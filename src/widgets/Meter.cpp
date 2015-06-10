@@ -2232,31 +2232,38 @@ wxAccStatus MeterAx::GetName(int WXUNUSED(childId), wxString* name)
 
       if (m->mMonitoring)
       {
-         *name += wxString::Format(_(" Monitoring "));
+         // translations of strings such as " Monitoring " did not
+         // always retain the leading space. Therefore a space has
+         // been added to ensure at least one space, and stop
+         // words from being merged
+         *name += wxT(" ") + wxString::Format(_(" Monitoring "));
       }
       else if (m->mActive)
       {
-         *name += wxString::Format(_(" Active "));
+         *name += wxT(" ") + wxString::Format(_(" Active "));
       }
 
       float peak = 0.;
+      bool clipped = false;
       for (int i = 0; i < m->mNumBars; i++)
       {
          peak = wxMax(peak, m->mBar[i].peakPeakHold);
+         if (m->mBar[i].clipping)
+            clipped = true;
       }
 
       if (m->mDB)
       {
-         *name += wxString::Format(_(" Peak %2.f dB"), (peak * m->mDBRange) - m->mDBRange);
+         *name += wxT(" ") + wxString::Format(_(" Peak %2.f dB"), (peak * m->mDBRange) - m->mDBRange);
       }
       else
       {
-         *name += wxString::Format(_(" Peak %.2f "), peak);
+         *name += wxT(" ") + wxString::Format(_(" Peak %.2f "), peak);
       }
 
-      if (m->IsClipping())
+      if (clipped)
       {
-         *name += wxString::Format(_(" Clipped "));
+         *name += wxT(" ") + wxString::Format(_(" Clipped "));
       }
    }
 

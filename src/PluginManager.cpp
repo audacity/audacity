@@ -122,7 +122,7 @@ public:
    // or child.
    virtual wxAccStatus GetValue( int childId, wxString *strValue );
 
-   void SetSelected( int item );
+   void SetSelected( int item, bool focused = true );
 
 private:
    wxListCtrl *mParent;
@@ -140,7 +140,7 @@ CheckListAx::~CheckListAx()
 {
 }
 
-void CheckListAx::SetSelected( int item )
+void CheckListAx::SetSelected( int item, bool focused )
 {
    if (mLastId != -1)
    {
@@ -153,10 +153,13 @@ void CheckListAx::SetSelected( int item )
 
    if (item != -1)
    {
-      NotifyEvent( wxACC_EVENT_OBJECT_FOCUS,
-                  mParent,
-                  wxOBJID_CLIENT,
-                  item + 1 );
+      if (focused)
+      {
+         NotifyEvent( wxACC_EVENT_OBJECT_FOCUS,
+                     mParent,
+                     wxOBJID_CLIENT,
+                     item + 1 );
+      }
 
       NotifyEvent( wxACC_EVENT_OBJECT_SELECTION,
                   mParent,
@@ -473,14 +476,13 @@ END_EVENT_TABLE()
 PluginRegistrationDialog::PluginRegistrationDialog(wxWindow *parent, EffectType type)
 :  wxDialog(parent,
             wxID_ANY,
-            _("Plug-in Manager: Effects"),
+            _("Plug-in Manager: Effects, Generators and Analyzers"),
             wxDefaultPosition, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {
    mType = type;
    mEffects = NULL;
-   SetLabel(_("Plug-in Manager: Effects"));         // Provide visual label
-   SetName(_("Plug-in Manager: Effects"));          // Provide audible label
+   SetName(GetTitle());
 
    mStates.SetCount(STATE_COUNT);
    mStates[STATE_Enabled] = _("Enabled");
@@ -747,7 +749,7 @@ void PluginRegistrationDialog::RegenerateEffectsList(int filter)
 //      mEffects->SetFocus();
       mEffects->SetItemState(0, wxLIST_STATE_FOCUSED|wxLIST_STATE_SELECTED, wxLIST_STATE_FOCUSED|wxLIST_STATE_SELECTED);
 #if wxUSE_ACCESSIBILITY
-      mAx->SetSelected(0);
+      mAx->SetSelected(0, false);
 #endif
    }
 }
@@ -1343,14 +1345,17 @@ void PluginDescriptor::SetImporterExtensions(const wxArrayString & extensions)
 //
 // ============================================================================
 
-bool PluginManager::IsPluginRegistered(const PluginID & ID)
+bool PluginManager::IsPluginRegistered(const wxString & path)
 {
-   if (mPlugins.find(ID) == mPlugins.end())
+   for (PluginMap::iterator iter = mPlugins.begin(); iter != mPlugins.end(); ++iter)
    {
-      return false;
+      if (iter->second.GetPath().IsSameAs(path))
+      {
+         return true;
+      }
    }
 
-   return true;
+   return false;
 }
 
 const PluginID & PluginManager::RegisterPlugin(ModuleInterface *module)

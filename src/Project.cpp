@@ -50,6 +50,7 @@ scroll information.  It also has some status flags.
 *//*******************************************************************/
 
 #include "Audacity.h"
+#include "Project.h"
 
 #include <stdio.h>
 #include <iostream>
@@ -89,8 +90,6 @@ scroll information.  It also has some status flags.
 #include <wx/mac/private.h>
 #endif
 #endif
-
-#include "Project.h"
 
 #include "FreqWindow.h"
 #include "effects/Contrast.h"
@@ -1021,7 +1020,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
 
    mTrackFactory = new TrackFactory(mDirManager);
 
-   int widths[] = {0, GetControlToolBar()->WidthForStatusBar(mStatusBar), -2, -1};
+   int widths[] = {0, GetControlToolBar()->WidthForStatusBar(mStatusBar), -1, 150};
    mStatusBar->SetStatusWidths(4, widths);
    wxString msg = wxString::Format(_("Welcome to Audacity version %s"),
                                    AUDACITY_VERSION_STRING);
