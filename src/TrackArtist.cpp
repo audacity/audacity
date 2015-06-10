@@ -941,11 +941,11 @@ float FromDB(float value, double dBRange)
    return pow(10.0, ((fabs(value) * dBRange) - dBRange) / 20.0)*sign;
 }
 
-float ValueOfPixel(int y, int height, bool offset,
+float ValueOfPixel(int yy, int height, bool offset,
    bool dB, double dBRange, float zoomMin, float zoomMax)
 {
    wxASSERT(height > 0);
-   float v = zoomMax - (y / (float)height) * (zoomMax - zoomMin);
+   float v = zoomMax - (yy / (float)height) * (zoomMax - zoomMin);
    if (offset) {
       if (v > 0.0)
          v += .5;
@@ -1008,26 +1008,26 @@ void TrackArtist::DrawWaveformBackground(wxDC &dc, const wxRect &rect, const dou
    int maxbot, lmaxbot = 0;
    int minbot, lminbot = 0;
    bool sel, lsel = false;
-   int x, lx = 0;
+   int xx, lx = 0;
    int l, w;
 
    dc.SetPen(*wxTRANSPARENT_PEN);
    dc.SetBrush(blankBrush);
    dc.DrawRectangle(rect);
 
-   for (x = 0; x < rect.width; x++) {
+   for (xx = 0; xx < rect.width; ++xx) {
       // First we compute the truncated shape of the waveform background.
       // If drawEnvelope is true, then we compute the lower border of the
       // envelope.
 
-      maxtop = GetWaveYPos(env[x], zoomMin, zoomMax,
+      maxtop = GetWaveYPos(env[xx], zoomMin, zoomMax,
                                h, dB, true, mdBrange, true);
-      maxbot = GetWaveYPos(env[x], zoomMin, zoomMax,
+      maxbot = GetWaveYPos(env[xx], zoomMin, zoomMax,
                                h, dB, false, mdBrange, true);
 
-      mintop = GetWaveYPos(-env[x], zoomMin, zoomMax,
+      mintop = GetWaveYPos(-env[xx], zoomMin, zoomMax,
                                h, dB, false, mdBrange, true);
-      minbot = GetWaveYPos(-env[x], zoomMin, zoomMax,
+      minbot = GetWaveYPos(-env[xx], zoomMin, zoomMax,
                                h, dB, true, mdBrange, true);
 
       // Make sure it's odd so that a that max and min mirror each other
@@ -1040,7 +1040,7 @@ void TrackArtist::DrawWaveformBackground(wxDC &dc, const wxRect &rect, const dou
       }
 
       // We don't draw selection color for sync-lock selected tracks.
-      sel = (ssel0 <= where[x] && where[x + 1] < ssel1) && !bIsSyncLockSelected;
+      sel = (ssel0 <= where[xx] && where[xx + 1] < ssel1) && !bIsSyncLockSelected;
 
       if (lmaxtop == maxtop &&
           lmintop == mintop &&
@@ -1053,7 +1053,7 @@ void TrackArtist::DrawWaveformBackground(wxDC &dc, const wxRect &rect, const dou
       dc.SetBrush(lsel ? selectedBrush : unselectedBrush);
 
       l = rect.x + lx;
-      w = x - lx;
+      w = xx - lx;
       if (lmaxbot < lmintop - 1) {
          dc.DrawRectangle(l, rect.y + lmaxtop, w, lmaxbot - lmaxtop);
          dc.DrawRectangle(l, rect.y + lmintop, w, lminbot - lmintop);
@@ -1067,12 +1067,12 @@ void TrackArtist::DrawWaveformBackground(wxDC &dc, const wxRect &rect, const dou
       lmaxbot = maxbot;
       lminbot = minbot;
       lsel = sel;
-      lx = x;
+      lx = xx;
    }
 
    dc.SetBrush(lsel ? selectedBrush : unselectedBrush);
    l = rect.x + lx;
-   w = x - lx;
+   w = xx - lx;
    if (lmaxbot < lmintop - 1) {
       dc.DrawRectangle(l, rect.y + lmaxtop, w, lmaxbot - lmaxtop);
       dc.DrawRectangle(l, rect.y + lmintop, w, lminbot - lmintop);
@@ -1085,10 +1085,10 @@ void TrackArtist::DrawWaveformBackground(wxDC &dc, const wxRect &rect, const dou
    if (bIsSyncLockSelected && ssel0 < ssel1) {
       // Find the beginning/end of the selection
       int begin, end;
-      for (x = 0; x < rect.width && where[x] < ssel0; ++x);
-      begin = x;
-      for (; x < rect.width && where[x] < ssel1; ++x);
-      end = x;
+      for (xx = 0; xx < rect.width && where[xx] < ssel0; ++xx);
+      begin = xx;
+      for (; xx < rect.width && where[xx] < ssel1; ++xx);
+      end = xx;
       DrawSyncLockTiles(&dc, wxRect(rect.x + begin, rect.y, end - 1 - begin, rect.height));
    }
 
@@ -1126,7 +1126,6 @@ void TrackArtist::DrawMinMaxRMS(wxDC &dc, const wxRect &rect, const double env[]
    int *r2 = new int[rect.width];
    int *clipped = NULL;
    int clipcnt = 0;
-   int x;
 
    if (mShowClipping) {
       clipped =  new int[rect.width];
@@ -1139,14 +1138,14 @@ void TrackArtist::DrawMinMaxRMS(wxDC &dc, const wxRect &rect, const double env[]
    bool drawWaveform = true;
 
    dc.SetPen(muted ? muteSamplePen : samplePen);
-   for (x = 0; x < rect.width; x++) {
-      int xx = rect.x + x;
+   for (int x0 = 0; x0 < rect.width; ++x0) {
+      int xx = rect.x + x0;
       double v;
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
      //JWA: "gain" variable passed to function includes the pan value and is used below 4/14/13
-      v = min[x] * env[x] * gain;
+      v = min[x0] * env[x0] * gain;
 #else
-      v = min[x] * env[x];
+      v = min[x0] * env[x0];
 #endif
       if (clipped && mShowClipping && (v <= -MAX_AUDIO))
       {
@@ -1158,9 +1157,9 @@ void TrackArtist::DrawMinMaxRMS(wxDC &dc, const wxRect &rect, const double env[]
                        rect.height, dB, true, mdBrange, true);
 
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-      v = max[x] * env[x] * gain;
+      v = max[x0] * env[x0] * gain;
 #else
-      v = max[x] * env[x];
+      v = max[x0] * env[x0];
 #endif
       if (clipped && mShowClipping && (v >= MAX_AUDIO))
       {
@@ -1173,7 +1172,7 @@ void TrackArtist::DrawMinMaxRMS(wxDC &dc, const wxRect &rect, const double env[]
 
       // JKC: This adjustment to h1 and h2 ensures that the drawn
       // waveform is continuous.
-      if (x > 0) {
+      if (x0 > 0) {
          if (h1 < lasth2) {
             h1 = lasth2 - 1;
          }
@@ -1185,38 +1184,38 @@ void TrackArtist::DrawMinMaxRMS(wxDC &dc, const wxRect &rect, const double env[]
       lasth2 = h2;
 
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-      r1[x] = GetWaveYPos(-rms[x] * env[x]*gain, zoomMin, zoomMax,
+      r1[x0] = GetWaveYPos(-rms[x0] * env[x0]*gain, zoomMin, zoomMax,
                           rect.height, dB, true, mdBrange, true);
-      r2[x] = GetWaveYPos(rms[x] * env[x]*gain, zoomMin, zoomMax,
+      r2[x0] = GetWaveYPos(rms[xx0 * env[x0]*gain, zoomMin, zoomMax,
                           rect.height, dB, true, mdBrange, true);
 #else
-      r1[x] = GetWaveYPos(-rms[x] * env[x], zoomMin, zoomMax,
+      r1[x0] = GetWaveYPos(-rms[x0] * env[x0], zoomMin, zoomMax,
                           rect.height, dB, true, mdBrange, true);
-      r2[x] = GetWaveYPos(rms[x] * env[x], zoomMin, zoomMax,
+      r2[x0] = GetWaveYPos(rms[x0] * env[x0], zoomMin, zoomMax,
                           rect.height, dB, true, mdBrange, true);
 #endif
       // Make sure the rms isn't larger than the waveform min/max
-      if (r1[x] > h1 - 1) {
-         r1[x] = h1 - 1;
+      if (r1[x0] > h1 - 1) {
+         r1[x0] = h1 - 1;
       }
-      if (r2[x] < h2 + 1) {
-         r2[x] = h2 + 1;
+      if (r2[x0] < h2 + 1) {
+         r2[x0] = h2 + 1;
       }
-      if (r2[x] > r1[x]) {
-         r2[x] = r1[x];
+      if (r2[x0] > r1[x0]) {
+         r2[x0] = r1[x0];
       }
 
-      if (bl[x] <= -1) {
+      if (bl[x0] <= -1) {
          if (drawStripes) {
             // TODO:unify with buffer drawing.
-            dc.SetPen((bl[x] % 2) ? muteSamplePen : samplePen);
-            for (int y = 0; y < rect.height / 25 + 1; y++) {
+            dc.SetPen((bl[x0] % 2) ? muteSamplePen : samplePen);
+            for (int yy = 0; yy < rect.height / 25 + 1; ++yy) {
                // we are drawing over the buffer, but I think DrawLine takes care of this.
                AColor::Line(dc,
                             xx,
-                            rect.y + 25 * y + (x /*+pixAnimOffset*/) % 25,
+                            rect.y + 25 * yy + (x0 /*+pixAnimOffset*/) % 25,
                             xx,
-                            rect.y + 25 * y + (x /*+pixAnimOffset*/) % 25 + 6); //take the min so we don't draw past the edge
+                            rect.y + 25 * yy + (x0 /*+pixAnimOffset*/) % 25 + 6); //take the min so we don't draw past the edge
             }
          }
 
@@ -1225,10 +1224,10 @@ void TrackArtist::DrawMinMaxRMS(wxDC &dc, const wxRect &rect, const double env[]
          if (drawWaveform) {
             int triX;
             dc.SetPen(samplePen);
-            triX = fabs((double)((x + pixAnimOffset) % (2 * rect.height)) - rect.height) + rect.height;
-            for (int y = 0; y < rect.height; y++) {
-               if ((y + triX) % rect.height == 0) {
-                  dc.DrawPoint(xx, rect.y + y);
+            triX = fabs((double)((x0 + pixAnimOffset) % (2 * rect.height)) - rect.height) + rect.height;
+            for (int yy = 0; yy < rect.height; ++yy) {
+               if ((yy + triX) % rect.height == 0) {
+                  dc.DrawPoint(xx, rect.y + yy);
                }
             }
          }
@@ -1243,12 +1242,12 @@ void TrackArtist::DrawMinMaxRMS(wxDC &dc, const wxRect &rect, const double env[]
 
    // Stroke rms over the min-max
    dc.SetPen(muted ? muteRmsPen : rmsPen);
-   for (int x = 0; x < rect.width; x++) {
-      int xx = rect.x + x;
-      if (bl[x] <= -1) {
+   for (int x0 = 0; x0 < rect.width; ++x0) {
+      int xx = rect.x + x0;
+      if (bl[x0] <= -1) {
       }
-      else if (r1[x] != r2[x]) {
-         AColor::Line(dc, xx, rect.y + r2[x], xx, rect.y + r1[x]);
+      else if (r1[x0] != r2[x0]) {
+         AColor::Line(dc, xx, rect.y + r2[x0], xx, rect.y + r1[x0]);
       }
    }
 
@@ -1384,17 +1383,17 @@ void TrackArtist::DrawEnvelope(wxDC &dc, const wxRect &rect, const double env[],
 
    dc.SetPen(AColor::envelopePen);
 
-   for (int x = 0; x < rect.width; x++) {
-      int cenvTop = GetWaveYPos(env[x], zoomMin, zoomMax,
+   for (int x0 = 0; x0 < rect.width; ++x0) {
+      int cenvTop = GetWaveYPos(env[x0], zoomMin, zoomMax,
                                 h, dB, true, mdBrange, true);
 
-      int cenvBot = GetWaveYPos(-env[x], zoomMin, zoomMax,
+      int cenvBot = GetWaveYPos(-env[x0], zoomMin, zoomMax,
                                 h, dB, true, mdBrange, true);
 
-      int envTop = GetWaveYPos(env[x], zoomMin, zoomMax,
+      int envTop = GetWaveYPos(env[x0], zoomMin, zoomMax,
                                h, dB, true, mdBrange, false);
 
-      int envBot = GetWaveYPos(-env[x], zoomMin, zoomMax,
+      int envBot = GetWaveYPos(-env[x0], zoomMin, zoomMax,
                                h, dB, true, mdBrange, false);
 
       // Make the collision at zero actually look solid
@@ -1404,23 +1403,23 @@ void TrackArtist::DrawEnvelope(wxDC &dc, const wxRect &rect, const double env[],
          cenvBot = value + 4;
       }
 
-      DrawEnvLine(dc, rect, x, envTop, cenvTop, true);
-      DrawEnvLine(dc, rect, x, envBot, cenvBot, false);
+      DrawEnvLine(dc, rect, x0, envTop, cenvTop, true);
+      DrawEnvLine(dc, rect, x0, envBot, cenvBot, false);
    }
 }
 
-void TrackArtist::DrawEnvLine(wxDC &dc, const wxRect &rect, int x, int y, int cy, bool top)
+void TrackArtist::DrawEnvLine(wxDC &dc, const wxRect &rect, int x0, int y0, int cy, bool top)
 {
-   int xx = rect.x + x;
+   int xx = rect.x + x0;
    int yy = rect.y + cy;
 
-   if (y < 0) {
-      if (x % 4 != 3) {
+   if (y0 < 0) {
+      if (x0 % 4 != 3) {
          AColor::Line(dc, xx, yy, xx, yy + 3);
       }
    }
-   else if (y > rect.height) {
-      if (x % 4 != 3) {
+   else if (y0 > rect.height) {
+      if (x0 % 4 != 3) {
          AColor::Line(dc, xx, yy - 3, xx, yy);
       }
    }
@@ -1458,19 +1457,19 @@ void TrackArtist::DrawWaveform(WaveTrack *track,
 
    for (int i = 0; i<track->GetNumCachedLocations(); i++) {
       WaveTrack::Location loc = track->GetCachedLocation(i);
-      double x = (loc.pos - viewInfo->h) * viewInfo->zoom;
-      if (x >= 0 && x < rect.width) {
+      double xx = (loc.pos - viewInfo->h) * viewInfo->zoom;
+      if (xx >= 0 && xx < rect.width) {
          dc.SetPen(*wxGREY_PEN);
-         AColor::Line(dc, (int) (rect.x + x - 1), rect.y, (int) (rect.x + x - 1), rect.y + rect.height);
+         AColor::Line(dc, (int) (rect.x + xx - 1), rect.y, (int) (rect.x + xx - 1), rect.y + rect.height);
          if (loc.typ == WaveTrack::locationCutLine) {
             dc.SetPen(*wxRED_PEN);
          }
          else {
             dc.SetPen(*wxBLACK_PEN);
          }
-         AColor::Line(dc, (int) (rect.x + x), rect.y, (int) (rect.x + x), rect.y + rect.height);
+         AColor::Line(dc, (int) (rect.x + xx), rect.y, (int) (rect.x + xx), rect.y + rect.height);
          dc.SetPen(*wxGREY_PEN);
-         AColor::Line(dc, (int) (rect.x + x + 1), rect.y, (int) (rect.x + x + 1), rect.y + rect.height);
+         AColor::Line(dc, (int) (rect.x + xx + 1), rect.y, (int) (rect.x + xx + 1), rect.y + rect.height);
       }
    }
 
@@ -1775,18 +1774,18 @@ void TrackArtist::DrawTimeSlider(wxDC & dc,
    int firstBar = yTop + taper + taper / 2;
    int nBars    = (yBot - yTop - taper * 3) / barSpacing + 1;
    xLeft += (width - barWidth + 1) / 2;
-   int y;
+   int yy;
    int i;
 
    AColor::Light(&dc, false);
    for (i = 0;i < nBars; i++) {
-      y = firstBar + barSpacing * i;
-      AColor::Line(dc, xLeft, y, xLeft + barWidth, y);
+      yy = firstBar + barSpacing * i;
+      AColor::Line(dc, xLeft, yy, xLeft + barWidth, yy);
    }
    AColor::Dark(&dc, false);
    for(i = 0;i < nBars; i++){
-      y = firstBar + barSpacing * i + 1;
-      AColor::Line(dc, xLeft, y, xLeft + barWidth, y);
+      yy = firstBar + barSpacing * i + 1;
+      AColor::Line(dc, xLeft, yy, xLeft + barWidth, yy);
    }
 }
 
@@ -1989,17 +1988,17 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
 
    bool *yGrid;
    yGrid = new bool[mid.height];
-   for (int y = 0; y < mid.height; y++) {
-      float n = (float(y) / mid.height*scale2 - lmin2) * 12;
-      float n2 = (float(y + 1) / mid.height*scale2 - lmin2) * 12;
+   for (int yy = 0; yy < mid.height; ++yy) {
+      float n = (float(yy) / mid.height*scale2 - lmin2) * 12;
+      float n2 = (float(yy + 1) / mid.height*scale2 - lmin2) * 12;
       float f = float(minFreq) / (fftSkipPoints + 1)*powf(2.0f, n / 12.0f + lmin2);
       float f2 = float(minFreq) / (fftSkipPoints + 1)*powf(2.0f, n2 / 12.0f + lmin2);
       n = logf(f / 440) / log2 * 12;
       n2 = logf(f2 / 440) / log2 * 12;
       if (floor(n) < floor(n2))
-         yGrid[y] = true;
+         yGrid[yy] = true;
       else
-         yGrid[y] = false;
+         yGrid[yy] = false;
    }
 #endif //EXPERIMENTAL_FFT_Y_GRID
 
@@ -2180,7 +2179,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
                }
                clip->mSpecPxCache->values[xx * mid.height + yy] = value;
                yy2 = yy2_base;
-            } // each y
+            } // each yy
          } // is logF
       } // each xx
 
@@ -2282,7 +2281,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
             data[px++] = rv;
             data[px++] = gv;
             data[px] = bv;
-         } // each y
+         } // each yy
       } // logF
    } // each xx
 
@@ -2477,8 +2476,8 @@ const char *LookupAtomAttribute(Alg_note_ptr note, Alg_attribute attr, char *def
 //  particular, line plots will be correct at any zoom (limited by floating point
 //  precision).
 #define CLIP_MAX 16000
-#define CLIP(x) { long c = (x); if (c < -CLIP_MAX) c = -CLIP_MAX; \
-                  if (c > CLIP_MAX) c = CLIP_MAX; (x) = c; }
+#define CLIP(xx) { long c = (xx); if (c < -CLIP_MAX) c = -CLIP_MAX; \
+                  if (c > CLIP_MAX) c = CLIP_MAX; (xx) = c; }
 
 #define RED(i) ( unsigned char )( (((i) >> 16) & 0xff) )
 #define GREEN(i) ( unsigned char )( (((i) >> 8) & 0xff) )
@@ -2588,9 +2587,9 @@ void TrackArtist::DrawNoteBackground(NoteTrack *track, wxDC &dc,
       // map beat to time
       double t = seq->get_time_map()->beat_to_time(next_bar_beat);
       // map time to position
-      int x = TIME_TO_X(t + track->GetOffset());
-      if (x > right) break;
-      AColor::Line(dc, x, sel.y, x, sel.y + sel.height);
+      int xx = TIME_TO_X(t + track->GetOffset());
+      if (xx > right) break;
+      AColor::Line(dc, xx, sel.y, xx, sel.y + sel.height);
       next_bar_beat += beats_per_measure;
    }
 }
@@ -2733,16 +2732,16 @@ void TrackArtist::DrawNoteTrack(NoteTrack *track,
          Alg_note_ptr note = (Alg_note_ptr) evt;
          // if the note's channel is visible
          if (visibleChannels & (1 << (evt->chan & 15))) {
-            double x = note->time + track->GetOffset();
-            double x1 = x + note->dur;
-            if (x < h1 && x1 > h) { // omit if outside box
+            double xx = note->time + track->GetOffset();
+            double x1 = xx + note->dur;
+            if (xx < h1 && x1 > h) { // omit if outside box
                const char *shape = NULL;
                if (note->loud > 0.0 || 0 == (shape = IsShape(note))) {
                   wxRect nr; // "note rectangle"
                   nr.y = track->PitchToY(note->pitch);
                   nr.height = track->GetPitchHeight();
 
-                  nr.x = rect.x + (int) ((x - h) * pps);
+                  nr.x = rect.x + (int) ((xx - h) * pps);
                   nr.width = (int) ((note->dur * pps) + 0.5);
 
                   if (nr.x + nr.width >= rect.x && nr.x < rect.x + rect.width) {
@@ -2799,7 +2798,7 @@ void TrackArtist::DrawNoteTrack(NoteTrack *track,
                   // add 0.5 to pitch because pitches are plotted with
                   // height = PITCH_HEIGHT; thus, the center is raised
                   // by PITCH_HEIGHT * 0.5
-                  int y = track->PitchToY(note->pitch);
+                  int yy = track->PitchToY(note->pitch);
                   long linecolor = LookupIntAttribute(note, linecolori, -1);
                   long linethick = LookupIntAttribute(note, linethicki, 1);
                   long fillcolor = -1;
@@ -2829,44 +2828,44 @@ void TrackArtist::DrawNoteTrack(NoteTrack *track,
                   if (shape == line) {
                      // extreme zooms caues problems under windows, so we have to do some
                      // clipping before calling display routine
-                     if (x < h) { // clip line on left
-                        y = int((y + (y1 - y) * (h - x) / (x1 - x)) + 0.5);
-                        x = h;
+                     if (xx < h) { // clip line on left
+                        yy = int((yy + (y1 - yy) * (h - xx) / (x1 - xx)) + 0.5);
+                        xx = h;
                      }
                      if (x1 > h1) { // clip line on right
-                        y1 = int((y + (y1 - y) * (h1 - x) / (x1 - x)) + 0.5);
+                        y1 = int((yy + (y1 - yy) * (h1 - xx) / (x1 - xx)) + 0.5);
                         x1 = h1;
                      }
-                     AColor::Line(dc, TIME_TO_X(x), y, TIME_TO_X(x1), y1);
+                     AColor::Line(dc, TIME_TO_X(xx), yy, TIME_TO_X(x1), y1);
                   } else if (shape == rectangle) {
-                     if (x < h) { // clip on left, leave 10 pixels to spare
-                        x = h - (linethick + 10) / pps;
+                     if (xx < h) { // clip on left, leave 10 pixels to spare
+                        xx = h - (linethick + 10) / pps;
                      }
                      if (x1 > h1) { // clip on right, leave 10 pixels to spare
                         x1 = h1 + (linethick + 10) / pps;
                      }
-                     dc.DrawRectangle(TIME_TO_X(x), y, int((x1 - x) * pps + 0.5), y1 - y + 1);
+                     dc.DrawRectangle(TIME_TO_X(xx), yy, int((x1 - xx) * pps + 0.5), y1 - yy + 1);
                   } else if (shape == triangle) {
                      wxPoint points[3];
-                     points[0].x = TIME_TO_X(x);
+                     points[0].x = TIME_TO_X(xx);
                      CLIP(points[0].x);
-                     points[0].y = y;
+                     points[0].y = yy;
                      points[1].x = TIME_TO_X(LookupRealAttribute(note, x1r, note->pitch));
                      CLIP(points[1].x);
                      points[1].y = y1;
-                     points[2].x = TIME_TO_X(LookupRealAttribute(note, x2r, x));
+                     points[2].x = TIME_TO_X(LookupRealAttribute(note, x2r, xx));
                      CLIP(points[2].x);
                      points[2].y = track->PitchToY(LookupRealAttribute(note, y2r, note->pitch));
                      dc.DrawPolygon(3, points);
                   } else if (shape == polygon) {
                      wxPoint points[20]; // upper bound of 20 sides
-                     points[0].x = TIME_TO_X(x);
+                     points[0].x = TIME_TO_X(xx);
                      CLIP(points[0].x);
-                     points[0].y = y;
-                     points[1].x = TIME_TO_X(LookupRealAttribute(note, x1r, x));
+                     points[0].y = yy;
+                     points[1].x = TIME_TO_X(LookupRealAttribute(note, x1r, xx));
                      CLIP(points[1].x);
                      points[1].y = y1;
-                     points[2].x = TIME_TO_X(LookupRealAttribute(note, x2r, x));
+                     points[2].x = TIME_TO_X(LookupRealAttribute(note, x2r, xx));
                      CLIP(points[2].x);
                      points[2].y = track->PitchToY(LookupRealAttribute(note, y2r, note->pitch));
                      int n = 3;
@@ -2887,11 +2886,11 @@ void TrackArtist::DrawNoteTrack(NoteTrack *track,
                      }
                      dc.DrawPolygon(n, points);
                   } else if (shape == oval) {
-                     int ix = TIME_TO_X(x);
+                     int ix = TIME_TO_X(xx);
                      CLIP(ix);
-                     int ix1 = int((x1 - x) * pps + 0.5);
+                     int ix1 = int((x1 - xx) * pps + 0.5);
                      if (ix1 > CLIP_MAX * 2) ix1 = CLIP_MAX * 2; // CLIP a width
-                     dc.DrawEllipse(ix, y, ix1, y1 - y + 1);
+                     dc.DrawEllipse(ix, yy, ix1, y1 - yy + 1);
                   } else if (shape == text) {
                      if (linecolor != -1)
                         dc.SetTextForeground(wxColour(RED(linecolor),
@@ -2948,10 +2947,10 @@ void TrackArtist::DrawNoteTrack(NoteTrack *track,
                               GREEN(fillcolor),
                               BLUE(fillcolor)),
                               1, wxSOLID));
-                        dc.DrawRectangle(TIME_TO_X(x) + hoffset, y + voffset,
+                        dc.DrawRectangle(TIME_TO_X(xx) + hoffset, yy + voffset,
                               textWidth, textHeight);
                      }
-                     dc.DrawText(LAT1CTOWX(s), TIME_TO_X(x) + hoffset, y + voffset);
+                     dc.DrawText(LAT1CTOWX(s), TIME_TO_X(xx) + hoffset, yy + voffset);
                   }
                }
             }
@@ -3115,11 +3114,11 @@ void TrackArtist::DrawSyncLockTiles(wxDC *dc, wxRect rect)
    // Make sure blockX is non-negative
    if (blockX < 0) blockX += 5;
 
-   int x = 0;
-   while (x < rect.width) {
+   int xx = 0;
+   while (xx < rect.width) {
       int width = syncLockBitmap.GetWidth() - xOffset;
-      if (x + width > rect.width)
-         width = rect.width - x;
+      if (xx + width > rect.width)
+         width = rect.width - xx;
 
       //
       // Draw each row in this column
@@ -3143,12 +3142,12 @@ void TrackArtist::DrawSyncLockTiles(wxDC *dc, wxRect rect)
       // Make sure blockY is non-negative
       if (blockY < 0) blockY += 5;
 
-      int y = 0;
-      while (y < rect.height)
+      int yy = 0;
+      while (yy < rect.height)
       {
          int height = syncLockBitmap.GetHeight() - yOffset;
-         if (y + height > rect.height)
-            height = rect.height - y;
+         if (yy + height > rect.height)
+            height = rect.height - yy;
 
          // AWD: draw blocks according to our pattern
          if ((blockX == 0 && blockY == 0) || (blockX == 2 && blockY == 1) ||
@@ -3160,10 +3159,10 @@ void TrackArtist::DrawSyncLockTiles(wxDC *dc, wxRect rect)
             if (width != syncLockBitmap.GetWidth() || height != syncLockBitmap.GetHeight()) {
                wxBitmap subSyncLockBitmap =
                   syncLockBitmap.GetSubBitmap(wxRect(xOffset, yOffset, width, height));
-               dc->DrawBitmap(subSyncLockBitmap, rect.x + x, rect.y + y, true);
+               dc->DrawBitmap(subSyncLockBitmap, rect.x + xx, rect.y + yy, true);
             }
             else {
-               dc->DrawBitmap(syncLockBitmap, rect.x + x, rect.y + y, true);
+               dc->DrawBitmap(syncLockBitmap, rect.x + xx, rect.y + yy, true);
             }
          }
 
@@ -3175,7 +3174,7 @@ void TrackArtist::DrawSyncLockTiles(wxDC *dc, wxRect rect)
          }
          else {
             // Move on in y, no more offset rows
-            y += gridH - yOffset;
+            yy += gridH - yOffset;
             yOffset = 0;
          }
          blockY = (blockY + 1) % 5;
@@ -3189,7 +3188,7 @@ void TrackArtist::DrawSyncLockTiles(wxDC *dc, wxRect rect)
       }
       else {
          // Move on in x, no more offset rows
-         x += gridW - xOffset;
+         xx += gridW - xOffset;
          xOffset = 0;
       }
       blockX = (blockX + 1) % 5;

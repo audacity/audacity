@@ -164,7 +164,7 @@ class AUDACITY_DLL_API TrackArtist {
 
    void DrawEnvelope(wxDC & dc, const wxRect & rect, const double env[],
                      float zoomMin, float zoomMax, bool dB);
-   void DrawEnvLine(wxDC & dc, const wxRect & rect, int x, int y, int cy, bool top);
+   void DrawEnvLine(wxDC & dc, const wxRect & rect, int x0, int y0, int cy, bool top);
 
    // Preference values
    float mdBrange;            // "/GUI/EnvdBRange"
@@ -217,7 +217,7 @@ extern int GetWaveYPos(float value, float min, float max,
                        int height, bool dB, bool outer, float dBr,
                        bool clip);
 extern float FromDB(float value, double dBRange);
-extern float ValueOfPixel(int y, int height, bool offset,
+extern float ValueOfPixel(int yy, int height, bool offset,
                           bool dB, double dBRange, float zoomMin, float zoomMax);
 
 #endif                          // define __AUDACITY_TRACKARTIST__
