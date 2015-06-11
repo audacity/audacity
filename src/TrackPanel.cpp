@@ -4927,10 +4927,31 @@ void TrackPanel::HandleVZoomButtonUp( wxMouseEvent & event )
    MakeParentModifyState(true);
 }
 
+namespace {
+// Is the sample horizontally nearest to the cursor sufficiently separated from
+// its neighbors that the pencil tool should be allowed to drag it?
+bool SampleResolutionTest(const ViewInfo &viewInfo, const WaveTrack *wt, double time, double rate)
+{
+   // Require more than 3 pixels per sample
+   // Round to an exact sample time
+   const double adjustedTime = wt->LongSamplesToTime(wt->TimeToLongSamples(time));
+   const wxInt64 xx = std::max(wxInt64(0), viewInfo.TimeToPosition(adjustedTime));
+   ZoomInfo::Intervals intervals;
+   viewInfo.FindIntervals(rate, intervals);
+   ZoomInfo::Intervals::const_iterator it = intervals.begin(), end = intervals.end(), prev;
+   wxASSERT(it != end && it->position == 0);
+   do
+      prev = it++;
+   while (it != end && it->position <= xx);
+   const double threshold = 3 * rate; // three times as many pixels per second, as samples
+   return prev->averageZoom > threshold;
+}
+}
+
 /// Determines if we can edit samples in a wave track.
 /// Also pops up warning messages in certain cases where we can't.
 ///  @return true if we can edit the samples, false otherwise.
-bool TrackPanel::IsSampleEditingPossible( wxMouseEvent & WXUNUSED(event), Track * t )
+bool TrackPanel::IsSampleEditingPossible( wxMouseEvent &event, Track * t )
 {
    //Exit if we don't have a track
    if(!t)
@@ -4959,10 +4980,15 @@ bool TrackPanel::IsSampleEditingPossible( wxMouseEvent & WXUNUSED(event), Track 
    }
 #endif
 
-   //Get rate in order to calculate the critical zoom threshold
-   //Find out the zoom level
-   const double rate = wt->GetRate();
-   const bool showPoints = (mViewInfo->zoom / rate > 3.0);
+   bool showPoints;
+   {
+      wxRect r;
+      FindTrack(event.m_x, event.m_y, false, false, &r);
+      WaveTrack *const wt = static_cast<WaveTrack*>(t);
+      const double rate = wt->GetRate();
+      const double time = mViewInfo->PositionToTime(event.m_x, r.x);
+      showPoints = SampleResolutionTest(*mViewInfo, wt, time, rate);
+   }
 
    //If we aren't zoomed in far enough, show a message dialog.
    if(!showPoints)
@@ -7065,21 +7091,18 @@ bool TrackPanel::HitTestSamples(Track *track, wxRect &r, wxMouseEvent & event)
    //Get rate in order to calculate the critical zoom threshold
    double rate = wavetrack->GetRate();
 
-   //Find out the zoom level
-   bool showPoints = (mViewInfo->zoom / rate > 3.0);
-   if( !showPoints )
-      return false;
-
    int displayType = wavetrack->GetDisplay();
    bool dB = (WaveTrack::WaveformDBDisplay == displayType);
    if (!(WaveTrack::WaveformDisplay == displayType || dB))
       return false;  // Not a wave, so return.
 
-   float oneSample;
    const double tt = mViewInfo->PositionToTime(event.m_x, r.x);
-   sampleCount s0 = (sampleCount)(tt * rate + 0.5);
+   if (!SampleResolutionTest(*mViewInfo, wavetrack, tt, rate))
+      return false;
 
    // Just get one sample.
+   float oneSample;
+   sampleCount s0 = (sampleCount)(tt * rate + 0.5);
    wavetrack->Get((samplePtr)&oneSample, floatSample, s0, 1);
 
    // Get y distance of envelope point from center line (in pixels).

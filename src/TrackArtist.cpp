@@ -1475,13 +1475,15 @@ struct ClipParameters
       (bool spectrum, const WaveTrack *track, const WaveClip *clip, const wxRect &rect,
       const SelectedRegion &selectedRegion, const ZoomInfo &zoomInfo)
    {
-      selectedRegion;
-
       tOffset = clip->GetOffset();
       rate = clip->GetRate();
 
-      h = zoomInfo.h;          //The horizontal position in seconds
-      pps = zoomInfo.zoom;     //points-per-second--the zoom level
+      h = zoomInfo.PositionToTime(0, 0
+         , true
+      );
+      h1 = zoomInfo.PositionToTime(rect.width, 0
+         , true
+      );
 
       double sel0 = selectedRegion.t0();    //left selection bound
       double sel1 = selectedRegion.t1();    //right selection bound
@@ -1494,18 +1496,17 @@ struct ClipParameters
 
       const double trackLen = clip->GetEndTime() - clip->GetStartTime();
 
-      tstep = 1.0 / pps; // Seconds per point
       tpre = h - tOffset;                 // offset corrected time of
       //  left edge of display
-      tpost = tpre + (rect.width * tstep);   // offset corrected time of
+      tpost = h1 - tOffset;               // offset corrected time of
       //  right edge of display
 
       const double sps = 1. / rate;            //seconds-per-sample
 
       // Determine whether we should show individual samples
       // or draw circular points as well
-      showIndividualSamples = (pps / rate > 0.5);   //zoomed in a lot
-      showPoints = (pps / rate > 3.0);              //zoomed in even more
+      averagePixelsPerSample = rect.width / (rate * (h1 - h));
+      showIndividualSamples = averagePixelsPerSample > 0.5;
 
       // Calculate actual selection bounds so that t0 > 0 and t1 < the
       // end of the track
@@ -1514,7 +1515,7 @@ struct ClipParameters
       if (showIndividualSamples) {
          // adjustment so that the last circular point doesn't appear
          // to be hanging off the end
-         t1 += 2. / pps;
+         t1 += 2. / (averagePixelsPerSample * rate);
       }
 
       // Make sure t1 (the right bound) is greater than 0
@@ -1542,50 +1543,76 @@ struct ClipParameters
          ssel1 = (sampleCount)(0.5 + trackLen * rate);
       }
 
-      // The variable "mid" will be the rectangle containing the
+      // The variable "hiddenMid" will be the rectangle containing the
       // actual waveform, as opposed to any blank area before
-      // or after the track.
-      mid = rect;
+      // or after the track, as it would appear without the fisheye.
+      hiddenMid = rect;
 
       // If the left edge of the track is to the right of the left
       // edge of the display, then there's some blank area to the
-      // left of the track.  Reduce the "mid"
-      // rect by size of the blank area.
+      // left of the track.  Reduce the "hiddenMid"
+      hiddenLeftOffset = 0;
       if (tpre < 0) {
-         // Fill in the area to the left of the track
-         double delta = rect.width;
-         if (t0 < tpost) {
-            delta = (int)((t0 - tpre) * pps);
-         }
-
-         // Offset the rectangle containing the waveform by the width
-         // of the area we just erased.
-         mid.x += (int)delta;
-         mid.width -= (int)delta;
+         hiddenLeftOffset = std::min(rect.width, int(
+            zoomInfo.TimeToPosition(tOffset, 0
+               , true
+            )
+         ));
+         hiddenMid.x += hiddenLeftOffset;
+         hiddenMid.width -= hiddenLeftOffset;
       }
 
       // If the right edge of the track is to the left of the the right
       // edge of the display, then there's some blank area to the right
-      // of the track.  Reduce the "mid" rect by the
+      // of the track.  Reduce the "hiddenMid" rect by the
       // size of the blank area.
       if (tpost > t1) {
-         wxRect post = rect;
-         if (t1 > tpre) {
-            post.x += (int)((t1 - tpre) * pps);
-         }
-         post.width = rect.width - (post.x - rect.x);
-         // Reduce the rectangle containing the waveform by the width
-         // of the area we just erased.
-         mid.width -= post.width;
+         const int hiddenRightOffset = std::min(rect.width, int(
+            zoomInfo.TimeToPosition(tOffset + t1, 0
+               , true
+            )
+         ));
+         hiddenMid.width = std::max(0, hiddenRightOffset - hiddenLeftOffset);
+      }
+
+      // The variable "mid" will be the rectangle containing the
+      // actual waveform, as distorted by the fisheye,
+      // as opposed to any blank area before or after the track.
+      mid = rect;
+
+      // If the left edge of the track is to the right of the left
+      // edge of the display, then there's some blank area to the
+      // left of the track.  Reduce the "hiddenMid"
+      leftOffset = 0;
+      if (tpre < 0) {
+         leftOffset = std::min(rect.width, int(
+            zoomInfo.TimeToPosition(tOffset, 0
+               , false
+            )
+         ));
+         mid.x += leftOffset;
+         mid.width -= leftOffset;
+      }
+
+      // If the right edge of the track is to the left of the the right
+      // edge of the display, then there's some blank area to the right
+      // of the track.  Reduce the "hiddenMid" rect by the
+      // size of the blank area.
+      if (tpost > t1) {
+         const int distortedRightOffset = std::min(rect.width, int(
+            zoomInfo.TimeToPosition(tOffset + t1, 0
+               , false
+            )
+         ));
+         mid.width = std::max(0, distortedRightOffset - leftOffset);
       }
    }
 
    double tOffset;
    double rate;
    double h; // absolute time of left edge of display
-   double tstep;
    double tpre; // offset corrected time of left edge of display
-   // double h1;
+   double h1;
    double tpost; // offset corrected time of right edge of display
 
    // Calculate actual selection bounds so that t0 > 0 and t1 < the
@@ -1593,14 +1620,59 @@ struct ClipParameters
    double t0;
    double t1;
 
-   double pps;
-   bool showIndividualSamples, showPoints;
+   double averagePixelsPerSample;
+   bool showIndividualSamples;
 
    sampleCount ssel0;
    sampleCount ssel1;
 
+   wxRect hiddenMid;
+   int hiddenLeftOffset;
+
    wxRect mid;
+   int leftOffset;
 };
+}
+
+namespace {
+struct WavePortion {
+   wxRect rect;
+   const double averageZoom;
+   const bool inFisheye;
+   WavePortion(int x, int y, int w, int h, double zoom, bool i)
+      : rect(x, y, w, h), averageZoom(zoom), inFisheye(i)
+   {}
+};
+
+void FindWavePortions
+   (std::vector<WavePortion> &portions, const wxRect &rect, const ZoomInfo &zoomInfo,
+    const ClipParameters &params)
+{
+   // If there is no fisheye, then only one rectangle has nonzero width.
+   // If there is a fisheye, make rectangles for before and after
+   // (except when they are squeezed to zero width), and at least one for inside
+   // the fisheye.
+
+   ZoomInfo::Intervals intervals;
+   zoomInfo.FindIntervals(params.rate, intervals, rect.x);
+   ZoomInfo::Intervals::const_iterator it = intervals.begin(), end = intervals.end(), prev;
+   wxASSERT(it != end && it->position == rect.x);
+   const int rightmost = rect.x + rect.width;
+   for (int left = rect.x; left < rightmost;) {
+      while (it != end && it->position <= left)
+         prev = it++;
+      const int right = std::max(left, int(
+         it != end ? it->position : rightmost
+      ));
+      const int width = right - left;
+      if (width > 0)
+         portions.push_back(
+            WavePortion(left, rect.y, width, rect.height,
+                        prev->averageZoom, prev->inFisheye)
+         );
+      left = right;
+   }
+}
 }
 
 void TrackArtist::DrawClipWaveform(WaveTrack *track,
@@ -1619,87 +1691,170 @@ void TrackArtist::DrawClipWaveform(WaveTrack *track,
 #endif
 
    const ClipParameters params(false, track, clip, rect, selectedRegion, zoomInfo);
-   const wxRect &mid = params.mid;
-   // The "mid" rect contains the part of the display actually
-   // containing the waveform.  If it's empty, we're done.
-   if (mid.width <= 0) {
+   const wxRect &hiddenMid = params.hiddenMid;
+   // The "hiddenMid" rect contains the part of the display actually
+   // containing the waveform, as it appears without the fisheye.  If it's empty, we're done.
+   if (hiddenMid.width <= 0) {
       return;
    }
 
    const double &t0 = params.t0;
-   const double &pps = params.pps;
    const double &tOffset = params.tOffset;
-   const double &tstep = params.tstep;
-   const bool &showIndividualSamples = params.showIndividualSamples;
-   const bool &showPoints = params.showPoints;
    const double &h = params.h;
    const double &tpre = params.tpre;
    const double &tpost = params.tpost;
    const double &t1 = params.t1;
+   const double &averagePixelsPerSample = params.averagePixelsPerSample;
+   const double &rate = params.rate;
+   double leftOffset = params.leftOffset;
+   const wxRect &mid = params.mid;
 
-   // Calculate sample-based offset-corrected selection
 
    dc.SetPen(*wxTRANSPARENT_PEN);
 
    // If we get to this point, the clip is actually visible on the
    // screen, so remember the display rectangle.
-   clip->SetDisplayRect(mid);
+   clip->SetDisplayRect(hiddenMid);
 
    // The bounds (controlled by vertical zooming; -1.0...1.0
    // by default)
    float zoomMin, zoomMax;
    track->GetDisplayBounds(&zoomMin, &zoomMax);
 
-   // Get the values of the envelope corresponding to each pixel
-   // in the display, and use these to compute the height of the
-   // track at each pixel
-
-   double *envValues = new double[mid.width];
-   clip->GetEnvelope()->GetValues(envValues, mid.width, t0 + tOffset, tstep);
+   std::vector<double> vEnv(mid.width);
+   double *const env = &vEnv[0];
+   clip->GetEnvelope()->GetValues(env, mid.width, leftOffset, zoomInfo);
 
    // Draw the background of the track, outlining the shape of
    // the envelope and using a colored pen for the selected
    // part of the waveform
-   DrawWaveformBackground(dc, mid.x - rect.x, mid,
-      envValues,
+   DrawWaveformBackground(dc, leftOffset, mid,
+      env,
       zoomMin, zoomMax, dB,
       selectedRegion, zoomInfo, drawEnvelope,
       !track->GetSelected());
 
-   if (!showIndividualSamples) {
-      WaveDisplay display(mid.width);
-      bool isLoadingOD = false;//true if loading on demand block in sequence.
+   WaveDisplay display(hiddenMid.width);
+   bool isLoadingOD = false;//true if loading on demand block in sequence.
 
+   const double pps =
+      averagePixelsPerSample * rate;
+   if (!params.showIndividualSamples) {
       // The WaveClip class handles the details of computing the shape
       // of the waveform.  The only way GetWaveDisplay will fail is if
       // there's a serious error, like some of the waveform data can't
       // be loaded.  So if the function returns false, we can just exit.
+
+      // Note that we compute the full width display even if there is a
+      // fisheye hiding part of it, because of the caching.  If the
+      // fisheye moves over the background, there is then less to do when
+      // redrawing.
+
       if (!clip->GetWaveDisplay(display,
-         t0, pps, isLoadingOD)) {
+            t0, pps, isLoadingOD))
          return;
+   }
+
+   // For each portion separately, we will decide to draw
+   // it as min/max/rms or as individual samples.
+   std::vector<WavePortion> portions;
+   FindWavePortions(portions, rect, zoomInfo, params);
+   const unsigned nPortions = portions.size();
+
+   // Require at least 1/2 pixel per sample for drawing individual samples.
+   const double threshold1 = 0.5 * rate;
+   // Require at least 3 pixels per sample for drawing the draggable points.
+   const double threshold2 = 3 * rate;
+   for (unsigned ii = 0; ii < nPortions; ++ii) {
+      WavePortion &portion = portions[ii];
+      const bool showIndividualSamples = portion.averageZoom > threshold1;
+      const bool showPoints = portion.averageZoom > threshold2;
+      wxRect& rect = portion.rect;
+      rect.Intersect(mid);
+      wxASSERT(rect.width >= 0);
+
+      float *useMin = 0, *useMax = 0, *useRms = 0;
+      int *useBl = 0;
+      WaveDisplay fisheyeDisplay(rect.width);
+      int skipped = 0, skippedLeft = 0, skippedRight = 0;
+      if (portion.inFisheye) {
+         if (!showIndividualSamples) {
+            fisheyeDisplay.Allocate();
+            const sampleCount numSamples = clip->GetNumSamples();
+            // Get wave display data for different magnification
+            int jj = 0;
+            for (; jj < rect.width; ++jj) {
+               const double time =
+                  zoomInfo.PositionToTime(jj, -leftOffset) - tOffset;
+               const sampleCount sample = (sampleCount)floor(time * rate + 0.5);
+               if (sample < 0) {
+                  ++rect.x;
+                  ++skippedLeft;
+                  continue;
+               }
+               if (sample >= numSamples)
+                  break;
+               fisheyeDisplay.where[jj - skippedLeft] = sample;
+            }
+
+            skippedRight = rect.width - jj;
+            skipped = skippedRight + skippedLeft;
+            rect.width -= skipped;
+
+            // where needs a sentinel
+            if (jj > 0)
+               fisheyeDisplay.where[jj - skippedLeft] =
+               1 + fisheyeDisplay.where[jj - skippedLeft - 1];
+            fisheyeDisplay.width -= skipped;
+            // Get a wave display for the fisheye, uncached.
+            if (rect.width > 0)
+               if (!clip->GetWaveDisplay(
+                     fisheyeDisplay, t0, -1.0, // ignored
+                     isLoadingOD))
+                  continue; // serious error.  just don't draw??
+            useMin = fisheyeDisplay.min;
+            useMax = fisheyeDisplay.max;
+            useRms = fisheyeDisplay.rms;
+            useBl = fisheyeDisplay.bl;
+         }
+      }
+      else {
+         const int pos = leftOffset - params.hiddenLeftOffset;
+         useMin = display.min + pos;
+         useMax = display.max + pos;
+         useRms = display.rms + pos;
+         useBl = display.bl + pos;
       }
 
-      DrawMinMaxRMS(dc, mid, envValues,
-                    zoomMin, zoomMax, dB,
-                    display.min, display.max, display.rms, display.bl,
-                    isLoadingOD, muted
+      leftOffset += skippedLeft;
+
+      if (rect.width > 0) {
+         if (!showIndividualSamples) {
+            std::vector<double> vEnv2(rect.width);
+            double *const env2 = &vEnv2[0];
+            clip->GetEnvelope()->GetValues(env2, rect.width, leftOffset, zoomInfo);
+            DrawMinMaxRMS(dc, rect, env2,
+               zoomMin, zoomMax, dB,
+               useMin, useMax, useRms, useBl,
+               isLoadingOD, muted
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-                    , track->GetChannelGain(track->GetChannel())
+               , track->GetChannelGain(track->GetChannel())
 #endif
-                    );
-   }
-   else {
-      DrawIndividualSamples(dc, mid.x - rect.x, mid,
-                            zoomMin, zoomMax, dB,
-                            clip, zoomInfo, bigPoints, showPoints, muted);
+            );
+         }
+         else
+            DrawIndividualSamples(dc, leftOffset, rect, zoomMin, zoomMax, dB,
+            clip, zoomInfo,
+            bigPoints, showPoints, muted);
+      }
+
+      leftOffset += rect.width + skippedRight;
    }
 
    if (drawEnvelope) {
-      DrawEnvelope(dc, mid, envValues, zoomMin, zoomMax, dB);
+      DrawEnvelope(dc, mid, env, zoomMin, zoomMax, dB);
       clip->GetEnvelope()->DrawPoints(dc, rect, zoomInfo, dB, zoomMin, zoomMax);
    }
-
-   delete[] envValues;
 
    // Draw arrows on the left side if the track extends to the left of the
    // beginning of time.  :)
@@ -1880,19 +2035,26 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
    enum { DASH_LENGTH = 10 /* pixels */ };
 
    const ClipParameters params(true, track, clip, rect, selectedRegion, zoomInfo);
-   const wxRect &mid = params.mid;
-   // The "mid" rect contains the part of the display actually
-   // containing the waveform.  If it's empty, we're done.
-   if (mid.width <= 0) {
+   const wxRect &hiddenMid = params.hiddenMid;
+   // The "hiddenMid" rect contains the part of the display actually
+   // containing the waveform, as it appears without the fisheye.  If it's empty, we're done.
+   if (hiddenMid.width <= 0) {
       return;
    }
 
    const double &t0 = params.t0;
-   const double &pps = params.pps;
-   const double &tstep = params.tstep;
+   const double &tOffset = params.tOffset;
    const double &ssel0 = params.ssel0;
    const double &ssel1 = params.ssel1;
+   const double &averagePixelsPerSample = params.averagePixelsPerSample;
    const double &rate = params.rate;
+   const double &hiddenLeftOffset = params.hiddenLeftOffset;
+   const double &leftOffset = params.leftOffset;
+   const wxRect &mid = params.mid;
+
+   // If we get to this point, the clip is actually visible on the
+   // screen, so remember the display rectangle.
+   clip->SetDisplayRect(hiddenMid);
 
    double freqLo = SelectedRegion::UndefinedFrequency;
    double freqHi = SelectedRegion::UndefinedFrequency;
@@ -1923,19 +2085,23 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
    // and then paint this directly to our offscreen
    // bitmap.  Note that this could be optimized even
    // more, but for now this is not bad.  -dmazzoni
-   wxImage *image = new wxImage((int) mid.width, (int) mid.height);
-   if (!image)return;
+   wxImage *image = new wxImage((int)mid.width, (int)mid.height);
+   if (!image)
+      return;
    unsigned char *data = image->GetData();
 
    const int half = GetSpectrumWindowSize(!autocorrelation) / 2;
    const double binUnit = rate / (2 * half);
    const float *freq = 0;
    const sampleCount *where = 0;
+   bool updated;
+   {
+      const double pps = averagePixelsPerSample * rate;
+      updated = clip->GetSpectrogram(waveTrackCache, freq, where, hiddenMid.width,
+         t0, pps, autocorrelation);
+   }
 
-   bool updated = clip->GetSpectrogram(waveTrackCache, freq, where, mid.width,
-                              t0, pps, autocorrelation);
-
-   int ifreq = lrint(rate/2);
+   int ifreq = lrint(rate / 2);
 
    int maxFreq;
    if (!logF)
@@ -1990,7 +2156,8 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
    }
 #endif //EXPERIMENTAL_FFT_Y_GRID
 
-   if (!updated && clip->mSpecPxCache->valid && (clip->mSpecPxCache->len == mid.height * mid.width)
+   if (!updated && clip->mSpecPxCache->valid &&
+       (clip->mSpecPxCache->len == hiddenMid.height * hiddenMid.width)
       && gain == clip->mSpecPxCache->gain
       && range == clip->mSpecPxCache->range
       && minFreq == clip->mSpecPxCache->minFreq
@@ -2011,7 +2178,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
    else {
       // Update the spectrum pixel cache
       delete clip->mSpecPxCache;
-      clip->mSpecPxCache = new SpecPxCache(mid.width * mid.height);
+      clip->mSpecPxCache = new SpecPxCache(hiddenMid.width * hiddenMid.height);
       clip->mSpecPxCache->valid = true;
       clip->mSpecPxCache->gain = gain;
       clip->mSpecPxCache->range = range;
@@ -2044,15 +2211,15 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
       int *indexes = new int[maxTableSize];
 #endif //EXPERIMENTAL_FIND_NOTES
 
-      for (int xx = 0; xx < mid.width; ++xx)
+      for (int xx = 0; xx < hiddenMid.width; ++xx)
       {
          if (!logF) {
-            for (int yy = 0; yy < mid.height; ++yy) {
+            for (int yy = 0; yy < hiddenMid.height; ++yy) {
                float bin0 = float(yy) * binPerPx + minBin;
                float bin1 = float(yy + 1) * binPerPx + minBin;
                const float value = findValue
                   (freq + half * xx, bin0, bin1, half, autocorrelation, gain, range);
-               clip->mSpecPxCache->values[xx * mid.height + yy] = value;
+               clip->mSpecPxCache->values[xx * hiddenMid.height + yy] = value;
             }
          }
          else {
@@ -2099,7 +2266,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
                }
 
 // The f2pix helper macro converts a frequency into a pixel coordinate.
-#define f2pix(f) (logf(f)-lmins)/(lmaxs-lmins)*mid.height
+#define f2pix(f) (logf(f)-lmins)/(lmaxs-lmins)*hiddenMid.height
 
                // Possibly quantize the maxima frequencies and create the pixel block limits.
                for (int i=0; i < maximas; i++) {
@@ -2122,8 +2289,8 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
 
             double yy2_base = exp(lmin) / binUnit;
             float yy2 = yy2_base;
-            double exp_scale_per_height = exp(scale / mid.height);
-            for (int yy = 0; yy < mid.height; ++yy) {
+            double exp_scale_per_height = exp(scale / hiddenMid.height);
+            for (int yy = 0; yy < hiddenMid.height; ++yy) {
                if (int(yy2) >= half)
                   yy2=half-1;
                if (yy2<0)
@@ -2167,12 +2334,11 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
                   value = findValue
                      (freq + half * xx, bin0, bin1, half, autocorrelation, gain, range);
                }
-               clip->mSpecPxCache->values[xx * mid.height + yy] = value;
+               clip->mSpecPxCache->values[xx * hiddenMid.height + yy] = value;
                yy2 = yy2_base;
             } // each yy
          } // is logF
       } // each xx
-
 
    } // updating cache
 
@@ -2181,24 +2347,56 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
    float selBinCenter =
       ((freqLo < 0 || freqHi < 0) ? -1 : sqrt(freqLo * freqHi)) / binUnit;
 
-   sampleCount w1 = sampleCount(0.5 + rate *
-      t0
+   sampleCount w1(0.5 + rate *
+      (zoomInfo.PositionToTime(0, -leftOffset) - tOffset)
    );
 
-   for (int xx = 0; xx < mid.width; ++xx)
+   const bool hidden = (ZoomInfo::HIDDEN == zoomInfo.GetFisheyeState());
+   const int begin = hidden
+      ? 0
+      : std::max(0, int(zoomInfo.GetFisheyeLeftBoundary(-leftOffset)));
+   const int end = hidden
+      ? 0
+      : std::min(mid.width, int(zoomInfo.GetFisheyeRightBoundary(-leftOffset)));
+   const int numPixels = std::max(0, end - begin);
+   const int zeroPaddingFactor = autocorrelation ? 1 : settings.zeroPaddingFactor;
+   SpecCache specCache
+      (numPixels, autocorrelation, -1,
+       t0, settings.windowType,
+       settings.windowSize, zeroPaddingFactor, settings.frequencyGain);
+   if (numPixels > 0) {
+      for (int ii = begin; ii < end; ++ii) {
+         const double time = zoomInfo.PositionToTime(ii, -leftOffset) - tOffset;
+         specCache.where[ii - begin] = sampleCount(0.5 + rate * time);
+      }
+      specCache.Populate
+         (settings, waveTrackCache,
+          0, 0, numPixels,
+          clip->GetNumSamples(),
+          tOffset, rate,
+          autocorrelation);
+   }
+
+   int correctedX = leftOffset - hiddenLeftOffset;
+   int fisheyeColumn = 0;
+   for (int xx = 0; xx < mid.width; ++xx, ++correctedX)
    {
+      const bool inFisheye = zoomInfo.InFisheye(xx, -leftOffset);
+      float *const uncached =
+         inFisheye ? &specCache.freq[(fisheyeColumn++) * half] : 0;
+
       sampleCount w0 = w1;
       w1 = sampleCount(0.5 + rate *
-         (t0 + (xx+1) * tstep)
+         (zoomInfo.PositionToTime(xx + 1, -leftOffset) - tOffset)
       );
 
       // TODO: The logF and non-logF case are very similar.
       // They should be merged and simplified.
       if (!logF)
       {
-         for (int yy = 0; yy < mid.height; ++yy) {
-            float bin0 = float (yy) * binPerPx + minBin;
-            float bin1 = float (yy + 1) * binPerPx + minBin;
+         for (int yy = 0; yy < hiddenMid.height; ++yy) {
+            float bin0 = float(yy) * binPerPx + minBin;
+            float bin1 = float(yy + 1) * binPerPx + minBin;
 
             // For spectral selection, determine what colour
             // set to use.  We use a darker selection if
@@ -2210,13 +2408,15 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
             if (ssel0 <= w0 && w1 < ssel1)
             {
                bool isSpectral = ((track->GetDisplay() == WaveTrack::SpectralSelectionDisplay) ||
-                                  (track->GetDisplay() == WaveTrack::SpectralSelectionLogDisplay));
-               selected = ChooseColorSet( bin0, bin1, selBinLo, selBinCenter, selBinHi, xx/DASH_LENGTH, isSpectral );
+                  (track->GetDisplay() == WaveTrack::SpectralSelectionLogDisplay));
+               selected = ChooseColorSet(bin0, bin1, selBinLo, selBinCenter, selBinHi,
+                  (xx + leftOffset - hiddenLeftOffset) / DASH_LENGTH, isSpectral);
             }
 
             unsigned char rv, gv, bv;
-            const float value =
-               clip->mSpecPxCache->values[xx * mid.height + yy];
+            const float value = uncached
+               ? findValue(uncached, bin0, bin1, half, autocorrelation, gain, range)
+               : clip->mSpecPxCache->values[correctedX * hiddenMid.height + yy];
             GetColorGradient(value, selected, isGrayscale, &rv, &gv, &bv);
             int px = ((mid.height - 1 - yy) * mid.width + xx) * 3;
             data[px++] = rv;
@@ -2228,8 +2428,8 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
       {
          double yy2_base=exp(lmin)/binUnit;
          float yy2 = yy2_base;
-         double exp_scale_per_height = exp(scale/mid.height);
-         for (int yy = 0; yy < mid.height; ++yy) {
+         double exp_scale_per_height = exp(scale / hiddenMid.height);
+         for (int yy = 0; yy < hiddenMid.height; ++yy) {
             if (int(yy2)>=half)
                yy2=half-1;
             if (yy2<0)
@@ -2243,20 +2443,21 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
                yy3=0;
             float bin1 = float(yy3);
 
-            AColor::ColorGradientChoice selected =
-               AColor::ColorGradientUnselected;
+            AColor::ColorGradientChoice selected = AColor::ColorGradientUnselected;
             // If we are in the time selected range, then we may use a different color set.
             if (ssel0 <= w0 && w1 < ssel1)
             {
                bool isSpectral = ((track->GetDisplay() == WaveTrack::SpectralSelectionDisplay) ||
-                                  (track->GetDisplay() == WaveTrack::SpectralSelectionLogDisplay));
-               selected = ChooseColorSet( bin0, bin1, selBinLo, selBinCenter, selBinHi, xx/DASH_LENGTH, isSpectral );
+                  (track->GetDisplay() == WaveTrack::SpectralSelectionLogDisplay));
+               selected = ChooseColorSet(
+                  bin0, bin1, selBinLo, selBinCenter, selBinHi,
+                  (xx + leftOffset - hiddenLeftOffset) / DASH_LENGTH, isSpectral);
             }
 
-            const float value = clip->mSpecPxCache->values[xx * mid.height + yy];
-            yy2 = yy2_base;
-
             unsigned char rv, gv, bv;
+            const float value = uncached
+               ? findValue(uncached, bin0, bin1, half, autocorrelation, gain, range)
+               : clip->mSpecPxCache->values[correctedX * hiddenMid.height + yy];
             GetColorGradient(value, selected, isGrayscale, &rv, &gv, &bv);
 
 #ifdef EXPERIMENTAL_FFT_Y_GRID
@@ -2271,13 +2472,11 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
             data[px++] = rv;
             data[px++] = gv;
             data[px] = bv;
-         } // each yy
-      } // logF
-   } // each xx
 
-   // If we get to this point, the clip is actually visible on the
-   // screen, so remember the display rectangle.
-   clip->SetDisplayRect(mid);
+            yy2 = yy2_base;
+         }
+      }
+   }
 
    wxBitmap converted = wxBitmap(*image);
 

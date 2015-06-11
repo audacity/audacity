@@ -11,6 +11,7 @@
 #ifndef __AUDACITY_VIEWINFO__
 #define __AUDACITY_VIEWINFO__
 
+#include <vector>
 #include "SelectedRegion.h"
 
 
@@ -31,6 +32,8 @@ public:
    double h;                    // h pos in secs
 
    double screen;               // screen width in secs
+
+protected:
    double zoom;                 // pixels per second
 
 public:
@@ -41,6 +44,7 @@ public:
    // origin specifies the pixel corresponding to time h
    double PositionToTime(wxInt64 position,
       wxInt64 origin = 0
+      , bool ignoreFisheye = false
       ) const;
 
    // do NOT use this once to convert a duration to a pixel width!
@@ -49,6 +53,7 @@ public:
    // origin specifies the pixel corresponding to time h
    wxInt64 TimeToPosition(double time,
       wxInt64 origin = 0
+      , bool ignoreFisheye = false
       ) const;
 
    double OffsetTimeByPixels(double time, wxInt64 offset) const
@@ -78,6 +83,46 @@ public:
    // Limits zoom to certain bounds
    // multipliers above 1.0 zoom in, below out
    void ZoomBy(double multiplier);
+
+   struct Interval {
+      const wxInt64 position; const double averageZoom; const bool inFisheye;
+      Interval(wxInt64 p, double z, bool i)
+         : position(p), averageZoom(z), inFisheye(i) {}
+   };
+   typedef std::vector<Interval> Intervals;
+
+   // Find an increasing sequence of pixel positions.  Each is the start
+   // of an interval, or is the end position.
+   // Each of the disjoint intervals should be drawn
+   // separately.
+   // It is guaranteed that there is at least one entry and the position of the
+   // first entry equals origin.
+   // @param origin specifies the pixel position corresponding to time ViewInfo::h.
+   void FindIntervals
+      (double rate, Intervals &results, wxInt64 origin = 0) const;
+
+   enum FisheyeState {
+      HIDDEN,
+      PINNED,
+
+      NUM_STATES,
+   };
+   FisheyeState GetFisheyeState() const
+   { return HIDDEN; } // stub
+
+   // Return true if the mouse position is anywhere in the fisheye
+   // origin specifies the pixel corresponding to time h
+   bool InFisheye(wxInt64 position, wxInt64 origin = 0) const
+   {origin; return false;} // stub
+
+   // These accessors ignore the fisheye hiding state.
+   // Inclusive:
+   wxInt64 GetFisheyeLeftBoundary(wxInt64 origin = 0) const
+   {origin; return 0;} // stub
+   // Exclusive:
+   wxInt64 GetFisheyeRightBoundary(wxInt64 origin = 0) const
+   {origin; return 0;} // stub
+
 };
 
 class AUDACITY_DLL_API ViewInfo
