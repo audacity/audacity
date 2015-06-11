@@ -325,7 +325,7 @@ public:
    }
 
    bool Matches(int dirty_, bool autocorrelation, double pixelsPerSecond,
-      const SpectrogramSettings &settings) const;
+      const SpectrogramSettings &settings, double rate) const;
 
    void CalculateOneSpectrum
       (const SpectrogramSettings &settings,
@@ -602,11 +602,20 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
 
    ODLocker locker(mWaveCacheMutex);
 
+   const double tstep = 1.0 / pixelsPerSecond;
+   const double samplesPerPixel = mRate * tstep;
+
+   // Make a tolerant comparison of the pps values in this wise:
+   // accumulated difference of times over the number of pixels is less than
+   // a sample period.
+   const bool ppsMatch = mWaveCache &&
+      (fabs(tstep - 1.0 / mWaveCache->pps) * numPixels < (1.0 / mRate));
+
    const bool match =
       mWaveCache &&
+      ppsMatch &&
       mWaveCache->len > 0 &&
-      mWaveCache->dirty == mDirty &&
-      mWaveCache->pps == pixelsPerSecond;
+      mWaveCache->dirty == mDirty;
 
    if (match &&
        mWaveCache->start == t0 &&
@@ -626,9 +635,6 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
 
    std::auto_ptr<WaveCache> oldCache(mWaveCache);
    mWaveCache = 0;
-
-   const double tstep = 1.0 / pixelsPerSecond;
-   const double samplesPerPixel = mRate * tstep;
 
    int oldX0 = 0;
    double correction = 0.0;
@@ -811,9 +817,17 @@ void ComputeSpectrogramGainFactors
 
 bool SpecCache::Matches
    (int dirty_, bool autocorrelation, double pixelsPerSecond,
-    const SpectrogramSettings &settings) const
+    const SpectrogramSettings &settings, double rate) const
 {
+   // Make a tolerant comparison of the pps values in this wise:
+   // accumulated difference of times over the number of pixels is less than
+   // a sample period.
+   const double tstep = 1.0 / pixelsPerSecond;
+   const bool ppsMatch =
+      (fabs(tstep - 1.0 / pps) * len < (1.0 / rate));
+
    return
+      ppsMatch &&
       dirty == dirty_ &&
       windowType == settings.windowType &&
       windowSize == settings.windowSize &&
@@ -822,8 +836,7 @@ bool SpecCache::Matches
 #ifdef EXPERIMENTAL_FFT_SKIP_POINTS
       fftSkipPoints == settings.fftSkipPoints &&
 #endif //EXPERIMENTAL_FFT_SKIP_POINTS
-      ac == autocorrelation &&
-      pps == pixelsPerSecond;
+      ac == autocorrelation;
 }
 
 void SpecCache::CalculateOneSpectrum
@@ -1017,7 +1030,8 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
    const bool match =
       mSpecCache &&
       mSpecCache->len > 0 &&
-      mSpecCache->Matches(mDirty, autocorrelation, pixelsPerSecond, settings);
+      mSpecCache->Matches
+      (mDirty, autocorrelation, pixelsPerSecond, settings, mRate);
 
    if (match &&
        mSpecCache->start == t0 &&
