@@ -37,7 +37,8 @@ ZoomInfo::~ZoomInfo()
 /// the track as an additional parameter.
 double ZoomInfo::PositionToTime(wxInt64 position,
    wxInt64 origin
-   ) const
+   , bool // ignoreFisheye
+) const
 {
    return h + (position - origin) / zoom;
 }
@@ -46,7 +47,8 @@ double ZoomInfo::PositionToTime(wxInt64 position,
 /// STM: Converts a project time to screen x position.
 wxInt64 ZoomInfo::TimeToPosition(double projectTime,
    wxInt64 origin
-   ) const
+   , bool // ignoreFisheye
+) const
 {
    return floor(0.5 +
       zoom * (projectTime - h) + origin
@@ -71,6 +73,23 @@ void ZoomInfo::SetZoom(double pixelsPerSecond)
 void ZoomInfo::ZoomBy(double multiplier)
 {
    SetZoom(zoom * multiplier);
+}
+
+void ZoomInfo::FindIntervals
+   (double /*rate*/, Intervals &results, wxInt64 origin) const
+{
+   results.clear();
+   results.reserve(2);
+
+   const wxInt64 rightmost(origin + (0.5 + screen * zoom));
+   wxASSERT(origin <= rightmost);
+   {
+      results.push_back(Interval(origin, zoom, false));
+   }
+
+   if (origin < rightmost)
+      results.push_back(Interval(rightmost, 0, false));
+   wxASSERT(!results.empty() && results[0].position == origin);
 }
 
 ViewInfo::ViewInfo(double start, double screenDuration, double pixelsPerSecond)
