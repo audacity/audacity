@@ -79,7 +79,7 @@ array of Ruler::Label.
 #include "../Prefs.h"
 #include "../Snap.h"
 
-#define max(a,b)  ( (a<b)?b:a )
+using std::max;
 
 #define SELECT_TOLERANCE_PIXEL 4
 #define QUICK_PLAY_SNAP_PIXEL 4     // pixel tolerance for snap guides
@@ -1080,53 +1080,32 @@ void Ruler::Update(TimeTrack* timetrack)// Envelope *speedEnv, long minSpeed, lo
 
       double sg = UPP > 0.0? 1.0: -1.0;
 
-      // Major ticks
-      double d, warpedD;
-      d = mMin - UPP/2;
-      if(timetrack)
-         warpedD = timetrack->ComputeWarpedLength(0.0, d);
-      else
-         warpedD = d;
-      // using ints for majorint doesn't work, as
-      // majorint will overflow and be negative at high zoom.
-      double majorInt = floor(sg * warpedD / mMajor);
-      i = -1;
-      while(i <= mLength) {
-         i++;
-         if(timetrack)
-            warpedD += timetrack->ComputeWarpedLength(d, d + UPP);
+      // Major and minor ticks
+      for (int jj = 0; jj < 2; ++jj) {
+         const double denom = jj == 0 ? mMajor : mMinor;
+         double d, warpedD;
+         d = mMin - UPP / 2;
+         if (timetrack)
+            warpedD = timetrack->ComputeWarpedLength(0.0, d);
          else
-            warpedD += UPP;
-         d += UPP;
+            warpedD = d;
+         // using ints doesn't work, as
+         // this will overflow and be negative at high zoom.
+         double step = floor(sg * warpedD / denom);
+         i = -1;
+         while (i <= mLength) {
+            i++;
+            if (timetrack)
+               warpedD += timetrack->ComputeWarpedLength(d, d + UPP);
+            else
+               warpedD += UPP;
+            d += UPP;
 
-         if (floor(sg * warpedD / mMajor) > majorInt) {
-            majorInt = floor(sg * warpedD / mMajor);
-            Tick(i, sg * majorInt * mMajor, true, false);
-         }
-      }
-
-      // Minor ticks
-      d = mMin - UPP/2;
-      if(timetrack)
-         warpedD = timetrack->ComputeWarpedLength(0.0, d);
-      else
-         warpedD = d;
-      // using ints for majorint doesn't work, as
-      // majorint will overflow and be negative at high zoom.
-      // MB: I assume the same applies to minorInt
-      double minorInt = floor(sg * warpedD / mMinor);
-      i = -1;
-      while(i <= mLength) {
-         i++;
-         if(timetrack)
-            warpedD += timetrack->ComputeWarpedLength(d, d + UPP);
-         else
-            warpedD += UPP;
-         d += UPP;
-
-         if (floor(sg * warpedD / mMinor) > minorInt) {
-            minorInt = floor(sg * warpedD / mMinor);
-            Tick(i, sg * minorInt * mMinor, false, true);
+            if (floor(sg * warpedD / denom) > step) {
+               step = floor(sg * warpedD / denom);
+               bool major = jj == 0;
+               Tick(i, sg * step * denom, major, !major);
+            }
          }
       }
 
