@@ -476,14 +476,13 @@ END_EVENT_TABLE()
 PluginRegistrationDialog::PluginRegistrationDialog(wxWindow *parent, EffectType type)
 :  wxDialog(parent,
             wxID_ANY,
-            _("Plug-in Manager: Effects"),
+            _("Plug-in Manager: Effects, Generators and Analyzers"),
             wxDefaultPosition, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {
    mType = type;
    mEffects = NULL;
-   SetLabel(_("Plug-in Manager: Effects"));         // Provide visual label
-   SetName(_("Plug-in Manager: Effects"));          // Provide audible label
+   SetName(GetTitle());
 
    mStates.SetCount(STATE_COUNT);
    mStates[STATE_Enabled] = _("Enabled");
@@ -1346,14 +1345,17 @@ void PluginDescriptor::SetImporterExtensions(const wxArrayString & extensions)
 //
 // ============================================================================
 
-bool PluginManager::IsPluginRegistered(const PluginID & ID)
+bool PluginManager::IsPluginRegistered(const wxString & path)
 {
-   if (mPlugins.find(ID) == mPlugins.end())
+   for (PluginMap::iterator iter = mPlugins.begin(); iter != mPlugins.end(); ++iter)
    {
-      return false;
+      if (iter->second.GetPath().IsSameAs(path))
+      {
+         return true;
+      }
    }
 
-   return true;
+   return false;
 }
 
 const PluginID & PluginManager::RegisterPlugin(ModuleInterface *module)

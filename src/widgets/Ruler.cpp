@@ -1637,8 +1637,8 @@ AdornedRulerPanel::AdornedRulerPanel(wxWindow* parent,
                                      ViewInfo *viewinfo):
    wxPanel( parent, id, pos, size )
 {
-   SetLabel( _("Vertical Ruler") );
-   SetName( _("Vertical Ruler") );
+   SetLabel( _("Timeline") );
+   SetName(GetLabel());
 
    mLeftOffset = 0;
    mCurPos = -1;
@@ -1677,9 +1677,9 @@ AdornedRulerPanel::AdornedRulerPanel(wxWindow* parent,
 
    mIsRecording = false;
 
-   mTimelineToolTip = gPrefs->Read(wxT("/QuickPlay/ToolTips"), 1L); 
+   mTimelineToolTip = !!gPrefs->Read(wxT("/QuickPlay/ToolTips"), 1L);
    mPlayRegionDragsSelection = (gPrefs->Read(wxT("/QuickPlay/DragSelection"), 0L) == 1)? true : false; 
-   mQuickPlayEnabled = gPrefs->Read(wxT("/QuickPlay/QuickPlayEnabled"), 1L); 
+   mQuickPlayEnabled = !!gPrefs->Read(wxT("/QuickPlay/QuickPlayEnabled"), 1L);
 
    UpdatePrefs();
 
@@ -2188,7 +2188,7 @@ void AdornedRulerPanel::ShowMenu(const wxPoint & pos)
    DrawQuickPlayIndicator(&cdc, true);
 }
 
-void AdornedRulerPanel::OnToggleQuickPlay(wxCommandEvent& evt)
+void AdornedRulerPanel::OnToggleQuickPlay(wxCommandEvent&)
 {
    mQuickPlayEnabled = (mQuickPlayEnabled)? false : true;
    gPrefs->Write(wxT("/QuickPlay/QuickPlayEnabled"), mQuickPlayEnabled);
@@ -2196,7 +2196,7 @@ void AdornedRulerPanel::OnToggleQuickPlay(wxCommandEvent& evt)
    RegenerateTooltips();
 }
 
-void AdornedRulerPanel::OnSyncSelToQuickPlay(wxCommandEvent& evt)
+void AdornedRulerPanel::OnSyncSelToQuickPlay(wxCommandEvent&)
 {
    mPlayRegionDragsSelection = (mPlayRegionDragsSelection)? false : true;
    gPrefs->Write(wxT("/QuickPlay/DragSelection"), mPlayRegionDragsSelection);
@@ -2233,7 +2233,7 @@ void AdornedRulerPanel::HandleSnapping()
 }
 
 
-void AdornedRulerPanel::OnTimelineToolTips(wxCommandEvent& evt)
+void AdornedRulerPanel::OnTimelineToolTips(wxCommandEvent&)
 {
    mTimelineToolTip = (mTimelineToolTip)? false : true;
    gPrefs->Write(wxT("/QuickPlay/ToolTips"), mTimelineToolTip);
@@ -2244,7 +2244,7 @@ void AdornedRulerPanel::OnTimelineToolTips(wxCommandEvent& evt)
 }
 
 
-void AdornedRulerPanel::OnAutoScroll(wxCommandEvent& evt)
+void AdornedRulerPanel::OnAutoScroll(wxCommandEvent&)
 {
    if (mViewInfo->bUpdateTrackIndicator)
       gPrefs->Write(wxT("/GUI/AutoScroll"), false);
@@ -2255,7 +2255,7 @@ void AdornedRulerPanel::OnAutoScroll(wxCommandEvent& evt)
 }
 
 
-void AdornedRulerPanel::OnLockPlayRegion(wxCommandEvent& evt)
+void AdornedRulerPanel::OnLockPlayRegion(wxCommandEvent&)
 {
    if (mProject->IsPlayRegionLocked())
       mProject->OnUnlockPlayRegion();

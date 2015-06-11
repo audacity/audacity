@@ -32,7 +32,7 @@ CommandHandler::~CommandHandler()
    delete mCurrentContext;
 }
 
-void CommandHandler::SetProject(AudacityProject *proj)
+void CommandHandler::SetProject(AudacityProject *)
 {
    // TODO:  Review if the extend command handling is ever utilized
    // mCurrentContext->proj = proj;

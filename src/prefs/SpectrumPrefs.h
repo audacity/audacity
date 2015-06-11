@@ -74,8 +74,9 @@ class SpectrumPrefs:public PrefsPanel
 };
 
 
-struct SpectrogramSettings
+class SpectrogramSettings
 {
+public:
    static SpectrogramSettings &defaults();
    SpectrogramSettings();
    ~SpectrogramSettings();
