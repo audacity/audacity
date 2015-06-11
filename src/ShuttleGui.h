@@ -325,7 +325,7 @@ class GuiWaveTrack;
 class AdornedRulerPanel;
 class RulerPanel;
 class AttachableScrollBar;
-struct ViewInfo;
+class ViewInfo;
 #include <wx/scrolbar.h>  // to get wxSB_HORIZONTAL
 
 // CreateStdButtonSizer defs...should probably move to widgets subdir

@@ -152,9 +152,11 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    sampleFormat GetDefaultFormat() { return mDefaultFormat; }
 
    double GetRate() { return mRate; }
-   double GetZoom() { return mViewInfo.zoom; }
+   bool ZoomInAvailable() const { return mViewInfo.ZoomInAvailable(); }
+   bool ZoomOutAvailable() const { return mViewInfo.ZoomOutAvailable(); }
    double GetSel0() { return mViewInfo.selectedRegion.t0(); }
    double GetSel1() { return mViewInfo.selectedRegion.t1(); }
+   const ZoomInfo &GetZoomInfo() const { return mViewInfo; }
 
    Track *GetFirstVisible();
    void UpdateFirstVisible();
@@ -308,6 +310,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    void SelectNone();
    void SelectAllIfNone();
    void Zoom(double level);
+   void ZoomBy(double multiplier);
    void Rewind(bool shift);
    void SkipEnd(bool shift);
    void EditByLabel( WaveTrack::EditFunction action, bool bSyncLockedTracks );
@@ -354,6 +357,8 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    void SafeDisplayStatusMessage(const wxChar *msg);
 
    double ScrollingLowerBoundTime() const;
+   // How many pixels are covered by the period from lowermost scrollable time, to the given time:
+   wxInt64 PixelWidthBeforeTime(double scrollto) const;
    void SetHorizontalThumb(double scrollto);
 
    // TrackPanel access

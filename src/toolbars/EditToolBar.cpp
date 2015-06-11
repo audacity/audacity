@@ -32,6 +32,7 @@
 
 
 #include "../Audacity.h"
+#include "EditToolBar.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
@@ -43,8 +44,6 @@
 #include <wx/sizer.h>
 #include <wx/tooltip.h>
 #endif
-
-#include "EditToolBar.h"
 
 #include "../AllThemeResources.h"
 #include "../AudioIO.h"
@@ -308,8 +307,8 @@ void EditToolBar::EnableDisableButtons()
 
    bool tracks = (!p->GetTracks()->IsEmpty());
 
-   mButtons[ETBZoomInID]->SetEnabled(tracks && (p->GetZoom() < gMaxZoom));
-   mButtons[ETBZoomOutID]->SetEnabled(tracks && (p->GetZoom() > gMinZoom) );
+   mButtons[ETBZoomInID]->SetEnabled(tracks && (p->ZoomInAvailable()));
+   mButtons[ETBZoomOutID]->SetEnabled(tracks && (p->ZoomOutAvailable()) );
 
    #if 0 // Disabled for version 1.2.0 since it doesn't work quite right...
    mButtons[ETBZoomToggleID]->SetEnabled(tracks);

@@ -780,6 +780,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
      mTimerRecordCanceled(false),
      mMenuClose(false)
      , mbInitializingScrollbar(false)
+     , mViewInfo(0.0, 1.0, ZoomInfo::GetDefaultZoom())
 {
    // Note that the first field of the status bar is a dummy, and it's width is set
    // to zero latter in the code. This field is needed for wxWidgets 2.8.12 because
@@ -809,26 +810,6 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    //
    // Initialize view info (shared with TrackPanel)
    //
-
-   // Selection
-   mViewInfo.selectedRegion = SelectedRegion();
-
-   // Horizontal scrollbar
-   mViewInfo.total = 1.0;
-   mViewInfo.screen = 1.0;
-   mViewInfo.h = 0.0;
-   mViewInfo.zoom = 44100.0 / 512.0;
-
-   // Vertical scrollbar
-   mViewInfo.track = NULL;
-   mViewInfo.vpos = 0;
-
-   mViewInfo.scrollStep = 16;
-
-   mViewInfo.sbarH = 0;
-   mViewInfo.sbarScreen = 1;
-   mViewInfo.sbarTotal = 1;
-   mViewInfo.sbarScale = 1.0;
 
    UpdatePrefs();
 
@@ -1470,19 +1451,20 @@ double AudacityProject::ScrollingLowerBoundTime() const
       : 0;
 }
 
+wxInt64 AudacityProject::PixelWidthBeforeTime(double scrollto) const
+{
+   const double lowerBound = ScrollingLowerBoundTime();
+   return
+      mViewInfo.TimeToPosition(scrollto, 0
+      ) -
+      mViewInfo.TimeToPosition(lowerBound, 0
+      );
+}
+
 void AudacityProject::SetHorizontalThumb(double scrollto)
 {
-   const double timeOffset = -ScrollingLowerBoundTime();
-   int pos = (int) (
-      (scrollto + timeOffset) * mViewInfo.zoom * mViewInfo.sbarScale
-   );
-   int max = mHsbar->GetRange() - mHsbar->GetThumbSize();
-
-   if (pos > max)
-      pos = max;
-   else if (pos < 0)
-      pos = 0;
-
+   wxInt64 max = mHsbar->GetRange() - mHsbar->GetThumbSize();
+   int pos = std::min(max, std::max(wxInt64(0), PixelWidthBeforeTime(scrollto)));
    mHsbar->SetThumbPosition(pos);
 }
 
@@ -1546,7 +1528,7 @@ void AudacityProject::FixScrollbars()
    double LastTime =
       std::max(mTracks->GetEndTime(), mViewInfo.selectedRegion.t1());
 
-   mViewInfo.screen = ((double) panelWidth) / mViewInfo.zoom;
+   mViewInfo.SetScreenWidth(panelWidth);
    const double halfScreen = mViewInfo.screen / 2.0;
 
    // If we can scroll beyond zero,
@@ -1570,9 +1552,9 @@ void AudacityProject::FixScrollbars()
       rescroll = true;
    }
 
-   mViewInfo.sbarTotal = (wxInt64) (mViewInfo.total * mViewInfo.zoom);
-   mViewInfo.sbarScreen = (wxInt64) (mViewInfo.screen * mViewInfo.zoom);
-   mViewInfo.sbarH = (wxInt64) (mViewInfo.h * mViewInfo.zoom);
+   mViewInfo.sbarTotal = (wxInt64) (mViewInfo.GetTotalWidth());
+   mViewInfo.sbarScreen = (wxInt64) (mViewInfo.GetScreenWidth());
+   mViewInfo.sbarH = (wxInt64) (mViewInfo.GetBeforeScreenWidth());
 
    int lastv = mViewInfo.vpos;
    // PRL:  Can someone else find a more elegant solution to bug 812, than
@@ -1593,7 +1575,7 @@ void AudacityProject::FixScrollbars()
 
    bool oldhstate;
    bool oldvstate;
-   bool newhstate = mViewInfo.screen < mViewInfo.total;
+   bool newhstate = !mViewInfo.ZoomedAll();
    bool newvstate = panelHeight < totalHeight;
 
 #ifdef __WXGTK__
@@ -1604,7 +1586,7 @@ void AudacityProject::FixScrollbars()
 #else
    oldhstate = mHsbar->IsEnabled();
    oldvstate = mVsbar->IsEnabled();
-   mHsbar->Enable(mViewInfo.screen < mViewInfo.total);
+   mHsbar->Enable(!mViewInfo.ZoomedAll());
    mVsbar->Enable(panelHeight < totalHeight);
 #endif
 
@@ -1614,7 +1596,7 @@ void AudacityProject::FixScrollbars()
       refresh = true;
       rescroll = false;
    }
-   if (mViewInfo.screen >= mViewInfo.total && mViewInfo.sbarH != 0) {
+   if (mViewInfo.ZoomedAll() && mViewInfo.sbarH != 0) {
       mViewInfo.sbarH = 0;
 
       refresh = true;
@@ -1642,8 +1624,7 @@ void AudacityProject::FixScrollbars()
       int scaledSbarH = (int)(mViewInfo.sbarH * mViewInfo.sbarScale);
       int scaledSbarScreen = (int)(mViewInfo.sbarScreen * mViewInfo.sbarScale);
       int scaledSbarTotal = (int)(mViewInfo.sbarTotal * mViewInfo.sbarScale);
-      int offset;
-      offset = -lowerBound * mViewInfo.zoom * mViewInfo.sbarScale;
+      const int offset = mViewInfo.sbarScale * PixelWidthBeforeTime(0.0);
 
       mHsbar->SetScrollbar(scaledSbarH + offset, scaledSbarScreen, scaledSbarTotal,
          scaledSbarScreen, TRUE);
@@ -1657,7 +1638,7 @@ void AudacityProject::FixScrollbars()
                         panelHeight / mViewInfo.scrollStep, TRUE);
    mVsbar->Refresh();
 
-   if (refresh || (rescroll && mViewInfo.screen < mViewInfo.total)) {
+   if (refresh || (rescroll && !mViewInfo.ZoomedAll())) {
       mTrackPanel->Refresh(false);
    }
 
@@ -1835,25 +1816,18 @@ void AudacityProject::OnScroll(wxScrollEvent & WXUNUSED(event))
    const wxInt64 hlast = mViewInfo.sbarH;
 
    const double lowerBound = ScrollingLowerBoundTime();
-   const wxInt64 offset = 0.5 + -lowerBound * mViewInfo.zoom;
+   const wxInt64 offset = PixelWidthBeforeTime(0.0);
 
    mViewInfo.sbarH =
       (wxInt64)(mHsbar->GetThumbPosition() / mViewInfo.sbarScale) - offset;
 
-   if (mViewInfo.sbarH != hlast) {
-      mViewInfo.h = mViewInfo.sbarH / mViewInfo.zoom;
-
-      if (mViewInfo.h > mViewInfo.total - mViewInfo.screen)
-         mViewInfo.h = mViewInfo.total - mViewInfo.screen;
-
-      if (mViewInfo.h < lowerBound)
-         mViewInfo.h = lowerBound;
-   }
-
+   if (mViewInfo.sbarH != hlast)
+      mViewInfo.SetBeforeScreenWidth(mViewInfo.sbarH, lowerBound);
 
    if (mScrollBeyondZero) {
       enum { SCROLL_PIXEL_TOLERANCE = 10 };
-      if (fabs(mViewInfo.h * mViewInfo.zoom) < SCROLL_PIXEL_TOLERANCE) {
+      if (abs(mViewInfo.TimeToPosition(0.0, 0
+                                   )) < SCROLL_PIXEL_TOLERANCE) {
          // Snap the scrollbar to 0
          mViewInfo.h = 0;
          SetHorizontalThumb(0.0);
@@ -2902,6 +2876,12 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       if (!value || !XMLValueChecker::IsGoodString(value))
          break;
 
+      if (mViewInfo.ReadXMLAttribute(attr, value)) {
+         // We need to save vpos now and restore it below
+         longVpos = std::max(longVpos, long(mViewInfo.vpos));
+         continue;
+      }
+
       if (!wxStrcmp(attr, wxT("datadir")))
       {
          //
@@ -2994,20 +2974,6 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 
          requiredTags++;
       }
-
-      else if (mViewInfo.selectedRegion
-         .HandleXMLAttribute(attr, value, wxT("sel0"), wxT("sel1"))) {
-      }
-
-      else if (!wxStrcmp(attr, wxT("vpos")))
-         // Just assign a variable, put the value in its place later 
-         wxString(value).ToLong(&longVpos);
-
-      else if (!wxStrcmp(attr, wxT("h")))
-         Internat::CompatibleToDouble(value, &mViewInfo.h);
-
-      else if (!wxStrcmp(attr, wxT("zoom")))
-         Internat::CompatibleToDouble(value, &mViewInfo.zoom);
 
       else if (!wxStrcmp(attr, wxT("rate"))) {
          Internat::CompatibleToDouble(value, &mRate);
@@ -3202,12 +3168,8 @@ void AudacityProject::WriteXML(XMLWriter &xmlFile)
    xmlFile.WriteAttr(wxT("projname"), projName);
    xmlFile.WriteAttr(wxT("version"), wxT(AUDACITY_FILE_FORMAT_VERSION));
    xmlFile.WriteAttr(wxT("audacityversion"), AUDACITY_VERSION_STRING);
-   mViewInfo.selectedRegion
-      .WriteXMLAttributes(xmlFile, wxT("sel0"), wxT("sel1"));
-   // PRL: to do: persistence of other fields of the selection
-   xmlFile.WriteAttr(wxT("vpos"), mViewInfo.vpos);
-   xmlFile.WriteAttr(wxT("h"), mViewInfo.h, 10);
-   xmlFile.WriteAttr(wxT("zoom"), mViewInfo.zoom, 10);
+
+   mViewInfo.WriteXMLAttributes(xmlFile);
    xmlFile.WriteAttr(wxT("rate"), mRate);
    xmlFile.WriteAttr(wxT("snapto"), GetSnapTo() ? wxT("on") : wxT("off"));
    xmlFile.WriteAttr(wxT("selectionformat"), GetSelectionFormat());
@@ -4148,12 +4110,14 @@ void AudacityProject::SelectNone()
 // Utility function called by other zoom methods
 void AudacityProject::Zoom(double level)
 {
-   if (level > gMaxZoom)
-      level = gMaxZoom;
-   if (level <= gMinZoom)
-      level = gMinZoom;
+   mViewInfo.SetZoom(level);
+   FixScrollbars();
+}
 
-   mViewInfo.zoom = level;
+// Utility function called by other zoom methods
+void AudacityProject::ZoomBy(double multiplier)
+{
+   mViewInfo.ZoomBy(multiplier);
    FixScrollbars();
 }
 

@@ -15,6 +15,7 @@
 
 
 #include "Audacity.h"
+#include "Printing.h"
 
 #include <wx/defs.h>
 #include <wx/dc.h>
@@ -29,7 +30,6 @@
 #include "ViewInfo.h"
 #include "WaveTrack.h"
 #include "widgets/Ruler.h"
-#include "Printing.h"
 
 // Globals, so that we remember settings from session to session
 static wxPrintData *gPrintData = NULL;
@@ -80,13 +80,8 @@ bool AudacityPrintout::OnPrintPage(int WXUNUSED(page))
    TrackArtist artist;
    artist.SetBackgroundBrushes(*wxWHITE_BRUSH, *wxWHITE_BRUSH,
                                *wxWHITE_PEN, *wxWHITE_PEN);
-   ViewInfo viewInfo;
-   viewInfo.selectedRegion = SelectedRegion();
-   viewInfo.vpos = 0;
-   viewInfo.h = 0.0;
-   viewInfo.screen = mTracks->GetEndTime() - viewInfo.h;
-   viewInfo.total = viewInfo.screen;
-   viewInfo.zoom = width / viewInfo.screen;
+   const double screenDuration = mTracks->GetEndTime();
+   ZoomInfo zoomInfo(0.0, screenDuration, width / screenDuration);
    int y = rulerPageHeight;
 
    TrackListIterator iter(mTracks);
@@ -98,7 +93,7 @@ bool AudacityPrintout::OnPrintPage(int WXUNUSED(page))
       r.width = width;
       r.height = (int)(n->GetHeight() * scale);
 
-      artist.DrawTrack(n, *dc, r, &viewInfo, false, false, false, false);
+      artist.DrawTrack(n, *dc, r, SelectedRegion(), zoomInfo, false, false, false, false);
 
       dc->SetPen(*wxBLACK_PEN);
       AColor::Line(*dc, 0, r.y, width, r.y);
