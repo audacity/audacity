@@ -208,11 +208,12 @@ bool LadspaEffectsModule::RegisterPlugin(PluginManagerInterface & pm, const wxSt
    // As a courtesy to some plug-ins that might be bridges to
    // open other plug-ins, we set the current working
    // directory to be the plug-in's directory.
-
-   wxString saveOldCWD = ::wxGetCwd();
-   wxString prefix = ::wxPathOnly(path);
-   ::wxSetWorkingDirectory(prefix);
-
+   wxString envpath;
+   bool hadpath = wxGetEnv(wxT("PATH"), &envpath);
+   wxSetEnv(wxT("PATH"), f.GetPath() + wxFILE_SEP_PATH + envpath);
+   wxString saveOldCWD = f.GetCwd();
+   f.SetCwd();
+   
    int index = 0;
    LADSPA_Descriptor_Function mainFn = NULL;
    wxDynamicLibrary lib;
@@ -236,7 +237,8 @@ bool LadspaEffectsModule::RegisterPlugin(PluginManagerInterface & pm, const wxSt
       lib.Unload();
    }
 
-   ::wxSetWorkingDirectory(saveOldCWD);
+   wxSetWorkingDirectory(saveOldCWD);
+   hadpath ? wxSetEnv(wxT("PATH"), envpath) : wxUnsetEnv(wxT("PATH"));
 
    return index > 0;
 }
@@ -1507,6 +1509,13 @@ bool LadspaEffect::Load()
       return true;
    }
 
+   wxFileName f = mPath;
+   wxString envpath;
+   bool hadpath = wxGetEnv(wxT("PATH"), &envpath);
+   wxSetEnv(wxT("PATH"), f.GetPath() + wxFILE_SEP_PATH + envpath);
+   wxString saveOldCWD = f.GetCwd();
+   f.SetCwd();
+
    LADSPA_Descriptor_Function mainFn = NULL;
 
    if (mLib.Load(mPath, wxDL_NOW))
@@ -1525,6 +1534,9 @@ bool LadspaEffect::Load()
    {
       mLib.Unload();
    }
+
+   wxSetWorkingDirectory(saveOldCWD);
+   hadpath ? wxSetEnv(wxT("PATH"), envpath) : wxUnsetEnv(wxT("PATH"));
 
    return false;
 }
