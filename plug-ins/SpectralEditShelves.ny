@@ -64,8 +64,8 @@
                               'Spectrogram' or 'Spectrogram (log f)' track view.~%~%"))
       (catch 'error-message
         (multichan-expand #'result *track*)))
-  ((string-not-equal (get '*TRACK* 'VIEW) "spectrogram"  :end1 4 :end2 4)
-      "Use this effect in the 'Spectrogram'\nor 'Spectrogram (log f)' view.")
+  ((string-not-equal (get '*TRACK* 'VIEW) "spectral"  :end1 8 :end2 8)
+      "Use this effect in the 'Spectral Selection'\nor 'Spectral Selection log(f)' view.")
   (T  (setf p-err "")
       (if (= control-gain 0)  ; Allow dry preview
           "Gain is zero. Nothing to do."

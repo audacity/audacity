@@ -45,7 +45,7 @@
       (T  (sum (prod env (wet sig f0 f1 fc))
                (prod (diff 1.0 env) sig))))))
 
-(if (string-not-equal (get '*TRACK* 'VIEW) "spectrogram"  :end1 4 :end2 4)
-    "Use this effect in the 'Spectrogram'\nor 'Spectrogram (log f)' view."
+(if (string-not-equal (get '*TRACK* 'VIEW) "spectral"  :end1 8 :end2 8)
+    "Use this effect in the 'Spectral Selection'\nor 'Spectral Selection log(f)' view."
     (catch 'error-message
       (multichan-expand #'result *track*)))
