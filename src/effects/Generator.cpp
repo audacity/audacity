@@ -14,6 +14,7 @@
 
 **********************************************************************/
 
+#include "../Project.h"
 #include "../Prefs.h"
 
 #include "Generator.h"
@@ -60,6 +61,7 @@ bool Generator::Process()
 
          if (GetDuration() > 0.0)
          {
+            AudacityProject *p = GetActiveProject();
             // Create a temporary track
             std::auto_ptr<WaveTrack> tmp(
                mFactory->NewWaveTrack(track->GetSampleFormat(),
@@ -75,7 +77,7 @@ bool Generator::Process()
                // Transfer the data from the temporary track to the actual one
                tmp->Flush();
                SetTimeWarper(new StepTimeWarper(mT0+GetDuration(), GetDuration()-(mT1-mT0)));
-               bGoodResult = track->ClearAndPaste(mT0, mT1, &*tmp, true,
+               bGoodResult = track->ClearAndPaste(p->GetSel0(), p->GetSel1(), &*tmp, true,
                      false, GetTimeWarper());
             }
 
