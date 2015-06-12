@@ -1956,8 +1956,8 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
    if (!image)return;
    unsigned char *data = image->GetData();
 
-   int windowSize = GetSpectrumWindowSize(!autocorrelation);
-   const int half = windowSize / 2;
+   const int half = GetSpectrumWindowSize(!autocorrelation) / 2;
+   const double binUnit = rate / (2 * half);
    const float *freq = 0;
    const sampleCount *where = 0;
 
@@ -1992,14 +1992,12 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
          minFreq = 1.0;
    }
 
-   // PRL:  Must the following two be integers?
-   int minSamples = int((double)minFreq * (double)windowSize / rate + 0.5);   // units are fft bins
-   int maxSamples = int((double)maxFreq * (double)windowSize / rate + 0.5);
-   float binPerPx = float(maxSamples - minSamples) / float(mid.height);
+   float minBin = ((double)minFreq / binUnit);
+   float maxBin = ((double)maxFreq / binUnit);
+   float binPerPx = float(maxBin - minBin) / float(mid.height);
 
    const float
       //      e=exp(1.0f),
-      f = rate / 2.0f / half,
       lmin = logf(float(minFreq)),
       lmax = logf(float(maxFreq)),
       scale = lmax - lmin;
@@ -2081,28 +2079,28 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
 #endif //EXPERIMENTAL_FFT_SKIP_POINTS
          bin2f = 1.0f / f2bin,
          minDistance = powf(2.0f, 2.0f / 12.0f),
-         i0 = expf(lmin) / f,
-         i1 = expf(scale + lmin) / f,
+         i0 = expf(lmin) / binUnit,
+         i1 = expf(scale + lmin) / binUnit,
          minColor = 0.0f;
       const int maxTableSize = 1024;
       int *indexes = new int[maxTableSize];
 #endif //EXPERIMENTAL_FIND_NOTES
 
-      for (int x = 0; x < mid.width; ++x)
+      for (int xx = 0; xx < mid.width; ++xx)
       {
          if (!logF) {
-            for (int yy = 0; yy < mid.height; yy++) {
-               float bin0 = float(yy) * binPerPx + minSamples;
-               float bin1 = float(yy + 1) * binPerPx + minSamples;
+            for (int yy = 0; yy < mid.height; ++yy) {
+               float bin0 = float(yy) * binPerPx + minBin;
+               float bin1 = float(yy + 1) * binPerPx + minBin;
                const float value = findValue
-                  (freq + half * x, bin0, bin1, half, autocorrelation, gain, range);
-               clip->mSpecPxCache->values[x * mid.height + yy] = value;
+                  (freq + half * xx, bin0, bin1, half, autocorrelation, gain, range);
+               clip->mSpecPxCache->values[xx * mid.height + yy] = value;
             }
          }
          else {
 #ifdef EXPERIMENTAL_FIND_NOTES
             int maximas=0;
-            const int x0 = half * x;
+            const int x0 = half * xx;
             if (fftFindNotes) {
                for (int i = maxTableSize-1; i >= 0; i--)
                   indexes[i]=-1;
@@ -2164,10 +2162,10 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
             bool inMaximum = false;
 #endif //EXPERIMENTAL_FIND_NOTES
 
-            double yy2_base = exp(lmin) / f;
+            double yy2_base = exp(lmin) / binUnit;
             float yy2 = yy2_base;
             double exp_scale_per_height = exp(scale / mid.height);
-            for (int yy = 0; yy < mid.height; yy++) {
+            for (int yy = 0; yy < mid.height; ++yy) {
                if (int(yy2) >= half)
                   yy2=half-1;
                if (yy2<0)
@@ -2209,41 +2207,40 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
 #endif //EXPERIMENTAL_FIND_NOTES
                {
                   value = findValue
-                     (freq + half * x, bin0, bin1, half, autocorrelation, gain, range);
+                     (freq + half * xx, bin0, bin1, half, autocorrelation, gain, range);
                }
-               clip->mSpecPxCache->values[x * mid.height + yy] = value;
+               clip->mSpecPxCache->values[xx * mid.height + yy] = value;
                yy2 = yy2_base;
             } // each y
          } // is logF
-      } // each x
+      } // each xx
 
 
    } // updating cache
 
-   float selBinLo = freqLo * (double)windowSize / rate;
-   float selBinHi = freqHi * (double)windowSize / rate;
+   float selBinLo = freqLo / binUnit;
+   float selBinHi = freqHi / binUnit;
    float selBinCenter =
-      ((freqLo < 0 || freqHi < 0) ? -1 : sqrt(freqLo * freqHi))
-       * (double)windowSize / rate;
+      ((freqLo < 0 || freqHi < 0) ? -1 : sqrt(freqLo * freqHi)) / binUnit;
 
    sampleCount w1 = sampleCount(0.5 + rate *
       t0
    );
 
-   for (int x = 0; x < mid.width; ++x)
+   for (int xx = 0; xx < mid.width; ++xx)
    {
       sampleCount w0 = w1;
       w1 = sampleCount(0.5 + rate *
-         (t0 + (x+1) * tstep)
+         (t0 + (xx+1) * tstep)
       );
 
       // TODO: The logF and non-logF case are very similar.
       // They should be merged and simplified.
       if (!logF)
       {
-         for (int yy = 0; yy < mid.height; yy++) {
-            float bin0 = float (yy) * binPerPx + minSamples;
-            float bin1 = float (yy + 1) * binPerPx + minSamples;
+         for (int yy = 0; yy < mid.height; ++yy) {
+            float bin0 = float (yy) * binPerPx + minBin;
+            float bin1 = float (yy + 1) * binPerPx + minBin;
 
             // For spectral selection, determine what colour
             // set to use.  We use a darker selection if
@@ -2256,14 +2253,14 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
             {
                bool isSpectral = ((track->GetDisplay() == WaveTrack::SpectralSelectionDisplay) ||
                                   (track->GetDisplay() == WaveTrack::SpectralSelectionLogDisplay));
-               selected = ChooseColorSet( bin0, bin1, selBinLo, selBinCenter, selBinHi, x/DASH_LENGTH, isSpectral );
+               selected = ChooseColorSet( bin0, bin1, selBinLo, selBinCenter, selBinHi, xx/DASH_LENGTH, isSpectral );
             }
 
             unsigned char rv, gv, bv;
             const float value =
-               clip->mSpecPxCache->values[x * mid.height + yy];
+               clip->mSpecPxCache->values[xx * mid.height + yy];
             GetColorGradient(value, selected, isGrayscale, &rv, &gv, &bv);
-            int px = ((mid.height - 1 - yy) * mid.width + x) * 3;
+            int px = ((mid.height - 1 - yy) * mid.width + xx) * 3;
             data[px++] = rv;
             data[px++] = gv;
             data[px] = bv;
@@ -2271,10 +2268,10 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
       }
       else //logF
       {
-         double yy2_base=exp(lmin)/f;
+         double yy2_base=exp(lmin)/binUnit;
          float yy2 = yy2_base;
          double exp_scale_per_height = exp(scale/mid.height);
-         for (int yy = 0; yy < mid.height; yy++) {
+         for (int yy = 0; yy < mid.height; ++yy) {
             if (int(yy2)>=half)
                yy2=half-1;
             if (yy2<0)
@@ -2295,10 +2292,10 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
             {
                bool isSpectral = ((track->GetDisplay() == WaveTrack::SpectralSelectionDisplay) ||
                                   (track->GetDisplay() == WaveTrack::SpectralSelectionLogDisplay));
-               selected = ChooseColorSet( bin0, bin1, selBinLo, selBinCenter, selBinHi, x/DASH_LENGTH, isSpectral );
+               selected = ChooseColorSet( bin0, bin1, selBinLo, selBinCenter, selBinHi, xx/DASH_LENGTH, isSpectral );
             }
 
-            const float value = clip->mSpecPxCache->values[x * mid.height + yy];
+            const float value = clip->mSpecPxCache->values[xx * mid.height + yy];
             yy2 = yy2_base;
 
             unsigned char rv, gv, bv;
@@ -2312,13 +2309,13 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
             }
 #endif //EXPERIMENTAL_FFT_Y_GRID
 
-            int px = ((mid.height - 1 - yy) * mid.width + x) * 3;
+            int px = ((mid.height - 1 - yy) * mid.width + xx) * 3;
             data[px++] = rv;
             data[px++] = gv;
             data[px] = bv;
          } // each y
       } // logF
-   } // each x
+   } // each xx
 
    // If we get to this point, the clip is actually visible on the
    // screen, so remember the display rectangle.
