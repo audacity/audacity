@@ -7090,7 +7090,7 @@ bool TrackPanel::HitTestSamples(Track *track, wxRect &r, wxMouseEvent & event)
 
    int displayType = wavetrack->GetDisplay();
    bool dB = (WaveTrack::WaveformDBDisplay == displayType);
-   if (!(WaveTrack::WaveformDisplay == displayType) || dB)
+   if (!(WaveTrack::WaveformDisplay == displayType || dB))
       return false;  // Not a wave, so return.
 
    float oneSample;
