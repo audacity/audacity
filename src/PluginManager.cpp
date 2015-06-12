@@ -1004,8 +1004,11 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
       }
       else if (item.state != STATE_New)
       {
-         item.plugs[0]->SetEnabled(item.state == STATE_Enabled);
-         item.plugs[0]->SetValid(item.valid);
+         for (size_t j = 0, cnt = item.plugs.GetCount(); j < cnt; j++)
+         {
+            item.plugs[j]->SetEnabled(item.state == STATE_Enabled);
+            item.plugs[j]->SetValid(item.valid);
+         }
       }
    }
 
