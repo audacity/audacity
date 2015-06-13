@@ -101,7 +101,8 @@ ControlToolBar::ControlToolBar()
    mSizer = NULL;
    mCutPreviewTracks = NULL;
 
-   // strings for status bar
+   /* i18n-hint: These are strings for the status bar, and indicate whether Audacity
+   is playing or recording or stopped, and whether it is paused. */
    mStatePlay = XO("Playing");
    mStateStop = XO("Stopped");
    mStateRecord = XO("Recording");
