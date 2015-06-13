@@ -780,3 +780,8 @@ void ExtImportPrefsDropTarget::SetDataObject(wxDataObject* data)
 {
    this->m_dataObject = data;
 }
+
+PrefsPanel *ExtImportPrefsFactory::Create(wxWindow *parent)
+{
+   return new ExtImportPrefs(parent);
+}

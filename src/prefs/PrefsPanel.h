@@ -61,4 +61,10 @@ class PrefsPanel:public wxPanel
    }
 };
 
+class PrefsPanelFactory
+{
+public:
+   virtual PrefsPanel *Create(wxWindow *parent) = 0;
+};
+
 #endif

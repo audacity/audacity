@@ -141,6 +141,12 @@ class KeyConfigPrefs:public PrefsPanel
 
    DECLARE_EVENT_TABLE();
 };
+
 #endif
 
+class KeyConfigPrefsFactory : public PrefsPanelFactory
+{
+public:
+   virtual PrefsPanel *Create(wxWindow *parent);
+};
 #endif

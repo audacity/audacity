@@ -15,6 +15,7 @@
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "PrefsDialog.h"
 
 #include <wx/defs.h>
 #include <wx/button.h>
@@ -41,7 +42,6 @@
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 
-#include "PrefsDialog.h"
 #include "PrefsPanel.h"
 
 #include "BatchPrefs.h"
@@ -108,11 +108,82 @@ int wxTreebookExt::SetSelection(size_t n)
 
 
 
-PrefsDialog::PrefsDialog(wxWindow * parent)
+PrefsDialog::Factories
+&PrefsDialog::DefaultFactories()
+{
+   // To do, perhaps:  create this table by registration, without including each PrefsPanel
+   // class... and thus allowing a plug-in protocol
+   static DevicePrefsFactory devicePrefsFactory;
+   static PlaybackPrefsFactory playbackPrefsFactory;
+   static RecordingPrefsFactory recordingPrefsFactory;
+#ifdef EXPERIMENTAL_MIDI_OUT
+   static MidiIOPrefsFactory midiIOPrefsFactory;
+#endif
+   static QualityPrefsFactory qualityPrefsFactory;
+   static GUIPrefsFactory guiPrefsFactory;
+   static TracksPrefsFactory tracksPrefsFactory;
+   static ImportExportPrefsFactory importExportPrefsFactory;
+   static ExtImportPrefsFactory extImportPrefsFactory;
+   static ProjectsPrefsFactory projectsPrefsFactory;
+#if !defined(DISABLE_DYNAMIC_LOADING_FFMPEG) || !defined(DISABLE_DYNAMIC_LOADING_LAME)
+   static LibraryPrefsFactory libraryPrefsFactory;
+#endif
+   static SpectrumPrefsFactory spectrumPrefsFactory;
+   static DirectoriesPrefsFactory directoriesPrefsFactory;
+   static WarningsPrefsFactory warningsPrefsFactory;
+   static EffectsPrefsFactory effectsPrefsFactory;
+#ifdef EXPERIMENTAL_THEME_PREFS
+   static ThemePrefsFactory themePrefsFactory;
+#endif
+   // static BatchPrefsFactory batchPrefsFactory;
+   static KeyConfigPrefsFactory keyConfigPrefsFactory;
+   static MousePrefsFactory mousePrefsFactory;
+#ifdef EXPERIMENTAL_MODULE_PREFS
+   static ModulePrefsFactory modulePrefsFactory;
+#endif
+
+   static PrefsNode nodes[] = {
+      &devicePrefsFactory,
+      &playbackPrefsFactory,
+      &recordingPrefsFactory,
+#ifdef EXPERIMENTAL_MIDI_OUT
+      &midiIOPrefsFactory,
+#endif
+      &qualityPrefsFactory,
+      &guiPrefsFactory,
+      &tracksPrefsFactory,
+      &importExportPrefsFactory,
+      &extImportPrefsFactory,
+      &projectsPrefsFactory,
+#if !defined(DISABLE_DYNAMIC_LOADING_FFMPEG) || !defined(DISABLE_DYNAMIC_LOADING_LAME)
+      &libraryPrefsFactory,
+#endif
+      &spectrumPrefsFactory,
+      &directoriesPrefsFactory,
+      &warningsPrefsFactory,
+      &effectsPrefsFactory,
+#ifdef EXPERIMENTAL_THEME_PREFS
+      &themePrefsFactory,
+#endif
+      // &batchPrefsFactory,
+      &keyConfigPrefsFactory,
+      &mousePrefsFactory,
+#ifdef EXPERIMENTAL_MODULE_PREFS
+      &modulePrefsFactory,
+#endif
+   };
+
+   static Factories factories(nodes, nodes + sizeof(nodes) / sizeof(nodes[0]));
+   return factories;
+}
+
+
+PrefsDialog::PrefsDialog(wxWindow * parent, Factories &factories)
 :  wxDialog(parent, wxID_ANY, wxString(_("Audacity Preferences")),
             wxDefaultPosition,
             wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
+, mFactories(factories)
 {
    ShuttleGui S(this, eIsCreating);
 
@@ -124,38 +195,32 @@ PrefsDialog::PrefsDialog(wxWindow * parent)
          S.Prop(1);
          S.AddWindow(mCategories, wxEXPAND);
 
-         wxWindow *w;
-         // Parameters are: AddPage(page, name, IsSelected, imageId).
-         w = new DevicePrefs(mCategories);      mCategories->AddPage(w, w->GetName(), false, 0);
-         w = new PlaybackPrefs(mCategories);    mCategories->AddPage(w, w->GetName(), false, 0);
-         w = new RecordingPrefs(mCategories);   mCategories->AddPage(w, w->GetName(), false, 0);
-#ifdef EXPERIMENTAL_MIDI_OUT
-         w = new MidiIOPrefs(mCategories);      mCategories->AddPage(w, w->GetName(), false, 0);
-#endif
-         w = new QualityPrefs(mCategories);     mCategories->AddPage(w, w->GetName(), false, 0);
-         w = new GUIPrefs(mCategories);         mCategories->AddPage(w, w->GetName(), false, 0);
-         w = new TracksPrefs(mCategories);      mCategories->AddPage(w, w->GetName(), false, 0);
-         w = new ImportExportPrefs(mCategories);mCategories->AddPage(w, w->GetName(), false, 0);
-         w = new ExtImportPrefs(mCategories);   mCategories->AddPage(w, w->GetName(), false, 0);
-         w = new ProjectsPrefs(mCategories);    mCategories->AddPage(w, w->GetName(), false, 0);
-#if !defined(DISABLE_DYNAMIC_LOADING_FFMPEG) || !defined(DISABLE_DYNAMIC_LOADING_LAME)
-         w = new LibraryPrefs(mCategories);     mCategories->AddPage(w, w->GetName(), false, 0);
-#endif
-         w = new SpectrumPrefs(mCategories);    mCategories->AddPage(w, w->GetName(), false, 0);
-         w = new DirectoriesPrefs(mCategories); mCategories->AddPage(w, w->GetName(), false, 0);
-         w = new WarningsPrefs(mCategories);    mCategories->AddPage(w, w->GetName(), false, 0);
-         w = new EffectsPrefs(mCategories);     mCategories->AddPage(w, w->GetName(), false, 0);
-
-#ifdef EXPERIMENTAL_THEME_PREFS
-         w = new ThemePrefs(mCategories);       mCategories->AddPage(w, w->GetName(), false, 0);
-#endif
-
-//       w = new BatchPrefs(mCategories);       mCategories->AddPage(w, w->GetName(), false, 0);
-         w = new KeyConfigPrefs(mCategories);   mCategories->AddPage(w, w->GetName(), false, 0);
-         w = new MousePrefs(mCategories);       mCategories->AddPage(w, w->GetName(), false, 0);
-#ifdef EXPERIMENTAL_MODULE_PREFS
-         w = new ModulePrefs(mCategories);      mCategories->AddPage(w, w->GetName(), false, 0);
-#endif
+         {
+            typedef std::pair<int, int> IntPair;
+            std::vector<IntPair> stack;
+            int iPage = 0;
+            for (Factories::const_iterator it = factories.begin(), end = factories.end();
+               it != end; ++it, ++iPage)
+            {
+               const PrefsNode &node = *it;
+               PrefsPanelFactory &factory = *node.pFactory;
+               wxWindow *const w = factory.Create(mCategories);
+               if (stack.empty())
+                  // Parameters are: AddPage(page, name, IsSelected, imageId).
+                  mCategories->AddPage(w, w->GetName(), false, 0);
+               else {
+                  IntPair &top = *stack.rbegin();
+                  mCategories->InsertSubPage(top.first, w, w->GetName(), false, 0);
+                  if (--top.second == 0) {
+                     // Expand all nodes before the layout calculation
+                     mCategories->ExpandNode(top.first, true);
+                     stack.pop_back();
+                  }
+               }
+               if (node.nChildren > 0)
+                  stack.push_back(IntPair(iPage, node.nChildren));
+            }
+         }
       }
       S.EndHorizontalLay();
    }
@@ -189,6 +254,14 @@ PrefsDialog::PrefsDialog(wxWindow * parent)
    Fit();
    wxSize sz = GetSize();
 
+   // Collapse nodes only after layout so the tree is wide enough
+   {
+      int iPage = 0;
+      for (Factories::const_iterator it = factories.begin(), end = factories.end();
+         it != end; ++it, ++iPage)
+         mCategories->ExpandNode(iPage, it->expanded);
+   }
+
    // This ASSERT used to limit us to 800 x 600.
    // However, we think screens have got bigger now, and that was a bit too restrictive.
    // The impetus for increasing the limit (before we ASSERT) was that this ASSERT
@@ -221,6 +294,8 @@ PrefsDialog::~PrefsDialog()
 
 void PrefsDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
 {
+   RecordExpansionState();
+
    for (size_t i = 0; i < mCategories->GetPageCount(); i++) {
       ((PrefsPanel *) mCategories->GetPage(i))->Cancel();
    }
@@ -238,6 +313,8 @@ void PrefsDialog::OnTreeKeyDown(wxTreeEvent & event)
 
 void PrefsDialog::OnOK(wxCommandEvent & WXUNUSED(event))
 {
+   RecordExpansionState();
+
    // Validate all pages first
    for (size_t i = 0; i < mCategories->GetPageCount(); i++) {
       PrefsPanel *panel = (PrefsPanel *) mCategories->GetPage(i);
@@ -310,4 +387,15 @@ void PrefsDialog::SelectPageByName(wxString pageName)
 void PrefsDialog::ShowTempDirPage()
 {
    SelectPageByName(_("Directories"));
+}
+
+void PrefsDialog::RecordExpansionState()
+{
+   // Remember expansion state of the tree control
+   {
+      int iPage = 0;
+      for (Factories::iterator it = mFactories.begin(), end = mFactories.end();
+         it != end; ++it, ++iPage)
+         it->expanded = mCategories->IsNodeExpanded(iPage);
+   }
 }

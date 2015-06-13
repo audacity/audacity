@@ -62,6 +62,11 @@ class MidiIOPrefs:public PrefsPanel
    DECLARE_EVENT_TABLE();
 };
 
+class MidiIOPrefsFactory : public PrefsPanelFactory
+{
+public:
+   virtual PrefsPanel *Create(wxWindow *parent);
+};
 #endif
 
 #endif

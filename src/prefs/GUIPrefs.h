@@ -43,4 +43,9 @@ class GUIPrefs :public PrefsPanel
    wxArrayString mRangeChoices;
 };
 
+class GUIPrefsFactory : public PrefsPanelFactory
+{
+public:
+   virtual PrefsPanel *Create(wxWindow *parent);
+};
 #endif

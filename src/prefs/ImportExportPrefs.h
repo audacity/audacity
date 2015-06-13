@@ -33,4 +33,9 @@ class ImportExportPrefs :public PrefsPanel
    void PopulateOrExchange(ShuttleGui & S);
 };
 
+class ImportExportPrefsFactory : public PrefsPanelFactory
+{
+public:
+   virtual PrefsPanel *Create(wxWindow *parent);
+};
 #endif

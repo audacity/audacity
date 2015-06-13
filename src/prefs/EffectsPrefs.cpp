@@ -165,3 +165,8 @@ bool EffectsPrefs::Apply()
 
    return true;
 }
+
+PrefsPanel *EffectsPrefsFactory::Create(wxWindow *parent)
+{
+   return new EffectsPrefs(parent);
+}

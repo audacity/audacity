@@ -235,3 +235,8 @@ bool LibraryPrefs::Apply()
 
    return true;
 }
+
+PrefsPanel *LibraryPrefsFactory::Create(wxWindow *parent)
+{
+   return new LibraryPrefs(parent);
+}
