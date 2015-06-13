@@ -81,11 +81,14 @@ class wxTreebookExt : public wxTreebook
 {
 public:
    wxTreebookExt( wxWindow *parent,
-      wxWindowID id) : wxTreebook( parent, id )
+      wxWindowID id, const wxString &titlePrefix)
+      : wxTreebook( parent, id )
+      , mTitlePrefix(titlePrefix)
    {;};
    ~wxTreebookExt(){;};
    virtual int ChangeSelection(size_t n);
    virtual int SetSelection(size_t n);
+   const wxString mTitlePrefix;
 };
 
 
@@ -100,7 +103,7 @@ int wxTreebookExt::ChangeSelection(size_t n) {
 int wxTreebookExt::SetSelection(size_t n)
 {
    int i = wxTreebook::SetSelection(n);
-   wxString Temp = wxString(_("Preferences: ")) + GetPageText( n );
+   wxString Temp = wxString(mTitlePrefix) + GetPageText( n );
    ((wxDialog*)GetParent())->SetTitle( Temp );
    ((wxDialog*)GetParent())->SetName( Temp );
    return i;
@@ -178,12 +181,14 @@ PrefsDialog::Factories
 }
 
 
-PrefsDialog::PrefsDialog(wxWindow * parent, Factories &factories)
+PrefsDialog::PrefsDialog
+  (wxWindow * parent, const wxString &titlePrefix, Factories &factories)
 :  wxDialog(parent, wxID_ANY, wxString(_("Audacity Preferences")),
             wxDefaultPosition,
             wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 , mFactories(factories)
+, mTitlePrefix(titlePrefix)
 {
    ShuttleGui S(this, eIsCreating);
 
@@ -191,7 +196,7 @@ PrefsDialog::PrefsDialog(wxWindow * parent, Factories &factories)
    {
       S.StartHorizontalLay(wxALIGN_LEFT | wxEXPAND, true);
       {
-         mCategories = new wxTreebookExt(this, wxID_ANY);
+         mCategories = new wxTreebookExt(this, wxID_ANY, mTitlePrefix);
          S.Prop(1);
          S.AddWindow(mCategories, wxEXPAND);
 

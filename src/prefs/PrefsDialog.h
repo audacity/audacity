@@ -44,7 +44,9 @@ class PrefsDialog:public wxDialog
    typedef std::vector<PrefsNode> Factories;
    static Factories &DefaultFactories();
 
-   PrefsDialog(wxWindow * parent, Factories &factories = DefaultFactories());
+   PrefsDialog(wxWindow * parent,
+      const wxString &titlePrefix = _("Preferences: "),
+      Factories &factories = DefaultFactories());
    virtual ~PrefsDialog();
 
    void OnCategoryChange(wxCommandEvent & e);
@@ -60,6 +62,7 @@ class PrefsDialog:public wxDialog
 
    wxTreebook *mCategories;
    Factories &mFactories;
+   const wxString mTitlePrefix;
 
    DECLARE_EVENT_TABLE()
 };
