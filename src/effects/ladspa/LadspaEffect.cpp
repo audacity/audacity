@@ -54,6 +54,14 @@ effects from this one class.
 #include "../../widgets/valnum.h"
 
 // ============================================================================
+// List of effects that ship with Audacity.  These will be autoregistered.
+// ============================================================================
+const static wxChar *kShippedEffects[] =
+{
+   wxT("sc4_1882.dll"),
+};
+
+// ============================================================================
 // Module registration entry point
 //
 // This is the symbol that Audacity looks for when the module is built as a
@@ -144,34 +152,36 @@ void LadspaEffectsModule::Terminate()
    return;
 }
 
-bool LadspaEffectsModule::AutoRegisterPlugins(PluginManagerInterface & WXUNUSED(pm))
+bool LadspaEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
 {
+   // Autoregister effects that we "think" are ones that have been shipped with
+   // Audacity.  A little simplistic, but it should suffice for now.
+   wxArrayString pathList = GetSearchPaths();
+   wxArrayString files;
+
+   for (int i = 0; i < WXSIZEOF(kShippedEffects); i++)
+   {
+      files.Clear();
+      pm.FindFilesInPathList(kShippedEffects[i], pathList, files);
+      for (size_t j = 0, cnt = files.GetCount(); j < cnt; j++)
+      {
+         if (!pm.IsPluginRegistered(files[j]))
+         {
+            RegisterPlugin(pm, files[j]);
+         }
+      }
+   }
+
+   // We still want to be called during the normal registration process
    return false;
 }
 
 wxArrayString LadspaEffectsModule::FindPlugins(PluginManagerInterface & pm)
 {
-   wxArrayString pathList;
+   wxArrayString pathList = GetSearchPaths();
    wxArrayString files;
-   wxString pathVar;
-
-   // Check for the LADSPA_PATH environment variable
-   pathVar = wxString::FromUTF8(getenv("LADSPA_PATH"));
-   if (!pathVar.empty())
-   {
-      wxStringTokenizer tok(pathVar);
-      while (tok.HasMoreTokens())
-      {
-         pathList.Add(tok.GetNextToken());
-      }
-   }
 
 #if defined(__WXMAC__)
-#define LADSPAPATH wxT("/Library/Audio/Plug-Ins/LADSPA")
-
-   // Look in ~/Library/Audio/Plug-Ins/LADSPA and /Library/Audio/Plug-Ins/LADSPA
-   pathList.Add(wxGetHomeDir() + wxFILE_SEP_PATH + LADSPAPATH);
-   pathList.Add(LADSPAPATH);
 
    // Recursively scan for all shared objects
    pm.FindFilesInPathList(wxT("*.so"), pathList, files, true);
@@ -183,11 +193,6 @@ wxArrayString LadspaEffectsModule::FindPlugins(PluginManagerInterface & pm)
 
 #else
    
-   pathList.Add(wxGetHomeDir() + wxFILE_SEP_PATH + wxT(".ladspa"));
-   pathList.Add(wxT("/usr/local/lib/ladspa"));
-   pathList.Add(wxT("/usr/lib/ladspa"));
-   pathList.Add(wxT(LIBDIR) wxT("/ladspa"));
-
    // Recursively scan for all shared objects
    pm.FindFilesInPathList(wxT("*.so"), pathList, files, true);
 
@@ -268,6 +273,46 @@ void LadspaEffectsModule::DeleteInstance(IdentInterface *instance)
    {
       delete effect;
    }
+}
+
+wxArrayString LadspaEffectsModule::GetSearchPaths()
+{
+   wxArrayString pathList;
+   wxArrayString files;
+   wxString pathVar;
+
+   // Check for the LADSPA_PATH environment variable
+   pathVar = wxString::FromUTF8(getenv("LADSPA_PATH"));
+   if (!pathVar.empty())
+   {
+      wxStringTokenizer tok(pathVar);
+      while (tok.HasMoreTokens())
+      {
+         pathList.Add(tok.GetNextToken());
+      }
+   }
+
+#if defined(__WXMAC__)
+#define LADSPAPATH wxT("/Library/Audio/Plug-Ins/LADSPA")
+
+   // Look in ~/Library/Audio/Plug-Ins/LADSPA and /Library/Audio/Plug-Ins/LADSPA
+   pathList.Add(wxGetHomeDir() + wxFILE_SEP_PATH + LADSPAPATH);
+   pathList.Add(LADSPAPATH);
+
+#elif defined(__WXMSW__)
+
+   // No special paths...probably should look in %CommonProgramFiles%\LADSPA
+
+#else
+   
+   pathList.Add(wxGetHomeDir() + wxFILE_SEP_PATH + wxT(".ladspa"));
+   pathList.Add(wxT("/usr/local/lib/ladspa"));
+   pathList.Add(wxT("/usr/lib/ladspa"));
+   pathList.Add(wxT(LIBDIR) wxT("/ladspa"));
+
+#endif
+
+   return pathList;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

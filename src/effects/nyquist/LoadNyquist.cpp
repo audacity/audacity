@@ -17,6 +17,37 @@
 #include "LoadNyquist.h"
 
 // ============================================================================
+// List of effects that ship with Audacity.  These will be autoregistered.
+// ============================================================================
+const static wxChar *kShippedEffects[] =
+{
+   wxT("adjustable-fade.ny"),
+   wxT("beat.ny"),
+   wxT("clicktrack.ny"),
+   wxT("clipfix.ny"),
+   wxT("crossfadeclips.ny"),
+   wxT("crossfadetracks.ny"),
+   wxT("delay.ny"),
+   wxT("equalabel.ny"),
+   wxT("highpass.ny"),
+   wxT("limiter.ny"),
+   wxT("lowpass.ny"),
+   wxT("notch.ny"),
+   wxT("pluck.ny"),
+   wxT("rissetdrum.ny"),
+   wxT("sample-data-export.ny"),
+   wxT("SilenceMarker.ny"),
+   wxT("SoundFinder.ny"),
+   wxT("SpectralEditMulti.ny"),
+   wxT("SpectralEditParametricEQ.ny"),
+   wxT("SpectralEditShelves.ny"),
+   wxT("StudioFadeOut.ny"),
+   wxT("tremolo.ny"),
+   wxT("vocalremover.ny"),
+   wxT("vocoder.ny"),
+};
+
+// ============================================================================
 // Module registration entry point
 //
 // This is the symbol that Audacity looks for when the module is built as a
@@ -125,9 +156,32 @@ void NyquistEffectsModule::Terminate()
    return;
 }
 
-bool NyquistEffectsModule::AutoRegisterPlugins(PluginManagerInterface & WXUNUSED(pm))
+bool NyquistEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
 {
-   // Nothing to do here
+   // Autoregister effects that we "think" are ones that have been shipped with
+   // Audacity.  A little simplistic, but it should suffice for now.
+   wxArrayString pathList = NyquistEffect::GetNyquistSearchPath();
+   wxArrayString files;
+
+   if (!pm.IsPluginRegistered(NYQUIST_PROMPT_ID))
+   {
+      RegisterPlugin(pm, NYQUIST_PROMPT_ID);
+   }
+
+   for (int i = 0; i < WXSIZEOF(kShippedEffects); i++)
+   {
+      files.Clear();
+      pm.FindFilesInPathList(kShippedEffects[i], pathList, files);
+      for (size_t j = 0, cnt = files.GetCount(); j < cnt; j++)
+      {
+         if (!pm.IsPluginRegistered(files[j]))
+         {
+            RegisterPlugin(pm, files[j]);
+         }
+      }
+   }
+
+   // We still want to be called during the normal registration process
    return false;
 }
 

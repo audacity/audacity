@@ -233,7 +233,7 @@ public:
 
    // LadspaEffectModule implementation
 
-   static void Check(const wchar_t *path);
+   wxArrayString GetSearchPaths();
 
 private:
    ModuleManagerInterface *mModMan;
