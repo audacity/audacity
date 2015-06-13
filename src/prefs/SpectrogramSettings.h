@@ -28,12 +28,23 @@ public:
    void DestroyWindows();
    void CacheWindows() const;
 
+private:
    int minFreq;
    int maxFreq;
-
    int logMinFreq;
    int logMaxFreq;
+public:
+   int GetMinFreq(double rate) const;
+   int GetMaxFreq(double rate) const;
+   int GetLogMinFreq(double rate) const;
+   int GetLogMaxFreq(double rate) const;
 
+   void SetMinFreq(int freq);
+   void SetMaxFreq(int freq);
+   void SetLogMinFreq(int freq);
+   void SetLogMaxFreq(int freq);
+
+public:
    int range;
    int gain;
    int frequencyGain;
@@ -67,5 +78,4 @@ public:
    mutable float         *window;
 #endif
 };
-
 #endif

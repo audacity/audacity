@@ -54,6 +54,7 @@ Track classes.
 #include "ondemand/ODManager.h"
 
 #include "effects/TimeWarper.h"
+#include "prefs/SpectrumPrefs.h"
 
 using std::max;
 
@@ -74,6 +75,7 @@ WaveTrack *TrackFactory::NewWaveTrack(sampleFormat format, double rate)
 
 WaveTrack::WaveTrack(DirManager *projDirManager, sampleFormat format, double rate):
    Track(projDirManager)
+   , mpSpectrumSettings(0)
 {
    if (format == (sampleFormat)0)
    {
@@ -105,6 +107,9 @@ WaveTrack::WaveTrack(DirManager *projDirManager, sampleFormat format, double rat
 
 WaveTrack::WaveTrack(WaveTrack &orig):
    Track(orig)
+   , mpSpectrumSettings(orig.mpSpectrumSettings
+        ? new SpectrogramSettings(*orig.mpSpectrumSettings) : 0
+     )
 {
    mDisplay = FindDefaultViewMode();
    mLastDisplay = -1;
@@ -139,9 +144,12 @@ void WaveTrack::Merge(const Track &orig)
 {
    if (orig.GetKind() == Wave)
    {
-      mDisplay = ((WaveTrack &)orig).mDisplay;
-      mGain    = ((WaveTrack &)orig).mGain;
-      mPan     = ((WaveTrack &)orig).mPan;
+      const WaveTrack &wt = static_cast<const WaveTrack&>(orig);
+      mDisplay = wt.mDisplay;
+      mGain    = wt.mGain;
+      mPan     = wt.mPan;
+      SetSpectrogramSettings(wt.mpSpectrumSettings
+         ? new SpectrogramSettings(*wt.mpSpectrumSettings) : 0);
    }
    Track::Merge(orig);
 }
@@ -159,6 +167,7 @@ WaveTrack::~WaveTrack()
    if (mDisplayLocations)
       delete [] mDisplayLocations;
 
+   delete mpSpectrumSettings;
 }
 
 double WaveTrack::GetOffset() const
@@ -622,6 +631,38 @@ bool WaveTrack::Clear(double t0, double t1)
 bool WaveTrack::ClearAndAddCutLine(double t0, double t1)
 {
    return HandleClear(t0, t1, true, false);
+}
+
+const SpectrogramSettings &WaveTrack::GetSpectrogramSettings() const
+{
+   if (mpSpectrumSettings)
+      return *mpSpectrumSettings;
+   else
+      return SpectrogramSettings::defaults();
+}
+
+SpectrogramSettings &WaveTrack::GetSpectrogramSettings()
+{
+   if (mpSpectrumSettings)
+      return *mpSpectrumSettings;
+   else
+      return SpectrogramSettings::defaults();
+}
+
+SpectrogramSettings &WaveTrack::GetIndependentSpectrogramSettings()
+{
+   if (!mpSpectrumSettings)
+      mpSpectrumSettings =
+      new SpectrogramSettings(SpectrogramSettings::defaults());
+   return *mpSpectrumSettings;
+}
+
+void WaveTrack::SetSpectrogramSettings(SpectrogramSettings *pSettings)
+{
+   if (mpSpectrumSettings != pSettings) {
+      delete mpSpectrumSettings;
+      mpSpectrumSettings = pSettings;
+   }
 }
 
 //

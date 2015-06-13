@@ -337,9 +337,9 @@ protected:
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
 public:
-   void SnapCenterOnce (WaveTrack *pTrack, bool up);
+   void SnapCenterOnce (const WaveTrack *pTrack, bool up);
 protected:
-   void StartSnappingFreqSelection (WaveTrack *pTrack);
+   void StartSnappingFreqSelection (const WaveTrack *pTrack);
    void MoveSnappingFreqSelection (int mouseYCoordinate,
                                    int trackTopEdge,
                                    int trackHeight, Track *pTrack);
@@ -494,9 +494,9 @@ protected:
    virtual wxRect FindTrackRect(Track * target, bool label);
 
    virtual int GetVRulerWidth() const;
-   virtual int GetVRulerOffset() const { return mTrackInfo.GetTrackInfoWidth(); };
+   virtual int GetVRulerOffset() const { return mTrackInfo.GetTrackInfoWidth(); }
 
-   virtual int GetLabelWidth() const { return mTrackInfo.GetTrackInfoWidth() + GetVRulerWidth(); };
+   virtual int GetLabelWidth() const { return mTrackInfo.GetTrackInfoWidth() + GetVRulerWidth(); }
 
 // JKC Nov-2011: These four functions only used from within a dll such as mod-track-panel
 // They work around some messy problems with constructors.
@@ -693,16 +693,16 @@ protected:
    void HandleCenterFrequencyClick
       (bool shiftDown, Track *pTrack, double value);
 
-   double PositionToFrequency(bool maySnap,
+   double PositionToFrequency(const WaveTrack *wt,
+                              bool maySnap,
                               wxInt64 mouseYCoordinate,
                               wxInt64 trackTopEdge,
                               int trackHeight,
-                              double rate,
                               bool logF) const;
-   wxInt64 FrequencyToPosition(double frequency,
+   wxInt64 FrequencyToPosition(const WaveTrack *wt,
+                               double frequency,
                                wxInt64 trackTopEdge,
                                int trackHeight,
-                               double rate,
                                bool logF) const;
 #endif
 

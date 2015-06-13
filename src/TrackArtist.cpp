@@ -692,7 +692,7 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
    // All waves have a ruler in the info panel
    // The ruler needs a bevelled surround.
    if (t->GetKind() == Track::Wave) {
-      WaveTrack *wt = (WaveTrack *)t;
+      WaveTrack *wt = static_cast<WaveTrack*>(t);
       int display = wt->GetDisplay();
 
       if (display == WaveTrack::WaveformDisplay) {
@@ -802,16 +802,10 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
          if (rect.height < 60)
             return;
 
-         double rate = wt->GetRate();
-         int freq = lrint(rate/2.);
-
-         int maxFreq = GetSpectrumMaxFreq(freq);
-         if(maxFreq > freq)
-            maxFreq = freq;
-
-         int minFreq = GetSpectrumMinFreq(0);
-         if(minFreq < 0)
-            minFreq = 0;
+         const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
+         const double rate = wt->GetRate();
+         const int maxFreq = settings.GetMaxFreq(rate);
+         const int minFreq = settings.GetMinFreq(rate);
 
          /*
             draw the ruler
@@ -842,16 +836,10 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
          if (rect.height < 10)
             return;
 
-         double rate = wt->GetRate();
-         int freq = lrint(rate/2.);
-
-         int maxFreq = GetSpectrumLogMaxFreq(freq);
-         if(maxFreq > freq)
-            maxFreq = freq;
-
-         int minFreq = GetSpectrumLogMinFreq(freq/1000.0);
-         if(minFreq < 1)
-            minFreq = 1;
+         const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
+         const double rate = wt->GetRate();
+         const int maxFreq = settings.GetLogMaxFreq(rate);
+         const int minFreq = settings.GetLogMinFreq(rate);
 
          /*
             draw the ruler
@@ -2042,6 +2030,8 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
 #endif
 
    const WaveTrack *const track = waveTrackCache.GetTrack();
+   const SpectrogramSettings &settings = track->GetSpectrogramSettings();
+
    const int display = track->GetDisplay();
    const bool autocorrelation = (WaveTrack::PitchDisplay == display);
    const bool logF = (WaveTrack::SpectrumLogDisplay == display
@@ -2079,7 +2069,6 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
    }
 #endif
 
-   const SpectrogramSettings &settings = SpectrogramSettings::defaults();
    const bool &isGrayscale = settings.isGrayscale;
    const int &range = settings.range;
    const int &gain = settings.gain;
@@ -2115,28 +2104,8 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
          t0, pps, autocorrelation);
    }
 
-   int ifreq = lrint(rate / 2);
-
-   int maxFreq;
-   if (!logF)
-      maxFreq = GetSpectrumMaxFreq(ifreq);
-   else
-      maxFreq = GetSpectrumLogMaxFreq(ifreq);
-   if(maxFreq > ifreq)
-      maxFreq = ifreq;
-
-   int minFreq;
-   if (!logF) {
-      minFreq = GetSpectrumMinFreq(0);
-      if(minFreq < 0)
-         minFreq = 0;
-   }
-   else {
-      minFreq = GetSpectrumLogMinFreq(ifreq/1000.0);
-      if(minFreq < 1)
-         // Paul L:  I suspect this line is now unreachable
-         minFreq = 1.0;
-   }
+   const int minFreq = logF ? settings.GetLogMinFreq(rate) : settings.GetMinFreq(rate);
+   const int maxFreq = logF ? settings.GetLogMaxFreq(rate) : settings.GetMaxFreq(rate);
 
    float minBin = ((double)minFreq / binUnit);
    float maxBin = ((double)maxFreq / binUnit);
@@ -3215,66 +3184,6 @@ void TrackArtist::UpdatePrefs()
    mShowClipping = gPrefs->Read(wxT("/GUI/ShowClipping"), mShowClipping);
 
    gPrefs->Flush();
-}
-
-// Get various preference values
-int TrackArtist::GetSpectrumMinFreq(int deffreq)
-{
-   const int &minFreq = SpectrogramSettings::defaults().minFreq;
-   return minFreq < 0 ? deffreq : minFreq;
-}
-
-int TrackArtist::GetSpectrumMaxFreq(int deffreq)
-{
-   const int &maxFreq = SpectrogramSettings::defaults().maxFreq;
-   return maxFreq < 0 ? deffreq : maxFreq;
-}
-
-int TrackArtist::GetSpectrumLogMinFreq(int deffreq)
-{
-   const int &logMinFreq = SpectrogramSettings::defaults().logMinFreq;
-   return logMinFreq < 0 ? deffreq : logMinFreq;
-}
-
-int TrackArtist::GetSpectrumLogMaxFreq(int deffreq)
-{
-   const int &logMaxFreq = SpectrogramSettings::defaults().logMaxFreq;
-   return logMaxFreq < 0 ? deffreq : logMaxFreq;
-}
-
-int TrackArtist::GetSpectrumWindowSize(bool includeZeroPadding)
-{
-   includeZeroPadding;
-   const int &windowSize = SpectrogramSettings::defaults().windowSize;
-#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
-   if (includeZeroPadding) {
-      const int &zeroPaddingFactor = SpectrogramSettings::defaults().zeroPaddingFactor;
-      return windowSize * zeroPaddingFactor;
-   }
-   else
-#endif
-      return windowSize;
-}
-
-// Set various preference values
-void TrackArtist::SetSpectrumMinFreq(int freq)
-{
-   SpectrogramSettings::defaults().minFreq = freq;
-}
-
-void TrackArtist::SetSpectrumMaxFreq(int freq)
-{
-   SpectrogramSettings::defaults().maxFreq = freq;
-}
-
-void TrackArtist::SetSpectrumLogMinFreq(int freq)
-{
-   SpectrogramSettings::defaults().logMinFreq = freq;
-}
-
-void TrackArtist::SetSpectrumLogMaxFreq(int freq)
-{
-   SpectrogramSettings::defaults().logMaxFreq = freq;
 }
 
 // Draws the sync-lock bitmap, tiled; always draws stationary relative to the DC

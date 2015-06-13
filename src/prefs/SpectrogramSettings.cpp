@@ -19,6 +19,9 @@ Paul Licameli
 #include "../Prefs.h"
 #include "../RealFFTf.h"
 
+#include <algorithm>
+#include <cmath>
+
 SpectrogramSettings::SpectrogramSettings()
    : hFFT(0)
    , window(0)
@@ -252,6 +255,59 @@ void SpectrogramSettings::CacheWindows() const
       RecreateWindow(window, WINDOW, fftLen, padding, windowType, windowSize, scale);
    }
 #endif // EXPERIMENTAL_USE_REALFFTF
+}
+
+int SpectrogramSettings::GetMinFreq(double rate) const
+{
+   const int top = lrint(rate / 2.);
+   return std::max(0, std::min(top, minFreq));
+}
+
+int SpectrogramSettings::GetMaxFreq(double rate) const
+{
+   const int top = lrint(rate / 2.);
+   if (maxFreq < 0)
+      return top;
+   else
+      return std::max(0, std::min(top, maxFreq));
+}
+
+int SpectrogramSettings::GetLogMinFreq(double rate) const
+{
+   const int top = lrint(rate / 2.);
+   if (logMinFreq < 0)
+      return top / 1000.0;
+   else
+      return std::max(1, std::min(top, logMinFreq));
+}
+
+int SpectrogramSettings::GetLogMaxFreq(double rate) const
+{
+   const int top = lrint(rate / 2.);
+   if (logMaxFreq < 0)
+      return top;
+   else
+      return std::max(1, std::min(top, logMaxFreq));
+}
+
+void SpectrogramSettings::SetMinFreq(int freq)
+{
+   minFreq = freq;
+}
+
+void SpectrogramSettings::SetMaxFreq(int freq)
+{
+   maxFreq = freq;
+}
+
+void SpectrogramSettings::SetLogMinFreq(int freq)
+{
+   logMinFreq = freq;
+}
+
+void SpectrogramSettings::SetLogMaxFreq(int freq)
+{
+   logMaxFreq = freq;
 }
 
 int SpectrogramSettings::GetFFTLength(bool autocorrelation) const
