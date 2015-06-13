@@ -964,7 +964,7 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
    wxString msg;
    msg.Printf(_("Enabling effects:\n\n%s"), last3.c_str());
    
-   ProgressDialog progress(_("Plugin Manager: Effects"), msg, pdlgHideStopButton);
+   ProgressDialog progress(GetTitle(), msg, pdlgHideStopButton);
    progress.CenterOnParent();
 
    int i = 0;
