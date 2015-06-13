@@ -665,10 +665,6 @@ void TrackArtist::DrawVRuler(Track *t, wxDC * dc, wxRect & r)
 
 void TrackArtist::UpdateVRuler(Track *t, wxRect & r)
 {
-#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
-   const int fftSkipPoints = SpectrogramSettings::defaults().fftSkipPoints;
-#endif //EXPERIMENTAL_FFT_SKIP_POINTS
-
    // Label tracks do not have a vruler
    if (t->GetKind() == Track::Label) {
       return;
@@ -807,16 +803,10 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & r)
          int freq = lrint(rate/2.);
 
          int maxFreq = GetSpectrumMaxFreq(freq);
-#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
-         maxFreq/=(fftSkipPoints+1);
-#endif //EXPERIMENTAL_FFT_SKIP_POINTS
          if(maxFreq > freq)
             maxFreq = freq;
 
          int minFreq = GetSpectrumMinFreq(0);
-#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
-         minFreq/=(fftSkipPoints+1);
-#endif //EXPERIMENTAL_FFT_SKIP_POINTS
          if(minFreq < 0)
             minFreq = 0;
 
@@ -853,16 +843,10 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & r)
          int freq = lrint(rate/2.);
 
          int maxFreq = GetSpectrumLogMaxFreq(freq);
-#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
-         maxFreq/=(fftSkipPoints+1);
-#endif //EXPERIMENTAL_FFT_SKIP_POINTS
          if(maxFreq > freq)
             maxFreq = freq;
 
          int minFreq = GetSpectrumLogMinFreq(freq/1000.0);
-#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
-         minFreq/=(fftSkipPoints+1);
-#endif //EXPERIMENTAL_FFT_SKIP_POINTS
          if(minFreq < 1)
             minFreq = 1;
 
@@ -1964,11 +1948,6 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
    bool updated = clip->GetSpectrogram(cache, freq, where, mid.width,
                               t0, pps, autocorrelation);
 
-#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
-   int fftSkipPoints = SpectrogramSettings::defaults().fftSkipPoints;
-   int fftSkipPoints1 = fftSkipPoints + 1;
-#endif //EXPERIMENTAL_FFT_SKIP_POINTS
-
    int ifreq = lrint(rate/2);
 
    int maxFreq;
@@ -2057,14 +2036,8 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
 #endif
 
 #ifdef EXPERIMENTAL_FIND_NOTES
-#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
-      const float
-         lmins = logf(float(minFreq) / (fftSkipPoints + 1)),
-         lmaxs = logf(float(maxFreq) / (fftSkipPoints + 1))
-#else //!EXPERIMENTAL_FFT_SKIP_POINTS
          lmins = lmin,
          lmaxs = lmax
-#endif //EXPERIMENTAL_FFT_SKIP_POINTS
          ;
 #endif //EXPERIMENTAL_FIND_NOTES
 
@@ -2072,11 +2045,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
       int maxima[128];
       float maxima0[128], maxima1[128];
       const float
-#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
-         f2bin = half / (rate / 2.0f / (fftSkipPoints + 1)),
-#else //!EXPERIMENTAL_FFT_SKIP_POINTS
          f2bin = half / (rate / 2.0f),
-#endif //EXPERIMENTAL_FFT_SKIP_POINTS
          bin2f = 1.0f / f2bin,
          minDistance = powf(2.0f, 2.0f / 12.0f),
          i0 = expf(lmin) / binUnit,
@@ -3085,13 +3054,6 @@ int TrackArtist::GetSpectrumWindowSize(bool includeZeroPadding)
 #endif
       return windowSize;
 }
-
-#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
-int TrackArtist::GetSpectrumFftSkipPoints()
-{
-   return SpectrogramSettings::defaults().fftSkipPoints;
-}
-#endif
 
 // Set various preference values
 void TrackArtist::SetSpectrumMinFreq(int freq)

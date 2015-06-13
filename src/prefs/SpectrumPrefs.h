@@ -103,10 +103,6 @@ public:
 
    bool isGrayscale;
 
-#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
-   int fftSkipPoints;
-#endif
-
 #ifdef EXPERIMENTAL_FFT_Y_GRID
    bool fftYGrid;
 #endif //EXPERIMENTAL_FFT_Y_GRID

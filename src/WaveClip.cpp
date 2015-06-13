@@ -276,9 +276,6 @@ public:
       , windowSize(-1)
       , zeroPaddingFactor(-1)
       , frequencyGain(-1)
-#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
-      , fftSkipPoints(-1)
-#endif //EXPERIMENTAL_FFT_SKIP_POINTS
 
       , freq(NULL)
       , where(NULL)
@@ -291,10 +288,7 @@ public:
    SpecCache(int cacheLen, bool autocorrelation,
       double pps_, double start_, int windowType_, int windowSize_,
       int zeroPaddingFactor_, int frequencyGain_
-#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
-      , int fftSkipPoints_
-#endif
-      )
+   )
       : len(cacheLen)
       , ac(autocorrelation)
       , pps(pps_)
@@ -303,9 +297,6 @@ public:
       , windowSize(windowSize_)
       , zeroPaddingFactor(zeroPaddingFactor_)
       , frequencyGain(frequencyGain_)
-#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
-      , fftSkipPoints(fftSkipPoints_)
-#endif //EXPERIMENTAL_FFT_SKIP_POINTS
 
       // len columns, and so many rows, column-major.
       // Don't take column literally -- this isn't pixel data yet, it's the
@@ -350,9 +341,6 @@ public:
    const int          windowSize;
    const int          zeroPaddingFactor;
    const int          frequencyGain;
-#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
-   const int          fftSkipPoints;
-#endif //EXPERIMENTAL_FFT_SKIP_POINTS
    std::vector<float> freq;
    std::vector<sampleCount> where;
 
@@ -833,9 +821,6 @@ bool SpecCache::Matches
       windowSize == settings.windowSize &&
       zeroPaddingFactor == settings.zeroPaddingFactor &&
       frequencyGain == settings.frequencyGain &&
-#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
-      fftSkipPoints == settings.fftSkipPoints &&
-#endif //EXPERIMENTAL_FFT_SKIP_POINTS
       ac == autocorrelation;
 }
 
@@ -847,11 +832,6 @@ void SpecCache::CalculateOneSpectrum
     bool autocorrelation, const std::vector<float> &gainFactors,
     float *scratch)
 {
-#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
-   int fftSkipPoints = settings.fftSkipPoints;
-   int fftSkipPoints1 = fftSkipPoints + 1;
-#endif //EXPERIMENTAL_FFT_SKIP_POINTS
-
    const int windowSize = settings.windowSize;
    sampleCount start = where[xx];
    const int zeroPaddingFactor = (autocorrelation ? 1 : settings.zeroPaddingFactor);
@@ -881,15 +861,6 @@ void SpecCache::CalculateOneSpectrum
          start = 0;
          copy = true;
       }
-#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
-      copy = true;
-      if (start + len*fftSkipPoints1 > numSamples) {
-         int newlen = (numSamples - start) / fftSkipPoints1;
-         for (int i = newlen*fftSkipPoints1; i < (sampleCount)len*fftSkipPoints1; i++)
-            adj[i] = 0;
-         len = newlen;
-      }
-#else //!EXPERIMENTAL_FFT_SKIP_POINTS
       if (start + len > numSamples) {
          // Near the end of the clip, pad right with zeroes as needed.
          int newlen = numSamples - start;
@@ -898,28 +869,13 @@ void SpecCache::CalculateOneSpectrum
          len = newlen;
          copy = true;
       }
-#endif //EXPERIMENTAL_FFT_SKIP_POINTS
 
       if (len > 0) {
          // Copy samples out of the track.
-#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
-         useBuffer = (float*)(waveTrackCache.Get(floatSample,
-                            floor(0.5 + start + offset * rate), len*fftSkipPoints1));
-         memcpy(adj, useBuffer, len * fftSkipPoints1 * sizeof(float));
-         if (fftSkipPoints) {
-            // TODO: (maybe) alternatively change Get to include skipping of points
-            int j = 0;
-            for (int i = 0; i < len; i++) {
-               adj[i] = adj[j];
-               j += fftSkipPoints1;
-            }
-         }
-#else //!EXPERIMENTAL_FFT_SKIP_POINTS
          useBuffer = (float*)(waveTrackCache.Get(floatSample,
                              floor(0.5 + start + offset * rate), len));
          if (copy)
             memcpy(adj, useBuffer, len * sizeof(float));
-#endif //EXPERIMENTAL_FFT_SKIP_POINTS
       }
 
       if (copy)
@@ -961,11 +917,6 @@ void SpecCache::Populate
    settings.CacheWindows();
 #endif
 
-#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
-   int fftSkipPoints = settings.fftSkipPoints;
-   int fftSkipPoints1 = fftSkipPoints + 1;
-#endif //EXPERIMENTAL_FFT_SKIP_POINTS
-
    const int &frequencyGain = settings.frequencyGain;
    const int &windowSize = settings.windowSize;
 #ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
@@ -979,11 +930,7 @@ void SpecCache::Populate
    const int fftLen = windowSize * zeroPaddingFactor;
 
    std::vector<float> buffer(
-#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
-      fftLen*fftSkipPoints1
-#else //!EXPERIMENTAL_FFT_SKIP_POINTS
       fftLen
-#endif //EXPERIMENTAL_FFT_SKIP_POINTS
    );
 
    std::vector<float> gainFactors;
@@ -1008,10 +955,6 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
                               bool autocorrelation)
 {
    const SpectrogramSettings &settings = SpectrogramSettings::defaults();
-
-#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
-   int fftSkipPoints = settings.fftSkipPoints;
-#endif //EXPERIMENTAL_FFT_SKIP_POINTS
 
    const int &frequencyGain = settings.frequencyGain;
    const int &windowSize = settings.windowSize;
@@ -1070,9 +1013,6 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
    mSpecCache = new SpecCache(
       numPixels, autocorrelation, pixelsPerSecond, t0,
       windowType, windowSize, zeroPaddingFactor, frequencyGain
-#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
-      , fftSkipPoints
-#endif
    );
 
    fillWhere(mSpecCache->where, numPixels, 0.5, correction,

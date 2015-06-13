@@ -4714,9 +4714,6 @@ void TrackPanel::HandleVZoomButtonUp( wxMouseEvent & event )
    float min, max, c, l, binSize = 0.0;
    bool spectrum, spectrumLog;
    int windowSize;
-#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
-   int fftSkipPoints=0;
-#endif //EXPERIMENTAL_FFT_SKIP_POINTS
    double rate = ((WaveTrack *)track)->GetRate();
    spectrum = (((WaveTrack *) track)->GetDisplay() == WaveTrack::SpectrumDisplay) ||
       (((WaveTrack *) track)->GetDisplay() == WaveTrack::SpectralSelectionDisplay)  ;
@@ -4733,9 +4730,6 @@ void TrackPanel::HandleVZoomButtonUp( wxMouseEvent & event )
 
       // Always spectrogram, never pitch view, pass true
       windowSize = mTrackArtist->GetSpectrumWindowSize(true);
-#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
-      fftSkipPoints = SpectrogramSettings::defaults().fftSkipPoints;
-#endif //EXPERIMENTAL_FFT_SKIP_POINTS
       binSize = rate / windowSize;
       minBins = wxMin(10, windowSize/2); //minimum 10 freq bins, unless there are less
    }
@@ -4750,9 +4744,6 @@ void TrackPanel::HandleVZoomButtonUp( wxMouseEvent & event )
 
          // Always spectrogram, never pitch view, pass true
          windowSize = mTrackArtist->GetSpectrumWindowSize(true);
-#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
-         fftSkipPoints = SpectrogramSettings::defaults().fftSkipPoints;
-#endif //EXPERIMENTAL_FFT_SKIP_POINTS
          binSize = rate / windowSize;
          minBins = wxMin(10, windowSize/2); //minimum 10 freq bins, unless there are less
       }

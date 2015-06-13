@@ -76,10 +76,6 @@ class AUDACITY_DLL_API TrackArtist {
    int GetSpectrumLogMaxFreq(int deffreq);
    int GetSpectrumWindowSize(bool includeZeroPadding);
 
-#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
-   int GetSpectrumFftSkipPoints();
-#endif
-
    void SetSpectrumMinFreq(int freq);
    void SetSpectrumMaxFreq(int freq);
    void SetSpectrumLogMinFreq(int freq);
