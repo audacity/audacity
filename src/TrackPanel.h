@@ -459,6 +459,7 @@ protected:
    virtual void MoveTrack(Track* target, int eventId);
    virtual void OnChangeOctave (wxCommandEvent &event);
    virtual void OnChannelChange(wxCommandEvent &event);
+   virtual void OnViewSettings(wxCommandEvent &event);
    virtual void OnSetDisplay   (wxCommandEvent &event);
    virtual void OnSetTimeTrackRange (wxCommandEvent &event);
    virtual void OnTimeTrackLin(wxCommandEvent &event);
