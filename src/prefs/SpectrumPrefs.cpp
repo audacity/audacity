@@ -127,98 +127,102 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
 {
    S.SetBorder(2);
 
-   S.StartStatic(_("FFT Window"));
+   // S.StartStatic(_("Track Settings"));
    {
-      S.StartMultiColumn(2);
+      S.StartStatic(_("FFT Window"));
       {
-         S.Id(ID_WINDOW_SIZE).TieChoice(_("Window &size:"),
-                     mTempSettings.windowSize,
-                     &mSizeChoices);
-         S.SetSizeHints(mSizeChoices);
+         S.StartMultiColumn(2);
+         {
+            S.Id(ID_WINDOW_SIZE).TieChoice(_("Window &size:"),
+               mTempSettings.windowSize,
+               &mSizeChoices);
+            S.SetSizeHints(mSizeChoices);
 
-         S.TieChoice(_("Window &type:"),
-                     mTempSettings.windowType,
-                     &mTypeChoices);
-         S.SetSizeHints(mTypeChoices);
+            S.TieChoice(_("Window &type:"),
+               mTempSettings.windowType,
+               &mTypeChoices);
+            S.SetSizeHints(mTypeChoices);
 
 #ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
-         S.Id(ID_PADDING_SIZE).TieChoice(_("&Zero padding factor") + wxString(wxT(":")),
-                     mTempSettings.zeroPaddingFactor,
-                     &mZeroPaddingChoices);
-         S.SetSizeHints(mZeroPaddingChoices);
+            S.Id(ID_PADDING_SIZE).TieChoice(_("&Zero padding factor") + wxString(wxT(":")),
+               mTempSettings.zeroPaddingFactor,
+               &mZeroPaddingChoices);
+            S.SetSizeHints(mZeroPaddingChoices);
 #endif
+         }
+         S.EndMultiColumn();
       }
-      S.EndMultiColumn();
-   }
-   S.EndStatic();
+      S.EndStatic();
 
-   S.StartStatic(_("Display"));
-   {
-      S.StartTwoColumn();
+      S.StartStatic(_("Display"));
       {
-         mMinFreq =
-            S.TieNumericTextBox(_("Mi&nimum Frequency (Hz):"),
-                                mTempSettings.minFreq,
-                                12);
+         S.StartTwoColumn();
+         {
+            mMinFreq =
+               S.TieNumericTextBox(_("Mi&nimum Frequency (Hz):"),
+               mTempSettings.minFreq,
+               12);
 
-         mMaxFreq =
-            S.TieNumericTextBox(_("Ma&ximum Frequency (Hz):"),
-                                mTempSettings.maxFreq,
-                                12);
+            mMaxFreq =
+               S.TieNumericTextBox(_("Ma&ximum Frequency (Hz):"),
+               mTempSettings.maxFreq,
+               12);
 
-         mGain =
-            S.TieNumericTextBox(_("&Gain (dB):"),
-                                mTempSettings.gain,
-                                8);
+            mGain =
+               S.TieNumericTextBox(_("&Gain (dB):"),
+               mTempSettings.gain,
+               8);
 
-         mRange =
-            S.TieNumericTextBox(_("&Range (dB):"),
-                                mTempSettings.range,
-                                8);
+            mRange =
+               S.TieNumericTextBox(_("&Range (dB):"),
+               mTempSettings.range,
+               8);
 
-         mFrequencyGain =
-            S.TieNumericTextBox(_("Frequency g&ain (dB/dec):"),
-                                mTempSettings.frequencyGain,
-                                4);
-      }
-      S.EndTwoColumn();
+            mFrequencyGain =
+               S.TieNumericTextBox(_("Frequency g&ain (dB/dec):"),
+               mTempSettings.frequencyGain,
+               4);
+         }
+         S.EndTwoColumn();
 
-      S.TieCheckBox(_("S&how the spectrum using grayscale colors"),
-                    mTempSettings.isGrayscale);
+         S.TieCheckBox(_("S&how the spectrum using grayscale colors"),
+            mTempSettings.isGrayscale);
 
 #ifdef EXPERIMENTAL_FFT_Y_GRID
-      S.TieCheckBox(_("Show a grid along the &Y-axis"),
-                    mTempSettings.fftYGrid);
+         S.TieCheckBox(_("Show a grid along the &Y-axis"),
+            mTempSettings.fftYGrid);
 #endif //EXPERIMENTAL_FFT_Y_GRID
-   }
-   S.EndStatic();
+      }
+      S.EndStatic();
 
 #ifdef EXPERIMENTAL_FIND_NOTES
-   /* i18n-hint: FFT stands for Fast Fourier Transform and probably shouldn't be translated*/
-   S.StartStatic(_("FFT Find Notes"));
-   {
-      S.StartTwoColumn();
+      /* i18n-hint: FFT stands for Fast Fourier Transform and probably shouldn't be translated*/
+      S.StartStatic(_("FFT Find Notes"));
       {
-         mFindNotesMinA =
-            S.TieNumericTextBox(_("Minimum Amplitude (dB):"),
-                                mTempSettings.fftFindNotes,
-                                8);
+         S.StartTwoColumn();
+         {
+            mFindNotesMinA =
+               S.TieNumericTextBox(_("Minimum Amplitude (dB):"),
+               mTempSettings.fftFindNotes,
+               8);
 
-         mFindNotesN =
-            S.TieNumericTextBox(_("Max. Number of Notes (1..128):"),
-                                mTempSettings.findNotesMinA,
-                                8);
+            mFindNotesN =
+               S.TieNumericTextBox(_("Max. Number of Notes (1..128):"),
+               mTempSettings.findNotesMinA,
+               8);
+         }
+         S.EndTwoColumn();
+
+         S.TieCheckBox(_("&Find Notes"),
+            mTempSettings.numberOfMaxima);
+
+         S.TieCheckBox(_("&Quantize Notes"),
+            mTempSettings.findNotesQuantize);
       }
-      S.EndTwoColumn();
-
-      S.TieCheckBox(_("&Find Notes"),
-                    mTempSettings.numberOfMaxima);
-
-      S.TieCheckBox(_("&Quantize Notes"),
-                    mTempSettings.findNotesQuantize);
-   }
-   S.EndStatic();
+      S.EndStatic();
 #endif //EXPERIMENTAL_FIND_NOTES
+   }
+   // S.EndStatic();
 }
 
 bool SpectrumPrefs::Validate()
