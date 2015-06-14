@@ -8,16 +8,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Audacity 2.0.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2015-06-14 16:38+0100\n"
-"PO-Revision-Date: 2015-02-12 14:52-0000\n"
-"Last-Translator: Yuri Chornoivan\n"
+"POT-Creation-Date: 2015-06-14 08:58+0300\n"
+"PO-Revision-Date: 2015-06-14 13:38+0300\n"
+"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <translation@linux.org.ua>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 1.6.9\n"
+"X-Generator: Lokalize 1.5\n"
 
 #: lib-src/FileDialog/generic/FileDialogPrivate.cpp:296
 #: lib-src/FileDialog/generic/FileDialogPrivate.cpp:319
@@ -183,7 +183,6 @@ msgid "OK... Audacious!"
 msgstr "Гаразд… Круто!"
 
 #: src/AboutDialog.cpp:215
-#, fuzzy
 msgid ""
 "Audacity is a free program written by a worldwide team of volunteer <a href="
 "\"http://audacityteam.org/about/credits\">developers</a>. Audacity is <a "
@@ -191,12 +190,9 @@ msgid ""
 "and GNU/Linux (and other Unix-like systems)."
 msgstr ""
 "Audacity — вільна програма, створена командою добровольців, <a href=\"http://"
-"audacity.sourceforge.net/community/developers\">розробників</a> з усього "
-"світу. Ми вдячні <a href=\"http://code.google.com\">Google Code</a> та <a "
-"href=\"http://sourceforge.net\">SourceForge</a> за надання майданчика для "
-"нашого проекту. Audacity <a href=\"http://audacity.sourceforge.net/download/"
-"\">можна користуватися</a> у Windows, Mac OS X, GNU/Linux та інших подібних "
-"до Unix системах."
+"audacityteam.org/about/credits\">розробників</a> з усього світу. Audacity <a "
+"href=\"http://audacityteam.org/download\">можна користуватися</a> у Windows, "
+"Mac OS X, GNU/Linux та інших подібних до Unix системах."
 
 #: src/AboutDialog.cpp:225
 msgid ""
@@ -362,9 +358,8 @@ msgid "Program build date: "
 msgstr "Дата компіляції програми: "
 
 #: src/AboutDialog.cpp:533
-#, fuzzy
 msgid "Commit Id:"
-msgstr "Команда:"
+msgstr "Ід. внеску:"
 
 #: src/AboutDialog.cpp:538 src/AboutDialog.cpp:540
 msgid "Build type:"
@@ -429,12 +424,11 @@ msgstr "Не вистачає файлів"
 
 #: src/AudacityApp.cpp:1056
 msgid "Report generated to:"
-msgstr ""
+msgstr "Звіт створено тут:"
 
 #: src/AudacityApp.cpp:1057
-#, fuzzy
 msgid "Audacity Support Data"
-msgstr "Команда підтримки Audacity"
+msgstr "Дані щодо супроводу Audacity"
 
 #: src/AudacityApp.cpp:1144
 msgid "Master Gain Control"
@@ -446,12 +440,11 @@ msgstr "Розмір блоку має належати діапазону ві�
 
 #: src/AudacityApp.cpp:1389
 msgid "File decoded successfully\n"
-msgstr ""
+msgstr "Файл успішно декодовано\n"
 
 #: src/AudacityApp.cpp:1393
-#, fuzzy
 msgid "Decoding failed\n"
-msgstr "Кінець запису"
+msgstr "Помилка під час декодування\n"
 
 #: src/AudacityApp.cpp:1415
 msgid "Audacity is starting up..."
@@ -545,9 +538,8 @@ msgid "set max disk block size in bytes"
 msgstr "встановити максимальний розмір блоку диску у байтах"
 
 #: src/AudacityApp.cpp:1842
-#, fuzzy
 msgid "decode an autosave file"
-msgstr "Не вдалося вилучити старий файл автозбереження"
+msgstr "декодувати файл автозбереження"
 
 #: src/AudacityApp.cpp:1846
 msgid "this help message"
@@ -795,9 +787,8 @@ msgid "&Edit Parameters"
 msgstr "&Редагувати параметри"
 
 #: src/BatchCommandDialog.cpp:88
-#, fuzzy
 msgid "&Use Preset"
-msgstr "Шаблони користувача"
+msgstr "Ви&користовувати шаблон"
 
 #: src/BatchCommandDialog.cpp:96
 msgid "&Parameters"
@@ -974,9 +965,8 @@ msgid "Enter name of new chain"
 msgstr "Введіть назву нового ланцюжка"
 
 #: src/BatchProcessDialog.cpp:716
-#, fuzzy
 msgid "Name of new chain"
-msgstr "Введіть назву нового ланцюжка"
+msgstr "Назва нового ланцюжка"
 
 #: src/BatchProcessDialog.cpp:727
 msgid "Name must not be blank"
@@ -1595,7 +1585,7 @@ msgstr "дБ"
 
 #: src/FreqWindow.cpp:316
 msgid "Scroll"
-msgstr ""
+msgstr "Гортати"
 
 #: src/FreqWindow.cpp:333 src/prefs/MousePrefs.cpp:125
 #: src/prefs/MousePrefs.cpp:126 src/prefs/MousePrefs.cpp:127
@@ -1605,14 +1595,12 @@ msgid "Zoom"
 msgstr "Масштабування"
 
 #: src/FreqWindow.cpp:430
-#, fuzzy
 msgid "&Algorithm:"
-msgstr "Алгоритм"
+msgstr "&Алгоритм:"
 
 #: src/FreqWindow.cpp:436
-#, fuzzy
 msgid "&Size:"
-msgstr "Розмір"
+msgstr "&Розмір:"
 
 #: src/FreqWindow.cpp:442 src/LabelDialog.cpp:135
 #: src/prefs/KeyConfigPrefs.cpp:282 src/prefs/KeyConfigPrefs.cpp:804
@@ -1620,24 +1608,20 @@ msgid "&Export..."
 msgstr "&Експорт…"
 
 #: src/FreqWindow.cpp:446
-#, fuzzy
 msgid "&Replot..."
-msgstr "Пере&малювати"
+msgstr "Пере&малювати…"
 
 #: src/FreqWindow.cpp:456
-#, fuzzy
 msgid "&Function:"
-msgstr "Функція"
+msgstr "&Функція:"
 
 #: src/FreqWindow.cpp:463
-#, fuzzy
 msgid "&Axis:"
-msgstr "Вісь"
+msgstr "В&ісь:"
 
 #: src/FreqWindow.cpp:470
-#, fuzzy
 msgid "&Grids"
-msgstr "Сітки"
+msgstr "Сі&тка"
 
 #: src/FreqWindow.cpp:586
 msgid "To plot the spectrum, all selected tracks must be the same sample rate."
@@ -1672,22 +1656,22 @@ msgstr "с"
 #: src/FreqWindow.cpp:940
 #, c-format
 msgid "%d Hz (%s) = %d dB"
-msgstr ""
+msgstr "%d Гц (%s) = %d дБ"
 
 #: src/FreqWindow.cpp:941
 #, c-format
 msgid "%d Hz (%s) = %.1f dB"
-msgstr ""
+msgstr "%d Гц (%s) = %.1f дБ"
 
 #: src/FreqWindow.cpp:949
 #, c-format
 msgid "%.4f sec (%d Hz) (%s) = %f"
-msgstr ""
+msgstr "%.4f сек (%d Гц) (%s) = %f"
 
 #: src/FreqWindow.cpp:951
 #, c-format
 msgid "%.4f sec (%d Hz) (%s) = %.3f"
-msgstr ""
+msgstr "%.4f сек (%d Гц) (%s) = %.3f"
 
 #: src/FreqWindow.cpp:1032
 msgid "spectrum.txt"
@@ -1860,9 +1844,8 @@ msgid "Undo History"
 msgstr "Повернути дію за журналом"
 
 #: src/HistoryWindow.cpp:75
-#, fuzzy
 msgid "&Manage History"
-msgstr "Керування журналом"
+msgstr "&Керування журналом"
 
 #: src/HistoryWindow.cpp:81 src/effects/TruncSilence.cpp:54
 #: src/effects/TruncSilence.cpp:516
@@ -1871,16 +1854,15 @@ msgstr "Дія"
 
 #: src/HistoryWindow.cpp:89
 msgid "&Total space used"
-msgstr ""
+msgstr "З&агалом використаного місця"
 
 #: src/HistoryWindow.cpp:93
 msgid "&Undo Levels Available"
 msgstr "Кількість рівнів &запису дій"
 
 #: src/HistoryWindow.cpp:97
-#, fuzzy
 msgid "&Levels To Discard"
-msgstr "Рівнів для відкидання"
+msgstr "&Рівнів для відкидання"
 
 #: src/HistoryWindow.cpp:109
 msgid "&Discard"
@@ -2514,9 +2496,8 @@ msgid "Add &New"
 msgstr "Додати &нову"
 
 #: src/Menus.cpp:848
-#, fuzzy
 msgid "&Mono Track"
-msgstr "Перемістити доріжку"
+msgstr "&Монодоріжку"
 
 #: src/Menus.cpp:849
 msgid "&Stereo Track"
@@ -2631,9 +2612,8 @@ msgid "&Generate"
 msgstr "&Створення"
 
 #: src/Menus.cpp:985 src/Menus.cpp:1012 src/Menus.cpp:1036
-#, fuzzy
 msgid "Manage..."
-msgstr "&Керування"
+msgstr "Керування…"
 
 #: src/Menus.cpp:1001
 msgid "Effe&ct"
@@ -2681,9 +2661,8 @@ msgid "&Run Benchmark..."
 msgstr "&Тестування швидкодії…"
 
 #: src/Menus.cpp:1081
-#, fuzzy
 msgid "&Check for Updates..."
-msgstr "Перевір&ити залежності…"
+msgstr "П&еревірити наявність оновлень…"
 
 #: src/Menus.cpp:1082
 msgid "Au&dio Device Info..."
@@ -2695,7 +2674,7 @@ msgstr "Показати &журнал…"
 
 #: src/Menus.cpp:1089
 msgid "&Generate Support Data..."
-msgstr ""
+msgstr "С&творити дані для супроводу…"
 
 #: src/Menus.cpp:1104
 msgid "Move backward thru active windows"
@@ -2768,34 +2747,28 @@ msgid "Play To Selection"
 msgstr "Відтворити вибране"
 
 #: src/Menus.cpp:1135
-#, fuzzy
 msgid "Play Before Selection Start"
-msgstr "До початку вид&іленого"
+msgstr "Відтворити після початку позначеного"
 
 #: src/Menus.cpp:1136
-#, fuzzy
 msgid "Play After Selection Start"
-msgstr "До початку вид&іленого"
+msgstr "Відтворити після початку позначеного"
 
 #: src/Menus.cpp:1137
-#, fuzzy
 msgid "Play Before Selection End"
-msgstr "Відтворити вибране"
+msgstr "Відтворити до кінця позначеного"
 
 #: src/Menus.cpp:1138
-#, fuzzy
 msgid "Play After Selection End"
-msgstr "до кінця вибран&ого"
+msgstr "Відтворити після кінця позначеного"
 
 #: src/Menus.cpp:1139
-#, fuzzy
 msgid "Play Before and After Selection Start"
-msgstr "Перейти до по&чатку позначеного"
+msgstr "Відтворити до і після початку позначеного"
 
 #: src/Menus.cpp:1140
-#, fuzzy
 msgid "Play Before and After Selection End"
-msgstr "Завершити на &кінці позначеного"
+msgstr "Відтворити до і після кінця позначеного"
 
 #: src/Menus.cpp:1141
 msgid "Play Cut Preview"
@@ -2842,14 +2815,12 @@ msgid "Move Focus to Next Track"
 msgstr "Перемістити фокус на наступну доріжку"
 
 #: src/Menus.cpp:1168
-#, fuzzy
 msgid "Move Focus to First Track"
-msgstr "Перемістити фокус на наступну доріжку"
+msgstr "Перемістити фокус на першу доріжку"
 
 #: src/Menus.cpp:1169
-#, fuzzy
 msgid "Move Focus to Last Track"
-msgstr "Перемістити фокус на наступну доріжку"
+msgstr "Перемістити фокус на останню доріжку"
 
 #: src/Menus.cpp:1172
 msgid "Move Focus to Previous and Select"
@@ -2952,24 +2923,20 @@ msgid "Close focused track"
 msgstr "Закрити активну доріжку"
 
 #: src/Menus.cpp:1203
-#, fuzzy
 msgid "Move focused track up"
-msgstr "Закрити активну доріжку"
+msgstr "Пересунути фокусовану доріжку вище"
 
 #: src/Menus.cpp:1204
-#, fuzzy
 msgid "Move focused track down"
-msgstr "Закрити активну доріжку"
+msgstr "Пересунути фокусовану доріжку нижче"
 
 #: src/Menus.cpp:1205
-#, fuzzy
 msgid "Move focused track to top"
-msgstr "Закрити активну доріжку"
+msgstr "Пересунути фокусовану доріжку на початок"
 
 #: src/Menus.cpp:1206
-#, fuzzy
 msgid "Move focused track to bottom"
-msgstr "Пересунути доріжку у &кінець"
+msgstr "Пересунути фокусовану доріжку у кінець"
 
 #: src/Menus.cpp:1210
 msgid "Snap To Off"
@@ -3550,20 +3517,20 @@ msgid "&Save"
 msgstr "&Зберегти"
 
 #: src/Menus.cpp:6425 src/Menus.cpp:6436
-#, fuzzy
 msgid "Save Device Info"
-msgstr "Інформація про аудіопристрої"
+msgstr "Збереження даних щодо пристрою"
 
 #: src/Menus.cpp:6436
-#, fuzzy
 msgid "Unable to save device info"
-msgstr "Не вдалося зберегти файл зі списком жанрів."
+msgstr "Не вдалося зберегти дані щодо пристрою"
 
 #: src/Menus.cpp:6519
 msgid ""
 "Cannot lock region beyond\n"
 "end of project."
 msgstr ""
+"Не можна блокувати область за\n"
+"кінцевою точкою проекту."
 
 #: src/Menus.cpp:6542 src/Menus.cpp:6604 src/export/ExportFFmpeg.cpp:915
 #: src/export/ExportMP3.cpp:1892
@@ -3721,7 +3688,7 @@ msgstr "Доріжка приміток"
 
 #: src/PluginManager.cpp:479
 msgid "Plug-in Manager: Effects, Generators and Analyzers"
-msgstr ""
+msgstr "Керування додатками: ефекти, засоби створення та аналізу"
 
 #: src/PluginManager.cpp:490 src/prefs/ModulePrefs.cpp:102
 msgid "New"
@@ -3730,86 +3697,86 @@ msgstr "Новий"
 #: src/PluginManager.cpp:528
 msgid "Select effects, click the Enable or Disable button, then click OK."
 msgstr ""
+"Виберіть ефекти, натисніть кнопку «Увімкнути» або «Вимкнути», потім "
+"натисніть кнопку «Гаразд»."
 
 #: src/PluginManager.cpp:542
 msgid "Show:"
-msgstr ""
+msgstr "Показ:"
 
 #: src/PluginManager.cpp:545
-#, fuzzy
 msgid "Show all"
-msgstr "Показувати всі кодеки"
+msgstr "Показати усе"
 
 #: src/PluginManager.cpp:547
-#, fuzzy
 msgid "D&isabled"
-msgstr "Вимкнено"
+msgstr "Ви&мкнені"
 
 #: src/PluginManager.cpp:548
-#, fuzzy
 msgid "Show disabled"
-msgstr " (вимкнено)"
+msgstr "Показати вимкнені"
 
 #: src/PluginManager.cpp:550
-#, fuzzy
 msgid "E&nabled"
-msgstr "Увімкнено"
+msgstr "&Увімкнені"
 
 #: src/PluginManager.cpp:551
-#, fuzzy
 msgid "Show enabled"
-msgstr "Увімкнено"
+msgstr "Показати увімкнені"
 
 #: src/PluginManager.cpp:553
 msgid "Ne&w"
-msgstr ""
+msgstr "Но&ві"
 
 #: src/PluginManager.cpp:554
 msgid "Show new"
-msgstr ""
+msgstr "Показати нові"
 
 #: src/PluginManager.cpp:571
 msgid "State"
-msgstr ""
+msgstr "Стан"
 
 #: src/PluginManager.cpp:572
 msgid "Path"
 msgstr "Шлях"
 
 #: src/PluginManager.cpp:576
-#, fuzzy
 msgid "&Select All"
-msgstr "Позна&чити все"
+msgstr "&Позначити усі"
 
 #: src/PluginManager.cpp:577
-#, fuzzy
 msgid "C&lear All"
-msgstr "С&порожнити все"
+msgstr "З&няти позначення з усіх"
 
 #: src/PluginManager.cpp:585 src/effects/Effect.cpp:3019
 msgid "&Enable"
 msgstr "&Увімкнути"
 
 #: src/PluginManager.cpp:586
-#, fuzzy
 msgid "&Disable"
-msgstr "Вимкнено"
+msgstr "Ви&мкнути"
 
 #: src/PluginManager.cpp:965
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Enabling effects:\n"
 "\n"
 "%s"
-msgstr "Увімкнути ефекти"
+msgstr ""
+"Вмикаємо ефекти:\n"
+"\n"
+"%s"
 
 #: src/PluginManager.cpp:979
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Enabling effect:\n"
 "\n"
 "%s"
-msgstr "Увімкнути ефекти"
+msgstr ""
+"Вмикаємо ефект:\n"
+"\n"
+"%s"
 
 #: src/Prefs.cpp:174
 #, c-format
@@ -3981,14 +3948,12 @@ msgstr ""
 "формату."
 
 #: src/Project.cpp:2644
-#, fuzzy
 msgid "Could not decode file: "
-msgstr "Не вдається відкрити файл: "
+msgstr "Не вдалося декодувати файл: "
 
 #: src/Project.cpp:2645
-#, fuzzy
 msgid "Error decoding file"
-msgstr "Помилка під час відкриття файла"
+msgstr "Помилка під час спроби декодування файла"
 
 #: src/Project.cpp:2743
 msgid "Project was recovered"
@@ -4770,14 +4735,12 @@ msgid "Spectrogram l&og(f)"
 msgstr "Сп&ектрограма ln(f)"
 
 #: src/TrackPanel.cpp:728
-#, fuzzy
 msgid "S&pectral Selection"
-msgstr "Спектральний вибір"
+msgstr "С&пектральний вибір"
 
 #: src/TrackPanel.cpp:730
-#, fuzzy
 msgid "Spectral Selection lo&g(f)"
-msgstr "Спектральний вибір"
+msgstr "log(f) спектрального вибору"
 
 #: src/TrackPanel.cpp:732
 msgid "Pitc&h (EAC)"
@@ -5028,12 +4991,11 @@ msgid "Time-Shift"
 msgstr "Зсув у часі"
 
 #: src/TrackPanel.cpp:4973
-#, fuzzy
 msgid ""
 "To use Draw, choose 'Waveform' or 'Waveform dB' in the Track Drop-down Menu."
 msgstr ""
-"Щоб використати Малювання, виберіть пункт «Форма хвилі» у спадному меню "
-"доріжки."
+"Щоб використати Малювання, виберіть пункт «Форма хвилі» або «дБ форми хвилі» "
+"у спадному меню доріжки."
 
 #: src/TrackPanel.cpp:4979
 msgid "To use Draw, choose 'Waveform' in the Track Drop-down Menu."
@@ -5048,9 +5010,8 @@ msgstr ""
 "окремі фрагменти."
 
 #: src/TrackPanel.cpp:5247
-#, fuzzy
 msgid "Moved Samples"
-msgstr "Семпл переміщено"
+msgstr "Пересунуті семли"
 
 #: src/TrackPanel.cpp:5248
 msgid "Sample Edit"
@@ -5450,7 +5411,7 @@ msgstr "Коефіцієнт"
 
 #: src/effects/Amplify.cpp:90
 msgid "Increases or decreases the volume of the audio you have selected"
-msgstr ""
+msgstr "Збільшує або зменшує гучність позначених вами звукових даних"
 
 #: src/effects/Amplify.cpp:219
 msgid "Amplification (dB):"
@@ -5473,45 +5434,40 @@ msgid "Amplify"
 msgstr "Підсилення сигналу"
 
 #: src/effects/AutoDuck.cpp:39
-#, fuzzy
 msgid "DuckAmountDb"
-msgstr "Величина приглушення:"
+msgstr "Величина приглушення у дБ"
 
 #: src/effects/AutoDuck.cpp:40
-#, fuzzy
 msgid "InnerFadeDownLen"
-msgstr "Внутрішня довжина згасання:"
+msgstr "Внутрішня довжина згасання"
 
 #: src/effects/AutoDuck.cpp:41
-#, fuzzy
 msgid "InnerFadeUpLen"
-msgstr "Внутрішня довжина наростання:"
+msgstr "Внутрішня довжина наростання"
 
 #: src/effects/AutoDuck.cpp:42
-#, fuzzy
 msgid "OuterFadeDownLen"
-msgstr "Зовнішня довжина згасання:"
+msgstr "Зовнішня довжина згасання"
 
 #: src/effects/AutoDuck.cpp:43
-#, fuzzy
 msgid "OuterFadeUpLen"
-msgstr "Зовнішня довжина наростання:"
+msgstr "Зовнішня довжина наростання"
 
 #: src/effects/AutoDuck.cpp:44
-#, fuzzy
 msgid "ThresholdDb"
 msgstr "Порогове значення"
 
 #: src/effects/AutoDuck.cpp:45
-#, fuzzy
 msgid "MaximumPause"
-msgstr "Максимальна пауза:"
+msgstr "Максимальна пауза"
 
 #: src/effects/AutoDuck.cpp:113
 msgid ""
 "Reduces (ducks) the volume of one or more tracks whenever the volume of a "
 "specified \"control\" track reaches a particular level"
 msgstr ""
+"Зменшує (приглушує) гучність однієї або декількох доріжок у місцях, де "
+"гучність вказаної «керівної» доріжки досягає вказаного рівня"
 
 #: src/effects/AutoDuck.cpp:223
 msgid ""
@@ -5600,6 +5556,8 @@ msgid ""
 "Increases or decreases the lower frequencies and higher frequencies of your "
 "audio independently"
 msgstr ""
+"Збільшує або зменшує інтенсивність нижніх або верхніх частот ваших звукових "
+"даних незалежно"
 
 #: src/effects/BassTreble.cpp:285
 msgid "&Bass (dB):"
@@ -5635,14 +5593,12 @@ msgstr "Баси і ВЧ"
 
 #: src/effects/ChangePitch.cpp:52 src/effects/ChangeSpeed.cpp:68
 #: src/effects/ChangeTempo.cpp:46
-#, fuzzy
 msgid "Percentage"
-msgstr "Зміна у відсотках"
+msgstr "Відсотки"
 
 #: src/effects/ChangePitch.cpp:114
-#, fuzzy
 msgid "Change the pitch of a track without changing its tempo"
-msgstr "Змінити висоту тону не змінюючи темп"
+msgstr "Зміна тону доріжки без зміни темпу"
 
 #: src/effects/ChangePitch.cpp:206
 msgid "Change Pitch without Changing Tempo"
@@ -5725,7 +5681,7 @@ msgstr "гг:хх:сс + мілісекунд"
 
 #: src/effects/ChangeSpeed.cpp:116
 msgid "Change the speed of a track, also changing its pitch"
-msgstr ""
+msgstr "Змінює швидкість відтворення доріжки, а також змінює тон"
 
 #: src/effects/ChangeSpeed.cpp:296
 msgid "Change Speed, affecting both Tempo and Pitch"
@@ -5752,27 +5708,24 @@ msgid "Selection Length"
 msgstr "Тривалість вибраної області"
 
 #: src/effects/ChangeSpeed.cpp:364
-#, fuzzy
 msgid "Current Length:"
-msgstr "Поточна тривалість"
+msgstr "Поточна тривалість:"
 
 #: src/effects/ChangeSpeed.cpp:375
 msgid "Current length of selection."
 msgstr "Поточна тривалість позначеного фрагмента."
 
 #: src/effects/ChangeSpeed.cpp:380
-#, fuzzy
 msgid "New Length:"
-msgstr "Нова тривалість"
+msgstr "Нова тривалість:"
 
 #: src/effects/ChangeSpeed.h:29
 msgid "Change Speed"
 msgstr "Зміна швидкості"
 
 #: src/effects/ChangeTempo.cpp:90
-#, fuzzy
 msgid "Change the tempo of a selection without changing its pitch"
-msgstr "Зміна темпу, не змінюючи висоту тону"
+msgstr "Зміна темпу позначеного фрагмента без зміни його тону"
 
 #: src/effects/ChangeTempo.cpp:165
 msgid "Change Tempo without Changing Pitch"
@@ -5813,11 +5766,13 @@ msgstr "Порогове значення"
 
 #: src/effects/ClickRemoval.cpp:50
 msgid "Width"
-msgstr ""
+msgstr "Ширина"
 
 #: src/effects/ClickRemoval.cpp:83
 msgid "Click Removal is designed to remove clicks on audio tracks"
 msgstr ""
+"Засіб вилучення клацання створено для вилучення клацальних звуків зі "
+"звукових даних"
 
 #: src/effects/ClickRemoval.cpp:189
 msgid "Algorithm not effective on this audio. Nothing changed."
@@ -5845,27 +5800,24 @@ msgid "Click Removal"
 msgstr "Вилучення клацання"
 
 #: src/effects/Compressor.cpp:57
-#, fuzzy
 msgid "NoiseFloor"
 msgstr "Нижній поріг шуму"
 
 #: src/effects/Compressor.cpp:59
-#, fuzzy
 msgid "AttackTime"
 msgstr "Час наростання"
 
 #: src/effects/Compressor.cpp:60
-#, fuzzy
 msgid "ReleaseTime"
 msgstr "Час випуску"
 
 #: src/effects/Compressor.cpp:62
 msgid "UsePeak"
-msgstr ""
+msgstr "Вик. піків"
 
 #: src/effects/Compressor.cpp:118
 msgid "Compresses the dynamic range of audio"
-msgstr ""
+msgstr "Стискає динамічний діапазон звукових даних"
 
 #: src/effects/Compressor.cpp:232
 msgid "Noise Floor:"
@@ -5965,9 +5917,8 @@ msgid "Compressor"
 msgstr "Компресор"
 
 #: src/effects/Contrast.cpp:66
-#, fuzzy
 msgid "No wave tracks exist."
-msgstr "Вилучено доріжку '%s.'"
+msgstr "Немає доріжок хвиль."
 
 #: src/effects/Contrast.cpp:72
 msgid ""
@@ -6199,27 +6150,26 @@ msgid "Data gathered"
 msgstr "Дані зібрано"
 
 #: src/effects/DtmfGen.cpp:38
-#, fuzzy
 msgid "Sequence"
-msgstr "Частота"
+msgstr "Послідовність"
 
 #: src/effects/DtmfGen.cpp:39 src/effects/FindClipping.cpp:36
 #: src/effects/FindClipping.cpp:37
-#, fuzzy
 msgid "Duty Cycle"
-msgstr "Робочий цикл:"
+msgstr "Робочий цикл"
 
 #: src/effects/DtmfGen.cpp:40 src/effects/Noise.cpp:49
 #: src/effects/ToneGen.cpp:73
-#, fuzzy
 msgid "Amplitude"
-msgstr "Кінець діапазону амплітуди"
+msgstr "Амплітуда"
 
 #: src/effects/DtmfGen.cpp:92
 msgid ""
 "Generates dual-tone multi-frequency (DTMF) tones like those produced by the "
 "keypad on telephones"
 msgstr ""
+"Створює двотональні багаточастотні (DTMF) звуки, подібні до тих, які "
+"видаються клавішними панелями на телефонах"
 
 #: src/effects/DtmfGen.cpp:306
 msgid "DTMF sequence:"
@@ -6227,9 +6177,8 @@ msgstr "Тонова послідовність:"
 
 #: src/effects/DtmfGen.cpp:311 src/effects/Noise.cpp:225
 #: src/effects/ToneGen.cpp:356 src/effects/ToneGen.cpp:393
-#, fuzzy
 msgid "Amplitude (0-1):"
-msgstr "Амплітуда (0-1)"
+msgstr "Амплітуда (0-1):"
 
 #: src/effects/DtmfGen.cpp:313 src/effects/Noise.cpp:227
 #: src/effects/Silence.cpp:58 src/effects/ToneGen.cpp:397
@@ -6260,9 +6209,8 @@ msgid "Silence duration:"
 msgstr "Тривалість тиші:"
 
 #: src/effects/DtmfGen.h:27
-#, fuzzy
 msgid "DTMF Tones"
-msgstr "Тонові сигнали телефону…"
+msgstr "Тонові сигнали телефону"
 
 #: src/effects/Echo.cpp:35 src/effects/Reverb.cpp:47
 msgid "Delay"
@@ -6270,12 +6218,11 @@ msgstr "Затримка"
 
 #: src/effects/Echo.cpp:36
 msgid "Decay"
-msgstr ""
+msgstr "Спадання"
 
 #: src/effects/Echo.cpp:59
-#, fuzzy
 msgid "Repeats the selected audio again and again"
-msgstr "Експортування вибраного аудіо як %s"
+msgstr "Циклічно повторює відтворення позначених звукових даних"
 
 #: src/effects/Echo.cpp:147
 msgid "Delay time (seconds):"
@@ -6295,22 +6242,22 @@ msgid "Audacity"
 msgstr "Audacity"
 
 #: src/effects/Effect.cpp:1058
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Could not update effect \"%s\" with:\n"
 "%s"
 msgstr ""
-"Не вдалося встановити параметри ефекту %s\n"
-" у значення %s."
+"Не вдалося оновити ефект «%s» з\n"
+"%s"
 
 #: src/effects/Effect.cpp:1176 src/widgets/NumericTextCtrl.cpp:337
 msgid "hh:mm:ss + samples"
 msgstr "гг:хх:сс + фрагменти"
 
 #: src/effects/Effect.cpp:1209
-#, fuzzy, c-format
+#, c-format
 msgid "Applying %s..."
-msgstr "Застосування…"
+msgstr "Застосовуємо %s…"
 
 #: src/effects/Effect.cpp:2503
 msgid "Preparing preview"
@@ -6347,20 +6294,17 @@ msgid "Start and stop playback"
 msgstr "Розпочати або припинити відтворення"
 
 #: src/effects/Effect.cpp:2951
-#, fuzzy
 msgid "&Preview"
-msgstr "&Прослухати"
+msgstr "П&рослухати"
 
 #: src/effects/Effect.cpp:2952 src/effects/Effect.cpp:2968
 #: src/effects/Effect.cpp:2970
-#, fuzzy
 msgid "Preview effect"
-msgstr "&Прослухати"
+msgstr "Прослуховування ефекту"
 
 #: src/effects/Effect.cpp:2972
-#, fuzzy
 msgid "&Preview effect"
-msgstr "Прослуховування пе&ред вирізанням області:"
+msgstr "&Прослухати ефект"
 
 #: src/effects/Effect.cpp:2981 src/effects/Effect.cpp:2990
 #: src/effects/Effect.cpp:2992
@@ -6398,9 +6342,8 @@ msgid "User Presets"
 msgstr "Шаблони користувача"
 
 #: src/effects/Effect.cpp:3213
-#, fuzzy
 msgid "Save Preset..."
-msgstr "Зберегти шаблон"
+msgstr "Зберегти шаблон…"
 
 #: src/effects/Effect.cpp:3217 src/effects/Effect.cpp:3226
 #: src/effects/Effect.cpp:3455 src/export/ExportFFmpegDialogs.cpp:1312
@@ -6479,17 +6422,18 @@ msgid "Preset name:"
 msgstr "Назва набору шаблонів:"
 
 #: src/effects/Effect.cpp:3507
-#, fuzzy
 msgid "You must specify a name"
-msgstr "Спочатку виберіть доріжку."
+msgstr "Вам слід вказати назву"
 
 #: src/effects/Effect.cpp:3517
-#, fuzzy
 msgid ""
 "Preset already exists.\n"
 "\n"
 "Replace?"
-msgstr "Набір шаблонів уже існує"
+msgstr ""
+"Шаблон з такою назвою вже існує.\n"
+"\n"
+"Замінити його?"
 
 #: src/effects/Effect.cpp:3645 src/effects/Effect.cpp:3655
 #: src/effects/Effect.cpp:3657
@@ -6497,31 +6441,26 @@ msgid "Stop &Playback"
 msgstr "Зупинити &відтворення"
 
 #: src/effects/Effect.cpp:3756
-#, fuzzy
 msgid "Select Preset"
-msgstr "Вилучити шаблон"
+msgstr "Виберіть шаблон"
 
 #: src/effects/Effect.cpp:3766
-#, fuzzy
 msgid "Type:"
-msgstr "Тип"
+msgstr "Тип:"
 
 #: src/effects/Effect.cpp:3770
-#, fuzzy
 msgid "&Preset:"
-msgstr "Шаблон:"
+msgstr "&Шаблон:"
 
 #: src/effects/Effect.cpp:3794 src/effects/Effect.cpp:3829
 #: src/effects/Effect.cpp:3873 src/effects/Effect.cpp:3933
-#, fuzzy
 msgid "Current Settings"
-msgstr "Поточна тривалість"
+msgstr "Поточні параметри"
 
 #: src/effects/Effect.cpp:3799 src/effects/Effect.cpp:3833
 #: src/effects/Effect.cpp:3879 src/effects/Effect.cpp:3939
-#, fuzzy
 msgid "Factory Defaults"
-msgstr "Відновити типові"
+msgstr "Типові значення виробника"
 
 #: src/effects/EffectManager.cpp:156
 #, c-format
@@ -6630,28 +6569,24 @@ msgid "Cubic"
 msgstr "Кубічний"
 
 #: src/effects/Equalization.cpp:162
-#, fuzzy
 msgid "FilterLength"
-msgstr "Фільтр"
+msgstr "Тривалість фільтра"
 
 #: src/effects/Equalization.cpp:163
-#, fuzzy
 msgid "CurveName"
 msgstr "Назва кривої"
 
 #: src/effects/Equalization.cpp:164
-#, fuzzy
 msgid "InterpolateLin"
-msgstr "Інтерполяція:"
+msgstr "Лінійна інтерполяція"
 
 #: src/effects/Equalization.cpp:165
-#, fuzzy
 msgid "InterpolationMethod"
-msgstr "Інтерполяція:"
+msgstr "Метод інтерполяції"
 
 #: src/effects/Equalization.cpp:322
 msgid "Adjusts the volume levels of particular frequencies"
-msgstr ""
+msgstr "Коригує рівень звуку для певних частот"
 
 #: src/effects/Equalization.cpp:392
 msgid ""
@@ -7017,14 +6952,12 @@ msgstr ""
 "SSE з потоками: %s\n"
 
 #: src/effects/Fade.cpp:43
-#, fuzzy
 msgid "Applies a linear fade-in to the selected audio"
-msgstr ""
-"Натисніть кнопку миші і перетягніть вказівник, щоб позначити звукові дані"
+msgstr "Застосовує лінійне зростання гучності для позначених звукових даних"
 
 #: src/effects/Fade.cpp:44
 msgid "Applies a linear fade-out to the selected audio"
-msgstr ""
+msgstr "Застосовує лінійне спадання гучності для позначених звукових даних"
 
 #: src/effects/Fade.h:18
 msgid "Fade In"
@@ -7036,7 +6969,7 @@ msgstr "Повільне згасання"
 
 #: src/effects/FindClipping.cpp:58
 msgid "This displays runs of clipped samples in a Label Track"
-msgstr ""
+msgstr "Показує фрагменти обрізаних частин на доріжці для позначок"
 
 #: src/effects/FindClipping.cpp:110
 msgid "Clipping"
@@ -7060,7 +6993,7 @@ msgstr "Не вистачає місця для створення звуков�
 
 #: src/effects/Invert.cpp:40
 msgid "Flips the audio samples upside-down, reversing their polarity"
-msgstr ""
+msgstr "Віддзеркалює звукові семпли вертикально, змінюючи їхню полярність"
 
 #: src/effects/Invert.h:20
 msgid "Invert"
@@ -7088,13 +7021,15 @@ msgstr "Найбільший"
 
 #: src/effects/Leveller.cpp:53
 msgid "Passes"
-msgstr ""
+msgstr "Проходи"
 
 #: src/effects/Leveller.cpp:83
 msgid ""
 "Leveler is a simple, combined compressor and limiter effect for reducing the "
 "dynamic range of audio"
 msgstr ""
+"Засіб вирівнювання є простим комбінованим засобом стискання та обмеження для "
+"зменшення динамічного діапазону звукових даних"
 
 #: src/effects/Leveller.cpp:218
 msgid "Degree of Leveling:"
@@ -7105,14 +7040,12 @@ msgid "Noise Threshold:"
 msgstr "Поріг шуму:"
 
 #: src/effects/Leveller.h:21
-#, fuzzy
 msgid "Leveller"
 msgstr "Вирівнювання"
 
 #: src/effects/LoadEffects.cpp:238 src/effects/LoadEffects.cpp:243
-#, fuzzy
 msgid "Builtin Effects"
-msgstr "Ефекти Nyquist"
+msgstr "Вбудовані ефекти"
 
 #: src/effects/LoadEffects.cpp:248 src/effects/VST/VSTEffect.cpp:319
 #: src/effects/audiounits/AudioUnitEffect.cpp:99
@@ -7122,9 +7055,8 @@ msgid "The Audacity Team"
 msgstr "Команда Audacity"
 
 #: src/effects/LoadEffects.cpp:259
-#, fuzzy
 msgid "Provides builtin effects to Audacity"
-msgstr "Надає підтримку ефектів Nyquist у Audacity"
+msgstr "Надає підтримку вбудованих ефектів у Audacity"
 
 #: src/effects/Noise.cpp:40
 msgid "White"
@@ -7140,16 +7072,15 @@ msgstr "Випадковий"
 
 #: src/effects/Noise.cpp:78
 msgid "Generates one of three different types of noise"
-msgstr ""
+msgstr "Створює шум одного з трьох різних типів"
 
 #: src/effects/Noise.cpp:221
 msgid "Noise type:"
 msgstr "Тип шуму:"
 
 #: src/effects/Noise.h:23
-#, fuzzy
 msgid "Noise"
-msgstr "Шум:"
+msgstr "Шум"
 
 #: src/effects/NoiseReduction.cpp:96
 msgid "Median"
@@ -7194,6 +7125,8 @@ msgstr "Гаммінґ, обернений Гаммінґ"
 #: src/effects/NoiseReduction.cpp:429
 msgid "Removes background noise such as fans, tape noise, or hums"
 msgstr ""
+"Вилучає фоновий шум, зокрема шум від вентиляторів, прокручування стрічки, "
+"гудіння"
 
 #: src/effects/NoiseReduction.cpp:576
 msgid "Steps per block are too few for the window types."
@@ -7275,7 +7208,6 @@ msgid "Frequency smoothing"
 msgstr "Згладжування частоти"
 
 #: src/effects/NoiseReduction.cpp:1473
-#, fuzzy
 msgid "Sensiti&vity (dB):"
 msgstr "&Чутливість (у дБ):"
 
@@ -7414,6 +7346,8 @@ msgstr "Вилучення шуму"
 #: src/effects/NoiseRemoval.cpp:123
 msgid "Removes constant background noise such as fans, tape noise, or hums"
 msgstr ""
+"Вилучає сталий фоновий шум, зокрема шум від вентиляторів, прокручування "
+"стрічки, гудіння"
 
 #: src/effects/NoiseRemoval.cpp:764
 msgid ""
@@ -7448,22 +7382,20 @@ msgid "Re&move"
 msgstr "Ви&лучити"
 
 #: src/effects/Normalize.cpp:37
-#, fuzzy
 msgid "RemoveDcOffset"
-msgstr "Вилучення зміщення сталої складової…\n"
+msgstr "Вилучити зміщення сталої складової"
 
 #: src/effects/Normalize.cpp:38
-#, fuzzy
 msgid "ApplyGain"
-msgstr "Застосувати ланцюжок"
+msgstr "Застосувати підсилення"
 
 #: src/effects/Normalize.cpp:39
 msgid "StereoIndependent"
-msgstr ""
+msgstr "Незалежні стереоканали"
 
 #: src/effects/Normalize.cpp:69 src/effects/Repair.cpp:53
 msgid "Sets the peak amplitude of a one or more tracks"
-msgstr ""
+msgstr "Встановлює амплітуду піків для однієї або декількох доріжок"
 
 #: src/effects/Normalize.cpp:171
 msgid "Removing DC offset and Normalizing...\n"
@@ -7526,18 +7458,18 @@ msgid ".  Maximum 0dB."
 msgstr ".  Максимум — 0 дБ."
 
 #: src/effects/Paulstretch.cpp:33
-#, fuzzy
 msgid "Stretch Factor"
-msgstr "Коефіцієнт видовження:"
+msgstr "Коефіцієнт видовження"
 
 #: src/effects/Paulstretch.cpp:34
-#, fuzzy
 msgid "Time Resolution"
-msgstr "Роздільність за часом (у секундах):"
+msgstr "Роздільність за часом"
 
 #: src/effects/Paulstretch.cpp:99
 msgid "Use Paulstretch only for an extreme time-stretch or \"stasis\" effect"
 msgstr ""
+"Надзвичайним уповільненням слід користуватися лише для надзвичайного "
+"збільшення тривалості або ефекту «присипляння»"
 
 #: src/effects/Paulstretch.cpp:171
 msgid "Stretch Factor:"
@@ -7558,9 +7490,8 @@ msgstr ""
 " Тривалість фрагмента має перевищувати роздільність за часом."
 
 #: src/effects/Paulstretch.h:20
-#, fuzzy
 msgid "Paulstretch"
-msgstr "Надзвичайне уповільнення…"
+msgstr "Надзвичайне уповільнення"
 
 #: src/effects/Phaser.cpp:45 src/effects/Phaser.cpp:236
 msgid "Stages"
@@ -7568,31 +7499,27 @@ msgstr "Етапи"
 
 #: src/effects/Phaser.cpp:46
 msgid "DryWet"
-msgstr ""
+msgstr "Холодний-теплий"
 
 #: src/effects/Phaser.cpp:47 src/effects/Wahwah.cpp:43
-#, fuzzy
 msgid "Freq"
-msgstr "Частота"
+msgstr "Част."
 
 #: src/effects/Phaser.cpp:48 src/effects/Wahwah.cpp:44
-#, fuzzy
 msgid "Phase"
-msgstr "Фазер"
+msgstr "Фаза"
 
 #: src/effects/Phaser.cpp:49 src/effects/Wahwah.cpp:45
-#, fuzzy
 msgid "Depth"
-msgstr "Глибина:"
+msgstr "Глибина"
 
 #: src/effects/Phaser.cpp:50
-#, fuzzy
 msgid "Feedback"
-msgstr "Зворотний зв'язок (%):"
+msgstr "Зворотній зв’язок"
 
 #: src/effects/Phaser.cpp:102
 msgid "Combines phase-shifted signals with the original signal"
-msgstr ""
+msgstr "Об’єднує сигнали із зсувом за фазою з початковим сигналом"
 
 #: src/effects/Phaser.cpp:231
 msgid "Stages:"
@@ -7675,24 +7602,23 @@ msgstr "Відновлення"
 
 #: src/effects/Repeat.cpp:41
 msgid "Count"
-msgstr ""
+msgstr "Кількість"
 
 #: src/effects/Repeat.cpp:67
 msgid "Repeats the selection the specified number of times"
-msgstr ""
+msgstr "Повторює позначений фрагмент вказану кількість разів"
 
 #: src/effects/Repeat.cpp:178
 msgid "Number of times to repeat:"
 msgstr "Кількість повторів:"
 
 #: src/effects/Repeat.cpp:185
-#, fuzzy
 msgid "New selection length: dd:hh:mm:ss"
-msgstr "Нова тривалість вибраного: гг:хх:сс"
+msgstr "Нова тривалість вибраного: dd:hh:mm:ss"
 
 #: src/effects/Repeat.cpp:225 src/widgets/NumericTextCtrl.cpp:289
 msgid "hh:mm:ss"
-msgstr "гг:хх:сс"
+msgstr "hh:mm:ss"
 
 #: src/effects/Repeat.cpp:229
 msgid "New selection length: "
@@ -7703,49 +7629,40 @@ msgid "Repeat"
 msgstr "Повтор…"
 
 #: src/effects/Reverb.cpp:46
-#, fuzzy
 msgid "RoomSize"
-msgstr "&Розмір зали (%):"
+msgstr "Розмір зали"
 
 #: src/effects/Reverb.cpp:48
-#, fuzzy
 msgid "Reverberance"
-msgstr "Від&луння (%):"
+msgstr "Реверберація"
 
 #: src/effects/Reverb.cpp:49
-#, fuzzy
 msgid "HfDamping"
-msgstr "&Послаблення (%):"
+msgstr "Послаблення вис. част."
 
 #: src/effects/Reverb.cpp:50
-#, fuzzy
 msgid "ToneLow"
-msgstr "&Низькі тони (%):"
+msgstr "Низькі тони"
 
 #: src/effects/Reverb.cpp:51
-#, fuzzy
 msgid "ToneHigh"
-msgstr "&Високі тони (%):"
+msgstr "Високі тони"
 
 #: src/effects/Reverb.cpp:52
-#, fuzzy
 msgid "WetGain"
-msgstr "Гучність"
+msgstr "Підс. теплого"
 
 #: src/effects/Reverb.cpp:53
-#, fuzzy
 msgid "DryGain"
-msgstr "Гучність"
+msgstr "Підс. холодного"
 
 #: src/effects/Reverb.cpp:54
-#, fuzzy
 msgid "StereoWidth"
-msgstr "Ширина ст&ерео (%):"
+msgstr "Ширина стерео"
 
 #: src/effects/Reverb.cpp:55
-#, fuzzy
 msgid "WetOnly"
-msgstr ", лише відлуння = %s"
+msgstr "Лише теплий"
 
 #: src/effects/Reverb.cpp:66
 msgid "Vocal I"
@@ -7785,7 +7702,7 @@ msgstr "Собор"
 
 #: src/effects/Reverb.cpp:139
 msgid "Adds ambience or a \"hall effect\""
-msgstr ""
+msgstr "Додає ефект атмосфери або «ефект великої зали»"
 
 #: src/effects/Reverb.cpp:424
 msgid "&Room Size (%):"
@@ -7832,9 +7749,8 @@ msgid "Reverb"
 msgstr "Відлуння"
 
 #: src/effects/Reverse.cpp:48
-#, fuzzy
 msgid "Reverses the selected audio"
-msgstr "Експортування вибраного аудіо як %s"
+msgstr "Обертає позначені звукові дані"
 
 #: src/effects/Reverse.h:22
 msgid "Reverse"
@@ -7861,38 +7777,32 @@ msgid "Highpass"
 msgstr "Високочастотний"
 
 #: src/effects/ScienFilter.cpp:114
-#, fuzzy
 msgid "FilterType"
-msgstr "Тип &фільтрування:"
+msgstr "Тип фільтрування"
 
 #: src/effects/ScienFilter.cpp:115
-#, fuzzy
 msgid "FilterSubtype"
-msgstr "Тип &фільтрування:"
+msgstr "Підтип фільтрування"
 
 #: src/effects/ScienFilter.cpp:116
-#, fuzzy
 msgid "Order"
-msgstr "По&рядок:"
+msgstr "Порядок"
 
 #: src/effects/ScienFilter.cpp:117
-#, fuzzy
 msgid "Cutoff"
-msgstr "Пропускання:"
+msgstr "Пропускання"
 
 #: src/effects/ScienFilter.cpp:118
-#, fuzzy
 msgid "PassbandRipple"
-msgstr "П&ульсація смуги пропускання:"
+msgstr "Пульсація смуги пропускання"
 
 #: src/effects/ScienFilter.cpp:119
-#, fuzzy
 msgid "StopbandRipple"
-msgstr "П&ульсація смуги пропускання:"
+msgstr "Пульсація смуги затримування"
 
 #: src/effects/ScienFilter.cpp:195
 msgid "Performs IIR filtering that emulates analog filters"
-msgstr ""
+msgstr "Виконує фільтрування НІХ, яке імітує аналогові фільтри"
 
 #: src/effects/ScienFilter.cpp:351
 msgid "To apply a filter, all selected tracks must have the same sample rate."
@@ -7902,11 +7812,11 @@ msgstr ""
 
 #: src/effects/ScienFilter.cpp:409
 msgid "+ dB"
-msgstr ""
+msgstr "+ дБ"
 
 #: src/effects/ScienFilter.cpp:419
 msgid "- dB"
-msgstr ""
+msgstr "- дБ"
 
 #: src/effects/ScienFilter.cpp:467
 msgid "&Filter Type:"
@@ -7921,9 +7831,8 @@ msgid "&Passband Ripple:"
 msgstr "П&ульсація смуги пропускання:"
 
 #: src/effects/ScienFilter.cpp:487
-#, fuzzy
 msgid "Passband Ripple (dB)"
-msgstr "П&ульсація смуги пропускання:"
+msgstr "Пульсація смуги пропускання (у дБ)"
 
 #: src/effects/ScienFilter.cpp:499
 msgid "&Subtype:"
@@ -7934,18 +7843,16 @@ msgid "C&utoff:"
 msgstr "П&ропускання:"
 
 #: src/effects/ScienFilter.cpp:507
-#, fuzzy
 msgid "Cutoff (Hz)"
-msgstr "Пропускання (у Гц):"
+msgstr "Пропускання (у Гц)"
 
 #: src/effects/ScienFilter.cpp:514
 msgid "Minimum S&topband Attenuation:"
 msgstr "Мінімальне пос&лаблення смуги затримування:"
 
 #: src/effects/ScienFilter.cpp:516
-#, fuzzy
 msgid "Minimum S&topband Attenuation (dB)"
-msgstr "Мінімальне послаблення смуги затримування (дБ):"
+msgstr "Мінімальне послаблення смуги затримування (у дБ)"
 
 #: src/effects/ScienFilter.h:32
 msgid "Classic Filters"
@@ -7956,9 +7863,8 @@ msgid "Align MIDI to Audio"
 msgstr "Вирівняти MIDI зі звуком"
 
 #: src/effects/ScoreAlignDialog.cpp:99
-#, fuzzy
 msgid "Frame Period:"
-msgstr "Період кадру"
+msgstr "Період кадру:"
 
 #: src/effects/ScoreAlignDialog.cpp:105
 msgid "Frame Period"
@@ -7985,27 +7891,24 @@ msgid "Silence Threshold"
 msgstr "Поріг шуму"
 
 #: src/effects/ScoreAlignDialog.cpp:143
-#, fuzzy
 msgid "Presmooth Time:"
-msgstr "Інтервал попереднього вирівнювання"
+msgstr "Інтервал попереднього вирівнювання:"
 
 #: src/effects/ScoreAlignDialog.cpp:148
 msgid "Presmooth Time"
 msgstr "Інтервал попереднього вирівнювання"
 
 #: src/effects/ScoreAlignDialog.cpp:156
-#, fuzzy
 msgid "Line Time:"
-msgstr "Інтервал лінійності"
+msgstr "Інтервал лінійності:"
 
 #: src/effects/ScoreAlignDialog.cpp:161
 msgid "Line Time"
 msgstr "Інтервал лінійності"
 
 #: src/effects/ScoreAlignDialog.cpp:169
-#, fuzzy
 msgid "Smooth Time:"
-msgstr "Інтервал згладжування"
+msgstr "Інтервал згладжування:"
 
 #: src/effects/ScoreAlignDialog.cpp:174
 msgid "Smooth Time"
@@ -8026,45 +7929,39 @@ msgstr "%.3f"
 
 #: src/effects/Silence.cpp:40
 msgid "Creates audio of zero amplitude"
-msgstr ""
+msgstr "Створює звукові дані нульової амплітуди"
 
 #: src/effects/StereoToMono.cpp:41
-#, fuzzy
 msgid "Converts stereo tracks to mono"
-msgstr "&Стерео на моно"
+msgstr "Перетворює стереодоріжки на моно"
 
 #: src/effects/StereoToMono.h:18
-#, fuzzy
 msgid "Stereo To Mono"
 msgstr "Стерео на моно"
 
 #: src/effects/TimeScale.cpp:42
-#, fuzzy
 msgid "RatePercentChangeStart"
-msgstr "Зміна у відсотках"
+msgstr "Поч. зміна част. у відсотках"
 
 #: src/effects/TimeScale.cpp:43
-#, fuzzy
 msgid "RatePercentChangeEnd"
-msgstr "Зміна у відсотках"
+msgstr "Кінц. зміна част. у відсотках"
 
 #: src/effects/TimeScale.cpp:44
 msgid "PitchHalfStepsStart"
-msgstr ""
+msgstr "Поч. кроки поділу тону навп."
 
 #: src/effects/TimeScale.cpp:45
 msgid "PitchHalfStepsEnd"
-msgstr ""
+msgstr "Кінц. кроки поділу тону навп."
 
 #: src/effects/TimeScale.cpp:46
-#, fuzzy
 msgid "PitchPercentChangeStart"
-msgstr "Зміна у відсотках"
+msgstr "Поч. зміна тону у відсотках"
 
 #: src/effects/TimeScale.cpp:47
-#, fuzzy
 msgid "PitchPercentChangeEnd"
-msgstr "Зміна у відсотках"
+msgstr "Кінц. зміна тону у відсотках"
 
 #: src/effects/TimeScale.cpp:89
 msgid "Sliding Time Scale/Pitch Shift"
@@ -8072,7 +7969,7 @@ msgstr "Зсув часової шкали/тону"
 
 #: src/effects/TimeScale.cpp:94
 msgid "Allows continuous changes to the tempo and/or pitch"
-msgstr ""
+msgstr "Надає змогу вносити неперервні зміни до темпу і/або тону"
 
 #: src/effects/TimeScale.cpp:162
 msgid "Initial Tempo Change (%)"
@@ -8099,9 +7996,8 @@ msgid "Final Pitch Shift"
 msgstr "Остаточний зсув тону"
 
 #: src/effects/TimeScale.h:27
-#, fuzzy
 msgid "Time Scale"
-msgstr "Масштаб"
+msgstr "Шкала часу"
 
 #: src/effects/ToneGen.cpp:44 src/widgets/Meter.cpp:2016
 #: src/widgets/Meter.cpp:2017
@@ -8129,50 +8025,48 @@ msgid "Square, no alias"
 msgstr "Квадратична, без переходів"
 
 #: src/effects/ToneGen.cpp:68
-#, fuzzy
 msgid "StartFreq"
-msgstr "Початок"
+msgstr "Поч. частота"
 
 #: src/effects/ToneGen.cpp:69
 msgid "EndFreq"
-msgstr ""
+msgstr "Кінц. частота"
 
 #: src/effects/ToneGen.cpp:70
-#, fuzzy
 msgid "StartAmp"
-msgstr "Початок"
+msgstr "Поч. ампл."
 
 #: src/effects/ToneGen.cpp:71
 msgid "EndAmp"
-msgstr ""
+msgstr "Кінц. ампл."
 
 #: src/effects/ToneGen.cpp:74 src/prefs/TracksPrefs.cpp:61
 msgid "Waveform"
 msgstr "Хвиля"
 
 #: src/effects/ToneGen.cpp:75
-#, fuzzy
 msgid "Interpolation"
-msgstr "Інтерполяція:"
+msgstr "Інтерполяція"
 
 #: src/effects/ToneGen.cpp:132
 msgid ""
 "Generates four different types of tone waveform while allowing starting and "
 "ending amplitude and frequency"
 msgstr ""
+"Створює чотири різних типи форми хвилі тону, надаючи змогу визначити "
+"початкові і кінцеві амплітуди і частоти"
 
 #: src/effects/ToneGen.cpp:133
 msgid "Generates four different types of tone waveform"
-msgstr ""
+msgstr "Створює чотири різних типи форми хвилі тону"
 
 #: src/effects/ToneGen.cpp:309
 msgid "Waveform:"
 msgstr "Хвиля:"
 
 #: src/effects/ToneGen.cpp:331 src/effects/ToneGen.cpp:388
-#, fuzzy
 msgid "Frequency (Hz):"
-msgstr "Частота (Гц)"
+msgstr "Частота (Гц):"
 
 #: src/effects/ToneGen.cpp:339
 msgid "Frequency Hertz Start"
@@ -8195,14 +8089,12 @@ msgid "Interpolation:"
 msgstr "Інтерполяція:"
 
 #: src/effects/ToneGen.h:24
-#, fuzzy
 msgid "Chirp"
-msgstr "Щебетання…"
+msgstr "Щебетання"
 
 #: src/effects/ToneGen.h:25
-#, fuzzy
 msgid "Tone"
-msgstr "Хвиля…"
+msgstr "Тон"
 
 #: src/effects/TruncSilence.cpp:40
 msgid "Truncate Detected Silence"
@@ -8214,27 +8106,27 @@ msgstr "Стискання усуванням тиші"
 
 #: src/effects/TruncSilence.cpp:53
 msgid "Db"
-msgstr ""
+msgstr "дБ"
 
 #: src/effects/TruncSilence.cpp:55
 msgid "Minimum"
-msgstr ""
+msgstr "Мінімум"
 
 #: src/effects/TruncSilence.cpp:56
-#, fuzzy
 msgid "Truncate"
-msgstr "Обрізати до:"
+msgstr "Вкоротити"
 
 #: src/effects/TruncSilence.cpp:57
-#, fuzzy
 msgid "Compress"
-msgstr "Компресор"
+msgstr "Стиснути"
 
 #: src/effects/TruncSilence.cpp:105
 msgid ""
 "Automatically reduces the length of passages where the volume is below a "
 "specified level"
 msgstr ""
+"Автоматично зменшувати тривалість проміжків, де гучність є нижчою за "
+"вказаний рівень"
 
 #: src/effects/TruncSilence.cpp:495
 msgid "Detect Silence"
@@ -8323,7 +8215,8 @@ msgstr "Компенсація латентності"
 #: src/effects/VST/VSTEffect.cpp:797
 msgid "As part of their processing, some VST effects must delay returning "
 msgstr ""
-"Використання для обробки даних деяких з ефектів VST призводити до затримки "
+"Використання для обробки даних деяких з ефектів VST може призводити до "
+"затримки "
 
 #: src/effects/VST/VSTEffect.cpp:798
 #: src/effects/audiounits/AudioUnitEffect.cpp:328
@@ -8465,13 +8358,14 @@ msgstr "Резонанс"
 
 #: src/effects/Wahwah.cpp:47
 msgid "Offset"
-msgstr ""
+msgstr "Зміщення"
 
 #: src/effects/Wahwah.cpp:93
 msgid ""
 "Rapid tone quality variations, like that guitar sound so popular in the "
 "1970's"
 msgstr ""
+"Швидкі зміни якості тону, подібні до гітарного звуку, популярного у 1970-ті"
 
 #: src/effects/Wahwah.cpp:243
 msgid "Depth (%):"
@@ -8578,49 +8472,43 @@ msgid "Effect Output"
 msgstr "Результат ефекту"
 
 #: src/effects/lv2/LV2Effect.cpp:191
-#, fuzzy
 msgid "LV2 Effect Settings"
-msgstr "Параметри ефектів VST"
+msgstr "Параметри ефектів LV2"
 
 #: src/effects/lv2/LV2Effect.cpp:216
-#, fuzzy
 msgid "As part of their processing, some LV2 effects must delay returning "
 msgstr ""
-"Використання для обробки даних деяких з ефектів VST призводити до затримки "
+"Використання для обробки даних деяких з ефектів LV2 може призводити до "
+"затримки "
 
 #: src/effects/lv2/LV2Effect.cpp:219
-#, fuzzy
 msgid "Enabling this setting will provide that compensation, but it may "
 msgstr ""
-"Якщо буде позначено цей пункт, програма намагатиметься застосувати "
-"компенсацію, але "
+"Якщо буде позначено цей пункт, програма намагатиметься виконати "
+"компенсування, "
 
 #: src/effects/lv2/LV2Effect.cpp:220
-#, fuzzy
 msgid "not work for all LV2 effects."
-msgstr "це працює не для усіх ефектів VST."
+msgstr "але компенсація можлива не для усіх ефектів LV2."
 
 #: src/effects/lv2/LV2Effect.cpp:234
-#, fuzzy
 msgid ""
 "LV2 effects can have a graphical interface for setting parameter values."
 msgstr ""
-"У більшості ефектів VST для встановлення значень параметрів передбачено "
-"графічний інтерфейс."
+"У ефектах LV2 для встановлення значень параметрів передбачено графічний "
+"інтерфейс."
 
 #: src/effects/lv2/LV2Effect.cpp:1580
 msgid "Generator"
 msgstr "Генератор"
 
 #: src/effects/lv2/LV2Effect.cpp:1584
-#, fuzzy
 msgid "&Duration:"
-msgstr "Тривалість:"
+msgstr "&Тривалість:"
 
 #: src/effects/lv2/LoadLV2.cpp:101
-#, fuzzy
 msgid "LV2 Effects Module"
-msgstr "Модуль ефектів Ladspa"
+msgstr "Модуль ефектів LV2"
 
 #: src/effects/lv2/LoadLV2.cpp:122
 msgid "Provides LV2 Effects support to Audacity"
@@ -8635,9 +8523,8 @@ msgid "Provides Nyquist Effects support to Audacity"
 msgstr "Надає підтримку ефектів Nyquist у Audacity"
 
 #: src/effects/nyquist/Nyquist.cpp:83
-#, fuzzy
 msgid "Version"
-msgstr "Версія: %s"
+msgstr "Версія"
 
 #: src/effects/nyquist/Nyquist.cpp:109
 msgid "Applying Nyquist Effect..."
@@ -8740,34 +8627,36 @@ msgid ""
 "Current program has been modified.\n"
 "Discard changes?"
 msgstr ""
+"Поточну програму було змінено.\n"
+"Відкинути зміни?"
 
 #: src/effects/nyquist/Nyquist.cpp:1952
-#, fuzzy
 msgid "Load Nyquist script"
-msgstr "Запит до Nyquist"
+msgstr "Завантажити скрипт Nyquist"
 
 #: src/effects/nyquist/Nyquist.cpp:1955
 msgid ""
 "Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|Text files (*.txt)|*."
 "txt|All files|*"
 msgstr ""
+"скрипти Nyquist (*.ny)|*.ny|скрипти Lisp (*.lsp)|*.lsp|текстові файли (*."
+"txt)|*.txt|усі файли|*"
 
 #: src/effects/nyquist/Nyquist.cpp:1967
 msgid "File could not be loaded"
-msgstr ""
+msgstr "Не вдалося завантажити файл"
 
 #: src/effects/nyquist/Nyquist.cpp:1974
-#, fuzzy
 msgid "Save Nyquist script"
-msgstr "Запит до Nyquist"
+msgstr "Збереження скрипту Nyquist"
 
 #: src/effects/nyquist/Nyquist.cpp:1977
 msgid "Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|All files|*"
-msgstr ""
+msgstr "скрипти Nyquist (*.ny)|*.ny|скрипти Lisp (*.lsp)|*.lsp|усі файли|*"
 
 #: src/effects/nyquist/Nyquist.cpp:1989
 msgid "File could not be saved"
-msgstr ""
+msgstr "Не вдалося зберегти файл"
 
 #: src/effects/nyquist/Nyquist.cpp:2087 src/widgets/ErrorDialog.cpp:123
 #: src/widgets/MultiDialog.cpp:119
@@ -10113,19 +10002,16 @@ msgid "Exporting the entire project as Ogg Vorbis"
 msgstr "Весь проект експортується у файл Ogg Vorbis"
 
 #: src/export/ExportPCM.cpp:61
-#, fuzzy
 msgid "AIFF (Apple) signed 16-bit PCM"
 msgstr "AIFF (Apple) 16-бітовий зі знаком PCM"
 
 #: src/export/ExportPCM.cpp:62
-#, fuzzy
 msgid "WAV (Microsoft) signed 16-bit PCM"
 msgstr "WAV (Microsoft) 16-бітовий зі знаком PCM"
 
 #: src/export/ExportPCM.cpp:63
-#, fuzzy
 msgid "WAV (Microsoft) 32-bit float PCM"
-msgstr "WAV (Microsoft) 16-бітовий зі знаком PCM"
+msgstr "WAV (Microsoft), 32-бітовий PCM, тип float"
 
 #: src/export/ExportPCM.cpp:130
 msgid "Specify Uncompressed Options"
@@ -10184,17 +10070,17 @@ msgid "There are no options for this format.\n"
 msgstr "Для цього формату параметри не доступні.\n"
 
 #: src/export/ExportPCM.cpp:902
-#, fuzzy, c-format
+#, c-format
 msgid "Your file will be exported as a \"%s\" file\n"
-msgstr "Ваш файл буде експортовано як GSM 6.10 WAV.\n"
+msgstr "Ваш файл буде експортовано як файл «%s»\n"
 
 #: src/export/ExportPCM.cpp:904
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "If you need more control over the export format please use the \"%s\" format."
 msgstr ""
 "Якщо у вас виникла потреба у керуванні цим форматом експорту, будь ласка, "
-"скористайтеся форматом «Інші нестиснуті файли»."
+"скористайтеся форматом «%s»."
 
 #: src/import/Import.cpp:540
 msgid "Select stream(s) to import"
@@ -10382,6 +10268,9 @@ msgid ""
 "\"%s\" is an Audacity Project file. \n"
 "Use the 'File > Open' command to open Audacity Projects."
 msgstr ""
+"«%s» є файлом проекту Audacity. \n"
+"Для відкриття проектів Audacity слід користуватися пунктом меню «Файл > "
+"Відкрити»."
 
 #: src/import/Import.cpp:712
 #, c-format
@@ -10682,9 +10571,8 @@ msgid "Interface"
 msgstr "Інтерфейс"
 
 #: src/prefs/DevicePrefs.cpp:115
-#, fuzzy
 msgid "&Host:"
-msgstr "В&узол"
+msgstr "&Вузол:"
 
 #: src/prefs/DevicePrefs.cpp:122
 msgid "Using:"
@@ -10696,9 +10584,8 @@ msgid "Playback"
 msgstr "Відтворення"
 
 #: src/prefs/DevicePrefs.cpp:134
-#, fuzzy
 msgid "&Device:"
-msgstr "Пр&истрій"
+msgstr "П&ристрій:"
 
 #: src/prefs/DevicePrefs.cpp:142 src/prefs/MidiIOPrefs.cpp:154
 #: src/prefs/RecordingPrefs.cpp:37 src/toolbars/ControlToolBar.cpp:108
@@ -10706,14 +10593,12 @@ msgid "Recording"
 msgstr "Запис"
 
 #: src/prefs/DevicePrefs.cpp:147
-#, fuzzy
 msgid "De&vice:"
-msgstr "П&ристрій"
+msgstr "Пр&истрій:"
 
 #: src/prefs/DevicePrefs.cpp:152
-#, fuzzy
 msgid "Cha&nnels:"
-msgstr "К&анали"
+msgstr "&Канали:"
 
 #: src/prefs/DevicePrefs.cpp:188
 msgid "No audio interfaces"
@@ -10967,14 +10852,12 @@ msgid "-60 dB (PCM range of 10 bit samples)"
 msgstr "-60 дБ (діапазон ІКМ при 10 бітах)"
 
 #: src/prefs/GUIPrefs.cpp:64
-#, fuzzy
 msgid "-72 dB (PCM range of 12 bit samples)"
-msgstr "-60 дБ (діапазон ІКМ при 10 бітах)"
+msgstr "-72 дБ (діапазон ІКМ при 12 бітах)"
 
 #: src/prefs/GUIPrefs.cpp:65
-#, fuzzy
 msgid "-84 dB (PCM range of 14 bit samples)"
-msgstr "-145 дБ (діапазон ІКМ при 24 бітах)"
+msgstr "-84 дБ (діапазон ІКМ при 14 бітах)"
 
 #: src/prefs/GUIPrefs.cpp:66
 msgid "-96 dB (PCM range of 16 bit samples)"
@@ -11315,9 +11198,8 @@ msgid "Using: PortMidi"
 msgstr "Використано: PortMidi"
 
 #: src/prefs/MidiIOPrefs.cpp:141 src/prefs/MidiIOPrefs.cpp:159
-#, fuzzy
 msgid "Device:"
-msgstr "Пристрій"
+msgstr "Пристрій:"
 
 #: src/prefs/MidiIOPrefs.cpp:146
 msgid "MIDI Synthesizer Latency (ms):"
@@ -11447,7 +11329,7 @@ msgstr "Ctrl-Клацання-лівою"
 
 #: src/prefs/MousePrefs.cpp:108
 msgid "Scrub"
-msgstr ""
+msgstr "Витерти"
 
 #: src/prefs/MousePrefs.cpp:109 src/prefs/MousePrefs.cpp:134
 #: src/prefs/MousePrefs.cpp:144
@@ -11456,25 +11338,23 @@ msgstr "Ліва-Ctrl-перетягування"
 
 #: src/prefs/MousePrefs.cpp:109
 msgid "Seek"
-msgstr ""
+msgstr "Позиціювання"
 
 #: src/prefs/MousePrefs.cpp:112
-#, fuzzy
 msgid "Ctrl-Left-Double-Click"
-msgstr "Подвійне-клацання-лівою"
+msgstr "Подвійне-клацання-лівою-з-Ctrl"
 
 #: src/prefs/MousePrefs.cpp:112
 msgid "Scroll-scrub"
-msgstr ""
+msgstr "Гортати-витерти"
 
 #: src/prefs/MousePrefs.cpp:115 src/prefs/MousePrefs.cpp:158
 msgid "Wheel-Rotate"
 msgstr "Обертання коліщатка"
 
 #: src/prefs/MousePrefs.cpp:115
-#, fuzzy
 msgid "Change scrub speed"
-msgstr "Зміна швидкості"
+msgstr "Змінити швидкість витирання"
 
 #: src/prefs/MousePrefs.cpp:125
 msgid "Zoom in on Point"
@@ -11821,18 +11701,16 @@ msgid "FFT Window"
 msgstr "Вікно FFT"
 
 #: src/prefs/SpectrumPrefs.cpp:140
-#, fuzzy
 msgid "Window &size:"
-msgstr "&Розмір вікна"
+msgstr "&Розмір вікна:"
 
 #: src/prefs/SpectrumPrefs.cpp:147
-#, fuzzy
 msgid "Window &type:"
-msgstr "&Тип вікна"
+msgstr "&Тип вікна:"
 
 #: src/prefs/SpectrumPrefs.cpp:155
 msgid "&Zero padding factor"
-msgstr ""
+msgstr "&Нульовий коефіцієнт полів"
 
 #: src/prefs/SpectrumPrefs.cpp:201
 msgid "Mi&nimum Frequency (Hz):"
@@ -12056,9 +11934,8 @@ msgid "Spectral Selection"
 msgstr "Спектральний вибір"
 
 #: src/prefs/TracksPrefs.cpp:66
-#, fuzzy
 msgid "Spectral Selection log(f)"
-msgstr "Спектральний вибір"
+msgstr "log(f) спектрального вибору"
 
 #: src/prefs/TracksPrefs.cpp:67
 msgid "Pitch (EAC)"
@@ -12098,7 +11975,7 @@ msgstr "Редагування ві&дрізку може пересувати �
 
 #: src/prefs/TracksPrefs.cpp:125
 msgid "Enable scrolling left of &zero"
-msgstr ""
+msgstr "Увімкнути гортання ліворуч від &нуля"
 
 #: src/prefs/TracksPrefs.cpp:134
 msgid "Solo &Button:"
@@ -12137,19 +12014,16 @@ msgid "&Importing uncompressed audio files"
 msgstr "&Імпортування нестиснених звукових файлів"
 
 #: src/toolbars/ControlToolBar.cpp:106
-#, fuzzy
 msgid "Playing"
-msgstr "Відтворити"
+msgstr "Відтворення"
 
 #: src/toolbars/ControlToolBar.cpp:107
-#, fuzzy
 msgid "Stopped"
-msgstr "Зупинити"
+msgstr "Зупинено"
 
 #: src/toolbars/ControlToolBar.cpp:109
-#, fuzzy
 msgid "Paused"
-msgstr "Призупинити"
+msgstr "Призупинено"
 
 #: src/toolbars/ControlToolBar.cpp:158
 msgid "Pause"
@@ -12449,12 +12323,18 @@ msgid ""
 "Click and drag to select audio, Command-Click to scrub, Command-Double-Click "
 "to scroll-scrub, Command-drag to seek"
 msgstr ""
+"Натисніть кнопку миші і перетягніть вказівник, щоб позначити звукові дані. "
+"Command з клацанням витирає, Command з подвійним клацанням витирає з "
+"гортанням, Command з перетягуванням — позиціює"
 
 #: src/toolbars/ToolsToolBar.cpp:93
 msgid ""
 "Click and drag to select audio, Ctrl-Click to scrub, Ctrl-Double-Click to "
 "scroll-scrub, Ctrl-drag to seek"
 msgstr ""
+"Натисніть кнопку миші і перетягніть вказівник, щоб позначити звукові дані. "
+"Ctrl з клацанням витирає, Ctrl з подвійним клацанням витирає з гортанням, "
+"Ctrl з перетягуванням — позиціює"
 
 #: src/toolbars/ToolsToolBar.cpp:98
 msgid "Click and drag to select audio"
@@ -12877,69 +12757,60 @@ msgid "Cancel"
 msgstr "Скасувати"
 
 #: src/widgets/Ruler.cpp:1640
-#, fuzzy
 msgid "Timeline"
-msgstr "Зміна монтажного столу"
+msgstr "Монтажний стіл"
 
 #: src/widgets/Ruler.cpp:1727
 msgid "Timeline actions disabled during recording"
 msgstr "Дії з монтажним столом вимкнено на час запису"
 
 #: src/widgets/Ruler.cpp:1730
-#, fuzzy
 msgid "Quick-Play disabled"
-msgstr "Монтажний стіл — увімкнено швидке відтворення"
+msgstr "Швидке відтворення вимкнено"
 
 #: src/widgets/Ruler.cpp:1733
-#, fuzzy
 msgid "Quick-Play enabled"
-msgstr "Монтажний стіл — увімкнено швидке відтворення"
+msgstr "Швидке відтворення увімкнено"
 
 #: src/widgets/Ruler.cpp:2152
 msgid "Disable Quick-Play"
-msgstr ""
+msgstr "Вимкнути швидке відтворення"
 
 #: src/widgets/Ruler.cpp:2154
 msgid "Enable Quick-Play"
-msgstr ""
+msgstr "Увімкнути швидке відтворення"
 
 #: src/widgets/Ruler.cpp:2158
-#, fuzzy
 msgid "Disable dragging selection"
-msgstr "Замінити позначене тишею"
+msgstr "Вимкнути перетягувальне позначення"
 
 #: src/widgets/Ruler.cpp:2160
-#, fuzzy
 msgid "Enable dragging selection"
-msgstr "Дозволити &перетягування лівої і правої границь вибору"
+msgstr "Увімкнути перетягувальне позначення"
 
 #: src/widgets/Ruler.cpp:2165
 msgid "Disable Timeline Tooltips"
-msgstr ""
+msgstr "Вимкнути підказки монтажного столу"
 
 #: src/widgets/Ruler.cpp:2167
 msgid "Enable Timeline Tooltips"
-msgstr ""
+msgstr "Увімкнути підказки монтажного столу"
 
 #: src/widgets/Ruler.cpp:2171
-#, fuzzy
 msgid "Do not scroll while playing"
-msgstr "&Оновлювати відображення під час відтворення"
+msgstr "Не гортати під час відтворення"
 
 #: src/widgets/Ruler.cpp:2173
-#, fuzzy
 msgid "Update display while playing"
-msgstr "&Оновлювати відображення під час відтворення"
+msgstr "Оновлювати відображення під час відтворення"
 
 #: src/widgets/Ruler.cpp:2177
-#, fuzzy
 msgid "Lock Play Region"
-msgstr "Відтвор&ити область"
+msgstr "Заблокувати область відтворення"
 
 #: src/widgets/Ruler.cpp:2179
-#, fuzzy
 msgid "Unlock Play Region"
-msgstr "Відтвор&ити область"
+msgstr "Розблокувати область відтворення"
 
 #: src/widgets/Warning.cpp:68
 msgid "Don't show this warning again"
@@ -12947,7 +12818,7 @@ msgstr "Більше не показувати"
 
 #: src/widgets/numformatter.cpp:142
 msgid "NaN"
-msgstr ""
+msgstr "Не число"
 
 #: src/widgets/numformatter.cpp:146
 msgid "-Infinity"
@@ -12980,17 +12851,17 @@ msgstr "Забагато десяткових цифр"
 #: src/widgets/valnum.cpp:501
 #, c-format
 msgid "Value not in range: %.*f to %.*f"
-msgstr ""
+msgstr "Значення поза діапазоном: від %.*f до %.*f"
 
 #: src/widgets/valnum.cpp:506
-#, fuzzy, c-format
+#, c-format
 msgid "Value must not be less than %.*f"
-msgstr "Назва не може бути порожньою"
+msgstr "Значення має бути не меншим за %.*f"
 
 #: src/widgets/valnum.cpp:511
-#, fuzzy, c-format
+#, c-format
 msgid "Value must not be greather than %.*f"
-msgstr "Початок та кінець мають бути більшими за 0."
+msgstr "Значення має бути не більшим за %.*f"
 
 #: src/widgets/valnum.cpp:529
 msgid "e"
