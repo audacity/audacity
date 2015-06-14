@@ -21,25 +21,29 @@
 #include <wx/intl.h>
 #include <wx/msgdlg.h>
 
-#include "../Prefs.h"
+#include "../FFT.h"
 #include "../Project.h"
 #include "../ShuttleGui.h"
-#include "../FFT.h"
+#include "../WaveTrack.h"
 
 #include <algorithm>
 
-SpectrumPrefs::SpectrumPrefs(wxWindow * parent)
+SpectrumPrefs::SpectrumPrefs(wxWindow * parent, WaveTrack *wt)
 :  PrefsPanel(parent, _("Spectrograms"))
+, mWt(wt)
 {
-   int windowSize = gPrefs->Read(wxT("/Spectrum/FFTSize"), 256);
-   Populate(windowSize);
+   SpectrogramSettings *const pSettings = mWt
+      ? &mWt->GetIndependentSpectrogramSettings()
+      : &SpectrogramSettings::defaults();
+
+   mTempSettings = *pSettings;
+   mTempSettings.ConvertToEnumeratedWindowSizes();
+   Populate(pSettings->windowSize);
 }
 
 SpectrumPrefs::~SpectrumPrefs()
 {
 }
-
-enum { maxWindowSize = 32768 };
 
 enum {
    ID_WINDOW_SIZE = 10001,
@@ -63,26 +67,18 @@ void SpectrumPrefs::Populate(int windowSize)
    mSizeChoices.Add(wxT("8192"));
    mSizeChoices.Add(wxT("16384"));
    mSizeChoices.Add(_("32768 - most narrowband"));
-
-   int lastCode = 0;
-   for (size_t i = 0; i < mSizeChoices.GetCount(); i++) {
-      mSizeCodes.Add(lastCode = 1 << (i + 3));
-   }
-   wxASSERT(lastCode == maxWindowSize);
+   wxASSERT(mSizeChoices.size() == SpectrogramSettings::NumWindowSizes);
 
    PopulatePaddingChoices(windowSize);
 
    for (int i = 0; i < NumWindowFuncs(); i++) {
       mTypeChoices.Add(WindowFuncName(i));
-      mTypeCodes.Add(i);
    }
 
 
    //------------------------- Main section --------------------
    // Now construct the GUI itself.
-   // Use 'eIsCreatingFromPrefs' so that the GUI is
-   // initialised with values from gPrefs.
-   ShuttleGui S(this, eIsCreatingFromPrefs);
+   ShuttleGui S(this, eIsCreating);
    PopulateOrExchange(S);
    // ----------------------- End of main section --------------
 }
@@ -107,14 +103,12 @@ void SpectrumPrefs::PopulatePaddingChoices(int windowSize)
       pPaddingSizeControl->Clear();
    }
 
-   mZeroPaddingCodes.Clear();
-
    int padding = 1;
    int numChoices = 0;
+   const int maxWindowSize = 1 << (SpectrogramSettings::LogMaxWindowSize);
    while (windowSize <= maxWindowSize) {
       const wxString numeral = wxString::Format(wxT("%d"), padding);
       mZeroPaddingChoices.Add(numeral);
-      mZeroPaddingCodes.Add(padding);
       if (pPaddingSizeControl)
          pPaddingSizeControl->Append(numeral);
       windowSize <<= 1;
@@ -138,25 +132,19 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(2);
       {
          S.Id(ID_WINDOW_SIZE).TieChoice(_("Window &size:"),
-                     wxT("/Spectrum/FFTSize"),
-                     256,
-                     mSizeChoices,
-                     mSizeCodes);
+                     mTempSettings.windowSize,
+                     &mSizeChoices);
          S.SetSizeHints(mSizeChoices);
 
          S.TieChoice(_("Window &type:"),
-                     wxT("/Spectrum/WindowType"),
-                     3,
-                     mTypeChoices,
-                     mTypeCodes);
+                     mTempSettings.windowType,
+                     &mTypeChoices);
          S.SetSizeHints(mTypeChoices);
 
 #ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
          S.Id(ID_PADDING_SIZE).TieChoice(_("&Zero padding factor") + wxString(wxT(":")),
-                     wxT("/Spectrum/ZeroPaddingFactor"),
-                     mZeroPaddingChoice,
-                     mZeroPaddingChoices,
-                     mZeroPaddingCodes);
+                     mTempSettings.zeroPaddingFactor,
+                     &mZeroPaddingChoices);
          S.SetSizeHints(mZeroPaddingChoices);
 #endif
       }
@@ -170,44 +158,37 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
       {
          mMinFreq =
             S.TieNumericTextBox(_("Mi&nimum Frequency (Hz):"),
-                                wxT("/Spectrum/MinFreq"),
-                                0,
+                                mTempSettings.minFreq,
                                 12);
 
          mMaxFreq =
             S.TieNumericTextBox(_("Ma&ximum Frequency (Hz):"),
-                                wxT("/Spectrum/MaxFreq"),
-                                8000,
+                                mTempSettings.maxFreq,
                                 12);
 
          mGain =
             S.TieNumericTextBox(_("&Gain (dB):"),
-                                wxT("/Spectrum/Gain"),
-                                20,
+                                mTempSettings.gain,
                                 8);
 
          mRange =
             S.TieNumericTextBox(_("&Range (dB):"),
-                                wxT("/Spectrum/Range"),
-                                80,
+                                mTempSettings.range,
                                 8);
 
          mFrequencyGain =
             S.TieNumericTextBox(_("Frequency g&ain (dB/dec):"),
-                                wxT("/Spectrum/FrequencyGain"),
-                                0,
+                                mTempSettings.frequencyGain,
                                 4);
       }
       S.EndTwoColumn();
 
       S.TieCheckBox(_("S&how the spectrum using grayscale colors"),
-                    wxT("/Spectrum/Grayscale"),
-                    false);
+                    mTempSettings.isGrayscale);
 
 #ifdef EXPERIMENTAL_FFT_Y_GRID
       S.TieCheckBox(_("Show a grid along the &Y-axis"),
-                    wxT("/Spectrum/FFTYGrid"),
-                    false);
+                    mTempSettings.fftYGrid);
 #endif //EXPERIMENTAL_FFT_Y_GRID
    }
    S.EndStatic();
@@ -220,25 +201,21 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
       {
          mFindNotesMinA =
             S.TieNumericTextBox(_("Minimum Amplitude (dB):"),
-                                wxT("/Spectrum/FindNotesMinA"),
-                                -30L,
+                                mTempSettings.fftFindNotes,
                                 8);
 
          mFindNotesN =
             S.TieNumericTextBox(_("Max. Number of Notes (1..128):"),
-                                wxT("/Spectrum/FindNotesN"),
-                                5L,
+                                mTempSettings.findNotesMinA,
                                 8);
       }
       S.EndTwoColumn();
 
       S.TieCheckBox(_("&Find Notes"),
-                    wxT("/Spectrum/FFTFindNotes"),
-                    false);
+                    mTempSettings.numberOfMaxima);
 
       S.TieCheckBox(_("&Quantize Notes"),
-                    wxT("/Spectrum/FindNotesQuantize"),
-                    false);
+                    mTempSettings.findNotesQuantize);
    }
    S.EndStatic();
 #endif //EXPERIMENTAL_FIND_NOTES
@@ -246,13 +223,13 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
 
 bool SpectrumPrefs::Validate()
 {
+   // Do checking for whole numbers
+
+   // ToDo: use wxIntegerValidator<unsigned> when available
+
    long maxFreq;
    if (!mMaxFreq->GetValue().ToLong(&maxFreq)) {
       wxMessageBox(_("The maximum frequency must be an integer"));
-      return false;
-   }
-   if (maxFreq < 100) {
-      wxMessageBox(_("Maximum frequency must be 100 Hz or above"));
       return false;
    }
 
@@ -261,28 +238,16 @@ bool SpectrumPrefs::Validate()
       wxMessageBox(_("The minimum frequency must be an integer"));
       return false;
    }
-   if (minFreq < 0) {
-      wxMessageBox(_("Minimum frequency must be at least 0 Hz"));
-      return false;
-   }
-
-   if (maxFreq < minFreq) {
-      wxMessageBox(_("Minimum frequency must be less than maximum frequency"));
-      return false;
-   }
 
    long gain;
    if (!mGain->GetValue().ToLong(&gain)) {
       wxMessageBox(_("The gain must be an integer"));
       return false;
    }
+
    long range;
    if (!mRange->GetValue().ToLong(&range)) {
       wxMessageBox(_("The range must be a positive integer"));
-      return false;
-   }
-   if (range <= 0) {
-      wxMessageBox(_("The range must be at least 1 dB"));
       return false;
    }
 
@@ -291,14 +256,7 @@ bool SpectrumPrefs::Validate()
       wxMessageBox(_("The frequency gain must be an integer"));
       return false;
    }
-   if (frequencygain < 0) {
-      wxMessageBox(_("The frequency gain cannot be negative"));
-      return false;
-   }
-   if (frequencygain > 60) {
-      wxMessageBox(_("The frequency gain must be no more than 60 dB/dec"));
-      return false;
-   }
+
 #ifdef EXPERIMENTAL_FIND_NOTES
    long findNotesMinA;
    if (!mFindNotesMinA->GetValue().ToLong(&findNotesMinA)) {
@@ -317,15 +275,52 @@ bool SpectrumPrefs::Validate()
    }
 #endif //EXPERIMENTAL_FIND_NOTES
 
-   return true;
+   ShuttleGui S(this, eIsGettingFromDialog);
+   PopulateOrExchange(S);
+
+   // Delegate range checking to SpectrogramSettings class
+   mTempSettings.ConvertToActualWindowSizes();
+   const bool result = mTempSettings.Validate(false);
+   mTempSettings.ConvertToEnumeratedWindowSizes();
+   return result;
 }
 
 bool SpectrumPrefs::Apply()
 {
-   ShuttleGui S(this, eIsSavingToPrefs);
+   const bool isOpenPage = this->IsShown();
+
+   WaveTrack *const partner =
+      mWt ? static_cast<WaveTrack*>(mWt->GetLink()) : 0;
+
+   ShuttleGui S(this, eIsGettingFromDialog);
    PopulateOrExchange(S);
 
-   SpectrogramSettings::defaults().UpdatePrefs();
+   mTempSettings.ConvertToActualWindowSizes();
+   if (mWt) {
+      SpectrogramSettings *pSettings =
+         &mWt->GetIndependentSpectrogramSettings();
+      *pSettings = mTempSettings;
+      if (partner) {
+         pSettings = &partner->GetIndependentSpectrogramSettings();
+         *pSettings = mTempSettings;
+      }
+   }
+   else {
+      SpectrogramSettings *const pSettings =
+         &SpectrogramSettings::defaults();
+      *pSettings = mTempSettings;
+      pSettings->SavePrefs();
+   }
+   mTempSettings.ConvertToEnumeratedWindowSizes();
+
+   if (mWt && isOpenPage) {
+      // Future: open page will determine the track view type
+      /*
+      mWt->SetDisplay(WaveTrack::Spectrum);
+      if (partner)
+         partner->SetDisplay(WaveTrack::Spectrum);
+         */
+   }
 
    return true;
 }
@@ -334,7 +329,8 @@ void SpectrumPrefs::OnWindowSize(wxCommandEvent &)
 {
    wxChoice *const pWindowSizeControl =
       static_cast<wxChoice*>(wxWindow::FindWindowById(ID_WINDOW_SIZE, this));
-   int windowSize = 1 << (pWindowSizeControl->GetSelection() + 3);
+   int windowSize = 1 <<
+      (pWindowSizeControl->GetSelection() + SpectrogramSettings::LogMinWindowSize);
    PopulatePaddingChoices(windowSize);
 }
 
@@ -342,7 +338,12 @@ BEGIN_EVENT_TABLE(SpectrumPrefs, PrefsPanel)
    EVT_CHOICE(ID_WINDOW_SIZE, SpectrumPrefs::OnWindowSize)
 END_EVENT_TABLE()
 
+SpectrumPrefsFactory::SpectrumPrefsFactory(WaveTrack *wt)
+: mWt(wt)
+{
+}
+
 PrefsPanel *SpectrumPrefsFactory::Create(wxWindow *parent)
 {
-   return new SpectrumPrefs(parent);
+   return new SpectrumPrefs(parent, mWt);
 }

@@ -14,19 +14,39 @@ Paul Licameli
 #include "../Experimental.h"
 
 struct FFTParam;
+class SpectrumPrefs;
 
 class SpectrogramSettings
 {
+   friend class SpectrumPrefs;
 public:
+
+   enum {
+      LogMinWindowSize = 3,
+      LogMaxWindowSize = 15,
+
+      NumWindowSizes = LogMaxWindowSize - LogMinWindowSize + 1,
+   };
+
    static SpectrogramSettings &defaults();
    SpectrogramSettings();
    SpectrogramSettings(const SpectrogramSettings &other);
    SpectrogramSettings& operator= (const SpectrogramSettings &other);
    ~SpectrogramSettings();
 
-   void UpdatePrefs();
+   bool IsDefault() const
+   {
+      return this == &defaults();
+   }
+
+   bool Validate(bool quiet);
+   void LoadPrefs();
+   void SavePrefs();
+   void InvalidateCaches();
    void DestroyWindows();
    void CacheWindows() const;
+   void ConvertToEnumeratedWindowSizes();
+   void ConvertToActualWindowSizes();
 
 private:
    int minFreq;
@@ -78,4 +98,5 @@ public:
    mutable float         *window;
 #endif
 };
+
 #endif

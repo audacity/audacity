@@ -33,11 +33,13 @@
 class wxTextCtrl;
 struct FFTParam;
 class ShuttleGui;
+class SpectrogramSettings;
+class WaveTrack;
 
 class SpectrumPrefs:public PrefsPanel
 {
  public:
-   SpectrumPrefs(wxWindow * parent);
+   SpectrumPrefs(wxWindow * parent, WaveTrack *wt);
    virtual ~SpectrumPrefs();
    virtual bool Apply();
    virtual bool Validate();
@@ -50,6 +52,8 @@ class SpectrumPrefs:public PrefsPanel
    void OnWindowSize(wxCommandEvent &event);
    DECLARE_EVENT_TABLE()
 
+   WaveTrack *const mWt;
+
    wxTextCtrl *mMinFreq;
    wxTextCtrl *mMaxFreq;
    wxTextCtrl *mGain;
@@ -57,28 +61,31 @@ class SpectrumPrefs:public PrefsPanel
    wxTextCtrl *mFrequencyGain;
 
    wxArrayString mSizeChoices;
-   wxArrayInt mSizeCodes;
 
 #ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
    int mZeroPaddingChoice;
    wxArrayString mZeroPaddingChoices;
-   wxArrayInt mZeroPaddingCodes;
 #endif
 
    wxArrayString mTypeChoices;
-   wxArrayInt mTypeCodes;
 
 
 #ifdef EXPERIMENTAL_FIND_NOTES
    wxTextCtrl *mFindNotesMinA;
    wxTextCtrl *mFindNotesN;
 #endif
+
+   SpectrogramSettings mTempSettings;
 };
 
 class SpectrumPrefsFactory : public PrefsPanelFactory
 {
 public:
+   explicit SpectrumPrefsFactory(WaveTrack *wt = 0);
    virtual PrefsPanel *Create(wxWindow *parent);
+
+private:
+   WaveTrack *const mWt;
 };
 
 #endif
