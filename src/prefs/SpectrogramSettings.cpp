@@ -26,6 +26,69 @@ SpectrogramSettings::SpectrogramSettings()
    UpdatePrefs();
 }
 
+SpectrogramSettings::SpectrogramSettings(const SpectrogramSettings &other)
+   : minFreq(other.minFreq)
+   , maxFreq(other.maxFreq)
+   , logMinFreq(other.logMinFreq)
+   , logMaxFreq(other.logMaxFreq)
+   , range(other.range)
+   , gain(other.gain)
+   , frequencyGain(other.frequencyGain)
+   , windowType(other.windowType)
+   , windowSize(other.windowSize)
+#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
+   , zeroPaddingFactor(other.zeroPaddingFactor)
+#endif
+   , isGrayscale(other.isGrayscale)
+#ifdef EXPERIMENTAL_FFT_Y_GRID
+   , fftYGrid(other.fftYGrid)
+#endif
+#ifdef EXPERIMENTAL_FIND_NOTES
+   , fftFindNotes(other.fftFindNotes)
+   , findNotesMinA(other.findNotesMinA)
+   , numberOfMaxima(other.numberOfMaxima)
+   , findNotesQuantize(other.findNotesQuantize)
+#endif
+
+   // Do not copy these!
+   , hFFT(0)
+   , window(0)
+{
+}
+
+SpectrogramSettings &SpectrogramSettings::operator= (const SpectrogramSettings &other)
+{
+   if (this != &other) {
+      minFreq = other.minFreq;
+      maxFreq = other.maxFreq;
+      logMinFreq = other.logMinFreq;
+      logMaxFreq = other.logMaxFreq;
+      range = other.range;
+      gain = other.gain;
+      frequencyGain = other.frequencyGain;
+      windowType = other.windowType;
+      windowSize = other.windowSize;
+#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
+      zeroPaddingFactor = other.zeroPaddingFactor;
+#endif
+      isGrayscale = other.isGrayscale;
+#ifdef EXPERIMENTAL_FFT_Y_GRID
+      fftYGrid = other.fftYGrid;
+#endif
+#ifdef EXPERIMENTAL_FIND_NOTES
+      fftFindNotes = other.fftFindNotes;
+      findNotesMinA = other.findNotesMinA;
+      numberOfMaxima = other.numberOfMaxima;
+      findNotesQuantize = other.findNotesQuantize;
+#endif
+
+      // Do not copy these!
+      hFFT = 0;
+      window = 0;
+   }
+   return *this;
+}
+
 SpectrogramSettings& SpectrogramSettings::defaults()
 {
    static SpectrogramSettings instance;
@@ -111,6 +174,7 @@ void SpectrogramSettings::DestroyWindows()
    }
 #endif
 }
+
 
 namespace
 {

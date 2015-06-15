@@ -20,6 +20,8 @@ class SpectrogramSettings
 public:
    static SpectrogramSettings &defaults();
    SpectrogramSettings();
+   SpectrogramSettings(const SpectrogramSettings &other);
+   SpectrogramSettings& operator= (const SpectrogramSettings &other);
    ~SpectrogramSettings();
 
    void UpdatePrefs();
