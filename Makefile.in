@@ -547,6 +547,9 @@ nobase_dist_pkgdata_DATA = \
    plug-ins/sample-data-export.ny \
    plug-ins/SilenceMarker.ny \
    plug-ins/SoundFinder.ny \
+   plug-ins/SpectralEditMulti.ny \
+   plug-ins/SpectralEditParametricEQ.ny \
+   plug-ins/SpectralEditShelves.ny \
    plug-ins/StudioFadeOut.ny \
    plug-ins/tremolo.ny \
    plug-ins/vocalremover.ny \
