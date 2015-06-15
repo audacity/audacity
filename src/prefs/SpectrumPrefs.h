@@ -30,6 +30,8 @@
 #include "PrefsPanel.h"
 #include "SpectrogramSettings.h"
 
+class wxChoice;
+class wxCheckBox;
 class wxTextCtrl;
 struct FFTParam;
 class ShuttleGui;
@@ -49,10 +51,13 @@ class SpectrumPrefs:public PrefsPanel
    void PopulatePaddingChoices(int windowSize);
    void PopulateOrExchange(ShuttleGui & S);
 
+   void OnControl(wxCommandEvent &event);
    void OnWindowSize(wxCommandEvent &event);
+   void OnDefaults(wxCommandEvent&);
    DECLARE_EVENT_TABLE()
 
    WaveTrack *const mWt;
+   bool mDefaulted;
 
    wxTextCtrl *mMinFreq;
    wxTextCtrl *mMaxFreq;
@@ -75,7 +80,11 @@ class SpectrumPrefs:public PrefsPanel
    wxTextCtrl *mFindNotesN;
 #endif
 
+   wxCheckBox *mDefaultsCheckbox;
+
    SpectrogramSettings mTempSettings;
+
+   bool mPopulating;
 };
 
 class SpectrumPrefsFactory : public PrefsPanelFactory

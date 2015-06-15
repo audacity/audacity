@@ -20,6 +20,7 @@
 #include <wx/defs.h>
 #include <wx/intl.h>
 #include <wx/msgdlg.h>
+#include <wx/checkbox.h>
 
 #include "../FFT.h"
 #include "../Project.h"
@@ -31,14 +32,21 @@
 SpectrumPrefs::SpectrumPrefs(wxWindow * parent, WaveTrack *wt)
 :  PrefsPanel(parent, _("Spectrograms"))
 , mWt(wt)
+, mPopulating(false)
 {
-   SpectrogramSettings *const pSettings = mWt
-      ? &mWt->GetIndependentSpectrogramSettings()
-      : &SpectrogramSettings::defaults();
+   if (mWt) {
+      SpectrogramSettings &settings = wt->GetSpectrogramSettings();
+      mDefaulted = (&SpectrogramSettings::defaults() == &settings);
+      mTempSettings = settings;
+   }
+   else  {
+      mTempSettings = SpectrogramSettings::defaults();
+      mDefaulted = false;
+   }
 
-   mTempSettings = *pSettings;
+   const int windowSize = mTempSettings.windowSize;
    mTempSettings.ConvertToEnumeratedWindowSizes();
-   Populate(pSettings->windowSize);
+   Populate(windowSize);
 }
 
 SpectrumPrefs::~SpectrumPrefs()
@@ -48,8 +56,16 @@ SpectrumPrefs::~SpectrumPrefs()
 enum {
    ID_WINDOW_SIZE = 10001,
 #ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
-   ID_PADDING_SIZE = 10002,
+   ID_WINDOW_TYPE,
+   ID_PADDING_SIZE,
+   ID_MINIMUM,
+   ID_MAXIMUM,
+   ID_GAIN,
+   ID_RANGE,
+   ID_FREQUENCY_GAIN,
+   ID_GRAYSCALE,
 #endif
+   ID_DEFAULTS,
 };
 
 void SpectrumPrefs::Populate(int windowSize)
@@ -125,10 +141,16 @@ void SpectrumPrefs::PopulatePaddingChoices(int windowSize)
 
 void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
 {
+   mPopulating = true;
+
    S.SetBorder(2);
 
    // S.StartStatic(_("Track Settings"));
    {
+      mDefaultsCheckbox = 0;
+      if (mWt) {
+         mDefaultsCheckbox = S.Id(ID_DEFAULTS).TieCheckBox(_("Defaults"), mDefaulted);
+      }
       S.StartStatic(_("FFT Window"));
       {
          S.StartMultiColumn(2);
@@ -138,7 +160,7 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
                &mSizeChoices);
             S.SetSizeHints(mSizeChoices);
 
-            S.TieChoice(_("Window &type:"),
+            S.Id(ID_WINDOW_TYPE).TieChoice(_("Window &type:"),
                mTempSettings.windowType,
                &mTypeChoices);
             S.SetSizeHints(mTypeChoices);
@@ -159,33 +181,33 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
          S.StartTwoColumn();
          {
             mMinFreq =
-               S.TieNumericTextBox(_("Mi&nimum Frequency (Hz):"),
+               S.Id(ID_MINIMUM).TieNumericTextBox(_("Mi&nimum Frequency (Hz):"),
                mTempSettings.minFreq,
                12);
 
             mMaxFreq =
-               S.TieNumericTextBox(_("Ma&ximum Frequency (Hz):"),
+               S.Id(ID_MAXIMUM).TieNumericTextBox(_("Ma&ximum Frequency (Hz):"),
                mTempSettings.maxFreq,
                12);
 
             mGain =
-               S.TieNumericTextBox(_("&Gain (dB):"),
+               S.Id(ID_GAIN).TieNumericTextBox(_("&Gain (dB):"),
                mTempSettings.gain,
                8);
 
             mRange =
-               S.TieNumericTextBox(_("&Range (dB):"),
+               S.Id(ID_RANGE).TieNumericTextBox(_("&Range (dB):"),
                mTempSettings.range,
                8);
 
             mFrequencyGain =
-               S.TieNumericTextBox(_("Frequency g&ain (dB/dec):"),
+               S.Id(ID_FREQUENCY_GAIN).TieNumericTextBox(_("Frequency g&ain (dB/dec):"),
                mTempSettings.frequencyGain,
                4);
          }
          S.EndTwoColumn();
 
-         S.TieCheckBox(_("S&how the spectrum using grayscale colors"),
+         S.Id(ID_GRAYSCALE).TieCheckBox(_("S&how the spectrum using grayscale colors"),
             mTempSettings.isGrayscale);
 
 #ifdef EXPERIMENTAL_FFT_Y_GRID
@@ -223,6 +245,8 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
 #endif //EXPERIMENTAL_FIND_NOTES
    }
    // S.EndStatic();
+
+   mPopulating = false;
 }
 
 bool SpectrumPrefs::Validate()
@@ -301,17 +325,24 @@ bool SpectrumPrefs::Apply()
 
    mTempSettings.ConvertToActualWindowSizes();
    if (mWt) {
-      SpectrogramSettings *pSettings =
-         &mWt->GetIndependentSpectrogramSettings();
-      *pSettings = mTempSettings;
-      if (partner) {
-         pSettings = &partner->GetIndependentSpectrogramSettings();
+      if (mDefaulted) {
+         mWt->SetSpectrogramSettings(NULL);
+         if (partner)
+            partner->SetSpectrogramSettings(NULL);
+      }
+      else {
+         SpectrogramSettings *pSettings =
+            &mWt->GetIndependentSpectrogramSettings();
          *pSettings = mTempSettings;
+         if (partner) {
+            pSettings = &partner->GetIndependentSpectrogramSettings();
+            *pSettings = mTempSettings;
+         }
       }
    }
-   else {
-      SpectrogramSettings *const pSettings =
-         &SpectrogramSettings::defaults();
+
+   if (!mWt || mDefaulted) {
+      SpectrogramSettings *const pSettings = &SpectrogramSettings::defaults();
       *pSettings = mTempSettings;
       pSettings->SavePrefs();
    }
@@ -329,17 +360,57 @@ bool SpectrumPrefs::Apply()
    return true;
 }
 
-void SpectrumPrefs::OnWindowSize(wxCommandEvent &)
+void SpectrumPrefs::OnControl(wxCommandEvent&)
 {
+   // Common routine for most controls
+   // If any per-track setting is changed, break the association with defaults
+   // Skip this, and View Settings... will be able to change defaults instead
+   // when the checkbox is on, as in the original design.
+
+   if (mDefaultsCheckbox && !mPopulating) {
+      mDefaulted = false;
+      mDefaultsCheckbox->SetValue(false);
+   }
+}
+
+void SpectrumPrefs::OnWindowSize(wxCommandEvent &evt)
+{
+   // Restrict choice of zero padding, so that product of window
+   // size and padding may not exceed the largest window size.
    wxChoice *const pWindowSizeControl =
       static_cast<wxChoice*>(wxWindow::FindWindowById(ID_WINDOW_SIZE, this));
    int windowSize = 1 <<
       (pWindowSizeControl->GetSelection() + SpectrogramSettings::LogMinWindowSize);
    PopulatePaddingChoices(windowSize);
+
+   // Do the common part
+   OnControl(evt);
+}
+
+void SpectrumPrefs::OnDefaults(wxCommandEvent &)
+{
+   if (mDefaultsCheckbox->IsChecked()) {
+      mTempSettings = SpectrogramSettings::defaults();
+      mTempSettings.ConvertToEnumeratedWindowSizes();
+      mDefaulted = true;
+      ShuttleGui S(this, eIsSettingToDialog);
+      PopulateOrExchange(S);
+   }
 }
 
 BEGIN_EVENT_TABLE(SpectrumPrefs, PrefsPanel)
    EVT_CHOICE(ID_WINDOW_SIZE, SpectrumPrefs::OnWindowSize)
+   EVT_CHECKBOX(ID_DEFAULTS, SpectrumPrefs::OnDefaults)
+
+   // Several controls with common routine that unchecks the default box
+   EVT_CHOICE(ID_WINDOW_TYPE, SpectrumPrefs::OnControl)
+   EVT_CHOICE(ID_PADDING_SIZE, SpectrumPrefs::OnControl)
+   EVT_TEXT(ID_MINIMUM, SpectrumPrefs::OnControl)
+   EVT_TEXT(ID_MAXIMUM, SpectrumPrefs::OnControl)
+   EVT_TEXT(ID_GAIN, SpectrumPrefs::OnControl)
+   EVT_TEXT(ID_RANGE, SpectrumPrefs::OnControl)
+   EVT_TEXT(ID_FREQUENCY_GAIN, SpectrumPrefs::OnControl)
+   EVT_CHECKBOX(ID_GRAYSCALE, SpectrumPrefs::OnControl)
 END_EVENT_TABLE()
 
 SpectrumPrefsFactory::SpectrumPrefsFactory(WaveTrack *wt)
