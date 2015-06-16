@@ -26,6 +26,7 @@
 #include "../Project.h"
 #include "../ShuttleGui.h"
 #include "../WaveTrack.h"
+#include "../TrackPanel.h"
 
 #include <algorithm>
 
@@ -66,6 +67,7 @@ enum {
    ID_GRAYSCALE,
 #endif
    ID_DEFAULTS,
+   ID_APPLY,
 };
 
 void SpectrumPrefs::Populate(int windowSize)
@@ -246,6 +248,12 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    // S.EndStatic();
 
+   S.StartMultiColumn(2, wxALIGN_RIGHT);
+   {
+      S.Id(ID_APPLY).AddButton(_("Appl&y"));
+   }
+   S.EndMultiColumn();
+
    mPopulating = false;
 }
 
@@ -398,6 +406,14 @@ void SpectrumPrefs::OnDefaults(wxCommandEvent &)
    }
 }
 
+void SpectrumPrefs::OnApply(wxCommandEvent &)
+{
+   if (Validate()) {
+      Apply();
+      ::GetActiveProject()->GetTrackPanel()->Refresh(false);
+   }
+}
+
 BEGIN_EVENT_TABLE(SpectrumPrefs, PrefsPanel)
    EVT_CHOICE(ID_WINDOW_SIZE, SpectrumPrefs::OnWindowSize)
    EVT_CHECKBOX(ID_DEFAULTS, SpectrumPrefs::OnDefaults)
@@ -411,6 +427,8 @@ BEGIN_EVENT_TABLE(SpectrumPrefs, PrefsPanel)
    EVT_TEXT(ID_RANGE, SpectrumPrefs::OnControl)
    EVT_TEXT(ID_FREQUENCY_GAIN, SpectrumPrefs::OnControl)
    EVT_CHECKBOX(ID_GRAYSCALE, SpectrumPrefs::OnControl)
+
+   EVT_BUTTON(ID_APPLY, SpectrumPrefs::OnApply)
 END_EVENT_TABLE()
 
 SpectrumPrefsFactory::SpectrumPrefsFactory(WaveTrack *wt)

@@ -54,6 +54,7 @@ class SpectrumPrefs:public PrefsPanel
    void OnControl(wxCommandEvent &event);
    void OnWindowSize(wxCommandEvent &event);
    void OnDefaults(wxCommandEvent&);
+   void OnApply(wxCommandEvent &);
    DECLARE_EVENT_TABLE()
 
    WaveTrack *const mWt;
