@@ -3846,7 +3846,7 @@ For an audio file that will open in other apps, use 'Export'.\n"),
       // for overwrite ourselves later, and we disallow it.
       // We disallow overwrite because we would have to delete the many
       // smaller files too, or prompt to move them.
-      wxFD_SAVE |  wxRESIZE_BORDER, this);
+      wxFD_SAVE | wxRESIZE_BORDER | FD_NO_ADD_EXTENSION, this);
 
    if (fName == wxT(""))
       return false;
