@@ -830,6 +830,10 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
          }
          break;
          case SpectrogramSettings::stLogarithmic:
+         case SpectrogramSettings::stMel:
+         case SpectrogramSettings::stBark:
+         case SpectrogramSettings::stErb:
+         case SpectrogramSettings::stUndertone:
          {
             // SpectrumLog
 

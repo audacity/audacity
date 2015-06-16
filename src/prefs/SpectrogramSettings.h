@@ -54,6 +54,10 @@ public:
    enum ScaleType {
       stLinear,
       stLogarithmic,
+      stMel,
+      stBark,
+      stErb,
+      stUndertone,
 
       stNumScaleTypes,
    };

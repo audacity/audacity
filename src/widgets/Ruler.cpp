@@ -1192,7 +1192,7 @@ void Ruler::Update(TimeTrack* timetrack)// Envelope *speedEnv, long minSpeed, lo
          : NumberScale(nstLogarithmic, mMin, mMax, 1.0f)
       );
 
-      mDigits=2;  //TODO: implement dynamic digit computation
+      mDigits=2; //TODO: implement dynamic digit computation
       double loLog = log10(mMin);
       double hiLog = log10(mMax);
       int loDecade = (int) floor(loLog);
@@ -1208,7 +1208,7 @@ void Ruler::Update(TimeTrack* timetrack)// Envelope *speedEnv, long minSpeed, lo
       for(i=0; i<=steps; i++)
       {  // if(i!=0)
          {  val = decade;
-            if(val > rMin && val < rMax) {
+            if(val >= rMin && val < rMax) {
                const int pos(0.5 + mLength * numberScale.ValueToPosition(val));
                Tick(pos, val, true, false);
             }
@@ -1244,13 +1244,16 @@ void Ruler::Update(TimeTrack* timetrack)// Envelope *speedEnv, long minSpeed, lo
       {  start=100; end= 10; mstep=-1;
       }
       steps++;
-      for(i=0; i<=steps; i++) {
-         for(int f=start; f!=int(end); f+=mstep) {
-            if (int(f/10)!=f/10.0f) {
-               val = decade * f/10;
-               if(val >= rMin && val < rMax) {
-                  const int pos(0.5 + mLength * numberScale.ValueToPosition(val));
-                  Tick(pos, val, false, false);
+      for (i = 0; i <= steps; i++) {
+         // PRL:  Bug1038.  Don't label 1.6, rounded, as a duplicate tick for "2"
+         if (!(mFormat == IntFormat && decade < 10.0)) {
+            for (int f = start; f != int(end); f += mstep) {
+               if (int(f / 10) != f / 10.0f) {
+                  val = decade * f / 10;
+                  if (val >= rMin && val < rMax) {
+                     const int pos(0.5 + mLength * numberScale.ValueToPosition(val));
+                     Tick(pos, val, false, false);
+                  }
                }
             }
          }
