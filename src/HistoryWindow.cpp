@@ -79,13 +79,14 @@ HistoryWindow::HistoryWindow(AudacityProject *parent, UndoManager *manager):
          // columns are deleted and later InsertItem()s will cause Audacity to crash.
          mList->SetSingleStyle(wxLC_SINGLE_SEL);
          mList->InsertColumn(0, _("Action"), wxLIST_FORMAT_LEFT, 300);
-         mList->InsertColumn(1, _("Size"), wxLIST_FORMAT_LEFT, 65);
+         mList->InsertColumn(1, _("Size"), wxLIST_FORMAT_LEFT, 85);
 
          //Assign rather than set the image list, so that it is deleted later.
          mList->AssignImageList(imageList, wxIMAGE_LIST_SMALL);
 
          S.StartMultiColumn(3, wxCENTRE);
          {
+            // FIXME: Textbox labels have inconsistent capitalization
             mTotal = S.Id(ID_TOTAL).AddTextBox(_("&Total space used"), wxT("0"), 10);
             mTotal->Connect(wxEVT_KEY_DOWN, wxKeyEventHandler(HistoryWindow::OnChar));
             S.AddVariableText(wxT(""))->Hide();
@@ -208,7 +209,7 @@ void HistoryWindow::OnDiscard(wxCommandEvent & WXUNUSED(event))
    while(--i >= 0)
       mList->DeleteItem(i);
 
-   UpdateLevels();
+   DoUpdate();
 }
 
 void HistoryWindow::OnItemSelected(wxListEvent &event)
