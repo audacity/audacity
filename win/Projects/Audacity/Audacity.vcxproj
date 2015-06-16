@@ -533,6 +533,7 @@
     <ClInclude Include="..\..\..\src\import\MultiFormatReader.h" />
     <ClInclude Include="..\..\..\src\import\SpecPowerMeter.h" />
     <ClInclude Include="..\..\..\src\ModuleManager.h" />
+    <ClInclude Include="..\..\..\src\NumberScale.h" />
     <ClInclude Include="..\..\..\src\prefs\SpectrogramSettings.h" />
     <ClInclude Include="..\..\..\src\RevisionIdent.h" />
     <ClInclude Include="..\..\..\src\SelectedRegion.h" />
