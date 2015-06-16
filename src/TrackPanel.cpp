@@ -201,6 +201,7 @@ is time to refresh some aspect of the screen.
 #include "MixerBoard.h"
 
 #include "NoteTrack.h"
+#include "NumberScale.h"
 #include "Prefs.h"
 #include "Project.h"
 #include "Snap.h"
@@ -1802,22 +1803,15 @@ void TrackPanel::SetCursorAndTipWhenInLabelTrack( LabelTrack * pLT,
 namespace {
 
 // This returns true if we're a spectral editing track.
-inline bool isSpectralSelectionTrack(const Track *pTrack, bool *pLogf = NULL) {
+inline bool isSpectralSelectionTrack(const Track *pTrack) {
    if (pTrack &&
        pTrack->GetKind() == Track::Wave) {
       const WaveTrack *const wt = static_cast<const WaveTrack*>(pTrack);
       const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
       const int display = wt->GetDisplay();
-      if (pLogf) {
-         const bool logF =
-           settings.scaleType == SpectrogramSettings::stLogarithmic;
-         *pLogf = logF;
-      }
       return (display == WaveTrack::Spectrum) && settings.SpectralSelectionEnabled();
    }
    else {
-      if (pLogf)
-         *pLogf = false;
       return false;
    }
 }
@@ -1941,9 +1935,8 @@ void TrackPanel::SetCursorAndTipWhenSelectTool( Track * t,
    const bool bShiftDown = event.ShiftDown();
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   bool logF;
    if ( (mFreqSelMode == FREQ_SEL_SNAPPING_CENTER) &&
-      isSpectralSelectionTrack(t, &logF)) {
+      isSpectralSelectionTrack(t)) {
       // Not shift-down, but center frequency snapping toggle is on
       *ppTip = _("Click and drag to set frequency bandwidth.");
       *ppCursor = mEnvelopeCursor;
@@ -2679,9 +2672,8 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
       // preferences now
       if (mAdjustSelectionEdges) {
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
-         bool logF;
          if (mFreqSelMode == FREQ_SEL_SNAPPING_CENTER &&
-            isSpectralSelectionTrack(pTrack, &logF)) {
+            isSpectralSelectionTrack(pTrack)) {
             // Ignore whether we are inside the time selection.
             // Exit center-snapping, start dragging the width.
             mFreqSelMode = FREQ_SEL_PINNED_CENTER;
@@ -3072,10 +3064,9 @@ void TrackPanel::MoveSnappingFreqSelection (int mouseYCoordinate,
                                             int trackTopEdge,
                                             int trackHeight, Track *pTrack)
 {
-   bool logF;
    if (pTrack &&
        pTrack->GetSelected() &&
-       isSpectralSelectionTrack(pTrack, &logF)) {
+       isSpectralSelectionTrack(pTrack)) {
       WaveTrack *const wt = static_cast<WaveTrack*>(pTrack);
       // PRL:
       // What happens if center snapping selection began in one spectrogram track,
@@ -3086,7 +3077,7 @@ void TrackPanel::MoveSnappingFreqSelection (int mouseYCoordinate,
       const double rate = wt->GetRate();
       const double frequency =
          PositionToFrequency(wt, false, mouseYCoordinate,
-         trackTopEdge, trackHeight, logF);
+         trackTopEdge, trackHeight);
       const double snappedFrequency =
          mFrequencySnapper->FindPeak(frequency, NULL);
       const double maxRatio = findMaxRatio(snappedFrequency, rate);
@@ -3118,13 +3109,12 @@ void TrackPanel::StartFreqSelection (int mouseYCoordinate, int trackTopEdge,
    mFreqSelMode = FREQ_SEL_INVALID;
    mFreqSelPin = SelectedRegion::UndefinedFrequency;
 
-   bool logF;
-   if (isSpectralSelectionTrack(pTrack, &logF)) {
+   if (isSpectralSelectionTrack(pTrack)) {
       mFreqSelTrack = static_cast<WaveTrack*>(pTrack);
       mFreqSelMode = FREQ_SEL_FREE;
       mFreqSelPin =
          PositionToFrequency(mFreqSelTrack, false, mouseYCoordinate,
-            trackTopEdge, trackHeight, logF);
+                             trackTopEdge, trackHeight);
       mViewInfo->selectedRegion.setFrequencies(mFreqSelPin, mFreqSelPin);
    }
 }
@@ -3143,12 +3133,10 @@ void TrackPanel::ExtendFreqSelection(int mouseYCoordinate, int trackTopEdge,
    // started, and that is of a spectrogram display type.
 
    const WaveTrack* wt = mFreqSelTrack;
-   const bool logF =
-      wt->GetSpectrogramSettings().scaleType == SpectrogramSettings::stLogarithmic;
    const double rate =  wt->GetRate();
    const double frequency =
       PositionToFrequency(wt, true, mouseYCoordinate,
-         trackTopEdge, trackHeight, logF);
+         trackTopEdge, trackHeight);
 
    // Dragging center?
    if (mFreqSelMode == FREQ_SEL_DRAG_CENTER) {
@@ -3527,8 +3515,7 @@ double TrackPanel::PositionToFrequency(const WaveTrack *wt,
                                        bool maySnap,
                                        wxInt64 mouseYCoordinate,
                                        wxInt64 trackTopEdge,
-                                       int trackHeight,
-                                       bool logF) const
+                                       int trackHeight) const
 {
    const double rate = wt->GetRate();
 
@@ -3540,57 +3527,23 @@ double TrackPanel::PositionToFrequency(const WaveTrack *wt,
        trackTopEdge + trackHeight - mouseYCoordinate < FREQ_SNAP_DISTANCE)
       return -1;
 
+   const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
+   const NumberScale numberScale(settings.GetScale(rate, false, false));
    const double p = double(mouseYCoordinate - trackTopEdge) / trackHeight;
-
-   if (logF)
-   {
-      const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
-      const double maxFreq = settings.GetLogMaxFreq(rate);
-      const double minFreq = settings.GetLogMinFreq(rate);
-      return exp(p * log(minFreq) + (1.0 - p) * log(maxFreq));
-   } 
-   else
-   {
-      const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
-      const double maxFreq = settings.GetMaxFreq(rate);
-      const double minFreq = settings.GetMinFreq(rate);
-      return p * minFreq + (1.0 - p) * maxFreq;
-   }
+   return numberScale.PositionToValue(1.0 - p);
 }
 
 /// Converts a frequency to screen y position.
 wxInt64 TrackPanel::FrequencyToPosition(const WaveTrack *wt,
                                         double frequency,
                                         wxInt64 trackTopEdge,
-                                        int trackHeight,
-                                        bool logF) const
+                                        int trackHeight) const
 {
    const double rate = wt->GetRate();
-   double p = 0;
 
-   if (logF)
-   {
-      const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
-      const double maxFreq = settings.GetLogMaxFreq(rate);
-      const double minFreq = settings.GetLogMinFreq(rate);
-      if (maxFreq > minFreq)
-      {
-         const double
-            logFrequency = log(frequency < 1.0 ? 1.0 : frequency),
-            logMinFreq = log(minFreq),
-            logMaxFreq = log(maxFreq);
-          p = (logFrequency - logMinFreq) / (logMaxFreq - logMinFreq);
-      }
-   }
-   else
-   {
-      const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
-      const double maxFreq = settings.GetMaxFreq(rate);
-      const double minFreq = settings.GetMinFreq(rate);
-      if (maxFreq > minFreq)
-         p = (frequency - minFreq) / (maxFreq - minFreq);
-   }
-
+   const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
+   const NumberScale numberScale(settings.GetScale(rate, false, false));
+   const float p = numberScale.ValueToPosition(frequency);
    return trackTopEdge + wxInt64((1.0 - p) * trackHeight);
 }
 #endif
@@ -3671,18 +3624,17 @@ bool mayDragWidth, bool onlyWithinSnapDistance,
    bool chooseTime = true;
    bool chooseBottom = true;
    bool chooseCenter = false;
-   bool logF;
    // Consider adjustment of frequencies only if mouse is
    // within the time boundaries
    if (!mViewInfo->selectedRegion.isPoint() &&
        t0 <= selend && selend < t1 &&
-       isSpectralSelectionTrack(pTrack, &logF)) {
+       isSpectralSelectionTrack(pTrack)) {
       const WaveTrack *const wt = static_cast<const WaveTrack*>(pTrack);
       const wxInt64 bottomSel = (f0 >= 0)
-         ? FrequencyToPosition(wt, f0, rect.y, rect.height, logF)
+         ? FrequencyToPosition(wt, f0, rect.y, rect.height)
          : rect.y + rect.height;
       const wxInt64 topSel = (f1 >= 0)
-         ? FrequencyToPosition(wt, f1, rect.y, rect.height, logF)
+         ? FrequencyToPosition(wt, f1, rect.y, rect.height)
          : rect.y;
       wxInt64 signedBottomDist = int(event.m_y - bottomSel);
       wxInt64 verticalDist = abs(signedBottomDist);
@@ -3700,7 +3652,7 @@ bool mayDragWidth, bool onlyWithinSnapDistance,
 #endif
          ) {
          const wxInt64 centerSel =
-            FrequencyToPosition(wt, fc, rect.y, rect.height, logF);
+            FrequencyToPosition(wt, fc, rect.y, rect.height);
          const wxInt64 centerDist = abs(int(event.m_y - centerSel));
          if (centerDist < verticalDist)
             chooseCenter = true, verticalDist = centerDist,

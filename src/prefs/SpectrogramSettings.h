@@ -16,6 +16,7 @@ Paul Licameli
 #undef SPECTRAL_SELECTION_GLOBAL_SWITCH
 
 struct FFTParam;
+class NumberScale;
 class SpectrumPrefs;
 class wxArrayString;
 
@@ -79,6 +80,10 @@ public:
    void CacheWindows() const;
    void ConvertToEnumeratedWindowSizes();
    void ConvertToActualWindowSizes();
+
+   // If "bins" is false, units are Hz
+   NumberScale SpectrogramSettings::GetScale
+      (double rate, bool bins, bool autocorrelation) const;
 
 private:
    int minFreq;

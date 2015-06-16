@@ -168,6 +168,7 @@ audio tracks.
 #include "AColor.h"
 #include "BlockFile.h"
 #include "Envelope.h"
+#include "NumberScale.h"
 #include "Track.h"
 #include "WaveTrack.h"
 #include "LabelTrack.h"
@@ -2036,7 +2037,6 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
 
    const int display = track->GetDisplay();
    const bool autocorrelation = (WaveTrack::PitchDisplay == display);
-   const bool logF = settings.scaleType == SpectrogramSettings::stLogarithmic;
 
    enum { DASH_LENGTH = 10 /* pixels */ };
 
@@ -2115,15 +2115,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
       scaleType == SpectrogramSettings::stLinear
       ? settings.GetMaxFreq(rate) : settings.GetLogMaxFreq(rate);
 
-   float minBin = ((double)minFreq / binUnit);
-   float maxBin = ((double)maxFreq / binUnit);
-   float binPerPx = float(maxBin - minBin) / float(mid.height);
-
-   const float
-      //      e=exp(1.0f),
-      lmin = logf(float(minFreq)),
-      lmax = logf(float(maxFreq)),
-      scale = lmax - lmin;
+   const NumberScale numberScale(settings.GetScale(rate, true, autocorrelation));
 
 #ifdef EXPERIMENTAL_FFT_Y_GRID
    const float
@@ -2204,135 +2196,124 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
       int *indexes = new int[maxTableSize];
 #endif //EXPERIMENTAL_FIND_NOTES
 
-      for (int xx = 0; xx < hiddenMid.width; ++xx)
-      {
-         if (!logF) {
-            for (int yy = 0; yy < hiddenMid.height; ++yy) {
-               float bin0 = float(yy) * binPerPx + minBin;
-               float bin1 = float(yy + 1) * binPerPx + minBin;
+      for (int xx = 0; xx < hiddenMid.width; ++xx) {
+         NumberScale::Iterator it = numberScale.begin(mid.height);
+         float nextBin = std::max(0.0f, std::min(float(half - 1), *it));
+         for (int yy = 0; yy < hiddenMid.height; ++yy) {
+            const float bin = nextBin;
+            nextBin = std::max(0.0f, std::min(float(half - 1), *++it));
+
+            if (settings.scaleType != SpectrogramSettings::stLogarithmic) {
                const float value = findValue
-                  (freq + half * xx, bin0, bin1, half, autocorrelation, gain, range);
+                  (freq + half * xx, bin, nextBin, half, autocorrelation, gain, range);
                clip->mSpecPxCache->values[xx * hiddenMid.height + yy] = value;
             }
-         }
-         else {
+            else {
+               // Do we need this legacy experiment still?
 #ifdef EXPERIMENTAL_FIND_NOTES
-            int maximas=0;
-            const int x0 = half * xx;
-            if (fftFindNotes) {
-               for (int i = maxTableSize-1; i >= 0; i--)
-                  indexes[i]=-1;
+               int maximas = 0;
+               const int x0 = half * x;
+               if (fftFindNotes) {
+                  for (int i = maxTableSize - 1; i >= 0; i--)
+                     indexes[i] = -1;
 
-               // Build a table of (most) values, put the index in it.
-               for (int i = int(i0); i < int(i1); i++) {
-                  float freqi=freq[x0 + int(i)];
-                  int value=int((freqi+gain+range)/range*(maxTableSize-1));
-                  if (value < 0)
-                     value=0;
-                  if (value >= maxTableSize)
-                     value=maxTableSize-1;
-                  indexes[value]=i;
-               }
-               // Build from the indices an array of maxima.
-               for (int i = maxTableSize - 1; i >= 0; i--) {
-                  int index = indexes[i];
-                  if (index >= 0) {
-                     float freqi = freq[x0 + index];
-                     if (freqi < findNotesMinA)
-                        break;
-
-                     bool ok = true;
-                     for (int m = 0; m < maximas; m++) {
-                        // Avoid to store very close maxima.
-                        float maxm = maxima[m];
-                        if (maxm / index < minDistance && index / maxm < minDistance) {
-                           ok = false;
+                  // Build a table of (most) values, put the index in it.
+                  for (int i = int(i0); i < int(i1); i++) {
+                     float freqi = freq[x0 + int(i)];
+                     int value = int((freqi + gain + range) / range*(maxTableSize - 1));
+                     if (value < 0)
+                        value = 0;
+                     if (value >= maxTableSize)
+                        value = maxTableSize - 1;
+                     indexes[value] = i;
+                  }
+                  // Build from the indices an array of maxima.
+                  for (int i = maxTableSize - 1; i >= 0; i--) {
+                     int index = indexes[i];
+                     if (index >= 0) {
+                        float freqi = freq[x0 + index];
+                        if (freqi < findNotesMinA)
                            break;
+
+                        bool ok = true;
+                        for (int m = 0; m < maximas; m++) {
+                           // Avoid to store very close maxima.
+                           float maxm = maxima[m];
+                           if (maxm / index < minDistance && index / maxm < minDistance) {
+                              ok = false;
+                              break;
+                           }
+                        }
+                        if (ok) {
+                           maxima[maximas++] = index;
+                           if (maximas >= numberOfMaxima)
+                              break;
                         }
                      }
-                     if (ok) {
-                        maxima[maximas++] = index;
-                        if (maximas >= numberOfMaxima)
-                           break;
-                     }
                   }
-               }
 
 // The f2pix helper macro converts a frequency into a pixel coordinate.
 #define f2pix(f) (logf(f)-lmins)/(lmaxs-lmins)*hiddenMid.height
 
-               // Possibly quantize the maxima frequencies and create the pixel block limits.
-               for (int i=0; i < maximas; i++) {
-                  int index=maxima[i];
-                  float f = float(index)*bin2f;
-                  if (findNotesQuantize)
-                  {  f = expf(int(log(f/440)/log2*12-0.5)/12.0f*log2)*440;
-                  maxima[i] = f*f2bin;
+                  // Possibly quantize the maxima frequencies and create the pixel block limits.
+                  for (int i = 0; i < maximas; i++) {
+                     int index = maxima[i];
+                     float f = float(index)*bin2f;
+                     if (findNotesQuantize)
+                     {
+                        f = expf(int(log(f / 440) / log2 * 12 - 0.5) / 12.0f*log2) * 440;
+                        maxima[i] = f*f2bin;
+                     }
+                     float f0 = expf((log(f / 440) / log2 * 24 - 1) / 24.0f*log2) * 440;
+                     maxima0[i] = f2pix(f0);
+                     float f1 = expf((log(f / 440) / log2 * 24 + 1) / 24.0f*log2) * 440;
+                     maxima1[i] = f2pix(f1);
                   }
-                  float f0 = expf((log(f/440)/log2*24-1)/24.0f*log2)*440;
-                  maxima0[i] = f2pix(f0);
-                  float f1 = expf((log(f/440)/log2*24+1)/24.0f*log2)*440;
-                  maxima1[i] = f2pix(f1);
                }
-            }
-            int it=0;
-            int oldBin0=-1;
-            bool inMaximum = false;
+               int it = 0;
+               int oldBin0 = -1;
+               bool inMaximum = false;
 #endif //EXPERIMENTAL_FIND_NOTES
 
-            double yy2_base = exp(lmin) / binUnit;
-            float yy2 = yy2_base;
-            double exp_scale_per_height = exp(scale / hiddenMid.height);
-            for (int yy = 0; yy < hiddenMid.height; ++yy) {
-               if (int(yy2) >= half)
-                  yy2=half-1;
-               if (yy2<0)
-                  yy2=0;
-               float bin0 = float(yy2);
-               yy2_base *= exp_scale_per_height;
-               float yy3 = yy2_base;
-               if (int(yy3)>=half)
-                  yy3=half-1;
-               if (yy3<0)
-                  yy3=0;
-               float bin1 = float(yy3);
                float value;
 
 #ifdef EXPERIMENTAL_FIND_NOTES
                if (fftFindNotes) {
                   if (it < maximas) {
-                     float i0=maxima0[it];
+                     float i0 = maxima0[it];
                      if (yy >= i0)
                         inMaximum = true;
 
                      if (inMaximum) {
-                        float i1=maxima1[it];
-                        if (yy+1 <= i1) {
-                           value=findValue(freq + x0, bin0, bin1, half, autocorrelation, gain, range);
+                        float i1 = maxima1[it];
+                        if (yy + 1 <= i1) {
+                           value = findValue(freq + x0, bin, nextBin, half, autocorrelation, gain, range);
                            if (value < findNotesMinA)
                               value = minColor;
-                        } else {
+                        }
+                        else {
                            it++;
                            inMaximum = false;
                            value = minColor;
                         }
-                     } else {
+                     }
+                     else {
                         value = minColor;
                      }
-                  } else
+                  }
+                  else
                      value = minColor;
-               } else
+               }
+               else
 #endif //EXPERIMENTAL_FIND_NOTES
                {
                   value = findValue
-                     (freq + half * xx, bin0, bin1, half, autocorrelation, gain, range);
+                     (freq + half * xx, bin, nextBin, half, autocorrelation, gain, range);
                }
                clip->mSpecPxCache->values[xx * hiddenMid.height + yy] = value;
-               yy2 = yy2_base;
-            } // each yy
-         } // is logF
+            } // logF
+         } // each yy
       } // each xx
-
    } // updating cache
 
    float selBinLo = freqLo / binUnit;
@@ -2384,85 +2365,42 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
          (zoomInfo.PositionToTime(xx + 1, -leftOffset) - tOffset)
       );
 
-      // TODO: The logF and non-logF case are very similar.
-      // They should be merged and simplified.
-      if (!logF)
-      {
-         for (int yy = 0; yy < hiddenMid.height; ++yy) {
-            float bin0 = float(yy) * binPerPx + minBin;
-            float bin1 = float(yy + 1) * binPerPx + minBin;
+      NumberScale::Iterator it = numberScale.begin(mid.height);
+      float nextBin = std::max(0.0f, std::min(float(half - 1), *it));
+      for (int yy = 0; yy < hiddenMid.height; ++yy) {
+         const float bin = nextBin;
+         nextBin = std::max(0.0f, std::min(float(half - 1), *++it));
 
-            // For spectral selection, determine what colour
-            // set to use.  We use a darker selection if
-            // in both spectral range and time range.
+         // For spectral selection, determine what colour
+         // set to use.  We use a darker selection if
+         // in both spectral range and time range.
 
-            AColor::ColorGradientChoice selected =
-               AColor::ColorGradientUnselected;
-            // If we are in the time selected range, then we may use a different color set.
-            if (ssel0 <= w0 && w1 < ssel1)
-               selected = ChooseColorSet(bin0, bin1, selBinLo, selBinCenter, selBinHi,
+         AColor::ColorGradientChoice selected = AColor::ColorGradientUnselected;
+         // If we are in the time selected range, then we may use a different color set.
+         if (ssel0 <= w0 && w1 < ssel1)
+            selected =
+               ChooseColorSet(bin, nextBin, selBinLo, selBinCenter, selBinHi,
                   (xx + leftOffset - hiddenLeftOffset) / DASH_LENGTH, isSpectral);
-
-            unsigned char rv, gv, bv;
-            const float value = uncached
-               ? findValue(uncached, bin0, bin1, half, autocorrelation, gain, range)
-               : clip->mSpecPxCache->values[correctedX * hiddenMid.height + yy];
-            GetColorGradient(value, selected, isGrayscale, &rv, &gv, &bv);
-            int px = ((mid.height - 1 - yy) * mid.width + xx) * 3;
-            data[px++] = rv;
-            data[px++] = gv;
-            data[px] = bv;
-         }
-      }
-      else //logF
-      {
-         double yy2_base=exp(lmin)/binUnit;
-         float yy2 = yy2_base;
-         double exp_scale_per_height = exp(scale / hiddenMid.height);
-         for (int yy = 0; yy < hiddenMid.height; ++yy) {
-            if (int(yy2)>=half)
-               yy2=half-1;
-            if (yy2<0)
-               yy2=0;
-            float bin0 = float(yy2);
-            yy2_base *= exp_scale_per_height;
-            float yy3 = yy2_base;
-            if (int(yy3)>=half)
-               yy3=half-1;
-            if (yy3<0)
-               yy3=0;
-            float bin1 = float(yy3);
-
-            AColor::ColorGradientChoice selected = AColor::ColorGradientUnselected;
-            // If we are in the time selected range, then we may use a different color set.
-            if (ssel0 <= w0 && w1 < ssel1)
-               selected = ChooseColorSet(
-                  bin0, bin1, selBinLo, selBinCenter, selBinHi,
-                  (xx + leftOffset - hiddenLeftOffset) / DASH_LENGTH, isSpectral);
-
-            unsigned char rv, gv, bv;
-            const float value = uncached
-               ? findValue(uncached, bin0, bin1, half, autocorrelation, gain, range)
-               : clip->mSpecPxCache->values[correctedX * hiddenMid.height + yy];
-            GetColorGradient(value, selected, isGrayscale, &rv, &gv, &bv);
+         const float value = uncached
+            ? findValue(uncached, bin, nextBin, half, autocorrelation, gain, range)
+            : clip->mSpecPxCache->values[correctedX * hiddenMid.height + yy];
+         unsigned char rv, gv, bv;
+         GetColorGradient(value, selected, isGrayscale, &rv, &gv, &bv);
 
 #ifdef EXPERIMENTAL_FFT_Y_GRID
-            if (fftYGrid && yGrid[yy]) {
-               rv /= 1.1f;
-               gv /= 1.1f;
-               bv /= 1.1f;
-            }
+         if (fftYGrid && yGrid[yy]) {
+            rv /= 1.1f;
+            gv /= 1.1f;
+            bv /= 1.1f;
+         }
 #endif //EXPERIMENTAL_FFT_Y_GRID
 
-            int px = ((mid.height - 1 - yy) * mid.width + xx) * 3;
-            data[px++] = rv;
-            data[px++] = gv;
-            data[px] = bv;
-
-            yy2 = yy2_base;
-         }
-      }
-   }
+         int px = ((mid.height - 1 - yy) * mid.width + xx) * 3;
+         data[px++] = rv;
+         data[px++] = gv;
+         data[px] = bv;
+      } // each yy
+   } // each xx
 
    wxBitmap converted = wxBitmap(*image);
 

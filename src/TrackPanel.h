@@ -698,13 +698,11 @@ protected:
                               bool maySnap,
                               wxInt64 mouseYCoordinate,
                               wxInt64 trackTopEdge,
-                              int trackHeight,
-                              bool logF) const;
+                              int trackHeight) const;
    wxInt64 FrequencyToPosition(const WaveTrack *wt,
                                double frequency,
                                wxInt64 trackTopEdge,
-                               int trackHeight,
-                               bool logF) const;
+                               int trackHeight) const;
 #endif
 
    enum SelectionBoundary {

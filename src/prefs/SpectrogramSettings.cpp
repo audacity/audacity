@@ -15,6 +15,7 @@ Paul Licameli
 
 #include "../Audacity.h"
 #include "SpectrogramSettings.h"
+#include "../NumberScale.h"
 
 #include <algorithm>
 #include <wx/msgdlg.h>
@@ -23,7 +24,6 @@ Paul Licameli
 #include "../Prefs.h"
 #include "../RealFFTf.h"
 
-#include <algorithm>
 #include <cmath>
 
 SpectrogramSettings::Globals::Globals()
@@ -522,6 +522,42 @@ int SpectrogramSettings::GetFFTLength(bool autocorrelation) const
       * (!autocorrelation ? zeroPaddingFactor : 1);
 #endif
    ;
+}
+
+NumberScale SpectrogramSettings::GetScale
+(double rate, bool bins, bool autocorrelation) const
+{
+   int minFreq, maxFreq;
+   NumberScaleType type = nstLinear;
+
+   // Don't assume the correspondence of the enums will remain direct in the future.
+   // Do this switch.
+   switch (scaleType) {
+   default:
+      wxASSERT(false);
+   case stLinear:
+      type = nstLinear; break;
+   case stLogarithmic:
+      type = nstLogarithmic; break;
+   }
+
+   switch (scaleType) {
+   default:
+      wxASSERT(false);
+   case stLinear:
+      minFreq = GetMinFreq(rate);
+      maxFreq = GetMaxFreq(rate);
+      break;
+   case stLogarithmic:
+      minFreq = GetLogMinFreq(rate);
+      maxFreq = GetLogMaxFreq(rate);
+      break;
+   }
+
+   const int half = GetFFTLength(autocorrelation) / 2;
+
+   return NumberScale(type, minFreq, maxFreq,
+      bins ? rate / (2 * half) : 1.0f);
 }
 
 bool SpectrogramSettings::SpectralSelectionEnabled() const
