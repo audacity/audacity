@@ -100,6 +100,7 @@ WaveTrack::WaveTrack(DirManager *projDirManager, sampleFormat format, double rat
    mDisplayLocations = NULL;
    mDisplayNumLocationsAllocated = 0;
    mLastDisplay = -1;
+   mAutoSaveIdent = 0;
 }
 
 WaveTrack::WaveTrack(WaveTrack &orig):

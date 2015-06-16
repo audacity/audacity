@@ -3249,16 +3249,14 @@ void AudacityProject::WriteXML(XMLWriter &xmlFile)
          if (t->GetLinked())
             t = iter.Next();
       }
-      else if (t->GetKind() == Track::Wave && mAutoSaving)
+      else if (t->GetKind() == Track::Wave)
       {
          pWaveTrack = (WaveTrack*)t;
-         pWaveTrack->SetAutoSaveIdent(++ndx);
+         pWaveTrack->SetAutoSaveIdent(mAutoSaving ? ++ndx : 0);
          t->WriteXML(xmlFile);
       }
       else
       {
-         pWaveTrack = (WaveTrack*)t;
-         pWaveTrack->SetAutoSaveIdent(0);
          t->WriteXML(xmlFile);
       }
 
