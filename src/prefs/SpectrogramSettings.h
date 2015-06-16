@@ -13,6 +13,8 @@ Paul Licameli
 
 #include "../Experimental.h"
 
+#undef SPECTRAL_SELECTION_GLOBAL_SWITCH
+
 struct FFTParam;
 class SpectrumPrefs;
 class wxArrayString;
@@ -21,6 +23,22 @@ class SpectrogramSettings
 {
    friend class SpectrumPrefs;
 public:
+
+   // Singleton for settings that are not per-track
+   class Globals
+   {
+   public:
+      static Globals &Get();
+      void SavePrefs();
+
+#ifdef SPECTRAL_SELECTION_GLOBAL_SWITCH
+      bool spectralSelection;
+#endif
+
+   private:
+      Globals();
+      void LoadPrefs();
+   };
 
    enum {
       LogMinWindowSize = 3,
@@ -72,6 +90,7 @@ public:
    int GetMaxFreq(double rate) const;
    int GetLogMinFreq(double rate) const;
    int GetLogMaxFreq(double rate) const;
+   bool SpectralSelectionEnabled() const;
 
    void SetMinFreq(int freq);
    void SetMaxFreq(int freq);
@@ -95,7 +114,9 @@ public:
 
    ScaleType scaleType;
 
+#ifndef SPECTRAL_SELECTION_GLOBAL_SWITCH
    bool spectralSelection; // But should this vary per track? -- PRL
+#endif
 
 #ifdef EXPERIMENTAL_FFT_Y_GRID
    bool fftYGrid;
@@ -116,5 +137,4 @@ public:
    mutable float         *window;
 #endif
 };
-
 #endif

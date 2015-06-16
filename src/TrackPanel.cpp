@@ -1813,7 +1813,7 @@ inline bool isSpectralSelectionTrack(const Track *pTrack, bool *pLogf = NULL) {
            settings.scaleType == SpectrogramSettings::stLogarithmic;
          *pLogf = logF;
       }
-      return (display == WaveTrack::Spectrum) && settings.spectralSelection;
+      return (display == WaveTrack::Spectrum) && settings.SpectralSelectionEnabled();
    }
    else {
       if (pLogf)

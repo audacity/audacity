@@ -218,8 +218,11 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
 
          S.Id(ID_GRAYSCALE).TieCheckBox(_("S&how the spectrum using grayscale colors"),
             mTempSettings.isGrayscale);
+
+#ifndef SPECTRAL_SELECTION_GLOBAL_SWITCH
          S.Id(ID_SPECTRAL_SELECTION).TieCheckBox(_("Ena&ble spectral selection"),
             mTempSettings.spectralSelection);
+#endif
 
 #ifdef EXPERIMENTAL_FFT_Y_GRID
          S.TieCheckBox(_("Show a grid along the &Y-axis"),
@@ -256,6 +259,15 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
 #endif //EXPERIMENTAL_FIND_NOTES
    }
    // S.EndStatic();
+
+#ifdef SPECTRAL_SELECTION_GLOBAL_SWITCH
+   S.StartStatic(_("Global settings"));
+   {
+      S.TieCheckBox(_("Ena&ble spectral selection"),
+         SpectrogramSettings::Globals::Get().spectralSelection);
+   }
+   S.EndStatic();
+#endif
 
    S.StartMultiColumn(2, wxALIGN_RIGHT);
    {
@@ -340,7 +352,10 @@ bool SpectrumPrefs::Apply()
    ShuttleGui S(this, eIsGettingFromDialog);
    PopulateOrExchange(S);
 
+
    mTempSettings.ConvertToActualWindowSizes();
+   SpectrogramSettings::Globals::Get().SavePrefs(); // always
+
    if (mWt) {
       if (mDefaulted) {
          mWt->SetSpectrogramSettings(NULL);

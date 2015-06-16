@@ -26,6 +26,33 @@ Paul Licameli
 #include <algorithm>
 #include <cmath>
 
+SpectrogramSettings::Globals::Globals()
+{
+   LoadPrefs();
+}
+
+void SpectrogramSettings::Globals::SavePrefs()
+{
+#ifdef SPECTRAL_SELECTION_GLOBAL_SWITCH
+   gPrefs->Write(wxT("/Spectrum/EnableSpectralSelection"), spectralSelection);
+#endif
+}
+
+void SpectrogramSettings::Globals::LoadPrefs()
+{
+#ifdef SPECTRAL_SELECTION_GLOBAL_SWITCH
+   spectralSelection
+      = (gPrefs->Read(wxT("/Spectrum/EnableSpectralSelection"), 0L) != 0);
+#endif
+}
+
+SpectrogramSettings::Globals
+&SpectrogramSettings::Globals::Get()
+{
+   static Globals instance;
+   return instance;
+}
+
 SpectrogramSettings::SpectrogramSettings()
    : hFFT(0)
    , window(0)
@@ -48,7 +75,9 @@ SpectrogramSettings::SpectrogramSettings(const SpectrogramSettings &other)
 #endif
    , isGrayscale(other.isGrayscale)
    , scaleType(other.scaleType)
+#ifndef SPECTRAL_SELECTION_GLOBAL_SWITCH
    , spectralSelection(other.spectralSelection)
+#endif
 #ifdef EXPERIMENTAL_FFT_Y_GRID
    , fftYGrid(other.fftYGrid)
 #endif
@@ -82,7 +111,9 @@ SpectrogramSettings &SpectrogramSettings::operator= (const SpectrogramSettings &
 #endif
       isGrayscale = other.isGrayscale;
       scaleType = other.scaleType;
+#ifndef SPECTRAL_SELECTION_GLOBAL_SWITCH
       spectralSelection = other.spectralSelection;
+#endif
 #ifdef EXPERIMENTAL_FFT_Y_GRID
       fftYGrid = other.fftYGrid;
 #endif
@@ -219,7 +250,10 @@ void SpectrogramSettings::LoadPrefs()
    isGrayscale = (gPrefs->Read(wxT("/Spectrum/Grayscale"), 0L) != 0);
 
    scaleType = ScaleType(gPrefs->Read(wxT("/Spectrum/ScaleType"), 0L));
+
+#ifndef SPECTRAL_SELECTION_GLOBAL_SWITCH
    spectralSelection = (gPrefs->Read(wxT("/Spectrum/EnableSpectralSelection"), 0L) != 0);
+#endif
 
 #ifdef EXPERIMENTAL_FFT_Y_GRID
    fftYGrid = (gPrefs->Read(wxT("/Spectrum/FFTYGrid"), 0L) != 0);
@@ -276,7 +310,10 @@ void SpectrogramSettings::SavePrefs()
    gPrefs->Write(wxT("/Spectrum/Grayscale"), isGrayscale);
 
    gPrefs->Write(wxT("/Spectrum/ScaleType"), scaleType);
+
+#ifndef SPECTRAL_SELECTION_GLOBAL_SWITCH
    gPrefs->Write(wxT("/Spectrum/EnableSpectralSelection"), spectralSelection);
+#endif
 
 #ifdef EXPERIMENTAL_FFT_Y_GRID
    gPrefs->Write(wxT("/Spectrum/FFTYGrid"), fftYGrid);
@@ -485,4 +522,13 @@ int SpectrogramSettings::GetFFTLength(bool autocorrelation) const
       * (!autocorrelation ? zeroPaddingFactor : 1);
 #endif
    ;
+}
+
+bool SpectrogramSettings::SpectralSelectionEnabled() const
+{
+#ifdef SPECTRAL_SELECTION_GLOBAL_SWITCH
+   return Globals::Get().spectralSelection;
+#else
+   return spectralSelection;
+#endif
 }

@@ -2344,7 +2344,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
       (zoomInfo.PositionToTime(0, -leftOffset) - tOffset)
    );
 
-   const bool isSpectral = settings.spectralSelection;
+   const bool isSpectral = settings.SpectralSelectionEnabled();
    const bool hidden = (ZoomInfo::HIDDEN == zoomInfo.GetFisheyeState());
    const int begin = hidden
       ? 0

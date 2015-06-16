@@ -605,7 +605,7 @@ bool NyquistEffect::Process()
             const WaveTrack::WaveTrackDisplay display = mCurTrack[0]->GetDisplay();
             const bool bAllowSpectralEditing =
                (display == WaveTrack::Spectrum) &&
-               mCurTrack[0]->GetSpectrogramSettings().spectralSelection;
+               mCurTrack[0]->GetSpectrogramSettings().SpectralSelectionEnabled();
 
             if (bAllowSpectralEditing) {
 #if defined(EXPERIMENTAL_SPECTRAL_EDITING)
