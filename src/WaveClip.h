@@ -127,6 +127,7 @@ public:
       len = cacheLen;
       values = new float[len];
       valid = false;
+      scaleType = 0;
       range = gain = -1;
       minFreq = maxFreq = -1;
    }
@@ -140,6 +141,7 @@ public:
    float       *values;
    bool         valid;
 
+   int scaleType;
    int range;
    int gain;
    int minFreq;

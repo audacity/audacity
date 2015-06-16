@@ -74,6 +74,7 @@ class SpectrumPrefs:public PrefsPanel
 #endif
 
    wxArrayString mTypeChoices;
+   wxArrayString mScaleChoices;
 
 
 #ifdef EXPERIMENTAL_FIND_NOTES

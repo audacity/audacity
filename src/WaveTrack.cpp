@@ -235,9 +235,12 @@ WaveTrack::ConvertLegacyDisplayValue(int oldValue)
    case WaveformDB:
       newValue = WaveTrack::WaveformDBDisplay; break;
    case Spectrogram:
-      newValue = WaveTrack::SpectrumDisplay; break;
+   case SpectrogramLogF:
+      newValue = WaveTrack::Spectrum; break;
+      /*
    case SpectrogramLogF:
       newValue = WaveTrack::SpectrumLogDisplay; break;
+      */
    case Pitch:
       newValue = WaveTrack::PitchDisplay; break;
    }
@@ -248,11 +251,24 @@ WaveTrack::ConvertLegacyDisplayValue(int oldValue)
 WaveTrack::WaveTrackDisplay
 WaveTrack::ValidateWaveTrackDisplay(WaveTrackDisplay display)
 {
-   // To do, in future:  detect obsolete values between min and max
-   if (display >= int(MinDisplay) && display <= int(MaxDisplay))
+   switch (display) {
+      // non-obsolete codes
+   case WaveformDisplay:
+   case WaveformDBDisplay:
+   case Spectrum:
+   case PitchDisplay:
       return display;
-   else
+
+      // obsolete codes
+   case obsolete1: // was SpectrumLogDisplay
+   case obsolete2: // was SpectralSelectionDisplay
+   case obsolete3: // was SpectralSelectionLogDisplay
+      return Spectrum;
+
+      // codes out of bounds (from future prefs files?)
+   default:
       return MinDisplay;
+   }
 }
 
 void WaveTrack::GetDisplayBounds(float *min, float *max)

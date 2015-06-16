@@ -418,10 +418,12 @@ class AUDACITY_DLL_API WaveTrack: public Track {
       MinDisplay = WaveformDisplay,
 
       WaveformDBDisplay,
-      SpectrumDisplay,
-      SpectrumLogDisplay,
-      SpectralSelectionDisplay,
-      SpectralSelectionLogDisplay,
+      Spectrum,
+
+      obsolete1, // was SpectrumLogDisplay
+      obsolete2, // was SpectralSelectionDisplay
+      obsolete3, // was SpectralSelectionLogDisplay
+
       PitchDisplay,
 
       // Add values here, and update MaxDisplay.
@@ -441,14 +443,10 @@ class AUDACITY_DLL_API WaveTrack: public Track {
    static WaveTrackDisplay ValidateWaveTrackDisplay(WaveTrackDisplay display);
 
    void SetDisplay(WaveTrackDisplay display) {
-      if(mDisplay < 2)
+      if (mDisplay < Spectrum)
          // remember last display mode for wave and wavedb so they can remap the vertical ruler
          mLastDisplay = mDisplay;
       mDisplay = display;
-      if( mDisplay == SpectralSelectionDisplay ){
-      }
-      if( mDisplay == SpectralSelectionLogDisplay ){
-      }
    }
    WaveTrackDisplay GetDisplay() const { return mDisplay; }
    int GetLastDisplay() {return mLastDisplay;}

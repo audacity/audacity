@@ -65,17 +65,8 @@ void TracksPrefs::Populate()
    mViewChoices.Add(_("Waveform (dB)"));
    mViewCodes.Add(int(WaveTrack::WaveformDBDisplay));
 
-   mViewChoices.Add(_("Spectrogram"));
-   mViewCodes.Add(int(WaveTrack::SpectrumDisplay));
-
-   mViewChoices.Add(_("Spectrogram log(f)"));
-   mViewCodes.Add(int(WaveTrack::SpectrumLogDisplay));
-
-   mViewChoices.Add(_("Spectral Selection"));
-   mViewCodes.Add(int(WaveTrack::SpectralSelectionDisplay));
-
-   mViewChoices.Add(_("Spectral Selection log(f)"));
-   mViewCodes.Add(int(WaveTrack::SpectralSelectionLogDisplay));
+   mViewChoices.Add(_("Spectrum"));
+   mViewCodes.Add(WaveTrack::Spectrum);
 
    mViewChoices.Add(_("Pitch (EAC)"));
    mViewCodes.Add(int(WaveTrack::PitchDisplay));

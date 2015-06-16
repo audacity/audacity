@@ -45,6 +45,7 @@ effects from this one class.
 #include "../../FileNames.h"
 #include "../../Internat.h"
 #include "../../LabelTrack.h"
+#include "../../prefs/SpectrogramSettings.h"
 #include "../../Project.h"
 #include "../../ShuttleGui.h"
 #include "../../WaveClip.h"
@@ -603,8 +604,8 @@ bool NyquistEffect::Process()
 
             const WaveTrack::WaveTrackDisplay display = mCurTrack[0]->GetDisplay();
             const bool bAllowSpectralEditing =
-               (display == WaveTrack::SpectralSelectionDisplay) ||
-               (display == WaveTrack::SpectralSelectionLogDisplay);
+               (display == WaveTrack::Spectrum) &&
+               mCurTrack[0]->GetSpectrogramSettings().spectralSelection;
 
             if (bAllowSpectralEditing) {
 #if defined(EXPERIMENTAL_SPECTRAL_EDITING)
@@ -790,10 +791,7 @@ bool NyquistEffect::ProcessOne()
             {
                case WaveTrack::WaveformDisplay: view = wxT("\"Waveform\""); break;
                case WaveTrack::WaveformDBDisplay: view = wxT("\"Waveform (dB)\""); break;
-               case WaveTrack::SpectrumDisplay: view = wxT("\"Spectrogram\""); break;
-               case WaveTrack::SpectrumLogDisplay: view = wxT("\"Spectrogram log(f)\""); break;
-               case WaveTrack::SpectralSelectionDisplay: view = wxT("\"Spectral Selection\""); break;
-               case WaveTrack::SpectralSelectionLogDisplay: view = wxT("\"Spectral Selection log(f)\""); break;
+               case WaveTrack::Spectrum: view = wxT("\"Spectrum\""); break;
                case WaveTrack::PitchDisplay: view = wxT("\"Pitch (EAC)\""); break;
                default: view = wxT("NIL"); break;
             }

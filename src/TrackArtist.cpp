@@ -464,10 +464,7 @@ void TrackArtist::DrawTrack(const Track * t,
          DrawWaveform(wt, dc, rect, selectedRegion, zoomInfo,
                       drawEnvelope,  bigPoints, drawSliders, true, muted);
          break;
-      case WaveTrack::SpectrumDisplay:
-      case WaveTrack::SpectrumLogDisplay:
-      case WaveTrack::SpectralSelectionDisplay:
-      case WaveTrack::SpectralSelectionLogDisplay:
+      case WaveTrack::Spectrum:
       case WaveTrack::PitchDisplay:
          DrawSpectrum(wt, dc, rect, selectedRegion, zoomInfo);
          break;
@@ -793,66 +790,71 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
          vruler->SetLabelEdges(true);
          vruler->SetLog(false);
       }
-      else if ( 
-         (display == WaveTrack::SpectrumDisplay) || 
-         (display == WaveTrack::SpectralSelectionDisplay) )
-      {
-         // Spectrum
+      else if (display == WaveTrack::Spectrum) {
+         switch (wt->GetSpectrogramSettings().scaleType) {
+         default:
+            wxASSERT(false);
+         case SpectrogramSettings::stLinear:
+         {
+            // Spectrum
 
-         if (rect.height < 60)
-            return;
+            if (rect.height < 60)
+               return;
 
-         const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
-         const double rate = wt->GetRate();
-         const int maxFreq = settings.GetMaxFreq(rate);
-         const int minFreq = settings.GetMinFreq(rate);
+            const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
+            const double rate = wt->GetRate();
+            const int maxFreq = settings.GetMaxFreq(rate);
+            const int minFreq = settings.GetMinFreq(rate);
 
-         /*
+            /*
             draw the ruler
             we will use Hz if maxFreq is < 2000, otherwise we represent kHz,
             and append to the numbers a "k"
-         */
-         vruler->SetBounds(rect.x, rect.y+1, rect.x + rect.width, rect.y + rect.height-1);
-         vruler->SetOrientation(wxVERTICAL);
-         vruler->SetFormat(Ruler::RealFormat);
-         vruler->SetLabelEdges(true);
-         // use kHz in scale, if appropriate
-         if (maxFreq>=2000) {
-            vruler->SetRange((maxFreq/1000.), (minFreq/1000.));
-            vruler->SetUnits(wxT("k"));
-         } else {
-            // use Hz
-            vruler->SetRange(int(maxFreq), int(minFreq));
-            vruler->SetUnits(wxT(""));
+            */
+            vruler->SetBounds(rect.x, rect.y + 1, rect.x + rect.width, rect.y + rect.height - 1);
+            vruler->SetOrientation(wxVERTICAL);
+            vruler->SetFormat(Ruler::RealFormat);
+            vruler->SetLabelEdges(true);
+            // use kHz in scale, if appropriate
+            if (maxFreq >= 2000) {
+               vruler->SetRange((maxFreq / 1000.), (minFreq / 1000.));
+               vruler->SetUnits(wxT("k"));
+            }
+            else {
+               // use Hz
+               vruler->SetRange(int(maxFreq), int(minFreq));
+               vruler->SetUnits(wxT(""));
+            }
+            vruler->SetLog(false);
          }
-         vruler->SetLog(false);
-      }
-      else if ( 
-         (display == WaveTrack::SpectrumLogDisplay) || 
-         (display == WaveTrack::SpectralSelectionLogDisplay) )
-      {
-         // SpectrumLog
+         break;
+         case SpectrogramSettings::stLogarithmic:
+         {
+            // SpectrumLog
 
-         if (rect.height < 10)
-            return;
+            if (rect.height < 10)
+               return;
 
-         const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
-         const double rate = wt->GetRate();
-         const int maxFreq = settings.GetLogMaxFreq(rate);
-         const int minFreq = settings.GetLogMinFreq(rate);
+            const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
+            const double rate = wt->GetRate();
+            const int maxFreq = settings.GetLogMaxFreq(rate);
+            const int minFreq = settings.GetLogMinFreq(rate);
 
-         /*
+            /*
             draw the ruler
             we will use Hz if maxFreq is < 2000, otherwise we represent kHz,
             and append to the numbers a "k"
-         */
-         vruler->SetBounds(rect.x, rect.y+1, rect.x + rect.width, rect.y + rect.height-1);
-         vruler->SetOrientation(wxVERTICAL);
-         vruler->SetFormat(Ruler::IntFormat);
-         vruler->SetLabelEdges(true);
-         vruler->SetRange(maxFreq, minFreq);
-         vruler->SetUnits(wxT(""));
-         vruler->SetLog(true);
+            */
+            vruler->SetBounds(rect.x, rect.y + 1, rect.x + rect.width, rect.y + rect.height - 1);
+            vruler->SetOrientation(wxVERTICAL);
+            vruler->SetFormat(Ruler::IntFormat);
+            vruler->SetLabelEdges(true);
+            vruler->SetRange(maxFreq, minFreq);
+            vruler->SetUnits(wxT(""));
+            vruler->SetLog(true);
+         }
+         break;
+         }
       }
       else if (display == WaveTrack::PitchDisplay) {
          // Pitch
@@ -2034,8 +2036,8 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
 
    const int display = track->GetDisplay();
    const bool autocorrelation = (WaveTrack::PitchDisplay == display);
-   const bool logF = (WaveTrack::SpectrumLogDisplay == display
-      || WaveTrack::SpectralSelectionLogDisplay == display);
+   const bool logF = settings.scaleType == SpectrogramSettings::stLogarithmic;
+
    enum { DASH_LENGTH = 10 /* pixels */ };
 
    const ClipParameters params(true, track, clip, rect, selectedRegion, zoomInfo);
@@ -2104,8 +2106,14 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
          t0, pps, autocorrelation);
    }
 
-   const int minFreq = logF ? settings.GetLogMinFreq(rate) : settings.GetMinFreq(rate);
-   const int maxFreq = logF ? settings.GetLogMaxFreq(rate) : settings.GetMaxFreq(rate);
+   // Legacy special-case treatment of log scale
+   const SpectrogramSettings::ScaleType scaleType = settings.scaleType;
+   const int minFreq =
+      scaleType == SpectrogramSettings::stLinear
+      ? settings.GetMinFreq(rate) : settings.GetLogMinFreq(rate);
+   const int maxFreq =
+      scaleType == SpectrogramSettings::stLinear
+      ? settings.GetMaxFreq(rate) : settings.GetLogMaxFreq(rate);
 
    float minBin = ((double)minFreq / binUnit);
    float maxBin = ((double)maxFreq / binUnit);
@@ -2140,7 +2148,8 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
 #endif //EXPERIMENTAL_FFT_Y_GRID
 
    if (!updated && clip->mSpecPxCache->valid &&
-       (clip->mSpecPxCache->len == hiddenMid.height * hiddenMid.width)
+      (clip->mSpecPxCache->len == hiddenMid.height * hiddenMid.width)
+      && scaleType == clip->mSpecPxCache->scaleType
       && gain == clip->mSpecPxCache->gain
       && range == clip->mSpecPxCache->range
       && minFreq == clip->mSpecPxCache->minFreq
@@ -2163,6 +2172,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
       delete clip->mSpecPxCache;
       clip->mSpecPxCache = new SpecPxCache(hiddenMid.width * hiddenMid.height);
       clip->mSpecPxCache->valid = true;
+      clip->mSpecPxCache->scaleType = scaleType;
       clip->mSpecPxCache->gain = gain;
       clip->mSpecPxCache->range = range;
       clip->mSpecPxCache->minFreq = minFreq;
@@ -2334,6 +2344,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
       (zoomInfo.PositionToTime(0, -leftOffset) - tOffset)
    );
 
+   const bool isSpectral = settings.spectralSelection;
    const bool hidden = (ZoomInfo::HIDDEN == zoomInfo.GetFisheyeState());
    const int begin = hidden
       ? 0
@@ -2389,12 +2400,8 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
                AColor::ColorGradientUnselected;
             // If we are in the time selected range, then we may use a different color set.
             if (ssel0 <= w0 && w1 < ssel1)
-            {
-               bool isSpectral = ((track->GetDisplay() == WaveTrack::SpectralSelectionDisplay) ||
-                  (track->GetDisplay() == WaveTrack::SpectralSelectionLogDisplay));
                selected = ChooseColorSet(bin0, bin1, selBinLo, selBinCenter, selBinHi,
                   (xx + leftOffset - hiddenLeftOffset) / DASH_LENGTH, isSpectral);
-            }
 
             unsigned char rv, gv, bv;
             const float value = uncached
@@ -2429,13 +2436,9 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
             AColor::ColorGradientChoice selected = AColor::ColorGradientUnselected;
             // If we are in the time selected range, then we may use a different color set.
             if (ssel0 <= w0 && w1 < ssel1)
-            {
-               bool isSpectral = ((track->GetDisplay() == WaveTrack::SpectralSelectionDisplay) ||
-                  (track->GetDisplay() == WaveTrack::SpectralSelectionLogDisplay));
                selected = ChooseColorSet(
                   bin0, bin1, selBinLo, selBinCenter, selBinHi,
                   (xx + leftOffset - hiddenLeftOffset) / DASH_LENGTH, isSpectral);
-            }
 
             unsigned char rv, gv, bv;
             const float value = uncached
@@ -2474,23 +2477,6 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
    delete[] yGrid;
 #endif //EXPERIMENTAL_FFT_Y_GRID
 }
-
-void TrackArtist::InvalidateSpectrumCache(TrackList *tracks)
-{
-   TrackListOfKindIterator iter(Track::Wave, tracks);
-   for (Track *t = iter.First(); t; t = iter.Next()) {
-      InvalidateSpectrumCache((WaveTrack *)t);
-   }
-}
-
-void TrackArtist::InvalidateSpectrumCache(WaveTrack *track)
-{
-   WaveClipList::compatibility_iterator it;
-   for (it = track->GetClipIterator(); it; it = it->GetNext()) {
-      it->GetData()->mSpecPxCache->valid = false;
-   }
-}
-
 
 #ifdef USE_MIDI
 /*

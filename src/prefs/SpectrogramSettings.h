@@ -15,6 +15,7 @@ Paul Licameli
 
 struct FFTParam;
 class SpectrumPrefs;
+class wxArrayString;
 
 class SpectrogramSettings
 {
@@ -27,6 +28,19 @@ public:
 
       NumWindowSizes = LogMaxWindowSize - LogMinWindowSize + 1,
    };
+
+   // Do not assume that this enumeration will remain the
+   // same as NumberScaleType in future.  That enum may become
+   // more general purpose.
+   enum ScaleType {
+      stLinear,
+      stLogarithmic,
+
+      stNumScaleTypes,
+   };
+
+   static void InvalidateNames(); // in case of language change
+   static const wxArrayString &GetScaleNames();
 
    static SpectrogramSettings &defaults();
    SpectrogramSettings();
@@ -78,6 +92,10 @@ public:
    int GetFFTLength(bool autocorrelation) const; // window size (times zero padding, if STFT)
 
    bool isGrayscale;
+
+   ScaleType scaleType;
+
+   bool spectralSelection; // But should this vary per track? -- PRL
 
 #ifdef EXPERIMENTAL_FFT_Y_GRID
    bool fftYGrid;
