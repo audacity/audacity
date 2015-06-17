@@ -233,23 +233,6 @@ PrefsDialog::PrefsDialog
 
    S.AddStandardButtons(eOkButton | eCancelButton);
 
-   /* long is signed, size_t is unsigned. On some platforms they are different
-    * lengths as well. So we must check that the stored category is both > 0
-    * and within the possible range of categories, making the first check on the
-    * _signed_ value to avoid issues when converting an unsigned one.
-    */
-   size_t selected;
-   long prefscat = gPrefs->Read(wxT("/Prefs/PrefsCategory"), 0L);
-   if (prefscat > 0L )
-      selected = prefscat; // only assign if number will fit
-   else
-      selected = 0;  // use 0 if value can't be assigned
-
-   if (selected >= mCategories->GetPageCount())
-      selected = 0;  // clamp to available range of tabs
-
-   mCategories->SetSelection(selected);
-
 #if defined(__WXGTK__)
    mCategories->GetTreeCtrl()->EnsureVisible(mCategories->GetTreeCtrl()->GetRootItem());
 #endif
@@ -297,6 +280,21 @@ PrefsDialog::~PrefsDialog()
 {
 }
 
+int PrefsDialog::ShowModal()
+{
+   /* long is signed, size_t is unsigned. On some platforms they are different
+    * lengths as well. So we must check that the stored category is both > 0
+    * and within the possible range of categories, making the first check on the
+    * _signed_ value to avoid issues when converting an unsigned one.
+    */
+   long selected = GetPreferredPage();
+   if (selected < 0 || size_t(selected) >= mCategories->GetPageCount())
+      selected = 0;  // clamp to available range of tabs
+   mCategories->SetSelection(selected);
+
+   return wxDialog::ShowModal();
+}
+
 void PrefsDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
 {
    RecordExpansionState();
@@ -338,8 +336,7 @@ void PrefsDialog::OnOK(wxCommandEvent & WXUNUSED(event))
       panel->Apply();
    }
 
-   gPrefs->Write(wxT("/Prefs/PrefsCategory"), (long)mCategories->GetSelection());
-   gPrefs->Flush();
+   SavePreferredPage();
 
 #if USE_PORTMIXER
    if (gAudioIO) {
@@ -392,6 +389,32 @@ void PrefsDialog::SelectPageByName(wxString pageName)
 void PrefsDialog::ShowTempDirPage()
 {
    SelectPageByName(_("Directories"));
+}
+
+int PrefsDialog::GetSelectedPage() const
+{
+   return mCategories->GetSelection();
+}
+
+GlobalPrefsDialog::GlobalPrefsDialog(wxWindow * parent)
+   : PrefsDialog(parent, _("Preferences: "), DefaultFactories())
+{
+}
+
+GlobalPrefsDialog::~GlobalPrefsDialog()
+{
+}
+
+long GlobalPrefsDialog::GetPreferredPage()
+{
+   long prefscat = gPrefs->Read(wxT("/Prefs/PrefsCategory"), 0L);
+   return prefscat;
+}
+
+void GlobalPrefsDialog::SavePreferredPage()
+{
+   gPrefs->Write(wxT("/Prefs/PrefsCategory"), (long)GetSelectedPage());
+   gPrefs->Flush();
 }
 
 void PrefsDialog::RecordExpansionState()

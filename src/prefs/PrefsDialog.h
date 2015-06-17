@@ -49,6 +49,9 @@ class PrefsDialog:public wxDialog
       Factories &factories = DefaultFactories());
    virtual ~PrefsDialog();
 
+   // Defined this so a protected virtual can be invoked after the constructor
+   virtual int ShowModal();
+
    void OnCategoryChange(wxCommandEvent & e);
    void OnOK(wxCommandEvent & e);
    void OnCancel(wxCommandEvent & e);
@@ -57,14 +60,35 @@ class PrefsDialog:public wxDialog
    void SelectPageByName(wxString pageName);
    void ShowTempDirPage();
 
- private:
-   void RecordExpansionState();
+   // Accessor to help implementations of SavePreferredPage(),
+   // such as by saving a preference after DoModal() returns
+   int GetSelectedPage() const;
 
+ protected:
+    // Decide which page to open first; return -1 for undecided
+    virtual long GetPreferredPage() = 0;
+
+    // Called after OK is clicked and all pages validate
+    virtual void SavePreferredPage() = 0;
+
+private:
+   void RecordExpansionState();
    wxTreebook *mCategories;
    Factories &mFactories;
    const wxString mTitlePrefix;
 
    DECLARE_EVENT_TABLE()
+};
+
+// This adds code appropriate only to the original use of PrefsDialog for
+// global settings -- not its reuses elsewhere as in View Settings
+class GlobalPrefsDialog : public PrefsDialog
+{
+public:
+   GlobalPrefsDialog(wxWindow * parent);
+   virtual ~GlobalPrefsDialog();
+   virtual long GetPreferredPage();
+   virtual void SavePreferredPage();
 };
 
 #endif

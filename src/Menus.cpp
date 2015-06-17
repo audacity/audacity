@@ -3586,7 +3586,7 @@ void AudacityProject::OnExportMultiple()
 
 void AudacityProject::OnPreferences()
 {
-   PrefsDialog dialog(this /* parent */ );
+   GlobalPrefsDialog dialog(this /* parent */ );
 
    if (!dialog.ShowModal()) {
       // Canceled

@@ -1605,7 +1605,7 @@ bool AudacityApp::InitTempDir()
       // Failed
       wxMessageBox(_("Audacity could not find a place to store temporary files.\nPlease enter an appropriate directory in the preferences dialog."));
 
-      PrefsDialog dialog(NULL);
+      GlobalPrefsDialog dialog(NULL);
       dialog.ShowTempDirPage();
       dialog.ShowModal();
 
@@ -2132,7 +2132,7 @@ void AudacityApp::OnMenuPreferences(wxCommandEvent & event)
    // all platforms.
 
    if(gAudacityProjects.GetCount() == 0) {
-      PrefsDialog dialog(NULL /* parent */ );
+      GlobalPrefsDialog dialog(NULL /* parent */ );
       dialog.ShowModal();
    }
    else
