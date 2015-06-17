@@ -386,18 +386,13 @@ void PrefsDialog::SelectPageByName(wxString pageName)
    }
 }
 
-void PrefsDialog::ShowTempDirPage()
-{
-   SelectPageByName(_("Directories"));
-}
-
 int PrefsDialog::GetSelectedPage() const
 {
    return mCategories->GetSelection();
 }
 
-GlobalPrefsDialog::GlobalPrefsDialog(wxWindow * parent)
-   : PrefsDialog(parent, _("Preferences: "), DefaultFactories())
+GlobalPrefsDialog::GlobalPrefsDialog(wxWindow * parent, Factories &factories)
+   : PrefsDialog(parent, _("Preferences: "), factories)
 {
 }
 

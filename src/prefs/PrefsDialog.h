@@ -58,7 +58,6 @@ class PrefsDialog:public wxDialog
    void OnTreeKeyDown(wxTreeEvent & e); // Used to dismiss the dialog when enter is pressed with focus on tree
 
    void SelectPageByName(wxString pageName);
-   void ShowTempDirPage();
 
    // Accessor to help implementations of SavePreferredPage(),
    // such as by saving a preference after DoModal() returns
@@ -85,7 +84,7 @@ private:
 class GlobalPrefsDialog : public PrefsDialog
 {
 public:
-   GlobalPrefsDialog(wxWindow * parent);
+   GlobalPrefsDialog(wxWindow * parent, Factories &factories = DefaultFactories());
    virtual ~GlobalPrefsDialog();
    virtual long GetPreferredPage();
    virtual void SavePreferredPage();
