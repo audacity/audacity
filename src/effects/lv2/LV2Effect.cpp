@@ -48,7 +48,7 @@
 #if defined(__WXGTK__)
 #if wxCHECK_VERSION(3, 0, 0)
 #include <gtk/gtk.h>
-#include "win_gtk.h"
+#include <wx/win_gtk.h>
 #else
 #include <wx/gtk/win_gtk.h>
 #include <gtk/gtk.h>
