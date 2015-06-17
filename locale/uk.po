@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Audacity 2.0.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2015-06-14 08:58+0300\n"
-"PO-Revision-Date: 2015-06-14 13:38+0300\n"
+"PO-Revision-Date: 2015-06-17 21:10+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <translation@linux.org.ua>\n"
 "Language: uk\n"
@@ -5439,27 +5439,27 @@ msgstr "Величина приглушення у дБ"
 
 #: src/effects/AutoDuck.cpp:40
 msgid "InnerFadeDownLen"
-msgstr "Внутрішня довжина згасання"
+msgstr "ВнутрішняДовжинаЗгасання"
 
 #: src/effects/AutoDuck.cpp:41
 msgid "InnerFadeUpLen"
-msgstr "Внутрішня довжина наростання"
+msgstr "ВнутрішняДовжинаНаростання"
 
 #: src/effects/AutoDuck.cpp:42
 msgid "OuterFadeDownLen"
-msgstr "Зовнішня довжина згасання"
+msgstr "ЗовнішняДовжинаЗгасання"
 
 #: src/effects/AutoDuck.cpp:43
 msgid "OuterFadeUpLen"
-msgstr "Зовнішня довжина наростання"
+msgstr "ЗовнішняДовжинаНаростання"
 
 #: src/effects/AutoDuck.cpp:44
 msgid "ThresholdDb"
-msgstr "Порогове значення"
+msgstr "ПороговеЗначення"
 
 #: src/effects/AutoDuck.cpp:45
 msgid "MaximumPause"
-msgstr "Максимальна пауза"
+msgstr "МаксимальнаПауза"
 
 #: src/effects/AutoDuck.cpp:113
 msgid ""
@@ -5809,11 +5809,11 @@ msgstr "Час наростання"
 
 #: src/effects/Compressor.cpp:60
 msgid "ReleaseTime"
-msgstr "Час випуску"
+msgstr "ЧасВипуску"
 
 #: src/effects/Compressor.cpp:62
 msgid "UsePeak"
-msgstr "Вик. піків"
+msgstr "ВикПіків"
 
 #: src/effects/Compressor.cpp:118
 msgid "Compresses the dynamic range of audio"
@@ -7630,7 +7630,7 @@ msgstr "Повтор…"
 
 #: src/effects/Reverb.cpp:46
 msgid "RoomSize"
-msgstr "Розмір зали"
+msgstr "РозмірЗали"
 
 #: src/effects/Reverb.cpp:48
 msgid "Reverberance"
@@ -7638,31 +7638,31 @@ msgstr "Реверберація"
 
 #: src/effects/Reverb.cpp:49
 msgid "HfDamping"
-msgstr "Послаблення вис. част."
+msgstr "ПослабленняВисЧаст"
 
 #: src/effects/Reverb.cpp:50
 msgid "ToneLow"
-msgstr "Низькі тони"
+msgstr "НизькіТони"
 
 #: src/effects/Reverb.cpp:51
 msgid "ToneHigh"
-msgstr "Високі тони"
+msgstr "ВисокіТони"
 
 #: src/effects/Reverb.cpp:52
 msgid "WetGain"
-msgstr "Підс. теплого"
+msgstr "ПідсТеплого"
 
 #: src/effects/Reverb.cpp:53
 msgid "DryGain"
-msgstr "Підс. холодного"
+msgstr "ПідсХолодного"
 
 #: src/effects/Reverb.cpp:54
 msgid "StereoWidth"
-msgstr "Ширина стерео"
+msgstr "ШиринаСтерео"
 
 #: src/effects/Reverb.cpp:55
 msgid "WetOnly"
-msgstr "Лише теплий"
+msgstr "ЛишеТеплий"
 
 #: src/effects/Reverb.cpp:66
 msgid "Vocal I"
@@ -7778,11 +7778,11 @@ msgstr "Високочастотний"
 
 #: src/effects/ScienFilter.cpp:114
 msgid "FilterType"
-msgstr "Тип фільтрування"
+msgstr "ТипФільтрування"
 
 #: src/effects/ScienFilter.cpp:115
 msgid "FilterSubtype"
-msgstr "Підтип фільтрування"
+msgstr "ПідтипФільтрування"
 
 #: src/effects/ScienFilter.cpp:116
 msgid "Order"
@@ -7794,11 +7794,11 @@ msgstr "Пропускання"
 
 #: src/effects/ScienFilter.cpp:118
 msgid "PassbandRipple"
-msgstr "Пульсація смуги пропускання"
+msgstr "ПульсаціяСмугиПропускання"
 
 #: src/effects/ScienFilter.cpp:119
 msgid "StopbandRipple"
-msgstr "Пульсація смуги затримування"
+msgstr "ПульсаціяСмугиЗатримування"
 
 #: src/effects/ScienFilter.cpp:195
 msgid "Performs IIR filtering that emulates analog filters"
@@ -7941,27 +7941,27 @@ msgstr "Стерео на моно"
 
 #: src/effects/TimeScale.cpp:42
 msgid "RatePercentChangeStart"
-msgstr "Поч. зміна част. у відсотках"
+msgstr "ПочЗмінаЧастУВідсотках"
 
 #: src/effects/TimeScale.cpp:43
 msgid "RatePercentChangeEnd"
-msgstr "Кінц. зміна част. у відсотках"
+msgstr "КінцЗмінаЧастУВідсотках"
 
 #: src/effects/TimeScale.cpp:44
 msgid "PitchHalfStepsStart"
-msgstr "Поч. кроки поділу тону навп."
+msgstr "ПочКрокиПоділуТонуНавпіл"
 
 #: src/effects/TimeScale.cpp:45
 msgid "PitchHalfStepsEnd"
-msgstr "Кінц. кроки поділу тону навп."
+msgstr "КінцКрокиПоділуТонуНавпіл"
 
 #: src/effects/TimeScale.cpp:46
 msgid "PitchPercentChangeStart"
-msgstr "Поч. зміна тону у відсотках"
+msgstr "ПочЗмінаТонуУВідсотках"
 
 #: src/effects/TimeScale.cpp:47
 msgid "PitchPercentChangeEnd"
-msgstr "Кінц. зміна тону у відсотках"
+msgstr "КінцЗмінаТонуУВідсотках"
 
 #: src/effects/TimeScale.cpp:89
 msgid "Sliding Time Scale/Pitch Shift"
@@ -8026,19 +8026,19 @@ msgstr "Квадратична, без переходів"
 
 #: src/effects/ToneGen.cpp:68
 msgid "StartFreq"
-msgstr "Поч. частота"
+msgstr "ПочЧастота"
 
 #: src/effects/ToneGen.cpp:69
 msgid "EndFreq"
-msgstr "Кінц. частота"
+msgstr "КінцЧастота"
 
 #: src/effects/ToneGen.cpp:70
 msgid "StartAmp"
-msgstr "Поч. ампл."
+msgstr "ПочАмпл"
 
 #: src/effects/ToneGen.cpp:71
 msgid "EndAmp"
-msgstr "Кінц. ампл."
+msgstr "КінцАмпл"
 
 #: src/effects/ToneGen.cpp:74 src/prefs/TracksPrefs.cpp:61
 msgid "Waveform"
