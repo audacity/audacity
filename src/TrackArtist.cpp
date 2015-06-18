@@ -853,6 +853,9 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
             vruler->SetRange(maxFreq, minFreq);
             vruler->SetUnits(wxT(""));
             vruler->SetLog(true);
+            NumberScale scale
+               (wt->GetSpectrogramSettings().GetScale(wt->GetRate(), false, false).Reversal());
+            vruler->SetNumberScale(&scale);
          }
          break;
          }

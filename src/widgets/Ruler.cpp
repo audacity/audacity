@@ -76,6 +76,7 @@ array of Ruler::Label.
 #include "../TimeTrack.h"
 #include "../TrackPanel.h"
 #include "../Menus.h"
+#include "../NumberScale.h"
 #include "../Prefs.h"
 #include "../Snap.h"
 
@@ -97,6 +98,7 @@ using std::max;
 //
 
 Ruler::Ruler()
+   : mpNumberScale(0)
 {
    mMin = mHiddenMin = 0.0;
    mMax = mHiddenMax = 100.0;
@@ -177,6 +179,8 @@ Ruler::~Ruler()
       delete[] mMinorLabels;
    if (mMinorMinorLabels)
       delete[] mMinorMinorLabels;
+
+   delete mpNumberScale;
 }
 
 void Ruler::SetTwoTone(bool twoTone)
@@ -317,6 +321,23 @@ void Ruler::SetFonts(const wxFont &minorFont, const wxFont &majorFont, const wxF
    mUserFonts = true;
 
    Invalidate();
+}
+
+void Ruler::SetNumberScale(const NumberScale *pScale)
+{
+   if (!pScale) {
+      if (mpNumberScale) {
+         delete mpNumberScale;
+         Invalidate();
+      }
+   }
+   else {
+      if (!mpNumberScale || *mpNumberScale != *pScale) {
+         delete mpNumberScale;
+         mpNumberScale = new NumberScale(*pScale);
+         Invalidate();
+      }
+   }
 }
 
 void Ruler::OfflimitsPixels(int start, int end)
@@ -1165,13 +1186,17 @@ void Ruler::Update(TimeTrack* timetrack)// Envelope *speedEnv, long minSpeed, lo
    }
    else {
       // log case
+
+      NumberScale numberScale(mpNumberScale
+         ? *mpNumberScale
+         : NumberScale(nstLogarithmic, mMin, mMax, 1.0f)
+      );
+
       mDigits=2;  //TODO: implement dynamic digit computation
       double loLog = log10(mMin);
       double hiLog = log10(mMax);
-      double scale = mLength/(hiLog - loLog);
       int loDecade = (int) floor(loLog);
 
-      int pos;
       double val;
       double startDecade = pow(10., (double)loDecade);
 
@@ -1179,12 +1204,12 @@ void Ruler::Update(TimeTrack* timetrack)// Envelope *speedEnv, long minSpeed, lo
       double decade = startDecade;
       double delta=hiLog-loLog, steps=fabs(delta);
       double step = delta>=0 ? 10 : 0.1;
-      double rMin=wxMin(mMin, mMax), rMax=wxMax(mMin, mMax);
+      double rMin=std::min(mMin, mMax), rMax=std::max(mMin, mMax);
       for(i=0; i<=steps; i++)
       {  // if(i!=0)
          {  val = decade;
             if(val > rMin && val < rMax) {
-               pos = (int)(((log10(val) - loLog)*scale)+0.5);
+               const int pos(0.5 + mLength * numberScale.ValueToPosition(val));
                Tick(pos, val, true, false);
             }
          }
@@ -1204,7 +1229,7 @@ void Ruler::Update(TimeTrack* timetrack)// Envelope *speedEnv, long minSpeed, lo
          for(j=start; j!=end; j+=mstep) {
             val = decade * j;
             if(val >= rMin && val < rMax) {
-               pos = (int)(((log10(val) - loLog)*scale)+0.5);
+               const int pos(0.5 + mLength * numberScale.ValueToPosition(val));
                Tick(pos, val, false, true);
             }
          }
@@ -1224,8 +1249,8 @@ void Ruler::Update(TimeTrack* timetrack)// Envelope *speedEnv, long minSpeed, lo
             if (int(f/10)!=f/10.0f) {
                val = decade * f/10;
                if(val >= rMin && val < rMax) {
-                  pos = (int)(((log10(val) - loLog)*scale)+0.5);
-               Tick(pos, val, false, false);
+                  const int pos(0.5 + mLength * numberScale.ValueToPosition(val));
+                  Tick(pos, val, false, false);
                }
             }
          }
@@ -1904,8 +1929,8 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
    TrackPanel *tp = mProject->GetTrackPanel();
    int mousePosX, width, height;
    tp->GetTracksUsableArea(&width, &height);
-   mousePosX = wxMax(evt.GetX(), tp->GetLeftOffset());
-   mousePosX = wxMin(mousePosX, tp->GetLeftOffset() + width - 1);
+   mousePosX = std::max(evt.GetX(), tp->GetLeftOffset());
+   mousePosX = std::min(mousePosX, tp->GetLeftOffset() + width - 1);
 
    bool isWithinStart = IsWithinMarker(mousePosX, mOldPlayRegionStart);
    bool isWithinEnd = IsWithinMarker(mousePosX, mOldPlayRegionEnd);
@@ -1920,7 +1945,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
    mLastMouseX = mousePosX;
    mQuickPlayPos = Pos2Time(mousePosX);
    // If not looping, restrict selection to end of project
-   if (!evt.ShiftDown()) mQuickPlayPos = wxMin(t1, mQuickPlayPos);
+   if (!evt.ShiftDown()) mQuickPlayPos = std::min(t1, mQuickPlayPos);
 
 
    if (evt.Leaving()) {
@@ -2487,7 +2512,7 @@ void AdornedRulerPanel::DrawQuickPlayIndicator(wxDC * dc, bool clear)
    TrackPanel *tp = mProject->GetTrackPanel();
    wxClientDC cdc(tp);
 
-   double latestEnd = wxMax(mProject->GetTracks()->GetEndTime(), mProject->GetSel1());
+   double latestEnd = std::max(mProject->GetTracks()->GetEndTime(), mProject->GetSel1());
    if (clear || (mQuickPlayPos >= latestEnd)) {
       tp->TrackPanel::DrawQuickPlayIndicator(cdc, -1);
       return;
