@@ -39,6 +39,7 @@
 #include "../Experimental.h"
 #include "../Project.h"
 #include "../Prefs.h"
+#include "../ShuttleGui.h"
 
 #include "PrefsDialog.h"
 #include "PrefsPanel.h"

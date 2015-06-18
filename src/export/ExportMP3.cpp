@@ -59,6 +59,9 @@
 
 *//********************************************************************/
 
+#include "../Audacity.h"
+#include "ExportMP3.h"
+
 #include <wx/defs.h>
 
 #include <wx/choice.h>
@@ -75,13 +78,13 @@
 #include <wx/utils.h>
 #include <wx/window.h>
 
-#include "../Audacity.h"
 #include "../FileNames.h"
 #include "../float_cast.h"
 #include "../Internat.h"
 #include "../Mix.h"
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../ShuttleGui.h"
 #include "../Tags.h"
 #include "../WaveTrack.h"
 #include "../widgets/LinkingHtmlWindow.h"
@@ -89,7 +92,6 @@
 #include "FileDialog.h"
 
 #include "Export.h"
-#include "ExportMP3.h"
 
 #include <lame/lame.h>
 

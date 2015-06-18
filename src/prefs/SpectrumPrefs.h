@@ -26,11 +26,12 @@
 #include <wx/window.h>
 
 #include "../Experimental.h"
-#include "../ShuttleGui.h"
 
 #include "PrefsPanel.h"
 
+class wxTextCtrl;
 struct FFTParam;
+class ShuttleGui;
 
 class SpectrumPrefs:public PrefsPanel
 {

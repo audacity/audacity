@@ -18,10 +18,11 @@
 #include <wx/string.h>
 #include <wx/textctrl.h>
 
-#include "../ShuttleGui.h"
 #include "../WaveTrack.h"
 
 #include "Effect.h"
+
+class ShuttleGui;
 
 #define NORMALIZE_PLUGIN_SYMBOL XO("Normalize")
 

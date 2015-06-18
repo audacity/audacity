@@ -19,10 +19,11 @@
 #include <wx/stattext.h>
 #include <wx/string.h>
 
-#include "../ShuttleGui.h"
 #include "../widgets/NumericTextCtrl.h"
 
 #include "Effect.h"
+
+class ShuttleGui;
 
 #define DTMFTONES_PLUGIN_SYMBOL XO("DTMF Tones")
 

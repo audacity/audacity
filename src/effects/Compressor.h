@@ -21,11 +21,10 @@
 #include <wx/stattext.h>
 #include <wx/window.h>
 
-#include "../ShuttleGui.h"
-
 #include "TwoPassSimpleMono.h"
 
 class EffectCompressorPanel;
+class ShuttleGui;
 
 #define COMPRESSOR_PLUGIN_SYMBOL XO("Compressor")
 

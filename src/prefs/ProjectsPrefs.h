@@ -17,11 +17,11 @@
 
 #include <wx/window.h>
 
-#include "../ShuttleGui.h"
-
 #include "PrefsPanel.h"
 
-class ProjectsPrefs:public PrefsPanel
+class ShuttleGui;
+
+class ProjectsPrefs :public PrefsPanel
 {
  public:
    ProjectsPrefs(wxWindow * parent);

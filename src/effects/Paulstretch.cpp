@@ -15,6 +15,7 @@
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "Paulstretch.h"
 
 #include <math.h>
 #include <float.h>
@@ -22,10 +23,9 @@
 #include <wx/intl.h>
 #include <wx/valgen.h>
 
+#include "../ShuttleGui.h"
 #include "../FFT.h"
 #include "../widgets/valnum.h"
-
-#include "Paulstretch.h"
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //

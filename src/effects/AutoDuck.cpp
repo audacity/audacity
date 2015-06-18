@@ -14,6 +14,7 @@
 *******************************************************************/
 
 #include "../Audacity.h"
+#include "AutoDuck.h"
 
 #include <math.h>
 #include <float.h>
@@ -28,10 +29,9 @@
 #include "../AllThemeResources.h"
 #include "../Internat.h"
 #include "../Prefs.h"
+#include "../ShuttleGui.h"
 #include "../Theme.h"
 #include "../widgets/valnum.h"
-
-#include "AutoDuck.h"
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //

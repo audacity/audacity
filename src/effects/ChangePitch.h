@@ -27,9 +27,9 @@ the pitch without changing the tempo.
 #include <wx/string.h>
 #include <wx/textctrl.h>
 
-#include "../ShuttleGui.h"
-
 #include "SoundTouchEffect.h"
+
+class ShuttleGui;
 
 #define CHANGEPITCH_PLUGIN_SYMBOL XO("Change Pitch")
 

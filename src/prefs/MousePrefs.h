@@ -15,11 +15,11 @@
 #include <wx/string.h>
 #include <wx/window.h>
 
-#include "../ShuttleGui.h"
-
 #include "PrefsPanel.h"
 
-class MousePrefs:public PrefsPanel
+class ShuttleGui;
+
+class MousePrefs :public PrefsPanel
 {
  public:
    MousePrefs(wxWindow * parent);

@@ -18,11 +18,11 @@
 #include <wx/arrstr.h>
 #include <wx/window.h>
 
-#include "../ShuttleGui.h"
-
 #include "PrefsPanel.h"
 
-class EffectsPrefs:public PrefsPanel
+class ShuttleGui;
+
+class EffectsPrefs :public PrefsPanel
 {
  public:
    EffectsPrefs(wxWindow * parent);

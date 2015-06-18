@@ -20,14 +20,14 @@
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "Echo.h"
 
 #include <float.h>
 
 #include <wx/intl.h>
 
+#include "../ShuttleGui.h"
 #include "../widgets/valnum.h"
-
-#include "Echo.h"
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //

@@ -204,6 +204,7 @@ is time to refresh some aspect of the screen.
 #include "Prefs.h"
 #include "Project.h"
 #include "Snap.h"
+#include "ShuttleGui.h"
 #include "Theme.h"
 #include "TimeTrack.h"
 #include "Track.h"

@@ -19,6 +19,7 @@
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "Amplify.h"
 
 #include <math.h>
 #include <float.h>
@@ -32,10 +33,9 @@
 #include <wx/valtext.h>
 #include <wx/log.h>
 
+#include "../ShuttleGui.h"
 #include "../WaveTrack.h"
 #include "../widgets/valnum.h"
-
-#include "Amplify.h"
 
 
 enum

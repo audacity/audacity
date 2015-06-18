@@ -25,6 +25,7 @@
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "ClickRemoval.h"
 
 #include <math.h>
 
@@ -33,9 +34,8 @@
 #include <wx/valgen.h>
 
 #include "../Prefs.h"
+#include "../ShuttleGui.h"
 #include "../widgets/valnum.h"
-
-#include "ClickRemoval.h"
 
 enum
 {

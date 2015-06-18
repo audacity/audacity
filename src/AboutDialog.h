@@ -16,7 +16,7 @@
 #include <wx/statbmp.h>
 #include <wx/bitmap.h>
 
-#include "ShuttleGui.h"
+class ShuttleGui;
 
 struct AboutDialogCreditItem {
    wxString description;

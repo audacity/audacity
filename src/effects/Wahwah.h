@@ -21,9 +21,9 @@
 #include <wx/string.h>
 #include <wx/textctrl.h>
 
-#include "../ShuttleGui.h"
-
 #include "Effect.h"
+
+class ShuttleGui;
 
 #define WAHWAH_PLUGIN_SYMBOL XO("Wahwah")
 

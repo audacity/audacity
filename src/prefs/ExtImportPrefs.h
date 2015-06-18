@@ -16,15 +16,15 @@
 #include <wx/window.h>
 #include "../widgets/Grid.h"
 
-#include "../ShuttleGui.h"
-
 #include "PrefsPanel.h"
 
 #include "../import/Import.h"
 #include "../import/ImportPlugin.h"
 
+class wxButton;
 class wxListEvent;
 class ExtImportPrefs;
+class ShuttleGui;
 
 class ExtImportPrefsDropTarget: public wxDropTarget
 {

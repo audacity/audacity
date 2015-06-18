@@ -17,11 +17,11 @@
 #include <wx/defs.h>
 #include <wx/window.h>
 
-#include "../ShuttleGui.h"
-
 #include "PrefsPanel.h"
 
-class ThemePrefs:public PrefsPanel
+class ShuttleGui;
+
+class ThemePrefs :public PrefsPanel
 {
  public:
    ThemePrefs(wxWindow * parent);

@@ -10,15 +10,16 @@
 *//*******************************************************************/
 
 #include "../Audacity.h"
-#include "../AudacityApp.h"
-
 #include "Contrast.h"
+
+#include "../AudacityApp.h"
 
 #include "../Envelope.h"
 #include "../FFT.h"
 #include "../WaveTrack.h"
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../ShuttleGui.h"
 #include "../FileNames.h"
 #include "../widgets/LinkingHtmlWindow.h"
 #include "../widgets/HelpSystem.h"
