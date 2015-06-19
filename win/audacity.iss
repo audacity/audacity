@@ -77,6 +77,9 @@ Name: resetPrefs; Description:  "{cm:ResetPrefs}"; Flags: unchecked
 ; Name: associate_aup; Description: "&Associate Audacity project files"; GroupDescription: "Other tasks:"; Flags: checkedonce
 
 [Files]
+; Prime the first time .ini file so the permissions can be set
+Source: "FirstTimeModel.ini"; DestDir: "{app}"; DestName: "FirstTime.ini"; Permissions: users-modify
+
 ; Don't display in separate window, rather as InfoAfterFile.   Source: "..\README.txt"; DestDir: "{app}"; Flags: ignoreversion isreadme
 Source: "..\README.txt"; DestDir: "{app}"; Flags: ignoreversion
 
