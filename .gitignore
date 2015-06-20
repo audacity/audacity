@@ -61,3 +61,5 @@ win/Projects/*/Release
 src/RevisionIdent.h
 win/resetPrefs.txt
 
+# Emacs backup files
+*~
