@@ -253,3 +253,12 @@ void SpectrogramSettings::CacheWindows() const
    }
 #endif // EXPERIMENTAL_USE_REALFFTF
 }
+
+int SpectrogramSettings::GetFFTLength(bool autocorrelation) const
+{
+   return windowSize
+#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
+      * (!autocorrelation ? zeroPaddingFactor : 1);
+#endif
+   ;
+}

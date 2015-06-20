@@ -2104,7 +2104,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
       return;
    unsigned char *data = image->GetData();
 
-   const int half = GetSpectrumWindowSize(!autocorrelation) / 2;
+   const int half = settings.GetFFTLength(autocorrelation) / 2;
    const double binUnit = rate / (2 * half);
    const float *freq = 0;
    const sampleCount *where = 0;

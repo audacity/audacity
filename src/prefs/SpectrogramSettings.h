@@ -44,6 +44,8 @@ public:
    int zeroPaddingFactor;
 #endif
 
+   int GetFFTLength(bool autocorrelation) const; // window size (times zero padding, if STFT)
+
    bool isGrayscale;
 
 #ifdef EXPERIMENTAL_FFT_Y_GRID
