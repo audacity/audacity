@@ -126,9 +126,6 @@ Name: "{commonprograms}\Audacity"; Filename: "{app}\audacity.exe"
 Name: "{commondesktop}\Audacity"; Filename: "{app}\audacity.exe"; Tasks: desktopicon
 
 [InstallDelete]
-; Get rid of previous 'first time' file, in case somebody want to reinstall without the reset option after they installed with it
-Type: files; Name: "{app}\FirstTime.txt" 
-
 ; Get rid of Audacity 1.0.0 stuff that's no longer used.
 Type: files; Name: "{app}\audacity-help.htb"
 Type: files; Name: "{app}\audacity-1.2-help.htb"
@@ -162,6 +159,7 @@ Type: files; Name: "{app}\Nyquist\test.lsp"
 ; Get rid of specific LADSPA plug-ins that we now ship with different names.
 Type: files; Name: "{app}\Plug-Ins\GVerb.dll"
 Type: files; Name: "{app}\Plug-Ins\Hard Limiter.dll"
+Type: files; Name: "{app}\Plug-Ins\hard_limiter_1413.dll"
 Type: files; Name: "{app}\Plug-Ins\sc4.dll"
 
 ;Get rid of any modules that we have ever installed
