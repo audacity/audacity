@@ -477,6 +477,8 @@ audacity_SOURCES = \
 	prefs/QualityPrefs.h \
 	prefs/RecordingPrefs.cpp \
 	prefs/RecordingPrefs.h \
+	prefs/SpectrogramSettings.cpp \
+	prefs/SpectrogramSettings.h \
 	prefs/SpectrumPrefs.cpp \
 	prefs/SpectrumPrefs.h \
 	prefs/ThemePrefs.cpp \

@@ -217,7 +217,7 @@ is time to refresh some aspect of the screen.
 
 #include "ondemand/ODManager.h"
 
-#include "prefs/SpectrumPrefs.h"
+#include "prefs/SpectrogramSettings.h"
 
 #include "toolbars/ControlToolBar.h"
 #include "toolbars/ToolManager.h"

@@ -840,6 +840,9 @@
     <ClCompile Include="..\..\..\src\ViewInfo.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\prefs\SpectrogramSettings.cpp">
+      <Filter>src/prefs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\AboutDialog.h">
@@ -1678,6 +1681,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\AudacityHeaders.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\prefs\SpectrogramSettings.h">
+      <Filter>src/prefs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

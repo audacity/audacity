@@ -173,7 +173,7 @@ audio tracks.
 #include "LabelTrack.h"
 #include "TimeTrack.h"
 #include "Prefs.h"
-#include "prefs/SpectrumPrefs.h"
+#include "prefs/SpectrogramSettings.h"
 #include "Sequence.h"
 #include "Spectrum.h"
 #include "ViewInfo.h"

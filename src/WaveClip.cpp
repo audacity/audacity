@@ -33,7 +33,7 @@
 #include "Resample.h"
 #include "Project.h"
 
-#include "prefs/SpectrumPrefs.h"
+#include "prefs/SpectrogramSettings.h"
 
 #include <wx/listimpl.cpp>
 WX_DEFINE_LIST(WaveClipList);
