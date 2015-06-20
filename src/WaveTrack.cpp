@@ -236,13 +236,14 @@ WaveTrack::ConvertLegacyDisplayValue(int oldValue)
       newValue = WaveTrack::WaveformDBDisplay; break;
    case Spectrogram:
    case SpectrogramLogF:
+   case Pitch:
       newValue = WaveTrack::Spectrum; break;
       /*
    case SpectrogramLogF:
       newValue = WaveTrack::SpectrumLogDisplay; break;
-      */
    case Pitch:
       newValue = WaveTrack::PitchDisplay; break;
+      */
    }
    return newValue;
 }
@@ -256,13 +257,13 @@ WaveTrack::ValidateWaveTrackDisplay(WaveTrackDisplay display)
    case WaveformDisplay:
    case WaveformDBDisplay:
    case Spectrum:
-   case PitchDisplay:
       return display;
 
       // obsolete codes
    case obsolete1: // was SpectrumLogDisplay
    case obsolete2: // was SpectralSelectionDisplay
    case obsolete3: // was SpectralSelectionLogDisplay
+   case obsolete4: // was PitchDisplay
       return Spectrum;
 
       // codes out of bounds (from future prefs files?)

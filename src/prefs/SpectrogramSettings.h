@@ -64,6 +64,7 @@ public:
 
    static void InvalidateNames(); // in case of language change
    static const wxArrayString &GetScaleNames();
+   static const wxArrayString &GetAlgorithmNames();
 
    static SpectrogramSettings &defaults();
    SpectrogramSettings();
@@ -87,7 +88,7 @@ public:
 
    // If "bins" is false, units are Hz
    NumberScale SpectrogramSettings::GetScale
-      (double rate, bool bins, bool autocorrelation) const;
+      (double rate, bool bins) const;
 
 private:
    int minFreq;
@@ -117,7 +118,7 @@ public:
    int zeroPaddingFactor;
 #endif
 
-   int GetFFTLength(bool autocorrelation) const; // window size (times zero padding, if STFT)
+   int GetFFTLength() const; // window size (times zero padding, if STFT)
 
    bool isGrayscale;
 
@@ -126,6 +127,14 @@ public:
 #ifndef SPECTRAL_SELECTION_GLOBAL_SWITCH
    bool spectralSelection; // But should this vary per track? -- PRL
 #endif
+
+   enum Algorithm {
+      algSTFT = 0,
+      algPitchEAC,
+
+      algNumAlgorithms,
+   };
+   Algorithm algorithm;
 
 #ifdef EXPERIMENTAL_FFT_Y_GRID
    bool fftYGrid;

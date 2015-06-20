@@ -423,12 +423,11 @@ class AUDACITY_DLL_API WaveTrack: public Track {
       obsolete1, // was SpectrumLogDisplay
       obsolete2, // was SpectralSelectionDisplay
       obsolete3, // was SpectralSelectionLogDisplay
-
-      PitchDisplay,
+      obsolete4, // was PitchDisplay
 
       // Add values here, and update MaxDisplay.
 
-      MaxDisplay = PitchDisplay,
+      MaxDisplay = Spectrum,
 
       NoDisplay,            // Preview track has no display
    };

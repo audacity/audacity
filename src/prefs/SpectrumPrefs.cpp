@@ -60,6 +60,7 @@ enum {
    ID_WINDOW_TYPE,
    ID_PADDING_SIZE,
    ID_SCALE,
+   ID_ALGORITHM,
    ID_MINIMUM,
    ID_MAXIMUM,
    ID_GAIN,
@@ -96,6 +97,8 @@ void SpectrumPrefs::Populate(int windowSize)
    }
 
    mScaleChoices = SpectrogramSettings::GetScaleNames();
+
+   mAlgorithmChoices = SpectrogramSettings::GetAlgorithmNames();
 
    //------------------------- Main section --------------------
    // Now construct the GUI itself.
@@ -171,6 +174,7 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
             S.SetSizeHints(mTypeChoices);
 
 #ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
+            mZeroPaddingChoiceCtrl =
             S.Id(ID_PADDING_SIZE).TieChoice(_("&Zero padding factor") + wxString(wxT(":")),
                mTempSettings.zeroPaddingFactor,
                &mZeroPaddingChoices);
@@ -188,6 +192,11 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
             S.Id(ID_SCALE).TieChoice(_("S&cale") + wxString(wxT(":")),
                *(int*)&mTempSettings.scaleType,
                &mScaleChoices);
+
+            mAlgorithmChoice =
+            S.Id(ID_ALGORITHM).TieChoice(_("Algorithm") + wxString(wxT(":")),
+               *(int*)&mTempSettings.algorithm,
+               &mAlgorithmChoices);
 
             mMinFreq =
                S.Id(ID_MINIMUM).TieNumericTextBox(_("Mi&nimum Frequency (Hz):"),
@@ -274,6 +283,8 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
       S.Id(ID_APPLY).AddButton(_("Appl&y"));
    }
    S.EndMultiColumn();
+
+   EnableDisableSTFTOnlyControls();
 
    mPopulating = false;
 }
@@ -428,6 +439,24 @@ void SpectrumPrefs::OnDefaults(wxCommandEvent &)
    }
 }
 
+void SpectrumPrefs::OnAlgorithm(wxCommandEvent &evt)
+{
+   EnableDisableSTFTOnlyControls();
+   OnControl(evt);
+}
+
+void SpectrumPrefs::EnableDisableSTFTOnlyControls()
+{
+   // Enable or disable other controls that are applicable only to STFT.
+   const bool STFT = (mAlgorithmChoice->GetSelection() == 0);
+   mGain->Enable(STFT);
+   mRange->Enable(STFT);
+   mFrequencyGain->Enable(STFT);
+#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
+   mZeroPaddingChoiceCtrl->Enable(STFT);
+#endif
+}
+
 void SpectrumPrefs::OnApply(wxCommandEvent &)
 {
    if (Validate()) {
@@ -439,6 +468,7 @@ void SpectrumPrefs::OnApply(wxCommandEvent &)
 BEGIN_EVENT_TABLE(SpectrumPrefs, PrefsPanel)
    EVT_CHOICE(ID_WINDOW_SIZE, SpectrumPrefs::OnWindowSize)
    EVT_CHECKBOX(ID_DEFAULTS, SpectrumPrefs::OnDefaults)
+   EVT_CHOICE(ID_ALGORITHM, SpectrumPrefs::OnAlgorithm)
 
    // Several controls with common routine that unchecks the default box
    EVT_CHOICE(ID_WINDOW_TYPE, SpectrumPrefs::OnControl)

@@ -68,9 +68,6 @@ void TracksPrefs::Populate()
    mViewChoices.Add(_("Spectrum"));
    mViewCodes.Add(WaveTrack::Spectrum);
 
-   mViewChoices.Add(_("Pitch (EAC)"));
-   mViewCodes.Add(int(WaveTrack::PitchDisplay));
-
    //------------------------- Main section --------------------
    // Now construct the GUI itself.
    // Use 'eIsCreatingFromPrefs' so that the GUI is

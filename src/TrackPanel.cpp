@@ -328,7 +328,6 @@ enum {
    OnWaveformID,
    OnWaveformDBID,
    OnSpectrumID,
-   OnPitchID,
    OnViewSettingsID,
 
    OnSplitStereoID,
@@ -368,7 +367,7 @@ BEGIN_EVENT_TABLE(TrackPanel, wxWindow)
     EVT_MENU_RANGE(OnUpOctaveID, OnDownOctaveID, TrackPanel::OnChangeOctave)
     EVT_MENU_RANGE(OnChannelLeftID, OnChannelMonoID,
                TrackPanel::OnChannelChange)
-    EVT_MENU_RANGE(OnWaveformID, OnPitchID, TrackPanel::OnSetDisplay)
+    EVT_MENU_RANGE(OnWaveformID, OnSpectrumID, TrackPanel::OnSetDisplay)
     EVT_MENU(OnViewSettingsID, TrackPanel::OnViewSettings)
     EVT_MENU_RANGE(OnRate8ID, OnRate384ID, TrackPanel::OnRateChange)
     EVT_MENU_RANGE(On16BitID, OnFloatID, TrackPanel::OnFormatChange)
@@ -726,7 +725,6 @@ void TrackPanel::BuildMenus(void)
    mWaveTrackMenu->Append(OnWaveformID, _("Wa&veform"));
    mWaveTrackMenu->Append(OnWaveformDBID, _("&Waveform (dB)"));
    mWaveTrackMenu->Append(OnSpectrumID, _("&Spectrum"));
-   mWaveTrackMenu->Append(OnPitchID, _("Pitc&h (EAC)"));
    mWaveTrackMenu->Append(OnViewSettingsID, _("View& Settings...")); // PRL:  all the other letters already taken for accelerators!
    mWaveTrackMenu->AppendSeparator();
 
@@ -1726,9 +1724,7 @@ bool TrackPanel::SetCursorByActivity( )
 void TrackPanel::SetCursorAndTipWhenInLabel( Track * t,
          wxMouseEvent &event, const wxChar ** ppTip )
 {
-   if (event.m_x >= GetVRulerOffset() &&
-         (t->GetKind() == Track::Wave) &&
-         ( ((WaveTrack *) t)->GetDisplay() != WaveTrack::PitchDisplay) )
+   if (event.m_x >= GetVRulerOffset() && (t->GetKind() == Track::Wave) )
    {
       *ppTip = _("Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom region.");
       SetCursor(event.ShiftDown()? *mZoomOutCursor : *mZoomInCursor);
@@ -2984,7 +2980,7 @@ inline double findMaxRatio(double center, double rate)
 void TrackPanel::SnapCenterOnce(const WaveTrack *pTrack, bool up)
 {
    const SpectrogramSettings &settings = pTrack->GetSpectrogramSettings();
-   const int windowSize = settings.GetFFTLength(false);
+   const int windowSize = settings.GetFFTLength();
    const double rate = pTrack->GetRate();
    const double nyq = rate / 2.0;
    const double binFrequency = rate / windowSize;
@@ -3047,7 +3043,7 @@ void TrackPanel::StartSnappingFreqSelection (const WaveTrack *pTrack)
    // except, shrink the window as needed so we get some answers
 
    const SpectrogramSettings &settings = pTrack->GetSpectrogramSettings();
-   int windowSize = settings.GetFFTLength(false);
+   int windowSize = settings.GetFFTLength();
 
    while(windowSize > effectiveLength)
       windowSize >>= 1;
@@ -3528,7 +3524,7 @@ double TrackPanel::PositionToFrequency(const WaveTrack *wt,
       return -1;
 
    const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
-   const NumberScale numberScale(settings.GetScale(rate, false, false));
+   const NumberScale numberScale(settings.GetScale(rate, false));
    const double p = double(mouseYCoordinate - trackTopEdge) / trackHeight;
    return numberScale.PositionToValue(1.0 - p);
 }
@@ -3542,7 +3538,7 @@ wxInt64 TrackPanel::FrequencyToPosition(const WaveTrack *wt,
    const double rate = wt->GetRate();
 
    const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
-   const NumberScale numberScale(settings.GetScale(rate, false, false));
+   const NumberScale numberScale(settings.GetScale(rate, false));
    const float p = numberScale.ValueToPosition(frequency);
    return trackTopEdge + wxInt64((1.0 - p) * trackHeight);
 }
@@ -4551,9 +4547,7 @@ void TrackPanel::HandleVZoomClick( wxMouseEvent & event )
    if (!mCapturedTrack)
       return;
 
-   // don't do anything if track is not wave or Spectrum/log Spectrum
-   if (((mCapturedTrack->GetKind() == Track::Wave) &&
-            (((WaveTrack*)mCapturedTrack)->GetDisplay() != WaveTrack::PitchDisplay))
+   if (mCapturedTrack->GetKind() == Track::Wave
 #ifdef USE_MIDI
             || mCapturedTrack->GetKind() == Track::Note
 #endif
@@ -4639,7 +4633,7 @@ void TrackPanel::HandleVZoomButtonUp( wxMouseEvent & event )
    const double rate = track->GetRate();
    const float halfrate = rate / 2;
    const SpectrogramSettings &settings = track->GetSpectrogramSettings();
-   NumberScale scale(track->GetSpectrogramSettings().GetScale(rate, false, false));
+   NumberScale scale(track->GetSpectrogramSettings().GetScale(rate, false));
    const bool spectral = (track->GetDisplay() == WaveTrack::Spectrum);
    const bool spectrumLinear = spectral &&
       (track->GetSpectrogramSettings().scaleType == SpectrogramSettings::stLinear);
@@ -4653,7 +4647,7 @@ void TrackPanel::HandleVZoomButtonUp( wxMouseEvent & event )
          min = settings.GetLogMinFreq(rate);
          max = settings.GetLogMaxFreq(rate);
       }
-      const int fftLength = settings.GetFFTLength(false);
+      const int fftLength = settings.GetFFTLength();
       const float binSize = rate / fftLength;
       const int minBins =
          std::min(10, fftLength / 2); //minimum 10 freq bins, unless there are less
@@ -8460,7 +8454,6 @@ void TrackPanel::OnTrackMenu(Track *t)
       theMenu->Enable(OnWaveformDBID,
                         display != WaveTrack::WaveformDBDisplay);
       theMenu->Enable(OnSpectrumID, display != WaveTrack::Spectrum);
-      theMenu->Enable(OnPitchID, display != WaveTrack::PitchDisplay);
       theMenu->Enable(OnViewSettingsID, true);
 
       WaveTrack * track = (WaveTrack *)t;
@@ -8963,7 +8956,7 @@ void TrackPanel::OnViewSettings(wxCommandEvent &)
 void TrackPanel::OnSetDisplay(wxCommandEvent & event)
 {
    int idInt = event.GetId();
-   wxASSERT(idInt >= OnWaveformID && idInt <= OnPitchID);
+   wxASSERT(idInt >= OnWaveformID && idInt <= OnSpectrumID);
    wxASSERT(mPopupMenuTarget
             && mPopupMenuTarget->GetKind() == Track::Wave);
 
@@ -8976,8 +8969,6 @@ void TrackPanel::OnSetDisplay(wxCommandEvent & event)
       id = WaveTrack::WaveformDBDisplay; break;
    case OnSpectrumID:
       id = WaveTrack::Spectrum; break;
-   case OnPitchID:
-      id = WaveTrack::PitchDisplay; break;
    }
    WaveTrack *wt = (WaveTrack *) mPopupMenuTarget;
    if (wt->GetDisplay() != id) {

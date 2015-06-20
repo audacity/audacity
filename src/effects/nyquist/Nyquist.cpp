@@ -792,7 +792,6 @@ bool NyquistEffect::ProcessOne()
                case WaveTrack::WaveformDisplay: view = wxT("\"Waveform\""); break;
                case WaveTrack::WaveformDBDisplay: view = wxT("\"Waveform (dB)\""); break;
                case WaveTrack::Spectrum: view = wxT("\"Spectrum\""); break;
-               case WaveTrack::PitchDisplay: view = wxT("\"Pitch (EAC)\""); break;
                default: view = wxT("NIL"); break;
             }
          break;

@@ -466,7 +466,6 @@ void TrackArtist::DrawTrack(const Track * t,
                       drawEnvelope,  bigPoints, drawSliders, true, muted);
          break;
       case WaveTrack::Spectrum:
-      case WaveTrack::PitchDisplay:
          DrawSpectrum(wt, dc, rect, selectedRegion, zoomInfo);
          break;
       }
@@ -542,11 +541,6 @@ void TrackArtist::DrawVRuler(Track *t, wxDC * dc, wxRect & rect)
       bev.Inflate(-1, -1);
       bev.width += 1;
       AColor::BevelTrackInfo(*dc, true, bev);
-
-      // Pitch doesn't have a ruler
-      if (((WaveTrack *)t)->GetDisplay() == WaveTrack::PitchDisplay) {
-         return;
-      }
 
       // Right align the ruler
       wxRect rr = rect;
@@ -858,14 +852,11 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
             vruler->SetUnits(wxT(""));
             vruler->SetLog(true);
             NumberScale scale
-               (wt->GetSpectrogramSettings().GetScale(wt->GetRate(), false, false).Reversal());
+               (wt->GetSpectrogramSettings().GetScale(wt->GetRate(), false).Reversal());
             vruler->SetNumberScale(&scale);
          }
          break;
          }
-      }
-      else if (display == WaveTrack::PitchDisplay) {
-         // Pitch
       }
    }
 
@@ -1966,6 +1957,8 @@ static inline float findValue
  bool autocorrelation, int gain, int range)
 {
    float value;
+
+
 #if 0
    // Averaging method
    if (int(bin1) == int(bin0)) {
@@ -1991,11 +1984,24 @@ static inline float findValue
    half;
    // Maximum method, and no apportionment of any single bins over multiple pixel rows
    // See Bug971
-   int bin = std::min(half - 1, int(floor(0.5 + bin0)));
-   const int limitBin = std::min(half, int(floor(0.5 + bin1)));
-   value = spectrum[bin];
-   while (++bin < limitBin)
-      value = std::max(value, spectrum[bin]);
+   int index, limitIndex;
+   if (autocorrelation) {
+      // bin = 2 * half / (half - 1 - array_index);
+      // Solve for index
+      index = std::max(0.0f, std::min(float(half - 1),
+         (half - 1) - (2 * half) / (std::max(1.0f, bin0))
+      ));
+      limitIndex = std::max(0.0f, std::min(float(half - 1),
+         (half - 1) - (2 * half) / (std::max(1.0f, bin1))
+      ));
+   }
+   else {
+      index = std::min(half - 1, int(floor(0.5 + bin0)));
+      limitIndex = std::min(half, int(floor(0.5 + bin1)));
+   }
+   value = spectrum[index];
+   while (++index < limitIndex)
+      value = std::max(value, spectrum[index]);
 #endif
    if (!autocorrelation) {
       // Last step converts dB to a 0.0-1.0 range
@@ -2042,8 +2048,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
    const WaveTrack *const track = waveTrackCache.GetTrack();
    const SpectrogramSettings &settings = track->GetSpectrogramSettings();
 
-   const int display = track->GetDisplay();
-   const bool autocorrelation = (WaveTrack::PitchDisplay == display);
+   const bool autocorrelation = (settings.algorithm == SpectrogramSettings::algPitchEAC);
 
    enum { DASH_LENGTH = 10 /* pixels */ };
 
@@ -2072,10 +2077,8 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
    double freqLo = SelectedRegion::UndefinedFrequency;
    double freqHi = SelectedRegion::UndefinedFrequency;
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   if (!autocorrelation) {
-      freqLo = selectedRegion.f0();
-      freqHi = selectedRegion.f1();
-   }
+   freqLo = selectedRegion.f0();
+   freqHi = selectedRegion.f1();
 #endif
 
    const bool &isGrayscale = settings.isGrayscale;
@@ -2102,7 +2105,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
       return;
    unsigned char *data = image->GetData();
 
-   const int half = settings.GetFFTLength(autocorrelation) / 2;
+   const int half = settings.GetFFTLength() / 2;
    const double binUnit = rate / (2 * half);
    const float *freq = 0;
    const sampleCount *where = 0;
@@ -2122,7 +2125,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
       scaleType == SpectrogramSettings::stLinear
       ? settings.GetMaxFreq(rate) : settings.GetLogMaxFreq(rate);
 
-   const NumberScale numberScale(settings.GetScale(rate, true, autocorrelation));
+   const NumberScale numberScale(settings.GetScale(rate, true));
 
 #ifdef EXPERIMENTAL_FFT_Y_GRID
    const float

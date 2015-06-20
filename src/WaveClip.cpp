@@ -846,7 +846,8 @@ void SpecCache::CalculateOneSpectrum
          rate, results,
          autocorrelation, settings.windowType);
 #endif // EXPERIMENTAL_USE_REALFFTF
-      if (!gainFactors.empty()) {
+      if (!autocorrelation &&
+          !gainFactors.empty()) {
          // Apply a frequency-dependant gain factor
          for (int ii = 0; ii < half; ++ii)
             results[ii] += gainFactors[ii];

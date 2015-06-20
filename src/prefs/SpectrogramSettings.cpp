@@ -78,6 +78,7 @@ SpectrogramSettings::SpectrogramSettings(const SpectrogramSettings &other)
 #ifndef SPECTRAL_SELECTION_GLOBAL_SWITCH
    , spectralSelection(other.spectralSelection)
 #endif
+   , algorithm(other.algorithm)
 #ifdef EXPERIMENTAL_FFT_Y_GRID
    , fftYGrid(other.fftYGrid)
 #endif
@@ -114,6 +115,7 @@ SpectrogramSettings &SpectrogramSettings::operator= (const SpectrogramSettings &
 #ifndef SPECTRAL_SELECTION_GLOBAL_SWITCH
       spectralSelection = other.spectralSelection;
 #endif
+      algorithm = other.algorithm;
 #ifdef EXPERIMENTAL_FFT_Y_GRID
       fftYGrid = other.fftYGrid;
 #endif
@@ -144,12 +146,19 @@ namespace
       static wxArrayString theArray;
       return theArray;
    }
+
+   wxArrayString &algorithmNamesArray()
+   {
+      static wxArrayString theArray;
+      return theArray;
+   }
 }
 
 //static
 void SpectrogramSettings::InvalidateNames()
 {
    scaleNamesArray().Clear();
+   algorithmNamesArray().Clear();
 }
 
 //static
@@ -165,6 +174,20 @@ const wxArrayString &SpectrogramSettings::GetScaleNames()
       theArray.Add(_("Bark"));
       theArray.Add(_("Erb"));
       theArray.Add(_("Undertone"));
+   }
+
+   return theArray;
+}
+
+//static
+const wxArrayString &SpectrogramSettings::GetAlgorithmNames()
+{
+   wxArrayString &theArray = algorithmNamesArray();
+
+   if (theArray.IsEmpty()) {
+      // Keep in correspondence with enum SpectrogramSettings::Algorithm:
+      theArray.Add(_("STFT"));
+      theArray.Add(_("Pitch (enhanced autocorrelation)"));
    }
 
    return theArray;
@@ -227,6 +250,9 @@ bool SpectrogramSettings::Validate(bool quiet)
       ScaleType(std::max(0,
          std::min(int(SpectrogramSettings::stNumScaleTypes) - 1,
             int(scaleType))));
+   algorithm = Algorithm(
+      std::max(0, std::min(int(algNumAlgorithms) - 1, int(algorithm)))
+   );
    ConvertToEnumeratedWindowSizes();
    ConvertToActualWindowSizes();
 
@@ -258,6 +284,8 @@ void SpectrogramSettings::LoadPrefs()
 #ifndef SPECTRAL_SELECTION_GLOBAL_SWITCH
    spectralSelection = (gPrefs->Read(wxT("/Spectrum/EnableSpectralSelection"), 0L) != 0);
 #endif
+
+   algorithm = Algorithm(gPrefs->Read(wxT("/Spectrum/Algorithm"), 0L));
 
 #ifdef EXPERIMENTAL_FFT_Y_GRID
    fftYGrid = (gPrefs->Read(wxT("/Spectrum/FFTYGrid"), 0L) != 0);
@@ -318,6 +346,8 @@ void SpectrogramSettings::SavePrefs()
 #ifndef SPECTRAL_SELECTION_GLOBAL_SWITCH
    gPrefs->Write(wxT("/Spectrum/EnableSpectralSelection"), spectralSelection);
 #endif
+
+   gPrefs->Write(wxT("/Spectrum/Algorithm"), algorithm);
 
 #ifdef EXPERIMENTAL_FFT_Y_GRID
    gPrefs->Write(wxT("/Spectrum/FFTYGrid"), fftYGrid);
@@ -519,21 +549,21 @@ void SpectrogramSettings::SetLogMaxFreq(int freq)
    logMaxFreq = freq;
 }
 
-int SpectrogramSettings::GetFFTLength(bool autocorrelation) const
+int SpectrogramSettings::GetFFTLength() const
 {
    return windowSize
 #ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
-      * (!autocorrelation ? zeroPaddingFactor : 1);
+      * ((algorithm == algSTFT) ? zeroPaddingFactor : 1);
 #endif
    ;
 }
 
 NumberScale SpectrogramSettings::GetScale
-(double rate, bool bins, bool autocorrelation) const
+(double rate, bool bins) const
 {
    int minFreq, maxFreq;
    NumberScaleType type = nstLinear;
-   const int half = GetFFTLength(autocorrelation) / 2;
+   const int half = GetFFTLength() / 2;
 
    // Don't assume the correspondence of the enums will remain direct in the future.
    // Do this switch.
