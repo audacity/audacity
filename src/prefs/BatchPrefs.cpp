@@ -82,3 +82,8 @@ bool BatchPrefs::Apply()
 BatchPrefs::~BatchPrefs()
 {
 }
+
+PrefsPanel *BatchPrefsFactory::Create(wxWindow *parent)
+{
+   return new BatchPrefs(parent);
+}

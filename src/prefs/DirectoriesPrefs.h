@@ -38,4 +38,9 @@ class DirectoriesPrefs :public PrefsPanel
    DECLARE_EVENT_TABLE();
 };
 
+class DirectoriesPrefsFactory : public PrefsPanelFactory
+{
+public:
+   virtual PrefsPanel *Create(wxWindow *parent);
+};
 #endif

@@ -34,4 +34,9 @@ class EffectsPrefs :public PrefsPanel
    void PopulateOrExchange(ShuttleGui & S);
 };
 
+class EffectsPrefsFactory : public PrefsPanelFactory
+{
+public:
+   virtual PrefsPanel *Create(wxWindow *parent);
+};
 #endif

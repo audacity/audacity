@@ -79,3 +79,8 @@ bool ProjectsPrefs::Apply()
 
    return true;
 }
+
+PrefsPanel *ProjectsPrefsFactory::Create(wxWindow *parent)
+{
+   return new ProjectsPrefs(parent);
+}

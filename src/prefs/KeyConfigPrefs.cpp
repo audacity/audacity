@@ -1211,3 +1211,8 @@ void KeyConfigPrefs::Cancel()
 }
 
 #endif
+
+PrefsPanel *KeyConfigPrefsFactory::Create(wxWindow *parent)
+{
+   return new KeyConfigPrefs(parent);
+}

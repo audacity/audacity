@@ -83,3 +83,8 @@ bool WarningsPrefs::Apply()
 
    return true;
 }
+
+PrefsPanel *WarningsPrefsFactory::Create(wxWindow *parent)
+{
+   return new WarningsPrefs(parent);
+}

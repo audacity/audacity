@@ -32,4 +32,10 @@ class PlaybackPrefs :public PrefsPanel
    void PopulateOrExchange(ShuttleGui & S);
 };
 
+class PlaybackPrefsFactory : public PrefsPanelFactory
+{
+public:
+   virtual PrefsPanel *Create(wxWindow *parent);
+};
+
 #endif

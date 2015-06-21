@@ -107,4 +107,10 @@ class ExtImportPrefs:public PrefsPanel
    DECLARE_EVENT_TABLE()
 };
 
+
+class ExtImportPrefsFactory : public PrefsPanelFactory
+{
+public:
+   virtual PrefsPanel *Create(wxWindow *parent);
+};
 #endif

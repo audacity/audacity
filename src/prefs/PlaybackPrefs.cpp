@@ -122,3 +122,8 @@ bool PlaybackPrefs::Apply()
 
    return true;
 }
+
+PrefsPanel *PlaybackPrefsFactory::Create(wxWindow *parent)
+{
+   return new PlaybackPrefs(parent);
+}

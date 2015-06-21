@@ -53,4 +53,9 @@ class QualityPrefs :public PrefsPanel
    DECLARE_EVENT_TABLE();
 };
 
+class QualityPrefsFactory : public PrefsPanelFactory
+{
+public:
+   virtual PrefsPanel *Create(wxWindow *parent);
+};
 #endif

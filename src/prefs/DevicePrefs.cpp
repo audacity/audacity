@@ -373,3 +373,8 @@ bool DevicePrefs::Apply()
 
    return true;
 }
+
+PrefsPanel *DevicePrefsFactory::Create(wxWindow *parent)
+{
+   return new DevicePrefs(parent);
+}
