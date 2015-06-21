@@ -8921,20 +8921,24 @@ class ViewSettingsDialog : public PrefsDialog
 {
 public:
    ViewSettingsDialog
-      (wxWindow *parent, const wxString &title, PrefsDialog::Factories &factories)
+      (wxWindow *parent, const wxString &title, PrefsDialog::Factories &factories,
+       int page)
       : PrefsDialog(parent, title, factories)
+      , mPage(page)
    {
    }
 
    virtual long GetPreferredPage()
    {
-      // Future:  choose Spectrum or Waveform page
-      return 0;
+      return mPage;
    }
 
    virtual void SavePreferredPage()
    {
    }
+
+private:
+   const int mPage;
 };
 
 void TrackPanel::OnViewSettings(wxCommandEvent &)
@@ -8943,12 +8947,15 @@ void TrackPanel::OnViewSettings(wxCommandEvent &)
    WaveformPrefsFactory waveformFactory(wt);
    SpectrumPrefsFactory spectrumFactory(wt);
 
+   // Put Waveform page first
    PrefsDialog::Factories factories;
    factories.push_back(&waveformFactory);
    factories.push_back(&spectrumFactory);
+   const int page = (wt->GetDisplay() == WaveTrack::Spectrum)
+      ? 1 : 0;
 
    wxString title(wt->GetName() + wxT(": "));
-   ViewSettingsDialog dialog(this, title, factories);
+   ViewSettingsDialog dialog(this, title, factories, page);
 
    if (0 != dialog.ShowModal())
       // Redraw
