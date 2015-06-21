@@ -220,6 +220,7 @@ is time to refresh some aspect of the screen.
 
 #include "prefs/PrefsDialog.h"
 #include "prefs/SpectrumPrefs.h"
+#include "prefs/WaveformPrefs.h"
 
 #include "toolbars/ControlToolBar.h"
 #include "toolbars/ToolManager.h"
@@ -8939,11 +8940,16 @@ public:
 void TrackPanel::OnViewSettings(wxCommandEvent &)
 {
    WaveTrack *const wt = static_cast<WaveTrack*>(mPopupMenuTarget);
+   WaveformPrefsFactory waveformFactory(wt);
    SpectrumPrefsFactory spectrumFactory(wt);
+
    PrefsDialog::Factories factories;
+   factories.push_back(&waveformFactory);
    factories.push_back(&spectrumFactory);
+
    wxString title(wt->GetName() + wxT(": "));
    ViewSettingsDialog dialog(this, title, factories);
+
    if (0 != dialog.ShowModal())
       // Redraw
       Refresh(false);

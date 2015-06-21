@@ -55,6 +55,7 @@ Track classes.
 
 #include "effects/TimeWarper.h"
 #include "prefs/SpectrumPrefs.h"
+#include "prefs/WaveformPrefs.h"
 
 using std::max;
 
@@ -76,6 +77,7 @@ WaveTrack *TrackFactory::NewWaveTrack(sampleFormat format, double rate)
 WaveTrack::WaveTrack(DirManager *projDirManager, sampleFormat format, double rate):
    Track(projDirManager)
    , mpSpectrumSettings(0)
+   , mpWaveformSettings(0)
 {
    if (format == (sampleFormat)0)
    {
@@ -110,6 +112,8 @@ WaveTrack::WaveTrack(WaveTrack &orig):
    , mpSpectrumSettings(orig.mpSpectrumSettings
         ? new SpectrogramSettings(*orig.mpSpectrumSettings) : 0
      )
+   , mpWaveformSettings(orig.mpWaveformSettings 
+        ? new WaveformSettings(*orig.mpWaveformSettings) : 0)
 {
    mDisplay = FindDefaultViewMode();
    mLastDisplay = -1;
@@ -150,6 +154,8 @@ void WaveTrack::Merge(const Track &orig)
       mPan     = wt.mPan;
       SetSpectrogramSettings(wt.mpSpectrumSettings
          ? new SpectrogramSettings(*wt.mpSpectrumSettings) : 0);
+      SetWaveformSettings
+         (wt.mpWaveformSettings ? new WaveformSettings(*wt.mpWaveformSettings) : 0);
    }
    Track::Merge(orig);
 }
@@ -168,6 +174,7 @@ WaveTrack::~WaveTrack()
       delete [] mDisplayLocations;
 
    delete mpSpectrumSettings;
+   delete mpWaveformSettings;
 }
 
 double WaveTrack::GetOffset() const
@@ -679,6 +686,37 @@ void WaveTrack::SetSpectrogramSettings(SpectrogramSettings *pSettings)
    if (mpSpectrumSettings != pSettings) {
       delete mpSpectrumSettings;
       mpSpectrumSettings = pSettings;
+   }
+}
+
+const WaveformSettings &WaveTrack::GetWaveformSettings() const
+{
+   if (mpWaveformSettings)
+      return *mpWaveformSettings;
+   else
+      return WaveformSettings::defaults();
+}
+
+WaveformSettings &WaveTrack::GetWaveformSettings()
+{
+   if (mpWaveformSettings)
+      return *mpWaveformSettings;
+   else
+      return WaveformSettings::defaults();
+}
+
+WaveformSettings &WaveTrack::GetIndependentWaveformSettings()
+{
+   if (!mpWaveformSettings)
+      mpWaveformSettings = new WaveformSettings(WaveformSettings::defaults());
+   return *mpWaveformSettings;
+}
+
+void WaveTrack::SetWaveformSettings(WaveformSettings *pSettings)
+{
+   if (mpWaveformSettings != pSettings) {
+      delete mpWaveformSettings;
+      mpWaveformSettings = pSettings;
    }
 }
 

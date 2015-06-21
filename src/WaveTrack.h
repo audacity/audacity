@@ -23,6 +23,7 @@
 #include <wx/thread.h>
 
 class SpectrogramSettings;
+class WaveformSettings;
 class TimeWarper;
 
 //
@@ -150,6 +151,11 @@ class AUDACITY_DLL_API WaveTrack: public Track {
    SpectrogramSettings &GetSpectrogramSettings();
    SpectrogramSettings &GetIndependentSpectrogramSettings();
    void SetSpectrogramSettings(SpectrogramSettings *pSettings);
+
+   const WaveformSettings &GetWaveformSettings() const;
+   WaveformSettings &GetWaveformSettings();
+   WaveformSettings &GetIndependentWaveformSettings();
+   void SetWaveformSettings(WaveformSettings *pSettings);
 
    //
    // High-level editing
@@ -495,6 +501,7 @@ class AUDACITY_DLL_API WaveTrack: public Track {
    int mAutoSaveIdent;
 
    SpectrogramSettings *mpSpectrumSettings;
+   WaveformSettings *mpWaveformSettings;
 };
 
 // This is meant to be a short-lived object, during whose lifetime,
