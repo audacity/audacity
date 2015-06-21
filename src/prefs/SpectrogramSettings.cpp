@@ -15,6 +15,10 @@ Paul Licameli
 
 #include "../Audacity.h"
 #include "SpectrogramSettings.h"
+
+#include <algorithm>
+#include <wx/msgdlg.h>
+
 #include "../FFT.h"
 #include "../Prefs.h"
 #include "../RealFFTf.h"
@@ -26,7 +30,7 @@ SpectrogramSettings::SpectrogramSettings()
    : hFFT(0)
    , window(0)
 {
-   UpdatePrefs();
+   LoadPrefs();
 }
 
 SpectrogramSettings::SpectrogramSettings(const SpectrogramSettings &other)
@@ -98,49 +102,82 @@ SpectrogramSettings& SpectrogramSettings::defaults()
    return instance;
 }
 
-void SpectrogramSettings::UpdatePrefs()
+bool SpectrogramSettings::Validate(bool quiet)
 {
-   bool destroy = false;
+   if (!quiet &&
+      maxFreq < 100) {
+      wxMessageBox(_("Maximum frequency must be 100 Hz or above"));
+      return false;
+   }
+   else
+      maxFreq = std::max(100, maxFreq);
 
-   minFreq = gPrefs->Read(wxT("/Spectrum/MinFreq"), -1L);
+   if (!quiet &&
+      minFreq < 0) {
+      wxMessageBox(_("Minimum frequency must be at least 0 Hz"));
+      return false;
+   }
+   else
+      minFreq = std::max(0, minFreq);
+
+   if (!quiet &&
+      maxFreq <= minFreq) {
+      wxMessageBox(_("Minimum frequency must be less than maximum frequency"));
+      return false;
+   }
+   else
+      maxFreq = std::max(1 + minFreq, maxFreq);
+
+   if (!quiet &&
+      range <= 0) {
+      wxMessageBox(_("The range must be at least 1 dB"));
+      return false;
+   }
+   else
+      range = std::max(1, range);
+
+   if (!quiet &&
+      frequencyGain < 0) {
+      wxMessageBox(_("The frequency gain cannot be negative"));
+      return false;
+   }
+   else if (!quiet &&
+      frequencyGain > 60) {
+      wxMessageBox(_("The frequency gain must be no more than 60 dB/dec"));
+      return false;
+   }
+   else
+      frequencyGain =
+         std::max(0, std::min(60, frequencyGain));
+
+   // The rest are controlled by drop-down menus so they can't go wrong
+   // in the Preferences dialog, but we also come here after reading fom saved
+   // preference files, which could be or from future versions.  Validate quietly.
+   windowType =
+      std::max(0, std::min(NumWindowFuncs() - 1, windowType));
+   ConvertToEnumeratedWindowSizes();
+   ConvertToActualWindowSizes();
+
+   return true;
+}
+
+void SpectrogramSettings::LoadPrefs()
+{
+   minFreq = gPrefs->Read(wxT("/Spectrum/MinFreq"), 0L);
+
    maxFreq = gPrefs->Read(wxT("/Spectrum/MaxFreq"), 8000L);
-
-   // These preferences are not written anywhere in the program as of now,
-   // but I keep this legacy here.  Who knows, someone might edit prefs files
-   // directly.  PRL
-   logMaxFreq = gPrefs->Read(wxT("/SpectrumLog/MaxFreq"), -1);
-   if (logMaxFreq < 0)
-      logMaxFreq = maxFreq;
-   logMinFreq = gPrefs->Read(wxT("/SpectrumLog/MinFreq"), -1);
-   if (logMinFreq < 0)
-      logMinFreq = minFreq;
-   if (logMinFreq < 1)
-      logMinFreq = 1;
 
    range = gPrefs->Read(wxT("/Spectrum/Range"), 80L);
    gain = gPrefs->Read(wxT("/Spectrum/Gain"), 20L);
    frequencyGain = gPrefs->Read(wxT("/Spectrum/FrequencyGain"), 0L);
 
-   const int newWindowSize = gPrefs->Read(wxT("/Spectrum/FFTSize"), 256);
-   if (newWindowSize != windowSize) {
-      destroy = true;
-      windowSize = newWindowSize;
-   }
+   windowSize = gPrefs->Read(wxT("/Spectrum/FFTSize"), 256);
 
 #ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
-   const int newZeroPaddingFactor = gPrefs->Read(wxT("/Spectrum/ZeroPaddingFactor"), 1);
-   if (newZeroPaddingFactor != zeroPaddingFactor) {
-      destroy = true;
-      zeroPaddingFactor = newZeroPaddingFactor;
-   }
+   zeroPaddingFactor = gPrefs->Read(wxT("/Spectrum/ZeroPaddingFactor"), 1);
 #endif
 
-   int newWindowType;
-   gPrefs->Read(wxT("/Spectrum/WindowType"), &newWindowType, 3);
-   if (newWindowType != windowType) {
-      destroy = true;
-      windowType = newWindowType;
-   }
+   gPrefs->Read(wxT("/Spectrum/WindowType"), &windowType, eWinFuncHanning);
 
    isGrayscale = (gPrefs->Read(wxT("/Spectrum/Grayscale"), 0L) != 0);
 
@@ -155,8 +192,64 @@ void SpectrogramSettings::UpdatePrefs()
    findNotesQuantize = (gPrefs->Read(wxT("/Spectrum/FindNotesQuantize"), 0L) != 0);
 #endif //EXPERIMENTAL_FIND_NOTES
 
-   if (destroy)
-      DestroyWindows();
+   // Enforce legal values
+   Validate(true);
+
+   // These preferences are not written anywhere in the program as of now,
+   // but I keep this legacy here.  Who knows, someone might edit prefs files
+   // directly.  PRL
+   logMinFreq = gPrefs->Read(wxT("/SpectrumLog/MinFreq"), -1);
+   if (logMinFreq < 0)
+      logMinFreq = minFreq;
+   if (logMinFreq < 1)
+      logMinFreq = 1;
+   logMaxFreq = gPrefs->Read(wxT("/SpectrumLog/MaxFreq"), -1);
+   if (logMaxFreq < 0)
+      logMaxFreq = maxFreq;
+   logMaxFreq =
+      std::max(logMinFreq + 1, logMaxFreq);
+
+   InvalidateCaches();
+}
+
+void SpectrogramSettings::SavePrefs()
+{
+   gPrefs->Write(wxT("/Spectrum/MinFreq"), minFreq);
+   gPrefs->Write(wxT("/Spectrum/MaxFreq"), maxFreq);
+
+   // Nothing wrote these.  They only varied from the linear scale bounds in-session. -- PRL
+   // gPrefs->Write(wxT("/SpectrumLog/MaxFreq"), logMinFreq);
+   // gPrefs->Write(wxT("/SpectrumLog/MinFreq"), logMaxFreq);
+
+   gPrefs->Write(wxT("/Spectrum/Range"), range);
+   gPrefs->Write(wxT("/Spectrum/Gain"), gain);
+   gPrefs->Write(wxT("/Spectrum/FrequencyGain"), frequencyGain);
+
+   gPrefs->Write(wxT("/Spectrum/FFTSize"), windowSize);
+
+#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
+   gPrefs->Write(wxT("/Spectrum/ZeroPaddingFactor"), zeroPaddingFactor);
+#endif
+
+   gPrefs->Write(wxT("/Spectrum/WindowType"), windowType);
+
+   gPrefs->Write(wxT("/Spectrum/Grayscale"), isGrayscale);
+
+#ifdef EXPERIMENTAL_FFT_Y_GRID
+   gPrefs->Write(wxT("/Spectrum/FFTYGrid"), fftYGrid);
+#endif //EXPERIMENTAL_FFT_Y_GRID
+
+#ifdef EXPERIMENTAL_FIND_NOTES
+   gPrefs->Write(wxT("/Spectrum/FFTFindNotes"), fftFindNotes);
+   gPrefs->Write(wxT("/Spectrum/FindNotesMinA"), findNotesMinA);
+   gPrefs->Write(wxT("/Spectrum/FindNotesN"), numberOfMaxima);
+   gPrefs->Write(wxT("/Spectrum/FindNotesQuantize"), findNotesQuantize);
+#endif //EXPERIMENTAL_FIND_NOTES
+}
+
+void SpectrogramSettings::InvalidateCaches()
+{
+   DestroyWindows();
 }
 
 SpectrogramSettings::~SpectrogramSettings()
@@ -255,6 +348,38 @@ void SpectrogramSettings::CacheWindows() const
       RecreateWindow(window, WINDOW, fftLen, padding, windowType, windowSize, scale);
    }
 #endif // EXPERIMENTAL_USE_REALFFTF
+}
+
+void SpectrogramSettings::ConvertToEnumeratedWindowSizes()
+{
+   unsigned size;
+   int logarithm;
+
+   logarithm = -LogMinWindowSize;
+   size = unsigned(windowSize);
+   while (size > 1)
+      size >>= 1, ++logarithm;
+   windowSize = std::max(0, std::min(NumWindowSizes - 1, logarithm));
+
+#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
+   // Choices for zero padding begin at 1
+   logarithm = 0;
+   size = unsigned(zeroPaddingFactor);
+   while (zeroPaddingFactor > 1)
+      zeroPaddingFactor >>= 1, ++logarithm;
+   zeroPaddingFactor = std::max(0,
+      std::min(LogMaxWindowSize - (windowSize + LogMinWindowSize),
+         logarithm
+   ));
+#endif
+}
+
+void SpectrogramSettings::ConvertToActualWindowSizes()
+{
+   windowSize = 1 << (windowSize + LogMinWindowSize);
+#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
+   zeroPaddingFactor = 1 << zeroPaddingFactor;
+#endif
 }
 
 int SpectrogramSettings::GetMinFreq(double rate) const
