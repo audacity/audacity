@@ -722,8 +722,8 @@ void TrackPanel::BuildMenus(void)
    /* build the pop-down menu used on wave (sampled audio) tracks */
    mWaveTrackMenu = new wxMenu();
    BuildCommonDropMenuItems(mWaveTrackMenu);   // does name, up/down etc
-   mWaveTrackMenu->Append(OnWaveformID, _("&Waveform"));
-   mWaveTrackMenu->Append(OnSpectrumID, _("&Spectrum"));
+   mWaveTrackMenu->AppendRadioItem(OnWaveformID, _("&Waveform"));
+   mWaveTrackMenu->AppendRadioItem(OnSpectrumID, _("&Spectrum"));
    mWaveTrackMenu->Append(OnViewSettingsID, _("&View Settings..."));
    mWaveTrackMenu->AppendSeparator();
 
@@ -8436,10 +8436,10 @@ void TrackPanel::OnTrackMenu(Track *t)
       theMenu->Enable(OnChannelRightID, !t->GetLinked());
 
       const int display = static_cast<WaveTrack *>(t)->GetDisplay();
-
-      theMenu->Enable(OnWaveformID, display != WaveTrack::Waveform);
-      theMenu->Enable(OnSpectrumID, display != WaveTrack::Spectrum);
-      theMenu->Enable(OnViewSettingsID, true);
+      theMenu->Check(
+         (display == WaveTrack::Waveform) ? OnWaveformID : OnSpectrumID,
+         true
+      );
 
       WaveTrack * track = (WaveTrack *)t;
       SetMenuCheck(*mRateMenu, IdOfRate((int) track->GetRate()));
@@ -8980,9 +8980,10 @@ void TrackPanel::OnSetDisplay(wxCommandEvent & event)
       }
 #endif
       UpdateVRuler(wt);
+
+      MakeParentModifyState(true);
+      Refresh(false);
    }
-   MakeParentModifyState(true);
-   Refresh(false);
 }
 
 /// Sets the sample rate for a track, and if it is linked to
