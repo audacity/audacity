@@ -41,6 +41,8 @@ private:
 
    wxCheckBox *mDefaultsCheckbox;
 
+   wxArrayString mScaleChoices;
+
    WaveformSettings mTempSettings;
 
    bool mPopulating;

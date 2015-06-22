@@ -175,6 +175,7 @@ audio tracks.
 #include "TimeTrack.h"
 #include "Prefs.h"
 #include "prefs/SpectrogramSettings.h"
+#include "prefs/WaveformSettings.h"
 #include "Sequence.h"
 #include "Spectrum.h"
 #include "ViewInfo.h"
@@ -457,13 +458,9 @@ void TrackArtist::DrawTrack(const Track * t,
       bool muted = (hasSolo || t->GetMute()) && !t->GetSolo();
 
       switch (wt->GetDisplay()) {
-      case WaveTrack::WaveformDisplay:
+      case WaveTrack::Waveform:
          DrawWaveform(wt, dc, rect, selectedRegion, zoomInfo,
-                      drawEnvelope, bigPoints, drawSliders, false, muted);
-         break;
-      case WaveTrack::WaveformDBDisplay:
-         DrawWaveform(wt, dc, rect, selectedRegion, zoomInfo,
-                      drawEnvelope,  bigPoints, drawSliders, true, muted);
+                      drawEnvelope,  bigPoints, drawSliders, muted);
          break;
       case WaveTrack::Spectrum:
          DrawSpectrum(wt, dc, rect, selectedRegion, zoomInfo);
@@ -685,107 +682,115 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
    // The ruler needs a bevelled surround.
    if (t->GetKind() == Track::Wave) {
       WaveTrack *wt = static_cast<WaveTrack*>(t);
-      int display = wt->GetDisplay();
 
-      if (display == WaveTrack::WaveformDisplay) {
-         // Waveform
+      const int display = wt->GetDisplay();
 
-         float min, max;
-         wt->GetDisplayBounds(&min, &max);
-         if(wt->GetLastDisplay()==WaveTrack::WaveformDBDisplay)
-         {
-            // do a translation into the WaveTrack::WaveformDisplay space
-            wt->SetDisplay(WaveTrack::WaveformDisplay); // this makes the last display not WaveformDBDisplay
-            float sign = (min >= 0 ? 1 : -1);
-            if (min != 0.) {
-               min = DB_TO_LINEAR(fabs(min)*mdBrange - mdBrange);
-               if (min < 0.0)
-                  min = 0.0;
-               min *= sign;
-            }
-            sign = (max >= 0 ? 1 : -1);
+      if (display == WaveTrack::Waveform) {
+         WaveformSettings::ScaleType scaleType =
+            wt->GetWaveformSettings().scaleType;
 
-            if (max != 0.) {
-               max = DB_TO_LINEAR(fabs(max)*mdBrange - mdBrange);
-               if (max < 0.0)
-                  max = 0.0;
-               max *= sign;
-            }
-            wt->SetDisplayBounds(min, max);
-         }
+         if (scaleType == WaveformSettings::stLinear) {
+            // Waveform
 
-         vruler->SetBounds(rect.x, rect.y+1, rect.x + rect.width, rect.y + rect.height-1);
-         vruler->SetOrientation(wxVERTICAL);
-         vruler->SetRange(max, min);
-         vruler->SetFormat(Ruler::RealFormat);
-         vruler->SetUnits(wxT(""));
-         vruler->SetLabelEdges(false);
-         vruler->SetLog(false);
-      }
-      else if (display == WaveTrack::WaveformDBDisplay) {
-         // Waveform (db)
+            float min, max;
+            wt->GetDisplayBounds(&min, &max);
+            if (wt->GetLastScaleType() != scaleType)
+            {
+               // do a translation into the linear space
+               wt->SetLastScaleType(scaleType);
+               float sign = (min >= 0 ? 1 : -1);
+               if (min != 0.) {
+                  min = DB_TO_LINEAR(fabs(min)*mdBrange - mdBrange);
+                  if (min < 0.0)
+                     min = 0.0;
+                  min *= sign;
+               }
+               sign = (max >= 0 ? 1 : -1);
 
-         vruler->SetUnits(wxT(""));
-
-         float min, max;
-         wt->GetDisplayBounds(&min, &max);
-
-         if(wt->GetLastDisplay()==WaveTrack::WaveformDisplay)
-         {
-            // do a translation into the WaveTrack::WaveformDBDisplay space
-            wt->SetDisplay(WaveTrack::WaveformDBDisplay); // this makes the last display not WaveformDisplay
-            float sign = (min >= 0 ? 1 : -1);
-            if (min != 0.) {
-               min = (LINEAR_TO_DB(fabs(min)) + mdBrange) / mdBrange;
-               if (min < 0.0)
-                  min = 0.0;
-               min *= sign;
-            }
-            sign = (max >= 0 ? 1 : -1);
-
-            if (max != 0.) {
-               max = (LINEAR_TO_DB(fabs(max)) + mdBrange) / mdBrange;
-               if (max < 0.0)
-                  max = 0.0;
-               max *= sign;
-            }
-            wt->SetDisplayBounds(min, max);
-         }
-
-         if (max > 0) {
-            int top = 0;
-            float topval = 0;
-            int bot = rect.height;
-            float botval = -mdBrange;
-
-            if (min < 0) {
-               bot = top + (int)((max / (max-min))*(bot-top));
-               min = 0;
+               if (max != 0.) {
+                  max = DB_TO_LINEAR(fabs(max)*mdBrange - mdBrange);
+                  if (max < 0.0)
+                     max = 0.0;
+                  max *= sign;
+               }
+               wt->SetDisplayBounds(min, max);
             }
 
-            if (max > 1) {
-               top += (int)((max-1)/(max-min) * (bot-top));
-               max = 1;
-            }
-
-            if (max < 1 && max > 0)
-               topval = -((1-max)*mdBrange);
-
-            if (min > 0) {
-               botval = -((1-min)*mdBrange);
-            }
-
-            vruler->SetBounds(rect.x, rect.y+top+1, rect.x + rect.width, rect.y + bot-1);
+            vruler->SetBounds(rect.x, rect.y + 1, rect.x + rect.width, rect.y + rect.height - 1);
             vruler->SetOrientation(wxVERTICAL);
-            vruler->SetRange(topval, botval);
-          }
-         else
-            vruler->SetBounds(0.0, 0.0, 0.0, 0.0); // A.C.H I couldn't find a way to just disable it?
-         vruler->SetFormat(Ruler::RealLogFormat);
-         vruler->SetLabelEdges(true);
-         vruler->SetLog(false);
+            vruler->SetRange(max, min);
+            vruler->SetFormat(Ruler::RealFormat);
+            vruler->SetUnits(wxT(""));
+            vruler->SetLabelEdges(false);
+            vruler->SetLog(false);
+         }
+         else {
+            wxASSERT(scaleType == WaveformSettings::stLogarithmic);
+            scaleType = WaveformSettings::stLogarithmic;
+
+            vruler->SetUnits(wxT(""));
+
+            float min, max;
+            wt->GetDisplayBounds(&min, &max);
+
+            if (wt->GetLastScaleType() != scaleType)
+            {
+               // do a translation into the dB space
+               wt->SetLastScaleType(scaleType);
+               float sign = (min >= 0 ? 1 : -1);
+               if (min != 0.) {
+                  min = (LINEAR_TO_DB(fabs(min)) + mdBrange) / mdBrange;
+                  if (min < 0.0)
+                     min = 0.0;
+                  min *= sign;
+               }
+               sign = (max >= 0 ? 1 : -1);
+
+               if (max != 0.) {
+                  max = (LINEAR_TO_DB(fabs(max)) + mdBrange) / mdBrange;
+                  if (max < 0.0)
+                     max = 0.0;
+                  max *= sign;
+               }
+               wt->SetDisplayBounds(min, max);
+            }
+
+            if (max > 0) {
+               int top = 0;
+               float topval = 0;
+               int bot = rect.height;
+               float botval = -mdBrange;
+
+               if (min < 0) {
+                  bot = top + (int)((max / (max - min))*(bot - top));
+                  min = 0;
+               }
+
+               if (max > 1) {
+                  top += (int)((max - 1) / (max - min) * (bot - top));
+                  max = 1;
+               }
+
+               if (max < 1 && max > 0)
+                  topval = -((1 - max)*mdBrange);
+
+               if (min > 0) {
+                  botval = -((1 - min)*mdBrange);
+               }
+
+               vruler->SetBounds(rect.x, rect.y + top + 1, rect.x + rect.width, rect.y + bot - 1);
+               vruler->SetOrientation(wxVERTICAL);
+               vruler->SetRange(topval, botval);
+            }
+            else
+               vruler->SetBounds(0.0, 0.0, 0.0, 0.0); // A.C.H I couldn't find a way to just disable it?
+            vruler->SetFormat(Ruler::RealLogFormat);
+            vruler->SetLabelEdges(true);
+            vruler->SetLog(false);
+         }
       }
-      else if (display == WaveTrack::Spectrum) {
+      else {
+         wxASSERT(display == WaveTrack::Spectrum);
          switch (wt->GetSpectrogramSettings().scaleType) {
          default:
             wxASSERT(false);
@@ -1416,9 +1421,10 @@ void TrackArtist::DrawWaveform(WaveTrack *track,
                                bool drawEnvelope,
                                bool bigPoints,
                                bool drawSliders,
-                               bool dB,
                                bool muted)
 {
+   const bool dB = !track->GetWaveformSettings().isLinear();
+
    DrawBackgroundWithSelection(&dc, rect, track, blankSelectedBrush, blankBrush,
          selectedRegion, zoomInfo);
 

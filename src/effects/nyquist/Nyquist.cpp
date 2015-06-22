@@ -789,8 +789,7 @@ bool NyquistEffect::ProcessOne()
             type = wxT("wave");
             switch (((WaveTrack *) mCurTrack[0])->GetDisplay())
             {
-               case WaveTrack::WaveformDisplay: view = wxT("\"Waveform\""); break;
-               case WaveTrack::WaveformDBDisplay: view = wxT("\"Waveform (dB)\""); break;
+               case WaveTrack::Waveform: view = wxT("\"Waveform\""); break;
                case WaveTrack::Spectrum: view = wxT("\"Spectrum\""); break;
                default: view = wxT("NIL"); break;
             }

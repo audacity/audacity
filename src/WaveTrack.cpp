@@ -74,7 +74,7 @@ WaveTrack *TrackFactory::NewWaveTrack(sampleFormat format, double rate)
    return new WaveTrack(mDirManager, format, rate);
 }
 
-WaveTrack::WaveTrack(DirManager *projDirManager, sampleFormat format, double rate):
+WaveTrack::WaveTrack(DirManager *projDirManager, sampleFormat format, double rate) :
    Track(projDirManager)
    , mpSpectrumSettings(0)
    , mpWaveformSettings(0)
@@ -103,7 +103,7 @@ WaveTrack::WaveTrack(DirManager *projDirManager, sampleFormat format, double rat
    mDisplayNumLocations = 0;
    mDisplayLocations = NULL;
    mDisplayNumLocationsAllocated = 0;
-   mLastDisplay = -1;
+   mLastScaleType = -1;
    mAutoSaveIdent = 0;
 }
 
@@ -116,7 +116,7 @@ WaveTrack::WaveTrack(WaveTrack &orig):
         ? new WaveformSettings(*orig.mpWaveformSettings) : 0)
 {
    mDisplay = FindDefaultViewMode();
-   mLastDisplay = -1;
+   mLastScaleType = -1;
 
    mLegacyProjectFileOffset = 0;
 
@@ -211,7 +211,7 @@ WaveTrack::WaveTrackDisplay WaveTrack::FindDefaultViewMode()
    if (viewMode < 0) {
       int oldMode;
       gPrefs->Read(wxT("/GUI/DefaultViewMode"), &oldMode,
-         int(WaveTrack::WaveformDisplay));
+         int(WaveTrack::Waveform));
       viewMode = WaveTrack::ConvertLegacyDisplayValue(oldMode);
    }
 
@@ -238,9 +238,12 @@ WaveTrack::ConvertLegacyDisplayValue(int oldValue)
    switch (oldValue) {
    default:
    case Waveform:
-      newValue = WaveTrack::WaveformDisplay; break;
+   case WaveformDB:
+      newValue = WaveTrack::Waveform; break;
+      /*
    case WaveformDB:
       newValue = WaveTrack::WaveformDBDisplay; break;
+      */
    case Spectrogram:
    case SpectrogramLogF:
    case Pitch:
@@ -261,8 +264,7 @@ WaveTrack::ValidateWaveTrackDisplay(WaveTrackDisplay display)
 {
    switch (display) {
       // non-obsolete codes
-   case WaveformDisplay:
-   case WaveformDBDisplay:
+   case Waveform:
    case Spectrum:
       return display;
 
@@ -272,6 +274,9 @@ WaveTrack::ValidateWaveTrackDisplay(WaveTrackDisplay display)
    case obsolete3: // was SpectralSelectionLogDisplay
    case obsolete4: // was PitchDisplay
       return Spectrum;
+
+   case obsolete5: // was WaveformDBDisplay
+      return Waveform;
 
       // codes out of bounds (from future prefs files?)
    default:

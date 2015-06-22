@@ -47,11 +47,13 @@ WaveformPrefs::~WaveformPrefs()
 enum {
    ID_DEFAULTS = 10001,
    ID_APPLY,
+
+   ID_SCALE,
 };
 
 void WaveformPrefs::Populate()
 {
-   // Create control objects
+   mScaleChoices = WaveformSettings::GetScaleNames();
 
    //------------------------- Main section --------------------
    // Now construct the GUI itself.
@@ -77,6 +79,9 @@ void WaveformPrefs::PopulateOrExchange(ShuttleGui & S)
       {
          S.StartTwoColumn();
          {
+            S.Id(ID_SCALE).TieChoice(_("S&cale") + wxString(wxT(":")),
+               *(int*)&mTempSettings.scaleType,
+               &mScaleChoices);
          }
          S.EndTwoColumn();
       }
@@ -151,12 +156,9 @@ bool WaveformPrefs::Apply()
    }
 
    if (mWt && isOpenPage) {
-      // Future:  open page will determine view type
-      /*
       mWt->SetDisplay(WaveTrack::Waveform);
       if (partner)
          partner->SetDisplay(WaveTrack::Waveform);
-         */
    }
 
    return true;
@@ -194,6 +196,9 @@ void WaveformPrefs::OnApply(wxCommandEvent &)
 }
 
 BEGIN_EVENT_TABLE(WaveformPrefs, PrefsPanel)
+
+EVT_CHOICE(ID_SCALE, WaveformPrefs::OnControl)
+
 EVT_CHECKBOX(ID_DEFAULTS, WaveformPrefs::OnDefaults)
 EVT_BUTTON(ID_APPLY, WaveformPrefs::OnApply)
 END_EVENT_TABLE()

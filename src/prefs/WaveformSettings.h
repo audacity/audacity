@@ -11,6 +11,8 @@ Paul Licameli
 #ifndef __AUDACITY_WAVEFORM_SETTINGS__
 #define __AUDACITY_WAVEFORM_SETTINGS__
 
+class wxArrayString;
+
 class WaveformSettings
 {
 public:
@@ -42,5 +44,20 @@ public:
    void LoadPrefs();
    void SavePrefs();
    void Update();
+
+   enum ScaleType {
+      stLinear,
+      stLogarithmic,
+
+      stNumScaleTypes,
+   };
+
+   static void InvalidateNames(); // in case of language change
+   static const wxArrayString &GetScaleNames();
+
+   ScaleType scaleType;
+
+   // Convenience
+   bool isLinear() const { return stLinear == scaleType; }
 };
 #endif

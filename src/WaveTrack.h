@@ -420,10 +420,11 @@ class AUDACITY_DLL_API WaveTrack: public Track {
 
       // DO NOT REORDER OLD VALUES!  Replace obsoletes with placeholders.
 
-      WaveformDisplay = 0,
-      MinDisplay = WaveformDisplay,
+      Waveform = 0,
+      MinDisplay = Waveform,
 
-      WaveformDBDisplay,
+      obsolete5, // was WaveformDBDisplay
+
       Spectrum,
 
       obsolete1, // was SpectrumLogDisplay
@@ -447,14 +448,15 @@ class AUDACITY_DLL_API WaveTrack: public Track {
    // Handle restriction of range of values of the enum from future versions
    static WaveTrackDisplay ValidateWaveTrackDisplay(WaveTrackDisplay display);
 
-   void SetDisplay(WaveTrackDisplay display) {
-      if (mDisplay < Spectrum)
-         // remember last display mode for wave and wavedb so they can remap the vertical ruler
-         mLastDisplay = mDisplay;
-      mDisplay = display;
+   int GetLastScaleType() { return mLastScaleType; }
+   void SetLastScaleType(int scaleType)
+   {
+      // remember last display mode for wave and wavedb so vertical ruler can remap
+      mLastScaleType = scaleType;
    }
+
    WaveTrackDisplay GetDisplay() const { return mDisplay; }
-   int GetLastDisplay() {return mLastDisplay;}
+   void SetDisplay(WaveTrackDisplay display) { mDisplay = display; }
 
    void GetDisplayBounds(float *min, float *max);
    void SetDisplayBounds(float min, float max);
@@ -480,7 +482,7 @@ class AUDACITY_DLL_API WaveTrack: public Track {
    float         mDisplayMin;
    float         mDisplayMax;
    WaveTrackDisplay mDisplay;
-   int           mLastDisplay; // last display mode
+   int           mLastScaleType; // last scale type choice
    int           mDisplayNumLocations;
    int           mDisplayNumLocationsAllocated;
    Location*       mDisplayLocations;
