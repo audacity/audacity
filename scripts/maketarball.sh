@@ -128,7 +128,6 @@ function slimtree {
    myrmrvf $1 lib-src/expat lib-src/libflac lib-src/libid3tag
    myrmrvf $1 lib-src/libmad lib-src/libogg
    myrmrvf $1 lib-src/libvorbis lib-src/soundtouch
-   myrmrvf $1 lib-src/libvamp lib-src/lv2
    # these bindings aren't built by default, we don't need them
    myrmrvf $1 lib-src/portaudio-v19/bindings/
    printf "Done\n"
