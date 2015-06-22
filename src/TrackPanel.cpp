@@ -783,9 +783,19 @@ void TrackPanel::BuildMenus(void)
    }
    mWaveTrackMenu->AppendSeparator();
 
+#ifdef EXPERIMENTAL_CASCADE_TCP_MENU
+   mWaveTrackMenu->Append(0, _("&Format"), mFormatMenu);
+#else
    mWaveTrackMenu->Append(0, _("Set Sample &Format"), mFormatMenu);
+#endif
+
    mWaveTrackMenu->AppendSeparator();
+
+#ifdef EXPERIMENTAL_CASCADE_TCP_MENU
+   mWaveTrackMenu->Append(0, _("&Rate"), mRateMenu);
+#else
    mWaveTrackMenu->Append(0, _("Set Rat&e"), mRateMenu);
+#endif
 
    /* build the pop-down menu used on note (MIDI) tracks */
    mNoteTrackMenu = new wxMenu();
@@ -804,7 +814,11 @@ void TrackPanel::BuildMenus(void)
    mTimeTrackMenu->Append(OnTimeTrackLinID, _("&Linear"));
    mTimeTrackMenu->Append(OnTimeTrackLogID, _("L&ogarithmic"));
    mTimeTrackMenu->AppendSeparator();
+#ifdef EXPERIMENTAL_CASCADE_TCP_MENU
+   mTimeTrackMenu->Append(OnSetTimeTrackRangeID, _("Set &Range..."));
+#else
    mTimeTrackMenu->Append(OnSetTimeTrackRangeID, _("Set Ra&nge..."));
+#endif
    mTimeTrackMenu->AppendCheckItem(OnTimeTrackLogIntID, _("Logarithmic &Interpolation"));
 
    mRulerWaveformMenu = new wxMenu();
@@ -820,7 +834,11 @@ void TrackPanel::BuildMenus(void)
 
 void TrackPanel::BuildCommonDropMenuItems(wxMenu * menu)
 {
+#ifdef EXPERIMENTAL_CASCADE_TCP_MENU
+   menu->Append(OnSetNameID, _("&Name..."));
+#else
    menu->Append(OnSetNameID, _("N&ame..."));
+#endif
    menu->AppendSeparator();
 
    wxMenu *theMenu;
