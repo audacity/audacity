@@ -8992,12 +8992,12 @@ void TrackPanel::OnSetDisplay(wxCommandEvent & event)
    id -= OnWaveformID;
    WaveTrack *wt = (WaveTrack *) mPopupMenuTarget;
    if (wt->GetDisplay() != id) {
-      wt->SetDisplay(id);
+      wt->SetDisplay(WaveTrack::WaveTrackDisplay(id));
       mTrackArtist->InvalidateSpectrumCache(wt);
 
       WaveTrack *l = (WaveTrack *) wt->GetLink();
       if (l) {
-         l->SetDisplay(id);
+         l->SetDisplay(WaveTrack::WaveTrackDisplay(id));
          mTrackArtist->InvalidateSpectrumCache(l);
       }
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
