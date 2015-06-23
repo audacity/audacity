@@ -1079,6 +1079,13 @@ bool LV2Effect::PopulateUI(wxWindow *parent)
                           mUseGUI,
                           true);
 
+   // Until I figure out where to put the "Duration" control in the
+   // graphical editor, force usage of plain editor.
+   if (GetType() == EffectTypeGenerate)
+   {
+      mUseGUI = false;
+   }
+
    if (mUseGUI)
    {
       mUseGUI = BuildFancy();
