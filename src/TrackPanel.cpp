@@ -1732,7 +1732,7 @@ void TrackPanel::SetCursorAndTipWhenInLabel( Track * t,
 {
    if (event.m_x >= GetVRulerOffset() &&
          (t->GetKind() == Track::Wave) &&
-         ( ((WaveTrack *) t)->GetDisplay() <= WaveTrack::SpectralSelectionLogDisplay) )
+         ( ((WaveTrack *) t)->GetDisplay() != WaveTrack::PitchDisplay) )
    {
       *ppTip = _("Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom region.");
       SetCursor(event.ShiftDown()? *mZoomOutCursor : *mZoomInCursor);
@@ -3854,8 +3854,8 @@ void TrackPanel::ForwardEventToWaveTrackEnvelope(wxMouseEvent & event)
 
    // AS: If we're using the right type of display for envelope operations
    //  ie one of the Wave displays
-   if (display <= 1) {
-      bool dB = (display == 1);
+   const bool dB = (display == WaveTrack::WaveformDBDisplay);
+   if (dB || (display == WaveTrack::WaveformDisplay)) {
       bool needUpdate;
 
       // AS: Then forward our mouse event to the envelope.
@@ -4629,7 +4629,7 @@ void TrackPanel::HandleVZoomClick( wxMouseEvent & event )
 
    // don't do anything if track is not wave or Spectrum/log Spectrum
    if (((mCapturedTrack->GetKind() == Track::Wave) &&
-            (((WaveTrack*)mCapturedTrack)->GetDisplay() <= WaveTrack::SpectralSelectionLogDisplay))
+            (((WaveTrack*)mCapturedTrack)->GetDisplay() != WaveTrack::PitchDisplay))
 #ifdef USE_MIDI
             || mCapturedTrack->GetKind() == Track::Note
 #endif
@@ -7016,11 +7016,13 @@ bool TrackPanel::HitTestEnvelope(Track *track, wxRect &r, wxMouseEvent & event)
    int displayType = wavetrack->GetDisplay();
    // Not an envelope hit, unless we're using a type of wavetrack display
    // suitable for envelopes operations, ie one of the Wave displays.
-   if ( displayType > 1)
+   const bool dB = (displayType == WaveTrack::WaveformDBDisplay);
+   if (!
+      (dB || (displayType == WaveTrack::WaveformDisplay))
+   )
       return false;  // No envelope, not a hit, so return.
 
    // Get envelope point, range 0.0 to 1.0
-   bool dB = (displayType == 1);
    double envValue = envelope->GetValueAtX(
       event.m_x, r, mViewInfo->h, mViewInfo->zoom );
 
@@ -8979,12 +8981,29 @@ void TrackPanel::OnMergeStereo(wxCommandEvent & WXUNUSED(event))
 ///  wxT("spectrum"), wxT("pitch") };
 void TrackPanel::OnSetDisplay(wxCommandEvent & event)
 {
-   int id = event.GetId();
-   wxASSERT(id >= OnWaveformID && id <= OnPitchID);
+   int idInt = event.GetId();
+   wxASSERT(idInt >= OnWaveformID && idInt <= OnPitchID);
    wxASSERT(mPopupMenuTarget
             && mPopupMenuTarget->GetKind() == Track::Wave);
 
-   id -= OnWaveformID;
+   WaveTrack::WaveTrackDisplay id;
+   switch (idInt) {
+   default:
+   case OnWaveformID:
+      id = WaveTrack::WaveformDisplay; break;
+   case OnWaveformDBID:
+      id = WaveTrack::WaveformDBDisplay; break;
+   case OnSpectrumID:
+      id = WaveTrack::SpectralSelectionDisplay; break;
+   case OnSpectrumLogID:
+      id = WaveTrack::SpectralSelectionLogDisplay; break;
+   case OnSpectralSelID:
+      id = WaveTrack::SpectralSelectionDisplay; break;
+   case OnSpectralSelLogID:
+      id = WaveTrack::SpectralSelectionLogDisplay; break;
+   case OnPitchID:
+      id = WaveTrack::PitchDisplay; break;
+   }
    WaveTrack *wt = (WaveTrack *) mPopupMenuTarget;
    if (wt->GetDisplay() != id) {
       wt->SetDisplay(WaveTrack::WaveTrackDisplay(id));

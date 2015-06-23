@@ -56,23 +56,29 @@ void TracksPrefs::Populate()
    mSoloChoices.Add(_("None"));
 
 
-   // Keep the same order as in TrackPanel.cpp menu: OnWaveformID, OnWaveformDBID, OnSpectrumID, OnSpectrumLogID, 
-   // OnSpectralSelID, OnSpectralSelLogID, OnPitchID
-   mViewCodes.Add(0);
-   mViewCodes.Add(1);
-   mViewCodes.Add(2);
-   mViewCodes.Add(3);
-   mViewCodes.Add(4);
-   mViewCodes.Add(5);
-   mViewCodes.Add(6);
+   // Keep view choices and codes in proper correspondence --
+   // we don't display them by increasing integer values.
 
    mViewChoices.Add(_("Waveform"));
+   mViewCodes.Add(int(WaveTrack::WaveformDisplay));
+
    mViewChoices.Add(_("Waveform (dB)"));
+   mViewCodes.Add(int(WaveTrack::WaveformDBDisplay));
+
    mViewChoices.Add(_("Spectrogram"));
+   mViewCodes.Add(int(WaveTrack::SpectrumDisplay));
+
    mViewChoices.Add(_("Spectrogram log(f)"));
+   mViewCodes.Add(int(WaveTrack::SpectrumLogDisplay));
+
    mViewChoices.Add(_("Spectral Selection"));
+   mViewCodes.Add(int(WaveTrack::SpectralSelectionDisplay));
+
    mViewChoices.Add(_("Spectral Selection log(f)"));
+   mViewCodes.Add(int(WaveTrack::SpectralSelectionLogDisplay));
+
    mViewChoices.Add(_("Pitch (EAC)"));
+   mViewCodes.Add(int(WaveTrack::PitchDisplay));
 
    //------------------------- Main section --------------------
    // Now construct the GUI itself.
