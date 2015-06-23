@@ -404,20 +404,40 @@ class AUDACITY_DLL_API WaveTrack: public Track {
    // and will be taken out of the WaveTrack class:
    //
 
-   enum {
-      WaveformDisplay,
+   enum WaveTrackDisplay {
+
+      // DO NOT REORDER OLD VALUES!  Replace obsoletes with placeholders.
+
+      WaveformDisplay = 0,
+      MinDisplay = WaveformDisplay,
+
       WaveformDBDisplay,
       SpectrumDisplay,
       SpectrumLogDisplay,
       SpectralSelectionDisplay,
       SpectralSelectionLogDisplay,
       PitchDisplay,
-      NoDisplay            // Preview track has no display
-   } WaveTrackDisplay;
 
-   void SetDisplay(int display) {
-      if(mDisplay<2)
-         mLastDisplay=mDisplay;    // remember last display mode for wave and wavedb so they can remap
+      // Add values here, and update MaxDisplay.
+
+      MaxDisplay = PitchDisplay,
+
+      NoDisplay,            // Preview track has no display
+   };
+
+   // Read appropriate value from preferences
+   static WaveTrackDisplay FindDefaultViewMode();
+
+   // Handle remapping of enum values from 2.1.0 and earlier
+   static WaveTrackDisplay ConvertLegacyDisplayValue(int oldValue);
+
+   // Handle restriction of range of values of the enum from future versions
+   static WaveTrackDisplay ValidateWaveTrackDisplay(WaveTrackDisplay display);
+
+   void SetDisplay(WaveTrackDisplay display) {
+      if(mDisplay < 2)
+         // remember last display mode for wave and wavedb so they can remap the vertical ruler
+         mLastDisplay = mDisplay;
       mDisplay = display;
       if( mDisplay == SpectralSelectionDisplay ){
       }
@@ -450,7 +470,7 @@ class AUDACITY_DLL_API WaveTrack: public Track {
    //
    float         mDisplayMin;
    float         mDisplayMax;
-   int           mDisplay; // type of display, from WaveTrackDisplay enum
+   WaveTrackDisplay mDisplay;
    int           mLastDisplay; // last display mode
    int           mDisplayNumLocations;
    int           mDisplayNumLocationsAllocated;

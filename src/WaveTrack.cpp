@@ -84,7 +84,7 @@ WaveTrack::WaveTrack(DirManager *projDirManager, sampleFormat format, double rat
       rate = GetActiveProject()->GetRate();
    }
 
-   gPrefs->Read(wxT("/GUI/DefaultViewMode"), &mDisplay, 0);
+   mDisplay = FindDefaultViewMode();
 
    mLegacyProjectFileOffset = 0;
 
@@ -106,8 +106,8 @@ WaveTrack::WaveTrack(DirManager *projDirManager, sampleFormat format, double rat
 WaveTrack::WaveTrack(WaveTrack &orig):
    Track(orig)
 {
-   gPrefs->Read(wxT("/GUI/DefaultViewMode"), &mDisplay, 0);
-   mLastDisplay=-1;
+   mDisplay = FindDefaultViewMode();
+   mLastDisplay = -1;
 
    mLegacyProjectFileOffset = 0;
 
@@ -177,6 +177,73 @@ void WaveTrack::SetOffset(double o)
    }
 
    mOffset = o;
+}
+
+//static
+WaveTrack::WaveTrackDisplay WaveTrack::FindDefaultViewMode()
+{
+   // PRL:  Bugs 1043, 1044
+   // 2.1.1 writes a new key for this preference, which got new values,
+   // to avoid confusing version 2.1.0 if it reads the preference file afterwards.
+   // Prefer the new preference key if it is present
+
+   WaveTrack::WaveTrackDisplay viewMode;
+   gPrefs->Read(wxT("/GUI/DefaultViewModeNew"), (int*)&viewMode, -1);
+
+   // Default to the old key only if not, default the value if it's not there either
+   wxASSERT(WaveTrack::MinDisplay >= 0);
+   if (viewMode < 0) {
+      int oldMode;
+      gPrefs->Read(wxT("/GUI/DefaultViewMode"), &oldMode,
+         int(WaveTrack::WaveformDisplay));
+      viewMode = WaveTrack::ConvertLegacyDisplayValue(oldMode);
+   }
+
+   // Now future-proof 2.1.1 against a recurrence of this sort of bug!
+   viewMode = WaveTrack::ValidateWaveTrackDisplay(viewMode);
+
+   return viewMode;
+}
+
+// static
+WaveTrack::WaveTrackDisplay
+WaveTrack::ConvertLegacyDisplayValue(int oldValue)
+{
+   // Remap old values.
+   enum OldValues {
+      Waveform,
+      WaveformDB,
+      Spectrogram,
+      SpectrogramLogF,
+      Pitch,
+   };
+
+   WaveTrackDisplay newValue;
+   switch (oldValue) {
+   default:
+   case Waveform:
+      newValue = WaveTrack::WaveformDisplay; break;
+   case WaveformDB:
+      newValue = WaveTrack::WaveformDBDisplay; break;
+   case Spectrogram:
+      newValue = WaveTrack::SpectrumDisplay; break;
+   case SpectrogramLogF:
+      newValue = WaveTrack::SpectrumLogDisplay; break;
+   case Pitch:
+      newValue = WaveTrack::PitchDisplay; break;
+   }
+   return newValue;
+}
+
+// static
+WaveTrack::WaveTrackDisplay
+WaveTrack::ValidateWaveTrackDisplay(WaveTrackDisplay display)
+{
+   // To do, in future:  detect obsolete values between min and max
+   if (display >= int(MinDisplay) && display <= int(MaxDisplay))
+      return display;
+   else
+      return MinDisplay;
 }
 
 void WaveTrack::GetDisplayBounds(float *min, float *max)
