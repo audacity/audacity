@@ -169,4 +169,9 @@
       <Filter>Source Files</Filter>
     </msgfmt>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\locale\audacity.pot">
+      <Filter>Source Files</Filter>
+    </None>
+  </ItemGroup>
 </Project>

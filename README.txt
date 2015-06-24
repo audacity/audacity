@@ -20,12 +20,12 @@ http://creativecommons.org/licenses/by/3.0/legalcode .
 
 "Audacity" is a registered trademark of Dominic Mazzoni.
 
-Version 2.1.0 
+Version 2.1.1 
 
 Contents of this README:
 
 1.  Licensing
-2.  Changes since version 2.0.6 
+2.  Changes since version 2.1.0 
 3.  Known Issues at Release
 4.  Source Code, Libraries and Additional Copyright Information
 5.  Compilation Instructions
@@ -57,44 +57,40 @@ to http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or write to
 
 -------------------------------------------------------------------------------
 
-2. Changes since version 2.0.6: 
+2. Changes since version 2.1.0: 
 
 Changes and Improvements:
 
  * Effects:
-   * LADSPA, VST and Audio Unit (OS X) effects now support real-time preview, 
-      save/load of user presets and saving effect settings across sessions. 
-      Note: Real-time preview does not yet support latency compensation.
-   * VST effects now support import/export of FXB preset banks. 
-   * Shell VST effects that host multiple plugins are now supported.
-   * All Effect Menu items (built-in or plugin) can now be used in a Chain. 
-   * Items in the Effect, Generate or Analyze Menus can be sorted or grouped
-      by name, publisher or class of effect.   
-   * Noise Removal is improved and renamed to "Noise Reduction".  
-   * Change Speed has new time controls for current and new length. You can 
-      now enter the speed change as a multiplier e.g. "2" is twice as fast.  
-   * New "Crossfade Tracks" effect can be used for crossfading two tracks. 
-      This replaces Cross Fade In and Cross Fade Out.  	
-   * Nyquist Prompt and most shipped Nyquist effects now have Preview button. 
+   * Built in effects now support presets.
+   * Can now add/remove effects from Generate and Effects menus.
+   * New version of Vocal Removal Effect.
+   * Classic Filters' now included as an opt-in effect.
 
  * Interface:  
-   * Redesigned Meter Toolbars: The default shows separate Record and Playback   
-      Meters, half-height so they can be wider while docked, in gradient style. 
-   * A frequency selection can now be made (and spectral edit effects applied
-      to those frequencies) when in a spectrogram view. You can also create
-      or adjust frequency selections in a new "Spectral Selection Toolbar"
-      (available at View > Toolbars).  
-   * Transcription Toolbar (Play-at-speed) can now loop play and cut-preview. 
-   * Timer Record now saves recordings automatically into an existing project.  
-   * New Armenian translation. 
+   * Much faster editing with larger projects, thanks to a faster method for 
+     storing the autorecovery file.
+   * Performance improvements for Draw Tool and zooming of Spectrogram views.
+   * Zero-padding Spectrograms Preference smooths the image for short window sizes.
+   * Scrubbing and Seeking, including backwards play. 
+   * Quick-Play from timeline enhancements Timeline, particularly for looping.
+   * (Windows) Language of Audacity user interface is now set in installer.
+   * More VI usability enhancements, track focus & navigation.
+   
+ * Other Changes:   
+   * Upgraded to Nyquist 3.0.9 and FLAC lib.
+   * Upgraded LV2 libs, LV2 GUIs on Linux, LV2 factory Presets.
+   * Crash report integration.
+   * Modules enabled. Mod Nyqbench available as an experimental module 
+     (but not in the default download).
 
  * Operating system and sound device support:
    * (Windows) Audacity 2.1.0 requires Windows XP SP3 (32-bit) or XP SP2
       (64-bit), Vista, Windows 7, Windows 8 or 8.1. 
-   * (Windows) Audacity is now compiled using Visual Studio 2013.  
-   * (Windows) Recording with WASAPI host now includes experimental support 
+   * (Windows) Audacity is compiled using Visual Studio 2013.  
+   * (Windows) Recording with WASAPI host ncludes experimental support 
       for physical inputs (up to 24-bit depth) as well as loopback recording.  
-   * (OS X) 10.10 (Yosemite) is now supported including Apple Audio Units.
+   * (OS X) 10.10 (Yosemite) is supported including Apple Audio Units.
    * Please report any issues with WASAPI recording/playback or Yosemite 
       to http://audacity.sourceforge.net/contact/#feedback .
    * (Linux Ubuntu) Under Unity, keyboard shortcuts are not visible in the
@@ -103,46 +99,46 @@ Changes and Improvements:
      UBUNTU_MENUPROXY=0 environment variable. Audacity compiled from source
      will ship with src/audacity.desktop.in set to UBUNTU_MENUPROXY=0 but it
      will remain up to distributions to use this desktop file. 
+   * Work has begun on wx3 support, however for 2.1.1 Audacity must use 2.8.12.
 
 Bug fixes:
 
+ * Crashes:
+   * Crash using Undo while dragging sample points
+   * Crash using File > Close on project window when Screenshot Tools is open.
+   * Crash closing Track Gain or Pan adjustment box on Mac.
+   * Crash closing project window between save project dialogues
+   * SPACE cannot be used/may crash in context menus that have a checkbox.
+   * FFmpeg Custom Export: Crashes importing presets.
+   * TAL VST (but not other VST's) crashes if previewing built-in effect
+
  * Interface:
-   * Typing "j" or "k" in a label track activated the "move cursor" shortcut.
-   * Spectrogram log (f) view displayed incorrectly until vertically zoomed.
-   * Fixed crash after zooming out on vertical scale beyond +/-1.0. 
-   * Selections made with Selection Toolbar were not restored after Undo.
-   * Undo could fail silently if a selection included/touched a clip boundary.
+   * LV2 effects don't use parameters when using chains.
+   * Built in Generators not usable in Chains.
+   * Plot Spectrum: Can't change values without losing focus.
+   * Changing Windows default devices in Audacity session breaks recording 
+     or playback until rescan.
+   * Track dropdown menu settings may affect other tracks
+   * Slight mismatch of vertical scale with linear spectrogram view
+   * RTP effect Play/Stop button remains deactivated after built-in preview ends
+   * Contrast: "Move forward or backward thru active windows" does not refocus 
+     Contrast.
+   * LADSPA generate plug-ins fail when white space selected.
 
  * Imports and Exports 
-   * If there were invalid FFmpeg libs in system PATH this prevented Audacity
-      recognising the installed FFmpeg or the FFmpeg specified in audacity.cfg.
+   * Confusing behaviour importing / exporting AU presets, different to VST 
+     preset import/ export
 
  * Mac OS X:
-   * Fix uninitialized buffer - this should correct playback buzz or crackle
-      where the upper of multiple tracks started with or contained white space.   
-   * Device names were corrupted when using system language other than English. 
-   * Fixed crashes using (external program). 
-   * Waves v9 Audio Units should now work correctly.
-
- * GNU/Linux: 
-   * Fix "Audacity already running" error when using the command-line or 
-      context menu to open multiple or further files. 
-   * Fix segfault exporting an FFmpeg format to an unwritable folder.
-   * Fix silent failure exporting FFmpeg, MP2 or OGG to an unwritable folder.
-   * Fix ENTER activated an effect when OK button was greyed out.  
-
-
- * Addendum:  
-   * The previous Audacity 2.0.6 version fixed an issue that projects did not
-      reopen correctly if they contained tracks having 2^31 samples or greater
-      of audio (just over 13.5 hours at 44100 Hz).
-
+   * Apple Audio Units silently apply an imported preset
+ 
+   
 -------------------------------------------------------------------------------
 
-3. Known Issues in 2.1.0:
+3. Known Issues in 2.1.1:
 
-For known issues at release of 2.1.0 please see:
-  http://wiki.audacityteam.org/wiki/Release_Notes_2.1.0#known
+For known issues at release of 2.1.1 please see:
+  http://wiki.audacityteam.org/wiki/Release_Notes_2.1.1#known
 
 Please also check:
   http://wiki.audacityteam.org/index.php?title=Known_Issues
@@ -301,7 +297,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 5. Compilation instructions
 
-First you must download wxWidgets. Audacity 2.1.0 requires wxWidgets 2.8.12
+First you must download wxWidgets. Audacity 2.1.1 requires wxWidgets 2.8.12
 from:
 
    http://www.wxWidgets.org/ .
@@ -352,6 +348,65 @@ or ask at:
 
 6.  Previous Changes going back to version 1.1.0
 
+Changes in version 2.1.0: 
+
+Bug fixes:
+
+ * Interface:
+   * Typing "j" or "k" in a label track activated the "move cursor" shortcut.
+   * Spectrogram log (f) view displayed incorrectly until vertically zoomed.
+   * Fixed crash after zooming out on vertical scale beyond +/-1.0. 
+   * Selections made with Selection Toolbar were not restored after Undo.
+   * Undo could fail silently if a selection included/touched a clip boundary.
+
+ * Imports and Exports 
+   * If there were invalid FFmpeg libs in system PATH this prevented Audacity
+      recognising the installed FFmpeg or the FFmpeg specified in audacity.cfg.
+
+ * Mac OS X:
+   * Fix uninitialized buffer - this should correct playback buzz or crackle
+      where the upper of multiple tracks started with or contained white space.   
+   * Device names were corrupted when using system language other than English. 
+   * Fixed crashes using (external program). 
+   * Waves v9 Audio Units should now work correctly.
+
+ * GNU/Linux: 
+   * Fix "Audacity already running" error when using the command-line or 
+      context menu to open multiple or further files. 
+   * Fix segfault exporting an FFmpeg format to an unwritable folder.
+   * Fix silent failure exporting FFmpeg, MP2 or OGG to an unwritable folder.
+   * Fix ENTER activated an effect when OK button was greyed out.  
+
+   
+Changes and Improvements:
+
+ * Effects:
+   * LADSPA, VST and Audio Unit (OS X) effects now support real-time preview, 
+      save/load of user presets and saving effect settings across sessions. 
+      Note: Real-time preview does not yet support latency compensation.
+   * VST effects now support import/export of FXB preset banks. 
+   * Shell VST effects that host multiple plugins are now supported.
+   * All Effect Menu items (built-in or plugin) can now be used in a Chain. 
+   * Items in the Effect, Generate or Analyze Menus can be sorted or grouped
+      by name, publisher or class of effect.   
+   * Noise Removal is improved and renamed to "Noise Reduction".  
+   * Change Speed has new time controls for current and new length. You can 
+      now enter the speed change as a multiplier e.g. "2" is twice as fast.  
+   * New "Crossfade Tracks" effect can be used for crossfading two tracks. 
+      This replaces Cross Fade In and Cross Fade Out.  	
+   * Nyquist Prompt and most shipped Nyquist effects now have Preview button. 
+
+ * Interface:  
+   * Redesigned Meter Toolbars: The default shows separate Record and Playback   
+      Meters, half-height so they can be wider while docked, in gradient style. 
+   * A frequency selection can now be made (and spectral edit effects applied
+      to those frequencies) when in a spectrogram view. You can also create
+      or adjust frequency selections in a new "Spectral Selection Toolbar"
+      (available at View > Toolbars).  
+   * Transcription Toolbar (Play-at-speed) can now loop play and cut-preview. 
+   * Timer Record now saves recordings automatically into an existing project.  
+   * New Armenian translation. 
+
 Changes in version 2.0.6:
 
 Bug fixes for:
@@ -373,6 +428,8 @@ Bug fixes for:
  * Click or drag on the Timeline after Loop Play continued to loop.
  * Transcription Toolbar did not play slower than 0.1x speed.
  * (Linux) Audacity did not build if python 2 was not available.  
+ * Projects did not reopen correctly if they contained tracks having 
+   2^31 samples or greater of audio (just over 13.5 hours at 44100 Hz).
 
 
 Changes and Improvements:
