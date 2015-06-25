@@ -63,7 +63,6 @@ function build
 function cleanAction
 {
    [ -d "${TARGET_TEMP_DIR}" ] && rm -rf "${TARGET_TEMP_DIR}"
-   rm -f "${TARGET_BUILD_DIR}/hard_limiter_1413.so"
    rm -f "${TARGET_BUILD_DIR}/sc4_1882.so"
 }
 
@@ -87,7 +86,6 @@ function buildAction
    echo >config.h
     
    # Build the 2 standard plugins
-   build hard_limiter_1413 hard_limiter_1413.c
    build sc4_1882 sc4_1882.c util/db.c util/rms.c
 } 
 
