@@ -442,6 +442,7 @@
 		2800FE370FF32566005CA9E5 /* MidiIOPrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2800FE350FF32566005CA9E5 /* MidiIOPrefs.cpp */; };
 		2801127B1943EE0E00D98A16 /* HelpSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 280112791943EE0E00D98A16 /* HelpSystem.cpp */; };
 		2801A6460BF9268700648258 /* ImportQT.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2801A6430BF9268700648258 /* ImportQT.cpp */; };
+		2807832B1B3F1D4700562DAD /* vocalrediso.ny in Resources */ = {isa = PBXBuildFile; fileRef = 2807832A1B3F1D4700562DAD /* vocalrediso.ny */; };
 		280828550A75E0D0000002EF /* LabelDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 280828530A75E0D0000002EF /* LabelDialog.cpp */; };
 		2808285A0A75E0EA000002EF /* Grid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 280828580A75E0EA000002EF /* Grid.cpp */; };
 		2809C4B80BCB7E560006010F /* FileIO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2809C4B60BCB7E560006010F /* FileIO.cpp */; };
@@ -2070,6 +2071,7 @@
 		2803C8B519F35AA000278526 /* PluginManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PluginManager.h; sourceTree = "<group>"; };
 		2803C8B619F35AA000278526 /* TrackPanelListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackPanelListener.h; sourceTree = "<group>"; };
 		2803C8BB19F35B4900278526 /* SelectionBarListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectionBarListener.h; sourceTree = "<group>"; };
+		2807832A1B3F1D4700562DAD /* vocalrediso.ny */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = vocalrediso.ny; path = "../plug-ins/vocalrediso.ny"; sourceTree = SOURCE_ROOT; };
 		2808025C0F32C11F0021001D /* dspprims.lsp */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = text; name = dspprims.lsp; path = ../nyquist/dspprims.lsp; sourceTree = SOURCE_ROOT; };
 		2808025D0F32C11F0021001D /* envelopes.lsp */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = text; name = envelopes.lsp; path = ../nyquist/envelopes.lsp; sourceTree = SOURCE_ROOT; };
 		2808025E0F32C11F0021001D /* equalizer.lsp */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = text; name = equalizer.lsp; path = ../nyquist/equalizer.lsp; sourceTree = SOURCE_ROOT; };
@@ -5306,6 +5308,7 @@
 		28AA28110F267957008AED9E /* plug-ins */ = {
 			isa = PBXGroup;
 			children = (
+				2807832A1B3F1D4700562DAD /* vocalrediso.ny */,
 				28ED7B6E1A1C77B0008A01D9 /* adjustable-fade.ny */,
 				28AA28130F267A2D008AED9E /* beat.ny */,
 				28AA28140F267A2D008AED9E /* clicktrack.ny */,
@@ -6799,6 +6802,7 @@
 				2862CED31AD3900000A53194 /* velocity.lsp in Resources */,
 				285D9EAE1B1ED65F006D11F0 /* crossfadeclips.ny in Resources */,
 				285D9EAF1B1ED65F006D11F0 /* limiter.ny in Resources */,
+				2807832B1B3F1D4700562DAD /* vocalrediso.ny in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
