@@ -43,6 +43,7 @@ const static wxChar *kShippedEffects[] =
    wxT("SpectralEditShelves.ny"),
    wxT("StudioFadeOut.ny"),
    wxT("tremolo.ny"),
+   wxT("vocalrediso.ny"),
    wxT("vocalremover.ny"),
    wxT("vocoder.ny"),
 };
