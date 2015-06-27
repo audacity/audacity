@@ -84,23 +84,6 @@ Changes and Improvements:
    * Modules enabled. Mod Nyqbench available as an experimental module 
      (but not in the default download).
 
- * Operating system and sound device support:
-   * (Windows) Audacity 2.1.0 requires Windows XP SP3 (32-bit) or XP SP2
-      (64-bit), Vista, Windows 7, Windows 8 or 8.1. 
-   * (Windows) Audacity is compiled using Visual Studio 2013.  
-   * (Windows) Recording with WASAPI host ncludes experimental support 
-      for physical inputs (up to 24-bit depth) as well as loopback recording.  
-   * (OS X) 10.10 (Yosemite) is supported including Apple Audio Units.
-   * Please report any issues with WASAPI recording/playback or Yosemite 
-      to http://audacity.sourceforge.net/contact/#feedback .
-   * (Linux Ubuntu) Under Unity, keyboard shortcuts are not visible in the
-     Audacity menus. Keyboard shortcuts are visible if you install the classic
-     GNOME Flashback interface or under Unity if you open Audacity with the
-     UBUNTU_MENUPROXY=0 environment variable. Audacity compiled from source
-     will ship with src/audacity.desktop.in set to UBUNTU_MENUPROXY=0 but it
-     will remain up to distributions to use this desktop file. 
-   * Work has begun on wx3 support, however for 2.1.1 Audacity must use 2.8.12.
-
 Bug fixes:
 
  * Crashes:
