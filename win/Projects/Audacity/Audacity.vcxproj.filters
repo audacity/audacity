@@ -1889,5 +1889,8 @@
     <copy Include="..\..\..\plug-ins\limiter.ny">
       <Filter>plug-ins</Filter>
     </copy>
+    <copy Include="..\..\..\plug-ins\vocalrediso.ny">
+      <Filter>plug-ins</Filter>
+    </copy>
   </ItemGroup>
 </Project>
