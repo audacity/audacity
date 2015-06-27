@@ -98,7 +98,7 @@ wxString LV2EffectsModule::GetPath()
 
 wxString LV2EffectsModule::GetSymbol()
 {
-   return XO("LV2 Effects Module");
+   return XO("LV2 Effects");
 }
 
 wxString LV2EffectsModule::GetName()
