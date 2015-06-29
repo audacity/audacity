@@ -4057,7 +4057,7 @@ msgstr ""
 "Brug 'Eksportér' til en lydfil, der skal åbnes i andre programmer.\n"
 "\n"
 "Komprimerede projektfiler er en god måde at overføre et projekt på\n"
-"online, men der sker et kvalitetstab.\n
+"online, men der sker et kvalitetstab.\n"
 "\n"
 "Der går længere end normalt med at åbne et komprimeret projekt, \n"
 "fordi hvert komprimeret spor skal indlæses.\n"
