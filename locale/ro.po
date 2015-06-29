@@ -5,74 +5,74 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Audacity 2.0.0\n"
+"Project-Id-Version: Audacity 2.0.6\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2015-06-14 16:38+0100\n"
-"PO-Revision-Date: 2012-01-16 16:28-0000\n"
-"Last-Translator: Gale <gale@audacityteam.org>\n"
-"Language-Team: \n"
+"PO-Revision-Date: 2015-06-28 03:24+0200\n"
+"Last-Translator: Cristian Secară <cristi AT secarica DOT ro>\n"
+"Language-Team: Gnome Romanian Team <gnomero-list@lists.sourceforge.net>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.6.11\n"
 
 #: lib-src/FileDialog/generic/FileDialogPrivate.cpp:296
 #: lib-src/FileDialog/generic/FileDialogPrivate.cpp:319
 msgid "<DIR>"
-msgstr ""
+msgstr "<DIR>"
 
 #: lib-src/FileDialog/generic/FileDialogPrivate.cpp:298
 #: lib-src/FileDialog/generic/FileDialogPrivate.cpp:321
 msgid "<LINK>"
-msgstr ""
+msgstr "<LINK>"
 
 #: lib-src/FileDialog/generic/FileDialogPrivate.cpp:300
 #: lib-src/FileDialog/generic/FileDialogPrivate.cpp:323
 msgid "<DRIVE>"
-msgstr ""
+msgstr "<DRIVE>"
 
 #: lib-src/FileDialog/generic/FileDialogPrivate.cpp:325
-#, fuzzy, c-format
+#, c-format
 msgid "%ld bytes"
-msgstr "octeţi"
+msgstr "%ld octeți"
 
 #: lib-src/FileDialog/generic/FileDialogPrivate.cpp:470
 #: src/AutoRecovery.cpp:82 src/PluginManager.cpp:570
 msgid "Name"
-msgstr ""
+msgstr "Nume"
 
 #: lib-src/FileDialog/generic/FileDialogPrivate.cpp:471
 #: src/HistoryWindow.cpp:82
 msgid "Size"
-msgstr "Mărime"
+msgstr "Dimensiune"
 
 #: lib-src/FileDialog/generic/FileDialogPrivate.cpp:472
 #: src/effects/Noise.cpp:48
 msgid "Type"
-msgstr ""
+msgstr "Tip"
 
 #: lib-src/FileDialog/generic/FileDialogPrivate.cpp:473
 msgid "Modified"
-msgstr ""
+msgstr "Modificat"
 
 #: lib-src/FileDialog/generic/FileDialogPrivate.cpp:476
 msgid "Permissions"
-msgstr ""
+msgstr "Permisiuni"
 
 #: lib-src/FileDialog/generic/FileDialogPrivate.cpp:479
 msgid "Attributes"
-msgstr ""
+msgstr "Atribute"
 
 #: lib-src/FileDialog/generic/FileDialogPrivate.cpp:652
 #: lib-src/FileDialog/generic/FileDialogPrivate.cpp:661
-#, fuzzy
 msgid "NewName"
-msgstr "Nume..."
+msgstr "NumeNou"
 
 #: lib-src/FileDialog/generic/FileDialogPrivate.cpp:676
 #: lib-src/FileDialog/generic/FileDialogPrivate.cpp:826
 msgid "Operation not permitted."
-msgstr ""
+msgstr "Operațiunea nu este permisă."
 
 #: lib-src/FileDialog/generic/FileDialogPrivate.cpp:676
 #: lib-src/FileDialog/generic/FileDialogPrivate.cpp:794
@@ -99,97 +99,103 @@ msgstr "Eroare"
 
 #: lib-src/FileDialog/generic/FileDialogPrivate.cpp:790
 msgid "."
-msgstr ""
+msgstr "."
 
 #: lib-src/FileDialog/generic/FileDialogPrivate.cpp:791
 msgid ".."
-msgstr ""
+msgstr ".."
 
 #: lib-src/FileDialog/generic/FileDialogPrivate.cpp:794
 msgid "Illegal directory name."
-msgstr ""
+msgstr "Nume nelegal de director."
 
 #: lib-src/FileDialog/generic/FileDialogPrivate.cpp:808
 msgid "File name exists already."
-msgstr ""
+msgstr "Numele de fișier există deja."
 
 #: lib-src/FileDialog/generic/FileDialogPrivate.cpp:1031
 msgid "View files as a list view"
-msgstr ""
+msgstr "Vizualizează fișierele sub formă de listă"
 
 #: lib-src/FileDialog/generic/FileDialogPrivate.cpp:1038
 msgid "View files as a detailed view"
-msgstr ""
+msgstr "Vizualizează fișierele în mod detaliat"
 
 #: lib-src/FileDialog/generic/FileDialogPrivate.cpp:1047
 msgid "Go to parent directory"
-msgstr ""
+msgstr "Salt la directorul superior"
 
+# hm ? conform glosarului
 #: lib-src/FileDialog/generic/FileDialogPrivate.cpp:1055
 msgid "Go to home directory"
-msgstr ""
+msgstr "Salt la directorul personal"
 
 #: lib-src/FileDialog/generic/FileDialogPrivate.cpp:1065
-#, fuzzy
 msgid "Create new directory"
-msgstr "Noul proiect a fost creat"
+msgstr "Crează un director nou"
 
 #: lib-src/FileDialog/generic/FileDialogPrivate.cpp:1076
 msgid "Current directory:"
-msgstr ""
+msgstr "Directorul curent:"
 
 #: lib-src/FileDialog/generic/FileDialogPrivate.cpp:1131
 msgid "Show hidden files"
-msgstr ""
+msgstr "Arată fișierele ascunse"
 
 #: lib-src/FileDialog/generic/FileDialogPrivate.cpp:1382
 msgid "Illegal file specification."
-msgstr ""
+msgstr "Specificare nelegală de fișier."
 
 #: lib-src/FileDialog/generic/FileDialogPrivate.cpp:1410
-#, fuzzy
 msgid "Directory doesn't exist."
-msgstr "Directorul %s nu există. Doriţi să îl creaţi?"
+msgstr "Directorul nu există."
 
 #: lib-src/FileDialog/generic/FileDialogPrivate.cpp:1431
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp:91
 #, c-format
 msgid "File '%s' already exists, do you really want to overwrite it?"
-msgstr ""
+msgstr "Fișierul „%s” există deja, sigur vreți să fie suprascris ?"
 
 #: lib-src/FileDialog/generic/FileDialogPrivate.cpp:1433
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp:94 src/LangChoice.cpp:135
 msgid "Confirm"
-msgstr ""
+msgstr "Confirmă"
 
 #: lib-src/FileDialog/generic/FileDialogPrivate.cpp:1440
 msgid "Please choose an existing file."
-msgstr ""
+msgstr "Alegeți un fișier existent."
 
 #: src/AboutDialog.cpp:57 src/AboutDialog.cpp:79
 msgid "co-founder"
-msgstr ""
+msgstr "co-fondator"
 
 #: src/AboutDialog.cpp:64
 msgid "quality assurance"
 msgstr ""
 
 #: src/AboutDialog.cpp:179
-#, fuzzy
 msgid "About Audacity"
-msgstr "&Despre Audacity..."
+msgstr "Despre Audacity"
 
 #: src/AboutDialog.cpp:199
 msgid "OK... Audacious!"
-msgstr ""
+msgstr "OK... Audacious !"
 
 #: src/AboutDialog.cpp:215
+#, fuzzy
 msgid ""
 "Audacity is a free program written by a worldwide team of volunteer <a href="
 "\"http://audacityteam.org/about/credits\">developers</a>. Audacity is <a "
 "href=\"http://audacityteam.org/download\">available</a> for Windows, Mac, "
 "and GNU/Linux (and other Unix-like systems)."
 msgstr ""
+"Audacity este un program gratuit, scris de o echipă de <a href=\"http://"
+"audacity.sourceforge.net/community/developers\">dezvoltatoril</a> voluntari "
+"din toată lumea. Mulțumim <a href=\"http://code.google.com\">Google Code</a> "
+"și <a href=\"http://sourceforge.net\">SourceForge</a> pentru găzduirea "
+"proiectului nostru. Audacity este <a href=\"http://audacity.sourceforge.net/"
+"download/\">disponibil</a> pentru Windows, Mac și GNU/Linux (precum și alte "
+"sisteme de tip Unix)."
 
 #: src/AboutDialog.cpp:225
 msgid ""
@@ -199,63 +205,72 @@ msgid ""
 "\">wiki</a> or visit our <a href=\"http://forum.audacityteam.org/\">forum</"
 "a>."
 msgstr ""
+"Dacă găsiți vreo problemă sau aveți sugestii pentru noi, vă rugăm să ne "
+"scrieți, în engleză, la <a href=\"mailto:feedback@audacityteam.org\">adresa "
+"noastră de feedback</a>. Pentru ajutor, vedeți sugestiile și sfaturile utile "
+"de pe <a href=\"http://wiki.audacityteam.org/\">wiki</a> sau vizitați <a "
+"href=\"http://forum.audacityteam.org/\">forumul </a> nostru."
 
 #: src/AboutDialog.cpp:238 src/AboutDialog.cpp:240
 msgid "translator_credits"
-msgstr "creditele translatorilor"
+msgstr ""
+"<b>Traducere în limba română</b><br><a href=\"mailto:gale@audacityteam.org"
+"\">Gale</a> (20??-2012)<br><a href=\"mailto:cristi@secarica.ro\">Cristian "
+"Secară</a> (2014-2015)"
 
 #: src/AboutDialog.cpp:250
 msgid ""
 "free, open source, cross-platform software for recording and editing "
 "sounds<br>"
 msgstr ""
+"software gratuit, cu sursă deschisă, multiplatformă, pentru editarea și "
+"codarea sunetelor<br>"
 
 #: src/AboutDialog.cpp:254
 msgid "Credits"
 msgstr "Credite"
 
 #: src/AboutDialog.cpp:257
-#, fuzzy
 msgid "Audacity Developers"
-msgstr "Setări Audacity"
+msgstr "Dezvoltatori Audacity"
 
 #: src/AboutDialog.cpp:260
-#, fuzzy
 msgid "Audacity Support Team"
-msgstr "Prima rulare a programului Audacity"
+msgstr "Echipa de suport Audacity"
 
 #: src/AboutDialog.cpp:263
 msgid "Emeritus Developers"
-msgstr ""
+msgstr "Dezvoltatori emeriți"
 
 #: src/AboutDialog.cpp:266
 msgid " Emeritus Team Members"
-msgstr ""
+msgstr " Membri emeriți ai echipei"
 
 #: src/AboutDialog.cpp:269
 msgid "Other Contributors"
-msgstr ""
+msgstr "Alți contribuitori"
 
 #: src/AboutDialog.cpp:272
 msgid "Audacity is based on code from the following projects:"
-msgstr ""
+msgstr "Audacity se bazează pe codul din următoarele proiecte:"
 
 #: src/AboutDialog.cpp:275
 msgid "Special thanks:"
-msgstr "Mulţumiri speciale:"
+msgstr "Mulțumiri speciale:"
 
 #: src/AboutDialog.cpp:278
 msgid "<b>Audacity&reg;</b> software is copyright"
-msgstr ""
+msgstr "Programul <b>Audacity&reg;</b> este copyright"
 
 #: src/AboutDialog.cpp:280
 msgid ""
 "The name <b>Audacity&reg;</b> is a registered trademark of Dominic Mazzoni."
 msgstr ""
+"Numele <b>Audacity&reg;</b> este o marcă înregistrată a lui Dominic Mazzoni."
 
 #: src/AboutDialog.cpp:336 src/AboutDialog.cpp:349 src/AboutDialog.cpp:523
 msgid "Build Information"
-msgstr ""
+msgstr "Informații despre compilare"
 
 #: src/AboutDialog.cpp:342 src/PluginManager.cpp:488
 #: src/prefs/ModulePrefs.cpp:99
@@ -265,112 +280,111 @@ msgstr "Activat"
 #: src/AboutDialog.cpp:343 src/PluginManager.cpp:489
 #: src/prefs/ModulePrefs.cpp:98
 msgid "Disabled"
-msgstr ""
+msgstr "Dezactivat"
 
 #: src/AboutDialog.cpp:353
 msgid "File Format Support"
-msgstr ""
+msgstr "Suportul formatelor de fișiere"
 
+# hm ?
 #: src/AboutDialog.cpp:363 src/AboutDialog.cpp:365
 msgid "MP3 Importing"
-msgstr ""
+msgstr "Import MP3"
 
 #: src/AboutDialog.cpp:372 src/AboutDialog.cpp:375
 msgid "Ogg Vorbis Import and Export"
-msgstr ""
+msgstr "Import și export Ogg Vorbis"
 
 #: src/AboutDialog.cpp:379 src/AboutDialog.cpp:382
 msgid "ID3 tag support"
-msgstr ""
+msgstr "Suport pentru etichetă ID3"
 
 #: src/AboutDialog.cpp:389 src/AboutDialog.cpp:392
 msgid "FLAC import and export"
-msgstr ""
+msgstr "Import și export FLAC"
 
 #: src/AboutDialog.cpp:397 src/AboutDialog.cpp:400
 msgid "MP2 export"
-msgstr ""
+msgstr "Export MP2"
 
 #: src/AboutDialog.cpp:405 src/AboutDialog.cpp:408
 msgid "Import via QuickTime"
-msgstr ""
+msgstr "Import via QuickTime"
 
 #: src/AboutDialog.cpp:413 src/AboutDialog.cpp:415
 msgid "FFmpeg Import/Export"
-msgstr ""
+msgstr "Import sau export FFmpeg"
 
 #: src/AboutDialog.cpp:419 src/AboutDialog.cpp:421
-#, fuzzy
 msgid "Import via GStreamer"
-msgstr "Importă date brute"
+msgstr "Import via GStreamer"
 
 #: src/AboutDialog.cpp:427
 msgid "Core Libraries"
-msgstr ""
+msgstr "Biblioteci principale"
 
 #: src/AboutDialog.cpp:431
 msgid "Sample rate conversion"
-msgstr ""
+msgstr "Conversie a ratei de eșantionare"
 
 #: src/AboutDialog.cpp:434
 msgid "Audio playback and recording"
-msgstr ""
+msgstr "Redare și înregistrare audio"
 
 #: src/AboutDialog.cpp:444
 msgid "Features"
-msgstr ""
+msgstr "Caracteristici"
 
 #: src/AboutDialog.cpp:448 src/AboutDialog.cpp:451 src/AboutDialog.cpp:456
 #: src/AboutDialog.cpp:459 src/AboutDialog.cpp:464 src/AboutDialog.cpp:467
 #: src/AboutDialog.cpp:472 src/AboutDialog.cpp:475 src/AboutDialog.cpp:480
 #: src/AboutDialog.cpp:483 src/AboutDialog.cpp:488 src/AboutDialog.cpp:491
 msgid "Plug-in support"
-msgstr ""
+msgstr "Suport pe bază de plug-in"
 
 #: src/AboutDialog.cpp:496 src/AboutDialog.cpp:499
 msgid "Sound card mixer support"
-msgstr ""
+msgstr "Suport pe baza mixerului plăcii de sunet"
 
 #: src/AboutDialog.cpp:504 src/AboutDialog.cpp:507
 msgid "Pitch and Tempo Change support"
-msgstr ""
+msgstr "Suport pentru modificarea înălțimii și tempoului sunetului"
 
 #: src/AboutDialog.cpp:512 src/AboutDialog.cpp:515
 msgid "Extreme Pitch and Tempo Change support"
-msgstr ""
+msgstr "Suport pentru modificarea extremă a înălțimii și tempoului sunetului"
 
 #: src/AboutDialog.cpp:527
-#, fuzzy
 msgid "Program build date: "
-msgstr "Data construirii programului:"
+msgstr "Data compilării programului:"
 
 #: src/AboutDialog.cpp:533
 msgid "Commit Id:"
-msgstr ""
+msgstr "ID-ul de comitere:"
 
 #: src/AboutDialog.cpp:538 src/AboutDialog.cpp:540
 msgid "Build type:"
-msgstr ""
+msgstr "Tipul de compilare:"
 
 #: src/AboutDialog.cpp:538
 msgid "Debug build"
-msgstr ""
+msgstr "Compilare pentru testare și depanare"
 
 #: src/AboutDialog.cpp:540
 msgid "Release build"
-msgstr ""
+msgstr "Compilare pentru publicare"
 
 #: src/AboutDialog.cpp:545
 msgid "Installation Prefix: "
-msgstr ""
+msgstr "Prefix de instalare:"
 
 #: src/AboutDialog.cpp:549
 msgid "Settings folder: "
-msgstr ""
+msgstr "Dosar pentru setări:"
 
 #: src/AboutDialog.cpp:564
 msgid "GPL License"
-msgstr ""
+msgstr "Licență GPL"
 
 #: src/AudacityApp.cpp:798
 #, c-format
@@ -379,6 +393,9 @@ msgid ""
 "\n"
 "It has been removed from the list of recent files."
 msgstr ""
+"%s nu a putut fi găsit.\n"
+"\n"
+"A fost eliminat din lista fișierelor recente."
 
 #: src/AudacityApp.cpp:894
 #, c-format
@@ -393,10 +410,19 @@ msgid ""
 "Choose File > Check Dependencies to view a list of locations of the missing "
 "files."
 msgstr ""
+"Unul sau mai multe fișiere audio externe nu au putut fi găsite.\n"
+"Este posibil să fi fost mutat sau șters, sau unitatea pe care se afla(u) a "
+"fost demontată.\n"
+"Zona audio afectată este în curs de substituire cu liniște.\n"
+"Primul fișier lipsă detectat este:\n"
+"%s\n"
+"Pot exista fișiere lipsă adiționale.\n"
+"Alegeți Fișier > Verifică dependințele pentru a vizualiza o listă a "
+"locațiilor fișierelor lipsă."
 
 #: src/AudacityApp.cpp:908
 msgid "Files Missing"
-msgstr ""
+msgstr "Lipsesc fișierele"
 
 #: src/AudacityApp.cpp:1056
 msgid "Report generated to:"
@@ -405,7 +431,7 @@ msgstr ""
 #: src/AudacityApp.cpp:1057
 #, fuzzy
 msgid "Audacity Support Data"
-msgstr "Prima rulare a programului Audacity"
+msgstr "Echipa de suport Audacity"
 
 #: src/AudacityApp.cpp:1144
 msgid "Master Gain Control"
@@ -417,17 +443,16 @@ msgstr ""
 
 #: src/AudacityApp.cpp:1389
 msgid "File decoded successfully\n"
-msgstr ""
+msgstr "Fișierul a fost decodat cu succes\n"
 
 #: src/AudacityApp.cpp:1393
 #, fuzzy
 msgid "Decoding failed\n"
-msgstr "Selectează"
+msgstr "Dispozitiv de înregistrare"
 
 #: src/AudacityApp.cpp:1415
-#, fuzzy
 msgid "Audacity is starting up..."
-msgstr "Audacity rulează deja"
+msgstr "Audacity pornește..."
 
 #: src/AudacityApp.cpp:1433 src/Menus.cpp:340
 msgid "&New"
@@ -439,36 +464,35 @@ msgstr "&Deschide..."
 
 #: src/AudacityApp.cpp:1435
 msgid "Open &Recent..."
-msgstr ""
+msgstr "Deschide &recente..."
 
 #: src/AudacityApp.cpp:1436 src/Menus.cpp:1096
 msgid "&About Audacity..."
-msgstr "&Despre Audacity..."
+msgstr "Despre &Audacity..."
 
 #: src/AudacityApp.cpp:1437
 msgid "&Preferences..."
-msgstr ""
+msgstr "&Preferințe..."
 
 #: src/AudacityApp.cpp:1440 src/Menus.cpp:336
 msgid "&File"
-msgstr "&Fişier"
+msgstr "&Fișier"
 
 #: src/AudacityApp.cpp:1604
 msgid ""
 "Audacity could not find a place to store temporary files.\n"
 "Please enter an appropriate directory in the preferences dialog."
 msgstr ""
-"Audacity nu a putut găsi un loc unde să depoziteze fişierele temporare.\n"
-"Vă rog introduceţi calea la preferinţe (setări)."
+"Audacity nu a putut găsi un loc unde să stocheze fișierele temporare.\n"
+"Introduceți un director adecvat în dialogul de preferințe."
 
 #: src/AudacityApp.cpp:1610
-#, fuzzy
 msgid ""
 "Audacity is now going to exit. Please launch Audacity again to use the new "
 "temporary directory."
 msgstr ""
-"Audacity se va închide. Vă rugăm să redeschideţi Audacity pentru a folosi "
-"noul director pentru fişiere temporare."
+"Audacity este pe cale de a se închide. Reporniți Audacity pentru a folosi "
+"noul director pentru fișiere temporare."
 
 #: src/AudacityApp.cpp:1644
 msgid ""
@@ -488,9 +512,8 @@ msgid "Do you still want to start Audacity?"
 msgstr ""
 
 #: src/AudacityApp.cpp:1655
-#, fuzzy
 msgid "Error Locking Temporary Folder"
-msgstr "Eoare la bloccarea directorului cu fişierel temporare."
+msgstr ""
 
 #: src/AudacityApp.cpp:1752
 msgid "The system has detected that another copy of Audacity is running.\n"
@@ -523,14 +546,12 @@ msgid "run self diagnostics"
 msgstr ""
 
 #: src/AudacityApp.cpp:1853
-#, fuzzy
 msgid "display Audacity version"
-msgstr "Setări Audacity"
+msgstr "afișează versiunea Audacity"
 
 #: src/AudacityApp.cpp:1857
-#, fuzzy
 msgid "audio or project file name"
-msgstr "Nu se poate deschide Proiectul"
+msgstr "numele de fișier audio sau al proiectului"
 
 #: src/AudacityApp.cpp:2188
 msgid ""
@@ -539,52 +560,50 @@ msgid ""
 "\n"
 "Associate them, so they open on double-click?"
 msgstr ""
-"Fişierele proiect Audacity (.AUP) nu sunt\n"
-" asociate cu Audacity în acest moment.\n"
+"În acest moment fișierele de proiect Audacity (.AUP)\n"
+"nu sunt asociate cu Audacity.\n"
 "\n"
-"Să le asociez, astfel încât să se deschidă la dublu click?"
+"Doriți să fie asociate, astfel încât să se deschidă la dublu clic ?"
 
 #: src/AudacityApp.cpp:2189
 msgid "Audacity Project Files"
-msgstr "Fişiere Proiect Audacity"
+msgstr "Fișiere de proiect Audacity"
 
 #: src/AudacityLogger.cpp:167
-#, fuzzy
 msgid "Audacity Log"
-msgstr "Prima rulare a programului Audacity"
+msgstr "Jurnal Audacity"
 
 #: src/AudacityLogger.cpp:201 src/Tags.cpp:817
 msgid "&Save..."
-msgstr ""
+msgstr "&Salvează..."
 
 #: src/AudacityLogger.cpp:202 src/Tags.cpp:796
 #: src/prefs/KeyConfigPrefs.cpp:271 src/prefs/KeyConfigPrefs.cpp:793
 msgid "Cl&ear"
-msgstr ""
+msgstr "Șt&erge"
 
 #: src/AudacityLogger.cpp:203 src/FreqWindow.cpp:475 src/Menus.cpp:357
 #: src/ShuttleGui.cpp:2192 src/effects/Contrast.cpp:327
 msgid "&Close"
-msgstr "&Ieşire"
+msgstr "În&chide"
 
 #: src/AudacityLogger.cpp:296
 msgid "log.txt"
-msgstr ""
+msgstr "log.txt"
 
 #: src/AudacityLogger.cpp:298
 msgid "Save log to:"
-msgstr ""
+msgstr "Salvează jurnalul în:"
 
 #: src/AudacityLogger.cpp:311
-#, fuzzy
 msgid "Couldn't save log to file: "
-msgstr "Nu a putut fi scris fişierul:"
+msgstr ""
 
 #: src/AudacityLogger.cpp:312 src/export/Export.cpp:604
 #: src/export/Export.cpp:625 src/export/Export.cpp:669
 #: src/import/ImportPCM.cpp:238 src/widgets/Warning.cpp:55
 msgid "Warning"
-msgstr "Atenţie"
+msgstr "Avertisment"
 
 #: src/AudioIO.cpp:903
 msgid "Could not find any audio devices.\n"
@@ -595,7 +614,7 @@ msgid ""
 "You will not be able to play or record audio.\n"
 "\n"
 msgstr ""
-"Nu veţi putea să ascultaţi sau să înregistraţi sunet.\n"
+"Nu veți putea să ascultați sau să înregistrați audio.\n"
 "\n"
 
 #: src/AudioIO.cpp:907 src/AudioIO.cpp:927
@@ -604,7 +623,7 @@ msgstr "Eroare:"
 
 #: src/AudioIO.cpp:910
 msgid "Error Initializing Audio"
-msgstr "Eroare la iniţializarea Audacity"
+msgstr "Eroare la inițializarea audio"
 
 #: src/AudioIO.cpp:923
 msgid "There was an error initializing the midi i/o layer.\n"
@@ -701,9 +720,8 @@ msgid "Quit Audacity"
 msgstr ""
 
 #: src/AutoRecovery.cpp:93
-#, fuzzy
 msgid "Discard Projects"
-msgstr "&Salvează Proiect"
+msgstr ""
 
 #: src/AutoRecovery.cpp:94
 msgid "Recover Projects"
@@ -727,32 +745,32 @@ msgstr ""
 #: src/BatchCommandDialog.cpp:60 src/BatchCommandDialog.cpp:64
 #: src/BatchCommandDialog.cpp:65
 msgid "Select Command"
-msgstr ""
+msgstr "Selectați comanda"
 
 #: src/BatchCommandDialog.cpp:84
 msgid "&Command"
-msgstr ""
+msgstr "&Comandă"
 
 #: src/BatchCommandDialog.cpp:86
 msgid "&Edit Parameters"
-msgstr ""
+msgstr "&Editare parametri"
 
 #: src/BatchCommandDialog.cpp:88
+#, fuzzy
 msgid "&Use Preset"
-msgstr ""
+msgstr "Presetări de utilizatori"
 
 #: src/BatchCommandDialog.cpp:96
 msgid "&Parameters"
-msgstr ""
+msgstr "&Parametri"
 
 #: src/BatchCommandDialog.cpp:101
 msgid "C&hoose command"
-msgstr ""
+msgstr "Ale&geți comanda"
 
 #: src/BatchCommands.cpp:567
 msgid "Ogg Vorbis support is not included in this build of Audacity"
-msgstr ""
-"Suportul pentru Ogg Vorbis nu este inclus în această versiune a Audacity"
+msgstr "Suportul pentru Ogg Vorbis nu este inclus în această versiune Audacity"
 
 #: src/BatchCommands.cpp:579
 msgid "FLAC support is not included in this build of Audacity"
@@ -778,7 +796,7 @@ msgstr ""
 
 #: src/BatchCommands.cpp:761 src/BatchCommands.cpp:766
 msgid "Test Mode"
-msgstr ""
+msgstr "Mod de test"
 
 #: src/BatchCommands.cpp:765
 #, c-format
@@ -791,9 +809,8 @@ msgid "Apply Chain"
 msgstr ""
 
 #: src/BatchProcessDialog.cpp:96
-#, fuzzy
 msgid "&Select Chain"
-msgstr "Selectează"
+msgstr ""
 
 #: src/BatchProcessDialog.cpp:101
 msgid "Chain"
@@ -879,19 +896,19 @@ msgstr ""
 
 #: src/BatchProcessDialog.cpp:502
 msgid "&Insert"
-msgstr ""
+msgstr "&Inserează"
 
 #: src/BatchProcessDialog.cpp:503
 msgid "De&lete"
-msgstr ""
+msgstr "Ș&terge"
 
 #: src/BatchProcessDialog.cpp:504 src/effects/Equalization.cpp:2913
 msgid "Move &Up"
-msgstr ""
+msgstr "Mută mai s&us"
 
 #: src/BatchProcessDialog.cpp:505 src/effects/Equalization.cpp:2914
 msgid "Move &Down"
-msgstr ""
+msgstr "Mută mai j&os"
 
 #: src/BatchProcessDialog.cpp:506 src/effects/Equalization.cpp:2920
 msgid "De&faults"
@@ -960,48 +977,47 @@ msgstr ""
 
 #: src/Dependencies.cpp:339
 msgid "Project Dependencies"
-msgstr ""
+msgstr "Dependințele proiectului"
 
 #: src/Dependencies.cpp:342
-#, fuzzy
 msgid "Audio File"
-msgstr "Fişiere Proiect Audacity"
+msgstr "Fișier audio"
 
 #: src/Dependencies.cpp:344
 msgid "Disk Space"
-msgstr ""
+msgstr "Spațiu pe disc"
 
 #: src/Dependencies.cpp:350
 msgid "Copy Selected Files"
-msgstr ""
+msgstr "Copiază fișierele selectate"
 
 #: src/Dependencies.cpp:362 src/Dependencies.cpp:514
 msgid "Cancel Save"
-msgstr ""
+msgstr "Anulează salvarea"
 
 #: src/Dependencies.cpp:363
 msgid "Save without Copying"
-msgstr ""
+msgstr "Salvează fără copiere"
 
 #: src/Dependencies.cpp:366
 msgid "Do Not Copy"
-msgstr ""
+msgstr "Nu copia"
 
 #: src/Dependencies.cpp:369
 msgid "Copy All Files (Safer)"
-msgstr ""
+msgstr "Copiază toate fișierele (mai sigur)"
 
 #: src/Dependencies.cpp:384 src/Dependencies.cpp:390
 msgid "Ask me"
-msgstr ""
+msgstr "Întreabă-mă"
 
 #: src/Dependencies.cpp:385
 msgid "Always copy all files (safest)"
-msgstr ""
+msgstr "Copiază întotdeauna toate fișierele (cel mai sigur)"
 
 #: src/Dependencies.cpp:386
 msgid "Never copy any files"
-msgstr ""
+msgstr "Nu copia niciodată niciun fișier"
 
 #: src/Dependencies.cpp:389
 msgid "Whenever a project depends on other files:"
@@ -1034,7 +1050,7 @@ msgstr ""
 #: src/DirManager.cpp:209 src/DirManager.cpp:295 src/DirManager.cpp:446
 #: src/DirManager.cpp:1649
 msgid "Progress"
-msgstr "Progress"
+msgstr "Progres"
 
 #: src/DirManager.cpp:364
 msgid ""
@@ -1072,24 +1088,23 @@ msgid "%s-old%d"
 msgstr ""
 
 #: src/DirManager.cpp:1226
-#, fuzzy
 msgid "Unable to open/create test file."
-msgstr "Fişierul ţintă nu a putut fi deschis pentru scriere"
+msgstr ""
 
 #: src/DirManager.cpp:1236
-#, fuzzy, c-format
+#, c-format
 msgid "Unable to remove '%s'."
-msgstr "Incapabil sa determin"
+msgstr ""
 
 #: src/DirManager.cpp:1241
 #, c-format
 msgid "Renamed file: %s\n"
-msgstr "Fişierul %s a fost redenumit\n"
+msgstr "Fișierul redenumit: %s\n"
 
 #: src/DirManager.cpp:1304
-#, fuzzy, c-format
+#, c-format
 msgid "Unable to rename '%s' to '%s'."
-msgstr "Fisierul '%s' a fost renumit '%s'"
+msgstr ""
 
 #: src/DirManager.cpp:1323
 #, c-format
@@ -1116,9 +1131,8 @@ msgid "Warning - Problems Reading Sequence Tags"
 msgstr ""
 
 #: src/DirManager.cpp:1411 src/DirManager.cpp:1813
-#, fuzzy
 msgid "Inspecting project file data"
-msgstr "Nu se poate deschide Proiectul"
+msgstr ""
 
 #: src/DirManager.cpp:1430
 #, c-format
@@ -1295,9 +1309,8 @@ msgid "Saving recorded audio"
 msgstr ""
 
 #: src/DirManager.cpp:1894
-#, fuzzy
 msgid "Saving recorded audio to disk"
-msgstr "Suntetul nu poate fi exportat ca şi %s"
+msgstr "Salvare pe disc a audioului înregistrat"
 
 #: src/FFT.cpp:495
 msgid "Rectangular"
@@ -1344,9 +1357,10 @@ msgstr ""
 msgid "To find '%s', click here -->"
 msgstr ""
 
+# hm ? sau răsfoiește ?
 #: src/FFmpeg.cpp:493 src/export/ExportCL.cpp:108 src/export/ExportMP3.cpp:609
 msgid "Browse..."
-msgstr ""
+msgstr "Navighează..."
 
 #: src/FFmpeg.cpp:494
 msgid "To get a free copy of FFmpeg, click here -->"
@@ -1354,12 +1368,12 @@ msgstr ""
 
 #: src/FFmpeg.cpp:495 src/export/ExportMP3.cpp:613
 msgid "Download"
-msgstr ""
+msgstr "Descarcă"
 
 #: src/FFmpeg.cpp:517
-#, fuzzy, c-format
+#, c-format
 msgid "Where is '%s'?"
-msgstr "Unde se găseşte %s?"
+msgstr "Unde se află „%s” ?"
 
 #: src/FFmpeg.cpp:705
 msgid "Failed to find compatible FFmpeg libraries."
@@ -1367,7 +1381,7 @@ msgstr ""
 
 #: src/FFmpeg.h:178
 msgid "FFmpeg not found"
-msgstr ""
+msgstr "FFmpeg nu a fost găsit"
 
 #: src/FFmpeg.h:193
 msgid ""
@@ -1377,32 +1391,33 @@ msgid ""
 "To use FFmpeg import, go to Preferences > Libraries\n"
 "to download or locate the FFmpeg libraries."
 msgstr ""
+"Audacity a încercat să folosească FFmpeg pentru importul unui fișier audio,\n"
+"însă bibliotecile nu au fost găsite.\n"
+"\n"
+"Pentru a folosi importul FFmpeg, mergeți la Preferințe > Biblioteci\n"
+"pentru a descărca sau indica locul bibliotecilor FFmpeg."
 
 #: src/FFmpeg.h:201
 msgid "Do not show this warning again"
-msgstr ""
+msgstr "Nu mai arăta din nou acest avertisment"
 
 #: src/FFmpeg.h:277
-#, fuzzy
 msgid ""
 "Only avformat.dll|*avformat*.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
 "All Files|*"
 msgstr ""
-"Doar lame_enc.dll|lame_enc.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
-"Toate fişierele (*.*)|*"
+"Numai avformat.dll|*avformat*.dll|Biblioteci legate dinamic (*.dll)|*.dll|"
+"Toate fișierele|*"
 
 #: src/FFmpeg.h:310
 msgid "Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"
 msgstr ""
 
 #: src/FFmpeg.h:337
-#, fuzzy
 msgid ""
 "Only libavformat.so|libavformat*.so*|Dynamically Linked Libraries (*.so*)|*."
 "so*|All Files (*)|*"
 msgstr ""
-"Doar lame_enc.dll|lame_enc.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
-"Toate fişierele (*.*)|*"
 
 #: src/FreqWindow.cpp:215
 msgid "Spectrum"
@@ -1425,9 +1440,8 @@ msgid "Cepstrum"
 msgstr ""
 
 #: src/FreqWindow.cpp:241
-#, fuzzy
 msgid "window"
-msgstr "Fereastră"
+msgstr ""
 
 #: src/FreqWindow.cpp:245
 msgid "Linear frequency"
@@ -1435,7 +1449,7 @@ msgstr ""
 
 #: src/FreqWindow.cpp:246
 msgid "Log frequency"
-msgstr "Frecvenţă scăzută"
+msgstr "Frecvența de jurnalizare"
 
 #: src/FreqWindow.cpp:292 src/FreqWindow.cpp:695 src/effects/AutoDuck.cpp:436
 #: src/effects/AutoDuck.cpp:476 src/effects/AutoDuck.cpp:774
@@ -1456,7 +1470,6 @@ msgstr "dB"
 msgid "Scroll"
 msgstr ""
 
-# Mărire
 #: src/FreqWindow.cpp:333 src/prefs/MousePrefs.cpp:125
 #: src/prefs/MousePrefs.cpp:126 src/prefs/MousePrefs.cpp:127
 #: src/prefs/MousePrefs.cpp:128 src/prefs/MousePrefs.cpp:129
@@ -1465,13 +1478,14 @@ msgid "Zoom"
 msgstr "Zoom"
 
 #: src/FreqWindow.cpp:430
+#, fuzzy
 msgid "&Algorithm:"
-msgstr ""
+msgstr "L&ogaritmic"
 
 #: src/FreqWindow.cpp:436
 #, fuzzy
 msgid "&Size:"
-msgstr "Mărime"
+msgstr "Dimensiune"
 
 #: src/FreqWindow.cpp:442 src/LabelDialog.cpp:135
 #: src/prefs/KeyConfigPrefs.cpp:282 src/prefs/KeyConfigPrefs.cpp:804
@@ -1486,7 +1500,7 @@ msgstr "Repetă..."
 #: src/FreqWindow.cpp:456
 #, fuzzy
 msgid "&Function:"
-msgstr "Acţiune"
+msgstr "Acțiune"
 
 #: src/FreqWindow.cpp:463
 msgid "&Axis:"
@@ -1505,11 +1519,13 @@ msgstr ""
 msgid ""
 "Too much audio was selected.  Only the first %.1f seconds of audio will be "
 "analyzed."
-msgstr "Prea mult selectat. Numai primele %.1f secunde vor fi analizate."
+msgstr ""
+"A fost selectat prea mult audio. Numai primele %.1f secunde de audio vor fi "
+"analizate."
 
 #: src/FreqWindow.cpp:665
 msgid "Not enough data selected."
-msgstr "Insuficiente date selectate."
+msgstr "Nu sunt selectate suficiente date."
 
 #: src/FreqWindow.cpp:741 src/effects/ChangePitch.cpp:265
 #: src/effects/Equalization.cpp:638 src/effects/Equalization.cpp:672
@@ -1550,15 +1566,16 @@ msgstr ""
 msgid "Export Spectral Data As:"
 msgstr ""
 
+# hm ? urmează numele fișierului sau al unei erori ?
 #: src/FreqWindow.cpp:1050 src/LabelDialog.cpp:650 src/Menus.cpp:3454
 #: src/effects/Contrast.cpp:482 src/prefs/KeyConfigPrefs.cpp:387
 #: src/prefs/KeyConfigPrefs.cpp:973
 msgid "Couldn't write to file: "
-msgstr "Nu a putut fi scris fişierul:"
+msgstr "Nu s-a putut scrie în fișier:"
 
 #: src/FreqWindow.cpp:1057
 msgid "Frequency (Hz)\tLevel (dB)"
-msgstr "Frecvenţa (Hz)\tNivel (dB)"
+msgstr "Frecvență (Hz)\tNivel (dB)"
 
 #: src/FreqWindow.cpp:1063
 msgid "Lag (seconds)\tFrequency (Hz)\tLevel"
@@ -1566,7 +1583,7 @@ msgstr ""
 
 #: src/HelpText.cpp:120
 msgid "Welcome!"
-msgstr ""
+msgstr "Bun venit !"
 
 #: src/HelpText.cpp:126
 msgid "Playing Audio"
@@ -1577,19 +1594,16 @@ msgid "Recording Audio"
 msgstr ""
 
 #: src/HelpText.cpp:136
-#, fuzzy
 msgid "Recording - Choosing the Recording Device"
-msgstr "Se înregistrează"
+msgstr ""
 
 #: src/HelpText.cpp:141
-#, fuzzy
 msgid "Recording - Choosing the Recording Source"
-msgstr "Se înregistrează"
+msgstr ""
 
 #: src/HelpText.cpp:146
-#, fuzzy
 msgid "Recording - Setting the Recording Level"
-msgstr "Se înregistrează"
+msgstr ""
 
 #: src/HelpText.cpp:151
 msgid "Editing and greyed out Menus"
@@ -1617,15 +1631,15 @@ msgstr ""
 
 #: src/HelpText.cpp:189
 msgid "<center><h3>How to Get Help</h3></center>"
-msgstr ""
+msgstr "<center><h3>Cum să obțineți ajutor</h3></center>"
 
 #: src/HelpText.cpp:190
 msgid "Welcome to Audacity "
-msgstr ""
+msgstr "Bun venit la Audacity "
 
 #: src/HelpText.cpp:191
 msgid "These are our support methods:"
-msgstr ""
+msgstr "Acestea sunt modalitățile noastre de suport:"
 
 #: src/HelpText.cpp:192
 msgid ""
@@ -1633,30 +1647,41 @@ msgid ""
 "\"http://manual.audacityteam.org/o/quick_help.html\">Internet version if it "
 "isn't</a>)"
 msgstr ""
+" [[file:quick_help.html|Ajutor rapid]] (ar trebui să fie instalat local, sau "
+"dacă nu, <a href=\"http://manual.audacityteam.org/o/quick_help.html"
+"\">versiunea pe internet</a>)"
 
 #: src/HelpText.cpp:193
 msgid ""
 " [[file:index.html|Manual]] (should be installed locally, <a href=\"http://"
 "manual.audacityteam.org/o/\">Internet version if it isn't</a>)"
 msgstr ""
+" [[file:index.html|Manual]] (ar trebui să fie instalat local, sau dacă nu, "
+"<a href=\"http://manual.audacityteam.org/o/\">versiunea pe internet</a>)"
 
 #: src/HelpText.cpp:194
 msgid ""
 " [[http://wiki.audacityteam.org/index.php|Wiki]] (the latest tips, tricks "
 "and tutorials, on the Internet)"
 msgstr ""
+" [[http://wiki.audacityteam.org/index.php|Wiki]] (cele mai recente sfaturi "
+"utile și tutoriale, pe internet)"
 
 #: src/HelpText.cpp:195
 msgid ""
 " <a href=\"http://forum.audacityteam.org/\">Forum</a> (ask your question "
 "directly, on the Internet)"
 msgstr ""
+" <a href=\"http://forum.audacityteam.org/\">Forum</a> (formulați întrebări "
+"directe, pe internet)"
 
 #: src/HelpText.cpp:196
 msgid ""
 " For even quicker answers, all the online resources above are <b>searchable</"
 "b>."
 msgstr ""
+" Pentru aflarea și mai rapidă a unor răspunsuri, toate resursele online de "
+"mai sus <b>au funcții de căutare</b>."
 
 #: src/HelpText.cpp:203
 msgid ""
@@ -1686,91 +1711,92 @@ msgstr ""
 
 #: src/HistoryWindow.cpp:54
 msgid "Undo History"
-msgstr "Istoria desfacerilor"
+msgstr "Istoric de anulări"
 
 #: src/HistoryWindow.cpp:75
-#, fuzzy
 msgid "&Manage History"
-msgstr "Istoria desfacerilor"
+msgstr "&Gestionare istoric"
 
 #: src/HistoryWindow.cpp:81 src/effects/TruncSilence.cpp:54
 #: src/effects/TruncSilence.cpp:516
 msgid "Action"
-msgstr "Acţiune"
+msgstr "Acțiune"
 
 #: src/HistoryWindow.cpp:89
 msgid "&Total space used"
-msgstr ""
+msgstr "Spațiu &total utilizat"
 
 #: src/HistoryWindow.cpp:93
 msgid "&Undo Levels Available"
-msgstr ""
+msgstr "Niveluri de an&ulări disponibile"
 
 #: src/HistoryWindow.cpp:97
 msgid "&Levels To Discard"
-msgstr ""
+msgstr "Nive&luri de suprimat"
 
 #: src/HistoryWindow.cpp:109
 msgid "&Discard"
-msgstr ""
+msgstr "&Suprimă"
 
 #: src/HistoryWindow.cpp:118 src/export/ExportCL.cpp:514
 msgid "&OK"
-msgstr ""
+msgstr "&OK"
 
 #: src/Internat.cpp:147
 msgid "Unable to determine"
-msgstr "Incapabil sa determin"
+msgstr "Nu s-a putut determina"
 
 #: src/Internat.cpp:151 src/import/ImportRaw.cpp:412
 msgid "bytes"
-msgstr "octeţi"
+msgstr "baiți"
 
 #: src/Internat.cpp:154
 msgid "KB"
-msgstr ""
+msgstr "KiB"
 
 #: src/Internat.cpp:158
 msgid "MB"
-msgstr ""
+msgstr "MiB"
 
 #: src/Internat.cpp:162
 msgid "GB"
-msgstr ""
+msgstr "GiB"
 
 #: src/Internat.cpp:188
 msgid ""
 "The specified filename could not be converted due to Unicode character use."
 msgstr ""
+"Numele specificat de fișier nu a putut fi convertit datorită folosirii "
+"caracterelor Unicode."
 
 #: src/Internat.cpp:190
 msgid "Specify New Filename:"
-msgstr ""
+msgstr "Specificați un nou nume de fișier:"
 
 #: src/LabelDialog.cpp:99
 msgid "Edit Labels"
-msgstr ""
+msgstr "Editare etichete"
 
 #: src/LabelDialog.cpp:118
 msgid "Press F2 or double click to edit cell contents."
-msgstr ""
+msgstr "Apăsați F2 sau cublu clic pentru a edita conținutul celulei."
 
 #: src/LabelDialog.cpp:131
 msgid "Insert &After"
-msgstr ""
+msgstr "Insere&ază după"
 
 #: src/LabelDialog.cpp:132
 msgid "Insert &Before"
-msgstr ""
+msgstr "Inserea&ză înainte"
 
 #: src/LabelDialog.cpp:134 src/prefs/KeyConfigPrefs.cpp:281
 #: src/prefs/KeyConfigPrefs.cpp:803
 msgid "&Import..."
-msgstr ""
+msgstr "&Importă..."
 
 #: src/LabelDialog.cpp:149
 msgid "Track"
-msgstr ""
+msgstr "Pistă"
 
 #: src/LabelDialog.cpp:151 src/LabelTrack.cpp:1960 src/Menus.cpp:6228
 #: src/Menus.cpp:6271
@@ -1779,50 +1805,49 @@ msgstr "Etichetă"
 
 #: src/LabelDialog.cpp:153 src/TimerRecordDialog.cpp:367
 msgid "Start Time"
-msgstr ""
+msgstr "Timpul de început"
 
 #: src/LabelDialog.cpp:155 src/TimerRecordDialog.cpp:389
 msgid "End Time"
-msgstr ""
+msgstr "Timpul de sfârșit"
 
 #: src/LabelDialog.cpp:166
 msgid "New..."
-msgstr ""
+msgstr "Nou..."
 
 #: src/LabelDialog.cpp:561 src/Menus.cpp:5327
 msgid "Select a text file containing labels..."
-msgstr ""
+msgstr "Selectați un fișier text ce conține etichete..."
 
 #: src/LabelDialog.cpp:565 src/Menus.cpp:5331
-#, fuzzy
 msgid "Text files (*.txt)|*.txt|All files|*"
-msgstr "Fişiere text (*.txt)|*.txt|Toate fişierele(*.*)|*.*"
+msgstr "Fișiere text (*.txt)|*.txt|Toate fișierele|*"
 
 #: src/LabelDialog.cpp:580 src/Menus.cpp:5344 src/Project.cpp:2568
 #: src/Project.cpp:2581
 msgid "Could not open file: "
-msgstr "Nu s-a putut deschide fişierul:"
+msgstr "Nu s-a putut deschide fișierul:"
 
 #: src/LabelDialog.cpp:606
 msgid "No labels to export."
-msgstr ""
+msgstr "Nicio etichetă de exportat."
 
 #: src/LabelDialog.cpp:613 src/Menus.cpp:3423
 msgid "Export Labels As:"
-msgstr "Exportează etichetele ca şi:"
+msgstr "Exportă etichetele ca:"
 
 #: src/LabelDialog.cpp:749
 msgid "New Label Track"
-msgstr ""
+msgstr "Pistă nouă de etichete"
 
 #: src/LabelDialog.cpp:750
 msgid "Enter track name"
-msgstr ""
+msgstr "Introduceți numele pistei"
 
 #: src/LabelDialog.cpp:752 src/LabelDialog.h:54 src/LabelTrack.cpp:97
 #: src/TrackPanelAx.cpp:311
 msgid "Label Track"
-msgstr ""
+msgstr "Pistă de etichete"
 
 #: src/LabelTrack.cpp:1960 src/Menus.cpp:6228
 msgid "Added label"
@@ -1834,7 +1859,7 @@ msgstr "Prima rulare a programului Audacity"
 
 #: src/LangChoice.cpp:93
 msgid "Choose Language for Audacity to use:"
-msgstr "Selectaţi limba pe care o va folosi Audacity:"
+msgstr "Alegeți limba care să fie folosită de Audacity:"
 
 #: src/LangChoice.cpp:130
 #, c-format
@@ -1842,6 +1867,8 @@ msgid ""
 "The language you have chosen, %s (%s), is not the same as the system "
 "language, %s (%s)."
 msgstr ""
+"Limba pe care ați ales-o, %s (%s), nu este aceeași cu limba sistemului, %s "
+"(%s)."
 
 #: src/Legacy.cpp:372
 #, c-format
@@ -1849,8 +1876,8 @@ msgid ""
 "Converted a 1.0 project file to the new format.\n"
 "The old file has been saved as '%s'"
 msgstr ""
-"A fost convertit un proiect 1.0 in formatul nou.\n"
-"Fisierul a fost salvat ca si '%s'"
+"Un proiect 1.0 a fost convertit în formatul nou.\n"
+"Fișierul vechi a fost salvat ca '%s'"
 
 #: src/Legacy.cpp:373
 msgid "Opening Audacity Project"
@@ -1859,95 +1886,92 @@ msgstr "Se deschide proiectul Audacity"
 #: src/LyricsWindow.cpp:47
 #, c-format
 msgid "Audacity Karaoke%s"
-msgstr ""
+msgstr "Audacity Karaoke%s"
 
 #: src/Menus.cpp:226 src/Menus.cpp:230 src/Menus.cpp:272 src/Menus.cpp:276
 #: src/Menus.cpp:304 src/Menus.cpp:308
 msgid "Uncategorized"
-msgstr ""
+msgstr "Neclasificat"
 
 #: src/Menus.cpp:359
 msgid "&Save Project"
-msgstr "&Salvează Proiect"
+msgstr "&Salvează proiectul"
 
 #: src/Menus.cpp:362
 msgid "Save Project &As..."
-msgstr "Salvează proiectul c&a şi..."
+msgstr "Salvează proiectul c&a..."
 
 #: src/Menus.cpp:364
 msgid "Save Compressed Copy of Project..."
-msgstr ""
+msgstr "Salvează o copie comprimată a proiectului..."
 
 #: src/Menus.cpp:367
 msgid "Chec&k Dependencies..."
-msgstr ""
+msgstr "&Verifică dependințele..."
 
 #: src/Menus.cpp:371
-#, fuzzy
 msgid "Edit Me&tadata..."
-msgstr "eroare la încărcarea scurtăturilor din tastatură"
+msgstr "Editare me&tadate..."
 
 #: src/Menus.cpp:377 src/import/ImportRaw.cpp:439
 msgid "&Import"
-msgstr ""
+msgstr "&Importă"
 
 #: src/Menus.cpp:379
 msgid "&Audio..."
-msgstr ""
+msgstr "&Audio..."
 
 #: src/Menus.cpp:380
 msgid "&Labels..."
-msgstr ""
+msgstr "&Etichete..."
 
 #: src/Menus.cpp:382
 msgid "&MIDI..."
-msgstr ""
+msgstr "&MIDI..."
 
 #: src/Menus.cpp:384
 msgid "&Raw Data..."
-msgstr ""
+msgstr "Date b&rute..."
 
 #: src/Menus.cpp:393
-#, fuzzy
 msgid "&Export Audio..."
-msgstr "&Despre Audacity..."
+msgstr "&Exportă audio..."
 
 #: src/Menus.cpp:398
 msgid "Expo&rt Selected Audio..."
-msgstr ""
+msgstr "Expo&rtă audio selectat..."
 
 #: src/Menus.cpp:402
 msgid "Export &Labels..."
-msgstr ""
+msgstr "Exportă etichete&le..."
 
 #: src/Menus.cpp:406
 msgid "Export &Multiple..."
-msgstr ""
+msgstr "Exportă &multiplu..."
 
 #: src/Menus.cpp:410
 msgid "Export MIDI..."
-msgstr ""
+msgstr "Exportă MIDI..."
 
 #: src/Menus.cpp:416
 msgid "Appl&y Chain..."
-msgstr ""
+msgstr "Aplicare lanț de comen&zi..."
 
 #: src/Menus.cpp:419
 msgid "Edit C&hains..."
-msgstr ""
+msgstr "Editare lanț de comenz&i..."
 
 #: src/Menus.cpp:423
-#, fuzzy
 msgid "Pa&ge Setup..."
-msgstr "Setarea Paginii"
+msgstr "Configurare pa&gină..."
 
 #: src/Menus.cpp:427
 msgid "&Print..."
-msgstr ""
+msgstr "Ti&părește..."
 
 #: src/Menus.cpp:436
 msgid "E&xit"
-msgstr ""
+msgstr "&Ieșire"
 
 #: src/Menus.cpp:446
 msgid "&Edit"
@@ -1955,7 +1979,7 @@ msgstr "&Editare"
 
 #: src/Menus.cpp:451 src/Menus.cpp:1612
 msgid "&Undo"
-msgstr "&Desfă"
+msgstr "An&ulează"
 
 #: src/Menus.cpp:463 src/Menus.cpp:1627
 msgid "&Redo"
@@ -1963,130 +1987,124 @@ msgstr "&Refă"
 
 #: src/Menus.cpp:473 src/TrackPanel.cpp:767
 msgid "Cu&t"
-msgstr "&Tăiere"
+msgstr "&Taie"
 
 #: src/Menus.cpp:476 src/Menus.cpp:542
 msgid "&Delete"
-msgstr "&Ştergere"
+msgstr "Ș&terge"
 
 #: src/Menus.cpp:478 src/TrackPanel.cpp:768
 msgid "&Copy"
-msgstr "&Copiere"
+msgstr "&Copiază"
 
 #: src/Menus.cpp:482 src/TrackPanel.cpp:769
 msgid "&Paste"
-msgstr "&Lipeşte"
+msgstr "Li&pește"
 
 #: src/Menus.cpp:486
 msgid "Duplic&ate"
-msgstr ""
+msgstr "&Duplică"
 
 #: src/Menus.cpp:490
-#, fuzzy
 msgid "R&emove Special"
-msgstr "Sunete înregistrate"
+msgstr "&Elimină special"
 
 #: src/Menus.cpp:492
 msgid "Spl&it Cut"
-msgstr ""
+msgstr "Divizează și ta&ie"
 
 #: src/Menus.cpp:494
 msgid "Split D&elete"
-msgstr ""
+msgstr "Divizează și șt&erge"
 
 #: src/Menus.cpp:499
 msgid "Silence Audi&o"
-msgstr ""
+msgstr "Liniște în locul audi&o"
 
 #: src/Menus.cpp:503
-#, fuzzy
 msgid "Tri&m Audio"
-msgstr "Sunete înregistrate"
+msgstr "Supri&mă audio în afara selecției"
 
 #: src/Menus.cpp:508
 msgid "Paste Te&xt to New Label"
-msgstr ""
+msgstr "Lipește te&xtul într-o nouă etichetă"
 
 #: src/Menus.cpp:516
 msgid "Clip B&oundaries"
-msgstr ""
+msgstr "Limitele &clipului"
 
 #: src/Menus.cpp:518
 msgid "Sp&lit"
-msgstr ""
+msgstr "&Divizează"
 
 #: src/Menus.cpp:521
 msgid "Split Ne&w"
-msgstr ""
+msgstr "Divizează no&u"
 
 #: src/Menus.cpp:526 src/Menus.cpp:566
 msgid "&Join"
-msgstr ""
+msgstr "&Unește"
 
+# hm ?
 #: src/Menus.cpp:527 src/Menus.cpp:567
 msgid "Detac&h at Silences"
-msgstr ""
+msgstr "&Detașează în locurile de liniște"
 
 #: src/Menus.cpp:534
-#, fuzzy
 msgid "La&beled Audio"
-msgstr "Sunete înregistrate"
+msgstr "Audio etic&hetat"
 
 #: src/Menus.cpp:539
 msgid "&Cut"
-msgstr ""
+msgstr "&Taie"
 
 #: src/Menus.cpp:549
 msgid "&Split Cut"
-msgstr ""
+msgstr "Divi&zează și taie"
 
 #: src/Menus.cpp:550
 msgid "Sp&lit Delete"
-msgstr ""
+msgstr "Divize&ază și șterge"
 
 #: src/Menus.cpp:555
 msgid "Silence &Audio"
-msgstr ""
+msgstr "Liniște în locul &audio"
 
 #: src/Menus.cpp:557
 msgid "Co&py"
-msgstr ""
+msgstr "Co&piază"
 
 #: src/Menus.cpp:562
 msgid "Spli&t"
-msgstr ""
+msgstr "Di&vizează"
 
 #: src/Menus.cpp:574
 msgid "&Select"
-msgstr ""
+msgstr "&Selectează"
 
 #: src/Menus.cpp:577 src/PluginManager.cpp:544
 msgid "&All"
-msgstr "&Toate"
+msgstr "To&ate"
 
 #: src/Menus.cpp:578
 msgid "&None"
-msgstr ""
+msgstr "&Nimic"
 
 #: src/Menus.cpp:581
-#, fuzzy
 msgid "S&pectral"
-msgstr "Spectrograme"
+msgstr "S&pectral"
 
 #: src/Menus.cpp:582
-#, fuzzy
 msgid "To&ggle spectral selection"
-msgstr "spre sfârşitull Selecţiei"
+msgstr "Comută selecția &spectrală"
 
 #: src/Menus.cpp:583
-#, fuzzy
 msgid "Next Higher Peak Frequency"
-msgstr "Frecvenţa (Hz):"
+msgstr ""
 
 #: src/Menus.cpp:584
-#, fuzzy
 msgid "Next Lower Peak Frequency"
-msgstr "Frecvenţa (Hz):"
+msgstr ""
 
 #: src/Menus.cpp:588
 msgid "&Left at Playback Position"
@@ -2105,9 +2123,8 @@ msgid "Cursor to Track &End"
 msgstr ""
 
 #: src/Menus.cpp:598
-#, fuzzy
 msgid "In All &Tracks"
-msgstr "Piese"
+msgstr ""
 
 #: src/Menus.cpp:603
 msgid "In All S&ync-Locked Tracks"
@@ -2115,53 +2132,51 @@ msgstr ""
 
 #: src/Menus.cpp:613
 msgid "Find &Zero Crossings"
-msgstr ""
+msgstr "Găsește trecerile prin &zero"
 
 #: src/Menus.cpp:617
 msgid "Mo&ve Cursor"
-msgstr ""
+msgstr "&Mută cursorul"
 
 #: src/Menus.cpp:619
-#, fuzzy
 msgid "to Selection Star&t"
-msgstr "spre începutul Selecţiei"
+msgstr "câtre începu&tul selecției"
 
 #: src/Menus.cpp:620
-#, fuzzy
 msgid "to Selection En&d"
-msgstr "spre sfârşitull Selecţiei"
+msgstr "către s&fârșitul selecției"
 
 #: src/Menus.cpp:622
 msgid "to Track &Start"
-msgstr ""
+msgstr "la începutul pi&stei"
 
 #: src/Menus.cpp:623
 msgid "to Track &End"
-msgstr ""
+msgstr "la sfârșitul pist&ei"
 
 #: src/Menus.cpp:631
 msgid "Re&gion Save"
-msgstr ""
+msgstr "Sal&vează zona"
 
 #: src/Menus.cpp:634
 msgid "Regio&n Restore"
-msgstr ""
+msgstr "Restaurează zo&na"
 
 #: src/Menus.cpp:642
 msgid "Pla&y Region"
-msgstr ""
+msgstr "Zona de re&dare"
 
 #: src/Menus.cpp:644
 msgid "&Lock"
-msgstr ""
+msgstr "B&lochează"
 
 #: src/Menus.cpp:647
 msgid "&Unlock"
-msgstr ""
+msgstr "Debloc&hează"
 
 #: src/Menus.cpp:667
 msgid "Pre&ferences..."
-msgstr ""
+msgstr "Pre&ferințe..."
 
 #: src/Menus.cpp:677
 msgid "&View"
@@ -2169,49 +2184,47 @@ msgstr "&Vizualizare"
 
 #: src/Menus.cpp:680
 msgid "Zoom &In"
-msgstr "Măreşt&e"
+msgstr "Măreșt&e"
 
 #: src/Menus.cpp:683
 msgid "Zoom &Normal"
-msgstr "Mărime &normală"
+msgstr "Zoom &normal"
 
 #: src/Menus.cpp:684
 msgid "Zoom &Out"
-msgstr "Micş&orează"
+msgstr "Micș&orează"
 
 #: src/Menus.cpp:687
 msgid "&Zoom to Selection"
-msgstr "&Măreşte selecţia"
+msgstr "&Zoom la selecție"
 
 #: src/Menus.cpp:690
 msgid "&Fit in Window"
-msgstr "&Potriveşte în Fereastră"
+msgstr "&Potrivește în fereastră"
 
 #: src/Menus.cpp:691
 msgid "Fit &Vertically"
-msgstr ""
+msgstr "Potrivește &vertical"
 
 #: src/Menus.cpp:694
-#, fuzzy
 msgid "Go to Selection Sta&rt"
-msgstr "spre începutul Selecţiei"
+msgstr "Du-&te la începutul selecției"
 
 #: src/Menus.cpp:695
-#, fuzzy
 msgid "Go to Selection En&d"
-msgstr "spre sfârşitull Selecţiei"
+msgstr "&Du-te la sfârșitul selecției"
 
 #: src/Menus.cpp:698
 msgid "&Collapse All Tracks"
-msgstr ""
+msgstr "&Restrânge toate pistele"
 
 #: src/Menus.cpp:699
 msgid "E&xpand All Tracks"
-msgstr ""
+msgstr "E&xtinde toate pistele"
 
 #: src/Menus.cpp:702
 msgid "&Show Clipping"
-msgstr ""
+msgstr "Arată li&mitarea"
 
 #: src/Menus.cpp:730
 msgid "&History..."
@@ -2219,7 +2232,7 @@ msgstr "&Istoric..."
 
 #: src/Menus.cpp:734
 msgid "&Karaoke..."
-msgstr ""
+msgstr "&Karaoke..."
 
 #: src/Menus.cpp:735
 msgid "&Mixer Board..."
@@ -2227,7 +2240,7 @@ msgstr ""
 
 #: src/Menus.cpp:741
 msgid "&Toolbars"
-msgstr ""
+msgstr "Bare de instrumen&te"
 
 #: src/Menus.cpp:744
 msgid "&Device Toolbar"
@@ -2235,21 +2248,19 @@ msgstr ""
 
 #: src/Menus.cpp:746
 msgid "&Edit Toolbar"
-msgstr ""
+msgstr "&Editează bara de unelte"
 
 #: src/Menus.cpp:748
 msgid "&Combined Meter Toolbar"
 msgstr ""
 
 #: src/Menus.cpp:750
-#, fuzzy
 msgid "&Recording Meter Toolbar"
-msgstr "Se înregistrează"
+msgstr "Bară de unelte pentru în&registrare"
 
 #: src/Menus.cpp:752
-#, fuzzy
 msgid "&Playback Meter Toolbar"
-msgstr "Redare"
+msgstr "Bară de unelte &pentru înregistrare"
 
 #: src/Menus.cpp:754
 msgid "Mi&xer Toolbar"
@@ -2260,9 +2271,8 @@ msgid "&Selection Toolbar"
 msgstr ""
 
 #: src/Menus.cpp:759
-#, fuzzy
 msgid "&Spectral Selection Toolbar"
-msgstr "Unealta de selecţie"
+msgstr "Bară de unelte pentru selecție &spectrală"
 
 #: src/Menus.cpp:762
 msgid "T&ools Toolbar"
@@ -2286,46 +2296,44 @@ msgstr ""
 
 #: src/Menus.cpp:793
 msgid "T&ransport"
-msgstr ""
+msgstr "T&ransport"
 
 #: src/Menus.cpp:797
 msgid "Pl&ay/Stop"
-msgstr ""
+msgstr "Red&are/Stop"
 
+# hm ? sau potrivire cursor ?
 #: src/Menus.cpp:800
 msgid "Play/Stop and &Set Cursor"
-msgstr ""
+msgstr "Redare/Stop și potrivește cursorul"
 
 #: src/Menus.cpp:803
 msgid "&Loop Play"
-msgstr ""
+msgstr "Redare în buc&lă"
 
 #: src/Menus.cpp:806
 msgid "&Pause"
-msgstr ""
+msgstr "&Pauză"
 
 #: src/Menus.cpp:809
-#, fuzzy
 msgid "S&kip to Start"
-msgstr "Sari la Început"
+msgstr "Salt la î&nceput"
 
 #: src/Menus.cpp:812
-#, fuzzy
 msgid "Skip to E&nd"
-msgstr "Sari la Sfârşit"
+msgstr "Salt la sfârși&t"
 
 #: src/Menus.cpp:819
 msgid "&Record"
-msgstr ""
+msgstr "Înregist&rare"
 
 #: src/Menus.cpp:820
 msgid "&Timer Record..."
 msgstr ""
 
 #: src/Menus.cpp:821
-#, fuzzy
 msgid "Appen&d Record"
-msgstr "Înregistrează"
+msgstr ""
 
 #: src/Menus.cpp:825
 msgid "&Overdub (on/off)"
@@ -2353,94 +2361,87 @@ msgstr ""
 
 #: src/Menus.cpp:841
 msgid "&Tracks"
-msgstr ""
+msgstr "Pis&te"
 
 #: src/Menus.cpp:846
 msgid "Add &New"
-msgstr ""
+msgstr "Adaugă o &nouă"
 
 #: src/Menus.cpp:848
-#, fuzzy
 msgid "&Mono Track"
-msgstr "Piese"
+msgstr "Pistă &mono"
 
 #: src/Menus.cpp:849
 msgid "&Stereo Track"
-msgstr ""
+msgstr "Pistă stereo"
 
 #: src/Menus.cpp:850
-#, fuzzy
 msgid "&Label Track"
-msgstr "Etichetează piesa"
+msgstr "Pistă de etic&hete"
 
 #: src/Menus.cpp:851
 msgid "&Time Track"
-msgstr ""
+msgstr "Pistă de &timp"
 
 #: src/Menus.cpp:859
 msgid "Stereo Trac&k to Mono"
-msgstr ""
+msgstr "Pistă stereo la &mono"
 
 #: src/Menus.cpp:862
 msgid "Mi&x and Render"
-msgstr ""
+msgstr "Mi&xează și randează"
 
 #: src/Menus.cpp:865
 msgid "Mix and Render to Ne&w Track"
-msgstr ""
+msgstr "Mixează și randează într-o nouă &pistă"
 
 #: src/Menus.cpp:868
 msgid "&Resample..."
-msgstr ""
+msgstr "&Reeșantionează..."
 
 #: src/Menus.cpp:874
 msgid "Remo&ve Tracks"
-msgstr "Elimină Pie&sele"
+msgstr "Elimină &pistele"
 
 #: src/Menus.cpp:880
 msgid "&Mute All Tracks"
-msgstr ""
+msgstr "Pune toate pistele pe &mut"
 
 #: src/Menus.cpp:881
-#, fuzzy
 msgid "&Unmute All Tracks"
-msgstr "Piese"
+msgstr "Activează sunet&ul pe toate pistele"
 
 #: src/Menus.cpp:886
 msgid "&Align End to End"
-msgstr ""
+msgstr "&Aliniază sfârșit la sfârșit"
 
 #: src/Menus.cpp:887
 msgid "Align &Together"
-msgstr ""
+msgstr "A&liniază împreună"
 
 #: src/Menus.cpp:890
 msgid "Start to &Zero"
 msgstr ""
 
 #: src/Menus.cpp:891
-#, fuzzy
 msgid "Start to &Cursor/Selection Start"
-msgstr "spre începutul Selecţiei"
+msgstr ""
 
 #: src/Menus.cpp:892
-#, fuzzy
 msgid "Start to Selection &End"
-msgstr "spre sfârşitull Selecţiei"
+msgstr ""
 
 #: src/Menus.cpp:893
-#, fuzzy
 msgid "End to Cu&rsor/Selection Start"
-msgstr "spre începutul Selecţiei"
+msgstr ""
 
 #: src/Menus.cpp:894
-#, fuzzy
 msgid "End to Selection En&d"
-msgstr "spre sfârşitull Selecţiei"
+msgstr ""
 
 #: src/Menus.cpp:902
 msgid "&Align Tracks"
-msgstr ""
+msgstr "&Aliniază pistele"
 
 #: src/Menus.cpp:913
 msgid "Move Sele&ction when Aligning"
@@ -2450,44 +2451,42 @@ msgstr ""
 msgid "Synchronize MIDI with Audio"
 msgstr ""
 
+# hm ?
 #: src/Menus.cpp:935
 msgid "Sync-&Lock Tracks"
-msgstr ""
+msgstr "B&lochează sincronizarea pistelor"
 
 #: src/Menus.cpp:941
 msgid "Add Label At &Selection"
 msgstr ""
 
 #: src/Menus.cpp:943
-#, fuzzy
 msgid "Add Label At &Playback Position"
-msgstr "Adaugă etichetă la pozitia de redare"
+msgstr ""
 
 #: src/Menus.cpp:951
 msgid "&Edit Labels..."
-msgstr ""
+msgstr "&Editare etichete..."
 
 #: src/Menus.cpp:957
-#, fuzzy
 msgid "S&ort Tracks"
-msgstr "Piese"
+msgstr "&Ordonează pistele"
 
 #: src/Menus.cpp:959
 msgid "by &Start time"
-msgstr ""
+msgstr "După timpul de &start"
 
 #: src/Menus.cpp:962
 msgid "by &Name"
-msgstr ""
+msgstr "După &nume"
 
 #: src/Menus.cpp:981
 msgid "&Generate"
-msgstr "&Generează"
+msgstr "&Generare"
 
 #: src/Menus.cpp:985 src/Menus.cpp:1012 src/Menus.cpp:1036
-#, fuzzy
 msgid "Manage..."
-msgstr "Nume..."
+msgstr "Gestionare..."
 
 #: src/Menus.cpp:1001
 msgid "Effe&ct"
@@ -2500,15 +2499,15 @@ msgstr "Repetă %s"
 
 #: src/Menus.cpp:1009
 msgid "Repeat Last Effect"
-msgstr ""
+msgstr "Repetă ultimul efect"
 
 #: src/Menus.cpp:1033
 msgid "&Analyze"
-msgstr "&Analizează"
+msgstr "&Analizare"
 
 #: src/Menus.cpp:1041
 msgid "Contrast..."
-msgstr ""
+msgstr "Contrast..."
 
 #: src/Menus.cpp:1044
 msgid "Plot Spectrum..."
@@ -2519,13 +2518,12 @@ msgid "&Help"
 msgstr "&Ajutor"
 
 #: src/Menus.cpp:1066
-#, fuzzy
 msgid "&Quick Help"
-msgstr "&Ajutor"
+msgstr "&Ajutor rapid"
 
 #: src/Menus.cpp:1067
 msgid "&Manual"
-msgstr ""
+msgstr "&Manual"
 
 #: src/Menus.cpp:1071
 msgid "&Screenshot Tools..."
@@ -2533,11 +2531,11 @@ msgstr ""
 
 #: src/Menus.cpp:1077
 msgid "&Run Benchmark..."
-msgstr "&Execută Test"
+msgstr "&Rulează un test de performanță..."
 
 #: src/Menus.cpp:1081
 msgid "&Check for Updates..."
-msgstr ""
+msgstr "&Caută actualizări..."
 
 #: src/Menus.cpp:1082
 msgid "Au&dio Device Info..."
@@ -2570,43 +2568,45 @@ msgstr ""
 #: src/Menus.cpp:1112 src/toolbars/ToolsToolBar.cpp:154
 #: src/toolbars/ToolsToolBar.cpp:193
 msgid "Selection Tool"
-msgstr "Unealta de selecţie"
+msgstr "Instrument de selecție"
 
 #: src/Menus.cpp:1113 src/toolbars/ToolsToolBar.cpp:155
 #: src/toolbars/ToolsToolBar.cpp:194
 msgid "Envelope Tool"
-msgstr ""
+msgstr "Instrument de anvelopă"
 
 #: src/Menus.cpp:1114 src/toolbars/ToolsToolBar.cpp:158
 #: src/toolbars/ToolsToolBar.cpp:195
 msgid "Draw Tool"
-msgstr "Unealta de desenare"
+msgstr "Instrument de desenare"
 
 #: src/Menus.cpp:1115 src/toolbars/ToolsToolBar.cpp:157
 #: src/toolbars/ToolsToolBar.cpp:196
 msgid "Zoom Tool"
-msgstr "Unealta de mărire"
+msgstr "Instrument de zoom"
 
+# hm ?
 #: src/Menus.cpp:1116 src/toolbars/ToolsToolBar.cpp:156
 msgid "Time Shift Tool"
-msgstr ""
+msgstr "Instrument de decalaj temporal"
 
+# hm ? sau de multiplicare ?
 #: src/Menus.cpp:1117 src/toolbars/ToolsToolBar.cpp:198
 msgid "Multi Tool"
-msgstr ""
+msgstr "Instrument multiplu"
 
 #: src/Menus.cpp:1119
 msgid "Next Tool"
-msgstr "Urmâtoare unealtă"
+msgstr "Instrumentul următor"
 
 #: src/Menus.cpp:1120
 msgid "Previous Tool"
-msgstr "Unelata precedentă"
+msgstr "Instrumentul precedent"
 
 #: src/Menus.cpp:1122 src/effects/Effect.cpp:3675
 #: src/toolbars/ControlToolBar.cpp:161
 msgid "Play"
-msgstr ""
+msgstr "Redă"
 
 #: src/Menus.cpp:1126 src/effects/Effect.cpp:3653
 #: src/toolbars/ControlToolBar.cpp:168 src/widgets/ProgressDialog.cpp:1119
@@ -2615,45 +2615,45 @@ msgstr "Stop"
 
 #: src/Menus.cpp:1129
 msgid "Play One Second"
-msgstr ""
+msgstr "Redă o secundă"
 
 #: src/Menus.cpp:1132
 msgid "Play To Selection"
-msgstr ""
+msgstr "Redă două secunde"
 
 #: src/Menus.cpp:1135
 #, fuzzy
 msgid "Play Before Selection Start"
-msgstr "spre începutul Selecţiei"
+msgstr "câtre începu&tul selecției"
 
 #: src/Menus.cpp:1136
 #, fuzzy
 msgid "Play After Selection Start"
-msgstr "spre începutul Selecţiei"
+msgstr "câtre începu&tul selecției"
 
 #: src/Menus.cpp:1137
 #, fuzzy
 msgid "Play Before Selection End"
-msgstr "spre sfârşitull Selecţiei"
+msgstr "Redă două secunde"
 
 #: src/Menus.cpp:1138
 #, fuzzy
 msgid "Play After Selection End"
-msgstr "spre sfârşitull Selecţiei"
+msgstr "către s&fârșitul selecției"
 
 #: src/Menus.cpp:1139
 #, fuzzy
 msgid "Play Before and After Selection Start"
-msgstr "spre începutul Selecţiei"
+msgstr "Du-&te la începutul selecției"
 
 #: src/Menus.cpp:1140
 #, fuzzy
 msgid "Play Before and After Selection End"
-msgstr "spre sfârşitull Selecţiei"
+msgstr "&Du-te la sfârșitul selecției"
 
 #: src/Menus.cpp:1141
 msgid "Play Cut Preview"
-msgstr ""
+msgstr "Redă previzualizarea tăiată"
 
 #: src/Menus.cpp:1145
 msgid "Selection to Start"
@@ -2665,11 +2665,11 @@ msgstr ""
 
 #: src/Menus.cpp:1148
 msgid "DeleteKey"
-msgstr "Tasta de ştergere"
+msgstr "Tasta de ștergere"
 
 #: src/Menus.cpp:1152
 msgid "DeleteKey2"
-msgstr "Tasta de ştergere2"
+msgstr "Tasta de ștergere2"
 
 #: src/Menus.cpp:1158
 msgid "Short seek left during playback"
@@ -2696,12 +2696,14 @@ msgid "Move Focus to Next Track"
 msgstr ""
 
 #: src/Menus.cpp:1168
+#, fuzzy
 msgid "Move Focus to First Track"
-msgstr ""
+msgstr "Mută efectul mai jos în rack"
 
 #: src/Menus.cpp:1169
+#, fuzzy
 msgid "Move Focus to Last Track"
-msgstr ""
+msgstr "Mută efectul mai sus în rack"
 
 #: src/Menus.cpp:1172
 msgid "Move Focus to Previous and Select"
@@ -2806,134 +2808,124 @@ msgstr ""
 #: src/Menus.cpp:1203
 #, fuzzy
 msgid "Move focused track up"
-msgstr "Elimină piesa"
+msgstr "Mută pista mai s&us"
 
 #: src/Menus.cpp:1204
 #, fuzzy
 msgid "Move focused track down"
-msgstr "Elimină piesa"
+msgstr "Mută pista mai &jos"
 
 #: src/Menus.cpp:1205
 #, fuzzy
 msgid "Move focused track to top"
-msgstr "Elimină piesa"
+msgstr "Mută pista sus de &tot"
 
 #: src/Menus.cpp:1206
 #, fuzzy
 msgid "Move focused track to bottom"
-msgstr "Elimină piesa"
+msgstr "Mută pista jos de &tot"
 
 #: src/Menus.cpp:1210
 msgid "Snap To Off"
-msgstr ""
+msgstr "Acroșare dezactivată"
 
 #: src/Menus.cpp:1211
 msgid "Snap To Nearest"
-msgstr ""
+msgstr "Acroșare la cel mai apropiat"
 
 #: src/Menus.cpp:1212
 msgid "Snap To Prior"
-msgstr ""
+msgstr "Acroșare la precedent"
 
 #: src/Menus.cpp:1214
 msgid "Full screen on/off"
-msgstr ""
+msgstr "Ecran întreg pornit/oprit"
 
 #: src/Menus.cpp:1221
-#, fuzzy
 msgid "Change recording device"
-msgstr "Ajusteaza Inaltele"
+msgstr "Schimbă dispozitivul de înregistrare"
 
 #: src/Menus.cpp:1224
-#, fuzzy
 msgid "Change playback device"
-msgstr "Ajusteaza Inaltele"
+msgstr "Schimbă dispozitivul de redare"
 
 #: src/Menus.cpp:1227
-#, fuzzy
 msgid "Change audio host"
-msgstr "Ajusteaza Inaltele"
+msgstr "Schimbă gazda audio"
 
 #: src/Menus.cpp:1230
-#, fuzzy
 msgid "Change recording channels"
-msgstr "Ajusteaza Inaltele"
+msgstr "Schimbă canalele de înregistrare"
 
 #: src/Menus.cpp:1234
-#, fuzzy
 msgid "Adjust playback volume"
-msgstr "Redare"
+msgstr "Ajustează volumul de redare"
 
 #: src/Menus.cpp:1235
-#, fuzzy
 msgid "Increase playback volume"
-msgstr "Redare"
+msgstr "Mărește volumul de redare"
 
 #: src/Menus.cpp:1236
-#, fuzzy
 msgid "Decrease playback volume"
-msgstr "Redare"
+msgstr "Scade volumul de redare"
 
 #: src/Menus.cpp:1237
-#, fuzzy
 msgid "Adjust recording volume"
-msgstr "Se înregistrează"
+msgstr "Ajustează volumul de înregistrare"
 
 #: src/Menus.cpp:1238
-#, fuzzy
 msgid "Increase recording volume"
-msgstr "Se înregistrează"
+msgstr "Mărește volumul de înregistrare"
 
 #: src/Menus.cpp:1239
-#, fuzzy
 msgid "Decrease recording volume"
-msgstr "Se înregistrează"
+msgstr "Scade volumul de înregistrare"
 
 #: src/Menus.cpp:1243
 msgid "Play at speed"
-msgstr ""
+msgstr "Redă la viteza"
 
 #: src/Menus.cpp:1244
 msgid "Loop Play at speed"
-msgstr ""
+msgstr "Redă în buclă la viteza"
 
 #: src/Menus.cpp:1245
 msgid "Play Cut Preview at speed"
-msgstr ""
+msgstr "Redă previzualizarea tăiată la viteza"
 
 #: src/Menus.cpp:1246
 msgid "Adjust playback speed"
-msgstr ""
+msgstr "Ajustează viteza de redare"
 
 #: src/Menus.cpp:1247
 msgid "Increase playback speed"
-msgstr ""
+msgstr "Crește viteza de redare"
 
 #: src/Menus.cpp:1248
 msgid "Decrease playback speed"
-msgstr ""
+msgstr "Scade viteza de redare"
 
 #: src/Menus.cpp:1369 src/Menus.cpp:1377
 msgid "Unknown"
-msgstr ""
+msgstr "Necunoscut"
 
 #: src/Menus.cpp:1512
-#, fuzzy, c-format
+#, c-format
 msgid "Plug-ins %d to %d"
-msgstr "Plug-in-urile de la %i la %i"
+msgstr "Plug-in-uri de la %d la %d"
 
 #: src/Menus.cpp:1565
 msgid "Open Recent"
-msgstr ""
+msgstr "Deschide fișiere recente"
 
 #: src/Menus.cpp:1568
 msgid "Recent &Files"
-msgstr ""
+msgstr "&Fișiere recente"
 
 #: src/Menus.cpp:1586
 #, c-format
 msgid "&Undo %s"
-msgstr "&Desfă %s"
+msgstr "&Anulează %s"
 
 #: src/Menus.cpp:1621
 #, c-format
@@ -2942,31 +2934,31 @@ msgstr "&Refă %s"
 
 #: src/Menus.cpp:2510
 msgid "Tracks sorted by time"
-msgstr ""
+msgstr "Piste ordonate după timp"
 
 #: src/Menus.cpp:2510
 msgid "Sort by Time"
-msgstr ""
+msgstr "Ordonează după timp"
 
 #: src/Menus.cpp:2519
 msgid "Tracks sorted by name"
-msgstr ""
+msgstr "Piste ordonate după nume"
 
 #: src/Menus.cpp:2519
 msgid "Sort by Name"
-msgstr ""
+msgstr "Ordonează după nume"
 
 #: src/Menus.cpp:2682
 msgid "Set Left Selection Boundary"
-msgstr ""
+msgstr "Stabilește limita de selecție din stânga"
 
 #: src/Menus.cpp:2683 src/Menus.cpp:2715
 msgid "Position"
-msgstr ""
+msgstr "Poziție"
 
 #: src/Menus.cpp:2714
 msgid "Set Right Selection Boundary"
-msgstr ""
+msgstr "Stabilește limita de selecție din dreapta"
 
 #: src/Menus.cpp:3407
 msgid "labels.txt"
@@ -2974,34 +2966,35 @@ msgstr "etichete.txt"
 
 #: src/Menus.cpp:3419
 msgid "There are no label tracks to export."
-msgstr "Nu existe nici o piesă care să fie exportată."
+msgstr "Nu există nicio pistă de etichete de exportat."
 
 #: src/Menus.cpp:3504
 msgid "Export MIDI As:"
-msgstr ""
+msgstr "Exportă MIDI ca:"
 
 #: src/Menus.cpp:3508
 msgid "MIDI file (*.mid)|*.mid|Allegro file (*.gro)|*.gro"
-msgstr ""
+msgstr "Fișier MIDI (*.mid)|*.mid|Fișier Allegro (*.gro)|*.gro"
 
 #: src/Menus.cpp:3540
 msgid ""
 "You have selected a filename with an unrecognized file extension.\n"
 "Do you want to continue?"
 msgstr ""
+"Ați selectat un nume de fișier cu o extensie de fișier nerecunoascută.\n"
+"Vreți să continuați ?"
 
 #: src/Menus.cpp:3541
 msgid "Export MIDI"
-msgstr ""
+msgstr "Exportă MIDI"
 
 #: src/Menus.cpp:3568
-#, fuzzy
 msgid "Export Selected Audio"
-msgstr "Locaţia exportului:"
+msgstr "Exportă audio selectat"
 
 #: src/Menus.cpp:3628
 msgid "Nothing to undo"
-msgstr "Nu există nimic de desfăcut"
+msgstr "Nu există nimic de anulat"
 
 #: src/Menus.cpp:3654
 msgid "Nothing to redo"
@@ -3009,7 +3002,7 @@ msgstr "Nu există nimic de refăcut"
 
 #: src/Menus.cpp:3757
 msgid "Cut to the clipboard"
-msgstr "Taie şi adaugă în Clipboard"
+msgstr "Taie și copiază în clipboard"
 
 #: src/Menus.cpp:3757 src/toolbars/EditToolBar.cpp:201
 msgid "Cut"
@@ -3033,12 +3026,12 @@ msgstr ""
 
 #: src/Menus.cpp:4053 src/Menus.cpp:4182 src/Menus.cpp:4259
 msgid "Pasted from the clipboard"
-msgstr "Lipreşte din Memoria Clipboard"
+msgstr "Lipit din clipboard"
 
 #: src/Menus.cpp:4053 src/Menus.cpp:4077 src/Menus.cpp:4182
 #: src/toolbars/EditToolBar.cpp:135 src/toolbars/EditToolBar.cpp:203
 msgid "Paste"
-msgstr "Lipeşte"
+msgstr "Lipește"
 
 #: src/Menus.cpp:4077
 msgid "Pasted text from the clipboard"
@@ -3046,17 +3039,19 @@ msgstr ""
 
 #: src/Menus.cpp:4259
 msgid "Paste Text to New Label"
-msgstr ""
+msgstr "Lipește textul într-o etichetă nouă"
 
 #: src/Menus.cpp:4311
 #, c-format
 msgid "Trim selected audio tracks from %.2f seconds to %.2f seconds"
 msgstr ""
+"Suprimă audio de la %.2f secunde la %.2f secunde din pistele audio selectate"
 
+# în meniul Edit -> Edit Special
+# ca tooltip
 #: src/Menus.cpp:4313 src/toolbars/EditToolBar.cpp:204
-#, fuzzy
 msgid "Trim Audio"
-msgstr "Sunete înregistrate"
+msgstr "Suprimă audio în afara selecției"
 
 #: src/Menus.cpp:4344
 #, c-format
@@ -3074,7 +3069,7 @@ msgstr ""
 
 #: src/Menus.cpp:4372
 msgid "Detach"
-msgstr ""
+msgstr "Detașează"
 
 #: src/Menus.cpp:4394
 #, c-format
@@ -3092,11 +3087,11 @@ msgstr ""
 
 #: src/Menus.cpp:4413 src/effects/Silence.h:23
 msgid "Silence"
-msgstr "Linişte"
+msgstr "Liniște"
 
 #: src/Menus.cpp:4444
 msgid "Duplicated"
-msgstr ""
+msgstr "Duplicat"
 
 #: src/Menus.cpp:4444
 msgid "Duplicate"
@@ -3174,9 +3169,10 @@ msgstr ""
 msgid "Detach Labeled Audio"
 msgstr ""
 
+# hm ? sau divizare ?
 #: src/Menus.cpp:4624 src/TrackPanel.cpp:8869
 msgid "Split"
-msgstr "Împarte"
+msgstr "Divizează"
 
 #: src/Menus.cpp:4715
 msgid "Split to new track"
@@ -3186,9 +3182,10 @@ msgstr ""
 msgid "Split New"
 msgstr ""
 
+# hm ?
 #: src/Menus.cpp:5145
 msgid "Frequency Analysis"
-msgstr "Analiza frecvenţei"
+msgstr "Analiza frecvenței"
 
 #: src/Menus.cpp:5163
 msgid "Contrast Analysis (WCAG 2 compliance)"
@@ -3197,49 +3194,49 @@ msgstr ""
 #: src/Menus.cpp:5360
 #, c-format
 msgid "Imported labels from '%s'"
-msgstr "Au fost importate etichete de la '%s'"
+msgstr "Etichete importate de la '%s'"
 
 #: src/Menus.cpp:5361
 msgid "Import Labels"
-msgstr "Importează etichete"
+msgstr "Importă etichetele"
 
 #: src/Menus.cpp:5372
 msgid "Select a MIDI file..."
-msgstr "Selectează un fişier MIDI..."
+msgstr "Selectați un fișier MIDI..."
 
 #: src/Menus.cpp:5376
 msgid ""
 "MIDI and Allegro files (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI files (*."
 "mid;*.midi)|*.mid;*.midi|Allegro files (*.gro)|*.gro|All files|*"
 msgstr ""
+"Fișiere MIDI și Allegro (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|Fișiere MIDI "
+"(*.mid;*.midi)|*.mid;*.midi|Fișiere Allegro (*.gro)|*.gro|Toate fișierele|*"
 
 #: src/Menus.cpp:5393
 #, c-format
 msgid "Imported MIDI from '%s'"
-msgstr "MIDI a fost importat de la '%s'"
+msgstr "MIDI importat de la '%s'"
 
 #: src/Menus.cpp:5394
 msgid "Import MIDI"
-msgstr "Importează MIDI"
+msgstr "Importă MIDI"
 
 #: src/Menus.cpp:5408
 msgid "Select any uncompressed audio file..."
-msgstr ""
+msgstr "Selectați orice fișier audio necomprimat..."
 
 #: src/Menus.cpp:5412
-#, fuzzy
 msgid "All files|*"
-msgstr "Toate Fişierele (*)|*"
+msgstr "Toate Fișierele|*"
 
 #: src/Menus.cpp:5437 src/Menus.cpp:5438
-#, fuzzy
 msgid "Edit Metadata Tags"
-msgstr "eroare la încărcarea scurtăturilor din tastatură"
+msgstr "Editare etichete metadate"
 
 #: src/Menus.cpp:5438 src/export/Export.cpp:382
 #: src/export/ExportMultiple.cpp:682 src/export/ExportMultiple.cpp:820
 msgid "Edit Metadata"
-msgstr ""
+msgstr "Editare metadate"
 
 #: src/Menus.cpp:5494
 #, c-format
@@ -3271,42 +3268,37 @@ msgstr ""
 #: src/Menus.cpp:5669 src/Menus.cpp:5674 src/Menus.cpp:5679
 #: src/effects/Contrast.cpp:220 src/effects/ToneGen.cpp:319
 msgid "Start"
-msgstr ""
+msgstr "Început"
 
 #: src/Menus.cpp:5673
-#, fuzzy
 msgid "start to cursor/selection start"
-msgstr "spre începutul Selecţiei"
+msgstr ""
 
 #: src/Menus.cpp:5678
-#, fuzzy
 msgid "start to selection end"
-msgstr "spre sfârşitull Selecţiei"
+msgstr ""
 
 #: src/Menus.cpp:5683
-#, fuzzy
 msgid "end to cursor/selection start"
-msgstr "spre începutul Selecţiei"
+msgstr ""
 
 #: src/Menus.cpp:5684 src/Menus.cpp:5689 src/effects/Contrast.cpp:221
 #: src/effects/ToneGen.cpp:325 src/toolbars/SelectionBar.cpp:154
 #: src/toolbars/SelectionBar.cpp:157 src/toolbars/SelectionBar.cpp:264
 msgid "End"
-msgstr ""
+msgstr "Sfârșit"
 
 #: src/Menus.cpp:5688
-#, fuzzy
 msgid "end to selection end"
-msgstr "spre sfârşitull Selecţiei"
+msgstr ""
 
 #: src/Menus.cpp:5694
 msgid "end to end"
 msgstr ""
 
 #: src/Menus.cpp:5695
-#, fuzzy
 msgid "End to End"
-msgstr "Sari la Sfârşit"
+msgstr ""
 
 #: src/Menus.cpp:5699
 msgid "together"
@@ -3317,24 +3309,24 @@ msgid "Together"
 msgstr ""
 
 #: src/Menus.cpp:5775
-#, fuzzy, c-format
+#, c-format
 msgid "Aligned/Moved %s"
-msgstr "Aliniat"
+msgstr ""
 
 #: src/Menus.cpp:5776
-#, fuzzy, c-format
+#, c-format
 msgid "Align %s/Move"
-msgstr "Aliniat"
+msgstr ""
 
 #: src/Menus.cpp:5779
-#, fuzzy, c-format
+#, c-format
 msgid "Aligned %s"
-msgstr "Aliniat"
+msgstr ""
 
 #: src/Menus.cpp:5780
-#, fuzzy, c-format
+#, c-format
 msgid "Align %s"
-msgstr "Aliniare"
+msgstr ""
 
 #: src/Menus.cpp:5891
 msgid "Synchronizing MIDI and Audio Tracks"
@@ -3364,19 +3356,19 @@ msgstr ""
 
 #: src/Menus.cpp:6089
 msgid "Created new audio track"
-msgstr "A fost creată o nouă piesă audio"
+msgstr "A fost creată o nouă pistă audio"
 
 #: src/Menus.cpp:6089 src/Menus.cpp:6111 src/Menus.cpp:6126 src/Menus.cpp:6146
 msgid "New Track"
-msgstr "Piesă nouă"
+msgstr "Pistă nouă"
 
 #: src/Menus.cpp:6111
 msgid "Created new stereo audio track"
-msgstr "A fost creată o nouă piesă audio stereo"
+msgstr "A fost creată o nouă pistă audio stereo"
 
 #: src/Menus.cpp:6126
 msgid "Created new label track"
-msgstr "A fost creată o nouă etichetă pentru piesă"
+msgstr "A fost creată o nouă pistă de etichete"
 
 #: src/Menus.cpp:6135
 msgid ""
@@ -3393,20 +3385,19 @@ msgstr ""
 
 #: src/Menus.cpp:6330
 msgid "Removed audio track(s)"
-msgstr "Piesă(e) eliminate"
+msgstr "Piste audio eliminate"
 
 #: src/Menus.cpp:6330
 msgid "Remove Track"
-msgstr "Elimină piesa"
+msgstr "Elimină pista"
 
 #: src/Menus.cpp:6407
 msgid "Audio Device Info"
 msgstr ""
 
 #: src/Menus.cpp:6420 src/effects/nyquist/Nyquist.cpp:1842
-#, fuzzy
 msgid "&Save"
-msgstr "Salvat %s"
+msgstr ""
 
 #: src/Menus.cpp:6425 src/Menus.cpp:6436
 msgid "Save Device Info"
@@ -3415,7 +3406,7 @@ msgstr ""
 #: src/Menus.cpp:6436
 #, fuzzy
 msgid "Unable to save device info"
-msgstr "Incapabil sa determin"
+msgstr "Nu s-a putut salva fișierul de genuri muzicale."
 
 #: src/Menus.cpp:6519
 msgid ""
@@ -3461,11 +3452,12 @@ msgstr ""
 msgid "Velocity"
 msgstr ""
 
+# hm ? sau Amplificare ?
 #: src/MixerBoard.cpp:224 src/MixerBoard.cpp:227 src/MixerBoard.cpp:407
 #: src/TrackPanel.cpp:5542 src/TrackPanel.cpp:8454 src/TrackPanel.cpp:9838
 #: src/widgets/ASlider.cpp:357
 msgid "Gain"
-msgstr "Câştig"
+msgstr "Câștig"
 
 #: src/MixerBoard.cpp:247 src/MixerBoard.cpp:248
 msgid "Musical Instrument"
@@ -3549,21 +3541,19 @@ msgstr ""
 
 #: src/ModuleManager.cpp:288
 msgid "Yes"
-msgstr ""
+msgstr "Da"
 
 #: src/ModuleManager.cpp:288
-#, fuzzy
 msgid "No"
-msgstr "Nimic"
+msgstr "Nu"
 
 #: src/ModuleManager.cpp:290
-#, fuzzy
 msgid "Audacity Module Loader"
-msgstr "Prima rulare a programului Audacity"
+msgstr "Încărcător de module Audacity"
 
 #: src/ModuleManager.cpp:290
 msgid "Try and load this module?"
-msgstr ""
+msgstr "Încercați și încărcați acest modul ?"
 
 #: src/NoteTrack.cpp:107 src/TrackPanelAx.cpp:323
 msgid "Note Track"
@@ -3574,9 +3564,8 @@ msgid "Plug-in Manager: Effects, Generators and Analyzers"
 msgstr ""
 
 #: src/PluginManager.cpp:490 src/prefs/ModulePrefs.cpp:102
-#, fuzzy
 msgid "New"
-msgstr "&Nou"
+msgstr "Nou"
 
 #: src/PluginManager.cpp:528
 msgid "Select effects, click the Enable or Disable button, then click OK."
@@ -3584,21 +3573,21 @@ msgstr ""
 
 #: src/PluginManager.cpp:542
 msgid "Show:"
-msgstr ""
+msgstr "Arată:"
 
 #: src/PluginManager.cpp:545
 msgid "Show all"
-msgstr ""
+msgstr "Arată tot"
 
 #: src/PluginManager.cpp:547
 #, fuzzy
 msgid "D&isabled"
-msgstr "(dezactivat)"
+msgstr "Dezactivat"
 
 #: src/PluginManager.cpp:548
 #, fuzzy
 msgid "Show disabled"
-msgstr "(dezactivat)"
+msgstr " (dezactivat)"
 
 #: src/PluginManager.cpp:550
 #, fuzzy
@@ -3629,21 +3618,21 @@ msgstr ""
 #: src/PluginManager.cpp:576
 #, fuzzy
 msgid "&Select All"
-msgstr "Selectează"
+msgstr "&Selectează"
 
 #: src/PluginManager.cpp:577
+#, fuzzy
 msgid "C&lear All"
-msgstr ""
+msgstr "&Curăță"
 
 #: src/PluginManager.cpp:585 src/effects/Effect.cpp:3019
-#, fuzzy
 msgid "&Enable"
-msgstr "Activat"
+msgstr "Activ&ează"
 
 #: src/PluginManager.cpp:586
 #, fuzzy
 msgid "&Disable"
-msgstr "(dezactivat)"
+msgstr "Dezactivat"
 
 #: src/PluginManager.cpp:965
 #, fuzzy, c-format
@@ -3651,7 +3640,7 @@ msgid ""
 "Enabling effects:\n"
 "\n"
 "%s"
-msgstr "Efect aplicat în proporţie de: %s"
+msgstr "Efectul aplicat: %s"
 
 #: src/PluginManager.cpp:979
 #, fuzzy, c-format
@@ -3659,12 +3648,12 @@ msgid ""
 "Enabling effect:\n"
 "\n"
 "%s"
-msgstr "Efect aplicat în proporţie de: %s"
+msgstr "Efectul aplicat: %s"
 
 #: src/Prefs.cpp:174
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to remove %s"
-msgstr "Incapabil sa determin"
+msgstr ""
 
 #: src/Prefs.cpp:174
 msgid "Failed!"
@@ -3679,17 +3668,16 @@ msgid ""
 msgstr ""
 
 #: src/Prefs.cpp:192
-#, fuzzy
 msgid "Reset Audacity Preferences"
-msgstr "Setări Audacity"
+msgstr ""
 
 #: src/Printing.cpp:173
 msgid "There was a problem printing."
-msgstr "A apărut o problemă la printare."
+msgstr "A apărut o problemă la tipărire."
 
 #: src/Printing.cpp:174
 msgid "Print"
-msgstr "Imprimă"
+msgstr "Tipărire"
 
 #: src/Project.cpp:896
 msgid "Main Mix"
@@ -3698,7 +3686,7 @@ msgstr ""
 #: src/Project.cpp:1025
 #, c-format
 msgid "Welcome to Audacity version %s"
-msgstr ""
+msgstr "Bun venit la Audacity versiunea %s"
 
 #: src/Project.cpp:1230
 msgid "(Recovered)"
@@ -3706,7 +3694,7 @@ msgstr ""
 
 #: src/Project.cpp:2130
 msgid "Save changes before closing?"
-msgstr "Salvează modificările înainte de a închide?"
+msgstr "Doriți salvarea modificărilor înainte închidere ?"
 
 #: src/Project.cpp:2133
 msgid ""
@@ -3718,9 +3706,10 @@ msgid ""
 "are open, then File > Save Project."
 msgstr ""
 
+# titlu
 #: src/Project.cpp:2136
 msgid "Save changes?"
-msgstr "Salvează modificările?"
+msgstr "Salvarea modificărilor"
 
 #: src/Project.cpp:2406
 msgid "Select one or more audio files..."
@@ -3729,13 +3718,12 @@ msgstr ""
 #: src/Project.cpp:2442
 #, c-format
 msgid "%s is already open in another window."
-msgstr "%s este deschis în altă fereastră."
+msgstr "%s este deja deschis în altă fereastră."
 
 #: src/Project.cpp:2445 src/Project.cpp:2610 src/Project.cpp:2807
 #: src/Project.cpp:2987
-#, fuzzy
 msgid "Error Opening Project"
-msgstr "Eroare la deschiderea proiectului"
+msgstr ""
 
 #: src/Project.cpp:2459 src/Project.cpp:3846
 msgid "Audacity projects"
@@ -3776,13 +3764,12 @@ msgid "Warning - Backup File Detected"
 msgstr ""
 
 #: src/Project.cpp:2569 src/xml/XMLWriter.cpp:269
-#, fuzzy
 msgid "Error Opening File"
-msgstr "Eroare la deschiderea fişierului"
+msgstr "Eroare la deschiderea fișierului"
 
 #: src/Project.cpp:2582
 msgid "Error opening file"
-msgstr "Eroare la deschiderea fişierului"
+msgstr "Eroare la deschiderea fișierului"
 
 #: src/Project.cpp:2588
 #, c-format
@@ -3792,27 +3779,26 @@ msgid ""
 msgstr ""
 
 #: src/Project.cpp:2589
-#, fuzzy
 msgid "Error Opening File or Project"
-msgstr "Eroare la deschiderea proiectului"
+msgstr "Eroare la deschiderea fișierului sau a proiectului"
 
 #: src/Project.cpp:2609
 msgid ""
 "Audacity was unable to convert an Audacity 1.0 project to the new project "
 "format."
 msgstr ""
-"Audacity nu a putut să convertească un proiect Audacity 1.0 într-un proiect "
-"din noul format."
+"Audacity nu a putut converti un proiect Audacity 1.0 în noul format de "
+"proiect."
 
 #: src/Project.cpp:2644
 #, fuzzy
 msgid "Could not decode file: "
-msgstr "Nu s-a putut deschide fişierul:"
+msgstr "Nu s-a putut deschide fișierul:"
 
 #: src/Project.cpp:2645
 #, fuzzy
 msgid "Error decoding file"
-msgstr "Eroare la deschiderea fişierului"
+msgstr "Eroare la deschiderea fișierului"
 
 #: src/Project.cpp:2743
 msgid "Project was recovered"
@@ -3833,22 +3819,22 @@ msgstr ""
 #: src/Project.cpp:2985
 #, c-format
 msgid "Couldn't find the project data folder: \"%s\""
-msgstr "Nu a putut fi găsit dosarul cu date al proiectului: \"%s\""
+msgstr "Nu s-a putut găsi dosarul cu datele proiectului: „%s”"
 
 #: src/Project.cpp:3050
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "This file was saved using Audacity %s.\n"
 "You are using Audacity %s. You may need to upgrade to a newer version to "
 "open this file."
 msgstr ""
-"Fişierul a fost dalvat folosind Audacity %s.\n"
-"Folosiţi în acest moment versiunea Audacity %s - trebuie să upgradaţi la\n"
-" o versiune mai nouă pentru a putea deschide acest fişier."
+"Fișierul a fost salvat folosind Audacity %s.\n"
+"În prezent folosiți Audacity %s. Pentru a putea deschide acest fișier "
+"trebuie să treceți la versiunea mai nouă."
 
 #: src/Project.cpp:3054
 msgid "Can't open project file"
-msgstr "Nu se poate deschide Proiectul"
+msgstr "Nu se poate deschide fișierul de proiect"
 
 #: src/Project.cpp:3334
 msgid ""
@@ -3863,9 +3849,8 @@ msgid ""
 msgstr ""
 
 #: src/Project.cpp:3335
-#, fuzzy
 msgid "Warning - Empty Project"
-msgstr "Se deschide proiectul Audacity"
+msgstr "Avertisment - proiect gol"
 
 #: src/Project.cpp:3394
 #, c-format
@@ -3904,12 +3889,11 @@ msgstr "Importat '%s'"
 
 #: src/Project.cpp:3693
 msgid "Import"
-msgstr "Importează"
+msgstr "Importă"
 
 #: src/Project.cpp:3729
-#, fuzzy
 msgid "Error Importing"
-msgstr "Eroare la importare"
+msgstr "Eroare la import"
 
 #: src/Project.cpp:3778 src/Project.cpp:3868
 msgid ""
@@ -3935,9 +3919,9 @@ msgid ""
 msgstr ""
 
 #: src/Project.cpp:3830
-#, fuzzy, c-format
+#, c-format
 msgid "Save Compressed Project \"%s\" As..."
-msgstr "Salvează proiectul c&a şi..."
+msgstr ""
 
 #: src/Project.cpp:3835
 msgid ""
@@ -3946,46 +3930,46 @@ msgid ""
 msgstr ""
 
 #: src/Project.cpp:3840
-#, fuzzy, c-format
+#, c-format
 msgid "Save Project \"%s\" As..."
-msgstr "Salvează proiectul c&a şi..."
+msgstr "Salvează proiectul „%s” ca..."
 
 #: src/Project.cpp:3911
 msgid "Created new project"
-msgstr "Noul proiect a fost creat"
+msgstr "A fost creat un nou proiect"
 
 #: src/Project.cpp:4128
 #, c-format
 msgid "Deleted %.2f seconds at t=%.2f"
-msgstr "Au fost şterse %.2f secunde la t=%.2f"
+msgstr "Au fost șterse %.2f secunde la t=%.2f"
 
 #: src/Project.cpp:4131
 msgid "Delete"
-msgstr "Şterge"
+msgstr "Șterge"
 
 #: src/Project.cpp:4341
 #, c-format
 msgid "Disk space remains for recording %d hours and %d minutes."
-msgstr ""
+msgstr "Pe disc mai este spațiu pentru %d ore și %d minute de înregistrare."
 
 #: src/Project.cpp:4344
 #, c-format
 msgid "Disk space remains for recording 1 hour and %d minutes."
-msgstr ""
+msgstr "Pe disc mai este spațiu pentru 1 oră și %d minute de înregistrare."
 
 #: src/Project.cpp:4347
 #, c-format
 msgid "Disk space remains for recording %d minutes."
-msgstr ""
+msgstr "Pe disc mai este spațiu pentru %d minute de înregistrare."
 
 #: src/Project.cpp:4350
 #, c-format
 msgid "Disk space remains for recording %d seconds."
-msgstr ""
+msgstr "Pe disc mai este spațiu pentru %d secunde de înregistrare."
 
 #: src/Project.cpp:4353
 msgid "Out of disk space"
-msgstr "Nu mai există spaţiu pe disk"
+msgstr "Nu mai există spațiu pe disc"
 
 #: src/Project.cpp:4375
 msgid "On-demand import and waveform calculation complete."
@@ -4019,7 +4003,7 @@ msgstr ""
 #: src/Project.cpp:4820
 #, c-format
 msgid "Actual Rate: %d"
-msgstr ""
+msgstr "Rata de biți actuală: %d"
 
 #: src/Project.cpp:4842
 msgid "Recorded Audio"
@@ -4031,15 +4015,15 @@ msgstr "Înregistrează"
 
 #: src/SampleFormat.cpp:66
 msgid "16-bit PCM"
-msgstr ""
+msgstr "16 biți PCM"
 
 #: src/SampleFormat.cpp:69
 msgid "24-bit PCM"
-msgstr ""
+msgstr "24 biți PCM"
 
 #: src/SampleFormat.cpp:72
 msgid "32-bit float"
-msgstr ""
+msgstr "32 de biți flotant"
 
 #: src/Screenshot.cpp:266
 msgid "Screen Capture Frame"
@@ -4055,7 +4039,7 @@ msgstr ""
 
 #: src/Screenshot.cpp:320 src/export/ExportMultiple.cpp:268
 msgid "Choose..."
-msgstr "Alegeţi..."
+msgstr "Alegeți..."
 
 #: src/Screenshot.cpp:326
 msgid "Capture entire window or screen"
@@ -4158,7 +4142,7 @@ msgstr ""
 #: src/Screenshot.cpp:396 src/export/ExportMultiple.cpp:310
 #: src/export/ExportMultiple.cpp:311 src/prefs/TracksPrefs.cpp:31
 msgid "Tracks"
-msgstr "Piese"
+msgstr "Piste"
 
 #: src/Screenshot.cpp:397
 msgid "First Track"
@@ -4225,16 +4209,15 @@ msgstr ""
 
 #: src/ShuttleGui.cpp:2202
 msgid "Pre&view"
-msgstr ""
+msgstr "Pre&vizualizare"
 
 #: src/ShuttleGui.cpp:2206
 msgid "Dry Previe&w"
 msgstr ""
 
 #: src/ShuttleGui.cpp:2212
-#, fuzzy
 msgid "&Settings"
-msgstr "Setările efectului"
+msgstr "S&etări"
 
 #: src/ShuttleGui.cpp:2243
 msgid "Debu&g"
@@ -4242,7 +4225,7 @@ msgstr ""
 
 #: src/Snap.cpp:275
 msgid "Off"
-msgstr ""
+msgstr "Nimic"
 
 #: src/Snap.cpp:276
 msgid "Nearest"
@@ -4258,40 +4241,39 @@ msgstr ""
 
 #: src/SoundActivatedRecord.cpp:61
 msgid "Activation level (dB):"
-msgstr ""
+msgstr "Nivel de activare (dB):"
 
 #: src/SplashDialog.cpp:62
 msgid "Welcome to Audacity!"
-msgstr ""
+msgstr "Bun venit la Audacity !"
 
 #: src/SplashDialog.cpp:116
 msgid "Don't show this again at start up"
-msgstr ""
+msgstr "Nu mai arăta din nou acest dialog la pornire"
 
 #: src/Tags.cpp:590
 msgid "Artist Name"
-msgstr ""
+msgstr "Nume artist"
 
 #: src/Tags.cpp:591
 msgid "Track Title"
-msgstr ""
+msgstr "Titlu pistă"
 
 #: src/Tags.cpp:592
 msgid "Album Title"
-msgstr ""
+msgstr "Titlu album"
 
 #: src/Tags.cpp:593
-#, fuzzy
 msgid "Track Number"
-msgstr "Numărul piesei"
+msgstr "Număr pistă"
 
 #: src/Tags.cpp:594
 msgid "Year"
-msgstr "Anul"
+msgstr "An"
 
 #: src/Tags.cpp:595
 msgid "Genre"
-msgstr ""
+msgstr "Gen muzical"
 
 #: src/Tags.cpp:596 src/prefs/MousePrefs.cpp:101
 msgid "Comments"
@@ -4300,76 +4282,76 @@ msgstr "Comentarii"
 #: src/Tags.cpp:756
 msgid "Use arrow keys (or ENTER key after editing) to navigate fields."
 msgstr ""
+"Folosiți tastele săgeți (sau tasta ENTER după editare) pentru a naviga între "
+"câmpuri."
 
 #: src/Tags.cpp:780
 msgid "Tag"
-msgstr ""
+msgstr "Etichetă"
 
 #: src/Tags.cpp:781
 msgid "Value"
-msgstr ""
+msgstr "Valoare"
 
 #: src/Tags.cpp:802
 msgid "Genres"
-msgstr ""
+msgstr "Genuri muzicale"
 
 #: src/Tags.cpp:806
 msgid "E&dit..."
-msgstr ""
+msgstr "E&ditare..."
 
 #: src/Tags.cpp:807
 msgid "Rese&t..."
-msgstr ""
+msgstr "Rese&tare..."
 
 #: src/Tags.cpp:812
 msgid "Template"
-msgstr ""
+msgstr "Șablon"
 
 #: src/Tags.cpp:816
 msgid "&Load..."
-msgstr ""
+msgstr "Î&ncarcă..."
 
 #: src/Tags.cpp:819
 msgid "Set De&fault"
-msgstr ""
+msgstr "Stabilește ca &implicit"
 
 #: src/Tags.cpp:969
 msgid "Edit Genres"
-msgstr ""
+msgstr "Editare genuri muzicale"
 
 #: src/Tags.cpp:1003 src/Tags.cpp:1042
 msgid "Unable to save genre file."
-msgstr ""
+msgstr "Nu s-a putut salva fișierul de genuri muzicale."
 
 #: src/Tags.cpp:1003 src/Tags.cpp:1015 src/Tags.cpp:1030 src/Tags.cpp:1042
 msgid "Reset Genres"
-msgstr ""
+msgstr "Resetare genuri muzicale"
 
 #: src/Tags.cpp:1014
 msgid "Are you sure you want to reset the genre list to defaults?"
-msgstr ""
+msgstr "Sigur vreți ca lista de genuri muzicale să fie resetată la implicit ?"
 
 #: src/Tags.cpp:1030
 msgid "Unable to open genre file."
-msgstr ""
+msgstr "Nu s-a putut deschide fișierul de genuri muzicale."
 
 #: src/Tags.cpp:1064
 msgid "Load Metadata As:"
 msgstr ""
 
 #: src/Tags.cpp:1089
-#, fuzzy
 msgid "Error Loading Metadata"
-msgstr "eroare la încărcarea scurtăturilor din tastatură"
+msgstr "Eroare la încărcarea metadatelor"
 
 #: src/Tags.cpp:1118
 msgid "Save Metadata As:"
 msgstr ""
 
 #: src/Tags.cpp:1173
-#, fuzzy
 msgid "Error Saving Tags File"
-msgstr "Eroare la deschiderea fişierului"
+msgstr "Eroare la salvarea fișierului de etichete"
 
 #: src/Theme.cpp:639
 #, c-format
@@ -4516,9 +4498,8 @@ msgid "Audacity Timer Record - Waiting for Start"
 msgstr ""
 
 #: src/TrackPanel.cpp:712
-#, fuzzy
 msgid "&Other..."
-msgstr "Alt.."
+msgstr ""
 
 #: src/TrackPanel.cpp:722
 msgid "Wa&veform"
@@ -4529,132 +4510,114 @@ msgid "&Waveform (dB)"
 msgstr ""
 
 #: src/TrackPanel.cpp:724
-#, fuzzy
 msgid "&Spectrogram"
-msgstr "Spectrograme"
+msgstr ""
 
 #: src/TrackPanel.cpp:726
-#, fuzzy
 msgid "Spectrogram l&og(f)"
-msgstr "Spectrograme"
+msgstr ""
 
 #: src/TrackPanel.cpp:728
 #, fuzzy
 msgid "S&pectral Selection"
-msgstr "spre sfârşitull Selecţiei"
+msgstr "Potrivește selecția"
 
 #: src/TrackPanel.cpp:730
 #, fuzzy
 msgid "Spectral Selection lo&g(f)"
-msgstr "spre sfârşitull Selecţiei"
+msgstr "Potrivește selecția"
 
 #: src/TrackPanel.cpp:732
-#, fuzzy
 msgid "Pitc&h (EAC)"
-msgstr "Înalte (EAC)"
+msgstr ""
 
 #: src/TrackPanel.cpp:734
-#, fuzzy
 msgid "&Mono"
-msgstr "Mono"
+msgstr ""
 
 #: src/TrackPanel.cpp:735
-#, fuzzy
 msgid "&Left Channel"
-msgstr "Canalul Stâng"
+msgstr "Cana&lul stâng"
 
 #: src/TrackPanel.cpp:736
-#, fuzzy
 msgid "&Right Channel"
-msgstr "Canalul drept"
+msgstr "Canalul d&rept"
 
 #: src/TrackPanel.cpp:737
-#, fuzzy
 msgid "Ma&ke Stereo Track"
-msgstr "Creează o piesă stereo"
+msgstr ""
 
 #: src/TrackPanel.cpp:738
-#, fuzzy
 msgid "Swap Stereo &Channels"
-msgstr "%d Canale"
+msgstr ""
 
 #: src/TrackPanel.cpp:739
-#, fuzzy
 msgid "Spl&it Stereo Track"
-msgstr "Împarte piesa stereo"
+msgstr ""
 
 #: src/TrackPanel.cpp:740
-#, fuzzy
 msgid "Split Stereo to Mo&no"
-msgstr "Împarte piesa stereo"
+msgstr ""
 
 #: src/TrackPanel.cpp:742
 msgid "Set Sample &Format"
 msgstr ""
 
 #: src/TrackPanel.cpp:744
-#, fuzzy
 msgid "Set Rat&e"
-msgstr "Setează Rata"
+msgstr "Stabileșt&e rata"
 
 #: src/TrackPanel.cpp:749
 msgid "Up &Octave"
-msgstr ""
+msgstr "Mai sus o &octavă"
 
 #: src/TrackPanel.cpp:750
 msgid "Down Octa&ve"
-msgstr ""
+msgstr "Mai jos o octa&vă"
 
 #: src/TrackPanel.cpp:755
-#, fuzzy
 msgid "&Font..."
-msgstr "Font..."
+msgstr "&Font..."
 
 #: src/TrackPanel.cpp:760
 msgid "&Linear"
-msgstr ""
+msgstr "&Liniar"
 
 #: src/TrackPanel.cpp:761
 msgid "L&ogarithmic"
-msgstr ""
+msgstr "L&ogaritmic"
 
 #: src/TrackPanel.cpp:763
-#, fuzzy
 msgid "Set Ra&nge..."
-msgstr "Setează Rata"
+msgstr ""
 
 #: src/TrackPanel.cpp:764
 msgid "Logarithmic &Interpolation"
 msgstr ""
 
 #: src/TrackPanel.cpp:770
-#, fuzzy
 msgid "&Delete Label"
-msgstr "&Ştergere"
+msgstr "Șterge etic&heta"
 
 #: src/TrackPanel.cpp:775
-#, fuzzy
 msgid "N&ame..."
-msgstr "Nume..."
+msgstr "N&ume..."
 
 #: src/TrackPanel.cpp:777
-#, fuzzy
 msgid "Move Track &Up"
-msgstr "Elimină piesa"
+msgstr "Mută pista mai s&us"
 
 #: src/TrackPanel.cpp:778
-#, fuzzy
 msgid "Move Track &Down"
-msgstr "Elimină piesa"
+msgstr "Mută pista mai &jos"
 
 #: src/TrackPanel.cpp:779
-#, fuzzy
 msgid "Move Track to &Top"
-msgstr "Elimină piesa"
+msgstr "Mută pista sus de &tot"
 
 #: src/TrackPanel.cpp:780
 msgid "Move Track to &Bottom"
-msgstr ""
+msgstr "Mută pista jos de &tot"
 
 #: src/TrackPanel.cpp:1735
 msgid ""
@@ -4675,10 +4638,11 @@ msgstr ""
 #: src/TrackPanel.cpp:1766
 msgid "Click and drag to adjust relative size of stereo tracks."
 msgstr ""
+"Clic și trageți pentru a ajusta dimensiunea relativă a pistelor stereo."
 
 #: src/TrackPanel.cpp:1769
 msgid "Click and drag to resize the track."
-msgstr ""
+msgstr "Clic și trageți pentru a redimensiona pista."
 
 #: src/TrackPanel.cpp:1800
 msgid "Drag one or more label boundaries."
@@ -4691,17 +4655,16 @@ msgstr ""
 #: src/TrackPanel.cpp:1851 src/TrackPanel.cpp:1858
 #, fuzzy
 msgid "Click and drag to move center selection frequency."
-msgstr "Click and drag pentru a modifica limita stângă a selecţiei"
+msgstr "Clic și trageți pentru a muta selecția centrală."
 
 #: src/TrackPanel.cpp:1852
 #, fuzzy
 msgid "Click and drag to move center selection frequency to a spectral peak."
-msgstr "Click and drag pentru a modifica limita stângă a selecţiei"
+msgstr "Clic și trageți pentru a modifica limita stângă a selecției."
 
 #: src/TrackPanel.cpp:1910
-#, fuzzy
 msgid "Edit, Preferences..."
-msgstr "Setări Audacity"
+msgstr "Editare, Preferințe..."
 
 #: src/TrackPanel.cpp:1914
 #, c-format
@@ -4711,40 +4674,39 @@ msgstr ""
 #: src/TrackPanel.cpp:1945
 #, fuzzy
 msgid "Click and drag to set frequency bandwidth."
-msgstr "Click and drag pentru a modifica limita stângă a selecţiei"
+msgstr "Clic și trageți pentru a modifica limita stângă a selecției."
 
 #: src/TrackPanel.cpp:1971
-#, fuzzy
 msgid "Click and drag to stretch within selected region."
-msgstr "Click and drag pentru a modifica limita dreaptă a selecţiei."
+msgstr ""
 
 #: src/TrackPanel.cpp:1986
-#, fuzzy
 msgid "Click to move selection boundary to cursor."
-msgstr "Click and drag pentru a modifica limita stângă a selecţiei"
+msgstr "Clic pentru a muta limita selecției la cursor."
 
 #: src/TrackPanel.cpp:1992
 msgid "Click and drag to move left selection boundary."
-msgstr "Click and drag pentru a modifica limita stângă a selecţiei"
+msgstr "Clic și trageți pentru a modifica limita stângă a selecției."
 
 #: src/TrackPanel.cpp:1996
 msgid "Click and drag to move right selection boundary."
-msgstr "Click and drag pentru a modifica limita dreaptă a selecţiei."
+msgstr "Clic și trageți pentru a modifica limita dreaptă a selecției."
 
 #: src/TrackPanel.cpp:2001
 #, fuzzy
 msgid "Click and drag to move bottom selection frequency."
-msgstr "Click and drag pentru a modifica limita stângă a selecţiei"
+msgstr "Clic și trageți pentru a modifica limita stângă a selecției."
 
 #: src/TrackPanel.cpp:2005
 #, fuzzy
 msgid "Click and drag to move top selection frequency."
-msgstr "Click and drag pentru a modifica limita stângă a selecţiei"
+msgstr "Clic și trageți pentru a modifica limita stângă a selecției."
 
 #: src/TrackPanel.cpp:2012
 #, fuzzy
 msgid "Click and drag to adjust frequency bandwidth."
-msgstr "Click and drag pentru a modifica limita stângă a selecţiei"
+msgstr ""
+"Clic și trageți pentru a ajusta dimensiunea relativă a pistelor stereo."
 
 #: src/TrackPanel.cpp:2745 src/TrackPanel.cpp:6402 src/TrackPanel.cpp:6442
 #: src/TrackPanel.cpp:6727 src/TrackPanel.cpp:9417 src/TrackPanel.cpp:9438
@@ -4755,17 +4717,15 @@ msgstr ""
 #: src/TrackPanel.cpp:6728 src/TrackPanel.cpp:9418 src/TrackPanel.cpp:9439
 #: src/TrackPanel.cpp:9454
 msgid "Label Edit"
-msgstr "Editează eticheta"
+msgstr "Editare etichetă"
 
 #: src/TrackPanel.cpp:2784 src/TrackPanel.cpp:2792
-#, fuzzy
 msgid "Click and drag to stretch selected region."
-msgstr "Click and drag pentru a modifica limita stângă a selecţiei"
+msgstr ""
 
 #: src/TrackPanel.cpp:2827 src/TrackPanel.cpp:3399
-#, fuzzy
 msgid "Stretch Note Track"
-msgstr "Creează o piesă stereo"
+msgstr ""
 
 #: src/TrackPanel.cpp:2832 src/TrackPanel.cpp:3399
 msgid "Stretch"
@@ -4799,7 +4759,7 @@ msgstr ""
 #: src/TrackPanel.cpp:3991 src/prefs/MousePrefs.cpp:132
 #: src/prefs/MousePrefs.cpp:133 src/prefs/MousePrefs.cpp:134
 msgid "Time-Shift"
-msgstr ""
+msgstr "Decalaj temporal"
 
 #: src/TrackPanel.cpp:4973
 msgid ""
@@ -4817,20 +4777,20 @@ msgstr ""
 #: src/TrackPanel.cpp:5247
 #, fuzzy
 msgid "Moved Samples"
-msgstr "Elimină piesa"
+msgstr "Modifică eșantionul"
 
 #: src/TrackPanel.cpp:5248
 msgid "Sample Edit"
-msgstr "Editează mostra"
+msgstr "Editare eșantion"
 
 #: src/TrackPanel.cpp:5358
 #, c-format
 msgid "Removed track '%s.'"
-msgstr "Piesa '%s' a fost eliminată"
+msgstr "Pista '%s' a fost eliminată."
 
 #: src/TrackPanel.cpp:5360
 msgid "Track Remove"
-msgstr "Elimină piesele"
+msgstr "Eliminare pistă"
 
 #: src/TrackPanel.cpp:5546
 msgid "Moved velocity slider"
@@ -4875,7 +4835,7 @@ msgstr ""
 
 #: src/TrackPanel.cpp:6648 src/effects/EffectRack.cpp:235
 msgid "Remove"
-msgstr ""
+msgstr "Elimină"
 
 #: src/TrackPanel.cpp:8399
 msgid "Adjusted Pan"
@@ -4907,7 +4867,7 @@ msgstr "Dreapta, "
 
 #: src/TrackPanel.cpp:8824
 msgid "Left Channel"
-msgstr "Canalul Stâng"
+msgstr "Canalul stâng"
 
 #: src/TrackPanel.cpp:8824
 msgid "Right Channel"
@@ -4920,7 +4880,7 @@ msgstr "Mono"
 #: src/TrackPanel.cpp:8834 src/TrackPanel.cpp:9069
 #, c-format
 msgid "Changed '%s' to %s"
-msgstr "A fost schimbat din '%s' în %s "
+msgstr "'%s' a fost schimbat în %s"
 
 #: src/TrackPanel.cpp:8837
 msgid "Channel"
@@ -4932,9 +4892,8 @@ msgid "Swapped Channels in '%s'"
 msgstr ""
 
 #: src/TrackPanel.cpp:8859
-#, fuzzy
 msgid "Swap Channels"
-msgstr "%d Canale"
+msgstr ""
 
 #: src/TrackPanel.cpp:8867
 #, c-format
@@ -4944,11 +4903,11 @@ msgstr ""
 #: src/TrackPanel.cpp:8876
 #, c-format
 msgid "Split Stereo to Mono '%s'"
-msgstr ""
+msgstr "Divizează stereo în mono „%s”"
 
 #: src/TrackPanel.cpp:8878
 msgid "Split to Mono"
-msgstr ""
+msgstr "Divizează în mono"
 
 #: src/TrackPanel.cpp:8971
 #, c-format
@@ -4957,28 +4916,28 @@ msgstr ""
 
 #: src/TrackPanel.cpp:8974
 msgid "Make Stereo"
-msgstr "Fă Stereo"
+msgstr "Transformă în stereo"
 
 #: src/TrackPanel.cpp:9026
 #, c-format
 msgid "Changed '%s' to %s Hz"
-msgstr "A fost schimbat din '%s' în %s Hz"
+msgstr "'%s' a fost schimbat în %s Hz"
 
 #: src/TrackPanel.cpp:9028
 msgid "Rate Change"
-msgstr "Schimbă rata"
+msgstr "Schimbare de rată"
 
 #: src/TrackPanel.cpp:9073
 msgid "Format Change"
-msgstr "Schimbare formatului"
+msgstr "Schimbare de format"
 
 #: src/TrackPanel.cpp:9160
 msgid "Set Rate"
-msgstr "Setează Rata"
+msgstr "Stabilește rata"
 
 #: src/TrackPanel.cpp:9237
 msgid "Change lower speed limit (%) to:"
-msgstr "Schimbă valoarea vitezei minime (%) la:"
+msgstr "Schimbă limita vitezei inferioare (%) la:"
 
 #: src/TrackPanel.cpp:9238 src/TrackPanel.cpp:9239
 msgid "Lower speed limit"
@@ -4986,7 +4945,7 @@ msgstr ""
 
 #: src/TrackPanel.cpp:9244
 msgid "Change upper speed limit (%) to:"
-msgstr "Schimbă valoarea vitezei maxime (%) la:"
+msgstr "Schimbă limita vitezei superioare (%) la:"
 
 #: src/TrackPanel.cpp:9245 src/TrackPanel.cpp:9246
 msgid "Upper speed limit"
@@ -5047,25 +5006,24 @@ msgstr ""
 
 #: src/TrackPanel.cpp:9388
 msgid "Change track name to:"
-msgstr "Schimbă numele piesei în:"
+msgstr "Schimbă numele pistei în:"
 
 #: src/TrackPanel.cpp:9389
 msgid "Track Name"
-msgstr "Numele piesei"
+msgstr "Nume pistă"
 
 #: src/TrackPanel.cpp:9402
 #, c-format
 msgid "Renamed '%s' to '%s'"
-msgstr "Fisierul '%s' a fost renumit '%s'"
+msgstr "'%s' a fost redenumit în '%s'"
 
 #: src/TrackPanel.cpp:9405
 msgid "Name Change"
-msgstr "Schimbă numele"
+msgstr "Schimbare de nume"
 
 #: src/TrackPanel.cpp:9453
-#, fuzzy
 msgid "Deleted Label"
-msgstr "Şterge"
+msgstr ""
 
 #: src/TrackPanel.cpp:9489
 msgid "Label Track Font"
@@ -5134,7 +5092,7 @@ msgstr ""
 
 #: src/WaveTrack.cpp:95
 msgid "Audio Track"
-msgstr "Piesă audio"
+msgstr "Pistă audio"
 
 #: src/WaveTrack.cpp:1074 src/WaveTrack.cpp:1093
 msgid "There is not enough room available to paste the selection"
@@ -5151,9 +5109,9 @@ msgid "Command"
 msgstr ""
 
 #: src/commands/CommandManager.cpp:554
-#, fuzzy, c-format
+#, c-format
 msgid "Plug-ins %i to %i"
-msgstr "Plug-in-urile de la %i la %i"
+msgstr ""
 
 #: src/commands/CommandManager.cpp:989
 msgid ""
@@ -5193,9 +5151,8 @@ msgid "Loaded %d keyboard shortcuts\n"
 msgstr ""
 
 #: src/commands/CommandManager.cpp:1326
-#, fuzzy
 msgid "Loading Keyboard Shortcuts"
-msgstr "eroare la încărcarea scurtăturilor din tastatură"
+msgstr ""
 
 #: src/commands/ScreenshotCommand.cpp:219
 msgid "Saved "
@@ -5257,7 +5214,7 @@ msgstr ""
 #: src/effects/AutoDuck.cpp:44
 #, fuzzy
 msgid "ThresholdDb"
-msgstr "Scoaterea zgomotului"
+msgstr "Liniște în locul audio"
 
 #: src/effects/AutoDuck.cpp:45
 msgid "MaximumPause"
@@ -5331,16 +5288,16 @@ msgstr ""
 
 #: src/effects/BassTreble.cpp:47 src/effects/BassTreble.cpp:291
 msgid "Bass"
-msgstr ""
+msgstr "Bași"
 
 #: src/effects/BassTreble.cpp:48 src/effects/BassTreble.cpp:302
 msgid "Treble"
-msgstr ""
+msgstr "Înalte"
 
 #: src/effects/BassTreble.cpp:49 src/effects/BassTreble.cpp:313
 #: src/effects/Normalize.cpp:36
 msgid "Level"
-msgstr ""
+msgstr "Nivel"
 
 #: src/effects/BassTreble.cpp:50 src/effects/Compressor.cpp:61
 #: src/effects/Normalize.h:26
@@ -5354,30 +5311,28 @@ msgid ""
 msgstr ""
 
 #: src/effects/BassTreble.cpp:285
-#, fuzzy
 msgid "&Bass (dB):"
-msgstr "Câştig (dB)"
+msgstr "&Bași (dB):"
 
 #: src/effects/BassTreble.cpp:286
-#, fuzzy
 msgid "Bass (dB):"
-msgstr "Câştig (dB)"
+msgstr "Bași (dB):"
 
 #: src/effects/BassTreble.cpp:297
 msgid "&Treble (dB):"
-msgstr ""
+msgstr "Înal&te (dB):"
 
 #: src/effects/BassTreble.cpp:308
 msgid "&Level (dB):"
-msgstr ""
+msgstr "Nive&l (dB):"
 
 #: src/effects/BassTreble.cpp:323
 msgid "&Enable level control"
-msgstr ""
+msgstr "Activ&ează controlul de nivel"
 
 #: src/effects/BassTreble.cpp:434
 msgid "    No change to apply."
-msgstr ""
+msgstr "    Nu este nicio modificare de aplicat."
 
 #: src/effects/BassTreble.cpp:442
 msgid ":   Maximum 0 dB."
@@ -5385,22 +5340,23 @@ msgstr ""
 
 #: src/effects/BassTreble.h:26
 msgid "Bass and Treble"
-msgstr ""
+msgstr "Bași și înalte"
 
+# hm ?
 #: src/effects/ChangePitch.cpp:52 src/effects/ChangeSpeed.cpp:68
 #: src/effects/ChangeTempo.cpp:46
 #, fuzzy
 msgid "Percentage"
-msgstr "Procent schimbat:"
+msgstr "Schimbare în procente:"
 
 #: src/effects/ChangePitch.cpp:114
 #, fuzzy
 msgid "Change the pitch of a track without changing its tempo"
-msgstr "Ajusteaza Inaltele fara a schimba Tempoul"
+msgstr "Modifică înălțimea sunetului fără a schimba tempoul"
 
 #: src/effects/ChangePitch.cpp:206
 msgid "Change Pitch without Changing Tempo"
-msgstr "Ajusteaza Inaltele fara a schimba Tempoul"
+msgstr "Modifică înălțimea sunetului fără a schimba tempoul"
 
 #: src/effects/ChangePitch.cpp:208
 #, c-format
@@ -5408,16 +5364,15 @@ msgid "Estimated Start Pitch: %s%d (%.3f Hz)"
 msgstr ""
 
 #: src/effects/ChangePitch.cpp:214
-#, fuzzy
 msgid "Pitch"
-msgstr "Înalte (EAC)"
+msgstr ""
 
 #: src/effects/ChangePitch.cpp:218 src/effects/ChangePitch.cpp:219
 #: src/effects/ChangePitch.cpp:255 src/effects/ChangeSpeed.cpp:348
 #: src/effects/ChangeSpeed.cpp:374 src/effects/ChangeTempo.cpp:197
 #: src/effects/ChangeTempo.cpp:213
 msgid "from"
-msgstr ""
+msgstr "de la"
 
 #: src/effects/ChangePitch.cpp:223
 msgid "from Octave"
@@ -5428,7 +5383,7 @@ msgstr ""
 #: src/effects/ChangeSpeed.cpp:390 src/effects/ChangeTempo.cpp:203
 #: src/effects/ChangeTempo.cpp:228
 msgid "to"
-msgstr "spre"
+msgstr "către"
 
 #: src/effects/ChangePitch.cpp:232
 msgid "to Octave"
@@ -5443,22 +5398,22 @@ msgid "Semitones (half-steps)"
 msgstr ""
 
 #: src/effects/ChangePitch.cpp:249 src/effects/ToneGen.cpp:72
-#, fuzzy
 msgid "Frequency"
-msgstr "Frecvenţa (Hz):"
+msgstr ""
 
 #: src/effects/ChangePitch.cpp:256
 msgid "from (Hz)"
-msgstr ""
+msgstr "de la (Hz)"
 
 #: src/effects/ChangePitch.cpp:262
 msgid "to (Hz)"
-msgstr ""
+msgstr "la (Hz)"
 
+# hm ?
 #: src/effects/ChangePitch.cpp:273 src/effects/ChangeSpeed.cpp:311
 #: src/effects/ChangeTempo.cpp:174
 msgid "Percent Change:"
-msgstr "Procent schimbat:"
+msgstr "Schimbare în procente:"
 
 #: src/effects/ChangePitch.cpp:283 src/effects/ChangeSpeed.cpp:322
 #: src/effects/ChangeTempo.cpp:185
@@ -5467,7 +5422,7 @@ msgstr ""
 
 #: src/effects/ChangePitch.h:34
 msgid "Change Pitch"
-msgstr "Ajusteaza Inaltele"
+msgstr "Modifică înălțimea sunetului"
 
 #: src/effects/ChangeSpeed.cpp:60
 msgid "n/a"
@@ -5477,7 +5432,7 @@ msgstr ""
 #: src/effects/ChangeSpeed.cpp:183 src/effects/Effect.cpp:1176
 #: src/widgets/NumericTextCtrl.cpp:325
 msgid "hh:mm:ss + milliseconds"
-msgstr ""
+msgstr "hh:mm:ss + milisecunde"
 
 #: src/effects/ChangeSpeed.cpp:116
 msgid "Change the speed of a track, also changing its pitch"
@@ -5485,7 +5440,7 @@ msgstr ""
 
 #: src/effects/ChangeSpeed.cpp:296
 msgid "Change Speed, affecting both Tempo and Pitch"
-msgstr "Schimbă viteza afectând atât Tempoul cât şi Înălţimea"
+msgstr "Modifică viteza afectând atât tempoul cât și înălțimea sunetului"
 
 #: src/effects/ChangeSpeed.cpp:305
 msgid "Speed Multiplier:"
@@ -5505,33 +5460,34 @@ msgstr ""
 
 #: src/effects/ChangeSpeed.cpp:360 src/toolbars/SelectionBar.cpp:347
 msgid "Selection Length"
-msgstr ""
+msgstr "Lungimea selecției"
 
 #: src/effects/ChangeSpeed.cpp:364
+#, fuzzy
 msgid "Current Length:"
-msgstr ""
+msgstr "Lungimea curentă"
 
 #: src/effects/ChangeSpeed.cpp:375
-#, fuzzy
 msgid "Current length of selection."
-msgstr "spre sfârşitull Selecţiei"
+msgstr "Lungimea curentă a selecției."
 
 #: src/effects/ChangeSpeed.cpp:380
+#, fuzzy
 msgid "New Length:"
-msgstr ""
+msgstr "Lungime nouă"
 
 #: src/effects/ChangeSpeed.h:29
 msgid "Change Speed"
-msgstr "Schimbă viteza"
+msgstr "Modifică viteza"
 
 #: src/effects/ChangeTempo.cpp:90
 #, fuzzy
 msgid "Change the tempo of a selection without changing its pitch"
-msgstr "Ajusteaza Tempoul fara a schimba Inaltele"
+msgstr "Modifică tempoul fără a schimba înălțimea sunetului"
 
 #: src/effects/ChangeTempo.cpp:165
 msgid "Change Tempo without Changing Pitch"
-msgstr "Ajusteaza Tempoul fara a schimba Inaltele"
+msgstr "Modifică tempoul fără a schimba înălțimea sunetului"
 
 #: src/effects/ChangeTempo.cpp:193
 msgid "Beats per minute:"
@@ -5559,7 +5515,7 @@ msgstr ""
 
 #: src/effects/ChangeTempo.h:28
 msgid "Change Tempo"
-msgstr "Ajusteaza Tempoul"
+msgstr "Modifică tempoul"
 
 #: src/effects/ClickRemoval.cpp:49 src/effects/ClickRemoval.cpp:349
 #: src/effects/Compressor.cpp:56 src/effects/Compressor.cpp:228
@@ -5602,15 +5558,17 @@ msgstr ""
 #: src/effects/Compressor.cpp:57
 #, fuzzy
 msgid "NoiseFloor"
-msgstr "Nimic"
+msgstr "Zgomot:"
 
 #: src/effects/Compressor.cpp:59
+#, fuzzy
 msgid "AttackTime"
-msgstr ""
+msgstr "Timpul de întârziere (secunde):"
 
 #: src/effects/Compressor.cpp:60
+#, fuzzy
 msgid "ReleaseTime"
-msgstr ""
+msgstr "Repetat de %d ori"
 
 #: src/effects/Compressor.cpp:62
 msgid "UsePeak"
@@ -5692,9 +5650,9 @@ msgid "%.1f:1"
 msgstr ""
 
 #: src/effects/Compressor.cpp:648
-#, fuzzy, c-format
+#, c-format
 msgid "Attack Time %.2f secs"
-msgstr "Timpul de întârziere (secunde):"
+msgstr ""
 
 #: src/effects/Compressor.cpp:649 src/effects/ScoreAlignDialog.cpp:262
 #: src/effects/ScoreAlignDialog.cpp:264 src/effects/ScoreAlignDialog.cpp:268
@@ -5715,12 +5673,12 @@ msgstr ""
 
 #: src/effects/Compressor.h:30
 msgid "Compressor"
-msgstr ""
+msgstr "Compresor"
 
 #: src/effects/Contrast.cpp:66
 #, fuzzy
 msgid "No wave tracks exist."
-msgstr "Piesa '%s' a fost eliminată"
+msgstr "Pista '%s' a fost eliminată."
 
 #: src/effects/Contrast.cpp:72
 msgid ""
@@ -5798,7 +5756,7 @@ msgstr ""
 
 #: src/effects/Contrast.cpp:306
 msgid "Result"
-msgstr ""
+msgstr "Rezultat"
 
 #: src/effects/Contrast.cpp:310
 msgid "Co&ntrast Result:"
@@ -5806,16 +5764,15 @@ msgstr ""
 
 #: src/effects/Contrast.cpp:313
 msgid "R&eset"
-msgstr ""
+msgstr "R&eset"
 
 #: src/effects/Contrast.cpp:314
-#, fuzzy
 msgid "&Difference:"
-msgstr "Setări Audacity"
+msgstr "&Diferență:"
 
 #: src/effects/Contrast.cpp:317 src/effects/Equalization.cpp:2918
 msgid "E&xport..."
-msgstr ""
+msgstr "E&xport..."
 
 #: src/effects/Contrast.cpp:412
 msgid "No foreground measured"
@@ -5828,11 +5785,11 @@ msgstr ""
 #: src/effects/Contrast.cpp:419 src/effects/Contrast.cpp:432
 #, c-format
 msgid "%.1f dB"
-msgstr ""
+msgstr "%.1f dB"
 
 #: src/effects/Contrast.cpp:421 src/effects/Contrast.cpp:434
 msgid "zero"
-msgstr ""
+msgstr "zero"
 
 #: src/effects/Contrast.cpp:425
 msgid "No background measured"
@@ -5947,7 +5904,7 @@ msgstr ""
 #: src/effects/DtmfGen.cpp:38
 #, fuzzy
 msgid "Sequence"
-msgstr "Frecvenţa (Hz):"
+msgstr "Liniște"
 
 #: src/effects/DtmfGen.cpp:39 src/effects/FindClipping.cpp:36
 #: src/effects/FindClipping.cpp:37
@@ -5958,7 +5915,7 @@ msgstr ""
 #: src/effects/ToneGen.cpp:73
 #, fuzzy
 msgid "Amplitude"
-msgstr "Amplifică"
+msgstr "Amplificator"
 
 #: src/effects/DtmfGen.cpp:92
 msgid ""
@@ -6018,7 +5975,7 @@ msgstr ""
 #: src/effects/Echo.cpp:59
 #, fuzzy
 msgid "Repeats the selected audio again and again"
-msgstr "Se exportă sunetele selectate ca şi Ogg Vorbis"
+msgstr "Se exportă audio selectat ca Ogg Vorbis"
 
 #: src/effects/Echo.cpp:147
 msgid "Delay time (seconds):"
@@ -6034,16 +5991,15 @@ msgstr "Ecou"
 
 #: src/effects/Effect.cpp:198 src/effects/Effect.cpp:228
 #: src/effects/nyquist/Nyquist.cpp:184
-#, fuzzy
 msgid "Audacity"
-msgstr "Prima rulare a programului Audacity"
+msgstr "Audacity"
 
 #: src/effects/Effect.cpp:1058
 #, fuzzy, c-format
 msgid ""
 "Could not update effect \"%s\" with:\n"
 "%s"
-msgstr "Fisierul \"%s\" nu a putut fi deschis"
+msgstr "Nu s-a putut deschide fișierul: „%s”"
 
 #: src/effects/Effect.cpp:1176 src/widgets/NumericTextCtrl.cpp:337
 msgid "hh:mm:ss + samples"
@@ -6052,7 +6008,7 @@ msgstr ""
 #: src/effects/Effect.cpp:1209
 #, fuzzy, c-format
 msgid "Applying %s..."
-msgstr "Aplicare Phaserului"
+msgstr "Se aplică"
 
 #: src/effects/Effect.cpp:2503
 msgid "Preparing preview"
@@ -6079,26 +6035,28 @@ msgstr ""
 
 #: src/effects/Effect.cpp:2945 src/effects/Effect.cpp:3667
 #: src/effects/Effect.cpp:3677 src/effects/Effect.cpp:3679
-#, fuzzy
 msgid "Start &Playback"
-msgstr "Redare"
+msgstr "&Pornește redarea"
 
 #: src/effects/Effect.cpp:2946
 msgid "Start and stop playback"
 msgstr ""
 
 #: src/effects/Effect.cpp:2951
+#, fuzzy
 msgid "&Preview"
-msgstr ""
+msgstr "Pre&vizualizare"
 
 #: src/effects/Effect.cpp:2952 src/effects/Effect.cpp:2968
 #: src/effects/Effect.cpp:2970
+#, fuzzy
 msgid "Preview effect"
-msgstr ""
+msgstr "Pre&vizualizare"
 
 #: src/effects/Effect.cpp:2972
+#, fuzzy
 msgid "&Preview effect"
-msgstr ""
+msgstr "Pre&vizualizare"
 
 #: src/effects/Effect.cpp:2981 src/effects/Effect.cpp:2990
 #: src/effects/Effect.cpp:2992
@@ -6110,40 +6068,35 @@ msgid "Skip backward"
 msgstr ""
 
 #: src/effects/Effect.cpp:3000
-#, fuzzy
 msgid "Skip &Forward"
-msgstr "Sari la Început"
+msgstr "Sari peste î&nainte"
 
 #: src/effects/Effect.cpp:3009 src/effects/Effect.cpp:3011
 msgid "Skip &Foreward"
 msgstr ""
 
 #: src/effects/Effect.cpp:3015
-#, fuzzy
 msgid "Skip forward"
-msgstr "Sari la Început"
+msgstr "Sari peste îna&poi"
 
 #: src/effects/Effect.cpp:3021
-#, fuzzy
 msgid "Enable"
-msgstr "Activat"
+msgstr "Activează"
 
 #: src/effects/Effect.cpp:3125
-#, fuzzy
 msgid "You must select audio in the project window."
-msgstr "Trebuie să selectaţi o piesă mai întâi."
+msgstr "Trebuie să selectați audio în fereastra proiectului."
 
 #: src/effects/Effect.cpp:3201 src/effects/Effect.cpp:3210
 #: src/effects/Effect.cpp:3784 src/effects/Effect.cpp:3820
 #: src/effects/Effect.cpp:3841 src/effects/Effect.cpp:3897
-#, fuzzy
 msgid "User Presets"
-msgstr "Setările efectului"
+msgstr "Presetări de utilizatori"
 
 #: src/effects/Effect.cpp:3213
 #, fuzzy
 msgid "Save Preset..."
-msgstr "Salvează proiectul c&a şi..."
+msgstr "Salvează proiectul c&a..."
 
 #: src/effects/Effect.cpp:3217 src/effects/Effect.cpp:3226
 #: src/effects/Effect.cpp:3455 src/export/ExportFFmpegDialogs.cpp:1312
@@ -6151,9 +6104,8 @@ msgid "Delete Preset"
 msgstr ""
 
 #: src/effects/Effect.cpp:3234
-#, fuzzy
 msgid "Defaults"
-msgstr "256 - implicit"
+msgstr "Implicite"
 
 #: src/effects/Effect.cpp:3243 src/effects/Effect.cpp:3861
 #: src/effects/Effect.cpp:3925 src/prefs/QualityPrefs.cpp:74
@@ -6165,21 +6117,19 @@ msgstr "Nimic"
 #: src/effects/Effect.cpp:3825 src/effects/Effect.cpp:3853
 #: src/effects/Effect.cpp:3911
 msgid "Factory Presets"
-msgstr ""
+msgstr "Presetări de fabrică"
 
 #: src/effects/Effect.cpp:3252
-#, fuzzy
 msgid "Import..."
-msgstr "Importează"
+msgstr "Importă..."
 
 #: src/effects/Effect.cpp:3253
-#, fuzzy
 msgid "Export..."
-msgstr "Importează"
+msgstr "Exportă..."
 
 #: src/effects/Effect.cpp:3255 src/export/ExportMultiple.cpp:260
 msgid "Options..."
-msgstr ""
+msgstr "Opțiuni..."
 
 #: src/effects/Effect.cpp:3260
 #, c-format
@@ -6187,9 +6137,9 @@ msgid "Type: %s"
 msgstr ""
 
 #: src/effects/Effect.cpp:3261
-#, fuzzy, c-format
+#, c-format
 msgid "Name: %s"
-msgstr "Nume..."
+msgstr ""
 
 #: src/effects/Effect.cpp:3262
 #, c-format
@@ -6211,9 +6161,9 @@ msgid "About"
 msgstr ""
 
 #: src/effects/Effect.cpp:3454
-#, fuzzy, c-format
+#, c-format
 msgid "Are you sure you want to delete \"%s\"?"
-msgstr "Eşti sigur că vrei să salvezi acest fişier ca şi \""
+msgstr "Sigur vreți să ștergeți „%s” ?"
 
 #: src/effects/Effect.cpp:3471 src/effects/Effect.cpp:3508
 #: src/effects/Effect.cpp:3518 src/export/ExportFFmpegDialogs.cpp:1311
@@ -6227,7 +6177,7 @@ msgstr ""
 #: src/effects/Effect.cpp:3507
 #, fuzzy
 msgid "You must specify a name"
-msgstr "Trebuie să selectaţi o piesă mai întâi."
+msgstr "Mai întâi trebuie să selectați o pistă."
 
 #: src/effects/Effect.cpp:3517
 msgid ""
@@ -6238,39 +6188,40 @@ msgstr ""
 
 #: src/effects/Effect.cpp:3645 src/effects/Effect.cpp:3655
 #: src/effects/Effect.cpp:3657
-#, fuzzy
 msgid "Stop &Playback"
-msgstr "Redare"
+msgstr "O&prește redarea"
 
 #: src/effects/Effect.cpp:3756
 #, fuzzy
 msgid "Select Preset"
-msgstr "Selectează"
+msgstr "Presetări de fabrică"
 
 #: src/effects/Effect.cpp:3766
+#, fuzzy
 msgid "Type:"
-msgstr ""
+msgstr "Tip"
 
 #: src/effects/Effect.cpp:3770
+#, fuzzy
 msgid "&Preset:"
-msgstr ""
+msgstr "Apăsați"
 
 #: src/effects/Effect.cpp:3794 src/effects/Effect.cpp:3829
 #: src/effects/Effect.cpp:3873 src/effects/Effect.cpp:3933
 #, fuzzy
 msgid "Current Settings"
-msgstr "Setările efectului"
+msgstr "Lungimea curentă"
 
 #: src/effects/Effect.cpp:3799 src/effects/Effect.cpp:3833
 #: src/effects/Effect.cpp:3879 src/effects/Effect.cpp:3939
 #, fuzzy
 msgid "Factory Defaults"
-msgstr "256 - implicit"
+msgstr "Stabilește ca &implicit"
 
 #: src/effects/EffectManager.cpp:156
 #, c-format
 msgid "Applied effect: %s"
-msgstr "Efect aplicat în proporţie de: %s"
+msgstr "Efectul aplicat: %s"
 
 #: src/effects/EffectManager.cpp:739
 #, c-format
@@ -6287,17 +6238,16 @@ msgid "Effect failed to initialize"
 msgstr ""
 
 #: src/effects/EffectRack.cpp:78
-#, fuzzy
 msgid "Effects Rack"
-msgstr "Efe&ct"
+msgstr "Rack de efecte"
 
 #: src/effects/EffectRack.cpp:113
 msgid "&Apply"
-msgstr ""
+msgstr "&Aplică"
 
 #: src/effects/EffectRack.cpp:115
 msgid "Latency: 0"
-msgstr ""
+msgstr "Latență: 0"
 
 #: src/effects/EffectRack.cpp:118
 msgid "&Bypass"
@@ -6320,30 +6270,28 @@ msgid "Open/close effect editor"
 msgstr ""
 
 #: src/effects/EffectRack.cpp:205
-#, fuzzy
 msgid "Move Up"
-msgstr "Elimină piesa"
+msgstr "Mută mai sus"
 
 #: src/effects/EffectRack.cpp:206
 msgid "Move effect up in the rack"
-msgstr ""
+msgstr "Mută efectul mai sus în rack"
 
 #: src/effects/EffectRack.cpp:212
-#, fuzzy
 msgid "Move Down"
-msgstr "Elimină piesa"
+msgstr "Mută mai jos"
 
 #: src/effects/EffectRack.cpp:213
 msgid "Move effect down in the rack"
-msgstr ""
+msgstr "Mută efectul mai jos în rack"
 
 #: src/effects/EffectRack.cpp:218
 msgid "Favorite"
-msgstr ""
+msgstr "Favorit"
 
 #: src/effects/EffectRack.cpp:219
 msgid "Mark effect as a favorite"
-msgstr ""
+msgstr "Marchează efectul ca favorit"
 
 #: src/effects/EffectRack.cpp:236
 msgid "Remove effect from the rack"
@@ -6356,7 +6304,7 @@ msgstr ""
 #: src/effects/EffectRack.cpp:273
 #, c-format
 msgid "Latency: %4d"
-msgstr ""
+msgstr "Latență: %4d"
 
 #: src/effects/Equalization.cpp:147
 msgid "B-spline"
@@ -6371,18 +6319,19 @@ msgid "Cubic"
 msgstr ""
 
 #: src/effects/Equalization.cpp:162
+#, fuzzy
 msgid "FilterLength"
-msgstr ""
+msgstr "Lungime"
 
 #: src/effects/Equalization.cpp:163
 #, fuzzy
 msgid "CurveName"
-msgstr "Numele piesei"
+msgstr "NumeNou"
 
 #: src/effects/Equalization.cpp:164
 #, fuzzy
 msgid "InterpolateLin"
-msgstr "Interfaţă"
+msgstr "Interfață"
 
 #: src/effects/Equalization.cpp:165
 msgid "InterpolationMethod"
@@ -6437,14 +6386,12 @@ msgid "Graphic EQ"
 msgstr ""
 
 #: src/effects/Equalization.cpp:711
-#, fuzzy
 msgid "Li&near Frequency Scale"
-msgstr "Frecvenţă scăzută"
+msgstr ""
 
 #: src/effects/Equalization.cpp:712
-#, fuzzy
 msgid "Linear Frequency Scale"
-msgstr "Frecvenţă scăzută"
+msgstr ""
 
 #: src/effects/Equalization.cpp:721
 msgid "Length of &Filter:"
@@ -6455,9 +6402,8 @@ msgid "Length of Filter"
 msgstr ""
 
 #: src/effects/Equalization.cpp:744
-#, fuzzy
 msgid "&Select Curve:"
-msgstr "Selectează"
+msgstr ""
 
 #: src/effects/Equalization.cpp:750
 msgid "S&ave/Manage Curves..."
@@ -6472,9 +6418,8 @@ msgid "Fla&tten"
 msgstr ""
 
 #: src/effects/Equalization.cpp:756
-#, fuzzy
 msgid "&Invert"
-msgstr "&Generează"
+msgstr "&Inversează"
 
 #: src/effects/Equalization.cpp:758
 msgid "G&rids"
@@ -6493,17 +6438,16 @@ msgid "D&efault"
 msgstr ""
 
 #: src/effects/Equalization.cpp:783
-#, fuzzy
 msgid "Default"
-msgstr "256 - implicit"
+msgstr ""
 
 #: src/effects/Equalization.cpp:787
 msgid "&SSE"
-msgstr ""
+msgstr "&SSE"
 
 #: src/effects/Equalization.cpp:789 src/effects/Equalization.cpp:795
 msgid "SSE"
-msgstr ""
+msgstr "SSE"
 
 #: src/effects/Equalization.cpp:793
 msgid "SSE &Threaded"
@@ -6511,11 +6455,11 @@ msgstr ""
 
 #: src/effects/Equalization.cpp:799
 msgid "A&VX"
-msgstr ""
+msgstr "A&VX"
 
 #: src/effects/Equalization.cpp:801
 msgid "AVX"
-msgstr ""
+msgstr "AVX"
 
 #: src/effects/Equalization.cpp:805
 msgid "AV&X Threaded"
@@ -6558,9 +6502,8 @@ msgid ""
 msgstr ""
 
 #: src/effects/Equalization.cpp:1334
-#, fuzzy
 msgid "Error Loading EQ Curves"
-msgstr "Eroare la salvarea proiectului"
+msgstr ""
 
 #: src/effects/Equalization.cpp:1413
 msgid "Error Saving Equalization Curves"
@@ -6587,29 +6530,24 @@ msgid "&Curves"
 msgstr ""
 
 #: src/effects/Equalization.cpp:2908
-#, fuzzy
 msgid "Curve Name"
-msgstr "Numele piesei"
+msgstr ""
 
 #: src/effects/Equalization.cpp:2915
-#, fuzzy
 msgid "&Rename..."
-msgstr "Nume..."
+msgstr "&Redenumește..."
 
 #: src/effects/Equalization.cpp:2916
-#, fuzzy
 msgid "D&elete..."
-msgstr "Şterge"
+msgstr "Șt&erge..."
 
 #: src/effects/Equalization.cpp:2917
-#, fuzzy
 msgid "I&mport..."
-msgstr "Importează"
+msgstr "I&mportă..."
 
 #: src/effects/Equalization.cpp:2919
-#, fuzzy
 msgid "&Get More..."
-msgstr "&Istoric..."
+msgstr "&Obține mai multe..."
 
 #: src/effects/Equalization.cpp:2926 src/widgets/ErrorDialog.cpp:120
 msgid "Help"
@@ -6638,32 +6576,28 @@ msgid "' to..."
 msgstr ""
 
 #: src/effects/Equalization.cpp:3057
-#, fuzzy
 msgid "Rename..."
-msgstr "Nume..."
+msgstr "Redenumește..."
 
 #: src/effects/Equalization.cpp:3080
 msgid "Name is the same as the original one"
 msgstr ""
 
 #: src/effects/Equalization.cpp:3080
-#, fuzzy
 msgid "Same name"
-msgstr "Schimbă numele"
+msgstr "Același nume"
 
 #: src/effects/Equalization.cpp:3083
-#, fuzzy
 msgid "Overwrite existing curve '"
-msgstr "Înlocuieşte fişierele existente"
+msgstr "Suprascrie curba existentă '"
 
 #: src/effects/Equalization.cpp:3083
 msgid "'?"
 msgstr ""
 
 #: src/effects/Equalization.cpp:3084
-#, fuzzy
 msgid "Curve exists"
-msgstr "Credite"
+msgstr "Curba există"
 
 #: src/effects/Equalization.cpp:3155
 msgid "You cannot delete the 'unnamed' curve."
@@ -6674,13 +6608,12 @@ msgid "Can't delete 'unnamed'"
 msgstr ""
 
 #: src/effects/Equalization.cpp:3162 src/effects/Equalization.cpp:3191
-#, fuzzy
 msgid "Delete '"
-msgstr "Şterge"
+msgstr "Șterge '"
 
 #: src/effects/Equalization.cpp:3162 src/effects/Equalization.cpp:3191
 msgid "' ?"
-msgstr ""
+msgstr "' ?"
 
 #: src/effects/Equalization.cpp:3165 src/effects/Equalization.cpp:3195
 #: src/export/ExportFFmpegDialogs.cpp:1659
@@ -6688,9 +6621,8 @@ msgid "Confirm Deletion"
 msgstr ""
 
 #: src/effects/Equalization.cpp:3188
-#, fuzzy
 msgid "Delete "
-msgstr "Şterge"
+msgstr ""
 
 #: src/effects/Equalization.cpp:3188
 msgid "items?"
@@ -6717,9 +6649,8 @@ msgid "You cannot export 'unnamed' curve, it is special."
 msgstr ""
 
 #: src/effects/Equalization.cpp:3263
-#, fuzzy
 msgid "Cannot Export 'unnamed'"
-msgstr "Suntetul nu poate fi exportat ca şi %s"
+msgstr ""
 
 #: src/effects/Equalization.cpp:3273
 #, c-format
@@ -6752,7 +6683,7 @@ msgstr ""
 #: src/effects/Fade.cpp:43
 #, fuzzy
 msgid "Applies a linear fade-in to the selected audio"
-msgstr "Click and drag pentru a modifica limita stângă a selecţiei"
+msgstr "Clic și trageți pentru a redimensiona pista."
 
 #: src/effects/Fade.cpp:44
 msgid "Applies a linear fade-out to the selected audio"
@@ -6833,17 +6764,18 @@ msgid "Degree of Leveling:"
 msgstr ""
 
 #: src/effects/Leveller.cpp:221
-#, fuzzy
 msgid "Noise Threshold:"
-msgstr "Scoaterea zgomotului"
+msgstr ""
 
 #: src/effects/Leveller.h:21
+#, fuzzy
 msgid "Leveller"
-msgstr ""
+msgstr "Nivel"
 
 #: src/effects/LoadEffects.cpp:238 src/effects/LoadEffects.cpp:243
+#, fuzzy
 msgid "Builtin Effects"
-msgstr ""
+msgstr "Efecte Nyquist"
 
 #: src/effects/LoadEffects.cpp:248 src/effects/VST/VSTEffect.cpp:319
 #: src/effects/audiounits/AudioUnitEffect.cpp:99
@@ -6851,7 +6783,7 @@ msgstr ""
 #: src/effects/nyquist/LoadNyquist.cpp:112 src/effects/vamp/LoadVamp.cpp:89
 #, fuzzy
 msgid "The Audacity Team"
-msgstr "Prima rulare a programului Audacity"
+msgstr "Echipa de suport Audacity"
 
 #: src/effects/LoadEffects.cpp:259
 msgid "Provides builtin effects to Audacity"
@@ -6874,14 +6806,13 @@ msgid "Generates one of three different types of noise"
 msgstr ""
 
 #: src/effects/Noise.cpp:221
-#, fuzzy
 msgid "Noise type:"
-msgstr "Nimic"
+msgstr ""
 
 #: src/effects/Noise.h:23
 #, fuzzy
 msgid "Noise"
-msgstr "Nimic"
+msgstr "Zgomot:"
 
 #: src/effects/NoiseReduction.cpp:96
 msgid "Median"
@@ -6967,7 +6898,7 @@ msgstr ""
 
 #: src/effects/NoiseReduction.cpp:1454 src/effects/NoiseRemoval.cpp:774
 msgid "Noise reduction"
-msgstr ""
+msgstr "Reducere de zgomot"
 
 #: src/effects/NoiseReduction.cpp:1457
 msgid "&Sensitivity:"
@@ -6987,9 +6918,8 @@ msgid "Attack time"
 msgstr ""
 
 #: src/effects/NoiseReduction.cpp:1464
-#, fuzzy
 msgid "R&elease time (secs):"
-msgstr "Timpul de întârziere (secunde):"
+msgstr ""
 
 #: src/effects/NoiseReduction.cpp:1464
 #, fuzzy
@@ -6999,7 +6929,7 @@ msgstr "Repetat de %d ori"
 #: src/effects/NoiseReduction.cpp:1468
 #, fuzzy
 msgid "&Frequency smoothing (bands):"
-msgstr "Frecvenţa (Hz):"
+msgstr "N&etezire de frecvență (Hz):"
 
 #: src/effects/NoiseReduction.cpp:1468 src/effects/NoiseRemoval.cpp:794
 msgid "Frequency smoothing"
@@ -7014,9 +6944,8 @@ msgid "Old Sensitivity"
 msgstr ""
 
 #: src/effects/NoiseReduction.cpp:1530 src/effects/NoiseReduction.h:20
-#, fuzzy
 msgid "Noise Reduction"
-msgstr "Scoaterea zgomotului"
+msgstr "Reducere de zgomot"
 
 #: src/effects/NoiseReduction.cpp:1677 src/effects/NoiseRemoval.cpp:755
 msgid "Step 1"
@@ -7029,9 +6958,8 @@ msgid ""
 msgstr ""
 
 #: src/effects/NoiseReduction.cpp:1682 src/effects/NoiseRemoval.cpp:758
-#, fuzzy
 msgid "&Get Noise Profile"
-msgstr "Generează profilul zgomotului"
+msgstr "Obține profilul de z&gomot"
 
 #: src/effects/NoiseReduction.cpp:1686 src/effects/NoiseRemoval.cpp:762
 msgid "Step 2"
@@ -7044,9 +6972,8 @@ msgid ""
 msgstr ""
 
 #: src/effects/NoiseReduction.cpp:1720 src/effects/NoiseRemoval.cpp:808
-#, fuzzy
 msgid "Noise:"
-msgstr "Nimic"
+msgstr "Zgomot:"
 
 #: src/effects/NoiseReduction.cpp:1722
 msgid "Re&duce"
@@ -7071,35 +6998,35 @@ msgstr ""
 
 #: src/effects/NoiseReduction.cpp:1764 src/effects/NoiseReduction.cpp:1785
 msgid "8"
-msgstr ""
+msgstr "8"
 
 #: src/effects/NoiseReduction.cpp:1765 src/effects/NoiseReduction.cpp:1786
 msgid "16"
-msgstr ""
+msgstr "16"
 
 #: src/effects/NoiseReduction.cpp:1766 src/effects/NoiseReduction.cpp:1787
 msgid "32"
-msgstr ""
+msgstr "32"
 
 #: src/effects/NoiseReduction.cpp:1767 src/effects/NoiseReduction.cpp:1788
 msgid "64"
-msgstr ""
+msgstr "64"
 
 #: src/effects/NoiseReduction.cpp:1768
 msgid "128"
-msgstr ""
+msgstr "128"
 
 #: src/effects/NoiseReduction.cpp:1769
 msgid "256"
-msgstr ""
+msgstr "256"
 
 #: src/effects/NoiseReduction.cpp:1770
 msgid "512"
-msgstr ""
+msgstr "512"
 
 #: src/effects/NoiseReduction.cpp:1771
 msgid "1024"
-msgstr ""
+msgstr "1024"
 
 #: src/effects/NoiseReduction.cpp:1772
 #, fuzzy
@@ -7108,28 +7035,28 @@ msgstr "256 - implicit"
 
 #: src/effects/NoiseReduction.cpp:1773
 msgid "4096"
-msgstr ""
+msgstr "4096"
 
 #: src/effects/NoiseReduction.cpp:1774
 msgid "8192"
-msgstr ""
+msgstr "8192"
 
 #: src/effects/NoiseReduction.cpp:1775
 msgid "16384"
-msgstr ""
+msgstr "16384"
 
 #: src/effects/NoiseReduction.cpp:1776
 msgid "Window si&ze"
-msgstr ""
+msgstr "Dimensiune &fereastră"
 
 #: src/effects/NoiseReduction.cpp:1783 src/export/ExportFLAC.cpp:83
 msgid "2"
-msgstr ""
+msgstr "2"
 
 #: src/effects/NoiseReduction.cpp:1784
 #, fuzzy
 msgid "4 (default)"
-msgstr "256 - implicit"
+msgstr "Zoom implicit"
 
 #: src/effects/NoiseReduction.cpp:1789
 msgid "S&teps per window"
@@ -7137,11 +7064,11 @@ msgstr ""
 
 #: src/effects/NoiseReduction.cpp:1803
 msgid "Discrimination &method"
-msgstr ""
+msgstr "&Metodă de discriminare"
 
 #: src/effects/NoiseRemoval.cpp:118 src/effects/NoiseRemoval.cpp:686
 msgid "Noise Removal"
-msgstr "Scoaterea zgomotului"
+msgstr "Eliminare zgomot"
 
 #: src/effects/NoiseRemoval.cpp:123
 msgid "Removes constant background noise such as fans, tape noise, or hums"
@@ -7155,40 +7082,37 @@ msgstr ""
 
 #: src/effects/NoiseRemoval.cpp:770
 msgid "Noise re&duction (dB):"
-msgstr ""
+msgstr "Re&ducere de zgomot (dB):"
 
 #: src/effects/NoiseRemoval.cpp:778
 msgid "&Sensitivity (dB):"
-msgstr ""
+msgstr "&Sensibilitate (dB):"
 
 #: src/effects/NoiseRemoval.cpp:788
-#, fuzzy
 msgid "Fr&equency smoothing (Hz):"
-msgstr "Frecvenţa (Hz):"
+msgstr "N&etezire de frecvență (Hz):"
 
 #: src/effects/NoiseRemoval.cpp:798
-#, fuzzy
 msgid "Attac&k/decay time (secs):"
-msgstr "Timpul de întârziere (secunde):"
+msgstr ""
 
 #: src/effects/NoiseRemoval.cpp:804
 msgid "Attack/decay time"
 msgstr ""
 
 #: src/effects/NoiseRemoval.cpp:810
-#, fuzzy
 msgid "Re&move"
-msgstr "Elimină piesa"
+msgstr "Eli&mină"
 
 #: src/effects/Normalize.cpp:37
 #, fuzzy
 msgid "RemoveDcOffset"
-msgstr "Se alimină zgomotul"
+msgstr "Elimină"
 
 #: src/effects/Normalize.cpp:38
 #, fuzzy
 msgid "ApplyGain"
-msgstr "Aplicare Phaserului"
+msgstr "Se aplică"
 
 #: src/effects/Normalize.cpp:39
 msgid "StereoIndependent"
@@ -7203,18 +7127,16 @@ msgid "Removing DC offset and Normalizing...\n"
 msgstr ""
 
 #: src/effects/Normalize.cpp:173
-#, fuzzy
 msgid "Removing DC offset...\n"
-msgstr "Se alimină zgomotul"
+msgstr ""
 
 #: src/effects/Normalize.cpp:175
 msgid "Normalizing without removing DC offset...\n"
 msgstr ""
 
 #: src/effects/Normalize.cpp:195
-#, fuzzy
 msgid "Analyzing: "
-msgstr "&Analizează"
+msgstr ""
 
 #: src/effects/Normalize.cpp:197
 msgid "Analyzing first track of stereo pair: "
@@ -7261,28 +7183,25 @@ msgid ".  Maximum 0dB."
 msgstr ""
 
 #: src/effects/Paulstretch.cpp:33
-#, fuzzy
 msgid "Stretch Factor"
-msgstr "Creează o piesă stereo"
+msgstr ""
 
 #: src/effects/Paulstretch.cpp:34
 #, fuzzy
 msgid "Time Resolution"
-msgstr "Timpul de întârziere (secunde):"
+msgstr "Reducere de zgomot"
 
 #: src/effects/Paulstretch.cpp:99
 msgid "Use Paulstretch only for an extreme time-stretch or \"stasis\" effect"
 msgstr ""
 
 #: src/effects/Paulstretch.cpp:171
-#, fuzzy
 msgid "Stretch Factor:"
-msgstr "Creează o piesă stereo"
+msgstr ""
 
 #: src/effects/Paulstretch.cpp:175
-#, fuzzy
 msgid "Time Resolution (seconds):"
-msgstr "Timpul de întârziere (secunde):"
+msgstr ""
 
 #: src/effects/Paulstretch.cpp:231
 msgid ""
@@ -7304,9 +7223,8 @@ msgid "DryWet"
 msgstr ""
 
 #: src/effects/Phaser.cpp:47 src/effects/Wahwah.cpp:43
-#, fuzzy
 msgid "Freq"
-msgstr "Frecvenţa (Hz):"
+msgstr ""
 
 #: src/effects/Phaser.cpp:48 src/effects/Wahwah.cpp:44
 msgid "Phase"
@@ -7315,7 +7233,7 @@ msgstr ""
 #: src/effects/Phaser.cpp:49 src/effects/Wahwah.cpp:45
 #, fuzzy
 msgid "Depth"
-msgstr "Adâncime:"
+msgstr "Profunzime:"
 
 #: src/effects/Phaser.cpp:50
 msgid "Feedback"
@@ -7327,7 +7245,7 @@ msgstr ""
 
 #: src/effects/Phaser.cpp:231
 msgid "Stages:"
-msgstr "Nivele:"
+msgstr "Etape:"
 
 #: src/effects/Phaser.cpp:242
 msgid "Dry/Wet:"
@@ -7355,7 +7273,7 @@ msgstr ""
 
 #: src/effects/Phaser.cpp:273
 msgid "Depth:"
-msgstr "Adâncime:"
+msgstr "Profunzime:"
 
 #: src/effects/Phaser.cpp:278 src/effects/Wahwah.cpp:248
 msgid "Depth in percent"
@@ -7403,9 +7321,8 @@ msgid "Repeats the selection the specified number of times"
 msgstr ""
 
 #: src/effects/Repeat.cpp:178
-#, fuzzy
 msgid "Number of times to repeat:"
-msgstr "Numărul de repetiţii:"
+msgstr "De câte ori să se repete:"
 
 #: src/effects/Repeat.cpp:185
 msgid "New selection length: dd:hh:mm:ss"
@@ -7426,7 +7343,7 @@ msgstr "Repetă"
 #: src/effects/Reverb.cpp:46
 #, fuzzy
 msgid "RoomSize"
-msgstr "Mărime"
+msgstr "Dimensiune"
 
 #: src/effects/Reverb.cpp:48
 #, fuzzy
@@ -7434,9 +7351,8 @@ msgid "Reverberance"
 msgstr "Inversează"
 
 #: src/effects/Reverb.cpp:49
-#, fuzzy
 msgid "HfDamping"
-msgstr "Adâncime (%):"
+msgstr ""
 
 #: src/effects/Reverb.cpp:50
 msgid "ToneLow"
@@ -7446,15 +7362,17 @@ msgstr ""
 msgid "ToneHigh"
 msgstr ""
 
+# hm ? sau Amplificare ?
 #: src/effects/Reverb.cpp:52
 #, fuzzy
 msgid "WetGain"
-msgstr "Câştig"
+msgstr "Câștig"
 
+# hm ? sau Amplificare ?
 #: src/effects/Reverb.cpp:53
 #, fuzzy
 msgid "DryGain"
-msgstr "Câştig"
+msgstr "Câștig"
 
 #: src/effects/Reverb.cpp:54
 #, fuzzy
@@ -7518,9 +7436,8 @@ msgid "Rever&berance (%):"
 msgstr ""
 
 #: src/effects/Reverb.cpp:427
-#, fuzzy
 msgid "Da&mping (%):"
-msgstr "Adâncime (%):"
+msgstr ""
 
 #: src/effects/Reverb.cpp:428
 msgid "Tone &Low (%):"
@@ -7551,9 +7468,8 @@ msgid "Reverb"
 msgstr ""
 
 #: src/effects/Reverse.cpp:48
-#, fuzzy
 msgid "Reverses the selected audio"
-msgstr "Locaţia exportului:"
+msgstr ""
 
 #: src/effects/Reverse.h:22
 msgid "Reverse"
@@ -7644,8 +7560,9 @@ msgid "C&utoff:"
 msgstr ""
 
 #: src/effects/ScienFilter.cpp:507
+#, fuzzy
 msgid "Cutoff (Hz)"
-msgstr ""
+msgstr "la (Hz)"
 
 #: src/effects/ScienFilter.cpp:514
 msgid "Minimum S&topband Attenuation:"
@@ -7684,48 +7601,52 @@ msgid "Ignore Silence at Beginnings and Endings"
 msgstr ""
 
 #: src/effects/ScoreAlignDialog.cpp:130
-#, fuzzy
 msgid "Silence Threshold:"
-msgstr "Scoaterea zgomotului"
+msgstr ""
 
 #: src/effects/ScoreAlignDialog.cpp:135
 #, fuzzy
 msgid "Silence Threshold"
-msgstr "Scoaterea zgomotului"
+msgstr "Liniște în locul audio"
 
 #: src/effects/ScoreAlignDialog.cpp:143
+#, fuzzy
 msgid "Presmooth Time:"
-msgstr ""
+msgstr "Ordonează după timp"
 
 #: src/effects/ScoreAlignDialog.cpp:148
 msgid "Presmooth Time"
 msgstr ""
 
 #: src/effects/ScoreAlignDialog.cpp:156
+#, fuzzy
 msgid "Line Time:"
-msgstr ""
+msgstr "Timpul de sfârșit"
 
 #: src/effects/ScoreAlignDialog.cpp:161
+#, fuzzy
 msgid "Line Time"
-msgstr ""
+msgstr "Timpul de sfârșit"
 
 #: src/effects/ScoreAlignDialog.cpp:169
+#, fuzzy
 msgid "Smooth Time:"
-msgstr ""
+msgstr "Ordonează după timp"
 
 #: src/effects/ScoreAlignDialog.cpp:174
+#, fuzzy
 msgid "Smooth Time"
-msgstr ""
+msgstr "Ordonează după timp"
 
 #: src/effects/ScoreAlignDialog.cpp:181
 #, fuzzy
 msgid "Use Defaults"
-msgstr "256 - implicit"
+msgstr "Stabilește ca &implicit"
 
 #: src/effects/ScoreAlignDialog.cpp:182
 #, fuzzy
 msgid "Restore Defaults"
-msgstr "256 - implicit"
+msgstr "Stabilește ca &implicit"
 
 #: src/effects/ScoreAlignDialog.cpp:265
 #, c-format
@@ -7737,23 +7658,25 @@ msgid "Creates audio of zero amplitude"
 msgstr ""
 
 #: src/effects/StereoToMono.cpp:41
+#, fuzzy
 msgid "Converts stereo tracks to mono"
-msgstr ""
+msgstr "Pistă stereo la &mono"
 
 #: src/effects/StereoToMono.h:18
-#, fuzzy
 msgid "Stereo To Mono"
-msgstr "Împarte piesa stereo"
+msgstr "Stereo la mono"
 
+# hm ?
 #: src/effects/TimeScale.cpp:42
 #, fuzzy
 msgid "RatePercentChangeStart"
-msgstr "Procent schimbat:"
+msgstr "Schimbare în procente:"
 
+# hm ?
 #: src/effects/TimeScale.cpp:43
 #, fuzzy
 msgid "RatePercentChangeEnd"
-msgstr "Procent schimbat:"
+msgstr "Schimbare în procente:"
 
 #: src/effects/TimeScale.cpp:44
 msgid "PitchHalfStepsStart"
@@ -7763,15 +7686,17 @@ msgstr ""
 msgid "PitchHalfStepsEnd"
 msgstr ""
 
+# hm ?
 #: src/effects/TimeScale.cpp:46
 #, fuzzy
 msgid "PitchPercentChangeStart"
-msgstr "Procent schimbat:"
+msgstr "Schimbare în procente:"
 
+# hm ?
 #: src/effects/TimeScale.cpp:47
 #, fuzzy
 msgid "PitchPercentChangeEnd"
-msgstr "Procent schimbat:"
+msgstr "Schimbare în procente:"
 
 #: src/effects/TimeScale.cpp:89
 msgid "Sliding Time Scale/Pitch Shift"
@@ -7835,16 +7760,18 @@ msgid "Square, no alias"
 msgstr ""
 
 #: src/effects/ToneGen.cpp:68
+#, fuzzy
 msgid "StartFreq"
-msgstr ""
+msgstr "Început"
 
 #: src/effects/ToneGen.cpp:69
 msgid "EndFreq"
 msgstr ""
 
 #: src/effects/ToneGen.cpp:70
+#, fuzzy
 msgid "StartAmp"
-msgstr ""
+msgstr "Început"
 
 #: src/effects/ToneGen.cpp:71
 msgid "EndAmp"
@@ -7875,7 +7802,7 @@ msgstr ""
 #: src/effects/ToneGen.cpp:331 src/effects/ToneGen.cpp:388
 #, fuzzy
 msgid "Frequency (Hz):"
-msgstr "Frecvenţa (Hz):"
+msgstr "N&etezire de frecvență (Hz):"
 
 #: src/effects/ToneGen.cpp:339
 msgid "Frequency Hertz Start"
@@ -7922,13 +7849,14 @@ msgid "Minimum"
 msgstr ""
 
 #: src/effects/TruncSilence.cpp:56
+#, fuzzy
 msgid "Truncate"
-msgstr ""
+msgstr "Trunchiază la:"
 
 #: src/effects/TruncSilence.cpp:57
 #, fuzzy
 msgid "Compress"
-msgstr "Compresor..."
+msgstr "Compresor"
 
 #: src/effects/TruncSilence.cpp:105
 msgid ""
@@ -7937,22 +7865,20 @@ msgid ""
 msgstr ""
 
 #: src/effects/TruncSilence.cpp:495
-#, fuzzy
 msgid "Detect Silence"
-msgstr "Se generează liniştea"
+msgstr "Detectează liniștea"
 
 #: src/effects/TruncSilence.cpp:500 src/export/ExportFLAC.cpp:101
 msgid "Level:"
-msgstr ""
+msgstr "Nivel:"
 
 #: src/effects/TruncSilence.cpp:532
 msgid "Truncate to:"
-msgstr ""
+msgstr "Trunchiază la:"
 
 #: src/effects/TruncSilence.cpp:538
-#, fuzzy
 msgid "Compress to:"
-msgstr "Compresor..."
+msgstr ""
 
 #: src/effects/TruncSilence.h:31
 msgid "Truncate Silence"
@@ -8018,7 +7944,7 @@ msgstr ""
 #: src/effects/ladspa/LadspaEffect.cpp:367 src/effects/lv2/LV2Effect.cpp:213
 #, fuzzy
 msgid "Latency Compensation"
-msgstr "Combinaţia de taste"
+msgstr "Combinație de taste"
 
 #: src/effects/VST/VSTEffect.cpp:797
 msgid "As part of their processing, some VST effects must delay returning "
@@ -8082,19 +8008,16 @@ msgid "Enable &graphical interface"
 msgstr ""
 
 #: src/effects/VST/VSTEffect.cpp:1638
-#, fuzzy
 msgid "Audio In: "
-msgstr "Fişiere Proiect Audacity"
+msgstr "Intrare audio:"
 
 #: src/effects/VST/VSTEffect.cpp:1640
-#, fuzzy
 msgid ", Audio Out: "
-msgstr "Fişiere Proiect Audacity"
+msgstr ""
 
 #: src/effects/VST/VSTEffect.cpp:2299
-#, fuzzy
 msgid "Save VST Preset As:"
-msgstr "Salvează proiectul c&a şi..."
+msgstr ""
 
 #: src/effects/VST/VSTEffect.cpp:2330 src/effects/VST/VSTEffect.cpp:2381
 msgid "Unrecognized file extension."
@@ -8103,9 +8026,8 @@ msgstr ""
 #: src/effects/VST/VSTEffect.cpp:2331 src/effects/VST/VSTEffect.cpp:4091
 #: src/effects/VST/VSTEffect.cpp:4158 src/effects/VST/VSTEffect.cpp:4175
 #: src/effects/VST/VSTEffect.cpp:4190
-#, fuzzy
 msgid "Error Saving VST Presets"
-msgstr "Eroare la deschiderea fişierului"
+msgstr ""
 
 #: src/effects/VST/VSTEffect.cpp:2349
 msgid "Load VST Preset:"
@@ -8115,14 +8037,12 @@ msgstr ""
 #: src/effects/VST/VSTEffect.cpp:3690 src/effects/VST/VSTEffect.cpp:3704
 #: src/effects/VST/VSTEffect.cpp:3863 src/effects/VST/VSTEffect.cpp:3877
 #: src/effects/VST/VSTEffect.cpp:4075
-#, fuzzy
 msgid "Error Loading VST Presets"
-msgstr "Eroare la salvarea proiectului"
+msgstr ""
 
 #: src/effects/VST/VSTEffect.cpp:2391
-#, fuzzy
 msgid "Unable to load presets file."
-msgstr "Fişierul ţintă nu a putut fi deschis pentru scriere"
+msgstr "Nu s-a putut încărca fișierul de setări predefinite."
 
 #: src/effects/VST/VSTEffect.cpp:2608
 msgid "VST plugin initialization failed\n"
@@ -8138,20 +8058,19 @@ msgid "Unable to allocate memory when loading presets file."
 msgstr ""
 
 #: src/effects/VST/VSTEffect.cpp:3703 src/effects/VST/VSTEffect.cpp:3876
-#, fuzzy
 msgid "Unable to read presets file."
-msgstr "Fişierul ţintă nu a putut fi deschis pentru scriere"
+msgstr "Nu s-a putut citi fișierul de setări predefinite."
 
 #: src/effects/VST/VSTEffect.cpp:4090 src/effects/VST/VSTEffect.cpp:4174
 #: src/xml/XMLFileReader.cpp:49
 #, c-format
 msgid "Could not open file: \"%s\""
-msgstr "Fisierul \"%s\" nu a putut fi deschis"
+msgstr "Nu s-a putut deschide fișierul: „%s”"
 
 #: src/effects/VST/VSTEffect.cpp:4157 src/effects/VST/VSTEffect.cpp:4189
-#, fuzzy, c-format
+#, c-format
 msgid "Error writing to file: \"%s\""
-msgstr "Eroare la deschiderea fişierului"
+msgstr "Eroare la scrierea fișierului: „%s”"
 
 #: src/effects/VST/VSTEffect.cpp:4387
 #, c-format
@@ -8174,11 +8093,11 @@ msgstr ""
 
 #: src/effects/Wahwah.cpp:243
 msgid "Depth (%):"
-msgstr "Adâncime (%):"
+msgstr "Profunzime (%):"
 
 #: src/effects/Wahwah.cpp:253
 msgid "Resonance:"
-msgstr "Rezonanţa:"
+msgstr "Rezonanța:"
 
 #: src/effects/Wahwah.cpp:263
 msgid "Wah Frequency Offset (%):"
@@ -8201,9 +8120,8 @@ msgid "Provides Audio Unit Effects support to Audacity"
 msgstr ""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:302
-#, fuzzy
 msgid "Audio Unit Effect Options"
-msgstr "Setările efectului"
+msgstr ""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:327
 msgid ""
@@ -8221,9 +8139,8 @@ msgid ""
 msgstr ""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:413
-#, fuzzy
 msgid "Export Audio Unit Presets"
-msgstr "Locaţia exportului:"
+msgstr ""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:432
 #: src/effects/audiounits/AudioUnitEffect.cpp:607
@@ -8240,23 +8157,20 @@ msgid "Import Audio Unit Presets"
 msgstr ""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:613
-#, fuzzy
 msgid "Location"
-msgstr "Acţiune"
+msgstr "Locație"
 
 #: src/effects/ladspa/LadspaEffect.cpp:115
-#, fuzzy
 msgid "LADSPA Effects"
-msgstr "Efe&ct"
+msgstr ""
 
 #: src/effects/ladspa/LadspaEffect.cpp:136
 msgid "Provides LADSPA Effects"
 msgstr ""
 
 #: src/effects/ladspa/LadspaEffect.cpp:346
-#, fuzzy
 msgid "LADSPA Effect Options"
-msgstr "Setările efectului"
+msgstr ""
 
 #: src/effects/ladspa/LadspaEffect.cpp:370
 msgid "As part of their processing, some LADSPA effects must delay returning "
@@ -8272,9 +8186,8 @@ msgid "N/A"
 msgstr ""
 
 #: src/effects/ladspa/LadspaEffect.cpp:1381
-#, fuzzy
 msgid "Effect Output"
-msgstr "Setările efectului"
+msgstr ""
 
 #: src/effects/lv2/LV2Effect.cpp:191
 #, fuzzy
@@ -8304,45 +8217,42 @@ msgstr ""
 
 #: src/effects/lv2/LV2Effect.cpp:1584
 msgid "&Duration:"
-msgstr ""
+msgstr "&Durată:"
 
 #: src/effects/lv2/LoadLV2.cpp:101
+#, fuzzy
 msgid "LV2 Effects Module"
-msgstr ""
+msgstr "Efecte Vamp"
 
 #: src/effects/lv2/LoadLV2.cpp:122
 msgid "Provides LV2 Effects support to Audacity"
 msgstr ""
 
 #: src/effects/nyquist/LoadNyquist.cpp:102
-#, fuzzy
 msgid "Nyquist Effects"
-msgstr "Aplicarea Efectelor Nyquist..."
+msgstr "Efecte Nyquist"
 
 #: src/effects/nyquist/LoadNyquist.cpp:123
 msgid "Provides Nyquist Effects support to Audacity"
 msgstr ""
 
 #: src/effects/nyquist/Nyquist.cpp:83
-#, fuzzy
 msgid "Version"
-msgstr "Reversarea"
+msgstr "Versiune"
 
 #: src/effects/nyquist/Nyquist.cpp:109
 msgid "Applying Nyquist Effect..."
-msgstr "Aplicarea Efectelor Nyquist..."
+msgstr "Se aplică efectul Nyquist..."
 
 #: src/effects/nyquist/Nyquist.cpp:135 src/effects/nyquist/Nyquist.cpp:169
-#, fuzzy
 msgid "Nyquist Prompt"
-msgstr "Nyquist"
+msgstr ""
 
 #: src/effects/nyquist/Nyquist.cpp:586
 msgid ""
 "Sorry, cannot apply effect on stereo tracks where the tracks don't match."
 msgstr ""
-"Îmi pare rău, nu pot aplica efecte pe piesele stereo în care piesele nu sunt "
-"la fel."
+"Nu se pot aplica efecte pe piste stereo în care pistele nu se potrivesc."
 
 #: src/effects/nyquist/Nyquist.cpp:651
 msgid "Nyquist"
@@ -8404,7 +8314,7 @@ msgstr ""
 
 #: src/effects/nyquist/Nyquist.cpp:1823
 msgid "Enter Nyquist Command: "
-msgstr "Introdu comanda Nyquist:"
+msgstr "Introduceți comanda Nyquist:"
 
 #: src/effects/nyquist/Nyquist.cpp:1827
 msgid "&Use legacy (version 3) syntax."
@@ -8412,7 +8322,7 @@ msgstr ""
 
 #: src/effects/nyquist/Nyquist.cpp:1841
 msgid "&Load"
-msgstr ""
+msgstr "În&carcă"
 
 #: src/effects/nyquist/Nyquist.cpp:1943
 msgid ""
@@ -8421,9 +8331,8 @@ msgid ""
 msgstr ""
 
 #: src/effects/nyquist/Nyquist.cpp:1952
-#, fuzzy
 msgid "Load Nyquist script"
-msgstr "Nyquist"
+msgstr ""
 
 #: src/effects/nyquist/Nyquist.cpp:1955
 msgid ""
@@ -8436,9 +8345,8 @@ msgid "File could not be loaded"
 msgstr ""
 
 #: src/effects/nyquist/Nyquist.cpp:1974
-#, fuzzy
 msgid "Save Nyquist script"
-msgstr "Nyquist"
+msgstr ""
 
 #: src/effects/nyquist/Nyquist.cpp:1977
 msgid "Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|All files|*"
@@ -8454,9 +8362,8 @@ msgid "OK"
 msgstr "OK"
 
 #: src/effects/vamp/LoadVamp.cpp:84
-#, fuzzy
 msgid "Vamp Effects"
-msgstr "Efe&ct"
+msgstr "Efecte Vamp"
 
 #: src/effects/vamp/LoadVamp.cpp:100
 msgid "Provides Vamp Effects support to Audacity"
@@ -8485,30 +8392,28 @@ msgid "Program"
 msgstr ""
 
 #: src/export/Export.cpp:290
-#, fuzzy
 msgid "Export Audio"
-msgstr "Locaţia exportului:"
+msgstr "Export audio"
 
 #: src/export/Export.cpp:498
 msgid "All selected audio is muted."
-msgstr ""
+msgstr "Întregul audio selectat este pus pe mut."
 
 #: src/export/Export.cpp:500 src/export/ExportMultiple.cpp:179
 msgid "All audio is muted."
-msgstr ""
+msgstr "Întregul audio este pus pe mut."
 
 #: src/export/Export.cpp:502
 msgid "Unable to export"
-msgstr ""
+msgstr "NU s-a putut exporta"
 
 #: src/export/Export.cpp:558
 msgid "&Options..."
-msgstr ""
+msgstr "&Opțiuni..."
 
 #: src/export/Export.cpp:599
-#, fuzzy
 msgid "Are you sure you want to export the file as \""
-msgstr "Eşti sigur că vrei să salvezi acest fişier ca şi \""
+msgstr "Sigur vreți să exportați fișierul ca \""
 
 #: src/export/Export.cpp:619
 #, c-format
@@ -8523,8 +8428,7 @@ msgstr ""
 
 #: src/export/Export.cpp:633
 msgid "Sorry, pathnames longer than 256 characters not supported."
-msgstr ""
-"Îmi pare râu, dar adresele mai lungi de 256 caractere nu sunt suportate."
+msgstr "Numele de cale mai lungi de 256 caractere nu sunt suportate."
 
 #: src/export/Export.cpp:651
 msgid ""
@@ -8545,12 +8449,11 @@ msgstr ""
 msgid ""
 "Your tracks will be mixed down to two stereo channels in the exported file."
 msgstr ""
-"Piesele dumneavoastră vor fi mixate intr-un fişier stereo la exportare."
 
 #: src/export/Export.cpp:786
 msgid ""
 "Your tracks will be mixed down to a single mono channel in the exported file."
-msgstr "Piesele dumneavoastră vor fi mixate într-un fişier mono la exportare."
+msgstr ""
 
 #: src/export/Export.cpp:799
 msgid "Advanced Mixing Options"
@@ -8612,7 +8515,7 @@ msgstr ""
 #: src/export/ExportCL.cpp:365 src/export/ExportPCM.cpp:460
 #, c-format
 msgid "Cannot export audio to %s"
-msgstr "Suntetul nu poate fi exportat ca şi %s"
+msgstr "Nu se poate exporta audioul către %s"
 
 #: src/export/ExportCL.cpp:438 src/export/ExportMultiple.cpp:358
 msgid "Export"
@@ -8620,11 +8523,11 @@ msgstr ""
 
 #: src/export/ExportCL.cpp:440
 msgid "Exporting the selected audio using command-line encoder"
-msgstr "Se exportă sunetele selectate folosind un encoder linie de comandă"
+msgstr "Se exportă audio selectat folosind un codor în linie de comandă"
 
 #: src/export/ExportCL.cpp:441
 msgid "Exporting the entire project using command-line encoder"
-msgstr "Se exportă întregul fişier folosind un encoder linie de comandă"
+msgstr "Se exportă întregul proiect folosind un codor în linie de comandă"
 
 #: src/export/ExportCL.cpp:504
 msgid "Command Output"
@@ -8650,9 +8553,8 @@ msgstr ""
 #: src/export/ExportFFmpeg.cpp:626 src/export/ExportFFmpeg.cpp:686
 #: src/export/ExportFFmpeg.cpp:741 src/export/ExportFFmpeg.cpp:759
 #: src/export/ExportFFmpeg.cpp:778
-#, fuzzy
 msgid "FFmpeg Error"
-msgstr "Eroare LOF"
+msgstr "Eroare FFmpeg"
 
 #: src/export/ExportFFmpeg.cpp:275
 msgid "FFmpeg : ERROR - Can't allocate output format context."
@@ -8782,7 +8684,7 @@ msgstr ""
 #: src/export/ExportFFmpegDialogs.cpp:375
 #: src/export/ExportFFmpegDialogs.cpp:1366 src/export/ExportMP2.cpp:133
 msgid "Bit Rate:"
-msgstr "Bit Rate:"
+msgstr "Rată de biți:"
 
 #: src/export/ExportFFmpegDialogs.cpp:218
 msgid "Specify AAC Options"
@@ -8944,7 +8846,7 @@ msgstr ""
 
 #: src/export/ExportFFmpegDialogs.cpp:1349
 msgid "Language:"
-msgstr "Limba:"
+msgstr "Limbă:"
 
 #: src/export/ExportFFmpegDialogs.cpp:1350
 msgid ""
@@ -9178,9 +9080,8 @@ msgstr ""
 #: src/export/ExportFFmpegDialogs.cpp:1740 src/prefs/KeyConfigPrefs.cpp:333
 #: src/prefs/KeyConfigPrefs.cpp:365 src/prefs/KeyConfigPrefs.cpp:919
 #: src/prefs/KeyConfigPrefs.cpp:951
-#, fuzzy
 msgid "XML files (*.xml)|*.xml|All files|*"
-msgstr "Fişiere XML (*.xml)|*.xml|Toate fişierele (*.*)|*.*"
+msgstr "Fișiere XML (*.xml)|*.xml|Toate fișierele|*"
 
 #: src/export/ExportFFmpegDialogs.cpp:1737
 msgid "Select xml file to export presets into"
@@ -9200,43 +9101,43 @@ msgstr ""
 
 #: src/export/ExportFLAC.cpp:81
 msgid "0 (fastest)"
-msgstr ""
+msgstr "0 (cel mai rapid)"
 
 #: src/export/ExportFLAC.cpp:82
 msgid "1"
-msgstr ""
+msgstr "1"
 
 #: src/export/ExportFLAC.cpp:84
 msgid "3"
-msgstr ""
+msgstr "3"
 
 #: src/export/ExportFLAC.cpp:85
 msgid "4"
-msgstr ""
+msgstr "4"
 
 #: src/export/ExportFLAC.cpp:86
 msgid "5"
-msgstr ""
+msgstr "5"
 
 #: src/export/ExportFLAC.cpp:87
 msgid "6"
-msgstr ""
+msgstr "6"
 
 #: src/export/ExportFLAC.cpp:88
 msgid "7"
-msgstr ""
+msgstr "7"
 
 #: src/export/ExportFLAC.cpp:89
 msgid "8 (best)"
-msgstr ""
+msgstr "8 (cel mai bun)"
 
 #: src/export/ExportFLAC.cpp:92
 msgid "16 bit"
-msgstr ""
+msgstr "16 biți"
 
 #: src/export/ExportFLAC.cpp:93
 msgid "24 bit"
-msgstr ""
+msgstr "24 de biți"
 
 #: src/export/ExportFLAC.cpp:97
 msgid "FLAC Export Setup"
@@ -9289,17 +9190,17 @@ msgstr ""
 #: src/export/ExportMP2.cpp:247 src/export/ExportMP3.cpp:1725
 #: src/export/ExportOGG.cpp:187
 msgid "Unable to open target file for writing"
-msgstr "Fişierul ţintă nu a putut fi deschis pentru scriere"
+msgstr "Fișierul țintă nu a putut fi deschis pentru scriere"
 
 #: src/export/ExportMP2.cpp:280
-#, c-format
+#, fuzzy, c-format
 msgid "Exporting selected audio at %ld kbps"
-msgstr ""
+msgstr "Se exportă audio selectat ca Ogg Vorbis"
 
 #: src/export/ExportMP2.cpp:281
-#, c-format
+#, fuzzy, c-format
 msgid "Exporting entire file at %ld kbps"
-msgstr ""
+msgstr "Se exportă întregul proiect ca Ogg Vorbis"
 
 #: src/export/ExportMP3.cpp:218 src/export/ExportMP3.cpp:236
 #: src/export/ExportMP3.cpp:251
@@ -9341,7 +9242,7 @@ msgstr ""
 
 #: src/export/ExportMP3.cpp:332
 msgid "MP3 Export Setup"
-msgstr "Setările exportului în MP3"
+msgstr "Configurare export în format MP3"
 
 #: src/export/ExportMP3.cpp:339
 msgid "Bit Rate Mode:"
@@ -9405,7 +9306,7 @@ msgstr ""
 #: src/export/ExportMP3.cpp:635
 #, c-format
 msgid "Where is %s?"
-msgstr "Unde se găseşte %s?"
+msgstr "Unde se află %s?"
 
 #: src/export/ExportMP3.cpp:1140
 #, c-format
@@ -9421,8 +9322,8 @@ msgid ""
 "Only lame_enc.dll|lame_enc.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
 "All Files|*"
 msgstr ""
-"Doar lame_enc.dll|lame_enc.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
-"Toate fişierele (*.*)|*"
+"Numai lame_enc.dll|lame_enc.dll|Biblioteci legate dinamic (*.dll)|*.dll|"
+"Toate fișierele (*.*)|*"
 
 #: src/export/ExportMP3.cpp:1436
 msgid ""
@@ -9431,30 +9332,28 @@ msgid ""
 msgstr ""
 
 #: src/export/ExportMP3.cpp:1454
-#, fuzzy
 msgid ""
 "Only libmp3lame.so.0|libmp3lame.so.0|Primary Shared Object files (*.so)|*.so|"
 "Extended Libraries (*.so*)|*.so*|All Files (*)|*"
 msgstr ""
-"Doar libmp3lame.so|libmp3lame.so|Fişiere împărtăşite primar (*.so)|*.so|"
-"Librării extinse (*.so*)|*.so*|Toate fişierele (*)|*"
+"Numai libmp3lame.so.0|libmp3lame.so.0|Fișierele obiect partajate primar (*."
+"so)|*.so|Biblioteci extinse (*.so*)|*.so*|Toate fișierele (*)|*"
 
 #: src/export/ExportMP3.cpp:1592
 msgid "MP3 Files"
 msgstr ""
 
 #: src/export/ExportMP3.cpp:1619
-#, fuzzy
 msgid "Could not initialize MP3 encoding library!"
-msgstr "Nu a putut fi deschisa libraria de codare in MP3!"
+msgstr ""
 
 #: src/export/ExportMP3.cpp:1627
 msgid "Could not open MP3 encoding library!"
-msgstr "Nu a putut fi deschisa libraria de codare in MP3!"
+msgstr "Nu s-a putut deschide biblioteca de codare MP3 !"
 
 #: src/export/ExportMP3.cpp:1635
 msgid "Not a valid or supported MP3 encoding library!"
-msgstr "Nu este o librărie de codare MP3 validă sau nu este suportată!"
+msgstr "Bibliotecă de codare MP3 nevalidă sau nesuportată !"
 
 #: src/export/ExportMP3.cpp:1714
 msgid "Unable to initialize MP3 stream"
@@ -9519,9 +9418,8 @@ msgid "Export Multiple"
 msgstr ""
 
 #: src/export/ExportMultiple.cpp:180 src/export/ExportMultiple.cpp:190
-#, fuzzy
 msgid "Cannot Export Multiple"
-msgstr "Nu se pot exporta fişiere multiple"
+msgstr ""
 
 #: src/export/ExportMultiple.cpp:188
 msgid ""
@@ -9531,19 +9429,19 @@ msgstr ""
 
 #: src/export/ExportMultiple.cpp:255
 msgid "Export format:"
-msgstr "Formatului exportului:"
+msgstr "Formatul de export:"
 
 #: src/export/ExportMultiple.cpp:264
 msgid "Export location:"
-msgstr "Locaţia exportului:"
+msgstr "Locația pentru export:"
 
 #: src/export/ExportMultiple.cpp:269
 msgid "Create"
-msgstr ""
+msgstr "Creează"
 
 #: src/export/ExportMultiple.cpp:276
 msgid "Split files based on:"
-msgstr ""
+msgstr "Divizează fișierele pe baza:"
 
 #: src/export/ExportMultiple.cpp:280 src/export/ExportMultiple.cpp:281
 msgid "Labels"
@@ -9567,7 +9465,7 @@ msgstr ""
 
 #: src/export/ExportMultiple.cpp:323
 msgid "Using Label/Track Name"
-msgstr "Se foloseşte eticheta/numele piesei"
+msgstr "Se folosește eticheta sau numele pistei"
 
 #: src/export/ExportMultiple.cpp:326
 msgid "Numbering before Label/Track Name"
@@ -9587,7 +9485,7 @@ msgstr ""
 
 #: src/export/ExportMultiple.cpp:352
 msgid "Overwrite existing files"
-msgstr "Înlocuieşte fişierele existente"
+msgstr "Suprascrie fișierele existente"
 
 #: src/export/ExportMultiple.cpp:436
 #, c-format
@@ -9596,7 +9494,7 @@ msgstr ""
 
 #: src/export/ExportMultiple.cpp:445
 msgid "Choose a location to save the exported files"
-msgstr "Alege o locaţie unde vor fi salvate fişierele exportate."
+msgstr "Alegeți o locație pentru salvarea fișierelor exportate"
 
 #: src/export/ExportMultiple.cpp:540
 #, c-format
@@ -9660,11 +9558,11 @@ msgstr ""
 
 #: src/export/ExportOGG.cpp:259
 msgid "Exporting the selected audio as Ogg Vorbis"
-msgstr "Se exportă sunetele selectate ca şi Ogg Vorbis"
+msgstr "Se exportă audio selectat ca Ogg Vorbis"
 
 #: src/export/ExportOGG.cpp:260
 msgid "Exporting the entire project as Ogg Vorbis"
-msgstr "Exportă tot proiectul ca şi Ogg Vorbis"
+msgstr "Se exportă întregul proiect ca Ogg Vorbis"
 
 #: src/export/ExportPCM.cpp:61
 msgid "AIFF (Apple) signed 16-bit PCM"
@@ -9688,27 +9586,23 @@ msgstr ""
 
 #: src/export/ExportPCM.cpp:198
 msgid "Header:"
-msgstr ""
+msgstr "Antet:"
 
 #: src/export/ExportPCM.cpp:202 src/import/ImportRaw.cpp:392
-#, fuzzy
 msgid "Encoding:"
 msgstr "Codare:"
 
 #: src/export/ExportPCM.cpp:207
-#, fuzzy
 msgid "(Not all combinations of headers and encodings are possible.)"
-msgstr ""
-"(Nu toate combinaţiile de antete\n"
-"şi codări sunt posibile.)"
+msgstr "(Nu sunt posibile toate combinațiile de antete și codări)"
 
 #: src/export/ExportPCM.cpp:369 src/export/ExportPCM.cpp:905
 msgid "Other uncompressed files"
-msgstr ""
+msgstr "Alte fișiere necomprimate"
 
 #: src/export/ExportPCM.cpp:442
 msgid "Cannot export audio in this format."
-msgstr "Sunetul nu poate fi salvat în acest format"
+msgstr "Nu se poate exporta audio în acest format."
 
 #: src/export/ExportPCM.cpp:499
 #, c-format
@@ -9728,13 +9622,13 @@ msgid ""
 msgstr ""
 
 #: src/export/ExportPCM.cpp:560
-#, fuzzy, c-format
+#, c-format
 msgid "Error (file may not have been written): %s"
-msgstr "Eroare (este posibil ca fişierul să nu fi fost scris): %s"
+msgstr "Eroare (este posibil ca fișierul să nu fi fost scris): %s"
 
 #: src/export/ExportPCM.cpp:901
 msgid "There are no options for this format.\n"
-msgstr ""
+msgstr "Pentru acest format nu există opțiuni.\n"
 
 #: src/export/ExportPCM.cpp:902
 #, c-format
@@ -9754,7 +9648,7 @@ msgstr ""
 #: src/import/Import.cpp:601
 #, c-format
 msgid "This version of Audacity was not compiled with %s support."
-msgstr "Aceasră versiune de Audacity nu a fost compilată cu suport %s"
+msgstr "Aceasră versiune Audacity nu a fost compilată cu suport pentru %s."
 
 #: src/import/Import.cpp:615
 #, c-format
@@ -9963,7 +9857,7 @@ msgstr ""
 
 #: src/import/ImportOGG.cpp:196
 msgid "Not an Ogg Vorbis file"
-msgstr "Nu este un fişier Ogg Vorbis"
+msgstr "Nu este un fișier Ogg Vorbis"
 
 #: src/import/ImportOGG.cpp:199
 msgid "Vorbis version mismatch"
@@ -10056,9 +9950,10 @@ msgstr ""
 msgid "Unable to get fill buffer"
 msgstr ""
 
+# hm ? sau import brut ?
 #: src/import/ImportRaw.cpp:226
 msgid "Import Raw"
-msgstr ""
+msgstr "Importă brut"
 
 #: src/import/ImportRaw.cpp:306
 msgid "Import Raw Data"
@@ -10082,16 +9977,16 @@ msgstr ""
 
 #: src/import/ImportRaw.cpp:381
 msgid "1 Channel (Mono)"
-msgstr "1 Canal (Mono)"
+msgstr "1 canal (mono)"
 
 #: src/import/ImportRaw.cpp:382
 msgid "2 Channels (Stereo)"
-msgstr "2 canale (Stereo)"
+msgstr "2 canale (stereo)"
 
 #: src/import/ImportRaw.cpp:384
 #, c-format
 msgid "%d Channels"
-msgstr "%d Canale"
+msgstr "%d canale"
 
 #: src/import/ImportRaw.cpp:395
 msgid "Byte order:"
@@ -10141,16 +10036,16 @@ msgstr ""
 
 #: src/prefs/DevicePrefs.cpp:56
 msgid "Devices"
-msgstr ""
+msgstr "Dispozitive"
 
 #: src/prefs/DevicePrefs.cpp:110 src/prefs/GUIPrefs.cpp:32
 #: src/prefs/MidiIOPrefs.cpp:117
 msgid "Interface"
-msgstr "Interfaţă"
+msgstr "Interfață"
 
 #: src/prefs/DevicePrefs.cpp:115
 msgid "&Host:"
-msgstr ""
+msgstr "&Gazdă:"
 
 #: src/prefs/DevicePrefs.cpp:122
 msgid "Using:"
@@ -10162,24 +10057,21 @@ msgid "Playback"
 msgstr "Redare"
 
 #: src/prefs/DevicePrefs.cpp:134
-#, fuzzy
 msgid "&Device:"
-msgstr "Selectează"
+msgstr "&Dispozitiv:"
 
 #: src/prefs/DevicePrefs.cpp:142 src/prefs/MidiIOPrefs.cpp:154
 #: src/prefs/RecordingPrefs.cpp:37 src/toolbars/ControlToolBar.cpp:108
 msgid "Recording"
-msgstr "Se înregistrează"
+msgstr "Înregistrare"
 
 #: src/prefs/DevicePrefs.cpp:147
-#, fuzzy
 msgid "De&vice:"
-msgstr "Selectează"
+msgstr "Dispoziti&v:"
 
 #: src/prefs/DevicePrefs.cpp:152
-#, fuzzy
 msgid "Cha&nnels:"
-msgstr "Canal"
+msgstr "Ca&nale:"
 
 #: src/prefs/DevicePrefs.cpp:188
 msgid "No audio interfaces"
@@ -10192,11 +10084,11 @@ msgstr ""
 
 #: src/prefs/DevicePrefs.cpp:313
 msgid "1 (Mono)"
-msgstr "1 (Mono)"
+msgstr "1 (mono)"
 
 #: src/prefs/DevicePrefs.cpp:316
 msgid "2 (Stereo)"
-msgstr "2 (Stereo)"
+msgstr "2 (stereo)"
 
 #: src/prefs/DirectoriesPrefs.cpp:52 src/prefs/PrefsDialog.cpp:311
 msgid "Directories"
@@ -10216,7 +10108,7 @@ msgstr ""
 
 #: src/prefs/DirectoriesPrefs.cpp:96
 msgid "Free Space:"
-msgstr "Spaţiu liber:"
+msgstr "Spațiu liber:"
 
 #: src/prefs/DirectoriesPrefs.cpp:105
 msgid "Audio cache"
@@ -10238,7 +10130,7 @@ msgstr ""
 
 #: src/prefs/DirectoriesPrefs.cpp:129
 msgid "Choose a location to place the temporary directory"
-msgstr "Alege o locaţie unde vrei sa plasezi directorul fişierelor temporare."
+msgstr "Alegeți o locație pentru amplasarea directorului temporar"
 
 #: src/prefs/DirectoriesPrefs.cpp:180
 msgid "unavailable - above location doesn't exist"
@@ -10247,29 +10139,28 @@ msgstr ""
 #: src/prefs/DirectoriesPrefs.cpp:196
 #, c-format
 msgid "Directory %s does not exist. Create it?"
-msgstr "Directorul %s nu există. Doriţi să îl creaţi?"
+msgstr "Directorul %s nu există. Doriți să fie creat ?"
 
 #: src/prefs/DirectoriesPrefs.cpp:198
 msgid "New Temporary Directory"
-msgstr "Director Temporar Nou"
+msgstr "Director temporar nou"
 
 #: src/prefs/DirectoriesPrefs.cpp:216
 #, c-format
 msgid "Directory %s is not writable"
-msgstr "În directorul %s nu se poate scrie"
+msgstr "Directorul %s nu este scriibil"
 
 #: src/prefs/DirectoriesPrefs.cpp:230
 msgid ""
 "Changes to temporary directory will not take effect until Audacity is "
 "restarted"
 msgstr ""
-"Schimbarile directorului temporar nu vor avea efect pana Audacity nu este "
-"restartat"
+"Schimbările asupra directorului temporar vor avea efect numai după "
+"repornirea Audacity"
 
 #: src/prefs/DirectoriesPrefs.cpp:231
-#, fuzzy
 msgid "Temp Directory Update"
-msgstr "Director Temporar Nou"
+msgstr ""
 
 #: src/prefs/EffectsPrefs.cpp:33
 msgid "Effects"
@@ -10289,8 +10180,9 @@ msgid "Effect Options"
 msgstr "Setările efectului"
 
 #: src/prefs/EffectsPrefs.cpp:105
+#, fuzzy
 msgid "Sorted by Effect Name"
-msgstr ""
+msgstr "Ordonează după nume"
 
 #: src/prefs/EffectsPrefs.cpp:106
 msgid "Sorted by Publisher and Effect Name"
@@ -10319,7 +10211,7 @@ msgstr ""
 #: src/prefs/EffectsPrefs.cpp:138
 #, fuzzy
 msgid "Plugin Options"
-msgstr "Acţiune"
+msgstr "Acțiune"
 
 #: src/prefs/EffectsPrefs.cpp:140
 msgid "Check for updated plugins when Audacity starts"
@@ -10358,9 +10250,8 @@ msgid "Mime-types"
 msgstr ""
 
 #: src/prefs/ExtImportPrefs.cpp:134
-#, fuzzy
 msgid "Importer order"
-msgstr "Importează"
+msgstr ""
 
 #: src/prefs/ExtImportPrefs.cpp:150
 msgid "Move rule &up"
@@ -10388,7 +10279,7 @@ msgstr ""
 
 #: src/prefs/ExtImportPrefs.cpp:419 src/prefs/ExtImportPrefs.cpp:436
 msgid "Unused filters:"
-msgstr ""
+msgstr "Filtre neutilizate:"
 
 #: src/prefs/ExtImportPrefs.cpp:484
 msgid ""
@@ -10444,7 +10335,7 @@ msgstr ""
 
 #: src/prefs/GUIPrefs.cpp:67
 msgid "-120 dB (approximate limit of human hearing)"
-msgstr "-120 dB (apozimativ limita auzului uman)"
+msgstr "-120 dB (limita aproximativă a auzului uman)"
 
 #: src/prefs/GUIPrefs.cpp:68
 msgid "-145 dB (PCM range of 24 bit samples)"
@@ -10561,9 +10452,8 @@ msgid "Key Bindings"
 msgstr ""
 
 #: src/prefs/KeyConfigPrefs.cpp:176
-#, fuzzy
 msgid "View by:"
-msgstr "&Vizualizare"
+msgstr ""
 
 #: src/prefs/KeyConfigPrefs.cpp:179
 msgid "&Tree"
@@ -10574,9 +10464,8 @@ msgid "View by tree"
 msgstr ""
 
 #: src/prefs/KeyConfigPrefs.cpp:181
-#, fuzzy
 msgid "&Name"
-msgstr "Nume..."
+msgstr ""
 
 #: src/prefs/KeyConfigPrefs.cpp:182
 msgid "View by name"
@@ -10619,22 +10508,19 @@ msgstr ""
 #: src/prefs/KeyConfigPrefs.cpp:329 src/prefs/KeyConfigPrefs.cpp:915
 msgid "Select an XML file containing Audacity keyboard shortcuts..."
 msgstr ""
-"Selectează un fişier XML care conţine scurtăturile din tastatură ale "
-"Audacity..."
+"Selectați un fișier XML care conține scurtăturile din tastatură Audacity..."
 
 #: src/prefs/KeyConfigPrefs.cpp:348 src/prefs/KeyConfigPrefs.cpp:934
-#, fuzzy
 msgid "Error Importing Keyboard Shortcuts"
-msgstr "eroare la încărcarea scurtăturilor din tastatură"
+msgstr ""
 
 #: src/prefs/KeyConfigPrefs.cpp:361 src/prefs/KeyConfigPrefs.cpp:947
 msgid "Export Keyboard Shortcuts As:"
-msgstr "Exportează scurtăturile din tastatură ca şi:"
+msgstr "Exportă scurtăturile de tastatură ca:"
 
 #: src/prefs/KeyConfigPrefs.cpp:388 src/prefs/KeyConfigPrefs.cpp:974
-#, fuzzy
 msgid "Error Exporting Keyboard Shortcuts"
-msgstr "eroare la încărcarea scurtăturilor din tastatură"
+msgstr ""
 
 #: src/prefs/KeyConfigPrefs.cpp:520
 msgid "You may not assign a key to this entry"
@@ -10660,29 +10546,29 @@ msgstr ""
 
 #: src/prefs/KeyConfigPrefs.cpp:742 src/prefs/KeyConfigPrefs.cpp:877
 msgid "All"
-msgstr ""
+msgstr "Tot"
 
 #: src/prefs/KeyConfigPrefs.cpp:763
 msgid "C&ategory:"
-msgstr ""
+msgstr "C&ategorie:"
 
 #: src/prefs/KeyConfigPrefs.cpp:792
 msgid "Set"
-msgstr ""
+msgstr "Stabilește"
 
 #: src/prefs/KeyConfigPrefs.cpp:817
 msgid "Key Combination"
-msgstr "Combinaţia de taste"
+msgstr "Combinație de taste"
 
 #: src/prefs/KeyConfigPrefs.cpp:886 src/toolbars/EditToolBar.cpp:144
 #: src/toolbars/EditToolBar.cpp:206 src/widgets/KeyView.cpp:693
 msgid "Undo"
-msgstr "Desfă"
+msgstr "Anulează"
 
 #: src/prefs/KeyConfigPrefs.cpp:889 src/toolbars/EditToolBar.cpp:146
 #: src/toolbars/EditToolBar.cpp:207 src/widgets/KeyView.cpp:697
 msgid "Redo"
-msgstr ""
+msgstr "Refă"
 
 #: src/prefs/KeyConfigPrefs.cpp:1058
 #, c-format
@@ -10694,7 +10580,7 @@ msgstr ""
 
 #: src/prefs/LibraryPrefs.cpp:47
 msgid "Libraries"
-msgstr ""
+msgstr "Biblioteci"
 
 #: src/prefs/LibraryPrefs.cpp:80
 msgid "MP3 Export Library"
@@ -10702,7 +10588,7 @@ msgstr ""
 
 #: src/prefs/LibraryPrefs.cpp:84
 msgid "MP3 Library Version:"
-msgstr "Versiunea librăriilor MP3:"
+msgstr "Versiunea bibliotecilor MP3:"
 
 #: src/prefs/LibraryPrefs.cpp:90
 msgid "MP3 Library:"
@@ -10760,16 +10646,15 @@ msgstr ""
 
 #: src/prefs/MidiIOPrefs.cpp:123
 msgid "Host"
-msgstr ""
+msgstr "Gazdă"
 
 #: src/prefs/MidiIOPrefs.cpp:130
 msgid "Using: PortMidi"
 msgstr ""
 
 #: src/prefs/MidiIOPrefs.cpp:141 src/prefs/MidiIOPrefs.cpp:159
-#, fuzzy
 msgid "Device:"
-msgstr "Selectează"
+msgstr "Dispozitiv:"
 
 #: src/prefs/MidiIOPrefs.cpp:146
 msgid "MIDI Synthesizer Latency (ms):"
@@ -10780,21 +10665,20 @@ msgid "No MIDI interfaces"
 msgstr ""
 
 #: src/prefs/MidiIOPrefs.cpp:281
-#, fuzzy
 msgid "The MIDI Synthesizer Latency must be an integer"
-msgstr "Frecvenţa maximă trebuie să fie un număr mai mare ca 0."
+msgstr ""
 
 #: src/prefs/ModulePrefs.cpp:32
 msgid "Modules"
-msgstr ""
+msgstr "Module"
 
 #: src/prefs/ModulePrefs.cpp:100
 msgid "Ask"
-msgstr ""
+msgstr "Întreabă"
 
 #: src/prefs/ModulePrefs.cpp:101
 msgid "Failed"
-msgstr ""
+msgstr "Eșuat"
 
 #: src/prefs/ModulePrefs.cpp:107
 msgid ""
@@ -10821,8 +10705,8 @@ msgstr ""
 #, fuzzy
 msgid "Changes to these settings only take effect when Audacity starts up."
 msgstr ""
-"Schimbarile directorului temporar nu vor avea efect pana Audacity nu este "
-"restartat"
+"Schimbările asupra directorului temporar vor avea efect numai după "
+"repornirea Audacity"
 
 #: src/prefs/ModulePrefs.cpp:122
 msgid "No modules were found"
@@ -10830,19 +10714,19 @@ msgstr ""
 
 #: src/prefs/MousePrefs.cpp:58
 msgid "Mouse"
-msgstr "Mouse"
+msgstr "Maus"
 
 #: src/prefs/MousePrefs.cpp:85
 msgid "Mouse Bindings (default values, not configurable)"
-msgstr ""
+msgstr "Legături de maus (valori implicite, neconfigurabile)"
 
 #: src/prefs/MousePrefs.cpp:98
 msgid "Tool"
-msgstr "Unealtă"
+msgstr "Instrument"
 
 #: src/prefs/MousePrefs.cpp:99
 msgid "Command Action"
-msgstr ""
+msgstr "Acțiunea comenzii"
 
 #: src/prefs/MousePrefs.cpp:100
 msgid "Buttons"
@@ -10851,48 +10735,48 @@ msgstr "Butoane"
 #: src/prefs/MousePrefs.cpp:103 src/prefs/MousePrefs.cpp:125
 #: src/prefs/MousePrefs.cpp:141 src/prefs/MousePrefs.cpp:146
 msgid "Left-Click"
-msgstr ""
+msgstr "Clic stânga"
 
 #: src/prefs/MousePrefs.cpp:103 src/prefs/MousePrefs.cpp:104
 #: src/prefs/MousePrefs.cpp:105 src/prefs/MousePrefs.cpp:106
 #: src/prefs/MousePrefs.cpp:108 src/prefs/MousePrefs.cpp:109
 #: src/prefs/MousePrefs.cpp:112 src/prefs/MousePrefs.cpp:115
 msgid "Select"
-msgstr "Selectează"
+msgstr "Selectare"
 
 #: src/prefs/MousePrefs.cpp:103 src/prefs/MousePrefs.cpp:146
 msgid "Set Selection Point"
-msgstr ""
+msgstr "Stabilește punctul de selecție"
 
 #: src/prefs/MousePrefs.cpp:104 src/prefs/MousePrefs.cpp:126
 #: src/prefs/MousePrefs.cpp:132 src/prefs/MousePrefs.cpp:136
 #: src/prefs/MousePrefs.cpp:143 src/prefs/MousePrefs.cpp:147
 msgid "Left-Drag"
-msgstr ""
+msgstr "Tragere spre stânga"
 
 #: src/prefs/MousePrefs.cpp:104 src/prefs/MousePrefs.cpp:147
 msgid "Set Selection Range"
-msgstr ""
+msgstr "Stabilește intervalul de selecție"
 
 #: src/prefs/MousePrefs.cpp:105
 msgid "Shift-Left-Click"
-msgstr ""
+msgstr "Shift + clic stânga"
 
 #: src/prefs/MousePrefs.cpp:105
 msgid "Extend Selection Range"
-msgstr ""
+msgstr "Extinde intervalul de selecție"
 
 #: src/prefs/MousePrefs.cpp:106
 msgid "Left-Double-Click"
-msgstr ""
+msgstr "Dublu clic stânga"
 
 #: src/prefs/MousePrefs.cpp:106
 msgid "Select Clip or Entire Track"
-msgstr ""
+msgstr "Selectează clipul sau întreaga pistă"
 
 #: src/prefs/MousePrefs.cpp:108
 msgid "Ctrl-Left-Click"
-msgstr ""
+msgstr "Ctrl + clic stânga"
 
 #: src/prefs/MousePrefs.cpp:108
 msgid "Scrub"
@@ -10901,7 +10785,7 @@ msgstr ""
 #: src/prefs/MousePrefs.cpp:109 src/prefs/MousePrefs.cpp:134
 #: src/prefs/MousePrefs.cpp:144
 msgid "Ctrl-Left-Drag"
-msgstr ""
+msgstr "Ctrl + tragere spre stânga"
 
 #: src/prefs/MousePrefs.cpp:109
 msgid "Seek"
@@ -10910,7 +10794,7 @@ msgstr ""
 #: src/prefs/MousePrefs.cpp:112
 #, fuzzy
 msgid "Ctrl-Left-Double-Click"
-msgstr "Alt-Stânga-Click"
+msgstr "Dublu clic stânga"
 
 #: src/prefs/MousePrefs.cpp:112
 msgid "Scroll-scrub"
@@ -10918,77 +10802,77 @@ msgstr ""
 
 #: src/prefs/MousePrefs.cpp:115 src/prefs/MousePrefs.cpp:158
 msgid "Wheel-Rotate"
-msgstr ""
+msgstr "Învârtire de rotiță"
 
 #: src/prefs/MousePrefs.cpp:115
 #, fuzzy
 msgid "Change scrub speed"
-msgstr "Schimbă viteza"
+msgstr "Modifică viteza"
 
 #: src/prefs/MousePrefs.cpp:125
 msgid "Zoom in on Point"
-msgstr ""
+msgstr "Mărește pe punct"
 
 #: src/prefs/MousePrefs.cpp:126 src/prefs/MousePrefs.cpp:128
 #: src/prefs/MousePrefs.cpp:149
 msgid "Zoom in on a Range"
-msgstr ""
+msgstr "Mărește pe un interval"
 
 #: src/prefs/MousePrefs.cpp:126
 msgid "same as right-drag"
-msgstr ""
+msgstr "la fel ca tragerea spre dreapta"
 
 #: src/prefs/MousePrefs.cpp:127 src/prefs/MousePrefs.cpp:148
 msgid "Right-Click"
-msgstr "Click Dreapta"
+msgstr "Click dreapta"
 
 #: src/prefs/MousePrefs.cpp:127 src/prefs/MousePrefs.cpp:148
 msgid "Zoom out one step"
-msgstr "Micşorează un pas"
+msgstr "Micșorează o treaptă"
 
 #: src/prefs/MousePrefs.cpp:128 src/prefs/MousePrefs.cpp:149
 msgid "Right-Drag"
-msgstr ""
+msgstr "Tragere spre dreapta"
 
 #: src/prefs/MousePrefs.cpp:128
 msgid "same as left-drag"
-msgstr ""
+msgstr "la fel ca tragerea spre stânga"
 
 #: src/prefs/MousePrefs.cpp:129
 msgid "Shift-Drag"
-msgstr ""
+msgstr "Shift + tragere"
 
 #: src/prefs/MousePrefs.cpp:129
 msgid "Zoom out on a Range"
-msgstr ""
+msgstr "Micșorează pe un interval"
 
 #: src/prefs/MousePrefs.cpp:130
 msgid "Middle-Click"
-msgstr ""
+msgstr "Clic mijloc"
 
 #: src/prefs/MousePrefs.cpp:130
 msgid "Zoom default"
-msgstr ""
+msgstr "Zoom implicit"
 
 #: src/prefs/MousePrefs.cpp:132
 msgid "Time shift clip or move up/down between tracks"
-msgstr ""
+msgstr "Decalează temporal clipul sau mută mai sus sau mai jos între piste"
 
 #: src/prefs/MousePrefs.cpp:133
 msgid "Shift-Left-Drag"
-msgstr ""
+msgstr "Shift + tragere spre stânga"
 
 #: src/prefs/MousePrefs.cpp:133
 msgid "Time shift all clips in track"
-msgstr ""
+msgstr "Decalează temporal toate clipurile de pe pistă"
 
 #: src/prefs/MousePrefs.cpp:134
 msgid "Move clip up/down between tracks"
-msgstr ""
+msgstr "Mută clipul mai sus sau mai jos între piste"
 
 #: src/prefs/MousePrefs.cpp:139
 msgid "Change Amplification Envelope"
-msgstr ""
+msgstr "Modifică anvelopa amplificării"
 
 #: src/prefs/MousePrefs.cpp:141 src/prefs/MousePrefs.cpp:142
 #: src/prefs/MousePrefs.cpp:143 src/prefs/MousePrefs.cpp:144
@@ -10997,38 +10881,36 @@ msgstr "Creion"
 
 #: src/prefs/MousePrefs.cpp:141
 msgid "Change Sample"
-msgstr ""
+msgstr "Modifică eșantionul"
 
 #: src/prefs/MousePrefs.cpp:142
 msgid "Alt-Left-Click"
-msgstr "Alt-Stânga-Click"
+msgstr "Alt + clic stânga"
 
 #: src/prefs/MousePrefs.cpp:142
 msgid "Smooth at Sample"
-msgstr ""
+msgstr "Netezește în jurul eșantionului"
 
 #: src/prefs/MousePrefs.cpp:143
 msgid "Change Several Samples"
-msgstr ""
+msgstr "Modifică mai multe eșantioane"
 
 #: src/prefs/MousePrefs.cpp:144
 msgid "Change ONE Sample only"
-msgstr ""
+msgstr "Modifică numai UN eșantion"
 
 #: src/prefs/MousePrefs.cpp:146 src/prefs/MousePrefs.cpp:147
 #: src/prefs/MousePrefs.cpp:148 src/prefs/MousePrefs.cpp:149
 msgid "Multi"
-msgstr ""
+msgstr "Multiplu"
 
 #: src/prefs/MousePrefs.cpp:146 src/prefs/MousePrefs.cpp:147
-#, fuzzy
 msgid "same as select tool"
-msgstr "la fel cu unealta de selectare"
+msgstr "la fel ca instrumentul de selectare"
 
 #: src/prefs/MousePrefs.cpp:148 src/prefs/MousePrefs.cpp:149
-#, fuzzy
 msgid "same as zoom tool"
-msgstr "La fel cu unealta de mărire"
+msgstr "la fel ca instrumentul de zoom"
 
 #: src/prefs/MousePrefs.cpp:158 src/prefs/MousePrefs.cpp:159
 #: src/prefs/MousePrefs.cpp:160
@@ -11037,36 +10919,35 @@ msgstr "Orice"
 
 #: src/prefs/MousePrefs.cpp:158
 msgid "Scroll up or down"
-msgstr "Scroll sus sau jos"
+msgstr "Derulează în sus sau în jos"
 
 #: src/prefs/MousePrefs.cpp:159
 msgid "Shift-Wheel-Rotate"
-msgstr ""
+msgstr "Shift + învârtire de rotiță"
 
 #: src/prefs/MousePrefs.cpp:159
 msgid "Scroll left or right"
-msgstr ""
+msgstr "Derulează la stânga sau la dreapta"
 
 #: src/prefs/MousePrefs.cpp:160
 msgid "Ctrl-Wheel-Rotate"
-msgstr ""
+msgstr "Ctrl + învârtire de rotiță"
 
 #: src/prefs/MousePrefs.cpp:160
-#, fuzzy
 msgid "Zoom in or out on Mouse Pointer"
-msgstr "Micşorează un pas"
+msgstr "Mărire sau micșorare la indicatorul de maus"
 
 #: src/prefs/PlaybackPrefs.cpp:57
 msgid "Effects Preview"
-msgstr ""
+msgstr "Previzualizare efecte"
 
 #: src/prefs/PlaybackPrefs.cpp:61
 msgid "&Length of preview:"
-msgstr ""
+msgstr "&Lungimea previzualizării:"
 
 #: src/prefs/PlaybackPrefs.cpp:73
 msgid "Cut Preview"
-msgstr ""
+msgstr "Taie previzualizarea"
 
 #: src/prefs/PlaybackPrefs.cpp:77
 msgid "Preview &before cut region:"
@@ -11089,17 +10970,16 @@ msgid "Lo&ng period:"
 msgstr ""
 
 #: src/prefs/PrefsDialog.cpp:102
-#, fuzzy
 msgid "Preferences: "
-msgstr "Setări Audacity"
+msgstr "Preferințe:"
 
 #: src/prefs/PrefsDialog.cpp:111
 msgid "Audacity Preferences"
-msgstr "Setări Audacity"
+msgstr "Preferințe Audacity"
 
 #: src/prefs/ProjectsPrefs.cpp:34
 msgid "Projects"
-msgstr ""
+msgstr "Proiecte"
 
 #: src/prefs/ProjectsPrefs.cpp:59
 msgid "When saving a project that depends on other audio files"
@@ -11115,11 +10995,11 @@ msgstr ""
 
 #: src/prefs/ProjectsPrefs.cpp:67
 msgid "As&k user"
-msgstr ""
+msgstr "Întreabă utili&zatorul"
 
 #: src/prefs/QualityPrefs.cpp:75
 msgid "Rectangle"
-msgstr ""
+msgstr "Dreptunghi"
 
 #: src/prefs/QualityPrefs.cpp:76
 msgid "Triangle"
@@ -11131,27 +11011,27 @@ msgstr ""
 
 #: src/prefs/QualityPrefs.cpp:99
 msgid "Other..."
-msgstr "Alt.."
+msgstr "Altele..."
 
 #: src/prefs/QualityPrefs.cpp:121
 msgid "Sampling"
-msgstr ""
+msgstr "Eșantionare"
 
 #: src/prefs/QualityPrefs.cpp:125
 msgid "Default Sample &Rate:"
-msgstr ""
+msgstr "&Rata de eșantionare implicită:"
 
 #: src/prefs/QualityPrefs.cpp:150
 msgid "Default Sample &Format:"
-msgstr ""
+msgstr "&Formatul implicit al eșantionării:"
 
 #: src/prefs/QualityPrefs.cpp:161
 msgid "Real-time Conversion"
-msgstr ""
+msgstr "Conversie în timp real"
 
 #: src/prefs/QualityPrefs.cpp:165
 msgid "Sample Rate Con&verter:"
-msgstr ""
+msgstr "Con&vertor al ratei de eșantionare:"
 
 #: src/prefs/QualityPrefs.cpp:172
 msgid "&Dither:"
@@ -11163,7 +11043,7 @@ msgstr ""
 
 #: src/prefs/QualityPrefs.cpp:187
 msgid "Sample Rate Conver&ter:"
-msgstr ""
+msgstr "Conver&tor al ratei de eșantionare:"
 
 #: src/prefs/QualityPrefs.cpp:194
 msgid "Dit&her:"
@@ -11191,7 +11071,7 @@ msgstr ""
 
 #: src/prefs/RecordingPrefs.cpp:82
 msgid "Latency"
-msgstr ""
+msgstr "Latență"
 
 #: src/prefs/RecordingPrefs.cpp:88
 msgid "Audio to &buffer:"
@@ -11335,12 +11215,11 @@ msgstr ""
 
 #: src/prefs/SpectrumPrefs.cpp:280
 msgid "The maximum frequency must be an integer"
-msgstr "Frecvenţa maximă trebuie să fie un număr mai mare ca 0."
+msgstr "Frecvența maximă trebuie să fie un număr întreg"
 
 #: src/prefs/SpectrumPrefs.cpp:284
-#, fuzzy
 msgid "Maximum frequency must be 100 Hz or above"
-msgstr "Frecvenţa maximă trebuie să fie un număr mai mare ca 0."
+msgstr "Frecvența maximă trebuie să fie 100 Hz sau peste"
 
 #: src/prefs/SpectrumPrefs.cpp:290
 msgid "The minimum frequency must be an integer"
@@ -11392,11 +11271,11 @@ msgstr ""
 
 #: src/prefs/ThemePrefs.cpp:60
 msgid "Theme"
-msgstr ""
+msgstr "Temă"
 
 #: src/prefs/ThemePrefs.cpp:88
 msgid "Info"
-msgstr ""
+msgstr "Informații"
 
 #: src/prefs/ThemePrefs.cpp:91
 msgid ""
@@ -11457,45 +11336,43 @@ msgstr ""
 
 #: src/prefs/ThemePrefs.cpp:150
 msgid "Save Files"
-msgstr ""
+msgstr "Salvează fișierele"
 
 #: src/prefs/ThemePrefs.cpp:151
 msgid "Load Files"
-msgstr ""
+msgstr "Încarcă fișiere"
 
 #: src/prefs/TracksPrefs.cpp:47
 msgid "Simple"
-msgstr ""
+msgstr "Simplu"
 
 #: src/prefs/TracksPrefs.cpp:62
 msgid "Waveform (dB)"
 msgstr ""
 
 #: src/prefs/TracksPrefs.cpp:63
-#, fuzzy
 msgid "Spectrogram"
-msgstr "Spectrograme"
+msgstr "Spectrogramă"
 
 #: src/prefs/TracksPrefs.cpp:64
-#, fuzzy
 msgid "Spectrogram log(f)"
-msgstr "Spectrograme"
+msgstr ""
 
 #: src/prefs/TracksPrefs.cpp:65 src/toolbars/SpectralSelectionBar.cpp:86
 #: src/toolbars/SpectralSelectionBar.cpp:137
 #: src/toolbars/SpectralSelectionBar.cpp:201
 #, fuzzy
 msgid "Spectral Selection"
-msgstr "spre sfârşitull Selecţiei"
+msgstr "Potrivește selecția"
 
 #: src/prefs/TracksPrefs.cpp:66
 #, fuzzy
 msgid "Spectral Selection log(f)"
-msgstr "spre sfârşitull Selecţiei"
+msgstr "Potrivește selecția"
 
 #: src/prefs/TracksPrefs.cpp:67
 msgid "Pitch (EAC)"
-msgstr "Înalte (EAC)"
+msgstr "Înălțime sunet (EAC)"
 
 #: src/prefs/TracksPrefs.cpp:84
 msgid "&Update display while playing"
@@ -11539,7 +11416,7 @@ msgstr ""
 
 #: src/prefs/WarningsPrefs.cpp:31
 msgid "Warnings"
-msgstr ""
+msgstr "Avertismente"
 
 #: src/prefs/WarningsPrefs.cpp:55
 msgid "Show Warnings/Prompts for"
@@ -11570,19 +11447,16 @@ msgid "&Importing uncompressed audio files"
 msgstr ""
 
 #: src/toolbars/ControlToolBar.cpp:106
-#, fuzzy
 msgid "Playing"
-msgstr "Aplicare Phaserului"
+msgstr "În redare"
 
 #: src/toolbars/ControlToolBar.cpp:107
-#, fuzzy
 msgid "Stopped"
-msgstr "Stop"
+msgstr "Oprit"
 
 #: src/toolbars/ControlToolBar.cpp:109
-#, fuzzy
 msgid "Paused"
-msgstr "Pauză"
+msgstr "În pauză"
 
 #: src/toolbars/ControlToolBar.cpp:158
 msgid "Pause"
@@ -11590,19 +11464,19 @@ msgstr "Pauză"
 
 #: src/toolbars/ControlToolBar.cpp:171
 msgid "Skip to Start"
-msgstr "Sari la Început"
+msgstr "Sari la început"
 
 #: src/toolbars/ControlToolBar.cpp:174
 msgid "Skip to End"
-msgstr "Sari la Sfârşit"
+msgstr "Sari la sfârșit"
 
 #: src/toolbars/ControlToolBar.cpp:208
 msgid ") / Loop Play ("
-msgstr ""
+msgstr ") / Redare în buclă ("
 
 #: src/toolbars/ControlToolBar.cpp:213
 msgid ") / Append Record ("
-msgstr ""
+msgstr ") / Adaugă înregistrarea ("
 
 #: src/toolbars/ControlToolBar.cpp:654
 msgid "Error while opening sound device. "
@@ -11615,97 +11489,84 @@ msgid ""
 msgstr ""
 
 #: src/toolbars/DeviceToolBar.cpp:108
-#, fuzzy
 msgid "Audio Host"
-msgstr "Fişiere Proiect Audacity"
+msgstr "Gazdă audio"
 
 #: src/toolbars/DeviceToolBar.cpp:125
-#, fuzzy
 msgid "Recording Device"
-msgstr "Selectează"
+msgstr "Dispozitiv de înregistrare"
 
 #: src/toolbars/DeviceToolBar.cpp:132
-#, fuzzy
 msgid "Recording Channels"
-msgstr "Canalul drept"
+msgstr "Canale de înregistrare"
 
 #: src/toolbars/DeviceToolBar.cpp:147
-#, fuzzy
 msgid "Playback Device"
-msgstr "Redare"
+msgstr "Dispozitiv de redare"
 
 #: src/toolbars/DeviceToolBar.cpp:636
-#, fuzzy
 msgid "1 (Mono) Recording Channel"
-msgstr "Canalul drept"
+msgstr "1 canal de înregistrare (mono)"
 
 #: src/toolbars/DeviceToolBar.cpp:639
-#, fuzzy
 msgid "2 (Stereo) Recording Channels"
-msgstr "%d Canale"
+msgstr "2 canale de înregistrare (stereo)"
 
 #: src/toolbars/DeviceToolBar.cpp:770
-#, fuzzy
 msgid "Select Recording Device"
-msgstr "Selectează"
+msgstr "Selectați dispozitivul de înregistrare"
 
 #: src/toolbars/DeviceToolBar.cpp:774
-#, fuzzy
 msgid "Select Playback Device"
-msgstr "Selectează"
+msgstr "Selectați dispozitivul de redare"
 
 #: src/toolbars/DeviceToolBar.cpp:778
-#, fuzzy
 msgid "Select Audio Host"
-msgstr "Unealta de selecţie"
+msgstr "Selectați gazda audio"
 
 #: src/toolbars/DeviceToolBar.cpp:782
-#, fuzzy
 msgid "Select Recording Channels"
-msgstr "Canalul drept"
+msgstr "Selectați canalele de înregistrare"
 
 #: src/toolbars/DeviceToolBar.cpp:788
 msgid "Device information is not available."
-msgstr ""
+msgstr "Informațiile despre dispozitiv nu sunt disponibile"
 
 #: src/toolbars/EditToolBar.cpp:131
-#, fuzzy
 msgid "Cut selection"
-msgstr "spre sfârşitull Selecţiei"
+msgstr "Taie selecția"
 
 #: src/toolbars/EditToolBar.cpp:133
-#, fuzzy
 msgid "Copy selection"
-msgstr "spre sfârşitull Selecţiei"
+msgstr "Copiază selecția"
 
 #: src/toolbars/EditToolBar.cpp:137
 msgid "Trim audio outside selection"
-msgstr ""
+msgstr "Suprimă audio în afara selecției"
 
 #: src/toolbars/EditToolBar.cpp:139
-#, fuzzy
 msgid "Silence audio selection"
-msgstr "Unealta de selecţie"
+msgstr "Liniște în locul selecției audi&o"
 
 #: src/toolbars/EditToolBar.cpp:152 src/toolbars/EditToolBar.cpp:209
 msgid "Sync-Lock Tracks"
-msgstr ""
+msgstr "Blochează sincronizarea pistelor"
 
 #: src/toolbars/EditToolBar.cpp:158 src/toolbars/EditToolBar.cpp:211
 msgid "Zoom In"
-msgstr "Zoom In"
+msgstr "Mărește"
 
 #: src/toolbars/EditToolBar.cpp:160 src/toolbars/EditToolBar.cpp:212
 msgid "Zoom Out"
-msgstr "Zoom afară"
+msgstr "Micșorează"
 
 #: src/toolbars/EditToolBar.cpp:163
 msgid "Fit selection in window"
-msgstr ""
+msgstr "Potrivește selecția la fereastră"
 
 #: src/toolbars/EditToolBar.cpp:165
 msgid "Fit project in window"
-msgstr ""
+msgstr "Potrivește proiectul la fereastră"
 
 #: src/toolbars/EditToolBar.cpp:181
 msgid "Show Effects Rack"
@@ -11716,17 +11577,16 @@ msgid "Copy"
 msgstr "Copiază"
 
 #: src/toolbars/EditToolBar.cpp:205
-#, fuzzy
 msgid "Silence Audio"
-msgstr "Linişte"
+msgstr "Liniște în locul audio"
 
 #: src/toolbars/EditToolBar.cpp:213
 msgid "Fit Selection"
-msgstr ""
+msgstr "Potrivește selecția"
 
 #: src/toolbars/EditToolBar.cpp:214
 msgid "Fit Project"
-msgstr ""
+msgstr "Potrivește proiectul"
 
 #: src/toolbars/EditToolBar.cpp:217
 msgid "Open Effects Rack"
@@ -11735,17 +11595,17 @@ msgstr ""
 #: src/toolbars/MeterToolBar.cpp:51
 #, fuzzy
 msgid "Combined Meter"
-msgstr "Se înregistrează"
+msgstr "Activează instrumentul de măsură"
 
 #: src/toolbars/MeterToolBar.cpp:57
 #, fuzzy
 msgid "Recording Meter"
-msgstr "Se înregistrează"
+msgstr "Dispozitiv de înregistrare"
 
 #: src/toolbars/MeterToolBar.cpp:61
 #, fuzzy
 msgid "Playback Meter"
-msgstr "Redare"
+msgstr "Nivel de redare"
 
 #: src/toolbars/MeterToolBar.cpp:129
 msgid "Record Meter"
@@ -11764,48 +11624,42 @@ msgid "Meter-Play"
 msgstr ""
 
 #: src/toolbars/MeterToolBar.cpp:183
-#, fuzzy
 msgid "Playback Level"
-msgstr "Redare"
+msgstr "Nivel de redare"
 
 #: src/toolbars/MeterToolBar.cpp:185
-#, fuzzy
 msgid "Recording Level"
-msgstr "Selectează"
+msgstr "Nivel de înregistrare"
 
 #: src/toolbars/MixerToolBar.cpp:94
-#, fuzzy
 msgid "Recording Volume"
-msgstr "Se înregistrează"
+msgstr ""
 
 #: src/toolbars/MixerToolBar.cpp:97
-#, fuzzy
 msgid "Slider Recording"
-msgstr "Se înregistrează"
+msgstr ""
 
 #: src/toolbars/MixerToolBar.cpp:107
-#, fuzzy
 msgid "Playback Volume"
-msgstr "Redare"
+msgstr "Volum de redare"
 
 #: src/toolbars/MixerToolBar.cpp:110
-#, fuzzy
 msgid "Slider Playback"
-msgstr "Redare"
+msgstr ""
 
 #: src/toolbars/MixerToolBar.cpp:300
-#, fuzzy, c-format
+#, c-format
 msgid "Recording Volume: %.2f"
-msgstr "Se înregistrează"
+msgstr ""
 
 #: src/toolbars/MixerToolBar.cpp:304
 msgid "Recording Volume (Unavailable; use system mixer.)"
 msgstr ""
 
 #: src/toolbars/MixerToolBar.cpp:309
-#, fuzzy, c-format
+#, c-format
 msgid "Playback Volume: %.2f%s"
-msgstr "Redare"
+msgstr ""
 
 #: src/toolbars/MixerToolBar.cpp:309
 msgid " (emulated)"
@@ -11817,49 +11671,49 @@ msgstr ""
 
 #: src/toolbars/SelectionBar.cpp:88 src/toolbars/SelectionBar.cpp:295
 msgid "Selection"
-msgstr ""
+msgstr "Selecție"
 
 #: src/toolbars/SelectionBar.cpp:132 src/toolbars/SelectionBar.cpp:192
 msgid "Project Rate (Hz):"
-msgstr ""
+msgstr "Rată de biți proiect (Hz):"
 
 #: src/toolbars/SelectionBar.cpp:144
 msgid "Snap To:"
-msgstr ""
+msgstr "Acroșare la:"
 
 #: src/toolbars/SelectionBar.cpp:147 src/toolbars/SelectionBar.cpp:256
 msgid "Selection Start:"
-msgstr ""
+msgstr "Începutul selecției:"
 
 #: src/toolbars/SelectionBar.cpp:161 src/toolbars/SelectionBar.cpp:162
 #: src/toolbars/SelectionBar.cpp:263
 msgid "Length"
-msgstr ""
+msgstr "Lungime"
 
 #: src/toolbars/SelectionBar.cpp:172
 msgid "hidden"
-msgstr ""
+msgstr "ascuns"
 
 #: src/toolbars/SelectionBar.cpp:182 src/toolbars/SelectionBar.cpp:275
 msgid "Audio Position:"
-msgstr ""
+msgstr "Poziție audio:"
 
 #: src/toolbars/SelectionBar.cpp:239
 msgid "Snap To"
-msgstr ""
+msgstr "Acroșează la"
 
 #: src/toolbars/SelectionBar.cpp:242 src/toolbars/SelectionBar.cpp:377
 #, c-format
 msgid "Snap Clicks/Selections to %s"
-msgstr ""
+msgstr "Acroșează clicurile sau selecțiile la %s"
 
 #: src/toolbars/SelectionBar.cpp:262
 msgid "Selection "
-msgstr ""
+msgstr "Selecție"
 
 #: src/toolbars/SelectionBar.cpp:355
 msgid "Selection End"
-msgstr ""
+msgstr "Sfârșitul selecției:"
 
 #: src/toolbars/SpectralSelectionBar.cpp:132
 msgid "Center frequency and Width"
@@ -11867,36 +11721,33 @@ msgstr ""
 
 #: src/toolbars/SpectralSelectionBar.cpp:133
 msgid "Low and High Frequencies"
-msgstr ""
+msgstr "Frecvențe joase și înalte"
 
 #: src/toolbars/SpectralSelectionBar.cpp:149
-#, fuzzy
 msgid "Center Frequency:"
-msgstr "Frecvenţa (Hz):"
+msgstr "Frecvență centrală:"
 
 #: src/toolbars/SpectralSelectionBar.cpp:155
 msgid "Bandwidth:"
-msgstr ""
+msgstr "Lățime de bandă:"
 
 #: src/toolbars/SpectralSelectionBar.cpp:161
-#, fuzzy
 msgid "Low Frequency:"
-msgstr "Frecvenţă scăzută"
+msgstr "Frecvență joasă:"
 
 #: src/toolbars/SpectralSelectionBar.cpp:167
-#, fuzzy
 msgid "High Frequency:"
-msgstr "Frecvenţa (Hz):"
+msgstr "Frecvență înaltă"
 
 #: src/toolbars/ToolBar.cpp:299
 #, fuzzy, c-format
 msgid "Audacity %s Toolbar"
-msgstr "Prima rulare a programului Audacity"
+msgstr "Bara de instrumente %s Audacity"
 
 #: src/toolbars/ToolBar.cpp:448 src/toolbars/ToolBar.cpp:492
 #, fuzzy
 msgid "Click and drag to resize toolbar"
-msgstr "Click and drag pentru a modifica limita stângă a selecţiei"
+msgstr "Clic și trageți pentru a redimensiona pista."
 
 #: src/toolbars/ToolDock.cpp:75 src/toolbars/ToolDock.cpp:76
 msgid "ToolDock"
@@ -11917,26 +11768,25 @@ msgstr ""
 #: src/toolbars/ToolsToolBar.cpp:98
 #, fuzzy
 msgid "Click and drag to select audio"
-msgstr "Click and drag pentru a modifica limita stângă a selecţiei"
+msgstr "Clic și trageți pentru a redimensiona pista."
 
 #: src/toolbars/ToolsToolBar.cpp:102
 #, fuzzy
 msgid "Click and drag to edit the amplitude envelope"
-msgstr "Click and drag pentru a modifica limita stângă a selecţiei"
+msgstr "Clic și trageți pentru a redimensiona pista."
 
 #: src/toolbars/ToolsToolBar.cpp:103
 #, fuzzy
 msgid "Click and drag to edit the samples"
-msgstr "Click and Drag pentru a muta o piesă în timp"
+msgstr "Clic și trageți pentru a redimensiona pista."
 
 #: src/toolbars/ToolsToolBar.cpp:105
 msgid "Click to Zoom In, Shift-Click to Zoom Out"
 msgstr "Click pentru Zoom In, Shift-Click pentru Zoom Out"
 
 #: src/toolbars/ToolsToolBar.cpp:107
-#, fuzzy
 msgid "Drag to Zoom Into Region, Right-Click to Zoom Out"
-msgstr "Click pentru Zoom In, Shift-Click pentru Zoom Out"
+msgstr "Clic pentru a mări zona, Shift-Clic pentru a o micșora"
 
 #: src/toolbars/ToolsToolBar.cpp:109
 msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
@@ -11948,7 +11798,7 @@ msgstr "Click and Drag pentru a muta o piesă în timp"
 
 #: src/toolbars/ToolsToolBar.cpp:159
 msgid "Multi-Tool Mode"
-msgstr ""
+msgstr "Mod instrumente multiple"
 
 #: src/toolbars/ToolsToolBar.cpp:197
 msgid "Slide Tool"
@@ -11956,37 +11806,37 @@ msgstr ""
 
 #: src/toolbars/TranscriptionToolBar.cpp:182
 msgid "Play at selected speed"
-msgstr ""
+msgstr "Redă la viteza selectată"
 
 #: src/toolbars/TranscriptionToolBar.cpp:191
 #: src/toolbars/TranscriptionToolBar.cpp:196
 #: src/toolbars/TranscriptionToolBar.cpp:282
 msgid "Playback Speed"
-msgstr ""
+msgstr "Viteza de redare"
 
 #: src/toolbars/TranscriptionToolBar.cpp:281
 msgid "Play-at-speed"
-msgstr ""
+msgstr "Redă-cu-viteza"
 
 #: src/widgets/AButton.cpp:441
 msgid " (disabled)"
-msgstr "(dezactivat)"
+msgstr " (dezactivat)"
 
 #: src/widgets/AButton.cpp:619 src/widgets/Meter.cpp:2156
 msgid "Press"
-msgstr ""
+msgstr "Apăsați"
 
 #: src/widgets/AButton.cpp:698
 msgid "Button"
-msgstr ""
+msgstr "Buton"
 
 #: src/widgets/ASlider.cpp:786 src/widgets/Meter.cpp:1184
 msgid "L"
-msgstr "S"
+msgstr "L"
 
 #: src/widgets/ASlider.cpp:789 src/widgets/Meter.cpp:1186
 msgid "R"
-msgstr "D"
+msgstr "R"
 
 #: src/widgets/ASlider.cpp:918
 msgid "Center"
@@ -12002,35 +11852,36 @@ msgstr "Dreapta"
 
 #: src/widgets/ASlider.cpp:935
 msgid "+"
-msgstr ""
+msgstr "+"
 
 #: src/widgets/FileHistory.cpp:174
 msgid "&Clear"
-msgstr ""
+msgstr "&Curăță"
 
+# hm ?
 #: src/widgets/Grabber.cpp:67 src/widgets/Grabber.cpp:68
 msgid "Grabber"
-msgstr ""
+msgstr "Acaparator"
 
 #: src/widgets/Grid.cpp:758
 msgid "Empty"
-msgstr ""
+msgstr "Gol"
 
 #: src/widgets/HelpSystem.cpp:127
 msgid "<"
-msgstr ""
+msgstr "<"
 
 #: src/widgets/HelpSystem.cpp:128
 msgid ">"
-msgstr ""
+msgstr ">"
 
 #: src/widgets/HelpSystem.cpp:132
 msgid "Forwards"
-msgstr ""
+msgstr "Înainte"
 
 #: src/widgets/HelpSystem.cpp:133
 msgid "Backwards"
-msgstr ""
+msgstr "Înapoi"
 
 #: src/widgets/HelpSystem.cpp:151
 msgid "Close"
@@ -12042,52 +11893,49 @@ msgstr ""
 
 #: src/widgets/KeyView.cpp:598
 msgid "Menu"
-msgstr ""
+msgstr "Meniu"
 
 #: src/widgets/Meter.cpp:583
 msgid "Click to Start Monitoring"
-msgstr ""
+msgstr "Clic pentru a porni monitorizarea"
 
 #: src/widgets/Meter.cpp:584
 msgid "Click for Monitoring"
-msgstr ""
+msgstr "Clic pentru a monitoriza"
 
 #: src/widgets/Meter.cpp:585
-#, fuzzy
 msgid "Click to Start"
-msgstr "Sari la Început"
+msgstr "Clic pentru a începe"
 
 #: src/widgets/Meter.cpp:586
-#, fuzzy
 msgid "Click"
-msgstr "Click Dreapta"
+msgstr "Clic"
 
 #: src/widgets/Meter.cpp:680 src/widgets/Meter.cpp:1910
 msgid "Stop Monitoring"
-msgstr ""
+msgstr "Oprește monitorizarea"
 
 #: src/widgets/Meter.cpp:682 src/widgets/Meter.cpp:1912
 msgid "Start Monitoring"
-msgstr ""
+msgstr "Pornește monitorizarea"
 
 #: src/widgets/Meter.cpp:686 src/widgets/Meter.cpp:1916
 msgid "Preferences..."
-msgstr ""
+msgstr "Preferințe..."
 
 #: src/widgets/Meter.cpp:1963
 #, fuzzy
 msgid "Recording Meter Preferences"
-msgstr "Se înregistrează"
+msgstr "Preferințe pentru "
 
 #: src/widgets/Meter.cpp:1963
 #, fuzzy
 msgid "Playback Meter Preferences"
-msgstr "Redare"
+msgstr "Preferințe pentru"
 
 #: src/widgets/Meter.cpp:1973
-#, fuzzy
 msgid "Refresh Rate"
-msgstr "Setează Rata"
+msgstr "Rată de reîmprospătare"
 
 #: src/widgets/Meter.cpp:1975
 msgid ""
@@ -12130,15 +11978,15 @@ msgstr ""
 
 #: src/widgets/Meter.cpp:2032 src/widgets/Meter.cpp:2033
 msgid "Horizontal"
-msgstr ""
+msgstr "Orizontal"
 
 #: src/widgets/Meter.cpp:2036 src/widgets/Meter.cpp:2037
 msgid "Vertical"
-msgstr ""
+msgstr "Vertical"
 
 #: src/widgets/Meter.cpp:2239
 msgid " Monitoring "
-msgstr ""
+msgstr " Monitorizare "
 
 #: src/widgets/Meter.cpp:2243
 msgid " Active "
@@ -12308,7 +12156,7 @@ msgstr ""
 
 #: src/widgets/NumericTextCtrl.cpp:1234
 msgid "(Use context menu to change format.)"
-msgstr ""
+msgstr "(Folosiți meniul contextual pentru a modifica formatul)"
 
 #: src/widgets/NumericTextCtrl.cpp:1941
 msgid "centiseconds"
@@ -12328,15 +12176,15 @@ msgstr ""
 
 #: src/widgets/ProgressDialog.cpp:1074
 msgid "Elapsed Time:"
-msgstr ""
+msgstr "Timp scurs:"
 
 #: src/widgets/ProgressDialog.cpp:1096
 msgid "Remaining Time:"
-msgstr ""
+msgstr "Timp rămas:"
 
 #: src/widgets/ProgressDialog.cpp:1125
 msgid "Cancel"
-msgstr ""
+msgstr "Renunță"
 
 #: src/widgets/Ruler.cpp:1640
 msgid "Timeline"
@@ -12349,7 +12197,7 @@ msgstr ""
 #: src/widgets/Ruler.cpp:1730
 #, fuzzy
 msgid "Quick-Play disabled"
-msgstr "(dezactivat)"
+msgstr " (dezactivat)"
 
 #: src/widgets/Ruler.cpp:1733
 msgid "Quick-Play enabled"
@@ -12366,12 +12214,12 @@ msgstr ""
 #: src/widgets/Ruler.cpp:2158
 #, fuzzy
 msgid "Disable dragging selection"
-msgstr "Unealta de selecţie"
+msgstr "Liniște în locul selecției audi&o"
 
 #: src/widgets/Ruler.cpp:2160
 #, fuzzy
 msgid "Enable dragging selection"
-msgstr "Unealta de selecţie"
+msgstr "Liniște în locul selecției audi&o"
 
 #: src/widgets/Ruler.cpp:2165
 msgid "Disable Timeline Tooltips"
@@ -12390,16 +12238,18 @@ msgid "Update display while playing"
 msgstr ""
 
 #: src/widgets/Ruler.cpp:2177
+#, fuzzy
 msgid "Lock Play Region"
-msgstr ""
+msgstr "Zona de re&dare"
 
 #: src/widgets/Ruler.cpp:2179
+#, fuzzy
 msgid "Unlock Play Region"
-msgstr ""
+msgstr "Zona de re&dare"
 
 #: src/widgets/Warning.cpp:68
 msgid "Don't show this warning again"
-msgstr "Nu mai arăta acest avertisment!"
+msgstr "Nu mai arăta acest avertisment"
 
 #: src/widgets/numformatter.cpp:142
 msgid "NaN"
@@ -12415,7 +12265,7 @@ msgstr ""
 
 #: src/widgets/valnum.cpp:359 src/widgets/valnum.cpp:480
 msgid "Empty value"
-msgstr ""
+msgstr "Valoare goală"
 
 #: src/widgets/valnum.cpp:368
 msgid "Malformed number"
@@ -12423,7 +12273,7 @@ msgstr ""
 
 #: src/widgets/valnum.cpp:373
 msgid "Not in range"
-msgstr ""
+msgstr "În afara intervalului"
 
 #: src/widgets/valnum.cpp:488
 msgid "Value overflow"
@@ -12450,249 +12300,26 @@ msgstr ""
 
 #: src/widgets/valnum.cpp:529
 msgid "e"
-msgstr ""
+msgstr "e"
 
 #: src/xml/XMLFileReader.cpp:63
 #, c-format
 msgid "Error: %hs at line %lu"
-msgstr ""
+msgstr "Eroare: %hs la linia %lu"
 
 #: src/xml/XMLFileReader.cpp:79
 #, c-format
 msgid "Could not load file: \"%s\""
-msgstr ""
+msgstr "Nu s-a putut încărca fișierul: „%s”"
 
 #: src/xml/XMLWriter.cpp:290
-#, fuzzy
 msgid "Error Flushing File"
-msgstr "Eroare la deschiderea fişierului"
+msgstr "Eroare la golirea fișierului"
 
 #: src/xml/XMLWriter.cpp:295
-#, fuzzy
 msgid "Error Closing File"
-msgstr "Eroare la deschiderea fişierului"
+msgstr "Eroare la închiderea fișierului"
 
 #: src/xml/XMLWriter.cpp:305
-#, fuzzy
 msgid "Error Writing to File"
-msgstr "Eroare la deschiderea fişierului"
-
-#~ msgid "Unknown command line option: %s\n"
-#~ msgstr "Opţiune pe linie de comandă necunoscută: %s\n"
-
-#~ msgid "Applied effect: %s %.1f dB"
-#~ msgstr "Se aplică efectul: %s %.1f dB"
-
-#~ msgid "Amplify..."
-#~ msgstr "Amplifică..."
-
-#~ msgid "Amplifying"
-#~ msgstr "Se amplifică"
-
-#, fuzzy
-#~ msgid "Applied effect: %s bass = %.1f dB, treble = %.1f dB"
-#~ msgstr "Se aplică efectul: %s %.1f dB"
-
-#, fuzzy
-#~ msgid ", level disabled"
-#~ msgstr "(dezactivat)"
-
-#~ msgid "Change Pitch..."
-#~ msgstr "Ajusteaza Inaltele..."
-
-#~ msgid "Changing Pitch"
-#~ msgstr "Schimbarea Inaltelor"
-
-#~ msgid "Applied effect: %s %.1f%%"
-#~ msgstr "Se aplică efectul: %s %.1f%%"
-
-#~ msgid "Change Speed..."
-#~ msgstr "Schimbă viteza..."
-
-#~ msgid "Changing Speed"
-#~ msgstr "Se schimbă viteza"
-
-#~ msgid "Change Tempo..."
-#~ msgstr "Ajusteaza Tempoul..."
-
-#~ msgid "Changing Tempo"
-#~ msgstr "Schimbarea Tempoului"
-
-#~ msgid "Compressor..."
-#~ msgstr "Compresor..."
-
-#~ msgid "Echo..."
-#~ msgstr "Ecou..."
-
-#~ msgid "Performing Echo"
-#~ msgstr "Se adaugă ecou"
-
-#, fuzzy
-#~ msgid "Applying Leveler..."
-#~ msgstr "Aplicare Phaserului"
-
-#~ msgid "Noise Removal..."
-#~ msgstr "Scoate zgomotul..."
-
-#~ msgid "Creating Noise Profile"
-#~ msgstr "Se creează profilul zgomotului"
-
-#~ msgid "Removing Noise"
-#~ msgstr "Se alimină zgomotul"
-
-#~ msgid "Applying Phaser"
-#~ msgstr "Aplicare Phaserului"
-
-#~ msgid "Tracks are too long to repeat the selection."
-#~ msgstr "Piesele sunt prea lungi pentru a repeta selecţia"
-
-#, fuzzy
-#~ msgid "R&ename"
-#~ msgstr "Nume..."
-
-#, fuzzy
-#~ msgid "Reverb settings"
-#~ msgstr "Reversarea"
-
-#, fuzzy
-#~ msgid "Change name to:"
-#~ msgstr "Schimbă numele piesei în:"
-
-#, fuzzy
-#~ msgid "Reverb..."
-#~ msgstr "Inversează"
-
-#, fuzzy
-#~ msgid "Applying Reverb"
-#~ msgstr "Aplicare Phaserului"
-
-#~ msgid "Generating Silence"
-#~ msgstr "Se generează liniştea"
-
-#~ msgid "Tone Generator"
-#~ msgstr "Generator de ton"
-
-#, fuzzy
-#~ msgid "Buffer Delay Compensation"
-#~ msgstr "Combinaţia de taste"
-
-#~ msgid "Wahwah..."
-#~ msgstr "Wahwah..."
-
-#~ msgid "Applying Wahwah"
-#~ msgstr "Aplicarea efectului Wahwah"
-
-#~ msgid "Performing Effect: %s"
-#~ msgstr "se adaugă efectul: %s"
-
-#~ msgid "Author: "
-#~ msgstr "Autor:"
-
-#~ msgid "Length (seconds)"
-#~ msgstr "Lungime (secunde)"
-
-#, fuzzy
-#~ msgid "Input Meter"
-#~ msgstr "Volumul la intrare"
-
-#, fuzzy
-#~ msgid "Output Meter"
-#~ msgstr "Volumul ieşire"
-
-#, fuzzy
-#~ msgid "Change input device"
-#~ msgstr "Schimbă viteza"
-
-#, fuzzy
-#~ msgid "Change output device"
-#~ msgstr "Schimbă viteza"
-
-#, fuzzy
-#~ msgid "Change input channels"
-#~ msgstr "Ajusteaza Inaltele"
-
-#, fuzzy
-#~ msgid "Effect Refresh"
-#~ msgstr "Setările efectului"
-
-#, fuzzy
-#~ msgid "Output Device"
-#~ msgstr "Selectează"
-
-#, fuzzy
-#~ msgid "Input Channels"
-#~ msgstr "%d Canale"
-
-#, fuzzy
-#~ msgid "Select Input Device"
-#~ msgstr "Selectează"
-
-#, fuzzy
-#~ msgid "Select Output Device"
-#~ msgstr "Selectează"
-
-#, fuzzy
-#~ msgid "Select Input Channels"
-#~ msgstr "Canalul Stâng"
-
-#, fuzzy
-#~ msgid "Output Level"
-#~ msgstr "Volumul ieşire"
-
-#~ msgid "Output Volume"
-#~ msgstr "Volumul ieşire"
-
-#, fuzzy
-#~ msgid "Slider Output"
-#~ msgstr "Selectează"
-
-#~ msgid "Input Volume"
-#~ msgstr "Volumul la intrare"
-
-#, fuzzy
-#~ msgid "Input Volume: %.2f"
-#~ msgstr "Volumul la intrare"
-
-#, fuzzy
-#~ msgid "Output Volume: %.2f%s"
-#~ msgstr "Volumul ieşire"
-
-#~ msgid "Aligned cursor"
-#~ msgstr "Cursorul a fost aliniat"
-
-#~ msgid "Plugins 1 to %i"
-#~ msgstr "Plug-in-urile de la 1 la %i"
-
-#, fuzzy
-#~ msgid "BassBoost..."
-#~ msgstr "Bass Boost..."
-
-#~ msgid "by Vaughan Johnson && Dominic Mazzoni"
-#~ msgstr "de Vaughan Johnson && Dominic Mazzoni"
-
-#~ msgid "using SoundTouch, by Olli Parviainen"
-#~ msgstr "Foloseşte SoundTouch de Olli Parviainen"
-
-#~ msgid "using SampleRate, by Erik de Castro Lopo"
-#~ msgstr "foloseşte SampleRate de Erik de Castri Lopo"
-
-#~ msgid "by Dominic Mazzoni && Vaughan Johnson"
-#~ msgstr "de Dominic Mazzoni && Vaughan Johnson"
-
-#~ msgid "Noise Removal by Dominic Mazzoni"
-#~ msgstr "Scoaterea zgomotului creat de Dominic Mazzoni"
-
-#, fuzzy
-#~ msgid "Error Saving Keyboard Shortcuts"
-#~ msgstr "Eroare la salvarea scurtăturilor tastaturii"
-
-#~ msgid "Zoom in or out"
-#~ msgstr "Măreşte sau Micşorează"
-
-#, fuzzy
-#~ msgid "Input Volume Slider"
-#~ msgstr "Volumul la intrare"
-
-#, fuzzy
-#~ msgid "Output Volume Slider"
-#~ msgstr "Volumul ieşire"
+msgstr "Eroare la scrierea fișierului"
