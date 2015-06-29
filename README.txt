@@ -63,57 +63,60 @@ Changes and Improvements:
 
  * Effects:
    * Built in effects now support presets.
+   * New Limiter effect replaces Hard Limiter effect.
+   * New Crossfade Clips effect to apply a simple crossfade to a selected 
+     pair of clips in a single audio track.   
    * Can now add/remove effects from Generate and Effects menus.
    * New version of Vocal Removal Effect.
    * Classic Filters' now included as an opt-in effect.
 
  * Interface:  
-   * Much faster editing with larger projects, thanks to a faster method for 
-     storing the autorecovery file.
+   * Much faster editing with larger projects, thanks to a faster method 
+     for storing the autosave recovery file.
    * Performance improvements for Draw Tool and zooming of Spectrogram views.
-   * Zero-padding Spectrograms Preference smooths the image for short window sizes.
+   * Zero-padding Spectrograms Preference smooths the image for short 
+     window sizes.
    * Scrubbing and Seeking, including backwards play. 
-   * Quick-Play from timeline enhancements Timeline, particularly for looping.
+   * Quick-Play from Timeline enhancements, particularly for looping.
    * (Windows) Language of Audacity user interface is now set in installer.
-   * More VI usability enhancements, track focus & navigation.
+   * More VI usability enhancements for track focus & navigation.
    
  * Other Changes:   
-   * Upgraded to Nyquist 3.0.9 and FLAC lib.
+   * Upgraded to Nyquist 3.0.9 and libflac 1.3.1.
    * Upgraded LV2 libs, LV2 GUIs on Linux, LV2 factory Presets.
    * Crash report integration.
-   * Modules enabled. Mod Nyqbench available as an experimental module 
-     (but not in the default download).
+   * Modules can be enabled in Preferences. Mod-nyq-bench available as an 
+     experimental module (but not in the default download).
 
 Bug fixes:
 
- * Crashes:
+ * Crashes
    * Crash using Undo while dragging sample points
-   * Crash using File > Close on project window when Screenshot Tools is open.
-   * Crash closing Track Gain or Pan adjustment box on Mac.
-   * Crash closing project window between save project dialogues
-   * SPACE cannot be used/may crash in context menus that have a checkbox.
+   * Crash using File > Close on project window when Screenshot Tools was 
+     open.
    * FFmpeg Custom Export: Crashes importing presets.
-   * TAL VST (but not other VST's) crashes if previewing built-in effect
+   * (OS X) Crash closing Track Gain or Pan adjustment box.
+   * (OS X) Crash closing project window between save project dialogues
+   * (Linux) TAL VST (but not other VST's) crashed if previewing built-in 
+     effect
+   * (Linux) SPACE could not be used/could crash in context menus that have 
+     a checkbox.
 
- * Interface:
-   * LV2 effects don't use parameters when using chains.
-   * Built in Generators not usable in Chains.
-   * Plot Spectrum: Can't change values without losing focus.
-   * Changing Windows default devices in Audacity session breaks recording 
-     or playback until rescan.
-   * Track dropdown menu settings may affect other tracks
-   * Slight mismatch of vertical scale with linear spectrogram view
-   * RTP effect Play/Stop button remains deactivated after built-in preview ends
-   * Contrast: "Move forward or backward thru active windows" does not refocus 
-     Contrast.
-   * LADSPA generate plug-ins fail when white space selected.
+ * Interface
+   * LV2 effects did not use parameters when using Chains.
+   * Built in Generators were not usable in Chains.
+   * Plot Spectrum could not change values without losing focus.
+   * Track dropdown menu settings could affect other tracks.
+   * Slight mismatch of vertical scale with linear spectrogram view.
+   * RTP effect Play/Stop button remained deactivated after built-in preview 
+     ended.
+   * Contrast: "Move forward or backward through active windows" did not 
+     refocus Contrast.
+   * LADSPA and LV2 generate plug-ins failed when white space selected.
 
- * Imports and Exports 
-   * Confusing behaviour importing / exporting AU presets, different to VST 
-     preset import/ export
-
- * Mac OS X:
-   * Apple Audio Units silently apply an imported preset
+ * Mac OS X
+   * Confusing behaviour importing / exporting AU presets. In particular, 
+     Apple Audio Units silently applied an imported preset.
  
    
 -------------------------------------------------------------------------------
@@ -360,6 +363,21 @@ Bug fixes:
    * Fix silent failure exporting FFmpeg, MP2 or OGG to an unwritable folder.
    * Fix ENTER activated an effect when OK button was greyed out.  
 
+ * Operating system and sound device support:
+   * (Windows) Audacity 2.1.0 requires Windows XP SP3 (32-bit) or XP SP2
+      (64-bit), Vista, Windows 7, Windows 8 or 8.1. 
+   * (Windows) Audacity is now compiled using Visual Studio 2013.  
+   * (Windows) Recording with WASAPI host now includes experimental support 
+      for physical inputs (up to 24-bit depth) as well as loopback recording.  
+   * (OS X) 10.10 (Yosemite) is now supported including Apple Audio Units.
+   * Please report any issues with WASAPI recording/playback or Yosemite 
+      to http://audacity.sourceforge.net/contact/#feedback .
+   * (Linux Ubuntu) Under Unity, keyboard shortcuts are not visible in the
+     Audacity menus. Keyboard shortcuts are visible if you install the classic
+     GNOME Flashback interface or under Unity if you open Audacity with the
+     UBUNTU_MENUPROXY=0 environment variable. Audacity compiled from source
+     will ship with src/audacity.desktop.in set to UBUNTU_MENUPROXY=0 but it
+     will remain up to distributions to use this desktop file.    
    
 Changes and Improvements:
 
