@@ -1168,6 +1168,7 @@ ProgressDialog::ProgressDialog(const wxString & title, const wxString & message,
    // no editing in any project until Timer Record finishes. 
    mDisable = new wxWindowDisabler(this);
 
+#if !wxCHECK_VERSION(3, 0, 0)
 #if defined(__WXMAC__)
    // LL:  On the Mac, the parent windows get disabled, but they still respond
    //      to the close button being clicked and the application quit menu item
@@ -1206,6 +1207,7 @@ ProgressDialog::ProgressDialog(const wxString & title, const wxString & message,
    //      no longer be processed.
    wxTheApp->SetEvtHandlerEnabled(false);
 #endif
+#endif
 }
 
 //
@@ -1220,6 +1222,7 @@ ProgressDialog::~ProgressDialog()
       Beep();
    }
 
+#if !wxCHECK_VERSION(3, 0, 0)
 #if defined(__WXMSW__)
    // Undo above fix for bug 334.
    wxTheApp->SetEvtHandlerEnabled(true);
@@ -1245,6 +1248,7 @@ ProgressDialog::~ProgressDialog()
    if (windowRef) {
       EndAppModalStateForWindow(windowRef);
    }
+#endif
 #endif
 
    if (mDisable)
@@ -1316,6 +1320,7 @@ ProgressDialog::Show(bool show)
       {
          mDisable = new wxWindowDisabler(this);
 
+#if !wxCHECK_VERSION(3, 0, 0)
          #if defined(__WXMAC__)
             // LL:  On the Mac, the parent windows get disabled, but they still respond
             //      to the close button being clicked and the application quit menu item
@@ -1330,6 +1335,7 @@ ProgressDialog::Show(bool show)
             bar->Enable(wxID_PREFERENCES, false);
             bar->Enable(wxID_EXIT, false);
          #endif
+#endif
       }
    }
 

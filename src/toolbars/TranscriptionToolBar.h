@@ -32,31 +32,36 @@ class wxPen;
 class AButton;
 class ASlider;
 class TimeTrack;
-class VoiceKey;
 class WaveTrack;
 
+#ifdef EXPERIMENTAL_VOICE_DETECTION
+class VoiceKey;
 //TTB 0-8 are button-ids, which also correspond to their
 //position in mButtons.  9 & 10 are ids for sliders, which aren't
 //in the button array.
+#endif
+
 enum
-   {
-      TTB_PlaySpeed,
-      TTB_StartOn,
-      TTB_EndOn,
-      TTB_StartOff,
-      TTB_EndOff,
-      TTB_SelectSound,
-      TTB_SelectSilence,
-      TTB_AutomateSelection,
-      TTB_MakeLabel,
-      TTB_Calibrate,
+{
+   TTB_PlaySpeed,
+   TTB_PlaySpeedSlider,
 
-      TTB_SensitivitySlider,
-      TTB_PlaySpeedSlider,
-      TTB_KeyType
-   };
+#ifdef EXPERIMENTAL_VOICE_DETECTION
+   TTB_StartOn,
+   TTB_EndOn,
+   TTB_StartOff,
+   TTB_EndOff,
+   TTB_SelectSound,
+   TTB_SelectSilence,
+   TTB_AutomateSelection,
+   TTB_MakeLabel,
+   TTB_Calibrate,
+   TTB_SensitivitySlider,
+   TTB_KeyType,
+#endif
 
-#define TTBNumButtons 10
+   TTBNumButtons
+};
 
 class TranscriptionToolBar:public ToolBar {
 
@@ -70,6 +75,16 @@ class TranscriptionToolBar:public ToolBar {
    virtual void OnKeyEvent(wxKeyEvent & event);
    virtual void OnPlaySpeed(wxCommandEvent & event);
    virtual void OnSpeedSlider(wxCommandEvent & event);
+
+   virtual void Populate();
+   virtual void Repaint(wxDC * WXUNUSED(dc)) {};
+   virtual void EnableDisableButtons();
+   virtual void UpdatePrefs();
+
+   void OnFocus(wxFocusEvent &event);
+   void OnCaptureKey(wxCommandEvent &event);
+
+#ifdef EXPERIMENTAL_VOICE_DETECTION
    virtual void OnStartOn(wxCommandEvent & event);
    virtual void OnStartOff(wxCommandEvent & event);
    virtual void OnEndOn(wxCommandEvent & event);
@@ -80,17 +95,9 @@ class TranscriptionToolBar:public ToolBar {
    virtual void OnMakeLabel(wxCommandEvent & event);
    virtual void OnAutomateSelection(wxCommandEvent & event);
    virtual void OnSensitivitySlider(wxCommandEvent & event);
-
-   virtual void Populate();
-   virtual void Repaint(wxDC * WXUNUSED(dc)) {};
-   virtual void EnableDisableButtons();
-   virtual void UpdatePrefs();
-
-   void OnFocus(wxFocusEvent &event);
-   void OnCaptureKey(wxCommandEvent &event);
-
    virtual double GetSensitivity();
    virtual void SetKeyType(wxCommandEvent & event);
+#endif
 
    void PlayAtSpeed(bool looped, bool cutPreview);
    void ShowPlaySpeedDialog();
@@ -123,8 +130,12 @@ class TranscriptionToolBar:public ToolBar {
    ASlider *mPlaySpeedSlider;
    double mPlaySpeed;
    ASlider *mSensitivitySlider;
+
+#ifdef EXPERIMENTAL_VOICE_DETECTION
    double mSensitivity;
    VoiceKey *mVk;
+   wxChoice *mKeyTypeChoice;
+#endif
 
    wxBrush mBackgroundBrush;
    wxPen mBackgroundPen;
@@ -132,7 +143,6 @@ class TranscriptionToolBar:public ToolBar {
    int mBackgroundHeight;
 
    TimeTrack *mTimeTrack;
-   wxChoice *mKeyTypeChoice;
 
  public:
 
@@ -140,7 +150,5 @@ class TranscriptionToolBar:public ToolBar {
    DECLARE_EVENT_TABLE();
 };
 
-
-#define COMMAND_LINE_LOG_TRACE    TRUE
 #endif
 

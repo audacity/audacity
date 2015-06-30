@@ -674,6 +674,9 @@ int main(int argc, char *argv[])
       unsetenv("DYLD_LIBRARY_PATH");
       execve(argv[0], argv, environ);
    }
+
+   wxDISABLE_DEBUG_SUPPORT();
+
    return wxEntry(argc, argv);
 }
 #endif
@@ -1290,64 +1293,6 @@ bool AudacityApp::OnInit()
    // Initialize the ModuleManager, including loading found modules
    ModuleManager::Get().Initialize(*mCmdHandler);
 
-#if !wxCHECK_VERSION(3, 0, 0)
-   FinishInits();
-#endif
-
-   return TRUE;
-}
-
-#if wxCHECK_VERSION(3, 0, 0)
-#include <wx/evtloop.h>
-static bool bInitsDone = false;
-void AudacityApp::OnEventLoopEnter(wxEventLoopBase * pLoop)
-{
-   if( !pLoop->IsMain() )
-      return;
-   if (bInitsDone)
-      return;
-   bInitsDone = true;
-   FinishInits();
-}
-#endif
-
-// JKC: I've split 'FinishInits()' from 'OnInit()', so that 
-// we can have a real event loop running.  We could (I think) 
-// put everything that is in OnInit() in here.
-// This change was to support wxWidgets 3.0.0 and allow us
-// to show a dialog (for module loading) during initialisation.
-// without it messing up the splash screen.
-// Hasn't actually fixed that yet, but is addressing the point
-// they make in their release notes.
-void AudacityApp::FinishInits()
-{
-
-// Until we are ready for wxWidgets 3.x, put a warning dialog up.
-// Our problem is that distros may ship with 3.x builds as default.
-// We are saying, don't.
-//
-// wx3 is Ok for experimental builds.  
-//
-// Deliberately not translated.  People can search for the english error
-// text for more details.  This error will only show in versions
-// of Audacity that were incorrectly built.
-//
-// The intention was to do this, if needed, as part of the splash screen.
-// However the splash screen is one of the things broken by wx3.0
-// changes in OnInit handling.  We also can't put this dialog earlier.
-#if wxCHECK_VERSION(3, 0, 0)
-   ShowErrorDialog( NULL,
-                    wxT("Bad Version"),
-                    wxT(
-"Audacity should be built with wxWidgets 2.8.12.\n\n  This version \
-of Audacity (") AUDACITY_VERSION_STRING wxT(") is using ")  wxVERSION_STRING  \
-wxT( ".\n  We're not ready for that version of wxWidgets yet.\n\n  \
-Click the 'Help' button for known issues."),
-                    wxT("http://wiki.audacityteam.org/wiki/Incorrect_wxWidgets_Version"),
-                     true);
-#endif
-
-
    // Parse command line and handle options that might require
    // immediate exit...no need to initialize all of the audio
    // stuff to display the version string.
@@ -1530,6 +1475,8 @@ Click the 'Help' button for known issues."),
 
    mTimer.SetOwner(this, kAudacityAppTimerID);
    mTimer.Start(200);
+
+   return TRUE;
 }
 
 void AudacityApp::InitCommandHandler()

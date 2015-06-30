@@ -81,12 +81,12 @@ class VoiceKey {
    double TestSignChanges (WaveTrack & t, sampleCount start, sampleCount len);
    double TestDirectionChanges(WaveTrack & t, sampleCount start, sampleCount len);
 
-   void TestEnergyUpdate (double & prevErg, int length, const sampleFormat & drop, const sampleFormat & add);
-   void TestSignChangesUpdate(double & currentsignchanges,int length, const sampleFormat & a1,
-                              const sampleFormat & a2,   const sampleFormat & z1, const sampleFormat & z2);
+   void TestEnergyUpdate (double & prevErg, int length, const float & drop, const float & add);
+   void TestSignChangesUpdate(double & currentsignchanges,int length, const float & a1,
+                              const float & a2, const float & z1, const float & z2);
    void TestDirectionChangesUpdate(double & currentdirectionchanges,int length,
-                                   int & atrend, const sampleFormat & a1, const sampleFormat & a2,
-                                   int & ztrend, const sampleFormat & z1, const sampleFormat & z2);
+                                   int & atrend, const float & a1, const float & a2,
+                                   int & ztrend, const float & z1, const float & z2);
 
 };
 

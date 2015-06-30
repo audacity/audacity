@@ -742,11 +742,7 @@ void LabelTrack::Draw(wxDC & dc, const wxRect & r, double h, double pps,
 
    int i;
 
-#ifdef __WXMAC__
-   long textWidth, textHeight;
-#else
-   int textWidth, textHeight;
-#endif
+   wxCoord textWidth, textHeight;
 
    // Get the text widths.
    // TODO: Make more efficient by only re-computing when a

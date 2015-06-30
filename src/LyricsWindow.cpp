@@ -49,7 +49,7 @@ LyricsWindow::LyricsWindow(AudacityProject *parent):
                                  wxT("") :
                                  wxString::Format(
                                    wxT(" - %s"),
-                                   parent->GetName().c_str()).c_str())),
+                                   parent->GetName()))),
             wxPoint(100, 300), gSize,
             //v Bug in wxFRAME_FLOAT_ON_PARENT:
             // If both the project frame and LyricsWindow are minimized and you restore LyricsWindow,

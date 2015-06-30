@@ -105,10 +105,6 @@ class AudacityApp:public wxApp {
  public:
    AudacityApp();
    virtual bool OnInit(void);
-   void FinishInits();
-#if wxCHECK_VERSION(3, 0, 0)
-   virtual void OnEventLoopEnter(wxEventLoopBase * pLoop);
-#endif
    virtual int OnExit(void);
    virtual void OnFatalException();
 

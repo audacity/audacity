@@ -68,57 +68,7 @@ void FileIO::Close()
       mInputStream = NULL;
    }
 
-   SetCatalogInfo();
-
    mOpen = false;
-}
-
-// MacOS: set the file type/creator so that the OS knows it's an MP3
-// file which was created by Audacity
-
-void FileIO::SetCatalogInfo()
-{
-#ifdef __WXMAC__
-#if !wxCHECK_VERSION(3, 0, 0)
-   if (!mOpen ) {
-      return;
-   }
-
-   wxUint32 type;
-   wxFileName fn(mName);
-   wxString ext = fn.GetExt().MakeUpper() + wxT("    ");
-
-   type = (ext[0] & 0xff) << 24 |
-          (ext[1] & 0xff) << 16 |
-          (ext[2] & 0xff) << 8  |
-          (ext[3] & 0xff);
-
-   SetCatalogInfo(type);
-#endif
-#endif
-
-   return;
-}
-
-#if defined(__WXMAC__)
-void FileIO::SetCatalogInfo(wxUint32 type)
-#else
-void FileIO::SetCatalogInfo(wxUint32 WXUNUSED(type))
-#endif
-{
-#ifdef __WXMAC__
-#if !wxCHECK_VERSION(3, 0, 0)
-   if (!mOpen ) {
-      return;
-   }
-
-   wxFileName fn(mName);
-
-   fn.MacSetTypeAndCreator(type, AUDACITY_CREATOR);
-#endif
-#endif
-
-   return;
 }
 
 wxInputStream & FileIO::Read(void *buf, size_t size)

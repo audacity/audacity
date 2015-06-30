@@ -49,10 +49,6 @@ greater use in future.
 #include "TimeWarper.h"
 #include "nyquist/Nyquist.h"
 
-#if defined(__WXMAC__)
-#include <wx/mac/private.h>
-#endif
-
 static const int kDummyID = 30000;
 static const int kSaveAsID = 30001;
 static const int kImportID = 30002;
@@ -2810,6 +2806,7 @@ bool EffectUIHost::Show(bool show)
 {
    if (!mIsModal)
    {
+#if !wxCHECK_VERSION(3, 0, 0)
       // We want the effects windows on the Mac to float above the project window
       // but still have normal modal dialogs appear above the effects windows and
       // not let the effect windows fall behind the project window.
@@ -2819,6 +2816,7 @@ bool EffectUIHost::Show(bool show)
       WindowGroupRef parentGroup = GetWindowGroup((WindowRef) ((wxFrame *)wxGetTopLevelParent(mParent))->MacGetWindowRef());
       ChangeWindowGroupAttributes(parentGroup, kWindowGroupAttrSharedActivation, kWindowGroupAttrMoveTogether);
       SetWindowGroup(windowRef, parentGroup);
+#endif
    }
    mIsModal = false;
 
@@ -3051,6 +3049,7 @@ bool EffectUIHost::Initialize()
 
    InitializeRealtime();
 
+   SetMinSize(GetSize());
    return true;
 }
 

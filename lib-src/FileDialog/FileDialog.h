@@ -17,20 +17,10 @@ custom controls.
 #ifndef _FILE_DIALOG_H_
 #define _FILE_DIALOG_H_
 
-#include "wx/defs.h"
-#include "wx/filedlg.h"
+#include <wx/defs.h>
+#include <wx/filedlg.h>
 
 typedef void (*fdCallback)(void *, int);
-
-#if defined(__WXGTK__)
-#include "gtk/FileDialogPrivate.h"
-#elif defined(__WXMAC__)
-#include "mac/FileDialogPrivate.h"
-#elif defined(__WXMSW__)
-#include "win/FileDialogPrivate.h"
-#else
-#error Unknown implementation
-#endif
 
 /////////////////////////////////////////////////////////////////////////////
 // Name:        filedlg.h
@@ -52,8 +42,33 @@ DECLARE_EVENT_TYPE(EVT_FILEDIALOG_ADD_CONTROLS, -1);
 
 #define FD_NO_ADD_EXTENSION 0x0400
 
+class FileDialogBase : public wxFileDialogBase
+{
+public:
+   FileDialogBase() {};
+   virtual ~FileDialogBase() {};
+
+   virtual void EnableButton(wxString label, fdCallback cb, void *cbdata);
+   virtual void ClickButton(int index);   
+
+protected:
+   wxString m_buttonlabel;
+   fdCallback m_callback;
+   void *m_cbdata;
+};
+
+#if defined(__WXGTK__)
+#include "gtk/FileDialog.h"
+#elif defined(__WXMAC__)
+#include "mac/FileDialog.h"
+#elif defined(__WXMSW__)
+#include "win/FileDialog.h"
+#else
+#error Unknown implementation
+#endif
+
 //----------------------------------------------------------------------------
-// wxFileDialog convenience functions
+// FileDialog convenience functions
 //----------------------------------------------------------------------------
 
 wxString 

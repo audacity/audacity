@@ -1671,8 +1671,8 @@ bool LV2Effect::BuildPlain()
          }
          else if (ctrl.mEnumeration)      // Check before integer
          {
-            size_t s;
-            for (s = ctrl.mScaleValues.GetCount() - 1; s >= 0; s--)
+            int s;
+            for (s = (int) ctrl.mScaleValues.GetCount() - 1; s >= 0; s--)
             {
                if (ctrl.mVal >= ctrl.mScaleValues[s])
                {
@@ -1901,8 +1901,8 @@ bool LV2Effect::TransferDataToWindow()
          }
          else if (ctrl.mEnumeration)      // Check before integer
          {
-            size_t s;
-            for (s = ctrl.mScaleValues.GetCount() - 1; s >= 0; s--)
+            int s;
+            for (s = (int) ctrl.mScaleValues.GetCount() - 1; s >= 0; s--)
             {
                if (ctrl.mVal >= ctrl.mScaleValues[s])
                {

@@ -275,10 +275,10 @@ bool RecordingRecoveryHandler::HandleXMLTag(const wxChar *tag,
 
       // We need to find the track and sequence where the blockfile belongs
       WaveTrackArray tracks = mProject->GetTracks()->GetWaveTrackArray(false);
-      size_t index;
+      int index;
       if (mAutoSaveIdent)
       {
-         for (index = 0; index < tracks.GetCount(); index++)
+         for (index = 0; index < (int) tracks.GetCount(); index++)
          {
             if (tracks[index]->GetAutoSaveIdent() == mAutoSaveIdent)
             {
@@ -291,7 +291,7 @@ bool RecordingRecoveryHandler::HandleXMLTag(const wxChar *tag,
          index = tracks.GetCount() - mNumChannels + mChannel;
       }
 
-      if (index < 0 || index >= tracks.GetCount())
+      if (index < 0 || index >= (int) tracks.GetCount())
       {
          // This should only happen if there is a bug
          wxASSERT(false);
@@ -460,7 +460,7 @@ void AutoSaveFile::WriteAttr(const wxString & name, const wxString & value)
    short len = value.Length() * sizeof(wxChar);
 
    mBuffer.Write(&len, sizeof(len));
-   mBuffer.Write(value.c_str(), len);
+   mBuffer.Write(value.wx_str(), len);
 }
 
 void AutoSaveFile::WriteAttr(const wxString & name, int value)
@@ -528,7 +528,7 @@ void AutoSaveFile::WriteData(const wxString & value)
    short len = value.Length() * sizeof(wxChar);
 
    mBuffer.Write(&len, sizeof(len));
-   mBuffer.Write(value.c_str(), len);
+   mBuffer.Write(value.wx_str(), len);
 }
 
 void AutoSaveFile::Write(const wxString & value)
@@ -538,7 +538,7 @@ void AutoSaveFile::Write(const wxString & value)
    short len = value.Length() * sizeof(wxChar);
 
    mBuffer.Write(&len, sizeof(len));
-   mBuffer.Write(value.c_str(), len);
+   mBuffer.Write(value.wx_str(), len);
 }
 
 void AutoSaveFile::WriteSubTree(const AutoSaveFile & value)
@@ -611,7 +611,7 @@ void AutoSaveFile::WriteName(const wxString & name)
       mDict.PutC(FT_Name);
       mDict.Write(&id, sizeof(id));
       mDict.Write(&len, sizeof(len));
-      mDict.Write(name.c_str(), len);
+      mDict.Write(name.wx_str(), len);
    }
 
    CheckSpace(mBuffer);
@@ -692,8 +692,7 @@ bool AutoSaveFile::Decode(const wxString & fileName)
    file.Close();
 
    // Decode to a temporary file to preserve the orignal.
-   wxString tempName = fn.CreateTempFileName(fn.GetPath());
-
+   wxString tempName = fn.CreateTempFileName(fn.GetFullPath());
    bool opened = false;
 
    XMLFileWriter out;

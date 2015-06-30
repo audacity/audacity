@@ -487,6 +487,8 @@ AudacityProject *CreateNewAudacityProject()
    bool bIconized;
    GetNextWindowPlacement(&wndRect, &bMaximized, &bIconized);
 
+wndRect.width = 500;
+wndRect.height = 500;
    //Create and show a new project
    AudacityProject *p = new AudacityProject(NULL, -1,
                                             wxPoint(wndRect.x, wndRect.y),
@@ -3466,13 +3468,6 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
 
       return false;
    }
-
-#ifdef __WXMAC__
-#if !wxCHECK_VERSION(3, 0, 0)
-   wxFileName fn(mFileName);
-   fn.MacSetTypeAndCreator(AUDACITY_PROJECT_TYPE, AUDACITY_CREATOR);
-#endif
-#endif
 
    if (bWantSaveCompressed)
       mWantSaveCompressed = false; // Don't want this mode for AudacityProject::WriteXML() any more.

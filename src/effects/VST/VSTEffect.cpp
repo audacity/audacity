@@ -19,6 +19,9 @@
 // WARNING:  This is NOT 64-bit safe
 // *******************************************************************
 
+#include "../../Audacity.h"
+
+#if 0
 #if defined(BUILDING_AUDACITY)
 #include "../../Audacity.h"
 #include "../../PlatformCompatibility.h"
@@ -28,6 +31,7 @@
 #else
 #define MODULEMAIN_SCOPE
 #define USE_VST 1
+#endif
 #endif
 
 #if USE_VST
@@ -66,7 +70,7 @@
 
 #if defined(__WXMAC__)
 #include <dlfcn.h>
-#include <wx/mac/private.h>
+#include <wx/osx/core/private.h>
 #elif defined(__WXMSW__)
 #include <wx/dynlib.h>
 #include <wx/msw/seh.h>
@@ -117,14 +121,12 @@
 // declared static so as not to clash with other builtin modules.
 //
 // ============================================================================
-MODULEMAIN_SCOPE ModuleInterface *AudacityModule(ModuleManagerInterface *moduleManager,
-                                                 const wxString *path)
+DECLARE_MODULE_ENTRY(AudacityModule)
 {
    // Create our effects module and register
    return new VSTEffectsModule(moduleManager, path);
 }
 
-#if defined(BUILDING_AUDACITY)
 // ============================================================================
 //
 // Register this as a builtin module
@@ -166,8 +168,6 @@ public:
    DECLARE_DYNAMIC_CLASS(VSTSubEntry);
 };
 IMPLEMENT_DYNAMIC_CLASS(VSTSubEntry, wxModule);
-
-#endif
 
 //----------------------------------------------------------------------------
 // VSTSubProcess

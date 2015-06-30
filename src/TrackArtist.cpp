@@ -1503,10 +1503,8 @@ struct ClipParameters
    // Do a bunch of calculations common to waveform and spectrum drawing.
    ClipParameters
       (bool spectrum, const WaveTrack *track, const WaveClip *clip, const wxRect &r,
-      const SelectedRegion &selectedRegion, const ViewInfo &viewInfo)
+      const SelectedRegion &WXUNUSED(selectedRegion), const ViewInfo &viewInfo)
    {
-      selectedRegion;
-
       tOffset = clip->GetOffset();
       rate = clip->GetRate();
 
@@ -1849,7 +1847,7 @@ static inline float findValue
       value /= binwidth;
    }
 #else
-   half;
+   wxUnusedVar(half);
    // Maximum method, and no apportionment of any single bins over multiple pixel rows
    // See Bug971
    int bin = std::min(half - 1, int(floor(0.5 + bin0)));
@@ -2954,12 +2952,8 @@ void TrackArtist::DrawNoteTrack(NoteTrack *track,
 
                      // now do justification
                      const char *s = LookupStringAttribute(note, texts, "");
-                     #ifdef __WXMAC__
-                        long textWidth, textHeight;
-                     #else
-                        int textWidth, textHeight;
-                     #endif
-                     dc.GetTextExtent(LAT1CTOWX(s), &textWidth, &textHeight);
+                     wxCoord textWidth, textHeight;
+                     dc.GetTextExtent(wxString::FromUTF8(s), &textWidth, &textHeight);
                      long hoffset = 0;
                      long voffset = -textHeight; // default should be baseline of text
 
@@ -3074,7 +3068,7 @@ int TrackArtist::GetSpectrumLogMaxFreq(int deffreq)
 
 int TrackArtist::GetSpectrumWindowSize(bool includeZeroPadding)
 {
-   includeZeroPadding;
+   wxUnusedVar(includeZeroPadding);
    const int &windowSize = SpectrogramSettings::defaults().windowSize;
 #ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
    if (includeZeroPadding) {

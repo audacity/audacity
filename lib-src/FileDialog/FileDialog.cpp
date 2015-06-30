@@ -34,14 +34,14 @@ DEFINE_EVENT_TYPE(EVT_FILEDIALOG_SELECTION_CHANGED);
 DEFINE_EVENT_TYPE(EVT_FILEDIALOG_FILTER_CHANGED);
 DEFINE_EVENT_TYPE(EVT_FILEDIALOG_ADD_CONTROLS);
 
-void FileDialog::EnableButton(wxString label, fdCallback cb, void *data)
+void FileDialogBase::EnableButton(wxString label, fdCallback cb, void *data)
 {
    m_buttonlabel = label;
    m_callback = cb;
    m_cbdata = data;
 }
 
-void FileDialog::ClickButton(int index)
+void FileDialogBase::ClickButton(int index)
 {
    if (m_callback)
    {

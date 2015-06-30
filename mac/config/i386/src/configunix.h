@@ -178,7 +178,7 @@
 #define USE_VAMP 1
 
 /* Define if VST plug-in support is enabled */
-#define USE_VST 1
+#define USE_VST 0
 
 /* Version number of package */
 #define VERSION "2.0.6"

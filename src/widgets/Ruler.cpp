@@ -130,13 +130,16 @@ Ruler::Ruler()
    mMinorMinorFont = new wxFont(fontSize - 1, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
    mMinorFont = new wxFont(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
    mMajorFont = new wxFont(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
+
    mUserFonts = false;
 
+#if !wxCHECK_VERSION(3, 0, 0)
    #ifdef __WXMAC__
    mMinorMinorFont->SetNoAntiAliasing(true);
    mMinorFont->SetNoAntiAliasing(true);
    mMajorFont->SetNoAntiAliasing(true);
    #endif
+#endif
 
    mMajorLabels = 0;
    mMinorLabels = 0;
@@ -291,11 +294,13 @@ void Ruler::SetFonts(const wxFont &minorFont, const wxFont &majorFont, const wxF
    *mMinorFont = minorFont;
    *mMajorFont = majorFont;
 
+#if !wxCHECK_VERSION(3, 0, 0)
    #ifdef __WXMAC__
    mMinorMinorFont->SetNoAntiAliasing(true);
    mMinorFont->SetNoAntiAliasing(true);
    mMajorFont->SetNoAntiAliasing(true);
    #endif
+#endif
 
    // Won't override these fonts
    mUserFonts = true;
