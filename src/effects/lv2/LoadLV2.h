@@ -44,6 +44,7 @@
    URI( gAudio,         LV2_CORE__AudioPort           ) \
    URI( gControl,       LV2_CORE__ControlPort         ) \
    URI( gInput,         LV2_CORE__InputPort           ) \
+   URI( gInstrument,    LV2_CORE__InstrumentPlugin    ) \
    URI( gOutput,        LV2_CORE__OutputPort          ) \
    URI( gOptional,      LV2_CORE__connectionOptional  ) \
    URI( gEnumeration,   LV2_CORE__enumeration         ) \

@@ -212,6 +212,8 @@ is time to refresh some aspect of the screen.
 #include "ViewInfo.h"
 #include "WaveTrack.h"
 
+#include "commands/Keyboard.h"
+
 #include "ondemand/ODManager.h"
 
 #include "prefs/SpectrumPrefs.h"
@@ -1908,6 +1910,8 @@ void TrackPanel::SetCursorAndTipWhenSelectTool( Track * t,
          // No keyboard preference defined for opening Preferences dialog
          /* i18n-hint: These are the names of a menu and a command in that menu */
          keyStr = _("Edit, Preferences...");
+      else
+         keyStr = KeyStringDisplay(keyStr);
       static wxString result;
       /* i18n-hint: %s is usually replaced by "Ctrl+P" for Windows/Linux, "Command+," for Mac */
       result = wxString::Format(
@@ -8992,12 +8996,12 @@ void TrackPanel::OnSetDisplay(wxCommandEvent & event)
    id -= OnWaveformID;
    WaveTrack *wt = (WaveTrack *) mPopupMenuTarget;
    if (wt->GetDisplay() != id) {
-      wt->SetDisplay(id);
+      wt->SetDisplay(WaveTrack::WaveTrackDisplay(id));
       mTrackArtist->InvalidateSpectrumCache(wt);
 
       WaveTrack *l = (WaveTrack *) wt->GetLink();
       if (l) {
-         l->SetDisplay(id);
+         l->SetDisplay(WaveTrack::WaveTrackDisplay(id));
          mTrackArtist->InvalidateSpectrumCache(l);
       }
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY

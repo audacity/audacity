@@ -462,8 +462,21 @@ bool LV2Effect::SetHost(EffectHostInterface *host)
 {
    mHost = host;
 
-   // Allocate buffers for the port indices and the default control values
    int numPorts = lilv_plugin_get_num_ports(mPlug);
+
+   // Fail if we don't grok the port types
+   for (int i = 0; i < numPorts; i++)
+   {
+      const LilvPort *port = lilv_plugin_get_port_by_index(mPlug, i);
+
+      if (!lilv_port_is_a(mPlug, port, gAudio) &&
+          !lilv_port_is_a(mPlug, port, gControl))
+      {
+         return false;
+      }
+   }
+
+   // Allocate buffers for the port indices and the default control values
    float *minimumVals = new float [numPorts];
    float *maximumVals = new float [numPorts];
    float *defaultValues = new float [numPorts];
@@ -1078,6 +1091,13 @@ bool LV2Effect::PopulateUI(wxWindow *parent)
                           wxT("UseGUI"),
                           mUseGUI,
                           true);
+
+   // Until I figure out where to put the "Duration" control in the
+   // graphical editor, force usage of plain editor.
+   if (GetType() == EffectTypeGenerate)
+   {
+      mUseGUI = false;
+   }
 
    if (mUseGUI)
    {

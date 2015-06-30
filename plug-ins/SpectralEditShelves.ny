@@ -30,12 +30,9 @@
 
 (defun wet (sig gain f0 f1)
   (cond
-    ((not f0) ;low-shelf
-      (if (< f1 (/ *sound-srate* 2.0))
-          (eq-lowshelf sig f1 gain)
-          (mult sig gain))) ;frequency above Nyquist so amplify full spectrum
-   ((not f1) (eq-highshelf sig f0 gain))
-   (t (mid-shelf sig f0 (validate f1) gain))))
+    ((not f0) (eq-lowshelf sig f1 gain))
+    ((not f1) (eq-highshelf sig f0 gain))
+    (t (mid-shelf sig f0 (validate f1) gain))))
 
 (defun result (sig)
   (let*
@@ -58,14 +55,23 @@
       (T (sum (prod env (wet sig control-gain f0 f1))
               (prod (diff 1.0 env) sig))))))
 
+;; Frequency selection must be between 0 Hz and Nyquist.
+(if (and (get '*selection* 'low-hz)
+         (<= (get '*selection* 'low-hz) 0))
+    (remprop '*selection* 'low-hz))
+(if (and (get '*selection* 'high-hz)
+         (>= (get '*selection* 'high-hz)(/ *sound-srate* 2)))
+    (remprop '*selection* 'high-hz))
+
 (cond
   ((not (get '*TRACK* 'VIEW)) ; 'View is NIL during Preview
       (setf p-err (format nil "This effect requires a frequency selection in the~%~
-                              'Spectrogram' or 'Spectrogram (log f)' track view.~%~%"))
+                              'Spectral Selection' or 'Spectral Selection log(f)'~%~
+                              track view.~%~%"))
       (catch 'error-message
         (multichan-expand #'result *track*)))
   ((string-not-equal (get '*TRACK* 'VIEW) "spectral"  :end1 8 :end2 8)
-      "Use this effect in the 'Spectral Selection'\nor 'Spectral Selection log(f)' view.")
+     "Use this effect in the 'Spectral Selection'\nor 'Spectral Selection log(f)' view.")
   (T  (setf p-err "")
       (if (= control-gain 0)  ; Allow dry preview
           "Gain is zero. Nothing to do."

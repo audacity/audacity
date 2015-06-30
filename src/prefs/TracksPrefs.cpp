@@ -20,16 +20,24 @@
 #include "../Audacity.h"
 #include "TracksPrefs.h"
 
+#include <algorithm>
 #include <wx/defs.h>
 
 #include "../Experimental.h"
+#include "../Prefs.h"
 #include "../ShuttleGui.h"
+#include "../WaveTrack.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 
 TracksPrefs::TracksPrefs(wxWindow * parent)
 :  PrefsPanel(parent, _("Tracks"))
 {
+   // Bugs 1043, 1044
+   // First rewrite legacy preferences
+   gPrefs->Write(wxT("/GUI/DefaultViewModeNew"),
+      WaveTrack::FindDefaultViewMode());
+
    Populate();
 }
 
@@ -92,8 +100,9 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
 
       S.StartMultiColumn(2);
       {
+
          S.TieChoice(_("Default &View Mode:"),
-                     wxT("/GUI/DefaultViewMode"),
+                     wxT("/GUI/DefaultViewModeNew"),
                      0,
                      mViewChoices,
                      mViewCodes);

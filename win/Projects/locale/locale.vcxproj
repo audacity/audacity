@@ -179,6 +179,9 @@ goto :EOF
     <msgfmt Include="..\..\..\locale\zh.po" />
     <msgfmt Include="..\..\..\locale\zh_TW.po" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\locale\audacity.pot" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="po.targets" />
