@@ -488,6 +488,10 @@ audacity_SOURCES = \
 	prefs/TracksPrefs.h \
 	prefs/WarningsPrefs.cpp \
 	prefs/WarningsPrefs.h \
+	prefs/WaveformPrefs.cpp \
+	prefs/WaveformPrefs.h \
+	prefs/WaveformSettings.cpp \
+	prefs/WaveformSettings.h \
 	toolbars/ControlToolBar.cpp \
 	toolbars/ControlToolBar.h \
 	toolbars/DeviceToolBar.cpp \

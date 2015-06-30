@@ -60,10 +60,7 @@ void TracksPrefs::Populate()
    // we don't display them by increasing integer values.
 
    mViewChoices.Add(_("Waveform"));
-   mViewCodes.Add(int(WaveTrack::WaveformDisplay));
-
-   mViewChoices.Add(_("Waveform (dB)"));
-   mViewCodes.Add(int(WaveTrack::WaveformDBDisplay));
+   mViewCodes.Add(int(WaveTrack::Waveform));
 
    mViewChoices.Add(_("Spectrum"));
    mViewCodes.Add(WaveTrack::Spectrum);

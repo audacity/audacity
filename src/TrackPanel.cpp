@@ -220,6 +220,7 @@ is time to refresh some aspect of the screen.
 
 #include "prefs/PrefsDialog.h"
 #include "prefs/SpectrumPrefs.h"
+#include "prefs/WaveformPrefs.h"
 
 #include "toolbars/ControlToolBar.h"
 #include "toolbars/ToolManager.h"
@@ -326,7 +327,6 @@ enum {
    OnFloatID,              // <---
 
    OnWaveformID,
-   OnWaveformDBID,
    OnSpectrumID,
    OnViewSettingsID,
 
@@ -722,10 +722,9 @@ void TrackPanel::BuildMenus(void)
    /* build the pop-down menu used on wave (sampled audio) tracks */
    mWaveTrackMenu = new wxMenu();
    BuildCommonDropMenuItems(mWaveTrackMenu);   // does name, up/down etc
-   mWaveTrackMenu->Append(OnWaveformID, _("Wa&veform"));
-   mWaveTrackMenu->Append(OnWaveformDBID, _("&Waveform (dB)"));
-   mWaveTrackMenu->Append(OnSpectrumID, _("&Spectrum"));
-   mWaveTrackMenu->Append(OnViewSettingsID, _("View& Settings...")); // PRL:  all the other letters already taken for accelerators!
+   mWaveTrackMenu->AppendRadioItem(OnWaveformID, _("&Waveform"));
+   mWaveTrackMenu->AppendRadioItem(OnSpectrumID, _("&Spectrum"));
+   mWaveTrackMenu->Append(OnViewSettingsID, _("&View Settings..."));
    mWaveTrackMenu->AppendSeparator();
 
    mWaveTrackMenu->AppendRadioItem(OnChannelMonoID, _("&Mono"));
@@ -3775,10 +3774,8 @@ void TrackPanel::ForwardEventToWaveTrackEnvelope(wxMouseEvent & event)
    //  This asks which one is in use. (ie, Wave, Spectrum, etc)
    int display = pwavetrack->GetDisplay();
 
-   // AS: If we're using the right type of display for envelope operations
-   //  ie one of the Wave displays
-   const bool dB = (display == WaveTrack::WaveformDBDisplay);
-   if (dB || (display == WaveTrack::WaveformDisplay)) {
+   if (display == WaveTrack::Waveform) {
+      const bool dB = !pwavetrack->GetWaveformSettings().isLinear();
       bool needUpdate;
 
       // AS: Then forward our mouse event to the envelope.
@@ -4849,20 +4846,12 @@ bool TrackPanel::IsSampleEditingPossible( wxMouseEvent &event, Track * t )
    //If we aren't displaying the waveform, Display a message dialog
    WaveTrack *const wt = static_cast<WaveTrack*>(t);
    const int display = wt->GetDisplay();
-#if 1
-   if (!(WaveTrack::WaveformDisplay == display ||
-         WaveTrack::WaveformDBDisplay == display))
-   {
-      wxMessageBox(_("To use Draw, choose 'Waveform' or 'Waveform dB' in the Track Drop-down Menu."), wxT("Draw Tool"));
-      return false;
-   }
-#else
-   if(WaveTrack::WaveformDisplay != display)
+
+   if (WaveTrack::Waveform != display)
    {
       wxMessageBox(_("To use Draw, choose 'Waveform' in the Track Drop-down Menu."), wxT("Draw Tool"));
       return false;
    }
-#endif
 
    bool showPoints;
    {
@@ -4900,7 +4889,7 @@ float TrackPanel::FindSampleEditingLevel(wxMouseEvent &event, double t0)
 
    const int y = event.m_y - mDrawingTrackTop;
    const int height = mDrawingTrack->GetHeight();
-   const bool dB = (WaveTrack::WaveformDBDisplay == mDrawingTrack->GetDisplay());
+   const bool dB = !mDrawingTrack->GetWaveformSettings().isLinear();
    float newLevel = ::ValueOfPixel(y, height, false, dB, mdBr, zoomMin, zoomMax);
 
    //Take the envelope into account
@@ -6908,16 +6897,14 @@ bool TrackPanel::HitTestEnvelope(Track *track, wxRect &r, wxMouseEvent & event)
    if (!envelope)
       return false;
 
-   int displayType = wavetrack->GetDisplay();
+   const int displayType = wavetrack->GetDisplay();
    // Not an envelope hit, unless we're using a type of wavetrack display
    // suitable for envelopes operations, ie one of the Wave displays.
-   const bool dB = (displayType == WaveTrack::WaveformDBDisplay);
-   if (!
-      (dB || (displayType == WaveTrack::WaveformDisplay))
-   )
+   if ( displayType != WaveTrack::Waveform)
       return false;  // No envelope, not a hit, so return.
 
    // Get envelope point, range 0.0 to 1.0
+   const bool dB = !wavetrack->GetWaveformSettings().isLinear();
    // Convert x to time.
    const double envValue = envelope->GetValue(mViewInfo->PositionToTime(event.m_x, r.x));
 
@@ -6975,10 +6962,10 @@ bool TrackPanel::HitTestSamples(Track *track, wxRect &r, wxMouseEvent & event)
    //Get rate in order to calculate the critical zoom threshold
    double rate = wavetrack->GetRate();
 
-   int displayType = wavetrack->GetDisplay();
-   bool dB = (WaveTrack::WaveformDBDisplay == displayType);
-   if (!(WaveTrack::WaveformDisplay == displayType || dB))
+   const int displayType = wavetrack->GetDisplay();
+   if (WaveTrack::Waveform != displayType)
       return false;  // Not a wave, so return.
+   const bool dB = !wavetrack->GetWaveformSettings().isLinear();
 
    const double tt = mViewInfo->PositionToTime(event.m_x, r.x);
    if (!SampleResolutionTest(*mViewInfo, wavetrack, tt, rate))
@@ -8448,13 +8435,11 @@ void TrackPanel::OnTrackMenu(Track *t)
       theMenu->Enable(OnChannelLeftID, !t->GetLinked());
       theMenu->Enable(OnChannelRightID, !t->GetLinked());
 
-      int display = ((WaveTrack *) t)->GetDisplay();
-
-      theMenu->Enable(OnWaveformID, display != WaveTrack::WaveformDisplay);
-      theMenu->Enable(OnWaveformDBID,
-                        display != WaveTrack::WaveformDBDisplay);
-      theMenu->Enable(OnSpectrumID, display != WaveTrack::Spectrum);
-      theMenu->Enable(OnViewSettingsID, true);
+      const int display = static_cast<WaveTrack *>(t)->GetDisplay();
+      theMenu->Check(
+         (display == WaveTrack::Waveform) ? OnWaveformID : OnSpectrumID,
+         true
+      );
 
       WaveTrack * track = (WaveTrack *)t;
       SetMenuCheck(*mRateMenu, IdOfRate((int) track->GetRate()));
@@ -8920,30 +8905,42 @@ class ViewSettingsDialog : public PrefsDialog
 {
 public:
    ViewSettingsDialog
-      (wxWindow *parent, const wxString &title, PrefsDialog::Factories &factories)
+      (wxWindow *parent, const wxString &title, PrefsDialog::Factories &factories,
+       int page)
       : PrefsDialog(parent, title, factories)
+      , mPage(page)
    {
    }
 
    virtual long GetPreferredPage()
    {
-      // Future:  choose Spectrum or Waveform page
-      return 0;
+      return mPage;
    }
 
    virtual void SavePreferredPage()
    {
    }
+
+private:
+   const int mPage;
 };
 
 void TrackPanel::OnViewSettings(wxCommandEvent &)
 {
    WaveTrack *const wt = static_cast<WaveTrack*>(mPopupMenuTarget);
+   WaveformPrefsFactory waveformFactory(wt);
    SpectrumPrefsFactory spectrumFactory(wt);
+
+   // Put Waveform page first
    PrefsDialog::Factories factories;
+   factories.push_back(&waveformFactory);
    factories.push_back(&spectrumFactory);
+   const int page = (wt->GetDisplay() == WaveTrack::Spectrum)
+      ? 1 : 0;
+
    wxString title(wt->GetName() + wxT(": "));
-   ViewSettingsDialog dialog(this, title, factories);
+   ViewSettingsDialog dialog(this, title, factories, page);
+
    if (0 != dialog.ShowModal())
       // Redraw
       Refresh(false);
@@ -8964,9 +8961,7 @@ void TrackPanel::OnSetDisplay(wxCommandEvent & event)
    switch (idInt) {
    default:
    case OnWaveformID:
-      id = WaveTrack::WaveformDisplay; break;
-   case OnWaveformDBID:
-      id = WaveTrack::WaveformDBDisplay; break;
+      id = WaveTrack::Waveform; break;
    case OnSpectrumID:
       id = WaveTrack::Spectrum; break;
    }
@@ -8985,9 +8980,10 @@ void TrackPanel::OnSetDisplay(wxCommandEvent & event)
       }
 #endif
       UpdateVRuler(wt);
+
+      MakeParentModifyState(true);
+      Refresh(false);
    }
-   MakeParentModifyState(true);
-   Refresh(false);
 }
 
 /// Sets the sample rate for a track, and if it is linked to
