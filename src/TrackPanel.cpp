@@ -352,6 +352,10 @@ enum {
    // Reserve an ample block of ids for spectrum scale types
    OnFirstSpectrumScaleID,
    OnLastSpectrumScaleID = OnFirstSpectrumScaleID + 19,
+
+   OnZoomInVerticalID,
+   OnZoomOutVerticalID,
+   OnZoomFitVerticalID,
 };
 
 BEGIN_EVENT_TABLE(TrackPanel, wxWindow)
@@ -396,6 +400,10 @@ BEGIN_EVENT_TABLE(TrackPanel, wxWindow)
 
     EVT_MENU_RANGE(OnFirstWaveformScaleID, OnLastWaveformScaleID, TrackPanel::OnWaveformScaleType)
     EVT_MENU_RANGE(OnFirstSpectrumScaleID, OnLastSpectrumScaleID, TrackPanel::OnSpectrumScaleType)
+
+    EVT_MENU(OnZoomInVerticalID, TrackPanel::OnZoomInVertical)
+    EVT_MENU(OnZoomOutVerticalID, TrackPanel::OnZoomOutVertical)
+    EVT_MENU(OnZoomFitVerticalID, TrackPanel::OnZoomFitVertical)
 END_EVENT_TABLE()
 
 /// Makes a cursor from an XPM, uses CursorId as a fallback.
@@ -808,6 +816,10 @@ void TrackPanel::BuildVRulerMenuItems
    int id = firstId;
    for (int ii = 0, nn = names.size(); ii < nn; ++ii)
       menu->AppendRadioItem(id++, names[ii]);
+   menu->AppendSeparator();
+   menu->Append(OnZoomInVerticalID, _("Zoom In\tLeft-Click/Left-Drag"));
+   menu->Append(OnZoomOutVerticalID, _("Zoom Out\tShift-Left-Click"));
+   menu->Append(OnZoomFitVerticalID, _("Zoom to Fit\tShift-Right-Click"));
 }
 
 void TrackPanel::DeleteMenus(void)
@@ -4656,7 +4668,13 @@ void TrackPanel::HandleVZoomButtonUp( wxMouseEvent & event )
       return;
    }
 
-   WaveTrack *track = static_cast<WaveTrack*>(mCapturedTrack);
+   HandleWaveTrackVZoom(static_cast<WaveTrack*>(mCapturedTrack),
+      event.ShiftDown(), event.RightUp());
+   mCapturedTrack = NULL;
+}
+
+void TrackPanel::HandleWaveTrackVZoom(WaveTrack *track, bool shiftDown, bool rightUp)
+{
    WaveTrack *partner = static_cast<WaveTrack *>(mTracks->GetLink(track));
    int height = track->GetHeight();
    int ypos = mCapturedRect.y;
@@ -4728,10 +4746,10 @@ void TrackPanel::HandleVZoomButtonUp( wxMouseEvent & event )
          }
       }
    }
-   else if (event.ShiftDown() || event.RightUp()) {
+   else if (shiftDown || rightUp) {
       // Zoom OUT
       if (spectral) {
-         if (event.ShiftDown() && event.RightUp()) {
+         if (shiftDown && rightUp) {
             // Zoom out full
             min = spectrumLinear ? 0.0f : 1.0f;
             max = halfrate;
@@ -4753,7 +4771,7 @@ void TrackPanel::HandleVZoomButtonUp( wxMouseEvent & event )
          // Zoom out to -1.0...1.0 first, then, and only
          // then, if they click again, allow one more
          // zoom out.
-         if (event.ShiftDown() && event.RightUp()) {
+         if (shiftDown && rightUp) {
             // Zoom out full
             min = -1.0;
             max = 1.0;
@@ -4844,9 +4862,8 @@ void TrackPanel::HandleVZoomButtonUp( wxMouseEvent & event )
    }
 
    mZoomEnd = mZoomStart = 0;
-   UpdateVRuler(mCapturedTrack);
+   UpdateVRuler(track);
    Refresh(false);
-   mCapturedTrack = NULL;
    MakeParentModifyState(true);
 }
 
@@ -8564,6 +8581,10 @@ void TrackPanel::OnVRulerMenu(Track *t, wxMouseEvent *pEvent)
       x = GetVRulerOffset(), y = titleRect.y + titleRect.height + 1;
    }
 
+   // So that IsDragZooming() returns false, and if we zoom in, we do so
+   // centered where the mouse is now:
+   mZoomStart = mZoomEnd = pEvent->m_y;
+
    mPopupMenuTarget = wt;
    PopupMenu(theMenu, x, y);
    mPopupMenuTarget = NULL;
@@ -9385,6 +9406,21 @@ void TrackPanel::OnSpectrumScaleType(wxCommandEvent &evt)
       MakeParentModifyState(true);
       Refresh(false);
    }
+}
+
+void TrackPanel::OnZoomInVertical(wxCommandEvent &)
+{
+   HandleWaveTrackVZoom(static_cast<WaveTrack*>(mPopupMenuTarget), false, false);
+}
+
+void TrackPanel::OnZoomOutVertical(wxCommandEvent &)
+{
+   HandleWaveTrackVZoom(static_cast<WaveTrack*>(mPopupMenuTarget), true, false);
+}
+
+void TrackPanel::OnZoomFitVertical(wxCommandEvent &)
+{
+   HandleWaveTrackVZoom(static_cast<WaveTrack*>(mPopupMenuTarget), true, true);
 }
 
 /// Move a track up, down, to top or to bottom.

@@ -397,6 +397,7 @@ protected:
    virtual void HandleVZoomClick(wxMouseEvent & event);
    virtual void HandleVZoomDrag(wxMouseEvent & event);
    virtual void HandleVZoomButtonUp(wxMouseEvent & event);
+   virtual void HandleWaveTrackVZoom(WaveTrack *track, bool shiftDown, bool rightUp);
 
    // Handle sample editing using the 'draw' tool.
    virtual bool IsSampleEditingPossible( wxMouseEvent & event, Track * t );
@@ -470,6 +471,10 @@ protected:
 
    virtual void OnWaveformScaleType(wxCommandEvent &event);
    virtual void OnSpectrumScaleType(wxCommandEvent &event);
+
+   virtual void OnZoomInVertical(wxCommandEvent &event);
+   virtual void OnZoomOutVertical(wxCommandEvent &event);
+   virtual void OnZoomFitVertical(wxCommandEvent &event);
 
    virtual void SetMenuCheck( wxMenu & menu, int newId );
    virtual void SetRate(Track *pTrack, double rate);
