@@ -344,6 +344,18 @@ enum {
    OnTimeTrackLinID,
    OnTimeTrackLogID,
    OnTimeTrackLogIntID,
+
+   // Reserve an ample block of ids for waveform scale types
+   OnFirstWaveformScaleID,
+   OnLastWaveformScaleID = OnFirstWaveformScaleID + 9,
+
+   // Reserve an ample block of ids for spectrum scale types
+   OnFirstSpectrumScaleID,
+   OnLastSpectrumScaleID = OnFirstSpectrumScaleID + 19,
+
+   OnZoomInVerticalID,
+   OnZoomOutVerticalID,
+   OnZoomFitVerticalID,
 };
 
 BEGIN_EVENT_TABLE(TrackPanel, wxWindow)
@@ -385,6 +397,13 @@ BEGIN_EVENT_TABLE(TrackPanel, wxWindow)
     EVT_MENU(OnTimeTrackLinID, TrackPanel::OnTimeTrackLin)
     EVT_MENU(OnTimeTrackLogID, TrackPanel::OnTimeTrackLog)
     EVT_MENU(OnTimeTrackLogIntID, TrackPanel::OnTimeTrackLogInt)
+
+    EVT_MENU_RANGE(OnFirstWaveformScaleID, OnLastWaveformScaleID, TrackPanel::OnWaveformScaleType)
+    EVT_MENU_RANGE(OnFirstSpectrumScaleID, OnLastSpectrumScaleID, TrackPanel::OnSpectrumScaleType)
+
+    EVT_MENU(OnZoomInVerticalID, TrackPanel::OnZoomInVertical)
+    EVT_MENU(OnZoomOutVerticalID, TrackPanel::OnZoomOutVertical)
+    EVT_MENU(OnZoomFitVerticalID, TrackPanel::OnZoomFitVertical)
 END_EVENT_TABLE()
 
 /// Makes a cursor from an XPM, uses CursorId as a fallback.
@@ -551,6 +570,8 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    mLabelTrackMenu = NULL;
    mLabelTrackInfoMenu = NULL;
    mTimeTrackMenu = NULL;
+
+   mRulerWaveformMenu = mRulerSpectrumMenu = NULL;
 
    BuildMenus();
 
@@ -764,6 +785,16 @@ void TrackPanel::BuildMenus(void)
    mLabelTrackInfoMenu->Append(OnCopySelectedTextID, _("&Copy"));
    mLabelTrackInfoMenu->Append(OnPasteSelectedTextID, _("&Paste"));
    mLabelTrackInfoMenu->Append(OnDeleteSelectedLabelID, _("&Delete Label"));
+
+   mRulerWaveformMenu = new wxMenu();
+   BuildVRulerMenuItems
+      (mRulerWaveformMenu, OnFirstWaveformScaleID,
+       WaveformSettings::GetScaleNames());
+
+   mRulerSpectrumMenu = new wxMenu();
+   BuildVRulerMenuItems
+      (mRulerSpectrumMenu, OnFirstSpectrumScaleID,
+       SpectrogramSettings::GetScaleNames());
 }
 
 void TrackPanel::BuildCommonDropMenuItems(wxMenu * menu)
@@ -776,6 +807,19 @@ void TrackPanel::BuildCommonDropMenuItems(wxMenu * menu)
    menu->Append(OnMoveBottomID, _("Move Track to &Bottom"));
    menu->AppendSeparator();
 
+}
+
+// static
+void TrackPanel::BuildVRulerMenuItems
+(wxMenu * menu, int firstId, const wxArrayString &names)
+{
+   int id = firstId;
+   for (int ii = 0, nn = names.size(); ii < nn; ++ii)
+      menu->AppendRadioItem(id++, names[ii]);
+   menu->AppendSeparator();
+   menu->Append(OnZoomInVerticalID, _("Zoom In\tLeft-Click/Left-Drag"));
+   menu->Append(OnZoomOutVerticalID, _("Zoom Out\tShift-Left-Click"));
+   menu->Append(OnZoomFitVerticalID, _("Zoom to Fit\tShift-Right-Click"));
 }
 
 void TrackPanel::DeleteMenus(void)
@@ -806,6 +850,9 @@ void TrackPanel::DeleteMenus(void)
       delete mTimeTrackMenu;
       mTimeTrackMenu = NULL;
    }
+
+   delete mRulerWaveformMenu;
+   delete mRulerSpectrumMenu;
 }
 
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
@@ -4610,11 +4657,24 @@ void TrackPanel::HandleVZoomButtonUp( wxMouseEvent & event )
    }
 #endif
 
+
    // don't do anything if track is not wave
    if (mCapturedTrack->GetKind() != Track::Wave)
       return;
 
-   WaveTrack *track = static_cast<WaveTrack*>(mCapturedTrack);
+   if (event.RightUp() &&
+       !(event.ShiftDown() || event.CmdDown())) {
+      OnVRulerMenu(mCapturedTrack, &event);
+      return;
+   }
+
+   HandleWaveTrackVZoom(static_cast<WaveTrack*>(mCapturedTrack),
+      event.ShiftDown(), event.RightUp());
+   mCapturedTrack = NULL;
+}
+
+void TrackPanel::HandleWaveTrackVZoom(WaveTrack *track, bool shiftDown, bool rightUp)
+{
    WaveTrack *partner = static_cast<WaveTrack *>(mTracks->GetLink(track));
    int height = track->GetHeight();
    int ypos = mCapturedRect.y;
@@ -4686,10 +4746,10 @@ void TrackPanel::HandleVZoomButtonUp( wxMouseEvent & event )
          }
       }
    }
-   else if (event.ShiftDown() || event.RightUp()) {
+   else if (shiftDown || rightUp) {
       // Zoom OUT
       if (spectral) {
-         if (event.ShiftDown() && event.RightUp()) {
+         if (shiftDown && rightUp) {
             // Zoom out full
             min = spectrumLinear ? 0.0f : 1.0f;
             max = halfrate;
@@ -4711,7 +4771,7 @@ void TrackPanel::HandleVZoomButtonUp( wxMouseEvent & event )
          // Zoom out to -1.0...1.0 first, then, and only
          // then, if they click again, allow one more
          // zoom out.
-         if (event.ShiftDown() && event.RightUp()) {
+         if (shiftDown && rightUp) {
             // Zoom out full
             min = -1.0;
             max = 1.0;
@@ -4802,9 +4862,8 @@ void TrackPanel::HandleVZoomButtonUp( wxMouseEvent & event )
    }
 
    mZoomEnd = mZoomStart = 0;
-   UpdateVRuler(mCapturedTrack);
+   UpdateVRuler(track);
    Refresh(false);
-   mCapturedTrack = NULL;
    MakeParentModifyState(true);
 }
 
@@ -8482,6 +8541,55 @@ void TrackPanel::OnTrackMenu(Track *t)
    Refresh(false);
 }
 
+void TrackPanel::OnVRulerMenu(Track *t, wxMouseEvent *pEvent)
+{
+   if (!t) {
+      t = GetFocusedTrack();
+      if (!t)
+         return;
+   }
+
+   if (t->GetKind() != Track::Wave)
+      return;
+
+   WaveTrack *const wt = static_cast<WaveTrack*>(t);
+
+   const int display = wt->GetDisplay();
+   wxMenu *theMenu;
+   if (display == WaveTrack::Waveform) {
+      theMenu = mRulerWaveformMenu;
+      const int id =
+         OnFirstWaveformScaleID + int(wt->GetWaveformSettings().scaleType);
+      theMenu->Check(id, true);
+   }
+   else {
+      theMenu = mRulerSpectrumMenu;
+      const int id =
+         OnFirstSpectrumScaleID + int(wt->GetSpectrogramSettings().scaleType);
+      theMenu->Check(id, true);
+   }
+
+   int x, y;
+   if (pEvent)
+      x = pEvent->m_x, y = pEvent->m_y;
+   else {
+      // If no event given, pop up the menu at the same height
+      // as for the track control menu
+      const wxRect r = FindTrackRect(wt, true);
+      wxRect titleRect;
+      mTrackInfo.GetTitleBarRect(r, titleRect);
+      x = GetVRulerOffset(), y = titleRect.y + titleRect.height + 1;
+   }
+
+   // So that IsDragZooming() returns false, and if we zoom in, we do so
+   // centered where the mouse is now:
+   mZoomStart = mZoomEnd = pEvent->m_y;
+
+   mPopupMenuTarget = wt;
+   PopupMenu(theMenu, x, y);
+   mPopupMenuTarget = NULL;
+}
+
 void TrackPanel::OnTrackMute(bool shiftDown, Track *t)
 {
    if (!t) {
@@ -9264,6 +9372,55 @@ void TrackPanel::OnTimeTrackLogInt(wxCommandEvent & /*event*/)
       MakeParentPushState(_("Set time track interpolation to logarithmic"), _("Set Interpolation"));
    }
    Refresh(false);
+}
+
+void TrackPanel::OnWaveformScaleType(wxCommandEvent &evt)
+{
+   WaveTrack *const wt = static_cast<WaveTrack *>(mPopupMenuTarget);
+   const WaveformSettings::ScaleType newScaleType =
+      WaveformSettings::ScaleType(
+         std::max(0,
+            std::min(int(WaveformSettings::stNumScaleTypes) - 1,
+               evt.GetId() - OnFirstWaveformScaleID
+      )));
+   if (wt->GetWaveformSettings().scaleType != newScaleType) {
+      wt->GetIndependentWaveformSettings().scaleType = newScaleType;
+      UpdateVRuler(wt); // Is this really needed?
+      MakeParentModifyState(true);
+      Refresh(false);
+   }
+}
+
+void TrackPanel::OnSpectrumScaleType(wxCommandEvent &evt)
+{
+   WaveTrack *const wt = static_cast<WaveTrack *>(mPopupMenuTarget);
+   const SpectrogramSettings::ScaleType newScaleType =
+      SpectrogramSettings::ScaleType(
+         std::max(0,
+            std::min(int(SpectrogramSettings::stNumScaleTypes) - 1,
+               evt.GetId() - OnFirstSpectrumScaleID
+      )));
+   if (wt->GetSpectrogramSettings().scaleType != newScaleType) {
+      wt->GetIndependentSpectrogramSettings().scaleType = newScaleType;
+      UpdateVRuler(wt); // Is this really needed?
+      MakeParentModifyState(true);
+      Refresh(false);
+   }
+}
+
+void TrackPanel::OnZoomInVertical(wxCommandEvent &)
+{
+   HandleWaveTrackVZoom(static_cast<WaveTrack*>(mPopupMenuTarget), false, false);
+}
+
+void TrackPanel::OnZoomOutVertical(wxCommandEvent &)
+{
+   HandleWaveTrackVZoom(static_cast<WaveTrack*>(mPopupMenuTarget), true, false);
+}
+
+void TrackPanel::OnZoomFitVertical(wxCommandEvent &)
+{
+   HandleWaveTrackVZoom(static_cast<WaveTrack*>(mPopupMenuTarget), true, true);
 }
 
 /// Move a track up, down, to top or to bottom.
