@@ -14,6 +14,9 @@
 
 *//*******************************************************************/
 
+#include "Audacity.h"
+#include "TrackPanelAx.h"
+
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
 
@@ -23,10 +26,9 @@
 #endif
 
 
-#include "Audacity.h"
-#include "TrackPanelAx.h"
-
 #include <wx/intl.h>
+
+#include "Track.h"
 
 TrackPanelAx::TrackPanelAx( wxWindow *window )
 #if wxUSE_ACCESSIBILITY

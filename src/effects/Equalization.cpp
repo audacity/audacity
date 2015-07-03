@@ -53,6 +53,7 @@
 
 
 #include "../Audacity.h"
+#include "Equalization.h"
 
 #include <math.h>
 #include <vector>
@@ -95,12 +96,9 @@
 #include "../xml/XMLFileReader.h"
 #include "../Theme.h"
 #include "../AllThemeResources.h"
-#include "../WaveTrack.h"
 #include "../float_cast.h"
 
 #include "FileDialog.h"
-
-#include "Equalization.h"
 
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
 #include "Equalization48x.h"

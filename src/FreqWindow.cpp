@@ -84,6 +84,8 @@ and in the spectrogram spectral selection.
 
 #include "FileDialog.h"
 
+#include "WaveTrack.h"
+
 #if defined(__WXGTK__)
 #define GSocket GSocketHack
 #include <gtk/gtk.h>

@@ -27,6 +27,8 @@ recover previous Audacity projects that were closed incorrectly.
 #include <wx/dialog.h>
 #include <wx/app.h>
 
+#include "WaveTrack.h"
+
 enum {
    ID_RECOVER_ALL = 10000,
    ID_RECOVER_NONE,

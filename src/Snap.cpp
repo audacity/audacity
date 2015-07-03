@@ -16,6 +16,7 @@
 #include "LabelTrack.h"
 #include "Project.h"
 #include "TrackPanel.h"
+#include "WaveTrack.h"
 #include "widgets/NumericTextCtrl.h"
 
 // Change this to "true" to snap to nearest and "false" to snap to previous

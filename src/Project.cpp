@@ -1215,6 +1215,11 @@ void AudacityProject::SetProjectTitle()
    SetName(name);       // to make the nvda screen reader read the correct title
 }
 
+bool AudacityProject::GetIsEmpty()
+{
+   return mTracks->IsEmpty();
+}
+
 double AudacityProject::AS_GetRate()
 {
    return mRate;
@@ -4420,7 +4425,7 @@ void AudacityProject::GetRegionsByLabel( Regions &regions )
 //If the function replaces the selection with audio of a different length,
 // bSyncLockedTracks should be set true to perform the same action on sync-lock selected
 // tracks.
-void AudacityProject::EditByLabel( WaveTrack::EditFunction action,
+void AudacityProject::EditByLabel( EditFunction action,
                                    bool bSyncLockedTracks )
 {
    Regions regions;
@@ -4469,7 +4474,7 @@ void AudacityProject::EditByLabel( WaveTrack::EditFunction action,
 //Functions copy the edited regions to clipboard, possibly in multiple tracks
 //This probably should not be called if *action() changes the timeline, because
 // the copy needs to happen by track, and the timeline change by group.
-void AudacityProject::EditClipboardByLabel( WaveTrack::EditDestFunction action )
+void AudacityProject::EditClipboardByLabel( EditDestFunction action )
 {
    Regions regions;
 

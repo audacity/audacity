@@ -14,6 +14,7 @@
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "ChangeSpeed.h"
 
 #include <math.h>
 
@@ -27,9 +28,8 @@
 #include "../ShuttleGui.h"
 #include "../widgets/valnum.h"
 
-#include "ChangeSpeed.h"
-
 #include "TimeWarper.h"
+#include "../WaveTrack.h"
 
 enum
 {

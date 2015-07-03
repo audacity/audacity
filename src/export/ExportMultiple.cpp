@@ -48,6 +48,7 @@
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 #include "../Tags.h"
+#include "../WaveTrack.h"
 #include "../widgets/HelpSystem.h"
 
 

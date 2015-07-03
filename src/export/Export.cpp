@@ -71,7 +71,6 @@
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../ShuttleGui.h"
-#include "../Track.h"
 #include "../WaveTrack.h"
 #include "../widgets/Warning.h"
 #include "../AColor.h"

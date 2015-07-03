@@ -17,7 +17,6 @@ class wxString;
 #include <wx/string.h>
 
 #include "../LabelTrack.h"
-#include "../WaveTrack.h"
 
 #include "Effect.h"
 

@@ -34,6 +34,8 @@
 #include "Prefs.h"
 #include "toolbars/ToolManager.h"
 
+#include "Track.h"
+
 class CommandType;
 
 ////////////////////////////////////////////////////////////////////////////////

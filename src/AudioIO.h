@@ -29,10 +29,10 @@
 #include "portmixer.h"
 #endif
 
+#include <wx/event.h>
 #include <wx/string.h>
 #include <wx/thread.h>
 
-#include "WaveTrack.h"
 #include "SampleFormat.h"
 
 class AudioIO;
@@ -45,6 +45,9 @@ class Meter;
 class SelectedRegion;
 class TimeTrack;
 class wxDialog;
+
+class AudacityProject;
+class WaveTrackArray;
 
 extern AUDACITY_DLL_API AudioIO *gAudioIO;
 
@@ -571,9 +574,9 @@ private:
 #endif
    Resample          **mResample;
    RingBuffer        **mCaptureBuffers;
-   WaveTrackArray      mCaptureTracks;
+   WaveTrackArray     *mCaptureTracks;
    RingBuffer        **mPlaybackBuffers;
-   WaveTrackArray      mPlaybackTracks;
+   WaveTrackArray     *mPlaybackTracks;
 
    Mixer             **mPlaybackMixers;
    volatile int        mStreamToken;

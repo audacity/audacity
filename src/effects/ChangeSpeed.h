@@ -19,7 +19,6 @@
 #include <wx/string.h>
 #include <wx/textctrl.h>
 
-#include "../WaveTrack.h"
 #include "../widgets/NumericTextCtrl.h"
 
 #include "Effect.h"

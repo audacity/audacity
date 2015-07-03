@@ -32,6 +32,7 @@
 #include "Envelope.h"
 #include "Resample.h"
 #include "Project.h"
+#include "WaveTrack.h"
 
 #include "prefs/SpectrogramSettings.h"
 

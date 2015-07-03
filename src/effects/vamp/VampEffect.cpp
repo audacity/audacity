@@ -40,6 +40,8 @@
 #include "../../ShuttleGui.h"
 #include "../../widgets/valnum.h"
 
+#include "../../WaveTrack.h"
+
 enum
 {
    ID_Program  =  10000,

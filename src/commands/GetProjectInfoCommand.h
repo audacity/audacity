@@ -50,10 +50,10 @@ private:
    void SendTracksInfo(TrackList *projTracks, Getter);
 
 // Functions pointed to for getting track parameters
-   bool testSelected(Track * track) const {return track->GetSelected();}
-   bool testLinked( Track * track) const {return track->GetLinked();}
-   bool testSolo( Track * track) const {return track->GetSolo();}
-   bool testMute( Track * track) const {return track->GetMute();}
+   bool testSelected(Track * track) const;
+   bool testLinked(Track * track) const;
+   bool testSolo(Track * track) const;
+   bool testMute(Track * track) const;
 };
 
 

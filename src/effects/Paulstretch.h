@@ -12,8 +12,6 @@
 
 #include <wx/string.h>
 
-#include "../WaveTrack.h"
-
 #include "Effect.h"
 
 class ShuttleGui;

@@ -14,12 +14,12 @@
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "StereoToMono.h"
 
 #include <wx/intl.h>
 
 #include "../Project.h"
-
-#include "StereoToMono.h"
+#include "../WaveTrack.h"
 
 EffectStereoToMono::EffectStereoToMono()
 {

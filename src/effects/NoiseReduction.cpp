@@ -43,6 +43,8 @@
 #include "../ShuttleGui.h"
 #include "../Prefs.h"
 
+#include "../WaveTrack.h"
+
 #include <algorithm>
 #include <vector>
 #include <math.h>

@@ -22,7 +22,6 @@
 #include <wx/textctrl.h>
 
 #include "../Envelope.h"
-#include "../WaveTrack.h"
 
 #include "Effect.h"
 

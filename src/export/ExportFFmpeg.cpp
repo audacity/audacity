@@ -42,7 +42,6 @@ function.
 #include "../Project.h"
 #include "../Tags.h"
 #include "../Track.h"
-#include "../WaveTrack.h"
 
 #include "Export.h"
 #include "ExportFFmpeg.h"

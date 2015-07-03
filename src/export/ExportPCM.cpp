@@ -35,7 +35,6 @@
 #include "../ShuttleGui.h"
 #include "../Tags.h"
 #include "../Track.h"
-#include "../WaveTrack.h"
 #include "../ondemand/ODManager.h"
 
 #include "Export.h"

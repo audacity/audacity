@@ -1441,7 +1441,7 @@ void TrackArtist::DrawWaveform(WaveTrack *track,
       if (xx >= 0 && xx < rect.width) {
          dc.SetPen(*wxGREY_PEN);
          AColor::Line(dc, (int) (rect.x + xx - 1), rect.y, (int) (rect.x + xx - 1), rect.y + rect.height);
-         if (loc.typ == WaveTrack::locationCutLine) {
+         if (loc.typ == WaveTrackLocation::locationCutLine) {
             dc.SetPen(*wxRED_PEN);
          }
          else {

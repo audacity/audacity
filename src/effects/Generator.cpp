@@ -14,10 +14,12 @@
 
 **********************************************************************/
 
+#include "Generator.h"
+
 #include "../Project.h"
 #include "../Prefs.h"
+#include "../WaveTrack.h"
 
-#include "Generator.h"
 #include "TimeWarper.h"
 
 #include <memory>

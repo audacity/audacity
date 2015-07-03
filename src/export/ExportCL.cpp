@@ -18,6 +18,7 @@
 #include <wx/button.h>
 #include <wx/combobox.h>
 #include <wx/log.h>
+#include <wx/msgdlg.h>
 #include <wx/process.h>
 #include <wx/sizer.h>
 #include <wx/textctrl.h>
@@ -30,6 +31,8 @@
 #include "../Internat.h"
 #include "../float_cast.h"
 #include "../widgets/FileHistory.h"
+
+#include "../Track.h"
 
 
 //----------------------------------------------------------------------------

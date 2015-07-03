@@ -16,10 +16,10 @@
 #include <wx/ffile.h>
 #include <wx/filename.h>
 
-#include "WaveTrack.h"
-
 #include "xml/XMLTagHandler.h"
 #include "xml/XMLWriter.h"
+
+#include "SampleFormat.h"
 
 
 class SummaryInfo {
@@ -209,7 +209,7 @@ class AliasBlockFile : public BlockFile
    //
    // These methods are for advanced use only!
    //
-   wxFileName GetAliasedFileName() { return mAliasedFileName; };
+   wxFileName GetAliasedFileName() { return mAliasedFileName; }
    void ChangeAliasedFileName(wxFileName newAliasedFile);
    virtual bool IsAlias() { return true; }
 

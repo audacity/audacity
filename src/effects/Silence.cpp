@@ -19,6 +19,7 @@
 #include <wx/intl.h>
 
 #include "../ShuttleGui.h"
+#include "../WaveTrack.h"
 
 EffectSilence::EffectSilence()
 {
