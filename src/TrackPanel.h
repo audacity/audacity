@@ -22,7 +22,6 @@
 
 #include "Experimental.h"
 #include "Sequence.h"  //Stm: included for the sampleCount declaration
-#include "WaveClip.h"
 #include "UndoManager.h" //JKC: Included for PUSH_XXX definitions.
 #include "widgets/NumericTextCtrl.h"
 
@@ -49,6 +48,8 @@ class TrackPanelAx;
 class ViewInfo;
 
 class WaveTrack;
+class WaveClip;
+class Envelope;
 
 WX_DEFINE_ARRAY(LWSlider *, LWSliderArray);
 
