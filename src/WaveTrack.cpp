@@ -39,8 +39,6 @@ Track classes.
 
 #include "float_cast.h"
 
-#include "LabelTrack.h"
-
 #include "Envelope.h"
 #include "Sequence.h"
 #include "Spectrum.h"

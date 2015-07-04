@@ -30,6 +30,7 @@
 #include "../ShuttleGui.h"
 #include "../widgets/valnum.h"
 
+#include "../LabelTrack.h"
 #include "../Wavetrack.h"
 
 // Define keys, defaults, minimums, and maximums for the effect parameters

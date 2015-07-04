@@ -28,7 +28,6 @@
 
 #include "../FileFormats.h"
 #include "../Internat.h"
-#include "../LabelTrack.h"
 #include "../Mix.h"
 #include "../Prefs.h"
 #include "../Project.h"

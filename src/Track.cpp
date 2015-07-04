@@ -23,7 +23,6 @@ and TimeTrack.
 #include "Track.h"
 #include "WaveTrack.h"
 #include "NoteTrack.h"
-#include "LabelTrack.h"
 #include "Project.h"
 #include "DirManager.h"
 
