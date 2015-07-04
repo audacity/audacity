@@ -2826,7 +2826,9 @@ wxString PluginManager::ConvertID(const PluginID & ID)
    if (ID.StartsWith(wxT("base64:")))
    {
       wxString id = ID.Mid(7);
-      char *buf = new char[id.Length() / 4 * 3];
+      //JKC: Quick fix.  I am guessing this buffer is too small.
+      //char *buf = new char[id.Length() / 4 * 3];
+      char *buf = new char[id.Length() +8 ];
       id =  wxString::FromUTF8(buf, b64decode(id, buf));
       delete [] buf;
       return id;
