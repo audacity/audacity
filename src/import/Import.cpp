@@ -58,7 +58,6 @@ and ImportLOF.cpp.
 #include "ImportFLAC.h"
 #include "ImportFFmpeg.h"
 #include "ImportGStreamer.h"
-#include "../Track.h"
 #include "../Prefs.h"
 
 WX_DEFINE_LIST(ImportPluginList);

@@ -61,8 +61,6 @@
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../Tags.h"
-#include "../Track.h"
-#include "../WaveTrack.h"
 
 #include "Export.h"
 

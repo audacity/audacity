@@ -23,6 +23,8 @@
 #include <wx/string.h>
 #include <wx/textctrl.h>
 
+#include "../Audacity.h"
+
 #if wxUSE_ACCESSIBILITY
 #include <wx/access.h>
 #endif

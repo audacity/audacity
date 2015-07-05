@@ -113,7 +113,6 @@ scroll information.  It also has some status flags.
 #include "Snap.h"
 #include "Tags.h"
 #include "TimeTrack.h"
-#include "Track.h"
 #include "TrackPanel.h"
 #include "WaveTrack.h"
 #include "DirManager.h"

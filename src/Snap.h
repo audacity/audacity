@@ -18,9 +18,10 @@
 #include <wx/defs.h>
 #include <wx/dynarray.h>
 
-#include "Track.h"
 #include "widgets/NumericTextCtrl.h"
 
+class Track;
+class TrackList;
 class TrackClipArray;
 class ZoomInfo;
 

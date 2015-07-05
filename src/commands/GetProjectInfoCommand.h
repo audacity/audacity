@@ -18,7 +18,6 @@
 
 #include "Command.h"
 #include "CommandType.h"
-#include "../Track.h"
 
 class GetProjectInfoCommandType : public CommandType
 {

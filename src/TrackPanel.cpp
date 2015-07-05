@@ -208,7 +208,6 @@ is time to refresh some aspect of the screen.
 #include "ShuttleGui.h"
 #include "Theme.h"
 #include "TimeTrack.h"
-#include "Track.h"
 #include "TrackArtist.h"
 #include "TrackPanelAx.h"
 #include "ViewInfo.h"
