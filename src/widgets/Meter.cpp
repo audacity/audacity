@@ -60,6 +60,7 @@
 
 #include "../AudioIO.h"
 #include "../AColor.h"
+#include "../Envelope.h"
 #include "../ImageManipulation.h"
 #include "../Project.h"
 #include "../toolbars/MeterToolBar.h"

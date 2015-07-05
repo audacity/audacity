@@ -14,7 +14,6 @@
 
 #include "../AudacityApp.h"
 
-#include "../Envelope.h"
 #include "../FFT.h"
 #include "../WaveTrack.h"
 #include "../Prefs.h"

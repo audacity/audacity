@@ -35,7 +35,6 @@
 
 #include "WaveTrack.h"
 #include "DirManager.h"
-#include "Envelope.h"
 #include "Internat.h"
 #include "Prefs.h"
 #include "Project.h"

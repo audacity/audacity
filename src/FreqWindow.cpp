@@ -71,6 +71,7 @@ and in the spectrogram spectral selection.
 
 #include <math.h>
 
+#include "Envelope.h"
 #include "ShuttleGui.h"
 #include "AColor.h"
 #include "FFT.h"

@@ -20,7 +20,6 @@
 
 #include <wx/intl.h>
 
-#include "../Envelope.h"
 #include "../LabelTrack.h"
 #include "../Prefs.h"
 #include "../Project.h"

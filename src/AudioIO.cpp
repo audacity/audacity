@@ -295,6 +295,7 @@ writing audio.
 #include <wx/txtstrm.h>
 
 #include "AudacityApp.h"
+#include "Envelope.h"
 #include "Mix.h"
 #include "MixerBoard.h"
 #include "Resample.h"
@@ -307,8 +308,6 @@ writing audio.
 
 #include "toolbars/ControlToolBar.h"
 #include "widgets/Meter.h"
-
-#include "Experimental.h"
 
 #ifdef EXPERIMENTAL_MIDI_OUT
    #define MIDI_SLEEP 10 /* milliseconds */
