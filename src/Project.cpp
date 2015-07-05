@@ -121,7 +121,6 @@ scroll information.  It also has some status flags.
 #include "prefs/PrefsDialog.h"
 #include "widgets/LinkingHtmlWindow.h"
 #include "widgets/ErrorDialog.h"
-#include "widgets/Meter.h"
 #include "widgets/Ruler.h"
 #include "widgets/Warning.h"
 #include "xml/XMLFileReader.h"

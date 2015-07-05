@@ -28,6 +28,8 @@
 #include "Project.h"
 #include "WaveTrack.h"
 
+#include "widgets/Meter.h"
+
 
 #include "../images/MusicalInstruments.h"
 #ifdef __WXMSW__
