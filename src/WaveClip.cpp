@@ -27,6 +27,7 @@
 #include <vector>
 #include <wx/log.h>
 
+#include "Sequence.h"
 #include "Spectrum.h"
 #include "Prefs.h"
 #include "Envelope.h"
@@ -368,6 +369,11 @@ bool WaveClip::SetSamples(samplePtr buffer, sampleFormat format,
    return bResult;
 }
 
+BlockArray* WaveClip::GetSequenceBlockArray()
+{
+   return mSequence->GetBlockArray();
+}
+
 double WaveClip::GetStartTime() const
 {
    // JS: mOffset is the minimum value and it is returned; no clipping to 0
@@ -393,6 +399,11 @@ sampleCount WaveClip::GetStartSample() const
 sampleCount WaveClip::GetEndSample() const
 {
    return GetStartSample() + mSequence->GetNumSamples();
+}
+
+sampleCount WaveClip::GetNumSamples() const
+{
+   return mSequence->GetNumSamples();
 }
 
 bool WaveClip::WithinClip(double t) const

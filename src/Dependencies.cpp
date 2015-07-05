@@ -36,6 +36,7 @@
 #include "Internat.h"
 #include "Prefs.h"
 #include "Project.h"
+#include "Sequence.h"
 #include "ShuttleGui.h"
 #include "WaveTrack.h"
 #include "WaveClip.h"

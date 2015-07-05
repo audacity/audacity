@@ -13,7 +13,6 @@
 
 #include "Track.h"
 #include "SampleFormat.h"
-#include "Sequence.h"
 #include "WaveClip.h"
 #include "Experimental.h"
 #include "widgets/ProgressDialog.h"

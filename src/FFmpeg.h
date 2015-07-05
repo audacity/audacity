@@ -128,6 +128,8 @@ extern "C" {
 #endif
 
 #include "Audacity.h"
+#include "Experimental.h"
+
 /* rather earlier than normal, but pulls in config*.h and other program stuff
  * we need for the next bit */
 #include <wx/string.h>
@@ -141,10 +143,8 @@ extern "C" {
 #include "Prefs.h"
 #include <wx/checkbox.h>
 #include <wx/textctrl.h>
-// needed for sampleCount
-#include "Sequence.h"
 
-#include "Experimental.h"
+#include "audacity/Types.h"
 
 // if you needed them, any other audacity header files would go here
 

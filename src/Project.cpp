@@ -110,6 +110,7 @@ scroll information.  It also has some status flags.
 #include "Mix.h"
 #include "NoteTrack.h"
 #include "Prefs.h"
+#include "Sequence.h"
 #include "Snap.h"
 #include "Tags.h"
 #include "TimeTrack.h"

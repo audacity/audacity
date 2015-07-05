@@ -20,6 +20,7 @@ updating the ODPCMAliasBlockFile and the GUI of the newly available data.
 
 #include "ODComputeSummaryTask.h"
 #include "../blockfile/ODPCMAliasBlockFile.h"
+#include "../Sequence.h"
 #include "../WaveTrack.h"
 #include <wx/wx.h>
 

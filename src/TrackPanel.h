@@ -21,7 +21,7 @@
 #include <wx/window.h>
 
 #include "Experimental.h"
-#include "Sequence.h"  //Stm: included for the sampleCount declaration
+#include "audacity/Types.h"
 #include "UndoManager.h" //JKC: Included for PUSH_XXX definitions.
 #include "widgets/NumericTextCtrl.h"
 

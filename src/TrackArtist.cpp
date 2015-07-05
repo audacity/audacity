@@ -175,7 +175,6 @@ audio tracks.
 #include "Prefs.h"
 #include "prefs/SpectrogramSettings.h"
 #include "prefs/WaveformSettings.h"
-#include "Sequence.h"
 #include "Spectrum.h"
 #include "ViewInfo.h"
 #include "widgets/Ruler.h"
