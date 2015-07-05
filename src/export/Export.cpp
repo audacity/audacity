@@ -75,7 +75,6 @@
 #include "../WaveTrack.h"
 #include "../widgets/Warning.h"
 #include "../AColor.h"
-#include "../TimeTrack.h"
 #include "../Dependencies.h"
 
 // Callback to display format options

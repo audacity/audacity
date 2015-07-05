@@ -40,6 +40,7 @@
 #include "Prefs.h"
 #include "Project.h"
 #include "Resample.h"
+#include "TimeTrack.h"
 #include "float_cast.h"
 
 //TODO-MB: wouldn't it make more sense to delete the time track after 'mix and render'?

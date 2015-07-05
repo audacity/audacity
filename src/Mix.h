@@ -16,7 +16,6 @@
 
 #include "SampleFormat.h"
 #include "WaveTrack.h"
-#include "TimeTrack.h"
 #include "Resample.h"
 
 class DirManager;

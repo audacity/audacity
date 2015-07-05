@@ -25,7 +25,6 @@ and TimeTrack.
 #include "NoteTrack.h"
 #include "LabelTrack.h"
 #include "Project.h"
-#include "TimeTrack.h"
 #include "DirManager.h"
 
 #ifdef _MSC_VER
