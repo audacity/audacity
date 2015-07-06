@@ -355,14 +355,14 @@ protected:
 
    // AS: Cursor handling
    virtual bool SetCursorByActivity( );
-   virtual void SetCursorAndTipWhenInLabel( Track * t, wxMouseEvent &event, const wxChar ** ppTip );
-   virtual void SetCursorAndTipWhenInVResizeArea( Track * label, bool blinked, const wxChar ** ppTip );
-   virtual void SetCursorAndTipWhenInLabelTrack( LabelTrack * pLT, wxMouseEvent & event, const wxChar ** ppTip );
+   virtual void SetCursorAndTipWhenInLabel( Track * t, wxMouseEvent &event, wxString &tip );
+   virtual void SetCursorAndTipWhenInVResizeArea( Track * label, bool blinked, wxString &tip );
+   virtual void SetCursorAndTipWhenInLabelTrack( LabelTrack * pLT, wxMouseEvent & event, wxString &tip );
    virtual void SetCursorAndTipWhenSelectTool
-      ( Track * t, wxMouseEvent & event, wxRect &r, bool bMultiToolMode, const wxChar ** ppTip, const wxCursor ** ppCursor );
-   virtual void SetCursorAndTipByTool( int tool, wxMouseEvent & event, const wxChar **ppTip );
+      ( Track * t, wxMouseEvent & event, wxRect &r, bool bMultiToolMode, wxString &tip, const wxCursor ** ppCursor );
+   virtual void SetCursorAndTipByTool( int tool, wxMouseEvent & event, wxString &tip );
    virtual void HandleCursor(wxMouseEvent & event);
-   virtual void MaySetOnDemandTip( Track * t, const wxChar ** ppTip );
+   virtual void MaySetOnDemandTip( Track * t, wxString &tip );
 
    // AS: Envelope editing handlers
    virtual void HandleEnvelope(wxMouseEvent & event);
@@ -693,7 +693,7 @@ protected:
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    void HandleCenterFrequencyCursor
-      (bool shiftDown, const wxChar ** ppTip, const wxCursor ** ppCursor);
+      (bool shiftDown, wxString &tip, const wxCursor ** ppCursor);
 
    void HandleCenterFrequencyClick
       (bool shiftDown, Track *pTrack, double value);

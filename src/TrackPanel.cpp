@@ -1739,29 +1739,29 @@ bool TrackPanel::SetCursorByActivity( )
 /// When in the "label" (TrackInfo or vertical ruler), we can either vertical zoom or re-order tracks.
 /// Dont't change cursor/tip to zoom if display is not waveform (either linear of dB) or Spectrum
 void TrackPanel::SetCursorAndTipWhenInLabel( Track * t,
-         wxMouseEvent &event, const wxChar ** ppTip )
+         wxMouseEvent &event, wxString &tip )
 {
    if (event.m_x >= GetVRulerOffset() && (t->GetKind() == Track::Wave) )
    {
-      *ppTip = _("Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom region.");
+      tip = _("Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom region.");
       SetCursor(event.ShiftDown()? *mZoomOutCursor : *mZoomInCursor);
    }
 #ifdef USE_MIDI
    else if (event.m_x >= GetVRulerOffset() && t->GetKind() == Track::Note) {
-      *ppTip = _("Click to verticaly zoom in, Shift-click to zoom out, Drag to create a particular zoom region.");
+      tip = _("Click to verticaly zoom in, Shift-click to zoom out, Drag to create a particular zoom region.");
       SetCursor(event.ShiftDown() ? *mZoomOutCursor : *mZoomInCursor);
    }
 #endif
    else {
       // Set a status message if over TrackInfo.
-      *ppTip = _("Drag the track vertically to change the order of the tracks.");
+      tip = _("Drag the track vertically to change the order of the tracks.");
       SetCursor(*mArrowCursor);
    }
 }
 
 /// When in the resize area we can adjust size or relative size.
 void TrackPanel::SetCursorAndTipWhenInVResizeArea( Track * label,
-         bool bLinked, const wxChar ** ppTip )
+         bool bLinked, wxString &tip )
 {
    // Check to see whether it is the first channel of a stereo track
    if (bLinked) {
@@ -1774,10 +1774,10 @@ void TrackPanel::SetCursorAndTipWhenInVResizeArea( Track * label,
       // cursor are still needed.
       if (label)
          return;
-      *ppTip = _("Click and drag to adjust relative size of stereo tracks.");
+      tip = _("Click and drag to adjust relative size of stereo tracks.");
       SetCursor(*mResizeCursor);
    } else {
-      *ppTip = _("Click and drag to resize the track.");
+      tip = _("Click and drag to resize the track.");
       SetCursor(*mResizeCursor);
    }
 }
@@ -1785,7 +1785,7 @@ void TrackPanel::SetCursorAndTipWhenInVResizeArea( Track * label,
 /// When in a label track, find out if we've hit anything that
 /// would cause a cursor change.
 void TrackPanel::SetCursorAndTipWhenInLabelTrack( LabelTrack * pLT,
-       wxMouseEvent & event, const wxChar ** ppTip )
+       wxMouseEvent & event, wxString &tip )
 {
    int edge=pLT->OverGlyph(event.m_x, event.m_y);
    if(edge !=0)
@@ -1806,7 +1806,7 @@ void TrackPanel::SetCursorAndTipWhenInLabelTrack( LabelTrack * pLT,
    // signal this by setting the tip.
    if( edge != 0 )
    {
-      *ppTip =
+      tip =
          (pLT->mbHitCenter ) ?
          _("Drag one or more label boundaries.") :
          _("Drag label boundary.");
@@ -1832,7 +1832,7 @@ inline bool isSpectralSelectionTrack(const Track *pTrack) {
 } // namespace
 
 // If we're in OnDemand mode, we may change the tip.
-void TrackPanel::MaySetOnDemandTip( Track * t, const wxChar ** ppTip )
+void TrackPanel::MaySetOnDemandTip( Track * t, wxString &tip )
 {
    wxASSERT( t );
    //For OD regions, we need to override and display the percent complete for this task.
@@ -1842,17 +1842,17 @@ void TrackPanel::MaySetOnDemandTip( Track * t, const wxChar ** ppTip )
    //see if the wavetrack exists in the ODManager (if the ODManager exists)
    if(!ODManager::IsInstanceCreated())
       return;
-   //ask the wavetrack for the corresponding tip - it may not change **pptip, but that's fine.
-   ODManager::Instance()->FillTipForWaveTrack((WaveTrack*)t,ppTip);
+   //ask the wavetrack for the corresponding tip - it may not change tip, but that's fine.
+   ODManager::Instance()->FillTipForWaveTrack(static_cast<WaveTrack*>(t), tip);
    return;
 }
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
 void TrackPanel::HandleCenterFrequencyCursor
-(bool shiftDown, const wxChar ** ppTip, const wxCursor ** ppCursor)
+(bool shiftDown, wxString &tip, const wxCursor ** ppCursor)
 {
 #ifndef SPECTRAL_EDITING_ESC_KEY
-   *ppTip =
+   tip =
       shiftDown ?
       _("Click and drag to move center selection frequency.") :
       _("Click and drag to move center selection frequency to a spectral peak.");
@@ -1860,7 +1860,7 @@ void TrackPanel::HandleCenterFrequencyCursor
 #else
    shiftDown;
 
-   *ppTip =
+   tip =
       _("Click and drag to move center selection frequency.");
 
 #endif
@@ -1897,7 +1897,7 @@ void TrackPanel::HandleCenterFrequencyClick
 // Determine and set the cursor and tip accordingly.
 void TrackPanel::SetCursorAndTipWhenSelectTool( Track * t,
         wxMouseEvent & event, wxRect &r, bool bMultiToolMode,
-        const wxChar ** ppTip, const wxCursor ** ppCursor )
+        wxString &tip, const wxCursor ** ppCursor )
 {
    // Do not set the default cursor here and re-set later, that causes
    // flashing.
@@ -1915,13 +1915,10 @@ void TrackPanel::SetCursorAndTipWhenSelectTool( Track * t,
          keyStr = _("Edit, Preferences...");
       else
          keyStr = KeyStringDisplay(keyStr);
-      // Must compose a string that survives the function call, hence static.
-      static wxString result;
       /* i18n-hint: %s is usually replaced by "Ctrl+P" for Windows/Linux, "Command+," for Mac */
-      result = wxString::Format(
+      tip = wxString::Format(
          _("Multi-Tool Mode: %s for Mouse and Keyboard Preferences."),
          keyStr.c_str());
-      *ppTip = result;
       // Later in this function we may point to some other string instead.
    }
 
@@ -1934,7 +1931,7 @@ void TrackPanel::SetCursorAndTipWhenSelectTool( Track * t,
    // the preferences...
    if ( !t->GetSelected() || !mAdjustSelectionEdges)
    {
-      MaySetOnDemandTip( t, ppTip );
+      MaySetOnDemandTip( t, tip );
       return;
    }
 
@@ -1951,7 +1948,7 @@ void TrackPanel::SetCursorAndTipWhenSelectTool( Track * t,
    if ( (mFreqSelMode == FREQ_SEL_SNAPPING_CENTER) &&
       isSpectralSelectionTrack(t)) {
       // Not shift-down, but center frequency snapping toggle is on
-      *ppTip = _("Click and drag to set frequency bandwidth.");
+      tip = _("Click and drag to set frequency bandwidth.");
       *ppCursor = mEnvelopeCursor;
       return;
    }
@@ -1977,7 +1974,7 @@ void TrackPanel::SetCursorAndTipWhenSelectTool( Track * t,
       case SBLeft:
       case SBRight:
          if ( HitTestStretch(t, r, event)) {
-            *ppTip = _("Click and drag to stretch within selected region.");
+            tip = _("Click and drag to stretch within selected region.");
             *ppCursor = mStretchCursor;
             return;
          }
@@ -1992,33 +1989,33 @@ void TrackPanel::SetCursorAndTipWhenSelectTool( Track * t,
          if( bShiftDown ){
             // wxASSERT( false );
             // Same message is used for moving left right top or bottom edge.
-            *ppTip = _("Click to move selection boundary to cursor.");
+            tip = _("Click to move selection boundary to cursor.");
             // No cursor change.
             return;
          }
          break;
       case SBLeft:
-         *ppTip = _("Click and drag to move left selection boundary.");
+         tip = _("Click and drag to move left selection boundary.");
          *ppCursor = mAdjustLeftSelectionCursor;
          return;
       case SBRight:
-         *ppTip = _("Click and drag to move right selection boundary.");
+         tip = _("Click and drag to move right selection boundary.");
          *ppCursor = mAdjustRightSelectionCursor;
          return;
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
       case SBBottom:
-         *ppTip = _("Click and drag to move bottom selection frequency.");
+         tip = _("Click and drag to move bottom selection frequency.");
          *ppCursor = mBottomFrequencyCursor;
          return;
       case SBTop:
-         *ppTip = _("Click and drag to move top selection frequency.");
+         tip = _("Click and drag to move top selection frequency.");
          *ppCursor = mTopFrequencyCursor;
          return;
       case SBCenter:
-         HandleCenterFrequencyCursor(bShiftDown, ppTip, ppCursor);
+         HandleCenterFrequencyCursor(bShiftDown, tip, ppCursor);
          return;
       case SBWidth:
-         *ppTip = _("Click and drag to adjust frequency bandwidth.");
+         tip = _("Click and drag to adjust frequency bandwidth.");
          *ppCursor = mBandWidthCursor;
          return;
 #endif
@@ -2027,13 +2024,13 @@ void TrackPanel::SetCursorAndTipWhenSelectTool( Track * t,
    } // switch
    // Falls through the switch if there was no boundary found.
 
-   MaySetOnDemandTip( t, ppTip );
+   MaySetOnDemandTip( t, tip );
 }
 
 /// In this method we know what tool we are using,
 /// so set the cursor accordingly.
 void TrackPanel::SetCursorAndTipByTool( int tool,
-         wxMouseEvent & event, const wxChar ** /*ppTip*/ )
+         wxMouseEvent & event, wxString& )
 {
    bool unsafe = IsUnsafe();
 
@@ -2094,30 +2091,31 @@ void TrackPanel::HandleCursor(wxMouseEvent & event)
    // Strategy here is to set the tip when we have determined and
    // set the correct cursor.  We stop doing tests for what we've
    // hit once the tip is not NULL.
-   const wxChar *tip = NULL;
+
+   wxString tip;
 
    if (label) {
-      SetCursorAndTipWhenInLabel( label, event, &tip );
+      SetCursorAndTipWhenInLabel( label, event, tip );
    }
 
    // Are we within the vertical resize area?
-   if ((tip == NULL ) && within(event.m_y, r.y + r.height, TRACK_RESIZE_REGION))
+   if ((tip == wxString() ) && within(event.m_y, r.y + r.height, TRACK_RESIZE_REGION))
    {
-      SetCursorAndTipWhenInVResizeArea( label, t->GetLinked(), &tip );
+      SetCursorAndTipWhenInVResizeArea( label, t->GetLinked(), tip );
       // tip may still be NULL at this point, in which case we go on looking.
    }
 
    // Otherwise, we must be over a track of some kind
    // Is it a label track?
-   if ((tip==NULL) && (t->GetKind() == Track::Label))
+   if ((tip == wxString()) && (t->GetKind() == Track::Label))
    {
       // We are over a label track
-      SetCursorAndTipWhenInLabelTrack( (LabelTrack*)t, event, &tip );
+      SetCursorAndTipWhenInLabelTrack( (LabelTrack*)t, event, tip );
       // ..and if we haven't yet determined the cursor,
       // we go on to do all the standard track hit tests.
    }
 
-   if( tip==NULL )
+   if( tip == wxString() )
    {
       ToolsToolBar * ttb = mListener->TP_GetToolsToolBar();
       if( ttb == NULL )
@@ -2136,21 +2134,21 @@ void TrackPanel::HandleCursor(wxMouseEvent & event)
       // the other tool cases.
       if( tool != selectTool )
       {
-         SetCursorAndTipByTool( tool, event, &tip);
+         SetCursorAndTipByTool( tool, event, tip);
       }
       else
       {
          bool bMultiToolMode = ttb->IsDown(multiTool);
          const wxCursor *pSelection = 0;
          SetCursorAndTipWhenSelectTool
-            ( t, event, r, bMultiToolMode, &tip, &pSelection );
+            ( t, event, r, bMultiToolMode, tip, &pSelection );
          if (pSelection)
             // Set cursor once only here, to avoid flashing during drags
             SetCursor(*pSelection);
       }
    }
 
-   if (tip)
+   if (tip != wxString())
       mListener->TP_DisplayStatusMessage(tip);
 }
 
