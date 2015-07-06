@@ -239,6 +239,7 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
     */
    virtual void BuildCommonDropMenuItems(wxMenu * menu);
    static void BuildVRulerMenuItems(wxMenu * menu, int firstId, const wxArrayString &names);
+   virtual bool IsAudioActive();
    virtual bool IsUnsafe();
    virtual bool HandleLabelTrackMouseEvent(LabelTrack * lTrack, wxRect &r, wxMouseEvent & event);
    virtual bool HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &r, wxMouseEvent &event);

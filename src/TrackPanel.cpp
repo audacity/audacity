@@ -1051,8 +1051,7 @@ void TrackPanel::OnTimer()
    wxCommandEvent dummyEvent;
    AudacityProject *p = GetProject();
 
-   if ((p->GetAudioIOToken() > 0) &&
-      gAudioIO->IsStreamActive(p->GetAudioIOToken()))
+   if (IsAudioActive())
    {
       // Update lyrics display.
       LyricsWindow* pLyricsWindow = p->GetLyricsWindow();
@@ -1069,9 +1068,7 @@ void TrackPanel::OnTimer()
    //    Since all we're doing here is updating the meters, I moved it to
    //    audacityAudioCallback where it calls gAudioIO->mOutputMeter->UpdateDisplay().
    MixerBoard* pMixerBoard = this->GetMixerBoard();
-   if (pMixerBoard &&
-      (p->GetAudioIOToken() > 0) &&
-      gAudioIO->IsStreamActive(p->GetAudioIOToken()))
+   if (pMixerBoard && IsAudioActive())
    {
       pMixerBoard->UpdateMeters(gAudioIO->GetStreamTime(),
          (p->mLastPlayMode == loopedPlay));
@@ -1115,8 +1112,7 @@ void TrackPanel::OnTimer()
 #endif
 
    // Check whether we were playing or recording, but the stream has stopped.
-   if (p->GetAudioIOToken()>0 &&
-         !gAudioIO->IsStreamActive(p->GetAudioIOToken()))
+   if (p->GetAudioIOToken()>0 && !IsAudioActive())
    {
       //the stream may have been started up after this one finished (by some other project)
       //in that case reset the buttons don't stop the stream
@@ -1155,8 +1151,8 @@ void TrackPanel::OnTimer()
    //  that indicates where the current play/record position is. (This also
    //  draws the moving vertical line.)
 
-   if (!gAudioIO->IsPaused() &&
-       ( mIndicatorShowing || gAudioIO->IsStreamActive(p->GetAudioIOToken()))
+   if (!gAudioIO->IsPaused() && ( mIndicatorShowing || IsAudioActive())
+
 #ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
        && !mSmoothScrollingScrub
 #endif
@@ -1165,8 +1161,7 @@ void TrackPanel::OnTimer()
       DrawIndicator();
    }
 
-   if(gAudioIO->IsStreamActive(p->GetAudioIOToken()) &&
-      gAudioIO->GetNumCaptureChannels()) {
+   if(IsAudioActive() && gAudioIO->GetNumCaptureChannels()) {
 
       // Periodically update the display while recording
 
@@ -1313,7 +1308,7 @@ void TrackPanel::DoDrawIndicator
          pos = gAudioIO->GetStreamTime();
 
       AudacityProject *p = GetProject();
-      bool audioActive = ( gAudioIO->IsStreamActive( p->GetAudioIOToken() ) != 0 );
+      bool audioActive = IsAudioActive();
       onScreen = between_inclusive( mViewInfo->h,
                                    pos,
                                    mViewInfo->h + mViewInfo->screen );
@@ -1513,8 +1508,7 @@ void TrackPanel::OnPaint(wxPaintEvent & /* event */)
       mRefreshBacking = false;
 
 #ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
-      if (mSmoothScrollingScrub &&
-         gAudioIO->IsStreamActive(GetProject()->GetAudioIOToken())) {
+      if (mSmoothScrollingScrub && IsAudioActive()) {
          // Pan the view, so that we center the play indicator.
          // By the time DoDrawIndicator() is reached, gAudioIO->GetStreamTime()
          // may be a little different.
@@ -1549,9 +1543,7 @@ void TrackPanel::OnPaint(wxPaintEvent & /* event */)
 
    // Update the indicator in case it was damaged if this project is playing
 
-   AudacityProject* p = GetProject();
-   if (!gAudioIO->IsPaused() &&
-      (mIndicatorShowing || gAudioIO->IsStreamActive(p->GetAudioIOToken())))
+   if (!gAudioIO->IsPaused() && (mIndicatorShowing || IsAudioActive()))
    {
       // If not smooth scrolling, then
       // we just want to repair, not update the old, so set the second param to true.
@@ -1641,7 +1633,6 @@ void TrackPanel::HandleEscapeKey(bool down)
       break;
    default:
       return;
-      ;
    }
 
    // Common part in all cases that do anything
@@ -1698,10 +1689,13 @@ MixerBoard* TrackPanel::GetMixerBoard()
 /// @return true if audio is being recorded or is playing.
 bool TrackPanel::IsUnsafe()
 {
+   return IsAudioActive();
+}
+
+bool TrackPanel::IsAudioActive()
+{
    AudacityProject *p = GetProject();
-   bool bUnsafe = (p->GetAudioIOToken()>0 &&
-                  gAudioIO->IsStreamActive(p->GetAudioIOToken()));
-   return bUnsafe;
+   return p->IsAudioActive();
 }
 
 
@@ -5181,8 +5175,6 @@ void TrackPanel::HandleSampleEditing(wxMouseEvent & event)
 // This is for when a given track gets the x.
 void TrackPanel::HandleClosing(wxMouseEvent & event)
 {
-   AudacityProject *p = GetProject(); //lda
-
    Track *t = mCapturedTrack;
    wxRect r = mCapturedRect;
 
@@ -5196,7 +5188,7 @@ void TrackPanel::HandleClosing(wxMouseEvent & event)
    else if (event.LeftUp()) {
       mTrackInfo.DrawCloseBox(&dc, r, false);
       if (closeRect.Contains(event.m_x, event.m_y)) {
-         if (!gAudioIO->IsStreamActive(p->GetAudioIOToken()))
+         if (!IsUnsafe())
             RemoveTrack(t);
       }
       SetCapturedTrack( NULL );
@@ -5504,9 +5496,7 @@ void TrackPanel::HandleLabelClick(wxMouseEvent & event)
    // if they see anything other than a left click.
    bool isleft = event.Button(wxMOUSE_BTN_LEFT);
 
-   AudacityProject *p = GetProject();
-   bool unsafe = (p->GetAudioIOToken()>0 &&
-                  gAudioIO->IsStreamActive(p->GetAudioIOToken()));
+   bool unsafe = IsUnsafe();
 
    wxRect r;
 
@@ -6721,9 +6711,7 @@ void TrackPanel::HandleTrackSpecificMouseEvent(wxMouseEvent & event)
    wxRect r;
    wxRect rLabel;
 
-   AudacityProject *p = GetProject();
-   bool unsafe = (p->GetAudioIOToken()>0 &&
-                  gAudioIO->IsStreamActive(p->GetAudioIOToken()));
+   bool unsafe = IsUnsafe();
 
    FindTrack(event.m_x, event.m_y, true, true, &rLabel);
    pTrack = FindTrack(event.m_x, event.m_y, false, false, &r);
@@ -6896,7 +6884,7 @@ bool TrackPanel::HitTestStretch(Track *track, wxRect &r, wxMouseEvent & event)
    // selected when the cursor is near the center of the track and
    // within the selection
    if (!track || !track->GetSelected() || track->GetKind() != Track::Note ||
-       gAudioIO->IsStreamActive( GetProject()->GetAudioIOToken())) {
+       IsUnsafe()) {
       return false;
    }
    int center = r.y + r.height / 2;
@@ -7972,8 +7960,7 @@ void TrackPanel::SeekLeftOrRight
 {
    if (keyup)
    {
-      int token = GetProject()->GetAudioIOToken();
-      if (token > 0 && gAudioIO->IsStreamActive(token))
+      if (IsAudioActive())
       {
          return;
       }
@@ -7993,8 +7980,6 @@ void TrackPanel::SeekLeftOrRight
    int multiplier = (fast && mayAccelerateQuiet) ? LARGER_MULTIPLIER : 1;
    if (leftward)
       multiplier = -multiplier;
-
-   int token = GetProject()->GetAudioIOToken();
 
    if (shift && ctrl)
    {
@@ -8034,7 +8019,7 @@ void TrackPanel::SeekLeftOrRight
       }
       Refresh(false);
    }
-   else if (token > 0 && gAudioIO->IsStreamActive(token)) {
+   else if (IsAudioActive()) {
 #ifdef EXPERIMENTAL_IMPROVED_SEEKING
       if (gAudioIO->GetLastPlaybackTime() < mLastSelectionAdjustment) {
          // Allow time for the last seek to output a buffer before
@@ -8187,8 +8172,7 @@ void TrackPanel::OnBoundaryMove(bool left, bool boundaryContract)
    }
    mLastSelectionAdjustment = curtime;
 
-   int token = GetProject()->GetAudioIOToken();
-   if( token > 0 && gAudioIO->IsStreamActive( token ) )
+   if (IsAudioActive())
    {
       double indicator = gAudioIO->GetStreamTime();
       if (left) {
@@ -8608,7 +8592,7 @@ void TrackPanel::OnTrackClose()
    Track *t = GetFocusedTrack();
    if(!t) return;
 
-   if( gAudioIO->IsStreamActive( GetProject()->GetAudioIOToken() ) )
+   if (IsUnsafe())
    {
       mListener->TP_DisplayStatusMessage( _( "Can't delete track with active audio" ) );
       wxBell();

@@ -1169,7 +1169,7 @@ AdornedRulerPanel *AudacityProject::GetRulerPanel()
    return mRuler;
 }
 
-int AudacityProject::GetAudioIOToken()
+int AudacityProject::GetAudioIOToken() const
 {
    return mAudioIOToken;
 }
@@ -1177,6 +1177,12 @@ int AudacityProject::GetAudioIOToken()
 void AudacityProject::SetAudioIOToken(int token)
 {
    mAudioIOToken = token;
+}
+
+bool AudacityProject::IsAudioActive() const
+{
+   return GetAudioIOToken() > 0 &&
+      gAudioIO->IsStreamActive(GetAudioIOToken());
 }
 
 Tags *AudacityProject::GetTags()

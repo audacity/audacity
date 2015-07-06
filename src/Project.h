@@ -177,7 +177,8 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    TrackFactory *GetTrackFactory();
    AdornedRulerPanel *GetRulerPanel();
    Tags *GetTags();
-   int GetAudioIOToken();
+   int GetAudioIOToken() const;
+   bool IsAudioActive() const;
    void SetAudioIOToken(int token);
 
    bool IsActive();
