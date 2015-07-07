@@ -120,6 +120,11 @@ class AUDACITY_DLL_API LabelTrack final : public Track
    LabelTrack(const LabelTrack &orig);
 
    virtual ~ LabelTrack();
+
+   HitTestResult HitTest
+      (const TrackPanelMouseEvent &event,
+       const AudacityProject *pProject) override;
+
    void SetOffset(double dOffset) override;
 
    static const int DefaultFontSize = 12;
@@ -284,6 +289,10 @@ private:
    bool mbIsMoving;
 
    static wxFont msFont;
+
+protected:
+   TrackControls *GetControls() override;
+   TrackVRulerControls *GetVRulerControls() override;
 };
 
 #endif

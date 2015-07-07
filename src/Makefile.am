@@ -148,6 +148,7 @@ audacity_SOURCES = \
 	HelpText.h \
 	HistoryWindow.cpp \
 	HistoryWindow.h \
+	HitTestResult.h \
 	ImageManipulation.cpp \
 	ImageManipulation.h \
 	InconsistencyException.cpp \
@@ -197,6 +198,7 @@ audacity_SOURCES = \
 	RealFFTf.h \
 	RealFFTf48x.cpp \
 	RealFFTf48x.h \
+	RefreshCode.h \
 	Resample.cpp \
 	Resample.h \
 	RevisionIdent.h \
@@ -246,7 +248,10 @@ audacity_SOURCES = \
 	TrackPanelCell.h \
 	TrackPanelCellIterator.h \
 	TrackPanelListener.h \
+	TrackPanelMouseEvent.h \
 	TranslatableStringArray.h \
+	UIHandle.h \
+	UIHandle.cpp \
 	UndoManager.cpp \
 	UndoManager.h \
 	UserException.cpp \
@@ -544,12 +549,39 @@ audacity_SOURCES = \
 	toolbars/ToolsToolBar.h \
 	toolbars/TranscriptionToolBar.cpp \
 	toolbars/TranscriptionToolBar.h \
+	tracks/labeltrack/ui/LabelTrackControls.cpp \
+	tracks/labeltrack/ui/LabelTrackControls.h \
+	tracks/labeltrack/ui/LabelTrackUI.cpp \
+	tracks/labeltrack/ui/LabelTrackVRulerControls.cpp \
+	tracks/labeltrack/ui/LabelTrackVRulerControls.h \
+	tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp \
+	tracks/playabletrack/notetrack/ui/NoteTrackControls.h \
+	tracks/playabletrack/notetrack/ui/NoteTrackUI.cpp \
+	tracks/playabletrack/notetrack/ui/NoteTrackVRulerControls.cpp \
+	tracks/playabletrack/notetrack/ui/NoteTrackVRulerControls.h \
+	tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp \
+	tracks/playabletrack/wavetrack/ui/WaveTrackControls.h \
+	tracks/playabletrack/wavetrack/ui/WaveTrackVRulerControls.cpp \
+	tracks/playabletrack/wavetrack/ui/WaveTrackVRulerControls.h \
+	tracks/playabletrack/wavetrack/ui/WaveTrackUI.cpp \
+	tracks/timetrack/ui/TimeTrackControls.cpp \
+	tracks/timetrack/ui/TimeTrackControls.h \
+	tracks/timetrack/ui/TimeTrackUI.cpp \
+	tracks/timetrack/ui/TimeTrackVRulerControls.cpp \
+	tracks/timetrack/ui/TimeTrackVRulerControls.h \
+	tracks/ui/CommonTrackPanelCell.cpp \
+	tracks/ui/CommonTrackPanelCell.h \
 	tracks/ui/EditCursorOverlay.cpp \
 	tracks/ui/EditCursorOverlay.h \
 	tracks/ui/PlayIndicatorOverlay.cpp \
 	tracks/ui/PlayIndicatorOverlay.h \
 	tracks/ui/Scrubbing.cpp \
 	tracks/ui/Scrubbing.h \
+	tracks/ui/TrackControls.cpp \
+	tracks/ui/TrackControls.h \
+	tracks/ui/TrackUI.cpp \
+	tracks/ui/TrackVRulerControls.cpp \
+	tracks/ui/TrackVRulerControls.h \
 	widgets/AButton.cpp \
 	widgets/AButton.h \
 	widgets/ASlider.cpp \

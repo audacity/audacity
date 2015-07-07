@@ -34,6 +34,7 @@ class EnvelopeEditor;
 class LabelTrack;
 class SpectrumAnalyst;
 class TrackPanel;
+class TrackPanelCell;
 class TrackArtist;
 class Ruler;
 class SnapManager;
@@ -51,6 +52,7 @@ class ViewInfo;
 class WaveTrack;
 class WaveClip;
 class Envelope;
+class UIHandle;
 
 // Declared elsewhere, to reduce compilation dependencies
 class TrackPanelListener;
@@ -156,7 +158,7 @@ public:
       ( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed,
         bool captured );
 
-private:
+public:
    int GetTrackInfoWidth() const;
    static void SetTrackInfoFont(wxDC *dc);
 
@@ -331,6 +333,7 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
    //virtual void SetSnapTo(int snapto)
 
    virtual void HandleInterruptedDrag();
+   virtual void CancelDragging();
    virtual bool HandleEscapeKey(bool down);
    virtual void HandleAltKey(bool down);
    virtual void HandleShiftKey(bool down);
@@ -486,7 +489,7 @@ protected:
    virtual void SetCursorAndTipByTool( int tool, const wxMouseEvent & event, wxString &tip );
 
 public:
-   virtual void HandleCursor(const wxMouseEvent & event);
+   virtual void HandleCursor(wxMouseEvent & event);
 
 protected:
    virtual void MaySetOnDemandTip( Track * t, wxString &tip );
@@ -585,15 +588,16 @@ protected:
 #endif
 
 
+public:
    virtual void MakeParentRedrawScrollbars();
 
+protected:
    // AS: Pushing the state preserves state for Undo operations.
    virtual void MakeParentPushState(const wxString &desc, const wxString &shortDesc); // use UndoPush::AUTOSAVE
    virtual void MakeParentPushState(const wxString &desc, const wxString &shortDesc,
                             UndoPush flags);
    virtual void MakeParentModifyState(bool bWantsAutoSave);    // if true, writes auto-save file. Should set only if you really want the state change restored after
                                                                // a crash, as it can take many seconds for large (eg. 10 track-hours) projects
-
    virtual void OnSetName(wxCommandEvent &event);
 
    virtual void OnSetFont(wxCommandEvent &event);
@@ -629,9 +633,10 @@ protected:
    virtual void OnMergeStereo(wxCommandEvent &event);
 
    // Find track info by coordinate
-   enum class CellType { Label, Track, VRuler };
+   enum class CellType { Label, Track, VRuler, Background };
    struct FoundCell {
       Track *pTrack;
+      TrackPanelCell *pCell;
       CellType type;
       wxRect rect;
    };
@@ -677,6 +682,12 @@ protected:
    virtual void DrawShadow            (Track *t, wxDC* dc, const wxRect & rect);
    virtual void DrawBordersAroundTrack(Track *t, wxDC* dc, const wxRect & rect, const int labelw, const int vrul);
    virtual void DrawOutsideOfTrack    (Track *t, wxDC* dc, const wxRect & rect);
+
+public:
+   // Set the object that performs catch-all event handling when the pointer
+   // is not in any track or ruler or control panel.
+   virtual void SetBackgroundCell
+      (const std::shared_ptr< TrackPanelCell > &pCell);
 
 protected:
    virtual int IdOfRate( int rate );
@@ -970,7 +981,13 @@ protected:
  public:
    wxSize vrulerSize;
 
- public:
+ protected:
+   Track *mpClickedTrack {};
+   // TrackPanel is not responsible for memory management:
+   UIHandle *mUIHandle {};
+
+   std::shared_ptr<TrackPanelCell> mpBackground;
+
    DECLARE_EVENT_TABLE()
 };
 

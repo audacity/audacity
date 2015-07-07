@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="src">
@@ -74,6 +74,33 @@
     </Filter>
     <Filter Include="src\tracks\ui">
       <UniqueIdentifier>{aa9627ea-e614-4704-bf68-4a347023569f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\tracks\labeltrack">
+      <UniqueIdentifier>{fdc20d46-ec27-45d8-afaa-1636f016a9cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\tracks\timetrack">
+      <UniqueIdentifier>{f99cdeb8-6f20-43aa-bb7f-7ca9ec2fd7bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\tracks\labeltrack\ui">
+      <UniqueIdentifier>{6d5ec816-850c-4709-baf6-0cbb50f98e15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\tracks\timetrack\ui">
+      <UniqueIdentifier>{0480a7aa-2605-4b17-984e-5a7c9412986d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\tracks\playabletrack">
+      <UniqueIdentifier>{6e1dc240-b278-4242-852d-54ddc88d283e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\tracks\playabletrack\wavetrack">
+      <UniqueIdentifier>{b589487a-f2cf-45a8-8241-61a49767dd82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\tracks\playabletrack\wavetrack\ui">
+      <UniqueIdentifier>{695fd2f1-de41-4703-aee8-cf5901fe089e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\tracks\playabletrack\notetrack">
+      <UniqueIdentifier>{6a2fa93f-907f-4790-bf18-5bbc6b8e85a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\tracks\playabletrack\notetrack\ui">
+      <UniqueIdentifier>{355a925b-a166-4405-aff8-894bfa027ad3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -484,9 +511,6 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\import\RawAudioGuess.cpp">
       <Filter>src\import</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\prefs\BatchPrefs.cpp">
-      <Filter>src\prefs</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\prefs\DevicePrefs.cpp">
       <Filter>src\prefs</Filter>
@@ -907,6 +931,60 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\SelectionState.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\labeltrack\ui\LabelTrackUI.cpp">
+      <Filter>src\tracks\labeltrack\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\timetrack\ui\TimeTrackUI.cpp">
+      <Filter>src\tracks\timetrack\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\ui\TrackUI.cpp">
+      <Filter>src\tracks\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\UIHandle.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\prefs\BatchPrefs.cpp">
+      <Filter>src\prefs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\ui\TrackControls.cpp">
+      <Filter>src\tracks\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\timetrack\ui\TimeTrackControls.cpp">
+      <Filter>src\tracks\timetrack\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\labeltrack\ui\LabelTrackControls.cpp">
+      <Filter>src\tracks\labeltrack\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\labeltrack\ui\LabelTrackVRulerControls.cpp">
+      <Filter>src\tracks\labeltrack\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\timetrack\ui\TimeTrackVRulerControls.cpp">
+      <Filter>src\tracks\timetrack\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\ui\TrackVRulerControls.cpp">
+      <Filter>src\tracks\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\ui\CommonTrackPanelCell.cpp">
+      <Filter>src\tracks\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\playabletrack\notetrack\ui\NoteTrackControls.cpp">
+      <Filter>src\tracks\playabletrack\notetrack\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\playabletrack\notetrack\ui\NoteTrackUI.cpp">
+      <Filter>src\tracks\playabletrack\notetrack\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\playabletrack\notetrack\ui\NoteTrackVRulerControls.cpp">
+      <Filter>src\tracks\playabletrack\notetrack\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveTrackControls.cpp">
+      <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveTrackUI.cpp">
+      <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveTrackVRulerControls.cpp">
+      <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1798,6 +1876,42 @@
     <ClInclude Include="..\..\..\src\commands\CommandFunctors.h">
       <Filter>src\commands</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\UIHandle.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\HitTestResult.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\TrackPanelCell.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\RefreshCode.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\ui\TrackControls.h">
+      <Filter>src\tracks\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\timetrack\ui\TimeTrackControls.h">
+      <Filter>src\tracks\timetrack\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\labeltrack\ui\LabelTrackControls.h">
+      <Filter>src\tracks\labeltrack\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\labeltrack\ui\LabelTrackVRulerControls.h">
+      <Filter>src\tracks\labeltrack\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\timetrack\ui\TimeTrackVRulerControls.h">
+      <Filter>src\tracks\timetrack\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\ui\TrackVRulerControls.h">
+      <Filter>src\tracks\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\TrackPanelMouseEvent.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\ui\CommonTrackPanelCell.h">
+      <Filter>src\tracks\ui</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\widgets\BackedPanel.h">
       <Filter>src\widgets</Filter>
     </ClInclude>
@@ -1839,6 +1953,18 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\SelectionState.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\playabletrack\notetrack\ui\NoteTrackControls.h">
+      <Filter>src\tracks\playabletrack\notetrack\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\playabletrack\notetrack\ui\NoteTrackVRulerControls.h">
+      <Filter>src\tracks\playabletrack\notetrack\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveTrackControls.h">
+      <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveTrackVRulerControls.h">
+      <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

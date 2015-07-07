@@ -17,12 +17,13 @@ and TimeTrack.
 
 #include <algorithm>
 #include <numeric>
+#include "Track.h"
+
 #include <float.h>
 #include <wx/file.h>
 #include <wx/textfile.h>
 #include <wx/log.h>
 
-#include "Track.h"
 #include "TimeTrack.h"
 #include "WaveTrack.h"
 #include "NoteTrack.h"
@@ -316,6 +317,11 @@ void Track::SyncLockAdjust(double oldT1, double newT1)
       // Remove from the track
       Clear(newT1, oldT1);
    }
+}
+
+Track *Track::FindTrack()
+{
+   return this;
 }
 
 void PlayableTrack::Init( const PlayableTrack &orig )
