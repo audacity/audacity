@@ -402,7 +402,8 @@ BEGIN_EVENT_TABLE(TrackPanel, wxWindow)
 END_EVENT_TABLE()
 
 /// Makes a cursor from an XPM, uses CursorId as a fallback.
-static wxCursor * MakeCursor( int WXUNUSED(CursorId), const char * pXpm[36],  int HotX, int HotY )
+/// TODO:  Move this function to some other source file for reuse elsewhere.
+wxCursor * MakeCursor( int WXUNUSED(CursorId), const char * pXpm[36],  int HotX, int HotY )
 {
    wxCursor * pCursor;
 
