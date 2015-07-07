@@ -12,7 +12,9 @@ Paul Licameli
 
 #include <algorithm>
 
+#include "Envelope.h"
 #include "Internat.h"
+#include "Prefs.h"
 #include "xml/XMLWriter.h"
 
 namespace {
@@ -26,10 +28,16 @@ ZoomInfo::ZoomInfo(double start, double screenDuration, double pixelsPerSecond)
    , screen(screenDuration)
    , zoom(pixelsPerSecond)
 {
+   UpdatePrefs();
 }
 
 ZoomInfo::~ZoomInfo()
 {
+}
+
+void ZoomInfo::UpdatePrefs()
+{
+   dBr = gPrefs->Read(wxT("/GUI/EnvdBRange"), ENV_DB_RANGE);
 }
 
 /// Converts a position (mouse X coordinate) to

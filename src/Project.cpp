@@ -3017,6 +3017,8 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          SetBandwidthSelectionFormatName(value);
    } // while
 
+   mViewInfo.UpdatePrefs();
+
    if (longVpos != 0) {
       // PRL: It seems this must happen after SetSnapTo
        mViewInfo.track = NULL;

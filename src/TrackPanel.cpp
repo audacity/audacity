@@ -882,7 +882,6 @@ void TrackPanel::UpdatePrefs()
 #ifdef EXPERIMENTAL_SCROLLING_LIMITS
    gPrefs->Read(wxT("/GUI/ScrollBeyondZero"), &mScrollBeyondZero, false);
 #endif
-   mdBr = gPrefs->Read(wxT("/GUI/EnvdBRange"), ENV_DB_RANGE);
    gPrefs->Read(wxT("/GUI/AutoScroll"), &mViewInfo->bUpdateTrackIndicator,
       true);
    gPrefs->Read(wxT("/GUI/AdjustSelectionEdges"), &mAdjustSelectionEdges,
@@ -903,6 +902,8 @@ void TrackPanel::UpdatePrefs()
    if(WaveTrack::mMonoAsVirtualStereo != temp)
       UpdateVirtualStereoOrder();
 #endif
+
+   mViewInfo->UpdatePrefs();
 
    if (mTrackArtist) {
       mTrackArtist->UpdatePrefs();
@@ -3753,7 +3754,7 @@ void TrackPanel::ForwardEventToTimeTrackEnvelope(wxMouseEvent & event)
    double lower = ptimetrack->GetRangeLower(), upper = ptimetrack->GetRangeUpper();
    if(ptimetrack->GetDisplayLog()) {
       // MB: silly way to undo the work of GetWaveYPos while still getting a logarithmic scale
-      double dBRange = gPrefs->Read(wxT("/GUI/EnvdBRange"), ENV_DB_RANGE);
+      double dBRange = mViewInfo->dBr;
       lower = LINEAR_TO_DB(std::max(1.0e-7, lower)) / dBRange + 1.0;
       upper = LINEAR_TO_DB(std::max(1.0e-7, upper)) / dBRange + 1.0;
    }
@@ -4911,7 +4912,8 @@ float TrackPanel::FindSampleEditingLevel(wxMouseEvent &event, double t0)
    const int y = event.m_y - mDrawingTrackTop;
    const int height = mDrawingTrack->GetHeight();
    const bool dB = !mDrawingTrack->GetWaveformSettings().isLinear();
-   float newLevel = ::ValueOfPixel(y, height, false, dB, mdBr, zoomMin, zoomMax);
+   float newLevel =
+      ::ValueOfPixel(y, height, false, dB, mViewInfo->dBr, zoomMin, zoomMax);
 
    //Take the envelope into account
    Envelope *const env = mDrawingTrack->GetEnvelopeAtX(event.m_x);
@@ -6928,12 +6930,12 @@ bool TrackPanel::HitTestEnvelope(Track *track, wxRect &r, wxMouseEvent & event)
    // Get y position of envelope point.
    int yValue = GetWaveYPos( envValue,
       zoomMin, zoomMax,
-      r.height, dB, true, mdBr, false ) + r.y;
+      r.height, dB, true, mViewInfo->dBr, false) + r.y;
 
    // Get y position of center line
    int ctr = GetWaveYPos( 0.0,
       zoomMin, zoomMax,
-      r.height, dB, true, mdBr, false ) + r.y;
+      r.height, dB, true, mViewInfo->dBr, false) + r.y;
 
    // Get y distance of mouse from center line (in pixels).
    int yMouse = abs(ctr - event.m_y);
@@ -7002,7 +7004,7 @@ bool TrackPanel::HitTestSamples(Track *track, wxRect &r, wxMouseEvent & event)
 
    int yValue = GetWaveYPos( oneSample * envValue,
       zoomMin, zoomMax,
-      r.height, dB, true, mdBr, false) + r.y;
+      r.height, dB, true, mViewInfo->dBr, false) + r.y;
 
    // Get y position of mouse (in pixels)
    int yMouse = event.m_y;
