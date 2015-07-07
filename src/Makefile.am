@@ -582,6 +582,8 @@ audacity_SOURCES = \
 	tracks/ui/TrackUI.cpp \
 	tracks/ui/TrackVRulerControls.cpp \
 	tracks/ui/TrackVRulerControls.h \
+	tracks/ui/ZoomHandle.cpp \
+	tracks/ui/ZoomHandle.h \
 	widgets/AButton.cpp \
 	widgets/AButton.h \
 	widgets/ASlider.cpp \
