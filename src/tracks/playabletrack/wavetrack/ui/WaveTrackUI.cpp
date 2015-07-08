@@ -18,6 +18,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../toolbars/ToolsToolBar.h"
 
 #include "SampleHandle.h"
+#include "../../../ui/TimeShiftHandle.h"
 
 HitTestResult WaveTrack::HitTest
 (const TrackPanelMouseEvent &event,
@@ -29,7 +30,14 @@ HitTestResult WaveTrack::HitTest
 
    const ToolsToolBar *const pTtb = pProject->GetToolsToolBar();
    if (pTtb->IsDown(multiTool)) {
-      if (NULL != (result =
+      // Replicate some of the logic of TrackPanel::DetermineToolToUse
+      int currentTool = -1;
+      if (event.event.CmdDown())
+         result = TimeShiftHandle::HitAnywhere(pProject);
+      else if (NULL != (result =
+         TimeShiftHandle::HitTest(event.event, event.rect, pProject)).preview.cursor)
+         ;
+      else if (NULL != (result =
          SampleHandle::HitTest(event.event, event.rect, pProject, this)).preview.cursor)
          ;
    }

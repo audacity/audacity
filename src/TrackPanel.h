@@ -21,8 +21,8 @@
 #include "SelectedRegion.h"
 #include "WaveTrackLocation.h"
 
-#include "Snap.h"
 #include "Track.h"
+#include "Snap.h"
 #include "widgets/OverlayPanel.h"
 
 #include "SelectionState.h"
@@ -33,6 +33,8 @@ class wxRect;
 class EnvelopeEditor;
 class LabelTrack;
 class SpectrumAnalyst;
+class Track;
+class TrackList;
 class TrackPanel;
 class TrackPanelCell;
 class TrackArtist;
@@ -49,6 +51,7 @@ class TrackPanelAx;
 
 class ViewInfo;
 
+class NoteTrack;
 class WaveTrack;
 class WaveClip;
 class Envelope;
@@ -254,7 +257,9 @@ const int DragThreshold = 3;// Anything over 3 pixels is a drag, else a click.
 
 
 struct ClipMoveState {
+   // non-NULL only if click was in a WaveTrack and without Shift key:
    WaveClip *capturedClip {};
+
    bool capturedClipIsSelection {};
    TrackArray trackExclusions {};
    double hSlideAmount {};
@@ -398,7 +403,6 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
    // Working out where to dispatch the event to.
    virtual int DetermineToolToUse( ToolsToolBar * pTtb, const wxMouseEvent & event);
    virtual bool HitTestEnvelope(Track *track, const wxRect &rect, const wxMouseEvent & event);
-   virtual bool HitTestSlide(Track *track, const wxRect &rect, const wxMouseEvent & event);
 #ifdef USE_MIDI
    // data for NoteTrack interactive stretch operations:
    // Stretching applies to a selected region after quantizing the
@@ -499,10 +503,7 @@ protected:
    virtual void ForwardEventToWaveTrackEnvelope(wxMouseEvent & event);
    virtual void ForwardEventToEnvelope(wxMouseEvent &event);
 
-   // AS: Track sliding handlers
-   virtual void HandleSlide(wxMouseEvent & event);
-   virtual void StartSlide(wxMouseEvent &event);
-   virtual void DoSlide(wxMouseEvent &event);
+public:
    static void DoSlideHorizontal
       ( ClipMoveState &state, TrackList &trackList, Track &capturedTrack );
    static void CreateListOfCapturedClips
@@ -514,6 +515,7 @@ protected:
    static void AddClipsToCaptured
       ( ClipMoveState &state, Track *t, double t0, double t1 );
 
+protected:
    static bool IsDragZooming(int zoomStart, int zoomEnd);
    virtual bool IsDragZooming() { return IsDragZooming(mZoomStart, mZoomEnd); }
 
@@ -767,18 +769,14 @@ protected:
 
    Track *mCapturedTrack;
    Envelope *mCapturedEnvelope;
-   ClipMoveState mClipMoveState;
    WaveTrackLocation mCapturedTrackLocation;
    wxRect mCapturedTrackLocationRect;
    wxRect mCapturedRect;
-
-   bool mDidSlideVertically;
 
    bool mRedrawAfterStop;
 
    wxMouseEvent mLastMouseEvent;
 
-   int mMouseClickX;
    int mMouseClickY;
 
    int mMouseMostRecentX;
@@ -792,23 +790,17 @@ protected:
    // are the horizontal index of pixels to display user feedback
    // guidelines so the user knows when such snapping is taking place.
    std::unique_ptr<SnapManager> mSnapManager;
+
    wxInt64 mSnapLeft { -1 };
    wxInt64 mSnapRight { -1 };
-   bool mSnapPreferRightEdge;
 
 public:
    wxInt64 GetSnapLeft () const
    {
-      if ( mMouseCapture == IsSliding )
-         return mClipMoveState.snapLeft ;
-      else
          return mSnapLeft ;
    }
    wxInt64 GetSnapRight() const
    {
-      if ( mMouseCapture == IsSliding )
-         return mClipMoveState.snapRight;
-      else
          return mSnapRight;
    }
 
@@ -869,7 +861,6 @@ public:
       IsResizingBetweenLinkedTracks,
       IsResizingBelowLinkedTracks,
       IsRearranging,
-      IsSliding,
       IsEnveloping,
       IsMuting,
       IsSoloing,
@@ -888,8 +879,6 @@ protected:
    enum MouseCaptureEnum mMouseCapture;
    virtual void SetCapturedTrack( Track * t, enum MouseCaptureEnum MouseCapture=IsUncaptured );
 
-   bool mSlideUpDownOnly;
-
    // JH: if the user is dragging a track, at what y
    //   coordinate should the dragging track move up or down?
    int mMoveUpThreshold;
@@ -898,7 +887,7 @@ protected:
 
    std::unique_ptr<wxCursor>
       mArrowCursor, mSelectCursor,
-      mResizeCursor, mSlideCursor, mEnvelopeCursor, // doubles as the center frequency cursor
+      mResizeCursor, mEnvelopeCursor, // doubles as the center frequency cursor
                               // for spectral selection
       mZoomInCursor, mZoomOutCursor,
       mRearrangeCursor,

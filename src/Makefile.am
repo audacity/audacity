@@ -579,6 +579,8 @@ audacity_SOURCES = \
 	tracks/ui/PlayIndicatorOverlay.h \
 	tracks/ui/Scrubbing.cpp \
 	tracks/ui/Scrubbing.h \
+	tracks/ui/TimeShiftHandle.cpp \
+	tracks/ui/TimeShiftHandle.h \
 	tracks/ui/TrackControls.cpp \
 	tracks/ui/TrackControls.h \
 	tracks/ui/TrackUI.cpp \

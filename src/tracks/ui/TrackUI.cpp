@@ -19,6 +19,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../playabletrack/wavetrack/ui/SampleHandle.h"
 #include "ZoomHandle.h"
+#include "TimeShiftHandle.h"
 
 HitTestResult Track::HitTest
 (const TrackPanelMouseEvent &event,
@@ -33,10 +34,11 @@ HitTestResult Track::HitTest
          return SampleHandle::HitAnywhere(event.event, pProject);
       case zoomTool:
          return ZoomHandle::HitAnywhere(event.event, pProject);
+      case slideTool:
+         return TimeShiftHandle::HitAnywhere(pProject);
 
       case selectTool:
       case envelopeTool:
-      case slideTool:
       default:
          // cases not yet implemented
          // fallthru

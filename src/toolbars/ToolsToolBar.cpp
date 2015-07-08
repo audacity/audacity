@@ -102,7 +102,11 @@ ToolsToolBar::ToolsToolBar()
    mMessageOfTool[zoomTool] = _("Left=Zoom In, Right=Zoom Out, Middle=Normal");
 #endif
 
+   // TODO: Should it say "track or clip" ?  Non-wave tracks can move, or clips in a wave track.
+   // TODO: mention effects of shift (move all clips of selected wave track) and ctrl (move vertically only) ?
+   //  -- but not all of that is available in multi tool.
    mMessageOfTool[slideTool] = _("Click and drag to move a track in time");
+
    mMessageOfTool[multiTool] = wxT(""); // multi-mode tool
 
    bool multiToolActive = false;
