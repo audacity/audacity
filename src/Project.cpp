@@ -3933,6 +3933,11 @@ void AudacityProject::PushState(wxString desc,
       AutoSave();
 }
 
+void AudacityProject::RollbackState()
+{
+   SetStateTo(GetUndoManager()->GetCurrentState());
+}
+
 void AudacityProject::ModifyState(bool bWantsAutoSave)
 {
    mUndoManager.ModifyState(mTracks, mViewInfo.selectedRegion);

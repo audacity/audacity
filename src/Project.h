@@ -473,6 +473,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 
    void PushState(wxString desc, wxString shortDesc,
                   int flags = PUSH_AUTOSAVE);
+   void RollbackState();
 
  private:
 
