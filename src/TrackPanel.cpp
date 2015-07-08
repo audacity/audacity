@@ -3709,10 +3709,12 @@ void TrackPanel::HandleEnvelope(wxMouseEvent & event)
 {
    if (event.LeftDown()) {
       wxRect r;
-      mCapturedTrack = FindTrack(event.m_x, event.m_y, false, false, &r);
+      Track *pTrack = FindTrack(event.m_x, event.m_y, false, false, &r);
 
-      if (!mCapturedTrack)
+      if (!pTrack)
          return;
+
+      SetCapturedTrack(pTrack, IsEnveloping);
 
       if (mCapturedTrack->GetKind() == Track::Wave)
       {
@@ -4889,16 +4891,7 @@ bool TrackPanel::IsSampleEditingPossible( wxMouseEvent &event, Track * t )
    //If we aren't zoomed in far enough, show a message dialog.
    if(!showPoints)
    {
-      // Release capture so user will be able to click OK on Linux
-      bool hadCapture = HasCapture();
-      if (hadCapture)
-         ReleaseMouse();
-
       wxMessageBox(_("To use Draw, zoom in further until you can see the individual samples."), wxT("Draw Tool"));
-
-      // Re-aquire capture
-      if (hadCapture)
-         CaptureMouse();
       return false;
    }
    return true;
@@ -4948,11 +4941,7 @@ void TrackPanel::HandleSampleEditingClick( wxMouseEvent & event )
       return;
 
    if( !IsSampleEditingPossible( event, t ) )
-   {
-      if( HasCapture() )
-         ReleaseMouse();
       return;
-   }
 
    /// \todo Should mCapturedTrack take the place of mDrawingTrack??
    mDrawingTrack = static_cast<WaveTrack*>(t);
@@ -6395,10 +6384,8 @@ void TrackPanel::OnMouseEvent(wxMouseEvent & event)
 
    if (event.ButtonDown()) {
       SetFocus();
-      if (!HasCapture())
-         CaptureMouse();
    }
-   else if (event.ButtonUp()) {
+   if (event.ButtonUp()) {
       if (HasCapture())
          ReleaseMouse();
    }
@@ -6456,8 +6443,14 @@ void TrackPanel::OnMouseEvent(wxMouseEvent & event)
       HandleLabelTrackMouseEvent((LabelTrack *)mCapturedTrack, mCapturedRect, event);
       break;
    default: //includes case of IsUncaptured
+      // This is where most button-downs are detected
       HandleTrackSpecificMouseEvent(event);
       break;
+   }
+
+   if (event.ButtonDown() && IsMouseCaptured()) {
+      if (!HasCapture())
+         CaptureMouse();
    }
 
    //EnsureVisible should be called after the up-click.
@@ -6502,10 +6495,6 @@ bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &r, wxM
          {
             // When user presses left button on cut line, expand the line again
             double cutlineStart = 0, cutlineEnd = 0;
-
-            // Release capture so user will be able to click OK on Linux
-            if (HasCapture())
-               ReleaseMouse();
 
             if (track->ExpandCutLine(mCapturedTrackLocation.pos, &cutlineStart, &cutlineEnd))
             {
