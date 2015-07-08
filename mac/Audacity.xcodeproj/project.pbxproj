@@ -1204,6 +1204,7 @@
 		28FC1AFB0A47762C00A188AE /* WrappedType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28FC1AF90A47762C00A188AE /* WrappedType.cpp */; };
 		28FE4A080ABF4E960056F5C4 /* mmx_optimized.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28FE4A060ABF4E960056F5C4 /* mmx_optimized.cpp */; };
 		28FE4A090ABF4E960056F5C4 /* sse_optimized.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28FE4A070ABF4E960056F5C4 /* sse_optimized.cpp */; };
+		5E000A211EC7B5D500E8FD93 /* SampleHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E000A1F1EC7B5D500E8FD93 /* SampleHandle.cpp */; };
 		5E02BFF21D1164DF00EB7578 /* Distortion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E02BFF01D1164DF00EB7578 /* Distortion.cpp */; };
 		5E07842E1DEE6B8600CA76EA /* FileException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E07842C1DEE6B8600CA76EA /* FileException.cpp */; };
 		5E0784311DF1E4F400CA76EA /* UserException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E07842F1DF1E4F400CA76EA /* UserException.cpp */; };
@@ -1220,6 +1221,8 @@
 		5E15126E1DB0010C00702E29 /* TrackControls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E1512681DB0010C00702E29 /* TrackControls.cpp */; };
 		5E15126F1DB0010C00702E29 /* TrackUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E15126A1DB0010C00702E29 /* TrackUI.cpp */; };
 		5E1512701DB0010C00702E29 /* TrackVRulerControls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E15126B1DB0010C00702E29 /* TrackVRulerControls.cpp */; };
+		5E73963B1DAFD82D00BA0A4D /* PopupMenuTable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E7396391DAFD82D00BA0A4D /* PopupMenuTable.cpp */; };
+		5E73963E1DAFD86000BA0A4D /* ZoomHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E73963C1DAFD86000BA0A4D /* ZoomHandle.cpp */; };
 		5E74D2E31CC4429700D88B0B /* EditCursorOverlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E74D2DD1CC4429700D88B0B /* EditCursorOverlay.cpp */; };
 		5E74D2E41CC4429700D88B0B /* PlayIndicatorOverlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E74D2DF1CC4429700D88B0B /* PlayIndicatorOverlay.cpp */; };
 		5E74D2E51CC4429700D88B0B /* Scrubbing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E74D2E11CC4429700D88B0B /* Scrubbing.cpp */; };
@@ -1238,8 +1241,6 @@
 		5ED1D0B11CDE560C00471E3C /* BackedPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5ED1D0AF1CDE560C00471E3C /* BackedPanel.cpp */; };
 		5EF17C231D1F0A690090A642 /* ScrubbingToolBar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF17C211D1F0A690090A642 /* ScrubbingToolBar.cpp */; };
 		5EF958851DEB121800191280 /* InconsistencyException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF958831DEB121800191280 /* InconsistencyException.cpp */; };
-		5E73963B1DAFD82D00BA0A4D /* PopupMenuTable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E7396391DAFD82D00BA0A4D /* PopupMenuTable.cpp */; };
-		5E73963E1DAFD86000BA0A4D /* ZoomHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E73963C1DAFD86000BA0A4D /* ZoomHandle.cpp */; };
 		8406A93812D0F2510011EA01 /* EQDefaultCurves.xml in Resources */ = {isa = PBXBuildFile; fileRef = 8406A93712D0F2510011EA01 /* EQDefaultCurves.xml */; };
 		8484F31413086237002DF7F0 /* DeviceManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8484F31213086237002DF7F0 /* DeviceManager.cpp */; };
 		AA0084191EA8C6E70070CCE3 /* TracksBehaviorsPrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA0084181EA8C6E70070CCE3 /* TracksBehaviorsPrefs.cpp */; };
@@ -3001,6 +3002,8 @@
 		28FE4A060ABF4E960056F5C4 /* mmx_optimized.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = mmx_optimized.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		28FE4A070ABF4E960056F5C4 /* sse_optimized.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = sse_optimized.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		28FEC1B21A12B6FB00FACE48 /* EffectAutomationParameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EffectAutomationParameters.h; path = ../include/audacity/EffectAutomationParameters.h; sourceTree = SOURCE_ROOT; };
+		5E000A1F1EC7B5D500E8FD93 /* SampleHandle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SampleHandle.cpp; sourceTree = "<group>"; };
+		5E000A201EC7B5D500E8FD93 /* SampleHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SampleHandle.h; sourceTree = "<group>"; };
 		5E02BFF01D1164DF00EB7578 /* Distortion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Distortion.cpp; sourceTree = "<group>"; };
 		5E02BFF11D1164DF00EB7578 /* Distortion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Distortion.h; sourceTree = "<group>"; };
 		5E07842C1DEE6B8600CA76EA /* FileException.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileException.cpp; sourceTree = "<group>"; };
@@ -3034,6 +3037,9 @@
 		5E15126C1DB0010C00702E29 /* TrackVRulerControls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackVRulerControls.h; sourceTree = "<group>"; };
 		5E4685F81CCA9D84008741F2 /* CommandFunctors.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CommandFunctors.h; sourceTree = "<group>"; };
 		5E61EE0C1CBAA6BB0009FCF1 /* MemoryX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemoryX.h; sourceTree = "<group>"; };
+		5E7396391DAFD82D00BA0A4D /* PopupMenuTable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PopupMenuTable.cpp; sourceTree = "<group>"; };
+		5E73963C1DAFD86000BA0A4D /* ZoomHandle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZoomHandle.cpp; sourceTree = "<group>"; };
+		5E73963D1DAFD86000BA0A4D /* ZoomHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZoomHandle.h; sourceTree = "<group>"; };
 		5E74D2D91CC4427B00D88B0B /* TrackPanelCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackPanelCell.h; sourceTree = "<group>"; };
 		5E74D2DA1CC4427B00D88B0B /* TrackPanelCellIterator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackPanelCellIterator.h; sourceTree = "<group>"; };
 		5E74D2DD1CC4429700D88B0B /* EditCursorOverlay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditCursorOverlay.cpp; sourceTree = "<group>"; };
@@ -3074,10 +3080,7 @@
 		5EF17C221D1F0A690090A642 /* ScrubbingToolBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScrubbingToolBar.h; sourceTree = "<group>"; };
 		5EF958831DEB121800191280 /* InconsistencyException.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = InconsistencyException.cpp; sourceTree = "<group>"; };
 		5EF958841DEB121800191280 /* InconsistencyException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InconsistencyException.h; sourceTree = "<group>"; };
-		5E7396391DAFD82D00BA0A4D /* PopupMenuTable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PopupMenuTable.cpp; sourceTree = "<group>"; };
 		5E73963A1DAFD82D00BA0A4D /* PopupMenuTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PopupMenuTable.h; sourceTree = "<group>"; };
-		5E73963C1DAFD86000BA0A4D /* ZoomHandle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZoomHandle.cpp; sourceTree = "<group>"; };
-		5E73963D1DAFD86000BA0A4D /* ZoomHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZoomHandle.h; sourceTree = "<group>"; };
 		82FF184D13CF01A600C1B664 /* dBTable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dBTable.cpp; path = sbsms/src/dBTable.cpp; sourceTree = "<group>"; };
 		82FF184E13CF01A600C1B664 /* dBTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dBTable.h; path = sbsms/src/dBTable.h; sourceTree = "<group>"; };
 		82FF184F13CF01A600C1B664 /* slide.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = slide.cpp; path = sbsms/src/slide.cpp; sourceTree = "<group>"; };
@@ -5784,6 +5787,8 @@
 		5EA018221EC7B226001F2996 /* ui */ = {
 			isa = PBXGroup;
 			children = (
+				5E000A1F1EC7B5D500E8FD93 /* SampleHandle.cpp */,
+				5E000A201EC7B5D500E8FD93 /* SampleHandle.h */,
 				5EA018231EC7B226001F2996 /* WaveTrackControls.cpp */,
 				5EA018241EC7B226001F2996 /* WaveTrackControls.h */,
 				5EA018251EC7B226001F2996 /* WaveTrackUI.cpp */,
@@ -7550,6 +7555,7 @@
 				1790B13C09883BFD008A330A /* Fade.cpp in Sources */,
 				1790B13E09883BFD008A330A /* Invert.cpp in Sources */,
 				1790B13F09883BFD008A330A /* LadspaEffect.cpp in Sources */,
+				5E000A211EC7B5D500E8FD93 /* SampleHandle.cpp in Sources */,
 				1790B14109883BFD008A330A /* Leveller.cpp in Sources */,
 				1790B14209883BFD008A330A /* LoadEffects.cpp in Sources */,
 				5E0784311DF1E4F400CA76EA /* UserException.cpp in Sources */,

@@ -467,7 +467,6 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
 
    mRedrawAfterStop = false;
 
-   mPencilCursor  = MakeCursor( wxCURSOR_PENCIL,    DrawCursorXpm,    12, 22);
    mSelectCursor  = MakeCursor( wxCURSOR_IBEAM,     IBeamCursorXpm,   17, 16);
    mEnvelopeCursor= MakeCursor( wxCURSOR_ARROW,     EnvCursorXpm,     16, 16);
    mDisabledCursor= MakeCursor( wxCURSOR_NO_ENTRY,  DisabledCursorXpm,16, 16);
@@ -492,7 +491,6 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
 #endif
 
    mArrowCursor = std::make_unique<wxCursor>(wxCURSOR_ARROW);
-   mSmoothCursor = std::make_unique<wxCursor>(wxCURSOR_SPRAYCAN);
    mResizeCursor = std::make_unique<wxCursor>(wxCURSOR_SIZENS);
    mRearrangeCursor = std::make_unique<wxCursor>(wxCURSOR_HAND);
    mAdjustLeftSelectionCursor = std::make_unique<wxCursor>(wxCURSOR_POINT_LEFT);
@@ -519,10 +517,6 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    mTimer.parent = this;
    // Timer is started after the window is visible
    GetProject()->Bind(wxEVT_IDLE, &TrackPanel::OnIdle, this);
-
-   //Initialize a member variable pointing to the current
-   //drawing track.
-   mDrawingTrack =NULL;
 
    mZoomStart = -1;
    mZoomEnd = -1;
@@ -1157,7 +1151,6 @@ void TrackPanel::HandleInterruptedDrag()
 
     IsClosing,
     IsAdjustingLabel,
-    IsAdjustingSample,
     IsRearranging,
     IsSliding,
     IsEnveloping,
@@ -1298,7 +1291,6 @@ bool TrackPanel::HandleEscapeKey(bool down)
    }
       break;
    case IsVZooming:
-   //case IsAdjustingSample:
       break;
    case IsResizing:
       mCapturedTrack->SetHeight(mInitialActualHeight);
@@ -1762,7 +1754,7 @@ void TrackPanel::SetCursorAndTipWhenSelectTool( Track * t,
 /// In this method we know what tool we are using,
 /// so set the cursor accordingly.
 void TrackPanel::SetCursorAndTipByTool( int tool,
-         const wxMouseEvent & event, wxString& )
+         const wxMouseEvent &, wxString& )
 {
    bool unsafe = IsUnsafe();
 
@@ -1776,12 +1768,6 @@ void TrackPanel::SetCursorAndTipByTool( int tool,
       break;
    case slideTool:
       SetCursor(unsafe ? *mDisabledCursor : *mSlideCursor);
-      break;
-   case drawTool:
-      if (unsafe)
-         SetCursor(*mDisabledCursor);
-      else
-         SetCursor(event.AltDown()? *mSmoothCursor : *mPencilCursor);
       break;
    }
    // doesn't actually change the tip itself, but it could (should?) do at some
@@ -4407,330 +4393,6 @@ void TrackPanel::HandleWaveTrackVZoom
    }
 }
 
-namespace {
-// Is the sample horizontally nearest to the cursor sufficiently separated from
-// its neighbors that the pencil tool should be allowed to drag it?
-bool SampleResolutionTest(const ViewInfo &viewInfo, const WaveTrack *wt, double time, double rate, int width)
-{
-   // Require more than 3 pixels per sample
-   // Round to an exact sample time
-   const double adjustedTime = wt->LongSamplesToTime(wt->TimeToLongSamples(time));
-   const wxInt64 xx = std::max(wxInt64(0), viewInfo.TimeToPosition(adjustedTime));
-   ZoomInfo::Intervals intervals;
-   viewInfo.FindIntervals(rate, intervals, width);
-   ZoomInfo::Intervals::const_iterator it = intervals.begin(), end = intervals.end(), prev;
-   wxASSERT(it != end && it->position == 0);
-   do
-      prev = it++;
-   while (it != end && it->position <= xx);
-   const double threshold = 3 * rate; // three times as many pixels per second, as samples
-   return prev->averageZoom > threshold;
-}
-}
-
-/// Determines if we can edit samples in a wave track.
-/// Also pops up warning messages in certain cases where we can't.
-///  @return true if we can edit the samples, false otherwise.
-bool TrackPanel::IsSampleEditingPossible( wxMouseEvent &event, const WaveTrack * wt )
-{
-   //Exit if it's not waveform display
-   //Get out of here if we shouldn't be drawing right now:
-   //If we aren't displaying the waveform, Display a message dialog
-   const int display = wt->GetDisplay();
-
-   if (WaveTrack::Waveform != display)
-   {
-      wxMessageBox(_("To use Draw, choose 'Waveform' or 'Waveform (dB)' in the Track Dropdown Menu."), _("Draw Tool"));
-      return false;
-   }
-
-   bool showPoints;
-   {
-      const auto foundCell = FindCell(event.m_x, event.m_y);
-      if ( foundCell.type != CellType::Track )
-         return false;
-      const double rate = wt->GetRate();
-      const double time = mViewInfo->PositionToTime(event.m_x, foundCell.rect.x);
-      int width;
-      GetTracksUsableArea(&width, NULL);
-      showPoints = SampleResolutionTest(*mViewInfo, wt, time, rate, width);
-   }
-
-   //If we aren't zoomed in far enough, show a message dialog.
-   if(!showPoints)
-   {
-      wxMessageBox(_("To use Draw, zoom in further until you can see the individual samples."), _("Draw Tool"));
-      return false;
-   }
-   return true;
-}
-
-float TrackPanel::FindSampleEditingLevel(wxMouseEvent &event, double dBRange, double t0)
-{
-   // Calculate where the mouse is located vertically (between +/- 1)
-   float zoomMin, zoomMax;
-   mDrawingTrack->GetDisplayBounds(&zoomMin, &zoomMax);
-
-   const int y = event.m_y - mDrawingTrackTop;
-   const int height = mDrawingTrack->GetHeight() - (kTopMargin + kBottomMargin);
-   const bool dB = !mDrawingTrack->GetWaveformSettings().isLinear();
-   float newLevel =
-      ::ValueOfPixel(y, height, false, dB, dBRange, zoomMin, zoomMax);
-
-   //Take the envelope into account
-   Envelope *const env = mDrawingTrack->GetEnvelopeAtX(event.m_x);
-   if (env)
-   {
-      // Calculate sample as it would be rendered, so quantize time
-      double envValue = env->GetValue( t0, 1.0 / mDrawingTrack->GetRate() );
-      if (envValue > 0)
-         newLevel /= envValue;
-      else
-         newLevel = 0;
-
-      //Make sure the NEW level is between +/-1
-      newLevel = std::max(-1.0f, std::min(1.0f, newLevel));
-   }
-
-   return newLevel;
-}
-
-/// We're in a track view and zoomed enough to see the samples.
-/// Someone has just clicked the mouse.  What do we do?
-void TrackPanel::HandleSampleEditingClick( wxMouseEvent & event )
-{
-   //Get the track the mouse is over, and save it away for future events
-   mDrawingTrack = NULL;
-   const auto foundCell = FindCell(event.m_x, event.m_y);
-   auto &t = foundCell.pTrack;
-   auto &rect = foundCell.rect;
-
-   if (!t || (t->GetKind() != Track::Wave)
-       || foundCell.type != CellType::Track)
-      return;
-   const auto wt = static_cast<WaveTrack *>(t);
-   if( !IsSampleEditingPossible( event, wt ) )
-      return;
-
-   /// \todo Should mCapturedTrack take the place of mDrawingTrack??
-   mDrawingTrack = wt;
-   mDrawingTrackTop = rect.y + kTopMargin;
-
-   //If we are still around, we are drawing in earnest.  Set some member data structures up:
-   //First, calculate the starting sample.  To get this, we need the time
-   double t0 = mViewInfo->PositionToTime(event.m_x, GetLeftOffset());
-
-   //convert t0 to samples
-   mDrawingStartSample = mDrawingTrack->TimeToLongSamples(t0);
-   // quantize
-   t0 = mDrawingTrack->LongSamplesToTime(mDrawingStartSample);
-
-   //Determine how drawing should occur.  If alt is down,
-   //do a smoothing, instead of redrawing.
-   if( event.m_altDown )
-   {
-      //*************************************************
-      //***  ALT-DOWN-CLICK (SAMPLE SMOOTHING)        ***
-      //*************************************************
-      //
-      //  Smoothing works like this:  There is a smoothing kernel radius constant that
-      //  determines how wide the averaging window is.  Plus, there is a smoothing brush radius,
-      //  which determines how many pixels wide around the selected pixel this smoothing is applied.
-      //
-      //  Samples will be replaced by a mixture of the original points and the smoothed points,
-      //  with a triangular mixing probability whose value at the center point is
-      //  SMOOTHING_PROPORTION_MAX and at the far bounds is SMOOTHING_PROPORTION_MIN
-
-      //Get the region of samples around the selected point
-      size_t sampleRegionSize = 1 + 2 * (SMOOTHING_KERNEL_RADIUS + SMOOTHING_BRUSH_RADIUS);
-      Floats sampleRegion{ sampleRegionSize };
-      Floats newSampleRegion{ 1 + 2 * (size_t)SMOOTHING_BRUSH_RADIUS };
-
-      //Get a sample  from the track to do some tricks on.
-      mDrawingTrack->Get((samplePtr)sampleRegion.get(), floatSample,
-                                       mDrawingStartSample - SMOOTHING_KERNEL_RADIUS - SMOOTHING_BRUSH_RADIUS,
-                                       sampleRegionSize);
-      //Go through each point of the smoothing brush and apply a smoothing operation.
-      for(auto j = -SMOOTHING_BRUSH_RADIUS; j <= SMOOTHING_BRUSH_RADIUS; j++){
-         float sumOfSamples = 0;
-         for (auto i = -SMOOTHING_KERNEL_RADIUS; i <= SMOOTHING_KERNEL_RADIUS; i++){
-            //Go through each point of the smoothing kernel and find the average
-
-            //The average is a weighted average, scaled by a weighting kernel that is simply triangular
-            // A triangular kernel across N items, with a radius of R ( 2 R + 1 points), if the farthest:
-            // points have a probability of a, the entire triangle has total probability of (R + 1)^2.
-            //      For sample number i and middle brush sample M,  (R + 1 - abs(M-i))/ ((R+1)^2) gives a
-            //   legal distribution whose total probability is 1.
-            //
-            //
-            //                weighting factor                       value
-            sumOfSamples += (SMOOTHING_KERNEL_RADIUS + 1 - abs(i)) * sampleRegion[i + j + SMOOTHING_KERNEL_RADIUS + SMOOTHING_BRUSH_RADIUS];
-
-         }
-         newSampleRegion[j + SMOOTHING_BRUSH_RADIUS] = sumOfSamples/((SMOOTHING_KERNEL_RADIUS + 1) *(SMOOTHING_KERNEL_RADIUS + 1) );
-      }
-
-
-      // Now that the NEW sample levels are determined, go through each and mix it appropriately
-      // with the original point, according to a 2-part linear function whose center has probability
-      // SMOOTHING_PROPORTION_MAX and extends out SMOOTHING_BRUSH_RADIUS, at which the probability is
-      // SMOOTHING_PROPORTION_MIN.  _MIN and _MAX specify how much of the smoothed curve make it through.
-
-      float prob;
-
-      for(auto j = -SMOOTHING_BRUSH_RADIUS; j <= SMOOTHING_BRUSH_RADIUS; j++){
-
-         prob = SMOOTHING_PROPORTION_MAX - (float)abs(j)/SMOOTHING_BRUSH_RADIUS * (SMOOTHING_PROPORTION_MAX - SMOOTHING_PROPORTION_MIN);
-
-         newSampleRegion[j+SMOOTHING_BRUSH_RADIUS] =
-            newSampleRegion[j + SMOOTHING_BRUSH_RADIUS] * prob +
-            sampleRegion[SMOOTHING_BRUSH_RADIUS + SMOOTHING_KERNEL_RADIUS + j] * (1 - prob);
-      }
-      //Set the sample to the point of the mouse event
-      mDrawingTrack->Set((samplePtr)newSampleRegion.get(), floatSample, mDrawingStartSample - SMOOTHING_BRUSH_RADIUS, 1 + 2 * SMOOTHING_BRUSH_RADIUS);
-
-      mDrawingLastDragSampleValue = 0;
-   }
-   else
-   {
-      //*************************************************
-      //***   PLAIN DOWN-CLICK (NORMAL DRAWING)       ***
-      //*************************************************
-
-      SetCapturedTrack(t, IsAdjustingSample);
-
-      //Otherwise (e.g., the alt button is not down) do normal redrawing, based on the mouse position.
-      const float newLevel = FindSampleEditingLevel
-         (event, mDrawingTrack->GetWaveformSettings().dBRange, t0);
-
-      //Set the sample to the point of the mouse event
-      mDrawingTrack->Set((samplePtr)&newLevel, floatSample, mDrawingStartSample, 1);
-
-      mDrawingLastDragSampleValue = newLevel;
-   }
-
-   //Set the member data structures for drawing
-   mDrawingLastDragSample=mDrawingStartSample;
-
-   //Redraw the region of the selected track
-   RefreshTrack(mDrawingTrack);
-}
-
-void TrackPanel::HandleSampleEditingDrag( wxMouseEvent & event )
-{
-   //*************************************************
-   //***    DRAG-DRAWING                           ***
-   //*************************************************
-
-   //The following will happen on a drag or a down-click.
-   // The point should get re-drawn at the location of the mouse.
-   //Exit if the mDrawingTrack is null.
-   if( mDrawingTrack == NULL)
-      return;
-
-   //Exit dragging if the alt key is down--Don't allow left-right dragging for smoothing operation
-   if (mMouseCapture != IsAdjustingSample)
-      return;
-
-   sampleCount s0;     //declare this for use below.  It designates the sample number which to draw.
-
-   // Figure out what time the click was at
-   //Find the point that we want to redraw at. If the control button is down,
-   //adjust only the originally clicked-on sample
-
-   if( event.m_controlDown) {
-      //*************************************************
-      //***   CTRL-DOWN (Hold Initial Sample Constant ***
-      //*************************************************
-
-      s0 = mDrawingStartSample;
-   }
-   else {
-      //*************************************************
-      //***    Normal CLICK-drag  (Normal drawing)    ***
-      //*************************************************
-
-      //Otherwise, adjust the sample you are dragging over right now.
-      //convert this to samples
-      const double t = mViewInfo->PositionToTime(event.m_x, GetLeftOffset());
-      s0 = mDrawingTrack->TimeToLongSamples(t);
-   }
-
-   const double t0 = mDrawingTrack->LongSamplesToTime(s0);
-
-   //Otherwise, do normal redrawing, based on the mouse position.
-   // Calculate where the mouse is located vertically (between +/- 1)
-
-   const float newLevel = FindSampleEditingLevel
-      (event, mDrawingTrack->GetWaveformSettings().dBRange, t0);
-
-   //Now, redraw all samples between current and last redrawn sample, inclusive
-   //Go from the smaller to larger sample.
-   const auto start = std::min( s0, mDrawingLastDragSample);
-   const auto end   = std::max( s0, mDrawingLastDragSample);
-   // Few enough samples to be drawn individually on screen will not
-   // overflow size_t:
-   const auto size = ( end - start + 1 ).as_size_t();
-   if (size == 1) {
-      mDrawingTrack->Set((samplePtr)&newLevel, floatSample, start, size);
-   }
-   else {
-      std::vector<float> values(size);
-      for (auto i = start; i <= end; ++i) {
-         //This interpolates each sample linearly:
-         // i - start will not overflow size_t either:
-         values[( i - start ).as_size_t()] =
-            mDrawingLastDragSampleValue + (newLevel - mDrawingLastDragSampleValue)  *
-            (i - mDrawingLastDragSample).as_float() /
-            (s0 - mDrawingLastDragSample).as_float();
-      }
-      mDrawingTrack->Set((samplePtr)&values[0], floatSample, start, size);
-   }
-
-   //Update the member data structures.
-   mDrawingLastDragSample=s0;
-   mDrawingLastDragSampleValue = newLevel;
-
-   //Redraw the region of the selected track
-   RefreshTrack(mDrawingTrack);
-}
-
-void TrackPanel::HandleSampleEditingButtonUp( wxMouseEvent & WXUNUSED(event))
-{
-   //*************************************************
-   //***    UP-CLICK  (Finish drawing)             ***
-   //*************************************************
-   SetCapturedTrack( NULL );
-   //On up-click, send the state to the undo stack
-   mDrawingTrack=NULL;       //Set this to NULL so it will catch improper drag events.
-   MakeParentPushState(_("Moved Samples"),
-                       _("Sample Edit"),
-                       UndoPush::CONSOLIDATE | UndoPush::AUTOSAVE);
-}
-
-
-/// This handles adjusting individual samples by hand using the draw tool(s)
-///
-/// There are several member data structure for handling drawing:
-///  - mDrawingTrack:               keeps track of which track you clicked down on, so drawing doesn't
-///                                 jump to a NEW track
-///  - mDrawingTrackTop:            The top position of the drawing track--makes drawing easier.
-///  - mDrawingStartSample:         The sample you clicked down on, so that you can hold it steady
-///  - mDrawingLastDragSample:      When drag-drawing, this keeps track of the last sample you dragged over,
-///                                 so it can smoothly redraw samples that got skipped over
-///  - mDrawingLastDragSampleValue: The value of the last
-void TrackPanel::HandleSampleEditing(wxMouseEvent & event)
-{
-   if (event.LeftDown() ) {
-      HandleSampleEditingClick( event);
-   } else if (mDrawingTrack && event.Dragging()) {
-      HandleSampleEditingDrag( event );
-   }  else if(mDrawingTrack && event.ButtonUp()) {
-      HandleSampleEditingButtonUp( event );
-   }
-}
-
-
 // This is for when a given track gets the x.
 void TrackPanel::HandleClosing(wxMouseEvent & event)
 {
@@ -6885,10 +6547,6 @@ void TrackPanel::HandleTrackSpecificMouseEvent(wxMouseEvent & event)
             if (!unsafe)
                HandleSlide(event);
             break;
-         case drawTool:
-            if (!unsafe)
-               HandleSampleEditing(event);
-            break;
          }
       }
    }
@@ -6958,8 +6616,6 @@ int TrackPanel::DetermineToolToUse( ToolsToolBar * pTtb, const wxMouseEvent & ev
       currentTool = envelopeTool;
    } else if( HitTestSlide( pTrack, rect, event )){
       currentTool = slideTool;
-   } else if( HitTestSamples( pTrack, rect, event )){
-      currentTool = drawTool;
    }
 
    //Use the false argument since in multimode we don't
@@ -7067,62 +6723,6 @@ bool TrackPanel::HitTestEnvelope(Track *track, const wxRect &rect, const wxMouse
    // Subtracting the ContourSpacing/2 we added earlier ensures distance is centred on the contour.
    distance = abs( ( yDisplace % ContourSpacing ) - ContourSpacing/2);
    return( distance < yTolerance );
-}
-
-/// method that tells us if the mouse event landed on an
-/// editable sample
-bool TrackPanel::HitTestSamples(Track *track, const wxRect &rect, const wxMouseEvent & event)
-{
-   wxASSERT(track);
-   if( track->GetKind() != Track::Wave )
-      return false;
-
-   WaveTrack *wavetrack = (WaveTrack *)track;
-   //Get rate in order to calculate the critical zoom threshold
-   double rate = wavetrack->GetRate();
-   const double dBRange = wavetrack->GetWaveformSettings().dBRange;
-
-   const int displayType = wavetrack->GetDisplay();
-   if (WaveTrack::Waveform != displayType)
-      return false;  // Not a wave, so return.
-   const bool dB = !wavetrack->GetWaveformSettings().isLinear();
-
-   const double tt = mViewInfo->PositionToTime(event.m_x, rect.x);
-   int width;
-   GetTracksUsableArea(&width, NULL);
-   if (!SampleResolutionTest(*mViewInfo, wavetrack, tt, rate, width))
-      return false;
-
-   // Just get one sample.
-   float oneSample;
-   auto s0 = (sampleCount)(tt * rate + 0.5);
-   if ( !wavetrack->Get(
-         (samplePtr)&oneSample, floatSample, s0, 1, fillZero,
-         // Do not propagate exception but return a failure value
-         false))
-      return false;
-
-   // Get y distance of envelope point from center line (in pixels).
-   float zoomMin, zoomMax;
-
-   wavetrack->GetDisplayBounds(&zoomMin, &zoomMax);
-
-   double envValue = 1.0;
-   Envelope* env = wavetrack->GetEnvelopeAtX(event.GetX());
-   if (env)
-      // Calculate sample as it would be rendered, so quantize time
-      envValue = env->GetValue( tt, 1.0 / wavetrack->GetRate() );
-
-   int yValue = GetWaveYPos( oneSample * envValue,
-      zoomMin, zoomMax,
-      rect.height, dB, true, dBRange, false) + rect.y;
-
-   // Get y position of mouse (in pixels)
-   int yMouse = event.m_y;
-
-   // Perhaps yTolerance should be put into preferences?
-   const int yTolerance = 10; // More tolerance on samples than on envelope.
-   return( abs( yValue -  yMouse ) < yTolerance );
 }
 
 /// method that tells us if the mouse event landed on a

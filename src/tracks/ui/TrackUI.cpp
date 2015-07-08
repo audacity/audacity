@@ -17,6 +17,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Project.h"
 #include "../../toolbars/ToolsToolBar.h"
 
+#include "../playabletrack/wavetrack/ui/SampleHandle.h"
 #include "ZoomHandle.h"
 
 HitTestResult Track::HitTest
@@ -28,12 +29,13 @@ HitTestResult Track::HitTest
    const bool isMultiTool = pTtb->IsDown(multiTool);
    if (!isMultiTool) {
       switch (pTtb->GetCurrentTool()) {
+      case drawTool:
+         return SampleHandle::HitAnywhere(event.event, pProject);
       case zoomTool:
          return ZoomHandle::HitAnywhere(event.event, pProject);
 
       case selectTool:
       case envelopeTool:
-      case drawTool:
       case slideTool:
       default:
          // cases not yet implemented

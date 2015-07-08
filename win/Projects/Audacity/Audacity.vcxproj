@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -230,6 +230,7 @@
     <ClCompile Include="..\..\..\src\tracks\playabletrack\notetrack\ui\NoteTrackControls.cpp" />
     <ClCompile Include="..\..\..\src\tracks\playabletrack\notetrack\ui\NoteTrackUI.cpp" />
     <ClCompile Include="..\..\..\src\tracks\playabletrack\notetrack\ui\NoteTrackVRulerControls.cpp" />
+    <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\SampleHandle.cpp" />
     <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveTrackControls.cpp" />
     <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveTrackUI.cpp" />
     <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveTrackVRulerControls.cpp" />
@@ -490,6 +491,7 @@
     <ClInclude Include="..\..\..\src\TrackPanelMouseEvent.h" />
     <ClInclude Include="..\..\..\src\tracks\playabletrack\notetrack\ui\NoteTrackControls.h" />
     <ClInclude Include="..\..\..\src\tracks\playabletrack\notetrack\ui\NoteTrackVRulerControls.h" />
+    <ClInclude Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\SampleHandle.h" />
     <ClInclude Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveTrackControls.h" />
     <ClInclude Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveTrackVRulerControls.h" />
     <ClInclude Include="..\..\..\src\tracks\ui\CommonTrackPanelCell.h" />

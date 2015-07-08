@@ -398,7 +398,6 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
    // Working out where to dispatch the event to.
    virtual int DetermineToolToUse( ToolsToolBar * pTtb, const wxMouseEvent & event);
    virtual bool HitTestEnvelope(Track *track, const wxRect &rect, const wxMouseEvent & event);
-   virtual bool HitTestSamples(Track *track, const wxRect &rect, const wxMouseEvent & event);
    virtual bool HitTestSlide(Track *track, const wxRect &rect, const wxMouseEvent & event);
 #ifdef USE_MIDI
    // data for NoteTrack interactive stretch operations:
@@ -528,14 +527,6 @@ protected:
        int zoomStart, int zoomEnd,
        WaveTrack *track, bool shiftDown, bool rightUp,
        bool fixedMousePoint);
-
-   // Handle sample editing using the 'draw' tool.
-   virtual bool IsSampleEditingPossible( wxMouseEvent & event, const WaveTrack * t );
-   virtual void HandleSampleEditing(wxMouseEvent & event);
-   float FindSampleEditingLevel(wxMouseEvent &event, double dBRange, double t0);
-   virtual void HandleSampleEditingClick( wxMouseEvent & event );
-   virtual void HandleSampleEditingDrag( wxMouseEvent & event );
-   virtual void HandleSampleEditingButtonUp( wxMouseEvent & event );
 
    // MM: Handle mouse wheel rotation
    virtual void HandleWheelRotation(wxMouseEvent & event);
@@ -823,12 +814,6 @@ public:
 
 protected:
 
-   WaveTrack * mDrawingTrack;          // Keeps track of which track you are drawing on between events cf. HandleDraw()
-   int mDrawingTrackTop;           // Keeps track of the top position of the drawing track.
-   sampleCount mDrawingStartSample;   // sample of last click-down
-   sampleCount mDrawingLastDragSample; // sample of last drag-over
-   float mDrawingLastDragSampleValue;  // value of last drag-over
-
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    void HandleCenterFrequencyCursor
       (bool shiftDown, wxString &tip, const wxCursor ** ppCursor);
@@ -880,7 +865,6 @@ public:
       IsSelecting,
       IsAdjustingLabel,
       IsSelectingLabelText,
-      IsAdjustingSample,
       IsResizing,
       IsResizingBetweenLinkedTracks,
       IsResizingBelowLinkedTracks,
@@ -913,10 +897,10 @@ protected:
    int mRearrangeCount;
 
    std::unique_ptr<wxCursor>
-      mArrowCursor, mPencilCursor, mSelectCursor,
+      mArrowCursor, mSelectCursor,
       mResizeCursor, mSlideCursor, mEnvelopeCursor, // doubles as the center frequency cursor
                               // for spectral selection
-      mSmoothCursor, mZoomInCursor, mZoomOutCursor,
+      mZoomInCursor, mZoomOutCursor,
       mRearrangeCursor,
       mDisabledCursor, mAdjustLeftSelectionCursor, mAdjustRightSelectionCursor;
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
@@ -1025,11 +1009,6 @@ enum : int {
 //(or, vertical distance around top and bottom bounds in spectrograms,
 // for vertical selection adjusting)
 #define SELECTION_RESIZE_REGION 3
-
-#define SMOOTHING_KERNEL_RADIUS 3
-#define SMOOTHING_BRUSH_RADIUS 5
-#define SMOOTHING_PROPORTION_MAX 0.7
-#define SMOOTHING_PROPORTION_MIN 0.0
 
 #endif
 

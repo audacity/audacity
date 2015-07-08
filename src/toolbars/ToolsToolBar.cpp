@@ -88,6 +88,9 @@ ToolsToolBar::ToolsToolBar()
    mMessageOfTool[selectTool] = _("Click and drag to select audio");
 
    mMessageOfTool[envelopeTool] = _("Click and drag to edit the amplitude envelope");
+
+   // TODO:  message should also mention the brush.  Describing the modifier key
+   // (alt, or other) varies with operating system.
    mMessageOfTool[drawTool] = _("Click and drag to edit the samples");
 
    // TODO:  Why not mention middle click to zoom normal on Windows too?
