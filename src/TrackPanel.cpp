@@ -230,11 +230,7 @@ is time to refresh some aspect of the screen.
 #include "widgets/Ruler.h"
 #include "widgets/NumericTextCtrl.h"
 
-#include <wx/arrimpl.cpp>
-
 #define ZOOMLIMIT 0.001f
-
-WX_DEFINE_OBJARRAY(TrackClipArray);
 
 //This loads the appropriate set of cursors, depending on platform.
 #include "../images/Cursors.h"
@@ -2235,7 +2231,7 @@ void TrackPanel::HandleSelect(wxMouseEvent & event)
                selectedClip->GetOffset(), selectedClip->GetEndTime());
          }
          //Also, capture this track for dragging until we up-click.
-         mCapturedClipArray.Add(TrackClip(w, selectedClip));
+         mCapturedClipArray.push_back(TrackClip(w, selectedClip));
 
          mMouseCapture = IsSliding;
 
@@ -3887,7 +3883,7 @@ void TrackPanel::HandleSlide(wxMouseEvent & event)
       if (mDidSlideVertically && mCapturedTrack)
          // Now that user has dropped the clip into a different track,
          // make sure the sample rate matches the destination track (mCapturedTrack).
-         for (size_t i = 0; i < mCapturedClipArray.GetCount(); i++)
+         for (size_t i = 0; i < mCapturedClipArray.size(); i++)
             if (mCapturedTrack->GetKind() == Track::Wave) // Should always be true here, but make sure.
             {
                WaveClip* pWaveClip = mCapturedClipArray[i].clip;
@@ -3975,7 +3971,7 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
       // The captured clip is the focus, but we need to create a list
       // of all clips that have to move, also...
 
-      mCapturedClipArray.Clear();
+      mCapturedClipArray.clear();
 
       double clickTime =
          mViewInfo->PositionToTime(event.m_x, GetLeftOffset());
@@ -3998,7 +3994,7 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
       }
       else {
          mCapturedClipIsSelection = false;
-         mCapturedClipArray.Add(TrackClip(vt, mCapturedClip));
+         mCapturedClipArray.push_back(TrackClip(vt, mCapturedClip));
 
          // Check for stereo partner
          Track *partner = mTracks->GetLink(vt);
@@ -4012,7 +4008,7 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
             if (s0 >= 0) {
                WaveClip *clip = ((WaveTrack *)partner)->GetClipAtSample(s0);
                if (clip) {
-                  mCapturedClipArray.Add(TrackClip(partner, clip));
+                  mCapturedClipArray.push_back(TrackClip(partner, clip));
                }
             }
          }
@@ -4025,7 +4021,7 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
          // clips are considered (the effect is like recursion and terminates
          // because AddClipsToCaptured doesn't add duplicate clips); to remove
          // this behavior just store the array size beforehand.
-         for (unsigned int i = 0; i < mCapturedClipArray.GetCount(); ++i) {
+         for (unsigned int i = 0; i < mCapturedClipArray.size(); ++i) {
             // Capture based on tracks that have clips -- that means we
             // don't capture based on links to label tracks for now (until
             // we can treat individual labels as clips)
@@ -4057,7 +4053,7 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
 
    } else {
       mCapturedClip = NULL;
-      mCapturedClipArray.Clear();
+      mCapturedClipArray.clear();
    }
 
    mSlideUpDownOnly = event.CmdDown() && !multiToolModeActive;
@@ -4116,7 +4112,7 @@ void TrackPanel::AddClipsToCaptured(Track *t, double t0, double t1)
          {
             // Avoid getting clips that were already captured
             bool newClip = true;
-            for (unsigned int i = 0; i < mCapturedClipArray.GetCount(); ++i) {
+            for (unsigned int i = 0; i < mCapturedClipArray.size(); ++i) {
                if (mCapturedClipArray[i].clip == clip) {
                   newClip = false;
                   break;
@@ -4124,7 +4120,7 @@ void TrackPanel::AddClipsToCaptured(Track *t, double t0, double t1)
             }
 
             if (newClip)
-               mCapturedClipArray.Add(TrackClip(t, clip));
+               mCapturedClipArray.push_back(TrackClip(t, clip));
          }
          it = it->GetNext();
       }
@@ -4136,7 +4132,7 @@ void TrackPanel::AddClipsToCaptured(Track *t, double t0, double t1)
 
       // Avoid adding a track twice
       bool newClip = true;
-      for (unsigned int i = 0; i < mCapturedClipArray.GetCount(); ++i) {
+      for (unsigned int i = 0; i < mCapturedClipArray.size(); ++i) {
          if (mCapturedClipArray[i].track == t) {
             newClip = false;
             break;
@@ -4151,7 +4147,7 @@ void TrackPanel::AddClipsToCaptured(Track *t, double t0, double t1)
                return;
          }
 #endif
-         mCapturedClipArray.Add(TrackClip(t, NULL));
+         mCapturedClipArray.push_back(TrackClip(t, NULL));
       }
    }
 }
@@ -4183,11 +4179,11 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
    // happens relative to the original horizontal position of
    // each clip...
 #ifdef USE_MIDI
-   if (mCapturedClipArray.GetCount()) {
+   if (mCapturedClipArray.size()) {
 #else
    if (mCapturedClip) {
 #endif
-      for(i=0; i<mCapturedClipArray.GetCount(); i++) {
+      for(i=0; i<mCapturedClipArray.size(); i++) {
          if (mCapturedClipArray[i].clip)
             mCapturedClipArray[i].clip->Offset(-mHSlideAmount);
          else
@@ -4217,7 +4213,7 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
                            mtw->GetRate();  // set it to a sample point
    }
    // Adjust desiredSlideAmount using SnapManager
-   if (mSnapManager && mCapturedClipArray.GetCount()) {
+   if (mSnapManager && mCapturedClipArray.size()) {
       double clipLeft;
       double clipRight;
       if (mCapturedClip) {
@@ -4291,7 +4287,7 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
 
       // Temporary apply the offset because we want to see if the
       // track fits with the desired offset
-      for(i=0; i<mCapturedClipArray.GetCount(); i++)
+      for(i=0; i<mCapturedClipArray.size(); i++)
          if (mCapturedClipArray[i].clip)
             mCapturedClipArray[i].clip->Offset(desiredSlideAmount);
       // See if it can be moved
@@ -4312,7 +4308,7 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
       }
       else {
          // Undo the offset
-         for(i=0; i<mCapturedClipArray.GetCount(); i++)
+         for(i=0; i<mCapturedClipArray.size(); i++)
             if (mCapturedClipArray[i].clip)
                mCapturedClipArray[i].clip->Offset(-desiredSlideAmount);
       }
@@ -4333,7 +4329,7 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
    }
 
 #ifdef USE_MIDI
-   if (mCapturedClipArray.GetCount()) {
+   if (mCapturedClipArray.size()) {
 #else
    if (mCapturedClip) {
 #endif
@@ -4346,7 +4342,7 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
          initialAllowed = mHSlideAmount;
 
          unsigned int i, j;
-         for(i=0; i<mCapturedClipArray.GetCount(); i++) {
+         for(i=0; i<mCapturedClipArray.size(); i++) {
             WaveTrack *track = (WaveTrack *)mCapturedClipArray[i].track;
             WaveClip *clip = mCapturedClipArray[i].clip;
 
@@ -4355,7 +4351,7 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
                // temporarily because they're all moving together and
                // we want to find out if OTHER clips are in the way,
                // not one of the moving ones
-               for(j=0; j<mCapturedClipArray.GetCount(); j++) {
+               for(j=0; j<mCapturedClipArray.size(); j++) {
                   WaveClip *clip2 = mCapturedClipArray[j].clip;
                   if (clip2 && clip2 != clip)
                      clip2->Offset(-safeBigDistance);
@@ -4367,7 +4363,7 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
                else
                   mHSlideAmount = 0.0;
 
-               for(j=0; j<mCapturedClipArray.GetCount(); j++) {
+               for(j=0; j<mCapturedClipArray.size(); j++) {
                   WaveClip *clip2 = mCapturedClipArray[j].clip;
                   if (clip2 && clip2 != clip)
                      clip2->Offset(safeBigDistance);
@@ -4378,7 +4374,7 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
 
       if (mHSlideAmount != 0.0) { // finally, here is where clips are moved
          unsigned int i;
-         for(i=0; i<mCapturedClipArray.GetCount(); i++) {
+         for(i=0; i<mCapturedClipArray.size(); i++) {
             Track *track = mCapturedClipArray[i].track;
             WaveClip *clip = mCapturedClipArray[i].clip;
             if (clip)
@@ -9794,7 +9790,7 @@ bool TrackPanel::MoveClipToTrack(WaveClip *clip, WaveTrack* dst)
    if (dst->GetKind() != Track::Wave) return false;
 #endif
 
-   for (i = 0; i < mCapturedClipArray.GetCount(); i++) {
+   for (i = 0; i < mCapturedClipArray.size(); i++) {
       if (clip == mCapturedClipArray[i].clip) {
          src = (WaveTrack*)mCapturedClipArray[i].track;
          break;
@@ -9812,7 +9808,7 @@ bool TrackPanel::MoveClipToTrack(WaveClip *clip, WaveTrack* dst)
 
       // find the first track by getting the linked track from src
       // assumes that mCapturedArray[i].clip and .track is not NULL.
-      for (i = 0; i < mCapturedClipArray.GetCount(); i++) {
+      for (i = 0; i < mCapturedClipArray.size(); i++) {
          if (mTracks->GetLink(src) == mCapturedClipArray[i].track) {
             clip = mCapturedClipArray[i].clip;
             break;
@@ -9828,7 +9824,7 @@ bool TrackPanel::MoveClipToTrack(WaveClip *clip, WaveTrack* dst)
    src2 = (WaveTrack*)mTracks->GetLink(src);
    dst2 = (WaveTrack*)mTracks->GetLink(dst);
 
-   for (i = 0; i < mCapturedClipArray.GetCount(); i++) {
+   for (i = 0; i < mCapturedClipArray.size(); i++) {
       if (mCapturedClipArray[i].track == src2) {
          clip2 = mCapturedClipArray[i].clip;
          break;
@@ -9864,7 +9860,7 @@ bool TrackPanel::MoveClipToTrack(WaveClip *clip, WaveTrack* dst)
       src2->MoveClipToTrack(clip2, dst2);
 
    // update the captured clip array.
-   for (i = 0; i < mCapturedClipArray.GetCount(); i++) {
+   for (i = 0; i < mCapturedClipArray.size(); i++) {
       if (clip && mCapturedClipArray[i].clip == clip) {
          mCapturedClipArray[i].track = dst;
       } else if (clip2 && mCapturedClipArray[i].clip == clip2) {

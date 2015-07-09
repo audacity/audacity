@@ -15,7 +15,6 @@
 #include <vector>
 
 #include <wx/dcmemory.h>
-#include <wx/dynarray.h>
 #include <wx/panel.h>
 #include <wx/timer.h>
 #include <wx/window.h>
@@ -26,6 +25,8 @@
 #include "widgets/NumericTextCtrl.h"
 
 #include "WaveTrackLocation.h"
+
+#include "Snap.h"
 
 class wxMenu;
 class wxRect;
@@ -51,24 +52,12 @@ class WaveTrack;
 class WaveClip;
 class Envelope;
 
-WX_DEFINE_ARRAY(LWSlider *, LWSliderArray);
-
-class AUDACITY_DLL_API TrackClip
-{
- public:
-   TrackClip(Track *t, WaveClip *c) { track = t; clip = c; }
-   Track *track;
-   WaveClip *clip;
-};
-
-WX_DECLARE_OBJARRAY(TrackClip, TrackClipArray);
-
 // Declared elsewhere, to reduce compilation dependencies
 class TrackPanelListener;
 
 // JKC Nov 2011: Disabled warning C4251 which is to do with DLL linkage
 // and only a worry when there are DLLs using the structures.
-// LWSliderArray and TrackClipArray are private in TrackInfo, so we will not
+// Array classes are private in TrackInfo, so we will not
 // access them directly from the DLL.
 // TrackClipArray in TrackPanel needs to be handled with care in the derived
 // class, but the C4251 warning is no worry in core Audacity.
