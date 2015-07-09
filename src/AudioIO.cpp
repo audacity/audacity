@@ -295,11 +295,11 @@ writing audio.
 #include <wx/txtstrm.h>
 
 #include "AudacityApp.h"
-#include "Envelope.h"
 #include "Mix.h"
 #include "MixerBoard.h"
 #include "Resample.h"
 #include "RingBuffer.h"
+#include "prefs/GUISettings.h"
 #include "Prefs.h"
 #include "Project.h"
 #include "TimeTrack.h"
@@ -1529,11 +1529,11 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
    int silenceLevelDB;
    gPrefs->Read(wxT("/AudioIO/SilenceLevel"), &silenceLevelDB, -50);
    int dBRange;
-   dBRange = gPrefs->Read(wxT("/GUI/EnvdBRange"), ENV_DB_RANGE);
+   dBRange = gPrefs->Read(ENV_DB_KEY, ENV_DB_RANGE);
    if(silenceLevelDB < -dBRange)
    {
       silenceLevelDB = -dBRange + 3;   // meter range was made smaller than SilenceLevel
-      gPrefs->Write(wxT("/GUI/EnvdBRange"), dBRange); // so set SilenceLevel reasonable
+      gPrefs->Write(ENV_DB_KEY, dBRange); // so set SilenceLevel reasonable
       gPrefs->Flush();
    }
    mSilenceLevel = (silenceLevelDB + dBRange)/(double)dBRange;  // meter goes -dBRange dB -> 0dB

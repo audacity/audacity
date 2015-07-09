@@ -536,6 +536,7 @@
     <ClInclude Include="..\..\..\src\import\SpecPowerMeter.h" />
     <ClInclude Include="..\..\..\src\ModuleManager.h" />
     <ClInclude Include="..\..\..\src\NumberScale.h" />
+    <ClInclude Include="..\..\..\src\prefs\GUISettings.h" />
     <ClInclude Include="..\..\..\src\prefs\SpectrogramSettings.h" />
     <ClInclude Include="..\..\..\src\prefs\WaveformPrefs.h" />
     <ClInclude Include="..\..\..\src\prefs\WaveformSettings.h" />

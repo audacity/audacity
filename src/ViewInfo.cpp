@@ -12,8 +12,8 @@ Paul Licameli
 
 #include <algorithm>
 
-#include "Envelope.h"
 #include "Internat.h"
+#include "prefs/GUISettings.h"
 #include "Prefs.h"
 #include "xml/XMLWriter.h"
 
@@ -37,7 +37,7 @@ ZoomInfo::~ZoomInfo()
 
 void ZoomInfo::UpdatePrefs()
 {
-   dBr = gPrefs->Read(wxT("/GUI/EnvdBRange"), ENV_DB_RANGE);
+   dBr = gPrefs->Read(ENV_DB_KEY, ENV_DB_RANGE);
 }
 
 /// Converts a position (mouse X coordinate) to

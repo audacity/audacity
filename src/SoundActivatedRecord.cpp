@@ -19,14 +19,12 @@
 *//********************************************************************/
 
 #include "Audacity.h"
+#include "SoundActivatedRecord.h"
 
-#include <wx/dialog.h>
-
-#include "Envelope.h"
 #include "ShuttleGui.h"
 #include "ShuttlePrefs.h"
 #include "Prefs.h"
-#include "SoundActivatedRecord.h"
+#include "prefs/GUISettings.h"
 
 BEGIN_EVENT_TABLE(SoundActivatedRecord, wxDialog)
    EVT_BUTTON(wxID_OK, SoundActivatedRecord::OnOK)
@@ -57,7 +55,7 @@ void SoundActivatedRecord::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartMultiColumn(2, wxEXPAND);
          S.SetStretchyCol(1);
-         dBRange = gPrefs->Read(wxT("/GUI/EnvdBRange"), ENV_DB_RANGE);
+         dBRange = gPrefs->Read(ENV_DB_KEY, ENV_DB_RANGE);
          S.TieSlider(_("Activation level (dB):"), wxT("/AudioIO/SilenceLevel"), -50, 0, -dBRange);
       S.EndMultiColumn();
    }

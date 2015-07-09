@@ -31,8 +31,6 @@ class Envelope;
 
 class ZoomInfo;
 
-#define ENV_DB_RANGE 60
-
 class EnvPoint : public XMLTagHandler {
 
 public:

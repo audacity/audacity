@@ -456,6 +456,7 @@ audacity_SOURCES = \
 	prefs/ExtImportPrefs.h \
 	prefs/GUIPrefs.cpp \
 	prefs/GUIPrefs.h \
+	prefs/GUISettings.h \
 	prefs/ImportExportPrefs.cpp \
 	prefs/ImportExportPrefs.h \
 	prefs/KeyConfigPrefs.cpp \
