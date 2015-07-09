@@ -2548,8 +2548,6 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
    mCapturedTrack = pTrack;
    mCapturedRect = r;
 
-   mMouseClickX = event.m_x;
-   mMouseClickY = event.m_y;
    mMouseCapture=IsSelecting;
    mInitialSelection = mViewInfo->selectedRegion;
 
@@ -5851,7 +5849,6 @@ void TrackPanel::HandleResizeClick( wxMouseEvent & event )
       return;
    }
 
-   mMouseClickX = event.m_x;
    mMouseClickY = event.m_y;
 
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
