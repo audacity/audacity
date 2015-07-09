@@ -28,7 +28,6 @@
 class wxMenu;
 class wxRect;
 
-class EnvelopeEditor;
 class LabelTrack;
 class SpectrumAnalyst;
 class Track;
@@ -52,7 +51,6 @@ class ViewInfo;
 class NoteTrack;
 class WaveTrack;
 class WaveClip;
-class Envelope;
 class UIHandle;
 
 // Declared elsewhere, to reduce compilation dependencies
@@ -375,7 +373,6 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
 
    // Working out where to dispatch the event to.
    virtual int DetermineToolToUse( ToolsToolBar * pTtb, const wxMouseEvent & event);
-   virtual bool HitTestEnvelope(Track *track, const wxRect &rect, const wxMouseEvent & event);
 #ifdef USE_MIDI
    // data for NoteTrack interactive stretch operations:
    // Stretching applies to a selected region after quantizing the
@@ -469,12 +466,6 @@ public:
 
 protected:
    virtual void MaySetOnDemandTip( Track * t, wxString &tip );
-
-   // AS: Envelope editing handlers
-   virtual void HandleEnvelope(wxMouseEvent & event);
-   virtual void ForwardEventToTimeTrackEnvelope(wxMouseEvent & event);
-   virtual void ForwardEventToWaveTrackEnvelope(wxMouseEvent & event);
-   virtual void ForwardEventToEnvelope(wxMouseEvent &event);
 
    static bool IsDragZooming(int zoomStart, int zoomEnd);
    virtual bool IsDragZooming() { return IsDragZooming(mZoomStart, mZoomEnd); }
@@ -728,7 +719,6 @@ protected:
 #endif
 
    Track *mCapturedTrack;
-   Envelope *mCapturedEnvelope;
    WaveTrackLocation mCapturedTrackLocation;
    wxRect mCapturedTrackLocationRect;
    wxRect mCapturedRect;
@@ -821,7 +811,6 @@ public:
       IsResizingBetweenLinkedTracks,
       IsResizingBelowLinkedTracks,
       IsRearranging,
-      IsEnveloping,
       IsMuting,
       IsSoloing,
       IsGainSliding,
@@ -891,9 +880,6 @@ protected:
 
    // Keeps track of extra fractional vertical scroll steps
    double mVertScrollRemainder;
-
-   std::unique_ptr<EnvelopeEditor> mEnvelopeEditor;
-   std::unique_ptr<EnvelopeEditor> mEnvelopeEditorRight;
 
  protected:
 

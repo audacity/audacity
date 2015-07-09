@@ -170,7 +170,6 @@ is time to refresh some aspect of the screen.
 #include "AColor.h"
 #include "AllThemeResources.h"
 #include "AudioIO.h"
-#include "Envelope.h"
 #include "float_cast.h"
 #include "LabelTrack.h"
 #include "MixerBoard.h"
@@ -1150,7 +1149,6 @@ void TrackPanel::HandleInterruptedDrag()
     IsClosing,
     IsAdjustingLabel,
     IsRearranging,
-    IsEnveloping,
     IsGainSliding,
     IsPanSliding,
     WasOverCutLine,
@@ -1405,9 +1403,6 @@ bool TrackPanel::SetCursorByActivity( )
    {
    case IsSelecting:
       SetCursor(*mSelectCursor);
-      return true;
-   case IsEnveloping:
-      SetCursor( unsafe ? *mDisabledCursor : *mEnvelopeCursor);
       return true;
    case IsRearranging:
       SetCursor( unsafe ? *mDisabledCursor : *mRearrangeCursor);
@@ -1750,15 +1745,10 @@ void TrackPanel::SetCursorAndTipWhenSelectTool( Track * t,
 void TrackPanel::SetCursorAndTipByTool( int tool,
          const wxMouseEvent &, wxString& )
 {
-   bool unsafe = IsUnsafe();
-
    // Change the cursor based on the active tool.
    switch (tool) {
    case selectTool:
       wxFAIL;// should have already been handled
-      break;
-   case envelopeTool:
-      SetCursor(unsafe ? *mDisabledCursor : *mEnvelopeCursor);
       break;
    }
    // doesn't actually change the tip itself, but it could (should?) do at some
@@ -3135,171 +3125,6 @@ bool mayDragWidth, bool onlyWithinSnapDistance,
 #endif
    {
       return boundary;
-   }
-}
-
-/// HandleEnvelope gets called when the user is changing the
-/// amplitude envelope on a track.
-void TrackPanel::HandleEnvelope(wxMouseEvent & event)
-{
-   if (event.LeftDown()) {
-      const auto foundCell = FindCell(event.m_x, event.m_y);
-      auto &pTrack = foundCell.pTrack;
-      auto &rect = foundCell.rect;
-
-      if (!pTrack || foundCell.type != CellType::Track)
-         return;
-
-      SetCapturedTrack(pTrack, IsEnveloping);
-
-      if (mCapturedTrack->GetKind() == Track::Wave)
-      {
-         mCapturedEnvelope =
-            ((WaveTrack*)mCapturedTrack)->GetEnvelopeAtX(event.GetX());
-      } else {
-         mCapturedEnvelope = NULL;
-      }
-
-      mCapturedRect = rect;
-      mCapturedRect.y += kTopMargin;
-      mCapturedRect.height -= kTopMargin + kBottomMargin;
-   }
-   // AS: if there's actually a selected track, then forward all of the
-   //  mouse events to its envelope.
-   if (mCapturedTrack)
-      ForwardEventToEnvelope(event);
-
-   // We test for IsEnveloping, because we could have had our action stopped already,
-   // and already recorded and the second mouse up is bogus.
-   // e.g could be stopped by some key press.  Bug 1496.
-   if ((mMouseCapture == IsEnveloping ) && event.LeftUp()) {
-      SetCapturedTrack( NULL );
-      MakeParentPushState(
-         /* i18n-hint: (verb) Audacity has just adjusted the envelope .*/
-         _("Adjusted envelope."),
-         /* i18n-hint: The envelope is a curve that controls the audio loudness.*/
-         _("Envelope")
-         );
-   }
-}
-
-/// We've established we're a time track.
-/// send events for its envelope.
-void TrackPanel::ForwardEventToTimeTrackEnvelope(wxMouseEvent & event)
-{
-   // Assume captured track was time
-   const auto ptimetrack = static_cast<TimeTrack *>(mCapturedTrack);
-   Envelope *pspeedenvelope = ptimetrack->GetEnvelope();
-
-   wxRect envRect = mCapturedRect;
-   double lower = ptimetrack->GetRangeLower(), upper = ptimetrack->GetRangeUpper();
-   const double dBRange = mViewInfo->dBr;
-   if (ptimetrack->GetDisplayLog()) {
-      // MB: silly way to undo the work of GetWaveYPos while still getting a logarithmic scale
-      lower = LINEAR_TO_DB(std::max(1.0e-7, lower)) / dBRange + 1.0;
-      upper = LINEAR_TO_DB(std::max(1.0e-7, upper)) / dBRange + 1.0;
-   }
-   if (event.ButtonDown()) {
-      mEnvelopeEditor = std::make_unique<EnvelopeEditor>(*pspeedenvelope, false);
-      mEnvelopeEditorRight.reset();
-   }
-   bool needUpdate =
-      mEnvelopeEditor &&
-      mEnvelopeEditor->MouseEvent(
-         event, envRect,
-         *mViewInfo,
-         ptimetrack->GetDisplayLog(), dBRange, lower, upper);
-   if (needUpdate) {
-      RefreshTrack(mCapturedTrack);
-   }
-}
-
-/// We've established we're a wave track.
-/// send events for its envelope.
-void TrackPanel::ForwardEventToWaveTrackEnvelope(wxMouseEvent & event)
-{
-   // Assume captured track was wave
-   const auto pwavetrack = static_cast<WaveTrack*>(mCapturedTrack);
-   Envelope *penvelope = mCapturedEnvelope;
-
-   // Possibly no-envelope, for example when in spectrum view mode.
-   // if so, then bail out.
-   if (!penvelope)
-      return;
-
-   // AS: WaveTracks can be displayed in several different formats.
-   //  This asks which one is in use. (ie, Wave, Spectrum, etc)
-   int display = pwavetrack->GetDisplay();
-
-   if (display == WaveTrack::Waveform) {
-      const bool dB = !pwavetrack->GetWaveformSettings().isLinear();
-      const double dBRange = pwavetrack->GetWaveformSettings().dBRange;
-      bool needUpdate;
-
-      // AS: Then forward our mouse event to the envelope.
-      // It'll recalculate and then tell us whether or not to redraw.
-      wxRect envRect = mCapturedRect;
-      float zoomMin, zoomMax;
-      pwavetrack->GetDisplayBounds(&zoomMin, &zoomMax);
-      if (event.ButtonDown()) {
-         mEnvelopeEditor = std::make_unique<EnvelopeEditor>(*penvelope, true);
-         mEnvelopeEditorRight.reset();
-      }
-      needUpdate =
-         mEnvelopeEditor &&
-         mEnvelopeEditor->MouseEvent(
-         event, envRect,
-         *mViewInfo,
-         dB, dBRange, zoomMin, zoomMax);
-
-      // If this track is linked to another track, make the identical
-      // change to the linked envelope:
-      // Assume linked track is wave or null
-      const auto link = static_cast<WaveTrack *>(mCapturedTrack->GetLink());
-      if (link) {
-         if (event.ButtonDown()) {
-            Envelope *e2 = link->GetEnvelopeAtX(event.GetX());
-            if (e2)
-               mEnvelopeEditorRight = std::make_unique<EnvelopeEditor>(*e2, true);
-            else {
-               // There isn't necessarily an envelope there; no guarantee a
-               // linked track has the same WaveClip structure...
-            }
-         }
-         if (mEnvelopeEditorRight) {
-            wxRect envRect = mCapturedRect;
-            float zoomMin, zoomMax;
-            pwavetrack->GetDisplayBounds(&zoomMin, &zoomMax);
-            needUpdate|= mEnvelopeEditorRight->MouseEvent(event, envRect,
-                                         *mViewInfo,
-                                         dB, dBRange,
-                                         zoomMin, zoomMax);
-         }
-      }
-
-      if (needUpdate) {
-         RefreshTrack(mCapturedTrack);
-      }
-   }
-}
-
-
-/// The Envelope class actually handles things at the mouse
-/// event level, so we have to forward the events over.  Envelope
-/// will then tell us whether or not we need to redraw.
-
-// AS: I'm not sure why we can't let the Envelope take care of
-//  redrawing itself.  ?
-
-void TrackPanel::ForwardEventToEnvelope(wxMouseEvent & event)
-{
-   if (mCapturedTrack && mCapturedTrack->GetKind() == Track::Time)
-   {
-      ForwardEventToTimeTrackEnvelope( event );
-   }
-   else if (mCapturedTrack && mCapturedTrack->GetKind() == Track::Wave)
-   {
-      ForwardEventToWaveTrackEnvelope( event );
    }
 }
 
@@ -5700,8 +5525,6 @@ void TrackPanel::HandleTrackSpecificMouseEvent(wxMouseEvent & event)
    auto &pCell = foundCell.pCell;
    auto &rect = foundCell.rect;
 
-   bool unsafe = IsUnsafe();
-
    //call HandleResize if I'm over the border area
    // (Add margin back to bottom of the rectangle)
    if (event.LeftDown() &&
@@ -5804,18 +5627,13 @@ void TrackPanel::HandleTrackSpecificMouseEvent(wxMouseEvent & event)
          case selectTool:
             HandleSelect(event);
             break;
-         case envelopeTool:
-            if (!unsafe)
-               HandleEnvelope(event);
-            break;
          }
       }
    }
 
    if ((event.Moving() || event.LeftUp())  &&
        (mMouseCapture == IsUncaptured ))
-//       (mMouseCapture != IsSelecting ) &&
-//       (mMouseCapture != IsEnveloping)
+//       (mMouseCapture != IsSelecting )
    {
       HandleCursor(event);
    }
@@ -5857,9 +5675,7 @@ int TrackPanel::DetermineToolToUse( ToolsToolBar * pTtb, const wxMouseEvent & ev
    int trackKind = pTrack->GetKind();
    currentTool = selectTool; // the default.
 
-   if (trackKind == Track::Time){
-      currentTool = envelopeTool;
-   } else if( trackKind == Track::Label ){
+   if( trackKind == Track::Label ){
       currentTool = selectTool;
    } else if( trackKind != Track::Wave) {
       currentTool = selectTool;
@@ -5868,8 +5684,6 @@ int TrackPanel::DetermineToolToUse( ToolsToolBar * pTtb, const wxMouseEvent & ev
    // From here on the order in which we hit test determines
    // which tool takes priority in the rare cases where it
    // could be more than one.
-   } else if( HitTestEnvelope( pTrack, rect, event ) ) {
-      currentTool = envelopeTool;
    }
 
    //Use the false argument since in multimode we don't
@@ -5909,75 +5723,6 @@ auto TrackPanel::HitTestStretch
    return stretchNone;
 }
 #endif
-
-
-/// method that tells us if the mouse event landed on an
-/// envelope boundary.
-bool TrackPanel::HitTestEnvelope(Track *track, const wxRect &rect, const wxMouseEvent & event)
-{
-   wxASSERT(track);
-   if( track->GetKind() != Track::Wave )
-      return false;
-   WaveTrack *wavetrack = (WaveTrack *)track;
-   Envelope *envelope = wavetrack->GetEnvelopeAtX(event.GetX());
-
-   if (!envelope)
-      return false;
-
-   const int displayType = wavetrack->GetDisplay();
-   // Not an envelope hit, unless we're using a type of wavetrack display
-   // suitable for envelopes operations, ie one of the Wave displays.
-   if ( displayType != WaveTrack::Waveform)
-      return false;  // No envelope, not a hit, so return.
-
-   // Get envelope point, range 0.0 to 1.0
-   const bool dB = !wavetrack->GetWaveformSettings().isLinear();
-
-   const double envValue = envelope->GetValue(mViewInfo->PositionToTime(event.m_x, rect.x));
-
-   float zoomMin, zoomMax;
-   wavetrack->GetDisplayBounds(&zoomMin, &zoomMax);
-
-   const double dBRange = wavetrack->GetWaveformSettings().dBRange;
-
-   // Get y position of envelope point.
-   int yValue = GetWaveYPos( envValue,
-      zoomMin, zoomMax,
-      rect.height, dB, true, dBRange, false) + rect.y;
-
-   // Get y position of center line
-   int ctr = GetWaveYPos( 0.0,
-      zoomMin, zoomMax,
-      rect.height, dB, true, dBRange, false) + rect.y;
-
-   // Get y distance of mouse from center line (in pixels).
-   int yMouse = abs(ctr - event.m_y);
-   // Get y distance of envelope from center line (in pixels)
-   yValue = abs(ctr-yValue);
-
-   // JKC: It happens that the envelope is actually drawn offset from its
-   // 'true' position (it is 3 pixels wide).  yMisalign is really a fudge
-   // factor to allow us to hit it exactly, but I wouldn't dream of
-   // calling it yFudgeFactor :)
-   const int yMisalign = 2;
-   // Perhaps yTolerance should be put into preferences?
-   const int yTolerance = 5; // how far from envelope we may be and count as a hit.
-   int distance;
-
-   // For amplification using the envelope we introduced the idea of contours.
-   // The contours have the same shape as the envelope, which may be partially off-screen.
-   // The contours are closer in to the center line.
-   int ContourSpacing = (int) (rect.height / (2* (zoomMax-zoomMin)));
-   const int MaxContours = 2;
-
-   // Adding ContourSpacing/2 selects a region either side of the contour.
-   int yDisplace = yValue - yMisalign - yMouse  + ContourSpacing/2;
-   if (yDisplace > (MaxContours * ContourSpacing))
-      return false;
-   // Subtracting the ContourSpacing/2 we added earlier ensures distance is centred on the contour.
-   distance = abs( ( yDisplace % ContourSpacing ) - ContourSpacing/2);
-   return( distance < yTolerance );
-}
 
 double TrackPanel::GetMostRecentXPos()
 {

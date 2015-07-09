@@ -17,6 +17,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Project.h"
 #include "../../toolbars/ToolsToolBar.h"
 
+#include "EnvelopeHandle.h"
 #include "../playabletrack/wavetrack/ui/SampleHandle.h"
 #include "ZoomHandle.h"
 #include "TimeShiftHandle.h"
@@ -30,6 +31,9 @@ HitTestResult Track::HitTest
    const bool isMultiTool = pTtb->IsDown(multiTool);
    if (!isMultiTool) {
       switch (pTtb->GetCurrentTool()) {
+      case envelopeTool:
+         // Pass "false" for unsafe -- let the tool decide to cancel itself
+         return EnvelopeHandle::HitAnywhere(pProject);
       case drawTool:
          return SampleHandle::HitAnywhere(event.event, pProject);
       case zoomTool:
@@ -38,7 +42,6 @@ HitTestResult Track::HitTest
          return TimeShiftHandle::HitAnywhere(pProject);
 
       case selectTool:
-      case envelopeTool:
       default:
          // cases not yet implemented
          // fallthru
