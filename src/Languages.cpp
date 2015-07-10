@@ -156,7 +156,9 @@ void GetLanguages(wxArrayString &langCodes, wxArrayString &langNames)
    localLanguageName[wxT("tr")] = wxT("Turkce");
    localLanguageName[wxT("uk")] = wxT("Ukrainska");
    localLanguageName[wxT("vi")] = wxT("Vietnamese");
-   localLanguageName[wxT("zh")] = wxT("Chinese (Simplified)");
+   // If we look up zh in wxLocale we get zh_TW hence we MUST look
+   // for zh_CN.
+   localLanguageName[wxT("zh_CN")] = wxT("Chinese (Simplified)");
    localLanguageName[wxT("zh_TW")] = wxT("Chinese (Traditional)");
 
    wxArrayString audacityPathList = wxGetApp().audacityPathList;
@@ -164,6 +166,8 @@ void GetLanguages(wxArrayString &langCodes, wxArrayString &langNames)
                                                        wxT(INSTALL_PREFIX)),
                                       audacityPathList);
 
+   // For each language in our list we look for a corresponding entry in
+   // wxLocale.  
    for (LangHash::iterator i = localLanguageName.begin();
         i != localLanguageName.end();
         i++)
@@ -234,10 +238,10 @@ void GetLanguages(wxArrayString &langCodes, wxArrayString &langNames)
 
 
    // Sort
-
    unsigned int j;
-   for(j=0; j<tempNames.GetCount(); j++)
+   for(j=0; j<tempNames.GetCount(); j++){
       reverseHash[tempNames[j]] = tempCodes[j];
+   }
 
    tempNames.Sort();
 
