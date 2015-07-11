@@ -238,7 +238,7 @@ Name: "bn"; MessagesFile: "{#Get('Bengali.islu')}"
 Name: "bs"; MessagesFile: "{#Get('Bosnian.isl')}"
 Name: "ca"; MessagesFile: "compiler:Languages\Catalan.isl"
 Name: "ca_ES0valencia"; MessagesFile: "{#Get('Valencian.isl')}"
-Name: "co"; MessagesFile: "compiler:Languages\Corsican.isl"
+;Name: "co"; MessagesFile: "compiler:Languages\Corsican.isl"
 Name: "cs"; MessagesFile: "compiler:Languages\Czech.isl"
 Name: "cy"; MessagesFile: "{#Dummy('Welsh', '0452')}"
 Name: "da"; MessagesFile: "compiler:Languages\Danish.isl"
@@ -267,7 +267,7 @@ Name: "lt"; MessagesFile: "{#Get('Lithuanian.isl')}"
 Name: "mk"; MessagesFile: "{#Get('Macedonian.isl')}"
 Name: "my"; MessagesFile: "{#Dummy('Burmese', '0409')}"
 Name: "nb"; MessagesFile: "compiler:Languages\Norwegian.isl"
-Name: "ne"; MessagesFile: "compiler:Languages\Nepali.islu"
+;Name: "ne"; MessagesFile: "compiler:Languages\Nepali.islu"
 Name: "nl"; MessagesFile: "compiler:Languages\Dutch.isl"
 Name: "oc"; MessagesFile: "{#Get('Occitan.isl')}"
 Name: "pl"; MessagesFile: "compiler:Languages\Polish.isl"
@@ -317,7 +317,7 @@ bn.ResetPrefs=Reset Preferences
 bs.ResetPrefs=Reset Preferences
 ca.ResetPrefs=Voleu restablir les preferències?
 ca_ES0valencia.ResetPrefs=Reset Preferences
-co.ResetPrefs=Reset Preferences
+;co.ResetPrefs=Reset Preferences
 cs.ResetPrefs=Vynulovat nastavení?
 cy.ResetPrefs=Reset Preferences
 da.ResetPrefs=Gendan indstillinger?
@@ -346,7 +346,7 @@ lt.ResetPrefs=Reset Preferences
 mk.ResetPrefs=Reset Preferences
 my.ResetPrefs=Reset Preferences
 nb.ResetPrefs=Reset Preferences
-ne.ResetPrefs=Reset Preferences
+;ne.ResetPrefs=Reset Preferences
 nl.ResetPrefs=Voorkeuren herstellen?
 oc.ResetPrefs=Reset Preferences
 pl.ResetPrefs=Zresetować ustawienia?
