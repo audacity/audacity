@@ -1238,6 +1238,7 @@
 		5ED1D0B11CDE560C00471E3C /* BackedPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5ED1D0AF1CDE560C00471E3C /* BackedPanel.cpp */; };
 		5EF17C231D1F0A690090A642 /* ScrubbingToolBar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF17C211D1F0A690090A642 /* ScrubbingToolBar.cpp */; };
 		5EF958851DEB121800191280 /* InconsistencyException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF958831DEB121800191280 /* InconsistencyException.cpp */; };
+		5E73963B1DAFD82D00BA0A4D /* PopupMenuTable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E7396391DAFD82D00BA0A4D /* PopupMenuTable.cpp */; };
 		8406A93812D0F2510011EA01 /* EQDefaultCurves.xml in Resources */ = {isa = PBXBuildFile; fileRef = 8406A93712D0F2510011EA01 /* EQDefaultCurves.xml */; };
 		8484F31413086237002DF7F0 /* DeviceManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8484F31213086237002DF7F0 /* DeviceManager.cpp */; };
 		AA0084191EA8C6E70070CCE3 /* TracksBehaviorsPrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA0084181EA8C6E70070CCE3 /* TracksBehaviorsPrefs.cpp */; };
@@ -3072,6 +3073,8 @@
 		5EF17C221D1F0A690090A642 /* ScrubbingToolBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScrubbingToolBar.h; sourceTree = "<group>"; };
 		5EF958831DEB121800191280 /* InconsistencyException.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = InconsistencyException.cpp; sourceTree = "<group>"; };
 		5EF958841DEB121800191280 /* InconsistencyException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InconsistencyException.h; sourceTree = "<group>"; };
+		5E7396391DAFD82D00BA0A4D /* PopupMenuTable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PopupMenuTable.cpp; sourceTree = "<group>"; };
+		5E73963A1DAFD82D00BA0A4D /* PopupMenuTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PopupMenuTable.h; sourceTree = "<group>"; };
 		82FF184D13CF01A600C1B664 /* dBTable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dBTable.cpp; path = sbsms/src/dBTable.cpp; sourceTree = "<group>"; };
 		82FF184E13CF01A600C1B664 /* dBTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dBTable.h; path = sbsms/src/dBTable.h; sourceTree = "<group>"; };
 		82FF184F13CF01A600C1B664 /* slide.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = slide.cpp; path = sbsms/src/slide.cpp; sourceTree = "<group>"; };
@@ -4442,6 +4445,8 @@
 				5ED1D0A91CDE55BD00471E3C /* Overlay.cpp */,
 				5ED1D0AA1CDE55BD00471E3C /* Overlay.h */,
 				5ED1D0AB1CDE55BD00471E3C /* OverlayPanel.cpp */,
+				5E7396391DAFD82D00BA0A4D /* PopupMenuTable.cpp */,
+				5E73963A1DAFD82D00BA0A4D /* PopupMenuTable.h */,
 				5ED1D0AC1CDE55BD00471E3C /* OverlayPanel.h */,
 				28530C4A0DF2105200555C94 /* ProgressDialog.cpp */,
 				28530C4B0DF2105200555C94 /* ProgressDialog.h */,
@@ -7606,6 +7611,7 @@
 				1790B18709883BFD008A330A /* QualityPrefs.cpp in Sources */,
 				1790B18809883BFD008A330A /* SpectrumPrefs.cpp in Sources */,
 				1790B18909883BFD008A330A /* Prefs.cpp in Sources */,
+				5E73963B1DAFD82D00BA0A4D /* PopupMenuTable.cpp in Sources */,
 				1790B18A09883BFD008A330A /* Printing.cpp in Sources */,
 				1790B18B09883BFD008A330A /* Project.cpp in Sources */,
 				1790B18C09883BFD008A330A /* Resample.cpp in Sources */,

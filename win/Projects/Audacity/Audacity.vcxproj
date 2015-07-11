@@ -256,6 +256,7 @@
     <ClCompile Include="..\..\..\src\widgets\Overlay.cpp" />
     <ClCompile Include="..\..\..\src\widgets\OverlayPanel.cpp" />
     <ClCompile Include="..\..\..\src\widgets\wxPanelWrapper.cpp" />
+    <ClCompile Include="..\..\..\src\widgets\PopupMenuTable.cpp" />
     <ClCompile Include="..\..\..\src\WrappedType.cpp" />
     <ClCompile Include="..\..\..\src\effects\Amplify.cpp" />
     <ClCompile Include="..\..\..\src\effects\AutoDuck.cpp" />
@@ -511,6 +512,7 @@
     <ClInclude Include="..\..\..\src\widgets\OverlayPanel.h" />
     <ClInclude Include="..\..\..\src\widgets\wxPanelWrapper.h" />
     <ClInclude Include="..\..\..\src\wxFileNameWrapper.h" />
+    <ClInclude Include="..\..\..\src\widgets\PopupMenuTable.h" />
     <ClInclude Include="..\..\configwin.h" />
     <ClInclude Include="..\..\..\src\Dependencies.h" />
     <ClInclude Include="..\..\..\src\DeviceManager.h" />
