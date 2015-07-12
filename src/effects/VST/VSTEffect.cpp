@@ -1521,7 +1521,8 @@ VSTEffect::VSTEffect(const wxString & path, VSTEffect *master)
    mTimeInfo.flags = kVstTempoValid | kVstNanosValid;
 
    // UI
-
+   
+   mGui = false;
    mNames = NULL;
    mSliders = NULL;
    mDisplays = NULL;
@@ -3598,7 +3599,7 @@ void VSTEffect::BuildPlain()
 
 void VSTEffect::RefreshParameters(int skip)
 {
-   if (mGui)
+   if (!mNames)
    {
       return;
    }

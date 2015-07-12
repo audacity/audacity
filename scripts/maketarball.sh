@@ -64,21 +64,9 @@ function cleanfulltree {
       exit ${status}
    fi
 
-   printf "Checking SVN status ... "
-   revision="$(svnversion)"
-   regex="[[:digit:]]*"
-   if [[ ${revision} =~ ${regex} ]] ; then
-      echo "Unmodified working copy at revision ${revision}"
-   else
-      echo "Modified working copy! Release tarballs must be built from an unmodified working copy! Exiting"
-      exit
-   fi
-
-   printf "removing SVN directories ... "
-   find . -depth -name '.svn' -execdir rm -rf '{}' ';'
-   # -depth is needed to avoid find trying to examine directories it has just
-   # deleted.
-   # The sort of quotes used is critical!
+   printf "removing GIT directories ... "
+   myrmrvf $1 .git .gitignore
+   myrmrvf $1 .gitignore
    printf "Done\n"
 
    printf "removing vim / emacs temp files ... "
@@ -106,13 +94,13 @@ function cleanfulltree {
    myrmrvf $1 dox 
    printf "Done\n"
 
-   printf "removing unused libraries from SVN tree ..."
+   printf "removing unused libraries from GIT tree ..."
    myrmrvf $1 lib-src/portmidi
    myrmrvf $1 lib-src/libscorealign
    printf "Done\n"
 }
 
-# remove all the things we have in SVN for convenience rather than being
+# remove all the things we have in GIT for convenience rather than being
 # necessary
 function slimtree {
    printf "removing todo lists ... "
