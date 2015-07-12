@@ -36,7 +36,7 @@ TracksPrefs::TracksPrefs(wxWindow * parent)
    // Bugs 1043, 1044
    // First rewrite legacy preferences
    gPrefs->Write(wxT("/GUI/DefaultViewModeNew"),
-      WaveTrack::FindDefaultViewMode());
+      (int) WaveTrack::FindDefaultViewMode());
 
    Populate();
 }

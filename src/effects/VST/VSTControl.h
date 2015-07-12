@@ -8,66 +8,57 @@
 
 **********************************************************************/
 
-#ifndef AUDACITY_AUCONTROL_H
-#define AUDACITY_AUCONTROL_H
+#ifndef AUDACITY_VSTCONTROL_H
+#define AUDACITY_VSTCONTROL_H
 
-#if !defined(_LP64)
-#include <Carbon/Carbon.h>
-#endif
-
-#include <wx/osx/private.h>
 #include <wx/control.h>
 
-//#include <AudioUnit/AudioUnit.h>
-#include <AudioUnit/AudioComponent.h>
-//#include <AudioUnit/AudioUnitProperties.h>
+#include "aeffectx.h"
 
-class VSTControlImpl : public wxWidgetCocoaImpl
-{
-public :
-   VSTControlImpl(wxWindowMac *peer, NSView *view);
-   ~VSTControlImpl();
-};
-
-class VSTControl : public wxControl
+class VSTEffectLink
 {
 public:
-   VSTControl();
-   ~VSTControl();
-
-   bool Create(wxWindow *parent, AudioComponent comp, AudioUnit unit, bool custom);
-   void CreateCocoa();
-   void CreateGeneric();
-   void CocoaViewResized();
-
-   void OnSize(wxSizeEvent & evt);
-
-#if !defined(_LP64)
-   void CreateCarbon();
-   void CreateCarbonOverlay();
-   void CarbonViewResized();
-   static pascal OSStatus ControlEventHandlerCallback(EventHandlerCallRef handler,
-                                                      EventRef event,
-                                                      void *data);
-#endif
-
-private:
-   AudioComponent mComponent;
-   AudioUnit mUnit;
-
-   NSView *mAUView;
-   NSView *mView;
-
-   wxSize mLastMin;
-   bool mSettingSize;
-
-#if !defined(_LP64)
-   AudioComponentInstance mInstance;
-   WindowRef mWindowRef;
-   HIViewRef mHIView;
-#endif
-
-   DECLARE_EVENT_TABLE();
+   virtual ~VSTEffectLink() {};
+   virtual intptr_t callDispatcher(int opcode, int index, intptr_t value, void *ptr, float opt) = 0;
 };
+
+class VSTControlBase : public wxControl
+{
+public:
+   VSTControlBase()
+   {
+   }
+
+   virtual ~VSTControlBase()
+   {
+   }
+
+   virtual bool Create(wxWindow *parent, VSTEffectLink *link)
+   {
+      mParent = parent;
+      mLink = link;
+   
+      DontCreatePeer();
+   
+      if (!wxControl::Create(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, wxEmptyString))
+      {
+         return false;
+      }
+
+      return true;
+   }
+   
+protected:
+   wxWindow *mParent;
+   VSTEffectLink *mLink;
+};
+
+#if defined(__WXMAC__)
+#include "VSTControlMac.h"
+#elif defined(__WXMSW__)
+#include "VSTControlMSW.h"
+#elif defined(__WXGTK__)
+#include "VSTControlGTK.h"
+#endif
 
 #endif

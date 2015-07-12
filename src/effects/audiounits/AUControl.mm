@@ -107,9 +107,6 @@ AUControl::AUControl()
 AUControl::~AUControl()
 {
 #if !defined(_LP64)
-   if (mHIView)
-   {
-   }
 
    if (mInstance)
    {
@@ -117,6 +114,7 @@ AUControl::~AUControl()
    }
 
 #endif
+
    if (mView)
    {
       NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
@@ -242,8 +240,8 @@ void AUControl::OnSize(wxSizeEvent & evt)
       wxSize min = w->GetMinSize();
       min.x += (rect.size.width - mLastMin.GetWidth());
       min.y += (rect.size.height - mLastMin.GetHeight());
-      w->SetMinSize(min);
-      w->SetMaxSize(min);
+
+      w->SetSizeHints(min, min);
 
       mLastMin = wxSize(rect.size.width, rect.size.height);
    }
@@ -537,7 +535,7 @@ void AUControl::CreateCarbon()
       AudioComponentInstanceDispose(mInstance);
       mInstance = NULL;
 
-      return nil;
+      return;
    }
 
    SetWindowActivationScope(mWindowRef, kWindowActivationScopeIndependent);
@@ -647,12 +645,16 @@ void AUControl::CarbonViewResized()
    size.x += (rect.size.width - frameSize.width);
    size.y += (rect.size.height - frameSize.height);
 
-   w->SetMinSize(wxDefaultSize);
-   w->SetMaxSize(wxDefaultSize);
+   // Reset the current max/min
+   w->SetSizeHints(wxDefaultSize, wxDefaultSize);
+
+   // Set the dialog size
    w->SetSize(size);
-   w->SetMinSize(size);
-   w->SetMaxSize(size);
-   mLastMin = size;
+
+   // And finally set the new max/min
+   w->SetSizeHints(size, size);
+
+   mLastMin = wxSize(rect.size.width, rect.size.height);
 }
 
 #endif

@@ -2,40 +2,41 @@
 
   Audacity: A Digital Audio Editor
 
-  AUControl.h
+  VSTControlOSX.h
 
   Leland Lucius
 
 **********************************************************************/
 
-#ifndef AUDACITY_AUCONTROL_H
-#define AUDACITY_AUCONTROL_H
+#ifndef AUDACITY_VSTCONTROLOSX_H
+#define AUDACITY_VSTCONTROLOSX_H
 
 #if !defined(_LP64)
 #include <Carbon/Carbon.h>
 #endif
 
 #include <wx/osx/private.h>
+
 #include <wx/control.h>
 
-#include <AudioUnit/AudioComponent.h>
+#include "aeffectx.h"
 
-class AUControlImpl : public wxWidgetCocoaImpl
+class VSTControlImpl : public wxWidgetCocoaImpl
 {
 public :
-   AUControlImpl(wxWindowMac *peer, NSView *view);
-   ~AUControlImpl();
+   VSTControlImpl(wxWindowMac *peer, NSView *view);
+   ~VSTControlImpl();
 };
 
-class AUControl : public wxControl
+class VSTControl : public VSTControlBase
 {
 public:
-   AUControl();
-   ~AUControl();
+   VSTControl();
+   ~VSTControl();
 
-   bool Create(wxWindow *parent, AudioComponent comp, AudioUnit unit, bool custom);
+   bool Create(wxWindow *parent, VSTEffectLink *link);
+
    void CreateCocoa();
-   void CreateGeneric();
    void CocoaViewResized();
 
    void OnSize(wxSizeEvent & evt);
@@ -50,19 +51,18 @@ public:
 #endif
 
 private:
-   AudioComponent mComponent;
-   AudioUnit mUnit;
-
-   NSView *mAUView;
+   NSView *mVSTView;
    NSView *mView;
 
    wxSize mLastMin;
    bool mSettingSize;
 
 #if !defined(_LP64)
-   AudioComponentInstance mInstance;
+
    WindowRef mWindowRef;
+   WindowRef mPreviousRef;
    HIViewRef mHIView;
+
 #endif
 
    DECLARE_EVENT_TABLE();

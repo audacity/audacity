@@ -49,6 +49,10 @@ greater use in future.
 #include "TimeWarper.h"
 #include "nyquist/Nyquist.h"
 
+#if defined(__WXMAC__)
+#include <Cocoa/Cocoa.h>
+#endif
+
 static const int kDummyID = 30000;
 static const int kSaveAsID = 30001;
 static const int kImportID = 30002;
@@ -2755,6 +2759,11 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
             wxDefaultPosition, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMINIMIZE_BOX | wxMAXIMIZE_BOX)
 {
+#if defined(__WXMAC__)
+   // Make sure the effect window actually floats above the main window
+   [[((NSView *)GetHandle()) window] setLevel:NSFloatingWindowLevel];
+#endif
+
    SetName(effect->GetName());
    SetExtraStyle(wxWS_EX_VALIDATE_RECURSIVELY);
 

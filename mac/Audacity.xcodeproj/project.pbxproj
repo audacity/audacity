@@ -876,6 +876,7 @@
 		2897F6F80AB3DB5A003C20C5 /* ToolsToolBar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2897F6EC0AB3DB5A003C20C5 /* ToolsToolBar.cpp */; };
 		2897F6F90AB3DB5A003C20C5 /* TranscriptionToolBar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2897F6EE0AB3DB5A003C20C5 /* TranscriptionToolBar.cpp */; };
 		2897F6FE0AB3DCD0003C20C5 /* Grabber.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2897F6FC0AB3DCD0003C20C5 /* Grabber.cpp */; };
+		289D127A1B44D57F00B5B6AA /* VSTControlMac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 289D12791B44D57F00B5B6AA /* VSTControlMac.mm */; };
 		289E750A1006D0BD00CEF79B /* MixerBoard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 289E75081006D0BD00CEF79B /* MixerBoard.cpp */; };
 		289F9C7E0AC671BB00797DC1 /* DeviceToolBar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 289F9C7C0AC671BB00797DC1 /* DeviceToolBar.cpp */; };
 		28A4E2AC0F60319300E9E7F2 /* fftext.c in Sources */ = {isa = PBXBuildFile; fileRef = 28A4E2A40F60319300E9E7F2 /* fftext.c */; };
@@ -1793,7 +1794,7 @@
 		1790B01509883BFD008A330A /* Compressor.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = Compressor.h; sourceTree = "<group>"; tabWidth = 3; };
 		1790B01709883BFD008A330A /* Echo.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = Echo.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		1790B01809883BFD008A330A /* Echo.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = Echo.h; sourceTree = "<group>"; tabWidth = 3; };
-		1790B01909883BFD008A330A /* Effect.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = Effect.cpp; sourceTree = "<group>"; tabWidth = 3; };
+		1790B01909883BFD008A330A /* Effect.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 30; indentWidth = 3; path = Effect.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		1790B01A09883BFD008A330A /* Effect.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = Effect.h; sourceTree = "<group>"; tabWidth = 3; };
 		1790B01B09883BFD008A330A /* Equalization.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = Equalization.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		1790B01C09883BFD008A330A /* Equalization.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = Equalization.h; sourceTree = "<group>"; tabWidth = 3; };
@@ -2607,6 +2608,9 @@
 		2897F6EF0AB3DB5A003C20C5 /* TranscriptionToolBar.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = TranscriptionToolBar.h; sourceTree = "<group>"; tabWidth = 3; };
 		2897F6FC0AB3DCD0003C20C5 /* Grabber.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = Grabber.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		2897F6FD0AB3DCD0003C20C5 /* Grabber.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = Grabber.h; sourceTree = "<group>"; tabWidth = 3; };
+		289D12771B44D57F00B5B6AA /* VSTControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VSTControl.h; path = VST/VSTControl.h; sourceTree = "<group>"; };
+		289D12781B44D57F00B5B6AA /* VSTControlMac.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VSTControlMac.h; path = VST/VSTControlMac.h; sourceTree = "<group>"; };
+		289D12791B44D57F00B5B6AA /* VSTControlMac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = VSTControlMac.mm; path = VST/VSTControlMac.mm; sourceTree = "<group>"; };
 		289E75081006D0BD00CEF79B /* MixerBoard.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = MixerBoard.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		289E75091006D0BD00CEF79B /* MixerBoard.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = MixerBoard.h; sourceTree = "<group>"; tabWidth = 3; };
 		289F9C7C0AC671BB00797DC1 /* DeviceToolBar.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = DeviceToolBar.cpp; sourceTree = "<group>"; tabWidth = 3; };
@@ -5304,9 +5308,12 @@
 		28B97B800FBF77030076CF28 /* vst */ = {
 			isa = PBXGroup;
 			children = (
-				2885BFF10FC108F800128165 /* aeffectx.h */,
+				289D12771B44D57F00B5B6AA /* VSTControl.h */,
+				289D12781B44D57F00B5B6AA /* VSTControlMac.h */,
+				289D12791B44D57F00B5B6AA /* VSTControlMac.mm */,
 				28B97B850FBF771A0076CF28 /* VSTEffect.cpp */,
 				28B97B860FBF771A0076CF28 /* VSTEffect.h */,
+				2885BFF10FC108F800128165 /* aeffectx.h */,
 			);
 			name = vst;
 			sourceTree = "<group>";
@@ -7585,6 +7592,7 @@
 				2888496F131B6CF600B59735 /* tr.po in Sources */,
 				28884970131B6CF600B59735 /* uk.po in Sources */,
 				28884971131B6CF600B59735 /* vi.po in Sources */,
+				289D127A1B44D57F00B5B6AA /* VSTControlMac.mm in Sources */,
 				28884972131B6CF600B59735 /* zh_TW.po in Sources */,
 				28884973131B6CF600B59735 /* zh.po in Sources */,
 				EDF3B7B01588C0D50032D35F /* Paulstretch.cpp in Sources */,

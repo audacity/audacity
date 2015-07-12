@@ -18,7 +18,7 @@
 
 #include "../../widgets/NumericTextCtrl.h"
 
-#include "aeffectx.h"
+#include "VSTControl.h"
 
 #define VSTCMDKEY wxT("-checkvst")
 #define VSTPLUGINTYPE wxT("VST")
@@ -64,7 +64,8 @@ DECLARE_LOCAL_EVENT_TYPE(EVT_UPDATEDISPLAY, -1);
 class VSTEffect : public wxEvtHandler, 
                   public EffectClientInterface,
                   public EffectUIClientInterface,
-                  public XMLTagHandler
+                  public XMLTagHandler,
+                  public VSTEffectLink
 {
  public:
    VSTEffect(const wxString & path, VSTEffect *master = NULL);
@@ -300,6 +301,8 @@ private:
    EffectUIHostInterface *mUIHost;
    wxSizerItem *mContainer;
    bool mGui;
+
+   VSTControl *mControl;
 
    NumericTextCtrl *mDuration;
    wxStaticText **mNames;
