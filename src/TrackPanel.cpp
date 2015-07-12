@@ -3420,12 +3420,7 @@ void TrackPanel::Stretch(int mouseXCoordinate, int trackLeftEdge,
 void TrackPanel::SelectionHandleDrag(wxMouseEvent & event, Track *clickedTrack)
 {
 #ifdef EXPERIMENTAL_SCRUBBING_BASIC
-   if (IsScrubbing()) {
-      // May need a screen update.
-      if (mAutoScrolling)
-         UpdateSelectionDisplay();
-   }
-   else if (mScrubStartPosition >= 0) {
+   if (mScrubStartPosition >= 0) {
       MaybeStartScrubbing(event);
       // Do nothing more, don't change selection
       return;
