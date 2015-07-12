@@ -604,8 +604,8 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    mSnapLeft = -1;
    mSnapRight = -1;
 
-   mLastCursor = -1;
-   mLastIndicator = -1;
+   mLastCursorX = -1;
+   mLastIndicatorX = -1;
    mOldQPIndicatorPos = -1;
 
    // Register for tracklist updates
@@ -1279,41 +1279,36 @@ void TrackPanel::DoDrawIndicator
    (wxDC & dc, bool repairOld /* = false */, double indicator /* = -1 */)
 {
    bool onScreen;
-   int x;
    double pos;
 
    if (!repairOld)
    {
       // Erase the old indicator.
-      if( mLastIndicator != -1 )
+      if (mLastIndicatorX != -1)
       {
-         onScreen = between_inclusive( mViewInfo->h,
-                                      mLastIndicator,
-                                      mViewInfo->h + mViewInfo->screen );
-         if( onScreen )
+         onScreen = between_inclusive(GetLeftOffset(),
+            mLastIndicatorX,
+            GetLeftOffset() + mViewInfo->GetScreenWidth());
+         if (onScreen)
          {
-            x = mViewInfo->TimeToPosition(mLastIndicator, GetLeftOffset());
-
             // LL:  Keep from trying to blit outsize of the source DC.  This results in a crash on
             //      OSX due to allocating memory using negative sizes and can be caused by resizing
             //      the project window while recording or playing.
             int w = dc.GetSize().GetWidth();
-            if (x >= w) {
-               x = w - 1;
+            if (mLastIndicatorX >= w) {
+               mLastIndicatorX = w - 1;
             }
 
-            dc.Blit( x, 0, 1, mBacking->GetHeight(), &mBackingDC, x, 0 );
+            dc.Blit(mLastIndicatorX, 0, 1, mBacking->GetHeight(), &mBackingDC, mLastIndicatorX, 0);
          }
 
          // Nothing's ever perfect...
          //
          // Redraw the cursor since we may have just wiped it out
-         if( mLastCursor == mLastIndicator )
+         if (mLastCursorX == mLastIndicatorX)
          {
             DoDrawCursor( dc );
          }
-
-         mLastIndicator = -1;
       }
 
       pos = indicator;
@@ -1350,18 +1345,15 @@ void TrackPanel::DoDrawIndicator
 
       mIndicatorShowing = ( onScreen && audioActive );
 
-      // Remember it
-      mLastIndicator = pos;
-   } else {
-      pos = mLastIndicator;
+      // Calculate the horizontal position of the indicator
+      mLastIndicatorX = mViewInfo->TimeToPosition(pos, GetLeftOffset());
    }
+   else
+      pos = mViewInfo->PositionToTime(mLastIndicatorX, GetLeftOffset());
 
    // Set play/record color
    bool rec = (gAudioIO->GetNumCaptureChannels() > 0);
    AColor::IndicatorColor( &dc, !rec);
-
-   // Calculate the horizontal position of the indicator
-   x = mViewInfo->TimeToPosition(pos, GetLeftOffset());
 
    mRuler->DrawIndicator( pos, rec );
 
@@ -1370,7 +1362,7 @@ void TrackPanel::DoDrawIndicator
    int leftCutoff = clip.x + GetLabelWidth();
    int rightInset = kLeftInset + 2; // See the call to SetInset
    int rightCutoff = clip.x + clip.width - rightInset;
-   if (!between_inclusive(leftCutoff, x, rightCutoff))
+   if (!between_inclusive(leftCutoff, mLastIndicatorX, rightCutoff))
    {
       return;
    }
@@ -1390,9 +1382,9 @@ void TrackPanel::DoDrawIndicator
 
       // Draw the new indicator in its new location
       AColor::Line(dc,
-                   x,
+                   mLastIndicatorX,
                    y + kTopInset + 1,
-                   x,
+                   mLastIndicatorX,
                    y + t->GetHeight() - 3 );
    }
 }
@@ -1411,37 +1403,27 @@ void TrackPanel::DrawCursor()
 void TrackPanel::DoDrawCursor(wxDC & dc)
 {
    bool onScreen;
-   int x;
 
-   if( mLastCursor != -1 )
+   if( mLastCursorX != -1 )
    {
-      onScreen = between_inclusive( mViewInfo->h,
-                                    mLastCursor,
-                                    mViewInfo->h + mViewInfo->screen );
+      onScreen = between_inclusive(GetLeftOffset(),
+                                   mLastCursorX,
+                                   GetLeftOffset() + mViewInfo->GetScreenWidth());
       if( onScreen )
-      {
-         x = mViewInfo->TimeToPosition(mLastCursor, GetLeftOffset());
-
-         dc.Blit( x, 0, 1, mBacking->GetHeight(), &mBackingDC, x, 0 );
-      }
-
-      mLastCursor = -1;
+         dc.Blit(mLastCursorX, 0, 1, mBacking->GetHeight(), &mBackingDC, mLastCursorX, 0);
    }
 
-   mLastCursor = mViewInfo->selectedRegion.t0();
+   const double time = mViewInfo->selectedRegion.t0();
+   mLastCursorX = mViewInfo->TimeToPosition(time, GetLeftOffset());
 
    onScreen = between_inclusive( mViewInfo->h,
-                                 mLastCursor,
+                                 time,
                                  mViewInfo->h + mViewInfo->screen );
 
    if( !onScreen )
-   {
       return;
-   }
 
    AColor::CursorColor( &dc );
-
-   x = mViewInfo->TimeToPosition(mLastCursor, GetLeftOffset());
 
    // Draw cursor in all selected tracks
    VisibleTrackIterator iter( GetProject() );
@@ -1454,14 +1436,14 @@ void TrackPanel::DoDrawCursor(wxDC & dc)
          wxCoord bottom = y + t->GetHeight() - kTopInset;
 
          // MB: warp() is not needed here as far as I know, in fact it creates a bug. Removing it fixes that.
-         AColor::Line( dc, x, top, x, bottom ); // <-- The whole point of this routine.
+         AColor::Line(dc, mLastCursorX, top, mLastCursorX, bottom); // <-- The whole point of this routine.
 
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
          if(MONO_WAVE_PAN(t)){
             y = t->GetY(true) - mViewInfo->vpos + 1;
             top = y + kTopInset;
             bottom = y + t->GetHeight(true) - kTopInset;
-            AColor::Line( dc, x, top, x, bottom );
+            AColor::Line( dc, mLastCursorX, top, mLastCursorX, bottom );
          }
 #endif
 
@@ -1469,7 +1451,7 @@ void TrackPanel::DoDrawCursor(wxDC & dc)
    }
 
    // AS: Ah, no, this is where we draw the blinky thing in the ruler.
-   mRuler->DrawCursor( mLastCursor );
+   mRuler->DrawCursor( time );
 
    DisplaySelection();
 }

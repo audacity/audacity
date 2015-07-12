@@ -587,8 +587,8 @@ protected:
 
    // This stores the parts of the screen that get overwritten by the indicator
    // and cursor
-   double mLastIndicator;
-   double mLastCursor;
+   int mLastIndicatorX;
+   int mLastCursorX;
 
    // Quick-Play indicator postion
    double mOldQPIndicatorPos;
