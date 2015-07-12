@@ -68,6 +68,8 @@ class TrackPanelListener;
 #pragma warning( disable: 4251 )
 #endif
 
+DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_TRACK_PANEL_TIMER, -1);
+
 class AUDACITY_DLL_API TrackInfo
 {
 public:

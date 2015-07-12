@@ -196,8 +196,6 @@ is time to refresh some aspect of the screen.
 #include "float_cast.h"
 #include "Internat.h"
 #include "LabelTrack.h"
-#include "Lyrics.h"
-#include "LyricsWindow.h"
 #include "MixerBoard.h"
 
 #include "NoteTrack.h"
@@ -235,6 +233,8 @@ is time to refresh some aspect of the screen.
 //This loads the appropriate set of cursors, depending on platform.
 #include "../images/Cursors.h"
 #include <iostream>
+
+DEFINE_EVENT_TYPE(EVT_TRACK_PANEL_TIMER)
 
 enum {
    kLeftInset = 4,
@@ -1053,27 +1053,9 @@ void TrackPanel::OnTimer()
    wxCommandEvent dummyEvent;
    AudacityProject *p = GetProject();
 
-   if (IsAudioActive())
    {
-      // Update lyrics display.
-      LyricsWindow* pLyricsWindow = p->GetLyricsWindow();
-      if (pLyricsWindow)
-      {
-         Lyrics* pLyricsPanel = pLyricsWindow->GetLyricsPanel();
-         pLyricsPanel->Update(gAudioIO->GetStreamTime());
-      }
-   }
-
-   //v Vaughan, 2011-02-25: Moved this update back here from audacityAudioCallback.
-   //    See note there.
-   // Vaughan, 2010-01-30:
-   //    Since all we're doing here is updating the meters, I moved it to
-   //    audacityAudioCallback where it calls gAudioIO->mOutputMeter->UpdateDisplay().
-   MixerBoard* pMixerBoard = this->GetMixerBoard();
-   if (pMixerBoard && IsAudioActive())
-   {
-      pMixerBoard->UpdateMeters(gAudioIO->GetStreamTime(),
-         (p->mLastPlayMode == loopedPlay));
+      wxCommandEvent e(EVT_TRACK_PANEL_TIMER);
+      p->ProcessEvent(e);
    }
 
 #ifdef EXPERIMENTAL_SCRUBBING_BASIC
@@ -1119,19 +1101,6 @@ void TrackPanel::OnTimer()
       //the stream may have been started up after this one finished (by some other project)
       //in that case reset the buttons don't stop the stream
       p->GetControlToolBar()->StopPlaying(!gAudioIO->IsStreamActive());
-
-      // Reset lyrics display.
-      LyricsWindow* pLyricsWindow = p->GetLyricsWindow();
-      if (pLyricsWindow)
-      {
-         Lyrics* pLyricsPanel = pLyricsWindow->GetLyricsPanel();
-         pLyricsPanel->Update(p->GetSel0());
-      }
-
-      // Vaughan, 2011-01-28: No longer doing this on timer.
-      //   Now it's in AudioIO::SetMeters() and AudioIO::StopStream(), as with Meter Toolbar meters.
-      //if (pMixerBoard)
-      //   pMixerBoard->ResetMeters(false);
    }
 
    // Next, check to see if we were playing or recording
@@ -2176,7 +2145,7 @@ void TrackPanel::HandleSelect(wxMouseEvent & event)
    // AS: Ok, did the user just click the mouse, release the mouse,
    //  or drag?
    if (event.LeftDown() ||
-	   (event.LeftDClick() && event.CmdDown())) {
+      (event.LeftDClick() && event.CmdDown())) {
       // AS: Now, did they click in a track somewhere?  If so, we want
       //  to extend the current selection or start a new selection,
       //  depending on the shift key.  If not, cancel all selections.
@@ -2258,15 +2227,6 @@ void TrackPanel::HandleSelect(wxMouseEvent & event)
 #endif
  done:
    SelectionHandleDrag(event, t);
-
-   // Update lyrics display for new selection.
-   AudacityProject* pProj = GetActiveProject();
-   LyricsWindow* pLyricsWindow = pProj->GetLyricsWindow();
-   if (pLyricsWindow && pLyricsWindow->IsShown())
-   {
-      Lyrics* pLyricsPanel = pLyricsWindow->GetLyricsPanel();
-      pLyricsPanel->Update(pProj->GetSel0());
-   }
 }
 
 
