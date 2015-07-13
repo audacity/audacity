@@ -18,6 +18,7 @@ custom controls.
 #define _FILE_DIALOG_H_
 
 #include <wx/defs.h>
+#include <wx/filectrl.h>
 #include <wx/filedlg.h>
 
 typedef void (*fdCallback)(void *, int);
@@ -45,13 +46,25 @@ DECLARE_EVENT_TYPE(EVT_FILEDIALOG_ADD_CONTROLS, -1);
 class FileDialogBase : public wxFileDialogBase
 {
 public:
-   FileDialogBase() {};
+   FileDialogBase();
    virtual ~FileDialogBase() {};
+
+   // FileDialogBase
+
+   typedef void (*UserPaneCreatorFunction)(wxWindow *parent, wxUIntPtr userdata);
+
+   virtual bool HasUserPaneCreator() const;
+   virtual void SetUserPaneCreator(UserPaneCreatorFunction creator, wxUIntPtr userdata);
 
    virtual void EnableButton(wxString label, fdCallback cb, void *cbdata);
    virtual void ClickButton(int index);   
 
 protected:
+   void CreateUserPane(wxWindow *parent);
+
+   UserPaneCreatorFunction m_creator;
+   wxUIntPtr m_userdata;
+
    wxString m_buttonlabel;
    fdCallback m_callback;
    void *m_cbdata;

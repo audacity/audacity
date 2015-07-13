@@ -81,42 +81,30 @@ static int iBitrates[] = {
    192, 224, 256, 320, 384
 };
 
-class ExportMP2Options : public wxDialog
+class ExportMP2Options : public wxPanel
 {
 public:
+   ExportMP2Options(wxWindow *parent, int format);
 
-   ///
-   ///
-   ExportMP2Options(wxWindow *parent);
    void PopulateOrExchange(ShuttleGui & S);
-   void OnOK(wxCommandEvent& event);
 
 private:
    wxArrayString mBitRateNames;
    wxArrayInt    mBitRateLabels;
-
-   DECLARE_EVENT_TABLE()
 };
 
-BEGIN_EVENT_TABLE(ExportMP2Options, wxDialog)
-   EVT_BUTTON(wxID_OK, ExportMP2Options::OnOK)
-END_EVENT_TABLE()
-
 ///
 ///
-ExportMP2Options::ExportMP2Options(wxWindow *parent)
-:  wxDialog(parent, wxID_ANY,
-            wxString(_("Specify MP2 Options")))
+ExportMP2Options::ExportMP2Options(wxWindow *parent, int WXUNUSED(format))
+:  wxPanel(parent, wxID_ANY)
 {
-   SetName(GetTitle());
-   ShuttleGui S(this, eIsCreatingFromPrefs);
-
    for (unsigned int i=0; i < (sizeof(iBitrates)/sizeof(int)); i++)
    {
       mBitRateNames.Add(wxString::Format(_("%i kbps"),iBitrates[i]));
       mBitRateLabels.Add(iBitrates[i]);
    }
 
+   ShuttleGui S(this, eIsCreatingFromPrefs);
    PopulateOrExchange(S);
 }
 
@@ -124,41 +112,20 @@ ExportMP2Options::ExportMP2Options(wxWindow *parent)
 ///
 void ExportMP2Options::PopulateOrExchange(ShuttleGui & S)
 {
-   S.StartHorizontalLay(wxEXPAND, 0);
+   S.StartVerticalLay();
    {
-      S.StartStatic(_("MP2 Export Setup"), 0);
+      S.StartHorizontalLay(wxCENTER);
       {
-         S.StartTwoColumn();
+         S.StartMultiColumn(2, wxCENTER);
          {
             S.TieChoice(_("Bit Rate:"), wxT("/FileFormats/MP2Bitrate"),
                160, mBitRateNames, mBitRateLabels);
          }
-         S.EndTwoColumn();
+         S.EndMultiColumn();
       }
-      S.EndStatic();
+      S.EndHorizontalLay();
    }
-   S.EndHorizontalLay();
-
-   S.AddStandardButtons();
-
-   Layout();
-   Fit();
-   SetMinSize(GetSize());
-   Center();
-
-   return;
-}
-
-///
-///
-void ExportMP2Options::OnOK(wxCommandEvent& WXUNUSED(event))
-{
-   ShuttleGui S(this, eIsSavingToPrefs);
-   PopulateOrExchange(S);
-
-   EndModal(wxID_OK);
-
-   return;
+   S.EndVerticalLay();
 }
 
 //----------------------------------------------------------------------------
@@ -174,7 +141,7 @@ public:
 
    // Required
 
-   bool DisplayOptions(wxWindow *parent, int format = 0);
+   wxWindow *OptionsCreate(wxWindow *parent, int format);
    int Export(AudacityProject *project,
                int channels,
                wxString fName,
@@ -333,13 +300,9 @@ int ExportMP2::Export(AudacityProject *project,
    return updateResult;
 }
 
-bool ExportMP2::DisplayOptions(wxWindow *parent, int WXUNUSED(format))
+wxWindow *ExportMP2::OptionsCreate(wxWindow *parent, int format)
 {
-   ExportMP2Options od(parent);
-
-   od.ShowModal();
-
-   return true;
+   return new ExportMP2Options(parent, format);
 }
 
 // returns buffer len; caller frees

@@ -31,7 +31,7 @@ protected:
     wxArrayString m_paths;
 
 public:
-    FileDialog() { Init(); }
+    FileDialog();
     FileDialog(wxWindow *parent,
                const wxString& message = wxFileSelectorPromptStr,
                const wxString& defaultDir = wxEmptyString,
@@ -40,12 +40,7 @@ public:
                long style = wxFD_DEFAULT_STYLE,
                const wxPoint& pos = wxDefaultPosition,
                const wxSize& sz = wxDefaultSize,
-               const wxString& name = wxFileDialogNameStr)
-    {
-        Init();
-
-        Create(parent,message,defaultDir,defaultFile,wildCard,style,pos,sz,name);
-    }
+               const wxString& name = wxFileDialogNameStr);
 
     void Create(wxWindow *parent,
                 const wxString& message = wxFileSelectorPromptStr,
@@ -61,16 +56,6 @@ public:
     ~FileDialog();
 #endif
     
-    virtual void EnableButton(wxString label, fdCallback cb, void *cbdata)
-    {
-      FileDialogBase::EnableButton(label, cb, cbdata);
-    }
-
-    virtual void ClickButton(int index)
-    {
-        FileDialogBase::ClickButton(index);
-    };
-
     virtual void GetPaths(wxArrayString& paths) const { paths = m_paths; }
     virtual void GetFilenames(wxArrayString& files) const { files = m_fileNames ; }
 
@@ -86,8 +71,9 @@ public:
     // implementation only
     
 #if wxOSX_USE_COCOA
-    // returns true if the file can be shown as active
-    bool CheckFile( const wxString& filename );
+    void DoSendFileActivatedEvent(void* panel);
+    void DoSendFolderChangedEvent(void* panel, const wxString& path);
+    void DoSendSelectionChangedEvent(void* panel);
 #endif
 
 protected:
@@ -99,7 +85,6 @@ protected:
     void SetupExtraControls(WXWindow nativeWindow);
     
 #if wxOSX_USE_COCOA
-    virtual wxWindow* CreateFilterPanel(wxWindow *extracontrol);
     void DoOnFilterSelected(int index);
     virtual void OnFilterSelected(wxCommandEvent &event);
 

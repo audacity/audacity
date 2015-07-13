@@ -34,6 +34,31 @@ DEFINE_EVENT_TYPE(EVT_FILEDIALOG_SELECTION_CHANGED);
 DEFINE_EVENT_TYPE(EVT_FILEDIALOG_FILTER_CHANGED);
 DEFINE_EVENT_TYPE(EVT_FILEDIALOG_ADD_CONTROLS);
 
+FileDialogBase::FileDialogBase()
+{
+   m_creator = NULL;
+   m_userdata = NULL;
+}
+
+bool FileDialogBase::HasUserPaneCreator() const
+{
+   return m_creator != NULL;
+}
+
+void FileDialogBase::SetUserPaneCreator(UserPaneCreatorFunction creator, wxUIntPtr userdata)
+{
+   m_creator = creator;
+   m_userdata = userdata;
+}
+
+void FileDialogBase::CreateUserPane(wxWindow *parent)
+{
+   if (m_creator)
+   {
+      (*m_creator)(parent, m_userdata);
+   }
+}
+
 void FileDialogBase::EnableButton(wxString label, fdCallback cb, void *data)
 {
    m_buttonlabel = label;

@@ -42,6 +42,7 @@
 #include <wx/progdlg.h>
 #include <wx/sizer.h>
 #include <wx/slider.h>
+#include <wx/statbox.h>
 #include <wx/stattext.h>
 #include <wx/string.h>
 #include <wx/textctrl.h>
@@ -235,6 +236,24 @@ bool ExportPlugin::DisplayOptions(wxWindow * WXUNUSED(parent), int WXUNUSED(form
    return false;
 }
 
+wxWindow *ExportPlugin::OptionsCreate(wxWindow *parent, int format)
+{
+   wxPanel *p = new wxPanel(parent, wxID_ANY);
+   ShuttleGui S(p, eIsCreatingFromPrefs);
+
+   S.StartHorizontalLay(wxCENTER);
+   {
+      S.StartHorizontalLay(wxCENTER, 0);
+      {
+         S.Prop(1).AddTitle(_("No format specific options"));
+      }
+      S.EndHorizontalLay();
+   }
+   S.EndHorizontalLay();
+
+   return p;
+}
+
 int ExportPlugin::Export(AudacityProject *project,
                           int channels,
                           wxString fName,
@@ -280,13 +299,20 @@ Mixer* ExportPlugin::CreateMixer(int numInputTracks, WaveTrack **inputTracks,
                   outRate, outFormat,
                   highQuality, mixerSpec);
 }
+
 //----------------------------------------------------------------------------
 // Export
 //----------------------------------------------------------------------------
 
+BEGIN_EVENT_TABLE(Exporter, wxEvtHandler)
+   EVT_FILECTRL_FILTERCHANGED(wxID_ANY, Exporter::OnFilterChanged)
+END_EVENT_TABLE()
+
 Exporter::Exporter()
 {
+   mActivePage = NULL;
    mMixerSpec = NULL;
+
    SetFileDialogTitle( _("Export Audio") );
 
    RegisterPlugin(New_ExportPCM());
@@ -552,7 +578,9 @@ bool Exporter::GetFilename()
                     maskString,
                     wxFD_SAVE | wxRESIZE_BORDER | FD_NO_ADD_EXTENSION);
       mDialog = &fd;
+      mDialog->PushEventHandler(this);
 
+      fd.SetUserPaneCreator(CreateUserPaneCallback, (wxUIntPtr) this);
       fd.SetFilterIndex(mFilterIndex);
 
       fd.EnableButton(_("&Options..."), ExportCallback, this);
@@ -841,6 +869,83 @@ bool Exporter::ExportTracks()
    }
 
    return (success == eProgressSuccess || success == eProgressStopped);
+}
+
+void Exporter::CreateUserPaneCallback(wxWindow *parent, wxUIntPtr userdata)
+{
+   Exporter *self = (Exporter *) userdata;
+   if (self)
+   {
+      self->CreateUserPane(parent);
+   }
+}
+
+void Exporter::CreateUserPane(wxWindow *parent)
+{
+   mUserPaneParent = parent;
+
+   ShuttleGui S(parent, eIsCreatingFromPrefs);
+
+   wxSize maxsz;
+   wxSize pageMax;
+
+   S.StartVerticalLay();
+   {
+      S.StartHorizontalLay(wxEXPAND);
+      {
+         S.StartStatic(_("Format Options"), 1);
+         {
+            for (size_t i = 0; i < mPlugins.GetCount(); i++)
+            {
+               for (int j = 0; j < mPlugins[i]->GetFormatCount(); j++)
+               {
+                  wxWindow *page = mPlugins[i]->OptionsCreate(parent, j);
+                  mPages.Add(page);
+                  S.Prop(1).AddWindow(page, wxEXPAND|wxALL);
+
+                  parent->Layout();
+                  wxSize sz = parent->GetBestSize();
+                  maxsz.x = wxMax(maxsz.x, sz.x);
+                  maxsz.y = wxMax(maxsz.y, sz.y);
+
+                  sz = page->GetBestSize();
+                  pageMax.x = wxMax(pageMax.x, sz.x);
+                  pageMax.y = wxMax(pageMax.y, sz.y);
+
+                  S.GetSizer()->Hide(page);
+               }
+            }
+         }
+         S.EndStatic();
+      }
+      S.EndHorizontalLay();
+   }
+   S.EndHorizontalLay();
+
+   parent->SetMinSize(maxsz);
+   parent->SetSize(maxsz);
+
+   for (size_t i = 0, cnt = mPages.GetCount(); i < cnt; i++)
+   {
+      mPages[i]->SetSize(pageMax);
+   }
+
+   return;
+}
+
+void Exporter::OnFilterChanged(wxFileCtrlEvent & evt)
+{
+   int index = evt.GetFilterIndex();
+
+   if (mActivePage)
+   {
+      mActivePage->Hide();
+      mActivePage = NULL;
+   }
+
+   mActivePage = mPages[index];
+   mActivePage->Show();
+   mUserPaneParent->Layout();
 }
 
 //----------------------------------------------------------------------------
