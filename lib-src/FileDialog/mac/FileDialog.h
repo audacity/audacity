@@ -71,7 +71,6 @@ public:
     // implementation only
     
 #if wxOSX_USE_COCOA
-    void DoSendFileActivatedEvent(void* panel);
     void DoSendFolderChangedEvent(void* panel, const wxString& path);
     void DoSendSelectionChangedEvent(void* panel);
 #endif

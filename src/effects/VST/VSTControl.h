@@ -38,8 +38,6 @@ public:
       mParent = parent;
       mLink = link;
    
-      DontCreatePeer();
-   
       if (!wxControl::Create(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, wxEmptyString))
       {
          return false;

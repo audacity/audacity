@@ -16,49 +16,75 @@
 #define _FILEDIALOGMSW_H_
 
 #include <windows.h>
-#include <wx/msw/winundef.h>
 
 //-------------------------------------------------------------------------
-// wxFileDialog
+// FileDialog
 //-------------------------------------------------------------------------
 
-class FileDialog: public wxFileDialogBase
+class FileDialog : public FileDialogBase
 {
  public:
-   FileDialog(wxWindow *parent,
-              const wxString& message = wxFileSelectorPromptStr,
-              const wxString& defaultDir = wxEmptyString,
-              const wxString& defaultFile = wxEmptyString,
-              const wxString& wildCard = wxFileSelectorDefaultWildcardStr,
-              long style = 0,
-              const wxPoint& pos = wxDefaultPosition);
-   
-   virtual void SetPath(const wxString& path);
+    FileDialog();
+    FileDialog(wxWindow *parent,
+               const wxString& message = wxFileSelectorPromptStr,
+               const wxString& defaultDir = wxEmptyString,
+               const wxString& defaultFile = wxEmptyString,
+               const wxString& wildCard = wxFileSelectorDefaultWildcardStr,
+               long style = wxFD_DEFAULT_STYLE,
+               const wxPoint& pos = wxDefaultPosition,
+               const wxSize& sz = wxDefaultSize,
+               const wxString& name = wxFileDialogNameStr);
+
    virtual void GetPaths(wxArrayString& paths) const;
    virtual void GetFilenames(wxArrayString& files) const;
-   
+   void OnSize(wxSizeEvent & e);
    virtual int ShowModal();
    
-   virtual void EnableButton(wxString label, fdCallback cb, void *cbdata);
-   virtual void ClickButton(int index);
-   
-   virtual void FilterFiles(HWND hDlg, bool refresh);
-   virtual void ParseFilter(int index);
-   wxString m_buttonlabel;
-   
- protected:
+   // -----------------------------------------
+   // wxMSW-specific implementation from now on
+   // -----------------------------------------
+
+   //
+   virtual UINT_PTR MSWDialogHook(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam, OPENFILENAME *pOfn);
+
+   //
+   virtual UINT_PTR MSWParentHook(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam, OPENFILENAME *pOfn);
+
+protected:
    
 #if !(defined(__SMARTPHONE__) && defined(__WXWINCE__))
-   virtual void DoMoveWindow(int x, int y, int width, int height);
-   virtual void DoGetSize( int *width, int *height ) const;
-   virtual void DoGetPosition( int *x, int *y ) const;
+    virtual void DoMoveWindow(int x, int y, int width, int height);
+    virtual void DoCentre(int dir);
+    virtual void DoGetSize(int *width, int *height) const;
+    virtual void DoGetPosition(int *x, int *y) const;
 #endif // !(__SMARTPHONE__ && __WXWINCE__)
-   
+
+private:
+   void Init();
+
+   wxString GetFullPath(HWND hwnd, int itm);
+   void FilterFiles(HWND hwnd, bool refresh);
+   void ParseFilter(int index);
+
+   // Message handlers for the child dialog
+   virtual void MSWOnInitDialog(HWND hwnd, LPOPENFILENAME pOfn);
+   virtual void MSWOnDestroy(HWND hwnd, LPOPENFILENAME pOfn);
+   virtual void MSWOnInitDone(HWND hwnd, LPOPENFILENAME pOfn);
+   virtual void MSWOnFolderChange(HWND hwnd, LPOPENFILENAME pOfn);
+   virtual void MSWOnSelChange(HWND hwnd, LPOPENFILENAME pOfn);
+   virtual void MSWOnTypeChange(HWND hwnd, LPOPENFILENAME pOfn);
+
+   // Message handlers for the child dialog
+   virtual void MSWOnSize(HWND hwnd, LPOPENFILENAME pOfn);
+
 private:
    wxArrayString m_fileNames;
+
+   // remember if our SetPosition() or Centre() (which requires special
+   // treatment) was called
    bool m_bMovedWindow;
-   long m_dialogStyle;
-   
+   int m_centreDir;        // nothing to do if 0
+
    wxArrayString m_FilterGroups;
    wxArrayString m_Filters;
    wxChar *m_NameBuf;
@@ -67,6 +93,12 @@ private:
    fdCallback m_callback;
    void *m_cbdata;
    
+   HWND mParentDlg;
+   HWND mChildDlg;
+   WNDPROC mParentProc;
+
+   wxPanel *mRoot;
+
    DECLARE_DYNAMIC_CLASS(FileDialog)
    DECLARE_NO_COPY_CLASS(FileDialog)
 };

@@ -59,21 +59,6 @@ void FileDialogBase::CreateUserPane(wxWindow *parent)
    }
 }
 
-void FileDialogBase::EnableButton(wxString label, fdCallback cb, void *data)
-{
-   m_buttonlabel = label;
-   m_callback = cb;
-   m_cbdata = data;
-}
-
-void FileDialogBase::ClickButton(int index)
-{
-   if (m_callback)
-   {
-      m_callback(m_cbdata, index);
-   }
-}
-
 //----------------------------------------------------------------------------
 // FileDialog convenience functions
 //----------------------------------------------------------------------------

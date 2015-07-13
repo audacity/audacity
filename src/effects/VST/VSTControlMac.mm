@@ -106,6 +106,8 @@ VSTControl::~VSTControl()
 
 bool VSTControl::Create(wxWindow *parent, VSTEffectLink *link)
 {
+   DontCreatePeer();
+   
    if (!VSTControlBase::Create(parent, link))
    {
       return false;

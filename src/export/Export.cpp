@@ -77,12 +77,6 @@
 #include "../TimeTrack.h"
 #include "../Dependencies.h"
 
-// Callback to display format options
-static void ExportCallback(void *cbdata, int index)
-{
-   ((Exporter *) cbdata)->DisplayOptions(index);
-}
-
 //----------------------------------------------------------------------------
 // ExportPlugin
 //----------------------------------------------------------------------------
@@ -236,7 +230,7 @@ bool ExportPlugin::DisplayOptions(wxWindow * WXUNUSED(parent), int WXUNUSED(form
    return false;
 }
 
-wxWindow *ExportPlugin::OptionsCreate(wxWindow *parent, int format)
+wxWindow *ExportPlugin::OptionsCreate(wxWindow *parent, int WXUNUSED(format))
 {
    wxPanel *p = new wxPanel(parent, wxID_ANY);
    ShuttleGui S(p, eIsCreatingFromPrefs);
@@ -583,9 +577,11 @@ bool Exporter::GetFilename()
       fd.SetUserPaneCreator(CreateUserPaneCallback, (wxUIntPtr) this);
       fd.SetFilterIndex(mFilterIndex);
 
-      fd.EnableButton(_("&Options..."), ExportCallback, this);
+      int result = fd.ShowModal();
 
-      if (fd.ShowModal() == wxID_CANCEL) {
+      mDialog->PopEventHandler();
+
+      if (result == wxID_CANCEL) {
          return false;
       }
 

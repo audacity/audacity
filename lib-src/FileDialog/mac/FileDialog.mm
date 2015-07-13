@@ -50,7 +50,6 @@
 @interface OSPanelDelegate : NSObject wxOSX_10_6_AND_LATER(<NSOpenSavePanelDelegate>)
 {
     FileDialog* _dialog;
-    BOOL _didActivate;
 }
 
 - (FileDialog*) fileDialog;
@@ -68,7 +67,6 @@
 {
     self = [super init];
     _dialog = NULL;
-    _didActivate = NO;
     return self;
 }
 
@@ -80,17 +78,6 @@
 - (void) setFileDialog:(FileDialog*) dialog
 {
     _dialog = dialog;
-}
-
-- (BOOL)panel:(id)sender validateURL:(NSURL *)url error:(NSError **)outError AVAILABLE_MAC_OS_X_VERSION_10_6_AND_LATER
-{
-   if (_didActivate == NO)
-   {
-       _dialog->DoSendFileActivatedEvent( sender );
-       _didActivate = YES;
-   }
-
-   return YES;
 }
 
 - (void)panel:(id)sender didChangeToDirectoryURL:(NSURL *)url AVAILABLE_MAC_OS_X_VERSION_10_6_AND_LATER
@@ -343,26 +330,6 @@ void FileDialog::OnFilterSelected( wxCommandEvent &WXUNUSED(event) )
     DoOnFilterSelected( m_filterChoice->GetSelection() );
 }
 
-void FileDialog::DoSendFileActivatedEvent(void* panel)
-{
-    wxFileCtrlEvent event( wxEVT_FILECTRL_FILEACTIVATED, this, GetId() );
-
-    event.SetDirectory( m_dir );
-
-    if ( HasFlag( wxFD_SAVE ) )
-    {
-        wxArrayString filenames;
-        filenames.Add( m_fileName );
-        event.SetFiles( filenames );
-    }
-    else
-    {
-        event.SetFiles( m_fileNames );
-    }
-
-    GetEventHandler()->ProcessEvent( event );
-}
-
 void FileDialog::DoSendFolderChangedEvent(void* panel, const wxString & path)
 {
     m_dir = wxPathOnly( path );
@@ -384,6 +351,7 @@ void FileDialog::DoSendSelectionChangedEvent(void* panel)
         m_path = wxCFStringRef::AsStringWithNormalizationFormC( path );
         m_fileName = wxFileNameFromPath( m_path );
         m_dir = wxPathOnly( m_path );
+        m_fileNames.Add( m_fileName );
     }
     else
     {
@@ -438,7 +406,7 @@ void FileDialog::SetupExtraControls(WXWindow nativeWindow)
     if ( m_useFileTypeFilter || HasUserPaneCreator() )
     {
         wxBoxSizer *verticalSizer = new wxBoxSizer( wxVERTICAL );
-        m_filterPanel = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxDefaultSize );
+        m_filterPanel = new wxPanel( this, wxID_ANY );
         
         if ( m_useFileTypeFilter )
         {
@@ -462,7 +430,7 @@ void FileDialog::SetupExtraControls(WXWindow nativeWindow)
             
         if ( HasUserPaneCreator() )
         {
-            wxPanel *extrapanel = new wxPanel( m_filterPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize );
+            wxPanel *extrapanel = new wxPanel( m_filterPanel, wxID_ANY );
             CreateUserPane( extrapanel );
 
             wxBoxSizer *horizontalSizer = new wxBoxSizer( wxHORIZONTAL );

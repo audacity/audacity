@@ -123,7 +123,9 @@ It handles initialization and termination by subclassing wxApp.
 // Windows specific linker control...only needed once so
 // this is a good place (unless we want to add another file).
 #if defined(__WXMSW__)
-
+//#if wxCHECK_VERSION(3, 0, 2) && !wxCHECK_VERSION(3, 1, 0)
+#include <wx/init.h>
+//#endif
 // These lines ensure that Audacity gets WindowsXP themes.
 // Without them we get the old-style Windows98/2000 look under XP.
 #  if !defined(__WXWINCE__)
@@ -207,6 +209,15 @@ It handles initialization and termination by subclassing wxApp.
 #  if defined(EXPERIMENTAL_CRASH_REPORT)
 #     pragma comment(lib, "wxmsw" V "u" D "_qa")
 #  endif
+#  pragma comment(lib, "wxbase" V "u" D)
+#  pragma comment(lib, "wxbase" V "u" D "_net.lib")
+#  pragma comment(lib, "wxmsw"  V "u" D "_adv.lib")
+#  pragma comment(lib, "wxmsw"  V "u" D "_core.lib")
+#  pragma comment(lib, "wxmsw"  V "u" D "_html.lib")
+#  pragma comment(lib, "wxpng"        D)
+#  pragma comment(lib, "wxzlib"       D)
+#  pragma comment(lib, "wxjpeg"       D)
+#  pragma comment(lib, "wxtiff"       D)
 
 #  undef V
 #  undef D
@@ -646,12 +657,12 @@ public:
    };
 };
 
-#ifndef __WXMAC__
+#if !defined(__WXMAC__) && !defined(__WXMSW__)
 IMPLEMENT_APP(AudacityApp)
 /* make the application class known to wxWidgets for dynamic construction */
 #endif
 
-#ifdef __WXMAC__
+#if defined(__WXMAC__) || defined(__WXMSW__)
 // This should be removed when Lame and FFmpeg support is converted
 // from loadable libraries to commands.
 //
@@ -666,6 +677,8 @@ IMPLEMENT_APP(AudacityApp)
 // one tried.
 IMPLEMENT_APP_NO_MAIN(AudacityApp)
 IMPLEMENT_WX_THEME_SUPPORT
+
+#if defined(__WXMAC__)
 int main(int argc, char *argv[])
 {
    if (getenv("DYLD_LIBRARY_PATH")) {
@@ -679,6 +692,26 @@ int main(int argc, char *argv[])
 
    return wxEntry(argc, argv);
 }
+
+#elif defined(__WXMSW__)
+
+extern "C" int WINAPI WinMain(HINSTANCE hInstance,
+                              HINSTANCE hPrevInstance,
+                              wxCmdLineArgType WXUNUSED(lpCmdLine),
+                              int nCmdShow)
+{
+   wxDISABLE_DEBUG_SUPPORT();
+
+   // Disable setting of HiDPI aware mode
+   wxMSWDisableSettingHighDPIAware();
+
+   /* NB: We pass NULL in place of lpCmdLine to behave the same as  */
+   /*     Borland-specific wWinMain() above. If it becomes needed   */
+   /*     to pass lpCmdLine to wxEntry() here, you'll have to fix   */
+   /*     wWinMain() above too.                                     */
+   return wxEntry(hInstance, hPrevInstance, NULL, nCmdShow);
+}
+#endif
 #endif
 
 #ifdef __WXMAC__
@@ -1443,7 +1476,7 @@ bool AudacityApp::OnInit()
       DirManager::SetDontDeleteTempFiles();
       delete parser;
       QuitAudacity(true);
-      return;
+      return false;
    }
 
    //
@@ -1456,7 +1489,7 @@ bool AudacityApp::OnInit()
          delete parser;
    
          RunBenchmark(NULL);
-         return;
+         return false;
       }
 
       for (size_t i = 0, cnt = parser->GetParamCount(); i < cnt; i++)

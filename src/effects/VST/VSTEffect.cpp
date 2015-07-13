@@ -38,7 +38,10 @@
 
 #include <limits.h>
 #include <stdio.h>
+
+#if defined(__WXMAC__)
 #include <dlfcn.h>
+#endif
 
 #include <wx/app.h>
 #include <wx/defs.h>

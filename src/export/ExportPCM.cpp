@@ -97,6 +97,7 @@ class ExportPCMOptions : public wxPanel
 public:
 
    ExportPCMOptions(wxWindow *parent, int format);
+   virtual ~ExportPCMOptions();
    void PopulateOrExchange(ShuttleGui & S);
    void OnHeaderChoice(wxCommandEvent & evt);
 
@@ -162,6 +163,11 @@ ExportPCMOptions::ExportPCMOptions(wxWindow *parent, int selformat)
 
    ShuttleGui S(this, eIsCreatingFromPrefs);
    PopulateOrExchange(S);
+}
+
+ExportPCMOptions::~ExportPCMOptions()
+{
+   WriteExportFormatPref(GetFormat());
 }
 
 void ExportPCMOptions::PopulateOrExchange(ShuttleGui & S)

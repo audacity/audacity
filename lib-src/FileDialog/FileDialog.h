@@ -37,10 +37,6 @@ typedef void (*fdCallback)(void *, int);
 //
 /////////////////////////////////////////////////////////////////////////////
 
-DECLARE_EVENT_TYPE(EVT_FILEDIALOG_SELECTION_CHANGED, -1);
-DECLARE_EVENT_TYPE(EVT_FILEDIALOG_FILTER_CHANGED, -1);
-DECLARE_EVENT_TYPE(EVT_FILEDIALOG_ADD_CONTROLS, -1);
-
 #define FD_NO_ADD_EXTENSION 0x0400
 
 class FileDialogBase : public wxFileDialogBase
@@ -55,9 +51,6 @@ public:
 
    virtual bool HasUserPaneCreator() const;
    virtual void SetUserPaneCreator(UserPaneCreatorFunction creator, wxUIntPtr userdata);
-
-   virtual void EnableButton(wxString label, fdCallback cb, void *cbdata);
-   virtual void ClickButton(int index);   
 
 protected:
    void CreateUserPane(wxWindow *parent);
@@ -75,7 +68,7 @@ protected:
 #elif defined(__WXMAC__)
 #include "mac/FileDialog.h"
 #elif defined(__WXMSW__)
-#include "win/FileDialog.h"
+#include "win/FileDialogPrivate.h"
 #else
 #error Unknown implementation
 #endif
