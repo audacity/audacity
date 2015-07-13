@@ -1729,11 +1729,19 @@ bool TrackPanel::SetCursorByActivity( )
       SetCursor( unsafe ? *mDisabledCursor : *mStretchCursor);
       return true;
 #endif
-   case IsOverCutLine:
-      SetCursor( unsafe ? *mDisabledCursor : *mArrowCursor);
-      // what, no return true here? -- PRL
    default:
       break;
+   }
+   return false;
+}
+
+bool TrackPanel::SetCursorForCutline(WaveTrack * track, wxRect &rect, wxMouseEvent &event)
+{
+   if (IsOverCutline(track, rect, event)) {
+      bool unsafe = IsUnsafe();
+      SetCursor(unsafe ? *mDisabledCursor : *mArrowCursor);
+      return true;
+      // No tip string?
    }
    return false;
 }
@@ -2112,6 +2120,12 @@ void TrackPanel::HandleCursor(wxMouseEvent & event)
       // ..and if we haven't yet determined the cursor,
       // we go on to do all the standard track hit tests.
    }
+
+   if ((tip == wxString()) &&
+      nonlabel &&
+      nonlabel->GetKind() == Track::Wave &&
+      SetCursorForCutline(static_cast<WaveTrack*>(nonlabel), trackRect, event))
+      return;
 
    if( tip == wxString() )
    {
@@ -6459,27 +6473,26 @@ void TrackPanel::OnMouseEvent(wxMouseEvent & event)
    }
 }
 
-bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &r, wxMouseEvent &event)
+bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &rect, wxMouseEvent &event)
 {
    // FIXME: Disable this and return true when CutLines aren't showing?
    // (Don't use gPrefs-> for the fix as registry access is slow).
 
    if (mMouseCapture == WasOverCutLine)
    {
-      // Needed to avoid select events right after IsOverCutLine event on button up
       if (event.ButtonUp()) {
          mMouseCapture = IsUncaptured;
          return false;
       }
-      return true;
+      else
+         // Needed to avoid select events after button down
+         return true;
    }
-
-   if (mMouseCapture == IsOverCutLine)
+   else if (!IsUnsafe() && IsOverCutline(track, rect, event))
    {
       if (!mCapturedTrackLocationRect.Contains(event.m_x, event.m_y))
       {
          SetCapturedTrack( NULL );
-         SetCursorByActivity();
          return false;
       }
 
@@ -6504,8 +6517,8 @@ bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &r, wxM
                MakeParentPushState(_("Expanded Cut Line"), _("Expand"));
                handled = true;
             }
-         } else if (mCapturedTrackLocation.typ == WaveTrackLocation::locationMergePoint)
-         {
+         }
+         else if (mCapturedTrackLocation.typ == WaveTrackLocation::locationMergePoint) {
             if (!track->MergeClips(mCapturedTrackLocation.clipidx1, mCapturedTrackLocation.clipidx2))
                return false;
 
@@ -6532,6 +6545,8 @@ bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &r, wxM
       if (handled)
       {
          SetCapturedTrack( NULL );
+         // Effect happened at button-down, but treat like a dragging mode until
+         // button-up.
          mMouseCapture = WasOverCutLine;
          RefreshTrack(track);
          return true;
@@ -6540,24 +6555,27 @@ bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &r, wxM
       return true;
    }
 
+   return false;
+}
+
+bool TrackPanel::IsOverCutline(WaveTrack * track, wxRect &rect, wxMouseEvent &event)
+{
    for (int i=0; i<track->GetNumCachedLocations(); i++)
    {
       WaveTrack::Location loc = track->GetCachedLocation(i);
 
       const double x = mViewInfo->TimeToPosition(loc.pos);
-      if (x >= 0 && x < r.width)
+      if (x >= 0 && x < rect.width)
       {
          wxRect locRect;
-         locRect.x = int( r.x + x ) - 5;
+         locRect.x = int(rect.x + x) - 5;
          locRect.width = 11;
-         locRect.y = r.y;
-         locRect.height = r.height;
+         locRect.y = rect.y;
+         locRect.height = rect.height;
          if (locRect.Contains(event.m_x, event.m_y))
          {
-            SetCapturedTrack(track, IsOverCutLine);
             mCapturedTrackLocation = loc;
             mCapturedTrackLocationRect = locRect;
-            SetCursorByActivity();
             return true;
          }
       }
@@ -6747,18 +6765,14 @@ void TrackPanel::HandleTrackSpecificMouseEvent(wxMouseEvent & event)
    }
 #endif
 
+   bool handled = false;
+
    if (pTrack && (pTrack->GetKind() == Track::Wave) &&
-       (mMouseCapture == IsUncaptured || mMouseCapture == IsOverCutLine ||
-        mMouseCapture == WasOverCutLine))
-   {
-      if (HandleTrackLocationMouseEvent((WaveTrack *)pTrack, rTrack, event))
-         return;
-   }
+      (mMouseCapture == IsUncaptured || mMouseCapture == WasOverCutLine))
+      handled = HandleTrackLocationMouseEvent((WaveTrack *)pTrack, rTrack, event);
 
    ToolsToolBar * pTtb = mListener->TP_GetToolsToolBar();
-   if( pTtb == NULL )
-      return;
-
+   if( !handled && pTtb != NULL )
    {
       int toolToUse = DetermineToolToUse(pTtb, event);
 
