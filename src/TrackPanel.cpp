@@ -5801,22 +5801,22 @@ bool TrackPanel::PopupFunc(Track * t, wxRect r, int x, int y)
 ///  update the track size.
 void TrackPanel::HandleResizeClick( wxMouseEvent & event )
 {
-   wxRect r;
+   wxRect rTrack;
    wxRect rLabel;
 
    // DM: Figure out what track is about to be resized
-   Track *t = FindTrack(event.m_x, event.m_y, false, false, &r);
-   Track *label = FindTrack(event.m_x, event.m_y, true, true, &rLabel);
+   Track *track = FindTrack(event.m_x, event.m_y, false, false, &rTrack);
 
-   // If the click is at the bottom of a non-linked track label, we
-   // treat it as a normal resize.  If the label is of a linked track,
-   // we ignore the click.
-
-   if (label && !label->GetLinked()) {
-      t = label;
+   if (!track) {
+      // This will only return unlinked tracks or left channels of stereo tracks
+      // or NULL:
+      track = FindTrack(event.m_x, event.m_y, true, true, &rLabel);
+      // If stereo, get the right channel.
+      if (track && track->GetLinked())
+         track = track->GetLink();
    }
 
-   if (!t) {
+   if (!track) {
       return;
    }
 
@@ -5865,34 +5865,34 @@ void TrackPanel::HandleResizeClick( wxMouseEvent & event )
       }
    }
 #else // EXPERIMENTAL_OUTPUT_DISPLAY
-   Track *prev = mTracks->GetPrev(t);
-   Track *next = mTracks->GetNext(t);
+   Track *prev = mTracks->GetPrev(track);
+   Track *next = mTracks->GetNext(track);
 
    //STM:  Determine whether we should rescale one or two tracks
-   if (prev && prev->GetLink() == t) {
+   if (prev && prev->GetLink() == track) {
       // mCapturedTrack is the lower track
-      mInitialTrackHeight = t->GetHeight();
-      mInitialActualHeight = t->GetActualHeight();
-      mInitialMinimized = t->GetMinimized();
+      mInitialTrackHeight = track->GetHeight();
+      mInitialActualHeight = track->GetActualHeight();
+      mInitialMinimized = track->GetMinimized();
       mInitialUpperTrackHeight = prev->GetHeight();
       mInitialUpperActualHeight = prev->GetActualHeight();
-      SetCapturedTrack(t, IsResizingBelowLinkedTracks);
+      SetCapturedTrack(track, IsResizingBelowLinkedTracks);
    }
-   else if (next && t->GetLink() == next) {
+   else if (next && track->GetLink() == next) {
       // mCapturedTrack is the upper track
       mInitialTrackHeight = next->GetHeight();
       mInitialActualHeight = next->GetActualHeight();
       mInitialMinimized = next->GetMinimized();
-      mInitialUpperTrackHeight = t->GetHeight();
-      mInitialUpperActualHeight = t->GetActualHeight();
-      SetCapturedTrack(t, IsResizingBetweenLinkedTracks);
+      mInitialUpperTrackHeight = track->GetHeight();
+      mInitialUpperActualHeight = track->GetActualHeight();
+      SetCapturedTrack(track, IsResizingBetweenLinkedTracks);
    }
    else {
       // DM: Save the initial mouse location and the initial height
-      mInitialTrackHeight = t->GetHeight();
-      mInitialActualHeight = t->GetActualHeight();
-      mInitialMinimized = t->GetMinimized();
-      SetCapturedTrack(t, IsResizing);
+      mInitialTrackHeight = track->GetHeight();
+      mInitialActualHeight = track->GetActualHeight();
+      mInitialMinimized = track->GetMinimized();
+      SetCapturedTrack(track, IsResizing);
    }
 #endif // EXPERIMENTAL_OUTPUT_DISPLAY
 }
