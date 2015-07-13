@@ -1762,8 +1762,7 @@ void TrackPanel::SetCursorAndTipWhenInLabel( Track * t,
 }
 
 /// When in the resize area we can adjust size or relative size.
-void TrackPanel::SetCursorAndTipWhenInVResizeArea( Track * label,
-         bool bLinked, wxString &tip )
+void TrackPanel::SetCursorAndTipWhenInVResizeArea( bool bLinked, wxString &tip )
 {
    // Check to see whether it is the first channel of a stereo track
    if (bLinked) {
@@ -1771,11 +1770,6 @@ void TrackPanel::SetCursorAndTipWhenInVResizeArea( Track * label,
       // not actually in the resize area at all.  (The resize area
       // is shorter when it is between stereo tracks).
 
-      // IF we are in the label THEN return.
-      // Subsequently called methods can detect that a tip and
-      // cursor are still needed.
-      if (label)
-         return;
       tip = _("Click and drag to adjust relative size of stereo tracks.");
       SetCursor(*mResizeCursor);
    } else {
@@ -2075,12 +2069,12 @@ void TrackPanel::HandleCursor(wxMouseEvent & event)
 
    // (2) If we are not over a track at all, set the cursor to Arrow and
    //     clear the StatusBar,
-   wxRect r;
-   Track *label = FindTrack(event.m_x, event.m_y, true, true, &r);
-   Track *nonlabel = FindTrack(event.m_x, event.m_y, false, false, &r);
-   Track *t = label ? label : nonlabel;
+   wxRect labelRect, trackRect;
+   Track *const label = FindTrack(event.m_x, event.m_y, true, true, &labelRect);
+   Track *const nonlabel = FindTrack(event.m_x, event.m_y, false, false, &trackRect);
+   Track *const track = label ? label : nonlabel;
 
-   if (!t) {
+   if (!track) {
       SetCursor(*mArrowCursor);
       mListener->TP_DisplayStatusMessage(wxT(""));
       return;
@@ -2096,23 +2090,25 @@ void TrackPanel::HandleCursor(wxMouseEvent & event)
 
    wxString tip;
 
-   if (label) {
-      SetCursorAndTipWhenInLabel( label, event, tip );
+   // Are we within the vertical resize area?
+   if (nonlabel
+      ? within(event.m_y, trackRect.y + trackRect.height, TRACK_RESIZE_REGION)
+      : within(event.m_y, labelRect.y + labelRect.height, TRACK_RESIZE_REGION))
+   {
+      SetCursorAndTipWhenInVResizeArea(nonlabel && track->GetLinked(), tip);
+      // tip may still be NULL at this point, in which case we go on looking.
    }
 
-   // Are we within the vertical resize area?
-   if ((tip == wxString() ) && within(event.m_y, r.y + r.height, TRACK_RESIZE_REGION))
-   {
-      SetCursorAndTipWhenInVResizeArea( label, t->GetLinked(), tip );
-      // tip may still be NULL at this point, in which case we go on looking.
+   if ((tip == wxString()) && label) {
+      SetCursorAndTipWhenInLabel( label, event, tip );
    }
 
    // Otherwise, we must be over a track of some kind
    // Is it a label track?
-   if ((tip == wxString()) && (t->GetKind() == Track::Label))
+   if ((tip == wxString()) && (track->GetKind() == Track::Label))
    {
       // We are over a label track
-      SetCursorAndTipWhenInLabelTrack( (LabelTrack*)t, event, tip );
+      SetCursorAndTipWhenInLabelTrack( static_cast<LabelTrack*>(track), event, tip );
       // ..and if we haven't yet determined the cursor,
       // we go on to do all the standard track hit tests.
    }
@@ -2143,7 +2139,7 @@ void TrackPanel::HandleCursor(wxMouseEvent & event)
          bool bMultiToolMode = ttb->IsDown(multiTool);
          const wxCursor *pSelection = 0;
          SetCursorAndTipWhenSelectTool
-            ( t, event, r, bMultiToolMode, tip, &pSelection );
+            ( track, event, trackRect, bMultiToolMode, tip, &pSelection );
          if (pSelection)
             // Set cursor once only here, to avoid flashing during drags
             SetCursor(*pSelection);
@@ -6698,17 +6694,17 @@ bool TrackPanel::HandleLabelTrackMouseEvent(LabelTrack * lTrack, wxRect &r, wxMo
 void TrackPanel::HandleTrackSpecificMouseEvent(wxMouseEvent & event)
 {
    Track * pTrack;
-   wxRect r;
+   wxRect rTrack;
    wxRect rLabel;
 
    bool unsafe = IsUnsafe();
 
    FindTrack(event.m_x, event.m_y, true, true, &rLabel);
-   pTrack = FindTrack(event.m_x, event.m_y, false, false, &r);
+   pTrack = FindTrack(event.m_x, event.m_y, false, false, &rTrack);
 
    //call HandleResize if I'm over the border area
    if (event.LeftDown() &&
-       (within(event.m_y, r.y + r.height, TRACK_RESIZE_REGION)
+          (within(event.m_y, rTrack.y + rTrack.height, TRACK_RESIZE_REGION)
         || within(event.m_y, rLabel.y + rLabel.height,
                   TRACK_RESIZE_REGION))) {
       HandleResize(event);
@@ -6734,7 +6730,7 @@ void TrackPanel::HandleTrackSpecificMouseEvent(wxMouseEvent & event)
    //If so, use MouseDown handler for the label track.
    if (pTrack && (pTrack->GetKind() == Track::Label))
    {
-      if(HandleLabelTrackMouseEvent( (LabelTrack *) pTrack, r, event ))
+      if (HandleLabelTrackMouseEvent((LabelTrack *)pTrack, rTrack, event))
          return;
    }
 
@@ -6755,7 +6751,7 @@ void TrackPanel::HandleTrackSpecificMouseEvent(wxMouseEvent & event)
        (mMouseCapture == IsUncaptured || mMouseCapture == IsOverCutLine ||
         mMouseCapture == WasOverCutLine))
    {
-      if (HandleTrackLocationMouseEvent( (WaveTrack *) pTrack, r, event ))
+      if (HandleTrackLocationMouseEvent((WaveTrack *)pTrack, rTrack, event))
          return;
    }
 

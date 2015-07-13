@@ -356,7 +356,7 @@ protected:
    // AS: Cursor handling
    virtual bool SetCursorByActivity( );
    virtual void SetCursorAndTipWhenInLabel( Track * t, wxMouseEvent &event, wxString &tip );
-   virtual void SetCursorAndTipWhenInVResizeArea( Track * label, bool blinked, wxString &tip );
+   virtual void SetCursorAndTipWhenInVResizeArea( bool blinked, wxString &tip );
    virtual void SetCursorAndTipWhenInLabelTrack( LabelTrack * pLT, wxMouseEvent & event, wxString &tip );
    virtual void SetCursorAndTipWhenSelectTool
       ( Track * t, wxMouseEvent & event, wxRect &r, bool bMultiToolMode, wxString &tip, const wxCursor ** ppCursor );
