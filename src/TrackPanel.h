@@ -19,7 +19,6 @@
 #include "Experimental.h"
 
 #include "SelectedRegion.h"
-#include "WaveTrackLocation.h"
 
 #include "widgets/OverlayPanel.h"
 
@@ -365,8 +364,6 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
    virtual bool HandleLabelTrackClick(LabelTrack * lTrack, const wxRect &rect, wxMouseEvent & event);
    virtual void HandleGlyphDragRelease(LabelTrack * lTrack, wxMouseEvent & event);
    virtual void HandleTextDragRelease(LabelTrack * lTrack, wxMouseEvent & event);
-   virtual bool HandleTrackLocationMouseEvent(WaveTrack * track, const wxRect &rect, wxMouseEvent &event);
-   virtual bool IsOverCutline(WaveTrack * track, const wxRect &rect, const wxMouseEvent &event);
    virtual void HandleTrackSpecificMouseEvent(wxMouseEvent & event);
 
    virtual void ScrollDuringDrag();
@@ -453,7 +450,6 @@ protected:
 
    // AS: Cursor handling
    virtual bool SetCursorByActivity( );
-   virtual bool SetCursorForCutline(WaveTrack * track, const wxRect &rect, const wxMouseEvent &event);
    virtual void SetCursorAndTipWhenInLabel( Track * t, const wxMouseEvent &event, wxString &tip );
    virtual void SetCursorAndTipWhenInVResizeArea( bool blinked, wxString &tip );
    virtual void SetCursorAndTipWhenInLabelTrack( LabelTrack * pLT, const wxMouseEvent & event, wxString &tip );
@@ -719,8 +715,6 @@ protected:
 #endif
 
    Track *mCapturedTrack;
-   WaveTrackLocation mCapturedTrackLocation;
-   wxRect mCapturedTrackLocationRect;
    wxRect mCapturedRect;
 
    bool mRedrawAfterStop;
@@ -816,7 +810,6 @@ public:
       IsGainSliding,
       IsPanSliding,
       IsMinimizing,
-      WasOverCutLine,
       IsPopping,
 #ifdef EXPERIMENTAL_MIDI_OUT
       IsVelocitySliding,

@@ -1151,7 +1151,6 @@ void TrackPanel::HandleInterruptedDrag()
     IsRearranging,
     IsGainSliding,
     IsPanSliding,
-    WasOverCutLine,
     IsStretching,
     IsVelocitySliding
     */
@@ -1419,17 +1418,6 @@ bool TrackPanel::SetCursorByActivity( )
 #endif
    default:
       break;
-   }
-   return false;
-}
-
-bool TrackPanel::SetCursorForCutline(WaveTrack * track, const wxRect &rect, const wxMouseEvent &event)
-{
-   if (IsOverCutline(track, rect, event)) {
-      bool unsafe = IsUnsafe();
-      SetCursor(unsafe ? *mDisabledCursor : *mArrowCursor);
-      return true;
-      // No tip string?
    }
    return false;
 }
@@ -1825,13 +1813,6 @@ void TrackPanel::HandleCursor(wxMouseEvent & event)
       // ..and if we haven't yet determined the cursor,
       // we go on to do all the standard track hit tests.
    }
-
-   if (pCursor == NULL && tip == wxString() &&
-       !(foundCell.type == CellType::Label ||
-         foundCell.type == CellType::VRuler) &&
-      track->GetKind() == Track::Wave &&
-      SetCursorForCutline(static_cast<WaveTrack*>(track), rect, event))
-      return;
 
    if( pCursor == NULL && tip == wxString() )
    {
@@ -5214,143 +5195,6 @@ catch( ... )
    throw;
 }
 
-namespace {
-   int FindMergeLine(WaveTrack *track, double time)
-   {
-      const double tolerance = 0.5 / track->GetRate();
-      int ii = 0;
-      for (const auto loc: track->GetCachedLocations()) {
-         if (loc.typ == WaveTrackLocation::locationMergePoint &&
-            fabs(time - loc.pos) < tolerance)
-            return ii;
-         ++ii;
-      }
-      return -1;
-   }
-}
-
-bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, const wxRect &rect, wxMouseEvent &event)
-{
-   // FIXME: Disable this and return true when CutLines aren't showing?
-   // (Don't use gPrefs-> for the fix as registry access is slow).
-
-   if (mMouseCapture == WasOverCutLine)
-   {
-      if (event.ButtonUp()) {
-         mMouseCapture = IsUncaptured;
-         return false;
-      }
-      else
-         // Needed to avoid select events after button down
-         return true;
-   }
-   else if (!IsUnsafe() && IsOverCutline(track, rect, event))
-   {
-      if (!mCapturedTrackLocationRect.Contains(event.m_x, event.m_y))
-      {
-         SetCapturedTrack( NULL );
-         return false;
-      }
-
-      bool handled = false;
-
-      if (event.LeftDown())
-      {
-         if (mCapturedTrackLocation.typ == WaveTrackLocation::locationCutLine)
-         {
-            // When user presses left button on cut line, expand the line again
-            double cutlineStart = 0, cutlineEnd = 0;
-
-            track->ExpandCutLine(mCapturedTrackLocation.pos, &cutlineStart, &cutlineEnd);
-            {
-               // Assume linked track is wave or null
-               const auto linked =
-                  static_cast<WaveTrack*>(track->GetLink());
-               if (linked)
-                  // Expand the cutline in the opposite channel if it is present.
-                  linked->ExpandCutLine(mCapturedTrackLocation.pos);
-
-               mViewInfo->selectedRegion.setTimes(cutlineStart, cutlineEnd);
-               DisplaySelection();
-               MakeParentPushState(_("Expanded Cut Line"), _("Expand"));
-               handled = true;
-            }
-         }
-         else if (mCapturedTrackLocation.typ == WaveTrackLocation::locationMergePoint) {
-            const double pos = mCapturedTrackLocation.pos;
-            track->MergeClips(mCapturedTrackLocation.clipidx1, mCapturedTrackLocation.clipidx2);
-
-            // Assume linked track is wave or null
-            const auto linked =
-               static_cast<WaveTrack*>(track->GetLink());
-            if (linked) {
-               // Don't assume correspondence of merge points across channels!
-               int idx = FindMergeLine(linked, pos);
-               if (idx >= 0) {
-                  WaveTrack::Location location = linked->GetCachedLocations()[idx];
-                  linked->MergeClips(location.clipidx1, location.clipidx2);
-               }
-            }
-
-            MakeParentPushState(_("Merged Clips"),_("Merge"), UndoPush::CONSOLIDATE);
-            handled = true;
-         }
-      }
-
-      if (!handled && event.RightDown())
-      {
-         track->RemoveCutLine(mCapturedTrackLocation.pos);
-         // Assume linked track is wave or null
-         const auto linked =
-            static_cast<WaveTrack*>(track->GetLink());
-         if (linked)
-            linked->RemoveCutLine(mCapturedTrackLocation.pos);
-         MakeParentPushState(_("Removed Cut Line"), _("Remove") );
-         handled = true;
-      }
-
-      if (handled)
-      {
-         SetCapturedTrack( NULL );
-         // Effect happened at button-down, but treat like a dragging mode until
-         // button-up.
-         mMouseCapture = WasOverCutLine;
-         RefreshTrack(track);
-         return true;
-      }
-
-
-      return true;
-   }
-
-   return false;
-}
-
-bool TrackPanel::IsOverCutline(WaveTrack * track, const wxRect &rect, const wxMouseEvent &event)
-{
-   for (auto loc: track->GetCachedLocations())
-   {
-      const double x = mViewInfo->TimeToPosition(loc.pos);
-      if (x >= 0 && x < rect.width)
-      {
-         wxRect locRect;
-         locRect.x = (int)(rect.x + x) - 5;
-         locRect.width = 11;
-         locRect.y = rect.y;
-         locRect.height = rect.height;
-         if (locRect.Contains(event.m_x, event.m_y))
-         {
-            mCapturedTrackLocation = loc;
-            mCapturedTrackLocationRect = locRect;
-            return true;
-         }
-      }
-   }
-
-   return false;
-}
-
-
 /// Event has happened on a track and it has been determined to be a label track.
 bool TrackPanel::HandleLabelTrackClick(LabelTrack * lTrack, const wxRect &rect, wxMouseEvent & event)
 {
@@ -5593,12 +5437,6 @@ void TrackPanel::HandleTrackSpecificMouseEvent(wxMouseEvent & event)
    }
 
    bool handled = false;
-
-   if (!mUIHandle &&
-       pTrack && foundCell.type == CellType::Track &&
-       (pTrack->GetKind() == Track::Wave) &&
-      (mMouseCapture == IsUncaptured || mMouseCapture == WasOverCutLine))
-      handled = HandleTrackLocationMouseEvent((WaveTrack *)pTrack, rect, event);
 
    ToolsToolBar * pTtb = mListener->TP_GetToolsToolBar();
    if( !handled && pTtb != NULL &&

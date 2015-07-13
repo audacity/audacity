@@ -17,6 +17,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../toolbars/ToolsToolBar.h"
 
+#include "CutlineHandle.h"
 #include "../../../ui/EnvelopeHandle.h"
 #include "SampleHandle.h"
 #include "../../../ui/TimeShiftHandle.h"
@@ -25,7 +26,12 @@ HitTestResult WaveTrack::HitTest
 (const TrackPanelMouseEvent &event,
  const AudacityProject *pProject)
 {
-   HitTestResult result = Track::HitTest(event, pProject);
+   // This hit was always tested first no matter which tool:
+   HitTestResult result = CutlineHandle::HitTest(event.event, event.rect, pProject, this);
+   if (result.preview.cursor)
+      return result;
+
+   result = Track::HitTest(event, pProject);
    if (result.preview.cursor)
       return result;
 
