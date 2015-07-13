@@ -24,6 +24,9 @@
 #include <wx/defs.h>
 #include <wx/string.h>
 #include <wx/window.h>
+#include <wx/statbmp.h>
+#include <wx/dcbuffer.h>
+#include <wx/colordlg.h>
 
 #include "../Experimental.h"
 #include "../ShuttleGui.h"
@@ -66,7 +69,18 @@ class SpectrumPrefs:public PrefsPanel
    wxArrayString mTypeChoices;
    wxArrayInt mTypeCodes;
 
+	wxArrayString mColorScaleChoices;
+	wxArrayInt mColorScaleCodes;
 
+	wxTextCtrl *C[3][5]; // C[Color][position] Color: 1 = R/2 = G/3 = B 
+	int cScale;
+	float *red, *blue, *green;
+	wxColour Colors[5];
+
+	void PaintColorScale();
+	void OnRefresh(wxCommandEvent & e);
+	void OnChangeColor(wxCommandEvent& e);
+	
 #ifdef EXPERIMENTAL_FIND_NOTES
    wxTextCtrl *mFindNotesMinA;
    wxTextCtrl *mFindNotesN;

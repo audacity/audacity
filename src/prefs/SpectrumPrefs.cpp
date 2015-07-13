@@ -25,8 +25,35 @@
 #include "../Project.h"
 #include "../ShuttleGui.h"
 #include "../FFT.h"
+#include "../AColor.h"
 
 #include <algorithm>
+
+enum { maxWindowSize = 32768 };
+
+enum {
+	ID_WINDOW_SIZE = 10001,
+#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
+	ID_PADDING_SIZE = 10002,
+#endif
+};
+
+#define ID_CHANGE_COLOR1			1
+#define ID_CHANGE_COLOR2			2
+#define ID_CHANGE_COLOR3			3
+#define ID_CHANGE_COLOR4			4
+#define ID_CHANGE_COLOR5			5
+#define ID_REFRESH_COLOR_SCALE	6
+
+BEGIN_EVENT_TABLE(SpectrumPrefs, PrefsPanel)
+EVT_CHOICE(ID_REFRESH_COLOR_SCALE, SpectrumPrefs::OnRefresh)
+EVT_BUTTON(ID_CHANGE_COLOR1, SpectrumPrefs::OnChangeColor)
+EVT_BUTTON(ID_CHANGE_COLOR2, SpectrumPrefs::OnChangeColor)
+EVT_BUTTON(ID_CHANGE_COLOR3, SpectrumPrefs::OnChangeColor)
+EVT_BUTTON(ID_CHANGE_COLOR4, SpectrumPrefs::OnChangeColor)
+EVT_BUTTON(ID_CHANGE_COLOR5, SpectrumPrefs::OnChangeColor)
+EVT_CHOICE(ID_WINDOW_SIZE, SpectrumPrefs::OnWindowSize)
+END_EVENT_TABLE()
 
 SpectrumPrefs::SpectrumPrefs(wxWindow * parent)
 :  PrefsPanel(parent, _("Spectrograms"))
@@ -39,14 +66,6 @@ SpectrumPrefs::~SpectrumPrefs()
 {
 }
 
-enum { maxWindowSize = 32768 };
-
-enum {
-   ID_WINDOW_SIZE = 10001,
-#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
-   ID_PADDING_SIZE = 10002,
-#endif
-};
 
 void SpectrumPrefs::Populate(int windowSize)
 {
@@ -76,6 +95,27 @@ void SpectrumPrefs::Populate(int windowSize)
       mTypeChoices.Add(WindowFuncName(i));
       mTypeCodes.Add(i);
    }
+
+	mColorScaleChoices.Add(wxT("Audacity"));
+	mColorScaleCodes.Add(0);
+	mColorScaleChoices.Add(wxT("Cool"));
+	mColorScaleCodes.Add(1);
+	mColorScaleChoices.Add(wxT("C2H"));
+	mColorScaleCodes.Add(2);
+	mColorScaleChoices.Add(wxT("Multicolor"));
+	mColorScaleCodes.Add(3);
+	mColorScaleChoices.Add(wxT("Fire"));
+	mColorScaleCodes.Add(4);
+	mColorScaleChoices.Add(wxT("Protanopia"));
+	mColorScaleCodes.Add(5);
+	mColorScaleChoices.Add(wxT("Deuteranopia"));
+	mColorScaleCodes.Add(6);
+	mColorScaleChoices.Add(wxT("Tritanopia"));
+	mColorScaleCodes.Add(7);
+	mColorScaleChoices.Add(wxT("Grayscale"));
+	mColorScaleCodes.Add(8);
+	mColorScaleChoices.Add(wxT("Custom"));
+	mColorScaleCodes.Add(9);
 
 
    //------------------------- Main section --------------------
@@ -192,7 +232,7 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 #endif //EXPERIMENTAL_FFT_SKIP_POINTS
-
+	S.StartTwoColumn(); {
    S.StartStatic(_("Display"));
    {
       S.StartTwoColumn();
@@ -228,11 +268,7 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
                                 4);
       }
       S.EndTwoColumn();
-
-      S.TieCheckBox(_("S&how the spectrum using grayscale colors"),
-                    wxT("/Spectrum/Grayscale"),
-                    false);
-
+		
 #ifdef EXPERIMENTAL_FFT_Y_GRID
       S.TieCheckBox(_("Show a grid along the &Y-axis"),
                     wxT("/Spectrum/FFTYGrid"),
@@ -240,7 +276,50 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
 #endif //EXPERIMENTAL_FFT_Y_GRID
    }
    S.EndStatic();
+	S.StartStatic(_("Colormap Settings")); {
+		S.StartTwoColumn(); {
+			S.Id(ID_REFRESH_COLOR_SCALE).TieChoice(_("Color &map") + wxString(wxT(":")),
+				wxT("/Spectrum/Colormap"),
+				0,
+				mColorScaleChoices,
+				mColorScaleCodes);
+			S.SetSizeHints(mColorScaleChoices);
+		}
+		S.EndTwoColumn();
+		S.StartMultiColumn(8); {
+			C[0][0] = S.TieNumericTextBox(_("R1:"), wxT("/Spectrum/R1"), -1, 6);
+			C[1][0] = S.TieNumericTextBox(_("G1:"), wxT("/Spectrum/G1"), -1, 6);
+			C[2][0] = S.TieNumericTextBox(_("B1:"), wxT("/Spectrum/B1"), -1, 6);
+			S.Id(ID_CHANGE_COLOR1).AddButton(_("..."));
+			S.AddSpace(30, 20);
+			C[0][1] = S.TieNumericTextBox(_("R2:"), wxT("/Spectrum/R2"), -1, 6);
+			C[1][1] = S.TieNumericTextBox(_("G2:"), wxT("/Spectrum/G2"), -1, 6);
+			C[2][1] = S.TieNumericTextBox(_("B2:"), wxT("/Spectrum/B2"), -1, 6);
+			S.Id(ID_CHANGE_COLOR2).AddButton(_("..."));
+			S.AddSpace(30, 20);
+			C[0][2] = S.TieNumericTextBox(_("R3:"), wxT("/Spectrum/R3"), -1, 6);
+			C[1][2] = S.TieNumericTextBox(_("G3:"), wxT("/Spectrum/G3"), -1, 6);
+			C[2][2] = S.TieNumericTextBox(_("B3:"), wxT("/Spectrum/B3"), -1, 6);
+			S.Id(ID_CHANGE_COLOR3).AddButton(_("..."));
+			S.AddSpace(30, 20);
+			C[0][3] = S.TieNumericTextBox(_("R4:"), wxT("/Spectrum/R4"), -1, 6);
+			C[1][3] = S.TieNumericTextBox(_("G4:"), wxT("/Spectrum/G4"), -1, 6);
+			C[2][3] = S.TieNumericTextBox(_("B4:"), wxT("/Spectrum/B4"), -1, 6);
+			S.Id(ID_CHANGE_COLOR4).AddButton(_("..."));
+			S.AddSpace(30, 20);
+			C[0][4] = S.TieNumericTextBox(_("R5:"), wxT("/Spectrum/R5"), -1, 6);
+			C[1][4] = S.TieNumericTextBox(_("G5:"), wxT("/Spectrum/G5"), -1, 6);
+			C[2][4] = S.TieNumericTextBox(_("B5:"), wxT("/Spectrum/C5"), -1, 6);
+			S.Id(ID_CHANGE_COLOR5).AddButton(_("..."));
+			S.AddSpace(30, 20);
 
+	}
+		S.EndMultiColumn();
+		PaintColorScale();
+	}
+	S.EndStatic();
+}
+	S.EndTwoColumn();
 #ifdef EXPERIMENTAL_FIND_NOTES
    /* i18n-hint: FFT stands for Fast Fourier Transform and probably shouldn't be translated*/
    S.StartStatic(_("FFT Find Notes"));
@@ -328,6 +407,28 @@ bool SpectrumPrefs::Validate()
       wxMessageBox(_("The frequency gain must be no more than 60 dB/dec"));
       return false;
    }
+	for (int i = 0; i < 3; i++){
+		for (int j = 0; j < 5; j++){
+			long val;
+			wxString pos;
+			switch (i){
+			case 0: pos = _("R");
+				break;
+			case 1: pos = _("G");
+				break;
+			case 2: pos = _("B");
+				break;
+			}
+			if (!C[i][j]->GetValue().ToLong(&val)){
+				wxMessageBox(_("The value of ") + pos + wxString::Format(wxT("%i"), j+1) + _(" must be an integer"));
+				return false;
+			}
+			if (val < 0 || val > 255){
+				wxMessageBox(_("The value of ") + pos + wxString::Format(wxT("%i"), j + 1) + _("must be between 0 and 250"));
+				return false;
+			}
+		}
+	}
 #ifdef EXPERIMENTAL_FIND_NOTES
    long findNotesMinA;
    if (!mFindNotesMinA->GetValue().ToLong(&findNotesMinA)) {
@@ -367,10 +468,173 @@ void SpectrumPrefs::OnWindowSize(wxCommandEvent &)
    PopulatePaddingChoices(windowSize);
 }
 
-BEGIN_EVENT_TABLE(SpectrumPrefs, PrefsPanel)
-   EVT_CHOICE(ID_WINDOW_SIZE, SpectrumPrefs::OnWindowSize)
-END_EVENT_TABLE()
+void SpectrumPrefs::OnRefresh(wxCommandEvent & e)
+{
+	ShuttleGui S(this, eIsSavingToPrefs);
+	PaintColorScale();
+	PopulateOrExchange(S);
+	Apply();
+}
 
+
+void SpectrumPrefs::OnChangeColor(wxCommandEvent & event){
+	int id = event.GetId();
+	wxColourData data;
+	wxColour color = wxColour(wxAtoi(C[0][id - 1]->GetValue()), wxAtoi(C[1][id - 1]->GetValue()), wxAtoi(C[2][id - 1]->GetValue()));
+	wxColour newColor;
+	data = wxColourData();
+	data.SetColour(color);
+	wxColourDialog dialog(this, &data);
+
+	if (C[0][0]->IsEditable()){
+		if (dialog.ShowModal() == wxID_OK)
+		{
+			data = dialog.GetColourData();
+			newColor = wxColor(data.GetColour().Red(), data.GetColour().Green(), data.GetColour().Blue());
+		}
+		C[0][id - 1]->SetValue(wxString::Format(wxT("%i"), newColor.Red()));
+		C[1][id - 1]->SetValue(wxString::Format(wxT("%i"), newColor.Green()));
+		C[2][id - 1]->SetValue(wxString::Format(wxT("%i"), newColor.Blue()));
+		Colors[id - 1] = newColor;
+	}
+	else{
+		wxMessageBox(_("You must select the Custom color map to be able to edit a color"));
+	}
+	PaintColorScale();
+	Apply();
+}
+
+void SpectrumPrefs::PaintColorScale(){
+
+	wxStaticBitmap *ColorMap = new wxStaticBitmap(this, wxID_ANY, wxNullBitmap, wxPoint(460, 147), wxSize(25, 132), wxBORDER_SIMPLE);
+
+	int choice = (gPrefs->Read(wxT("/Spectrum/Colormap"), -1));
+
+	wxBitmap *ColorScale = new wxBitmap(25, 132);
+	int Size = ColorScale->GetHeight();
+	red = new float[Size];
+	blue = new float[Size];
+	green = new float[Size];
+
+	float colors[9][5][3] = {
+		//Audacity
+			{
+				{ float(0.75), float(0.75), float(0.75) },
+				{ float(0.30), float(0.60), float(1.00) },
+				{ float(0.90), float(0.10), float(0.90) },
+				{ float(1.00), float(0.00), float(0.00) },
+				{ float(1.00), float(1.00), float(1.00) }
+			},
+			//Cool
+			{
+				{ float(0.00), float(0.15), float(0.15) },
+				{ float(0.00), float(0.00), float(0.35) },
+				{ float(0.65), float(0.10), float(0.65) },
+				{ float(1.00), float(0.00), float(0.00) },
+				{ float(1.00), float(1.00), float(0.65) }
+			},
+			//C2H
+			{
+				{ float(0.00), float(0.00), float(0.74) },
+				{ float(0.00), float(0.74), float(1.00) },
+				{ float(0.74), float(1.00), float(0.26) },
+				{ float(1.00), float(0.26), float(0.00) },
+				{ float(0.52), float(0.00), float(0.00) }
+			},
+			//Multicolor
+			{
+				{ float(1.00), float(0.00), float(0.00) },
+				{ float(0.52), float(1.00), float(0.00) },
+				{ float(0.00), float(1.00), float(1.00) },
+				{ float(0.48), float(0.00), float(1.00) },
+				{ float(1.00), float(0.00), float(0.39) }
+			},
+			//Fire
+			{
+				{ float(0.16), float(0.00), float(0.00) },
+				{ float(0.84), float(0.00), float(0.00) },
+				{ float(1.00), float(0.48), float(0.00) },
+				{ float(1.00), float(1.00), float(0.26) },
+				{ float(1.00), float(1.00), float(1.00) }
+			},
+			//Protanopia
+			{
+				{ float(0.00), float(0.00), float(0.63) },
+				{ float(0.43), float(0.43), float(0.56) },
+				{ float(0.43), float(0.43), float(0.24) },
+				{ float(1.00), float(1.00), float(0.24) },
+				{ float(1.00), float(1.00), float(1.00) }
+			},
+			//Deuteranopia
+			{
+				{ float(0.00), float(0.00), float(0.55) },
+				{ float(0.40), float(0.30), float(0.55) },
+				{ float(0.35), float(0.30), float(0.30) },
+				{ float(1.00), float(1.00), float(0.30) },
+				{ float(1.00), float(1.00), float(1.00) }
+			},
+			//Tritanopia
+			{
+				{ float(0.90), float(0.00), float(0.00) },
+				{ float(1.00), float(0.43), float(0.47) },
+				{ float(0.00), float(0.60), float(0.60) },
+				{ float(0.00), float(1.00), float(1.00) },
+				{ float(1.00), float(1.00), float(1.00) }
+			},
+			//Grayscale
+			{
+				{ float(0.80), float(0.80), float(0.80) },
+				{ float(0.60), float(0.60), float(0.60) },
+				{ float(0.40), float(0.40), float(0.40) },
+				{ float(0.20), float(0.20), float(0.20) },
+				{ float(0.00), float(0.00), float(0.00) }
+			}
+	};
+	if (choice != 9){
+		for (int i = 0; i < 3; i++){
+			for (int j = 0; j < 5; j++){
+				C[i][j]->SetValue(wxString::Format(wxT("%i"), (int)(colors[choice][j][i] * 255)));
+				C[i][j]->SetEditable(false);
+			}
+		}
+	}
+	else{
+		for (int i = 0; i < 3; i++){
+			for (int j = 0; j < 5; j++){
+				C[i][j]->SetEditable(true);
+			}
+		}
+	}
+
+	for (int j = 0; j < 5; j++){
+		Colors[j] = wxColor(wxAtoi(C[0][j]->GetValue()), wxAtoi(C[1][j]->GetValue()), wxAtoi(C[2][j]->GetValue()));
+	}
+	float r[5] = { Colors[0].Red(), Colors[1].Red(), Colors[2].Red(), Colors[3].Red(), Colors[4].Red() };
+	float g[5] = { Colors[0].Green(), Colors[1].Green(), Colors[2].Green(), Colors[3].Green(), Colors[4].Green() };
+	float b[5] = { Colors[0].Blue(), Colors[1].Blue(), Colors[2].Blue(), Colors[3].Blue(), Colors[4].Blue() };
+
+	for (int j = 0; j < 4; j++){
+		for (int i = 0; i < (Size / 4); i++){
+			red[i + j * (Size / 4)] = ((r[j] + (r[j + 1] - r[j])*i / (Size / 4)) / 255);
+			green[i + j * (Size / 4)] = ((g[j] + (g[j + 1] - g[j])*i / (Size / 4)) / 255);
+			blue[i + j * (Size / 4)] = ((b[j] + (b[j + 1] - b[j])*i / (Size / 4)) / 255);
+		}
+	}
+	wxBufferedDC dc;
+	dc.Clear();
+
+	dc.SelectObject(*ColorScale);
+	for (int i = 0; i < Size; i++)
+	{
+		dc.SetPen(wxPen(wxColour(red[i] * 255, green[i] * 255, blue[i] * 255, 1), 1));
+		dc.DrawLine(1, i, ColorScale->GetWidth(), i);
+		dc.DrawLine(1, i, ColorScale->GetWidth(), i);
+	}
+	dc.SelectObject(wxNullBitmap);
+	ColorScale->SetDepth(0);
+	ColorMap->SetBitmap(*ColorScale);
+	AColor::gradient_inited = 0;
+}
 SpectrogramSettings::SpectrogramSettings()
 : hFFT(0)
 , window(0)
@@ -427,8 +691,14 @@ void SpectrogramSettings::UpdatePrefs()
       destroy = true;
       windowType = newWindowType;
    }
-
-   isGrayscale = (gPrefs->Read(wxT("/Spectrum/Grayscale"), 0L) != 0);
+	
+	int cScale = (gPrefs->Read(wxT("/Spectrum/Colormap"), -1));
+	if (cScale != 8){
+		isGrayscale = 0;
+	}
+	else{
+		isGrayscale = 1;
+	}
 
 #ifdef EXPERIMENTAL_FFT_SKIP_POINTS
    fftSkipPoints = gPrefs->Read(wxT("/Spectrum/FFTSkipPoints"), 0L);

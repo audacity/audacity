@@ -570,81 +570,99 @@ void AColor::DarkMIDIChannel(wxDC * dc, int channel /* 1 - 16 */ )
 
 bool AColor::gradient_inited = 0;
 
-unsigned char AColor::gradient_pre[ColorGradientTotal][2][gradientSteps][3];
+unsigned char AColor::gradient_pre[ColorGradientTotal][gradientSteps][3];
 
 void AColor::PreComputeGradient() {
-   {
-      if (!gradient_inited) {
-         gradient_inited = 1;
+		{
+			if (!gradient_inited) {
+				gradient_inited = 1;
 
-         for (int selected = 0; selected < ColorGradientTotal; selected++)
-            for (int grayscale = 0; grayscale <= 1; grayscale++) {
-               float r, g, b;
+				for (int selected = 0; selected < ColorGradientTotal; selected++){
+					float r, g, b;
 
-               int i;
-               for (i=0; i<gradientSteps; i++) {
-                  float value = float(i)/gradientSteps;
+					int i;
+					for (i = 0; i < gradientSteps; i++) {
+						float value = float(i) / gradientSteps;
+						int choice = (gPrefs->Read(wxT("/Spectrum/Colormap"), -1));
+						const int gsteps = 4;
 
-                  if (grayscale) {
-                     r = g = b = 0.84 - 0.84 * value;
-                  } else {
-                     const int gsteps = 4;
-                     float gradient[gsteps + 1][3] = {
-                        {float(0.75), float(0.75), float(0.75)},    // lt gray
-                        {float(0.30), float(0.60), float(1.00)},    // lt blue
-                        {float(0.90), float(0.10), float(0.90)},    // violet
-                        {float(1.00), float(0.00), float(0.00)},    // red
-                        {float(1.00), float(1.00), float(1.00)}     // white
-                     };
+						float r1 = (float)(gPrefs->Read(wxT("/Spectrum/R1"), -1)) / 255;
+						float r2 = (float)(gPrefs->Read(wxT("/Spectrum/R2"), -1)) / 255;
+						float r3 = (float)(gPrefs->Read(wxT("/Spectrum/R3"), -1)) / 255;
+						float r4 = (float)(gPrefs->Read(wxT("/Spectrum/R4"), -1)) / 255;
+						float r5 = (float)(gPrefs->Read(wxT("/Spectrum/R5"), -1)) / 255;
+						float g1 = (float)(gPrefs->Read(wxT("/Spectrum/G1"), -1)) / 255;
+						float g2 = (float)(gPrefs->Read(wxT("/Spectrum/G2"), -1)) / 255;
+						float g3 = (float)(gPrefs->Read(wxT("/Spectrum/G3"), -1)) / 255;
+						float g4 = (float)(gPrefs->Read(wxT("/Spectrum/G4"), -1)) / 255;
+						float g5 = (float)(gPrefs->Read(wxT("/Spectrum/G5"), -1)) / 255;
+						float b1 = (float)(gPrefs->Read(wxT("/Spectrum/B1"), -1)) / 255;
+						float b2 = (float)(gPrefs->Read(wxT("/Spectrum/B2"), -1)) / 255;
+						float b3 = (float)(gPrefs->Read(wxT("/Spectrum/B3"), -1)) / 255;
+						float b4 = (float)(gPrefs->Read(wxT("/Spectrum/B4"), -1)) / 255;
+						float b5 = (float)(gPrefs->Read(wxT("/Spectrum/B5"), -1)) / 255;
+						float gradient[gsteps + 1][3] =
+						{
+							{ r1, g1, b1 },
+							{ r2, g2, b2 },
+							{ r3, g3, b3 },
+							{ r4, g4, b4 },
+							{ r5, g5, b5 }
+						};
 
-                     int left = int (value * gsteps);
-                     int right = (left == gsteps ? gsteps : left + 1);
+						int left = int(value * gsteps);
+						int right = (left == gsteps ? gsteps : left + 1);
 
-                     float rweight = (value * gsteps) - left;
-                     float lweight = 1.0 - rweight;
+						float rweight = (value * gsteps) - left;
+						float lweight = 1.0 - rweight;
 
-                     r = (gradient[left][0] * lweight) + (gradient[right][0] * rweight);
-                     g = (gradient[left][1] * lweight) + (gradient[right][1] * rweight);
-                     b = (gradient[left][2] * lweight) + (gradient[right][2] * rweight);
-                  }
+						r = (gradient[left][0] * lweight) + (gradient[right][0] * rweight);
+						g = (gradient[left][1] * lweight) + (gradient[right][1] * rweight);
+						b = (gradient[left][2] * lweight) + (gradient[right][2] * rweight);
 
-                  switch (selected) {
-                  case ColorGradientUnselected:
-                     // not dimmed
-                     break;
+						switch (selected) {
+						case ColorGradientUnselected:
+							// not dimmed
+							break;
 
-                  case ColorGradientTimeAndFrequencySelected:
-                     if( !grayscale )
-                     {
-                        // flip the blue, makes spectrogram more yellow.
-                        b = 1.0f - 0.75f * b;
-                        break;
-                     }
-                     // else fall through to SAME grayscale colour as normal selection.
-                     // The white lines show it up clearly enough.
+						case ColorGradientTimeAndFrequencySelected:
+							if (choice != 8)
+							{
+								// flip the blue, makes spectrogram more yellow.
+								b = 1.0f - 0.75f * b;
+								break;
+							}
+							// else fall through to SAME grayscale colour as normal selection.
+							// The white lines show it up clearly enough.
 
-                  case ColorGradientTimeSelected:
-                     // partly dimmed
-                     r *= 0.75f;
-                     g *= 0.75f;
-                     b *= 0.75f;
-                     break;
+						case ColorGradientTimeSelected:
+							// partly dimmed
+							r *= 0.75f;
+							g *= 0.75f;
+							b *= 0.75f;
+							break;
 
 
-                  // For now edge colour is just black (or white if grey-scale)
-                  // Later we might invert or something else funky.
-                  case ColorGradientEdge:
-                     // fully dimmed
-                     r = 1.0f * grayscale;
-                     g = 1.0f * grayscale;
-                     b = 1.0f * grayscale;
-                     break;
-                  }
-                  gradient_pre[selected][grayscale][i][0] = (unsigned char) (255 * r);
-                  gradient_pre[selected][grayscale][i][1] = (unsigned char) (255 * g);
-                  gradient_pre[selected][grayscale][i][2] = (unsigned char) (255 * b);
-               }
-            }
-      }
-   }
+							// For now edge colour is just black (or white if grey-scale)
+							// Later we might invert or something else funky.
+						case ColorGradientEdge:
+							// fully dimmed
+							if (choice == 8){
+								r = 1.0f;
+								g = 1.0f;
+								b = 1.0f;
+							}
+							else{
+								r = g = b = 0;
+							}
+							break;
+						}
+						gradient_pre[selected][i][0] = (unsigned char)(255 * r);
+						gradient_pre[selected][i][1] = (unsigned char)(255 * g);
+						gradient_pre[selected][i][2] = (unsigned char)(255 * b);
+					}
+
+				}
+			}
+		}
 }

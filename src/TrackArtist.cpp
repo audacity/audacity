@@ -1933,7 +1933,6 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
 #endif
 
    const SpectrogramSettings &settings = SpectrogramSettings::defaults();
-   const bool &isGrayscale = settings.isGrayscale;
    const int &range = settings.range;
    const int &gain = settings.gain;
 #ifdef EXPERIMENTAL_FIND_NOTES
@@ -2259,7 +2258,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
             unsigned char rv, gv, bv;
             const float value =
                clip->mSpecPxCache->values[xx * mid.height + yy];
-            GetColorGradient(value, selected, isGrayscale, &rv, &gv, &bv);
+            GetColorGradient(value, selected, &rv, &gv, &bv);
             int px = ((mid.height - 1 - yy) * mid.width + xx) * 3;
             data[px++] = rv;
             data[px++] = gv;
@@ -2299,7 +2298,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
             yy2 = yy2_base;
 
             unsigned char rv, gv, bv;
-            GetColorGradient(value, selected, isGrayscale, &rv, &gv, &bv);
+            GetColorGradient(value, selected, &rv, &gv, &bv);
 
 #ifdef EXPERIMENTAL_FFT_Y_GRID
             if (fftYGrid && yGrid[yy]) {
