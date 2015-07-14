@@ -793,6 +793,8 @@ protected:
    bool mAutoScrolling;
 
 public:
+   // Old enumeration of click-and-drag states, which will shrink and disappear
+   // as UIHandle subclasses take over the repsonsibilities.
    enum   MouseCaptureEnum
    {
       IsUncaptured=0,   // This is the normal state for the mouse

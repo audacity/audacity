@@ -5823,6 +5823,9 @@ void TrackPanel::DrawZooming(wxDC * dc, const wxRect & clip)
    dc->DrawRectangle(rect);
 }
 
+// Make this #include go away!
+#include "tracks/ui/TrackControls.h"
+
 void TrackInfo::DrawItems
 ( wxDC *dc, const wxRect &rect, const Track &track,
   int mouseCapture, bool captured )
@@ -6219,9 +6222,16 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec)
    rect.y += kTopMargin;
    rect.height -= (kBottomMargin + kTopMargin);
 
-   bool captured = (t == mCapturedTrack);
+   // Need to know which button, if any, to draw as pressed.
+   const MouseCaptureEnum mouseCapture =
+      mMouseCapture ? mMouseCapture
+      // This public global variable is a hack for now, which should go away
+      // when TrackPanelCell gets a virtual function into which we move this
+      // drawing code.
+      : MouseCaptureEnum(TrackControls::gCaptureState);
+   const bool captured = (t == mCapturedTrack || t == mpClickedTrack);
 
-   TrackInfo::DrawItems( dc, rect, *t, mMouseCapture, captured );
+   TrackInfo::DrawItems( dc, rect, *t, mouseCapture, captured );
 
    //mTrackInfo.DrawBordersWithin( dc, rect, *t );
 }

@@ -12,6 +12,8 @@ Paul Licameli split from TrackPanel.cpp
 #include "TrackControls.h"
 #include "../../HitTestResult.h"
 
+int TrackControls::gCaptureState;
+
 TrackControls::~TrackControls()
 {
 }
