@@ -1,15 +1,14 @@
+//
+// Copied from wxWidgets 3.0.2 and modified for Audacity
+//
 /////////////////////////////////////////////////////////////////////////////
 // Name:        src/msw/filedlg.cpp
 // Purpose:     wxFileDialog
 // Author:      Julian Smart
 // Modified by: Leland Lucius
 // Created:     01/02/97
-// RCS-ID:      $Id: FileDialogPrivate.cpp,v 1.19 2010-01-19 09:08:39 llucius Exp $
 // Copyright:   (c) Julian Smart
 // Licence:     wxWindows licence
-//
-// Modified for Audacity to support an additional button on Save dialogs
-//
 /////////////////////////////////////////////////////////////////////////////
 
 // ============================================================================
@@ -28,25 +27,25 @@
 #endif
 
 #ifndef WX_PRECOMP
-#include "wx/utils.h"
-#include "wx/msgdlg.h"
-#include "wx/filedlg.h"
-#include "wx/filefn.h"
-#include "wx/intl.h"
-#include "wx/log.h"
-#include "wx/app.h"
+    #include <wx/msw/wrapcdlg.h>
+    #include <wx/msw/missing.h>
+    #include <wx/utils.h>
+    #include <wx/msgdlg.h>
+    #include <wx/filefn.h>
+    #include <wx/intl.h>
+    #include <wx/log.h>
+    #include <wx/app.h>
+    #include <wx/math.h>
 #endif
-
-#include "wx/msw/wrapcdlg.h"
 
 #include <stdlib.h>
 #include <string.h>
 
-#include "wx/filename.h"
-#include "wx/tokenzr.h"
-#include "wx/math.h"
-
-#include "wx/msw/missing.h"
+#include <wx/dynlib.h>
+#include <wx/filename.h>
+#include <wx/scopeguard.h>
+#include <wx/tokenzr.h>
+#include <wx/modalhook.h>
 
 #include "../FileDialog.h"
 
@@ -80,35 +79,90 @@ static wxRect gs_rectDialog(0, 0, 428, 266);
 IMPLEMENT_CLASS(FileDialog, wxFileDialogBase)
 
 // ----------------------------------------------------------------------------
+
+namespace
+{
+
+#if wxUSE_DYNLIB_CLASS
+
+typedef BOOL (WINAPI *GetProcessUserModeExceptionPolicy_t)(LPDWORD);
+typedef BOOL (WINAPI *SetProcessUserModeExceptionPolicy_t)(DWORD);
+
+GetProcessUserModeExceptionPolicy_t gs_pfnGetProcessUserModeExceptionPolicy
+    = (GetProcessUserModeExceptionPolicy_t) -1;
+
+SetProcessUserModeExceptionPolicy_t gs_pfnSetProcessUserModeExceptionPolicy
+    = (SetProcessUserModeExceptionPolicy_t) -1;
+
+DWORD gs_oldExceptionPolicyFlags = 0;
+
+bool gs_changedPolicy = false;
+
+#endif // #if wxUSE_DYNLIB_CLASS
+
+/*
+Since Windows 7 by default (callback) exceptions aren't swallowed anymore
+with native x64 applications. Exceptions can occur in a file dialog when
+using the hook procedure in combination with third-party utilities.
+Since Windows 7 SP1 the swallowing of exceptions can be enabled again
+by using SetProcessUserModeExceptionPolicy.
+*/
+void ChangeExceptionPolicy()
+{
+#if wxUSE_DYNLIB_CLASS
+    gs_changedPolicy = false;
+
+    wxLoadedDLL dllKernel32(wxT("kernel32.dll"));
+
+    if ( gs_pfnGetProcessUserModeExceptionPolicy
+        == (GetProcessUserModeExceptionPolicy_t) -1)
+    {
+        wxDL_INIT_FUNC(gs_pfn, GetProcessUserModeExceptionPolicy, dllKernel32);
+        wxDL_INIT_FUNC(gs_pfn, SetProcessUserModeExceptionPolicy, dllKernel32);
+    }
+
+    if ( !gs_pfnGetProcessUserModeExceptionPolicy
+        || !gs_pfnSetProcessUserModeExceptionPolicy
+        || !gs_pfnGetProcessUserModeExceptionPolicy(&gs_oldExceptionPolicyFlags) )
+    {
+        return;
+    }
+
+    if ( gs_pfnSetProcessUserModeExceptionPolicy(gs_oldExceptionPolicyFlags
+        | 0x1 /* PROCESS_CALLBACK_FILTER_ENABLED */ ) )
+    {
+        gs_changedPolicy = true;
+    }
+
+#endif // wxUSE_DYNLIB_CLASS
+}
+
+void RestoreExceptionPolicy()
+{
+#if wxUSE_DYNLIB_CLASS
+    if (gs_changedPolicy)
+    {
+        gs_changedPolicy = false;
+        (void) gs_pfnSetProcessUserModeExceptionPolicy(gs_oldExceptionPolicyFlags);
+    }
+#endif // wxUSE_DYNLIB_CLASS
+}
+
+} // unnamed namespace
+
+// ----------------------------------------------------------------------------
 // hook function for moving the dialog
 // ----------------------------------------------------------------------------
 
-static UINT_PTR APIENTRY
-ParentHook(HWND hDlg, UINT iMsg, WPARAM wParam, LPARAM lParam)
+UINT_PTR APIENTRY FileDialog::ParentHook(HWND hDlg, UINT iMsg, WPARAM wParam, LPARAM lParam)
 {
    OPENFILENAME *pOfn = reinterpret_cast<OPENFILENAME *>(GetWindowLongPtr(hDlg, GWLP_USERDATA));
    return reinterpret_cast<FileDialog *>(pOfn->lCustData)->MSWParentHook(hDlg, iMsg, wParam, lParam, pOfn);
 }
 
-static UINT_PTR APIENTRY
-DialogHook(HWND hDlg, UINT iMsg, WPARAM wParam, LPARAM lParam)
-{
-   OPENFILENAME *pOfn;
-
-   if (iMsg == WM_INITDIALOG)
-   {
-      pOfn = reinterpret_cast<OPENFILENAME *>(lParam);
-   }
-   else
-   {
-      pOfn = reinterpret_cast<OPENFILENAME *>(GetWindowLongPtr(hDlg, GWLP_USERDATA));
-   }
-
-   return reinterpret_cast<FileDialog *>(pOfn->lCustData)->MSWDialogHook(hDlg, iMsg, wParam, lParam, pOfn);
-}
-
 UINT_PTR FileDialog::MSWParentHook(HWND hDlg, UINT iMsg, WPARAM wParam, LPARAM lParam, OPENFILENAME *pOfn)
 {
+   // Allow default handling to process first
    UINT_PTR ret = CallWindowProc(mParentProc, hDlg, iMsg, wParam, lParam);
 
    if (iMsg == WM_SIZE)
@@ -116,7 +170,6 @@ UINT_PTR FileDialog::MSWParentHook(HWND hDlg, UINT iMsg, WPARAM wParam, LPARAM l
       MSWOnSize(mParentDlg, pOfn);
    }
 
-   //return CallWindowProc(mParentProc, hDlg, iMsg, wParam, lParam);
    return ret;
 }
 
@@ -132,6 +185,22 @@ void FileDialog::MSWOnSize(HWND hDlg, LPOPENFILENAME pOfn)
    mRoot->SetSize(r.GetWidth(), mRoot->GetSize().GetHeight());
 
    SetHWND(NULL);
+}
+
+UINT_PTR APIENTRY FileDialog::DialogHook(HWND hDlg, UINT iMsg, WPARAM wParam, LPARAM lParam)
+{
+   OPENFILENAME *pOfn;
+
+   if (iMsg == WM_INITDIALOG)
+   {
+      pOfn = reinterpret_cast<OPENFILENAME *>(lParam);
+   }
+   else
+   {
+      pOfn = reinterpret_cast<OPENFILENAME *>(GetWindowLongPtr(hDlg, GWLP_USERDATA));
+   }
+
+   return reinterpret_cast<FileDialog *>(pOfn->lCustData)->MSWDialogHook(hDlg, iMsg, wParam, lParam, pOfn);
 }
 
 UINT_PTR FileDialog::MSWDialogHook(HWND hDlg, UINT iMsg, WPARAM WXUNUSED(wParam), LPARAM lParam, OPENFILENAME *pOfn)
@@ -197,33 +266,34 @@ void FileDialog::MSWOnInitDialog(HWND hDlg, LPOPENFILENAME pOfn)
    // set HWND for wx
    SetHWND(mChildDlg);
 
-   // Create the root window
-   wxBoxSizer *verticalSizer = new wxBoxSizer( wxVERTICAL );
-   mRoot = new wxPanel(this, wxID_ANY);
-   
    if (HasUserPaneCreator())
    {
-      wxPanel *extrapanel = new wxPanel(mRoot, wxID_ANY);
-      CreateUserPane( extrapanel );
+      // Create the root window
+      wxBoxSizer *verticalSizer = new wxBoxSizer( wxVERTICAL );
+      mRoot = new wxPanel(this, wxID_ANY);
+   
+      wxPanel *userpane = new wxPanel(mRoot, wxID_ANY);
+      CreateUserPane(userpane);
 
-      wxBoxSizer *horizontalSizer = new wxBoxSizer( wxHORIZONTAL );
-      horizontalSizer->Add( extrapanel, 1, wxEXPAND, 5 );
-      verticalSizer->Add( horizontalSizer, 1, wxEXPAND|wxALL, 5 );
+      wxBoxSizer *horizontalSizer = new wxBoxSizer(wxHORIZONTAL);
+      horizontalSizer->Add(userpane, 1, wxEXPAND, 0);
+      verticalSizer->Add(horizontalSizer, 1, wxEXPAND|wxALL, 0);
+
+      mRoot->SetSizer(verticalSizer);
+      mRoot->Layout();
+      verticalSizer->SetSizeHints(mRoot);
+
+      // This reserves space for the additional panel
+      wxSize sz = mRoot->GetBestSize();
+      SetWindowPos(mChildDlg,
+                   HWND_TOP,
+                   0,
+                   0,
+                   sz.GetWidth(),
+                   sz.GetHeight(),
+                   SWP_NOZORDER | SWP_NOMOVE);
+
    }
-
-   mRoot->SetSizer(verticalSizer);
-   mRoot->Layout();
-   verticalSizer->SetSizeHints(mRoot);
-
-   // This reserves space for the additional panel
-   wxSize sz = mRoot->GetBestSize();
-   SetWindowPos(mChildDlg,
-                HWND_TOP,
-                0,
-                0,
-                sz.GetWidth(),
-                sz.GetHeight(),
-                SWP_NOZORDER | SWP_NOMOVE);
 
    SetHWND(NULL);
 }
@@ -244,7 +314,7 @@ void FileDialog::MSWOnInitDone(HWND hDlg, LPOPENFILENAME pOfn)
 {
    // set HWND so that our DoMoveWindow() works correctly
    SetHWND(mChildDlg);
-#if 0
+
    if (m_centreDir)
    {
       // now we have the real dialog size, remember it
@@ -260,31 +330,16 @@ void FileDialog::MSWOnInitDone(HWND hDlg, LPOPENFILENAME pOfn)
    {
       SetPosition(gs_rectDialog.GetPosition());
    }
-#endif
-#if 0
-   // Call selection change handler so that update handler will be
-   // called once with no selection.
-   MSWOnSelChange(hDlg, pOfn);
 
-   // Call selection change handler so that update handler will be
-   // called once with no selection.
+   // Filter change event must be sent once initialized
    MSWOnTypeChange(hDlg, pOfn);
-#endif
+
    // we shouldn't destroy this HWND
    SetHWND(NULL);
 }
 
 void FileDialog::MSWOnFolderChange(HWND hDlg, LPOPENFILENAME pOfn)
 {
-   static bool firstTime = true;
-
-   if (firstTime)
-   {
-      firstTime = false;
-
-      MSWOnTypeChange(hDlg, pOfn);
-   }
-
    FilterFiles(mParentDlg, true);
 
    wxChar path[wxMAXPATH];
@@ -296,9 +351,9 @@ void FileDialog::MSWOnFolderChange(HWND hDlg, LPOPENFILENAME pOfn)
 
    m_dir = path;
 
-   wxFileCtrlEvent event( wxEVT_FILECTRL_FOLDERCHANGED, this, GetId() );
-   event.SetDirectory( m_dir );
-   GetEventHandler()->ProcessEvent( event );
+   wxFileCtrlEvent event(wxEVT_FILECTRL_FOLDERCHANGED, this, GetId());
+   event.SetDirectory(m_dir);
+   GetEventHandler()->ProcessEvent(event);
 }
 
 void FileDialog::MSWOnSelChange(HWND hDlg, LPOPENFILENAME pOfn)
@@ -330,7 +385,7 @@ void FileDialog::MSWOnSelChange(HWND hDlg, LPOPENFILENAME pOfn)
    wxFileCtrlEvent event(wxEVT_FILECTRL_SELECTIONCHANGED, this, GetId());
    event.SetDirectory(m_dir);
    event.SetFiles(m_fileNames);
-   GetEventHandler()->ProcessEvent( event );
+   GetEventHandler()->ProcessEvent(event);
 
    // we shouldn't destroy this HWND
    SetHWND(NULL);
@@ -346,9 +401,9 @@ void FileDialog::MSWOnTypeChange(HWND hDlg, LPOPENFILENAME pOfn)
 
    m_filterIndex = pOfn->nFilterIndex - 1;
 
-   wxFileCtrlEvent event( wxEVT_FILECTRL_FILTERCHANGED, this, GetId() );
-   event.SetFilterIndex( m_filterIndex );
-   GetEventHandler()->ProcessEvent( event );
+   wxFileCtrlEvent event(wxEVT_FILECTRL_FILTERCHANGED, this, GetId());
+   event.SetFilterIndex(m_filterIndex);
+   GetEventHandler()->ProcessEvent(event);
 
    // we shouldn't destroy this HWND
    SetHWND(NULL);
@@ -541,154 +596,6 @@ void FileDialog::FilterFiles(HWND hwnd, bool refresh)
    }
 }
 
-wxString FileDialog::GetFullPath(HWND hwnd, int itm)
-{
-   IShellFolder *ishell = NULL;
-   IShellBrowser *ishellbrowser = NULL;  // Does not have to be released
-   IShellView *ishellview = NULL;
-   IFolderView *ifolderview = NULL;
-   LPMALLOC imalloc = NULL;
-   HRESULT hr;
-   wxString filename = wxEmptyString;
-
-   // Get pointer to the ListView control
-   HWND lv = ::GetDlgItem(::GetDlgItem(hwnd, lst2), 1);
-   if (lv == NULL)
-   {
-      return filename;
-   }
-
-   // Get shell's memory allocation interface (must be Release()'d)
-   hr = SHGetMalloc(&imalloc);
-   if ((hr != NOERROR) || (imalloc == NULL))
-   {
-      wxASSERT((hr == NOERROR) && (imalloc != NULL));
-      return filename;
-   }
-
-   // Get IShellBrowser interface for current dialog
-   ishellbrowser = (IShellBrowser*)::SendMessage(hwnd, WM_GETISHELLBROWSER, 0, 0);
-   if (ishellbrowser)
-   {
-      // Get IShellBrowser interface for returned browser
-      if (ishellbrowser->QueryActiveShellView(&ishellview) == S_OK)
-      {
-         // Get the IFolderView interface...available on XP or greater
-         ishellview->QueryInterface(IID_IFolderView, (void **)&ifolderview);
-      }
-   }
-
-   // Init
-   LVITEM lvi;
-   wxZeroMemory(lvi);
-
-   // Process once
-   do
-   {
-      // Retrieve the file IDL
-      lvi.iItem = itm;
-      lvi.mask = LVIF_PARAM;
-      if (ListView_GetItem(lv, &lvi) != TRUE)
-      {
-         wxASSERT(FALSE);
-         break;
-      }
-
-      LPCITEMIDLIST fidl = (LPCITEMIDLIST)lvi.lParam;
-
-      // On Vista, lParam no longer contains the pidl so retrieve it via the
-      // IFolderView interface.  This interface is only available on XP or higher
-      // so if that limitation isn't workable, use IShellView::GetItemObject() to
-      // retrieve items.
-      if (fidl == NULL && ifolderview != NULL)
-      {
-         ifolderview->Item(itm, (LPITEMIDLIST *)&fidl);
-      }
-
-      if (fidl == NULL)
-      {
-         wxASSERT(fidl != NULL);
-         break;
-      }
-
-      // Retrieve the IShellFolder interface of the parent (must be Release()'d)
-      if (ishell == NULL)
-      {
-         hr = SHBindToParent(fidl, IID_IShellFolder, (void **)&ishell, NULL);
-         if (!SUCCEEDED(hr))
-         {
-            wxASSERT(SUCCEEDED(hr));
-            break;
-         }
-      }
-
-      // Get the attributes of the object
-      DWORD attr = SFGAO_FOLDER | SFGAO_BROWSABLE;
-      hr = ishell->GetAttributesOf(1, &fidl, &attr);
-      if (!SUCCEEDED(hr))
-      {
-         wxASSERT(SUCCEEDED(hr));
-         break;
-      }
-
-      // Retrieve the parsable name of the object (includes extension)
-      STRRET str;
-      hr = ishell->GetDisplayNameOf(fidl, SHGDN_INFOLDER | SHGDN_FORPARSING, &str);
-      if (hr != NOERROR)
-      {
-         // For some objects, we get back an error of 80070057.  I'm assuming this
-         // means there is no way to represent the name (like some sort of virtual name)
-         // or I've not used the correct PIDL.  But, in either case, it "probably"
-         // represents some sort of folder (at least in all cases I've seen), so we
-         // simply allow it to display.
-         continue;
-      }
-
-      // Convert result to wxString
-      switch (str.uType)
-      {
-         case STRRET_WSTR:
-            filename = str.pOleStr;
-            imalloc->Free(str.pOleStr);
-         break;
-
-         case STRRET_OFFSET:
-            filename = wxString(((char *)fidl) + str.uOffset, wxConvISO8859_1);
-         break;
-
-         case STRRET_CSTR:
-            filename = wxString(str.cStr, wxConvISO8859_1);
-         break;
-      }
-   } while (false);
-
-   // Release the interface
-   if (ifolderview)
-   {
-      ifolderview->Release();
-   }
-
-   // Release the interface
-   if (ishellview)
-   {
-      ishellview->Release();
-   }
-
-   // Release the interface
-   if (ishell)
-   {
-      ishell->Release();
-   }
-
-   // Release the interface
-   if (imalloc)
-   {
-      imalloc->Release();
-   }
-
-   return filename;
-}
-
 void FileDialog::ParseFilter(int index)
 {
    m_Filters.Empty();
@@ -743,9 +650,6 @@ void FileDialog::Init()
    // already at the requested size.. (when centering)
    gs_rectDialog.x =
    gs_rectDialog.y = 0;
-   
-   m_callback = NULL;
-   m_cbdata = NULL;
 }
 
 void FileDialog::GetPaths(wxArrayString& paths) const
@@ -757,7 +661,7 @@ void FileDialog::GetPaths(wxArrayString& paths) const
       dir += wxT('\\');
    
    size_t count = m_fileNames.GetCount();
-   for ( size_t n = 0; n < count; n++ )
+   for (size_t n = 0; n < count; n++)
    {
       if (wxFileName(m_fileNames[n]).IsAbsolute())
          paths.Add(m_fileNames[n]);
@@ -778,7 +682,6 @@ void FileDialog::DoGetPosition( int *x, int *y ) const
    if (y)
       *y = gs_rectDialog.y;
 }
-
 
 void FileDialog::DoGetSize(int *width, int *height) const
 {
@@ -939,10 +842,29 @@ int FileDialog::ShowModal()
    if (HasFdFlag(wxFD_FILE_MUST_EXIST))
       msw_flags |= OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
 
+   /*
+      If the window has been moved the programmer is probably
+      trying to center or position it.  Thus we set the callback
+      or hook function so that we can actually adjust the position.
+      Without moving or centering the dlg, it will just stay
+      in the upper left of the frame, it does not center
+      automatically.
+   */
+   if (m_bMovedWindow || HasExtraControlCreator()) // we need these flags.
+   {
+      ChangeExceptionPolicy();
+      msw_flags |= OFN_EXPLORER|OFN_ENABLEHOOK;
+#ifndef __WXWINCE__
+      msw_flags |= OFN_ENABLESIZING;
+#endif
+   }
+
+   wxON_BLOCK_EXIT0(RestoreExceptionPolicy);
+
    if (HasFdFlag(wxFD_MULTIPLE))
    {
       // OFN_EXPLORER must always be specified with OFN_ALLOWMULTISELECT
-      msw_flags |= OFN_ALLOWMULTISELECT;
+      msw_flags |= OFN_EXPLORER | OFN_ALLOWMULTISELECT;
    }
 
    // if wxCHANGE_DIR flag is not given we shouldn't change the CWD which the
@@ -975,9 +897,9 @@ int FileDialog::ShowModal()
    // Allow Places bar to show on supported platforms
    of.lStructSize       = sizeof(OPENFILENAME);
    of.hwndOwner         = hWnd;
-   of.lpstrTitle        = WXSTRINGCAST m_message;
+   of.lpstrTitle        = m_message.t_str();
    of.lpstrFileTitle    = titleBuffer;
-   of.nMaxFileTitle     = wxMAXFILE + 1 + wxMAXEXT;    // Windows 3.0 and 3.1
+   of.nMaxFileTitle     = wxMAXFILE + 1 + wxMAXEXT;
    of.hInstance         = (HINSTANCE) lpdt;
 
    // Convert forward slashes to backslashes (file selector doesn't like
@@ -1057,8 +979,7 @@ int FileDialog::ShowModal()
    
    //=== Setting defaultFileName >>=========================================
    
-   wxStrncpy( fileNameBuffer, m_fileName.c_str(), wxMAXPATH-1 );
-   fileNameBuffer[ wxMAXPATH-1 ] = wxT('\0');
+   wxStrlcpy(fileNameBuffer, m_fileName.c_str(), WXSIZEOF(fileNameBuffer));
    
    of.lpstrFile = fileNameBuffer;  // holds returned filename
    of.nMaxFile  = wxMAXPATH;
@@ -1146,26 +1067,23 @@ int FileDialog::ShowModal()
    {
       //=== Adding the correct extension >>=================================
       m_filterIndex = (int)of.nFilterIndex - 1;
-         
-#if 0
-      // LLL:  Removed to prevent adding extension during Export
-      //       processing.
-         
-      if ( !of.nFileExtension ||
-            (of.nFileExtension && fileNameBuffer[of.nFileExtension] == wxT('\0')) )
+
+      if (HasFdFlag(FD_NO_ADD_EXTENSION))
       {
-         // User has typed a filename without an extension:
-         const wxChar* extension = filterBuffer;
-         int   maxFilter = (int)(of.nFilterIndex*2L) - 1;
+         if ( !of.nFileExtension ||
+               (of.nFileExtension && fileNameBuffer[of.nFileExtension] == wxT('\0')) )
+         {
+            // User has typed a filename without an extension:
+            const wxChar* extension = filterBuffer;
+            int   maxFilter = (int)(of.nFilterIndex*2L) - 1;
             
-         for( int i = 0; i < maxFilter; i++ )           // get extension
-            extension = extension + wxStrlen( extension ) + 1;
+            for( int i = 0; i < maxFilter; i++ )           // get extension
+               extension = extension + wxStrlen( extension ) + 1;
             
-         m_fileName = AppendExtension(fileNameBuffer, extension);
-         wxStrncpy(fileNameBuffer, m_fileName.c_str(), wxMin(m_fileName.Len(), wxMAXPATH-1));
-         fileNameBuffer[wxMin(m_fileName.Len(), wxMAXPATH-1)] = wxT('\0');
+            m_fileName = AppendExtension(fileNameBuffer, extension);
+            wxStrlcpy(fileNameBuffer, m_fileName.c_str(), WXSIZEOF(fileNameBuffer));
+         }
       }
-#endif
       m_path = fileNameBuffer;
       m_fileName = wxFileNameFromPath(fileNameBuffer);
       m_fileNames.Add(m_fileName);

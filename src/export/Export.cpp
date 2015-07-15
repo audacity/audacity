@@ -926,7 +926,7 @@ void Exporter::CreateUserPane(wxWindow *parent)
 void Exporter::OnFilterChanged(wxFileCtrlEvent & evt)
 {
    int index = evt.GetFilterIndex();
-printf("index = %d\n", index);
+
    if (index < 0 || index >= (int) mPages.GetCount())
    {
       return;

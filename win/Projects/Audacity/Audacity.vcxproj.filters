@@ -105,9 +105,6 @@
     <ClCompile Include="..\..\..\src\BlockFile.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\CaptureEvents.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\Dependencies.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -879,9 +876,6 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\BlockFile.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\CaptureEvents.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\configwin.h">
