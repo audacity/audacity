@@ -431,7 +431,7 @@
 		2800FE370FF32566005CA9E5 /* MidiIOPrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2800FE350FF32566005CA9E5 /* MidiIOPrefs.cpp */; };
 		2801127B1943EE0E00D98A16 /* HelpSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 280112791943EE0E00D98A16 /* HelpSystem.cpp */; };
 		2801A6460BF9268700648258 /* ImportQT.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2801A6430BF9268700648258 /* ImportQT.cpp */; };
-		2806EF7A1B32532A00D1AB9A /* FileDialog.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2806EF791B32532A00D1AB9A /* FileDialog.mm */; };
+		2806EF7A1B32532A00D1AB9A /* FileDialogPrivate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2806EF791B32532A00D1AB9A /* FileDialogPrivate.mm */; };
 		280828550A75E0D0000002EF /* LabelDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 280828530A75E0D0000002EF /* LabelDialog.cpp */; };
 		2808285A0A75E0EA000002EF /* Grid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 280828580A75E0EA000002EF /* Grid.cpp */; };
 		2809C4B80BCB7E560006010F /* FileIO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2809C4B60BCB7E560006010F /* FileIO.cpp */; };
@@ -2044,8 +2044,8 @@
 		2803C8B519F35AA000278526 /* PluginManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PluginManager.h; sourceTree = "<group>"; };
 		2803C8B619F35AA000278526 /* TrackPanelListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackPanelListener.h; sourceTree = "<group>"; };
 		2803C8BB19F35B4900278526 /* SelectionBarListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectionBarListener.h; sourceTree = "<group>"; };
-		2806EF781B32532A00D1AB9A /* FileDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileDialog.h; sourceTree = "<group>"; };
-		2806EF791B32532A00D1AB9A /* FileDialog.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FileDialog.mm; sourceTree = "<group>"; };
+		2806EF781B32532A00D1AB9A /* FileDialogPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileDialogPrivate.h; sourceTree = "<group>"; };
+		2806EF791B32532A00D1AB9A /* FileDialogPrivate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FileDialogPrivate.mm; sourceTree = "<group>"; };
 		2808025C0F32C11F0021001D /* dspprims.lsp */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = text; name = dspprims.lsp; path = ../nyquist/dspprims.lsp; sourceTree = SOURCE_ROOT; };
 		2808025D0F32C11F0021001D /* envelopes.lsp */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = text; name = envelopes.lsp; path = ../nyquist/envelopes.lsp; sourceTree = SOURCE_ROOT; };
 		2808025E0F32C11F0021001D /* equalizer.lsp */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = text; name = equalizer.lsp; path = ../nyquist/equalizer.lsp; sourceTree = SOURCE_ROOT; };
@@ -5485,8 +5485,8 @@
 		28F8BBDA0BC5FA6600CDF16E /* mac */ = {
 			isa = PBXGroup;
 			children = (
-				2806EF781B32532A00D1AB9A /* FileDialog.h */,
-				2806EF791B32532A00D1AB9A /* FileDialog.mm */,
+				2806EF781B32532A00D1AB9A /* FileDialogPrivate.h */,
+				2806EF791B32532A00D1AB9A /* FileDialogPrivate.mm */,
 			);
 			path = mac;
 			sourceTree = "<group>";
@@ -7385,7 +7385,7 @@
 				1790B18109883BFD008A330A /* DirectoriesPrefs.cpp in Sources */,
 				1790B18309883BFD008A330A /* GUIPrefs.cpp in Sources */,
 				1790B18409883BFD008A330A /* KeyConfigPrefs.cpp in Sources */,
-				2806EF7A1B32532A00D1AB9A /* FileDialog.mm in Sources */,
+				2806EF7A1B32532A00D1AB9A /* FileDialogPrivate.mm in Sources */,
 				1790B18509883BFD008A330A /* MousePrefs.cpp in Sources */,
 				1790B18609883BFD008A330A /* PrefsDialog.cpp in Sources */,
 				1790B18709883BFD008A330A /* QualityPrefs.cpp in Sources */,

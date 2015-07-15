@@ -117,7 +117,6 @@ simplifies construction of menu items.
 #include "widgets/HelpSystem.h"
 #include "DeviceManager.h"
 
-#include "CaptureEvents.h"
 #include "Snap.h"
 
 #if defined(EXPERIMENTAL_CRASH_REPORT)

@@ -75,8 +75,8 @@ END_EVENT_TABLE()
 KeyConfigPrefs::KeyConfigPrefs(wxWindow * parent)
 :  PrefsPanel(parent, _("Keyboard")),
    mView(NULL),
-   mFilter(NULL),
    mKey(NULL),
+   mFilter(NULL),
    mFilterTimer(this, FilterTimerID),
    mFilterPending(false)
 {

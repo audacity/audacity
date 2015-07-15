@@ -12,8 +12,8 @@
 //
 /////////////////////////////////////////////////////////////////////////////
 
-#ifndef _FILEDIALOGMSW_H_
-#define _FILEDIALOGMSW_H_
+#ifndef _WIN_FILEDIALOGPRIVATE_H_
+#define _WIN_FILEDIALOGPRIVATE_H_
 
 #include <windows.h>
 
@@ -89,9 +89,6 @@ private:
    wxArrayString m_Filters;
    wxChar *m_NameBuf;
    int m_NameBufLen;
-   
-   fdCallback m_callback;
-   void *m_cbdata;
    
    HWND mParentDlg;
    HWND mChildDlg;

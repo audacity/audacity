@@ -114,8 +114,6 @@ audacity_SOURCES = \
 	BatchProcessDialog.h \
 	Benchmark.cpp \
 	Benchmark.h \
-	CaptureEvents.cpp \
-	CaptureEvents.h \
 	Dependencies.cpp \
 	Dependencies.h \
 	DeviceChange.cpp \

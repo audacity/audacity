@@ -14,28 +14,12 @@ custom controls.
 
 *//*******************************************************************/
 
-#ifndef _FILE_DIALOG_H_
-#define _FILE_DIALOG_H_
+#ifndef _FILEDIALOG_H_
+#define _FILEDIALOG_H_
 
 #include <wx/defs.h>
 #include <wx/filectrl.h>
 #include <wx/filedlg.h>
-
-typedef void (*fdCallback)(void *, int);
-
-/////////////////////////////////////////////////////////////////////////////
-// Name:        filedlg.h
-// Purpose:     wxFileDialog base header
-// Author:      Robert Roebling
-// Modified by: Leland Lucius
-// Created:     8/17/99
-// Copyright:   (c) Robert Roebling
-// RCS-ID:      $Id: FileDialog.h,v 1.9 2008-05-24 02:57:39 llucius Exp $
-// Licence:     wxWindows licence
-//
-// Modified for Audacity to support an additional button on Save dialogs
-//
-/////////////////////////////////////////////////////////////////////////////
 
 #define FD_NO_ADD_EXTENSION 0x0400
 
@@ -57,34 +41,51 @@ protected:
 
    UserPaneCreatorFunction m_creator;
    wxUIntPtr m_userdata;
-
-   wxString m_buttonlabel;
-   fdCallback m_callback;
-   void *m_cbdata;
 };
 
 #if defined(__WXGTK__)
-#include "gtk/FileDialog.h"
+#include "gtk/FileDialogPrivate.h"
 #elif defined(__WXMAC__)
-#include "mac/FileDialog.h"
+#include "mac/FileDialogPrivate.h"
 #elif defined(__WXMSW__)
 #include "win/FileDialogPrivate.h"
 #else
 #error Unknown implementation
 #endif
 
+/////////////////////////////////////////////////////////////////////////////
+// Name:        wx/filedlg.h
+// Purpose:     wxFileDialog base header
+// Author:      Robert Roebling
+// Modified by: Leland Lucius for use by Audacity
+// Created:     8/17/99
+// Copyright:   (c) Robert Roebling
+// Licence:     wxWindows licence
+/////////////////////////////////////////////////////////////////////////////
+
 //----------------------------------------------------------------------------
 // FileDialog convenience functions
 //----------------------------------------------------------------------------
 
-wxString 
-FileSelector(const wxString & message = wxFileSelectorPromptStr,
-             const wxString & default_path = wxEmptyString,
-             const wxString & default_filename = wxEmptyString,
-             const wxString & default_extension = wxEmptyString,
-             const wxString & wildcard = wxFileSelectorDefaultWildcardStr,
+wxString
+FileSelector(const wxString& message = wxFileSelectorPromptStr,
+             const wxString& default_path = wxEmptyString,
+             const wxString& default_filename = wxEmptyString,
+             const wxString& default_extension = wxEmptyString,
+             const wxString& wildcard = wxFileSelectorDefaultWildcardStr,
              int flags = 0,
-             wxWindow *parent = NULL);
+             wxWindow *parent = NULL,
+             int x = wxDefaultCoord, int y = wxDefaultCoord);
+
+// An extended version of FileSelector
+wxString
+FileSelectorEx(const wxString& message = wxFileSelectorPromptStr,
+               const wxString& default_path = wxEmptyString,
+               const wxString& default_filename = wxEmptyString,
+               int *indexDefaultExtension = NULL,
+               const wxString& wildcard = wxFileSelectorDefaultWildcardStr,
+               int flags = 0,
+               wxWindow *parent = NULL,
+               int x = wxDefaultCoord, int y = wxDefaultCoord);
 
 #endif
-

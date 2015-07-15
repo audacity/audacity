@@ -247,7 +247,12 @@ void BenchmarkDialog::OnSave( wxCommandEvent & WXUNUSED(event))
    wxString fName = wxT("benchmark.txt");
 
    fName = FileSelector(wxT("Export Benchmark Data As:"),
-                        wxEmptyString, fName, wxT("txt"), wxT("*.txt"), wxFD_SAVE | wxRESIZE_BORDER, this);
+                        wxEmptyString,
+                        fName,
+                        wxT("txt"),
+                        wxT("*.txt"),
+                        wxFD_SAVE | wxRESIZE_BORDER,
+                        this);
 
    if (fName == wxT(""))
       return;

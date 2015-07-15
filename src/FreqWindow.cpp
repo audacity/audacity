@@ -42,15 +42,6 @@ and in the spectrogram spectral selection.
 
 #include "Audacity.h"
 
-// For compilers that support precompilation, includes "wx/wx.h".
-#include <wx/wxprec.h>
-
-
-
-#ifdef __BORLANDC__
-#pragma hdrstop
-#endif
-
 #include <wx/brush.h>
 #include <wx/button.h>
 #include <wx/choice.h>
@@ -84,10 +75,10 @@ and in the spectrogram spectral selection.
 
 #include "FileDialog.h"
 
-#if defined(__WXGTK__)
-#define GSocket GSocketHack
-#include <gtk/gtk.h>
-#endif
+//#if defined(__WXGTK__)
+//#define GSocket GSocketHack
+//#include <gtk/gtk.h>
+//#endif
 
 DEFINE_EVENT_TYPE(EVT_FREQWINDOW_RECALC);
 
@@ -516,7 +507,7 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
    //
    // I guess the only way round it would be to handle key actions
    // ourselves, but we'll leave that for a future date.
-   gtk_widget_set_can_focus(mPanScroller->m_widget, true);
+//   gtk_widget_set_can_focus(mPanScroller->m_widget, true);
 #endif
 }
 

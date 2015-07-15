@@ -188,11 +188,9 @@ AC_ARG_ENABLE(gtk3, [AS_HELP_STRING([--enable-gtk3],[enable use of GTK+-3.0 (def
 
 AC_ARG_WITH(wx-version,
            [AS_HELP_STRING([--with-wx-version],
-                           [select wxWidgets version (if both installed) [2.8,]])],
+                           [select wxWidgets version (if both installed) [3.0,]])],
            wx_preference="--version=$withval",
            wx_preference="")
-dnl At the moment we only support wx2.8. If we start supporting 3.0 when it
-dnl comes out, we'll want it back again.
 
 dnl ----------------------------------------------------
 dnl If user asked for debug, put debug in compiler flags
@@ -274,7 +272,7 @@ dnl there isn't a way to turn them off.
 dnl-------------------------------------------------------------
 
 dnl wxWidgets -- we assume that if wx-config is found, wxWidgets is successfully installed.
-AC_PATH_PROG(WX_CONFIG, wx-config, no, $PATH:/usr/local/bin )
+AC_PATH_PROGS(WX_CONFIG, wx-config wx-config-3.0, no, $PATH:/usr/local/bin )
 if [[ "$WX_CONFIG" = "no" ]] ; then
    AC_MSG_ERROR([Could not find wx-config: is wxWidgets installed? is wx-config in your path?])
 fi
@@ -288,18 +286,18 @@ else
 fi
 
 dnl more things we always pass to wx-config
-wxconfigargs="$static_wx_preference $unicode_preference  $wxconfigargs $wx_preference"
+wxconfigargs="$static_wx_preference $unicode_preference $wxconfigargs $wx_preference"
 wx_version=`${WX_CONFIG} $wxconfigargs --version`
 
-AC_MSG_NOTICE([Checking that the chosen version of wxWidgets is 2.8.x])
+AC_MSG_NOTICE([Checking that the chosen version of wxWidgets is 3.0.x])
 
 case "${wx_version}" in
-  2.8.* | 3.0.*)
+  3.0.*)
     echo "Great, you're using wxWidgets ${wx_version}!"
     ;;
   *)
   wx_list=`${WX_CONFIG} --list`
-  AC_MSG_ERROR([Unable to locate a suitable configuration of wxWidgets v2.8.x or higher.
+  AC_MSG_ERROR([Unable to locate a suitable configuration of wxWidgets v3.0.x or higher.
 The currently available configurations are listed below.  If necessary, either
 install the package for your distribution or download the latest version of
 wxWidgets

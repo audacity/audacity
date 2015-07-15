@@ -2561,7 +2561,7 @@ constSamplePtr WaveTrackCache::Get(sampleFormat format,
             const sampleCount len0 = mPTrack->GetBestBlockSize(start0);
             wxASSERT(len0 <= mBufferSize);
             if (!mPTrack->Get(samplePtr(mBuffers[0].data), floatSample, start0, len0))
-               return false;
+               return 0;
             mBuffers[0].start = start0;
             mBuffers[0].len = len0;
             if (!fillSecond &&
@@ -2587,7 +2587,7 @@ constSamplePtr WaveTrackCache::Get(sampleFormat format,
                const sampleCount len1 = mPTrack->GetBestBlockSize(start1);
                wxASSERT(len1 <= mBufferSize);
                if (!mPTrack->Get(samplePtr(mBuffers[1].data), floatSample, start1, len1))
-                  return false;
+                  return 0;
                mBuffers[1].start = start1;
                mBuffers[1].len = len1;
                mNValidBuffers = 2;
@@ -2637,7 +2637,7 @@ constSamplePtr WaveTrackCache::Get(sampleFormat format,
          // Very big request!
          // Fall back to direct fetch
          if (!mPTrack->Get(buffer, format, start, remaining))
-            return false;
+            return 0;
       }
 
       return mOverlapBuffer.ptr();

@@ -28,13 +28,6 @@
 
 *//********************************************************************/
 
-// For compilers that support precompilation, includes "wx/wx.h".
-#include <wx/wxprec.h>
-
-#ifndef WX_PRECOMP
-#include <wx/window.h>
-#endif
-
 #include <wx/dynarray.h>
 #include <wx/file.h>
 #include <wx/filename.h>
@@ -48,6 +41,7 @@
 #include <wx/textctrl.h>
 #include <wx/timer.h>
 #include <wx/dcmemory.h>
+#include <wx/window.h>
 
 #include "Export.h"
 #include "ExportPCM.h"
@@ -932,6 +926,11 @@ void Exporter::CreateUserPane(wxWindow *parent)
 void Exporter::OnFilterChanged(wxFileCtrlEvent & evt)
 {
    int index = evt.GetFilterIndex();
+printf("index = %d\n", index);
+   if (index < 0 || index >= (int) mPages.GetCount())
+   {
+      return;
+   }
 
    if (mActivePage)
    {

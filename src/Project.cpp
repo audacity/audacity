@@ -160,8 +160,6 @@ scroll information.  It also has some status flags.
 #include "commands/Command.h"
 #include "commands/CommandType.h"
 
-#include "CaptureEvents.h"
-
 #include "../images/AudacityLogoAlpha.xpm"
 
 TrackList *AudacityProject::msClipboard = new TrackList();

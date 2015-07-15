@@ -46,13 +46,8 @@
 #include "lv2/lv2plug.in/ns/extensions/ui/ui.h"
 
 #if defined(__WXGTK__)
-#if wxCHECK_VERSION(3, 0, 0)
 #include <gtk/gtk.h>
 #include "win_gtk.h"
-#else
-#include <wx/gtk/win_gtk.h>
-#include <gtk/gtk.h>
-#endif
 #endif
 
 #if defined(__WXMSW__)
@@ -1489,7 +1484,7 @@ bool LV2Effect::BuildFancy()
 //wxWindow *mContainer = mParent;
 #if defined(__WXGTK__)
    // Make sure the parent has a window
-   if (!GTK_WIDGET(mContainer->m_wxwindow)->window)
+   if (!gtk_widget_get_window(GTK_WIDGET(mContainer->m_wxwindow)))
    {
       gtk_widget_realize(GTK_WIDGET(mContainer->m_wxwindow));
    }
@@ -1545,7 +1540,6 @@ bool LV2Effect::BuildFancy()
    gtk_widget_set_size_request(widget, 1, 1);
    gtk_widget_set_size_request(widget, sz.width, sz.height);
 
-#if wxCHECK_VERSION(3, 0, 0)
    wxPizza *pizza = WX_PIZZA(mContainer->m_wxwindow);
    pizza->put(widget,
               0, //gtk_pizza_get_xoffset(pizza),
@@ -1553,16 +1547,6 @@ bool LV2Effect::BuildFancy()
               sz.width,
               sz.height);
    gtk_widget_show_all(GTK_WIDGET(pizza));
-#else
-   GtkPizza *pizza = GTK_PIZZA(mContainer->m_wxwindow);
-   gtk_pizza_put(pizza,
-                 widget,
-                 0, //gtk_pizza_get_xoffset(pizza),
-                 0, //gtk_pizza_get_yoffset(pizza),
-                 sz.width,
-                 sz.height);
-   gtk_widget_show_all(GTK_WIDGET(pizza));
-#endif
    si->SetMinSize(wxSize(sz.width, sz.height));
 #elif defined(__WXMSW__)
    HWND widget = (HWND) suil_instance_get_widget(mSuilInstance);
