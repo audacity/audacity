@@ -41,19 +41,22 @@ void FileDialogBase::CreateUserPane(wxWindow *parent)
    }
 }
 
-//----------------------------------------------------------------------------
-// FileDialog convenience functions
-//----------------------------------------------------------------------------
-
+//
+// Copied from wx 3.0.2 and modified to support additional features
+//
 /////////////////////////////////////////////////////////////////////////////
 // Name:        src/common/fldlgcmn.cpp
 // Purpose:     wxFileDialog common functions
 // Author:      John Labenski
-// Modified by: Leland Lucius for use with Audacity
+// Modified by: Leland Lucius
 // Created:     14.06.03 (extracted from src/*/filedlg.cpp)
 // Copyright:   (c) Robert Roebling
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
+
+//----------------------------------------------------------------------------
+// FileDialog convenience functions
+//----------------------------------------------------------------------------
 
 wxString FileSelector(const wxString& title,
                       const wxString& defaultDir,

@@ -3793,16 +3793,12 @@ bool AudacityProject::SaveAs(const wxString & newFileName, bool bWantSaveCompres
 
 bool AudacityProject::SaveAs(bool bWantSaveCompressed /*= false*/)
 {
-   wxString path = wxPathOnly(mFileName);
-   wxString fName;
-
-   wxString ext = wxT(".aup");
-
-   fName = GetName().Len()? GetName() + ext : wxString(wxT(""));
+   wxFileName filename(mFileName);
 
    wxString sProjName = this->GetName();
    if (sProjName.IsEmpty())
       sProjName = _("<untitled>");
+
    wxString sDialogTitle;
    if (bWantSaveCompressed)
    {
@@ -3831,29 +3827,29 @@ For an audio file that will open in other apps, use 'Export'.\n"),
       sDialogTitle.Printf(_("Save Project \"%s\" As..."), sProjName.c_str());
    }
 
-   fName = FileSelector(
-      sDialogTitle,
-      path, fName, wxT(""),
-      _("Audacity projects") + static_cast<wxString>(wxT(" (*.aup)|*.aup")),
-      // JKC: I removed 'wxFD_OVERWRITE_PROMPT' because we are checking
-      // for overwrite ourselves later, and we disallow it.
-      // We disallow overwrite because we would have to delete the many
-      // smaller files too, or prompt to move them.
-      wxFD_SAVE | wxRESIZE_BORDER | FD_NO_ADD_EXTENSION, this);
+   // JKC: I removed 'wxFD_OVERWRITE_PROMPT' because we are checking
+   // for overwrite ourselves later, and we disallow it.
+   // We disallow overwrite because we would have to delete the many
+   // smaller files too, or prompt to move them.
+   wxString fName = FileSelector(sDialogTitle,
+                                 filename.GetPath(),
+                                 filename.GetFullName(),
+                                 wxT("aup"),
+                                 _("Audacity projects") + wxT(" (*.aup)|*.aup"),
+                                 wxFD_SAVE | wxRESIZE_BORDER,
+                                 this);
 
    if (fName == wxT(""))
       return false;
 
-   size_t len = fName.Len();
-   if (len > 4 && fName.Mid(len - 4) == wxT(".aup"))
-      fName = fName.Mid(0, len - 4);
-
-   wxString oldFileName = mFileName;
+   filename = fName;
+   filename.SetExt(wxT("aup"));
+   fName = filename.GetFullPath();
 
    //check to see if the new project file already exists.
    //We should only overwrite it if this project already has the same name, where the user
    //simply chose to use the save as command although the save command would have the effect.
-   if(mFileName!=fName+ext && wxFileExists(fName+ext)) {
+   if (mFileName != fName && filename.FileExists()) {
       wxMessageDialog m(
          NULL,
          _("The project was not saved because the file name provided would overwrite another project.\nPlease try again and select an original name."),
@@ -3863,7 +3859,8 @@ For an audio file that will open in other apps, use 'Export'.\n"),
       return false;
    }
 
-   mFileName = fName + ext;
+   wxString oldFileName = mFileName;
+   mFileName = fName;
    SetProjectTitle();
 
    bool success = Save(false, true, bWantSaveCompressed);

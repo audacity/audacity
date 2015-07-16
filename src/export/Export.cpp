@@ -564,7 +564,7 @@ bool Exporter::GetFilename()
                     mFilename.GetPath(),
                     mFilename.GetFullName(),
                     maskString,
-                    wxFD_SAVE | wxRESIZE_BORDER | FD_NO_ADD_EXTENSION);
+                    wxFD_SAVE | wxRESIZE_BORDER);
       mDialog = &fd;
       mDialog->PushEventHandler(this);
 
@@ -580,6 +580,10 @@ bool Exporter::GetFilename()
       }
 
       mFilename = fd.GetPath();
+      if (mFilename == wxT("")) {
+         return false;
+      }
+
       mFormat = fd.GetFilterIndex();
       mFilterIndex = fd.GetFilterIndex();
 
@@ -595,10 +599,6 @@ bool Exporter::GetFilename()
             }
             c++;
          }
-      }
-
-      if (mFilename == wxT("")) {
-         return false;
       }
 
       wxString ext = mFilename.GetExt();

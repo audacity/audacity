@@ -1068,22 +1068,20 @@ int FileDialog::ShowModal()
       //=== Adding the correct extension >>=================================
       m_filterIndex = (int)of.nFilterIndex - 1;
 
-      if (HasFdFlag(FD_NO_ADD_EXTENSION))
+      if ( !of.nFileExtension ||
+            (of.nFileExtension && fileNameBuffer[of.nFileExtension] == wxT('\0')) )
       {
-         if ( !of.nFileExtension ||
-               (of.nFileExtension && fileNameBuffer[of.nFileExtension] == wxT('\0')) )
-         {
-            // User has typed a filename without an extension:
-            const wxChar* extension = filterBuffer;
-            int   maxFilter = (int)(of.nFilterIndex*2L) - 1;
-            
-            for( int i = 0; i < maxFilter; i++ )           // get extension
-               extension = extension + wxStrlen( extension ) + 1;
-            
-            m_fileName = AppendExtension(fileNameBuffer, extension);
-            wxStrlcpy(fileNameBuffer, m_fileName.c_str(), WXSIZEOF(fileNameBuffer));
-         }
+         // User has typed a filename without an extension:
+         const wxChar* extension = filterBuffer;
+         int   maxFilter = (int)(of.nFilterIndex*2L) - 1;
+         
+         for( int i = 0; i < maxFilter; i++ )           // get extension
+            extension = extension + wxStrlen( extension ) + 1;
+         
+         m_fileName = AppendExtension(fileNameBuffer, extension);
+         wxStrlcpy(fileNameBuffer, m_fileName.c_str(), WXSIZEOF(fileNameBuffer));
       }
+
       m_path = fileNameBuffer;
       m_fileName = wxFileNameFromPath(fileNameBuffer);
       m_fileNames.Add(m_fileName);

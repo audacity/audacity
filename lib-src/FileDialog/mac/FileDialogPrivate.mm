@@ -1,12 +1,11 @@
 //
 // Copied from wxWidgets 3.0.2 and modified to support additional features
 //
-
 /////////////////////////////////////////////////////////////////////////////
 // Name:        src/cocoa/filedlg.mm
 // Purpose:     wxFileDialog for wxCocoa
 // Author:      Ryan Norton
-// Modified by:
+// Modified by: Leland Lucius
 // Created:     2004-10-02
 // Copyright:   (c) Ryan Norton
 // Licence:     wxWindows licence
@@ -55,13 +54,19 @@
 - (FileDialog*) fileDialog;
 - (void) setFileDialog:(FileDialog*) dialog;
 
-- (BOOL)panel:(id)sender validateURL:(NSURL *)url error:(NSError **)outError AVAILABLE_MAC_OS_X_VERSION_10_6_AND_LATER;
 - (void)panel:(id)sender didChangeToDirectoryURL:(NSURL *)url AVAILABLE_MAC_OS_X_VERSION_10_6_AND_LATER;
 - (void)panelSelectionDidChange:(id)sender AVAILABLE_MAC_OS_X_VERSION_10_3_AND_LATER;
+- (NSString *)panel:(id)sender userEnteredFilename:(NSString *)filename confirmed:(BOOL)okFlag;
+
+- (void)viewResized:(NSNotification *)notification;
 
 @end
 
 @implementation OSPanelDelegate
+- (void)viewResized:(NSNotification *)notification
+{
+   _dialog->DoViewResized([notification object]);
+}
 
 - (id) init
 {
@@ -84,12 +89,26 @@
 {
     wxString path = wxCFStringRef::AsStringWithNormalizationFormC( [url path] );
 
-   _dialog->DoSendFolderChangedEvent(sender, path);
+    _dialog->DoSendFolderChangedEvent(sender, path);
 }
 
 - (void)panelSelectionDidChange:(id)sender AVAILABLE_MAC_OS_X_VERSION_10_3_AND_LATER
 {
-   _dialog->DoSendSelectionChangedEvent(sender);
+    _dialog->DoSendSelectionChangedEvent(sender);
+}
+
+- (NSString *)panel:(id)sender userEnteredFilename:(NSString *)filename confirmed:(BOOL)okFlag;
+{
+    if (okFlag == YES)
+    {
+        wxString name = wxCFStringRef::AsStringWithNormalizationFormC( filename );
+
+        wxCFStringRef cfname( _dialog->DoCaptureFilename( sender, name ) );
+
+        return [[NSString alloc] initWithString:cfname.AsNSString()];
+    }
+
+    return filename;
 }
 @end
 
@@ -257,6 +276,11 @@ void FileDialog::ShowWindowModal()
     wxCFStringRef dir( m_dir );
     wxCFStringRef file( m_fileName );
 
+    m_noOverwritePromptFilename = wxEmptyString;
+    m_path = wxEmptyString;
+    m_fileNames.Clear();
+    m_paths.Clear();
+
     wxNonOwnedWindow* parentWindow = NULL;
     
     m_modality = wxDIALOG_MODALITY_WINDOW_MODAL;
@@ -330,6 +354,11 @@ void FileDialog::OnFilterSelected( wxCommandEvent &WXUNUSED(event) )
     DoOnFilterSelected( m_filterChoice->GetSelection() );
 }
 
+void FileDialog::DoViewResized(void* object)
+{
+   m_filterPanel->Layout();
+}
+
 void FileDialog::DoSendFolderChangedEvent(void* panel, const wxString & path)
 {
     m_dir = wxPathOnly( path );
@@ -382,7 +411,33 @@ void FileDialog::DoSendSelectionChangedEvent(void* panel)
 
     GetEventHandler()->ProcessEvent( event );
 }
-    
+
+wxString FileDialog::DoCaptureFilename(void* panel, const wxString & name)
+{
+    if ( HasFlag( wxFD_SAVE ) )
+    {
+        if ( !HasFlag(wxFD_OVERWRITE_PROMPT) )
+        {
+            NSSavePanel* sPanel = (NSSavePanel*) panel;
+            NSString* dir = [[sPanel directoryURL] path];
+   
+            wxFileName fn;
+            fn.SetPath(wxCFStringRef::AsStringWithNormalizationFormC( dir ));
+            fn.SetFullName(name);
+   
+            m_currentlySelectedFilename = fn.GetFullPath();
+
+            fn.SetName(wxT("NoOverwritePrompt"));
+            fn.AssignTempFileName(fn.GetFullPath());
+            m_noOverwritePromptFilename = fn.GetFullPath();
+ 
+            return fn.GetFullName();
+        }
+    }
+
+    return name;
+}
+
 void FileDialog::SetupExtraControls(WXWindow nativeWindow)
 {
     NSSavePanel* panel = (NSSavePanel*) nativeWindow;
@@ -401,13 +456,21 @@ void FileDialog::SetupExtraControls(WXWindow nativeWindow)
 
     m_filterPanel = NULL;
     m_filterChoice = NULL;
-
     NSView* accView = nil;
+
     if ( m_useFileTypeFilter || HasUserPaneCreator() )
     {
         wxBoxSizer *verticalSizer = new wxBoxSizer( wxVERTICAL );
+
         m_filterPanel = new wxPanel( this, wxID_ANY );
-        
+        accView = m_filterPanel->GetHandle();
+
+        NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+        [center addObserver:del
+                   selector:@selector(viewResized:)
+                       name:NSViewFrameDidChangeNotification
+                     object:accView];
+
         if ( m_useFileTypeFilter )
         {
             wxBoxSizer *horizontalSizer = new wxBoxSizer( wxHORIZONTAL );
@@ -424,31 +487,37 @@ void FileDialog::SetupExtraControls(WXWindow nativeWindow)
             }
             m_filterChoice->Connect( wxEVT_CHOICE, wxCommandEventHandler( FileDialog::OnFilterSelected ), NULL, this );
 
-            horizontalSizer->Add( m_filterChoice, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+            horizontalSizer->Add( m_filterChoice, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
             verticalSizer->Add( horizontalSizer, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5 );
         }
             
         if ( HasUserPaneCreator() )
         {
-            wxPanel *extrapanel = new wxPanel( m_filterPanel, wxID_ANY );
-            CreateUserPane( extrapanel );
+            wxPanel *userpane = new wxPanel( m_filterPanel, wxID_ANY );
+            CreateUserPane( userpane );
 
             wxBoxSizer *horizontalSizer = new wxBoxSizer( wxHORIZONTAL );
-            horizontalSizer->Add( extrapanel, 1, wxEXPAND, 5 );
-            verticalSizer->Add( horizontalSizer, 1, wxEXPAND|wxALL, 5 );
+            horizontalSizer->Add( userpane, 1, wxEXPAND, 0 );
+            verticalSizer->Add( horizontalSizer, 1, wxEXPAND, 0 );
         }
 
         m_filterPanel->SetSizer( verticalSizer );
         m_filterPanel->Layout();
-        verticalSizer->SetSizeHints( m_filterPanel );
-    
-        accView = m_filterPanel->GetHandle();
+
+        NSSize ss = [[accView superview] frame].size;
+        wxSize ws = m_filterPanel->GetBestSize();
+        ws.SetWidth( wxMax( (wxCoord) ss.width, ws.GetWidth() ) );
+
+        m_filterPanel->SetSize(ws);
     }
 
     if ( accView != nil )
     {
         [accView removeFromSuperview];
+
         [panel setAccessoryView:accView];
+
+        [accView setAutoresizingMask:NSViewWidthSizable];
     }
 }
 
@@ -465,6 +534,7 @@ int FileDialog::ShowModal()
     wxCFStringRef dir( m_dir );
     wxCFStringRef file( m_fileName );
 
+    m_noOverwritePromptFilename = wxEmptyString;
     m_path = wxEmptyString;
     m_fileNames.Clear();
     m_paths.Clear();
@@ -600,6 +670,15 @@ void FileDialog::ModalFinishedCallback(void* panel, int returnCode)
             result = wxID_OK;
 
             m_path = wxCFStringRef::AsStringWithNormalizationFormC([sPanel filename]);
+            if (!HasFlag(wxFD_OVERWRITE_PROMPT))
+            {
+                wxASSERT(!m_noOverwritePromptFilename.IsEmpty());
+                if (!m_noOverwritePromptFilename.IsEmpty())
+                {
+                    wxRemoveFile(m_noOverwritePromptFilename);
+                    m_path = m_currentlySelectedFilename;
+                }
+            }
             m_fileName = wxFileNameFromPath(m_path);
             m_dir = wxPathOnly( m_path );
             if (m_filterChoice)

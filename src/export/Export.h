@@ -27,7 +27,6 @@ class DirManager;
 class WaveTrack;
 class TrackList;
 class MixerSpec;
-class FileDialog;
 class TimeTrack;
 class Mixer;
 

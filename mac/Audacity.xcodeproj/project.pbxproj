@@ -1280,7 +1280,6 @@
 		EDFCEBA618894B2A00C98E51 /* RealFFTf48x.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDFCEBA218894B2A00C98E51 /* RealFFTf48x.cpp */; };
 		EDFCEBA718894B2A00C98E51 /* SseMathFuncs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDFCEBA418894B2A00C98E51 /* SseMathFuncs.cpp */; };
 		EDFCEBB518894B9E00C98E51 /* Equalization48x.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDFCEBB318894B9E00C98E51 /* Equalization48x.cpp */; };
-		EEFF576E109AB4E20032EDFE /* CaptureEvents.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EEFF576C109AB4E10032EDFE /* CaptureEvents.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -1772,7 +1771,6 @@
 		1790AFE809883BFD008A330A /* BlockFile.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = BlockFile.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		1790AFE909883BFD008A330A /* BlockFile.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = BlockFile.h; sourceTree = "<group>"; tabWidth = 3; };
 		1790AFF009883BFD008A330A /* configtemplate.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = configtemplate.h; sourceTree = "<group>"; tabWidth = 3; };
-		1790AFF109883BFD008A330A /* configunix.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = configunix.h; sourceTree = "<group>"; tabWidth = 3; };
 		1790AFF409883BFD008A330A /* CrossFade.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = CrossFade.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		1790AFF509883BFD008A330A /* CrossFade.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = CrossFade.h; sourceTree = "<group>"; tabWidth = 3; };
 		1790AFF709883BFD008A330A /* DirManager.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = DirManager.cpp; sourceTree = "<group>"; tabWidth = 3; usesTabs = 0; };
@@ -3090,8 +3088,6 @@
 		EDFCEBA518894B2A00C98E51 /* SseMathFuncs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SseMathFuncs.h; sourceTree = "<group>"; };
 		EDFCEBB318894B9E00C98E51 /* Equalization48x.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Equalization48x.cpp; sourceTree = "<group>"; };
 		EDFCEBB418894B9E00C98E51 /* Equalization48x.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Equalization48x.h; sourceTree = "<group>"; };
-		EEFF576C109AB4E10032EDFE /* CaptureEvents.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; name = CaptureEvents.cpp; path = ../src/CaptureEvents.cpp; sourceTree = SOURCE_ROOT; tabWidth = 3; };
-		EEFF576D109AB4E20032EDFE /* CaptureEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.c.h; name = CaptureEvents.h; path = ../src/CaptureEvents.h; sourceTree = SOURCE_ROOT; tabWidth = 3; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -3846,7 +3842,6 @@
 				1790AFE809883BFD008A330A /* BlockFile.cpp */,
 				1790AFE909883BFD008A330A /* BlockFile.h */,
 				1790AFF009883BFD008A330A /* configtemplate.h */,
-				1790AFF109883BFD008A330A /* configunix.h */,
 				1790AFF409883BFD008A330A /* CrossFade.cpp */,
 				1790AFF509883BFD008A330A /* CrossFade.h */,
 				2849B4600A7444BE00ECF12D /* Dependencies.cpp */,
@@ -4223,8 +4218,6 @@
 			children = (
 				1790B0B809883BFD008A330A /* BatchPrefs.cpp */,
 				1790B0B909883BFD008A330A /* BatchPrefs.h */,
-				EEFF576C109AB4E10032EDFE /* CaptureEvents.cpp */,
-				EEFF576D109AB4E20032EDFE /* CaptureEvents.h */,
 				284B278E0FC66863005EAC96 /* DevicePrefs.cpp */,
 				284B278F0FC66863005EAC96 /* DevicePrefs.h */,
 				1790B0BB09883BFD008A330A /* DirectoriesPrefs.cpp */,
@@ -7534,7 +7527,6 @@
 				28DE72AF10388583007E18EC /* SetTrackInfoCommand.cpp in Sources */,
 				28DE72B2103885AA007E18EC /* TimeWarper.cpp in Sources */,
 				EDD94EDB103CB520000873F1 /* ImportExportCommands.cpp in Sources */,
-				EEFF576E109AB4E20032EDFE /* CaptureEvents.cpp in Sources */,
 				284249EE10D337CE004330A6 /* GetProjectInfoCommand.cpp in Sources */,
 				284249EF10D337CE004330A6 /* SetProjectInfoCommand.cpp in Sources */,
 				18CE3C951145511200282C50 /* ODDecodeFFmpegTask.cpp in Sources */,

@@ -1,19 +1,18 @@
 //
 // Copied from wx 3.0.2 and modified to support additional features
 //
-
 /////////////////////////////////////////////////////////////////////////////
 // Name:        wx/osx/filedlg.h
 // Purpose:     wxFileDialog class
 // Author:      Stefan Csomor
-// Modified by:
+// Modified by: Leland Lucius
 // Created:     1998-01-01
 // Copyright:   (c) Stefan Csomor
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
 
-#ifndef _FILEDIALOG_H_
-#define _FILEDIALOG_H_
+#ifndef _MAC_FILEDIALOG_H_
+#define _MAC_FILEDIALOG_H_
 
 #include <wx/choice.h>
 
@@ -71,8 +70,10 @@ public:
     // implementation only
     
 #if wxOSX_USE_COCOA
+    void DoViewResized(void* object);
     void DoSendFolderChangedEvent(void* panel, const wxString& path);
     void DoSendSelectionChangedEvent(void* panel);
+    wxString DoCaptureFilename(void* panel, const wxString& name);
 #endif
 
 protected:
@@ -96,6 +97,7 @@ protected:
     wxArrayString m_currentExtensions;
     WX_NSObject m_delegate;
     WX_NSObject m_sheetDelegate;
+    wxString m_noOverwritePromptFilename;
 #endif
 
 private:
@@ -103,4 +105,4 @@ private:
     void Init();
 };
 
-#endif // _FILEDIALOG_H_
+#endif

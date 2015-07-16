@@ -21,8 +21,6 @@ custom controls.
 #include <wx/filectrl.h>
 #include <wx/filedlg.h>
 
-#define FD_NO_ADD_EXTENSION 0x0400
-
 class FileDialogBase : public wxFileDialogBase
 {
 public:
@@ -53,11 +51,14 @@ protected:
 #error Unknown implementation
 #endif
 
+//
+// Copied from wx 3.0.2 and modified to support additional features
+//
 /////////////////////////////////////////////////////////////////////////////
 // Name:        wx/filedlg.h
 // Purpose:     wxFileDialog base header
 // Author:      Robert Roebling
-// Modified by: Leland Lucius for use by Audacity
+// Modified by: Leland Lucius
 // Created:     8/17/99
 // Copyright:   (c) Robert Roebling
 // Licence:     wxWindows licence
