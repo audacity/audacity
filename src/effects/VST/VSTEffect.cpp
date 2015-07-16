@@ -41,6 +41,13 @@
 
 #if defined(__WXMAC__)
 #include <dlfcn.h>
+#elif defined(__WXMSW__)
+#include <wx/dynlib.h>
+#include <wx/msw/seh.h>
+#include <shlwapi.h>
+#pragma comment(lib, "shlwapi")
+#else
+// Includes for GTK are later since they cause conflicts with our class names
 #endif
 
 #include <wx/app.h>
@@ -2796,8 +2803,6 @@ void VSTEffect::BuildFancy()
    // Turn the power on...some effects need this when the editor is open
    PowerOn();
 
-   OSStatus result;
-
    wxBoxSizer *mainSizer = new wxBoxSizer(wxVERTICAL);
 
    wxPanel *container = new wxPanel(mParent, wxID_ANY);
@@ -2822,14 +2827,14 @@ void VSTEffect::BuildFancy()
          return;
       }
 
-      if (!mControl->Create(mParent, this))
+      if (!mControl->Create(container, this))
       {
          return;
       }
 
       wxBoxSizer *innerSizer = new wxBoxSizer(wxVERTICAL);
    
-      innerSizer->Add(mControl, 1, wxEXPAND);
+      innerSizer->Add(mControl, 0, wxALIGN_CENTER);
       container->SetSizer(innerSizer);
 
       mParent->SetMinSize(wxDefaultSize);
@@ -3014,14 +3019,17 @@ void VSTEffect::RefreshParameters(int skip)
 
 void VSTEffect::OnSizeWindow(wxCommandEvent & evt)
 {
-   if (!mContainer)
+   if (!mControl)
    {
       return;
    }
 
    // This really needs some work.  We shouldn't know anything about the parent...
-   mContainer->SetMinSize(evt.GetInt(), (int) evt.GetExtraLong());
-   mParent->SetMinSize(mContainer->GetMinSize());
+   mControl->SetMinSize(wxSize(evt.GetInt(), (int) evt.GetExtraLong()));
+   mControl->SetSize(wxSize(evt.GetInt(), (int) evt.GetExtraLong()));
+      mParent->SetMinSize(wxDefaultSize);
+      mDialog->SetMinSize(wxDefaultSize);
+//   mParent->SetMinSize(mControl->GetMinSize());
    mDialog->Layout();
    mDialog->Fit();
 }

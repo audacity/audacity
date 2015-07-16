@@ -144,6 +144,7 @@
     <ClCompile Include="..\..\..\src\effects\EffectRack.cpp" />
     <ClCompile Include="..\..\..\src\effects\NoiseReduction.cpp" />
     <ClCompile Include="..\..\..\src\effects\Phaser.cpp" />
+    <ClCompile Include="..\..\..\src\effects\VST\VSTControlMSW.cpp" />
     <ClCompile Include="..\..\..\src\Envelope.cpp" />
     <ClCompile Include="..\..\..\src\FFmpeg.cpp" />
     <ClCompile Include="..\..\..\src\FFT.cpp" />
@@ -414,6 +415,7 @@
     <ClInclude Include="..\..\..\src\effects\EffectRack.h" />
     <ClInclude Include="..\..\..\src\effects\NoiseReduction.h" />
     <ClInclude Include="..\..\..\src\effects\Phaser.h" />
+    <ClInclude Include="..\..\..\src\effects\VST\VSTControlMSW.h" />
     <ClInclude Include="..\..\..\src\import\FormatClassifier.h" />
     <ClInclude Include="..\..\..\src\import\ImportGStreamer.h" />
     <ClInclude Include="..\..\..\src\import\MultiFormatReader.h" />

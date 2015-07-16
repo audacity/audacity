@@ -2,7 +2,7 @@
 
   Audacity: A Digital Audio Editor
 
-  VSTControlMac.mm
+  VSTControlOSX.mm
 
   Leland Lucius
 
@@ -74,14 +74,13 @@ VSTControlImpl::~VSTControlImpl()
 {
 }
 
-BEGIN_EVENT_TABLE(VSTControl, wxControl)
+BEGIN_EVENT_TABLE(VSTControl, VSTControlBase)
    EVT_SIZE(VSTControl::OnSize)
 END_EVENT_TABLE()
 
 VSTControl::VSTControl()
+:  VSTControlBase()
 {
-   mLink = NULL;
-
    mVSTView = nil;
    mView = nil;
 

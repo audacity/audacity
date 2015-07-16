@@ -837,6 +837,9 @@
     <ClCompile Include="..\..\..\src\ViewInfo.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\VST\VSTControlMSW.cpp">
+      <Filter>src/effects/VST</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\AboutDialog.h">
@@ -1672,6 +1675,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\AudacityHeaders.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\VST\VSTControlMSW.h">
+      <Filter>src/effects/VST</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
