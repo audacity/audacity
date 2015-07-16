@@ -209,7 +209,6 @@ public:
    static void GetMidiControlsRect(const wxRect & rect, wxRect &dest);
 #endif
 
-public:
    static bool HideTopItem( const wxRect &rect, const wxRect &subRect,
                                int allowance = 0 );
 
@@ -494,7 +493,6 @@ protected:
    virtual void CalculateRearrangingThresholds(wxMouseEvent & event);
    virtual void HandleClosing(wxMouseEvent & event);
    virtual void HandlePopping(wxMouseEvent & event);
-   virtual void HandleMutingSoloing(wxMouseEvent & event, bool solo);
    virtual void HandleMinimizing(wxMouseEvent & event);
    virtual void HandleSliders(wxMouseEvent &event, bool pan);
 #ifdef EXPERIMENTAL_MIDI_OUT
@@ -508,7 +506,6 @@ protected:
    virtual bool CloseFunc(Track * t, wxRect rect, int x, int y);
    virtual bool PopupFunc(Track * t, wxRect rect, int x, int y);
 
-   virtual bool MuteSoloFunc(Track *t, wxRect rect, int x, int f, bool solo);
    virtual bool MinimizeFunc(Track *t, wxRect rect, int x, int f);
    virtual bool GainFunc(Track * t, wxRect rect, wxMouseEvent &event,
                  int x, int y);

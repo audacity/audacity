@@ -102,6 +102,9 @@
     <Filter Include="src\tracks\playabletrack\notetrack\ui">
       <UniqueIdentifier>{355a925b-a166-4405-aff8-894bfa027ad3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\tracks\playabletrack\ui">
+      <UniqueIdentifier>{1af54030-3637-42e2-8339-b48bf05b8564}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\AboutDialog.cpp">
@@ -1009,6 +1012,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\tracks\ui\SliderHandle.cpp">
       <Filter>src\tracks\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\playabletrack\ui\PlayableTrackButtonHandles.cpp">
+      <Filter>src\tracks\playabletrack\ui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -2013,6 +2019,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\tracks\ui\SliderHandle.h">
       <Filter>src\tracks\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\playabletrack\ui\PlayableTrackButtonHandles.h">
+      <Filter>src\tracks\playabletrack\ui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
