@@ -11,6 +11,11 @@ AM_INIT_AUTOMAKE([1.11 dist-xz foreign no-dist-gzip subdir-objects -Wall])
 AM_MAINTAINER_MODE([disable])
 
 #
+# We use C++
+#
+AC_LANG_CPLUSPLUS
+
+#
 # Checks for programs.
 #
 AC_PROG_CXX
@@ -41,11 +46,6 @@ AC_ARG_ENABLE(debug,
             debug_preference="--debug=$enableval",
             debug_preference="")
 
-AC_ARG_ENABLE(gtk3,
-            [AS_HELP_STRING([--enable-gtk3],[enable use of GTK+-3.0 (default: use GTK+-2.0)])],
-            enable_gtk3=$enableval,
-            enable_gtk3=no)
-
 AC_ARG_WITH(wx-version,
             [AS_HELP_STRING([--with-wx-version],[override default wxWidgets version [2.6,2.8]])],
             wx_preference="--version=$withval",
@@ -70,12 +70,24 @@ WX_LIBS=""
 AC_SUBST([WX_CXXFLAGS])
 AC_SUBST([WX_LIBS])
 
-AC_SUBST(HAVE_GTK)
+AC_MSG_CHECKING([for gtk3 use in wxWidgets])
+CPPFLAGS="${WX_CXXFLAGS}"
+AC_EGREP_CPP(yes,
+[#include <wx/wx.h>
+#if defined(__WXGTK3__)
+  yes
+#endif
+], enable_gtk3=yes, enable_gtk3=no)
+
 if [[ "$enable_gtk3" = yes ]]; then
    gtk_version=gtk+-3.0
+   AC_MSG_RESULT([yes])
 else
    gtk_version=gtk+-2.0
+   AC_MSG_RESULT([no])
 fi
+
+AC_SUBST(HAVE_GTK)
 PKG_CHECK_MODULES(GTK, $gtk_version, have_gtk="yes", have_gtk="no")
 
 dnl OS-specific configuration

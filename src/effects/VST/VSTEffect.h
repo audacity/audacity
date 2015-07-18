@@ -317,13 +317,6 @@ private:
    long mXMLVersion;
    VstPatchChunkInfo mXMLInfo;
    
-#if defined(__WXGTK__)
-
-   Display *mXdisp;
-   Window mXwin;
-
-#endif
-
    DECLARE_EVENT_TABLE();
 
    friend class VSTEffectsModule;

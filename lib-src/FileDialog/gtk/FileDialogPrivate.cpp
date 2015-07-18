@@ -9,12 +9,12 @@
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
 
+#include <gtk/gtk.h>
+
 #include "../FileDialog.h"
 
 #include "wx/intl.h"
 #include "wx/msgdlg.h"
-
-#include <gtk/gtk.h>
 
 #ifdef __UNIX__
 #include <unistd.h> // chdir

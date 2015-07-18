@@ -2,16 +2,20 @@
 
   Audacity: A Digital Audio Editor
 
-  VSTControlMSW.h
+  VSTControlGTK.h
 
   Leland Lucius
 
 **********************************************************************/
 
-#ifndef AUDACITY_VSTCONTROLMSW_H
-#define AUDACITY_VSTCONTROLMSW_H
+#ifndef AUDACITY_VSTCONTROLGTK_H
+#define AUDACITY_VSTCONTROLGTK_H
 
-#include <Windows.h>
+// Must include after ours since we have a lot of name collisions
+#define Region XRegion     // Conflicts with Audacity's Region structure
+#include <gtk/gtk.h>
+#include <gdk/gdkx.h>
+#undef Region
 
 #include <wx/control.h>
 
@@ -26,7 +30,8 @@ public:
    bool Create(wxWindow *parent, VSTEffectLink *link);
 
 private:
-   HANDLE mHwnd;
+   Display *mXdisp;
+   Window mXwin;
 };
 
 #endif

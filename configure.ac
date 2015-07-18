@@ -184,8 +184,6 @@ AC_ARG_ENABLE(dynamic-loading,
             [dynamic_loading="$enableval"],
             [dynamic_loading="yes"])
 
-AC_ARG_ENABLE(gtk3, [AS_HELP_STRING([--enable-gtk3],[enable use of GTK+-3.0 (default: use GTK+-2.0)])], enable_gtk3=$enableval, enable_gtk3=no)
-
 AC_ARG_WITH(wx-version,
            [AS_HELP_STRING([--with-wx-version],
                            [select wxWidgets version (if both installed) [3.0,]])],
@@ -566,12 +564,24 @@ case "${host_os}" in
          AC_MSG_ERROR([dlopen not found, required by Audacity])
       fi
 
-      AC_SUBST(HAVE_GTK)
+      AC_MSG_CHECKING([for gtk3 use in wxWidgets])
+      CPPFLAGS="${WX_CXXFLAGS}"
+      AC_EGREP_CPP(yes,
+      [#include <wx/wx.h>
+      #if defined(__WXGTK3__)
+        yes
+      #endif
+      ], enable_gtk3=yes, enable_gtk3=no)
+      
       if [[ "$enable_gtk3" = yes ]]; then
-         PKG_CHECK_MODULES(GTK, gtk+-3.0, have_gtk=yes, have_gtk=no)
+         gtk_version=gtk+-3.0
+         AC_MSG_RESULT([yes])
       else
-         PKG_CHECK_MODULES(GTK, gtk+-2.0, have_gtk=yes, have_gtk=no)
+         gtk_version=gtk+-2.0
+         AC_MSG_RESULT([no])
       fi
+      
+      AC_SUBST(HAVE_GTK)
       PKG_CHECK_MODULES(GTK, $gtk_version, have_gtk=yes, have_gtk=no)
       if [[ "$have_gtk" = "yes" ]]
       then
@@ -579,10 +589,6 @@ case "${host_os}" in
          CPPFLAGS="$CPPFLAGS $GTK_CFLAGS"
          LIBS="$LIBS $GTK_LIBS"
       fi
-      
-      dnl VST support on platforms other than Mac OS and Windows not enabled for
-      dnl 2.0.6 release
-	   dnl use_vst="no"
    ;;
 esac
 

@@ -939,7 +939,6 @@ with_lib_preference
 enable_sse
 enable_universal_binary
 enable_dynamic_loading
-enable_gtk3
 with_wx_version
 with_expat
 with_ffmpeg
@@ -1678,7 +1677,6 @@ Optional Features:
   --enable-dynamic-loading
                           enable dynamic loading of lame and FFmpeg
                           [default=yes]
-  --enable-gtk3           enable use of GTK+-3.0 (default: use GTK+-2.0)
   --enable-nyquist        enable Nyquist plug-in support [default=yes]
   --enable-audiounits     enable audio unit plug-in support (Mac OS X only)
                           [default=auto]
@@ -19157,14 +19155,6 @@ else
 fi
 
 
-# Check whether --enable-gtk3 was given.
-if test "${enable_gtk3+set}" = set; then :
-  enableval=$enable_gtk3; enable_gtk3=$enableval
-else
-  enable_gtk3=no
-fi
-
-
 
 # Check whether --with-wx-version was given.
 if test "${with_wx_version+set}" = set; then :
@@ -23488,144 +23478,37 @@ fi
          as_fn_error $? "dlopen not found, required by Audacity" "$LINENO" 5
       fi
 
+      { $as_echo "$as_me:${as_lineno-$LINENO}: checking for gtk3 use in wxWidgets" >&5
+$as_echo_n "checking for gtk3 use in wxWidgets... " >&6; }
+      CPPFLAGS="${WX_CXXFLAGS}"
+      cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#include <wx/wx.h>
+      #if defined(__WXGTK3__)
+        yes
+      #endif
+
+_ACEOF
+if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
+  $EGREP "yes" >/dev/null 2>&1; then :
+  enable_gtk3=yes
+else
+  enable_gtk3=no
+fi
+rm -f conftest*
+
 
       if [ "$enable_gtk3" = yes ]; then
-
-pkg_failed=no
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for GTK" >&5
-$as_echo_n "checking for GTK... " >&6; }
-
-if test -n "$GTK_CFLAGS"; then
-    pkg_cv_GTK_CFLAGS="$GTK_CFLAGS"
- elif test -n "$PKG_CONFIG"; then
-    if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtk+-3.0\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "gtk+-3.0") 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; then
-  pkg_cv_GTK_CFLAGS=`$PKG_CONFIG --cflags "gtk+-3.0" 2>/dev/null`
-else
-  pkg_failed=yes
-fi
- else
-    pkg_failed=untried
-fi
-if test -n "$GTK_LIBS"; then
-    pkg_cv_GTK_LIBS="$GTK_LIBS"
- elif test -n "$PKG_CONFIG"; then
-    if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtk+-3.0\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "gtk+-3.0") 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; then
-  pkg_cv_GTK_LIBS=`$PKG_CONFIG --libs "gtk+-3.0" 2>/dev/null`
-else
-  pkg_failed=yes
-fi
- else
-    pkg_failed=untried
-fi
-
-
-
-if test $pkg_failed = yes; then
-
-if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
-        _pkg_short_errors_supported=yes
-else
-        _pkg_short_errors_supported=no
-fi
-        if test $_pkg_short_errors_supported = yes; then
-	        GTK_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "gtk+-3.0" 2>&1`
-        else
-	        GTK_PKG_ERRORS=`$PKG_CONFIG --print-errors "gtk+-3.0" 2>&1`
-        fi
-	# Put the nasty error message in config.log where it belongs
-	echo "$GTK_PKG_ERRORS" >&5
-
-	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-                have_gtk=no
-elif test $pkg_failed = untried; then
-	have_gtk=no
-else
-	GTK_CFLAGS=$pkg_cv_GTK_CFLAGS
-	GTK_LIBS=$pkg_cv_GTK_LIBS
-        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+         gtk_version=gtk+-3.0
+         { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
-	have_gtk=yes
-fi
       else
-
-pkg_failed=no
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for GTK" >&5
-$as_echo_n "checking for GTK... " >&6; }
-
-if test -n "$GTK_CFLAGS"; then
-    pkg_cv_GTK_CFLAGS="$GTK_CFLAGS"
- elif test -n "$PKG_CONFIG"; then
-    if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtk+-2.0\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "gtk+-2.0") 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; then
-  pkg_cv_GTK_CFLAGS=`$PKG_CONFIG --cflags "gtk+-2.0" 2>/dev/null`
-else
-  pkg_failed=yes
-fi
- else
-    pkg_failed=untried
-fi
-if test -n "$GTK_LIBS"; then
-    pkg_cv_GTK_LIBS="$GTK_LIBS"
- elif test -n "$PKG_CONFIG"; then
-    if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtk+-2.0\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "gtk+-2.0") 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; then
-  pkg_cv_GTK_LIBS=`$PKG_CONFIG --libs "gtk+-2.0" 2>/dev/null`
-else
-  pkg_failed=yes
-fi
- else
-    pkg_failed=untried
-fi
-
-
-
-if test $pkg_failed = yes; then
-
-if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
-        _pkg_short_errors_supported=yes
-else
-        _pkg_short_errors_supported=no
-fi
-        if test $_pkg_short_errors_supported = yes; then
-	        GTK_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "gtk+-2.0" 2>&1`
-        else
-	        GTK_PKG_ERRORS=`$PKG_CONFIG --print-errors "gtk+-2.0" 2>&1`
-        fi
-	# Put the nasty error message in config.log where it belongs
-	echo "$GTK_PKG_ERRORS" >&5
-
-	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+         gtk_version=gtk+-2.0
+         { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
-                have_gtk=no
-elif test $pkg_failed = untried; then
-	have_gtk=no
-else
-	GTK_CFLAGS=$pkg_cv_GTK_CFLAGS
-	GTK_LIBS=$pkg_cv_GTK_LIBS
-        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
-	have_gtk=yes
-fi
       fi
+
+
 
 pkg_failed=no
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for GTK" >&5
@@ -23701,8 +23584,7 @@ $as_echo "#define HAVE_GTK 1" >>confdefs.h
          CPPFLAGS="$CPPFLAGS $GTK_CFLAGS"
          LIBS="$LIBS $GTK_LIBS"
       fi
-
-            	      ;;
+   ;;
 esac
 
 

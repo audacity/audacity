@@ -2,7 +2,7 @@
 
   Audacity: A Digital Audio Editor
 
-  VSTControlMSW.cpp
+  VSTControlGTK.cpp
 
   Leland Lucius
 
@@ -13,13 +13,27 @@
 
 #include "VSTControl.h"
 
+static int trappedErrorCode = 0;
+static int X11TrapHandler(Display *, XErrorEvent *err)
+{
+    return 0;
+}
+
 VSTControl::VSTControl()
 :  VSTControlBase()
 {
+   mXdisp = 0;
+   mXwin = 0;
 }
 
 VSTControl::~VSTControl()
 {
+   if (mXwin)
+   {
+      mLink->callDispatcher(effEditClose, 0, (intptr_t)mXdisp, (void *)mXwin, 0.0);
+      mXdisp = 0;
+      mXwin = 0;
+   }
 }
 
 bool VSTControl::Create(wxWindow *parent, VSTEffectLink *link)
@@ -34,11 +48,17 @@ bool VSTControl::Create(wxWindow *parent, VSTEffectLink *link)
    // Some effects like to have us get their rect before opening them.
    mLink->callDispatcher(effEditGetRect, 0, 0, &rect, 0.0);
 
-   // Get the native handle
-   mHwnd = GetHWND();
+   // Make sure the parent has a window
+   if (!gtk_widget_get_realized(GTK_WIDGET(m_wxwindow)))
+   {
+      gtk_widget_realize(GTK_WIDGET(m_wxwindow));
+   }
 
-   // Ask the effect to add its GUI
-   mLink->callDispatcher(effEditOpen, 0, 0, mHwnd, 0.0);
+   GdkWindow *gwin = gtk_widget_get_window(GTK_WIDGET(m_wxwindow));
+   mXdisp = GDK_WINDOW_XDISPLAY(gwin);
+   mXwin = GDK_WINDOW_XID(gwin);
+
+   mLink->callDispatcher(effEditOpen, 0, (intptr_t)mXdisp, (void *)mXwin, 0.0);
 
    // Get the final bounds of the effect GUI
    mLink->callDispatcher(effEditGetRect, 0, 0, &rect, 0.0);

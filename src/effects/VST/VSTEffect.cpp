@@ -39,15 +39,13 @@
 #include <limits.h>
 #include <stdio.h>
 
-#if defined(__WXMAC__)
-#include <dlfcn.h>
-#elif defined(__WXMSW__)
+#if defined(__WXMSW__)
 #include <wx/dynlib.h>
 #include <wx/msw/seh.h>
 #include <shlwapi.h>
 #pragma comment(lib, "shlwapi")
 #else
-// Includes for GTK are later since they cause conflicts with our class names
+#include <dlfcn.h>
 #endif
 
 #include <wx/app.h>
