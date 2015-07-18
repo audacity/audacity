@@ -701,8 +701,8 @@ audacity_SOURCES += \
 	effects/VST/aeffectx.h \
 	effects/VST/VSTEffect.cpp \
 	effects/VST/VSTEffect.h \
-	effects/VST/VSTControlVST.cpp \
-	effects/VST/VSTControlVST.h \
+	effects/VST/VSTControlGTK.cpp \
+	effects/VST/VSTControlGTK.h \
 	$(NULL)
 endif
 
