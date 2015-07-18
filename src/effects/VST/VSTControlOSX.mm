@@ -25,7 +25,6 @@
 
 @interface VSTView : NSView
 {
-   VSTControl *mControl;
 }
 @end
 
@@ -40,29 +39,6 @@
       wxOSXCocoaClassAddWXMethods(self);
    }
 }
-
-- (instancetype)initWithControl:(VSTControl *)control
-{
-   // Make sure a parameters were provided
-   NSParameterAssert(control);
-
-   mControl = control;
-
-   [super init];
-
-   return self;
-}
-
-- (BOOL)autoresizesSubviews
-{
-   return NO;
-}
-
-- (void)cocoaViewResized:(NSNotification *)notification
-{
-   mControl->CocoaViewResized();
-}
-
 @end
 
 VSTControlImpl::VSTControlImpl(wxWindowMac *peer, NSView *view)
@@ -74,33 +50,27 @@ VSTControlImpl::~VSTControlImpl()
 {
 }
 
-BEGIN_EVENT_TABLE(VSTControl, VSTControlBase)
-   EVT_SIZE(VSTControl::OnSize)
-END_EVENT_TABLE()
-
 VSTControl::VSTControl()
 :  VSTControlBase()
 {
    mVSTView = nil;
    mView = nil;
 
-   mSettingSize = false;
-
 #if !defined(_LP64)
    mHIView = NULL;
    mWindowRef = NULL;
-
 #endif
 }
 
 VSTControl::~VSTControl()
 {
+#if !defined(_LP64)
    if (mWindowRef)
    {
       mLink->callDispatcher(effEditClose, 0, 0, mWindowRef, 0.0);
       mWindowRef = 0;
    }
-
+#endif
 }
 
 bool VSTControl::Create(wxWindow *parent, VSTEffectLink *link)
@@ -117,8 +87,10 @@ bool VSTControl::Create(wxWindow *parent, VSTEffectLink *link)
    {
       return false;
    }
-   [(VSTView *)mVSTView initWithControl:this];
+   [mVSTView init];
    [mVSTView retain];
+
+   SetPeer(new VSTControlImpl(this, mVSTView));
 
    CreateCocoa();
 
@@ -128,16 +100,10 @@ bool VSTControl::Create(wxWindow *parent, VSTEffectLink *link)
       CreateCarbon();
    }
 #endif
+
    if (!mView && !mHIView)
    {
       return false;
-   }
-
-   SetPeer(new VSTControlImpl(this, mVSTView));
-
-   if (mHIView)
-   {
-      CreateCarbonOverlay();
    }
 
    // Must get the size again since SetPeer() could cause it to change
@@ -148,77 +114,17 @@ bool VSTControl::Create(wxWindow *parent, VSTEffectLink *link)
    return true;
 }
 
-void VSTControl::OnSize(wxSizeEvent & evt)
-{
-   evt.Skip();
-
-   if (mSettingSize)
-   {
-      return;
-   }
-   mSettingSize = true;
-
-   wxSize sz = GetSize();
-
-   if (mView)
-   {
-      int mask = [mView autoresizingMask];
-
-      NSRect viewFrame = [mVSTView frame];
-      NSRect viewRect = [mView frame];
-   
-      if (mask & NSViewWidthSizable)
-      {
-         viewRect.size.width = sz.GetWidth();
-      }
-
-      if (mask & NSViewHeightSizable)
-      {
-         viewRect.size.height = sz.GetHeight();
-      }
-
-      viewRect.origin.x = (viewFrame.size.width - viewRect.size.width) / 2;
-      viewRect.origin.y = (viewFrame.size.height - viewRect.size.height) / 2;
-
-      [mView setFrame:viewRect];
-   }
-
-#if !defined(_LP64)
-   else if (mHIView)
-   {
-      HIRect rect;
-      HIViewGetFrame(mHIView, &rect);
-
-      CGFloat x = (sz.x - rect.size.width) / 2;
-      CGFloat y = (sz.y - rect.size.height) / 2;
-      
-      SizeWindow(mWindowRef, sz.x, sz.y, true);
-      HIViewPlaceInSuperviewAt(mHIView, x, y);
-
-      wxWindow *w = wxGetTopLevelParent(this);
-
-      wxSize min = w->GetMinSize();
-      min.x += (rect.size.width - mLastMin.GetWidth());
-      min.y += (rect.size.height - mLastMin.GetHeight());
-
-      w->SetSizeHints(min, min);
-
-      mLastMin = wxSize(rect.size.width, rect.size.height);
-   }
-#endif
-
-   mSettingSize = false;
-
-   return;
-}
-
 void VSTControl::CreateCocoa()
 {
-   bool mIsCocoa = (mLink->callDispatcher(effCanDo, 0, 0, (void *) "hasCockosViewAsConfig", 0.0) & 0xffff0000) == 0xbeef0000;
-   if (!mIsCocoa)
+   if ((mLink->callDispatcher(effCanDo, 0, 0, (void *) "hasCockosViewAsConfig", 0.0) & 0xffff0000) != 0xbeef0000)
    {
       return;
    }
+
+   VstRect *rect;
+
+   // Some effects like to have us get their rect before opening them.
+   mLink->callDispatcher(effEditGetRect, 0, 0, &rect, 0.0);
 
    // Ask the effect to add its GUI
    mLink->callDispatcher(effEditOpen, 0, 0, mVSTView, 0.0);
@@ -234,60 +140,18 @@ void VSTControl::CreateCocoa()
       return;
    }
 
-   NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
-   [center addObserver:mVSTView
-              selector:@selector(cocoaViewResized:)
-                  name:NSViewFrameDidChangeNotification
-                object:mView];
+   // Get the final bounds of the effect GUI
+   mLink->callDispatcher(effEditGetRect, 0, 0, &rect, 0.0);
+
+   NSRect frame = { 0, 0, rect->right - rect->left, rect->bottom - rect->top };
+
+   [mView setFrame:frame];
 
    [mVSTView addSubview:mView];
 
-   NSSize viewSize = [mView frame].size;
-
-   mLastMin = wxSize(viewSize.width, viewSize.height);
-
-   SetMinSize(mLastMin);
-
-   [mVSTView setAutoresizingMask:[mView autoresizingMask]];
+   SetMinSize(wxSize(frame.size.width, frame.size.height));
 
    return;
-}
-
-void VSTControl::CocoaViewResized()
-{
-   if (mSettingSize)
-   {
-      return;
-   }
-
-   NSSize viewSize = [mView frame].size;
-   NSSize frameSize = [mVSTView frame].size;
-
-   [mVSTView setFrameSize:viewSize];
-
-   int diffW = (viewSize.width - frameSize.width);
-   int diffH = (viewSize.height - frameSize.height);
-
-   wxWindow *w = wxGetTopLevelParent(this);
-
-   wxSize min = w->GetMinSize();
-   if ([mView autoresizingMask] == NSViewNotSizable)
-   {
-      min.x += (viewSize.width - mLastMin.GetWidth());
-      min.y += (viewSize.height - mLastMin.GetHeight());
-      mLastMin = wxSize(viewSize.width, viewSize.height);;
-   }
-   else
-   {
-      min.x += diffW;
-      min.y += diffH;
-   }
-   w->SetMinSize(min);
-
-   wxSize size = w->GetSize();
-   size.x += diffW;
-   size.y += diffH;
-   w->SetSize(size);
 }
 
 #if !defined(_LP64)
@@ -296,16 +160,15 @@ void VSTControl::CreateCarbon()
 {
    OSStatus result;
 
-   struct
-   {
-      short top, left, bottom, right;
-   } *rect;
+   Connect(wxEVT_SIZE, wxSizeEventHandler(VSTControl::OnSize));
+
+   VstRect *rect;
 
    // Some effects like to have us get their rect before opening them.
    mLink->callDispatcher(effEditGetRect, 0, 0, &rect, 0.0);
 
    // Suggest a dummy size
-   Rect bounds = { 100, 100, 200, 200 };
+   Rect bounds = { 0, 0, 0, 0 };
 
    // And create the window
    result = CreateNewWindow(kOverlayWindowClass,
@@ -330,10 +193,8 @@ void VSTControl::CreateCarbon()
       DisposeWindow(mWindowRef);
       mWindowRef = NULL;
 
-      return nil;
+      return;
    }
-
-   SetWindowActivationScope(mWindowRef, kWindowActivationScopeIndependent);
 
    // Some effects (iZotope Vinyl) seem to need an existing subview
    // of the content view.  So just use a "dummy" scrollview.
@@ -352,12 +213,11 @@ void VSTControl::CreateCarbon()
    HIViewRef subview = HIViewGetFirstSubview(content);
    if (subview)
    {
-      // The scrollview was used, so it leave it.
+      // The scrollview was used, so leave it.
       if (subview == mHIView)
       {
          subview = HIViewGetFirstSubview(mHIView);
       }
-
       // The effect didn't use our scrollview, so dispose of it.
       else
       {
@@ -373,6 +233,11 @@ void VSTControl::CreateCarbon()
    // just fall back to the textual interface.
    if (subview == NULL)
    {
+      mLink->callDispatcher(effEditClose, 0, 0, mWindowRef, 0.0);
+      DisposeWindow(mWindowRef);
+      mWindowRef = NULL;
+      mHIView = NULL;
+
       return;
    }
 
@@ -381,97 +246,36 @@ void VSTControl::CreateCarbon()
 
    // Set the size of the scrollview to match
    HIRect r = { 0, 0, rect->right - rect->left, rect->bottom - rect->top };
+
+   // One effect, mutagene lipredemuco, doesn't return a valid rect so
+   // try to detect it and use the created view dimensions instead.
+   if (rect->left < 0 || rect->top < 0 || rect->right <= 0 || rect->bottom <= 0)
+   {
+      HIViewGetFrame(subview, &r);
+   }
+
+   // Make sure container is the same size as the effect GUI
    HIViewSetFrame(mHIView, &r);
+   HIViewPlaceInSuperviewAt(mHIView, 0, 0);
 
-   // Make sure it can be seen
-   HIViewSetVisible(mHIView, TRUE);
-
+   // Establish the minimum size
    SetMinSize(wxSize(r.size.width, r.size.height));
 
-   mLastMin = GetMinSize();
-
-   EventTypeSpec controlEventList[] =
-   {
-      {kEventClassControl, kEventControlBoundsChanged},
-   };
-
-   InstallControlEventHandler(mHIView,
-                              ControlEventHandlerCallback,
-                              GetEventTypeCount(controlEventList),
-                              controlEventList,
-                              (void *) this,
-                              NULL);
-
-   return;
-}
-
-void VSTControl::CreateCarbonOverlay()
-{
    NSWindow *parent = [mVSTView window];
-   WindowRef parentRef = (WindowRef)[parent windowRef];
-
    NSWindow *host = [[[NSWindow alloc] initWithWindowRef:mWindowRef] autorelease];
    [parent addChildWindow:host ordered:NSWindowAbove];
 
-   WindowGroupRef group;
-
-   CreateWindowGroup(0, &group);
-   SetWindowGroupParent(group, GetWindowGroup(parentRef));
-   ChangeWindowGroupAttributes(group,
-                               kWindowGroupAttrLayerTogether |
-                               kWindowGroupAttrSharedActivation |
-                               kWindowGroupAttrHideOnCollapse,
-                               0);
-   SetWindowGroup(parentRef, group);
-   SetWindowGroup(mWindowRef, group);
-
-   Rect location;
-   GetWindowBounds(parentRef, kWindowContentRgn, &location);
-   MoveWindow(mWindowRef, location.left, location.top, true);
    ShowWindow(mWindowRef);
 }
 
-pascal OSStatus
-VSTControl::ControlEventHandlerCallback(EventHandlerCallRef handler, EventRef event, void *data)
+void VSTControl::OnSize(wxSizeEvent & evt)
 {
-   ((VSTControl *) data)->CarbonViewResized();
+   evt.Skip();
 
-   return eventNotHandledErr;
-}
+   wxRect rect = GetScreenRect();
 
-void VSTControl::CarbonViewResized()
-{
-   if (mSettingSize)
-   {
-      return;
-   }
-   
-   // resize and move window
-   HIRect rect;
-   HIViewGetFrame(mHIView, &rect);
-
-   HIViewPlaceInSuperviewAt(mHIView, 0, 0);
-   SizeWindow(mWindowRef, rect.size.width, rect.size.height, true);
-
-   NSSize frameSize = [mVSTView frame].size;
-
-   [mVSTView setFrameSize:NSMakeSize(rect.size.width, rect.size.height)];
-
-   wxWindow *w = wxGetTopLevelParent(this);
-   wxSize size = w->GetSize();
-   size.x += (rect.size.width - frameSize.width);
-   size.y += (rect.size.height - frameSize.height);
-
-   // Reset the current max/min
-   w->SetSizeHints(wxDefaultSize, wxDefaultSize);
-
-   // Set the dialog size
-   w->SetSize(size);
-
-   // And finally set the new max/min
-   w->SetSizeHints(size, size);
-
-   mLastMin = wxSize(rect.size.width, rect.size.height);
+   MoveWindow(mWindowRef, rect.x, rect.y, true);
+   SizeWindow(mWindowRef, rect.width, rect.height, true);
 }
 
 #endif

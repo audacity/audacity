@@ -36,36 +36,22 @@ public:
 
    bool Create(wxWindow *parent, VSTEffectLink *link);
 
+private:
    void CreateCocoa();
-   void CocoaViewResized();
-
-   void OnSize(wxSizeEvent & evt);
 
 #if !defined(_LP64)
    void CreateCarbon();
-   void CreateCarbonOverlay();
-   void CarbonViewResized();
-   static pascal OSStatus ControlEventHandlerCallback(EventHandlerCallRef handler,
-                                                      EventRef event,
-                                                      void *data);
+   void OnSize(wxSizeEvent & evt);
 #endif
 
 private:
    NSView *mVSTView;
    NSView *mView;
 
-   wxSize mLastMin;
-   bool mSettingSize;
-
 #if !defined(_LP64)
-
    WindowRef mWindowRef;
-   WindowRef mPreviousRef;
    HIViewRef mHIView;
-
 #endif
-
-   DECLARE_EVENT_TABLE();
 };
 
 #endif

@@ -2803,46 +2803,27 @@ void VSTEffect::BuildFancy()
    // Turn the power on...some effects need this when the editor is open
    PowerOn();
 
+   mControl = new VSTControl;
+   if (!mControl)
+   {
+      return;
+   }
+
+   if (!mControl->Create(mParent, this))
+   {
+      return;
+   }
+
    wxBoxSizer *mainSizer = new wxBoxSizer(wxVERTICAL);
 
-   wxPanel *container = new wxPanel(mParent, wxID_ANY);
-   mainSizer->Add(container, 1, wxEXPAND);
+   mainSizer->Add(mControl, 0, wxALIGN_CENTER);
 
+   mParent->SetMinSize(wxDefaultSize);
    mParent->SetSizer(mainSizer);
-
-#if 0
-   if (mUIType == wxT("Plain"))
-   {
-      if (!CreatePlain(mParent))
-      {
-         return false;
-      }
-   }
-   else
-#endif
-   {
-      mControl = new VSTControl;
-      if (!mControl)
-      {
-         return;
-      }
-
-      if (!mControl->Create(container, this))
-      {
-         return;
-      }
-
-      wxBoxSizer *innerSizer = new wxBoxSizer(wxVERTICAL);
-   
-      innerSizer->Add(mControl, 0, wxALIGN_CENTER);
-      container->SetSizer(innerSizer);
-
-      mParent->SetMinSize(wxDefaultSize);
-   }
 
    NeedEditIdle(true);
 
-//   mParent->PushEventHandler(this);
+   mDialog->Connect(wxEVT_SIZE, wxSizeEventHandler(VSTEffect::OnSize));
 
    return;
 }
@@ -3017,6 +2998,24 @@ void VSTEffect::RefreshParameters(int skip)
    }
 }
 
+void VSTEffect::OnSize(wxSizeEvent & evt)
+{
+   evt.Skip();
+
+   // Once the parent dialog reaches it's final size as indicated by
+   // a non-default minimum size, we set the maximum size to match.
+   // This is a bit of a hack to prevent VSTs GUI windows from resizing
+   // there's no real reason to allow it.  But, there should be a better
+   // way of handling it.
+   wxWindow *w = (wxWindow *) evt.GetEventObject();
+   wxSize sz = w->GetMinSize();
+
+   if (sz != wxDefaultSize)
+   {
+      w->SetMaxSize(sz);
+   }
+}
+
 void VSTEffect::OnSizeWindow(wxCommandEvent & evt)
 {
    if (!mControl)
@@ -3024,13 +3023,18 @@ void VSTEffect::OnSizeWindow(wxCommandEvent & evt)
       return;
    }
 
-   // This really needs some work.  We shouldn't know anything about the parent...
    mControl->SetMinSize(wxSize(evt.GetInt(), (int) evt.GetExtraLong()));
    mControl->SetSize(wxSize(evt.GetInt(), (int) evt.GetExtraLong()));
-      mParent->SetMinSize(wxDefaultSize);
-      mDialog->SetMinSize(wxDefaultSize);
-//   mParent->SetMinSize(mControl->GetMinSize());
+
+   // DO NOT CHANGE THE ORDER OF THESE
+   //
+   // Guitar Rig (and possibly others) Cocoa VSTs can resize too large
+   // if the bounds are unlimited.
+   mDialog->SetMinSize(wxDefaultSize);
+   mDialog->SetMaxSize(wxDefaultSize);
    mDialog->Layout();
+   mDialog->SetMinSize(mDialog->GetBestSize());
+   mDialog->SetMaxSize(mDialog->GetBestSize());
    mDialog->Fit();
 }
 
