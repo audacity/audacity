@@ -54,6 +54,10 @@
 #include <wx/msw/wrapwin.h>
 #endif
 
+#if defined(__WXMAC__)
+#include <Appkit/Appkit.h>
+#endif
+
 // Define the static URI nodes
 #undef URI
 #define URI(n, u) LilvNode *LV2Effect::n = NULL;
@@ -103,7 +107,6 @@ LV2EffectMeter::LV2EffectMeter(wxWindow *parent, const LV2Port & ctrl)
 LV2EffectMeter::~LV2EffectMeter()
 {
 }
-
 
 void LV2EffectMeter::OnIdle(wxIdleEvent & WXUNUSED(evt))
 {
@@ -1478,10 +1481,6 @@ bool LV2Effect::BuildFancy()
       return false;
    }
 
-//   wxBoxSizer *hs = new wxBoxSizer(wxVERTICAL);
-//   vs->Add(mContainer, 0, wxALIGN_CENTER);
-//   mParent->SetSizer(vs);
-//wxWindow *mContainer = mParent;
 #if defined(__WXGTK__)
    // Make sure the parent has a window
    if (!gtk_widget_get_window(GTK_WIDGET(mContainer->m_wxwindow)))
@@ -1493,6 +1492,7 @@ bool LV2Effect::BuildFancy()
 #elif defined(__WXMSW__)
    mParentFeature->data = mContainer->GetHandle();
 #elif defined(__WXMAC__)
+   mParentFeature->data = mContainer->GetHandle();
 #endif
 
    mInstanceAccessFeature->data = lilv_instance_get_handle(mMaster);
@@ -1554,7 +1554,9 @@ bool LV2Effect::BuildFancy()
    GetWindowRect(widget, &rect);
    si->SetMinSize(wxSize(rect.right - rect.left, rect.bottom - rect.top));
 #elif defined(__WXMAC__)
-//   si->SetMinSize(wxSize(sz.width, sz.height));
+   NSView *view = (NSView *) suil_instance_get_widget(mSuilInstance);
+   NSSize sz = [view frame].size;
+   si->SetMinSize(sz.width, sz.height);
 #endif
 
    mParent->SetSizerAndFit(vs);
