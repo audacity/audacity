@@ -1229,6 +1229,7 @@
 		5E73964A1DAFD91D00BA0A4D /* CutlineHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E7396481DAFD91D00BA0A4D /* CutlineHandle.cpp */; };
 		5E73964D1DAFD95B00BA0A4D /* ButtonHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E73964B1DAFD95B00BA0A4D /* ButtonHandle.cpp */; };
 		5E7396501DAFD98400BA0A4D /* SliderHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E73964E1DAFD98400BA0A4D /* SliderHandle.cpp */; };
+		5E7396561DAFDA0000BA0A4D /* WaveTrackSliderHandles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E7396541DAFDA0000BA0A4D /* WaveTrackSliderHandles.cpp */; };
 		5E74D2E31CC4429700D88B0B /* EditCursorOverlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E74D2DD1CC4429700D88B0B /* EditCursorOverlay.cpp */; };
 		5E74D2E41CC4429700D88B0B /* PlayIndicatorOverlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E74D2DF1CC4429700D88B0B /* PlayIndicatorOverlay.cpp */; };
 		5E74D2E51CC4429700D88B0B /* Scrubbing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E74D2E11CC4429700D88B0B /* Scrubbing.cpp */; };
@@ -3058,6 +3059,8 @@
 		5E73964C1DAFD95B00BA0A4D /* ButtonHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ButtonHandle.h; sourceTree = "<group>"; };
 		5E73964E1DAFD98400BA0A4D /* SliderHandle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SliderHandle.cpp; sourceTree = "<group>"; };
 		5E73964F1DAFD98400BA0A4D /* SliderHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SliderHandle.h; sourceTree = "<group>"; };
+		5E7396541DAFDA0000BA0A4D /* WaveTrackSliderHandles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WaveTrackSliderHandles.cpp; sourceTree = "<group>"; };
+		5E7396551DAFDA0000BA0A4D /* WaveTrackSliderHandles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WaveTrackSliderHandles.h; sourceTree = "<group>"; };
 		5E74D2D91CC4427B00D88B0B /* TrackPanelCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackPanelCell.h; sourceTree = "<group>"; };
 		5E74D2DA1CC4427B00D88B0B /* TrackPanelCellIterator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackPanelCellIterator.h; sourceTree = "<group>"; };
 		5E74D2DD1CC4429700D88B0B /* EditCursorOverlay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditCursorOverlay.cpp; sourceTree = "<group>"; };
@@ -5826,11 +5829,13 @@
 				5E7396481DAFD91D00BA0A4D /* CutlineHandle.cpp */,
 				5E000A1F1EC7B5D500E8FD93 /* SampleHandle.cpp */,
 				5EA018231EC7B226001F2996 /* WaveTrackControls.cpp */,
+				5E7396541DAFDA0000BA0A4D /* WaveTrackSliderHandles.cpp */,
 				5EA018251EC7B226001F2996 /* WaveTrackUI.cpp */,
 				5EA018261EC7B226001F2996 /* WaveTrackVRulerControls.cpp */,
 				5E7396491DAFD91D00BA0A4D /* CutlineHandle.h */,
 				5E000A201EC7B5D500E8FD93 /* SampleHandle.h */,
 				5EA018241EC7B226001F2996 /* WaveTrackControls.h */,
+				5E7396551DAFDA0000BA0A4D /* WaveTrackSliderHandles.h */,
 				5EA018271EC7B226001F2996 /* WaveTrackVRulerControls.h */,
 			);
 			path = ui;
@@ -7749,6 +7754,7 @@
 				28501EAA0CEED0670029ABAA /* LoadVamp.cpp in Sources */,
 				5ED1D0AD1CDE55BD00471E3C /* Overlay.cpp in Sources */,
 				28501EAB0CEED0680029ABAA /* VampEffect.cpp in Sources */,
+				5E7396561DAFDA0000BA0A4D /* WaveTrackSliderHandles.cpp in Sources */,
 				288052C20DEA73F500671EA4 /* NonGuiThread.cpp in Sources */,
 				28530C4C0DF2105200555C94 /* HtmlWindow.cpp in Sources */,
 				28530C4D0DF2105200555C94 /* ProgressDialog.cpp in Sources */,

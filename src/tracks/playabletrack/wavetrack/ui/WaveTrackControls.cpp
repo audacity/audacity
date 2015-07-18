@@ -11,6 +11,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../Audacity.h"
 #include "WaveTrackControls.h"
 #include "../../ui/PlayableTrackButtonHandles.h"
+#include "WaveTrackSliderHandles.h"
 
 #include "../../../../HitTestResult.h"
 #include "../../../../Track.h"
@@ -50,6 +51,14 @@ HitTestResult WaveTrackControls::HitTest
          if (NULL !=
              (result = SoloButtonHandle::HitTest
                  (event, rect, pProject, track)).handle)
+            return result;
+
+         if (NULL != (result =
+            GainSliderHandle::HitTest(event, rect, pProject, mpTrack)).handle)
+            return result;
+
+         if (NULL != (result =
+            PanSliderHandle::HitTest(event, rect, pProject, mpTrack)).handle)
             return result;
       }
    }
