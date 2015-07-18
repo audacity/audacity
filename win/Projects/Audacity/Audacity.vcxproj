@@ -244,6 +244,7 @@
     <ClCompile Include="..\..\..\src\tracks\ui\EnvelopeHandle.cpp" />
     <ClCompile Include="..\..\..\src\tracks\ui\PlayIndicatorOverlay.cpp" />
     <ClCompile Include="..\..\..\src\tracks\ui\Scrubbing.cpp" />
+    <ClCompile Include="..\..\..\src\tracks\ui\SliderHandle.cpp" />
     <ClCompile Include="..\..\..\src\tracks\ui\TimeShiftHandle.cpp" />
     <ClCompile Include="..\..\..\src\tracks\ui\TrackControls.cpp" />
     <ClCompile Include="..\..\..\src\tracks\ui\TrackUI.cpp" />
@@ -510,6 +511,7 @@
     <ClInclude Include="..\..\..\src\tracks\ui\Scrubbing.h" />
     <ClInclude Include="..\..\..\src\TranslatableStringArray.h" />
     <ClInclude Include="..\..\..\src\UserException.h" />
+    <ClInclude Include="..\..\..\src\tracks\ui\SliderHandle.h" />
     <ClInclude Include="..\..\..\src\tracks\ui\TimeShiftHandle.h" />
     <ClInclude Include="..\..\..\src\tracks\ui\TrackControls.h" />
     <ClInclude Include="..\..\..\src\tracks\ui\ZoomHandle.h" />
