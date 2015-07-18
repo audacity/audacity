@@ -146,6 +146,7 @@ class AUDACITY_DLL_API Effect : public wxEvtHandler,
    virtual double GetDefaultDuration();
    virtual double GetDuration();
    virtual wxString GetDurationFormat();
+   virtual wxString GetSelectionFormat(); // time format in Selection toolbar
    virtual void SetDuration(double duration);
 
    virtual bool Apply();

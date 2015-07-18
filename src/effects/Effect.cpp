@@ -724,6 +724,11 @@ wxString Effect::GetDurationFormat()
    return mDurationFormat;
 }
 
+wxString Effect::GetSelectionFormat()
+{
+   return GetActiveProject()->GetSelectionFormat();
+}
+
 void Effect::SetDuration(double seconds)
 {
    if (seconds < 0.0)

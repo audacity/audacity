@@ -38,7 +38,7 @@
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
 //     Name    Type  Key             Def  Min   Max      Scale
-Param( Count,  int,  XO("Count"),    10,  1,    INT_MAX, 1  );
+Param( Count,  int,  XO("Count"),    1,  1,    INT_MAX, 1  );
 
 BEGIN_EVENT_TABLE(EffectRepeat, wxEvtHandler)
    EVT_TEXT(wxID_ANY, EffectRepeat::OnRepeatTextChange)
@@ -46,7 +46,7 @@ END_EVENT_TABLE()
 
 EffectRepeat::EffectRepeat()
 {
-   repeatCount = 10;
+   repeatCount = DEF_Count;
 
    SetLinearEffectFlag(true);
 }
@@ -175,16 +175,17 @@ void EffectRepeat::PopulateOrExchange(ShuttleGui & S)
    {
       IntegerValidator<int> vldRepeatCount(&repeatCount);
       vldRepeatCount.SetRange(MIN_Count, 2147483647 / mProjectRate);
-      mRepeatCount = S.AddTextBox(_("Number of times to repeat:"), wxT(""), 12);
+      mRepeatCount = S.AddTextBox(_("Number of repeats to add:"), wxT(""), 12);
       mRepeatCount->SetValidator(vldRepeatCount);
    }
    S.EndHorizontalLay();
 
-   S.StartHorizontalLay(wxCENTER, true);
+   S.StartMultiColumn(1, wxCENTER);
    {
+      mCurrentTime = S.AddVariableText(_("Current selection length: dd:hh:mm:ss"));
       mTotalTime = S.AddVariableText(_("New selection length: dd:hh:mm:ss"));
    }
-   S.EndHorizontalLay();
+   S.EndMultiColumn();
 }
 
 bool EffectRepeat::TransferDataToWindow()
@@ -215,22 +216,32 @@ bool EffectRepeat::TransferDataFromWindow()
 void EffectRepeat::DisplayNewTime()
 {
    long l;
+   wxString str;
    mRepeatCount->GetValue().ToLong(&l);
 
-   if (l > 0)
-   {
+   NumericConverter nc(NumericConverter::TIME,
+                       GetSelectionFormat(),
+                       mT1 - mT0,
+                       mProjectRate);
+
+   str = _("Current selection length: ") + nc.GetString();
+
+   mCurrentTime->SetLabel(str);
+   mCurrentTime->SetName(str); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+
+   if (l > 0) {
+      EnableApply(true);
       repeatCount = l;
 
-      NumericConverter nc(NumericConverter::TIME,
-                          _("hh:mm:ss"),
-                          (mT1 - mT0) * (repeatCount + 1),
-                          mProjectRate);
-
-      wxString str = _("New selection length: ") + nc.GetString();
-
-      mTotalTime->SetLabel(str);
-      mTotalTime->SetName(str); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+      nc.SetValue((mT1 - mT0) * (repeatCount + 1));
+      str = _("New selection length: ") + nc.GetString();
    }
+   else {
+      str = _("Warning: No repeats.");
+      EnableApply(false);
+   }
+   mTotalTime->SetLabel(str);
+   mTotalTime->SetName(str); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
 }
 
 void EffectRepeat::OnRepeatTextChange(wxCommandEvent & WXUNUSED(evt))

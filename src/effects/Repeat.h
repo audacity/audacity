@@ -59,6 +59,7 @@ private:
    int repeatCount;
 
    wxTextCtrl   *mRepeatCount;
+   wxStaticText *mCurrentTime;
    wxStaticText *mTotalTime;
 
    DECLARE_EVENT_TABLE();
