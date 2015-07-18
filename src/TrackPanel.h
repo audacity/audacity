@@ -491,18 +491,13 @@ protected:
 
    virtual void HandleRearrange(wxMouseEvent & event);
    virtual void CalculateRearrangingThresholds(wxMouseEvent & event);
-   virtual void HandleClosing(wxMouseEvent & event);
    virtual void HandlePopping(wxMouseEvent & event);
-   virtual void HandleMinimizing(wxMouseEvent & event);
-
 
    // These *Func methods are used in TrackPanel::HandleLabelClick to set up
    // for actual handling in methods called by TrackPanel::OnMouseEvent, and
    // to draw button-down states, etc.
-   virtual bool CloseFunc(Track * t, wxRect rect, int x, int y);
    virtual bool PopupFunc(Track * t, wxRect rect, int x, int y);
 
-   virtual bool MinimizeFunc(Track *t, wxRect rect, int x, int f);
 
 public:
    virtual void MakeParentRedrawScrollbars();
@@ -799,6 +794,7 @@ public:
 
 protected:
    enum MouseCaptureEnum mMouseCapture;
+
    virtual void SetCapturedTrack( Track * t, enum MouseCaptureEnum MouseCapture=IsUncaptured );
 
    // JH: if the user is dragging a track, at what y

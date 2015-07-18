@@ -595,6 +595,8 @@ audacity_SOURCES = \
 	tracks/ui/SliderHandle.h \
 	tracks/ui/TimeShiftHandle.cpp \
 	tracks/ui/TimeShiftHandle.h \
+	tracks/ui/TrackButtonHandles.cpp \
+	tracks/ui/TrackButtonHandles.h \
 	tracks/ui/TrackControls.cpp \
 	tracks/ui/TrackControls.h \
 	tracks/ui/TrackUI.cpp \

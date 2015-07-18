@@ -557,8 +557,11 @@ public:
 
    void OnCapture(wxCommandEvent & evt);
    void InitialState();
+
+ public:
    void ModifyState(bool bWantsAutoSave);    // if true, writes auto-save file. Should set only if you really want the state change restored after
                                              // a crash, as it can take many seconds for large (eg. 10 track-hours) projects
+private:
    void PopState(const UndoState &state);
 
    void UpdateLyrics();
