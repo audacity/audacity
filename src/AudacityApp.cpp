@@ -1144,6 +1144,9 @@ AudacityApp::AudacityApp()
 // main frame
 bool AudacityApp::OnInit()
 {
+   // Ensure we have an event loop during initialization
+   wxEventLoopGuarantor eventLoop;
+
    delete wxLog::SetActiveTarget(new AudacityLogger);
 
    mLocale = NULL;
@@ -1382,6 +1385,7 @@ bool AudacityApp::OnInit()
                          wxSTAY_ON_TOP);
    temporarywindow->SetTitle(_("Audacity is starting up..."));
    SetTopWindow(temporarywindow);
+   wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI);
 
    //JKC: Would like to put module loading here.
 
