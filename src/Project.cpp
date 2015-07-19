@@ -2397,12 +2397,7 @@ wxArrayString AudacityProject::ShowOpenDialog(wxString extraformat, wxString ext
    // Construct and display the file dialog
    wxArrayString selected;
 
-#if defined(__WXMSW__reenable_if_new_filtering_does_not_work)
-   // Make sure you build wxWidgets with filedlgg.cpp enabled in core/generic
-   wxGenericFileDialog dlog(NULL,
-#else
    FileDialog dlog(NULL,
-#endif
                    _("Select one or more audio files..."),
                    path,
                    wxT(""),

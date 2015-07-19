@@ -661,6 +661,9 @@ int FileDialog::ShowModal()
 
 void FileDialog::ModalFinishedCallback(void* panel, int returnCode)
 {
+    m_paths.Clear();
+    m_fileNames.Clear();
+
     int result = wxID_CANCEL;
     if (HasFlag(wxFD_SAVE))
     {
