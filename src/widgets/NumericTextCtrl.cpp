@@ -1019,6 +1019,12 @@ void NumericConverter::Decrement()
 
 void NumericConverter::Adjust(int steps, int dir)
 {
+   // It is possible and "valid" for steps to be zero if a
+   // high precision device is being used and wxWidgets supports
+   // reporting a higher precision...Mac wx3 does.
+   if (steps == 0)
+      return;
+
    wxASSERT(dir == -1 || dir == 1);
    wxASSERT(steps > 0);
    if (steps < 0)
