@@ -25,7 +25,7 @@ class TrackList;
 class RowData;
 class EmptyLabelRenderer;
 class LabelTrack;
-struct ViewInfo;
+class ViewInfo;
 
 WX_DEFINE_ARRAY(RowData *, RowDataArray);
 

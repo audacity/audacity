@@ -22,6 +22,7 @@
 #include "widgets/NumericTextCtrl.h"
 
 class TrackClipArray;
+class ZoomInfo;
 
 enum
 {
@@ -43,9 +44,9 @@ class SnapPoint {
 WX_DEFINE_SORTED_ARRAY(SnapPoint *, SnapPointArray);
 
 class SnapManager {
- public:
+public:
    SnapManager(TrackList *tracks, TrackClipArray *exclusions,
-               double zoom, int pixelTolerance, bool noTimeSnap = false);
+      const ZoomInfo &zoomInfo, int pixelTolerance, bool noTimeSnap = false);
 
    ~SnapManager();
 
@@ -54,34 +55,35 @@ class SnapManager {
    // Pass rightEdge=true if this is the right edge of a selection,
    // and false if it's the left edge.
    bool Snap(Track *currentTrack,
-             double t,
-             bool rightEdge,
-             double *out_t,
-             bool *snappedPoint,
-             bool *snappedTime);
+      double t,
+      bool rightEdge,
+      double *out_t,
+      bool *snappedPoint,
+      bool *snappedTime);
 
    static wxArrayString GetSnapLabels();
    static wxArrayString GetSnapValues();
    static const wxString & GetSnapValue(int index);
    static int GetSnapIndex(const wxString & value);
 
- private:
+private:
    void CondListAdd(double t, Track *tr);
    double Get(int index);
-   double Diff(double t, int index);
+   wxInt64 PixelDiff(double t, int index);
    int Find(double t, int i0, int i1);
    int Find(double t);
    bool SnapToPoints(Track *currentTrack, double t, bool rightEdge,
-                     double *out_t);
+      double *out_t);
 
    double           mEpsilon;
-   double           mTolerance;
-   double           mZoom;
    SnapPointArray  *mSnapPoints;
 
    // Info for snap-to-time
    NumericConverter    mConverter;
    bool             mSnapToTime;
+
+   const wxInt64    mPixelTolerance;
+   const ZoomInfo  &mZoomInfo;
 };
 
 #endif

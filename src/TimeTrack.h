@@ -21,6 +21,7 @@ class wxRect;
 class wxDC;
 class Envelope;
 class Ruler;
+class ZoomInfo;
 
 class TimeTrack: public Track {
 
@@ -49,7 +50,7 @@ class TimeTrack: public Track {
    virtual double GetStartTime() const { return 0.0; }
    virtual double GetEndTime() const { return 0.0; }
 
-   void Draw(wxDC & dc, const wxRect & r, double h, double pps);
+   void Draw(wxDC & dc, const wxRect & r, const ZoomInfo &zoomInfo);
 
    // XMLTagHandler callback methods for loading and saving
 

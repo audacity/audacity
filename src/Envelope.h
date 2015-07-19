@@ -29,6 +29,8 @@ class wxTextFile;
 class DirManager;
 class Envelope;
 
+class ZoomInfo;
+
 #define ENV_DB_RANGE 60
 
 class EnvPoint : public XMLTagHandler {
@@ -116,23 +118,21 @@ class Envelope : public XMLTagHandler {
    virtual XMLTagHandler *HandleXMLChild(const wxChar *tag);
    virtual void WriteXML(XMLWriter &xmlFile);
 
-   void DrawPoints(wxDC & dc, const wxRect & r, double h, double pps, bool dB,
+   void DrawPoints(wxDC & dc, const wxRect & r, const ZoomInfo &zoomInfo, bool dB,
              float zoomMin=-1.0, float zoomMax=1.0);
 
    // Event Handlers
    // Each ofthese returns true if parents needs to be redrawn
    bool MouseEvent(wxMouseEvent & event, wxRect & r,
-                   double h, double pps, bool dB,
+                   const ZoomInfo &zoomInfo, bool dB,
                    float zoomMin=-1.0, float zoomMax=1.0);
    bool HandleMouseButtonDown( wxMouseEvent & event, wxRect & r,
-                               double h, double pps, bool dB,
+                               const ZoomInfo &zoomInfo, bool dB,
                                float zoomMin=-1.0, float zoomMax=1.0);
    bool HandleDragging( wxMouseEvent & event, wxRect & r,
-                        double h, double pps, bool dB,
+                        const ZoomInfo &zoomInfo, bool dB,
                         float zoomMin=-1.0, float zoomMax=1.0, float eMin=0., float eMax=2.);
-   bool HandleMouseButtonUp( wxMouseEvent & event, wxRect & r,
-                             double h, double pps, bool dB,
-                             float zoomMin=-1.0, float zoomMax=1.0);
+   bool HandleMouseButtonUp();
    void GetEventParams( int &height, bool &upper, bool dB,
                         wxMouseEvent & event, wxRect & r,
                         float &zoomMin, float &zoomMax);
@@ -151,14 +151,17 @@ class Envelope : public XMLTagHandler {
    // Accessors
    /** \brief Get envelope value at time t */
    double GetValue(double t) const;
-   /** \brief Get envelope value at pixel X */
-   double GetValueAtX(int x, const wxRect & r, double h, double pps);
 
    /** \brief Get many envelope points at once.
     *
     * This is much faster than calling GetValue() multiple times if you need
     * more than one value in a row. */
    void GetValues(double *buffer, int len, double t0, double tstep) const;
+
+   /** \brief Get many envelope points at once, but don't assume uniform time step.
+   */
+   void GetValues
+      (double *buffer, int bufferLen, int leftOffset, const ZoomInfo &zoomInfo) const;
 
    int NumberOfPointsAfter(double t);
    double NextPointAfter(double t);
@@ -202,7 +205,7 @@ private:
    void BinarySearchForTime( int &Lo, int &Hi, double t ) const;
    double GetInterpolationStartValueAtPoint( int iPoint ) const;
    void MoveDraggedPoint( wxMouseEvent & event, wxRect & r,
-                               double h, double pps, bool dB,
+                               const ZoomInfo &zoomInfo, bool dB,
                                float zoomMin, float zoomMax);
 
    // Possibly inline functions:
@@ -228,12 +231,10 @@ private:
 
    /** \brief Number of pixels contour is from the true envelope. */
    int mContourOffset;
-   double mInitialWhen;
    double mInitialVal;
 
    // These are used in dragging.
    int mDragPoint;
-   int mInitialX;
    int mInitialY;
    bool mUpper;
    bool mIsDeleting;
@@ -247,6 +248,8 @@ private:
    double lastIntegral_t0;
    double lastIntegral_t1;
    double lastIntegral_result;
+
+   mutable int mSearchGuess;
 
 };
 

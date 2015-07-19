@@ -70,6 +70,7 @@
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "ImportLOF.h"
 
 #include <wx/string.h>
 #include <wx/utils.h>
@@ -78,7 +79,6 @@
 #include <wx/msgdlg.h>
 #include <wx/tokenzr.h>
 
-#include "ImportLOF.h"
 #ifdef USE_MIDI
 #include "ImportMIDI.h"
 #endif // USE_MIDI
@@ -485,8 +485,7 @@ void LOFImportFileHandle::doDuration()
    if (callDurationFactor)
    {
       double longestDuration = mProject->GetTracks()->GetEndTime();
-      double realZoomValue = ((longestDuration/durationFactor)*(mProject->GetZoom()));
-      mProject->Zoom(realZoomValue);
+      mProject->ZoomBy(longestDuration / durationFactor);
       callDurationFactor = false;
    }
 }

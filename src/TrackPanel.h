@@ -45,7 +45,7 @@ class AudacityProject;
 
 class TrackPanelAx;
 
-struct ViewInfo;
+class ViewInfo;
 
 WX_DEFINE_ARRAY(LWSlider *, LWSliderArray);
 
@@ -331,8 +331,9 @@ protected:
    // Handle small cursor and play head movements
    void SeekLeftOrRight
       (bool left, bool shift, bool ctrl, bool keyup,
-      int snapToTime, bool mayAccelerateQuiet, bool mayAccelerateAudio,
-      double quietSeekStepPositive, double audioSeekStepPositive);
+       int snapToTime, bool mayAccelerateQuiet, bool mayAccelerateAudio,
+       double quietSeekStepPositive, bool quietStepIsPixels,
+       double audioSeekStepPositive, bool audioStepIsPixels);
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
 public:
@@ -500,10 +501,10 @@ protected:
 // JKC Nov-2011: These four functions only used from within a dll such as mod-track-panel
 // They work around some messy problems with constructors.
 public:
-   TrackList * GetTracks(){ return mTracks;};
-   ViewInfo * GetViewInfo(){ return mViewInfo;};
-   TrackPanelListener * GetListener(){ return mListener;};
-   AdornedRulerPanel * GetRuler(){ return mRuler;};
+   TrackList * GetTracks(){ return mTracks;}
+   ViewInfo * GetViewInfo(){ return mViewInfo;}
+   TrackPanelListener * GetListener(){ return mListener;}
+   AdornedRulerPanel * GetRuler(){ return mRuler;}
 // JKC and here is a factory function which just does 'new' in standard Audacity.
    static TrackPanel *(*FactoryFunction)(wxWindow * parent,
               wxWindowID id,
@@ -538,7 +539,7 @@ protected:
    void UpdateVirtualStereoOrder();
 #endif
    // Accessors...
-   virtual bool HasSoloButton(){  return mSoloPref!=wxT("None");};
+   virtual bool HasSoloButton(){  return mSoloPref!=wxT("None");}
 
    //JKC: These two belong in the label track.
    int mLabelTrackStartXPos;
@@ -691,14 +692,7 @@ protected:
 
    void HandleCenterFrequencyClick
       (bool shiftDown, Track *pTrack, double value);
-#endif
 
-   double PositionToTime(wxInt64 mouseXCoordinate,
-                         wxInt64 trackLeftEdge) const;
-   wxInt64 TimeToPosition(double time,
-                          wxInt64 trackLeftEdge) const;
-
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
    double PositionToFrequency(bool maySnap,
                               wxInt64 mouseYCoordinate,
                               wxInt64 trackTopEdge,

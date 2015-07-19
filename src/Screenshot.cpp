@@ -661,7 +661,7 @@ void ScreenFrame::TimeZoom(double seconds)
 {
    int width, height;
    mContext.GetProject()->GetClientSize(&width, &height);
-   mContext.GetProject()->mViewInfo.zoom = (0.75 * width) / seconds;
+   mContext.GetProject()->mViewInfo.SetZoom((0.75 * width) / seconds);
    mContext.GetProject()->RedrawProject();
 }
 
