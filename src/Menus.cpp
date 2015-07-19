@@ -1126,6 +1126,9 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddCommand(wxT("Stop"), _("Stop"), FN(OnStop),
                  AudioIOBusyFlag,
                  AudioIOBusyFlag);
+
+   c->SetDefaultFlags(CaptureNotBusyFlag, CaptureNotBusyFlag);
+
    c->AddCommand(wxT("PlayOneSec"), _("Play One Second"), FN(OnPlayOneSecond), wxT("1"),
                  CaptureNotBusyFlag,
                  CaptureNotBusyFlag);
@@ -1141,6 +1144,9 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddCommand(wxT("PlayCutPreview"), _("Play Cut Preview"), FN(OnPlayCutPreview), wxT("C"),
                  CaptureNotBusyFlag,
                  CaptureNotBusyFlag);
+
+   c->SetDefaultFlags(AlwaysEnabledFlag, AlwaysEnabledFlag);
+
 
    c->AddCommand(wxT("SelStart"), _("Selection to Start"), FN(OnSelToStart), wxT("Shift+Home"));
    c->AddCommand(wxT("SelEnd"), _("Selection to End"), FN(OnSelToEnd), wxT("Shift+End"));
