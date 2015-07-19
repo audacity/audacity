@@ -41,6 +41,7 @@ and in the spectrogram spectral selection.
 
 
 #include "Audacity.h"
+#include "FreqWindow.h"
 
 #include <wx/brush.h>
 #include <wx/button.h>
@@ -61,8 +62,7 @@ and in the spectrogram spectral selection.
 
 #include <math.h>
 
-#include "FreqWindow.h"
-
+#include "ShuttleGui.h"
 #include "AColor.h"
 #include "FFT.h"
 #include "Internat.h"

@@ -164,35 +164,6 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 
-#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
-// Search and replace with _ if you want translation.
-#define TRANSLATABLE( x ) wxT(x)
-   wxArrayString wskipn;
-   wxArrayInt wskipv;
-
-   for (size_t i = 0; i < 7; i++) {
-      wskipn.Add(wxString::Format(wxT("%d"), (1 << i) - 1));
-      wskipv.Add((1 << i) - 1);
-   }
-
-   /* /////i18n-hint: (noun) Experimental.  Don't know what it does.  Don't translate.*/
-   S.StartStatic(TRANSLATABLE("FFT Skip Points"));
-   {
-      S.StartMultiColumn(2);
-      {
-         /* /////i18n-hint: (noun) here the user chooses points to skip.*/
-         S.TieChoice(TRANSLATABLE("Skip Points:"),
-                     wxT("/Spectrum/FFTSkipPoints"),
-                     0,
-                     wskipn,
-                     wskipv);
-         S.SetSizeHints(wskipn);
-      }
-      S.EndMultiColumn();
-   }
-   S.EndStatic();
-#endif //EXPERIMENTAL_FFT_SKIP_POINTS
-
    S.StartStatic(_("Display"));
    {
       S.StartTwoColumn();
@@ -429,10 +400,6 @@ void SpectrogramSettings::UpdatePrefs()
    }
 
    isGrayscale = (gPrefs->Read(wxT("/Spectrum/Grayscale"), 0L) != 0);
-
-#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
-   fftSkipPoints = gPrefs->Read(wxT("/Spectrum/FFTSkipPoints"), 0L);
-#endif
 
 #ifdef EXPERIMENTAL_FFT_Y_GRID
    fftYGrid = (gPrefs->Read(wxT("/Spectrum/FFTYGrid"), 0L) != 0);

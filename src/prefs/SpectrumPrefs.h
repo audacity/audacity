@@ -26,11 +26,12 @@
 #include <wx/window.h>
 
 #include "../Experimental.h"
-#include "../ShuttleGui.h"
 
 #include "PrefsPanel.h"
 
+class wxTextCtrl;
 struct FFTParam;
+class ShuttleGui;
 
 class SpectrumPrefs:public PrefsPanel
 {
@@ -102,10 +103,6 @@ public:
 #endif
 
    bool isGrayscale;
-
-#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
-   int fftSkipPoints;
-#endif
 
 #ifdef EXPERIMENTAL_FFT_Y_GRID
    bool fftYGrid;

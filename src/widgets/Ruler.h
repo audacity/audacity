@@ -19,7 +19,7 @@
 #include "../Envelope.h"
 #include "../Experimental.h"
 
-struct ViewInfo;
+class ViewInfo;
 class AudacityProject;
 class TimeTrack;
 class SnapManager;
@@ -55,6 +55,13 @@ class AUDACITY_DLL_API Ruler {
    // max is the value at (x+width, y+height)
    // (at the center of the pixel, in both cases)
    void SetRange(double min, double max);
+
+   // An overload needed for the special case of fisheye
+   // min is the value at (x, y)
+   // max is the value at (x+width, y+height)
+   // hiddenMin, hiddenMax are the values that would be shown without the fisheye.
+   // (at the center of the pixel, in both cases)
+   void SetRange(double min, double max, double hiddenMin, double hiddenMax);
 
    //
    // Optional Ruler Parameters
@@ -114,6 +121,8 @@ class AUDACITY_DLL_API Ruler {
    void SetCustomMajorLabels(wxArrayString *label, int numLabel, int start, int step);
    void SetCustomMinorLabels(wxArrayString *label, int numLabel, int start, int step);
 
+   void SetUseZoomInfo(int leftOffset);
+
    //
    // Drawing
    //
@@ -130,8 +139,10 @@ class AUDACITY_DLL_API Ruler {
    void SetTickColour( const wxColour & colour)
    { mTickColour = colour; mPen.SetColour( colour );}
 
- private:
+   // Force regeneration of labels at next draw time
    void Invalidate();
+
+ private:
    void Update();
    void Update(TimeTrack* timetrack);
    void FindTickSizes();
@@ -163,6 +174,7 @@ private:
    bool         mUserFonts;
 
    double       mMin, mMax;
+   double       mHiddenMin, mHiddenMax;
 
    double       mMajor;
    double       mMinor;
@@ -213,6 +225,8 @@ private:
    int          mGridLineLength; //        end
    wxString     mUnits;
    bool         mTwoTone;
+   bool         mUseZoomInfo;
+   int          mLeftOffset;
 };
 
 class AUDACITY_DLL_API RulerPanel : public wxPanel {
@@ -262,10 +276,10 @@ public:
 
 public:
    static int GetRulerHeight() { return 28; }
-   void SetLeftOffset(int offset){ mLeftOffset = offset; }
+   void SetLeftOffset(int offset);
 
-   void DrawCursor(double pos);
-   void DrawIndicator(double pos, bool rec);
+   void DrawCursor(double time);
+   void DrawIndicator(double time, bool rec);
    void DrawSelection();
    void ClearIndicator();
 
@@ -273,8 +287,10 @@ public:
    void ClearPlayRegion();
    void GetPlayRegion(double* playRegionStart, double* playRegionEnd);
 
-   void SetProject(AudacityProject* project) {mProject = project;};
+   void SetProject(AudacityProject* project) {mProject = project;}
    void GetMaxSize(wxCoord *width, wxCoord *height);
+
+   void InvalidateRuler();
 
    void UpdatePrefs();
    void RegenerateTooltips();
@@ -297,9 +313,8 @@ private:
    void DrawQuickPlayIndicator(wxDC * dc, bool clear /*delete old only*/);
    void DoDrawPlayRegion(wxDC * dc);
 
-   double Pos2Time(int p);
-   int Time2Pos(double t);
-   int Seconds2Pixels(double t);
+   double Pos2Time(int p, bool ignoreFisheye = false);
+   int Time2Pos(double t, bool ignoreFisheye = false);
 
    bool IsWithinMarker(int mousePosX, double markerTime);
 
@@ -314,10 +329,11 @@ private:
 
    int mLeftOffset;  // Number of pixels before we hit the 'zero position'.
 
-   double mCurPos;
+   double mCurTime;
 
-   int    mIndType;     // -1 = No indicator, 0 = Play, 1 = Record
-   double mIndPos;
+
+   int mIndType;     // -1 = No indicator, 0 = Play, 1 = Record
+   double mIndTime;
    bool   mQuickPlayInd;
    double mQuickPlayPos;
    SnapManager *mSnapManager;

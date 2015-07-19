@@ -8,14 +8,14 @@
 
 **********************************************************************/
 
+#include "Snap.h"
+
+#include <algorithm>
 #include <math.h>
 
 #include "LabelTrack.h"
-#include "Prefs.h"
 #include "Project.h"
-#include "Snap.h"
 #include "TrackPanel.h"
-#include "WaveTrack.h"
 #include "widgets/NumericTextCtrl.h"
 
 // Change this to "true" to snap to nearest and "false" to snap to previous
@@ -29,8 +29,10 @@ static int CompareSnapPoints(SnapPoint *s1, SnapPoint *s2)
 }
 
 SnapManager::SnapManager(TrackList *tracks, TrackClipArray *exclusions,
-                         double zoom, int pixelTolerance, bool noTimeSnap)
+                         const ZoomInfo &zoomInfo, int pixelTolerance, bool noTimeSnap)
  : mConverter(NumericConverter::TIME)
+ , mPixelTolerance(std::max(0, pixelTolerance))
+ , mZoomInfo(zoomInfo)
 {
    int i;
 
@@ -50,13 +52,7 @@ SnapManager::SnapManager(TrackList *tracks, TrackClipArray *exclusions,
    }
 
    mSnapPoints = new SnapPointArray(CompareSnapPoints);
-   if (zoom > 0 && pixelTolerance > 0)
-      mTolerance = pixelTolerance / zoom;
-   else {
-      // This shouldn't happen, but we don't want to crash if we get
-      // illegal values.  The net effect of this is to never snap.
-      mTolerance = 0.0;
-   }
+
    // Two time points closer than this are considered the same
    mEpsilon = 1 / 44100.0;
 
@@ -135,9 +131,12 @@ double SnapManager::Get(int index)
 }
 
 // Returns the difference in time between t and the point at a given index
-double SnapManager::Diff(double t, int index)
+wxInt64 SnapManager::PixelDiff(double t, int index)
 {
-   return fabs(t - Get(index));
+   return abs(
+      mZoomInfo.TimeToPosition(t, 0) -
+      mZoomInfo.TimeToPosition(Get(index), 0)
+   );
 }
 
 // Find the index where this SnapPoint should go in
@@ -168,7 +167,7 @@ int SnapManager::Find(double t)
       next++;
 
    // Now return whichever one is closer to time t
-   if (next < len && Diff(t, next) < Diff(t, index))
+   if (next < len && PixelDiff(t, next) < PixelDiff(t, index))
       return next;
    else
       return index;
@@ -189,7 +188,7 @@ bool SnapManager::SnapToPoints(Track *currentTrack,
    int index = Find(t);
 
    // If it's too far away, just give up now
-   if (Diff(t, index) >= mTolerance)
+   if (PixelDiff(t, index) >= mPixelTolerance)
       return false;
 
    // Otherwise, search left and right for all of the points
@@ -198,10 +197,10 @@ bool SnapManager::SnapToPoints(Track *currentTrack,
    int right = index;
    int i;
 
-   while(left > 0 && Diff(t, left-1) < mTolerance)
+   while(left > 0 && PixelDiff(t, left-1) < mPixelTolerance)
       left--;
 
-   while(right < len-1 && Diff(t, right+1) < mTolerance)
+   while(right < len-1 && PixelDiff(t, right+1) < mPixelTolerance)
       right++;
 
    if (left == index && right == index) {

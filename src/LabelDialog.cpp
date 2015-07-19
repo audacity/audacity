@@ -14,6 +14,7 @@
 *//*******************************************************************/
 
 #include "Audacity.h"
+#include "LabelDialog.h"
 
 #include <wx/button.h>
 #include <wx/defs.h>
@@ -29,8 +30,8 @@
 #include <wx/stattext.h>
 #include <wx/textdlg.h>
 
+#include "ShuttleGui.h"
 #include "Internat.h"
-#include "LabelDialog.h"
 #include "LabelTrack.h"
 #include "Prefs.h"
 #include "Project.h"

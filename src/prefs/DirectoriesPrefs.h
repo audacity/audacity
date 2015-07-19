@@ -14,11 +14,11 @@
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
 
-#include "../ShuttleGui.h"
-
 #include "PrefsPanel.h"
 
-class DirectoriesPrefs:public PrefsPanel
+class ShuttleGui;
+
+class DirectoriesPrefs :public PrefsPanel
 {
  public:
    DirectoriesPrefs(wxWindow * parent);

@@ -15,6 +15,7 @@
 
 
 #include "../Audacity.h"
+#include "DeviceToolBar.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
@@ -31,7 +32,6 @@
 
 #include "../AudacityApp.h"
 
-#include "DeviceToolBar.h"
 #include "ToolDock.h"
 #include "../TrackPanel.h"
 
@@ -41,6 +41,7 @@
 #include "../ImageManipulation.h"
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../ShuttleGui.h"
 #include "../Theme.h"
 #include "../widgets/Grabber.h"
 #include "../DeviceManager.h"

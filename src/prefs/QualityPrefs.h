@@ -19,11 +19,11 @@
 #include <wx/dynarray.h>
 #include <wx/textctrl.h>
 
-#include "../ShuttleGui.h"
-
 #include "PrefsPanel.h"
 
-class QualityPrefs:public PrefsPanel
+class ShuttleGui;
+
+class QualityPrefs :public PrefsPanel
 {
  public:
    QualityPrefs(wxWindow * parent);

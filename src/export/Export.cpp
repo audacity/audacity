@@ -28,6 +28,9 @@
 
 *//********************************************************************/
 
+#include "../Audacity.h"
+#include "Export.h"
+
 #include <wx/dynarray.h>
 #include <wx/file.h>
 #include <wx/filename.h>
@@ -43,7 +46,6 @@
 #include <wx/dcmemory.h>
 #include <wx/window.h>
 
-#include "Export.h"
 #include "ExportPCM.h"
 #include "ExportMP3.h"
 #include "ExportOGG.h"
@@ -56,7 +58,6 @@
 
 #include "FileDialog.h"
 
-#include "../Audacity.h"
 #include "../DirManager.h"
 #include "../FileFormats.h"
 #include "../Internat.h"
@@ -64,6 +65,7 @@
 #include "../Mix.h"
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../ShuttleGui.h"
 #include "../Track.h"
 #include "../WaveTrack.h"
 #include "../widgets/Warning.h"

@@ -86,10 +86,6 @@
 // to activate it instead of the Spectrum log(f) mode.
 //#define EXPERIMENTAL_FIND_NOTES
 
-// AM, 22.Nov 2007
-// Skip Points support in the spectrum view mode.
-//#define EXPERIMENTAL_FFT_SKIP_POINTS
-
 // AM, 22.Nov 2007:
 // A Frequency Grid for the Spectrum Log(f) & Find Notes modes
 //#define EXPERIMENTAL_FFT_Y_GRID

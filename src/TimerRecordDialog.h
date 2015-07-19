@@ -19,10 +19,12 @@
 #include <wx/dialog.h>
 #include <wx/datectrl.h>
 #include <wx/calctrl.h>
+#include <wx/timer.h>
 
-#include "ShuttleGui.h"
+class wxTimerEvent;
 
 class NumericTextCtrl;
+class ShuttleGui;
 
 class TimerRecordDialog : public wxDialog
 {

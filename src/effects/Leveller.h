@@ -14,9 +14,9 @@
 #include <wx/arrstr.h>
 #include <wx/string.h>
 
-#include "../ShuttleGui.h"
-
 #include "Effect.h"
+
+class ShuttleGui;
 
 #define LEVELLER_PLUGIN_SYMBOL XO("Leveller")
 

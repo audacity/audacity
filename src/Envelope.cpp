@@ -27,6 +27,7 @@ a draggable point type.
 *//*******************************************************************/
 
 #include "Envelope.h"
+#include "ViewInfo.h"
 
 #include <math.h>
 
@@ -65,6 +66,8 @@ Envelope::Envelope()
    mMaxValue = 2.0;
 
    mButton = wxMOUSE_BTN_NONE;
+
+   mSearchGuess = -1;
 }
 
 Envelope::~Envelope()
@@ -199,13 +202,9 @@ static void DrawPoint(wxDC & dc, const wxRect & r, int x, int y, bool top)
 }
 
 /// TODO: This should probably move to track artist.
-void Envelope::DrawPoints(wxDC & dc, const wxRect & r, double h, double pps, bool dB,
+void Envelope::DrawPoints(wxDC & dc, const wxRect & r, const ZoomInfo &zoomInfo, bool dB,
                     float zoomMin, float zoomMax)
 {
-   h -= mOffset;
-
-   wxASSERT( pps > 0 );
-   double tright = h + (r.width / pps);
    // TODO: Cache the gPrefs value.  Reading it every time is inefficient.
    double dBRange = gPrefs->Read(wxT("/GUI/EnvdBRange"), ENV_DB_RANGE);
 
@@ -213,7 +212,9 @@ void Envelope::DrawPoints(wxDC & dc, const wxRect & r, double h, double pps, boo
    dc.SetBrush(*wxWHITE_BRUSH);
 
    for (int i = 0; i < (int)mEnv.Count(); i++) {
-      if (mEnv[i]->GetT() >= h && mEnv[i]->GetT() <= tright) {
+      const double time = mEnv[i]->GetT() + mOffset;
+      const wxInt64 position = zoomInfo.TimeToPosition(time);
+      if (position >= 0 && position < r.width) {
          // Change colour if this is the draggable point...
          if (i == mDragPoint) {
             dc.SetPen(AColor::envelopePen);
@@ -221,7 +222,7 @@ void Envelope::DrawPoints(wxDC & dc, const wxRect & r, double h, double pps, boo
          }
 
          double v = mEnv[i]->GetVal();
-         int x = int ((mEnv[i]->GetT() - h) * pps);
+         int x = int(position);
          int y, y2;
 
          y = GetWaveYPos(v, zoomMin, zoomMax, r.height, dB,
@@ -317,9 +318,10 @@ void Envelope::WriteXML(XMLWriter &xmlFile)
    xmlFile.EndTag(wxT("envelope"));
 }
 
-#ifndef SQR
-#define SQR(X) ((X)*(X))
-#endif
+namespace
+{
+inline int SQR(int x) { return x * x; }
+}
 
 /// ValueOfPixel() converts a y position on screen to an envelope value.
 /// @param y - y position, usually of the mouse.relative to the clip.
@@ -353,7 +355,7 @@ float Envelope::ValueOfPixel( int y, int height, bool upper, bool dB,
 /// We have an upper and lower envelope line.
 /// Also we may be showing an inner envelope (at 0.5 the range).
 bool Envelope::HandleMouseButtonDown(wxMouseEvent & event, wxRect & r,
-                                     double h, double pps, bool dB,
+                                     const ZoomInfo &zoomInfo, bool dB,
                                      float zoomMin, float zoomMax)
 {
    int ctr = (int)(r.height * zoomMax / (zoomMax - zoomMin));
@@ -363,10 +365,8 @@ bool Envelope::HandleMouseButtonDown(wxMouseEvent & event, wxRect & r,
    if(clip_y < 0) clip_y = 0; //keeps point in rect r, even if mouse isn't
    if(clip_y > r.GetBottom()) clip_y = r.GetBottom();
 
-   double tleft = h - mOffset;
-   double tright = tleft + (r.width / pps);
    int bestNum = -1;
-   int bestDist = 10; // Must be within 10 pixel radius.
+   int bestDistSqr = 100; // Must be within 10 pixel radius.
 
    // TODO: Cache the gPrefs value.  Reading it every time is inefficient.
    double dBr = gPrefs->Read(wxT("/GUI/EnvdBRange"), ENV_DB_RANGE);
@@ -382,22 +382,25 @@ bool Envelope::HandleMouseButtonDown(wxMouseEvent & event, wxRect & r,
    // TODO: extract this into a function FindNearestControlPoint()
    // TODO: also fix it so that we can drag the last point on an envelope.
    for (int i = 0; i < len; i++) { //search for control point nearest click
-      if (mEnv[i]->GetT() >= tleft && mEnv[i]->GetT() <= tright) {
+      const double time = mEnv[i]->GetT() + mOffset;
+      const wxInt64 position = zoomInfo.TimeToPosition(time);
+      if (position >= 0 && position < r.width) {
 
-         int x = int ((mEnv[i]->GetT() + mOffset - h) * pps) + r.x;
+         int x = int (position);
          int y[4];
          int numControlPoints;
 
          // Outer control points
-         y[0] = GetWaveYPos( mEnv[i]->GetVal(), zoomMin, zoomMax, r.height,
+         double value = mEnv[i]->GetVal();
+         y[0] = GetWaveYPos(value, zoomMin, zoomMax, r.height,
                                 dB, true, dBr, false);
-         y[1] = GetWaveYPos( -mEnv[i]->GetVal(), zoomMin, zoomMax, r.height,
+         y[1] = GetWaveYPos(-value, zoomMin, zoomMax, r.height,
                                 dB, true, dBr, false);
 
          // Inner control points(contour)
-         y[2] = GetWaveYPos( mEnv[i]->GetVal(), zoomMin, zoomMax, r.height,
+         y[2] = GetWaveYPos(value, zoomMin, zoomMax, r.height,
                                 dB, false, dBr, false);
-         y[3] = GetWaveYPos( -mEnv[i]->GetVal()-.00000001, zoomMin, zoomMax,
+         y[3] = GetWaveYPos(-value -.00000001, zoomMin, zoomMax,
                                 r.height, dB, false, dBr, false);
 
          numControlPoints = 4;
@@ -408,12 +411,13 @@ bool Envelope::HandleMouseButtonDown(wxMouseEvent & event, wxRect & r,
          if (!mMirror)
             numControlPoints = 1;
 
+         const int deltaXSquared = SQR(x - (event.m_x - r.x));
          for(int j=0; j<numControlPoints; j++){
 
-            int d = (int)(sqrt((double)(SQR(x-event.m_x) + SQR(y[j]-(event.m_y-r.y)))) + 0.5);
-            if (d < bestDist) {
+            const int dSqr = deltaXSquared + SQR(y[j] - (event.m_y - r.y));
+            if (dSqr < bestDistSqr) {
                bestNum = i;
-               bestDist = d;
+               bestDistSqr = dSqr;
                mContourOffset = (bool)(j > 1);
             }
          }
@@ -425,12 +429,12 @@ bool Envelope::HandleMouseButtonDown(wxMouseEvent & event, wxRect & r,
    }
    else {
       // TODO: Extract this into a function CreateNewPoint
-      double when = h + (event.m_x - r.x) / pps - mOffset;
+      const double when = zoomInfo.PositionToTime(event.m_x, r.x);
 
       //      if (when <= 0 || when >= mTrackLen)
       //         return false;
 
-      double v = GetValueAtX( event.m_x, r, h, pps );
+      const double v = GetValue( when );
 
       int ct = GetWaveYPos( v, zoomMin, zoomMax, r.height, dB,
                                false, dBr, false) ;
@@ -456,16 +460,14 @@ bool Envelope::HandleMouseButtonDown(wxMouseEvent & event, wxRect & r,
       double newVal = ValueOfPixel(clip_y, r.height, upper, dB,
                                    zoomMin, zoomMax);
 
-      mDragPoint = Insert(when, newVal);
+      mDragPoint = Insert(when - mOffset, newVal);
       mDirty = true;
    }
 
    mUpper = upper;
 
-   mInitialWhen = mEnv[mDragPoint]->GetT();
    mInitialVal = mEnv[mDragPoint]->GetVal();
 
-   mInitialX = event.m_x;
    mInitialY = event.m_y+mContourOffset;
 
    return true;
@@ -500,8 +502,8 @@ void Envelope::MarkDragPointForDeletion()
 }
 
 void Envelope::MoveDraggedPoint( wxMouseEvent & event, wxRect & r,
-                               double WXUNUSED(h), double pps, bool dB,
-                               float zoomMin, float zoomMax)
+                                 const ZoomInfo &zoomInfo, bool dB,
+                                 float zoomMin, float zoomMax)
 {
    int clip_y = event.m_y - r.y;
    if(clip_y < 0) clip_y = 0;
@@ -509,13 +511,12 @@ void Envelope::MoveDraggedPoint( wxMouseEvent & event, wxRect & r,
    double newVal = ValueOfPixel(clip_y, r.height, mUpper, dB,
                                 zoomMin, zoomMax);
 
-   wxASSERT( pps > 0 );
    // We no longer tolerate multiple envelope points at the same t.
    // epsilon is less than the time offset of a single sample
    // TODO: However because mTrackEpsilon assumes 200KHz this use
    // of epsilon is a tad bogus.  What we need to do instead is delete
    // a duplicated point on a mouse up.
-   double newWhen = mInitialWhen + (event.m_x - mInitialX) / pps;
+   double newWhen = zoomInfo.PositionToTime(event.m_x, r.x) - mOffset;
 
    // We'll limit the drag point time to be between those of the preceding
    // and next envelope point.
@@ -536,7 +537,7 @@ void Envelope::MoveDraggedPoint( wxMouseEvent & event, wxRect & r,
 }
 
 bool Envelope::HandleDragging( wxMouseEvent & event, wxRect & r,
-                               double h, double pps, bool dB,
+                               const ZoomInfo &zoomInfo, bool dB,
                                float zoomMin, float zoomMax,
                                float WXUNUSED(eMin), float WXUNUSED(eMax))
 {
@@ -550,7 +551,7 @@ bool Envelope::HandleDragging( wxMouseEvent & event, wxRect & r,
       // IF we're in the rect THEN we're not deleting this point (anymore).
       mIsDeleting = false;
       // ...we're dragging it.
-      MoveDraggedPoint( event, r,h,pps,dB, zoomMin, zoomMax);
+      MoveDraggedPoint( event, r, zoomInfo, dB, zoomMin, zoomMax);
       return true;
    }
 
@@ -563,11 +564,7 @@ bool Envelope::HandleDragging( wxMouseEvent & event, wxRect & r,
 }
 
 // Exit dragging mode and deletes dragged point if neccessary.
-bool Envelope::HandleMouseButtonUp( wxMouseEvent & WXUNUSED(event), wxRect & WXUNUSED(r),
-                                    double WXUNUSED(h),
-                                    double WXUNUSED(pps), bool WXUNUSED(dB),
-                                    float WXUNUSED(zoomMin),
-                                    float WXUNUSED(zoomMax) )
+bool Envelope::HandleMouseButtonUp()
 {
    if (mIsDeleting) {
       delete mEnv[mDragPoint];
@@ -586,18 +583,17 @@ void Envelope::Delete( int point )
 
 // Returns true if parent needs to be redrawn
 bool Envelope::MouseEvent(wxMouseEvent & event, wxRect & r,
-                          double h, double pps, bool dB,
+                          const ZoomInfo &zoomInfo, bool dB,
                           float zoomMin, float zoomMax)
 {
    if (event.ButtonDown() && mButton == wxMOUSE_BTN_NONE)
-      return HandleMouseButtonDown( event, r, h, pps,dB,
+      return HandleMouseButtonDown( event, r, zoomInfo,dB,
                                     zoomMin, zoomMax);
    if (event.Dragging() && mDragPoint >= 0)
-      return HandleDragging( event, r, h, pps,dB,
+      return HandleDragging( event, r, zoomInfo,dB,
                              zoomMin, zoomMax);
    if (event.ButtonUp() && event.GetButton() == mButton)
-      return HandleMouseButtonUp( event, r, h, pps, dB,
-                                  zoomMin, zoomMax);
+      return HandleMouseButtonUp();
    return false;
 }
 
@@ -1023,28 +1019,45 @@ void Envelope::SetTrackLen(double trackLen)
 // Accessors
 double Envelope::GetValue(double t) const
 {
+   // t is absolute time
    double temp;
 
    GetValues(&temp, 1, t, 1.0);
    return temp;
 }
 
-// 'X' is in pixels and relative to track.
-double Envelope::GetValueAtX(int x, const wxRect & r, double h, double pps)
-{
-   // Convert x to time.
-   double t = (x - r.x) / pps + h ;//-mOffset;
-   return GetValue(t);
-}
-
-/// @param Lo returns index before this time.
-/// @param Hi returns index after this time.
+/// @param Lo returns last index at or before this time.
+/// @param Hi returns first index after this time.
 void Envelope::BinarySearchForTime( int &Lo, int &Hi, double t ) const
 {
    Lo = 0;
    Hi = mEnv.Count() - 1;
    // JC: Do we have a problem if the envelope only has one point??
-   wxASSERT( Hi > Lo );
+   wxASSERT(Hi > Lo);
+
+   // Optimizations for the usual pattern of repeated calls with
+   // small increases of t.
+   {
+      if (mSearchGuess >= 0 && mSearchGuess < int(mEnv.Count()) - 1) {
+         if (t >= mEnv[mSearchGuess]->GetT() &&
+            t < mEnv[1 + mSearchGuess]->GetT()) {
+            Lo = mSearchGuess;
+            Hi = 1 + mSearchGuess;
+            return;
+         }
+      }
+
+      ++mSearchGuess;
+      if (mSearchGuess >= 0 && mSearchGuess < int(mEnv.Count()) - 1) {
+         if (t >= mEnv[mSearchGuess]->GetT() &&
+            t < mEnv[1 + mSearchGuess]->GetT()) {
+            Lo = mSearchGuess;
+            Hi = 1 + mSearchGuess;
+            return;
+         }
+      }
+   }
+
    while (Hi > (Lo + 1)) {
       int mid = (Lo + Hi) / 2;
       if (t < mEnv[mid]->GetT())
@@ -1053,6 +1066,8 @@ void Envelope::BinarySearchForTime( int &Lo, int &Hi, double t ) const
          Lo = mid;
    }
    wxASSERT( Hi == ( Lo+1 ));
+
+   mSearchGuess = Lo;
 }
 
 /// GetInterpolationStartValueAtPoint() is used to select either the
@@ -1072,6 +1087,7 @@ double Envelope::GetInterpolationStartValueAtPoint( int iPoint ) const
 void Envelope::GetValues(double *buffer, int bufferLen,
                          double t0, double tstep) const
 {
+   // Convert t0 from absolute to clip-relative time
    t0 -= mOffset;
 
    // JC: If bufferLen ==0 we have probably just allocated a zero sized buffer.
@@ -1152,6 +1168,13 @@ void Envelope::GetValues(double *buffer, int bufferLen,
 
       t += tstep;
    }
+}
+
+void Envelope::GetValues
+   (double *buffer, int bufferLen, int leftOffset, const ZoomInfo &zoomInfo) const
+{
+   for (int xx = 0; xx < bufferLen; ++xx)
+      buffer[xx] = GetValue(zoomInfo.PositionToTime(xx, -leftOffset));
 }
 
 int Envelope::NumberOfPointsAfter(double t)

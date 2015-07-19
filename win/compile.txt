@@ -14,7 +14,7 @@ Authors:
   Martyn Shaw
 
 ========================================================================
-This document is for Audacity version 2.1.0.
+This document is for Audacity version 2.1.2.
 
 If the advice here is inaccurate or incomplete, 
 email audacity-devel@lists.sourceforge.net.
@@ -41,7 +41,8 @@ To simplify the implementation of a near-identical user
 interface across platforms, Audacity uses wxWidgets, a  
 GUI framework. 
 
-Audacity 2.1.0 requires wxWidgets 2.8.12.
+Audacity 2.1.2 currently requires wxWidgets 2.8.12.
+(we're transitioning to wxWidgets 3.0.2. during this release...)
 
 To be able to build Audacity for Windows, download and install 
 wxWidgets from http://www.wxwidgets.org/.
@@ -100,16 +101,18 @@ MSVC++ STEP 2:  Build wxWidgets
    See "MSVC++ STEP 6:  Build Audacity" for the differences
    between these versions of Audacity.
 
-   For Audacity, you need only the following five projects 
+   For Audacity, you need only the following seven projects 
    to build (not the whole solution) for each configuration:
       * adv
       * base
       * core
       * html
       * net
+      * qa
+      * xml
    Building only these will give you a faster build, and 
    possibly smaller wxWidgets DLLs. 
-   To do this, Ctrl-select those 5 projects in the Solution Explorer. 
+   To do this, Ctrl-select those 7 projects in the Solution Explorer. 
    Then right-click and choose Build Selection (or Rebuild Selection).
 
    Because of dependencies, this should also build the 
@@ -262,7 +265,7 @@ command.
 MSVC++ STEP 7:  Provide Access to the wxWidgets DLLs
 ------------------------------------------------------------------------
 
-Each Audacity executable needs access to five specific wxWidgets
+Each Audacity executable needs access to seven specific wxWidgets
 DLLs from those you built in "MSVC++ STEP 2:  Build wxWidgets" 
 above. You can copy them to your Windows PATH, or more simply,
 to the same directory as the executable. If you are building 
@@ -275,7 +278,9 @@ are at "C:\wxWidgets-2.8.12\lib\vc_dll":
 	wxmsw28*_adv_vc_custom.dll
 	wxmsw28*_core_vc_custom.dll
 	wxmsw28*_html_vc_custom.dll
-
+        wxbase28*_xml_vc_custom.dll
+        wxmsw28*_qa_vc_custom.dll	
+	
 The "*" in the file names above is replaced in the actual files by
 a suffix specific to its Widgets configuration. You can identify the
 DLLs needed for each Audacity version as follows: 
@@ -290,6 +295,8 @@ So for instance, a Debug version of Audacity should have:
 	wxmsw28ud_adv_vc_custom.dll
 	wxmsw28ud_core_vc_custom.dll
 	wxmsw28ud_html_vc_custom.dll
+        wxbase28ud_xml_vc_custom.dll
+        wxmsw28ud_qa_vc_custom.dll	
         
 in the "audacity\win\Debug" directory.
 

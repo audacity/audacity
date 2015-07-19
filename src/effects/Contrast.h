@@ -15,6 +15,7 @@
 class wxButton;
 class wxSizer;
 class wxString;
+class wxTextCtrl;
 
 class Envelope;
 class NumericTextCtrl;

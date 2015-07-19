@@ -19,6 +19,8 @@ the pitch without changing the tempo.
 
 #if USE_SOUNDTOUCH
 
+#include "ChangePitch.h"
+
 #include <float.h>
 #include <math.h>
 
@@ -26,12 +28,11 @@ the pitch without changing the tempo.
 #include <wx/valtext.h>
 
 #include "../PitchName.h"
+#include "../ShuttleGui.h"
 #include "../Spectrum.h"
 #include "../WaveTrack.h"
 #include "../widgets/valnum.h"
 #include "TimeWarper.h"
-
-#include "ChangePitch.h"
 
 enum {
    ID_PercentChange = 10000,

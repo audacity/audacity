@@ -19,11 +19,11 @@
 #include <wx/window.h>
 #include <wx/dynarray.h>
 
-#include "../ShuttleGui.h"
-
 #include "PrefsPanel.h"
 
-class DevicePrefs:public PrefsPanel
+class ShuttleGui;
+
+class DevicePrefs :public PrefsPanel
 {
  public:
    DevicePrefs(wxWindow * parent);

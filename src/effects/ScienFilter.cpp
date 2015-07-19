@@ -33,6 +33,7 @@ a graph for EffectScienFilter.
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "ScienFilter.h"
 
 #include <math.h>
 #include <float.h>
@@ -50,12 +51,12 @@ a graph for EffectScienFilter.
 #include "../PlatformCompatibility.h"
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../ShuttleGui.h"
 #include "../Theme.h"
 #include "../WaveTrack.h"
 #include "../widgets/valnum.h"
 
 #include "Equalization.h" // For SliderAx
-#include "ScienFilter.h"
 
 #if !defined(M_PI)
 #define PI = 3.1415926535897932384626433832795

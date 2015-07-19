@@ -22,8 +22,8 @@ and libvorbis examples, Monty <monty@xiph.org>
 
 #ifdef USE_LIBFLAC
 
-#include "Export.h"
 #include "ExportFLAC.h"
+#include "Export.h"
 
 #include <wx/progdlg.h>
 #include <wx/ffile.h>
@@ -36,6 +36,7 @@ and libvorbis examples, Monty <monty@xiph.org>
 #include "../Project.h"
 #include "../Mix.h"
 #include "../Prefs.h"
+#include "../ShuttleGui.h"
 
 #include "../Internat.h"
 #include "../Tags.h"

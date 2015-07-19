@@ -21,9 +21,9 @@
 #include <wx/string.h>
 #include <wx/textctrl.h>
 
-#include "../ShuttleGui.h"
-
 #include "SoundTouchEffect.h"
+
+class ShuttleGui;
 
 #define CHANGETEMPO_PLUGIN_SYMBOL XO("Change Tempo")
 

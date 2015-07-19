@@ -19,6 +19,7 @@
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "BassTreble.h"
 
 #include <math.h>
 
@@ -28,10 +29,9 @@
 #include <wx/sizer.h>
 
 #include "../Prefs.h"
+#include "../ShuttleGui.h"
 #include "../WaveTrack.h"
 #include "../widgets/valnum.h"
-
-#include "BassTreble.h"
 
 enum 
 {

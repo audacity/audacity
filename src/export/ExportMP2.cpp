@@ -33,6 +33,7 @@
 */
 
 #include "../Audacity.h"
+#include "ExportMP2.h"
 
 #ifdef USE_LIBTWOLAME
 
@@ -47,12 +48,12 @@
 #include <wx/intl.h>
 
 #include "Export.h"
-#include "ExportMP2.h"
 #include "../FileIO.h"
 #include "../Internat.h"
 #include "../Mix.h"
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../ShuttleGui.h"
 #include "../Tags.h"
 #include "../WaveTrack.h"
 

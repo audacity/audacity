@@ -20,7 +20,10 @@
 #include <wx/string.h>
 #include <wx/tglbtn.h>
 
+class wxCheckBox;
+class wxChoice;
 class wxDialog;
+class wxListBox;
 class wxWindow;
 
 #include "audacity/ConfigInterface.h"
@@ -30,9 +33,10 @@ class wxWindow;
 #include "../WaveTrack.h"
 #include "../SelectedRegion.h"
 #include "../Shuttle.h"
-#include "../ShuttleGui.h"
 #include "../Internat.h"
 #include "../widgets/ProgressDialog.h"
+
+class ShuttleGui;
 
 #define BUILTIN_EFFECT_PREFIX wxT("Built-in Effect: ")
 
@@ -146,6 +150,7 @@ class AUDACITY_DLL_API Effect : public wxEvtHandler,
    virtual double GetDefaultDuration();
    virtual double GetDuration();
    virtual wxString GetDurationFormat();
+   virtual wxString GetSelectionFormat(); // time format in Selection toolbar
    virtual void SetDuration(double duration);
 
    virtual bool Apply();

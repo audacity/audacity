@@ -19,6 +19,7 @@ recover previous Audacity projects that were closed incorrectly.
 #include "AudacityApp.h"
 #include "FileNames.h"
 #include "blockfile/SimpleBlockFile.h"
+#include "ShuttleGui.h"
 
 #include <wx/wxprec.h>
 #include <wx/filefn.h>

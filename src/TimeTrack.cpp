@@ -13,15 +13,16 @@
 
 *//*******************************************************************/
 
+#include "Audacity.h"
+#include "TimeTrack.h"
 
 #include <wx/intl.h>
-#include "Audacity.h"
 #include "AColor.h"
-#include "TimeTrack.h"
 #include "widgets/Ruler.h"
 #include "Prefs.h"
 #include "Internat.h"
 #include "Resample.h"
+#include "ViewInfo.h"
 
 //TODO-MB: are these sensible values?
 #define TIMETRACK_MIN 0.01
@@ -52,7 +53,8 @@ TimeTrack::TimeTrack(DirManager *projDirManager):
    SetDefaultName(_("Time Track"));
    SetName(GetDefaultName());
 
-   mRuler = new Ruler();
+   mRuler = new Ruler;
+   mRuler->SetUseZoomInfo(0);
    mRuler->SetLabelEdges(false);
    mRuler->SetFormat(Ruler::TimeFormat);
 
@@ -76,7 +78,8 @@ TimeTrack::TimeTrack(TimeTrack &orig):
    mEnvelope->Paste(0.0, orig.mEnvelope);
 
    ///@TODO: Give Ruler:: a copy-constructor instead of this?
-   mRuler = new Ruler();
+   mRuler = new Ruler;
+   mRuler->SetUseZoomInfo(0);
    mRuler->SetLabelEdges(false);
    mRuler->SetFormat(Ruler::TimeFormat);
 
@@ -223,19 +226,15 @@ void TimeTrack::WriteXML(XMLWriter &xmlFile)
    xmlFile.EndTag(wxT("timetrack"));
 }
 
-void TimeTrack::Draw(wxDC & dc, const wxRect & r, double h, double pps)
+void TimeTrack::Draw(wxDC & dc, const wxRect & r, const ZoomInfo &zoomInfo)
 {
-   double tstep = 1.0 / pps;                     // Seconds per point
-   double t0 = h;
-   double t1 = h + (r.width * tstep);
-
-   //Make sure t1 (the right bound) is greater than 0
-   if (t1 < 0.0)
-      t1 = 0.0;
-
-   //make sure t1 is greater than t0
-   if (t0 > t1)
-      t0 = t1;
+   double min = zoomInfo.PositionToTime(0);
+   double max = zoomInfo.PositionToTime(r.width);
+   if (min > max)
+   {
+      wxASSERT(false);
+      min = max;
+   }
 
    dc.SetBrush(blankBrush);
    dc.SetPen(blankPen);
@@ -246,8 +245,6 @@ void TimeTrack::Draw(wxDC & dc, const wxRect & r, double h, double pps)
 
    // Draw the Ruler
    mRuler->SetBounds(r.x, r.y, r.x + r.width - 1, r.y + r.height - 1);
-   double min = t0;
-   double max = min + r.width / pps;
    mRuler->SetRange(min, max);
    mRuler->SetFlip(false);  // If we don't do this, the Ruler doesn't redraw itself when the envelope is modified.
                             // I have no idea why!
@@ -258,7 +255,7 @@ void TimeTrack::Draw(wxDC & dc, const wxRect & r, double h, double pps)
    mRuler->Draw(dc, this);
 
    double *envValues = new double[mid.width];
-   GetEnvelope()->GetValues(envValues, mid.width, t0, tstep);
+   GetEnvelope()->GetValues(envValues, mid.width, 0, zoomInfo);
 
    dc.SetPen(AColor::envelopePen);
 

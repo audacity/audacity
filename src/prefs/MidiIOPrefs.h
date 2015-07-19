@@ -10,6 +10,9 @@
 **********************************************************************/
 
 #include "../Experimental.h"
+
+class ShuttleGui;
+
 #ifdef EXPERIMENTAL_MIDI_OUT
 
 #ifndef __AUDACITY_MIDI_IO_PREFS__
@@ -20,8 +23,6 @@
 #include <wx/choice.h>
 #include <wx/string.h>
 #include <wx/window.h>
-
-#include "../ShuttleGui.h"
 
 #include "PrefsPanel.h"
 

@@ -1125,6 +1125,9 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddCommand(wxT("Stop"), _("Stop"), FN(OnStop),
                  AudioIOBusyFlag,
                  AudioIOBusyFlag);
+
+   c->SetDefaultFlags(CaptureNotBusyFlag, CaptureNotBusyFlag);
+
    c->AddCommand(wxT("PlayOneSec"), _("Play One Second"), FN(OnPlayOneSecond), wxT("1"),
                  CaptureNotBusyFlag,
                  CaptureNotBusyFlag);
@@ -1140,6 +1143,9 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddCommand(wxT("PlayCutPreview"), _("Play Cut Preview"), FN(OnPlayCutPreview), wxT("C"),
                  CaptureNotBusyFlag,
                  CaptureNotBusyFlag);
+
+   c->SetDefaultFlags(AlwaysEnabledFlag, AlwaysEnabledFlag);
+
 
    c->AddCommand(wxT("SelStart"), _("Selection to Start"), FN(OnSelToStart), wxT("Shift+Home"));
    c->AddCommand(wxT("SelEnd"), _("Selection to End"), FN(OnSelToEnd), wxT("Shift+End"));
@@ -1769,10 +1775,10 @@ wxUint32 AudacityProject::GetUpdateFlags()
    if (mUndoManager.RedoAvailable())
       flags |= RedoAvailableFlag;
 
-   if (GetZoom() < gMaxZoom && (flags & TracksExistFlag))
+   if (ZoomInAvailable() && (flags & TracksExistFlag))
       flags |= ZoomInAvailableFlag;
 
-   if (GetZoom() > gMinZoom && (flags & TracksExistFlag))
+   if (ZoomOutAvailable() && (flags & TracksExistFlag))
       flags |= ZoomOutAvailableFlag;
 
    if ((flags & LabelTracksExistFlag) && LabelTrack::IsTextClipSupported())
@@ -4881,7 +4887,7 @@ void AudacityProject::ZoomInByFactor( double ZoomFactor )
 {
    // LLL: Handling positioning differently when audio is active
    if (gAudioIO->IsStreamActive(GetAudioIOToken()) != 0) {
-      Zoom(mViewInfo.zoom * ZoomFactor);
+      ZoomBy(ZoomFactor);
       mTrackPanel->ScrollIntoView(gAudioIO->GetStreamTime());
       mTrackPanel->Refresh(false);
       return;
@@ -4914,7 +4920,7 @@ void AudacityProject::ZoomInByFactor( double ZoomFactor )
             (mViewInfo.h + mViewInfo.screen - mViewInfo.selectedRegion.t0()) / 2;
 
       // Zoom in
-      Zoom(mViewInfo.zoom *= ZoomFactor);
+      ZoomBy(ZoomFactor);
 
       // Recenter on selCenter
       TP_ScrollWindow(selCenter - mViewInfo.screen / 2);
@@ -4924,7 +4930,7 @@ void AudacityProject::ZoomInByFactor( double ZoomFactor )
 
    double origLeft = mViewInfo.h;
    double origWidth = mViewInfo.screen;
-   Zoom(mViewInfo.zoom *= ZoomFactor);
+   ZoomBy(ZoomFactor);
 
    double newh = origLeft + (origWidth - mViewInfo.screen) / 2;
 
@@ -4956,7 +4962,7 @@ void AudacityProject::ZoomOutByFactor( double ZoomFactor )
    double origLeft = mViewInfo.h;
    double origWidth = mViewInfo.screen;
 
-   Zoom(mViewInfo.zoom *=ZoomFactor);
+   ZoomBy(ZoomFactor);
 
    double newh = origLeft + (origWidth - mViewInfo.screen) / 2;
    // newh = (newh > 0) ? newh : 0;
@@ -4964,6 +4970,8 @@ void AudacityProject::ZoomOutByFactor( double ZoomFactor )
 
 }
 
+// this is unused:
+#if 0
 static double OldZooms[2]={ 44100.0/512.0, 4410.0/512.0 };
 void AudacityProject::OnZoomToggle()
 {
@@ -4983,11 +4991,12 @@ void AudacityProject::OnZoomToggle()
    double newh = origLeft + (origWidth - mViewInfo.screen) / 2;
    TP_ScrollWindow(newh);
 }
+#endif
 
 
 void AudacityProject::OnZoomNormal()
 {
-   Zoom(44100.0 / 512.0);
+   Zoom(ZoomInfo::GetDefaultZoom());
    mTrackPanel->Refresh(false);
 }
 
@@ -5073,7 +5082,7 @@ void AudacityProject::OnZoomSel()
    //      where the selected region may be scrolled off the left of the screen.
    //      I know this isn't right, but until the real rounding or 1-off issue is
    //      found, this will have to work.
-   Zoom(((mViewInfo.zoom * mViewInfo.screen) - 1) / denom);
+   Zoom((mViewInfo.GetScreenWidth() - 1) / denom);
    TP_ScrollWindow(mViewInfo.selectedRegion.t0());
 }
 

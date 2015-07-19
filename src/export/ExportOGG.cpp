@@ -19,8 +19,8 @@
 
 #ifdef USE_LIBVORBIS
 
-#include "Export.h"
 #include "ExportOGG.h"
+#include "Export.h"
 
 #include <wx/log.h>
 #include <wx/msgdlg.h>
@@ -32,6 +32,7 @@
 #include "../Project.h"
 #include "../Mix.h"
 #include "../Prefs.h"
+#include "../ShuttleGui.h"
 
 #include "../Internat.h"
 #include "../Tags.h"

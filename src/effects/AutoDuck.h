@@ -19,12 +19,12 @@
 #include <wx/textctrl.h>
 #include <wx/window.h>
 
-#include "../ShuttleGui.h"
 #include "../WaveTrack.h"
 
 #include "Effect.h"
 
 class EffectAutoDuckPanel;
+class ShuttleGui;
 
 #define AUTO_DUCK_PANEL_NUM_CONTROL_POINTS 5
 

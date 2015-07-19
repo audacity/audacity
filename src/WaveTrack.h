@@ -444,7 +444,7 @@ class AUDACITY_DLL_API WaveTrack: public Track {
       if( mDisplay == SpectralSelectionLogDisplay ){
       }
    }
-   int GetDisplay() const {return mDisplay;}
+   WaveTrackDisplay GetDisplay() const { return mDisplay; }
    int GetLastDisplay() {return mLastDisplay;}
 
    void GetDisplayBounds(float *min, float *max);

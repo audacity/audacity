@@ -20,14 +20,15 @@
 
 
 #include "../Audacity.h"
+#include "Phaser.h"
 
 #include <math.h>
 
 #include <wx/intl.h>
 
+#include "../ShuttleGui.h"
 #include "../widgets/valnum.h"
 
-#include "Phaser.h"
 
 enum
 {
