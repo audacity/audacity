@@ -1308,15 +1308,6 @@ bool AudacityApp::OnInit()
 // If we're waiitng in a dialog before then we can very easily
 // start multiple instances, defeating the single instance checker.
 
-
-
-
-   //JKC We'd like to initialise the module manager WHILE showing the splash screen.
-   //Can't in wx3.0.1 as MultiDialog interacts poorly with the splash screen.  So we do it before.
-   //TODO: Find out why opening a multidialog wrecks the splash screen.
-   //best current guess is that it's something to do with doing a DoModal this early
-   //in the program.
-
    // Initialize the CommandHandler
    InitCommandHandler();
 
@@ -1375,9 +1366,6 @@ bool AudacityApp::OnInit()
       exit(1);
    }
 
-// No Splash screen on wx3 whislt we sort out the problem
-// with showing a dialog AND a splash screen during inits.
-#if !wxCHECK_VERSION(3, 0, 0)
    // BG: Create a temporary window to set as the top window
    wxImage logoimage((const char **) AudacityLogoWithName_xpm);
    logoimage.Rescale(logoimage.GetWidth() / 2, logoimage.GetHeight() / 2);
@@ -1394,7 +1382,6 @@ bool AudacityApp::OnInit()
                          wxSTAY_ON_TOP);
    temporarywindow->SetTitle(_("Audacity is starting up..."));
    SetTopWindow(temporarywindow);
-#endif
 
    //JKC: Would like to put module loading here.
 
@@ -1444,11 +1431,8 @@ bool AudacityApp::OnInit()
       pWnd->Show( true );
    }
 
-
-#if !wxCHECK_VERSION(3, 0, 0)
    temporarywindow->Show(false);
    delete temporarywindow;
-#endif
 
    if( project->mShowSplashScreen )
       project->OnHelpWelcome();
