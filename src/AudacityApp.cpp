@@ -1021,11 +1021,12 @@ void AudacityApp::InitLang( const wxString & lang )
    wxSetEnv(wxT("LANG"), wxT("en_US.UTF-8"));
 #endif
 
-#if wxCHECK_VERSION(3,0,0)
-   mLocale = new wxLocale(wxT(""), lang, wxT(""), true);
-#else
-   mLocale = new wxLocale(wxT(""), lang, wxT(""), true, true);
-#endif
+   const wxLanguageInfo *info = wxLocale::FindLanguageInfo(lang);
+   if (!lang)
+   {
+      return;
+   }
+   mLocale = new wxLocale(info->Language);
 
    for(unsigned int i=0; i<audacityPathList.GetCount(); i++)
       mLocale->AddCatalogLookupPathPrefix(audacityPathList[i]);
