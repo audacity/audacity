@@ -25,6 +25,7 @@
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "Compressor.h"
 
 #include <math.h>
 
@@ -36,10 +37,9 @@
 
 #include "../AColor.h"
 #include "../Prefs.h"
+#include "../ShuttleGui.h"
 #include "../float_cast.h"
 #include "../widgets/Ruler.h"
-
-#include "Compressor.h"
 
 enum
 {

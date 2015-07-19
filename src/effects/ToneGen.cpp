@@ -19,6 +19,7 @@ frequency changes smoothly during the tone.
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "ToneGen.h"
 
 #include <math.h>
 #include <float.h>
@@ -27,10 +28,9 @@ frequency changes smoothly during the tone.
 #include <wx/valgen.h>
 
 #include "../Project.h"
+#include "../ShuttleGui.h"
 #include "../widgets/NumericTextCtrl.h"
 #include "../widgets/valnum.h"
-
-#include "ToneGen.h"
 
 enum kInterpolations
 {

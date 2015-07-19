@@ -12,6 +12,8 @@
 #ifndef __AUDACITY_KEY_CONFIG_PREFS__
 #define __AUDACITY_KEY_CONFIG_PREFS__
 
+class ShuttleGui;
+
 #if defined(EXPERIMENTAL_KEY_VIEW)
 
 #include <wx/defs.h>
@@ -23,13 +25,12 @@
 #include <wx/textctrl.h>
 #include <wx/timer.h>
 
-#include "../ShuttleGui.h"
 #include "../commands/CommandManager.h"
 #include "../widgets/KeyView.h"
 
 #include "PrefsPanel.h"
 
-class KeyConfigPrefs:public PrefsPanel
+class KeyConfigPrefs :public PrefsPanel
 {
 public:
    KeyConfigPrefs(wxWindow * parent);
@@ -93,7 +94,6 @@ private:
 #include <wx/textctrl.h>
 #include <wx/string.h>
 
-#include "../ShuttleGui.h"
 #include "../commands/CommandManager.h"
 
 #include "PrefsPanel.h"

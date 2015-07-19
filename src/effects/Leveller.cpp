@@ -14,6 +14,7 @@
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "Leveller.h"
 
 #include <math.h>
 
@@ -22,8 +23,7 @@
 #include <wx/valgen.h>
 
 #include "../Prefs.h"
-
-#include "Leveller.h"
+#include "../ShuttleGui.h"
 
 enum kPasses
 {

@@ -25,7 +25,6 @@
 #include  <wx/menuitem.h>
 #include  <wx/checklst.h>
 
-#include "ShuttleGui.h"
 #include "BatchCommands.h"
 
 class wxWindow;
@@ -37,6 +36,7 @@ class wxRadioButton;
 class wxListCtrl;
 class wxListEvent;
 class wxButton;
+class ShuttleGui;
 
 class BatchProcessDialog:public wxDialog {
  public:

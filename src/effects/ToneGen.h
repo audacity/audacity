@@ -16,10 +16,11 @@
 #include <wx/arrstr.h>
 #include <wx/string.h>
 
-#include "../ShuttleGui.h"
 #include "../widgets/NumericTextCtrl.h"
 
 #include "Effect.h"
+
+class ShuttleGui;
 
 #define CHIRP_PLUGIN_SYMBOL XO("Chirp")
 #define TONE_PLUGIN_SYMBOL XO("Tone")

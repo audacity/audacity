@@ -37,6 +37,7 @@
 #include <wx/version.h>
 
 
+#include "../../ShuttleGui.h"
 #include "../../widgets/valnum.h"
 
 enum

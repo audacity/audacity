@@ -28,6 +28,9 @@
 
 *//********************************************************************/
 
+#include "../Audacity.h"
+#include "Export.h"
+
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
 
@@ -48,7 +51,6 @@
 #include <wx/timer.h>
 #include <wx/dcmemory.h>
 
-#include "Export.h"
 #include "ExportPCM.h"
 #include "ExportMP3.h"
 #include "ExportOGG.h"
@@ -61,7 +63,6 @@
 
 #include "FileDialog.h"
 
-#include "../Audacity.h"
 #include "../DirManager.h"
 #include "../FileFormats.h"
 #include "../Internat.h"
@@ -69,6 +70,7 @@
 #include "../Mix.h"
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../ShuttleGui.h"
 #include "../Track.h"
 #include "../WaveTrack.h"
 #include "../widgets/Warning.h"

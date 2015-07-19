@@ -17,13 +17,15 @@
 
 #if USE_SBSMS
 
+#include "TimeScale.h"
+
 #include <math.h>
 
 #include <wx/intl.h>
 
+#include "../ShuttleGui.h"
 #include "../widgets/valnum.h"
 
-#include "TimeScale.h"
 #include "sbsms.h"
 
 enum

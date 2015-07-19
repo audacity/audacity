@@ -21,11 +21,11 @@
 #include <wx/string.h>
 #include <wx/textctrl.h>
 
-#include "../ShuttleGui.h"
-
 #include "Effect.h"
 
 #define AMPLIFY_PLUGIN_SYMBOL XO("Amplify")
+
+class ShuttleGui;
 
 class EffectAmplify : public Effect
 {

@@ -39,6 +39,7 @@
 *//******************************************************************/
 
 #include "../Audacity.h"
+#include "Meter.h"
 #include "../AudacityApp.h"
 
 #include <wx/defs.h>
@@ -57,8 +58,6 @@
 
 #include <math.h>
 
-#include "Meter.h"
-
 #include "../AudioIO.h"
 #include "../AColor.h"
 #include "../ImageManipulation.h"
@@ -66,6 +65,7 @@
 #include "../toolbars/MeterToolBar.h"
 #include "../toolbars/ControlToolBar.h"
 #include "../Prefs.h"
+#include "../ShuttleGui.h"
 
 #include "../Theme.h"
 #include "../AllThemeResources.h"

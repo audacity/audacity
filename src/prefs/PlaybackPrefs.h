@@ -16,11 +16,11 @@
 
 #include <wx/window.h>
 
-#include "../ShuttleGui.h"
-
 #include "PrefsPanel.h"
 
-class PlaybackPrefs:public PrefsPanel
+class ShuttleGui;
+
+class PlaybackPrefs :public PrefsPanel
 {
  public:
    PlaybackPrefs(wxWindow * parent);

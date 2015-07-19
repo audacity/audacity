@@ -14,6 +14,7 @@
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "Noise.h"
 
 #include <math.h>
 
@@ -23,9 +24,8 @@
 #include <wx/valgen.h>
 
 #include "../Prefs.h"
+#include "../ShuttleGui.h"
 #include "../widgets/valnum.h"
-
-#include "Noise.h"
 
 enum kTypes
 {

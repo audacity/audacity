@@ -40,6 +40,7 @@
 #include "../Experimental.h"
 #include "NoiseReduction.h"
 
+#include "../ShuttleGui.h"
 #include "../Prefs.h"
 
 #include <algorithm>
