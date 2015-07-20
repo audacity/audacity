@@ -75,13 +75,6 @@ void MixerToolBar::Create(wxWindow *parent)
    ToolBar::Create(parent);
 }
 
-void MixerToolBar::RecreateTipWindows()
-{
-   // Hack to make sure they appear on top of other windows
-   mInputSlider->RecreateTipWin();
-   mOutputSlider->RecreateTipWin();
-}
-
 void MixerToolBar::Populate()
 {
    if( mRecordBitmap == NULL )

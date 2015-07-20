@@ -296,8 +296,6 @@ void QuitAudacity(bool bForce)
       }
    }
 
-   LWSlider::DeleteSharedTipPanel();
-
    ModuleManager::Get().Dispatch(AppQuiting);
 
 #ifdef EXPERIMENTAL_SCOREALIGN

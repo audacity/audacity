@@ -86,10 +86,6 @@ void DeviceToolBar::Create(wxWindow *parent)
 #endif
 }
 
-void DeviceToolBar::RecreateTipWindows()
-{
-}
-
 void DeviceToolBar::DeinitChildren()
 {
    mInput         = NULL;

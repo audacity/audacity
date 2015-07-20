@@ -842,15 +842,6 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
 #endif
    mToolManager->LayoutToolBars();
 
-   // Fix the sliders on the mixer toolbar so that the tip windows
-   // actually pop-up on top of everything else.  Sorry for the hack -
-   // it's necessary to do it this way to avoid flicker.
-#if 0
-   MixerToolBar *mtb = GetMixerToolBar();
-   if (mtb)
-      mtb->RecreateTipWindows();
-#endif
-
    //
    // Create the horizontal ruler
    //

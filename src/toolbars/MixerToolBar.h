@@ -30,7 +30,6 @@ class MixerToolBar:public ToolBar {
 
    void Create(wxWindow * parent);
 
-   void RecreateTipWindows();
    void UpdatePrefs();
    void UpdateControls();
    void SetMixer(wxCommandEvent &event);

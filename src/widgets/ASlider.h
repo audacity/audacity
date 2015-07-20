@@ -31,6 +31,7 @@ class wxTextCtrl;
 class wxButton;
 
 class Ruler;
+class TipPanel;
 
 //
 // Predefined slider types (mStyle)
@@ -141,8 +142,6 @@ class LWSlider
    void OnKeyEvent(wxKeyEvent & event);
    void Refresh();
 
-   void RecreateTipWin();
-
    bool ShowDialog();
    bool ShowDialog(wxPoint pos);
 
@@ -166,11 +165,7 @@ class LWSlider
    float DragPositionToValue(int fromPos, bool shiftDown);
    float ClickPositionToValue(int fromPos, bool shiftDown);
 
-   wxWindow* GetToolTipParent() const;
-
    wxWindow *mParent;
-
-   wxString maxTipLabel; //string with the max num of chars for tip
 
    int mStyle;
    int mOrientation; // wxHORIZONTAL or wxVERTICAL. wxVERTICAL is currently only for DB_SLIDER.
@@ -222,8 +217,7 @@ class LWSlider
 
    wxWindowID mID;
 
-   //since we only need to show one tip at a time, just share one instance over all sliders.
-   static wxWindow* sharedTipPanel;
+   TipPanel *mTipPanel;
 
    Ruler* mpRuler;
 
@@ -283,8 +277,6 @@ class ASlider :public wxPanel
    void OnSlider(wxCommandEvent &event);
    void OnSetFocus(wxFocusEvent & event);
    void OnKillFocus(wxFocusEvent & event);
-
-   void RecreateTipWin();
 
    // Overrides of the wxWindow functions with the same semantics
    bool Enable(bool enable = true);
