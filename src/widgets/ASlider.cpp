@@ -91,7 +91,7 @@ const int sliderFontSize = 12;
 class TipPanel : public wxPopupWindow
 {
  public:
-   TipPanel(const wxString & label);
+   TipPanel(wxWindow *parent, const wxString & label);
    virtual ~TipPanel() {}
 
    void SetLabel(const wxString & label);
@@ -113,8 +113,8 @@ BEGIN_EVENT_TABLE(TipPanel, wxPopupWindow)
    EVT_PAINT(TipPanel::OnPaint)
 END_EVENT_TABLE()
 
-TipPanel::TipPanel(const wxString & maxLabel)
-:  wxPopupWindow(NULL)
+TipPanel::TipPanel(wxWindow *parent, const wxString & maxLabel)
+:  wxPopupWindow(parent)
 {
    mMaxLabel = maxLabel;
 
@@ -474,7 +474,7 @@ void LWSlider::CreatePopWin()
        )
       maxTipLabel += wxT("000");
 
-   mTipPanel = new TipPanel(maxTipLabel);
+   mTipPanel = new TipPanel(mParent, maxTipLabel);
 }
 
 void LWSlider::SetPopWinPosition()
