@@ -33,30 +33,8 @@
 #include "dict.h"
 #include "rational.h"
 #include "samplefmt.h"
+#include "pixfmt.h"
 #include "version.h"
-
-
-enum AVColorSpace{
-    AVCOL_SPC_RGB         =  0,
-    AVCOL_SPC_BT709       =  1, ///< also ITU-R BT1361 / IEC 61966-2-4 xvYCC709 / SMPTE RP177 Annex B
-    AVCOL_SPC_UNSPECIFIED =  2,
-    AVCOL_SPC_FCC         =  4,
-    AVCOL_SPC_BT470BG     =  5, ///< also ITU-R BT601-6 625 / ITU-R BT1358 625 / ITU-R BT1700 625 PAL & SECAM / IEC 61966-2-4 xvYCC601
-    AVCOL_SPC_SMPTE170M   =  6, ///< also ITU-R BT601-6 525 / ITU-R BT1358 525 / ITU-R BT1700 NTSC / functionally identical to above
-    AVCOL_SPC_SMPTE240M   =  7,
-    AVCOL_SPC_YCOCG       =  8, ///< Used by Dirac / VC-2 and H.264 FRext, see ITU-T SG16
-    AVCOL_SPC_BT2020_NCL  =  9, ///< ITU-R BT2020 non-constant luminance system
-    AVCOL_SPC_BT2020_CL   = 10, ///< ITU-R BT2020 constant luminance system
-    AVCOL_SPC_NB              , ///< Not part of ABI
-};
-#define AVCOL_SPC_YCGCO AVCOL_SPC_YCOCG
-
-enum AVColorRange{
-    AVCOL_RANGE_UNSPECIFIED = 0,
-    AVCOL_RANGE_MPEG        = 1, ///< the normal 219*2^(n-8) "MPEG" YUV ranges
-    AVCOL_RANGE_JPEG        = 2, ///< the normal     2^n-1   "JPEG" YUV ranges
-    AVCOL_RANGE_NB             , ///< Not part of ABI
-};
 
 
 /**
@@ -92,13 +70,73 @@ enum AVFrameSideDataType {
      * The data is the AVDownmixInfo struct defined in libavutil/downmix_info.h.
      */
     AV_FRAME_DATA_DOWNMIX_INFO,
+    /**
+     * ReplayGain information in the form of the AVReplayGain struct.
+     */
+    AV_FRAME_DATA_REPLAYGAIN,
+    /**
+     * This side data contains a 3x3 transformation matrix describing an affine
+     * transformation that needs to be applied to the frame for correct
+     * presentation.
+     *
+     * See libavutil/display.h for a detailed description of the data.
+     */
+    AV_FRAME_DATA_DISPLAYMATRIX,
+    /**
+     * Active Format Description data consisting of a single byte as specified
+     * in ETSI TS 101 154 using AVActiveFormatDescription enum.
+     */
+    AV_FRAME_DATA_AFD,
+    /**
+     * Motion vectors exported by some codecs (on demand through the export_mvs
+     * flag set in the libavcodec AVCodecContext flags2 option).
+     * The data is the AVMotionVector struct defined in
+     * libavutil/motion_vector.h.
+     */
+    AV_FRAME_DATA_MOTION_VECTORS,
+    /**
+     * Recommmends skipping the specified number of samples. This is exported
+     * only if the "skip_manual" AVOption is set in libavcodec.
+     * This has the same format as AV_PKT_DATA_SKIP_SAMPLES.
+     * @code
+     * u32le number of samples to skip from start of this packet
+     * u32le number of samples to skip from end of this packet
+     * u8    reason for start skip
+     * u8    reason for end   skip (0=padding silence, 1=convergence)
+     * @endcode
+     */
+    AV_FRAME_DATA_SKIP_SAMPLES,
+
+    /**
+     * This side data must be associated with an audio frame and corresponds to
+     * enum AVAudioServiceType defined in avcodec.h.
+     */
+    AV_FRAME_DATA_AUDIO_SERVICE_TYPE,
 };
 
+enum AVActiveFormatDescription {
+    AV_AFD_SAME         = 8,
+    AV_AFD_4_3          = 9,
+    AV_AFD_16_9         = 10,
+    AV_AFD_14_9         = 11,
+    AV_AFD_4_3_SP_14_9  = 13,
+    AV_AFD_16_9_SP_14_9 = 14,
+    AV_AFD_SP_4_3       = 15,
+};
+
+
+/**
+ * Structure to hold side data for an AVFrame.
+ *
+ * sizeof(AVFrameSideData) is not a part of the public ABI, so new fields may be added
+ * to the end with a minor bump.
+ */
 typedef struct AVFrameSideData {
     enum AVFrameSideDataType type;
     uint8_t *data;
     int      size;
     AVDictionary *metadata;
+    AVBufferRef *buf;
 } AVFrameSideData;
 
 /**
@@ -150,7 +188,7 @@ typedef struct AVFrame {
      * For audio, only linesize[0] may be set. For planar audio, each channel
      * plane must be the same size.
      *
-     * For video the linesizes should be multiplies of the CPUs alignment
+     * For video the linesizes should be multiples of the CPUs alignment
      * preference, this is 16 or 32 for modern desktop CPUs.
      * Some code requires such alignment other code can be slower without
      * correct alignment, for yet other it makes no difference.
@@ -224,7 +262,7 @@ typedef struct AVFrame {
     int64_t pkt_pts;
 
     /**
-     * DTS copied from the AVPacket that triggered returning this frame. (if frame threading isnt used)
+     * DTS copied from the AVPacket that triggered returning this frame. (if frame threading isn't used)
      * This is also the Presentation time of this AVFrame calculated from
      * only AVPacket.dts values without pts values.
      */
@@ -279,7 +317,6 @@ typedef struct AVFrame {
      * motion_val[direction][x + y*mv_stride][0->mv_x, 1->mv_y];
      * @endcode
      */
-    attribute_deprecated
     int16_t (*motion_val[2])[2];
 
     /**
@@ -376,7 +413,6 @@ typedef struct AVFrame {
      * log2 of the size of the block which a single vector in motion_val represents:
      * (4->16x16, 3->8x8, 2-> 4x4, 1-> 2x2)
      */
-    attribute_deprecated
     uint8_t motion_subsample_log2;
 #endif
 
@@ -392,7 +428,9 @@ typedef struct AVFrame {
 
     /**
      * AVBuffer references backing the data for this frame. If all elements of
-     * this array are NULL, then this frame is not reference counted.
+     * this array are NULL, then this frame is not reference counted. This array
+     * must be filled contiguously -- if buf[i] is non-NULL then buf[j] must
+     * also be non-NULL for all j < i.
      *
      * There may be at most one AVBuffer per data plane, so for video this array
      * always contains all the references. For planar audio with more than
@@ -442,6 +480,30 @@ typedef struct AVFrame {
      * Frame flags, a combination of @ref lavu_frame_flags
      */
     int flags;
+
+    /**
+     * MPEG vs JPEG YUV range.
+     * It must be accessed using av_frame_get_color_range() and
+     * av_frame_set_color_range().
+     * - encoding: Set by user
+     * - decoding: Set by libavcodec
+     */
+    enum AVColorRange color_range;
+
+    enum AVColorPrimaries color_primaries;
+
+    enum AVColorTransferCharacteristic color_trc;
+
+    /**
+     * YUV colorspace type.
+     * It must be accessed using av_frame_get_colorspace() and
+     * av_frame_set_colorspace().
+     * - encoding: Set by user
+     * - decoding: Set by libavcodec
+     */
+    enum AVColorSpace colorspace;
+
+    enum AVChromaLocation chroma_location;
 
     /**
      * frame timestamp estimated using various heuristics, in stream time base
@@ -511,25 +573,6 @@ typedef struct AVFrame {
      * - decoding: set by libavcodec, read by user.
      */
     int pkt_size;
-
-    /**
-     * YUV colorspace type.
-     * It must be accessed using av_frame_get_colorspace() and
-     * av_frame_set_colorspace().
-     * - encoding: Set by user
-     * - decoding: Set by libavcodec
-     */
-    enum AVColorSpace colorspace;
-
-    /**
-     * MPEG vs JPEG YUV range.
-     * It must be accessed using av_frame_get_color_range() and
-     * av_frame_set_color_range().
-     * - encoding: Set by user
-     * - decoding: Set by libavcodec
-     */
-    enum AVColorRange color_range;
-
 
     /**
      * Not to be accessed directly from outside libavutil
@@ -623,7 +666,7 @@ AVFrame *av_frame_clone(const AVFrame *src);
 void av_frame_unref(AVFrame *frame);
 
 /**
- * Move everythnig contained in src to dst and reset src.
+ * Move everything contained in src to dst and reset src.
  */
 void av_frame_move_ref(AVFrame *dst, AVFrame *src);
 
@@ -725,6 +768,17 @@ AVFrameSideData *av_frame_new_side_data(AVFrame *frame,
  */
 AVFrameSideData *av_frame_get_side_data(const AVFrame *frame,
                                         enum AVFrameSideDataType type);
+
+/**
+ * If side data of the supplied type exists in the frame, free it and remove it
+ * from the frame.
+ */
+void av_frame_remove_side_data(AVFrame *frame, enum AVFrameSideDataType type);
+
+/**
+ * @return a string identifying the side data type
+ */
+const char *av_frame_side_data_name(enum AVFrameSideDataType type);
 
 /**
  * @}
