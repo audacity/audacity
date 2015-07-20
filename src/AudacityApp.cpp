@@ -252,8 +252,6 @@ static void wxOnAssert(const wxChar *fileName, int lineNumber, const wxChar *msg
 }
 #endif
 
-static wxFrame *gParentFrame = NULL;
-
 static bool gInited = false;
 bool gIsQuitting = false;
 
@@ -301,10 +299,6 @@ void QuitAudacity(bool bForce)
    LWSlider::DeleteSharedTipPanel();
 
    ModuleManager::Get().Dispatch(AppQuiting);
-
-   if (gParentFrame)
-      gParentFrame->Destroy();
-   gParentFrame = NULL;
 
 #ifdef EXPERIMENTAL_SCOREALIGN
    CloseScoreAlignDialog();
@@ -1415,10 +1409,6 @@ bool AudacityApp::OnInit()
 
    mRecentFiles->UseMenu(recentMenu);
    mRecentFiles->AddFilesToMenu(recentMenu);
-
-   // This invisibale frame will be the "root" of all other frames and will
-   // become the active frame when no projects are open.
-   gParentFrame = new wxFrame(NULL, -1, wxEmptyString, wxPoint(0, 0), wxSize(0, 0), 0);
 
 #endif //__WXMAC__
 
