@@ -262,6 +262,8 @@ void QuitAudacity(bool bForce)
 
    gIsQuitting = true;
 
+   wxTheApp->SetExitOnFrameDelete(true);
+
    // Try to close each open window.  If the user hits Cancel
    // in a Save Changes dialog, don't continue.
    // BG: unless force is true
