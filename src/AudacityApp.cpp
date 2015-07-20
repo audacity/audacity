@@ -1408,10 +1408,9 @@ bool AudacityApp::OnInit()
    mRecentFiles->UseMenu(recentMenu);
    mRecentFiles->AddFilesToMenu(recentMenu);
 
+   SetExitOnFrameDelete(false);
+
 #endif //__WXMAC__
-
-   SetExitOnFrameDelete(true);
-
 
    AudacityProject *project = CreateNewAudacityProject();
    mCmdHandler->SetProject(project);
