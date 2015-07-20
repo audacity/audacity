@@ -81,14 +81,14 @@ void AutoRecoveryDialog::PopulateOrExchange(ShuttleGui& S)
          mFileList = S.Id(ID_FILE_LIST).AddListControlReportMode();
          /*i18n-hint: (noun).  It's the name of the project to recover.*/
          mFileList->InsertColumn(0, _("Name"));
-         mFileList->SetColumnWidth(0, 220);
+         mFileList->SetColumnWidth(0, wxLIST_AUTOSIZE);
          PopulateList();
       }
       S.EndStatic();
 
       S.AddVariableText(_("After recovery, save the project to save the changes to disk."), false);
 
-      S.StartHorizontalLay(true);
+      S.StartHorizontalLay();
       {
          S.Id(ID_QUIT_AUDACITY).AddButton(_("Quit Audacity"));
          S.Id(ID_RECOVER_NONE).AddButton(_("Discard Projects"));
@@ -101,6 +101,10 @@ void AutoRecoveryDialog::PopulateOrExchange(ShuttleGui& S)
    Layout();
    Fit();
    SetMinSize(GetSize());
+
+   // Sometimes it centers on wxGTK and sometimes it doesn't.
+   // Yielding before centering seems to be a good workaround,
+   // but will leave to implement on a rainy day.
    Center();
 }
 
@@ -227,6 +231,20 @@ bool ShowAutoRecoveryDialogIfNeeded(AudacityProject** pproj,
       *didRecoverAnything = false;
    if (HaveFilesToRecover())
    {
+      // Under wxGTK3, the auto recovery dialog will not get
+      // the focus since the project window hasn't been allowed
+      // to completely initialize.
+      //
+      // Yielding seems to allow the initialization to complete.
+      //
+      // Additionally, it also corrects a sizing issue in the dialog
+      // related to wxWidgets bug:
+      //
+      //    http://trac.wxwidgets.org/ticket/16440
+      //
+      // This must be done before "dlg" is declared.
+      wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI);
+
       AutoRecoveryDialog dlg(*pproj);
       int ret = dlg.ShowModal();
 
