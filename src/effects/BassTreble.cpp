@@ -44,8 +44,8 @@ enum
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
 //     Name       Type     Key               Def      Min      Max      Scale
-Param( Bass,      double,  XO("Bass"),       0.0,     -15.0,   15.0,    1  );
-Param( Treble,    double,  XO("Treble"),     0.0,     -15.0,   15.0,    1  );
+Param( Bass,      double,  XO("Bass"),       0.0,     -30.0,   30.0,    1  );
+Param( Treble,    double,  XO("Treble"),     0.0,     -30.0,   30.0,    1  );
 Param( Level,     double,  XO("Level"),      -1.0,    -30.0,   0.0,     1  );
 Param( Normalize, bool,    XO("Normalize"),  true,    false,   true,    1  );
 

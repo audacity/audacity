@@ -211,10 +211,11 @@ void EffectAmplify::PopulateOrExchange(ShuttleGui & S)
 
    S.StartVerticalLay(0);
    {
+      int precission = 3;
       // Amplitude
       S.StartMultiColumn(2, wxCENTER);
       {
-         FloatingPointValidator<double> vldAmp(2, &mAmp);
+         FloatingPointValidator<double> vldAmp(precission, &mAmp, NUM_VAL_ONE_TRAILING_ZERO);
          vldAmp.SetRange(MIN_Amp, MAX_Amp);
          mAmpT = S.Id(ID_Amp).AddTextBox(_("Amplification (dB):"), wxT(""), 12);
          mAmpT->SetValidator(vldAmp);
@@ -233,8 +234,7 @@ void EffectAmplify::PopulateOrExchange(ShuttleGui & S)
       // Peak
       S.StartMultiColumn(2, wxCENTER);
       {
-         int precission = 2;
-         FloatingPointValidator<double> vldNewPeak(precission, &mNewPeak);
+         FloatingPointValidator<double> vldNewPeak(precission, &mNewPeak, NUM_VAL_ONE_TRAILING_ZERO);
          double minAmp = MIN_Amp + (20.0 * log10(mPeak));
          double maxAmp = MAX_Amp + (20.0 * log10(mPeak));
 
