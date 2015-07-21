@@ -6,20 +6,6 @@
 	objectVersion = 46;
 	objects = {
 
-/* Begin PBXAggregateTarget section */
-		17072E880988BD39008541CC /* Configure */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = 17072E890988BD58008541CC /* Build configuration list for PBXAggregateTarget "Configure" */;
-			buildPhases = (
-				17072E8C0988BD85008541CC /* Configure */,
-			);
-			dependencies = (
-			);
-			name = Configure;
-			productName = Untitled;
-		};
-/* End PBXAggregateTarget section */
-
 /* Begin PBXBuildFile section */
 		17073F630988E13B008541CC /* compat.c in Sources */ = {isa = PBXBuildFile; fileRef = 17072F810988D6A9008541CC /* compat.c */; };
 		17073F640988E13B008541CC /* compat.h in Headers */ = {isa = PBXBuildFile; fileRef = 17072F830988D6A9008541CC /* compat.h */; };
@@ -411,7 +397,6 @@
 		18D8314E0ED0F56300FD870D /* Contrast.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18D8314C0ED0F56200FD870D /* Contrast.cpp */; };
 		28001B3E1A0F0E5D007DD161 /* NumericTextCtrl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28001B3C1A0F0E5D007DD161 /* NumericTextCtrl.cpp */; };
 		28001B4B1A0F0EB6007DD161 /* SpectralSelectionBar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28001B481A0F0EB6007DD161 /* SpectralSelectionBar.cpp */; };
-		28006FFB132C167600BD34D7 /* Install.txt in Resources */ = {isa = PBXBuildFile; fileRef = 28006FFA132C167600BD34D7 /* Install.txt */; };
 		28006FFC132C169700BD34D7 /* Install.txt in Install miscellany */ = {isa = PBXBuildFile; fileRef = 28006FFA132C167600BD34D7 /* Install.txt */; };
 		2800FE0D0FF32308005CA9E5 /* pminternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 2800FDF40FF3225B005CA9E5 /* pminternal.h */; };
 		2800FE0E0FF32308005CA9E5 /* pmutil.c in Sources */ = {isa = PBXBuildFile; fileRef = 2800FDF50FF3225B005CA9E5 /* pmutil.c */; };
@@ -743,8 +728,6 @@
 		285D3CBE0F09FCB2007883FC /* PluginAdapter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 285D3CBC0F09FCB2007883FC /* PluginAdapter.cpp */; };
 		285D3CBF0F09FCB2007883FC /* RealTime.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 285D3CBD0F09FCB2007883FC /* RealTime.cpp */; };
 		285DE1FA0BF03C7800A20DF0 /* Screenshot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 285DE1F80BF03C7800A20DF0 /* Screenshot.cpp */; };
-		2860736C1B1ED77100850872 /* crossfadeclips.ny in Resources */ = {isa = PBXBuildFile; fileRef = 2860736A1B1ED77100850872 /* crossfadeclips.ny */; };
-		2860736D1B1ED77100850872 /* limiter.ny in Resources */ = {isa = PBXBuildFile; fileRef = 2860736B1B1ED77100850872 /* limiter.ny */; };
 		2860BA240E0F0D8600A13878 /* SoundActivatedRecord.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2860BA200E0F0D8600A13878 /* SoundActivatedRecord.cpp */; };
 		2860BA250E0F0D8600A13878 /* TimerRecordDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2860BA220E0F0D8600A13878 /* TimerRecordDialog.cpp */; };
 		2860BA280E0F0DD800A13878 /* ExportFFmpeg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2860BA260E0F0DD800A13878 /* ExportFFmpeg.cpp */; };
@@ -777,9 +760,7 @@
 		286229EC181CE62A00E1AD1A /* syntax.c in Sources */ = {isa = PBXBuildFile; fileRef = 286229E8181CE62A00E1AD1A /* syntax.c */; };
 		28624C0F181CE65700E1AD1A /* sratom.h in Headers */ = {isa = PBXBuildFile; fileRef = 286243A0181CE65500E1AD1A /* sratom.h */; };
 		28624C10181CE65700E1AD1A /* sratom.c in Sources */ = {isa = PBXBuildFile; fileRef = 286243A1181CE65500E1AD1A /* sratom.c */; };
-		2862CED11AD3900000A53194 /* test.lsp in Resources */ = {isa = PBXBuildFile; fileRef = 2862CECE1AD3900000A53194 /* test.lsp */; };
-		2862CED21AD3900000A53194 /* upic.sal in Resources */ = {isa = PBXBuildFile; fileRef = 2862CECF1AD3900000A53194 /* upic.sal */; };
-		2862CED31AD3900000A53194 /* velocity.lsp in Resources */ = {isa = PBXBuildFile; fileRef = 2862CED01AD3900000A53194 /* velocity.lsp */; };
+		2872DFEA1B5EEC15004385B1 /* hy.po in Sources */ = {isa = PBXBuildFile; fileRef = 28ECC1911A66CC5000EECC53 /* hy.po */; };
 		287DBE890F3F6B2700C5BBED /* audio_detect.c in Sources */ = {isa = PBXBuildFile; fileRef = 287DBE830F3F6B2700C5BBED /* audio_detect.c */; };
 		287DBE8A0F3F6B2700C5BBED /* chunk.c in Sources */ = {isa = PBXBuildFile; fileRef = 287DBE840F3F6B2700C5BBED /* chunk.c */; };
 		287DBE8B0F3F6B2700C5BBED /* ima_oki_adpcm.c in Sources */ = {isa = PBXBuildFile; fileRef = 287DBE850F3F6B2700C5BBED /* ima_oki_adpcm.c */; };
@@ -879,6 +860,7 @@
 		289D127A1B44D57F00B5B6AA /* VSTControlOSX.mm in Sources */ = {isa = PBXBuildFile; fileRef = 289D12791B44D57F00B5B6AA /* VSTControlOSX.mm */; };
 		289E750A1006D0BD00CEF79B /* MixerBoard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 289E75081006D0BD00CEF79B /* MixerBoard.cpp */; };
 		289F9C7E0AC671BB00797DC1 /* DeviceToolBar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 289F9C7C0AC671BB00797DC1 /* DeviceToolBar.cpp */; };
+		289FC6051B5EE9A400D1B13F /* hy.po in Resources */ = {isa = PBXBuildFile; fileRef = 28ECC1911A66CC5000EECC53 /* hy.po */; };
 		28A4E2AC0F60319300E9E7F2 /* fftext.c in Sources */ = {isa = PBXBuildFile; fileRef = 28A4E2A40F60319300E9E7F2 /* fftext.c */; };
 		28A4E2AD0F60319300E9E7F2 /* fftext.h in Headers */ = {isa = PBXBuildFile; fileRef = 28A4E2A50F60319300E9E7F2 /* fftext.h */; };
 		28A4E2AE0F60319300E9E7F2 /* fftlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 28A4E2A60F60319300E9E7F2 /* fftlib.c */; };
@@ -1192,16 +1174,6 @@
 		28EBA7FC0A78FADE00C8BB1F /* Repair.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28EBA7FA0A78FADE00C8BB1F /* Repair.cpp */; };
 		28EBA8010A78FAF800C8BB1F /* InterpolateAudio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28EBA7FD0A78FAF800C8BB1F /* InterpolateAudio.cpp */; };
 		28EBA8020A78FAF800C8BB1F /* Matrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28EBA7FF0A78FAF800C8BB1F /* Matrix.cpp */; };
-		28ECC1921A66CC5000EECC53 /* hy.po in Resources */ = {isa = PBXBuildFile; fileRef = 28ECC1911A66CC5000EECC53 /* hy.po */; };
-		28ED7B711A1C77B0008A01D9 /* adjustable-fade.ny in Resources */ = {isa = PBXBuildFile; fileRef = 28ED7B6E1A1C77B0008A01D9 /* adjustable-fade.ny */; };
-		28ED7B721A1C77B0008A01D9 /* crossfadetracks.ny in Resources */ = {isa = PBXBuildFile; fileRef = 28ED7B6F1A1C77B0008A01D9 /* crossfadetracks.ny */; };
-		28ED7B731A1C77B0008A01D9 /* notch.ny in Resources */ = {isa = PBXBuildFile; fileRef = 28ED7B701A1C77B0008A01D9 /* notch.ny */; };
-		28ED7B7A1A1C77BF008A01D9 /* sample-data-export.ny in Resources */ = {isa = PBXBuildFile; fileRef = 28ED7B741A1C77BF008A01D9 /* sample-data-export.ny */; };
-		28ED7B7B1A1C77BF008A01D9 /* SoundFinder.ny in Resources */ = {isa = PBXBuildFile; fileRef = 28ED7B751A1C77BF008A01D9 /* SoundFinder.ny */; };
-		28ED7B7C1A1C77BF008A01D9 /* SpectralEditMulti.ny in Resources */ = {isa = PBXBuildFile; fileRef = 28ED7B761A1C77BF008A01D9 /* SpectralEditMulti.ny */; };
-		28ED7B7D1A1C77BF008A01D9 /* SpectralEditParametricEQ.ny in Resources */ = {isa = PBXBuildFile; fileRef = 28ED7B771A1C77BF008A01D9 /* SpectralEditParametricEQ.ny */; };
-		28ED7B7E1A1C77BF008A01D9 /* SpectralEditShelves.ny in Resources */ = {isa = PBXBuildFile; fileRef = 28ED7B781A1C77BF008A01D9 /* SpectralEditShelves.ny */; };
-		28ED7B7F1A1C77BF008A01D9 /* StudioFadeOut.ny in Resources */ = {isa = PBXBuildFile; fileRef = 28ED7B791A1C77BF008A01D9 /* StudioFadeOut.ny */; };
 		28F00A930A3E2FF100A3E5F5 /* FileNames.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28F00A900A3E2FF100A3E5F5 /* FileNames.cpp */; };
 		28F1D81D0A2D0019005506A7 /* AttachableScrollBar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28F1D8170A2D0018005506A7 /* AttachableScrollBar.cpp */; };
 		28F1D81E0A2D0019005506A7 /* ExpandingToolBar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28F1D8190A2D0018005506A7 /* ExpandingToolBar.cpp */; };
@@ -1265,7 +1237,6 @@
 		ED924BD2182EA20500319F81 /* ogg_encoder_aspect.c in Sources */ = {isa = PBXBuildFile; fileRef = ED924BCE182EA20500319F81 /* ogg_encoder_aspect.c */; };
 		ED924BD3182EA20500319F81 /* ogg_helper.c in Sources */ = {isa = PBXBuildFile; fileRef = ED924BCF182EA20500319F81 /* ogg_helper.c */; };
 		ED924BD4182EA20500319F81 /* ogg_mapping.c in Sources */ = {isa = PBXBuildFile; fileRef = ED924BD0182EA20500319F81 /* ogg_mapping.c */; };
-		ED9551A1195D95FC0027176E /* Audacity-DMG-background.png in Resources */ = {isa = PBXBuildFile; fileRef = ED9551A0195D95FC0027176E /* Audacity-DMG-background.png */; };
 		ED9551A6195D96290027176E /* Audacity-DMG-background.png in Install background image */ = {isa = PBXBuildFile; fileRef = ED9551A0195D95FC0027176E /* Audacity-DMG-background.png */; };
 		EDAD326B1544452E009C6220 /* sl.po in Sources */ = {isa = PBXBuildFile; fileRef = EDAD325515444371009C6220 /* sl.po */; };
 		EDAD326C1544452E009C6220 /* sr_RS.po in Sources */ = {isa = PBXBuildFile; fileRef = EDAD325615444371009C6220 /* sr_RS.po */; };
@@ -1298,13 +1269,6 @@
 /* End PBXBuildRule section */
 
 /* Begin PBXContainerItemProxy section */
-		17072E930988C35B008541CC /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1790ABE309883346008A330A /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 17072E880988BD39008541CC;
-			remoteInfo = Configure;
-		};
 		176A1B6D098B7C7200DC73B4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1790ABE309883346008A330A /* Project object */;
@@ -1416,6 +1380,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 2862299E181CE4B600E1AD1A;
 			remoteInfo = lv2;
+		};
+		28D489281B5F061200A2E4DF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1790ABE309883346008A330A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 28D489241B5F052C00A2E4DF;
+			remoteInfo = "Create Info Header";
 		};
 		28E237260E515E1300281398 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -6201,29 +6172,17 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXLegacyTarget section */
-		282413C6131D4E3F009FD931 /* Plugins */ = {
+		28D489241B5F052C00A2E4DF /* Create Info Header */ = {
 			isa = PBXLegacyTarget;
-			buildArgumentsString = "$(PROJECT_DIR)/build_plugins.sh";
-			buildConfigurationList = 282413CB131D4E5E009FD931 /* Build configuration list for PBXLegacyTarget "Plugins" */;
+			buildArgumentsString = "$(PROJECT_DIR)/scripts/create_info_header.sh";
+			buildConfigurationList = 28D489251B5F052C00A2E4DF /* Build configuration list for PBXLegacyTarget "Create Info Header" */;
 			buildPhases = (
 			);
 			buildToolPath = /bin/sh;
+			buildWorkingDirectory = "";
 			dependencies = (
 			);
-			name = Plugins;
-			passBuildSettingsInEnvironment = 1;
-			productName = Plugins;
-		};
-		2892CDC3131ADC6900E1E17D /* Manual */ = {
-			isa = PBXLegacyTarget;
-			buildArgumentsString = "$(PROJECT_DIR)/build_manual.sh";
-			buildConfigurationList = 2892CDC8131ADC9100E1E17D /* Build configuration list for PBXLegacyTarget "Manual" */;
-			buildPhases = (
-			);
-			buildToolPath = /bin/sh;
-			dependencies = (
-			);
-			name = Manual;
+			name = "Create Info Header";
 			passBuildSettingsInEnvironment = 1;
 			productName = "SWH plugins";
 		};
@@ -6410,12 +6369,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1790AFB409883B6E008A330A /* Build configuration list for PBXNativeTarget "Audacity" */;
 			buildPhases = (
-				17190AF8098A2DF7004583C6 /* Rez */,
 				1790AFAC09883B6D008A330A /* Resources */,
 				1790AFAD09883B6D008A330A /* Sources */,
 				1790AFAE09883B6D008A330A /* Frameworks */,
-				28032560131DAFAF0059D002 /* Copy nyquist */,
 				28032580131DB4960059D002 /* Copy plug-ins */,
+				28032560131DAFAF0059D002 /* Copy nyquist */,
 				28708D631B17C3C400496FEB /* Install wxWidgets libs */,
 				288F0980131A400F0008E860 /* Install manual */,
 				282413DA131D52CE009FD931 /* Install plugins */,
@@ -6427,7 +6385,7 @@
 				286D31370F264C38004E6E4A /* PBXBuildRule */,
 			);
 			dependencies = (
-				17072E940988C35B008541CC /* PBXTargetDependency */,
+				28D489291B5F061200A2E4DF /* PBXTargetDependency */,
 				285B11851833D0F10073B36C /* PBXTargetDependency */,
 				176EEC7109A2F54D00188F3B /* PBXTargetDependency */,
 				176EEC7309A2F55100188F3B /* PBXTargetDependency */,
@@ -6658,7 +6616,7 @@
 			projectRoot = ..;
 			targets = (
 				1790AFAF09883B6D008A330A /* Audacity */,
-				17072E880988BD39008541CC /* Configure */,
+				28D489241B5F052C00A2E4DF /* Create Info Header */,
 				28FADDCA1833C3C500BA4141 /* expat */,
 				176EEBE909A2F16200188F3B /* libFLAC */,
 				176EEC1D09A2F2DD00188F3B /* libFLAC++ */,
@@ -6681,8 +6639,6 @@
 				2840CECB0AEB803C00F49FC3 /* twolame */,
 				28E236F40E515D1D00281398 /* libscorealign */,
 				ED2706F30EF9C3C6007D4FFD /* sbsms */,
-				2892CDC3131ADC6900E1E17D /* Manual */,
-				282413C6131D4E3F009FD931 /* Plugins */,
 			);
 		};
 /* End PBXProject section */
@@ -6692,63 +6648,21 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2860736D1B1ED77100850872 /* limiter.ny in Resources */,
 				174F73D0098D516D009CD6E0 /* Audacity.icns in Resources */,
 				174F73D1098D516D009CD6E0 /* AudacityAIFF.icns in Resources */,
 				174F73D2098D516D009CD6E0 /* AudacityAU.icns in Resources */,
 				174F73D3098D516D009CD6E0 /* AudacityMP3.icns in Resources */,
 				174F73D4098D516D009CD6E0 /* AudacityOGG.icns in Resources */,
 				174F73D5098D516D009CD6E0 /* AudacityProject.icns in Resources */,
+				289FC6051B5EE9A400D1B13F /* hy.po in Resources */,
 				174F73D6098D516D009CD6E0 /* AudacityWAV.icns in Resources */,
 				8406A93812D0F2510011EA01 /* EQDefaultCurves.xml in Resources */,
-				28006FFB132C167600BD34D7 /* Install.txt in Resources */,
-				ED9551A1195D95FC0027176E /* Audacity-DMG-background.png in Resources */,
-				28ED7B711A1C77B0008A01D9 /* adjustable-fade.ny in Resources */,
-				2860736C1B1ED77100850872 /* crossfadeclips.ny in Resources */,
-				28ED7B721A1C77B0008A01D9 /* crossfadetracks.ny in Resources */,
-				28ED7B731A1C77B0008A01D9 /* notch.ny in Resources */,
-				28ED7B7A1A1C77BF008A01D9 /* sample-data-export.ny in Resources */,
-				28ED7B7B1A1C77BF008A01D9 /* SoundFinder.ny in Resources */,
-				28ED7B7C1A1C77BF008A01D9 /* SpectralEditMulti.ny in Resources */,
-				28ED7B7D1A1C77BF008A01D9 /* SpectralEditParametricEQ.ny in Resources */,
-				28ED7B7E1A1C77BF008A01D9 /* SpectralEditShelves.ny in Resources */,
-				28ED7B7F1A1C77BF008A01D9 /* StudioFadeOut.ny in Resources */,
-				28ECC1921A66CC5000EECC53 /* hy.po in Resources */,
-				2862CED11AD3900000A53194 /* test.lsp in Resources */,
-				2862CED21AD3900000A53194 /* upic.sal in Resources */,
-				2862CED31AD3900000A53194 /* velocity.lsp in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
-/* Begin PBXRezBuildPhase section */
-		17190AF8098A2DF7004583C6 /* Rez */ = {
-			isa = PBXRezBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXRezBuildPhase section */
-
 /* Begin PBXShellScriptBuildPhase section */
-		17072E8C0988BD85008541CC /* Configure */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"$(TOPLEVEL)/Makefile.in",
-			);
-			name = Configure;
-			outputPaths = (
-				"$(TOPLEVEL)/Makefile",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "#\n# Make building on Lion or higher easier\n#\nexport CPP=cpp\nexport CC=gcc\nexport CXX=g++\nexport CPPFLAGS=\"-isysroot${SDKROOT}\"\nexport CFLAGS=\"-isysroot${SDKROOT}\"\nexport CXXFLAGS=\"-isysroot${SDKROOT}\"\n\nif [ -z \"$WX_CONFIG\" ]\nthen\n   echo \"WX_CONFIG environment variable not set...aborting\"\n   exit 1\nfi\n\nif [ ! -z \"${DYLD_LIBRARY_PATH}\" ]\nthen\n\techo \"warning: -----\"\n\techo \"warning: Warning:\"\n\techo \"warning: -----\"\n\techo \"warning: You have DYLD_LIBRARY_PATH set to '${DYLD_LIBRARY_PATH}'\"\n\techo \"warning: When you run or debug Audacity it will be unset so that libraries loaded by Audacity (like Lame or FFmpeg) will be searched for in a similar manner as in released versions.\"\n\techo \"warning: If this is a problem, copy the DYLD_LIBRARY_PATH value to DYLD_FALLBACK_LIBRARY_PATH before starting Xcode.\"\n\techo \"warning: -----\"\nfi\n\n#\n# Here we create empty xcconfig files if they do not exist.  Otherwise,\n# the build will fail.\n#\nconfigs='Debug_Shared Debug_Static Release_Shared Release_Static'\nfor config in $configs\ndo\n\t[ ! -f $TOPLEVEL/mac/$config.xcconfig ] && touch $TOPLEVEL/mac/$config.xcconfig\ndone\n\n#\n# Get to a known location\n#\ncd $TOPLEVEL\n\nif false\nthen\n#\n# Libsndfile seems to have some date/time issues, so placate him.\n#\n# Run aclocal to make libsndfile happy\n#\n#touch lib-src/libsndfile/configure.ac\n\n#\n# Configure the world\nsh configure --enable-static=$CONFIG_STATIC \\\n             --enable-unicode=$CONFIG_UNICODE \\\n             --enable-debug=$CONFIG_DEBUG \\\n             --with-lib-preference=local,system \\\n             --with-wx-version=$WX_VER \\\n             $CONFIG_FLAGS || exit 1\n\n#\n# Libsndfile's endianness detection is a bit unfriendly to universal binary\n# builds, so we coerce it into working our way.\n#\nFILE=lib-src/libsndfile/src/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#undef CPU_IS_BIG_ENDIAN\n#undef CPU_IS_LITTLE_ENDIAN\n#if defined(__BIG_ENDIAN__)\n#define CPU_IS_BIG_ENDIAN 1\n#define CPU_IS_LITTLE_ENDIAN 0\n#else\n#define CPU_IS_BIG_ENDIAN 0\n#define CPU_IS_LITTLE_ENDIAN 1\n#endif\nEOF\n\n#\n# Ditto for libflac.\n#\nFILE=lib-src/libflac/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#ifdef WORDS_BIGENDIAN\n#undef WORDS_BIGENDIAN\n#endif\n#if defined(__BIG_ENDIAN__)\n#define WORDS_BIGENDIAN 1\n#endif\nEOF\n\n#\n# And libmad.\n#\nFILE=lib-src/libmad/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#ifdef WORDS_BIGENDIAN\n#undef WORDS_BIGENDIAN\n#endif\n#if defined(__BIG_ENDIAN__)\n#define WORDS_BIGENDIAN 1\n#endif\nEOF\n\n#\n# And expat.\n#\nFILE=lib-src/expat/expat_config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#ifdef BYTEORDER\n#undef BYTEORDER\n#endif\n#if defined(__BIG_ENDIAN__)\n#define BYTEORDER 4321\n#else\n#define BYTEORDER 1234\n#endif\nEOF\n\n#\n# Libsoxr's endianness detection is a bit unfriendly to universal binary\n# builds. We need to disable SIMD since we can't build UBs with it enabled.\n#\nFILE=lib-src/libsoxr/soxr-config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#if defined(__BIG_ENDIAN__)\n#undef WORDS_BIGENDIAN\n#define WORDS_BIGENDIAN 1\n#endif\n#undef HAVE_SIMD\n#define HAVE_SIMD 0\nEOF\nfi\n\n#\n# Generate the header file for preprocessing the Info.plist\n#\ngcc -E -dM src/Audacity.h | grep AUDACITY >mac/Info.plist.h\necho >>mac/Info.plist.h '#define AUDACITY_EXECUTABLE Audacity'\n\nexit 0\n";
-		};
 		28032560131DAFAF0059D002 /* Copy nyquist */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -6763,7 +6677,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "for (( i = 0; i < ${SCRIPT_INPUT_FILE_COUNT}; i++ ))\ndo\n   in=\"$(eval echo \\${SCRIPT_INPUT_FILE_${i}})\"\n   out=\"$(eval echo \\${SCRIPT_OUTPUT_FILE_${i}})\"\n   cp -pPR \"${in}\" \"${out}\" && find \"${out}\" -name .svn -print0 | xargs -0 rm -rf\ndone\n";
+			shellScript = "\"${PROJECT_DIR}/scripts/copy_nyquist.sh\"";
 		};
 		28032580131DB4960059D002 /* Copy plug-ins */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -6779,7 +6693,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "for (( i = 0; i < ${SCRIPT_INPUT_FILE_COUNT}; i++ ))\ndo\n   in=\"$(eval echo \\${SCRIPT_INPUT_FILE_${i}})\"\n   out=\"$(eval echo \\${SCRIPT_OUTPUT_FILE_${i}})\"\n   cp -pPR \"${in}\" \"${out}\" && find \"${out}\" -name .svn -print0 | xargs -0 rm -rf\ndone\n";
+			shellScript = "\"${PROJECT_DIR}/scripts/copy_plugins.sh\"";
 		};
 		282413D8131D51FC009FD931 /* Create dist */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -6793,7 +6707,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
-			shellScript = "set -x\n\n# Setup\nVERSION=`awk '/^#define+ AUDACITY_VERSION / {print $3}' Info.plist.h`\nRELEASE=`awk '/^#define+ AUDACITY_RELEASE / {print $3}' Info.plist.h`\nREVISION=`awk '/^#define+ AUDACITY_REVISION / {print $3}' Info.plist.h`\nVERSION=$VERSION.$RELEASE.$REVISION\n\ncd \"${DSTROOT}\"\nchmod -RH \"${INSTALL_MODE_FLAG}\" \"${TARGET_BUILD_DIR}\"\nchown -RH \"${INSTALL_OWNER}:${INSTALL_GROUP}\" \"${TARGET_BUILD_DIR}\"\n\necho \"Audacity has been installed to: ${DSTROOT}\"\n\ncd ..\n\nVOL=\"Audacity $VERSION\"\nDMG=\"audacity-macosx-$VERSION\"\n\n# Preclean\nrm -rf \"$DMG\" \"$DMG.dmg\" TMP.dmg\n\n# Create structure\nmkdir \"$DMG\"\ncp -pR \"${DSTROOT}/\" \"${DMG}\"\n\n#Add a custom icon for the DMG\n#cp -p mac/Resources/Audacity.icns \"${DMG}\"/.VolumeIcon.icns\n\n# Create and mount the image\nhdiutil create -ov -format UDRW -srcdir \"$DMG\" -fs HFS+ -volname \"$VOL\" TMP.dmg\n\n#Mount the DMG and store the name it was mounted with\nTITLE=`hdiutil attach TMP.dmg | grep \\/Volumes | sed \"s/^.*\\/Volumes\\///\"`\n\n#Set the custom icon flag\n#SetFile -a C /Volumes/\"$TITLE\"\n\n#Make our DMG look pretty and install the custom background image\necho '\n   tell application \"Finder\"\n     tell disk \"'${TITLE}'\"\n           open\n           set current view of container window to icon view\n           set toolbar visible of container window to false\n           set statusbar visible of container window to false\n           set the bounds of container window to {400, 100, 1000, 550}\n           set theViewOptions to the icon view options of container window\n           set arrangement of theViewOptions to not arranged\n           set icon size of theViewOptions to 72\n           set background picture of theViewOptions to file \".background:Audacity-DMG-background.png\" \n           make new alias file at container window to POSIX file \"/Applications\" with properties {name:\"Applications\"}\n           set position of item \"Audacity\" of container window to {170, 350}\n           set position of item \"Applications\" of container window to {430, 350}\n           close\n           open\n           update without registering applications\n           delay 5\n           eject\n     end tell\n   end tell\n' | osascript\n\n# Compress and prepare for Internet delivery\nhdiutil convert TMP.dmg -format UDZO -imagekey zlib-level=9 -o \"$DMG.dmg\"\n\n# Create zip version\nrm -rf \"${DMG}/Audacity/help/\"\nzip -r9 \"${DMG}.zip\" \"${DMG}\"\n\n# Cleanup\nrm -rf ${DMG} TMP.dmg\n";
+			shellScript = "\"${PROJECT_DIR}/scripts/build_dist.sh\"";
 		};
 		282413DA131D52CE009FD931 /* Install plugins */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -6807,7 +6721,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
-			shellScript = "\"${PROJECT_DIR}/build_plugins.sh\"";
+			shellScript = "\"${PROJECT_DIR}/scripts/install_ladspa_plugins.sh\"";
 		};
 		28708D631B17C3C400496FEB /* Install wxWidgets libs */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -6821,7 +6735,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
-			shellScript = "#!/bin/sh\n\nupdate_paths()\n{\n   base=$(basename \"${1}\")\n   cp -p \"${1}\" \"${LIBPATH}\"\n\n   for lib in $(otool -L \"${1}\" | awk '/libwx/{print $1}')\n   do\n      install_name_tool -change \"${lib}\" @loader_path/../Frameworks/$(basename \"${lib}\") \"${LIBPATH}/${base}\"\n   done\n}\n\nEXEPATH=\"${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}\"\nLIBPATH=\"${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}\"\n\nmkdir -p \"${LIBPATH}\"\n\nfor lib in $(otool -L \"${EXEPATH}\" | awk '/libwx/{print $1}')\ndo\n   install_name_tool -change \"${lib}\" @executable_path/../Frameworks/$(basename \"${lib}\") \"${EXEPATH}\"\n   update_paths \"${lib}\"\ndone\n";
+			shellScript = "\"${PROJECT_DIR}/scripts/install_wxlibs.sh\"";
 		};
 		288F0980131A400F0008E860 /* Install manual */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -6835,7 +6749,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
-			shellScript = "\"${PROJECT_DIR}/build_manual.sh\"";
+			shellScript = "\"${PROJECT_DIR}/scripts/install_manual.sh\"";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -7301,6 +7215,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2872DFEA1B5EEC15004385B1 /* hy.po in Sources */,
 				28C8211D1B5C661E00B53328 /* ViewInfo.cpp in Sources */,
 				1790B11A09883BFD008A330A /* AudacityApp.cpp in Sources */,
 				1790B11C09883BFD008A330A /* AudioIO.cpp in Sources */,
@@ -7816,11 +7731,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		17072E940988C35B008541CC /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 17072E880988BD39008541CC /* Configure */;
-			targetProxy = 17072E930988C35B008541CC /* PBXContainerItemProxy */;
-		};
 		176A1B6E098B7C7200DC73B4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 176A1A5A098B7B8D00DC73B4 /* libnyquist */;
@@ -7901,6 +7811,11 @@
 			target = 2862299E181CE4B600E1AD1A /* lv2 */;
 			targetProxy = 28640879181CE78E00CC4E2C /* PBXContainerItemProxy */;
 		};
+		28D489291B5F061200A2E4DF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 28D489241B5F052C00A2E4DF /* Create Info Header */;
+			targetProxy = 28D489281B5F061200A2E4DF /* PBXContainerItemProxy */;
+		};
 		28E237270E515E1300281398 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 28E236F40E515D1D00281398 /* libscorealign */;
@@ -7939,20 +7854,6 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				PRODUCT_NAME = portmidi;
 				SKIP_INSTALL = YES;
-			};
-			name = Release;
-		};
-		282413C8131D4E3F009FD931 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				PRODUCT_NAME = Plugins;
-			};
-			name = Debug;
-		};
-		282413CA131D4E3F009FD931 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				PRODUCT_NAME = Plugins;
 			};
 			name = Release;
 		};
@@ -8023,7 +7924,7 @@
 				FFMPEG_PREFIX = /usr/local;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
-				INFOPLIST_PREFIX_HEADER = Info.plist.h;
+				INFOPLIST_PREFIX_HEADER = build/Info.plist.h;
 				INFOPLIST_PREPROCESS = YES;
 				KEEP_PRIVATE_EXTERNS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
@@ -8105,14 +8006,6 @@
 				PRODUCT_NAME = Audacity;
 				STRIP_INSTALLED_PRODUCT = NO;
 				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/$(arch)/src/** $(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libsoxr/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/** $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/lv2 $(TOPLEVEL)/lib-src/lv2/lilv $(TOPLEVEL)/lib-src/lv2/suil $(TOPLEVEL)/lib-src/twolame/libtwolame $(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/**";
-			};
-			name = Debug;
-		};
-		288052CC0DEA74F100671EA4 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
-			buildSettings = {
-				PRODUCT_NAME = Untitled;
 			};
 			name = Debug;
 		};
@@ -8361,7 +8254,7 @@
 				FFMPEG_PREFIX = /usr/local;
 				GCC_OPTIMIZATION_LEVEL = 3;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
-				INFOPLIST_PREFIX_HEADER = Info.plist.h;
+				INFOPLIST_PREFIX_HEADER = build/Info.plist.h;
 				INFOPLIST_PREPROCESS = YES;
 				KEEP_PRIVATE_EXTERNS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
@@ -8445,14 +8338,6 @@
 				PRODUCT_NAME = Audacity;
 				STRIP_INSTALLED_PRODUCT = NO;
 				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/$(arch)/src/** $(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libsoxr/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/** $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/lv2 $(TOPLEVEL)/lib-src/lv2/lilv $(TOPLEVEL)/lib-src/lv2/suil $(TOPLEVEL)/lib-src/twolame/libtwolame $(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/**";
-			};
-			name = Release;
-		};
-		288052E10DEA74FD00671EA4 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
-			buildSettings = {
-				PRODUCT_NAME = Untitled;
 			};
 			name = Release;
 		};
@@ -8688,17 +8573,17 @@
 			};
 			name = Release;
 		};
-		2892CDC5131ADC6900E1E17D /* Debug */ = {
+		28D489261B5F052C00A2E4DF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				PRODUCT_NAME = "SWH plugins";
+				PRODUCT_NAME = Header;
 			};
 			name = Debug;
 		};
-		2892CDC7131ADC6900E1E17D /* Release */ = {
+		28D489271B5F052C00A2E4DF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				PRODUCT_NAME = "SWH plugins";
+				PRODUCT_NAME = Header;
 			};
 			name = Release;
 		};
@@ -8873,15 +8758,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		17072E890988BD58008541CC /* Build configuration list for PBXAggregateTarget "Configure" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				288052CC0DEA74F100671EA4 /* Debug */,
-				288052E10DEA74FD00671EA4 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
 		17073EE90988DC02008541CC /* Build configuration list for PBXNativeTarget "portsmf" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -9008,15 +8884,6 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		282413CB131D4E5E009FD931 /* Build configuration list for PBXLegacyTarget "Plugins" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				282413C8131D4E3F009FD931 /* Debug */,
-				282413CA131D4E3F009FD931 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
 		2840CF1D0AEB803C00F49FC3 /* Build configuration list for PBXNativeTarget "twolame" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -9053,11 +8920,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		2892CDC8131ADC9100E1E17D /* Build configuration list for PBXLegacyTarget "Manual" */ = {
+		28D489251B5F052C00A2E4DF /* Build configuration list for PBXLegacyTarget "Create Info Header" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				2892CDC5131ADC6900E1E17D /* Debug */,
-				2892CDC7131ADC6900E1E17D /* Release */,
+				28D489261B5F052C00A2E4DF /* Debug */,
+				28D489271B5F052C00A2E4DF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
