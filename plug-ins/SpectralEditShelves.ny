@@ -47,9 +47,9 @@
        (env (snd-pwl 0.0 rate breakpoints)))
     (cond
       ((not (or f0 f1))
-          (throw 'error-message (format nil "~aPlease select frequencies." p-err)))
-      ((and f0 f1 (= f0 f1)) (throw 'error-message
-                                    "Please select a frequency range."))
+          (throw 'error-message "Please select frequencies."))
+      ((and f0 f1 (= f0 f1))
+          (throw 'error-message "Please select a frequency range."))
       ; shelf is above Nyquist frequency so do nothing
       ((and f0 (>= f0 (/ *sound-srate* 2.0))) nil)
       (T (sum (prod env (wet sig control-gain f0 f1))
@@ -63,18 +63,4 @@
          (>= (get '*selection* 'high-hz)(/ *sound-srate* 2)))
     (remprop '*selection* 'high-hz))
 
-(cond
-  ((not (get '*TRACK* 'VIEW)) ; 'View is NIL during Preview
-      (setf p-err (format nil "This effect requires a frequency selection in the~%~
-                              'Spectral Selection' or 'Spectral Selection log(f)'~%~
-                              track view.~%~%"))
-      (catch 'error-message
-        (multichan-expand #'result *track*)))
-  ((string-not-equal (get '*TRACK* 'VIEW) "spectral"  :end1 8 :end2 8)
-     "Use this effect in the 'Spectral Selection'\nor 'Spectral Selection log(f)' view.")
-  (T  (setf p-err "")
-      (if (= control-gain 0)  ; Allow dry preview
-          "Gain is zero. Nothing to do."
-          (catch 'error-message
-            (multichan-expand #'result *track*)))))
-
+(catch 'error-message (multichan-expand #'result *track*))
