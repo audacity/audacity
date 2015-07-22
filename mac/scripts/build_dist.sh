@@ -27,11 +27,38 @@ cp -pR "${DSTROOT}/" "${DMG}"
 #Add a custom icon for the DMG
 #cp -p mac/Resources/Audacity.icns "${DMG}"/.VolumeIcon.icns
 
+# Make sure it's not already attached
+ATTACHED=$(hdiutil info | awk "/\/Volumes\/${VOL}/{print \$1}")
+if [ -n "${ATTACHED}" ]
+then
+   hdiutil detach "${ATTACHED}"
+fi
+
 # Create and mount the image
 hdiutil create -ov -format UDRW -srcdir "$DMG" -fs HFS+ -volname "$VOL" TMP.dmg
+if [ $? -ne 0 ]
+then
+   echo "Create failed"
+   exit 1
+fi
 
 #Mount the DMG and store the name it was mounted with
-TITLE=`hdiutil attach TMP.dmg | grep \/Volumes | sed "s/^.*\/Volumes\///"`
+TITLE=$(hdiutil attach TMP.dmg | grep \/Volumes | sed "s/^.*\/Volumes\///")
+if [ $? -ne 0 ]
+then
+   echo "Attach failed"
+   exit 1
+fi
+
+# And wait for it to show up in Finder
+osascript <<EOF
+   tell application "Finder"
+      repeat until exists disk "${TITLE}"
+         log "Waiting for ${TITLE} to appear"
+         delay 0.2
+      end repeat
+   end tell
+EOF
 
 #Set the custom icon flag
 #SetFile -a C /Volumes/"$TITLE"
@@ -39,7 +66,7 @@ TITLE=`hdiutil attach TMP.dmg | grep \/Volumes | sed "s/^.*\/Volumes\///"`
 #Make our DMG look pretty and install the custom background image
 echo '
    tell application "Finder"
-     tell disk "'${TITLE}'"
+     tell disk "'$TITLE'"
            open
            set current view of container window to icon view
            set toolbar visible of container window to false
