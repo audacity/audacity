@@ -19,6 +19,7 @@ done
 # It's also used for create the distribution files
 #
 cd ${TOPLEVEL}
+mkdir -p mac/build
 eval $(gcc -E -dM src/Audacity.h | awk '/#define *AUDACITY_(VERSION|RELEASE|REVISION|MODLEVEL) /{print $2 "=" $3}')
 cat >mac/build/Info.plist.h <<EOF
 #define AUDACITY_EXECUTABLE Audacity
