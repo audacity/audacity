@@ -285,7 +285,7 @@ void EffectNormalize::PopulateOrExchange(ShuttleGui & S)
                                              mGain ? wxT("true") : wxT("false"));
                mGainCheckBox->SetValidator(wxGenericValidator(&mGain));
 
-               FloatingPointValidator<double> vldLevel(1, &mLevel);
+               FloatingPointValidator<double> vldLevel(2, &mLevel, NUM_VAL_ONE_TRAILING_ZERO);
                vldLevel.SetRange(MIN_Level, MAX_Level);
                mLevelTextCtrl = S.AddTextBox(wxT(""), wxT(""), 10);
                mLevelTextCtrl->SetName(_("Maximum amplitude dB"));
