@@ -2078,10 +2078,8 @@
 		28105DA20AD09FC500BB4269 /* px_mixer.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = px_mixer.h; sourceTree = "<group>"; tabWidth = 3; };
 		2810644A1818EEB5004F678B /* cpu_detect_x86.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cpu_detect_x86.cpp; sourceTree = "<group>"; };
 		2810644C1818EED3004F678B /* cpu_detect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = cpu_detect.h; path = "../lib-src/soundtouch/source/SoundTouch/cpu_detect.h"; sourceTree = SOURCE_ROOT; };
-		2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Debug_Shared.xcconfig; sourceTree = "<group>"; };
-		2812A5B90DF63FF000576305 /* Debug_Static.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Debug_Static.xcconfig; sourceTree = "<group>"; };
-		2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Release_Shared.xcconfig; sourceTree = "<group>"; };
-		2812A5BD0DF6400E00576305 /* Release_Static.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Release_Static.xcconfig; sourceTree = "<group>"; };
+		2812A5B90DF63FF000576305 /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
+		2812A5BD0DF6400E00576305 /* Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
 		2813897919E6163C004111ED /* SelectedRegion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectedRegion.h; sourceTree = "<group>"; };
 		2816372C0BAE3B6C0079C746 /* LinkingHtmlWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = LinkingHtmlWindow.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		2816372D0BAE3B6C0079C746 /* LinkingHtmlWindow.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = LinkingHtmlWindow.h; sourceTree = "<group>"; tabWidth = 3; };
@@ -5142,10 +5140,8 @@
 		287179EE0DF6383000E171DF /* Xcode Settings */ = {
 			isa = PBXGroup;
 			children = (
-				2812A5B90DF63FF000576305 /* Debug_Static.xcconfig */,
-				2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */,
-				2812A5BD0DF6400E00576305 /* Release_Static.xcconfig */,
-				2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */,
+				2812A5B90DF63FF000576305 /* Debug.xcconfig */,
+				2812A5BD0DF6400E00576305 /* Release.xcconfig */,
 			);
 			name = "Xcode Settings";
 			sourceTree = "<group>";
@@ -7859,7 +7855,6 @@
 		};
 		286229AD181CE4B600E1AD1A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -7886,7 +7881,6 @@
 		};
 		286229AF181CE4B600E1AD1A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -7944,7 +7938,6 @@
 		};
 		288052CB0DEA74F100671EA4 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
@@ -8011,7 +8004,6 @@
 		};
 		288052CD0DEA74F100671EA4 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				PRODUCT_NAME = portsmf;
@@ -8021,7 +8013,6 @@
 		};
 		288052CF0DEA74F100671EA4 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -8038,7 +8029,6 @@
 		};
 		288052D00DEA74F100671EA4 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -8054,7 +8044,6 @@
 		};
 		288052D10DEA74F100671EA4 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
@@ -8066,7 +8055,6 @@
 		};
 		288052D20DEA74F100671EA4 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
@@ -8078,7 +8066,6 @@
 		};
 		288052D30DEA74F100671EA4 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -8094,7 +8081,6 @@
 		};
 		288052D40DEA74F100671EA4 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -8110,7 +8096,6 @@
 		};
 		288052D50DEA74F100671EA4 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				PRODUCT_NAME = ogg;
@@ -8121,7 +8106,6 @@
 		};
 		288052D70DEA74F100671EA4 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
@@ -8133,7 +8117,6 @@
 		};
 		288052D80DEA74F100671EA4 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
@@ -8145,7 +8128,6 @@
 		};
 		288052D90DEA74F100671EA4 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -8174,7 +8156,6 @@
 		};
 		288052DA0DEA74F100671EA4 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = "PX_USE_MAC_COREAUDIO=1";
@@ -8185,7 +8166,6 @@
 		};
 		288052DB0DEA74F100671EA4 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
@@ -8197,7 +8177,6 @@
 		};
 		288052DC0DEA74F100671EA4 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
@@ -8210,7 +8189,6 @@
 		};
 		288052DE0DEA74F100671EA4 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/modules";
@@ -8274,7 +8252,6 @@
 		};
 		288052E00DEA74FD00671EA4 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
@@ -8343,7 +8320,6 @@
 		};
 		288052E20DEA74FD00671EA4 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				PRODUCT_NAME = portsmf;
@@ -8353,7 +8329,6 @@
 		};
 		288052E40DEA74FD00671EA4 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -8370,7 +8345,6 @@
 		};
 		288052E50DEA74FD00671EA4 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -8386,7 +8360,6 @@
 		};
 		288052E60DEA74FD00671EA4 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
@@ -8398,7 +8371,6 @@
 		};
 		288052E70DEA74FD00671EA4 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
@@ -8410,7 +8382,6 @@
 		};
 		288052E80DEA74FD00671EA4 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -8426,7 +8397,6 @@
 		};
 		288052E90DEA74FD00671EA4 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -8442,7 +8412,6 @@
 		};
 		288052EA0DEA74FD00671EA4 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				PRODUCT_NAME = ogg;
@@ -8453,7 +8422,6 @@
 		};
 		288052EC0DEA74FD00671EA4 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
@@ -8465,7 +8433,6 @@
 		};
 		288052ED0DEA74FD00671EA4 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
@@ -8477,7 +8444,6 @@
 		};
 		288052EE0DEA74FD00671EA4 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -8506,7 +8472,6 @@
 		};
 		288052EF0DEA74FD00671EA4 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = "PX_USE_MAC_COREAUDIO=1";
@@ -8517,7 +8482,6 @@
 		};
 		288052F00DEA74FD00671EA4 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
@@ -8529,7 +8493,6 @@
 		};
 		288052F10DEA74FD00671EA4 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
@@ -8542,7 +8505,6 @@
 		};
 		288052F30DEA74FD00671EA4 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/modules";
@@ -8589,7 +8551,6 @@
 		};
 		28E237050E515D1D00281398 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				PRODUCT_NAME = scorealign;
@@ -8599,7 +8560,6 @@
 		};
 		28E237070E515D1D00281398 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				PRODUCT_NAME = scorealign;
@@ -8609,7 +8569,6 @@
 		};
 		28FADDEC1833C3C500BA4141 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_EXPAT_CONFIG_H;
@@ -8621,7 +8580,6 @@
 		};
 		28FADDEE1833C3C500BA4141 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_EXPAT_CONFIG_H;
@@ -8661,7 +8619,6 @@
 		};
 		ED2706F60EF9C3C6007D4FFD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
@@ -8678,7 +8635,6 @@
 		};
 		ED2706F80EF9C3C6007D4FFD /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
@@ -8695,7 +8651,6 @@
 		};
 		EDBFAD10177E5399004CC1C1 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/modules";
@@ -8726,7 +8681,6 @@
 		};
 		EDBFAD12177E5399004CC1C1 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/modules";
