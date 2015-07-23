@@ -9055,9 +9055,9 @@ void TrackPanel::OnSetDisplay(wxCommandEvent & event)
    case OnWaveformDBID:
       id = WaveTrack::WaveformDBDisplay; break;
    case OnSpectrumID:
-      id = WaveTrack::SpectralSelectionDisplay; break;
+      id = WaveTrack::SpectrumDisplay; break;
    case OnSpectrumLogID:
-      id = WaveTrack::SpectralSelectionLogDisplay; break;
+      id = WaveTrack::SpectrumLogDisplay; break;
    case OnSpectralSelID:
       id = WaveTrack::SpectralSelectionDisplay; break;
    case OnSpectralSelLogID:
