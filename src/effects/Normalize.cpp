@@ -152,9 +152,8 @@ bool EffectNormalize::Process()
 
    float ratio;
    if( mGain )
-      ratio = pow(10.0,TrapDouble(mLevel, // same value used for all tracks
-                               MIN_Level,
-                               MAX_Level)/20.0);
+      // same value used for all tracks
+      ratio = DB_TO_LINEAR(TrapDouble(mLevel, MIN_Level, MAX_Level));
    else
       ratio = 1.0;
 

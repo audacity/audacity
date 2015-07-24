@@ -706,7 +706,7 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
             wt->SetDisplay(WaveTrack::WaveformDisplay); // this makes the last display not WaveformDBDisplay
             float sign = (min >= 0 ? 1 : -1);
             if (min != 0.) {
-               min = pow(10., (fabs(min)*mdBrange - mdBrange)/20.0);
+               min = DB_TO_LINEAR(fabs(min)*mdBrange - mdBrange);
                if (min < 0.0)
                   min = 0.0;
                min *= sign;
@@ -714,7 +714,7 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
             sign = (max >= 0 ? 1 : -1);
 
             if (max != 0.) {
-               max = pow(10., (fabs(max)*mdBrange - mdBrange)/20.0);
+               max = DB_TO_LINEAR(fabs(max)*mdBrange - mdBrange);
                if (max < 0.0)
                   max = 0.0;
                max *= sign;
@@ -744,7 +744,7 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
             wt->SetDisplay(WaveTrack::WaveformDBDisplay); // this makes the last display not WaveformDisplay
             float sign = (min >= 0 ? 1 : -1);
             if (min != 0.) {
-               min = (20.0 * log10(fabs(min)) + mdBrange) / mdBrange;
+               min = (LINEAR_TO_DB(fabs(min)) + mdBrange) / mdBrange;
                if (min < 0.0)
                   min = 0.0;
                min *= sign;
@@ -752,7 +752,7 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
             sign = (max >= 0 ? 1 : -1);
 
             if (max != 0.) {
-               max = (20.0 * log10(fabs(max)) + mdBrange) / mdBrange;
+               max = (LINEAR_TO_DB(fabs(max)) + mdBrange) / mdBrange;
                if (max < 0.0)
                   max = 0.0;
                max *= sign;
@@ -900,7 +900,7 @@ int GetWaveYPos(float value, float min, float max,
       float sign = (value >= 0 ? 1 : -1);
 
       if (value != 0.) {
-         float db = 20.0 * log10(fabs(value));
+         float db = LINEAR_TO_DB(fabs(value));
          value = (db + dBr) / dBr;
          if (!outer) {
             value -= 0.5;
@@ -941,7 +941,7 @@ float FromDB(float value, double dBRange)
       return 0;
 
    double sign = (value >= 0 ? 1 : -1);
-   return pow(10.0, ((fabs(value) * dBRange) - dBRange) / 20.0)*sign;
+   return DB_TO_LINEAR((fabs(value) * dBRange) - dBRange) * sign;
 }
 
 float ValueOfPixel(int yy, int height, bool offset,
@@ -3188,8 +3188,8 @@ void TrackArtist::DrawTimeTrack(TimeTrack *track,
    if(track->GetDisplayLog()) {
       // MB: silly way to undo the work of GetWaveYPos while still getting a logarithmic scale
       double dBRange = gPrefs->Read(wxT("/GUI/EnvdBRange"), ENV_DB_RANGE);
-      lower = 20.0 * log10(std::max(1.0e-7, lower)) / dBRange + 1.0;
-      upper = 20.0 * log10(std::max(1.0e-7, upper)) / dBRange + 1.0;
+      lower = LINEAR_TO_DB(std::max(1.0e-7, lower)) / dBRange + 1.0;
+      upper = LINEAR_TO_DB(std::max(1.0e-7, upper)) / dBRange + 1.0;
    }
    track->GetEnvelope()->DrawPoints(dc, envRect, zoomInfo,
                track->GetDisplayLog(), lower, upper);

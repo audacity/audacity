@@ -3810,8 +3810,8 @@ void TrackPanel::ForwardEventToTimeTrackEnvelope(wxMouseEvent & event)
    if(ptimetrack->GetDisplayLog()) {
       // MB: silly way to undo the work of GetWaveYPos while still getting a logarithmic scale
       double dBRange = gPrefs->Read(wxT("/GUI/EnvdBRange"), ENV_DB_RANGE);
-      lower = 20.0 * log10(std::max(1.0e-7, lower)) / dBRange + 1.0;
-      upper = 20.0 * log10(std::max(1.0e-7, upper)) / dBRange + 1.0;
+      lower = LINEAR_TO_DB(std::max(1.0e-7, lower)) / dBRange + 1.0;
+      upper = LINEAR_TO_DB(std::max(1.0e-7, upper)) / dBRange + 1.0;
    }
    bool needUpdate =
       pspeedenvelope->MouseEvent(

@@ -155,7 +155,7 @@ sampleCount EffectBassTreble::ProcessBlock(float **inBlock, float **outBlock, sa
    }
    else
    {
-      float gain = (pow(10.0, dB_level / 20.0f)) / mMax;
+      float gain = DB_TO_LINEAR(dB_level) / mMax;
       for (sampleCount i = 0; i < blockLen; i++)
       {
          // Normalize to specified level
