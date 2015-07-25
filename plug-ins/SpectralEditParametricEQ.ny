@@ -55,14 +55,7 @@
           (sum (prod env (wet sig control-gain f0 f1)) (prod (diff 1.0 env) sig))))))
 
 (catch 'error-message
-  (cond
-   ((not (get '*TRACK* 'VIEW))		; 'View is NIL during Preview
-    (setf p-err (format nil "This effect requires a frequency selection in the~%~
-                              'Spectrogram' or 'Spectrogram (log f)' track view.~%~%"))
-    (multichan-expand #'result *track*))
-   ((string-not-equal (get '*TRACK* 'VIEW) "spectral"  :end1 8 :end2 8)
-    "Use this effect in the 'Spectral Selection'\nor 'Spectral Selection log(f)' view.")
-   (T  (setf p-err "")
-       (if (= control-gain 0)		; Allow dry preview
-	   "Gain is zero. Nothing to do."
-	 (multichan-expand #'result *track*)))))
+  (setf p-err "")
+  (if (= control-gain 0)		; Allow dry preview
+      "Gain is zero. Nothing to do."
+    (multichan-expand #'result *track*)))
