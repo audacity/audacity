@@ -533,6 +533,7 @@ NumericConverter::NumericConverter(Type type,
 {
    ResetMinValue();
    ResetMaxValue();
+   mInvalidValue = -1.0;
 
    mDefaultNdx = 0;
 
@@ -866,7 +867,7 @@ void NumericConverter::ControlsToValue()
 
    if (mFields.GetCount() > 0 &&
       mValueString.Mid(mFields[0].pos, 1) == wxChar('-')) {
-      mValue = -1;
+      mValue = mInvalidValue;
       return;
    }
 
@@ -1169,6 +1170,7 @@ NumericTextCtrl::NumericTextCtrl(NumericConverter::Type type,
    mAutoPos(autoPos)
    , mType(type)
 {
+   mAllowInvalidValue = false;
 
    mDigitBoxW = 10;
    mDigitBoxH = 16;
@@ -1211,6 +1213,7 @@ NumericTextCtrl::~NumericTextCtrl()
 
 // Set the focus to the first (left-most) non-zero digit
 // If all digits are zero, the right-most position is focused
+// If all digits are hyphens (invalid), the left-most position is focused
 void NumericTextCtrl::UpdateAutoFocus()
 {
    if (!mAutoPos)
@@ -1278,6 +1281,15 @@ void NumericTextCtrl::EnableMenu(bool enable)
    mButtonWidth = enable ? 9 : 0;
    Layout();
    Fit();
+}
+
+void NumericTextCtrl::SetInvalidValue(double invalidValue)
+{
+   const bool wasInvalid = mAllowInvalidValue && (mValue == mInvalidValue);
+   mAllowInvalidValue = true;
+   mInvalidValue = invalidValue;
+   if (wasInvalid)
+      SetValue(invalidValue);
 }
 
 bool NumericTextCtrl::Layout()
@@ -1596,6 +1608,7 @@ void NumericTextCtrl::OnCaptureKey(wxCommandEvent &event)
       case WXK_TAB:
       case WXK_RETURN:
       case WXK_NUMPAD_ENTER:
+      case '-':
          return;
 
       default:
@@ -1618,6 +1631,7 @@ void NumericTextCtrl::OnKeyUp(wxKeyEvent &event)
       keyCode -= WXK_NUMPAD0 - '0';
 
    if ((keyCode >= '0' && keyCode <= '9') ||
+       (keyCode == '-') ||
        (keyCode == WXK_BACK) ||
        (keyCode == WXK_UP) ||
        (keyCode == WXK_DOWN)) {
@@ -1659,6 +1673,11 @@ void NumericTextCtrl::OnKeyDown(wxKeyEvent &event)
       ValueToControls();
       mFocusedDigit = (mFocusedDigit + 1) % (mDigits.GetCount());
       Updated();
+   }
+
+   else if (!mReadOnly && keyCode == '-') {
+      if (mAllowInvalidValue)
+         SetValue(mInvalidValue);
    }
 
    else if (!mReadOnly && keyCode == WXK_BACK) {

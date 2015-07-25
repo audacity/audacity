@@ -158,12 +158,14 @@ void SpectralSelectionBar::Populate()
 
    mLowCtrl = new NumericTextCtrl(
       NumericConverter::FREQUENCY, this, OnLowID, frequencyFormatName, 0.0);
+   mLowCtrl->SetInvalidValue(SelectedRegion::UndefinedFrequency);
    mLowCtrl->SetName(_("Low Frequency:"));
    mLowCtrl->EnableMenu();
    subSizer->Add(mLowCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 
    mHighCtrl = new NumericTextCtrl(
       NumericConverter::FREQUENCY, this, OnHighID, frequencyFormatName, 0.0);
+   mHighCtrl->SetInvalidValue(SelectedRegion::UndefinedFrequency);
    mHighCtrl->SetName(wxString(_("High Frequency:")));
    mHighCtrl->EnableMenu();
    subSizer->Add(mHighCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 0);
