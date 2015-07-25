@@ -1661,9 +1661,9 @@ void FindWavePortions
    for (int left = rect.x; left < rightmost;) {
       while (it != end && it->position <= left)
          prev = it++;
-      const int right = std::max(left, int(
-         it != end ? it->position : rightmost
-      ));
+      if (it == end)
+         break;
+      const int right = std::max(left, int(it->position));
       const int width = right - left;
       if (width > 0)
          portions.push_back(
