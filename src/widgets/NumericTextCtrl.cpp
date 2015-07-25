@@ -531,6 +531,9 @@ NumericConverter::NumericConverter(Type type,
                                    double value,
                                    double sampleRate)
 {
+   ResetMinValue();
+   ResetMaxValue();
+
    mDefaultNdx = 0;
 
    mType = type;
@@ -904,7 +907,7 @@ void NumericConverter::ControlsToValue()
       t = frames * 1.001 / 30.;
    }
 
-   mValue = t;
+   mValue = std::max(mMinValue, std::min(mMaxValue, t));
 }
 
 void NumericConverter::SetFormatName(const wxString & formatName)
@@ -933,6 +936,35 @@ void NumericConverter::SetValue(double newValue)
    mValue = newValue;
    ValueToControls();
    ControlsToValue();
+}
+
+void NumericConverter::SetMinValue(double minValue)
+{
+   mMinValue = minValue;
+   if (mMaxValue < minValue)
+      mMaxValue = minValue;
+   if (mValue < minValue)
+      SetValue(minValue);
+}
+
+void NumericConverter::ResetMinValue()
+{
+   mMinValue = std::numeric_limits<double>::min();
+}
+
+void NumericConverter::SetMaxValue(double maxValue)
+{
+   mMaxValue = maxValue;
+   if (mMinValue > maxValue) {
+      mMinValue = maxValue;
+   }
+   if (mValue > maxValue)
+      SetValue(maxValue);
+}
+
+void NumericConverter::ResetMaxValue()
+{
+   mMaxValue = std::numeric_limits<double>::max();
 }
 
 double NumericConverter::GetValue()
@@ -1072,6 +1104,8 @@ void NumericConverter::Adjust(int steps, int dir)
             {
                mValue = 0.;
             }
+
+            mValue = std::max(mMinValue, std::min(mMaxValue, mValue));
 
             mValue /= mScalingFactor;
 
@@ -1615,7 +1649,7 @@ void NumericTextCtrl::OnKeyDown(wxKeyEvent &event)
    if (!mReadOnly && (keyCode >= '0' && keyCode <= '9')) {
       int digitPosition = mDigits[mFocusedDigit].pos;
       if (mValueString[digitPosition] == wxChar('-')) {
-         mValue = 0;
+         mValue = std::max(mMinValue, std::min(mMaxValue, 0.0));
          ValueToControls();
          // Beware relocation of the string
          digitPosition = mDigits[mFocusedDigit].pos;

@@ -71,6 +71,10 @@ public:
    void SetFormatString(const wxString & formatString);
    void SetSampleRate(double sampleRate);
    void SetValue(double newValue);
+   void SetMinValue(double minValue);
+   void ResetMinValue();
+   void SetMaxValue(double maxValue);
+   void ResetMaxValue();
    double GetValue();
 
    wxString GetString();
@@ -94,6 +98,9 @@ protected:
    Type           mType;
 
    double         mValue;
+
+   double         mMinValue;
+   double         mMaxValue;
 
    wxString       mFormatString;
 

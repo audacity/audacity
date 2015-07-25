@@ -265,6 +265,10 @@ void SpectralSelectionBar::ModifySpectralSelection(bool done)
          top = SelectedRegion::UndefinedFrequency;
    }
 
+   mLow = bottom;
+   mHigh = top;
+   SetBounds();
+
    // Notify project and track panel, which may change
    // the values again, and call back to us in SetFrequencies()
    mListener->SSBL_ModifySpectralSelection(bottom, top, done);
@@ -349,9 +353,23 @@ void SpectralSelectionBar::ValuesToControls()
       mWidthCtrl->SetValue(mWidth);
    }
    else {
+      SetBounds();
       mLowCtrl->SetValue(mLow);
       mHighCtrl->SetValue(mHigh);
    }
+}
+
+void SpectralSelectionBar::SetBounds()
+{
+   if (mHigh >= 0)
+      mLowCtrl->SetMaxValue(mHigh);
+   else
+      mLowCtrl->ResetMaxValue();
+
+   if (mLow >= 0)
+      mHighCtrl->SetMinValue(mLow);
+   else
+      mHighCtrl->ResetMinValue();
 }
 
 void SpectralSelectionBar::SetFrequencies(double bottom, double top)
