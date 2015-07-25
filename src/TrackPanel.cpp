@@ -3128,9 +3128,8 @@ void TrackPanel::StartFreqSelection (int mouseYCoordinate, int trackTopEdge,
       mFreqSelPin =
          PositionToFrequency(false, mouseYCoordinate,
             trackTopEdge, trackHeight, rate, logF);
+      mViewInfo->selectedRegion.setFrequencies(mFreqSelPin, mFreqSelPin);
    }
-
-   mViewInfo->selectedRegion.setFrequencies(mFreqSelPin, mFreqSelPin);
 }
 
 void TrackPanel::ExtendFreqSelection(int mouseYCoordinate, int trackTopEdge,
