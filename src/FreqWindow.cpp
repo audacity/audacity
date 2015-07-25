@@ -41,6 +41,7 @@ and in the spectrogram spectral selection.
 
 
 #include "Audacity.h"
+#include "FreqWindow.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
@@ -70,8 +71,7 @@ and in the spectrogram spectral selection.
 
 #include <math.h>
 
-#include "FreqWindow.h"
-
+#include "ShuttleGui.h"
 #include "AColor.h"
 #include "FFT.h"
 #include "Internat.h"

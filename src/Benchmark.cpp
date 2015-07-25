@@ -16,6 +16,7 @@ of the BlockFile system.
 
 
 #include "Audacity.h"
+#include "Benchmark.h"
 
 #include <wx/log.h>
 #include <wx/textctrl.h>
@@ -33,7 +34,7 @@ of the BlockFile system.
 #include <wx/valtext.h>
 #include <wx/intl.h>
 
-#include "Benchmark.h"
+#include "ShuttleGui.h"
 #include "Project.h"
 #include "WaveTrack.h"
 #include "Sequence.h"

@@ -20,9 +20,9 @@
 #include <wx/string.h>
 #include <wx/textctrl.h>
 
-#include "../ShuttleGui.h"
-
 #include "SBSMSEffect.h"
+
+class ShuttleGui;
 
 #define TIMESCALE_PLUGIN_SYMBOL XO("Time Scale")
 

@@ -15,6 +15,7 @@
 *//*******************************************************************/
 
 #include "Audacity.h"
+#include "BatchProcessDialog.h"
 
 #include <wx/defs.h>
 #include <wx/checkbox.h>
@@ -32,9 +33,9 @@
 #include <wx/msgdlg.h>
 #include <wx/settings.h>
 
+#include "ShuttleGui.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "BatchProcessDialog.h"
 #include "Internat.h"
 #include "commands/CommandManager.h"
 #include "effects/Effect.h"

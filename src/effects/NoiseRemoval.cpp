@@ -275,10 +275,8 @@ void EffectNoiseRemoval::Initialize()
    mFreqSmoothingBins = (int)(mFreqSmoothingHz * mWindowSize / mSampleRate);
    mAttackDecayBlocks = 1 +
       (int)(mAttackDecayTime * mSampleRate / (mWindowSize / 2));
-   // Applies to amplitudes, divide by 20:
-   mNoiseAttenFactor = pow(10.0, mNoiseGain/20.0);
-   // Applies to gain factors which apply to amplitudes, divide by 20:
-   mOneBlockAttackDecay = pow(10.0, (mNoiseGain / (20.0 * mAttackDecayBlocks)));
+   mNoiseAttenFactor = DB_TO_LINEAR(mNoiseGain);
+   mOneBlockAttackDecay = DB_TO_LINEAR(mNoiseGain / mAttackDecayBlocks);
    // Applies to power, divide by 10:
    mSensitivityFactor = pow(10.0, mSensitivity/10.0);
    mMinSignalBlocks =

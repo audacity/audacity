@@ -40,6 +40,7 @@
 #include "../Experimental.h"
 #include "NoiseReduction.h"
 
+#include "../ShuttleGui.h"
 #include "../Prefs.h"
 
 #include <algorithm>
@@ -764,10 +765,10 @@ EffectNoiseReduction::Worker::Worker
    const int nAttackBlocks = 1 + (int)(settings.mAttackTime * sampleRate / mStepSize);
    const int nReleaseBlocks = 1 + (int)(settings.mReleaseTime * sampleRate / mStepSize);
    // Applies to amplitudes, divide by 20:
-   mNoiseAttenFactor = pow(10.0, noiseGain / 20.0);
+   mNoiseAttenFactor = DB_TO_LINEAR(noiseGain);
    // Apply to gain factors which apply to amplitudes, divide by 20:
-   mOneBlockAttack = pow(10.0, (noiseGain / (20.0 * nAttackBlocks)));
-   mOneBlockRelease = pow(10.0, (noiseGain / (20.0 * nReleaseBlocks)));
+   mOneBlockAttack = DB_TO_LINEAR(noiseGain / nAttackBlocks);
+   mOneBlockRelease = DB_TO_LINEAR(noiseGain / nReleaseBlocks);
    // Applies to power, divide by 10:
    mOldSensitivityFactor = pow(10.0, settings.mOldSensitivity / 10.0);
 

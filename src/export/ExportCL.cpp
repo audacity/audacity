@@ -12,6 +12,7 @@
 **********************************************************************/
 
 #include "../Audacity.h"
+#include "ExportCL.h"
 #include "../Project.h"
 
 #include <wx/button.h>
@@ -22,10 +23,10 @@
 #include <wx/textctrl.h>
 #include <FileDialog.h>
 #include "Export.h"
-#include "ExportCL.h"
 
 #include "../Mix.h"
 #include "../Prefs.h"
+#include "../ShuttleGui.h"
 #include "../Internat.h"
 #include "../float_cast.h"
 #include "../widgets/FileHistory.h"

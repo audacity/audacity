@@ -22,6 +22,7 @@ greater use in future.
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "Effect.h"
 
 #include <wx/defs.h>
 #include <wx/hashmap.h>
@@ -36,11 +37,11 @@ greater use in future.
 
 #include "audacity/ConfigInterface.h"
 
-#include "Effect.h"
 #include "../AudioIO.h"
 #include "../Mix.h"
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../ShuttleGui.h"
 #include "../WaveTrack.h"
 #include "../toolbars/ControlToolBar.h"
 #include "../widgets/AButton.h"

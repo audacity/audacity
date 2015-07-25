@@ -19,6 +19,7 @@
 *//*******************************************************************/
 
 #include "Audacity.h"
+#include "TimerRecordDialog.h"
 
 #include <wx/defs.h>
 #include <wx/datetime.h>
@@ -29,7 +30,7 @@
 #include <wx/timer.h>
 #include <wx/dynlib.h> //<! For windows.h
 
-#include "TimerRecordDialog.h"
+#include "ShuttleGui.h"
 #include "Project.h"
 #include "Internat.h"
 #include "Prefs.h"

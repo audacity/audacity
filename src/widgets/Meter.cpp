@@ -39,6 +39,7 @@
 *//******************************************************************/
 
 #include "../Audacity.h"
+#include "Meter.h"
 #include "../AudacityApp.h"
 
 #include <wx/defs.h>
@@ -57,8 +58,6 @@
 
 #include <math.h>
 
-#include "Meter.h"
-
 #include "../AudioIO.h"
 #include "../AColor.h"
 #include "../ImageManipulation.h"
@@ -66,6 +65,7 @@
 #include "../toolbars/MeterToolBar.h"
 #include "../toolbars/ControlToolBar.h"
 #include "../Prefs.h"
+#include "../ShuttleGui.h"
 
 #include "../Theme.h"
 #include "../AllThemeResources.h"
@@ -864,7 +864,7 @@ static float ToDB(float v, float range)
 {
    double db;
    if (v > 0)
-      db = 20 * log10(fabs(v));
+      db = LINEAR_TO_DB(fabs(v));
    else
       db = -999;
    return ClipZeroToOne((db + range) / range);
@@ -995,7 +995,7 @@ void Meter::OnMeterUpdate(wxTimerEvent & WXUNUSED(event))
             }
             else {
                double decayAmount = mDecayRate * deltaT;
-               double decayFactor = pow(10.0, -decayAmount/20);
+               double decayFactor = DB_TO_LINEAR(-decayAmount);
                mBar[j].peak = floatMax(msg.peak[j],
                                        mBar[j].peak * decayFactor);
             }

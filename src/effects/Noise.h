@@ -15,10 +15,11 @@
 
 #include <wx/string.h>
 
-#include "../ShuttleGui.h"
 #include "../widgets/NumericTextCtrl.h"
 
 #include "Effect.h"
+
+class ShuttleGui;
 
 #define NOISE_PLUGIN_SYMBOL XO("Noise")
 

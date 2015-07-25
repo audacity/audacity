@@ -204,6 +204,7 @@ is time to refresh some aspect of the screen.
 #include "Prefs.h"
 #include "Project.h"
 #include "Snap.h"
+#include "ShuttleGui.h"
 #include "Theme.h"
 #include "TimeTrack.h"
 #include "Track.h"
@@ -3127,9 +3128,8 @@ void TrackPanel::StartFreqSelection (int mouseYCoordinate, int trackTopEdge,
       mFreqSelPin =
          PositionToFrequency(false, mouseYCoordinate,
             trackTopEdge, trackHeight, rate, logF);
+      mViewInfo->selectedRegion.setFrequencies(mFreqSelPin, mFreqSelPin);
    }
-
-   mViewInfo->selectedRegion.setFrequencies(mFreqSelPin, mFreqSelPin);
 }
 
 void TrackPanel::ExtendFreqSelection(int mouseYCoordinate, int trackTopEdge,
@@ -3809,8 +3809,8 @@ void TrackPanel::ForwardEventToTimeTrackEnvelope(wxMouseEvent & event)
    if(ptimetrack->GetDisplayLog()) {
       // MB: silly way to undo the work of GetWaveYPos while still getting a logarithmic scale
       double dBRange = gPrefs->Read(wxT("/GUI/EnvdBRange"), ENV_DB_RANGE);
-      lower = 20.0 * log10(std::max(1.0e-7, lower)) / dBRange + 1.0;
-      upper = 20.0 * log10(std::max(1.0e-7, upper)) / dBRange + 1.0;
+      lower = LINEAR_TO_DB(std::max(1.0e-7, lower)) / dBRange + 1.0;
+      upper = LINEAR_TO_DB(std::max(1.0e-7, upper)) / dBRange + 1.0;
    }
    bool needUpdate =
       pspeedenvelope->MouseEvent(
@@ -9054,9 +9054,9 @@ void TrackPanel::OnSetDisplay(wxCommandEvent & event)
    case OnWaveformDBID:
       id = WaveTrack::WaveformDBDisplay; break;
    case OnSpectrumID:
-      id = WaveTrack::SpectralSelectionDisplay; break;
+      id = WaveTrack::SpectrumDisplay; break;
    case OnSpectrumLogID:
-      id = WaveTrack::SpectralSelectionLogDisplay; break;
+      id = WaveTrack::SpectrumLogDisplay; break;
    case OnSpectralSelID:
       id = WaveTrack::SpectralSelectionDisplay; break;
    case OnSpectralSelLogID:

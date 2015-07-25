@@ -10,15 +10,16 @@
 *//*******************************************************************/
 
 #include "../Audacity.h"
-#include "../AudacityApp.h"
-
 #include "Contrast.h"
+
+#include "../AudacityApp.h"
 
 #include "../Envelope.h"
 #include "../FFT.h"
 #include "../WaveTrack.h"
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../ShuttleGui.h"
 #include "../FileNames.h"
 #include "../widgets/LinkingHtmlWindow.h"
 #include "../widgets/HelpSystem.h"
@@ -111,7 +112,7 @@ float ContrastDialog::GetDB()
    {
       if( rms < 1.0E-30 )
          return -60.0;
-      return 20.0*log10(rms);
+      return LINEAR_TO_DB(rms);
    }
    else
    {

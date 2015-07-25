@@ -23,11 +23,13 @@ Vaughan Johnson (Preview)
 #include <wx/string.h>
 #include <wx/window.h>
 
-#include "../ShuttleGui.h"
 #include "../widgets/Ruler.h"
 #include "Biquad.h"
 
 #include "Effect.h"
+
+class wxTextCtrl;
+class ShuttleGui;
 
 #define CLASSICFILTERS_PLUGIN_SYMBOL XO("Classic Filters")
 

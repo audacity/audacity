@@ -19,14 +19,14 @@
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "Wahwah.h"
 
 #include <math.h>
 
 #include <wx/intl.h>
 
+#include "../ShuttleGui.h"
 #include "../widgets/valnum.h"
-
-#include "Wahwah.h"
 
 enum
 {
@@ -217,7 +217,7 @@ void EffectWahwah::PopulateOrExchange(ShuttleGui & S)
    {
       S.SetStretchyCol(2);
 
-      FloatingPointValidator<double> vldfreq(1, &mFreq);
+      FloatingPointValidator<double> vldfreq(5, &mFreq, NUM_VAL_ONE_TRAILING_ZERO);
       vldfreq.SetRange(MIN_Freq, MAX_Freq);
       mFreqT = S.Id(ID_Freq).AddTextBox(_("LFO Frequency (Hz):"), wxT(""), 12);
       mFreqT->SetValidator(vldfreq);

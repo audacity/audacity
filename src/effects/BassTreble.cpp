@@ -19,6 +19,7 @@
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "BassTreble.h"
 
 #include <math.h>
 
@@ -28,10 +29,9 @@
 #include <wx/sizer.h>
 
 #include "../Prefs.h"
+#include "../ShuttleGui.h"
 #include "../WaveTrack.h"
 #include "../widgets/valnum.h"
-
-#include "BassTreble.h"
 
 enum 
 {
@@ -44,8 +44,8 @@ enum
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
 //     Name       Type     Key               Def      Min      Max      Scale
-Param( Bass,      double,  XO("Bass"),       0.0,     -15.0,   15.0,    1  );
-Param( Treble,    double,  XO("Treble"),     0.0,     -15.0,   15.0,    1  );
+Param( Bass,      double,  XO("Bass"),       0.0,     -30.0,   30.0,    1  );
+Param( Treble,    double,  XO("Treble"),     0.0,     -30.0,   30.0,    1  );
 Param( Level,     double,  XO("Level"),      -1.0,    -30.0,   0.0,     1  );
 Param( Normalize, bool,    XO("Normalize"),  true,    false,   true,    1  );
 
@@ -155,7 +155,7 @@ sampleCount EffectBassTreble::ProcessBlock(float **inBlock, float **outBlock, sa
    }
    else
    {
-      float gain = (pow(10.0, dB_level / 20.0f)) / mMax;
+      float gain = DB_TO_LINEAR(dB_level) / mMax;
       for (sampleCount i = 0; i < blockLen; i++)
       {
          // Normalize to specified level

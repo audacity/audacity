@@ -8,6 +8,9 @@
 
 **********************************************************************/
 
+#include "../Audacity.h"
+#include "ExportPCM.h"
+
 #include <wx/defs.h>
 
 #include <wx/choice.h>
@@ -23,20 +26,19 @@
 
 #include "sndfile.h"
 
-#include "../Audacity.h"
 #include "../FileFormats.h"
 #include "../Internat.h"
 #include "../LabelTrack.h"
 #include "../Mix.h"
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../ShuttleGui.h"
 #include "../Tags.h"
 #include "../Track.h"
 #include "../WaveTrack.h"
 #include "../ondemand/ODManager.h"
 
 #include "Export.h"
-#include "ExportPCM.h"
 
 #ifdef USE_LIBID3TAG
    #include <id3tag.h>

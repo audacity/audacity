@@ -49,6 +49,7 @@ public:
 private:
 
    void ValuesToControls();
+   void SetBounds();
    void OnUpdate(wxCommandEvent &evt);
    void OnCtrl(wxCommandEvent &evt);
    void OnChoice(wxCommandEvent &evt);

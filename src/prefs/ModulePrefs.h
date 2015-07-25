@@ -17,10 +17,10 @@
 
 #include <wx/window.h>
 
-#include "../ShuttleGui.h"
-
 #include "PrefsPanel.h"
 
+
+class ShuttleGui;
 
 enum {
    kModuleDisabled = 0,

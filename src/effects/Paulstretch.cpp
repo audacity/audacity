@@ -15,6 +15,7 @@
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "Paulstretch.h"
 
 #include <math.h>
 #include <float.h>
@@ -22,16 +23,15 @@
 #include <wx/intl.h>
 #include <wx/valgen.h>
 
+#include "../ShuttleGui.h"
 #include "../FFT.h"
 #include "../widgets/valnum.h"
-
-#include "Paulstretch.h"
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
 //     Name    Type     Key                     Def      Min      Max      Scale
 Param( Amount, float,   XO("Stretch Factor"),   10.0,    1.0,     FLT_MAX, 1   );
-Param( Time,   float,   XO("Time Resolution"),  0.25f,   0.001f,  FLT_MAX, 1   );
+Param( Time,   float,   XO("Time Resolution"),  0.25f,   0.00099f,  FLT_MAX, 1   );
 
 class PaulStretch
 {
@@ -170,7 +170,7 @@ void EffectPaulstretch::PopulateOrExchange(ShuttleGui & S)
        */
       S.AddTextBox(_("Stretch Factor:"), wxT(""), 10)->SetValidator(vldAmount);
 
-      FloatingPointValidator<float> vldTime(1, &time_resolution);
+      FloatingPointValidator<float> vldTime(3, &time_resolution, NUM_VAL_ONE_TRAILING_ZERO);
       vldTime.SetMin(MIN_Time);
       S.AddTextBox(_("Time Resolution (seconds):"), wxT(""), 10)->SetValidator(vldTime);
    }

@@ -25,6 +25,7 @@
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "Compressor.h"
 
 #include <math.h>
 
@@ -36,10 +37,9 @@
 
 #include "../AColor.h"
 #include "../Prefs.h"
+#include "../ShuttleGui.h"
 #include "../float_cast.h"
 #include "../widgets/Ruler.h"
-
-#include "Compressor.h"
 
 enum
 {
@@ -328,8 +328,8 @@ bool EffectCompressor::TransferDataFromWindow()
 
 bool EffectCompressor::NewTrackPass1()
 {
-   mThreshold = pow(10.0, mThresholdDB/20); // factor of 20 because it's power
-   mNoiseFloor = pow(10.0, mNoiseFloorDB/20);
+   mThreshold = DB_TO_LINEAR(mThresholdDB);
+   mNoiseFloor = DB_TO_LINEAR(mNoiseFloorDB);
    mNoiseCounter = 100;
 
    mAttackInverseFactor = exp(log(mThreshold) / (mCurRate * mAttackTime + 0.5));

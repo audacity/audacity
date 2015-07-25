@@ -33,6 +33,7 @@ a graph for EffectScienFilter.
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "ScienFilter.h"
 
 #include <math.h>
 #include <float.h>
@@ -50,12 +51,12 @@ a graph for EffectScienFilter.
 #include "../PlatformCompatibility.h"
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../ShuttleGui.h"
 #include "../Theme.h"
 #include "../WaveTrack.h"
 #include "../widgets/valnum.h"
 
 #include "Equalization.h" // For SliderAx
-#include "ScienFilter.h"
 
 #if !defined(M_PI)
 #define PI = 3.1415926535897932384626433832795
@@ -724,7 +725,7 @@ bool EffectScienFilter::CalcFilter()
       }
       if ((mOrder & 1) == 0)
       {
-         float fTemp = pow (10.0, -wxMax(0.001, mRipple) / 20.0);      // at DC the response is down R dB (for even-order)
+         float fTemp = DB_TO_LINEAR(-wxMax(0.001, mRipple));      // at DC the response is down R dB (for even-order)
          mpBiquad[0].fNumerCoeffs [0] *= fTemp;
          mpBiquad[0].fNumerCoeffs [1] *= fTemp;
          mpBiquad[0].fNumerCoeffs [2] *= fTemp;
@@ -760,7 +761,7 @@ bool EffectScienFilter::CalcFilter()
    case kChebyshevTypeII:     // Chebyshev Type 2
       float fSZeroX, fSZeroY;
       float fSPoleX, fSPoleY;
-      eps = pow (10.0, -wxMax(0.001, mStopbandRipple) / 20.0);
+      eps = DB_TO_LINEAR(-wxMax(0.001, mStopbandRipple));
       a = log (1 / eps + sqrt(1 / square(eps) + 1)) / mOrder;
 
       // Assume even order
@@ -1130,7 +1131,7 @@ void EffectScienFilterPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
       x = mEnvRect.x + i;
       freq = pow(10.0, loLog + i * step);          //Hz
       yF = mEffect->FilterMagnAtFreq (freq);
-      yF = 20.0 * log10(yF);
+      yF = LINEAR_TO_DB(yF);
 
       if (yF < mDbMin)
       {

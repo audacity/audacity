@@ -16,6 +16,7 @@
 *//********************************************************************/
 
 #include "../Audacity.h"
+#include "ExportMultiple.h"
 
 #include <wx/defs.h>
 #include <wx/button.h>
@@ -38,7 +39,6 @@
 #include <wx/textdlg.h>
 
 #include "Export.h"
-#include "ExportMultiple.h"
 
 #include "../Internat.h"
 #include "../FileFormats.h"
@@ -46,6 +46,7 @@
 #include "../LabelTrack.h"
 #include "../Project.h"
 #include "../Prefs.h"
+#include "../ShuttleGui.h"
 #include "../Tags.h"
 #include "../widgets/HelpSystem.h"
 

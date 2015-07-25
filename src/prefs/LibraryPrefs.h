@@ -18,11 +18,11 @@
 #include <wx/stattext.h>
 #include <wx/window.h>
 
-#include "../ShuttleGui.h"
-
 #include "PrefsPanel.h"
 
-class LibraryPrefs:public PrefsPanel
+class ShuttleGui;
+
+class LibraryPrefs :public PrefsPanel
 {
  public:
    LibraryPrefs(wxWindow * parent);

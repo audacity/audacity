@@ -223,6 +223,7 @@ private:
    wxArrayString     mCategories;
 
    wxString          mProps;
+   wxString          mPerTrackProps;
 
    bool              mRestoreSplits;
    int               mMergeClips;
