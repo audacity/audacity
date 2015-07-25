@@ -42,15 +42,27 @@
        (env (snd-pwl 0.0 rate breakpoints)))
     (cond
       ((not (or f0 f1))
-        (throw 'error-message "~aPlease select frequencies."))
+        (throw 'error-message (format nil "~aPlease select frequencies." p-err)))
       ((not f0)
-         (throw 'error-message "~aLow frequency is undefined."))
+         (throw 'error-message (format nil "~aLow frequency is undefined." p-err)))
       ((not f1)
-         (throw 'error-message "~aHigh frequency is undefined."))
+         (throw 'error-message (format nil "~aHigh frequency is undefined." p-err)))
       ((= bw 0)
-         (throw 'error-message "~aBandwidth is zero.~%Select a frequency range."))
+         (throw 'error-message (format nil "~aBandwidth is zero.~%Select a frequency range." p-err)))
       ;; If seleted frequency band is above Nyquist, do nothing.
       ((< f0 (/ *sound-srate* 2.0))
           (sum (prod env (wet sig control-gain f0 f1)) (prod (diff 1.0 env) sig))))))
 
-(catch 'error-message (multichan-expand #'result *track*))
+(cond
+  ((not (get '*TRACK* 'VIEW)) ; 'View is NIL during Preview
+      (setf p-err (format nil "This effect requires a frequency selection in the~%~
+                              'Spectrogram' or 'Spectrogram (log f)' track view.~%~%"))
+      (catch 'error-message
+        (multichan-expand #'result *track*)))
+  ((string-not-equal (get '*TRACK* 'VIEW) "spectral"  :end1 8 :end2 8)
+      "Use this effect in the 'Spectral Selection'\nor 'Spectral Selection log(f)' view.")
+  (T  (setf p-err "")
+      (if (= control-gain 0)  ; Allow dry preview
+          "Gain is zero. Nothing to do."
+          (catch 'error-message
+            (multichan-expand #'result *track*)))))
