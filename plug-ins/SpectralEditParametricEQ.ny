@@ -19,20 +19,23 @@
 
 (defmacro validate (hz)
 "Ensure frequency is below Nyquist"
-  `(setf hz (min (/ *sound-srate* 2.0),hz)))
+  `(setf ,hz (max 0 (min (/ *sound-srate* 2.0) ,hz))))
 
 (defun wet (sig gain f0 f1)
   ;; (re)calculate bw and fc to ensure we do not exceed Nyquist frequency
-  (let ((fc (sqrt (* f0 (validate f1))))
-       (bw (/ (log (/ (validate f1) f0))
-              (log 2.0))))
+  (validate f0)
+  (validate f1)
+  (let ((fc (sqrt (* f0 f1)))
+	(bw (/ (log (/ f1 f0))
+	       (log 2.0))))
+    (when (= bw 0)
+      (throw 'error-message (format nil "~aBandwidth is zero.~%Select a frequency range." p-err)))
     (eq-band sig fc gain (/ bw 2))))
 
 (defun result (sig)
   (let*
       ((f0 (get '*selection* 'low-hz))
        (f1 (get '*selection* 'high-hz))
-       (bw (get '*selection* 'bandwidth))
        (tn (truncate len))
        (rate (snd-srate sig))
        (transition (truncate (* 0.01 rate)))  ; 10 ms
@@ -47,8 +50,6 @@
          (throw 'error-message (format nil "~aLow frequency is undefined." p-err)))
       ((not f1)
          (throw 'error-message (format nil "~aHigh frequency is undefined." p-err)))
-      ((= bw 0)
-         (throw 'error-message (format nil "~aBandwidth is zero.~%Select a frequency range." p-err)))
       ;; If seleted frequency band is above Nyquist, do nothing.
       ((< f0 (/ *sound-srate* 2.0))
           (sum (prod env (wet sig control-gain f0 f1)) (prod (diff 1.0 env) sig))))))

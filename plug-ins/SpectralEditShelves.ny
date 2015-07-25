@@ -19,7 +19,7 @@
 
 (defmacro validate (hz)
 "Ensure frequency is below Nyquist"
-  `(setf hz (min (/ *sound-srate* 2.0),hz)))
+  `(setf ,hz (max 0 (min (/ *sound-srate* 2.0) ,hz))))
 
 (defun mid-shelf (sig lf hf gain)
   "Combines high shelf and low shelf filters"
@@ -30,9 +30,14 @@
 
 (defun wet (sig gain f0 f1)
   (cond
-    ((not f0) (eq-lowshelf sig f1 gain))
-    ((not f1) (eq-highshelf sig f0 gain))
-    (t (mid-shelf sig f0 (validate f1) gain))))
+   ((not f0) (eq-lowshelf sig (validate f1) gain))
+   ((not f1) (eq-highshelf sig (validate f0) gain))
+   (t
+    (validate f0)
+    (validate f1)
+    (when (= f0 f1)
+      (throw 'error-message "Please select a frequency range."))
+    (mid-shelf sig f0 f1 gain))))
 
 (defun result (sig)
   (let*
@@ -48,8 +53,6 @@
     (cond
       ((not (or f0 f1))
           (throw 'error-message (format nil "~aPlease select frequencies." p-err)))
-      ((and f0 f1 (= f0 f1)) (throw 'error-message
-                                    "Please select a frequency range."))
       ; shelf is above Nyquist frequency so do nothing
       ((and f0 (>= f0 (/ *sound-srate* 2.0))) nil)
       (T (sum (prod env (wet sig control-gain f0 f1))

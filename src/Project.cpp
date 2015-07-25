@@ -1258,7 +1258,18 @@ void AudacityProject::AS_SetSelectionFormat(const wxString & format)
 
 double AudacityProject::SSBL_GetRate() const
 {
-   return mRate;
+   // Return maximum of project rate and all track rates.
+   double rate = mRate;
+
+   TrackListOfKindIterator iterWaveTrack(Track::Wave, mTracks);
+   WaveTrack *pWaveTrack = static_cast<WaveTrack*>(iterWaveTrack.First());
+   while (pWaveTrack)
+   {
+      rate = std::max(rate, pWaveTrack->GetRate());
+      pWaveTrack = static_cast<WaveTrack*>(iterWaveTrack.Next());
+   }
+
+   return rate;
 }
 
 const wxString & AudacityProject::SSBL_GetFrequencySelectionFormatName()
@@ -1290,7 +1301,7 @@ void AudacityProject::SSBL_SetBandwidthSelectionFormatName(const wxString & form
 void AudacityProject::SSBL_ModifySpectralSelection(double &bottom, double &top, bool done)
 {
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   double nyq = mRate / 2.0;
+   double nyq = SSBL_GetRate() / 2.0;
    if (bottom >= 0.0)
       bottom = std::min(nyq, bottom);
    if (top >= 0.0)
