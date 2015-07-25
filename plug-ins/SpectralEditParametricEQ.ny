@@ -43,7 +43,7 @@
     (cond
       ((not (or f0 f1))
         (throw 'error-message (format nil "~aPlease select frequencies." p-err)))
-      ((not f0)
+      ((or (not f0) (= f0 0))
          (throw 'error-message (format nil "~aLow frequency is undefined." p-err)))
       ((not f1)
          (throw 'error-message (format nil "~aHigh frequency is undefined." p-err)))
