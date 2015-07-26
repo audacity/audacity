@@ -1636,8 +1636,8 @@ struct ClipParameters
 namespace {
 struct WavePortion {
    wxRect rect;
-   /*const*/ double averageZoom;
-   /*const*/ bool inFisheye;
+   const double averageZoom;
+   const bool inFisheye;
    WavePortion(int x, int y, int w, int h, double zoom, bool i)
       : rect(x, y, w, h), averageZoom(zoom), inFisheye(i)
    {}
