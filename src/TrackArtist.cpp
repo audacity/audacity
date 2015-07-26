@@ -992,11 +992,10 @@ void TrackArtist::DrawNegativeOffsetTrackArrows(wxDC &dc, const wxRect &rect)
 void TrackArtist::DrawWaveformBackground(wxDC &dc, int leftOffset, const wxRect &rect,
                                          const double env[],
                                          float zoomMin, float zoomMax, bool dB,
-                                         const SelectedRegion &selectedRegion,
+                                         double t0, double t1,
                                          const ZoomInfo &zoomInfo,
                                          bool drawEnvelope, bool bIsSyncLockSelected)
 {
-   const double t0 = selectedRegion.t0(), t1 = selectedRegion.t1();
 
    // Visually (one vertical slice of the waveform background, on its side;
    // the "*" is the actual waveform background we're drawing
@@ -1728,11 +1727,20 @@ void TrackArtist::DrawClipWaveform(WaveTrack *track,
    // Draw the background of the track, outlining the shape of
    // the envelope and using a colored pen for the selected
    // part of the waveform
-   DrawWaveformBackground(dc, leftOffset, mid,
-      env,
-      zoomMin, zoomMax, dB,
-      selectedRegion, zoomInfo, drawEnvelope,
-      !track->GetSelected());
+   {
+      double t0, t1;
+      if (track->GetSelected() || track->IsSyncLockSelected()) {
+         t0 = track->LongSamplesToTime(track->TimeToLongSamples(selectedRegion.t0())),
+            t1 = track->LongSamplesToTime(track->TimeToLongSamples(selectedRegion.t1()));
+      }
+      else
+         t0 = t1 = 0.0;
+      DrawWaveformBackground(dc, leftOffset, mid,
+         env,
+         zoomMin, zoomMax, dB,
+         t0, t1, zoomInfo, drawEnvelope,
+         !track->GetSelected());
+   }
 
    WaveDisplay display(hiddenMid.width);
    bool isLoadingOD = false;//true if loading on demand block in sequence.

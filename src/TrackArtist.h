@@ -154,7 +154,7 @@ class AUDACITY_DLL_API TrackArtist {
    void DrawWaveformBackground(wxDC & dc, int leftOffset, const wxRect &rect,
                                const double env[],
                                float zoomMin, float zoomMax, bool dB,
-                               const SelectedRegion &selectedRegion, const ZoomInfo &zoomInfo,
+                               double t0, double t1, const ZoomInfo &zoomInfo,
                                bool drawEnvelope, bool bIsSyncLockSelected);
    void DrawMinMaxRMS(wxDC &dc, const wxRect & rect, const double env[],
                       float zoomMin, float zoomMax, bool dB,
