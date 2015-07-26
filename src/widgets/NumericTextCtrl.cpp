@@ -175,6 +175,7 @@ different formats.
 
 #include <algorithm>
 #include <math.h>
+#include <limits>
 
 #include <wx/wx.h>
 #include <wx/dcmemory.h>
