@@ -109,3 +109,8 @@ bool ImportExportPrefs::Apply()
 
    return true;
 }
+
+PrefsPanel *ImportExportPrefsFactory::Create(wxWindow *parent)
+{
+   return new ImportExportPrefs(parent);
+}

@@ -165,3 +165,8 @@ bool TracksPrefs::Apply()
 
    return true;
 }
+
+PrefsPanel *TracksPrefsFactory::Create(wxWindow *parent)
+{
+   return new TracksPrefs(parent);
+}

@@ -101,7 +101,6 @@
 #include "widgets/Warning.h"
 #include "widgets/MultiDialog.h"
 
-#include "prefs/PrefsDialog.h"
 #include "ondemand/ODManager.h"
 
 #if defined(__WXMAC__)

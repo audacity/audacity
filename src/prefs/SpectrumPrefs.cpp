@@ -342,6 +342,11 @@ BEGIN_EVENT_TABLE(SpectrumPrefs, PrefsPanel)
    EVT_CHOICE(ID_WINDOW_SIZE, SpectrumPrefs::OnWindowSize)
 END_EVENT_TABLE()
 
+PrefsPanel *SpectrumPrefsFactory::Create(wxWindow *parent)
+{
+   return new SpectrumPrefs(parent);
+}
+
 SpectrogramSettings::SpectrogramSettings()
 : hFFT(0)
 , window(0)

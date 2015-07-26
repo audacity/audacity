@@ -202,3 +202,8 @@ bool RecordingPrefs::Apply()
    #endif
    return gPrefs->Flush();
 }
+
+PrefsPanel *RecordingPrefsFactory::Create(wxWindow *parent)
+{
+   return new RecordingPrefs(parent);
+}

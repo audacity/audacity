@@ -33,4 +33,9 @@ class WarningsPrefs :public PrefsPanel
    void PopulateOrExchange(ShuttleGui & S);
 };
 
+class WarningsPrefsFactory : public PrefsPanelFactory
+{
+public:
+   virtual PrefsPanel *Create(wxWindow *parent);
+};
 #endif

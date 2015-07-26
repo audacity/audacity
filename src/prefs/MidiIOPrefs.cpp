@@ -284,4 +284,9 @@ bool MidiIOPrefs::Validate()
    return true;
 }
 
+PrefsPanel *MidiIOPrefsFactory::Create(wxWindow *parent)
+{
+   return new MidiIOPrefs(parent);
+}
+
 #endif

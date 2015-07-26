@@ -34,4 +34,9 @@ private:
    DECLARE_EVENT_TABLE();
 };
 
+class BatchPrefsFactory : public PrefsPanelFactory
+{
+public:
+   virtual PrefsPanel *Create(wxWindow *parent);
+};
 #endif

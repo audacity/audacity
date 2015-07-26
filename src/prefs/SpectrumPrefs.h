@@ -124,4 +124,10 @@ public:
 #endif
 };
 
+class SpectrumPrefsFactory : public PrefsPanelFactory
+{
+public:
+   virtual PrefsPanel *Create(wxWindow *parent);
+};
+
 #endif

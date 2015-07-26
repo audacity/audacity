@@ -161,5 +161,9 @@ void ModulePrefs::SetModuleStatus( wxString fname, int iStatus ){
    gPrefs->Flush();
 }
 
+PrefsPanel *ModulePrefsFactory::Create(wxWindow *parent)
+{
+   return new ModulePrefs(parent);
+}
 
 

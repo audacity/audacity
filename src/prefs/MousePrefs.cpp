@@ -196,3 +196,8 @@ bool MousePrefs::Apply()
 //   PopulateOrExchange(S);
    return true;
 }
+
+PrefsPanel *MousePrefsFactory::Create(wxWindow *parent)
+{
+   return new MousePrefs(parent);
+}

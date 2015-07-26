@@ -228,3 +228,8 @@ bool QualityPrefs::Apply()
 
    return true;
 }
+
+PrefsPanel *QualityPrefsFactory::Create(wxWindow *parent)
+{
+   return new QualityPrefs(parent);
+}

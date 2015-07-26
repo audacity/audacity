@@ -205,3 +205,8 @@ bool ThemePrefs::Apply()
 
    return true;
 }
+
+PrefsPanel *ThemePrefsFactory::Create(wxWindow *parent)
+{
+   return new ThemePrefs(parent);
+}

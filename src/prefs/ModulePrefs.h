@@ -50,4 +50,9 @@ class ModulePrefs:public PrefsPanel
    wxArrayString mPaths;
 };
 
+class ModulePrefsFactory : public PrefsPanelFactory
+{
+public:
+   virtual PrefsPanel *Create(wxWindow *parent);
+};
 #endif
