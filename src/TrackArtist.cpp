@@ -1729,8 +1729,12 @@ void TrackArtist::DrawClipWaveform(WaveTrack *track,
    // part of the waveform
    {
       double t0, t1;
-      t0 = track->LongSamplesToTime(track->TimeToLongSamples(selectedRegion.t0())),
-      t1 = track->LongSamplesToTime(track->TimeToLongSamples(selectedRegion.t1()));
+      if (track->GetSelected() || track->IsSyncLockSelected()) {
+         t0 = track->LongSamplesToTime(track->TimeToLongSamples(selectedRegion.t0())),
+            t1 = track->LongSamplesToTime(track->TimeToLongSamples(selectedRegion.t1()));
+      }
+      else
+         t0 = t1 = 0.0;
       DrawWaveformBackground(dc, leftOffset, mid,
          env,
          zoomMin, zoomMax, dB,
