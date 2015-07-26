@@ -1633,11 +1633,17 @@ struct ClipParameters
 };
 }
 
+#ifdef __GNUC__
+#define CONST
+#else
+#define CONST const
+#endif
+
 namespace {
 struct WavePortion {
    wxRect rect;
-   const double averageZoom;
-   const bool inFisheye;
+   CONST double averageZoom;
+   CONST bool inFisheye;
    WavePortion(int x, int y, int w, int h, double zoom, bool i)
       : rect(x, y, w, h), averageZoom(zoom), inFisheye(i)
    {}
