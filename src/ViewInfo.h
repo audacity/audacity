@@ -85,7 +85,7 @@ public:
    void ZoomBy(double multiplier);
 
    struct Interval {
-      /* const */ wxInt64 position; /* const */ double averageZoom; /* const */ bool inFisheye;
+      const wxInt64 position; const double averageZoom; const bool inFisheye;
       Interval(wxInt64 p, double z, bool i)
          : position(p), averageZoom(z), inFisheye(i) {}
    };
