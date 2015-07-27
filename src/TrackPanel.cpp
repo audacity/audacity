@@ -9038,8 +9038,9 @@ void TrackPanel::OnMergeStereo(wxCommandEvent & WXUNUSED(event))
 class ViewSettingsDialog : public PrefsDialog
 {
 public:
-   ViewSettingsDialog(wxWindow *parent, PrefsDialog::Factories &factories)
-      : PrefsDialog(parent, _("View Settings: "), factories)
+   ViewSettingsDialog
+      (wxWindow *parent, const wxString &title, PrefsDialog::Factories &factories)
+      : PrefsDialog(parent, title, factories)
    {
    }
 
@@ -9060,7 +9061,8 @@ void TrackPanel::OnViewSettings(wxCommandEvent &)
    SpectrumPrefsFactory spectrumFactory(wt);
    PrefsDialog::Factories factories;
    factories.push_back(&spectrumFactory);
-   ViewSettingsDialog dialog(this, factories);
+   wxString title(wt->GetName() + wxT(": "));
+   ViewSettingsDialog dialog(this, title, factories);
    if (0 != dialog.ShowModal())
       // Redraw
       Refresh(false);
