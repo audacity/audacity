@@ -286,6 +286,7 @@
     <ClCompile Include="..\..\..\src\PlatformCompatibility.cpp" />
     <ClCompile Include="..\..\..\src\PluginManager.cpp" />
     <ClCompile Include="..\..\..\src\Prefs.cpp" />
+    <ClCompile Include="..\..\..\src\prefs\SpectrogramSettings.cpp" />
     <ClCompile Include="..\..\..\src\Printing.cpp" />
     <ClCompile Include="..\..\..\src\Profiler.cpp" />
     <ClCompile Include="..\..\..\src\Project.cpp" />
@@ -532,6 +533,7 @@
     <ClInclude Include="..\..\..\src\import\MultiFormatReader.h" />
     <ClInclude Include="..\..\..\src\import\SpecPowerMeter.h" />
     <ClInclude Include="..\..\..\src\ModuleManager.h" />
+    <ClInclude Include="..\..\..\src\prefs\SpectrogramSettings.h" />
     <ClInclude Include="..\..\..\src\RevisionIdent.h" />
     <ClInclude Include="..\..\..\src\SelectedRegion.h" />
     <ClInclude Include="..\..\..\src\SseMathFuncs.h" />

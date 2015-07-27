@@ -73,16 +73,6 @@ class AUDACITY_DLL_API TrackArtist {
 
    void InvalidateSpectrumCache(TrackList *tracks);
    void InvalidateSpectrumCache(WaveTrack *track);
-   int GetSpectrumMinFreq(int deffreq);
-   int GetSpectrumMaxFreq(int deffreq);
-   int GetSpectrumLogMinFreq(int deffreq);
-   int GetSpectrumLogMaxFreq(int deffreq);
-   int GetSpectrumWindowSize(bool includeZeroPadding);
-
-   void SetSpectrumMinFreq(int freq);
-   void SetSpectrumMaxFreq(int freq);
-   void SetSpectrumLogMinFreq(int freq);
-   void SetSpectrumLogMaxFreq(int freq);
 
    void SetBackgroundBrushes(wxBrush unselectedBrush, wxBrush selectedBrush,
                              wxPen unselectedPen, wxPen selectedPen) {

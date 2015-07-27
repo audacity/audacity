@@ -33,7 +33,7 @@
 #include "Resample.h"
 #include "Project.h"
 
-#include "prefs/SpectrumPrefs.h"
+#include "prefs/SpectrogramSettings.h"
 
 #include <wx/listimpl.cpp>
 WX_DEFINE_LIST(WaveClipList);
@@ -902,8 +902,8 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
                               double t0, double pixelsPerSecond,
                               bool autocorrelation)
 {
-   const SpectrogramSettings &settings = SpectrogramSettings::defaults();
-
+   const WaveTrack *const track = waveTrackCache.GetTrack();
+   const SpectrogramSettings &settings = track->GetSpectrogramSettings();
    const int &frequencyGain = settings.frequencyGain;
    const int &windowSize = settings.windowSize;
    const int &windowType = settings.windowType;
