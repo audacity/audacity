@@ -30,14 +30,18 @@
 #include "PrefsPanel.h"
 #include "SpectrogramSettings.h"
 
+class wxChoice;
+class wxCheckBox;
 class wxTextCtrl;
 struct FFTParam;
 class ShuttleGui;
+class SpectrogramSettings;
+class WaveTrack;
 
 class SpectrumPrefs:public PrefsPanel
 {
  public:
-   SpectrumPrefs(wxWindow * parent);
+   SpectrumPrefs(wxWindow * parent, WaveTrack *wt);
    virtual ~SpectrumPrefs();
    virtual bool Apply();
    virtual bool Validate();
@@ -47,8 +51,14 @@ class SpectrumPrefs:public PrefsPanel
    void PopulatePaddingChoices(int windowSize);
    void PopulateOrExchange(ShuttleGui & S);
 
+   void OnControl(wxCommandEvent &event);
    void OnWindowSize(wxCommandEvent &event);
+   void OnDefaults(wxCommandEvent&);
+   void OnApply(wxCommandEvent &);
    DECLARE_EVENT_TABLE()
+
+   WaveTrack *const mWt;
+   bool mDefaulted;
 
    wxTextCtrl *mMinFreq;
    wxTextCtrl *mMaxFreq;
@@ -57,28 +67,35 @@ class SpectrumPrefs:public PrefsPanel
    wxTextCtrl *mFrequencyGain;
 
    wxArrayString mSizeChoices;
-   wxArrayInt mSizeCodes;
 
 #ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
    int mZeroPaddingChoice;
    wxArrayString mZeroPaddingChoices;
-   wxArrayInt mZeroPaddingCodes;
 #endif
 
    wxArrayString mTypeChoices;
-   wxArrayInt mTypeCodes;
 
 
 #ifdef EXPERIMENTAL_FIND_NOTES
    wxTextCtrl *mFindNotesMinA;
    wxTextCtrl *mFindNotesN;
 #endif
+
+   wxCheckBox *mDefaultsCheckbox;
+
+   SpectrogramSettings mTempSettings;
+
+   bool mPopulating;
 };
 
 class SpectrumPrefsFactory : public PrefsPanelFactory
 {
 public:
+   explicit SpectrumPrefsFactory(WaveTrack *wt = 0);
    virtual PrefsPanel *Create(wxWindow *parent);
+
+private:
+   WaveTrack *const mWt;
 };
 
 #endif

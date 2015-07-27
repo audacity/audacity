@@ -217,7 +217,8 @@ is time to refresh some aspect of the screen.
 
 #include "ondemand/ODManager.h"
 
-#include "prefs/SpectrogramSettings.h"
+#include "prefs/PrefsDialog.h"
+#include "prefs/SpectrumPrefs.h"
 
 #include "toolbars/ControlToolBar.h"
 #include "toolbars/ToolManager.h"
@@ -330,6 +331,7 @@ enum {
    OnSpectralSelID,
    OnSpectralSelLogID,
    OnPitchID,
+   OnViewSettingsID,
 
    OnSplitStereoID,
    OnSplitStereoMonoID,
@@ -369,6 +371,7 @@ BEGIN_EVENT_TABLE(TrackPanel, wxWindow)
     EVT_MENU_RANGE(OnChannelLeftID, OnChannelMonoID,
                TrackPanel::OnChannelChange)
     EVT_MENU_RANGE(OnWaveformID, OnPitchID, TrackPanel::OnSetDisplay)
+    EVT_MENU(OnViewSettingsID, TrackPanel::OnViewSettings)
     EVT_MENU_RANGE(OnRate8ID, OnRate384ID, TrackPanel::OnRateChange)
     EVT_MENU_RANGE(On16BitID, OnFloatID, TrackPanel::OnFormatChange)
     EVT_MENU(OnRateOtherID, TrackPanel::OnRateOther)
@@ -731,9 +734,10 @@ void TrackPanel::BuildMenus(void)
    mWaveTrackMenu->Append(OnSpectralSelID, _("S&pectral Selection"));
    /* i18n-hint: short form of 'logarithm'*/
    mWaveTrackMenu->Append(OnSpectralSelLogID, _("Spectral Selection lo&g(f)"));
-
    mWaveTrackMenu->Append(OnPitchID, _("Pitc&h (EAC)"));
+   mWaveTrackMenu->Append(OnViewSettingsID, _("View& Settings...")); // PRL:  all the other letters already taken for accelerators!
    mWaveTrackMenu->AppendSeparator();
+
    mWaveTrackMenu->AppendRadioItem(OnChannelMonoID, _("&Mono"));
    mWaveTrackMenu->AppendRadioItem(OnChannelLeftID, _("&Left Channel"));
    mWaveTrackMenu->AppendRadioItem(OnChannelRightID, _("&Right Channel"));
@@ -8569,6 +8573,7 @@ void TrackPanel::OnTrackMenu(Track *t)
       theMenu->Enable(OnSpectralSelID, display != WaveTrack::SpectralSelectionDisplay);
       theMenu->Enable(OnSpectralSelLogID, display != WaveTrack::SpectralSelectionLogDisplay);
       theMenu->Enable(OnPitchID, display != WaveTrack::PitchDisplay);
+      theMenu->Enable(OnViewSettingsID, true);
 
       WaveTrack * track = (WaveTrack *)t;
       SetMenuCheck(*mRateMenu, IdOfRate((int) track->GetRate()));
@@ -9028,6 +9033,37 @@ void TrackPanel::OnMergeStereo(wxCommandEvent & WXUNUSED(event))
       mPopupMenuTarget->SetLinked(false);
 
    Refresh(false);
+}
+
+class ViewSettingsDialog : public PrefsDialog
+{
+public:
+   ViewSettingsDialog(wxWindow *parent, PrefsDialog::Factories &factories)
+      : PrefsDialog(parent, _("View Settings: "), factories)
+   {
+   }
+
+   virtual long GetPreferredPage()
+   {
+      // Future:  choose Spectrum or Waveform page
+      return 0;
+   }
+
+   virtual void SavePreferredPage()
+   {
+   }
+};
+
+void TrackPanel::OnViewSettings(wxCommandEvent &)
+{
+   WaveTrack *const wt = static_cast<WaveTrack*>(mPopupMenuTarget);
+   SpectrumPrefsFactory spectrumFactory(wt);
+   PrefsDialog::Factories factories;
+   factories.push_back(&spectrumFactory);
+   ViewSettingsDialog dialog(this, factories);
+   if (0 != dialog.ShowModal())
+      // Redraw
+      Refresh(false);
 }
 
 ///  Set the Display mode based on the menu choice in the Track Menu.
