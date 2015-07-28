@@ -102,7 +102,7 @@ ErrorDialog::ErrorDialog(
    S.EndVerticalLay();
 
    Layout();
-   Fit();
+   GetSizer()->Fit(this);
    SetMinSize(GetSize());
    Center();
 

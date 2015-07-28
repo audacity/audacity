@@ -46,17 +46,16 @@
 #include "lv2/lv2plug.in/ns/extensions/ui/ui.h"
 
 #if defined(__WXGTK__)
-#if wxCHECK_VERSION(3, 0, 0)
 #include <gtk/gtk.h>
 #include "win_gtk.h"
-#else
-#include <wx/gtk/win_gtk.h>
-#include <gtk/gtk.h>
-#endif
 #endif
 
 #if defined(__WXMSW__)
 #include <wx/msw/wrapwin.h>
+#endif
+
+#if defined(__WXMAC__)
+#include <Appkit/Appkit.h>
 #endif
 
 // Define the static URI nodes
@@ -108,7 +107,6 @@ LV2EffectMeter::LV2EffectMeter(wxWindow *parent, const LV2Port & ctrl)
 LV2EffectMeter::~LV2EffectMeter()
 {
 }
-
 
 void LV2EffectMeter::OnIdle(wxIdleEvent & WXUNUSED(evt))
 {
@@ -1483,13 +1481,9 @@ bool LV2Effect::BuildFancy()
       return false;
    }
 
-//   wxBoxSizer *hs = new wxBoxSizer(wxVERTICAL);
-//   vs->Add(mContainer, 0, wxALIGN_CENTER);
-//   mParent->SetSizer(vs);
-//wxWindow *mContainer = mParent;
 #if defined(__WXGTK__)
    // Make sure the parent has a window
-   if (!GTK_WIDGET(mContainer->m_wxwindow)->window)
+   if (!gtk_widget_get_window(GTK_WIDGET(mContainer->m_wxwindow)))
    {
       gtk_widget_realize(GTK_WIDGET(mContainer->m_wxwindow));
    }
@@ -1498,6 +1492,7 @@ bool LV2Effect::BuildFancy()
 #elif defined(__WXMSW__)
    mParentFeature->data = mContainer->GetHandle();
 #elif defined(__WXMAC__)
+   mParentFeature->data = mContainer->GetHandle();
 #endif
 
    mInstanceAccessFeature->data = lilv_instance_get_handle(mMaster);
@@ -1545,7 +1540,6 @@ bool LV2Effect::BuildFancy()
    gtk_widget_set_size_request(widget, 1, 1);
    gtk_widget_set_size_request(widget, sz.width, sz.height);
 
-#if wxCHECK_VERSION(3, 0, 0)
    wxPizza *pizza = WX_PIZZA(mContainer->m_wxwindow);
    pizza->put(widget,
               0, //gtk_pizza_get_xoffset(pizza),
@@ -1553,16 +1547,6 @@ bool LV2Effect::BuildFancy()
               sz.width,
               sz.height);
    gtk_widget_show_all(GTK_WIDGET(pizza));
-#else
-   GtkPizza *pizza = GTK_PIZZA(mContainer->m_wxwindow);
-   gtk_pizza_put(pizza,
-                 widget,
-                 0, //gtk_pizza_get_xoffset(pizza),
-                 0, //gtk_pizza_get_yoffset(pizza),
-                 sz.width,
-                 sz.height);
-   gtk_widget_show_all(GTK_WIDGET(pizza));
-#endif
    si->SetMinSize(wxSize(sz.width, sz.height));
 #elif defined(__WXMSW__)
    HWND widget = (HWND) suil_instance_get_widget(mSuilInstance);
@@ -1570,7 +1554,9 @@ bool LV2Effect::BuildFancy()
    GetWindowRect(widget, &rect);
    si->SetMinSize(wxSize(rect.right - rect.left, rect.bottom - rect.top));
 #elif defined(__WXMAC__)
-//   si->SetMinSize(wxSize(sz.width, sz.height));
+   NSView *view = (NSView *) suil_instance_get_widget(mSuilInstance);
+   NSSize sz = [view frame].size;
+   si->SetMinSize(sz.width, sz.height);
 #endif
 
    mParent->SetSizerAndFit(vs);
@@ -1691,8 +1677,8 @@ bool LV2Effect::BuildPlain()
          }
          else if (ctrl.mEnumeration)      // Check before integer
          {
-            size_t s;
-            for (s = ctrl.mScaleValues.GetCount() - 1; s >= 0; s--)
+            int s;
+            for (s = (int) ctrl.mScaleValues.GetCount() - 1; s >= 0; s--)
             {
                if (ctrl.mVal >= ctrl.mScaleValues[s])
                {
@@ -1921,8 +1907,8 @@ bool LV2Effect::TransferDataToWindow()
          }
          else if (ctrl.mEnumeration)      // Check before integer
          {
-            size_t s;
-            for (s = ctrl.mScaleValues.GetCount() - 1; s >= 0; s--)
+            int s;
+            for (s = (int) ctrl.mScaleValues.GetCount() - 1; s >= 0; s--)
             {
                if (ctrl.mVal >= ctrl.mScaleValues[s])
                {

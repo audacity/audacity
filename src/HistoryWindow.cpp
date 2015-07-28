@@ -113,7 +113,7 @@ HistoryWindow::HistoryWindow(AudacityProject *parent, UndoManager *manager):
       }
       S.EndStatic();
 
-      S.StartHorizontalLay(wxALIGN_BOTTOM | wxALIGN_RIGHT, false);
+      S.StartHorizontalLay(wxALIGN_RIGHT, false);
       {
          S.SetBorder(10);
          S.Id(wxID_OK).AddButton(_("&OK"))->SetDefault();

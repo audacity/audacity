@@ -462,7 +462,8 @@ void NyqTextCtrl::FindParens()
    mRightParens.clear();
 
    for (pos = 0; pos < len; pos++) {
-      switch (text[(int)pos])
+      wxChar c = text[pos];
+      switch (c)
       {
          case wxT('"'):
             inquotes = !inquotes;

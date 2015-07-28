@@ -86,6 +86,9 @@ class MixerBoardFrame;
 
 struct AudioIOStartStreamOptions;
 
+class WaveTrackArray;
+class Regions;
+
 AudacityProject *CreateNewAudacityProject();
 AUDACITY_DLL_API AudacityProject *GetActiveProject();
 void RedrawAllProjects();
@@ -114,6 +117,11 @@ enum StatusBarField {
    mainStatusBarField = 2,
    rateStatusBarField = 3
 };
+
+////////////////////////////////////////////////////////////
+/// Custom events
+////////////////////////////////////////////////////////////
+DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_CAPTURE_KEY, -1);
 
 // XML handler for <import> tag
 class ImportXMLTagHandler : public XMLTagHandler
@@ -174,7 +182,8 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    TrackFactory *GetTrackFactory();
    AdornedRulerPanel *GetRulerPanel();
    Tags *GetTags();
-   int GetAudioIOToken();
+   int GetAudioIOToken() const;
+   bool IsAudioActive() const;
    void SetAudioIOToken(int token);
 
    bool IsActive();
@@ -236,7 +245,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 
    TrackPanel * GetTrackPanel(){return mTrackPanel;}
 
-   bool GetIsEmpty() { return mTracks->IsEmpty(); }
+   bool GetIsEmpty();
 
    bool GetTracksFitVerticallyZoomed() { return mTracksFitVerticallyZoomed; } //lda
    void SetTracksFitVerticallyZoomed(bool flag) { mTracksFitVerticallyZoomed = flag; } //lda
@@ -260,6 +269,12 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 
    CommandManager *GetCommandManager() { return &mCommandManager; }
 
+   // Keyboard capture
+   static bool HasKeyboardCapture(const wxWindow *handler);
+   static wxWindow *GetKeyboardCaptureHandler();
+   static void CaptureKeyboard(wxWindow *handler);
+   static void ReleaseKeyboard(wxWindow *handler);
+
    void RebuildMenuBar();
    void RebuildOtherMenus();
    void MayStartMonitoring();
@@ -267,7 +282,6 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 
    // Message Handlers
 
-   void OnMenuEvent(wxMenuEvent & event);
    void OnMenu(wxCommandEvent & event);
    void OnUpdateUI(wxUpdateUIEvent & event);
 
@@ -281,8 +295,6 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    void OnTimer(wxTimerEvent & event);
    void OnToolBarUpdate(wxCommandEvent & event);
    void OnOpenAudioFile(wxCommandEvent & event);
-   void OnCaptureKeyboard(wxCommandEvent & event);
-   void OnReleaseKeyboard(wxCommandEvent & event);
    void OnODTaskUpdate(wxCommandEvent & event);
    void OnODTaskComplete(wxCommandEvent & event);
    void OnTrackListUpdated(wxCommandEvent & event);
@@ -313,8 +325,14 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    void ZoomBy(double multiplier);
    void Rewind(bool shift);
    void SkipEnd(bool shift);
-   void EditByLabel( WaveTrack::EditFunction action, bool bSyncLockedTracks );
-   void EditClipboardByLabel( WaveTrack::EditDestFunction action );
+
+
+   typedef bool (WaveTrack::* EditFunction)(double, double);
+   typedef bool (WaveTrack::* EditDestFunction)(double, double, Track**);
+
+   void EditByLabel(EditFunction action, bool bSyncLockedTracks);
+   void EditClipboardByLabel(EditDestFunction action );
+
    bool IsSyncLocked();
    void SetSyncLock(bool flag);
 
@@ -445,10 +463,6 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    PlayMode mLastPlayMode;
    ViewInfo mViewInfo;
 
-   wxWindow *HasKeyboardCapture();
-   void CaptureKeyboard(wxWindow *h);
-   void ReleaseKeyboard(wxWindow *h);
-
    // Audio IO callback methods
    virtual void OnAudioIORate(int rate);
    virtual void OnAudioIOStartRecording();
@@ -464,6 +478,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 
    void PushState(wxString desc, wxString shortDesc,
                   int flags = PUSH_AUTOSAVE);
+   void RollbackState();
 
  private:
 
@@ -601,8 +616,6 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    // See AudacityProject::OnActivate() for an explanation of this.
    wxWindow *mLastFocusedWindow;
 
-   wxWindow *mKeyboardCaptured;
-
    ImportXMLTagHandler* mImportXMLTagHandler;
 
    // Last auto-save file name and path (empty if none)
@@ -644,6 +657,9 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 
    // Flag that we're recoding.
    bool mIsCapturing;
+
+   // Keyboard capture
+   wxWindow *mKeyboardCaptureHandler;
 
    DECLARE_EVENT_TABLE()
 };

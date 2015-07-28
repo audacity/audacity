@@ -15,8 +15,10 @@
 #include <wx/string.h>
 #include <wx/filename.h>
 #include <wx/hashmap.h>
+#include <wx/utils.h>
 
-#include "WaveTrack.h"
+#include "audacity/Types.h"
+#include "xml/XMLTagHandler.h"
 
 class wxHashTable;
 class BlockFile;
@@ -105,7 +107,7 @@ class DirManager: public XMLTagHandler {
    void SetMaxSamples(sampleCount max) { mMaxSamples = max; }
    bool HandleXMLTag(const wxChar *tag, const wxChar **attrs);
    XMLTagHandler *HandleXMLChild(const wxChar * WXUNUSED(tag)) { return NULL; }
-   void WriteXML(XMLWriter & WXUNUSED(xmlFile)) { wxASSERT(false); }; // This class only reads tags.
+   void WriteXML(XMLWriter & WXUNUSED(xmlFile)) { wxASSERT(false); } // This class only reads tags.
    bool AssignFile(wxFileName &filename,wxString value,bool check);
 
    // Clean the temp dir. Note that now where we have auto recovery the temp

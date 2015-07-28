@@ -34,11 +34,6 @@ class FileIO
    wxInputStream & Read(void *buffer, size_t size);
    wxOutputStream & Write(const void *buffer, size_t size);
 
-   // On the Mac, this sets the file type and creator.  It does nothing on
-   // other platforms.
-   void SetCatalogInfo();
-   void SetCatalogInfo(wxUint32 type);
-
  private:
    wxString mName;
    FileIOMode mMode;

@@ -18,6 +18,8 @@
 #include "../Tags.h"
 #include "../SampleFormat.h"
 
+#include "FileDialog.h"
+
 class wxMemoryDC;
 class wxStaticText;
 class AudacityProject;
@@ -25,7 +27,6 @@ class DirManager;
 class WaveTrack;
 class TrackList;
 class MixerSpec;
-class FileDialog;
 class TimeTrack;
 class Mixer;
 
@@ -82,6 +83,8 @@ public:
 
    virtual bool DisplayOptions(wxWindow *parent, int format = 0);
 
+   virtual wxWindow *OptionsCreate(wxWindow *parent, int format);
+
    virtual bool CheckFileName(wxFileName &filename, int format = 0);
 
    /** \brief called to export audio into a file.
@@ -130,11 +133,12 @@ private:
 };
 
 WX_DECLARE_USER_EXPORTED_OBJARRAY(ExportPlugin *, ExportPluginArray, AUDACITY_DLL_API);
+WX_DEFINE_USER_EXPORTED_ARRAY_PTR(wxWindow *, WindowPtrArray, class AUDACITY_DLL_API);
 
 //----------------------------------------------------------------------------
 // Exporter
 //----------------------------------------------------------------------------
-class  AUDACITY_DLL_API Exporter
+class  AUDACITY_DLL_API Exporter : public wxEvtHandler
 {
 public:
 
@@ -163,6 +167,10 @@ private:
    bool CheckMix();
    bool ExportTracks();
 
+   static void CreateUserPaneCallback(wxWindow *parent, wxUIntPtr userdata);
+   void CreateUserPane(wxWindow *parent);
+   void OnFilterChanged(wxFileCtrlEvent & evt);
+
 private:
    FileDialog *mDialog;
    wxString mFileDialogTitle;
@@ -185,6 +193,12 @@ private:
    int mNumMono;
    int mChannels;
    bool mSelectedOnly;
+
+   wxWindow *mUserPaneParent;
+   WindowPtrArray mPages;
+   wxWindow *mActivePage;
+
+   DECLARE_EVENT_TABLE();
 };
 
 //----------------------------------------------------------------------------

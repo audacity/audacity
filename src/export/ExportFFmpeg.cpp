@@ -36,13 +36,11 @@ function.
 
 #include "../FileFormats.h"
 #include "../Internat.h"
-#include "../LabelTrack.h"
 #include "../Mix.h"
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../Tags.h"
 #include "../Track.h"
-#include "../WaveTrack.h"
 
 #include "Export.h"
 #include "ExportFFmpeg.h"
@@ -57,13 +55,16 @@ function.
 
 extern FFmpegLibs *FFmpegLibsInst;
 
-static bool CheckFFmpegPresence()
+static bool CheckFFmpegPresence(bool quiet = false)
 {
    bool result = true;
    PickFFmpegLibs();
    if (!FFmpegLibsInst->ValidLibsLoaded())
    {
-      wxMessageBox(_("Properly configured FFmpeg is required to proceed.\nYou can configure it at Preferences > Libraries."));
+      if (!quiet)
+      {
+         wxMessageBox(_("Properly configured FFmpeg is required to proceed.\nYou can configure it at Preferences > Libraries."));
+      }
       result = false;
    }
    DropFFmpegLibs();
@@ -117,9 +118,9 @@ public:
    /// Flushes audio encoder
    bool Finalize();
 
-   /// Shows options dialog
+   /// Creates options panel
    ///\param format - index of export type
-   bool DisplayOptions(wxWindow *parent, int format = 0);
+   wxWindow *OptionsCreate(wxWindow *parent, int format);
 
    /// Check whether or not current project sample rate is compatible with the export codec
    bool CheckSampleRate(int rate, int lowrate, int highrate, const int *sampRates);
@@ -975,45 +976,41 @@ int ExportFFmpeg::AskResample(int bitrate, int rate, int lowrate, int highrate, 
    return wxAtoi(choice->GetStringSelection());
 }
 
-
-bool ExportFFmpeg::DisplayOptions(wxWindow *parent, int format)
+wxWindow *ExportFFmpeg::OptionsCreate(wxWindow *parent, int format)
 {
-   if (!CheckFFmpegPresence())
-      return false;
+   if (!CheckFFmpegPresence(true)) {
+      return ExportPlugin::OptionsCreate(parent, format);
+   }
+
    // subformat index may not correspond directly to fmts[] index, convert it
    mSubFormat = AdjustFormatIndex(format);
    if (mSubFormat == FMT_M4A)
    {
-      ExportFFmpegAACOptions od(parent);
-      od.ShowModal();
-      return true;
+      return new ExportFFmpegAACOptions(parent, format);
    }
    else if (mSubFormat == FMT_AC3)
    {
-      ExportFFmpegAC3Options od(parent);
-      od.ShowModal();
-      return true;
+      return new ExportFFmpegAC3Options(parent, format);
    }
    else if (mSubFormat == FMT_AMRNB)
    {
-      ExportFFmpegAMRNBOptions od(parent);
-      od.ShowModal();
-      return true;
+      return new ExportFFmpegAMRNBOptions(parent, format);
    }
    else if (mSubFormat == FMT_WMA2)
    {
-      ExportFFmpegWMAOptions od(parent);
-      od.ShowModal();
-      return true;
+      return new ExportFFmpegWMAOptions(parent, format);
    }
    else if (mSubFormat == FMT_OTHER)
    {
+      return ExportPlugin::OptionsCreate(parent, format);
+#if 0
       ExportFFmpegOptions od(parent);
       od.ShowModal();
       return true;
+#endif
    }
 
-   return false;
+   return ExportPlugin::OptionsCreate(parent, format);
 }
 
 ExportPlugin *New_ExportFFmpeg()

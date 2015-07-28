@@ -30,7 +30,6 @@ class DeviceToolBar:public ToolBar {
 
    void Create(wxWindow * parent);
 
-   void RecreateTipWindows();
    void UpdatePrefs();
 
    void DeinitChildren();

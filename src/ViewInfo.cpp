@@ -13,6 +13,8 @@ Paul Licameli
 #include <algorithm>
 
 #include "Internat.h"
+#include "prefs/GUISettings.h"
+#include "Prefs.h"
 #include "xml/XMLWriter.h"
 
 namespace {
@@ -26,10 +28,16 @@ ZoomInfo::ZoomInfo(double start, double screenDuration, double pixelsPerSecond)
    , screen(screenDuration)
    , zoom(pixelsPerSecond)
 {
+   UpdatePrefs();
 }
 
 ZoomInfo::~ZoomInfo()
 {
+}
+
+void ZoomInfo::UpdatePrefs()
+{
+   dBr = gPrefs->Read(ENV_DB_KEY, ENV_DB_RANGE);
 }
 
 /// Converts a position (mouse X coordinate) to

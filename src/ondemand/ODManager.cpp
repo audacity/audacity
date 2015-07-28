@@ -541,12 +541,12 @@ bool ODManager::HasLoadedODFlag()
 }
 
 ///fills in the status bar message for a given track
-void ODManager::FillTipForWaveTrack( WaveTrack * t, const wxChar ** ppTip )
+void ODManager::FillTipForWaveTrack( WaveTrack * t, wxString &tip )
 {
    mQueuesMutex.Lock();
    for(unsigned int i=0;i<mQueues.size();i++)
    {
-      mQueues[i]->FillTipForWaveTrack(t,ppTip);
+      mQueues[i]->FillTipForWaveTrack(t, tip);
    }
    mQueuesMutex.Unlock();
 }

@@ -11,12 +11,14 @@
 #ifndef __AUDACITY_VOICEKEY__
 #define __AUDACITY_VOICEKEY__
 
-#include "WaveTrack.h"
-
 
 #ifndef M_PI
 #define	M_PI		3.14159265358979323846  /* pi */
 #endif
+
+#include "audacity/Types.h"
+
+class WaveTrack;
 
 enum VoiceKeyTypes
   {
@@ -81,20 +83,20 @@ class VoiceKey {
    double TestSignChanges (WaveTrack & t, sampleCount start, sampleCount len);
    double TestDirectionChanges(WaveTrack & t, sampleCount start, sampleCount len);
 
-   void TestEnergyUpdate (double & prevErg, int length, const sampleFormat & drop, const sampleFormat & add);
-   void TestSignChangesUpdate(double & currentsignchanges,int length, const sampleFormat & a1,
-                              const sampleFormat & a2,   const sampleFormat & z1, const sampleFormat & z2);
+   void TestEnergyUpdate (double & prevErg, int length, const float & drop, const float & add);
+   void TestSignChangesUpdate(double & currentsignchanges,int length, const float & a1,
+                              const float & a2, const float & z1, const float & z2);
    void TestDirectionChangesUpdate(double & currentdirectionchanges,int length,
-                                   int & atrend, const sampleFormat & a1, const sampleFormat & a2,
-                                   int & ztrend, const sampleFormat & z1, const sampleFormat & z2);
+                                   int & atrend, const float & a1, const float & a2,
+                                   int & ztrend, const float & z1, const float & z2);
 
 };
 
 
-inline int sgn(int  number){ return (number<0) ? -1: 1;};
+inline int sgn(int  number){ return (number<0) ? -1: 1;}
 
 //This returns a logistic density based on a z-score
 // a logistic distn has variance (pi*s)^2/3
 
-//inline float inline float logistic(float z){   return fexp(-1 * z/(pi / sqrt(3)) / (1 + pow(fexp(-1 * z(pi / sqrt(3))),2)));};
+//inline float inline float logistic(float z){   return fexp(-1 * z/(pi / sqrt(3)) / (1 + pow(fexp(-1 * z(pi / sqrt(3))),2)));}
 #endif

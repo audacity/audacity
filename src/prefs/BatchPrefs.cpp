@@ -21,7 +21,6 @@
 #include <wx/textdlg.h>
 
 #include "BatchPrefs.h"
-#include "../Envelope.h"
 #include "../Languages.h"
 #include "../Prefs.h"
 #include "../Project.h"

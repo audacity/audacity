@@ -51,11 +51,6 @@ extern bool gIsQuitting;
 // Asynchronous open
 DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_OPEN_AUDIO_FILE, -1);
 
-// Keyboard capture support
-DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_CAPTURE_KEYBOARD, -1);
-DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_RELEASE_KEYBOARD, -1);
-DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_CAPTURE_KEY, -1);
-
 // Flags used in command handling.
 
 // These flags represent the majority of the states that affect
@@ -105,16 +100,10 @@ class AudacityApp:public wxApp {
  public:
    AudacityApp();
    virtual bool OnInit(void);
-   void FinishInits();
-#if wxCHECK_VERSION(3, 0, 0)
-   virtual void OnEventLoopEnter(wxEventLoopBase * pLoop);
-#endif
    virtual int OnExit(void);
    virtual void OnFatalException();
 
-#if defined(__WXGTK__)
    int FilterEvent(wxEvent & event);
-#endif
 
    void InitLang( const wxString & lang );
 
@@ -209,12 +198,6 @@ class AudacityApp:public wxApp {
 
 #if defined(EXPERIMENTAL_CRASH_REPORT)
    void GenerateCrashReport(wxDebugReport::Context ctx);
-#endif
-
-#if defined(__WXGTK__)
-   /** \brief This flag is set true when in a keyboard event handler.
-    * Used to work around a hang issue with ibus (bug 154) */
-   bool inKbdHandler;
 #endif
 
  private:

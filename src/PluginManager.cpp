@@ -535,7 +535,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
             }
             S.EndHorizontalLay();
 
-            S.StartHorizontalLay(wxALIGN_RIGHT, 0);
+            S.StartHorizontalLay(wxALIGN_NOT | wxALIGN_LEFT, 0);
             {
                wxRadioButton* rb;
                /* i18n-hint: This is before radio buttons selecting which effects to show */
@@ -571,7 +571,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
          mEffects->InsertColumn(COL_State, _("State"));
          mEffects->InsertColumn(COL_Path, _("Path"));
 
-         S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxEXPAND, 0);
+         S.StartHorizontalLay(wxALIGN_LEFT | wxEXPAND, 0);
          {
             S.Id(ID_SelectAll).AddButton(_("&Select All"));
             S.Id(ID_ClearAll).AddButton(_("C&lear All"));

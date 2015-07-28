@@ -21,7 +21,6 @@
 #include <wx/timer.h>
 
 #include "../SampleFormat.h"
-#include "../Sequence.h"
 #include "Ruler.h"
 
 // Event used to notify all meters of preference changes
@@ -57,8 +56,8 @@ class MeterUpdateMsg
    int tailPeakCount[kMaxMeterBars];
 
    /* neither constructor nor destructor do anything */
-   MeterUpdateMsg() { };
-   ~MeterUpdateMsg() { };
+   MeterUpdateMsg() { }
+   ~MeterUpdateMsg() { }
    /* for debugging purposes, printing the values out is really handy */
    /** \brief Print out all the values in the meter update message */
    wxString toString();

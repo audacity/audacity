@@ -444,7 +444,7 @@ void ToolBar::ReCreateButtons()
    {
       // Create the resizer and add it to the main sizer
       mResizer = new ToolBarResizer( this );
-      ms->Add( mResizer, 0, wxEXPAND | wxALIGN_RIGHT | wxALIGN_TOP | wxLEFT, 1 );
+      ms->Add( mResizer, 0, wxEXPAND | wxALIGN_TOP | wxLEFT, 1 );
       mResizer->SetToolTip( _("Click and drag to resize toolbar") );
    }
 

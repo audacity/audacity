@@ -92,7 +92,7 @@ class ODWaveTrackTaskQueue
    ODTask* GetTask(size_t x);
 
    ///fills in the status bar message for a given track
-   void FillTipForWaveTrack( WaveTrack * t, const wxChar ** ppTip );
+   void FillTipForWaveTrack( WaveTrack * t, wxString &tip );
 
  protected:
 

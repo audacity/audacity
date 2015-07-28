@@ -169,14 +169,13 @@ audio tracks.
 #include "BlockFile.h"
 #include "Envelope.h"
 #include "NumberScale.h"
-#include "Track.h"
 #include "WaveTrack.h"
 #include "LabelTrack.h"
 #include "TimeTrack.h"
 #include "Prefs.h"
+#include "prefs/GUISettings.h"
 #include "prefs/SpectrogramSettings.h"
 #include "prefs/WaveformSettings.h"
-#include "Sequence.h"
 #include "Spectrum.h"
 #include "ViewInfo.h"
 #include "widgets/Ruler.h"
@@ -326,9 +325,12 @@ void TrackArtist::DrawTracks(TrackList * tracks,
                              bool bigPoints,
                              bool drawSliders)
 {
+#if defined(__WXMAC__)
+   dc.GetGraphicsContext()->SetAntialiasMode(wxANTIALIAS_NONE);
+#endif
+
    wxRect trackRect = rect;
    wxRect stereoTrackRect;
-
    TrackListIterator iter(tracks);
    Track *t;
 
@@ -1442,7 +1444,7 @@ void TrackArtist::DrawWaveform(WaveTrack *track,
       if (xx >= 0 && xx < rect.width) {
          dc.SetPen(*wxGREY_PEN);
          AColor::Line(dc, (int) (rect.x + xx - 1), rect.y, (int) (rect.x + xx - 1), rect.y + rect.height);
-         if (loc.typ == WaveTrack::locationCutLine) {
+         if (loc.typ == WaveTrackLocation::locationCutLine) {
             dc.SetPen(*wxRED_PEN);
          }
          else {
@@ -1987,7 +1989,7 @@ static inline float findValue
       value /= binwidth;
    }
 #else
-   half;
+   wxUnusedVar(half);
    // Maximum method, and no apportionment of any single bins over multiple pixel rows
    // See Bug971
    int index, limitIndex;
@@ -3032,12 +3034,8 @@ void TrackArtist::DrawNoteTrack(NoteTrack *track,
 
                      // now do justification
                      const char *s = LookupStringAttribute(note, texts, "");
-                     #ifdef __WXMAC__
-                        long textWidth, textHeight;
-                     #else
-                        int textWidth, textHeight;
-                     #endif
-                     dc.GetTextExtent(LAT1CTOWX(s), &textWidth, &textHeight);
+                     wxCoord textWidth, textHeight;
+                     dc.GetTextExtent(wxString::FromUTF8(s), &textWidth, &textHeight);
                      long hoffset = 0;
                      long voffset = -textHeight; // default should be baseline of text
 
@@ -3110,7 +3108,7 @@ void TrackArtist::DrawTimeTrack(TimeTrack *track,
    double lower = track->GetRangeLower(), upper = track->GetRangeUpper();
    if(track->GetDisplayLog()) {
       // MB: silly way to undo the work of GetWaveYPos while still getting a logarithmic scale
-      double dBRange = gPrefs->Read(wxT("/GUI/EnvdBRange"), ENV_DB_RANGE);
+      double dBRange = gPrefs->Read(ENV_DB_KEY, ENV_DB_RANGE);
       lower = LINEAR_TO_DB(std::max(1.0e-7, lower)) / dBRange + 1.0;
       upper = LINEAR_TO_DB(std::max(1.0e-7, upper)) / dBRange + 1.0;
    }
@@ -3120,7 +3118,7 @@ void TrackArtist::DrawTimeTrack(TimeTrack *track,
 
 void TrackArtist::UpdatePrefs()
 {
-   mdBrange = gPrefs->Read(wxT("/GUI/EnvdBRange"), mdBrange);
+   mdBrange = gPrefs->Read(ENV_DB_KEY, mdBrange);
    mShowClipping = gPrefs->Read(wxT("/GUI/ShowClipping"), mShowClipping);
 
    gPrefs->Flush();

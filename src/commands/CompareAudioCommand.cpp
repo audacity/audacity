@@ -20,6 +20,7 @@ threshold of difference in two selected tracks
 #include "CompareAudioCommand.h"
 #include "../Project.h"
 #include "Command.h"
+#include "../WaveTrack.h"
 
 wxString CompareAudioCommandType::BuildName()
 {

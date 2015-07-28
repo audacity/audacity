@@ -61,6 +61,7 @@
 #include "../AudioIO.h"
 #include "../AColor.h"
 #include "../ImageManipulation.h"
+#include "../prefs/GUISettings.h"
 #include "../Project.h"
 #include "../toolbars/MeterToolBar.h"
 #include "../toolbars/ControlToolBar.h"
@@ -366,7 +367,7 @@ Meter::~Meter()
 
 void Meter::UpdatePrefs()
 {
-   mDBRange = gPrefs->Read(wxT("/GUI/EnvdBRange"), ENV_DB_RANGE);
+   mDBRange = gPrefs->Read(ENV_DB_KEY, ENV_DB_RANGE);
 
    mMeterRefreshRate = gPrefs->Read(Key(wxT("RefreshRate")), 30);
    mGradient = gPrefs->Read(Key(wxT("Bars")), wxT("Gradient")) == wxT("Gradient");

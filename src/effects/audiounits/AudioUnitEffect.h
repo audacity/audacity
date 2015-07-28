@@ -8,21 +8,23 @@
   Leland Lucius
 
 **********************************************************************/
+#ifndef AUDACITY_AUDIOUNIT_EFFECT_H
+
+#include "../../Audacity.h"
+
+#if USE_AUDIO_UNITS
 
 #include <wx/dialog.h>
 
-#include "../Effect.h"
-
-#include <ApplicationServices/ApplicationServices.h>
-#include <CoreServices/CoreServices.h>
-#include <Carbon/Carbon.h>
-#include <AudioUnit/AudioUnitProperties.h>
-#include <AudioUnit/AudioUnitCarbonView.h>
 #include <AudioToolbox/AudioUnitUtilities.h>
+#include <AudioUnit/AudioUnit.h>
+#include <AudioUnit/AudioUnitProperties.h>
 
 #include "audacity/EffectInterface.h"
 #include "audacity/ModuleInterface.h"
 #include "audacity/PluginInterface.h"
+
+#include "AUControl.h"
 
 #define AUDIOUNITEFFECTS_VERSION wxT("1.0.0.0")
 #define AUDIOUNITEFFECTS_FAMILY wxT("AudioUnit")
@@ -41,7 +43,7 @@ class AudioUnitEffect : public wxEvtHandler,
 public:
    AudioUnitEffect(const wxString & path,
                    const wxString & name,
-                   Component component,
+                   AudioComponent component,
                    AudioUnitEffect *master = NULL);
    virtual ~AudioUnitEffect();
 
@@ -156,53 +158,39 @@ private:
    void EventListener(const AudioUnitEvent *inEvent,
                       AudioUnitParameterValue inParameterValue);
 
-   static pascal OSStatus WindowEventHandlerCallback(EventHandlerCallRef handler,
-                                                     EventRef event,
-                                                     void *data);
-   OSStatus WindowEventHandler(EventRef event);
-
-   static pascal OSStatus ControlEventHandlerCallback(EventHandlerCallRef handler,
-                                                      EventRef event,
-                                                      void *data);
-   OSStatus ControlEventHandler(EventRef event);
-
-   static pascal OSStatus TrackingEventHandler(EventHandlerCallRef handler,
-                                               EventRef event,
-                                               void *data);
-   OSStatus OnTrackingEvent(EventRef event);
-
-   void RemoveHandler();
-
    void GetChannelCounts();
 
    bool LoadParameters(const wxString & group);
    bool SaveParameters(const wxString & group);
 
-   void OnSize(wxSizeEvent & evt);
+
+   bool CreatePlain(wxWindow *parent);
 
 private:
 
-   wxString    mPath;
-   wxString    mName;
-   wxString    mVendor;
-   Component   mComponent;
-   AudioUnit   mUnit;
-   bool        mSupportsMono;
-   bool        mSupportsStereo;
+   wxString mPath;
+   wxString mName;
+   wxString mVendor;
+   AudioComponent mComponent;
+   AudioUnit mUnit;
+   bool mUnitInitialized;
+
+   bool mSupportsMono;
+   bool mSupportsStereo;
 
    EffectHostInterface *mHost;
-   int         mAudioIns;
-   int         mAudioOuts;
-   bool        mInteractive;
-   bool        mLatencyDone;
-   UInt32      mBlockSize;
-   double      mSampleRate;
+   int mAudioIns;
+   int mAudioOuts;
+   bool mInteractive;
+   bool mLatencyDone;
+   UInt32 mBlockSize;
+   double mSampleRate;
 
-   int         mBufferSize;
-   bool        mUseLatency;
+   int mBufferSize;
+   bool mUseLatency;
 
    AudioTimeStamp mTimeStamp;
-   bool        mReady;
+   bool mReady;
 
    AudioBufferList *mInputList;
    AudioBufferList *mOutputList;
@@ -210,14 +198,9 @@ private:
    EffectUIHostInterface *mUIHost;
    wxWindow *mParent;
    wxDialog *mDialog;
-   wxSizerItem *mContainer;
-   AudioUnitCarbonView mCarbonView;
-   bool mUseGUI;
-   HIViewRef mAUView;
-   EventTargetRef mEventRef;
-   bool mIsCocoa;
-   bool mIsCarbon;
-   bool mIsGeneric;
+   AUControl *mControl;
+   wxString mUIType;
+   bool mIsGraphical;
 
    AudioUnitEffect *mMaster;     // non-NULL if a slave
    AudioUnitEffectArray mSlaves;
@@ -227,18 +210,6 @@ private:
    sampleCount mNumSamples;
    
    AUEventListenerRef mEventListenerRef;
-
-   EventHandlerRef mHandlerRef;
-   EventHandlerUPP mHandlerUPP;
-   EventHandlerRef mControlHandlerRef;
-   EventHandlerUPP mControlHandlerUPP;
-
-   EventHandlerUPP mTrackingHandlerUPP;
-   EventHandlerRef mRootTrackingHandlerRef;
-   EventHandlerRef mContentTrackingHandlerRef;
-   EventHandlerRef mAUTrackingHandlerRef;
-
-   DECLARE_EVENT_TABLE();
 
    friend class AudioUnitEffectExportDialog;
    friend class AudioUnitEffectImportDialog;
@@ -282,7 +253,7 @@ public:
    // AudioUnitEffectModule implementation
 
    void LoadAudioUnitsOfType(OSType inAUType, wxArrayString & effects);
-   Component FindAudioUnit(const wxString & path, wxString & name);
+   AudioComponent FindAudioUnit(const wxString & path, wxString & name);
 
    wxString FromOSType(OSType type);
    OSType ToOSType(const wxString & type);
@@ -292,3 +263,6 @@ private:
    wxString mPath;
 };
 
+#endif
+
+#endif

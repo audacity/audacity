@@ -13,7 +13,9 @@
 
 #include "LyricsWindow.h"
 #include "Lyrics.h"
+#include "AudioIO.h"
 #include "Project.h"
+#include "TrackPanel.h" // for EVT_TRACK_PANEL_TIMER
 
 #include <wx/radiobut.h>
 #include <wx/toolbar.h>
@@ -49,7 +51,7 @@ LyricsWindow::LyricsWindow(AudacityProject *parent):
                                  wxT("") :
                                  wxString::Format(
                                    wxT(" - %s"),
-                                   parent->GetName().c_str()).c_str())),
+                                   parent->GetName()))),
             wxPoint(100, 300), gSize,
             //v Bug in wxFRAME_FLOAT_ON_PARENT:
             // If both the project frame and LyricsWindow are minimized and you restore LyricsWindow,
@@ -123,10 +125,21 @@ LyricsWindow::LyricsWindow(AudacityProject *parent):
    //   default:
    //      pRadioButton_Highlight->SetValue(true); break;
    //}
+
+   // Events from the project don't propagate directly to this other frame, so...
+   mProject->Connect(EVT_TRACK_PANEL_TIMER,
+      wxCommandEventHandler(LyricsWindow::OnTimer),
+      NULL,
+      this);
 }
 
 LyricsWindow::~LyricsWindow()
-{}
+{
+   mProject->Disconnect(EVT_TRACK_PANEL_TIMER,
+      wxCommandEventHandler(LyricsWindow::OnTimer),
+      NULL,
+      this);
+}
 
 void LyricsWindow::OnCloseWindow(wxCloseEvent & WXUNUSED(event))
 {
@@ -143,3 +156,18 @@ void LyricsWindow::OnStyle_Highlight(wxCommandEvent & WXUNUSED(event))
    mLyricsPanel->SetLyricsStyle(Lyrics::kHighlightLyrics);
 }
 
+void LyricsWindow::OnTimer(wxCommandEvent &event)
+{
+   if (mProject->IsAudioActive())
+   {
+      GetLyricsPanel()->Update(gAudioIO->GetStreamTime());
+   }
+   else
+   {
+      // Reset lyrics display.
+      GetLyricsPanel()->Update(mProject->GetSel0());
+   }
+
+   // Let other listeners get the notification
+   event.Skip();
+}

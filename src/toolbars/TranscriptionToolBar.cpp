@@ -15,6 +15,7 @@
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "TranscriptionToolBar.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
@@ -28,7 +29,6 @@
 #endif // WX_PRECOMP
 
 #include "../Envelope.h"
-#include "TranscriptionToolBar.h"
 
 #include "ControlToolBar.h"
 #include "../AudacityApp.h"
@@ -38,10 +38,13 @@
 #include "../ImageManipulation.h"
 #include "../Project.h"
 #include "../TimeTrack.h"
-#include "../VoiceKey.h"
 #include "../WaveTrack.h"
 #include "../widgets/AButton.h"
 #include "../widgets/ASlider.h"
+
+#ifdef EXPERIMENTAL_VOICE_DETECTION
+#include "../VoiceKey.h"
+#endif
 
 IMPLEMENT_CLASS(TranscriptionToolBar, ToolBar);
 
@@ -52,9 +55,13 @@ IMPLEMENT_CLASS(TranscriptionToolBar, ToolBar);
 
 BEGIN_EVENT_TABLE(TranscriptionToolBar, ToolBar)
    EVT_CHAR(TranscriptionToolBar::OnKeyEvent)
+   EVT_COMMAND(wxID_ANY, EVT_CAPTURE_KEY, TranscriptionToolBar::OnCaptureKey)
+
    EVT_COMMAND_RANGE(TTB_PlaySpeed, TTB_PlaySpeed,
                      wxEVT_COMMAND_BUTTON_CLICKED, TranscriptionToolBar::OnPlaySpeed)
    EVT_SLIDER(TTB_PlaySpeedSlider, TranscriptionToolBar::OnSpeedSlider)
+
+#ifdef EXPERIMENTAL_VOICE_DETECTION
    EVT_COMMAND_RANGE(TTB_StartOn, TTB_StartOn,
                      wxEVT_COMMAND_BUTTON_CLICKED, TranscriptionToolBar::OnStartOn)
    EVT_COMMAND_RANGE(TTB_StartOff, TTB_StartOff,
@@ -76,7 +83,7 @@ BEGIN_EVENT_TABLE(TranscriptionToolBar, ToolBar)
    EVT_SLIDER(TTB_SensitivitySlider, TranscriptionToolBar::OnSensitivitySlider)
 
    EVT_CHOICE(TTB_KeyType, TranscriptionToolBar::SetKeyType)
-   EVT_COMMAND(wxID_ANY, EVT_CAPTURE_KEY, TranscriptionToolBar::OnCaptureKey)
+#endif
 END_EVENT_TABLE()
    ;   //semicolon enforces  proper automatic indenting in emacs.
 
@@ -264,6 +271,25 @@ void TranscriptionToolBar::Populate()
    UpdatePrefs();
 }
 
+void TranscriptionToolBar::EnableDisableButtons()
+{
+#ifdef EXPERIMENTAL_VOICE_DETECTION
+   AudacityProject *p = GetActiveProject();
+   if (!p) return;
+   // Is anything selected?
+   bool selection = false;
+   TrackListIterator iter(p->GetTracks());
+   for (Track *t = iter.First(); t; t = iter.Next())
+      if (t->GetSelected()) {
+         selection = true;
+         break;
+      }
+   selection &= (p->GetSel0() < p->GetSel1());
+
+   mButtons[TTB_Calibrate]->SetEnabled(selection);
+#endif
+}
+
 void TranscriptionToolBar::UpdatePrefs()
 {
    RegenerateTooltips();
@@ -300,13 +326,12 @@ void TranscriptionToolBar::RegenerateTooltips()
 
 void TranscriptionToolBar::OnFocus(wxFocusEvent &event)
 {
-   wxCommandEvent e(EVT_CAPTURE_KEYBOARD);
-
    if (event.GetEventType() == wxEVT_KILL_FOCUS) {
-      e.SetEventType(EVT_RELEASE_KEYBOARD);
+      AudacityProject::ReleaseKeyboard(this);
    }
-   e.SetEventObject(this);
-   GetParent()->GetEventHandler()->ProcessEvent(e);
+   else {
+      AudacityProject::CaptureKeyboard(this);
+   }
 
    Refresh(false);
 
@@ -471,6 +496,7 @@ void TranscriptionToolBar::OnSpeedSlider(wxCommandEvent& WXUNUSED(event))
    //}
 }
 
+#ifdef EXPERIMENTAL_VOICE_DETECTION
 void TranscriptionToolBar::OnStartOn(wxCommandEvent & WXUNUSED(event))
 {
    //If IO is busy, abort immediately
@@ -847,26 +873,6 @@ void TranscriptionToolBar::OnSensitivitySlider(wxCommandEvent & WXUNUSED(event))
    mSensitivity = (mSensitivitySlider->Get());
 }
 
-void TranscriptionToolBar::EnableDisableButtons()
-{
-
-#ifdef EXPERIMENTAL_VOICE_DETECTION
-   AudacityProject *p = GetActiveProject();
-   if (!p) return;
-   // Is anything selected?
-   bool selection = false;
-   TrackListIterator iter(p->GetTracks());
-   for (Track *t = iter.First(); t; t = iter.Next())
-      if (t->GetSelected()) {
-         selection = true;
-         break;
-      }
-   selection &= (p->GetSel0() < p->GetSel1());
-
-   mButtons[TTB_Calibrate]->SetEnabled(selection);
-#endif
-}
-
 void TranscriptionToolBar::SetKeyType(wxCommandEvent & WXUNUSED(event))
 {
    int value = mKeyTypeChoice->GetSelection();
@@ -892,6 +898,7 @@ void TranscriptionToolBar::SetKeyType(wxCommandEvent & WXUNUSED(event))
       }
 
 }
+#endif
 
 void TranscriptionToolBar::ShowPlaySpeedDialog()
 {

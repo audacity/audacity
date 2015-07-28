@@ -16,6 +16,7 @@
 #include "LabelTrack.h"
 #include "Project.h"
 #include "TrackPanel.h"
+#include "WaveTrack.h"
 #include "widgets/NumericTextCtrl.h"
 
 // Change this to "true" to snap to nearest and "false" to snap to previous
@@ -81,7 +82,7 @@ SnapManager::SnapManager(TrackList *tracks, TrackClipArray *exclusions,
             WaveClip *clip = it->GetData();
             if (exclusions) {
                bool skip = false;
-               for(int j=0; j<(int)exclusions->GetCount(); j++) {
+               for(int j=0; j<(int)exclusions->size(); j++) {
                   if ((*exclusions)[j].track == waveTrack &&
                       (*exclusions)[j].clip == clip)
                      skip = true;

@@ -102,7 +102,7 @@ class AUDACITY_DLL_API CommandManager: public XMLTagHandler
                    wxString after, int checkmark = -1);
 
    void AddItemList(wxString name, wxArrayString labels,
-                    CommandFunctor *callback, bool plugins = false);
+                    CommandFunctor *callback);
 
    void AddCheck(const wxChar *name,
                  const wxChar *label,
@@ -180,12 +180,6 @@ class AUDACITY_DLL_API CommandManager: public XMLTagHandler
    void SetKeyFromIndex(int i, wxString key);
 
    //
-   // Displaying menus
-   //
-   void HandleMenuOpen(wxMenuEvent &evt);
-   void HandleMenuClose(wxMenuEvent &evt);
-
-   //
    // Executing commands
    //
    bool HandleCommandEntry(CommandListEntry * entry, wxUint32 flags, wxUint32 mask, const wxEvent * evt = NULL);
@@ -231,8 +225,6 @@ class AUDACITY_DLL_API CommandManager: public XMLTagHandler
    virtual XMLTagHandler *HandleXMLChild(const wxChar *tag);
    virtual void WriteXML(XMLWriter &xmlFile);
 
-   bool mbHideFlaggedItems;
-
 protected:
 
    wxMenuBar * CurrentMenuBar();
@@ -248,9 +240,6 @@ protected:
 
    wxString GetKey(wxString label);
 
-   void ToggleAccels(wxMenu *m, bool show);
-   bool ItemShouldBeHidden( wxString &Label );
-
 private:
    MenuBarList  mMenuBarList;
    SubMenuList  mSubMenuList;
@@ -259,15 +248,12 @@ private:
    CommandNameHash  mCommandKeyHash;
    CommandIDHash  mCommandIDHash;
    int mCurrentID;
-   int mHiddenID;
    int mXMLKeysRead;
 
    bool mbSeparatorAllowed; // false at the start of a menu and immediately after a separator.
-   int mHidingLevel;
 
    wxString mCurrentMenuName;
    wxMenu * mCurrentMenu;
-   wxMenu * mOpenMenu;
 
    wxUint32 mDefaultFlags;
    wxUint32 mDefaultMask;

@@ -47,7 +47,7 @@ void GetQTImportPlugin(ImportPluginList *importPluginList,
    #include <Carbon/Carbon.h>
    #include <QuickTime/QuickTime.h>
 
-   #include <wx/mac/private.h>
+   #include <wx/osx/core/private.h>
 #else
 // These get used when building under Windows
    #include <ConditionalMacros.h>

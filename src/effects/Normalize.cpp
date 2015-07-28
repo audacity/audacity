@@ -16,6 +16,7 @@
 
 
 #include "../Audacity.h" // for rint from configwin.h
+#include "Normalize.h"
 
 #include <math.h>
 
@@ -27,8 +28,6 @@
 #include "../ShuttleGui.h"
 #include "../WaveTrack.h"
 #include "../widgets/valnum.h"
-
-#include "Normalize.h"
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //

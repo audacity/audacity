@@ -31,6 +31,7 @@ simplifies construction of menu items.
 *//*******************************************************************/
 
 #include "Audacity.h"
+#include "Project.h"
 
 #include <iterator>
 #include <limits>
@@ -53,7 +54,6 @@ simplifies construction of menu items.
 #include "effects/Contrast.h"
 #include "TrackPanel.h"
 
-#include "Project.h"
 #include "effects/EffectManager.h"
 
 #include "AudacityApp.h"
@@ -117,8 +117,9 @@ simplifies construction of menu items.
 #include "widgets/HelpSystem.h"
 #include "DeviceManager.h"
 
-#include "CaptureEvents.h"
 #include "Snap.h"
+
+#include "WaveTrack.h"
 
 #if defined(EXPERIMENTAL_CRASH_REPORT)
 #include <wx/debugrpt.h>
@@ -772,16 +773,6 @@ void AudacityProject::CreateMenusAndCommands()
 
    c->EndSubMenu();
 
-   /////////////////////////////////////////////////////////////////////////////
-
-   /* i18n-hint: Usually keep the ! at the start.  It means this option is hidden.
-    * Simplified View toggles the showing and hiding of 'hidden' menu items that start
-    * with !.  If your translation file is for a special use, that is if it is for a
-    * simplified view with hidden menu items, then leave the ! out here, so that the
-    * user can show/hide some of the menu items. */
-   c->AddCheck(wxT("SimplifiedView"), _("!Simplified View"), FN(OnSimplifiedView),
-               mCommandManager.mbHideFlaggedItems ? 1 : 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
-
    c->EndMenu();
 
    /////////////////////////////////////////////////////////////////////////////
@@ -1202,7 +1193,8 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddCommand(wxT("TrackGain"), _("Change gain on focused track"), FN(OnTrackGain), wxT("Shift+G"));
    c->AddCommand(wxT("TrackGainInc"), _("Increase gain on focused track"), FN(OnTrackGainInc), wxT("Alt+Shift+Up"));
    c->AddCommand(wxT("TrackGainDec"), _("Decrease gain on focused track"), FN(OnTrackGainDec), wxT("Alt+Shift+Down"));
-   c->AddCommand(wxT("TrackMenu"), _("Open menu on focused track"), FN(OnTrackMenu), wxT("Shift+M"));
+   // use "wantevent" to eat the KEY_UP event...fixes a problem on Windows where the key up selects the "Mono" item
+   c->AddCommand(wxT("TrackMenu"), _("Open menu on focused track"), FN(OnTrackMenu), wxT("Shift+M\twantevent"));
    c->AddCommand(wxT("TrackMute"), _("Mute/Unmute focused track"), FN(OnTrackMute), wxT("Shift+U"));
    c->AddCommand(wxT("TrackSolo"), _("Solo/Unsolo focused track"), FN(OnTrackSolo), wxT("Shift+S"));
    c->AddCommand(wxT("TrackClose"), _("Close focused track"), FN(OnTrackClose), wxT("Shift+C"));
@@ -1591,34 +1583,10 @@ void AudacityProject::ModifyUndoMenuItems()
       mCommandManager.Modify(wxT("Undo"),
                              wxString::Format(_("&Undo %s"),
                                               desc.c_str()));
-      // LL:  Hackage Alert!!!
-      //
-      // On the Mac, all menu state changes are ignored if a modal
-      // dialog is displayed.
-      //
-      // An example of this is when applying chains where the "Undo"
-      // menu state should change when each command executes.  But,
-      // since the state changes are ignored, the "Undo" menu item
-      // will never get enabled.  And unfortunately, this will cause
-      // the menu item to be permanently disabled since the recorded
-      // state is enabled (even though it isn't) causing the routines
-      // to ignore the new enable request.
-      //
-      // So, the workaround is to transition the item back to disabled
-      // and then to enabled.  (Sorry, I couldn't find a better way of
-      // doing it.)
-      //
-      // See src/mac/carbon/menuitem.cpp, wxMenuItem::Enable() for more
-      // info.
-      mCommandManager.Enable(wxT("Undo"), false);
-      mCommandManager.Enable(wxT("Undo"), true);
    }
    else {
       mCommandManager.Modify(wxT("Undo"),
                              wxString::Format(_("&Undo")));
-      // LL: See above
-      mCommandManager.Enable(wxT("Undo"), true);
-      mCommandManager.Enable(wxT("Undo"), false);
    }
 
    if (mUndoManager.RedoAvailable()) {
@@ -2904,31 +2872,7 @@ void AudacityProject::OnTrackGainDec()
 
 void AudacityProject::OnTrackMenu()
 {
-   // LLL:  There's a slight problem on Windows that I was not able to track
-   //       down to the actual cause.  I "think" it might be a problem in wxWidgets
-   //       on Windows, but I'm not sure.
-   //
-   //       Let's say the user has SHIFT+M assigned as the keyboard shortcut for
-   //       bringing up the track menu.  If there is only 1 wave track and the user
-   //       uses the shortcut, the menu is display and immediately disappears.  But,
-   //       if there are 2 or more wave tracks, then the menu is displayed.
-   //
-   //       However, what is actually happening is that the popup menu is processing
-   //       the "M" as the menu item to select after the menu is displayed.  With only
-   //       1 track, the only (enabled) menu item that begins with "M" is Mono and
-   //       that's what gets selected.
-   //
-   //       With 2+ wave tracks, there's 2 menu items that begin with "M" and Mono
-   //       is only highlighted by not selected, so the menu doesn't get dismissed.
-   //
-   //       While the 1 or 2 track example above is a way to recreate the issue, the
-   //       real problem is when there's only one enabled menu item that begins with
-   //       the selected shortcut key.
-   //
-   //       The workaround is to queue a context menu event, allowing the key press
-   //       event to complete.
-   wxContextMenuEvent e(wxEVT_CONTEXT_MENU, GetId());
-   mTrackPanel->GetEventHandler()->AddPendingEvent(e);
+   mTrackPanel->OnTrackMenu();
 }
 
 void AudacityProject::OnTrackMute()
@@ -5274,14 +5218,6 @@ void AudacityProject::OnResetToolBars()
    ModifyToolbarMenus();
 }
 
-void AudacityProject::OnSimplifiedView()
-{
-   mCommandManager.mbHideFlaggedItems = !mCommandManager.mbHideFlaggedItems;
-   mCommandManager.Check(wxT("SimplifiedView"), mCommandManager.mbHideFlaggedItems );
-   RebuildMenuBar();
-}
-
-
 //
 // Project Menu
 //
@@ -6281,10 +6217,6 @@ void AudacityProject::OnApplyChain()
 {
    BatchProcessDialog dlg(this);
    dlg.ShowModal();
-
-   // LL:  See comments in ModifyUndoMenuItems() for info about this...
-   //
-   // Refresh the Undo menu.
    ModifyUndoMenuItems();
 }
 

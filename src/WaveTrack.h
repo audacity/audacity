@@ -13,7 +13,6 @@
 
 #include "Track.h"
 #include "SampleFormat.h"
-#include "Sequence.h"
 #include "WaveClip.h"
 #include "Experimental.h"
 #include "widgets/ProgressDialog.h"
@@ -21,6 +20,8 @@
 #include <wx/gdicmn.h>
 #include <wx/longlong.h>
 #include <wx/thread.h>
+
+#include "WaveTrackLocation.h"
 
 class SpectrogramSettings;
 class WaveformSettings;
@@ -53,7 +54,7 @@ WX_DEFINE_ARRAY( Region*, Regions );
 
 class Envelope;
 
-class AUDACITY_DLL_API WaveTrack: public Track {
+class AUDACITY_DLL_API WaveTrack : public Track {
 
  private:
 
@@ -79,22 +80,8 @@ class AUDACITY_DLL_API WaveTrack: public Track {
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
    static bool mMonoAsVirtualStereo;
 #endif
-   enum LocationType {
-      locationCutLine = 1,
-      locationMergePoint
-   };
 
-   struct Location {
-      // Position of track location
-      double pos;
-
-      // Type of track location
-      LocationType typ;
-
-      // Only for typ==locationMergePoint
-      int clipidx1; // first clip (left one)
-      int clipidx2; // second clip (right one)
-   };
+   typedef WaveTrackLocation Location;
 
    virtual ~WaveTrack();
    virtual double GetOffset() const;
@@ -183,9 +170,6 @@ class AUDACITY_DLL_API WaveTrack: public Track {
    virtual bool SplitDelete(double t0, double t1);
    virtual bool Join       (double t0, double t1);
    virtual bool Disjoin    (double t0, double t1);
-
-   typedef bool ( WaveTrack::* EditFunction )( double, double );
-   typedef bool ( WaveTrack::* EditDestFunction )( double, double, Track** );
 
    virtual bool Trim (double t0, double t1);
 

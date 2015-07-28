@@ -32,6 +32,8 @@ or "OFF" point
 #include <wx/intl.h>
 #include <iostream>
 
+#include "WaveTrack.h"
+
 using std::cout;
 using std::endl;
 
@@ -149,7 +151,7 @@ sampleCount VoiceKey::OnForward (WaveTrack & t, sampleCount start, sampleCount l
 
          //To speed things up, create a local buffer to store things in, to avoid the costly t.Get();
          //Only go through the first SignalWindowSizeInt samples, and choose the first that trips the key.
-         sampleFormat *buffer = new sampleFormat[samplesleft];
+         float *buffer = new float[samplesleft];
          t.Get((samplePtr)buffer, floatSample,lastsubthresholdsample,samplesleft);
 
 
@@ -300,7 +302,7 @@ sampleCount VoiceKey::OnBackward (WaveTrack & t, sampleCount end, sampleCount le
 
          //To speed things up, create a local buffer to store things in, to avoid the costly t.Get();
          //Only go through the first mSilentWindowSizeInt samples, and choose the first that trips the key.
-         sampleFormat *buffer = new sampleFormat[samplesleft];
+         float *buffer = new float[samplesleft];
          t.Get((samplePtr)buffer, floatSample, lastsubthresholdsample-samplesleft,samplesleft);
 
          //Initialize these trend markers atrend and ztrend.  They keep track of the
@@ -438,7 +440,7 @@ sampleCount VoiceKey::OffForward (WaveTrack & t, sampleCount start, sampleCount 
 
          //To speed things up, create a local buffer to store things in, to avoid the costly t.Get();
          //Only go through the first SilentWindowSizeInt samples, and choose the first that trips the key.
-         sampleFormat *buffer = new sampleFormat[samplesleft];
+         float *buffer = new float[samplesleft];
          t.Get((samplePtr)buffer, floatSample, lastsubthresholdsample,samplesleft);
 
          //Initialize these trend markers atrend and ztrend.  They keep track of the
@@ -578,7 +580,7 @@ sampleCount VoiceKey::OffBackward (WaveTrack & t, sampleCount end, sampleCount l
 
          //To speed things up, create a local buffer to store things in, to avoid the costly t.Get();
          //Only go through the first SilentWindowSizeInt samples, and choose the first that trips the key.
-         sampleFormat *buffer = new sampleFormat[samplesleft];
+         float *buffer = new float[samplesleft];
          t.Get((samplePtr)buffer, floatSample, lastsubthresholdsample-samplesleft,samplesleft);
 
          //Initialize these trend markers atrend and ztrend.  They keep track of the
@@ -885,10 +887,10 @@ double VoiceKey::TestEnergy (WaveTrack & t, sampleCount start, sampleCount len)
 
 
 //This will update RMSE by adding one element and subtracting another
-void VoiceKey::TestEnergyUpdate (double & prevErg, int len, const sampleFormat & drop, const sampleFormat & add)
+void VoiceKey::TestEnergyUpdate (double & prevErg, int len, const float & drop, const float & add)
 {
    //This is an updating formula for RMSE. It will only recalculate what's changed.
-   prevErg =  prevErg + (double)(abs(add) - abs(drop))/len;
+   prevErg =  prevErg + (double)(fabs(add) - fabs(drop))/len;
 
 }
 
@@ -906,7 +908,7 @@ double VoiceKey::TestSignChanges(WaveTrack & t, sampleCount start, sampleCount l
 
    if( blockSize > len)
       blockSize = len;
-   sampleFormat *buffer = new sampleFormat[blockSize];       //Get a sampling buffer
+   float *buffer = new float[blockSize];       //Get a sampling buffer
 
    while(len > 0) {
 
@@ -940,10 +942,10 @@ double VoiceKey::TestSignChanges(WaveTrack & t, sampleCount start, sampleCount l
 }
 
 void VoiceKey::TestSignChangesUpdate(double & currentsignchanges, int len,
-                                     const sampleFormat & a1,
-                                     const sampleFormat & a2,
-                                     const sampleFormat & z1,
-                                     const sampleFormat & z2)
+                                     const float & a1,
+                                     const float & a2,
+                                     const float & z1,
+                                     const float & z2)
 {
 
    if(sgn(a1)!=sgn(a2)) currentsignchanges -= 1.0/len;
@@ -960,12 +962,12 @@ double VoiceKey::TestDirectionChanges(WaveTrack & t, sampleCount start, sampleCo
    sampleCount originalLen = len;                        //Keep track of the length of block to process (its not the length of t)
    sampleCount blockSize = t.GetMaxBlockSize();         //Determine size of sampling buffer
    unsigned long directionchanges = 1;
-   sampleFormat lastval=sampleFormat(0);
+   float lastval=float(0);
    int lastdirection=1;
 
    if( blockSize > len)
       blockSize = len;
-   sampleFormat *buffer = new sampleFormat[blockSize];       //Get a sampling buffer
+   float *buffer = new float[blockSize];       //Get a sampling buffer
 
    while(len > 0) {
 
@@ -1004,8 +1006,8 @@ double VoiceKey::TestDirectionChanges(WaveTrack & t, sampleCount start, sampleCo
 // This method does an updating by looking at the trends
 // This will change currentdirections and atrend/trend, so be warned.
 void VoiceKey::TestDirectionChangesUpdate(double & currentdirectionchanges, int len,
-                                          int & atrend, const sampleFormat & a1, const sampleFormat & a2,
-                                          int & ztrend, const sampleFormat & z1, const sampleFormat & z2)
+                                          int & atrend, const float & a1, const float & a2,
+                                          int & ztrend, const float & z1, const float & z2)
 {
 
    if(sgn(a2 - a1)!= atrend ) {

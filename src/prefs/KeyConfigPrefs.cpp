@@ -20,12 +20,15 @@ KeyConfigPrefs and MousePrefs use.
 *//*********************************************************************/
 
 #include "../Audacity.h"
+#include "../Experimental.h"
+#include "KeyConfigPrefs.h"
 
 #include <wx/defs.h>
 #include <wx/ffile.h>
 #include <wx/intl.h>
 #include <wx/filedlg.h>
 #include <wx/button.h>
+#include <wx/msgdlg.h>
 
 #include "../Prefs.h"
 #include "../Project.h"
@@ -35,7 +38,6 @@ KeyConfigPrefs and MousePrefs use.
 
 #include "../Internat.h"
 #include "../ShuttleGui.h"
-#include "KeyConfigPrefs.h"
 
 #include "FileDialog.h"
 
@@ -75,8 +77,8 @@ END_EVENT_TABLE()
 KeyConfigPrefs::KeyConfigPrefs(wxWindow * parent)
 :  PrefsPanel(parent, _("Keyboard")),
    mView(NULL),
-   mFilter(NULL),
    mKey(NULL),
+   mFilter(NULL),
    mFilterTimer(this, FilterTimerID),
    mFilterPending(false)
 {
@@ -218,7 +220,7 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
                                 NULL,
                                 this);
             }
-            S.AddWindow(mFilter, wxALIGN_RIGHT);
+            S.AddWindow(mFilter, wxALIGN_NOT | wxALIGN_LEFT);
          }
          S.EndHorizontalLay();
       }

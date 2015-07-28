@@ -1,15 +1,14 @@
+//
+// Copied from wxWidgets 3.0.2 and modified for Audacity
+//
 /////////////////////////////////////////////////////////////////////////////
 // Name:        src/msw/filedlg.cpp
 // Purpose:     wxFileDialog
 // Author:      Julian Smart
 // Modified by: Leland Lucius
 // Created:     01/02/97
-// RCS-ID:      $Id: FileDialogPrivate.cpp,v 1.19 2010-01-19 09:08:39 llucius Exp $
 // Copyright:   (c) Julian Smart
 // Licence:     wxWindows licence
-//
-// Modified for Audacity to support an additional button on Save dialogs
-//
 /////////////////////////////////////////////////////////////////////////////
 
 // ============================================================================
@@ -27,28 +26,26 @@
 #pragma hdrstop
 #endif
 
-#if wxUSE_FILEDLG && !(defined(__SMARTPHONE__) && defined(__WXWINCE__))
-
 #ifndef WX_PRECOMP
-#include "wx/utils.h"
-#include "wx/msgdlg.h"
-#include "wx/filedlg.h"
-#include "wx/filefn.h"
-#include "wx/intl.h"
-#include "wx/log.h"
-#include "wx/app.h"
+    #include <wx/msw/wrapcdlg.h>
+    #include <wx/msw/missing.h>
+    #include <wx/utils.h>
+    #include <wx/msgdlg.h>
+    #include <wx/filefn.h>
+    #include <wx/intl.h>
+    #include <wx/log.h>
+    #include <wx/app.h>
+    #include <wx/math.h>
 #endif
-
-#include "wx/msw/wrapcdlg.h"
 
 #include <stdlib.h>
 #include <string.h>
 
-#include "wx/filename.h"
-#include "wx/tokenzr.h"
-#include "wx/math.h"
-
-#include "wx/msw/missing.h"
+#include <wx/dynlib.h>
+#include <wx/filename.h>
+#include <wx/scopeguard.h>
+#include <wx/tokenzr.h>
+#include <wx/modalhook.h>
 
 #include "../FileDialog.h"
 
@@ -75,9 +72,6 @@
 // standard dialog size
 static wxRect gs_rectDialog(0, 0, 428, 266);
 
-// true to use custom filtering code (anything less than Win7)
-static bool gs_customFilter = true;
-
 // ============================================================================
 // implementation
 // ============================================================================
@@ -85,178 +79,340 @@ static bool gs_customFilter = true;
 IMPLEMENT_CLASS(FileDialog, wxFileDialogBase)
 
 // ----------------------------------------------------------------------------
-// Alternative implementation for SHBindToParent() since older
-// shell32.dll version do not supply it.
-//
-// By jim@mvps.org
-// http://www.geocities.com/SiliconValley/2060/
-// ----------------------------------------------------------------------------
 
-#include <ShlObj.h>
-#include <ComDef.h>
-
-HRESULT SHBindToParentLocal(
-                       LPCITEMIDLIST pidl,
-                       REFIID riid,
-                       VOID** ppv,
-                       LPCITEMIDLIST* ppidlLast)
+namespace
 {
-   if (!ppv)
-      return E_POINTER;
 
-   // There must be at least one item ID.
-   if (!pidl || !pidl->mkid.cb)
-      return E_INVALIDARG;
+#if wxUSE_DYNLIB_CLASS
 
-   // Get the root folder.
-   IShellFolderPtr desktop;
-   HRESULT hr = SHGetDesktopFolder(&desktop);
-   if (FAILED(hr))
-      return hr;
+typedef BOOL (WINAPI *GetProcessUserModeExceptionPolicy_t)(LPDWORD);
+typedef BOOL (WINAPI *SetProcessUserModeExceptionPolicy_t)(DWORD);
 
-   // Walk to the penultimate item ID.
-   LPCITEMIDLIST marker = pidl;
-   for (;;)
-   {
-      LPCITEMIDLIST next = reinterpret_cast<LPCITEMIDLIST>(
-         marker->mkid.abID - sizeof(marker->mkid.cb) + marker->mkid.cb);
-      if (!next->mkid.cb)
-         break;
-      marker = next;
-   };
+GetProcessUserModeExceptionPolicy_t gs_pfnGetProcessUserModeExceptionPolicy
+    = (GetProcessUserModeExceptionPolicy_t) -1;
 
-   if (marker == pidl)
-   {
-      // There was only a single item ID, so bind to the root folder.
-      hr = desktop->QueryInterface(riid, ppv);
-   }
-   else
-   {
-      // Copy the ID list, truncating the last item.
-      int length = marker->mkid.abID - pidl->mkid.abID;
-      if (LPITEMIDLIST parent_id = reinterpret_cast<LPITEMIDLIST>(
-         malloc(length + sizeof(pidl->mkid.cb))))
-      {
-         LPBYTE raw_data = reinterpret_cast<LPBYTE>(parent_id);
-         memcpy(raw_data, pidl, length);
-         memset(raw_data + length, 0, sizeof(pidl->mkid.cb));
-         hr = desktop->BindToObject(parent_id, 0, riid, ppv);
-         free(parent_id);
-      }
-      else
-         return E_OUTOFMEMORY;
-   }
+SetProcessUserModeExceptionPolicy_t gs_pfnSetProcessUserModeExceptionPolicy
+    = (SetProcessUserModeExceptionPolicy_t) -1;
 
-   // Return a pointer to the last item ID.
-   if (ppidlLast)
-      *ppidlLast = marker;
+DWORD gs_oldExceptionPolicyFlags = 0;
 
-   return hr;
+bool gs_changedPolicy = false;
+
+#endif // #if wxUSE_DYNLIB_CLASS
+
+/*
+Since Windows 7 by default (callback) exceptions aren't swallowed anymore
+with native x64 applications. Exceptions can occur in a file dialog when
+using the hook procedure in combination with third-party utilities.
+Since Windows 7 SP1 the swallowing of exceptions can be enabled again
+by using SetProcessUserModeExceptionPolicy.
+*/
+void ChangeExceptionPolicy()
+{
+#if wxUSE_DYNLIB_CLASS
+    gs_changedPolicy = false;
+
+    wxLoadedDLL dllKernel32(wxT("kernel32.dll"));
+
+    if ( gs_pfnGetProcessUserModeExceptionPolicy
+        == (GetProcessUserModeExceptionPolicy_t) -1)
+    {
+        wxDL_INIT_FUNC(gs_pfn, GetProcessUserModeExceptionPolicy, dllKernel32);
+        wxDL_INIT_FUNC(gs_pfn, SetProcessUserModeExceptionPolicy, dllKernel32);
+    }
+
+    if ( !gs_pfnGetProcessUserModeExceptionPolicy
+        || !gs_pfnSetProcessUserModeExceptionPolicy
+        || !gs_pfnGetProcessUserModeExceptionPolicy(&gs_oldExceptionPolicyFlags) )
+    {
+        return;
+    }
+
+    if ( gs_pfnSetProcessUserModeExceptionPolicy(gs_oldExceptionPolicyFlags
+        | 0x1 /* PROCESS_CALLBACK_FILTER_ENABLED */ ) )
+    {
+        gs_changedPolicy = true;
+    }
+
+#endif // wxUSE_DYNLIB_CLASS
 }
+
+void RestoreExceptionPolicy()
+{
+#if wxUSE_DYNLIB_CLASS
+    if (gs_changedPolicy)
+    {
+        gs_changedPolicy = false;
+        (void) gs_pfnSetProcessUserModeExceptionPolicy(gs_oldExceptionPolicyFlags);
+    }
+#endif // wxUSE_DYNLIB_CLASS
+}
+
+} // unnamed namespace
 
 // ----------------------------------------------------------------------------
 // hook function for moving the dialog
 // ----------------------------------------------------------------------------
 
-UINT_PTR APIENTRY
-FileDialogHookFunction(HWND      hDlg,
-                       UINT      iMsg,
-                       WPARAM    WXUNUSED(wParam),
-                       LPARAM    lParam)
+UINT_PTR APIENTRY FileDialog::ParentHook(HWND hDlg, UINT iMsg, WPARAM wParam, LPARAM lParam)
 {
-   HWND   hwndDialog;
-   hwndDialog = ::GetParent( hDlg );
+   OPENFILENAME *pOfn = reinterpret_cast<OPENFILENAME *>(GetWindowLongPtr(hDlg, GWLP_USERDATA));
+   return reinterpret_cast<FileDialog *>(pOfn->lCustData)->MSWParentHook(hDlg, iMsg, wParam, lParam, pOfn);
+}
+
+UINT_PTR FileDialog::MSWParentHook(HWND hDlg, UINT iMsg, WPARAM wParam, LPARAM lParam, OPENFILENAME *pOfn)
+{
+   // Allow default handling to process first
+   UINT_PTR ret = CallWindowProc(mParentProc, hDlg, iMsg, wParam, lParam);
+
+   if (iMsg == WM_SIZE)
+   {
+      MSWOnSize(mParentDlg, pOfn);
+   }
+
+   return ret;
+}
+
+void FileDialog::MSWOnSize(HWND hDlg, LPOPENFILENAME pOfn)
+{
+   wxRect r;
+   wxCopyRECTToRect(wxGetClientRect(hDlg), r);
+
+   SetHWND(mChildDlg);
+
+   SetSize(r);
+
+   mRoot->SetSize(r.GetWidth(), mRoot->GetSize().GetHeight());
+
+   SetHWND(NULL);
+}
+
+UINT_PTR APIENTRY FileDialog::DialogHook(HWND hDlg, UINT iMsg, WPARAM wParam, LPARAM lParam)
+{
+   OPENFILENAME *pOfn;
+
+   if (iMsg == WM_INITDIALOG)
+   {
+      pOfn = reinterpret_cast<OPENFILENAME *>(lParam);
+   }
+   else
+   {
+      pOfn = reinterpret_cast<OPENFILENAME *>(GetWindowLongPtr(hDlg, GWLP_USERDATA));
+   }
+
+   return reinterpret_cast<FileDialog *>(pOfn->lCustData)->MSWDialogHook(hDlg, iMsg, wParam, lParam, pOfn);
+}
+
+UINT_PTR FileDialog::MSWDialogHook(HWND hDlg, UINT iMsg, WPARAM WXUNUSED(wParam), LPARAM lParam, OPENFILENAME *pOfn)
+{
    switch (iMsg)
    {
       case WM_INITDIALOG:
-      {
-#ifdef _WIN64
-         SetWindowLongPtr(hDlg, GWLP_USERDATA, lParam);
-#else
-         SetWindowLong(hDlg, GWL_USERDATA, lParam);
-#endif
-      }
+         MSWOnInitDialog(hDlg, pOfn);
+      break;
+
       case WM_DESTROY:
-      {
-         RECT dlgRect;
-         GetWindowRect( hwndDialog, & dlgRect );
-         gs_rectDialog.x = dlgRect.left;
-         gs_rectDialog.y = dlgRect.top;
-         gs_rectDialog.width = dlgRect.right - dlgRect.left;
-         gs_rectDialog.height = dlgRect.bottom - dlgRect.top;
-         break;
-      }
-         
+         MSWOnDestroy(hDlg, pOfn);
+      break;
+
       case WM_NOTIFY:
       {
-         OFNOTIFY *   pNotifyCode;
-         pNotifyCode = (LPOFNOTIFY) lParam;
-         if (CDN_INITDONE == (pNotifyCode->hdr).code)
+         NMHDR * const pNM = reinterpret_cast<NMHDR *>(lParam);
+         if (pNM->code > CDN_LAST && pNM->code <= CDN_FIRST)
          {
-            SetWindowPos( hwndDialog, HWND_TOP,
-                         gs_rectDialog.x,
-                         gs_rectDialog.y,
-                         gs_rectDialog.width,
-                         gs_rectDialog.height,
-                         SWP_NOZORDER|SWP_NOSIZE);
-            
-            OPENFILENAME *ofn = (OPENFILENAME *)
-            GetWindowLongPtr(hDlg, GWLP_USERDATA);
-            FileDialog *me = (FileDialog *)
-            ofn->lCustData;
-            
-            if (!me->m_buttonlabel.IsEmpty())
+            OFNOTIFY * const pNotifyCode = reinterpret_cast<OFNOTIFY *>(lParam);
+            switch (pNotifyCode->hdr.code)
             {
-               CommDlg_OpenSave_SetControlText( hwndDialog,
-                                               pshHelp,
-                                               (LPCTSTR)me->m_buttonlabel.c_str());
+               case CDN_INITDONE:
+                  MSWOnInitDone(hDlg, pOfn);
+               break;
+
+               case CDN_FOLDERCHANGE:
+                  MSWOnFolderChange(hDlg, pOfn);
+               break;
+
+               case CDN_SELCHANGE:
+                  MSWOnSelChange(hDlg, pOfn);
+               break;
+
+               case CDN_TYPECHANGE:
+                  MSWOnTypeChange(hDlg, pOfn);
+               break;
             }
          }
-         else if (CDN_HELP == (pNotifyCode->hdr).code)
-         {
-            OPENFILENAME *ofn = (OPENFILENAME *)
-            GetWindowLongPtr(hDlg, GWLP_USERDATA);
-            FileDialog *me = (FileDialog *)
-            ofn->lCustData;
-            HWND w = GetFocus();
-            int index = SendDlgItemMessage(hwndDialog,
-                                           cmb1,
-                                           CB_GETCURSEL,
-                                           0,
-                                           0);
-            EnableWindow(hwndDialog, FALSE);
-            me->ClickButton(index);
-            EnableWindow(hwndDialog, TRUE);
-            SetFocus(w);
-         }
-         else if (CDN_SELCHANGE == (pNotifyCode->hdr).code && gs_customFilter)
-         {
-            OPENFILENAME *ofn = (OPENFILENAME *)
-            GetWindowLongPtr(hDlg, GWLP_USERDATA);
-            FileDialog *me = (FileDialog *) ofn->lCustData;
-            me->FilterFiles(hDlg, false);
-         }
-         else if (CDN_TYPECHANGE == (pNotifyCode->hdr).code && gs_customFilter)
-         {
-            OPENFILENAME *ofn = (OPENFILENAME *)
-            GetWindowLongPtr(hDlg, GWLP_USERDATA);
-            FileDialog *me = (FileDialog *) ofn->lCustData;
-            me->ParseFilter(ofn->nFilterIndex);
-            me->FilterFiles(hDlg, true);
-         }
-         break;
       }
+      break;
    }
-   
+
    // do the default processing
    return 0;
 }
 
+void FileDialog::MSWOnInitDialog(HWND hDlg, LPOPENFILENAME pOfn)
+{
+   // Since we've specified the OFN_EXPLORER flag, the "real" dialog is the parent of this one
+   mParentDlg = ::GetParent(hDlg);
+
+   // This is the dialog were our controls will go
+   mChildDlg = hDlg;
+
+   // Store the OPENFILENAME pointer in each window
+   SetWindowLongPtr(mParentDlg, GWLP_USERDATA, reinterpret_cast<LPARAM>(pOfn));
+   SetWindowLongPtr(mChildDlg, GWLP_USERDATA, reinterpret_cast<LPARAM>(pOfn));
+
+   // Subclass the parent dialog so we can receive WM_SIZE messages
+   mParentProc = reinterpret_cast<WNDPROC>(SetWindowLongPtr(mParentDlg, GWLP_WNDPROC, reinterpret_cast<LPARAM>(&ParentHook)));
+
+   // set HWND for wx
+   SetHWND(mChildDlg);
+
+   if (HasUserPaneCreator())
+   {
+      // Create the root window
+      wxBoxSizer *verticalSizer = new wxBoxSizer( wxVERTICAL );
+      mRoot = new wxPanel(this, wxID_ANY);
+   
+      wxPanel *userpane = new wxPanel(mRoot, wxID_ANY);
+      CreateUserPane(userpane);
+
+      wxBoxSizer *horizontalSizer = new wxBoxSizer(wxHORIZONTAL);
+      horizontalSizer->Add(userpane, 1, wxEXPAND, 0);
+      verticalSizer->Add(horizontalSizer, 1, wxEXPAND|wxALL, 0);
+
+      mRoot->SetSizer(verticalSizer);
+      mRoot->Layout();
+      verticalSizer->SetSizeHints(mRoot);
+
+      // This reserves space for the additional panel
+      wxSize sz = mRoot->GetBestSize();
+      SetWindowPos(mChildDlg,
+                   HWND_TOP,
+                   0,
+                   0,
+                   sz.GetWidth(),
+                   sz.GetHeight(),
+                   SWP_NOZORDER | SWP_NOMOVE);
+
+   }
+
+   SetHWND(NULL);
+}
+
+void FileDialog::MSWOnDestroy(HWND hDlg, LPOPENFILENAME WXUNUSED(pOfn))
+{
+   // Save final dialog position for next time
+   wxCopyRECTToRect(wxGetWindowRect(mParentDlg), gs_rectDialog);
+
+   // Must explicitly delete the root window.  Otherwise, wx will try to 
+   // destroy it when the FileDialog is deleted.  But, the windows will
+   // have already been deleted as a result of the OpenFile dialog being
+   // destroyed.
+   delete mRoot;
+}
+
+void FileDialog::MSWOnInitDone(HWND hDlg, LPOPENFILENAME pOfn)
+{
+   // set HWND so that our DoMoveWindow() works correctly
+   SetHWND(mChildDlg);
+
+   if (m_centreDir)
+   {
+      // now we have the real dialog size, remember it
+      RECT rect;
+      GetWindowRect(mParentDlg, &rect);
+      gs_rectDialog = wxRectFromRECT(rect);
+
+      // and position the window correctly: notice that we must use the base
+      // class version as our own doesn't do anything except setting flags
+      wxFileDialogBase::DoCentre(m_centreDir);
+   }
+   else // need to just move it to the correct place
+   {
+      SetPosition(gs_rectDialog.GetPosition());
+   }
+
+   // Filter change event must be sent once initialized
+   MSWOnTypeChange(hDlg, pOfn);
+
+   // we shouldn't destroy this HWND
+   SetHWND(NULL);
+}
+
+void FileDialog::MSWOnFolderChange(HWND hDlg, LPOPENFILENAME pOfn)
+{
+   FilterFiles(mParentDlg, true);
+
+   wxChar path[wxMAXPATH];
+   int result = CommDlg_OpenSave_GetFolderPath(::GetParent(hDlg), path, WXSIZEOF(path));
+   if (result < 0 || result > WXSIZEOF(path))
+   {
+      return;
+   }
+
+   m_dir = path;
+
+   wxFileCtrlEvent event(wxEVT_FILECTRL_FOLDERCHANGED, this, GetId());
+   event.SetDirectory(m_dir);
+   GetEventHandler()->ProcessEvent(event);
+}
+
+void FileDialog::MSWOnSelChange(HWND hDlg, LPOPENFILENAME pOfn)
+{
+   // set HWND for wx
+   SetHWND(mChildDlg);
+
+   // Get pointer to the ListView control
+   HWND lv = ::GetDlgItem(::GetDlgItem(mParentDlg, lst2), 1);
+   if (lv == NULL)
+   {
+      return;
+   }
+
+   wxChar path[wxMAXPATH];
+   int result = CommDlg_OpenSave_GetFilePath(::GetParent(hDlg), path, WXSIZEOF(path));
+   if (result < 0 || result > WXSIZEOF(path))
+   {
+      return;
+   }
+
+   m_path = path;
+   m_fileName = wxFileNameFromPath(m_path);
+   m_dir = wxPathOnly(m_path);
+
+   m_fileNames.Clear();
+   m_fileNames.Add(m_fileName);
+
+   wxFileCtrlEvent event(wxEVT_FILECTRL_SELECTIONCHANGED, this, GetId());
+   event.SetDirectory(m_dir);
+   event.SetFiles(m_fileNames);
+   GetEventHandler()->ProcessEvent(event);
+
+   // we shouldn't destroy this HWND
+   SetHWND(NULL);
+}
+
+void FileDialog::MSWOnTypeChange(HWND hDlg, LPOPENFILENAME pOfn)
+{
+   // set HWND for wx
+   SetHWND(mChildDlg);
+
+   ParseFilter(pOfn->nFilterIndex);
+   FilterFiles(mParentDlg, true);
+
+   m_filterIndex = pOfn->nFilterIndex - 1;
+
+   wxFileCtrlEvent event(wxEVT_FILECTRL_FILTERCHANGED, this, GetId());
+   event.SetFilterIndex(m_filterIndex);
+   GetEventHandler()->ProcessEvent(event);
+
+   // we shouldn't destroy this HWND
+   SetHWND(NULL);
+}
+
 #define WM_GETISHELLBROWSER WM_USER + 7
 
-void FileDialog::FilterFiles(HWND hDlg, bool refresh)
+void FileDialog::FilterFiles(HWND hwnd, bool refresh)
 {
-   HWND parent = ::GetParent(hDlg);
    IShellFolder *ishell = NULL;
    IShellBrowser *ishellbrowser = NULL;  // Does not have to be released
    IShellView *ishellview = NULL;
@@ -265,10 +421,9 @@ void FileDialog::FilterFiles(HWND hDlg, bool refresh)
    HRESULT hr;
    
    // Get pointer to the ListView control
-   HWND lv = ::GetDlgItem(::GetDlgItem(parent, lst2), 1);
+   HWND lv = ::GetDlgItem(::GetDlgItem(hwnd, lst2), 1);
    if (lv == NULL)
    {
-      wxASSERT(lv != NULL);
       return;
    }
    
@@ -281,7 +436,7 @@ void FileDialog::FilterFiles(HWND hDlg, bool refresh)
    }
 
    // Get IShellBrowser interface for current dialog
-   ishellbrowser = (IShellBrowser*)::SendMessage(parent, WM_GETISHELLBROWSER, 0, 0);
+   ishellbrowser = (IShellBrowser*)::SendMessage(hwnd, WM_GETISHELLBROWSER, 0, 0);
    if (ishellbrowser)
    {
       // Get IShellBrowser interface for returned browser
@@ -298,7 +453,7 @@ void FileDialog::FilterFiles(HWND hDlg, bool refresh)
 
    // Process all items
    int fltcnt = (int) m_Filters.GetCount();
-   int itmcnt = ::SendMessage(lv, LVM_GETITEMCOUNT, 0, 0);
+   int itmcnt = ListView_GetItemCount(lv);
    for (int itm = 0; itm < itmcnt; itm++)
    {
       // Retrieve the file IDL
@@ -330,7 +485,7 @@ void FileDialog::FilterFiles(HWND hDlg, bool refresh)
       // Retrieve the IShellFolder interface of the parent (must be Release()'d)
       if (ishell == NULL)
       {
-         hr = SHBindToParentLocal(fidl, IID_IShellFolder, (void **)&ishell, NULL);
+         hr = SHBindToParent(fidl, IID_IShellFolder, (void **)&ishell, NULL);
          if (!SUCCEEDED(hr))
          {
             wxASSERT(SUCCEEDED(hr));
@@ -461,32 +616,40 @@ void FileDialog::ParseFilter(int index)
 // FileDialog
 // ----------------------------------------------------------------------------
 
+FileDialog::FileDialog()
+:   FileDialogBase()
+{
+    Init();
+}
+
 FileDialog::FileDialog(wxWindow *parent,
                        const wxString& message,
                        const wxString& defaultDir,
-                       const wxString& defaultFileName,
+                       const wxString& defaultFile,
                        const wxString& wildCard,
                        long style,
-                       const wxPoint& pos)
-: wxFileDialogBase(parent, message, defaultDir, defaultFileName,
-                   wildCard, style, pos)
-
+                       const wxPoint& pos,
+                       const wxSize& sz,
+                       const wxString& name)
+:   FileDialogBase()
 {
-   m_dialogStyle = style;
-   
-   if ( ( m_dialogStyle & wxFD_MULTIPLE ) && ( m_dialogStyle & wxFD_SAVE ) )
-      m_dialogStyle &= ~wxFD_MULTIPLE;
-   
+    Init();
+
+    FileDialogBase::Create(parent,message,defaultDir,defaultFile,wildCard,style,pos,sz,name);
+}
+
+void FileDialog::Init()
+{
+   // NB: all style checks are done by wxFileDialogBase::Create
+
    m_bMovedWindow = false;
-   
+   m_centreDir = 0;
+
    // Must set to zero, otherwise the wx routines won't size the window
    // the second time you call the file dialog, because it thinks it is
    // already at the requested size.. (when centering)
    gs_rectDialog.x =
    gs_rectDialog.y = 0;
-   
-   m_callback = NULL;
-   m_cbdata = NULL;
 }
 
 void FileDialog::GetPaths(wxArrayString& paths) const
@@ -494,11 +657,11 @@ void FileDialog::GetPaths(wxArrayString& paths) const
    paths.Empty();
    
    wxString dir(m_dir);
-   if ( m_dir.Last() != wxT('\\') )
+   if (m_dir.empty() || m_dir.Last() != wxT('\\'))
       dir += wxT('\\');
    
    size_t count = m_fileNames.GetCount();
-   for ( size_t n = 0; n < count; n++ )
+   for (size_t n = 0; n < count; n++)
    {
       if (wxFileName(m_fileNames[n]).IsAbsolute())
          paths.Add(m_fileNames[n]);
@@ -512,25 +675,20 @@ void FileDialog::GetFilenames(wxArrayString& files) const
    files = m_fileNames;
 }
 
-void FileDialog::SetPath(const wxString& path)
-{
-   wxString ext;
-   wxFileName::SplitPath(path, &m_dir, &m_fileName, &ext);
-   if ( !ext.empty() )
-      m_fileName << wxT('.') << ext;
-}
-
 void FileDialog::DoGetPosition( int *x, int *y ) const
 {
-   *x = gs_rectDialog.x;
-   *y = gs_rectDialog.y;
+   if (x)
+      *x = gs_rectDialog.x;
+   if (y)
+      *y = gs_rectDialog.y;
 }
-
 
 void FileDialog::DoGetSize(int *width, int *height) const
 {
-   *width  = gs_rectDialog.width;
-   *height = gs_rectDialog.height;
+   if (width)
+      *width = gs_rectDialog.width;
+   if (height)
+      *height = gs_rectDialog.height;
 }
 
 void FileDialog::DoMoveWindow(int x, int y, int WXUNUSED(width), int WXUNUSED(height))
@@ -540,12 +698,129 @@ void FileDialog::DoMoveWindow(int x, int y, int WXUNUSED(width), int WXUNUSED(he
    gs_rectDialog.x = x;
    gs_rectDialog.y = y;
    
-   /*
-    The width and height can not be set by the programmer
-    its just not possible.  But the program can get the
-    size of the Dlg after it has been shown, in case they need
-    that data.
-    */
+   // our HWND is only set when we're called from MSWOnInitDone(), test if
+   // this is the case
+   HWND hwnd = GetHwnd();
+   if (hwnd)
+   {
+      // size of the dialog can't be changed because the controls are not
+      // laid out correctly then
+      ::SetWindowPos(hwnd, HWND_TOP, x, y, 0, 0, SWP_NOZORDER | SWP_NOSIZE);
+   }
+   else // just remember that we were requested to move the window
+   {
+      m_bMovedWindow = true;
+
+      // if Centre() had been called before, it shouldn't be taken into
+      // account now
+      m_centreDir = 0;
+   }
+}
+
+void FileDialog::DoCentre(int dir)
+{
+   m_centreDir = dir;
+   m_bMovedWindow = true;
+
+   // it's unnecessary to do anything else at this stage as we'll redo it in
+   // MSWOnInitDone() anyhow
+}
+
+// helper used below in ShowCommFileDialog(): style is used to determine
+// whether to show the "Save file" dialog (if it contains wxFD_SAVE bit) or
+// "Open file" one; returns true on success or false on failure in which case
+// err is filled with the CDERR_XXX constant
+static bool DoShowCommFileDialog(OPENFILENAME *of, long style, DWORD *err)
+{
+   if (style & wxFD_SAVE ? GetSaveFileName(of) : GetOpenFileName(of))
+      return true;
+
+   if (err)
+   {
+      *err = CommDlgExtendedError();
+   }
+
+   return false;
+}
+
+// We want to use OPENFILENAME struct version 5 (Windows 2000/XP) but we don't
+// know if the OPENFILENAME declared in the currently used headers is a V5 or
+// V4 (smaller) one so we try to manually extend the struct in case it is the
+// old one.
+//
+// We don't do this on Windows CE nor under Win64, however, as there are no
+// compilers with old headers for these architectures
+#if defined(__WXWINCE__) || defined(__WIN64__)
+typedef OPENFILENAME wxOPENFILENAME;
+
+static const DWORD gs_ofStructSize = sizeof(OPENFILENAME);
+#else // !__WXWINCE__ || __WIN64__
+#define wxTRY_SMALLER_OPENFILENAME
+
+struct wxOPENFILENAME : public OPENFILENAME
+{
+   // fields added in Windows 2000/XP comdlg32.dll version
+   void *pVoid;
+   DWORD dw1;
+   DWORD dw2;
+};
+
+// hardcoded sizeof(OPENFILENAME) in the Platform SDK: we have to do it
+// because sizeof(OPENFILENAME) in the headers we use when compiling the
+// library could be less if _WIN32_WINNT is not >= 0x500
+static const DWORD wxOPENFILENAME_V5_SIZE = 88;
+
+// this is hardcoded sizeof(OPENFILENAME_NT4) from Platform SDK
+static const DWORD wxOPENFILENAME_V4_SIZE = 76;
+
+// always try the new one first
+static DWORD gs_ofStructSize = wxOPENFILENAME_V5_SIZE;
+#endif // __WXWINCE__ || __WIN64__/!...
+
+static bool ShowCommFileDialog(OPENFILENAME *of, long style)
+{
+   DWORD errCode;
+   bool success = DoShowCommFileDialog(of, style, &errCode);
+
+#ifdef wxTRY_SMALLER_OPENFILENAME
+   // the system might be too old to support the new version file dialog
+   // boxes, try with the old size
+   if (!success && errCode == CDERR_STRUCTSIZE &&
+      of->lStructSize != wxOPENFILENAME_V4_SIZE)
+   {
+      of->lStructSize = wxOPENFILENAME_V4_SIZE;
+
+      success = DoShowCommFileDialog(of, style, &errCode);
+
+      if (success || !errCode)
+      {
+         // use this struct size for subsequent dialogs
+         gs_ofStructSize = of->lStructSize;
+      }
+   }
+#endif // wxTRY_SMALLER_OPENFILENAME
+
+   if (!success && errCode == FNERR_INVALIDFILENAME && of->lpstrFile[0])
+   {
+      // this can happen if the default file name is invalid, try without it
+      // now
+      of->lpstrFile[0] = wxT('\0');
+      success = DoShowCommFileDialog(of, style, &errCode);
+   }
+
+   if (!success)
+   {
+      // common dialog failed - why?
+      if (errCode != 0)
+      {
+         wxLogError(_("File dialog failed with error code %0lx."), errCode);
+      }
+      //else: it was just cancelled
+
+      return false;
+   }
+
+   return true;
 }
 
 int FileDialog::ShowModal()
@@ -561,89 +836,72 @@ int FileDialog::ShowModal()
    *fileNameBuffer = wxT('\0');
    *titleBuffer    = wxT('\0');
    
-#if WXWIN_COMPATIBILITY_2_4
-   long msw_flags = 0;
-   if ( (m_dialogStyle & wxHIDE_READONLY) || (m_dialogStyle & wxSAVE) )
-      msw_flags |= OFN_HIDEREADONLY;
-#else
-   long msw_flags = OFN_HIDEREADONLY;
-#endif
-   
-   if ( m_dialogStyle & wxFD_FILE_MUST_EXIST )
+   // We always need EXPLORER and ENABLEHOOK to use our filtering code
+   DWORD msw_flags = OFN_HIDEREADONLY | OFN_EXPLORER | OFN_ENABLEHOOK | OFN_ENABLESIZING | OFN_ENABLETEMPLATEHANDLE;
+
+   if (HasFdFlag(wxFD_FILE_MUST_EXIST))
       msw_flags |= OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+
    /*
-    If the window has been moved the programmer is probably
-    trying to center or position it.  Thus we set the callback
-    or hook function so that we can actually adjust the position.
-    Without moving or centering the dlg, it will just stay
-    in the upper left of the frame, it does not center
-    automatically..  One additional note, when the hook is
-    enabled, the PLACES BAR in the dlg (shown on later versions
-    of windows (2000 and XP) will automatically be turned off
-    according to the MSDN docs.  This is normal.  If the
-    programmer needs the PLACES BAR (left side of dlg) they
-    just shouldn't move or center the dlg.
-    */
-   if (m_bMovedWindow) // we need these flags.
+      If the window has been moved the programmer is probably
+      trying to center or position it.  Thus we set the callback
+      or hook function so that we can actually adjust the position.
+      Without moving or centering the dlg, it will just stay
+      in the upper left of the frame, it does not center
+      automatically.
+   */
+   if (m_bMovedWindow || HasExtraControlCreator()) // we need these flags.
    {
+      ChangeExceptionPolicy();
       msw_flags |= OFN_EXPLORER|OFN_ENABLEHOOK;
 #ifndef __WXWINCE__
       msw_flags |= OFN_ENABLESIZING;
 #endif
    }
-   
-   if (m_dialogStyle & wxFD_MULTIPLE )
+
+   wxON_BLOCK_EXIT0(RestoreExceptionPolicy);
+
+   if (HasFdFlag(wxFD_MULTIPLE))
    {
       // OFN_EXPLORER must always be specified with OFN_ALLOWMULTISELECT
       msw_flags |= OFN_EXPLORER | OFN_ALLOWMULTISELECT;
    }
-   
+
    // if wxCHANGE_DIR flag is not given we shouldn't change the CWD which the
    // standard dialog does by default (notice that under NT it does it anyhow, 
    // OFN_NOCHANGEDIR or not, see below)
-   if ( !(m_dialogStyle & wxFD_CHANGE_DIR) )
+   if (!HasFdFlag(wxFD_CHANGE_DIR))
    {
       msw_flags |= OFN_NOCHANGEDIR;
    }
    
-   if ( m_dialogStyle & wxFD_OVERWRITE_PROMPT )
+   if (HasFdFlag(wxFD_OVERWRITE_PROMPT))
    {
       msw_flags |= OFN_OVERWRITEPROMPT;
    }
    
-   if ( m_dialogStyle & wxRESIZE_BORDER )
-   {
-      msw_flags |= OFN_ENABLESIZING;
-   }
-   
-   if ( m_callback != NULL )
-   {
-      msw_flags |= OFN_SHOWHELP | OFN_EXPLORER | OFN_ENABLEHOOK;
-   }
-   
-   // We always need EXPLORER and ENABLEHOOK to use our filtering code
-   msw_flags |= OFN_EXPLORER | OFN_ENABLEHOOK;
-   
+   // Define a dummy dialog box template
+   GlobalPtr hgbl(256, GMEM_ZEROINIT);
+   GlobalPtrLock hgblLock(hgbl);
+   LPDLGTEMPLATE lpdt = static_cast<LPDLGTEMPLATE>((void *)hgblLock);
+   lpdt->style = DS_CONTROL | WS_CHILD | WS_CLIPSIBLINGS;
+   lpdt->cdit = 0;         // Number of controls
+   lpdt->x = 0;
+   lpdt->y = 0;
+   lpdt->cx = 0;
+   lpdt->cy = 0;
+
    OPENFILENAME of;
    wxZeroMemory(of);
    
    // Allow Places bar to show on supported platforms
-   int major, minor;
-   if ( wxGetOsVersion(&major, &minor) == wxOS_WINDOWS_NT )
-   {
-      of.lStructSize       = sizeof(OPENFILENAME);
-   }
-   else
-   {
-      of.lStructSize       = OPENFILENAME_SIZE_VERSION_400;
-   }
-   
+   of.lStructSize       = sizeof(OPENFILENAME);
    of.hwndOwner         = hWnd;
-   of.lpstrTitle        = WXSTRINGCAST m_message;
+   of.lpstrTitle        = m_message.t_str();
    of.lpstrFileTitle    = titleBuffer;
-   of.nMaxFileTitle     = wxMAXFILE + 1 + wxMAXEXT;    // Windows 3.0 and 3.1
-   of.lCustData         = (LPARAM) this;
-   
+   of.nMaxFileTitle     = wxMAXFILE + 1 + wxMAXEXT;
+   of.hInstance         = (HINSTANCE) lpdt;
+
    // Convert forward slashes to backslashes (file selector doesn't like
    // forward slashes) and also squeeze multiple consecutive slashes into one
    // as it doesn't like two backslashes in a row neither
@@ -686,25 +944,22 @@ int FileDialog::ShowModal()
    of.lpstrInitialDir   = dir.c_str();
    
    of.Flags             = msw_flags;
-   of.lpfnHook          = FileDialogHookFunction;
-   
+   of.lpfnHook          = DialogHook;
+   of.lCustData         = (LPARAM) this;
+
    wxArrayString wildDescriptions;
    
    size_t items = wxParseCommonDialogsFilter(m_wildCard, wildDescriptions, m_FilterGroups);
    
    wxASSERT_MSG( items > 0 , wxT("empty wildcard list") );
    
-   // We do not use the custom filter code on Windows 7 or higher since it now
-   // handles filters larger than 260 characters.
-   gs_customFilter = (major < 6 || minor < 1);
-
    wxString filterBuffer;
    
    for (i = 0; i < items ; i++)
    {
       filterBuffer += wildDescriptions[i];
       filterBuffer += wxT("|");
-      filterBuffer += (gs_customFilter ? wxT("*.*") : m_FilterGroups[i]);
+      filterBuffer += m_FilterGroups[i];
       filterBuffer += wxT("|");
    }
    
@@ -724,8 +979,7 @@ int FileDialog::ShowModal()
    
    //=== Setting defaultFileName >>=========================================
    
-   wxStrncpy( fileNameBuffer, (const wxChar *)m_fileName, wxMAXPATH-1 );
-   fileNameBuffer[ wxMAXPATH-1 ] = wxT('\0');
+   wxStrlcpy(fileNameBuffer, m_fileName.c_str(), WXSIZEOF(fileNameBuffer));
    
    of.lpstrFile = fileNameBuffer;  // holds returned filename
    of.nMaxFile  = wxMAXPATH;
@@ -735,7 +989,7 @@ int FileDialog::ShowModal()
    // user types "foo" and the default extension is ".bar" we should force it
    // to check for "foo.bar" existence and not "foo")
    wxString defextBuffer; // we need it to be alive until GetSaveFileName()!
-   if (m_dialogStyle & wxFD_SAVE && m_dialogStyle & wxFD_OVERWRITE_PROMPT)
+   if (HasFdFlag(wxFD_SAVE))
    {
       const wxChar* extension = filterBuffer;
       int maxFilter = (int)(of.nFilterIndex*2L) - 1;
@@ -747,7 +1001,7 @@ int FileDialog::ShowModal()
       defextBuffer = AppendExtension(wxT("a"), extension);
       if (defextBuffer.StartsWith(wxT("a.")))
       {
-         defextBuffer.Mid(2);
+         defextBuffer = defextBuffer.Mid(2); // remove "a."
          of.lpstrDefExt = defextBuffer.c_str();
       }
    }
@@ -756,160 +1010,83 @@ int FileDialog::ShowModal()
    const wxString cwdOrig = wxGetCwd(); 
    
    //== Execute FileDialog >>=================================================
-   
-   bool success = (m_dialogStyle & wxFD_SAVE ? GetSaveFileName(&of)
-                   : GetOpenFileName(&of)) != 0;
-   
-#ifdef __WXWINCE__
-   DWORD errCode = GetLastError();
-#else
-   DWORD errCode = CommDlgExtendedError();
-   
-   // GetOpenFileName will always change the current working directory on 
-   // (according to MSDN) "Windows NT 4.0/2000/XP" because the flag 
-   // OFN_NOCHANGEDIR has no effect.  If the user did not specify wxCHANGE_DIR 
-   // let's restore the current working directory to what it was before the 
-   // dialog was shown (assuming this behavior extends to Windows Server 2003 
-   // seems safe). 
-   if ( success && 
-       (msw_flags & OFN_NOCHANGEDIR) && 
-       wxGetOsVersion() == wxOS_WINDOWS_NT ) 
-   { 
-      wxSetWorkingDirectory(cwdOrig); 
-   } 
-   
-#ifdef __WIN32__
-   if (!success && (errCode == CDERR_STRUCTSIZE))
+
+   if (!ShowCommFileDialog(&of, m_windowStyle))
+      return wxID_CANCEL;
+
+   // GetOpenFileName will always change the current working directory on
+   // (according to MSDN) "Windows NT 4.0/2000/XP" because the flag
+   // OFN_NOCHANGEDIR has no effect.  If the user did not specify
+   // wxFD_CHANGE_DIR let's restore the current working directory to what it
+   // was before the dialog was shown.
+   if (msw_flags & OFN_NOCHANGEDIR)
    {
-      // The struct size has changed so try a smaller or bigger size
-      
-      int oldStructSize = of.lStructSize;
-      of.lStructSize       = oldStructSize - (sizeof(void *) + 2*sizeof(DWORD));
-      success = (m_dialogStyle & wxFD_SAVE) ? (GetSaveFileName(&of) != 0)
-      : (GetOpenFileName(&of) != 0);
-      errCode = CommDlgExtendedError();
-      
-      if (!success && (errCode == CDERR_STRUCTSIZE))
-      {
-         of.lStructSize       = oldStructSize + (sizeof(void *) + 2*sizeof(DWORD));
-         success = (m_dialogStyle & wxFD_SAVE) ? (GetSaveFileName(&of) != 0)
-         : (GetOpenFileName(&of) != 0);
-      }
+      wxSetWorkingDirectory(cwdOrig);
    }
-#endif // __WIN32__
-#endif // __WXWINCE__
-   
-   if ( success )
-   {
-      m_fileNames.Empty();
+
+   m_fileNames.Empty();
       
-      if ( ( m_dialogStyle & wxFD_MULTIPLE ) &&
+   if ((HasFdFlag(wxFD_MULTIPLE)) &&
 #if defined(OFN_EXPLORER)
-          ( fileNameBuffer[of.nFileOffset-1] == wxT('\0') )
+         ( fileNameBuffer[of.nFileOffset-1] == wxT('\0') )
 #else
-          ( fileNameBuffer[of.nFileOffset-1] == wxT(' ') )
+         ( fileNameBuffer[of.nFileOffset-1] == wxT(' ') )
 #endif // OFN_EXPLORER
-          )
-      {
+         )
+   {
 #if defined(OFN_EXPLORER)
-         m_dir = fileNameBuffer;
-         i = of.nFileOffset;
-         m_fileName = &fileNameBuffer[i];
-         m_fileNames.Add(m_fileName);
-         i += m_fileName.Len() + 1;
+      m_dir = fileNameBuffer;
+      i = of.nFileOffset;
+      m_fileName = &fileNameBuffer[i];
+      m_fileNames.Add(m_fileName);
+      i += m_fileName.Len() + 1;
          
-         while (fileNameBuffer[i] != wxT('\0'))
-         {
-            m_fileNames.Add(&fileNameBuffer[i]);
-            i += wxStrlen(&fileNameBuffer[i]) + 1;
-         }
+      while (fileNameBuffer[i] != wxT('\0'))
+      {
+         m_fileNames.Add(&fileNameBuffer[i]);
+         i += wxStrlen(&fileNameBuffer[i]) + 1;
+      }
 #else
-         wxStringTokenizer toke(fileNameBuffer, wxT(" \t\r\n"));
-         m_dir = toke.GetNextToken();
-         m_fileName = toke.GetNextToken();
-         m_fileNames.Add(m_fileName);
+      wxStringTokenizer toke(fileNameBuffer, wxT(" \t\r\n"));
+      m_dir = toke.GetNextToken();
+      m_fileName = toke.GetNextToken();
+      m_fileNames.Add(m_fileName);
          
-         while (toke.HasMoreTokens())
-            m_fileNames.Add(toke.GetNextToken());
+      while (toke.HasMoreTokens())
+         m_fileNames.Add(toke.GetNextToken());
 #endif // OFN_EXPLORER
          
-         wxString dir(m_dir);
-         if ( m_dir.Last() != wxT('\\') )
-            dir += wxT('\\');
+      wxString dir(m_dir);
+      if ( m_dir.Last() != wxT('\\') )
+         dir += wxT('\\');
          
-         m_path = dir + m_fileName;
-         m_filterIndex = (int)of.nFilterIndex - 1;
-      }
-      else
-      {
-         //=== Adding the correct extension >>=================================
-         m_filterIndex = (int)of.nFilterIndex - 1;
-
-         if (!(m_dialogStyle & FD_NO_ADD_EXTENSION))
-         {
-            if ( !of.nFileExtension ||
-                  (of.nFileExtension && fileNameBuffer[of.nFileExtension] == wxT('\0')) )
-            {
-               // User has typed a filename without an extension:
-               const wxChar* extension = filterBuffer;
-               int   maxFilter = (int)(of.nFilterIndex*2L) - 1;
-            
-               for( int i = 0; i < maxFilter; i++ )           // get extension
-                  extension = extension + wxStrlen( extension ) + 1;
-            
-               m_fileName = AppendExtension(fileNameBuffer, extension);
-               wxStrncpy(fileNameBuffer, m_fileName.c_str(), wxMin(m_fileName.Len(), wxMAXPATH-1));
-               fileNameBuffer[wxMin(m_fileName.Len(), wxMAXPATH-1)] = wxT('\0');
-            }
-         }
-
-         m_path = fileNameBuffer;
-         m_fileName = wxFileNameFromPath(fileNameBuffer);
-         m_fileNames.Add(m_fileName);
-         m_dir = wxPathOnly(fileNameBuffer);
-      }
+      m_path = dir + m_fileName;
+      m_filterIndex = (int)of.nFilterIndex - 1;
    }
    else
    {
-      // common dialog failed - why?
-#ifdef __WXDEBUG__
-#ifdef __WXWINCE__
-      if (errCode == 0)
+      //=== Adding the correct extension >>=================================
+      m_filterIndex = (int)of.nFilterIndex - 1;
+
+      if ( !of.nFileExtension ||
+            (of.nFileExtension && fileNameBuffer[of.nFileExtension] == wxT('\0')) )
       {
-         // OK, user cancelled the dialog
+         // User has typed a filename without an extension:
+         const wxChar* extension = filterBuffer;
+         int   maxFilter = (int)(of.nFilterIndex*2L) - 1;
+         
+         for( int i = 0; i < maxFilter; i++ )           // get extension
+            extension = extension + wxStrlen( extension ) + 1;
+         
+         m_fileName = AppendExtension(fileNameBuffer, extension);
+         wxStrlcpy(fileNameBuffer, m_fileName.c_str(), WXSIZEOF(fileNameBuffer));
       }
-      else if (errCode == ERROR_INVALID_PARAMETER)
-      {
-         wxLogError(wxT("Invalid parameter passed to file dialog function."));
-      }
-      else if (errCode == ERROR_OUTOFMEMORY)
-      {
-         wxLogError(wxT("Out of memory when calling file dialog function."));
-      }
-      else if (errCode == ERROR_CALL_NOT_IMPLEMENTED)
-      {
-         wxLogError(wxT("Call not implemented when calling file dialog function."));
-      }
-      else
-      {
-         wxLogError(wxT("Unknown error %d when calling file dialog function."), errCode);
-      }
-#else
-      DWORD dwErr = CommDlgExtendedError();
-      if ( dwErr != 0 )
-      {
-         // this msg is only for developers
-         wxLogError(wxT("Common dialog failed with error code %0lx."),
-                    dwErr);
-      }
-      //else: it was just cancelled
-#endif
-#endif
+
+      m_path = fileNameBuffer;
+      m_fileName = wxFileNameFromPath(fileNameBuffer);
+      m_fileNames.Add(m_fileName);
+      m_dir = wxPathOnly(fileNameBuffer);
    }
    
-   return success ? wxID_OK : wxID_CANCEL;
-   
+   return wxID_OK;
 }
-
-#endif // wxUSE_FILEDLG && !(__SMARTPHONE__ && __WXWINCE__)
-
