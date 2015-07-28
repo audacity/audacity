@@ -23,6 +23,8 @@
 #include <wx/string.h>
 #include <wx/textctrl.h>
 
+#include "../Audacity.h"
+
 #if wxUSE_ACCESSIBILITY
 #include <wx/access.h>
 #endif
@@ -71,6 +73,11 @@ public:
    void SetFormatString(const wxString & formatString);
    void SetSampleRate(double sampleRate);
    void SetValue(double newValue);
+   void SetMinValue(double minValue);
+   void ResetMinValue();
+   void SetMaxValue(double maxValue);
+   void ResetMaxValue();
+
    double GetValue();
 
    wxString GetString();
@@ -94,6 +101,10 @@ protected:
    Type           mType;
 
    double         mValue;
+
+   double         mMinValue;
+   double         mMaxValue;
+   double         mInvalidValue;
 
    wxString       mFormatString;
 
@@ -147,6 +158,12 @@ class NumericTextCtrl: public wxControl, public NumericConverter
    void SetReadOnly(bool readOnly = true);
    void EnableMenu(bool enable = true);
 
+   // The text control permits typing '-' to make the value invalid only if this
+   // function has previously been called.
+   // Maybe you want something other than the default of -1 to indicate the invalid value
+   // this control returns to the program, so you can specify.
+   void SetInvalidValue(double invalidValue);
+
    int GetFocusedField() { return mLastField; }
    int GetFocusedDigit() { return mFocusedDigit; }
 
@@ -199,6 +216,8 @@ private:
    double         mScrollRemainder;
 
    NumericConverter::Type mType;
+
+   bool           mAllowInvalidValue;
 
    DECLARE_EVENT_TABLE()
 };

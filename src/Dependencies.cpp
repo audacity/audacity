@@ -21,6 +21,8 @@
 
 **********************************************************************/
 
+#include "Dependencies.h"
+
 #include <wx/button.h>
 #include <wx/defs.h>
 #include <wx/dialog.h>
@@ -30,13 +32,14 @@
 #include <wx/choice.h>
 
 #include "BlockFile.h"
-#include "Dependencies.h"
 #include "DirManager.h"
 #include "Internat.h"
 #include "Prefs.h"
 #include "Project.h"
+#include "Sequence.h"
 #include "ShuttleGui.h"
-#include "Track.h"
+#include "WaveTrack.h"
+#include "WaveClip.h"
 
 // Note, this #include must occur here, not up with the others!
 // It must be between the WX_DECLARE_OBJARRAY and WX_DEFINE_OBJARRAY.

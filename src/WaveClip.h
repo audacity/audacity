@@ -14,7 +14,6 @@
 
 #include "Audacity.h"
 #include "SampleFormat.h"
-#include "Sequence.h"
 #include "widgets/ProgressDialog.h"
 #include "ondemand/ODTaskThread.h"
 #include "xml/XMLTagHandler.h"
@@ -31,7 +30,10 @@
 
 #include <vector>
 
+class BlockArray;
+class DirManager;
 class Envelope;
+class Sequence;
 class SpectrogramSettings;
 class WaveCache;
 class WaveTrackCache;
@@ -127,6 +129,7 @@ public:
       len = cacheLen;
       values = new float[len];
       valid = false;
+      scaleType = 0;
       range = gain = -1;
       minFreq = maxFreq = -1;
    }
@@ -140,6 +143,7 @@ public:
    float       *values;
    bool         valid;
 
+   int scaleType;
    int range;
    int gain;
    int minFreq;
@@ -247,7 +251,7 @@ public:
    double GetEndTime() const;
    sampleCount GetStartSample() const;
    sampleCount GetEndSample() const;
-   sampleCount GetNumSamples() const { return mSequence->GetNumSamples(); }
+   sampleCount GetNumSamples() const;
 
    // One and only one of the following is true for a given t (unless the clip
    // has zero length -- then BeforeClip() and AfterClip() can both be true).
@@ -262,7 +266,7 @@ public:
                    sampleCount start, sampleCount len);
 
    Envelope* GetEnvelope() { return mEnvelope; }
-   BlockArray* GetSequenceBlockArray() { return mSequence->GetBlockArray(); }
+   BlockArray* GetSequenceBlockArray();
 
    // Get low-level access to the sequence. Whenever possible, don't use this,
    // but use more high-level functions inside WaveClip (or add them if you

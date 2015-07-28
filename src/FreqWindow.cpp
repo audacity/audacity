@@ -43,6 +43,8 @@ and in the spectrogram spectral selection.
 #include "Audacity.h"
 #include "FreqWindow.h"
 
+#include <algorithm>
+
 #include <wx/brush.h>
 #include <wx/button.h>
 #include <wx/choice.h>
@@ -67,6 +69,7 @@ and in the spectrogram spectral selection.
 #include "FFT.h"
 #include "Internat.h"
 #include "PitchName.h"
+#include "prefs/GUISettings.h"
 #include "Prefs.h"
 #include "Project.h"
 #include "WaveClip.h"
@@ -75,10 +78,7 @@ and in the spectrogram spectral selection.
 
 #include "FileDialog.h"
 
-//#if defined(__WXGTK__)
-//#define GSocket GSocketHack
-//#include <gtk/gtk.h>
-//#endif
+#include "WaveTrack.h"
 
 DEFINE_EVENT_TYPE(EVT_FREQWINDOW_RECALC);
 
@@ -253,7 +253,7 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
 
    gPrefs->Read(wxT("/FreqWindow/FuncChoice"), &mFunc, 3);
    gPrefs->Read(wxT("/FreqWindow/AxisChoice"), &mAxis, 0);
-   gPrefs->Read(wxT("/GUI/EnvdBRange"), &dBRange, ENV_DB_RANGE);
+   gPrefs->Read(ENV_DB_KEY, &dBRange, ENV_DB_RANGE);
    if(dBRange < 90.)
       dBRange = 90.;
 
@@ -534,7 +534,7 @@ bool FreqWindow::Show(bool show)
 
    if (show && !shown)
    {
-      gPrefs->Read(wxT("/GUI/EnvdBRange"), &dBRange, ENV_DB_RANGE);
+      gPrefs->Read(ENV_DB_KEY, &dBRange, ENV_DB_RANGE);
       if(dBRange < 90.)
          dBRange = 90.;
       GetAudio();
@@ -1067,7 +1067,7 @@ void FreqWindow::OnExport(wxCommandEvent & WXUNUSED(event))
 
 void FreqWindow::OnReplot(wxCommandEvent & WXUNUSED(event))
 {
-   gPrefs->Read(wxT("/GUI/EnvdBRange"), &dBRange, ENV_DB_RANGE);
+   gPrefs->Read(ENV_DB_KEY, &dBRange, ENV_DB_RANGE);
    if(dBRange < 90.)
       dBRange = 90.;
    GetAudio();

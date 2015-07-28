@@ -39,12 +39,12 @@
     * 9: Gaussian(a=4.5)
 */
 
+#include "FFT.h"
+
 #include <wx/intl.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
-
-#include "FFT.h"
 
 static int **gFFTBitTable = NULL;
 static const int MaxFastBits = 16;

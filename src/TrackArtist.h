@@ -71,19 +71,6 @@ class AUDACITY_DLL_API TrackArtist {
 
    void UpdatePrefs();
 
-   void InvalidateSpectrumCache(TrackList *tracks);
-   void InvalidateSpectrumCache(WaveTrack *track);
-   int GetSpectrumMinFreq(int deffreq);
-   int GetSpectrumMaxFreq(int deffreq);
-   int GetSpectrumLogMinFreq(int deffreq);
-   int GetSpectrumLogMaxFreq(int deffreq);
-   int GetSpectrumWindowSize(bool includeZeroPadding);
-
-   void SetSpectrumMinFreq(int freq);
-   void SetSpectrumMaxFreq(int freq);
-   void SetSpectrumLogMinFreq(int freq);
-   void SetSpectrumLogMaxFreq(int freq);
-
    void SetBackgroundBrushes(wxBrush unselectedBrush, wxBrush selectedBrush,
                              wxPen unselectedPen, wxPen selectedPen) {
      this->unselectedBrush = unselectedBrush;
@@ -110,7 +97,7 @@ class AUDACITY_DLL_API TrackArtist {
                      wxDC & dc, const wxRect & rect,
                      const SelectedRegion &selectedRegion, const ZoomInfo &zoomInfo,
                      bool drawEnvelope, bool bigPoints, bool drawSliders,
-                     bool dB, bool muted);
+                     bool muted);
 
    void DrawSpectrum(WaveTrack *track,
                      wxDC & dc, const wxRect & rect,
@@ -154,7 +141,7 @@ class AUDACITY_DLL_API TrackArtist {
    void DrawWaveformBackground(wxDC & dc, int leftOffset, const wxRect &rect,
                                const double env[],
                                float zoomMin, float zoomMax, bool dB,
-                               const SelectedRegion &selectedRegion, const ZoomInfo &zoomInfo,
+                               double t0, double t1, const ZoomInfo &zoomInfo,
                                bool drawEnvelope, bool bIsSyncLockSelected);
    void DrawMinMaxRMS(wxDC &dc, const wxRect & rect, const double env[],
                       float zoomMin, float zoomMax, bool dB,

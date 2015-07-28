@@ -53,6 +53,7 @@
 
 
 #include "../Audacity.h"
+#include "Equalization.h"
 
 #include <math.h>
 #include <vector>
@@ -95,12 +96,9 @@
 #include "../xml/XMLFileReader.h"
 #include "../Theme.h"
 #include "../AllThemeResources.h"
-#include "../WaveTrack.h"
 #include "../float_cast.h"
 
 #include "FileDialog.h"
-
-#include "Equalization.h"
 
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
 #include "Equalization48x.h"
@@ -1182,13 +1180,13 @@ bool EffectEqualization::CalcFilter()
    }
    mFilterFuncR[mWindowSize/2] = val1;
 
-   mFilterFuncR[0] = (float)(pow(10., mFilterFuncR[0]/20.));
+   mFilterFuncR[0] = DB_TO_LINEAR(mFilterFuncR[0]);
    for(i=1;i<mWindowSize/2;i++)
    {
-      mFilterFuncR[i] = (float)(pow(10., mFilterFuncR[i]/20.));
+      mFilterFuncR[i] = DB_TO_LINEAR(mFilterFuncR[i]);
       mFilterFuncR[mWindowSize-i]=mFilterFuncR[i];   //Fill entire array
    }
-   mFilterFuncR[i] = (float)(pow(10., mFilterFuncR[i]/20.));   //do last one
+   mFilterFuncR[i] = DB_TO_LINEAR(mFilterFuncR[i]);   //do last one
 
    //transfer to time domain to do the padding and windowing
    float *outr = new float[mWindowSize];
@@ -2773,7 +2771,7 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
          yF += mOutr[halfM];
          yF = fabs(yF);
          if(yF!=0.)
-            yF = 20.0*log10(yF);   //20 here as an amplitude
+            yF = LINEAR_TO_DB(yF);
          else
             yF = mEffect->mdBMin;
       }

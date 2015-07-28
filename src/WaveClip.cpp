@@ -27,13 +27,15 @@
 #include <vector>
 #include <wx/log.h>
 
+#include "Sequence.h"
 #include "Spectrum.h"
 #include "Prefs.h"
 #include "Envelope.h"
 #include "Resample.h"
 #include "Project.h"
+#include "WaveTrack.h"
 
-#include "prefs/SpectrumPrefs.h"
+#include "prefs/SpectrogramSettings.h"
 
 #include <wx/listimpl.cpp>
 WX_DEFINE_LIST(WaveClipList);
@@ -367,6 +369,11 @@ bool WaveClip::SetSamples(samplePtr buffer, sampleFormat format,
    return bResult;
 }
 
+BlockArray* WaveClip::GetSequenceBlockArray()
+{
+   return mSequence->GetBlockArray();
+}
+
 double WaveClip::GetStartTime() const
 {
    // JS: mOffset is the minimum value and it is returned; no clipping to 0
@@ -392,6 +399,11 @@ sampleCount WaveClip::GetStartSample() const
 sampleCount WaveClip::GetEndSample() const
 {
    return GetStartSample() + mSequence->GetNumSamples();
+}
+
+sampleCount WaveClip::GetNumSamples() const
+{
+   return mSequence->GetNumSamples();
 }
 
 bool WaveClip::WithinClip(double t) const
@@ -846,7 +858,8 @@ void SpecCache::CalculateOneSpectrum
          rate, results,
          autocorrelation, settings.windowType);
 #endif // EXPERIMENTAL_USE_REALFFTF
-      if (!gainFactors.empty()) {
+      if (!autocorrelation &&
+          !gainFactors.empty()) {
          // Apply a frequency-dependant gain factor
          for (int ii = 0; ii < half; ++ii)
             results[ii] += gainFactors[ii];
@@ -902,8 +915,8 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
                               double t0, double pixelsPerSecond,
                               bool autocorrelation)
 {
-   const SpectrogramSettings &settings = SpectrogramSettings::defaults();
-
+   const WaveTrack *const track = waveTrackCache.GetTrack();
+   const SpectrogramSettings &settings = track->GetSpectrogramSettings();
    const int &frequencyGain = settings.frequencyGain;
    const int &windowSize = settings.windowSize;
    const int &windowType = settings.windowType;

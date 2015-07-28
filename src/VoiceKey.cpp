@@ -32,6 +32,8 @@ or "OFF" point
 #include <wx/intl.h>
 #include <iostream>
 
+#include "WaveTrack.h"
+
 using std::cout;
 using std::endl;
 

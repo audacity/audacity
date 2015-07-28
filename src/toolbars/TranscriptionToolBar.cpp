@@ -15,6 +15,7 @@
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "TranscriptionToolBar.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
@@ -28,7 +29,6 @@
 #endif // WX_PRECOMP
 
 #include "../Envelope.h"
-#include "TranscriptionToolBar.h"
 
 #include "ControlToolBar.h"
 #include "../AudacityApp.h"

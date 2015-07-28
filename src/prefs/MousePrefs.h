@@ -38,4 +38,9 @@ class MousePrefs :public PrefsPanel
    wxListCtrl * mList;
 };
 
+class MousePrefsFactory : public PrefsPanelFactory
+{
+public:
+   virtual PrefsPanel *Create(wxWindow *parent);
+};
 #endif

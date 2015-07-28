@@ -15,11 +15,13 @@
 #include <wx/string.h>
 
 #include "SampleFormat.h"
-#include "WaveTrack.h"
-#include "TimeTrack.h"
 #include "Resample.h"
 
 class DirManager;
+class TimeTrack;
+class TrackFactory;
+class TrackList;
+class WaveTrack;
 
 /** @brief Mixes together all input tracks, applying any envelopes, amplitude
  * gain, panning, and real-time effects in the process.

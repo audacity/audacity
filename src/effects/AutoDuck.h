@@ -19,8 +19,6 @@
 #include <wx/textctrl.h>
 #include <wx/window.h>
 
-#include "../WaveTrack.h"
-
 #include "Effect.h"
 
 class EffectAutoDuckPanel;

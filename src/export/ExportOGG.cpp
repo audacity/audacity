@@ -36,6 +36,7 @@
 
 #include "../Internat.h"
 #include "../Tags.h"
+#include "../Track.h"
 
 //----------------------------------------------------------------------------
 // ExportOGGOptions

@@ -16,6 +16,7 @@
 
 
 #include "../Audacity.h" // for rint from configwin.h
+#include "Normalize.h"
 
 #include <math.h>
 
@@ -27,8 +28,6 @@
 #include "../ShuttleGui.h"
 #include "../WaveTrack.h"
 #include "../widgets/valnum.h"
-
-#include "Normalize.h"
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
@@ -152,9 +151,8 @@ bool EffectNormalize::Process()
 
    float ratio;
    if( mGain )
-      ratio = pow(10.0,TrapDouble(mLevel, // same value used for all tracks
-                               MIN_Level,
-                               MAX_Level)/20.0);
+      // same value used for all tracks
+      ratio = DB_TO_LINEAR(TrapDouble(mLevel, MIN_Level, MAX_Level));
    else
       ratio = 1.0;
 
@@ -285,7 +283,7 @@ void EffectNormalize::PopulateOrExchange(ShuttleGui & S)
                                              mGain ? wxT("true") : wxT("false"));
                mGainCheckBox->SetValidator(wxGenericValidator(&mGain));
 
-               FloatingPointValidator<double> vldLevel(1, &mLevel);
+               FloatingPointValidator<double> vldLevel(2, &mLevel, NUM_VAL_ONE_TRAILING_ZERO);
                vldLevel.SetRange(MIN_Level, MAX_Level);
                mLevelTextCtrl = S.AddTextBox(wxT(""), wxT(""), 10);
                mLevelTextCtrl->SetName(_("Maximum amplitude dB"));

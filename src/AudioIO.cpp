@@ -265,8 +265,9 @@ writing audio.
 *//*******************************************************************/
 
 #include "Audacity.h"
-#include "float_cast.h"
 #include "Experimental.h"
+#include "AudioIO.h"
+#include "float_cast.h"
 
 #include <math.h>
 #include <stdlib.h>
@@ -294,11 +295,11 @@ writing audio.
 #include <wx/txtstrm.h>
 
 #include "AudacityApp.h"
-#include "AudioIO.h"
 #include "Mix.h"
 #include "MixerBoard.h"
 #include "Resample.h"
 #include "RingBuffer.h"
+#include "prefs/GUISettings.h"
 #include "Prefs.h"
 #include "Project.h"
 #include "TimeTrack.h"
@@ -307,8 +308,6 @@ writing audio.
 
 #include "toolbars/ControlToolBar.h"
 #include "widgets/Meter.h"
-
-#include "Experimental.h"
 
 #ifdef EXPERIMENTAL_MIDI_OUT
    #define MIDI_SLEEP 10 /* milliseconds */
@@ -856,6 +855,8 @@ bool AudioIO::ValidateDeviceNames(wxString play, wxString rec)
 
 AudioIO::AudioIO()
 {
+   mCaptureTracks = mPlaybackTracks = NULL;
+
    mAudioThreadShouldCallFillBuffersOnce = false;
    mAudioThreadFillBuffersLoopRunning = false;
    mAudioThreadFillBuffersLoopActive = false;
@@ -992,6 +993,9 @@ AudioIO::~AudioIO()
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
    delete mScrubQueue;
 #endif
+
+   delete mCaptureTracks;
+   delete mPlaybackTracks;
 }
 
 void AudioIO::SetMixer(int inputSource)
@@ -1525,11 +1529,11 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
    int silenceLevelDB;
    gPrefs->Read(wxT("/AudioIO/SilenceLevel"), &silenceLevelDB, -50);
    int dBRange;
-   dBRange = gPrefs->Read(wxT("/GUI/EnvdBRange"), ENV_DB_RANGE);
+   dBRange = gPrefs->Read(ENV_DB_KEY, ENV_DB_RANGE);
    if(silenceLevelDB < -dBRange)
    {
       silenceLevelDB = -dBRange + 3;   // meter range was made smaller than SilenceLevel
-      gPrefs->Write(wxT("/GUI/EnvdBRange"), dBRange); // so set SilenceLevel reasonable
+      gPrefs->Write(ENV_DB_KEY, dBRange); // so set SilenceLevel reasonable
       gPrefs->Flush();
    }
    mSilenceLevel = (silenceLevelDB + dBRange)/(double)dBRange;  // meter goes -dBRange dB -> 0dB
@@ -1542,8 +1546,8 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
    mTime    = t0;
    mSeek    = 0;
    mLastRecordingOffset = 0;
-   mPlaybackTracks = playbackTracks;
-   mCaptureTracks  = captureTracks;
+   mPlaybackTracks = new WaveTrackArray(playbackTracks);
+   mCaptureTracks  = new WaveTrackArray(captureTracks);
 #ifdef EXPERIMENTAL_MIDI_OUT
    mMidiPlaybackTracks = midiPlaybackTracks;
 #endif
@@ -1563,7 +1567,7 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
    double minScrubStutter = options.minScrubStutter;
    if (scrubbing)
    {
-      if (mCaptureTracks.GetCount() > 0 ||
+      if (mCaptureTracks->GetCount() > 0 ||
           mPlayMode == PLAY_LOOPED ||
           mTimeTrack != NULL ||
           options.maxScrubSpeed < GetMinScrubSpeed())
@@ -1625,8 +1629,8 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
    // Capacity of the playback buffer.
    mPlaybackRingBufferSecs = 10.0;
 
-   mCaptureRingBufferSecs = 4.5 + 0.5 * std::min(size_t(16), mCaptureTracks.GetCount());
-   mMinCaptureSecsToCopy = 0.2 + 0.2 * std::min(size_t(16), mCaptureTracks.GetCount());
+   mCaptureRingBufferSecs = 4.5 + 0.5 * std::min(size_t(16), mCaptureTracks->GetCount());
+   mMinCaptureSecsToCopy = 0.2 + 0.2 * std::min(size_t(16), mCaptureTracks->GetCount());
 
    unsigned int playbackChannels = 0;
    unsigned int captureChannels = 0;
@@ -1641,7 +1645,7 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
    if( captureTracks.GetCount() > 0 )
    {
       // For capture, every input channel gets its own track
-      captureChannels = mCaptureTracks.GetCount();
+      captureChannels = mCaptureTracks->GetCount();
       // I don't deal with the possibility of the capture tracks
       // having different sample formats, since it will never happen
       // with the current code.  This code wouldn't *break* if this
@@ -1650,7 +1654,7 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
       // we would set the sound card to capture in 16 bits and the second
       // track wouldn't get the benefit of all 24 bits the card is capable
       // of.
-      captureFormat = mCaptureTracks[0]->GetSampleFormat();
+      captureFormat = (*mCaptureTracks)[0]->GetSampleFormat();
 
       // Tell project that we are about to start recording
       if (mListener)
@@ -1711,12 +1715,12 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
                return 0;
             }
 
-            mPlaybackBuffers = new RingBuffer* [mPlaybackTracks.GetCount()];
-            mPlaybackMixers  = new Mixer*      [mPlaybackTracks.GetCount()];
+            mPlaybackBuffers = new RingBuffer* [mPlaybackTracks->GetCount()];
+            mPlaybackMixers  = new Mixer*      [mPlaybackTracks->GetCount()];
 
             // Set everything to zero in case we have to delete these due to a memory exception.
-            memset(mPlaybackBuffers, 0, sizeof(RingBuffer*)*mPlaybackTracks.GetCount());
-            memset(mPlaybackMixers, 0, sizeof(Mixer*)*mPlaybackTracks.GetCount());
+            memset(mPlaybackBuffers, 0, sizeof(RingBuffer*)*mPlaybackTracks->GetCount());
+            memset(mPlaybackMixers, 0, sizeof(Mixer*)*mPlaybackTracks->GetCount());
 
             const Mixer::WarpOptions &warpOptions =
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
@@ -1724,12 +1728,12 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
 #endif
                Mixer::WarpOptions(mTimeTrack);
 
-            for (unsigned int i = 0; i < mPlaybackTracks.GetCount(); i++)
+            for (unsigned int i = 0; i < mPlaybackTracks->GetCount(); i++)
             {
                mPlaybackBuffers[i] = new RingBuffer(floatSample, playbackBufferSize);
 
                // MB: use normal time for the end time, not warped time!
-               mPlaybackMixers[i]  = new Mixer(1, &mPlaybackTracks[i],
+               mPlaybackMixers[i]  = new Mixer(1, &(*mPlaybackTracks)[i],
                                                warpOptions,
                                                mT0, mT1, 1,
                                                playbackMixBufferSize, false,
@@ -1753,17 +1757,17 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
                return 0;
             }
 
-            mCaptureBuffers = new RingBuffer* [mCaptureTracks.GetCount()];
-            mResample = new Resample* [mCaptureTracks.GetCount()];
+            mCaptureBuffers = new RingBuffer* [mCaptureTracks->GetCount()];
+            mResample = new Resample* [mCaptureTracks->GetCount()];
             mFactor = sampleRate / mRate;
 
             // Set everything to zero in case we have to delete these due to a memory exception.
-            memset(mCaptureBuffers, 0, sizeof(RingBuffer*)*mCaptureTracks.GetCount());
-            memset(mResample, 0, sizeof(Resample*)*mCaptureTracks.GetCount());
+            memset(mCaptureBuffers, 0, sizeof(RingBuffer*)*mCaptureTracks->GetCount());
+            memset(mResample, 0, sizeof(Resample*)*mCaptureTracks->GetCount());
 
-            for( unsigned int i = 0; i < mCaptureTracks.GetCount(); i++ )
+            for( unsigned int i = 0; i < mCaptureTracks->GetCount(); i++ )
             {
-               mCaptureBuffers[i] = new RingBuffer( mCaptureTracks[i]->GetSampleFormat(),
+               mCaptureBuffers[i] = new RingBuffer( (*mCaptureTracks)[i]->GetSampleFormat(),
                                                     captureBufferSize );
                mResample[i] = new Resample(true, mFactor, mFactor); // constant rate resampling
             }
@@ -1791,9 +1795,9 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
       // group determination should mimic what is done in audacityAudioCallback()
       // when calling RealtimeProcess().
       int group = 0;
-      for (size_t i = 0, cnt = mPlaybackTracks.GetCount(); i < cnt; i++)
+      for (size_t i = 0, cnt = mPlaybackTracks->GetCount(); i < cnt; i++)
       {
-         WaveTrack *vt = gAudioIO->mPlaybackTracks[i];
+         WaveTrack *vt = (*gAudioIO->mPlaybackTracks)[i];
 
          int chanCnt = 1;
          if (vt->GetLinked())
@@ -1815,7 +1819,7 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
       // Calculate the new time position
       mTime = std::max(mT0, std::min(mT1, *options.pStartTime));
       // Reset mixer positions for all playback tracks
-      unsigned numMixers = mPlaybackTracks.GetCount();
+      unsigned numMixers = mPlaybackTracks->GetCount();
       for (unsigned ii = 0; ii < numMixers; ++ii)
          mPlaybackMixers[ii]->Reposition(mTime);
       if(mTimeTrack)
@@ -1919,7 +1923,7 @@ void AudioIO::StartStreamCleanup(bool bOnlyBuffers)
 
    if(mPlaybackBuffers)
    {
-      for( unsigned int i = 0; i < mPlaybackTracks.GetCount(); i++ )
+      for( unsigned int i = 0; i < mPlaybackTracks->GetCount(); i++ )
          delete mPlaybackBuffers[i];
       delete [] mPlaybackBuffers;
       mPlaybackBuffers = NULL;
@@ -1927,7 +1931,7 @@ void AudioIO::StartStreamCleanup(bool bOnlyBuffers)
 
    if(mPlaybackMixers)
    {
-      for( unsigned int i = 0; i < mPlaybackTracks.GetCount(); i++ )
+      for( unsigned int i = 0; i < mPlaybackTracks->GetCount(); i++ )
          delete mPlaybackMixers[i];
       delete [] mPlaybackMixers;
       mPlaybackMixers = NULL;
@@ -1935,7 +1939,7 @@ void AudioIO::StartStreamCleanup(bool bOnlyBuffers)
 
    if(mCaptureBuffers)
    {
-      for( unsigned int i = 0; i < mCaptureTracks.GetCount(); i++ )
+      for( unsigned int i = 0; i < mCaptureTracks->GetCount(); i++ )
          delete mCaptureBuffers[i];
       delete [] mCaptureBuffers;
       mCaptureBuffers = NULL;
@@ -1943,7 +1947,7 @@ void AudioIO::StartStreamCleanup(bool bOnlyBuffers)
 
    if(mResample)
    {
-      for( unsigned int i = 0; i < mCaptureTracks.GetCount(); i++ )
+      for( unsigned int i = 0; i < mCaptureTracks->GetCount(); i++ )
          delete mResample[i];
       delete [] mResample;
       mResample = NULL;
@@ -2268,9 +2272,9 @@ void AudioIO::StopStream()
       // we allocated in StartStream()
       //
 
-      if( mPlaybackTracks.GetCount() > 0 )
+      if( mPlaybackTracks->GetCount() > 0 )
       {
-         for( unsigned int i = 0; i < mPlaybackTracks.GetCount(); i++ )
+         for( unsigned int i = 0; i < mPlaybackTracks->GetCount(); i++ )
          {
             delete mPlaybackBuffers[i];
             delete mPlaybackMixers[i];
@@ -2283,7 +2287,7 @@ void AudioIO::StopStream()
       //
       // Offset all recorded tracks to account for latency
       //
-      if( mCaptureTracks.GetCount() > 0 )
+      if( mCaptureTracks->GetCount() > 0 )
       {
          //
          // We only apply latency correction when we actually played back
@@ -2298,15 +2302,15 @@ void AudioIO::StopStream()
          double recordingOffset =
             mLastRecordingOffset + latencyCorrection / 1000.0;
 
-         for( unsigned int i = 0; i < mCaptureTracks.GetCount(); i++ )
+         for( unsigned int i = 0; i < mCaptureTracks->GetCount(); i++ )
             {
                delete mCaptureBuffers[i];
                delete mResample[i];
 
-               WaveTrack* track = mCaptureTracks[i];
+               WaveTrack* track = (*mCaptureTracks)[i];
                track->Flush();
 
-               if (mPlaybackTracks.GetCount() > 0)
+               if (mPlaybackTracks->GetCount() > 0)
                {  // only do latency correction if some tracks are being played back
                   WaveTrackArray playbackTracks;
                   AudacityProject *p = GetActiveProject();
@@ -2873,7 +2877,7 @@ int AudioIO::GetCommonlyAvailPlayback()
    int commonlyAvail = mPlaybackBuffers[0]->AvailForPut();
    unsigned int i;
 
-   for( i = 1; i < mPlaybackTracks.GetCount(); i++ )
+   for( i = 1; i < mPlaybackTracks->GetCount(); i++ )
    {
       int thisBlockAvail = mPlaybackBuffers[i]->AvailForPut();
 
@@ -2889,7 +2893,7 @@ int AudioIO::GetCommonlyAvailCapture()
    int commonlyAvail = mCaptureBuffers[0]->AvailForGet();
    unsigned int i;
 
-   for( i = 1; i < mCaptureTracks.GetCount(); i++ )
+   for( i = 1; i < mCaptureTracks->GetCount(); i++ )
    {
       int avail = mCaptureBuffers[i]->AvailForGet();
       if( avail < commonlyAvail )
@@ -3266,7 +3270,7 @@ void AudioIO::FillBuffers()
 {
    unsigned int i;
 
-   if( mPlaybackTracks.GetCount() > 0 )
+   if( mPlaybackTracks->GetCount() > 0 )
    {
       // Though extremely unlikely, it is possible that some buffers
       // will have more samples available than others.  This could happen
@@ -3323,7 +3327,7 @@ void AudioIO::FillBuffers()
                   mWarpedTime += deltat;
             }
 
-            for( i = 0; i < mPlaybackTracks.GetCount(); i++ )
+            for( i = 0; i < mPlaybackTracks->GetCount(); i++ )
             {
                // The mixer here isn't actually mixing: it's just doing
                // resampling, format conversion, and possibly time track
@@ -3400,7 +3404,7 @@ void AudioIO::FillBuffers()
                         startTime = startSample / mRate;
                         endTime = endSample / mRate;
                         speed = double(abs(endSample - startSample)) / mScrubDuration;
-                        for (i = 0; i < mPlaybackTracks.GetCount(); i++)
+                        for (i = 0; i < mPlaybackTracks->GetCount(); i++)
                            mPlaybackMixers[i]->SetTimesAndSpeed(startTime, endTime, speed);
                      }
                   }
@@ -3415,7 +3419,7 @@ void AudioIO::FillBuffers()
                // and if yes, restart from the beginning.
                if (mWarpedTime >= mWarpedLength)
                {
-                  for (i = 0; i < mPlaybackTracks.GetCount(); i++)
+                  for (i = 0; i < mPlaybackTracks->GetCount(); i++)
                      mPlaybackMixers[i]->Restart();
                   mWarpedTime = 0.0;
                }
@@ -3429,7 +3433,7 @@ void AudioIO::FillBuffers()
       }
    }  // end of playback buffering
 
-   if( mCaptureTracks.GetCount() > 0 ) // start record buffering
+   if( mCaptureTracks->GetCount() > 0 ) // start record buffering
    {
       int commonlyAvail = GetCommonlyAvailCapture();
 
@@ -3444,12 +3448,12 @@ void AudioIO::FillBuffers()
          // Append captured samples to the end of the WaveTracks.
          // The WaveTracks have their own buffering for efficiency.
          AutoSaveFile blockFileLog;
-         int numChannels = mCaptureTracks.GetCount();
+         int numChannels = mCaptureTracks->GetCount();
 
          for( i = 0; (int)i < numChannels; i++ )
          {
             int avail = commonlyAvail;
-            sampleFormat trackFormat = mCaptureTracks[i]->GetSampleFormat();
+            sampleFormat trackFormat = (*mCaptureTracks)[i]->GetSampleFormat();
 
             AutoSaveFile appendLog;
 
@@ -3457,7 +3461,7 @@ void AudioIO::FillBuffers()
             {
                samplePtr temp = NewSamples(avail, trackFormat);
                mCaptureBuffers[i]->Get   (temp, trackFormat, avail);
-               mCaptureTracks[i]-> Append(temp, trackFormat, avail, 1,
+               (*mCaptureTracks)[i]-> Append(temp, trackFormat, avail, 1,
                                           &appendLog);
                DeleteSamples(temp);
             }
@@ -3473,7 +3477,7 @@ void AudioIO::FillBuffers()
                 */
                size = mResample[i]->Process(mFactor, (float *)temp1, avail, !IsStreamActive(),
                                             &size, (float *)temp2, size);
-               mCaptureTracks[i]-> Append(temp2, floatSample, size, 1,
+               (*mCaptureTracks)[i]-> Append(temp2, floatSample, size, 1,
                                           &appendLog);
                DeleteSamples(temp1);
                DeleteSamples(temp2);
@@ -3482,7 +3486,7 @@ void AudioIO::FillBuffers()
             if (!appendLog.IsEmpty())
             {
                blockFileLog.StartTag(wxT("recordingrecovery"));
-               blockFileLog.WriteAttr(wxT("id"), mCaptureTracks[i]->GetAutoSaveIdent());
+               blockFileLog.WriteAttr(wxT("id"), (*mCaptureTracks)[i]->GetAutoSaveIdent());
                blockFileLog.WriteAttr(wxT("channel"), (int)i);
                blockFileLog.WriteAttr(wxT("numchannels"), numChannels);
                blockFileLog.WriteSubTree(appendLog);
@@ -3675,7 +3679,7 @@ bool AudioIO::SetHasSolo(bool hasSolo)
 void AudioIO::FillMidiBuffers()
 {
    bool hasSolo = false;
-   int numPlaybackTracks = gAudioIO->mPlaybackTracks.GetCount();
+   int numPlaybackTracks = gAudioIO->mPlaybackTracks->GetCount();
    int t;
    for(t = 0; t < numPlaybackTracks; t++ )
       if( gAudioIO->mPlaybackTracks[t]->GetSolo() ) {
@@ -3956,7 +3960,7 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
                           const PaStreamCallbackFlags WXUNUSED(statusFlags), void * WXUNUSED(userData) )
 {
    int numPlaybackChannels = gAudioIO->mNumPlaybackChannels;
-   int numPlaybackTracks = gAudioIO->mPlaybackTracks.GetCount();
+   int numPlaybackTracks = gAudioIO->mPlaybackTracks->GetCount();
    int numCaptureChannels = gAudioIO->mNumCaptureChannels;
    int callbackReturn = paContinue;
    void *tempBuffer = alloca(framesPerBuffer*sizeof(float)*
@@ -4137,7 +4141,7 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
 
          int numSolo = 0;
          for( t = 0; t < numPlaybackTracks; t++ )
-            if( gAudioIO->mPlaybackTracks[t]->GetSolo() )
+            if( (*gAudioIO->mPlaybackTracks)[t]->GetSolo() )
                numSolo++;
 #ifdef EXPERIMENTAL_MIDI_OUT
          int numMidiPlaybackTracks = gAudioIO->mMidiPlaybackTracks.GetCount();
@@ -4162,7 +4166,7 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
          int maxLen = 0;
          for (t = 0; t < numPlaybackTracks; t++)
          {
-            WaveTrack *vt = gAudioIO->mPlaybackTracks[t];
+            WaveTrack *vt = (*gAudioIO->mPlaybackTracks)[t];
 
             chans[chanCnt] = vt;
 
@@ -4516,6 +4520,8 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
          //    The problem there occurs if Software Playthrough is on.
          //    Could conditionally do the update here if Software Playthrough is off,
          //    and in TrackPanel::OnTimer() if Software Playthrough is on, but not now.
+         // PRL 12 Jul 2015: and what was in TrackPanel::OnTimer is now handled by means of event
+         // type EVT_TRACK_PANEL_TIMER
          //AudacityProject* pProj = GetActiveProject();
          //MixerBoard* pMixerBoard = pProj->GetMixerBoard();
          //if (pMixerBoard)

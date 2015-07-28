@@ -18,6 +18,7 @@
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "GUIPrefs.h"
 
 #include <wx/defs.h>
 
@@ -26,7 +27,7 @@
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 
-#include "GUIPrefs.h"
+#include "GUISettings.h"
 
 GUIPrefs::GUIPrefs(wxWindow * parent)
 :  PrefsPanel(parent, _("Interface"))
@@ -99,9 +100,10 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
 
       S.StartMultiColumn(2);
       {
+         const wxString defaultRange = wxString::Format(wxT("%d"), ENV_DB_RANGE);
          S.TieChoice(_("Meter/Waveform dB &range:"),
-                     wxT("/GUI/EnvdBRange"),
-                     wxT("60"),
+                     ENV_DB_KEY,
+                     defaultRange,
                      mRangeChoices,
                      mRangeCodes);
          S.SetSizeHints(mRangeChoices);
@@ -157,4 +159,9 @@ bool GUIPrefs::Apply()
    wxGetApp().InitLang(lang);
 
    return true;
+}
+
+PrefsPanel *GUIPrefsFactory::Create(wxWindow *parent)
+{
+   return new GUIPrefs(parent);
 }

@@ -62,6 +62,7 @@
 
 
 #include "Audacity.h"
+#include "DirManager.h"
 
 #include <time.h> // to use time() for srand()
 
@@ -94,15 +95,15 @@
 #include "blockfile/PCMAliasBlockFile.h"
 #include "blockfile/ODPCMAliasBlockFile.h"
 #include "blockfile/ODDecodeBlockFile.h"
-#include "DirManager.h"
 #include "Internat.h"
 #include "Project.h"
 #include "Prefs.h"
 #include "widgets/Warning.h"
 #include "widgets/MultiDialog.h"
 
-#include "prefs/PrefsDialog.h"
 #include "ondemand/ODManager.h"
+
+#include "Track.h"
 
 #if defined(__WXMAC__)
 #include <mach/mach.h>

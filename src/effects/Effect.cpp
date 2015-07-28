@@ -2060,6 +2060,11 @@ TimeWarper *Effect::GetTimeWarper()
 // Use these two methods to copy the input tracks to mOutputTracks, if
 // doing the processing on them, and replacing the originals only on success (and not cancel).
 // Copy the group tracks that have tracks selected
+void Effect::CopyInputTracks()
+{
+   CopyInputTracks(Track::Wave);
+}
+
 void Effect::CopyInputTracks(int trackType)
 {
    // Reset map

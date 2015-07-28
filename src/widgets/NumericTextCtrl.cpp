@@ -167,7 +167,8 @@ different formats.
 
 #include "../Audacity.h"
 #include "NumericTextCtrl.h"
-#include "../Sequence.h"   // for sampleCount
+#include "audacity/Types.h"
+#include "../AudacityApp.h"
 #include "../Theme.h"
 #include "../AllThemeResources.h"
 #include "../AColor.h"
@@ -175,6 +176,7 @@ different formats.
 
 #include <algorithm>
 #include <math.h>
+#include <limits>
 
 #include <wx/wx.h>
 #include <wx/dcmemory.h>
@@ -531,6 +533,10 @@ NumericConverter::NumericConverter(Type type,
                                    double value,
                                    double sampleRate)
 {
+   ResetMinValue();
+   ResetMaxValue();
+   mInvalidValue = -1.0;
+
    mDefaultNdx = 0;
 
    mType = type;
@@ -863,7 +869,7 @@ void NumericConverter::ControlsToValue()
 
    if (mFields.GetCount() > 0 &&
       mValueString.Mid(mFields[0].pos, 1) == wxChar('-')) {
-      mValue = -1;
+      mValue = mInvalidValue;
       return;
    }
 
@@ -904,7 +910,7 @@ void NumericConverter::ControlsToValue()
       t = frames * 1.001 / 30.;
    }
 
-   mValue = t;
+   mValue = std::max(mMinValue, std::min(mMaxValue, t));
 }
 
 void NumericConverter::SetFormatName(const wxString & formatName)
@@ -933,6 +939,35 @@ void NumericConverter::SetValue(double newValue)
    mValue = newValue;
    ValueToControls();
    ControlsToValue();
+}
+
+void NumericConverter::SetMinValue(double minValue)
+{
+   mMinValue = minValue;
+   if (mMaxValue < minValue)
+      mMaxValue = minValue;
+   if (mValue < minValue)
+      SetValue(minValue);
+}
+
+void NumericConverter::ResetMinValue()
+{
+   mMinValue = std::numeric_limits<double>::min();
+}
+
+void NumericConverter::SetMaxValue(double maxValue)
+{
+   mMaxValue = maxValue;
+   if (mMinValue > maxValue) {
+      mMinValue = maxValue;
+   }
+   if (mValue > maxValue)
+      SetValue(maxValue);
+}
+
+void NumericConverter::ResetMaxValue()
+{
+   mMaxValue = std::numeric_limits<double>::max();
 }
 
 double NumericConverter::GetValue()
@@ -1079,6 +1114,8 @@ void NumericConverter::Adjust(int steps, int dir)
                mValue = 0.;
             }
 
+            mValue = std::max(mMinValue, std::min(mMaxValue, mValue));
+
             mValue /= mScalingFactor;
 
             if (!mNtscDrop)
@@ -1141,6 +1178,7 @@ NumericTextCtrl::NumericTextCtrl(NumericConverter::Type type,
    mAutoPos(autoPos)
    , mType(type)
 {
+   mAllowInvalidValue = false;
 
    mDigitBoxW = 10;
    mDigitBoxH = 16;
@@ -1179,6 +1217,7 @@ NumericTextCtrl::~NumericTextCtrl()
 
 // Set the focus to the first (left-most) non-zero digit
 // If all digits are zero, the right-most position is focused
+// If all digits are hyphens (invalid), the left-most position is focused
 void NumericTextCtrl::UpdateAutoFocus()
 {
    if (!mAutoPos)
@@ -1246,6 +1285,15 @@ void NumericTextCtrl::EnableMenu(bool enable)
    mButtonWidth = enable ? 9 : 0;
    Layout();
    Fit();
+}
+
+void NumericTextCtrl::SetInvalidValue(double invalidValue)
+{
+   const bool wasInvalid = mAllowInvalidValue && (mValue == mInvalidValue);
+   mAllowInvalidValue = true;
+   mInvalidValue = invalidValue;
+   if (wasInvalid)
+      SetValue(invalidValue);
 }
 
 bool NumericTextCtrl::Layout()
@@ -1564,6 +1612,7 @@ void NumericTextCtrl::OnCaptureKey(wxCommandEvent &event)
       case WXK_TAB:
       case WXK_RETURN:
       case WXK_NUMPAD_ENTER:
+      case '-':
          return;
 
       default:
@@ -1586,6 +1635,7 @@ void NumericTextCtrl::OnKeyUp(wxKeyEvent &event)
       keyCode -= WXK_NUMPAD0 - '0';
 
    if ((keyCode >= '0' && keyCode <= '9') ||
+       (keyCode == '-') ||
        (keyCode == WXK_BACK) ||
        (keyCode == WXK_UP) ||
        (keyCode == WXK_DOWN)) {
@@ -1618,7 +1668,7 @@ void NumericTextCtrl::OnKeyDown(wxKeyEvent &event)
    if (!mReadOnly && (keyCode >= '0' && keyCode <= '9')) {
       int digitPosition = mDigits[mFocusedDigit].pos;
       if (mValueString[digitPosition] == wxChar('-')) {
-         mValue = 0;
+         mValue = std::max(mMinValue, std::min(mMaxValue, 0.0));
          ValueToControls();
          // Beware relocation of the string
          digitPosition = mDigits[mFocusedDigit].pos;
@@ -1628,6 +1678,11 @@ void NumericTextCtrl::OnKeyDown(wxKeyEvent &event)
       ValueToControls();
       mFocusedDigit = (mFocusedDigit + 1) % (mDigits.GetCount());
       Updated();
+   }
+
+   else if (!mReadOnly && keyCode == '-') {
+      if (mAllowInvalidValue)
+         SetValue(mInvalidValue);
    }
 
    else if (!mReadOnly && keyCode == WXK_BACK) {

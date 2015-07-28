@@ -25,6 +25,7 @@ project window.
 #include <wx/settings.h>
 #include <wx/bitmap.h>
 
+#include "../Track.h"
 #include "../TrackPanel.h"
 #include "../toolbars/ToolManager.h"
 #include "../toolbars/ToolBar.h"

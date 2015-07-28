@@ -29,6 +29,7 @@
 #include <wx/string.h>
 #include <wx/timer.h>
 #include <wx/dynlib.h> //<! For windows.h
+#include <wx/msgdlg.h>
 
 #include "ShuttleGui.h"
 #include "Project.h"

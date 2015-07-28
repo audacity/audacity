@@ -33,6 +33,8 @@
 #include "../Theme.h"
 #include "../widgets/valnum.h"
 
+#include "../WaveTrack.h"
+
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
 //     Name                Type     Key                     Def      Min      Max      Scale
@@ -278,7 +280,7 @@ bool EffectAutoDuck::Process()
    sampleCount minSamplesPause =
       mControlTrack->TimeToLongSamples(maxPause);
 
-   double threshold = pow(10.0, mThresholdDb/20);
+   double threshold = DB_TO_LINEAR(mThresholdDb);
 
    // adjust the threshold so we can compare it to the rmsSum value
    threshold = threshold * threshold * kRMSWindowSize;
@@ -553,7 +555,7 @@ bool EffectAutoDuck::ApplyDuckFade(int trackNumber, WaveTrack* t,
          if (gain < mDuckAmountDb)
             gain = mDuckAmountDb;
 
-         buf[i - pos] *= pow(10.0, gain / 20.0);
+         buf[i - pos] *= DB_TO_LINEAR(gain);
       }
 
       t->Set((samplePtr)buf, floatSample, pos, len);

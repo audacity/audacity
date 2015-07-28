@@ -32,4 +32,9 @@ class RecordingPrefs :public PrefsPanel
    void PopulateOrExchange(ShuttleGui & S);
 };
 
+class RecordingPrefsFactory : public PrefsPanelFactory
+{
+public:
+   virtual PrefsPanel *Create(wxWindow *parent);
+};
 #endif

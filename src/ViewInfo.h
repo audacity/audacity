@@ -17,6 +17,11 @@
 
 class Track;
 
+#ifdef __GNUC__
+#define CONST
+#else
+#define CONST const
+#endif
 
 // The subset of ViewInfo information (other than selection)
 // that is sufficient for purposes of TrackArtist,
@@ -26,6 +31,8 @@ class AUDACITY_DLL_API ZoomInfo
 public:
    ZoomInfo(double start, double duration, double pixelsPerSecond);
    ~ZoomInfo();
+
+   void UpdatePrefs();
 
    int vpos;                    // vertical scroll pos
 
@@ -37,6 +44,7 @@ protected:
    double zoom;                 // pixels per second
 
 public:
+   float dBr;                   // decibel scale range
 
    // do NOT use this once to convert a pixel width to a duration!
    // Instead, call twice to convert start and end times,
@@ -85,7 +93,7 @@ public:
    void ZoomBy(double multiplier);
 
    struct Interval {
-      /* const */ wxInt64 position; /* const */ double averageZoom; /* const */ bool inFisheye;
+      CONST wxInt64 position; CONST double averageZoom; CONST bool inFisheye;
       Interval(wxInt64 p, double z, bool i)
          : position(p), averageZoom(z), inFisheye(i) {}
    };

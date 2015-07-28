@@ -31,6 +31,7 @@ simplifies construction of menu items.
 *//*******************************************************************/
 
 #include "Audacity.h"
+#include "Project.h"
 
 #include <iterator>
 #include <limits>
@@ -53,7 +54,6 @@ simplifies construction of menu items.
 #include "effects/Contrast.h"
 #include "TrackPanel.h"
 
-#include "Project.h"
 #include "effects/EffectManager.h"
 
 #include "AudacityApp.h"
@@ -118,6 +118,8 @@ simplifies construction of menu items.
 #include "DeviceManager.h"
 
 #include "Snap.h"
+
+#include "WaveTrack.h"
 
 #if defined(EXPERIMENTAL_CRASH_REPORT)
 #include <wx/debugrpt.h>
@@ -3551,7 +3553,7 @@ void AudacityProject::OnExportMultiple()
 
 void AudacityProject::OnPreferences()
 {
-   PrefsDialog dialog(this /* parent */ );
+   GlobalPrefsDialog dialog(this /* parent */ );
 
    if (!dialog.ShowModal()) {
       // Canceled
@@ -4730,12 +4732,7 @@ void AudacityProject::DoNextPeakFrequency(bool up)
    for (Track *t = iter.First(); t; t = iter.Next()) {
       WaveTrack *const wt = static_cast<WaveTrack*>(t);
       const int display = wt->GetDisplay();
-      if (display == WaveTrack::SpectrumDisplay ||
-          display == WaveTrack::SpectrumLogDisplay ||
-          display == WaveTrack::SpectralSelectionDisplay ||
-          display == WaveTrack::SpectralSelectionLogDisplay 
-          
-          ) {
+      if (display == WaveTrack::Spectrum) {
          pTrack = wt;
          break;
       }

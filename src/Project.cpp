@@ -110,10 +110,10 @@ scroll information.  It also has some status flags.
 #include "Mix.h"
 #include "NoteTrack.h"
 #include "Prefs.h"
+#include "Sequence.h"
 #include "Snap.h"
 #include "Tags.h"
 #include "TimeTrack.h"
-#include "Track.h"
 #include "TrackPanel.h"
 #include "WaveTrack.h"
 #include "DirManager.h"
@@ -121,7 +121,6 @@ scroll information.  It also has some status flags.
 #include "prefs/PrefsDialog.h"
 #include "widgets/LinkingHtmlWindow.h"
 #include "widgets/ErrorDialog.h"
-#include "widgets/Meter.h"
 #include "widgets/Ruler.h"
 #include "widgets/Warning.h"
 #include "xml/XMLFileReader.h"
@@ -1162,7 +1161,7 @@ AdornedRulerPanel *AudacityProject::GetRulerPanel()
    return mRuler;
 }
 
-int AudacityProject::GetAudioIOToken()
+int AudacityProject::GetAudioIOToken() const
 {
    return mAudioIOToken;
 }
@@ -1170,6 +1169,12 @@ int AudacityProject::GetAudioIOToken()
 void AudacityProject::SetAudioIOToken(int token)
 {
    mAudioIOToken = token;
+}
+
+bool AudacityProject::IsAudioActive() const
+{
+   return GetAudioIOToken() > 0 &&
+      gAudioIO->IsStreamActive(GetAudioIOToken());
 }
 
 Tags *AudacityProject::GetTags()
@@ -1206,6 +1211,11 @@ void AudacityProject::SetProjectTitle()
 
    SetTitle( name );
    SetName(name);       // to make the nvda screen reader read the correct title
+}
+
+bool AudacityProject::GetIsEmpty()
+{
+   return mTracks->IsEmpty();
 }
 
 double AudacityProject::AS_GetRate()
@@ -1250,7 +1260,18 @@ void AudacityProject::AS_SetSelectionFormat(const wxString & format)
 
 double AudacityProject::SSBL_GetRate() const
 {
-   return mRate;
+   // Return maximum of project rate and all track rates.
+   double rate = mRate;
+
+   TrackListOfKindIterator iterWaveTrack(Track::Wave, mTracks);
+   WaveTrack *pWaveTrack = static_cast<WaveTrack*>(iterWaveTrack.First());
+   while (pWaveTrack)
+   {
+      rate = std::max(rate, pWaveTrack->GetRate());
+      pWaveTrack = static_cast<WaveTrack*>(iterWaveTrack.Next());
+   }
+
+   return rate;
 }
 
 const wxString & AudacityProject::SSBL_GetFrequencySelectionFormatName()
@@ -1282,7 +1303,7 @@ void AudacityProject::SSBL_SetBandwidthSelectionFormatName(const wxString & form
 void AudacityProject::SSBL_ModifySpectralSelection(double &bottom, double &top, bool done)
 {
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   double nyq = mRate / 2.0;
+   double nyq = SSBL_GetRate() / 2.0;
    if (bottom >= 0.0)
       bottom = std::min(nyq, bottom);
    if (top >= 0.0)
@@ -2949,6 +2970,8 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          SetBandwidthSelectionFormatName(value);
    } // while
 
+   mViewInfo.UpdatePrefs();
+
    if (longVpos != 0) {
       // PRL: It seems this must happen after SetSnapTo
        mViewInfo.track = NULL;
@@ -3861,6 +3884,11 @@ void AudacityProject::PushState(wxString desc,
       AutoSave();
 }
 
+void AudacityProject::RollbackState()
+{
+   SetStateTo(GetUndoManager()->GetCurrentState());
+}
+
 void AudacityProject::ModifyState(bool bWantsAutoSave)
 {
    mUndoManager.ModifyState(mTracks, mViewInfo.selectedRegion);
@@ -4353,7 +4381,7 @@ void AudacityProject::GetRegionsByLabel( Regions &regions )
 //If the function replaces the selection with audio of a different length,
 // bSyncLockedTracks should be set true to perform the same action on sync-lock selected
 // tracks.
-void AudacityProject::EditByLabel( WaveTrack::EditFunction action,
+void AudacityProject::EditByLabel( EditFunction action,
                                    bool bSyncLockedTracks )
 {
    Regions regions;
@@ -4402,7 +4430,7 @@ void AudacityProject::EditByLabel( WaveTrack::EditFunction action,
 //Functions copy the edited regions to clipboard, possibly in multiple tracks
 //This probably should not be called if *action() changes the timeline, because
 // the copy needs to happen by track, and the timeline change by group.
-void AudacityProject::EditClipboardByLabel( WaveTrack::EditDestFunction action )
+void AudacityProject::EditClipboardByLabel( EditDestFunction action )
 {
    Regions regions;
 

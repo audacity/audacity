@@ -16,13 +16,13 @@
 #include <wx/font.h>
 #include <wx/panel.h>
 #include <wx/window.h>
-#include "../Envelope.h"
 #include "../Experimental.h"
 
 class ViewInfo;
 class AudacityProject;
 class TimeTrack;
 class SnapManager;
+class NumberScale;
 
 class AUDACITY_DLL_API Ruler {
  public:
@@ -97,6 +97,9 @@ class AUDACITY_DLL_API Ruler {
 
    // Good defaults are provided, but you can override here
    void SetFonts(const wxFont &minorFont, const wxFont &majorFont, const wxFont &minorMinorFont);
+
+   // Copies *pScale if it is not NULL
+   void SetNumberScale(const NumberScale *pScale);
 
    // The ruler will not draw text within this (pixel) range.
    // Use this if you have another graphic object obscuring part
@@ -227,6 +230,8 @@ private:
    bool         mTwoTone;
    bool         mUseZoomInfo;
    int          mLeftOffset;
+
+   NumberScale *mpNumberScale;
 };
 
 class AUDACITY_DLL_API RulerPanel : public wxPanel {

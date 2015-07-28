@@ -11,7 +11,6 @@
 #ifndef __AUDACITY_SPECTRUM__
 #define __AUDACITY_SPECTRUM__
 
-#include "WaveTrack.h"
 #include "FFT.h"
 
 /*

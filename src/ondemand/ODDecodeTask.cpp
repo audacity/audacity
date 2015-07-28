@@ -18,6 +18,8 @@ updating the ODPCMAliasBlockFile and the GUI of the newly available data.
 
 #include "ODDecodeTask.h"
 #include "../blockfile/ODDecodeBlockFile.h"
+#include "../Sequence.h"
+#include "../WaveTrack.h"
 #include <wx/wx.h>
 
 ///Creates a new task that computes summaries for a wavetrack that needs to be specified through SetWaveTrack()

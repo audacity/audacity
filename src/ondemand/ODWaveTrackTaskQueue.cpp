@@ -325,7 +325,7 @@ ODTask* ODWaveTrackTaskQueue::GetFrontTask()
 }
 
 ///fills in the status bar message for a given track
-void ODWaveTrackTaskQueue::FillTipForWaveTrack( WaveTrack * t, const wxChar ** ppTip )
+void ODWaveTrackTaskQueue::FillTipForWaveTrack( WaveTrack * t, wxString &tip )
 {
    if(ContainsWaveTrack(t) && GetNumTasks())
    {
@@ -335,7 +335,7 @@ void ODWaveTrackTaskQueue::FillTipForWaveTrack( WaveTrack * t, const wxChar ** p
      // else
        //  msg.Printf(_("%s %d additional tasks remaining."), GetFrontTask()->GetTip().c_str(), GetNumTasks());
 
-      *ppTip = mTipMsg.c_str();
+      tip = mTipMsg.c_str();
 
    }
 }

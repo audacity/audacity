@@ -52,6 +52,7 @@
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../Theme.h"
+#include "../Track.h"
 #include "../UndoManager.h"
 #include "../widgets/AButton.h"
 

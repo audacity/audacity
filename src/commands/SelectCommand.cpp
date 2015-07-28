@@ -19,6 +19,7 @@
 #include "SelectCommand.h"
 #include <wx/string.h>
 #include "../Project.h"
+#include "../Track.h"
 
 wxString SelectCommandType::BuildName()
 {

@@ -39,7 +39,6 @@ a draggable point type.
 #include <wx/log.h>
 
 #include "AColor.h"
-#include "Prefs.h"
 #include "DirManager.h"
 #include "TrackArtist.h"
 
@@ -175,23 +174,6 @@ static double Limit( double Lo, double Value, double Hi )
    return Value;
 }
 
-double Envelope::toDB(double value)
-{
-   if (value == 0)
-      return 0;
-
-   // TODO: Cache the gPrefs value.  Reading it every time is inefficient.
-   double dBRange = gPrefs->Read(wxT("/GUI/EnvdBRange"), ENV_DB_RANGE);
-   double sign = (value >= 0 ? 1 : -1);
-
-   wxASSERT( dBRange > 0 );
-   double db = 20 * log10(fabs(value));
-   double val = (db + dBRange) / dBRange;
-
-   val = Limit( 0.0, val, 1.0 );
-   return sign * val;
-}
-
 /// TODO: This should probably move to track artist.
 static void DrawPoint(wxDC & dc, const wxRect & r, int x, int y, bool top)
 {
@@ -205,8 +187,7 @@ static void DrawPoint(wxDC & dc, const wxRect & r, int x, int y, bool top)
 void Envelope::DrawPoints(wxDC & dc, const wxRect & r, const ZoomInfo &zoomInfo, bool dB,
                     float zoomMin, float zoomMax)
 {
-   // TODO: Cache the gPrefs value.  Reading it every time is inefficient.
-   double dBRange = gPrefs->Read(wxT("/GUI/EnvdBRange"), ENV_DB_RANGE);
+   double dBRange = zoomInfo.dBr;
 
    dc.SetPen(AColor::envelopePen);
    dc.SetBrush(*wxWHITE_BRUSH);
@@ -330,13 +311,13 @@ inline int SQR(int x) { return x * x; }
 /// @dB - display mode either linear or log.
 /// @zoomMin - vertical scale, typically -1.0
 /// @zoomMax - vertical scale, typically +1.0
-float Envelope::ValueOfPixel( int y, int height, bool upper, bool dB,
+float Envelope::ValueOfPixel( int y, int height, bool upper,
+                              const ZoomInfo &zoomInfo, bool dB,
                               float zoomMin, float zoomMax)
 {
    double dBRange = 0;
    if (dB)
-      // TODO: Cache the gPrefs value.  Reading it every time is inefficient.
-      dBRange = gPrefs->Read(wxT("/GUI/EnvdBRange"), ENV_DB_RANGE);
+      dBRange = zoomInfo.dBr;
 
    float v = ::ValueOfPixel(y, height, 0 != mContourOffset, dB, dBRange, zoomMin, zoomMax);
 
@@ -368,8 +349,7 @@ bool Envelope::HandleMouseButtonDown(wxMouseEvent & event, wxRect & r,
    int bestNum = -1;
    int bestDistSqr = 100; // Must be within 10 pixel radius.
 
-   // TODO: Cache the gPrefs value.  Reading it every time is inefficient.
-   double dBr = gPrefs->Read(wxT("/GUI/EnvdBRange"), ENV_DB_RANGE);
+   double dBr = zoomInfo.dBr;
 
    // Member variables hold state that will be needed in dragging.
    mButton        = event.GetButton();
@@ -457,7 +437,7 @@ bool Envelope::HandleMouseButtonDown(wxMouseEvent & event, wxRect & r,
             mContourOffset = false;
       }
 
-      double newVal = ValueOfPixel(clip_y, r.height, upper, dB,
+      double newVal = ValueOfPixel(clip_y, r.height, upper, zoomInfo, dB,
                                    zoomMin, zoomMax);
 
       mDragPoint = Insert(when - mOffset, newVal);
@@ -508,7 +488,7 @@ void Envelope::MoveDraggedPoint( wxMouseEvent & event, wxRect & r,
    int clip_y = event.m_y - r.y;
    if(clip_y < 0) clip_y = 0;
    if(clip_y > r.height) clip_y = r.height;
-   double newVal = ValueOfPixel(clip_y, r.height, mUpper, dB,
+   double newVal = ValueOfPixel(clip_y, r.height, mUpper, zoomInfo, dB,
                                 zoomMin, zoomMax);
 
    // We no longer tolerate multiple envelope points at the same t.

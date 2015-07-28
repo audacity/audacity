@@ -30,6 +30,8 @@ class ShuttleGui;
 
 #include "PrefsPanel.h"
 
+class wxStaticText;
+
 class KeyConfigPrefs :public PrefsPanel
 {
 public:
@@ -141,6 +143,12 @@ class KeyConfigPrefs:public PrefsPanel
 
    DECLARE_EVENT_TABLE();
 };
+
 #endif
 
+class KeyConfigPrefsFactory : public PrefsPanelFactory
+{
+public:
+   virtual PrefsPanel *Create(wxWindow *parent);
+};
 #endif

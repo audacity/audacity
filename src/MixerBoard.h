@@ -24,7 +24,6 @@
 
 #include "widgets/AButton.h"
 #include "widgets/ASlider.h"
-#include "widgets/Meter.h"
 
 // containment hierarchy:
 //    MixerBoardFrame -> MixerBoard -> MixerBoardScrolledWindow -> MixerTrackCluster(s)
@@ -45,7 +44,7 @@ public:
                      bool canUseShift = true,
                      float stepValue = STEP_CONTINUOUS,
                      int orientation = wxHORIZONTAL);
-   virtual ~MixerTrackSlider() {};
+   virtual ~MixerTrackSlider() {}
 
    void OnMouseEvent(wxMouseEvent & event);
 
@@ -61,6 +60,7 @@ public:
 
 
 class AudacityProject;
+class Meter;
 class MixerBoard;
 #ifdef EXPERIMENTAL_MIDI_OUT
 class Track;
@@ -76,7 +76,7 @@ public:
                      WaveTrack* pLeftTrack, WaveTrack* pRightTrack = NULL,
                      const wxPoint& pos = wxDefaultPosition,
                      const wxSize& size = wxDefaultSize);
-   virtual ~MixerTrackCluster() {};
+   virtual ~MixerTrackCluster() {}
 
    void HandleResize(); // For wxSizeEvents, update gain slider and meter.
 
@@ -265,6 +265,7 @@ private:
 
    // event handlers
    void OnSize(wxSizeEvent &evt);
+   void OnTimer(wxCommandEvent &event);
 
 
 public:

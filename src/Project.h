@@ -86,6 +86,9 @@ class MixerBoardFrame;
 
 struct AudioIOStartStreamOptions;
 
+class WaveTrackArray;
+class Regions;
+
 AudacityProject *CreateNewAudacityProject();
 AUDACITY_DLL_API AudacityProject *GetActiveProject();
 void RedrawAllProjects();
@@ -179,7 +182,8 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    TrackFactory *GetTrackFactory();
    AdornedRulerPanel *GetRulerPanel();
    Tags *GetTags();
-   int GetAudioIOToken();
+   int GetAudioIOToken() const;
+   bool IsAudioActive() const;
    void SetAudioIOToken(int token);
 
    bool IsActive();
@@ -241,7 +245,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 
    TrackPanel * GetTrackPanel(){return mTrackPanel;}
 
-   bool GetIsEmpty() { return mTracks->IsEmpty(); }
+   bool GetIsEmpty();
 
    bool GetTracksFitVerticallyZoomed() { return mTracksFitVerticallyZoomed; } //lda
    void SetTracksFitVerticallyZoomed(bool flag) { mTracksFitVerticallyZoomed = flag; } //lda
@@ -321,8 +325,14 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    void ZoomBy(double multiplier);
    void Rewind(bool shift);
    void SkipEnd(bool shift);
-   void EditByLabel( WaveTrack::EditFunction action, bool bSyncLockedTracks );
-   void EditClipboardByLabel( WaveTrack::EditDestFunction action );
+
+
+   typedef bool (WaveTrack::* EditFunction)(double, double);
+   typedef bool (WaveTrack::* EditDestFunction)(double, double, Track**);
+
+   void EditByLabel(EditFunction action, bool bSyncLockedTracks);
+   void EditClipboardByLabel(EditDestFunction action );
+
    bool IsSyncLocked();
    void SetSyncLock(bool flag);
 
@@ -468,6 +478,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 
    void PushState(wxString desc, wxString shortDesc,
                   int flags = PUSH_AUTOSAVE);
+   void RollbackState();
 
  private:
 

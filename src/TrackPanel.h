@@ -15,17 +15,18 @@
 #include <vector>
 
 #include <wx/dcmemory.h>
-#include <wx/dynarray.h>
 #include <wx/panel.h>
 #include <wx/timer.h>
 #include <wx/window.h>
 
 #include "Experimental.h"
-#include "Sequence.h"  //Stm: included for the sampleCount declaration
-#include "WaveClip.h"
-#include "WaveTrack.h"
+#include "audacity/Types.h"
 #include "UndoManager.h" //JKC: Included for PUSH_XXX definitions.
 #include "widgets/NumericTextCtrl.h"
+
+#include "WaveTrackLocation.h"
+
+#include "Snap.h"
 
 class wxMenu;
 class wxRect;
@@ -47,24 +48,16 @@ class TrackPanelAx;
 
 class ViewInfo;
 
-WX_DEFINE_ARRAY(LWSlider *, LWSliderArray);
-
-class AUDACITY_DLL_API TrackClip
-{
- public:
-   TrackClip(Track *t, WaveClip *c) { track = t; clip = c; }
-   Track *track;
-   WaveClip *clip;
-};
-
-WX_DECLARE_OBJARRAY(TrackClip, TrackClipArray);
+class WaveTrack;
+class WaveClip;
+class Envelope;
 
 // Declared elsewhere, to reduce compilation dependencies
 class TrackPanelListener;
 
 // JKC Nov 2011: Disabled warning C4251 which is to do with DLL linkage
 // and only a worry when there are DLLs using the structures.
-// LWSliderArray and TrackClipArray are private in TrackInfo, so we will not
+// Array classes are private in TrackInfo, so we will not
 // access them directly from the DLL.
 // TrackClipArray in TrackPanel needs to be handled with care in the derived
 // class, but the C4251 warning is no worry in core Audacity.
@@ -74,6 +67,8 @@ class TrackPanelListener;
 #pragma warning( push )
 #pragma warning( disable: 4251 )
 #endif
+
+DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_TRACK_PANEL_TIMER, -1);
 
 class AUDACITY_DLL_API TrackInfo
 {
@@ -210,6 +205,7 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
    virtual void OnTrackGainDec();
    virtual void OnTrackGainInc();
    virtual void OnTrackMenu(Track *t = NULL);
+   virtual void OnVRulerMenu(Track *t, wxMouseEvent *pEvent = NULL);
    virtual void OnTrackMute(bool shiftdown, Track *t = NULL);
    virtual void OnTrackSolo(bool shiftdown, Track *t = NULL);
    virtual void OnTrackClose();
@@ -244,9 +240,12 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
     * @param menu the menu to add the commands to.
     */
    virtual void BuildCommonDropMenuItems(wxMenu * menu);
+   static void BuildVRulerMenuItems(wxMenu * menu, int firstId, const wxArrayString &names);
+   virtual bool IsAudioActive();
    virtual bool IsUnsafe();
    virtual bool HandleLabelTrackMouseEvent(LabelTrack * lTrack, wxRect &r, wxMouseEvent & event);
-   virtual bool HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &r, wxMouseEvent &event);
+   virtual bool HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &rect, wxMouseEvent &event);
+   virtual bool IsOverCutline(WaveTrack * track, wxRect &rect, wxMouseEvent &event);
    virtual void HandleTrackSpecificMouseEvent(wxMouseEvent & event);
    virtual void DrawIndicator();
    /// draws the green line on the tracks to show playback position
@@ -337,9 +336,9 @@ protected:
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
 public:
-   void SnapCenterOnce (WaveTrack *pTrack, bool up);
+   void SnapCenterOnce (const WaveTrack *pTrack, bool up);
 protected:
-   void StartSnappingFreqSelection (WaveTrack *pTrack);
+   void StartSnappingFreqSelection (const WaveTrack *pTrack);
    void MoveSnappingFreqSelection (int mouseYCoordinate,
                                    int trackTopEdge,
                                    int trackHeight, Track *pTrack);
@@ -359,14 +358,15 @@ protected:
 
    // AS: Cursor handling
    virtual bool SetCursorByActivity( );
-   virtual void SetCursorAndTipWhenInLabel( Track * t, wxMouseEvent &event, const wxChar ** ppTip );
-   virtual void SetCursorAndTipWhenInVResizeArea( Track * label, bool blinked, const wxChar ** ppTip );
-   virtual void SetCursorAndTipWhenInLabelTrack( LabelTrack * pLT, wxMouseEvent & event, const wxChar ** ppTip );
+   virtual bool SetCursorForCutline(WaveTrack * track, wxRect &rect, wxMouseEvent &event);
+   virtual void SetCursorAndTipWhenInLabel( Track * t, wxMouseEvent &event, wxString &tip );
+   virtual void SetCursorAndTipWhenInVResizeArea( bool blinked, wxString &tip );
+   virtual void SetCursorAndTipWhenInLabelTrack( LabelTrack * pLT, wxMouseEvent & event, wxString &tip );
    virtual void SetCursorAndTipWhenSelectTool
-      ( Track * t, wxMouseEvent & event, wxRect &r, bool bMultiToolMode, const wxChar ** ppTip, const wxCursor ** ppCursor );
-   virtual void SetCursorAndTipByTool( int tool, wxMouseEvent & event, const wxChar **ppTip );
+      ( Track * t, wxMouseEvent & event, wxRect &r, bool bMultiToolMode, wxString &tip, const wxCursor ** ppCursor );
+   virtual void SetCursorAndTipByTool( int tool, wxMouseEvent & event, wxString &tip );
    virtual void HandleCursor(wxMouseEvent & event);
-   virtual void MaySetOnDemandTip( Track * t, const wxChar ** ppTip );
+   virtual void MaySetOnDemandTip( Track * t, wxString &tip );
 
    // AS: Envelope editing handlers
    virtual void HandleEnvelope(wxMouseEvent & event);
@@ -395,6 +395,7 @@ protected:
    virtual void HandleVZoomClick(wxMouseEvent & event);
    virtual void HandleVZoomDrag(wxMouseEvent & event);
    virtual void HandleVZoomButtonUp(wxMouseEvent & event);
+   virtual void HandleWaveTrackVZoom(WaveTrack *track, bool shiftDown, bool rightUp);
 
    // Handle sample editing using the 'draw' tool.
    virtual bool IsSampleEditingPossible( wxMouseEvent & event, Track * t );
@@ -459,11 +460,19 @@ protected:
    virtual void MoveTrack(Track* target, int eventId);
    virtual void OnChangeOctave (wxCommandEvent &event);
    virtual void OnChannelChange(wxCommandEvent &event);
+   virtual void OnViewSettings(wxCommandEvent &event);
    virtual void OnSetDisplay   (wxCommandEvent &event);
    virtual void OnSetTimeTrackRange (wxCommandEvent &event);
    virtual void OnTimeTrackLin(wxCommandEvent &event);
    virtual void OnTimeTrackLog(wxCommandEvent &event);
    virtual void OnTimeTrackLogInt(wxCommandEvent &event);
+
+   virtual void OnWaveformScaleType(wxCommandEvent &event);
+   virtual void OnSpectrumScaleType(wxCommandEvent &event);
+
+   virtual void OnZoomInVertical(wxCommandEvent &event);
+   virtual void OnZoomOutVertical(wxCommandEvent &event);
+   virtual void OnZoomFitVertical(wxCommandEvent &event);
 
    virtual void SetMenuCheck( wxMenu & menu, int newId );
    virtual void SetRate(Track *pTrack, double rate);
@@ -494,9 +503,9 @@ protected:
    virtual wxRect FindTrackRect(Track * target, bool label);
 
    virtual int GetVRulerWidth() const;
-   virtual int GetVRulerOffset() const { return mTrackInfo.GetTrackInfoWidth(); };
+   virtual int GetVRulerOffset() const { return mTrackInfo.GetTrackInfoWidth(); }
 
-   virtual int GetLabelWidth() const { return mTrackInfo.GetTrackInfoWidth() + GetVRulerWidth(); };
+   virtual int GetLabelWidth() const { return mTrackInfo.GetTrackInfoWidth() + GetVRulerWidth(); }
 
 // JKC Nov-2011: These four functions only used from within a dll such as mod-track-panel
 // They work around some messy problems with constructors.
@@ -572,8 +581,8 @@ protected:
 
    // This stores the parts of the screen that get overwritten by the indicator
    // and cursor
-   double mLastIndicator;
-   double mLastCursor;
+   int mLastIndicatorX;
+   int mLastCursorX;
 
    // Quick-Play indicator postion
    double mOldQPIndicatorPos;
@@ -632,7 +641,7 @@ protected:
    WaveClip *mCapturedClip;
    TrackClipArray mCapturedClipArray;
    bool mCapturedClipIsSelection;
-   WaveTrack::Location mCapturedTrackLocation;
+   WaveTrackLocation mCapturedTrackLocation;
    wxRect mCapturedTrackLocationRect;
    wxRect mCapturedRect;
 
@@ -688,22 +697,20 @@ protected:
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    void HandleCenterFrequencyCursor
-      (bool shiftDown, const wxChar ** ppTip, const wxCursor ** ppCursor);
+      (bool shiftDown, wxString &tip, const wxCursor ** ppCursor);
 
    void HandleCenterFrequencyClick
       (bool shiftDown, Track *pTrack, double value);
 
-   double PositionToFrequency(bool maySnap,
+   double PositionToFrequency(const WaveTrack *wt,
+                              bool maySnap,
                               wxInt64 mouseYCoordinate,
                               wxInt64 trackTopEdge,
-                              int trackHeight,
-                              double rate,
-                              bool logF) const;
-   wxInt64 FrequencyToPosition(double frequency,
+                              int trackHeight) const;
+   wxInt64 FrequencyToPosition(const WaveTrack *wt,
+                               double frequency,
                                wxInt64 trackTopEdge,
-                               int trackHeight,
-                               double rate,
-                               bool logF) const;
+                               int trackHeight) const;
 #endif
 
    enum SelectionBoundary {
@@ -749,7 +756,6 @@ protected:
       IsGainSliding,
       IsPanSliding,
       IsMinimizing,
-      IsOverCutLine,
       WasOverCutLine,
       IsPopping,
 #ifdef USE_MIDI
@@ -766,7 +772,6 @@ protected:
    bool mAdjustSelectionEdges;
    bool mSlideUpDownOnly;
    bool mCircularTrackNavigation;
-   float mdBr;
 
    // JH: if the user is dragging a track, at what y
    //   coordinate should the dragging track move up or down?
@@ -825,6 +830,9 @@ protected:
    wxMenu *mRateMenu;
    wxMenu *mFormatMenu;
    wxMenu *mLabelTrackInfoMenu;
+
+   wxMenu *mRulerWaveformMenu;
+   wxMenu *mRulerSpectrumMenu;
 
    Track *mPopupMenuTarget;
 

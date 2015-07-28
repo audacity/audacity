@@ -242,3 +242,8 @@ bool DirectoriesPrefs::Apply()
 
    return true;
 }
+
+PrefsPanel *DirectoriesPrefsFactory::Create(wxWindow *parent)
+{
+   return new DirectoriesPrefs(parent);
+}

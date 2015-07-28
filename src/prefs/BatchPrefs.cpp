@@ -21,7 +21,6 @@
 #include <wx/textdlg.h>
 
 #include "BatchPrefs.h"
-#include "../Envelope.h"
 #include "../Languages.h"
 #include "../Prefs.h"
 #include "../Project.h"
@@ -81,4 +80,9 @@ bool BatchPrefs::Apply()
 
 BatchPrefs::~BatchPrefs()
 {
+}
+
+PrefsPanel *BatchPrefsFactory::Create(wxWindow *parent)
+{
+   return new BatchPrefs(parent);
 }

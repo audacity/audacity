@@ -60,25 +60,10 @@ void TracksPrefs::Populate()
    // we don't display them by increasing integer values.
 
    mViewChoices.Add(_("Waveform"));
-   mViewCodes.Add(int(WaveTrack::WaveformDisplay));
+   mViewCodes.Add(int(WaveTrack::Waveform));
 
-   mViewChoices.Add(_("Waveform (dB)"));
-   mViewCodes.Add(int(WaveTrack::WaveformDBDisplay));
-
-   mViewChoices.Add(_("Spectrogram"));
-   mViewCodes.Add(int(WaveTrack::SpectrumDisplay));
-
-   mViewChoices.Add(_("Spectrogram log(f)"));
-   mViewCodes.Add(int(WaveTrack::SpectrumLogDisplay));
-
-   mViewChoices.Add(_("Spectral Selection"));
-   mViewCodes.Add(int(WaveTrack::SpectralSelectionDisplay));
-
-   mViewChoices.Add(_("Spectral Selection log(f)"));
-   mViewCodes.Add(int(WaveTrack::SpectralSelectionLogDisplay));
-
-   mViewChoices.Add(_("Pitch (EAC)"));
-   mViewCodes.Add(int(WaveTrack::PitchDisplay));
+   mViewChoices.Add(_("Spectrum"));
+   mViewCodes.Add(WaveTrack::Spectrum);
 
    //------------------------- Main section --------------------
    // Now construct the GUI itself.
@@ -164,4 +149,9 @@ bool TracksPrefs::Apply()
    PopulateOrExchange(S);
 
    return true;
+}
+
+PrefsPanel *TracksPrefsFactory::Create(wxWindow *parent)
+{
+   return new TracksPrefs(parent);
 }

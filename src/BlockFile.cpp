@@ -42,6 +42,8 @@ out.
 
 *//*******************************************************************/
 
+#include "BlockFile.h"
+
 #include <float.h>
 #include <math.h>
 
@@ -51,7 +53,6 @@ out.
 #include <wx/log.h>
 #include <wx/math.h>
 
-#include "BlockFile.h"
 #include "Internat.h"
 
 // msmeyer: Define this to add debug output via printf()
