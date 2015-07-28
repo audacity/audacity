@@ -28,6 +28,7 @@
 #include <wx/tokenzr.h>
 #include <wx/mac/private.h>
 
+#include "../../ShuttleGui.h"
 #include "../../widgets/valnum.h"
 
 

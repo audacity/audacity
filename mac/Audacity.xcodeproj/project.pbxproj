@@ -880,6 +880,7 @@
 		288A544B1346D1BA0050D774 /* chanmap.c in Sources */ = {isa = PBXBuildFile; fileRef = 288A54481346D1BA0050D774 /* chanmap.c */; };
 		288A544C1346D1BA0050D774 /* chanmap.h in Headers */ = {isa = PBXBuildFile; fileRef = 288A54491346D1BA0050D774 /* chanmap.h */; };
 		288A544D1346D1BA0050D774 /* id3.c in Sources */ = {isa = PBXBuildFile; fileRef = 288A544A1346D1BA0050D774 /* id3.c */; };
+		2890498E1B6716B40038A543 /* SpectrogramSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2890498C1B6716B40038A543 /* SpectrogramSettings.cpp */; };
 		2891B2870C531D2C0044FBE3 /* FindClipping.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2891B2850C531D2C0044FBE3 /* FindClipping.cpp */; };
 		2892CE24131AFAE200E1E17D /* LICENSE.txt in Install miscellany */ = {isa = PBXBuildFile; fileRef = 288F0977131A3EE00008E860 /* LICENSE.txt */; };
 		2892CE25131AFAEF00E1E17D /* README.txt in Install miscellany */ = {isa = PBXBuildFile; fileRef = 288F097A131A3F130008E860 /* README.txt */; };
@@ -2617,6 +2618,8 @@
 		288A544A1346D1BA0050D774 /* id3.c */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = sourcecode.c.c; path = id3.c; sourceTree = "<group>"; };
 		288F0977131A3EE00008E860 /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = text; name = LICENSE.txt; path = ../LICENSE.txt; sourceTree = "<group>"; };
 		288F097A131A3F130008E860 /* README.txt */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = text; name = README.txt; path = ../README.txt; sourceTree = "<group>"; };
+		2890498C1B6716B40038A543 /* SpectrogramSettings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SpectrogramSettings.cpp; sourceTree = "<group>"; };
+		2890498D1B6716B40038A543 /* SpectrogramSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpectrogramSettings.h; sourceTree = "<group>"; };
 		2891B2850C531D2C0044FBE3 /* FindClipping.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = FindClipping.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		2891B2860C531D2C0044FBE3 /* FindClipping.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = FindClipping.h; sourceTree = "<group>"; tabWidth = 3; };
 		28948425101DF8FC005B0713 /* EffectsPrefs.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = EffectsPrefs.cpp; sourceTree = "<group>"; tabWidth = 3; };
@@ -4314,6 +4317,8 @@
 				1790B0CA09883BFD008A330A /* SpectrumPrefs.cpp */,
 				1790B0CB09883BFD008A330A /* SpectrumPrefs.h */,
 				28456AC00A2C180E00C23C1E /* ThemePrefs.cpp */,
+				2890498C1B6716B40038A543 /* SpectrogramSettings.cpp */,
+				2890498D1B6716B40038A543 /* SpectrogramSettings.h */,
 				28456AC10A2C180E00C23C1E /* ThemePrefs.h */,
 				284B27E00FC66CCD005EAC96 /* TracksPrefs.cpp */,
 				284B27E10FC66CCD005EAC96 /* TracksPrefs.h */,
@@ -7725,6 +7730,7 @@
 				28D8425C1AD8D69D00551353 /* SelectedRegion.cpp in Sources */,
 				2888A1631AE25F9A00E06FDC /* Diags.cpp in Sources */,
 				28DDE3A21AE3771100C784FE /* ViewInfo.cpp in Sources */,
+				2890498E1B6716B40038A543 /* SpectrogramSettings.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
