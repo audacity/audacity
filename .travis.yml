@@ -6,4 +6,8 @@ before_install:
 language: cpp
 compiler:
     - gcc
-script: aclocal --install -I m4 && automake && ./configure && make
+script: 
+    - ls -la /usr/bin/wx-config*
+    - wx-config --cflags
+    - grep WXGTK /usr/lib/x86_64-linux-gnu/wx/include/gtk2-unicode-3.0/wx/setup.h
+    - aclocal --install -I m4 && automake && ./configure && make
