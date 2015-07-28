@@ -59,12 +59,14 @@ enum {
 #ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
    ID_WINDOW_TYPE,
    ID_PADDING_SIZE,
+   ID_SCALE,
    ID_MINIMUM,
    ID_MAXIMUM,
    ID_GAIN,
    ID_RANGE,
    ID_FREQUENCY_GAIN,
    ID_GRAYSCALE,
+   ID_SPECTRAL_SELECTION,
 #endif
    ID_DEFAULTS,
    ID_APPLY,
@@ -93,6 +95,7 @@ void SpectrumPrefs::Populate(int windowSize)
       mTypeChoices.Add(WindowFuncName(i));
    }
 
+   mScaleChoices = SpectrogramSettings::GetScaleNames();
 
    //------------------------- Main section --------------------
    // Now construct the GUI itself.
@@ -182,6 +185,10 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
       {
          S.StartTwoColumn();
          {
+            S.Id(ID_SCALE).TieChoice(_("S&cale") + wxString(wxT(":")),
+               *(int*)&mTempSettings.scaleType,
+               &mScaleChoices);
+
             mMinFreq =
                S.Id(ID_MINIMUM).TieNumericTextBox(_("Mi&nimum Frequency (Hz):"),
                mTempSettings.minFreq,
@@ -211,6 +218,11 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
 
          S.Id(ID_GRAYSCALE).TieCheckBox(_("S&how the spectrum using grayscale colors"),
             mTempSettings.isGrayscale);
+
+#ifndef SPECTRAL_SELECTION_GLOBAL_SWITCH
+         S.Id(ID_SPECTRAL_SELECTION).TieCheckBox(_("Ena&ble spectral selection"),
+            mTempSettings.spectralSelection);
+#endif
 
 #ifdef EXPERIMENTAL_FFT_Y_GRID
          S.TieCheckBox(_("Show a grid along the &Y-axis"),
@@ -247,6 +259,15 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
 #endif //EXPERIMENTAL_FIND_NOTES
    }
    // S.EndStatic();
+
+#ifdef SPECTRAL_SELECTION_GLOBAL_SWITCH
+   S.StartStatic(_("Global settings"));
+   {
+      S.TieCheckBox(_("Ena&ble spectral selection"),
+         SpectrogramSettings::Globals::Get().spectralSelection);
+   }
+   S.EndStatic();
+#endif
 
    S.StartMultiColumn(2, wxALIGN_RIGHT);
    {
@@ -331,7 +352,10 @@ bool SpectrumPrefs::Apply()
    ShuttleGui S(this, eIsGettingFromDialog);
    PopulateOrExchange(S);
 
+
    mTempSettings.ConvertToActualWindowSizes();
+   SpectrogramSettings::Globals::Get().SavePrefs(); // always
+
    if (mWt) {
       if (mDefaulted) {
          mWt->SetSpectrogramSettings(NULL);
@@ -358,11 +382,9 @@ bool SpectrumPrefs::Apply()
 
    if (mWt && isOpenPage) {
       // Future: open page will determine the track view type
-      /*
       mWt->SetDisplay(WaveTrack::Spectrum);
       if (partner)
          partner->SetDisplay(WaveTrack::Spectrum);
-         */
    }
 
    return true;
@@ -421,14 +443,17 @@ BEGIN_EVENT_TABLE(SpectrumPrefs, PrefsPanel)
    // Several controls with common routine that unchecks the default box
    EVT_CHOICE(ID_WINDOW_TYPE, SpectrumPrefs::OnControl)
    EVT_CHOICE(ID_PADDING_SIZE, SpectrumPrefs::OnControl)
+   EVT_CHOICE(ID_SCALE, SpectrumPrefs::OnControl)
    EVT_TEXT(ID_MINIMUM, SpectrumPrefs::OnControl)
    EVT_TEXT(ID_MAXIMUM, SpectrumPrefs::OnControl)
    EVT_TEXT(ID_GAIN, SpectrumPrefs::OnControl)
    EVT_TEXT(ID_RANGE, SpectrumPrefs::OnControl)
    EVT_TEXT(ID_FREQUENCY_GAIN, SpectrumPrefs::OnControl)
    EVT_CHECKBOX(ID_GRAYSCALE, SpectrumPrefs::OnControl)
+   EVT_CHECKBOX(ID_SPECTRAL_SELECTION, SpectrumPrefs::OnControl)
 
    EVT_BUTTON(ID_APPLY, SpectrumPrefs::OnApply)
+
 END_EVENT_TABLE()
 
 SpectrumPrefsFactory::SpectrumPrefsFactory(WaveTrack *wt)

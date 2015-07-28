@@ -13,13 +13,32 @@ Paul Licameli
 
 #include "../Experimental.h"
 
+#undef SPECTRAL_SELECTION_GLOBAL_SWITCH
+
 struct FFTParam;
 class SpectrumPrefs;
+class wxArrayString;
 
 class SpectrogramSettings
 {
    friend class SpectrumPrefs;
 public:
+
+   // Singleton for settings that are not per-track
+   class Globals
+   {
+   public:
+      static Globals &Get();
+      void SavePrefs();
+
+#ifdef SPECTRAL_SELECTION_GLOBAL_SWITCH
+      bool spectralSelection;
+#endif
+
+   private:
+      Globals();
+      void LoadPrefs();
+   };
 
    enum {
       LogMinWindowSize = 3,
@@ -27,6 +46,19 @@ public:
 
       NumWindowSizes = LogMaxWindowSize - LogMinWindowSize + 1,
    };
+
+   // Do not assume that this enumeration will remain the
+   // same as NumberScaleType in future.  That enum may become
+   // more general purpose.
+   enum ScaleType {
+      stLinear,
+      stLogarithmic,
+
+      stNumScaleTypes,
+   };
+
+   static void InvalidateNames(); // in case of language change
+   static const wxArrayString &GetScaleNames();
 
    static SpectrogramSettings &defaults();
    SpectrogramSettings();
@@ -58,6 +90,7 @@ public:
    int GetMaxFreq(double rate) const;
    int GetLogMinFreq(double rate) const;
    int GetLogMaxFreq(double rate) const;
+   bool SpectralSelectionEnabled() const;
 
    void SetMinFreq(int freq);
    void SetMaxFreq(int freq);
@@ -79,6 +112,12 @@ public:
 
    bool isGrayscale;
 
+   ScaleType scaleType;
+
+#ifndef SPECTRAL_SELECTION_GLOBAL_SWITCH
+   bool spectralSelection; // But should this vary per track? -- PRL
+#endif
+
 #ifdef EXPERIMENTAL_FFT_Y_GRID
    bool fftYGrid;
 #endif //EXPERIMENTAL_FFT_Y_GRID
@@ -98,5 +137,4 @@ public:
    mutable float         *window;
 #endif
 };
-
 #endif

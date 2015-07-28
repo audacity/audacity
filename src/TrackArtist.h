@@ -71,9 +71,6 @@ class AUDACITY_DLL_API TrackArtist {
 
    void UpdatePrefs();
 
-   void InvalidateSpectrumCache(TrackList *tracks);
-   void InvalidateSpectrumCache(WaveTrack *track);
-
    void SetBackgroundBrushes(wxBrush unselectedBrush, wxBrush selectedBrush,
                              wxPen unselectedPen, wxPen selectedPen) {
      this->unselectedBrush = unselectedBrush;

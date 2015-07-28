@@ -93,6 +93,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "commands/Keyboard.h"
 #include "widgets/ErrorDialog.h"
 #include "prefs/DirectoriesPrefs.h"
+#include "prefs/SpectrogramSettings.h"
 
 //temporarilly commented out till it is added to all projects
 //#include "Profiler.h"
@@ -1011,7 +1012,11 @@ void AudacityApp::InitLang( const wxString & lang )
    //
    // This must go _after_ creating the wxLocale instance because
    // creating the wxLocale instance sets the application-wide locale.
+
    Internat::Init();
+
+   // Some static arrays unconnected with any project want to be informed of language changes.
+   SpectrogramSettings::InvalidateNames();
 }
 
 void AudacityApp::OnFatalException()

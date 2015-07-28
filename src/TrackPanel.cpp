@@ -327,9 +327,6 @@ enum {
    OnWaveformID,
    OnWaveformDBID,
    OnSpectrumID,
-   OnSpectrumLogID,
-   OnSpectralSelID,
-   OnSpectralSelLogID,
    OnPitchID,
    OnViewSettingsID,
 
@@ -727,13 +724,7 @@ void TrackPanel::BuildMenus(void)
    BuildCommonDropMenuItems(mWaveTrackMenu);   // does name, up/down etc
    mWaveTrackMenu->Append(OnWaveformID, _("Wa&veform"));
    mWaveTrackMenu->Append(OnWaveformDBID, _("&Waveform (dB)"));
-   mWaveTrackMenu->Append(OnSpectrumID, _("&Spectrogram"));
-   /* i18n-hint: short form of 'logarithm'*/
-   mWaveTrackMenu->Append(OnSpectrumLogID, _("Spectrogram l&og(f)"));
-   /* i18n-hint: Spectral Selection is spectrogram with ability to select frequencies too'*/
-   mWaveTrackMenu->Append(OnSpectralSelID, _("S&pectral Selection"));
-   /* i18n-hint: short form of 'logarithm'*/
-   mWaveTrackMenu->Append(OnSpectralSelLogID, _("Spectral Selection lo&g(f)"));
+   mWaveTrackMenu->Append(OnSpectrumID, _("&Spectrum"));
    mWaveTrackMenu->Append(OnPitchID, _("Pitc&h (EAC)"));
    mWaveTrackMenu->Append(OnViewSettingsID, _("View& Settings...")); // PRL:  all the other letters already taken for accelerators!
    mWaveTrackMenu->AppendSeparator();
@@ -1811,16 +1802,18 @@ void TrackPanel::SetCursorAndTipWhenInLabelTrack( LabelTrack * pLT,
 namespace {
 
 // This returns true if we're a spectral editing track.
-inline bool isSpectrogramTrack(const Track *pTrack, bool *pLogf = NULL) {
+inline bool isSpectralSelectionTrack(const Track *pTrack, bool *pLogf = NULL) {
    if (pTrack &&
        pTrack->GetKind() == Track::Wave) {
-      const int display =
-         static_cast<const WaveTrack*>(pTrack)->GetDisplay();
-      const bool logF = (display == WaveTrack::SpectrumLogDisplay) || 
-         (display == WaveTrack::SpectralSelectionLogDisplay);
-      if (pLogf)
+      const WaveTrack *const wt = static_cast<const WaveTrack*>(pTrack);
+      const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
+      const int display = wt->GetDisplay();
+      if (pLogf) {
+         const bool logF =
+           settings.scaleType == SpectrogramSettings::stLogarithmic;
          *pLogf = logF;
-      return (display == WaveTrack::SpectralSelectionLogDisplay) || (display == WaveTrack::SpectralSelectionDisplay);
+      }
+      return (display == WaveTrack::Spectrum) && settings.SpectralSelectionEnabled();
    }
    else {
       if (pLogf)
@@ -1950,7 +1943,7 @@ void TrackPanel::SetCursorAndTipWhenSelectTool( Track * t,
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    bool logF;
    if ( (mFreqSelMode == FREQ_SEL_SNAPPING_CENTER) &&
-         isSpectrogramTrack(t, &logF) ) {
+      isSpectralSelectionTrack(t, &logF)) {
       // Not shift-down, but center frequency snapping toggle is on
       *ppTip = _("Click and drag to set frequency bandwidth.");
       *ppCursor = mEnvelopeCursor;
@@ -2688,7 +2681,7 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
          bool logF;
          if (mFreqSelMode == FREQ_SEL_SNAPPING_CENTER &&
-             isSpectrogramTrack(pTrack, &logF)) {
+            isSpectralSelectionTrack(pTrack, &logF)) {
             // Ignore whether we are inside the time selection.
             // Exit center-snapping, start dragging the width.
             mFreqSelMode = FREQ_SEL_PINNED_CENTER;
@@ -3082,7 +3075,7 @@ void TrackPanel::MoveSnappingFreqSelection (int mouseYCoordinate,
    bool logF;
    if (pTrack &&
        pTrack->GetSelected() &&
-       isSpectrogramTrack(pTrack, &logF)) {
+       isSpectralSelectionTrack(pTrack, &logF)) {
       WaveTrack *const wt = static_cast<WaveTrack*>(pTrack);
       // PRL:
       // What happens if center snapping selection began in one spectrogram track,
@@ -3126,7 +3119,7 @@ void TrackPanel::StartFreqSelection (int mouseYCoordinate, int trackTopEdge,
    mFreqSelPin = SelectedRegion::UndefinedFrequency;
 
    bool logF;
-   if (isSpectrogramTrack(pTrack, &logF)) {
+   if (isSpectralSelectionTrack(pTrack, &logF)) {
       mFreqSelTrack = static_cast<WaveTrack*>(pTrack);
       mFreqSelMode = FREQ_SEL_FREE;
       mFreqSelPin =
@@ -3150,10 +3143,8 @@ void TrackPanel::ExtendFreqSelection(int mouseYCoordinate, int trackTopEdge,
    // started, and that is of a spectrogram display type.
 
    const WaveTrack* wt = mFreqSelTrack;
-   const int display = wt->GetDisplay();
-   const bool logF = (display == WaveTrack::SpectrumLogDisplay) ||
-      (display == WaveTrack::SpectralSelectionLogDisplay) 
-      ;
+   const bool logF =
+      wt->GetSpectrogramSettings().scaleType == SpectrogramSettings::stLogarithmic;
    const double rate =  wt->GetRate();
    const double frequency =
       PositionToFrequency(wt, true, mouseYCoordinate,
@@ -3685,7 +3676,7 @@ bool mayDragWidth, bool onlyWithinSnapDistance,
    // within the time boundaries
    if (!mViewInfo->selectedRegion.isPoint() &&
        t0 <= selend && selend < t1 &&
-       isSpectrogramTrack(pTrack, &logF)) {
+       isSpectralSelectionTrack(pTrack, &logF)) {
       const WaveTrack *const wt = static_cast<const WaveTrack*>(pTrack);
       const wxInt64 bottomSel = (f0 >= 0)
          ? FrequencyToPosition(wt, f0, rect.y, rect.height, logF)
@@ -4694,11 +4685,12 @@ void TrackPanel::HandleVZoomButtonUp( wxMouseEvent & event )
 
    float min, max, c, l, binSize = 0.0;
    const double rate = track->GetRate();
-   const bool spectrum = (track->GetDisplay() == WaveTrack::SpectrumDisplay) ||
-      (track->GetDisplay() == WaveTrack::SpectralSelectionDisplay);
-   const bool spectrumLog = (track->GetDisplay() == WaveTrack::SpectrumLogDisplay) ||
-      (track->GetDisplay() == WaveTrack::SpectralSelectionLogDisplay);
-   if(spectrum) {
+   const bool spectral = (track->GetDisplay() == WaveTrack::Spectrum);
+   const bool spectrumLinear = spectral &&
+      (track->GetSpectrogramSettings().scaleType == SpectrogramSettings::stLinear);
+   const bool spectrumLog = spectral &&
+      (track->GetSpectrogramSettings().scaleType == SpectrogramSettings::stLogarithmic);
+   if (spectrumLinear) {
       const SpectrogramSettings &settings = track->GetSpectrogramSettings();
       min = settings.GetMinFreq(rate);
       max = settings.GetMaxFreq(rate);
@@ -4706,17 +4698,16 @@ void TrackPanel::HandleVZoomButtonUp( wxMouseEvent & event )
       binSize = rate / fftLength;
       minBins = std::min(10, fftLength / 2); //minimum 10 freq bins, unless there are less
    }
+   else if (spectrumLog) {
+      const SpectrogramSettings &settings = track->GetSpectrogramSettings();
+      min = settings.GetLogMinFreq(rate);
+      max = settings.GetLogMaxFreq(rate);
+      const int fftLength = settings.GetFFTLength(false);
+      binSize = rate / fftLength;
+      minBins = std::min(10, fftLength / 2); //minimum 10 freq bins, unless there are less
+   }
    else
-      if(spectrumLog) {
-         const SpectrogramSettings &settings = track->GetSpectrogramSettings();
-         min = settings.GetLogMinFreq(rate);
-         max = settings.GetLogMaxFreq(rate);
-         const int fftLength = settings.GetFFTLength(false);
-         binSize = rate / fftLength;
-         minBins = std::min(10, fftLength / 2); //minimum 10 freq bins, unless there are less
-      }
-      else
-         track->GetDisplayBounds(&min, &max);
+      track->GetDisplayBounds(&min, &max);
    if (IsDragZooming()) {
       // Drag Zoom
       float p1, p2, tmin, tmax;
@@ -4746,7 +4737,7 @@ void TrackPanel::HandleVZoomButtonUp( wxMouseEvent & event )
          min = (tmax * (1.0-p2) + tmin * p2);
 
          // Enforce vertical zoom limits
-         if(spectrum) {
+         if(spectrumLinear) {
             if(min < 0.)
                min = 0.;
             if(max < min + minBins * binSize)
@@ -4771,7 +4762,7 @@ void TrackPanel::HandleVZoomButtonUp( wxMouseEvent & event )
       // Zoom out to -1.0...1.0 first, then, and only
       // then, if they click again, allow one more
       // zoom out.
-      if(spectrum) {
+      if (spectrumLinear) {
          if (event.ShiftDown() && event.RightUp()) {
             // Zoom out full
             min = 0.0;
@@ -4840,7 +4831,7 @@ void TrackPanel::HandleVZoomButtonUp( wxMouseEvent & event )
    else {
       // Zoom IN
       float p1;
-      if(spectrum) {
+      if (spectrumLinear) {
          c = 0.5*(min+max);
          // Enforce maximum vertical zoom
          l = std::max( minBins * binSize, (c - min));
@@ -4889,7 +4880,7 @@ void TrackPanel::HandleVZoomButtonUp( wxMouseEvent & event )
       }
    }
 
-   if(spectrum) {
+   if (spectrumLinear) {
       SpectrogramSettings &settings = track->GetSpectrogramSettings();
       settings.SetMinFreq(min);
       settings.SetMaxFreq(max);
@@ -4899,7 +4890,6 @@ void TrackPanel::HandleVZoomButtonUp( wxMouseEvent & event )
          settings.SetMinFreq(min);
          settings.SetMaxFreq(max);
       }
-      mTrackArtist->InvalidateSpectrumCache(mTracks);
    }
    else if(spectrumLog) {
       SpectrogramSettings &settings = track->GetSpectrogramSettings();
@@ -4911,7 +4901,6 @@ void TrackPanel::HandleVZoomButtonUp( wxMouseEvent & event )
          settings.SetLogMinFreq(min);
          settings.SetLogMaxFreq(max);
       }
-      mTrackArtist->InvalidateSpectrumCache(mTracks);
    }
    else {
       track->SetDisplayBounds(min, max);
@@ -8568,10 +8557,7 @@ void TrackPanel::OnTrackMenu(Track *t)
       theMenu->Enable(OnWaveformID, display != WaveTrack::WaveformDisplay);
       theMenu->Enable(OnWaveformDBID,
                         display != WaveTrack::WaveformDBDisplay);
-      theMenu->Enable(OnSpectrumID, display != WaveTrack::SpectrumDisplay);
-      theMenu->Enable(OnSpectrumLogID, display != WaveTrack::SpectrumLogDisplay);
-      theMenu->Enable(OnSpectralSelID, display != WaveTrack::SpectralSelectionDisplay);
-      theMenu->Enable(OnSpectralSelLogID, display != WaveTrack::SpectralSelectionLogDisplay);
+      theMenu->Enable(OnSpectrumID, display != WaveTrack::Spectrum);
       theMenu->Enable(OnPitchID, display != WaveTrack::PitchDisplay);
       theMenu->Enable(OnViewSettingsID, true);
 
@@ -9087,26 +9073,17 @@ void TrackPanel::OnSetDisplay(wxCommandEvent & event)
    case OnWaveformDBID:
       id = WaveTrack::WaveformDBDisplay; break;
    case OnSpectrumID:
-      id = WaveTrack::SpectrumDisplay; break;
-   case OnSpectrumLogID:
-      id = WaveTrack::SpectrumLogDisplay; break;
-   case OnSpectralSelID:
-      id = WaveTrack::SpectralSelectionDisplay; break;
-   case OnSpectralSelLogID:
-      id = WaveTrack::SpectralSelectionLogDisplay; break;
+      id = WaveTrack::Spectrum; break;
    case OnPitchID:
       id = WaveTrack::PitchDisplay; break;
    }
    WaveTrack *wt = (WaveTrack *) mPopupMenuTarget;
    if (wt->GetDisplay() != id) {
       wt->SetDisplay(WaveTrack::WaveTrackDisplay(id));
-      mTrackArtist->InvalidateSpectrumCache(wt);
 
-      WaveTrack *l = (WaveTrack *) wt->GetLink();
-      if (l) {
+      WaveTrack *l = static_cast<WaveTrack *>(wt->GetLink());
+      if (l)
          l->SetDisplay(WaveTrack::WaveTrackDisplay(id));
-         mTrackArtist->InvalidateSpectrumCache(l);
-      }
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
       if (wt->GetDisplay() == WaveTrack::WaveformDisplay) {
          wt->SetVirtualState(false);

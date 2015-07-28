@@ -26,6 +26,33 @@ Paul Licameli
 #include <algorithm>
 #include <cmath>
 
+SpectrogramSettings::Globals::Globals()
+{
+   LoadPrefs();
+}
+
+void SpectrogramSettings::Globals::SavePrefs()
+{
+#ifdef SPECTRAL_SELECTION_GLOBAL_SWITCH
+   gPrefs->Write(wxT("/Spectrum/EnableSpectralSelection"), spectralSelection);
+#endif
+}
+
+void SpectrogramSettings::Globals::LoadPrefs()
+{
+#ifdef SPECTRAL_SELECTION_GLOBAL_SWITCH
+   spectralSelection
+      = (gPrefs->Read(wxT("/Spectrum/EnableSpectralSelection"), 0L) != 0);
+#endif
+}
+
+SpectrogramSettings::Globals
+&SpectrogramSettings::Globals::Get()
+{
+   static Globals instance;
+   return instance;
+}
+
 SpectrogramSettings::SpectrogramSettings()
    : hFFT(0)
    , window(0)
@@ -47,6 +74,10 @@ SpectrogramSettings::SpectrogramSettings(const SpectrogramSettings &other)
    , zeroPaddingFactor(other.zeroPaddingFactor)
 #endif
    , isGrayscale(other.isGrayscale)
+   , scaleType(other.scaleType)
+#ifndef SPECTRAL_SELECTION_GLOBAL_SWITCH
+   , spectralSelection(other.spectralSelection)
+#endif
 #ifdef EXPERIMENTAL_FFT_Y_GRID
    , fftYGrid(other.fftYGrid)
 #endif
@@ -79,6 +110,10 @@ SpectrogramSettings &SpectrogramSettings::operator= (const SpectrogramSettings &
       zeroPaddingFactor = other.zeroPaddingFactor;
 #endif
       isGrayscale = other.isGrayscale;
+      scaleType = other.scaleType;
+#ifndef SPECTRAL_SELECTION_GLOBAL_SWITCH
+      spectralSelection = other.spectralSelection;
+#endif
 #ifdef EXPERIMENTAL_FFT_Y_GRID
       fftYGrid = other.fftYGrid;
 #endif
@@ -100,6 +135,35 @@ SpectrogramSettings& SpectrogramSettings::defaults()
 {
    static SpectrogramSettings instance;
    return instance;
+}
+
+namespace
+{
+   wxArrayString &scaleNamesArray()
+   {
+      static wxArrayString theArray;
+      return theArray;
+   }
+}
+
+//static
+void SpectrogramSettings::InvalidateNames()
+{
+   scaleNamesArray().Clear();
+}
+
+//static
+const wxArrayString &SpectrogramSettings::GetScaleNames()
+{
+   wxArrayString &theArray = scaleNamesArray();
+
+   if (theArray.IsEmpty()) {
+      // Keep in correspondence with enum SpectrogramSettings::ScaleType:
+      theArray.Add(_("Linear"));
+      theArray.Add(_("Logarithmic"));
+   }
+
+   return theArray;
 }
 
 bool SpectrogramSettings::Validate(bool quiet)
@@ -155,6 +219,10 @@ bool SpectrogramSettings::Validate(bool quiet)
    // preference files, which could be or from future versions.  Validate quietly.
    windowType =
       std::max(0, std::min(NumWindowFuncs() - 1, windowType));
+   scaleType =
+      ScaleType(std::max(0,
+         std::min(int(SpectrogramSettings::stNumScaleTypes) - 1,
+            int(scaleType))));
    ConvertToEnumeratedWindowSizes();
    ConvertToActualWindowSizes();
 
@@ -180,6 +248,12 @@ void SpectrogramSettings::LoadPrefs()
    gPrefs->Read(wxT("/Spectrum/WindowType"), &windowType, eWinFuncHanning);
 
    isGrayscale = (gPrefs->Read(wxT("/Spectrum/Grayscale"), 0L) != 0);
+
+   scaleType = ScaleType(gPrefs->Read(wxT("/Spectrum/ScaleType"), 0L));
+
+#ifndef SPECTRAL_SELECTION_GLOBAL_SWITCH
+   spectralSelection = (gPrefs->Read(wxT("/Spectrum/EnableSpectralSelection"), 0L) != 0);
+#endif
 
 #ifdef EXPERIMENTAL_FFT_Y_GRID
    fftYGrid = (gPrefs->Read(wxT("/Spectrum/FFTYGrid"), 0L) != 0);
@@ -234,6 +308,12 @@ void SpectrogramSettings::SavePrefs()
    gPrefs->Write(wxT("/Spectrum/WindowType"), windowType);
 
    gPrefs->Write(wxT("/Spectrum/Grayscale"), isGrayscale);
+
+   gPrefs->Write(wxT("/Spectrum/ScaleType"), scaleType);
+
+#ifndef SPECTRAL_SELECTION_GLOBAL_SWITCH
+   gPrefs->Write(wxT("/Spectrum/EnableSpectralSelection"), spectralSelection);
+#endif
 
 #ifdef EXPERIMENTAL_FFT_Y_GRID
    gPrefs->Write(wxT("/Spectrum/FFTYGrid"), fftYGrid);
@@ -442,4 +522,13 @@ int SpectrogramSettings::GetFFTLength(bool autocorrelation) const
       * (!autocorrelation ? zeroPaddingFactor : 1);
 #endif
    ;
+}
+
+bool SpectrogramSettings::SpectralSelectionEnabled() const
+{
+#ifdef SPECTRAL_SELECTION_GLOBAL_SWITCH
+   return Globals::Get().spectralSelection;
+#else
+   return spectralSelection;
+#endif
 }
