@@ -211,7 +211,7 @@ void EffectAmplify::PopulateOrExchange(ShuttleGui & S)
 
    S.StartVerticalLay(0);
    {
-      int precission = 3;
+      int precission = 3; // allow (a generous) 3 decimal  places for Amplification (dB)
       // Amplitude
       S.StartMultiColumn(2, wxCENTER);
       {
@@ -234,7 +234,8 @@ void EffectAmplify::PopulateOrExchange(ShuttleGui & S)
       // Peak
       S.StartMultiColumn(2, wxCENTER);
       {
-         FloatingPointValidator<double> vldNewPeak(precission, &mNewPeak, NUM_VAL_ONE_TRAILING_ZERO);
+         // One extra decimal place so that rounding is visible to user (see: bug 958)
+         FloatingPointValidator<double> vldNewPeak(precission + 1, &mNewPeak, NUM_VAL_ONE_TRAILING_ZERO);
          double minAmp = MIN_Amp + LINEAR_TO_DB(mPeak);
          double maxAmp = MAX_Amp + LINEAR_TO_DB(mPeak);
 
