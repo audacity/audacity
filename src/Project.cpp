@@ -187,6 +187,11 @@ const int sbarHjump = 30;       //STM: This is how far the thumb jumps when the 
 #include "AllThemeResources.h"
 #endif
 
+////////////////////////////////////////////////////////////
+/// Custom events
+////////////////////////////////////////////////////////////
+DEFINE_EVENT_TYPE(EVT_CAPTURE_KEY);
+
 //
 // This small template class resembles a try-finally block
 //
@@ -707,8 +712,6 @@ enum {
 
 
 BEGIN_EVENT_TABLE(AudacityProject, wxFrame)
-   EVT_MENU_OPEN(AudacityProject::OnMenuEvent)
-   EVT_MENU_CLOSE(AudacityProject::OnMenuEvent)
    EVT_MENU(wxID_ANY, AudacityProject::OnMenu)
    EVT_MOUSE_EVENTS(AudacityProject::OnMouseEvent)
    EVT_CLOSE(AudacityProject::OnCloseWindow)
@@ -725,8 +728,6 @@ BEGIN_EVENT_TABLE(AudacityProject, wxFrame)
    EVT_ICONIZE(AudacityProject::OnIconize)
    EVT_COMMAND(wxID_ANY, EVT_OPEN_AUDIO_FILE, AudacityProject::OnOpenAudioFile)
    EVT_COMMAND(wxID_ANY, EVT_TOOLBAR_UPDATED, AudacityProject::OnToolBarUpdate)
-   EVT_COMMAND(wxID_ANY, EVT_CAPTURE_KEYBOARD, AudacityProject::OnCaptureKeyboard)
-   EVT_COMMAND(wxID_ANY, EVT_RELEASE_KEYBOARD, AudacityProject::OnReleaseKeyboard)
    //mchinen:multithreaded calls - may not be threadsafe with CommandEvent: may have to change.
    EVT_COMMAND(wxID_ANY, EVT_ODTASK_UPDATE, AudacityProject::OnODTaskUpdate)
    EVT_COMMAND(wxID_ANY, EVT_ODTASK_COMPLETE, AudacityProject::OnODTaskComplete)
@@ -768,7 +769,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
      mShowId3Dialog(true),               //lda
      mScrollBeyondZero(false),
      mLastFocusedWindow(NULL),
-     mKeyboardCaptured(NULL),
+     mKeyboardCaptureHandler(NULL),
      mImportXMLTagHandler(NULL),
      mAutoSaving(false),
      mIsRecovered(false),
@@ -1819,7 +1820,7 @@ void AudacityProject::OnScroll(wxScrollEvent & WXUNUSED(event))
 
    if (mScrollBeyondZero) {
       enum { SCROLL_PIXEL_TOLERANCE = 10 };
-      if (abs(mViewInfo.TimeToPosition(0.0, 0
+      if (std::abs(mViewInfo.TimeToPosition(0.0, 0
                                    )) < SCROLL_PIXEL_TOLERANCE) {
          // Snap the scrollbar to 0
          mViewInfo.h = 0;
@@ -1875,20 +1876,6 @@ bool AudacityProject::HandleKeyDown(wxKeyEvent & event)
    if (event.GetKeyCode() == WXK_PAGEDOWN)
       mTrackPanel->HandlePageDownKey();
 
-   // If a window has captured the keyboard, then allow it
-   // first dibs at the event.  If it does an event.Skip(false)
-   // then allow the event to process as normal, bypassing the
-   // command handler.
-   wxWindow *w = HasKeyboardCapture();
-   if (w) {
-      wxCommandEvent e(EVT_CAPTURE_KEY);
-      e.SetEventObject(&event);
-
-      if (w->GetEventHandler()->ProcessEvent(e)) {
-         return false;
-      }
-   }
-
    return mCommandManager.HandleKey(event, GetUpdateFlags(), 0xFFFFFFFF);
 }
 
@@ -1917,16 +1904,6 @@ bool AudacityProject::HandleKeyUp(wxKeyEvent & event)
       mTrackPanel->HandleControlKey(false);
 
    return mCommandManager.HandleKey(event, GetUpdateFlags(), 0xFFFFFFFF);
-}
-
-void AudacityProject::OnMenuEvent(wxMenuEvent & event)
-{
-   if (event.GetEventType() == wxEVT_MENU_OPEN) {
-      mCommandManager.HandleMenuOpen(event);
-   }
-   else if (event.GetEventType() == wxEVT_MENU_CLOSE) {
-      mCommandManager.HandleMenuClose(event);
-   }
 }
 
 /// Determines if flags for command are compatible with current state.
@@ -2274,16 +2251,6 @@ void AudacityProject::OnOpenAudioFile(wxCommandEvent & event)
    }
 
    RequestUserAttention();
-}
-
-void AudacityProject::OnCaptureKeyboard(wxCommandEvent & event)
-{
-   CaptureKeyboard((wxWindow *)event.GetEventObject());
-}
-
-void AudacityProject::OnReleaseKeyboard(wxCommandEvent & event)
-{
-   ReleaseKeyboard((wxWindow *)event.GetEventObject());
 }
 
 // static method, can be called outside of a project
@@ -4642,25 +4609,6 @@ void AudacityProject::GetPlayRegion(double* playRegionStart,
    mRuler->GetPlayRegion(playRegionStart, playRegionEnd);
 }
 
-wxWindow *AudacityProject::HasKeyboardCapture()
-{
-   return mKeyboardCaptured;
-}
-
-void AudacityProject::CaptureKeyboard(wxWindow *w)
-{
-   mKeyboardCaptured = w;
-}
-
-void AudacityProject::ReleaseKeyboard(wxWindow *w)
-{
-   if (w == mKeyboardCaptured)
-   {
-      mKeyboardCaptured = NULL;
-   }
-}
-
-
 void AudacityProject::AutoSave()
 {
    //    SonifyBeginAutoSave(); // part of RBD's r10680 stuff now backed out
@@ -4970,3 +4918,46 @@ void AudacityProject::HandleTrackSolo(Track *t, const bool alternate)
    ModifyState(true);
 }
 
+// Keyboard capture
+
+// static
+bool AudacityProject::HasKeyboardCapture(const wxWindow *handler)
+{
+   return GetKeyboardCaptureHandler() == handler;
+}
+
+// static
+wxWindow *AudacityProject::GetKeyboardCaptureHandler()
+{
+   AudacityProject *project = GetActiveProject();
+   if (project)
+   {
+      return project->mKeyboardCaptureHandler;
+   }
+
+   return NULL;
+}
+
+// static
+void AudacityProject::CaptureKeyboard(wxWindow *handler)
+{
+   AudacityProject *project = GetActiveProject();
+   if (project)
+   {
+//      wxASSERT(project->mKeyboardCaptureHandler == NULL);
+      project->mKeyboardCaptureHandler = handler;
+   }
+}
+
+// static
+void AudacityProject::ReleaseKeyboard(wxWindow *handler)
+{
+   AudacityProject *project = GetActiveProject();
+   if (project)
+   {
+//      wxASSERT(project->mKeyboardCaptureHandler == handler);
+      project->mKeyboardCaptureHandler = NULL;
+   }
+
+   return;
+}

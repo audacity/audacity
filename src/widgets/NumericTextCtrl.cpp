@@ -166,12 +166,12 @@ different formats.
 
 
 #include "../Audacity.h"
-#include "../AudacityApp.h"
 #include "NumericTextCtrl.h"
 #include "../Sequence.h"   // for sampleCount
 #include "../Theme.h"
 #include "../AllThemeResources.h"
 #include "../AColor.h"
+#include "../Project.h"
 
 #include <algorithm>
 #include <math.h>
@@ -1169,10 +1169,6 @@ NumericTextCtrl::NumericTextCtrl(NumericConverter::Type type,
 
 NumericTextCtrl::~NumericTextCtrl()
 {
-   wxCommandEvent e(EVT_RELEASE_KEYBOARD);
-   e.SetEventObject(this);
-   GetParent()->GetEventHandler()->ProcessEvent(e);
-
    if (mBackgroundBitmap)
       delete mBackgroundBitmap;
    if (mDigitFont)
@@ -1537,13 +1533,12 @@ void NumericTextCtrl::OnMouse(wxMouseEvent &event)
 
 void NumericTextCtrl::OnFocus(wxFocusEvent &event)
 {
-   wxCommandEvent e(EVT_CAPTURE_KEYBOARD);
-
    if (event.GetEventType() == wxEVT_KILL_FOCUS) {
-      e.SetEventType(EVT_RELEASE_KEYBOARD);
+      AudacityProject::ReleaseKeyboard(this);
    }
-   e.SetEventObject(this);
-   GetParent()->GetEventHandler()->ProcessEvent(e);
+   else {
+      AudacityProject::CaptureKeyboard(this);
+   }
 
    Refresh(false);
 }
@@ -1554,7 +1549,8 @@ void NumericTextCtrl::OnCaptureKey(wxCommandEvent &event)
    int keyCode = kevent->GetKeyCode();
 
    // Convert numeric keypad entries.
-   if ((keyCode >= WXK_NUMPAD0) && (keyCode <= WXK_NUMPAD9)) keyCode -= WXK_NUMPAD0 - '0';
+   if ((keyCode >= WXK_NUMPAD0) && (keyCode <= WXK_NUMPAD9))
+      keyCode -= WXK_NUMPAD0 - '0';
 
    switch (keyCode)
    {
@@ -1605,7 +1601,7 @@ void NumericTextCtrl::OnKeyDown(wxKeyEvent &event)
       return;
    }
 
-   event.Skip();
+   event.Skip(false);
 
    int keyCode = event.GetKeyCode();
    int digit = mFocusedDigit;
@@ -1616,7 +1612,8 @@ void NumericTextCtrl::OnKeyDown(wxKeyEvent &event)
       mFocusedDigit = mDigits.GetCount()-1;
 
    // Convert numeric keypad entries.
-   if ((keyCode >= WXK_NUMPAD0) && (keyCode <= WXK_NUMPAD9)) keyCode -= WXK_NUMPAD0 - '0';
+   if ((keyCode >= WXK_NUMPAD0) && (keyCode <= WXK_NUMPAD9))
+      keyCode -= WXK_NUMPAD0 - '0';
 
    if (!mReadOnly && (keyCode >= '0' && keyCode <= '9')) {
       int digitPosition = mDigits[mFocusedDigit].pos;
@@ -1687,7 +1684,6 @@ void NumericTextCtrl::OnKeyDown(wxKeyEvent &event)
       nevent.SetEventObject(parent);
       nevent.SetCurrentFocus(parent);
       GetParent()->GetEventHandler()->ProcessEvent(nevent);
-      event.Skip(false);
    }
 
    else if (keyCode == WXK_RETURN || keyCode == WXK_NUMPAD_ENTER) {
@@ -1697,7 +1693,6 @@ void NumericTextCtrl::OnKeyDown(wxKeyEvent &event)
          wxCommandEvent cevent(wxEVT_COMMAND_BUTTON_CLICKED,
                                def->GetId());
          GetParent()->GetEventHandler()->ProcessEvent(cevent);
-         event.Skip(false);
       }
    }
 

@@ -231,9 +231,6 @@ It handles initialization and termination by subclassing wxApp.
 ////////////////////////////////////////////////////////////
 
 DEFINE_EVENT_TYPE(EVT_OPEN_AUDIO_FILE);
-DEFINE_EVENT_TYPE(EVT_CAPTURE_KEYBOARD);
-DEFINE_EVENT_TYPE(EVT_RELEASE_KEYBOARD);
-DEFINE_EVENT_TYPE(EVT_CAPTURE_KEY);
 
 #ifdef __WXGTK__
 static void wxOnAssert(const wxChar *fileName, int lineNumber, const wxChar *msg)
@@ -1099,16 +1096,16 @@ void AudacityApp::GenerateCrashReport(wxDebugReport::Context ctx)
 }
 #endif
 
-#if defined(__WXGTK__)
-// On wxGTK, there's a focus issue where dialogs do not automatically pass focus
-// to the first child.  This means that you can use the keyboard to navigate within
-// the dialog.  Watching for the ACTIVATE event allows us to set the focus ourselves
-// when each dialog opens.
-//
-// See bug #57
-//
 int AudacityApp::FilterEvent(wxEvent & event)
 {
+#if !wxCHECK_VERSION(3, 0, 0) && defined(__WXGTK__)
+   // On wxGTK, there's a focus issue where dialogs do not automatically pass focus
+   // to the first child.  This means that you can use the keyboard to navigate within
+   // the dialog.  Watching for the ACTIVATE event allows us to set the focus ourselves
+   // when each dialog opens.
+   //
+   // See bug #57
+   //
    if (event.GetEventType() == wxEVT_ACTIVATE)
    {
       wxActivateEvent & e = (wxActivateEvent &) event;
@@ -1118,10 +1115,11 @@ int AudacityApp::FilterEvent(wxEvent & event)
          ((wxWindow *)e.GetEventObject())->SetFocus();
       }
    }
-
-   return -1;
-}
+   break;
 #endif
+
+   return Event_Skip;
+}
 
 AudacityApp::AudacityApp()
 {
@@ -1151,11 +1149,6 @@ bool AudacityApp::OnInit()
 
    mChecker = NULL;
    mIPCServ = NULL;
-
-#if defined(__WXGTK__)
-   // Workaround for bug 154 -- initialize to false
-   inKbdHandler = false;
-#endif
 
 #if defined(__WXMAC__)
    // Disable window animation

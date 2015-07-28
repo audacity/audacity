@@ -112,16 +112,16 @@ public:
 
    // Return true if the mouse position is anywhere in the fisheye
    // origin specifies the pixel corresponding to time h
-   bool InFisheye(wxInt64 position, wxInt64 origin = 0) const
-   {origin; return false;} // stub
+   bool InFisheye(wxInt64 position, wxInt64 WXUNUSED(origin = 0)) const
+   {return false;} // stub
 
    // These accessors ignore the fisheye hiding state.
    // Inclusive:
-   wxInt64 GetFisheyeLeftBoundary(wxInt64 origin = 0) const
-   {origin; return 0;} // stub
+   wxInt64 GetFisheyeLeftBoundary(wxInt64 WXUNUSED(origin = 0)) const
+   {return 0;} // stub
    // Exclusive:
-   wxInt64 GetFisheyeRightBoundary(wxInt64 origin = 0) const
-   {origin; return 0;} // stub
+   wxInt64 GetFisheyeRightBoundary(wxInt64 WXUNUSED(origin = 0)) const
+   {return 0;} // stub
 
 };
 

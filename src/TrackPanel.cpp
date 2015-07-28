@@ -1261,7 +1261,6 @@ void TrackPanel::DoDrawIndicator
             if (x >= w) {
                x = w - 1;
             }
-
             dc.Blit( x, 0, 1, mBacking->GetHeight(), &mBackingDC, x, 0 );
          }
 
@@ -6424,12 +6423,6 @@ void TrackPanel::OnKeyDown(wxKeyEvent & event)
 /// Allow typing into LabelTracks.
 void TrackPanel::OnChar(wxKeyEvent & event)
 {
-#if defined (__WXGTK__)
-   // AWD: workaround for bug 154
-   bool restore = wxGetApp().inKbdHandler;
-   wxGetApp().inKbdHandler = true;
-#endif
-
    // Only deal with LabelTracks
    Track *t = GetFocusedTrack();
    if (!t || t->GetKind() != Track::Label) {
@@ -6453,11 +6446,6 @@ void TrackPanel::OnChar(wxKeyEvent & event)
       Refresh( false );
    else if (!event.GetSkipped())
       RefreshTrack(t);
-
-#if defined (__WXGTK__)
-   // AWD: workaround for bug 154
-   wxGetApp().inKbdHandler = restore;
-#endif
 }
 
 /// Should handle the case when the mouse capture is lost.
@@ -7219,6 +7207,9 @@ void TrackPanel::Refresh(bool eraseBackground /* = TRUE */,
 /// actual contents of each track are drawn by the TrackArtist.
 void TrackPanel::DrawTracks(wxDC * dc)
 {
+#if defined(__WXMAC__)
+   dc->GetGraphicsContext()->SetAntialiasMode(wxANTIALIAS_NONE);
+#endif
    wxRegion region = GetUpdateRegion();
 
    wxRect clip = GetRect();
@@ -9860,18 +9851,12 @@ void TrackPanel::SetFocusedTrack( Track *t )
    if (t && !t->GetLinked() && t->GetLink())
       t = (WaveTrack*)t->GetLink();
 
-   AudacityProject *p = GetActiveProject();
-
-   if (p && p->HasKeyboardCapture()) {
-      wxCommandEvent e(EVT_RELEASE_KEYBOARD);
-      e.SetEventObject(this);
-      GetParent()->GetEventHandler()->ProcessEvent(e);
+   if (AudacityProject::GetKeyboardCaptureHandler()) {
+      AudacityProject::ReleaseKeyboard(this);
    }
 
    if (t && t->GetKind() == Track::Label) {
-      wxCommandEvent e(EVT_CAPTURE_KEYBOARD);
-      e.SetEventObject(this);
-      GetParent()->GetEventHandler()->ProcessEvent(e);
+      AudacityProject::CaptureKeyboard(this);
    }
 
    mAx->SetFocus( t );

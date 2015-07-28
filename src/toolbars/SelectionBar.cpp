@@ -46,10 +46,10 @@ with changes in the SelectionBar.
 #include "SelectionBarListener.h"
 #include "SelectionBar.h"
 
-#include "../AudacityApp.h"
 #include "../AudioIO.h"
 #include "../AColor.h"
 #include "../Prefs.h"
+#include "../Project.h"
 #include "../Snap.h"
 #include "../widgets/NumericTextCtrl.h"
 
@@ -521,13 +521,12 @@ void SelectionBar::UpdateRates()
 
 void SelectionBar::OnFocus(wxFocusEvent &event)
 {
-   wxCommandEvent e(EVT_CAPTURE_KEYBOARD);
-
    if (event.GetEventType() == wxEVT_KILL_FOCUS) {
-      e.SetEventType(EVT_RELEASE_KEYBOARD);
+      AudacityProject::ReleaseKeyboard(this);
    }
-   e.SetEventObject(this);
-   GetParent()->GetEventHandler()->ProcessEvent(e);
+   else {
+      AudacityProject::CaptureKeyboard(this);
+   }
 
    Refresh(false);
 
@@ -539,11 +538,6 @@ void SelectionBar::OnCaptureKey(wxCommandEvent &event)
    wxKeyEvent *kevent = (wxKeyEvent *)event.GetEventObject();
    wxWindow *w = FindFocus();
    int keyCode = kevent->GetKeyCode();
-
-   // Pass the SPACE through for SnapTo
-   if (w == mSnapTo && keyCode == WXK_SPACE) {
-      return;
-   }
 
    // Convert numeric keypad entries.
    if ((keyCode >= WXK_NUMPAD0) && (keyCode <= WXK_NUMPAD9)) {

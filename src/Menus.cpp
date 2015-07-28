@@ -771,16 +771,6 @@ void AudacityProject::CreateMenusAndCommands()
 
    c->EndSubMenu();
 
-   /////////////////////////////////////////////////////////////////////////////
-
-   /* i18n-hint: Usually keep the ! at the start.  It means this option is hidden.
-    * Simplified View toggles the showing and hiding of 'hidden' menu items that start
-    * with !.  If your translation file is for a special use, that is if it is for a
-    * simplified view with hidden menu items, then leave the ! out here, so that the
-    * user can show/hide some of the menu items. */
-   c->AddCheck(wxT("SimplifiedView"), _("!Simplified View"), FN(OnSimplifiedView),
-               mCommandManager.mbHideFlaggedItems ? 1 : 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
-
    c->EndMenu();
 
    /////////////////////////////////////////////////////////////////////////////
@@ -1590,34 +1580,10 @@ void AudacityProject::ModifyUndoMenuItems()
       mCommandManager.Modify(wxT("Undo"),
                              wxString::Format(_("&Undo %s"),
                                               desc.c_str()));
-      // LL:  Hackage Alert!!!
-      //
-      // On the Mac, all menu state changes are ignored if a modal
-      // dialog is displayed.
-      //
-      // An example of this is when applying chains where the "Undo"
-      // menu state should change when each command executes.  But,
-      // since the state changes are ignored, the "Undo" menu item
-      // will never get enabled.  And unfortunately, this will cause
-      // the menu item to be permanently disabled since the recorded
-      // state is enabled (even though it isn't) causing the routines
-      // to ignore the new enable request.
-      //
-      // So, the workaround is to transition the item back to disabled
-      // and then to enabled.  (Sorry, I couldn't find a better way of
-      // doing it.)
-      //
-      // See src/mac/carbon/menuitem.cpp, wxMenuItem::Enable() for more
-      // info.
-      mCommandManager.Enable(wxT("Undo"), false);
-      mCommandManager.Enable(wxT("Undo"), true);
    }
    else {
       mCommandManager.Modify(wxT("Undo"),
                              wxString::Format(_("&Undo")));
-      // LL: See above
-      mCommandManager.Enable(wxT("Undo"), true);
-      mCommandManager.Enable(wxT("Undo"), false);
    }
 
    if (mUndoManager.RedoAvailable()) {
@@ -5278,14 +5244,6 @@ void AudacityProject::OnResetToolBars()
    ModifyToolbarMenus();
 }
 
-void AudacityProject::OnSimplifiedView()
-{
-   mCommandManager.mbHideFlaggedItems = !mCommandManager.mbHideFlaggedItems;
-   mCommandManager.Check(wxT("SimplifiedView"), mCommandManager.mbHideFlaggedItems );
-   RebuildMenuBar();
-}
-
-
 //
 // Project Menu
 //
@@ -6285,10 +6243,6 @@ void AudacityProject::OnApplyChain()
 {
    BatchProcessDialog dlg(this);
    dlg.ShowModal();
-
-   // LL:  See comments in ModifyUndoMenuItems() for info about this...
-   //
-   // Refresh the Undo menu.
    ModifyUndoMenuItems();
 }
 

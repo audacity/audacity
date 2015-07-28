@@ -115,6 +115,11 @@ enum StatusBarField {
    rateStatusBarField = 3
 };
 
+////////////////////////////////////////////////////////////
+/// Custom events
+////////////////////////////////////////////////////////////
+DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_CAPTURE_KEY, -1);
+
 // XML handler for <import> tag
 class ImportXMLTagHandler : public XMLTagHandler
 {
@@ -260,6 +265,12 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 
    CommandManager *GetCommandManager() { return &mCommandManager; }
 
+   // Keyboard capture
+   static bool HasKeyboardCapture(const wxWindow *handler);
+   static wxWindow *GetKeyboardCaptureHandler();
+   static void CaptureKeyboard(wxWindow *handler);
+   static void ReleaseKeyboard(wxWindow *handler);
+
    void RebuildMenuBar();
    void RebuildOtherMenus();
    void MayStartMonitoring();
@@ -267,7 +278,6 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 
    // Message Handlers
 
-   void OnMenuEvent(wxMenuEvent & event);
    void OnMenu(wxCommandEvent & event);
    void OnUpdateUI(wxUpdateUIEvent & event);
 
@@ -281,8 +291,6 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    void OnTimer(wxTimerEvent & event);
    void OnToolBarUpdate(wxCommandEvent & event);
    void OnOpenAudioFile(wxCommandEvent & event);
-   void OnCaptureKeyboard(wxCommandEvent & event);
-   void OnReleaseKeyboard(wxCommandEvent & event);
    void OnODTaskUpdate(wxCommandEvent & event);
    void OnODTaskComplete(wxCommandEvent & event);
    void OnTrackListUpdated(wxCommandEvent & event);
@@ -445,10 +453,6 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    PlayMode mLastPlayMode;
    ViewInfo mViewInfo;
 
-   wxWindow *HasKeyboardCapture();
-   void CaptureKeyboard(wxWindow *h);
-   void ReleaseKeyboard(wxWindow *h);
-
    // Audio IO callback methods
    virtual void OnAudioIORate(int rate);
    virtual void OnAudioIOStartRecording();
@@ -601,8 +605,6 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    // See AudacityProject::OnActivate() for an explanation of this.
    wxWindow *mLastFocusedWindow;
 
-   wxWindow *mKeyboardCaptured;
-
    ImportXMLTagHandler* mImportXMLTagHandler;
 
    // Last auto-save file name and path (empty if none)
@@ -644,6 +646,9 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 
    // Flag that we're recoding.
    bool mIsCapturing;
+
+   // Keyboard capture
+   wxWindow *mKeyboardCaptureHandler;
 
    DECLARE_EVENT_TABLE()
 };

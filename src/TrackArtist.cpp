@@ -324,9 +324,12 @@ void TrackArtist::DrawTracks(TrackList * tracks,
                              bool bigPoints,
                              bool drawSliders)
 {
+#if defined(__WXMAC__)
+   dc.GetGraphicsContext()->SetAntialiasMode(wxANTIALIAS_NONE);
+#endif
+
    wxRect trackRect = rect;
    wxRect stereoTrackRect;
-
    TrackListIterator iter(tracks);
    Track *t;
 
