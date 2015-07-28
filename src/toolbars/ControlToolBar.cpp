@@ -36,6 +36,7 @@
 
 #include "../Audacity.h"
 #include "../Experimental.h"
+#include "ControlToolBar.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
@@ -51,7 +52,6 @@
 #endif
 #include <wx/tooltip.h>
 
-#include "ControlToolBar.h"
 #include "TranscriptionToolBar.h"
 #include "MeterToolBar.h"
 
@@ -62,7 +62,7 @@
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../Theme.h"
-#include "../Track.h"
+#include "../WaveTrack.h"
 #include "../widgets/AButton.h"
 #include "../widgets/Meter.h"
 

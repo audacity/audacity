@@ -21,11 +21,11 @@
 #include <wx/window.h>
 
 #include "Experimental.h"
-#include "Sequence.h"  //Stm: included for the sampleCount declaration
-#include "WaveClip.h"
-#include "WaveTrack.h"
+#include "audacity/Types.h"
 #include "UndoManager.h" //JKC: Included for PUSH_XXX definitions.
 #include "widgets/NumericTextCtrl.h"
+
+#include "WaveTrackLocation.h"
 
 class wxMenu;
 class wxRect;
@@ -46,6 +46,10 @@ class AudacityProject;
 class TrackPanelAx;
 
 class ViewInfo;
+
+class WaveTrack;
+class WaveClip;
+class Envelope;
 
 WX_DEFINE_ARRAY(LWSlider *, LWSliderArray);
 
@@ -643,7 +647,7 @@ protected:
    WaveClip *mCapturedClip;
    TrackClipArray mCapturedClipArray;
    bool mCapturedClipIsSelection;
-   WaveTrack::Location mCapturedTrackLocation;
+   WaveTrackLocation mCapturedTrackLocation;
    wxRect mCapturedTrackLocationRect;
    wxRect mCapturedRect;
 

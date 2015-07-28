@@ -90,7 +90,6 @@
 #include "../Project.h"
 #include "../FileFormats.h"
 #include "../Prefs.h"
-#include "../WaveTrack.h"
 #include "../Internat.h"
 
 #define BINARY_FILE_CHECK_BUFFER_SIZE 1024

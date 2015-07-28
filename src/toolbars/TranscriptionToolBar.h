@@ -18,7 +18,7 @@
 #include <wx/brush.h>
 #include <wx/pen.h>
 
-#include "../Sequence.h"
+#include "audacity/Types.h"
 #include "../Theme.h"
 
 class wxBitmap;
@@ -82,7 +82,7 @@ class TranscriptionToolBar:public ToolBar {
    virtual void OnSensitivitySlider(wxCommandEvent & event);
 
    virtual void Populate();
-   virtual void Repaint(wxDC * WXUNUSED(dc)) {};
+   virtual void Repaint(wxDC * WXUNUSED(dc)) {}
    virtual void EnableDisableButtons();
    virtual void UpdatePrefs();
 

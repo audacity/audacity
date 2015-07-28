@@ -31,6 +31,7 @@ simplifies construction of menu items.
 *//*******************************************************************/
 
 #include "Audacity.h"
+#include "Project.h"
 
 #include <iterator>
 #include <limits>
@@ -53,7 +54,6 @@ simplifies construction of menu items.
 #include "effects/Contrast.h"
 #include "TrackPanel.h"
 
-#include "Project.h"
 #include "effects/EffectManager.h"
 
 #include "AudacityApp.h"
@@ -119,6 +119,8 @@ simplifies construction of menu items.
 
 #include "CaptureEvents.h"
 #include "Snap.h"
+
+#include "WaveTrack.h"
 
 #if defined(EXPERIMENTAL_CRASH_REPORT)
 #include <wx/debugrpt.h>

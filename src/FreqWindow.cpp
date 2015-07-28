@@ -71,6 +71,7 @@ and in the spectrogram spectral selection.
 
 #include <math.h>
 
+#include "Envelope.h"
 #include "ShuttleGui.h"
 #include "AColor.h"
 #include "FFT.h"
@@ -83,6 +84,8 @@ and in the spectrogram spectral selection.
 #include "AllThemeResources.h"
 
 #include "FileDialog.h"
+
+#include "WaveTrack.h"
 
 #if defined(__WXGTK__)
 #define GSocket GSocketHack

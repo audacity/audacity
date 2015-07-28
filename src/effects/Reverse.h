@@ -15,8 +15,6 @@
 
 #include <wx/string.h>
 
-#include "../WaveTrack.h"
-
 #include "Effect.h"
 
 #define REVERSE_PLUGIN_SYMBOL XO("Reverse")

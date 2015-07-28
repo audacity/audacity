@@ -15,6 +15,7 @@
 #define __AUDACITY_DEPENDENCIES__
 
 #include <wx/dynarray.h>
+#include <wx/filename.h>
 
 class AudacityProject;
 

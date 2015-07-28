@@ -41,6 +41,8 @@
 #include "../float_cast.h"
 #include "../widgets/Ruler.h"
 
+#include "../WaveTrack.h"
+
 enum
 {
    ID_Threshold = 10000,

@@ -66,16 +66,13 @@
 #include "../DirManager.h"
 #include "../FileFormats.h"
 #include "../Internat.h"
-#include "../LabelTrack.h"
 #include "../Mix.h"
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../ShuttleGui.h"
-#include "../Track.h"
 #include "../WaveTrack.h"
 #include "../widgets/Warning.h"
 #include "../AColor.h"
-#include "../TimeTrack.h"
 #include "../Dependencies.h"
 
 // Callback to display format options

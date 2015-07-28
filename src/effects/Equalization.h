@@ -35,8 +35,6 @@
 #endif
 
 #include "Effect.h"
-#include "../Envelope.h"
-#include "../WaveTrack.h"
 #include "../xml/XMLTagHandler.h"
 #include "../widgets/Grid.h"
 #include "../widgets/Ruler.h"
@@ -45,6 +43,7 @@
 #define EQUALIZATION_PLUGIN_SYMBOL XO("Equalization")
 
 
+class Envelope;
 class EqualizationPanel;
 
 //

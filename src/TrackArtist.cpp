@@ -169,14 +169,12 @@ audio tracks.
 #include "BlockFile.h"
 #include "Envelope.h"
 #include "NumberScale.h"
-#include "Track.h"
 #include "WaveTrack.h"
 #include "LabelTrack.h"
 #include "TimeTrack.h"
 #include "Prefs.h"
 #include "prefs/SpectrogramSettings.h"
 #include "prefs/WaveformSettings.h"
-#include "Sequence.h"
 #include "Spectrum.h"
 #include "ViewInfo.h"
 #include "widgets/Ruler.h"
@@ -1442,7 +1440,7 @@ void TrackArtist::DrawWaveform(WaveTrack *track,
       if (xx >= 0 && xx < rect.width) {
          dc.SetPen(*wxGREY_PEN);
          AColor::Line(dc, (int) (rect.x + xx - 1), rect.y, (int) (rect.x + xx - 1), rect.y + rect.height);
-         if (loc.typ == WaveTrack::locationCutLine) {
+         if (loc.typ == WaveTrackLocation::locationCutLine) {
             dc.SetPen(*wxRED_PEN);
          }
          else {

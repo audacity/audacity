@@ -41,6 +41,8 @@ and libvorbis examples, Monty <monty@xiph.org>
 #include "../Internat.h"
 #include "../Tags.h"
 
+#include "../Track.h"
+
 //----------------------------------------------------------------------------
 // ExportFLACOptions Class
 //----------------------------------------------------------------------------

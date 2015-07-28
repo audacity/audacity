@@ -110,10 +110,10 @@ scroll information.  It also has some status flags.
 #include "Mix.h"
 #include "NoteTrack.h"
 #include "Prefs.h"
+#include "Sequence.h"
 #include "Snap.h"
 #include "Tags.h"
 #include "TimeTrack.h"
-#include "Track.h"
 #include "TrackPanel.h"
 #include "WaveTrack.h"
 #include "DirManager.h"
@@ -121,7 +121,6 @@ scroll information.  It also has some status flags.
 #include "prefs/PrefsDialog.h"
 #include "widgets/LinkingHtmlWindow.h"
 #include "widgets/ErrorDialog.h"
-#include "widgets/Meter.h"
 #include "widgets/Ruler.h"
 #include "widgets/Warning.h"
 #include "xml/XMLFileReader.h"
@@ -1214,6 +1213,11 @@ void AudacityProject::SetProjectTitle()
 
    SetTitle( name );
    SetName(name);       // to make the nvda screen reader read the correct title
+}
+
+bool AudacityProject::GetIsEmpty()
+{
+   return mTracks->IsEmpty();
 }
 
 double AudacityProject::AS_GetRate()
@@ -4421,7 +4425,7 @@ void AudacityProject::GetRegionsByLabel( Regions &regions )
 //If the function replaces the selection with audio of a different length,
 // bSyncLockedTracks should be set true to perform the same action on sync-lock selected
 // tracks.
-void AudacityProject::EditByLabel( WaveTrack::EditFunction action,
+void AudacityProject::EditByLabel( EditFunction action,
                                    bool bSyncLockedTracks )
 {
    Regions regions;
@@ -4470,7 +4474,7 @@ void AudacityProject::EditByLabel( WaveTrack::EditFunction action,
 //Functions copy the edited regions to clipboard, possibly in multiple tracks
 //This probably should not be called if *action() changes the timeline, because
 // the copy needs to happen by track, and the timeline change by group.
-void AudacityProject::EditClipboardByLabel( WaveTrack::EditDestFunction action )
+void AudacityProject::EditClipboardByLabel( EditDestFunction action )
 {
    Regions regions;
 

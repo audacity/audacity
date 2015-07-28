@@ -19,6 +19,7 @@ recover previous Audacity projects that were closed incorrectly.
 #include "AudacityApp.h"
 #include "FileNames.h"
 #include "blockfile/SimpleBlockFile.h"
+#include "Sequence.h"
 #include "ShuttleGui.h"
 
 #include <wx/wxprec.h>
@@ -26,6 +27,8 @@ recover previous Audacity projects that were closed incorrectly.
 #include <wx/dir.h>
 #include <wx/dialog.h>
 #include <wx/app.h>
+
+#include "WaveTrack.h"
 
 enum {
    ID_RECOVER_ALL = 10000,

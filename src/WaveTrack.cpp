@@ -39,8 +39,6 @@ Track classes.
 
 #include "float_cast.h"
 
-#include "LabelTrack.h"
-
 #include "Envelope.h"
 #include "Sequence.h"
 #include "Spectrum.h"
@@ -2407,7 +2405,7 @@ void WaveTrack::UpdateLocationsCache()
            it = it->GetNext())
       {
          // Add cut line expander point
-         mDisplayLocations[curpos].typ = locationCutLine;
+         mDisplayLocations[curpos].typ = WaveTrackLocation::locationCutLine;
          mDisplayLocations[curpos].pos =
             clip->GetOffset() + it->GetData()->GetOffset();
          curpos++;
@@ -2421,7 +2419,7 @@ void WaveTrack::UpdateLocationsCache()
                                           < WAVETRACK_MERGE_POINT_TOLERANCE)
          {
             // Add merge point
-            mDisplayLocations[curpos].typ = locationMergePoint;
+            mDisplayLocations[curpos].typ = WaveTrackLocation::locationMergePoint;
             mDisplayLocations[curpos].pos = clips.Item(i-1)->GetEndTime();
             mDisplayLocations[curpos].clipidx1 = mClips.IndexOf(previousClip);
             mDisplayLocations[curpos].clipidx2 = mClips.IndexOf(clip);

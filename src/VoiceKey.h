@@ -11,12 +11,14 @@
 #ifndef __AUDACITY_VOICEKEY__
 #define __AUDACITY_VOICEKEY__
 
-#include "WaveTrack.h"
-
 
 #ifndef M_PI
 #define	M_PI		3.14159265358979323846  /* pi */
 #endif
+
+#include "audacity/Types.h"
+
+class WaveTrack;
 
 enum VoiceKeyTypes
   {
@@ -91,10 +93,10 @@ class VoiceKey {
 };
 
 
-inline int sgn(int  number){ return (number<0) ? -1: 1;};
+inline int sgn(int  number){ return (number<0) ? -1: 1;}
 
 //This returns a logistic density based on a z-score
 // a logistic distn has variance (pi*s)^2/3
 
-//inline float inline float logistic(float z){   return fexp(-1 * z/(pi / sqrt(3)) / (1 + pow(fexp(-1 * z(pi / sqrt(3))),2)));};
+//inline float inline float logistic(float z){   return fexp(-1 * z/(pi / sqrt(3)) / (1 + pow(fexp(-1 * z(pi / sqrt(3))),2)));}
 #endif

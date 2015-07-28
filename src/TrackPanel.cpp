@@ -208,7 +208,6 @@ is time to refresh some aspect of the screen.
 #include "ShuttleGui.h"
 #include "Theme.h"
 #include "TimeTrack.h"
-#include "Track.h"
 #include "TrackArtist.h"
 #include "TrackPanelAx.h"
 #include "ViewInfo.h"
@@ -6538,7 +6537,7 @@ bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &r, wxM
 
       if (event.LeftDown())
       {
-         if (mCapturedTrackLocation.typ == WaveTrack::locationCutLine)
+         if (mCapturedTrackLocation.typ == WaveTrackLocation::locationCutLine)
          {
             // When user presses left button on cut line, expand the line again
             double cutlineStart = 0, cutlineEnd = 0;
@@ -6559,7 +6558,7 @@ bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &r, wxM
                MakeParentPushState(_("Expanded Cut Line"), _("Expand"));
                handled = true;
             }
-         } else if (mCapturedTrackLocation.typ == WaveTrack::locationMergePoint)
+         } else if (mCapturedTrackLocation.typ == WaveTrackLocation::locationMergePoint)
          {
             if (!track->MergeClips(mCapturedTrackLocation.clipidx1, mCapturedTrackLocation.clipidx2))
                return false;

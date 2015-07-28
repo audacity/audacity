@@ -21,11 +21,9 @@
 #include <wx/string.h>
 #include <wx/textctrl.h>
 
-#include "../Envelope.h"
-#include "../WaveTrack.h"
-
 #include "Effect.h"
 
+class Envelope;
 class ShuttleGui;
 
 #define CLICKREMOVAL_PLUGIN_SYMBOL XO("Click Removal")

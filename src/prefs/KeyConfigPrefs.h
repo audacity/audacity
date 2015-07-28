@@ -30,6 +30,8 @@ class ShuttleGui;
 
 #include "PrefsPanel.h"
 
+class wxStaticText;
+
 class KeyConfigPrefs :public PrefsPanel
 {
 public:

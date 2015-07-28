@@ -27,6 +27,8 @@
 #include "../FFT.h"
 #include "../widgets/valnum.h"
 
+#include "../WaveTrack.h"
+
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
 //     Name    Type     Key                     Def      Min      Max      Scale

@@ -10,8 +10,8 @@
 **********************************************************************/
 
 #include "Audacity.h"
-
 #include "Experimental.h"
+#include "MixerBoard.h"
 
 #include <math.h>
 
@@ -22,12 +22,13 @@
 
 #include "AColor.h"
 #include "AudioIO.h"
-#include "MixerBoard.h"
 #ifdef EXPERIMENTAL_MIDI_OUT
    #include "NoteTrack.h"
 #endif
 #include "Project.h"
-#include "Track.h"
+#include "WaveTrack.h"
+
+#include "widgets/Meter.h"
 
 
 #include "../images/MusicalInstruments.h"

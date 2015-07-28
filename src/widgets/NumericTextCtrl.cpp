@@ -166,9 +166,9 @@ different formats.
 
 
 #include "../Audacity.h"
-#include "../AudacityApp.h"
 #include "NumericTextCtrl.h"
-#include "../Sequence.h"   // for sampleCount
+#include "audacity/Types.h"
+#include "../AudacityApp.h"
 #include "../Theme.h"
 #include "../AllThemeResources.h"
 #include "../AColor.h"

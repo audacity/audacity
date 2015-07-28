@@ -1700,6 +1700,9 @@
     <ClInclude Include="..\..\..\src\prefs\WaveformSettings.h">
       <Filter>src/prefs</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\WaveTrackLocation.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\audacity.ico">

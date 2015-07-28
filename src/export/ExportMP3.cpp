@@ -86,7 +86,7 @@
 #include "../Project.h"
 #include "../ShuttleGui.h"
 #include "../Tags.h"
-#include "../WaveTrack.h"
+#include "../Track.h"
 #include "../widgets/LinkingHtmlWindow.h"
 
 #include "FileDialog.h"
