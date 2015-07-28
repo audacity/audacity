@@ -429,6 +429,8 @@
 		2810644B1818EEB5004F678B /* cpu_detect_x86.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2810644A1818EEB5004F678B /* cpu_detect_x86.cpp */; };
 		2810644D1818EED3004F678B /* cpu_detect.h in Headers */ = {isa = PBXBuildFile; fileRef = 2810644C1818EED3004F678B /* cpu_detect.h */; };
 		2816372E0BAE3B6C0079C746 /* LinkingHtmlWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2816372C0BAE3B6C0079C746 /* LinkingHtmlWindow.cpp */; };
+		282B70331B682342009A1618 /* WaveformPrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 282B702F1B682342009A1618 /* WaveformPrefs.cpp */; };
+		282B70341B682342009A1618 /* WaveformSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 282B70311B682342009A1618 /* WaveformSettings.cpp */; };
 		282D474C0B9E8D900034BC49 /* Snap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 282D474A0B9E8D900034BC49 /* Snap.cpp */; };
 		283135EC0DFB9D110076D551 /* ImportFFmpeg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 283135EA0DFB9D110076D551 /* ImportFFmpeg.cpp */; };
 		283135FF0DFBA2E80076D551 /* FFmpeg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 283135FD0DFBA2E80076D551 /* FFmpeg.cpp */; };
@@ -2085,6 +2087,11 @@
 		2813897919E6163C004111ED /* SelectedRegion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectedRegion.h; sourceTree = "<group>"; };
 		2816372C0BAE3B6C0079C746 /* LinkingHtmlWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = LinkingHtmlWindow.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		2816372D0BAE3B6C0079C746 /* LinkingHtmlWindow.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = LinkingHtmlWindow.h; sourceTree = "<group>"; tabWidth = 3; };
+		282B702E1B682342009A1618 /* GUISettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GUISettings.h; sourceTree = "<group>"; };
+		282B702F1B682342009A1618 /* WaveformPrefs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WaveformPrefs.cpp; sourceTree = "<group>"; };
+		282B70301B682342009A1618 /* WaveformPrefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WaveformPrefs.h; sourceTree = "<group>"; };
+		282B70311B682342009A1618 /* WaveformSettings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WaveformSettings.cpp; sourceTree = "<group>"; };
+		282B70321B682342009A1618 /* WaveformSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WaveformSettings.h; sourceTree = "<group>"; };
 		282D474A0B9E8D900034BC49 /* Snap.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = Snap.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		282D474B0B9E8D900034BC49 /* Snap.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = Snap.h; sourceTree = "<group>"; tabWidth = 3; };
 		283135EA0DFB9D110076D551 /* ImportFFmpeg.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ImportFFmpeg.cpp; sourceTree = "<group>"; tabWidth = 3; };
@@ -4205,6 +4212,7 @@
 				ED90976C116CAD49002F7479 /* ExtImportPrefs.h */,
 				1790B0BF09883BFD008A330A /* GUIPrefs.cpp */,
 				1790B0C009883BFD008A330A /* GUIPrefs.h */,
+				282B702E1B682342009A1618 /* GUISettings.h */,
 				284B27900FC66863005EAC96 /* ImportExportPrefs.cpp */,
 				284B27910FC66863005EAC96 /* ImportExportPrefs.h */,
 				1790B0C109883BFD008A330A /* KeyConfigPrefs.cpp */,
@@ -4238,6 +4246,10 @@
 				284B27E10FC66CCD005EAC96 /* TracksPrefs.h */,
 				284B27E20FC66CCD005EAC96 /* WarningsPrefs.cpp */,
 				284B27E30FC66CCD005EAC96 /* WarningsPrefs.h */,
+				282B702F1B682342009A1618 /* WaveformPrefs.cpp */,
+				282B70301B682342009A1618 /* WaveformPrefs.h */,
+				282B70311B682342009A1618 /* WaveformSettings.cpp */,
+				282B70321B682342009A1618 /* WaveformSettings.h */,
 			);
 			path = prefs;
 			sourceTree = "<group>";
@@ -7289,6 +7301,7 @@
 				1790B17009883BFD008A330A /* Internat.cpp in Sources */,
 				1790B17109883BFD008A330A /* LabelTrack.cpp in Sources */,
 				1790B17309883BFD008A330A /* LangChoice.cpp in Sources */,
+				282B70331B682342009A1618 /* WaveformPrefs.cpp in Sources */,
 				1790B17409883BFD008A330A /* Languages.cpp in Sources */,
 				1790B17509883BFD008A330A /* Legacy.cpp in Sources */,
 				1790B17809883BFD008A330A /* Menus.cpp in Sources */,
@@ -7438,6 +7451,7 @@
 				28948427101DF8FC005B0713 /* EffectsPrefs.cpp in Sources */,
 				287E207F102561F300BF47A2 /* PluginManager.cpp in Sources */,
 				28851FAB1027F16500152EE1 /* Command.cpp in Sources */,
+				282B70341B682342009A1618 /* WaveformSettings.cpp in Sources */,
 				28851FAC1027F16500152EE1 /* CommandSignature.cpp in Sources */,
 				28851FAD1027F16500152EE1 /* CommandType.cpp in Sources */,
 				28851FAE1027F16500152EE1 /* CompareAudioCommand.cpp in Sources */,
@@ -7535,7 +7549,6 @@
 				28D000A51A32920C00367B21 /* DeviceChange.cpp in Sources */,
 				28D8425C1AD8D69D00551353 /* SelectedRegion.cpp in Sources */,
 				2888A1631AE25F9A00E06FDC /* Diags.cpp in Sources */,
-				28DDE3A21AE3771100C784FE /* ViewInfo.cpp in Sources */,
 				2890498E1B6716B40038A543 /* SpectrogramSettings.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
