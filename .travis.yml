@@ -3,14 +3,10 @@ before_install:
     - sudo apt-get install -y libwxgtk3.0-dev libgtk2.0-dev
     - git show -s --format="wxT(\"<a href=\\\"http://github.com/audacity/audacity/commit/%H\\\">%h</a> of %cd\")"
     - git show -s --format="wxT(\"<a href=\\\"http://github.com/audacity/audacity/commit/%H\\\">%h</a> of %cd\")" > ./src/RevisionIdent.h
-language: cpp
+language:
+    - cpp
 compiler:
     - gcc
 script: 
-    - ls -la /usr/bin/wx-config*
-    - wx-config --cflags
-    - grep WXGTK /usr/lib/x86_64-linux-gnu/wx/include/gtk2-unicode-3.0/wx/setup.h
-    - pkg-config --list-all | grep gtk
-    - pkg-config --print-provides gtk+-2.0
-    - aclocal --install -I m4 && automake && ./configure && make
+    - aclocal --install -I m4 && automake && ./configure #&& make
     - cat config.log
