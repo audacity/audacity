@@ -5587,6 +5587,11 @@ void TrackPanel::HandleRearrange(wxMouseEvent & event)
       return;
    }
 
+   // probably harmless during play?  However, we do disallow the click, so check this too.
+   bool unsafe = IsUnsafe();
+   if (unsafe)
+      return;
+
    MixerBoard* pMixerBoard = this->GetMixerBoard(); // Update mixer board, too.
    wxString dir;
    if (event.m_y < mMoveUpThreshold || event.m_y < 0) {
