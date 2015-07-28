@@ -15,6 +15,7 @@ Paul Licameli
 
 #include "../Audacity.h"
 #include "SpectrogramSettings.h"
+#include "../NumberScale.h"
 
 #include <algorithm>
 #include <wx/msgdlg.h>
@@ -23,7 +24,6 @@ Paul Licameli
 #include "../Prefs.h"
 #include "../RealFFTf.h"
 
-#include <algorithm>
 #include <cmath>
 
 SpectrogramSettings::Globals::Globals()
@@ -161,6 +161,10 @@ const wxArrayString &SpectrogramSettings::GetScaleNames()
       // Keep in correspondence with enum SpectrogramSettings::ScaleType:
       theArray.Add(_("Linear"));
       theArray.Add(_("Logarithmic"));
+      theArray.Add(_("Mel"));
+      theArray.Add(_("Bark"));
+      theArray.Add(_("Erb"));
+      theArray.Add(_("Undertone"));
    }
 
    return theArray;
@@ -522,6 +526,59 @@ int SpectrogramSettings::GetFFTLength(bool autocorrelation) const
       * (!autocorrelation ? zeroPaddingFactor : 1);
 #endif
    ;
+}
+
+NumberScale SpectrogramSettings::GetScale
+(double rate, bool bins, bool autocorrelation) const
+{
+   int minFreq, maxFreq;
+   NumberScaleType type = nstLinear;
+   const int half = GetFFTLength(autocorrelation) / 2;
+
+   // Don't assume the correspondence of the enums will remain direct in the future.
+   // Do this switch.
+   switch (scaleType) {
+   default:
+      wxASSERT(false);
+   case stLinear:
+      type = nstLinear; break;
+   case stLogarithmic:
+      type = nstLogarithmic; break;
+   case stMel:
+      type = nstMel; break;
+   case stBark:
+      type = nstBark; break;
+   case stErb:
+      type = nstErb; break;
+   case stUndertone:
+      type = nstUndertone; break;
+   }
+
+   switch (scaleType) {
+   default:
+      wxASSERT(false);
+   case stLinear:
+      minFreq = GetMinFreq(rate);
+      maxFreq = GetMaxFreq(rate);
+      break;
+   case stLogarithmic:
+   case stMel:
+   case stBark:
+   case stErb:
+      minFreq = GetLogMinFreq(rate);
+      maxFreq = GetLogMaxFreq(rate);
+      break;
+   case stUndertone:
+   {
+      const float bin2 = rate / half;
+      minFreq = std::max(int(0.5 + bin2), GetLogMinFreq(rate));
+      maxFreq = GetLogMaxFreq(rate);
+   }
+   break;
+   }
+
+   return NumberScale(type, minFreq, maxFreq,
+      bins ? rate / (2 * half) : 1.0f);
 }
 
 bool SpectrogramSettings::SpectralSelectionEnabled() const

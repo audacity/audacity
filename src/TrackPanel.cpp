@@ -201,6 +201,7 @@ is time to refresh some aspect of the screen.
 #include "MixerBoard.h"
 
 #include "NoteTrack.h"
+#include "NumberScale.h"
 #include "Prefs.h"
 #include "Project.h"
 #include "Snap.h"
@@ -1802,22 +1803,15 @@ void TrackPanel::SetCursorAndTipWhenInLabelTrack( LabelTrack * pLT,
 namespace {
 
 // This returns true if we're a spectral editing track.
-inline bool isSpectralSelectionTrack(const Track *pTrack, bool *pLogf = NULL) {
+inline bool isSpectralSelectionTrack(const Track *pTrack) {
    if (pTrack &&
        pTrack->GetKind() == Track::Wave) {
       const WaveTrack *const wt = static_cast<const WaveTrack*>(pTrack);
       const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
       const int display = wt->GetDisplay();
-      if (pLogf) {
-         const bool logF =
-           settings.scaleType == SpectrogramSettings::stLogarithmic;
-         *pLogf = logF;
-      }
       return (display == WaveTrack::Spectrum) && settings.SpectralSelectionEnabled();
    }
    else {
-      if (pLogf)
-         *pLogf = false;
       return false;
    }
 }
@@ -1941,9 +1935,8 @@ void TrackPanel::SetCursorAndTipWhenSelectTool( Track * t,
    const bool bShiftDown = event.ShiftDown();
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   bool logF;
    if ( (mFreqSelMode == FREQ_SEL_SNAPPING_CENTER) &&
-      isSpectralSelectionTrack(t, &logF)) {
+      isSpectralSelectionTrack(t)) {
       // Not shift-down, but center frequency snapping toggle is on
       *ppTip = _("Click and drag to set frequency bandwidth.");
       *ppCursor = mEnvelopeCursor;
@@ -2679,9 +2672,8 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
       // preferences now
       if (mAdjustSelectionEdges) {
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
-         bool logF;
          if (mFreqSelMode == FREQ_SEL_SNAPPING_CENTER &&
-            isSpectralSelectionTrack(pTrack, &logF)) {
+            isSpectralSelectionTrack(pTrack)) {
             // Ignore whether we are inside the time selection.
             // Exit center-snapping, start dragging the width.
             mFreqSelMode = FREQ_SEL_PINNED_CENTER;
@@ -3072,10 +3064,9 @@ void TrackPanel::MoveSnappingFreqSelection (int mouseYCoordinate,
                                             int trackTopEdge,
                                             int trackHeight, Track *pTrack)
 {
-   bool logF;
    if (pTrack &&
        pTrack->GetSelected() &&
-       isSpectralSelectionTrack(pTrack, &logF)) {
+       isSpectralSelectionTrack(pTrack)) {
       WaveTrack *const wt = static_cast<WaveTrack*>(pTrack);
       // PRL:
       // What happens if center snapping selection began in one spectrogram track,
@@ -3086,7 +3077,7 @@ void TrackPanel::MoveSnappingFreqSelection (int mouseYCoordinate,
       const double rate = wt->GetRate();
       const double frequency =
          PositionToFrequency(wt, false, mouseYCoordinate,
-         trackTopEdge, trackHeight, logF);
+         trackTopEdge, trackHeight);
       const double snappedFrequency =
          mFrequencySnapper->FindPeak(frequency, NULL);
       const double maxRatio = findMaxRatio(snappedFrequency, rate);
@@ -3118,13 +3109,12 @@ void TrackPanel::StartFreqSelection (int mouseYCoordinate, int trackTopEdge,
    mFreqSelMode = FREQ_SEL_INVALID;
    mFreqSelPin = SelectedRegion::UndefinedFrequency;
 
-   bool logF;
-   if (isSpectralSelectionTrack(pTrack, &logF)) {
+   if (isSpectralSelectionTrack(pTrack)) {
       mFreqSelTrack = static_cast<WaveTrack*>(pTrack);
       mFreqSelMode = FREQ_SEL_FREE;
       mFreqSelPin =
          PositionToFrequency(mFreqSelTrack, false, mouseYCoordinate,
-            trackTopEdge, trackHeight, logF);
+                             trackTopEdge, trackHeight);
       mViewInfo->selectedRegion.setFrequencies(mFreqSelPin, mFreqSelPin);
    }
 }
@@ -3143,12 +3133,10 @@ void TrackPanel::ExtendFreqSelection(int mouseYCoordinate, int trackTopEdge,
    // started, and that is of a spectrogram display type.
 
    const WaveTrack* wt = mFreqSelTrack;
-   const bool logF =
-      wt->GetSpectrogramSettings().scaleType == SpectrogramSettings::stLogarithmic;
    const double rate =  wt->GetRate();
    const double frequency =
       PositionToFrequency(wt, true, mouseYCoordinate,
-         trackTopEdge, trackHeight, logF);
+         trackTopEdge, trackHeight);
 
    // Dragging center?
    if (mFreqSelMode == FREQ_SEL_DRAG_CENTER) {
@@ -3527,8 +3515,7 @@ double TrackPanel::PositionToFrequency(const WaveTrack *wt,
                                        bool maySnap,
                                        wxInt64 mouseYCoordinate,
                                        wxInt64 trackTopEdge,
-                                       int trackHeight,
-                                       bool logF) const
+                                       int trackHeight) const
 {
    const double rate = wt->GetRate();
 
@@ -3540,57 +3527,23 @@ double TrackPanel::PositionToFrequency(const WaveTrack *wt,
        trackTopEdge + trackHeight - mouseYCoordinate < FREQ_SNAP_DISTANCE)
       return -1;
 
+   const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
+   const NumberScale numberScale(settings.GetScale(rate, false, false));
    const double p = double(mouseYCoordinate - trackTopEdge) / trackHeight;
-
-   if (logF)
-   {
-      const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
-      const double maxFreq = settings.GetLogMaxFreq(rate);
-      const double minFreq = settings.GetLogMinFreq(rate);
-      return exp(p * log(minFreq) + (1.0 - p) * log(maxFreq));
-   } 
-   else
-   {
-      const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
-      const double maxFreq = settings.GetMaxFreq(rate);
-      const double minFreq = settings.GetMinFreq(rate);
-      return p * minFreq + (1.0 - p) * maxFreq;
-   }
+   return numberScale.PositionToValue(1.0 - p);
 }
 
 /// Converts a frequency to screen y position.
 wxInt64 TrackPanel::FrequencyToPosition(const WaveTrack *wt,
                                         double frequency,
                                         wxInt64 trackTopEdge,
-                                        int trackHeight,
-                                        bool logF) const
+                                        int trackHeight) const
 {
    const double rate = wt->GetRate();
-   double p = 0;
 
-   if (logF)
-   {
-      const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
-      const double maxFreq = settings.GetLogMaxFreq(rate);
-      const double minFreq = settings.GetLogMinFreq(rate);
-      if (maxFreq > minFreq)
-      {
-         const double
-            logFrequency = log(frequency < 1.0 ? 1.0 : frequency),
-            logMinFreq = log(minFreq),
-            logMaxFreq = log(maxFreq);
-          p = (logFrequency - logMinFreq) / (logMaxFreq - logMinFreq);
-      }
-   }
-   else
-   {
-      const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
-      const double maxFreq = settings.GetMaxFreq(rate);
-      const double minFreq = settings.GetMinFreq(rate);
-      if (maxFreq > minFreq)
-         p = (frequency - minFreq) / (maxFreq - minFreq);
-   }
-
+   const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
+   const NumberScale numberScale(settings.GetScale(rate, false, false));
+   const float p = numberScale.ValueToPosition(frequency);
    return trackTopEdge + wxInt64((1.0 - p) * trackHeight);
 }
 #endif
@@ -3671,18 +3624,17 @@ bool mayDragWidth, bool onlyWithinSnapDistance,
    bool chooseTime = true;
    bool chooseBottom = true;
    bool chooseCenter = false;
-   bool logF;
    // Consider adjustment of frequencies only if mouse is
    // within the time boundaries
    if (!mViewInfo->selectedRegion.isPoint() &&
        t0 <= selend && selend < t1 &&
-       isSpectralSelectionTrack(pTrack, &logF)) {
+       isSpectralSelectionTrack(pTrack)) {
       const WaveTrack *const wt = static_cast<const WaveTrack*>(pTrack);
       const wxInt64 bottomSel = (f0 >= 0)
-         ? FrequencyToPosition(wt, f0, rect.y, rect.height, logF)
+         ? FrequencyToPosition(wt, f0, rect.y, rect.height)
          : rect.y + rect.height;
       const wxInt64 topSel = (f1 >= 0)
-         ? FrequencyToPosition(wt, f1, rect.y, rect.height, logF)
+         ? FrequencyToPosition(wt, f1, rect.y, rect.height)
          : rect.y;
       wxInt64 signedBottomDist = int(event.m_y - bottomSel);
       wxInt64 verticalDist = abs(signedBottomDist);
@@ -3700,7 +3652,7 @@ bool mayDragWidth, bool onlyWithinSnapDistance,
 #endif
          ) {
          const wxInt64 centerSel =
-            FrequencyToPosition(wt, fc, rect.y, rect.height, logF);
+            FrequencyToPosition(wt, fc, rect.y, rect.height);
          const wxInt64 centerDist = abs(int(event.m_y - centerSel));
          if (centerDist < verticalDist)
             chooseCenter = true, verticalDist = centerDist,
@@ -4641,7 +4593,6 @@ void TrackPanel::HandleVZoomDrag( wxMouseEvent & event )
 ///   - Zoom in; ensure we don't go too large.
 void TrackPanel::HandleVZoomButtonUp( wxMouseEvent & event )
 {
-   int minBins = 0;
    if (!mCapturedTrack)
       return;
 
@@ -4671,6 +4622,7 @@ void TrackPanel::HandleVZoomButtonUp( wxMouseEvent & event )
    // don't do anything if track is not wave
    if (mCapturedTrack->GetKind() != Track::Wave)
       return;
+
    WaveTrack *track = static_cast<WaveTrack*>(mCapturedTrack);
    WaveTrack *partner = static_cast<WaveTrack *>(mTracks->GetLink(track));
    int height = track->GetHeight();
@@ -4683,223 +4635,173 @@ void TrackPanel::HandleVZoomButtonUp( wxMouseEvent & event )
       mZoomStart = temp;
    }
 
-   float min, max, c, l, binSize = 0.0;
+   float min, max, c, l, minBand = 0;
    const double rate = track->GetRate();
+   const float halfrate = rate / 2;
+   const SpectrogramSettings &settings = track->GetSpectrogramSettings();
+   NumberScale scale(track->GetSpectrogramSettings().GetScale(rate, false, false));
    const bool spectral = (track->GetDisplay() == WaveTrack::Spectrum);
    const bool spectrumLinear = spectral &&
       (track->GetSpectrogramSettings().scaleType == SpectrogramSettings::stLinear);
-   const bool spectrumLog = spectral &&
-      (track->GetSpectrogramSettings().scaleType == SpectrogramSettings::stLogarithmic);
-   if (spectrumLinear) {
-      const SpectrogramSettings &settings = track->GetSpectrogramSettings();
-      min = settings.GetMinFreq(rate);
-      max = settings.GetMaxFreq(rate);
+
+   if (spectral) {
+      if (spectrumLinear) {
+         min = settings.GetMinFreq(rate);
+         max = settings.GetMaxFreq(rate);
+      }
+      else {
+         min = settings.GetLogMinFreq(rate);
+         max = settings.GetLogMaxFreq(rate);
+      }
       const int fftLength = settings.GetFFTLength(false);
-      binSize = rate / fftLength;
-      minBins = std::min(10, fftLength / 2); //minimum 10 freq bins, unless there are less
-   }
-   else if (spectrumLog) {
-      const SpectrogramSettings &settings = track->GetSpectrogramSettings();
-      min = settings.GetLogMinFreq(rate);
-      max = settings.GetLogMaxFreq(rate);
-      const int fftLength = settings.GetFFTLength(false);
-      binSize = rate / fftLength;
-      minBins = std::min(10, fftLength / 2); //minimum 10 freq bins, unless there are less
+      const float binSize = rate / fftLength;
+      const int minBins =
+         std::min(10, fftLength / 2); //minimum 10 freq bins, unless there are less
+      minBand = minBins * binSize;
    }
    else
       track->GetDisplayBounds(&min, &max);
+
    if (IsDragZooming()) {
       // Drag Zoom
-      float p1, p2, tmin, tmax;
-      tmin=min;
-      tmax=max;
+      const float tmin = min, tmax = max;
 
-      if(spectrumLog) {
-         double xmin = 1-(mZoomEnd - ypos) / (float)height;
-         double xmax = 1-(mZoomStart - ypos) / (float)height;
-         double lmin=log10(tmin), lmax=log10(tmax);
-         double d=lmax-lmin;
-         min=std::max(1.0, pow(10, xmin*d+lmin));
-         max=std::min(rate/2.0, pow(10, xmax*d+lmin));
-         // Enforce vertical zoom limits
-         // done in the linear freq domain for now, but not too far out
-         if(max < min + minBins * binSize)
-            max = min + minBins * binSize;
-         if(max > rate/2.) {
-            max = rate/2.;
-            min = max - minBins * binSize;
-         }
+      if (spectral) {
+         double xmin = 1 - (mZoomEnd - ypos) / (float)height;
+         double xmax = 1 - (mZoomStart - ypos) / (float)height;
+         const float middle = (xmin + xmax) / 2;
+         const float middleValue = scale.PositionToValue(middle);
+
+         min = std::max(spectrumLinear ? 0.0f : 1.0f,
+            std::min(middleValue - minBand / 2,
+               scale.PositionToValue(xmin)
+         ));
+         max = std::min(halfrate,
+            std::max(middleValue + minBand / 2,
+               scale.PositionToValue(xmax)
+         ));
       }
       else {
-         p1 = (mZoomStart - ypos) / (float)height;
-         p2 = (mZoomEnd - ypos) / (float)height;
+         const float p1 = (mZoomStart - ypos) / (float)height;
+         const float p2 = (mZoomEnd - ypos) / (float)height;
          max = (tmax * (1.0-p1) + tmin * p1);
          min = (tmax * (1.0-p2) + tmin * p2);
 
-         // Enforce vertical zoom limits
-         if(spectrumLinear) {
-            if(min < 0.)
-               min = 0.;
-            if(max < min + minBins * binSize)
-               max = min + minBins * binSize;
-            if(max > rate/2.) {
-               max = rate/2.;
-               min = max - minBins * binSize;
-            }
-         }
-         else {
-            // Waveform view - allow zooming down to a range of ZOOMLIMIT
-            if (max - min < ZOOMLIMIT) {     // if user attempts to go smaller...
-               c = (min+max)/2;           // ...set centre of view to centre of dragged area and top/bottom to ZOOMLIMIT/2 above/below
-               min = c - ZOOMLIMIT/2.0;
-               max = c + ZOOMLIMIT/2.0;
-            }
+         // Waveform view - allow zooming down to a range of ZOOMLIMIT
+         if (max - min < ZOOMLIMIT) {     // if user attempts to go smaller...
+            c = (min+max)/2;           // ...set centre of view to centre of dragged area and top/bottom to ZOOMLIMIT/2 above/below
+            min = c - ZOOMLIMIT/2.0;
+            max = c + ZOOMLIMIT/2.0;
          }
       }
    }
    else if (event.ShiftDown() || event.RightUp()) {
       // Zoom OUT
-      // Zoom out to -1.0...1.0 first, then, and only
-      // then, if they click again, allow one more
-      // zoom out.
-      if (spectrumLinear) {
+      if (spectral) {
          if (event.ShiftDown() && event.RightUp()) {
             // Zoom out full
-            min = 0.0;
-            max = rate/2.;
+            min = spectrumLinear ? 0.0f : 1.0f;
+            max = halfrate;
          }
          else {
             // Zoom out
-            c = 0.5*(min+max);
-            l = (c - min);
-            if(c - 2*l <= 0) {
-               min = 0.0;
-               max = std::min( rate/2., 2. * max);
-            }
-            else {
-               min = std::max( 0.0f, c - 2*l);
-               max = std::min( float(rate)/2, c + 2*l);
-            }
+
+            // (Used to zoom out centered at midline, ignoring the click, if linear view.
+            //  I think it is better to be consistent.  PRL)
+            // Center zoom-out at the midline
+            const float middle = // spectrumLinear ? 0.5f :
+               1.0f - (mZoomStart - ypos) / (float)height;
+
+            min = std::max(spectrumLinear ? 0.0f : 1.0f, scale.PositionToValue(middle - 1.0f));
+            max = std::min(halfrate, scale.PositionToValue(middle + 1.0f));
          }
       }
       else {
-         if(spectrumLog) {
-            if (event.ShiftDown() && event.RightUp()) {
-                // Zoom out full
-                min = 1.0;
-                max = rate/2.;
-            }
-            else {
-               // Zoom out
-               float p1;
-               p1 = (mZoomStart - ypos) / (float)height;
-               c = 1.0-p1;
-               double xmin = c - 1.;
-               double xmax = c + 1.;
-               double lmin = log10(min), lmax = log10(max);
-               double d = lmax-lmin;
-               min = std::max(1.0f,float(pow(10, xmin*d+lmin)));
-               max = std::min(rate/2., pow(10, xmax*d+lmin));
-            }
+         // Zoom out to -1.0...1.0 first, then, and only
+         // then, if they click again, allow one more
+         // zoom out.
+         if (event.ShiftDown() && event.RightUp()) {
+            // Zoom out full
+            min = -1.0;
+            max = 1.0;
          }
          else {
-            if (event.ShiftDown() && event.RightUp()) {
-               // Zoom out full
-               min = -1.0;
-               max = 1.0;
+            // Zoom out
+            if (min <= -1.0 && max >= 1.0) {
+               min = -2.0;
+               max = 2.0;
             }
             else {
-               // Zoom out
-               if (min <= -1.0 && max >= 1.0) {
-                  min = -2.0;
-                  max = 2.0;
-               }
-               else {
-                  c = 0.5*(min+max);
-                  l = (c - min);
-                  // limit to +/- 1 range unless already outside that range...
-                  float minRange = (min < -1) ? -2.0 : -1.0;
-                  float maxRange = (max > 1) ? 2.0 : 1.0;
-                  // and enforce vertical zoom limits.
-                  min = std::min(maxRange - ZOOMLIMIT, std::max(minRange, c - 2*l));
-                  max = std::max(minRange + ZOOMLIMIT, std::min(maxRange, c + 2*l));
-               }
+               c = 0.5*(min + max);
+               l = (c - min);
+               // limit to +/- 1 range unless already outside that range...
+               float minRange = (min < -1) ? -2.0 : -1.0;
+               float maxRange = (max > 1) ? 2.0 : 1.0;
+               // and enforce vertical zoom limits.
+               min = std::min(maxRange - ZOOMLIMIT, std::max(minRange, c - 2 * l));
+               max = std::max(minRange + ZOOMLIMIT, std::min(maxRange, c + 2 * l));
             }
          }
       }
    }
    else {
       // Zoom IN
-      float p1;
-      if (spectrumLinear) {
-         c = 0.5*(min+max);
-         // Enforce maximum vertical zoom
-         l = std::max( minBins * binSize, (c - min));
+      if (spectral) {
+         // Center the zoom-in at the click
+         const float middle = 1.0f - (mZoomStart - ypos) / (float)height;
+         const float middleValue = scale.PositionToValue(middle);
 
-         p1 = (mZoomStart - ypos) / (float)height;
-         c = (max * (1.0-p1) + min * p1);
-         min = std::max( 0.0, c - 0.5*l);
-         max = std::min( float(rate)/2, min + l);
+         min = std::max(spectrumLinear ? 0.0f : 1.0f,
+            std::min(middleValue - minBand / 2,
+               scale.PositionToValue(middle - 0.25f)
+         ));
+         max = std::min(halfrate,
+            std::max(middleValue + minBand / 2,
+               scale.PositionToValue(middle + 0.25f)
+         ));
       }
       else {
-         if(spectrumLog) {
-            p1 = (mZoomStart - ypos) / (float)height;
-            c = 1.0-p1;
-            double xmin = c - 0.25;
-            double xmax = c + 0.25;
-            double lmin = log10(min), lmax = log10(max);
-            double d = lmax-lmin;
-            min = std::max(1.0f, float(pow(10, xmin*d+lmin)));
-            max = std::min(rate/2., pow(10, xmax*d+lmin));
-            // Enforce vertical zoom limits
-            // done in the linear freq domain for now, but not too far out
-            if(max < min + minBins * binSize)
-               max = min + minBins * binSize;
-            if(max > rate/2.) {
-               max = rate/2.;
-               min = max - minBins * binSize;
-            }
+         // Zoom in centered on cursor
+         float p1;
+         if (min < -1.0 || max > 1.0) {
+            min = -1.0;
+            max = 1.0;
          }
          else {
-            // Zoom in centered on cursor
-            if (min < -1.0 || max > 1.0) {
-               min = -1.0;
-               max = 1.0;
-            }
-            else {
-               c = 0.5*(min+max);
-               // Enforce maximum vertical zoom
-               l = std::max( ZOOMLIMIT, (c - min));
+            c = 0.5*(min + max);
+            // Enforce maximum vertical zoom
+            l = std::max(ZOOMLIMIT, (c - min));
 
-               p1 = (mZoomStart - ypos) / (float)height;
-               c = (max * (1.0-p1) + min * p1);
-               min = c - 0.5*l;
-               max = c + 0.5*l;
-            }
+            p1 = (mZoomStart - ypos) / (float)height;
+            c = (max * (1.0 - p1) + min * p1);
+            min = c - 0.5*l;
+            max = c + 0.5*l;
          }
       }
    }
 
-   if (spectrumLinear) {
-      SpectrogramSettings &settings = track->GetSpectrogramSettings();
-      settings.SetMinFreq(min);
-      settings.SetMaxFreq(max);
-      if (partner) {
-         // To do:  share memory with reference counting?
-         SpectrogramSettings &settings = partner->GetSpectrogramSettings();
+   if (spectral) {
+      if (spectrumLinear) {
+         SpectrogramSettings &settings = track->GetSpectrogramSettings();
          settings.SetMinFreq(min);
          settings.SetMaxFreq(max);
+         if (partner) {
+            // To do:  share memory with reference counting?
+            SpectrogramSettings &settings = partner->GetSpectrogramSettings();
+            settings.SetMinFreq(min);
+            settings.SetMaxFreq(max);
+         }
       }
-   }
-   else if(spectrumLog) {
-      SpectrogramSettings &settings = track->GetSpectrogramSettings();
-      settings.SetLogMinFreq(min);
-      settings.SetLogMaxFreq(max);
-      if (partner) {
-         // To do:  share memory with reference counting?
-         SpectrogramSettings &settings = partner->GetSpectrogramSettings();
+      else {
+         SpectrogramSettings &settings = track->GetSpectrogramSettings();
          settings.SetLogMinFreq(min);
          settings.SetLogMaxFreq(max);
+         if (partner) {
+            // To do:  share memory with reference counting?
+            SpectrogramSettings &settings = partner->GetSpectrogramSettings();
+            settings.SetLogMinFreq(min);
+            settings.SetLogMaxFreq(max);
+         }
       }
    }
    else {
