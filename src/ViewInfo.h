@@ -17,6 +17,11 @@
 
 class Track;
 
+#ifdef __GNUC__
+#define CONST
+#else
+#define CONST const
+#endif
 
 // The subset of ViewInfo information (other than selection)
 // that is sufficient for purposes of TrackArtist,
@@ -85,7 +90,7 @@ public:
    void ZoomBy(double multiplier);
 
    struct Interval {
-      const wxInt64 position; const double averageZoom; const bool inFisheye;
+      CONST wxInt64 position; CONST double averageZoom; CONST bool inFisheye;
       Interval(wxInt64 p, double z, bool i)
          : position(p), averageZoom(z), inFisheye(i) {}
    };

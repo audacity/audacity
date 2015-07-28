@@ -92,6 +92,9 @@ It handles initialization and termination by subclassing wxApp.
 #include "ondemand/ODManager.h"
 #include "commands/Keyboard.h"
 #include "widgets/ErrorDialog.h"
+#include "prefs/DirectoriesPrefs.h"
+#include "prefs/SpectrogramSettings.h"
+#include "prefs/WaveformSettings.h"
 
 //temporarilly commented out till it is added to all projects
 //#include "Profiler.h"
@@ -1010,7 +1013,12 @@ void AudacityApp::InitLang( const wxString & lang )
    //
    // This must go _after_ creating the wxLocale instance because
    // creating the wxLocale instance sets the application-wide locale.
+
    Internat::Init();
+
+   // Some static arrays unconnected with any project want to be informed of language changes.
+   SpectrogramSettings::InvalidateNames();
+   WaveformSettings::InvalidateNames();
 }
 
 void AudacityApp::OnFatalException()
@@ -1605,8 +1613,11 @@ bool AudacityApp::InitTempDir()
       // Failed
       wxMessageBox(_("Audacity could not find a place to store temporary files.\nPlease enter an appropriate directory in the preferences dialog."));
 
-      PrefsDialog dialog(NULL);
-      dialog.ShowTempDirPage();
+      // Only want one page of the preferences
+      DirectoriesPrefsFactory directoriesPrefsFactory;
+      PrefsDialog::Factories factories;
+      factories.push_back(&directoriesPrefsFactory);
+      GlobalPrefsDialog dialog(NULL, factories);
       dialog.ShowModal();
 
       wxMessageBox(_("Audacity is now going to exit. Please launch Audacity again to use the new temporary directory."));
@@ -2132,7 +2143,7 @@ void AudacityApp::OnMenuPreferences(wxCommandEvent & event)
    // all platforms.
 
    if(gAudacityProjects.GetCount() == 0) {
-      PrefsDialog dialog(NULL /* parent */ );
+      GlobalPrefsDialog dialog(NULL /* parent */ );
       dialog.ShowModal();
    }
    else

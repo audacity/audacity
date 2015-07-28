@@ -54,4 +54,10 @@ class DevicePrefs :public PrefsPanel
    DECLARE_EVENT_TABLE();
 };
 
+class DevicePrefsFactory : public PrefsPanelFactory
+{
+public:
+   virtual PrefsPanel *Create(wxWindow *parent);
+};
+
 #endif

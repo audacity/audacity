@@ -41,4 +41,9 @@ class ThemePrefs :public PrefsPanel
    DECLARE_EVENT_TABLE();
 };
 
+class ThemePrefsFactory : public PrefsPanelFactory
+{
+public:
+   virtual PrefsPanel *Create(wxWindow *parent);
+};
 #endif

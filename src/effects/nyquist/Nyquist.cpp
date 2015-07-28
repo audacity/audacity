@@ -45,6 +45,7 @@ effects from this one class.
 #include "../../FileNames.h"
 #include "../../Internat.h"
 #include "../../LabelTrack.h"
+#include "../../prefs/SpectrogramSettings.h"
 #include "../../Project.h"
 #include "../../ShuttleGui.h"
 #include "../../WaveClip.h"
@@ -539,34 +540,6 @@ bool NyquistEffect::Process()
                                  Internat::ToString(mT1).c_str());
       mProps += wxString::Format(wxT("(putprop '*SELECTION* (list %s) 'TRACKS)\n"), waveTrackList.c_str());
       mProps += wxString::Format(wxT("(putprop '*SELECTION* %d 'CHANNELS)\n"), numChannels);
-
-      wxString lowHz = wxT("nil");
-      wxString highHz = wxT("nil");
-      wxString centerHz = wxT("nil");
-      wxString bandwidth = wxT("nil");
-
-#if defined(EXPERIMENTAL_SPECTRAL_EDITING)
-      if (mF0 >= 0.0) {
-         lowHz.Printf(wxT("(float %s)"), Internat::ToString(mF0).c_str());
-      }
-
-      if (mF1 >= 0.0) {
-         highHz.Printf(wxT("(float %s)"), Internat::ToString(mF1).c_str());
-      }
-
-      if ((mF0 >= 0.0) && (mF1 >= 0.0)) {
-         centerHz.Printf(wxT("(float %s)"), Internat::ToString(sqrt(mF0 * mF1)).c_str());
-      }
-
-      if ((mF0 > 0.0) && (mF1 >= mF0)) {
-         bandwidth.Printf(wxT("(float %s)"), Internat::ToString(log(mF1 / mF0)/log(2.0)).c_str());
-      }
-
-#endif
-      mProps += wxString::Format(wxT("(putprop '*SELECTION* %s 'LOW-HZ)\n"), lowHz.c_str());
-      mProps += wxString::Format(wxT("(putprop '*SELECTION* %s 'CENTER-HZ)\n"), centerHz.c_str());
-      mProps += wxString::Format(wxT("(putprop '*SELECTION* %s 'HIGH-HZ)\n"), highHz.c_str());
-      mProps += wxString::Format(wxT("(putprop '*SELECTION* %s 'BANDWIDTH)\n"), bandwidth.c_str());
    }
 
    // Keep track of whether the current track is first selected in its sync-lock group
@@ -620,6 +593,45 @@ bool NyquistEffect::Process()
          nyx_init();
          nyx_set_os_callback(StaticOSCallback, (void *)this);
          nyx_capture_output(StaticOutputCallback, (void *)this);
+
+         if (mVersion >= 4)
+         {
+            mPerTrackProps = wxEmptyString;
+            wxString lowHz = wxT("nil");
+            wxString highHz = wxT("nil");
+            wxString centerHz = wxT("nil");
+            wxString bandwidth = wxT("nil");
+
+            const WaveTrack::WaveTrackDisplay display = mCurTrack[0]->GetDisplay();
+            const bool bAllowSpectralEditing =
+               (display == WaveTrack::Spectrum) &&
+               mCurTrack[0]->GetSpectrogramSettings().SpectralSelectionEnabled();
+
+            if (bAllowSpectralEditing) {
+#if defined(EXPERIMENTAL_SPECTRAL_EDITING)
+               if (mF0 >= 0.0) {
+                  lowHz.Printf(wxT("(float %s)"), Internat::ToString(mF0).c_str());
+               }
+
+               if (mF1 >= 0.0) {
+                  highHz.Printf(wxT("(float %s)"), Internat::ToString(mF1).c_str());
+               }
+
+               if ((mF0 >= 0.0) && (mF1 >= 0.0)) {
+                  centerHz.Printf(wxT("(float %s)"), Internat::ToString(sqrt(mF0 * mF1)).c_str());
+               }
+
+               if ((mF0 > 0.0) && (mF1 >= mF0)) {
+                  bandwidth.Printf(wxT("(float %s)"), Internat::ToString(log(mF1 / mF0) / log(2.0)).c_str());
+               }
+            }
+
+#endif
+            mPerTrackProps += wxString::Format(wxT("(putprop '*SELECTION* %s 'LOW-HZ)\n"), lowHz.c_str());
+            mPerTrackProps += wxString::Format(wxT("(putprop '*SELECTION* %s 'CENTER-HZ)\n"), centerHz.c_str());
+            mPerTrackProps += wxString::Format(wxT("(putprop '*SELECTION* %s 'HIGH-HZ)\n"), highHz.c_str());
+            mPerTrackProps += wxString::Format(wxT("(putprop '*SELECTION* %s 'BANDWIDTH)\n"), bandwidth.c_str());
+         }
 
          success = ProcessOne();
 
@@ -765,6 +777,7 @@ bool NyquistEffect::ProcessOne()
 
    if (mVersion >= 4) {
       cmd += mProps;
+      cmd += mPerTrackProps;
 
       // Set the track TYPE and VIEW properties
       wxString type;
@@ -776,13 +789,8 @@ bool NyquistEffect::ProcessOne()
             type = wxT("wave");
             switch (((WaveTrack *) mCurTrack[0])->GetDisplay())
             {
-               case WaveTrack::WaveformDisplay: view = wxT("\"Waveform\""); break;
-               case WaveTrack::WaveformDBDisplay: view = wxT("\"Waveform (dB)\""); break;
-               case WaveTrack::SpectrumDisplay: view = wxT("\"Spectrogram\""); break;
-               case WaveTrack::SpectrumLogDisplay: view = wxT("\"Spectrogram log(f)\""); break;
-               case WaveTrack::SpectralSelectionDisplay: view = wxT("\"Spectral Selection\""); break;
-               case WaveTrack::SpectralSelectionLogDisplay: view = wxT("\"Spectral Selection log(f)\""); break;
-               case WaveTrack::PitchDisplay: view = wxT("\"Pitch (EAC)\""); break;
+               case WaveTrack::Waveform: view = wxT("\"Waveform\""); break;
+               case WaveTrack::Spectrum: view = wxT("\"Spectrum\""); break;
                default: view = wxT("NIL"); break;
             }
          break;

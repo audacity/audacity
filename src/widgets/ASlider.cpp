@@ -292,7 +292,7 @@ bool SliderDialog::TransferDataFromWindow()
 
    mTextCtrl->GetValue().ToDouble(&value);
    if (mStyle == DB_SLIDER)
-      value = pow(10.0, value / 20.0);
+      value = DB_TO_LINEAR(value);
    mSlider->Set(value);
 
    return true;
@@ -1330,7 +1330,7 @@ float LWSlider::DragPositionToValue(int fromPos, bool shiftDown)
 float LWSlider::Get( bool convert )
 {
    if (mStyle == DB_SLIDER)
-      return ( convert ? pow(10.0f, mCurrentValue / 20.0f) : mCurrentValue );
+      return (convert ? DB_TO_LINEAR(mCurrentValue) : mCurrentValue);
    else
       return mCurrentValue;
 }
@@ -1340,7 +1340,7 @@ void LWSlider::Set(float value)
    if (mIsDragging)
       return;
    if (mStyle == DB_SLIDER)
-      mCurrentValue = 20.0f*log10(value);
+      mCurrentValue = LINEAR_TO_DB(value);
    else
       mCurrentValue = value;
 

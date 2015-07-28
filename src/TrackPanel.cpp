@@ -201,6 +201,7 @@ is time to refresh some aspect of the screen.
 #include "MixerBoard.h"
 
 #include "NoteTrack.h"
+#include "NumberScale.h"
 #include "Prefs.h"
 #include "Project.h"
 #include "Snap.h"
@@ -217,7 +218,9 @@ is time to refresh some aspect of the screen.
 
 #include "ondemand/ODManager.h"
 
+#include "prefs/PrefsDialog.h"
 #include "prefs/SpectrumPrefs.h"
+#include "prefs/WaveformPrefs.h"
 
 #include "toolbars/ControlToolBar.h"
 #include "toolbars/ToolManager.h"
@@ -230,7 +233,7 @@ is time to refresh some aspect of the screen.
 
 #include <wx/arrimpl.cpp>
 
-#define ZOOMLIMIT 0.001
+#define ZOOMLIMIT 0.001f
 
 WX_DEFINE_OBJARRAY(TrackClipArray);
 
@@ -324,12 +327,8 @@ enum {
    OnFloatID,              // <---
 
    OnWaveformID,
-   OnWaveformDBID,
    OnSpectrumID,
-   OnSpectrumLogID,
-   OnSpectralSelID,
-   OnSpectralSelLogID,
-   OnPitchID,
+   OnViewSettingsID,
 
    OnSplitStereoID,
    OnSplitStereoMonoID,
@@ -345,6 +344,18 @@ enum {
    OnTimeTrackLinID,
    OnTimeTrackLogID,
    OnTimeTrackLogIntID,
+
+   // Reserve an ample block of ids for waveform scale types
+   OnFirstWaveformScaleID,
+   OnLastWaveformScaleID = OnFirstWaveformScaleID + 9,
+
+   // Reserve an ample block of ids for spectrum scale types
+   OnFirstSpectrumScaleID,
+   OnLastSpectrumScaleID = OnFirstSpectrumScaleID + 19,
+
+   OnZoomInVerticalID,
+   OnZoomOutVerticalID,
+   OnZoomFitVerticalID,
 };
 
 BEGIN_EVENT_TABLE(TrackPanel, wxWindow)
@@ -368,7 +379,8 @@ BEGIN_EVENT_TABLE(TrackPanel, wxWindow)
     EVT_MENU_RANGE(OnUpOctaveID, OnDownOctaveID, TrackPanel::OnChangeOctave)
     EVT_MENU_RANGE(OnChannelLeftID, OnChannelMonoID,
                TrackPanel::OnChannelChange)
-    EVT_MENU_RANGE(OnWaveformID, OnPitchID, TrackPanel::OnSetDisplay)
+    EVT_MENU_RANGE(OnWaveformID, OnSpectrumID, TrackPanel::OnSetDisplay)
+    EVT_MENU(OnViewSettingsID, TrackPanel::OnViewSettings)
     EVT_MENU_RANGE(OnRate8ID, OnRate384ID, TrackPanel::OnRateChange)
     EVT_MENU_RANGE(On16BitID, OnFloatID, TrackPanel::OnFormatChange)
     EVT_MENU(OnRateOtherID, TrackPanel::OnRateOther)
@@ -385,6 +397,13 @@ BEGIN_EVENT_TABLE(TrackPanel, wxWindow)
     EVT_MENU(OnTimeTrackLinID, TrackPanel::OnTimeTrackLin)
     EVT_MENU(OnTimeTrackLogID, TrackPanel::OnTimeTrackLog)
     EVT_MENU(OnTimeTrackLogIntID, TrackPanel::OnTimeTrackLogInt)
+
+    EVT_MENU_RANGE(OnFirstWaveformScaleID, OnLastWaveformScaleID, TrackPanel::OnWaveformScaleType)
+    EVT_MENU_RANGE(OnFirstSpectrumScaleID, OnLastSpectrumScaleID, TrackPanel::OnSpectrumScaleType)
+
+    EVT_MENU(OnZoomInVerticalID, TrackPanel::OnZoomInVertical)
+    EVT_MENU(OnZoomOutVerticalID, TrackPanel::OnZoomOutVertical)
+    EVT_MENU(OnZoomFitVerticalID, TrackPanel::OnZoomFitVertical)
 END_EVENT_TABLE()
 
 /// Makes a cursor from an XPM, uses CursorId as a fallback.
@@ -551,6 +570,8 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    mLabelTrackMenu = NULL;
    mLabelTrackInfoMenu = NULL;
    mTimeTrackMenu = NULL;
+
+   mRulerWaveformMenu = mRulerSpectrumMenu = NULL;
 
    BuildMenus();
 
@@ -722,18 +743,11 @@ void TrackPanel::BuildMenus(void)
    /* build the pop-down menu used on wave (sampled audio) tracks */
    mWaveTrackMenu = new wxMenu();
    BuildCommonDropMenuItems(mWaveTrackMenu);   // does name, up/down etc
-   mWaveTrackMenu->Append(OnWaveformID, _("Wa&veform"));
-   mWaveTrackMenu->Append(OnWaveformDBID, _("&Waveform (dB)"));
-   mWaveTrackMenu->Append(OnSpectrumID, _("&Spectrogram"));
-   /* i18n-hint: short form of 'logarithm'*/
-   mWaveTrackMenu->Append(OnSpectrumLogID, _("Spectrogram l&og(f)"));
-   /* i18n-hint: Spectral Selection is spectrogram with ability to select frequencies too'*/
-   mWaveTrackMenu->Append(OnSpectralSelID, _("S&pectral Selection"));
-   /* i18n-hint: short form of 'logarithm'*/
-   mWaveTrackMenu->Append(OnSpectralSelLogID, _("Spectral Selection lo&g(f)"));
-
-   mWaveTrackMenu->Append(OnPitchID, _("Pitc&h (EAC)"));
+   mWaveTrackMenu->AppendRadioItem(OnWaveformID, _("&Waveform"));
+   mWaveTrackMenu->AppendRadioItem(OnSpectrumID, _("&Spectrum"));
+   mWaveTrackMenu->Append(OnViewSettingsID, _("&View Settings..."));
    mWaveTrackMenu->AppendSeparator();
+
    mWaveTrackMenu->AppendRadioItem(OnChannelMonoID, _("&Mono"));
    mWaveTrackMenu->AppendRadioItem(OnChannelLeftID, _("&Left Channel"));
    mWaveTrackMenu->AppendRadioItem(OnChannelRightID, _("&Right Channel"));
@@ -771,6 +785,16 @@ void TrackPanel::BuildMenus(void)
    mLabelTrackInfoMenu->Append(OnCopySelectedTextID, _("&Copy"));
    mLabelTrackInfoMenu->Append(OnPasteSelectedTextID, _("&Paste"));
    mLabelTrackInfoMenu->Append(OnDeleteSelectedLabelID, _("&Delete Label"));
+
+   mRulerWaveformMenu = new wxMenu();
+   BuildVRulerMenuItems
+      (mRulerWaveformMenu, OnFirstWaveformScaleID,
+       WaveformSettings::GetScaleNames());
+
+   mRulerSpectrumMenu = new wxMenu();
+   BuildVRulerMenuItems
+      (mRulerSpectrumMenu, OnFirstSpectrumScaleID,
+       SpectrogramSettings::GetScaleNames());
 }
 
 void TrackPanel::BuildCommonDropMenuItems(wxMenu * menu)
@@ -783,6 +807,19 @@ void TrackPanel::BuildCommonDropMenuItems(wxMenu * menu)
    menu->Append(OnMoveBottomID, _("Move Track to &Bottom"));
    menu->AppendSeparator();
 
+}
+
+// static
+void TrackPanel::BuildVRulerMenuItems
+(wxMenu * menu, int firstId, const wxArrayString &names)
+{
+   int id = firstId;
+   for (int ii = 0, nn = names.size(); ii < nn; ++ii)
+      menu->AppendRadioItem(id++, names[ii]);
+   menu->AppendSeparator();
+   menu->Append(OnZoomInVerticalID, _("Zoom In\tLeft-Click/Left-Drag"));
+   menu->Append(OnZoomOutVerticalID, _("Zoom Out\tShift-Left-Click"));
+   menu->Append(OnZoomFitVerticalID, _("Zoom to Fit\tShift-Right-Click"));
 }
 
 void TrackPanel::DeleteMenus(void)
@@ -813,6 +850,9 @@ void TrackPanel::DeleteMenus(void)
       delete mTimeTrackMenu;
       mTimeTrackMenu = NULL;
    }
+
+   delete mRulerWaveformMenu;
+   delete mRulerSpectrumMenu;
 }
 
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
@@ -1730,9 +1770,7 @@ bool TrackPanel::SetCursorByActivity( )
 void TrackPanel::SetCursorAndTipWhenInLabel( Track * t,
          wxMouseEvent &event, const wxChar ** ppTip )
 {
-   if (event.m_x >= GetVRulerOffset() &&
-         (t->GetKind() == Track::Wave) &&
-         ( ((WaveTrack *) t)->GetDisplay() != WaveTrack::PitchDisplay) )
+   if (event.m_x >= GetVRulerOffset() && (t->GetKind() == Track::Wave) )
    {
       *ppTip = _("Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom region.");
       SetCursor(event.ShiftDown()? *mZoomOutCursor : *mZoomInCursor);
@@ -1807,20 +1845,15 @@ void TrackPanel::SetCursorAndTipWhenInLabelTrack( LabelTrack * pLT,
 namespace {
 
 // This returns true if we're a spectral editing track.
-inline bool isSpectrogramTrack(const Track *pTrack, bool *pLogf = NULL) {
+inline bool isSpectralSelectionTrack(const Track *pTrack) {
    if (pTrack &&
        pTrack->GetKind() == Track::Wave) {
-      const int display =
-         static_cast<const WaveTrack*>(pTrack)->GetDisplay();
-      const bool logF = (display == WaveTrack::SpectrumLogDisplay) || 
-         (display == WaveTrack::SpectralSelectionLogDisplay);
-      if (pLogf)
-         *pLogf = logF;
-      return (display == WaveTrack::SpectralSelectionLogDisplay) || (display == WaveTrack::SpectralSelectionDisplay);
+      const WaveTrack *const wt = static_cast<const WaveTrack*>(pTrack);
+      const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
+      const int display = wt->GetDisplay();
+      return (display == WaveTrack::Spectrum) && settings.SpectralSelectionEnabled();
    }
    else {
-      if (pLogf)
-         *pLogf = false;
       return false;
    }
 }
@@ -1944,9 +1977,8 @@ void TrackPanel::SetCursorAndTipWhenSelectTool( Track * t,
    const bool bShiftDown = event.ShiftDown();
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   bool logF;
    if ( (mFreqSelMode == FREQ_SEL_SNAPPING_CENTER) &&
-         isSpectrogramTrack(t, &logF) ) {
+      isSpectralSelectionTrack(t)) {
       // Not shift-down, but center frequency snapping toggle is on
       *ppTip = _("Click and drag to set frequency bandwidth.");
       *ppCursor = mEnvelopeCursor;
@@ -2682,9 +2714,8 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
       // preferences now
       if (mAdjustSelectionEdges) {
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
-         bool logF;
          if (mFreqSelMode == FREQ_SEL_SNAPPING_CENTER &&
-             isSpectrogramTrack(pTrack, &logF)) {
+            isSpectralSelectionTrack(pTrack)) {
             // Ignore whether we are inside the time selection.
             // Exit center-snapping, start dragging the width.
             mFreqSelMode = FREQ_SEL_PINNED_CENTER;
@@ -2992,10 +3023,10 @@ inline double findMaxRatio(double center, double rate)
 
 }
 
-void TrackPanel::SnapCenterOnce(WaveTrack *pTrack, bool up)
+void TrackPanel::SnapCenterOnce(const WaveTrack *pTrack, bool up)
 {
-   // Always spectrogram, never pitch view, pass true
-   const int windowSize = mTrackArtist->GetSpectrumWindowSize(true);
+   const SpectrogramSettings &settings = pTrack->GetSpectrogramSettings();
+   const int windowSize = settings.GetFFTLength();
    const double rate = pTrack->GetRate();
    const double nyq = rate / 2.0;
    const double binFrequency = rate / windowSize;
@@ -3032,7 +3063,7 @@ void TrackPanel::SnapCenterOnce(WaveTrack *pTrack, bool up)
       (snappedFrequency / ratio, snappedFrequency * ratio);
 }
 
-void TrackPanel::StartSnappingFreqSelection (WaveTrack *pTrack)
+void TrackPanel::StartSnappingFreqSelection (const WaveTrack *pTrack)
 {
    static const sampleCount minLength = 8;
 
@@ -3057,12 +3088,13 @@ void TrackPanel::StartSnappingFreqSelection (WaveTrack *pTrack)
    // Use same settings as are now used for spectrogram display,
    // except, shrink the window as needed so we get some answers
 
-   // Always spectrogram, never pitch view, pass true
-   int windowSize = mTrackArtist->GetSpectrumWindowSize(true);
+   const SpectrogramSettings &settings = pTrack->GetSpectrogramSettings();
+   int windowSize = settings.GetFFTLength();
 
    while(windowSize > effectiveLength)
       windowSize >>= 1;
-   const int windowType = SpectrogramSettings::defaults().windowType;
+   const int windowType = settings.windowType;
+
    mFrequencySnapper->Calculate(
       SpectrumAnalyst::Spectrum, windowType, windowSize, rate,
       &frequencySnappingData[0], length);
@@ -3074,10 +3106,9 @@ void TrackPanel::MoveSnappingFreqSelection (int mouseYCoordinate,
                                             int trackTopEdge,
                                             int trackHeight, Track *pTrack)
 {
-   bool logF;
    if (pTrack &&
        pTrack->GetSelected() &&
-       isSpectrogramTrack(pTrack, &logF)) {
+       isSpectralSelectionTrack(pTrack)) {
       WaveTrack *const wt = static_cast<WaveTrack*>(pTrack);
       // PRL:
       // What happens if center snapping selection began in one spectrogram track,
@@ -3087,8 +3118,8 @@ void TrackPanel::MoveSnappingFreqSelection (int mouseYCoordinate,
       // I am not worrying about that odd case.
       const double rate = wt->GetRate();
       const double frequency =
-         PositionToFrequency(false, mouseYCoordinate,
-         trackTopEdge, trackHeight, rate, logF);
+         PositionToFrequency(wt, false, mouseYCoordinate,
+         trackTopEdge, trackHeight);
       const double snappedFrequency =
          mFrequencySnapper->FindPeak(frequency, NULL);
       const double maxRatio = findMaxRatio(snappedFrequency, rate);
@@ -3120,17 +3151,14 @@ void TrackPanel::StartFreqSelection (int mouseYCoordinate, int trackTopEdge,
    mFreqSelMode = FREQ_SEL_INVALID;
    mFreqSelPin = SelectedRegion::UndefinedFrequency;
 
-   bool logF;
-   if (isSpectrogramTrack(pTrack, &logF)) {
+   if (isSpectralSelectionTrack(pTrack)) {
       mFreqSelTrack = static_cast<WaveTrack*>(pTrack);
       mFreqSelMode = FREQ_SEL_FREE;
-      const double rate = mFreqSelTrack->GetRate();
       mFreqSelPin =
-         PositionToFrequency(false, mouseYCoordinate,
-            trackTopEdge, trackHeight, rate, logF);
+         PositionToFrequency(mFreqSelTrack, false, mouseYCoordinate,
+                             trackTopEdge, trackHeight);
+      mViewInfo->selectedRegion.setFrequencies(mFreqSelPin, mFreqSelPin);
    }
-
-   mViewInfo->selectedRegion.setFrequencies(mFreqSelPin, mFreqSelPin);
 }
 
 void TrackPanel::ExtendFreqSelection(int mouseYCoordinate, int trackTopEdge,
@@ -3147,14 +3175,10 @@ void TrackPanel::ExtendFreqSelection(int mouseYCoordinate, int trackTopEdge,
    // started, and that is of a spectrogram display type.
 
    const WaveTrack* wt = mFreqSelTrack;
-   const int display = wt->GetDisplay();
-   const bool logF = (display == WaveTrack::SpectrumLogDisplay) ||
-      (display == WaveTrack::SpectralSelectionLogDisplay) 
-      ;
    const double rate =  wt->GetRate();
    const double frequency =
-      PositionToFrequency(true, mouseYCoordinate,
-         trackTopEdge, trackHeight, rate, logF);
+      PositionToFrequency(wt, true, mouseYCoordinate,
+         trackTopEdge, trackHeight);
 
    // Dragging center?
    if (mFreqSelMode == FREQ_SEL_DRAG_CENTER) {
@@ -3529,13 +3553,14 @@ enum { FREQ_SNAP_DISTANCE = 10 };
 
 /// Converts a position (mouse Y coordinate) to
 /// frequency, in Hz.
-double TrackPanel::PositionToFrequency(bool maySnap,
+double TrackPanel::PositionToFrequency(const WaveTrack *wt,
+                                       bool maySnap,
                                        wxInt64 mouseYCoordinate,
                                        wxInt64 trackTopEdge,
-                                       int trackHeight,
-                                       double rate,
-                                       bool logF) const
+                                       int trackHeight) const
 {
+   const double rate = wt->GetRate();
+
    // Handle snapping
    if (maySnap &&
        mouseYCoordinate - trackTopEdge < FREQ_SNAP_DISTANCE)
@@ -3544,62 +3569,23 @@ double TrackPanel::PositionToFrequency(bool maySnap,
        trackTopEdge + trackHeight - mouseYCoordinate < FREQ_SNAP_DISTANCE)
       return -1;
 
+   const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
+   const NumberScale numberScale(settings.GetScale(rate, false));
    const double p = double(mouseYCoordinate - trackTopEdge) / trackHeight;
-   const int freq = lrint(rate/2.);
-
-   if (logF)
-   {
-      const double maxFreq =
-         std::min(freq, mTrackArtist->GetSpectrumLogMaxFreq(freq));
-      const double minFreq =
-         std::max(1, mTrackArtist->GetSpectrumLogMinFreq(1));
-      return exp(p * log(minFreq) + (1.0 - p) * log(maxFreq));
-   } 
-   else
-   {
-      const double maxFreq =
-         std::min(freq, mTrackArtist->GetSpectrumMaxFreq(freq));
-      const double minFreq =
-         std::max(0, mTrackArtist->GetSpectrumMinFreq(0));
-      return p * minFreq + (1.0 - p) * maxFreq;
-   }
+   return numberScale.PositionToValue(1.0 - p);
 }
 
 /// Converts a frequency to screen y position.
-wxInt64 TrackPanel::FrequencyToPosition(double frequency,
+wxInt64 TrackPanel::FrequencyToPosition(const WaveTrack *wt,
+                                        double frequency,
                                         wxInt64 trackTopEdge,
-                                        int trackHeight,
-                                        double rate,
-                                        bool logF) const
+                                        int trackHeight) const
 {
-   const int freq = lrint(rate/2.);
-   double p = 0;
+   const double rate = wt->GetRate();
 
-   if (logF)
-   {
-      const double maxFreq =
-         std::min(freq, mTrackArtist->GetSpectrumLogMaxFreq(freq));
-      const double minFreq =
-         std::max(1, mTrackArtist->GetSpectrumLogMinFreq(1));
-      if (maxFreq > minFreq)
-      {
-         const double
-            logFrequency = log(frequency < 1.0 ? 1.0 : frequency),
-            logMinFreq = log(minFreq),
-            logMaxFreq = log(maxFreq);
-          p = (logFrequency - logMinFreq) / (logMaxFreq - logMinFreq);
-      }
-   }
-   else
-   {
-      const double maxFreq =
-         std::min(freq, mTrackArtist->GetSpectrumMaxFreq(freq));
-      const double minFreq =
-         std::max(0, mTrackArtist->GetSpectrumMinFreq(0));
-      if (maxFreq > minFreq)
-         p = (frequency - minFreq) / (maxFreq - minFreq);
-   }
-
+   const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
+   const NumberScale numberScale(settings.GetScale(rate, false));
+   const float p = numberScale.ValueToPosition(frequency);
    return trackTopEdge + wxInt64((1.0 - p) * trackHeight);
 }
 #endif
@@ -3680,20 +3666,17 @@ bool mayDragWidth, bool onlyWithinSnapDistance,
    bool chooseTime = true;
    bool chooseBottom = true;
    bool chooseCenter = false;
-   bool logF;
    // Consider adjustment of frequencies only if mouse is
    // within the time boundaries
    if (!mViewInfo->selectedRegion.isPoint() &&
        t0 <= selend && selend < t1 &&
-       isSpectrogramTrack(pTrack, &logF)) {
+       isSpectralSelectionTrack(pTrack)) {
       const WaveTrack *const wt = static_cast<const WaveTrack*>(pTrack);
       const wxInt64 bottomSel = (f0 >= 0)
-         ? FrequencyToPosition(f0, rect.y, rect.height,
-                               wt->GetRate(), logF)
+         ? FrequencyToPosition(wt, f0, rect.y, rect.height)
          : rect.y + rect.height;
       const wxInt64 topSel = (f1 >= 0)
-         ? FrequencyToPosition(f1, rect.y, rect.height,
-         wt->GetRate(), logF)
+         ? FrequencyToPosition(wt, f1, rect.y, rect.height)
          : rect.y;
       wxInt64 signedBottomDist = int(event.m_y - bottomSel);
       wxInt64 verticalDist = abs(signedBottomDist);
@@ -3711,8 +3694,7 @@ bool mayDragWidth, bool onlyWithinSnapDistance,
 #endif
          ) {
          const wxInt64 centerSel =
-            FrequencyToPosition(fc, rect.y, rect.height,
-                                 wt->GetRate(), logF);
+            FrequencyToPosition(wt, fc, rect.y, rect.height);
          const wxInt64 centerDist = abs(int(event.m_y - centerSel));
          if (centerDist < verticalDist)
             chooseCenter = true, verticalDist = centerDist,
@@ -3810,8 +3792,8 @@ void TrackPanel::ForwardEventToTimeTrackEnvelope(wxMouseEvent & event)
    if(ptimetrack->GetDisplayLog()) {
       // MB: silly way to undo the work of GetWaveYPos while still getting a logarithmic scale
       double dBRange = gPrefs->Read(wxT("/GUI/EnvdBRange"), ENV_DB_RANGE);
-      lower = 20.0 * log10(std::max(1.0e-7, lower)) / dBRange + 1.0;
-      upper = 20.0 * log10(std::max(1.0e-7, upper)) / dBRange + 1.0;
+      lower = LINEAR_TO_DB(std::max(1.0e-7, lower)) / dBRange + 1.0;
+      upper = LINEAR_TO_DB(std::max(1.0e-7, upper)) / dBRange + 1.0;
    }
    bool needUpdate =
       pspeedenvelope->MouseEvent(
@@ -3839,10 +3821,8 @@ void TrackPanel::ForwardEventToWaveTrackEnvelope(wxMouseEvent & event)
    //  This asks which one is in use. (ie, Wave, Spectrum, etc)
    int display = pwavetrack->GetDisplay();
 
-   // AS: If we're using the right type of display for envelope operations
-   //  ie one of the Wave displays
-   const bool dB = (display == WaveTrack::WaveformDBDisplay);
-   if (dB || (display == WaveTrack::WaveformDisplay)) {
+   if (display == WaveTrack::Waveform) {
+      const bool dB = !pwavetrack->GetWaveformSettings().isLinear();
       bool needUpdate;
 
       // AS: Then forward our mouse event to the envelope.
@@ -4611,9 +4591,7 @@ void TrackPanel::HandleVZoomClick( wxMouseEvent & event )
    if (!mCapturedTrack)
       return;
 
-   // don't do anything if track is not wave or Spectrum/log Spectrum
-   if (((mCapturedTrack->GetKind() == Track::Wave) &&
-            (((WaveTrack*)mCapturedTrack)->GetDisplay() != WaveTrack::PitchDisplay))
+   if (mCapturedTrack->GetKind() == Track::Wave
 #ifdef USE_MIDI
             || mCapturedTrack->GetKind() == Track::Note
 #endif
@@ -4653,7 +4631,6 @@ void TrackPanel::HandleVZoomDrag( wxMouseEvent & event )
 ///   - Zoom in; ensure we don't go too large.
 void TrackPanel::HandleVZoomButtonUp( wxMouseEvent & event )
 {
-   int minBins = 0;
    if (!mCapturedTrack)
       return;
 
@@ -4680,11 +4657,25 @@ void TrackPanel::HandleVZoomButtonUp( wxMouseEvent & event )
    }
 #endif
 
+
    // don't do anything if track is not wave
    if (mCapturedTrack->GetKind() != Track::Wave)
       return;
-   WaveTrack *track = (WaveTrack *)mCapturedTrack;
-   WaveTrack *partner = (WaveTrack *)mTracks->GetLink(track);
+
+   if (event.RightUp() &&
+       !(event.ShiftDown() || event.CmdDown())) {
+      OnVRulerMenu(mCapturedTrack, &event);
+      return;
+   }
+
+   HandleWaveTrackVZoom(static_cast<WaveTrack*>(mCapturedTrack),
+      event.ShiftDown(), event.RightUp());
+   mCapturedTrack = NULL;
+}
+
+void TrackPanel::HandleWaveTrackVZoom(WaveTrack *track, bool shiftDown, bool rightUp)
+{
+   WaveTrack *partner = static_cast<WaveTrack *>(mTracks->GetLink(track));
    int height = track->GetHeight();
    int ypos = mCapturedRect.y;
 
@@ -4695,225 +4686,174 @@ void TrackPanel::HandleVZoomButtonUp( wxMouseEvent & event )
       mZoomStart = temp;
    }
 
-   float min, max, c, l, binSize = 0.0;
-   bool spectrum, spectrumLog;
-   int windowSize;
-   double rate = ((WaveTrack *)track)->GetRate();
-   spectrum = (((WaveTrack *) track)->GetDisplay() == WaveTrack::SpectrumDisplay) ||
-      (((WaveTrack *) track)->GetDisplay() == WaveTrack::SpectralSelectionDisplay)  ;
-   spectrumLog=(((WaveTrack *) track)->GetDisplay() == WaveTrack::SpectrumLogDisplay) ||
-      (((WaveTrack *) track)->GetDisplay() == WaveTrack::SpectralSelectionLogDisplay) 
-      ;
-   if(spectrum) {
-      min = mTrackArtist->GetSpectrumMinFreq(0);
-      if(min < 0)
-         min = 0;
-      max = mTrackArtist->GetSpectrumMaxFreq(8000);
-      if(max > rate/2.)
-         max = rate/2.;
+   float min, max, c, l, minBand = 0;
+   const double rate = track->GetRate();
+   const float halfrate = rate / 2;
+   const SpectrogramSettings &settings = track->GetSpectrogramSettings();
+   NumberScale scale(track->GetSpectrogramSettings().GetScale(rate, false));
+   const bool spectral = (track->GetDisplay() == WaveTrack::Spectrum);
+   const bool spectrumLinear = spectral &&
+      (track->GetSpectrogramSettings().scaleType == SpectrogramSettings::stLinear);
 
-      // Always spectrogram, never pitch view, pass true
-      windowSize = mTrackArtist->GetSpectrumWindowSize(true);
-      binSize = rate / windowSize;
-      minBins = wxMin(10, windowSize/2); //minimum 10 freq bins, unless there are less
-   }
-   else
-      if(spectrumLog) {
-         min = mTrackArtist->GetSpectrumLogMinFreq(lrint(rate/1000.0));
-         if(min < 1)
-            min = 1;
-         max = mTrackArtist->GetSpectrumLogMaxFreq(lrint(rate/2.));
-         if(max > rate/2.)
-            max = rate/2.;
-
-         // Always spectrogram, never pitch view, pass true
-         windowSize = mTrackArtist->GetSpectrumWindowSize(true);
-         binSize = rate / windowSize;
-         minBins = wxMin(10, windowSize/2); //minimum 10 freq bins, unless there are less
-      }
-      else
-         track->GetDisplayBounds(&min, &max);
-   if (IsDragZooming()) {
-      // Drag Zoom
-      float p1, p2, tmin, tmax;
-      tmin=min;
-      tmax=max;
-
-      if(spectrumLog) {
-         double xmin = 1-(mZoomEnd - ypos) / (float)height;
-         double xmax = 1-(mZoomStart - ypos) / (float)height;
-         double lmin=log10(tmin), lmax=log10(tmax);
-         double d=lmax-lmin;
-         min=wxMax(1.0, pow(10, xmin*d+lmin));
-         max=wxMin(rate/2.0, pow(10, xmax*d+lmin));
-         // Enforce vertical zoom limits
-         // done in the linear freq domain for now, but not too far out
-         if(max < min + minBins * binSize)
-            max = min + minBins * binSize;
-         if(max > rate/2.) {
-            max = rate/2.;
-            min = max - minBins * binSize;
-         }
+   if (spectral) {
+      if (spectrumLinear) {
+         min = settings.GetMinFreq(rate);
+         max = settings.GetMaxFreq(rate);
       }
       else {
-         p1 = (mZoomStart - ypos) / (float)height;
-         p2 = (mZoomEnd - ypos) / (float)height;
+         min = settings.GetLogMinFreq(rate);
+         max = settings.GetLogMaxFreq(rate);
+      }
+      const int fftLength = settings.GetFFTLength();
+      const float binSize = rate / fftLength;
+      const int minBins =
+         std::min(10, fftLength / 2); //minimum 10 freq bins, unless there are less
+      minBand = minBins * binSize;
+   }
+   else
+      track->GetDisplayBounds(&min, &max);
+
+   if (IsDragZooming()) {
+      // Drag Zoom
+      const float tmin = min, tmax = max;
+
+      if (spectral) {
+         double xmin = 1 - (mZoomEnd - ypos) / (float)height;
+         double xmax = 1 - (mZoomStart - ypos) / (float)height;
+         const float middle = (xmin + xmax) / 2;
+         const float middleValue = scale.PositionToValue(middle);
+
+         min = std::max(spectrumLinear ? 0.0f : 1.0f,
+            std::min(middleValue - minBand / 2,
+               scale.PositionToValue(xmin)
+         ));
+         max = std::min(halfrate,
+            std::max(middleValue + minBand / 2,
+               scale.PositionToValue(xmax)
+         ));
+      }
+      else {
+         const float p1 = (mZoomStart - ypos) / (float)height;
+         const float p2 = (mZoomEnd - ypos) / (float)height;
          max = (tmax * (1.0-p1) + tmin * p1);
          min = (tmax * (1.0-p2) + tmin * p2);
 
-         // Enforce vertical zoom limits
-         if(spectrum) {
-            if(min < 0.)
-               min = 0.;
-            if(max < min + minBins * binSize)
-               max = min + minBins * binSize;
-            if(max > rate/2.) {
-               max = rate/2.;
-               min = max - minBins * binSize;
-            }
-         }
-         else {
-            // Waveform view - allow zooming down to a range of ZOOMLIMIT
-            if (max - min < ZOOMLIMIT) {     // if user attempts to go smaller...
-               c = (min+max)/2;           // ...set centre of view to centre of dragged area and top/bottom to ZOOMLIMIT/2 above/below
-               min = c - ZOOMLIMIT/2.0;
-               max = c + ZOOMLIMIT/2.0;
-            }
+         // Waveform view - allow zooming down to a range of ZOOMLIMIT
+         if (max - min < ZOOMLIMIT) {     // if user attempts to go smaller...
+            c = (min+max)/2;           // ...set centre of view to centre of dragged area and top/bottom to ZOOMLIMIT/2 above/below
+            min = c - ZOOMLIMIT/2.0;
+            max = c + ZOOMLIMIT/2.0;
          }
       }
    }
-   else if (event.ShiftDown() || event.RightUp()) {
+   else if (shiftDown || rightUp) {
       // Zoom OUT
-      // Zoom out to -1.0...1.0 first, then, and only
-      // then, if they click again, allow one more
-      // zoom out.
-      if(spectrum) {
-         if (event.ShiftDown() && event.RightUp()) {
+      if (spectral) {
+         if (shiftDown && rightUp) {
             // Zoom out full
-            min = 0.0;
-            max = rate/2.;
+            min = spectrumLinear ? 0.0f : 1.0f;
+            max = halfrate;
          }
          else {
             // Zoom out
-            c = 0.5*(min+max);
-            l = (c - min);
-            if(c - 2*l <= 0) {
-               min = 0.0;
-               max = wxMin( rate/2., 2. * max);
-            }
-            else {
-               min = wxMax( 0.0, c - 2*l);
-               max = wxMin( rate/2., c + 2*l);
-            }
+
+            // (Used to zoom out centered at midline, ignoring the click, if linear view.
+            //  I think it is better to be consistent.  PRL)
+            // Center zoom-out at the midline
+            const float middle = // spectrumLinear ? 0.5f :
+               1.0f - (mZoomStart - ypos) / (float)height;
+
+            min = std::max(spectrumLinear ? 0.0f : 1.0f, scale.PositionToValue(middle - 1.0f));
+            max = std::min(halfrate, scale.PositionToValue(middle + 1.0f));
          }
       }
       else {
-         if(spectrumLog) {
-            if (event.ShiftDown() && event.RightUp()) {
-                // Zoom out full
-                min = 1.0;
-                max = rate/2.;
-            }
-            else {
-               // Zoom out
-               float p1;
-               p1 = (mZoomStart - ypos) / (float)height;
-               c = 1.0-p1;
-               double xmin = c - 1.;
-               double xmax = c + 1.;
-               double lmin = log10(min), lmax = log10(max);
-               double d = lmax-lmin;
-               min = wxMax(1,pow(10, xmin*d+lmin));
-               max = wxMin(rate/2., pow(10, xmax*d+lmin));
-            }
+         // Zoom out to -1.0...1.0 first, then, and only
+         // then, if they click again, allow one more
+         // zoom out.
+         if (shiftDown && rightUp) {
+            // Zoom out full
+            min = -1.0;
+            max = 1.0;
          }
          else {
-            if (event.ShiftDown() && event.RightUp()) {
-               // Zoom out full
-               min = -1.0;
-               max = 1.0;
+            // Zoom out
+            if (min <= -1.0 && max >= 1.0) {
+               min = -2.0;
+               max = 2.0;
             }
             else {
-               // Zoom out
-               if (min <= -1.0 && max >= 1.0) {
-                  min = -2.0;
-                  max = 2.0;
-               }
-               else {
-                  c = 0.5*(min+max);
-                  l = (c - min);
-                  // limit to +/- 1 range unless already outside that range...
-                  float minRange = (min < -1) ? -2.0 : -1.0;
-                  float maxRange = (max > 1) ? 2.0 : 1.0;
-                  // and enforce vertical zoom limits.
-                  min = wxMin(maxRange - ZOOMLIMIT, wxMax(minRange, c - 2*l));
-                  max = wxMax(minRange + ZOOMLIMIT, wxMin(maxRange, c + 2*l));
-               }
+               c = 0.5*(min + max);
+               l = (c - min);
+               // limit to +/- 1 range unless already outside that range...
+               float minRange = (min < -1) ? -2.0 : -1.0;
+               float maxRange = (max > 1) ? 2.0 : 1.0;
+               // and enforce vertical zoom limits.
+               min = std::min(maxRange - ZOOMLIMIT, std::max(minRange, c - 2 * l));
+               max = std::max(minRange + ZOOMLIMIT, std::min(maxRange, c + 2 * l));
             }
          }
       }
    }
    else {
       // Zoom IN
-      float p1;
-      if(spectrum) {
-         c = 0.5*(min+max);
-         // Enforce maximum vertical zoom
-         l = wxMax( minBins * binSize, (c - min));
+      if (spectral) {
+         // Center the zoom-in at the click
+         const float middle = 1.0f - (mZoomStart - ypos) / (float)height;
+         const float middleValue = scale.PositionToValue(middle);
 
-         p1 = (mZoomStart - ypos) / (float)height;
-         c = (max * (1.0-p1) + min * p1);
-         min = wxMax( 0.0, c - 0.5*l);
-         max = wxMin( rate/2., min + l);
+         min = std::max(spectrumLinear ? 0.0f : 1.0f,
+            std::min(middleValue - minBand / 2,
+               scale.PositionToValue(middle - 0.25f)
+         ));
+         max = std::min(halfrate,
+            std::max(middleValue + minBand / 2,
+               scale.PositionToValue(middle + 0.25f)
+         ));
       }
       else {
-         if(spectrumLog) {
-            p1 = (mZoomStart - ypos) / (float)height;
-            c = 1.0-p1;
-            double xmin = c - 0.25;
-            double xmax = c + 0.25;
-            double lmin = log10(min), lmax = log10(max);
-            double d = lmax-lmin;
-            min = wxMax(1,pow(10, xmin*d+lmin));
-            max = wxMin(rate/2., pow(10, xmax*d+lmin));
-            // Enforce vertical zoom limits
-            // done in the linear freq domain for now, but not too far out
-            if(max < min + minBins * binSize)
-               max = min + minBins * binSize;
-            if(max > rate/2.) {
-               max = rate/2.;
-               min = max - minBins * binSize;
-            }
+         // Zoom in centered on cursor
+         float p1;
+         if (min < -1.0 || max > 1.0) {
+            min = -1.0;
+            max = 1.0;
          }
          else {
-            // Zoom in centered on cursor
-            if (min < -1.0 || max > 1.0) {
-               min = -1.0;
-               max = 1.0;
-            }
-            else {
-               c = 0.5*(min+max);
-               // Enforce maximum vertical zoom
-               l = wxMax( ZOOMLIMIT, (c - min));
+            c = 0.5*(min + max);
+            // Enforce maximum vertical zoom
+            l = std::max(ZOOMLIMIT, (c - min));
 
-               p1 = (mZoomStart - ypos) / (float)height;
-               c = (max * (1.0-p1) + min * p1);
-               min = c - 0.5*l;
-               max = c + 0.5*l;
-            }
+            p1 = (mZoomStart - ypos) / (float)height;
+            c = (max * (1.0 - p1) + min * p1);
+            min = c - 0.5*l;
+            max = c + 0.5*l;
          }
       }
    }
 
-   if(spectrum) {
-      mTrackArtist->SetSpectrumMaxFreq(max);
-      mTrackArtist->SetSpectrumMinFreq(min);
-      mTrackArtist->InvalidateSpectrumCache(mTracks);
-   }
-   else if(spectrumLog) {
-      mTrackArtist->SetSpectrumLogMaxFreq(max);
-      mTrackArtist->SetSpectrumLogMinFreq(min);
-      mTrackArtist->InvalidateSpectrumCache(mTracks);
+   if (spectral) {
+      if (spectrumLinear) {
+         SpectrogramSettings &settings = track->GetSpectrogramSettings();
+         settings.SetMinFreq(min);
+         settings.SetMaxFreq(max);
+         if (partner) {
+            // To do:  share memory with reference counting?
+            SpectrogramSettings &settings = partner->GetSpectrogramSettings();
+            settings.SetMinFreq(min);
+            settings.SetMaxFreq(max);
+         }
+      }
+      else {
+         SpectrogramSettings &settings = track->GetSpectrogramSettings();
+         settings.SetLogMinFreq(min);
+         settings.SetLogMaxFreq(max);
+         if (partner) {
+            // To do:  share memory with reference counting?
+            SpectrogramSettings &settings = partner->GetSpectrogramSettings();
+            settings.SetLogMinFreq(min);
+            settings.SetLogMaxFreq(max);
+         }
+      }
    }
    else {
       track->SetDisplayBounds(min, max);
@@ -4922,9 +4862,8 @@ void TrackPanel::HandleVZoomButtonUp( wxMouseEvent & event )
    }
 
    mZoomEnd = mZoomStart = 0;
-   UpdateVRuler(mCapturedTrack);
+   UpdateVRuler(track);
    Refresh(false);
-   mCapturedTrack = NULL;
    MakeParentModifyState(true);
 }
 
@@ -4966,20 +4905,12 @@ bool TrackPanel::IsSampleEditingPossible( wxMouseEvent &event, Track * t )
    //If we aren't displaying the waveform, Display a message dialog
    WaveTrack *const wt = static_cast<WaveTrack*>(t);
    const int display = wt->GetDisplay();
-#if 1
-   if (!(WaveTrack::WaveformDisplay == display ||
-         WaveTrack::WaveformDBDisplay == display))
-   {
-      wxMessageBox(_("To use Draw, choose 'Waveform' or 'Waveform dB' in the Track Drop-down Menu."), wxT("Draw Tool"));
-      return false;
-   }
-#else
-   if(WaveTrack::WaveformDisplay != display)
+
+   if (WaveTrack::Waveform != display)
    {
       wxMessageBox(_("To use Draw, choose 'Waveform' in the Track Drop-down Menu."), wxT("Draw Tool"));
       return false;
    }
-#endif
 
    bool showPoints;
    {
@@ -5017,7 +4948,7 @@ float TrackPanel::FindSampleEditingLevel(wxMouseEvent &event, double t0)
 
    const int y = event.m_y - mDrawingTrackTop;
    const int height = mDrawingTrack->GetHeight();
-   const bool dB = (WaveTrack::WaveformDBDisplay == mDrawingTrack->GetDisplay());
+   const bool dB = !mDrawingTrack->GetWaveformSettings().isLinear();
    float newLevel = ::ValueOfPixel(y, height, false, dB, mdBr, zoomMin, zoomMax);
 
    //Take the envelope into account
@@ -7025,16 +6956,14 @@ bool TrackPanel::HitTestEnvelope(Track *track, wxRect &r, wxMouseEvent & event)
    if (!envelope)
       return false;
 
-   int displayType = wavetrack->GetDisplay();
+   const int displayType = wavetrack->GetDisplay();
    // Not an envelope hit, unless we're using a type of wavetrack display
    // suitable for envelopes operations, ie one of the Wave displays.
-   const bool dB = (displayType == WaveTrack::WaveformDBDisplay);
-   if (!
-      (dB || (displayType == WaveTrack::WaveformDisplay))
-   )
+   if ( displayType != WaveTrack::Waveform)
       return false;  // No envelope, not a hit, so return.
 
    // Get envelope point, range 0.0 to 1.0
+   const bool dB = !wavetrack->GetWaveformSettings().isLinear();
    // Convert x to time.
    const double envValue = envelope->GetValue(mViewInfo->PositionToTime(event.m_x, r.x));
 
@@ -7092,10 +7021,10 @@ bool TrackPanel::HitTestSamples(Track *track, wxRect &r, wxMouseEvent & event)
    //Get rate in order to calculate the critical zoom threshold
    double rate = wavetrack->GetRate();
 
-   int displayType = wavetrack->GetDisplay();
-   bool dB = (WaveTrack::WaveformDBDisplay == displayType);
-   if (!(WaveTrack::WaveformDisplay == displayType || dB))
+   const int displayType = wavetrack->GetDisplay();
+   if (WaveTrack::Waveform != displayType)
       return false;  // Not a wave, so return.
+   const bool dB = !wavetrack->GetWaveformSettings().isLinear();
 
    const double tt = mViewInfo->PositionToTime(event.m_x, r.x);
    if (!SampleResolutionTest(*mViewInfo, wavetrack, tt, rate))
@@ -8565,16 +8494,11 @@ void TrackPanel::OnTrackMenu(Track *t)
       theMenu->Enable(OnChannelLeftID, !t->GetLinked());
       theMenu->Enable(OnChannelRightID, !t->GetLinked());
 
-      int display = ((WaveTrack *) t)->GetDisplay();
-
-      theMenu->Enable(OnWaveformID, display != WaveTrack::WaveformDisplay);
-      theMenu->Enable(OnWaveformDBID,
-                        display != WaveTrack::WaveformDBDisplay);
-      theMenu->Enable(OnSpectrumID, display != WaveTrack::SpectrumDisplay);
-      theMenu->Enable(OnSpectrumLogID, display != WaveTrack::SpectrumLogDisplay);
-      theMenu->Enable(OnSpectralSelID, display != WaveTrack::SpectralSelectionDisplay);
-      theMenu->Enable(OnSpectralSelLogID, display != WaveTrack::SpectralSelectionLogDisplay);
-      theMenu->Enable(OnPitchID, display != WaveTrack::PitchDisplay);
+      const int display = static_cast<WaveTrack *>(t)->GetDisplay();
+      theMenu->Check(
+         (display == WaveTrack::Waveform) ? OnWaveformID : OnSpectrumID,
+         true
+      );
 
       WaveTrack * track = (WaveTrack *)t;
       SetMenuCheck(*mRateMenu, IdOfRate((int) track->GetRate()));
@@ -8615,6 +8539,55 @@ void TrackPanel::OnTrackMenu(Track *t)
    SetCapturedTrack(NULL);
 
    Refresh(false);
+}
+
+void TrackPanel::OnVRulerMenu(Track *t, wxMouseEvent *pEvent)
+{
+   if (!t) {
+      t = GetFocusedTrack();
+      if (!t)
+         return;
+   }
+
+   if (t->GetKind() != Track::Wave)
+      return;
+
+   WaveTrack *const wt = static_cast<WaveTrack*>(t);
+
+   const int display = wt->GetDisplay();
+   wxMenu *theMenu;
+   if (display == WaveTrack::Waveform) {
+      theMenu = mRulerWaveformMenu;
+      const int id =
+         OnFirstWaveformScaleID + int(wt->GetWaveformSettings().scaleType);
+      theMenu->Check(id, true);
+   }
+   else {
+      theMenu = mRulerSpectrumMenu;
+      const int id =
+         OnFirstSpectrumScaleID + int(wt->GetSpectrogramSettings().scaleType);
+      theMenu->Check(id, true);
+   }
+
+   int x, y;
+   if (pEvent)
+      x = pEvent->m_x, y = pEvent->m_y;
+   else {
+      // If no event given, pop up the menu at the same height
+      // as for the track control menu
+      const wxRect r = FindTrackRect(wt, true);
+      wxRect titleRect;
+      mTrackInfo.GetTitleBarRect(r, titleRect);
+      x = GetVRulerOffset(), y = titleRect.y + titleRect.height + 1;
+   }
+
+   // So that IsDragZooming() returns false, and if we zoom in, we do so
+   // centered where the mouse is now:
+   mZoomStart = mZoomEnd = pEvent->m_y;
+
+   mPopupMenuTarget = wt;
+   PopupMenu(theMenu, x, y);
+   mPopupMenuTarget = NULL;
 }
 
 void TrackPanel::OnTrackMute(bool shiftDown, Track *t)
@@ -9036,6 +9009,51 @@ void TrackPanel::OnMergeStereo(wxCommandEvent & WXUNUSED(event))
    Refresh(false);
 }
 
+class ViewSettingsDialog : public PrefsDialog
+{
+public:
+   ViewSettingsDialog
+      (wxWindow *parent, const wxString &title, PrefsDialog::Factories &factories,
+       int page)
+      : PrefsDialog(parent, title, factories)
+      , mPage(page)
+   {
+   }
+
+   virtual long GetPreferredPage()
+   {
+      return mPage;
+   }
+
+   virtual void SavePreferredPage()
+   {
+   }
+
+private:
+   const int mPage;
+};
+
+void TrackPanel::OnViewSettings(wxCommandEvent &)
+{
+   WaveTrack *const wt = static_cast<WaveTrack*>(mPopupMenuTarget);
+   WaveformPrefsFactory waveformFactory(wt);
+   SpectrumPrefsFactory spectrumFactory(wt);
+
+   // Put Waveform page first
+   PrefsDialog::Factories factories;
+   factories.push_back(&waveformFactory);
+   factories.push_back(&spectrumFactory);
+   const int page = (wt->GetDisplay() == WaveTrack::Spectrum)
+      ? 1 : 0;
+
+   wxString title(wt->GetName() + wxT(": "));
+   ViewSettingsDialog dialog(this, title, factories, page);
+
+   if (0 != dialog.ShowModal())
+      // Redraw
+      Refresh(false);
+}
+
 ///  Set the Display mode based on the menu choice in the Track Menu.
 ///  Note that gModes MUST BE IN THE SAME ORDER AS THE MENU CHOICES!!
 ///  const wxChar *gModes[] = { wxT("waveform"), wxT("waveformDB"),
@@ -9043,7 +9061,7 @@ void TrackPanel::OnMergeStereo(wxCommandEvent & WXUNUSED(event))
 void TrackPanel::OnSetDisplay(wxCommandEvent & event)
 {
    int idInt = event.GetId();
-   wxASSERT(idInt >= OnWaveformID && idInt <= OnPitchID);
+   wxASSERT(idInt >= OnWaveformID && idInt <= OnSpectrumID);
    wxASSERT(mPopupMenuTarget
             && mPopupMenuTarget->GetKind() == Track::Wave);
 
@@ -9051,30 +9069,17 @@ void TrackPanel::OnSetDisplay(wxCommandEvent & event)
    switch (idInt) {
    default:
    case OnWaveformID:
-      id = WaveTrack::WaveformDisplay; break;
-   case OnWaveformDBID:
-      id = WaveTrack::WaveformDBDisplay; break;
+      id = WaveTrack::Waveform; break;
    case OnSpectrumID:
-      id = WaveTrack::SpectralSelectionDisplay; break;
-   case OnSpectrumLogID:
-      id = WaveTrack::SpectralSelectionLogDisplay; break;
-   case OnSpectralSelID:
-      id = WaveTrack::SpectralSelectionDisplay; break;
-   case OnSpectralSelLogID:
-      id = WaveTrack::SpectralSelectionLogDisplay; break;
-   case OnPitchID:
-      id = WaveTrack::PitchDisplay; break;
+      id = WaveTrack::Spectrum; break;
    }
    WaveTrack *wt = (WaveTrack *) mPopupMenuTarget;
    if (wt->GetDisplay() != id) {
       wt->SetDisplay(WaveTrack::WaveTrackDisplay(id));
-      mTrackArtist->InvalidateSpectrumCache(wt);
 
-      WaveTrack *l = (WaveTrack *) wt->GetLink();
-      if (l) {
+      WaveTrack *l = static_cast<WaveTrack *>(wt->GetLink());
+      if (l)
          l->SetDisplay(WaveTrack::WaveTrackDisplay(id));
-         mTrackArtist->InvalidateSpectrumCache(l);
-      }
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
       if (wt->GetDisplay() == WaveTrack::WaveformDisplay) {
          wt->SetVirtualState(false);
@@ -9083,9 +9088,10 @@ void TrackPanel::OnSetDisplay(wxCommandEvent & event)
       }
 #endif
       UpdateVRuler(wt);
+
+      MakeParentModifyState(true);
+      Refresh(false);
    }
-   MakeParentModifyState(true);
-   Refresh(false);
 }
 
 /// Sets the sample rate for a track, and if it is linked to
@@ -9366,6 +9372,55 @@ void TrackPanel::OnTimeTrackLogInt(wxCommandEvent & /*event*/)
       MakeParentPushState(_("Set time track interpolation to logarithmic"), _("Set Interpolation"));
    }
    Refresh(false);
+}
+
+void TrackPanel::OnWaveformScaleType(wxCommandEvent &evt)
+{
+   WaveTrack *const wt = static_cast<WaveTrack *>(mPopupMenuTarget);
+   const WaveformSettings::ScaleType newScaleType =
+      WaveformSettings::ScaleType(
+         std::max(0,
+            std::min(int(WaveformSettings::stNumScaleTypes) - 1,
+               evt.GetId() - OnFirstWaveformScaleID
+      )));
+   if (wt->GetWaveformSettings().scaleType != newScaleType) {
+      wt->GetIndependentWaveformSettings().scaleType = newScaleType;
+      UpdateVRuler(wt); // Is this really needed?
+      MakeParentModifyState(true);
+      Refresh(false);
+   }
+}
+
+void TrackPanel::OnSpectrumScaleType(wxCommandEvent &evt)
+{
+   WaveTrack *const wt = static_cast<WaveTrack *>(mPopupMenuTarget);
+   const SpectrogramSettings::ScaleType newScaleType =
+      SpectrogramSettings::ScaleType(
+         std::max(0,
+            std::min(int(SpectrogramSettings::stNumScaleTypes) - 1,
+               evt.GetId() - OnFirstSpectrumScaleID
+      )));
+   if (wt->GetSpectrogramSettings().scaleType != newScaleType) {
+      wt->GetIndependentSpectrogramSettings().scaleType = newScaleType;
+      UpdateVRuler(wt); // Is this really needed?
+      MakeParentModifyState(true);
+      Refresh(false);
+   }
+}
+
+void TrackPanel::OnZoomInVertical(wxCommandEvent &)
+{
+   HandleWaveTrackVZoom(static_cast<WaveTrack*>(mPopupMenuTarget), false, false);
+}
+
+void TrackPanel::OnZoomOutVertical(wxCommandEvent &)
+{
+   HandleWaveTrackVZoom(static_cast<WaveTrack*>(mPopupMenuTarget), true, false);
+}
+
+void TrackPanel::OnZoomFitVertical(wxCommandEvent &)
+{
+   HandleWaveTrackVZoom(static_cast<WaveTrack*>(mPopupMenuTarget), true, true);
 }
 
 /// Move a track up, down, to top or to bottom.

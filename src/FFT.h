@@ -32,6 +32,8 @@
 #ifndef __AUDACITY_FFT_H__
 #define __AUDACITY_FFT_H__
 
+#include <wx/defs.h>
+
 /*
   Salvo Ventura - November 2006
   Added more window functions:

@@ -158,12 +158,14 @@ void SpectralSelectionBar::Populate()
 
    mLowCtrl = new NumericTextCtrl(
       NumericConverter::FREQUENCY, this, OnLowID, frequencyFormatName, 0.0);
+   mLowCtrl->SetInvalidValue(SelectedRegion::UndefinedFrequency);
    mLowCtrl->SetName(_("Low Frequency:"));
    mLowCtrl->EnableMenu();
    subSizer->Add(mLowCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 
    mHighCtrl = new NumericTextCtrl(
       NumericConverter::FREQUENCY, this, OnHighID, frequencyFormatName, 0.0);
+   mHighCtrl->SetInvalidValue(SelectedRegion::UndefinedFrequency);
    mHighCtrl->SetName(wxString(_("High Frequency:")));
    mHighCtrl->EnableMenu();
    subSizer->Add(mHighCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 0);
@@ -265,6 +267,10 @@ void SpectralSelectionBar::ModifySpectralSelection(bool done)
          top = SelectedRegion::UndefinedFrequency;
    }
 
+   mLow = bottom;
+   mHigh = top;
+   SetBounds();
+
    // Notify project and track panel, which may change
    // the values again, and call back to us in SetFrequencies()
    mListener->SSBL_ModifySpectralSelection(bottom, top, done);
@@ -349,9 +355,23 @@ void SpectralSelectionBar::ValuesToControls()
       mWidthCtrl->SetValue(mWidth);
    }
    else {
+      SetBounds();
       mLowCtrl->SetValue(mLow);
       mHighCtrl->SetValue(mHigh);
    }
+}
+
+void SpectralSelectionBar::SetBounds()
+{
+   if (mHigh >= 0)
+      mLowCtrl->SetMaxValue(mHigh);
+   else
+      mLowCtrl->ResetMaxValue();
+
+   if (mLow >= 0)
+      mHighCtrl->SetMinValue(mLow);
+   else
+      mHighCtrl->ResetMinValue();
 }
 
 void SpectralSelectionBar::SetFrequencies(double bottom, double top)

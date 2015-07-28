@@ -33,7 +33,7 @@
 #include "Resample.h"
 #include "Project.h"
 
-#include "prefs/SpectrumPrefs.h"
+#include "prefs/SpectrogramSettings.h"
 
 #include <wx/listimpl.cpp>
 WX_DEFINE_LIST(WaveClipList);
@@ -846,7 +846,8 @@ void SpecCache::CalculateOneSpectrum
          rate, results,
          autocorrelation, settings.windowType);
 #endif // EXPERIMENTAL_USE_REALFFTF
-      if (!gainFactors.empty()) {
+      if (!autocorrelation &&
+          !gainFactors.empty()) {
          // Apply a frequency-dependant gain factor
          for (int ii = 0; ii < half; ++ii)
             results[ii] += gainFactors[ii];
@@ -902,8 +903,8 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
                               double t0, double pixelsPerSecond,
                               bool autocorrelation)
 {
-   const SpectrogramSettings &settings = SpectrogramSettings::defaults();
-
+   const WaveTrack *const track = waveTrackCache.GetTrack();
+   const SpectrogramSettings &settings = track->GetSpectrogramSettings();
    const int &frequencyGain = settings.frequencyGain;
    const int &windowSize = settings.windowSize;
    const int &windowType = settings.windowType;

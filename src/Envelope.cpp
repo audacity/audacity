@@ -185,7 +185,7 @@ double Envelope::toDB(double value)
    double sign = (value >= 0 ? 1 : -1);
 
    wxASSERT( dBRange > 0 );
-   double db = 20 * log10(fabs(value));
+   double db = LINEAR_TO_DB(fabs(value));
    double val = (db + dBRange) / dBRange;
 
    val = Limit( 0.0, val, 1.0 );

@@ -22,6 +22,8 @@
 #include <wx/longlong.h>
 #include <wx/thread.h>
 
+class SpectrogramSettings;
+class WaveformSettings;
 class TimeWarper;
 
 //
@@ -144,6 +146,16 @@ class AUDACITY_DLL_API WaveTrack: public Track {
 #endif
    sampleFormat GetSampleFormat() { return mFormat; }
    bool ConvertToSampleFormat(sampleFormat format);
+
+   const SpectrogramSettings &GetSpectrogramSettings() const;
+   SpectrogramSettings &GetSpectrogramSettings();
+   SpectrogramSettings &GetIndependentSpectrogramSettings();
+   void SetSpectrogramSettings(SpectrogramSettings *pSettings);
+
+   const WaveformSettings &GetWaveformSettings() const;
+   WaveformSettings &GetWaveformSettings();
+   WaveformSettings &GetIndependentWaveformSettings();
+   void SetWaveformSettings(WaveformSettings *pSettings);
 
    //
    // High-level editing
@@ -408,19 +420,21 @@ class AUDACITY_DLL_API WaveTrack: public Track {
 
       // DO NOT REORDER OLD VALUES!  Replace obsoletes with placeholders.
 
-      WaveformDisplay = 0,
-      MinDisplay = WaveformDisplay,
+      Waveform = 0,
+      MinDisplay = Waveform,
 
-      WaveformDBDisplay,
-      SpectrumDisplay,
-      SpectrumLogDisplay,
-      SpectralSelectionDisplay,
-      SpectralSelectionLogDisplay,
-      PitchDisplay,
+      obsolete5, // was WaveformDBDisplay
+
+      Spectrum,
+
+      obsolete1, // was SpectrumLogDisplay
+      obsolete2, // was SpectralSelectionDisplay
+      obsolete3, // was SpectralSelectionLogDisplay
+      obsolete4, // was PitchDisplay
 
       // Add values here, and update MaxDisplay.
 
-      MaxDisplay = PitchDisplay,
+      MaxDisplay = Spectrum,
 
       NoDisplay,            // Preview track has no display
    };
@@ -434,18 +448,15 @@ class AUDACITY_DLL_API WaveTrack: public Track {
    // Handle restriction of range of values of the enum from future versions
    static WaveTrackDisplay ValidateWaveTrackDisplay(WaveTrackDisplay display);
 
-   void SetDisplay(WaveTrackDisplay display) {
-      if(mDisplay < 2)
-         // remember last display mode for wave and wavedb so they can remap the vertical ruler
-         mLastDisplay = mDisplay;
-      mDisplay = display;
-      if( mDisplay == SpectralSelectionDisplay ){
-      }
-      if( mDisplay == SpectralSelectionLogDisplay ){
-      }
+   int GetLastScaleType() { return mLastScaleType; }
+   void SetLastScaleType(int scaleType)
+   {
+      // remember last display mode for wave and wavedb so vertical ruler can remap
+      mLastScaleType = scaleType;
    }
+
    WaveTrackDisplay GetDisplay() const { return mDisplay; }
-   int GetLastDisplay() {return mLastDisplay;}
+   void SetDisplay(WaveTrackDisplay display) { mDisplay = display; }
 
    void GetDisplayBounds(float *min, float *max);
    void SetDisplayBounds(float min, float max);
@@ -471,7 +482,7 @@ class AUDACITY_DLL_API WaveTrack: public Track {
    float         mDisplayMin;
    float         mDisplayMax;
    WaveTrackDisplay mDisplay;
-   int           mLastDisplay; // last display mode
+   int           mLastScaleType; // last scale type choice
    int           mDisplayNumLocations;
    int           mDisplayNumLocationsAllocated;
    Location*       mDisplayLocations;
@@ -490,6 +501,9 @@ class AUDACITY_DLL_API WaveTrack: public Track {
    wxCriticalSection mAppendCriticalSection;
    double mLegacyProjectFileOffset;
    int mAutoSaveIdent;
+
+   SpectrogramSettings *mpSpectrumSettings;
+   WaveformSettings *mpWaveformSettings;
 };
 
 // This is meant to be a short-lived object, during whose lifetime,

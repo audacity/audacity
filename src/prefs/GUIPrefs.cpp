@@ -158,3 +158,8 @@ bool GUIPrefs::Apply()
 
    return true;
 }
+
+PrefsPanel *GUIPrefsFactory::Create(wxWindow *parent)
+{
+   return new GUIPrefs(parent);
+}

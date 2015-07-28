@@ -39,4 +39,9 @@ class TracksPrefs :public PrefsPanel
    wxArrayString mViewChoices;
 };
 
+class TracksPrefsFactory : public PrefsPanelFactory
+{
+public:
+   virtual PrefsPanel *Create(wxWindow *parent);
+};
 #endif

@@ -210,6 +210,7 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
    virtual void OnTrackGainDec();
    virtual void OnTrackGainInc();
    virtual void OnTrackMenu(Track *t = NULL);
+   virtual void OnVRulerMenu(Track *t, wxMouseEvent *pEvent = NULL);
    virtual void OnTrackMute(bool shiftdown, Track *t = NULL);
    virtual void OnTrackSolo(bool shiftdown, Track *t = NULL);
    virtual void OnTrackClose();
@@ -244,6 +245,7 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
     * @param menu the menu to add the commands to.
     */
    virtual void BuildCommonDropMenuItems(wxMenu * menu);
+   static void BuildVRulerMenuItems(wxMenu * menu, int firstId, const wxArrayString &names);
    virtual bool IsUnsafe();
    virtual bool HandleLabelTrackMouseEvent(LabelTrack * lTrack, wxRect &r, wxMouseEvent & event);
    virtual bool HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &r, wxMouseEvent &event);
@@ -337,9 +339,9 @@ protected:
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
 public:
-   void SnapCenterOnce (WaveTrack *pTrack, bool up);
+   void SnapCenterOnce (const WaveTrack *pTrack, bool up);
 protected:
-   void StartSnappingFreqSelection (WaveTrack *pTrack);
+   void StartSnappingFreqSelection (const WaveTrack *pTrack);
    void MoveSnappingFreqSelection (int mouseYCoordinate,
                                    int trackTopEdge,
                                    int trackHeight, Track *pTrack);
@@ -395,6 +397,7 @@ protected:
    virtual void HandleVZoomClick(wxMouseEvent & event);
    virtual void HandleVZoomDrag(wxMouseEvent & event);
    virtual void HandleVZoomButtonUp(wxMouseEvent & event);
+   virtual void HandleWaveTrackVZoom(WaveTrack *track, bool shiftDown, bool rightUp);
 
    // Handle sample editing using the 'draw' tool.
    virtual bool IsSampleEditingPossible( wxMouseEvent & event, Track * t );
@@ -459,11 +462,19 @@ protected:
    virtual void MoveTrack(Track* target, int eventId);
    virtual void OnChangeOctave (wxCommandEvent &event);
    virtual void OnChannelChange(wxCommandEvent &event);
+   virtual void OnViewSettings(wxCommandEvent &event);
    virtual void OnSetDisplay   (wxCommandEvent &event);
    virtual void OnSetTimeTrackRange (wxCommandEvent &event);
    virtual void OnTimeTrackLin(wxCommandEvent &event);
    virtual void OnTimeTrackLog(wxCommandEvent &event);
    virtual void OnTimeTrackLogInt(wxCommandEvent &event);
+
+   virtual void OnWaveformScaleType(wxCommandEvent &event);
+   virtual void OnSpectrumScaleType(wxCommandEvent &event);
+
+   virtual void OnZoomInVertical(wxCommandEvent &event);
+   virtual void OnZoomOutVertical(wxCommandEvent &event);
+   virtual void OnZoomFitVertical(wxCommandEvent &event);
 
    virtual void SetMenuCheck( wxMenu & menu, int newId );
    virtual void SetRate(Track *pTrack, double rate);
@@ -494,9 +505,9 @@ protected:
    virtual wxRect FindTrackRect(Track * target, bool label);
 
    virtual int GetVRulerWidth() const;
-   virtual int GetVRulerOffset() const { return mTrackInfo.GetTrackInfoWidth(); };
+   virtual int GetVRulerOffset() const { return mTrackInfo.GetTrackInfoWidth(); }
 
-   virtual int GetLabelWidth() const { return mTrackInfo.GetTrackInfoWidth() + GetVRulerWidth(); };
+   virtual int GetLabelWidth() const { return mTrackInfo.GetTrackInfoWidth() + GetVRulerWidth(); }
 
 // JKC Nov-2011: These four functions only used from within a dll such as mod-track-panel
 // They work around some messy problems with constructors.
@@ -693,17 +704,15 @@ protected:
    void HandleCenterFrequencyClick
       (bool shiftDown, Track *pTrack, double value);
 
-   double PositionToFrequency(bool maySnap,
+   double PositionToFrequency(const WaveTrack *wt,
+                              bool maySnap,
                               wxInt64 mouseYCoordinate,
                               wxInt64 trackTopEdge,
-                              int trackHeight,
-                              double rate,
-                              bool logF) const;
-   wxInt64 FrequencyToPosition(double frequency,
+                              int trackHeight) const;
+   wxInt64 FrequencyToPosition(const WaveTrack *wt,
+                               double frequency,
                                wxInt64 trackTopEdge,
-                               int trackHeight,
-                               double rate,
-                               bool logF) const;
+                               int trackHeight) const;
 #endif
 
    enum SelectionBoundary {
@@ -825,6 +834,9 @@ protected:
    wxMenu *mRateMenu;
    wxMenu *mFormatMenu;
    wxMenu *mLabelTrackInfoMenu;
+
+   wxMenu *mRulerWaveformMenu;
+   wxMenu *mRulerSpectrumMenu;
 
    Track *mPopupMenuTarget;
 
