@@ -56,3 +56,5 @@
 #endif
 
 #endif
+
+wxCursor * MakeCursor(int WXUNUSED(CursorId), const char * pXpm[36], int HotX, int HotY);

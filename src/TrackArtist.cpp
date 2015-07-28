@@ -173,6 +173,7 @@ audio tracks.
 #include "LabelTrack.h"
 #include "TimeTrack.h"
 #include "Prefs.h"
+#include "prefs/GUISettings.h"
 #include "prefs/SpectrogramSettings.h"
 #include "prefs/WaveformSettings.h"
 #include "Spectrum.h"
@@ -3108,7 +3109,7 @@ void TrackArtist::DrawTimeTrack(TimeTrack *track,
    double lower = track->GetRangeLower(), upper = track->GetRangeUpper();
    if(track->GetDisplayLog()) {
       // MB: silly way to undo the work of GetWaveYPos while still getting a logarithmic scale
-      double dBRange = gPrefs->Read(wxT("/GUI/EnvdBRange"), ENV_DB_RANGE);
+      double dBRange = gPrefs->Read(ENV_DB_KEY, ENV_DB_RANGE);
       lower = LINEAR_TO_DB(std::max(1.0e-7, lower)) / dBRange + 1.0;
       upper = LINEAR_TO_DB(std::max(1.0e-7, upper)) / dBRange + 1.0;
    }
@@ -3118,7 +3119,7 @@ void TrackArtist::DrawTimeTrack(TimeTrack *track,
 
 void TrackArtist::UpdatePrefs()
 {
-   mdBrange = gPrefs->Read(wxT("/GUI/EnvdBRange"), mdBrange);
+   mdBrange = gPrefs->Read(ENV_DB_KEY, mdBrange);
    mShowClipping = gPrefs->Read(wxT("/GUI/ShowClipping"), mShowClipping);
 
    gPrefs->Flush();

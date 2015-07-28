@@ -265,6 +265,7 @@ private:
 
    // event handlers
    void OnSize(wxSizeEvent &evt);
+   void OnTimer(wxCommandEvent &event);
 
 
 public:

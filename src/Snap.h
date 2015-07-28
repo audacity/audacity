@@ -15,15 +15,26 @@
 #ifndef __AUDACITY_SNAP__
 #define __AUDACITY_SNAP__
 
+#include <vector>
+
 #include <wx/defs.h>
-#include <wx/dynarray.h>
 
 #include "widgets/NumericTextCtrl.h"
 
 class Track;
+class WaveClip;
 class TrackList;
-class TrackClipArray;
 class ZoomInfo;
+
+class TrackClip
+{
+public:
+   TrackClip(Track *t, WaveClip *c) { track = t; clip = c; }
+   Track *track;
+   WaveClip *clip;
+};
+
+typedef std::vector<TrackClip> TrackClipArray;
 
 enum
 {

@@ -1169,7 +1169,7 @@ AdornedRulerPanel *AudacityProject::GetRulerPanel()
    return mRuler;
 }
 
-int AudacityProject::GetAudioIOToken()
+int AudacityProject::GetAudioIOToken() const
 {
    return mAudioIOToken;
 }
@@ -1177,6 +1177,12 @@ int AudacityProject::GetAudioIOToken()
 void AudacityProject::SetAudioIOToken(int token)
 {
    mAudioIOToken = token;
+}
+
+bool AudacityProject::IsAudioActive() const
+{
+   return GetAudioIOToken() > 0 &&
+      gAudioIO->IsStreamActive(GetAudioIOToken());
 }
 
 Tags *AudacityProject::GetTags()
@@ -3011,6 +3017,8 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          SetBandwidthSelectionFormatName(value);
    } // while
 
+   mViewInfo.UpdatePrefs();
+
    if (longVpos != 0) {
       // PRL: It seems this must happen after SetSnapTo
        mViewInfo.track = NULL;
@@ -3931,6 +3939,11 @@ void AudacityProject::PushState(wxString desc,
       this->DoZoomFitV();
    if( (flags & PUSH_AUTOSAVE)!= 0)
       AutoSave();
+}
+
+void AudacityProject::RollbackState()
+{
+   SetStateTo(GetUndoManager()->GetCurrentState());
 }
 
 void AudacityProject::ModifyState(bool bWantsAutoSave)

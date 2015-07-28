@@ -32,6 +32,8 @@ public:
    ZoomInfo(double start, double duration, double pixelsPerSecond);
    ~ZoomInfo();
 
+   void UpdatePrefs();
+
    int vpos;                    // vertical scroll pos
 
    double h;                    // h pos in secs
@@ -42,6 +44,7 @@ protected:
    double zoom;                 // pixels per second
 
 public:
+   float dBr;                   // decibel scale range
 
    // do NOT use this once to convert a pixel width to a duration!
    // Instead, call twice to convert start and end times,
