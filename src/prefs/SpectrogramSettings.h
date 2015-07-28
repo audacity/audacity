@@ -87,7 +87,7 @@ public:
    void ConvertToActualWindowSizes();
 
    // If "bins" is false, units are Hz
-   NumberScale SpectrogramSettings::GetScale
+   NumberScale GetScale
       (double rate, bool bins) const;
 
 private:
