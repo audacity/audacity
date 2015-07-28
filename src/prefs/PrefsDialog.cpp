@@ -64,6 +64,7 @@
 #include "ThemePrefs.h"
 #include "TracksPrefs.h"
 #include "WarningsPrefs.h"
+#include "WaveformPrefs.h"
 #include "ExtImportPrefs.h"
 
 #ifdef EXPERIMENTAL_MIDI_OUT
@@ -131,6 +132,7 @@ PrefsDialog::Factories
 #if !defined(DISABLE_DYNAMIC_LOADING_FFMPEG) || !defined(DISABLE_DYNAMIC_LOADING_LAME)
    static LibraryPrefsFactory libraryPrefsFactory;
 #endif
+   static WaveformPrefsFactory waveformPrefsFactory;
    static SpectrumPrefsFactory spectrumPrefsFactory;
    static DirectoriesPrefsFactory directoriesPrefsFactory;
    static WarningsPrefsFactory warningsPrefsFactory;
@@ -161,6 +163,7 @@ PrefsDialog::Factories
 #if !defined(DISABLE_DYNAMIC_LOADING_FFMPEG) || !defined(DISABLE_DYNAMIC_LOADING_LAME)
       &libraryPrefsFactory,
 #endif
+      &waveformPrefsFactory,
       &spectrumPrefsFactory,
       &directoriesPrefsFactory,
       &warningsPrefsFactory,

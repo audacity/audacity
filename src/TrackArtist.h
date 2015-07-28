@@ -97,7 +97,7 @@ class AUDACITY_DLL_API TrackArtist {
                      wxDC & dc, const wxRect & rect,
                      const SelectedRegion &selectedRegion, const ZoomInfo &zoomInfo,
                      bool drawEnvelope, bool bigPoints, bool drawSliders,
-                     bool dB, bool muted);
+                     bool muted);
 
    void DrawSpectrum(WaveTrack *track,
                      wxDC & dc, const wxRect & rect,
