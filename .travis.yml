@@ -8,5 +8,5 @@ language:
 compiler:
     - gcc
 script: 
-    - aclocal --install -I m4 && automake && ./configure #&& make
-    - cat config.log
+    - aclocal --install -I m4 && automake && ./configure && make
+    
