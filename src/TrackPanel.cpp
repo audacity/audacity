@@ -1054,7 +1054,7 @@ void TrackPanel::OnTimer()
 
    {
       wxCommandEvent e(EVT_TRACK_PANEL_TIMER);
-      p->ProcessEvent(e);
+      p->GetEventHandler()->ProcessEvent(e);
    }
 
 #ifdef EXPERIMENTAL_SCRUBBING_BASIC

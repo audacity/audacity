@@ -1564,7 +1564,6 @@ bool AudacityApp::InitTempDir()
       // Failed
       wxMessageBox(_("Audacity could not find a place to store temporary files.\nPlease enter an appropriate directory in the preferences dialog."));
 
-      PrefsDialog dialog(NULL);
       // Only want one page of the preferences
       DirectoriesPrefsFactory directoriesPrefsFactory;
       PrefsDialog::Factories factories;

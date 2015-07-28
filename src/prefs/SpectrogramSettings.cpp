@@ -341,13 +341,13 @@ void SpectrogramSettings::SavePrefs()
 
    gPrefs->Write(wxT("/Spectrum/Grayscale"), isGrayscale);
 
-   gPrefs->Write(wxT("/Spectrum/ScaleType"), scaleType);
+   gPrefs->Write(wxT("/Spectrum/ScaleType"), (int) scaleType);
 
 #ifndef SPECTRAL_SELECTION_GLOBAL_SWITCH
    gPrefs->Write(wxT("/Spectrum/EnableSpectralSelection"), spectralSelection);
 #endif
 
-   gPrefs->Write(wxT("/Spectrum/Algorithm"), algorithm);
+   gPrefs->Write(wxT("/Spectrum/Algorithm"), (int) algorithm);
 
 #ifdef EXPERIMENTAL_FFT_Y_GRID
    gPrefs->Write(wxT("/Spectrum/FFTYGrid"), fftYGrid);
