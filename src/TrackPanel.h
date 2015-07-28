@@ -210,6 +210,7 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
    virtual void OnTrackGainDec();
    virtual void OnTrackGainInc();
    virtual void OnTrackMenu(Track *t = NULL);
+   virtual void OnVRulerMenu(Track *t, wxMouseEvent *pEvent = NULL);
    virtual void OnTrackMute(bool shiftdown, Track *t = NULL);
    virtual void OnTrackSolo(bool shiftdown, Track *t = NULL);
    virtual void OnTrackClose();
@@ -244,6 +245,7 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
     * @param menu the menu to add the commands to.
     */
    virtual void BuildCommonDropMenuItems(wxMenu * menu);
+   static void BuildVRulerMenuItems(wxMenu * menu, int firstId, const wxArrayString &names);
    virtual bool IsUnsafe();
    virtual bool HandleLabelTrackMouseEvent(LabelTrack * lTrack, wxRect &r, wxMouseEvent & event);
    virtual bool HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &r, wxMouseEvent &event);
@@ -395,6 +397,7 @@ protected:
    virtual void HandleVZoomClick(wxMouseEvent & event);
    virtual void HandleVZoomDrag(wxMouseEvent & event);
    virtual void HandleVZoomButtonUp(wxMouseEvent & event);
+   virtual void HandleWaveTrackVZoom(WaveTrack *track, bool shiftDown, bool rightUp);
 
    // Handle sample editing using the 'draw' tool.
    virtual bool IsSampleEditingPossible( wxMouseEvent & event, Track * t );
@@ -465,6 +468,13 @@ protected:
    virtual void OnTimeTrackLin(wxCommandEvent &event);
    virtual void OnTimeTrackLog(wxCommandEvent &event);
    virtual void OnTimeTrackLogInt(wxCommandEvent &event);
+
+   virtual void OnWaveformScaleType(wxCommandEvent &event);
+   virtual void OnSpectrumScaleType(wxCommandEvent &event);
+
+   virtual void OnZoomInVertical(wxCommandEvent &event);
+   virtual void OnZoomOutVertical(wxCommandEvent &event);
+   virtual void OnZoomFitVertical(wxCommandEvent &event);
 
    virtual void SetMenuCheck( wxMenu & menu, int newId );
    virtual void SetRate(Track *pTrack, double rate);
@@ -824,6 +834,9 @@ protected:
    wxMenu *mRateMenu;
    wxMenu *mFormatMenu;
    wxMenu *mLabelTrackInfoMenu;
+
+   wxMenu *mRulerWaveformMenu;
+   wxMenu *mRulerSpectrumMenu;
 
    Track *mPopupMenuTarget;
 
