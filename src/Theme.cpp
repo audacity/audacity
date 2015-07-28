@@ -60,6 +60,7 @@ and use it for toolbar and window layouts too.
 #include <wx/file.h>
 #include <wx/ffile.h>
 #include <wx/mstream.h>
+#include <wx/msgdlg.h>
 
 #include "Project.h"
 #include "toolbars/ToolBar.h"
