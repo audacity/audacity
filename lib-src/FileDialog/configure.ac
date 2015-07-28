@@ -72,10 +72,10 @@ AC_SUBST([WX_LIBS])
 
 AC_MSG_CHECKING([for gtk3 use in wxWidgets])
 CPPFLAGS="${WX_CXXFLAGS}"
-AC_EGREP_CPP(yes,
+AC_EGREP_CPP(wxWidgets built with GTK3,
 [#include <wx/wx.h>
 #if defined(__WXGTK3__)
-  yes
+   wxWidgets built with GTK3
 #endif
 ], enable_gtk3=yes, enable_gtk3=no)
 

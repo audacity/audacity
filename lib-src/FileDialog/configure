@@ -15593,12 +15593,12 @@ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 #include <wx/wx.h>
 #if defined(__WXGTK3__)
-  yes
+   wxWidgets built with GTK3
 #endif
 
 _ACEOF
 if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
-  $EGREP "yes" >/dev/null 2>&1; then :
+  $EGREP "wxWidgets built with GTK3" >/dev/null 2>&1; then :
   enable_gtk3=yes
 else
   enable_gtk3=no
