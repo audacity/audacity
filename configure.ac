@@ -270,7 +270,7 @@ dnl there isn't a way to turn them off.
 dnl-------------------------------------------------------------
 
 dnl wxWidgets -- we assume that if wx-config is found, wxWidgets is successfully installed.
-AC_PATH_PROGS(WX_CONFIG, wx-config wx-config-3.0, no, $PATH:/usr/local/bin )
+AC_PATH_PROGS(WX_CONFIG, $WX_CONFIG wx-config wx-config-3.0, no, $PATH:/usr/local/bin )
 if [[ "$WX_CONFIG" = "no" ]] ; then
    AC_MSG_ERROR([Could not find wx-config: is wxWidgets installed? is wx-config in your path?])
 fi
@@ -566,10 +566,10 @@ case "${host_os}" in
 
       AC_MSG_CHECKING([for gtk3 use in wxWidgets])
       CPPFLAGS="${WX_CXXFLAGS}"
-      AC_EGREP_CPP(yes,
+      AC_EGREP_CPP(wxWidgets built with GTK3,
       [#include <wx/wx.h>
       #if defined(__WXGTK3__)
-        yes
+         wxWidgets built with GTK3
       #endif
       ], enable_gtk3=yes, enable_gtk3=no)
       

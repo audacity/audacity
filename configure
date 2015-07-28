@@ -19765,7 +19765,7 @@ _ACEOF
 
 
 
-for ac_prog in wx-config wx-config-3.0
+for ac_prog in $WX_CONFIG wx-config wx-config-3.0
 do
   # Extract the first word of "$ac_prog", so it can be a program name with args.
 set dummy $ac_prog; ac_word=$2
@@ -23485,12 +23485,12 @@ $as_echo_n "checking for gtk3 use in wxWidgets... " >&6; }
 /* end confdefs.h.  */
 #include <wx/wx.h>
       #if defined(__WXGTK3__)
-        yes
+         wxWidgets built with GTK3
       #endif
 
 _ACEOF
 if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
-  $EGREP "yes" >/dev/null 2>&1; then :
+  $EGREP "wxWidgets built with GTK3" >/dev/null 2>&1; then :
   enable_gtk3=yes
 else
   enable_gtk3=no
