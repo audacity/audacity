@@ -2129,6 +2129,7 @@
 		280A8B4619F4403B0091DE70 /* ModuleManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModuleManager.h; sourceTree = "<group>"; };
 		280A8B4819F440880091DE70 /* EffectRack.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EffectRack.cpp; sourceTree = "<group>"; };
 		280A8B4919F440880091DE70 /* EffectRack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EffectRack.h; sourceTree = "<group>"; };
+		280F5C8B1B676699003022C5 /* NumberScale.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NumberScale.h; sourceTree = "<group>"; };
 		28105D9B0AD09FB200BB4269 /* portmixer.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = portmixer.h; sourceTree = "<group>"; tabWidth = 3; };
 		28105DA00AD09FC500BB4269 /* px_mac_coreaudio.c */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = px_mac_coreaudio.c; sourceTree = "<group>"; tabWidth = 3; };
 		28105DA10AD09FC500BB4269 /* px_mixer.c */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = px_mixer.c; sourceTree = "<group>"; tabWidth = 3; };
@@ -3969,6 +3970,7 @@
 				280A8B4619F4403B0091DE70 /* ModuleManager.h */,
 				1790B0AF09883BFD008A330A /* NoteTrack.cpp */,
 				1790B0B009883BFD008A330A /* NoteTrack.h */,
+				280F5C8B1B676699003022C5 /* NumberScale.h */,
 				EDF3B7AF1588C0D50032D35F /* Paulstretch.cpp */,
 				EDF3B7AE1588C0D50032D35F /* Paulstretch.h */,
 				1790B0B109883BFD008A330A /* PitchName.cpp */,
