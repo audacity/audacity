@@ -242,6 +242,7 @@ audacity_SOURCES = \
 	WaveClip.h \
 	WaveTrack.cpp \
 	WaveTrack.h \
+	WaveTrackLocation.h \
 	WrappedType.cpp \
 	WrappedType.h \
 	commands/AppCommandEvent.cpp \
