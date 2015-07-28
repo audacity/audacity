@@ -54,8 +54,11 @@ class SpectrumPrefs:public PrefsPanel
    void OnControl(wxCommandEvent &event);
    void OnWindowSize(wxCommandEvent &event);
    void OnDefaults(wxCommandEvent&);
+   void OnAlgorithm(wxCommandEvent &);
    void OnApply(wxCommandEvent &);
    DECLARE_EVENT_TABLE()
+
+   void EnableDisableSTFTOnlyControls();
 
    WaveTrack *const mWt;
    bool mDefaulted;
@@ -70,10 +73,15 @@ class SpectrumPrefs:public PrefsPanel
 
 #ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
    int mZeroPaddingChoice;
+   wxChoice *mZeroPaddingChoiceCtrl;
    wxArrayString mZeroPaddingChoices;
 #endif
 
    wxArrayString mTypeChoices;
+   wxArrayString mScaleChoices;
+
+   wxChoice *mAlgorithmChoice;
+   wxArrayString mAlgorithmChoices;
 
 
 #ifdef EXPERIMENTAL_FIND_NOTES
@@ -97,5 +105,4 @@ public:
 private:
    WaveTrack *const mWt;
 };
-
 #endif

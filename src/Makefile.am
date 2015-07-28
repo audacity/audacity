@@ -171,6 +171,7 @@ audacity_SOURCES = \
 	MixerBoard.h \
 	ModuleManager.cpp \
 	ModuleManager.h \
+        NumberScale.h \
 	PitchName.cpp \
 	PitchName.h \
 	PlatformCompatibility.cpp \

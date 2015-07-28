@@ -13,13 +13,33 @@ Paul Licameli
 
 #include "../Experimental.h"
 
+#undef SPECTRAL_SELECTION_GLOBAL_SWITCH
+
 struct FFTParam;
+class NumberScale;
 class SpectrumPrefs;
+class wxArrayString;
 
 class SpectrogramSettings
 {
    friend class SpectrumPrefs;
 public:
+
+   // Singleton for settings that are not per-track
+   class Globals
+   {
+   public:
+      static Globals &Get();
+      void SavePrefs();
+
+#ifdef SPECTRAL_SELECTION_GLOBAL_SWITCH
+      bool spectralSelection;
+#endif
+
+   private:
+      Globals();
+      void LoadPrefs();
+   };
 
    enum {
       LogMinWindowSize = 3,
@@ -27,6 +47,24 @@ public:
 
       NumWindowSizes = LogMaxWindowSize - LogMinWindowSize + 1,
    };
+
+   // Do not assume that this enumeration will remain the
+   // same as NumberScaleType in future.  That enum may become
+   // more general purpose.
+   enum ScaleType {
+      stLinear,
+      stLogarithmic,
+      stMel,
+      stBark,
+      stErb,
+      stUndertone,
+
+      stNumScaleTypes,
+   };
+
+   static void InvalidateNames(); // in case of language change
+   static const wxArrayString &GetScaleNames();
+   static const wxArrayString &GetAlgorithmNames();
 
    static SpectrogramSettings &defaults();
    SpectrogramSettings();
@@ -48,6 +86,10 @@ public:
    void ConvertToEnumeratedWindowSizes();
    void ConvertToActualWindowSizes();
 
+   // If "bins" is false, units are Hz
+   NumberScale SpectrogramSettings::GetScale
+      (double rate, bool bins) const;
+
 private:
    int minFreq;
    int maxFreq;
@@ -58,6 +100,7 @@ public:
    int GetMaxFreq(double rate) const;
    int GetLogMinFreq(double rate) const;
    int GetLogMaxFreq(double rate) const;
+   bool SpectralSelectionEnabled() const;
 
    void SetMinFreq(int freq);
    void SetMaxFreq(int freq);
@@ -75,9 +118,23 @@ public:
    int zeroPaddingFactor;
 #endif
 
-   int GetFFTLength(bool autocorrelation) const; // window size (times zero padding, if STFT)
+   int GetFFTLength() const; // window size (times zero padding, if STFT)
 
    bool isGrayscale;
+
+   ScaleType scaleType;
+
+#ifndef SPECTRAL_SELECTION_GLOBAL_SWITCH
+   bool spectralSelection; // But should this vary per track? -- PRL
+#endif
+
+   enum Algorithm {
+      algSTFT = 0,
+      algPitchEAC,
+
+      algNumAlgorithms,
+   };
+   Algorithm algorithm;
 
 #ifdef EXPERIMENTAL_FFT_Y_GRID
    bool fftYGrid;
@@ -98,5 +155,4 @@ public:
    mutable float         *window;
 #endif
 };
-
 #endif
