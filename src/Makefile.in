@@ -1386,8 +1386,8 @@ $(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ $(am__aclocal_m4_deps)
 $(am__aclocal_m4_deps):
 
 configwin.h: stamp-h1
-	@if test ! -f $@; then rm -f stamp-h1; else :; fi
-	@if test ! -f $@; then $(MAKE) $(AM_MAKEFLAGS) stamp-h1; else :; fi
+	@test -f $@ || rm -f stamp-h1
+	@test -f $@ || $(MAKE) $(AM_MAKEFLAGS) stamp-h1
 
 stamp-h1: $(srcdir)/configtemplate.h $(top_builddir)/config.status
 	@rm -f stamp-h1
@@ -1398,8 +1398,8 @@ $(srcdir)/configtemplate.h: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
 	touch $@
 
 configunix.h: stamp-h2
-	@if test ! -f $@; then rm -f stamp-h2; else :; fi
-	@if test ! -f $@; then $(MAKE) $(AM_MAKEFLAGS) stamp-h2; else :; fi
+	@test -f $@ || rm -f stamp-h2
+	@test -f $@ || $(MAKE) $(AM_MAKEFLAGS) stamp-h2
 
 stamp-h2: $(srcdir)/configtemplate.h $(top_builddir)/config.status
 	@rm -f stamp-h2

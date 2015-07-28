@@ -90,22 +90,6 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 subdir = .
-<<<<<<< HEAD
-=======
-DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
-	$(top_srcdir)/configure $(am__configure_deps) $(dist_doc_DATA) \
-	$(dist_pkgdata_DATA) $(nobase_dist_pkgdata_DATA) ABOUT-NLS \
-	autotools/ar-lib autotools/compile autotools/config.guess \
-	autotools/config.rpath autotools/config.sub autotools/depcomp \
-	autotools/install-sh autotools/missing autotools/ltmain.sh \
-	$(top_srcdir)/autotools/ar-lib \
-	$(top_srcdir)/autotools/config.guess \
-	$(top_srcdir)/autotools/config.rpath \
-	$(top_srcdir)/autotools/config.sub \
-	$(top_srcdir)/autotools/install-sh \
-	$(top_srcdir)/autotools/ltmain.sh \
-	$(top_srcdir)/autotools/missing
->>>>>>> upstream/master
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ac_c99_func_lrint.m4 \
 	$(top_srcdir)/m4/ac_c99_func_lrintf.m4 \
@@ -918,22 +902,16 @@ dist-xz: distdir
 	$(am__post_remove_distdir)
 
 dist-tarZ: distdir
-<<<<<<< HEAD
 	@echo WARNING: "Support for distribution archives compressed with" \
 		       "legacy program 'compress' is deprecated." >&2
 	@echo WARNING: "It will be removed altogether in Automake 2.0" >&2
-=======
->>>>>>> upstream/master
 	tardir=$(distdir) && $(am__tar) | compress -c >$(distdir).tar.Z
 	$(am__post_remove_distdir)
 
 dist-shar: distdir
-<<<<<<< HEAD
 	@echo WARNING: "Support for shar distribution archives is" \
 	               "deprecated." >&2
 	@echo WARNING: "It will be removed altogether in Automake 2.0" >&2
-=======
->>>>>>> upstream/master
 	shar $(distdir) | GZIP=$(GZIP_ENV) gzip -c >$(distdir).shar.gz
 	$(am__post_remove_distdir)
 
@@ -974,18 +952,11 @@ distcheck: dist
 	dc_install_base=`$(am__cd) $(distdir)/_inst && pwd | sed -e 's,^[^:\\/]:[\\/],/,'` \
 	  && dc_destdir="$${TMPDIR-/tmp}/am-dc-$$$$/" \
 	  && am__cwd=`pwd` \
-<<<<<<< HEAD
 	  && $(am__cd) $(distdir)/_build/sub \
 	  && ../../configure \
 	    $(AM_DISTCHECK_CONFIGURE_FLAGS) \
 	    $(DISTCHECK_CONFIGURE_FLAGS) \
 	    --srcdir=../.. --prefix="$$dc_install_base" \
-=======
-	  && $(am__cd) $(distdir)/_build \
-	  && ../configure --srcdir=.. --prefix="$$dc_install_base" \
-	    $(AM_DISTCHECK_CONFIGURE_FLAGS) \
-	    $(DISTCHECK_CONFIGURE_FLAGS) \
->>>>>>> upstream/master
 	  && $(MAKE) $(AM_MAKEFLAGS) \
 	  && $(MAKE) $(AM_MAKEFLAGS) dvi \
 	  && $(MAKE) $(AM_MAKEFLAGS) check \
