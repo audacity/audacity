@@ -20,7 +20,7 @@ Paul Licameli
 
 #include "../Project.h"
 #include "../TrackPanel.h"
-#include "../ShuttleGUI.h"
+#include "../ShuttleGui.h"
 
 WaveformPrefs::WaveformPrefs(wxWindow * parent, WaveTrack *wt)
 : PrefsPanel(parent, _("Waveforms"))
