@@ -855,7 +855,8 @@ bool AudioIO::ValidateDeviceNames(wxString play, wxString rec)
 
 AudioIO::AudioIO()
 {
-   mCaptureTracks = mPlaybackTracks = NULL;
+   mCaptureTracks = new WaveTrackArray;
+   mPlaybackTracks = new WaveTrackArray;
 
    mAudioThreadShouldCallFillBuffersOnce = false;
    mAudioThreadFillBuffersLoopRunning = false;
@@ -1546,8 +1547,8 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
    mTime    = t0;
    mSeek    = 0;
    mLastRecordingOffset = 0;
-   mPlaybackTracks = new WaveTrackArray(playbackTracks);
-   mCaptureTracks  = new WaveTrackArray(captureTracks);
+   *mCaptureTracks = captureTracks;
+   *mPlaybackTracks = playbackTracks;
 #ifdef EXPERIMENTAL_MIDI_OUT
    mMidiPlaybackTracks = midiPlaybackTracks;
 #endif
