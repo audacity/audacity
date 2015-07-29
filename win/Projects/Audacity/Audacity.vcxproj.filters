@@ -1841,9 +1841,15 @@
     <CustomBuild Include="..\..\..\nyquist\xm.lsp">
       <Filter>nyquist</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\..\..\nyquist\test.lsp" />
-    <CustomBuild Include="..\..\..\nyquist\upic.sal" />
-    <CustomBuild Include="..\..\..\nyquist\velocity.lsp" />
+    <CustomBuild Include="..\..\..\nyquist\velocity.lsp">
+      <Filter>nyquist</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\upic.sal">
+      <Filter>nyquist</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\test.lsp">
+      <Filter>nyquist</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <copy Include="..\..\..\plug-ins\adjustable-fade.ny">
