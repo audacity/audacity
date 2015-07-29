@@ -466,6 +466,9 @@ int FileDialog::ShowModal()
     root->Layout();
     verticalSizer->SetSizeHints(root);
 
+    // Send an initial filter changed event
+    GTKFilterChanged();
+
     return wxDialog::ShowModal();
 }
 
