@@ -839,9 +839,6 @@
     <ClCompile Include="..\..\..\src\ViewInfo.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\effects\VST\VSTControlMSW.cpp">
-      <Filter>src/effects/VST</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\prefs\SpectrogramSettings.cpp">
       <Filter>src\prefs</Filter>
     </ClCompile>
@@ -850,6 +847,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\prefs\WaveformSettings.cpp">
       <Filter>src\prefs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\VST\VSTControlMSW.cpp">
+      <Filter>src\effects\VST</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1687,9 +1687,6 @@
     <ClInclude Include="..\..\..\src\AudacityHeaders.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\effects\VST\VSTControlMSW.h">
-      <Filter>src/effects/VST</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\prefs\SpectrogramSettings.h">
       <Filter>src\prefs</Filter>
     </ClInclude>
@@ -1707,6 +1704,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\prefs\GUISettings.h">
       <Filter>src\prefs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\VST\VSTControlMSW.h">
+      <Filter>src\effects\VST</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

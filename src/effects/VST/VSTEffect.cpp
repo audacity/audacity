@@ -41,13 +41,6 @@
 
 #if defined(__WXMSW__)
 #include <wx/dynlib.h>
-#include <wx/msw/seh.h>
-#include <shlwapi.h>
-#pragma comment(lib, "shlwapi")
-#else
-#include <dlfcn.h>
-#endif
-
 #include <wx/app.h>
 #include <wx/defs.h>
 #include <wx/buffer.h>
@@ -76,6 +69,12 @@
 #include <wx/timer.h>
 #include <wx/tokenzr.h>
 #include <wx/utils.h>
+
+#include <shlwapi.h>
+#pragma comment(lib, "shlwapi")
+#else
+#include <dlfcn.h>
+#endif
 
 // TODO:  Unfortunately we have some dependencies on Audacity provided 
 //        dialogs, widgets and other stuff.  This will need to be cleaned up.
