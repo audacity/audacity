@@ -20,6 +20,7 @@ AC_LANG_CPLUSPLUS
 #
 AC_PROG_CXX
 AM_PROG_AR
+AC_PROG_OBJCXX
 
 LT_INIT
 
@@ -31,20 +32,10 @@ AC_HEADER_STDC
 #
 # Check for debug
 #
-AC_ARG_ENABLE(static-wx,
-            [AS_HELP_STRING([--enable-static-wx],[link wx statically (default=no)])],
-            static_wx_preference="--static=$enableval",
-            static_wx_preference="")
-
-AC_ARG_ENABLE(unicode,
-            [AS_HELP_STRING([--enable-unicode],[enable unicode support (default=no)])],
-            unicode_preference="--unicode=$enableval",
-            unicode_preference="")
-
 AC_ARG_ENABLE(debug,
             [AS_HELP_STRING([--enable-debug],[enable debug support (default=none)])],
-            debug_preference="--debug=$enableval",
-            debug_preference="")
+            debug_preference="yes",
+            debug_preference="no")
 
 AC_ARG_WITH(wx-version,
             [AS_HELP_STRING([--with-wx-version],[override default wxWidgets version [2.6,2.8]])],
@@ -64,11 +55,21 @@ fi
 
 dnl Gather wx arguments
 
-wxconfigargs="$static_wx_preference $unicode_preference $debug_preference $wx_preference"
+wxconfigargs="$wx_preference"
 WX_CXXFLAGS=$($WX_CONFIG $wxconfigargs --cxxflags)
 WX_LIBS=""
 AC_SUBST([WX_CXXFLAGS])
 AC_SUBST([WX_LIBS])
+
+if test x"$debug_preference" = "xyes" ; then
+   dnl we want debuging on
+   AC_MSG_NOTICE([Adding -g for debugging to CFLAGS and CXXFLAGS ...])
+   CFLAGS="${CFLAGS} -g -DWXDEBUG_LEVEL=1"
+   CXXFLAGS="${CXXFLAGS} -g -DWXDEBUG_LEVEL=1"
+else
+   CFLAGS="${CFLAGS} -DWXDEBUG_LEVEL=0"
+   CXXFLAGS="${CXXFLAGS} -DWXDEBUG_LEVEL=0"
+fi
 
 AC_MSG_CHECKING([for gtk3 use in wxWidgets])
 CPPFLAGS="${WX_CXXFLAGS}"

@@ -771,8 +771,6 @@ enable_fast_install
 with_gnu_ld
 with_sysroot
 enable_libtool_lock
-enable_static_wx
-enable_unicode
 enable_debug
 with_wx_version
 '
@@ -1421,8 +1419,6 @@ Optional Features:
   --enable-fast-install[=PKGS]
                           optimize for fast installation [default=yes]
   --disable-libtool-lock  avoid locking (might break parallel builds)
-  --enable-static-wx      link wx statically [default=no]
-  --enable-unicode        enable unicode support [default=yes]
   --enable-debug          enable debug support [default=no]
 
 Optional Packages:
@@ -16210,22 +16206,6 @@ CPPFLAGS="$cppflags_save"
 CXXFLAGS="$cxxflags_save"
 
 
-# Check whether --enable-static-wx was given.
-if test "${enable_static_wx+set}" = set; then :
-  enableval=$enable_static_wx; static_wx_preference="--static=$enableval"
-else
-  static_wx_preference=""
-fi
-
-
-# Check whether --enable-unicode was given.
-if test "${enable_unicode+set}" = set; then :
-  enableval=$enable_unicode; unicode_preference="--unicode=$enableval"
-else
-  unicode_preference="--unicode=yes"
-fi
-
-
 # Check whether --enable-debug was given.
 if test "${enable_debug+set}" = set; then :
   enableval=$enable_debug; debug_preference="$enableval"
@@ -16244,11 +16224,14 @@ fi
 
 
 
-if test "$debug_preference" = "yes"; then
+if test x"$debug_preference" = "xyes" ; then
       { $as_echo "$as_me:${as_lineno-$LINENO}: Adding -g for debugging to CFLAGS and CXXFLAGS ..." >&5
 $as_echo "$as_me: Adding -g for debugging to CFLAGS and CXXFLAGS ..." >&6;}
-   CFLAGS="${CFLAGS} -g "
-   CXXFLAGS="${CXXFLAGS} -g "
+   CFLAGS="${CFLAGS} -g -DWXDEBUG_LEVEL=1"
+   CXXFLAGS="${CXXFLAGS} -g -DWXDEBUG_LEVEL=1"
+else
+   CFLAGS="${CFLAGS} -DWXDEBUG_LEVEL=0"
+   CXXFLAGS="${CXXFLAGS} -DWXDEBUG_LEVEL=0"
 fi
 
 

@@ -491,10 +491,13 @@ AudacityProject *CreateNewAudacityProject()
 
    //Create and show a new project
    AudacityProject *p = new AudacityProject(NULL, -1,
-                                            wxPoint(wndRect.x, wndRect.y),
+                                            wxDefaultPosition,
                                             wxSize(wndRect.width, wndRect.height));
-
    gAudacityProjects.Add(p);
+
+   // wxGTK3 seems to need to require creating the window using default position
+   // and then manually positioning it.
+   p->SetPosition(wndRect.GetPosition());
 
    if(bMaximized) {
       p->Maximize(true);

@@ -1111,7 +1111,8 @@ libaudacity_la_SOURCES = \
 	xml/XMLTagHandler.h \
 	$(NULL)
 
-audacity_CPPFLAGS = -D__STDC_CONSTANT_MACROS -DLIBDIR=\"$(libdir)\" \
+audacity_CPPFLAGS = -Wno-deprecated-declarations \
+	-D__STDC_CONSTANT_MACROS -DLIBDIR=\"$(libdir)\" \
 	$(EXPAT_CFLAGS) $(FILEDIALOG_CFLAGS) $(PORTAUDIO_CFLAGS) \
 	$(PORTMIXER_CFLAGS) $(SNDFILE_CFLAGS) $(SOXR_CFLAGS) \
 	$(WIDGETEXTRA_CFLAGS) $(WX_CXXFLAGS) $(NULL) $(am__append_1) \

@@ -93,11 +93,16 @@ host_triplet = @host@
 @GTK_TRUE@am__append_3 = \
 @GTK_TRUE@	gtk/FileDialogPrivate.cpp \
 @GTK_TRUE@	gtk/FileDialogPrivate.h \
-@GTK_TRUE@	gtk/private.h \
 @GTK_TRUE@	$(NULL)
 
-@MAC_TRUE@am__append_4 = mac/FileDialogPrivate.cpp mac/FileDialogPrivate.h
-@WINDOWS_TRUE@am__append_5 = win/FileDialogPrivate.cpp win/FileDialogPrivate.h
+@MAC_TRUE@am__append_4 = mac/FileDialogPrivate.mm \
+@MAC_TRUE@									 mac/FileDialogPrivate.h \
+@MAC_TRUE@									 $(NULL)
+
+@WINDOWS_TRUE@am__append_5 = win/FileDialogPrivate.cpp \
+@WINDOWS_TRUE@									 win/FileDialogPrivate.h \
+@WINDOWS_TRUE@									 $(NULL)
+
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
@@ -148,9 +153,8 @@ libFileDialog_la_DEPENDENCIES = $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_2)
 am__libFileDialog_la_SOURCES_DIST = FileDialog.cpp FileDialog.h \
 	gtk/FileDialogPrivate.cpp gtk/FileDialogPrivate.h \
-	gtk/private.h mac/FileDialogPrivate.cpp \
-	mac/FileDialogPrivate.h win/FileDialogPrivate.cpp \
-	win/FileDialogPrivate.h
+	mac/FileDialogPrivate.mm mac/FileDialogPrivate.h \
+	win/FileDialogPrivate.cpp win/FileDialogPrivate.h
 am__dirstamp = $(am__leading_dot)dirstamp
 @GTK_TRUE@am__objects_1 = gtk/libFileDialog_la-FileDialogPrivate.lo
 @MAC_TRUE@am__objects_2 = mac/libFileDialog_la-FileDialogPrivate.lo
@@ -197,6 +201,24 @@ AM_V_CXXLD = $(am__v_CXXLD_@AM_V@)
 am__v_CXXLD_ = $(am__v_CXXLD_@AM_DEFAULT_V@)
 am__v_CXXLD_0 = @echo "  CXXLD   " $@;
 am__v_CXXLD_1 = 
+OBJCXXCOMPILE = $(OBJCXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
+	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_OBJCXXFLAGS) $(OBJCXXFLAGS)
+LTOBJCXXCOMPILE = $(LIBTOOL) $(AM_V_lt) $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=compile $(OBJCXX) $(DEFS) \
+	$(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
+	$(AM_OBJCXXFLAGS) $(OBJCXXFLAGS)
+AM_V_OBJCXX = $(am__v_OBJCXX_@AM_V@)
+am__v_OBJCXX_ = $(am__v_OBJCXX_@AM_DEFAULT_V@)
+am__v_OBJCXX_0 = @echo "  OBJCXX  " $@;
+am__v_OBJCXX_1 = 
+OBJCXXLD = $(OBJCXX)
+OBJCXXLINK = $(LIBTOOL) $(AM_V_lt) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
+	--mode=link $(OBJCXXLD) $(AM_OBJCXXFLAGS) $(OBJCXXFLAGS) \
+	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+AM_V_OBJCXXLD = $(am__v_OBJCXXLD_@AM_V@)
+am__v_OBJCXXLD_ = $(am__v_OBJCXXLD_@AM_DEFAULT_V@)
+am__v_OBJCXXLD_0 = @echo "  OBJCXXLD" $@;
+am__v_OBJCXXLD_1 = 
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 LTCOMPILE = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
@@ -323,6 +345,9 @@ MANIFEST_TOOL = @MANIFEST_TOOL@
 MKDIR_P = @MKDIR_P@
 NM = @NM@
 NMEDIT = @NMEDIT@
+OBJCXX = @OBJCXX@
+OBJCXXDEPMODE = @OBJCXXDEPMODE@
+OBJCXXFLAGS = @OBJCXXFLAGS@
 OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
 OTOOL = @OTOOL@
@@ -355,6 +380,7 @@ ac_ct_AR = @ac_ct_AR@
 ac_ct_CC = @ac_ct_CC@
 ac_ct_CXX = @ac_ct_CXX@
 ac_ct_DUMPBIN = @ac_ct_DUMPBIN@
+ac_ct_OBJCXX = @ac_ct_OBJCXX@
 am__include = @am__include@
 am__leading_dot = @am__leading_dot@
 am__quote = @am__quote@
@@ -401,16 +427,16 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 ACLOCAL_AMFLAGS = -I m4
-EXTRA_DIST = FileDialog.vcproj FileDialogPrivate.h.in
 lib_LTLIBRARIES = libFileDialog.la
-libFileDialog_la_CPPFLAGS = $(WX_CXXFLAGS) $(am__append_1)
+libFileDialog_la_CPPFLAGS = $(WX_CXXFLAGS) \
+	-Wno-deprecated-declarations $(am__append_1)
 libFileDialog_la_LIBADD = $(WX_LIBS) $(am__append_2)
 libFileDialog_la_SOURCES = FileDialog.cpp FileDialog.h $(am__append_3) \
 	$(am__append_4) $(am__append_5)
 all: all-am
 
 .SUFFIXES:
-.SUFFIXES: .cpp .lo .o .obj
+.SUFFIXES: .cpp .lo .mm .o .obj
 am--refresh: Makefile
 	@:
 $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__configure_deps)
@@ -505,7 +531,7 @@ win/libFileDialog_la-FileDialogPrivate.lo: win/$(am__dirstamp) \
 	win/$(DEPDIR)/$(am__dirstamp)
 
 libFileDialog.la: $(libFileDialog_la_OBJECTS) $(libFileDialog_la_DEPENDENCIES) $(EXTRA_libFileDialog_la_DEPENDENCIES) 
-	$(AM_V_CXXLD)$(CXXLINK) -rpath $(libdir) $(libFileDialog_la_OBJECTS) $(libFileDialog_la_LIBADD) $(LIBS)
+	$(AM_V_OBJCXXLD)$(OBJCXXLINK) -rpath $(libdir) $(libFileDialog_la_OBJECTS) $(libFileDialog_la_LIBADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -562,19 +588,43 @@ gtk/libFileDialog_la-FileDialogPrivate.lo: gtk/FileDialogPrivate.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libFileDialog_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o gtk/libFileDialog_la-FileDialogPrivate.lo `test -f 'gtk/FileDialogPrivate.cpp' || echo '$(srcdir)/'`gtk/FileDialogPrivate.cpp
 
-mac/libFileDialog_la-FileDialogPrivate.lo: mac/FileDialogPrivate.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libFileDialog_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT mac/libFileDialog_la-FileDialogPrivate.lo -MD -MP -MF mac/$(DEPDIR)/libFileDialog_la-FileDialogPrivate.Tpo -c -o mac/libFileDialog_la-FileDialogPrivate.lo `test -f 'mac/FileDialogPrivate.cpp' || echo '$(srcdir)/'`mac/FileDialogPrivate.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) mac/$(DEPDIR)/libFileDialog_la-FileDialogPrivate.Tpo mac/$(DEPDIR)/libFileDialog_la-FileDialogPrivate.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='mac/FileDialogPrivate.cpp' object='mac/libFileDialog_la-FileDialogPrivate.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libFileDialog_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o mac/libFileDialog_la-FileDialogPrivate.lo `test -f 'mac/FileDialogPrivate.cpp' || echo '$(srcdir)/'`mac/FileDialogPrivate.cpp
-
 win/libFileDialog_la-FileDialogPrivate.lo: win/FileDialogPrivate.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libFileDialog_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT win/libFileDialog_la-FileDialogPrivate.lo -MD -MP -MF win/$(DEPDIR)/libFileDialog_la-FileDialogPrivate.Tpo -c -o win/libFileDialog_la-FileDialogPrivate.lo `test -f 'win/FileDialogPrivate.cpp' || echo '$(srcdir)/'`win/FileDialogPrivate.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) win/$(DEPDIR)/libFileDialog_la-FileDialogPrivate.Tpo win/$(DEPDIR)/libFileDialog_la-FileDialogPrivate.Plo
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='win/FileDialogPrivate.cpp' object='win/libFileDialog_la-FileDialogPrivate.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libFileDialog_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o win/libFileDialog_la-FileDialogPrivate.lo `test -f 'win/FileDialogPrivate.cpp' || echo '$(srcdir)/'`win/FileDialogPrivate.cpp
+
+.mm.o:
+@am__fastdepOBJCXX_TRUE@	$(AM_V_OBJCXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
+@am__fastdepOBJCXX_TRUE@	$(OBJCXXCOMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ $< &&\
+@am__fastdepOBJCXX_TRUE@	$(am__mv) $$depbase.Tpo $$depbase.Po
+@AMDEP_TRUE@@am__fastdepOBJCXX_FALSE@	$(AM_V_OBJCXX)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepOBJCXX_FALSE@	DEPDIR=$(DEPDIR) $(OBJCXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepOBJCXX_FALSE@	$(AM_V_OBJCXX@am__nodep@)$(OBJCXXCOMPILE) -c -o $@ $<
+
+.mm.obj:
+@am__fastdepOBJCXX_TRUE@	$(AM_V_OBJCXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.obj$$||'`;\
+@am__fastdepOBJCXX_TRUE@	$(OBJCXXCOMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ `$(CYGPATH_W) '$<'` &&\
+@am__fastdepOBJCXX_TRUE@	$(am__mv) $$depbase.Tpo $$depbase.Po
+@AMDEP_TRUE@@am__fastdepOBJCXX_FALSE@	$(AM_V_OBJCXX)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepOBJCXX_FALSE@	DEPDIR=$(DEPDIR) $(OBJCXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepOBJCXX_FALSE@	$(AM_V_OBJCXX@am__nodep@)$(OBJCXXCOMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
+
+.mm.lo:
+@am__fastdepOBJCXX_TRUE@	$(AM_V_OBJCXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.lo$$||'`;\
+@am__fastdepOBJCXX_TRUE@	$(LTOBJCXXCOMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ $< &&\
+@am__fastdepOBJCXX_TRUE@	$(am__mv) $$depbase.Tpo $$depbase.Plo
+@AMDEP_TRUE@@am__fastdepOBJCXX_FALSE@	$(AM_V_OBJCXX)source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepOBJCXX_FALSE@	DEPDIR=$(DEPDIR) $(OBJCXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepOBJCXX_FALSE@	$(AM_V_OBJCXX@am__nodep@)$(LTOBJCXXCOMPILE) -c -o $@ $<
+
+mac/libFileDialog_la-FileDialogPrivate.lo: mac/FileDialogPrivate.mm
+@am__fastdepOBJCXX_TRUE@	$(AM_V_OBJCXX)$(LIBTOOL) $(AM_V_lt) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(OBJCXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libFileDialog_la_CPPFLAGS) $(CPPFLAGS) $(AM_OBJCXXFLAGS) $(OBJCXXFLAGS) -MT mac/libFileDialog_la-FileDialogPrivate.lo -MD -MP -MF mac/$(DEPDIR)/libFileDialog_la-FileDialogPrivate.Tpo -c -o mac/libFileDialog_la-FileDialogPrivate.lo `test -f 'mac/FileDialogPrivate.mm' || echo '$(srcdir)/'`mac/FileDialogPrivate.mm
+@am__fastdepOBJCXX_TRUE@	$(AM_V_at)$(am__mv) mac/$(DEPDIR)/libFileDialog_la-FileDialogPrivate.Tpo mac/$(DEPDIR)/libFileDialog_la-FileDialogPrivate.Plo
+@AMDEP_TRUE@@am__fastdepOBJCXX_FALSE@	$(AM_V_OBJCXX)source='mac/FileDialogPrivate.mm' object='mac/libFileDialog_la-FileDialogPrivate.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepOBJCXX_FALSE@	DEPDIR=$(DEPDIR) $(OBJCXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepOBJCXX_FALSE@	$(AM_V_OBJCXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(OBJCXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libFileDialog_la_CPPFLAGS) $(CPPFLAGS) $(AM_OBJCXXFLAGS) $(OBJCXXFLAGS) -c -o mac/libFileDialog_la-FileDialogPrivate.lo `test -f 'mac/FileDialogPrivate.mm' || echo '$(srcdir)/'`mac/FileDialogPrivate.mm
 
 mostlyclean-libtool:
 	-rm -f *.lo

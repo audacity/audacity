@@ -220,8 +220,11 @@ fi
 if test x"$debug_preference" = "xyes" ; then
    dnl we want debuging on
    AC_MSG_NOTICE([Adding -g for debugging to CFLAGS and CXXFLAGS ...])
-   CFLAGS="${CFLAGS} -g "
-   CXXFLAGS="${CXXFLAGS} -g "
+   CFLAGS="${CFLAGS} -g -DWXDEBUG_LEVEL=1"
+   CXXFLAGS="${CXXFLAGS} -g -DWXDEBUG_LEVEL=1"
+else
+   CFLAGS="${CFLAGS} -DWXDEBUG_LEVEL=0"
+   CXXFLAGS="${CXXFLAGS} -DWXDEBUG_LEVEL=0"
 fi
 
 dnl Checks for typedefs, structures, and compiler characteristics.
@@ -231,6 +234,7 @@ AC_TYPE_SIZE_T
 dnl check if alloca.h exists. If it does, we need to include it for
 dnl Solaris builds, by defining HAVE_ALLOCA_H
 AC_CHECK_HEADERS_ONCE(alloca.h)
+
 
 dnl --------------------------------------------------------------------------
 dnl We would like warnings enabled on the builds, but different compilers need
