@@ -19245,8 +19245,11 @@ fi
 if test x"$debug_preference" = "xyes" ; then
       { $as_echo "$as_me:${as_lineno-$LINENO}: Adding -g for debugging to CFLAGS and CXXFLAGS ..." >&5
 $as_echo "$as_me: Adding -g for debugging to CFLAGS and CXXFLAGS ..." >&6;}
-   CFLAGS="${CFLAGS} -g "
-   CXXFLAGS="${CXXFLAGS} -g "
+   CFLAGS="${CFLAGS} -g -DWXDEBUG_LEVEL=1"
+   CXXFLAGS="${CXXFLAGS} -g -DWXDEBUG_LEVEL=1"
+else
+   CFLAGS="${CFLAGS} -DWXDEBUG_LEVEL=0"
+   CXXFLAGS="${CXXFLAGS} -DWXDEBUG_LEVEL=0"
 fi
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for an ANSI C-conforming const" >&5
@@ -19358,6 +19361,7 @@ _ACEOF
 fi
 
 done
+
 
 
 
