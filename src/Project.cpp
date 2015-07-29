@@ -489,8 +489,6 @@ AudacityProject *CreateNewAudacityProject()
    bool bIconized;
    GetNextWindowPlacement(&wndRect, &bMaximized, &bIconized);
 
-wndRect.width = 500;
-wndRect.height = 500;
    //Create and show a new project
    AudacityProject *p = new AudacityProject(NULL, -1,
                                             wxPoint(wndRect.x, wndRect.y),
