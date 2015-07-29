@@ -1612,7 +1612,7 @@ void NumericTextCtrl::OnCaptureKey(wxCommandEvent &event)
       case WXK_TAB:
       case WXK_RETURN:
       case WXK_NUMPAD_ENTER:
-      case '-':
+      case WXK_DELETE:
          return;
 
       default:
@@ -1635,7 +1635,7 @@ void NumericTextCtrl::OnKeyUp(wxKeyEvent &event)
       keyCode -= WXK_NUMPAD0 - '0';
 
    if ((keyCode >= '0' && keyCode <= '9') ||
-       (keyCode == '-') ||
+       (keyCode == WXK_DELETE) ||
        (keyCode == WXK_BACK) ||
        (keyCode == WXK_UP) ||
        (keyCode == WXK_DOWN)) {
@@ -1680,7 +1680,7 @@ void NumericTextCtrl::OnKeyDown(wxKeyEvent &event)
       Updated();
    }
 
-   else if (!mReadOnly && keyCode == '-') {
+   else if (!mReadOnly && keyCode == WXK_DELETE) {
       if (mAllowInvalidValue)
          SetValue(mInvalidValue);
    }
