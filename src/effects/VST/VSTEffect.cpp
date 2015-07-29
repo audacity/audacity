@@ -39,7 +39,6 @@
 #include <limits.h>
 #include <stdio.h>
 
-#if defined(__WXMSW__)
 #include <wx/dynlib.h>
 #include <wx/app.h>
 #include <wx/defs.h>
@@ -70,6 +69,7 @@
 #include <wx/tokenzr.h>
 #include <wx/utils.h>
 
+#if defined(__WXMSW__)
 #include <shlwapi.h>
 #pragma comment(lib, "shlwapi")
 #else
