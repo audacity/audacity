@@ -626,7 +626,7 @@ int FileDialog::ShowModal()
         types are foo and bar, a filename "myletter" with SetDialogIndex(1)
         would result in saving as myletter.foo, while we want myletter.bar.
         */
-        if(m_firstFileTypeFilter > 0)
+//        if(m_firstFileTypeFilter > 0)
         {
             DoOnFilterSelected(m_firstFileTypeFilter);
         }
@@ -651,6 +651,11 @@ int FileDialog::ShowModal()
         if ( !m_dir.IsEmpty() )
             [oPanel setDirectoryURL:[NSURL fileURLWithPath:dir.AsNSString() 
                                                isDirectory:YES]];
+
+        {
+            DoOnFilterSelected(m_firstFileTypeFilter);
+        }
+
         returnCode = [oPanel runModal];
             
         ModalFinishedCallback(oPanel, returnCode);
