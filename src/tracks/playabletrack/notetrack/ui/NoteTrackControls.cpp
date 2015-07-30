@@ -19,6 +19,8 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../HitTestResult.h"
 #include "../../../../Track.h"
 #include "../../../../TrackPanelMouseEvent.h"
+#include "../../../../NoteTrack.h"
+#include "../../../../widgets/PopupMenuTable.h"
 
 NoteTrackControls::NoteTrackControls()
 {
@@ -62,6 +64,41 @@ HitTestResult NoteTrackControls::HitTest
    }
 
    return TrackControls::HitTest(evt, pProject);
+}
+
+class NoteTrackMenuTable : public PopupMenuTable
+{
+   NoteTrackMenuTable() : mpData(NULL) {}
+   DECLARE_POPUP_MENU(NoteTrackMenuTable);
+
+public:
+   static NoteTrackMenuTable &Instance();
+
+   void InitMenu(Menu*, void *pUserData) override
+   {
+      mpData = static_cast<TrackControls::InitMenuData*>(pUserData);
+   }
+
+   void DestroyMenu() override
+   {
+      mpData = nullptr;
+   }
+
+   TrackControls::InitMenuData *mpData;
+};
+
+NoteTrackMenuTable &NoteTrackMenuTable::Instance()
+{
+   static NoteTrackMenuTable instance;
+   return instance;
+}
+
+BEGIN_POPUP_MENU(NoteTrackMenuTable)
+END_POPUP_MENU()
+
+PopupMenuTable *NoteTrackControls::GetMenuExtension(Track *)
+{
+   return &NoteTrackMenuTable::Instance();
 }
 
 #endif

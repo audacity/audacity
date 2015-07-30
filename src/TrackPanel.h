@@ -491,13 +491,6 @@ protected:
 
    virtual void HandleRearrange(wxMouseEvent & event);
    virtual void CalculateRearrangingThresholds(wxMouseEvent & event);
-   virtual void HandlePopping(wxMouseEvent & event);
-
-   // These *Func methods are used in TrackPanel::HandleLabelClick to set up
-   // for actual handling in methods called by TrackPanel::OnMouseEvent, and
-   // to draw button-down states, etc.
-   virtual bool PopupFunc(Track * t, wxRect rect, int x, int y);
-
 
 public:
    virtual void MakeParentRedrawScrollbars();

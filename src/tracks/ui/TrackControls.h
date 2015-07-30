@@ -13,6 +13,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "CommonTrackPanelCell.h"
 
+class PopupMenuTable;
 class Track;
 
 class TrackControls /* not final */ : public CommonTrackPanelCell
@@ -23,6 +24,16 @@ public:
    virtual ~TrackControls() = 0;
 
    Track *GetTrack() const { return mpTrack; }
+
+   // This is passed to the InitMenu() methods of the PopupMenuTable
+   // objects returned by GetMenuExtension:
+   struct InitMenuData
+   {
+   public:
+      Track *pTrack;
+      wxWindow *pParent;
+      unsigned result;
+   };
 
    // Make this hack go away!  See TrackPanel::DrawOutside
    static int gCaptureState;
@@ -35,6 +46,10 @@ protected:
        const AudacityProject *) override = 0;
 
    Track *FindTrack() override;
+
+   unsigned DoContextMenu
+      (const wxRect &rect, wxWindow *pParent, wxPoint *pPosition) override;
+   virtual PopupMenuTable *GetMenuExtension(Track *pTrack) = 0;
 
    friend class Track;
    Track *mpTrack;

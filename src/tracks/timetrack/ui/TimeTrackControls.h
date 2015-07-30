@@ -26,6 +26,8 @@ public:
    HitTestResult HitTest
       (const TrackPanelMouseEvent &event,
        const AudacityProject *pProject) override;
+
+   PopupMenuTable *GetMenuExtension(Track *pTrack) override;
 };
 
 #endif

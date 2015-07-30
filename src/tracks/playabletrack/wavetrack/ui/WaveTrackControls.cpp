@@ -14,9 +14,10 @@ Paul Licameli split from TrackPanel.cpp
 #include "WaveTrackSliderHandles.h"
 
 #include "../../../../HitTestResult.h"
-#include "../../../../Track.h"
+#include "../../../../WaveTrack.h"
 #include "../../../../TrackPanel.h"
 #include "../../../../TrackPanelMouseEvent.h"
+#include "../../../../widgets/PopupMenuTable.h"
 
 WaveTrackControls::WaveTrackControls()
 {
@@ -64,4 +65,39 @@ HitTestResult WaveTrackControls::HitTest
    }
 
    return TrackControls::HitTest(evt, pProject);
+}
+
+class WaveTrackMenuTable : public PopupMenuTable
+{
+   WaveTrackMenuTable() : mpData(NULL) {}
+   DECLARE_POPUP_MENU(WaveTrackMenuTable);
+
+public:
+   static WaveTrackMenuTable &Instance();
+
+   void InitMenu(Menu*, void *pUserData) override
+   {
+      mpData = static_cast<TrackControls::InitMenuData*>(pUserData);
+   }
+
+   void DestroyMenu() override
+   {
+      mpData = nullptr;
+   }
+
+   TrackControls::InitMenuData *mpData;
+};
+
+WaveTrackMenuTable &WaveTrackMenuTable::Instance()
+{
+   static WaveTrackMenuTable instance;
+   return instance;
+}
+
+BEGIN_POPUP_MENU(WaveTrackMenuTable)
+END_POPUP_MENU()
+
+PopupMenuTable *WaveTrackControls::GetMenuExtension(Track*)
+{
+   return &WaveTrackMenuTable::Instance();
 }
