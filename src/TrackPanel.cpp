@@ -151,7 +151,6 @@ is time to refresh some aspect of the screen.
 
 *//*****************************************************************/
 
-
 #include "Audacity.h"
 #include "Experimental.h"
 #include "TrackPanel.h"
@@ -291,13 +290,7 @@ template < class CLIPPEE, class CLIPVAL >
 
 enum {
    TrackPanelFirstID = 2000,
-   OnSetNameID,
    OnSetFontID,
-
-   OnMoveUpID,
-   OnMoveDownID,
-   OnMoveTopID,
-   OnMoveBottomID,
 
    OnUpOctaveID,
    OnDownOctaveID,
@@ -364,12 +357,9 @@ BEGIN_EVENT_TABLE(TrackPanel, OverlayPanel)
     EVT_SET_FOCUS(TrackPanel::OnSetFocus)
     EVT_KILL_FOCUS(TrackPanel::OnKillFocus)
     EVT_CONTEXT_MENU(TrackPanel::OnContextMenu)
-    EVT_MENU(OnSetNameID, TrackPanel::OnSetName)
     EVT_MENU(OnSetFontID, TrackPanel::OnSetFont)
     EVT_MENU(OnSetTimeTrackRangeID, TrackPanel::OnSetTimeTrackRange)
 
-    EVT_MENU_RANGE(OnMoveUpID, OnMoveDownID, TrackPanel::OnMoveTrack)
-    EVT_MENU_RANGE(OnMoveTopID, OnMoveBottomID, TrackPanel::OnMoveTrack)
     EVT_MENU_RANGE(OnUpOctaveID, OnDownOctaveID, TrackPanel::OnChangeOctave)
     EVT_MENU_RANGE(OnChannelLeftID, OnChannelMonoID,
                TrackPanel::OnChannelChange)
@@ -630,7 +620,6 @@ void TrackPanel::BuildMenus(void)
 
    /* build the pop-down menu used on wave (sampled audio) tracks */
    mWaveTrackMenu = std::make_unique<wxMenu>();
-   BuildCommonDropMenuItems(mWaveTrackMenu.get());   // does name, up/down etc
    mWaveTrackMenu->AppendRadioItem(OnWaveformID, _("Wa&veform"));
    mWaveTrackMenu->AppendRadioItem(OnWaveformDBID, _("&Waveform (dB)"));
    mWaveTrackMenu->AppendRadioItem(OnSpectrumID, _("&Spectrogram"));
@@ -659,18 +648,15 @@ void TrackPanel::BuildMenus(void)
 
    /* build the pop-down menu used on note (MIDI) tracks */
    mNoteTrackMenu = std::make_unique<wxMenu>();
-   BuildCommonDropMenuItems(mNoteTrackMenu.get());   // does name, up/down etc
    mNoteTrackMenu->Append(OnUpOctaveID, _("Up &Octave"));
    mNoteTrackMenu->Append(OnDownOctaveID, _("Down Octa&ve"));
 
    /* build the pop-down menu used on label tracks */
    mLabelTrackMenu = std::make_unique<wxMenu>();
-   BuildCommonDropMenuItems(mLabelTrackMenu.get());   // does name, up/down etc
    mLabelTrackMenu->Append(OnSetFontID, _("&Font..."));
 
    /* build the pop-down menu used on time warping tracks */
    mTimeTrackMenu = std::make_unique<wxMenu>();
-   BuildCommonDropMenuItems(mTimeTrackMenu.get());   // does name, up/down etc
    mTimeTrackMenu->AppendRadioItem(OnTimeTrackLinID, wxT("&Linear scale"));
    mTimeTrackMenu->AppendRadioItem(OnTimeTrackLogID, _("L&ogarithmic scale"));
 
@@ -689,24 +675,6 @@ void TrackPanel::BuildMenus(void)
       (mRulerSpectrumMenu.get(), OnFirstSpectrumScaleID,
        SpectrogramSettings::GetScaleNames());
 */
-}
-
-void TrackPanel::BuildCommonDropMenuItems(wxMenu * menu)
-{
-   menu->Append(OnSetNameID, _("&Name..."));
-   menu->AppendSeparator();
-   // It is not correct to use KeyStringDisplay here -- wxWidgets will apply
-   // its equivalent to the key names passed to menu functions.
-   menu->Append(OnMoveUpID, _("Move Track &Up") + wxT("\t") + 
-                           (GetProject()->GetCommandManager()->GetKeyFromName(wxT("TrackMoveUp"))));
-   menu->Append(OnMoveDownID, _("Move Track &Down") + wxT("\t") + 
-                           (GetProject()->GetCommandManager()->GetKeyFromName(wxT("TrackMoveDown"))));
-   menu->Append(OnMoveTopID, _("Move Track to &Top") + wxT("\t") + 
-                           (GetProject()->GetCommandManager()->GetKeyFromName(wxT("TrackMoveTop"))));
-   menu->Append(OnMoveBottomID, _("Move Track to &Bottom") + wxT("\t") + 
-                           (GetProject()->GetCommandManager()->GetKeyFromName(wxT("TrackMoveBottom"))));
-   menu->AppendSeparator();
-
 }
 
 /*
@@ -6068,11 +6036,6 @@ void TrackPanel::OnTrackMenu(Track *t)
    }
 
    if (theMenu) {
-      theMenu->Enable(OnMoveUpID, mTracks->CanMoveUp(t));
-      theMenu->Enable(OnMoveDownID, mTracks->CanMoveDown(t));
-      theMenu->Enable(OnMoveTopID, mTracks->CanMoveUp(t));
-      theMenu->Enable(OnMoveBottomID, mTracks->CanMoveDown(t));
-
       //We need to find the location of the menu rectangle.
       const wxRect rect = FindTrackRect(t,true);
       wxRect titleRect;
@@ -6926,27 +6889,6 @@ void TrackPanel::OnZoomFitVertical(wxCommandEvent &)
    HandleWaveTrackVZoom(static_cast<WaveTrack*>(mPopupMenuTarget), true, true);
 }
 
-/// Move a track up, down, to top or to bottom.
-
-void TrackPanel::OnMoveTrack(wxCommandEvent &event)
-{
-   AudacityProject::MoveChoice choice;
-   switch (event.GetId()) {
-   default:
-      wxASSERT(false);
-   case OnMoveUpID:
-      choice = AudacityProject::OnMoveUpID; break;
-   case OnMoveDownID:
-      choice = AudacityProject::OnMoveDownID; break;
-   case OnMoveTopID:
-      choice = AudacityProject::OnMoveTopID; break;
-   case OnMoveBottomID:
-      choice = AudacityProject::OnMoveBottomID; break;
-   }
-
-   GetProject()->MoveTrack(mPopupMenuTarget, choice);
-}
-
 /// This only applies to MIDI tracks.  Presumably, it shifts the
 /// whole sequence by an octave.
 void TrackPanel::OnChangeOctave(wxCommandEvent & event)
@@ -6963,38 +6905,6 @@ void TrackPanel::OnChangeOctave(wxCommandEvent & event)
    MakeParentModifyState(true);
    Refresh(false);
 #endif
-}
-
-void TrackPanel::OnSetName(wxCommandEvent & WXUNUSED(event))
-{
-   Track *t = mPopupMenuTarget;
-   if (t)
-   {
-      wxString oldName = t->GetName();
-      wxString newName =
-         wxGetTextFromUser(_("Change track name to:"),
-                           _("Track Name"), oldName);
-      if (newName != wxT("")) // wxGetTextFromUser returns empty string on Cancel.
-      {
-         t->SetName(newName);
-         // if we have a linked channel this name should change as well
-         // (otherwise sort by name and time will crash).
-         if (t->GetLinked())
-            t->GetLink()->SetName(newName);
-
-         MixerBoard* pMixerBoard = this->GetMixerBoard();
-         auto pt = dynamic_cast<PlayableTrack*>(t);
-         if (pMixerBoard && pt)
-            pMixerBoard->UpdateName(pt);
-
-         MakeParentPushState(wxString::Format(_("Renamed '%s' to '%s'"),
-                                              oldName.c_str(),
-                                              newName.c_str()),
-                             _("Name Change"));
-
-         Refresh(false);
-      }
-   }
 }
 
 // Small helper class to enumerate all fonts in the system
