@@ -1183,6 +1183,8 @@ bool ProgressDialog::Create(const wxString & title,
    // On OSX at least, creating the disabler causes the dialog to show, so
    // just hide it again until the delay has been reached.
    Show(false);
+
+   return true;
 }
 
 //
