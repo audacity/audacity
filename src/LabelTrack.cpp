@@ -61,6 +61,14 @@ for drawing different aspects of the label and its text box.
 
 #include "effects/TimeWarper.h"
 
+enum
+{
+   OnCutSelectedTextID,
+   OnCopySelectedTextID,
+   OnPasteSelectedTextID,
+   OnDeleteSelectedLabelID,
+};
+
 wxFont LabelTrack::msFont;
 
 // static member variables.
@@ -1586,6 +1594,13 @@ bool LabelTrack::HandleMouse(const wxMouseEvent & evt,
       }
    }
 
+   if (evt.RightUp()) {
+      if ((mSelIndex != -1) && OverTextBox(GetLabel(mSelIndex), evt.m_x, evt.m_y)) {
+         // popup menu for editing
+         ShowContextMenu();
+      }
+   }
+
    return false;
 }
 
@@ -1822,6 +1837,10 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
          }
          break;
 
+      case WXK_WINDOWS_MENU:
+         ShowContextMenu();
+         break;
+
       default:
          if (!IsGoodLabelEditKey(keyCode)) {
             event.Skip();
@@ -1975,6 +1994,94 @@ bool LabelTrack::OnChar(SelectedRegion &WXUNUSED(newSel), wxKeyEvent & event)
    mDrawCursor = true;
 
    return updated;
+}
+
+void LabelTrack::ShowContextMenu()
+{
+   wxWindow *parent = wxWindow::FindFocus();
+
+   wxMenu *menu = new wxMenu();
+   menu->Bind(wxEVT_MENU, &LabelTrack::OnContextMenu, this);
+
+   menu->Append(OnCutSelectedTextID, _("Cu&t"));
+   menu->Append(OnCopySelectedTextID, _("&Copy"));
+   menu->Append(OnPasteSelectedTextID, _("&Paste"));
+   menu->Append(OnDeleteSelectedLabelID, _("&Delete Label"));
+
+   menu->Enable(OnCutSelectedTextID, IsTextSelected());
+   menu->Enable(OnCopySelectedTextID, IsTextSelected());
+   menu->Enable(OnPasteSelectedTextID, IsTextClipSupported());
+   menu->Enable(OnDeleteSelectedLabelID, true);
+
+   const LabelStruct *ls = GetLabel(mSelIndex);
+
+   wxClientDC dc(parent);
+
+   if (msFont.Ok())
+   {
+      dc.SetFont(msFont);
+   }
+
+   int x;
+   if (mMouseXPos != -1)
+   {
+      x = mMouseXPos;
+   }
+   else
+   {
+      dc.GetTextExtent(ls->title.Left(mCurrentCursorPos), &x, NULL);
+      x += ls->xText;
+   }
+
+   parent->PopupMenu(menu, x, ls->y + (mIconHeight / 2) - 1);
+
+   // it's an invalid dragging event
+   SetWrongDragging(true);
+}
+
+void LabelTrack::OnContextMenu(wxCommandEvent & evt)
+{
+   AudacityProject *p = GetActiveProject();
+
+   switch (evt.GetId())
+   {
+   /// Cut selected text if cut menu item is selected
+   case OnCutSelectedTextID:
+      if (CutSelectedText())
+      {
+         p->PushState(_("Modified Label"),
+                      _("Label Edit"),
+                      PUSH_CONSOLIDATE);
+      }
+      break;
+
+   /// Copy selected text if copy menu item is selected
+   case OnCopySelectedTextID:
+      CopySelectedText();
+      break;
+
+   /// paste selected text if paste menu item is selected
+   case OnPasteSelectedTextID:
+      if (PasteSelectedText(p->GetSel0(), p->GetSel1()))
+      {
+         p->PushState(_("Modified Label"),
+                      _("Label Edit"),
+                      true /* consolidate */);
+      }
+      break;
+
+   /// delete selected label
+   case OnDeleteSelectedLabelID:
+      int ndx = GetLabelIndex(p->GetSel0(), p->GetSel1());
+      if (ndx != -1)
+      {
+         DeleteLabel(ndx);
+         p->PushState(_("Deleted Label"),
+                      _("Label Edit"),
+                      true /* consolidate */);
+      }
+      break;
+   }
 }
 
 void LabelTrack::RemoveSelectedText()

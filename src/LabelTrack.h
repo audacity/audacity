@@ -232,6 +232,8 @@ class AUDACITY_DLL_API LabelTrack : public Track
    //mOldEdge is useful for telling us when there has been a state change.
    int mOldEdge;
  private:
+   void ShowContextMenu();
+   void OnContextMenu(wxCommandEvent & evt);
 
    int mSelIndex;              /// Keeps track of the currently selected label
    int mMouseOverLabelLeft;    /// Keeps track of which left label the mouse is currently over.

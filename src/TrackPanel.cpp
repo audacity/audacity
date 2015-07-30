@@ -331,10 +331,6 @@ enum {
    OnSwapChannelsID,
 
    OnSetTimeTrackRangeID,
-   OnCutSelectedTextID,
-   OnCopySelectedTextID,
-   OnPasteSelectedTextID,
-   OnDeleteSelectedLabelID,
 
    OnTimeTrackLinID,
    OnTimeTrackLogID,
@@ -383,11 +379,6 @@ BEGIN_EVENT_TABLE(TrackPanel, wxWindow)
     EVT_MENU(OnSplitStereoID, TrackPanel::OnSplitStereo)
     EVT_MENU(OnSplitStereoMonoID, TrackPanel::OnSplitStereoMono)
     EVT_MENU(OnMergeStereoID, TrackPanel::OnMergeStereo)
-
-    EVT_MENU(OnCutSelectedTextID, TrackPanel::OnCutSelectedText)
-    EVT_MENU(OnCopySelectedTextID, TrackPanel::OnCopySelectedText)
-    EVT_MENU(OnPasteSelectedTextID, TrackPanel::OnPasteSelectedText)
-    EVT_MENU(OnDeleteSelectedLabelID, TrackPanel::OnDeleteSelectedLabel)
 
     EVT_MENU(OnTimeTrackLinID, TrackPanel::OnTimeTrackLin)
     EVT_MENU(OnTimeTrackLogID, TrackPanel::OnTimeTrackLog)
@@ -564,7 +555,6 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    mWaveTrackMenu = NULL;
    mNoteTrackMenu = NULL;
    mLabelTrackMenu = NULL;
-   mLabelTrackInfoMenu = NULL;
    mTimeTrackMenu = NULL;
 
    mRulerWaveformMenu = mRulerSpectrumMenu = NULL;
@@ -776,12 +766,6 @@ void TrackPanel::BuildMenus(void)
    mTimeTrackMenu->Append(OnSetTimeTrackRangeID, _("Set Ra&nge..."));
    mTimeTrackMenu->AppendCheckItem(OnTimeTrackLogIntID, _("Logarithmic &Interpolation"));
 
-   mLabelTrackInfoMenu = new wxMenu();
-   mLabelTrackInfoMenu->Append(OnCutSelectedTextID, _("Cu&t"));
-   mLabelTrackInfoMenu->Append(OnCopySelectedTextID, _("&Copy"));
-   mLabelTrackInfoMenu->Append(OnPasteSelectedTextID, _("&Paste"));
-   mLabelTrackInfoMenu->Append(OnDeleteSelectedLabelID, _("&Delete Label"));
-
    mRulerWaveformMenu = new wxMenu();
    BuildVRulerMenuItems
       (mRulerWaveformMenu, OnFirstWaveformScaleID,
@@ -835,11 +819,6 @@ void TrackPanel::DeleteMenus(void)
    if (mLabelTrackMenu) {
       delete mLabelTrackMenu;
       mLabelTrackMenu = NULL;
-   }
-
-   if (mLabelTrackInfoMenu) {
-      delete mLabelTrackInfoMenu;
-      mLabelTrackInfoMenu = NULL;
    }
 
    if (mTimeTrackMenu) {
@@ -6583,25 +6562,6 @@ bool TrackPanel::HandleLabelTrackMouseEvent(LabelTrack * lTrack, wxRect &r, wxMo
                           PUSH_CONSOLIDATE);
    }
 
-
-   if (event.RightUp()) {
-      // popup menu for editing
-      RefreshTrack(lTrack);
-
-      if ((lTrack->getSelectedIndex() != -1) && lTrack->OverTextBox(lTrack->GetLabel(lTrack->getSelectedIndex()), event.m_x, event.m_y)) {
-         mPopupMenuTarget = lTrack;
-         mLabelTrackInfoMenu->Enable(OnCutSelectedTextID, lTrack->IsTextSelected());
-         mLabelTrackInfoMenu->Enable(OnCopySelectedTextID, lTrack->IsTextSelected());
-         mLabelTrackInfoMenu->Enable(OnPasteSelectedTextID, lTrack->IsTextClipSupported());
-         mLabelTrackInfoMenu->Enable(OnDeleteSelectedLabelID, true);
-         PopupMenu(mLabelTrackInfoMenu, event.m_x + 1, event.m_y + 1);
-         mPopupMenuTarget = NULL;
-         // it's an invalid dragging event
-         lTrack->SetWrongDragging(true);
-      }
-      return true;
-   }
-
    //If we are adjusting a label on a labeltrack, do not do anything
    //that follows. Instead, redraw the track.
    if(mMouseCapture == IsAdjustingLabel)
@@ -9449,54 +9409,6 @@ void TrackPanel::OnSetName(wxCommandEvent & WXUNUSED(event))
          Refresh(false);
       }
    }
-}
-
-/// Cut selected text if cut menu item is selected
-void TrackPanel::OnCutSelectedText(wxCommandEvent & WXUNUSED(event))
-{
-   LabelTrack *lt = (LabelTrack *)mPopupMenuTarget;
-   if (lt->CutSelectedText()) {
-      MakeParentPushState(_("Modified Label"),
-                          _("Label Edit"),
-                          PUSH_CONSOLIDATE);
-   }
-   RefreshTrack(lt);
-}
-
-/// Copy selected text if copy menu item is selected
-void TrackPanel::OnCopySelectedText(wxCommandEvent & WXUNUSED(event))
-{
-   LabelTrack *lt = (LabelTrack *)mPopupMenuTarget;
-   lt->CopySelectedText();
-   RefreshTrack(lt);
-}
-
-/// paste selected text if paste menu item is selected
-void TrackPanel::OnPasteSelectedText(wxCommandEvent & WXUNUSED(event))
-{
-   LabelTrack *lt = (LabelTrack *)mPopupMenuTarget;
-   if (lt->PasteSelectedText(mViewInfo->selectedRegion.t0(),
-       mViewInfo->selectedRegion.t1())) {
-      MakeParentPushState(_("Modified Label"),
-                          _("Label Edit"),
-                          true /* consolidate */);
-   }
-   RefreshTrack(lt);
-}
-
-/// delete selected label
-void TrackPanel::OnDeleteSelectedLabel(wxCommandEvent & WXUNUSED(event))
-{
-   LabelTrack *lt = (LabelTrack *)mPopupMenuTarget;
-   int ndx = lt->GetLabelIndex(mViewInfo->selectedRegion.t0(),
-                               mViewInfo->selectedRegion.t1());
-   if (ndx != -1) {
-      lt->DeleteLabel(ndx);
-      MakeParentPushState(_("Deleted Label"),
-                          _("Label Edit"),
-                          true /* consolidate */);
-   }
-   RefreshTrack(lt);
 }
 
 // Small helper class to enumerate all fonts in the system

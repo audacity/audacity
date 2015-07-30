@@ -486,10 +486,6 @@ protected:
    virtual void OnSplitStereoMono(wxCommandEvent &event);
    virtual void SplitStereo(bool stereo);
    virtual void OnMergeStereo(wxCommandEvent &event);
-   virtual void OnCutSelectedText(wxCommandEvent &event);
-   virtual void OnCopySelectedText(wxCommandEvent &event);
-   virtual void OnPasteSelectedText(wxCommandEvent &event);
-   virtual void OnDeleteSelectedLabel(wxCommandEvent &event);
 
    virtual void SetTrackPan(Track * t, LWSlider * s);
    virtual void SetTrackGain(Track * t, LWSlider * s);
