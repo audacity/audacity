@@ -220,7 +220,7 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
                                 NULL,
                                 this);
             }
-            S.AddWindow(mFilter, wxALIGN_RIGHT);
+            S.AddWindow(mFilter, wxALIGN_NOT | wxALIGN_LEFT);
          }
          S.EndHorizontalLay();
       }

@@ -3050,7 +3050,7 @@ bool EffectUIHost::Initialize()
    }
 
    buttonPanel->SetSizer(CreateStdButtonSizer(buttonPanel, buttons, bar));
-   vs->Add(buttonPanel, 0, wxEXPAND | wxALIGN_CENTER_VERTICAL);
+   vs->Add(buttonPanel, 0, wxEXPAND);
 
    SetSizer(vs);
    Layout();

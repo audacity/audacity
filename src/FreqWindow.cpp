@@ -296,7 +296,7 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
       mFreqPlot = new FreqPlot(this);
       mFreqPlot->SetMinSize(wxSize(wxDefaultCoord, FREQ_WINDOW_HEIGHT));
       S.Prop(1);
-      S.AddWindow(mFreqPlot, wxEXPAND | wxALIGN_CENTRE);
+      S.AddWindow(mFreqPlot, wxEXPAND);
 
       S.StartHorizontalLay(wxEXPAND, 0);
       {
@@ -476,7 +476,7 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
    S.AddSpace(5);
 
    mProgress = new FreqGauge(this); //, wxID_ANY, wxST_SIZEGRIP);
-   S.AddWindow(mProgress, wxEXPAND | wxALIGN_BOTTOM);
+   S.AddWindow(mProgress, wxEXPAND);
 
    // Log-frequency axis works for spectrum plots only.
    if (mAlg != SpectrumAnalyst::Spectrum)

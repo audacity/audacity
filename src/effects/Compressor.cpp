@@ -217,7 +217,7 @@ void EffectCompressor::PopulateOrExchange(ShuttleGui & S)
 
    S.StartStatic(wxT(""));
    {
-      S.StartMultiColumn(3, wxEXPAND | wxALIGN_CENTER_VERTICAL);
+      S.StartMultiColumn(3, wxEXPAND);
       {
          S.SetStretchyCol(1);
          mThresholdLabel = S.AddVariableText(_("Threshold:"), true,

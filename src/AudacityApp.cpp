@@ -213,10 +213,10 @@ It handles initialization and termination by subclassing wxApp.
 #     pragma comment(lib, "wxmsw" V "u" D "_qa")
 #  endif
 #  pragma comment(lib, "wxbase" V "u" D)
-#  pragma comment(lib, "wxbase" V "u" D "_net.lib")
-#  pragma comment(lib, "wxmsw"  V "u" D "_adv.lib")
-#  pragma comment(lib, "wxmsw"  V "u" D "_core.lib")
-#  pragma comment(lib, "wxmsw"  V "u" D "_html.lib")
+#  pragma comment(lib, "wxbase" V "u" D "_net")
+#  pragma comment(lib, "wxmsw"  V "u" D "_adv")
+#  pragma comment(lib, "wxmsw"  V "u" D "_core")
+#  pragma comment(lib, "wxmsw"  V "u" D "_html")
 #  pragma comment(lib, "wxpng"        D)
 #  pragma comment(lib, "wxzlib"       D)
 #  pragma comment(lib, "wxjpeg"       D)
@@ -651,12 +651,7 @@ public:
    };
 };
 
-#if !defined(__WXMAC__) && !defined(__WXMSW__)
-IMPLEMENT_APP(AudacityApp)
-/* make the application class known to wxWidgets for dynamic construction */
-#endif
-
-#if defined(__WXMAC__) || defined(__WXMSW__)
+#if defined(__WXMAC__)
 // This should be removed when Lame and FFmpeg support is converted
 // from loadable libraries to commands.
 //
@@ -672,7 +667,6 @@ IMPLEMENT_APP(AudacityApp)
 IMPLEMENT_APP_NO_MAIN(AudacityApp)
 IMPLEMENT_WX_THEME_SUPPORT
 
-#if defined(__WXMAC__)
 int main(int argc, char *argv[])
 {
    if (getenv("DYLD_LIBRARY_PATH")) {
@@ -687,7 +681,11 @@ int main(int argc, char *argv[])
    return wxEntry(argc, argv);
 }
 
-#elif defined(__WXMSW__)
+#elif defined(__WXMSW__) && !wxCHECK_VERSION(3, 1, 0)
+// Disable telling Windows that we support HiDPI displays.  It is forced on
+// in wxWidget versions between 3.0.0 and 3.1.0.
+IMPLEMENT_APP_NO_MAIN(AudacityApp)
+IMPLEMENT_WX_THEME_SUPPORT
 
 extern "C" int WINAPI WinMain(HINSTANCE hInstance,
                               HINSTANCE hPrevInstance,
@@ -705,7 +703,9 @@ extern "C" int WINAPI WinMain(HINSTANCE hInstance,
    /*     wWinMain() above too.                                     */
    return wxEntry(hInstance, hPrevInstance, NULL, nCmdShow);
 }
-#endif
+
+#else
+IMPLEMENT_APP(AudacityApp)
 #endif
 
 #ifdef __WXMAC__

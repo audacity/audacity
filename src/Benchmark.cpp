@@ -229,7 +229,7 @@ void BenchmarkDialog::MakeBenchmarkDialog()
          }
          S.EndHorizontalLay();
 
-         S.StartHorizontalLay(wxALIGN_RIGHT, false);
+         S.StartHorizontalLay(wxALIGN_NOT | wxALIGN_LEFT, false);
          {
             S.Id(wxID_CANCEL).AddButton(wxT("Close"));
          }

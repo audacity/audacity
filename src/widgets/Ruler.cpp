@@ -1871,6 +1871,10 @@ void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
 void AdornedRulerPanel::OnSize(wxSizeEvent & WXUNUSED(evt))
 {
    mOuter = GetClientRect();
+   if (mOuter.GetWidth() == 0 || mOuter.GetHeight() == 0)
+   {
+      return;
+   }
 
    mInner = mOuter;
    mInner.x += 1;          // +1 for left bevel

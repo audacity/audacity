@@ -1131,13 +1131,13 @@ bool ProgressDialog::Create(const wxString & title,
    if (!(flags & pdlgHideStopButton))
    {
       w = new wxButton(this, wxID_OK, _("Stop"));
-      h->Add(w, 0, wxALIGN_RIGHT | wxRIGHT, 10);
+      h->Add(w, 0, wxRIGHT, 10);
    }
 
    if (!(flags & pdlgHideCancelButton))
    {
       w = new wxButton(this, wxID_CANCEL, _("Cancel"));
-      h->Add(w, 0, wxALIGN_RIGHT | wxRIGHT, 10);
+      h->Add(w, 0, wxRIGHT, 10);
    }
 
    v->Add(h, 0, wxALIGN_RIGHT | wxRIGHT | wxBOTTOM, 10);

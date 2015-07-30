@@ -798,6 +798,10 @@ void LWSlider::Draw()
 
 void LWSlider::FormatPopWin()
 {
+   if (!mTipPanel) {
+      return;
+   }
+
    wxString label;
    wxString valstr;
 
@@ -841,6 +845,7 @@ void LWSlider::FormatPopWin()
    }
 
    mTipPanel->SetLabel(label);
+   mTipPanel->Refresh();
 }
 
 bool LWSlider::ShowDialog()
@@ -1126,7 +1131,6 @@ void LWSlider::SendUpdate( float newValue )
    mCurrentValue = newValue;
 
    FormatPopWin();
-   mTipPanel->Refresh();
 
    Refresh();
 
