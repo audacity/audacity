@@ -1,9 +1,16 @@
-Distributed versions of Audacity are built with accessibility
-enabled.  This requires a patch to wxWidgets:
+There's a few changes that need to be made to the wxWidgets 3.0.2 source
+before you build it.  You can choose to apply the patches listed below.
+
+Or you may copy the wxWidgets-3.0.2 subdirectory in this directory to
+where your wxWidgets-3.0.2 source tree is located, overlaying the existing
+files.
+
+Distributed versions of Audacity are built with accessibility enabled.
+This requires a patch to wxWidgets:
 
    accessibility.diff
 
-Patches that need to be applied to wxWidgets 3.0.2.  These should not
+Other patches that need to be applied to wxWidgets 3.0.2.  These should not
 be required for later versions:
 
    changeset_0797a6f8754db982b87a1df63975ccf76df2905f.diff
