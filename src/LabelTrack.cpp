@@ -63,7 +63,7 @@ for drawing different aspects of the label and its text box.
 
 enum
 {
-   OnCutSelectedTextID,
+   OnCutSelectedTextID = 1,      // OSX doesn't like a 0 menu id
    OnCopySelectedTextID,
    OnPasteSelectedTextID,
    OnDeleteSelectedLabelID,
@@ -1837,6 +1837,7 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
          }
          break;
 
+      case '\x10':   // OSX
       case WXK_MENU:
       case WXK_WINDOWS_MENU:
          ShowContextMenu();
