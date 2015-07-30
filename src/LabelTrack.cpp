@@ -1837,6 +1837,7 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
          }
          break;
 
+      case WXK_MENU:
       case WXK_WINDOWS_MENU:
          ShowContextMenu();
          break;
