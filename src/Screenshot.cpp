@@ -428,7 +428,7 @@ void ScreenFrame::PopulateOrExchange(ShuttleGui & S)
    S.EndPanel();
 
    Layout();
-   Fit();
+   GetSizer()->Fit(this);
    SetMinSize(GetSize());
 
    int top = 0;
