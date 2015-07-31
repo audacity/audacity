@@ -2037,6 +2037,8 @@ void LabelTrack::ShowContextMenu()
 
    parent->PopupMenu(menu, x, ls->y + (mIconHeight / 2) - 1);
 
+   delete menu;
+
    // it's an invalid dragging event
    SetWrongDragging(true);
 }
