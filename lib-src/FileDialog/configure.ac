@@ -64,11 +64,11 @@ AC_SUBST([WX_LIBS])
 if test x"$debug_preference" = "xyes" ; then
    dnl we want debuging on
    AC_MSG_NOTICE([Adding -g for debugging to CFLAGS and CXXFLAGS ...])
-   CFLAGS="${CFLAGS} -g -DWXDEBUG_LEVEL=1"
-   CXXFLAGS="${CXXFLAGS} -g -DWXDEBUG_LEVEL=1"
+   CFLAGS="${CFLAGS} -g -DwxDEBUG_LEVEL=1"
+   CXXFLAGS="${CXXFLAGS} -g -DwxDEBUG_LEVEL=1"
 else
-   CFLAGS="${CFLAGS} -DWXDEBUG_LEVEL=0"
-   CXXFLAGS="${CXXFLAGS} -DWXDEBUG_LEVEL=0"
+   CFLAGS="${CFLAGS} -DwxDEBUG_LEVEL=0"
+   CXXFLAGS="${CXXFLAGS} -DwxDEBUG_LEVEL=0"
 fi
 
 AC_MSG_CHECKING([for gtk3 use in wxWidgets])
