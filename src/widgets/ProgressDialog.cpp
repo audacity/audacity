@@ -1203,16 +1203,6 @@ ProgressDialog::Update(int value, const wxString & message)
       return eProgressStopped;
    }
 
-   // Copied from wx 3.0.2 generic progress dialog
-   //
-   // we have to yield because not only we want to update the display but
-   // also to process the clicks on the cancel and skip buttons
-   // NOTE: using YieldFor() this call shouldn't give re-entrancy problems
-   //       for event handlers not interested to UI/user-input events.
-   wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI|wxEVT_CATEGORY_USER_INPUT);
-   
-   wxDialog::Update();
-
    SetMessage(message);
 
    if (value <= 0)
@@ -1259,12 +1249,20 @@ ProgressDialog::Update(int value, const wxString & message)
       mLastUpdate = now;
    }
 
+   wxDialog::Update();
+
    // Copied from wx 3.0.2 generic progress dialog
    //
-   // allow the window to repaint:
-   // NOTE: since we yield only for UI events with this call, there
-   //       should be no side-effects
-   wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI);
+   // we have to yield because not only we want to update the display but
+   // also to process the clicks on the cancel and skip buttons
+   // NOTE: using YieldFor() this call shouldn't give re-entrancy problems
+   //       for event handlers not interested to UI/user-input events.
+   //
+   // LL:  Added timer category to prevent extreme delays when processing effects
+   //      (and probably other things).  I do not yet know why this happens and
+   //      I'm not too keen on having timer events processed here, but you do
+   //      what you have to do.
+   wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI | wxEVT_CATEGORY_USER_INPUT | wxEVT_CATEGORY_TIMER);
 
    return eProgressSuccess;
 }
