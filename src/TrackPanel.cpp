@@ -286,9 +286,6 @@ template < class CLIPPEE, class CLIPVAL >
 enum {
    TrackPanelFirstID = 2000,
 
-   OnUpOctaveID,
-   OnDownOctaveID,
-
    OnChannelLeftID,
    OnChannelRightID,
    OnChannelMonoID,
@@ -346,7 +343,6 @@ BEGIN_EVENT_TABLE(TrackPanel, OverlayPanel)
     EVT_KILL_FOCUS(TrackPanel::OnKillFocus)
     EVT_CONTEXT_MENU(TrackPanel::OnContextMenu)
 
-    EVT_MENU_RANGE(OnUpOctaveID, OnDownOctaveID, TrackPanel::OnChangeOctave)
     EVT_MENU_RANGE(OnChannelLeftID, OnChannelMonoID,
                TrackPanel::OnChannelChange)
     EVT_MENU_RANGE(OnWaveformID, OnSpectrumID, TrackPanel::OnSetDisplay)
@@ -471,8 +467,6 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    mWaveTrackMenu = NULL;
    mChannelItemsInsertionPoint = 0;
    
-   mNoteTrackMenu = NULL;
-
    mTrackArtist = std::make_unique<TrackArtist>();
 
    mTrackArtist->SetMargins(1, kTopMargin, kRightMargin, kBottomMargin);
@@ -626,11 +620,6 @@ void TrackPanel::BuildMenus(void)
 
    mWaveTrackMenu->Append(0, _("Rat&e"), (mRateMenu = rateMenu.release()));
 
-   /* build the pop-down menu used on note (MIDI) tracks */
-   mNoteTrackMenu = std::make_unique<wxMenu>();
-   mNoteTrackMenu->Append(OnUpOctaveID, _("Up &Octave"));
-   mNoteTrackMenu->Append(OnDownOctaveID, _("Down Octa&ve"));
-
 /*
    mRulerWaveformMenu = std::make_unique<wxMenu>();
    BuildVRulerMenuItems
@@ -668,7 +657,6 @@ void TrackPanel::DeleteMenus(void)
    mRateMenu = mFormatMenu = nullptr;
 
    mWaveTrackMenu.reset();
-   mNoteTrackMenu.reset();
    mRulerWaveformMenu.reset();
    mRulerSpectrumMenu.reset();
 }
@@ -5984,11 +5972,6 @@ void TrackPanel::OnTrackMenu(Track *t)
       }
    }
 
-#if defined(USE_MIDI)
-   if (t->GetKind() == Track::Note)
-      theMenu = mNoteTrackMenu.get();
-#endif
-
    if (theMenu) {
       //We need to find the location of the menu rectangle.
       const wxRect rect = FindTrackRect(t,true);
@@ -6769,24 +6752,6 @@ void TrackPanel::OnZoomFitVertical(wxCommandEvent &)
 {
    // Get here only from vertical ruler menu for wave tracks
    HandleWaveTrackVZoom(static_cast<WaveTrack*>(mPopupMenuTarget), true, true);
-}
-
-/// This only applies to MIDI tracks.  Presumably, it shifts the
-/// whole sequence by an octave.
-void TrackPanel::OnChangeOctave(wxCommandEvent & event)
-{
-#if defined(USE_MIDI)
-   wxASSERT(event.GetId() == OnUpOctaveID
-            || event.GetId() == OnDownOctaveID);
-   wxASSERT(mPopupMenuTarget->GetKind() == Track::Note);
-   NoteTrack *t = (NoteTrack *) mPopupMenuTarget;
-
-   bool bDown = (OnDownOctaveID == event.GetId());
-   t->SetBottomNote(t->GetBottomNote() + ((bDown) ? -12 : 12));
-
-   MakeParentModifyState(true);
-   Refresh(false);
-#endif
 }
 
 /// Determines which cell is under the mouse
