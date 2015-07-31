@@ -495,10 +495,6 @@ protected:
    virtual void OnChannelChange(wxCommandEvent &event);
    virtual void OnSpectrogramSettings(wxCommandEvent &event);
    virtual void OnSetDisplay   (wxCommandEvent &event);
-   virtual void OnSetTimeTrackRange (wxCommandEvent &event);
-   virtual void OnTimeTrackLin(wxCommandEvent &event);
-   virtual void OnTimeTrackLog(wxCommandEvent &event);
-   virtual void OnTimeTrackLogInt(wxCommandEvent &event);
 
    virtual void OnWaveformScaleType(wxCommandEvent &event);
    virtual void OnSpectrumScaleType(wxCommandEvent &event);
@@ -800,7 +796,7 @@ protected:
    size_t mChannelItemsInsertionPoint {};
 
    std::unique_ptr<wxMenu>
-      mNoteTrackMenu, mTimeTrackMenu, mLabelTrackMenu,
+      mNoteTrackMenu, mLabelTrackMenu,
       mRulerWaveformMenu, mRulerSpectrumMenu;
 
    // These sub-menus are owned by parent menus,
