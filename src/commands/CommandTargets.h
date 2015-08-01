@@ -118,7 +118,7 @@ public:
    {}
    virtual void Update(wxString message)
    {
-      mStatus.SetStatusText(message, mainStatusBarField);
+      mStatus.SetStatusText(message, 0);
    }
 };
 

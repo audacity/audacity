@@ -35,7 +35,6 @@
 #include "LabelTrack.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "Track.h"
 #include "ViewInfo.h"
 #include "widgets/NumericTextCtrl.h"
 

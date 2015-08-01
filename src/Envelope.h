@@ -31,8 +31,6 @@ class Envelope;
 
 class ZoomInfo;
 
-#define ENV_DB_RANGE 60
-
 class EnvPoint : public XMLTagHandler {
 
 public:
@@ -197,10 +195,10 @@ class Envelope : public XMLTagHandler {
                   int bufferLen) const;
 
 private:
-   double toDB(double x);
    EnvPoint *  AddPointAtEnd( double t, double val );
    void MarkDragPointForDeletion();
-   float ValueOfPixel( int y, int height, bool upper, bool dB,
+   float ValueOfPixel( int y, int height, bool upper,
+                       const ZoomInfo &zoomInfo, bool dB,
                        float zoomMin, float zoomMax);
    void BinarySearchForTime( int &Lo, int &Hi, double t ) const;
    double GetInterpolationStartValueAtPoint( int iPoint ) const;

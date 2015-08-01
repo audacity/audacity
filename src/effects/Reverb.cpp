@@ -221,7 +221,7 @@ sampleCount EffectReverb::ProcessBlock(float **inBlock, float **outBlock, sample
 
    while (remaining)
    {
-      size_t len = min((size_t) remaining, (size_t) BLOCK);
+      sampleCount len = wxMin(remaining, BLOCK);
       for (int c = 0; c < mNumChans; c++)
       {
          // Write the input samples to the reverb fifo.  Returned value is the address of the
@@ -312,7 +312,7 @@ wxArrayString EffectReverb::GetFactoryPresets()
 {
    wxArrayString names;
 
-   for (int i = 0; i < WXSIZEOF(FactoryPresets); i++)
+   for (size_t i = 0; i < WXSIZEOF(FactoryPresets); i++)
    {
       names.Add(wxGetTranslation(FactoryPresets[i].name));
    }

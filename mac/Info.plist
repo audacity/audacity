@@ -217,18 +217,18 @@
 	<key>CFBundleSignature</key>
 	<string>auDy</string>
 	<key>CFBundleVersion</key>
-	<string>AUDACITY_VERSION.AUDACITY_RELEASE.AUDACITY_REVISION.AUDACITY_MODLEVEL</string>
+	<string>AUDACITY_INFO_VERSION</string>
 	<key>CFBundleShortVersionString</key>
-	<string>AUDACITY_VERSION.AUDACITY_RELEASE.AUDACITY_REVISION.AUDACITY_MODLEVEL</string>
+	<string>AUDACITY_INFO_VERSION</string>
 	<key>CFBundleGetInfoString</key>
-	<string>Audacity version AUDACITY_VERSION.AUDACITY_RELEASE.AUDACITY_REVISION.AUDACITY_MODLEVEL</string>
+	<string>Audacity version AUDACITY_INFO_VERSION</string>
 	<key>CFBundleLongVersionString</key>
-	<string>Version AUDACITY_VERSION.AUDACITY_RELEASE.AUDACITY_REVISION.AUDACITY_MODLEVEL</string>
+	<string>Version AUDACITY_INFO_VERSION</string>
 	<key>NSHumanReadableCopyright</key>
-	<string>Audacity version AUDACITY_VERSION.AUDACITY_RELEASE.AUDACITY_REVISION.AUDACITY_MODLEVEL</string>
-	<key>LSRequiresCarbon</key>
+	<string>Audacity version AUDACITY_INFO_VERSION</string>
+	<key>NSHighResolutionCapable</key>
 	<true/>
-	<key>CSResourcesFileMapped</key>
-	<true/>
+	<key>NSPrincipalClass</key>
+	<string>NSApplication</string>
 </dict>
 </plist>

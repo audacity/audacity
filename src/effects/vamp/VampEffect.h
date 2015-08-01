@@ -25,9 +25,9 @@
 
 #include <vamp-hostsdk/PluginLoader.h>
 
-#include "../../LabelTrack.h"
-
 #include "../Effect.h"
+
+class LabelTrack;
 
 #define VAMPEFFECTS_VERSION wxT("1.0.0.0")
 #define VAMPEFFECTS_FAMILY wxT("Vamp")

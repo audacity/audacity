@@ -110,10 +110,10 @@ scroll information.  It also has some status flags.
 #include "Mix.h"
 #include "NoteTrack.h"
 #include "Prefs.h"
+#include "Sequence.h"
 #include "Snap.h"
 #include "Tags.h"
 #include "TimeTrack.h"
-#include "Track.h"
 #include "TrackPanel.h"
 #include "WaveTrack.h"
 #include "DirManager.h"
@@ -121,7 +121,6 @@ scroll information.  It also has some status flags.
 #include "prefs/PrefsDialog.h"
 #include "widgets/LinkingHtmlWindow.h"
 #include "widgets/ErrorDialog.h"
-#include "widgets/Meter.h"
 #include "widgets/Ruler.h"
 #include "widgets/Warning.h"
 #include "xml/XMLFileReader.h"
@@ -160,8 +159,6 @@ scroll information.  It also has some status flags.
 #include "commands/Command.h"
 #include "commands/CommandType.h"
 
-#include "CaptureEvents.h"
-
 #include "../images/AudacityLogoAlpha.xpm"
 
 TrackList *AudacityProject::msClipboard = new TrackList();
@@ -188,6 +185,11 @@ const int sbarHjump = 30;       //STM: This is how far the thumb jumps when the 
 #include "Theme.h"
 #include "AllThemeResources.h"
 #endif
+
+////////////////////////////////////////////////////////////
+/// Custom events
+////////////////////////////////////////////////////////////
+DEFINE_EVENT_TYPE(EVT_CAPTURE_KEY);
 
 //
 // This small template class resembles a try-finally block
@@ -489,10 +491,13 @@ AudacityProject *CreateNewAudacityProject()
 
    //Create and show a new project
    AudacityProject *p = new AudacityProject(NULL, -1,
-                                            wxPoint(wndRect.x, wndRect.y),
+                                            wxDefaultPosition,
                                             wxSize(wndRect.width, wndRect.height));
-
    gAudacityProjects.Add(p);
+
+   // wxGTK3 seems to need to require creating the window using default position
+   // and then manually positioning it.
+   p->SetPosition(wndRect.GetPosition());
 
    if(bMaximized) {
       p->Maximize(true);
@@ -707,8 +712,6 @@ enum {
 
 
 BEGIN_EVENT_TABLE(AudacityProject, wxFrame)
-   EVT_MENU_OPEN(AudacityProject::OnMenuEvent)
-   EVT_MENU_CLOSE(AudacityProject::OnMenuEvent)
    EVT_MENU(wxID_ANY, AudacityProject::OnMenu)
    EVT_MOUSE_EVENTS(AudacityProject::OnMouseEvent)
    EVT_CLOSE(AudacityProject::OnCloseWindow)
@@ -725,8 +728,6 @@ BEGIN_EVENT_TABLE(AudacityProject, wxFrame)
    EVT_ICONIZE(AudacityProject::OnIconize)
    EVT_COMMAND(wxID_ANY, EVT_OPEN_AUDIO_FILE, AudacityProject::OnOpenAudioFile)
    EVT_COMMAND(wxID_ANY, EVT_TOOLBAR_UPDATED, AudacityProject::OnToolBarUpdate)
-   EVT_COMMAND(wxID_ANY, EVT_CAPTURE_KEYBOARD, AudacityProject::OnCaptureKeyboard)
-   EVT_COMMAND(wxID_ANY, EVT_RELEASE_KEYBOARD, AudacityProject::OnReleaseKeyboard)
    //mchinen:multithreaded calls - may not be threadsafe with CommandEvent: may have to change.
    EVT_COMMAND(wxID_ANY, EVT_ODTASK_UPDATE, AudacityProject::OnODTaskUpdate)
    EVT_COMMAND(wxID_ANY, EVT_ODTASK_COMPLETE, AudacityProject::OnODTaskComplete)
@@ -768,7 +769,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
      mShowId3Dialog(true),               //lda
      mScrollBeyondZero(false),
      mLastFocusedWindow(NULL),
-     mKeyboardCaptured(NULL),
+     mKeyboardCaptureHandler(NULL),
      mImportXMLTagHandler(NULL),
      mAutoSaving(false),
      mIsRecovered(false),
@@ -842,15 +843,6 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
 #endif
    mToolManager->LayoutToolBars();
 
-   // Fix the sliders on the mixer toolbar so that the tip windows
-   // actually pop-up on top of everything else.  Sorry for the hack -
-   // it's necessary to do it this way to avoid flicker.
-#if 0
-   MixerToolBar *mtb = GetMixerToolBar();
-   if (mtb)
-      mtb->RecreateTipWindows();
-#endif
-
    //
    // Create the horizontal ruler
    //
@@ -895,10 +887,10 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
 #endif
 
    wxBoxSizer *bs = new wxBoxSizer( wxVERTICAL );
-   bs->Add( mToolManager->GetTopDock(), 0, wxEXPAND | wxALIGN_LEFT | wxALIGN_TOP );
-   bs->Add( mRuler, 0, wxEXPAND | wxALIGN_LEFT | wxALIGN_CENTRE );
-   bs->Add( pPage, 1, wxEXPAND | wxALIGN_LEFT );
-   bs->Add( mToolManager->GetBotDock(), 0, wxEXPAND | wxALIGN_LEFT | wxALIGN_BOTTOM );
+   bs->Add( mToolManager->GetTopDock(), 0, wxEXPAND | wxALIGN_TOP );
+   bs->Add( mRuler, 0, wxEXPAND );
+   bs->Add( pPage, 1, wxEXPAND );
+   bs->Add( mToolManager->GetBotDock(), 0, wxEXPAND );
    SetAutoLayout( true );
    SetSizer( bs );
    bs->Layout();
@@ -944,8 +936,8 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    vs = new wxBoxSizer( wxVERTICAL );
 
    // Vertical scroll bar
-   vs->Add( mVsbar, 1, wxEXPAND | wxALIGN_RIGHT | wxALIGN_TOP );
-   hs->Add( vs, 0, wxEXPAND | wxALIGN_RIGHT | wxALIGN_TOP );
+   vs->Add( mVsbar, 1, wxEXPAND | wxALIGN_TOP );
+   hs->Add( vs, 0, wxEXPAND | wxALIGN_TOP );
    bs->Add( hs, 1, wxEXPAND | wxALIGN_LEFT | wxALIGN_TOP );
 
    // Bottom horizontal grouping
@@ -955,7 +947,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    hs->Add( mTrackPanel->GetLeftOffset() - 1, 0 );
    hs->Add( mHsbar, 1, wxALIGN_BOTTOM );
    hs->Add( mVsbar->GetSize().GetWidth(), 0 );
-   bs->Add( hs, 0, wxEXPAND | wxALIGN_LEFT | wxALIGN_BOTTOM );
+   bs->Add( hs, 0, wxEXPAND | wxALIGN_LEFT );
 
    // Lay it out
    pPage->SetAutoLayout(true);
@@ -1170,7 +1162,7 @@ AdornedRulerPanel *AudacityProject::GetRulerPanel()
    return mRuler;
 }
 
-int AudacityProject::GetAudioIOToken()
+int AudacityProject::GetAudioIOToken() const
 {
    return mAudioIOToken;
 }
@@ -1178,6 +1170,12 @@ int AudacityProject::GetAudioIOToken()
 void AudacityProject::SetAudioIOToken(int token)
 {
    mAudioIOToken = token;
+}
+
+bool AudacityProject::IsAudioActive() const
+{
+   return GetAudioIOToken() > 0 &&
+      gAudioIO->IsStreamActive(GetAudioIOToken());
 }
 
 Tags *AudacityProject::GetTags()
@@ -1214,6 +1212,11 @@ void AudacityProject::SetProjectTitle()
 
    SetTitle( name );
    SetName(name);       // to make the nvda screen reader read the correct title
+}
+
+bool AudacityProject::GetIsEmpty()
+{
+   return mTracks->IsEmpty();
 }
 
 double AudacityProject::AS_GetRate()
@@ -1839,7 +1842,7 @@ void AudacityProject::OnScroll(wxScrollEvent & WXUNUSED(event))
 
    if (mScrollBeyondZero) {
       enum { SCROLL_PIXEL_TOLERANCE = 10 };
-      if (abs(mViewInfo.TimeToPosition(0.0, 0
+      if (std::abs(mViewInfo.TimeToPosition(0.0, 0
                                    )) < SCROLL_PIXEL_TOLERANCE) {
          // Snap the scrollbar to 0
          mViewInfo.h = 0;
@@ -1895,20 +1898,6 @@ bool AudacityProject::HandleKeyDown(wxKeyEvent & event)
    if (event.GetKeyCode() == WXK_PAGEDOWN)
       mTrackPanel->HandlePageDownKey();
 
-   // If a window has captured the keyboard, then allow it
-   // first dibs at the event.  If it does an event.Skip(false)
-   // then allow the event to process as normal, bypassing the
-   // command handler.
-   wxWindow *w = HasKeyboardCapture();
-   if (w) {
-      wxCommandEvent e(EVT_CAPTURE_KEY);
-      e.SetEventObject(&event);
-
-      if (w->GetEventHandler()->ProcessEvent(e)) {
-         return false;
-      }
-   }
-
    return mCommandManager.HandleKey(event, GetUpdateFlags(), 0xFFFFFFFF);
 }
 
@@ -1937,16 +1926,6 @@ bool AudacityProject::HandleKeyUp(wxKeyEvent & event)
       mTrackPanel->HandleControlKey(false);
 
    return mCommandManager.HandleKey(event, GetUpdateFlags(), 0xFFFFFFFF);
-}
-
-void AudacityProject::OnMenuEvent(wxMenuEvent & event)
-{
-   if (event.GetEventType() == wxEVT_MENU_OPEN) {
-      mCommandManager.HandleMenuOpen(event);
-   }
-   else if (event.GetEventType() == wxEVT_MENU_CLOSE) {
-      mCommandManager.HandleMenuClose(event);
-   }
 }
 
 /// Determines if flags for command are compatible with current state.
@@ -2296,16 +2275,6 @@ void AudacityProject::OnOpenAudioFile(wxCommandEvent & event)
    RequestUserAttention();
 }
 
-void AudacityProject::OnCaptureKeyboard(wxCommandEvent & event)
-{
-   CaptureKeyboard((wxWindow *)event.GetEventObject());
-}
-
-void AudacityProject::OnReleaseKeyboard(wxCommandEvent & event)
-{
-   ReleaseKeyboard((wxWindow *)event.GetEventObject());
-}
-
 // static method, can be called outside of a project
 wxArrayString AudacityProject::ShowOpenDialog(wxString extraformat, wxString extrafilter)
 {
@@ -2385,12 +2354,7 @@ wxArrayString AudacityProject::ShowOpenDialog(wxString extraformat, wxString ext
    // Construct and display the file dialog
    wxArrayString selected;
 
-#if defined(__WXMSW__reenable_if_new_filtering_does_not_work)
-   // Make sure you build wxWidgets with filedlgg.cpp enabled in core/generic
-   wxGenericFileDialog dlog(NULL,
-#else
    FileDialog dlog(NULL,
-#endif
                    _("Select one or more audio files..."),
                    path,
                    wxT(""),
@@ -3007,6 +2971,8 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          SetBandwidthSelectionFormatName(value);
    } // while
 
+   mViewInfo.UpdatePrefs();
+
    if (longVpos != 0) {
       // PRL: It seems this must happen after SetSnapTo
        mViewInfo.track = NULL;
@@ -3443,13 +3409,6 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
       return false;
    }
 
-#ifdef __WXMAC__
-#if !wxCHECK_VERSION(3, 0, 0)
-   wxFileName fn(mFileName);
-   fn.MacSetTypeAndCreator(AUDACITY_PROJECT_TYPE, AUDACITY_CREATOR);
-#endif
-#endif
-
    if (bWantSaveCompressed)
       mWantSaveCompressed = false; // Don't want this mode for AudacityProject::WriteXML() any more.
    else
@@ -3776,16 +3735,12 @@ bool AudacityProject::SaveAs(const wxString & newFileName, bool bWantSaveCompres
 
 bool AudacityProject::SaveAs(bool bWantSaveCompressed /*= false*/)
 {
-   wxString path = wxPathOnly(mFileName);
-   wxString fName;
-
-   wxString ext = wxT(".aup");
-
-   fName = GetName().Len()? GetName() + ext : wxString(wxT(""));
+   wxFileName filename(mFileName);
 
    wxString sProjName = this->GetName();
    if (sProjName.IsEmpty())
       sProjName = _("<untitled>");
+
    wxString sDialogTitle;
    if (bWantSaveCompressed)
    {
@@ -3814,29 +3769,29 @@ For an audio file that will open in other apps, use 'Export'.\n"),
       sDialogTitle.Printf(_("Save Project \"%s\" As..."), sProjName.c_str());
    }
 
-   fName = FileSelector(
-      sDialogTitle,
-      path, fName, wxT(""),
-      _("Audacity projects") + static_cast<wxString>(wxT(" (*.aup)|*.aup")),
-      // JKC: I removed 'wxFD_OVERWRITE_PROMPT' because we are checking
-      // for overwrite ourselves later, and we disallow it.
-      // We disallow overwrite because we would have to delete the many
-      // smaller files too, or prompt to move them.
-      wxFD_SAVE | wxRESIZE_BORDER | FD_NO_ADD_EXTENSION, this);
+   // JKC: I removed 'wxFD_OVERWRITE_PROMPT' because we are checking
+   // for overwrite ourselves later, and we disallow it.
+   // We disallow overwrite because we would have to delete the many
+   // smaller files too, or prompt to move them.
+   wxString fName = FileSelector(sDialogTitle,
+                                 filename.GetPath(),
+                                 filename.GetFullName(),
+                                 wxT("aup"),
+                                 _("Audacity projects") + wxT(" (*.aup)|*.aup"),
+                                 wxFD_SAVE | wxRESIZE_BORDER,
+                                 this);
 
    if (fName == wxT(""))
       return false;
 
-   size_t len = fName.Len();
-   if (len > 4 && fName.Mid(len - 4) == wxT(".aup"))
-      fName = fName.Mid(0, len - 4);
-
-   wxString oldFileName = mFileName;
+   filename = fName;
+   filename.SetExt(wxT("aup"));
+   fName = filename.GetFullPath();
 
    //check to see if the new project file already exists.
    //We should only overwrite it if this project already has the same name, where the user
    //simply chose to use the save as command although the save command would have the effect.
-   if(mFileName!=fName+ext && wxFileExists(fName+ext)) {
+   if (mFileName != fName && filename.FileExists()) {
       wxMessageDialog m(
          NULL,
          _("The project was not saved because the file name provided would overwrite another project.\nPlease try again and select an original name."),
@@ -3846,7 +3801,8 @@ For an audio file that will open in other apps, use 'Export'.\n"),
       return false;
    }
 
-   mFileName = fName + ext;
+   wxString oldFileName = mFileName;
+   mFileName = fName;
    SetProjectTitle();
 
    bool success = Save(false, true, bWantSaveCompressed);
@@ -3927,6 +3883,11 @@ void AudacityProject::PushState(wxString desc,
       this->DoZoomFitV();
    if( (flags & PUSH_AUTOSAVE)!= 0)
       AutoSave();
+}
+
+void AudacityProject::RollbackState()
+{
+   SetStateTo(GetUndoManager()->GetCurrentState());
 }
 
 void AudacityProject::ModifyState(bool bWantsAutoSave)
@@ -4421,7 +4382,7 @@ void AudacityProject::GetRegionsByLabel( Regions &regions )
 //If the function replaces the selection with audio of a different length,
 // bSyncLockedTracks should be set true to perform the same action on sync-lock selected
 // tracks.
-void AudacityProject::EditByLabel( WaveTrack::EditFunction action,
+void AudacityProject::EditByLabel( EditFunction action,
                                    bool bSyncLockedTracks )
 {
    Regions regions;
@@ -4470,7 +4431,7 @@ void AudacityProject::EditByLabel( WaveTrack::EditFunction action,
 //Functions copy the edited regions to clipboard, possibly in multiple tracks
 //This probably should not be called if *action() changes the timeline, because
 // the copy needs to happen by track, and the timeline change by group.
-void AudacityProject::EditClipboardByLabel( WaveTrack::EditDestFunction action )
+void AudacityProject::EditClipboardByLabel( EditDestFunction action )
 {
    Regions regions;
 
@@ -4676,25 +4637,6 @@ void AudacityProject::GetPlayRegion(double* playRegionStart,
 {
    mRuler->GetPlayRegion(playRegionStart, playRegionEnd);
 }
-
-wxWindow *AudacityProject::HasKeyboardCapture()
-{
-   return mKeyboardCaptured;
-}
-
-void AudacityProject::CaptureKeyboard(wxWindow *w)
-{
-   mKeyboardCaptured = w;
-}
-
-void AudacityProject::ReleaseKeyboard(wxWindow *w)
-{
-   if (w == mKeyboardCaptured)
-   {
-      mKeyboardCaptured = NULL;
-   }
-}
-
 
 void AudacityProject::AutoSave()
 {
@@ -5005,3 +4947,46 @@ void AudacityProject::HandleTrackSolo(Track *t, const bool alternate)
    ModifyState(true);
 }
 
+// Keyboard capture
+
+// static
+bool AudacityProject::HasKeyboardCapture(const wxWindow *handler)
+{
+   return GetKeyboardCaptureHandler() == handler;
+}
+
+// static
+wxWindow *AudacityProject::GetKeyboardCaptureHandler()
+{
+   AudacityProject *project = GetActiveProject();
+   if (project)
+   {
+      return project->mKeyboardCaptureHandler;
+   }
+
+   return NULL;
+}
+
+// static
+void AudacityProject::CaptureKeyboard(wxWindow *handler)
+{
+   AudacityProject *project = GetActiveProject();
+   if (project)
+   {
+//      wxASSERT(project->mKeyboardCaptureHandler == NULL);
+      project->mKeyboardCaptureHandler = handler;
+   }
+}
+
+// static
+void AudacityProject::ReleaseKeyboard(wxWindow *handler)
+{
+   AudacityProject *project = GetActiveProject();
+   if (project)
+   {
+//      wxASSERT(project->mKeyboardCaptureHandler == handler);
+      project->mKeyboardCaptureHandler = NULL;
+   }
+
+   return;
+}

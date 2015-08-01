@@ -19,7 +19,6 @@
 #include "SetProjectInfoCommand.h"
 #include "../Project.h"
 #include "../Track.h"
-#include "../WaveTrack.h"
 
 // The following parameters have a boolean string, indicated by the kSetOfTracksStr
 #define kSetOfTracksStr "TrackSet"

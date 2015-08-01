@@ -53,6 +53,7 @@
 
 
 #include "../Audacity.h"
+#include "Equalization.h"
 
 #include <math.h>
 #include <vector>
@@ -95,12 +96,9 @@
 #include "../xml/XMLFileReader.h"
 #include "../Theme.h"
 #include "../AllThemeResources.h"
-#include "../WaveTrack.h"
 #include "../float_cast.h"
 
 #include "FileDialog.h"
-
-#include "Equalization.h"
 
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
 #include "Equalization48x.h"
@@ -589,11 +587,11 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
    szr2 = new wxBoxSizer( wxVERTICAL );
    mdBMaxSlider = new wxSlider(parent, ID_dBMax, DEF_dBMax, MIN_dBMax, MAX_dBMax,
       wxDefaultPosition, wxDefaultSize, wxSL_VERTICAL|wxSL_INVERSE);
-   szr2->Add( mdBMaxSlider, 1, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 4 );
+   szr2->Add( mdBMaxSlider, 1, wxALIGN_LEFT|wxALL, 4 );
    mdBMinSlider = new wxSlider(parent, ID_dBMin, DEF_dBMin, MIN_dBMin, MAX_dBMin,
       wxDefaultPosition, wxDefaultSize, wxSL_VERTICAL|wxSL_INVERSE);
-   szr2->Add( mdBMinSlider, 1, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 4 );
-   szr1->Add( szr2, 0, wxEXPAND|wxALIGN_CENTRE|wxALL, 4 );
+   szr2->Add( mdBMinSlider, 1, wxALIGN_LEFT|wxALL, 4 );
+   szr1->Add( szr2, 0, wxEXPAND|wxALL, 4 );
 
 #if wxUSE_ACCESSIBILITY
    mdBMaxSlider->SetName(_("Max dB"));
@@ -621,7 +619,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
    szr1->Add( szr4, 0, wxEXPAND|wxALIGN_LEFT|wxALL );
 
    mPanel = new EqualizationPanel(this, parent);
-   szr1->Add( mPanel, 1, wxEXPAND|wxALIGN_CENTRE);
+   szr1->Add( mPanel, 1, wxEXPAND);
    szr3 = new wxBoxSizer( wxVERTICAL );
    szr1->Add( szr3, 0, wxALIGN_CENTRE|wxRIGHT, 0);   //spacer for last EQ
 
@@ -648,7 +646,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
    szr1->Add( szr5, 0, wxEXPAND|wxALIGN_LEFT|wxALL );
    szr1->Layout();
 
-   szrV->Add( szr1, 1, wxEXPAND|wxALIGN_CENTER|wxALL, 0 );
+   szrV->Add( szr1, 1, wxEXPAND|wxALL, 0 );
 
    // -------------------------------------------------------------------
    // Graphic EQ - parent gets laid out horizontally in onSize
@@ -661,7 +659,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
       mSliders[i] = new wxSlider(parent, ID_Slider + i, 0, -20, +20,
          wxDefaultPosition, wxSize(20, 124), wxSL_VERTICAL|
          wxSL_INVERSE);
-      szrG->Add( mSliders[i], 0, wxEXPAND|wxALIGN_CENTER );
+      szrG->Add( mSliders[i], 0, wxEXPAND );
       szrG->Add(0, 0, 0); // horizontal spacer - used to put EQ sliders in correct position
       mSliders[i]->Connect(wxEVT_ERASE_BACKGROUND, wxEraseEventHandler(EffectEqualization::OnErase));
       mEQVals[i] = 0.;

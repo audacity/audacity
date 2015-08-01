@@ -18,7 +18,7 @@
 
 #include "../../widgets/NumericTextCtrl.h"
 
-#include "aeffectx.h"
+#include "VSTControl.h"
 
 #define VSTCMDKEY wxT("-checkvst")
 #define VSTPLUGINTYPE wxT("VST")
@@ -64,7 +64,8 @@ DECLARE_LOCAL_EVENT_TYPE(EVT_UPDATEDISPLAY, -1);
 class VSTEffect : public wxEvtHandler, 
                   public EffectClientInterface,
                   public EffectUIClientInterface,
-                  public XMLTagHandler
+                  public XMLTagHandler,
+                  public VSTEffectLink
 {
  public:
    VSTEffect(const wxString & path, VSTEffect *master = NULL);
@@ -182,6 +183,7 @@ private:
 
    // UI
    void OnSlider(wxCommandEvent & evt);
+   void OnSize(wxSizeEvent & evt);
    void OnSizeWindow(wxCommandEvent & evt);
    void OnUpdateDisplay(wxCommandEvent & evt);
 
@@ -257,6 +259,7 @@ private:
    wxString mDescription;
    int mVersion;
    bool mInteractive;
+   int mVstVersion;
 
    static intptr_t mCurrentEffectID;
 
@@ -301,6 +304,8 @@ private:
    wxSizerItem *mContainer;
    bool mGui;
 
+   VSTControl *mControl;
+
    NumericTextCtrl *mDuration;
    wxStaticText **mNames;
    wxSlider **mSliders;
@@ -312,42 +317,7 @@ private:
    wxString mChunk;
    long mXMLVersion;
    VstPatchChunkInfo mXMLInfo;
-
-#if defined(__WXMAC__)
-   static pascal OSStatus OverlayEventHandler(EventHandlerCallRef handler, EventRef event, void *data);
-   OSStatus OnOverlayEvent(EventHandlerCallRef handler, EventRef event);
-   static pascal OSStatus WindowEventHandler(EventHandlerCallRef handler, EventRef event, void *data);
-   OSStatus OnWindowEvent(EventHandlerCallRef handler, EventRef event);
-   static pascal OSStatus TrackingEventHandler(EventHandlerCallRef handler, EventRef event, void *data);
-   OSStatus OnTrackingEvent(EventRef event);
-
-   WindowRef mOverlayRef;
-   EventHandlerUPP mOverlayEventHandlerUPP;
-   EventHandlerRef mOverlayEventHandlerRef;
-
-   WindowRef mWindowRef;
-   WindowRef mPreviousRef;
-   EventHandlerUPP mWindowEventHandlerUPP;
-   EventHandlerRef mWindowEventHandlerRef;
-
-   EventHandlerUPP mTrackingHandlerUPP;
-   EventHandlerRef mRootTrackingHandlerRef;
-   EventHandlerRef mViewTrackingHandlerRef;
-   EventHandlerRef mSubviewTrackingHandlerRef;
-   EventHandlerRef mOverlayRootTrackingHandlerRef;
-   EventHandlerRef mOverlayViewTrackingHandlerRef;
    
-#elif defined(__WXMSW__)
-
-   HANDLE mHwnd;
-
-#else
-
-   Display *mXdisp;
-   Window mXwin;
-
-#endif
-
    DECLARE_EVENT_TABLE();
 
    friend class VSTEffectsModule;

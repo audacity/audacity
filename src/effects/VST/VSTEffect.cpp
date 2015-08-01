@@ -19,6 +19,9 @@
 // WARNING:  This is NOT 64-bit safe
 // *******************************************************************
 
+#include "../../Audacity.h"
+
+#if 0
 #if defined(BUILDING_AUDACITY)
 #include "../../Audacity.h"
 #include "../../PlatformCompatibility.h"
@@ -29,12 +32,14 @@
 #define MODULEMAIN_SCOPE
 #define USE_VST 1
 #endif
+#endif
 
 #if USE_VST
 
 #include <limits.h>
 #include <stdio.h>
 
+#include <wx/dynlib.h>
 #include <wx/app.h>
 #include <wx/defs.h>
 #include <wx/buffer.h>
@@ -64,16 +69,11 @@
 #include <wx/tokenzr.h>
 #include <wx/utils.h>
 
-#if defined(__WXMAC__)
-#include <dlfcn.h>
-#include <wx/mac/private.h>
-#elif defined(__WXMSW__)
-#include <wx/dynlib.h>
-#include <wx/msw/seh.h>
+#if defined(__WXMSW__)
 #include <shlwapi.h>
 #pragma comment(lib, "shlwapi")
 #else
-// Includes for GTK are later since they cause conflicts with our class names
+#include <dlfcn.h>
 #endif
 
 // TODO:  Unfortunately we have some dependencies on Audacity provided 
@@ -92,15 +92,6 @@
 
 #include "audacity/ConfigInterface.h"
 
-// Must include after ours since we have a lot of name collisions
-#if defined(__WXGTK__)
-#include <dlfcn.h>
-#define Region XRegion     // Conflicts with Audacity's Region structure
-#include <gtk/gtk.h>
-#include <gdk/gdkx.h>
-#undef Region
-#endif
-
 #include "VSTEffect.h"
 
 // NOTE:  To debug the subprocess, use wxLogDebug and, on Windows, Debugview
@@ -117,14 +108,12 @@
 // declared static so as not to clash with other builtin modules.
 //
 // ============================================================================
-MODULEMAIN_SCOPE ModuleInterface *AudacityModule(ModuleManagerInterface *moduleManager,
-                                                 const wxString *path)
+DECLARE_MODULE_ENTRY(AudacityModule)
 {
    // Create our effects module and register
    return new VSTEffectsModule(moduleManager, path);
 }
 
-#if defined(BUILDING_AUDACITY)
 // ============================================================================
 //
 // Register this as a builtin module
@@ -166,8 +155,6 @@ public:
    DECLARE_DYNAMIC_CLASS(VSTSubEntry);
 };
 IMPLEMENT_DYNAMIC_CLASS(VSTSubEntry, wxModule);
-
-#endif
 
 //----------------------------------------------------------------------------
 // VSTSubProcess
@@ -898,421 +885,6 @@ BEGIN_EVENT_TABLE(VSTEffect, wxEvtHandler)
    EVT_COMMAND(wxID_ANY, EVT_SIZEWINDOW, VSTEffect::OnSizeWindow)
 END_EVENT_TABLE()
 
-#if defined(__WXMAC__)
-
-// To use, change the SDK in the project to at least 10.5
-extern void DebugPrintControlHierarchy(WindowRef inWindow);
-extern void DebugPrintWindowList(void);
-
-// Event handler to track when the mouse enters/exits the various view
-static const EventTypeSpec trackingEventList[] =
-{                             
-   {kEventClassControl, kEventControlTrackingAreaEntered},
-   {kEventClassControl, kEventControlTrackingAreaExited},
-};                            
-                              
-pascal OSStatus VSTEffect::TrackingEventHandler(EventHandlerCallRef handler, EventRef event, void *data)
-{
-   return ((VSTEffect *)data)->OnTrackingEvent(event);
-}
-
-OSStatus VSTEffect::OnTrackingEvent(EventRef event)
-{
-   OSStatus result = eventNotHandledErr;
-   
-   if (GetEventKind(event) == kEventControlTrackingAreaEntered)
-   {
-      // Should we save the existing cursor???
-      SetThemeCursor(kThemeArrowCursor);
-   }
-
-   if (GetEventKind(event) == kEventControlTrackingAreaExited)
-   {
-      // Possibly restore a saved cursor
-   }
-
-   return result;
-}
-
-// ----------------------------------------------------------------------------
-// Most of the following is used to deal with VST effects that create an overlay
-// window on top of ours.  This is usually done because Cocoa is being used
-// instead of Carbon.
-//
-// That works just fine...usually.  But, we display the effect in a modal dialog
-// box and, since that overlay window is just another window in the application,
-// the modality of the dialog causes the overlay to be disabled and the user
-// can't interact with the effect.
-//
-// Examples of these effects would be BlueCat's Freeware Pack and GRM Tools,
-// though I'm certain there are other's out there.  Anything JUCE based would
-// affected...that's what GRM Tools uses.
-//
-// So, to work around the problem (without moving to Cocoa or wxWidgets 3.x),
-// we install an event handler if the overlay is detected.  This handler and
-// the companion handler on our window use the kEventWindowGetClickModality
-// event to tell the system that events can be passed to our window and the
-// overlay window.
-//
-// In addition, there's some window state management that must be dealt with
-// to keep our window from becoming unhightlighted when the floater is clicked.
-// ----------------------------------------------------------------------------
-
-// Events to be captured in the overlay window
-static const EventTypeSpec OverlayEventList[] =
-{
-#if 0
-   { kEventClassMouse,  kEventMouseDown },
-   { kEventClassMouse,  kEventMouseUp },
-   { kEventClassMouse,  kEventMouseMoved },
-   { kEventClassMouse,  kEventMouseDragged },
-   { kEventClassMouse,  kEventMouseEntered },
-   { kEventClassMouse,  kEventMouseExited },
-   { kEventClassMouse,  kEventMouseWheelMoved },
-#endif
-};
-
-// Overlay window event handler callback thunk
-pascal OSStatus VSTEffect::OverlayEventHandler(EventHandlerCallRef handler, EventRef event, void *data)
-{
-   return ((VSTEffect *)data)->OnOverlayEvent(handler, event);
-}
-
-// Overlay window event handler
-OSStatus VSTEffect::OnOverlayEvent(EventHandlerCallRef handler, EventRef event)
-{
-   // Get the current window in front of all the rest of the non-floaters.
-   WindowRef frontwin = FrontNonFloatingWindow();
-
-   // Get the target window of the event
-   WindowRef evtwin = 0;
-   GetEventParameter(event,
-                     kEventParamDirectObject,
-                     typeWindowRef,
-                     NULL,
-                     sizeof(evtwin),
-                     NULL,
-                     &evtwin);
-
-#if defined(DEBUG_VST)
-   int cls = GetEventClass(event);
-   printf("OVERLAY class %4.4s kind %d ewin %p owin %p mwin %p anf %p fnf %p\n",
-      &cls,
-      GetEventKind(event),
-      evtwin,
-      mOverlayRef,
-      mWindowRef,
-      ActiveNonFloatingWindow(),
-      frontwin);
-#endif
-
-   bool block = false;
-   WindowModality kind;
-   WindowRef ref = NULL;
-   GetWindowModality(frontwin, &kind, &ref);
-
-   switch (kind)
-   {
-      case kWindowModalityNone:
-      {
-         // Allow
-      }
-      break;
-
-      case kWindowModalityWindowModal:
-      {
-         if (ref == mWindowRef || ref == mOverlayRef)
-         {
-            block = true;
-         }
-      }
-      break;
-
-      case kWindowModalitySystemModal:
-      case kWindowModalityAppModal:
-      {
-         if (frontwin != mWindowRef && frontwin != mOverlayRef)
-         {
-            block = true;
-         }
-      }
-      break;
-   }
-
-   // We must block mouse events because plugins still act on mouse
-   // movement and drag events, even if they are supposed to be disabled
-   // due to other modal dialogs (like when Load or Settings are clicked).
-   if (GetEventClass(event) == kEventClassMouse)
-   {
-      if (block)
-      {
-         return noErr;
-      }
-      
-      return eventNotHandledErr;
-   }
-
-   // Only kEventClassWindow events at this point
-   switch (GetEventKind(event))
-   {
-      // The system is asking if the target of an upcoming event
-      // should be passed to the overlay window or not.
-      //
-      // We allow it when the overlay window or our window is the
-      // curret top window.  Any other windows would mean that a
-      // modal dialog box has been opened on top and we should block.
-      case kEventWindowGetClickModality:
-      {
-         // Announce the event may need blocking
-         HIModalClickResult res = block ? kHIModalClickIsModal | kHIModalClickAnnounce : 0;
-
-         // Set the return parameters
-         SetEventParameter(event,
-                           kEventParamWindowModality,
-                           typeWindowRef,
-                           sizeof(kind),
-                           &kind);
-
-         SetEventParameter(event,
-                           kEventParamModalWindow,
-                           typeWindowRef,
-                           sizeof(ref),
-                           &ref);
-
-         SetEventParameter(event,
-                           kEventParamModalClickResult,
-                           typeModalClickResult,
-                           sizeof(res),
-                           &res);
-
-         return noErr;
-      }
-      break;
-   }
-
-   return eventNotHandledErr;
-}
-
-// Events to be captured in the our window
-static const EventTypeSpec WindowEventList[] =
-{
-   { kEventClassWindow, kEventWindowGetClickModality },
-   { kEventClassWindow, kEventWindowShown },
-   { kEventClassWindow, kEventWindowClose },
-#if 0
-   { kEventClassMouse,  kEventMouseDown },
-   { kEventClassMouse,  kEventMouseUp },
-   { kEventClassMouse,  kEventMouseMoved },
-   { kEventClassMouse,  kEventMouseDragged },
-   { kEventClassMouse,  kEventMouseEntered },
-   { kEventClassMouse,  kEventMouseExited },
-   { kEventClassMouse,  kEventMouseWheelMoved },
-#endif
-};
-
-// Our window event handler callback thunk
-pascal OSStatus VSTEffect::WindowEventHandler(EventHandlerCallRef handler, EventRef event, void *data)
-{
-   return ((VSTEffect *)data)->OnWindowEvent(handler, event);
-}
-
-// Our window event handler
-OSStatus VSTEffect::OnWindowEvent(EventHandlerCallRef handler, EventRef event)
-{
-   // Get the current window in from of all the rest non-floaters.
-   WindowRef frontwin = FrontNonFloatingWindow();
-
-   // Get the target window of the event
-   WindowRef evtwin = 0;
-   GetEventParameter(event,
-                     kEventParamDirectObject,
-                     typeWindowRef,
-                     NULL,
-                     sizeof(evtwin),
-                     NULL,
-                     &evtwin);
-
-#if defined(DEBUG_VST)
-   int cls = GetEventClass(event);
-   printf("WINDOW class %4.4s kind %d ewin %p owin %p mwin %p anf %p fnf %p\n",
-      &cls,
-      GetEventKind(event),
-      evtwin,
-      mOverlayRef,
-      mWindowRef,
-      ActiveNonFloatingWindow(),
-      frontwin);
-#endif
-
-   bool block = false;
-   WindowModality kind;
-   WindowRef ref = NULL;
-   GetWindowModality(frontwin, &kind, &ref);
-
-   switch (kind)
-   {
-      case kWindowModalityNone:
-      {
-         // Allow
-      }
-      break;
-
-      case kWindowModalityWindowModal:
-      {
-         if (ref == mWindowRef || ref == mOverlayRef)
-         {
-            block = true;
-         }
-      }
-      break;
-
-      case kWindowModalitySystemModal:
-      case kWindowModalityAppModal:
-      {
-         if (frontwin != mWindowRef && frontwin != mOverlayRef)
-         {
-            block = true;
-         }
-      }
-      break;
-   }
-
-   // We must block mouse events because plugins still act on mouse
-   // movement and drag events, even if they are supposed to be disabled
-   // due to other modal dialogs (like when Load or Settings are clicked).
-   if (GetEventClass(event) == kEventClassMouse)
-   {
-      if (block)
-      {
-         return noErr;
-      }
-
-      return eventNotHandledErr;
-   }
-
-   // Only kEventClassWindow events at this point
-   switch (GetEventKind(event))
-   {
-      // If we don't capture the close event, Audacity will crash at termination
-      // since the window is still on the wxWidgets toplevel window lists, but
-      // it has already been deleted from the system.
-      case kEventWindowClose:
-      {
-         RemoveHandler();
-         mDialog->Close();
-         return noErr;
-      }
-      break;
-
-      // This is where we determine if the effect has created a window above
-      // ours.  Since the overlay is created on top of our window, we look at
-      // the topmost window to see if it is different that ours.  If so, then
-      // we assume an overlay has been created and install the event handler
-      // on the overlay.
-      case kEventWindowShown:
-      {
-         // Have an overlay?
-         WindowRef newprev = GetPreviousWindow(mWindowRef);
-
-         if (newprev != mPreviousRef)
-         {
-            // We have an overlay
-            mOverlayRef = newprev;
-
-            // Set our window's activatino scope to make sure it alway
-            // stays active.
-            SetWindowActivationScope(mWindowRef,
-                                     kWindowActivationScopeIndependent);
-
-            // Install the overlay handler
-            mOverlayEventHandlerUPP = NewEventHandlerUPP(OverlayEventHandler);
-            InstallWindowEventHandler(mOverlayRef,
-                                      mOverlayEventHandlerUPP,
-                                      GetEventTypeCount(OverlayEventList),
-                                      OverlayEventList,
-                                      this,
-                                      &mOverlayEventHandlerRef);
-
-            ControlRef root = HIViewGetRoot(mOverlayRef);
-            HIViewRef view;
-            HIViewFindByID(root, kHIViewWindowContentID, &view);
-            InstallControlEventHandler(root,
-                                       mTrackingHandlerUPP,
-                                       GetEventTypeCount(trackingEventList),
-                                       trackingEventList,
-                                       this,
-                                       &mOverlayRootTrackingHandlerRef);
-            InstallControlEventHandler(view,
-                                       mTrackingHandlerUPP,
-                                       GetEventTypeCount(trackingEventList),
-                                       trackingEventList,
-                                       this,
-                                       &mOverlayViewTrackingHandlerRef);
-            HIViewNewTrackingArea(root, NULL, 0, NULL);
-            HIViewNewTrackingArea(view, NULL, 0, NULL);
-         }
-      }
-      break;
-
-      // The system is asking if the target of an upcoming event
-      // should be passed to the overlay window or not.
-      //
-      // We allow it when the overlay window or our window is the
-      // curret top window.  Any other windows would mean that a
-      // modal dialog box has been opened on top and we should block.
-      case kEventWindowGetClickModality:
-      {
-         // Announce the event may need blocking
-         HIModalClickResult res = block ? kHIModalClickIsModal | kHIModalClickAnnounce : 0;
-
-         // Set the return parameters
-         SetEventParameter(event,
-                           kEventParamWindowModality,
-                           typeWindowRef,
-                           sizeof(kind),
-                           &kind);
-
-         SetEventParameter(event,
-                           kEventParamModalWindow,
-                           typeWindowRef,
-                           sizeof(ref),
-                           &ref);
-
-         SetEventParameter(event,
-                           kEventParamModalClickResult,
-                           typeModalClickResult,
-                           sizeof(res),
-                           &res);
-
-         if (mOverlayRef)
-         {
-            // If the front window is the overlay, then make our window
-            // the selected one so that the mouse click go to it instead.
-            WindowRef act = ActiveNonFloatingWindow();
-            if (frontwin == mOverlayRef || act == NULL || act == mOverlayRef)
-            {
-               SelectWindow(mWindowRef);
-            }
-         }
-
-         return noErr;
-      }
-      break;
-   }
-
-   return eventNotHandledErr;
-}
-#endif
-
-#if defined(__WXGTK__)
-
-static int trappedErrorCode = 0;
-static int X11TrapHandler(Display *, XErrorEvent *err)
-{
-    return 0;
-}
-#endif
-
 // Needed to support shell plugins...sucks, but whatcha gonna do???
 intptr_t VSTEffect::mCurrentEffectID;
 
@@ -1528,28 +1100,6 @@ VSTEffect::VSTEffect(const wxString & path, VSTEffect *master)
    mDisplays = NULL;
    mLabels = NULL;
    mContainer = NULL;
-
-#if defined(__WXMAC__)
-   mOverlayRef = 0;
-   mOverlayEventHandlerUPP = 0;
-   mOverlayEventHandlerRef = 0;
-
-   mWindowRef = 0;
-   mWindowEventHandlerUPP = 0;
-   mWindowEventHandlerRef = 0;
-
-   mRootTrackingHandlerRef = 0;
-   mViewTrackingHandlerRef = 0;
-   mSubviewTrackingHandlerRef = 0;
-   mOverlayRootTrackingHandlerRef = 0;
-   mOverlayViewTrackingHandlerRef = 0;
-
-#elif defined(__WXMSW__)
-   mHwnd = 0;
-#else
-   mXdisp = 0;
-   mXwin = 0;
-#endif
 
    // If we're a slave then go ahead a load immediately
    if (mMaster)
@@ -2147,9 +1697,12 @@ wxArrayString VSTEffect::GetFactoryPresets()
    // Some plugins, like Guitar Rig 5, only report 128 programs while they have hundreds.  While
    // I was able to come up with a hack in the Guitar Rig case to gather all of the program names
    // it would not let me set a program outside of the first 128.
-   for (int i = 0; i < mAEffect->numPrograms; i++)
+   if (mVstVersion >= 2)
    {
-      progs.Add(GetString(effGetProgramNameIndexed, i));
+      for (int i = 0; i < mAEffect->numPrograms; i++)
+      {
+         progs.Add(GetString(effGetProgramNameIndexed, i));
+      }
    }
 
    return progs;
@@ -2443,7 +1996,7 @@ bool VSTEffect::Load()
    mResource = -1;
 
    // Convert the path to a CFSTring
-   wxMacCFStringHolder path(realPath);
+   wxCFStringRef path(realPath);
 
    // Convert the path to a URL
    CFURLRef urlRef =
@@ -2630,6 +2183,9 @@ bool VSTEffect::Load()
       // Open the plugin
       callDispatcher(effOpen, 0, 0, NULL, 0.0);
 
+      // Get the VST version the plugin understands
+      mVstVersion = callDispatcher(effGetVstVersion, 0, 0, NULL, 0);
+
       // Set it again in case plugin ignored it before the effOpen
       callDispatcher(effSetSampleRate, 0, 0, NULL, 48000.0);
       callDispatcher(effSetBlockSize, 0, 512, NULL, 0);
@@ -2640,18 +2196,25 @@ bool VSTEffect::Load()
          !(mAEffect->flags & effFlagsIsSynth) &&
          mAEffect->flags & effFlagsCanReplacing)
       {
-         mName = GetString(effGetEffectName);
-         if (mName.length() == 0)
+         if (mVstVersion >= 2)
          {
-            mName = GetString(effGetProductString);
+            mName = GetString(effGetEffectName);
             if (mName.length() == 0)
             {
-               wxFileName f(realPath);
-               mName = f.GetName();
+               mName = GetString(effGetProductString);
             }
          }
-         mVendor = GetString(effGetVendorString);
-         mVersion = wxINT32_SWAP_ON_LE(callDispatcher(effGetVendorVersion, 0, 0, NULL, 0));
+         if (mName.length() == 0)
+         {
+            wxFileName f(realPath);
+            mName = f.GetName();
+         }
+
+         if (mVstVersion >= 2)
+         {
+            mVendor = GetString(effGetVendorString);
+            mVersion = wxINT32_SWAP_ON_LE(callDispatcher(effGetVendorVersion, 0, 0, NULL, 0));
+         }
          if (mVersion == 0)
          {
             mVersion = wxINT32_SWAP_ON_LE(mAEffect->version);
@@ -2761,7 +2324,7 @@ wxArrayInt VSTEffect::GetEffectIDs()
    wxArrayInt effectIDs;
 
    // Are we a shell?
-   if ((VstPlugCategory) callDispatcher(effGetPlugCategory, 0, 0, NULL, 0) == kPlugCategShell)
+   if (mVstVersion >= 2 && (VstPlugCategory) callDispatcher(effGetPlugCategory, 0, 0, NULL, 0) == kPlugCategShell)
    {
       char name[64];
       int effectID;
@@ -2866,7 +2429,7 @@ void VSTEffect::OnTimer()
       return;
    }
 
-   if (mWantsIdle)
+   if (mVstVersion >= 2 && mWantsIdle)
    {
       int ret = callDispatcher(effIdle, 0, 0, NULL, 0.0);
       if (!ret)
@@ -2917,7 +2480,10 @@ void VSTEffect::PowerOn()
       callDispatcher(effMainsChanged, 0, 1, NULL, 0.0);
 
       // Tell the effect we're going to start processing
-      callDispatcher(effStartProcess, 0, 0, NULL, 0.0);
+      if (mVstVersion >= 2)
+      {
+         callDispatcher(effStartProcess, 0, 0, NULL, 0.0);
+      }
 
       // Set state
       mHasPower = true;
@@ -2929,7 +2495,10 @@ void VSTEffect::PowerOff()
    if (mHasPower)
    {
       // Tell the effect we're going to stop processing
-      callDispatcher(effStopProcess, 0, 0, NULL, 0.0);
+      if (mVstVersion >= 2)
+      {
+         callDispatcher(effStopProcess, 0, 0, NULL, 0.0);
+      }
 
       // Turn the power off
       callDispatcher(effMainsChanged, 0, 0, NULL, 0.0);
@@ -3044,7 +2613,7 @@ float VSTEffect::callGetParameter(int index)
 
 void VSTEffect::callSetParameter(int index, float value)
 {
-   if (callDispatcher(effCanBeAutomated, 0, index, NULL, 0.0))
+   if (mVstVersion == 0 || callDispatcher(effCanBeAutomated, 0, index, NULL, 0.0))
    {
       mAEffect->setParameter(mAEffect, index, value);
 
@@ -3243,239 +2812,36 @@ int VSTEffect::b64decode(wxString in, void *out)
 
 void VSTEffect::RemoveHandler()
 {
-#if defined(__WXMAC__)
-   if (mWindowRef)
-   {
-      callDispatcher(effEditClose, 0, 0, mWindowRef, 0.0);
-      mWindowRef = 0;
-   }
-
-   if (mOverlayViewTrackingHandlerRef)
-   {
-      ::RemoveEventHandler(mOverlayViewTrackingHandlerRef);
-      mOverlayViewTrackingHandlerRef = 0;
-   }
-
-   if (mOverlayRootTrackingHandlerRef)
-   {
-      ::RemoveEventHandler(mOverlayRootTrackingHandlerRef);
-      mOverlayRootTrackingHandlerRef = 0;
-   }
-
-   if (mOverlayEventHandlerRef)
-   {
-      ::RemoveEventHandler(mOverlayEventHandlerRef);
-      mOverlayEventHandlerRef = 0;
-   }
-
-   if (mOverlayEventHandlerUPP)
-   {
-      DisposeEventHandlerUPP(mOverlayEventHandlerUPP);
-      mOverlayEventHandlerUPP = 0;
-   }
-
-   if (mSubviewTrackingHandlerRef)
-   {
-      ::RemoveEventHandler(mSubviewTrackingHandlerRef);
-      mSubviewTrackingHandlerRef = 0;
-   }
-
-   if (mViewTrackingHandlerRef)
-   {
-      ::RemoveEventHandler(mViewTrackingHandlerRef);
-      mViewTrackingHandlerRef = 0;
-   }
-
-   if (mRootTrackingHandlerRef)
-   {
-      ::RemoveEventHandler(mRootTrackingHandlerRef);
-      mRootTrackingHandlerRef = 0;
-   }
-
-   if (mTrackingHandlerUPP)
-   {
-      DisposeEventHandlerUPP(mTrackingHandlerUPP);
-      mTrackingHandlerUPP = 0;
-   }
-
-   if (mWindowEventHandlerRef)
-   {
-      ::RemoveEventHandler(mWindowEventHandlerRef);
-      mWindowEventHandlerRef = 0;
-      mDialog->MacInstallTopLevelWindowEventHandler();
-   }
-
-   if (mWindowEventHandlerUPP)
-   {
-      DisposeEventHandlerUPP(mWindowEventHandlerUPP);
-      mWindowEventHandlerUPP = 0;
-   }
-#elif defined(__WXMSW__)
-   if (mHwnd)
-   {
-      callDispatcher(effEditClose, 0, 0, mHwnd, 0.0);
-      mHwnd = 0;
-   }
-#else
-   if (mXwin)
-   {
-      callDispatcher(effEditClose, 0, (intptr_t)mXdisp, (void *)mXwin, 0.0);
-      mXdisp = 0;
-      mXwin = 0;
-   }
-#endif
 }
 
 void VSTEffect::BuildFancy()
 {
-   struct
-   {
-      short top, left, bottom, right;
-   } *rect;
-
    // Turn the power on...some effects need this when the editor is open
    PowerOn();
 
-   // Some effects like to have us get their rect before opening them.
-   callDispatcher(effEditGetRect, 0, 0, &rect, 0.0);
-
-#if defined(__WXMAC__)
-   // Retrieve the current window and the one above it.  The window list
-   // is kept in top-most to bottom-most order, so we'll use that to
-   // determine if another window was opened above ours.
-   mWindowRef = (WindowRef) mDialog->MacGetWindowRef();
-   mPreviousRef = GetPreviousWindow(mWindowRef);
-
-   // Install the event handler on our window
-   mWindowEventHandlerUPP = NewEventHandlerUPP(WindowEventHandler);
-   InstallWindowEventHandler(mWindowRef,
-                             mWindowEventHandlerUPP,
-                             GetEventTypeCount(WindowEventList),
-                             WindowEventList,
-                             this,
-                             &mWindowEventHandlerRef);
-
-   // Find the content view within our window
-   ControlRef root = HIViewGetRoot(mWindowRef);
-   HIViewRef view;
-   HIViewFindByID(root, kHIViewWindowContentID, &view);
-
-   // And ask the effect to add it's GUI
-   callDispatcher(effEditOpen, 0, 0, mWindowRef, 0.0);
-
-   // Get the subview it created
-   HIViewRef subview = HIViewGetFirstSubview(view);
-   if (subview == NULL)
+   mControl = new VSTControl;
+   if (!mControl)
    {
-      // Doesn't seem the effect created the subview, so switch
-      // to the plain dialog.  This can happen when an effect
-      // uses the content view directly.  As of this time, we
-      // will not try to support those and fall back to the
-      // textual interface.
-      mGui = false;
-      RemoveHandler();
-      BuildPlain();
       return;
    }
 
-   // Install the tracking event handler on our views
-   mTrackingHandlerUPP = NewEventHandlerUPP(VSTEffect::TrackingEventHandler);
-   InstallControlEventHandler(root,
-                              mTrackingHandlerUPP,
-                              GetEventTypeCount(trackingEventList),
-                              trackingEventList,
-                              this,
-                              &mRootTrackingHandlerRef);
-   InstallControlEventHandler(view,
-                              mTrackingHandlerUPP,
-                              GetEventTypeCount(trackingEventList),
-                              trackingEventList,
-                              this,
-                              &mViewTrackingHandlerRef);
-   InstallControlEventHandler(subview,
-                              mTrackingHandlerUPP,
-                              GetEventTypeCount(trackingEventList),
-                              trackingEventList,
-                              this,
-                              &mSubviewTrackingHandlerRef);
-   HIViewNewTrackingArea(root, NULL, 0, NULL);
-   HIViewNewTrackingArea(view, NULL, 0, NULL);
-   HIViewNewTrackingArea(subview, NULL, 0, NULL);
-
-#elif defined(__WXMSW__)
-
-   // Use a panel to host the plugins GUI
-   wxPanel *w = new wxPanel(mParent, wxID_ANY);
-   mHwnd = w->GetHWND();
-   callDispatcher(effEditOpen, 0, 0, mHwnd, 0.0);
-
-#else
-
-   // Use a panel to host the plugins GUI
-   wxPanel *w = new wxPanel(mParent, wxID_ANY);
-
-   // Make sure the parent has a window
-   if (!gtk_widget_get_realized(GTK_WIDGET(w->m_wxwindow)))
+   if (!mControl->Create(mParent, this))
    {
-      gtk_widget_realize(GTK_WIDGET(w->m_wxwindow));
+      return;
    }
 
-   GdkWindow *gwin = gtk_widget_get_window(GTK_WIDGET(w->m_wxwindow));
-   mXdisp = GDK_WINDOW_XDISPLAY(gwin);
-   mXwin = GDK_WINDOW_XID(gwin);
+   wxBoxSizer *mainSizer = new wxBoxSizer(wxVERTICAL);
 
-   callDispatcher(effEditOpen, 0, (intptr_t)mXdisp, (void *)mXwin, 0.0);
+   mainSizer->Add(mControl, 0, wxALIGN_CENTER);
 
-#endif
-
-   // Get the final bounds of the effect GUI
-   callDispatcher(effEditGetRect, 0, 0, &rect, 0.0);
-
-   // Build our display now
-   wxBoxSizer *vs = new wxBoxSizer(wxVERTICAL);
-   wxBoxSizer *hs = new wxBoxSizer(wxHORIZONTAL);
-
-#if defined(__WXMAC__)
-
-   // Reserve space for the effect GUI
-   mContainer = hs->Add(rect->right - rect->left, rect->bottom - rect->top);
-
-#elif defined(__WXMSW__)
-
-   // Add the effect host window to the layout
-   mContainer = hs->Add(w, 1, wxCENTER | wxEXPAND);
-   mContainer->SetMinSize(rect->right - rect->left, rect->bottom - rect->top);
-
-#else
-
-   // Add the effect host window to the layout
-   mContainer = hs->Add(w, 1, wxCENTER | wxEXPAND);
-   mContainer->SetMinSize(rect->right - rect->left, rect->bottom - rect->top);
-
-#endif
-
-   vs->Add(hs, 0, wxCENTER);
-
-   mParent->SetSizerAndFit(vs);
-
-#if defined(__WXMAC__)
-
-   // Found out where the reserved space wound up
-   wxPoint pos = mContainer->GetPosition();
-
-   // Reposition the subview into the reserved space
-   HIViewPlaceInSuperviewAt(subview, pos.x, pos.y);
-
-   // Some VST effects do not work unless the default handler is removed since
-   // it captures many of the events that the plugins need.  But, it must be
-   // done last since proper window sizing will not occur otherwise.
-   ::RemoveEventHandler((EventHandlerRef) mDialog->MacGetEventHandler());
-
-#elif defined(__WXMSW__)
-#else
-#endif
+   mParent->SetMinSize(wxDefaultSize);
+   mParent->SetSizer(mainSizer);
 
    NeedEditIdle(true);
+
+   mDialog->Connect(wxEVT_SIZE, wxSizeEventHandler(VSTEffect::OnSize));
+
+   return;
 }
 
 void VSTEffect::BuildPlain()
@@ -3648,17 +3014,43 @@ void VSTEffect::RefreshParameters(int skip)
    }
 }
 
+void VSTEffect::OnSize(wxSizeEvent & evt)
+{
+   evt.Skip();
+
+   // Once the parent dialog reaches it's final size as indicated by
+   // a non-default minimum size, we set the maximum size to match.
+   // This is a bit of a hack to prevent VSTs GUI windows from resizing
+   // there's no real reason to allow it.  But, there should be a better
+   // way of handling it.
+   wxWindow *w = (wxWindow *) evt.GetEventObject();
+   wxSize sz = w->GetMinSize();
+
+   if (sz != wxDefaultSize)
+   {
+      w->SetMaxSize(sz);
+   }
+}
+
 void VSTEffect::OnSizeWindow(wxCommandEvent & evt)
 {
-   if (!mContainer)
+   if (!mControl)
    {
       return;
    }
 
-   // This really needs some work.  We shouldn't know anything about the parent...
-   mContainer->SetMinSize(evt.GetInt(), (int) evt.GetExtraLong());
-   mParent->SetMinSize(mContainer->GetMinSize());
+   mControl->SetMinSize(wxSize(evt.GetInt(), (int) evt.GetExtraLong()));
+   mControl->SetSize(wxSize(evt.GetInt(), (int) evt.GetExtraLong()));
+
+   // DO NOT CHANGE THE ORDER OF THESE
+   //
+   // Guitar Rig (and possibly others) Cocoa VSTs can resize too large
+   // if the bounds are unlimited.
+   mDialog->SetMinSize(wxDefaultSize);
+   mDialog->SetMaxSize(wxDefaultSize);
    mDialog->Layout();
+   mDialog->SetMinSize(mDialog->GetBestSize());
+   mDialog->SetMaxSize(mDialog->GetBestSize());
    mDialog->Fit();
 }
 

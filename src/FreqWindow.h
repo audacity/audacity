@@ -29,7 +29,6 @@
 #include <wx/statusbr.h>
 #include <wx/textctrl.h>
 #include <wx/utils.h>
-
 #include "widgets/Ruler.h"
 
 class wxStatusBar;

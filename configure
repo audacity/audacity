@@ -939,7 +939,6 @@ with_lib_preference
 enable_sse
 enable_universal_binary
 enable_dynamic_loading
-enable_gtk3
 with_wx_version
 with_expat
 with_ffmpeg
@@ -1678,7 +1677,6 @@ Optional Features:
   --enable-dynamic-loading
                           enable dynamic loading of lame and FFmpeg
                           [default=yes]
-  --enable-gtk3           enable use of GTK+-3.0 (default: use GTK+-2.0)
   --enable-nyquist        enable Nyquist plug-in support [default=yes]
   --enable-audiounits     enable audio unit plug-in support (Mac OS X only)
                           [default=auto]
@@ -1702,7 +1700,7 @@ Optional Packages:
                         (or the compiler's sysroot if not specified).
   --with-lib-preference   whether to use local and/or system libraries, in
                           order of preference (default="system local")
-  --with-wx-version       select wxWidgets version (if both installed) [2.8,]
+  --with-wx-version       select wxWidgets version (if both installed) [3.0,]
   --with-expat            which expat to use for XML file support:
                           [system,local]
   --with-ffmpeg           use ffmpeg for import and export support
@@ -2889,7 +2887,7 @@ ac_configure="$SHELL $ac_aux_dir/configure"  # Please don't use this var.
 
 
 
-am__api_version='1.14'
+am__api_version='1.15'
 
 # Find a good install program.  We prefer a C program (faster),
 # so one script is as good as another.  But avoid the broken or
@@ -3061,8 +3059,8 @@ test "$program_suffix" != NONE &&
 ac_script='s/[\\$]/&&/g;s/;s,x,x,$//'
 program_transform_name=`$as_echo "$program_transform_name" | sed "$ac_script"`
 
-# expand $ac_aux_dir to an absolute path
-am_aux_dir=`cd $ac_aux_dir && pwd`
+# Expand $ac_aux_dir to an absolute path.
+am_aux_dir=`cd "$ac_aux_dir" && pwd`
 
 if test x"${MISSING+set}" != xset; then
   case $am_aux_dir in
@@ -3081,7 +3079,7 @@ else
 $as_echo "$as_me: WARNING: 'missing' script is too old or missing" >&2;}
 fi
 
-if test x"${install_sh}" != xset; then
+if test x"${install_sh+set}" != xset; then
   case $am_aux_dir in
   *\ * | *\	*)
     install_sh="\${SHELL} '$am_aux_dir/install-sh'" ;;
@@ -3409,8 +3407,8 @@ MAKEINFO=${MAKEINFO-"${am_missing_run}makeinfo"}
 # <http://lists.gnu.org/archive/html/automake/2012-07/msg00014.html>
 mkdir_p='$(MKDIR_P)'
 
-# We need awk for the "check" target.  The system "awk" is bad on
-# some platforms.
+# We need awk for the "check" target (and possibly the TAP driver).  The
+# system "awk" is bad on some platforms.
 # Always define AMTAR for backward compatibility.  Yes, it's still used
 # in the wild :-(  We should find a proper way to deprecate it ...
 AMTAR='$${TAR-tar}'
@@ -3583,6 +3581,7 @@ END
     as_fn_error $? "Your 'rm' program is bad, sorry." "$LINENO" 5
   fi
 fi
+
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether to enable maintainer-specific portions of Makefiles" >&5
 $as_echo_n "checking whether to enable maintainer-specific portions of Makefiles... " >&6; }
@@ -19156,14 +19155,6 @@ else
 fi
 
 
-# Check whether --enable-gtk3 was given.
-if test "${enable_gtk3+set}" = set; then :
-  enableval=$enable_gtk3; enable_gtk3=$enableval
-else
-  enable_gtk3=no
-fi
-
-
 
 # Check whether --with-wx-version was given.
 if test "${with_wx_version+set}" = set; then :
@@ -19254,8 +19245,11 @@ fi
 if test x"$debug_preference" = "xyes" ; then
       { $as_echo "$as_me:${as_lineno-$LINENO}: Adding -g for debugging to CFLAGS and CXXFLAGS ..." >&5
 $as_echo "$as_me: Adding -g for debugging to CFLAGS and CXXFLAGS ..." >&6;}
-   CFLAGS="${CFLAGS} -g "
-   CXXFLAGS="${CXXFLAGS} -g "
+   CFLAGS="${CFLAGS} -g -DwxDEBUG_LEVEL=1"
+   CXXFLAGS="${CXXFLAGS} -g -DwxDEBUG_LEVEL=1"
+else
+   CFLAGS="${CFLAGS} -DwxDEBUG_LEVEL=0"
+   CXXFLAGS="${CXXFLAGS} -DwxDEBUG_LEVEL=0"
 fi
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for an ANSI C-conforming const" >&5
@@ -19367,6 +19361,7 @@ _ACEOF
 fi
 
 done
+
 
 
 
@@ -19774,8 +19769,10 @@ _ACEOF
 
 
 
-# Extract the first word of "wx-config", so it can be a program name with args.
-set dummy wx-config; ac_word=$2
+for ac_prog in $WX_CONFIG wx-config wx-config-3.0
+do
+  # Extract the first word of "$ac_prog", so it can be a program name with args.
+set dummy $ac_prog; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
 if ${ac_cv_path_WX_CONFIG+:} false; then :
@@ -19802,7 +19799,6 @@ done
   done
 IFS=$as_save_IFS
 
-  test -z "$ac_cv_path_WX_CONFIG" && ac_cv_path_WX_CONFIG="no"
   ;;
 esac
 fi
@@ -19816,6 +19812,10 @@ $as_echo "no" >&6; }
 fi
 
 
+  test -n "$WX_CONFIG" && break
+done
+test -n "$WX_CONFIG" || WX_CONFIG="no"
+
 if [ "$WX_CONFIG" = "no" ] ; then
    as_fn_error $? "Could not find wx-config: is wxWidgets installed? is wx-config in your path?" "$LINENO" 5
 fi
@@ -19826,19 +19826,19 @@ else
       wxconfigargs=""
 fi
 
-wxconfigargs="$static_wx_preference $unicode_preference  $wxconfigargs $wx_preference"
+wxconfigargs="$static_wx_preference $unicode_preference $wxconfigargs $wx_preference"
 wx_version=`${WX_CONFIG} $wxconfigargs --version`
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: Checking that the chosen version of wxWidgets is 2.8.x" >&5
-$as_echo "$as_me: Checking that the chosen version of wxWidgets is 2.8.x" >&6;}
+{ $as_echo "$as_me:${as_lineno-$LINENO}: Checking that the chosen version of wxWidgets is 3.0.x" >&5
+$as_echo "$as_me: Checking that the chosen version of wxWidgets is 3.0.x" >&6;}
 
 case "${wx_version}" in
-  2.8.* | 3.0.*)
+  3.0.*)
     echo "Great, you're using wxWidgets ${wx_version}!"
     ;;
   *)
   wx_list=`${WX_CONFIG} --list`
-  as_fn_error $? "Unable to locate a suitable configuration of wxWidgets v2.8.x or higher.
+  as_fn_error $? "Unable to locate a suitable configuration of wxWidgets v3.0.x or higher.
 The currently available configurations are listed below.  If necessary, either
 install the package for your distribution or download the latest version of
 wxWidgets
@@ -23482,144 +23482,37 @@ fi
          as_fn_error $? "dlopen not found, required by Audacity" "$LINENO" 5
       fi
 
+      { $as_echo "$as_me:${as_lineno-$LINENO}: checking for gtk3 use in wxWidgets" >&5
+$as_echo_n "checking for gtk3 use in wxWidgets... " >&6; }
+      CPPFLAGS="${WX_CXXFLAGS}"
+      cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#include <wx/wx.h>
+      #if defined(__WXGTK3__)
+         wxWidgets built with GTK3
+      #endif
+
+_ACEOF
+if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
+  $EGREP "wxWidgets built with GTK3" >/dev/null 2>&1; then :
+  enable_gtk3=yes
+else
+  enable_gtk3=no
+fi
+rm -f conftest*
+
 
       if [ "$enable_gtk3" = yes ]; then
-
-pkg_failed=no
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for GTK" >&5
-$as_echo_n "checking for GTK... " >&6; }
-
-if test -n "$GTK_CFLAGS"; then
-    pkg_cv_GTK_CFLAGS="$GTK_CFLAGS"
- elif test -n "$PKG_CONFIG"; then
-    if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtk+-3.0\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "gtk+-3.0") 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; then
-  pkg_cv_GTK_CFLAGS=`$PKG_CONFIG --cflags "gtk+-3.0" 2>/dev/null`
-else
-  pkg_failed=yes
-fi
- else
-    pkg_failed=untried
-fi
-if test -n "$GTK_LIBS"; then
-    pkg_cv_GTK_LIBS="$GTK_LIBS"
- elif test -n "$PKG_CONFIG"; then
-    if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtk+-3.0\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "gtk+-3.0") 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; then
-  pkg_cv_GTK_LIBS=`$PKG_CONFIG --libs "gtk+-3.0" 2>/dev/null`
-else
-  pkg_failed=yes
-fi
- else
-    pkg_failed=untried
-fi
-
-
-
-if test $pkg_failed = yes; then
-
-if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
-        _pkg_short_errors_supported=yes
-else
-        _pkg_short_errors_supported=no
-fi
-        if test $_pkg_short_errors_supported = yes; then
-	        GTK_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "gtk+-3.0" 2>&1`
-        else
-	        GTK_PKG_ERRORS=`$PKG_CONFIG --print-errors "gtk+-3.0" 2>&1`
-        fi
-	# Put the nasty error message in config.log where it belongs
-	echo "$GTK_PKG_ERRORS" >&5
-
-	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-                have_gtk=no
-elif test $pkg_failed = untried; then
-	have_gtk=no
-else
-	GTK_CFLAGS=$pkg_cv_GTK_CFLAGS
-	GTK_LIBS=$pkg_cv_GTK_LIBS
-        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+         gtk_version=gtk+-3.0
+         { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
-	have_gtk=yes
-fi
       else
-
-pkg_failed=no
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for GTK" >&5
-$as_echo_n "checking for GTK... " >&6; }
-
-if test -n "$GTK_CFLAGS"; then
-    pkg_cv_GTK_CFLAGS="$GTK_CFLAGS"
- elif test -n "$PKG_CONFIG"; then
-    if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtk+-2.0\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "gtk+-2.0") 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; then
-  pkg_cv_GTK_CFLAGS=`$PKG_CONFIG --cflags "gtk+-2.0" 2>/dev/null`
-else
-  pkg_failed=yes
-fi
- else
-    pkg_failed=untried
-fi
-if test -n "$GTK_LIBS"; then
-    pkg_cv_GTK_LIBS="$GTK_LIBS"
- elif test -n "$PKG_CONFIG"; then
-    if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtk+-2.0\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "gtk+-2.0") 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; then
-  pkg_cv_GTK_LIBS=`$PKG_CONFIG --libs "gtk+-2.0" 2>/dev/null`
-else
-  pkg_failed=yes
-fi
- else
-    pkg_failed=untried
-fi
-
-
-
-if test $pkg_failed = yes; then
-
-if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
-        _pkg_short_errors_supported=yes
-else
-        _pkg_short_errors_supported=no
-fi
-        if test $_pkg_short_errors_supported = yes; then
-	        GTK_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "gtk+-2.0" 2>&1`
-        else
-	        GTK_PKG_ERRORS=`$PKG_CONFIG --print-errors "gtk+-2.0" 2>&1`
-        fi
-	# Put the nasty error message in config.log where it belongs
-	echo "$GTK_PKG_ERRORS" >&5
-
-	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+         gtk_version=gtk+-2.0
+         { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
-                have_gtk=no
-elif test $pkg_failed = untried; then
-	have_gtk=no
-else
-	GTK_CFLAGS=$pkg_cv_GTK_CFLAGS
-	GTK_LIBS=$pkg_cv_GTK_LIBS
-        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
-	have_gtk=yes
-fi
       fi
+
+
 
 pkg_failed=no
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for GTK" >&5
@@ -23695,8 +23588,7 @@ $as_echo "#define HAVE_GTK 1" >>confdefs.h
          CPPFLAGS="$CPPFLAGS $GTK_CFLAGS"
          LIBS="$LIBS $GTK_LIBS"
       fi
-
-            	      ;;
+   ;;
 esac
 
 

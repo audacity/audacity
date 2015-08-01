@@ -18,6 +18,7 @@
 #include <wx/button.h>
 #include <wx/combobox.h>
 #include <wx/log.h>
+#include <wx/msgdlg.h>
 #include <wx/process.h>
 #include <wx/sizer.h>
 #include <wx/textctrl.h>
@@ -31,18 +32,20 @@
 #include "../float_cast.h"
 #include "../widgets/FileHistory.h"
 
+#include "../Track.h"
+
 
 //----------------------------------------------------------------------------
 // ExportCLOptions
 //----------------------------------------------------------------------------
 
-class ExportCLOptions : public wxDialog
+class ExportCLOptions : public wxPanel
 {
 public:
+   ExportCLOptions(wxWindow *parent, int format);
+   virtual ~ExportCLOptions();
 
-   ExportCLOptions(wxWindow *parent);
    void PopulateOrExchange(ShuttleGui & S);
-   void OnOK(wxCommandEvent & event);
 
    void OnBrowse(wxCommandEvent & event);
 
@@ -55,19 +58,15 @@ private:
 
 #define ID_BROWSE 5000
 
-BEGIN_EVENT_TABLE(ExportCLOptions, wxDialog)
-   EVT_BUTTON(wxID_OK, ExportCLOptions::OnOK)
+BEGIN_EVENT_TABLE(ExportCLOptions, wxPanel)
    EVT_BUTTON(ID_BROWSE, ExportCLOptions::OnBrowse)
 END_EVENT_TABLE()
 
 ///
 ///
-ExportCLOptions::ExportCLOptions(wxWindow *parent)
-:  wxDialog(parent, wxID_ANY,
-            wxString(_("Specify Command Line Encoder")))
+ExportCLOptions::ExportCLOptions(wxWindow *parent, int WXUNUSED(format))
+:  wxPanel(parent, wxID_ANY)
 {
-   SetName(GetTitle());
-
    mHistory.Load(*gPrefs, wxT("/FileFormats/ExternalProgramHistory"));
 
    if (mHistory.GetCount() == 0) {
@@ -82,6 +81,22 @@ ExportCLOptions::ExportCLOptions(wxWindow *parent)
    ShuttleGui S(this, eIsCreatingFromPrefs);
 
    PopulateOrExchange(S);
+
+   parent->Layout();
+}
+
+ExportCLOptions::~ExportCLOptions()
+{
+   wxString cmd = mCmd->GetValue();
+
+   gPrefs->Write(wxT("/FileFormats/ExternalProgramExportCommand"), cmd);
+   gPrefs->Flush();
+
+   ShuttleGui S(this, eIsSavingToPrefs);
+   PopulateOrExchange(S);
+
+   mHistory.AddFileToHistory(cmd, false);
+   mHistory.Save(*gPrefs, wxT("/FileFormats/ExternalProgramHistory"));
 }
 
 ///
@@ -96,10 +111,11 @@ void ExportCLOptions::PopulateOrExchange(ShuttleGui & S)
    }
    cmd = cmds[0];
 
-   S.StartHorizontalLay(wxEXPAND, 0);
+   S.StartVerticalLay();
    {
-      S.StartStatic(_("Command Line Export Setup"), true);
+      S.StartHorizontalLay(wxEXPAND);
       {
+         S.SetSizerProportion(1);
          S.StartMultiColumn(3, wxEXPAND);
          {
             S.SetStretchyCol(1);
@@ -114,41 +130,15 @@ void ExportCLOptions::PopulateOrExchange(ShuttleGui & S)
                           false);
          }
          S.EndMultiColumn();
-
-         S.AddFixedText(_("Data will be piped to standard in. \"%f\" uses the file name in the export window."));
       }
-      S.EndStatic();
+      S.EndHorizontalLay();
+
+      S.AddTitle(_("Data will be piped to standard in. \"%f\" uses the file name in the export window."));
    }
-   S.EndHorizontalLay();
+   S.EndVerticalLay();
 
-   S.AddStandardButtons();
-
-   Layout();
-   Fit();
-   SetMinSize(GetSize());
-   Center();
-
-   return;
-}
-
-///
-///
-void ExportCLOptions::OnOK(wxCommandEvent& WXUNUSED(event))
-{
-   ShuttleGui S(this, eIsSavingToPrefs);
-   wxString cmd = mCmd->GetValue();
-
-   gPrefs->Write(wxT("/FileFormats/ExternalProgramExportCommand"), cmd);
-   gPrefs->Flush();
-
-   PopulateOrExchange(S);
-
-   mHistory.AddFileToHistory(cmd, false);
-   mHistory.Save(*gPrefs, wxT("/FileFormats/ExternalProgramHistory"));
-
-   EndModal(wxID_OK);
-
-   return;
+//   Layout();
+//   Fit();
 }
 
 ///
@@ -276,8 +266,8 @@ public:
    void Destroy();
 
    // Required
+   wxWindow *OptionsCreate(wxWindow *parent, int format);
 
-   bool DisplayOptions(wxWindow *parent, int format = 0);
    int Export(AudacityProject *project,
                int channels,
                wxString fName,
@@ -530,13 +520,9 @@ int ExportCL::Export(AudacityProject *project,
    return updateResult;
 }
 
-bool ExportCL::DisplayOptions(wxWindow *parent, int WXUNUSED(format))
+wxWindow *ExportCL::OptionsCreate(wxWindow *parent, int format)
 {
-   ExportCLOptions od(parent);
-
-   od.ShowModal();
-
-   return true;
+   return new ExportCLOptions(parent, format);
 }
 
 ExportPlugin *New_ExportCL()

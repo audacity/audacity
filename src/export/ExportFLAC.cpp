@@ -41,36 +41,26 @@ and libvorbis examples, Monty <monty@xiph.org>
 #include "../Internat.h"
 #include "../Tags.h"
 
+#include "../Track.h"
+
 //----------------------------------------------------------------------------
 // ExportFLACOptions Class
 //----------------------------------------------------------------------------
 
-class ExportFLACOptions : public wxDialog
+class ExportFLACOptions : public wxPanel
 {
 public:
 
-   ExportFLACOptions(wxWindow *parent);
+   ExportFLACOptions(wxWindow *parent, int format);
    void PopulateOrExchange(ShuttleGui & S);
-   void OnOK(wxCommandEvent& event);
-
-private:
-
-   DECLARE_EVENT_TABLE()
 };
 
-BEGIN_EVENT_TABLE(ExportFLACOptions, wxDialog)
-   EVT_BUTTON(wxID_OK, ExportFLACOptions::OnOK)
-END_EVENT_TABLE()
-
 ///
 ///
-ExportFLACOptions::ExportFLACOptions(wxWindow *parent)
-:  wxDialog(parent, wxID_ANY,
-            wxString(_("Specify FLAC Options")))
+ExportFLACOptions::ExportFLACOptions(wxWindow *parent, int WXUNUSED(format))
+:  wxPanel(parent, wxID_ANY)
 {
-   SetName(GetTitle());
    ShuttleGui S(this, eIsCreatingFromPrefs);
-
    PopulateOrExchange(S);
 }
 
@@ -93,41 +83,22 @@ void ExportFLACOptions::PopulateOrExchange(ShuttleGui & S)
    flacBitDepthLabels.Add(wxT("16")); flacBitDepthNames.Add(_("16 bit"));
    flacBitDepthLabels.Add(wxT("24")); flacBitDepthNames.Add(_("24 bit"));
 
-   S.StartHorizontalLay(wxEXPAND, 0);
+   S.StartVerticalLay();
    {
-      S.StartStatic(_("FLAC Export Setup"), 0);
+      S.StartHorizontalLay(wxCENTER);
       {
-         S.StartTwoColumn();
+         S.StartMultiColumn(2, wxCENTER);
          {
             S.TieChoice(_("Level:"), wxT("/FileFormats/FLACLevel"),
                         wxT("5"), flacLevelNames, flacLevelLabels);
             S.TieChoice(_("Bit depth:"), wxT("/FileFormats/FLACBitDepth"),
                         wxT("16"), flacBitDepthNames, flacBitDepthLabels);
          }
-         S.EndTwoColumn();
+         S.EndMultiColumn();
       }
-      S.EndStatic();
+      S.EndHorizontalLay();
    }
-   S.EndHorizontalLay();
-
-   S.AddStandardButtons();
-
-   Layout();
-   Fit();
-   SetMinSize(GetSize());
-   Center();
-
-   return;
-}
-
-///
-///
-void ExportFLACOptions::OnOK(wxCommandEvent& WXUNUSED(event))
-{
-   ShuttleGui S(this, eIsSavingToPrefs);
-   PopulateOrExchange(S);
-
-   EndModal(wxID_OK);
+   S.EndVerticalLay();
 
    return;
 }
@@ -179,7 +150,7 @@ public:
 
    // Required
 
-   bool DisplayOptions(wxWindow *parent, int format = 0);
+   wxWindow *OptionsCreate(wxWindow *parent, int format);
    int Export(AudacityProject *project,
                int channels,
                wxString fName,
@@ -365,13 +336,9 @@ int ExportFLAC::Export(AudacityProject *project,
    return updateResult;
 }
 
-bool ExportFLAC::DisplayOptions(wxWindow *parent, int WXUNUSED(format))
+wxWindow *ExportFLAC::OptionsCreate(wxWindow *parent, int format)
 {
-   ExportFLACOptions od(parent);
-
-   od.ShowModal();
-
-   return true;
+   return new ExportFLACOptions(parent, format);
 }
 
 // LL:  There's a bug in libflac++ 1.1.2 that prevents us from using

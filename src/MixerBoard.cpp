@@ -10,8 +10,8 @@
 **********************************************************************/
 
 #include "Audacity.h"
-
 #include "Experimental.h"
+#include "MixerBoard.h"
 
 #include <math.h>
 
@@ -22,12 +22,14 @@
 
 #include "AColor.h"
 #include "AudioIO.h"
-#include "MixerBoard.h"
 #ifdef EXPERIMENTAL_MIDI_OUT
    #include "NoteTrack.h"
 #endif
 #include "Project.h"
-#include "Track.h"
+#include "TrackPanel.h" // for EVT_TRACK_PANEL_TIMER
+#include "WaveTrack.h"
+
+#include "widgets/Meter.h"
 
 
 #include "../images/MusicalInstruments.h"
@@ -82,13 +84,12 @@ void MixerTrackSlider::OnMouseEvent(wxMouseEvent &event)
 
 void MixerTrackSlider::OnFocus(wxFocusEvent &event)
 {
-   wxCommandEvent e(EVT_CAPTURE_KEYBOARD);
-
    if (event.GetEventType() == wxEVT_KILL_FOCUS) {
-      e.SetEventType(EVT_RELEASE_KEYBOARD);
+      AudacityProject::ReleaseKeyboard(this);
    }
-   e.SetEventObject(this);
-   GetParent()->GetEventHandler()->ProcessEvent(e);
+   else {
+      AudacityProject::CaptureKeyboard(this);
+   }
 
    Refresh(false);
 
@@ -1016,6 +1017,12 @@ MixerBoard::MixerBoard(AudacityProject* pProject,
 
    mPrevT1 = 0.0;
    mTracks = mProject->GetTracks();
+
+   // Events from the project don't propagate directly to this other frame, so...
+   mProject->Connect(EVT_TRACK_PANEL_TIMER,
+      wxCommandEventHandler(MixerBoard::OnTimer),
+      NULL,
+      this);
 }
 
 MixerBoard::~MixerBoard()
@@ -1033,6 +1040,11 @@ MixerBoard::~MixerBoard()
 
    // private data members
    mMusicalInstruments.Clear();
+
+   mProject->Disconnect(EVT_TRACK_PANEL_TIMER,
+      wxCommandEventHandler(MixerBoard::OnTimer),
+      NULL,
+      this);
 }
 
 // Reassign mixer input strips (MixerTrackClusters) to Track Clusters
@@ -1692,6 +1704,30 @@ void MixerBoard::OnSize(wxSizeEvent &evt)
    this->RefreshTrackClusters(true);
 }
 
+void MixerBoard::OnTimer(wxCommandEvent &event)
+{
+   // PRL 12 Jul 2015:  Moved the below (with comments) out of TrackPanel::OnTimer.
+
+   // Vaughan, 2011-01-28: No longer doing this on timer.
+   //   Now it's in AudioIO::SetMeters() and AudioIO::StopStream(), as with Meter Toolbar meters.
+   //if (pMixerBoard)
+   //   pMixerBoard->ResetMeters(false);
+
+   //v Vaughan, 2011-02-25: Moved this update back here from audacityAudioCallback.
+   //    See note there.
+   // Vaughan, 2010-01-30:
+   //    Since all we're doing here is updating the meters, I moved it to
+   //    audacityAudioCallback where it calls gAudioIO->mOutputMeter->UpdateDisplay().
+   if (mProject->IsAudioActive())
+   {
+      UpdateMeters(gAudioIO->GetStreamTime(),
+         (mProject->mLastPlayMode == loopedPlay));
+   }
+
+   // Let other listeners get the notification
+   event.Skip();
+}
+
 
 // class MixerBoardFrame
 
@@ -1707,11 +1743,11 @@ const wxSize kDefaultSize =
 
 MixerBoardFrame::MixerBoardFrame(AudacityProject* parent)
 : wxFrame(parent, -1,
-            wxString::Format(_("Audacity Mixer Board%s"),
-                              ((parent->GetName() == wxEmptyString) ?
-                                 wxT("") :
-                                 wxString::Format(wxT(" - %s"),
-                                                parent->GetName().c_str()).c_str())),
+          wxString::Format(_("Audacity Mixer Board%s"),
+                           ((parent->GetName() == wxEmptyString) ?
+                              wxT("") :
+                              wxString::Format(wxT(" - %s"),
+                                             parent->GetName()))),
             wxDefaultPosition, kDefaultSize,
             //vvv Bug in wxFRAME_FLOAT_ON_PARENT:
             // If both the project frame and MixerBoardFrame are minimized and you restore MixerBoardFrame,
@@ -1760,5 +1796,3 @@ void MixerBoardFrame::OnSize(wxSizeEvent & WXUNUSED(event))
 {
    mMixerBoard->SetSize(this->GetClientSize());
 }
-
-

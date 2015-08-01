@@ -41,6 +41,8 @@
 #include "../float_cast.h"
 #include "../widgets/Ruler.h"
 
+#include "../WaveTrack.h"
+
 enum
 {
    ID_Threshold = 10000,
@@ -215,7 +217,7 @@ void EffectCompressor::PopulateOrExchange(ShuttleGui & S)
 
    S.StartStatic(wxT(""));
    {
-      S.StartMultiColumn(3, wxEXPAND | wxALIGN_CENTER_VERTICAL);
+      S.StartMultiColumn(3, wxEXPAND);
       {
          S.SetStretchyCol(1);
          mThresholdLabel = S.AddVariableText(_("Threshold:"), true,

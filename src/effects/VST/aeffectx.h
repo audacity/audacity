@@ -377,4 +377,15 @@ enum VstPlugCategory
   kPlugCategMaxCount        // 12=Marker to count the categories
 };
 
+
+
+class VstRect
+{
+public:
+   short top;
+   short left;
+   short bottom;
+   short right;
+} ;
+   
 #endif

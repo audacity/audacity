@@ -184,15 +184,11 @@ AC_ARG_ENABLE(dynamic-loading,
             [dynamic_loading="$enableval"],
             [dynamic_loading="yes"])
 
-AC_ARG_ENABLE(gtk3, [AS_HELP_STRING([--enable-gtk3],[enable use of GTK+-3.0 (default: use GTK+-2.0)])], enable_gtk3=$enableval, enable_gtk3=no)
-
 AC_ARG_WITH(wx-version,
            [AS_HELP_STRING([--with-wx-version],
-                           [select wxWidgets version (if both installed) [2.8,]])],
+                           [select wxWidgets version (if both installed) [3.0,]])],
            wx_preference="--version=$withval",
            wx_preference="")
-dnl At the moment we only support wx2.8. If we start supporting 3.0 when it
-dnl comes out, we'll want it back again.
 
 dnl ----------------------------------------------------
 dnl If user asked for debug, put debug in compiler flags
@@ -224,8 +220,11 @@ fi
 if test x"$debug_preference" = "xyes" ; then
    dnl we want debuging on
    AC_MSG_NOTICE([Adding -g for debugging to CFLAGS and CXXFLAGS ...])
-   CFLAGS="${CFLAGS} -g "
-   CXXFLAGS="${CXXFLAGS} -g "
+   CFLAGS="${CFLAGS} -g -DwxDEBUG_LEVEL=1"
+   CXXFLAGS="${CXXFLAGS} -g -DwxDEBUG_LEVEL=1"
+else
+   CFLAGS="${CFLAGS} -DwxDEBUG_LEVEL=0"
+   CXXFLAGS="${CXXFLAGS} -DwxDEBUG_LEVEL=0"
 fi
 
 dnl Checks for typedefs, structures, and compiler characteristics.
@@ -235,6 +234,7 @@ AC_TYPE_SIZE_T
 dnl check if alloca.h exists. If it does, we need to include it for
 dnl Solaris builds, by defining HAVE_ALLOCA_H
 AC_CHECK_HEADERS_ONCE(alloca.h)
+
 
 dnl --------------------------------------------------------------------------
 dnl We would like warnings enabled on the builds, but different compilers need
@@ -274,7 +274,7 @@ dnl there isn't a way to turn them off.
 dnl-------------------------------------------------------------
 
 dnl wxWidgets -- we assume that if wx-config is found, wxWidgets is successfully installed.
-AC_PATH_PROG(WX_CONFIG, wx-config, no, $PATH:/usr/local/bin )
+AC_PATH_PROGS(WX_CONFIG, $WX_CONFIG wx-config wx-config-3.0, no, $PATH:/usr/local/bin )
 if [[ "$WX_CONFIG" = "no" ]] ; then
    AC_MSG_ERROR([Could not find wx-config: is wxWidgets installed? is wx-config in your path?])
 fi
@@ -288,18 +288,18 @@ else
 fi
 
 dnl more things we always pass to wx-config
-wxconfigargs="$static_wx_preference $unicode_preference  $wxconfigargs $wx_preference"
+wxconfigargs="$static_wx_preference $unicode_preference $wxconfigargs $wx_preference"
 wx_version=`${WX_CONFIG} $wxconfigargs --version`
 
-AC_MSG_NOTICE([Checking that the chosen version of wxWidgets is 2.8.x])
+AC_MSG_NOTICE([Checking that the chosen version of wxWidgets is 3.0.x])
 
 case "${wx_version}" in
-  2.8.* | 3.0.*)
+  3.0.*)
     echo "Great, you're using wxWidgets ${wx_version}!"
     ;;
   *)
   wx_list=`${WX_CONFIG} --list`
-  AC_MSG_ERROR([Unable to locate a suitable configuration of wxWidgets v2.8.x or higher.
+  AC_MSG_ERROR([Unable to locate a suitable configuration of wxWidgets v3.0.x or higher.
 The currently available configurations are listed below.  If necessary, either
 install the package for your distribution or download the latest version of
 wxWidgets
@@ -568,12 +568,24 @@ case "${host_os}" in
          AC_MSG_ERROR([dlopen not found, required by Audacity])
       fi
 
-      AC_SUBST(HAVE_GTK)
+      AC_MSG_CHECKING([for gtk3 use in wxWidgets])
+      CPPFLAGS="${WX_CXXFLAGS}"
+      AC_EGREP_CPP(wxWidgets built with GTK3,
+      [#include <wx/wx.h>
+      #if defined(__WXGTK3__)
+         wxWidgets built with GTK3
+      #endif
+      ], enable_gtk3=yes, enable_gtk3=no)
+      
       if [[ "$enable_gtk3" = yes ]]; then
-         PKG_CHECK_MODULES(GTK, gtk+-3.0, have_gtk=yes, have_gtk=no)
+         gtk_version=gtk+-3.0
+         AC_MSG_RESULT([yes])
       else
-         PKG_CHECK_MODULES(GTK, gtk+-2.0, have_gtk=yes, have_gtk=no)
+         gtk_version=gtk+-2.0
+         AC_MSG_RESULT([no])
       fi
+      
+      AC_SUBST(HAVE_GTK)
       PKG_CHECK_MODULES(GTK, $gtk_version, have_gtk=yes, have_gtk=no)
       if [[ "$have_gtk" = "yes" ]]
       then
@@ -581,10 +593,6 @@ case "${host_os}" in
          CPPFLAGS="$CPPFLAGS $GTK_CFLAGS"
          LIBS="$LIBS $GTK_LIBS"
       fi
-      
-      dnl VST support on platforms other than Mac OS and Windows not enabled for
-      dnl 2.0.6 release
-	   dnl use_vst="no"
    ;;
 esac
 

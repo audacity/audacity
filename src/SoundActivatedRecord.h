@@ -13,6 +13,13 @@
 
 ********************************************************************/
 
+#ifndef __AUDACITY_SOUND_ACTIVATED_RECORD__
+#define __AUDACITY_SOUND_ACTIVATED_RECORD__
+
+#include <wx/dialog.h>
+
+class ShuttleGui;
+
 class SoundActivatedRecord : public wxDialog
 {
 public:
@@ -27,3 +34,4 @@ private:
    DECLARE_EVENT_TABLE();
 };
 
+#endif

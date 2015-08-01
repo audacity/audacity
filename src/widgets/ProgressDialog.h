@@ -22,6 +22,7 @@
 
 #include <wx/defs.h>
 #include <wx/dialog.h>
+#include <wx/evtloop.h>
 #include <wx/gauge.h>
 #include <wx/stattext.h>
 #include <wx/utils.h>
@@ -38,8 +39,10 @@ enum ProgressDialogFlags
 {
    pdlgEmptyFlags = 0x00000000,
    pdlgHideStopButton = 0x00000001,
-   pdlgHideCancelButton = 0x00000002
-} ;
+   pdlgHideCancelButton = 0x00000002,
+
+   pdlgDefaultFlags = pdlgEmptyFlags
+};
 
 ////////////////////////////////////////////////////////////
 /// ProgressDialog Class
@@ -47,13 +50,12 @@ enum ProgressDialogFlags
 
 class AUDACITY_DLL_API ProgressDialog:public wxDialog
 {
+public:
+   ProgressDialog();
+   ProgressDialog(const wxString & title, const wxString & message = wxEmptyString, ProgressDialogFlags flags = pdlgDefaultFlags);
+   ~ProgressDialog();
 
- public:
-
-   ProgressDialog(const wxString & title, const wxString & message = wxEmptyString, ProgressDialogFlags flags = pdlgEmptyFlags);
-   virtual ~ProgressDialog();
-
-   bool Show(bool show = true);
+   bool Create(const wxString & title, const wxString & message = wxEmptyString, ProgressDialogFlags flags = pdlgDefaultFlags);
 
    int Update(int value, const wxString & message = wxEmptyString);
    int Update(double current, const wxString & message = wxEmptyString);
@@ -64,13 +66,7 @@ class AUDACITY_DLL_API ProgressDialog:public wxDialog
    int Update(int current, int total, const wxString & message = wxEmptyString);
    void SetMessage(const wxString & message);
 
- private:
-   void OnCancel(wxCommandEvent & e);
-   void OnStop(wxCommandEvent & e);
-   void OnCloseWindow(wxCloseEvent & e);
-   void Beep();
-
- protected:
+protected:
    wxStaticText *mElapsed;
    wxStaticText *mRemaining;
    wxGauge *mGauge;
@@ -82,13 +78,19 @@ class AUDACITY_DLL_API ProgressDialog:public wxDialog
    bool mCancel;
    bool mStop;
 
- private:
-   bool SearchForWindow(const wxWindowList & list, const wxWindow *searchfor);
+private:
+   void Init();
+   void OnCancel(wxCommandEvent & e);
+   void OnStop(wxCommandEvent & e);
+   void OnCloseWindow(wxCloseEvent & e);
+   void Beep();
 
-   wxWindow *mHadFocus;
+private:
+   // This guarantees we have an active event loop...possible during OnInit()
+   wxEventLoopGuarantor mLoop;
+
    wxStaticText *mMessage;
    wxWindowDisabler *mDisable;
-
    int mLastW;
    int mLastH;
 
@@ -101,7 +103,7 @@ class AUDACITY_DLL_API TimerProgressDialog : public ProgressDialog
    TimerProgressDialog(const wxLongLong_t duration,
                         const wxString & title,
                         const wxString & message = wxEmptyString,
-                        ProgressDialogFlags flags = pdlgEmptyFlags);
+                        ProgressDialogFlags flags = pdlgDefaultFlags);
    int Update(const wxString & message = wxEmptyString);
 
  protected:

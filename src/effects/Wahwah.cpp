@@ -49,6 +49,9 @@ Param( FreqOfs,   int,     XO("Offset"),     30,      0,       100,     1   ); /
 // How many samples are processed before recomputing the lfo value again
 #define lfoskipsamples 30
 
+#include <wx/arrimpl.cpp>
+WX_DEFINE_OBJARRAY(EffectWahwahStateArray);
+
 //
 // EffectWahwah
 //
@@ -100,6 +103,15 @@ EffectType EffectWahwah::GetType()
    return EffectTypeProcess;
 }
 
+bool EffectWahwah::SupportsRealtime()
+{
+#if defined(EXPERIMENTAL_REALTIME_AUDACITY_EFFECTS)
+   return true;
+#else
+   return false;
+#endif
+}
+
 // EffectClientInterface implementation
 
 int EffectWahwah::GetAudioInCount()
@@ -114,26 +126,11 @@ int EffectWahwah::GetAudioOutCount()
 
 bool EffectWahwah::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames chanMap)
 {
-   lfoskip = mFreq * 2 * M_PI / mSampleRate;
-   skipcount = 0;
-   xn1 = 0;
-   xn2 = 0;
-   yn1 = 0;
-   yn2 = 0;
-   b0 = 0;
-   b1 = 0;
-   b2 = 0;
-   a0 = 0;
-   a1 = 0;
-   a2 = 0;
+   InstanceInit(mMaster, mSampleRate);
 
-   depth = mDepth / 100.0;
-   freqofs = mFreqOfs / 100.0;
-
-   phase = mPhase * M_PI / 180.0;
    if (chanMap[0] == ChannelNameFrontRight)
    {
-      phase += M_PI;
+      mMaster.phase += M_PI;
    }
 
    return true;
@@ -141,41 +138,43 @@ bool EffectWahwah::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelName
 
 sampleCount EffectWahwah::ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen)
 {
-   float *ibuf = inBlock[0];
-   float *obuf = outBlock[0];
-   double frequency, omega, sn, cs, alpha;
-   double in, out;
+   return InstanceProcess(mMaster, inBlock, outBlock, blockLen);
+}
 
-   for (int i = 0; i < blockLen; i++)
-   {
-      in = (double) ibuf[i];
+bool EffectWahwah::RealtimeInitialize()
+{
+   SetBlockSize(512);
 
-      if ((skipcount++) % lfoskipsamples == 0)
-      {
-         frequency = (1 + cos(skipcount * lfoskip + phase)) / 2;
-         frequency = frequency * depth * (1 - freqofs) + freqofs;
-         frequency = exp((frequency - 1) * 6);
-         omega = M_PI * frequency;
-         sn = sin(omega);
-         cs = cos(omega);
-         alpha = sn / (2 * mRes);
-         b0 = (1 - cs) / 2;
-         b1 = 1 - cs;
-         b2 = (1 - cs) / 2;
-         a0 = 1 + alpha;
-         a1 = -2 * cs;
-         a2 = 1 - alpha;
-      };
-      out = (b0 * in + b1 * xn1 + b2 * xn2 - a1 * yn1 - a2 * yn2) / a0;
-      xn2 = xn1;
-      xn1 = in;
-      yn2 = yn1;
-      yn1 = out;
+   mSlaves.Clear();
 
-      obuf[i] = (float) out;
-   }
+   return true;
+}
 
-   return blockLen;
+bool EffectWahwah::RealtimeAddProcessor(int WXUNUSED(numChannels), float sampleRate)
+{
+   EffectWahwahState slave;
+
+   InstanceInit(slave, sampleRate);
+
+   mSlaves.Add(slave);
+
+   return true;
+}
+
+bool EffectWahwah::RealtimeFinalize()
+{
+   mSlaves.Clear();
+
+   return true;
+}
+
+sampleCount EffectWahwah::RealtimeProcess(int group,
+                                          float **inbuf,
+                                          float **outbuf,
+                                          sampleCount numSamples)
+{
+
+   return InstanceProcess(mSlaves[group], inbuf, outbuf, numSamples);
 }
 
 bool EffectWahwah::GetAutomationParameters(EffectAutomationParameters & parms)
@@ -298,6 +297,73 @@ bool EffectWahwah::TransferDataFromWindow()
 }
 
 // EffectWahwah implementation
+
+void EffectWahwah::InstanceInit(EffectWahwahState & data, float sampleRate)
+{
+   data.samplerate = sampleRate;
+   data.lfoskip = mFreq * 2 * M_PI / sampleRate;
+   data.skipcount = 0;
+   data.xn1 = 0;
+   data.xn2 = 0;
+   data.yn1 = 0;
+   data.yn2 = 0;
+   data.b0 = 0;
+   data.b1 = 0;
+   data.b2 = 0;
+   data.a0 = 0;
+   data.a1 = 0;
+   data.a2 = 0;
+
+   data.depth = mDepth / 100.0;
+   data.freqofs = mFreqOfs / 100.0;
+
+   data.phase = mPhase * M_PI / 180.0;
+}
+
+sampleCount EffectWahwah::InstanceProcess(EffectWahwahState & data, float **inBlock, float **outBlock, sampleCount blockLen)
+{
+   float *ibuf = inBlock[0];
+   float *obuf = outBlock[0];
+   double frequency, omega, sn, cs, alpha;
+   double in, out;
+
+   data.lfoskip = mFreq * 2 * M_PI / data.samplerate;
+   data.depth = mDepth / 100.0;
+   data.freqofs = mFreqOfs / 100.0;
+
+   data.phase = mPhase * M_PI / 180.0;
+
+   for (int i = 0; i < blockLen; i++)
+   {
+      in = (double) ibuf[i];
+
+      if ((data.skipcount++) % lfoskipsamples == 0)
+      {
+         frequency = (1 + cos(data.skipcount * data.lfoskip + data.phase)) / 2;
+         frequency = frequency * data.depth * (1 - data.freqofs) + data.freqofs;
+         frequency = exp((frequency - 1) * 6);
+         omega = M_PI * frequency;
+         sn = sin(omega);
+         cs = cos(omega);
+         alpha = sn / (2 * mRes);
+         data.b0 = (1 - cs) / 2;
+         data.b1 = 1 - cs;
+         data.b2 = (1 - cs) / 2;
+         data.a0 = 1 + alpha;
+         data.a1 = -2 * cs;
+         data.a2 = 1 - alpha;
+      };
+      out = (data.b0 * in + data.b1 * data.xn1 + data.b2 * data.xn2 - data.a1 * data.yn1 - data.a2 * data.yn2) / data.a0;
+      data.xn2 = data.xn1;
+      data.xn1 = in;
+      data.yn2 = data.yn1;
+      data.yn1 = out;
+
+      obuf[i] = (float) out;
+   }
+
+   return blockLen;
+}
 
 void EffectWahwah::OnFreqSlider(wxCommandEvent & evt)
 {

@@ -17,6 +17,7 @@ See also BatchCommandDialog and BatchProcessDialog.
 
 
 #include "Audacity.h"
+#include "BatchCommands.h"
 
 #include <wx/defs.h>
 #include <wx/dir.h>
@@ -25,7 +26,6 @@ See also BatchCommandDialog and BatchProcessDialog.
 #include <wx/textfile.h>
 
 #include "Project.h"
-#include "BatchCommands.h"
 #include "commands/CommandManager.h"
 #include "effects/EffectManager.h"
 #include "FileNames.h"
@@ -41,6 +41,7 @@ See also BatchCommandDialog and BatchProcessDialog.
 #include "Theme.h"
 #include "AllThemeResources.h"
 
+#include "Track.h"
 
 // KLUDGE: All commands should be on the same footing
 // however, for historical reasons we distinguish between
@@ -682,8 +683,7 @@ bool BatchCommands::ApplyChain(const wxString & filename)
    {
       if(proj) {
          // Chain failed or was cancelled; revert to the previous state
-         UndoManager *um = proj->GetUndoManager();
-         proj->SetStateTo(um->GetCurrentState());
+         proj->RollbackState();
       }
       return false;
    }

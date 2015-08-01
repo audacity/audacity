@@ -16,6 +16,7 @@
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "QualityPrefs.h"
 
 #include <wx/defs.h>
 
@@ -25,8 +26,6 @@
 #include "../Resample.h"
 #include "../SampleFormat.h"
 #include "../ShuttleGui.h"
-
-#include "QualityPrefs.h"
 
 #define ID_SAMPLE_RATE_CHOICE           7001
 

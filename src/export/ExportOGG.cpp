@@ -24,7 +24,8 @@
 
 #include <wx/log.h>
 #include <wx/msgdlg.h>
-
+#include <wx/slider.h>
+ 
 #include <vorbis/vorbisenc.h>
 
 #include "../FileIO.h"
@@ -35,86 +36,64 @@
 
 #include "../Internat.h"
 #include "../Tags.h"
+#include "../Track.h"
 
 //----------------------------------------------------------------------------
 // ExportOGGOptions
 //----------------------------------------------------------------------------
 
-class ExportOGGOptions : public wxDialog
+class ExportOGGOptions : public wxPanel
 {
 public:
 
    ExportOGGOptions(wxWindow *parent, int format);
+   virtual ~ExportOGGOptions();
    void PopulateOrExchange(ShuttleGui & S);
-   void OnOK(wxCommandEvent& event);
 
 private:
 
    int mOggQualityUnscaled;
-
-   DECLARE_EVENT_TABLE()
 };
-
-BEGIN_EVENT_TABLE(ExportOGGOptions, wxDialog)
-   EVT_BUTTON(wxID_OK, ExportOGGOptions::OnOK)
-END_EVENT_TABLE()
 
 ///
 ///
 ExportOGGOptions::ExportOGGOptions(wxWindow *parent, int WXUNUSED(format))
-:  wxDialog(parent, wxID_ANY,
-            wxString(_("Specify Ogg Vorbis Options")))
+:  wxPanel(parent, wxID_ANY)
 {
-   SetName(GetTitle());
-   ShuttleGui S(this, eIsCreatingFromPrefs);
-
    mOggQualityUnscaled = gPrefs->Read(wxT("/FileFormats/OggExportQuality"),50)/10;
 
+   ShuttleGui S(this, eIsCreatingFromPrefs);
    PopulateOrExchange(S);
 }
 
-///
-///
-void ExportOGGOptions::PopulateOrExchange(ShuttleGui & S)
-{
-   S.StartHorizontalLay(wxEXPAND, 0);
-   {
-      S.StartStatic(_("Ogg Vorbis Export Setup"), 1);
-      {
-         S.StartMultiColumn(2, wxEXPAND);
-         {
-            S.SetStretchyCol(1);
-            S.TieSlider(_("Quality:"), mOggQualityUnscaled, 10);
-         }
-         S.EndMultiColumn();
-      }
-      S.EndStatic();
-   }
-   S.EndHorizontalLay();
-
-   S.AddStandardButtons();
-
-   Layout();
-   Fit();
-   SetMinSize(GetSize());
-   Center();
-
-   return;
-}
-
-///
-///
-void ExportOGGOptions::OnOK(wxCommandEvent& WXUNUSED(event))
+ExportOGGOptions::~ExportOGGOptions()
 {
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
 
    gPrefs->Write(wxT("/FileFormats/OggExportQuality"),mOggQualityUnscaled * 10);
    gPrefs->Flush();
+}
 
-   EndModal(wxID_OK);
-
-   return;
+///
+///
+void ExportOGGOptions::PopulateOrExchange(ShuttleGui & S)
+{
+   S.StartVerticalLay();
+   {
+      S.StartHorizontalLay(wxEXPAND);
+      {
+         S.SetSizerProportion(1);
+         S.StartMultiColumn(2, wxCENTER);
+         {
+            S.SetStretchyCol(1);
+            S.Prop(1).TieSlider(_("Quality:"), mOggQualityUnscaled, 10);
+         }
+         S.EndMultiColumn();
+      }
+      S.EndHorizontalLay();
+   }
+   S.EndVerticalLay();
 }
 
 //----------------------------------------------------------------------------
@@ -131,8 +110,8 @@ public:
    void Destroy();
 
    // Required
+   virtual wxWindow *OptionsCreate(wxWindow *parent, int format);
 
-   bool DisplayOptions(wxWindow *parent, int format = 0);
    int Export(AudacityProject *project,
                int channels,
                wxString fName,
@@ -335,13 +314,9 @@ int ExportOGG::Export(AudacityProject *project,
    return updateResult;
 }
 
-bool ExportOGG::DisplayOptions(wxWindow *parent, int format)
+wxWindow *ExportOGG::OptionsCreate(wxWindow *parent, int format)
 {
-   ExportOGGOptions od(parent, format);
-
-   od.ShowModal();
-
-   return true;
+   return new ExportOGGOptions(parent, format);
 }
 
 bool ExportOGG::FillComment(AudacityProject *project, vorbis_comment *comment, Tags *metadata)

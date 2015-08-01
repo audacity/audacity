@@ -15,7 +15,6 @@
 
 #include <wx/string.h>
 
-#include "../WaveTrack.h"
 #include "../widgets/NumericTextCtrl.h"
 
 #include "Generator.h"

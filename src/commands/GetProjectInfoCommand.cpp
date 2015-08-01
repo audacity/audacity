@@ -20,7 +20,6 @@
 #include "../TrackPanel.h"
 #include "../Project.h"
 #include "../Track.h"
-#include "../WaveTrack.h"
 
 wxString GetProjectInfoCommandType::BuildName()
 {
@@ -148,4 +147,24 @@ void GetProjectInfoCommand::SendTracksInfo(TrackList *projTracks,
       trk = iter.Next();
    }
    Status(boolValueStr);
+}
+
+bool GetProjectInfoCommand::testSelected(Track * track) const
+{
+   return track->GetSelected();
+}
+
+bool GetProjectInfoCommand::testLinked(Track * track) const
+{
+   return track->GetLinked();
+}
+
+bool GetProjectInfoCommand::testSolo(Track * track) const
+{
+   return track->GetSolo();
+}
+
+bool GetProjectInfoCommand::testMute(Track * track) const
+{
+   return track->GetMute();
 }

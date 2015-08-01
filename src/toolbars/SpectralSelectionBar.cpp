@@ -146,12 +146,14 @@ void SpectralSelectionBar::Populate()
 
    mCenterCtrl = new NumericTextCtrl(
       NumericConverter::FREQUENCY, this, OnCenterID, frequencyFormatName, 0.0);
+   mCenterCtrl->SetInvalidValue(SelectedRegion::UndefinedFrequency);
    mCenterCtrl->SetName(_("Center Frequency:"));
    mCenterCtrl->EnableMenu();
    subSizer->Add(mCenterCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 
    mWidthCtrl = new NumericTextCtrl(
       NumericConverter::BANDWIDTH, this, OnWidthID, bandwidthFormatName, 0.0);
+   mWidthCtrl->SetInvalidValue(-1.0);
    mWidthCtrl->SetName(wxString(_("Bandwidth:")));
    mWidthCtrl->EnableMenu();
    subSizer->Add(mWidthCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 0);
@@ -228,7 +230,11 @@ void SpectralSelectionBar::ModifySpectralSelection(bool done)
    if (mbCenterAndWidth) {
       mCenter = mCenterCtrl->GetValue();
       mWidth = mWidthCtrl->GetValue();
-      if (mCenter < 0 && mWidth < 0)
+      if ((mCenter < 0 || mWidth < 0) &&
+          (mLow >= 0 || mHigh >= 0))
+         // Transition from defined spectral selection to undefined
+         bottom = top = SelectedRegion::UndefinedFrequency;
+      else if (mCenter < 0 && mWidth < 0)
          bottom = top = SelectedRegion::UndefinedFrequency;
       else {
          if (mCenter < 0) {

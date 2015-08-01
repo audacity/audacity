@@ -45,18 +45,6 @@ CXXFLAGS="$cxxflags_save"
 
 dnl Build Options
 
-AC_ARG_ENABLE(static-wx,
-            [AS_HELP_STRING([--enable-static-wx],
-                            [link wx statically [default=no]])],
-            static_wx_preference="--static=$enableval",
-            static_wx_preference="")
-
-AC_ARG_ENABLE(unicode,
-            [AS_HELP_STRING([--enable-unicode],
-                            [enable unicode support [default=yes]])],
-            unicode_preference="--unicode=$enableval",
-            unicode_preference="--unicode=yes")
-
 AC_ARG_ENABLE(debug,
             [AS_HELP_STRING([--enable-debug],
                             [enable debug support [default=no]])],
@@ -68,17 +56,20 @@ AC_ARG_WITH(wx-version,
                            [select wxWidgets version (if both installed) [2.8,]])],
            wx_preference="--version=$withval",
            wx_preference="")
-dnl Right now only support wx 2.8
+dnl Right now only support wx 3.0
 
 dnl ----------------------------------------------------
 dnl If user asked for debug, put debug in compiler flags
 dnl ----------------------------------------------------
 
-if test "$debug_preference" = "yes"; then
+if test x"$debug_preference" = "xyes" ; then
    dnl we want debuging on
    AC_MSG_NOTICE([Adding -g for debugging to CFLAGS and CXXFLAGS ...])
-   CFLAGS="${CFLAGS} -g "
-   CXXFLAGS="${CXXFLAGS} -g "
+   CFLAGS="${CFLAGS} -g -DwxDEBUG_LEVEL=1"
+   CXXFLAGS="${CXXFLAGS} -g -DwxDEBUG_LEVEL=1"
+else
+   CFLAGS="${CFLAGS} -DwxDEBUG_LEVEL=0"
+   CXXFLAGS="${CXXFLAGS} -DwxDEBUG_LEVEL=0"
 fi
 
 dnl --------------------------------------------------------------------------
@@ -108,7 +99,7 @@ fi
 dnl --- check for required libraries ---
 
 dnl wxWidgets -- we assume that if wx-config is found, wxWidgets is successfully installed.
-AC_PATH_PROG(WX_CONFIG, wx-config, no, $PATH:/usr/local/bin )
+AC_PATH_PROGS(WX_CONFIG, wx-config wx-config-3.0, no, $PATH:/usr/local/bin )
 if [[ "$WX_CONFIG" = "no" ]] ; then
    AC_MSG_ERROR("Could not find wx-config: is wxWidgets installed? is wx-config in your path?")
 fi

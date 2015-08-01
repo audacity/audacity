@@ -19,6 +19,7 @@
 #include <wx/intl.h>
 #include "AColor.h"
 #include "widgets/Ruler.h"
+#include "Envelope.h"
 #include "Prefs.h"
 #include "Internat.h"
 #include "Resample.h"

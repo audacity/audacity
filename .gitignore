@@ -49,7 +49,7 @@
 project.xcworkspace
 xcuserdata
 *.xcconfig
-mac/Info.plist.h
+mac/build
 
 # Windows specific
 win/Debug

@@ -46,13 +46,13 @@ class HtmlTextHelpDialog : public BrowserFrame
 public:
    HtmlTextHelpDialog() : BrowserFrame()
    {
-#if !wxCHECK_VERSION(3, 1, 0)
+#if !wxCHECK_VERSION(3, 0, 0)
       MakeModal( true );
 #endif
    }
    virtual ~HtmlTextHelpDialog()
    {
-#if !wxCHECK_VERSION(3, 1, 0)
+#if !wxCHECK_VERSION(3, 0, 0)
       MakeModal( false );
 #endif
       // On Windows, for some odd reason, the Audacity window will be sent to

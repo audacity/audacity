@@ -15,14 +15,14 @@
 
 
 #include "../Audacity.h"
+#include "Reverse.h"
 
 #include <math.h>
 
 #include <wx/intl.h>
 
 #include "../LabelTrack.h"
-
-#include "Reverse.h"
+#include "../WaveTrack.h"
 
 //
 // EffectReverse

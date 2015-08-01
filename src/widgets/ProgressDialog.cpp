@@ -35,27 +35,17 @@
 #include <wx/datetime.h>
 #include <wx/dialog.h>
 #include <wx/event.h>
+#include <wx/evtloop.h>
 #include <wx/frame.h>
 #include <wx/intl.h>
-#if defined(__WXMAC__)
-#include <wx/menu.h>
-#endif
 #include <wx/settings.h>
 #include <wx/sizer.h>
+#include <wx/sound.h>
 #include <wx/stopwatch.h>
 #include <wx/window.h>
 
 #include "ProgressDialog.h"
 #include "../Prefs.h"
-#include "../ShuttleGui.h"
-
-#include <wx/sound.h>
-
-// Remove this when wxSound patch gets applied to wxWidgets
-// http://trac.wxwidgets.org/ticket/10362
-#if defined(__WXMAC__)
-#include <Carbon/Carbon.h>
-#endif
 
 // This really should be a Preferences setting
 static const unsigned char beep[] =
@@ -998,45 +988,69 @@ END_EVENT_TABLE()
 //
 // Constructor
 //
-ProgressDialog::ProgressDialog(const wxString & title, const wxString & message, ProgressDialogFlags flags)
-: wxDialog(wxTheApp->GetTopWindow(),
-           wxID_ANY,
-           title,
-           wxDefaultPosition,
-           wxDefaultSize,
-           wxDEFAULT_DIALOG_STYLE |
-           wxFRAME_FLOAT_ON_PARENT),
-   mLastValue(0),
-   mDisable(NULL)
+ProgressDialog::ProgressDialog()
+:  wxDialog()
 {
+   Init();
+}
+
+ProgressDialog::ProgressDialog(const wxString & title,
+                               const wxString & message,
+                               ProgressDialogFlags flags)
+:  wxDialog()
+{
+   Init();
+
+   Create(title, message, flags);
+}
+
+//
+// Destructor
+//
+ProgressDialog::~ProgressDialog()
+{
+   if (mDisable)
+   {
+      delete mDisable;
+      mDisable = NULL;
+   }
+
+   if (IsShown())
+   {
+      Show(false);
+
+      Beep();
+   }
+}
+
+void ProgressDialog::Init()
+{
+   mLastValue = 0;
+   mDisable = NULL;
+}
+
+bool ProgressDialog::Create(const wxString & title,
+                            const wxString & message,
+                            ProgressDialogFlags flags)
+{
+   wxWindow *parent = GetParentForModalDialog(NULL, 0);
+
+   bool success = wxDialog::Create(parent,
+                                   wxID_ANY,
+                                   title,
+                                   wxDefaultPosition,
+                                   wxDefaultSize,
+                                   wxDEFAULT_DIALOG_STYLE |
+                                   wxFRAME_FLOAT_ON_PARENT);
+   if (!success)
+   {
+      return false;
+   }
    SetName(GetTitle());
 
    wxBoxSizer *v;
    wxWindow *w;
    wxSize ds;
-
-   // There's a problem where the focus is not returned to the window that had
-   // it before creating this object.  The reason is not entirely understood
-   // but if the dialog window never gets shown then the focus does not get
-   // returned to the original window.  It seems to have something to do with
-   // wxWindowDisabler as the problem doesn't occur when it isn't created.
-   //
-   // This never used to be a problem for us because we didn't actually create
-   // the wxProgressDialog until after the elapsed time reached .5 seconds.
-   // This also meant that the app modal state was not established until .5
-   // seconds had passed.  This left a small window where the user would be able
-   // to interact with the main window and possibly do things like get two
-   // effects running at the same time.
-
-   mHadFocus = wxWindow::FindFocus();
-
-#if defined(__WXGTK__)
-   // Under GTK, when applying any effect that prompts the user, it's more than
-   // likely that FindFocus() will return NULL.  So, make sure something has focus.
-   if (GetParent()) {
-      GetParent()->SetFocus();
-   }
-#endif
 
    SetExtraStyle(GetExtraStyle() | wxWS_EX_TRANSIENT);
 
@@ -1117,13 +1131,13 @@ ProgressDialog::ProgressDialog(const wxString & title, const wxString & message,
    if (!(flags & pdlgHideStopButton))
    {
       w = new wxButton(this, wxID_OK, _("Stop"));
-      h->Add(w, 0, wxALIGN_RIGHT | wxRIGHT, 10);
+      h->Add(w, 0, wxRIGHT, 10);
    }
 
    if (!(flags & pdlgHideCancelButton))
    {
       w = new wxButton(this, wxID_CANCEL, _("Cancel"));
-      h->Add(w, 0, wxALIGN_RIGHT | wxRIGHT, 10);
+      h->Add(w, 0, wxRIGHT, 10);
    }
 
    v->Add(h, 0, wxALIGN_RIGHT | wxRIGHT | wxBOTTOM, 10);
@@ -1152,8 +1166,6 @@ ProgressDialog::ProgressDialog(const wxString & title, const wxString & message,
    mCancel = false;
    mStop = false;
 
-   Show(false);
-
    // Even though we won't necessarily show the dialog due to the 500ms
    // delay, we MUST disable other windows/menus anyway since we run the risk
    // of allowing other tasks to run before this one is complete.
@@ -1168,172 +1180,11 @@ ProgressDialog::ProgressDialog(const wxString & title, const wxString & message,
    // no editing in any project until Timer Record finishes. 
    mDisable = new wxWindowDisabler(this);
 
-#if defined(__WXMAC__)
-   // LL:  On the Mac, the parent windows get disabled, but they still respond
-   //      to the close button being clicked and the application quit menu item
-   //      is still enabled.  We do not want the parent window to be destroyed
-   //      while we're active, so we have to kludge around a bit to keep this
-   //      from happening.
-   WindowRef windowRef = (WindowRef) MacGetWindowRef();
-   if (windowRef) {
-      SetWindowModality(windowRef, kWindowModalityAppModal, NULL);
-      BeginAppModalStateForWindow(windowRef);
-   }
+   // On OSX at least, creating the disabler causes the dialog to show, so
+   // just hide it again until the delay has been reached.
+   Show(false);
 
-   w = wxTheApp->GetTopWindow();
-   if (w) {
-      w = wxGetTopLevelParent(w);
-      if (w) {
-         wxFrame *f = wxStaticCast(w, wxFrame);
-         if (f) {
-            wxMenuBar *bar = f->GetMenuBar();
-            if (bar) {
-               bar->Enable(wxID_PREFERENCES, false);
-               bar->Enable(wxID_EXIT, false);
-            }
-         }
-      }
-   }
-#endif
-
-#if defined(__WXMSW__)
-   // See Bug #334
-   // LL:  On Windows, the application message loop is still active even though
-   //      all of the windows have been disabled.  So, keyboard shortcuts still
-   //      work in windows not related to the progress dialog, which allows
-   //      interaction when it should be blocked.
-   //      This disables the application message loop so keyboard shortcuts will
-   //      no longer be processed.
-   wxTheApp->SetEvtHandlerEnabled(false);
-#endif
-}
-
-//
-// Destructor
-//
-ProgressDialog::~ProgressDialog()
-{
-   if (IsShown())
-   {
-      Show(false);
-
-      Beep();
-   }
-
-#if defined(__WXMSW__)
-   // Undo above fix for bug 334.
-   wxTheApp->SetEvtHandlerEnabled(true);
-#endif
-
-#if defined(__WXMAC__)
-   wxWindow *w = wxTheApp->GetTopWindow();
-   if (w) {
-      w = wxGetTopLevelParent(w);
-      if (w) {
-         wxFrame *f = wxStaticCast(w, wxFrame);
-         if (f) {
-            wxMenuBar *bar = f->GetMenuBar();
-            if (bar) {
-               bar->Enable(wxID_PREFERENCES, true);
-               bar->Enable(wxID_EXIT, true);
-            }
-         }
-      }
-   }
-
-   WindowRef windowRef = (WindowRef) MacGetWindowRef();
-   if (windowRef) {
-      EndAppModalStateForWindow(windowRef);
-   }
-#endif
-
-   if (mDisable)
-   {
-      delete mDisable;
-   }
-
-#if defined(__WXGTK__)
-   // Under GTK, when applying any effect that prompts the user, it's more than
-   // like that FindFocus() will return NULL.  So, make sure something has focus.
-   if (GetParent()) {
-      GetParent()->SetFocus();
-   }
-#endif
-
-   // Restore saved focus, but only if the window still exists.
-   //
-   // It is possible that it was a deferred deletion and it was deleted since
-   // we captured the focused window.  So, we need to verify that the window
-   // still exists by searching all of the wxWidgets windows.  It's the only
-   // sure way.
-   if (mHadFocus && SearchForWindow(wxTopLevelWindows, mHadFocus)) {
-      mHadFocus->SetFocus();
-   }
-}
-
-//
-// Recursivaly search the window list for the given window.
-//
-bool ProgressDialog::SearchForWindow(const wxWindowList & list, const wxWindow *searchfor)
-{
-   wxWindowList::compatibility_iterator node = list.GetFirst();
-   while (node) {
-      wxWindow *win = node->GetData();
-      if (win == searchfor || SearchForWindow(win->GetChildren(), searchfor)) {
-         return true;
-      }
-      node = node->GetNext();
-   }
-
-   return false;
-}
-
-//
-// Show/Hide the dialog
-//
-// At least on the Mac, deleting the WindowDisabler before continuing to the
-// base class is VERY important since menu items can remain in the disabled
-// state.  This has to do with the Mac not honoring the Enable() if the
-// application is still in a modal state.
-//
-// An example is generating a tone in an empty project.  The Export menus
-// will not get enabled.
-//
-bool
-ProgressDialog::Show(bool show)
-{
-   if (!show)
-   {
-      if (mDisable)
-      {
-         delete mDisable;
-         mDisable = NULL;
-      }
-   }
-   else
-   {
-      if (!mDisable)
-      {
-         mDisable = new wxWindowDisabler(this);
-
-         #if defined(__WXMAC__)
-            // LL:  On the Mac, the parent windows get disabled, but they still respond
-            //      to the close button being clicked and the application quit menu item
-            //      is still enabled.  We do not want the parent window to be destroyed
-            //      while we're active, so we have to kludge around a bit to keep this
-            //      from happening.
-            WindowRef windowRef = (WindowRef) MacGetWindowRef();
-            SetWindowModality( windowRef, kWindowModalityAppModal, NULL ) ;
-            BeginAppModalStateForWindow(windowRef);
-
-            wxMenuBar *bar = wxStaticCast(wxGetTopLevelParent(wxTheApp->GetTopWindow()), wxFrame)->GetMenuBar();
-            bar->Enable(wxID_PREFERENCES, false);
-            bar->Enable(wxID_EXIT, false);
-         #endif
-      }
-   }
-
-    return wxDialog::Show(show);
+   return true;
 }
 
 //
@@ -1398,7 +1249,20 @@ ProgressDialog::Update(int value, const wxString & message)
       mLastUpdate = now;
    }
 
-   wxYieldIfNeeded();
+   wxDialog::Update();
+
+   // Copied from wx 3.0.2 generic progress dialog
+   //
+   // we have to yield because not only we want to update the display but
+   // also to process the clicks on the cancel and skip buttons
+   // NOTE: using YieldFor() this call shouldn't give re-entrancy problems
+   //       for event handlers not interested to UI/user-input events.
+   //
+   // LL:  Added timer category to prevent extreme delays when processing effects
+   //      (and probably other things).  I do not yet know why this happens and
+   //      I'm not too keen on having timer events processed here, but you do
+   //      what you have to do.
+   wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI | wxEVT_CATEGORY_USER_INPUT | wxEVT_CATEGORY_TIMER);
 
    return eProgressSuccess;
 }
@@ -1491,6 +1355,7 @@ ProgressDialog::Update(double current, double total, const wxString & message)
       return Update(1000, message);
    }
 }
+
 
 //
 // Update the message text
@@ -1611,6 +1476,16 @@ int TimerProgressDialog::Update(const wxString & message /*= wxEmptyString*/)
       return eProgressStopped;
    }
 
+   // Copied from wx 3.0.2 generic progress dialog
+   //
+   // we have to yield because not only we want to update the display but
+   // also to process the clicks on the cancel and skip buttons
+   // NOTE: using YieldFor() this call shouldn't give re-entrancy problems
+   //       for event handlers not interested to UI/user-input events.
+   wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI|wxEVT_CATEGORY_USER_INPUT);
+   
+   wxDialog::Update();
+
    SetMessage(message);
 
    wxLongLong_t now = wxGetLocalTimeMillis().GetValue();
@@ -1651,7 +1526,12 @@ int TimerProgressDialog::Update(const wxString & message /*= wxEmptyString*/)
       mLastUpdate = now;
    }
 
-   wxYieldIfNeeded();
+   // Copied from wx 3.0.2 generic progress dialog
+   //
+   // allow the window to repaint:
+   // NOTE: since we yield only for UI events with this call, there
+   //       should be no side-effects
+   wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI);
 
    return eProgressSuccess;
 }

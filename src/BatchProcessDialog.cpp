@@ -175,15 +175,23 @@ void BatchProcessDialog::OnApplyToProject(wxCommandEvent & WXUNUSED(event))
    d.Show();
    Hide();
 
-   wxWindowDisabler wd;
-
    gPrefs->Write(wxT("/Batch/ActiveChain"), name);
    gPrefs->Flush();
 
    mBatchCommands.ReadChain(name);
-   if (!mBatchCommands.ApplyChain()) {
+
+   // The disabler must get deleted before the EndModal() call.  Otherwise,
+   // the menus on OSX will remain disabled.
+   wxWindowDisabler *wd = new wxWindowDisabler(&d);
+   bool success = mBatchCommands.ApplyChain();
+   delete wd;
+
+   if (!success) {
+      Show();
       return;
    }
+
+   EndModal(wxID_OK);
 }
 
 void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
@@ -342,11 +350,13 @@ void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
       project->OnRemoveTracks();
    }
    project->OnRemoveTracks();
+
+   EndModal(wxID_OK);
 }
 
 void BatchProcessDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
 {
-   EndModal(false);
+   EndModal(wxID_CANCEL);
 }
 
 /////////////////////////////////////////////////////////////////////

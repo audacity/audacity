@@ -16,7 +16,6 @@
 #include <wx/font.h>
 #include <wx/panel.h>
 #include <wx/window.h>
-#include "../Envelope.h"
 #include "../Experimental.h"
 
 class ViewInfo;

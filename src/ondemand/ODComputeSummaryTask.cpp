@@ -20,6 +20,8 @@ updating the ODPCMAliasBlockFile and the GUI of the newly available data.
 
 #include "ODComputeSummaryTask.h"
 #include "../blockfile/ODPCMAliasBlockFile.h"
+#include "../Sequence.h"
+#include "../WaveTrack.h"
 #include <wx/wx.h>
 
 //36 blockfiles > 3 minutes stereo 44.1kHz per ODTask::DoSome

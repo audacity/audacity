@@ -298,7 +298,6 @@ void OnShowSpectralSelectionToolBar();
 void OnShowToolsToolBar();
 void OnShowTranscriptionToolBar();
 void OnResetToolBars();
-void OnSimplifiedView();
 
         // Transport Menu
 

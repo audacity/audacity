@@ -34,6 +34,8 @@
 #include "Prefs.h"
 #include "toolbars/ToolManager.h"
 
+#include "Track.h"
+
 class CommandType;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -426,7 +428,7 @@ void ScreenFrame::PopulateOrExchange(ShuttleGui & S)
    S.EndPanel();
 
    Layout();
-   Fit();
+   GetSizer()->Fit(this);
    SetMinSize(GetSize());
 
    int top = 0;

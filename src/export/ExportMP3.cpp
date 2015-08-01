@@ -86,7 +86,7 @@
 #include "../Project.h"
 #include "../ShuttleGui.h"
 #include "../Tags.h"
-#include "../WaveTrack.h"
+#include "../Track.h"
 #include "../widgets/LinkingHtmlWindow.h"
 
 #include "FileDialog.h"
@@ -259,13 +259,14 @@ static void InitMP3_Statics()
    }
 }
 
-class ExportMP3Options : public wxDialog
+class ExportMP3Options : public wxPanel
 {
 public:
 
-   ExportMP3Options(wxWindow *parent);
+   ExportMP3Options(wxWindow *parent, int format);
+   virtual ~ExportMP3Options();
+
    void PopulateOrExchange(ShuttleGui & S);
-   void OnOK(wxCommandEvent& event);
    void OnSET(wxCommandEvent& evt);
    void OnVBR(wxCommandEvent& evt);
    void OnABR(wxCommandEvent& evt);
@@ -296,23 +297,19 @@ private:
    DECLARE_EVENT_TABLE()
 };
 
-BEGIN_EVENT_TABLE(ExportMP3Options, wxDialog)
+BEGIN_EVENT_TABLE(ExportMP3Options, wxPanel)
    EVT_RADIOBUTTON(ID_SET,    ExportMP3Options::OnSET)
    EVT_RADIOBUTTON(ID_VBR,    ExportMP3Options::OnVBR)
    EVT_RADIOBUTTON(ID_ABR,    ExportMP3Options::OnABR)
    EVT_RADIOBUTTON(ID_CBR,    ExportMP3Options::OnCBR)
    EVT_CHOICE(wxID_ANY,       ExportMP3Options::OnQuality)
-   EVT_BUTTON(wxID_OK,        ExportMP3Options::OnOK)
 END_EVENT_TABLE()
 
 ///
 ///
-ExportMP3Options::ExportMP3Options(wxWindow *parent)
-:  wxDialog(parent, wxID_ANY,
-            wxString(_("Specify MP3 Options")))
+ExportMP3Options::ExportMP3Options(wxWindow *parent, int WXUNUSED(format))
+:  wxPanel(parent, wxID_ANY)
 {
-   SetName(GetTitle());
-
    InitMP3_Statics();
 
    mSetRate = gPrefs->Read(wxT("/FileFormats/MP3SetRate"), PRESET_STANDARD);
@@ -321,19 +318,30 @@ ExportMP3Options::ExportMP3Options(wxWindow *parent)
    mCbrRate = gPrefs->Read(wxT("/FileFormats/MP3CbrRate"), 128);
 
    ShuttleGui S(this, eIsCreatingFromPrefs);
-
    PopulateOrExchange(S);
+}
+
+ExportMP3Options::~ExportMP3Options()
+{
+   ShuttleGui S(this, eIsSavingToPrefs);
+   PopulateOrExchange(S);
+
+   gPrefs->Write(wxT("/FileFormats/MP3SetRate"), mSetRate);
+   gPrefs->Write(wxT("/FileFormats/MP3VbrRate"), mVbrRate);
+   gPrefs->Write(wxT("/FileFormats/MP3AbrRate"), mAbrRate);
+   gPrefs->Write(wxT("/FileFormats/MP3CbrRate"), mCbrRate);
+   gPrefs->Flush();
 }
 
 ///
 ///
 void ExportMP3Options::PopulateOrExchange(ShuttleGui & S)
 {
-   S.StartHorizontalLay(wxEXPAND, 0);
+   S.StartVerticalLay();
    {
-      S.StartStatic(_("MP3 Export Setup"), 0);
+      S.StartHorizontalLay(wxCENTER);
       {
-         S.StartMultiColumn(2, wxEXPAND);
+         S.StartMultiColumn(2, wxCENTER);
          {
             S.SetStretchyCol(1);
             S.StartTwoColumn();
@@ -351,12 +359,12 @@ void ExportMP3Options::PopulateOrExchange(ShuttleGui & S)
                   S.EndRadioButtonGroup();
                }
                S.EndHorizontalLay();
-
+   
                CHOICES *choices;
                int cnt;
                bool enable;
                int defrate;
-
+   
                if (mSET->GetValue()) {
                   choices = setRates;
                   cnt = WXSIZEOF(setRates);
@@ -382,20 +390,20 @@ void ExportMP3Options::PopulateOrExchange(ShuttleGui & S)
                   enable = false;
                   defrate = mCbrRate;
                }
-
+   
                mRate = S.Id(ID_QUALITY).TieChoice(_("Quality"),
                                                   wxT("/FileFormats/MP3Bitrate"),
                                                   defrate,
                                                   GetNames(choices, cnt),
                                                   GetLabels(choices, cnt));
-
+   
                mMode = S.TieChoice(_("Variable Speed:"),
                                    wxT("/FileFormats/MP3VarMode"),
                                    ROUTINE_FAST,
                                    GetNames(varModes, WXSIZEOF(varModes)),
                                    GetLabels(varModes, WXSIZEOF(varModes)));
                mMode->Enable(enable);
-
+   
                S.AddPrompt(_("Channel Mode:"));
                S.StartTwoColumn();
                {
@@ -412,36 +420,9 @@ void ExportMP3Options::PopulateOrExchange(ShuttleGui & S)
          }
          S.EndMultiColumn();
       }
-      S.EndStatic();
+      S.EndHorizontalLay();
    }
-   S.EndHorizontalLay();
-
-   S.AddStandardButtons();
-
-   Layout();
-   Fit();
-   SetMinSize(GetSize());
-   Center();
-
-   return;
-}
-
-///
-///
-void ExportMP3Options::OnOK(wxCommandEvent& WXUNUSED(event))
-{
-   ShuttleGui S(this, eIsSavingToPrefs);
-   PopulateOrExchange(S);
-
-   gPrefs->Write(wxT("/FileFormats/MP3SetRate"), mSetRate);
-   gPrefs->Write(wxT("/FileFormats/MP3VbrRate"), mVbrRate);
-   gPrefs->Write(wxT("/FileFormats/MP3AbrRate"), mAbrRate);
-   gPrefs->Write(wxT("/FileFormats/MP3CbrRate"), mCbrRate);
-   gPrefs->Flush();
-
-   EndModal(wxID_OK);
-
-   return;
+   S.EndVerticalLay();
 }
 
 ///
@@ -1560,7 +1541,7 @@ public:
 
    // Required
 
-   bool DisplayOptions(wxWindow *parent, int format = 0);
+   wxWindow *OptionsCreate(wxWindow *parent, int format);
    int Export(AudacityProject *project,
                int channels,
                wxString fName,
@@ -1849,13 +1830,9 @@ int ExportMP3::Export(AudacityProject *project,
    return updateResult;
 }
 
-bool ExportMP3::DisplayOptions(wxWindow *parent, int WXUNUSED(format))
+wxWindow *ExportMP3::OptionsCreate(wxWindow *parent, int format)
 {
-   ExportMP3Options od(parent);
-
-   od.ShowModal();
-
-   return true;
+   return new ExportMP3Options(parent, format);
 }
 
 int ExportMP3::FindValue(CHOICES *choices, int cnt, int needle, int def)

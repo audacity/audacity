@@ -162,9 +162,12 @@ void GetLanguages(wxArrayString &langCodes, wxArrayString &langNames)
    localLanguageName[wxT("zh_TW")] = wxT("Chinese (Traditional)");
 
    wxArrayString audacityPathList = wxGetApp().audacityPathList;
+
+#if defined(__WXGTK__)
    wxGetApp().AddUniquePathToPathList(wxString::Format(wxT("%s/share/locale"),
                                                        wxT(INSTALL_PREFIX)),
                                       audacityPathList);
+#endif
 
    // For each language in our list we look for a corresponding entry in
    // wxLocale.  

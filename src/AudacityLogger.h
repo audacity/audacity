@@ -38,7 +38,7 @@ class AudacityLogger:public wxEvtHandler, public wxLog {
 
  protected:
    virtual void Flush();
-   virtual void DoLogString(const wxChar *szString, time_t t);
+   virtual void DoLogText(const wxString & msg);
 
  private:
    void OnCloseWindow(wxCloseEvent & e);

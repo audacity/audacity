@@ -134,8 +134,12 @@ int WrappedType::ReadAsInt()
    switch( eWrappedType )
    {
    case eWrappedString:
-      return wxAtoi( *mpStr );
+   {
+      long l;
+      mpStr->ToLong(&l);
+      return (int) l;
       break;
+   }
    case eWrappedInt:
       return *mpInt;
       break;
@@ -217,8 +221,12 @@ void WrappedType::WriteToAsString( const wxString & InStr)
       *mpStr = InStr;
       break;
    case eWrappedInt:
-      *mpInt = wxAtoi( InStr );
+   {
+      long l;
+      InStr.ToLong(&l);
+      *mpInt = (int) l;
       break;
+   }
    case eWrappedDouble:
       *mpDouble = Internat::CompatibleToDouble( InStr );
       break;

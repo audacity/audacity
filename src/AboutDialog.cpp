@@ -542,8 +542,10 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
 
    // Install prefix
    /* i18n-hint: The directory audacity is installed into (on *nix systems) */
+#ifdef __WXGTK__
    AddBuildinfoRow(&informationStr, _("Installation Prefix: "), \
          wxT(INSTALL_PREFIX));
+#endif
 
    // Location of settings
    AddBuildinfoRow(&informationStr,_("Settings folder: "), \

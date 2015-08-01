@@ -1,9 +1,12 @@
 before_install:
     - sudo apt-get update -qq
-    - sudo apt-get install -y libwxgtk2.8-dev
+    - sudo apt-get install -y libwxgtk3.0-dev libgtk2.0-dev
     - git show -s --format="wxT(\"<a href=\\\"http://github.com/audacity/audacity/commit/%H\\\">%h</a> of %cd\")"
     - git show -s --format="wxT(\"<a href=\\\"http://github.com/audacity/audacity/commit/%H\\\">%h</a> of %cd\")" > ./src/RevisionIdent.h
-language: cpp
+language:
+    - cpp
 compiler:
     - gcc
-script: aclocal --install -I m4 && automake && ./configure && make
+script: 
+    - aclocal --install -I m4 && automake && ./configure && make
+    

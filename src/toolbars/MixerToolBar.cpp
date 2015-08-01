@@ -75,13 +75,6 @@ void MixerToolBar::Create(wxWindow *parent)
    ToolBar::Create(parent);
 }
 
-void MixerToolBar::RecreateTipWindows()
-{
-   // Hack to make sure they appear on top of other windows
-   mInputSlider->RecreateTipWin();
-   mOutputSlider->RecreateTipWin();
-}
-
 void MixerToolBar::Populate()
 {
    if( mRecordBitmap == NULL )
@@ -139,13 +132,12 @@ void MixerToolBar::Populate()
 //Also from SelectionBar;
 void MixerToolBar::OnFocus(wxFocusEvent &event)
 {
-   wxCommandEvent e(EVT_CAPTURE_KEYBOARD);
-
    if (event.GetEventType() == wxEVT_KILL_FOCUS) {
-      e.SetEventType(EVT_RELEASE_KEYBOARD);
+      AudacityProject::ReleaseKeyboard(this);
    }
-   e.SetEventObject(this);
-   GetParent()->GetEventHandler()->ProcessEvent(e);
+   else {
+      AudacityProject::CaptureKeyboard(this);
+   }
 
    Refresh(false);
 

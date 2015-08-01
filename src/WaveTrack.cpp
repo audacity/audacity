@@ -39,8 +39,6 @@ Track classes.
 
 #include "float_cast.h"
 
-#include "LabelTrack.h"
-
 #include "Envelope.h"
 #include "Sequence.h"
 #include "Spectrum.h"
@@ -2407,7 +2405,7 @@ void WaveTrack::UpdateLocationsCache()
            it = it->GetNext())
       {
          // Add cut line expander point
-         mDisplayLocations[curpos].typ = locationCutLine;
+         mDisplayLocations[curpos].typ = WaveTrackLocation::locationCutLine;
          mDisplayLocations[curpos].pos =
             clip->GetOffset() + it->GetData()->GetOffset();
          curpos++;
@@ -2421,7 +2419,7 @@ void WaveTrack::UpdateLocationsCache()
                                           < WAVETRACK_MERGE_POINT_TOLERANCE)
          {
             // Add merge point
-            mDisplayLocations[curpos].typ = locationMergePoint;
+            mDisplayLocations[curpos].typ = WaveTrackLocation::locationMergePoint;
             mDisplayLocations[curpos].pos = clips.Item(i-1)->GetEndTime();
             mDisplayLocations[curpos].clipidx1 = mClips.IndexOf(previousClip);
             mDisplayLocations[curpos].clipidx2 = mClips.IndexOf(clip);
@@ -2662,7 +2660,7 @@ constSamplePtr WaveTrackCache::Get(sampleFormat format,
             const sampleCount len0 = mPTrack->GetBestBlockSize(start0);
             wxASSERT(len0 <= mBufferSize);
             if (!mPTrack->Get(samplePtr(mBuffers[0].data), floatSample, start0, len0))
-               return false;
+               return 0;
             mBuffers[0].start = start0;
             mBuffers[0].len = len0;
             if (!fillSecond &&
@@ -2688,7 +2686,7 @@ constSamplePtr WaveTrackCache::Get(sampleFormat format,
                const sampleCount len1 = mPTrack->GetBestBlockSize(start1);
                wxASSERT(len1 <= mBufferSize);
                if (!mPTrack->Get(samplePtr(mBuffers[1].data), floatSample, start1, len1))
-                  return false;
+                  return 0;
                mBuffers[1].start = start1;
                mBuffers[1].len = len1;
                mNValidBuffers = 2;
@@ -2738,7 +2736,7 @@ constSamplePtr WaveTrackCache::Get(sampleFormat format,
          // Very big request!
          // Fall back to direct fetch
          if (!mPTrack->Get(buffer, format, start, remaining))
-            return false;
+            return 0;
       }
 
       return mOverlapBuffer.ptr();

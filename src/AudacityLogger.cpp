@@ -68,7 +68,7 @@ void AudacityLogger::Flush()
    }
 }
 
-void AudacityLogger::DoLogString(const wxChar *str, time_t WXUNUSED(t))
+void AudacityLogger::DoLogText(const wxString & str)
 {
    if (!wxIsMainThread()) {
       wxMutexGuiEnter();
@@ -288,7 +288,7 @@ void AudacityLogger::OnClose(wxCommandEvent & WXUNUSED(e))
 void AudacityLogger::OnClear(wxCommandEvent & WXUNUSED(e))
 {
    mBuffer = wxEmptyString;
-   DoLogString(wxT("Log Cleared."), 0);
+   DoLogText(wxT("Log Cleared."));
 }
 
 void AudacityLogger::OnSave(wxCommandEvent & WXUNUSED(e))

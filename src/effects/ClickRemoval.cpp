@@ -37,6 +37,8 @@
 #include "../ShuttleGui.h"
 #include "../widgets/valnum.h"
 
+#include "../WaveTrack.h"
+
 enum
 {
    ID_Thresh = 10000,
