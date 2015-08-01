@@ -9367,6 +9367,7 @@ void TrackPanel::OnTimeTrackLogInt(wxCommandEvent & /*event*/)
 void TrackPanel::OnWaveformScaleType(wxCommandEvent &evt)
 {
    WaveTrack *const wt = static_cast<WaveTrack *>(mPopupMenuTarget);
+   WaveTrack *const partner = static_cast<WaveTrack*>(wt->GetLink());
    const WaveformSettings::ScaleType newScaleType =
       WaveformSettings::ScaleType(
          std::max(0,
@@ -9375,6 +9376,8 @@ void TrackPanel::OnWaveformScaleType(wxCommandEvent &evt)
       )));
    if (wt->GetWaveformSettings().scaleType != newScaleType) {
       wt->GetIndependentWaveformSettings().scaleType = newScaleType;
+      if (partner)
+         partner->GetIndependentWaveformSettings().scaleType = newScaleType;
       UpdateVRuler(wt); // Is this really needed?
       MakeParentModifyState(true);
       Refresh(false);
@@ -9384,6 +9387,7 @@ void TrackPanel::OnWaveformScaleType(wxCommandEvent &evt)
 void TrackPanel::OnSpectrumScaleType(wxCommandEvent &evt)
 {
    WaveTrack *const wt = static_cast<WaveTrack *>(mPopupMenuTarget);
+   WaveTrack *const partner = static_cast<WaveTrack*>(wt->GetLink());
    const SpectrogramSettings::ScaleType newScaleType =
       SpectrogramSettings::ScaleType(
          std::max(0,
@@ -9392,6 +9396,8 @@ void TrackPanel::OnSpectrumScaleType(wxCommandEvent &evt)
       )));
    if (wt->GetSpectrogramSettings().scaleType != newScaleType) {
       wt->GetIndependentSpectrogramSettings().scaleType = newScaleType;
+      if (partner)
+         partner->GetIndependentSpectrogramSettings().scaleType = newScaleType;
       UpdateVRuler(wt); // Is this really needed?
       MakeParentModifyState(true);
       Refresh(false);
