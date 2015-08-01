@@ -896,7 +896,7 @@ sampleCount LadspaEffect::GetLatency()
    if (mUseLatency && mLatencyPort >= 0 && !mLatencyDone)
    {
       mLatencyDone = true;
-      return mOutputControls[mLatencyPort] * 2;
+      return mOutputControls[mLatencyPort];
    }
 
    return 0;
