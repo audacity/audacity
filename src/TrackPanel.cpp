@@ -8856,6 +8856,10 @@ void TrackPanel::OnChannelChange(wxCommandEvent & event)
 void TrackPanel::OnSwapChannels(wxCommandEvent & WXUNUSED(event))
 {
    Track *partner = mPopupMenuTarget->GetLink();
+   Track *const focused = GetFocusedTrack();
+   const bool hasFocus =
+      (focused == mPopupMenuTarget || focused == partner);
+
    SplitStereo(true);
    mPopupMenuTarget->SetChannel(Track::RightChannel);
    partner->SetChannel(Track::LeftChannel);
@@ -8867,6 +8871,9 @@ void TrackPanel::OnSwapChannels(wxCommandEvent & WXUNUSED(event))
    if (pMixerBoard) {
       pMixerBoard->UpdateTrackClusters();
    }
+
+   if (hasFocus)
+      SetFocusedTrack(partner);
 
    MakeParentPushState(wxString::Format(_("Swapped Channels in '%s'"),
                                         mPopupMenuTarget->GetName().c_str()),
