@@ -20,6 +20,7 @@
 
 #include <wx/mimetype.h>
 #include <wx/filename.h>
+#include <wx/uri.h>
 
 #include "LinkingHtmlWindow.h"
 #include "../HelpText.h"
@@ -79,7 +80,8 @@ void BrowserFrame::UpdateButtons()
 
 void OpenInDefaultBrowser(const wxHtmlLinkInfo& link)
 {
-   wxLaunchDefaultBrowser(link.GetHref());
+   wxURI uri(link.GetHref());
+   wxLaunchDefaultBrowser(uri.BuildURI());
 }
 
 LinkingHtmlWindow::LinkingHtmlWindow(wxWindow *parent, wxWindowID id /*= -1*/,
