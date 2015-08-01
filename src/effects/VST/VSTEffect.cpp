@@ -1697,9 +1697,12 @@ wxArrayString VSTEffect::GetFactoryPresets()
    // Some plugins, like Guitar Rig 5, only report 128 programs while they have hundreds.  While
    // I was able to come up with a hack in the Guitar Rig case to gather all of the program names
    // it would not let me set a program outside of the first 128.
-   for (int i = 0; i < mAEffect->numPrograms; i++)
+   if (mVstVersion >= 2)
    {
-      progs.Add(GetString(effGetProgramNameIndexed, i));
+      for (int i = 0; i < mAEffect->numPrograms; i++)
+      {
+         progs.Add(GetString(effGetProgramNameIndexed, i));
+      }
    }
 
    return progs;
@@ -2193,18 +2196,25 @@ bool VSTEffect::Load()
          !(mAEffect->flags & effFlagsIsSynth) &&
          mAEffect->flags & effFlagsCanReplacing)
       {
-         mName = GetString(effGetEffectName);
-         if (mName.length() == 0)
+         if (mVstVersion >= 2)
          {
-            mName = GetString(effGetProductString);
+            mName = GetString(effGetEffectName);
             if (mName.length() == 0)
             {
-               wxFileName f(realPath);
-               mName = f.GetName();
+               mName = GetString(effGetProductString);
             }
          }
-         mVendor = GetString(effGetVendorString);
-         mVersion = wxINT32_SWAP_ON_LE(callDispatcher(effGetVendorVersion, 0, 0, NULL, 0));
+         if (mName.length() == 0)
+         {
+            wxFileName f(realPath);
+            mName = f.GetName();
+         }
+
+         if (mVstVersion >= 2)
+         {
+            mVendor = GetString(effGetVendorString);
+            mVersion = wxINT32_SWAP_ON_LE(callDispatcher(effGetVendorVersion, 0, 0, NULL, 0));
+         }
          if (mVersion == 0)
          {
             mVersion = wxINT32_SWAP_ON_LE(mAEffect->version);
@@ -2314,7 +2324,7 @@ wxArrayInt VSTEffect::GetEffectIDs()
    wxArrayInt effectIDs;
 
    // Are we a shell?
-   if ((VstPlugCategory) callDispatcher(effGetPlugCategory, 0, 0, NULL, 0) == kPlugCategShell)
+   if (mVstVersion >= 2 && (VstPlugCategory) callDispatcher(effGetPlugCategory, 0, 0, NULL, 0) == kPlugCategShell)
    {
       char name[64];
       int effectID;
@@ -2419,7 +2429,7 @@ void VSTEffect::OnTimer()
       return;
    }
 
-   if (mWantsIdle)
+   if (mVstVersion >= 2 && mWantsIdle)
    {
       int ret = callDispatcher(effIdle, 0, 0, NULL, 0.0);
       if (!ret)
@@ -2470,7 +2480,10 @@ void VSTEffect::PowerOn()
       callDispatcher(effMainsChanged, 0, 1, NULL, 0.0);
 
       // Tell the effect we're going to start processing
-      callDispatcher(effStartProcess, 0, 0, NULL, 0.0);
+      if (mVstVersion >= 2)
+      {
+         callDispatcher(effStartProcess, 0, 0, NULL, 0.0);
+      }
 
       // Set state
       mHasPower = true;
@@ -2482,7 +2495,10 @@ void VSTEffect::PowerOff()
    if (mHasPower)
    {
       // Tell the effect we're going to stop processing
-      callDispatcher(effStopProcess, 0, 0, NULL, 0.0);
+      if (mVstVersion >= 2)
+      {
+         callDispatcher(effStopProcess, 0, 0, NULL, 0.0);
+      }
 
       // Turn the power off
       callDispatcher(effMainsChanged, 0, 0, NULL, 0.0);
