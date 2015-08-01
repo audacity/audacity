@@ -421,6 +421,8 @@ bool Effect::RealtimeInitialize()
       return mClient->RealtimeInitialize();
    }
 
+   mBlockSize = 512;
+
    return false;
 }
 
@@ -455,9 +457,15 @@ bool Effect::RealtimeSuspend()
          mRealtimeSuspendLock.Leave();
          return true;
       }
+
+      return false;
    }
 
-   return false;
+   mRealtimeSuspendLock.Enter();
+   mRealtimeSuspendCount++;
+   mRealtimeSuspendLock.Leave();
+
+   return true;
 }
 
 bool Effect::RealtimeResume()
@@ -471,9 +479,15 @@ bool Effect::RealtimeResume()
          mRealtimeSuspendLock.Leave();
          return true;
       }
+
+      return false;
    }
 
-   return false;
+   mRealtimeSuspendLock.Enter();
+   mRealtimeSuspendCount--;
+   mRealtimeSuspendLock.Leave();
+
+   return true;
 }
 
 bool Effect::RealtimeProcessStart()
@@ -677,6 +691,7 @@ bool Effect::CloseUI()
    mUIParent->RemoveEventHandler(this);
 
    mUIParent = NULL;
+   mUIDialog = NULL;
 
    return true;
 }
@@ -2270,7 +2285,7 @@ bool Effect::RealtimeAddProcessor(int group, int chans, float rate)
       }
 
       // Add a new processor
-      mClient->RealtimeAddProcessor(gchans, rate);
+      RealtimeAddProcessor(gchans, rate);
 
       // Bump to next processor
       mCurrentProcessor++;
@@ -2377,7 +2392,7 @@ sampleCount Effect::RealtimeProcess(int group,
       for (sampleCount block = 0; block < numSamples; block += mBlockSize)
       {
          sampleCount cnt = (block + mBlockSize > numSamples ? numSamples - block : mBlockSize);
-         len += mClient->RealtimeProcess(processor, clientIn, clientOut, cnt);
+         len += RealtimeProcess(processor, clientIn, clientOut, cnt);
 
          for (int i = 0 ; i < mNumAudioIn; i++)
          {

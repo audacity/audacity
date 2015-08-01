@@ -150,6 +150,9 @@
 // to enable.
 #define EXPERIMENTAL_MODULE_PREFS
 
+// Define to allow realtime processing in Audacity effects that have been converted.
+#define EXPERIMENTAL_REALTIME_AUDACITY_EFFECTS
+
 // Define to include the effects rack (such as it is).
 //#define EXPERIMENTAL_EFFECTS_RACK
 

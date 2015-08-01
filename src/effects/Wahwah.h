@@ -27,6 +27,21 @@ class ShuttleGui;
 
 #define WAHWAH_PLUGIN_SYMBOL XO("Wahwah")
 
+class EffectWahwahState
+{
+public:
+   float samplerate;
+   double depth;
+   double freqofs;
+   double phase;
+   double lfoskip;
+   unsigned long skipcount;
+   double xn1, xn2, yn1, yn2;
+   double b0, b1, b2, a0, a1, a2;
+};
+
+WX_DECLARE_OBJARRAY(EffectWahwahState, EffectWahwahStateArray);
+
 class EffectWahwah : public Effect
 {
 public:
@@ -41,6 +56,7 @@ public:
    // EffectIdentInterface implementation
 
    virtual EffectType GetType();
+   virtual bool SupportsRealtime();
 
    // EffectClientInterface implementation
 
@@ -48,6 +64,13 @@ public:
    virtual int GetAudioOutCount();
    virtual bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL);
    virtual sampleCount ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen);
+   virtual bool RealtimeInitialize();
+   virtual bool RealtimeAddProcessor(int numChannels, float sampleRate);
+   virtual bool RealtimeFinalize();
+   virtual sampleCount RealtimeProcess(int group,
+                                       float **inbuf,
+                                       float **outbuf,
+                                       sampleCount numSamples);
    virtual bool GetAutomationParameters(EffectAutomationParameters & parms);
    virtual bool SetAutomationParameters(EffectAutomationParameters & parms);
 
@@ -59,6 +82,9 @@ public:
 
 private:
    // EffectWahwah implementation
+
+   void InstanceInit(EffectWahwahState & data, float sampleRate);
+   sampleCount InstanceProcess(EffectWahwahState & data, float **inBlock, float **outBlock, sampleCount blockLen);
 
    void OnFreqSlider(wxCommandEvent & evt);
    void OnPhaseSlider(wxCommandEvent & evt);
@@ -73,15 +99,10 @@ private:
    void OnFreqOffText(wxCommandEvent & evt);
 
 private:
-   double depth;
-   double freqofs;
-   double phase;
-   double lfoskip;
-   unsigned long skipcount;
-   double xn1, xn2, yn1, yn2;
-   double b0, b1, b2, a0, a1, a2;
+   EffectWahwahState mMaster;
+   EffectWahwahStateArray mSlaves;
 
-/* Parameters:
+   /* Parameters:
    mFreq - LFO frequency
    mPhase - LFO startphase in RADIANS - useful for stereo WahWah
    mDepth - Wah depth

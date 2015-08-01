@@ -29,6 +29,22 @@ class ShuttleGui;
 
 #define PHASER_PLUGIN_SYMBOL XO("Phaser")
 
+class EffectPhaserState
+{
+public:
+   // state variables
+   float samplerate;
+   sampleCount skipcount;
+   double old[NUM_STAGES]; // must be as large as MAX_STAGES
+   double gain;
+   double fbout;
+   double lfoskip;
+   double phase;
+   int laststages;
+};
+
+WX_DECLARE_OBJARRAY(EffectPhaserState, EffectPhaserStateArray);
+
 class EffectPhaser : public Effect
 {
 public:
@@ -43,6 +59,7 @@ public:
    // EffectIdentInterface implementation
 
    virtual EffectType GetType();
+   virtual bool SupportsRealtime();
 
    // EffectClientInterface implementation
 
@@ -50,6 +67,13 @@ public:
    virtual int GetAudioOutCount();
    virtual bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL);
    virtual sampleCount ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen);
+   virtual bool RealtimeInitialize();
+   virtual bool RealtimeAddProcessor(int numChannels, float sampleRate);
+   virtual bool RealtimeFinalize();
+   virtual sampleCount RealtimeProcess(int group,
+                                       float **inbuf,
+                                       float **outbuf,
+                                       sampleCount numSamples);
    virtual bool GetAutomationParameters(EffectAutomationParameters & parms);
    virtual bool SetAutomationParameters(EffectAutomationParameters & parms);
 
@@ -61,6 +85,9 @@ public:
 
 protected:
    // EffectPhaser implementation
+
+   void InstanceInit(EffectPhaserState & data, float sampleRate);
+   sampleCount InstanceProcess(EffectPhaserState & data, float **inBlock, float **outBlock, sampleCount blockLen);
 
    void OnStagesSlider(wxCommandEvent & evt);
    void OnDryWetSlider(wxCommandEvent & evt);
@@ -87,13 +114,8 @@ protected:
 */
 
 private:
-   // state variables
-   sampleCount skipcount;
-   double old[NUM_STAGES]; // must be as large as MAX_STAGES
-   double gain;
-   double fbout;
-   double lfoskip;
-   double phase;
+   EffectPhaserState mMaster;
+   EffectPhaserStateArray mSlaves;
 
    // parameters
    int mStages;

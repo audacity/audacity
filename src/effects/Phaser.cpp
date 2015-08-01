@@ -56,6 +56,9 @@ Param( Feedback,  int,     XO("Feedback"),   0,    -100, 100,        1  );
 // How many samples are processed before recomputing the lfo value again
 #define lfoskipsamples 20
 
+#include <wx/arrimpl.cpp>
+WX_DEFINE_OBJARRAY(EffectPhaserStateArray);
+
 //
 // EffectPhaser
 //
@@ -110,6 +113,15 @@ EffectType EffectPhaser::GetType()
    return EffectTypeProcess;
 }
 
+bool EffectPhaser::SupportsRealtime()
+{
+#if defined(EXPERIMENTAL_REALTIME_AUDACITY_EFFECTS)
+   return true;
+#else
+   return false;
+#endif
+}
+
 // EffectClientInterface implementation
 
 int EffectPhaser::GetAudioInCount()
@@ -124,20 +136,10 @@ int EffectPhaser::GetAudioOutCount()
 
 bool EffectPhaser::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames chanMap)
 {
-   for (int j = 0; j < mStages; j++)
-   {
-      old[j] = 0;
-   }
-
-   skipcount = 0;
-   gain = 0;
-   fbout = 0;
-   lfoskip = mFreq * 2 * M_PI / mSampleRate;
-
-   phase = mPhase * M_PI / 180;
+   InstanceInit(mMaster, mSampleRate);
    if (chanMap[0] == ChannelNameFrontRight)
    {
-      phase += M_PI;
+      mMaster.phase += M_PI;
    }
 
    return true;
@@ -145,40 +147,43 @@ bool EffectPhaser::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelName
 
 sampleCount EffectPhaser::ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen)
 {
-   float *ibuf = inBlock[0];
-   float *obuf = outBlock[0];
+   return InstanceProcess(mMaster, inBlock, outBlock, blockLen);
+}
 
-   for (sampleCount i = 0; i < blockLen; i++)
-   {
-      double in = ibuf[i];
+bool EffectPhaser::RealtimeInitialize()
+{
+   SetBlockSize(512);
 
-      double m = in + fbout * mFeedback / 101;  // Feedback must be less than 100% to avoid infinite gain.
+   mSlaves.Clear();
 
-      if (((skipcount++) % lfoskipsamples) == 0)
-      {
-         //compute sine between 0 and 1
-         gain = (1.0 + cos(skipcount * lfoskip + phase)) / 2.0;
+   return true;
+}
 
-         // change lfo shape
-         gain = expm1(gain * phaserlfoshape) / expm1(phaserlfoshape);
+bool EffectPhaser::RealtimeAddProcessor(int WXUNUSED(numChannels), float sampleRate)
+{
+   EffectPhaserState slave;
 
-         // attenuate the lfo
-         gain = 1.0 - gain / 255.0 * mDepth;
-      }
+   InstanceInit(slave, sampleRate);
 
-      // phasing routine
-      for (int j = 0; j < mStages; j++)
-      {
-         double tmp = old[j];
-         old[j] = gain * tmp + m;
-         m = tmp - gain * old[j];
-      }
-      fbout = m;
+   mSlaves.Add(slave);
 
-      obuf[i] = (float) ((m * mDryWet + in * (255 - mDryWet)) / 255);
-   }
+   return true;
+}
 
-   return blockLen;
+bool EffectPhaser::RealtimeFinalize()
+{
+   mSlaves.Clear();
+
+   return true;
+}
+
+sampleCount EffectPhaser::RealtimeProcess(int group,
+                                          float **inbuf,
+                                          float **outbuf,
+                                          sampleCount numSamples)
+{
+
+   return InstanceProcess(mSlaves[group], inbuf, outbuf, numSamples);
 }
 
 bool EffectPhaser::GetAutomationParameters(EffectAutomationParameters & parms)
@@ -328,6 +333,70 @@ bool EffectPhaser::TransferDataFromWindow()
 }
 
 // EffectPhaser implementation
+
+void EffectPhaser::InstanceInit(EffectPhaserState & data, float sampleRate)
+{
+   data.samplerate = sampleRate;
+
+   for (int j = 0; j < mStages; j++)
+   {
+      data.old[j] = 0;
+   }
+
+   data.skipcount = 0;
+   data.gain = 0;
+   data.fbout = 0;
+   data.laststages = 0;
+
+   return;
+}
+
+sampleCount EffectPhaser::InstanceProcess(EffectPhaserState & data, float **inBlock, float **outBlock, sampleCount blockLen)
+{
+   float *ibuf = inBlock[0];
+   float *obuf = outBlock[0];
+
+   for (int j = data.laststages; j < mStages; j++)
+   {
+      data.old[j] = 0;
+   }
+   data.laststages = mStages;
+
+   data.lfoskip = mFreq * 2 * M_PI / data.samplerate;
+   data.phase = mPhase * M_PI / 180;
+
+   for (sampleCount i = 0; i < blockLen; i++)
+   {
+      double in = ibuf[i];
+
+      double m = in + data.fbout * mFeedback / 101;  // Feedback must be less than 100% to avoid infinite gain.
+
+      if (((data.skipcount++) % lfoskipsamples) == 0)
+      {
+         //compute sine between 0 and 1
+         data.gain = (1.0 + cos(data.skipcount * data.lfoskip + data.phase)) / 2.0;
+
+         // change lfo shape
+         data.gain = expm1(data.gain * phaserlfoshape) / expm1(phaserlfoshape);
+
+         // attenuate the lfo
+         data.gain = 1.0 - data.gain / 255.0 * mDepth;
+      }
+
+      // phasing routine
+      for (int j = 0; j < mStages; j++)
+      {
+         double tmp = data.old[j];
+         data.old[j] = data.gain * tmp + m;
+         m = tmp - data.gain * data.old[j];
+      }
+      data.fbout = m;
+
+      obuf[i] = (float) ((m * mDryWet + in * (255 - mDryWet)) / 255);
+   }
+
+   return blockLen;
+}
 
 void EffectPhaser::OnStagesSlider(wxCommandEvent & evt)
 {
