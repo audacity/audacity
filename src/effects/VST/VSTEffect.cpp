@@ -2594,7 +2594,10 @@ float VSTEffect::callGetParameter(int index)
 
 void VSTEffect::callSetParameter(int index, float value)
 {
-   if (callDispatcher(effCanBeAutomated, 0, index, NULL, 0.0))
+// LL:  Apparently, some VSTs do not respond to this call, even though
+//      the parameters can be automated.
+//      See bug #1083.
+// if (callDispatcher(effCanBeAutomated, 0, index, NULL, 0.0))
    {
       mAEffect->setParameter(mAEffect, index, value);
 
