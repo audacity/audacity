@@ -259,6 +259,7 @@ private:
    wxString mDescription;
    int mVersion;
    bool mInteractive;
+   int mVstVersion;
 
    static intptr_t mCurrentEffectID;
 

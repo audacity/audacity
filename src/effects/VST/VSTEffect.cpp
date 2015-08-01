@@ -2180,6 +2180,9 @@ bool VSTEffect::Load()
       // Open the plugin
       callDispatcher(effOpen, 0, 0, NULL, 0.0);
 
+      // Get the VST version the plugin understands
+      mVstVersion = callDispatcher(effGetVstVersion, 0, 0, NULL, 0);
+
       // Set it again in case plugin ignored it before the effOpen
       callDispatcher(effSetSampleRate, 0, 0, NULL, 48000.0);
       callDispatcher(effSetBlockSize, 0, 512, NULL, 0);
@@ -2594,10 +2597,7 @@ float VSTEffect::callGetParameter(int index)
 
 void VSTEffect::callSetParameter(int index, float value)
 {
-// LL:  Apparently, some VSTs do not respond to this call, even though
-//      the parameters can be automated.
-//      See bug #1083.
-// if (callDispatcher(effCanBeAutomated, 0, index, NULL, 0.0))
+   if (mVstVersion == 0 || callDispatcher(effCanBeAutomated, 0, index, NULL, 0.0))
    {
       mAEffect->setParameter(mAEffect, index, value);
 
