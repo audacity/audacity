@@ -158,7 +158,6 @@ is time to refresh some aspect of the screen.
 
 // This conditional compilation switch does not need to be seen
 // in any other file, so I define it here, not in Experimental.h -- PRL
-#undef  EXPERIMENTAL_CASCADE_MOVE_MENU
 #define EXPERIMENTAL_CASCADE_TCP_MENU
 
 #include "Audacity.h"
@@ -843,7 +842,7 @@ void TrackPanel::BuildCommonDropMenuItems(wxMenu * menu)
    menu->AppendSeparator();
 
    wxMenu *theMenu;
-#ifdef EXPERIMENTAL_CASCADE_MOVE_MENU
+#ifdef EXPERIMENTAL_CASCADE_TCP_MENU
    wxMenu *const moveMenu = new wxMenu();
    menu->Append(0, _("&Move"), moveMenu);
    theMenu = moveMenu;
