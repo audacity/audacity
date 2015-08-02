@@ -830,10 +830,6 @@ protected:
    wxMenu *mRulerWaveformMenu;
    wxMenu *mRulerSpectrumMenu;
 
-   wxMenu *mChannelMenuMono;
-   wxMenu *mChannelMenuStereo;
-   wxMenu *mHiddenChannelMenu;
-
    Track *mPopupMenuTarget;
 
    friend class TrackPanelAx;
