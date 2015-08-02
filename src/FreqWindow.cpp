@@ -641,7 +641,7 @@ void FreqWindow::DrawBackground(wxMemoryDC & dc)
 
 void FreqWindow::DrawPlot()
 {
-   if (!mData || mDataLen < mWindowSize) {
+   if (!mData || mDataLen < mWindowSize || mAnalyst->GetProcessedSize() == 0) {
       wxMemoryDC memDC;
 
       vRuler->ruler.SetLog(false);
