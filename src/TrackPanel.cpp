@@ -339,8 +339,6 @@ enum {
    OnTimeTrackLogID,
    OnTimeTrackLogIntID,
 
-   ChannelMenuID,
-
    // Reserve an ample block of ids for waveform scale types
    OnFirstWaveformScaleID,
    OnLastWaveformScaleID = OnFirstWaveformScaleID + 9,
@@ -561,7 +559,6 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    mNoteTrackMenu = NULL;
    mLabelTrackMenu = NULL;
    mTimeTrackMenu = NULL;
-   mHiddenChannelMenu = mChannelMenuMono = mChannelMenuStereo = NULL;
 
    mRulerWaveformMenu = mRulerSpectrumMenu = NULL;
 
@@ -740,62 +737,20 @@ void TrackPanel::BuildMenus(void)
    mWaveTrackMenu->Append(OnViewSettingsID, _("&View Settings..."));
    mWaveTrackMenu->AppendSeparator();
 
-   // Handle the channels items
-   {
-#ifdef EXPERIMENTAL_CASCADE_TCP_MENU
-      mChannelMenuMono = new wxMenu();
-      mChannelMenuStereo = new wxMenu();
-      mHiddenChannelMenu = mChannelMenuMono;
-      mWaveTrackMenu->Append(ChannelMenuID, _("&Channels"), mChannelMenuStereo);
-      wxString names[] = {
-         _("&Mono"),
-         _("&Left"),
-         _("&Right"),
-         _("Make &Stereo"),
-
-         _("S&wap"),
-         _("S&plit"),
-         _("Split to &Mono"),
-      };
-#else
-      mChannelMenuMono = mChannelMenuStereo =  mWaveTrackMenu;
-      mHiddenChannelMenu = NULL;
-      wxString names[] = {
-         _("&Mono"),
-         _("&Left Channel"),
-         _("&Right Channel"),
-         _("Ma&ke Stereo Track"),
-
-         _("Swap Stereo &Channels"),
-         _("Spl&it Stereo Track"),
-         _("Split Stereo to Mo&no"),
-      };
-#endif
-
-      mChannelMenuMono->AppendRadioItem(OnChannelMonoID, names[0]);
-      mChannelMenuMono->AppendRadioItem(OnChannelLeftID, names[1]);
-      mChannelMenuMono->AppendRadioItem(OnChannelRightID, names[2]);
-      mChannelMenuMono->Append(OnMergeStereoID, names[3]);
-
-      mChannelMenuStereo->Append(OnSwapChannelsID, names[4]);
-      mChannelMenuStereo->Append(OnSplitStereoID, names[5]);
-      mChannelMenuStereo->Append(OnSplitStereoMonoID, names[6]);
-   }
+   mWaveTrackMenu->AppendRadioItem(OnChannelMonoID, _("&Mono"));
+   mWaveTrackMenu->AppendRadioItem(OnChannelLeftID, _("&Left Channel"));
+   mWaveTrackMenu->AppendRadioItem(OnChannelRightID, _("&Right Channel"));
+   mWaveTrackMenu->Append(OnMergeStereoID, _("Ma&ke Stereo Track"));
+   mWaveTrackMenu->Append(OnSwapChannelsID, _("Swap Stereo &Channels"));
+   mWaveTrackMenu->Append(OnSplitStereoID, _("Spl&it Stereo Track"));
+   mWaveTrackMenu->Append(OnSplitStereoMonoID, _("Split Stereo to Mo&no"));
    mWaveTrackMenu->AppendSeparator();
 
-#ifdef EXPERIMENTAL_CASCADE_TCP_MENU
    mWaveTrackMenu->Append(0, _("&Format"), mFormatMenu);
-#else
-   mWaveTrackMenu->Append(0, _("Set Sample &Format"), mFormatMenu);
-#endif
 
    mWaveTrackMenu->AppendSeparator();
 
-#ifdef EXPERIMENTAL_CASCADE_TCP_MENU
    mWaveTrackMenu->Append(0, _("&Rate"), mRateMenu);
-#else
-   mWaveTrackMenu->Append(0, _("Set Rat&e"), mRateMenu);
-#endif
 
    /* build the pop-down menu used on note (MIDI) tracks */
    mNoteTrackMenu = new wxMenu();
@@ -814,11 +769,7 @@ void TrackPanel::BuildMenus(void)
    mTimeTrackMenu->Append(OnTimeTrackLinID, _("&Linear"));
    mTimeTrackMenu->Append(OnTimeTrackLogID, _("L&ogarithmic"));
    mTimeTrackMenu->AppendSeparator();
-#ifdef EXPERIMENTAL_CASCADE_TCP_MENU
    mTimeTrackMenu->Append(OnSetTimeTrackRangeID, _("Set &Range..."));
-#else
-   mTimeTrackMenu->Append(OnSetTimeTrackRangeID, _("Set Ra&nge..."));
-#endif
    mTimeTrackMenu->AppendCheckItem(OnTimeTrackLogIntID, _("Logarithmic &Interpolation"));
 
    mRulerWaveformMenu = new wxMenu();
@@ -834,11 +785,7 @@ void TrackPanel::BuildMenus(void)
 
 void TrackPanel::BuildCommonDropMenuItems(wxMenu * menu)
 {
-#ifdef EXPERIMENTAL_CASCADE_TCP_MENU
    menu->Append(OnSetNameID, _("&Name..."));
-#else
-   menu->Append(OnSetNameID, _("N&ame..."));
-#endif
    menu->AppendSeparator();
 
    wxMenu *theMenu;
@@ -887,13 +834,6 @@ void TrackPanel::DeleteMenus(void)
 {
    // Note that the submenus (mRateMenu, ...)
    // are deleted by their parent
-
-   // ... except for this special swapping of the Channel sub-menus.
-   // One of them is not managed by the main popup menu.
-   if (mHiddenChannelMenu)
-      delete mHiddenChannelMenu;
-   mHiddenChannelMenu = mChannelMenuMono = mChannelMenuStereo = NULL;
-
    if (mWaveTrackMenu) {
       delete mWaveTrackMenu;
       mWaveTrackMenu = NULL;
@@ -8412,6 +8352,7 @@ void TrackPanel::OnTrackMenu(Track *t)
 
    mPopupMenuTarget = t;
 
+   bool canMakeStereo = false;
    Track *next = mTracks->GetNext(t);
 
    wxMenu *theMenu = NULL;
@@ -8427,55 +8368,31 @@ void TrackPanel::OnTrackMenu(Track *t)
 
    if (t->GetKind() == Track::Wave) {
       theMenu = mWaveTrackMenu;
+      if (next && !t->GetLinked() && !next->GetLinked()
+            && t->GetKind() == Track::Wave
+            && next->GetKind() == Track::Wave)
+         canMakeStereo = true;
 
-      const bool isMono = !t->GetLinked();
-      wxMenu *const correctSubMenu =
-         isMono ? mChannelMenuMono : mChannelMenuStereo;
-
-      const bool canMakeStereo = isMono &&
-         (next && !next->GetLinked()
-         && t->GetKind() == Track::Wave
-         && next->GetKind() == Track::Wave);
-      mChannelMenuMono->Enable(OnMergeStereoID, canMakeStereo);
+      theMenu->Enable(OnSwapChannelsID, t->GetLinked());
+      theMenu->Enable(OnMergeStereoID, canMakeStereo);
+      theMenu->Enable(OnSplitStereoID, t->GetLinked());
+      theMenu->Enable(OnSplitStereoMonoID, t->GetLinked());
 
       // We only need to set check marks. Clearing checks causes problems on Linux (bug 851)
       switch (t->GetChannel()) {
       case Track::LeftChannel:
-         mChannelMenuMono->Check(OnChannelLeftID, true);
+         theMenu->Check(OnChannelLeftID, true);
          break;
       case Track::RightChannel:
-         mChannelMenuMono->Check(OnChannelRightID, true);
+         theMenu->Check(OnChannelRightID, true);
          break;
       default:
-         mChannelMenuMono->Check(OnChannelMonoID, true);
+         theMenu->Check(OnChannelMonoID, true);
       }
 
-#ifdef EXPERIMENTAL_CASCADE_TCP_MENU
-      // Swap in appropriate Channels sub-menu.
-      if (correctSubMenu == mHiddenChannelMenu) {
-         wxMenu *const otherSubMenu =
-            isMono ? mChannelMenuStereo : mChannelMenuMono;
-         size_t position;
-         wxMenuItem *const pItem =
-            theMenu->FindChildItem(ChannelMenuID, &position);
-         wxASSERT(pItem->GetSubMenu() == otherSubMenu);
-         theMenu->Remove(pItem);
-         pItem->SetSubMenu(0);
-         delete pItem;
-         theMenu->Insert(position, ChannelMenuID,
-            isMono ? _("&Channel") : _("&Channels"),
-            correctSubMenu);
-         mHiddenChannelMenu = otherSubMenu;
-      }
-#else
-      mChannelMenuStereo->Enable(OnSwapChannelsID, !isMono);
-      mChannelMenuStereo->Enable(OnSplitStereoID, !isMono);
-      mChannelMenuStereo->Enable(OnSplitStereoMonoID, !isMono);
-
-      mChannelMenuMono->Enable(OnChannelMonoID, isMono);
-      mChannelMenuMono->Enable(OnChannelLeftID, isMono);
-      mChannelMenuMono->Enable(OnChannelRightID, isMono);
-#endif
+      theMenu->Enable(OnChannelMonoID, !t->GetLinked());
+      theMenu->Enable(OnChannelLeftID, !t->GetLinked());
+      theMenu->Enable(OnChannelRightID, !t->GetLinked());
 
       const int display = static_cast<WaveTrack *>(t)->GetDisplay();
       theMenu->Check(
