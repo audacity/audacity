@@ -239,7 +239,8 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
     * the track around, via a single set of code.
     * @param menu the menu to add the commands to.
     */
-   virtual void BuildCommonDropMenuItems(wxMenu * menu);
+   static void BuildCommonDropMenuItems(wxMenu * menu);
+   static void BuildWaveTrackMenuItems(wxMenu * menu, bool mono);
    static void BuildVRulerMenuItems(wxMenu * menu, int firstId, const wxArrayString &names);
    virtual bool IsAudioActive();
    virtual bool IsUnsafe();
@@ -819,7 +820,8 @@ protected:
    wxCursor *mStretchRightCursor;
 #endif
 
-   wxMenu *mWaveTrackMenu;
+   wxMenu *mMonoTrackMenu;
+   wxMenu *mStereoTrackMenu;
    wxMenu *mNoteTrackMenu;
    wxMenu *mTimeTrackMenu;
    wxMenu *mLabelTrackMenu;
