@@ -140,7 +140,7 @@ this version.
 Source code to this program is always available; for more information visit
 our web site at:
 
-  http://audacity.sourceforge.net/download/
+  http://audacityteam.org/download/source
 
 Audacity is built upon other free libraries; some of these libraries may have
 come with Audacity in the lib-src directory.  Others you are expected to install

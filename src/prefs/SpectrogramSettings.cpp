@@ -170,10 +170,14 @@ const wxArrayString &SpectrogramSettings::GetScaleNames()
       // Keep in correspondence with enum SpectrogramSettings::ScaleType:
       theArray.Add(_("Linear"));
       theArray.Add(_("Logarithmic"));
+      /* i18n-hint: The name of a frequency scale in psychoacoustics */
       theArray.Add(_("Mel"));
+      /* i18n-hint: The name of a frequency scale in psychoacoustics, named for Heinrich Barkhausen */
       theArray.Add(_("Bark"));
-      theArray.Add(_("Erb"));
-      theArray.Add(_("Undertone"));
+      /* i18n-hint: The name of a frequency scale in psychoacoustics, abbreviates Equivalent Rectangular Bandwidth */
+      theArray.Add(_("ERB"));
+      /* i18n-hint: A mathematical formula where f stands for frequency */
+      theArray.Add(_("1 / f"));
    }
 
    return theArray;
