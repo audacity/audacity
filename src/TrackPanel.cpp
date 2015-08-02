@@ -156,9 +156,6 @@ is time to refresh some aspect of the screen.
 
 *//*****************************************************************/
 
-// This conditional compilation switch does not need to be seen
-// in any other file, so I define it here, not in Experimental.h -- PRL
-#define EXPERIMENTAL_CASCADE_TCP_MENU
 
 #include "Audacity.h"
 #include "Experimental.h"
@@ -787,34 +784,12 @@ void TrackPanel::BuildCommonDropMenuItems(wxMenu * menu)
 {
    menu->Append(OnSetNameID, _("&Name..."));
    menu->AppendSeparator();
-
-   wxMenu *theMenu;
-#ifdef EXPERIMENTAL_CASCADE_TCP_MENU
-   wxMenu *const moveMenu = new wxMenu();
-   menu->Append(0, _("&Move"), moveMenu);
-   theMenu = moveMenu;
-   wxString names[] = {
-      _("&Up"),
-      _("&Down"),
-      _("To &Top"),
-      _("To &Bottom"),
-   };
-#else
-   theMenu = menu;
-   wxString names[] = {
-      _("Move Track &Up"),
-      _("Move Track &Down"),
-      _("Move Track to &Top"),
-      _("Move Track to &Bottom"),
-   };
-#endif
-
-   theMenu->Append(OnMoveUpID, names[0]);
-   theMenu->Append(OnMoveDownID, names[1]);
-   theMenu->Append(OnMoveTopID, names[2]);
-   theMenu->Append(OnMoveBottomID, names[3]);
-
+   menu->Append(OnMoveUpID, _("Move Track &Up"));
+   menu->Append(OnMoveDownID, _("Move Track &Down"));
+   menu->Append(OnMoveTopID, _("Move Track to &Top"));
+   menu->Append(OnMoveBottomID, _("Move Track to &Bottom"));
    menu->AppendSeparator();
+
 }
 
 // static
