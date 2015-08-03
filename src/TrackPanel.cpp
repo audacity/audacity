@@ -2169,11 +2169,6 @@ void TrackPanel::HandleSelect(wxMouseEvent & event)
       //  depending on the shift key.  If not, cancel all selections.
       if (t)
          SelectionHandleClick(event, t, rect);
-      else {
-         SelectNone();
-         Refresh(false);
-      }
-
    } else if (event.LeftUp() || event.RightUp()) {
       if (mSnapManager) {
          delete mSnapManager;
@@ -5480,14 +5475,6 @@ void TrackPanel::HandleLabelClick(wxMouseEvent & event)
 
    Track *t = FindTrack(event.m_x, event.m_y, true, true, &rect);
 
-   // AS: If the user clicked outside all tracks, make nothing
-   //  selected.
-   if (!t) {
-      SelectNone();
-      Refresh(false);
-      return;
-   }
-
    // LL: Check close box
    if (isleft && CloseFunc(t, rect, event.m_x, event.m_y))
       return;
@@ -6668,12 +6655,13 @@ bool TrackPanel::HandleLabelTrackMouseEvent(LabelTrack * lTrack, wxRect &rect, w
 void TrackPanel::HandleTrackSpecificMouseEvent(wxMouseEvent & event)
 {
    Track * pTrack;
+   Track * pControlTrack;
    wxRect rTrack;
    wxRect rLabel;
 
    bool unsafe = IsUnsafe();
 
-   FindTrack(event.m_x, event.m_y, true, true, &rLabel);
+   pControlTrack = FindTrack(event.m_x, event.m_y, true, true, &rLabel);
    pTrack = FindTrack(event.m_x, event.m_y, false, false, &rTrack);
 
    //call HandleResize if I'm over the border area
@@ -6683,6 +6671,15 @@ void TrackPanel::HandleTrackSpecificMouseEvent(wxMouseEvent & event)
                   TRACK_RESIZE_REGION))) {
       HandleResize(event);
       HandleCursor(event);
+      return;
+   }
+
+   // AS: If the user clicked outside all tracks, make nothing
+   //  selected.
+   if ((event.ButtonDown() || event.ButtonDClick()) &&
+       !(pTrack || pControlTrack)) {
+      SelectNone();
+      Refresh(false);
       return;
    }
 
