@@ -258,7 +258,6 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
 
    virtual ~ TrackPanel();
 
-   virtual void BuildMenusIfNeeded(void);
    virtual void BuildMenus(void);
 
    virtual void DeleteMenus(void);
@@ -489,29 +488,12 @@ protected:
    virtual void MakeParentModifyState(bool bWantsAutoSave);    // if true, writes auto-save file. Should set only if you really want the state change restored after
                                                                // a crash, as it can take many seconds for large (eg. 10 track-hours) projects
 
-   virtual void OnChannelChange(wxCommandEvent &event);
-   virtual void OnSpectrogramSettings(wxCommandEvent &event);
-   virtual void OnSetDisplay   (wxCommandEvent &event);
-
    virtual void OnWaveformScaleType(wxCommandEvent &event);
    virtual void OnSpectrumScaleType(wxCommandEvent &event);
 
    virtual void OnZoomInVertical(wxCommandEvent &event);
    virtual void OnZoomOutVertical(wxCommandEvent &event);
    virtual void OnZoomFitVertical(wxCommandEvent &event);
-
-   virtual void SetMenuCheck( wxMenu & menu, int newId );
-   virtual void SetRate(WaveTrack *pTrack, double rate);
-   virtual void OnRateChange(wxCommandEvent &event);
-   virtual void OnRateOther(wxCommandEvent &event);
-
-   virtual void OnFormatChange(wxCommandEvent &event);
-
-   virtual void OnSwapChannels(wxCommandEvent &event);
-   virtual void OnSplitStereo(wxCommandEvent &event);
-   virtual void OnSplitStereoMono(wxCommandEvent &event);
-   virtual void SplitStereo(bool stereo);
-   virtual void OnMergeStereo(wxCommandEvent &event);
 
    // Find track info by coordinate
    enum class CellType { Label, Track, VRuler, Background };
@@ -569,10 +551,6 @@ public:
    // is not in any track or ruler or control panel.
    virtual void SetBackgroundCell
       (const std::shared_ptr< TrackPanelCell > &pCell);
-
-protected:
-   virtual int IdOfRate( int rate );
-   virtual int IdOfFormat( int format );
 
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
    void UpdateVirtualStereoOrder();
@@ -789,15 +767,8 @@ protected:
       mStretchCursor, mStretchLeftCursor, mStretchRightCursor;
 #endif
 
-   std::unique_ptr<wxMenu> mWaveTrackMenu;
-   size_t mChannelItemsInsertionPoint {};
-
    std::unique_ptr<wxMenu>
       mRulerWaveformMenu, mRulerSpectrumMenu;
-
-   // These sub-menus are owned by parent menus,
-   // so not unique_ptrs
-   wxMenu *mRateMenu{}, *mFormatMenu{};
 
    Track *mPopupMenuTarget {};
 
