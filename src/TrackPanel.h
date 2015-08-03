@@ -80,28 +80,28 @@ private:
    int GetTrackInfoWidth() const;
    void SetTrackInfoFont(wxDC *dc) const;
 
-   void DrawBackground(wxDC * dc, const wxRect & r, bool bSelected, bool bHasMuteSolo, const int labelw, const int vrul) const;
-   void DrawBordersWithin(wxDC * dc, const wxRect & r, bool bHasMuteSolo ) const;
-   void DrawCloseBox(wxDC * dc, const wxRect & r, bool down) const;
-   void DrawTitleBar(wxDC * dc, const wxRect & r, Track * t, bool down) const;
-   void DrawMuteSolo(wxDC * dc, const wxRect & r, Track * t, bool down, bool solo, bool bHasSoloButton) const;
-   void DrawVRuler(wxDC * dc, const wxRect & r, Track * t) const;
+   void DrawBackground(wxDC * dc, const wxRect & rect, bool bSelected, bool bHasMuteSolo, const int labelw, const int vrul) const;
+   void DrawBordersWithin(wxDC * dc, const wxRect & rect, bool bHasMuteSolo ) const;
+   void DrawCloseBox(wxDC * dc, const wxRect & rect, bool down) const;
+   void DrawTitleBar(wxDC * dc, const wxRect & rect, Track * t, bool down) const;
+   void DrawMuteSolo(wxDC * dc, const wxRect & rect, Track * t, bool down, bool solo, bool bHasSoloButton) const;
+   void DrawVRuler(wxDC * dc, const wxRect & rect, Track * t) const;
 #ifdef EXPERIMENTAL_MIDI_OUT
-   void DrawVelocitySlider(wxDC * dc, NoteTrack *t, wxRect r) const ;
+   void DrawVelocitySlider(wxDC * dc, NoteTrack *t, wxRect rect) const ;
 #endif
-   void DrawSliders(wxDC * dc, WaveTrack *t, wxRect r) const;
+   void DrawSliders(wxDC * dc, WaveTrack *t, wxRect rect) const;
 
    // Draw the minimize button *and* the sync-lock track icon, if necessary.
-   void DrawMinimize(wxDC * dc, const wxRect & r, Track * t, bool down) const;
+   void DrawMinimize(wxDC * dc, const wxRect & rect, Track * t, bool down) const;
 
-   void GetTrackControlsRect(const wxRect & r, wxRect &dest) const;
-   void GetCloseBoxRect(const wxRect & r, wxRect &dest) const;
-   void GetTitleBarRect(const wxRect & r, wxRect &dest) const;
-   void GetMuteSoloRect(const wxRect & r, wxRect &dest, bool solo, bool bHasSoloButton) const;
-   void GetGainRect(const wxRect & r, wxRect &dest) const;
-   void GetPanRect(const wxRect & r, wxRect &dest) const;
-   void GetMinimizeRect(const wxRect & r, wxRect &dest) const;
-   void GetSyncLockIconRect(const wxRect & r, wxRect &dest) const;
+   void GetTrackControlsRect(const wxRect & rect, wxRect &dest) const;
+   void GetCloseBoxRect(const wxRect & rect, wxRect &dest) const;
+   void GetTitleBarRect(const wxRect & rect, wxRect &dest) const;
+   void GetMuteSoloRect(const wxRect & rect, wxRect &dest, bool solo, bool bHasSoloButton) const;
+   void GetGainRect(const wxRect & rect, wxRect &dest) const;
+   void GetPanRect(const wxRect & rect, wxRect &dest) const;
+   void GetMinimizeRect(const wxRect & rect, wxRect &dest) const;
+   void GetSyncLockIconRect(const wxRect & rect, wxRect &dest) const;
 
    LWSlider * GainSlider(WaveTrack *t) const;
    LWSlider * PanSlider(WaveTrack *t) const;
@@ -244,7 +244,7 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
    static void BuildVRulerMenuItems(wxMenu * menu, int firstId, const wxArrayString &names);
    virtual bool IsAudioActive();
    virtual bool IsUnsafe();
-   virtual bool HandleLabelTrackMouseEvent(LabelTrack * lTrack, wxRect &r, wxMouseEvent & event);
+   virtual bool HandleLabelTrackMouseEvent(LabelTrack * lTrack, wxRect &rect, wxMouseEvent & event);
    virtual bool HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &rect, wxMouseEvent &event);
    virtual bool IsOverCutline(WaveTrack * track, wxRect &rect, wxMouseEvent &event);
    virtual void HandleTrackSpecificMouseEvent(wxMouseEvent & event);
@@ -260,9 +260,9 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
 
    // Working out where to dispatch the event to.
    virtual int DetermineToolToUse( ToolsToolBar * pTtb, wxMouseEvent & event);
-   virtual bool HitTestEnvelope(Track *track, wxRect &r, wxMouseEvent & event);
-   virtual bool HitTestSamples(Track *track, wxRect &r, wxMouseEvent & event);
-   virtual bool HitTestSlide(Track *track, wxRect &r, wxMouseEvent & event);
+   virtual bool HitTestEnvelope(Track *track, wxRect &rect, wxMouseEvent & event);
+   virtual bool HitTestSamples(Track *track, wxRect &rect, wxMouseEvent & event);
+   virtual bool HitTestSlide(Track *track, wxRect &rect, wxMouseEvent & event);
 #ifdef USE_MIDI
    // data for NoteTrack interactive stretch operations:
    // Stretching applies to a selected region after quantizing the
@@ -287,7 +287,7 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
    double mStretchSel1;  // initial sel1 (left) quantized to nearest beat
    double mStretchLeftBeats; // how many beats from left to cursor
    double mStretchRightBeats; // how many beats from cursor to right
-   virtual bool HitTestStretch(Track *track, wxRect &r, wxMouseEvent & event);
+   virtual bool HitTestStretch(Track *track, wxRect &rect, wxMouseEvent & event);
    virtual void Stretch(int mouseXCoordinate, int trackLeftEdge, Track *pTrack);
 #endif
 
@@ -322,7 +322,7 @@ protected:
 #endif
 
    virtual void SelectionHandleClick(wxMouseEvent &event,
-                                     Track* pTrack, wxRect r);
+                                     Track* pTrack, wxRect rect);
    virtual void StartSelection (int mouseXCoordinate, int trackLeftEdge);
    virtual void ExtendSelection(int mouseXCoordinate, int trackLeftEdge,
                         Track *pTrack);
@@ -364,7 +364,7 @@ protected:
    virtual void SetCursorAndTipWhenInVResizeArea( bool blinked, wxString &tip );
    virtual void SetCursorAndTipWhenInLabelTrack( LabelTrack * pLT, wxMouseEvent & event, wxString &tip );
    virtual void SetCursorAndTipWhenSelectTool
-      ( Track * t, wxMouseEvent & event, wxRect &r, bool bMultiToolMode, wxString &tip, const wxCursor ** ppCursor );
+      ( Track * t, wxMouseEvent & event, wxRect &rect, bool bMultiToolMode, wxString &tip, const wxCursor ** ppCursor );
    virtual void SetCursorAndTipByTool( int tool, wxMouseEvent & event, wxString &tip );
    virtual void HandleCursor(wxMouseEvent & event);
    virtual void MaySetOnDemandTip( Track * t, wxString &tip );
@@ -428,19 +428,19 @@ protected:
    // These *Func methods are used in TrackPanel::HandleLabelClick to set up
    // for actual handling in methods called by TrackPanel::OnMouseEvent, and
    // to draw button-down states, etc.
-   virtual bool CloseFunc(Track * t, wxRect r, int x, int y);
-   virtual bool PopupFunc(Track * t, wxRect r, int x, int y);
+   virtual bool CloseFunc(Track * t, wxRect rect, int x, int y);
+   virtual bool PopupFunc(Track * t, wxRect rect, int x, int y);
 
    // TrackSelFunc, unlike the other *Func methods, returns true if the click is not
    // set up to be handled, but click is on the sync-lock icon or the blank area to
    // the left of the minimize button, and we want to pass it forward to be a track select.
-   virtual bool TrackSelFunc(Track * t, wxRect r, int x, int y);
+   virtual bool TrackSelFunc(Track * t, wxRect rect, int x, int y);
 
-   virtual bool MuteSoloFunc(Track *t, wxRect r, int x, int f, bool solo);
-   virtual bool MinimizeFunc(Track *t, wxRect r, int x, int f);
-   virtual bool GainFunc(Track * t, wxRect r, wxMouseEvent &event,
+   virtual bool MuteSoloFunc(Track *t, wxRect rect, int x, int f, bool solo);
+   virtual bool MinimizeFunc(Track *t, wxRect rect, int x, int f);
+   virtual bool GainFunc(Track * t, wxRect rect, wxMouseEvent &event,
                  int x, int y);
-   virtual bool PanFunc(Track * t, wxRect r, wxMouseEvent &event,
+   virtual bool PanFunc(Track * t, wxRect rect, wxMouseEvent &event,
                 int x, int y);
 
 
@@ -533,10 +533,10 @@ protected:
 #endif
    virtual void DrawZooming(wxDC* dc, const wxRect & clip);
 
-   virtual void HighlightFocusedTrack (wxDC* dc, const wxRect &r);
-   virtual void DrawShadow            (Track *t, wxDC* dc, const wxRect & r);
-   virtual void DrawBordersAroundTrack(Track *t, wxDC* dc, const wxRect & r, const int labelw, const int vrul);
-   virtual void DrawOutsideOfTrack    (Track *t, wxDC* dc, const wxRect & r);
+   virtual void HighlightFocusedTrack (wxDC* dc, const wxRect &rect);
+   virtual void DrawShadow            (Track *t, wxDC* dc, const wxRect & rect);
+   virtual void DrawBordersAroundTrack(Track *t, wxDC* dc, const wxRect & rect, const int labelw, const int vrul);
+   virtual void DrawOutsideOfTrack    (Track *t, wxDC* dc, const wxRect & rect);
 
    virtual int IdOfRate( int rate );
    virtual int IdOfFormat( int format );
