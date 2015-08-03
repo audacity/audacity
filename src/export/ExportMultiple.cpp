@@ -352,8 +352,9 @@ void ExportMultiple::PopulateOrExchange(ShuttleGui& S)
    S.SetBorder(5);
    S.StartHorizontalLay(wxEXPAND, false);
    {
-      mOverwrite = S.Id(OverwriteID)
-         .AddCheckBox(_("Overwrite existing files"), wxT("true"));
+      mOverwrite = S.Id(OverwriteID).TieCheckBox(_("Overwrite existing files"),
+                                                 wxT("/Export/OverwriteExisting"),
+                                                 false);
    }
    S.EndHorizontalLay();
 
