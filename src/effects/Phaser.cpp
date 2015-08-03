@@ -37,7 +37,8 @@ enum
    ID_Freq,
    ID_Phase,
    ID_Depth,
-   ID_Feedback
+   ID_Feedback,
+   ID_OutGain
 };
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
@@ -49,6 +50,7 @@ Param( Freq,      double,  XO("Freq"),       0.4,  0.001,4.0,        10.0 );
 Param( Phase,     double,  XO("Phase"),      0.0,  0.0,  360.0,      1  );
 Param( Depth,     int,     XO("Depth"),      100,  0,    255,        1  );
 Param( Feedback,  int,     XO("Feedback"),   0,    -100, 100,        1  );
+Param( OutGain,   double,  XO("Gain"),      -6.0,    -30.0,    30.0,    1   );
 
 //
 #define phaserlfoshape 4.0
@@ -70,12 +72,14 @@ BEGIN_EVENT_TABLE(EffectPhaser, wxEvtHandler)
     EVT_SLIDER(ID_Phase, EffectPhaser::OnPhaseSlider)
     EVT_SLIDER(ID_Depth, EffectPhaser::OnDepthSlider)
     EVT_SLIDER(ID_Feedback, EffectPhaser::OnFeedbackSlider)
+    EVT_SLIDER(ID_OutGain, EffectPhaser::OnGainSlider)
     EVT_TEXT(ID_Stages, EffectPhaser::OnStagesText)
     EVT_TEXT(ID_DryWet, EffectPhaser::OnDryWetText)
     EVT_TEXT(ID_Freq, EffectPhaser::OnFreqText)
     EVT_TEXT(ID_Phase, EffectPhaser::OnPhaseText)
     EVT_TEXT(ID_Depth, EffectPhaser::OnDepthText)
     EVT_TEXT(ID_Feedback, EffectPhaser::OnFeedbackText)
+    EVT_TEXT(ID_OutGain, EffectPhaser::OnGainText)
 END_EVENT_TABLE()
 
 EffectPhaser::EffectPhaser()
@@ -86,6 +90,7 @@ EffectPhaser::EffectPhaser()
    mPhase = DEF_Phase;
    mDepth = DEF_Depth;
    mFeedback = DEF_Feedback;
+   mOutGain = DEF_OutGain;
 
    SetLinearEffectFlag(true);
 }
@@ -194,6 +199,7 @@ bool EffectPhaser::GetAutomationParameters(EffectAutomationParameters & parms)
    parms.Write(KEY_Phase, mPhase);
    parms.Write(KEY_Depth, mDepth);
    parms.Write(KEY_Feedback, mFeedback);
+   parms.Write(KEY_OutGain, mOutGain);
 
    return true;
 }
@@ -206,6 +212,7 @@ bool EffectPhaser::SetAutomationParameters(EffectAutomationParameters & parms)
    ReadAndVerifyDouble(Phase);
    ReadAndVerifyInt(Depth);
    ReadAndVerifyInt(Feedback);
+   ReadAndVerifyDouble(OutGain);
 
    if (Stages & 1)    // must be even, but don't complain about it
    {
@@ -218,6 +225,7 @@ bool EffectPhaser::SetAutomationParameters(EffectAutomationParameters & parms)
    mDryWet = DryWet;
    mDepth = Depth;
    mPhase = Phase;
+   mOutGain = OutGain;
 
    return true;
 }
@@ -295,6 +303,16 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
       mFeedbackS->SetName(_("Feedback in percent"));
       mFeedbackS->SetLineSize(10);
       mFeedbackS->SetMinSize(wxSize(100, -1));
+
+      FloatingPointValidator<double> vldoutgain(1, &mOutGain);
+      vldoutgain.SetRange(MIN_OutGain, MAX_OutGain);
+      mOutGainT = S.Id(ID_OutGain).AddTextBox(_("Output gain (dB):"), wxT(""), 12);
+      mOutGainT->SetValidator(vldoutgain);
+
+      S.SetStyle(wxSL_HORIZONTAL);
+      mOutGainS = S.Id(ID_OutGain).AddSlider(wxT(""), DEF_OutGain * SCL_OutGain, MAX_OutGain * SCL_OutGain, MIN_OutGain * SCL_OutGain);
+      mOutGainS->SetName(_("Output gain (dB)"));
+      mOutGainS->SetMinSize(wxSize(100, -1));
    }
    S.EndMultiColumn();
 }
@@ -312,6 +330,7 @@ bool EffectPhaser::TransferDataToWindow()
    mPhaseS->SetValue((int) (mPhase * SCL_Phase));
    mDepthS->SetValue((int) (mDepth * SCL_Depth));
    mFeedbackS->SetValue((int) (mFeedback * SCL_Feedback));
+   mOutGainS->SetValue((int) (mOutGain * SCL_OutGain));
 
    return true;
 }
@@ -347,6 +366,7 @@ void EffectPhaser::InstanceInit(EffectPhaserState & data, float sampleRate)
    data.gain = 0;
    data.fbout = 0;
    data.laststages = 0;
+   data.outgain = 0;
 
    return;
 }
@@ -364,6 +384,7 @@ sampleCount EffectPhaser::InstanceProcess(EffectPhaserState & data, float **inBl
 
    data.lfoskip = mFreq * 2 * M_PI / data.samplerate;
    data.phase = mPhase * M_PI / 180;
+   data.outgain = DB_TO_LINEAR(mOutGain);
 
    for (sampleCount i = 0; i < blockLen; i++)
    {
@@ -392,7 +413,7 @@ sampleCount EffectPhaser::InstanceProcess(EffectPhaserState & data, float **inBl
       }
       data.fbout = m;
 
-      obuf[i] = (float) ((m * mDryWet + in * (255 - mDryWet)) / 255);
+      obuf[i] = (float) (data.outgain * (m * mDryWet + in * (255 - mDryWet)) / 255);
    }
 
    return blockLen;
@@ -445,6 +466,13 @@ void EffectPhaser::OnFeedbackSlider(wxCommandEvent & evt)
    mFeedbackS->SetValue(val);
    mFeedback = val / SCL_Feedback;
    mFeedbackT->GetValidator()->TransferToWindow();
+   EnableApply(mUIParent->Validate());
+}
+
+void EffectPhaser::OnGainSlider(wxCommandEvent & evt)
+{
+   mOutGain = evt.GetInt() / SCL_OutGain;
+   mOutGainT->GetValidator()->TransferToWindow();
    EnableApply(mUIParent->Validate());
 }
 
@@ -506,4 +534,14 @@ void EffectPhaser::OnFeedbackText(wxCommandEvent & WXUNUSED(evt))
    }
 
    mFeedbackS->SetValue((int) (mFeedback * SCL_Feedback));
+}
+
+void EffectPhaser::OnGainText(wxCommandEvent & WXUNUSED(evt))
+{
+   if (!EnableApply(mUIParent->TransferDataFromWindow()))
+   {
+      return;
+   }
+
+   mOutGainS->SetValue((int) (mOutGain * SCL_OutGain));
 }
