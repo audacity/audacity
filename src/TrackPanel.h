@@ -820,6 +820,9 @@ protected:
 #endif
 
    wxMenu *mWaveTrackMenu;
+   size_t mChannelItemsInsertionPoint;
+   bool mShowMono;
+
    wxMenu *mNoteTrackMenu;
    wxMenu *mTimeTrackMenu;
    wxMenu *mLabelTrackMenu;
