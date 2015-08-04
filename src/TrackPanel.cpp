@@ -347,9 +347,6 @@ enum {
    OnZoomInVerticalID,
    OnZoomOutVerticalID,
    OnZoomFitVerticalID,
-
-   IDFormatMenu,
-   IDRateMenu,
 };
 
 BEGIN_EVENT_TABLE(TrackPanel, wxWindow)
@@ -555,8 +552,7 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    mAdjustLeftSelectionCursor = new wxCursor(wxCURSOR_POINT_LEFT);
    mAdjustRightSelectionCursor = new wxCursor(wxCURSOR_POINT_RIGHT);
 
-   mMonoTrackMenu = NULL;
-   mStereoTrackMenu = NULL;
+   mWaveTrackMenu = NULL;
    mNoteTrackMenu = NULL;
    mLabelTrackMenu = NULL;
    mTimeTrackMenu = NULL;
@@ -730,22 +726,28 @@ void TrackPanel::BuildMenus(void)
    mFormatMenu->AppendRadioItem(On24BitID, GetSampleFormatStr(int24Sample));
    mFormatMenu->AppendRadioItem(OnFloatID, GetSampleFormatStr(floatSample));
 
-   /* build the pop-down menus used on wave (sampled audio) tracks */
-   mMonoTrackMenu = new wxMenu();
-   BuildCommonDropMenuItems(mMonoTrackMenu);   // does name, up/down etc
-   BuildWaveTrackMenuItems(mMonoTrackMenu, true);
-   mMonoTrackMenu->Append(IDFormatMenu, _("&Format"), mFormatMenu);
-   mMonoTrackMenu->AppendSeparator();
-   mMonoTrackMenu->Append(IDRateMenu, _("&Rate"), mRateMenu);
+   /* build the pop-down menu used on wave (sampled audio) tracks */
+   mWaveTrackMenu = new wxMenu();
+   BuildCommonDropMenuItems(mWaveTrackMenu);   // does name, up/down etc
+   mWaveTrackMenu->AppendRadioItem(OnWaveformID, _("&Waveform"));
+   mWaveTrackMenu->AppendRadioItem(OnSpectrumID, _("&Spectrum"));
+   mWaveTrackMenu->Append(OnViewSettingsID, _("&View Settings..."));
+   mWaveTrackMenu->AppendSeparator();
 
-   mStereoTrackMenu = new wxMenu();
-   BuildCommonDropMenuItems(mStereoTrackMenu);   // does name, up/down etc
-   BuildWaveTrackMenuItems(mStereoTrackMenu, false);
-   // Following lines share a sub-menu!  We must be careful when destroying
-   // these menus later, to avoid double deletion of the sub-menus.
-   mStereoTrackMenu->Append(0, _("&Format"), mFormatMenu);
-   mStereoTrackMenu->AppendSeparator();
-   mStereoTrackMenu->Append(0, _("&Rate"), mRateMenu);
+   mWaveTrackMenu->AppendRadioItem(OnChannelMonoID, _("&Mono"));
+   mWaveTrackMenu->AppendRadioItem(OnChannelLeftID, _("&Left Channel"));
+   mWaveTrackMenu->AppendRadioItem(OnChannelRightID, _("&Right Channel"));
+   mWaveTrackMenu->Append(OnMergeStereoID, _("Ma&ke Stereo Track"));
+   mWaveTrackMenu->Append(OnSwapChannelsID, _("Swap Stereo &Channels"));
+   mWaveTrackMenu->Append(OnSplitStereoID, _("Spl&it Stereo Track"));
+   mWaveTrackMenu->Append(OnSplitStereoMonoID, _("Split Stereo to Mo&no"));
+   mWaveTrackMenu->AppendSeparator();
+
+   mWaveTrackMenu->Append(0, _("&Format"), mFormatMenu);
+
+   mWaveTrackMenu->AppendSeparator();
+
+   mWaveTrackMenu->Append(0, _("&Rate"), mRateMenu);
 
    /* build the pop-down menu used on note (MIDI) tracks */
    mNoteTrackMenu = new wxMenu();
@@ -790,27 +792,6 @@ void TrackPanel::BuildCommonDropMenuItems(wxMenu * menu)
 
 }
 
-void TrackPanel::BuildWaveTrackMenuItems(wxMenu * menu, bool mono)
-{
-   menu->AppendRadioItem(OnWaveformID, _("&Waveform"));
-   menu->AppendRadioItem(OnSpectrumID, _("&Spectrum"));
-   menu->Append(OnViewSettingsID, _("&View Settings..."));
-   menu->AppendSeparator();
-
-   if (mono) {
-      menu->AppendRadioItem(OnChannelMonoID, _("&Mono"));
-      menu->AppendRadioItem(OnChannelLeftID, _("&Left Channel"));
-      menu->AppendRadioItem(OnChannelRightID, _("R&ight Channel"));
-      menu->Append(OnMergeStereoID, _("Ma&ke Stereo Track"));
-   }
-   else {
-      menu->Append(OnSwapChannelsID, _("Swap Stereo &Channels"));
-      menu->Append(OnSplitStereoID, _("Spl&it Stereo Track"));
-      menu->Append(OnSplitStereoMonoID, _("Split Stereo to &Mono"));
-   }
-   menu->AppendSeparator();
-}
-
 // static
 void TrackPanel::BuildVRulerMenuItems
 (wxMenu * menu, int firstId, const wxArrayString &names)
@@ -828,27 +809,9 @@ void TrackPanel::DeleteMenus(void)
 {
    // Note that the submenus (mRateMenu, ...)
    // are deleted by their parent
-   if (mMonoTrackMenu) {
-      // Avoid double deletion of the sub-menus shared with the stereo menu
-      wxMenuItem *pItem;
-
-      pItem = mMonoTrackMenu->Remove(IDFormatMenu);
-      wxASSERT(pItem->GetSubMenu() == mFormatMenu);
-      pItem->SetSubMenu(NULL);
-      delete pItem;
-
-      pItem = mMonoTrackMenu->Remove(IDRateMenu);
-      wxASSERT(pItem->GetSubMenu() == mRateMenu);
-      pItem->SetSubMenu(NULL);
-      delete pItem;
-
-      delete mMonoTrackMenu;
-      mMonoTrackMenu = NULL;
-   }
-
-   if (mStereoTrackMenu) {
-      delete mStereoTrackMenu;
-      mStereoTrackMenu = NULL;
+   if (mWaveTrackMenu) {
+      delete mWaveTrackMenu;
+      mWaveTrackMenu = NULL;
    }
 
    if (mNoteTrackMenu) {
@@ -8379,28 +8342,32 @@ void TrackPanel::OnTrackMenu(Track *t)
    }
 
    if (t->GetKind() == Track::Wave) {
-      const bool isMono = !t->GetLinked();
-      theMenu = isMono? mMonoTrackMenu : mStereoTrackMenu;
-      if (next && isMono && !next->GetLinked()
+      theMenu = mWaveTrackMenu;
+      if (next && !t->GetLinked() && !next->GetLinked()
             && t->GetKind() == Track::Wave
             && next->GetKind() == Track::Wave)
          canMakeStereo = true;
 
-      if (isMono) {
-         theMenu->Enable(OnMergeStereoID, canMakeStereo);
+      theMenu->Enable(OnSwapChannelsID, t->GetLinked());
+      theMenu->Enable(OnMergeStereoID, canMakeStereo);
+      theMenu->Enable(OnSplitStereoID, t->GetLinked());
+      theMenu->Enable(OnSplitStereoMonoID, t->GetLinked());
 
-         // We only need to set check marks. Clearing checks causes problems on Linux (bug 851)
-         switch (t->GetChannel()) {
-         case Track::LeftChannel:
-            theMenu->Check(OnChannelLeftID, true);
-            break;
-         case Track::RightChannel:
-            theMenu->Check(OnChannelRightID, true);
-            break;
-         default:
-            theMenu->Check(OnChannelMonoID, true);
-         }
+      // We only need to set check marks. Clearing checks causes problems on Linux (bug 851)
+      switch (t->GetChannel()) {
+      case Track::LeftChannel:
+         theMenu->Check(OnChannelLeftID, true);
+         break;
+      case Track::RightChannel:
+         theMenu->Check(OnChannelRightID, true);
+         break;
+      default:
+         theMenu->Check(OnChannelMonoID, true);
       }
+
+      theMenu->Enable(OnChannelMonoID, !t->GetLinked());
+      theMenu->Enable(OnChannelLeftID, !t->GetLinked());
+      theMenu->Enable(OnChannelRightID, !t->GetLinked());
 
       const int display = static_cast<WaveTrack *>(t)->GetDisplay();
       theMenu->Check(
