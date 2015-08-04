@@ -317,7 +317,6 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
    virtual void ScrollIntoView(int x);
 
    virtual void OnTrackMenu(Track *t = NULL);
-   virtual void OnVRulerMenu(Track *t, wxMouseEvent *pEvent = NULL);
    virtual Track * GetFirstSelectedTrack();
    virtual bool IsMouseCaptured();
 
@@ -339,9 +338,6 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
 
  protected:
    virtual MixerBoard* GetMixerBoard();
-
-   // left over from PRL's vertical ruler context menu experiment in 2.1.2
-   // static void BuildVRulerMenuItems(wxMenu * menu, int firstId, const wxArrayString &names);
 
    virtual bool IsAudioActive();
    virtual bool IsUnsafe();
@@ -447,24 +443,8 @@ public:
 protected:
    virtual void MaySetOnDemandTip( Track * t, wxString &tip );
 
-   static bool IsDragZooming(int zoomStart, int zoomEnd);
-   virtual bool IsDragZooming() { return IsDragZooming(mZoomStart, mZoomEnd); }
-
-   virtual void HandleVZoom(wxMouseEvent & event);
-   virtual void HandleVZoomClick(wxMouseEvent & event);
-   virtual void HandleVZoomDrag(wxMouseEvent & event);
-   virtual void HandleVZoomButtonUp(wxMouseEvent & event);
-   virtual void HandleWaveTrackVZoom(WaveTrack *track, bool shiftDown, bool rightUp);
-   static void HandleWaveTrackVZoom
-      (TrackList *tracks, const wxRect &rect,
-       int zoomStart, int zoomEnd,
-       WaveTrack *track, bool shiftDown, bool rightUp,
-       bool fixedMousePoint);
-
    // MM: Handle mouse wheel rotation
    virtual void HandleWheelRotation(wxMouseEvent & event);
-   virtual void HandleWheelRotationInVRuler
-      (wxMouseEvent &event, double steps, Track *pTrack, const wxRect &rect);
 
    // Handle resizing.
    virtual void HandleResizeClick(wxMouseEvent & event);
@@ -487,13 +467,6 @@ protected:
                             UndoPush flags);
    virtual void MakeParentModifyState(bool bWantsAutoSave);    // if true, writes auto-save file. Should set only if you really want the state change restored after
                                                                // a crash, as it can take many seconds for large (eg. 10 track-hours) projects
-
-   virtual void OnWaveformScaleType(wxCommandEvent &event);
-   virtual void OnSpectrumScaleType(wxCommandEvent &event);
-
-   virtual void OnZoomInVertical(wxCommandEvent &event);
-   virtual void OnZoomOutVertical(wxCommandEvent &event);
-   virtual void OnZoomFitVertical(wxCommandEvent &event);
 
    // Find track info by coordinate
    enum class CellType { Label, Track, VRuler, Background };
@@ -539,7 +512,6 @@ protected:
    virtual void DrawEverythingElse(wxDC *dc, const wxRegion & region,
                            const wxRect & clip);
    virtual void DrawOutside(Track *t, wxDC *dc, const wxRect & rec);
-   virtual void DrawZooming(wxDC* dc, const wxRect & clip);
 
    virtual void HighlightFocusedTrack (wxDC* dc, const wxRect &rect);
    virtual void DrawShadow            (Track *t, wxDC* dc, const wxRect & rect);
@@ -653,9 +625,6 @@ protected:
    int mMouseMostRecentX;
    int mMouseMostRecentY;
 
-   int mZoomStart;
-   int mZoomEnd;
-
    // Handles snapping the selection boundaries or track boundaries to
    // line up with existing tracks or labels.  mSnapLeft and mSnapRight
    // are the horizontal index of pixels to display user feedback
@@ -725,7 +694,6 @@ public:
    enum   MouseCaptureEnum
    {
       IsUncaptured=0,   // This is the normal state for the mouse
-      IsVZooming,
       IsClosing,
       IsSelecting,
       IsAdjustingLabel,
@@ -755,7 +723,6 @@ protected:
       mArrowCursor, mSelectCursor,
       mResizeCursor, mEnvelopeCursor, // doubles as the center frequency cursor
                               // for spectral selection
-      mZoomInCursor, mZoomOutCursor,
       mRearrangeCursor,
       mDisabledCursor, mAdjustLeftSelectionCursor, mAdjustRightSelectionCursor;
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
@@ -766,9 +733,6 @@ protected:
    std::unique_ptr<wxCursor>
       mStretchCursor, mStretchLeftCursor, mStretchRightCursor;
 #endif
-
-   std::unique_ptr<wxMenu>
-      mRulerWaveformMenu, mRulerSpectrumMenu;
 
    Track *mPopupMenuTarget {};
 

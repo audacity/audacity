@@ -76,6 +76,7 @@ class NoteTrackMenuTable : public PopupMenuTable
 public:
    static NoteTrackMenuTable &Instance();
 
+private:
    void InitMenu(Menu*, void *pUserData) override
    {
       mpData = static_cast<TrackControls::InitMenuData*>(pUserData);

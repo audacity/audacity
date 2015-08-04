@@ -14,6 +14,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "CommonTrackPanelCell.h"
 
 class Track;
+class wxDC;
 
 class TrackVRulerControls /* not final */ : public CommonTrackPanelCell
 {
@@ -28,6 +29,10 @@ public:
    HitTestResult HitTest
       (const TrackPanelMouseEvent &event,
        const AudacityProject *pProject) override;
+
+   static void DrawZooming
+      ( wxDC *dc, const wxRect &cellRect, const wxRect &panelRect,
+        int zoomStart, int zoomEnd);
 
 protected:
 
