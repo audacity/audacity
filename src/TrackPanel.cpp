@@ -523,6 +523,9 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    mAdjustRightSelectionCursor = new wxCursor(wxCURSOR_POINT_RIGHT);
 
    mWaveTrackMenu = NULL;
+   mChannelItemsInsertionPoint = 0;
+   mShowMono = false;
+   
    mNoteTrackMenu = NULL;
    mLabelTrackMenu = NULL;
    mTimeTrackMenu = NULL;
@@ -669,6 +672,43 @@ TrackPanel::~TrackPanel()
    delete mInitialTrackSelection;
 }
 
+namespace
+{
+
+   void ShowMonoItems(wxMenu *pMenu, size_t pos)
+   {
+      // Insert in the reverse of the sequence in which they appear
+      pMenu->Insert(pos, OnMergeStereoID, _("Ma&ke Stereo Track"));
+      pMenu->InsertRadioItem(pos, OnChannelRightID, _("R&ight Channel"));
+      pMenu->InsertRadioItem(pos, OnChannelLeftID, _("&Left Channel"));
+      pMenu->InsertRadioItem(pos, OnChannelMonoID, _("&Mono"));
+   }
+
+   void HideMonoItems(wxMenu *pMenu)
+   {
+      pMenu->Delete(OnChannelMonoID);
+      pMenu->Delete(OnChannelLeftID);
+      pMenu->Delete(OnChannelRightID);
+      pMenu->Delete(OnMergeStereoID);
+   }
+
+   void ShowStereoItems(wxMenu *pMenu, size_t pos)
+   {
+      // Insert in the reverse of the sequence in which they appear
+      pMenu->Insert(pos, OnSplitStereoMonoID, _("Split Stereo to &Mono"));
+      pMenu->Insert(pos, OnSplitStereoID, _("Spl&it Stereo Track"));
+      pMenu->Insert(pos, OnSwapChannelsID, _("Swap Stereo &Channels"));
+   }
+
+   void HideStereoItems(wxMenu *pMenu)
+   {
+      pMenu->Delete(OnSwapChannelsID);
+      pMenu->Delete(OnSplitStereoID);
+      pMenu->Delete(OnSplitStereoMonoID);
+   }
+
+}
+
 void TrackPanel::BuildMenus(void)
 {
    // Get rid of existing menus
@@ -704,13 +744,9 @@ void TrackPanel::BuildMenus(void)
    mWaveTrackMenu->Append(OnViewSettingsID, _("&View Settings..."));
    mWaveTrackMenu->AppendSeparator();
 
-   mWaveTrackMenu->AppendRadioItem(OnChannelMonoID, _("&Mono"));
-   mWaveTrackMenu->AppendRadioItem(OnChannelLeftID, _("&Left Channel"));
-   mWaveTrackMenu->AppendRadioItem(OnChannelRightID, _("&Right Channel"));
-   mWaveTrackMenu->Append(OnMergeStereoID, _("Ma&ke Stereo Track"));
-   mWaveTrackMenu->Append(OnSwapChannelsID, _("Swap Stereo &Channels"));
-   mWaveTrackMenu->Append(OnSplitStereoID, _("Spl&it Stereo Track"));
-   mWaveTrackMenu->Append(OnSplitStereoMonoID, _("Split Stereo to Mo&no"));
+   mChannelItemsInsertionPoint = mWaveTrackMenu->GetMenuItemCount();
+   ShowMonoItems(mWaveTrackMenu, mChannelItemsInsertionPoint);
+   mShowMono = true;
    mWaveTrackMenu->AppendSeparator();
 
    mWaveTrackMenu->Append(0, _("&Format"), mFormatMenu);
@@ -8294,7 +8330,6 @@ void TrackPanel::OnTrackMenu(Track *t)
 
    mPopupMenuTarget = t;
 
-   bool canMakeStereo = false;
    Track *next = mTracks->GetNext(t);
 
    wxMenu *theMenu = NULL;
@@ -8310,31 +8345,38 @@ void TrackPanel::OnTrackMenu(Track *t)
 
    if (t->GetKind() == Track::Wave) {
       theMenu = mWaveTrackMenu;
-      if (next && !t->GetLinked() && !next->GetLinked()
-            && t->GetKind() == Track::Wave
-            && next->GetKind() == Track::Wave)
-         canMakeStereo = true;
+      const bool isMono = !t->GetLinked();
+      const bool canMakeStereo =
+         (next && isMono && !next->GetLinked() &&
+          next->GetKind() == Track::Wave);
 
-      theMenu->Enable(OnSwapChannelsID, t->GetLinked());
-      theMenu->Enable(OnMergeStereoID, canMakeStereo);
-      theMenu->Enable(OnSplitStereoID, t->GetLinked());
-      theMenu->Enable(OnSplitStereoMonoID, t->GetLinked());
-
-      // We only need to set check marks. Clearing checks causes problems on Linux (bug 851)
-      switch (t->GetChannel()) {
-      case Track::LeftChannel:
-         theMenu->Check(OnChannelLeftID, true);
-         break;
-      case Track::RightChannel:
-         theMenu->Check(OnChannelRightID, true);
-         break;
-      default:
-         theMenu->Check(OnChannelMonoID, true);
+      if (isMono != mShowMono) {
+         if (isMono) {
+            HideStereoItems(theMenu);
+            ShowMonoItems(theMenu, mChannelItemsInsertionPoint);
+         }
+         else {
+            HideMonoItems(theMenu);
+            ShowStereoItems(theMenu, mChannelItemsInsertionPoint);
+         }
+         mShowMono = isMono;
       }
 
-      theMenu->Enable(OnChannelMonoID, !t->GetLinked());
-      theMenu->Enable(OnChannelLeftID, !t->GetLinked());
-      theMenu->Enable(OnChannelRightID, !t->GetLinked());
+      if (isMono) {
+         theMenu->Enable(OnMergeStereoID, canMakeStereo);
+
+         // We only need to set check marks. Clearing checks causes problems on Linux (bug 851)
+         switch (t->GetChannel()) {
+         case Track::LeftChannel:
+            theMenu->Check(OnChannelLeftID, true);
+            break;
+         case Track::RightChannel:
+            theMenu->Check(OnChannelRightID, true);
+            break;
+         default:
+            theMenu->Check(OnChannelMonoID, true);
+         }
+      }
 
       const int display = static_cast<WaveTrack *>(t)->GetDisplay();
       theMenu->Check(
