@@ -161,54 +161,31 @@ is time to refresh some aspect of the screen.
 #include "Experimental.h"
 #include "TrackPanel.h"
 
-#include <math.h>
-#include <stdlib.h>
-
 //#define DEBUG_DRAW_TIMING 1
 // #define SPECTRAL_EDITING_ESC_KEY
 
-#include <wx/combobox.h>
-#include <wx/dcclient.h>
-#include <wx/dcbuffer.h>
-#include <wx/dcmemory.h>
-#include <wx/font.h>
 #include <wx/fontenum.h>
-#include <wx/log.h>
-#include <wx/menu.h>
-#include <wx/msgdlg.h>
-#include <wx/textdlg.h>
 #include <wx/numdlg.h>
-#include <wx/choicdlg.h>
 #include <wx/spinctrl.h>
-#include <wx/listbox.h>
-#include <wx/textctrl.h>
-#include <wx/intl.h>
-#include <wx/image.h>
 
 #include "FreqWindow.h" // for SpectrumAnalyst
 
 #include "AColor.h"
 #include "AllThemeResources.h"
-#include "AudacityApp.h"
 #include "AudioIO.h"
 #include "Envelope.h"
-#include "Experimental.h"
 #include "float_cast.h"
-#include "Internat.h"
 #include "LabelTrack.h"
 #include "MixerBoard.h"
 
 #include "NoteTrack.h"
 #include "NumberScale.h"
 #include "Prefs.h"
-#include "Project.h"
 #include "Snap.h"
 #include "ShuttleGui.h"
-#include "Theme.h"
 #include "TimeTrack.h"
 #include "TrackArtist.h"
 #include "TrackPanelAx.h"
-#include "ViewInfo.h"
 #include "WaveTrack.h"
 
 #include "commands/Keyboard.h"
@@ -220,19 +197,12 @@ is time to refresh some aspect of the screen.
 #include "prefs/WaveformPrefs.h"
 
 #include "toolbars/ControlToolBar.h"
-#include "toolbars/ToolManager.h"
 #include "toolbars/ToolsToolBar.h"
-// #include "toolbars/TranscriptionToolBar.h"
-
-#include "widgets/ASlider.h"
-#include "widgets/Ruler.h"
-#include "widgets/NumericTextCtrl.h"
 
 #define ZOOMLIMIT 0.001f
 
 //This loads the appropriate set of cursors, depending on platform.
 #include "../images/Cursors.h"
-#include <iostream>
 
 DEFINE_EVENT_TYPE(EVT_TRACK_PANEL_TIMER)
 
