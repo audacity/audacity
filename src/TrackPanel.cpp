@@ -772,7 +772,7 @@ void TrackPanel::BuildMenus(void)
    mTimeTrackMenu->Append(OnTimeTrackLinID, _("&Linear"));
    mTimeTrackMenu->Append(OnTimeTrackLogID, _("L&ogarithmic"));
    mTimeTrackMenu->AppendSeparator();
-   mTimeTrackMenu->Append(OnSetTimeTrackRangeID, _("Set &Range..."));
+   mTimeTrackMenu->Append(OnSetTimeTrackRangeID, _("&Range..."));
    mTimeTrackMenu->AppendCheckItem(OnTimeTrackLogIntID, _("Logarithmic &Interpolation"));
 
    mRulerWaveformMenu = new wxMenu();
