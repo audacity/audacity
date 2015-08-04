@@ -3083,30 +3083,6 @@ void TrackPanel::HandleLabelClick(wxMouseEvent & event)
    auto &t = foundCell.pTrack;
    auto &rect = foundCell.rect;
 
-   {
-#ifdef USE_MIDI
-      // DM: If it's a NoteTrack, it has special controls
-      if (t->GetKind() == Track::Note)
-      {
-#ifdef EXPERIMENTAL_MIDI_OUT
-         wxRect midiRect;
-         mTrackInfo.GetMidiControlsRect(rect, midiRect);
-
-         bool isright = event.Button(wxMOUSE_BTN_RIGHT);
-
-         if ( !TrackInfo::HideTopItem( rect, midiRect ) &&
-             (isleft || isright) && midiRect.Contains(event.m_x, event.m_y) &&
-               static_cast<NoteTrack *>(t)->LabelClick(midiRect, event.m_x, event.m_y, isright)) {
-            MakeParentModifyState(false);
-            Refresh(false);
-            return;
-         }
-#endif
-      }
-#endif // USE_MIDI
-
-   }
-
    if (!isleft) {
       return;
    }
