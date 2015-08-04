@@ -62,7 +62,7 @@ static const struct
 }
 FactoryPresets[] =
 {
-   //                               Room  Pre            Hf       Tone Tone  Wet   Dry   Stereo Wet
+   //                         Room  Pre            Hf       Tone Tone  Wet   Dry   Stereo Wet
    // Name                    Size, Delay, Reverb, Damping, Low, High, Gain, Gain, Width, Only
    XO("Vocal I" ),          { 70,   20,    40,     99,      100, 50,   -12,  0,    70,    false },
    XO("Vocal II"),          { 50,   0,     50,     99,      50,  100,  -1,   -1,   70,    false },

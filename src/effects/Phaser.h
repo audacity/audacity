@@ -38,6 +38,7 @@ public:
    double old[NUM_STAGES]; // must be as large as MAX_STAGES
    double gain;
    double fbout;
+   double outgain;
    double lfoskip;
    double phase;
    int laststages;
@@ -83,7 +84,7 @@ public:
    bool TransferDataToWindow();
    bool TransferDataFromWindow();
 
-protected:
+private:
    // EffectPhaser implementation
 
    void InstanceInit(EffectPhaserState & data, float sampleRate);
@@ -95,12 +96,15 @@ protected:
    void OnDepthSlider(wxCommandEvent & evt);
    void OnPhaseSlider(wxCommandEvent & evt);
    void OnFreqSlider(wxCommandEvent & evt);
+   void OnGainSlider(wxCommandEvent & evt);
+
    void OnStagesText(wxCommandEvent & evt);
    void OnDryWetText(wxCommandEvent & evt);
    void OnFeedbackText(wxCommandEvent & evt);
    void OnDepthText(wxCommandEvent & evt);
    void OnPhaseText(wxCommandEvent & evt);
    void OnFreqText(wxCommandEvent & evt);
+   void OnGainText(wxCommandEvent & evt);
 /*
     Phaser Parameters
 
@@ -124,6 +128,7 @@ private:
    double mPhase;
    int mDepth;
    int mFeedback;
+   double mOutGain;
 
    wxTextCtrl *mStagesT;
    wxTextCtrl *mDryWetT;
@@ -131,6 +136,7 @@ private:
    wxTextCtrl *mPhaseT;
    wxTextCtrl *mDepthT;
    wxTextCtrl *mFeedbackT;
+   wxTextCtrl *mOutGainT;
 
    wxSlider *mStagesS;
    wxSlider *mDryWetS;
@@ -138,6 +144,7 @@ private:
    wxSlider *mPhaseS;
    wxSlider *mDepthS;
    wxSlider *mFeedbackS;
+   wxSlider *mOutGainS;
 
    DECLARE_EVENT_TABLE();
 };

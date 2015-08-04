@@ -34,6 +34,7 @@ public:
    double depth;
    double freqofs;
    double phase;
+   double outgain;
    double lfoskip;
    unsigned long skipcount;
    double xn1, xn2, yn1, yn2;
@@ -91,12 +92,14 @@ private:
    void OnDepthSlider(wxCommandEvent & evt);
    void OnResonanceSlider(wxCommandEvent & evt);
    void OnFreqOffSlider(wxCommandEvent & evt);
+   void OnGainSlider(wxCommandEvent & evt);
 
    void OnFreqText(wxCommandEvent & evt);
    void OnPhaseText(wxCommandEvent & evt);
    void OnDepthText(wxCommandEvent & evt);
    void OnResonanceText(wxCommandEvent & evt);
    void OnFreqOffText(wxCommandEvent & evt);
+   void OnGainText(wxCommandEvent & evt);
 
 private:
    EffectWahwahState mMaster;
@@ -108,6 +111,7 @@ private:
    mDepth - Wah depth
    mRes - Resonance
    mFreqOfs - Wah frequency offset
+   mOutGain - output gain
 
    !!!!!!!!!!!!! IMPORTANT!!!!!!!!! :
    mDepth and mFreqOfs should be from 0(min) to 1(max) !
@@ -118,18 +122,21 @@ private:
    int mDepth;
    double mRes;
    int mFreqOfs;
+   double mOutGain;
 
    wxTextCtrl *mFreqT;
    wxTextCtrl *mPhaseT;
    wxTextCtrl *mDepthT;
    wxTextCtrl *mResT;
    wxTextCtrl *mFreqOfsT;
+   wxTextCtrl *mOutGainT;
 
    wxSlider *mFreqS;
    wxSlider *mPhaseS;
    wxSlider *mDepthS;
    wxSlider *mResS;
    wxSlider *mFreqOfsS;
+   wxSlider *mOutGainS;
 
    DECLARE_EVENT_TABLE();
 };
