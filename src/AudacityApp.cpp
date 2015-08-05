@@ -1123,7 +1123,6 @@ int AudacityApp::FilterEvent(wxEvent & event)
          ((wxWindow *)e.GetEventObject())->SetFocus();
       }
    }
-   break;
 #endif
 
    return Event_Skip;

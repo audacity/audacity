@@ -418,9 +418,9 @@ void KeyConfigPrefs::OnHotkeyKeyDown(wxKeyEvent & e)
    // active, buttons on the Mac do not accept focus and all the
    // controls between this one and the tree control are buttons.
    if (e.GetKeyCode() == WXK_TAB) {
-      Navigate(e.ShiftDown()
-               ? wxNavigationKeyEvent::IsBackward
-               : wxNavigationKeyEvent::IsForward);
+      NavigateIn(e.ShiftDown()
+                 ? wxNavigationKeyEvent::IsBackward
+                 : wxNavigationKeyEvent::IsForward);
       return;
    }
 

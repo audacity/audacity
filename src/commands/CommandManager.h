@@ -58,6 +58,7 @@ struct CommandListEntry
    int count;
    bool enabled;
    bool wantevent;
+   bool ignoredown;
    bool isMeta;
    wxUint32 flags;
    wxUint32 mask;

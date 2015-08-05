@@ -735,6 +735,7 @@ int CommandManager::NewIdentifier(wxString name,
    tmpEntry->mask = mDefaultMask;
    tmpEntry->enabled = true;
    tmpEntry->wantevent = (label.Find(wxT("\twantevent")) != wxNOT_FOUND);
+   tmpEntry->ignoredown = (label.Find(wxT("\tignoredown")) != wxNOT_FOUND);
    tmpEntry->isMeta = false;
 
    // Key from preferences overridse the default key given
@@ -985,14 +986,18 @@ bool CommandManager::HandleKey(wxKeyEvent &evt, wxUint32 flags, wxUint32 mask)
 {
    wxString keyStr = KeyEventToKeyString(evt);
    CommandListEntry *entry = mCommandKeyHash[keyStr];
-   if (evt.GetEventType() == wxEVT_KEY_DOWN)
-   {
-      return HandleCommandEntry( entry, flags, mask, &evt );
-   }
 
-   if (entry && entry->wantevent)
+   if (entry)
    {
-      return HandleCommandEntry( entry, flags, mask, &evt );
+      if (evt.GetEventType() == wxEVT_KEY_DOWN && !entry->ignoredown)
+      {
+         return HandleCommandEntry( entry, flags, mask, &evt );
+      }
+
+      if (evt.GetEventType() == wxEVT_KEY_UP && (entry->wantevent || entry->ignoredown))
+      {
+         return HandleCommandEntry( entry, flags, mask, &evt );
+      }
    }
 
    return false;
