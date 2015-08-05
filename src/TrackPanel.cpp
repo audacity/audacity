@@ -4826,7 +4826,7 @@ bool TrackPanel::IsSampleEditingPossible( wxMouseEvent &event, Track * t )
 
    if (WaveTrack::Waveform != display)
    {
-      wxMessageBox(_("To use Draw, choose 'Waveform' in the Track Drop-down Menu."), wxT("Draw Tool"));
+      wxMessageBox(_("To use Draw, choose 'Waveform' in the Track Drop-down Menu."), _("Draw Tool"));
       return false;
    }
 
@@ -4843,7 +4843,7 @@ bool TrackPanel::IsSampleEditingPossible( wxMouseEvent &event, Track * t )
    //If we aren't zoomed in far enough, show a message dialog.
    if(!showPoints)
    {
-      wxMessageBox(_("To use Draw, zoom in further until you can see the individual samples."), wxT("Draw Tool"));
+      wxMessageBox(_("To use Draw, zoom in further until you can see the individual samples."), _("Draw Tool"));
       return false;
    }
    return true;
