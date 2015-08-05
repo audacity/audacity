@@ -52,7 +52,11 @@ class ExportFLACOptions : public wxPanel
 public:
 
    ExportFLACOptions(wxWindow *parent, int format);
+   virtual ~ExportFLACOptions();
+
    void PopulateOrExchange(ShuttleGui & S);
+   bool TransferDataToWindow();
+   bool TransferDataFromWindow();
 };
 
 ///
@@ -62,6 +66,15 @@ ExportFLACOptions::ExportFLACOptions(wxWindow *parent, int WXUNUSED(format))
 {
    ShuttleGui S(this, eIsCreatingFromPrefs);
    PopulateOrExchange(S);
+
+   TransferDataToWindow();
+}
+
+///
+///
+ExportFLACOptions::~ExportFLACOptions()
+{
+   TransferDataFromWindow();
 }
 
 ///
@@ -101,6 +114,25 @@ void ExportFLACOptions::PopulateOrExchange(ShuttleGui & S)
    S.EndVerticalLay();
 
    return;
+}
+
+///
+///
+bool ExportFLACOptions::TransferDataToWindow()
+{
+   return true;
+}
+
+///
+///
+bool ExportFLACOptions::TransferDataFromWindow()
+{
+   ShuttleGui S(this, eIsSavingToPrefs);
+   PopulateOrExchange(S);
+
+   gPrefs->Flush();
+
+   return true;
 }
 
 //----------------------------------------------------------------------------

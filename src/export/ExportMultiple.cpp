@@ -79,7 +79,7 @@ enum {
 
 BEGIN_EVENT_TABLE(ExportMultiple, wxDialog)
    EVT_CHOICE(FormatID, ExportMultiple::OnFormat)
-   EVT_BUTTON(OptionsID, ExportMultiple::OnOptions)
+//   EVT_BUTTON(OptionsID, ExportMultiple::OnOptions)
    EVT_BUTTON(CreateID, ExportMultiple::OnCreate)
    EVT_BUTTON(ChooseID, ExportMultiple::OnChoose)
    EVT_BUTTON(wxID_OK, ExportMultiple::OnExport)
@@ -114,6 +114,8 @@ ExportMultiple::ExportMultiple(AudacityProject *project)
    mPlugins = mExporter.GetPlugins();
 
    this->CountTracksAndLabels();
+
+   mBook = NULL;
 
    // create array of characters not allowed in file names
    wxString forbid = wxFileName::GetForbiddenChars();
@@ -244,82 +246,110 @@ void ExportMultiple::PopulateOrExchange(ShuttleGui& S)
 
 
    S.SetBorder(5);
-   S.StartMultiColumn(4, true);
-   {
-      wxArrayString formats;
-
-      for (size_t i = 0; i < mPlugins.GetCount(); i++) {
-         for (int j = 0; j < mPlugins[i]->GetFormatCount(); j++)
-         {
-            formats.Add(mPlugins[i]->GetDescription(j));
-         }
-      }
-
-      mFormat = S.Id(FormatID)
-         .TieChoice(_("Export format:"),
-                    wxT("/Export/MultipleFormat"),
-                    mPlugins[mPluginIndex]->GetFormat(mSubFormatIndex),
-                    formats,
-                    formats);
-      S.Id(OptionsID).AddButton(_("Options..."));
-      S.AddVariableText(wxT(""), false);
-
-      mDir = S.Id(DirID)
-         .TieTextBox(_("Export location:"),
-                     wxT("/Export/MultiplePath"),
-                     gPrefs->Read(wxT("/Export/Path"), ::wxGetCwd()),
-                     64);
-      S.Id(ChooseID).AddButton(_("Choose..."));
-      S.Id(CreateID).AddButton(_("Create"));
-   }
-   S.EndMultiColumn();
-
    S.StartHorizontalLay(wxEXPAND, true);
    {
       S.SetBorder(5);
-      S.StartStatic(_("Split files based on:"), true);
+      S.StartStatic(_("Export files to:"), true);
+      {
+         S.StartMultiColumn(4, true);
+         {
+            mDir = S.Id(DirID)
+               .TieTextBox(_("Folder:"),
+                           wxT("/Export/MultiplePath"),
+                           gPrefs->Read(wxT("/Export/Path"), ::wxGetCwd()),
+                           64);
+            S.Id(ChooseID).AddButton(_("Choose..."));
+            S.Id(CreateID).AddButton(_("Create"));
+
+            wxArrayString formats;
+
+            for (size_t i = 0; i < mPlugins.GetCount(); i++) {
+               for (int j = 0; j < mPlugins[i]->GetFormatCount(); j++)
+               {
+                  formats.Add(mPlugins[i]->GetDescription(j));
+               }
+            }
+
+            mFormat = S.Id(FormatID)
+               .TieChoice(_("Format:"),
+                          wxT("/Export/MultipleFormat"),
+                          mPlugins[mPluginIndex]->GetFormat(mSubFormatIndex),
+                          formats,
+                          formats);
+            S.AddVariableText(wxT(""), false);
+            S.AddVariableText(wxT(""), false);
+
+            S.AddPrompt(_("Options:"));
+            if (!mBook)
+            {
+               mBook = new wxSimplebook(S.GetParent(), OptionsID, wxDefaultPosition, wxDefaultSize, wxBORDER_STATIC);
+               for (size_t i = 0; i < mPlugins.GetCount(); i++)
+               {
+                  for (int j = 0; j < mPlugins[i]->GetFormatCount(); j++)
+                  {
+                     mBook->AddPage(mPlugins[i]->OptionsCreate(mBook, j), wxEmptyString);
+                  }
+               }
+               mBook->ChangeSelection(mFormat->GetSelection());
+            }
+            S.AddWindow(mBook);
+            S.AddVariableText(wxT(""), false);
+            S.AddVariableText(wxT(""), false);
+         }
+         S.EndMultiColumn();
+      }
+      S.EndStatic();
+   }
+   S.EndHorizontalLay();
+
+   S.StartHorizontalLay(wxEXPAND, false);
+   {
+      S.SetBorder(5);
+      S.StartStatic(_("Split files based on:"), 1);
       {
          // Row 1
          S.SetBorder(1);
-         mLabel = S.Id(LabelID).AddRadioButton(wxString(_("Labels")));
+         mTrack = S.Id(TrackID)
+            .AddRadioButton(wxString(_("Tracks")));
+         mTrack->SetName(_("Tracks"));
+
+         // Row 2
+         S.SetBorder(1);
+         mLabel = S.Id(LabelID).AddRadioButtonToGroup(wxString(_("Labels")));
          mLabel->SetName(_("Labels"));
          S.SetBorder(3);
 
-         S.StartMultiColumn(2, false);
+         S.StartMultiColumn(2, wxEXPAND);
          S.SetStretchyCol(1);
          {
-            // Row 2 (indented)
+            // Row 3 (indented)
             S.AddVariableText(wxT("   "), false);
             mFirst = S.Id(FirstID)
                .AddCheckBox(_("Include audio before first label"), wxT("false"));
 
-            // Row 3
+            // Row 4
             S.AddVariableText(wxT(""), false);
-            S.StartHorizontalLay(wxEXPAND, false);
+            S.StartMultiColumn(2, wxEXPAND);
+            S.SetStretchyCol(1);
             {
-               mFirstFileLabel = S.AddVariableText(_("First file name:"), true);
+               mFirstFileLabel = S.AddVariableText(_("First file name:"), false);
                mFirstFileName = S.Id(FirstFileNameID)
-                  .TieTextBox(wxT(""),
+                  .Prop(1).TieTextBox(wxT(""),
                               name,
                               30);
                mFirstFileName->SetName(_("First file name"));
             }
-            S.EndHorizontalLay();
+            S.EndMultiColumn();
          }
          S.EndMultiColumn();
 
-         // Row 4
-         S.SetBorder(1);
-         mTrack = S.Id(TrackID)
-            .AddRadioButtonToGroup(wxString(_("Tracks")));
-         mTrack->SetName(_("Tracks"));
          S.SetBorder(3);
       }
       S.EndStatic();
 
       S.SetBorder(5);
-      S.StartStatic(_("Name files:"), false);
-       {
+      S.StartStatic(_("Name files:"), 1);
+      {
          S.SetBorder(2);
          S.StartRadioButtonGroup(wxT("/Export/TrackNameWithOrWithoutNumbers"), wxT("labelTrack"));
          {
@@ -334,16 +364,19 @@ void ExportMultiple::PopulateOrExchange(ShuttleGui& S)
          }
          S.EndRadioButtonGroup();
 
-         S.StartHorizontalLay(wxEXPAND, false);
+         S.StartMultiColumn(3, wxEXPAND);
+         S.SetStretchyCol(2);
          {
-            mPrefixLabel = S.AddVariableText(_("File name prefix:"), true);
+            // Row 3 (indented)
+            S.AddVariableText(wxT("   "), false);
+            mPrefixLabel = S.AddVariableText(_("File name prefix:"), false);
             mPrefix = S.Id(PrefixID)
                .TieTextBox(wxT(""),
                            name,
                            30);
             mPrefix->SetName(_("File name prefix"));
          }
-         S.EndHorizontalLay();
+         S.EndMultiColumn();
       }
       S.EndStatic();
    }
@@ -400,6 +433,8 @@ void ExportMultiple::EnableControls()
 
 void ExportMultiple::OnFormat(wxCommandEvent& WXUNUSED(event))
 {
+   mBook->ChangeSelection(mFormat->GetSelection());
+
    EnableControls();
 }
 
@@ -507,20 +542,19 @@ void ExportMultiple::OnExport(wxCommandEvent& WXUNUSED(event))
    mFilterIndex = mFormat->GetSelection();
    if (mFilterIndex != wxNOT_FOUND)
    {
-     size_t c = 0;
-     for (size_t i = 0; i < mPlugins.GetCount(); i++)
-     {
-       for (int j = 0; j < mPlugins[i]->GetFormatCount(); j++)
-       {
-         if ((size_t)mFilterIndex == c)
-         {  // this is the selected format. Store the plug-in and sub-format
-            // needed to acheive it.
-            mPluginIndex = i;
-            mSubFormatIndex = j;
+      for (size_t c = 0, i = 0; i < mPlugins.GetCount(); i++)
+      {
+         for (int j = 0; j < mPlugins[i]->GetFormatCount(); j++, c++)
+         {
+            if ((size_t)mFilterIndex == c)
+            {  // this is the selected format. Store the plug-in and sub-format
+               // needed to acheive it.
+               mPluginIndex = i;
+               mSubFormatIndex = j;
+               mBook->GetPage(mFilterIndex)->TransferDataFromWindow();
+            }
          }
-         c++;
-       }
-     }
+      }
    }
 
 //   bool overwrite = mOverwrite->GetValue();
@@ -955,6 +989,7 @@ wxString ExportMultiple::MakeFileName(wxString input)
    }  // phew - end of file name sanitisation procedure
    return newname;
 }
+
 void SuccessDialog::OnKeyDown(wxListEvent& event)
 {
    if (event.GetKeyCode() == WXK_RETURN)

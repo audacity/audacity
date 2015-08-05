@@ -152,12 +152,13 @@ ExportFFmpegAC3Options::ExportFFmpegAC3Options(wxWindow *parent, int WXUNUSED(fo
 
    ShuttleGui S(this, eIsCreatingFromPrefs);
    PopulateOrExchange(S);
+
+   TransferDataToWindow();
 }
 
 ExportFFmpegAC3Options::~ExportFFmpegAC3Options()
 {
-   ShuttleGui S(this, eIsSavingToPrefs);
-   PopulateOrExchange(S);
+   TransferDataFromWindow();
 }
 
 ///
@@ -180,6 +181,25 @@ void ExportFFmpegAC3Options::PopulateOrExchange(ShuttleGui & S)
    S.EndVerticalLay();
 }
 
+///
+///
+bool ExportFFmpegAC3Options::TransferDataToWindow()
+{
+   return true;
+}
+
+///
+///
+bool ExportFFmpegAC3Options::TransferDataFromWindow()
+{
+   ShuttleGui S(this, eIsSavingToPrefs);
+   PopulateOrExchange(S);
+
+   gPrefs->Flush();
+
+   return true;
+}
+
 //----------------------------------------------------------------------------
 // ExportFFmpegAACOptions Class
 //----------------------------------------------------------------------------
@@ -189,12 +209,13 @@ ExportFFmpegAACOptions::ExportFFmpegAACOptions(wxWindow *parent, int WXUNUSED(fo
 {
    ShuttleGui S(this, eIsCreatingFromPrefs);
    PopulateOrExchange(S);
+
+   TransferDataToWindow();
 }
 
 ExportFFmpegAACOptions::~ExportFFmpegAACOptions()
 {
-   ShuttleGui S(this, eIsSavingToPrefs);
-   PopulateOrExchange(S);
+   TransferDataFromWindow();
 }
 
 ///
@@ -218,6 +239,25 @@ void ExportFFmpegAACOptions::PopulateOrExchange(ShuttleGui & S)
    S.EndVerticalLay();
 }
 
+///
+///
+bool ExportFFmpegAACOptions::TransferDataToWindow()
+{
+   return true;
+}
+
+///
+///
+bool ExportFFmpegAACOptions::TransferDataFromWindow()
+{
+   ShuttleGui S(this, eIsSavingToPrefs);
+   PopulateOrExchange(S);
+
+   gPrefs->Flush();
+
+   return true;
+}
+
 //----------------------------------------------------------------------------
 // ExportFFmpegAMRNBOptions Class
 //----------------------------------------------------------------------------
@@ -238,12 +278,13 @@ ExportFFmpegAMRNBOptions::ExportFFmpegAMRNBOptions(wxWindow *parent, int WXUNUSE
 
    ShuttleGui S(this, eIsCreatingFromPrefs);
    PopulateOrExchange(S);
+
+   TransferDataToWindow();
 }
 
 ExportFFmpegAMRNBOptions::~ExportFFmpegAMRNBOptions()
 {
-   ShuttleGui S(this, eIsSavingToPrefs);
-   PopulateOrExchange(S);
+   TransferDataFromWindow();
 }
 
 ///
@@ -264,6 +305,25 @@ void ExportFFmpegAMRNBOptions::PopulateOrExchange(ShuttleGui & S)
       S.EndHorizontalLay();
    }
    S.EndVerticalLay();
+}
+
+///
+///
+bool ExportFFmpegAMRNBOptions::TransferDataToWindow()
+{
+   return true;
+}
+
+///
+///
+bool ExportFFmpegAMRNBOptions::TransferDataFromWindow()
+{
+   ShuttleGui S(this, eIsSavingToPrefs);
+   PopulateOrExchange(S);
+
+   gPrefs->Flush();
+
+   return true;
 }
 
 //----------------------------------------------------------------------------
@@ -288,12 +348,13 @@ ExportFFmpegWMAOptions::ExportFFmpegWMAOptions(wxWindow *parent, int WXUNUSED(fo
 
    ShuttleGui S(this, eIsCreatingFromPrefs);
    PopulateOrExchange(S);
+
+   TransferDataToWindow();
 }
 
 ExportFFmpegWMAOptions::~ExportFFmpegWMAOptions()
 {
-   ShuttleGui S(this, eIsSavingToPrefs);
-   PopulateOrExchange(S);
+   TransferDataFromWindow();
 }
 
 ///
@@ -314,6 +375,86 @@ void ExportFFmpegWMAOptions::PopulateOrExchange(ShuttleGui & S)
       S.EndHorizontalLay();
    }
    S.EndVerticalLay();
+}
+
+///
+///
+bool ExportFFmpegWMAOptions::TransferDataToWindow()
+{
+   return true;
+}
+
+///
+///
+bool ExportFFmpegWMAOptions::TransferDataFromWindow()
+{
+   ShuttleGui S(this, eIsSavingToPrefs);
+   PopulateOrExchange(S);
+
+   gPrefs->Flush();
+
+   return true;
+}
+
+//----------------------------------------------------------------------------
+// ExportFFmpegCustomOptions Class
+//----------------------------------------------------------------------------
+
+#define OpenID 9000
+
+BEGIN_EVENT_TABLE(ExportFFmpegCustomOptions, wxPanel)
+   EVT_BUTTON(OpenID, ExportFFmpegCustomOptions::OnOpen)
+END_EVENT_TABLE()
+
+ExportFFmpegCustomOptions::ExportFFmpegCustomOptions(wxWindow *parent, int WXUNUSED(format))
+:  wxPanel(parent, wxID_ANY)
+{
+   ShuttleGui S(this, eIsCreatingFromPrefs);
+   PopulateOrExchange(S);
+
+   TransferDataToWindow();
+}
+
+ExportFFmpegCustomOptions::~ExportFFmpegCustomOptions()
+{
+   TransferDataFromWindow();
+}
+
+///
+///
+void ExportFFmpegCustomOptions::PopulateOrExchange(ShuttleGui & S)
+{
+   S.StartHorizontalLay(wxCENTER);
+   {
+      S.StartHorizontalLay(wxCENTER, 0);
+      {
+         S.Id(OpenID).AddButton(_("Open custom FFmpeg format options"));
+      }
+      S.EndHorizontalLay();
+   }
+   S.EndHorizontalLay();
+}
+
+///
+///
+bool ExportFFmpegCustomOptions::TransferDataToWindow()
+{
+   return true;
+}
+
+///
+///
+bool ExportFFmpegCustomOptions::TransferDataFromWindow()
+{
+   return true;
+}
+
+///
+///
+void ExportFFmpegCustomOptions::OnOpen(wxCommandEvent & WXUNUSED(evt))
+{
+   ExportFFmpegOptions od(wxGetTopLevelParent(this));
+   od.ShowModal();
 }
 
 FFmpegPreset::FFmpegPreset(wxString &name)

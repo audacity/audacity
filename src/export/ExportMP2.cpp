@@ -86,8 +86,11 @@ class ExportMP2Options : public wxPanel
 {
 public:
    ExportMP2Options(wxWindow *parent, int format);
+   virtual ~ExportMP2Options();
 
    void PopulateOrExchange(ShuttleGui & S);
+   bool TransferDataToWindow();
+   bool TransferDataFromWindow();
 
 private:
    wxArrayString mBitRateNames;
@@ -107,6 +110,15 @@ ExportMP2Options::ExportMP2Options(wxWindow *parent, int WXUNUSED(format))
 
    ShuttleGui S(this, eIsCreatingFromPrefs);
    PopulateOrExchange(S);
+
+   TransferDataToWindow();
+}
+
+///
+///
+ExportMP2Options::~ExportMP2Options()
+{
+   TransferDataFromWindow();
 }
 
 ///
@@ -127,6 +139,25 @@ void ExportMP2Options::PopulateOrExchange(ShuttleGui & S)
       S.EndHorizontalLay();
    }
    S.EndVerticalLay();
+}
+
+///
+///
+bool ExportMP2Options::TransferDataToWindow()
+{
+   return true;
+}
+
+///
+///
+bool ExportMP2Options::TransferDataFromWindow()
+{
+   ShuttleGui S(this, eIsSavingToPrefs);
+   PopulateOrExchange(S);
+
+   gPrefs->Flush();
+
+   return true;
 }
 
 //----------------------------------------------------------------------------

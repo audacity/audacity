@@ -15,6 +15,7 @@
 #include <wx/string.h>
 #include <wx/dynarray.h>   // sadly we are using wx dynamic arrays
 #include <wx/listctrl.h>
+#include <wx/simplebook.h>
 
 #include "Export.h"
 #include "../Tags.h"       // we need to know about the Tags class for metadata
@@ -161,6 +162,8 @@ private:
 
    wxButton      *mCancel;
    wxButton      *mExport;
+
+   wxSimplebook   *mBook;
 
    DECLARE_EVENT_TABLE()
 

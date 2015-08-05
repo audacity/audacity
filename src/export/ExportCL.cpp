@@ -46,6 +46,8 @@ public:
    virtual ~ExportCLOptions();
 
    void PopulateOrExchange(ShuttleGui & S);
+   bool TransferDataToWindow();
+   bool TransferDataFromWindow();
 
    void OnBrowse(wxCommandEvent & event);
 
@@ -79,24 +81,16 @@ ExportCLOptions::ExportCLOptions(wxWindow *parent, int WXUNUSED(format))
                              false);
 
    ShuttleGui S(this, eIsCreatingFromPrefs);
-
    PopulateOrExchange(S);
+
+   TransferDataToWindow();
 
    parent->Layout();
 }
 
 ExportCLOptions::~ExportCLOptions()
 {
-   wxString cmd = mCmd->GetValue();
-
-   gPrefs->Write(wxT("/FileFormats/ExternalProgramExportCommand"), cmd);
-   gPrefs->Flush();
-
-   ShuttleGui S(this, eIsSavingToPrefs);
-   PopulateOrExchange(S);
-
-   mHistory.AddFileToHistory(cmd, false);
-   mHistory.Save(*gPrefs, wxT("/FileFormats/ExternalProgramHistory"));
+   TransferDataFromWindow();
 }
 
 ///
@@ -136,9 +130,31 @@ void ExportCLOptions::PopulateOrExchange(ShuttleGui & S)
       S.AddTitle(_("Data will be piped to standard in. \"%f\" uses the file name in the export window."));
    }
    S.EndVerticalLay();
+}
 
-//   Layout();
-//   Fit();
+///
+///
+bool ExportCLOptions::TransferDataToWindow()
+{
+   return true;
+}
+
+///
+///
+bool ExportCLOptions::TransferDataFromWindow()
+{
+   ShuttleGui S(this, eIsSavingToPrefs);
+   PopulateOrExchange(S);
+
+   wxString cmd = mCmd->GetValue();
+
+   mHistory.AddFileToHistory(cmd, false);
+   mHistory.Save(*gPrefs, wxT("/FileFormats/ExternalProgramHistory"));
+
+   gPrefs->Write(wxT("/FileFormats/ExternalProgramExportCommand"), cmd);
+   gPrefs->Flush();
+
+   return true;
 }
 
 ///

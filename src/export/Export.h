@@ -15,6 +15,7 @@
 #include <wx/dynarray.h>
 #include <wx/filename.h>
 #include <wx/panel.h>
+#include <wx/simplebook.h>
 #include "../Tags.h"
 #include "../SampleFormat.h"
 
@@ -194,9 +195,7 @@ private:
    int mChannels;
    bool mSelectedOnly;
 
-   wxWindow *mUserPaneParent;
-   WindowPtrArray mPages;
-   wxWindow *mActivePage;
+   wxSimplebook *mBook;
 
    DECLARE_EVENT_TABLE();
 };
