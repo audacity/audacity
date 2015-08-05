@@ -1070,17 +1070,11 @@ void LWSlider::OnKeyEvent(wxKeyEvent & event)
             break;
 
          case WXK_PAGEUP:
-#if !wxCHECK_VERSION(2,7,0)
-         case WXK_PRIOR:
-#endif
             Increase( mScrollPage );
             SendUpdate( mCurrentValue );
             break;
 
          case WXK_PAGEDOWN:
-#if !wxCHECK_VERSION(2,7,0)
-         case WXK_NEXT:
-#endif
             Decrease( mScrollPage );
             SendUpdate( mCurrentValue );
             break;
@@ -1091,17 +1085,6 @@ void LWSlider::OnKeyEvent(wxKeyEvent & event)
 
          case WXK_END:
             SendUpdate( mMaxValue );
-            break;
-
-         case WXK_TAB:
-            {
-               wxNavigationKeyEvent nevent;
-               nevent.SetWindowChange( event.ControlDown() );
-               nevent.SetDirection( !event.ShiftDown() );
-               nevent.SetEventObject( mParent );
-               nevent.SetCurrentFocus( mParent );
-               mParent->GetParent()->GetEventHandler()->ProcessEvent(nevent);
-            }
             break;
 
          case WXK_RETURN:
@@ -1122,8 +1105,10 @@ void LWSlider::OnKeyEvent(wxKeyEvent & event)
             break;
       }
    }
-
-   event.Skip();
+   else
+   {
+      event.Skip();
+   }
 }
 
 void LWSlider::SendUpdate( float newValue )
@@ -1505,6 +1490,9 @@ bool ASlider::Enable(bool enable)
       return false;
 
    mLWSlider->SetEnabled(enable);
+
+   wxWindow::Enable(enable);
+
    return true;
 }
 

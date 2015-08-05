@@ -1732,13 +1732,9 @@ void NumericTextCtrl::OnKeyDown(wxKeyEvent &event)
    }
 
    else if (keyCode == WXK_TAB) {
-      wxWindow *parent = GetParent();
-      wxNavigationKeyEvent nevent;
-      nevent.SetWindowChange(event.ControlDown());
-      nevent.SetDirection(!event.ShiftDown());
-      nevent.SetEventObject(parent);
-      nevent.SetCurrentFocus(parent);
-      GetParent()->GetEventHandler()->ProcessEvent(nevent);
+      Navigate(event.ShiftDown()
+               ? wxNavigationKeyEvent::IsBackward
+               : wxNavigationKeyEvent::IsForward);
    }
 
    else if (keyCode == WXK_RETURN || keyCode == WXK_NUMPAD_ENTER) {
