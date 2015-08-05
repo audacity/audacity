@@ -466,10 +466,15 @@ void AButton::OnKeyDown(wxKeyEvent & event)
    switch( event.GetKeyCode() )
    {
    case WXK_RIGHT:
-      NavigateIn(wxNavigationKeyEvent::IsForward);
+      Navigate(wxNavigationKeyEvent::IsForward);
       break;
    case WXK_LEFT:
-      NavigateIn(wxNavigationKeyEvent::IsBackward);
+      Navigate(wxNavigationKeyEvent::IsBackward);
+      break;
+   case WXK_TAB:
+      Navigate(event.ShiftDown()
+               ? wxNavigationKeyEvent::IsBackward
+               : wxNavigationKeyEvent::IsForward);
       break;
    case WXK_RETURN:
    case WXK_NUMPAD_ENTER:

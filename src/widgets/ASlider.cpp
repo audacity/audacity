@@ -1057,6 +1057,12 @@ void LWSlider::OnKeyEvent(wxKeyEvent & event)
    {
       switch( event.GetKeyCode() )
       {
+         case WXK_TAB:
+            mParent->Navigate(event.ShiftDown()
+                              ? wxNavigationKeyEvent::IsBackward
+                              : wxNavigationKeyEvent::IsForward);
+            break;
+
          case WXK_RIGHT:
          case WXK_UP:
             Increase( mScrollLine );
