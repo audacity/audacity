@@ -182,7 +182,10 @@ void FileDialog::MSWOnSize(HWND hDlg, LPOPENFILENAME pOfn)
 
    SetSize(r);
 
-   mRoot->SetSize(r.GetWidth(), mRoot->GetSize().GetHeight());
+   if (mRoot)
+   {
+      mRoot->SetSize(r.GetWidth(), mRoot->GetSize().GetHeight());
+   }
 
    SetHWND(NULL);
 }
@@ -640,6 +643,8 @@ FileDialog::FileDialog(wxWindow *parent,
 
 void FileDialog::Init()
 {
+   mRoot = NULL;
+
    // NB: all style checks are done by wxFileDialogBase::Create
 
    m_bMovedWindow = false;
