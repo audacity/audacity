@@ -5533,9 +5533,10 @@ void TrackPanel::HandleLabelClick(wxMouseEvent & event)
       }
 #endif // USE_MIDI
 
-      if (!isleft) {
-         return;
-      }
+   }
+
+   if (!isleft) {
+      return;
    }
 
    // DM: If they weren't clicking on a particular part of a track label,
@@ -5544,6 +5545,7 @@ void TrackPanel::HandleLabelClick(wxMouseEvent & event)
    // JH: also, capture the current track for rearranging, so the user
    //  can drag the track up or down to swap it with others
    if (!unsafe) {
+      mRearrangeCount = 0;
       SetCapturedTrack( t, IsRearranging );
       TrackPanel::CalculateRearrangingThresholds(event);
    }
@@ -5579,7 +5581,16 @@ void TrackPanel::HandleRearrange(wxMouseEvent & event)
 {
    // are we finishing the drag?
    if (event.LeftUp()) {
-      SetCapturedTrack( NULL );
+      if (mRearrangeCount != 0) {
+         wxString dir;
+         dir = mRearrangeCount < 0 ? _("up") : _("down");
+         MakeParentPushState(wxString::Format(_("Moved '%s' %s"),
+            mCapturedTrack->GetName().c_str(),
+            dir.c_str()),
+            _("Move Track"));
+      }
+
+      SetCapturedTrack(NULL);
       SetCursor(*mArrowCursor);
       return;
    }
@@ -5590,10 +5601,9 @@ void TrackPanel::HandleRearrange(wxMouseEvent & event)
       return;
 
    MixerBoard* pMixerBoard = this->GetMixerBoard(); // Update mixer board, too.
-   wxString dir;
    if (event.m_y < mMoveUpThreshold || event.m_y < 0) {
       mTracks->MoveUp(mCapturedTrack);
-      dir = _("up");
+      --mRearrangeCount;
 #ifdef EXPERIMENTAL_MIDI_OUT
       if (pMixerBoard && (mCapturedTrack->GetKind() == Track::Wave ||
                           mCapturedTrack->GetKind() == Track::Note))
@@ -5605,8 +5615,8 @@ void TrackPanel::HandleRearrange(wxMouseEvent & event)
    }
    else if (event.m_y > mMoveDownThreshold || event.m_y > GetRect().GetHeight()) {
       mTracks->MoveDown(mCapturedTrack);
+      ++mRearrangeCount;
       /* i18n-hint: a direction as in up or down.*/
-      dir = _("down");
 #ifdef EXPERIMENTAL_MIDI_OUT
       if (pMixerBoard && (mCapturedTrack->GetKind() == Track::Wave ||
                           mCapturedTrack->GetKind() == Track::Note))
@@ -5620,11 +5630,6 @@ void TrackPanel::HandleRearrange(wxMouseEvent & event)
    {
       return;
    }
-
-   MakeParentPushState(wxString::Format(_("Moved '%s' %s"),
-                                        mCapturedTrack->GetName().c_str(),
-                                        dir.c_str()),
-                       _("Move Track"));
 
    // JH: if we moved up or down, recalculate the thresholds and make sure the
    // track is fully on-screen.

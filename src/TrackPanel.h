@@ -773,6 +773,7 @@ protected:
    //   coordinate should the dragging track move up or down?
    int mMoveUpThreshold;
    int mMoveDownThreshold;
+   int mRearrangeCount;
 
 #ifdef EXPERIMENTAL_SCRUBBING_BASIC
    int mScrubToken;
