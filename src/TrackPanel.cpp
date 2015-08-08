@@ -4113,17 +4113,9 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
 
    // find which track the mouse is currently in (mouseTrack) -
    // this may not be the same as the one we started in...
-#ifdef USE_MIDI
    Track *mouseTrack = FindTrack(event.m_x, event.m_y, false, false, NULL);
-   if (!mouseTrack || (mouseTrack->GetKind() != Track::Wave &&
-                       mouseTrack->GetKind() != Track::Note)) {
-#else
-   WaveTrack *mouseTrack =
-      (WaveTrack *)FindTrack(event.m_x, event.m_y, false, false, NULL);
-   if (!mouseTrack || mouseTrack->GetKind() != Track::Wave) {
-#endif
-      return;
-   }
+   if (mouseTrack == NULL)
+      mouseTrack = mCapturedTrack;
 
    // Start by undoing the current slide amount; everything
    // happens relative to the original horizontal position of
