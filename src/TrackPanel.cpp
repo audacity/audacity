@@ -3902,6 +3902,13 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
    ToolsToolBar * ttb = mListener->TP_GetToolsToolBar();
    bool multiToolModeActive = (ttb && ttb->IsDown(multiTool));
 
+   double clickTime =
+      mViewInfo->PositionToTime(event.m_x, GetLeftOffset());
+   mCapturedClipIsSelection =
+      (vt->GetSelected() &&
+      clickTime > mViewInfo->selectedRegion.t0() &&
+      clickTime < mViewInfo->selectedRegion.t1());
+
    if ((vt->GetKind() == Track::Wave
 #ifdef USE_MIDI
         || vt->GetKind() == Track::Note
@@ -3926,18 +3933,9 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
 
       mCapturedClipArray.clear();
 
-      double clickTime =
-         mViewInfo->PositionToTime(event.m_x, GetLeftOffset());
-      bool clickedInSelection =
-         (vt->GetSelected() &&
-          clickTime > mViewInfo->selectedRegion.t0() &&
-          clickTime < mViewInfo->selectedRegion.t1());
-
       // First, if click was in selection, capture selected clips; otherwise
       // just the clicked-on clip
-      if (clickedInSelection) {
-         mCapturedClipIsSelection = true;
-
+      if (mCapturedClipIsSelection) {
          TrackListIterator iter(mTracks);
          for (Track *t = iter.First(); t; t = iter.Next()) {
             if (t->GetSelected()) {
@@ -3946,7 +3944,6 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
          }
       }
       else {
-         mCapturedClipIsSelection = false;
          mCapturedClipArray.push_back(TrackClip(vt, mCapturedClip));
 
          // Check for stereo partner
@@ -4116,17 +4113,9 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
 
    // find which track the mouse is currently in (mouseTrack) -
    // this may not be the same as the one we started in...
-#ifdef USE_MIDI
    Track *mouseTrack = FindTrack(event.m_x, event.m_y, false, false, NULL);
-   if (!mouseTrack || (mouseTrack->GetKind() != Track::Wave &&
-                       mouseTrack->GetKind() != Track::Note)) {
-#else
-   WaveTrack *mouseTrack =
-      (WaveTrack *)FindTrack(event.m_x, event.m_y, false, false, NULL);
-   if (!mouseTrack || mouseTrack->GetKind() != Track::Wave) {
-#endif
-      return;
-   }
+   if (mouseTrack == NULL)
+      mouseTrack = mCapturedTrack;
 
    // Start by undoing the current slide amount; everything
    // happens relative to the original horizontal position of
@@ -4156,70 +4145,78 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
    }
    mHSlideAmount = 0.0;
 
-   double desiredSlideAmount =
-      mViewInfo->PositionToTime(event.m_x) -
-      mViewInfo->PositionToTime(mMouseClickX);
-#ifdef USE_MIDI
-   if (mouseTrack->GetKind() == Track::Wave) {
-      WaveTrack *mtw = (WaveTrack *) mouseTrack;
-      desiredSlideAmount = rint(mtw->GetRate() * desiredSlideAmount) /
-                           mtw->GetRate();  // set it to a sample point
-   }
-   // Adjust desiredSlideAmount using SnapManager
-   if (mSnapManager && mCapturedClipArray.size()) {
-      double clipLeft;
-      double clipRight;
-      if (mCapturedClip) {
-         clipLeft = mCapturedClip->GetStartTime() + desiredSlideAmount;
-         clipRight = mCapturedClip->GetEndTime() + desiredSlideAmount;
-      }
-      else {
-         clipLeft = mCapturedTrack->GetStartTime() + desiredSlideAmount;
-         clipRight = mCapturedTrack->GetEndTime() + desiredSlideAmount;
-      }
-#else
-   desiredSlideAmount = rint(mouseTrack->GetRate() * desiredSlideAmount) /
-                        mouseTrack->GetRate();  // set it to a sample point
-   if (mSnapManager && mCapturedClip) {
-      double clipLeft = mCapturedClip->GetStartTime() + desiredSlideAmount;
-      double clipRight = mCapturedClip->GetEndTime() + desiredSlideAmount;
-#endif
-
-      double newClipLeft = clipLeft;
-      double newClipRight = clipRight;
-
-      bool dummy1, dummy2;
-      mSnapManager->Snap(mCapturedTrack, clipLeft, false, &newClipLeft,
-                         &dummy1, &dummy2);
-      mSnapManager->Snap(mCapturedTrack, clipRight, false, &newClipRight,
-                         &dummy1, &dummy2);
-
-      // Only one of them is allowed to snap
-      if (newClipLeft != clipLeft && newClipRight != clipRight) {
-         if (mSnapPreferRightEdge)
-            newClipLeft = clipLeft;
-         else
-            newClipRight = clipRight;
-      }
-
-      // Take whichever one snapped (if any) and compute the new desiredSlideAmount
-      mSnapLeft = -1;
-      mSnapRight = -1;
-      if (newClipLeft != clipLeft) {
-         double difference = (newClipLeft - clipLeft);
-         desiredSlideAmount += difference;
-         mSnapLeft = mViewInfo->TimeToPosition(newClipLeft, GetLeftOffset());
-      }
-      else if (newClipRight != clipRight) {
-         double difference = (newClipRight - clipRight);
-         desiredSlideAmount += difference;
-         mSnapRight = mViewInfo->TimeToPosition(newClipRight, GetLeftOffset());
-      }
-   }
-
    // Implement sliding within the track(s)
+   double desiredSlideAmount;
    if (mSlideUpDownOnly) {
       desiredSlideAmount = 0.0;
+   }
+   else {
+      desiredSlideAmount =
+         mViewInfo->PositionToTime(event.m_x) -
+         mViewInfo->PositionToTime(mMouseClickX);
+      bool trySnap = false;
+      double clipLeft = 0, clipRight = 0;
+#ifdef USE_MIDI
+      if (mouseTrack->GetKind() == Track::Wave) {
+         WaveTrack *mtw = (WaveTrack *)mouseTrack;
+         desiredSlideAmount = rint(mtw->GetRate() * desiredSlideAmount) /
+            mtw->GetRate();  // set it to a sample point
+      }
+      // Adjust desiredSlideAmount using SnapManager
+      if (mSnapManager && mCapturedClipArray.size()) {
+         trySnap = true;
+         if (mCapturedClip) {
+            clipLeft = mCapturedClip->GetStartTime() + desiredSlideAmount;
+            clipRight = mCapturedClip->GetEndTime() + desiredSlideAmount;
+         }
+         else {
+            clipLeft = mCapturedTrack->GetStartTime() + desiredSlideAmount;
+            clipRight = mCapturedTrack->GetEndTime() + desiredSlideAmount;
+         }
+      }
+#else
+      {
+         trySnap = true;
+         desiredSlideAmount = rint(mouseTrack->GetRate() * desiredSlideAmount) /
+            mouseTrack->GetRate();  // set it to a sample point
+         if (mSnapManager && mCapturedClip) {
+            clipLeft = mCapturedClip->GetStartTime() + desiredSlideAmount;
+            clipRight = mCapturedClip->GetEndTime() + desiredSlideAmount;
+         }
+      }
+#endif
+      if (trySnap) {
+         double newClipLeft = clipLeft;
+         double newClipRight = clipRight;
+
+         bool dummy1, dummy2;
+         mSnapManager->Snap(mCapturedTrack, clipLeft, false, &newClipLeft,
+            &dummy1, &dummy2);
+         mSnapManager->Snap(mCapturedTrack, clipRight, false, &newClipRight,
+            &dummy1, &dummy2);
+
+         // Only one of them is allowed to snap
+         if (newClipLeft != clipLeft && newClipRight != clipRight) {
+            if (mSnapPreferRightEdge)
+               newClipLeft = clipLeft;
+            else
+               newClipRight = clipRight;
+         }
+
+         // Take whichever one snapped (if any) and compute the new desiredSlideAmount
+         mSnapLeft = -1;
+         mSnapRight = -1;
+         if (newClipLeft != clipLeft) {
+            double difference = (newClipLeft - clipLeft);
+            desiredSlideAmount += difference;
+            mSnapLeft = mViewInfo->TimeToPosition(newClipLeft, GetLeftOffset());
+         }
+         else if (newClipRight != clipRight) {
+            double difference = (newClipRight - clipRight);
+            desiredSlideAmount += difference;
+            mSnapRight = mViewInfo->TimeToPosition(newClipRight, GetLeftOffset());
+         }
+      }
    }
 
    // Scroll during vertical drag.
@@ -4269,7 +4266,6 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
       Refresh(false);
    }
 
-   // Implement sliding within the track(s)
    if (mSlideUpDownOnly)
       return;
 
@@ -4282,10 +4278,11 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
    }
 
 #ifdef USE_MIDI
-   if (mCapturedClipArray.size()) {
+   if (mCapturedClipArray.size())
 #else
-   if (mCapturedClip) {
+   if (mCapturedClip)
 #endif
+   {
       double allowed;
       double initialAllowed;
       double safeBigDistance = 1000 + 2.0 * (mTracks->GetEndTime() -
@@ -4311,10 +4308,15 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
                }
 
                if (track->CanOffsetClip(clip, mHSlideAmount, &allowed)) {
-                  mHSlideAmount = allowed;
+                  if (mHSlideAmount != allowed) {
+                     mHSlideAmount = allowed;
+                     mSnapLeft = mSnapRight = -1; // see bug 1067
+                  }
                }
-               else
+               else {
                   mHSlideAmount = 0.0;
+                  mSnapLeft = mSnapRight = -1; // see bug 1067
+               }
 
                for(j=0; j<mCapturedClipArray.size(); j++) {
                   WaveClip *clip2 = mCapturedClipArray[j].clip;
