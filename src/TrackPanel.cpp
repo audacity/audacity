@@ -3836,23 +3836,23 @@ void TrackPanel::HandleSlide(wxMouseEvent & event)
       DoSlide(event);
 
    if (event.LeftUp()) {
-      if (mDidSlideVertically && mCapturedTrack)
-         // Now that user has dropped the clip into a different track,
-         // make sure the sample rate matches the destination track (mCapturedTrack).
-         for (size_t i = 0; i < mCapturedClipArray.size(); i++)
-            if (mCapturedTrack->GetKind() == Track::Wave) // Should always be true here, but make sure.
-            {
-               WaveClip* pWaveClip = mCapturedClipArray[i].clip;
-               // Note that per TrackPanel::AddClipsToCaptured(Track *t, double t0, double t1),
-               // in the non-WaveTrack case, the code adds a NULL clip to mCapturedClipArray,
-               // so we have to check for that any time we're going to deref it.
-               // Previous code did not check it here, and that caused bug 367 crash.
-               if (pWaveClip)
-               {
-                  pWaveClip->Resample(((WaveTrack*)mCapturedTrack)->GetRate());
-                  pWaveClip->MarkChanged();
-               }
-            }
+      for (size_t i = 0; i < mCapturedClipArray.size(); i++)
+      {
+         TrackClip &trackClip = mCapturedClipArray[i];
+         WaveClip* pWaveClip = trackClip.clip;
+         // Note that per TrackPanel::AddClipsToCaptured(Track *t, double t0, double t1),
+         // in the non-WaveTrack case, the code adds a NULL clip to mCapturedClipArray,
+         // so we have to check for that any time we're going to deref it.
+         // Previous code did not check it here, and that caused bug 367 crash.
+         if (pWaveClip &&
+             trackClip.track != trackClip.origTrack)
+         {
+            // Now that user has dropped the clip into a different track,
+            // make sure the sample rate matches the destination track (mCapturedTrack).
+            pWaveClip->Resample(static_cast<WaveTrack*>(trackClip.track)->GetRate());
+            pWaveClip->MarkChanged();
+         }
+      }
 
       SetCapturedTrack( NULL );
 

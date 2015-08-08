@@ -30,8 +30,9 @@ class ZoomInfo;
 class TrackClip
 {
 public:
-   TrackClip(Track *t, WaveClip *c) { track = t; clip = c; }
+   TrackClip(Track *t, WaveClip *c) { track = origTrack = t; clip = c; }
    Track *track;
+   Track *origTrack;
    WaveClip *clip;
 };
 
