@@ -2148,8 +2148,11 @@ void TrackPanel::HandleSelect(wxMouseEvent & event)
          delete mSnapManager;
          mSnapManager = NULL;
       }
-      mSnapLeft = -1;
-      mSnapRight = -1;
+      // Do not draw yellow lines
+      if (mSnapLeft != -1 || mSnapRight != -1) {
+         mSnapLeft = mSnapRight = -1;
+         Refresh(false);
+      }
 
       SetCapturedTrack( NULL );
       //Send the new selection state to the undo/redo stack:
@@ -2846,8 +2849,8 @@ void TrackPanel::StartSelection(int mouseXCoordinate, int trackLeftEdge)
       bool snappedPoint, snappedTime;
       if (mSnapManager->Snap(mCapturedTrack, mSelStart, false,
                              &s, &snappedPoint, &snappedTime)) {
-         if (snappedPoint)
-            mSnapLeft = mViewInfo->TimeToPosition(s, trackLeftEdge);
+         //if (snappedPoint)
+            //mSnapLeft = mViewInfo->TimeToPosition(s, trackLeftEdge);
       }
    }
 
@@ -3857,8 +3860,12 @@ void TrackPanel::HandleSlide(wxMouseEvent & event)
          delete mSnapManager;
          mSnapManager = NULL;
       }
-      mSnapLeft = -1;
-      mSnapRight = -1;
+
+      // Do not draw yellow lines
+      if (mSnapLeft != -1 || mSnapRight != -1) {
+         mSnapLeft = mSnapRight = -1;
+         Refresh(false);
+      }
 
       if (!mDidSlideVertically && mHSlideAmount==0)
          return;
