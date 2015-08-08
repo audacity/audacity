@@ -4289,10 +4289,11 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
    }
 
 #ifdef USE_MIDI
-   if (mCapturedClipArray.size()) {
+   if (mCapturedClipArray.size())
 #else
-   if (mCapturedClip) {
+   if (mCapturedClip)
 #endif
+   {
       double allowed;
       double initialAllowed;
       double safeBigDistance = 1000 + 2.0 * (mTracks->GetEndTime() -
@@ -4318,10 +4319,15 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
                }
 
                if (track->CanOffsetClip(clip, mHSlideAmount, &allowed)) {
-                  mHSlideAmount = allowed;
+                  if (mHSlideAmount != allowed) {
+                     mHSlideAmount = allowed;
+                     mSnapLeft = mSnapRight = -1; // see bug 1067
+                  }
                }
-               else
+               else {
                   mHSlideAmount = 0.0;
+                  mSnapLeft = mSnapRight = -1; // see bug 1067
+               }
 
                for(j=0; j<mCapturedClipArray.size(); j++) {
                   WaveClip *clip2 = mCapturedClipArray[j].clip;
