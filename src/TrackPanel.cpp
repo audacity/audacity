@@ -5533,9 +5533,10 @@ void TrackPanel::HandleLabelClick(wxMouseEvent & event)
       }
 #endif // USE_MIDI
 
-      if (!isleft) {
-         return;
-      }
+   }
+
+   if (!isleft) {
+      return;
    }
 
    // DM: If they weren't clicking on a particular part of a track label,
