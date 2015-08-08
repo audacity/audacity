@@ -1351,6 +1351,8 @@ void TrackPanel::DrawCursor()
 /// Second level DrawCursor()
 void TrackPanel::DoDrawCursor(wxDC & dc)
 {
+   DisableAntialiasing(dc);
+
    bool onScreen;
 
    if( mLastCursorX != -1 )
@@ -1424,6 +1426,7 @@ void TrackPanel::OnSize(wxSizeEvent & /* event */)
 
    mBacking = new wxBitmap( width, height );
    mBackingDC.SelectObject( *mBacking );
+   DisableAntialiasing(mBackingDC);
 
    // Refresh the entire area.  Really only need to refresh when
    // expanding...is it worth the trouble?
@@ -1452,6 +1455,7 @@ void TrackPanel::OnPaint(wxPaintEvent & /* event */)
    // Construct the paint DC on the heap so that it may be deleted
    // early
    wxDC *dc = new wxPaintDC(this);
+   DisableAntialiasing(*dc);
 
    // Retrieve the damage rectangle
    wxRect box = GetUpdateRegion().GetBox();
@@ -1498,6 +1502,7 @@ void TrackPanel::OnPaint(wxPaintEvent & /* event */)
 
    // Drawing now goes directly to the client area
    wxClientDC cdc(this);
+   DisableAntialiasing(cdc);
 
    // Update the indicator in case it was damaged if this project is playing
 
@@ -3223,7 +3228,7 @@ void TrackPanel::ResetFreqSelectionPin(double hintFrequency, bool logF)
                const double logf1 = log(std::max(1.0, f1));
                const double logf0 = log(std::max(1.0, f0));
                const double logHint = log(std::max(1.0, hintFrequency));
-               if (abs (logHint - logf1) < abs (logHint - logf0))
+               if (std::abs (logHint - logf1) < std::abs (logHint - logf0))
                   mFreqSelPin = f0;
                else
                   mFreqSelPin = f1;
@@ -3231,7 +3236,7 @@ void TrackPanel::ResetFreqSelectionPin(double hintFrequency, bool logF)
          }
          else {
             if (f1 < 0 ||
-                abs (hintFrequency - f1) < abs (hintFrequency - f0))
+                std::abs (hintFrequency - f1) < std::abs (hintFrequency - f0))
                mFreqSelPin = f0;
             else
                mFreqSelPin = f1;
@@ -3523,7 +3528,7 @@ TrackPanel::SelectionBoundary TrackPanel::ChooseTimeBoundary
    const double t1 = mViewInfo->selectedRegion.t1();
    const wxInt64 posS = mViewInfo->TimeToPosition(selend);
    const wxInt64 pos0 = mViewInfo->TimeToPosition(t0);
-   wxInt64 pixelDist = abs(posS - pos0);
+   wxInt64 pixelDist = std::abs(posS - pos0);
    bool chooseLeft = true;
 
    if (mViewInfo->selectedRegion.isPoint())
@@ -3532,7 +3537,7 @@ TrackPanel::SelectionBoundary TrackPanel::ChooseTimeBoundary
       chooseLeft = (selend < t0);
    else {
       const wxInt64 pos1 = mViewInfo->TimeToPosition(t1);
-      const wxInt64 rightDist = abs(posS - pos1);
+      const wxInt64 rightDist = std::abs(posS - pos1);
       if (rightDist < pixelDist)
          chooseLeft = false, pixelDist = rightDist;
    }
@@ -3595,7 +3600,7 @@ bool mayDragWidth, bool onlyWithinSnapDistance,
          ? FrequencyToPosition(wt, f1, rect.y, rect.height)
          : rect.y;
       wxInt64 signedBottomDist = int(event.m_y - bottomSel);
-      wxInt64 verticalDist = abs(signedBottomDist);
+      wxInt64 verticalDist = std::abs(signedBottomDist);
       if (bottomSel == topSel)
          // Top and bottom are too close to resolve on screen
          chooseBottom = (signedBottomDist >= 0);
@@ -7025,9 +7030,6 @@ void TrackPanel::Refresh(bool eraseBackground /* = TRUE */,
 /// actual contents of each track are drawn by the TrackArtist.
 void TrackPanel::DrawTracks(wxDC * dc)
 {
-#if defined(__WXMAC__)
-   dc->GetGraphicsContext()->SetAntialiasMode(wxANTIALIAS_NONE);
-#endif
    wxRegion region = GetUpdateRegion();
 
    wxRect clip = GetRect();
@@ -7273,7 +7275,8 @@ void TrackPanel::DrawScrubSpeed(wxDC &dc)
       else
 #endif
          dc.SetTextForeground(clrNoScroll);
-      dc.DrawText(text, xx, yy);
+
+      DrawText(dc, text, xx, yy);
    }
 }
 #endif
@@ -7377,12 +7380,12 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec,
          int offset = 8;
 
          if (rect.y + 22 + 12 < rec.y + rec.height - 19)
-            dc->DrawText(TrackSubText(t),
+            DrawText(dc, TrackSubText(t),
                          trackRect.x + offset,
                          trackRect.y + 22);
 
          if (rect.y + 38 + 12 < rec.y + rec.height - 19)
-            dc->DrawText(GetSampleFormatStr(((WaveTrack *) t)->GetSampleFormat()),
+            DrawText(dc, GetSampleFormatStr(((WaveTrack *) t)->GetSampleFormat()),
                          trackRect.x + offset,
                          trackRect.y + 38);
       }
@@ -8070,7 +8073,7 @@ double TrackPanel::GridMove(double t, int minPix)
    double result;
    minPix >= 0 ? ttc.Increment() : ttc.Decrement();
    result = ttc.GetValue();
-   if (abs(mViewInfo->TimeToPosition(result) - mViewInfo->TimeToPosition(t))
+   if (std::abs(mViewInfo->TimeToPosition(result) - mViewInfo->TimeToPosition(t))
        >= abs(minPix))
        return result;
 
@@ -10041,13 +10044,14 @@ void TrackInfo::DrawTitleBar(wxDC * dc, const wxRect & rect, Track * t,
       titleStr = titleStr.Left(titleStr.Length() - 1);
       dc->GetTextExtent(titleStr, &textWidth, &textHeight);
    }
+
    // wxGTK leaves little scraps (antialiasing?) of the
    // characters if they are repeatedly drawn.  This
    // happens when holding down mouse button and moving
    // in and out of the title bar.  So clear it first.
    AColor::MediumTrackInfo(dc, t->GetSelected());
    dc->DrawRectangle(bev);
-   dc->DrawText(titleStr, rect.x + kTrackInfoBtnSize + 3, rect.y + 2);
+   DrawText(dc, titleStr, bev.x + 2, bev.y + (bev.height - textHeight) / 2);
 
    // Pop-up triangle
 #ifdef EXPERIMENTAL_THEMING
@@ -10110,7 +10114,7 @@ void TrackInfo::DrawMuteSolo(wxDC * dc, const wxRect & rect, Track * t,
 
    SetTrackInfoFont(dc);
    dc->GetTextExtent(str, &textWidth, &textHeight);
-   dc->DrawText(str, bev.x + (bev.width - textWidth) / 2, bev.y);
+   DrawText(dc, str, bev.x + (bev.width - textWidth) / 2, bev.y + (bev.height - textHeight) / 2);
 
    AColor::BevelTrackInfo(*dc, (solo?t->GetSolo():t->GetMute()) == down, bev);
 

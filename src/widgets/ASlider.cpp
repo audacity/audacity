@@ -640,6 +640,11 @@ void LWSlider::Draw()
    // cleared.
    dc->SelectObject(*mBitmap);
 
+#if defined(__WXMAC__)
+   dc->GetGraphicsContext()->EnableOffset();
+   dc->GetGraphicsContext()->SetAntialiasMode(wxANTIALIAS_NONE);
+#endif
+
    wxColour TransparentColour = wxColour( 255, 254, 255 );
    // DO-THEME Mask colour!!  JC-Aug-2007
    // Needed with experimental theming!
