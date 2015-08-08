@@ -3902,6 +3902,13 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
    ToolsToolBar * ttb = mListener->TP_GetToolsToolBar();
    bool multiToolModeActive = (ttb && ttb->IsDown(multiTool));
 
+   double clickTime =
+      mViewInfo->PositionToTime(event.m_x, GetLeftOffset());
+   mCapturedClipIsSelection =
+      (vt->GetSelected() &&
+      clickTime > mViewInfo->selectedRegion.t0() &&
+      clickTime < mViewInfo->selectedRegion.t1());
+
    if ((vt->GetKind() == Track::Wave
 #ifdef USE_MIDI
         || vt->GetKind() == Track::Note
@@ -3926,18 +3933,9 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
 
       mCapturedClipArray.clear();
 
-      double clickTime =
-         mViewInfo->PositionToTime(event.m_x, GetLeftOffset());
-      bool clickedInSelection =
-         (vt->GetSelected() &&
-          clickTime > mViewInfo->selectedRegion.t0() &&
-          clickTime < mViewInfo->selectedRegion.t1());
-
       // First, if click was in selection, capture selected clips; otherwise
       // just the clicked-on clip
-      if (clickedInSelection) {
-         mCapturedClipIsSelection = true;
-
+      if (mCapturedClipIsSelection) {
          TrackListIterator iter(mTracks);
          for (Track *t = iter.First(); t; t = iter.Next()) {
             if (t->GetSelected()) {
@@ -3946,7 +3944,6 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
          }
       }
       else {
-         mCapturedClipIsSelection = false;
          mCapturedClipArray.push_back(TrackClip(vt, mCapturedClip));
 
          // Check for stereo partner
