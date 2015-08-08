@@ -1462,7 +1462,8 @@ bool LabelTrack::HandleMouse(const wxMouseEvent & evt,
    {
       //OverGlyph sets mMouseOverLabel to be the chosen label.
       int iGlyph = OverGlyph(evt.m_x, evt.m_y);
-      mIsAdjustingLabel = iGlyph != 0;
+      mIsAdjustingLabel = evt.Button(wxMOUSE_BTN_LEFT) &&
+         iGlyph != 0;
 
       // reset mouseXPos if the mouse is pressed in the text box
       mMouseXPos = -1;
