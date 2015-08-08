@@ -305,7 +305,10 @@ void TranscriptionToolBar::RegenerateTooltips()
 {
 #if wxUSE_TOOLTIPS
    mButtons[TTB_PlaySpeed]->SetToolTip(_("Play-at-speed"));
-   mPlaySpeedSlider->SetToolTip(_("Playback Speed"));
+
+   wxString tip;
+   tip.Printf(_("Playback Speed") + wxT(": %.2fx"), mPlaySpeedSlider->Get());
+   mPlaySpeedSlider->SetToolTip(tip);
 
 #ifdef EXPERIMENTAL_VOICE_DETECTION
    mButtons[TTB_StartOn]->SetToolTip(TRANSLATABLE("Left-to-On"));
@@ -487,6 +490,7 @@ void TranscriptionToolBar::OnPlaySpeed(wxCommandEvent & WXUNUSED(event))
 void TranscriptionToolBar::OnSpeedSlider(wxCommandEvent& WXUNUSED(event))
 {
    mPlaySpeed = (mPlaySpeedSlider->Get()) * 100;
+   RegenerateTooltips();
 
    // If IO is busy, abort immediately
    // AWD: This is disabled to work around a hang on Linux when PulseAudio is

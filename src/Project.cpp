@@ -1867,16 +1867,9 @@ void AudacityProject::OnScroll(wxScrollEvent & WXUNUSED(event))
    }
 }
 
+// Called from the CommandMananger
 bool AudacityProject::HandleKeyDown(wxKeyEvent & event)
 {
-   // Check to see if it is a meta command
-   if (mCommandManager.HandleMeta(event))
-      return true;
-
-   // Any other keypresses must be destined for this project window.
-   if (wxGetTopLevelParent(wxWindow::FindFocus()) != this)
-      return false;
-
    if (event.GetKeyCode() == WXK_ESCAPE)
       mTrackPanel->HandleEscapeKey(true);
 
@@ -1898,20 +1891,12 @@ bool AudacityProject::HandleKeyDown(wxKeyEvent & event)
    if (event.GetKeyCode() == WXK_PAGEDOWN)
       mTrackPanel->HandlePageDownKey();
 
-   return mCommandManager.HandleKey(event, GetUpdateFlags(), 0xFFFFFFFF);
+   return true;
 }
 
-bool AudacityProject::HandleChar(wxKeyEvent & WXUNUSED(event))
-{
-   return false;
-}
-
+// Called from the CommandMananger
 bool AudacityProject::HandleKeyUp(wxKeyEvent & event)
 {
-   // All keypresses must be destined for this project window.
-   if (wxGetTopLevelParent(wxWindow::FindFocus()) != this)
-      return false;
-
    if (event.GetKeyCode() == WXK_ESCAPE)
       mTrackPanel->HandleEscapeKey(false);
 
@@ -1925,7 +1910,7 @@ bool AudacityProject::HandleKeyUp(wxKeyEvent & event)
    if (event.GetKeyCode() == WXK_CONTROL)
       mTrackPanel->HandleControlKey(false);
 
-   return mCommandManager.HandleKey(event, GetUpdateFlags(), 0xFFFFFFFF);
+   return true;
 }
 
 /// Determines if flags for command are compatible with current state.

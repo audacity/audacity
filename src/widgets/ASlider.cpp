@@ -465,6 +465,12 @@ void LWSlider::SetScroll(float line, float page)
 
 void LWSlider::CreatePopWin()
 {
+   if (mTipPanel)
+   {
+      delete mTipPanel;
+      mTipPanel = NULL;
+   }
+
    wxString maxTipLabel = mName + wxT(": 000000");
 
    if (mStyle == PAN_SLIDER || mStyle == DB_SLIDER || mStyle == SPEED_SLIDER
@@ -912,6 +918,15 @@ void LWSlider::OnMouseEvent(wxMouseEvent & event)
    if (!mEnabled)
       return;
 
+   // Windows sends a right button mouse event when you press the context menu
+   // key, so ignore it.
+   if ((event.RightDown() && !event.RightIsDown()) ||
+       (event.RightUp() && event.GetPosition() == wxPoint(-1, -1)))
+   {
+      event.Skip(false);
+      return;
+   }
+
    float prevValue = mCurrentValue;
 
    // Figure out the thumb position
@@ -940,7 +955,7 @@ void LWSlider::OnMouseEvent(wxMouseEvent & event)
    }
    else if( event.ButtonDown() )
    {
-      if( mDefaultShortcut && event.CmdDown() )
+      if( mDefaultShortcut && event.ControlDown() )
       {
          mCurrentValue = mDefaultValue;
       }
@@ -974,8 +989,6 @@ void LWSlider::OnMouseEvent(wxMouseEvent & event)
          mParent->CaptureMouse();
       }
 
-      wxASSERT(mTipPanel == NULL);
-
       CreatePopWin();
       FormatPopWin();
       SetPopWinPosition();
@@ -990,10 +1003,11 @@ void LWSlider::OnMouseEvent(wxMouseEvent & event)
       if (mParent->HasCapture())
          mParent->ReleaseMouse();
 
-      wxASSERT(mTipPanel != NULL);
-
-      delete mTipPanel;
-      mTipPanel = NULL;
+      if (mTipPanel)
+      {
+         delete mTipPanel;
+         mTipPanel = NULL;
+      }
 
       //restore normal tooltip behavor for mouseovers
       wxToolTip::Enable(true);

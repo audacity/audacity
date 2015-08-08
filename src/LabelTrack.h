@@ -113,8 +113,8 @@ class AUDACITY_DLL_API LabelTrack : public Track
    friend class LabelStruct;
 
  public:
-   bool IsGoodLabelFirstKey(int keyCode);
-   bool IsGoodLabelEditKey(int keyCode);
+   bool IsGoodLabelFirstKey(const wxKeyEvent & evt);
+   bool IsGoodLabelEditKey(const wxKeyEvent & evt);
    bool IsTextSelected();
 
    void CreateCustomGlyphs();

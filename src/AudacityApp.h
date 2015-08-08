@@ -118,13 +118,6 @@ class AudacityApp:public wxApp {
 
    void OnEndSession(wxCloseEvent & event);
 
-   void OnKeyDown(wxKeyEvent & event);
-   void OnChar(wxKeyEvent & event);
-   void OnKeyUp(wxKeyEvent & event);
-
-   void OnCaptureKeyboard(wxCommandEvent & event);
-   void OnReleaseKeyboard(wxCommandEvent & event);
-
    // Most Recently Used File support (for all platforms).
    void OnMRUClear(wxCommandEvent &event);
    void OnMRUFile(wxCommandEvent &event);

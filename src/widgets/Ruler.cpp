@@ -2177,14 +2177,14 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
          AudioIOStartStreamOptions options(mProject->GetDefaultPlayOptions());
          options.playLooped = (loopEnabled && evt.ShiftDown());
 
-         if (!evt.CmdDown())  // Use CmdDown rather than ControlDown. See bug 746
+         if (!evt.ControlDown())
             options.pStartTime = &mPlayRegionStart;
          else
             options.timeTrack = NULL;
 
          ctb->PlayPlayRegion((SelectedRegion(start, end)),
                              options,
-                             evt.CmdDown(),
+                             evt.ControlDown(),
                              false,
                              true);
 

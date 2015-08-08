@@ -298,8 +298,8 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    void OnODTaskUpdate(wxCommandEvent & event);
    void OnODTaskComplete(wxCommandEvent & event);
    void OnTrackListUpdated(wxCommandEvent & event);
+
    bool HandleKeyDown(wxKeyEvent & event);
-   bool HandleChar(wxKeyEvent & event);
    bool HandleKeyUp(wxKeyEvent & event);
 
    void HandleResize();
@@ -660,6 +660,9 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 
    // Keyboard capture
    wxWindow *mKeyboardCaptureHandler;
+
+   // CommandManager needs to use private methods
+   friend class CommandManager;
 
    DECLARE_EVENT_TABLE()
 };

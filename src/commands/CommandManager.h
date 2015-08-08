@@ -71,6 +71,8 @@ WX_DEFINE_USER_EXPORTED_ARRAY(CommandListEntry *, CommandList, class AUDACITY_DL
 WX_DECLARE_STRING_HASH_MAP_WITH_DECL(CommandListEntry *, CommandNameHash, class AUDACITY_DLL_API);
 WX_DECLARE_HASH_MAP_WITH_DECL(int, CommandListEntry *, wxIntegerHash, wxIntegerEqual, CommandIDHash, class AUDACITY_DLL_API);
 
+class AudacityProject;
+
 class AUDACITY_DLL_API CommandManager: public XMLTagHandler
 {
  public:
@@ -183,6 +185,7 @@ class AUDACITY_DLL_API CommandManager: public XMLTagHandler
    //
    // Executing commands
    //
+   bool FilterKeyEvent(AudacityProject *project, wxKeyEvent & evt);
    bool HandleCommandEntry(CommandListEntry * entry, wxUint32 flags, wxUint32 mask, const wxEvent * evt = NULL);
    bool HandleMenuID(int id, wxUint32 flags, wxUint32 mask);
    bool HandleKey(wxKeyEvent &evt, wxUint32 flags, wxUint32 mask);
@@ -228,18 +231,30 @@ class AUDACITY_DLL_API CommandManager: public XMLTagHandler
 
 protected:
 
-   wxMenuBar * CurrentMenuBar();
-   wxMenuBar * GetMenuBar(wxString sMenu);
-   wxMenu * CurrentSubMenu();
-   wxMenu * CurrentMenu();
+   wxMenuBar * CurrentMenuBar() const;
+   wxMenuBar * GetMenuBar(wxString sMenu) const;
+   wxMenu * CurrentSubMenu() const;
+   wxMenu * CurrentMenu() const;
 
    int NextIdentifier(int ID);
-   int NewIdentifier(wxString name, wxString label, wxMenu *menu,
-                     CommandFunctor *callback,
-                     bool multi, int index, int count);
+   CommandListEntry *NewIdentifier(const wxString & name,
+                                   const wxString & label,
+                                   wxMenu *menu,
+                                   CommandFunctor *callback,
+                                   bool multi,
+                                   int index,
+                                   int count);
+   CommandListEntry *NewIdentifier(const wxString & name,
+                                   const wxString & label,
+                                   const wxString & accel,
+                                   wxMenu *menu,
+                                   CommandFunctor *callback,
+                                   bool multi,
+                                   int index,
+                                   int count);
    void Enable(CommandListEntry *entry, bool enabled);
 
-   wxString GetKey(wxString label);
+   wxString GetLabel(const CommandListEntry *entry) const;
 
 private:
    MenuBarList  mMenuBarList;

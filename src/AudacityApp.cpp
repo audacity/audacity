@@ -754,9 +754,6 @@ typedef int (AudacityApp::*SPECIALKEYEVENT)(wxKeyEvent&);
 BEGIN_EVENT_TABLE(AudacityApp, wxApp)
    EVT_QUERY_END_SESSION(AudacityApp::OnEndSession)
 
-   EVT_KEY_DOWN(AudacityApp::OnKeyDown)
-   EVT_CHAR(AudacityApp::OnChar)
-   EVT_KEY_UP(AudacityApp::OnKeyUp)
    EVT_TIMER(kAudacityAppTimerID, AudacityApp::OnTimer)
 #ifdef __WXMAC__
    EVT_MENU(wxID_NEW, AudacityApp::OnMenuNew)
@@ -1897,63 +1894,6 @@ void AudacityApp::OnEndSession(wxCloseEvent & event)
          }
       }
    }
-}
-
-void AudacityApp::OnKeyDown(wxKeyEvent & event)
-{
-   // Not handled
-   event.Skip(true);
-
-   // Make sure this event is destined for a project window
-   AudacityProject *prj = GetActiveProject();
-
-   // TODO: I don't know how it can happen, but it did on 2006-07-06.
-   // I was switching between apps fairly quickly so maybe that has something
-   // to do with it.
-   if (!prj)
-      return;
-
-   if (prj->HandleKeyDown(event))
-      event.Skip(false);
-}
-
-void AudacityApp::OnChar(wxKeyEvent & event)
-{
-   // Not handled
-   event.Skip(true);
-
-   // Make sure this event is destined for a project window
-   AudacityProject *prj = GetActiveProject();
-
-   // TODO: I don't know how it can happen, but it did on 2006-07-06.
-   // I was switching between apps fairly quickly so maybe that has something
-   // to do with it.
-   if (!prj)
-      return;
-
-   if (prj->HandleChar(event))
-      event.Skip(false);
-}
-
-void AudacityApp::OnKeyUp(wxKeyEvent & event)
-{
-   // Not handled
-   event.Skip(true);
-
-   // Make sure this event is destined for a project window
-   AudacityProject *prj = GetActiveProject();
-
-   // TODO: I don't know how it can happen, but it did on 2006-07-06.
-   // I was switching between apps fairly quickly so maybe that has something
-   // to do with it.
-   if (!prj)
-      return;
-
-   if (prj != wxGetTopLevelParent(wxWindow::FindFocus()))
-      return;
-
-   if (prj->HandleKeyUp(event))
-      event.Skip(false);
 }
 
 void AudacityApp::AddFileToHistory(const wxString & name)

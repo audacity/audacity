@@ -62,11 +62,8 @@ wxString KeyEventToKeyString(const wxKeyEvent & event)
    long key = event.GetKeyCode();
 
    if (event.ControlDown())
-#if defined(__WXMAC__)
-      newStr += wxT("XCtrl+");
-#else
       newStr += wxT("Ctrl+");
-#endif
+
    if (event.AltDown())
       newStr += wxT("Alt+");
 
@@ -74,11 +71,11 @@ wxString KeyEventToKeyString(const wxKeyEvent & event)
       newStr += wxT("Shift+");
 
 #if defined(__WXMAC__)
-   if (event.MetaDown())
-      newStr += wxT("Ctrl+");
+   if (event.RawControlDown())
+      newStr += wxT("XCtrl+");
 #endif
 
-   if (event.ControlDown() && key >= 1 && key <= 26)
+   if (event.RawControlDown() && key >= 1 && key <= 26)
       newStr += (wxChar)(64 + key);
    else if (key >= 33 && key <= 126)
       newStr += (wxChar)key;
