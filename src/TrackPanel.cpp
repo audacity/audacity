@@ -2528,7 +2528,7 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
    if (mSnapManager)
       delete mSnapManager;
 
-   mSnapManager = new SnapManager(mTracks, NULL,
+   mSnapManager = new SnapManager(mTracks, NULL, NULL,
                                   *mViewInfo,
                                   4); // pixel tolerance
 
@@ -3895,6 +3895,8 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
    mHSlideAmount = 0.0;
    mDidSlideVertically = false;
 
+   std::vector<Track*> trackExclusions;
+
    Track *vt = FindTrack(event.m_x, event.m_y, false, false, &rect);
    if (!vt)
       return;
@@ -3940,6 +3942,8 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
          for (Track *t = iter.First(); t; t = iter.Next()) {
             if (t->GetSelected()) {
                AddClipsToCaptured(t, true);
+               if (t->GetKind() != Track::Wave)
+                  trackExclusions.push_back(t);
             }
          }
       }
@@ -3984,6 +3988,8 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
                   AddClipsToCaptured(t,
                         mCapturedClipArray[i].clip->GetStartTime(),
                         mCapturedClipArray[i].clip->GetEndTime() );
+                  if (t->GetKind() != Track::Wave)
+                     trackExclusions.push_back(t);
                }
             }
 #ifdef USE_MIDI
@@ -3995,6 +4001,8 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
                for (Track *t = git.First(nt); t; t = git.Next())
                {
                   AddClipsToCaptured(t, nt->GetStartTime(), nt->GetEndTime());
+                  if (t->GetKind() != Track::Wave)
+                     trackExclusions.push_back(t);
                }
             }
 #endif
@@ -4021,6 +4029,7 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
       delete mSnapManager;
    mSnapManager = new SnapManager(mTracks,
                                   &mCapturedClipArray,
+                                  &trackExclusions,
                                   *mViewInfo,
                                   4,     // pixel tolerance
                                   true); // don't snap to time

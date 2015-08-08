@@ -2290,7 +2290,7 @@ void AdornedRulerPanel::HandleSnapping()
       // Create a new snap manager in case any snap-points have changed
       delete mSnapManager;
    }
-   mSnapManager = new SnapManager(mProject->GetTracks(), NULL,
+   mSnapManager = new SnapManager(mProject->GetTracks(), NULL, NULL,
                                  *mViewInfo,
                                  QUICK_PLAY_SNAP_PIXEL);
    bool snappedPoint, snappedTime;

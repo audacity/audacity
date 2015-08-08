@@ -21,6 +21,7 @@
 
 #include "widgets/NumericTextCtrl.h"
 
+class LabelTrack;
 class Track;
 class WaveClip;
 class TrackList;
@@ -58,6 +59,7 @@ WX_DEFINE_SORTED_ARRAY(SnapPoint *, SnapPointArray);
 class SnapManager {
 public:
    SnapManager(TrackList *tracks, TrackClipArray *exclusions,
+      const std::vector<Track*> *pLabelTrackExclusions,
       const ZoomInfo &zoomInfo, int pixelTolerance, bool noTimeSnap = false);
 
    ~SnapManager();
