@@ -1042,7 +1042,7 @@ void CommandManager::TellUserWhyDisallowed( wxUint32 flagsGot, wxUint32 flagsReq
 ///
 ///
 ///
-bool CommandManager::FilterKeyEvent(AudacityProject *project, wxKeyEvent & evt)
+bool CommandManager::FilterKeyEvent(AudacityProject *project, wxKeyEvent & evt, bool permit)
 {
    if (HandleMeta(evt))
    {
@@ -1050,7 +1050,7 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, wxKeyEvent & evt)
    }
 
    // Any other keypresses must be destined for this project window.
-   if (wxGetTopLevelParent(wxWindow::FindFocus()) != project)
+   if (!permit && wxGetTopLevelParent(wxWindow::FindFocus()) != project)
    {
       return false;
    }
@@ -1065,13 +1065,6 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, wxKeyEvent & evt)
       HandleKey(temp, flags, 0xFFFFFFFF);
 
       return true;
-   }
-
-   if (project->HandleKeyDown(evt))
-   {
-      wxKeyEvent temp = evt;
-      temp.SetEventType(wxEVT_KEY_UP);
-      project->HandleKeyUp(temp);
    }
 
    return false;

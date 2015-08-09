@@ -179,13 +179,17 @@ class AUDACITY_DLL_API CommandManager: public XMLTagHandler
    //
    // Modifying accelerators
    //
+
    void SetKeyFromName(wxString name, wxString key);
    void SetKeyFromIndex(int i, wxString key);
 
    //
    // Executing commands
    //
-   bool FilterKeyEvent(AudacityProject *project, wxKeyEvent & evt);
+
+   // "permit" allows filtering even if the active window is a child of the project.
+   // Lyrics and MixerTrackCluster classes use it.
+   bool FilterKeyEvent(AudacityProject *project, wxKeyEvent & evt, bool permit = false);
    bool HandleCommandEntry(CommandListEntry * entry, wxUint32 flags, wxUint32 mask, const wxEvent * evt = NULL);
    bool HandleMenuID(int id, wxUint32 flags, wxUint32 mask);
    bool HandleKey(wxKeyEvent &evt, wxUint32 flags, wxUint32 mask);
