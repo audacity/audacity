@@ -11,6 +11,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Audacity.h"
 #include "TrackControls.h"
 #include "TrackButtonHandles.h"
+#include "TrackSelectHandle.h"
 #include "../../HitTestResult.h"
 #include "../../RefreshCode.h"
 #include "../../MixerBoard.h"
@@ -28,7 +29,7 @@ TrackControls::~TrackControls()
 
 HitTestResult TrackControls::HitTest
 (const TrackPanelMouseEvent &evt,
- const AudacityProject *)
+ const AudacityProject *project)
 {
    const wxMouseEvent &event = evt.event;
    const wxRect &rect = evt.rect;
@@ -43,7 +44,8 @@ HitTestResult TrackControls::HitTest
    if (NULL != (result = MinimizeButtonHandle::HitTest(event, rect)).handle)
       return result;
 
-   return result;
+   return TrackSelectHandle::HitAnywhere
+      (project->GetTrackPanel()->GetTrackCount());
 }
 
 Track *TrackControls::FindTrack()

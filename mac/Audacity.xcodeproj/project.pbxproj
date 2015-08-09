@@ -1233,6 +1233,7 @@
 		5E7396561DAFDA0000BA0A4D /* WaveTrackSliderHandles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E7396541DAFDA0000BA0A4D /* WaveTrackSliderHandles.cpp */; };
 		5E7396591DAFDA3600BA0A4D /* TrackButtonHandles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E7396571DAFDA3600BA0A4D /* TrackButtonHandles.cpp */; };
 		5E73965C1DAFDAA400BA0A4D /* BackgroundCell.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E73965A1DAFDAA400BA0A4D /* BackgroundCell.cpp */; };
+		5E73965F1DAFDAEC00BA0A4D /* TrackSelectHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E73965D1DAFDAEC00BA0A4D /* TrackSelectHandle.cpp */; };
 		5E74D2E31CC4429700D88B0B /* EditCursorOverlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E74D2DD1CC4429700D88B0B /* EditCursorOverlay.cpp */; };
 		5E74D2E41CC4429700D88B0B /* PlayIndicatorOverlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E74D2DF1CC4429700D88B0B /* PlayIndicatorOverlay.cpp */; };
 		5E74D2E51CC4429700D88B0B /* Scrubbing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E74D2E11CC4429700D88B0B /* Scrubbing.cpp */; };
@@ -3070,6 +3071,8 @@
 		5E7396581DAFDA3600BA0A4D /* TrackButtonHandles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackButtonHandles.h; sourceTree = "<group>"; };
 		5E73965A1DAFDAA400BA0A4D /* BackgroundCell.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BackgroundCell.cpp; sourceTree = "<group>"; };
 		5E73965B1DAFDAA400BA0A4D /* BackgroundCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackgroundCell.h; sourceTree = "<group>"; };
+		5E73965D1DAFDAEC00BA0A4D /* TrackSelectHandle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TrackSelectHandle.cpp; sourceTree = "<group>"; };
+		5E73965E1DAFDAEC00BA0A4D /* TrackSelectHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackSelectHandle.h; sourceTree = "<group>"; };
 		5E74D2D91CC4427B00D88B0B /* TrackPanelCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackPanelCell.h; sourceTree = "<group>"; };
 		5E74D2DA1CC4427B00D88B0B /* TrackPanelCellIterator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackPanelCellIterator.h; sourceTree = "<group>"; };
 		5E74D2DD1CC4429700D88B0B /* EditCursorOverlay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditCursorOverlay.cpp; sourceTree = "<group>"; };
@@ -5778,6 +5781,7 @@
 				5E7396421DAFD8C600BA0A4D /* TimeShiftHandle.cpp */,
 				5E7396571DAFDA3600BA0A4D /* TrackButtonHandles.cpp */,
 				5E1512681DB0010C00702E29 /* TrackControls.cpp */,
+				5E73965D1DAFDAEC00BA0A4D /* TrackSelectHandle.cpp */,
 				5E15126A1DB0010C00702E29 /* TrackUI.cpp */,
 				5E15126B1DB0010C00702E29 /* TrackVRulerControls.cpp */,
 				5E73963C1DAFD86000BA0A4D /* ZoomHandle.cpp */,
@@ -5792,6 +5796,7 @@
 				5E7396431DAFD8C600BA0A4D /* TimeShiftHandle.h */,
 				5E7396581DAFDA3600BA0A4D /* TrackButtonHandles.h */,
 				5E1512691DB0010C00702E29 /* TrackControls.h */,
+				5E73965E1DAFDAEC00BA0A4D /* TrackSelectHandle.h */,
 				5E15126C1DB0010C00702E29 /* TrackVRulerControls.h */,
 				5E73963D1DAFD86000BA0A4D /* ZoomHandle.h */,
 			);
@@ -7893,6 +7898,7 @@
 				2888495E131B6CF600B59735 /* km.po in Sources */,
 				2888495F131B6CF600B59735 /* ko.po in Sources */,
 				28884960131B6CF600B59735 /* lt.po in Sources */,
+				5E73965F1DAFDAEC00BA0A4D /* TrackSelectHandle.cpp in Sources */,
 				28884961131B6CF600B59735 /* mk.po in Sources */,
 				28884962131B6CF600B59735 /* my.po in Sources */,
 				28884963131B6CF600B59735 /* nb.po in Sources */,

@@ -601,6 +601,8 @@ audacity_SOURCES = \
 	tracks/ui/TrackButtonHandles.h \
 	tracks/ui/TrackControls.cpp \
 	tracks/ui/TrackControls.h \
+	tracks/ui/TrackSelectHandle.cpp \
+	tracks/ui/TrackSelectHandle.h \
 	tracks/ui/TrackUI.cpp \
 	tracks/ui/TrackVRulerControls.cpp \
 	tracks/ui/TrackVRulerControls.h \
