@@ -809,6 +809,11 @@ void LWSlider::ShowTip(bool show)
    {
       if (mTipPanel)
       {
+         if (mTipPanel->IsShownOnScreen())
+         {
+            return;
+         }
+
          delete mTipPanel;
          mTipPanel = NULL;
       }
