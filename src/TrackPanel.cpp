@@ -740,7 +740,7 @@ void TrackPanel::BuildMenus(void)
    mWaveTrackMenu = new wxMenu();
    BuildCommonDropMenuItems(mWaveTrackMenu);   // does name, up/down etc
    mWaveTrackMenu->AppendRadioItem(OnWaveformID, _("&Waveform"));
-   mWaveTrackMenu->AppendRadioItem(OnSpectrumID, _("&Spectrum"));
+   mWaveTrackMenu->AppendRadioItem(OnSpectrumID, _("&Spectrogram"));
    mWaveTrackMenu->Append(OnViewSettingsID, _("&View Settings..."));
    mWaveTrackMenu->AppendSeparator();
 
