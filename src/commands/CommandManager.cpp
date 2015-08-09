@@ -172,11 +172,11 @@ public:
       }
  
       AudacityProject *project = GetActiveProject();
-      if (!project)
+      if (!project || !project->IsEnabled())
       {
          return Event_Skip;
       }
-      
+
       wxWindow *handler = project->GetKeyboardCaptureHandler();
       if (handler && HandleCapture(handler, (wxKeyEvent &) event))
       {
