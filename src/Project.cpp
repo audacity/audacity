@@ -1867,52 +1867,6 @@ void AudacityProject::OnScroll(wxScrollEvent & WXUNUSED(event))
    }
 }
 
-// Called from the CommandMananger
-bool AudacityProject::HandleKeyDown(wxKeyEvent & event)
-{
-   if (event.GetKeyCode() == WXK_ESCAPE)
-      mTrackPanel->HandleEscapeKey(true);
-
-   if (event.GetKeyCode() == WXK_ALT)
-      mTrackPanel->HandleAltKey(true);
-
-   // Allow the zoom cursor to change to a zoom out cursor
-   if (event.GetKeyCode() == WXK_SHIFT)
-      mTrackPanel->HandleShiftKey(true);
-
-   if (event.GetKeyCode() == WXK_CONTROL)
-      mTrackPanel->HandleControlKey(true);
-
-   // Allow PageUp and PageDown keys to
-   //scroll the Track Panel left and right
-   if (event.GetKeyCode() == WXK_PAGEUP)
-      mTrackPanel->HandlePageUpKey();
-
-   if (event.GetKeyCode() == WXK_PAGEDOWN)
-      mTrackPanel->HandlePageDownKey();
-
-   return true;
-}
-
-// Called from the CommandMananger
-bool AudacityProject::HandleKeyUp(wxKeyEvent & event)
-{
-   if (event.GetKeyCode() == WXK_ESCAPE)
-      mTrackPanel->HandleEscapeKey(false);
-
-   if (event.GetKeyCode() == WXK_ALT)
-      mTrackPanel->HandleAltKey(false);
-
-   // Allow the Zoom Out cursor back to Zoom In
-   if (event.GetKeyCode() == WXK_SHIFT)
-      mTrackPanel->HandleShiftKey(false);
-
-   if (event.GetKeyCode() == WXK_CONTROL)
-      mTrackPanel->HandleControlKey(false);
-
-   return true;
-}
-
 /// Determines if flags for command are compatible with current state.
 /// If not, then try some recovery action to make it so.
 /// @return whether compatible or not after any actions taken.

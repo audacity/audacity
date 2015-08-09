@@ -147,6 +147,7 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
    virtual void OnCaptureKey(wxCommandEvent & event);
    virtual void OnKeyDown(wxKeyEvent & event);
    virtual void OnChar(wxKeyEvent & event);
+   virtual void OnKeyUp(wxKeyEvent & event);
 
    virtual void OnSetFocus(wxFocusEvent & event);
    virtual void OnKillFocus(wxFocusEvent & event);
