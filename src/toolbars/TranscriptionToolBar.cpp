@@ -303,12 +303,7 @@ void TranscriptionToolBar::UpdatePrefs()
 
 void TranscriptionToolBar::RegenerateTooltips()
 {
-#if wxUSE_TOOLTIPS
    mButtons[TTB_PlaySpeed]->SetToolTip(_("Play-at-speed"));
-
-   wxString tip;
-   tip.Printf(_("Playback Speed") + wxT(": %.2fx"), mPlaySpeedSlider->Get());
-   mPlaySpeedSlider->SetToolTip(tip);
 
 #ifdef EXPERIMENTAL_VOICE_DETECTION
    mButtons[TTB_StartOn]->SetToolTip(TRANSLATABLE("Left-to-On"));
@@ -323,7 +318,6 @@ void TranscriptionToolBar::RegenerateTooltips()
 
    mSensitivitySlider->SetToolTip(TRANSLATABLE("Sensitivity"));
    mKeyTypeChoice->SetToolTip(TRANSLATABLE("Key type"));
-#endif
 #endif
 }
 

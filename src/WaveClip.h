@@ -51,10 +51,10 @@ public:
       , windowSize(-1)
       , zeroPaddingFactor(-1)
       , frequencyGain(-1)
-
+#if 0
       , freq(NULL)
       , where(NULL)
-
+#endif
       , dirty(-1)
    {
    }
