@@ -136,14 +136,6 @@ Ruler::Ruler()
 
    mUserFonts = false;
 
-#if !wxCHECK_VERSION(3, 0, 0)
-   #ifdef __WXMAC__
-   mMinorMinorFont->SetNoAntiAliasing(true);
-   mMinorFont->SetNoAntiAliasing(true);
-   mMajorFont->SetNoAntiAliasing(true);
-   #endif
-#endif
-
    mMajorLabels = 0;
    mMinorLabels = 0;
    mMinorMinorLabels = 0;
@@ -313,14 +305,6 @@ void Ruler::SetFonts(const wxFont &minorFont, const wxFont &majorFont, const wxF
    *mMinorMinorFont = minorMinorFont;
    *mMinorFont = minorFont;
    *mMajorFont = majorFont;
-
-#if !wxCHECK_VERSION(3, 0, 0)
-   #ifdef __WXMAC__
-   mMinorMinorFont->SetNoAntiAliasing(true);
-   mMinorFont->SetNoAntiAliasing(true);
-   mMajorFont->SetNoAntiAliasing(true);
-   #endif
-#endif
 
    // Won't override these fonts
    mUserFonts = true;
@@ -1015,15 +999,18 @@ void Ruler::Update(TimeTrack* timetrack)// Envelope *speedEnv, long minSpeed, lo
          desiredPixelHeight = 10;//8;
       if (desiredPixelHeight > 12)
          desiredPixelHeight = 12;
-
+printf("desired h %d\n", desiredPixelHeight);
       // Keep making the font bigger until it's too big, then subtract one.
       mDC->SetFont(wxFont(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD));
       mDC->GetTextExtent(exampleText, &strW, &strH, &strD, &strL);
+printf("strW %d h %d d %d l %d\n", strW, strH, strD, strL);
       while ((strH - strD - strL) <= desiredPixelHeight && fontSize < 40) {
          fontSize++;
          mDC->SetFont(wxFont(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD));
          mDC->GetTextExtent(exampleText, &strW, &strH, &strD, &strL);
+printf("size %d strW %d h %d d %d l %d\n", fontSize, strW, strH, strD, strL);
       }
+printf("fontSize = %d\n", fontSize);
       fontSize--;
       mDC->SetFont(wxFont(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
       mDC->GetTextExtent(exampleText, &strW, &strH, &strD, &strL);
@@ -1608,7 +1595,7 @@ void Ruler::SetUseZoomInfo(int leftOffset)
 //
 
 BEGIN_EVENT_TABLE(RulerPanel, wxPanel)
-   EVT_ERASE_BACKGROUND(RulerPanel::OnErase)
+//   EVT_ERASE_BACKGROUND(RulerPanel::OnErase)
    EVT_PAINT(RulerPanel::OnPaint)
    EVT_SIZE(RulerPanel::OnSize)
 END_EVENT_TABLE()
@@ -1620,6 +1607,7 @@ RulerPanel::RulerPanel(wxWindow* parent, wxWindowID id,
                        const wxSize& size /*= wxDefaultSize*/):
    wxPanel(parent, id, pos, size)
 {
+   SetBackgroundStyle(wxBG_STYLE_PAINT);
 }
 
 RulerPanel::~RulerPanel()
@@ -1683,7 +1671,6 @@ enum {
 };
 
 BEGIN_EVENT_TABLE(AdornedRulerPanel, wxPanel)
-   EVT_ERASE_BACKGROUND(AdornedRulerPanel::OnErase)
    EVT_PAINT(AdornedRulerPanel::OnPaint)
    EVT_SIZE(AdornedRulerPanel::OnSize)
    EVT_MOUSE_EVENTS(AdornedRulerPanel::OnMouseEvents)
@@ -1836,7 +1823,7 @@ void AdornedRulerPanel::OnErase(wxEraseEvent & WXUNUSED(evt))
 
 void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
 {
-   wxBufferedPaintDC dc(this);
+   wxAutoBufferedPaintDC dc(this);
 
    DoDrawBorder(&dc);
 
