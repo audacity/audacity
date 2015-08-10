@@ -156,7 +156,7 @@ is time to refresh some aspect of the screen.
 #include "TrackPanel.h"
 #include "TrackPanelCellIterator.h"
 #include "TrackPanelMouseEvent.h"
-
+#include "TrackPanelResizeHandle.h"
 //#define DEBUG_DRAW_TIMING 1
 // #define SPECTRAL_EDITING_ESC_KEY
 
@@ -382,7 +382,6 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
 #endif
 
    mArrowCursor = std::make_unique<wxCursor>(wxCURSOR_ARROW);
-   mResizeCursor = std::make_unique<wxCursor>(wxCURSOR_SIZENS);
    mAdjustLeftSelectionCursor = std::make_unique<wxCursor>(wxCURSOR_POINT_LEFT);
    mAdjustRightSelectionCursor = std::make_unique<wxCursor>(wxCURSOR_POINT_RIGHT);
 
@@ -861,9 +860,6 @@ void TrackPanel::HandleInterruptedDrag()
       case IsUncaptured:
       case IsSelecting:
       case IsSelectingLabelText:
-      case IsResizing:
-      case IsResizingBetweenLinkedTracks:
-      case IsResizingBelowLinkedTracks:
          sendEvent = false;
 
       default:
@@ -1006,38 +1002,6 @@ bool TrackPanel::HandleEscapeKey(bool down)
          pMixerBoard->Refresh();
    }
       break;
-   case IsResizing:
-      mCapturedTrack->SetHeight(mInitialActualHeight);
-      mCapturedTrack->SetMinimized(mInitialMinimized);
-      break;
-   case IsResizingBetweenLinkedTracks:
-   {
-      Track *const next = mTracks->GetNext(mCapturedTrack);
-      mCapturedTrack->SetHeight(mInitialUpperActualHeight);
-      mCapturedTrack->SetMinimized(mInitialMinimized);
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-      if( !MONO_WAVE_PAN(mCapturedTrack) )
-#endif
-      {
-         next->SetHeight(mInitialActualHeight);
-         next->SetMinimized(mInitialMinimized);
-      }
-   }
-      break;
-   case IsResizingBelowLinkedTracks:
-   {
-      Track *const prev = mTracks->GetPrev(mCapturedTrack);
-      mCapturedTrack->SetHeight(mInitialActualHeight);
-      mCapturedTrack->SetMinimized(mInitialMinimized);
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-      if( !MONO_WAVE_PAN(mCapturedTrack) )
-#endif
-      {
-         prev->SetHeight(mInitialUpperActualHeight);
-         prev->SetMinimized(mInitialMinimized);
-      }
-   }
-      break;
    default:
    {
       // Not escaping from a mouse drag
@@ -1137,23 +1101,6 @@ bool TrackPanel::SetCursorByActivity( )
       break;
    }
    return false;
-}
-
-/// When in the resize area we can adjust size or relative size.
-void TrackPanel::SetCursorAndTipWhenInVResizeArea( bool bLinked, wxString &tip )
-{
-   // Check to see whether it is the first channel of a stereo track
-   if (bLinked) {
-      // If we are in the label we got here 'by mistake' and we're
-      // not actually in the resize area at all.  (The resize area
-      // is shorter when it is between stereo tracks).
-
-      tip = _("Click and drag to adjust relative size of stereo tracks.");
-      SetCursor(*mResizeCursor);
-   } else {
-      tip = _("Click and drag to resize the track.");
-      SetCursor(*mResizeCursor);
-   }
 }
 
 /// When in a label track, find out if we've hit anything that
@@ -1440,15 +1387,22 @@ void TrackPanel::HandleCursor(wxMouseEvent & event)
 
    wxString tip;
 
+   // tip may still be NULL at this point, in which case we go on looking.
+
    // Are we within the vertical resize area?
    // (Add margin back to bottom of the rectangle)
    if (within(event.m_y,
               (rect.GetBottom() + (kBottomMargin + kTopMargin) / 2),
               TRACK_RESIZE_REGION))
-      SetCursorAndTipWhenInVResizeArea(
-         track->GetLinked() && foundCell.type != CellType::Label, tip);
-   
-   // tip may still be NULL at this point, in which case we go on looking.
+   {
+      HitTestPreview preview
+         (TrackPanelResizeHandle::HitPreview(
+            (foundCell.type != CellType::Label) && track->GetLinked()));
+      tip = preview.message;
+      wxCursor *const pCursor = preview.cursor;
+      if (pCursor)
+         SetCursor(*pCursor);
+   }
 
    if (pCell && pCursor == NULL && tip == wxString()) {
       const auto size = GetSize();
@@ -3028,275 +2982,6 @@ bool TrackInfo::HideTopItem( const wxRect &rect, const wxRect &subRect,
    return subRect.y + subRect.height - allowance >= rect.y + limit;
 }
 
-///  ButtonDown means they just clicked and haven't released yet.
-///  We use this opportunity to save which track they clicked on,
-///  and the initial height of the track, so as they drag we can
-///  update the track size.
-void TrackPanel::HandleResizeClick( wxMouseEvent & event )
-{
-   // Get here only if the click was near the bottom of the cell rectangle.
-   // DM: Figure out what track is about to be resized
-   const auto foundCell = FindCell(event.m_x, event.m_y);
-   auto track = foundCell.pTrack;
-
-   if (foundCell.type == CellType::Label && track && track->GetLinked())
-      // Click was at the bottom of a stereo track.
-      track = track->GetLink();
-
-   if (!track) {
-      return;
-   }
-
-   mMouseClickY = event.m_y;
-
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   // To do: escape key
-   if(MONO_WAVE_PAN(track)){
-      //STM:  Determine whether we should rescale one or two tracks
-      if (track->GetVirtualStereo()) {
-         // mCapturedTrack is the lower track
-         mInitialTrackHeight = track->GetHeight(true);
-         mInitialActualHeight = mInitialUpperActualHeight = track->GetActualHeight();
-         mInitialMinimized = track->GetMinimized();
-         mInitialUpperTrackHeight = track->GetHeight();
-         SetCapturedTrack(track, IsResizingBelowLinkedTracks);
-      }
-      else {
-         // mCapturedTrack is the upper track
-         mInitialTrackHeight = track->GetHeight(true);
-         mInitialActualHeight = mInitialUpperActualHeight = track->GetActualHeight();
-         mInitialMinimized = track->GetMinimized();
-         mInitialUpperTrackHeight = track->GetHeight();
-         SetCapturedTrack(track, IsResizingBetweenLinkedTracks);
-      }
-   }
-   else
-#endif
-   {
-      Track *prev = mTracks->GetPrev(track);
-      Track *next = mTracks->GetNext(track);
-
-      //STM:  Determine whether we should rescale one or two tracks
-      if (prev && prev->GetLink() == track) {
-         // mCapturedTrack is the lower track
-         mInitialTrackHeight = track->GetHeight();
-         mInitialActualHeight = track->GetActualHeight();
-         mInitialMinimized = track->GetMinimized();
-         mInitialUpperTrackHeight = prev->GetHeight();
-         mInitialUpperActualHeight = prev->GetActualHeight();
-         SetCapturedTrack(track, IsResizingBelowLinkedTracks);
-      }
-      else if (next && track->GetLink() == next) {
-         // mCapturedTrack is the upper track
-         mInitialTrackHeight = next->GetHeight();
-         mInitialActualHeight = next->GetActualHeight();
-         mInitialMinimized = next->GetMinimized();
-         mInitialUpperTrackHeight = track->GetHeight();
-         mInitialUpperActualHeight = track->GetActualHeight();
-         SetCapturedTrack(track, IsResizingBetweenLinkedTracks);
-      }
-      else {
-         // DM: Save the initial mouse location and the initial height
-         mInitialTrackHeight = track->GetHeight();
-         mInitialActualHeight = track->GetActualHeight();
-         mInitialMinimized = track->GetMinimized();
-         SetCapturedTrack(track, IsResizing);
-      }
-   }
-}
-
-///  This happens when the button is released from a drag.
-///  Since we actually took care of resizing the track when
-///  we got drag events, all we have to do here is clean up.
-///  We also modify the undo state (the action doesn't become
-///  undo-able, but it gets merged with the previous undo-able
-///  event).
-void TrackPanel::HandleResizeButtonUp(wxMouseEvent & WXUNUSED(event))
-{
-   SetCapturedTrack( NULL );
-   MakeParentRedrawScrollbars();
-   MakeParentModifyState(false);
-}
-
-///  Resize dragging means that the mouse button IS down and has moved
-///  from its initial location.  By the time we get here, we
-///  have already received a ButtonDown() event and saved the
-///  track being resized in mCapturedTrack.
-void TrackPanel::HandleResizeDrag(wxMouseEvent & event)
-{
-   int delta = (event.m_y - mMouseClickY);
-
-   // On first drag, jump out of minimized mode.  Initial height
-   // will be height of minimized track.
-   //
-   // This used to be in HandleResizeClick(), but simply clicking
-   // on a resize border would switch the minimized state.
-   if (mCapturedTrack->GetMinimized()) {
-      Track *link = mCapturedTrack->GetLink();
-
-      mCapturedTrack->SetHeight(mCapturedTrack->GetHeight());
-      mCapturedTrack->SetMinimized(false);
-
-      if (link) {
-         link->SetHeight(link->GetHeight());
-         link->SetMinimized(false);
-         // Initial values must be reset since they weren't based on the
-         // minimized heights.
-         mInitialUpperTrackHeight = link->GetHeight();
-         mInitialTrackHeight = mCapturedTrack->GetHeight();
-      }
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-      else if(MONO_WAVE_PAN(mCapturedTrack)){
-         mCapturedTrack->SetMinimized(false);
-         mInitialUpperTrackHeight = mCapturedTrack->GetHeight();
-         mInitialTrackHeight = mCapturedTrack->GetHeight(true);
-      }
-#endif
-   }
-
-   // Common pieces of code for MONO_WAVE_PAN and otherwise.
-   auto doResizeBelow = [&] (Track *prev, bool vStereo) {
-      double proportion = static_cast < double >(mInitialTrackHeight)
-      / (mInitialTrackHeight + mInitialUpperTrackHeight);
-
-      int newTrackHeight = static_cast < int >
-      (mInitialTrackHeight + delta * proportion);
-
-      int newUpperTrackHeight = static_cast < int >
-      (mInitialUpperTrackHeight + delta * (1.0 - proportion));
-
-      //make sure neither track is smaller than its minimum height
-      if (newTrackHeight < mCapturedTrack->GetMinimizedHeight())
-         newTrackHeight = mCapturedTrack->GetMinimizedHeight();
-      if (newUpperTrackHeight < prev->GetMinimizedHeight())
-         newUpperTrackHeight = prev->GetMinimizedHeight();
-
-      mCapturedTrack->SetHeight(newTrackHeight
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-                                , vStereo
-#endif
-                                );
-      prev->SetHeight(newUpperTrackHeight);
-   };
-
-   auto doResizeBetween = [&] (Track *next, bool vStereo) {
-      int newUpperTrackHeight = mInitialUpperTrackHeight + delta;
-      int newTrackHeight = mInitialTrackHeight - delta;
-
-      // make sure neither track is smaller than its minimum height
-      if (newTrackHeight < next->GetMinimizedHeight()) {
-         newTrackHeight = next->GetMinimizedHeight();
-         newUpperTrackHeight =
-         mInitialUpperTrackHeight + mInitialTrackHeight - next->GetMinimizedHeight();
-      }
-      if (newUpperTrackHeight < mCapturedTrack->GetMinimizedHeight()) {
-         newUpperTrackHeight = mCapturedTrack->GetMinimizedHeight();
-         newTrackHeight =
-         mInitialUpperTrackHeight + mInitialTrackHeight - mCapturedTrack->GetMinimizedHeight();
-      }
-
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-      if (vStereo) {
-         float temp = 1.0f;
-         if(newUpperTrackHeight != 0.0f)
-            temp = (float)newUpperTrackHeight/(float)(newUpperTrackHeight + newTrackHeight);
-         mCapturedTrack->SetVirtualTrackPercentage(temp);
-      }
-#endif
-
-      mCapturedTrack->SetHeight(newUpperTrackHeight);
-      next->SetHeight(newTrackHeight
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-                      , vStereo
-#endif
-      );
-   };
-
-   auto doResize = [&] {
-      int newTrackHeight = mInitialTrackHeight + delta;
-      if (newTrackHeight < mCapturedTrack->GetMinimizedHeight())
-         newTrackHeight = mCapturedTrack->GetMinimizedHeight();
-      mCapturedTrack->SetHeight(newTrackHeight);
-   };
-
-   //STM: We may be dragging one or two (stereo) tracks.
-   // If two, resize proportionally if we are dragging the lower track, and
-   // adjust compensatively if we are dragging the upper track.
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   if(MONO_WAVE_PAN(mCapturedTrack)) {
-      switch( mMouseCapture )
-      {
-         case IsResizingBelowLinkedTracks:
-         {
-            doResizeBelow( mCapturedTrack, true );
-            break;
-         }
-         case IsResizingBetweenLinkedTracks:
-         {
-            doResizeBetween( mCapturedTrack, true );
-            break;
-         }
-         case IsResizing:
-         {
-            // Should imply !MONO_WAVE_PAN(mCapturedTrack),
-            // so impossible, but anyway:
-            doResize();
-            break;
-         }
-         default:
-            // don't refresh in this case.
-            return;
-      }
-   }
-   else
-#endif
-   {
-      switch( mMouseCapture )
-      {
-         case IsResizingBelowLinkedTracks:
-         {
-            Track *prev = mTracks->GetPrev(mCapturedTrack);
-            doResizeBelow(prev, false);
-            break;
-         }
-         case IsResizingBetweenLinkedTracks:
-         {
-            Track *next = mTracks->GetNext(mCapturedTrack);
-            doResizeBetween(next, false);
-            break;
-         }
-         case IsResizing:
-         {
-            doResize();
-            break;
-         }
-         default:
-            // don't refresh in this case.
-            return;
-      }
-   }
-   Refresh(false);
-}
-
-/// HandleResize gets called when:
-///  - A mouse-down event occurs in the "resize region" of a track,
-///    i.e. to change its vertical height.
-///  - A mouse event occurs and mIsResizing==true (i.e. while
-///    the resize is going on)
-void TrackPanel::HandleResize(wxMouseEvent & event)
-{
-   if (event.LeftDown()) {
-      HandleResizeClick( event );
-   }
-   else if (event.LeftUp())
-   {
-      HandleResizeButtonUp( event );
-   }
-   else if (event.Dragging()) {
-      HandleResizeDrag( event );
-   }
-}
-
 /// Handle mouse wheel rotation (for zoom in/out, vertical and horizontal scrolling)
 void TrackPanel::HandleWheelRotation(wxMouseEvent & event)
 {
@@ -3657,12 +3342,6 @@ try
       }
    }
    else switch( mMouseCapture ) {
-   case IsResizing:
-   case IsResizingBetweenLinkedTracks:
-   case IsResizingBelowLinkedTracks:
-      HandleResize(event);
-      HandleCursor(event);
-      break;
    case IsAdjustingLabel:
       // Reach this case only when the captured track was label
       HandleGlyphDragRelease(static_cast<LabelTrack *>(mCapturedTrack), event);
@@ -3885,16 +3564,17 @@ void TrackPanel::HandleTrackSpecificMouseEvent(wxMouseEvent & event)
    auto &pCell = foundCell.pCell;
    auto &rect = foundCell.rect;
 
-   //call HandleResize if I'm over the border area
-   // (Add margin back to bottom of the rectangle)
-   if (event.LeftDown() &&
-       pTrack &&
+   // see if I'm over the border area.
+   // TrackPanelResizeHandle is the UIHandle subclass that TrackPanel knows
+   // and uses directly, because allocating area to cells is TrackPanel's business,
+   // and we implement a "hit test" directly here.
+   if (mUIHandle == NULL &&
+       event.LeftDown()) {
+      if (pCell &&
           (within(event.m_y,
                   (rect.GetBottom() + (kBottomMargin + kTopMargin) / 2),
-                  TRACK_RESIZE_REGION))) {
-      HandleResize(event);
-      HandleCursor(event);
-      return;
+                  TRACK_RESIZE_REGION)))
+         mUIHandle = &TrackPanelResizeHandle::Instance();
    }
 
    //Determine if user clicked on the track's left-hand label or ruler

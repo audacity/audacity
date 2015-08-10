@@ -1234,6 +1234,7 @@
 		5E7396591DAFDA3600BA0A4D /* TrackButtonHandles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E7396571DAFDA3600BA0A4D /* TrackButtonHandles.cpp */; };
 		5E73965C1DAFDAA400BA0A4D /* BackgroundCell.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E73965A1DAFDAA400BA0A4D /* BackgroundCell.cpp */; };
 		5E73965F1DAFDAEC00BA0A4D /* TrackSelectHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E73965D1DAFDAEC00BA0A4D /* TrackSelectHandle.cpp */; };
+		5E7396621DAFDB1E00BA0A4D /* TrackPanelResizeHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E7396601DAFDB1E00BA0A4D /* TrackPanelResizeHandle.cpp */; };
 		5E74D2E31CC4429700D88B0B /* EditCursorOverlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E74D2DD1CC4429700D88B0B /* EditCursorOverlay.cpp */; };
 		5E74D2E41CC4429700D88B0B /* PlayIndicatorOverlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E74D2DF1CC4429700D88B0B /* PlayIndicatorOverlay.cpp */; };
 		5E74D2E51CC4429700D88B0B /* Scrubbing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E74D2E11CC4429700D88B0B /* Scrubbing.cpp */; };
@@ -3073,6 +3074,8 @@
 		5E73965B1DAFDAA400BA0A4D /* BackgroundCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackgroundCell.h; sourceTree = "<group>"; };
 		5E73965D1DAFDAEC00BA0A4D /* TrackSelectHandle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TrackSelectHandle.cpp; sourceTree = "<group>"; };
 		5E73965E1DAFDAEC00BA0A4D /* TrackSelectHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackSelectHandle.h; sourceTree = "<group>"; };
+		5E7396601DAFDB1E00BA0A4D /* TrackPanelResizeHandle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TrackPanelResizeHandle.cpp; sourceTree = "<group>"; };
+		5E7396611DAFDB1E00BA0A4D /* TrackPanelResizeHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackPanelResizeHandle.h; sourceTree = "<group>"; };
 		5E74D2D91CC4427B00D88B0B /* TrackPanelCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackPanelCell.h; sourceTree = "<group>"; };
 		5E74D2DA1CC4427B00D88B0B /* TrackPanelCellIterator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackPanelCellIterator.h; sourceTree = "<group>"; };
 		5E74D2DD1CC4429700D88B0B /* EditCursorOverlay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditCursorOverlay.cpp; sourceTree = "<group>"; };
@@ -4022,6 +4025,7 @@
 				1790B0EA09883BFD008A330A /* TrackArtist.cpp */,
 				1790B0EC09883BFD008A330A /* TrackPanel.cpp */,
 				1790B0EE09883BFD008A330A /* TrackPanelAx.cpp */,
+				5E7396601DAFDB1E00BA0A4D /* TrackPanelResizeHandle.cpp */,
 				5E15123B1DB000C000702E29 /* UIHandle.cpp */,
 				1790B0F209883BFD008A330A /* UndoManager.cpp */,
 				5E07842F1DF1E4F400CA76EA /* UserException.cpp */,
@@ -4127,6 +4131,7 @@
 				5E74D2DA1CC4427B00D88B0B /* TrackPanelCellIterator.h */,
 				2803C8B619F35AA000278526 /* TrackPanelListener.h */,
 				5E15123A1DB000C000702E29 /* TrackPanelMouseEvent.h */,
+				5E7396611DAFDB1E00BA0A4D /* TrackPanelResizeHandle.h */,
 				284416391B82D6BC0000574D /* TranslatableStringArray.h */,
 				5E15123C1DB000C000702E29 /* UIHandle.h */,
 				1790B0F309883BFD008A330A /* UndoManager.h */,
@@ -7933,6 +7938,7 @@
 				28F2CED4181867BB00573D61 /* numformatter.cpp in Sources */,
 				28F2CED5181867BB00573D61 /* valnum.cpp in Sources */,
 				EDFCEB9C18894AE600C98E51 /* OpenSaveCommands.cpp in Sources */,
+				5E7396621DAFDB1E00BA0A4D /* TrackPanelResizeHandle.cpp in Sources */,
 				EDFCEBA618894B2A00C98E51 /* RealFFTf48x.cpp in Sources */,
 				EDFCEBA718894B2A00C98E51 /* SseMathFuncs.cpp in Sources */,
 				EDFCEBB518894B9E00C98E51 /* Equalization48x.cpp in Sources */,

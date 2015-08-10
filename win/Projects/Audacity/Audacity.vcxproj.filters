@@ -1028,6 +1028,9 @@
     <ClCompile Include="..\..\..\src\tracks\ui\TrackSelectHandle.cpp">
       <Filter>src\tracks\ui</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\TrackPanelResizeHandle.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\AboutDialog.h">
@@ -2046,6 +2049,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\tracks\ui\TrackSelectHandle.h">
       <Filter>src\tracks\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\TrackPanelResizeHandle.h">
+      <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
