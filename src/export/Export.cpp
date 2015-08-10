@@ -298,6 +298,7 @@ END_EVENT_TABLE()
 Exporter::Exporter()
 {
    mMixerSpec = NULL;
+   mBook = NULL;
 
    SetFileDialogTitle( _("Export Audio") );
 
@@ -902,7 +903,8 @@ void Exporter::OnFilterChanged(wxFileCtrlEvent & evt)
 {
    int index = evt.GetFilterIndex();
 
-   if (index < 0 || index >= (int) mBook->GetPageCount())
+   // On GTK, this event can fire before the userpane is created
+   if (mBook == NULL || index < 0 || index >= (int) mBook->GetPageCount())
    {
       return;
    }
