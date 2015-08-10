@@ -998,8 +998,8 @@ void CommandManager::Modify(wxString name, wxString newLabel)
 {
    CommandListEntry *entry = mCommandNameHash[name];
    if (entry && entry->menu) {
-      entry->label = newLabel.BeforeFirst(wxT('\t'));
-      entry->menu->SetLabel(entry->id, entry->label);
+      entry->label = newLabel;
+      entry->menu->SetLabel(entry->id, GetLabel(entry));
    }
 }
 
