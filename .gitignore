@@ -46,6 +46,7 @@
 
 # Mac Specific
 .DS_Store
+project.xcworkspace
 xcuserdata
 *.xcconfig
 mac/build

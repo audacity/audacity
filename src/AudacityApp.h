@@ -234,11 +234,13 @@ extern AudacityApp & wxGetApp();
 #if defined(__WXMAC__)
 inline void EnableAntialiasing(wxDC & dc)
 {
+   dc.GetGraphicsContext()->EnableOffset(false);
    dc.GetGraphicsContext()->SetAntialiasMode(wxANTIALIAS_DEFAULT);
 }
 
 inline void DisableAntialiasing(wxDC & dc)
 {
+   dc.GetGraphicsContext()->EnableOffset(true);
    dc.GetGraphicsContext()->SetAntialiasMode(wxANTIALIAS_NONE);
 }
 
