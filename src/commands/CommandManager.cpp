@@ -729,15 +729,15 @@ void CommandManager::AddCommand(const wxChar *name,
    }
 }
 
-void CommandManager::AddMetaCommand(const wxChar *name,
-                                    const wxChar *label_in,
-                                    CommandFunctor *callback,
-                                    const wxChar *accel)
+void CommandManager::AddGlobalCommand(const wxChar *name,
+                                      const wxChar *label_in,
+                                      CommandFunctor *callback,
+                                      const wxChar *accel)
 {
    CommandListEntry *entry = NewIdentifier(name, label_in, accel, NULL, callback, false, 0, 0);
 
    entry->enabled = false;
-   entry->isMeta = true;
+   entry->isGlobal = true;
    entry->flags = 0;
    entry->mask = 0;
 }
@@ -834,9 +834,8 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & name,
    entry->flags = mDefaultFlags;
    entry->mask = mDefaultMask;
    entry->enabled = true;
-   entry->wantevent = (accel.Find(wxT("\twantevent")) != wxNOT_FOUND);
-   entry->ignoredown = (accel.Find(wxT("\tignoredown")) != wxNOT_FOUND);
-   entry->isMeta = false;
+   entry->wantKeyup = (accel.Find(wxT("\twantKeyup")) != wxNOT_FOUND);
+   entry->isGlobal = false;
 
    // For key bindings for commands with a list, such as effects,
    // the name in prefs is the category name plus the effect name.
@@ -1042,11 +1041,27 @@ void CommandManager::TellUserWhyDisallowed( wxUint32 flagsGot, wxUint32 flagsReq
 ///
 ///
 ///
-bool CommandManager::FilterKeyEvent(AudacityProject *project, wxKeyEvent & evt, bool permit)
+bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent & evt, bool permit)
 {
-   if (HandleMeta(evt))
+   CommandListEntry *entry = mCommandKeyHash[KeyEventToKeyString(evt)];
+   if (entry == NULL)
    {
-      return true;
+      return false;
+   }
+
+   // Global commands are tied to any specific project
+   if (entry->isGlobal)
+   {
+      // Global commands are always disabled so they do not interfere with the
+      // rest of the command handling.  But, to use the common handler, we
+      // enable it temporarily and then disable it again after handling.
+      entry->enabled = true;
+      bool ret = HandleCommandEntry(entry, 0xffffffff, 0xffffffff, &evt);
+      entry->enabled = false;
+      if (ret)
+      {
+         return true;
+      }
    }
 
    // Any other keypresses must be destined for this project window.
@@ -1059,10 +1074,13 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, wxKeyEvent & evt, 
 
    wxKeyEvent temp = evt;
    temp.SetEventType(wxEVT_KEY_DOWN);
-   if (HandleKey(temp, flags, 0xFFFFFFFF))
+   if (HandleCommandEntry(entry, flags, 0xffffffff, &evt))
    {
-      temp.SetEventType(wxEVT_KEY_UP);
-      HandleKey(temp, flags, 0xFFFFFFFF);
+      if (entry->wantKeyup)
+      {
+         temp.SetEventType(wxEVT_KEY_UP);
+         HandleCommandEntry(entry, flags, 0xffffffff, &evt);
+      }
 
       return true;
    }
@@ -1074,7 +1092,7 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, wxKeyEvent & evt, 
 /// returning true iff successful.  If you pass any flags,
 ///the command won't be executed unless the flags are compatible
 ///with the command's flags.
-bool CommandManager::HandleCommandEntry(CommandListEntry * entry, wxUint32 flags, wxUint32 mask, const wxEvent * evt)
+bool CommandManager::HandleCommandEntry(const CommandListEntry * entry, wxUint32 flags, wxUint32 mask, const wxEvent * evt)
 {
    if (!entry || !entry->enabled)
       return false;
@@ -1112,53 +1130,6 @@ bool CommandManager::HandleMenuID(int id, wxUint32 flags, wxUint32 mask)
 {
    CommandListEntry *entry = mCommandIDHash[id];
    return HandleCommandEntry( entry, flags, mask );
-}
-
-///Call this when a key event is received.
-///If it matches a command, it will call the appropriate
-///CommandManagerListener function.  If you pass any flags,
-///the command won't be executed unless the flags are compatible
-///with the command's flags.
-bool CommandManager::HandleKey(wxKeyEvent &evt, wxUint32 flags, wxUint32 mask)
-{
-   wxString keyStr = KeyEventToKeyString(evt);
-   CommandListEntry *entry = mCommandKeyHash[keyStr];
-
-   if (entry)
-   {
-      if (evt.GetEventType() == wxEVT_KEY_DOWN && !entry->ignoredown)
-      {
-         return HandleCommandEntry( entry, flags, mask, &evt );
-      }
-
-      if (evt.GetEventType() == wxEVT_KEY_UP && (entry->wantevent || entry->ignoredown))
-      {
-         return HandleCommandEntry( entry, flags, mask, &evt );
-      }
-   }
-
-   return false;
-}
-
-bool CommandManager::HandleMeta(wxKeyEvent &evt)
-{
-   wxString keyStr = KeyEventToKeyString(evt);
-   CommandListEntry *entry = mCommandKeyHash[keyStr];
-
-   // Return unhandle if it isn't a meta command
-   if (!entry || !entry->isMeta)
-   {
-      return false;
-   }
-
-   // Meta commands are always disabled so they do not interfere with the
-   // rest of the command handling.  But, to use the common handler, we
-   // enable it temporarily and then disable it again after handling.
-   entry->enabled = true;
-   bool ret = HandleCommandEntry( entry, 0xffffffff, 0xffffffff, &evt );
-   entry->enabled = false;
-
-   return ret;
 }
 
 /// HandleTextualCommand() allows us a limitted version of script/batch
@@ -1471,7 +1442,7 @@ void CommandManager::CheckDups()
          continue;
       }
 
-      if (mCommandList[j]->label.AfterLast(wxT('\t')) == wxT("allowdup")) {
+      if (mCommandList[j]->label.AfterLast(wxT('\t')) == wxT("allowDup")) {
          continue;
       }
 

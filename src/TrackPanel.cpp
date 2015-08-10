@@ -324,7 +324,7 @@ BEGIN_EVENT_TABLE(TrackPanel, wxWindow)
     EVT_MOUSE_CAPTURE_LOST(TrackPanel::OnCaptureLost)
     EVT_COMMAND(wxID_ANY, EVT_CAPTURE_KEY, TrackPanel::OnCaptureKey)
     EVT_KEY_DOWN(TrackPanel::OnKeyDown)
-    EVT_KEY_DOWN(TrackPanel::OnKeyUp)
+    EVT_KEY_UP(TrackPanel::OnKeyUp)
     EVT_CHAR(TrackPanel::OnChar)
     EVT_SIZE(TrackPanel::OnSize)
     EVT_ERASE_BACKGROUND(TrackPanel::OnErase)
@@ -6243,29 +6243,36 @@ void TrackPanel::OnCaptureKey(wxCommandEvent & event)
    event.Skip(!((LabelTrack *)t)->CaptureKey(*kevent));
 }
 
-/// Allow typing into LabelTracks.
 void TrackPanel::OnKeyDown(wxKeyEvent & event)
 {
-   if (event.GetKeyCode() == WXK_ESCAPE)
+   switch (event.GetKeyCode())
+   {
+   case WXK_ESCAPE:
       HandleEscapeKey(true);
+      break;
 
-   if (event.GetKeyCode() == WXK_ALT)
+   case WXK_ALT:
       HandleAltKey(true);
+      break;
 
-   // Allow the zoom cursor to change to a zoom out cursor
-   if (event.GetKeyCode() == WXK_SHIFT)
+   case WXK_SHIFT:
       HandleShiftKey(true);
+      break;
 
-   if (event.GetKeyCode() == WXK_CONTROL)
+   case WXK_CONTROL:
       HandleControlKey(true);
+      break;
 
    // Allow PageUp and PageDown keys to
    //scroll the Track Panel left and right
-   if (event.GetKeyCode() == WXK_PAGEUP)
+   case WXK_PAGEUP:
       HandlePageUpKey();
+      return;
 
-   if (event.GetKeyCode() == WXK_PAGEDOWN)
+   case WXK_PAGEDOWN:
       HandlePageDownKey();
+      return;
+   }
 
    Track *t = GetFocusedTrack();
 
@@ -6301,9 +6308,19 @@ void TrackPanel::OnKeyDown(wxKeyEvent & event)
       RefreshTrack(t);
 }
 
-/// Allow typing into LabelTracks.
 void TrackPanel::OnChar(wxKeyEvent & event)
 {
+   switch (event.GetKeyCode())
+   {
+   case WXK_ESCAPE:
+   case WXK_ALT:
+   case WXK_SHIFT:
+   case WXK_CONTROL:
+   case WXK_PAGEUP:
+   case WXK_PAGEDOWN:
+      return;
+   }
+
    // Only deal with LabelTracks
    Track *t = GetFocusedTrack();
    if (!t || t->GetKind() != Track::Label) {
@@ -6331,19 +6348,25 @@ void TrackPanel::OnChar(wxKeyEvent & event)
 
 void TrackPanel::OnKeyUp(wxKeyEvent & event)
 {
-   if (event.GetKeyCode() == WXK_ESCAPE)
+   switch (event.GetKeyCode())
+   {
+   case WXK_ESCAPE:
       HandleEscapeKey(false);
-
-   if (event.GetKeyCode() == WXK_ALT)
+      break;
+   case WXK_ALT:
       HandleAltKey(false);
+      break;
 
-   // Allow the Zoom Out cursor back to Zoom In
-   if (event.GetKeyCode() == WXK_SHIFT)
+   case WXK_SHIFT:
       HandleShiftKey(false);
+      break;
 
-   if (event.GetKeyCode() == WXK_CONTROL)
+   case WXK_CONTROL:
       HandleControlKey(false);
+      break;
+   }
 
+   event.Skip();
 }
 
 /// Should handle the case when the mouse capture is lost.

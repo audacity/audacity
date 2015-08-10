@@ -738,8 +738,6 @@ void AudacityApp::MacNewFile()
 
 #endif //__WXMAC__
 
-typedef int (AudacityApp::*SPECIALKEYEVENT)(wxKeyEvent&);
-
 #define ID_RECENT_CLEAR 6100
 #define ID_RECENT_FIRST 6101
 #define ID_RECENT_LAST  6112
