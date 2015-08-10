@@ -1905,7 +1905,7 @@ bool LabelTrack::OnChar(SelectedRegion &WXUNUSED(newSel), wxKeyEvent & event)
 
    // Cache the character
    wxChar charCode = event.GetUnicodeKey();
-   if (charCode == 0) {
+   if (charCode == 0 || wxIscntrl(charCode)) {
       event.Skip();
       return false;
    }
