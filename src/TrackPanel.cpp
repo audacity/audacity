@@ -1685,6 +1685,7 @@ bool TrackPanel::SetCursorByActivity( )
       SetCursor( unsafe ? *mDisabledCursor : *mRearrangeCursor);
       return true;
    case IsAdjustingLabel:
+   case IsSelectingLabelText:
       return true;
 #ifdef USE_MIDI
    case IsStretching:
@@ -2705,30 +2706,6 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
             }
          }
       } // mAdjustSelectionEdges
-   }
-
-   //Determine if user clicked on a label track.
-   if (pTrack && (pTrack->GetKind() == Track::Label))
-   {
-      LabelTrack *lt = (LabelTrack *) pTrack;
-      if (lt->HandleMouse(event, rect,//mCapturedRect,
-                          *mViewInfo,
-                          &mViewInfo->selectedRegion)) {
-         MakeParentPushState(_("Modified Label"),
-                             _("Label Edit"),
-                             PUSH_CONSOLIDATE);
-      }
-
-      // IF the user clicked a label, THEN select all other tracks by Label
-      if (lt->IsSelected()) {
-         mTracks->Select(lt);
-         SelectTracksByLabel( lt );
-         DisplaySelection();
-
-         // Not starting a drag
-         SetCapturedTrack(NULL, IsUncaptured);
-         return;
-      }
    }
 
 #ifdef USE_MIDI
@@ -6471,7 +6448,10 @@ void TrackPanel::OnMouseEvent(wxMouseEvent & event)
       HandleZoom(event);
       break;
    case IsAdjustingLabel:
-      HandleLabelTrackMouseEvent((LabelTrack *)mCapturedTrack, mCapturedRect, event);
+      HandleGlyphDragRelease(static_cast<LabelTrack *>(mCapturedTrack), event);
+      break;
+   case IsSelectingLabelText:
+      HandleTextDragRelease(static_cast<LabelTrack *>(mCapturedTrack), event);
       break;
    default: //includes case of IsUncaptured
       // This is where most button-downs are detected
@@ -6607,12 +6587,15 @@ bool TrackPanel::IsOverCutline(WaveTrack * track, wxRect &rect, wxMouseEvent &ev
 
 
 /// Event has happened on a track and it has been determined to be a label track.
-bool TrackPanel::HandleLabelTrackMouseEvent(LabelTrack * lTrack, wxRect &rect, wxMouseEvent & event)
+bool TrackPanel::HandleLabelTrackClick(LabelTrack * lTrack, wxRect &rect, wxMouseEvent & event)
 {
-   /// \todo This method is one of a large number of methods in
-   /// TrackPanel which suitably modified belong in other classes.
+   if (!event.ButtonDown())
+      return false;
+
    if(event.LeftDown())
    {
+      /// \todo This method is one of a large number of methods in
+      /// TrackPanel which suitably modified belong in other classes.
       TrackListIterator iter(mTracks);
       Track *n = iter.First();
 
@@ -6623,68 +6606,46 @@ bool TrackPanel::HandleLabelTrackMouseEvent(LabelTrack * lTrack, wxRect &rect, w
          }
          n = iter.Next();
       }
-
-      //If the button was pressed, check to see if we are over
-      //a glyph (this is the second of three calls to the method).
-      //std::cout << ((LabelTrack*)pTrack)->OverGlyph(event.m_x, event.m_y) << std::endl;
-      if(lTrack->OverGlyph(event.m_x, event.m_y))
-      {
-         SetCapturedTrack(lTrack, IsAdjustingLabel);
-         mCapturedRect = rect;
-         mCapturedRect.x += kLeftInset;
-         mCapturedRect.width -= kLeftInset;
-      }
-   } else if (event.Dragging()) {
-      ;
-   } else if (event.LeftUp() && mCapturedTrack && (mCapturedTrack->GetKind() == Track::Label)) {
-      SetCapturedTrack( NULL );
    }
 
-   if (lTrack->HandleMouse(event, mCapturedRect,
-      *mViewInfo, &mViewInfo->selectedRegion)) {
+   lTrack->HandleClick(event, mCapturedRect, *mViewInfo, &mViewInfo->selectedRegion);
 
-      MakeParentPushState(_("Modified Label"),
-                          _("Label Edit"),
-                          PUSH_CONSOLIDATE);
-   }
-
-   //If we are adjusting a label on a labeltrack, do not do anything
-   //that follows. Instead, redraw the track.
-   if(mMouseCapture == IsAdjustingLabel)
+   if (lTrack->IsAdjustingLabel())
    {
+      SetCapturedTrack(lTrack, IsAdjustingLabel);
+      mCapturedRect = rect;
+      mCapturedRect.x += kLeftInset;
+      mCapturedRect.width -= kLeftInset;
+
+      //If we are adjusting a label on a labeltrack, do not do anything
+      //that follows. Instead, redraw the track.
       RefreshTrack(lTrack);
       return true;
    }
 
-   // handle dragging
-   if(event.Dragging()) {
-      // locate the initial mouse position
-      if (event.LeftIsDown()) {
-         if (mLabelTrackStartXPos == -1) {
-            mLabelTrackStartXPos = event.m_x;
-            mLabelTrackStartYPos = event.m_y;
+   // IF the user clicked a label, THEN select all other tracks by Label
+   if (lTrack->IsSelected()) {
+      mTracks->Select(lTrack);
+      SelectTracksByLabel(lTrack);
+      DisplaySelection();
 
-            if ((lTrack->getSelectedIndex() != -1) &&
-               lTrack->OverTextBox(
-                  lTrack->GetLabel(lTrack->getSelectedIndex()),
-                  mLabelTrackStartXPos,
-                  mLabelTrackStartYPos))
-            {
-               mLabelTrackStartYPos = -1;
-            }
-         }
-         // if initial mouse position in the text box
-         // then only drag text
-         if (mLabelTrackStartYPos == -1) {
+      // Not starting a drag
+      SetCapturedTrack(NULL, IsUncaptured);
+
+      if(mCapturedTrack == NULL)
+         SetCapturedTrack(lTrack, IsSelectingLabelText);
+      // handle shift+mouse left button
+      if (event.ShiftDown() && event.ButtonDown()) {
+         // if the mouse is clicked in text box, set flags
+         if (lTrack->OverTextBox(lTrack->GetLabel(lTrack->getSelectedIndex()), event.m_x, event.m_y)) {
+            lTrack->SetInBox(true);
+            lTrack->SetDragXPos(event.m_x);
+            lTrack->SetResetCursorPos(true);
             RefreshTrack(lTrack);
             return true;
          }
       }
-   }
-
-   // handle mouse left button up
-   if (event.LeftUp()) {
-      mLabelTrackStartXPos = -1;
+      return true;
    }
 
    // handle shift+ctrl down
@@ -6694,19 +6655,81 @@ bool TrackPanel::HandleLabelTrackMouseEvent(LabelTrack * lTrack, wxRect &rect, w
       return;
    }*/
 
-   // handle shift+mouse left button
-   if (event.ShiftDown() && event.ButtonDown() && (lTrack->getSelectedIndex() != -1)) {
-      // if the mouse is clicked in text box, set flags
-      if (lTrack->OverTextBox(lTrack->GetLabel(lTrack->getSelectedIndex()), event.m_x, event.m_y)) {
-         lTrack->SetInBox(true);
-         lTrack->SetDragXPos(event.m_x);
-         lTrack->SetResetCursorPos(true);
-         RefreshTrack(lTrack);
-         return true;
-      }
-   }
    // return false, there is more to do...
    return false;
+}
+
+/// Event has happened on a track and it has been determined to be a label track.
+void TrackPanel::HandleGlyphDragRelease(LabelTrack * lTrack, wxMouseEvent & event)
+{
+   if (!lTrack)
+      return;
+
+   /// \todo This method is one of a large number of methods in
+   /// TrackPanel which suitably modified belong in other classes.
+   if (event.Dragging()) {
+      ;
+   } else if (event.LeftUp() && mCapturedTrack && (mCapturedTrack->GetKind() == Track::Label)) {
+      SetCapturedTrack(NULL);
+   }
+
+   if (lTrack->HandleGlyphDragRelease(event, mCapturedRect,
+      *mViewInfo, &mViewInfo->selectedRegion)) {
+      MakeParentPushState(_("Modified Label"),
+         _("Label Edit"),
+         PUSH_CONSOLIDATE);
+   }
+
+   //If we are adjusting a label on a labeltrack, do not do anything
+   //that follows. Instead, redraw the track.
+   RefreshTrack(lTrack);
+   return;
+}
+
+/// Event has happened on a track and it has been determined to be a label track.
+void TrackPanel::HandleTextDragRelease(LabelTrack * lTrack, wxMouseEvent & event)
+{
+   if (!lTrack)
+      return;
+
+   /// \todo This method is one of a large number of methods in
+   /// TrackPanel which suitably modified belong in other classes.
+   if (event.Dragging()) {
+      ;
+   } else if (event.LeftUp() && mCapturedTrack && (mCapturedTrack->GetKind() == Track::Label)) {
+      SetCapturedTrack(NULL);
+   }
+
+   // handle dragging
+   if (event.Dragging()) {
+      // locate the initial mouse position
+      if (event.LeftIsDown()) {
+         if (mLabelTrackStartXPos == -1) {
+            mLabelTrackStartXPos = event.m_x;
+            mLabelTrackStartYPos = event.m_y;
+
+            if ((lTrack->getSelectedIndex() != -1) &&
+               lTrack->OverTextBox(
+               lTrack->GetLabel(lTrack->getSelectedIndex()),
+               mLabelTrackStartXPos,
+               mLabelTrackStartYPos))
+            {
+               mLabelTrackStartYPos = -1;
+            }
+         }
+         // if initial mouse position in the text box
+         // then only drag text
+         if (mLabelTrackStartYPos == -1) {
+            RefreshTrack(lTrack);
+            return;
+         }
+      }
+   }
+
+   // handle mouse left button up
+   if (event.LeftUp()) {
+      mLabelTrackStartXPos = -1;
+   }
 }
 
 // AS: I don't really understand why this code is sectioned off
@@ -6760,7 +6783,7 @@ void TrackPanel::HandleTrackSpecificMouseEvent(wxMouseEvent & event)
    //If so, use MouseDown handler for the label track.
    if (pTrack && (pTrack->GetKind() == Track::Label))
    {
-      if (HandleLabelTrackMouseEvent((LabelTrack *)pTrack, rTrack, event))
+      if (HandleLabelTrackClick((LabelTrack *)pTrack, rTrack, event))
          return;
    }
 

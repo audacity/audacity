@@ -244,7 +244,9 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
    static void BuildVRulerMenuItems(wxMenu * menu, int firstId, const wxArrayString &names);
    virtual bool IsAudioActive();
    virtual bool IsUnsafe();
-   virtual bool HandleLabelTrackMouseEvent(LabelTrack * lTrack, wxRect &rect, wxMouseEvent & event);
+   virtual bool HandleLabelTrackClick(LabelTrack * lTrack, wxRect &rect, wxMouseEvent & event);
+   virtual void HandleGlyphDragRelease(LabelTrack * lTrack, wxMouseEvent & event);
+   virtual void HandleTextDragRelease(LabelTrack * lTrack, wxMouseEvent & event);
    virtual bool HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &rect, wxMouseEvent &event);
    virtual bool IsOverCutline(WaveTrack * track, wxRect &rect, wxMouseEvent &event);
    virtual void HandleTrackSpecificMouseEvent(wxMouseEvent & event);
@@ -741,6 +743,7 @@ protected:
       IsClosing,
       IsSelecting,
       IsAdjustingLabel,
+      IsSelectingLabelText,
       IsAdjustingSample,
       IsResizing,
       IsResizingBetweenLinkedTracks,
