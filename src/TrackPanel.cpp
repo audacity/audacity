@@ -1110,7 +1110,8 @@ void TrackPanel::OnTimer()
    //  that indicates where the current play/record position is. (This also
    //  draws the moving vertical line.)
 
-   if (!gAudioIO->IsPaused() && ( mIndicatorShowing || IsAudioActive())
+   if (!gAudioIO->IsPaused() && // Don't redraw paused indicator needlessly for timer
+       ( mIndicatorShowing || IsAudioActive())
 
 #ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
        && !mSmoothScrollingScrub
@@ -1507,7 +1508,8 @@ void TrackPanel::OnPaint(wxPaintEvent & /* event */)
 
    // Update the indicator in case it was damaged if this project is playing
 
-   if (!gAudioIO->IsPaused() && (mIndicatorShowing || IsAudioActive()))
+   if (// !gAudioIO->IsPaused() && // Bug1139: do repaint the line even if paused.
+       (mIndicatorShowing || IsAudioActive()))
    {
       // If not smooth scrolling, then
       // we just want to repair, not update the old, so set the second param to true.
