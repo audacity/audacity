@@ -1606,7 +1606,7 @@ void LabelTrack::HandleClick(const wxMouseEvent & evt,
          PasteSelectedText(newSel->t0(), newSel->t1());
          wxTheClipboard->UsePrimarySelection(false);
 
-         return false;
+         return;
       }
 #endif
    }
