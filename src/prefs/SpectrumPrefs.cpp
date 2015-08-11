@@ -230,7 +230,7 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
             mTempSettings.isGrayscale);
 
 #ifndef SPECTRAL_SELECTION_GLOBAL_SWITCH
-         S.Id(ID_SPECTRAL_SELECTION).TieCheckBox(_("Ena&ble spectral selection"),
+         S.Id(ID_SPECTRAL_SELECTION).TieCheckBox(_("Ena&ble Spectral Selection"),
             mTempSettings.spectralSelection);
 #endif
 
