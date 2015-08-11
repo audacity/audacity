@@ -4581,11 +4581,13 @@ void TrackPanel::HandleVZoomButtonUp( wxMouseEvent & event )
    if (mCapturedTrack->GetKind() != Track::Wave)
       return;
 
+   /*
    if (event.RightUp() &&
        !(event.ShiftDown() || event.CmdDown())) {
       OnVRulerMenu(mCapturedTrack, &event);
       return;
    }
+   */
 
    HandleWaveTrackVZoom(static_cast<WaveTrack*>(mCapturedTrack),
       event.ShiftDown(), event.RightUp());
