@@ -17,4 +17,36 @@ to work as well.
 
     /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/
 
-That's it.  You can now build using the Xcode project in this directory.
+Xcode is now ready.
+
+You must now build wxWidgets.  We currently require version 3.0.2, do download it from:
+
+   http://sourceforge.net/projects/wxwindows/files/3.0.2/wxWidgets-3.0.2.tar.bz2
+
+Once downloaded untar it (your browser may have already done this):
+
+   tar xf wxWidgets-3.0.2.tar.bz2
+
+And build/install it:
+
+   cd wxWidgets-3.0.2
+   sudo <path to Audacity source>/mac/build_wxwidgets
+
+You should now be able to build Audacity using either the Xcode application or the
+xcodebuild command line tool.
+
+If you need Audacity to use languages other than English, then you'll have to install
+the gettext suite of tools (to get the msgfmt command).  The source can be downloaded
+from:
+
+   ftp://ftp.gnu.org/gnu/gettext/gettext-latest.tar.gz
+
+Untar it:
+
+   tar xf gettext-latest.tar.gz
+
+And install:
+
+   cd gexttext-latest
+   ./configure
+   sudo make install

@@ -7947,10 +7947,11 @@
 				SDKROOT = macosx10.6;
 				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386";
 				TOPLEVEL = ..;
-				WX_CFLAGS = "-I$(WX_PREFIX)/lib/wx/include/osx_cocoa-unicode-$(WX_VER)-debug -I$(WX_PREFIX)/include/wx-$(WX_VER)-debug -D_FILE_OFFSET_BITS=64 -DwxDEBUG_LEVEL=1 -DWXUSINGDLL -D__WXMAC__ -D__WXOSX__ -D__WXOSX_COCOA__";
+				WX_CFLAGS = "-I$(WX_PREFIX)/lib/wx/include/osx_cocoa-unicode-$(WX_VER)-$(WX_FLAVOR) -I$(WX_PREFIX)/include/wx-$(WX_VER)-$(WX_FLAVOR) -D_FILE_OFFSET_BITS=64 -DwxDEBUG_LEVEL=1 -DWXUSINGDLL -D__WXMAC__ -D__WXOSX__ -D__WXOSX_COCOA__";
 				WX_CONFIG = "$(WX_PREFIX)/bin/wx-config";
 				WX_CXXFLAGS = "$(WX_CFLAGS)";
-				WX_LDFLAGS = "-L$(WX_PREFIX)/lib -lwx_osx_cocoau_debug_xrc-$(WX_VER) -lwx_osx_cocoau_debug_webview-$(WX_VER) -lwx_osx_cocoau_debug_html-$(WX_VER) -lwx_osx_cocoau_debug_qa-$(WX_VER) -lwx_osx_cocoau_debug_adv-$(WX_VER) -lwx_osx_cocoau_debug_core-$(WX_VER) -lwx_baseu_debug_xml-$(WX_VER) -lwx_baseu_debug_net-$(WX_VER) -lwx_baseu_debug-$(WX_VER)";
+				WX_FLAVOR = debug;
+				WX_LDFLAGS = "-L$(WX_PREFIX)/lib -lwx_osx_cocoau_$(WX_FLAVOR)_xrc-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_webview-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_html-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_qa-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_adv-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_core-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_xml-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_net-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)-$(WX_VER)";
 				WX_PREFIX = /usr/local;
 				WX_VER = 3.0;
 				ZERO_LINK = NO;
@@ -8259,10 +8260,11 @@
 				SDKROOT = macosx10.6;
 				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386";
 				TOPLEVEL = ..;
-				WX_CFLAGS = "-I$(WX_PREFIX)/lib/wx/include/osx_cocoa-unicode-$(WX_VER)-release -I$(WX_PREFIX)/include/wx-$(WX_VER)-release -D_FILE_OFFSET_BITS=64 -DwxDEBUG_LEVEL=0 -DWXUSINGDLL -D__WXMAC__ -D__WXOSX__ -D__WXOSX_COCOA__";
+				WX_CFLAGS = "-I$(WX_PREFIX)/lib/wx/include/osx_cocoa-unicode-$(WX_VER)-$(WX_FLAVOR) -I$(WX_PREFIX)/include/wx-$(WX_VER)-$(WX_FLAVOR) -D_FILE_OFFSET_BITS=64 -DwxDEBUG_LEVEL=0 -DWXUSINGDLL -D__WXMAC__ -D__WXOSX__ -D__WXOSX_COCOA__";
 				WX_CONFIG = "$(WX_PREFIX)/bin/wx-config";
 				WX_CXXFLAGS = "$(WX_CFLAGS)";
-				WX_LDFLAGS = "-L$(WX_PREFIX)/lib -lwx_osx_cocoau_xrc-$(WX_VER) -lwx_osx_cocoau_webview-$(WX_VER) -lwx_osx_cocoau_html-$(WX_VER) -lwx_osx_cocoau_qa-$(WX_VER) -lwx_osx_cocoau_adv-$(WX_VER) -lwx_osx_cocoau_core-$(WX_VER) -lwx_baseu_xml-$(WX_VER) -lwx_baseu_net-$(WX_VER) -lwx_baseu-$(WX_VER)";
+				WX_FLAVOR = release;
+				WX_LDFLAGS = "-L$(WX_PREFIX)/lib -lwx_osx_cocoau_$(WX_FLAVOR)_xrc-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_webview-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_html-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_qa-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_adv-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_core-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_xml-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_net-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)-$(WX_VER)";
 				WX_PREFIX = /usr/local;
 				WX_VER = 3.0;
 				ZERO_LINK = NO;
