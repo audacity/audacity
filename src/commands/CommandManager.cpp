@@ -1074,12 +1074,12 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
 
    wxKeyEvent temp = evt;
    temp.SetEventType(wxEVT_KEY_DOWN);
-   if (HandleCommandEntry(entry, flags, 0xffffffff, &evt))
+   if (HandleCommandEntry(entry, flags, 0xffffffff, &temp))
    {
       if (entry->wantKeyup)
       {
          temp.SetEventType(wxEVT_KEY_UP);
-         HandleCommandEntry(entry, flags, 0xffffffff, &evt);
+         HandleCommandEntry(entry, flags, 0xffffffff, &temp);
       }
 
       return true;
