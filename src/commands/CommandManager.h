@@ -57,6 +57,7 @@ struct CommandListEntry
    int index;
    int count;
    bool enabled;
+   bool skipKeydown;
    bool wantKeyup;
    bool isGlobal;
    wxUint32 flags;

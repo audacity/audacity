@@ -123,7 +123,14 @@ public:
    :  wxEventFilter()
    {
 #if defined(__WXMAC__)
-      NSEventMask mask = NSKeyDownMask;
+      // In wx3, the menu accelerators take precendence over key event processing
+      // so we won't get wxEVT_CHAR_HOOK events for combinations assigned to menus.
+      // Since we only support OS X 10.6 or greater, we can use an event monitor
+      // to capture the key event before it gets to the normal wx3 processing.
+
+      // The documentation for addLocalMonitorForEventsMatchingMask implies that
+      // NSKeyUpMask can't be used in 10.6, but testing shows that it can.
+      NSEventMask mask = NSKeyDownMask | NSKeyUpMask;
 
       mHandler =
       [
@@ -138,11 +145,18 @@ public:
                {
                   mEvent = event;
 
-                  wxKeyEvent wxevent(wxEVT_KEY_DOWN);
+                  wxKeyEvent wxevent([event type] == NSKeyDown ? wxEVT_KEY_DOWN : wxEVT_KEY_UP);
                   impl->SetupKeyEvent(wxevent, event);
-              
-                  wxKeyEvent eventHook(wxEVT_CHAR_HOOK, wxevent);
-                  return FilterEvent(eventHook) == Event_Processed ? nil : event;
+
+                  if ([event type] == NSKeyDown)
+                  {
+                     wxKeyEvent eventHook(wxEVT_CHAR_HOOK, wxevent);
+                     return FilterEvent(eventHook) == Event_Processed ? nil : event;
+                  }
+                  else
+                  {
+                     return FilterEvent(wxevent) == Event_Processed ? nil : event;
+                  }
                }
             }
 
@@ -166,25 +180,31 @@ public:
    int FilterEvent(wxEvent& event)
    {
       wxEventType type = event.GetEventType();
-      if (type != wxEVT_CHAR_HOOK)
+      if (type != wxEVT_CHAR_HOOK && type != wxEVT_KEY_UP)
       {
          return Event_Skip;
       }
- 
+
       AudacityProject *project = GetActiveProject();
       if (!project || !project->IsEnabled())
       {
          return Event_Skip;
       }
 
+      wxKeyEvent key = (wxKeyEvent &) event;
+      if (type == wxEVT_CHAR_HOOK)
+      {
+         key.SetEventType(wxEVT_KEY_DOWN);
+      }
+
       wxWindow *handler = project->GetKeyboardCaptureHandler();
-      if (handler && HandleCapture(handler, (wxKeyEvent &) event))
+      if (handler && HandleCapture(handler, key))
       {
          return Event_Processed;
       }
 
       CommandManager *manager = project->GetCommandManager();
-      if (manager && manager->FilterKeyEvent(project, (wxKeyEvent &) event))
+      if (manager && manager->FilterKeyEvent(project, key))
       {
          return Event_Processed;
       }
@@ -195,7 +215,7 @@ public:
 private:
 
    // Returns true if the event was captured and processed
-   bool HandleCapture(wxWindow *target, wxKeyEvent & event)
+   bool HandleCapture(wxWindow *target, const wxKeyEvent & event)
    {
       if (wxGetTopLevelParent(target) != wxGetTopLevelParent(wxWindow::FindFocus()))
       {
@@ -203,8 +223,7 @@ private:
       }
       wxEvtHandler *handler = target->GetEventHandler();
 
-      wxKeyEvent temp = (wxKeyEvent &) event;
-      temp.SetEventType(wxEVT_KEY_DOWN);
+      wxKeyEvent temp = event;
 
 #if defined(__WXGTK__)
       // wxGTK uses the control and alt modifiers to represent ALTGR,
@@ -233,24 +252,20 @@ private:
          return false;
       }
 
-      wxString chars = GetUnicodeString(temp);
-      for (size_t i = 0, cnt = chars.Length(); i < cnt; i++)
+      if (temp.GetEventType() == wxEVT_KEY_DOWN)
       {
-         temp = (wxKeyEvent &) event;
-         temp.SetEventType(wxEVT_CHAR);
-         temp.WasProcessed();
-         temp.StopPropagation();
-         temp.m_uniChar = chars[i];
-         wxEventProcessInHandlerOnly onlyChar(temp, handler);
-         handler->ProcessEvent(temp);
+         wxString chars = GetUnicodeString(temp);
+         for (size_t i = 0, cnt = chars.Length(); i < cnt; i++)
+         {
+            temp = event;
+            temp.SetEventType(wxEVT_CHAR);
+            temp.WasProcessed();
+            temp.StopPropagation();
+            temp.m_uniChar = chars[i];
+            wxEventProcessInHandlerOnly onlyChar(temp, handler);
+            handler->ProcessEvent(temp);
+         }
       }
-   
-      temp = (wxKeyEvent &) event;
-      temp.SetEventType(wxEVT_KEY_UP);
-      temp.WasProcessed();
-      temp.StopPropagation();
-      wxEventProcessInHandlerOnly onlyUp(temp, handler);
-      handler->ProcessEvent(temp);
 
       return true;
    }
@@ -834,7 +849,8 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & name,
    entry->flags = mDefaultFlags;
    entry->mask = mDefaultMask;
    entry->enabled = true;
-   entry->wantKeyup = (accel.Find(wxT("\twantKeyup")) != wxNOT_FOUND);
+   entry->skipKeydown = (accel.Find(wxT("\tskipKeydown")) != wxNOT_FOUND);
+   entry->wantKeyup = (accel.Find(wxT("\twantKeyup")) != wxNOT_FOUND) || entry->skipKeydown;
    entry->isGlobal = false;
 
    // For key bindings for commands with a list, such as effects,
@@ -1049,12 +1065,13 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
       return false;
    }
 
-   // Global commands are tied to any specific project
+   // Global commands aren't tied to any specific project
    if (entry->isGlobal)
    {
       // Global commands are always disabled so they do not interfere with the
       // rest of the command handling.  But, to use the common handler, we
-      // enable it temporarily and then disable it again after handling.
+      // enable them temporarily and then disable them again after handling.
+      // LL:  Why do they need to be disabled???
       entry->enabled = true;
       bool ret = HandleCommandEntry(entry, 0xffffffff, 0xffffffff, &evt);
       entry->enabled = false;
@@ -1073,16 +1090,20 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
    wxUint32 flags = project->GetUpdateFlags();
 
    wxKeyEvent temp = evt;
-   temp.SetEventType(wxEVT_KEY_DOWN);
-   if (HandleCommandEntry(entry, flags, 0xffffffff, &temp))
+
+   if (temp.GetEventType() == wxEVT_KEY_DOWN)
    {
-      if (entry->wantKeyup)
+      if (entry->skipKeydown)
       {
-         temp.SetEventType(wxEVT_KEY_UP);
-         HandleCommandEntry(entry, flags, 0xffffffff, &temp);
+         return true;
       }
 
-      return true;
+      return HandleCommandEntry(entry, flags, 0xffffffff, &temp);
+   }
+
+   if (temp.GetEventType() == wxEVT_KEY_UP && entry->wantKeyup)
+   {
+      return HandleCommandEntry(entry, flags, 0xffffffff, &temp);
    }
 
    return false;
