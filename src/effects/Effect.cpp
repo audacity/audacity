@@ -2014,10 +2014,10 @@ bool Effect::TrackProgress(int whichTrack, double frac, wxString msg)
    return (updateResult != eProgressSuccess);
 }
 
-bool Effect::TrackGroupProgress(int whichGroup, double frac)
+bool Effect::TrackGroupProgress(int whichGroup, double frac, wxString msg)
 {
    int updateResult = (mProgress ?
-      mProgress->Update(whichGroup + frac, (double) mNumGroups) :
+      mProgress->Update(whichGroup + frac, (double) mNumGroups, msg) :
       eProgressSuccess);
    return (updateResult != eProgressSuccess);
 }

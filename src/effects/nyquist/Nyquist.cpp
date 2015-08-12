@@ -423,6 +423,18 @@ bool NyquistEffect::Process()
 
    mTrackIndex = 0;
 
+   mNumSelectedChannels = 0;
+   SelectedTrackListOfKindIterator sel(Track::Wave, mOutputTracks);
+   for (WaveTrack *t = (WaveTrack *) sel.First(); t; t = (WaveTrack *) sel.Next()) {
+      mNumSelectedChannels++;
+      if (mT1 >= mT0) {
+         if (t->GetLinked()) {
+            mNumSelectedChannels++;
+            sel.Next();
+         }
+      }
+   }
+
    mDebugOutput.Clear();
 
    if (mVersion >= 4)
@@ -522,24 +534,14 @@ bool NyquistEffect::Process()
       mProps += wxString::Format(wxT("(putprop '*PROJECT* (float %s) 'PREVIEW-DURATION)\n"),
                                  Internat::ToString(previewLen).c_str());
 
-      SelectedTrackListOfKindIterator sel(Track::Wave, mOutputTracks);
-      int numChannels = 0;
-      for (WaveTrack *t = (WaveTrack *) sel.First(); t; t = (WaveTrack *) sel.Next()) {
-         numChannels++;
-         if (mT1 >= mT0) {
-            if (t->GetLinked()) {
-               numChannels++;
-               sel.Next();
-            }
-         }
-      }
+
 
       mProps += wxString::Format(wxT("(putprop '*SELECTION* (float %s) 'START)\n"),
                                  Internat::ToString(mT0).c_str());
       mProps += wxString::Format(wxT("(putprop '*SELECTION* (float %s) 'END)\n"),
                                  Internat::ToString(mT1).c_str());
       mProps += wxString::Format(wxT("(putprop '*SELECTION* (list %s) 'TRACKS)\n"), waveTrackList.c_str());
-      mProps += wxString::Format(wxT("(putprop '*SELECTION* %d 'CHANNELS)\n"), numChannels);
+      mProps += wxString::Format(wxT("(putprop '*SELECTION* %d 'CHANNELS)\n"), mNumSelectedChannels);
    }
 
    // Keep track of whether the current track is first selected in its sync-lock group
@@ -966,6 +968,19 @@ bool NyquistEffect::ProcessOne()
    }
 
    rval = nyx_eval_expression(cmd.mb_str(wxConvUTF8));
+
+   // Audacity has no idea how long Nyquist processing will take, but
+   // can monitor audio being returned.
+   // Anything other than audio should be returmed almost instantly
+   // so notify the user that process has completed (bug 558)
+   if ((rval != nyx_audio) && ((mCount + mCurNumChannels) == mNumSelectedChannels)) {
+      if (mCurNumChannels == 1) {
+         TrackProgress(mCount, 1.0, _("Processing complete."));
+      }
+      else {
+         TrackGroupProgress(mCount, 1.0, _("Processing complete."));
+      }
+   }
 
    if (!rval) {
       wxLogWarning(wxT("Nyquist returned NIL"));

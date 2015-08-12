@@ -209,6 +209,7 @@ private:
    bool              mFirstInGroup;
    double            mOutputTime;
    int               mCount;
+   int               mNumSelectedChannels;
    double            mProgressIn;
    double            mProgressOut;
    double            mProgressTot;

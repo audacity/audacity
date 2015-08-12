@@ -1233,8 +1233,8 @@ ProgressDialog::Update(int value, const wxString & message)
       mLastValue = value;
    }
 
-   // Only update if a full second has passed.
-   if (now - mLastUpdate > 1000)
+   // Only update if a full second has passed.or track progress is complete
+   if ((now - mLastUpdate > 1000) || (value == 1000))
    {
       wxTimeSpan tsElapsed(0, 0, 0, elapsed);
       wxTimeSpan tsRemains(0, 0, 0, remains);
