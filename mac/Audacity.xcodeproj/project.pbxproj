@@ -997,6 +997,7 @@
 		28E67FEE0A3A2B150021D89F /* libFLAC++.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 176EEC1E09A2F2DD00188F3B /* libFLAC++.a */; };
 		28E67FEF0A3A2B160021D89F /* libFLAC.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 176EEBEA09A2F16200188F3B /* libFLAC.a */; };
 		28E67FF00A3A2B190021D89F /* libportaudio.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 28E67F5F0A3A160D0021D89F /* libportaudio.a */; };
+		28EA4A091B7B162500723B3E /* Build.txt in Resources */ = {isa = PBXBuildFile; fileRef = 28EA4A081B7B162500723B3E /* Build.txt */; };
 		28EA56630D9753B000C8D1B6 /* bitreader.c in Sources */ = {isa = PBXBuildFile; fileRef = 28EA56600D9753B000C8D1B6 /* bitreader.c */; };
 		28EA56640D9753B000C8D1B6 /* bitwriter.c in Sources */ = {isa = PBXBuildFile; fileRef = 28EA56610D9753B000C8D1B6 /* bitwriter.c */; };
 		28EA56650D9753B000C8D1B6 /* window.c in Sources */ = {isa = PBXBuildFile; fileRef = 28EA56620D9753B000C8D1B6 /* window.c */; };
@@ -1951,7 +1952,6 @@
 		1790B11109883BFD008A330A /* XMLFileReader.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = XMLFileReader.h; sourceTree = "<group>"; tabWidth = 3; };
 		1790B11209883BFD008A330A /* XMLTagHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = XMLTagHandler.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		1790B11309883BFD008A330A /* XMLTagHandler.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = XMLTagHandler.h; sourceTree = "<group>"; tabWidth = 3; };
-		17FC86F30994637C0061DC94 /* compile.txt */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = text; path = compile.txt; sourceTree = "<group>"; };
 		1818558F0FFE916C0026D190 /* CommandMisc.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = CommandMisc.h; sourceTree = "<group>"; tabWidth = 3; };
 		181855900FFE916C0026D190 /* CommandTargets.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = CommandTargets.h; sourceTree = "<group>"; tabWidth = 3; };
 		181855950FFE916C0026D190 /* ScreenshotCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ScreenshotCommand.cpp; sourceTree = "<group>"; tabWidth = 3; };
@@ -2711,6 +2711,7 @@
 		28E822380A39FDB800DCE280 /* pa_mac_core_internal.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = pa_mac_core_internal.h; sourceTree = "<group>"; tabWidth = 3; };
 		28E8223A0A39FDB800DCE280 /* pa_mac_core_utilities.c */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = pa_mac_core_utilities.c; sourceTree = "<group>"; tabWidth = 3; };
 		28E8223B0A39FDB800DCE280 /* pa_mac_core_utilities.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = pa_mac_core_utilities.h; sourceTree = "<group>"; tabWidth = 3; };
+		28EA4A081B7B162500723B3E /* Build.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Build.txt; sourceTree = "<group>"; };
 		28EA56600D9753B000C8D1B6 /* bitreader.c */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = bitreader.c; sourceTree = "<group>"; tabWidth = 3; };
 		28EA56610D9753B000C8D1B6 /* bitwriter.c */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = bitwriter.c; sourceTree = "<group>"; tabWidth = 3; };
 		28EA56620D9753B000C8D1B6 /* window.c */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = window.c; sourceTree = "<group>"; tabWidth = 3; };
@@ -3739,9 +3740,9 @@
 		1790ABE109883346008A330A = {
 			isa = PBXGroup;
 			children = (
+				28EA4A081B7B162500723B3E /* Build.txt */,
 				288F0977131A3EE00008E860 /* LICENSE.txt */,
 				288F097A131A3F130008E860 /* README.txt */,
-				17FC86F30994637C0061DC94 /* compile.txt */,
 				1790AFB109883B6D008A330A /* Products */,
 				287179EE0DF6383000E171DF /* Xcode Settings */,
 				280A8B3A19F43FE30091DE70 /* includes */,
@@ -6670,6 +6671,7 @@
 				174F73D4098D516D009CD6E0 /* AudacityOGG.icns in Resources */,
 				174F73D5098D516D009CD6E0 /* AudacityProject.icns in Resources */,
 				289FC6051B5EE9A400D1B13F /* hy.po in Resources */,
+				28EA4A091B7B162500723B3E /* Build.txt in Resources */,
 				174F73D6098D516D009CD6E0 /* AudacityWAV.icns in Resources */,
 				8406A93812D0F2510011EA01 /* EQDefaultCurves.xml in Resources */,
 			);
