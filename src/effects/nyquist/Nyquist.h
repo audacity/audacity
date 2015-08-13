@@ -205,6 +205,7 @@ private:
    WaveTrack         *mCurTrack[2];
    sampleCount       mCurStart[2];
    sampleCount       mCurLen;
+   sampleCount       mMaxLen;
    int               mTrackIndex;
    bool              mFirstInGroup;
    double            mOutputTime;
