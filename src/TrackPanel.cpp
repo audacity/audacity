@@ -1047,40 +1047,7 @@ void TrackPanel::OnTimer()
    }
 
 #ifdef EXPERIMENTAL_SCRUBBING_BASIC
-   // Call ContinueScrubbing() here rather than in SelectionHandleDrag()
-   // so that even without drag events, we can instruct the play head to
-   // keep approaching the mouse cursor, when its maximum speed is limited.
-
-   // Thus scrubbing relies mostly on periodic polling of mouse and keys,
-   // not event notifications.  But there are a few event handlers that
-   // leave messages for this routine, in mScrubSeekPress and in mScrubHasFocus.
-   if (IsScrubbing())
-   {
-      wxMouseState state(::wxGetMouseState());
-      wxCoord position = state.GetX();
-      const bool seek = mScrubSeekPress || PollIsSeeking();
-      ScreenToClient(&position, NULL);
-      if (ContinueScrubbing(position, mScrubHasFocus, seek))
-         mScrubSeekPress = false;
-      // else, if seek requested, try again at a later time when we might
-      // enqueue a long enough stutter
-
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
-      if (mSmoothScrollingScrub)
-         // Redraw with every timer tick, to keep the indicator centered.
-         Refresh(false);
-      else
-#endif
-      {
-         if (mScrubSpeedDisplayCountdown > 0) {
-            --mScrubSpeedDisplayCountdown;
-            if (mScrubSpeedDisplayCountdown == kOneSecondCountdown ||
-               mScrubSpeedDisplayCountdown == 0)
-               // Show or hide the maximum speed.
-               Refresh(false);
-         }
-      }
-   }
+   TimerUpdateScrubbing();
 #endif
 
    // Check whether we were playing or recording, but the stream has stopped.
@@ -7303,21 +7270,141 @@ void TrackPanel::DrawEverythingElse(wxDC * dc,
          AColor::Line(*dc, (int)mSnapRight, 0, mSnapRight, 30000);
       }
    }
-
-#ifdef EXPERIMENTAL_SCRUBBING_BASIC
-   if (IsScrubbing())
-      DrawScrubSpeed(*dc);
-#endif
 }
 
 #ifdef EXPERIMENTAL_SCRUBBING_BASIC
-void TrackPanel::DrawScrubSpeed(wxDC &dc)
+bool TrackPanel::ShouldDrawScrubSpeed()
 {
-   // Halt scrubbing and associated display when some other program
-   // has focus
-   if (!mScrubHasFocus)
+   return IsScrubbing() &&
+      mScrubHasFocus &&
+      ((!PollIsSeeking() && mScrubSpeedDisplayCountdown > 0)
+#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
+      // Draw always for scroll-scrub and for scroll-seek
+      || mSmoothScrollingScrub
+#endif
+   );
+}
+
+void TrackPanel::TimerUpdateScrubbing()
+{
+   if (!IsScrubbing()) {
+      mNextScrubRect = wxRect();
       return;
-   
+   }
+
+   // Call ContinueScrubbing() here in the timer handler
+   // rather than in SelectionHandleDrag()
+   // so that even without drag events, we can instruct the play head to
+   // keep approaching the mouse cursor, when its maximum speed is limited.
+
+   // Thus scrubbing relies mostly on periodic polling of mouse and keys,
+   // not event notifications.  But there are a few event handlers that
+   // leave messages for this routine, in mScrubSeekPress and in mScrubHasFocus.
+   wxMouseState state(::wxGetMouseState());
+   wxCoord position = state.GetX();
+   const bool seek = mScrubSeekPress || PollIsSeeking();
+   ScreenToClient(&position, NULL);
+   if (ContinueScrubbing(position, mScrubHasFocus, seek))
+      mScrubSeekPress = false;
+   // else, if seek requested, try again at a later time when we might
+   // enqueue a long enough stutter
+
+#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
+   if (mSmoothScrollingScrub)
+      ;
+   else
+#endif
+   {
+      if (mScrubSpeedDisplayCountdown > 0)
+         --mScrubSpeedDisplayCountdown;
+   }
+
+   if (!ShouldDrawScrubSpeed()) {
+      mNextScrubRect = wxRect();
+      return;
+   }
+
+   int panelWidth, panelHeight;
+   GetSize(&panelWidth, &panelHeight);
+
+   // Where's the mouse?
+   int xx, yy;
+   ::wxGetMousePosition(&xx, &yy);
+   ScreenToClient(&xx, &yy);
+
+   const bool seeking = PollIsSeeking();
+
+   // Find the text
+   const double speed =
+#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
+      mSmoothScrollingScrub
+      ? seeking
+         ? FindSeekSpeed(mViewInfo->PositionToTime(xx, GetLeftOffset()))
+         : FindScrubSpeed(mViewInfo->PositionToTime(xx, GetLeftOffset()))
+      :
+#endif
+         mMaxScrubSpeed;
+
+   const wxChar *format =
+#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
+      mSmoothScrollingScrub
+      ? seeking
+         ? wxT("%+.2fX")
+         : wxT("%+.2f")
+      :
+#endif
+         wxT("%.2f");
+
+   mScrubSpeedText = wxString::Format(format, speed);
+
+   // Find the origin for drawing text
+   wxCoord width, height;
+   {
+      wxClientDC dc(this);
+      DisableAntialiasing(dc);
+      static const wxFont labelFont(24, wxSWISS, wxNORMAL, wxNORMAL);
+      dc.SetFont(labelFont);
+      dc.GetTextExtent(mScrubSpeedText, &width, &height);
+   }
+   xx = std::max(0, std::min(panelWidth - width, xx - width / 2));
+
+   // Put the text above the cursor, if it fits.
+   enum { offset = 20 };
+   yy -= height + offset;
+   if (yy < 0)
+      yy += height + 2 * offset;
+   yy = std::max(0, std::min(panelHeight - height, yy));
+
+   mNextScrubRect = wxRect(xx, yy, width, height);
+}
+
+std::pair<wxRect, bool> TrackPanel::GetScrubSpeedRectangle()
+{
+   const bool outdated =
+      (mLastScrubRect != mNextScrubRect) ||
+      (!mLastScrubRect.IsEmpty() && !ShouldDrawScrubSpeed());
+   return std::make_pair(
+      mLastScrubRect,
+      outdated
+   );
+}
+
+void TrackPanel::UndrawScrubSpeed(wxDC & dc)
+{
+   if (!mLastScrubRect.IsEmpty())
+      dc.Blit(
+         mLastScrubRect.GetX(), mLastScrubRect.GetY(),
+         mLastScrubRect.GetWidth(), mLastScrubRect.GetHeight(),
+         &mBackingDC,
+         mLastScrubRect.GetX(), mLastScrubRect.GetY());
+}
+
+void TrackPanel::DoDrawScrubSpeed(wxDC &dc)
+{
+   if (!ShouldDrawScrubSpeed())
+      return;
+
+   mLastScrubRect = mNextScrubRect;
    const bool seeking = PollIsSeeking();
    if (// Draw for (non-scroll) scrub, sometimes, but never for seek
        (!seeking && mScrubSpeedDisplayCountdown > 0)
@@ -7327,51 +7414,8 @@ void TrackPanel::DrawScrubSpeed(wxDC &dc)
 #endif
 
    ) {
-      int panelWidth, panelHeight;
-      GetSize(&panelWidth, &panelHeight);
-
-      // Where's the mouse?
-      int xx, yy;
-      ::wxGetMousePosition(&xx, &yy);
-      ScreenToClient(&xx, &yy);
-
-      // Find the text
-      const double speed =
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
-         mSmoothScrollingScrub
-         ? seeking
-            ? FindSeekSpeed(mViewInfo->PositionToTime(xx, GetLeftOffset()))
-            : FindScrubSpeed(mViewInfo->PositionToTime(xx, GetLeftOffset()))
-         :
-#endif
-           mMaxScrubSpeed;
-
-      const wxChar *format =
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
-         mSmoothScrollingScrub
-         ? seeking
-            ? wxT("%+.2fX")
-            : wxT("%+.2f")
-         :
-#endif
-           wxT("%.2f");
-
-      wxString text(wxString::Format(format, speed));
-
       static const wxFont labelFont(24, wxSWISS, wxNORMAL, wxNORMAL);
       dc.SetFont(labelFont);
-
-      // Find the origin for drawing text
-      wxCoord width, height;
-      dc.GetTextExtent(text, &width, &height);
-      xx = std::max(0, std::min(panelWidth - width, xx - width / 2));
-
-      // Put the text above the cursor, if it fits.
-      enum { offset = 20 };
-      yy -= height + offset;
-      if (yy < 0)
-         yy += height + 2 * offset;
-      yy = std::max(0, std::min(panelHeight - height, yy));
 
       // These two colors were previously saturated red and green.  However 
       // we have a rule to try to only use red for reserved purposes of
@@ -7386,7 +7430,7 @@ void TrackPanel::DrawScrubSpeed(wxDC &dc)
 #endif
          dc.SetTextForeground(clrNoScroll);
 
-      DrawText(dc, text, xx, yy);
+      DrawText(dc, mScrubSpeedText, mLastScrubRect.GetX(), mLastScrubRect.GetY());
    }
 }
 #endif
@@ -7595,10 +7639,20 @@ void TrackPanel::DrawOverlays(bool repaint)
    bool isOutdated = false;
 
    // Determine which overlays are outdated.
-   enum { n_pairs = 2 };
+   enum {
+      n_pairs =
+#ifdef EXPERIMENTAL_SCRUBBING_BASIC
+      3
+#else
+      2
+#endif
+   };
    std::pair<wxRect, bool> pairs[n_pairs] = {
       GetIndicatorRectangle(),
       GetCursorRectangle(),
+#ifdef EXPERIMENTAL_SCRUBBING_BASIC
+      GetScrubSpeedRectangle(),
+#endif
    };
 
    {
@@ -7638,6 +7692,13 @@ void TrackPanel::DrawOverlays(bool repaint)
       DisableAntialiasing(dc);
       UndrawCursor(dc);
    }
+#ifdef EXPERIMENTAL_SCRUBBING_BASIC
+   if (repaint || pairs[2].second) {
+      wxClientDC dc(this);
+      DisableAntialiasing(dc);
+      UndrawScrubSpeed(dc);
+   }
+#endif
 
    if (repaint || pairs[0].second) {
       wxClientDC dc(this);
@@ -7649,6 +7710,13 @@ void TrackPanel::DrawOverlays(bool repaint)
       DisableAntialiasing(dc);
       DoDrawCursor(dc);
    }
+#ifdef EXPERIMENTAL_SCRUBBING_BASIC
+   if (repaint || pairs[2].second) {
+      wxClientDC dc(this);
+      DisableAntialiasing(dc);
+      DoDrawScrubSpeed(dc);
+   }
+#endif
 }
 
 /// Draw a three-level highlight gradient around the focused track.

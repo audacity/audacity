@@ -263,6 +263,15 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
    virtual void UndrawCursor(wxDC & dc);
    virtual void DoDrawCursor(wxDC & dc);
 
+#ifdef EXPERIMENTAL_SCRUBBING_BASIC
+   bool ShouldDrawScrubSpeed();
+   virtual void TimerUpdateScrubbing();
+   // Second member of pair indicates whether the cursor is out of date:
+   virtual std::pair<wxRect, bool> GetScrubSpeedRectangle();
+   virtual void UndrawScrubSpeed(wxDC & dc);
+   virtual void DoDrawScrubSpeed(wxDC & dc);
+#endif
+
    virtual void ScrollDuringDrag();
 
    // Working out where to dispatch the event to.
@@ -535,9 +544,6 @@ protected:
                            const wxRect & clip);
    virtual void DrawOutside(Track *t, wxDC *dc, const wxRect & rec,
                     const wxRect &trackRect);
-#ifdef EXPERIMENTAL_SCRUBBING_BASIC
-   void DrawScrubSpeed(wxDC &dc);
-#endif
    virtual void DrawZooming(wxDC* dc, const wxRect & clip);
 
    virtual void HighlightFocusedTrack (wxDC* dc, const wxRect &rect);
@@ -797,6 +803,9 @@ protected:
    int mScrubSpeedDisplayCountdown;
    bool mScrubHasFocus;
    bool mScrubSeekPress;
+
+   wxRect mLastScrubRect, mNextScrubRect;
+   wxString mScrubSpeedText;
 #endif
 
 #ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
