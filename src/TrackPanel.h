@@ -237,7 +237,7 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
     * initial items.
     *
     * Ensures that all pop-down menus start with Name, and the commands for moving
-    * the track around, via a single set of code.
+    * the track around, via a single set of c ode.
     * @param menu the menu to add the commands to.
     */
    virtual void BuildCommonDropMenuItems(wxMenu * menu);
@@ -250,12 +250,17 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
    virtual bool HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &rect, wxMouseEvent &event);
    virtual bool IsOverCutline(WaveTrack * track, wxRect &rect, wxMouseEvent &event);
    virtual void HandleTrackSpecificMouseEvent(wxMouseEvent & event);
-   virtual void DrawIndicator();
+
+   virtual void TimerUpdateIndicator();
+   // Second member of pair indicates whether the indicator is out of date:
+   virtual std::pair<wxRect, bool> GetIndicatorRectangle();
+   virtual void UndrawIndicator(wxDC & dc);
    /// draws the green line on the tracks to show playback position
-   /// @param repairOld if true the playback position is not updated/erased, and simply redrawn
-   /// @param indicator if nonnegative, overrides the indicator value obtainable from AudioIO
-   virtual void DoDrawIndicator(wxDC & dc, bool repairOld = false, double indicator = -1);
-   virtual void DrawCursor();
+   virtual void DoDrawIndicator(wxDC & dc);
+
+   // Second member of pair indicates whether the cursor is out of date:
+   virtual std::pair<wxRect, bool> GetCursorRectangle();
+   virtual void UndrawCursor(wxDC & dc);
    virtual void DoDrawCursor(wxDC & dc);
 
    virtual void ScrollDuringDrag();
@@ -540,6 +545,10 @@ protected:
    virtual void DrawBordersAroundTrack(Track *t, wxDC* dc, const wxRect & rect, const int labelw, const int vrul);
    virtual void DrawOutsideOfTrack    (Track *t, wxDC* dc, const wxRect & rect);
 
+   // Erase and redraw things like the cursor, cheaply and directly to the
+   // client area, without full refresh.
+   virtual void DrawOverlays(bool repaint);
+
    virtual int IdOfRate( int rate );
    virtual int IdOfFormat( int format );
 
@@ -581,7 +590,10 @@ protected:
    // This stores the parts of the screen that get overwritten by the indicator
    // and cursor
    int mLastIndicatorX;
+   int mNewIndicatorX;
    int mLastCursorX;
+   double mCursorTime;
+   int mNewCursorX;
 
    // Quick-Play indicator postion
    double mOldQPIndicatorPos;
@@ -663,8 +675,6 @@ protected:
    bool mDidSlideVertically;
 
    bool mRedrawAfterStop;
-
-   bool mIndicatorShowing;
 
    wxMouseEvent mLastMouseEvent;
 
