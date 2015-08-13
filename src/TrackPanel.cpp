@@ -484,7 +484,6 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    UpdatePrefs();
 
    mRedrawAfterStop = false;
-   mIndicatorShowing = false;
 
    mPencilCursor  = MakeCursor( wxCURSOR_PENCIL,    DrawCursorXpm,    12, 22);
    mSelectCursor  = MakeCursor( wxCURSOR_IBEAM,     IBeamCursorXpm,   17, 16);
@@ -565,8 +564,9 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    mSnapLeft = -1;
    mSnapRight = -1;
 
-   mLastCursorX = -1;
-   mLastIndicatorX = -1;
+   mLastCursorX = mNewCursorX = -1;
+   mLastIndicatorX = mNewIndicatorX = -1;
+   mCursorTime = -1.0;
    mOldQPIndicatorPos = -1;
 
    // Register for tracklist updates
@@ -1047,40 +1047,7 @@ void TrackPanel::OnTimer()
    }
 
 #ifdef EXPERIMENTAL_SCRUBBING_BASIC
-   // Call ContinueScrubbing() here rather than in SelectionHandleDrag()
-   // so that even without drag events, we can instruct the play head to
-   // keep approaching the mouse cursor, when its maximum speed is limited.
-
-   // Thus scrubbing relies mostly on periodic polling of mouse and keys,
-   // not event notifications.  But there are a few event handlers that
-   // leave messages for this routine, in mScrubSeekPress and in mScrubHasFocus.
-   if (IsScrubbing())
-   {
-      wxMouseState state(::wxGetMouseState());
-      wxCoord position = state.GetX();
-      const bool seek = mScrubSeekPress || PollIsSeeking();
-      ScreenToClient(&position, NULL);
-      if (ContinueScrubbing(position, mScrubHasFocus, seek))
-         mScrubSeekPress = false;
-      // else, if seek requested, try again at a later time when we might
-      // enqueue a long enough stutter
-
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
-      if (mSmoothScrollingScrub)
-         // Redraw with every timer tick, to keep the indicator centered.
-         Refresh(false);
-      else
-#endif
-      {
-         if (mScrubSpeedDisplayCountdown > 0) {
-            --mScrubSpeedDisplayCountdown;
-            if (mScrubSpeedDisplayCountdown == kOneSecondCountdown ||
-               mScrubSpeedDisplayCountdown == 0)
-               // Show or hide the maximum speed.
-               Refresh(false);
-         }
-      }
-   }
+   TimerUpdateScrubbing();
 #endif
 
    // Check whether we were playing or recording, but the stream has stopped.
@@ -1106,20 +1073,8 @@ void TrackPanel::OnTimer()
       DisplaySelection();
    }
 
-   // AS: The "indicator" is the little graphical mark shown in the ruler
-   //  that indicates where the current play/record position is. (This also
-   //  draws the moving vertical line.)
-
-   if (!gAudioIO->IsPaused() && // Don't redraw paused indicator needlessly for timer
-       ( mIndicatorShowing || IsAudioActive())
-
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
-       && !mSmoothScrollingScrub
-#endif
-       )
-   {
-      DrawIndicator();
-   }
+   TimerUpdateIndicator();
+   DrawOverlays(false);
 
    if(IsAudioActive() && gAudioIO->GetNumCaptureChannels()) {
 
@@ -1182,6 +1137,8 @@ void TrackPanel::ScrollDuringDrag()
    }
 }
 
+#if 0
+// now unused
 ///  This updates the indicator (on a timer tick) that shows
 ///  where the current play or record position is.  To do this,
 ///  we cheat a little.  The indicator is drawn during the ruler
@@ -1194,6 +1151,7 @@ void TrackPanel::DrawIndicator()
    wxClientDC dc( this );
    DoDrawIndicator( dc );
 }
+#endif
 
 void TrackPanel::DrawQuickPlayIndicator(wxDC & dc, double pos)
 {
@@ -1225,53 +1183,31 @@ void TrackPanel::DrawQuickPlayIndicator(wxDC & dc, double pos)
    }
 }
 
-/// Second level DrawIndicator()
-void TrackPanel::DoDrawIndicator
-   (wxDC & dc, bool repairOld /* = false */, double indicator /* = -1 */)
+void TrackPanel::TimerUpdateIndicator()
 {
-   bool onScreen;
-   double pos;
+   double pos = 0.0;
 
-   if (!repairOld)
-   {
-      // Erase the old indicator.
-      if (mLastIndicatorX != -1)
-      {
-         onScreen = between_inclusive(GetLeftOffset(),
-            mLastIndicatorX,
-            GetLeftOffset() + mViewInfo->GetScreenWidth());
-         if (onScreen)
-         {
-            // LL:  Keep from trying to blit outsize of the source DC.  This results in a crash on
-            //      OSX due to allocating memory using negative sizes and can be caused by resizing
-            //      the project window while recording or playing.
-            int w = dc.GetSize().GetWidth();
-            if (mLastIndicatorX >= w) {
-               mLastIndicatorX = w - 1;
-            }
+   if (!IsAudioActive())
+      mNewIndicatorX = -1;
+   else {
+      // Calculate the horizontal position of the indicator
+      pos = gAudioIO->GetStreamTime();
 
-            dc.Blit(mLastIndicatorX, 0, 1, mBacking->GetHeight(), &mBackingDC, mLastIndicatorX, 0);
-         }
-
-         // Nothing's ever perfect...
-         //
-         // Redraw the cursor since we may have just wiped it out
-         if (mLastCursorX == mLastIndicatorX)
-         {
-            DoDrawCursor( dc );
-         }
+#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
+      if (mSmoothScrollingScrub) {
+         // Pan the view, so that we center the play indicator.
+         mViewInfo->h = pos - mViewInfo->screen / 2.0;
+         if (!mScrollBeyondZero)
+            // Can't scroll too far left
+            mViewInfo->h = std::max(0.0, mViewInfo->h);
+         Refresh(false);
       }
-
-      pos = indicator;
-      if (pos < 0.0)
-         // The stream time can be < 0 if the audio is currently stopped
-         pos = gAudioIO->GetStreamTime();
-
+#endif
       AudacityProject *p = GetProject();
-      bool audioActive = IsAudioActive();
-      onScreen = between_inclusive( mViewInfo->h,
-                                   pos,
-                                   mViewInfo->h + mViewInfo->screen );
+      const bool
+         onScreen = between_inclusive(mViewInfo->h,
+         pos,
+         mViewInfo->h + mViewInfo->screen);
 
       // This displays the audio time, too...
       DisplaySelection();
@@ -1281,7 +1217,6 @@ void TrackPanel::DoDrawIndicator
       if( mViewInfo->bUpdateTrackIndicator &&
          p->mLastPlayMode != loopedPlay &&
          p->mLastPlayMode != oneSecondPlay &&
-         audioActive &&
          pos >= 0 &&
          !onScreen &&
          !gAudioIO->IsPaused() )
@@ -1294,13 +1229,55 @@ void TrackPanel::DoDrawIndicator
       // length of the project and therefore the appearance of the scrollbar.
       MakeParentRedrawScrollbars();
 
-      mIndicatorShowing = ( onScreen && audioActive );
-
-      // Calculate the horizontal position of the indicator
-      mLastIndicatorX = mViewInfo->TimeToPosition(pos, GetLeftOffset());
+      mNewIndicatorX = mViewInfo->TimeToPosition(pos, GetLeftOffset());
    }
-   else
-      pos = mViewInfo->PositionToTime(mLastIndicatorX, GetLeftOffset());
+}
+
+std::pair<wxRect, bool> TrackPanel::GetIndicatorRectangle()
+{
+   return std::make_pair(
+      wxRect(mLastIndicatorX, 0, 1, mBacking->GetHeight()),
+      mLastIndicatorX != mNewIndicatorX
+   );
+}
+
+void TrackPanel::UndrawIndicator(wxDC & dc)
+{
+   // AS: The "indicator" is the little graphical mark shown in the ruler
+   //  that indicates where the current play/record position is. (This also
+   //  draws the moving vertical line.)
+
+   // Erase the old indicator.
+   if (mLastIndicatorX != -1)
+   {
+      const bool
+      onScreen = between_inclusive(GetLeftOffset(),
+         mLastIndicatorX,
+         GetLeftOffset() + mViewInfo->GetScreenWidth());
+      if (onScreen)
+      {
+         // LL:  Keep from trying to blit outsize of the source DC.  This results in a crash on
+         //      OSX due to allocating memory using negative sizes and can be caused by resizing
+         //      the project window while recording or playing.
+         int w = dc.GetSize().GetWidth();
+         if (mLastIndicatorX >= w) {
+            mLastIndicatorX = w - 1;
+         }
+
+         dc.Blit(mLastIndicatorX, 0, 1, mBacking->GetHeight(), &mBackingDC, mLastIndicatorX, 0);
+      }
+
+      mRuler->ClearIndicator();
+   }
+}
+
+void TrackPanel::DoDrawIndicator(wxDC & dc)
+{
+   mLastIndicatorX = mNewIndicatorX;
+   if (mLastIndicatorX == -1)
+      return;
+
+   double pos = mViewInfo->PositionToTime(mLastIndicatorX, GetLeftOffset());
 
    // Set play/record color
    bool rec = (gAudioIO->GetNumCaptureChannels() > 0);
@@ -1340,6 +1317,8 @@ void TrackPanel::DoDrawIndicator
    }
 }
 
+#if 0
+// now unused
 /// This method draws the cursor things, both in the
 /// ruler as seen at the top of the screen, but also in each of the
 /// selected tracks.
@@ -1349,12 +1328,27 @@ void TrackPanel::DrawCursor()
    wxClientDC dc( this );
    DoDrawCursor( dc );
 }
+#endif
 
-/// Second level DrawCursor()
-void TrackPanel::DoDrawCursor(wxDC & dc)
+std::pair<wxRect, bool> TrackPanel::GetCursorRectangle()
 {
-   DisableAntialiasing(dc);
+   if (!mViewInfo->selectedRegion.isPoint()) {
+      mCursorTime = -1.0;
+      mNewCursorX = -1;
+   }
+   else {
+      mCursorTime = mViewInfo->selectedRegion.t0();
+      mNewCursorX = mViewInfo->TimeToPosition(mCursorTime, GetLeftOffset());
+   }
 
+   return std::make_pair(
+      wxRect(mLastCursorX, 0, 1, mBacking->GetHeight()),
+      mLastCursorX != mNewCursorX
+   );
+}
+
+void TrackPanel::UndrawCursor(wxDC & dc)
+{
    bool onScreen;
 
    if( mLastCursorX != -1 )
@@ -1365,18 +1359,23 @@ void TrackPanel::DoDrawCursor(wxDC & dc)
       if( onScreen )
          dc.Blit(mLastCursorX, 0, 1, mBacking->GetHeight(), &mBackingDC, mLastCursorX, 0);
    }
+}
 
-   const double time = mViewInfo->selectedRegion.t0();
-   mLastCursorX = mViewInfo->TimeToPosition(time, GetLeftOffset());
+void TrackPanel::DoDrawCursor(wxDC & dc)
+{
+   mLastCursorX = mNewCursorX;
+   if (mLastCursorX == -1)
+      return;
 
+   const bool
    onScreen = between_inclusive( mViewInfo->h,
-                                 time,
+                                 mCursorTime,
                                  mViewInfo->h + mViewInfo->screen );
 
    if( !onScreen )
       return;
 
-   AColor::CursorColor( &dc );
+   AColor::CursorColor(&dc);
 
    // Draw cursor in all selected tracks
    VisibleTrackIterator iter( GetProject() );
@@ -1404,7 +1403,7 @@ void TrackPanel::DoDrawCursor(wxDC & dc)
    }
 
    // AS: Ah, no, this is where we draw the blinky thing in the ruler.
-   mRuler->DrawCursor( time );
+   mRuler->DrawCursor(mCursorTime);
 
    DisplaySelection();
 }
@@ -1462,30 +1461,12 @@ void TrackPanel::OnPaint(wxPaintEvent & /* event */)
    // Retrieve the damage rectangle
    wxRect box = GetUpdateRegion().GetBox();
 
-   double indicator = -1;
-
    // Recreate the backing bitmap if we have a full refresh
    // (See TrackPanel::Refresh())
    if (mRefreshBacking || (box == GetRect()))
    {
       // Reset (should a mutex be used???)
       mRefreshBacking = false;
-
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
-      if (mSmoothScrollingScrub && IsAudioActive()) {
-         // Pan the view, so that we center the play indicator.
-         // By the time DoDrawIndicator() is reached, gAudioIO->GetStreamTime()
-         // may be a little different.
-         // Cause DoDrawIndicator to show the value as it was at this time when we begin
-         // the drawing of the tracks.  This prevents flashing of the indicator
-         // at higher magnifications, and keeps the green line still in the middle.
-         indicator = gAudioIO->GetStreamTime();
-         mViewInfo->h = indicator - mViewInfo->screen / 2.0;
-         if (!mScrollBeyondZero)
-            // Can't scroll too far left
-            mViewInfo->h = std::max(0.0, mViewInfo->h);
-      }
-#endif
 
       // Redraw the backing bitmap
       DrawTracks(&mBackingDC);
@@ -1503,23 +1484,7 @@ void TrackPanel::OnPaint(wxPaintEvent & /* event */)
    delete dc;
 
    // Drawing now goes directly to the client area
-   wxClientDC cdc(this);
-   DisableAntialiasing(cdc);
-
-   // Update the indicator in case it was damaged if this project is playing
-
-   if (// !gAudioIO->IsPaused() && // Bug1139: do repaint the line even if paused.
-       (mIndicatorShowing || IsAudioActive()))
-   {
-      // If not smooth scrolling, then
-      // we just want to repair, not update the old, so set the second param to true.
-      // This is important because this onPaint could be for just some of the tracks.
-      DoDrawIndicator(cdc, (indicator < 0), indicator);
-   }
-
-   // Draw the cursor
-   if (mViewInfo->selectedRegion.isPoint())
-      DoDrawCursor(cdc);
+   DrawOverlays(true);
 
 #if DEBUG_DRAW_TIMING
       sw.Pause();
@@ -7305,21 +7270,141 @@ void TrackPanel::DrawEverythingElse(wxDC * dc,
          AColor::Line(*dc, (int)mSnapRight, 0, mSnapRight, 30000);
       }
    }
-
-#ifdef EXPERIMENTAL_SCRUBBING_BASIC
-   if (IsScrubbing())
-      DrawScrubSpeed(*dc);
-#endif
 }
 
 #ifdef EXPERIMENTAL_SCRUBBING_BASIC
-void TrackPanel::DrawScrubSpeed(wxDC &dc)
+bool TrackPanel::ShouldDrawScrubSpeed()
 {
-   // Halt scrubbing and associated display when some other program
-   // has focus
-   if (!mScrubHasFocus)
+   return IsScrubbing() &&
+      mScrubHasFocus &&
+      ((!PollIsSeeking() && mScrubSpeedDisplayCountdown > 0)
+#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
+      // Draw always for scroll-scrub and for scroll-seek
+      || mSmoothScrollingScrub
+#endif
+   );
+}
+
+void TrackPanel::TimerUpdateScrubbing()
+{
+   if (!IsScrubbing()) {
+      mNextScrubRect = wxRect();
       return;
-   
+   }
+
+   // Call ContinueScrubbing() here in the timer handler
+   // rather than in SelectionHandleDrag()
+   // so that even without drag events, we can instruct the play head to
+   // keep approaching the mouse cursor, when its maximum speed is limited.
+
+   // Thus scrubbing relies mostly on periodic polling of mouse and keys,
+   // not event notifications.  But there are a few event handlers that
+   // leave messages for this routine, in mScrubSeekPress and in mScrubHasFocus.
+   wxMouseState state(::wxGetMouseState());
+   wxCoord position = state.GetX();
+   const bool seek = mScrubSeekPress || PollIsSeeking();
+   ScreenToClient(&position, NULL);
+   if (ContinueScrubbing(position, mScrubHasFocus, seek))
+      mScrubSeekPress = false;
+   // else, if seek requested, try again at a later time when we might
+   // enqueue a long enough stutter
+
+#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
+   if (mSmoothScrollingScrub)
+      ;
+   else
+#endif
+   {
+      if (mScrubSpeedDisplayCountdown > 0)
+         --mScrubSpeedDisplayCountdown;
+   }
+
+   if (!ShouldDrawScrubSpeed()) {
+      mNextScrubRect = wxRect();
+      return;
+   }
+
+   int panelWidth, panelHeight;
+   GetSize(&panelWidth, &panelHeight);
+
+   // Where's the mouse?
+   int xx, yy;
+   ::wxGetMousePosition(&xx, &yy);
+   ScreenToClient(&xx, &yy);
+
+   const bool seeking = PollIsSeeking();
+
+   // Find the text
+   const double speed =
+#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
+      mSmoothScrollingScrub
+      ? seeking
+         ? FindSeekSpeed(mViewInfo->PositionToTime(xx, GetLeftOffset()))
+         : FindScrubSpeed(mViewInfo->PositionToTime(xx, GetLeftOffset()))
+      :
+#endif
+         mMaxScrubSpeed;
+
+   const wxChar *format =
+#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
+      mSmoothScrollingScrub
+      ? seeking
+         ? wxT("%+.2fX")
+         : wxT("%+.2f")
+      :
+#endif
+         wxT("%.2f");
+
+   mScrubSpeedText = wxString::Format(format, speed);
+
+   // Find the origin for drawing text
+   wxCoord width, height;
+   {
+      wxClientDC dc(this);
+      DisableAntialiasing(dc);
+      static const wxFont labelFont(24, wxSWISS, wxNORMAL, wxNORMAL);
+      dc.SetFont(labelFont);
+      dc.GetTextExtent(mScrubSpeedText, &width, &height);
+   }
+   xx = std::max(0, std::min(panelWidth - width, xx - width / 2));
+
+   // Put the text above the cursor, if it fits.
+   enum { offset = 20 };
+   yy -= height + offset;
+   if (yy < 0)
+      yy += height + 2 * offset;
+   yy = std::max(0, std::min(panelHeight - height, yy));
+
+   mNextScrubRect = wxRect(xx, yy, width, height);
+}
+
+std::pair<wxRect, bool> TrackPanel::GetScrubSpeedRectangle()
+{
+   const bool outdated =
+      (mLastScrubRect != mNextScrubRect) ||
+      (!mLastScrubRect.IsEmpty() && !ShouldDrawScrubSpeed());
+   return std::make_pair(
+      mLastScrubRect,
+      outdated
+   );
+}
+
+void TrackPanel::UndrawScrubSpeed(wxDC & dc)
+{
+   if (!mLastScrubRect.IsEmpty())
+      dc.Blit(
+         mLastScrubRect.GetX(), mLastScrubRect.GetY(),
+         mLastScrubRect.GetWidth(), mLastScrubRect.GetHeight(),
+         &mBackingDC,
+         mLastScrubRect.GetX(), mLastScrubRect.GetY());
+}
+
+void TrackPanel::DoDrawScrubSpeed(wxDC &dc)
+{
+   if (!ShouldDrawScrubSpeed())
+      return;
+
+   mLastScrubRect = mNextScrubRect;
    const bool seeking = PollIsSeeking();
    if (// Draw for (non-scroll) scrub, sometimes, but never for seek
        (!seeking && mScrubSpeedDisplayCountdown > 0)
@@ -7329,51 +7414,8 @@ void TrackPanel::DrawScrubSpeed(wxDC &dc)
 #endif
 
    ) {
-      int panelWidth, panelHeight;
-      GetSize(&panelWidth, &panelHeight);
-
-      // Where's the mouse?
-      int xx, yy;
-      ::wxGetMousePosition(&xx, &yy);
-      ScreenToClient(&xx, &yy);
-
-      // Find the text
-      const double speed =
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
-         mSmoothScrollingScrub
-         ? seeking
-            ? FindSeekSpeed(mViewInfo->PositionToTime(xx, GetLeftOffset()))
-            : FindScrubSpeed(mViewInfo->PositionToTime(xx, GetLeftOffset()))
-         :
-#endif
-           mMaxScrubSpeed;
-
-      const wxChar *format =
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
-         mSmoothScrollingScrub
-         ? seeking
-            ? wxT("%+.2fX")
-            : wxT("%+.2f")
-         :
-#endif
-           wxT("%.2f");
-
-      wxString text(wxString::Format(format, speed));
-
       static const wxFont labelFont(24, wxSWISS, wxNORMAL, wxNORMAL);
       dc.SetFont(labelFont);
-
-      // Find the origin for drawing text
-      wxCoord width, height;
-      dc.GetTextExtent(text, &width, &height);
-      xx = std::max(0, std::min(panelWidth - width, xx - width / 2));
-
-      // Put the text above the cursor, if it fits.
-      enum { offset = 20 };
-      yy -= height + offset;
-      if (yy < 0)
-         yy += height + 2 * offset;
-      yy = std::max(0, std::min(panelHeight - height, yy));
 
       // These two colors were previously saturated red and green.  However 
       // we have a rule to try to only use red for reserved purposes of
@@ -7388,7 +7430,7 @@ void TrackPanel::DrawScrubSpeed(wxDC &dc)
 #endif
          dc.SetTextForeground(clrNoScroll);
 
-      DrawText(dc, text, xx, yy);
+      DrawText(dc, mScrubSpeedText, mLastScrubRect.GetX(), mLastScrubRect.GetY());
    }
 }
 #endif
@@ -7588,6 +7630,91 @@ void TrackPanel::DrawOutsideOfTrack(Track * t, wxDC * dc, const wxRect & rect)
       side.y += t->GetHeight() - 1;
       side.height = kTopInset + 1;
       dc->DrawRectangle(side);
+   }
+#endif
+}
+
+void TrackPanel::DrawOverlays(bool repaint)
+{
+   bool isOutdated = false;
+
+   // Determine which overlays are outdated.
+   enum {
+      n_pairs =
+#ifdef EXPERIMENTAL_SCRUBBING_BASIC
+      3
+#else
+      2
+#endif
+   };
+   std::pair<wxRect, bool> pairs[n_pairs] = {
+      GetIndicatorRectangle(),
+      GetCursorRectangle(),
+#ifdef EXPERIMENTAL_SCRUBBING_BASIC
+      GetScrubSpeedRectangle(),
+#endif
+   };
+
+   {
+      // Drawing now goes directly to the client area
+      wxClientDC dc(this);
+      DisableAntialiasing(dc);
+
+      // See what requires redrawing.  If repainting, all.
+      // If not, then whatever is outdated, and whatever will be damaged by
+      // undrawing.
+      // By redrawing only what needs it, we avoid flashing things like
+      // the cursor that are drawn with xor.
+      if (!repaint) {
+         bool done;
+         do {
+            done = true;
+            for (int ii = 0; ii < n_pairs; ++ii) {
+               for (int jj = ii + 1; jj < n_pairs; ++jj) {
+                  if (pairs[ii].second != pairs[jj].second &&
+                     pairs[ii].first.Intersects(pairs[jj].first)) {
+                     done = false;
+                     pairs[ii].second = pairs[jj].second = true;
+                  }
+               }
+            }
+         } while (!done);
+      }
+   }
+
+   if (repaint || pairs[0].second) {
+      wxClientDC dc(this);
+      DisableAntialiasing(dc);
+      UndrawIndicator(dc);
+   }
+   if (repaint || pairs[1].second) {
+      wxClientDC dc(this);
+      DisableAntialiasing(dc);
+      UndrawCursor(dc);
+   }
+#ifdef EXPERIMENTAL_SCRUBBING_BASIC
+   if (repaint || pairs[2].second) {
+      wxClientDC dc(this);
+      DisableAntialiasing(dc);
+      UndrawScrubSpeed(dc);
+   }
+#endif
+
+   if (repaint || pairs[0].second) {
+      wxClientDC dc(this);
+      DisableAntialiasing(dc);
+      DoDrawIndicator(dc);
+   }
+   if (repaint || pairs[1].second) {
+      wxClientDC dc(this);
+      DisableAntialiasing(dc);
+      DoDrawCursor(dc);
+   }
+#ifdef EXPERIMENTAL_SCRUBBING_BASIC
+   if (repaint || pairs[2].second) {
+      wxClientDC dc(this);
+      DisableAntialiasing(dc);
+      DoDrawScrubSpeed(dc);
    }
 #endif
 }
@@ -8153,7 +8280,7 @@ void TrackPanel::SeekLeftOrRight
          mViewInfo->selectedRegion.collapseToT0();
 
          // Move the visual cursor
-         DrawCursor();
+         DrawOverlays(false);
       }
       else
       {
