@@ -55,7 +55,7 @@
 #endif
 
 #if defined(__WXMAC__)
-#include <Appkit/Appkit.h>
+#include <AppKit/AppKit.h>
 #endif
 
 // Define the static URI nodes
