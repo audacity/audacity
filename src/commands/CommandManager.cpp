@@ -198,9 +198,9 @@ public:
       }
 
       wxWindow *handler = project->GetKeyboardCaptureHandler();
-      if (handler)
+      if (handler && HandleCapture(handler, key))
       {
-         return HandleCapture(handler, key) ? Event_Processed : Event_Skip;
+         return Event_Processed;
       }
 
       CommandManager *manager = project->GetCommandManager();
