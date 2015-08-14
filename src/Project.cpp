@@ -2773,6 +2773,10 @@ void AudacityProject::OpenFile(wxString fileName, bool addtohistory)
          //release the flag.
       ODManager::UnmarkLoadedODFlag();
    }
+
+   // For an unknown reason, OSX requires that the project window be
+   // raised if a recovery took place.
+   Raise();
 }
 
 bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
