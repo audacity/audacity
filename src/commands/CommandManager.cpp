@@ -198,9 +198,9 @@ public:
       }
 
       wxWindow *handler = project->GetKeyboardCaptureHandler();
-      if (handler && HandleCapture(handler, key))
+      if (handler)
       {
-         return Event_Processed;
+         return HandleCapture(handler, key) ? Event_Processed : Event_Skip;
       }
 
       CommandManager *manager = project->GetCommandManager();
@@ -1065,8 +1065,10 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
       return false;
    }
 
+   int type = evt.GetEventType();
+
    // Global commands aren't tied to any specific project
-   if (entry->isGlobal)
+   if (entry->isGlobal && type == wxEVT_KEY_DOWN)
    {
       // Global commands are always disabled so they do not interfere with the
       // rest of the command handling.  But, to use the common handler, we
@@ -1075,10 +1077,7 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
       entry->enabled = true;
       bool ret = HandleCommandEntry(entry, 0xffffffff, 0xffffffff, &evt);
       entry->enabled = false;
-      if (ret)
-      {
-         return true;
-      }
+      return ret;
    }
 
    // Any other keypresses must be destined for this project window.
@@ -1091,7 +1090,7 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
 
    wxKeyEvent temp = evt;
 
-   if (temp.GetEventType() == wxEVT_KEY_DOWN)
+   if (type == wxEVT_KEY_DOWN)
    {
       if (entry->skipKeydown)
       {
@@ -1101,7 +1100,7 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
       return HandleCommandEntry(entry, flags, 0xffffffff, &temp);
    }
 
-   if (temp.GetEventType() == wxEVT_KEY_UP && entry->wantKeyup)
+   if (type == wxEVT_KEY_UP && entry->wantKeyup)
    {
       return HandleCommandEntry(entry, flags, 0xffffffff, &temp);
    }
