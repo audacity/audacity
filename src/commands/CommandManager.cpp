@@ -1081,7 +1081,9 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
    }
 
    // Any other keypresses must be destined for this project window.
-   if (!permit && wxGetTopLevelParent(wxWindow::FindFocus()) != project)
+   if (!permit && 
+       (wxGetTopLevelParent(wxWindow::FindFocus()) != project ||
+        !wxEventLoop::GetActive()->IsMain()))
    {
       return false;
    }
