@@ -547,10 +547,9 @@ int FileDialog::ShowModal()
         parentWindow = dynamic_cast<wxNonOwnedWindow*>(wxGetTopLevelParent(GetParent()));
     }
 
-
     NSArray* types = GetTypesFromFilter( m_wildCard, m_filterNames, m_filterExtensions ) ;
 
-    m_useFileTypeFilter = m_filterExtensions.GetCount() > 1;
+    m_useFileTypeFilter = m_filterExtensions.GetCount() > 0;
 
     if( HasFlag(wxFD_OPEN) )
     {
