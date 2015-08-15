@@ -156,15 +156,18 @@ PrefsDialog::Factories
 #endif
       &qualityPrefsFactory,
       &guiPrefsFactory,
-      &tracksPrefsFactory,
+
+      // Group two other pages
+      PrefsNode(&tracksPrefsFactory, 2),
+      &waveformPrefsFactory,
+      &spectrumPrefsFactory,
+
       &importExportPrefsFactory,
       &extImportPrefsFactory,
       &projectsPrefsFactory,
 #if !defined(DISABLE_DYNAMIC_LOADING_FFMPEG) || !defined(DISABLE_DYNAMIC_LOADING_LAME)
       &libraryPrefsFactory,
 #endif
-      &waveformPrefsFactory,
-      &spectrumPrefsFactory,
       &directoriesPrefsFactory,
       &warningsPrefsFactory,
       &effectsPrefsFactory,
