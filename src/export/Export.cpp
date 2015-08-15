@@ -297,8 +297,8 @@ END_EVENT_TABLE()
 
 Exporter::Exporter()
 {
-   mActivePage = NULL;
    mMixerSpec = NULL;
+   mBook = NULL;
 
    SetFileDialogTitle( _("Export Audio") );
 
@@ -871,12 +871,7 @@ void Exporter::CreateUserPaneCallback(wxWindow *parent, wxUIntPtr userdata)
 
 void Exporter::CreateUserPane(wxWindow *parent)
 {
-   mUserPaneParent = parent;
-
-   ShuttleGui S(parent, eIsCreatingFromPrefs);
-
-   wxSize maxsz;
-   wxSize pageMax;
+   ShuttleGui S(parent, eIsCreating);
 
    S.StartVerticalLay();
    {
@@ -884,24 +879,14 @@ void Exporter::CreateUserPane(wxWindow *parent)
       {
          S.StartStatic(_("Format Options"), 1);
          {
+            mBook = new wxSimplebook(parent);
+            S.AddWindow(mBook, wxEXPAND);
+                                  
             for (size_t i = 0; i < mPlugins.GetCount(); i++)
             {
                for (int j = 0; j < mPlugins[i]->GetFormatCount(); j++)
                {
-                  wxWindow *page = mPlugins[i]->OptionsCreate(parent, j);
-                  mPages.Add(page);
-                  S.Prop(1).AddWindow(page, wxEXPAND|wxALL);
-
-                  parent->Layout();
-                  wxSize sz = parent->GetBestSize();
-                  maxsz.x = wxMax(maxsz.x, sz.x);
-                  maxsz.y = wxMax(maxsz.y, sz.y);
-
-                  sz = page->GetBestSize();
-                  pageMax.x = wxMax(pageMax.x, sz.x);
-                  pageMax.y = wxMax(pageMax.y, sz.y);
-
-                  S.GetSizer()->Hide(page);
+                  mBook->AddPage(mPlugins[i]->OptionsCreate(mBook, j), wxEmptyString);
                }
             }
          }
@@ -909,15 +894,7 @@ void Exporter::CreateUserPane(wxWindow *parent)
       }
       S.EndHorizontalLay();
    }
-   S.EndHorizontalLay();
-
-   parent->SetMinSize(maxsz);
-   parent->SetSize(maxsz);
-
-   for (size_t i = 0, cnt = mPages.GetCount(); i < cnt; i++)
-   {
-      mPages[i]->SetSize(pageMax);
-   }
+   S.EndVerticalLay();
 
    return;
 }
@@ -926,20 +903,13 @@ void Exporter::OnFilterChanged(wxFileCtrlEvent & evt)
 {
    int index = evt.GetFilterIndex();
 
-   if (index < 0 || index >= (int) mPages.GetCount())
+   // On GTK, this event can fire before the userpane is created
+   if (mBook == NULL || index < 0 || index >= (int) mBook->GetPageCount())
    {
       return;
    }
 
-   if (mActivePage)
-   {
-      mActivePage->Hide();
-      mActivePage = NULL;
-   }
-
-   mActivePage = mPages[index];
-   mActivePage->Show();
-   mUserPaneParent->Layout();
+   mBook->ChangeSelection(index);
 }
 
 //----------------------------------------------------------------------------

@@ -40,8 +40,10 @@ or ASlider.
 #include <math.h>
 
 #include <wx/defs.h>
+#include <wx/dcbuffer.h>
 #include <wx/dcclient.h>
 #include <wx/dcmemory.h>
+#include <wx/graphics.h>
 #include <wx/image.h>
 #include <wx/msgdlg.h>
 #include <wx/panel.h>
@@ -99,6 +101,9 @@ class TipPanel : public wxPopupWindow
 
 private:
    void OnPaint(wxPaintEvent & event);
+#if defined(__WXGTK__)
+   void OnCreate(wxWindowCreateEvent & event);
+#endif
 
 private:
    wxString mMaxLabel;
@@ -111,19 +116,28 @@ private:
 
 BEGIN_EVENT_TABLE(TipPanel, wxPopupWindow)
    EVT_PAINT(TipPanel::OnPaint)
+#if defined(__WXGTK__)
+   EVT_WINDOW_CREATE(TipPanel::OnCreate)
+#endif
 END_EVENT_TABLE()
 
 TipPanel::TipPanel(wxWindow *parent, const wxString & maxLabel)
-:  wxPopupWindow(parent)
+:  wxPopupWindow(parent, wxFRAME_SHAPED)
 {
+   SetBackgroundStyle(wxBG_STYLE_PAINT);
+
    mMaxLabel = maxLabel;
-
    wxFont labelFont(sliderFontSize, wxSWISS, wxNORMAL, wxNORMAL);
-
    GetTextExtent(mMaxLabel, &mWidth, &mHeight, NULL, NULL, &labelFont);
 
    mWidth += 8;
    mHeight += 8;
+
+#if defined(__WXMSW__) || defined(__WXMAC__)
+   wxGraphicsPath path = wxGraphicsRenderer::GetDefaultRenderer()->CreatePath();
+   path.AddRoundedRectangle(0, 0, mWidth, mHeight, 5);
+   SetShape(path);
+#endif
 }
 
 void TipPanel::SetPos(const wxPoint & pos)
@@ -136,20 +150,31 @@ void TipPanel::SetLabel(const wxString & label)
    mLabel = label;
 }
 
-void TipPanel::OnPaint(wxPaintEvent& WXUNUSED(event))
+void TipPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
 {
-   wxPaintDC dc(this);
-
-   dc.SetFont(wxFont(sliderFontSize, wxSWISS, wxNORMAL, wxNORMAL));
+   wxAutoBufferedPaintDC dc(this);
+   DisableAntialiasing(dc);
 
    dc.SetPen(*wxBLACK_PEN);
    dc.SetBrush(AColor::tooltipBrush);
-   dc.DrawRectangle(0, 0, mWidth, mHeight);
+   dc.DrawRoundedRectangle(0, 0, mWidth, mHeight, 5);
+
+   dc.SetFont(wxFont(sliderFontSize, wxSWISS, wxNORMAL, wxNORMAL));
+   dc.SetTextForeground(AColor::tooltipPen.GetColour());
 
    int textWidth, textHeight;
    dc.GetTextExtent(mLabel, &textWidth, &textHeight);
-   dc.DrawText(mLabel, (mWidth - textWidth) / 2, (mHeight - textHeight) / 2);
+   DrawText(dc, mLabel, (mWidth - textWidth) / 2, (mHeight - textHeight) / 2);
 }
+
+#if defined(__WXGTK__)
+void TipPanel::OnCreate(wxWindowCreateEvent & WXUNUSED(event))
+{
+   wxGraphicsPath path = wxGraphicsRenderer::GetDefaultRenderer()->CreatePath();
+   path.AddRoundedRectangle(0, 0, mWidth, mHeight, 5);
+   SetShape(path);
+}
+#endif
 
 //
 // SliderDialog
@@ -463,33 +488,6 @@ void LWSlider::SetScroll(float line, float page)
    mScrollPage = page;
 }
 
-void LWSlider::CreatePopWin()
-{
-   wxString maxTipLabel = mName + wxT(": 000000");
-
-   if (mStyle == PAN_SLIDER || mStyle == DB_SLIDER || mStyle == SPEED_SLIDER
-#ifdef EXPERIMENTAL_MIDI_OUT
-       || mStyle == VEL_SLIDER
-#endif
-       )
-      maxTipLabel += wxT("000");
-
-   mTipPanel = new TipPanel(mParent, maxTipLabel);
-}
-
-void LWSlider::SetPopWinPosition()
-{
-   wxPoint pt;
-   if (mOrientation == wxHORIZONTAL)
-      pt = wxPoint(mWidth/2 + mLeft, mHeight + mTop + 1);
-   else
-      pt = wxPoint(mWidth + mLeft + 1, mHeight/2 + mTop);
-   pt = mParent->ClientToScreen(pt);
-
-   if (mTipPanel)
-      mTipPanel->SetPos(pt);
-}
-
 void LWSlider::Move(const wxPoint &newpos)
 {
    mLeft = newpos.x;
@@ -527,7 +525,7 @@ void LWSlider::OnPaint(wxDC &dc, bool  WXUNUSED(selected))
       dc.DrawBitmap(*mThumbBitmap, mLeft+thumbOrtho, mTop+thumbPos, true);
 
    if (mTipPanel)
-      mTipPanel->Refresh();
+      mTipPanel->Update();
 }
 
 void LWSlider::OnSize( wxSizeEvent & event )
@@ -633,6 +631,11 @@ void LWSlider::Draw()
    // mask creation.  And garbage can be displayed if it isn't
    // cleared.
    dc->SelectObject(*mBitmap);
+
+#if defined(__WXMAC__)
+   dc->GetGraphicsContext()->EnableOffset();
+   dc->GetGraphicsContext()->SetAntialiasMode(wxANTIALIAS_NONE);
+#endif
 
    wxColour TransparentColour = wxColour( 255, 254, 255 );
    // DO-THEME Mask colour!!  JC-Aug-2007
@@ -795,57 +798,137 @@ void LWSlider::Draw()
    mBitmap->SetMask( new wxMask( *mBitmap, TransparentColour ) );
 }
 
+void LWSlider::SetToolTipTemplate(const wxString & tip)
+{
+   mTipTemplate = tip;
+}
+
+void LWSlider::ShowTip(bool show)
+{
+   if (show)
+   {
+      if (mTipPanel)
+      {
+         if (mTipPanel->IsShownOnScreen())
+         {
+            return;
+         }
+
+         delete mTipPanel;
+         mTipPanel = NULL;
+      }
+
+      CreatePopWin();
+      FormatPopWin();
+      SetPopWinPosition();
+      mTipPanel->Show();
+   }
+   else
+   {
+      if (mTipPanel)
+      {
+         mTipPanel->Hide();
+         delete mTipPanel;
+         mTipPanel = NULL;
+      }
+   }
+}
+
+void LWSlider::CreatePopWin()
+{
+   if (mTipPanel)
+   {
+      delete mTipPanel;
+      mTipPanel = NULL;
+   }
+
+   wxString mintip = GetTip(mMinValue);
+   wxString maxtip = GetTip(mMaxValue);
+   mTipPanel = new TipPanel(mParent, mintip.Length() > maxtip.Length() ? mintip : maxtip);
+}
+
+void LWSlider::SetPopWinPosition()
+{
+   wxPoint pt;
+
+   if (mOrientation == wxHORIZONTAL)
+   {
+      pt = wxPoint(mWidth/2 + mLeft, mHeight + mTop + 1);
+   }
+   else
+   {
+      pt = wxPoint(mWidth + mLeft + 1, mHeight/2 + mTop);
+   }
+
+   if (mTipPanel)
+   {
+      mTipPanel->SetPos(mParent->ClientToScreen(pt));
+   }
+}
 
 void LWSlider::FormatPopWin()
 {
-   if (!mTipPanel) {
+   if (!mTipPanel)
+   {
       return;
    }
 
+   mTipPanel->SetLabel(GetTip(mCurrentValue));
+   mTipPanel->Refresh();
+}
+
+wxString LWSlider::GetTip(float value) const
+{
    wxString label;
-   wxString valstr;
 
-   switch(mStyle) {
-   case FRAC_SLIDER:
-      label.Printf(wxT("%s: %.2f"), mName.c_str(), mCurrentValue);
-      break;
+   if (mTipTemplate.IsEmpty())
+   {
+      wxString val;
 
-   case DB_SLIDER:
-      valstr.Printf(wxT("%.1f"), mCurrentValue);
-      if (valstr.Right(1) == wxT("0"))
-         valstr = valstr.Left(valstr.Length() - 2);
-      if (mCurrentValue > 0)
-         valstr = wxT("+") + valstr;
+      switch(mStyle)
+      {
+      case FRAC_SLIDER:
+         val.Printf(wxT("%.2f"), value);
+         break;
+   
+      case DB_SLIDER:
+         val.Printf(wxT("%.3g dB"), value);
+         break;
 
-      label.Printf(wxT("%s: %s dB"), mName.c_str(), valstr.c_str());
-      break;
-   case PAN_SLIDER:
-      if (mCurrentValue == 0.0)
-         label.Printf(wxT("%s: %s"), mName.c_str(),
-                      _("Center"));
-      else {
-         if (mCurrentValue < 0.0)
-            label.Printf(wxT("%s: %.0f%% %s"), mName.c_str(),
-                         -mCurrentValue * 100.0f, _("Left"));
-         else /* if (val > 0.0) */
-            label.Printf(wxT("%s: %.0f%% %s"), mName.c_str(),
-                         mCurrentValue * 100.0f, _("Right"));
+      case PAN_SLIDER:
+         if (value == 0.0)
+         {
+            val = _("Center");
+         }
+         else
+         {
+            val.Printf(wxT("%.0f%% %s"),
+               value * (value < 0.0 ? -100.0f : 100.0f),
+               value < 0.0 ? _("Left") : _("Right"));
+         }
+         break;
+
+      case SPEED_SLIDER:
+         val.Printf(wxT("%.2fx"), value);
+         break;
+
+#ifdef EXPERIMENTAL_MIDI_OUT
+      case VEL_SLIDER:
+          val.Printf(wxT("%s%d"),
+                     (value > 0.0f ? _("+") : wxT("")),
+                     (int) value);
+          break;
+#endif
       }
 
-      break;
-   case SPEED_SLIDER:
-      label.Printf(wxT("%s: %.2fx"), mName.c_str(), mCurrentValue);
-      break;
-#ifdef EXPERIMENTAL_MIDI_OUT
-   case VEL_SLIDER:
-       label.Printf(wxT("%s: %s%d"), mName.c_str(),
-                    (mCurrentValue > 0.0f ? _("+") : wxT("")),
-                    (int) mCurrentValue);
-#endif
+      label.Printf(wxT("%s: %s"), mName.c_str(), val.c_str());
+   }
+   else
+   {
+      label.Printf(mTipTemplate, value);
    }
 
-   mTipPanel->SetLabel(label);
-   mTipPanel->Refresh();
+   return label;
 }
 
 bool LWSlider::ShowDialog()
@@ -891,19 +974,19 @@ bool LWSlider::DoShowDialog(wxPoint pos)
 
 void LWSlider::OnMouseEvent(wxMouseEvent & event)
 {
-   if (event.Entering()) {
-      #if wxUSE_TOOLTIPS // Not available in wxX11
+   if (event.Entering())
+   {
       // Display the tooltip in the status bar
-      if (mParent->GetToolTip())
-      {
-         wxString tip = mParent->GetToolTip()->GetTip();
-         GetActiveProject()->TP_DisplayStatusMessage(tip);
-         Refresh();
-      }
-      #endif
+      wxString tip = GetTip(mCurrentValue);
+      GetActiveProject()->TP_DisplayStatusMessage(tip);
+      Refresh();
    }
    else if (event.Leaving())
    {
+      if (!mIsDragging)
+      {
+         ShowTip(false);
+      }
       GetActiveProject()->TP_DisplayStatusMessage(wxT(""));
       Refresh();
    }
@@ -911,6 +994,15 @@ void LWSlider::OnMouseEvent(wxMouseEvent & event)
    // Events other than mouse-overs are ignored when we are disabled
    if (!mEnabled)
       return;
+
+   // Windows sends a right button mouse event when you press the context menu
+   // key, so ignore it.
+   if ((event.RightDown() && !event.RightIsDown()) ||
+       (event.RightUp() && event.GetPosition() == wxPoint(-1, -1)))
+   {
+      event.Skip(false);
+      return;
+   }
 
    float prevValue = mCurrentValue;
 
@@ -940,7 +1032,7 @@ void LWSlider::OnMouseEvent(wxMouseEvent & event)
    }
    else if( event.ButtonDown() )
    {
-      if( mDefaultShortcut && event.CmdDown() )
+      if( mDefaultShortcut && event.ControlDown() )
       {
          mCurrentValue = mDefaultValue;
       }
@@ -974,15 +1066,7 @@ void LWSlider::OnMouseEvent(wxMouseEvent & event)
          mParent->CaptureMouse();
       }
 
-      wxASSERT(mTipPanel == NULL);
-
-      CreatePopWin();
-      FormatPopWin();
-      SetPopWinPosition();
-      mTipPanel->Show();
-
-      //hide mouseover tooltip
-      wxToolTip::Enable(false);
+      ShowTip(true);
    }
    else if( event.ButtonUp() )
    {
@@ -990,13 +1074,7 @@ void LWSlider::OnMouseEvent(wxMouseEvent & event)
       if (mParent->HasCapture())
          mParent->ReleaseMouse();
 
-      wxASSERT(mTipPanel != NULL);
-
-      delete mTipPanel;
-      mTipPanel = NULL;
-
-      //restore normal tooltip behavor for mouseovers
-      wxToolTip::Enable(true);
+      ShowTip(false);
    }
    else if (event.Dragging() && mIsDragging)
    {
@@ -1057,6 +1135,12 @@ void LWSlider::OnKeyEvent(wxKeyEvent & event)
    {
       switch( event.GetKeyCode() )
       {
+         case WXK_TAB:
+            mParent->Navigate(event.ShiftDown()
+                              ? wxNavigationKeyEvent::IsBackward
+                              : wxNavigationKeyEvent::IsForward);
+            break;
+
          case WXK_RIGHT:
          case WXK_UP:
             Increase( mScrollLine );
@@ -1070,17 +1154,11 @@ void LWSlider::OnKeyEvent(wxKeyEvent & event)
             break;
 
          case WXK_PAGEUP:
-#if !wxCHECK_VERSION(2,7,0)
-         case WXK_PRIOR:
-#endif
             Increase( mScrollPage );
             SendUpdate( mCurrentValue );
             break;
 
          case WXK_PAGEDOWN:
-#if !wxCHECK_VERSION(2,7,0)
-         case WXK_NEXT:
-#endif
             Decrease( mScrollPage );
             SendUpdate( mCurrentValue );
             break;
@@ -1091,17 +1169,6 @@ void LWSlider::OnKeyEvent(wxKeyEvent & event)
 
          case WXK_END:
             SendUpdate( mMaxValue );
-            break;
-
-         case WXK_TAB:
-            {
-               wxNavigationKeyEvent nevent;
-               nevent.SetWindowChange( event.ControlDown() );
-               nevent.SetDirection( !event.ShiftDown() );
-               nevent.SetEventObject( mParent );
-               nevent.SetCurrentFocus( mParent );
-               mParent->GetParent()->GetEventHandler()->ProcessEvent(nevent);
-            }
             break;
 
          case WXK_RETURN:
@@ -1122,8 +1189,10 @@ void LWSlider::OnKeyEvent(wxKeyEvent & event)
             break;
       }
    }
-
-   event.Skip();
+   else
+   {
+      event.Skip();
+   }
 }
 
 void LWSlider::SendUpdate( float newValue )
@@ -1335,6 +1404,7 @@ BEGIN_EVENT_TABLE(ASlider, wxWindow)
    EVT_SLIDER(wxID_ANY, ASlider::OnSlider)
    EVT_SET_FOCUS(ASlider::OnSetFocus)
    EVT_KILL_FOCUS(ASlider::OnKillFocus)
+   EVT_TIMER(wxID_ANY, ASlider::OnTimer)
 END_EVENT_TABLE()
 
 ASlider::ASlider( wxWindow * parent,
@@ -1364,6 +1434,8 @@ ASlider::ASlider( wxWindow * parent,
    mSliderIsFocused = false;
 
    mStyle = style;
+
+   mTimer.SetOwner(this);
 
 #if wxUSE_ACCESSIBILITY
    SetAccessible( new ASliderAx( this ) );
@@ -1425,6 +1497,15 @@ void ASlider::OnPaint(wxPaintEvent & WXUNUSED(event))
 
 void ASlider::OnMouseEvent(wxMouseEvent &event)
 {
+   if (event.Entering())
+   {
+      mTimer.StartOnce(1000);
+   }
+   else if (event.Leaving())
+   {
+      mTimer.Stop();
+   }
+
    mLWSlider->OnMouseEvent(event);
 }
 
@@ -1451,6 +1532,11 @@ void ASlider::OnKillFocus(wxFocusEvent & WXUNUSED(event))
    Refresh();
 }
 
+void ASlider::OnTimer(wxTimerEvent & WXUNUSED(event))
+{
+   mLWSlider->ShowTip(true);
+}
+
 void ASlider::GetScroll(float & line, float & page)
 {
    mLWSlider->GetScroll(line, page);
@@ -1459,6 +1545,11 @@ void ASlider::GetScroll(float & line, float & page)
 void ASlider::SetScroll(float line, float page)
 {
    mLWSlider->SetScroll(line, page);
+}
+
+void ASlider::SetToolTipTemplate(const wxString & tip)
+{
+   mLWSlider->SetToolTipTemplate(tip);
 }
 
 float ASlider::Get( bool convert )
@@ -1505,6 +1596,9 @@ bool ASlider::Enable(bool enable)
       return false;
 
    mLWSlider->SetEnabled(enable);
+
+   wxWindow::Enable(enable);
+
    return true;
 }
 

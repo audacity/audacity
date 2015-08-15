@@ -46,6 +46,8 @@ BEGIN_EVENT_TABLE(AButton, wxWindow)
    EVT_ERASE_BACKGROUND(AButton::OnErase)
 END_EVENT_TABLE()
 
+// LL:  An alternative to this might be to just use the wxEVT_KILL_FOCUS
+//      or wxEVT_ACTIVATE events.
 class AButton::Listener
    : public wxEvtHandler
 {
@@ -464,16 +466,15 @@ void AButton::OnKeyDown(wxKeyEvent & event)
    switch( event.GetKeyCode() )
    {
    case WXK_RIGHT:
-      Navigate();
+      Navigate(wxNavigationKeyEvent::IsForward);
       break;
    case WXK_LEFT:
       Navigate(wxNavigationKeyEvent::IsBackward);
       break;
    case WXK_TAB:
-      if (event.ShiftDown())
-         Navigate(wxNavigationKeyEvent::IsBackward);
-      else
-         Navigate();
+      Navigate(event.ShiftDown()
+               ? wxNavigationKeyEvent::IsBackward
+               : wxNavigationKeyEvent::IsForward);
       break;
    case WXK_RETURN:
    case WXK_NUMPAD_ENTER:
@@ -510,16 +511,18 @@ bool AButton::WasControlDown()
 
 void AButton::Enable()
 {
+   wxWindow::Enable(true);
    mEnabled = true;
-   this->Refresh(false);
+   Refresh(false);
 }
 
 void AButton::Disable()
 {
+   wxWindow::Enable(false);
    mEnabled = false;
    if (GetCapture()==this)
       ReleaseMouse();
-   this->Refresh(false);
+   Refresh(false);
 }
 
 void AButton::PushDown()

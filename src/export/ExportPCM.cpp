@@ -98,7 +98,11 @@ public:
 
    ExportPCMOptions(wxWindow *parent, int format);
    virtual ~ExportPCMOptions();
+
    void PopulateOrExchange(ShuttleGui & S);
+   bool TransferDataToWindow();
+   bool TransferDataFromWindow();
+
    void OnHeaderChoice(wxCommandEvent & evt);
 
 private:
@@ -148,10 +152,9 @@ ExportPCMOptions::ExportPCMOptions(wxWindow *parent, int selformat)
    for (int i = 0, sel = 0, num = sf_num_encodings(); i < num; i++) {
       int enc = sf_encoding_index_to_subtype(i);
       int fmt = (format & SF_FORMAT_TYPEMASK) | enc;
-      bool valid  = ValidatePair(fmt);
+      bool valid = ValidatePair(fmt);
       if (valid)
       {
-
          mEncodingNames.Add(sf_encoding_index_name(i));
          mEncodingFormats.Add(enc);
          if ((format & SF_FORMAT_SUBMASK) == (int)sf_encoding_index_to_subtype(i))
@@ -163,11 +166,13 @@ ExportPCMOptions::ExportPCMOptions(wxWindow *parent, int selformat)
 
    ShuttleGui S(this, eIsCreatingFromPrefs);
    PopulateOrExchange(S);
+
+   TransferDataToWindow();
 }
 
 ExportPCMOptions::~ExportPCMOptions()
 {
-   WriteExportFormatPref(GetFormat());
+   TransferDataFromWindow();
 }
 
 void ExportPCMOptions::PopulateOrExchange(ShuttleGui & S)
@@ -195,6 +200,25 @@ void ExportPCMOptions::PopulateOrExchange(ShuttleGui & S)
    S.EndVerticalLay();
 
    return;
+}
+
+///
+///
+bool ExportPCMOptions::TransferDataToWindow()
+{
+   return true;
+}
+
+///
+///
+bool ExportPCMOptions::TransferDataFromWindow()
+{
+   ShuttleGui S(this, eIsSavingToPrefs);
+   PopulateOrExchange(S);
+
+   WriteExportFormatPref(GetFormat());
+
+   return true;
 }
 
 void ExportPCMOptions::OnHeaderChoice(wxCommandEvent & WXUNUSED(evt))

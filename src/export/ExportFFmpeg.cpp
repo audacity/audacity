@@ -1002,12 +1002,7 @@ wxWindow *ExportFFmpeg::OptionsCreate(wxWindow *parent, int format)
    }
    else if (mSubFormat == FMT_OTHER)
    {
-      return ExportPlugin::OptionsCreate(parent, format);
-#if 0
-      ExportFFmpegOptions od(parent);
-      od.ShowModal();
-      return true;
-#endif
+      return new ExportFFmpegCustomOptions(parent, format);
    }
 
    return ExportPlugin::OptionsCreate(parent, format);

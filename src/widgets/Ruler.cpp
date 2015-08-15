@@ -1704,6 +1704,7 @@ AdornedRulerPanel::AdornedRulerPanel(wxWindow* parent,
 {
    SetLabel( _("Timeline") );
    SetName(GetLabel());
+   SetBackgroundStyle(wxBG_STYLE_PAINT);
 
    mLeftOffset = 0;
    mCurTime = -1;
@@ -1835,11 +1836,7 @@ void AdornedRulerPanel::OnErase(wxEraseEvent & WXUNUSED(evt))
 
 void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
 {
-#if defined(__WXMAC__)
-   wxPaintDC dc(this);
-#else
    wxBufferedPaintDC dc(this);
-#endif
 
    DoDrawBorder(&dc);
 
@@ -1961,13 +1958,6 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
 
 
    if (evt.Leaving()) {
-#if defined(__WXMAC__)
-      // We must install the cursor ourselves since the window under
-      // the mouse is no longer this one and wx2.8.12 makes that check.
-      // Should re-evaluate with wx3.
-      wxSTANDARD_CURSOR->MacInstall();
-#endif
-
       mQuickPlayInd = false;
       wxClientDC cdc(this);
       DrawQuickPlayIndicator(&cdc, true);
@@ -2177,14 +2167,14 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
          AudioIOStartStreamOptions options(mProject->GetDefaultPlayOptions());
          options.playLooped = (loopEnabled && evt.ShiftDown());
 
-         if (!evt.CmdDown())  // Use CmdDown rather than ControlDown. See bug 746
+         if (!evt.ControlDown())
             options.pStartTime = &mPlayRegionStart;
          else
             options.timeTrack = NULL;
 
          ctb->PlayPlayRegion((SelectedRegion(start, end)),
                              options,
-                             evt.CmdDown(),
+                             evt.ControlDown(),
                              false,
                              true);
 
@@ -2300,7 +2290,7 @@ void AdornedRulerPanel::HandleSnapping()
       // Create a new snap manager in case any snap-points have changed
       delete mSnapManager;
    }
-   mSnapManager = new SnapManager(mProject->GetTracks(), NULL,
+   mSnapManager = new SnapManager(mProject->GetTracks(), NULL, NULL,
                                  *mViewInfo,
                                  QUICK_PLAY_SNAP_PIXEL);
    bool snappedPoint, snappedTime;

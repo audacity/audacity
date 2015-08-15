@@ -113,8 +113,8 @@ class AUDACITY_DLL_API LabelTrack : public Track
    friend class LabelStruct;
 
  public:
-   bool IsGoodLabelFirstKey(int keyCode);
-   bool IsGoodLabelEditKey(int keyCode);
+   bool IsGoodLabelFirstKey(const wxKeyEvent & evt);
+   bool IsGoodLabelEditKey(const wxKeyEvent & evt);
    bool IsTextSelected();
 
    void CreateCustomGlyphs();
@@ -131,6 +131,7 @@ class AUDACITY_DLL_API LabelTrack : public Track
              const ZoomInfo &zoomInfo);
 
    int getSelectedIndex() const { return mSelIndex; }
+   bool IsAdjustingLabel() const { return mIsAdjustingLabel; }
 
    virtual int GetKind() const { return Label; }
 
@@ -179,8 +180,11 @@ class AUDACITY_DLL_API LabelTrack : public Track
    void SetWrongDragging(bool rightFlag) { mRightDragging = rightFlag; }
    void SetDrawCursor(bool drawCursorFlag) { mDrawCursor = drawCursorFlag; }
 
-   bool HandleMouse(const wxMouseEvent & evt, wxRect & r, const ZoomInfo &zoomInfo,
-                           SelectedRegion *newSel);
+   void HandleClick(const wxMouseEvent & evt, wxRect & r, const ZoomInfo &zoomInfo,
+      SelectedRegion *newSel);
+   bool HandleGlyphDragRelease(const wxMouseEvent & evt, wxRect & r, const ZoomInfo &zoomInfo,
+      SelectedRegion *newSel);
+   void HandleTextDragRelease(const wxMouseEvent & evt);
 
    bool CaptureKey(wxKeyEvent & event);
    bool OnKeyDown(SelectedRegion &sel, wxKeyEvent & event);

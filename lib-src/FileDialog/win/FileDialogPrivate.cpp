@@ -180,9 +180,20 @@ void FileDialog::MSWOnSize(HWND hDlg, LPOPENFILENAME pOfn)
 
    SetHWND(mChildDlg);
 
+   SetWindowPos(mChildDlg,
+                HWND_TOP,
+                0,
+                0,
+                r.GetWidth(),
+                r.GetHeight(),
+                SWP_NOZORDER | SWP_NOMOVE);
+
    SetSize(r);
 
-   mRoot->SetSize(r.GetWidth(), mRoot->GetSize().GetHeight());
+   if (mRoot)
+   {
+      mRoot->SetSize(r.GetWidth(), mRoot->GetSize().GetHeight());
+   }
 
    SetHWND(NULL);
 }
@@ -269,19 +280,19 @@ void FileDialog::MSWOnInitDialog(HWND hDlg, LPOPENFILENAME pOfn)
    if (HasUserPaneCreator())
    {
       // Create the root window
-      wxBoxSizer *verticalSizer = new wxBoxSizer( wxVERTICAL );
+      wxBoxSizer *verticalSizer = new wxBoxSizer(wxVERTICAL);
       mRoot = new wxPanel(this, wxID_ANY);
    
       wxPanel *userpane = new wxPanel(mRoot, wxID_ANY);
       CreateUserPane(userpane);
 
       wxBoxSizer *horizontalSizer = new wxBoxSizer(wxHORIZONTAL);
-      horizontalSizer->Add(userpane, 1, wxEXPAND, 0);
-      verticalSizer->Add(horizontalSizer, 1, wxEXPAND|wxALL, 0);
+      horizontalSizer->Add(userpane, 1, wxEXPAND);
+      verticalSizer->Add(horizontalSizer, 1, wxEXPAND);
 
       mRoot->SetSizer(verticalSizer);
       mRoot->Layout();
-      verticalSizer->SetSizeHints(mRoot);
+      mRoot->Fit();
 
       // This reserves space for the additional panel
       wxSize sz = mRoot->GetBestSize();
@@ -640,6 +651,8 @@ FileDialog::FileDialog(wxWindow *parent,
 
 void FileDialog::Init()
 {
+   mRoot = NULL;
+
    // NB: all style checks are done by wxFileDialogBase::Create
 
    m_bMovedWindow = false;

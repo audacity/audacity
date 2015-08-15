@@ -63,7 +63,11 @@ public:
 
    ExportFFmpegAC3Options(wxWindow *parent, int format);
    virtual ~ExportFFmpegAC3Options();
+
    void PopulateOrExchange(ShuttleGui & S);
+   bool TransferDataToWindow();
+   bool TransferDataFromWindow();
+
    /// Bit Rates supported by AC3 encoder
    static const int iAC3BitRates[];
    /// Sample Rates supported by AC3 encoder (must end with zero-element)
@@ -85,7 +89,10 @@ public:
 
    ExportFFmpegAACOptions(wxWindow *parent, int format);
    virtual ~ExportFFmpegAACOptions();
+
    void PopulateOrExchange(ShuttleGui & S);
+   bool TransferDataToWindow();
+   bool TransferDataFromWindow();
 
 private:
 
@@ -98,7 +105,10 @@ public:
 
    ExportFFmpegAMRNBOptions(wxWindow *parent, int format);
    virtual ~ExportFFmpegAMRNBOptions();
+
    void PopulateOrExchange(ShuttleGui & S);
+   bool TransferDataToWindow();
+   bool TransferDataFromWindow();
 
    static int iAMRNBBitRate[];
 
@@ -117,7 +127,10 @@ public:
 
    ExportFFmpegWMAOptions(wxWindow *parent, int format);
    ~ExportFFmpegWMAOptions();
+
    void PopulateOrExchange(ShuttleGui & S);
+   bool TransferDataToWindow();
+   bool TransferDataFromWindow();
 
    static const int iWMASampleRates[];
    static const int iWMABitRate[];
@@ -129,6 +142,24 @@ private:
 
    wxChoice *mBitRateChoice;
    int mBitRateFromChoice;
+};
+
+class ExportFFmpegCustomOptions : public wxPanel
+{
+public:
+
+   ExportFFmpegCustomOptions(wxWindow *parent, int format);
+   ~ExportFFmpegCustomOptions();
+
+   void PopulateOrExchange(ShuttleGui & S);
+   bool TransferDataToWindow();
+   bool TransferDataFromWindow();
+
+   void OnOpen(wxCommandEvent & evt);
+
+private:
+
+   DECLARE_EVENT_TABLE();
 };
 
 /// Entry for the Applicability table

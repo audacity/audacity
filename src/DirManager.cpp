@@ -1455,6 +1455,7 @@ _("Project check of \"%s\" folder \
          nResult = FSCKstatus_CLOSE_REQ;
       else
       {
+         // LL:  A progress dialog should probably be used here
          BlockHash::iterator iter = missingAliasedFileAUFHash.begin();
          while (iter != missingAliasedFileAUFHash.end())
          {
@@ -1516,6 +1517,7 @@ _("Project check of \"%s\" folder \
          nResult = FSCKstatus_CLOSE_REQ;
       else
       {
+         // LL:  A progress dialog should probably be used here
          BlockHash::iterator iter = missingAUFHash.begin();
          while (iter != missingAUFHash.end())
          {
@@ -1574,6 +1576,7 @@ _("Project check of \"%s\" folder \
          nResult = FSCKstatus_CLOSE_REQ;
       else
       {
+         // LL:  A progress dialog should probably be used here
          BlockHash::iterator iter = missingAUHash.begin();
          while (iter != missingAUHash.end())
          {

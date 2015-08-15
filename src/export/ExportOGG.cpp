@@ -48,7 +48,10 @@ public:
 
    ExportOGGOptions(wxWindow *parent, int format);
    virtual ~ExportOGGOptions();
+
    void PopulateOrExchange(ShuttleGui & S);
+   bool TransferDataToWindow();
+   bool TransferDataFromWindow();
 
 private:
 
@@ -64,15 +67,13 @@ ExportOGGOptions::ExportOGGOptions(wxWindow *parent, int WXUNUSED(format))
 
    ShuttleGui S(this, eIsCreatingFromPrefs);
    PopulateOrExchange(S);
+
+   TransferDataToWindow();
 }
 
 ExportOGGOptions::~ExportOGGOptions()
 {
-   ShuttleGui S(this, eIsSavingToPrefs);
-   PopulateOrExchange(S);
-
-   gPrefs->Write(wxT("/FileFormats/OggExportQuality"),mOggQualityUnscaled * 10);
-   gPrefs->Flush();
+   TransferDataFromWindow();
 }
 
 ///
@@ -94,6 +95,26 @@ void ExportOGGOptions::PopulateOrExchange(ShuttleGui & S)
       S.EndHorizontalLay();
    }
    S.EndVerticalLay();
+}
+
+///
+///
+bool ExportOGGOptions::TransferDataToWindow()
+{
+   return true;
+}
+
+///
+///
+bool ExportOGGOptions::TransferDataFromWindow()
+{
+   ShuttleGui S(this, eIsSavingToPrefs);
+   PopulateOrExchange(S);
+
+   gPrefs->Write(wxT("/FileFormats/OggExportQuality"),mOggQualityUnscaled * 10);
+   gPrefs->Flush();
+
+   return true;
 }
 
 //----------------------------------------------------------------------------

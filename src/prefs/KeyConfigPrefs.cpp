@@ -410,7 +410,7 @@ void KeyConfigPrefs::OnHotkeyKeyDown(wxKeyEvent & e)
    wxTextCtrl *t = (wxTextCtrl *)e.GetEventObject();
 
    // Make sure we can navigate away from the hotkey textctrl.
-   // On Linux and OSX, it an get stuck, but it doesn't hurt
+   // On Linux and OSX, it can get stuck, but it doesn't hurt
    // to do it for Windows as well.
    //
    // Mac note:  Don't waste time trying to figure out why the
@@ -418,12 +418,9 @@ void KeyConfigPrefs::OnHotkeyKeyDown(wxKeyEvent & e)
    // active, buttons on the Mac do not accept focus and all the
    // controls between this one and the tree control are buttons.
    if (e.GetKeyCode() == WXK_TAB) {
-      wxNavigationKeyEvent nevent;
-      nevent.SetWindowChange(e.ControlDown());
-      nevent.SetDirection(!e.ShiftDown());
-      nevent.SetEventObject(t);
-      nevent.SetCurrentFocus(t);
-      t->GetParent()->GetEventHandler()->ProcessEvent(nevent);
+      NavigateIn(e.ShiftDown()
+                 ? wxNavigationKeyEvent::IsBackward
+                 : wxNavigationKeyEvent::IsForward);
       return;
    }
 

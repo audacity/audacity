@@ -1867,67 +1867,6 @@ void AudacityProject::OnScroll(wxScrollEvent & WXUNUSED(event))
    }
 }
 
-bool AudacityProject::HandleKeyDown(wxKeyEvent & event)
-{
-   // Check to see if it is a meta command
-   if (mCommandManager.HandleMeta(event))
-      return true;
-
-   // Any other keypresses must be destined for this project window.
-   if (wxGetTopLevelParent(wxWindow::FindFocus()) != this)
-      return false;
-
-   if (event.GetKeyCode() == WXK_ESCAPE)
-      mTrackPanel->HandleEscapeKey(true);
-
-   if (event.GetKeyCode() == WXK_ALT)
-      mTrackPanel->HandleAltKey(true);
-
-   // Allow the zoom cursor to change to a zoom out cursor
-   if (event.GetKeyCode() == WXK_SHIFT)
-      mTrackPanel->HandleShiftKey(true);
-
-   if (event.GetKeyCode() == WXK_CONTROL)
-      mTrackPanel->HandleControlKey(true);
-
-   // Allow PageUp and PageDown keys to
-   //scroll the Track Panel left and right
-   if (event.GetKeyCode() == WXK_PAGEUP)
-      mTrackPanel->HandlePageUpKey();
-
-   if (event.GetKeyCode() == WXK_PAGEDOWN)
-      mTrackPanel->HandlePageDownKey();
-
-   return mCommandManager.HandleKey(event, GetUpdateFlags(), 0xFFFFFFFF);
-}
-
-bool AudacityProject::HandleChar(wxKeyEvent & WXUNUSED(event))
-{
-   return false;
-}
-
-bool AudacityProject::HandleKeyUp(wxKeyEvent & event)
-{
-   // All keypresses must be destined for this project window.
-   if (wxGetTopLevelParent(wxWindow::FindFocus()) != this)
-      return false;
-
-   if (event.GetKeyCode() == WXK_ESCAPE)
-      mTrackPanel->HandleEscapeKey(false);
-
-   if (event.GetKeyCode() == WXK_ALT)
-      mTrackPanel->HandleAltKey(false);
-
-   // Allow the Zoom Out cursor back to Zoom In
-   if (event.GetKeyCode() == WXK_SHIFT)
-      mTrackPanel->HandleShiftKey(false);
-
-   if (event.GetKeyCode() == WXK_CONTROL)
-      mTrackPanel->HandleControlKey(false);
-
-   return mCommandManager.HandleKey(event, GetUpdateFlags(), 0xFFFFFFFF);
-}
-
 /// Determines if flags for command are compatible with current state.
 /// If not, then try some recovery action to make it so.
 /// @return whether compatible or not after any actions taken.
@@ -2834,6 +2773,10 @@ void AudacityProject::OpenFile(wxString fileName, bool addtohistory)
          //release the flag.
       ODManager::UnmarkLoadedODFlag();
    }
+
+   // For an unknown reason, OSX requires that the project window be
+   // raised if a recovery took place.
+   Raise();
 }
 
 bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)

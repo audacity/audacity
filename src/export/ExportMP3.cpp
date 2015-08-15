@@ -267,6 +267,9 @@ public:
    virtual ~ExportMP3Options();
 
    void PopulateOrExchange(ShuttleGui & S);
+   bool TransferDataToWindow();
+   bool TransferDataFromWindow();
+
    void OnSET(wxCommandEvent& evt);
    void OnVBR(wxCommandEvent& evt);
    void OnABR(wxCommandEvent& evt);
@@ -312,25 +315,15 @@ ExportMP3Options::ExportMP3Options(wxWindow *parent, int WXUNUSED(format))
 {
    InitMP3_Statics();
 
-   mSetRate = gPrefs->Read(wxT("/FileFormats/MP3SetRate"), PRESET_STANDARD);
-   mVbrRate = gPrefs->Read(wxT("/FileFormats/MP3VbrRate"), QUALITY_4);
-   mAbrRate = gPrefs->Read(wxT("/FileFormats/MP3AbrRate"), 128);
-   mCbrRate = gPrefs->Read(wxT("/FileFormats/MP3CbrRate"), 128);
-
    ShuttleGui S(this, eIsCreatingFromPrefs);
    PopulateOrExchange(S);
+
+   TransferDataToWindow();
 }
 
 ExportMP3Options::~ExportMP3Options()
 {
-   ShuttleGui S(this, eIsSavingToPrefs);
-   PopulateOrExchange(S);
-
-   gPrefs->Write(wxT("/FileFormats/MP3SetRate"), mSetRate);
-   gPrefs->Write(wxT("/FileFormats/MP3VbrRate"), mVbrRate);
-   gPrefs->Write(wxT("/FileFormats/MP3AbrRate"), mAbrRate);
-   gPrefs->Write(wxT("/FileFormats/MP3CbrRate"), mCbrRate);
-   gPrefs->Flush();
+   TransferDataFromWindow();
 }
 
 ///
@@ -423,6 +416,32 @@ void ExportMP3Options::PopulateOrExchange(ShuttleGui & S)
       S.EndHorizontalLay();
    }
    S.EndVerticalLay();
+}
+
+///
+///
+bool ExportMP3Options::TransferDataToWindow()
+{
+   mSetRate = gPrefs->Read(wxT("/FileFormats/MP3SetRate"), PRESET_STANDARD);
+   mVbrRate = gPrefs->Read(wxT("/FileFormats/MP3VbrRate"), QUALITY_4);
+   mAbrRate = gPrefs->Read(wxT("/FileFormats/MP3AbrRate"), 128);
+   mCbrRate = gPrefs->Read(wxT("/FileFormats/MP3CbrRate"), 128);
+
+   return true;
+}
+
+bool ExportMP3Options::TransferDataFromWindow()
+{
+   ShuttleGui S(this, eIsSavingToPrefs);
+   PopulateOrExchange(S);
+
+   gPrefs->Write(wxT("/FileFormats/MP3SetRate"), mSetRate);
+   gPrefs->Write(wxT("/FileFormats/MP3VbrRate"), mVbrRate);
+   gPrefs->Write(wxT("/FileFormats/MP3AbrRate"), mAbrRate);
+   gPrefs->Write(wxT("/FileFormats/MP3CbrRate"), mCbrRate);
+   gPrefs->Flush();
+
+   return true;
 }
 
 ///
