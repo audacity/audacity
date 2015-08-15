@@ -4576,7 +4576,7 @@ void TrackPanel::HandleWaveTrackVZoom
 (TrackList *tracks, const wxRect &rect,
  int zoomStart, int zoomEnd,
  WaveTrack *track, bool shiftDown, bool rightUp,
- bool /*fixedMousePoint*/)
+ bool fixedMousePoint)
 {
    WaveTrack *const partner = static_cast<WaveTrack *>(tracks->GetLink(track));
    int height = track->GetHeight();
@@ -4586,7 +4586,7 @@ void TrackPanel::HandleWaveTrackVZoom
    if (zoomEnd < zoomStart)
       std::swap(zoomStart, zoomEnd);
 
-   float min, max, c, l, minBand = 0;
+   float min, max, minBand = 0;
    const double rate = track->GetRate();
    const float halfrate = rate / 2;
    const SpectrogramSettings &settings = track->GetSpectrogramSettings();
@@ -4640,7 +4640,7 @@ void TrackPanel::HandleWaveTrackVZoom
 
          // Waveform view - allow zooming down to a range of ZOOMLIMIT
          if (max - min < ZOOMLIMIT) {     // if user attempts to go smaller...
-            c = (min+max)/2;           // ...set centre of view to centre of dragged area and top/bottom to ZOOMLIMIT/2 above/below
+            const float c = (min+max)/2;  // ...set centre of view to centre of dragged area and top/bottom to ZOOMLIMIT/2 above/below
             min = c - ZOOMLIMIT/2.0;
             max = c + ZOOMLIMIT/2.0;
          }
@@ -4657,14 +4657,21 @@ void TrackPanel::HandleWaveTrackVZoom
          else {
             // Zoom out
 
+            const float p1 = (zoomStart - ypos) / (float)height;
             // (Used to zoom out centered at midline, ignoring the click, if linear view.
             //  I think it is better to be consistent.  PRL)
             // Center zoom-out at the midline
             const float middle = // spectrumLinear ? 0.5f :
-               1.0f - (zoomStart - ypos) / (float)height;
+               1.0f - p1;
 
-            min = std::max(spectrumLinear ? 0.0f : 1.0f, scale.PositionToValue(middle - 1.0f));
-            max = std::min(halfrate, scale.PositionToValue(middle + 1.0f));
+            if (fixedMousePoint) {
+               min = std::max(spectrumLinear ? 0.0f : 1.0f, scale.PositionToValue(-middle));
+               max = std::min(halfrate, scale.PositionToValue(1.0f + p1));
+            }
+            else {
+               min = std::max(spectrumLinear ? 0.0f : 1.0f, scale.PositionToValue(middle - 1.0f));
+               max = std::min(halfrate, scale.PositionToValue(middle + 1.0f));
+            }
          }
       }
       else {
@@ -4679,18 +4686,34 @@ void TrackPanel::HandleWaveTrackVZoom
          else {
             // Zoom out
             if (min <= -1.0 && max >= 1.0) {
+               // Go to the maximal zoom-out
                min = -2.0;
                max = 2.0;
             }
             else {
-               c = 0.5*(min + max);
-               l = (c - min);
+               const float oldRange = max - min;
+
                // limit to +/- 1 range unless already outside that range...
                float minRange = (min < -1) ? -2.0 : -1.0;
                float maxRange = (max > 1) ? 2.0 : 1.0;
                // and enforce vertical zoom limits.
-               min = std::min(maxRange - ZOOMLIMIT, std::max(minRange, c - 2 * l));
-               max = std::max(minRange + ZOOMLIMIT, std::min(maxRange, c + 2 * l));
+               if (fixedMousePoint) {
+                  const float oldRange = max - min;
+                  const float p1 = (zoomStart - ypos) / (float)height;
+                  const float c = (max * (1.0 - p1) + min * p1);
+                  min = std::min(maxRange - ZOOMLIMIT,
+                     std::max(minRange, c - 2 * (1.0f - p1) * oldRange));
+                  max = std::max(minRange + ZOOMLIMIT,
+                     std::min(maxRange, c + 2 * p1 * oldRange));
+               }
+               else {
+                  const float c = 0.5*(min + max);
+                  const float l = (c - min);
+                  min = std::min(maxRange - ZOOMLIMIT,
+                     std::max(minRange, c - 2 * l));
+                  max = std::max(minRange + ZOOMLIMIT,
+                     std::min(maxRange, c + 2 * l));
+               }
             }
          }
       }
@@ -4699,34 +4722,51 @@ void TrackPanel::HandleWaveTrackVZoom
       // Zoom IN
       if (spectral) {
          // Center the zoom-in at the click
-         const float middle = 1.0f - (zoomStart - ypos) / (float)height;
+         const float p1 = (zoomStart - ypos) / (float)height;
+         const float middle = 1.0f - p1;
          const float middleValue = scale.PositionToValue(middle);
 
-         min = std::max(spectrumLinear ? 0.0f : 1.0f,
-            std::min(middleValue - minBand / 2,
+         if (fixedMousePoint) {
+            min = std::max(spectrumLinear ? 0.0f : 1.0f,
+               std::min(middleValue - minBand * middle,
+               scale.PositionToValue(0.5f * middle)
+            ));
+            max = std::min(halfrate,
+               std::max(middleValue + minBand * p1,
+               scale.PositionToValue(middle + 0.5f * p1)
+            ));
+         }
+         else {
+            min = std::max(spectrumLinear ? 0.0f : 1.0f,
+               std::min(middleValue - minBand / 2,
                scale.PositionToValue(middle - 0.25f)
-         ));
-         max = std::min(halfrate,
-            std::max(middleValue + minBand / 2,
+            ));
+            max = std::min(halfrate,
+               std::max(middleValue + minBand / 2,
                scale.PositionToValue(middle + 0.25f)
-         ));
+            ));
+         }
       }
       else {
          // Zoom in centered on cursor
-         float p1;
          if (min < -1.0 || max > 1.0) {
             min = -1.0;
             max = 1.0;
          }
          else {
-            c = 0.5*(min + max);
             // Enforce maximum vertical zoom
-            l = std::max(ZOOMLIMIT, (c - min));
+            const float oldRange = max - min;
+            const float l = std::max(ZOOMLIMIT, 0.5f * oldRange);
+            const float ratio = l / (max - min);
 
-            p1 = (zoomStart - ypos) / (float)height;
-            c = (max * (1.0 - p1) + min * p1);
-            min = c - 0.5*l;
-            max = c + 0.5*l;
+            const float p1 = (zoomStart - ypos) / (float)height;
+            const float c = (max * (1.0 - p1) + min * p1);
+            if (fixedMousePoint)
+               min = c - ratio * (1.0f - p1) * oldRange,
+               max = c + ratio * p1 * oldRange;
+            else
+               min = c - 0.5 * l,
+               max = c + 0.5 * l;
          }
       }
    }
