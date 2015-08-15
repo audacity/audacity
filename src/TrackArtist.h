@@ -140,11 +140,13 @@ class AUDACITY_DLL_API TrackArtist {
 
    void DrawWaveformBackground(wxDC & dc, int leftOffset, const wxRect &rect,
                                const double env[],
-                               float zoomMin, float zoomMax, bool dB,
+                               float zoomMin, float zoomMax,
+                               bool dB, float dBRange,
                                double t0, double t1, const ZoomInfo &zoomInfo,
                                bool drawEnvelope, bool bIsSyncLockSelected);
    void DrawMinMaxRMS(wxDC &dc, const wxRect & rect, const double env[],
-                      float zoomMin, float zoomMax, bool dB,
+                      float zoomMin, float zoomMax,
+                      bool dB, float dBRange,
                       const float *min, const float *max, const float *rms, const int *bl,
                       bool /* showProgress */, bool muted
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
@@ -152,7 +154,8 @@ class AUDACITY_DLL_API TrackArtist {
 #endif
    );
    void DrawIndividualSamples(wxDC & dc, int leftOffset, const wxRect & rect,
-                              float zoomMin, float zoomMax, bool dB,
+                              float zoomMin, float zoomMax,
+                              bool dB, float dBRange,
                               WaveClip *clip,
                               const ZoomInfo &zoomInfo,
                               bool bigPoints, bool showPoints, bool muted);
@@ -160,7 +163,8 @@ class AUDACITY_DLL_API TrackArtist {
    void DrawNegativeOffsetTrackArrows(wxDC & dc, const wxRect & rect);
 
    void DrawEnvelope(wxDC & dc, const wxRect & rect, const double env[],
-                     float zoomMin, float zoomMax, bool dB);
+                     float zoomMin, float zoomMax,
+                     bool dB, float dBRange);
    void DrawEnvLine(wxDC & dc, const wxRect & rect, int x0, int y0, int cy, bool top);
 
    // Preference values

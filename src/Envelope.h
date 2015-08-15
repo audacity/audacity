@@ -116,24 +116,22 @@ class Envelope : public XMLTagHandler {
    virtual XMLTagHandler *HandleXMLChild(const wxChar *tag);
    virtual void WriteXML(XMLWriter &xmlFile);
 
-   void DrawPoints(wxDC & dc, const wxRect & r, const ZoomInfo &zoomInfo, bool dB,
-             float zoomMin=-1.0, float zoomMax=1.0);
+   void DrawPoints(wxDC & dc, const wxRect & r, const ZoomInfo &zoomInfo,
+             bool dB, double dBRange,
+             float zoomMin, float zoomMax);
 
    // Event Handlers
    // Each ofthese returns true if parents needs to be redrawn
    bool MouseEvent(wxMouseEvent & event, wxRect & r,
-                   const ZoomInfo &zoomInfo, bool dB,
-                   float zoomMin=-1.0, float zoomMax=1.0);
+                   const ZoomInfo &zoomInfo, bool dB, double dBRange,
+                   float zoomMin, float zoomMax);
    bool HandleMouseButtonDown( wxMouseEvent & event, wxRect & r,
-                               const ZoomInfo &zoomInfo, bool dB,
-                               float zoomMin=-1.0, float zoomMax=1.0);
+                               const ZoomInfo &zoomInfo, bool dB, double dBRange,
+                               float zoomMin, float zoomMax);
    bool HandleDragging( wxMouseEvent & event, wxRect & r,
-                        const ZoomInfo &zoomInfo, bool dB,
-                        float zoomMin=-1.0, float zoomMax=1.0, float eMin=0., float eMax=2.);
+                        const ZoomInfo &zoomInfo, bool dB, double dBRange,
+                        float zoomMin, float zoomMax);
    bool HandleMouseButtonUp();
-   void GetEventParams( int &height, bool &upper, bool dB,
-                        wxMouseEvent & event, wxRect & r,
-                        float &zoomMin, float &zoomMax);
 
    // Handling Cut/Copy/Paste events
    void CollapseRegion(double t0, double t1);
@@ -198,12 +196,12 @@ private:
    EnvPoint *  AddPointAtEnd( double t, double val );
    void MarkDragPointForDeletion();
    float ValueOfPixel( int y, int height, bool upper,
-                       const ZoomInfo &zoomInfo, bool dB,
+                       bool dB, double dBRange,
                        float zoomMin, float zoomMax);
    void BinarySearchForTime( int &Lo, int &Hi, double t ) const;
    double GetInterpolationStartValueAtPoint( int iPoint ) const;
    void MoveDraggedPoint( wxMouseEvent & event, wxRect & r,
-                               const ZoomInfo &zoomInfo, bool dB,
+                               const ZoomInfo &zoomInfo, bool dB, double dBRange,
                                float zoomMin, float zoomMax);
 
    // Possibly inline functions:
