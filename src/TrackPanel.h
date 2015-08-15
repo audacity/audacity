@@ -404,7 +404,8 @@ protected:
    virtual void HandleZoomDrag(wxMouseEvent & event);
    virtual void HandleZoomButtonUp(wxMouseEvent & event);
 
-   virtual bool IsDragZooming();
+   static bool IsDragZooming(int zoomStart, int zoomEnd);
+   virtual bool IsDragZooming() { return IsDragZooming(mZoomStart, mZoomEnd); }
    virtual void DragZoom(wxMouseEvent &event, int x);
    virtual void DoZoomInOut(wxMouseEvent &event, int x);
 
@@ -413,6 +414,11 @@ protected:
    virtual void HandleVZoomDrag(wxMouseEvent & event);
    virtual void HandleVZoomButtonUp(wxMouseEvent & event);
    virtual void HandleWaveTrackVZoom(WaveTrack *track, bool shiftDown, bool rightUp);
+   static void HandleWaveTrackVZoom
+      (TrackList *tracks, const wxRect &rect,
+       int zoomStart, int zoomEnd,
+       WaveTrack *track, bool shiftDown, bool rightUp,
+       bool fixedMousePoint);
 
    // Handle sample editing using the 'draw' tool.
    virtual bool IsSampleEditingPossible( wxMouseEvent & event, Track * t );

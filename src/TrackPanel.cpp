@@ -4403,9 +4403,9 @@ void TrackPanel::HandleZoomButtonUp(wxMouseEvent & event)
 }
 
 /// Determines if drag zooming is active
-bool TrackPanel::IsDragZooming()
+bool TrackPanel::IsDragZooming(int zoomStart, int zoomEnd)
 {
-   return (abs(mZoomEnd - mZoomStart) > DragThreshold);
+   return (abs(zoomEnd - zoomStart) > DragThreshold);
 }
 
 /// Determines if the a modal tool is active
@@ -4563,18 +4563,30 @@ void TrackPanel::HandleVZoomButtonUp( wxMouseEvent & event )
 
 void TrackPanel::HandleWaveTrackVZoom(WaveTrack *track, bool shiftDown, bool rightUp)
 {
-   WaveTrack *partner = static_cast<WaveTrack *>(mTracks->GetLink(track));
+   HandleWaveTrackVZoom(mTracks, mCapturedRect, mZoomStart, mZoomEnd,
+      track, shiftDown, rightUp, false);
+   mZoomEnd = mZoomStart = 0;
+   UpdateVRuler(track);
+   Refresh(false);
+   MakeParentModifyState(true);
+}
+
+//static
+void TrackPanel::HandleWaveTrackVZoom
+(TrackList *tracks, const wxRect &rect,
+ int zoomStart, int zoomEnd,
+ WaveTrack *track, bool shiftDown, bool rightUp,
+ bool fixedMousePoint)
+{
+   WaveTrack *const partner = static_cast<WaveTrack *>(tracks->GetLink(track));
    int height = track->GetHeight();
-   int ypos = mCapturedRect.y;
+   int ypos = rect.y;
 
    // Ensure start and end are in order (swap if not).
-   if (mZoomEnd < mZoomStart) {
-      int temp = mZoomEnd;
-      mZoomEnd = mZoomStart;
-      mZoomStart = temp;
-   }
+   if (zoomEnd < zoomStart)
+      std::swap(zoomStart, zoomEnd);
 
-   float min, max, c, l, minBand = 0;
+   float min, max, minBand = 0;
    const double rate = track->GetRate();
    const float halfrate = rate / 2;
    const SpectrogramSettings &settings = track->GetSpectrogramSettings();
@@ -4601,13 +4613,13 @@ void TrackPanel::HandleWaveTrackVZoom(WaveTrack *track, bool shiftDown, bool rig
    else
       track->GetDisplayBounds(&min, &max);
 
-   if (IsDragZooming()) {
+   if (IsDragZooming(zoomStart, zoomEnd)) {
       // Drag Zoom
       const float tmin = min, tmax = max;
 
       if (spectral) {
-         double xmin = 1 - (mZoomEnd - ypos) / (float)height;
-         double xmax = 1 - (mZoomStart - ypos) / (float)height;
+         double xmin = 1 - (zoomEnd - ypos) / (float)height;
+         double xmax = 1 - (zoomStart - ypos) / (float)height;
          const float middle = (xmin + xmax) / 2;
          const float middleValue = scale.PositionToValue(middle);
 
@@ -4621,14 +4633,14 @@ void TrackPanel::HandleWaveTrackVZoom(WaveTrack *track, bool shiftDown, bool rig
          ));
       }
       else {
-         const float p1 = (mZoomStart - ypos) / (float)height;
-         const float p2 = (mZoomEnd - ypos) / (float)height;
+         const float p1 = (zoomStart - ypos) / (float)height;
+         const float p2 = (zoomEnd - ypos) / (float)height;
          max = (tmax * (1.0-p1) + tmin * p1);
          min = (tmax * (1.0-p2) + tmin * p2);
 
          // Waveform view - allow zooming down to a range of ZOOMLIMIT
          if (max - min < ZOOMLIMIT) {     // if user attempts to go smaller...
-            c = (min+max)/2;           // ...set centre of view to centre of dragged area and top/bottom to ZOOMLIMIT/2 above/below
+            const float c = (min+max)/2;  // ...set centre of view to centre of dragged area and top/bottom to ZOOMLIMIT/2 above/below
             min = c - ZOOMLIMIT/2.0;
             max = c + ZOOMLIMIT/2.0;
          }
@@ -4645,14 +4657,21 @@ void TrackPanel::HandleWaveTrackVZoom(WaveTrack *track, bool shiftDown, bool rig
          else {
             // Zoom out
 
+            const float p1 = (zoomStart - ypos) / (float)height;
             // (Used to zoom out centered at midline, ignoring the click, if linear view.
             //  I think it is better to be consistent.  PRL)
             // Center zoom-out at the midline
             const float middle = // spectrumLinear ? 0.5f :
-               1.0f - (mZoomStart - ypos) / (float)height;
+               1.0f - p1;
 
-            min = std::max(spectrumLinear ? 0.0f : 1.0f, scale.PositionToValue(middle - 1.0f));
-            max = std::min(halfrate, scale.PositionToValue(middle + 1.0f));
+            if (fixedMousePoint) {
+               min = std::max(spectrumLinear ? 0.0f : 1.0f, scale.PositionToValue(-middle));
+               max = std::min(halfrate, scale.PositionToValue(1.0f + p1));
+            }
+            else {
+               min = std::max(spectrumLinear ? 0.0f : 1.0f, scale.PositionToValue(middle - 1.0f));
+               max = std::min(halfrate, scale.PositionToValue(middle + 1.0f));
+            }
          }
       }
       else {
@@ -4667,18 +4686,34 @@ void TrackPanel::HandleWaveTrackVZoom(WaveTrack *track, bool shiftDown, bool rig
          else {
             // Zoom out
             if (min <= -1.0 && max >= 1.0) {
+               // Go to the maximal zoom-out
                min = -2.0;
                max = 2.0;
             }
             else {
-               c = 0.5*(min + max);
-               l = (c - min);
+               const float oldRange = max - min;
+
                // limit to +/- 1 range unless already outside that range...
                float minRange = (min < -1) ? -2.0 : -1.0;
                float maxRange = (max > 1) ? 2.0 : 1.0;
                // and enforce vertical zoom limits.
-               min = std::min(maxRange - ZOOMLIMIT, std::max(minRange, c - 2 * l));
-               max = std::max(minRange + ZOOMLIMIT, std::min(maxRange, c + 2 * l));
+               if (fixedMousePoint) {
+                  const float oldRange = max - min;
+                  const float p1 = (zoomStart - ypos) / (float)height;
+                  const float c = (max * (1.0 - p1) + min * p1);
+                  min = std::min(maxRange - ZOOMLIMIT,
+                     std::max(minRange, c - 2 * (1.0f - p1) * oldRange));
+                  max = std::max(minRange + ZOOMLIMIT,
+                     std::min(maxRange, c + 2 * p1 * oldRange));
+               }
+               else {
+                  const float c = 0.5*(min + max);
+                  const float l = (c - min);
+                  min = std::min(maxRange - ZOOMLIMIT,
+                     std::max(minRange, c - 2 * l));
+                  max = std::max(minRange + ZOOMLIMIT,
+                     std::min(maxRange, c + 2 * l));
+               }
             }
          }
       }
@@ -4687,34 +4722,51 @@ void TrackPanel::HandleWaveTrackVZoom(WaveTrack *track, bool shiftDown, bool rig
       // Zoom IN
       if (spectral) {
          // Center the zoom-in at the click
-         const float middle = 1.0f - (mZoomStart - ypos) / (float)height;
+         const float p1 = (zoomStart - ypos) / (float)height;
+         const float middle = 1.0f - p1;
          const float middleValue = scale.PositionToValue(middle);
 
-         min = std::max(spectrumLinear ? 0.0f : 1.0f,
-            std::min(middleValue - minBand / 2,
+         if (fixedMousePoint) {
+            min = std::max(spectrumLinear ? 0.0f : 1.0f,
+               std::min(middleValue - minBand * middle,
+               scale.PositionToValue(0.5f * middle)
+            ));
+            max = std::min(halfrate,
+               std::max(middleValue + minBand * p1,
+               scale.PositionToValue(middle + 0.5f * p1)
+            ));
+         }
+         else {
+            min = std::max(spectrumLinear ? 0.0f : 1.0f,
+               std::min(middleValue - minBand / 2,
                scale.PositionToValue(middle - 0.25f)
-         ));
-         max = std::min(halfrate,
-            std::max(middleValue + minBand / 2,
+            ));
+            max = std::min(halfrate,
+               std::max(middleValue + minBand / 2,
                scale.PositionToValue(middle + 0.25f)
-         ));
+            ));
+         }
       }
       else {
          // Zoom in centered on cursor
-         float p1;
          if (min < -1.0 || max > 1.0) {
             min = -1.0;
             max = 1.0;
          }
          else {
-            c = 0.5*(min + max);
             // Enforce maximum vertical zoom
-            l = std::max(ZOOMLIMIT, (c - min));
+            const float oldRange = max - min;
+            const float l = std::max(ZOOMLIMIT, 0.5f * oldRange);
+            const float ratio = l / (max - min);
 
-            p1 = (mZoomStart - ypos) / (float)height;
-            c = (max * (1.0 - p1) + min * p1);
-            min = c - 0.5*l;
-            max = c + 0.5*l;
+            const float p1 = (zoomStart - ypos) / (float)height;
+            const float c = (max * (1.0 - p1) + min * p1);
+            if (fixedMousePoint)
+               min = c - ratio * (1.0f - p1) * oldRange,
+               max = c + ratio * p1 * oldRange;
+            else
+               min = c - 0.5 * l,
+               max = c + 0.5 * l;
          }
       }
    }
@@ -4748,11 +4800,6 @@ void TrackPanel::HandleWaveTrackVZoom(WaveTrack *track, bool shiftDown, bool rig
       if (partner)
          partner->SetDisplayBounds(min, max);
    }
-
-   mZoomEnd = mZoomStart = 0;
-   UpdateVRuler(track);
-   Refresh(false);
-   MakeParentModifyState(true);
 }
 
 namespace {
@@ -6071,6 +6118,27 @@ void TrackPanel::HandleWheelRotation(wxMouseEvent & event)
       // This should be disabled too for consistency.  Otherwise
       // you do see changes in the time ruler.
       return;
+
+   // Special case of pointer in the vertical ruler
+   {
+      wxRect rect;
+      Track *const pTrack = FindTrack(event.m_x, event.m_y, true, false, &rect);
+      if (pTrack && event.m_x >= GetVRulerOffset()) {
+         if (pTrack->GetKind() == Track::Wave) {
+            HandleWaveTrackVZoom(
+               mTracks, rect, event.m_y, event.m_y,
+               static_cast<WaveTrack*>(pTrack), false, (event.m_wheelRotation < 0),
+               true);
+            UpdateVRuler(pTrack);
+            Refresh(false);
+            MakeParentModifyState(true);
+         }
+         else {
+            // To do: time track?  Note track?
+         }
+         return;
+      }
+   }
 
    double steps = event.m_wheelRotation /
       (event.m_wheelDelta > 0 ? (double)event.m_wheelDelta : 120.0);
@@ -7636,8 +7704,6 @@ void TrackPanel::DrawOutsideOfTrack(Track * t, wxDC * dc, const wxRect & rect)
 
 void TrackPanel::DrawOverlays(bool repaint)
 {
-   bool isOutdated = false;
-
    // Determine which overlays are outdated.
    enum {
       n_pairs =
