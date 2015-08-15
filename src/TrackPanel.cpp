@@ -4691,8 +4691,6 @@ void TrackPanel::HandleWaveTrackVZoom
                max = 2.0;
             }
             else {
-               const float oldRange = max - min;
-
                // limit to +/- 1 range unless already outside that range...
                float minRange = (min < -1) ? -2.0 : -1.0;
                float maxRange = (max > 1) ? 2.0 : 1.0;
