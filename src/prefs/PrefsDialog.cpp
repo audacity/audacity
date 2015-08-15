@@ -158,7 +158,7 @@ PrefsDialog::Factories
       &guiPrefsFactory,
 
       // Group two other pages
-      PrefsNode(&tracksPrefsFactory, 2),
+      PrefsNode(&tracksPrefsFactory, 2, true),
       &waveformPrefsFactory,
       &spectrumPrefsFactory,
 
