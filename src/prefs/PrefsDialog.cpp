@@ -376,6 +376,8 @@ void PrefsDialog::OnOK(wxCommandEvent & WXUNUSED(event))
       gAudacityProjects[i]->UpdatePrefs();
    }
 
+   WaveformSettings::defaults().LoadPrefs();
+
    gPrefs->Flush();
    EndModal(true);
 }
