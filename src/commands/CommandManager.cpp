@@ -179,36 +179,46 @@ public:
 
    int FilterEvent(wxEvent& event)
    {
+      // Quickly bail if this isn't something we want.
       wxEventType type = event.GetEventType();
       if (type != wxEVT_CHAR_HOOK && type != wxEVT_KEY_UP)
       {
          return Event_Skip;
       }
 
+      // We must have a project since we will be working with the Command Manager
+      // and capture handler, both of which are (currently) tied to individual projects.
+      //
+      // Shouldn't they be tied to the application instead???
       AudacityProject *project = GetActiveProject();
       if (!project || !project->IsEnabled())
       {
          return Event_Skip;
       }
 
+      // Make a copy of the event and (possibly) make it look like a key down
+      // event.
       wxKeyEvent key = (wxKeyEvent &) event;
       if (type == wxEVT_CHAR_HOOK)
       {
          key.SetEventType(wxEVT_KEY_DOWN);
       }
 
+      // Give the capture handler first dibs at the event.
       wxWindow *handler = project->GetKeyboardCaptureHandler();
       if (handler && HandleCapture(handler, key))
       {
          return Event_Processed;
       }
 
+      // Capture handler didn't want it, so ask the Command Manager.
       CommandManager *manager = project->GetCommandManager();
       if (manager && manager->FilterKeyEvent(project, key))
       {
          return Event_Processed;
       }
 
+      // Give it back to WX for normal processing.
       return Event_Skip;
    }
 
@@ -223,6 +233,7 @@ private:
       }
       wxEvtHandler *handler = target->GetEventHandler();
 
+      // We make a copy of the event because the capture handler may modify it.
       wxKeyEvent temp = event;
 
 #if defined(__WXGTK__)
@@ -235,24 +246,35 @@ private:
       }
 #endif
 
+      // Ask the capture handler if the key down/up event is something they it
+      // might be interested in handling.
       wxCommandEvent e(EVT_CAPTURE_KEY);
       e.SetEventObject(&temp);
       e.StopPropagation();
-
       if (!handler->ProcessEvent(e))
       {
          return false;
       }
 
+      // Now, let the handler process the normal key event.
+      bool keyDown = temp.GetEventType() == wxEVT_KEY_DOWN;
       temp.WasProcessed();
       temp.StopPropagation();
       wxEventProcessInHandlerOnly onlyDown(temp, handler);
-      if (!handler->ProcessEvent(temp))
+      bool processed = handler->ProcessEvent(temp);
+
+      // Don't go any further if the capture handler didn't process
+      // the key down event.
+      if (!processed && keyDown)
       {
          return false;
       }
 
-      if (temp.GetEventType() == wxEVT_KEY_DOWN)
+      // At this point the capture handler has either processed a key down event
+      // or we're dealing with a key up event.
+      //
+      // So, only generate the char events for key down events.
+      if (keyDown)
       {
          wxString chars = GetUnicodeString(temp);
          for (size_t i = 0, cnt = chars.Length(); i < cnt; i++)
@@ -267,9 +289,12 @@ private:
          }
       }
 
+      // We get here for processed key down events or for key up events, whether
+      // processed or not.
       return true;
    }
 
+   // Convert the key down event to a unicode string.
    wxString GetUnicodeString(const wxKeyEvent & event)
    {
       wxString chars;
