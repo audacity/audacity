@@ -83,6 +83,7 @@ function cleanfulltree {
    myfindrm $1 config.log
    myfindrm $1 config.cache
    find . -depth -name 'autom4te.cache' -execdir rm -rf '{}' ';'
+   find . -depth -name '.deps' -execdir rm -rf '{}' ';'
    myfindrm $1 aclocal.m4
    printf "Done\n"
 

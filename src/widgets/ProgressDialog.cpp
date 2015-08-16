@@ -1044,8 +1044,7 @@ bool ProgressDialog::Create(const wxString & title,
                                    wxDefaultPosition,
                                    wxDefaultSize,
                                    wxDEFAULT_DIALOG_STYLE |
-                                   wxFRAME_FLOAT_ON_PARENT |
-                                   wxTRANSPARENT_WINDOW);
+                                   wxFRAME_FLOAT_ON_PARENT);
    if (!success)
    {
       return false;
