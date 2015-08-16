@@ -44,7 +44,7 @@ public:
    // Make invalid cache
    SpecCache()
       : len(-1)
-      , ac(false)
+      , algorithm(-1)
       , pps(-1.0)
       , start(-1.0)
       , windowType(-1)
@@ -60,12 +60,11 @@ public:
    }
 
    // Make valid cache, to be filled in
-   SpecCache(int cacheLen, bool autocorrelation,
+   SpecCache(int cacheLen, int algorithm_,
       double pps_, double start_, int windowType_, int windowSize_,
-      int zeroPaddingFactor_, int frequencyGain_
-      )
+      int zeroPaddingFactor_, int frequencyGain_)
       : len(cacheLen)
-      , ac(autocorrelation)
+      , algorithm(algorithm_)
       , pps(pps_)
       , start(start_)
       , windowType(windowType_)
@@ -90,7 +89,7 @@ public:
    {
    }
 
-   bool Matches(int dirty_, bool autocorrelation, double pixelsPerSecond,
+   bool Matches(int dirty_, double pixelsPerSecond,
       const SpectrogramSettings &settings, double rate) const;
 
    void CalculateOneSpectrum
@@ -105,11 +104,10 @@ public:
       (const SpectrogramSettings &settings, WaveTrackCache &waveTrackCache,
        int copyBegin, int copyEnd, int numPixels,
        sampleCount numSamples,
-       double offset, double rate,
-       bool autocorrelation);
+       double offset, double rate);
 
    const int          len; // counts pixels, not samples
-   const bool         ac;
+   const int          algorithm;
    const double       pps;
    const double       start;
    const int          windowType;
@@ -288,8 +286,7 @@ public:
    bool GetSpectrogram(WaveTrackCache &cache,
                        const float *& spectrogram, const sampleCount *& where,
                        int numPixels,
-                       double t0, double pixelsPerSecond,
-                       bool autocorrelation);
+                       double t0, double pixelsPerSecond);
    bool GetMinMax(float *min, float *max, double t0, double t1);
    bool GetRMS(float *rms, double t0, double t1);
 

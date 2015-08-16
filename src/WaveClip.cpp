@@ -764,7 +764,7 @@ void ComputeSpectrogramGainFactors
 }
 
 bool SpecCache::Matches
-   (int dirty_, bool autocorrelation, double pixelsPerSecond,
+   (int dirty_, double pixelsPerSecond,
     const SpectrogramSettings &settings, double rate) const
 {
    // Make a tolerant comparison of the pps values in this wise:
@@ -781,7 +781,7 @@ bool SpecCache::Matches
       windowSize == settings.windowSize &&
       zeroPaddingFactor == settings.zeroPaddingFactor &&
       frequencyGain == settings.frequencyGain &&
-      ac == autocorrelation;
+      algorithm == settings.algorithm;
 }
 
 void SpecCache::CalculateOneSpectrum
@@ -871,8 +871,7 @@ void SpecCache::Populate
    (const SpectrogramSettings &settings, WaveTrackCache &waveTrackCache,
     int copyBegin, int copyEnd, int numPixels,
     sampleCount numSamples,
-    double offset, double rate,
-    bool autocorrelation)
+    double offset, double rate)
 {
 #ifdef EXPERIMENTAL_USE_REALFFTF
    settings.CacheWindows();
@@ -880,6 +879,8 @@ void SpecCache::Populate
 
    const int &frequencyGain = settings.frequencyGain;
    const int &windowSize = settings.windowSize;
+   const bool autocorrelation =
+      settings.algorithm == SpectrogramSettings::algPitchEAC;
 #ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
    const int &zeroPaddingFactor = autocorrelation ? 1 : settings.zeroPaddingFactor;
 #else
@@ -912,11 +913,12 @@ void SpecCache::Populate
 bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
                               const float *& spectrogram, const sampleCount *& where,
                               int numPixels,
-                              double t0, double pixelsPerSecond,
-                              bool autocorrelation)
+                              double t0, double pixelsPerSecond)
 {
    const WaveTrack *const track = waveTrackCache.GetTrack();
    const SpectrogramSettings &settings = track->GetSpectrogramSettings();
+   const bool autocorrelation =
+      settings.algorithm == SpectrogramSettings::algPitchEAC;
    const int &frequencyGain = settings.frequencyGain;
    const int &windowSize = settings.windowSize;
    const int &windowType = settings.windowType;
@@ -935,7 +937,7 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
       mSpecCache &&
       mSpecCache->len > 0 &&
       mSpecCache->Matches
-      (mDirty, autocorrelation, pixelsPerSecond, settings, mRate);
+      (mDirty, pixelsPerSecond, settings, mRate);
 
    if (match &&
        mSpecCache->start == t0 &&
@@ -972,9 +974,8 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
       oldCache.reset(0);
 
    mSpecCache = new SpecCache(
-      numPixels, autocorrelation, pixelsPerSecond, t0,
-      windowType, windowSize, zeroPaddingFactor, frequencyGain
-   );
+      numPixels, settings.algorithm, pixelsPerSecond, t0,
+      windowType, windowSize, zeroPaddingFactor, frequencyGain);
 
    fillWhere(mSpecCache->where, numPixels, 0.5, correction,
       t0, mRate, samplesPerPixel);
@@ -990,7 +991,7 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
 
    mSpecCache->Populate
       (settings, waveTrackCache, copyBegin, copyEnd, numPixels,
-       mSequence->GetNumSamples(), mOffset, mRate, autocorrelation);
+       mSequence->GetNumSamples(), mOffset, mRate);
 
    mSpecCache->dirty = mDirty;
    spectrogram = &mSpecCache->freq[0];
