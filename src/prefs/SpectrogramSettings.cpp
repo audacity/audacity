@@ -191,6 +191,7 @@ const wxArrayString &SpectrogramSettings::GetAlgorithmNames()
    if (theArray.IsEmpty()) {
       // Keep in correspondence with enum SpectrogramSettings::Algorithm:
       theArray.Add(_("Frequencies"));
+      /* i18n-hint: EAC abbreviates "Enhanced Autocorrelation" */
       theArray.Add(_("Pitch (EAC)"));
    }
 
