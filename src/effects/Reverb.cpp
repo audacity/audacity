@@ -230,7 +230,7 @@ sampleCount EffectReverb::ProcessBlock(float **inBlock, float **outBlock, sample
          reverb_process(&mP[c].reverb, len);
       }
 
-      if (mNumChans == 2)
+      if (mNumChans == 2 && mParams.mStereoWidth)
       {
          for (sampleCount i = 0; i < len; i++)
          {
