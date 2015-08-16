@@ -175,7 +175,7 @@ const wxArrayString &SpectrogramSettings::GetScaleNames()
       /* i18n-hint: The name of a frequency scale in psychoacoustics, named for Heinrich Barkhausen */
       theArray.Add(_("Bark"));
       /* i18n-hint: The name of a frequency scale in psychoacoustics, abbreviates Equivalent Rectangular Bandwidth */
-      theArray.Add(_("ERB"));
+      theArray.Add(_("ERBS"));
       /* i18n-hint: A mathematical formula where f stands for frequency */
       theArray.Add(_("1 / f"));
    }
@@ -190,8 +190,8 @@ const wxArrayString &SpectrogramSettings::GetAlgorithmNames()
 
    if (theArray.IsEmpty()) {
       // Keep in correspondence with enum SpectrogramSettings::Algorithm:
-      theArray.Add(_("STFT"));
-      theArray.Add(_("Pitch (enhanced autocorrelation)"));
+      theArray.Add(_("Frequencies"));
+      theArray.Add(_("Pitch (EAC)"));
    }
 
    return theArray;
