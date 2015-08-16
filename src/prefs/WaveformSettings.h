@@ -45,6 +45,9 @@ public:
    void SavePrefs();
    void Update();
 
+   void ConvertToEnumeratedDBRange();
+   void ConvertToActualDBRange();
+
    enum ScaleType {
       stLinear,
       stLogarithmic,
@@ -56,6 +59,7 @@ public:
    static const wxArrayString &GetScaleNames();
 
    ScaleType scaleType;
+   int dBRange;
 
    // Convenience
    bool isLinear() const { return stLinear == scaleType; }

@@ -156,15 +156,18 @@ PrefsDialog::Factories
 #endif
       &qualityPrefsFactory,
       &guiPrefsFactory,
-      &tracksPrefsFactory,
+
+      // Group two other pages
+      PrefsNode(&tracksPrefsFactory, 2, true),
+      &waveformPrefsFactory,
+      &spectrumPrefsFactory,
+
       &importExportPrefsFactory,
       &extImportPrefsFactory,
       &projectsPrefsFactory,
 #if !defined(DISABLE_DYNAMIC_LOADING_FFMPEG) || !defined(DISABLE_DYNAMIC_LOADING_LAME)
       &libraryPrefsFactory,
 #endif
-      &waveformPrefsFactory,
-      &spectrumPrefsFactory,
       &directoriesPrefsFactory,
       &warningsPrefsFactory,
       &effectsPrefsFactory,
@@ -372,6 +375,8 @@ void PrefsDialog::OnOK(wxCommandEvent & WXUNUSED(event))
    for (size_t i = 0; i < gAudacityProjects.GetCount(); i++) {
       gAudacityProjects[i]->UpdatePrefs();
    }
+
+   WaveformSettings::defaults().LoadPrefs();
 
    gPrefs->Flush();
    EndModal(true);

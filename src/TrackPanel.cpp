@@ -3660,9 +3660,9 @@ void TrackPanel::ForwardEventToTimeTrackEnvelope(wxMouseEvent & event)
    envRect.y++;
    envRect.height -= 2;
    double lower = ptimetrack->GetRangeLower(), upper = ptimetrack->GetRangeUpper();
-   if(ptimetrack->GetDisplayLog()) {
+   const double dBRange = mViewInfo->dBr;
+   if (ptimetrack->GetDisplayLog()) {
       // MB: silly way to undo the work of GetWaveYPos while still getting a logarithmic scale
-      double dBRange = mViewInfo->dBr;
       lower = LINEAR_TO_DB(std::max(1.0e-7, lower)) / dBRange + 1.0;
       upper = LINEAR_TO_DB(std::max(1.0e-7, upper)) / dBRange + 1.0;
    }
@@ -3670,7 +3670,7 @@ void TrackPanel::ForwardEventToTimeTrackEnvelope(wxMouseEvent & event)
       pspeedenvelope->MouseEvent(
          event, envRect,
          *mViewInfo,
-         ptimetrack->GetDisplayLog(), lower, upper);
+         ptimetrack->GetDisplayLog(), dBRange, lower, upper);
    if (needUpdate) {
       RefreshTrack(mCapturedTrack);
    }
@@ -3694,6 +3694,7 @@ void TrackPanel::ForwardEventToWaveTrackEnvelope(wxMouseEvent & event)
 
    if (display == WaveTrack::Waveform) {
       const bool dB = !pwavetrack->GetWaveformSettings().isLinear();
+      const double dBRange = pwavetrack->GetWaveformSettings().dBRange;
       bool needUpdate;
 
       // AS: Then forward our mouse event to the envelope.
@@ -3706,7 +3707,7 @@ void TrackPanel::ForwardEventToWaveTrackEnvelope(wxMouseEvent & event)
       needUpdate = penvelope->MouseEvent(
          event, envRect,
          *mViewInfo,
-         dB, zoomMin, zoomMax);
+         dB, dBRange, zoomMin, zoomMax);
 
       // If this track is linked to another track, make the identical
       // change to the linked envelope:
@@ -3723,7 +3724,7 @@ void TrackPanel::ForwardEventToWaveTrackEnvelope(wxMouseEvent & event)
             float zoomMin, zoomMax;
             pwavetrack->GetDisplayBounds(&zoomMin, &zoomMax);
             updateNeeded = e2->MouseEvent(event, envRect,
-                                          *mViewInfo, dB,
+                                          *mViewInfo, dB, dBRange,
                                           zoomMin, zoomMax);
             needUpdate |= updateNeeded;
          }
@@ -3737,7 +3738,7 @@ void TrackPanel::ForwardEventToWaveTrackEnvelope(wxMouseEvent & event)
                float zoomMin, zoomMax;
                pwavetrack->GetDisplayBounds(&zoomMin, &zoomMax);
                needUpdate |= e2->MouseEvent(event, envRect,
-                                            *mViewInfo, dB,
+                                            *mViewInfo, dB, dBRange,
                                             zoomMin, zoomMax);
             }
          }
@@ -4691,8 +4692,6 @@ void TrackPanel::HandleWaveTrackVZoom
                max = 2.0;
             }
             else {
-               const float oldRange = max - min;
-
                // limit to +/- 1 range unless already outside that range...
                float minRange = (min < -1) ? -2.0 : -1.0;
                float maxRange = (max > 1) ? 2.0 : 1.0;
@@ -4866,7 +4865,7 @@ bool TrackPanel::IsSampleEditingPossible( wxMouseEvent &event, Track * t )
    return true;
 }
 
-float TrackPanel::FindSampleEditingLevel(wxMouseEvent &event, double t0)
+float TrackPanel::FindSampleEditingLevel(wxMouseEvent &event, double dBRange, double t0)
 {
    // Calculate where the mouse is located vertically (between +/- 1)
    float zoomMin, zoomMax;
@@ -4876,7 +4875,7 @@ float TrackPanel::FindSampleEditingLevel(wxMouseEvent &event, double t0)
    const int height = mDrawingTrack->GetHeight();
    const bool dB = !mDrawingTrack->GetWaveformSettings().isLinear();
    float newLevel =
-      ::ValueOfPixel(y, height, false, dB, mViewInfo->dBr, zoomMin, zoomMax);
+      ::ValueOfPixel(y, height, false, dB, dBRange, zoomMin, zoomMax);
 
    //Take the envelope into account
    Envelope *const env = mDrawingTrack->GetEnvelopeAtX(event.m_x);
@@ -5006,7 +5005,8 @@ void TrackPanel::HandleSampleEditingClick( wxMouseEvent & event )
       SetCapturedTrack(t, IsAdjustingSample);
 
       //Otherwise (e.g., the alt button is not down) do normal redrawing, based on the mouse position.
-      const float newLevel = FindSampleEditingLevel(event, t0);
+      const float newLevel = FindSampleEditingLevel
+         (event, mDrawingTrack->GetWaveformSettings().dBRange, t0);
 
       //Set the sample to the point of the mouse event
       mDrawingTrack->Set((samplePtr)&newLevel, floatSample, mDrawingStartSample, 1);
@@ -5066,7 +5066,8 @@ void TrackPanel::HandleSampleEditingDrag( wxMouseEvent & event )
    //Otherwise, do normal redrawing, based on the mouse position.
    // Calculate where the mouse is located vertically (between +/- 1)
 
-   const float newLevel = FindSampleEditingLevel(event, t0);
+   const float newLevel = FindSampleEditingLevel
+      (event, mDrawingTrack->GetWaveformSettings().dBRange, t0);
 
    //Now, redraw all samples between current and last redrawn sample, inclusive
    //Go from the smaller to larger sample.
@@ -6999,15 +7000,17 @@ bool TrackPanel::HitTestEnvelope(Track *track, wxRect &rect, wxMouseEvent & even
    float zoomMin, zoomMax;
    wavetrack->GetDisplayBounds(&zoomMin, &zoomMax);
 
+   const double dBRange = wavetrack->GetWaveformSettings().dBRange;
+
    // Get y position of envelope point.
    int yValue = GetWaveYPos( envValue,
       zoomMin, zoomMax,
-      rect.height, dB, true, mViewInfo->dBr, false) + rect.y;
+      rect.height, dB, true, dBRange, false) + rect.y;
 
    // Get y position of center line
    int ctr = GetWaveYPos( 0.0,
       zoomMin, zoomMax,
-      rect.height, dB, true, mViewInfo->dBr, false) + rect.y;
+      rect.height, dB, true, dBRange, false) + rect.y;
 
    // Get y distance of mouse from center line (in pixels).
    int yMouse = abs(ctr - event.m_y);
@@ -7049,6 +7052,7 @@ bool TrackPanel::HitTestSamples(Track *track, wxRect &rect, wxMouseEvent & event
    WaveTrack *wavetrack = (WaveTrack *)track;
    //Get rate in order to calculate the critical zoom threshold
    double rate = wavetrack->GetRate();
+   const double dBRange = wavetrack->GetWaveformSettings().dBRange;
 
    const int displayType = wavetrack->GetDisplay();
    if (WaveTrack::Waveform != displayType)
@@ -7076,7 +7080,7 @@ bool TrackPanel::HitTestSamples(Track *track, wxRect &rect, wxMouseEvent & event
 
    int yValue = GetWaveYPos( oneSample * envValue,
       zoomMin, zoomMax,
-      rect.height, dB, true, mViewInfo->dBr, false) + rect.y;
+      rect.height, dB, true, dBRange, false) + rect.y;
 
    // Get y position of mouse (in pixels)
    int yMouse = event.m_y;
