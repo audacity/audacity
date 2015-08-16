@@ -1159,14 +1159,14 @@ bool AudacityApp::OnInit()
 
 #ifdef AUDACITY_NAME
    wxString appName = wxT(AUDACITY_NAME);
-   wxString vendorName = wxT(AUDACITY_NAME);
 #else
-   wxString vendorName = wxT("Audacity");
    wxString appName = wxT("Audacity");
 #endif
 
-   wxTheApp->SetVendorName(vendorName);
    wxTheApp->SetAppName(appName);
+   // Explicitly set since OSX will use it for the "Quit" menu item
+   wxTheApp->SetAppDisplayName(wxT("Audacity"));
+   wxTheApp->SetVendorName(wxT("Audacity"));
 
    // Unused strings that we want to be translated, even though
    // we're not using them yet...

@@ -450,7 +450,7 @@ void CommandManager::PurgeData()
 /// Names it according to the passed-in string argument.
 ///
 /// If the menubar already exists, simply returns it.
-wxMenuBar *CommandManager::AddMenuBar(wxString sMenu)
+wxMenuBar *CommandManager::AddMenuBar(const wxString & sMenu)
 {
    wxMenuBar *menuBar = GetMenuBar(sMenu);
    if (menuBar)
@@ -470,7 +470,7 @@ wxMenuBar *CommandManager::AddMenuBar(wxString sMenu)
 ///
 /// Retrieves the menubar based on the name given in AddMenuBar(name)
 ///
-wxMenuBar * CommandManager::GetMenuBar(wxString sMenu) const
+wxMenuBar * CommandManager::GetMenuBar(const wxString & sMenu) const
 {
    for(unsigned int i = 0; i < mMenuBarList.GetCount(); i++)
    {
@@ -495,29 +495,26 @@ wxMenuBar * CommandManager::CurrentMenuBar() const
 
 
 ///
-/// This makes a new menu and adds it to the 'CurrentMenuBar'
+/// This starts a new menu
 ///
-/// If the menu already exists, all of the items in it are
-/// cleared instead.
-///
-void CommandManager::BeginMenu(wxString tNameIn)
+void CommandManager::BeginMenu(const wxString & tName)
 {
-   wxString tName = tNameIn;
-
    wxMenu *tmpMenu = new wxMenu();
 
    mCurrentMenu = tmpMenu;
    mCurrentMenuName = tName;
-
-   CurrentMenuBar()->Append(mCurrentMenu, tName);
 }
 
 
 ///
-/// This ends a menu by setting the pointer to it
-/// to NULL.  It is still attached to the CurrentMenuBar()
+/// This attaches a menu to the menubar and ends the menu
+///
 void CommandManager::EndMenu()
 {
+   // Add the menu to the menubard after all menu items have been
+   // added to the menu to allow OSX to rearrange special menu
+   // items like Preferences, About, and Quit.
+   CurrentMenuBar()->Append(mCurrentMenu, mCurrentMenuName);
    mCurrentMenu = NULL;
    mCurrentMenuName = COMMAND;
 }
@@ -526,10 +523,8 @@ void CommandManager::EndMenu()
 ///
 /// This starts a new submenu, and names it according to
 /// the function's argument.
-wxMenu* CommandManager::BeginSubMenu(wxString tNameIn)
+wxMenu* CommandManager::BeginSubMenu(const wxString & tName)
 {
-   wxString tName = tNameIn;
-
    SubMenuListEntry *tmpEntry = new SubMenuListEntry;
 
    tmpEntry->menu = new wxMenu();
@@ -597,12 +592,12 @@ wxMenu * CommandManager::CurrentMenu() const
 ///
 /// Add a menu item to the current menu.  When the user selects it, the
 /// given functor will be called
-void CommandManager::InsertItem(wxString name, wxString label_in,
-                                CommandFunctor *callback, wxString after,
+void CommandManager::InsertItem(const wxString & name,
+                                const wxString & label_in,
+                                CommandFunctor *callback,
+                                const wxString & after,
                                 int checkmark)
 {
-   wxString label = label_in;
-
    wxMenuBar *bar = GetActiveProject()->GetMenuBar();
    wxArrayString names = ::wxStringTokenize(after, wxT(":"));
    size_t cnt = names.GetCount();
@@ -649,9 +644,9 @@ void CommandManager::InsertItem(wxString name, wxString label_in,
       }
    }
 
-   CommandListEntry *entry = NewIdentifier(name, label, menu, callback, false, 0, 0);
+   CommandListEntry *entry = NewIdentifier(name, label_in, menu, callback, false, 0, 0);
    int ID = entry->id;
-   label = GetLabel(entry);
+   wxString label = GetLabel(entry);
 
    if (checkmark >= 0) {
       menu->InsertCheckItem(pos, ID, label);
@@ -727,7 +722,8 @@ void CommandManager::AddItem(const wxChar *name,
 /// with its position in the list as the index number.
 /// When you call Enable on this command name, it will enable or disable
 /// all of the items at once.
-void CommandManager::AddItemList(wxString name, wxArrayString labels,
+void CommandManager::AddItemList(const wxString & name,
+                                 const wxArrayString & labels,
                                  CommandFunctor *callback)
 {
    for (size_t i = 0, cnt = labels.GetCount(); i < cnt; i++) {
