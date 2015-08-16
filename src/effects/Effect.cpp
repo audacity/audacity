@@ -1282,6 +1282,11 @@ bool Effect::Process()
    CopyInputTracks(Track::All);
    bool bGoodResult = true;
 
+   // It's possible that the number of channels the effect expects changed based on
+   // the parameters (the Audacity Reverb effect does when the stereo width is 0).
+   mNumAudioIn = GetAudioInCount();
+   mNumAudioOut = GetAudioOutCount();
+
    mPass = 1;
    if (InitPass1())
    {

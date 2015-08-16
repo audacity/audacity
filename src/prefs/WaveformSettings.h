@@ -47,6 +47,8 @@ public:
 
    void ConvertToEnumeratedDBRange();
    void ConvertToActualDBRange();
+   void NextLowerDBRange();
+   void NextHigherDBRange();
 
    enum ScaleType {
       stLinear,

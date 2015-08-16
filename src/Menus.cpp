@@ -825,6 +825,8 @@ void AudacityProject::CreateMenusAndCommands()
 #endif
    c->AddItem(wxT("RescanDevices"), _("R&escan Audio Devices"), FN(OnRescanDevices));
 
+   c->EndMenu();
+
    //////////////////////////////////////////////////////////////////////////
    // Tracks Menu (formerly Project Menu)
    //////////////////////////////////////////////////////////////////////////
