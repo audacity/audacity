@@ -151,12 +151,12 @@ EffectType EffectReverb::GetType()
 
 int EffectReverb::GetAudioInCount()
 {
-   return 2;
+   return mParams.mStereoWidth ? 2 : 1;
 }
 
 int EffectReverb::GetAudioOutCount()
 {
-   return 2;
+   return mParams.mStereoWidth ? 2 : 1;
 }
 
 #define BLOCK 16384
@@ -230,7 +230,7 @@ sampleCount EffectReverb::ProcessBlock(float **inBlock, float **outBlock, sample
          reverb_process(&mP[c].reverb, len);
       }
 
-      if (mNumChans == 2 && mParams.mStereoWidth)
+      if (mNumChans == 2)
       {
          for (sampleCount i = 0; i < len; i++)
          {
