@@ -1465,10 +1465,14 @@ bool AudacityApp::OnInit()
          return false;
       }
 
+// As of wx3, there's no need to process the filename arguments as they
+// will be sent view the MacOpenFile() method.
+#if !defined(__WXMAC__)
       for (size_t i = 0, cnt = parser->GetParamCount(); i < cnt; i++)
       {
          MRUOpen(parser->GetParam(i));
-      }   
+      }
+#endif
    }
 
    delete parser;
