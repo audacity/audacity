@@ -2065,7 +2065,6 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
 
    const WaveTrack *const track = waveTrackCache.GetTrack();
    const SpectrogramSettings &settings = track->GetSpectrogramSettings();
-
    const bool autocorrelation = (settings.algorithm == SpectrogramSettings::algPitchEAC);
 
    enum { DASH_LENGTH = 10 /* pixels */ };
@@ -2131,7 +2130,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
    {
       const double pps = averagePixelsPerSample * rate;
       updated = clip->GetSpectrogram(waveTrackCache, freq, where, hiddenMid.width,
-         t0, pps, autocorrelation);
+         t0, pps);
    }
 
    // Legacy special-case treatment of log scale
@@ -2364,7 +2363,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
    const int numPixels = std::max(0, end - begin);
    const int zeroPaddingFactor = autocorrelation ? 1 : settings.zeroPaddingFactor;
    SpecCache specCache
-      (numPixels, autocorrelation, -1,
+      (numPixels, settings.algorithm, -1,
        t0, settings.windowType,
        settings.windowSize, zeroPaddingFactor, settings.frequencyGain);
    if (numPixels > 0) {
@@ -2376,8 +2375,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
          (settings, waveTrackCache,
           0, 0, numPixels,
           clip->GetNumSamples(),
-          tOffset, rate,
-          autocorrelation);
+          tOffset, rate);
    }
 
    int correctedX = leftOffset - hiddenLeftOffset;
