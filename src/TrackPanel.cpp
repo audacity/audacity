@@ -6126,10 +6126,29 @@ void TrackPanel::HandleWheelRotation(wxMouseEvent & event)
       Track *const pTrack = FindTrack(event.m_x, event.m_y, true, false, &rect);
       if (pTrack && event.m_x >= GetVRulerOffset()) {
          if (pTrack->GetKind() == Track::Wave) {
-            HandleWaveTrackVZoom(
-               mTracks, rect, event.m_y, event.m_y,
-               static_cast<WaveTrack*>(pTrack), false, (event.m_wheelRotation < 0),
-               true);
+            WaveTrack *const wt = static_cast<WaveTrack*>(pTrack);
+            if (event.CmdDown() &&
+                wt->GetWaveformSettings().scaleType == WaveformSettings::stLogarithmic) {
+               // Vary the bottom of the dB scale, but only if the midline is visible
+               float min, max;
+               wt->GetDisplayBounds(&min, &max);
+               if (min < 0.0 && max > 0.0) {
+                  WaveformSettings &settings = wt->GetIndependentWaveformSettings();
+                  if (event.m_wheelRotation < 0)
+                     // Zoom out
+                     settings.NextLowerDBRange();
+                  else
+                     settings.NextHigherDBRange();
+               }
+               else
+                  return;
+            }
+            else {
+               HandleWaveTrackVZoom(
+                  mTracks, rect, event.m_y, event.m_y,
+                  wt, false, (event.m_wheelRotation < 0),
+                  true);
+            }
             UpdateVRuler(pTrack);
             Refresh(false);
             MakeParentModifyState(true);

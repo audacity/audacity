@@ -126,8 +126,23 @@ void WaveformSettings::ConvertToActualDBRange()
    wxArrayString codes;
    GUIPrefs::GetRangeChoices(NULL, &codes);
    long value = 0;
-   codes[dBRange].ToLong(&value);
+   codes[std::max(0, std::min(int(codes.size()) - 1, dBRange))]
+      .ToLong(&value);
    dBRange = int(value);
+}
+
+void WaveformSettings::NextLowerDBRange()
+{
+   ConvertToEnumeratedDBRange();
+   ++dBRange;
+   ConvertToActualDBRange();
+}
+
+void WaveformSettings::NextHigherDBRange()
+{
+   ConvertToEnumeratedDBRange();
+   --dBRange;
+   ConvertToActualDBRange();
 }
 
 namespace
