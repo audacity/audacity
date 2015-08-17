@@ -126,9 +126,8 @@ SpectrogramSettings &SpectrogramSettings::operator= (const SpectrogramSettings &
       findNotesQuantize = other.findNotesQuantize;
 #endif
 
-      // Do not copy these!
-      hFFT = 0;
-      window = 0;
+      // Invalidate the caches
+      DestroyWindows();
    }
    return *this;
 }
