@@ -784,7 +784,7 @@ bool SpecCache::Matches
       algorithm == settings.algorithm;
 }
 
-void SpecCache::CalculateOneSpectrum
+bool SpecCache::CalculateOneSpectrum
    (const SpectrogramSettings &settings,
     WaveTrackCache &waveTrackCache,
     int xx, sampleCount numSamples,
@@ -793,10 +793,19 @@ void SpecCache::CalculateOneSpectrum
     const std::vector<float> &gainFactors,
     float *scratch)
 {
+   bool result = false;
    const bool reassignment =
       (settings.algorithm == SpectrogramSettings::algReassignment);
    const int windowSize = settings.windowSize;
-   sampleCount start = where[xx];
+
+   sampleCount start;
+   if (xx < 0)
+      start = where[0] + xx * (rate / pixelsPerSecond);
+   else if (xx > len)
+      start = where[len] + (xx - len) * (rate / pixelsPerSecond);
+   else
+      start = where[xx];
+
    const bool autocorrelation =
       settings.algorithm == SpectrogramSettings::algPitchEAC;
    const int zeroPaddingFactor = (autocorrelation ? 1 : settings.zeroPaddingFactor);
@@ -932,6 +941,7 @@ void SpecCache::CalculateOneSpectrum
 
                int correctedX = (floor(0.5 + xx + timeCorrection * pixelsPerSecond / rate));
                if (correctedX >= lowerBoundX && correctedX < upperBoundX)
+                  result = true,
                   freq[half * correctedX + bin] += power;
             }
          }
@@ -960,6 +970,7 @@ void SpecCache::CalculateOneSpectrum
          autocorrelation, settings.windowType);
 #endif // EXPERIMENTAL_USE_REALFFTF
    }
+   return result;
 }
 
 void SpecCache::Populate
@@ -1010,6 +1021,37 @@ void SpecCache::Populate
             gainFactors, &buffer[0]);
 
       if (reassignment) {
+         // Need to look beyond the edges of the range to accumulate more
+         // time reassignments.
+         // I'm not sure what's a good stopping criterion?
+         sampleCount xx = lowerBoundX;
+         const double pixelsPerSample = pixelsPerSecond / rate;
+         const int limit = std::min(int(0.5 + fftLen * pixelsPerSample), 100);
+         for (int ii = 0; ii < limit; ++ii)
+         {
+            const bool result =
+               CalculateOneSpectrum(
+                  settings, waveTrackCache, --xx, numSamples,
+                  offset, rate, pixelsPerSecond,
+                  lowerBoundX, upperBoundX,
+                  gainFactors, &buffer[0]);
+            if (!result)
+               break;
+         }
+
+         xx = upperBoundX;
+         for (int ii = 0; ii < limit; ++ii)
+         {
+            const bool result =
+               CalculateOneSpectrum(
+                  settings, waveTrackCache, xx++, numSamples,
+                  offset, rate, pixelsPerSecond,
+                  lowerBoundX, upperBoundX,
+                  gainFactors, &buffer[0]);
+            if (!result)
+               break;
+         }
+
          // Now Convert to dB terms.  Do this only after accumulating
          // power values, which may cross columns with the time correction.
          for (sampleCount xx = lowerBoundX; xx < upperBoundX; ++xx) {

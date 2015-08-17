@@ -92,7 +92,7 @@ public:
    bool Matches(int dirty_, double pixelsPerSecond,
       const SpectrogramSettings &settings, double rate) const;
 
-   void CalculateOneSpectrum
+   bool CalculateOneSpectrum
       (const SpectrogramSettings &settings,
        WaveTrackCache &waveTrackCache,
        int xx, sampleCount numSamples,
