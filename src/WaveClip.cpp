@@ -789,11 +789,13 @@ void SpecCache::CalculateOneSpectrum
     WaveTrackCache &waveTrackCache,
     int xx, sampleCount numSamples,
     double offset, double rate,
-    bool autocorrelation, const std::vector<float> &gainFactors,
+    const std::vector<float> &gainFactors,
     float *scratch)
 {
    const int windowSize = settings.windowSize;
    sampleCount start = where[xx];
+   const bool autocorrelation =
+      settings.algorithm == SpectrogramSettings::algPitchEAC;
    const int zeroPaddingFactor = (autocorrelation ? 1 : settings.zeroPaddingFactor);
    const int padding = (windowSize * (zeroPaddingFactor - 1)) / 2;
    const int fftLen = windowSize * zeroPaddingFactor;
@@ -906,7 +908,7 @@ void SpecCache::Populate
       for (sampleCount xx = lowerBoundX; xx < upperBoundX; ++xx)
          CalculateOneSpectrum(
          settings, waveTrackCache, xx, numSamples,
-         offset, rate, autocorrelation, gainFactors, &buffer[0]);
+         offset, rate, gainFactors, &buffer[0]);
    }
 }
 
