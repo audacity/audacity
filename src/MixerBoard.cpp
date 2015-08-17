@@ -140,7 +140,6 @@ enum {
 };
 
 BEGIN_EVENT_TABLE(MixerTrackCluster, wxPanel)
-   EVT_CHAR(MixerTrackCluster::OnKeyEvent)
    EVT_MOUSE_EVENTS(MixerTrackCluster::OnMouseEvent)
    EVT_PAINT(MixerTrackCluster::OnPaint)
 
@@ -751,11 +750,6 @@ void MixerTrackCluster::HandleSelect(const bool bShiftDown)
       //    it's necessary to prevent blinking.
       mMixerBoard->RefreshTrackClusters(false);
    }
-}
-
-void MixerTrackCluster::OnKeyEvent(wxKeyEvent & event)
-{
-   mProject->HandleKeyDown(event);
 }
 
 void MixerTrackCluster::OnMouseEvent(wxMouseEvent& event)
@@ -1732,6 +1726,7 @@ void MixerBoard::OnTimer(wxCommandEvent &event)
 // class MixerBoardFrame
 
 BEGIN_EVENT_TABLE(MixerBoardFrame, wxFrame)
+   EVT_KEY_DOWN(MixerBoardFrame::OnKeyEvent)
    EVT_CLOSE(MixerBoardFrame::OnCloseWindow)
    EVT_MAXIMIZE(MixerBoardFrame::OnMaximize)
    EVT_SIZE(MixerBoardFrame::OnSize)
@@ -1796,3 +1791,11 @@ void MixerBoardFrame::OnSize(wxSizeEvent & WXUNUSED(event))
 {
    mMixerBoard->SetSize(this->GetClientSize());
 }
+
+void MixerBoardFrame::OnKeyEvent(wxKeyEvent & event)
+{
+   AudacityProject *project = GetActiveProject();
+   project->GetCommandManager()->FilterKeyEvent(project, event, true);
+}
+
+

@@ -79,6 +79,9 @@ enum
    ID_Choice = 13000
 };
 
+// Protect Nyquist from selections greater than 2^31 samples (bug 439)
+#define NYQ_MAX_LEN ((sampleCount) 2147483647)
+
 #define UNINITIALIZED_CONTROL ((double)99999999.99)
 
 static const wxChar *KEY_Version = XO("Version");
@@ -129,6 +132,8 @@ NyquistEffect::NyquistEffect(wxString fName)
    mStop = false;
    mBreak = false;
    mCont = false;
+
+   mMaxLen = NYQ_MAX_LEN;
 
    // Interactive Nyquist
    if (fName == NYQUIST_PROMPT_ID)
@@ -379,6 +384,7 @@ bool NyquistEffect::Init()
       {
          SaveUserPreset(GetCurrentSettingsGroup());
 
+         mMaxLen = NYQ_MAX_LEN;
          ParseFile();
          mFileModified = mFileName.GetModificationTime();
 
@@ -422,6 +428,18 @@ bool NyquistEffect::Process()
    mCont = false;
 
    mTrackIndex = 0;
+
+   mNumSelectedChannels = 0;
+   SelectedTrackListOfKindIterator sel(Track::Wave, mOutputTracks);
+   for (WaveTrack *t = (WaveTrack *) sel.First(); t; t = (WaveTrack *) sel.Next()) {
+      mNumSelectedChannels++;
+      if (mT1 >= mT0) {
+         if (t->GetLinked()) {
+            mNumSelectedChannels++;
+            sel.Next();
+         }
+      }
+   }
 
    mDebugOutput.Clear();
 
@@ -522,24 +540,14 @@ bool NyquistEffect::Process()
       mProps += wxString::Format(wxT("(putprop '*PROJECT* (float %s) 'PREVIEW-DURATION)\n"),
                                  Internat::ToString(previewLen).c_str());
 
-      SelectedTrackListOfKindIterator sel(Track::Wave, mOutputTracks);
-      int numChannels = 0;
-      for (WaveTrack *t = (WaveTrack *) sel.First(); t; t = (WaveTrack *) sel.Next()) {
-         numChannels++;
-         if (mT1 >= mT0) {
-            if (t->GetLinked()) {
-               numChannels++;
-               sel.Next();
-            }
-         }
-      }
+
 
       mProps += wxString::Format(wxT("(putprop '*SELECTION* (float %s) 'START)\n"),
                                  Internat::ToString(mT0).c_str());
       mProps += wxString::Format(wxT("(putprop '*SELECTION* (float %s) 'END)\n"),
                                  Internat::ToString(mT1).c_str());
       mProps += wxString::Format(wxT("(putprop '*SELECTION* (list %s) 'TRACKS)\n"), waveTrackList.c_str());
-      mProps += wxString::Format(wxT("(putprop '*SELECTION* %d 'CHANNELS)\n"), numChannels);
+      mProps += wxString::Format(wxT("(putprop '*SELECTION* %d 'CHANNELS)\n"), mNumSelectedChannels);
    }
 
    // Keep track of whether the current track is first selected in its sync-lock group
@@ -574,6 +582,14 @@ bool NyquistEffect::Process()
          mCurStart[0] = mCurTrack[0]->TimeToLongSamples(mT0);
          sampleCount end = mCurTrack[0]->TimeToLongSamples(mT1);
          mCurLen = (sampleCount)(end - mCurStart[0]);
+
+         if (mCurLen > NYQ_MAX_LEN) {
+            wxMessageBox(_("Selection too long for Nyquist code.\nMaximum allowed selection is 2147483647 samples\n(about 13.5 hours at 44100 Hz sample rate)."),
+                         _("Nyquist Error"), wxOK | wxCENTRE);
+            return false;
+         }
+
+         if (mCurLen > mMaxLen) mCurLen = mMaxLen;
 
          mProgressIn = 0.0;
          mProgressOut = 0.0;
@@ -966,6 +982,19 @@ bool NyquistEffect::ProcessOne()
    }
 
    rval = nyx_eval_expression(cmd.mb_str(wxConvUTF8));
+
+   // Audacity has no idea how long Nyquist processing will take, but
+   // can monitor audio being returned.
+   // Anything other than audio should be returmed almost instantly
+   // so notify the user that process has completed (bug 558)
+   if ((rval != nyx_audio) && ((mCount + mCurNumChannels) == mNumSelectedChannels)) {
+      if (mCurNumChannels == 1) {
+         TrackProgress(mCount, 1.0, _("Processing complete."));
+      }
+      else {
+         TrackGroupProgress(mCount, 1.0, _("Processing complete."));
+      }
+   }
 
    if (!rval) {
       wxLogWarning(wxT("Nyquist returned NIL"));
@@ -1384,6 +1413,14 @@ void NyquistEffect::Parse(wxString line)
          mEnablePreview = false;
       }
       return;
+   }
+
+   // Maximum number of samples to be processed. This can help the
+   // progress bar if effect does not process all of selection.
+   if (len >= 2 && tokens[0] == wxT("maxlen")) {
+      long long v; // Note that Nyquist may overflow at > 2^31 samples (bug 439)
+      tokens[1].ToLongLong(&v);
+      mMaxLen = (sampleCount) v;
    }
 
 #if defined(EXPERIMENTAL_NYQUIST_SPLIT_CONTROL)

@@ -57,9 +57,9 @@ struct CommandListEntry
    int index;
    int count;
    bool enabled;
-   bool wantevent;
-   bool ignoredown;
-   bool isMeta;
+   bool skipKeydown;
+   bool wantKeyup;
+   bool isGlobal;
    wxUint32 flags;
    wxUint32 mask;
 };
@@ -90,21 +90,25 @@ class AUDACITY_DLL_API CommandManager: public XMLTagHandler
    // Creating menus and adding commands
    //
 
-   wxMenuBar *AddMenuBar(wxString sMenu);
+   wxMenuBar *AddMenuBar(const wxString & sMenu);
 
-   void BeginMenu(wxString tName);
+   void BeginMenu(const wxString & tName);
    void EndMenu();
 
-   wxMenu* BeginSubMenu(wxString tName);
+   wxMenu* BeginSubMenu(const wxString & tName);
    void EndSubMenu();
    void SetToMenu( wxMenu * menu ){
       mCurrentMenu = menu;
    };
 
-   void InsertItem(wxString name, wxString label, CommandFunctor *callback,
-                   wxString after, int checkmark = -1);
+   void InsertItem(const wxString & name,
+                   const wxString & label,
+                   CommandFunctor *callback,
+                   const wxString & after,
+                   int checkmark = -1);
 
-   void AddItemList(wxString name, wxArrayString labels,
+   void AddItemList(const wxString & name,
+                    const wxArrayString & labels,
                     CommandFunctor *callback);
 
    void AddCheck(const wxChar *name,
@@ -150,10 +154,10 @@ class AUDACITY_DLL_API CommandManager: public XMLTagHandler
                    unsigned int flags = NoFlagsSpecifed,
                    unsigned int mask = NoFlagsSpecifed);
 
-   void AddMetaCommand(const wxChar *name,
-                       const wxChar *label,
-                       CommandFunctor *callback,
-                       const wxChar *accel);
+   void AddGlobalCommand(const wxChar *name,
+                         const wxChar *label,
+                         CommandFunctor *callback,
+                         const wxChar *accel);
    //
    // Command masks
    //
@@ -179,19 +183,19 @@ class AUDACITY_DLL_API CommandManager: public XMLTagHandler
    //
    // Modifying accelerators
    //
+
    void SetKeyFromName(wxString name, wxString key);
    void SetKeyFromIndex(int i, wxString key);
 
    //
    // Executing commands
    //
-   bool FilterKeyEvent(AudacityProject *project, wxKeyEvent & evt);
-   bool HandleCommandEntry(CommandListEntry * entry, wxUint32 flags, wxUint32 mask, const wxEvent * evt = NULL);
+
+   // "permit" allows filtering even if the active window isn't a child of the project.
+   // Lyrics and MixerTrackCluster classes use it.
+   bool FilterKeyEvent(AudacityProject *project, const wxKeyEvent & evt, bool permit = false);
    bool HandleMenuID(int id, wxUint32 flags, wxUint32 mask);
-   bool HandleKey(wxKeyEvent &evt, wxUint32 flags, wxUint32 mask);
-   bool HandleMeta(wxKeyEvent &evt);
    bool HandleTextualCommand(wxString & Str, wxUint32 flags, wxUint32 mask);
-   void TellUserWhyDisallowed(wxUint32 flagsGot, wxUint32 flagsRequired);
 
    //
    // Accessing
@@ -224,17 +228,13 @@ class AUDACITY_DLL_API CommandManager: public XMLTagHandler
    // Loading/Saving
    //
 
-   virtual bool HandleXMLTag(const wxChar *tag, const wxChar **attrs);
-   virtual void HandleXMLEndTag(const wxChar *tag);
-   virtual XMLTagHandler *HandleXMLChild(const wxChar *tag);
    virtual void WriteXML(XMLWriter &xmlFile);
 
 protected:
 
-   wxMenuBar * CurrentMenuBar() const;
-   wxMenuBar * GetMenuBar(wxString sMenu) const;
-   wxMenu * CurrentSubMenu() const;
-   wxMenu * CurrentMenu() const;
+   //
+   // Creating menus and adding commands
+   //
 
    int NextIdentifier(int ID);
    CommandListEntry *NewIdentifier(const wxString & name,
@@ -252,9 +252,37 @@ protected:
                                    bool multi,
                                    int index,
                                    int count);
+
+   //
+   // Executing commands
+   //
+
+   bool HandleCommandEntry(const CommandListEntry * entry, wxUint32 flags, wxUint32 mask, const wxEvent * evt = NULL);
+   void TellUserWhyDisallowed(wxUint32 flagsGot, wxUint32 flagsRequired);
+
+   //
+   // Modifying
+   //
+
    void Enable(CommandListEntry *entry, bool enabled);
 
+   //
+   // Accessing
+   //
+
+   wxMenuBar * CurrentMenuBar() const;
+   wxMenuBar * GetMenuBar(const wxString & sMenu) const;
+   wxMenu * CurrentSubMenu() const;
+   wxMenu * CurrentMenu() const;
    wxString GetLabel(const CommandListEntry *entry) const;
+
+   //
+   // Loading/Saving
+   //
+
+   virtual bool HandleXMLTag(const wxChar *tag, const wxChar **attrs);
+   virtual void HandleXMLEndTag(const wxChar *tag);
+   virtual XMLTagHandler *HandleXMLChild(const wxChar *tag);
 
 private:
    MenuBarList  mMenuBarList;

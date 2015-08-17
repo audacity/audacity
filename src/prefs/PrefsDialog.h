@@ -37,8 +37,10 @@ class PrefsDialog:public wxDialog
        CONST int nChildren;
        bool expanded;
 
-       PrefsNode(PrefsPanelFactory *pFactory_, int nChildren_ = 0)
-          : pFactory(pFactory_), nChildren(nChildren_), expanded(false)
+       PrefsNode(PrefsPanelFactory *pFactory_,
+          int nChildren_ = 0,
+          bool expanded_ = false)
+          : pFactory(pFactory_), nChildren(nChildren_), expanded(expanded_)
        {}
     };
    typedef std::vector<PrefsNode> Factories;

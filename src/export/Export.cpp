@@ -298,6 +298,7 @@ END_EVENT_TABLE()
 Exporter::Exporter()
 {
    mMixerSpec = NULL;
+   mBook = NULL;
 
    SetFileDialogTitle( _("Export Audio") );
 
@@ -870,7 +871,7 @@ void Exporter::CreateUserPaneCallback(wxWindow *parent, wxUIntPtr userdata)
 
 void Exporter::CreateUserPane(wxWindow *parent)
 {
-   ShuttleGui S(parent, eIsCreatingFromPrefs);
+   ShuttleGui S(parent, eIsCreating);
 
    S.StartVerticalLay();
    {
@@ -893,7 +894,7 @@ void Exporter::CreateUserPane(wxWindow *parent)
       }
       S.EndHorizontalLay();
    }
-   S.EndHorizontalLay();
+   S.EndVerticalLay();
 
    return;
 }
@@ -902,7 +903,8 @@ void Exporter::OnFilterChanged(wxFileCtrlEvent & evt)
 {
    int index = evt.GetFilterIndex();
 
-   if (index < 0 || index >= (int) mBook->GetPageCount())
+   // On GTK, this event can fire before the userpane is created
+   if (mBook == NULL || index < 0 || index >= (int) mBook->GetPageCount())
    {
       return;
    }

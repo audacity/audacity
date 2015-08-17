@@ -299,9 +299,6 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    void OnODTaskComplete(wxCommandEvent & event);
    void OnTrackListUpdated(wxCommandEvent & event);
 
-   bool HandleKeyDown(wxKeyEvent & event);
-   bool HandleKeyUp(wxKeyEvent & event);
-
    void HandleResize();
    void UpdateLayout();
    void ZoomInByFactor( double ZoomFactor );

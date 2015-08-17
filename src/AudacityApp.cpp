@@ -738,8 +738,6 @@ void AudacityApp::MacNewFile()
 
 #endif //__WXMAC__
 
-typedef int (AudacityApp::*SPECIALKEYEVENT)(wxKeyEvent&);
-
 #define ID_RECENT_CLEAR 6100
 #define ID_RECENT_FIRST 6101
 #define ID_RECENT_LAST  6112
@@ -1161,14 +1159,14 @@ bool AudacityApp::OnInit()
 
 #ifdef AUDACITY_NAME
    wxString appName = wxT(AUDACITY_NAME);
-   wxString vendorName = wxT(AUDACITY_NAME);
 #else
-   wxString vendorName = wxT("Audacity");
    wxString appName = wxT("Audacity");
 #endif
 
-   wxTheApp->SetVendorName(vendorName);
    wxTheApp->SetAppName(appName);
+   // Explicitly set since OSX will use it for the "Quit" menu item
+   wxTheApp->SetAppDisplayName(wxT("Audacity"));
+   wxTheApp->SetVendorName(wxT("Audacity"));
 
    // Unused strings that we want to be translated, even though
    // we're not using them yet...
@@ -1467,10 +1465,14 @@ bool AudacityApp::OnInit()
          return false;
       }
 
+// As of wx3, there's no need to process the filename arguments as they
+// will be sent view the MacOpenFile() method.
+#if !defined(__WXMAC__)
       for (size_t i = 0, cnt = parser->GetParamCount(); i < cnt; i++)
       {
          MRUOpen(parser->GetParam(i));
-      }   
+      }
+#endif
    }
 
    delete parser;
@@ -1598,7 +1600,7 @@ bool AudacityApp::CreateSingleInstanceChecker(wxString dir)
    mChecker = new wxSingleInstanceChecker();
 
 #if defined(__UNIX__)
-   wxString sockFile(defaultTempDir + wxT("/.audacity.sock"));
+   wxString sockFile(dir + wxT("/.audacity.sock"));
 #endif
 
    wxString runningTwoCopiesStr = _("Running two copies of Audacity simultaneously may cause\ndata loss or cause your system to crash.\n\n");

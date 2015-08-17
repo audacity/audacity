@@ -684,6 +684,8 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
    // The ruler needs a bevelled surround.
    if (t->GetKind() == Track::Wave) {
       WaveTrack *wt = static_cast<WaveTrack*>(t);
+      const float dBRange =
+         static_cast<WaveTrack*>(wt)->GetWaveformSettings().dBRange;
 
       const int display = wt->GetDisplay();
 
@@ -702,7 +704,7 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
                wt->SetLastScaleType(scaleType);
                float sign = (min >= 0 ? 1 : -1);
                if (min != 0.) {
-                  min = DB_TO_LINEAR(fabs(min)*mdBrange - mdBrange);
+                  min = DB_TO_LINEAR(fabs(min) * dBRange - dBRange);
                   if (min < 0.0)
                      min = 0.0;
                   min *= sign;
@@ -710,7 +712,7 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
                sign = (max >= 0 ? 1 : -1);
 
                if (max != 0.) {
-                  max = DB_TO_LINEAR(fabs(max)*mdBrange - mdBrange);
+                  max = DB_TO_LINEAR(fabs(max) * dBRange - dBRange);
                   if (max < 0.0)
                      max = 0.0;
                   max *= sign;
@@ -741,7 +743,7 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
                wt->SetLastScaleType(scaleType);
                float sign = (min >= 0 ? 1 : -1);
                if (min != 0.) {
-                  min = (LINEAR_TO_DB(fabs(min)) + mdBrange) / mdBrange;
+                  min = (LINEAR_TO_DB(fabs(min)) + dBRange) / dBRange;
                   if (min < 0.0)
                      min = 0.0;
                   min *= sign;
@@ -749,7 +751,7 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
                sign = (max >= 0 ? 1 : -1);
 
                if (max != 0.) {
-                  max = (LINEAR_TO_DB(fabs(max)) + mdBrange) / mdBrange;
+                  max = (LINEAR_TO_DB(fabs(max)) + dBRange) / dBRange;
                   if (max < 0.0)
                      max = 0.0;
                   max *= sign;
@@ -761,7 +763,7 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
                int top = 0;
                float topval = 0;
                int bot = rect.height;
-               float botval = -mdBrange;
+               float botval = -dBRange;
 
                if (min < 0) {
                   bot = top + (int)((max / (max - min))*(bot - top));
@@ -774,10 +776,10 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
                }
 
                if (max < 1 && max > 0)
-                  topval = -((1 - max)*mdBrange);
+                  topval = -((1 - max) * dBRange);
 
                if (min > 0) {
-                  botval = -((1 - min)*mdBrange);
+                  botval = -((1 - min) * dBRange);
                }
 
                vruler->SetBounds(rect.x, rect.y + top + 1, rect.x + rect.width, rect.y + bot - 1);
@@ -987,7 +989,8 @@ void TrackArtist::DrawNegativeOffsetTrackArrows(wxDC &dc, const wxRect &rect)
 
 void TrackArtist::DrawWaveformBackground(wxDC &dc, int leftOffset, const wxRect &rect,
                                          const double env[],
-                                         float zoomMin, float zoomMax, bool dB,
+                                         float zoomMin, float zoomMax,
+                                         bool dB, float dBRange,
                                          double t0, double t1,
                                          const ZoomInfo &zoomInfo,
                                          bool drawEnvelope, bool bIsSyncLockSelected)
@@ -1024,14 +1027,14 @@ void TrackArtist::DrawWaveformBackground(wxDC &dc, int leftOffset, const wxRect 
       // envelope.
 
       maxtop = GetWaveYPos(env[xx], zoomMin, zoomMax,
-                               h, dB, true, mdBrange, true);
+                               h, dB, true, dBRange, true);
       maxbot = GetWaveYPos(env[xx], zoomMin, zoomMax,
-                               h, dB, false, mdBrange, true);
+                               h, dB, false, dBRange, true);
 
       mintop = GetWaveYPos(-env[xx], zoomMin, zoomMax,
-                               h, dB, false, mdBrange, true);
+                               h, dB, false, dBRange, true);
       minbot = GetWaveYPos(-env[xx], zoomMin, zoomMax,
-                               h, dB, true, mdBrange, true);
+                               h, dB, true, dBRange, true);
 
       // Make sure it's odd so that a that max and min mirror each other
       mintop +=1;
@@ -1103,7 +1106,8 @@ void TrackArtist::DrawWaveformBackground(wxDC &dc, int leftOffset, const wxRect 
 
 
 void TrackArtist::DrawMinMaxRMS(wxDC &dc, const wxRect & rect, const double env[],
-   float zoomMin, float zoomMax, bool dB,
+   float zoomMin, float zoomMax,
+   bool dB, float dBRange,
    const float *min, const float *max, const float *rms, const int *bl,
    bool /* showProgress */, bool muted
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
@@ -1149,7 +1153,7 @@ void TrackArtist::DrawMinMaxRMS(wxDC &dc, const wxRect & rect, const double env[
          }
       }
       h1 = GetWaveYPos(v, zoomMin, zoomMax,
-                       rect.height, dB, true, mdBrange, true);
+                       rect.height, dB, true, dBRange, true);
 
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
       v = max[x0] * env[x0] * gain;
@@ -1163,7 +1167,7 @@ void TrackArtist::DrawMinMaxRMS(wxDC &dc, const wxRect & rect, const double env[
          }
       }
       h2 = GetWaveYPos(v, zoomMin, zoomMax,
-                       rect.height, dB, true, mdBrange, true);
+                       rect.height, dB, true, dBRange, true);
 
       // JKC: This adjustment to h1 and h2 ensures that the drawn
       // waveform is continuous.
@@ -1180,14 +1184,14 @@ void TrackArtist::DrawMinMaxRMS(wxDC &dc, const wxRect & rect, const double env[
 
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
       r1[x0] = GetWaveYPos(-rms[x0] * env[x0]*gain, zoomMin, zoomMax,
-                          rect.height, dB, true, mdBrange, true);
+                          rect.height, dB, true, dBRange, true);
       r2[x0] = GetWaveYPos(rms[xx0 * env[x0]*gain, zoomMin, zoomMax,
-                          rect.height, dB, true, mdBrange, true);
+                          rect.height, dB, true, dBRange, true);
 #else
       r1[x0] = GetWaveYPos(-rms[x0] * env[x0], zoomMin, zoomMax,
-                          rect.height, dB, true, mdBrange, true);
+                          rect.height, dB, true, dBRange, true);
       r2[x0] = GetWaveYPos(rms[x0] * env[x0], zoomMin, zoomMax,
-                          rect.height, dB, true, mdBrange, true);
+                          rect.height, dB, true, dBRange, true);
 #endif
       // Make sure the rms isn't larger than the waveform min/max
       if (r1[x0] > h1 - 1) {
@@ -1264,7 +1268,8 @@ void TrackArtist::DrawMinMaxRMS(wxDC &dc, const wxRect & rect, const double env[
 }
 
 void TrackArtist::DrawIndividualSamples(wxDC &dc, int leftOffset, const wxRect &rect,
-                                        float zoomMin, float zoomMax, bool dB,
+                                        float zoomMin, float zoomMax,
+                                        bool dB, float dBRange,
                                         WaveClip *clip,
                                         const ZoomInfo &zoomInfo,
                                         bool bigPoints, bool showPoints, bool muted)
@@ -1312,7 +1317,7 @@ void TrackArtist::DrawIndividualSamples(wxDC &dc, int leftOffset, const wxRect &
          std::max(-1,
             std::min(rect.height,
                GetWaveYPos(tt, zoomMin, zoomMax,
-                                  rect.height, dB, true, mdBrange, false)));
+                                  rect.height, dB, true, dBRange, false)));
    }
 
    // Draw lines
@@ -1359,7 +1364,8 @@ void TrackArtist::DrawIndividualSamples(wxDC &dc, int leftOffset, const wxRect &
 }
 
 void TrackArtist::DrawEnvelope(wxDC &dc, const wxRect &rect, const double env[],
-                               float zoomMin, float zoomMax, bool dB)
+                               float zoomMin, float zoomMax,
+                               bool dB, float dBRange)
 {
    int h = rect.height;
 
@@ -1367,16 +1373,16 @@ void TrackArtist::DrawEnvelope(wxDC &dc, const wxRect &rect, const double env[],
 
    for (int x0 = 0; x0 < rect.width; ++x0) {
       int cenvTop = GetWaveYPos(env[x0], zoomMin, zoomMax,
-                                h, dB, true, mdBrange, true);
+                                h, dB, true, dBRange, true);
 
       int cenvBot = GetWaveYPos(-env[x0], zoomMin, zoomMax,
-                                h, dB, true, mdBrange, true);
+                                h, dB, true, dBRange, true);
 
       int envTop = GetWaveYPos(env[x0], zoomMin, zoomMax,
-                               h, dB, true, mdBrange, false);
+                               h, dB, true, dBRange, false);
 
       int envBot = GetWaveYPos(-env[x0], zoomMin, zoomMax,
-                               h, dB, true, mdBrange, false);
+                               h, dB, true, dBRange, false);
 
       // Make the collision at zero actually look solid
       if (cenvBot - cenvTop < 9) {
@@ -1711,6 +1717,7 @@ void TrackArtist::DrawClipWaveform(WaveTrack *track,
    double leftOffset = params.leftOffset;
    const wxRect &mid = params.mid;
 
+   const float dBRange = track->GetWaveformSettings().dBRange;
 
    dc.SetPen(*wxTRANSPARENT_PEN);
 
@@ -1740,7 +1747,8 @@ void TrackArtist::DrawClipWaveform(WaveTrack *track,
          t0 = t1 = 0.0;
       DrawWaveformBackground(dc, leftOffset, mid,
          env,
-         zoomMin, zoomMax, dB,
+         zoomMin, zoomMax,
+         dB, dBRange,
          t0, t1, zoomInfo, drawEnvelope,
          !track->GetSelected());
    }
@@ -1845,7 +1853,8 @@ void TrackArtist::DrawClipWaveform(WaveTrack *track,
             double *const env2 = &vEnv2[0];
             clip->GetEnvelope()->GetValues(env2, rect.width, leftOffset, zoomInfo);
             DrawMinMaxRMS(dc, rect, env2,
-               zoomMin, zoomMax, dB,
+               zoomMin, zoomMax,
+               dB, dBRange,
                useMin, useMax, useRms, useBl,
                isLoadingOD, muted
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
@@ -1854,17 +1863,18 @@ void TrackArtist::DrawClipWaveform(WaveTrack *track,
             );
          }
          else
-            DrawIndividualSamples(dc, leftOffset, rect, zoomMin, zoomMax, dB,
-            clip, zoomInfo,
-            bigPoints, showPoints, muted);
+            DrawIndividualSamples(dc, leftOffset, rect, zoomMin, zoomMax,
+               dB, dBRange,
+               clip, zoomInfo,
+               bigPoints, showPoints, muted);
       }
 
       leftOffset += rect.width + skippedRight;
    }
 
    if (drawEnvelope) {
-      DrawEnvelope(dc, mid, env, zoomMin, zoomMax, dB);
-      clip->GetEnvelope()->DrawPoints(dc, rect, zoomInfo, dB, zoomMin, zoomMax);
+      DrawEnvelope(dc, mid, env, zoomMin, zoomMax, dB, dBRange);
+      clip->GetEnvelope()->DrawPoints(dc, rect, zoomInfo, dB, dBRange, zoomMin, zoomMax);
    }
 
    // Draw arrows on the left side if the track extends to the left of the
@@ -2055,7 +2065,6 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
 
    const WaveTrack *const track = waveTrackCache.GetTrack();
    const SpectrogramSettings &settings = track->GetSpectrogramSettings();
-
    const bool autocorrelation = (settings.algorithm == SpectrogramSettings::algPitchEAC);
 
    enum { DASH_LENGTH = 10 /* pixels */ };
@@ -2121,7 +2130,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
    {
       const double pps = averagePixelsPerSample * rate;
       updated = clip->GetSpectrogram(waveTrackCache, freq, where, hiddenMid.width,
-         t0, pps, autocorrelation);
+         t0, pps);
    }
 
    // Legacy special-case treatment of log scale
@@ -2354,7 +2363,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
    const int numPixels = std::max(0, end - begin);
    const int zeroPaddingFactor = autocorrelation ? 1 : settings.zeroPaddingFactor;
    SpecCache specCache
-      (numPixels, autocorrelation, -1,
+      (numPixels, settings.algorithm, -1,
        t0, settings.windowType,
        settings.windowSize, zeroPaddingFactor, settings.frequencyGain);
    if (numPixels > 0) {
@@ -2367,7 +2376,8 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
           0, 0, numPixels,
           clip->GetNumSamples(),
           tOffset, rate,
-          autocorrelation);
+          0 //FIXME -- make reassignment work with fisheye
+       );
    }
 
    int correctedX = leftOffset - hiddenLeftOffset;
@@ -3108,12 +3118,11 @@ void TrackArtist::DrawTimeTrack(TimeTrack *track,
    double lower = track->GetRangeLower(), upper = track->GetRangeUpper();
    if(track->GetDisplayLog()) {
       // MB: silly way to undo the work of GetWaveYPos while still getting a logarithmic scale
-      double dBRange = gPrefs->Read(ENV_DB_KEY, ENV_DB_RANGE);
-      lower = LINEAR_TO_DB(std::max(1.0e-7, lower)) / dBRange + 1.0;
-      upper = LINEAR_TO_DB(std::max(1.0e-7, upper)) / dBRange + 1.0;
+      lower = LINEAR_TO_DB(std::max(1.0e-7, lower)) / mdBrange + 1.0;
+      upper = LINEAR_TO_DB(std::max(1.0e-7, upper)) / mdBrange + 1.0;
    }
    track->GetEnvelope()->DrawPoints(dc, envRect, zoomInfo,
-               track->GetDisplayLog(), lower, upper);
+               track->GetDisplayLog(), mdBrange, lower, upper);
 }
 
 void TrackArtist::UpdatePrefs()

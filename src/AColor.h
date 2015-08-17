@@ -103,6 +103,7 @@ class AColor {
    static wxPen trackFocusPens[3];
    static wxPen snapGuidePen;
 
+   static wxPen tooltipPen;
    static wxBrush tooltipBrush;
 
    static bool gradient_inited;

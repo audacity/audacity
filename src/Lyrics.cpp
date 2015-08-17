@@ -69,7 +69,7 @@ void HighlightTextCtrl::OnMouseEvent(wxMouseEvent& event)
 //v static const kHighlightTextCtrlID = 7654;
 
 BEGIN_EVENT_TABLE(Lyrics, wxPanel)
-   EVT_CHAR(Lyrics::OnKeyEvent)
+   EVT_KEY_DOWN(Lyrics::OnKeyEvent)
    EVT_PAINT(Lyrics::OnPaint)
    EVT_SIZE(Lyrics::OnSize)
 
@@ -442,7 +442,8 @@ void Lyrics::Update(double t)
 
 void Lyrics::OnKeyEvent(wxKeyEvent & event)
 {
-   GetActiveProject()->HandleKeyDown(event);
+   AudacityProject *project = GetActiveProject();
+   project->GetCommandManager()->FilterKeyEvent(project, event, true);
 }
 
 void Lyrics::OnPaint(wxPaintEvent & WXUNUSED(event))

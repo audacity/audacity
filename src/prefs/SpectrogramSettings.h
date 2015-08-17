@@ -130,6 +130,7 @@ public:
 
    enum Algorithm {
       algSTFT = 0,
+      algReassignment,
       algPitchEAC,
 
       algNumAlgorithms,
@@ -153,6 +154,11 @@ public:
    // Variables used for computing the spectrum
    mutable FFTParam      *hFFT;
    mutable float         *window;
+
+   // Two other windows for computing reassigned spectrogram
+   mutable float         *tWindow; // Window times time parameter
+   mutable float         *dWindow; // Derivative of window
+
 #endif
 };
 #endif

@@ -123,7 +123,14 @@ public:
    :  wxEventFilter()
    {
 #if defined(__WXMAC__)
-      NSEventMask mask = NSKeyDownMask;
+      // In wx3, the menu accelerators take precendence over key event processing
+      // so we won't get wxEVT_CHAR_HOOK events for combinations assigned to menus.
+      // Since we only support OS X 10.6 or greater, we can use an event monitor
+      // to capture the key event before it gets to the normal wx3 processing.
+
+      // The documentation for addLocalMonitorForEventsMatchingMask implies that
+      // NSKeyUpMask can't be used in 10.6, but testing shows that it can.
+      NSEventMask mask = NSKeyDownMask | NSKeyUpMask;
 
       mHandler =
       [
@@ -138,11 +145,18 @@ public:
                {
                   mEvent = event;
 
-                  wxKeyEvent wxevent(wxEVT_KEY_DOWN);
+                  wxKeyEvent wxevent([event type] == NSKeyDown ? wxEVT_KEY_DOWN : wxEVT_KEY_UP);
                   impl->SetupKeyEvent(wxevent, event);
-              
-                  wxKeyEvent eventHook(wxEVT_CHAR_HOOK, wxevent);
-                  return FilterEvent(eventHook) == Event_Processed ? nil : event;
+
+                  if ([event type] == NSKeyDown)
+                  {
+                     wxKeyEvent eventHook(wxEVT_CHAR_HOOK, wxevent);
+                     return FilterEvent(eventHook) == Event_Processed ? nil : event;
+                  }
+                  else
+                  {
+                     return FilterEvent(wxevent) == Event_Processed ? nil : event;
+                  }
                }
             }
 
@@ -165,37 +179,53 @@ public:
 
    int FilterEvent(wxEvent& event)
    {
+      // Quickly bail if this isn't something we want.
       wxEventType type = event.GetEventType();
-      if (type != wxEVT_CHAR_HOOK)
+      if (type != wxEVT_CHAR_HOOK && type != wxEVT_KEY_UP)
       {
          return Event_Skip;
       }
- 
+
+      // We must have a project since we will be working with the Command Manager
+      // and capture handler, both of which are (currently) tied to individual projects.
+      //
+      // Shouldn't they be tied to the application instead???
       AudacityProject *project = GetActiveProject();
-      if (!project)
+      if (!project || !project->IsEnabled())
       {
          return Event_Skip;
       }
-      
+
+      // Make a copy of the event and (possibly) make it look like a key down
+      // event.
+      wxKeyEvent key = (wxKeyEvent &) event;
+      if (type == wxEVT_CHAR_HOOK)
+      {
+         key.SetEventType(wxEVT_KEY_DOWN);
+      }
+
+      // Give the capture handler first dibs at the event.
       wxWindow *handler = project->GetKeyboardCaptureHandler();
-      if (handler && HandleCapture(handler, (wxKeyEvent &) event))
+      if (handler && HandleCapture(handler, key))
       {
          return Event_Processed;
       }
 
+      // Capture handler didn't want it, so ask the Command Manager.
       CommandManager *manager = project->GetCommandManager();
-      if (manager && manager->FilterKeyEvent(project, (wxKeyEvent &) event))
+      if (manager && manager->FilterKeyEvent(project, key))
       {
          return Event_Processed;
       }
 
+      // Give it back to WX for normal processing.
       return Event_Skip;
    }
 
 private:
 
    // Returns true if the event was captured and processed
-   bool HandleCapture(wxWindow *target, wxKeyEvent & event)
+   bool HandleCapture(wxWindow *target, const wxKeyEvent & event)
    {
       if (wxGetTopLevelParent(target) != wxGetTopLevelParent(wxWindow::FindFocus()))
       {
@@ -203,8 +233,8 @@ private:
       }
       wxEvtHandler *handler = target->GetEventHandler();
 
-      wxKeyEvent temp = (wxKeyEvent &) event;
-      temp.SetEventType(wxEVT_KEY_DOWN);
+      // We make a copy of the event because the capture handler may modify it.
+      wxKeyEvent temp = event;
 
 #if defined(__WXGTK__)
       // wxGTK uses the control and alt modifiers to represent ALTGR,
@@ -216,45 +246,55 @@ private:
       }
 #endif
 
+      // Ask the capture handler if the key down/up event is something they it
+      // might be interested in handling.
       wxCommandEvent e(EVT_CAPTURE_KEY);
       e.SetEventObject(&temp);
       e.StopPropagation();
-
       if (!handler->ProcessEvent(e))
       {
          return false;
       }
 
+      // Now, let the handler process the normal key event.
+      bool keyDown = temp.GetEventType() == wxEVT_KEY_DOWN;
       temp.WasProcessed();
       temp.StopPropagation();
       wxEventProcessInHandlerOnly onlyDown(temp, handler);
-      if (!handler->ProcessEvent(temp))
+      bool processed = handler->ProcessEvent(temp);
+
+      // Don't go any further if the capture handler didn't process
+      // the key down event.
+      if (!processed && keyDown)
       {
          return false;
       }
 
-      wxString chars = GetUnicodeString(temp);
-      for (size_t i = 0, cnt = chars.Length(); i < cnt; i++)
+      // At this point the capture handler has either processed a key down event
+      // or we're dealing with a key up event.
+      //
+      // So, only generate the char events for key down events.
+      if (keyDown)
       {
-         temp = (wxKeyEvent &) event;
-         temp.SetEventType(wxEVT_CHAR);
-         temp.WasProcessed();
-         temp.StopPropagation();
-         temp.m_uniChar = chars[i];
-         wxEventProcessInHandlerOnly onlyChar(temp, handler);
-         handler->ProcessEvent(temp);
+         wxString chars = GetUnicodeString(temp);
+         for (size_t i = 0, cnt = chars.Length(); i < cnt; i++)
+         {
+            temp = event;
+            temp.SetEventType(wxEVT_CHAR);
+            temp.WasProcessed();
+            temp.StopPropagation();
+            temp.m_uniChar = chars[i];
+            wxEventProcessInHandlerOnly onlyChar(temp, handler);
+            handler->ProcessEvent(temp);
+         }
       }
-   
-      temp = (wxKeyEvent &) event;
-      temp.SetEventType(wxEVT_KEY_UP);
-      temp.WasProcessed();
-      temp.StopPropagation();
-      wxEventProcessInHandlerOnly onlyUp(temp, handler);
-      handler->ProcessEvent(temp);
 
+      // We get here for processed key down events or for key up events, whether
+      // processed or not.
       return true;
    }
 
+   // Convert the key down event to a unicode string.
    wxString GetUnicodeString(const wxKeyEvent & event)
    {
       wxString chars;
@@ -410,7 +450,7 @@ void CommandManager::PurgeData()
 /// Names it according to the passed-in string argument.
 ///
 /// If the menubar already exists, simply returns it.
-wxMenuBar *CommandManager::AddMenuBar(wxString sMenu)
+wxMenuBar *CommandManager::AddMenuBar(const wxString & sMenu)
 {
    wxMenuBar *menuBar = GetMenuBar(sMenu);
    if (menuBar)
@@ -430,7 +470,7 @@ wxMenuBar *CommandManager::AddMenuBar(wxString sMenu)
 ///
 /// Retrieves the menubar based on the name given in AddMenuBar(name)
 ///
-wxMenuBar * CommandManager::GetMenuBar(wxString sMenu) const
+wxMenuBar * CommandManager::GetMenuBar(const wxString & sMenu) const
 {
    for(unsigned int i = 0; i < mMenuBarList.GetCount(); i++)
    {
@@ -455,29 +495,26 @@ wxMenuBar * CommandManager::CurrentMenuBar() const
 
 
 ///
-/// This makes a new menu and adds it to the 'CurrentMenuBar'
+/// This starts a new menu
 ///
-/// If the menu already exists, all of the items in it are
-/// cleared instead.
-///
-void CommandManager::BeginMenu(wxString tNameIn)
+void CommandManager::BeginMenu(const wxString & tName)
 {
-   wxString tName = tNameIn;
-
    wxMenu *tmpMenu = new wxMenu();
 
    mCurrentMenu = tmpMenu;
    mCurrentMenuName = tName;
-
-   CurrentMenuBar()->Append(mCurrentMenu, tName);
 }
 
 
 ///
-/// This ends a menu by setting the pointer to it
-/// to NULL.  It is still attached to the CurrentMenuBar()
+/// This attaches a menu to the menubar and ends the menu
+///
 void CommandManager::EndMenu()
 {
+   // Add the menu to the menubard after all menu items have been
+   // added to the menu to allow OSX to rearrange special menu
+   // items like Preferences, About, and Quit.
+   CurrentMenuBar()->Append(mCurrentMenu, mCurrentMenuName);
    mCurrentMenu = NULL;
    mCurrentMenuName = COMMAND;
 }
@@ -486,10 +523,8 @@ void CommandManager::EndMenu()
 ///
 /// This starts a new submenu, and names it according to
 /// the function's argument.
-wxMenu* CommandManager::BeginSubMenu(wxString tNameIn)
+wxMenu* CommandManager::BeginSubMenu(const wxString & tName)
 {
-   wxString tName = tNameIn;
-
    SubMenuListEntry *tmpEntry = new SubMenuListEntry;
 
    tmpEntry->menu = new wxMenu();
@@ -557,12 +592,12 @@ wxMenu * CommandManager::CurrentMenu() const
 ///
 /// Add a menu item to the current menu.  When the user selects it, the
 /// given functor will be called
-void CommandManager::InsertItem(wxString name, wxString label_in,
-                                CommandFunctor *callback, wxString after,
+void CommandManager::InsertItem(const wxString & name,
+                                const wxString & label_in,
+                                CommandFunctor *callback,
+                                const wxString & after,
                                 int checkmark)
 {
-   wxString label = label_in;
-
    wxMenuBar *bar = GetActiveProject()->GetMenuBar();
    wxArrayString names = ::wxStringTokenize(after, wxT(":"));
    size_t cnt = names.GetCount();
@@ -609,9 +644,9 @@ void CommandManager::InsertItem(wxString name, wxString label_in,
       }
    }
 
-   CommandListEntry *entry = NewIdentifier(name, label, menu, callback, false, 0, 0);
+   CommandListEntry *entry = NewIdentifier(name, label_in, menu, callback, false, 0, 0);
    int ID = entry->id;
-   label = GetLabel(entry);
+   wxString label = GetLabel(entry);
 
    if (checkmark >= 0) {
       menu->InsertCheckItem(pos, ID, label);
@@ -687,7 +722,8 @@ void CommandManager::AddItem(const wxChar *name,
 /// with its position in the list as the index number.
 /// When you call Enable on this command name, it will enable or disable
 /// all of the items at once.
-void CommandManager::AddItemList(wxString name, wxArrayString labels,
+void CommandManager::AddItemList(const wxString & name,
+                                 const wxArrayString & labels,
                                  CommandFunctor *callback)
 {
    for (size_t i = 0, cnt = labels.GetCount(); i < cnt; i++) {
@@ -729,15 +765,15 @@ void CommandManager::AddCommand(const wxChar *name,
    }
 }
 
-void CommandManager::AddMetaCommand(const wxChar *name,
-                                    const wxChar *label_in,
-                                    CommandFunctor *callback,
-                                    const wxChar *accel)
+void CommandManager::AddGlobalCommand(const wxChar *name,
+                                      const wxChar *label_in,
+                                      CommandFunctor *callback,
+                                      const wxChar *accel)
 {
    CommandListEntry *entry = NewIdentifier(name, label_in, accel, NULL, callback, false, 0, 0);
 
    entry->enabled = false;
-   entry->isMeta = true;
+   entry->isGlobal = true;
    entry->flags = 0;
    entry->mask = 0;
 }
@@ -834,9 +870,9 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & name,
    entry->flags = mDefaultFlags;
    entry->mask = mDefaultMask;
    entry->enabled = true;
-   entry->wantevent = (accel.Find(wxT("\twantevent")) != wxNOT_FOUND);
-   entry->ignoredown = (accel.Find(wxT("\tignoredown")) != wxNOT_FOUND);
-   entry->isMeta = false;
+   entry->skipKeydown = (accel.Find(wxT("\tskipKeydown")) != wxNOT_FOUND);
+   entry->wantKeyup = (accel.Find(wxT("\twantKeyup")) != wxNOT_FOUND) || entry->skipKeydown;
+   entry->isGlobal = false;
 
    // For key bindings for commands with a list, such as effects,
    // the name in prefs is the category name plus the effect name.
@@ -998,8 +1034,8 @@ void CommandManager::Modify(wxString name, wxString newLabel)
 {
    CommandListEntry *entry = mCommandNameHash[name];
    if (entry && entry->menu) {
-      entry->label = newLabel.BeforeFirst(wxT('\t'));
-      entry->menu->SetLabel(entry->id, entry->label);
+      entry->label = newLabel;
+      entry->menu->SetLabel(entry->id, GetLabel(entry));
    }
 }
 
@@ -1042,15 +1078,33 @@ void CommandManager::TellUserWhyDisallowed( wxUint32 flagsGot, wxUint32 flagsReq
 ///
 ///
 ///
-bool CommandManager::FilterKeyEvent(AudacityProject *project, wxKeyEvent & evt)
+bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent & evt, bool permit)
 {
-   if (HandleMeta(evt))
+   CommandListEntry *entry = mCommandKeyHash[KeyEventToKeyString(evt)];
+   if (entry == NULL)
    {
-      return true;
+      return false;
+   }
+
+   int type = evt.GetEventType();
+
+   // Global commands aren't tied to any specific project
+   if (entry->isGlobal && type == wxEVT_KEY_DOWN)
+   {
+      // Global commands are always disabled so they do not interfere with the
+      // rest of the command handling.  But, to use the common handler, we
+      // enable them temporarily and then disable them again after handling.
+      // LL:  Why do they need to be disabled???
+      entry->enabled = true;
+      bool ret = HandleCommandEntry(entry, 0xffffffff, 0xffffffff, &evt);
+      entry->enabled = false;
+      return ret;
    }
 
    // Any other keypresses must be destined for this project window.
-   if (wxGetTopLevelParent(wxWindow::FindFocus()) != project)
+   if (!permit && 
+       (wxGetTopLevelParent(wxWindow::FindFocus()) != project ||
+        !wxEventLoop::GetActive()->IsMain()))
    {
       return false;
    }
@@ -1058,20 +1112,20 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, wxKeyEvent & evt)
    wxUint32 flags = project->GetUpdateFlags();
 
    wxKeyEvent temp = evt;
-   temp.SetEventType(wxEVT_KEY_DOWN);
-   if (HandleKey(temp, flags, 0xFFFFFFFF))
-   {
-      temp.SetEventType(wxEVT_KEY_UP);
-      HandleKey(temp, flags, 0xFFFFFFFF);
 
-      return true;
+   if (type == wxEVT_KEY_DOWN)
+   {
+      if (entry->skipKeydown)
+      {
+         return true;
+      }
+
+      return HandleCommandEntry(entry, flags, 0xffffffff, &temp);
    }
 
-   if (project->HandleKeyDown(evt))
+   if (type == wxEVT_KEY_UP && entry->wantKeyup)
    {
-      wxKeyEvent temp = evt;
-      temp.SetEventType(wxEVT_KEY_UP);
-      project->HandleKeyUp(temp);
+      return HandleCommandEntry(entry, flags, 0xffffffff, &temp);
    }
 
    return false;
@@ -1081,7 +1135,7 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, wxKeyEvent & evt)
 /// returning true iff successful.  If you pass any flags,
 ///the command won't be executed unless the flags are compatible
 ///with the command's flags.
-bool CommandManager::HandleCommandEntry(CommandListEntry * entry, wxUint32 flags, wxUint32 mask, const wxEvent * evt)
+bool CommandManager::HandleCommandEntry(const CommandListEntry * entry, wxUint32 flags, wxUint32 mask, const wxEvent * evt)
 {
    if (!entry || !entry->enabled)
       return false;
@@ -1119,53 +1173,6 @@ bool CommandManager::HandleMenuID(int id, wxUint32 flags, wxUint32 mask)
 {
    CommandListEntry *entry = mCommandIDHash[id];
    return HandleCommandEntry( entry, flags, mask );
-}
-
-///Call this when a key event is received.
-///If it matches a command, it will call the appropriate
-///CommandManagerListener function.  If you pass any flags,
-///the command won't be executed unless the flags are compatible
-///with the command's flags.
-bool CommandManager::HandleKey(wxKeyEvent &evt, wxUint32 flags, wxUint32 mask)
-{
-   wxString keyStr = KeyEventToKeyString(evt);
-   CommandListEntry *entry = mCommandKeyHash[keyStr];
-
-   if (entry)
-   {
-      if (evt.GetEventType() == wxEVT_KEY_DOWN && !entry->ignoredown)
-      {
-         return HandleCommandEntry( entry, flags, mask, &evt );
-      }
-
-      if (evt.GetEventType() == wxEVT_KEY_UP && (entry->wantevent || entry->ignoredown))
-      {
-         return HandleCommandEntry( entry, flags, mask, &evt );
-      }
-   }
-
-   return false;
-}
-
-bool CommandManager::HandleMeta(wxKeyEvent &evt)
-{
-   wxString keyStr = KeyEventToKeyString(evt);
-   CommandListEntry *entry = mCommandKeyHash[keyStr];
-
-   // Return unhandle if it isn't a meta command
-   if (!entry || !entry->isMeta)
-   {
-      return false;
-   }
-
-   // Meta commands are always disabled so they do not interfere with the
-   // rest of the command handling.  But, to use the common handler, we
-   // enable it temporarily and then disable it again after handling.
-   entry->enabled = true;
-   bool ret = HandleCommandEntry( entry, 0xffffffff, 0xffffffff, &evt );
-   entry->enabled = false;
-
-   return ret;
 }
 
 /// HandleTextualCommand() allows us a limitted version of script/batch
@@ -1478,7 +1485,7 @@ void CommandManager::CheckDups()
          continue;
       }
 
-      if (mCommandList[j]->label.AfterLast(wxT('\t')) == wxT("allowdup")) {
+      if (mCommandList[j]->label.AfterLast(wxT('\t')) == wxT("allowDup")) {
          continue;
       }
 

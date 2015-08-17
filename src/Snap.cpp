@@ -30,6 +30,7 @@ static int CompareSnapPoints(SnapPoint *s1, SnapPoint *s2)
 }
 
 SnapManager::SnapManager(TrackList *tracks, TrackClipArray *exclusions,
+                         const std::vector<Track*> *pLabelTrackExclusions,
                          const ZoomInfo &zoomInfo, int pixelTolerance, bool noTimeSnap)
  : mConverter(NumericConverter::TIME)
  , mPixelTolerance(std::max(0, pixelTolerance))
@@ -61,9 +62,15 @@ SnapManager::SnapManager(TrackList *tracks, TrackClipArray *exclusions,
    mSnapPoints->Add(new SnapPoint(0.0, NULL));
 
    TrackListIterator iter(tracks);
-   Track *track = iter.First();
-   while (track) {
+   for (Track *track = iter.First();  track; track = iter.Next()) {
       if (track->GetKind() == Track::Label) {
+         if (pLabelTrackExclusions) {
+            const std::vector<Track*>::const_iterator
+               begin = pLabelTrackExclusions->begin(),
+               end = pLabelTrackExclusions->end();
+            if (end != std::find(begin, end, track))
+               continue;
+         }
          LabelTrack *labelTrack = (LabelTrack *)track;
          for(i = 0; i < labelTrack->GetNumLabels(); i++) {
             const LabelStruct *label = labelTrack->GetLabel(i);
@@ -100,7 +107,6 @@ SnapManager::SnapManager(TrackList *tracks, TrackClipArray *exclusions,
          CondListAdd(track->GetEndTime(), track);
       }
 #endif
-      track = iter.Next();
    }
 }
 

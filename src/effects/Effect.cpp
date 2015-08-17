@@ -1282,6 +1282,11 @@ bool Effect::Process()
    CopyInputTracks(Track::All);
    bool bGoodResult = true;
 
+   // It's possible that the number of channels the effect expects changed based on
+   // the parameters (the Audacity Reverb effect does when the stereo width is 0).
+   mNumAudioIn = GetAudioInCount();
+   mNumAudioOut = GetAudioOutCount();
+
    mPass = 1;
    if (InitPass1())
    {
@@ -2014,10 +2019,10 @@ bool Effect::TrackProgress(int whichTrack, double frac, wxString msg)
    return (updateResult != eProgressSuccess);
 }
 
-bool Effect::TrackGroupProgress(int whichGroup, double frac)
+bool Effect::TrackGroupProgress(int whichGroup, double frac, wxString msg)
 {
    int updateResult = (mProgress ?
-      mProgress->Update(whichGroup + frac, (double) mNumGroups) :
+      mProgress->Update(whichGroup + frac, (double) mNumGroups, msg) :
       eProgressSuccess);
    return (updateResult != eProgressSuccess);
 }

@@ -18,6 +18,7 @@ Paul Licameli
 class ShuttleGui;
 class WaveTrack;
 class wxCheckBox;
+class wxChoice;
 
 class WaveformPrefs :public PrefsPanel
 {
@@ -32,16 +33,23 @@ private:
    void PopulateOrExchange(ShuttleGui & S);
 
    void OnControl(wxCommandEvent&);
+   void OnScale(wxCommandEvent&);
    void OnDefaults(wxCommandEvent&);
    void OnApply(wxCommandEvent &);
    DECLARE_EVENT_TABLE()
+
+   void EnableDisableRange();
 
    WaveTrack *const mWt;
    bool mDefaulted;
 
    wxCheckBox *mDefaultsCheckbox;
+   wxChoice *mScaleChoice;
+   wxChoice *mRangeChoice;
 
    wxArrayString mScaleChoices;
+   wxArrayString mRangeCodes;
+   wxArrayString mRangeChoices;
 
    WaveformSettings mTempSettings;
 

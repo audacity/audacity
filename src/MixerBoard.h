@@ -308,6 +308,7 @@ private:
    void OnCloseWindow(wxCloseEvent &WXUNUSED(event));
    void OnMaximize(wxMaximizeEvent &event);
    void OnSize(wxSizeEvent &evt);
+   void OnKeyEvent(wxKeyEvent &evt);
 
 public:
    MixerBoard* mMixerBoard;

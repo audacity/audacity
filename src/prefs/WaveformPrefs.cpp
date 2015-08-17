@@ -15,6 +15,8 @@ Paul Licameli
 
 #include "../Audacity.h"
 #include "WaveformPrefs.h"
+#include "GUIPrefs.h"
+#include "GUISettings.h"
 
 #include <wx/checkbox.h>
 
@@ -38,6 +40,7 @@ WaveformPrefs::WaveformPrefs(wxWindow * parent, WaveTrack *wt)
       mDefaulted = false;
    }
 
+   mTempSettings.ConvertToEnumeratedDBRange();
    Populate();
 }
 
@@ -50,11 +53,15 @@ enum {
    ID_APPLY,
 
    ID_SCALE,
+   ID_RANGE,
 };
 
 void WaveformPrefs::Populate()
 {
    mScaleChoices = WaveformSettings::GetScaleNames();
+
+   // Reuse the same choices and codes as for Interface prefs
+   GUIPrefs::GetRangeChoices(&mRangeChoices, &mRangeCodes);
 
    //------------------------- Main section --------------------
    // Now construct the GUI itself.
@@ -81,9 +88,16 @@ void WaveformPrefs::PopulateOrExchange(ShuttleGui & S)
       {
          S.StartTwoColumn();
          {
-            S.Id(ID_SCALE).TieChoice(_("S&cale") + wxString(wxT(":")),
-               *(int*)&mTempSettings.scaleType,
-               &mScaleChoices);
+            mScaleChoice =
+               S.Id(ID_SCALE).TieChoice(_("S&cale") + wxString(wxT(":")),
+                  *(int*)&mTempSettings.scaleType,
+                  &mScaleChoices);
+
+            mRangeChoice =
+               S.Id(ID_RANGE).TieChoice(_("Waveform dB &range") + wxString(wxT(":")),
+               *(int*)&mTempSettings.dBRange,
+               &mRangeChoices);
+            S.SetSizeHints(mRangeChoices);
          }
          S.EndTwoColumn();
       }
@@ -104,6 +118,8 @@ void WaveformPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndMultiColumn();
 
+   EnableDisableRange();
+
    mPopulating = false;
 }
 
@@ -117,7 +133,9 @@ bool WaveformPrefs::Validate()
    PopulateOrExchange(S);
 
    // Delegate range checking to WaveformSettings class
+   mTempSettings.ConvertToActualDBRange();
    const bool result = mTempSettings.Validate(false);
+   mTempSettings.ConvertToEnumeratedDBRange();
    return result;
 }
 
@@ -131,6 +149,7 @@ bool WaveformPrefs::Apply()
    ShuttleGui S(this, eIsGettingFromDialog);
    PopulateOrExchange(S);
 
+   mTempSettings.ConvertToActualDBRange();
    WaveformSettings::Globals::Get().SavePrefs();
 
    if (mWt) {
@@ -157,6 +176,8 @@ bool WaveformPrefs::Apply()
       pSettings->SavePrefs();
    }
 
+   mTempSettings.ConvertToEnumeratedDBRange();
+
    if (mWt && isOpenPage) {
       mWt->SetDisplay(WaveTrack::Waveform);
       if (partner)
@@ -179,10 +200,19 @@ void WaveformPrefs::OnControl(wxCommandEvent&)
    }
 }
 
+void WaveformPrefs::OnScale(wxCommandEvent &e)
+{
+   EnableDisableRange();
+
+   // do the common part
+   OnControl(e);
+}
+
 void WaveformPrefs::OnDefaults(wxCommandEvent &)
 {
    if (mDefaultsCheckbox->IsChecked()) {
       mTempSettings = WaveformSettings::defaults();
+      mTempSettings.ConvertToEnumeratedDBRange();
       mDefaulted = true;
       ShuttleGui S(this, eIsSettingToDialog);
       PopulateOrExchange(S);
@@ -197,9 +227,16 @@ void WaveformPrefs::OnApply(wxCommandEvent &)
    }
 }
 
+void WaveformPrefs::EnableDisableRange()
+{
+   mRangeChoice->Enable
+      (mScaleChoice->GetSelection() == WaveformSettings::stLogarithmic);
+}
+
 BEGIN_EVENT_TABLE(WaveformPrefs, PrefsPanel)
 
-EVT_CHOICE(ID_SCALE, WaveformPrefs::OnControl)
+EVT_CHOICE(ID_SCALE, WaveformPrefs::OnScale)
+EVT_CHOICE(ID_RANGE, WaveformPrefs::OnControl)
 
 EVT_CHECKBOX(ID_DEFAULTS, WaveformPrefs::OnDefaults)
 EVT_BUTTON(ID_APPLY, WaveformPrefs::OnApply)

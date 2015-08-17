@@ -1359,42 +1359,21 @@ static int Constrain( int value, int min, int max )
    return result;
 }
 
-/// HandleMouse gets called with every mouse move or click.
-///
-bool LabelTrack::HandleMouse(const wxMouseEvent & evt,
-                             wxRect & r, const ZoomInfo &zoomInfo,
-                             SelectedRegion *newSel)
+bool LabelTrack::HandleGlyphDragRelease(const wxMouseEvent & evt,
+   wxRect & r, const ZoomInfo &zoomInfo,
+   SelectedRegion *newSel)
 {
    if(evt.LeftUp())
    {
       bool lupd = false, rupd = false;
-      if(mIsAdjustingLabel) {
-         if(mMouseOverLabelLeft>=0) {
-            lupd = mLabels[mMouseOverLabelLeft]->updated;
-            mLabels[mMouseOverLabelLeft]->updated = false;
-         }
-         if(mMouseOverLabelRight>=0) {
-            rupd = mLabels[mMouseOverLabelRight]->updated;
-            mLabels[mMouseOverLabelRight]->updated = false;
-         }
+      if(mMouseOverLabelLeft>=0) {
+         lupd = mLabels[mMouseOverLabelLeft]->updated;
+         mLabels[mMouseOverLabelLeft]->updated = false;
       }
-#if 0
-      // AWD: Due to wxWidgets bug #7491 (fix not ported to 2.8 branch) we
-      // should never write the primary selection. We can enable this block
-      // when we move to the 3.0 branch (or if a fixed 2.8 version is released
-      // and we can do a runtime version check)
-#if defined (__WXGTK__) && defined (HAVE_GTK)
-      // On GTK, if we just dragged out a text selection, set the primary
-      // selection
-      else {
-         if (mInitialCursorPos != mCurrentCursorPos) {
-            wxTheClipboard->UsePrimarySelection(true);
-            CopySelectedText();
-            wxTheClipboard->UsePrimarySelection(false);
-         }
+      if(mMouseOverLabelRight>=0) {
+         rupd = mLabels[mMouseOverLabelRight]->updated;
+         mLabels[mMouseOverLabelRight]->updated = false;
       }
-#endif
-#endif
 
       mIsAdjustingLabel = false;
       mMouseOverLabelLeft  = -1;
@@ -1404,96 +1383,109 @@ bool LabelTrack::HandleMouse(const wxMouseEvent & evt,
 
    if(evt.Dragging())
    {
-      // if dragging happens in text box
-      if (mInBox) {
-         // end dragging x position in pixels
-         // set flag to update current cursor position
-         mDragXPos = evt.m_x;
-         mResetCursorPos = true;
-
-         // if it's an invalid dragging, disable displaying
-         if (mRightDragging) {
-            mDragXPos = -1;
-            mRightDragging = false;
-         }
-      }
-
       //If we are currently adjusting a label,
       //just reset its value and redraw.
-      if(mIsAdjustingLabel )  // This guard is necessary but hides another bug.  && mSelIndex != -1)
+      // LL:  Constrain to inside track rectangle for now.  Should be changed
+      //      to allow scrolling while dragging labels
+      int x = Constrain( evt.m_x + mxMouseDisplacement - r.x, 0, r.width - 2);
+
+      // If exactly one edge is selected we allow swapping
+      bool bAllowSwapping = (mMouseOverLabelLeft >=0 ) ^ ( mMouseOverLabelRight >= 0);
+      // If we're on the 'dot' and nowe're moving,
+      // Though shift-down inverts that.
+      // and if both edges the same, then we're always moving the label.
+      bool bLabelMoving = mbIsMoving;
+      bLabelMoving ^= evt.ShiftDown();
+      bLabelMoving |= mMouseOverLabelLeft==mMouseOverLabelRight;
+      double fNewX = zoomInfo.PositionToTime(x, 0);
+      if( bLabelMoving )
       {
-         // LL:  Constrain to inside track rectangle for now.  Should be changed
-         //      to allow scrolling while dragging labels
-         int x = Constrain( evt.m_x + mxMouseDisplacement - r.x, 0, r.width - 2);
-
-         // If exactly one edge is selected we allow swapping
-         bool bAllowSwapping = (mMouseOverLabelLeft >=0 ) ^ ( mMouseOverLabelRight >= 0);
-         // If we're on the 'dot' and nowe're moving,
-         // Though shift-down inverts that.
-         // and if both edges the same, then we're always moving the label.
-         bool bLabelMoving = mbIsMoving;
-         bLabelMoving ^= evt.ShiftDown();
-         bLabelMoving |= mMouseOverLabelLeft==mMouseOverLabelRight;
-         double fNewX = zoomInfo.PositionToTime(x, 0);
-         if( bLabelMoving )
-         {
-            MayMoveLabel( mMouseOverLabelLeft,  -1, fNewX );
-            MayMoveLabel( mMouseOverLabelRight, +1, fNewX );
-         }
-         else
-         {
-            MayAdjustLabel( mMouseOverLabelLeft,  -1, bAllowSwapping, fNewX );
-            MayAdjustLabel( mMouseOverLabelRight, +1, bAllowSwapping, fNewX );
-         }
-
-         if( mSelIndex >=0 )
-         {
-            //Set the selection region to be equal to
-            //the new size of the label.
-            *newSel = mLabels[mSelIndex]->selectedRegion;
-         }
-         SortLabels();
+         MayMoveLabel( mMouseOverLabelLeft,  -1, fNewX );
+         MayMoveLabel( mMouseOverLabelRight, +1, fNewX );
+      }
+      else
+      {
+         MayAdjustLabel( mMouseOverLabelLeft,  -1, bAllowSwapping, fNewX );
+         MayAdjustLabel( mMouseOverLabelRight, +1, bAllowSwapping, fNewX );
       }
 
-      return false;
+      if( mSelIndex >=0 )
+      {
+         //Set the selection region to be equal to
+         //the new size of the label.
+         *newSel = mLabels[mSelIndex]->selectedRegion;
+      }
+      SortLabels();
    }
 
-   if( evt.ButtonDown())
+   return false;
+}
+
+void LabelTrack::HandleTextDragRelease(const wxMouseEvent & evt)
+{
+   if(evt.LeftUp())
+   {
+#if 0
+      // AWD: Due to wxWidgets bug #7491 (fix not ported to 2.8 branch) we
+      // should never write the primary selection. We can enable this block
+      // when we move to the 3.0 branch (or if a fixed 2.8 version is released
+      // and we can do a runtime version check)
+#if defined (__WXGTK__) && defined (HAVE_GTK)
+      // On GTK, if we just dragged out a text selection, set the primary
+      // selection
+      if (mInitialCursorPos != mCurrentCursorPos) {
+         wxTheClipboard->UsePrimarySelection(true);
+         CopySelectedText();
+         wxTheClipboard->UsePrimarySelection(false);
+      }
+#endif
+#endif
+
+      return;
+   }
+
+   if(evt.Dragging())
+   {
+      // if dragging happens in text box
+      // end dragging x position in pixels
+      // set flag to update current cursor position
+      mDragXPos = evt.m_x;
+      mResetCursorPos = true;
+
+      // if it's an invalid dragging, disable displaying
+      if (mRightDragging) {
+         mDragXPos = -1;
+         mRightDragging = false;
+      }
+
+      return;
+   }
+
+   if (evt.RightUp()) {
+      if ((mSelIndex != -1) && OverTextBox(GetLabel(mSelIndex), evt.m_x, evt.m_y)) {
+         // popup menu for editing
+         ShowContextMenu();
+      }
+   }
+
+   return;
+}
+
+void LabelTrack::HandleClick(const wxMouseEvent & evt,
+   wxRect & r, const ZoomInfo &zoomInfo,
+   SelectedRegion *newSel)
+{
+   if (evt.ButtonDown())
    {
       //OverGlyph sets mMouseOverLabel to be the chosen label.
       int iGlyph = OverGlyph(evt.m_x, evt.m_y);
-      mIsAdjustingLabel = iGlyph != 0;
+      mIsAdjustingLabel = evt.Button(wxMOUSE_BTN_LEFT) &&
+         iGlyph != 0;
 
       // reset mouseXPos if the mouse is pressed in the text box
       mMouseXPos = -1;
       mInBox = false;
       bool changeCursor = true;
-
-      // reset the highlight indicator
-      wxRect highlightedRect;
-      if (mSelIndex != -1) {
-         // the rectangle of highlighted area
-         if (mXPos1 < mXPos2)
-            highlightedRect = wxRect(mXPos1, mLabels[mSelIndex]->y - mFontHeight/2, (int) (mXPos2-mXPos1+0.5), mFontHeight);
-         else
-            highlightedRect = wxRect(mXPos2, mLabels[mSelIndex]->y - mFontHeight/2, (int) (mXPos1-mXPos2+0.5), mFontHeight);
-
-         // reset when left button is down
-         if (evt.LeftDown())
-            mLabels[mSelIndex]->highlighted = false;
-         // reset when right button is down outside text box
-         if (evt.RightDown())
-         {
-            if (!highlightedRect.Contains(evt.m_x, evt.m_y))
-            {
-               mCurrentCursorPos=0;
-               mInitialCursorPos=0;
-               mLabels[mSelIndex]->highlighted = false;
-            }
-         }
-         // set changeInitialMouseXPos flag
-         mLabels[mSelIndex]->changeInitialMouseXPos = true;
-      }
 
       if (mIsAdjustingLabel)
       {
@@ -1533,15 +1525,57 @@ bool LabelTrack::HandleMouse(const wxMouseEvent & evt,
             t = mLabels[mMouseOverLabelLeft]->getT0();
          }
          mxMouseDisplacement = zoomInfo.TimeToPosition(t, r.x) - evt.m_x;
-         return false;
+         return;
       }
 
       // disable displaying if left button is down
       if (evt.LeftDown())
          mDragXPos = -1;
 
+      mSelIndex = -1;
+      LabelStruct * pLabel;
+      for (int i = 0; i < (int)mLabels.Count(); i++) {
+         pLabel = mLabels[i];
+         if(OverTextBox(pLabel, evt.m_x, evt.m_y))
+         {
+            mSelIndex = i;
+            *newSel = mLabels[i]->selectedRegion;
+            // set mouseXPos to set current cursor position
+            if (changeCursor)
+               mMouseXPos = evt.m_x;
+            // set mInBox flag
+            mInBox = true;
+         }
+      }
+
+      // reset the highlight indicator
+      wxRect highlightedRect;
+      if (mSelIndex != -1) {
+         // the rectangle of highlighted area
+         if (mXPos1 < mXPos2)
+            highlightedRect = wxRect(mXPos1, mLabels[mSelIndex]->y - mFontHeight / 2, (int)(mXPos2 - mXPos1 + 0.5), mFontHeight);
+         else
+            highlightedRect = wxRect(mXPos2, mLabels[mSelIndex]->y - mFontHeight / 2, (int)(mXPos1 - mXPos2 + 0.5), mFontHeight);
+
+         // reset when left button is down
+         if (evt.LeftDown())
+            mLabels[mSelIndex]->highlighted = false;
+         // reset when right button is down outside text box
+         if (evt.RightDown())
+         {
+            if (!highlightedRect.Contains(evt.m_x, evt.m_y))
+            {
+               mCurrentCursorPos = 0;
+               mInitialCursorPos = 0;
+               mLabels[mSelIndex]->highlighted = false;
+            }
+         }
+         // set changeInitialMouseXPos flag
+         mLabels[mSelIndex]->changeInitialMouseXPos = true;
+      }
+
       // disable displaying if right button is down outside text box
-      if(mSelIndex != -1)
+      if (mSelIndex != -1)
       {
          if (evt.RightDown())
          {
@@ -1572,36 +1606,10 @@ bool LabelTrack::HandleMouse(const wxMouseEvent & evt,
          PasteSelectedText(newSel->t0(), newSel->t1());
          wxTheClipboard->UsePrimarySelection(false);
 
-         return false;
+         return;
       }
 #endif
-
-      mSelIndex = -1;
-      LabelStruct * pLabel;
-      for (int i = 0; i < (int)mLabels.Count(); i++) {
-         pLabel = mLabels[i];
-         if(OverTextBox(pLabel, evt.m_x, evt.m_y))
-         {
-            mSelIndex = i;
-            *newSel = mLabels[i]->selectedRegion;
-            // set mouseXPos to set current cursor position
-            if (changeCursor)
-               mMouseXPos = evt.m_x;
-            // set mInBox flag
-            mInBox = true;
-            return false;
-         }
-      }
    }
-
-   if (evt.RightUp()) {
-      if ((mSelIndex != -1) && OverTextBox(GetLabel(mSelIndex), evt.m_x, evt.m_y)) {
-         // popup menu for editing
-         ShowContextMenu();
-      }
-   }
-
-   return false;
 }
 
 // Check for keys that we will process
@@ -1658,6 +1666,12 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
    // Cache the keycode
    int keyCode = event.GetKeyCode();
    int mods = event.GetModifiers();
+
+   // Check for modifiers and only allow shift
+   if (mods != wxMOD_NONE && mods != wxMOD_SHIFT) {
+      event.Skip();
+      return updated;
+   }
 
    // All editing keys are only active if we're currently editing a label
    if (mSelIndex >= 0) {
@@ -1899,12 +1913,24 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
 /// by OnKeyDown.
 bool LabelTrack::OnChar(SelectedRegion &WXUNUSED(newSel), wxKeyEvent & event)
 {
+   // Check for modifiers and only allow shift.
+   //
+   // We still need to check this or we will eat the top level menu accelerators
+   // on Windows if our capture or key down handlers skipped the event.
+   int mods = event.GetModifiers();
+   if (mods != wxMOD_NONE && mods != wxMOD_SHIFT) {
+      event.Skip();
+      return false;
+   }
+
    // Only track true changes to the label
    bool updated = false;
 
    // Cache the character
    wxChar charCode = event.GetUnicodeKey();
-   if (charCode == 0) {
+
+   // Skip if it's not a valid unicode character or a control character
+   if (charCode == 0 || wxIscntrl(charCode)) {
       event.Skip();
       return false;
    }

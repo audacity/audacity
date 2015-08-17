@@ -62,6 +62,7 @@ wxPen AColor::labelSurroundPen;
 wxPen AColor::trackFocusPens[3];
 wxPen AColor::snapGuidePen;
 
+wxPen AColor::tooltipPen;
 wxBrush AColor::tooltipBrush;
 
 // The spare pen and brush possibly help us cut down on the
@@ -423,6 +424,7 @@ void AColor::Init()
    theTheme.SetPenColour(   playRegionPen[1],  clrRulerPlaybackPen);
 
    //Determine tooltip color
+   tooltipPen.SetColour( wxSystemSettingsNative::GetColour(wxSYS_COLOUR_INFOTEXT) );
    tooltipBrush.SetColour( wxSystemSettingsNative::GetColour(wxSYS_COLOUR_INFOBK) );
 
    // A tiny gradient of yellow surrounding the current focused track

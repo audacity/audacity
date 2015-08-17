@@ -3,6 +3,7 @@
 ;type analyze
 ;name "Sample Data Export..."
 ;action "Analyzing..."
+;maxlen 1000001
 ;categories "http://lv2plug.in/ns/lv2core#AnalyserPlugin"
 ;author "Steve Daulton"
 ;copyright "Released under terms of the GNU General Public License version 2"
@@ -90,7 +91,7 @@
   (if (< number 1)
       (add-error "No samples selected."))
   (if (> number 1000000)
-      (add-error "Too many samples selected.\nSet limit to less than 1 million"))
+      (add-error "Cannot export more than 1 million samples."))
   (setq number (truncate number)))
 
 
