@@ -16,6 +16,7 @@ Paul Licameli
 #include "../Audacity.h"
 #include "SpectrogramSettings.h"
 #include "../NumberScale.h"
+#include "../TranslatableStringArray.h"
 
 #include <algorithm>
 #include <wx/msgdlg.h>
@@ -142,65 +143,49 @@ SpectrogramSettings& SpectrogramSettings::defaults()
    return instance;
 }
 
-namespace
-{
-   wxArrayString &scaleNamesArray()
-   {
-      static wxArrayString theArray;
-      return theArray;
-   }
-
-   wxArrayString &algorithmNamesArray()
-   {
-      static wxArrayString theArray;
-      return theArray;
-   }
-}
-
-//static
-void SpectrogramSettings::InvalidateNames()
-{
-   scaleNamesArray().Clear();
-   algorithmNamesArray().Clear();
-}
-
 //static
 const wxArrayString &SpectrogramSettings::GetScaleNames()
 {
-   wxArrayString &theArray = scaleNamesArray();
+   class ScaleNamesArray : public TranslatableStringArray
+   {
+      virtual void Populate()
+      {
+         // Keep in correspondence with enum SpectrogramSettings::ScaleType:
+         mContents.Add(_("Linear"));
+         mContents.Add(_("Logarithmic"));
+         /* i18n-hint: The name of a frequency scale in psychoacoustics */
+         mContents.Add(_("Mel"));
+         /* i18n-hint: The name of a frequency scale in psychoacoustics, named for Heinrich Barkhausen */
+         mContents.Add(_("Bark"));
+         /* i18n-hint: The name of a frequency scale in psychoacoustics, abbreviates Equivalent Rectangular Bandwidth */
+         mContents.Add(_("ERBS"));
+         /* i18n-hint: A mathematical formula where f stands for frequency */
+         mContents.Add(_("1 / f"));
+      }
+   };
 
-   if (theArray.IsEmpty()) {
-      // Keep in correspondence with enum SpectrogramSettings::ScaleType:
-      theArray.Add(_("Linear"));
-      theArray.Add(_("Logarithmic"));
-      /* i18n-hint: The name of a frequency scale in psychoacoustics */
-      theArray.Add(_("Mel"));
-      /* i18n-hint: The name of a frequency scale in psychoacoustics, named for Heinrich Barkhausen */
-      theArray.Add(_("Bark"));
-      /* i18n-hint: The name of a frequency scale in psychoacoustics, abbreviates Equivalent Rectangular Bandwidth */
-      theArray.Add(_("ERBS"));
-      /* i18n-hint: A mathematical formula where f stands for frequency */
-      theArray.Add(_("1 / f"));
-   }
-
-   return theArray;
+   static ScaleNamesArray theArray;
+   return theArray.Get();
 }
 
 //static
 const wxArrayString &SpectrogramSettings::GetAlgorithmNames()
 {
-   wxArrayString &theArray = algorithmNamesArray();
+   class AlgorithmNamesArray : public TranslatableStringArray
+   {
+      virtual void Populate()
+      {
+         // Keep in correspondence with enum SpectrogramSettings::Algorithm:
+         mContents.Add(_("Frequencies"));
+         /* i18n-hint: the Reassignment algorithm for spectrograms */
+         mContents.Add(_("Reassignment"));
+         /* i18n-hint: EAC abbreviates "Enhanced Autocorrelation" */
+         mContents.Add(_("Pitch (EAC)"));
+      }
+   };
 
-   if (theArray.IsEmpty()) {
-      // Keep in correspondence with enum SpectrogramSettings::Algorithm:
-      theArray.Add(_("Frequencies"));
-      /* i18n-hint: the Reassignment algorithm for spectrograms */
-      theArray.Add(_("Reassignment"));
-      /* i18n-hint: EAC abbreviates "Enhanced Autocorrelation" */
-      theArray.Add(_("Pitch (EAC)"));
-   }
-
-   return theArray;
+   static AlgorithmNamesArray theArray;
+   return theArray.Get();
 }
 
 bool SpectrogramSettings::Validate(bool quiet)

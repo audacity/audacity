@@ -62,7 +62,6 @@ public:
       stNumScaleTypes,
    };
 
-   static void InvalidateNames(); // in case of language change
    static const wxArrayString &GetScaleNames();
    static const wxArrayString &GetAlgorithmNames();
 

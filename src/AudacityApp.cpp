@@ -22,6 +22,7 @@ It handles initialization and termination by subclassing wxApp.
 #endif
 
 #include "Audacity.h" // This should always be included first
+#include "TranslatableStringArray.h"
 
 #include <wx/defs.h>
 #include <wx/app.h>
@@ -93,8 +94,6 @@ It handles initialization and termination by subclassing wxApp.
 #include "commands/Keyboard.h"
 #include "widgets/ErrorDialog.h"
 #include "prefs/DirectoriesPrefs.h"
-#include "prefs/SpectrogramSettings.h"
-#include "prefs/WaveformSettings.h"
 
 //temporarilly commented out till it is added to all projects
 //#include "Profiler.h"
@@ -234,6 +233,7 @@ It handles initialization and termination by subclassing wxApp.
 ////////////////////////////////////////////////////////////
 
 DEFINE_EVENT_TYPE(EVT_OPEN_AUDIO_FILE);
+DEFINE_EVENT_TYPE(EVT_LANGUAGE_CHANGE);
 
 #ifdef __WXGTK__
 static void wxOnAssert(const wxChar *fileName, int lineNumber, const wxChar *msg)
@@ -1039,9 +1039,11 @@ void AudacityApp::InitLang( const wxString & lang )
 
    Internat::Init();
 
-   // Some static arrays unconnected with any project want to be informed of language changes.
-   SpectrogramSettings::InvalidateNames();
-   WaveformSettings::InvalidateNames();
+   // Notify listeners of language changes
+   {
+      wxCommandEvent evt(EVT_LANGUAGE_CHANGE);
+      ProcessEvent(evt);
+   }
 }
 
 void AudacityApp::OnFatalException()
