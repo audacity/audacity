@@ -594,71 +594,72 @@ bool IsWindowAccessible(wxRect *requestedRect)
 
 // BG: Calculate where to place the next window (could be the first window)
 // BG: Does not store X and Y in prefs. This is intentional.
+//
+// LL: This should NOT need to be this complicated...FIXME
 void GetNextWindowPlacement(wxRect *nextRect, bool *pMaximized, bool *pIconized)
 {
    int inc = 25;
-   *pMaximized = FALSE;
-   *pIconized = FALSE;
-   wxRect defaultWindowRect;
-   GetDefaultWindowRect(&defaultWindowRect);
+
+   wxRect defaultRect;
+   GetDefaultWindowRect(&defaultRect);
+
+   gPrefs->Read(wxT("/Window/Maximized"), pMaximized, false);
+   gPrefs->Read(wxT("/Window/Iconized"), pIconized, false);
+
+   wxRect windowRect;
+   gPrefs->Read(wxT("/Window/X"), &windowRect.x, defaultRect.x);
+   gPrefs->Read(wxT("/Window/Y"), &windowRect.y, defaultRect.y);
+   gPrefs->Read(wxT("/Window/Width"), &windowRect.width, defaultRect.width);
+   gPrefs->Read(wxT("/Window/Height"), &windowRect.height, defaultRect.height);
+
+   wxRect normalRect;
+   gPrefs->Read(wxT("/Window/Normal_X"), &normalRect.x, defaultRect.x);
+   gPrefs->Read(wxT("/Window/Normal_Y"), &normalRect.y, defaultRect.y);
+   gPrefs->Read(wxT("/Window/Normal_Width"), &normalRect.width, defaultRect.width);
+   gPrefs->Read(wxT("/Window/Normal_Height"), &normalRect.height, defaultRect.height);
+
+   // Workaround 2.1.1 and earlier bug on OSX...affects only normalRect, but be safe
+   if (normalRect.width == 0 || normalRect.height == 0) {
+      normalRect = defaultRect;
+   }
+   if (windowRect.width == 0 || windowRect.height == 0) {
+      windowRect = defaultRect;
+   }
 
    if (gAudacityProjects.IsEmpty()) {
-      // Read the values from the registry, or use the defaults.
-      // In version 1.3 and above, using the registry has been replaced
-      // by a configuration file -- audacity.cfg. Different OSes store
-      // this file in different locations.
-      gPrefs->Read(wxT("/Window/Maximized"), pMaximized);
-      gPrefs->Read(wxT("/Window/Iconized"), pIconized);
       if (*pMaximized || *pIconized) {
-         nextRect->SetX(gPrefs->Read(wxT("/Window/Normal_X"), defaultWindowRect.GetX()));
-         nextRect->SetY(gPrefs->Read(wxT("/Window/Normal_Y"), defaultWindowRect.GetY()));
-         nextRect->SetWidth(gPrefs->Read(wxT("/Window/Normal_Width"), defaultWindowRect.GetWidth()));
-         nextRect->SetHeight(gPrefs->Read(wxT("/Window/Normal_Height"), defaultWindowRect.GetHeight()));
+         *nextRect = normalRect;
       }
       else {
-         nextRect->SetX(gPrefs->Read(wxT("/Window/X"), defaultWindowRect.GetX()));
-         nextRect->SetY(gPrefs->Read(wxT("/Window/Y"), defaultWindowRect.GetY()));
-         nextRect->SetWidth(gPrefs->Read(wxT("/Window/Width"), defaultWindowRect.GetWidth()));
-         nextRect->SetHeight(gPrefs->Read(wxT("/Window/Height"), defaultWindowRect.GetHeight()));
+         *nextRect = windowRect;
       }
       if (!IsWindowAccessible(nextRect)) {
-         nextRect->SetX(defaultWindowRect.GetX());
-         nextRect->SetY(defaultWindowRect.GetY());
-         nextRect->SetWidth(defaultWindowRect.GetWidth());
-         nextRect->SetHeight(defaultWindowRect.GetHeight());
+         *nextRect = defaultRect;
       }
    }
    else {
-      bool validWindowSize = FALSE;
+      bool validWindowSize = false;
       AudacityProject * validProject = NULL;
       size_t numProjects = gAudacityProjects.Count();
-      for (int i = numProjects; i > 0 ; i--)
-      {
+      for (int i = numProjects; i > 0 ; i--) {
          if (!gAudacityProjects[i-1]->IsIconized()) {
-             validWindowSize = TRUE;
+             validWindowSize = true;
              validProject = gAudacityProjects[i-1];
-             i = 0;
+             break;
          }
       }
-      if (validWindowSize)
-      {
+      if (validWindowSize) {
          *nextRect = validProject->GetRect();
          *pMaximized = validProject->IsMaximized();
          *pIconized = validProject->IsIconized();
       }
-      else
-      {
-          nextRect->SetX(gPrefs->Read(wxT("/Window/Normal_X"), defaultWindowRect.GetX()));
-          nextRect->SetY(gPrefs->Read(wxT("/Window/Normal_Y"), defaultWindowRect.GetY()));
-          nextRect->SetWidth(gPrefs->Read(wxT("/Window/Normal_Width"), defaultWindowRect.GetWidth()));
-          nextRect->SetHeight(gPrefs->Read(wxT("/Window/Normal_Height"), defaultWindowRect.GetHeight()));
-          gPrefs->Read(wxT("/Window/Maximized"), pMaximized);
-          gPrefs->Read(wxT("/Window/Iconized"), pIconized);
+      else {
+         *nextRect = normalRect;
       }
 
       //Placement depends on the increments
-      nextRect->SetX(nextRect->GetX() + inc);
-      nextRect->SetY(nextRect->GetY() + inc);
+      nextRect->x += inc;
+      nextRect->y += inc;
    }
 
    wxRect screenRect = wxGetClientDisplayRect();
@@ -667,29 +668,28 @@ void GetNextWindowPlacement(wxRect *nextRect, bool *pMaximized, bool *pIconized)
    wxPoint bottomRight = nextRect->GetBottomRight();
    if (bottomRight.x > screenRect.GetRight()) {
       int newWidth = screenRect.GetWidth() - nextRect->GetLeft();
-      if (newWidth < defaultWindowRect.GetWidth()) {
-         nextRect->SetX(gPrefs->Read(wxT("/Window/X"), defaultWindowRect.GetX()));
-         nextRect->SetY(gPrefs->Read(wxT("/Window/Y"), defaultWindowRect.GetY()));
-         nextRect->SetWidth(gPrefs->Read(wxT("/Window/Width"), defaultWindowRect.GetWidth()));
+      if (newWidth < defaultRect.GetWidth()) {
+         nextRect->x = windowRect.x;
+         nextRect->y = windowRect.y;
+         nextRect->width = windowRect.width;
       }
       else {
-         nextRect->SetWidth(newWidth);
+         nextRect->width = newWidth;
       }
    }
-   bottomRight = nextRect->GetBottomRight();
+
    //Have we hit the bottom of the screen?
+   bottomRight = nextRect->GetBottomRight();
    if (bottomRight.y > screenRect.GetBottom()) {
-      nextRect->y  -= inc;
+      nextRect->y -= inc;
       bottomRight = nextRect->GetBottomRight();
       if (bottomRight.y > screenRect.GetBottom()) {
          nextRect->SetBottom(screenRect.GetBottom());
       }
    }
+
    if (!IsWindowAccessible(nextRect)) {
-      nextRect->SetX(defaultWindowRect.GetX());
-      nextRect->SetY(defaultWindowRect.GetY());
-      nextRect->SetWidth(defaultWindowRect.GetWidth());
-      nextRect->SetHeight(defaultWindowRect.GetHeight());
+      *nextRect = defaultRect;
    }
 }
 
