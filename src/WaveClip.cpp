@@ -1055,7 +1055,7 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
    const int fftLen = windowSize * zeroPaddingFactor;
    const int half = fftLen / 2;
 
-   const bool match =
+   bool match =
       mSpecCache &&
       mSpecCache->len > 0 &&
       mSpecCache->Matches
@@ -1068,6 +1068,11 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
       where = &mSpecCache->where[0];
       return false;  //hit cache completely
    }
+
+   if (settings.algorithm == SpectrogramSettings::algReassignment)
+      // Caching is not implemented for reassignment, unless for
+      // a complete hit, because of the complications of time reassignment
+      match = false;
 
    std::auto_ptr<SpecCache> oldCache(mSpecCache);
    mSpecCache = 0;
