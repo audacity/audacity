@@ -4076,8 +4076,16 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
    // find which track the mouse is currently in (mouseTrack) -
    // this may not be the same as the one we started in...
    Track *mouseTrack = FindTrack(event.m_x, event.m_y, false, false, NULL);
-   if (mouseTrack == NULL)
-      mouseTrack = mCapturedTrack;
+   if (mouseTrack == NULL) {
+      // Allow sliding if the pointer is not over any track, but only if x is
+      // within the bounds of the tracks area.
+      int width, height;
+      GetTracksUsableArea(&width, &height);
+      if (event.m_x >= GetLeftOffset() && event.m_x < GetLeftOffset() + width)
+         mouseTrack = mCapturedTrack;
+      else
+         return;
+   }
 
    // Start by undoing the current slide amount; everything
    // happens relative to the original horizontal position of
