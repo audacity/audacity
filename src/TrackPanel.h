@@ -337,9 +337,6 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
 
    virtual bool IsAudioActive();
    virtual bool IsUnsafe();
-   virtual bool HandleLabelTrackClick(LabelTrack * lTrack, const wxRect &rect, wxMouseEvent & event);
-   virtual void HandleGlyphDragRelease(LabelTrack * lTrack, wxMouseEvent & event);
-   virtual void HandleTextDragRelease(LabelTrack * lTrack, wxMouseEvent & event);
    virtual void HandleTrackSpecificMouseEvent(wxMouseEvent & event);
 
    virtual void ScrollDuringDrag();
@@ -424,12 +421,9 @@ protected:
 
 #endif
 
-   virtual void SelectTracksByLabel( LabelTrack *t );
-
 protected:
    // AS: Cursor handling
    virtual bool SetCursorByActivity( );
-   virtual void SetCursorAndTipWhenInLabelTrack( LabelTrack * pLT, const wxMouseEvent & event, wxString &tip );
    virtual void SetCursorAndTipWhenSelectTool
       ( Track * t, const wxMouseEvent & event, const wxRect &rect, bool bMultiToolMode, wxString &tip, const wxCursor ** ppCursor );
    virtual void SetCursorAndTipByTool( int tool, const wxMouseEvent & event, wxString &tip );
@@ -520,9 +514,6 @@ public:
    static bool HasSoloButton(){  return gSoloPref!=wxT("None");}
 
 protected:
-   //JKC: These two belong in the label track.
-   int mLabelTrackStartXPos;
-   int mLabelTrackStartYPos;
 
    TrackInfo mTrackInfo;
 
@@ -676,8 +667,6 @@ public:
       IsUncaptured=0,   // This is the normal state for the mouse
       IsClosing,
       IsSelecting,
-      IsAdjustingLabel,
-      IsSelectingLabelText,
       IsMuting,
       IsSoloing,
       IsMinimizing,

@@ -1031,6 +1031,15 @@
     <ClCompile Include="..\..\..\src\TrackPanelResizeHandle.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\labeltrack\ui\LabelTextHandle.cpp">
+      <Filter>src\tracks\labeltrack\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\labeltrack\ui\LabelGlyphHandle.cpp">
+      <Filter>src\tracks\labeltrack\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\labeltrack\ui\LabelDefaultClickHandle.cpp">
+      <Filter>src\tracks\labeltrack\ui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\AboutDialog.h">
@@ -2052,6 +2061,15 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\TrackPanelResizeHandle.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\labeltrack\ui\LabelGlyphHandle.h">
+      <Filter>src\tracks\labeltrack\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\labeltrack\ui\LabelTextHandle.h">
+      <Filter>src\tracks\labeltrack\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\labeltrack\ui\LabelDefaultClickHandle.h">
+      <Filter>src\tracks\labeltrack\ui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -551,6 +551,12 @@ audacity_SOURCES = \
 	toolbars/ToolsToolBar.h \
 	toolbars/TranscriptionToolBar.cpp \
 	toolbars/TranscriptionToolBar.h \
+	tracks/labeltrack/ui/LabelDefaultClickHandle.cpp \
+	tracks/labeltrack/ui/LabelDefaultClickHandle.h \
+	tracks/labeltrack/ui/LabelGlyphHandle.cpp \
+	tracks/labeltrack/ui/LabelGlyphHandle.h \
+	tracks/labeltrack/ui/LabelTextHandle.cpp \
+	tracks/labeltrack/ui/LabelTextHandle.h \
 	tracks/labeltrack/ui/LabelTrackControls.cpp \
 	tracks/labeltrack/ui/LabelTrackControls.h \
 	tracks/labeltrack/ui/LabelTrackUI.cpp \

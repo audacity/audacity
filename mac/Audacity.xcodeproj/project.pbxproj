@@ -1235,6 +1235,9 @@
 		5E73965C1DAFDAA400BA0A4D /* BackgroundCell.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E73965A1DAFDAA400BA0A4D /* BackgroundCell.cpp */; };
 		5E73965F1DAFDAEC00BA0A4D /* TrackSelectHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E73965D1DAFDAEC00BA0A4D /* TrackSelectHandle.cpp */; };
 		5E7396621DAFDB1E00BA0A4D /* TrackPanelResizeHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E7396601DAFDB1E00BA0A4D /* TrackPanelResizeHandle.cpp */; };
+		5E7396691DAFDB5600BA0A4D /* LabelDefaultClickHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E7396631DAFDB5600BA0A4D /* LabelDefaultClickHandle.cpp */; };
+		5E73966A1DAFDB5600BA0A4D /* LabelGlyphHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E7396651DAFDB5600BA0A4D /* LabelGlyphHandle.cpp */; };
+		5E73966B1DAFDB5600BA0A4D /* LabelTextHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E7396671DAFDB5600BA0A4D /* LabelTextHandle.cpp */; };
 		5E74D2E31CC4429700D88B0B /* EditCursorOverlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E74D2DD1CC4429700D88B0B /* EditCursorOverlay.cpp */; };
 		5E74D2E41CC4429700D88B0B /* PlayIndicatorOverlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E74D2DF1CC4429700D88B0B /* PlayIndicatorOverlay.cpp */; };
 		5E74D2E51CC4429700D88B0B /* Scrubbing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E74D2E11CC4429700D88B0B /* Scrubbing.cpp */; };
@@ -3076,6 +3079,12 @@
 		5E73965E1DAFDAEC00BA0A4D /* TrackSelectHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackSelectHandle.h; sourceTree = "<group>"; };
 		5E7396601DAFDB1E00BA0A4D /* TrackPanelResizeHandle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TrackPanelResizeHandle.cpp; sourceTree = "<group>"; };
 		5E7396611DAFDB1E00BA0A4D /* TrackPanelResizeHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackPanelResizeHandle.h; sourceTree = "<group>"; };
+		5E7396631DAFDB5600BA0A4D /* LabelDefaultClickHandle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LabelDefaultClickHandle.cpp; sourceTree = "<group>"; };
+		5E7396641DAFDB5600BA0A4D /* LabelDefaultClickHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LabelDefaultClickHandle.h; sourceTree = "<group>"; };
+		5E7396651DAFDB5600BA0A4D /* LabelGlyphHandle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LabelGlyphHandle.cpp; sourceTree = "<group>"; };
+		5E7396661DAFDB5600BA0A4D /* LabelGlyphHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LabelGlyphHandle.h; sourceTree = "<group>"; };
+		5E7396671DAFDB5600BA0A4D /* LabelTextHandle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LabelTextHandle.cpp; sourceTree = "<group>"; };
+		5E7396681DAFDB5600BA0A4D /* LabelTextHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LabelTextHandle.h; sourceTree = "<group>"; };
 		5E74D2D91CC4427B00D88B0B /* TrackPanelCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackPanelCell.h; sourceTree = "<group>"; };
 		5E74D2DA1CC4427B00D88B0B /* TrackPanelCellIterator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackPanelCellIterator.h; sourceTree = "<group>"; };
 		5E74D2DD1CC4429700D88B0B /* EditCursorOverlay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditCursorOverlay.cpp; sourceTree = "<group>"; };
@@ -5732,9 +5741,15 @@
 		5E15123F1DB000DC00702E29 /* ui */ = {
 			isa = PBXGroup;
 			children = (
+				5E7396631DAFDB5600BA0A4D /* LabelDefaultClickHandle.cpp */,
+				5E7396651DAFDB5600BA0A4D /* LabelGlyphHandle.cpp */,
+				5E7396671DAFDB5600BA0A4D /* LabelTextHandle.cpp */,
 				5E1512401DB000DC00702E29 /* LabelTrackControls.cpp */,
 				5E1512421DB000DC00702E29 /* LabelTrackUI.cpp */,
 				5E1512431DB000DC00702E29 /* LabelTrackVRulerControls.cpp */,
+				5E7396641DAFDB5600BA0A4D /* LabelDefaultClickHandle.h */,
+				5E7396661DAFDB5600BA0A4D /* LabelGlyphHandle.h */,
+				5E7396681DAFDB5600BA0A4D /* LabelTextHandle.h */,
 				5E1512411DB000DC00702E29 /* LabelTrackControls.h */,
 				5E1512441DB000DC00702E29 /* LabelTrackVRulerControls.h */,
 			);
@@ -7652,6 +7667,7 @@
 				1790B15E09883BFD008A330A /* ExportMultiple.cpp in Sources */,
 				1790B15F09883BFD008A330A /* ExportOGG.cpp in Sources */,
 				1790B16009883BFD008A330A /* ExportPCM.cpp in Sources */,
+				5E7396691DAFDB5600BA0A4D /* LabelDefaultClickHandle.cpp in Sources */,
 				1790B16109883BFD008A330A /* FFT.cpp in Sources */,
 				1790B16209883BFD008A330A /* FileFormats.cpp in Sources */,
 				1790B16309883BFD008A330A /* FreqWindow.cpp in Sources */,
@@ -7824,6 +7840,7 @@
 				284B279E0FC66864005EAC96 /* ProjectsPrefs.cpp in Sources */,
 				5E78388E1DE4995F003270C0 /* AudacityException.cpp in Sources */,
 				284B279F0FC66864005EAC96 /* RecordingPrefs.cpp in Sources */,
+				5E73966B1DAFDB5600BA0A4D /* LabelTextHandle.cpp in Sources */,
 				284B27E40FC66CCD005EAC96 /* TracksPrefs.cpp in Sources */,
 				284B27E50FC66CCD005EAC96 /* WarningsPrefs.cpp in Sources */,
 				5E15125B1DB000DC00702E29 /* LabelTrackUI.cpp in Sources */,
@@ -7921,6 +7938,7 @@
 				ED87F50A1986424100AC520B /* ta.po in Sources */,
 				2888496E131B6CF600B59735 /* tg.po in Sources */,
 				5E7396441DAFD8C600BA0A4D /* TimeShiftHandle.cpp in Sources */,
+				5E73966A1DAFDB5600BA0A4D /* LabelGlyphHandle.cpp in Sources */,
 				2888496F131B6CF600B59735 /* tr.po in Sources */,
 				28884970131B6CF600B59735 /* uk.po in Sources */,
 				28884971131B6CF600B59735 /* vi.po in Sources */,

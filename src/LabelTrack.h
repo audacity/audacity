@@ -125,6 +125,16 @@ class AUDACITY_DLL_API LabelTrack final : public Track
       (const TrackPanelMouseEvent &event,
        const AudacityProject *pProject) override;
 
+   bool DoCaptureKey(wxKeyEvent &event);
+   unsigned CaptureKey
+     (wxKeyEvent &event, ViewInfo &viewInfo, wxWindow *pParent) override;
+
+   unsigned KeyDown
+      (wxKeyEvent &event, ViewInfo &viewInfo, wxWindow *pParent) override;
+
+   unsigned Char
+      (wxKeyEvent &event, ViewInfo &viewInfo, wxWindow *pParent) override;
+
    void SetOffset(double dOffset) override;
 
    static const int DefaultFontSize = 12;
@@ -171,7 +181,20 @@ class AUDACITY_DLL_API LabelTrack final : public Track
    static wxBitmap & GetGlyph( int i);
 
 
+   struct Flags {
+      int mInitialCursorPos, mCurrentCursorPos, mSelIndex;
+      bool mRightDragging, mDrawCursor;
+   };
    void ResetFlags();
+   Flags SaveFlags() const
+   {
+      return {
+         mInitialCursorPos, mCurrentCursorPos, mSelIndex,
+         mRightDragging, mDrawCursor
+      };
+   }
+   void RestoreFlags( const Flags& flags );
+
    int OverATextBox(int xx, int yy) const;
    bool OverTextBox(const LabelStruct *pLabel, int x, int y) const;
    bool CutSelectedText();
@@ -179,13 +202,16 @@ class AUDACITY_DLL_API LabelTrack final : public Track
    bool PasteSelectedText(double sel0, double sel1);
    static bool IsTextClipSupported();
 
-   void HandleClick(const wxMouseEvent & evt, const wxRect & r, const ZoomInfo &zoomInfo,
-      SelectedRegion *newSel);
+   void HandleGlyphClick
+      (const wxMouseEvent & evt, const wxRect & r, const ZoomInfo &zoomInfo,
+       SelectedRegion *newSel);
+   void HandleTextClick
+      (const wxMouseEvent & evt, const wxRect & r, const ZoomInfo &zoomInfo,
+       SelectedRegion *newSel);
    bool HandleGlyphDragRelease(const wxMouseEvent & evt, wxRect & r, const ZoomInfo &zoomInfo,
       SelectedRegion *newSel);
    void HandleTextDragRelease(const wxMouseEvent & evt);
 
-   bool CaptureKey(wxKeyEvent & event);
    bool OnKeyDown(SelectedRegion &sel, wxKeyEvent & event);
    bool OnChar(SelectedRegion &sel, wxKeyEvent & event);
 
