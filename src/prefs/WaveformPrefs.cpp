@@ -229,7 +229,8 @@ void WaveformPrefs::OnApply(wxCommandEvent &)
 
 void WaveformPrefs::EnableDisableRange()
 {
-   mRangeChoice->Enable(mScaleChoice->GetSelection() == 1);
+   mRangeChoice->Enable
+      (mScaleChoice->GetSelection() == WaveformSettings::stLogarithmic);
 }
 
 BEGIN_EVENT_TABLE(WaveformPrefs, PrefsPanel)
