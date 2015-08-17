@@ -618,13 +618,25 @@ void GetNextWindowPlacement(wxRect *nextRect, bool *pMaximized, bool *pIconized)
    gPrefs->Read(wxT("/Window/Normal_Width"), &normalRect.width, defaultRect.width);
    gPrefs->Read(wxT("/Window/Normal_Height"), &normalRect.height, defaultRect.height);
 
-   // Workaround 2.1.1 and earlier bug on OSX...affects only normalRect, but be safe
+   // Workaround 2.1.1 and earlier bug on OSX...affects only normalRect, but let's just
+   // validate for all rects and plats
    if (normalRect.width == 0 || normalRect.height == 0) {
       normalRect = defaultRect;
    }
    if (windowRect.width == 0 || windowRect.height == 0) {
       windowRect = defaultRect;
    }
+
+#if defined(__WXMAC__)
+   // On OSX, the top of the window should never be less than the menu height,
+   // so something is amiss if it is
+   if (normalRect.y < defaultRect.y) {
+      normalRect = defaultRect;
+   }
+   if (windowRect.y < defaultRect.y) {
+      windowRect = defaultRect;
+   }
+#endif
 
    if (gAudacityProjects.IsEmpty()) {
       if (*pMaximized || *pIconized) {
