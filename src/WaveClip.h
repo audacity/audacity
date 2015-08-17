@@ -97,7 +97,7 @@ public:
        WaveTrackCache &waveTrackCache,
        int xx, sampleCount numSamples,
        double offset, double rate,
-       bool autocorrelation, const std::vector<float> &gainFactors,
+       const std::vector<float> &gainFactors,
        float *scratch);
 
    void Populate
