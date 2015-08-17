@@ -22,6 +22,7 @@ It handles initialization and termination by subclassing wxApp.
 #endif
 
 #include "Audacity.h" // This should always be included first
+#include "AudacityApp.h"
 #include "TranslatableStringArray.h"
 
 #include <wx/defs.h>
@@ -58,8 +59,6 @@ It handles initialization and termination by subclassing wxApp.
 #include <sys/file.h>
 #include <sys/stat.h>
 #endif
-
-#include "AudacityApp.h"
 
 #include "AudacityLogger.h"
 #include "AboutDialog.h"

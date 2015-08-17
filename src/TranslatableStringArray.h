@@ -11,7 +11,6 @@ Paul Licameli
 #ifndef __AUDACITY_TRANSLATABLE_STRING_ARRAY__
 #define __AUDACITY_TRANSLATABLE_STRING_ARRAY__
 
-#include <vector>
 #include <wx/app.h>
 #include <wx/event.h>
 
