@@ -2375,7 +2375,9 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
          (settings, waveTrackCache,
           0, 0, numPixels,
           clip->GetNumSamples(),
-          tOffset, rate);
+          tOffset, rate,
+          0 //FIXME -- make reassignment work with fisheye
+       );
    }
 
    int correctedX = leftOffset - hiddenLeftOffset;

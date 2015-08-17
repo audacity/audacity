@@ -92,11 +92,12 @@ public:
    bool Matches(int dirty_, double pixelsPerSecond,
       const SpectrogramSettings &settings, double rate) const;
 
-   void CalculateOneSpectrum
+   bool CalculateOneSpectrum
       (const SpectrogramSettings &settings,
        WaveTrackCache &waveTrackCache,
        int xx, sampleCount numSamples,
-       double offset, double rate,
+       double offset, double rate, double pixelsPerSecond,
+       int lowerBoundX, int upperBoundX,
        const std::vector<float> &gainFactors,
        float *scratch);
 
@@ -104,7 +105,7 @@ public:
       (const SpectrogramSettings &settings, WaveTrackCache &waveTrackCache,
        int copyBegin, int copyEnd, int numPixels,
        sampleCount numSamples,
-       double offset, double rate);
+       double offset, double rate, double pixelsPerSecond);
 
    const int          len; // counts pixels, not samples
    const int          algorithm;
