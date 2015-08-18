@@ -1214,8 +1214,18 @@ int LabelTrack::OverGlyph(int x, int y)
    return result;
 }
 
+int LabelTrack::OverATextBox(int xx, int yy) const
+{
+   for (int nn = (int)mLabels.Count(); nn--;) {
+      if (OverTextBox(mLabels[nn], xx, yy))
+         return nn;
+   }
+
+   return -1;
+}
+
 // return true if the mouse is over text box, false otherwise
-bool LabelTrack::OverTextBox(const LabelStruct *pLabel, int x, int y)
+bool LabelTrack::OverTextBox(const LabelStruct *pLabel, int x, int y) const
 {
    if( (pLabel->xText-(mIconWidth/2) < x) &&
             (x<pLabel->xText+pLabel->width+(mIconWidth/2)) &&
@@ -1483,7 +1493,7 @@ void LabelTrack::HandleTextDragRelease(const wxMouseEvent & evt)
 }
 
 void LabelTrack::HandleClick(const wxMouseEvent & evt,
-   wxRect & r, const ZoomInfo &zoomInfo,
+   const wxRect & r, const ZoomInfo &zoomInfo,
    SelectedRegion *newSel)
 {
    if (evt.ButtonDown())
@@ -1543,20 +1553,14 @@ void LabelTrack::HandleClick(const wxMouseEvent & evt,
       if (evt.LeftDown())
          mDragXPos = -1;
 
-      mSelIndex = -1;
-      LabelStruct * pLabel;
-      for (int i = 0; i < (int)mLabels.Count(); i++) {
-         pLabel = mLabels[i];
-         if(OverTextBox(pLabel, evt.m_x, evt.m_y))
-         {
-            mSelIndex = i;
-            *newSel = mLabels[i]->selectedRegion;
-            // set mouseXPos to set current cursor position
-            if (changeCursor)
-               mMouseXPos = evt.m_x;
-            // set mInBox flag
-            mInBox = true;
-         }
+      mSelIndex = OverATextBox(evt.m_x, evt.m_y);
+      if (mSelIndex != -1) {
+         *newSel = mLabels[mSelIndex]->selectedRegion;
+         // set mouseXPos to set current cursor position
+         if (changeCursor)
+            mMouseXPos = evt.m_x;
+         // set mInBox flag
+         mInBox = true;
       }
 
       // reset the highlight indicator
