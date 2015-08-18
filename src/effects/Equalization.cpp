@@ -248,7 +248,7 @@ EffectEqualization::EffectEqualization()
    mLinEnvelope->Mirror(false);
    mLinEnvelope->SetRange(MIN_dBMin, MAX_dBMax); // MB: this is the highest possible range
 
-   mEnvelope = (IsLinear() ? mLinEnvelope : mLogEnvelope);
+   mEnvelope = (mLin ? mLinEnvelope : mLogEnvelope);
 
    mWindowSize = windowSize;
 
@@ -336,7 +336,7 @@ bool EffectEqualization::GetAutomationParameters(EffectAutomationParameters & pa
 {
    parms.Write(KEY_FilterLength, mM);
    parms.Write(KEY_CurveName, mCurveName);
-   parms.Write(KEY_InterpLin, IsLinear());
+   parms.Write(KEY_InterpLin, mLin);
    parms.WriteEnum(KEY_InterpMeth, mInterp, wxArrayString(kNumInterpolations, kInterpStrings));
 
    return true;
@@ -367,7 +367,7 @@ bool EffectEqualization::SetAutomationParameters(EffectAutomationParameters & pa
       InterpMeth -= kNumInterpolations;
    }
 
-   mEnvelope = (IsLinear() ? mLinEnvelope : mLogEnvelope);
+   mEnvelope = (mLin ? mLinEnvelope : mLogEnvelope);
 
    return true;
 }
@@ -521,7 +521,7 @@ bool EffectEqualization::Init()
          break;
    }
 
-   mEnvelope = (IsLinear() ? mLinEnvelope : mLogEnvelope);
+   mEnvelope = (mLin ? mLinEnvelope : mLogEnvelope);
 
    setCurve(mCurveName);
 
@@ -962,7 +962,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
 bool EffectEqualization::TransferDataToWindow()
 {
    // Set log or lin freq scale (affects interpolation as well)
-   mLinFreq->SetValue( IsLinear() );
+   mLinFreq->SetValue( mLin );
    wxCommandEvent dummyEvent;
    OnLinFreq(dummyEvent);  // causes a CalcFilter
 
@@ -1521,7 +1521,7 @@ void EffectEqualization::setCurve(int currentCurve)
    wxASSERT( currentCurve < (int) mCurves.GetCount() );
    bool changed = false;
 
-   if( IsLinear() )   // linear freq mode?
+   if( mLin )   // linear freq mode?
    {
       Envelope *env = mLinEnvelope;
       env->Flatten(0.);
@@ -1567,7 +1567,6 @@ void EffectEqualization::setCurve(int currentCurve)
 
          for(i=0;i<nCurvePoints;i++)
          {
-            float f = mCurves[currentCurve].points[i].Freq;
             if( mCurves[currentCurve].points[i].Freq >= 20)
             {
                when = (log10(mCurves[currentCurve].points[i].Freq) - loLog)/denom;

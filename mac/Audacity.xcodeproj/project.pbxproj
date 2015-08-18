@@ -2160,6 +2160,8 @@
 		284249EB10D337CE004330A6 /* GetProjectInfoCommand.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = GetProjectInfoCommand.h; sourceTree = "<group>"; tabWidth = 3; };
 		284249EC10D337CE004330A6 /* SetProjectInfoCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = SetProjectInfoCommand.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		284249ED10D337CE004330A6 /* SetProjectInfoCommand.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = SetProjectInfoCommand.h; sourceTree = "<group>"; tabWidth = 3; };
+		284416391B82D6BC0000574D /* TranslatableStringArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TranslatableStringArray.h; sourceTree = "<group>"; };
+		2844163A1B82D6BC0000574D /* WaveTrackLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WaveTrackLocation.h; sourceTree = "<group>"; };
 		28456AC00A2C180E00C23C1E /* ThemePrefs.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ThemePrefs.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		28456AC10A2C180E00C23C1E /* ThemePrefs.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ThemePrefs.h; sourceTree = "<group>"; tabWidth = 3; };
 		2847504D1AD4EB84000AD751 /* common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = common.h; path = lv2/sord/src/zix/common.h; sourceTree = "<group>"; };
@@ -3962,6 +3964,7 @@
 				1790B0EE09883BFD008A330A /* TrackPanelAx.cpp */,
 				1790B0EF09883BFD008A330A /* TrackPanelAx.h */,
 				2803C8B619F35AA000278526 /* TrackPanelListener.h */,
+				284416391B82D6BC0000574D /* TranslatableStringArray.h */,
 				1790B0F209883BFD008A330A /* UndoManager.cpp */,
 				1790B0F309883BFD008A330A /* UndoManager.h */,
 				28C8211C1B5C661E00B53328 /* ViewInfo.cpp */,
@@ -3972,6 +3975,7 @@
 				1790B0FA09883BFD008A330A /* WaveClip.h */,
 				1790B0FB09883BFD008A330A /* WaveTrack.cpp */,
 				1790B0FC09883BFD008A330A /* WaveTrack.h */,
+				2844163A1B82D6BC0000574D /* WaveTrackLocation.h */,
 				28FC1AF90A47762C00A188AE /* WrappedType.cpp */,
 				28FC1AFA0A47762C00A188AE /* WrappedType.h */,
 			);

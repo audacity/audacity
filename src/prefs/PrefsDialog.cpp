@@ -162,8 +162,10 @@ PrefsDialog::Factories
       &waveformPrefsFactory,
       &spectrumPrefsFactory,
 
-      &importExportPrefsFactory,
+      // Group one other page
+      PrefsNode(&importExportPrefsFactory, 1, true),
       &extImportPrefsFactory,
+
       &projectsPrefsFactory,
 #if !defined(DISABLE_DYNAMIC_LOADING_FFMPEG) || !defined(DISABLE_DYNAMIC_LOADING_LAME)
       &libraryPrefsFactory,

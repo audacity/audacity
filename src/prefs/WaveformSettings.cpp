@@ -22,6 +22,7 @@ Paul Licameli
 #include <wx/intl.h>
 
 #include "../Prefs.h"
+#include "../TranslatableStringArray.h"
 
 WaveformSettings::Globals::Globals()
 {
@@ -145,33 +146,21 @@ void WaveformSettings::NextHigherDBRange()
    ConvertToActualDBRange();
 }
 
-namespace
-{
-   wxArrayString &scaleNamesArray()
-   {
-      static wxArrayString theArray;
-      return theArray;
-   }
-}
-
-//static
-void WaveformSettings::InvalidateNames()
-{
-   scaleNamesArray().Clear();
-}
-
 //static
 const wxArrayString &WaveformSettings::GetScaleNames()
 {
-   wxArrayString &theArray = scaleNamesArray();
+   class ScaleNamesArray : public TranslatableStringArray
+   {
+      virtual void Populate()
+      {
+         // Keep in correspondence with enum WaveTrack::WaveTrackDisplay:
+         mContents.Add(_("Linear"));
+         mContents.Add(_("Logarithmic"));
+      }
+   };
 
-   if (theArray.IsEmpty()) {
-      // Keep in correspondence with enum WaveTrack::WaveTrackDisplay:
-      theArray.Add(_("Linear"));
-      theArray.Add(_("Logarithmic"));
-   }
-
-   return theArray;
+   static ScaleNamesArray theArray;
+   return theArray.Get();
 }
 
 WaveformSettings::~WaveformSettings()
