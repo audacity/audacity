@@ -608,11 +608,22 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
 #endif
 
    mInitialTrackSelection = new std::vector<bool>;
+
+   if (wxTheApp)
+      wxTheApp->Connect
+         (wxEVT_ACTIVATE_APP,
+          wxActivateEventHandler(TrackPanel::OnActivateOrDeactivateApp), NULL, this);
 }
+
 
 TrackPanel::~TrackPanel()
 {
    mTimer.Stop();
+
+   if (wxTheApp)
+       wxTheApp->Disconnect
+      (wxEVT_ACTIVATE_APP,
+       wxActivateEventHandler(TrackPanel::OnActivateOrDeactivateApp), NULL, this);
 
    // Unregister for tracklist updates
    mTracks->Disconnect(EVT_TRACKLIST_UPDATED,
@@ -6853,9 +6864,10 @@ void TrackPanel::HandleTrackSpecificMouseEvent(wxMouseEvent & event)
    }
 
 #ifdef EXPERIMENTAL_SCRUBBING_BASIC
-   if ((!pTrack ||
-        pTrack->GetKind() == Track::Wave) &&
-       IsScrubbing()) {
+   if (IsScrubbing() &&
+       GetRect().Contains(event.GetPosition()) &&
+       (!pTrack ||
+        pTrack->GetKind() == Track::Wave)) {
       if (event.LeftDown()) {
          mScrubSeekPress = true;
          return;
@@ -7399,11 +7411,13 @@ void TrackPanel::TimerUpdateScrubbing()
    // Thus scrubbing relies mostly on periodic polling of mouse and keys,
    // not event notifications.  But there are a few event handlers that
    // leave messages for this routine, in mScrubSeekPress and in mScrubHasFocus.
-   wxMouseState state(::wxGetMouseState());
-   wxCoord position = state.GetX();
-   const bool seek = mScrubSeekPress || PollIsSeeking();
-   ScreenToClient(&position, NULL);
-   if (ContinueScrubbing(position, mScrubHasFocus, seek))
+
+   // Seek only when the pointer is in the panel.  Else, scrub.
+   const wxMouseState state(::wxGetMouseState());
+   const wxPoint position = ScreenToClient(state.GetPosition());
+   const bool inPanel = GetRect().Contains(position);
+   const bool seek = inPanel && (mScrubSeekPress || PollIsSeeking());
+   if (ContinueScrubbing(position.x, mScrubHasFocus, seek))
       mScrubSeekPress = false;
    // else, if seek requested, try again at a later time when we might
    // enqueue a long enough stutter
@@ -10115,19 +10129,25 @@ void TrackPanel::SetFocusedTrack( Track *t )
 
 void TrackPanel::OnSetFocus(wxFocusEvent & WXUNUSED(event))
 {
-#ifdef EXPERIMENTAL_SCRUBBING_BASIC
-   mScrubHasFocus = IsScrubbing();
-#endif
    SetFocusedTrack( GetFocusedTrack() );
    Refresh( false );
 }
 
 void TrackPanel::OnKillFocus(wxFocusEvent & WXUNUSED(event))
 {
-#ifdef EXPERIMENTAL_SCRUBBING_BASIC
-   mScrubHasFocus = false;
-#endif
    Refresh( false);
+}
+
+void TrackPanel::OnActivateOrDeactivateApp(wxActivateEvent &event)
+{
+#ifdef EXPERIMENTAL_SCRUBBING_BASIC
+   if (event.GetActive())
+      mScrubHasFocus = IsScrubbing();
+   else
+      mScrubHasFocus = false;
+#endif
+
+   event.Skip();
 }
 
 /**********************************************************************
