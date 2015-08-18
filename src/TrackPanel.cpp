@@ -6158,6 +6158,16 @@ void TrackPanel::HandleWheelRotation(wxMouseEvent & event)
                      settings.NextLowerDBRange();
                   else
                      settings.NextHigherDBRange();
+
+                  WaveTrack *const partner = static_cast<WaveTrack*>(wt->GetLink());
+                  if (partner) {
+                     WaveformSettings &settings = partner->GetIndependentWaveformSettings();
+                     if (event.m_wheelRotation < 0)
+                        // Zoom out
+                        settings.NextLowerDBRange();
+                     else
+                        settings.NextHigherDBRange();
+                  }
                }
                else
                   return;
