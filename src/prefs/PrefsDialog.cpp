@@ -258,7 +258,8 @@ PrefsDialog::PrefsDialog
    S.AddStandardButtons(eOkButton | eCancelButton);
 
 #if defined(__WXGTK__)
-   mCategories->GetTreeCtrl()->EnsureVisible(mCategories->GetTreeCtrl()->GetRootItem());
+   if (mCategories)
+      mCategories->GetTreeCtrl()->EnsureVisible(mCategories->GetTreeCtrl()->GetRootItem());
 #endif
 
 //   mCategories->SetSizeHints(-1, -1, 790, 600);  // 790 = 800 - (border * 2)
