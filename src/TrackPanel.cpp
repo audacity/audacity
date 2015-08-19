@@ -8426,23 +8426,21 @@ void TrackPanel::SeekLeftOrRight
 // negative to move backward.
 double TrackPanel::GridMove(double t, int minPix)
 {
-   NumericTextCtrl ttc(NumericConverter::TIME, this, wxID_ANY, wxT(""), 0.0, GetProject()->GetRate());
-   ttc.SetFormatName(GetProject()->GetSelectionFormat());
-   ttc.SetValue(t);
+   NumericConverter nc(NumericConverter::TIME, GetProject()->GetSelectionFormat(), t, GetProject()->GetRate());
 
    // Try incrementing/decrementing the value; if we've moved far enough we're
    // done
    double result;
-   minPix >= 0 ? ttc.Increment() : ttc.Decrement();
-   result = ttc.GetValue();
+   minPix >= 0 ? nc.Increment() : nc.Decrement();
+   result = nc.GetValue();
    if (std::abs(mViewInfo->TimeToPosition(result) - mViewInfo->TimeToPosition(t))
        >= abs(minPix))
        return result;
 
    // Otherwise, move minPix pixels, then snap to the time.
    result = mViewInfo->OffsetTimeByPixels(t, minPix);
-   ttc.SetValue(result);
-   result = ttc.GetValue();
+   nc.SetValue(result);
+   result = nc.GetValue();
    return result;
 }
 
