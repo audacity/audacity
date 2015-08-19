@@ -64,7 +64,8 @@
 #include "ThemePrefs.h"
 #include "TracksPrefs.h"
 #include "WarningsPrefs.h"
-#include "WaveformPrefs.h"
+// #include "WaveformPrefs.h"
+#include "WaveformSettings.h"
 #include "ExtImportPrefs.h"
 
 #ifdef EXPERIMENTAL_MIDI_OUT
@@ -132,7 +133,7 @@ PrefsDialog::Factories
 #if !defined(DISABLE_DYNAMIC_LOADING_FFMPEG) || !defined(DISABLE_DYNAMIC_LOADING_LAME)
    static LibraryPrefsFactory libraryPrefsFactory;
 #endif
-   static WaveformPrefsFactory waveformPrefsFactory;
+   // static WaveformPrefsFactory waveformPrefsFactory;
    static SpectrumPrefsFactory spectrumPrefsFactory;
    static DirectoriesPrefsFactory directoriesPrefsFactory;
    static WarningsPrefsFactory warningsPrefsFactory;
@@ -157,10 +158,9 @@ PrefsDialog::Factories
       &qualityPrefsFactory,
       &guiPrefsFactory,
 
-      // Group two other pages
-      PrefsNode(&tracksPrefsFactory, 2, true),
-      &waveformPrefsFactory,
-      &spectrumPrefsFactory,
+      &tracksPrefsFactory,
+      // &waveformPrefsFactory,
+      // &spectrumPrefsFactory,
 
       // Group one other page
       PrefsNode(&importExportPrefsFactory, 1, true),
@@ -170,6 +170,7 @@ PrefsDialog::Factories
 #if !defined(DISABLE_DYNAMIC_LOADING_FFMPEG) || !defined(DISABLE_DYNAMIC_LOADING_LAME)
       &libraryPrefsFactory,
 #endif
+      &spectrumPrefsFactory,
       &directoriesPrefsFactory,
       &warningsPrefsFactory,
       &effectsPrefsFactory,
