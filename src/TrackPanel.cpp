@@ -10145,6 +10145,10 @@ void TrackPanel::OnSetFocus(wxFocusEvent & WXUNUSED(event))
 
 void TrackPanel::OnKillFocus(wxFocusEvent & WXUNUSED(event))
 {
+   if (AudacityProject::HasKeyboardCapture(this))
+   {
+      AudacityProject::ReleaseKeyboard(this);
+   }
    Refresh( false);
 }
 
