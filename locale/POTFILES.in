@@ -167,6 +167,7 @@ src/TrackPanel.h
 src/TrackPanelAx.cpp
 src/TrackPanelAx.h
 src/TrackPanelListener.h
+src/TranslatableStringArray.h
 src/UndoManager.cpp
 src/UndoManager.h
 src/ViewInfo.cpp

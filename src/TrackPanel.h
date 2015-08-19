@@ -151,6 +151,7 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
 
    virtual void OnSetFocus(wxFocusEvent & event);
    virtual void OnKillFocus(wxFocusEvent & event);
+   virtual void OnActivateOrDeactivateApp(wxActivateEvent & event);
 
    virtual void OnContextMenu(wxContextMenuEvent & event);
 

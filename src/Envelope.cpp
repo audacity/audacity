@@ -1064,7 +1064,7 @@ void Envelope::GetValues(double *buffer, int bufferLen,
    t0 -= mOffset;
 
    // JC: If bufferLen ==0 we have probably just allocated a zero sized buffer.
-   wxASSERT( bufferLen > 0 );
+   // wxASSERT( bufferLen > 0 );
 
    int len = mEnv.Count();
 
