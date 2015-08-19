@@ -120,14 +120,6 @@ WaveTrack::WaveTrack(WaveTrack &orig):
    , mpWaveformSettings(orig.mpWaveformSettings 
         ? new WaveformSettings(*orig.mpWaveformSettings) : 0)
 {
-   // Force creation always:
-   WaveformSettings &settings = GetIndependentWaveformSettings();
-
-   mDisplay = FindDefaultViewMode();
-   if (mDisplay == obsoleteWaveformDBDisplay) {
-      mDisplay = Waveform;
-      settings.scaleType = WaveformSettings::stLinear;
-   }
    mLastScaleType = -1;
 
    mLegacyProjectFileOffset = 0;
