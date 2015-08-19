@@ -31,7 +31,7 @@
 #include <algorithm>
 
 SpectrumPrefs::SpectrumPrefs(wxWindow * parent, WaveTrack *wt)
-:  PrefsPanel(parent, _("Spectrograms"))
+:  PrefsPanel(parent, wt ? _("Spectrogram Settings") : _("Spectrograms"))
 , mWt(wt)
 , mPopulating(false)
 {
@@ -403,7 +403,6 @@ bool SpectrumPrefs::Apply()
    mTempSettings.ConvertToEnumeratedWindowSizes();
 
    if (mWt && isOpenPage) {
-      // Future: open page will determine the track view type
       mWt->SetDisplay(WaveTrack::Spectrum);
       if (partner)
          partner->SetDisplay(WaveTrack::Spectrum);

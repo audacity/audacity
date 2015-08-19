@@ -292,8 +292,9 @@ enum {
    OnFloatID,              // <---
 
    OnWaveformID,
+   OnWaveformDBID,
    OnSpectrumID,
-   OnViewSettingsID,
+   OnSpectrogramSettingsID,
 
    OnSplitStereoID,
    OnSplitStereoMonoID,
@@ -342,7 +343,7 @@ BEGIN_EVENT_TABLE(TrackPanel, wxWindow)
     EVT_MENU_RANGE(OnChannelLeftID, OnChannelMonoID,
                TrackPanel::OnChannelChange)
     EVT_MENU_RANGE(OnWaveformID, OnSpectrumID, TrackPanel::OnSetDisplay)
-    EVT_MENU(OnViewSettingsID, TrackPanel::OnViewSettings)
+    EVT_MENU(OnSpectrogramSettingsID, TrackPanel::OnSpectrogramSettings)
     EVT_MENU_RANGE(OnRate8ID, OnRate384ID, TrackPanel::OnRateChange)
     EVT_MENU_RANGE(On16BitID, OnFloatID, TrackPanel::OnFormatChange)
     EVT_MENU(OnRateOtherID, TrackPanel::OnRateOther)
@@ -751,9 +752,10 @@ void TrackPanel::BuildMenus(void)
    /* build the pop-down menu used on wave (sampled audio) tracks */
    mWaveTrackMenu = new wxMenu();
    BuildCommonDropMenuItems(mWaveTrackMenu);   // does name, up/down etc
-   mWaveTrackMenu->AppendRadioItem(OnWaveformID, _("&Waveform"));
+   mWaveTrackMenu->AppendRadioItem(OnWaveformID, _("Wa&veform"));
+   mWaveTrackMenu->AppendRadioItem(OnWaveformDBID, _("&Waveform (dB)"));
    mWaveTrackMenu->AppendRadioItem(OnSpectrumID, _("&Spectrogram"));
-   mWaveTrackMenu->Append(OnViewSettingsID, _("&View Settings..."));
+   mWaveTrackMenu->Append(OnSpectrogramSettingsID, _("S&pectrogram Settings..."));
    mWaveTrackMenu->AppendSeparator();
 
    mChannelItemsInsertionPoint = mWaveTrackMenu->GetMenuItemCount();
@@ -8741,13 +8743,16 @@ void TrackPanel::OnTrackMenu(Track *t)
          }
       }
 
-      const int display = static_cast<WaveTrack *>(t)->GetDisplay();
+      WaveTrack *const track = (WaveTrack *)t;
+      const int display = track->GetDisplay();
       theMenu->Check(
-         (display == WaveTrack::Waveform) ? OnWaveformID : OnSpectrumID,
+         (display == WaveTrack::Waveform)
+         ? (track->GetWaveformSettings().isLinear() ? OnWaveformID : OnWaveformDBID)
+         : OnSpectrumID,
          true
       );
+      theMenu->Enable(OnSpectrogramSettingsID, display == WaveTrack::Spectrum);
 
-      WaveTrack * track = (WaveTrack *)t;
       SetMenuCheck(*mRateMenu, IdOfRate((int) track->GetRate()));
       SetMenuCheck(*mFormatMenu, IdOfFormat(track->GetSampleFormat()));
 
@@ -9287,15 +9292,14 @@ private:
    const int mPage;
 };
 
-void TrackPanel::OnViewSettings(wxCommandEvent &)
+void TrackPanel::OnSpectrogramSettings(wxCommandEvent &)
 {
    WaveTrack *const wt = static_cast<WaveTrack*>(mPopupMenuTarget);
-   WaveformPrefsFactory waveformFactory(wt);
+   // WaveformPrefsFactory waveformFactory(wt);
    SpectrumPrefsFactory spectrumFactory(wt);
 
-   // Put Waveform page first
    PrefsDialog::Factories factories;
-   factories.push_back(&waveformFactory);
+   // factories.push_back(&waveformFactory);
    factories.push_back(&spectrumFactory);
    const int page = (wt->GetDisplay() == WaveTrack::Spectrum)
       ? 1 : 0;
@@ -9319,21 +9323,37 @@ void TrackPanel::OnSetDisplay(wxCommandEvent & event)
    wxASSERT(mPopupMenuTarget
             && mPopupMenuTarget->GetKind() == Track::Wave);
 
+   bool linear = false;
    WaveTrack::WaveTrackDisplay id;
    switch (idInt) {
    default:
    case OnWaveformID:
+      linear = true, id = WaveTrack::Waveform; break;
+   case OnWaveformDBID:
       id = WaveTrack::Waveform; break;
    case OnSpectrumID:
       id = WaveTrack::Spectrum; break;
    }
    WaveTrack *wt = (WaveTrack *) mPopupMenuTarget;
-   if (wt->GetDisplay() != id) {
+   const bool wrongType = wt->GetDisplay() != id;
+   const bool wrongScale =
+      (id == WaveTrack::Waveform &&
+       wt->GetWaveformSettings().isLinear() != linear);
+   if (wrongType || wrongScale) {
       wt->SetDisplay(WaveTrack::WaveTrackDisplay(id));
+      if (wrongScale)
+         wt->GetIndependentWaveformSettings().scaleType = linear
+         ? WaveformSettings::stLinear
+         : WaveformSettings::stLogarithmic;
 
       WaveTrack *l = static_cast<WaveTrack *>(wt->GetLink());
-      if (l)
+      if (l) {
          l->SetDisplay(WaveTrack::WaveTrackDisplay(id));
+         if (wrongScale)
+            l->GetIndependentWaveformSettings().scaleType = linear
+            ? WaveformSettings::stLinear
+            : WaveformSettings::stLogarithmic;
+   }
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
       if (wt->GetDisplay() == WaveTrack::WaveformDisplay) {
          wt->SetVirtualState(false);
