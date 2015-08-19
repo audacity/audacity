@@ -20,6 +20,7 @@
 #include <wx/treebook.h>
 #include <wx/window.h>
 
+class PrefsPanel;
 class PrefsPanelFactory;
 
 #ifdef __GNUC__
@@ -75,6 +76,7 @@ class PrefsDialog:public wxDialog
 private:
    void RecordExpansionState();
    wxTreebook *mCategories;
+   PrefsPanel *mUniquePage;
    Factories &mFactories;
    const wxString mTitlePrefix;
 
