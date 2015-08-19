@@ -1836,8 +1836,7 @@ void AdornedRulerPanel::OnErase(wxEraseEvent & WXUNUSED(evt))
 
 void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
 {
-//   wxBufferedPaintDC dc(this);
-   wxPaintDC dc(this);
+   wxBufferedPaintDC dc(this);
 
    DoDrawBorder(&dc);
 
@@ -1845,8 +1844,6 @@ void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
    {
       DoDrawSelection(&dc);
    }
-
-   DoDrawMarks(&dc, true);
 
    if (mIndType >= 0)
    {
@@ -1857,6 +1854,8 @@ void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
    {
       DrawQuickPlayIndicator(&dc, false);
    }
+
+   DoDrawMarks(&dc, true);
 
    if (mViewInfo->selectedRegion.isPoint())
    {
