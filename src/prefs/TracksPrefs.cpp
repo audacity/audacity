@@ -62,6 +62,9 @@ void TracksPrefs::Populate()
    mViewChoices.Add(_("Waveform"));
    mViewCodes.Add(int(WaveTrack::Waveform));
 
+   mViewChoices.Add(_("Waveform (dB)"));
+   mViewCodes.Add(int(WaveTrack::obsoleteWaveformDBDisplay));
+
    mViewChoices.Add(_("Spectrum"));
    mViewCodes.Add(WaveTrack::Spectrum);
 
