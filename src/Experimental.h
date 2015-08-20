@@ -192,6 +192,7 @@
 #define EXPERIMENTAL_TWO_TONE_TIME_RULER
 
 // Define to include crash reporting
+#include <wx/defs.h>
 #define EXPERIMENTAL_CRASH_REPORT
 #if !defined(wxUSE_DEBUGREPORT) || !wxUSE_DEBUGREPORT
 #undef EXPERIMENTAL_CRASH_REPORT

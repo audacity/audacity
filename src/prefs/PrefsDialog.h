@@ -20,6 +20,7 @@
 #include <wx/treebook.h>
 #include <wx/window.h>
 
+class PrefsPanel;
 class PrefsPanelFactory;
 
 #ifdef __GNUC__
@@ -37,8 +38,10 @@ class PrefsDialog:public wxDialog
        CONST int nChildren;
        bool expanded;
 
-       PrefsNode(PrefsPanelFactory *pFactory_, int nChildren_ = 0)
-          : pFactory(pFactory_), nChildren(nChildren_), expanded(false)
+       PrefsNode(PrefsPanelFactory *pFactory_,
+          int nChildren_ = 0,
+          bool expanded_ = false)
+          : pFactory(pFactory_), nChildren(nChildren_), expanded(expanded_)
        {}
     };
    typedef std::vector<PrefsNode> Factories;
@@ -73,6 +76,7 @@ class PrefsDialog:public wxDialog
 private:
    void RecordExpansionState();
    wxTreebook *mCategories;
+   PrefsPanel *mUniquePage;
    Factories &mFactories;
    const wxString mTitlePrefix;
 

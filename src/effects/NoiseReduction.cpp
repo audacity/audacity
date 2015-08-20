@@ -1691,13 +1691,6 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
       S.AddVariableText(_(
          "Select all of the audio you want filtered, choose how much noise you want\nfiltered out, and then click 'OK' to reduce noise.\n"));
 
-#if defined(__WXGTK__)
-      // Put everything inside a panel to workaround a problem on Linux where the access key
-      // does not work if it is defined within static text on the first control.
-      S.SetStyle(wxTAB_TRAVERSAL);
-      S.StartPanel();
-#endif
-
       S.StartMultiColumn(3, wxEXPAND);
       S.SetStretchyCol(2);
       {
@@ -1733,10 +1726,6 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
 #endif
       }
       S.EndMultiColumn();
-
-#if defined(__WXGTK__)
-      S.EndPanel();
-#endif
    }
    S.EndStatic();
 
@@ -1744,13 +1733,6 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
 #ifdef ADVANCED_SETTINGS
    S.StartStatic(_("Advanced Settings"));
    {
-#if defined(__WXGTK__)
-      // Put everything inside a panel to workaround a problem on Linux where the access key
-      // does not work if it is defined within static text on the first control.
-      S.SetStyle(wxTAB_TRAVERSAL);
-      S.StartPanel();
-#endif
-
       S.StartMultiColumn(2);
       {
          {
@@ -1820,10 +1802,6 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
          }
       }
       S.EndMultiColumn();
-
-#if defined(__WXGTK__)
-      S.EndPanel();
-#endif
    }
    S.EndStatic();
 #endif

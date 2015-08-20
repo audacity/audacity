@@ -39,6 +39,35 @@ GUIPrefs::~GUIPrefs()
 {
 }
 
+void GUIPrefs::GetRangeChoices(wxArrayString *pChoices, wxArrayString *pCodes)
+{
+   if (pCodes) {
+      wxArrayString &codes = *pCodes;
+      codes.Clear();
+      codes.Add(wxT("36"));
+      codes.Add(wxT("48"));
+      codes.Add(wxT("60"));
+      codes.Add(wxT("72"));
+      codes.Add(wxT("84"));
+      codes.Add(wxT("96"));
+      codes.Add(wxT("120"));
+      codes.Add(wxT("145"));
+   }
+
+   if (pChoices) {
+      wxArrayString &choices = *pChoices;
+      choices.Clear();
+      choices.Add(_("-36 dB (shallow range for high-amplitude editing)"));
+      choices.Add(_("-48 dB (PCM range of 8 bit samples)"));
+      choices.Add(_("-60 dB (PCM range of 10 bit samples)"));
+      choices.Add(_("-72 dB (PCM range of 12 bit samples)"));
+      choices.Add(_("-84 dB (PCM range of 14 bit samples)"));
+      choices.Add(_("-96 dB (PCM range of 16 bit samples)"));
+      choices.Add(_("-120 dB (approximate limit of human hearing)"));
+      choices.Add(_("-145 dB (PCM range of 24 bit samples)"));
+   }
+}
+
 void GUIPrefs::Populate()
 {
    // First any pre-processing for constructing the GUI.
@@ -50,23 +79,7 @@ void GUIPrefs::Populate()
    mHtmlHelpChoices.Add(_("Local"));
    mHtmlHelpChoices.Add(_("From Internet"));
 
-   mRangeCodes.Add(wxT("36"));
-   mRangeCodes.Add(wxT("48"));
-   mRangeCodes.Add(wxT("60"));
-   mRangeCodes.Add(wxT("72"));
-   mRangeCodes.Add(wxT("84"));
-   mRangeCodes.Add(wxT("96"));
-   mRangeCodes.Add(wxT("120"));
-   mRangeCodes.Add(wxT("145"));
-
-   mRangeChoices.Add(_("-36 dB (shallow range for high-amplitude editing)"));
-   mRangeChoices.Add(_("-48 dB (PCM range of 8 bit samples)"));
-   mRangeChoices.Add(_("-60 dB (PCM range of 10 bit samples)"));
-   mRangeChoices.Add(_("-72 dB (PCM range of 12 bit samples)"));
-   mRangeChoices.Add(_("-84 dB (PCM range of 14 bit samples)"));
-   mRangeChoices.Add(_("-96 dB (PCM range of 16 bit samples)"));
-   mRangeChoices.Add(_("-120 dB (approximate limit of human hearing)"));
-   mRangeChoices.Add(_("-145 dB (PCM range of 24 bit samples)"));
+   GetRangeChoices(&mRangeChoices, &mRangeCodes);
 
 #if 0
    // only for testing...
@@ -101,7 +114,7 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(2);
       {
          const wxString defaultRange = wxString::Format(wxT("%d"), ENV_DB_RANGE);
-         S.TieChoice(_("Meter/Waveform dB &range:"),
+         S.TieChoice(_("Meter dB &range:"),
                      ENV_DB_KEY,
                      defaultRange,
                      mRangeChoices,

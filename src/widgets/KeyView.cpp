@@ -1232,11 +1232,7 @@ KeyView::OnSetFocus(wxFocusEvent & event)
    // will also refresh the visual (highlighted) state.
    if (GetSelection() != wxNOT_FOUND)
    {
-#if wxCHECK_VERSION(3,0,0)
 	   RefreshRow(GetSelection());
-#else
-	   RefreshLine(GetSelection());
-#endif
    }
 
 #if wxUSE_ACCESSIBILITY
@@ -1257,11 +1253,7 @@ KeyView::OnKillFocus(wxFocusEvent & event)
    // Refresh the selected line to adjust visual highlighting.
    if (GetSelection() != wxNOT_FOUND)
    {
-#if wxCHECK_VERSION(3,0,0)
 	   RefreshRow(GetSelection());
-#else
-	   RefreshLine(GetSelection());
-#endif
    }
 }
 
@@ -1336,11 +1328,7 @@ KeyView::OnKeyDown(wxKeyEvent & event)
             RefreshLines();
 
             // Reset the original top line
-#if wxCHECK_VERSION(3,0,0)
-			ScrollToRow(topline);
-#else
-			ScrollToLine(topline);
-#endif
+            ScrollToRow(topline);
 
             // And make sure current line is still selected
             SelectNode(LineToIndex(line));
@@ -1404,11 +1392,7 @@ KeyView::OnKeyDown(wxKeyEvent & event)
                RefreshLines();
 
                // Reset the original top line
-#if wxCHECK_VERSION(3,0,0)
-			   ScrollToRow(topline);
-#else
-			   ScrollToLine(topline);
-#endif
+               ScrollToRow(topline);
 
                // And make sure current line is still selected
                SelectNode(LineToIndex(line));
@@ -1529,7 +1513,7 @@ KeyView::OnLeftDown(wxMouseEvent & event)
    wxPoint pos = event.GetPosition();
 
    // And see if it was on a line within the view
-   int line = HitTest(pos);
+   int line = VirtualHitTest(pos.y);
 
    // It was on a line
    if (line != wxNOT_FOUND)
@@ -1550,11 +1534,7 @@ KeyView::OnLeftDown(wxMouseEvent & event)
          RefreshLines();
 
          // Reset the original top line
-#if wxCHECK_VERSION(3,0,0)
-		 ScrollToRow(topline);
-#else
-		 ScrollToLine(topline);
-#endif
+         ScrollToRow(topline);
 
          // And make sure current line is still selected
          SelectNode(LineToIndex(line));
@@ -1780,11 +1760,7 @@ KeyView::GetLineHeight(int line)
       return 0;
    }
 
-#if wxCHECK_VERSION(3,0,0)
    return OnGetRowHeight(line);
-#else
-   return OnGetLineHeight(line);
-#endif
 }
 
 //

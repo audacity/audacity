@@ -996,7 +996,7 @@ ProgressDialog::ProgressDialog()
 
 ProgressDialog::ProgressDialog(const wxString & title,
                                const wxString & message,
-                               ProgressDialogFlags flags)
+                               int flags)
 :  wxDialog()
 {
    Init();
@@ -1009,29 +1009,27 @@ ProgressDialog::ProgressDialog(const wxString & title,
 //
 ProgressDialog::~ProgressDialog()
 {
+   // Delete the window disabler before hiding the dialog to allow
+   // focus to return to the original window.
    if (mDisable)
    {
       delete mDisable;
       mDisable = NULL;
    }
 
-   if (IsShown())
-   {
-      Show(false);
-
-      Beep();
-   }
+   Beep();
 }
 
 void ProgressDialog::Init()
 {
    mLastValue = 0;
    mDisable = NULL;
+   mIsTransparent = true;
 }
 
 bool ProgressDialog::Create(const wxString & title,
                             const wxString & message,
-                            ProgressDialogFlags flags)
+                            int flags)
 {
    wxWindow *parent = GetParentForModalDialog(NULL, 0);
 
@@ -1166,23 +1164,29 @@ bool ProgressDialog::Create(const wxString & title,
    mCancel = false;
    mStop = false;
 
+   // Because wxGTK is very sensitive about maintaining focus when
+   // this window is not shown, we always show it.  But, since we
+   // want a 500ms delay before it's actually visible for those
+   // quick tasks, we show it as transparent.  If the initial
+   // delay is exceeded, then we reset the dialog to full opacity.
+   SetTransparent(0);
+   mIsTransparent = true;
+
+   wxDialog::Show(true);
+
    // Even though we won't necessarily show the dialog due to the 500ms
    // delay, we MUST disable other windows/menus anyway since we run the risk
    // of allowing other tasks to run before this one is complete.
    //
-   // Reviewed this code per Proposed Features #1, at 
+   // Reviewed this code per Proposed Features #1, at
    // http://wiki.audacityteam.org/wiki/Proposal_Timer_Record_Improvements.
-   // Note that this causes a problem for Timer Record wait dialog 
-   // (see TimerRecordDialog::RunWaitDialog()), because it makes it 
-   // impossible to do any editing, even in other open projects, 
-   // while waiting for Timer Record to start -- and then also 
-   // while it's recording, it has a ProgressDialog, so really, 
-   // no editing in any project until Timer Record finishes. 
+   // Note that this causes a problem for Timer Record wait dialog
+   // (see TimerRecordDialog::RunWaitDialog()), because it makes it
+   // impossible to do any editing, even in other open projects,
+   // while waiting for Timer Record to start -- and then also
+   // while it's recording, it has a ProgressDialog, so really,
+   // no editing in any project until Timer Record finishes.
    mDisable = new wxWindowDisabler(this);
-
-   // On OSX at least, creating the disabler causes the dialog to show, so
-   // just hide it again until the delay has been reached.
-   Show(false);
 
    return true;
 }
@@ -1190,8 +1194,7 @@ bool ProgressDialog::Create(const wxString & title,
 //
 // Update the time and, optionally, the message
 //
-int
-ProgressDialog::Update(int value, const wxString & message)
+int ProgressDialog::Update(int value, const wxString & message)
 {
    if (mCancel)
    {
@@ -1203,7 +1206,19 @@ ProgressDialog::Update(int value, const wxString & message)
       return eProgressStopped;
    }
 
-   SetMessage(message);
+   wxLongLong_t now = wxGetLocalTimeMillis().GetValue();
+   wxLongLong_t elapsed = now - mStartTime;
+
+   if (elapsed < 500)
+   {
+      return eProgressSuccess;
+   }
+
+   if (mIsTransparent)
+   {
+      SetTransparent(255);
+      mIsTransparent = false;
+   }
 
    if (value <= 0)
    {
@@ -1215,16 +1230,10 @@ ProgressDialog::Update(int value, const wxString & message)
       value = 1000;
    }
 
-   wxLongLong_t now = wxGetLocalTimeMillis().GetValue();
-   wxLongLong_t elapsed = now - mStartTime;
    wxLongLong_t estimate = elapsed * 1000ll / value;
    wxLongLong_t remains = (estimate + mStartTime) - now;
 
-   if (!IsShown() && elapsed > 500)
-   {
-      Show(true);
-      wxDialog::Update();
-   }
+   SetMessage(message);
 
    if (value != mLastValue)
    {
@@ -1233,8 +1242,8 @@ ProgressDialog::Update(int value, const wxString & message)
       mLastValue = value;
    }
 
-   // Only update if a full second has passed.
-   if (now - mLastUpdate > 1000)
+   // Only update if a full second has passed or track progress is complete
+   if ((now - mLastUpdate > 1000) || (value == 1000))
    {
       wxTimeSpan tsElapsed(0, 0, 0, elapsed);
       wxTimeSpan tsRemains(0, 0, 0, remains);
@@ -1270,8 +1279,7 @@ ProgressDialog::Update(int value, const wxString & message)
 //
 // Update the time and, optionally, the message
 //
-int
-ProgressDialog::Update(double current, const wxString & message)
+int ProgressDialog::Update(double current, const wxString & message)
 {
    return Update((int)(current * 1000), message);
 }
@@ -1279,8 +1287,7 @@ ProgressDialog::Update(double current, const wxString & message)
 //
 // Update the time and, optionally, the message
 //
-int
-ProgressDialog::Update(wxULongLong_t current, wxULongLong_t total, const wxString & message)
+int ProgressDialog::Update(wxULongLong_t current, wxULongLong_t total, const wxString & message)
 {
    if (total != 0)
    {
@@ -1295,8 +1302,7 @@ ProgressDialog::Update(wxULongLong_t current, wxULongLong_t total, const wxStrin
 //
 // Update the time and, optionally, the message
 //
-int
-ProgressDialog::Update(wxLongLong current, wxLongLong total, const wxString & message)
+int ProgressDialog::Update(wxLongLong current, wxLongLong total, const wxString & message)
 {
    if (total.GetValue() != 0)
    {
@@ -1311,8 +1317,7 @@ ProgressDialog::Update(wxLongLong current, wxLongLong total, const wxString & me
 //
 // Update the time and, optionally, the message
 //
-int
-ProgressDialog::Update(wxLongLong_t current, wxLongLong_t total, const wxString & message)
+int ProgressDialog::Update(wxLongLong_t current, wxLongLong_t total, const wxString & message)
 {
    if (total != 0)
    {
@@ -1327,8 +1332,7 @@ ProgressDialog::Update(wxLongLong_t current, wxLongLong_t total, const wxString 
 //
 // Update the time and, optionally, the message
 //
-int
-ProgressDialog::Update(int current, int total, const wxString & message)
+int ProgressDialog::Update(int current, int total, const wxString & message)
 {
    if (total != 0)
    {
@@ -1343,8 +1347,7 @@ ProgressDialog::Update(int current, int total, const wxString & message)
 //
 // Update the time and, optionally, the message
 //
-int
-ProgressDialog::Update(double current, double total, const wxString & message)
+int ProgressDialog::Update(double current, double total, const wxString & message)
 {
    if (total != 0)
    {
@@ -1356,12 +1359,10 @@ ProgressDialog::Update(double current, double total, const wxString & message)
    }
 }
 
-
 //
 // Update the message text
 //
-void
-ProgressDialog::SetMessage(const wxString & message)
+void ProgressDialog::SetMessage(const wxString & message)
 {
    if (!message.IsEmpty())
    {
@@ -1400,33 +1401,28 @@ ProgressDialog::SetMessage(const wxString & message)
          SetClientSize(ds);
          wxDialog::Update();
       }
-
    }
 }
 
-void
-ProgressDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
+void ProgressDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
 {
    FindWindowById(wxID_CANCEL, this)->Disable();
    mCancel = true;
 }
 
-void
-ProgressDialog::OnStop(wxCommandEvent & WXUNUSED(event))
+void ProgressDialog::OnStop(wxCommandEvent & WXUNUSED(event))
 {
    FindWindowById(wxID_OK, this)->Disable();
    mCancel = false;
    mStop = true;
 }
 
-void
-ProgressDialog::OnCloseWindow(wxCloseEvent & WXUNUSED(event))
+void ProgressDialog::OnCloseWindow(wxCloseEvent & WXUNUSED(event))
 {
    mCancel = true;
 }
 
-void
-ProgressDialog::Beep()
+void ProgressDialog::Beep() const
 {
    int after;
    bool should;
@@ -1441,10 +1437,12 @@ ProgressDialog::Beep()
       wxBusyCursor busy;
       wxSound s;
 
-      if (name.IsEmpty()) {
+      if (name.IsEmpty())
+      {
          s.Create(sizeof(beep), beep);
       }
-      else {
+      else
+      {
          s.Create(name);
       }
 
@@ -1458,7 +1456,7 @@ ProgressDialog::Beep()
 TimerProgressDialog::TimerProgressDialog(const wxLongLong_t duration,
                                           const wxString & title,
                                           const wxString & message /*= wxEmptyString*/,
-                                          ProgressDialogFlags flags /*= pdlgEmptyFlags*/)
+                                          int flags /*= pdlgEmptyFlags*/)
 : ProgressDialog(title, message, flags)
 {
    mDuration = duration;
@@ -1476,27 +1474,23 @@ int TimerProgressDialog::Update(const wxString & message /*= wxEmptyString*/)
       return eProgressStopped;
    }
 
-   // Copied from wx 3.0.2 generic progress dialog
-   //
-   // we have to yield because not only we want to update the display but
-   // also to process the clicks on the cancel and skip buttons
-   // NOTE: using YieldFor() this call shouldn't give re-entrancy problems
-   //       for event handlers not interested to UI/user-input events.
-   wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI|wxEVT_CATEGORY_USER_INPUT);
-   
-   wxDialog::Update();
+   wxLongLong_t now = wxGetLocalTimeMillis().GetValue();
+   wxLongLong_t elapsed = now - mStartTime;
+
+   if (elapsed < 500)
+   {
+      return eProgressSuccess;
+   }
+
+   if (mIsTransparent)
+   {
+      SetTransparent(255);
+      mIsTransparent = false;
+   }
 
    SetMessage(message);
 
-   wxLongLong_t now = wxGetLocalTimeMillis().GetValue();
-   wxLongLong_t elapsed = now - mStartTime;
    wxLongLong_t remains = mStartTime + mDuration - now;
-
-   if (!IsShown() && elapsed > 500)
-   {
-      Show(true);
-      wxDialog::Update();
-   }
 
    int nGaugeValue = (1000 * elapsed) / mDuration; // range = [0,1000]
    // Running in TimerRecordDialog::RunWaitDialog(), for some unknown reason, 
@@ -1528,10 +1522,16 @@ int TimerProgressDialog::Update(const wxString & message /*= wxEmptyString*/)
 
    // Copied from wx 3.0.2 generic progress dialog
    //
-   // allow the window to repaint:
-   // NOTE: since we yield only for UI events with this call, there
-   //       should be no side-effects
-   wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI);
+   // we have to yield because not only we want to update the display but
+   // also to process the clicks on the cancel and skip buttons
+   // NOTE: using YieldFor() this call shouldn't give re-entrancy problems
+   //       for event handlers not interested to UI/user-input events.
+   //
+   // LL:  Added timer category to prevent extreme delays when processing effects
+   //      (and probably other things).  I do not yet know why this happens and
+   //      I'm not too keen on having timer events processed here, but you do
+   //      what you have to do.
+   wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI | wxEVT_CATEGORY_USER_INPUT | wxEVT_CATEGORY_TIMER);
 
    return eProgressSuccess;
 }

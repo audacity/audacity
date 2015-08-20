@@ -337,6 +337,11 @@ void FileDialog::ShowWindowModal()
 
 void FileDialog::DoOnFilterSelected(int index)
 {
+    if (index == wxNOT_FOUND)
+    {
+      return;
+    }
+
     NSArray* types = GetTypesFromExtension(m_filterExtensions[index],m_currentExtensions);
     NSSavePanel* panel = (NSSavePanel*) GetWXWindow();
     [panel setAllowedFileTypes:types];
@@ -547,18 +552,19 @@ int FileDialog::ShowModal()
         parentWindow = dynamic_cast<wxNonOwnedWindow*>(wxGetTopLevelParent(GetParent()));
     }
 
-
     NSArray* types = GetTypesFromFilter( m_wildCard, m_filterNames, m_filterExtensions ) ;
 
-    m_useFileTypeFilter = m_filterExtensions.GetCount() > 1;
+    m_useFileTypeFilter = m_filterExtensions.GetCount() > 0;
 
+#if defined(we_always_want_the_types)
     if( HasFlag(wxFD_OPEN) )
     {
         if ( !(wxSystemOptions::HasOption( wxOSX_FILEDIALOG_ALWAYS_SHOW_TYPES ) && (wxSystemOptions::GetOptionInt( wxOSX_FILEDIALOG_ALWAYS_SHOW_TYPES ) == 1)) )
             m_useFileTypeFilter = false;            
     }
+#endif
 
-    m_firstFileTypeFilter = -1;
+    m_firstFileTypeFilter = wxNOT_FOUND;
 
     if ( m_useFileTypeFilter
         && m_filterIndex >= 0 && m_filterIndex < m_filterExtensions.GetCount() )
