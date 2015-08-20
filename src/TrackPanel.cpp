@@ -6696,14 +6696,15 @@ bool TrackPanel::HandleLabelTrackClick(LabelTrack * lTrack, wxRect &rect, wxMous
       }
    }
 
+   mCapturedRect = rect;
+   mCapturedRect.x += kLeftInset;
+   mCapturedRect.width -= kLeftInset;
+
    lTrack->HandleClick(event, mCapturedRect, *mViewInfo, &mViewInfo->selectedRegion);
 
    if (lTrack->IsAdjustingLabel())
    {
       SetCapturedTrack(lTrack, IsAdjustingLabel);
-      mCapturedRect = rect;
-      mCapturedRect.x += kLeftInset;
-      mCapturedRect.width -= kLeftInset;
 
       //If we are adjusting a label on a labeltrack, do not do anything
       //that follows. Instead, redraw the track.
