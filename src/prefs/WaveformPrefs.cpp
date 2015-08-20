@@ -223,7 +223,9 @@ void WaveformPrefs::OnApply(wxCommandEvent &)
 {
    if (Validate()) {
       Apply();
-      ::GetActiveProject()->GetTrackPanel()->Refresh(false);
+      TrackPanel *const tp = ::GetActiveProject()->GetTrackPanel();
+      tp->UpdateVRulers();
+      tp->Refresh(false);
    }
 }
 
