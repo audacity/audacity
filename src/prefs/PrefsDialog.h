@@ -58,6 +58,7 @@ class PrefsDialog:public wxDialog
    void OnCategoryChange(wxCommandEvent & e);
    void OnOK(wxCommandEvent & e);
    void OnCancel(wxCommandEvent & e);
+   void OnApply(wxCommandEvent & e);
    void OnTreeKeyDown(wxTreeEvent & e); // Used to dismiss the dialog when enter is pressed with focus on tree
 
    void SelectPageByName(wxString pageName);

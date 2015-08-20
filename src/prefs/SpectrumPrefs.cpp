@@ -70,7 +70,6 @@ enum {
    ID_SPECTRAL_SELECTION,
 #endif
    ID_DEFAULTS,
-   ID_APPLY,
 };
 
 void SpectrumPrefs::Populate(int windowSize)
@@ -289,12 +288,6 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
    S.EndStatic();
 #endif
 
-   S.StartMultiColumn(2, wxALIGN_RIGHT);
-   {
-      S.Id(ID_APPLY).AddButton(_("Appl&y"));
-   }
-   S.EndMultiColumn();
-
    EnableDisableSTFTOnlyControls();
 
    mPopulating = false;
@@ -408,6 +401,17 @@ bool SpectrumPrefs::Apply()
          partner->SetDisplay(WaveTrack::Spectrum);
    }
 
+   if (isOpenPage) {
+      TrackPanel *const tp = ::GetActiveProject()->GetTrackPanel();
+      tp->UpdateVRulers();
+      tp->Refresh(false);
+   }
+
+   return true;
+}
+
+bool SpectrumPrefs::ShowsApplyButton()
+{
    return true;
 }
 
@@ -468,16 +472,6 @@ void SpectrumPrefs::EnableDisableSTFTOnlyControls()
 #endif
 }
 
-void SpectrumPrefs::OnApply(wxCommandEvent &)
-{
-   if (Validate()) {
-      Apply();
-      TrackPanel *const tp = ::GetActiveProject()->GetTrackPanel();
-      tp->UpdateVRulers();
-      tp->Refresh(false);
-   }
-}
-
 BEGIN_EVENT_TABLE(SpectrumPrefs, PrefsPanel)
    EVT_CHOICE(ID_WINDOW_SIZE, SpectrumPrefs::OnWindowSize)
    EVT_CHECKBOX(ID_DEFAULTS, SpectrumPrefs::OnDefaults)
@@ -494,8 +488,6 @@ BEGIN_EVENT_TABLE(SpectrumPrefs, PrefsPanel)
    EVT_TEXT(ID_FREQUENCY_GAIN, SpectrumPrefs::OnControl)
    EVT_CHECKBOX(ID_GRAYSCALE, SpectrumPrefs::OnControl)
    EVT_CHECKBOX(ID_SPECTRAL_SELECTION, SpectrumPrefs::OnControl)
-
-   EVT_BUTTON(ID_APPLY, SpectrumPrefs::OnApply)
 
 END_EVENT_TABLE()
 
