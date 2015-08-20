@@ -75,6 +75,7 @@
 BEGIN_EVENT_TABLE(PrefsDialog, wxDialog)
    EVT_BUTTON(wxID_OK, PrefsDialog::OnOK)
    EVT_BUTTON(wxID_CANCEL, PrefsDialog::OnCancel)
+   EVT_BUTTON(wxID_APPLY, PrefsDialog::OnApply)
    EVT_TREE_KEY_DOWN(wxID_ANY, PrefsDialog::OnTreeKeyDown) // Handles key events when tree has focus
 END_EVENT_TABLE()
 
@@ -108,6 +109,16 @@ int wxTreebookExt::SetSelection(size_t n)
    wxString Temp = wxString(mTitlePrefix) + GetPageText( n );
    ((wxDialog*)GetParent())->SetTitle( Temp );
    ((wxDialog*)GetParent())->SetName( Temp );
+
+   PrefsPanel *const panel = static_cast<PrefsPanel *>(GetPage(n));
+   const bool showApply = panel->ShowsApplyButton();
+   wxWindow *const applyButton = wxWindow::FindWindowById(wxID_APPLY, GetParent());
+   if (applyButton) { // might still be NULL during population
+      const bool changed = applyButton->Show(showApply);
+      if (changed)
+         GetParent()->Layout();
+   }
+
    return i;
 }
 
@@ -255,7 +266,13 @@ PrefsDialog::PrefsDialog
    }
    S.EndVerticalLay();
 
-   S.AddStandardButtons(eOkButton | eCancelButton);
+   S.AddStandardButtons(eOkButton | eCancelButton | eApplyButton);
+
+   if (mUniquePage && !mUniquePage->ShowsApplyButton()) {
+      wxWindow *const applyButton =
+         wxWindow::FindWindowById(wxID_APPLY, GetParent());
+      applyButton->Show(false);
+   }
 
 #if defined(__WXGTK__)
    if (mCategories)
@@ -341,6 +358,14 @@ void PrefsDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
       mUniquePage->Cancel();
 
    EndModal(false);
+}
+
+void PrefsDialog::OnApply(wxCommandEvent & WXUNUSED(event))
+{
+   if (mCategories)
+      static_cast<PrefsPanel*>(mCategories->GetCurrentPage())->Apply();
+   else
+      mUniquePage->Apply();
 }
 
 void PrefsDialog::OnTreeKeyDown(wxTreeEvent & event)
@@ -478,4 +503,17 @@ void PrefsDialog::RecordExpansionState()
    }
    else
       mFactories[0].expanded = true;
+}
+
+PrefsPanel::~PrefsPanel()
+{
+}
+
+void PrefsPanel::Cancel()
+{
+}
+
+bool PrefsPanel::ShowsApplyButton()
+{
+   return false;
 }
