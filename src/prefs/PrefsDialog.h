@@ -40,7 +40,7 @@ class PrefsDialog:public wxDialog
 
        PrefsNode(PrefsPanelFactory *pFactory_,
           int nChildren_ = 0,
-          bool expanded_ = false)
+          bool expanded_ = true)
           : pFactory(pFactory_), nChildren(nChildren_), expanded(expanded_)
        {}
     };
