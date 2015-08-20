@@ -206,6 +206,59 @@ is time to refresh some aspect of the screen.
 
 DEFINE_EVENT_TYPE(EVT_TRACK_PANEL_TIMER)
 
+/*
+
+This is a diagram of TrackPanel's division of one (non-stereo) track rectangle.
+Total height equals Track::GetHeight()'s value.  Total width is the wxWindow's width.
+Each charater that is not . represents one pixel.
+
+Inset space of this track, and top inset of the next track, are used to draw the focus highlight.
+
+Top inset of the right channel of a stereo track, and bottom shadow line of the
+left channel, are used for the channel separator.
+
+TrackInfo::GetTrackInfoWidth() == GetVRulerOffset()
+counts columns from the left edge up to and including controls, and is a constant.
+
+GetVRulerWidth() is variable -- all tracks have the same ruler width at any time,
+but that width may be adjusted when tracks change their vertical scales.
+
+GetLabelWidth() counts columns up to and including the VRuler.
+GetLeftOffset() is yet one more -- it counts the "one pixel" column.
+
+FindTrack() for label returns a rectangle with width equal to GetLeftOffset(),
+and OMITS left and top insets
+
+FindTrack() for !label returns a rectangle with x == GetLeftOffset(), and INCLUDES
+right and top insets
+
++--------------- ... ------ ... --------------------- ...       ... -------------+
+| Top Inset                                                                      |
+|                                                                                |
+|  +------------ ... ------ ... --------------------- ...       ... ----------+  |
+| L|+-Border---- ... ------ ... --------------------- ...       ... -Border-+ |R |
+| e||+---------- ... -++--- ... -+++----------------- ...       ... -------+| |i |
+| f|B|                ||         |||                                       |BS|g |
+| t|o| Controls       || V       |O|  The good stuff                       |oh|h |
+|  |r|                || R       |n|                                       |ra|t |
+| I|d|                || u       |e|                                       |dd|  |
+| n|e|                || l       | |                                       |eo|I |
+| s|r|                || e       |P|                                       |rw|n |
+| e|||                || r       |i|                                       ||||s |
+| t|||                ||         |x|                                       ||||e |
+|  |||                ||         |e|                                       ||||t |
+|  |||                ||         |l|                                       ||||  |
+|  |||                ||         |||                                       ||||  |
+
+.  ...                ..         ...                                       ....  .
+.  ...                ..         ...                                       ....  .
+.  ...                ..         ...                                       ....  .
+
+|  |||                ||         |||                                       ||||  |
+|  ||+----------     -++--  ... -+++----------------- ...       ... -------+|||  |
+|  |+-Border---- ... -----  ... --------------------- ...       ... -Border-+||  |
+|  |  Shadow---- ... -----  ... --------------------- ...       ... --Shadow-+|  |
+*/
 enum {
    kLeftInset = 4,
    kTopInset = 4,
