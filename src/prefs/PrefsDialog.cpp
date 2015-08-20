@@ -169,19 +169,19 @@ PrefsDialog::Factories
       &qualityPrefsFactory,
       &guiPrefsFactory,
 
-      &tracksPrefsFactory,
+      // Group other page(s)
+      PrefsNode(&tracksPrefsFactory, 1),
       // &waveformPrefsFactory,
-      // &spectrumPrefsFactory,
+      &spectrumPrefsFactory,
 
       // Group one other page
-      PrefsNode(&importExportPrefsFactory, 1, true),
+      PrefsNode(&importExportPrefsFactory, 1),
       &extImportPrefsFactory,
 
       &projectsPrefsFactory,
 #if !defined(DISABLE_DYNAMIC_LOADING_FFMPEG) || !defined(DISABLE_DYNAMIC_LOADING_LAME)
       &libraryPrefsFactory,
 #endif
-      &spectrumPrefsFactory,
       &directoriesPrefsFactory,
       &warningsPrefsFactory,
       &effectsPrefsFactory,
