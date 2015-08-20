@@ -226,8 +226,8 @@ but that width may be adjusted when tracks change their vertical scales.
 GetLabelWidth() counts columns up to and including the VRuler.
 GetLeftOffset() is yet one more -- it counts the "one pixel" column.
 
-FindTrack() for label returns a rectangle with width equal to GetLeftOffset(),
-and OMITS left and top insets
+FindTrack() for label returns a rectangle with right edge coinciding with
+that of Controls, and OMITS left and top insets
 
 FindTrack() for !label returns a rectangle with x == GetLeftOffset(), and INCLUDES
 right and top insets
