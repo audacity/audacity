@@ -1472,9 +1472,10 @@ void AudacityProject::OnScrollRightButton(wxScrollEvent & event)
 
 double AudacityProject::ScrollingLowerBoundTime() const
 {
-   return mScrollBeyondZero
-      ? std::min(mTracks->GetStartTime(), -mViewInfo.screen / 2.0)
-      : 0;
+   if (!mScrollBeyondZero)
+      return 0;
+   const double screen = mTrackPanel->GetScreenEndTime() - mViewInfo.h;
+   return std::min(mTracks->GetStartTime(), -screen / 2.0);
 }
 
 wxInt64 AudacityProject::PixelWidthBeforeTime(double scrollto) const
@@ -1556,8 +1557,8 @@ void AudacityProject::FixScrollbars()
    double LastTime =
       std::max(mTracks->GetEndTime(), mViewInfo.selectedRegion.t1());
 
-   mViewInfo.SetScreenWidth(panelWidth);
-   const double halfScreen = mViewInfo.screen / 2.0;
+   const double screen = GetScreenEndTime() - mViewInfo.h;
+   const double halfScreen = screen / 2.0;
 
    // If we can scroll beyond zero,
    // Add 1/2 of a screen of blank space to the end
@@ -1567,13 +1568,13 @@ void AudacityProject::FixScrollbars()
    // May add even more to the end, so that you can always scroll the starting time to zero.
    const double lowerBound = ScrollingLowerBoundTime();
    const double additional = mScrollBeyondZero
-      ? -lowerBound + std::max(halfScreen, mViewInfo.screen - LastTime)
-      : mViewInfo.screen / 4.0;
+      ? -lowerBound + std::max(halfScreen, screen - LastTime)
+      : screen / 4.0;
 
    mViewInfo.total = LastTime + additional;
 
    // Don't remove time from total that's still on the screen
-   mViewInfo.total = std::max(mViewInfo.total, mViewInfo.h + mViewInfo.screen);
+   mViewInfo.total = std::max(mViewInfo.total, mViewInfo.h + screen);
 
    if (mViewInfo.h < lowerBound) {
       mViewInfo.h = lowerBound;
@@ -1581,7 +1582,7 @@ void AudacityProject::FixScrollbars()
    }
 
    mViewInfo.sbarTotal = (wxInt64) (mViewInfo.GetTotalWidth());
-   mViewInfo.sbarScreen = (wxInt64) (mViewInfo.GetScreenWidth());
+   mViewInfo.sbarScreen = (wxInt64)(panelWidth);
    mViewInfo.sbarH = (wxInt64) (mViewInfo.GetBeforeScreenWidth());
 
    int lastv = mViewInfo.vpos;
@@ -1603,7 +1604,7 @@ void AudacityProject::FixScrollbars()
 
    bool oldhstate;
    bool oldvstate;
-   bool newhstate = !mViewInfo.ZoomedAll();
+   bool newhstate = (GetScreenEndTime() - mViewInfo.h) < mViewInfo.total;
    bool newvstate = panelHeight < totalHeight;
 
 #ifdef __WXGTK__
@@ -1614,7 +1615,7 @@ void AudacityProject::FixScrollbars()
 #else
    oldhstate = mHsbar->IsEnabled();
    oldvstate = mVsbar->IsEnabled();
-   mHsbar->Enable(!mViewInfo.ZoomedAll());
+   mHsbar->Enable(newhstate);
    mVsbar->Enable(panelHeight < totalHeight);
 #endif
 
@@ -1624,7 +1625,7 @@ void AudacityProject::FixScrollbars()
       refresh = true;
       rescroll = false;
    }
-   if (mViewInfo.ZoomedAll() && mViewInfo.sbarH != 0) {
+   if (!newhstate && mViewInfo.sbarH != 0) {
       mViewInfo.sbarH = 0;
 
       refresh = true;
@@ -1666,7 +1667,8 @@ void AudacityProject::FixScrollbars()
                         panelHeight / mViewInfo.scrollStep, TRUE);
    mVsbar->Refresh();
 
-   if (refresh || (rescroll && !mViewInfo.ZoomedAll())) {
+   if (refresh || (rescroll &&
+       (GetScreenEndTime() - mViewInfo.h) < mViewInfo.total)) {
       mTrackPanel->Refresh(false);
    }
 
@@ -1849,8 +1851,12 @@ void AudacityProject::OnScroll(wxScrollEvent & WXUNUSED(event))
    mViewInfo.sbarH =
       (wxInt64)(mHsbar->GetThumbPosition() / mViewInfo.sbarScale) - offset;
 
-   if (mViewInfo.sbarH != hlast)
-      mViewInfo.SetBeforeScreenWidth(mViewInfo.sbarH, lowerBound);
+   if (mViewInfo.sbarH != hlast) {
+      int width;
+      mTrackPanel->GetTracksUsableArea(&width, NULL);
+      mViewInfo.SetBeforeScreenWidth(mViewInfo.sbarH, width, lowerBound);
+   }
+
 
    if (mScrollBeyondZero) {
       enum { SCROLL_PIXEL_TOLERANCE = 10 };

@@ -234,6 +234,10 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
 
    virtual void DrawQuickPlayIndicator(wxDC & dc, double pos);
 
+   // Returns the time corresponding to the pixel column one past the track area
+   // (ignoring any fisheye)
+   virtual double GetScreenEndTime() const;
+
  protected:
    virtual MixerBoard* GetMixerBoard();
    /** @brief Populates the track pop-down menu with the common set of

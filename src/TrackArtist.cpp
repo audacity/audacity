@@ -1663,7 +1663,7 @@ void FindWavePortions
    // the fisheye.
 
    ZoomInfo::Intervals intervals;
-   zoomInfo.FindIntervals(params.rate, intervals, rect.x);
+   zoomInfo.FindIntervals(params.rate, intervals, rect.width, rect.x);
    ZoomInfo::Intervals::const_iterator it = intervals.begin(), end = intervals.end(), prev;
    wxASSERT(it != end && it->position == rect.x);
    const int rightmost = rect.x + rect.width;

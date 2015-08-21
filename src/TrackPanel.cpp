@@ -1259,6 +1259,13 @@ void TrackPanel::DrawQuickPlayIndicator(wxDC & dc, double pos)
    }
 }
 
+double TrackPanel::GetScreenEndTime() const
+{
+   int width;
+   GetTracksUsableArea(&width, NULL);
+   return mViewInfo->PositionToTime(width, true);
+}
+
 void TrackPanel::TimerUpdateIndicator()
 {
    double pos = 0.0;
@@ -1272,7 +1279,8 @@ void TrackPanel::TimerUpdateIndicator()
 #ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
       if (mSmoothScrollingScrub) {
          // Pan the view, so that we center the play indicator.
-         mViewInfo->h = pos - mViewInfo->screen / 2.0;
+         const double duration = GetScreenEndTime() - mViewInfo->h;
+         mViewInfo->h = pos - duration / 2.0;
          if (!mScrollBeyondZero)
             // Can't scroll too far left
             mViewInfo->h = std::max(0.0, mViewInfo->h);
@@ -1283,7 +1291,7 @@ void TrackPanel::TimerUpdateIndicator()
       const bool
          onScreen = between_inclusive(mViewInfo->h,
          pos,
-         mViewInfo->h + mViewInfo->screen);
+         GetScreenEndTime());
 
       // This displays the audio time, too...
       DisplaySelection();
@@ -1326,10 +1334,12 @@ void TrackPanel::UndrawIndicator(wxDC & dc)
    // Erase the old indicator.
    if (mLastIndicatorX != -1)
    {
+      int width;
+      GetTracksUsableArea(&width, NULL);
       const bool
       onScreen = between_inclusive(GetLeftOffset(),
          mLastIndicatorX,
-         GetLeftOffset() + mViewInfo->GetScreenWidth());
+         GetLeftOffset() + width);
       if (onScreen)
       {
          // LL:  Keep from trying to blit outsize of the source DC.  This results in a crash on
@@ -1429,9 +1439,11 @@ void TrackPanel::UndrawCursor(wxDC & dc)
 
    if( mLastCursorX != -1 )
    {
+      int width;
+      GetTracksUsableArea(&width, NULL);
       onScreen = between_inclusive(GetLeftOffset(),
                                    mLastCursorX,
-                                   GetLeftOffset() + mViewInfo->GetScreenWidth());
+                                   GetLeftOffset() + width);
       if( onScreen )
          dc.Blit(mLastCursorX, 0, 1, mBacking->GetHeight(), &mBackingDC, mLastCursorX, 0);
    }
@@ -1446,7 +1458,7 @@ void TrackPanel::DoDrawCursor(wxDC & dc)
    const bool
    onScreen = between_inclusive( mViewInfo->h,
                                  mCursorTime,
-                                 mViewInfo->h + mViewInfo->screen );
+                                 GetScreenEndTime() );
 
    if( !onScreen )
       return;
@@ -1672,12 +1684,12 @@ void TrackPanel::HandleControlKey(bool down)
 
 void TrackPanel::HandlePageUpKey()
 {
-   mListener->TP_ScrollWindow(mViewInfo->h + mViewInfo->screen);
+   mListener->TP_ScrollWindow(GetScreenEndTime());
 }
 
 void TrackPanel::HandlePageDownKey()
 {
-   mListener->TP_ScrollWindow(mViewInfo->h - mViewInfo->screen);
+   mListener->TP_ScrollWindow(2 * mViewInfo->h - GetScreenEndTime());
 }
 
 void TrackPanel::HandleCursorForLastMouseEvent()
@@ -2316,7 +2328,7 @@ double TrackPanel::FindScrubSpeed(double timeAtMouse) const
    // and the extremes to the maximum scrub speed.
 
    // Width of visible track area, in time terms:
-   const double screen = mViewInfo->screen;
+   const double screen = GetScreenEndTime() - mViewInfo->h;
    const double origin = mViewInfo->h + screen / 2.0;
 
    // There are various snapping zones that are this fraction of screen:
@@ -2363,7 +2375,7 @@ double TrackPanel::FindSeekSpeed(double timeAtMouse) const
    const double extreme = std::max(1.0, mMaxScrubSpeed * ARBITRARY_MULTIPLIER);
 
    // Width of visible track area, in time terms:
-   const double screen = mViewInfo->screen;
+   const double screen = GetScreenEndTime() - mViewInfo->h;
    const double halfScreen = screen / 2.0;
    const double origin = mViewInfo->h + halfScreen;
 
@@ -4463,11 +4475,8 @@ void TrackPanel::HandleZoomDrag(wxMouseEvent & event)
 /// Zoom button up
 void TrackPanel::HandleZoomButtonUp(wxMouseEvent & event)
 {
-   if (mZoomEnd < mZoomStart) {
-      int temp = mZoomEnd;
-      mZoomEnd = mZoomStart;
-      mZoomStart = temp;
-   }
+   if (mZoomEnd < mZoomStart)
+      std::swap(mZoomStart, mZoomEnd);
 
    if (IsDragZooming())
       DragZoom(event, GetLeftOffset());
@@ -4501,8 +4510,7 @@ void TrackPanel::DragZoom(wxMouseEvent & event, int trackLeftEdge)
 {
    double left = mViewInfo->PositionToTime(mZoomStart, trackLeftEdge);
    double right = mViewInfo->PositionToTime(mZoomEnd, trackLeftEdge);
-
-   double multiplier = mViewInfo->screen / (right - left);
+   double multiplier = (GetScreenEndTime() - mViewInfo->h) / (right - left);
    if (event.ShiftDown())
       multiplier = 1.0 / multiplier;
 
@@ -4883,14 +4891,14 @@ void TrackPanel::HandleWaveTrackVZoom
 namespace {
 // Is the sample horizontally nearest to the cursor sufficiently separated from
 // its neighbors that the pencil tool should be allowed to drag it?
-bool SampleResolutionTest(const ViewInfo &viewInfo, const WaveTrack *wt, double time, double rate)
+bool SampleResolutionTest(const ViewInfo &viewInfo, const WaveTrack *wt, double time, double rate, int width)
 {
    // Require more than 3 pixels per sample
    // Round to an exact sample time
    const double adjustedTime = wt->LongSamplesToTime(wt->TimeToLongSamples(time));
    const wxInt64 xx = std::max(wxInt64(0), viewInfo.TimeToPosition(adjustedTime));
    ZoomInfo::Intervals intervals;
-   viewInfo.FindIntervals(rate, intervals);
+   viewInfo.FindIntervals(rate, intervals, width);
    ZoomInfo::Intervals::const_iterator it = intervals.begin(), end = intervals.end(), prev;
    wxASSERT(it != end && it->position == 0);
    do
@@ -4932,7 +4940,9 @@ bool TrackPanel::IsSampleEditingPossible( wxMouseEvent &event, Track * t )
       WaveTrack *const wt = static_cast<WaveTrack*>(t);
       const double rate = wt->GetRate();
       const double time = mViewInfo->PositionToTime(event.m_x, rect.x);
-      showPoints = SampleResolutionTest(*mViewInfo, wt, time, rate);
+      int width;
+      GetTracksUsableArea(&width, NULL);
+      showPoints = SampleResolutionTest(*mViewInfo, wt, time, rate, width);
    }
 
    //If we aren't zoomed in far enough, show a message dialog.
@@ -6290,7 +6300,7 @@ void TrackPanel::HandleWheelRotation(wxMouseEvent & event)
 #ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
       if (mSmoothScrollingScrub) {
          // Expand or contract about the center, ignoring mouse position
-         center_h = mViewInfo->h + mViewInfo->screen / 2.0;
+         center_h = mViewInfo->h + (GetScreenEndTime() - mViewInfo->h) / 2.0;
          xx = mViewInfo->TimeToPosition(center_h, trackLeftEdge);
       }
       else
@@ -7169,7 +7179,9 @@ bool TrackPanel::HitTestSamples(Track *track, wxRect &rect, wxMouseEvent & event
    const bool dB = !wavetrack->GetWaveformSettings().isLinear();
 
    const double tt = mViewInfo->PositionToTime(event.m_x, rect.x);
-   if (!SampleResolutionTest(*mViewInfo, wavetrack, tt, rate))
+   int width;
+   GetTracksUsableArea(&width, NULL);
+   if (!SampleResolutionTest(*mViewInfo, wavetrack, tt, rate, width))
       return false;
 
    // Just get one sample.
@@ -7632,8 +7644,6 @@ void TrackPanel::DrawZooming(wxDC * dc, const wxRect & clip)
    dc->SetPen(*wxBLACK_DASHED_PEN);
 
    if (mMouseCapture==IsVZooming) {
-      int width, height;
-
       rect.y = std::min(mZoomStart, mZoomEnd);
       rect.height = 1 + abs(mZoomEnd - mZoomStart);
 
@@ -8254,14 +8264,11 @@ void TrackPanel::OnToggle()
 // Make sure selection edge is in view
 void TrackPanel::ScrollIntoView(double pos)
 {
-   const int screenWidth = rint(mViewInfo->GetScreenWidth());
-
    int w;
    GetTracksUsableArea( &w, NULL );
-   // Or should we just set w = screenWidth ?
 
    int pixel = mViewInfo->TimeToPosition(pos);
-   if (pixel < 0 || pixel >= screenWidth)
+   if (pixel < 0 || pixel >= w)
    {
       mListener->TP_ScrollWindow
          (mViewInfo->OffsetTimeByPixels(pos, -(w / 2)));
