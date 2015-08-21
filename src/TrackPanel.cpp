@@ -4441,18 +4441,16 @@ void TrackPanel::HandleZoomClick(wxMouseEvent & event)
 /// Zoom drag
 void TrackPanel::HandleZoomDrag(wxMouseEvent & event)
 {
-   int left, width, height;
-
-   left = GetLeftOffset();
-   GetTracksUsableArea(&width, &height);
+   const int left = GetLeftOffset();
+   const int right = GetSize().x - kRightMargin - 1;
 
    mZoomEnd = event.m_x;
 
    if (event.m_x < left) {
       mZoomEnd = left;
    }
-   else if (event.m_x >= left + width - 1) {
-      mZoomEnd = left + width - 1;
+   else if (event.m_x > right) {
+      mZoomEnd = right;
    }
 
    if (IsDragZooming()) {
@@ -7633,17 +7631,18 @@ void TrackPanel::DrawZooming(wxDC * dc, const wxRect & clip)
 
    if (mMouseCapture==IsVZooming) {
       int width, height;
-      GetTracksUsableArea(&width, &height);
 
-      rect.y = mZoomStart;
+      rect.y = std::min(mZoomStart, mZoomEnd);
+      rect.height = 1 + abs(mZoomEnd - mZoomStart);
+
       rect.x = GetVRulerOffset();
-      rect.width = width + GetVRulerWidth() + 1; //+1 extends into border rect
-      rect.height = mZoomEnd - mZoomStart;
+      rect.SetRight(GetSize().x - kRightMargin); // extends into border rect
    }
    else {
-      rect.x = mZoomStart;
+      rect.x = std::min(mZoomStart, mZoomEnd);
+      rect.width = 1 + abs(mZoomEnd - mZoomStart);
+
       rect.y = -1;
-      rect.width = mZoomEnd - mZoomStart;
       rect.height = clip.height + 2;
    }
 
