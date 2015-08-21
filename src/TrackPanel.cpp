@@ -2540,6 +2540,8 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
 {
    Track *rightTrack = NULL;
    mCapturedTrack = pTrack;
+   rect.y += kTopMargin;
+   rect.height -= kTopMargin + kBottomMargin;
    mCapturedRect = rect;
 
    mMouseCapture=IsSelecting;
@@ -3414,9 +3416,11 @@ void TrackPanel::SelectionHandleDrag(wxMouseEvent & event, Track *clickedTrack)
    wxRect rect      = mCapturedRect;
    Track *pTrack = mCapturedTrack;
 
-   // AS: Note that FindTrack will replace rect's value.
-   if (!pTrack)
+   if (!pTrack) {
       pTrack = FindTrack(event.m_x, event.m_y, false, false, &rect);
+      rect.y += kTopMargin;
+      rect.height -= kTopMargin + kBottomMargin;
+   }
 
    // Also fuhggeddaboudit if not in a track.
    if (!pTrack)
@@ -3705,8 +3709,8 @@ void TrackPanel::HandleEnvelope(wxMouseEvent & event)
       }
 
       mCapturedRect = rect;
-      mCapturedRect.y += kTopInset;
-      mCapturedRect.height -= kTopInset;
+      mCapturedRect.y += kTopMargin;
+      mCapturedRect.height -= kTopMargin + kBottomMargin;
    }
    // AS: if there's actually a selected track, then forward all of the
    //  mouse events to its envelope.
@@ -3732,8 +3736,6 @@ void TrackPanel::ForwardEventToTimeTrackEnvelope(wxMouseEvent & event)
    Envelope *pspeedenvelope = ptimetrack->GetEnvelope();
 
    wxRect envRect = mCapturedRect;
-   envRect.y++;
-   envRect.height -= 2;
    double lower = ptimetrack->GetRangeLower(), upper = ptimetrack->GetRangeUpper();
    const double dBRange = mViewInfo->dBr;
    if (ptimetrack->GetDisplayLog()) {
@@ -3775,8 +3777,6 @@ void TrackPanel::ForwardEventToWaveTrackEnvelope(wxMouseEvent & event)
       // AS: Then forward our mouse event to the envelope.
       // It'll recalculate and then tell us whether or not to redraw.
       wxRect envRect = mCapturedRect;
-      envRect.y++;
-      envRect.height -= 2;
       float zoomMin, zoomMax;
       pwavetrack->GetDisplayBounds(&zoomMin, &zoomMax);
       needUpdate = penvelope->MouseEvent(
@@ -3794,8 +3794,6 @@ void TrackPanel::ForwardEventToWaveTrackEnvelope(wxMouseEvent & event)
          bool updateNeeded = false;
          if (e2) {
             wxRect envRect = mCapturedRect;
-            envRect.y++;
-            envRect.height -= 2;
             float zoomMin, zoomMax;
             pwavetrack->GetDisplayBounds(&zoomMin, &zoomMax);
             updateNeeded = e2->MouseEvent(event, envRect,
@@ -3808,8 +3806,6 @@ void TrackPanel::ForwardEventToWaveTrackEnvelope(wxMouseEvent & event)
             if( (e2 = link->GetActiveEnvelope()) != 0 )  // search for any active DragPoint
             {
                wxRect envRect = mCapturedRect;
-               envRect.y++;
-               envRect.height -= 2;
                float zoomMin, zoomMax;
                pwavetrack->GetDisplayBounds(&zoomMin, &zoomMax);
                needUpdate |= e2->MouseEvent(event, envRect,
@@ -4663,8 +4659,8 @@ void TrackPanel::HandleWaveTrackVZoom
  bool fixedMousePoint)
 {
    WaveTrack *const partner = static_cast<WaveTrack *>(tracks->GetLink(track));
-   int height = track->GetHeight();
-   int ypos = rect.y;
+   int height = track->GetHeight() - (kTopMargin + kBottomMargin);
+   int ypos = rect.y + kBorderThickness;
 
    // Ensure start and end are in order (swap if not).
    if (zoomEnd < zoomStart)
@@ -4955,7 +4951,7 @@ float TrackPanel::FindSampleEditingLevel(wxMouseEvent &event, double dBRange, do
    mDrawingTrack->GetDisplayBounds(&zoomMin, &zoomMax);
 
    const int y = event.m_y - mDrawingTrackTop;
-   const int height = mDrawingTrack->GetHeight();
+   const int height = mDrawingTrack->GetHeight() - (kTopMargin + kBottomMargin);
    const bool dB = !mDrawingTrack->GetWaveformSettings().isLinear();
    float newLevel =
       ::ValueOfPixel(y, height, false, dB, dBRange, zoomMin, zoomMax);
@@ -4996,7 +4992,7 @@ void TrackPanel::HandleSampleEditingClick( wxMouseEvent & event )
 
    /// \todo Should mCapturedTrack take the place of mDrawingTrack??
    mDrawingTrack = static_cast<WaveTrack*>(t);
-   mDrawingTrackTop=rect.y;
+   mDrawingTrackTop=rect.y + kTopMargin;
 
    //If we are still around, we are drawing in earnest.  Set some member data structures up:
    //First, calculate the starting sample.  To get this, we need the time
@@ -7395,9 +7391,9 @@ void TrackPanel::DrawEverythingElse(wxDC * dc,
       if (region.Contains(0, trackRect.y, GetLeftOffset(), trackRect.height)) {
          wxRect rect = trackRect;
          rect.x += GetVRulerOffset();
-         rect.y += kTopInset;
+         rect.y += kTopMargin;
          rect.width = GetVRulerWidth();
-         rect.height -= (kTopInset + 2);
+         rect.height -= (kTopMargin + kBottomMargin);
          mTrackArtist->DrawVRuler(t, dc, rect);
       }
 
@@ -7408,9 +7404,9 @@ void TrackPanel::DrawEverythingElse(wxDC * dc,
          if (region.Contains(0, trackRect.y, GetLeftOffset(), trackRect.height)) {
             wxRect rect = trackRect;
             rect.x += GetVRulerOffset();
-            rect.y += kTopInset;
+            rect.y += kTopMargin;
             rect.width = GetVRulerWidth();
-            rect.height -= (kTopInset + 2);
+            rect.height -= (kTopMargin + kBottomMargin);
             mTrackArtist->DrawVRuler(t, dc, rect);
          }
       }
@@ -7953,20 +7949,20 @@ void TrackPanel::UpdateTrackVRuler(Track *t)
       return;
 
    wxRect rect(GetVRulerOffset(),
-            kTopInset,
+            kTopMargin,
             GetVRulerWidth(),
-            t->GetHeight() - (kTopInset + 2));
+            t->GetHeight() - (kTopMargin + kBottomMargin));
 
    mTrackArtist->UpdateVRuler(t, rect);
    Track *l = t->GetLink();
    if (l)
    {
-      rect.height = l->GetHeight() - (kTopInset + 2);
+      rect.height = l->GetHeight() - (kTopMargin + kBottomMargin);
       mTrackArtist->UpdateVRuler(l, rect);
    }
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
    else if(MONO_WAVE_PAN(t)){
-      rect.height = t->GetHeight(true) - (kTopInset + 2);
+      rect.height = t->GetHeight(true) - (kTopMargin + kBottomMargin);
       mTrackArtist->UpdateVRuler(t, rect);
    }
 #endif

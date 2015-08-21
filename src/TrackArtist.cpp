@@ -571,8 +571,8 @@ void TrackArtist::DrawVRuler(Track *t, wxDC * dc, wxRect & rect)
       bev.height--;
       dc->DrawRectangle(bev);
 
-      rect.y += 2;
-      rect.height -= 2;
+      rect.y += 1;
+      rect.height -= 1;
 
       //int bottom = GetBottom((NoteTrack *) t, rect);
       NoteTrack *track = (NoteTrack *) t;
@@ -671,7 +671,7 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
       min = tt->GetRangeLower() * 100.0;
       max = tt->GetRangeUpper() * 100.0;
 
-      vruler->SetBounds(rect.x, rect.y+1, rect.x + rect.width, rect.y + rect.height-1);
+      vruler->SetBounds(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height-1);
       vruler->SetOrientation(wxVERTICAL);
       vruler->SetRange(max, min);
       vruler->SetFormat((tt->GetDisplayLog()) ? Ruler::RealLogFormat : Ruler::RealFormat);
@@ -720,7 +720,7 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
                wt->SetDisplayBounds(min, max);
             }
 
-            vruler->SetBounds(rect.x, rect.y + 1, rect.x + rect.width, rect.y + rect.height - 1);
+            vruler->SetBounds(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height - 1);
             vruler->SetOrientation(wxVERTICAL);
             vruler->SetRange(max, min);
             vruler->SetFormat(Ruler::RealFormat);
@@ -782,7 +782,7 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
                   botval = -((1 - min) * dBRange);
                }
 
-               vruler->SetBounds(rect.x, rect.y + top + 1, rect.x + rect.width, rect.y + bot - 1);
+               vruler->SetBounds(rect.x, rect.y + top, rect.x + rect.width, rect.y + bot - 1);
                vruler->SetOrientation(wxVERTICAL);
                vruler->SetRange(topval, botval);
             }
@@ -815,7 +815,7 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
             we will use Hz if maxFreq is < 2000, otherwise we represent kHz,
             and append to the numbers a "k"
             */
-            vruler->SetBounds(rect.x, rect.y + 1, rect.x + rect.width, rect.y + rect.height - 1);
+            vruler->SetBounds(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height - 1);
             vruler->SetOrientation(wxVERTICAL);
             vruler->SetFormat(Ruler::RealFormat);
             vruler->SetLabelEdges(true);
@@ -853,7 +853,7 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
             we will use Hz if maxFreq is < 2000, otherwise we represent kHz,
             and append to the numbers a "k"
             */
-            vruler->SetBounds(rect.x, rect.y + 1, rect.x + rect.width, rect.y + rect.height - 1);
+            vruler->SetBounds(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height - 1);
             vruler->SetOrientation(wxVERTICAL);
             vruler->SetFormat(Ruler::IntFormat);
             vruler->SetLabelEdges(true);
@@ -873,7 +873,7 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
    // The note track isn't drawing a ruler at all!
    // But it needs to!
    else if (t->GetKind() == Track::Note) {
-      vruler->SetBounds(rect.x, rect.y+1, rect.x + 1, rect.y + rect.height-1);
+      vruler->SetBounds(rect.x, rect.y, rect.x + 1, rect.y + rect.height-1);
       vruler->SetOrientation(wxVERTICAL);
    }
 #endif // USE_MIDI
@@ -946,7 +946,10 @@ float ValueOfPixel(int yy, int height, bool offset,
    bool dB, double dBRange, float zoomMin, float zoomMax)
 {
    wxASSERT(height > 0);
-   float v = zoomMax - (yy / (float)height) * (zoomMax - zoomMin);
+   // Map 0 to max and height - 1 (not height) to min
+   float v =
+      height == 1 ? (zoomMin + zoomMax) / 2 :
+      zoomMax - (yy / (float)(height - 1)) * (zoomMax - zoomMin);
    if (offset) {
       if (v > 0.0)
          v += .5;
