@@ -1074,9 +1074,11 @@ void TrackPanel::SelectTrackLength(Track *t)
 void TrackPanel::GetTracksUsableArea(int *width, int *height) const
 {
    GetSize(width, height);
-   *width -= GetLeftOffset();
-   *width -= kRightMargin;
-   *width = std::max(0, *width);
+   if (width) {
+      *width -= GetLeftOffset();
+      *width -= kRightMargin;
+      *width = std::max(0, *width);
+   }
 }
 
 /// Gets the pointer to the AudacityProject that
@@ -4150,8 +4152,8 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
    if (mouseTrack == NULL) {
       // Allow sliding if the pointer is not over any track, but only if x is
       // within the bounds of the tracks area.
-      int width, height;
-      GetTracksUsableArea(&width, &height);
+      int width;
+      GetTracksUsableArea(&width, NULL);
       if (event.m_x >= GetLeftOffset() && event.m_x < GetLeftOffset() + width)
          mouseTrack = mCapturedTrack;
       else
@@ -8254,8 +8256,8 @@ void TrackPanel::ScrollIntoView(double pos)
 {
    const int screenWidth = rint(mViewInfo->GetScreenWidth());
 
-   int w, h;
-   GetTracksUsableArea( &w, &h );
+   int w;
+   GetTracksUsableArea( &w, NULL );
    // Or should we just set w = screenWidth ?
 
    int pixel = mViewInfo->TimeToPosition(pos);

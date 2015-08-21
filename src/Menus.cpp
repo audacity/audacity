@@ -4952,8 +4952,8 @@ void AudacityProject::OnZoomFit()
    if (len <= 0.0)
       return;
 
-   int w, h;
-   mTrackPanel->GetTracksUsableArea(&w, &h);
+   int w;
+   mTrackPanel->GetTracksUsableArea(&w, NULL);
    w -= 10;
 
    Zoom(w / len);
@@ -4962,9 +4962,9 @@ void AudacityProject::OnZoomFit()
 
 void AudacityProject::DoZoomFitV()
 {
-   int width, height, count;
+   int height, count;
 
-   mTrackPanel->GetTracksUsableArea(&width, &height);
+   mTrackPanel->GetTracksUsableArea(NULL, &height);
 
    height -= 28;
 
