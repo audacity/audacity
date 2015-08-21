@@ -165,6 +165,7 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
 
    virtual int GetLeftOffset() const { return GetLabelWidth() + 1;}
 
+   // Width and height, relative to upper left corner at (GetLeftOffset(), 0)
    virtual void GetTracksUsableArea(int *width, int *height) const;
 
    virtual void SelectNone();

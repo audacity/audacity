@@ -1074,7 +1074,7 @@ void TrackPanel::SelectTrackLength(Track *t)
 void TrackPanel::GetTracksUsableArea(int *width, int *height) const
 {
    GetSize(width, height);
-   *width -= GetLabelWidth();
+   *width -= GetLeftOffset();
    *width -= kRightMargin;
    *width = std::max(0, *width);
 }
