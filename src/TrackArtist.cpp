@@ -503,7 +503,7 @@ void TrackArtist::DrawVRuler(Track *t, wxDC * dc, wxRect & rect)
    // But give it a beveled area
    if (kind == Track::Label) {
       wxRect bev = rect;
-      bev.Inflate(-1, -1);
+      bev.Inflate(-1, 0);
       bev.width += 1;
       AColor::BevelTrackInfo(*dc, true, bev);
 
@@ -513,7 +513,7 @@ void TrackArtist::DrawVRuler(Track *t, wxDC * dc, wxRect & rect)
    // Time tracks
    if (kind == Track::Time) {
       wxRect bev = rect;
-      bev.Inflate(-1, -1);
+      bev.Inflate(-1, 0);
       bev.width += 1;
       AColor::BevelTrackInfo(*dc, true, bev);
 
@@ -537,7 +537,7 @@ void TrackArtist::DrawVRuler(Track *t, wxDC * dc, wxRect & rect)
    // The ruler needs a bevelled surround.
    if (kind == Track::Wave) {
       wxRect bev = rect;
-      bev.Inflate(-1, -1);
+      bev.Inflate(-1, 0);
       bev.width += 1;
       AColor::BevelTrackInfo(*dc, true, bev);
 
@@ -566,9 +566,7 @@ void TrackArtist::DrawVRuler(Track *t, wxDC * dc, wxRect & rect)
       dc->SetBrush(*wxWHITE_BRUSH);
       wxRect bev = rect;
       bev.x++;
-      bev.y++;
       bev.width--;
-      bev.height--;
       dc->DrawRectangle(bev);
 
       rect.y += 1;
