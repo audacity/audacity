@@ -267,6 +267,7 @@ PrefsDialog::PrefsDialog
    S.EndVerticalLay();
 
    S.AddStandardButtons(eOkButton | eCancelButton | eApplyButton);
+   static_cast<wxButton*>(wxWindow::FindWindowById(wxID_OK, this))->SetDefault();
 
    if (mUniquePage && !mUniquePage->ShowsApplyButton()) {
       wxWindow *const applyButton =
