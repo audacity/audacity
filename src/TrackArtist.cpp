@@ -3282,12 +3282,12 @@ void TrackArtist::DrawBackgroundWithSelection(wxDC *dc, const wxRect &rect,
          dc->SetBrush(unselBrush);
          dc->DrawRectangle(before);
 
-         within.x = before.GetRight();
+         within.x = 1 + before.GetRight();
       }
       within.width = rect.x + int(zoomInfo.TimeToPosition(sel1) + 2) - within.x;
 
       if (within.GetRight() > rect.GetRight()) {
-         within.width = rect.GetRight() - within.x;
+         within.width = 1 + rect.GetRight() - within.x;
       }
 
       if (within.width > 0) {
@@ -3302,14 +3302,14 @@ void TrackArtist::DrawBackgroundWithSelection(wxDC *dc, const wxRect &rect,
             DrawSyncLockTiles(dc, within);
          }
 
-         after.x = within.GetRight();
+         after.x = 1 + within.GetRight();
       }
       else {
          // `within` not drawn; start where it would have gone
          after.x = within.x;
       }
 
-      after.width = rect.GetRight() - after.x;
+      after.width = 1 + rect.GetRight() - after.x;
       if (after.width > 0) {
          dc->SetBrush(unselBrush);
          dc->DrawRectangle(after);
