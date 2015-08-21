@@ -1387,7 +1387,7 @@ bool LabelTrack::HandleGlyphDragRelease(const wxMouseEvent & evt,
       //just reset its value and redraw.
       // LL:  Constrain to inside track rectangle for now.  Should be changed
       //      to allow scrolling while dragging labels
-      int x = Constrain( evt.m_x + mxMouseDisplacement - r.x, 0, r.width - 2);
+      int x = Constrain( evt.m_x + mxMouseDisplacement - r.x, 0, r.width);
 
       // If exactly one edge is selected we allow swapping
       bool bAllowSwapping = (mMouseOverLabelLeft >=0 ) ^ ( mMouseOverLabelRight >= 0);

@@ -261,7 +261,15 @@ right and top insets
 */
 enum {
    kLeftInset = 4,
+   kRightInset = kLeftInset,
    kTopInset = 4,
+   kShadowThickness = 1,
+   kBorderThickness = 1,
+   kTopMargin = kTopInset + kBorderThickness,
+   kBottomMargin = kShadowThickness + kBorderThickness,
+   kLeftMargin = kLeftInset + kBorderThickness,
+   kRightMargin = kRightInset + kShadowThickness + kBorderThickness,
+
    kTimerInterval = 50, // milliseconds
    kOneSecondCountdown = 1000 / kTimerInterval,
 };
@@ -589,7 +597,7 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    BuildMenus();
 
    mTrackArtist = new TrackArtist();
-   mTrackArtist->SetInset(1, kTopInset + 1, kLeftInset + 2, 2);
+   mTrackArtist->SetInset(1, kTopMargin, kRightMargin, kBottomMargin);
 
    mCapturedTrack = NULL;
    mPopupMenuTarget = NULL;
@@ -1067,8 +1075,7 @@ void TrackPanel::GetTracksUsableArea(int *width, int *height) const
 {
    GetSize(width, height);
    *width -= GetLabelWidth();
-   // AS: MAGIC NUMBER: What does 2 represent?
-   *width -= 2 + kLeftInset;
+   *width -= kRightMargin;
    *width = std::max(0, *width);
 }
 
@@ -1241,9 +1248,10 @@ void TrackPanel::DrawQuickPlayIndicator(wxDC & dc, double pos)
          // Draw the new indicator in its new location
          AColor::Line(dc,
                      pos,
-                     y + kTopInset + 1,
+                     y + kTopMargin,
                      pos,
-                     y + t->GetHeight() - 3 );
+                     // Minus one more because AColor::Line includes both endpoints
+                     y + t->GetHeight() - kBottomMargin - 1 );
       }
       mOldQPIndicatorPos = pos;
    }
@@ -1354,8 +1362,7 @@ void TrackPanel::DoDrawIndicator(wxDC & dc)
    // Ensure that we don't draw through the TrackInfo or vertical ruler.
    wxRect clip = GetRect();
    int leftCutoff = clip.x + GetLabelWidth();
-   int rightInset = kLeftInset + 2; // See the call to SetInset
-   int rightCutoff = clip.x + clip.width - rightInset;
+   int rightCutoff = clip.x + clip.width - kRightMargin;
    if (!between_inclusive(leftCutoff, mLastIndicatorX, rightCutoff))
    {
       return;
@@ -1377,9 +1384,10 @@ void TrackPanel::DoDrawIndicator(wxDC & dc)
       // Draw the new indicator in its new location
       AColor::Line(dc,
                    mLastIndicatorX,
-                   y + kTopInset + 1,
+                   y + kTopMargin,
                    mLastIndicatorX,
-                   y + t->GetHeight() - 3 );
+                   // Minus one more because AColor::Line includes both endpoints
+                   y + t->GetHeight() - kBottomMargin - 1);
    }
 }
 
@@ -1449,9 +1457,10 @@ void TrackPanel::DoDrawCursor(wxDC & dc)
    {
       if( t->GetSelected() || mAx->IsFocused( t ) )
       {
-         int y = t->GetY() - mViewInfo->vpos + 1;
-         wxCoord top = y + kTopInset;
-         wxCoord bottom = y + t->GetHeight() - kTopInset;
+         int y = t->GetY() - mViewInfo->vpos;
+         wxCoord top = y + kTopMargin;
+         // Minus one more because AColor::Line includes both endpoints
+         wxCoord bottom = y + t->GetHeight() - kBottomMargin - 1;
 
          // MB: warp() is not needed here as far as I know, in fact it creates a bug. Removing it fixes that.
          AColor::Line(dc, mLastCursorX, top, mLastCursorX, bottom); // <-- The whole point of this routine.
@@ -6750,8 +6759,7 @@ bool TrackPanel::HandleLabelTrackClick(LabelTrack * lTrack, wxRect &rect, wxMous
    }
 
    mCapturedRect = rect;
-   mCapturedRect.x += kLeftInset;
-   mCapturedRect.width -= kLeftInset;
+   mCapturedRect.width -= kRightMargin;
 
    lTrack->HandleClick(event, mCapturedRect, *mViewInfo, &mViewInfo->selectedRegion);
 
@@ -7231,10 +7239,12 @@ void TrackPanel::RefreshTrack(Track *trk, bool refreshbacking)
       link = trk->GetLink();
    }
 
+   // subtract insets and shadows from the rectangle, but not border
+   // This matters because some separators do paint over the border
    wxRect rect(kLeftInset,
             -mViewInfo->vpos + trk->GetY() + kTopInset,
-            GetRect().GetWidth() - kLeftInset * 2 - 1,
-            trk->GetHeight() - kTopInset - 1);
+            GetRect().GetWidth() - kLeftInset - kRightInset - kShadowThickness,
+            trk->GetHeight() - kTopInset - kShadowThickness);
 
    if (link) {
       rect.height += link->GetHeight();
@@ -7805,9 +7815,11 @@ void TrackPanel::DrawOutsideOfTrack(Track * t, wxDC * dc, const wxRect & rect)
    }
 #else
    if (t->GetLinked()) {
+      // Paint the channel separator over (what would be) the shadow of the top
+      // channel, and the top inset of the bottom channel
       side = rect;
-      side.y += t->GetHeight() - 1;
-      side.height = kTopInset + 1;
+      side.y += t->GetHeight() - kShadowThickness;
+      side.height = kTopInset + kShadowThickness;
       dc->DrawRectangle(side);
    }
 #endif
@@ -9094,8 +9106,11 @@ void TrackPanel::DrawBordersAroundTrack(Track * t, wxDC * dc,
    }
 #else
    if (t->GetLinked()) {
+      // The given rect has had the top inset subtracted
       int h1 = rect.y + t->GetHeight() - kTopInset;
-      AColor::Line(*dc, vrul, h1 - 2, rect.x + rect.width - 1, h1 - 2);
+      // h1 is the top coordinate of the second tracks' rectangle
+      // Draw (part of) the bottom border of the top channel and top border of the bottom
+      AColor::Line(*dc, vrul, h1 - kBottomMargin, rect.x + rect.width - 1, h1 - kBottomMargin);
       AColor::Line(*dc, vrul, h1 + kTopInset, rect.x + rect.width - 1, h1 + kTopInset);
    }
 #endif
@@ -9966,6 +9981,9 @@ void TrackPanel::OnSetFont(wxCommandEvent & WXUNUSED(event))
 Track *TrackPanel::FindTrack(int mouseX, int mouseY, bool label, bool link,
                               wxRect * trackRect)
 {
+   // If label is true, resulting rectangle OMITS left and top insets.
+   // If label is false, resulting rectangle INCLUDES right and top insets.
+
    wxRect rect;
    rect.x = 0;
    rect.y = -mViewInfo->vpos;
