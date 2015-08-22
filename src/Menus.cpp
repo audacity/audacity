@@ -5035,6 +5035,9 @@ void AudacityProject::OnZoomSel()
    //      I know this isn't right, but until the real rounding or 1-off issue is
    //      found, this will have to work.
    // PRL:  Did I fix this?  I am not sure, so I leave the hack in place.
+   //      Fixes might have resulted from commits
+   //      1b8f44d0537d987c59653b11ed75a842b48896ea and
+   //      e7c7bb84a966c3b3cc4b3a9717d5f247f25e7296
    int width;
    mTrackPanel->GetTracksUsableArea(&width, NULL);
    Zoom((width - 1) / denom);
