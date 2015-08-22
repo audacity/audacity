@@ -1610,7 +1610,7 @@ void AudacityProject::FixScrollbars()
 #ifdef __WXGTK__
    oldhstate = mHsbar->IsShown();
    oldvstate = mVsbar->IsShown();
-   mHsbar->Show(mViewInfo.screen < mViewInfo.total);
+   mHsbar->Show(newhstate);
    mVsbar->Show(panelHeight < totalHeight);
 #else
    oldhstate = mHsbar->IsEnabled();
