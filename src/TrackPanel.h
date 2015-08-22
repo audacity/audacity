@@ -165,6 +165,8 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
 
    virtual int GetLeftOffset() const { return GetLabelWidth() + 1;}
 
+   // Width and height, relative to upper left corner at (GetLeftOffset(), 0)
+   // Either argument may be NULL
    virtual void GetTracksUsableArea(int *width, int *height) const;
 
    virtual void SelectNone();
@@ -231,6 +233,10 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
    virtual void UpdateVRulerSize();
 
    virtual void DrawQuickPlayIndicator(wxDC & dc, double pos);
+
+   // Returns the time corresponding to the pixel column one past the track area
+   // (ignoring any fisheye)
+   virtual double GetScreenEndTime() const;
 
  protected:
    virtual MixerBoard* GetMixerBoard();

@@ -2908,7 +2908,7 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
    memDC.SetPen(*wxBLACK_PEN);
    if( mEffect->mDraw->GetValue() )
    {
-      mEffect->mEnvelope->DrawPoints(memDC, mEnvRect, ZoomInfo(0.0, 1.0, mEnvRect.width-1), false, 0.0,
+      mEffect->mEnvelope->DrawPoints(memDC, mEnvRect, ZoomInfo(0.0, mEnvRect.width-1), false, 0.0,
                                      mEffect->mdBMin, mEffect->mdBMax);
    }
 
@@ -2927,7 +2927,7 @@ void EqualizationPanel::OnMouseEvent(wxMouseEvent & event)
       CaptureMouse();
    }
 
-   if (mEffect->mEnvelope->MouseEvent(event, mEnvRect, ZoomInfo(0.0, 1.0, mEnvRect.width),
+   if (mEffect->mEnvelope->MouseEvent(event, mEnvRect, ZoomInfo(0.0, mEnvRect.width),
       false, 0.0,
       mEffect->mdBMin, mEffect->mdBMax))
    {
