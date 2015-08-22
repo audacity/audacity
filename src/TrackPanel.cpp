@@ -292,15 +292,9 @@ template < class A, class B, class DIST > bool within(A a, B b, DIST d)
 }
 
 template < class LOW, class MID, class HIGH >
-    bool between_inclusive(LOW l, MID m, HIGH h)
+    bool between_incexc(LOW l, MID m, HIGH h)
 {
-   return (m >= l && m <= h);
-}
-
-template < class LOW, class MID, class HIGH >
-    bool between_exclusive(LOW l, MID m, HIGH h)
-{
-   return (m > l && m < h);
+   return (m >= l && m < h);
 }
 
 template < class CLIPPEE, class CLIPVAL >
@@ -1289,9 +1283,9 @@ void TrackPanel::TimerUpdateIndicator()
 #endif
       AudacityProject *p = GetProject();
       const bool
-         onScreen = between_inclusive(mViewInfo->h,
-         pos,
-         GetScreenEndTime());
+         onScreen = between_incexc(mViewInfo->h,
+            pos,
+            GetScreenEndTime());
 
       // This displays the audio time, too...
       DisplaySelection();
@@ -1337,9 +1331,9 @@ void TrackPanel::UndrawIndicator(wxDC & dc)
       int width;
       GetTracksUsableArea(&width, NULL);
       const bool
-      onScreen = between_inclusive(GetLeftOffset(),
-         mLastIndicatorX,
-         GetLeftOffset() + width);
+         onScreen = between_incexc(GetLeftOffset(),
+            mLastIndicatorX,
+            GetLeftOffset() + width);
       if (onScreen)
       {
          // LL:  Keep from trying to blit outsize of the source DC.  This results in a crash on
@@ -1373,9 +1367,9 @@ void TrackPanel::DoDrawIndicator(wxDC & dc)
 
    // Ensure that we don't draw through the TrackInfo or vertical ruler.
    wxRect clip = GetRect();
-   int leftCutoff = clip.x + GetLabelWidth();
+   int leftCutoff = clip.x + GetLeftOffset();
    int rightCutoff = clip.x + clip.width - kRightMargin;
-   if (!between_inclusive(leftCutoff, mLastIndicatorX, rightCutoff))
+   if (!between_incexc(leftCutoff, mLastIndicatorX, rightCutoff))
    {
       return;
    }
@@ -1441,9 +1435,9 @@ void TrackPanel::UndrawCursor(wxDC & dc)
    {
       int width;
       GetTracksUsableArea(&width, NULL);
-      onScreen = between_inclusive(GetLeftOffset(),
-                                   mLastCursorX,
-                                   GetLeftOffset() + width);
+      onScreen = between_incexc(GetLeftOffset(),
+                                mLastCursorX,
+                                GetLeftOffset() + width);
       if( onScreen )
          dc.Blit(mLastCursorX, 0, 1, mBacking->GetHeight(), &mBackingDC, mLastCursorX, 0);
    }
@@ -1456,9 +1450,9 @@ void TrackPanel::DoDrawCursor(wxDC & dc)
       return;
 
    const bool
-   onScreen = between_inclusive( mViewInfo->h,
-                                 mCursorTime,
-                                 GetScreenEndTime() );
+      onScreen = between_incexc(mViewInfo->h,
+                                mCursorTime,
+                                GetScreenEndTime() );
 
    if( !onScreen )
       return;
