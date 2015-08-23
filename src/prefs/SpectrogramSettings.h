@@ -62,7 +62,6 @@ public:
       stNumScaleTypes,
    };
 
-   static void InvalidateNames(); // in case of language change
    static const wxArrayString &GetScaleNames();
    static const wxArrayString &GetAlgorithmNames();
 
@@ -130,6 +129,7 @@ public:
 
    enum Algorithm {
       algSTFT = 0,
+      algReassignment,
       algPitchEAC,
 
       algNumAlgorithms,
@@ -153,6 +153,11 @@ public:
    // Variables used for computing the spectrum
    mutable FFTParam      *hFFT;
    mutable float         *window;
+
+   // Two other windows for computing reassigned spectrogram
+   mutable float         *tWindow; // Window times time parameter
+   mutable float         *dWindow; // Derivative of window
+
 #endif
 };
 #endif

@@ -151,12 +151,12 @@ EffectType EffectReverb::GetType()
 
 int EffectReverb::GetAudioInCount()
 {
-   return 2;
+   return mParams.mStereoWidth ? 2 : 1;
 }
 
 int EffectReverb::GetAudioOutCount()
 {
-   return 2;
+   return mParams.mStereoWidth ? 2 : 1;
 }
 
 #define BLOCK 16384

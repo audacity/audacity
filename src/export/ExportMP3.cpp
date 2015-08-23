@@ -315,6 +315,11 @@ ExportMP3Options::ExportMP3Options(wxWindow *parent, int WXUNUSED(format))
 {
    InitMP3_Statics();
 
+   mSetRate = gPrefs->Read(wxT("/FileFormats/MP3SetRate"), PRESET_STANDARD);
+   mVbrRate = gPrefs->Read(wxT("/FileFormats/MP3VbrRate"), QUALITY_4);
+   mAbrRate = gPrefs->Read(wxT("/FileFormats/MP3AbrRate"), 128);
+   mCbrRate = gPrefs->Read(wxT("/FileFormats/MP3CbrRate"), 128);
+
    ShuttleGui S(this, eIsCreatingFromPrefs);
    PopulateOrExchange(S);
 
@@ -422,11 +427,6 @@ void ExportMP3Options::PopulateOrExchange(ShuttleGui & S)
 ///
 bool ExportMP3Options::TransferDataToWindow()
 {
-   mSetRate = gPrefs->Read(wxT("/FileFormats/MP3SetRate"), PRESET_STANDARD);
-   mVbrRate = gPrefs->Read(wxT("/FileFormats/MP3VbrRate"), QUALITY_4);
-   mAbrRate = gPrefs->Read(wxT("/FileFormats/MP3AbrRate"), 128);
-   mCbrRate = gPrefs->Read(wxT("/FileFormats/MP3CbrRate"), 128);
-
    return true;
 }
 

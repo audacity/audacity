@@ -52,10 +52,10 @@ class AUDACITY_DLL_API ProgressDialog:public wxDialog
 {
 public:
    ProgressDialog();
-   ProgressDialog(const wxString & title, const wxString & message = wxEmptyString, ProgressDialogFlags flags = pdlgDefaultFlags);
-   ~ProgressDialog();
+   ProgressDialog(const wxString & title, const wxString & message = wxEmptyString, int flags = pdlgDefaultFlags);
+   virtual ~ProgressDialog();
 
-   bool Create(const wxString & title, const wxString & message = wxEmptyString, ProgressDialogFlags flags = pdlgDefaultFlags);
+   virtual bool Create(const wxString & title, const wxString & message = wxEmptyString, int flags = pdlgDefaultFlags);
 
    int Update(int value, const wxString & message = wxEmptyString);
    int Update(double current, const wxString & message = wxEmptyString);
@@ -78,19 +78,22 @@ protected:
    bool mCancel;
    bool mStop;
 
+   bool mIsTransparent;
+
 private:
    void Init();
    void OnCancel(wxCommandEvent & e);
    void OnStop(wxCommandEvent & e);
    void OnCloseWindow(wxCloseEvent & e);
-   void Beep();
+   void Beep() const;
 
 private:
    // This guarantees we have an active event loop...possible during OnInit()
    wxEventLoopGuarantor mLoop;
 
-   wxStaticText *mMessage;
    wxWindowDisabler *mDisable;
+
+   wxStaticText *mMessage;
    int mLastW;
    int mLastH;
 
@@ -99,14 +102,14 @@ private:
 
 class AUDACITY_DLL_API TimerProgressDialog : public ProgressDialog
 {
- public:
+public:
    TimerProgressDialog(const wxLongLong_t duration,
-                        const wxString & title,
-                        const wxString & message = wxEmptyString,
-                        ProgressDialogFlags flags = pdlgDefaultFlags);
+                       const wxString & title,
+                       const wxString & message = wxEmptyString,
+                       int flags = pdlgDefaultFlags);
    int Update(const wxString & message = wxEmptyString);
 
- protected:
+protected:
    wxLongLong_t mDuration;
 };
 

@@ -57,6 +57,7 @@ struct CommandListEntry
    int index;
    int count;
    bool enabled;
+   bool skipKeydown;
    bool wantKeyup;
    bool isGlobal;
    wxUint32 flags;
@@ -89,21 +90,25 @@ class AUDACITY_DLL_API CommandManager: public XMLTagHandler
    // Creating menus and adding commands
    //
 
-   wxMenuBar *AddMenuBar(wxString sMenu);
+   wxMenuBar *AddMenuBar(const wxString & sMenu);
 
-   void BeginMenu(wxString tName);
+   void BeginMenu(const wxString & tName);
    void EndMenu();
 
-   wxMenu* BeginSubMenu(wxString tName);
+   wxMenu* BeginSubMenu(const wxString & tName);
    void EndSubMenu();
    void SetToMenu( wxMenu * menu ){
       mCurrentMenu = menu;
    };
 
-   void InsertItem(wxString name, wxString label, CommandFunctor *callback,
-                   wxString after, int checkmark = -1);
+   void InsertItem(const wxString & name,
+                   const wxString & label,
+                   CommandFunctor *callback,
+                   const wxString & after,
+                   int checkmark = -1);
 
-   void AddItemList(wxString name, wxArrayString labels,
+   void AddItemList(const wxString & name,
+                    const wxArrayString & labels,
                     CommandFunctor *callback);
 
    void AddCheck(const wxChar *name,
@@ -266,7 +271,7 @@ protected:
    //
 
    wxMenuBar * CurrentMenuBar() const;
-   wxMenuBar * GetMenuBar(wxString sMenu) const;
+   wxMenuBar * GetMenuBar(const wxString & sMenu) const;
    wxMenu * CurrentSubMenu() const;
    wxMenu * CurrentMenu() const;
    wxString GetLabel(const CommandListEntry *entry) const;

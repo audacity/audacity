@@ -714,11 +714,11 @@ void NumericConverter::ParseFormatString( const wxString & format)
    for(i=0; i<mFields.GetCount(); i++) {
       mFields[i].pos = pos;
 
-      pos += mFields[i].digits;
       for(j=0; j<mFields[i].digits; j++) {
          mDigits.Add(DigitInfo(i, j, pos, wxRect()));
          mValueTemplate += wxT("0");
          mValueMask += wxT("0");
+         pos++;
       }
 
       pos += mFields[i].label.Length();

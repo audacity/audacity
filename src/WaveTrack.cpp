@@ -86,7 +86,14 @@ WaveTrack::WaveTrack(DirManager *projDirManager, sampleFormat format, double rat
       rate = GetActiveProject()->GetRate();
    }
 
+   // Force creation always:
+   WaveformSettings &settings = GetIndependentWaveformSettings();
+
    mDisplay = FindDefaultViewMode();
+   if (mDisplay == obsoleteWaveformDBDisplay) {
+      mDisplay = Waveform;
+      settings.scaleType = WaveformSettings::stLogarithmic;
+   }
 
    mLegacyProjectFileOffset = 0;
 
@@ -113,7 +120,6 @@ WaveTrack::WaveTrack(WaveTrack &orig):
    , mpWaveformSettings(orig.mpWaveformSettings 
         ? new WaveformSettings(*orig.mpWaveformSettings) : 0)
 {
-   mDisplay = FindDefaultViewMode();
    mLastScaleType = -1;
 
    mLegacyProjectFileOffset = 0;
@@ -236,12 +242,9 @@ WaveTrack::ConvertLegacyDisplayValue(int oldValue)
    switch (oldValue) {
    default:
    case Waveform:
-   case WaveformDB:
       newValue = WaveTrack::Waveform; break;
-      /*
    case WaveformDB:
-      newValue = WaveTrack::WaveformDBDisplay; break;
-      */
+      newValue = WaveTrack::obsoleteWaveformDBDisplay; break;
    case Spectrogram:
    case SpectrogramLogF:
    case Pitch:
@@ -263,6 +266,7 @@ WaveTrack::ValidateWaveTrackDisplay(WaveTrackDisplay display)
    switch (display) {
       // non-obsolete codes
    case Waveform:
+   case obsoleteWaveformDBDisplay:
    case Spectrum:
       return display;
 
@@ -272,9 +276,6 @@ WaveTrack::ValidateWaveTrackDisplay(WaveTrackDisplay display)
    case obsolete3: // was SpectralSelectionLogDisplay
    case obsolete4: // was PitchDisplay
       return Spectrum;
-
-   case obsolete5: // was WaveformDBDisplay
-      return Waveform;
 
       // codes out of bounds (from future prefs files?)
    default:

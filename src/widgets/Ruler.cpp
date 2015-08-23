@@ -1936,8 +1936,8 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
 
    // Keep Quick-Play within usable track area.
    TrackPanel *tp = mProject->GetTrackPanel();
-   int mousePosX, width, height;
-   tp->GetTracksUsableArea(&width, &height);
+   int mousePosX, width;
+   tp->GetTracksUsableArea(&width, NULL);
    mousePosX = std::max(evt.GetX(), tp->GetLeftOffset());
    mousePosX = std::min(mousePosX, tp->GetLeftOffset() + width - 1);
 

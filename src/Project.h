@@ -301,6 +301,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 
    void HandleResize();
    void UpdateLayout();
+   double GetScreenEndTime() const;
    void ZoomInByFactor( double ZoomFactor );
    void ZoomOutByFactor( double ZoomFactor );
 

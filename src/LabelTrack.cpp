@@ -1387,7 +1387,7 @@ bool LabelTrack::HandleGlyphDragRelease(const wxMouseEvent & evt,
       //just reset its value and redraw.
       // LL:  Constrain to inside track rectangle for now.  Should be changed
       //      to allow scrolling while dragging labels
-      int x = Constrain( evt.m_x + mxMouseDisplacement - r.x, 0, r.width - 2);
+      int x = Constrain( evt.m_x + mxMouseDisplacement - r.x, 0, r.width);
 
       // If exactly one edge is selected we allow swapping
       bool bAllowSwapping = (mMouseOverLabelLeft >=0 ) ^ ( mMouseOverLabelRight >= 0);
@@ -1606,7 +1606,7 @@ void LabelTrack::HandleClick(const wxMouseEvent & evt,
          PasteSelectedText(newSel->t0(), newSel->t1());
          wxTheClipboard->UsePrimarySelection(false);
 
-         return false;
+         return;
       }
 #endif
    }
@@ -1666,6 +1666,12 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
    // Cache the keycode
    int keyCode = event.GetKeyCode();
    int mods = event.GetModifiers();
+
+   // Check for modifiers and only allow shift
+   if (mods != wxMOD_NONE && mods != wxMOD_SHIFT) {
+      event.Skip();
+      return updated;
+   }
 
    // All editing keys are only active if we're currently editing a label
    if (mSelIndex >= 0) {
@@ -1907,11 +1913,23 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
 /// by OnKeyDown.
 bool LabelTrack::OnChar(SelectedRegion &WXUNUSED(newSel), wxKeyEvent & event)
 {
+   // Check for modifiers and only allow shift.
+   //
+   // We still need to check this or we will eat the top level menu accelerators
+   // on Windows if our capture or key down handlers skipped the event.
+   int mods = event.GetModifiers();
+   if (mods != wxMOD_NONE && mods != wxMOD_SHIFT) {
+      event.Skip();
+      return false;
+   }
+
    // Only track true changes to the label
    bool updated = false;
 
    // Cache the character
    wxChar charCode = event.GetUnicodeKey();
+
+   // Skip if it's not a valid unicode character or a control character
    if (charCode == 0 || wxIscntrl(charCode)) {
       event.Skip();
       return false;

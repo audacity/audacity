@@ -802,11 +802,11 @@ void DeviceToolBar::ShowComboDialog(wxChoice *combo, const wxString &title)
                          &inputSources);
       }
       S.EndHorizontalLay();
-      S.AddStandardButtons();
    }
    S.EndVerticalLay();
+   S.AddStandardButtons();
 
-   dlg.SetSize(dlg.GetSizer()->GetMinSize());
+   dlg.GetSizer()->SetSizeHints(&dlg);
    dlg.Center();
 
    if (dlg.ShowModal() == wxID_OK)

@@ -29,6 +29,8 @@ class GUIPrefs :public PrefsPanel
    ~GUIPrefs();
    virtual bool Apply();
 
+   static void GetRangeChoices(wxArrayString *pChoices, wxArrayString *pCodes);
+
  private:
    void Populate();
    void PopulateOrExchange(ShuttleGui & S);
