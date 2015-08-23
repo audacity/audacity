@@ -32,6 +32,7 @@ class HistoryWindow :public wxDialog {
    void UpdateDisplay();
 
  private:
+   void OnAudioIO(wxCommandEvent & evt);
    void DoUpdate();
    void UpdateLevels();
 
@@ -48,7 +49,9 @@ class HistoryWindow :public wxDialog {
    wxTextCtrl        *mAvail;
    wxSpinCtrl        *mLevels;
    wxButton          *mDiscard;
+
    int               mSelected;
+   bool              mAudioIOBusy;
 
  public:
    DECLARE_EVENT_TABLE()

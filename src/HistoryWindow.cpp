@@ -29,6 +29,7 @@ undo memory so as to free up space.
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
 
+#include "AudioIO.h"
 #include "../images/Arrow.xpm"
 #include "../images/Empty9x16.xpm"
 #include "HistoryWindow.h"
@@ -60,6 +61,7 @@ HistoryWindow::HistoryWindow(AudacityProject *parent, UndoManager *manager):
    mManager = manager;
    mProject = parent;
    mSelected = 0;
+   mAudioIOBusy = false;
 
    wxImageList *imageList = new wxImageList(9, 16);
    imageList->Add(wxIcon(empty9x16_xpm));
@@ -129,11 +131,43 @@ HistoryWindow::HistoryWindow(AudacityProject *parent, UndoManager *manager):
    SetMinSize(GetSize());
    mList->SetColumnWidth(0, mList->GetClientSize().x - mList->GetColumnWidth(1));
    mList->SetTextColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWTEXT));
+
+   wxTheApp->Connect(EVT_AUDIOIO_PLAYBACK,
+                     wxCommandEventHandler(HistoryWindow::OnAudioIO),
+                     NULL,
+                     this);
+
+   wxTheApp->Connect(EVT_AUDIOIO_CAPTURE,
+                     wxCommandEventHandler(HistoryWindow::OnAudioIO),
+                     NULL,
+                     this);
 }
 
 HistoryWindow::~HistoryWindow()
 {
+   wxTheApp->Disconnect(EVT_AUDIOIO_PLAYBACK,
+                        wxCommandEventHandler(HistoryWindow::OnAudioIO),
+                        NULL,
+                        this);
+
+   wxTheApp->Disconnect(EVT_AUDIOIO_CAPTURE,
+                        wxCommandEventHandler(HistoryWindow::OnAudioIO),
+                        NULL,
+                        this);
+
    mAvail->Disconnect(wxEVT_KEY_DOWN, wxKeyEventHandler(HistoryWindow::OnChar));
+}
+
+void HistoryWindow::OnAudioIO(wxCommandEvent& evt)
+{
+   evt.Skip();
+
+   if (evt.GetInt() != 0)
+      mAudioIOBusy = true;
+   else
+      mAudioIOBusy = false;
+
+   mDiscard->Enable(!mAudioIOBusy);
 }
 
 void HistoryWindow::UpdateDisplay()
@@ -214,6 +248,13 @@ void HistoryWindow::OnDiscard(wxCommandEvent & WXUNUSED(event))
 
 void HistoryWindow::OnItemSelected(wxListEvent &event)
 {
+   if (mAudioIOBusy) {
+      mList->SetItemState(mSelected,
+                       wxLIST_STATE_FOCUSED | wxLIST_STATE_SELECTED,
+                       wxLIST_STATE_FOCUSED | wxLIST_STATE_SELECTED);
+      return;
+   }
+
    int selected = event.GetIndex();
    int i;
 
