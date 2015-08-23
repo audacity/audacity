@@ -1130,6 +1130,17 @@ double LabelTrack::GetEndTime() const
    return end;
 }
 
+Track *LabelTrack::Duplicate()
+{
+   return new LabelTrack(*this);
+}
+
+void LabelTrack::SetSelected(bool s)
+{
+   Track::SetSelected(s);
+   if (!s)
+      Unselect();
+}
 
 /// OverGlyph returns 0 if not over a glyph,
 /// 1 if over the left-hand glyph, and

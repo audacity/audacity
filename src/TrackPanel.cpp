@@ -996,8 +996,6 @@ void TrackPanel::SelectNone()
    Track *t = iter.First();
    while (t) {
       t->SetSelected(false);
-      if (t->GetKind() == Track::Label)
-         ((LabelTrack *) t)->Unselect();
       t = iter.Next();
    }
 }

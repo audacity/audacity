@@ -159,7 +159,7 @@ class AUDACITY_DLL_API Track: public XMLTagHandler
    bool GetLinked  () const { return mLinked;   }
    bool GetSolo    () const { return mSolo;     }
 
-   void SetSelected(bool s) { mSelected = s; }
+   virtual void SetSelected(bool s);
    void SetMute    (bool m) { mMute     = m; }
    void SetLinked  (bool l);
    void SetSolo    (bool s) { mSolo     = s; }
