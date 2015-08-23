@@ -12,26 +12,19 @@
 ;; Released under terms of the GNU General Public License version 2:
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html .
 
-;control range "Frequency range" choice "Hz,kHz" 0
-;control frequency "Frequency" real "" 60 1 1000
-;control q "Q (higher value reduces width)" real "" 1 0.1 20
+
+;control frequency "Frequency (Hz)" float-text "" 60 0 nil
+;control q "Q (higher value reduces width)" float-text "" 1 0.1 nil
 
 
-(case range
-  (0 (setf f0 (format nil "~a Hz" frequency))
-     (setf srate (format nil "~a Hz" *sound-srate*))
-     (setf fmax (format nil "~a Hz" (/ *sound-srate* 2))))
-  (T (setf f0 (format nil "~a kHz" frequency))
-     (setf frequency (* frequency 1000))
-     (setf srate (format nil "~a kHz" (/ *sound-srate* 1000)))
-     (setf fmax (format nil "~a kHz" (/ *sound-srate* 2000)))))
-
-
-(if (>= frequency (/ *sound-srate* 2.0))
-    (format nil "Error:\nFrequency (~a) too high for track sample rate.~%~%~
-                 Track sample rate is ~a~%~
-                 Frequency must be less than ~a."
-            f0
-            srate
-            fmax)
-    (notch2 *track* frequency q))
+(cond
+  ((< frequency 0.1) "Frequency must be at least 0.1 Hz.")
+  ((>= frequency (/ *sound-srate* 2.0))
+      (format nil "Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~
+                   Track sample rate is ~a Hz~%~
+                   Frequency must be less than ~a Hz."
+              frequency
+              *sound-srate*
+              (/ *sound-srate* 2.0)))
+  ((< q 0.1) "Q must be at least 0.1.")
+  (T  (notch2 *track* frequency q)))
