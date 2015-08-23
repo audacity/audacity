@@ -6842,6 +6842,8 @@ void TrackPanel::HandleTextDragRelease(LabelTrack * lTrack, wxMouseEvent & event
    if (!lTrack)
       return;
 
+   lTrack->HandleTextDragRelease(event);
+
    /// \todo This method is one of a large number of methods in
    /// TrackPanel which suitably modified belong in other classes.
    if (event.Dragging()) {
