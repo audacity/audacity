@@ -11560,7 +11560,7 @@ msgstr "Con&versor de frecuencia de muestreo:"
 
 #: src/prefs/QualityPrefs.cpp:172
 msgid "&Dither:"
-msgstr "Corrección con rui&do blanco:"
+msgstr "&Dither:"
 
 #: src/prefs/QualityPrefs.cpp:183
 msgid "High-quality Conversion"
