@@ -456,7 +456,7 @@ void TrackArtist::DrawTrack(const Track * t,
 
       bool muted = (hasSolo || t->GetMute()) && !t->GetSolo();
 
-#if defined(__WXMAC__) || defined(__WXGTK__)
+#if defined(__WXMAC__)
       wxAntialiasMode aamode = dc.GetGraphicsContext()->GetAntialiasMode();
       dc.GetGraphicsContext()->SetAntialiasMode(wxANTIALIAS_NONE);
 #endif
@@ -471,7 +471,7 @@ void TrackArtist::DrawTrack(const Track * t,
          break;
       }
 
-#if defined(__WXMAC__) || defined(__WXGTK__)
+#if defined(__WXMAC__)
       dc.GetGraphicsContext()->SetAntialiasMode(aamode);
 #endif
 
