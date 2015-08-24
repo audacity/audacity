@@ -957,6 +957,9 @@ int ExportMultiple::DoExport(int channels,
       mExported.Add(name.GetFullPath());
    }
 
+   Refresh();
+   Update();
+
    return success;
 }
 
