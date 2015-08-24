@@ -550,8 +550,6 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    mSnapLeft = -1;
    mSnapRight = -1;
 
-   mOldQPIndicatorPos = -1;
-
    // Register for tracklist updates
    mTracks->Connect(EVT_TRACKLIST_RESIZED,
                     wxCommandEventHandler(TrackPanel::OnTrackListResized),
@@ -1036,47 +1034,6 @@ void TrackPanel::ScrollDuringDrag()
       wxMouseEvent e(wxEVT_MOTION);
       HandleSelect(e);
       mAutoScrolling = false;
-   }
-}
-
-void TrackPanel::DrawQuickPlayIndicator(int x, bool snapped)
-{
-   wxClientDC dc(this);
-
-   // Erase the old indicator.
-   if (mOldQPIndicatorPos != x) {
-#if defined(__WXMAC__)
-      // On OSX, if a HiDPI resolution is being used, the line will actually take up
-      // more than 1 pixel (even though it is drawn as 1), so we restore the surrounding
-      // pixels as well.  (This is because the wxClientDC doesn't know about the scaling.)
-      dc.Blit(mOldQPIndicatorPos - 1, 0, 3, mBacking->GetHeight(), &mBackingDC, mOldQPIndicatorPos - 1, 0);
-#else
-      dc.Blit(mOldQPIndicatorPos, 0, 1, mBacking->GetHeight(), &mBackingDC, mOldQPIndicatorPos, 0);
-#endif
-
-      mOldQPIndicatorPos = -1;
-   }
-
-   if (x >= 0) {
-      snapped ? AColor::SnapGuidePen(&dc) : AColor::Light(&dc, false);
-
-      // Draw indicator in all visible tracks
-      VisibleTrackIterator iter(GetProject());
-      for (Track *t = iter.First(); t; t = iter.Next())
-      {
-         // Convert virtual coordinate to physical
-         int y = t->GetY() - mViewInfo->vpos;
-
-         // Draw the NEW indicator in its new location
-         AColor::Line(dc,
-                      x,
-                      y + kTopMargin,
-                      x,
-                      // Minus one more because AColor::Line includes both endpoints
-                      y + t->GetHeight() - kBottomMargin - 1 );
-      }
-
-      mOldQPIndicatorPos = x;
    }
 }
 

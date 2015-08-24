@@ -66,6 +66,7 @@ array of Ruler::Label.
 #include <wx/menuitem.h>
 #include <wx/tooltip.h>
 
+#include "../AColor.h"
 #include "../AudioIO.h"
 #include "../Internat.h"
 #include "../Project.h"
@@ -75,6 +76,8 @@ array of Ruler::Label.
 #include "../Experimental.h"
 #include "../TimeTrack.h"
 #include "../TrackPanel.h"
+#include "../TrackPanelCellIterator.h"
+#include "../TrackPanelOverlay.h"
 #include "../Menus.h"
 #include "../NumberScale.h"
 #include "../Prefs.h"
@@ -1645,6 +1648,91 @@ void RulerPanel::DoSetSize(int x, int y,
 
 /**********************************************************************
 
+QuickPlayIndicatorOverlay.
+Graphical helper for AdornedRulerPanel.
+
+**********************************************************************/
+
+class QuickPlayIndicatorOverlay final : public TrackPanelOverlay
+{
+public:
+   QuickPlayIndicatorOverlay(AudacityProject *project)
+      : mProject(project)
+      , mOldQPIndicatorPos(-1)
+      , mNewQPIndicatorPos(-1)
+      , mOldQPIndicatorSnapped(false)
+      , mNewQPIndicatorSnapped(false)
+   {
+   }
+
+   virtual ~QuickPlayIndicatorOverlay()
+   {
+   }
+
+   void Update(int x, bool snapped = false)
+   {
+      mNewQPIndicatorPos = x;
+      mNewQPIndicatorSnapped = snapped;
+
+      // Not strictly needed, but this reduces the lag in updating
+      // track panel causing momentary mismatch between the triangle
+      // in the ruler and the white line.
+
+      mProject->GetTrackPanel()->DrawOverlays(false);
+   }
+
+private:
+   std::pair<wxRect, bool> DoGetRectangle(wxSize size) override;
+   void Draw
+      (wxDC &dc, TrackPanelCellIterator begin, TrackPanelCellIterator end) override;
+
+   AudacityProject *mProject;
+   int mOldQPIndicatorPos;
+   int mNewQPIndicatorPos;
+   bool mOldQPIndicatorSnapped;
+   bool mNewQPIndicatorSnapped;
+};
+
+std::pair<wxRect, bool> QuickPlayIndicatorOverlay::DoGetRectangle(wxSize size)
+{
+   wxRect rect(mOldQPIndicatorPos, 0, 1, size.GetHeight());
+   return std::make_pair(
+      rect,
+      (mOldQPIndicatorPos != mNewQPIndicatorPos ||
+      mOldQPIndicatorSnapped != mNewQPIndicatorSnapped)
+   );
+}
+
+void QuickPlayIndicatorOverlay::Draw
+(wxDC &dc, TrackPanelCellIterator begin, TrackPanelCellIterator end)
+{
+   mOldQPIndicatorPos = mNewQPIndicatorPos;
+   mOldQPIndicatorSnapped = mNewQPIndicatorSnapped;
+
+   if (mOldQPIndicatorPos >= 0) {
+      mOldQPIndicatorSnapped ? AColor::SnapGuidePen(&dc) : AColor::Light(&dc, false);
+
+      // Draw indicator in all visible tracks
+      for (; begin != end; ++begin)
+      {
+         TrackPanelCellIterator::value_type data(*begin);
+         Track *const pTrack = dynamic_cast<Track*>(data.first);
+         if (!pTrack)
+            continue;
+         const wxRect &rect = data.second;
+
+         // Draw the NEW indicator in its NEW location
+         AColor::Line(dc,
+            mOldQPIndicatorPos,
+            rect.GetTop(),
+            mOldQPIndicatorPos,
+            rect.GetBottom());
+      }
+   }
+}
+
+/**********************************************************************
+
   Implementation of AdornedRulerPanel.
   Either we find a way to make this more generic, Or it will move
   out of the widgets subdirectory into its own source file.
@@ -2525,6 +2613,16 @@ void AdornedRulerPanel::DoDrawIndicator(wxDC * dc)
    dc->DrawPolygon( 3, tri );
 }
 
+QuickPlayIndicatorOverlay *AdornedRulerPanel::GetOverlay()
+{
+   if (!mOverlay) {
+      TrackPanel *tp = mProject->GetTrackPanel();
+      mOverlay = std::make_unique<QuickPlayIndicatorOverlay>(mProject);
+      tp->AddOverlay(mOverlay.get());
+   }
+   return mOverlay.get();
+}
+
 // Draws the vertical line and green triangle indicating the Quick Play cursor position.
 void AdornedRulerPanel::DrawQuickPlayIndicator(wxDC * dc)
 {
@@ -2532,7 +2630,7 @@ void AdornedRulerPanel::DrawQuickPlayIndicator(wxDC * dc)
 
    double latestEnd = std::max(mTracks->GetEndTime(), mProject->GetSel1());
    if (dc == NULL || (mQuickPlayPos >= latestEnd)) {
-      tp->DrawQuickPlayIndicator(-1);
+      GetOverlay()->Update(-1);
       mLastQuickPlayX = -1;
       return;
    }
@@ -2564,7 +2662,7 @@ void AdornedRulerPanel::DrawQuickPlayIndicator(wxDC * dc)
    AColor::IndicatorColor( dc, true);
    dc->DrawPolygon( 3, tri, x );
 
-   tp->DrawQuickPlayIndicator(x, mIsSnapped);
+   GetOverlay()->Update(x, mIsSnapped);
 }
 
 void AdornedRulerPanel::SetPlayRegion(double playRegionStart,
