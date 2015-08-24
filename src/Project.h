@@ -159,7 +159,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 
    sampleFormat GetDefaultFormat() { return mDefaultFormat; }
 
-   double GetRate() { return mRate; }
+   double GetRate() const { return mRate; }
    bool ZoomInAvailable() const { return mViewInfo.ZoomInAvailable(); }
    bool ZoomOutAvailable() const { return mViewInfo.ZoomOutAvailable(); }
    double GetSel0() { return mViewInfo.selectedRegion.t0(); }
@@ -344,7 +344,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    // Snap To
 
    void SetSnapTo(int snap);
-   int GetSnapTo();
+   int GetSnapTo() const;
 
    // Selection Format
 

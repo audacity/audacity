@@ -114,13 +114,8 @@ wxString NumberFormatter::ToString(long val, int style)
 
 wxString NumberFormatter::ToString(wxLongLong_t val, int style)
 {
-#if wxCHECK_VERSION(3,0,0)
    return PostProcessIntString(wxString::Format("%" wxLongLongFmtSpec "d", val),
                                 style);
-#else
-   return PostProcessIntString(wxString::Format(wxT("%") wxLongLongFmtSpec wxT("d"), val),
-      style);
-#endif
 }
 
 #endif // HAS_LONG_LONG_T_DIFFERENT_FROM_LONG

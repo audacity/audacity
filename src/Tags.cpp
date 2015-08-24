@@ -636,11 +636,7 @@ enum {
 };
 
 BEGIN_EVENT_TABLE(TagsEditor, wxDialog)
-#if wxCHECK_VERSION(3,0,0)
    EVT_GRID_CELL_CHANGED(TagsEditor::OnChange)
-#else
-   EVT_GRID_CELL_CHANGE(TagsEditor::OnChange)
-#endif
    EVT_BUTTON(EditID, TagsEditor::OnEdit)
    EVT_BUTTON(ResetID, TagsEditor::OnReset)
    EVT_BUTTON(ClearID, TagsEditor::OnClear)

@@ -11,9 +11,7 @@
 #include "Audacity.h"
 
 #include <wx/defs.h>
-#if wxCHECK_VERSION(3,0,0)
 #include <wx/crt.h>
-#endif
 #include <wx/filename.h>
 #include <wx/wfstream.h>
 

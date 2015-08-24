@@ -27,6 +27,7 @@
 #include "WaveTrackLocation.h"
 
 #include "Snap.h"
+#include "Track.h"
 
 class wxMenu;
 class wxRect;
@@ -140,7 +141,6 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
    virtual void UpdatePrefs();
 
    virtual void OnSize(wxSizeEvent & event);
-   virtual void OnErase(wxEraseEvent & event);
    virtual void OnPaint(wxPaintEvent & event);
    virtual void OnMouseEvent(wxMouseEvent & event);
    virtual void OnCaptureLost(wxMouseCaptureLostEvent & event);
@@ -232,7 +232,7 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
    virtual void UpdateTrackVRuler(Track *t);
    virtual void UpdateVRulerSize();
 
-   virtual void DrawQuickPlayIndicator(wxDC & dc, double pos);
+   virtual void DrawQuickPlayIndicator(int x, bool snapped = false);
 
    // Returns the time corresponding to the pixel column one past the track area
    // (ignoring any fisheye)
@@ -615,12 +615,13 @@ protected:
    int mNewCursorX;
 
    // Quick-Play indicator postion
-   double mOldQPIndicatorPos;
+   int mOldQPIndicatorPos;
 
    int mTimeCount;
 
    wxMemoryDC mBackingDC;
    wxBitmap *mBacking;
+   bool mResizeBacking;
    bool mRefreshBacking;
    int mPrevWidth;
    int mPrevHeight;
@@ -670,6 +671,7 @@ protected:
    Envelope *mCapturedEnvelope;
    WaveClip *mCapturedClip;
    TrackClipArray mCapturedClipArray;
+   TrackArray mTrackExclusions;
    bool mCapturedClipIsSelection;
    WaveTrackLocation mCapturedTrackLocation;
    wxRect mCapturedTrackLocationRect;

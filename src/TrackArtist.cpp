@@ -156,6 +156,7 @@ audio tracks.
 #include <wx/dc.h>
 #include <wx/dcmemory.h>
 #include <wx/gdicmn.h>
+#include <wx/graphics.h>
 #include <wx/image.h>
 #include <wx/pen.h>
 #include <wx/log.h>
@@ -325,10 +326,6 @@ void TrackArtist::DrawTracks(TrackList * tracks,
                              bool bigPoints,
                              bool drawSliders)
 {
-#if defined(__WXMAC__)
-   dc.GetGraphicsContext()->SetAntialiasMode(wxANTIALIAS_NONE);
-#endif
-
    wxRect trackRect = rect;
    wxRect stereoTrackRect;
    TrackListIterator iter(tracks);
@@ -459,6 +456,11 @@ void TrackArtist::DrawTrack(const Track * t,
 
       bool muted = (hasSolo || t->GetMute()) && !t->GetSolo();
 
+#if defined(__WXMAC__) || defined(__WXGTK__)
+      wxAntialiasMode aamode = dc.GetGraphicsContext()->GetAntialiasMode();
+      dc.GetGraphicsContext()->SetAntialiasMode(wxANTIALIAS_NONE);
+#endif
+
       switch (wt->GetDisplay()) {
       case WaveTrack::Waveform:
          DrawWaveform(wt, dc, rect, selectedRegion, zoomInfo,
@@ -468,6 +470,11 @@ void TrackArtist::DrawTrack(const Track * t,
          DrawSpectrum(wt, dc, rect, selectedRegion, zoomInfo);
          break;
       }
+
+#if defined(__WXMAC__) || defined(__WXGTK__)
+      dc.GetGraphicsContext()->SetAntialiasMode(aamode);
+#endif
+
       if (mbShowTrackNameInWaveform &&
           // Exclude right channel of stereo track 
           !(!wt->GetLinked() && wt->GetLink())) {

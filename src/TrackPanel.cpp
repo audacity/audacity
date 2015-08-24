@@ -78,11 +78,6 @@
 
 *//**************************************************************//**
 
-\class TrackClip
-\brief One clip (i.e short section) of a WaveTrack.
-
-*//**************************************************************//**
-
 \class TrackPanelListener
 \brief A now badly named class which is used to give access to a
 subset of the TrackPanel methods from all over the place.
@@ -383,7 +378,6 @@ BEGIN_EVENT_TABLE(TrackPanel, wxWindow)
     EVT_KEY_UP(TrackPanel::OnKeyUp)
     EVT_CHAR(TrackPanel::OnChar)
     EVT_SIZE(TrackPanel::OnSize)
-    EVT_ERASE_BACKGROUND(TrackPanel::OnErase)
     EVT_PAINT(TrackPanel::OnPaint)
     EVT_SET_FOCUS(TrackPanel::OnSetFocus)
     EVT_KILL_FOCUS(TrackPanel::OnKillFocus)
@@ -435,62 +429,9 @@ wxCursor * MakeCursor( int WXUNUSED(CursorId), const char * pXpm[36],  int HotX,
    Image.SetMaskColour(255,0,0);
    Image.SetMask();// Enable mask.
 
-#if defined(__WXGTK__) && !wxCHECK_VERSION(3, 0, 0)
-   //
-   // Kludge: the wxCursor Image constructor is broken in wxGTK.
-   // This code, based loosely on the broken code from the wxGTK source,
-   // works around the problem by constructing a 1-bit bitmap and
-   // calling the other custom cursor constructor.
-   //
-   // -DMM
-   //
-
-   unsigned char *rgbBits = Image.GetData();
-   int w = Image.GetWidth() ;
-   int h = Image.GetHeight();
-   int imagebitcount = (w*h)/8;
-
-   unsigned char *bits = new unsigned char [imagebitcount];
-   unsigned char *maskBits = new unsigned char [imagebitcount];
-
-   int i, j, i8;
-   unsigned char cMask;
-   for (i=0; i<imagebitcount; i++) {
-      bits[i] = 0;
-      i8 = i * 8;
-
-      cMask = 1;
-      for (j=0; j<8; j++) {
-         if (rgbBits[(i8+j)*3+2] < 127)
-            bits[i] = bits[i] | cMask;
-         cMask = cMask * 2;
-      }
-   }
-
-   for (i=0; i<imagebitcount; i++) {
-      maskBits[i] = 0x0;
-      i8 = i * 8;
-
-      cMask = 1;
-      for (j=0; j<8; j++) {
-         if (rgbBits[(i8+j)*3] < 127 || rgbBits[(i8+j)*3+1] > 127)
-            maskBits[i] = maskBits[i] | cMask;
-         cMask = cMask * 2;
-      }
-   }
-
-   pCursor = new wxCursor((const char *)bits, w, h,
-                          HotX-HotAdjust, HotY-HotAdjust,
-                          (const char *)maskBits);
-
-   delete [] bits;
-   delete [] maskBits;
-
-#else
    Image.SetOption( wxIMAGE_OPTION_CUR_HOTSPOT_X, HotX-HotAdjust );
    Image.SetOption( wxIMAGE_OPTION_CUR_HOTSPOT_Y, HotY-HotAdjust );
    pCursor = new wxCursor( Image );
-#endif
 
    return pCursor;
 }
@@ -516,6 +457,7 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
      mRuler(ruler),
      mTrackArtist(NULL),
      mBacking(NULL),
+     mResizeBacking(false),
      mRefreshBacking(false),
      mConverter(NumericConverter::TIME),
      mAutoScrolling(false),
@@ -527,11 +469,18 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
 {
    SetLabel(_("Track Panel"));
    SetName(_("Track Panel"));
+   SetBackgroundStyle(wxBG_STYLE_PAINT);
 
    mAx = new TrackPanelAx( this );
 #if wxUSE_ACCESSIBILITY
    SetAccessible( mAx );
 #endif
+
+   // Preinit the backing DC and bitmap so routines that require it will
+   // not cause a crash if they run before the panel is fully initialized.
+   mBacking = new wxBitmap(1, 1);
+   mBackingDC.SelectObject(*mBacking);
+
    mMouseCapture = IsUncaptured;
    mSlideUpDownOnly = false;
    mLabelTrackStartXPos=-1;
@@ -1141,6 +1090,7 @@ void TrackPanel::OnTimer()
    }
 
    TimerUpdateIndicator();
+
    DrawOverlays(false);
 
    if(IsAudioActive() && gAudioIO->GetNumCaptureChannels()) {
@@ -1204,50 +1154,44 @@ void TrackPanel::ScrollDuringDrag()
    }
 }
 
-#if 0
-// now unused
-///  This updates the indicator (on a timer tick) that shows
-///  where the current play or record position is.  To do this,
-///  we cheat a little.  The indicator is drawn during the ruler
-///  drawing process (that should probably change, but...), so
-///  we create a memory DC and tell the ruler to draw itself there,
-///  and then just blit that to the screen.
-///  The indicator is a small triangle, red for record, green for play.
-void TrackPanel::DrawIndicator()
+void TrackPanel::DrawQuickPlayIndicator(int x, bool snapped)
 {
-   wxClientDC dc( this );
-   DoDrawIndicator( dc );
-}
+   wxClientDC dc(this);
+
+   // Erase the old indicator.
+   if (mOldQPIndicatorPos != x) {
+#if defined(__WXMAC__)
+      // On OSX, if a HiDPI resolution is being used, the line will actually take up
+      // more than 1 pixel (even though it is drawn as 1), so we restore the surrounding
+      // pixels as well.  (This is because the wxClientDC doesn't know about the scaling.)
+      dc.Blit(mOldQPIndicatorPos - 1, 0, 3, mBacking->GetHeight(), &mBackingDC, mOldQPIndicatorPos - 1, 0);
+#else
+      dc.Blit(mOldQPIndicatorPos, 0, 1, mBacking->GetHeight(), &mBackingDC, mOldQPIndicatorPos, 0);
 #endif
 
-void TrackPanel::DrawQuickPlayIndicator(wxDC & dc, double pos)
-{
-   // Erase the old indicator.
-   if( mOldQPIndicatorPos != -1 ) {
-      dc.Blit( mOldQPIndicatorPos, 0, 1, mBacking->GetHeight(), &mBackingDC, mOldQPIndicatorPos, 0 );
       mOldQPIndicatorPos = -1;
    }
 
-   if (pos >= 0) {
-
-      (mRuler->mIsSnapped)? AColor::SnapGuidePen( &dc) : AColor::Light( &dc, false);
+   if (x >= 0) {
+      snapped ? AColor::SnapGuidePen(&dc) : AColor::Light(&dc, false);
 
       // Draw indicator in all visible tracks
-      VisibleTrackIterator iter( GetProject() );
-      for( Track *t = iter.First(); t; t = iter.Next() )
+      VisibleTrackIterator iter(GetProject());
+      for (Track *t = iter.First(); t; t = iter.Next())
       {
          // Convert virtual coordinate to physical
          int y = t->GetY() - mViewInfo->vpos;
 
          // Draw the new indicator in its new location
          AColor::Line(dc,
-                     pos,
-                     y + kTopMargin,
-                     pos,
-                     // Minus one more because AColor::Line includes both endpoints
-                     y + t->GetHeight() - kBottomMargin - 1 );
+                      x,
+                      y + kTopMargin,
+                      x,
+                      // Minus one more because AColor::Line includes both endpoints
+                      y + t->GetHeight() - kBottomMargin - 1 );
       }
-      mOldQPIndicatorPos = pos;
+
+      mOldQPIndicatorPos = x;
    }
 }
 
@@ -1342,7 +1286,15 @@ void TrackPanel::UndrawIndicator(wxDC & dc)
             mLastIndicatorX = w - 1;
          }
 
+         // Restore the old position from the backing DC.
+#if defined(__WXMAC__)
+         // On OSX, if a HiDPI resolution is being used, the line will actually take up
+         // more than 1 pixel (even though it is drawn as 1), so we restore the surrounding
+         // pixels as well.  (This is because the wxClientDC doesn't know about the scaling.)
+         dc.Blit(mLastIndicatorX - 1, 0, 3, mBacking->GetHeight(), &mBackingDC, mLastIndicatorX - 1, 0);
+#else
          dc.Blit(mLastIndicatorX, 0, 1, mBacking->GetHeight(), &mBackingDC, mLastIndicatorX, 0);
+#endif
       }
 
       mRuler->ClearIndicator();
@@ -1437,7 +1389,14 @@ void TrackPanel::UndrawCursor(wxDC & dc)
                                 mLastCursorX,
                                 GetLeftOffset() + width);
       if( onScreen )
+#if defined(__WXMAC__)
+         // On OSX, if a HiDPI resolution is being used, the line will actually take up
+         // more than 1 pixel (even though it is drawn as 1), so we restore the surrounding
+         // pixels as well.  (This is because the wxClientDC doesn't know about the scaling.)
+         dc.Blit(mLastCursorX - 1, 0, 3, mBacking->GetHeight(), &mBackingDC, mLastCursorX - 1, 0);
+#else
          dc.Blit(mLastCursorX, 0, 1, mBacking->GetHeight(), &mBackingDC, mLastCursorX, 0);
+#endif
    }
 }
 
@@ -1492,38 +1451,12 @@ void TrackPanel::DoDrawCursor(wxDC & dc)
 /// OnSize() is called when the panel is resized
 void TrackPanel::OnSize(wxSizeEvent & /* event */)
 {
-   int width, height;
-   GetSize( &width, &height );
-
-   // wxMac doesn't like zero dimensions, so protect against it
-   width = width == 0 ? 1 : width;
-   height = height == 0 ? 1 : height;
-
-   // (Re)allocate the backing bitmap
-   if( mBacking )
-   {
-      mBackingDC.SelectObject( wxNullBitmap );
-      delete mBacking;
-   }
-
-   mBacking = new wxBitmap( width, height );
-   mBackingDC.SelectObject( *mBacking );
-   DisableAntialiasing(mBackingDC);
+   // Tell OnPaint() to recreate the backing bitmap
+   mResizeBacking = true;
 
    // Refresh the entire area.  Really only need to refresh when
    // expanding...is it worth the trouble?
-   Refresh( false );
-}
-
-/// OnErase( ) is called during the normal course of
-/// completing an erase operation.
-void TrackPanel::OnErase(wxEraseEvent & /* event */)
-{
-   // Ignore it for now.  This reduces flashing when dragging windows
-   // over track area while playing or recording.
-   //
-   // However, if artifacts or the like are discovered later, then
-   // we could blit the backing bitmap here.
+   Refresh();
 }
 
 /// AS: OnPaint( ) is called during the normal course of
@@ -1536,8 +1469,7 @@ void TrackPanel::OnPaint(wxPaintEvent & /* event */)
 
    // Construct the paint DC on the heap so that it may be deleted
    // early
-   wxDC *dc = new wxPaintDC(this);
-   DisableAntialiasing(*dc);
+   wxPaintDC *dc = new wxPaintDC(this);
 
    // Retrieve the damage rectangle
    wxRect box = GetUpdateRegion().GetBox();
@@ -1549,6 +1481,25 @@ void TrackPanel::OnPaint(wxPaintEvent & /* event */)
       // Reset (should a mutex be used???)
       mRefreshBacking = false;
 
+      if (mResizeBacking)
+      {
+         // Reset
+         mResizeBacking = false;
+
+         // Delete the backing bitmap
+         if (mBacking)
+         {
+            mBackingDC.SelectObject(wxNullBitmap);
+            delete mBacking;
+            mBacking = NULL;
+         }
+
+         wxSize sz = GetClientSize();
+         mBacking = new wxBitmap();
+         mBacking->Create(sz.x, sz.y); //, *dc);
+         mBackingDC.SelectObject(*mBacking);
+      }
+
       // Redraw the backing bitmap
       DrawTracks(&mBackingDC);
 
@@ -1557,20 +1508,22 @@ void TrackPanel::OnPaint(wxPaintEvent & /* event */)
    }
    else
    {
-      // Copy full, possibly clipped, damage rectange
+      // Copy full, possibly clipped, damage rectangle
       dc->Blit(box.x, box.y, box.width, box.height, &mBackingDC, box.x, box.y);
    }
 
    // Done with the clipped DC
    delete dc;
 
-   // Drawing now goes directly to the client area
+   // Drawing now goes directly to the client area.  It can't use the paint DC
+   // becuase the paint DC might be clipped and DrawOverlays() may need to draw
+   // outside the clipped region.
    DrawOverlays(true);
 
 #if DEBUG_DRAW_TIMING
-      sw.Pause();
-      wxLogDebug(wxT("Total: %ld milliseconds"), sw.Time());
-      wxPrintf(wxT("Total: %ld milliseconds\n"), sw.Time());
+   sw.Pause();
+   wxLogDebug(wxT("Total: %ld milliseconds"), sw.Time());
+   wxPrintf(wxT("Total: %ld milliseconds\n"), sw.Time());
 #endif
 }
 
@@ -2244,7 +2197,7 @@ void TrackPanel::HandleSelect(wxMouseEvent & event)
                selectedClip->GetOffset(), selectedClip->GetEndTime());
          }
          //Also, capture this track for dragging until we up-click.
-         mCapturedClipArray.push_back(TrackClip(w, selectedClip));
+         mCapturedClipArray.Add(TrackClip(w, selectedClip));
 
          mMouseCapture = IsSliding;
 
@@ -2583,9 +2536,7 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
    if (mSnapManager)
       delete mSnapManager;
 
-   mSnapManager = new SnapManager(mTracks, NULL, NULL,
-                                  *mViewInfo,
-                                  4); // pixel tolerance
+   mSnapManager = new SnapManager(mTracks, mViewInfo);
 
    mSnapLeft = -1;
    mSnapRight = -1;
@@ -3925,7 +3876,7 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
    mHSlideAmount = 0.0;
    mDidSlideVertically = false;
 
-   std::vector<Track*> trackExclusions;
+   mTrackExclusions.Clear();
 
    Track *vt = FindTrack(event.m_x, event.m_y, false, false, &rect);
    if (!vt)
@@ -3963,7 +3914,7 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
       // The captured clip is the focus, but we need to create a list
       // of all clips that have to move, also...
 
-      mCapturedClipArray.clear();
+      mCapturedClipArray.Clear();
 
       // First, if click was in selection, capture selected clips; otherwise
       // just the clicked-on clip
@@ -3973,12 +3924,12 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
             if (t->GetSelected()) {
                AddClipsToCaptured(t, true);
                if (t->GetKind() != Track::Wave)
-                  trackExclusions.push_back(t);
+                  mTrackExclusions.Add(t);
             }
          }
       }
       else {
-         mCapturedClipArray.push_back(TrackClip(vt, mCapturedClip));
+         mCapturedClipArray.Add(TrackClip(vt, mCapturedClip));
 
          // Check for stereo partner
          Track *partner = mTracks->GetLink(vt);
@@ -3992,7 +3943,7 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
             if (s0 >= 0) {
                WaveClip *clip = ((WaveTrack *)partner)->GetClipAtSample(s0);
                if (clip) {
-                  mCapturedClipArray.push_back(TrackClip(partner, clip));
+                  mCapturedClipArray.Add(TrackClip(partner, clip));
                }
             }
          }
@@ -4019,7 +3970,7 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
                         mCapturedClipArray[i].clip->GetStartTime(),
                         mCapturedClipArray[i].clip->GetEndTime() );
                   if (t->GetKind() != Track::Wave)
-                     trackExclusions.push_back(t);
+                     mTrackExclusions.Add(t);
                }
             }
 #ifdef USE_MIDI
@@ -4032,7 +3983,7 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
                {
                   AddClipsToCaptured(t, nt->GetStartTime(), nt->GetEndTime());
                   if (t->GetKind() != Track::Wave)
-                     trackExclusions.push_back(t);
+                     mTrackExclusions.Add(t);
                }
             }
 #endif
@@ -4041,7 +3992,7 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
 
    } else {
       mCapturedClip = NULL;
-      mCapturedClipArray.clear();
+      mCapturedClipArray.Clear();
    }
 
    mSlideUpDownOnly = event.CmdDown() && !multiToolModeActive;
@@ -4058,10 +4009,9 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
    if (mSnapManager)
       delete mSnapManager;
    mSnapManager = new SnapManager(mTracks,
+                                  mViewInfo,
                                   &mCapturedClipArray,
-                                  &trackExclusions,
-                                  *mViewInfo,
-                                  4,     // pixel tolerance
+                                  &mTrackExclusions,
                                   true); // don't snap to time
    mSnapLeft = -1;
    mSnapRight = -1;
@@ -4109,7 +4059,7 @@ void TrackPanel::AddClipsToCaptured(Track *t, double t0, double t1)
             }
 
             if (newClip)
-               mCapturedClipArray.push_back(TrackClip(t, clip));
+               mCapturedClipArray.Add(TrackClip(t, clip));
          }
          it = it->GetNext();
       }
@@ -4136,7 +4086,7 @@ void TrackPanel::AddClipsToCaptured(Track *t, double t0, double t1)
                return;
          }
 #endif
-         mCapturedClipArray.push_back(TrackClip(t, NULL));
+         mCapturedClipArray.Add(TrackClip(t, NULL));
       }
    }
 }
@@ -7552,7 +7502,6 @@ void TrackPanel::TimerUpdateScrubbing()
    wxCoord width, height;
    {
       wxClientDC dc(this);
-      DisableAntialiasing(dc);
       static const wxFont labelFont(24, wxSWISS, wxNORMAL, wxNORMAL);
       dc.SetFont(labelFont);
       dc.GetTextExtent(mScrubSpeedText, &width, &height);
@@ -7583,11 +7532,22 @@ std::pair<wxRect, bool> TrackPanel::GetScrubSpeedRectangle()
 void TrackPanel::UndrawScrubSpeed(wxDC & dc)
 {
    if (!mLastScrubRect.IsEmpty())
+#if defined(__WXMAC__)
+      // On OSX, if a HiDPI resolution is being used, the line will actually take up
+      // more than 1 pixel (even though it is drawn as 1), so we restore the surrounding
+      // pixels as well.  (This is because the wxClientDC doesn't know about the scaling.)
+      dc.Blit(
+         mLastScrubRect.GetX() - 1, mLastScrubRect.GetY(),
+         mLastScrubRect.GetWidth() + 3, mLastScrubRect.GetHeight(),
+         &mBackingDC,
+         mLastScrubRect.GetX() - 1, mLastScrubRect.GetY());
+#else
       dc.Blit(
          mLastScrubRect.GetX(), mLastScrubRect.GetY(),
          mLastScrubRect.GetWidth(), mLastScrubRect.GetHeight(),
          &mBackingDC,
          mLastScrubRect.GetX(), mLastScrubRect.GetY());
+#endif
 }
 
 void TrackPanel::DoDrawScrubSpeed(wxDC &dc)
@@ -7621,7 +7581,7 @@ void TrackPanel::DoDrawScrubSpeed(wxDC &dc)
 #endif
          dc.SetTextForeground(clrNoScroll);
 
-      DrawText(dc, mScrubSpeedText, mLastScrubRect.GetX(), mLastScrubRect.GetY());
+      dc.DrawText(mScrubSpeedText, mLastScrubRect.GetX(), mLastScrubRect.GetY());
    }
 }
 #endif
@@ -7721,15 +7681,15 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec,
 
       mTrackInfo.DrawSliders(dc, (WaveTrack *)t, rect);
       if (!t->GetMinimized()) {
-         int offset = 8;
 
+         int offset = 8;
          if (rect.y + 22 + 12 < rec.y + rec.height - 19)
-            DrawText(dc, TrackSubText(t),
+            dc->DrawText(TrackSubText(t),
                          trackRect.x + offset,
                          trackRect.y + 22);
 
          if (rect.y + 38 + 12 < rec.y + rec.height - 19)
-            DrawText(dc, GetSampleFormatStr(((WaveTrack *) t)->GetSampleFormat()),
+            dc->DrawText(GetSampleFormatStr(((WaveTrack *) t)->GetSampleFormat()),
                          trackRect.x + offset,
                          trackRect.y + 38);
       }
@@ -7848,7 +7808,6 @@ void TrackPanel::DrawOverlays(bool repaint)
    {
       // Drawing now goes directly to the client area
       wxClientDC dc(this);
-      DisableAntialiasing(dc);
 
       // See what requires redrawing.  If repainting, all.
       // If not, then whatever is outdated, and whatever will be damaged by
@@ -7874,36 +7833,30 @@ void TrackPanel::DrawOverlays(bool repaint)
 
    if (repaint || pairs[0].second) {
       wxClientDC dc(this);
-      DisableAntialiasing(dc);
       UndrawIndicator(dc);
    }
    if (repaint || pairs[1].second) {
       wxClientDC dc(this);
-      DisableAntialiasing(dc);
       UndrawCursor(dc);
    }
 #ifdef EXPERIMENTAL_SCRUBBING_BASIC
    if (repaint || pairs[2].second) {
       wxClientDC dc(this);
-      DisableAntialiasing(dc);
       UndrawScrubSpeed(dc);
    }
 #endif
 
    if (repaint || pairs[0].second) {
       wxClientDC dc(this);
-      DisableAntialiasing(dc);
       DoDrawIndicator(dc);
    }
    if (repaint || pairs[1].second) {
       wxClientDC dc(this);
-      DisableAntialiasing(dc);
       DoDrawCursor(dc);
    }
 #ifdef EXPERIMENTAL_SCRUBBING_BASIC
    if (repaint || pairs[2].second) {
       wxClientDC dc(this);
-      DisableAntialiasing(dc);
       DoDrawScrubSpeed(dc);
    }
 #endif
@@ -10509,7 +10462,7 @@ void TrackInfo::DrawTitleBar(wxDC * dc, const wxRect & rect, Track * t,
    // in and out of the title bar.  So clear it first.
    AColor::MediumTrackInfo(dc, t->GetSelected());
    dc->DrawRectangle(bev);
-   DrawText(dc, titleStr, bev.x + 2, bev.y + (bev.height - textHeight) / 2);
+   dc->DrawText(titleStr, bev.x + 2, bev.y + (bev.height - textHeight) / 2);
 
    // Pop-up triangle
 #ifdef EXPERIMENTAL_THEMING
@@ -10572,7 +10525,7 @@ void TrackInfo::DrawMuteSolo(wxDC * dc, const wxRect & rect, Track * t,
 
    SetTrackInfoFont(dc);
    dc->GetTextExtent(str, &textWidth, &textHeight);
-   DrawText(dc, str, bev.x + (bev.width - textWidth) / 2, bev.y + (bev.height - textHeight) / 2);
+   dc->DrawText(str, bev.x + (bev.width - textWidth) / 2, bev.y + (bev.height - textHeight) / 2);
 
    AColor::BevelTrackInfo(*dc, (solo?t->GetSolo():t->GetMute()) == down, bev);
 
@@ -10632,12 +10585,12 @@ void TrackInfo::DrawSliders(wxDC *dc, WaveTrack *t, wxRect rect) const
 
    GetGainRect(rect, sliderRect);
    if (sliderRect.y + sliderRect.height < rect.y + rect.height - 19) {
-      GainSlider(t)->OnPaint(*dc, t->GetSelected());
+      GainSlider(t)->OnPaint(*dc);
    }
 
    GetPanRect(rect, sliderRect);
    if (sliderRect.y + sliderRect.height < rect.y + rect.height - 19) {
-      PanSlider(t)->OnPaint(*dc, t->GetSelected());
+      PanSlider(t)->OnPaint(*dc);
    }
 }
 

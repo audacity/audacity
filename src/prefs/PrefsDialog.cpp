@@ -30,11 +30,7 @@
 
 #include <wx/listbook.h>
 
-#if wxCHECK_VERSION(2, 8, 4)
 #include <wx/treebook.h>
-#else
-#include "../widgets/treebook.h"
-#endif
 
 #include "../AudioIO.h"
 #include "../Experimental.h"

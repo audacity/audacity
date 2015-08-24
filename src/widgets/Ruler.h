@@ -23,6 +23,7 @@ class AudacityProject;
 class TimeTrack;
 class SnapManager;
 class NumberScale;
+class TrackList;
 
 class AUDACITY_DLL_API Ruler {
  public:
@@ -271,7 +272,7 @@ private:
 class AUDACITY_DLL_API AdornedRulerPanel : public wxPanel
 {
 public:
-   AdornedRulerPanel(wxWindow* parent,
+   AdornedRulerPanel(AudacityProject* parent,
                      wxWindowID id,
                      const wxPoint& pos = wxDefaultPosition,
                      const wxSize& size = wxDefaultSize,
@@ -300,11 +301,8 @@ public:
    void UpdatePrefs();
    void RegenerateTooltips();
 
-   bool mIsSnapped;
-
 private:
    void OnCapture(wxCommandEvent & evt);
-   void OnErase(wxEraseEvent &evt);
    void OnPaint(wxPaintEvent &evt);
    void OnSize(wxSizeEvent &evt);
    void OnMouseEvents(wxMouseEvent &evt);
@@ -315,7 +313,7 @@ private:
    void DoDrawCursor(wxDC * dc);
    void DoDrawSelection(wxDC * dc);
    void DoDrawIndicator(wxDC * dc);
-   void DrawQuickPlayIndicator(wxDC * dc, bool clear /*delete old only*/);
+   void DrawQuickPlayIndicator(wxDC * dc /*NULL to delete old only*/);
    void DoDrawPlayRegion(wxDC * dc);
 
    double Pos2Time(int p, bool ignoreFisheye = false);
@@ -323,11 +321,17 @@ private:
 
    bool IsWithinMarker(int mousePosX, double markerTime);
 
-   Ruler  ruler;
+private:
+
+   wxCursor mCursorDefault;
+   wxCursor mCursorHand;
+   wxCursor mCursorSizeWE;
+   bool mIsWE;
+
+   Ruler mRuler;
    ViewInfo *mViewInfo;
    AudacityProject *mProject;
-
-   wxBitmap *mBuffer;
+   TrackList *mTracks;
 
    wxRect mOuter;
    wxRect mInner;
@@ -341,7 +345,9 @@ private:
    double mIndTime;
    bool   mQuickPlayInd;
    double mQuickPlayPos;
+
    SnapManager *mSnapManager;
+   bool mIsSnapped;
 
    bool   mPlayRegionLock;
    double mPlayRegionStart;

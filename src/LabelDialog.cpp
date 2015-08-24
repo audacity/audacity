@@ -73,11 +73,7 @@ enum {
 
 BEGIN_EVENT_TABLE(LabelDialog, wxDialog)
    EVT_GRID_SELECT_CELL(LabelDialog::OnSelectCell)
-#if wxCHECK_VERSION(3,0,0)
    EVT_GRID_CELL_CHANGED(LabelDialog::OnCellChange)
-#else
-   EVT_GRID_CELL_CHANGE(LabelDialog::OnCellChange)
-#endif
    EVT_BUTTON(ID_INSERTA, LabelDialog::OnInsert)
    EVT_BUTTON(ID_INSERTB, LabelDialog::OnInsert)
    EVT_BUTTON(ID_REMOVE,  LabelDialog::OnRemove)

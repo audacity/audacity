@@ -30,11 +30,13 @@
 class wxTextFile;
 class DirManager;
 class UndoStack;
+class Track;
 class LabelTrack;
 class TimeTrack;
 class WaveTrack;
 class AudacityProject;
 
+WX_DEFINE_USER_EXPORTED_ARRAY(Track*, TrackArray, class AUDACITY_DLL_API);
 WX_DEFINE_USER_EXPORTED_ARRAY(WaveTrack*, WaveTrackArray, class AUDACITY_DLL_API);
 
 #if defined(USE_MIDI)

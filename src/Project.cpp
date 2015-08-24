@@ -4760,7 +4760,7 @@ void AudacityProject::SetSnapTo(int snap)
    }
 }
 
-int AudacityProject::GetSnapTo()
+int AudacityProject::GetSnapTo() const
 {
    return mSnapTo;
 }
