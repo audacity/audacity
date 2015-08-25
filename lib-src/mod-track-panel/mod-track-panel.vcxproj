@@ -85,7 +85,7 @@
       <CompileAs>Default</CompileAs>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>wxmsw3-u_core.lib;wxbase30u.lib;wxmsw30u_html.lib;odbc32.lib;odbccp32.lib;oldnames.lib;comctl32.lib;rpcrt4.lib;wsock32.lib;netapi32.lib;Audacity.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>wxmsw30u_core.lib;wxbase30u.lib;wxmsw30u_html.lib;odbc32.lib;odbccp32.lib;oldnames.lib;comctl32.lib;rpcrt4.lib;wsock32.lib;netapi32.lib;Audacity.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)modules\$(ProjectName).dll</OutputFile>
       <AdditionalLibraryDirectories>$(WXWIN)\lib\vc_dll;..\..\win\$(IntDir);$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
