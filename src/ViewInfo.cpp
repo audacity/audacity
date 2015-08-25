@@ -13,6 +13,7 @@ Paul Licameli
 
 #include <algorithm>
 
+#include "AudioIO.h"
 #include "Internat.h"
 #include "prefs/GUISettings.h"
 #include "Prefs.h"
@@ -123,6 +124,7 @@ ViewInfo::ViewInfo(double start, double screenDuration, double pixelsPerSecond)
    , scrollStep(16)
    , bUpdateTrackIndicator(true)
    , bScrollBeyondZero(false)
+   , mRecentStreamTime(-1.0)
 {
    UpdatePrefs();
 }
@@ -175,4 +177,10 @@ bool ViewInfo::ReadXMLAttribute(const wxChar *attr, const wxChar *value)
    }
 
    return false;
+}
+
+void ViewInfo::OnTimer(wxCommandEvent &event)
+{
+   mRecentStreamTime = gAudioIO->GetStreamTime();
+   event.Skip();
 }

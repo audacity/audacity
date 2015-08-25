@@ -62,6 +62,7 @@ class Tags;
 class EffectPlugs;
 
 class TrackPanel;
+class TrackPanelOverlay;
 class FreqWindow;
 class ContrastDialog;
 class Meter;
@@ -171,9 +172,13 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    double GetRate() const { return mRate; }
    bool ZoomInAvailable() const { return mViewInfo.ZoomInAvailable(); }
    bool ZoomOutAvailable() const { return mViewInfo.ZoomOutAvailable(); }
-   double GetSel0() { return mViewInfo.selectedRegion.t0(); }
-   double GetSel1() { return mViewInfo.selectedRegion.t1(); }
+   const SelectedRegion &GetSelection() const { return mViewInfo.selectedRegion; }
+   SelectedRegion &GetSelection() { return mViewInfo.selectedRegion; }
+   double GetSel0() const { return mViewInfo.selectedRegion.t0(); }
+   double GetSel1() const { return mViewInfo.selectedRegion.t1(); }
    const ZoomInfo &GetZoomInfo() const { return mViewInfo; }
+   const ViewInfo &GetViewInfo() const { return mViewInfo; }
+   ViewInfo &GetViewInfo() { return mViewInfo; }
 
    Track *GetFirstVisible();
    void UpdateFirstVisible();
@@ -701,6 +706,10 @@ public:
 
    // CommandManager needs to use private methods
    friend class CommandManager;
+
+   // TrackPanelOverlay objects
+   std::unique_ptr<TrackPanelOverlay> 
+      mIndicatorOverlay, mCursorOverlay, mScrubOverlay;
 
    DECLARE_EVENT_TABLE()
 };

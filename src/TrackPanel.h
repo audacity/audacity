@@ -35,6 +35,7 @@ class wxRect;
 class LabelTrack;
 class SpectrumAnalyst;
 class TrackPanel;
+class TrackPanelOverlay;
 class TrackArtist;
 class Ruler;
 class SnapManager;
@@ -249,18 +250,6 @@ class AUDACITY_DLL_API TrackPanel final : public wxPanel {
    virtual bool HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &rect, wxMouseEvent &event);
    virtual bool IsOverCutline(WaveTrack * track, wxRect &rect, wxMouseEvent &event);
    virtual void HandleTrackSpecificMouseEvent(wxMouseEvent & event);
-
-   virtual void TimerUpdateIndicator(double playPos);
-   // Second member of pair indicates whether the indicator is out of date:
-   virtual std::pair<wxRect, bool> GetIndicatorRectangle();
-   virtual void UndrawIndicator(wxDC & dc);
-   /// draws the green line on the tracks to show playback position
-   virtual void DoDrawIndicator(wxDC & dc);
-
-   // Second member of pair indicates whether the cursor is out of date:
-   virtual std::pair<wxRect, bool> GetCursorRectangle();
-   virtual void UndrawCursor(wxDC & dc);
-   virtual void DoDrawCursor(wxDC & dc);
 
 #ifdef EXPERIMENTAL_SCRUBBING_BASIC
    bool ShouldDrawScrubSpeed();
@@ -547,6 +536,15 @@ protected:
    virtual void DrawOutsideOfTrack    (Track *t, wxDC* dc, const wxRect & rect);
 
 public:
+   // Register and unregister overlay objects.
+   // The sequence in which they were registered is the sequence in
+   // which they are painted.
+   // TrackPanel is not responsible for their memory management.
+   virtual void AddOverlay(TrackPanelOverlay *pOverlay);
+   // Returns true if the overlay was found
+   virtual bool RemoveOverlay(TrackPanelOverlay *pOverlay);
+   virtual void ClearOverlays();
+
    // Erase and redraw things like the cursor, cheaply and directly to the
    // client area, without full refresh.
    virtual void DrawOverlays(bool repaint);
@@ -596,14 +594,6 @@ protected:
      }
      TrackPanel *parent;
    } mTimer;
-
-   // This stores the parts of the screen that get overwritten by the indicator
-   // and cursor
-   int mLastIndicatorX;
-   int mNewIndicatorX;
-   int mLastCursorX;
-   double mCursorTime;
-   int mNewCursorX;
 
    // Quick-Play indicator postion
    int mOldQPIndicatorPos;
@@ -854,6 +844,11 @@ protected:
 
    TrackPanelAx *mAx;
 
+public:
+   TrackPanelAx &GetAx() { return *mAx; }
+
+protected:
+
    wxString mSoloPref;
 
    // Keeps track of extra fractional vertical scroll steps
@@ -867,6 +862,10 @@ protected:
  public:
    wxSize vrulerSize;
 
+ protected:
+   std::vector<TrackPanelOverlay*> mOverlays;
+
+ public:
    DECLARE_EVENT_TABLE()
 };
 

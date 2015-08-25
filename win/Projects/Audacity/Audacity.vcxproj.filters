@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="src">
@@ -68,6 +68,12 @@
     </Filter>
     <Filter Include="src\effects\VST">
       <UniqueIdentifier>{99325e00-3930-4e03-a599-999f275db78e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\tracks">
+      <UniqueIdentifier>{7b403d1f-de11-43d5-becc-d9d118d06f18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\tracks\ui">
+      <UniqueIdentifier>{aa9627ea-e614-4704-bf68-4a347023569f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -273,9 +279,6 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\TrackArtist.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\TrackPanel.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\TrackPanelAx.cpp">
@@ -855,6 +858,21 @@
       <Filter>src\effects</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\RealFFTf48x.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\TrackPanelOverlay.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\ui\EditCursorOverlay.cpp">
+      <Filter>src\tracks\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\ui\PlayIndicatorOverlay.cpp">
+      <Filter>src\tracks\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\ui\Scrubbing.cpp">
+      <Filter>src\tracks\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\TrackPanel.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1714,6 +1732,9 @@
     <ClInclude Include="..\..\..\src\effects\VST\VSTControlMSW.h">
       <Filter>src\effects\VST</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\TrackPanelOverlay.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\TranslatableStringArray.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -1730,6 +1751,21 @@
       <Filter>src\effects</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\RealFFTf48x.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\TrackPanelCell.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\ui\EditCursorOverlay.h">
+      <Filter>src\tracks\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\ui\PlayIndicatorOverlay.h">
+      <Filter>src\tracks\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\ui\Scrubbing.h">
+      <Filter>src\tracks\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\TrackPanelCellIterator.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

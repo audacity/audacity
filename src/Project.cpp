@@ -156,6 +156,10 @@ scroll information.  It also has some status flags.
 #include "toolbars/ToolsToolBar.h"
 #include "toolbars/TranscriptionToolBar.h"
 
+#include "tracks/ui/EditCursorOverlay.h"
+#include "tracks/ui/PlayIndicatorOverlay.h"
+#include "tracks/ui/Scrubbing.h"
+
 #include "commands/ScriptCommandRelay.h"
 #include "commands/CommandDirectory.h"
 #include "commands/CommandTargets.h"
@@ -924,6 +928,32 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
                                              this,
                                              mRuler);
 
+   mIndicatorOverlay = std::make_unique<PlayIndicatorOverlay>(this);
+
+   mCursorOverlay = std::make_unique<EditCursorOverlay>(this);
+
+#ifdef EXPERIMENTAL_SCRUBBING_BASIC
+   // This must follow construction of *mIndicatorOverlay, because it must
+   // attach its timer event handler later (so that its handler is invoked
+   // earlier)
+   mScrubOverlay = std::make_unique<ScrubbingOverlay>(this);
+#else
+   mScrubOverlay = NULL;
+#endif
+
+   // This must follow construction of *mScrubOverlay, because it must
+   // attach its timer event handler later (so that its handler is invoked
+   // earlier)
+   this->Connect(EVT_TRACK_PANEL_TIMER,
+      wxCommandEventHandler(ViewInfo::OnTimer),
+      NULL,
+      &mViewInfo);
+
+   // Add the overlays, in the sequence in which they will be painted
+   mTrackPanel->AddOverlay(mIndicatorOverlay.get());
+   mTrackPanel->AddOverlay(mCursorOverlay.get());
+   mTrackPanel->AddOverlay(mScrubOverlay.get());
+
    // LLL: When Audacity starts or becomes active after returning from
    //      another application, the first window that can accept focus
    //      will be given the focus even if we try to SetFocus().  By
@@ -1049,6 +1079,12 @@ AudacityProject::~AudacityProject()
    if (wxGetApp().GetRecentFiles())
    {
       wxGetApp().GetRecentFiles()->RemoveMenu(mRecentFilesMenu);
+   }
+
+   if(mTrackPanel) {
+      mTrackPanel->RemoveOverlay(mScrubOverlay.get());
+      mTrackPanel->RemoveOverlay(mCursorOverlay.get());
+      mTrackPanel->RemoveOverlay(mIndicatorOverlay.get());
    }
 
    wxTheApp->Disconnect(EVT_AUDIOIO_CAPTURE,
@@ -2338,6 +2374,11 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
       }
 #endif
    }
+
+   this->Disconnect(EVT_TRACK_PANEL_TIMER,
+      wxCommandEventHandler(ViewInfo::OnTimer),
+      NULL,
+      &mViewInfo);
 
    Destroy();
 
