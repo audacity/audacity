@@ -8,14 +8,14 @@
 
 **********************************************************************/
 
+#include "Snap.h"
+
 #include <cstdlib>
 
+#include "Project.h"
 #include "LabelTrack.h"
 #include "TrackPanel.h"
 #include "WaveTrack.h"
-#include "widgets/NumericTextCtrl.h"
-
-#include "Snap.h"
 
 #include <wx/arrimpl.cpp>
 
@@ -214,12 +214,12 @@ size_t SnapManager::Find(double t, size_t i0, size_t i1)
 size_t SnapManager::Find(double t)
 {
    size_t cnt = mSnapPoints.GetCount();
-   int index = Find(t, 0, cnt);
+   size_t index = Find(t, 0, cnt);
 
    // At this point, either index is the closest, or the next one
    // to the right is.  Keep moving to the right until we get a
    // different value
-   int next = index + 1;
+   size_t next = index + 1;
    while (next + 1 < cnt && Get(next) == Get(index))
    {
       next++;
