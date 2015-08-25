@@ -53,6 +53,12 @@ enum
    CommentColumn
 };
 
+#if defined(__WXMAC__)
+#define CTRL _("Command")
+#else
+#define CTRL _("Ctrl")
+#endif
+
 /// Constructor
 MousePrefs::MousePrefs(wxWindow * parent)
 :  PrefsPanel(parent, _("Mouse"))
@@ -105,11 +111,11 @@ void MousePrefs::CreateList()
    AddItem(_("Shift-Left-Click"),  _("Select"),   _("Extend Selection Range"));
    AddItem(_("Left-Double-Click"), _("Select"),   _("Select Clip or Entire Track"));
 #ifdef EXPERIMENTAL_SCRUBBING_BASIC
-   AddItem(_("Ctrl-Left-Click"),    _("Select"),  _("Scrub"));
-   AddItem(_("Ctrl-Left-Drag"),     _("Select"),  _("Seek"));
+   AddItem(CTRL + _("-Left-Click"), _("Select"),  _("Scrub"));
+   AddItem(CTRL + _("-Left-Drag"),  _("Select"),  _("Seek"));
 #endif
 #ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
-   AddItem(_("Ctrl-Left-Double-Click"), _("Select"), _("Scroll-scrub"));
+   AddItem(CTRL + _("-Left-Double-Click"), _("Select"), _("Scroll-scrub"));
 #endif
 #ifdef EXPERIMENTAL_SCRUBBING_SCROLL_WHEEL
    AddItem(_("Wheel-Rotate"),      _("Select"),   _("Change scrub speed"));
@@ -131,7 +137,7 @@ void MousePrefs::CreateList()
 
    AddItem(_("Left-Drag"),        _("Time-Shift"),_("Time shift clip or move up/down between tracks"));
    AddItem(_("Shift-Left-Drag"),  _("Time-Shift"),_("Time shift all clips in track"));
-   AddItem(_("Ctrl-Left-Drag"),   _("Time-Shift"),_("Move clip up/down between tracks"));
+   AddItem(CTRL + _("-Left-Drag"),_("Time-Shift"),_("Move clip up/down between tracks"));
 
    AddItem(_("Left-Drag"),
    /* i18n-hint: The envelope is a curve that controls the audio loudness.*/
@@ -141,7 +147,7 @@ void MousePrefs::CreateList()
    AddItem(_("Left-Click"),       _("Pencil"),    _("Change Sample"));
    AddItem(_("Alt-Left-Click"),   _("Pencil"),    _("Smooth at Sample"));
    AddItem(_("Left-Drag"),        _("Pencil"),    _("Change Several Samples"));
-   AddItem(_("Ctrl-Left-Drag"),   _("Pencil"),    _("Change ONE Sample only"));
+   AddItem(CTRL + _("-Left-Drag"),_("Pencil"),    _("Change ONE Sample only"));
 
    AddItem(_("Left-Click"),       _("Multi"),     _("Set Selection Point"), _("same as select tool"));
    AddItem(_("Left-Drag"),        _("Multi"),     _("Set Selection Range"), _("same as select tool"));
@@ -157,7 +163,7 @@ void MousePrefs::CreateList()
 
    AddItem(_("Wheel-Rotate"),      _("Any"),      _("Scroll up or down"));
    AddItem(_("Shift-Wheel-Rotate"),_("Any"),      _("Scroll left or right"));
-   AddItem(_("Ctrl-Wheel-Rotate"), _("Any"),      _("Zoom in or out on Mouse Pointer"));
+   AddItem(CTRL + _("-Wheel-Rotate"), _("Any"),      _("Zoom in or out on Mouse Pointer"));
 
    mList->SetColumnWidth(BlankColumn, 0);
    mList->SetColumnWidth(ToolColumn, wxLIST_AUTOSIZE);

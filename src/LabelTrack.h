@@ -139,7 +139,9 @@ class AUDACITY_DLL_API LabelTrack : public Track
    virtual double GetStartTime() const;
    virtual double GetEndTime() const;
 
-   virtual Track *Duplicate() { return new LabelTrack(*this); }
+   virtual Track *Duplicate();
+
+   virtual void SetSelected(bool s);
 
    virtual bool HandleXMLTag(const wxChar *tag, const wxChar **attrs);
    virtual XMLTagHandler *HandleXMLChild(const wxChar *tag);

@@ -407,7 +407,7 @@ class AUDACITY_DLL_API WaveTrack : public Track {
       Waveform = 0,
       MinDisplay = Waveform,
 
-      obsolete5, // was WaveformDBDisplay
+      obsoleteWaveformDBDisplay,
 
       Spectrum,
 

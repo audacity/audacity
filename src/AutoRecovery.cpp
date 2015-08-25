@@ -248,8 +248,9 @@ bool ShowAutoRecoveryDialogIfNeeded(AudacityProject** pproj,
       // This must be done before "dlg" is declared.
       wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI);
 
-      AutoRecoveryDialog dlg(*pproj);
-      int ret = dlg.ShowModal();
+      AutoRecoveryDialog *dlg = new AutoRecoveryDialog(NULL); //*pproj);
+      int ret = dlg->ShowModal();
+      delete dlg;
 
       switch (ret)
       {

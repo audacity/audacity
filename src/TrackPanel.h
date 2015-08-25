@@ -27,6 +27,7 @@
 #include "WaveTrackLocation.h"
 
 #include "Snap.h"
+#include "Track.h"
 
 class wxMenu;
 class wxRect;
@@ -140,7 +141,6 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
    virtual void UpdatePrefs();
 
    virtual void OnSize(wxSizeEvent & event);
-   virtual void OnErase(wxEraseEvent & event);
    virtual void OnPaint(wxPaintEvent & event);
    virtual void OnMouseEvent(wxMouseEvent & event);
    virtual void OnCaptureLost(wxMouseCaptureLostEvent & event);
@@ -151,6 +151,7 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
 
    virtual void OnSetFocus(wxFocusEvent & event);
    virtual void OnKillFocus(wxFocusEvent & event);
+   virtual void OnActivateOrDeactivateApp(wxActivateEvent & event);
 
    virtual void OnContextMenu(wxContextMenuEvent & event);
 
@@ -164,6 +165,8 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
 
    virtual int GetLeftOffset() const { return GetLabelWidth() + 1;}
 
+   // Width and height, relative to upper left corner at (GetLeftOffset(), 0)
+   // Either argument may be NULL
    virtual void GetTracksUsableArea(int *width, int *height) const;
 
    virtual void SelectNone();
@@ -229,7 +232,11 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
    virtual void UpdateTrackVRuler(Track *t);
    virtual void UpdateVRulerSize();
 
-   virtual void DrawQuickPlayIndicator(wxDC & dc, double pos);
+   virtual void DrawQuickPlayIndicator(int x, bool snapped = false);
+
+   // Returns the time corresponding to the pixel column one past the track area
+   // (ignoring any fisheye)
+   virtual double GetScreenEndTime() const;
 
  protected:
    virtual MixerBoard* GetMixerBoard();
@@ -404,7 +411,8 @@ protected:
    virtual void HandleZoomDrag(wxMouseEvent & event);
    virtual void HandleZoomButtonUp(wxMouseEvent & event);
 
-   virtual bool IsDragZooming();
+   static bool IsDragZooming(int zoomStart, int zoomEnd);
+   virtual bool IsDragZooming() { return IsDragZooming(mZoomStart, mZoomEnd); }
    virtual void DragZoom(wxMouseEvent &event, int x);
    virtual void DoZoomInOut(wxMouseEvent &event, int x);
 
@@ -413,11 +421,16 @@ protected:
    virtual void HandleVZoomDrag(wxMouseEvent & event);
    virtual void HandleVZoomButtonUp(wxMouseEvent & event);
    virtual void HandleWaveTrackVZoom(WaveTrack *track, bool shiftDown, bool rightUp);
+   static void HandleWaveTrackVZoom
+      (TrackList *tracks, const wxRect &rect,
+       int zoomStart, int zoomEnd,
+       WaveTrack *track, bool shiftDown, bool rightUp,
+       bool fixedMousePoint);
 
    // Handle sample editing using the 'draw' tool.
    virtual bool IsSampleEditingPossible( wxMouseEvent & event, Track * t );
    virtual void HandleSampleEditing(wxMouseEvent & event);
-   float FindSampleEditingLevel(wxMouseEvent &event, double t0);
+   float FindSampleEditingLevel(wxMouseEvent &event, double dBRange, double t0);
    virtual void HandleSampleEditingClick( wxMouseEvent & event );
    virtual void HandleSampleEditingDrag( wxMouseEvent & event );
    virtual void HandleSampleEditingButtonUp( wxMouseEvent & event );
@@ -477,7 +490,7 @@ protected:
    virtual void MoveTrack(Track* target, int eventId);
    virtual void OnChangeOctave (wxCommandEvent &event);
    virtual void OnChannelChange(wxCommandEvent &event);
-   virtual void OnViewSettings(wxCommandEvent &event);
+   virtual void OnSpectrogramSettings(wxCommandEvent &event);
    virtual void OnSetDisplay   (wxCommandEvent &event);
    virtual void OnSetTimeTrackRange (wxCommandEvent &event);
    virtual void OnTimeTrackLin(wxCommandEvent &event);
@@ -602,12 +615,13 @@ protected:
    int mNewCursorX;
 
    // Quick-Play indicator postion
-   double mOldQPIndicatorPos;
+   int mOldQPIndicatorPos;
 
    int mTimeCount;
 
    wxMemoryDC mBackingDC;
    wxBitmap *mBacking;
+   bool mResizeBacking;
    bool mRefreshBacking;
    int mPrevWidth;
    int mPrevHeight;
@@ -657,6 +671,7 @@ protected:
    Envelope *mCapturedEnvelope;
    WaveClip *mCapturedClip;
    TrackClipArray mCapturedClipArray;
+   TrackArray mTrackExclusions;
    bool mCapturedClipIsSelection;
    WaveTrackLocation mCapturedTrackLocation;
    wxRect mCapturedTrackLocationRect;

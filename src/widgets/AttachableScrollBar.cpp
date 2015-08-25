@@ -56,6 +56,8 @@ AttachableScrollBar::~AttachableScrollBar(void)
 // Essentially a float to int conversion.
 void AttachableScrollBar::SetScrollBarFromViewInfo()
 {
+   // fix me
+#if 0
    ViewInfo & mViewInfo = *mpViewInfo;
 
    mViewInfo.sbarTotal = (int) (mViewInfo.GetTotalWidth());
@@ -64,11 +66,14 @@ void AttachableScrollBar::SetScrollBarFromViewInfo()
 
    SetScrollbar(mViewInfo.sbarH, mViewInfo.sbarScreen,
                         mViewInfo.sbarTotal, mViewInfo.sbarScreen, TRUE);
+#endif
 }
 
 // Essentially an int to float conversion.
 void AttachableScrollBar::SetViewInfoFromScrollBar()
 {
+   // fixme
+#if 0
    ViewInfo & mViewInfo = *mpViewInfo;
 
    int hlast = mViewInfo.sbarH;
@@ -76,7 +81,8 @@ void AttachableScrollBar::SetViewInfoFromScrollBar()
    mViewInfo.sbarH = GetThumbPosition();
 
    if (mViewInfo.sbarH != hlast)
-      mViewInfo.SetBeforeScreenWidth(mViewInfo.sbarH);
+     mViewInfo.SetBeforeScreenWidth(mViewInfo.sbarH);
+#endif
 }
 
 // Used to associated a ViewInfo structure with a scrollbar.

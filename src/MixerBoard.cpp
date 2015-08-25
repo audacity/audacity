@@ -335,14 +335,9 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
    #endif // wxUSE_TOOLTIPS
 
    #ifdef __WXMAC__
-#if wxCHECK_VERSION(3, 0, 0)
       wxSizeEvent event(GetSize(), GetId());
       event.SetEventObject(this);
       GetEventHandler()->ProcessEvent(event);
-#else
-      wxSizeEvent dummyEvent;
-      this->OnSize(dummyEvent);
-#endif
       UpdateGain();
    #endif
 }

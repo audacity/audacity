@@ -506,10 +506,6 @@ public:
                 EffectUIClientInterface *client);
    virtual ~EffectUIHost();
 
-#if defined(__WXMAC__)
-   virtual bool Show(bool show = true);
-#endif
-
    virtual bool TransferDataToWindow();
    virtual bool TransferDataFromWindow();
 
@@ -559,10 +555,6 @@ private:
    bool mSupportsRealtime;
    bool mIsGUI;
    bool mIsBatch;
-
-#if defined(__WXMAC__)
-   bool mIsModal;
-#endif
 
    wxButton *mApplyBtn;
    wxButton *mCloseBtn;

@@ -1282,6 +1282,11 @@ bool Effect::Process()
    CopyInputTracks(Track::All);
    bool bGoodResult = true;
 
+   // It's possible that the number of channels the effect expects changed based on
+   // the parameters (the Audacity Reverb effect does when the stereo width is 0).
+   mNumAudioIn = GetAudioInCount();
+   mNumAudioOut = GetAudioOutCount();
+
    mPass = 1;
    if (InitPass1())
    {
@@ -2826,39 +2831,6 @@ EffectUIHost::~EffectUIHost()
 // wxWindow implementation
 // ============================================================================
 
-#if defined(__WXMAC__)
-
-// As mentioned below, we want to manipulate the window attributes, but doing
-// so causes extra events to fire and those events lead to the rebuilding of
-// the menus.  Unfortunately, if this happens when a modal dialog is displayed
-// the menus become disabled until the menubar is completely rebuilt, like when
-// leaving preferecnes.
-//
-// So, we only do this when NOT displaying a modal dialog since that's really
-// only when it is needed.
-
-bool EffectUIHost::Show(bool show)
-{
-   if (!mIsModal)
-   {
-#if !wxCHECK_VERSION(3, 0, 0)
-      // We want the effects windows on the Mac to float above the project window
-      // but still have normal modal dialogs appear above the effects windows and
-      // not let the effect windows fall behind the project window.
-      //
-      // This seems to accomplish that, but time will be the real judge.
-      WindowRef windowRef = (WindowRef) MacGetWindowRef();
-      WindowGroupRef parentGroup = GetWindowGroup((WindowRef) ((wxFrame *)wxGetTopLevelParent(mParent))->MacGetWindowRef());
-      ChangeWindowGroupAttributes(parentGroup, kWindowGroupAttrSharedActivation, kWindowGroupAttrMoveTogether);
-      SetWindowGroup(windowRef, parentGroup);
-#endif
-   }
-   mIsModal = false;
-
-   return wxDialog::Show(show);
-}
-#endif
-
 bool EffectUIHost::TransferDataToWindow()
 {
    return mEffect->TransferDataToWindow();
@@ -2875,11 +2847,6 @@ bool EffectUIHost::TransferDataFromWindow()
 
 int EffectUIHost::ShowModal()
 {
-#if defined(__WXMAC__)
-   // See explanation in EffectUIHost::Show()
-   mIsModal = true;
-#endif
-
 #if defined(__WXMSW__)
    // Swap the Close and Apply buttons
    wxSizer *sz = mApplyBtn->GetContainingSizer();

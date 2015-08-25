@@ -39,6 +39,8 @@ enum NyqControlType
    NYQ_CTRL_REAL,
    NYQ_CTRL_STRING,
    NYQ_CTRL_CHOICE,
+   NYQ_CTRL_INT_TEXT,
+   NYQ_CTRL_FLOAT_TEXT
 };
 
 class NyqControl

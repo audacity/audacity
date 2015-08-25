@@ -230,56 +230,6 @@ class AudacityApp:public wxApp {
 
 extern AudacityApp & wxGetApp();
 
-
-#if defined(__WXMAC__)
-inline void EnableAntialiasing(wxDC & dc)
-{
-   dc.GetGraphicsContext()->EnableOffset(false);
-   dc.GetGraphicsContext()->SetAntialiasMode(wxANTIALIAS_DEFAULT);
-}
-
-inline void DisableAntialiasing(wxDC & dc)
-{
-   dc.GetGraphicsContext()->EnableOffset(true);
-   dc.GetGraphicsContext()->SetAntialiasMode(wxANTIALIAS_NONE);
-}
-
-inline void DrawText(wxDC & dc, const wxString & text, wxCoord x, wxCoord y)
-{
-   wxGraphicsContext *ctx = dc.GetGraphicsContext();
-   wxAntialiasMode mode = ctx->GetAntialiasMode();
-   if (mode == wxANTIALIAS_NONE)
-   {
-      dc.GetGraphicsContext()->SetAntialiasMode(wxANTIALIAS_DEFAULT);
-   }
-
-   dc.DrawText(text, x, y);
-
-   if (mode == wxANTIALIAS_NONE)
-   {
-      dc.GetGraphicsContext()->SetAntialiasMode(wxANTIALIAS_NONE);
-   }
-}
-
-inline void DrawText(wxDC *dc, const wxString & text, wxCoord x, wxCoord y)
-{
-   DrawText(*dc, text, x, y);
-}
-
-#else
-#define EnableAntialiasing(dc)
-#define DisableAntialiasing(dc)
-inline void DrawText(wxDC & dc, const wxString & text, wxCoord x, wxCoord y)
-{
-   dc.DrawText(text, x, y);
-}
-
-inline void DrawText(wxDC * dc, const wxString & text, wxCoord x, wxCoord y)
-{
-   dc->DrawText(text, x, y);
-}
-#endif
-
 #endif
 
 #define MAX_AUDIO (1. - 1./(1<<15))

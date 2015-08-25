@@ -22,6 +22,8 @@ It handles initialization and termination by subclassing wxApp.
 #endif
 
 #include "Audacity.h" // This should always be included first
+#include "AudacityApp.h"
+#include "TranslatableStringArray.h"
 
 #include <wx/defs.h>
 #include <wx/app.h>
@@ -58,8 +60,6 @@ It handles initialization and termination by subclassing wxApp.
 #include <sys/stat.h>
 #endif
 
-#include "AudacityApp.h"
-
 #include "AudacityLogger.h"
 #include "AboutDialog.h"
 #include "AColor.h"
@@ -93,8 +93,6 @@ It handles initialization and termination by subclassing wxApp.
 #include "commands/Keyboard.h"
 #include "widgets/ErrorDialog.h"
 #include "prefs/DirectoriesPrefs.h"
-#include "prefs/SpectrogramSettings.h"
-#include "prefs/WaveformSettings.h"
 
 //temporarilly commented out till it is added to all projects
 //#include "Profiler.h"
@@ -234,6 +232,7 @@ It handles initialization and termination by subclassing wxApp.
 ////////////////////////////////////////////////////////////
 
 DEFINE_EVENT_TYPE(EVT_OPEN_AUDIO_FILE);
+DEFINE_EVENT_TYPE(EVT_LANGUAGE_CHANGE);
 
 #ifdef __WXGTK__
 static void wxOnAssert(const wxChar *fileName, int lineNumber, const wxChar *msg)
@@ -616,16 +615,6 @@ public:
      
       return true;
    }
-
-#if !wxCHECK_VERSION(3, 0, 0)
-   bool OnExecute(const wxString & topic,
-                  wxChar *data,
-                  int WXUNUSED(size),
-                  wxIPCFormat WXUNUSED(format))
-   {
-      return OnExec(topic, data);
-   }
-#endif
 };
 
 class IPCServ : public wxServer
@@ -1039,9 +1028,11 @@ void AudacityApp::InitLang( const wxString & lang )
 
    Internat::Init();
 
-   // Some static arrays unconnected with any project want to be informed of language changes.
-   SpectrogramSettings::InvalidateNames();
-   WaveformSettings::InvalidateNames();
+   // Notify listeners of language changes
+   {
+      wxCommandEvent evt(EVT_LANGUAGE_CHANGE);
+      ProcessEvent(evt);
+   }
 }
 
 void AudacityApp::OnFatalException()
@@ -1159,14 +1150,14 @@ bool AudacityApp::OnInit()
 
 #ifdef AUDACITY_NAME
    wxString appName = wxT(AUDACITY_NAME);
-   wxString vendorName = wxT(AUDACITY_NAME);
 #else
-   wxString vendorName = wxT("Audacity");
    wxString appName = wxT("Audacity");
 #endif
 
-   wxTheApp->SetVendorName(vendorName);
    wxTheApp->SetAppName(appName);
+   // Explicitly set since OSX will use it for the "Quit" menu item
+   wxTheApp->SetAppDisplayName(wxT("Audacity"));
+   wxTheApp->SetVendorName(wxT("Audacity"));
 
    // Unused strings that we want to be translated, even though
    // we're not using them yet...
@@ -1465,10 +1456,14 @@ bool AudacityApp::OnInit()
          return false;
       }
 
+// As of wx3, there's no need to process the filename arguments as they
+// will be sent view the MacOpenFile() method.
+#if !defined(__WXMAC__)
       for (size_t i = 0, cnt = parser->GetParamCount(); i < cnt; i++)
       {
          MRUOpen(parser->GetParam(i));
-      }   
+      }
+#endif
    }
 
    delete parser;
@@ -1596,7 +1591,7 @@ bool AudacityApp::CreateSingleInstanceChecker(wxString dir)
    mChecker = new wxSingleInstanceChecker();
 
 #if defined(__UNIX__)
-   wxString sockFile(defaultTempDir + wxT("/.audacity.sock"));
+   wxString sockFile(dir + wxT("/.audacity.sock"));
 #endif
 
    wxString runningTwoCopiesStr = _("Running two copies of Audacity simultaneously may cause\ndata loss or cause your system to crash.\n\n");

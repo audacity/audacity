@@ -31,7 +31,7 @@
 #include <algorithm>
 
 SpectrumPrefs::SpectrumPrefs(wxWindow * parent, WaveTrack *wt)
-:  PrefsPanel(parent, _("Spectrograms"))
+:  PrefsPanel(parent, wt ? _("Spectrogram Settings") : _("Spectrograms"))
 , mWt(wt)
 , mPopulating(false)
 {
@@ -70,7 +70,6 @@ enum {
    ID_SPECTRAL_SELECTION,
 #endif
    ID_DEFAULTS,
-   ID_APPLY,
 };
 
 void SpectrumPrefs::Populate(int windowSize)
@@ -154,92 +153,103 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
    S.SetBorder(2);
 
    // S.StartStatic(_("Track Settings"));
-   {
-      mDefaultsCheckbox = 0;
-      if (mWt) {
-         /* i18n-hint: use is a verb */
-         mDefaultsCheckbox = S.Id(ID_DEFAULTS).TieCheckBox(_("Use Preferences"), mDefaulted);
-      }
-      S.StartStatic(_("FFT Window"));
-      {
-         S.StartMultiColumn(2);
-         {
-            S.Id(ID_WINDOW_SIZE).TieChoice(_("Window &size:"),
-               mTempSettings.windowSize,
-               &mSizeChoices);
-            S.SetSizeHints(mSizeChoices);
+   // {
 
-            S.Id(ID_WINDOW_TYPE).TieChoice(_("Window &type:"),
-               mTempSettings.windowType,
-               &mTypeChoices);
-            S.SetSizeHints(mTypeChoices);
+   mDefaultsCheckbox = 0;
+   if (mWt) {
+      /* i18n-hint: use is a verb */
+      mDefaultsCheckbox = S.Id(ID_DEFAULTS).TieCheckBox(_("Use Preferences"), mDefaulted);
+   }
+
+   S.StartStatic(_("Scale"));
+   {
+      S.StartTwoColumn();
+      {
+         S.Id(ID_SCALE).TieChoice(_("S&cale") + wxString(wxT(":")),
+            *(int*)&mTempSettings.scaleType,
+            &mScaleChoices);
+
+         mMinFreq =
+            S.Id(ID_MINIMUM).TieNumericTextBox(_("Mi&nimum Frequency (Hz):"),
+            mTempSettings.minFreq,
+            12);
+
+         mMaxFreq =
+            S.Id(ID_MAXIMUM).TieNumericTextBox(_("Ma&ximum Frequency (Hz):"),
+            mTempSettings.maxFreq,
+            12);
+      }
+      S.EndTwoColumn();
+   }
+   S.EndStatic();
+
+   S.StartStatic(_("Colors"));
+   {
+      S.StartTwoColumn();
+      {
+         mGain =
+            S.Id(ID_GAIN).TieNumericTextBox(_("&Gain (dB):"),
+            mTempSettings.gain,
+            8);
+
+         mRange =
+            S.Id(ID_RANGE).TieNumericTextBox(_("&Range (dB):"),
+            mTempSettings.range,
+            8);
+
+         mFrequencyGain =
+            S.Id(ID_FREQUENCY_GAIN).TieNumericTextBox(_("Frequency g&ain (dB/dec):"),
+            mTempSettings.frequencyGain,
+            4);
+      }
+
+      S.Id(ID_GRAYSCALE).TieCheckBox(_("S&how the spectrum using grayscale colors"),
+         mTempSettings.isGrayscale);
+
+      S.EndTwoColumn();
+   }
+   S.EndStatic();
+
+   S.StartStatic(_("Algorithm"));
+   {
+      S.StartMultiColumn(2);
+      {
+         mAlgorithmChoice =
+            S.Id(ID_ALGORITHM).TieChoice(_("A&lgorithm") + wxString(wxT(":")),
+            *(int*)&mTempSettings.algorithm,
+            &mAlgorithmChoices);
+
+         S.Id(ID_WINDOW_SIZE).TieChoice(_("Window &size:"),
+            mTempSettings.windowSize,
+            &mSizeChoices);
+         S.SetSizeHints(mSizeChoices);
+
+         S.Id(ID_WINDOW_TYPE).TieChoice(_("Window &type:"),
+            mTempSettings.windowType,
+            &mTypeChoices);
+         S.SetSizeHints(mTypeChoices);
 
 #ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
-            mZeroPaddingChoiceCtrl =
+         mZeroPaddingChoiceCtrl =
             S.Id(ID_PADDING_SIZE).TieChoice(_("&Zero padding factor") + wxString(wxT(":")),
-               mTempSettings.zeroPaddingFactor,
-               &mZeroPaddingChoices);
-            S.SetSizeHints(mZeroPaddingChoices);
+            mTempSettings.zeroPaddingFactor,
+            &mZeroPaddingChoices);
+         S.SetSizeHints(mZeroPaddingChoices);
 #endif
-         }
-         S.EndMultiColumn();
       }
-      S.EndStatic();
-
-      S.StartStatic(_("Display"));
-      {
-         S.StartTwoColumn();
-         {
-            S.Id(ID_SCALE).TieChoice(_("S&cale") + wxString(wxT(":")),
-               *(int*)&mTempSettings.scaleType,
-               &mScaleChoices);
-
-            mAlgorithmChoice =
-            S.Id(ID_ALGORITHM).TieChoice(_("Algorithm") + wxString(wxT(":")),
-               *(int*)&mTempSettings.algorithm,
-               &mAlgorithmChoices);
-
-            mMinFreq =
-               S.Id(ID_MINIMUM).TieNumericTextBox(_("Mi&nimum Frequency (Hz):"),
-               mTempSettings.minFreq,
-               12);
-
-            mMaxFreq =
-               S.Id(ID_MAXIMUM).TieNumericTextBox(_("Ma&ximum Frequency (Hz):"),
-               mTempSettings.maxFreq,
-               12);
-
-            mGain =
-               S.Id(ID_GAIN).TieNumericTextBox(_("&Gain (dB):"),
-               mTempSettings.gain,
-               8);
-
-            mRange =
-               S.Id(ID_RANGE).TieNumericTextBox(_("&Range (dB):"),
-               mTempSettings.range,
-               8);
-
-            mFrequencyGain =
-               S.Id(ID_FREQUENCY_GAIN).TieNumericTextBox(_("Frequency g&ain (dB/dec):"),
-               mTempSettings.frequencyGain,
-               4);
-         }
-         S.EndTwoColumn();
-
-         S.Id(ID_GRAYSCALE).TieCheckBox(_("S&how the spectrum using grayscale colors"),
-            mTempSettings.isGrayscale);
+      S.EndMultiColumn();
+   }
+   S.EndStatic();
 
 #ifndef SPECTRAL_SELECTION_GLOBAL_SWITCH
-         S.Id(ID_SPECTRAL_SELECTION).TieCheckBox(_("Ena&ble Spectral Selection"),
-            mTempSettings.spectralSelection);
+   S.Id(ID_SPECTRAL_SELECTION).TieCheckBox(_("Ena&ble Spectral Selection"),
+      mTempSettings.spectralSelection);
 #endif
 
 #ifdef EXPERIMENTAL_FFT_Y_GRID
          S.TieCheckBox(_("Show a grid along the &Y-axis"),
             mTempSettings.fftYGrid);
 #endif //EXPERIMENTAL_FFT_Y_GRID
-      }
-      S.EndStatic();
 
 #ifdef EXPERIMENTAL_FIND_NOTES
       /* i18n-hint: FFT stands for Fast Fourier Transform and probably shouldn't be translated*/
@@ -267,7 +277,6 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
       }
       S.EndStatic();
 #endif //EXPERIMENTAL_FIND_NOTES
-   }
    // S.EndStatic();
 
 #ifdef SPECTRAL_SELECTION_GLOBAL_SWITCH
@@ -278,12 +287,6 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 #endif
-
-   S.StartMultiColumn(2, wxALIGN_RIGHT);
-   {
-      S.Id(ID_APPLY).AddButton(_("Appl&y"));
-   }
-   S.EndMultiColumn();
 
    EnableDisableSTFTOnlyControls();
 
@@ -393,12 +396,22 @@ bool SpectrumPrefs::Apply()
    mTempSettings.ConvertToEnumeratedWindowSizes();
 
    if (mWt && isOpenPage) {
-      // Future: open page will determine the track view type
       mWt->SetDisplay(WaveTrack::Spectrum);
       if (partner)
          partner->SetDisplay(WaveTrack::Spectrum);
    }
 
+   if (isOpenPage) {
+      TrackPanel *const tp = ::GetActiveProject()->GetTrackPanel();
+      tp->UpdateVRulers();
+      tp->Refresh(false);
+   }
+
+   return true;
+}
+
+bool SpectrumPrefs::ShowsApplyButton()
+{
    return true;
 }
 
@@ -449,21 +462,14 @@ void SpectrumPrefs::OnAlgorithm(wxCommandEvent &evt)
 void SpectrumPrefs::EnableDisableSTFTOnlyControls()
 {
    // Enable or disable other controls that are applicable only to STFT.
-   const bool STFT = (mAlgorithmChoice->GetSelection() == 0);
+   const bool STFT =
+      (mAlgorithmChoice->GetSelection() != SpectrogramSettings::algPitchEAC);
    mGain->Enable(STFT);
    mRange->Enable(STFT);
    mFrequencyGain->Enable(STFT);
 #ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
    mZeroPaddingChoiceCtrl->Enable(STFT);
 #endif
-}
-
-void SpectrumPrefs::OnApply(wxCommandEvent &)
-{
-   if (Validate()) {
-      Apply();
-      ::GetActiveProject()->GetTrackPanel()->Refresh(false);
-   }
 }
 
 BEGIN_EVENT_TABLE(SpectrumPrefs, PrefsPanel)
@@ -482,8 +488,6 @@ BEGIN_EVENT_TABLE(SpectrumPrefs, PrefsPanel)
    EVT_TEXT(ID_FREQUENCY_GAIN, SpectrumPrefs::OnControl)
    EVT_CHECKBOX(ID_GRAYSCALE, SpectrumPrefs::OnControl)
    EVT_CHECKBOX(ID_SPECTRAL_SELECTION, SpectrumPrefs::OnControl)
-
-   EVT_BUTTON(ID_APPLY, SpectrumPrefs::OnApply)
 
 END_EVENT_TABLE()
 

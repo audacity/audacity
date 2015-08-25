@@ -594,71 +594,84 @@ bool IsWindowAccessible(wxRect *requestedRect)
 
 // BG: Calculate where to place the next window (could be the first window)
 // BG: Does not store X and Y in prefs. This is intentional.
+//
+// LL: This should NOT need to be this complicated...FIXME
 void GetNextWindowPlacement(wxRect *nextRect, bool *pMaximized, bool *pIconized)
 {
    int inc = 25;
-   *pMaximized = FALSE;
-   *pIconized = FALSE;
-   wxRect defaultWindowRect;
-   GetDefaultWindowRect(&defaultWindowRect);
+
+   wxRect defaultRect;
+   GetDefaultWindowRect(&defaultRect);
+
+   gPrefs->Read(wxT("/Window/Maximized"), pMaximized, false);
+   gPrefs->Read(wxT("/Window/Iconized"), pIconized, false);
+
+   wxRect windowRect;
+   gPrefs->Read(wxT("/Window/X"), &windowRect.x, defaultRect.x);
+   gPrefs->Read(wxT("/Window/Y"), &windowRect.y, defaultRect.y);
+   gPrefs->Read(wxT("/Window/Width"), &windowRect.width, defaultRect.width);
+   gPrefs->Read(wxT("/Window/Height"), &windowRect.height, defaultRect.height);
+
+   wxRect normalRect;
+   gPrefs->Read(wxT("/Window/Normal_X"), &normalRect.x, defaultRect.x);
+   gPrefs->Read(wxT("/Window/Normal_Y"), &normalRect.y, defaultRect.y);
+   gPrefs->Read(wxT("/Window/Normal_Width"), &normalRect.width, defaultRect.width);
+   gPrefs->Read(wxT("/Window/Normal_Height"), &normalRect.height, defaultRect.height);
+
+   // Workaround 2.1.1 and earlier bug on OSX...affects only normalRect, but let's just
+   // validate for all rects and plats
+   if (normalRect.width == 0 || normalRect.height == 0) {
+      normalRect = defaultRect;
+   }
+   if (windowRect.width == 0 || windowRect.height == 0) {
+      windowRect = defaultRect;
+   }
+
+#if defined(__WXMAC__)
+   // On OSX, the top of the window should never be less than the menu height,
+   // so something is amiss if it is
+   if (normalRect.y < defaultRect.y) {
+      normalRect = defaultRect;
+   }
+   if (windowRect.y < defaultRect.y) {
+      windowRect = defaultRect;
+   }
+#endif
 
    if (gAudacityProjects.IsEmpty()) {
-      // Read the values from the registry, or use the defaults.
-      // In version 1.3 and above, using the registry has been replaced
-      // by a configuration file -- audacity.cfg. Different OSes store
-      // this file in different locations.
-      gPrefs->Read(wxT("/Window/Maximized"), pMaximized);
-      gPrefs->Read(wxT("/Window/Iconized"), pIconized);
       if (*pMaximized || *pIconized) {
-         nextRect->SetX(gPrefs->Read(wxT("/Window/Normal_X"), defaultWindowRect.GetX()));
-         nextRect->SetY(gPrefs->Read(wxT("/Window/Normal_Y"), defaultWindowRect.GetY()));
-         nextRect->SetWidth(gPrefs->Read(wxT("/Window/Normal_Width"), defaultWindowRect.GetWidth()));
-         nextRect->SetHeight(gPrefs->Read(wxT("/Window/Normal_Height"), defaultWindowRect.GetHeight()));
+         *nextRect = normalRect;
       }
       else {
-         nextRect->SetX(gPrefs->Read(wxT("/Window/X"), defaultWindowRect.GetX()));
-         nextRect->SetY(gPrefs->Read(wxT("/Window/Y"), defaultWindowRect.GetY()));
-         nextRect->SetWidth(gPrefs->Read(wxT("/Window/Width"), defaultWindowRect.GetWidth()));
-         nextRect->SetHeight(gPrefs->Read(wxT("/Window/Height"), defaultWindowRect.GetHeight()));
+         *nextRect = windowRect;
       }
       if (!IsWindowAccessible(nextRect)) {
-         nextRect->SetX(defaultWindowRect.GetX());
-         nextRect->SetY(defaultWindowRect.GetY());
-         nextRect->SetWidth(defaultWindowRect.GetWidth());
-         nextRect->SetHeight(defaultWindowRect.GetHeight());
+         *nextRect = defaultRect;
       }
    }
    else {
-      bool validWindowSize = FALSE;
+      bool validWindowSize = false;
       AudacityProject * validProject = NULL;
       size_t numProjects = gAudacityProjects.Count();
-      for (int i = numProjects; i > 0 ; i--)
-      {
+      for (int i = numProjects; i > 0 ; i--) {
          if (!gAudacityProjects[i-1]->IsIconized()) {
-             validWindowSize = TRUE;
+             validWindowSize = true;
              validProject = gAudacityProjects[i-1];
-             i = 0;
+             break;
          }
       }
-      if (validWindowSize)
-      {
+      if (validWindowSize) {
          *nextRect = validProject->GetRect();
          *pMaximized = validProject->IsMaximized();
          *pIconized = validProject->IsIconized();
       }
-      else
-      {
-          nextRect->SetX(gPrefs->Read(wxT("/Window/Normal_X"), defaultWindowRect.GetX()));
-          nextRect->SetY(gPrefs->Read(wxT("/Window/Normal_Y"), defaultWindowRect.GetY()));
-          nextRect->SetWidth(gPrefs->Read(wxT("/Window/Normal_Width"), defaultWindowRect.GetWidth()));
-          nextRect->SetHeight(gPrefs->Read(wxT("/Window/Normal_Height"), defaultWindowRect.GetHeight()));
-          gPrefs->Read(wxT("/Window/Maximized"), pMaximized);
-          gPrefs->Read(wxT("/Window/Iconized"), pIconized);
+      else {
+         *nextRect = normalRect;
       }
 
       //Placement depends on the increments
-      nextRect->SetX(nextRect->GetX() + inc);
-      nextRect->SetY(nextRect->GetY() + inc);
+      nextRect->x += inc;
+      nextRect->y += inc;
    }
 
    wxRect screenRect = wxGetClientDisplayRect();
@@ -667,29 +680,28 @@ void GetNextWindowPlacement(wxRect *nextRect, bool *pMaximized, bool *pIconized)
    wxPoint bottomRight = nextRect->GetBottomRight();
    if (bottomRight.x > screenRect.GetRight()) {
       int newWidth = screenRect.GetWidth() - nextRect->GetLeft();
-      if (newWidth < defaultWindowRect.GetWidth()) {
-         nextRect->SetX(gPrefs->Read(wxT("/Window/X"), defaultWindowRect.GetX()));
-         nextRect->SetY(gPrefs->Read(wxT("/Window/Y"), defaultWindowRect.GetY()));
-         nextRect->SetWidth(gPrefs->Read(wxT("/Window/Width"), defaultWindowRect.GetWidth()));
+      if (newWidth < defaultRect.GetWidth()) {
+         nextRect->x = windowRect.x;
+         nextRect->y = windowRect.y;
+         nextRect->width = windowRect.width;
       }
       else {
-         nextRect->SetWidth(newWidth);
+         nextRect->width = newWidth;
       }
    }
-   bottomRight = nextRect->GetBottomRight();
+
    //Have we hit the bottom of the screen?
+   bottomRight = nextRect->GetBottomRight();
    if (bottomRight.y > screenRect.GetBottom()) {
-      nextRect->y  -= inc;
+      nextRect->y -= inc;
       bottomRight = nextRect->GetBottomRight();
       if (bottomRight.y > screenRect.GetBottom()) {
          nextRect->SetBottom(screenRect.GetBottom());
       }
    }
+
    if (!IsWindowAccessible(nextRect)) {
-      nextRect->SetX(defaultWindowRect.GetX());
-      nextRect->SetY(defaultWindowRect.GetY());
-      nextRect->SetWidth(defaultWindowRect.GetWidth());
-      nextRect->SetHeight(defaultWindowRect.GetHeight());
+      *nextRect = defaultRect;
    }
 }
 
@@ -1460,9 +1472,10 @@ void AudacityProject::OnScrollRightButton(wxScrollEvent & event)
 
 double AudacityProject::ScrollingLowerBoundTime() const
 {
-   return mScrollBeyondZero
-      ? std::min(mTracks->GetStartTime(), -mViewInfo.screen / 2.0)
-      : 0;
+   if (!mScrollBeyondZero)
+      return 0;
+   const double screen = mTrackPanel->GetScreenEndTime() - mViewInfo.h;
+   return std::min(mTracks->GetStartTime(), -screen / 2.0);
 }
 
 wxInt64 AudacityProject::PixelWidthBeforeTime(double scrollto) const
@@ -1544,8 +1557,8 @@ void AudacityProject::FixScrollbars()
    double LastTime =
       std::max(mTracks->GetEndTime(), mViewInfo.selectedRegion.t1());
 
-   mViewInfo.SetScreenWidth(panelWidth);
-   const double halfScreen = mViewInfo.screen / 2.0;
+   const double screen = GetScreenEndTime() - mViewInfo.h;
+   const double halfScreen = screen / 2.0;
 
    // If we can scroll beyond zero,
    // Add 1/2 of a screen of blank space to the end
@@ -1555,13 +1568,13 @@ void AudacityProject::FixScrollbars()
    // May add even more to the end, so that you can always scroll the starting time to zero.
    const double lowerBound = ScrollingLowerBoundTime();
    const double additional = mScrollBeyondZero
-      ? -lowerBound + std::max(halfScreen, mViewInfo.screen - LastTime)
-      : mViewInfo.screen / 4.0;
+      ? -lowerBound + std::max(halfScreen, screen - LastTime)
+      : screen / 4.0;
 
    mViewInfo.total = LastTime + additional;
 
    // Don't remove time from total that's still on the screen
-   mViewInfo.total = std::max(mViewInfo.total, mViewInfo.h + mViewInfo.screen);
+   mViewInfo.total = std::max(mViewInfo.total, mViewInfo.h + screen);
 
    if (mViewInfo.h < lowerBound) {
       mViewInfo.h = lowerBound;
@@ -1569,7 +1582,7 @@ void AudacityProject::FixScrollbars()
    }
 
    mViewInfo.sbarTotal = (wxInt64) (mViewInfo.GetTotalWidth());
-   mViewInfo.sbarScreen = (wxInt64) (mViewInfo.GetScreenWidth());
+   mViewInfo.sbarScreen = (wxInt64)(panelWidth);
    mViewInfo.sbarH = (wxInt64) (mViewInfo.GetBeforeScreenWidth());
 
    int lastv = mViewInfo.vpos;
@@ -1591,18 +1604,18 @@ void AudacityProject::FixScrollbars()
 
    bool oldhstate;
    bool oldvstate;
-   bool newhstate = !mViewInfo.ZoomedAll();
+   bool newhstate = (GetScreenEndTime() - mViewInfo.h) < mViewInfo.total;
    bool newvstate = panelHeight < totalHeight;
 
 #ifdef __WXGTK__
    oldhstate = mHsbar->IsShown();
    oldvstate = mVsbar->IsShown();
-   mHsbar->Show(mViewInfo.screen < mViewInfo.total);
+   mHsbar->Show(newhstate);
    mVsbar->Show(panelHeight < totalHeight);
 #else
    oldhstate = mHsbar->IsEnabled();
    oldvstate = mVsbar->IsEnabled();
-   mHsbar->Enable(!mViewInfo.ZoomedAll());
+   mHsbar->Enable(newhstate);
    mVsbar->Enable(panelHeight < totalHeight);
 #endif
 
@@ -1612,7 +1625,7 @@ void AudacityProject::FixScrollbars()
       refresh = true;
       rescroll = false;
    }
-   if (mViewInfo.ZoomedAll() && mViewInfo.sbarH != 0) {
+   if (!newhstate && mViewInfo.sbarH != 0) {
       mViewInfo.sbarH = 0;
 
       refresh = true;
@@ -1654,7 +1667,8 @@ void AudacityProject::FixScrollbars()
                         panelHeight / mViewInfo.scrollStep, TRUE);
    mVsbar->Refresh();
 
-   if (refresh || (rescroll && !mViewInfo.ZoomedAll())) {
+   if (refresh || (rescroll &&
+       (GetScreenEndTime() - mViewInfo.h) < mViewInfo.total)) {
       mTrackPanel->Refresh(false);
    }
 
@@ -1837,8 +1851,12 @@ void AudacityProject::OnScroll(wxScrollEvent & WXUNUSED(event))
    mViewInfo.sbarH =
       (wxInt64)(mHsbar->GetThumbPosition() / mViewInfo.sbarScale) - offset;
 
-   if (mViewInfo.sbarH != hlast)
-      mViewInfo.SetBeforeScreenWidth(mViewInfo.sbarH, lowerBound);
+   if (mViewInfo.sbarH != hlast) {
+      int width;
+      mTrackPanel->GetTracksUsableArea(&width, NULL);
+      mViewInfo.SetBeforeScreenWidth(mViewInfo.sbarH, width, lowerBound);
+   }
+
 
    if (mScrollBeyondZero) {
       enum { SCROLL_PIXEL_TOLERANCE = 10 };
@@ -2773,6 +2791,10 @@ void AudacityProject::OpenFile(wxString fileName, bool addtohistory)
          //release the flag.
       ODManager::UnmarkLoadedODFlag();
    }
+
+   // For an unknown reason, OSX requires that the project window be
+   // raised if a recovery took place.
+   Raise();
 }
 
 bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
@@ -4738,7 +4760,7 @@ void AudacityProject::SetSnapTo(int snap)
    }
 }
 
-int AudacityProject::GetSnapTo()
+int AudacityProject::GetSnapTo() const
 {
    return mSnapTo;
 }

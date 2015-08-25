@@ -44,6 +44,7 @@ class SpectrumPrefs:public PrefsPanel
    SpectrumPrefs(wxWindow * parent, WaveTrack *wt);
    virtual ~SpectrumPrefs();
    virtual bool Apply();
+   virtual bool ShowsApplyButton();
    virtual bool Validate();
 
  private:
@@ -55,7 +56,6 @@ class SpectrumPrefs:public PrefsPanel
    void OnWindowSize(wxCommandEvent &event);
    void OnDefaults(wxCommandEvent&);
    void OnAlgorithm(wxCommandEvent &);
-   void OnApply(wxCommandEvent &);
    DECLARE_EVENT_TABLE()
 
    void EnableDisableSTFTOnlyControls();

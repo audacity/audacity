@@ -77,7 +77,7 @@ wxString KeyEventToKeyString(const wxKeyEvent & event)
 
    if (event.RawControlDown() && key >= 1 && key <= 26)
       newStr += (wxChar)(64 + key);
-   else if (key >= 33 && key <= 126)
+   else if (key >= 33 && key <= 255 && key != 127)
       newStr += (wxChar)key;
    else
    {

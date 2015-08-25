@@ -22,10 +22,9 @@ static const double gMaxZoom = 6000000;
 static const double gMinZoom = 0.001;
 }
 
-ZoomInfo::ZoomInfo(double start, double screenDuration, double pixelsPerSecond)
+ZoomInfo::ZoomInfo(double start, double pixelsPerSecond)
    : vpos(0)
    , h(start)
-   , screen(screenDuration)
    , zoom(pixelsPerSecond)
 {
    UpdatePrefs();
@@ -84,12 +83,12 @@ void ZoomInfo::ZoomBy(double multiplier)
 }
 
 void ZoomInfo::FindIntervals
-   (double /*rate*/, Intervals &results, wxInt64 origin) const
+   (double /*rate*/, Intervals &results, wxInt64 width, wxInt64 origin) const
 {
    results.clear();
    results.reserve(2);
 
-   const wxInt64 rightmost(origin + (0.5 + screen * zoom));
+   const wxInt64 rightmost(origin + (0.5 + width));
    wxASSERT(origin <= rightmost);
    {
       results.push_back(Interval(origin, zoom, false));
@@ -101,10 +100,10 @@ void ZoomInfo::FindIntervals
 }
 
 ViewInfo::ViewInfo(double start, double screenDuration, double pixelsPerSecond)
-   : ZoomInfo(start, screenDuration, pixelsPerSecond)
+   : ZoomInfo(start, pixelsPerSecond)
    , selectedRegion()
    , track(NULL)
-   , total(screen)
+   , total(screenDuration)
    , sbarH(0)
    , sbarScreen(1)
    , sbarTotal(1)
@@ -114,12 +113,12 @@ ViewInfo::ViewInfo(double start, double screenDuration, double pixelsPerSecond)
 {
 }
 
-void ViewInfo::SetBeforeScreenWidth(wxInt64 width, double lowerBoundTime)
+void ViewInfo::SetBeforeScreenWidth(wxInt64 beforeWidth, wxInt64 screenWidth, double lowerBoundTime)
 {
    h =
       std::max(lowerBoundTime,
-         std::min(total - screen,
-            width / zoom));
+         std::min(total - screenWidth / zoom,
+         beforeWidth / zoom));
 }
 
 void ViewInfo::WriteXMLAttributes(XMLWriter &xmlFile)

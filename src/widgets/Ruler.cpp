@@ -84,7 +84,6 @@ using std::min;
 using std::max;
 
 #define SELECT_TOLERANCE_PIXEL 4
-#define QUICK_PLAY_SNAP_PIXEL 4     // pixel tolerance for snap guides
 
 #define PLAY_REGION_TRIANGLE_SIZE 6
 #define PLAY_REGION_RECT_WIDTH 1
@@ -135,14 +134,6 @@ Ruler::Ruler()
    mMajorFont = new wxFont(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
 
    mUserFonts = false;
-
-#if !wxCHECK_VERSION(3, 0, 0)
-   #ifdef __WXMAC__
-   mMinorMinorFont->SetNoAntiAliasing(true);
-   mMinorFont->SetNoAntiAliasing(true);
-   mMajorFont->SetNoAntiAliasing(true);
-   #endif
-#endif
 
    mMajorLabels = 0;
    mMinorLabels = 0;
@@ -313,14 +304,6 @@ void Ruler::SetFonts(const wxFont &minorFont, const wxFont &majorFont, const wxF
    *mMinorMinorFont = minorMinorFont;
    *mMinorFont = minorFont;
    *mMajorFont = majorFont;
-
-#if !wxCHECK_VERSION(3, 0, 0)
-   #ifdef __WXMAC__
-   mMinorMinorFont->SetNoAntiAliasing(true);
-   mMinorFont->SetNoAntiAliasing(true);
-   mMajorFont->SetNoAntiAliasing(true);
-   #endif
-#endif
 
    // Won't override these fonts
    mUserFonts = true;
@@ -1534,13 +1517,10 @@ int Ruler::GetZeroPosition()
 
 void Ruler::GetMaxSize(wxCoord *width, wxCoord *height)
 {
-
    if (!mValid) {
-      wxMemoryDC tmpDC;
-      wxBitmap tmpBM(1, 1);
-      tmpDC.SelectObject(tmpBM);
-      mDC = &tmpDC;
-      Update( NULL);
+      wxScreenDC sdc;
+      mDC = &sdc;
+      Update(NULL);
    }
 
    if (width)
@@ -1644,7 +1624,7 @@ void RulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
 
 void RulerPanel::OnSize(wxSizeEvent & WXUNUSED(evt))
 {
-   Refresh(false);
+   Refresh();
 }
 
 // LL:  We're overloading DoSetSize so that we can update the ruler bounds immediately
@@ -1683,7 +1663,6 @@ enum {
 };
 
 BEGIN_EVENT_TABLE(AdornedRulerPanel, wxPanel)
-   EVT_ERASE_BACKGROUND(AdornedRulerPanel::OnErase)
    EVT_PAINT(AdornedRulerPanel::OnPaint)
    EVT_SIZE(AdornedRulerPanel::OnSize)
    EVT_MOUSE_EVENTS(AdornedRulerPanel::OnMouseEvents)
@@ -1695,16 +1674,20 @@ BEGIN_EVENT_TABLE(AdornedRulerPanel, wxPanel)
    EVT_MENU(OnLockPlayRegionID, AdornedRulerPanel::OnLockPlayRegion)
 END_EVENT_TABLE()
 
-AdornedRulerPanel::AdornedRulerPanel(wxWindow* parent,
+AdornedRulerPanel::AdornedRulerPanel(AudacityProject* parent,
                                      wxWindowID id,
                                      const wxPoint& pos,
                                      const wxSize& size,
-                                     ViewInfo *viewinfo):
-   wxPanel( parent, id, pos, size )
+                                     ViewInfo *viewinfo)
+:  wxPanel(parent, id, pos, size)
 {
    SetLabel( _("Timeline") );
    SetName(GetLabel());
    SetBackgroundStyle(wxBG_STYLE_PAINT);
+
+   mCursorDefault = wxCursor(wxCURSOR_DEFAULT);
+   mCursorHand = wxCursor(wxCURSOR_HAND);
+   mCursorSizeWE = wxCursor(wxCURSOR_SIZEWE);
 
    mLeftOffset = 0;
    mCurTime = -1;
@@ -1720,7 +1703,6 @@ AdornedRulerPanel::AdornedRulerPanel(wxWindow* parent,
    mMouseEventState = mesNone;
    mIsDragging = false;
 
-   mBuffer = new wxBitmap( 1, 1 );
    mViewInfo = viewinfo;
 
    mOuter = GetClientRect();
@@ -1731,13 +1713,15 @@ AdornedRulerPanel::AdornedRulerPanel(wxWindow* parent,
    mInner.width -= 2;      // -2 for left and right bevels
    mInner.height -= 3;     // -3 for top and bottom bevels and bottom line
 
-   ruler.SetUseZoomInfo(mLeftOffset);
-   ruler.SetBounds( mInner.GetLeft(),
+   mRuler.SetUseZoomInfo(mLeftOffset);
+   mRuler.SetBounds(mInner.GetLeft(),
                     mInner.GetTop(),
                     mInner.GetRight(),
-                    mInner.GetBottom() );
-   ruler.SetLabelEdges( false );
-   ruler.SetFormat( Ruler::TimeFormat );
+                    mInner.GetBottom());
+   mRuler.SetLabelEdges( false );
+   mRuler.SetFormat( Ruler::TimeFormat );
+
+   mTracks = parent->GetTracks();
 
    mSnapManager = NULL;
    mIsSnapped = false;
@@ -1762,14 +1746,15 @@ AdornedRulerPanel::AdornedRulerPanel(wxWindow* parent,
 
 AdornedRulerPanel::~AdornedRulerPanel()
 {
+   // Done with the snap manager
+   if (mSnapManager) {
+      delete mSnapManager;
+   }
+
    wxTheApp->Disconnect(EVT_AUDIOIO_CAPTURE,
                         wxCommandEventHandler(AdornedRulerPanel::OnCapture),
                         NULL,
                         this);
-   delete mBuffer;
-
-   if (mSnapManager)
-      delete mSnapManager;
 }
 
 void AdornedRulerPanel::UpdatePrefs()
@@ -1779,7 +1764,7 @@ void AdornedRulerPanel::UpdatePrefs()
    {
       bool scrollBeyondZero = false;
       gPrefs->Read(wxT("/GUI/ScrollBeyondZero"), &scrollBeyondZero, false);
-      ruler.SetTwoTone(scrollBeyondZero);
+      mRuler.SetTwoTone(scrollBeyondZero);
    }
 #endif
 #endif
@@ -1788,7 +1773,7 @@ void AdornedRulerPanel::UpdatePrefs()
 
 void AdornedRulerPanel::InvalidateRuler()
 {
-   ruler.Invalidate();
+   mRuler.Invalidate();
 }
 
 void AdornedRulerPanel::RegenerateTooltips()
@@ -1819,24 +1804,23 @@ void AdornedRulerPanel::OnCapture(wxCommandEvent & evt)
    {
       // Set cursor immediately  because OnMouseEvents is not called
       // if recording is initiated by a modal window (Timer Record).
-      SetCursor(wxCursor(wxCURSOR_DEFAULT));
+      SetCursor(mCursorDefault);
       mIsRecording = true;
    }
    else {
-      SetCursor(wxCursor(wxCURSOR_HAND));
+      SetCursor(mCursorHand);
       mIsRecording = false;
    }
    RegenerateTooltips();
 }
 
-void AdornedRulerPanel::OnErase(wxEraseEvent & WXUNUSED(evt))
-{
-   // Ignore it to prevent flashing
-}
-
 void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
 {
-   wxBufferedPaintDC dc(this);
+   wxSize sz = GetClientSize();
+   wxPaintDC pdc(this);
+   wxBitmap buffer;
+   buffer.Create(sz.x, sz.y, pdc);
+   wxBufferedDC dc(&pdc, buffer);
 
    DoDrawBorder(&dc);
 
@@ -1845,6 +1829,8 @@ void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
       DoDrawSelection(&dc);
    }
 
+   DoDrawMarks(&dc, true);
+
    if (mIndType >= 0)
    {
       DoDrawIndicator(&dc);
@@ -1852,10 +1838,8 @@ void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
 
    if (mQuickPlayInd)
    {
-      DrawQuickPlayIndicator(&dc, false);
+      DrawQuickPlayIndicator(&dc);
    }
-
-   DoDrawMarks(&dc, true);
 
    if (mViewInfo->selectedRegion.isPoint())
    {
@@ -1879,19 +1863,12 @@ void AdornedRulerPanel::OnSize(wxSizeEvent & WXUNUSED(evt))
    mInner.width -= 2;      // -2 for left and right bevels
    mInner.height -= 3;     // -3 for top and bottom bevels and bottom line
 
-   ruler.SetBounds( mInner.GetLeft(),
+   mRuler.SetBounds(mInner.GetLeft(),
                     mInner.GetTop(),
                     mInner.GetRight(),
-                    mInner.GetBottom() );
+                    mInner.GetBottom());
 
-   if( mBuffer )
-   {
-      delete mBuffer;
-   }
-
-   mBuffer = new wxBitmap( mOuter.GetWidth(), mOuter.GetHeight() );
-
-   Refresh( false );
+   Refresh();
 }
 
 double AdornedRulerPanel::Pos2Time(int p, bool ignoreFisheye)
@@ -1936,8 +1913,8 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
 
    // Keep Quick-Play within usable track area.
    TrackPanel *tp = mProject->GetTrackPanel();
-   int mousePosX, width, height;
-   tp->GetTracksUsableArea(&width, &height);
+   int mousePosX, width;
+   tp->GetTracksUsableArea(&width, NULL);
    mousePosX = std::max(evt.GetX(), tp->GetLeftOffset());
    mousePosX = std::min(mousePosX, tp->GetLeftOffset() + width - 1);
 
@@ -1946,38 +1923,54 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
    bool isWithinClick = (mLeftDownClick >= 0) && IsWithinMarker(mousePosX, mLeftDownClick);
    bool canDragSel = !mPlayRegionLock && mPlayRegionDragsSelection;
 
-   double t0 = mProject->GetTracks()->GetStartTime();
-   double t1 = mProject->GetTracks()->GetEndTime();
+   double t0 = mTracks->GetStartTime();
+   double t1 = mTracks->GetEndTime();
    double sel0 = mProject->GetSel0();
    double sel1 = mProject->GetSel1();
 
    mLastMouseX = mousePosX;
    mQuickPlayPos = Pos2Time(mousePosX);
    // If not looping, restrict selection to end of project
-   if (!evt.ShiftDown()) mQuickPlayPos = std::min(t1, mQuickPlayPos);
-
+   if (!evt.ShiftDown()) {
+      mQuickPlayPos = std::min(t1, mQuickPlayPos);
+   }
 
    if (evt.Leaving()) {
       mQuickPlayInd = false;
-      wxClientDC cdc(this);
-      DrawQuickPlayIndicator(&cdc, true);
-      Refresh(false);
+      DrawQuickPlayIndicator(NULL);
+      Refresh();
+
+      SetCursor(mCursorDefault);
+      mIsWE = false;
+
+      if (mSnapManager) {
+         delete mSnapManager;
+         mSnapManager = NULL;
+      }
    }
    else if (mQuickPlayEnabled) {
       mQuickPlayInd = true;
-      Refresh(false);
+      Refresh();
 
       if (isWithinStart || isWithinEnd) {
-         SetCursor(wxCursor(wxCURSOR_SIZEWE));
+         if (!mIsWE) {
+            SetCursor(mCursorSizeWE);
+            mIsWE = true;
+         }
       }
       else {
-         SetCursor(wxCursor(wxCURSOR_HAND));
+         if (mIsWE) {
+            SetCursor(mCursorHand);
+            mIsWE = false;
+         }
       }
    }
-   else {
-      SetCursor(wxCursor(wxCURSOR_HAND));
+   else if (evt.Entering()) {
+      SetCursor(mCursorHand);
+      mQuickPlayInd = false;
+      DrawQuickPlayIndicator(NULL);
+      Refresh();
    }
-
 
    if (evt.RightDown() && !(evt.LeftIsDown())) {
       ShowMenu(evt.GetPosition());
@@ -2024,10 +2017,9 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
 
       // Check if we are dragging BEFORE CaptureMouse.
       if (mMouseEventState != mesNone)
-         SetCursor(wxCursor(wxCURSOR_SIZEWE));
+         SetCursor(mCursorSizeWE);
       CaptureMouse();
    }
-
 
    if (evt.LeftIsDown()) {
       switch (mMouseEventState)
@@ -2101,8 +2093,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
    if (evt.LeftUp())
    {
       mQuickPlayInd = false;
-      wxClientDC cdc(this);
-      DrawQuickPlayIndicator(&cdc, true);
+      DrawQuickPlayIndicator(NULL);
 
       if (HasCapture())
          ReleaseMouse();
@@ -2180,7 +2171,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
 
          mPlayRegionStart = start;
          mPlayRegionEnd = end;
-         DoDrawPlayRegion(&cdc);
+         Refresh();
       }
 
       mMouseEventState = mesNone;
@@ -2199,14 +2190,12 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
 
 void AdornedRulerPanel::OnCaptureLost(wxMouseCaptureLostEvent & WXUNUSED(evt))
 {
-   wxClientDC cdc(this);
-   DrawQuickPlayIndicator(&cdc, true);
+   DrawQuickPlayIndicator(NULL);
 
    wxMouseEvent e(wxEVT_LEFT_UP);
    e.m_x = mLastMouseX;
    OnMouseEvents(e);
 }
-
 
 // Pop-up menu
 
@@ -2250,8 +2239,7 @@ void AdornedRulerPanel::ShowMenu(const wxPoint & pos)
    delete rulerMenu;
    // dismiss and clear Quick-Play indicator
    mQuickPlayInd = false;
-   wxClientDC cdc(this);
-   DrawQuickPlayIndicator(&cdc, true);
+   DrawQuickPlayIndicator(NULL);
 }
 
 void AdornedRulerPanel::OnToggleQuickPlay(wxCommandEvent&)
@@ -2279,25 +2267,20 @@ void AdornedRulerPanel::DragSelection()
       mProject->SetSel0(mPlayRegionEnd);
       mProject->SetSel1(mPlayRegionStart);
    }
-   mProject->GetTrackPanel()->TrackPanel::DisplaySelection();
-   mProject->GetTrackPanel()->TrackPanel::Refresh(false);
+   mProject->GetTrackPanel()->DisplaySelection();
+   mProject->GetTrackPanel()->Refresh(false);
 }
-
 
 void AdornedRulerPanel::HandleSnapping()
 {
-   if (mSnapManager) {
-      // Create a new snap manager in case any snap-points have changed
-      delete mSnapManager;
+   if (!mSnapManager) {
+      mSnapManager = new SnapManager(mTracks, mViewInfo);
    }
-   mSnapManager = new SnapManager(mProject->GetTracks(), NULL, NULL,
-                                 *mViewInfo,
-                                 QUICK_PLAY_SNAP_PIXEL);
-   bool snappedPoint, snappedTime;
-   mIsSnapped = (mSnapManager->Snap(NULL, mQuickPlayPos, false,
-                                    &mQuickPlayPos, &snappedPoint, &snappedTime));
-}
 
+   bool snappedPoint, snappedTime;
+   mIsSnapped = mSnapManager->Snap(NULL, mQuickPlayPos, false,
+                                   &mQuickPlayPos, &snappedPoint, &snappedTime);
+}
 
 void AdornedRulerPanel::OnTimelineToolTips(wxCommandEvent&)
 {
@@ -2308,7 +2291,6 @@ void AdornedRulerPanel::OnTimelineToolTips(wxCommandEvent&)
    RegenerateTooltips();
 #endif
 }
-
 
 void AdornedRulerPanel::OnAutoScroll(wxCommandEvent&)
 {
@@ -2412,14 +2394,14 @@ void AdornedRulerPanel::DoDrawMarks(wxDC * dc, bool /*text */ )
    const double max = Pos2Time(mInner.width);
    const double hiddenMax = Pos2Time(mInner.width, true);
 
-   ruler.SetTickColour( theTheme.Colour( clrTrackPanelText ) );
-   ruler.SetRange( min, max, hiddenMin, hiddenMax );
-   ruler.Draw( *dc );
+   mRuler.SetTickColour( theTheme.Colour( clrTrackPanelText ) );
+   mRuler.SetRange( min, max, hiddenMin, hiddenMax );
+   mRuler.Draw( *dc );
 }
 
 void AdornedRulerPanel::DrawSelection()
 {
-   Refresh(false);
+   Refresh();
 }
 
 void AdornedRulerPanel::DoDrawSelection(wxDC * dc)
@@ -2442,14 +2424,14 @@ void AdornedRulerPanel::DoDrawSelection(wxDC * dc)
 void AdornedRulerPanel::SetLeftOffset(int offset)
 {
    mLeftOffset = offset;
-   ruler.SetUseZoomInfo(offset);
+   mRuler.SetUseZoomInfo(offset);
 }
 
 void AdornedRulerPanel::DrawCursor(double time)
 {
    mCurTime = time;
 
-   Refresh(false);
+   Refresh();
 }
 
 void AdornedRulerPanel::DoDrawCursor(wxDC * dc)
@@ -2468,7 +2450,7 @@ void AdornedRulerPanel::ClearIndicator()
 {
    mIndType = -1;
 
-   Refresh(false);
+   Refresh();
 }
 
 void AdornedRulerPanel::DrawIndicator( double time, bool rec )
@@ -2483,16 +2465,12 @@ void AdornedRulerPanel::DrawIndicator( double time, bool rec )
 
    mIndType = ( rec ? 0 : 1 );
 
-   Refresh(false);
+   Refresh();
 }
 
 // Draws the play/recording position indicator.
 void AdornedRulerPanel::DoDrawIndicator(wxDC * dc)
 {
-   if (mIndType < 0) {
-      return;
-   }
-
    int indsize = 6;
    const int x = Time2Pos(mIndTime);
 
@@ -2508,15 +2486,14 @@ void AdornedRulerPanel::DoDrawIndicator(wxDC * dc)
    dc->DrawPolygon( 3, tri );
 }
 
-// Draws the vertical line and green triangle indicating the Qick Play cursor position.
-void AdornedRulerPanel::DrawQuickPlayIndicator(wxDC * dc, bool clear)
+// Draws the vertical line and green triangle indicating the Quick Play cursor position.
+void AdornedRulerPanel::DrawQuickPlayIndicator(wxDC * dc)
 {
    TrackPanel *tp = mProject->GetTrackPanel();
-   wxClientDC cdc(tp);
 
-   double latestEnd = std::max(mProject->GetTracks()->GetEndTime(), mProject->GetSel1());
-   if (clear || (mQuickPlayPos >= latestEnd)) {
-      tp->TrackPanel::DrawQuickPlayIndicator(cdc, -1);
+   double latestEnd = std::max(mTracks->GetEndTime(), mProject->GetSel1());
+   if (dc == NULL || (mQuickPlayPos >= latestEnd)) {
+      tp->DrawQuickPlayIndicator(-1);
       return;
    }
 
@@ -2534,7 +2511,7 @@ void AdornedRulerPanel::DrawQuickPlayIndicator(wxDC * dc, bool clear)
    AColor::IndicatorColor( dc, true);
    dc->DrawPolygon( 3, tri, x );
 
-   tp->TrackPanel::DrawQuickPlayIndicator(cdc, x);
+   tp->DrawQuickPlayIndicator(x, mIsSnapped);
 }
 
 void AdornedRulerPanel::SetPlayRegion(double playRegionStart,
@@ -2548,6 +2525,8 @@ void AdornedRulerPanel::SetPlayRegion(double playRegionStart,
 
    mPlayRegionStart = playRegionStart;
    mPlayRegionEnd = playRegionEnd;
+
+   // Must use Refresh()
    Refresh();
 }
 
@@ -2559,6 +2538,8 @@ void AdornedRulerPanel::ClearPlayRegion()
    mPlayRegionStart = -1;
    mPlayRegionEnd = -1;
    mQuickPlayInd = false;
+
+   // Must use Refresh()
    Refresh();
 }
 
@@ -2580,6 +2561,5 @@ void AdornedRulerPanel::GetPlayRegion(double* playRegionStart,
 
 void AdornedRulerPanel::GetMaxSize(wxCoord *width, wxCoord *height)
 {
-   ruler.GetMaxSize(width, height);
+   mRuler.GetMaxSize(width, height);
 }
-

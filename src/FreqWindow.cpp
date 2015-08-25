@@ -284,7 +284,7 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
          vRuler->ruler.SetLabelEdges(true);
          int w;
          vRuler->ruler.GetMaxSize(&w, NULL);
-         vRuler->SetSize(wxSize(w, 150));  // height needed for wxGTK
+         vRuler->SetMinSize(wxSize(w, 150));  // height needed for wxGTK
 
          S.AddSpace(wxDefaultCoord, 1);
          S.Prop(1);

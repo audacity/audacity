@@ -16,6 +16,7 @@ Paul Licameli
 #include "../Audacity.h"
 #include "SpectrogramSettings.h"
 #include "../NumberScale.h"
+#include "../TranslatableStringArray.h"
 
 #include <algorithm>
 #include <wx/msgdlg.h>
@@ -56,6 +57,8 @@ SpectrogramSettings::Globals
 SpectrogramSettings::SpectrogramSettings()
    : hFFT(0)
    , window(0)
+   , dWindow(0)
+   , tWindow(0)
 {
    LoadPrefs();
 }
@@ -92,6 +95,8 @@ SpectrogramSettings::SpectrogramSettings(const SpectrogramSettings &other)
    // Do not copy these!
    , hFFT(0)
    , window(0)
+   , tWindow(0)
+   , dWindow(0)
 {
 }
 
@@ -126,9 +131,8 @@ SpectrogramSettings &SpectrogramSettings::operator= (const SpectrogramSettings &
       findNotesQuantize = other.findNotesQuantize;
 #endif
 
-      // Do not copy these!
-      hFFT = 0;
-      window = 0;
+      // Invalidate the caches
+      DestroyWindows();
    }
    return *this;
 }
@@ -139,62 +143,49 @@ SpectrogramSettings& SpectrogramSettings::defaults()
    return instance;
 }
 
-namespace
-{
-   wxArrayString &scaleNamesArray()
-   {
-      static wxArrayString theArray;
-      return theArray;
-   }
-
-   wxArrayString &algorithmNamesArray()
-   {
-      static wxArrayString theArray;
-      return theArray;
-   }
-}
-
-//static
-void SpectrogramSettings::InvalidateNames()
-{
-   scaleNamesArray().Clear();
-   algorithmNamesArray().Clear();
-}
-
 //static
 const wxArrayString &SpectrogramSettings::GetScaleNames()
 {
-   wxArrayString &theArray = scaleNamesArray();
+   class ScaleNamesArray : public TranslatableStringArray
+   {
+      virtual void Populate()
+      {
+         // Keep in correspondence with enum SpectrogramSettings::ScaleType:
+         mContents.Add(_("Linear"));
+         mContents.Add(_("Logarithmic"));
+         /* i18n-hint: The name of a frequency scale in psychoacoustics */
+         mContents.Add(_("Mel"));
+         /* i18n-hint: The name of a frequency scale in psychoacoustics, named for Heinrich Barkhausen */
+         mContents.Add(_("Bark"));
+         /* i18n-hint: The name of a frequency scale in psychoacoustics, abbreviates Equivalent Rectangular Bandwidth */
+         mContents.Add(_("ERBS"));
+         /* i18n-hint: A mathematical formula where f stands for frequency */
+         mContents.Add(_("1 / f"));
+      }
+   };
 
-   if (theArray.IsEmpty()) {
-      // Keep in correspondence with enum SpectrogramSettings::ScaleType:
-      theArray.Add(_("Linear"));
-      theArray.Add(_("Logarithmic"));
-      /* i18n-hint: The name of a frequency scale in psychoacoustics */
-      theArray.Add(_("Mel"));
-      /* i18n-hint: The name of a frequency scale in psychoacoustics, named for Heinrich Barkhausen */
-      theArray.Add(_("Bark"));
-      /* i18n-hint: The name of a frequency scale in psychoacoustics, abbreviates Equivalent Rectangular Bandwidth */
-      theArray.Add(_("ERB"));
-      /* i18n-hint: A mathematical formula where f stands for frequency */
-      theArray.Add(_("1 / f"));
-   }
-
-   return theArray;
+   static ScaleNamesArray theArray;
+   return theArray.Get();
 }
 
 //static
 const wxArrayString &SpectrogramSettings::GetAlgorithmNames()
 {
-   wxArrayString &theArray = algorithmNamesArray();
+   class AlgorithmNamesArray : public TranslatableStringArray
+   {
+      virtual void Populate()
+      {
+         // Keep in correspondence with enum SpectrogramSettings::Algorithm:
+         mContents.Add(_("Frequencies"));
+         /* i18n-hint: the Reassignment algorithm for spectrograms */
+         mContents.Add(_("Reassignment"));
+         /* i18n-hint: EAC abbreviates "Enhanced Autocorrelation" */
+         mContents.Add(_("Pitch (EAC)"));
+      }
+   };
 
-   if (theArray.IsEmpty()) {
-      // Keep in correspondence with enum SpectrogramSettings::Algorithm:
-      theArray.Add(_("STFT"));
-      theArray.Add(_("Pitch (enhanced autocorrelation)"));
-   }
-
-   return theArray;
+   static AlgorithmNamesArray theArray;
+   return theArray.Get();
 }
 
 bool SpectrogramSettings::Validate(bool quiet)
@@ -386,6 +377,14 @@ void SpectrogramSettings::DestroyWindows()
       delete[] window;
       window = NULL;
    }
+   if (dWindow != NULL) {
+      delete[] dWindow;
+      dWindow = NULL;
+   }
+   if (tWindow != NULL) {
+      delete[] tWindow;
+      tWindow = NULL;
+   }
 #endif
 }
 
@@ -403,7 +402,11 @@ namespace
       window = new float[fftLen];
       int ii;
 
+      const bool extra = padding > 0;
       wxASSERT(windowSize % 2 == 0);
+      if (extra)
+         // For windows that do not go to 0 at the edges, this improves symmetry
+         ++windowSize;
       const int endOfWindow = padding + windowSize;
       // Left and right padding
       for (ii = 0; ii < padding; ++ii) {
@@ -416,25 +419,17 @@ namespace
       // Overwrite middle as needed
       switch (which) {
       case WINDOW:
-         WindowFunc(windowType, windowSize, window + padding);
-         // NewWindowFunc(windowType, windowSize, extra, window + padding);
+         NewWindowFunc(windowType, windowSize, extra, window + padding);
          break;
-      case TWINDOW:
-         wxASSERT(false);
-#if 0
          // Future, reassignment
+      case TWINDOW:
          NewWindowFunc(windowType, windowSize, extra, window + padding);
          for (int ii = padding, multiplier = -windowSize / 2; ii < endOfWindow; ++ii, ++multiplier)
             window[ii] *= multiplier;
          break;
-#endif
       case DWINDOW:
-         wxASSERT(false);
-#if 0
-         // Future, reassignment
          DerivativeOfWindowFunc(windowType, windowSize, extra, window + padding);
          break;
-#endif
       default:
          wxASSERT(false);
       }
@@ -464,6 +459,10 @@ void SpectrogramSettings::CacheWindows() const
          EndFFT(hFFT);
       hFFT = InitializeFFT(fftLen);
       RecreateWindow(window, WINDOW, fftLen, padding, windowType, windowSize, scale);
+      if (algorithm == algReassignment) {
+         RecreateWindow(tWindow, TWINDOW, fftLen, padding, windowType, windowSize, scale);
+         RecreateWindow(dWindow, DWINDOW, fftLen, padding, windowType, windowSize, scale);
+      }
    }
 #endif // EXPERIMENTAL_USE_REALFFTF
 }
@@ -557,7 +556,7 @@ int SpectrogramSettings::GetFFTLength() const
 {
    return windowSize
 #ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
-      * ((algorithm == algSTFT) ? zeroPaddingFactor : 1);
+      * ((algorithm != algPitchEAC) ? zeroPaddingFactor : 1);
 #endif
    ;
 }
