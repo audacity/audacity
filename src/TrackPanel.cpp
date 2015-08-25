@@ -1255,8 +1255,13 @@ void TrackPanel::TimerUpdateIndicator()
 
 std::pair<wxRect, bool> TrackPanel::GetIndicatorRectangle()
 {
+   wxRect rect(mLastIndicatorX, 0, 1, mBacking->GetHeight());
+#if defined(__WXMAC__)
+   rect.Inflate(1, 0);
+#endif
+
    return std::make_pair(
-      wxRect(mLastIndicatorX, 0, 1, mBacking->GetHeight()),
+      rect,
       mLastIndicatorX != mNewIndicatorX
    );
 }
@@ -1371,8 +1376,13 @@ std::pair<wxRect, bool> TrackPanel::GetCursorRectangle()
       mNewCursorX = mViewInfo->TimeToPosition(mCursorTime, GetLeftOffset());
    }
 
+   wxRect rect(mLastCursorX, 0, 1, mBacking->GetHeight());
+#if defined(__WXMAC__)
+   rect.Inflate(1, 0);
+#endif
+
    return std::make_pair(
-      wxRect(mLastCursorX, 0, 1, mBacking->GetHeight()),
+      rect,
       mLastCursorX != mNewCursorX
    );
 }
@@ -7520,11 +7530,16 @@ void TrackPanel::TimerUpdateScrubbing()
 
 std::pair<wxRect, bool> TrackPanel::GetScrubSpeedRectangle()
 {
+   wxRect rect(mLastScrubRect);
+#if defined(__WXMAC__)
+   rect.Inflate(1, 0);
+#endif
+
    const bool outdated =
       (mLastScrubRect != mNextScrubRect) ||
       (!mLastScrubRect.IsEmpty() && !ShouldDrawScrubSpeed());
    return std::make_pair(
-      mLastScrubRect,
+      rect,
       outdated
    );
 }
