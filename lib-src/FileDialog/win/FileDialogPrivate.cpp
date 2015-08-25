@@ -203,32 +203,20 @@ void FileDialog::MSWOnSize(HWND hDlg, LPOPENFILENAME pOfn)
    SetHWND(NULL);
 }
 
-// Capture the minimum dialog size by saving the first non-zero size.
+// Provide the minimum size of the dialog
 //
-// We get called multiple times:
+// We've captured the full dialog size in MSWOnInitDone() below.  This will be returned
+// as the minimum size.
 //
-// The first, ptMinTrackSize will be {0, 0}.
-//
-// The second, ptMinTrackSize will be the absolute minimum to contain all controls.  This is
-// the POINT we will use to override the subsequent calls.
-//
-// Additional calls are made when the user resizes the dialog and for some unknown reason the
-// the common dialog control doesn't let the user resize the dialog smaller than it was the
-// last time the dialog was used.  This information is kept in:
-//
-//    HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\ComDlg32\CIDSizeMRU
-//
-// So, we override the minimum size supplied by the common dialog control with the captured
-// size from the second call.
+// When the user tries to resize the dialog, for some unknown reason the common dialog control
+// doesn't let the user resize it smaller than it was the last time the dialog was used.  This
+// may be a problem in this code and/or may only be a concern under Windows 10.  Either way, we
+// override the minimum size supplied by the common dialog control with our own size here.
 void FileDialog::MSWOnGetMinMaxInfo(HWND hwnd, LPOPENFILENAME pOfn, LPMINMAXINFO pMmi)
 {
    if (mMinSize.x > 0 && mMinSize.y > 0)
    {
       pMmi->ptMinTrackSize = mMinSize;
-   }
-   else
-   {
-      mMinSize = pMmi->ptMinTrackSize;
    }
 }
 
@@ -359,6 +347,11 @@ void FileDialog::MSWOnInitDone(HWND hDlg, LPOPENFILENAME pOfn)
 {
    // set HWND so that our DoMoveWindow() works correctly
    SetHWND(mChildDlg);
+
+   // capture the full initial size of the dialog to use as the minimum size
+   RECT r;
+   GetWindowRect(mParentDlg, &r);
+   mMinSize = {r.right - r.left, r.bottom - r.top};
 
    if (m_centreDir)
    {
@@ -686,6 +679,7 @@ FileDialog::FileDialog(wxWindow *parent,
 void FileDialog::Init()
 {
    mRoot = NULL;
+   mMinSize = {0, 0};
 
    // NB: all style checks are done by wxFileDialogBase::Create
 
