@@ -368,7 +368,7 @@ void ExportFFmpegWMAOptions::PopulateOrExchange(ShuttleGui & S)
          S.StartMultiColumn(2, wxCENTER);
          {
             S.TieChoice(_("Bit Rate:"), wxT("/FileFormats/WMABitRate"),
-               96000, mBitRateNames, mBitRateLabels);
+               128000, mBitRateNames, mBitRateLabels);
          }
          S.EndMultiColumn();
       }
