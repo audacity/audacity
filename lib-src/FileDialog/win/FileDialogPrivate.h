@@ -64,6 +64,7 @@ private:
 
    // Message handlers for the parent dialog
    virtual void MSWOnSize(HWND hwnd, LPOPENFILENAME pOfn);
+   virtual void MSWOnGetMinMaxInfo(HWND hwnd, LPOPENFILENAME pOfn, LPMINMAXINFO pMmi);
 
    // Child dialog hook
    static UINT_PTR APIENTRY DialogHook(HWND hDlg, UINT iMsg, WPARAM wParam, LPARAM lParam);
@@ -93,6 +94,7 @@ private:
    HWND mParentDlg;
    HWND mChildDlg;
    WNDPROC mParentProc;
+   POINT mMinSize;
 
    wxPanel *mRoot;
 

@@ -170,6 +170,11 @@ UINT_PTR FileDialog::MSWParentHook(HWND hDlg, UINT iMsg, WPARAM wParam, LPARAM l
       MSWOnSize(mParentDlg, pOfn);
    }
 
+   if (iMsg == WM_GETMINMAXINFO)
+   {
+      MSWOnGetMinMaxInfo(mParentDlg, pOfn, reinterpret_cast<LPMINMAXINFO>(lParam));
+   }
+
    return ret;
 }
 
@@ -196,6 +201,35 @@ void FileDialog::MSWOnSize(HWND hDlg, LPOPENFILENAME pOfn)
    }
 
    SetHWND(NULL);
+}
+
+// Capture the minimum dialog size by saving the first non-zero size.
+//
+// We get called multiple times:
+//
+// The first, ptMinTrackSize will be {0, 0}.
+//
+// The second, ptMinTrackSize will be the absolute minimum to contain all controls.  This is
+// the POINT we will use to override the subsequent calls.
+//
+// Additional calls are made when the user resizes the dialog and for some unknown reason the
+// the common dialog control doesn't let the user resize the dialog smaller than it was the
+// last time the dialog was used.  This information is kept in:
+//
+//    HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\ComDlg32\CIDSizeMRU
+//
+// So, we override the minimum size supplied by the common dialog control with the captured
+// size from the second call.
+void FileDialog::MSWOnGetMinMaxInfo(HWND hwnd, LPOPENFILENAME pOfn, LPMINMAXINFO pMmi)
+{
+   if (mMinSize.x > 0 && mMinSize.y > 0)
+   {
+      pMmi->ptMinTrackSize = mMinSize;
+   }
+   else
+   {
+      mMinSize = pMmi->ptMinTrackSize;
+   }
 }
 
 UINT_PTR APIENTRY FileDialog::DialogHook(HWND hDlg, UINT iMsg, WPARAM wParam, LPARAM lParam)
