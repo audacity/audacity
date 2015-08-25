@@ -1685,6 +1685,9 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* parent,
    SetName(GetLabel());
    SetBackgroundStyle(wxBG_STYLE_PAINT);
 
+   mBack = new wxBitmap(1, 1);
+   mBackDC.SelectObject(*mBack);
+
    mCursorDefault = wxCursor(wxCURSOR_DEFAULT);
    mCursorHand = wxCursor(wxCURSOR_HAND);
    mCursorSizeWE = wxCursor(wxCURSOR_SIZEWE);
@@ -1694,6 +1697,7 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* parent,
    mIndTime = -1;
    mIndType = -1;
    mQuickPlayInd = false;
+   mLastQuickPlayX = -1;
    mPlayRegionStart = -1;
    mPlayRegionLock = false;
    mPlayRegionEnd = -1;
@@ -1816,37 +1820,46 @@ void AdornedRulerPanel::OnCapture(wxCommandEvent & evt)
 
 void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
 {
-   wxSize sz = GetClientSize();
-   wxPaintDC pdc(this);
-   wxBitmap buffer;
-   buffer.Create(sz.x, sz.y, pdc);
-   wxBufferedDC dc(&pdc, buffer);
+   wxPaintDC dc(this);
 
-   DoDrawBorder(&dc);
+   if (mBack)
+   {
+      mBackDC.SelectObject(wxNullBitmap);
+      delete mBack;
+   }
+      
+   wxSize sz = GetClientSize();
+   mBack = new wxBitmap();
+   mBack->Create(sz.x, sz.y, dc);
+   mBackDC.SelectObject(*mBack);
+
+   DoDrawBorder(&mBackDC);
 
    if (!mViewInfo->selectedRegion.isPoint())
    {
-      DoDrawSelection(&dc);
+      DoDrawSelection(&mBackDC);
    }
 
-   DoDrawMarks(&dc, true);
+   DoDrawMarks(&mBackDC, true);
 
    if (mIndType >= 0)
    {
-      DoDrawIndicator(&dc);
+      DoDrawIndicator(&mBackDC);
    }
+
+   if (mViewInfo->selectedRegion.isPoint())
+   {
+      DoDrawCursor(&mBackDC);
+   }
+
+   DoDrawPlayRegion(&mBackDC);
+
+   dc.Blit(0, 0, mBack->GetWidth(), mBack->GetHeight(), &mBackDC, 0, 0);
 
    if (mQuickPlayInd)
    {
       DrawQuickPlayIndicator(&dc);
    }
-
-   if (mViewInfo->selectedRegion.isPoint())
-   {
-      DoDrawCursor(&dc);
-   }
-
-   DoDrawPlayRegion(&dc);
 }
 
 void AdornedRulerPanel::OnSize(wxSizeEvent & WXUNUSED(evt))
@@ -1947,29 +1960,13 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
          delete mSnapManager;
          mSnapManager = NULL;
       }
-   }
-   else if (mQuickPlayEnabled) {
-      mQuickPlayInd = true;
-      Refresh();
-
-      if (isWithinStart || isWithinEnd) {
-         if (!mIsWE) {
-            SetCursor(mCursorSizeWE);
-            mIsWE = true;
-         }
-      }
-      else {
-         if (mIsWE) {
-            SetCursor(mCursorHand);
-            mIsWE = false;
-         }
-      }
+      return;
    }
    else if (evt.Entering()) {
       SetCursor(mCursorHand);
       mQuickPlayInd = false;
       DrawQuickPlayIndicator(NULL);
-      Refresh();
+      return;
    }
 
    if (evt.RightDown() && !(evt.LeftIsDown())) {
@@ -1981,7 +1978,24 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
    if (!mQuickPlayEnabled)
       return;
 
+  if (isWithinStart || isWithinEnd) {
+      if (!mIsWE) {
+         SetCursor(mCursorSizeWE);
+         mIsWE = true;
+      }
+   }
+   else {
+      if (mIsWE) {
+         SetCursor(mCursorHand);
+         mIsWE = false;
+      }
+   }
+
    HandleSnapping();
+
+   mQuickPlayInd = true;
+   wxClientDC dc(this);
+   DrawQuickPlayIndicator(&dc);
 
    if (evt.LeftDown())
    {
@@ -2027,6 +2041,8 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
       case mesNone:
          // If close to either end of play region, snap to closest
          if (isWithinStart || isWithinEnd) {
+            DrawQuickPlayIndicator(NULL);
+
             if (fabs(mQuickPlayPos - mOldPlayRegionStart) < fabs(mQuickPlayPos - mOldPlayRegionEnd))
                mQuickPlayPos = mOldPlayRegionStart;
             else
@@ -2034,6 +2050,8 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
          }
          break;
       case mesDraggingPlayRegionStart:
+         DrawQuickPlayIndicator(NULL);
+
          // Don't start dragging until beyond tollerance initial playback start
          if (!mIsDragging && isWithinStart)
             mQuickPlayPos = mOldPlayRegionStart;
@@ -2048,20 +2066,29 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
          }
          break;
       case mesDraggingPlayRegionEnd:
-         if (!mIsDragging && isWithinEnd)
+         if (!mIsDragging && isWithinEnd) {
+            DrawQuickPlayIndicator(NULL);
+
             mQuickPlayPos = mOldPlayRegionEnd;
+         }
          else
             mIsDragging = true;
-         if (isWithinStart)
+         if (isWithinStart) {
+            DrawQuickPlayIndicator(NULL);
+
             mQuickPlayPos = mOldPlayRegionStart;
+         }
          mPlayRegionEnd = mQuickPlayPos;
          if (canDragSel) {
             DragSelection();
          }
          break;
       case mesSelectingPlayRegionClick:
+
          // Don't start dragging until mouse is beyond tollerance of initial click.
          if (isWithinClick || mLeftDownClick == -1) {
+            DrawQuickPlayIndicator(NULL);
+
             mQuickPlayPos = mLeftDownClick;
             mPlayRegionStart = mLeftDownClick;
             mPlayRegionEnd = mLeftDownClick;
@@ -2072,6 +2099,8 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
          break;
       case mesSelectingPlayRegionRange:
          if (isWithinClick) {
+            DrawQuickPlayIndicator(NULL);
+
             mQuickPlayPos = mLeftDownClick;
          }
 
@@ -2088,6 +2117,8 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
          }
          break;
       }
+      Refresh();
+      Update();
    }
 
    if (evt.LeftUp())
@@ -2240,6 +2271,8 @@ void AdornedRulerPanel::ShowMenu(const wxPoint & pos)
    // dismiss and clear Quick-Play indicator
    mQuickPlayInd = false;
    DrawQuickPlayIndicator(NULL);
+
+   Refresh();
 }
 
 void AdornedRulerPanel::OnToggleQuickPlay(wxCommandEvent&)
@@ -2494,11 +2527,25 @@ void AdornedRulerPanel::DrawQuickPlayIndicator(wxDC * dc)
    double latestEnd = std::max(mTracks->GetEndTime(), mProject->GetSel1());
    if (dc == NULL || (mQuickPlayPos >= latestEnd)) {
       tp->DrawQuickPlayIndicator(-1);
+      mLastQuickPlayX = -1;
       return;
    }
 
    int indsize = 4;
    int x = Time2Pos(mQuickPlayPos);
+
+   if (mLastQuickPlayX >= 0) {
+      // Restore the background, but make it a little oversized to make
+      // it happy OSX.
+      dc->Blit(mLastQuickPlayX - indsize - 1,
+               0,
+               indsize * 2 + 1 + 2,
+               (indsize * 3) / 2 + 1 + 2,
+               &mBackDC,
+               mLastQuickPlayX - indsize - 1,
+               0);
+   }
+   mLastQuickPlayX = x;
 
    wxPoint tri[3];
    tri[0].x = -indsize;
@@ -2526,7 +2573,6 @@ void AdornedRulerPanel::SetPlayRegion(double playRegionStart,
    mPlayRegionStart = playRegionStart;
    mPlayRegionEnd = playRegionEnd;
 
-   // Must use Refresh()
    Refresh();
 }
 
@@ -2539,7 +2585,6 @@ void AdornedRulerPanel::ClearPlayRegion()
    mPlayRegionEnd = -1;
    mQuickPlayInd = false;
 
-   // Must use Refresh()
    Refresh();
 }
 
