@@ -62,9 +62,9 @@ public:
       , bool ignoreFisheye = false
    ) const;
 
-   double OffsetTimeByPixels(double time, wxInt64 offset) const
+   double OffsetTimeByPixels(double time, wxInt64 offset, bool ignoreFisheye = false) const
    {
-      return PositionToTime(offset + TimeToPosition(time));
+      return PositionToTime(offset + TimeToPosition(time, ignoreFisheye), ignoreFisheye);
    }
 
    bool ZoomInAvailable() const;

@@ -1214,11 +1214,16 @@ void TrackPanel::TimerUpdateIndicator()
       // Calculate the horizontal position of the indicator
       pos = gAudioIO->GetStreamTime();
 
+
 #ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
       if (mSmoothScrollingScrub) {
          // Pan the view, so that we center the play indicator.
-         const double duration = GetScreenEndTime() - mViewInfo->h;
-         mViewInfo->h = pos - duration / 2.0;
+         const int posX = mViewInfo->TimeToPosition(pos);
+         int width;
+         GetTracksUsableArea(&width, NULL);
+         const int deltaX = posX - width / 2;
+         mViewInfo->h =
+            mViewInfo->OffsetTimeByPixels(mViewInfo->h, deltaX, true);
          if (!mScrollBeyondZero)
             // Can't scroll too far left
             mViewInfo->h = std::max(0.0, mViewInfo->h);
