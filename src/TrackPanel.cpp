@@ -411,6 +411,8 @@ BEGIN_EVENT_TABLE(TrackPanel, wxWindow)
     EVT_MENU(OnZoomInVerticalID, TrackPanel::OnZoomInVertical)
     EVT_MENU(OnZoomOutVerticalID, TrackPanel::OnZoomOutVertical)
     EVT_MENU(OnZoomFitVerticalID, TrackPanel::OnZoomFitVertical)
+
+    EVT_TIMER(wxID_ANY, TrackPanel::OnTimer)
 END_EVENT_TABLE()
 
 /// Makes a cursor from an XPM, uses CursorId as a fallback.
@@ -1045,7 +1047,7 @@ AudacityProject * TrackPanel::GetProject() const
 }
 
 /// AS: This gets called on our wx timer events.
-void TrackPanel::OnTimer()
+void TrackPanel::OnTimer(wxTimerEvent& event)
 {
    mTimeCount++;
    // AS: If the user is dragging the mouse and there is a track that

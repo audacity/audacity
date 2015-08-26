@@ -161,7 +161,7 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
 
    virtual double GetMostRecentXPos();
 
-   virtual void OnTimer();
+   virtual void OnTimer(wxTimerEvent& event);
 
    virtual int GetLeftOffset() const { return GetLabelWidth() + 1;}
 
@@ -601,10 +601,19 @@ protected:
 
    class AUDACITY_DLL_API AudacityTimer:public wxTimer {
    public:
-     virtual void Notify() { parent->OnTimer(); }
+     virtual void Notify() {
+       // (From Debian)
+       //
+       // Don't call parent->OnTimer(..) directly here, but instead post
+       // an event. This ensures that this is a pure wxWidgets event
+       // (no GDK event behind it) and that it therefore isn't processed
+       // within the YieldFor(..) of the clipboard operations (workaround
+       // for Debian bug #765341).
+       wxTimerEvent *event = new wxTimerEvent(*this);
+       parent->GetEventHandler()->QueueEvent(event);
+     }
      TrackPanel *parent;
    } mTimer;
-
 
    // This stores the parts of the screen that get overwritten by the indicator
    // and cursor

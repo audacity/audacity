@@ -728,6 +728,7 @@ BEGIN_EVENT_TABLE(AudacityProject, wxFrame)
    EVT_MOUSE_EVENTS(AudacityProject::OnMouseEvent)
    EVT_CLOSE(AudacityProject::OnCloseWindow)
    EVT_SIZE(AudacityProject::OnSize)
+   EVT_SHOW(AudacityProject::OnShow)
    EVT_MOVE(AudacityProject::OnMove)
    EVT_ACTIVATE(AudacityProject::OnActivate)
    EVT_COMMAND_SCROLL_LINEUP(HSBarID, AudacityProject::OnScrollLeftButton)
@@ -791,9 +792,10 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
      mWantSaveCompressed(false),
      mLastEffect(wxEmptyString),
      mTimerRecordCanceled(false),
-     mMenuClose(false)
-     , mbInitializingScrollbar(false)
-     , mViewInfo(0.0, 1.0, ZoomInfo::GetDefaultZoom())
+     mMenuClose(false),
+     mShownOnce(false),
+     mbInitializingScrollbar(false),
+     mViewInfo(0.0, 1.0, ZoomInfo::GetDefaultZoom())
 {
    // Note that the first field of the status bar is a dummy, and it's width is set
    // to zero latter in the code. This field is needed for wxWidgets 2.8.12 because
@@ -1554,6 +1556,20 @@ void AudacityProject::FixScrollbars()
    int panelWidth, panelHeight;
    mTrackPanel->GetTracksUsableArea(&panelWidth, &panelHeight);
 
+   // (From Debian...at least I think this is the change cooresponding
+   // to this comment)
+   //
+   // (2.) GTK critical warning "IA__gtk_range_set_range: assertion
+   // 'min < max' failed" because of negative numbers as result of window
+   // size checking. Added a sanity check that straightens up the numbers
+   // in edge cases.
+   if (panelWidth < 0) {
+      panelWidth = 0;
+   }
+   if (panelHeight < 0) {
+      panelHeight = 0;
+   }
+
    double LastTime =
       std::max(mTracks->GetEndTime(), mViewInfo.selectedRegion.t1());
 
@@ -1789,9 +1805,56 @@ void AudacityProject::OnMove(wxMoveEvent & event)
 
 void AudacityProject::OnSize(wxSizeEvent & event)
 {
-   HandleResize();
-   if (!this->IsMaximized() && !this->IsIconized())
-      SetNormalizedWindowState(this->GetRect());
+   // (From Debian)
+   //
+   // (3.) GTK critical warning "IA__gdk_window_get_origin: assertion
+   // 'GDK_IS_WINDOW (window)' failed": Received events of type wxSizeEvent
+   // on the main project window cause calls to "ClientToScreen" - which is
+   // not available until the window is first shown. So the class has to
+   // keep track of wxShowEvent events and inhibit those actions until the
+   // window is first shown.
+   if (mShownOnce) {
+      HandleResize();
+      if (!this->IsMaximized() && !this->IsIconized())
+         SetNormalizedWindowState(this->GetRect());
+   }
+   event.Skip();
+}
+
+void AudacityProject::OnShow(wxShowEvent & event)
+{
+   // Remember that the window has been shown at least once
+   mShownOnce = true;
+
+   // (From Debian...see also TrackPanel::OnTimer and AudacityTimer::Notify)
+   //
+   // Description: Workaround for wxWidgets bug: Reentry in clipboard
+   //  The wxWidgets bug http://trac.wxwidgets.org/ticket/16636 prevents
+   //  us from doing clipboard operations in wxShowEvent and wxTimerEvent
+   //  processing because those event could possibly be processed during
+   //  the (not sufficiently protected) Yield() of a first clipboard
+   //  operation, causing reentry. Audacity had a workaround in place
+   //  for this problem (the class "CaptureEvents"), which however isn't
+   //  applicable with wxWidgets 3.0 because it's based on changing the
+   //  gdk event handler, a change that would be overridden by wxWidgets's
+   //  own gdk event handler change.
+   //  Instead, as a new workaround, specifically protect those processings
+   //  of wxShowEvent and wxTimerEvent that try to do clipboard operations
+   //  from being executed within Yield(). This is done by delaying their
+   //  execution by posting pure wxWidgets events - which are never executed
+   //  during Yield().
+   // Author: Martin Stegh  fer <martin@steghoefer.eu>
+   //  Bug-Debian: https://bugs.debian.org/765341
+
+   // the actual creation/showing of the window).
+   // Post the event instead of calling OnSize(..) directly. This ensures that
+   // this is a pure wxWidgets event (no GDK event behind it) and that it
+   // therefore isn't processed within the YieldFor(..) of the clipboard
+   // operations (workaround for Debian bug #765341).
+   wxSizeEvent *sizeEvent = new wxSizeEvent(GetSize());
+   GetEventHandler()->QueueEvent(sizeEvent);
+
+   // Further processing by default handlers
    event.Skip();
 }
 

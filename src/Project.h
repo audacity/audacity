@@ -289,6 +289,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    void OnMouseEvent(wxMouseEvent & event);
    void OnIconize(wxIconizeEvent &event);
    void OnSize(wxSizeEvent & event);
+   void OnShow(wxShowEvent & event);
    void OnMove(wxMoveEvent & event);
    void OnScroll(wxScrollEvent & event);
    void OnCloseWindow(wxCloseEvent & event);
@@ -570,6 +571,8 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 
    // dialog for missing alias warnings
    wxDialog            *mAliasMissingWarningDialog;
+
+   bool mShownOnce;
 
    // Project owned meters
    Meter *mPlaybackMeter;
