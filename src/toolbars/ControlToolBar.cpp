@@ -776,6 +776,12 @@ void ControlToolBar::StopPlaying(bool stopStream /* = true*/)
    }
 }
 
+void ControlToolBar::Pause()
+{
+   wxCommandEvent dummy;
+   OnPause(dummy);
+}
+
 void ControlToolBar::OnRecord(wxCommandEvent &evt)
 {
    if (gAudioIO->IsBusy()) {

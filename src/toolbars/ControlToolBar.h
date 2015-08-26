@@ -79,6 +79,9 @@ class ControlToolBar:public ToolBar {
    // Stop playing
    void StopPlaying(bool stopStream = true);
 
+   // Pause - used by AudioIO to pause sound activate recording
+   void Pause();
+
    void Populate();
    virtual void Repaint(wxDC *dc);
    virtual void EnableDisableButtons();
