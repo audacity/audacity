@@ -457,9 +457,8 @@ void ExportFFmpegCustomOptions::OnOpen(wxCommandEvent & WXUNUSED(evt))
    od.ShowModal();
 }
 
-FFmpegPreset::FFmpegPreset(wxString &name)
+FFmpegPreset::FFmpegPreset()
 {
-   mPresetName = name;
    mControlState.SetCount(FELastID - FEFirstID);
 }
 
@@ -467,13 +466,11 @@ FFmpegPreset::~FFmpegPreset()
 {
 }
 
-WX_DEFINE_LIST(FFmpegPresetList);
-
-
 FFmpegPresets::FFmpegPresets()
 {
-   mPresets = new FFmpegPresetList();
-   mPresets->DeleteContents(true);
+   mPreset = NULL;
+   mAbortImport = false;
+
    XMLFileReader xmlfile;
    wxFileName xmlFileName(FileNames::DataDir(), wxT("ffmpeg_presets.xml"));
    xmlfile.Parse(this,xmlFileName.GetFullPath());
@@ -487,15 +484,20 @@ FFmpegPresets::~FFmpegPresets()
    writer.Open(xmlFileName.GetFullPath(),wxT("wb"));
    WriteXMLHeader(writer);
    WriteXML(writer);
-   delete mPresets;
 }
 
 void FFmpegPresets::ImportPresets(wxString &filename)
 {
    mPreset = NULL;
+   mAbortImport = false;
+
+   FFmpegPresetMap savePresets = mPresets;
 
    XMLFileReader xmlfile;
-   xmlfile.Parse(this,filename);
+   bool success = xmlfile.Parse(this,filename);
+   if (!success || mAbortImport) {
+      mPresets = savePresets;
+   }
 }
 
 void FFmpegPresets::ExportPresets(wxString &filename)
@@ -510,40 +512,35 @@ void FFmpegPresets::ExportPresets(wxString &filename)
 wxArrayString *FFmpegPresets::GetPresetList()
 {
    wxArrayString *list = new wxArrayString();
-   FFmpegPresetList::iterator iter;
-   for (iter = mPresets->begin(); iter != mPresets->end(); ++iter)
+   FFmpegPresetMap::iterator iter;
+   for (iter = mPresets.begin(); iter != mPresets.end(); ++iter)
    {
-      FFmpegPreset *preset = *iter;
-      list->Add(preset->mPresetName);
+      list->Add(iter->second.mPresetName);
    }
+
+   list->Sort();
+
    return list;
 }
 
 void FFmpegPresets::DeletePreset(wxString &name)
 {
-   FFmpegPresetList::iterator iter;
-   for (iter = mPresets->begin(); iter != mPresets->end(); ++iter)
+   FFmpegPresetMap::iterator iter = mPresets.find(name);
+   if (iter != mPresets.end())
    {
-      FFmpegPreset *preset = *iter;
-      if (!preset->mPresetName.CmpNoCase(name))
-      {
-         mPresets->erase(iter);
-         break;
-      }
+      mPresets.erase(iter);
    }
 }
 
 FFmpegPreset *FFmpegPresets::FindPreset(wxString &name)
 {
-   FFmpegPreset *preset = NULL;
-   FFmpegPresetList::iterator iter;
-   for (iter = mPresets->begin(); iter != mPresets->end(); ++iter)
+   FFmpegPresetMap::iterator iter = mPresets.find(name);
+   if (iter != mPresets.end())
    {
-      FFmpegPreset *current = *iter;
-      if (!current->mPresetName.CmpNoCase(name))
-         preset = current;
+      return &iter->second;
    }
-   return preset;
+
+   return NULL;
 }
 
 void FFmpegPresets::SavePreset(ExportFFmpegOptions *parent, wxString &name)
@@ -557,32 +554,30 @@ void FFmpegPresets::SavePreset(ExportFFmpegOptions *parent, wxString &name)
       int action = wxMessageBox(query,_("Confirm Overwrite"),wxYES_NO | wxCENTRE);
       if (action == wxNO) return;
    }
-   else
+
+   wxWindow *wnd;
+   wxListBox *lb;
+
+   wnd = dynamic_cast<wxWindow*>(parent)->FindWindowById(FEFormatID,parent);
+   lb = dynamic_cast<wxListBox*>(wnd);
+   if (lb->GetSelection() < 0)
    {
-      wxWindow *wnd;
-      wxListBox *lb;
-
-      wnd = dynamic_cast<wxWindow*>(parent)->FindWindowById(FEFormatID,parent);
-      lb = dynamic_cast<wxListBox*>(wnd);
-      if (lb->GetSelection() < 0)
-      {
-         wxMessageBox(_("Please select format before saving a profile"));
-         return;
-      }
-      format = lb->GetStringSelection();
-
-      wnd = dynamic_cast<wxWindow*>(parent)->FindWindowById(FECodecID,parent);
-      lb = dynamic_cast<wxListBox*>(wnd);
-      if (lb->GetSelection() < 0)
-      {
-         wxMessageBox(_("Please select codec before saving a profile"));
-         return;
-      }
-      codec = lb->GetStringSelection();
-
-      preset = new FFmpegPreset(name);
-      mPresets->push_front(preset);
+      wxMessageBox(_("Please select format before saving a profile"));
+      return;
    }
+   format = lb->GetStringSelection();
+
+   wnd = dynamic_cast<wxWindow*>(parent)->FindWindowById(FECodecID,parent);
+   lb = dynamic_cast<wxListBox*>(wnd);
+   if (lb->GetSelection() < 0)
+   {
+      wxMessageBox(_("Please select codec before saving a profile"));
+      return;
+   }
+   codec = lb->GetStringSelection();
+
+   preset = &mPresets[name];
+   preset->mPresetName = name;
 
    wxSpinCtrl *sc;
    wxTextCtrl *tc;
@@ -725,11 +720,17 @@ void FFmpegPresets::LoadPreset(ExportFFmpegOptions *parent, wxString &name)
 
 bool FFmpegPresets::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 {
+   if (mAbortImport)
+   {
+      return false;
+   }
+
    if (!wxStrcmp(tag,wxT("ffmpeg_presets")))
    {
       return true;
    }
-   else if (!wxStrcmp(tag,wxT("preset")))
+
+   if (!wxStrcmp(tag,wxT("preset")))
    {
       while (*attrs)
       {
@@ -742,16 +743,33 @@ bool FFmpegPresets::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          if (!wxStrcmp(attr,wxT("name")))
          {
             mPreset = FindPreset(value);
-            if (!mPreset)
+            if (mPreset)
             {
-               mPreset = new FFmpegPreset(value);
-               mPresets->push_front(mPreset);
+               wxString query = wxString::Format(_("Replace preset '%s'?"), value.c_str());
+               int action = wxMessageBox(query, _("Confirm Overwrite"), wxYES_NO | wxCANCEL | wxCENTRE);
+               if (action == wxCANCEL)
+               {
+                  mAbortImport = true;
+                  return false;
+               }
+               if (action == wxNO)
+               {
+                  mPreset = NULL;
+                  return false;
+               }
+               *mPreset = FFmpegPreset();
             }
+            else
+            {
+               mPreset = &mPresets[value];
+            }
+            mPreset->mPresetName = value;
          }
       }
       return true;
    }
-   else if (!wxStrcmp(tag,wxT("setctrlstate")) && mPreset)
+
+   if (!wxStrcmp(tag,wxT("setctrlstate")) && mPreset)
    {
       long id = -1;
       while (*attrs)
@@ -776,11 +794,17 @@ bool FFmpegPresets::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       }
       return true;
    }
+
    return false;
 }
 
 XMLTagHandler *FFmpegPresets::HandleXMLChild(const wxChar *tag)
 {
+   if (mAbortImport)
+   {
+      return NULL;
+   }
+
    if (!wxStrcmp(tag, wxT("preset")))
    {
       return this;
@@ -815,10 +839,10 @@ void FFmpegPresets::WriteXML(XMLWriter &xmlFile)
 {
    xmlFile.StartTag(wxT("ffmpeg_presets"));
    xmlFile.WriteAttr(wxT("version"),wxT("1.0"));
-   FFmpegPresetList::iterator iter;
-   for (iter = mPresets->begin(); iter != mPresets->end(); ++iter)
+   FFmpegPresetMap::iterator iter;
+   for (iter = mPresets.begin(); iter != mPresets.end(); ++iter)
    {
-      FFmpegPreset *preset = *iter;
+      FFmpegPreset *preset = &iter->second;
       xmlFile.StartTag(wxT("preset"));
       xmlFile.WriteAttr(wxT("name"),preset->mPresetName);
       for (long i = FEFirstID + 1; i < FELastID; i++)
