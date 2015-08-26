@@ -1267,7 +1267,7 @@ ExportFFmpegOptions::~ExportFFmpegOptions()
 
 ExportFFmpegOptions::ExportFFmpegOptions(wxWindow *parent)
 :  wxDialog(parent, wxID_ANY,
-            wxString(_("Specify Other Options")))
+            wxString(_("Configure custom FFmpeg options")))
 {
    SetName(GetTitle());
    ShuttleGui S(this, eIsCreatingFromPrefs);
