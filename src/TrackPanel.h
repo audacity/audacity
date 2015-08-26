@@ -258,7 +258,7 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
    virtual bool IsOverCutline(WaveTrack * track, wxRect &rect, wxMouseEvent &event);
    virtual void HandleTrackSpecificMouseEvent(wxMouseEvent & event);
 
-   virtual void TimerUpdateIndicator();
+   virtual void TimerUpdateIndicator(double playPos);
    // Second member of pair indicates whether the indicator is out of date:
    virtual std::pair<wxRect, bool> GetIndicatorRectangle();
    virtual void UndrawIndicator(wxDC & dc);
@@ -272,7 +272,7 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
 
 #ifdef EXPERIMENTAL_SCRUBBING_BASIC
    bool ShouldDrawScrubSpeed();
-   virtual void TimerUpdateScrubbing();
+   virtual void TimerUpdateScrubbing(double playPos);
    // Second member of pair indicates whether the cursor is out of date:
    virtual std::pair<wxRect, bool> GetScrubSpeedRectangle();
    virtual void UndrawScrubSpeed(wxDC & dc);
