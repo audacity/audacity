@@ -453,6 +453,19 @@ bool ExportFFmpegCustomOptions::TransferDataFromWindow()
 ///
 void ExportFFmpegCustomOptions::OnOpen(wxCommandEvent & WXUNUSED(evt))
 {
+   // Show "Locate FFmpeg" dialog
+   PickFFmpegLibs();
+   if (!FFmpegLibsInst->ValidLibsLoaded())
+   {
+      FFmpegLibsInst->FindLibs(NULL);
+      FFmpegLibsInst->FreeLibs();
+      if (!LoadFFmpeg(true))
+      {
+         return;
+      }
+   }
+   DropFFmpegLibs();
+
    ExportFFmpegOptions od(wxGetTopLevelParent(this));
    od.ShowModal();
 }
