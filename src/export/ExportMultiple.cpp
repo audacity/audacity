@@ -217,19 +217,17 @@ int ExportMultiple::ShowModal()
 
 void ExportMultiple::PopulateOrExchange(ShuttleGui& S)
 {
-
    wxString name = mProject->GetName();
+   wxString defaultFormat = gPrefs->Read(wxT("/Export/Format"), wxT("WAV"));
 
+   wxArrayString formats;
    mPluginIndex = -1;
-
-   wxString defaultFormat = gPrefs->Read(wxT("/Export/Format"),
-      wxT("WAV"));
-
    mFilterIndex = 0;
 
    for (size_t i = 0; i < mPlugins.GetCount(); i++) {
       for (int j = 0; j < mPlugins[i]->GetFormatCount(); j++)
       {
+         formats.Add(mPlugins[i]->GetDescription(j));
          if (mPlugins[i]->GetFormat(j) == defaultFormat) {
             mPluginIndex = i;
             mSubFormatIndex = j;
@@ -243,7 +241,6 @@ void ExportMultiple::PopulateOrExchange(ShuttleGui& S)
       mFilterIndex = 0;
       mSubFormatIndex = 0;
    }
-
 
    S.SetBorder(5);
    S.StartHorizontalLay(wxEXPAND, true);
@@ -261,19 +258,10 @@ void ExportMultiple::PopulateOrExchange(ShuttleGui& S)
             S.Id(ChooseID).AddButton(_("Choose..."));
             S.Id(CreateID).AddButton(_("Create"));
 
-            wxArrayString formats;
-
-            for (size_t i = 0; i < mPlugins.GetCount(); i++) {
-               for (int j = 0; j < mPlugins[i]->GetFormatCount(); j++)
-               {
-                  formats.Add(mPlugins[i]->GetDescription(j));
-               }
-            }
-
             mFormat = S.Id(FormatID)
                .TieChoice(_("Format:"),
                           wxT("/Export/MultipleFormat"),
-                          mPlugins[mPluginIndex]->GetFormat(mSubFormatIndex),
+                          formats[mFilterIndex],
                           formats,
                           formats);
             S.AddVariableText(wxT(""), false);
