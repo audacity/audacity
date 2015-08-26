@@ -283,6 +283,11 @@ WaveTrack::ValidateWaveTrackDisplay(WaveTrackDisplay display)
    }
 }
 
+void WaveTrack::SetLastScaleType()
+{
+   mLastScaleType = GetWaveformSettings().scaleType;
+}
+
 void WaveTrack::GetDisplayBounds(float *min, float *max)
 {
    *min = mDisplayMin;

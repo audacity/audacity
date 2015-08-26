@@ -9375,6 +9375,7 @@ void TrackPanel::OnSetDisplay(wxCommandEvent & event)
       (id == WaveTrack::Waveform &&
        wt->GetWaveformSettings().isLinear() != linear);
    if (wrongType || wrongScale) {
+      wt->SetLastScaleType();
       wt->SetDisplay(WaveTrack::WaveTrackDisplay(id));
       if (wrongScale)
          wt->GetIndependentWaveformSettings().scaleType = linear
@@ -9383,6 +9384,7 @@ void TrackPanel::OnSetDisplay(wxCommandEvent & event)
 
       WaveTrack *l = static_cast<WaveTrack *>(wt->GetLink());
       if (l) {
+         l->SetLastScaleType();
          l->SetDisplay(WaveTrack::WaveTrackDisplay(id));
          if (wrongScale)
             l->GetIndependentWaveformSettings().scaleType = linear

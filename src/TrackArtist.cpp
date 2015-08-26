@@ -703,10 +703,11 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
 
             float min, max;
             wt->GetDisplayBounds(&min, &max);
-            if (wt->GetLastScaleType() != scaleType)
+            if (wt->GetLastScaleType() != scaleType &&
+                wt->GetLastScaleType() != -1)
             {
                // do a translation into the linear space
-               wt->SetLastScaleType(scaleType);
+               wt->SetLastScaleType();
                float sign = (min >= 0 ? 1 : -1);
                if (min != 0.) {
                   min = DB_TO_LINEAR(fabs(min) * dBRange - dBRange);
@@ -742,10 +743,11 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
             float min, max;
             wt->GetDisplayBounds(&min, &max);
 
-            if (wt->GetLastScaleType() != scaleType)
+            if (wt->GetLastScaleType() != scaleType &&
+                wt->GetLastScaleType() != -1)
             {
                // do a translation into the dB space
-               wt->SetLastScaleType(scaleType);
+               wt->SetLastScaleType();
                float sign = (min >= 0 ? 1 : -1);
                if (min != 0.) {
                   min = (LINEAR_TO_DB(fabs(min)) + dBRange) / dBRange;
