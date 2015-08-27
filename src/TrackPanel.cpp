@@ -6280,28 +6280,45 @@ void TrackPanel::HandleWheelRotationInVRuler
          wt->GetDisplay() == WaveTrack::Waveform &&
          wt->GetWaveformSettings().scaleType == WaveformSettings::stLogarithmic;
       if (isDB && event.ShiftDown()) {
+         // Special cases for Waveform dB only
+
          // Vary the bottom of the dB scale, but only if the midline is visible
          float min, max;
          wt->GetDisplayBounds(&min, &max);
-         if (min < 0.0 && max > 0.0) {
-            WaveformSettings &settings = wt->GetIndependentWaveformSettings();
+         if (!(min < 0.0 && max > 0.0))
+            return;
+
+         WaveformSettings &settings = wt->GetIndependentWaveformSettings();
+         float olddBRange = settings.dBRange;
+         if (event.m_wheelRotation < 0)
+            // Zoom out
+            settings.NextLowerDBRange();
+         else
+            settings.NextHigherDBRange();
+         float newdBRange = settings.dBRange;
+
+         if (partner) {
+            WaveformSettings &settings = partner->GetIndependentWaveformSettings();
             if (event.m_wheelRotation < 0)
                // Zoom out
                settings.NextLowerDBRange();
             else
                settings.NextHigherDBRange();
+         }
 
+         if (event.CmdDown()) {
+            // extra-special case that varies the db limit without changing
+            // magnification
+            const float extreme = (LINEAR_TO_DB(2) + newdBRange) / newdBRange;
+            max = std::min(extreme, max * olddBRange / newdBRange);
+            min = std::max(-extreme, min * olddBRange / newdBRange);
+            wt->SetLastdBRange();
+            wt->SetDisplayBounds(min, max);
             if (partner) {
-               WaveformSettings &settings = partner->GetIndependentWaveformSettings();
-               if (event.m_wheelRotation < 0)
-                  // Zoom out
-                  settings.NextLowerDBRange();
-               else
-                  settings.NextHigherDBRange();
+               partner->SetLastdBRange();
+               partner->SetDisplayBounds(min, max);
             }
          }
-         else
-            return;
       }
       else if (event.CmdDown()) {
          HandleWaveTrackVZoom(
