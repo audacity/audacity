@@ -74,6 +74,11 @@ enum class UndoPush : unsigned char;
 
 DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_TRACK_PANEL_TIMER, -1);
 
+enum {
+   kTimerInterval = 50, // milliseconds
+   kOneSecondCountdown = 1000 / kTimerInterval,
+};
+
 class AUDACITY_DLL_API TrackInfo
 {
 public:
@@ -161,7 +166,6 @@ class AUDACITY_DLL_API TrackPanel final : public wxPanel {
 
    virtual void OnSetFocus(wxFocusEvent & event);
    virtual void OnKillFocus(wxFocusEvent & event);
-   virtual void OnActivateOrDeactivateApp(wxActivateEvent & event);
 
    virtual void OnContextMenu(wxContextMenuEvent & event);
 
@@ -251,15 +255,6 @@ class AUDACITY_DLL_API TrackPanel final : public wxPanel {
    virtual bool IsOverCutline(WaveTrack * track, wxRect &rect, wxMouseEvent &event);
    virtual void HandleTrackSpecificMouseEvent(wxMouseEvent & event);
 
-#ifdef EXPERIMENTAL_SCRUBBING_BASIC
-   bool ShouldDrawScrubSpeed();
-   virtual void TimerUpdateScrubbing(double playPos);
-   // Second member of pair indicates whether the cursor is out of date:
-   virtual std::pair<wxRect, bool> GetScrubSpeedRectangle();
-   virtual void UndrawScrubSpeed(wxDC & dc);
-   virtual void DoDrawScrubSpeed(wxDC & dc);
-#endif
-
    virtual void ScrollDuringDrag();
 
    // Working out where to dispatch the event to.
@@ -299,31 +294,7 @@ class AUDACITY_DLL_API TrackPanel final : public wxPanel {
    virtual void HandleSelect(wxMouseEvent & event);
    virtual void SelectionHandleDrag(wxMouseEvent &event, Track *pTrack);
 
-   // Made obsolete by scrubbing:
-#ifndef EXPERIMENTAL_SCRUBBING_BASIC
-   void StartOrJumpPlayback(wxMouseEvent &event);
-#endif
-
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
-   double FindScrubSpeed(double timeAtMouse) const;
-   double FindSeekSpeed(double timeAtMouse) const;
-#endif
-
-#ifdef EXPERIMENTAL_SCRUBBING_BASIC
-   static bool PollIsSeeking();
-   bool IsScrubbing();
-   void MarkScrubStart(
-      wxCoord xx
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
-      , bool smoothScrolling
-#endif
-   );
-   bool MaybeStartScrubbing(wxMouseEvent &event);
-   bool ContinueScrubbing(wxCoord position, bool hasFocus, bool seek);
-public:
-   bool StopScrubbing();
 protected:
-#endif
 
    virtual void SelectionHandleClick(wxMouseEvent &event,
                                      Track* pTrack, wxRect rect);
@@ -787,27 +758,6 @@ protected:
    int mMoveUpThreshold;
    int mMoveDownThreshold;
    int mRearrangeCount;
-
-#ifdef EXPERIMENTAL_SCRUBBING_BASIC
-   int mScrubToken;
-   wxLongLong mScrubStartClockTimeMillis;
-   wxCoord mScrubStartPosition;
-   double mMaxScrubSpeed;
-   int mScrubSpeedDisplayCountdown;
-   bool mScrubHasFocus;
-   bool mScrubSeekPress;
-
-   wxRect mLastScrubRect, mNextScrubRect;
-   wxString mLastScrubSpeedText, mNextScrubSpeedText;
-#endif
-
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
-   bool mSmoothScrollingScrub;
-#endif
-
-#ifdef EXPERIMENTAL_SCRUBBING_SCROLL_WHEEL
-   int mLogMaxScrubSpeed;
-#endif
 
    std::unique_ptr<wxCursor>
       mArrowCursor, mPencilCursor, mSelectCursor,

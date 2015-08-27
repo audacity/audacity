@@ -937,8 +937,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    // attach its timer event handler later (so that its handler is invoked
    // earlier)
    mScrubOverlay = std::make_unique<ScrubbingOverlay>(this);
-#else
-   mScrubOverlay = NULL;
+   mScrubber = std::make_unique<Scrubber>(this);
 #endif
 
    // This must follow construction of *mScrubOverlay, because it must
@@ -952,7 +951,9 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    // Add the overlays, in the sequence in which they will be painted
    mTrackPanel->AddOverlay(mIndicatorOverlay.get());
    mTrackPanel->AddOverlay(mCursorOverlay.get());
+#ifdef EXPERIMENTAL_SCRUBBING_BASIC
    mTrackPanel->AddOverlay(mScrubOverlay.get());
+#endif
 
    // LLL: When Audacity starts or becomes active after returning from
    //      another application, the first window that can accept focus
@@ -1082,7 +1083,9 @@ AudacityProject::~AudacityProject()
    }
 
    if(mTrackPanel) {
+#ifdef EXPERIMENTAL_SCRUBBING_BASIC
       mTrackPanel->RemoveOverlay(mScrubOverlay.get());
+#endif
       mTrackPanel->RemoveOverlay(mCursorOverlay.get());
       mTrackPanel->RemoveOverlay(mIndicatorOverlay.get());
    }

@@ -12,12 +12,65 @@ Paul Licameli split from TrackPanel.cpp
 #define __AUDACITY_SCRUBBING__
 
 #include <wx/event.h>
+#include <wx/longlong.h>
 
+#include "../../Experimental.h"
 #include "../../TrackPanelOverlay.h"
 
 class AudacityProject;
 
-class ScrubbingOverlay : public wxEvtHandler, public TrackPanelOverlay
+// Scrub state object
+class Scrubber : public wxEvtHandler
+{
+public:
+   Scrubber(AudacityProject *project);
+   ~Scrubber();
+
+   void MarkScrubStart(
+      wxCoord xx
+#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
+      , bool smoothScrolling
+#endif
+   );
+   // Returns true iff the event should be considered consumed by this:
+   bool MaybeStartScrubbing(const wxMouseEvent &event);
+   void ContinueScrubbing();
+   bool StopScrubbing();
+
+   bool IsScrubbing() const;
+   bool IsScrollScrubbing() const // If true, implies IsScrubbing()
+   { return mSmoothScrollingScrub; }
+
+   bool ShouldDrawScrubSpeed();
+   double FindScrubSpeed(bool seeking, double time) const;
+   double GetMaxScrubSpeed() const { return mMaxScrubSpeed; }
+
+   void HandleScrollWheel(int steps);
+
+   void SetSeeking() { mScrubSeekPress = true; }
+
+private:
+   int mScrubToken;
+   wxLongLong mScrubStartClockTimeMillis;
+   bool mScrubHasFocus;
+   int mScrubSpeedDisplayCountdown;
+   wxCoord mScrubStartPosition;
+   double mMaxScrubSpeed;
+   bool mScrubSeekPress;
+   bool mSmoothScrollingScrub;
+
+#ifdef EXPERIMENTAL_SCRUBBING_SCROLL_WHEEL
+   int mLogMaxScrubSpeed;
+#endif
+
+private:
+   void OnActivateOrDeactivateApp(wxActivateEvent & event);
+
+   AudacityProject *mProject;
+};
+
+// Specialist in drawing the scrub speed, and listening for certain events
+class ScrubbingOverlay final : public wxEvtHandler, public TrackPanelOverlay
 {
 public:
    ScrubbingOverlay(AudacityProject *project);
@@ -30,7 +83,13 @@ private:
 
    void OnTimer(wxCommandEvent &event);
 
+   const Scrubber &GetScrubber() const;
+   Scrubber &GetScrubber();
+
    AudacityProject *mProject;
+
+   wxRect mLastScrubRect, mNextScrubRect;
+   wxString mLastScrubSpeedText, mNextScrubSpeedText;
 };
 
 #endif

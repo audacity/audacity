@@ -73,6 +73,7 @@ class DeviceToolBar;
 class EditToolBar;
 class MeterToolBar;
 class MixerToolBar;
+class Scrubber;
 class SelectionBar;
 class SpectralSelectionBar;
 class Toolbar;
@@ -709,7 +710,15 @@ public:
 
    // TrackPanelOverlay objects
    std::unique_ptr<TrackPanelOverlay> 
-      mIndicatorOverlay, mCursorOverlay, mScrubOverlay;
+      mIndicatorOverlay, mCursorOverlay;
+
+#ifdef EXPERIMENTAL_SCRUBBING_BASIC
+   std::unique_ptr<TrackPanelOverlay> mScrubOverlay;
+   std::unique_ptr<Scrubber> mScrubber;
+public:
+   Scrubber &GetScrubber() { return *mScrubber; }
+   const Scrubber &GetScrubber() const { return *mScrubber; }
+#endif
 
    DECLARE_EVENT_TABLE()
 };
