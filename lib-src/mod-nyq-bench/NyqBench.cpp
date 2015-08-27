@@ -326,17 +326,18 @@ void NyqTextCtrl::OnUpdate(wxUpdateUIEvent & e)
       int lpos = wxMax(0, pos - 1);
    
       wxString text = GetRange(lpos, pos);
-   
-      if (text[0] == wxT('(')) {
-         wxLongToLongHashMap::const_iterator left = mLeftParens.find(lpos);
-         if (left != mLeftParens.end()) {
-            Colorize(lpos, left->second);
+      if (text.Length() > 0) {
+         if (text[0] == wxT('(')) {
+            wxLongToLongHashMap::const_iterator left = mLeftParens.find(lpos);
+            if (left != mLeftParens.end()) {
+               Colorize(lpos, left->second);
+            }
          }
-      }
-      else if (text[0] == wxT(')')) {
-         wxLongToLongHashMap::const_iterator right = mRightParens.find(lpos);
-         if (right != mRightParens.end()) {
-            Colorize(right->second, lpos);
+         else if (text[0] == wxT(')')) {
+            wxLongToLongHashMap::const_iterator right = mRightParens.find(lpos);
+            if (right != mRightParens.end()) {
+               Colorize(right->second, lpos);
+            }
          }
       }
 
