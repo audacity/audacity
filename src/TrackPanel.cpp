@@ -4723,9 +4723,9 @@ void TrackPanel::HandleWaveTrackVZoom
                float minRange = (min < -1) ? -2.0 : -1.0;
                float maxRange = (max > 1) ? 2.0 : 1.0;
                // and enforce vertical zoom limits.
+               const float p1 = (zoomStart - ypos) / (float)height;
                if (fixedMousePoint) {
                   const float oldRange = max - min;
-                  const float p1 = (zoomStart - ypos) / (float)height;
                   const float c = (max * (1.0 - p1) + min * p1);
                   min = std::min(maxRange - ZOOMLIMIT,
                      std::max(minRange, c - 2 * (1.0f - p1) * oldRange));
@@ -4733,12 +4733,12 @@ void TrackPanel::HandleWaveTrackVZoom
                      std::min(maxRange, c + 2 * p1 * oldRange));
                }
                else {
-                  const float c = 0.5*(min + max);
-                  const float l = (c - min);
+                  const float c = p1 * min + (1 - p1) * max;
+                  const float l = (max - min);
                   min = std::min(maxRange - ZOOMLIMIT,
-                     std::max(minRange, c - 2 * l));
+                     std::max(minRange, c - l));
                   max = std::max(minRange + ZOOMLIMIT,
-                     std::min(maxRange, c + 2 * l));
+                     std::min(maxRange, c + l));
                }
             }
          }
