@@ -399,7 +399,7 @@ bool EffectEqualization::ValidateUI()
 
    // Update unnamed curve (so it's there for next time)
    //(done in a hurry, may not be the neatest -MJS)
-   if (mDirty && mDrawMode)
+   if (mDirty && !mDrawMode)
    {
       int numPoints = mLogEnvelope->GetNumberOfPoints();
       double *when = new double[numPoints];
@@ -987,12 +987,10 @@ bool EffectEqualization::TransferDataToWindow()
    if (mDrawMode)
    {
       mDraw->SetValue(true);
-      UpdateDraw();
    }
    else
    {
       mGraphic->SetValue(true);
-      UpdateGraphic();
    }
 
    TransferDataFromWindow();
