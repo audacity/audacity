@@ -20,6 +20,11 @@ VSTControl::VSTControl()
 
 VSTControl::~VSTControl()
 {
+   if (mHwnd)
+   {
+      mLink->callDispatcher(effEditClose, 0, 0, mHwnd, 0.0);
+      mHwnd = 0;
+   }
 }
 
 bool VSTControl::Create(wxWindow *parent, VSTEffectLink *link)
