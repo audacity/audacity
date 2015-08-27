@@ -780,7 +780,7 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
 
                   const float extreme = LINEAR_TO_DB(2);
                   // recover dB value of max
-                  const float dB = std::min(extreme, (fabs(max) * lastdBRange - lastdBRange));
+                  const float dB = std::min(extreme, (float(fabs(max)) * lastdBRange - lastdBRange));
                   // find new scale position, but old max may get trimmed if the db limit rises
                   // Don't trim it to zero though, but leave max and limit distinct
                   newMax = sign * std::max(ZOOMLIMIT, (dBRange + dB) / dBRange);
