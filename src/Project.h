@@ -660,6 +660,11 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    // Keyboard capture
    wxWindow *mKeyboardCaptureHandler;
 
+   double mSeekShort;
+   double mSeekLong;
+
+   wxLongLong mLastSelectionAdjustment;
+
    // CommandManager needs to use private methods
    friend class CommandManager;
 

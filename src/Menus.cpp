@@ -2514,22 +2514,22 @@ void AudacityProject::OnSkipEnd()
 
 void AudacityProject::OnSeekLeftShort()
 {
-   mTrackPanel->OnCursorLeft( false, false );
+   OnCursorLeft( false, false );
 }
 
 void AudacityProject::OnSeekRightShort()
 {
-   mTrackPanel->OnCursorRight( false, false );
+   OnCursorRight( false, false );
 }
 
 void AudacityProject::OnSeekLeftLong()
 {
-   mTrackPanel->OnCursorLeft( true, false );
+   OnCursorLeft( true, false );
 }
 
 void AudacityProject::OnSeekRightLong()
 {
-   mTrackPanel->OnCursorRight( true, false );
+   OnCursorRight( true, false );
 }
 
 void AudacityProject::OnSelToStart()
@@ -2581,62 +2581,62 @@ void AudacityProject::OnToggle()
 
 void AudacityProject::OnCursorLeft(const wxEvent * evt)
 {
-   mTrackPanel->OnCursorLeft( false, false, evt->GetEventType() == wxEVT_KEY_UP );
+   OnCursorLeft( false, false, evt->GetEventType() == wxEVT_KEY_UP );
 }
 
 void AudacityProject::OnCursorRight(const wxEvent * evt)
 {
-   mTrackPanel->OnCursorRight( false, false, evt->GetEventType() == wxEVT_KEY_UP );
+   OnCursorRight( false, false, evt->GetEventType() == wxEVT_KEY_UP );
 }
 
 void AudacityProject::OnCursorShortJumpLeft()
 {
-   mTrackPanel->OnCursorMove( false, true, false );
+   OnCursorMove( false, true, false );
 }
 
 void AudacityProject::OnCursorShortJumpRight()
 {
-   mTrackPanel->OnCursorMove( true, true, false );
+   OnCursorMove( true, true, false );
 }
 
 void AudacityProject::OnCursorLongJumpLeft()
 {
-   mTrackPanel->OnCursorMove( false, true, true );
+   OnCursorMove( false, true, true );
 }
 
 void AudacityProject::OnCursorLongJumpRight()
 {
-   mTrackPanel->OnCursorMove( true, true, true );
+   OnCursorMove( true, true, true );
 }
 
 void AudacityProject::OnSelSetExtendLeft()
 {
-   mTrackPanel->OnBoundaryMove( true, false);
+   OnBoundaryMove( true, false);
 }
 
 void AudacityProject::OnSelSetExtendRight()
 {
-   mTrackPanel->OnBoundaryMove( false, false);
+   OnBoundaryMove( false, false);
 }
 
 void AudacityProject::OnSelExtendLeft(const wxEvent * evt)
 {
-   mTrackPanel->OnCursorLeft( true, false, evt->GetEventType() == wxEVT_KEY_UP );
+   OnCursorLeft( true, false, evt->GetEventType() == wxEVT_KEY_UP );
 }
 
 void AudacityProject::OnSelExtendRight(const wxEvent * evt)
 {
-   mTrackPanel->OnCursorRight( true, false, evt->GetEventType() == wxEVT_KEY_UP );
+   OnCursorRight( true, false, evt->GetEventType() == wxEVT_KEY_UP );
 }
 
 void AudacityProject::OnSelContractLeft(const wxEvent * evt)
 {
-   mTrackPanel->OnCursorRight( true, true, evt->GetEventType() == wxEVT_KEY_UP );
+   OnCursorRight( true, true, evt->GetEventType() == wxEVT_KEY_UP );
 }
 
 void AudacityProject::OnSelContractRight(const wxEvent * evt)
 {
-   mTrackPanel->OnCursorLeft( true, true, evt->GetEventType() == wxEVT_KEY_UP );
+   OnCursorLeft( true, true, evt->GetEventType() == wxEVT_KEY_UP );
 }
 
 //this pops up a dialog which allows the left selection to be set.
@@ -6592,3 +6592,360 @@ void AudacityProject::OnFullScreen()
       wxTopLevelWindow::ShowFullScreen(true);
 }
 
+void AudacityProject::OnCursorLeft(bool shift, bool ctrl, bool keyup)
+{
+   // PRL:  What I found and preserved, strange though it be:
+   // During playback:  jump depends on preferences and is independent of the zoom
+   // and does not vary if the key is held
+   // Else: jump depends on the zoom and gets bigger if the key is held
+   int snapToTime = GetSnapTo();
+   double quietSeekStepPositive = 1.0; // pixels
+   double audioSeekStepPositive = shift ? mSeekLong : mSeekShort;
+   SeekLeftOrRight
+      (true, shift, ctrl, keyup, snapToTime, true, false,
+       quietSeekStepPositive, true,
+       audioSeekStepPositive, false);
+}
+
+void AudacityProject::OnCursorRight(bool shift, bool ctrl, bool keyup)
+{
+   // PRL:  What I found and preserved, strange though it be:
+   // During playback:  jump depends on preferences and is independent of the zoom
+   // and does not vary if the key is held
+   // Else: jump depends on the zoom and gets bigger if the key is held
+   int snapToTime = GetSnapTo();
+   double quietSeekStepPositive = 1.0; // pixels
+   double audioSeekStepPositive = shift ? mSeekLong : mSeekShort;
+   SeekLeftOrRight
+      (false, shift, ctrl, keyup, snapToTime, true, false,
+       quietSeekStepPositive, true,
+       audioSeekStepPositive, false);
+}
+
+// Handle small cursor and play head movements
+void AudacityProject::SeekLeftOrRight
+(bool leftward, bool shift, bool ctrl, bool keyup,
+ int snapToTime, bool mayAccelerateQuiet, bool mayAccelerateAudio,
+ double quietSeekStepPositive, bool quietStepIsPixels,
+ double audioSeekStepPositive, bool audioStepIsPixels)
+{
+   if (keyup)
+   {
+      if (IsAudioActive())
+      {
+         return;
+      }
+
+      ModifyState(false);
+      return;
+   }
+
+   // If the last adjustment was very recent, we are
+   // holding the key down and should move faster.
+   const wxLongLong curtime = ::wxGetLocalTimeMillis();
+   enum { MIN_INTERVAL = 50 };
+   const bool fast = (curtime - mLastSelectionAdjustment < MIN_INTERVAL);
+
+   // How much faster should the cursor move if shift is down?
+   enum { LARGER_MULTIPLIER = 4 };
+   int multiplier = (fast && mayAccelerateQuiet) ? LARGER_MULTIPLIER : 1;
+   if (leftward)
+      multiplier = -multiplier;
+
+   if (shift && ctrl)
+   {
+      mLastSelectionAdjustment = curtime;
+
+      // Contract selection
+      // Reduce and constrain (counter-intuitive)
+      if (leftward) {
+         const double t1 = mViewInfo.selectedRegion.t1();
+         mViewInfo.selectedRegion.setT1(
+            std::max(mViewInfo.selectedRegion.t0(),
+               snapToTime
+               ? GridMove(t1, multiplier)
+               : quietStepIsPixels
+                  ? mViewInfo.OffsetTimeByPixels(
+                        t1, int(multiplier * quietSeekStepPositive))
+                  : t1 +  multiplier * quietSeekStepPositive
+         ));
+
+         // Make sure it's visible.
+         GetTrackPanel()->ScrollIntoView(mViewInfo.selectedRegion.t1());
+      }
+      else {
+         const double t0 = mViewInfo.selectedRegion.t0();
+         mViewInfo.selectedRegion.setT0(
+            std::min(mViewInfo.selectedRegion.t1(),
+               snapToTime
+               ? GridMove(t0, multiplier)
+               : quietStepIsPixels
+                  ? mViewInfo.OffsetTimeByPixels(
+                     t0, int(multiplier * quietSeekStepPositive))
+                  : t0 + multiplier * quietSeekStepPositive
+         ));
+
+         // Make sure new position is in view.
+         GetTrackPanel()->ScrollIntoView(mViewInfo.selectedRegion.t0());
+      }
+      GetTrackPanel()->Refresh(false);
+   }
+   else if (IsAudioActive()) {
+#ifdef EXPERIMENTAL_IMPROVED_SEEKING
+      if (gAudioIO->GetLastPlaybackTime() < mLastSelectionAdjustment) {
+         // Allow time for the last seek to output a buffer before
+         // discarding samples again
+         // Do not advance mLastSelectionAdjustment
+         return;
+      }
+#endif
+      mLastSelectionAdjustment = curtime;
+
+      // Ignore the multiplier for the quiet case
+      multiplier = (fast && mayAccelerateAudio) ? LARGER_MULTIPLIER : 1;
+      if (leftward)
+         multiplier = -multiplier;
+
+      // If playing, reposition
+      double seconds;
+      if (audioStepIsPixels) {
+         const double streamTime = gAudioIO->GetStreamTime();
+         const double newTime =
+            mViewInfo.OffsetTimeByPixels(streamTime, int(audioSeekStepPositive));
+         seconds = newTime - streamTime;
+      }
+      else
+         seconds = multiplier * audioSeekStepPositive;
+      gAudioIO->SeekStream(seconds);
+      return;
+   }
+   else if (shift)
+   {
+      mLastSelectionAdjustment = curtime;
+
+      // Extend selection
+      // Expand and constrain
+      if (leftward) {
+         const double t0 = mViewInfo.selectedRegion.t0();
+         mViewInfo.selectedRegion.setT0(
+            std::max(0.0,
+               snapToTime
+               ? GridMove(t0, multiplier)
+               : quietStepIsPixels
+                  ? mViewInfo.OffsetTimeByPixels(
+                        t0, int(multiplier * quietSeekStepPositive))
+                  : t0 + multiplier * quietSeekStepPositive
+         ));
+
+         // Make sure it's visible.
+         GetTrackPanel()->ScrollIntoView(mViewInfo.selectedRegion.t0());
+      }
+      else {
+         const double end = mTracks->GetEndTime();
+         const double t1 = mViewInfo.selectedRegion.t1();
+         mViewInfo.selectedRegion.setT1(
+            std::min(end,
+               snapToTime
+               ? GridMove(t1, multiplier)
+               : quietStepIsPixels
+                  ? mViewInfo.OffsetTimeByPixels(
+                        t1, int(multiplier * quietSeekStepPositive))
+                  : t1 + multiplier * quietSeekStepPositive
+         ));
+
+         // Make sure new position is in view.
+         GetTrackPanel()->ScrollIntoView(mViewInfo.selectedRegion.t1());
+      }
+      GetTrackPanel()->Refresh(false);
+   }
+   else
+   {
+      mLastSelectionAdjustment = curtime;
+
+      // Move the cursor
+      // Already in cursor mode?
+      if (mViewInfo.selectedRegion.isPoint())
+      {
+         // Move and constrain
+         const double end = mTracks->GetEndTime();
+         const double t0 = mViewInfo.selectedRegion.t0();
+         mViewInfo.selectedRegion.setT0(
+            std::max(0.0,
+               std::min(end,
+                  snapToTime
+                  ? GridMove(t0, multiplier)
+                  : quietStepIsPixels
+                     ? mViewInfo.OffsetTimeByPixels(
+                          t0, int(multiplier * quietSeekStepPositive))
+                     : t0 + multiplier * quietSeekStepPositive)),
+            false // do not swap selection boundaries
+         );
+         mViewInfo.selectedRegion.collapseToT0();
+
+         // Move the visual cursor, avoiding an unnecessary complete redraw
+         GetTrackPanel()->DrawOverlays(false);
+      }
+      else
+      {
+         // Transition to cursor mode.
+         if (leftward)
+            mViewInfo.selectedRegion.collapseToT0();
+         else
+            mViewInfo.selectedRegion.collapseToT1();
+         GetTrackPanel()->Refresh(false);
+      }
+
+      // Make sure new position is in view
+      GetTrackPanel()->ScrollIntoView(mViewInfo.selectedRegion.t1());
+   }
+}
+
+// Handles moving a selection edge with the keyboard in snap-to-time mode;
+// returns the moved value.
+// Will move at least minPix pixels -- set minPix positive to move forward,
+// negative to move backward.
+double AudacityProject::GridMove(double t, int minPix)
+{
+   NumericConverter nc(NumericConverter::TIME, GetSelectionFormat(), t, GetRate());
+
+   // Try incrementing/decrementing the value; if we've moved far enough we're
+   // done
+   double result;
+   minPix >= 0 ? nc.Increment() : nc.Decrement();
+   result = nc.GetValue();
+   if (std::abs(mViewInfo.TimeToPosition(result) - mViewInfo.TimeToPosition(t))
+       >= abs(minPix))
+       return result;
+
+   // Otherwise, move minPix pixels, then snap to the time.
+   result = mViewInfo.OffsetTimeByPixels(t, minPix);
+   nc.SetValue(result);
+   result = nc.GetValue();
+   return result;
+}
+
+void AudacityProject::OnBoundaryMove(bool left, bool boundaryContract)
+{
+  // Move the left/right selection boundary, to either expand or contract the selection
+  // left=true: operate on left boundary; left=false: operate on right boundary
+  // boundaryContract=true: contract region; boundaryContract=false: expand region.
+
+   // If the last adjustment was very recent, we are
+   // holding the key down and should move faster.
+   wxLongLong curtime = ::wxGetLocalTimeMillis();
+   int pixels = 1;
+   if( curtime - mLastSelectionAdjustment < 50 )
+   {
+      pixels = 4;
+   }
+   mLastSelectionAdjustment = curtime;
+
+   if (IsAudioActive())
+   {
+      double indicator = gAudioIO->GetStreamTime();
+      if (left)
+         mViewInfo.selectedRegion.setT0(indicator, false);
+      else
+         mViewInfo.selectedRegion.setT1(indicator);
+
+      ModifyState(false);
+      GetTrackPanel()->Refresh(false);
+   }
+   else
+   {
+      // BOUNDARY MOVEMENT
+      // Contract selection from the right to the left
+      if( boundaryContract )
+      {
+         if (left) {
+            // Reduce and constrain left boundary (counter-intuitive)
+            // Move the left boundary by at most the desired number of pixels,
+            // but not past the right
+            mViewInfo.selectedRegion.setT0(
+               std::min(mViewInfo.selectedRegion.t1(),
+                  mViewInfo.OffsetTimeByPixels(
+                     mViewInfo.selectedRegion.t0(),
+                     pixels)));
+
+            // Make sure it's visible
+            GetTrackPanel()->ScrollIntoView(mViewInfo.selectedRegion.t0());
+         }
+         else
+         {
+            // Reduce and constrain right boundary (counter-intuitive)
+            // Move the right boundary by at most the desired number of pixels,
+            // but not past the left
+            mViewInfo.selectedRegion.setT1(
+               std::max(mViewInfo.selectedRegion.t0(),
+                  mViewInfo.OffsetTimeByPixels(
+                     mViewInfo.selectedRegion.t1(),
+                     -pixels)));
+
+            // Make sure it's visible
+            GetTrackPanel()->ScrollIntoView(mViewInfo.selectedRegion.t1());
+         }
+      }
+      // BOUNDARY MOVEMENT
+      // Extend selection toward the left
+      else
+      {
+         if (left) {
+            // Expand and constrain left boundary
+            mViewInfo.selectedRegion.setT0(
+               std::max(0.0,
+                  mViewInfo.OffsetTimeByPixels(
+                     mViewInfo.selectedRegion.t0(),
+                     -pixels)));
+
+            // Make sure it's visible
+            GetTrackPanel()->ScrollIntoView(mViewInfo.selectedRegion.t0());
+         }
+         else
+         {
+            // Expand and constrain right boundary
+            const double end = mTracks->GetEndTime();
+            mViewInfo.selectedRegion.setT1(
+               std::min(end,
+                  mViewInfo.OffsetTimeByPixels(
+                     mViewInfo.selectedRegion.t1(),
+                     pixels)));
+
+            // Make sure it's visible
+            GetTrackPanel()->ScrollIntoView(mViewInfo.selectedRegion.t1());
+         }
+      }
+      GetTrackPanel()->Refresh( false );
+      ModifyState(false);
+   }
+}
+
+// Move the cursor forward or backward, while paused or while playing.
+// forward=true: Move cursor forward; forward=false: Move cursor backwards
+// jump=false: Move cursor determined by zoom; jump=true: Use seek times
+// longjump=false: Use mSeekShort; longjump=true: Use mSeekLong
+void AudacityProject::OnCursorMove(bool forward, bool jump, bool longjump )
+{
+   // PRL:  nobody calls this yet with !jump
+
+   double positiveSeekStep;
+   bool byPixels;
+   if (jump) {
+      if (!longjump) {
+         positiveSeekStep = mSeekShort;
+      } else {
+         positiveSeekStep = mSeekLong;
+      }
+      byPixels = false;
+   } else {
+      positiveSeekStep = 1.0;
+      byPixels = true;
+   }
+   bool mayAccelerate = !jump;
+   SeekLeftOrRight
+      (!forward, false, false, false,
+       0, mayAccelerate, mayAccelerate,
+       positiveSeekStep, byPixels,
+       positiveSeekStep, byPixels);
+
+   ModifyState(false);
+}

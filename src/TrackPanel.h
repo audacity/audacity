@@ -195,10 +195,6 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
    virtual void OnLastTrack();
    virtual void OnToggle();
 
-   virtual void OnCursorLeft(bool shift, bool ctrl, bool keyup = false);
-   virtual void OnCursorRight(bool shift, bool ctrl, bool keyup = false);
-   virtual void OnCursorMove(bool forward, bool jump, bool longjump);
-   virtual void OnBoundaryMove(bool left, bool boundaryContract);
    virtual void ScrollIntoView(double pos);
    virtual void ScrollIntoView(int x);
 
@@ -351,13 +347,6 @@ protected:
                         Track *pTrack);
    virtual void UpdateSelectionDisplay();
 
-   // Handle small cursor and play head movements
-   void SeekLeftOrRight
-      (bool left, bool shift, bool ctrl, bool keyup,
-       int snapToTime, bool mayAccelerateQuiet, bool mayAccelerateAudio,
-       double quietSeekStepPositive, bool quietStepIsPixels,
-       double audioSeekStepPositive, bool audioStepIsPixels);
-
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
 public:
    void SnapCenterOnce (const WaveTrack *pTrack, bool up);
@@ -376,9 +365,6 @@ protected:
 
    virtual void SelectTracksByLabel( LabelTrack *t );
    virtual void SelectTrackLength(Track *t);
-
-   // Helper for moving by keyboard with snap-to-grid enabled
-   virtual double GridMove(double t, int minPix);
 
    // AS: Cursor handling
    virtual bool SetCursorByActivity( );
@@ -566,10 +552,12 @@ protected:
    virtual void DrawBordersAroundTrack(Track *t, wxDC* dc, const wxRect & rect, const int labelw, const int vrul);
    virtual void DrawOutsideOfTrack    (Track *t, wxDC* dc, const wxRect & rect);
 
+public:
    // Erase and redraw things like the cursor, cheaply and directly to the
    // client area, without full refresh.
    virtual void DrawOverlays(bool repaint);
 
+protected:
    virtual int IdOfRate( int rate );
    virtual int IdOfFormat( int format );
 
@@ -595,9 +583,6 @@ protected:
    ViewInfo *mViewInfo;
 
    AdornedRulerPanel *mRuler;
-
-   double mSeekShort;
-   double mSeekLong;
 
    TrackArtist *mTrackArtist;
 
@@ -636,8 +621,6 @@ protected:
    bool mRefreshBacking;
    int mPrevWidth;
    int mPrevHeight;
-
-   wxLongLong mLastSelectionAdjustment;
 
    SelectedRegion mInitialSelection;
    // Extra indirection to avoid the stupid MSW compiler warnings!  Rrrr!
