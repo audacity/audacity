@@ -6154,47 +6154,7 @@ void TrackPanel::HandleWheelRotation(wxMouseEvent & event)
       wxRect rect;
       Track *const pTrack = FindTrack(event.m_x, event.m_y, true, false, &rect);
       if (pTrack && event.m_x >= GetVRulerOffset()) {
-         if (pTrack->GetKind() == Track::Wave) {
-            WaveTrack *const wt = static_cast<WaveTrack*>(pTrack);
-            if (event.CmdDown() &&
-                wt->GetWaveformSettings().scaleType == WaveformSettings::stLogarithmic) {
-               // Vary the bottom of the dB scale, but only if the midline is visible
-               float min, max;
-               wt->GetDisplayBounds(&min, &max);
-               if (min < 0.0 && max > 0.0) {
-                  WaveformSettings &settings = wt->GetIndependentWaveformSettings();
-                  if (event.m_wheelRotation < 0)
-                     // Zoom out
-                     settings.NextLowerDBRange();
-                  else
-                     settings.NextHigherDBRange();
-
-                  WaveTrack *const partner = static_cast<WaveTrack*>(wt->GetLink());
-                  if (partner) {
-                     WaveformSettings &settings = partner->GetIndependentWaveformSettings();
-                     if (event.m_wheelRotation < 0)
-                        // Zoom out
-                        settings.NextLowerDBRange();
-                     else
-                        settings.NextHigherDBRange();
-                  }
-               }
-               else
-                  return;
-            }
-            else {
-               HandleWaveTrackVZoom(
-                  mTracks, rect, event.m_y, event.m_y,
-                  wt, false, (event.m_wheelRotation < 0),
-                  true);
-            }
-            UpdateVRuler(pTrack);
-            Refresh(false);
-            MakeParentModifyState(true);
-         }
-         else {
-            // To do: time track?  Note track?
-         }
+         HandleWheelRotationInVRuler(event, pTrack, rect);
          return;
       }
    }
@@ -6300,6 +6260,120 @@ void TrackPanel::HandleWheelRotation(wxMouseEvent & event)
          mListener->TP_ScrollUpDown((int)-lines);
       }
    }
+}
+
+void TrackPanel::HandleWheelRotationInVRuler
+   (wxMouseEvent &event, Track *pTrack, const wxRect &rect)
+{
+   double steps = event.m_wheelRotation /
+      (event.m_wheelDelta > 0 ? (double)event.m_wheelDelta : 120.0);
+
+   if (pTrack->GetKind() == Track::Wave) {
+      WaveTrack *const wt = static_cast<WaveTrack*>(pTrack);
+      WaveTrack *const partner = static_cast<WaveTrack*>(wt->GetLink());
+      const bool isDB =
+         wt->GetDisplay() == WaveTrack::Waveform &&
+         wt->GetWaveformSettings().scaleType == WaveformSettings::stLogarithmic;
+      if (isDB && event.ShiftDown()) {
+         // Vary the bottom of the dB scale, but only if the midline is visible
+         float min, max;
+         wt->GetDisplayBounds(&min, &max);
+         if (min < 0.0 && max > 0.0) {
+            WaveformSettings &settings = wt->GetIndependentWaveformSettings();
+            if (event.m_wheelRotation < 0)
+               // Zoom out
+               settings.NextLowerDBRange();
+            else
+               settings.NextHigherDBRange();
+
+            if (partner) {
+               WaveformSettings &settings = partner->GetIndependentWaveformSettings();
+               if (event.m_wheelRotation < 0)
+                  // Zoom out
+                  settings.NextLowerDBRange();
+               else
+                  settings.NextHigherDBRange();
+            }
+         }
+         else
+            return;
+      }
+      else if (event.CmdDown()) {
+         HandleWaveTrackVZoom(
+            mTracks, rect, event.m_y, event.m_y,
+            wt, false, (event.m_wheelRotation < 0),
+            true);
+      }
+      else if (!(event.CmdDown() || event.ShiftDown())) {
+         // Scroll some fixed number of pixels, independent of zoom level or track height:
+         static const float movement = 10.0f;
+         const int height = wt->GetHeight() - (kTopMargin + kBottomMargin);
+         const bool spectral = (wt->GetDisplay() == WaveTrack::Spectrum);
+         if (spectral) {
+            const float delta = steps * movement / height;
+            SpectrogramSettings &settings = wt->GetIndependentSpectrogramSettings();
+            const bool isLinear = settings.scaleType == SpectrogramSettings::stLinear;
+            const double rate = wt->GetRate();
+            const float maxFreq = float(rate) / 2.0f;
+            const NumberScale numberScale(settings.GetScale(rate, false));
+            float newTop =
+               std::min(maxFreq, numberScale.PositionToValue(1.0f + delta));
+            const float newBottom =
+               std::max((isLinear ? 0.0f : 1.0f),
+                        numberScale.PositionToValue(numberScale.ValueToPosition(newTop) - 1.0f));
+            newTop =
+               std::min(maxFreq,
+                        numberScale.PositionToValue(numberScale.ValueToPosition(newBottom) + 1.0f));
+            if (isLinear) {
+               settings.SetMinFreq(newBottom);
+               settings.SetMaxFreq(newTop);
+            }
+            else {
+               settings.SetLogMinFreq(newBottom);
+               settings.SetLogMaxFreq(newTop);
+            }
+            if (partner) {
+               SpectrogramSettings &partnerSettings = partner->GetIndependentSpectrogramSettings();
+               if (isLinear) {
+                  partnerSettings.SetMinFreq(newBottom);
+                  partnerSettings.SetMaxFreq(newTop);
+               }
+               else {
+                  partnerSettings.SetLogMinFreq(newBottom);
+                  partnerSettings.SetLogMaxFreq(newTop);
+               }
+            }
+         }
+         else {
+            float topLimit = 2.0;
+            if (isDB) {
+               const float dBRange = wt->GetWaveformSettings().dBRange;
+               topLimit = (LINEAR_TO_DB(topLimit) + dBRange) / dBRange;
+            }
+            const float bottomLimit = -topLimit;
+            float top, bottom;
+            wt->GetDisplayBounds(&bottom, &top);
+            const float range = top - bottom;
+            const float delta = range * steps * movement / height;
+            float newTop = std::min(topLimit, top + delta);
+            const float newBottom = std::max(bottomLimit, newTop - range);
+            newTop = std::min(topLimit, newBottom + range);
+            wt->SetDisplayBounds(newBottom, newTop);
+            if (partner)
+               partner->SetDisplayBounds(newBottom, newTop);
+         }
+      }
+      else
+         return;
+
+      UpdateVRuler(pTrack);
+      Refresh(false);
+      MakeParentModifyState(true);
+   }
+   else {
+      // To do: time track?  Note track?
+   }
+   return;
 }
 
 /// Filter captured keys typed into LabelTracks.
