@@ -542,11 +542,7 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
             if((mInfo.format & SF_FORMAT_TYPEMASK) == SF_FORMAT_AIFF)
                len = wxUINT32_SWAP_ON_LE(len);
 
-#if wxCHECK_VERSION(3,0,0)
-			if (wxStricmp(id, "ID3 ") != 0) {  // must be case insensitive
-#else
-			if (Stricmp(id, "ID3 ") != 0) {  // must be case insensitive
-#endif
+            if (wxStricmp(id, "ID3 ") != 0) {  // must be case insensitive
                f.Seek(len + (len & 0x01), wxFromCurrent);
                continue;
             }

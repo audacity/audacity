@@ -20,6 +20,7 @@
 #include <wx/treebook.h>
 #include <wx/window.h>
 
+class PrefsPanel;
 class PrefsPanelFactory;
 
 #ifdef __GNUC__
@@ -39,7 +40,7 @@ class PrefsDialog:public wxDialog
 
        PrefsNode(PrefsPanelFactory *pFactory_,
           int nChildren_ = 0,
-          bool expanded_ = false)
+          bool expanded_ = true)
           : pFactory(pFactory_), nChildren(nChildren_), expanded(expanded_)
        {}
     };
@@ -57,6 +58,7 @@ class PrefsDialog:public wxDialog
    void OnCategoryChange(wxCommandEvent & e);
    void OnOK(wxCommandEvent & e);
    void OnCancel(wxCommandEvent & e);
+   void OnApply(wxCommandEvent & e);
    void OnTreeKeyDown(wxTreeEvent & e); // Used to dismiss the dialog when enter is pressed with focus on tree
 
    void SelectPageByName(wxString pageName);
@@ -75,6 +77,7 @@ class PrefsDialog:public wxDialog
 private:
    void RecordExpansionState();
    wxTreebook *mCategories;
+   PrefsPanel *mUniquePage;
    Factories &mFactories;
    const wxString mTitlePrefix;
 

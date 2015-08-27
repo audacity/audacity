@@ -53,9 +53,7 @@ KeyView::KeyView(wxWindow *parent,
                  wxWindowID id,
                  const wxPoint & pos,
                  const wxSize & size)
-: wxVListBox(parent, id, pos, size, wxBORDER_THEME),
-  mOpen(NULL),
-  mClosed(NULL),
+: wxVListBox(parent, id, pos, size, wxBORDER_THEME | wxHSCROLL | wxVSCROLL),
   mScrollX(0),
   mWidth(0)
 {
@@ -64,36 +62,6 @@ KeyView::KeyView(wxWindow *parent,
    mAx = new KeyViewAx(this);
    SetAccessible(mAx);
 #endif
-
-   // Create the device context
-   wxMemoryDC dc;
-
-   // Create the open/expanded bitmap
-   mOpen = new wxBitmap(16, 16);
-   dc.SelectObject(*mOpen);
-
-   dc.SetBrush(*wxWHITE_BRUSH);
-   dc.SetPen(*wxWHITE_PEN);
-   dc.DrawRectangle(0, 0, 16, 16);
-
-   dc.SetPen(*wxBLACK_PEN);
-   dc.DrawRectangle(3, 4, 9, 9);
-   dc.DrawLine(5, 8, 10, 8);
-   dc.SelectObject(wxNullBitmap);
-
-   // Create the closed/collapsed bitmap
-   mClosed = new wxBitmap(16, 16);
-   dc.SelectObject(*mClosed);
-
-   dc.SetBrush(*wxWHITE_BRUSH);
-   dc.SetPen(*wxWHITE_PEN);
-   dc.DrawRectangle(0, 0, 16, 16);
-
-   dc.SetPen(*wxBLACK_PEN);
-   dc.DrawRectangle(3, 4, 9, 9);
-   dc.DrawLine(7, 6, 7, 11);
-   dc.DrawLine(5, 8, 10, 8);
-   dc.SelectObject(wxNullBitmap);
 
    // The default view
    mViewType = ViewByTree;
@@ -104,16 +72,6 @@ KeyView::KeyView(wxWindow *parent,
 
 KeyView::~KeyView()
 {
-   // Cleanup
-   if (mOpen)
-   {
-      delete mOpen;
-   }
-
-   if (mClosed)
-   {
-      delete mClosed;
-   }
 }
 
 //
@@ -1098,7 +1056,7 @@ KeyView::OnDrawBackground(wxDC & dc, const wxRect & rect, size_t line) const
       }
       else
       {
-         // Non ocused lines get a light background
+         // Non focused lines get a light background
          dc.SetBrush(wxBrush(wxSystemSettings::GetColour(wxSYS_COLOUR_BTNFACE)));
          dc.SetPen(*wxTRANSPARENT_PEN);
          dc.DrawRectangle(r);
@@ -1142,15 +1100,28 @@ KeyView::OnDrawItem(wxDC & dc, const wxRect & rect, size_t line) const
       // Adjust left edge to account for scrolling
       wxCoord x = rect.x - mScrollX;
 
-      if (node->iscat)
+      if (node->iscat || node->ispfx)
       {
-         // Draw categories bitmap at left edge
-         dc.DrawBitmap(node->isopen ? *mOpen : *mClosed, x, rect.y);
-      }
-      else if (node->ispfx)
-      {
-         // Draw prefix bitmap to the right of the category bitmap
-         dc.DrawBitmap(node->isopen ? *mOpen : *mClosed, x + KV_BITMAP_SIZE, rect.y);
+         wxCoord bx = x;
+         wxCoord by = rect.y;
+
+         if (node->ispfx)
+         {
+            bx += KV_BITMAP_SIZE;
+         }
+
+         dc.SetBrush(*wxTRANSPARENT_BRUSH);
+         dc.SetPen(*wxBLACK_PEN);
+         dc.DrawRectangle(bx + 3, by + 4, 9, 9);
+         if (node->isopen)
+         {
+            AColor::Line(dc, bx + 5, by + 8, bx + 9, by + 8);
+         }
+         else
+         {
+            AColor::Line(dc, bx + 7, by + 6, bx + 7, by + 10);
+            AColor::Line(dc, bx + 5, by + 8, bx + 9, by + 8);
+         }
       }
 
       // Indent text
@@ -1232,11 +1203,7 @@ KeyView::OnSetFocus(wxFocusEvent & event)
    // will also refresh the visual (highlighted) state.
    if (GetSelection() != wxNOT_FOUND)
    {
-#if wxCHECK_VERSION(3,0,0)
 	   RefreshRow(GetSelection());
-#else
-	   RefreshLine(GetSelection());
-#endif
    }
 
 #if wxUSE_ACCESSIBILITY
@@ -1257,11 +1224,7 @@ KeyView::OnKillFocus(wxFocusEvent & event)
    // Refresh the selected line to adjust visual highlighting.
    if (GetSelection() != wxNOT_FOUND)
    {
-#if wxCHECK_VERSION(3,0,0)
 	   RefreshRow(GetSelection());
-#else
-	   RefreshLine(GetSelection());
-#endif
    }
 }
 
@@ -1336,11 +1299,7 @@ KeyView::OnKeyDown(wxKeyEvent & event)
             RefreshLines();
 
             // Reset the original top line
-#if wxCHECK_VERSION(3,0,0)
-			ScrollToRow(topline);
-#else
-			ScrollToLine(topline);
-#endif
+            ScrollToRow(topline);
 
             // And make sure current line is still selected
             SelectNode(LineToIndex(line));
@@ -1404,11 +1363,7 @@ KeyView::OnKeyDown(wxKeyEvent & event)
                RefreshLines();
 
                // Reset the original top line
-#if wxCHECK_VERSION(3,0,0)
-			   ScrollToRow(topline);
-#else
-			   ScrollToLine(topline);
-#endif
+               ScrollToRow(topline);
 
                // And make sure current line is still selected
                SelectNode(LineToIndex(line));
@@ -1529,7 +1484,7 @@ KeyView::OnLeftDown(wxMouseEvent & event)
    wxPoint pos = event.GetPosition();
 
    // And see if it was on a line within the view
-   int line = HitTest(pos);
+   int line = VirtualHitTest(pos.y);
 
    // It was on a line
    if (line != wxNOT_FOUND)
@@ -1550,11 +1505,7 @@ KeyView::OnLeftDown(wxMouseEvent & event)
          RefreshLines();
 
          // Reset the original top line
-#if wxCHECK_VERSION(3,0,0)
-		 ScrollToRow(topline);
-#else
-		 ScrollToLine(topline);
-#endif
+         ScrollToRow(topline);
 
          // And make sure current line is still selected
          SelectNode(LineToIndex(line));
@@ -1780,11 +1731,7 @@ KeyView::GetLineHeight(int line)
       return 0;
    }
 
-#if wxCHECK_VERSION(3,0,0)
    return OnGetRowHeight(line);
-#else
-   return OnGetLineHeight(line);
-#endif
 }
 
 //

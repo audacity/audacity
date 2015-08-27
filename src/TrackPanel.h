@@ -27,6 +27,7 @@
 #include "WaveTrackLocation.h"
 
 #include "Snap.h"
+#include "Track.h"
 
 class wxMenu;
 class wxRect;
@@ -140,7 +141,6 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
    virtual void UpdatePrefs();
 
    virtual void OnSize(wxSizeEvent & event);
-   virtual void OnErase(wxEraseEvent & event);
    virtual void OnPaint(wxPaintEvent & event);
    virtual void OnMouseEvent(wxMouseEvent & event);
    virtual void OnCaptureLost(wxMouseCaptureLostEvent & event);
@@ -161,10 +161,12 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
 
    virtual double GetMostRecentXPos();
 
-   virtual void OnTimer();
+   virtual void OnTimer(wxTimerEvent& event);
 
    virtual int GetLeftOffset() const { return GetLabelWidth() + 1;}
 
+   // Width and height, relative to upper left corner at (GetLeftOffset(), 0)
+   // Either argument may be NULL
    virtual void GetTracksUsableArea(int *width, int *height) const;
 
    virtual void SelectNone();
@@ -230,7 +232,11 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
    virtual void UpdateTrackVRuler(Track *t);
    virtual void UpdateVRulerSize();
 
-   virtual void DrawQuickPlayIndicator(wxDC & dc, double pos);
+   virtual void DrawQuickPlayIndicator(int x, bool snapped = false);
+
+   // Returns the time corresponding to the pixel column one past the track area
+   // (ignoring any fisheye)
+   virtual double GetScreenEndTime() const;
 
  protected:
    virtual MixerBoard* GetMixerBoard();
@@ -252,7 +258,7 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
    virtual bool IsOverCutline(WaveTrack * track, wxRect &rect, wxMouseEvent &event);
    virtual void HandleTrackSpecificMouseEvent(wxMouseEvent & event);
 
-   virtual void TimerUpdateIndicator();
+   virtual void TimerUpdateIndicator(double playPos);
    // Second member of pair indicates whether the indicator is out of date:
    virtual std::pair<wxRect, bool> GetIndicatorRectangle();
    virtual void UndrawIndicator(wxDC & dc);
@@ -266,7 +272,7 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
 
 #ifdef EXPERIMENTAL_SCRUBBING_BASIC
    bool ShouldDrawScrubSpeed();
-   virtual void TimerUpdateScrubbing();
+   virtual void TimerUpdateScrubbing(double playPos);
    // Second member of pair indicates whether the cursor is out of date:
    virtual std::pair<wxRect, bool> GetScrubSpeedRectangle();
    virtual void UndrawScrubSpeed(wxDC & dc);
@@ -484,7 +490,7 @@ protected:
    virtual void MoveTrack(Track* target, int eventId);
    virtual void OnChangeOctave (wxCommandEvent &event);
    virtual void OnChannelChange(wxCommandEvent &event);
-   virtual void OnViewSettings(wxCommandEvent &event);
+   virtual void OnSpectrogramSettings(wxCommandEvent &event);
    virtual void OnSetDisplay   (wxCommandEvent &event);
    virtual void OnSetTimeTrackRange (wxCommandEvent &event);
    virtual void OnTimeTrackLin(wxCommandEvent &event);
@@ -595,10 +601,19 @@ protected:
 
    class AUDACITY_DLL_API AudacityTimer:public wxTimer {
    public:
-     virtual void Notify() { parent->OnTimer(); }
+     virtual void Notify() {
+       // (From Debian)
+       //
+       // Don't call parent->OnTimer(..) directly here, but instead post
+       // an event. This ensures that this is a pure wxWidgets event
+       // (no GDK event behind it) and that it therefore isn't processed
+       // within the YieldFor(..) of the clipboard operations (workaround
+       // for Debian bug #765341).
+       wxTimerEvent *event = new wxTimerEvent(*this);
+       parent->GetEventHandler()->QueueEvent(event);
+     }
      TrackPanel *parent;
    } mTimer;
-
 
    // This stores the parts of the screen that get overwritten by the indicator
    // and cursor
@@ -609,12 +624,13 @@ protected:
    int mNewCursorX;
 
    // Quick-Play indicator postion
-   double mOldQPIndicatorPos;
+   int mOldQPIndicatorPos;
 
    int mTimeCount;
 
    wxMemoryDC mBackingDC;
    wxBitmap *mBacking;
+   bool mResizeBacking;
    bool mRefreshBacking;
    int mPrevWidth;
    int mPrevHeight;
@@ -664,6 +680,7 @@ protected:
    Envelope *mCapturedEnvelope;
    WaveClip *mCapturedClip;
    TrackClipArray mCapturedClipArray;
+   TrackArray mTrackExclusions;
    bool mCapturedClipIsSelection;
    WaveTrackLocation mCapturedTrackLocation;
    wxRect mCapturedTrackLocationRect;
@@ -791,7 +808,6 @@ protected:
    enum MouseCaptureEnum mMouseCapture;
    virtual void SetCapturedTrack( Track * t, enum MouseCaptureEnum MouseCapture=IsUncaptured );
 
-   bool mScrollBeyondZero;
    bool mAdjustSelectionEdges;
    bool mSlideUpDownOnly;
    bool mCircularTrackNavigation;

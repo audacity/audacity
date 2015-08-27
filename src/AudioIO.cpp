@@ -4023,19 +4023,29 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
    }  // end recording VU meter update
 
    // Stop recording if 'silence' is detected
+   //
+   // LL:  We'd gotten a little "dangerous" with the control toolbar calls
+   //      here because we are not running in the main GUI thread.  Eventually
+   //      the toolbar attempts to update the active project's status bar.
+   //      But, since we're not in the main thread, we can get all manner of
+   //      really weird failures.  Or none at all which is even worse, since
+   //      we don't know a problem exists.
+   //
+   //      By using CallAfter(), we can schedule the call to the toolbar
+   //      to run in the main GUI thread after the next event loop iteration.
    if(gAudioIO->mPauseRec && inputBuffer && gAudioIO->mInputMeter) {
       if(gAudioIO->mInputMeter->GetMaxPeak() < gAudioIO->mSilenceLevel ) {
          if(!gAudioIO->IsPaused()) {
             AudacityProject *p = GetActiveProject();
-            wxCommandEvent dummyEvt;
-            p->GetControlToolBar()->OnPause(dummyEvt);
+            ControlToolBar *bar = p->GetControlToolBar();
+            bar->CallAfter(&ControlToolBar::Pause);
          }
       }
       else {
          if(gAudioIO->IsPaused()) {
             AudacityProject *p = GetActiveProject();
-            wxCommandEvent dummyEvt;
-            p->GetControlToolBar()->OnPause(dummyEvt);
+            ControlToolBar *bar = p->GetControlToolBar();
+            bar->CallAfter(&ControlToolBar::Pause);
          }
       }
    }

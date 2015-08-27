@@ -4824,6 +4824,11 @@ void AudacityProject::OnZoomIn()
    ZoomInByFactor( 2.0 );
 }
 
+double AudacityProject::GetScreenEndTime() const
+{
+   return mTrackPanel->GetScreenEndTime();
+}
+
 void AudacityProject::ZoomInByFactor( double ZoomFactor )
 {
    // LLL: Handling positioning differently when audio is active
@@ -4838,13 +4843,16 @@ void AudacityProject::ZoomInByFactor( double ZoomFactor )
    // when there's a selection that's currently at least
    // partially on-screen
 
+   const double endTime = GetScreenEndTime();
+   const double duration = endTime - mViewInfo.h;
+
    bool selectionIsOnscreen =
-      (mViewInfo.selectedRegion.t0() < mViewInfo.h + mViewInfo.screen) &&
+      (mViewInfo.selectedRegion.t0() < endTime) &&
       (mViewInfo.selectedRegion.t1() >= mViewInfo.h);
 
    bool selectionFillsScreen =
       (mViewInfo.selectedRegion.t0() < mViewInfo.h) &&
-      (mViewInfo.selectedRegion.t1() > mViewInfo.h + mViewInfo.screen);
+      (mViewInfo.selectedRegion.t1() > endTime);
 
    if (selectionIsOnscreen && !selectionFillsScreen) {
       // Start with the center of the selection
@@ -4856,24 +4864,26 @@ void AudacityProject::ZoomInByFactor( double ZoomFactor )
       if (selCenter < mViewInfo.h)
          selCenter = mViewInfo.h +
                      (mViewInfo.selectedRegion.t1() - mViewInfo.h) / 2;
-      if (selCenter > mViewInfo.h + mViewInfo.screen)
-         selCenter = mViewInfo.h + mViewInfo.screen -
-            (mViewInfo.h + mViewInfo.screen - mViewInfo.selectedRegion.t0()) / 2;
+      if (selCenter > endTime)
+         selCenter = endTime -
+            (endTime - mViewInfo.selectedRegion.t0()) / 2;
 
       // Zoom in
       ZoomBy(ZoomFactor);
+      const double newDuration = GetScreenEndTime() - mViewInfo.h;
 
       // Recenter on selCenter
-      TP_ScrollWindow(selCenter - mViewInfo.screen / 2);
+      TP_ScrollWindow(selCenter - newDuration / 2);
       return;
    }
 
 
    double origLeft = mViewInfo.h;
-   double origWidth = mViewInfo.screen;
+   double origWidth = duration;
    ZoomBy(ZoomFactor);
 
-   double newh = origLeft + (origWidth - mViewInfo.screen) / 2;
+   const double newDuration = GetScreenEndTime() - mViewInfo.h;
+   double newh = origLeft + (origWidth - newDuration) / 2;
 
    // MM: Commented this out because it was confusing users
    /*
@@ -4900,12 +4910,13 @@ void AudacityProject::OnZoomOut()
 void AudacityProject::ZoomOutByFactor( double ZoomFactor )
 {
    //Zoom() may change these, so record original values:
-   double origLeft = mViewInfo.h;
-   double origWidth = mViewInfo.screen;
+   const double origLeft = mViewInfo.h;
+   const double origWidth = GetScreenEndTime() - origLeft;
 
    ZoomBy(ZoomFactor);
+   const double newWidth = GetScreenEndTime() - mViewInfo.h;
 
-   double newh = origLeft + (origWidth - mViewInfo.screen) / 2;
+   const double newh = origLeft + (origWidth - newWidth) / 2;
    // newh = (newh > 0) ? newh : 0;
    TP_ScrollWindow(newh);
 
@@ -4944,7 +4955,7 @@ void AudacityProject::OnZoomNormal()
 void AudacityProject::OnZoomFit()
 {
    const double end = mTracks->GetEndTime();
-   const double start = mScrollBeyondZero
+   const double start = mViewInfo.bScrollBeyondZero
       ? std::min(mTracks->GetStartTime(), 0.0)
       : 0;
    const double len = end - start;
@@ -4952,8 +4963,8 @@ void AudacityProject::OnZoomFit()
    if (len <= 0.0)
       return;
 
-   int w, h;
-   mTrackPanel->GetTracksUsableArea(&w, &h);
+   int w;
+   mTrackPanel->GetTracksUsableArea(&w, NULL);
    w -= 10;
 
    Zoom(w / len);
@@ -4962,9 +4973,9 @@ void AudacityProject::OnZoomFit()
 
 void AudacityProject::DoZoomFitV()
 {
-   int width, height, count;
+   int height, count;
 
-   mTrackPanel->GetTracksUsableArea(&width, &height);
+   mTrackPanel->GetTracksUsableArea(NULL, &height);
 
    height -= 28;
 
@@ -5023,16 +5034,22 @@ void AudacityProject::OnZoomSel()
    //      where the selected region may be scrolled off the left of the screen.
    //      I know this isn't right, but until the real rounding or 1-off issue is
    //      found, this will have to work.
-   Zoom((mViewInfo.GetScreenWidth() - 1) / denom);
+   // PRL:  Did I fix this?  I am not sure, so I leave the hack in place.
+   //      Fixes might have resulted from commits
+   //      1b8f44d0537d987c59653b11ed75a842b48896ea and
+   //      e7c7bb84a966c3b3cc4b3a9717d5f247f25e7296
+   int width;
+   mTrackPanel->GetTracksUsableArea(&width, NULL);
+   Zoom((width - 1) / denom);
    TP_ScrollWindow(mViewInfo.selectedRegion.t0());
-}
+}  
 
 void AudacityProject::OnGoSelStart()
 {
    if (mViewInfo.selectedRegion.isPoint())
       return;
 
-   TP_ScrollWindow(mViewInfo.selectedRegion.t0() - (mViewInfo.screen / 2));
+   TP_ScrollWindow(mViewInfo.selectedRegion.t0() - ((GetScreenEndTime() - mViewInfo.h) / 2));
 }
 
 void AudacityProject::OnGoSelEnd()
@@ -5040,7 +5057,7 @@ void AudacityProject::OnGoSelEnd()
    if (mViewInfo.selectedRegion.isPoint())
       return;
 
-   TP_ScrollWindow(mViewInfo.selectedRegion.t1() - (mViewInfo.screen / 2));
+   TP_ScrollWindow(mViewInfo.selectedRegion.t1() - ((GetScreenEndTime() - mViewInfo.h) / 2));
 }
 
 void AudacityProject::OnShowClipping()

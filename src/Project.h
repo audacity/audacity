@@ -159,7 +159,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 
    sampleFormat GetDefaultFormat() { return mDefaultFormat; }
 
-   double GetRate() { return mRate; }
+   double GetRate() const { return mRate; }
    bool ZoomInAvailable() const { return mViewInfo.ZoomInAvailable(); }
    bool ZoomOutAvailable() const { return mViewInfo.ZoomOutAvailable(); }
    double GetSel0() { return mViewInfo.selectedRegion.t0(); }
@@ -289,6 +289,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    void OnMouseEvent(wxMouseEvent & event);
    void OnIconize(wxIconizeEvent &event);
    void OnSize(wxSizeEvent & event);
+   void OnShow(wxShowEvent & event);
    void OnMove(wxMoveEvent & event);
    void OnScroll(wxScrollEvent & event);
    void OnCloseWindow(wxCloseEvent & event);
@@ -301,6 +302,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 
    void HandleResize();
    void UpdateLayout();
+   double GetScreenEndTime() const;
    void ZoomInByFactor( double ZoomFactor );
    void ZoomOutByFactor( double ZoomFactor );
 
@@ -343,7 +345,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    // Snap To
 
    void SetSnapTo(int snap);
-   int GetSnapTo();
+   int GetSnapTo() const;
 
    // Selection Format
 
@@ -570,6 +572,8 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    // dialog for missing alias warnings
    wxDialog            *mAliasMissingWarningDialog;
 
+   bool mShownOnce;
+
    // Project owned meters
    Meter *mPlaybackMeter;
    Meter *mCaptureMeter;
@@ -601,8 +605,6 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    bool mNormalizeOnLoad;  //lda
    bool mShowId3Dialog; //lda
    bool mEmptyCanBeDirty;
-
-   bool mScrollBeyondZero;
 
    bool mSelectAllOnNone;
 

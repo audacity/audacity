@@ -74,15 +74,15 @@ void AudacityLogger::DoLogText(const wxString & str)
       wxMutexGuiEnter();
    }
 
-   wxString stamp;
-
-   TimeStamp(&stamp);
-
    if (mBuffer.IsEmpty()) {
+      wxString stamp;
+
+      TimeStamp(&stamp);
+
       mBuffer << stamp << wxT("Audacity ") << AUDACITY_VERSION_STRING << wxT("\n");
    }
 
-   mBuffer << stamp << str << wxT("\n");
+   mBuffer << str << wxT("\n");
 
    mUpdated = true;
 

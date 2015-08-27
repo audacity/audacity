@@ -156,6 +156,7 @@ audio tracks.
 #include <wx/dc.h>
 #include <wx/dcmemory.h>
 #include <wx/gdicmn.h>
+#include <wx/graphics.h>
 #include <wx/image.h>
 #include <wx/pen.h>
 #include <wx/log.h>
@@ -325,10 +326,6 @@ void TrackArtist::DrawTracks(TrackList * tracks,
                              bool bigPoints,
                              bool drawSliders)
 {
-#if defined(__WXMAC__)
-   dc.GetGraphicsContext()->SetAntialiasMode(wxANTIALIAS_NONE);
-#endif
-
    wxRect trackRect = rect;
    wxRect stereoTrackRect;
    TrackListIterator iter(tracks);
@@ -459,6 +456,11 @@ void TrackArtist::DrawTrack(const Track * t,
 
       bool muted = (hasSolo || t->GetMute()) && !t->GetSolo();
 
+#if defined(__WXMAC__)
+      wxAntialiasMode aamode = dc.GetGraphicsContext()->GetAntialiasMode();
+      dc.GetGraphicsContext()->SetAntialiasMode(wxANTIALIAS_NONE);
+#endif
+
       switch (wt->GetDisplay()) {
       case WaveTrack::Waveform:
          DrawWaveform(wt, dc, rect, selectedRegion, zoomInfo,
@@ -468,6 +470,11 @@ void TrackArtist::DrawTrack(const Track * t,
          DrawSpectrum(wt, dc, rect, selectedRegion, zoomInfo);
          break;
       }
+
+#if defined(__WXMAC__)
+      dc.GetGraphicsContext()->SetAntialiasMode(aamode);
+#endif
+
       if (mbShowTrackNameInWaveform &&
           // Exclude right channel of stereo track 
           !(!wt->GetLinked() && wt->GetLink())) {
@@ -503,7 +510,7 @@ void TrackArtist::DrawVRuler(Track *t, wxDC * dc, wxRect & rect)
    // But give it a beveled area
    if (kind == Track::Label) {
       wxRect bev = rect;
-      bev.Inflate(-1, -1);
+      bev.Inflate(-1, 0);
       bev.width += 1;
       AColor::BevelTrackInfo(*dc, true, bev);
 
@@ -513,7 +520,7 @@ void TrackArtist::DrawVRuler(Track *t, wxDC * dc, wxRect & rect)
    // Time tracks
    if (kind == Track::Time) {
       wxRect bev = rect;
-      bev.Inflate(-1, -1);
+      bev.Inflate(-1, 0);
       bev.width += 1;
       AColor::BevelTrackInfo(*dc, true, bev);
 
@@ -537,7 +544,7 @@ void TrackArtist::DrawVRuler(Track *t, wxDC * dc, wxRect & rect)
    // The ruler needs a bevelled surround.
    if (kind == Track::Wave) {
       wxRect bev = rect;
-      bev.Inflate(-1, -1);
+      bev.Inflate(-1, 0);
       bev.width += 1;
       AColor::BevelTrackInfo(*dc, true, bev);
 
@@ -566,13 +573,11 @@ void TrackArtist::DrawVRuler(Track *t, wxDC * dc, wxRect & rect)
       dc->SetBrush(*wxWHITE_BRUSH);
       wxRect bev = rect;
       bev.x++;
-      bev.y++;
       bev.width--;
-      bev.height--;
       dc->DrawRectangle(bev);
 
-      rect.y += 2;
-      rect.height -= 2;
+      rect.y += 1;
+      rect.height -= 1;
 
       //int bottom = GetBottom((NoteTrack *) t, rect);
       NoteTrack *track = (NoteTrack *) t;
@@ -671,7 +676,7 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
       min = tt->GetRangeLower() * 100.0;
       max = tt->GetRangeUpper() * 100.0;
 
-      vruler->SetBounds(rect.x, rect.y+1, rect.x + rect.width, rect.y + rect.height-1);
+      vruler->SetBounds(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height-1);
       vruler->SetOrientation(wxVERTICAL);
       vruler->SetRange(max, min);
       vruler->SetFormat((tt->GetDisplayLog()) ? Ruler::RealLogFormat : Ruler::RealFormat);
@@ -698,10 +703,11 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
 
             float min, max;
             wt->GetDisplayBounds(&min, &max);
-            if (wt->GetLastScaleType() != scaleType)
+            if (wt->GetLastScaleType() != scaleType &&
+                wt->GetLastScaleType() != -1)
             {
                // do a translation into the linear space
-               wt->SetLastScaleType(scaleType);
+               wt->SetLastScaleType();
                float sign = (min >= 0 ? 1 : -1);
                if (min != 0.) {
                   min = DB_TO_LINEAR(fabs(min) * dBRange - dBRange);
@@ -720,7 +726,7 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
                wt->SetDisplayBounds(min, max);
             }
 
-            vruler->SetBounds(rect.x, rect.y + 1, rect.x + rect.width, rect.y + rect.height - 1);
+            vruler->SetBounds(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height - 1);
             vruler->SetOrientation(wxVERTICAL);
             vruler->SetRange(max, min);
             vruler->SetFormat(Ruler::RealFormat);
@@ -737,10 +743,11 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
             float min, max;
             wt->GetDisplayBounds(&min, &max);
 
-            if (wt->GetLastScaleType() != scaleType)
+            if (wt->GetLastScaleType() != scaleType &&
+                wt->GetLastScaleType() != -1)
             {
                // do a translation into the dB space
-               wt->SetLastScaleType(scaleType);
+               wt->SetLastScaleType();
                float sign = (min >= 0 ? 1 : -1);
                if (min != 0.) {
                   min = (LINEAR_TO_DB(fabs(min)) + dBRange) / dBRange;
@@ -782,7 +789,7 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
                   botval = -((1 - min) * dBRange);
                }
 
-               vruler->SetBounds(rect.x, rect.y + top + 1, rect.x + rect.width, rect.y + bot - 1);
+               vruler->SetBounds(rect.x, rect.y + top, rect.x + rect.width, rect.y + bot - 1);
                vruler->SetOrientation(wxVERTICAL);
                vruler->SetRange(topval, botval);
             }
@@ -815,7 +822,7 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
             we will use Hz if maxFreq is < 2000, otherwise we represent kHz,
             and append to the numbers a "k"
             */
-            vruler->SetBounds(rect.x, rect.y + 1, rect.x + rect.width, rect.y + rect.height - 1);
+            vruler->SetBounds(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height - 1);
             vruler->SetOrientation(wxVERTICAL);
             vruler->SetFormat(Ruler::RealFormat);
             vruler->SetLabelEdges(true);
@@ -853,7 +860,7 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
             we will use Hz if maxFreq is < 2000, otherwise we represent kHz,
             and append to the numbers a "k"
             */
-            vruler->SetBounds(rect.x, rect.y + 1, rect.x + rect.width, rect.y + rect.height - 1);
+            vruler->SetBounds(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height - 1);
             vruler->SetOrientation(wxVERTICAL);
             vruler->SetFormat(Ruler::IntFormat);
             vruler->SetLabelEdges(true);
@@ -873,7 +880,7 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
    // The note track isn't drawing a ruler at all!
    // But it needs to!
    else if (t->GetKind() == Track::Note) {
-      vruler->SetBounds(rect.x, rect.y+1, rect.x + 1, rect.y + rect.height-1);
+      vruler->SetBounds(rect.x, rect.y, rect.x + 1, rect.y + rect.height-1);
       vruler->SetOrientation(wxVERTICAL);
    }
 #endif // USE_MIDI
@@ -946,7 +953,10 @@ float ValueOfPixel(int yy, int height, bool offset,
    bool dB, double dBRange, float zoomMin, float zoomMax)
 {
    wxASSERT(height > 0);
-   float v = zoomMax - (yy / (float)height) * (zoomMax - zoomMin);
+   // Map 0 to max and height - 1 (not height) to min
+   float v =
+      height == 1 ? (zoomMin + zoomMax) / 2 :
+      zoomMax - (yy / (float)(height - 1)) * (zoomMax - zoomMin);
    if (offset) {
       if (v > 0.0)
          v += .5;
@@ -1662,7 +1672,7 @@ void FindWavePortions
    // the fisheye.
 
    ZoomInfo::Intervals intervals;
-   zoomInfo.FindIntervals(params.rate, intervals, rect.x);
+   zoomInfo.FindIntervals(params.rate, intervals, rect.width, rect.x);
    ZoomInfo::Intervals::const_iterator it = intervals.begin(), end = intervals.end(), prev;
    wxASSERT(it != end && it->position == rect.x);
    const int rightmost = rect.x + rect.width;
@@ -3282,12 +3292,12 @@ void TrackArtist::DrawBackgroundWithSelection(wxDC *dc, const wxRect &rect,
          dc->SetBrush(unselBrush);
          dc->DrawRectangle(before);
 
-         within.x = before.GetRight();
+         within.x = 1 + before.GetRight();
       }
       within.width = rect.x + int(zoomInfo.TimeToPosition(sel1) + 2) - within.x;
 
       if (within.GetRight() > rect.GetRight()) {
-         within.width = rect.GetRight() - within.x;
+         within.width = 1 + rect.GetRight() - within.x;
       }
 
       if (within.width > 0) {
@@ -3302,14 +3312,14 @@ void TrackArtist::DrawBackgroundWithSelection(wxDC *dc, const wxRect &rect,
             DrawSyncLockTiles(dc, within);
          }
 
-         after.x = within.GetRight();
+         after.x = 1 + within.GetRight();
       }
       else {
          // `within` not drawn; start where it would have gone
          after.x = within.x;
       }
 
-      after.width = rect.GetRight() - after.x;
+      after.width = 1 + rect.GetRight() - after.x;
       if (after.width > 0) {
          dc->SetBrush(unselBrush);
          dc->DrawRectangle(after);

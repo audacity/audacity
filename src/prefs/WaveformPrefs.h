@@ -26,6 +26,7 @@ public:
    WaveformPrefs(wxWindow * parent, WaveTrack *wt);
    virtual ~WaveformPrefs();
    virtual bool Apply();
+   virtual bool ShowsApplyButton();
    virtual bool Validate();
 
 private:
@@ -35,7 +36,6 @@ private:
    void OnControl(wxCommandEvent&);
    void OnScale(wxCommandEvent&);
    void OnDefaults(wxCommandEvent&);
-   void OnApply(wxCommandEvent &);
    DECLARE_EVENT_TABLE()
 
    void EnableDisableRange();

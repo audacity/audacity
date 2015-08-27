@@ -50,7 +50,6 @@ WaveformPrefs::~WaveformPrefs()
 
 enum {
    ID_DEFAULTS = 10001,
-   ID_APPLY,
 
    ID_SCALE,
    ID_RANGE,
@@ -111,12 +110,6 @@ void WaveformPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
    */
-
-   S.StartMultiColumn(2, wxALIGN_RIGHT);
-   {
-      S.Id(ID_APPLY).AddButton(_("Appl&y"));
-   }
-   S.EndMultiColumn();
 
    EnableDisableRange();
 
@@ -184,6 +177,17 @@ bool WaveformPrefs::Apply()
          partner->SetDisplay(WaveTrack::Waveform);
    }
 
+   if (isOpenPage) {
+      TrackPanel *const tp = ::GetActiveProject()->GetTrackPanel();
+      tp->UpdateVRulers();
+      tp->Refresh(false);
+   }
+
+   return true;
+}
+
+bool WaveformPrefs::ShowsApplyButton()
+{
    return true;
 }
 
@@ -219,14 +223,6 @@ void WaveformPrefs::OnDefaults(wxCommandEvent &)
    }
 }
 
-void WaveformPrefs::OnApply(wxCommandEvent &)
-{
-   if (Validate()) {
-      Apply();
-      ::GetActiveProject()->GetTrackPanel()->Refresh(false);
-   }
-}
-
 void WaveformPrefs::EnableDisableRange()
 {
    mRangeChoice->Enable
@@ -239,7 +235,6 @@ EVT_CHOICE(ID_SCALE, WaveformPrefs::OnScale)
 EVT_CHOICE(ID_RANGE, WaveformPrefs::OnControl)
 
 EVT_CHECKBOX(ID_DEFAULTS, WaveformPrefs::OnDefaults)
-EVT_BUTTON(ID_APPLY, WaveformPrefs::OnApply)
 END_EVENT_TABLE()
 
 WaveformPrefsFactory::WaveformPrefsFactory(WaveTrack *wt)

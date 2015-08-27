@@ -615,16 +615,6 @@ public:
      
       return true;
    }
-
-#if !wxCHECK_VERSION(3, 0, 0)
-   bool OnExecute(const wxString & topic,
-                  wxChar *data,
-                  int WXUNUSED(size),
-                  wxIPCFormat WXUNUSED(format))
-   {
-      return OnExec(topic, data);
-   }
-#endif
 };
 
 class IPCServ : public wxServer

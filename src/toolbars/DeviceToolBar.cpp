@@ -76,14 +76,9 @@ void DeviceToolBar::Create(wxWindow *parent)
    ToolBar::Create(parent);
 
    // Simulate a size event to set initial meter placement/size
-#if wxCHECK_VERSION(3, 0, 0)
    wxSizeEvent event(GetSize(), GetId());
    event.SetEventObject(this);
    GetEventHandler()->ProcessEvent(event);
-#else
-   wxSizeEvent dummy;
-   OnSize(dummy);
-#endif
 }
 
 void DeviceToolBar::DeinitChildren()
@@ -802,11 +797,11 @@ void DeviceToolBar::ShowComboDialog(wxChoice *combo, const wxString &title)
                          &inputSources);
       }
       S.EndHorizontalLay();
-      S.AddStandardButtons();
    }
    S.EndVerticalLay();
+   S.AddStandardButtons();
 
-   dlg.SetSize(dlg.GetSizer()->GetMinSize());
+   dlg.GetSizer()->SetSizeHints(&dlg);
    dlg.Center();
 
    if (dlg.ShowModal() == wxID_OK)
