@@ -9,6 +9,7 @@ Paul Licameli
 **********************************************************************/
 
 #include "ViewInfo.h"
+#include "Experimental.h"
 
 #include <algorithm>
 
@@ -110,7 +111,18 @@ ViewInfo::ViewInfo(double start, double screenDuration, double pixelsPerSecond)
    , sbarScale(1.0)
    , scrollStep(16)
    , bUpdateTrackIndicator(true)
+   , bScrollBeyondZero(false)
 {
+   UpdatePrefs();
+}
+
+void ViewInfo::UpdatePrefs()
+{
+   ZoomInfo::UpdatePrefs();
+#ifdef EXPERIMENTAL_SCROLLING_LIMITS
+   gPrefs->Read(wxT("/GUI/ScrollBeyondZero"), &bScrollBeyondZero, false);
+#endif
+
 }
 
 void ViewInfo::SetBeforeScreenWidth(wxInt64 beforeWidth, wxInt64 screenWidth, double lowerBoundTime)

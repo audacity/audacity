@@ -888,9 +888,6 @@ void TrackPanel::UpdateVirtualStereoOrder()
 
 void TrackPanel::UpdatePrefs()
 {
-#ifdef EXPERIMENTAL_SCROLLING_LIMITS
-   gPrefs->Read(wxT("/GUI/ScrollBeyondZero"), &mScrollBeyondZero, false);
-#endif
    gPrefs->Read(wxT("/GUI/AutoScroll"), &mViewInfo->bUpdateTrackIndicator,
       true);
    gPrefs->Read(wxT("/GUI/AdjustSelectionEdges"), &mAdjustSelectionEdges,
@@ -7527,7 +7524,7 @@ void TrackPanel::TimerUpdateScrubbing(double playPos)
       const int deltaX = posX - width / 2;
       mViewInfo->h =
          mViewInfo->OffsetTimeByPixels(mViewInfo->h, deltaX, true);
-      if (!mScrollBeyondZero)
+      if (!mViewInfo->bScrollBeyondZero)
          // Can't scroll too far left
          mViewInfo->h = std::max(0.0, mViewInfo->h);
       Refresh(false);

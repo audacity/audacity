@@ -130,6 +130,8 @@ class AUDACITY_DLL_API ViewInfo
 public:
    ViewInfo(double start, double screenDuration, double pixelsPerSecond);
 
+   void UpdatePrefs();
+
    double GetBeforeScreenWidth() const
    {
       return h * zoom;
@@ -166,6 +168,8 @@ public:
    // drawing the waveform. Maybe this should be put somewhere else?
 
    bool bUpdateTrackIndicator;
+
+   bool bScrollBeyondZero;
 
    void WriteXMLAttributes(XMLWriter &xmlFile);
    bool ReadXMLAttribute(const wxChar *attr, const wxChar *value);

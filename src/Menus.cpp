@@ -4955,7 +4955,7 @@ void AudacityProject::OnZoomNormal()
 void AudacityProject::OnZoomFit()
 {
    const double end = mTracks->GetEndTime();
-   const double start = mScrollBeyondZero
+   const double start = mViewInfo.bScrollBeyondZero
       ? std::min(mTracks->GetStartTime(), 0.0)
       : 0;
    const double len = end - start;

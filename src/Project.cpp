@@ -780,7 +780,6 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
      mIsDeleting(false),
      mTracksFitVerticallyZoomed(false),  //lda
      mShowId3Dialog(true),               //lda
-     mScrollBeyondZero(false),
      mLastFocusedWindow(NULL),
      mKeyboardCaptureHandler(NULL),
      mImportXMLTagHandler(NULL),
@@ -1052,9 +1051,6 @@ AudioIOStartStreamOptions AudacityProject::GetDefaultPlayOptions()
 
 void AudacityProject::UpdatePrefsVariables()
 {
-#ifdef EXPERIMENTAL_SCROLLING_LIMITS
-   gPrefs->Read(wxT("/GUI/ScrollBeyondZero"), &mScrollBeyondZero, false);
-#endif
    gPrefs->Read(wxT("/AudioFiles/ShowId3Dialog"), &mShowId3Dialog, true);
    gPrefs->Read(wxT("/AudioFiles/NormalizeOnLoad"),&mNormalizeOnLoad, false);
    gPrefs->Read(wxT("/GUI/AutoScroll"), &mViewInfo.bUpdateTrackIndicator, true);
@@ -1474,7 +1470,7 @@ void AudacityProject::OnScrollRightButton(wxScrollEvent & event)
 
 double AudacityProject::ScrollingLowerBoundTime() const
 {
-   if (!mScrollBeyondZero)
+   if (!mViewInfo.bScrollBeyondZero)
       return 0;
    const double screen = mTrackPanel->GetScreenEndTime() - mViewInfo.h;
    return std::min(mTracks->GetStartTime(), -screen / 2.0);
@@ -1583,7 +1579,7 @@ void AudacityProject::FixScrollbars()
    // may be scrolled to the midline.
    // May add even more to the end, so that you can always scroll the starting time to zero.
    const double lowerBound = ScrollingLowerBoundTime();
-   const double additional = mScrollBeyondZero
+   const double additional = mViewInfo.bScrollBeyondZero
       ? -lowerBound + std::max(halfScreen, screen - LastTime)
       : screen / 4.0;
 
@@ -1921,7 +1917,7 @@ void AudacityProject::OnScroll(wxScrollEvent & WXUNUSED(event))
    }
 
 
-   if (mScrollBeyondZero) {
+   if (mViewInfo.bScrollBeyondZero) {
       enum { SCROLL_PIXEL_TOLERANCE = 10 };
       if (std::abs(mViewInfo.TimeToPosition(0.0, 0
                                    )) < SCROLL_PIXEL_TOLERANCE) {
