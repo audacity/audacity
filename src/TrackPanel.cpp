@@ -6267,8 +6267,10 @@ void TrackPanel::HandleWheelRotationInVRuler
 {
    if (pTrack->GetKind() == Track::Wave) {
       WaveTrack *const wt = static_cast<WaveTrack*>(pTrack);
-      if (event.CmdDown() &&
-         wt->GetWaveformSettings().scaleType == WaveformSettings::stLogarithmic) {
+      const bool isDB =
+         wt->GetDisplay() == WaveTrack::Waveform &&
+         wt->GetWaveformSettings().scaleType == WaveformSettings::stLogarithmic;
+      if (isDB && event.ShiftDown()) {
          // Vary the bottom of the dB scale, but only if the midline is visible
          float min, max;
          wt->GetDisplayBounds(&min, &max);
@@ -6293,12 +6295,15 @@ void TrackPanel::HandleWheelRotationInVRuler
          else
             return;
       }
-      else {
+      else if (event.CmdDown()) {
          HandleWaveTrackVZoom(
             mTracks, rect, event.m_y, event.m_y,
             wt, false, (event.m_wheelRotation < 0),
             true);
       }
+      else
+         return;
+
       UpdateVRuler(pTrack);
       Refresh(false);
       MakeParentModifyState(true);
