@@ -16,6 +16,8 @@
 
 #include <windows.h>
 
+#include <wx/modalhook.h>
+
 //-------------------------------------------------------------------------
 // FileDialog
 //-------------------------------------------------------------------------
@@ -36,9 +38,8 @@ class FileDialog : public FileDialogBase
 
    virtual void GetPaths(wxArrayString& paths) const;
    virtual void GetFilenames(wxArrayString& files) const;
-   void OnSize(wxSizeEvent & e);
    virtual int ShowModal();
-   
+
 protected:
    // -----------------------------------------
    // wxMSW-specific implementation from now on
@@ -97,6 +98,23 @@ private:
    POINT mMinSize;
 
    wxPanel *mRoot;
+
+   class Disabler : public wxModalDialogHook
+   {
+   public:
+      Disabler();
+      void Init(wxWindow *root, HWND hwnd);
+
+   protected:
+      int Enter(wxDialog *dialog);
+      void Exit(wxDialog *dialog);
+      bool IsChild(const wxDialog *dialog) const;
+
+   private:
+      wxWindow *mRoot;
+      HWND mHwnd;
+      int mModalCount;
+   } mDisabler;
 
    DECLARE_DYNAMIC_CLASS(FileDialog)
    DECLARE_NO_COPY_CLASS(FileDialog)

@@ -286,6 +286,9 @@ void FileDialog::MSWOnInitDialog(HWND hDlg, LPOPENFILENAME pOfn)
    // Since we've specified the OFN_EXPLORER flag, the "real" dialog is the parent of this one
    mParentDlg = ::GetParent(hDlg);
 
+   // Now we can initialize the disabler
+   mDisabler.Init(this, mParentDlg);
+
    // This is the dialog were our controls will go
    mChildDlg = hDlg;
 
@@ -866,6 +869,8 @@ static bool ShowCommFileDialog(OPENFILENAME *of, long style)
 
 int FileDialog::ShowModal()
 {
+   WX_HOOK_MODAL_DIALOG();
+
    HWND hWnd = 0;
    if (m_parent) hWnd = (HWND) m_parent->GetHWND();
    if (!hWnd && wxTheApp->GetTopWindow())
@@ -1130,4 +1135,66 @@ int FileDialog::ShowModal()
    }
    
    return wxID_OK;
+}
+
+FileDialog::Disabler::Disabler()
+{
+   mRoot = NULL;
+   mHwnd = (HWND) INVALID_HANDLE_VALUE;
+   mModalCount = 0;
+
+   Register();
+}
+
+void FileDialog::Disabler::Init(wxWindow *root, HWND hwnd)
+{
+   mRoot = root;
+   mHwnd = hwnd;
+}
+
+int FileDialog::Disabler::Enter(wxDialog *dialog)
+{
+   if (mHwnd != (HWND) INVALID_HANDLE_VALUE)
+   {
+      if (IsChild(dialog)) {
+         ::EnableWindow(mHwnd, FALSE);
+         mModalCount++;
+      }
+   }
+
+   return wxID_NONE;
+}
+
+void FileDialog::Disabler::Exit(wxDialog *dialog)
+{
+   if (mHwnd != (HWND) INVALID_HANDLE_VALUE)
+   {
+      if (IsChild(dialog))
+      {
+         mModalCount--;
+         if (mModalCount == 0)
+         {
+            ::EnableWindow(mHwnd, TRUE);
+            ::SetWindowPos(mHwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+         }
+      }
+   }
+}
+
+bool FileDialog::Disabler::IsChild(const wxDialog *dialog) const
+{
+   if (!dialog)
+   {
+      return false;
+   }
+
+   for (const wxWindow *w = dialog->GetParent(); w != NULL; w = w->GetParent())
+   {
+      if (w == mRoot)
+      {
+         return true;
+      }
+   }
+
+   return false;
 }
