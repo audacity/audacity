@@ -435,6 +435,9 @@ class AUDACITY_DLL_API WaveTrack : public Track {
    int GetLastScaleType() { return mLastScaleType; }
    void SetLastScaleType();
 
+   int GetLastdBRange() { return mLastdBRange; }
+   void SetLastdBRange();
+
    WaveTrackDisplay GetDisplay() const { return mDisplay; }
    void SetDisplay(WaveTrackDisplay display) { mDisplay = display; }
 
@@ -463,6 +466,7 @@ class AUDACITY_DLL_API WaveTrack : public Track {
    float         mDisplayMax;
    WaveTrackDisplay mDisplay;
    int           mLastScaleType; // last scale type choice
+   int           mLastdBRange;
    int           mDisplayNumLocations;
    int           mDisplayNumLocationsAllocated;
    Location*       mDisplayLocations;

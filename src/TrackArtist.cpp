@@ -708,6 +708,7 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
             {
                // do a translation into the linear space
                wt->SetLastScaleType();
+               wt->SetLastdBRange();
                float sign = (min >= 0 ? 1 : -1);
                if (min != 0.) {
                   min = DB_TO_LINEAR(fabs(min) * dBRange - dBRange);
@@ -742,12 +743,14 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
 
             float min, max;
             wt->GetDisplayBounds(&min, &max);
+            float lastdBRange;
 
             if (wt->GetLastScaleType() != scaleType &&
                 wt->GetLastScaleType() != -1)
             {
                // do a translation into the dB space
                wt->SetLastScaleType();
+               wt->SetLastdBRange();
                float sign = (min >= 0 ? 1 : -1);
                if (min != 0.) {
                   min = (LINEAR_TO_DB(fabs(min)) + dBRange) / dBRange;
@@ -764,6 +767,30 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
                   max *= sign;
                }
                wt->SetDisplayBounds(min, max);
+            }
+            else if (dBRange != (lastdBRange = wt->GetLastdBRange())) {
+               wt->SetLastdBRange();
+               // Remap the max of the scale
+               const float sign = (max >= 0 ? 1 : -1);
+               float newMax = max;
+               if (max != 0.) {
+
+// Ugh, duplicating from TrackPanel.cpp
+#define ZOOMLIMIT 0.001f
+
+                  const float extreme = LINEAR_TO_DB(2);
+                  // recover dB value of max
+                  const float dB = std::min(extreme, (fabs(max) * lastdBRange - lastdBRange));
+                  // find new scale position, but old max may get trimmed if the db limit rises
+                  // Don't trim it to zero though, but leave max and limit distinct
+                  newMax = sign * std::max(ZOOMLIMIT, (dBRange + dB) / dBRange);
+                  // Adjust the min of the scale if we can,
+                  // so the db Limit remains where it was on screen, but don't violate extremes
+                  if (min != 0.)
+                     min = std::max(-extreme, newMax * min / max);
+               }
+
+               wt->SetDisplayBounds(min, newMax);
             }
 
             if (max > 0) {
