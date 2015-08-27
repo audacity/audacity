@@ -4713,15 +4713,20 @@ void TrackPanel::HandleWaveTrackVZoom
          }
          else {
             // Zoom out
+            const WaveformSettings &settings = track->GetWaveformSettings();
+            const bool linear = settings.isLinear();
+            const float top = linear
+               ? 2.0
+               : (LINEAR_TO_DB(2.0) + settings.dBRange) / settings.dBRange;
             if (min <= -1.0 && max >= 1.0) {
                // Go to the maximal zoom-out
-               min = -2.0;
-               max = 2.0;
+               min = -top;
+               max = top;
             }
             else {
                // limit to +/- 1 range unless already outside that range...
-               float minRange = (min < -1) ? -2.0 : -1.0;
-               float maxRange = (max > 1) ? 2.0 : 1.0;
+               float minRange = (min < -1) ? -top : -1.0;
+               float maxRange = (max > 1) ? top : 1.0;
                // and enforce vertical zoom limits.
                const float p1 = (zoomStart - ypos) / (float)height;
                if (fixedMousePoint) {
