@@ -6518,6 +6518,8 @@ void AudacityProject::OnResample()
 
       S.StartVerticalLay(true);
       {
+         S.AddSpace(-1, 15);
+
          S.StartHorizontalLay(wxCENTER, false);
          {
             cb = S.AddCombo(_("New sample rate (Hz):"),
@@ -6525,11 +6527,15 @@ void AudacityProject::OnResample()
                             &rates);
          }
          S.EndHorizontalLay();
+
+         S.AddSpace(-1, 15);
+
          S.AddStandardButtons();
       }
       S.EndVerticalLay();
 
-      dlg.SetSize(dlg.GetSizer()->GetMinSize());
+      dlg.Layout();
+      dlg.Fit();
       dlg.Center();
 
       if (dlg.ShowModal() != wxID_OK)
