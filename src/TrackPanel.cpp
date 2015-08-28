@@ -6588,7 +6588,11 @@ void TrackPanel::OnMouseEvent(wxMouseEvent & event)
 
    if (event.Leaving() && !event.ButtonIsDown(wxMOUSE_BTN_ANY))
    {
-      if (mMouseCapture != IsPanSliding && mMouseCapture != IsGainSliding)
+      // PRL:  was this test really needed?  It interfered with my refactoring
+      // that tried to eliminate those enum values.
+      // I think it was never true, that mouse capture was pan or gain sliding,
+      // but no mouse button was down.
+      // if (mMouseCapture != IsPanSliding && mMouseCapture != IsGainSliding)
       {
          SetCapturedTrack(NULL);
 #if defined(__WXMAC__)
@@ -8340,117 +8344,6 @@ void TrackPanel::ScrollIntoView(double pos)
 void TrackPanel::ScrollIntoView(int x)
 {
    ScrollIntoView(mViewInfo->PositionToTime(x, GetLeftOffset()));
-}
-
-//The following methods operate controls on specified tracks,
-//This will pop up the track panning dialog for specified track
-void TrackPanel::OnTrackPan()
-{
-   Track *t = GetFocusedTrack();
-   if (!t || (t->GetKind() != Track::Wave)) {
-      return;
-   }
-
-   LWSlider *slider = mTrackInfo.PanSlider((WaveTrack *) t);
-   if (slider->ShowDialog()) {
-      SetTrackPan(t, slider);
-   }
-}
-
-void TrackPanel::OnTrackPanLeft()
-{
-   Track *t = GetFocusedTrack();
-   if (!t || (t->GetKind() != Track::Wave)) {
-      return;
-   }
-
-   LWSlider *slider = mTrackInfo.PanSlider((WaveTrack *) t);
-   slider->Decrease(1);
-   SetTrackPan(t, slider);
-}
-
-void TrackPanel::OnTrackPanRight()
-{
-   Track *t = GetFocusedTrack();
-   if (!t || (t->GetKind() != Track::Wave)) {
-      return;
-   }
-
-   LWSlider *slider = mTrackInfo.PanSlider((WaveTrack *) t);
-   slider->Increase(1);
-   SetTrackPan(t, slider);
-}
-
-void TrackPanel::SetTrackPan(Track * t, LWSlider * s)
-{
-   wxASSERT(t);
-   if( t->GetKind() != Track::Wave )
-      return;
-   float newValue = s->Get();
-
-   WaveTrack *link = (WaveTrack *)mTracks->GetLink(t);
-   ((WaveTrack*)t)->SetPan(newValue);
-   if (link)
-      link->SetPan(newValue);
-
-   MakeParentPushState(_("Adjusted Pan"), _("Pan"), PUSH_CONSOLIDATE );
-
-   RefreshTrack(t);
-}
-
-/// This will pop up the track gain dialog for specified track
-void TrackPanel::OnTrackGain()
-{
-   Track *t = GetFocusedTrack();
-   if (!t || (t->GetKind() != Track::Wave)) {
-      return;
-   }
-
-   LWSlider *slider = mTrackInfo.GainSlider((WaveTrack *) t);
-   if (slider->ShowDialog()) {
-      SetTrackGain(t, slider);
-   }
-}
-
-void TrackPanel::OnTrackGainInc()
-{
-   Track *t = GetFocusedTrack();
-   if (!t || (t->GetKind() != Track::Wave)) {
-      return;
-   }
-
-   LWSlider *slider = mTrackInfo.GainSlider((WaveTrack *) t);
-   slider->Increase(1);
-   SetTrackGain(t, slider);
-}
-
-void TrackPanel::OnTrackGainDec()
-{
-   Track *t = GetFocusedTrack();
-   if (!t || (t->GetKind() != Track::Wave)) {
-      return;
-   }
-
-   LWSlider *slider = mTrackInfo.GainSlider((WaveTrack *) t);
-   slider->Decrease(1);
-   SetTrackGain(t, slider);
-}
-
-void TrackPanel::SetTrackGain(Track * t, LWSlider * s)
-{
-   wxASSERT(t);
-   if( t->GetKind() != Track::Wave )
-      return ;
-   float newValue = s->Get();
-
-   WaveTrack *link = (WaveTrack *)mTracks->GetLink(t);
-   ((WaveTrack*)t)->SetGain(newValue);
-   if (link)
-      link->SetGain(newValue);
-
-   MakeParentPushState(_("Adjusted gain"), _("Gain"), PUSH_CONSOLIDATE);
-
-   RefreshTrack(t);
 }
 
 void TrackPanel::OnTrackMenu(Track *t)

@@ -104,6 +104,7 @@ private:
    void GetMinimizeRect(const wxRect & rect, wxRect &dest) const;
    void GetSyncLockIconRect(const wxRect & rect, wxRect &dest) const;
 
+public:
    LWSlider * GainSlider(WaveTrack *t) const;
    LWSlider * PanSlider(WaveTrack *t) const;
 
@@ -198,12 +199,6 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
    virtual void ScrollIntoView(double pos);
    virtual void ScrollIntoView(int x);
 
-   virtual void OnTrackPan();
-   virtual void OnTrackPanLeft();
-   virtual void OnTrackPanRight();
-   virtual void OnTrackGain();
-   virtual void OnTrackGainDec();
-   virtual void OnTrackGainInc();
    virtual void OnTrackMenu(Track *t = NULL);
    virtual void OnVRulerMenu(Track *t, wxMouseEvent *pEvent = NULL);
    virtual void OnTrackClose();
@@ -506,9 +501,6 @@ protected:
    virtual void SplitStereo(bool stereo);
    virtual void OnMergeStereo(wxCommandEvent &event);
 
-   virtual void SetTrackPan(Track * t, LWSlider * s);
-   virtual void SetTrackGain(Track * t, LWSlider * s);
-
    virtual void RemoveTrack(Track * toRemove);
 
    // Find track info by coordinate
@@ -577,7 +569,10 @@ protected:
    virtual bool MoveClipToTrack(WaveClip *clip, WaveTrack* dst);
 
    TrackInfo mTrackInfo;
+ public:
+    TrackInfo *GetTrackInfo() { return &mTrackInfo; }
 
+protected:
    TrackPanelListener *mListener;
 
    TrackList *mTracks;

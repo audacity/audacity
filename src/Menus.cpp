@@ -2841,34 +2841,87 @@ void AudacityProject::PrevWindow()
    w->Raise();
 }
 
+//The following methods operate controls on specified tracks,
+//This will pop up the track panning dialog for specified track
 void AudacityProject::OnTrackPan()
 {
-   mTrackPanel->OnTrackPan();
+   Track *const track = mTrackPanel->GetFocusedTrack();
+   if (!track || (track->GetKind() != Track::Wave)) {
+      return;
+   }
+
+   LWSlider *slider = mTrackPanel->GetTrackInfo()->PanSlider
+      (static_cast<WaveTrack*>(track));
+   if (slider->ShowDialog()) {
+      SetTrackPan(track, slider);
+   }
 }
 
 void AudacityProject::OnTrackPanLeft()
 {
-   mTrackPanel->OnTrackPanLeft();
+   Track *const track = mTrackPanel->GetFocusedTrack();
+   if (!track || (track->GetKind() != Track::Wave)) {
+      return;
+   }
+
+   LWSlider *slider = mTrackPanel->GetTrackInfo()->PanSlider
+      (static_cast<WaveTrack*>(track));
+   slider->Decrease(1);
+   SetTrackPan(track, slider);
 }
 
 void AudacityProject::OnTrackPanRight()
 {
-   mTrackPanel->OnTrackPanRight();
+   Track *const track = mTrackPanel->GetFocusedTrack();
+   if (!track || (track->GetKind() != Track::Wave)) {
+      return;
+   }
+
+   LWSlider *slider = mTrackPanel->GetTrackInfo()->PanSlider
+      (static_cast<WaveTrack*>(track));
+   slider->Increase(1);
+   SetTrackPan(track, slider);
 }
 
 void AudacityProject::OnTrackGain()
 {
-   mTrackPanel->OnTrackGain();
+   /// This will pop up the track gain dialog for specified track
+   Track *const track = mTrackPanel->GetFocusedTrack();
+   if (!track || (track->GetKind() != Track::Wave)) {
+      return;
+   }
+
+   LWSlider *slider = mTrackPanel->GetTrackInfo()->GainSlider
+      (static_cast<WaveTrack*>(track));
+   if (slider->ShowDialog()) {
+      SetTrackGain(track, slider);
+   }
 }
 
 void AudacityProject::OnTrackGainInc()
 {
-   mTrackPanel->OnTrackGainInc();
+   Track *const track = mTrackPanel->GetFocusedTrack();
+   if (!track || (track->GetKind() != Track::Wave)) {
+      return;
+   }
+
+   LWSlider *slider = mTrackPanel->GetTrackInfo()->GainSlider
+      (static_cast<WaveTrack*>(track));
+   slider->Increase(1);
+   SetTrackGain(track, slider);
 }
 
 void AudacityProject::OnTrackGainDec()
 {
-   mTrackPanel->OnTrackGainDec();
+   Track *const track = mTrackPanel->GetFocusedTrack();
+   if (!track || (track->GetKind() != Track::Wave)) {
+      return;
+   }
+
+   LWSlider *slider = mTrackPanel->GetTrackInfo()->GainSlider
+      (static_cast<WaveTrack*>(track));
+   slider->Decrease(1);
+   SetTrackGain(track, slider);
 }
 
 void AudacityProject::OnTrackMenu()
