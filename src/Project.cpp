@@ -4916,6 +4916,49 @@ void AudacityProject::SetTrackPan(Track * track, LWSlider * slider)
    GetTrackPanel()->RefreshTrack(track);
 }
 
+/// Removes the specified track.  Called from HandleClosing.
+void AudacityProject::RemoveTrack(Track * toRemove)
+{
+   // If it was focused, reassign focus to the next or, if
+   // unavailable, the previous track.
+   if (mTrackPanel->GetFocusedTrack() == toRemove) {
+      Track *t = mTracks->GetNext(toRemove, true);
+      if (t == NULL) {
+         t = mTracks->GetPrev(toRemove, true);
+      }
+      mTrackPanel->SetFocusedTrack(t);  // It's okay if this is NULL
+   }
+
+   wxString name = toRemove->GetName();
+   Track *partner = toRemove->GetLink();
+
+   if (toRemove->GetKind() == Track::Wave)
+   {
+      // Update mixer board displayed tracks.
+      MixerBoard* pMixerBoard = this->GetMixerBoard();
+      if (pMixerBoard)
+         pMixerBoard->RemoveTrackCluster((WaveTrack*)toRemove); // Will remove partner shown in same cluster.
+   }
+
+   mTracks->Remove(toRemove, true);
+   if (partner) {
+      mTracks->Remove(partner, true);
+   }
+
+   if (mTracks->IsEmpty()) {
+      mTrackPanel->SetFocusedTrack(NULL);
+   }
+
+   PushState(
+      wxString::Format(_("Removed track '%s.'"),
+      name.c_str()),
+      _("Track Remove"));
+
+   TP_RedrawScrollbars();
+   TP_HandleResize();
+   GetTrackPanel()->Refresh(false);
+}
+
 void AudacityProject::HandleTrackMute(Track *t, const bool exclusive)
 {
    // "exclusive" mute means mute the chosen track and unmute all others.

@@ -342,6 +342,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    void SetTrackGain(Track * track, LWSlider * slider);
    void SetTrackPan(Track * track, LWSlider * slider);
 
+   void RemoveTrack(Track * toRemove);
 
    // "exclusive" mute means mute the chosen track and unmute all others.
    void HandleTrackMute(Track *t, const bool exclusive);

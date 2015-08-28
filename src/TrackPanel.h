@@ -201,7 +201,6 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
 
    virtual void OnTrackMenu(Track *t = NULL);
    virtual void OnVRulerMenu(Track *t, wxMouseEvent *pEvent = NULL);
-   virtual void OnTrackClose();
    virtual void OnTrackMoveUp();
    virtual void OnTrackMoveDown();
    virtual void OnTrackMoveTop();
@@ -500,8 +499,6 @@ protected:
    virtual void OnSplitStereoMono(wxCommandEvent &event);
    virtual void SplitStereo(bool stereo);
    virtual void OnMergeStereo(wxCommandEvent &event);
-
-   virtual void RemoveTrack(Track * toRemove);
 
    // Find track info by coordinate
    virtual Track *FindTrack(int mouseX, int mouseY, bool label, bool link,

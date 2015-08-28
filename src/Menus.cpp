@@ -2954,7 +2954,21 @@ void AudacityProject::OnTrackSolo()
 
 void AudacityProject::OnTrackClose()
 {
-   mTrackPanel->OnTrackClose();
+   Track *t = mTrackPanel->GetFocusedTrack();
+   if (!t)
+      return;
+
+   if (IsAudioActive())
+   {
+      this->TP_DisplayStatusMessage(_("Can't delete track with active audio"));
+      wxBell();
+      return;
+   }
+
+   RemoveTrack(t);
+
+   GetTrackPanel()->UpdateViewIfNoTracks();
+   GetTrackPanel()->Refresh(false);
 }
 
 void AudacityProject::OnTrackMoveUp()

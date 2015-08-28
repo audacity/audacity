@@ -5182,7 +5182,7 @@ void TrackPanel::HandleClosing(wxMouseEvent & event)
       mTrackInfo.DrawCloseBox(&dc, rect, false);
       if (closeRect.Contains(event.m_x, event.m_y)) {
          if (!IsUnsafe())
-            RemoveTrack(t);
+            GetProject()->RemoveTrack(t);
       }
       SetCapturedTrack( NULL );
    }
@@ -5210,48 +5210,6 @@ void TrackPanel::UpdateViewIfNoTracks()
       mListener->TP_RedrawScrollbars();
       mListener->TP_DisplayStatusMessage(wxT("")); //STM: Clear message if all tracks are removed
    }
-}
-
-/// Removes the specified track.  Called from HandleClosing.
-void TrackPanel::RemoveTrack(Track * toRemove)
-{
-   // If it was focused, reassign focus to the next or, if
-   // unavailable, the previous track.
-   if (GetFocusedTrack() == toRemove) {
-      Track *t = mTracks->GetNext(toRemove, true);
-      if (t == NULL) {
-         t = mTracks->GetPrev( toRemove, true );
-      }
-      SetFocusedTrack(t);  // It's okay if this is NULL
-   }
-
-   wxString name = toRemove->GetName();
-   Track *partner = toRemove->GetLink();
-
-   if (toRemove->GetKind() == Track::Wave)
-   {
-      // Update mixer board displayed tracks.
-      MixerBoard* pMixerBoard = this->GetMixerBoard();
-      if (pMixerBoard)
-         pMixerBoard->RemoveTrackCluster((WaveTrack*)toRemove); // Will remove partner shown in same cluster.
-   }
-
-   mTracks->Remove(toRemove, true);
-   if (partner) {
-      mTracks->Remove(partner, true);
-   }
-
-   if (mTracks->IsEmpty()) {
-      SetFocusedTrack( NULL );
-   }
-
-   MakeParentPushState(
-      wxString::Format(_("Removed track '%s.'"),
-      name.c_str()),
-      _("Track Remove"));
-   MakeParentRedrawScrollbars();
-   MakeParentResize();
-   Refresh(false);
 }
 
 void TrackPanel::HandlePopping(wxMouseEvent & event)
@@ -8500,39 +8458,6 @@ void TrackPanel::OnVRulerMenu(Track *t, wxMouseEvent *pEvent)
    mPopupMenuTarget = wt;
    PopupMenu(theMenu, x, y);
    mPopupMenuTarget = NULL;
-}
-
-void TrackPanel::OnTrackClose()
-{
-   Track *t = GetFocusedTrack();
-   if(!t) return;
-
-   if (IsUnsafe())
-   {
-      mListener->TP_DisplayStatusMessage( _( "Can't delete track with active audio" ) );
-      wxBell();
-      return;
-   }
-
-   RemoveTrack( t );
-
-   SetCapturedTrack( NULL );
-
-   // BG: There are no more tracks on screen
-   if( mTracks->IsEmpty() )
-   {
-      //BG: Set zoom to normal
-      mViewInfo->SetZoom(ZoomInfo::GetDefaultZoom());
-
-      //STM: Set selection to 0,0
-      //PRL: and default the rest of the selection information
-      mViewInfo->selectedRegion = SelectedRegion();
-
-      mListener->TP_RedrawScrollbars();
-      mListener->TP_DisplayStatusMessage( wxT( "" ) ); //STM: Clear message if all tracks are removed
-   }
-
-   Refresh( false );
 }
 
 void TrackPanel::OnTrackMoveUp()
