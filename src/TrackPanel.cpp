@@ -2906,6 +2906,12 @@ void TrackPanel::UpdateSelectionDisplay()
    DisplaySelection();
 }
 
+void TrackPanel::UpdateAccessibility()
+{
+   if (mAx)
+      mAx->Updated();
+}
+
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
 namespace {
    
@@ -5305,9 +5311,9 @@ void TrackPanel::HandleMutingSoloing(wxMouseEvent & event, bool solo)
       {
          // For either, MakeParentPushState to make the track state dirty.
          if(solo)
-            OnTrackSolo(event.ShiftDown(),t);
+            GetProject()->DoTrackSolo(t, event.ShiftDown());
          else
-            OnTrackMute(event.ShiftDown(),t);
+            GetProject()->DoTrackMute(t, event.ShiftDown());
       }
       SetCapturedTrack( NULL );
       // mTrackInfo.DrawMuteSolo(&dc, rect, t, false, solo);
@@ -8601,50 +8607,6 @@ void TrackPanel::OnVRulerMenu(Track *t, wxMouseEvent *pEvent)
    mPopupMenuTarget = wt;
    PopupMenu(theMenu, x, y);
    mPopupMenuTarget = NULL;
-}
-
-void TrackPanel::OnTrackMute(bool shiftDown, Track *t)
-{
-   if (!t) {
-      t = GetFocusedTrack();
-      if (!t || (t->GetKind() != Track::Wave))
-         return;
-   }
-   GetProject()->HandleTrackMute(t, shiftDown);
-
-   // Update mixer board, too.
-   MixerBoard* pMixerBoard = this->GetMixerBoard();
-   if (pMixerBoard)
-   {
-      pMixerBoard->UpdateMute(); // Update for all tracks.
-      pMixerBoard->UpdateSolo(); // Update for all tracks.
-   }
-
-   mAx->Updated();
-   Refresh(false);
-}
-
-
-void TrackPanel::OnTrackSolo(bool shiftDown, Track *t)
-{
-   if (!t)
-   {
-      t = GetFocusedTrack();
-      if (!t || (t->GetKind() != Track::Wave))
-         return;
-   }
-   GetProject()->HandleTrackSolo(t, shiftDown);
-
-   // Update mixer board, too.
-   MixerBoard* pMixerBoard = this->GetMixerBoard();
-   if (pMixerBoard)
-   {
-      pMixerBoard->UpdateMute(); // Update for all tracks.
-      pMixerBoard->UpdateSolo(); // Update for all tracks.
-   }
-
-   mAx->Updated();
-   Refresh(false);
 }
 
 void TrackPanel::OnTrackClose()

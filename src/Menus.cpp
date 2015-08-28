@@ -2878,12 +2878,25 @@ void AudacityProject::OnTrackMenu()
 
 void AudacityProject::OnTrackMute()
 {
-   mTrackPanel->OnTrackMute(false);
+   Track *t = NULL;
+   if (!t) {
+      t = mTrackPanel->GetFocusedTrack();
+      if (!t || (t->GetKind() != Track::Wave))
+         return;
+   }
+   DoTrackMute(t, false);
 }
 
 void AudacityProject::OnTrackSolo()
 {
-   mTrackPanel->OnTrackSolo(false);
+   Track *t = NULL;
+   if (!t)
+   {
+      t = mTrackPanel->GetFocusedTrack();
+      if (!t || (t->GetKind() != Track::Wave))
+         return;
+   }
+   DoTrackSolo(t, false);
 }
 
 void AudacityProject::OnTrackClose()

@@ -335,6 +335,9 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    bool IsSyncLocked();
    void SetSyncLock(bool flag);
 
+   void DoTrackMute(Track *pTrack, bool exclusive);
+   void DoTrackSolo(Track *pTrack, bool exclusive);
+
    // "exclusive" mute means mute the chosen track and unmute all others.
    void HandleTrackMute(Track *t, const bool exclusive);
 

@@ -4849,6 +4849,38 @@ void AudacityProject::SetSyncLock(bool flag)
    }
 }
 
+void AudacityProject::DoTrackMute(Track *t, bool exclusive)
+{
+   HandleTrackMute(t, exclusive);
+
+   // Update mixer board, too.
+   MixerBoard* pMixerBoard = this->GetMixerBoard();
+   if (pMixerBoard)
+   {
+      pMixerBoard->UpdateMute(); // Update for all tracks.
+      pMixerBoard->UpdateSolo(); // Update for all tracks.
+   }
+
+   mTrackPanel->UpdateAccessibility();
+   mTrackPanel->Refresh(false);
+}
+
+void AudacityProject::DoTrackSolo(Track *t, bool exclusive)
+{
+   HandleTrackSolo(t, exclusive);
+
+   // Update mixer board, too.
+   MixerBoard* pMixerBoard = this->GetMixerBoard();
+   if (pMixerBoard)
+   {
+      pMixerBoard->UpdateMute(); // Update for all tracks.
+      pMixerBoard->UpdateSolo(); // Update for all tracks.
+   }
+
+   mTrackPanel->UpdateAccessibility();
+   mTrackPanel->Refresh(false);
+}
+
 void AudacityProject::HandleTrackMute(Track *t, const bool exclusive)
 {
    // "exclusive" mute means mute the chosen track and unmute all others.

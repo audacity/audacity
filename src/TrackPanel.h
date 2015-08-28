@@ -206,8 +206,6 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
    virtual void OnTrackGainInc();
    virtual void OnTrackMenu(Track *t = NULL);
    virtual void OnVRulerMenu(Track *t, wxMouseEvent *pEvent = NULL);
-   virtual void OnTrackMute(bool shiftdown, Track *t = NULL);
-   virtual void OnTrackSolo(bool shiftdown, Track *t = NULL);
    virtual void OnTrackClose();
    virtual void OnTrackMoveUp();
    virtual void OnTrackMoveDown();
@@ -346,6 +344,9 @@ protected:
    virtual void ExtendSelection(int mouseXCoordinate, int trackLeftEdge,
                         Track *pTrack);
    virtual void UpdateSelectionDisplay();
+
+public:
+   virtual void UpdateAccessibility();
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
 public:
