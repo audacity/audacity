@@ -1875,6 +1875,7 @@ void TrackArtist::DrawClipWaveform(WaveTrack *track,
          }
       }
       else {
+         display.Allocate();
          const int pos = leftOffset - params.hiddenLeftOffset;
          useMin = display.min + pos;
          useMax = display.max + pos;
