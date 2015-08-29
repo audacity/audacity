@@ -104,6 +104,7 @@ private:
    void GetMinimizeRect(const wxRect & rect, wxRect &dest) const;
    void GetSyncLockIconRect(const wxRect & rect, wxRect &dest) const;
 
+public:
    LWSlider * GainSlider(WaveTrack *t) const;
    LWSlider * PanSlider(WaveTrack *t) const;
 
@@ -198,21 +199,8 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
    virtual void ScrollIntoView(double pos);
    virtual void ScrollIntoView(int x);
 
-   virtual void OnTrackPan();
-   virtual void OnTrackPanLeft();
-   virtual void OnTrackPanRight();
-   virtual void OnTrackGain();
-   virtual void OnTrackGainDec();
-   virtual void OnTrackGainInc();
    virtual void OnTrackMenu(Track *t = NULL);
    virtual void OnVRulerMenu(Track *t, wxMouseEvent *pEvent = NULL);
-   virtual void OnTrackMute(bool shiftdown, Track *t = NULL);
-   virtual void OnTrackSolo(bool shiftdown, Track *t = NULL);
-   virtual void OnTrackClose();
-   virtual void OnTrackMoveUp();
-   virtual void OnTrackMoveDown();
-   virtual void OnTrackMoveTop();
-   virtual void OnTrackMoveBottom();
    virtual Track * GetFirstSelectedTrack();
    virtual bool IsMouseCaptured();
 
@@ -347,6 +335,9 @@ protected:
                         Track *pTrack);
    virtual void UpdateSelectionDisplay();
 
+public:
+   virtual void UpdateAccessibility();
+
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
 public:
    void SnapCenterOnce (const WaveTrack *pTrack, bool up);
@@ -475,7 +466,6 @@ protected:
    virtual void OnSetFont(wxCommandEvent &event);
 
    virtual void OnMoveTrack    (wxCommandEvent &event);
-   virtual void MoveTrack(Track* target, int eventId);
    virtual void OnChangeOctave (wxCommandEvent &event);
    virtual void OnChannelChange(wxCommandEvent &event);
    virtual void OnSpectrogramSettings(wxCommandEvent &event);
@@ -504,11 +494,6 @@ protected:
    virtual void OnSplitStereoMono(wxCommandEvent &event);
    virtual void SplitStereo(bool stereo);
    virtual void OnMergeStereo(wxCommandEvent &event);
-
-   virtual void SetTrackPan(Track * t, LWSlider * s);
-   virtual void SetTrackGain(Track * t, LWSlider * s);
-
-   virtual void RemoveTrack(Track * toRemove);
 
    // Find track info by coordinate
    virtual Track *FindTrack(int mouseX, int mouseY, bool label, bool link,
@@ -576,7 +561,10 @@ protected:
    virtual bool MoveClipToTrack(WaveClip *clip, WaveTrack* dst);
 
    TrackInfo mTrackInfo;
+ public:
+    TrackInfo *GetTrackInfo() { return &mTrackInfo; }
 
+protected:
    TrackPanelListener *mListener;
 
    TrackList *mTracks;

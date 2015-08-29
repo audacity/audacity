@@ -89,6 +89,8 @@ struct AudioIOStartStreamOptions;
 class WaveTrackArray;
 class Regions;
 
+class LWSlider;
+
 AudacityProject *CreateNewAudacityProject();
 AUDACITY_DLL_API AudacityProject *GetActiveProject();
 void RedrawAllProjects();
@@ -334,6 +336,13 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 
    bool IsSyncLocked();
    void SetSyncLock(bool flag);
+
+   void DoTrackMute(Track *pTrack, bool exclusive);
+   void DoTrackSolo(Track *pTrack, bool exclusive);
+   void SetTrackGain(Track * track, LWSlider * slider);
+   void SetTrackPan(Track * track, LWSlider * slider);
+
+   void RemoveTrack(Track * toRemove);
 
    // "exclusive" mute means mute the chosen track and unmute all others.
    void HandleTrackMute(Track *t, const bool exclusive);

@@ -2906,6 +2906,12 @@ void TrackPanel::UpdateSelectionDisplay()
    DisplaySelection();
 }
 
+void TrackPanel::UpdateAccessibility()
+{
+   if (mAx)
+      mAx->Updated();
+}
+
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
 namespace {
    
@@ -5176,7 +5182,7 @@ void TrackPanel::HandleClosing(wxMouseEvent & event)
       mTrackInfo.DrawCloseBox(&dc, rect, false);
       if (closeRect.Contains(event.m_x, event.m_y)) {
          if (!IsUnsafe())
-            RemoveTrack(t);
+            GetProject()->RemoveTrack(t);
       }
       SetCapturedTrack( NULL );
    }
@@ -5204,48 +5210,6 @@ void TrackPanel::UpdateViewIfNoTracks()
       mListener->TP_RedrawScrollbars();
       mListener->TP_DisplayStatusMessage(wxT("")); //STM: Clear message if all tracks are removed
    }
-}
-
-/// Removes the specified track.  Called from HandleClosing.
-void TrackPanel::RemoveTrack(Track * toRemove)
-{
-   // If it was focused, reassign focus to the next or, if
-   // unavailable, the previous track.
-   if (GetFocusedTrack() == toRemove) {
-      Track *t = mTracks->GetNext(toRemove, true);
-      if (t == NULL) {
-         t = mTracks->GetPrev( toRemove, true );
-      }
-      SetFocusedTrack(t);  // It's okay if this is NULL
-   }
-
-   wxString name = toRemove->GetName();
-   Track *partner = toRemove->GetLink();
-
-   if (toRemove->GetKind() == Track::Wave)
-   {
-      // Update mixer board displayed tracks.
-      MixerBoard* pMixerBoard = this->GetMixerBoard();
-      if (pMixerBoard)
-         pMixerBoard->RemoveTrackCluster((WaveTrack*)toRemove); // Will remove partner shown in same cluster.
-   }
-
-   mTracks->Remove(toRemove, true);
-   if (partner) {
-      mTracks->Remove(partner, true);
-   }
-
-   if (mTracks->IsEmpty()) {
-      SetFocusedTrack( NULL );
-   }
-
-   MakeParentPushState(
-      wxString::Format(_("Removed track '%s.'"),
-      name.c_str()),
-      _("Track Remove"));
-   MakeParentRedrawScrollbars();
-   MakeParentResize();
-   Refresh(false);
 }
 
 void TrackPanel::HandlePopping(wxMouseEvent & event)
@@ -5305,9 +5269,9 @@ void TrackPanel::HandleMutingSoloing(wxMouseEvent & event, bool solo)
       {
          // For either, MakeParentPushState to make the track state dirty.
          if(solo)
-            OnTrackSolo(event.ShiftDown(),t);
+            GetProject()->DoTrackSolo(t, event.ShiftDown());
          else
-            OnTrackMute(event.ShiftDown(),t);
+            GetProject()->DoTrackMute(t, event.ShiftDown());
       }
       SetCapturedTrack( NULL );
       // mTrackInfo.DrawMuteSolo(&dc, rect, t, false, solo);
@@ -6582,7 +6546,11 @@ void TrackPanel::OnMouseEvent(wxMouseEvent & event)
 
    if (event.Leaving() && !event.ButtonIsDown(wxMOUSE_BTN_ANY))
    {
-      if (mMouseCapture != IsPanSliding && mMouseCapture != IsGainSliding)
+      // PRL:  was this test really needed?  It interfered with my refactoring
+      // that tried to eliminate those enum values.
+      // I think it was never true, that mouse capture was pan or gain sliding,
+      // but no mouse button was down.
+      // if (mMouseCapture != IsPanSliding && mMouseCapture != IsGainSliding)
       {
          SetCapturedTrack(NULL);
 #if defined(__WXMAC__)
@@ -8336,117 +8304,6 @@ void TrackPanel::ScrollIntoView(int x)
    ScrollIntoView(mViewInfo->PositionToTime(x, GetLeftOffset()));
 }
 
-//The following methods operate controls on specified tracks,
-//This will pop up the track panning dialog for specified track
-void TrackPanel::OnTrackPan()
-{
-   Track *t = GetFocusedTrack();
-   if (!t || (t->GetKind() != Track::Wave)) {
-      return;
-   }
-
-   LWSlider *slider = mTrackInfo.PanSlider((WaveTrack *) t);
-   if (slider->ShowDialog()) {
-      SetTrackPan(t, slider);
-   }
-}
-
-void TrackPanel::OnTrackPanLeft()
-{
-   Track *t = GetFocusedTrack();
-   if (!t || (t->GetKind() != Track::Wave)) {
-      return;
-   }
-
-   LWSlider *slider = mTrackInfo.PanSlider((WaveTrack *) t);
-   slider->Decrease(1);
-   SetTrackPan(t, slider);
-}
-
-void TrackPanel::OnTrackPanRight()
-{
-   Track *t = GetFocusedTrack();
-   if (!t || (t->GetKind() != Track::Wave)) {
-      return;
-   }
-
-   LWSlider *slider = mTrackInfo.PanSlider((WaveTrack *) t);
-   slider->Increase(1);
-   SetTrackPan(t, slider);
-}
-
-void TrackPanel::SetTrackPan(Track * t, LWSlider * s)
-{
-   wxASSERT(t);
-   if( t->GetKind() != Track::Wave )
-      return;
-   float newValue = s->Get();
-
-   WaveTrack *link = (WaveTrack *)mTracks->GetLink(t);
-   ((WaveTrack*)t)->SetPan(newValue);
-   if (link)
-      link->SetPan(newValue);
-
-   MakeParentPushState(_("Adjusted Pan"), _("Pan"), PUSH_CONSOLIDATE );
-
-   RefreshTrack(t);
-}
-
-/// This will pop up the track gain dialog for specified track
-void TrackPanel::OnTrackGain()
-{
-   Track *t = GetFocusedTrack();
-   if (!t || (t->GetKind() != Track::Wave)) {
-      return;
-   }
-
-   LWSlider *slider = mTrackInfo.GainSlider((WaveTrack *) t);
-   if (slider->ShowDialog()) {
-      SetTrackGain(t, slider);
-   }
-}
-
-void TrackPanel::OnTrackGainInc()
-{
-   Track *t = GetFocusedTrack();
-   if (!t || (t->GetKind() != Track::Wave)) {
-      return;
-   }
-
-   LWSlider *slider = mTrackInfo.GainSlider((WaveTrack *) t);
-   slider->Increase(1);
-   SetTrackGain(t, slider);
-}
-
-void TrackPanel::OnTrackGainDec()
-{
-   Track *t = GetFocusedTrack();
-   if (!t || (t->GetKind() != Track::Wave)) {
-      return;
-   }
-
-   LWSlider *slider = mTrackInfo.GainSlider((WaveTrack *) t);
-   slider->Decrease(1);
-   SetTrackGain(t, slider);
-}
-
-void TrackPanel::SetTrackGain(Track * t, LWSlider * s)
-{
-   wxASSERT(t);
-   if( t->GetKind() != Track::Wave )
-      return ;
-   float newValue = s->Get();
-
-   WaveTrack *link = (WaveTrack *)mTracks->GetLink(t);
-   ((WaveTrack*)t)->SetGain(newValue);
-   if (link)
-      link->SetGain(newValue);
-
-   MakeParentPushState(_("Adjusted gain"), _("Gain"), PUSH_CONSOLIDATE);
-
-   RefreshTrack(t);
-}
-
 void TrackPanel::OnTrackMenu(Track *t)
 {
    if(!t) {
@@ -8601,107 +8458,6 @@ void TrackPanel::OnVRulerMenu(Track *t, wxMouseEvent *pEvent)
    mPopupMenuTarget = wt;
    PopupMenu(theMenu, x, y);
    mPopupMenuTarget = NULL;
-}
-
-void TrackPanel::OnTrackMute(bool shiftDown, Track *t)
-{
-   if (!t) {
-      t = GetFocusedTrack();
-      if (!t || (t->GetKind() != Track::Wave))
-         return;
-   }
-   GetProject()->HandleTrackMute(t, shiftDown);
-
-   // Update mixer board, too.
-   MixerBoard* pMixerBoard = this->GetMixerBoard();
-   if (pMixerBoard)
-   {
-      pMixerBoard->UpdateMute(); // Update for all tracks.
-      pMixerBoard->UpdateSolo(); // Update for all tracks.
-   }
-
-   mAx->Updated();
-   Refresh(false);
-}
-
-
-void TrackPanel::OnTrackSolo(bool shiftDown, Track *t)
-{
-   if (!t)
-   {
-      t = GetFocusedTrack();
-      if (!t || (t->GetKind() != Track::Wave))
-         return;
-   }
-   GetProject()->HandleTrackSolo(t, shiftDown);
-
-   // Update mixer board, too.
-   MixerBoard* pMixerBoard = this->GetMixerBoard();
-   if (pMixerBoard)
-   {
-      pMixerBoard->UpdateMute(); // Update for all tracks.
-      pMixerBoard->UpdateSolo(); // Update for all tracks.
-   }
-
-   mAx->Updated();
-   Refresh(false);
-}
-
-void TrackPanel::OnTrackClose()
-{
-   Track *t = GetFocusedTrack();
-   if(!t) return;
-
-   if (IsUnsafe())
-   {
-      mListener->TP_DisplayStatusMessage( _( "Can't delete track with active audio" ) );
-      wxBell();
-      return;
-   }
-
-   RemoveTrack( t );
-
-   SetCapturedTrack( NULL );
-
-   // BG: There are no more tracks on screen
-   if( mTracks->IsEmpty() )
-   {
-      //BG: Set zoom to normal
-      mViewInfo->SetZoom(ZoomInfo::GetDefaultZoom());
-
-      //STM: Set selection to 0,0
-      //PRL: and default the rest of the selection information
-      mViewInfo->selectedRegion = SelectedRegion();
-
-      mListener->TP_RedrawScrollbars();
-      mListener->TP_DisplayStatusMessage( wxT( "" ) ); //STM: Clear message if all tracks are removed
-   }
-
-   Refresh( false );
-}
-
-void TrackPanel::OnTrackMoveUp()
-{
-   if (mTracks->CanMoveUp(GetFocusedTrack()))
-      MoveTrack(GetFocusedTrack(), OnMoveUpID);
-}
-
-void TrackPanel::OnTrackMoveDown()
-{
-   if (mTracks->CanMoveDown(GetFocusedTrack()))
-      MoveTrack(GetFocusedTrack(), OnMoveDownID);
-}
-
-void TrackPanel::OnTrackMoveTop()
-{
-   if (mTracks->CanMoveUp(GetFocusedTrack()))
-      MoveTrack(GetFocusedTrack(), OnMoveTopID);
-}
-
-void TrackPanel::OnTrackMoveBottom()
-{
-   if (mTracks->CanMoveDown(GetFocusedTrack()))
-      MoveTrack(GetFocusedTrack(), OnMoveBottomID);
 }
 
 
@@ -9473,67 +9229,21 @@ void TrackPanel::OnZoomFitVertical(wxCommandEvent &)
 
 void TrackPanel::OnMoveTrack(wxCommandEvent &event)
 {
-   wxASSERT(event.GetId() == OnMoveUpID || event.GetId() == OnMoveDownID ||
-            event.GetId() == OnMoveTopID || event.GetId() == OnMoveBottomID);
-
-   MoveTrack( mPopupMenuTarget, event.GetId() );
-}
-
-void TrackPanel::MoveTrack( Track* target, int eventId )
-{
-   wxString direction;
-
-   switch (eventId)
-   {
-   case OnMoveTopID :
-      /* i18n-hint: where the track is moving to.*/
-      direction = _("to Top");
-
-      while (mTracks->CanMoveUp(target)) {
-         if (mTracks->Move(target, true)) {
-            MixerBoard* pMixerBoard = this->GetMixerBoard(); // Update mixer board.
-            if (pMixerBoard && (target->GetKind() == Track::Wave))
-               pMixerBoard->MoveTrackCluster((WaveTrack*)target, true);
-         }
-      }
-      break;
-   case OnMoveBottomID :
-      /* i18n-hint: where the track is moving to.*/
-      direction = _("to Bottom");
-
-      while (mTracks->CanMoveDown(target)) {
-         if (mTracks->Move(target, false)) {
-            MixerBoard* pMixerBoard = this->GetMixerBoard(); // Update mixer board.
-            if (pMixerBoard && (target->GetKind() == Track::Wave))
-               pMixerBoard->MoveTrackCluster((WaveTrack*)target, false);
-         }
-      }
-      break;
+   AudacityProject::MoveChoice choice;
+   switch (event.GetId()) {
    default:
-      bool bUp = (OnMoveUpID == eventId);
-      /* i18n-hint: a direction.*/
-      direction = bUp ? _("Up") : _("Down");
-
-      if (mTracks->Move(target, bUp)) {
-         MixerBoard* pMixerBoard = this->GetMixerBoard();
-         if (pMixerBoard && (target->GetKind() == Track::Wave)) {
-            pMixerBoard->MoveTrackCluster((WaveTrack*)target, bUp);
-         }
-      }
+      wxASSERT(false);
+   case OnMoveUpID:
+      choice = AudacityProject::OnMoveUpID; break;
+   case OnMoveDownID:
+      choice = AudacityProject::OnMoveDownID; break;
+   case OnMoveTopID:
+      choice = AudacityProject::OnMoveTopID; break;
+   case OnMoveBottomID:
+      choice = AudacityProject::OnMoveBottomID; break;
    }
 
-   /* i18n-hint: Past tense of 'to move', as in 'moved audio track up'.*/
-   wxString longDesc = (_("Moved"));
-   /* i18n-hint: The direction of movement will be up, down, to top or to bottom.. */
-   wxString shortDesc = (_("Move Track"));
-
-   longDesc = (wxString::Format(wxT("%s '%s' %s"), longDesc.c_str(),
-                                target->GetName().c_str(), direction.c_str()));
-   shortDesc = (wxString::Format(wxT("%s %s"), shortDesc.c_str(), direction.c_str()));
-
-   MakeParentPushState(longDesc, shortDesc);
-
-   Refresh(false);
+   GetProject()->MoveTrack(mPopupMenuTarget, choice);
 }
 
 /// This only applies to MIDI tracks.  Presumably, it shifts the

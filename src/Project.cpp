@@ -120,6 +120,7 @@ scroll information.  It also has some status flags.
 #include "effects/Effect.h"
 #include "prefs/PrefsDialog.h"
 #include "widgets/LinkingHtmlWindow.h"
+#include "widgets/ASlider.h"
 #include "widgets/ErrorDialog.h"
 #include "widgets/Ruler.h"
 #include "widgets/Warning.h"
@@ -4847,6 +4848,115 @@ void AudacityProject::SetSyncLock(bool flag)
       if (GetTrackPanel())
          GetTrackPanel()->Refresh(false);
    }
+}
+
+void AudacityProject::DoTrackMute(Track *t, bool exclusive)
+{
+   HandleTrackMute(t, exclusive);
+
+   // Update mixer board, too.
+   MixerBoard* pMixerBoard = this->GetMixerBoard();
+   if (pMixerBoard)
+   {
+      pMixerBoard->UpdateMute(); // Update for all tracks.
+      pMixerBoard->UpdateSolo(); // Update for all tracks.
+   }
+
+   mTrackPanel->UpdateAccessibility();
+   mTrackPanel->Refresh(false);
+}
+
+void AudacityProject::DoTrackSolo(Track *t, bool exclusive)
+{
+   HandleTrackSolo(t, exclusive);
+
+   // Update mixer board, too.
+   MixerBoard* pMixerBoard = this->GetMixerBoard();
+   if (pMixerBoard)
+   {
+      pMixerBoard->UpdateMute(); // Update for all tracks.
+      pMixerBoard->UpdateSolo(); // Update for all tracks.
+   }
+
+   mTrackPanel->UpdateAccessibility();
+   mTrackPanel->Refresh(false);
+}
+
+void AudacityProject::SetTrackGain(Track * track, LWSlider * slider)
+{
+   wxASSERT(track);
+   if (track->GetKind() != Track::Wave)
+      return;
+   float newValue = slider->Get();
+
+   WaveTrack *const link = static_cast<WaveTrack*>(mTracks->GetLink(track));
+   static_cast<WaveTrack*>(track)->SetGain(newValue);
+   if (link)
+      link->SetGain(newValue);
+
+   PushState(_("Adjusted gain"), _("Gain"), PUSH_CONSOLIDATE);
+
+   GetTrackPanel()->RefreshTrack(track);
+}
+
+void AudacityProject::SetTrackPan(Track * track, LWSlider * slider)
+{
+   wxASSERT(track);
+   if (track->GetKind() != Track::Wave)
+      return;
+   float newValue = slider->Get();
+
+   WaveTrack *const link = static_cast<WaveTrack*>(mTracks->GetLink(track));
+   static_cast<WaveTrack*>(track)->SetPan(newValue);
+   if (link)
+      link->SetPan(newValue);
+
+   PushState(_("Adjusted Pan"), _("Pan"), PUSH_CONSOLIDATE);
+
+   GetTrackPanel()->RefreshTrack(track);
+}
+
+/// Removes the specified track.  Called from HandleClosing.
+void AudacityProject::RemoveTrack(Track * toRemove)
+{
+   // If it was focused, reassign focus to the next or, if
+   // unavailable, the previous track.
+   if (mTrackPanel->GetFocusedTrack() == toRemove) {
+      Track *t = mTracks->GetNext(toRemove, true);
+      if (t == NULL) {
+         t = mTracks->GetPrev(toRemove, true);
+      }
+      mTrackPanel->SetFocusedTrack(t);  // It's okay if this is NULL
+   }
+
+   wxString name = toRemove->GetName();
+   Track *partner = toRemove->GetLink();
+
+   if (toRemove->GetKind() == Track::Wave)
+   {
+      // Update mixer board displayed tracks.
+      MixerBoard* pMixerBoard = this->GetMixerBoard();
+      if (pMixerBoard)
+         pMixerBoard->RemoveTrackCluster((WaveTrack*)toRemove); // Will remove partner shown in same cluster.
+   }
+
+   mTracks->Remove(toRemove, true);
+   if (partner) {
+      mTracks->Remove(partner, true);
+   }
+
+   if (mTracks->IsEmpty()) {
+      mTrackPanel->SetFocusedTrack(NULL);
+   }
+
+   PushState(
+      wxString::Format(_("Removed track '%s.'"),
+      name.c_str()),
+      _("Track Remove"));
+
+   TP_RedrawScrollbars();
+   TP_HandleResize();
+   GetTrackPanel()->Refresh(false);
 }
 
 void AudacityProject::HandleTrackMute(Track *t, const bool exclusive)
