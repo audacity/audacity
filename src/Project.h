@@ -406,6 +406,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    virtual void TP_ScrollRight();
    virtual void TP_ScrollWindow(double scrollto);
    virtual void TP_ScrollUpDown(int delta);
+   virtual void TP_HandleResize();
 
    // ToolBar
 

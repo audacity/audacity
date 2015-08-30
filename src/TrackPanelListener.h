@@ -34,6 +34,7 @@ class AUDACITY_DLL_API TrackPanelListener {
    virtual void TP_ScrollRight() = 0;
    virtual void TP_ScrollWindow(double scrollto) = 0;
    virtual void TP_ScrollUpDown(int delta) = 0;
+   virtual void TP_HandleResize() = 0;
 };
 
 #endif

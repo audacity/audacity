@@ -4623,6 +4623,11 @@ void AudacityProject::TP_RedrawScrollbars()
    FixScrollbars();
 }
 
+void AudacityProject::TP_HandleResize()
+{
+   HandleResize();
+}
+
 void AudacityProject::GetPlayRegion(double* playRegionStart,
                                     double *playRegionEnd)
 {
