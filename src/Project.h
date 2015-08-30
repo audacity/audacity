@@ -399,7 +399,6 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    virtual ToolsToolBar * TP_GetToolsToolBar();
    virtual ControlToolBar * TP_GetControlToolBar();
 
-   virtual void TP_OnPlayKey();
    virtual void TP_PushState(wxString longDesc, wxString shortDesc,
                              int flags);
    virtual void TP_ModifyState(bool bWantsAutoSave);    // if true, writes auto-save file. Should set only if you really want the state change restored after

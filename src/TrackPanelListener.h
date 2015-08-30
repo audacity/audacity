@@ -27,7 +27,6 @@ class AUDACITY_DLL_API TrackPanelListener {
    virtual ToolsToolBar * TP_GetToolsToolBar() = 0;
    virtual ControlToolBar * TP_GetControlToolBar() = 0;
 
-   virtual void TP_OnPlayKey() = 0;
    virtual void TP_PushState(wxString shortDesc, wxString longDesc,
                             int flags = PUSH_AUTOSAVE) = 0;
    virtual void TP_ModifyState(bool bWantsAutoSave) = 0;    // if true, writes auto-save file. Should set only if you really want the state change restored after

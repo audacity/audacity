@@ -4619,12 +4619,6 @@ int AudacityProject::TP_GetCurrentTool()
 
 
 // TrackPanel callback method
-void AudacityProject::TP_OnPlayKey()
-{
-   OnPlayStop();
-}
-
-// TrackPanel callback method
 void AudacityProject::TP_PushState(wxString desc, wxString shortDesc,
                                    int flags)
 {
