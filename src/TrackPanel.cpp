@@ -1536,11 +1536,6 @@ void TrackPanel::MakeParentRedrawScrollbars()
    mListener->TP_RedrawScrollbars();
 }
 
-void TrackPanel::MakeParentResize()
-{
-   mListener->TP_HandleResize();
-}
-
 void TrackPanel::HandleEscapeKey(bool down)
 {
    if (!down)

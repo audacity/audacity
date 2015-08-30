@@ -395,9 +395,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    virtual void TP_DisplaySelection();
    virtual void TP_DisplayStatusMessage(wxString msg);
 
-   virtual int TP_GetCurrentTool();
    virtual ToolsToolBar * TP_GetToolsToolBar();
-   virtual ControlToolBar * TP_GetControlToolBar();
 
    virtual void TP_PushState(wxString longDesc, wxString shortDesc,
                              int flags);
@@ -408,7 +406,6 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    virtual void TP_ScrollRight();
    virtual void TP_ScrollWindow(double scrollto);
    virtual void TP_ScrollUpDown(int delta);
-   virtual void TP_HandleResize();
 
    // ToolBar
 

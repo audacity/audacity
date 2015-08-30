@@ -459,7 +459,6 @@ protected:
                             int flags = PUSH_AUTOSAVE);
    virtual void MakeParentModifyState(bool bWantsAutoSave);    // if true, writes auto-save file. Should set only if you really want the state change restored after
                                                                // a crash, as it can take many seconds for large (eg. 10 track-hours) projects
-   virtual void MakeParentResize();
 
    virtual void OnSetName(wxCommandEvent &event);
 

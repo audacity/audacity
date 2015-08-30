@@ -4175,16 +4175,6 @@ ControlToolBar *AudacityProject::GetControlToolBar()
            NULL);
 }
 
-//JKC: same as above *except* this a virtual function that
-//can be called from the track panel callback.
-//It seems a little crazy doing this but TrackArtist
-//needs to get information about the tool bar state and
-//I don't currently see a cleaner way.
-ControlToolBar * AudacityProject::TP_GetControlToolBar()
-{
-   return GetControlToolBar();
-}
-
 ToolsToolBar * AudacityProject::TP_GetToolsToolBar()
 {
    return GetToolsToolBar();
@@ -4602,22 +4592,6 @@ void AudacityProject::RefreshTPTrack(Track* pTrk, bool refreshbacking /*= true*/
 }
 
 
-// TrackPanel callback methods
-
-int AudacityProject::TP_GetCurrentTool()
-{
-   //ControlToolBar might be NULL--especially on shutdown.
-   //Make sure it isn't and if it is, return a reasonable value
-   ToolsToolBar *ctb = GetToolsToolBar();
-   if (ctb)
-      return GetToolsToolBar()->GetCurrentTool();
-   else
-      return 0;
-}
-
-
-
-
 // TrackPanel callback method
 void AudacityProject::TP_PushState(wxString desc, wxString shortDesc,
                                    int flags)
@@ -4647,11 +4621,6 @@ void AudacityProject::TP_ScrollRight()
 void AudacityProject::TP_RedrawScrollbars()
 {
    FixScrollbars();
-}
-
-void AudacityProject::TP_HandleResize()
-{
-   HandleResize();
 }
 
 void AudacityProject::GetPlayRegion(double* playRegionStart,
@@ -4949,7 +4918,7 @@ void AudacityProject::RemoveTrack(Track * toRemove)
       _("Track Remove"));
 
    TP_RedrawScrollbars();
-   TP_HandleResize();
+   HandleResize();
    GetTrackPanel()->Refresh(false);
 }
 
