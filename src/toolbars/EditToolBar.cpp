@@ -56,6 +56,8 @@
 #include "../UndoManager.h"
 #include "../widgets/AButton.h"
 
+#include "../Experimental.h"
+
 IMPLEMENT_CLASS(EditToolBar, ToolBar);
 
 const int BUTTON_WIDTH = 27;

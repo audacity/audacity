@@ -33,6 +33,8 @@
 #include "Prefs.h"
 #include "effects/TimeWarper.h"
 
+#include "Experimental.h"
+
 #ifdef SONIFY
 #include "portmidi.h"
 

@@ -26,6 +26,8 @@ and TimeTrack.
 #include "Project.h"
 #include "DirManager.h"
 
+#include "Experimental.h"
+
 #ifdef _MSC_VER
 //Disable truncation warnings
 #pragma warning( disable : 4786 )

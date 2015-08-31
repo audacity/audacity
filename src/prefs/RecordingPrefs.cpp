@@ -30,6 +30,8 @@
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 
+#include "../Experimental.h"
+
 using std::min;
 
 RecordingPrefs::RecordingPrefs(wxWindow * parent)

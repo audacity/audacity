@@ -30,6 +30,8 @@
 
 #include <algorithm>
 
+#include "../Experimental.h"
+
 SpectrumPrefs::SpectrumPrefs(wxWindow * parent, WaveTrack *wt)
 :  PrefsPanel(parent, wt ? _("Spectrogram Settings") : _("Spectrograms"))
 , mWt(wt)

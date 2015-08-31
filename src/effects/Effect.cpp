@@ -54,6 +54,8 @@ greater use in future.
 #include <Cocoa/Cocoa.h>
 #endif
 
+#include "../Experimental.h"
+
 static const int kDummyID = 20000;
 static const int kSaveAsID = 20001;
 static const int kImportID = 20002;

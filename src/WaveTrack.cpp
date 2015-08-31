@@ -55,6 +55,8 @@ Track classes.
 #include "prefs/SpectrumPrefs.h"
 #include "prefs/WaveformPrefs.h"
 
+#include "Experimental.h"
+
 using std::max;
 
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY

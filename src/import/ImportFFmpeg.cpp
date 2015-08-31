@@ -31,6 +31,8 @@ Licensed under the GNU General Public License v2 or later
 #include <wx/window.h>
 #endif
 
+#include "../Experimental.h"
+
 
 #define DESC _("FFmpeg-compatible files")
 

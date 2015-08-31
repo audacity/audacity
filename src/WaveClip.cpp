@@ -38,6 +38,9 @@
 #include "prefs/SpectrogramSettings.h"
 
 #include <wx/listimpl.cpp>
+
+#include "Experimental.h"
+
 WX_DEFINE_LIST(WaveClipList);
 
 class WaveCache {
