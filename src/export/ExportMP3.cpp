@@ -316,9 +316,9 @@ ExportMP3Options::ExportMP3Options(wxWindow *parent, int WXUNUSED(format))
    InitMP3_Statics();
 
    mSetRate = gPrefs->Read(wxT("/FileFormats/MP3SetRate"), PRESET_STANDARD);
-   mVbrRate = gPrefs->Read(wxT("/FileFormats/MP3VbrRate"), QUALITY_4);
-   mAbrRate = gPrefs->Read(wxT("/FileFormats/MP3AbrRate"), 128);
-   mCbrRate = gPrefs->Read(wxT("/FileFormats/MP3CbrRate"), 128);
+   mVbrRate = gPrefs->Read(wxT("/FileFormats/MP3VbrRate"), QUALITY_2);
+   mAbrRate = gPrefs->Read(wxT("/FileFormats/MP3AbrRate"), 192);
+   mCbrRate = gPrefs->Read(wxT("/FileFormats/MP3CbrRate"), 192);
 
    ShuttleGui S(this, eIsCreatingFromPrefs);
    PopulateOrExchange(S);
@@ -347,7 +347,7 @@ void ExportMP3Options::PopulateOrExchange(ShuttleGui & S)
                S.AddPrompt(_("Bit Rate Mode:"));
                S.StartHorizontalLay();
                {
-                  S.StartRadioButtonGroup(wxT("/FileFormats/MP3RateMode"), MODE_CBR);
+                  S.StartRadioButtonGroup(wxT("/FileFormats/MP3RateMode"), MODE_SET);
                   {
                      mSET = S.Id(ID_SET).TieRadioButton(_("Preset"), MODE_SET);
                      mVBR = S.Id(ID_VBR).TieRadioButton(_("Variable"), MODE_VBR);
@@ -1557,6 +1557,7 @@ public:
 
    ExportMP3();
    void Destroy();
+   bool CheckFileName(wxFileName & filename, int format);
 
    // Required
 
@@ -1597,6 +1598,21 @@ ExportMP3::ExportMP3()
 void ExportMP3::Destroy()
 {
    delete this;
+}
+
+bool ExportMP3::CheckFileName(wxFileName & WXUNUSED(filename), int WXUNUSED(format))
+{
+   MP3Exporter exporter;
+
+   if (!exporter.LoadLibrary(wxTheApp->GetTopWindow(), MP3Exporter::Maybe)) {
+      wxMessageBox(_("Could not open MP3 encoding library!"));
+      gPrefs->Write(wxT("/MP3/MP3LibPath"), wxString(wxT("")));
+      gPrefs->Flush();
+
+      return false;
+   }
+
+   return true;
 }
 
 int ExportMP3::Export(AudacityProject *project,

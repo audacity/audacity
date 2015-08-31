@@ -30,11 +30,13 @@
 class wxTextFile;
 class DirManager;
 class UndoStack;
+class Track;
 class LabelTrack;
 class TimeTrack;
 class WaveTrack;
 class AudacityProject;
 
+WX_DEFINE_USER_EXPORTED_ARRAY(Track*, TrackArray, class AUDACITY_DLL_API);
 WX_DEFINE_USER_EXPORTED_ARRAY(WaveTrack*, WaveTrackArray, class AUDACITY_DLL_API);
 
 #if defined(USE_MIDI)
@@ -159,7 +161,7 @@ class AUDACITY_DLL_API Track: public XMLTagHandler
    bool GetLinked  () const { return mLinked;   }
    bool GetSolo    () const { return mSolo;     }
 
-   void SetSelected(bool s) { mSelected = s; }
+   virtual void SetSelected(bool s);
    void SetMute    (bool m) { mMute     = m; }
    void SetLinked  (bool l);
    void SetSolo    (bool s) { mSolo     = s; }

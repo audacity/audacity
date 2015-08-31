@@ -156,6 +156,7 @@ audio tracks.
 #include <wx/dc.h>
 #include <wx/dcmemory.h>
 #include <wx/gdicmn.h>
+#include <wx/graphics.h>
 #include <wx/image.h>
 #include <wx/pen.h>
 #include <wx/log.h>
@@ -325,10 +326,6 @@ void TrackArtist::DrawTracks(TrackList * tracks,
                              bool bigPoints,
                              bool drawSliders)
 {
-#if defined(__WXMAC__)
-   dc.GetGraphicsContext()->SetAntialiasMode(wxANTIALIAS_NONE);
-#endif
-
    wxRect trackRect = rect;
    wxRect stereoTrackRect;
    TrackListIterator iter(tracks);
@@ -459,6 +456,11 @@ void TrackArtist::DrawTrack(const Track * t,
 
       bool muted = (hasSolo || t->GetMute()) && !t->GetSolo();
 
+#if defined(__WXMAC__)
+      wxAntialiasMode aamode = dc.GetGraphicsContext()->GetAntialiasMode();
+      dc.GetGraphicsContext()->SetAntialiasMode(wxANTIALIAS_NONE);
+#endif
+
       switch (wt->GetDisplay()) {
       case WaveTrack::Waveform:
          DrawWaveform(wt, dc, rect, selectedRegion, zoomInfo,
@@ -468,6 +470,11 @@ void TrackArtist::DrawTrack(const Track * t,
          DrawSpectrum(wt, dc, rect, selectedRegion, zoomInfo);
          break;
       }
+
+#if defined(__WXMAC__)
+      dc.GetGraphicsContext()->SetAntialiasMode(aamode);
+#endif
+
       if (mbShowTrackNameInWaveform &&
           // Exclude right channel of stereo track 
           !(!wt->GetLinked() && wt->GetLink())) {
@@ -503,7 +510,7 @@ void TrackArtist::DrawVRuler(Track *t, wxDC * dc, wxRect & rect)
    // But give it a beveled area
    if (kind == Track::Label) {
       wxRect bev = rect;
-      bev.Inflate(-1, -1);
+      bev.Inflate(-1, 0);
       bev.width += 1;
       AColor::BevelTrackInfo(*dc, true, bev);
 
@@ -513,7 +520,7 @@ void TrackArtist::DrawVRuler(Track *t, wxDC * dc, wxRect & rect)
    // Time tracks
    if (kind == Track::Time) {
       wxRect bev = rect;
-      bev.Inflate(-1, -1);
+      bev.Inflate(-1, 0);
       bev.width += 1;
       AColor::BevelTrackInfo(*dc, true, bev);
 
@@ -537,7 +544,7 @@ void TrackArtist::DrawVRuler(Track *t, wxDC * dc, wxRect & rect)
    // The ruler needs a bevelled surround.
    if (kind == Track::Wave) {
       wxRect bev = rect;
-      bev.Inflate(-1, -1);
+      bev.Inflate(-1, 0);
       bev.width += 1;
       AColor::BevelTrackInfo(*dc, true, bev);
 
@@ -566,13 +573,11 @@ void TrackArtist::DrawVRuler(Track *t, wxDC * dc, wxRect & rect)
       dc->SetBrush(*wxWHITE_BRUSH);
       wxRect bev = rect;
       bev.x++;
-      bev.y++;
       bev.width--;
-      bev.height--;
       dc->DrawRectangle(bev);
 
-      rect.y += 2;
-      rect.height -= 2;
+      rect.y += 1;
+      rect.height -= 1;
 
       //int bottom = GetBottom((NoteTrack *) t, rect);
       NoteTrack *track = (NoteTrack *) t;
@@ -671,7 +676,7 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
       min = tt->GetRangeLower() * 100.0;
       max = tt->GetRangeUpper() * 100.0;
 
-      vruler->SetBounds(rect.x, rect.y+1, rect.x + rect.width, rect.y + rect.height-1);
+      vruler->SetBounds(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height-1);
       vruler->SetOrientation(wxVERTICAL);
       vruler->SetRange(max, min);
       vruler->SetFormat((tt->GetDisplayLog()) ? Ruler::RealLogFormat : Ruler::RealFormat);
@@ -698,10 +703,12 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
 
             float min, max;
             wt->GetDisplayBounds(&min, &max);
-            if (wt->GetLastScaleType() != scaleType)
+            if (wt->GetLastScaleType() != scaleType &&
+                wt->GetLastScaleType() != -1)
             {
                // do a translation into the linear space
-               wt->SetLastScaleType(scaleType);
+               wt->SetLastScaleType();
+               wt->SetLastdBRange();
                float sign = (min >= 0 ? 1 : -1);
                if (min != 0.) {
                   min = DB_TO_LINEAR(fabs(min) * dBRange - dBRange);
@@ -720,7 +727,7 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
                wt->SetDisplayBounds(min, max);
             }
 
-            vruler->SetBounds(rect.x, rect.y + 1, rect.x + rect.width, rect.y + rect.height - 1);
+            vruler->SetBounds(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height - 1);
             vruler->SetOrientation(wxVERTICAL);
             vruler->SetRange(max, min);
             vruler->SetFormat(Ruler::RealFormat);
@@ -736,11 +743,14 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
 
             float min, max;
             wt->GetDisplayBounds(&min, &max);
+            float lastdBRange;
 
-            if (wt->GetLastScaleType() != scaleType)
+            if (wt->GetLastScaleType() != scaleType &&
+                wt->GetLastScaleType() != -1)
             {
                // do a translation into the dB space
-               wt->SetLastScaleType(scaleType);
+               wt->SetLastScaleType();
+               wt->SetLastdBRange();
                float sign = (min >= 0 ? 1 : -1);
                if (min != 0.) {
                   min = (LINEAR_TO_DB(fabs(min)) + dBRange) / dBRange;
@@ -757,6 +767,30 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
                   max *= sign;
                }
                wt->SetDisplayBounds(min, max);
+            }
+            else if (dBRange != (lastdBRange = wt->GetLastdBRange())) {
+               wt->SetLastdBRange();
+               // Remap the max of the scale
+               const float sign = (max >= 0 ? 1 : -1);
+               float newMax = max;
+               if (max != 0.) {
+
+// Ugh, duplicating from TrackPanel.cpp
+#define ZOOMLIMIT 0.001f
+
+                  const float extreme = LINEAR_TO_DB(2);
+                  // recover dB value of max
+                  const float dB = std::min(extreme, (float(fabs(max)) * lastdBRange - lastdBRange));
+                  // find new scale position, but old max may get trimmed if the db limit rises
+                  // Don't trim it to zero though, but leave max and limit distinct
+                  newMax = sign * std::max(ZOOMLIMIT, (dBRange + dB) / dBRange);
+                  // Adjust the min of the scale if we can,
+                  // so the db Limit remains where it was on screen, but don't violate extremes
+                  if (min != 0.)
+                     min = std::max(-extreme, newMax * min / max);
+               }
+
+               wt->SetDisplayBounds(min, newMax);
             }
 
             if (max > 0) {
@@ -782,7 +816,7 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
                   botval = -((1 - min) * dBRange);
                }
 
-               vruler->SetBounds(rect.x, rect.y + top + 1, rect.x + rect.width, rect.y + bot - 1);
+               vruler->SetBounds(rect.x, rect.y + top, rect.x + rect.width, rect.y + bot - 1);
                vruler->SetOrientation(wxVERTICAL);
                vruler->SetRange(topval, botval);
             }
@@ -815,7 +849,7 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
             we will use Hz if maxFreq is < 2000, otherwise we represent kHz,
             and append to the numbers a "k"
             */
-            vruler->SetBounds(rect.x, rect.y + 1, rect.x + rect.width, rect.y + rect.height - 1);
+            vruler->SetBounds(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height - 1);
             vruler->SetOrientation(wxVERTICAL);
             vruler->SetFormat(Ruler::RealFormat);
             vruler->SetLabelEdges(true);
@@ -853,7 +887,7 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
             we will use Hz if maxFreq is < 2000, otherwise we represent kHz,
             and append to the numbers a "k"
             */
-            vruler->SetBounds(rect.x, rect.y + 1, rect.x + rect.width, rect.y + rect.height - 1);
+            vruler->SetBounds(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height - 1);
             vruler->SetOrientation(wxVERTICAL);
             vruler->SetFormat(Ruler::IntFormat);
             vruler->SetLabelEdges(true);
@@ -873,7 +907,7 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
    // The note track isn't drawing a ruler at all!
    // But it needs to!
    else if (t->GetKind() == Track::Note) {
-      vruler->SetBounds(rect.x, rect.y+1, rect.x + 1, rect.y + rect.height-1);
+      vruler->SetBounds(rect.x, rect.y, rect.x + 1, rect.y + rect.height-1);
       vruler->SetOrientation(wxVERTICAL);
    }
 #endif // USE_MIDI
@@ -946,7 +980,10 @@ float ValueOfPixel(int yy, int height, bool offset,
    bool dB, double dBRange, float zoomMin, float zoomMax)
 {
    wxASSERT(height > 0);
-   float v = zoomMax - (yy / (float)height) * (zoomMax - zoomMin);
+   // Map 0 to max and height - 1 (not height) to min
+   float v =
+      height == 1 ? (zoomMin + zoomMax) / 2 :
+      zoomMax - (yy / (float)(height - 1)) * (zoomMax - zoomMin);
    if (offset) {
       if (v > 0.0)
          v += .5;
@@ -1662,7 +1699,7 @@ void FindWavePortions
    // the fisheye.
 
    ZoomInfo::Intervals intervals;
-   zoomInfo.FindIntervals(params.rate, intervals, rect.x);
+   zoomInfo.FindIntervals(params.rate, intervals, rect.width, rect.x);
    ZoomInfo::Intervals::const_iterator it = intervals.begin(), end = intervals.end(), prev;
    wxASSERT(it != end && it->position == rect.x);
    const int rightmost = rect.x + rect.width;
@@ -1758,21 +1795,6 @@ void TrackArtist::DrawClipWaveform(WaveTrack *track,
 
    const double pps =
       averagePixelsPerSample * rate;
-   if (!params.showIndividualSamples) {
-      // The WaveClip class handles the details of computing the shape
-      // of the waveform.  The only way GetWaveDisplay will fail is if
-      // there's a serious error, like some of the waveform data can't
-      // be loaded.  So if the function returns false, we can just exit.
-
-      // Note that we compute the full width display even if there is a
-      // fisheye hiding part of it, because of the caching.  If the
-      // fisheye moves over the background, there is then less to do when
-      // redrawing.
-
-      if (!clip->GetWaveDisplay(display,
-            t0, pps, isLoadingOD))
-         return;
-   }
 
    // For each portion separately, we will decide to draw
    // it as min/max/rms or as individual samples.
@@ -1784,6 +1806,32 @@ void TrackArtist::DrawClipWaveform(WaveTrack *track,
    const double threshold1 = 0.5 * rate;
    // Require at least 3 pixels per sample for drawing the draggable points.
    const double threshold2 = 3 * rate;
+
+   {
+      bool showIndividualSamples = false;
+      for (unsigned ii = 0; !showIndividualSamples && ii < nPortions; ++ii) {
+         const WavePortion &portion = portions[ii];
+         showIndividualSamples =
+            !portion.inFisheye && portion.averageZoom > threshold1;
+      }
+
+      if (!showIndividualSamples) {
+         // The WaveClip class handles the details of computing the shape
+         // of the waveform.  The only way GetWaveDisplay will fail is if
+         // there's a serious error, like some of the waveform data can't
+         // be loaded.  So if the function returns false, we can just exit.
+
+         // Note that we compute the full width display even if there is a
+         // fisheye hiding part of it, because of the caching.  If the
+         // fisheye moves over the background, there is then less to do when
+         // redrawing.
+
+         if (!clip->GetWaveDisplay(display,
+            t0, pps, isLoadingOD))
+            return;
+      }
+   }
+
    for (unsigned ii = 0; ii < nPortions; ++ii) {
       WavePortion &portion = portions[ii];
       const bool showIndividualSamples = portion.averageZoom > threshold1;
@@ -3282,12 +3330,12 @@ void TrackArtist::DrawBackgroundWithSelection(wxDC *dc, const wxRect &rect,
          dc->SetBrush(unselBrush);
          dc->DrawRectangle(before);
 
-         within.x = before.GetRight();
+         within.x = 1 + before.GetRight();
       }
       within.width = rect.x + int(zoomInfo.TimeToPosition(sel1) + 2) - within.x;
 
       if (within.GetRight() > rect.GetRight()) {
-         within.width = rect.GetRight() - within.x;
+         within.width = 1 + rect.GetRight() - within.x;
       }
 
       if (within.width > 0) {
@@ -3302,14 +3350,14 @@ void TrackArtist::DrawBackgroundWithSelection(wxDC *dc, const wxRect &rect,
             DrawSyncLockTiles(dc, within);
          }
 
-         after.x = within.GetRight();
+         after.x = 1 + within.GetRight();
       }
       else {
          // `within` not drawn; start where it would have gone
          after.x = within.x;
       }
 
-      after.width = rect.GetRight() - after.x;
+      after.width = 1 + rect.GetRight() - after.x;
       if (after.width > 0) {
          dc->SetBrush(unselBrush);
          dc->DrawRectangle(after);

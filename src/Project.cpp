@@ -120,6 +120,7 @@ scroll information.  It also has some status flags.
 #include "effects/Effect.h"
 #include "prefs/PrefsDialog.h"
 #include "widgets/LinkingHtmlWindow.h"
+#include "widgets/ASlider.h"
 #include "widgets/ErrorDialog.h"
 #include "widgets/Ruler.h"
 #include "widgets/Warning.h"
@@ -728,6 +729,7 @@ BEGIN_EVENT_TABLE(AudacityProject, wxFrame)
    EVT_MOUSE_EVENTS(AudacityProject::OnMouseEvent)
    EVT_CLOSE(AudacityProject::OnCloseWindow)
    EVT_SIZE(AudacityProject::OnSize)
+   EVT_SHOW(AudacityProject::OnShow)
    EVT_MOVE(AudacityProject::OnMove)
    EVT_ACTIVATE(AudacityProject::OnActivate)
    EVT_COMMAND_SCROLL_LINEUP(HSBarID, AudacityProject::OnScrollLeftButton)
@@ -779,7 +781,6 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
      mIsDeleting(false),
      mTracksFitVerticallyZoomed(false),  //lda
      mShowId3Dialog(true),               //lda
-     mScrollBeyondZero(false),
      mLastFocusedWindow(NULL),
      mKeyboardCaptureHandler(NULL),
      mImportXMLTagHandler(NULL),
@@ -791,9 +792,10 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
      mWantSaveCompressed(false),
      mLastEffect(wxEmptyString),
      mTimerRecordCanceled(false),
-     mMenuClose(false)
-     , mbInitializingScrollbar(false)
-     , mViewInfo(0.0, 1.0, ZoomInfo::GetDefaultZoom())
+     mMenuClose(false),
+     mShownOnce(false),
+     mbInitializingScrollbar(false),
+     mViewInfo(0.0, 1.0, ZoomInfo::GetDefaultZoom())
 {
    // Note that the first field of the status bar is a dummy, and it's width is set
    // to zero latter in the code. This field is needed for wxWidgets 2.8.12 because
@@ -1028,6 +1030,10 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
                      wxCommandEventHandler(AudacityProject::OnCapture),
                      NULL,
                      this);
+
+   //Initialize the last selection adjustment time.
+   mLastSelectionAdjustment = ::wxGetLocalTimeMillis();
+
 }
 
 AudacityProject::~AudacityProject()
@@ -1050,9 +1056,6 @@ AudioIOStartStreamOptions AudacityProject::GetDefaultPlayOptions()
 
 void AudacityProject::UpdatePrefsVariables()
 {
-#ifdef EXPERIMENTAL_SCROLLING_LIMITS
-   gPrefs->Read(wxT("/GUI/ScrollBeyondZero"), &mScrollBeyondZero, false);
-#endif
    gPrefs->Read(wxT("/AudioFiles/ShowId3Dialog"), &mShowId3Dialog, true);
    gPrefs->Read(wxT("/AudioFiles/NormalizeOnLoad"),&mNormalizeOnLoad, false);
    gPrefs->Read(wxT("/GUI/AutoScroll"), &mViewInfo.bUpdateTrackIndicator, true);
@@ -1066,6 +1069,9 @@ void AudacityProject::UpdatePrefsVariables()
 
    gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"), &mRate, AudioIO::GetOptimalSupportedSampleRate());
    mDefaultFormat = (sampleFormat) gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleFormat"), floatSample);
+
+   gPrefs->Read(wxT("/AudioIO/SeekShortPeriod"), &mSeekShort, 1.0);
+   gPrefs->Read(wxT("/AudioIO/SeekLongPeriod"), &mSeekLong, 15.0);
 }
 
 void AudacityProject::UpdatePrefs()
@@ -1472,9 +1478,10 @@ void AudacityProject::OnScrollRightButton(wxScrollEvent & event)
 
 double AudacityProject::ScrollingLowerBoundTime() const
 {
-   return mScrollBeyondZero
-      ? std::min(mTracks->GetStartTime(), -mViewInfo.screen / 2.0)
-      : 0;
+   if (!mViewInfo.bScrollBeyondZero)
+      return 0;
+   const double screen = mTrackPanel->GetScreenEndTime() - mViewInfo.h;
+   return std::min(mTracks->GetStartTime(), -screen / 2.0);
 }
 
 wxInt64 AudacityProject::PixelWidthBeforeTime(double scrollto) const
@@ -1553,11 +1560,25 @@ void AudacityProject::FixScrollbars()
    int panelWidth, panelHeight;
    mTrackPanel->GetTracksUsableArea(&panelWidth, &panelHeight);
 
+   // (From Debian...at least I think this is the change cooresponding
+   // to this comment)
+   //
+   // (2.) GTK critical warning "IA__gtk_range_set_range: assertion
+   // 'min < max' failed" because of negative numbers as result of window
+   // size checking. Added a sanity check that straightens up the numbers
+   // in edge cases.
+   if (panelWidth < 0) {
+      panelWidth = 0;
+   }
+   if (panelHeight < 0) {
+      panelHeight = 0;
+   }
+
    double LastTime =
       std::max(mTracks->GetEndTime(), mViewInfo.selectedRegion.t1());
 
-   mViewInfo.SetScreenWidth(panelWidth);
-   const double halfScreen = mViewInfo.screen / 2.0;
+   const double screen = GetScreenEndTime() - mViewInfo.h;
+   const double halfScreen = screen / 2.0;
 
    // If we can scroll beyond zero,
    // Add 1/2 of a screen of blank space to the end
@@ -1566,14 +1587,14 @@ void AudacityProject::FixScrollbars()
    // may be scrolled to the midline.
    // May add even more to the end, so that you can always scroll the starting time to zero.
    const double lowerBound = ScrollingLowerBoundTime();
-   const double additional = mScrollBeyondZero
-      ? -lowerBound + std::max(halfScreen, mViewInfo.screen - LastTime)
-      : mViewInfo.screen / 4.0;
+   const double additional = mViewInfo.bScrollBeyondZero
+      ? -lowerBound + std::max(halfScreen, screen - LastTime)
+      : screen / 4.0;
 
    mViewInfo.total = LastTime + additional;
 
    // Don't remove time from total that's still on the screen
-   mViewInfo.total = std::max(mViewInfo.total, mViewInfo.h + mViewInfo.screen);
+   mViewInfo.total = std::max(mViewInfo.total, mViewInfo.h + screen);
 
    if (mViewInfo.h < lowerBound) {
       mViewInfo.h = lowerBound;
@@ -1581,7 +1602,7 @@ void AudacityProject::FixScrollbars()
    }
 
    mViewInfo.sbarTotal = (wxInt64) (mViewInfo.GetTotalWidth());
-   mViewInfo.sbarScreen = (wxInt64) (mViewInfo.GetScreenWidth());
+   mViewInfo.sbarScreen = (wxInt64)(panelWidth);
    mViewInfo.sbarH = (wxInt64) (mViewInfo.GetBeforeScreenWidth());
 
    int lastv = mViewInfo.vpos;
@@ -1603,18 +1624,18 @@ void AudacityProject::FixScrollbars()
 
    bool oldhstate;
    bool oldvstate;
-   bool newhstate = !mViewInfo.ZoomedAll();
+   bool newhstate = (GetScreenEndTime() - mViewInfo.h) < mViewInfo.total;
    bool newvstate = panelHeight < totalHeight;
 
 #ifdef __WXGTK__
    oldhstate = mHsbar->IsShown();
    oldvstate = mVsbar->IsShown();
-   mHsbar->Show(mViewInfo.screen < mViewInfo.total);
+   mHsbar->Show(newhstate);
    mVsbar->Show(panelHeight < totalHeight);
 #else
    oldhstate = mHsbar->IsEnabled();
    oldvstate = mVsbar->IsEnabled();
-   mHsbar->Enable(!mViewInfo.ZoomedAll());
+   mHsbar->Enable(newhstate);
    mVsbar->Enable(panelHeight < totalHeight);
 #endif
 
@@ -1624,7 +1645,7 @@ void AudacityProject::FixScrollbars()
       refresh = true;
       rescroll = false;
    }
-   if (mViewInfo.ZoomedAll() && mViewInfo.sbarH != 0) {
+   if (!newhstate && mViewInfo.sbarH != 0) {
       mViewInfo.sbarH = 0;
 
       refresh = true;
@@ -1666,7 +1687,8 @@ void AudacityProject::FixScrollbars()
                         panelHeight / mViewInfo.scrollStep, TRUE);
    mVsbar->Refresh();
 
-   if (refresh || (rescroll && !mViewInfo.ZoomedAll())) {
+   if (refresh || (rescroll &&
+       (GetScreenEndTime() - mViewInfo.h) < mViewInfo.total)) {
       mTrackPanel->Refresh(false);
    }
 
@@ -1787,9 +1809,56 @@ void AudacityProject::OnMove(wxMoveEvent & event)
 
 void AudacityProject::OnSize(wxSizeEvent & event)
 {
-   HandleResize();
-   if (!this->IsMaximized() && !this->IsIconized())
-      SetNormalizedWindowState(this->GetRect());
+   // (From Debian)
+   //
+   // (3.) GTK critical warning "IA__gdk_window_get_origin: assertion
+   // 'GDK_IS_WINDOW (window)' failed": Received events of type wxSizeEvent
+   // on the main project window cause calls to "ClientToScreen" - which is
+   // not available until the window is first shown. So the class has to
+   // keep track of wxShowEvent events and inhibit those actions until the
+   // window is first shown.
+   if (mShownOnce) {
+      HandleResize();
+      if (!this->IsMaximized() && !this->IsIconized())
+         SetNormalizedWindowState(this->GetRect());
+   }
+   event.Skip();
+}
+
+void AudacityProject::OnShow(wxShowEvent & event)
+{
+   // Remember that the window has been shown at least once
+   mShownOnce = true;
+
+   // (From Debian...see also TrackPanel::OnTimer and AudacityTimer::Notify)
+   //
+   // Description: Workaround for wxWidgets bug: Reentry in clipboard
+   //  The wxWidgets bug http://trac.wxwidgets.org/ticket/16636 prevents
+   //  us from doing clipboard operations in wxShowEvent and wxTimerEvent
+   //  processing because those event could possibly be processed during
+   //  the (not sufficiently protected) Yield() of a first clipboard
+   //  operation, causing reentry. Audacity had a workaround in place
+   //  for this problem (the class "CaptureEvents"), which however isn't
+   //  applicable with wxWidgets 3.0 because it's based on changing the
+   //  gdk event handler, a change that would be overridden by wxWidgets's
+   //  own gdk event handler change.
+   //  Instead, as a new workaround, specifically protect those processings
+   //  of wxShowEvent and wxTimerEvent that try to do clipboard operations
+   //  from being executed within Yield(). This is done by delaying their
+   //  execution by posting pure wxWidgets events - which are never executed
+   //  during Yield().
+   // Author: Martin Stegh  fer <martin@steghoefer.eu>
+   //  Bug-Debian: https://bugs.debian.org/765341
+
+   // the actual creation/showing of the window).
+   // Post the event instead of calling OnSize(..) directly. This ensures that
+   // this is a pure wxWidgets event (no GDK event behind it) and that it
+   // therefore isn't processed within the YieldFor(..) of the clipboard
+   // operations (workaround for Debian bug #765341).
+   wxSizeEvent *sizeEvent = new wxSizeEvent(GetSize());
+   GetEventHandler()->QueueEvent(sizeEvent);
+
+   // Further processing by default handlers
    event.Skip();
 }
 
@@ -1849,10 +1918,14 @@ void AudacityProject::OnScroll(wxScrollEvent & WXUNUSED(event))
    mViewInfo.sbarH =
       (wxInt64)(mHsbar->GetThumbPosition() / mViewInfo.sbarScale) - offset;
 
-   if (mViewInfo.sbarH != hlast)
-      mViewInfo.SetBeforeScreenWidth(mViewInfo.sbarH, lowerBound);
+   if (mViewInfo.sbarH != hlast) {
+      int width;
+      mTrackPanel->GetTracksUsableArea(&width, NULL);
+      mViewInfo.SetBeforeScreenWidth(mViewInfo.sbarH, width, lowerBound);
+   }
 
-   if (mScrollBeyondZero) {
+
+   if (mViewInfo.bScrollBeyondZero) {
       enum { SCROLL_PIXEL_TOLERANCE = 10 };
       if (std::abs(mViewInfo.TimeToPosition(0.0, 0
                                    )) < SCROLL_PIXEL_TOLERANCE) {
@@ -4102,16 +4175,6 @@ ControlToolBar *AudacityProject::GetControlToolBar()
            NULL);
 }
 
-//JKC: same as above *except* this a virtual function that
-//can be called from the track panel callback.
-//It seems a little crazy doing this but TrackArtist
-//needs to get information about the tool bar state and
-//I don't currently see a cleaner way.
-ControlToolBar * AudacityProject::TP_GetControlToolBar()
-{
-   return GetControlToolBar();
-}
-
 ToolsToolBar * AudacityProject::TP_GetToolsToolBar()
 {
    return GetToolsToolBar();
@@ -4529,28 +4592,6 @@ void AudacityProject::RefreshTPTrack(Track* pTrk, bool refreshbacking /*= true*/
 }
 
 
-// TrackPanel callback methods
-
-int AudacityProject::TP_GetCurrentTool()
-{
-   //ControlToolBar might be NULL--especially on shutdown.
-   //Make sure it isn't and if it is, return a reasonable value
-   ToolsToolBar *ctb = GetToolsToolBar();
-   if (ctb)
-      return GetToolsToolBar()->GetCurrentTool();
-   else
-      return 0;
-}
-
-
-
-
-// TrackPanel callback method
-void AudacityProject::TP_OnPlayKey()
-{
-   OnPlayStop();
-}
-
 // TrackPanel callback method
 void AudacityProject::TP_PushState(wxString desc, wxString shortDesc,
                                    int flags)
@@ -4754,7 +4795,7 @@ void AudacityProject::SetSnapTo(int snap)
    }
 }
 
-int AudacityProject::GetSnapTo()
+int AudacityProject::GetSnapTo() const
 {
    return mSnapTo;
 }
@@ -4775,6 +4816,115 @@ void AudacityProject::SetSyncLock(bool flag)
       if (GetTrackPanel())
          GetTrackPanel()->Refresh(false);
    }
+}
+
+void AudacityProject::DoTrackMute(Track *t, bool exclusive)
+{
+   HandleTrackMute(t, exclusive);
+
+   // Update mixer board, too.
+   MixerBoard* pMixerBoard = this->GetMixerBoard();
+   if (pMixerBoard)
+   {
+      pMixerBoard->UpdateMute(); // Update for all tracks.
+      pMixerBoard->UpdateSolo(); // Update for all tracks.
+   }
+
+   mTrackPanel->UpdateAccessibility();
+   mTrackPanel->Refresh(false);
+}
+
+void AudacityProject::DoTrackSolo(Track *t, bool exclusive)
+{
+   HandleTrackSolo(t, exclusive);
+
+   // Update mixer board, too.
+   MixerBoard* pMixerBoard = this->GetMixerBoard();
+   if (pMixerBoard)
+   {
+      pMixerBoard->UpdateMute(); // Update for all tracks.
+      pMixerBoard->UpdateSolo(); // Update for all tracks.
+   }
+
+   mTrackPanel->UpdateAccessibility();
+   mTrackPanel->Refresh(false);
+}
+
+void AudacityProject::SetTrackGain(Track * track, LWSlider * slider)
+{
+   wxASSERT(track);
+   if (track->GetKind() != Track::Wave)
+      return;
+   float newValue = slider->Get();
+
+   WaveTrack *const link = static_cast<WaveTrack*>(mTracks->GetLink(track));
+   static_cast<WaveTrack*>(track)->SetGain(newValue);
+   if (link)
+      link->SetGain(newValue);
+
+   PushState(_("Adjusted gain"), _("Gain"), PUSH_CONSOLIDATE);
+
+   GetTrackPanel()->RefreshTrack(track);
+}
+
+void AudacityProject::SetTrackPan(Track * track, LWSlider * slider)
+{
+   wxASSERT(track);
+   if (track->GetKind() != Track::Wave)
+      return;
+   float newValue = slider->Get();
+
+   WaveTrack *const link = static_cast<WaveTrack*>(mTracks->GetLink(track));
+   static_cast<WaveTrack*>(track)->SetPan(newValue);
+   if (link)
+      link->SetPan(newValue);
+
+   PushState(_("Adjusted Pan"), _("Pan"), PUSH_CONSOLIDATE);
+
+   GetTrackPanel()->RefreshTrack(track);
+}
+
+/// Removes the specified track.  Called from HandleClosing.
+void AudacityProject::RemoveTrack(Track * toRemove)
+{
+   // If it was focused, reassign focus to the next or, if
+   // unavailable, the previous track.
+   if (mTrackPanel->GetFocusedTrack() == toRemove) {
+      Track *t = mTracks->GetNext(toRemove, true);
+      if (t == NULL) {
+         t = mTracks->GetPrev(toRemove, true);
+      }
+      mTrackPanel->SetFocusedTrack(t);  // It's okay if this is NULL
+   }
+
+   wxString name = toRemove->GetName();
+   Track *partner = toRemove->GetLink();
+
+   if (toRemove->GetKind() == Track::Wave)
+   {
+      // Update mixer board displayed tracks.
+      MixerBoard* pMixerBoard = this->GetMixerBoard();
+      if (pMixerBoard)
+         pMixerBoard->RemoveTrackCluster((WaveTrack*)toRemove); // Will remove partner shown in same cluster.
+   }
+
+   mTracks->Remove(toRemove, true);
+   if (partner) {
+      mTracks->Remove(partner, true);
+   }
+
+   if (mTracks->IsEmpty()) {
+      mTrackPanel->SetFocusedTrack(NULL);
+   }
+
+   PushState(
+      wxString::Format(_("Removed track '%s.'"),
+      name.c_str()),
+      _("Track Remove"));
+
+   TP_RedrawScrollbars();
+   HandleResize();
+   GetTrackPanel()->Refresh(false);
 }
 
 void AudacityProject::HandleTrackMute(Track *t, const bool exclusive)

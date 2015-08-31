@@ -241,10 +241,14 @@ public:
       case nstErb:
       case nstUndertone:
          return Iterator
-            (mType, (mValue1 - mValue0) / nPositions, mValue0, mUnit);
+            (mType,
+             nPositions == 1 ? 0 : (mValue1 - mValue0) / (nPositions - 1),
+             mValue0, mUnit);
       case nstLogarithmic:
          return Iterator
-            (mType, exp((mValue1 - mValue0) / nPositions), exp(mValue0), mUnit);
+            (mType,
+             nPositions == 1 ? 1 : exp((mValue1 - mValue0) / (nPositions - 1)),
+             exp(mValue0), mUnit);
       }
    }
 

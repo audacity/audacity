@@ -2068,28 +2068,6 @@ GuiWaveTrack * ShuttleGui::AddGuiWaveTrack( const wxString & WXUNUSED(Name))
 #endif
 }
 
-AdornedRulerPanel * ShuttleGui::AddAdornedRuler( ViewInfo *pViewInfo )
-{
-   UseUpId();
-   if( mShuttleMode != eIsCreating )
-      return (AdornedRulerPanel*)NULL;
-//      return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), AdornedRulerPanel);
-   AdornedRulerPanel * pAdornedRuler;
-   miProp=0;
-   mpWind = pAdornedRuler = new AdornedRulerPanel(
-      mpParent,
-      miId,
-      wxDefaultPosition,
-      wxDefaultSize,
-      pViewInfo
-      );
-
-   mpWind->SetMinSize(wxSize(100,28));
-   UpdateSizers();
-   return pAdornedRuler;
-}
-
-
 RulerPanel * ShuttleGui::AddRulerVertical(float low, float hi, const wxString & Units )
 {
    UseUpId();

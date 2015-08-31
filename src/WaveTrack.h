@@ -433,11 +433,10 @@ class AUDACITY_DLL_API WaveTrack : public Track {
    static WaveTrackDisplay ValidateWaveTrackDisplay(WaveTrackDisplay display);
 
    int GetLastScaleType() { return mLastScaleType; }
-   void SetLastScaleType(int scaleType)
-   {
-      // remember last display mode for wave and wavedb so vertical ruler can remap
-      mLastScaleType = scaleType;
-   }
+   void SetLastScaleType();
+
+   int GetLastdBRange() { return mLastdBRange; }
+   void SetLastdBRange();
 
    WaveTrackDisplay GetDisplay() const { return mDisplay; }
    void SetDisplay(WaveTrackDisplay display) { mDisplay = display; }
@@ -467,6 +466,7 @@ class AUDACITY_DLL_API WaveTrack : public Track {
    float         mDisplayMax;
    WaveTrackDisplay mDisplay;
    int           mLastScaleType; // last scale type choice
+   int           mLastdBRange;
    int           mDisplayNumLocations;
    int           mDisplayNumLocationsAllocated;
    Location*       mDisplayLocations;

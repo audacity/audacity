@@ -1130,6 +1130,17 @@ double LabelTrack::GetEndTime() const
    return end;
 }
 
+Track *LabelTrack::Duplicate()
+{
+   return new LabelTrack(*this);
+}
+
+void LabelTrack::SetSelected(bool s)
+{
+   Track::SetSelected(s);
+   if (!s)
+      Unselect();
+}
 
 /// OverGlyph returns 0 if not over a glyph,
 /// 1 if over the left-hand glyph, and
@@ -1203,8 +1214,18 @@ int LabelTrack::OverGlyph(int x, int y)
    return result;
 }
 
+int LabelTrack::OverATextBox(int xx, int yy) const
+{
+   for (int nn = (int)mLabels.Count(); nn--;) {
+      if (OverTextBox(mLabels[nn], xx, yy))
+         return nn;
+   }
+
+   return -1;
+}
+
 // return true if the mouse is over text box, false otherwise
-bool LabelTrack::OverTextBox(const LabelStruct *pLabel, int x, int y)
+bool LabelTrack::OverTextBox(const LabelStruct *pLabel, int x, int y) const
 {
    if( (pLabel->xText-(mIconWidth/2) < x) &&
             (x<pLabel->xText+pLabel->width+(mIconWidth/2)) &&
@@ -1387,7 +1408,7 @@ bool LabelTrack::HandleGlyphDragRelease(const wxMouseEvent & evt,
       //just reset its value and redraw.
       // LL:  Constrain to inside track rectangle for now.  Should be changed
       //      to allow scrolling while dragging labels
-      int x = Constrain( evt.m_x + mxMouseDisplacement - r.x, 0, r.width - 2);
+      int x = Constrain( evt.m_x + mxMouseDisplacement - r.x, 0, r.width);
 
       // If exactly one edge is selected we allow swapping
       bool bAllowSwapping = (mMouseOverLabelLeft >=0 ) ^ ( mMouseOverLabelRight >= 0);
@@ -1472,7 +1493,7 @@ void LabelTrack::HandleTextDragRelease(const wxMouseEvent & evt)
 }
 
 void LabelTrack::HandleClick(const wxMouseEvent & evt,
-   wxRect & r, const ZoomInfo &zoomInfo,
+   const wxRect & r, const ZoomInfo &zoomInfo,
    SelectedRegion *newSel)
 {
    if (evt.ButtonDown())
@@ -1532,20 +1553,14 @@ void LabelTrack::HandleClick(const wxMouseEvent & evt,
       if (evt.LeftDown())
          mDragXPos = -1;
 
-      mSelIndex = -1;
-      LabelStruct * pLabel;
-      for (int i = 0; i < (int)mLabels.Count(); i++) {
-         pLabel = mLabels[i];
-         if(OverTextBox(pLabel, evt.m_x, evt.m_y))
-         {
-            mSelIndex = i;
-            *newSel = mLabels[i]->selectedRegion;
-            // set mouseXPos to set current cursor position
-            if (changeCursor)
-               mMouseXPos = evt.m_x;
-            // set mInBox flag
-            mInBox = true;
-         }
+      mSelIndex = OverATextBox(evt.m_x, evt.m_y);
+      if (mSelIndex != -1) {
+         *newSel = mLabels[mSelIndex]->selectedRegion;
+         // set mouseXPos to set current cursor position
+         if (changeCursor)
+            mMouseXPos = evt.m_x;
+         // set mInBox flag
+         mInBox = true;
       }
 
       // reset the highlight indicator

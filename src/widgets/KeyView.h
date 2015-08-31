@@ -13,8 +13,6 @@
 
 #include <wx/defs.h>
 #include <wx/arrstr.h>
-#include <wx/bitmap.h>
-#include <wx/dcmemory.h>
 #include <wx/dynarray.h>
 #include <wx/string.h>
 #include <wx/vlbox.h>
@@ -145,9 +143,6 @@ private:
 #endif
 
 private:
-   wxBitmap *mOpen;
-   wxBitmap *mClosed;
-
    KeyNodeArray mNodes;
    KeyNodeArrayPtr mLines;
 

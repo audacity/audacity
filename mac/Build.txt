@@ -27,9 +27,13 @@ Once downloaded untar it (your browser may have already done this):
 
    tar xf wxWidgets-3.0.2.tar.bz2
 
-And build/install it:
+A couple of fixes need to be applied wxWidgets:
 
    cd wxWidgets-3.0.2
+   patch -p0 -i <path to Audacity source>/mac/wxMac_additions/wxMac-3.0.2-fixes.patch
+
+And finally build/install it:
+
    sudo <path to Audacity source>/mac/build_wxwidgets
 
 You should now be able to build Audacity using either the Xcode application or the

@@ -139,7 +139,9 @@ class AUDACITY_DLL_API LabelTrack : public Track
    virtual double GetStartTime() const;
    virtual double GetEndTime() const;
 
-   virtual Track *Duplicate() { return new LabelTrack(*this); }
+   virtual Track *Duplicate();
+
+   virtual void SetSelected(bool s);
 
    virtual bool HandleXMLTag(const wxChar *tag, const wxChar **attrs);
    virtual XMLTagHandler *HandleXMLChild(const wxChar *tag);
@@ -167,7 +169,8 @@ class AUDACITY_DLL_API LabelTrack : public Track
 
 
    void ResetFlags();
-   bool OverTextBox(const LabelStruct *pLabel, int x, int y);
+   int OverATextBox(int xx, int yy) const;
+   bool OverTextBox(const LabelStruct *pLabel, int x, int y) const;
    bool CutSelectedText();
    bool CopySelectedText();
    bool PasteSelectedText(double sel0, double sel1);
@@ -180,7 +183,7 @@ class AUDACITY_DLL_API LabelTrack : public Track
    void SetWrongDragging(bool rightFlag) { mRightDragging = rightFlag; }
    void SetDrawCursor(bool drawCursorFlag) { mDrawCursor = drawCursorFlag; }
 
-   void HandleClick(const wxMouseEvent & evt, wxRect & r, const ZoomInfo &zoomInfo,
+   void HandleClick(const wxMouseEvent & evt, const wxRect & r, const ZoomInfo &zoomInfo,
       SelectedRegion *newSel);
    bool HandleGlyphDragRelease(const wxMouseEvent & evt, wxRect & r, const ZoomInfo &zoomInfo,
       SelectedRegion *newSel);

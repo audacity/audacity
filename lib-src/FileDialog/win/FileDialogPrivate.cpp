@@ -170,6 +170,11 @@ UINT_PTR FileDialog::MSWParentHook(HWND hDlg, UINT iMsg, WPARAM wParam, LPARAM l
       MSWOnSize(mParentDlg, pOfn);
    }
 
+   if (iMsg == WM_GETMINMAXINFO)
+   {
+      MSWOnGetMinMaxInfo(mParentDlg, pOfn, reinterpret_cast<LPMINMAXINFO>(lParam));
+   }
+
    return ret;
 }
 
@@ -196,6 +201,23 @@ void FileDialog::MSWOnSize(HWND hDlg, LPOPENFILENAME pOfn)
    }
 
    SetHWND(NULL);
+}
+
+// Provide the minimum size of the dialog
+//
+// We've captured the full dialog size in MSWOnInitDone() below.  This will be returned
+// as the minimum size.
+//
+// When the user tries to resize the dialog, for some unknown reason the common dialog control
+// doesn't let the user resize it smaller than it was the last time the dialog was used.  This
+// may be a problem in this code and/or may only be a concern under Windows 10.  Either way, we
+// override the minimum size supplied by the common dialog control with our own size here.
+void FileDialog::MSWOnGetMinMaxInfo(HWND hwnd, LPOPENFILENAME pOfn, LPMINMAXINFO pMmi)
+{
+   if (mMinSize.x > 0 && mMinSize.y > 0)
+   {
+      pMmi->ptMinTrackSize = mMinSize;
+   }
 }
 
 UINT_PTR APIENTRY FileDialog::DialogHook(HWND hDlg, UINT iMsg, WPARAM wParam, LPARAM lParam)
@@ -264,6 +286,9 @@ void FileDialog::MSWOnInitDialog(HWND hDlg, LPOPENFILENAME pOfn)
    // Since we've specified the OFN_EXPLORER flag, the "real" dialog is the parent of this one
    mParentDlg = ::GetParent(hDlg);
 
+   // Now we can initialize the disabler
+   mDisabler.Init(this, mParentDlg);
+
    // This is the dialog were our controls will go
    mChildDlg = hDlg;
 
@@ -325,6 +350,11 @@ void FileDialog::MSWOnInitDone(HWND hDlg, LPOPENFILENAME pOfn)
 {
    // set HWND so that our DoMoveWindow() works correctly
    SetHWND(mChildDlg);
+
+   // capture the full initial size of the dialog to use as the minimum size
+   RECT r;
+   GetWindowRect(mParentDlg, &r);
+   mMinSize = {r.right - r.left, r.bottom - r.top};
 
    if (m_centreDir)
    {
@@ -652,6 +682,7 @@ FileDialog::FileDialog(wxWindow *parent,
 void FileDialog::Init()
 {
    mRoot = NULL;
+   mMinSize = {0, 0};
 
    // NB: all style checks are done by wxFileDialogBase::Create
 
@@ -838,6 +869,8 @@ static bool ShowCommFileDialog(OPENFILENAME *of, long style)
 
 int FileDialog::ShowModal()
 {
+   WX_HOOK_MODAL_DIALOG();
+
    HWND hWnd = 0;
    if (m_parent) hWnd = (HWND) m_parent->GetHWND();
    if (!hWnd && wxTheApp->GetTopWindow())
@@ -1102,4 +1135,66 @@ int FileDialog::ShowModal()
    }
    
    return wxID_OK;
+}
+
+FileDialog::Disabler::Disabler()
+{
+   mRoot = NULL;
+   mHwnd = (HWND) INVALID_HANDLE_VALUE;
+   mModalCount = 0;
+
+   Register();
+}
+
+void FileDialog::Disabler::Init(wxWindow *root, HWND hwnd)
+{
+   mRoot = root;
+   mHwnd = hwnd;
+}
+
+int FileDialog::Disabler::Enter(wxDialog *dialog)
+{
+   if (mHwnd != (HWND) INVALID_HANDLE_VALUE)
+   {
+      if (IsChild(dialog)) {
+         ::EnableWindow(mHwnd, FALSE);
+         mModalCount++;
+      }
+   }
+
+   return wxID_NONE;
+}
+
+void FileDialog::Disabler::Exit(wxDialog *dialog)
+{
+   if (mHwnd != (HWND) INVALID_HANDLE_VALUE)
+   {
+      if (IsChild(dialog))
+      {
+         mModalCount--;
+         if (mModalCount == 0)
+         {
+            ::EnableWindow(mHwnd, TRUE);
+            ::SetWindowPos(mHwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+         }
+      }
+   }
+}
+
+bool FileDialog::Disabler::IsChild(const wxDialog *dialog) const
+{
+   if (!dialog)
+   {
+      return false;
+   }
+
+   for (const wxWindow *w = dialog->GetParent(); w != NULL; w = w->GetParent())
+   {
+      if (w == mRoot)
+      {
+         return true;
+      }
+   }
+
+   return false;
 }

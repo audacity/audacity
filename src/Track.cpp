@@ -112,6 +112,11 @@ void Track::Init(const Track &orig)
 #endif
 }
 
+void Track::SetSelected(bool s)
+{
+   mSelected = s;
+}
+
 void Track::Merge(const Track &orig)
 {
    mSelected = orig.mSelected;

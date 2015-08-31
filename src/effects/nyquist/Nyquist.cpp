@@ -52,6 +52,7 @@ effects from this one class.
 #include "../../WaveTrack.h"
 #include "../../widgets/valnum.h"
 #include "../../Prefs.h"
+#include "../../prefs/WaveformSettings.h"
 
 #include "FileDialog.h"
 
@@ -257,7 +258,7 @@ bool NyquistEffect::GetAutomationParameters(EffectAutomationParameters & parms)
          d = GetCtrlValue(ctrl.valStr);
       }
 
-      if (ctrl.type == NYQ_CTRL_REAL)
+      if (ctrl.type == NYQ_CTRL_REAL || ctrl.type == NYQ_CTRL_FLOAT_TEXT)
       {
          parms.Write(ctrl.var, d);
       }
@@ -300,14 +301,14 @@ bool NyquistEffect::SetAutomationParameters(EffectAutomationParameters & parms)
       NyqControl & ctrl = mControls[c];
       bool good = false;
 
-      if (ctrl.type == NYQ_CTRL_REAL)
+      if (ctrl.type == NYQ_CTRL_REAL || ctrl.type == NYQ_CTRL_FLOAT_TEXT)
       {
          double val;
          good = parms.Read(ctrl.var, &val) &&
                 val >= ctrl.low &&
                 val <= ctrl.high;
       }
-      else if (ctrl.type == NYQ_CTRL_INT)
+      else if (ctrl.type == NYQ_CTRL_INT || ctrl.type == NYQ_CTRL_INT_TEXT)
       {
          int val;
          good = parms.Read(ctrl.var, &val) &&
@@ -344,11 +345,11 @@ bool NyquistEffect::SetAutomationParameters(EffectAutomationParameters & parms)
          d = GetCtrlValue(ctrl.valStr);
       }
 
-      if (ctrl.type == NYQ_CTRL_REAL)
+      if (ctrl.type == NYQ_CTRL_REAL || ctrl.type == NYQ_CTRL_FLOAT_TEXT)
       {
          parms.Read(ctrl.var, &ctrl.val);
       }
-      else if (ctrl.type == NYQ_CTRL_INT)
+      else if (ctrl.type == NYQ_CTRL_INT || ctrl.type == NYQ_CTRL_INT_TEXT)
       {
          int val;
          parms.Read(ctrl.var, &val);
@@ -799,14 +800,19 @@ bool NyquistEffect::ProcessOne()
       wxString type;
       wxString view;
       wxString bitFormat;
+
       switch (mCurTrack[0]->GetKind())
       {
          case Track::Wave:
             type = wxT("wave");
             switch (((WaveTrack *) mCurTrack[0])->GetDisplay())
             {
-               case WaveTrack::Waveform: view = wxT("\"Waveform\""); break;
-               case WaveTrack::Spectrum: view = wxT("\"Spectrum\""); break;
+               case WaveTrack::Waveform:
+                  view = (mCurTrack[0]->GetWaveformSettings().scaleType == 0) ? wxT("\"Waveform\"") : wxT("\"Waveform (dB)\"");
+                  break;
+               case WaveTrack::Spectrum:
+                  view = wxT("\"Spectrogram\"");
+                  break;
                default: view = wxT("NIL"); break;
             }
          break;
@@ -829,6 +835,7 @@ bool NyquistEffect::ProcessOne()
       cmd += wxString::Format(wxT("(putprop '*TRACK* %d 'INDEX)\n"), ++mTrackIndex);
       cmd += wxString::Format(wxT("(putprop '*TRACK* \"%s\" 'NAME)\n"), mCurTrack[0]->GetName().c_str());
       cmd += wxString::Format(wxT("(putprop '*TRACK* \"%s\" 'TYPE)\n"), type.c_str());
+      // Note: "View" property may change when Audacity's choice of track views has stabilized.
       cmd += wxString::Format(wxT("(putprop '*TRACK* %s 'VIEW)\n"), view.c_str());
       cmd += wxString::Format(wxT("(putprop '*TRACK* %d 'CHANNELS)\n"), mCurNumChannels);
       cmd += wxString::Format(wxT("(putprop '*TRACK* (float %s) 'START-TIME)\n"),
@@ -914,7 +921,7 @@ bool NyquistEffect::ProcessOne()
    }
 
    for (unsigned int j = 0; j < mControls.GetCount(); j++) {
-      if (mControls[j].type == NYQ_CTRL_REAL) {
+      if (mControls[j].type == NYQ_CTRL_REAL || mControls[j].type == NYQ_CTRL_FLOAT_TEXT) {
          // We use Internat::ToString() rather than "%f" here because we
          // always have to use the dot as decimal separator when giving
          // numbers to Nyquist, whereas using "%f" will use the user's
@@ -924,6 +931,7 @@ bool NyquistEffect::ProcessOne()
                                  Internat::ToString(mControls[j].val, 14).c_str());
       }
       else if (mControls[j].type == NYQ_CTRL_INT ||
+            mControls[j].type == NYQ_CTRL_INT_TEXT ||
             mControls[j].type == NYQ_CTRL_CHOICE) {
          cmd += wxString::Format(wxT("(setf %s %d)\n"),
                                  mControls[j].var.c_str(),
@@ -1256,12 +1264,22 @@ wxString NyquistEffect::UnQuote(wxString s)
 
 double NyquistEffect::GetCtrlValue(wxString s)
 {
-   if (s == wxT("rate")) {
-      TrackListOfKindIterator iter(Track::Wave, mTracks);
-      return ((WaveTrack *)iter.First())->GetRate();
+   /* For this to work correctly requires that the plug-in header is
+    * parsed on each run so that the correct value for "half-srate" may
+    * be determined.
+    * 
+   AudacityProject *project = GetActiveProject();
+   double rate = INT_MAX;
+   if (project && s.IsSameAs(wxT("half-srate"), false)) {
+      SelectedTrackListOfKindIterator sel(Track::Wave, project->GetTracks());
+      for (WaveTrack *t = (WaveTrack *) sel.First(); t; t = (WaveTrack *) sel.Next()) {
+         rate = std::min(t->GetRate(), rate);
+      }
+      return (rate / 2.0);
    }
+   */
 
-   return Internat::CompatibleToDouble(s);
+   return Internat::CompatibleToDouble(s);;
 }
 
 void NyquistEffect::Parse(wxString line)
@@ -1471,11 +1489,15 @@ void NyquistEffect::Parse(wxString line)
             return;
          }
 
-         if ((tokens[3] == wxT("real")) ||
-               (tokens[3] == wxT("float"))) // undocumented, but useful, alternative
+         if ((tokens[3] == wxT("float")) ||
+               (tokens[3] == wxT("real"))) // Deprecated
             ctrl.type = NYQ_CTRL_REAL;
          else if (tokens[3] == wxT("int"))
             ctrl.type = NYQ_CTRL_INT;
+         else if (tokens[3] == wxT("float-text"))
+            ctrl.type = NYQ_CTRL_FLOAT_TEXT;
+         else if (tokens[3] == wxT("int-text"))
+            ctrl.type = NYQ_CTRL_INT_TEXT;
          else
          {
             wxString str;
@@ -1492,9 +1514,26 @@ void NyquistEffect::Parse(wxString line)
          }
 
          ctrl.lowStr = tokens[6];
-         ctrl.low = GetCtrlValue(ctrl.lowStr);
+         if (ctrl.type == NYQ_CTRL_INT_TEXT && ctrl.lowStr.IsSameAs(wxT("nil"), false)) {
+            ctrl.low = INT_MIN;
+         }
+         else if (ctrl.type == NYQ_CTRL_FLOAT_TEXT && ctrl.lowStr.IsSameAs(wxT("nil"), false)) {
+            ctrl.low = -(FLT_MAX);
+         }
+         else {
+            ctrl.low = GetCtrlValue(ctrl.lowStr);
+         }
+
          ctrl.highStr = tokens[7];
-         ctrl.high = GetCtrlValue(ctrl.highStr);
+         if (ctrl.type == NYQ_CTRL_INT_TEXT && ctrl.highStr.IsSameAs(wxT("nil"), false)) {
+            ctrl.high = INT_MAX;
+         }
+         else if (ctrl.type == NYQ_CTRL_FLOAT_TEXT && ctrl.highStr.IsSameAs(wxT("nil"), false)) {
+            ctrl.high = FLT_MAX;
+         }
+         else {
+            ctrl.high = GetCtrlValue(ctrl.highStr);
+         }
 
          if (ctrl.high < ctrl.low) {
             ctrl.high = ctrl.low + 1;
@@ -1781,7 +1820,7 @@ bool NyquistEffect::TransferDataToEffectWindow()
          wxChoice *c = (wxChoice *) mUIParent->FindWindow(ID_Choice + i);
          c->SetSelection(val);
       }
-      else if (ctrl.type != NYQ_CTRL_STRING)
+      else if (ctrl.type == NYQ_CTRL_INT || ctrl.type == NYQ_CTRL_REAL)
       {
          // wxTextCtrls are handled by the validators
          double range = ctrl.high - ctrl.low;
@@ -1828,8 +1867,25 @@ bool NyquistEffect::TransferDataFromEffectWindow()
          continue;
       }
 
-      ctrl->low = GetCtrlValue(ctrl->lowStr);
-      ctrl->high = GetCtrlValue(ctrl->highStr);
+      if (ctrl->type == NYQ_CTRL_INT_TEXT && ctrl->lowStr.IsSameAs(wxT("nil"), false)) {
+         ctrl->low = INT_MIN;
+      }
+      else if (ctrl->type == NYQ_CTRL_FLOAT_TEXT && ctrl->lowStr.IsSameAs(wxT("nil"), false)) {
+         ctrl->low = -(FLT_MAX);
+      }
+      else {
+         ctrl->low = GetCtrlValue(ctrl->lowStr);
+      }
+
+      if (ctrl->type == NYQ_CTRL_INT_TEXT && ctrl->highStr.IsSameAs(wxT("nil"), false)) {
+         ctrl->high = INT_MAX;
+      }
+      else if (ctrl->type == NYQ_CTRL_FLOAT_TEXT && ctrl->highStr.IsSameAs(wxT("nil"), false)) {
+         ctrl->high = FLT_MAX;
+      }
+      else {
+         ctrl->high = GetCtrlValue(ctrl->highStr);
+      }
 
       if (ctrl->high < ctrl->low)
       {
@@ -1923,11 +1979,18 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
             else
             {
                // Integer or Real
-               wxTextCtrl *item = S.Id(ID_Text+i).AddTextBox(wxT(""), wxT(""), 12);
+               if (ctrl.type == NYQ_CTRL_INT_TEXT || ctrl.type == NYQ_CTRL_FLOAT_TEXT)
+               {
+                  S.AddSpace(10, 10);
+               }
+
+               wxTextCtrl *item = S.Id(ID_Text+i).AddTextBox(wxT(""), wxT(""), 
+                                                             (ctrl.type == NYQ_CTRL_INT_TEXT ||
+                                                              ctrl.type == NYQ_CTRL_FLOAT_TEXT) ? 25 : 12);
 
                double range = ctrl.high - ctrl.low;
 
-               if (ctrl.type == NYQ_CTRL_REAL)
+               if (ctrl.type == NYQ_CTRL_REAL || ctrl.type == NYQ_CTRL_FLOAT_TEXT)
                {
                   // > 12 decimal places can cause rounding errors in display.
                   FloatingPointValidator<double> vld(12, &ctrl.val);
@@ -1948,9 +2011,12 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
                   item->SetValidator(vld);
                }
 
-               S.SetStyle(wxSL_HORIZONTAL);
-               S.Id(ID_Slider + i).AddSlider(wxT(""), 0, ctrl.ticks, 0);
-               S.SetSizeHints(150, -1);
+               if (ctrl.type == NYQ_CTRL_INT || ctrl.type == NYQ_CTRL_REAL)
+               {
+                  S.SetStyle(wxSL_HORIZONTAL);
+                  S.Id(ID_Slider + i).AddSlider(wxT(""), 0, ctrl.ticks, 0);
+                  S.SetSizeHints(150, -1);
+               }
             }
 
             if (ctrl.type == NYQ_CTRL_CHOICE || ctrl.label.IsEmpty())
@@ -2080,7 +2146,7 @@ void NyquistEffect::OnText(wxCommandEvent & evt)
 
    if (wxDynamicCast(evt.GetEventObject(), wxWindow)->GetValidator()->TransferFromWindow())
    {
-      if (ctrl.type != NYQ_CTRL_STRING)
+      if (ctrl.type == NYQ_CTRL_REAL || ctrl.type == NYQ_CTRL_INT)
       {
          int pos = (int)floor((ctrl.val - ctrl.low) /
                               (ctrl.high - ctrl.low) * ctrl.ticks + 0.5);

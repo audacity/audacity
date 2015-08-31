@@ -29,7 +29,7 @@ class Track;
 class AUDACITY_DLL_API ZoomInfo
 {
 public:
-   ZoomInfo(double start, double duration, double pixelsPerSecond);
+   ZoomInfo(double start, double pixelsPerSecond);
    ~ZoomInfo();
 
    void UpdatePrefs();
@@ -37,8 +37,6 @@ public:
    int vpos;                    // vertical scroll pos
 
    double h;                    // h pos in secs
-
-   double screen;               // screen width in secs
 
 protected:
    double zoom;                 // pixels per second
@@ -53,7 +51,7 @@ public:
    double PositionToTime(wxInt64 position,
       wxInt64 origin = 0
       , bool ignoreFisheye = false
-      ) const;
+   ) const;
 
    // do NOT use this once to convert a duration to a pixel width!
    // Instead, call twice to convert start and end positions,
@@ -62,22 +60,15 @@ public:
    wxInt64 TimeToPosition(double time,
       wxInt64 origin = 0
       , bool ignoreFisheye = false
-      ) const;
+   ) const;
 
-   double OffsetTimeByPixels(double time, wxInt64 offset) const
+   double OffsetTimeByPixels(double time, wxInt64 offset, bool ignoreFisheye = false) const
    {
-      return PositionToTime(offset + TimeToPosition(time));
+      return PositionToTime(offset + TimeToPosition(time, ignoreFisheye), ignoreFisheye);
    }
 
    bool ZoomInAvailable() const;
    bool ZoomOutAvailable() const;
-
-   // Return pixels, but maybe not a whole number
-   double GetScreenWidth() const
-   { return screen * zoom; }
-
-   void SetScreenWidth(wxInt64 width)
-   { screen = width / zoom; }
 
    static double GetDefaultZoom()
    { return 44100.0 / 512.0; }
@@ -107,7 +98,7 @@ public:
    // first entry equals origin.
    // @param origin specifies the pixel position corresponding to time ViewInfo::h.
    void FindIntervals
-      (double rate, Intervals &results, wxInt64 origin = 0) const;
+      (double rate, Intervals &results, wxInt64 width, wxInt64 origin = 0) const;
 
    enum FisheyeState {
       HIDDEN,
@@ -120,7 +111,7 @@ public:
 
    // Return true if the mouse position is anywhere in the fisheye
    // origin specifies the pixel corresponding to time h
-   bool InFisheye(wxInt64 position, wxInt64 WXUNUSED(origin = 0)) const
+   bool InFisheye(wxInt64 /*position*/, wxInt64 WXUNUSED(origin = 0)) const
    {return false;} // stub
 
    // These accessors ignore the fisheye hiding state.
@@ -139,17 +130,16 @@ class AUDACITY_DLL_API ViewInfo
 public:
    ViewInfo(double start, double screenDuration, double pixelsPerSecond);
 
+   void UpdatePrefs();
+
    double GetBeforeScreenWidth() const
    {
       return h * zoom;
    }
-   void SetBeforeScreenWidth(wxInt64 width, double lowerBoundTime = 0.0);
+   void SetBeforeScreenWidth(wxInt64 beforeWidth, wxInt64 screenWidth, double lowerBoundTime = 0.0);
 
    double GetTotalWidth() const
    { return total * zoom; }
-
-   bool ZoomedAll() const
-   { return screen >= total; }
 
    // Current selection
 
@@ -178,6 +168,8 @@ public:
    // drawing the waveform. Maybe this should be put somewhere else?
 
    bool bUpdateTrackIndicator;
+
+   bool bScrollBeyondZero;
 
    void WriteXMLAttributes(XMLWriter &xmlFile);
    bool ReadXMLAttribute(const wxChar *attr, const wxChar *value);

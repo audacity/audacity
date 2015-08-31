@@ -140,7 +140,7 @@ class LWSlider
 
    void Move(const wxPoint &newpos);
 
-   void OnPaint(wxDC &dc, bool selected);
+   void OnPaint(wxDC &dc);
    void OnSize(wxSizeEvent & event);
    void OnMouseEvent(wxMouseEvent & event);
    void OnKeyEvent(wxKeyEvent & event);
@@ -157,10 +157,11 @@ class LWSlider
  private:
 
    wxString GetTip(float value) const;
+   wxString GetMaxTip() const;
    void FormatPopWin();
    void SetPopWinPosition();
    void CreatePopWin();
-   void Draw();
+   void Draw(wxDC & dc);
 
    bool DoShowDialog(wxPoint pos);
 

@@ -1449,7 +1449,7 @@ bool VSTEffect::RealtimeAddProcessor(int numChannels, float sampleRate)
    {
       void *chunk = NULL;
 
-      clen = (int) callDispatcher(effGetChunk, 0, 0, &chunk, 0.0);
+      clen = (int) callDispatcher(effGetChunk, 1, 0, &chunk, 0.0);
       if (clen != 0)
       {
          slave->callSetChunk(false, clen, chunk);

@@ -14,6 +14,7 @@
 #include <wx/filedlg.h>
 #include <wx/font.h>
 #include <wx/fontdlg.h>
+#include <wx/msgdlg.h>
 #include <wx/settings.h>
 #include <wx/sizer.h>
 #include <wx/splitter.h>
@@ -84,6 +85,35 @@
 #include "images/media-playback-start-large.xpm"
 #include "images/media-playback-stop-large.xpm"
 
+#if defined(__WXMSW__)
+#include <wx/init.h>
+#  if defined(__WXDEBUG__)
+#     define D "d"
+#  else
+#     define D ""
+#  endif
+#  if wxCHECK_VERSION(3, 1, 0)
+#     define V "31"
+#  elif wxCHECK_VERSION(3, 0, 0)
+#     define V "30"
+#  else
+#     define V "28"
+#  endif
+
+#  pragma comment(lib, "wxbase" V "u" D)
+#  pragma comment(lib, "wxbase" V "u" D "_net")
+#  pragma comment(lib, "wxmsw"  V "u" D "_adv")
+#  pragma comment(lib, "wxmsw"  V "u" D "_core")
+#  pragma comment(lib, "wxmsw"  V "u" D "_html")
+#  pragma comment(lib, "wxpng"        D)
+#  pragma comment(lib, "wxzlib"       D)
+#  pragma comment(lib, "wxjpeg"       D)
+#  pragma comment(lib, "wxtiff"       D)
+
+#  undef V
+#  undef D
+
+#endif //(__WXMSW__)
 /*
 There are several functions that can be used in a GUI module.
 
@@ -296,17 +326,18 @@ void NyqTextCtrl::OnUpdate(wxUpdateUIEvent & e)
       int lpos = wxMax(0, pos - 1);
    
       wxString text = GetRange(lpos, pos);
-   
-      if (text[0] == wxT('(')) {
-         wxLongToLongHashMap::const_iterator left = mLeftParens.find(lpos);
-         if (left != mLeftParens.end()) {
-            Colorize(lpos, left->second);
+      if (text.Length() > 0) {
+         if (text[0] == wxT('(')) {
+            wxLongToLongHashMap::const_iterator left = mLeftParens.find(lpos);
+            if (left != mLeftParens.end()) {
+               Colorize(lpos, left->second);
+            }
          }
-      }
-      else if (text[0] == wxT(')')) {
-         wxLongToLongHashMap::const_iterator right = mRightParens.find(lpos);
-         if (right != mRightParens.end()) {
-            Colorize(right->second, lpos);
+         else if (text[0] == wxT(')')) {
+            wxLongToLongHashMap::const_iterator right = mRightParens.find(lpos);
+            if (right != mRightParens.end()) {
+               Colorize(right->second, lpos);
+            }
          }
       }
 

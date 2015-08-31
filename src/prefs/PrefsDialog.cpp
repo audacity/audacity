@@ -30,11 +30,7 @@
 
 #include <wx/listbook.h>
 
-#if wxCHECK_VERSION(2, 8, 4)
 #include <wx/treebook.h>
-#else
-#include "../widgets/treebook.h"
-#endif
 
 #include "../AudioIO.h"
 #include "../Experimental.h"
@@ -267,6 +263,7 @@ PrefsDialog::PrefsDialog
    S.EndVerticalLay();
 
    S.AddStandardButtons(eOkButton | eCancelButton | eApplyButton);
+   static_cast<wxButton*>(wxWindow::FindWindowById(wxID_OK, this))->SetDefault();
 
    if (mUniquePage && !mUniquePage->ShowsApplyButton()) {
       wxWindow *const applyButton =
@@ -312,7 +309,9 @@ PrefsDialog::PrefsDialog
    // Frankly, this is a hack to work around a bug in wxTreebook, and
    // will have to be revisited if we add another category to mCategories.
    // JKC later added a category and 20 onto the 7.
-   SetSizeHints(sz.x, sz.y + 7 + 20, 800, 627);
+   sz.y += 7 + 20;
+   SetSize(sz);
+   SetMinSize(sz);
 
    // Center after all that resizing, but make sure it doesn't end up
    // off-screen
