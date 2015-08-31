@@ -502,7 +502,7 @@ wxTextCtrl * ShuttleGuiBase::AddTextBox(const wxString &Caption, const wxString 
    AddPrompt( Caption );
    miProp=0;
 
-#ifdef RIGHT_ALIGNED_TEXTBOXES
+#ifdef EXPERIMENTAL_RIGHT_ALIGNED_TEXTBOXES
    long flags = wxTE_RIGHT;
 #else
    long flags = wxTE_LEFT;
@@ -529,7 +529,7 @@ wxTextCtrl * ShuttleGuiBase::AddNumericTextBox(const wxString &Caption, const wx
    AddPrompt( Caption );
    miProp=0;
 
-#ifdef RIGHT_ALIGNED_TEXTBOXES
+#ifdef EXPERIMENTAL_RIGHT_ALIGNED_TEXTBOXES
    long flags = wxTE_RIGHT;
 #else
    long flags = wxTE_LEFT;

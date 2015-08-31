@@ -308,7 +308,7 @@ void OnSoundActivated();
 void OnToggleSoundActivated();
 void OnTogglePlayRecording();
 void OnToggleSWPlaythrough();
-#ifdef AUTOMATED_INPUT_LEVEL_ADJUSTMENT
+#ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
    void OnToogleAutomatedInputLevelAdjustment();
 #endif
 void OnRescanDevices();
