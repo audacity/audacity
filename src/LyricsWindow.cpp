@@ -9,8 +9,6 @@
 
 **********************************************************************/
 
-#include "Experimental.h"
-
 #include "LyricsWindow.h"
 #include "Lyrics.h"
 #include "AudioIO.h"

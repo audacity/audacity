@@ -21,6 +21,8 @@ effects.
 #ifndef __AUDACITY_EFFECTMANAGER__
 #define __AUDACITY_EFFECTMANAGER__
 
+#include "../Experimental.h"
+
 #include <wx/choice.h>
 #include <wx/dialog.h>
 #include <wx/event.h>

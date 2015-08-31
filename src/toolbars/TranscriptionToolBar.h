@@ -14,6 +14,7 @@
 #define __AUDACITY_TRANSCRIPTION_TOOLBAR__
 
 #include "ToolBar.h"
+#include "../Experimental.h"
 
 #include <wx/brush.h>
 #include <wx/pen.h>

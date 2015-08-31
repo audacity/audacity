@@ -28,6 +28,8 @@
 #include "../ShuttleGui.h"
 #include "../WaveTrack.h"
 
+#include "../Experimental.h"
+
 ////////////////////////////////////////////////////////////////////////////////
 
 TracksPrefs::TracksPrefs(wxWindow * parent)

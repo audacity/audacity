@@ -746,7 +746,7 @@ void ControlToolBar::StopPlaying(bool stopStream /* = true*/)
    SetPlay(false);
    SetRecord(false);
 
-   #ifdef AUTOMATED_INPUT_LEVEL_ADJUSTMENT
+   #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
       gAudioIO->AILADisable();
    #endif
 
@@ -929,7 +929,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
       }
 
       //Automated Input Level Adjustment Initialization
-      #ifdef AUTOMATED_INPUT_LEVEL_ADJUSTMENT
+      #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
          gAudioIO->AILAInitialize();
       #endif
          

@@ -28,6 +28,8 @@
 #include "../ShuttleGui.h"
 #include "../widgets/valnum.h"
 
+#include "../Experimental.h"
+
 enum
 {
    ID_Freq = 10000,

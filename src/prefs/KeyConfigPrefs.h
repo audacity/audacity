@@ -12,6 +12,8 @@
 #ifndef __AUDACITY_KEY_CONFIG_PREFS__
 #define __AUDACITY_KEY_CONFIG_PREFS__
 
+#include "../Experimental.h"
+
 class ShuttleGui;
 
 #if defined(EXPERIMENTAL_KEY_VIEW)

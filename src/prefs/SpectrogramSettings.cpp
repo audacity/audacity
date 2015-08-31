@@ -27,6 +27,8 @@ Paul Licameli
 
 #include <cmath>
 
+#include "../Experimental.h"
+
 SpectrogramSettings::Globals::Globals()
 {
    LoadPrefs();

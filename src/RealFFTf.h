@@ -1,6 +1,8 @@
 #ifndef __realfftf_h
 #define __realfftf_h
 
+#include "Experimental.h"
+
 #define fft_type float
 struct FFTParam {
    int *BitReversed;

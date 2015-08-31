@@ -68,6 +68,8 @@ effects from this one class.
 #include <sstream>
 #include <float.h>
 
+#include "../../Experimental.h"
+
 enum
 {
    ID_Editor = 10000,

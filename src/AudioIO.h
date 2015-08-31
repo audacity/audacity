@@ -67,7 +67,7 @@ class AudioIOListener;
 #define DEFAULT_LATENCY_DURATION 100.0
 #define DEFAULT_LATENCY_CORRECTION -130.0
 
-#ifdef AUTOMATED_INPUT_LEVEL_ADJUSTMENT
+#ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
    #define AILA_DEF_TARGET_PEAK 92
    #define AILA_DEF_DELTA_PEAK 2
    #define AILA_DEF_ANALYSIS_TIME 1000
@@ -393,7 +393,7 @@ class AUDACITY_DLL_API AudioIO {
    /** \brief Function to automatically set an acceptable volume
     *
     */
-   #ifdef AUTOMATED_INPUT_LEVEL_ADJUSTMENT
+   #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
       void AILAInitialize();
       void AILADisable();
       bool AILAIsActive();
@@ -551,7 +551,7 @@ private:
    NoteTrackArray   mMidiPlaybackTracks;
 #endif
 
-#ifdef AUTOMATED_INPUT_LEVEL_ADJUSTMENT
+#ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
    bool           mAILAActive;
    bool           mAILAClipped;
    int            mAILATotalAnalysis;

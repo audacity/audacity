@@ -80,6 +80,8 @@ and in the spectrogram spectral selection.
 
 #include "WaveTrack.h"
 
+#include "Experimental.h"
+
 DEFINE_EVENT_TYPE(EVT_FREQWINDOW_RECALC);
 
 enum {

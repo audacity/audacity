@@ -29,6 +29,8 @@
 
 #include "GUISettings.h"
 
+#include "../Experimental.h"
+
 GUIPrefs::GUIPrefs(wxWindow * parent)
 :  PrefsPanel(parent, _("Interface"))
 {

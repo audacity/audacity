@@ -183,6 +183,8 @@ audio tracks.
 #include "Theme.h"
 #include "AllThemeResources.h"
 
+#include "Experimental.h"
+
 #undef PROFILE_WAVEFORM
 #ifdef PROFILE_WAVEFORM
    #ifdef __WXMSW__

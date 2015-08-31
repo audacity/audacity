@@ -30,6 +30,8 @@
 #include "WaveTrack.h"
 #include "widgets/Ruler.h"
 
+#include "Experimental.h"
+
 // Globals, so that we remember settings from session to session
 static wxPrintData *gPrintData = NULL;
 static wxPageSetupData *gPageSetupData = NULL;

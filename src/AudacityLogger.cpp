@@ -26,6 +26,7 @@ Provides thread-safe logging based on the wxWidgets log facility.
 #include <wx/settings.h>
 
 #include "../images/AudacityLogoAlpha.xpm"
+#include "Experimental.h"
 
 //
 // AudacityLogger class
