@@ -14,6 +14,8 @@
 
 #include "../Audacity.h"
 
+#include "../Experimental.h"
+
 #if !defined(EXPERIMENTAL_NOISE_REDUCTION)
 
 #include "Effect.h"
