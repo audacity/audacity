@@ -15,6 +15,8 @@
 
 #include "DeviceChange.h"
 
+#include "Experimental.h"
+
 #if defined(EXPERIMENTAL_DEVICE_CHANGE_HANDLER)
 
 #if defined(HAVE_DEVICE_CHANGE)

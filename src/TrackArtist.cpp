@@ -183,6 +183,8 @@ audio tracks.
 #include "Theme.h"
 #include "AllThemeResources.h"
 
+#include "Experimental.h"
+
 #undef PROFILE_WAVEFORM
 #ifdef PROFILE_WAVEFORM
    #ifdef __WXMSW__
@@ -1795,21 +1797,6 @@ void TrackArtist::DrawClipWaveform(WaveTrack *track,
 
    const double pps =
       averagePixelsPerSample * rate;
-   if (!params.showIndividualSamples) {
-      // The WaveClip class handles the details of computing the shape
-      // of the waveform.  The only way GetWaveDisplay will fail is if
-      // there's a serious error, like some of the waveform data can't
-      // be loaded.  So if the function returns false, we can just exit.
-
-      // Note that we compute the full width display even if there is a
-      // fisheye hiding part of it, because of the caching.  If the
-      // fisheye moves over the background, there is then less to do when
-      // redrawing.
-
-      if (!clip->GetWaveDisplay(display,
-            t0, pps, isLoadingOD))
-         return;
-   }
 
    // For each portion separately, we will decide to draw
    // it as min/max/rms or as individual samples.
@@ -1821,6 +1808,32 @@ void TrackArtist::DrawClipWaveform(WaveTrack *track,
    const double threshold1 = 0.5 * rate;
    // Require at least 3 pixels per sample for drawing the draggable points.
    const double threshold2 = 3 * rate;
+
+   {
+      bool showIndividualSamples = false;
+      for (unsigned ii = 0; !showIndividualSamples && ii < nPortions; ++ii) {
+         const WavePortion &portion = portions[ii];
+         showIndividualSamples =
+            !portion.inFisheye && portion.averageZoom > threshold1;
+      }
+
+      if (!showIndividualSamples) {
+         // The WaveClip class handles the details of computing the shape
+         // of the waveform.  The only way GetWaveDisplay will fail is if
+         // there's a serious error, like some of the waveform data can't
+         // be loaded.  So if the function returns false, we can just exit.
+
+         // Note that we compute the full width display even if there is a
+         // fisheye hiding part of it, because of the caching.  If the
+         // fisheye moves over the background, there is then less to do when
+         // redrawing.
+
+         if (!clip->GetWaveDisplay(display,
+            t0, pps, isLoadingOD))
+            return;
+      }
+   }
+
    for (unsigned ii = 0; ii < nPortions; ++ii) {
       WavePortion &portion = portions[ii];
       const bool showIndividualSamples = portion.averageZoom > threshold1;

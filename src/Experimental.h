@@ -63,7 +63,7 @@
 //#define EXPERIMENTAL_EXTRA_MONITORING
 
 //#define EXPERIMENTAL_ROLL_UP_DIALOG
-//#define RIGHT_ALIGNED_TEXTBOXES
+//#define EXPERIMENTAL_RIGHT_ALIGNED_TEXTBOXES
 //#define EXPERIMENTAL_VOICE_DETECTION
 
 // Effect categorisation. Adds support for arranging effects in categories
@@ -74,8 +74,6 @@
 // it should have an easy mechanism to disable it at run-time, such as a menu item or a pref,
 // preferrably disabled until other work is done.  Martyn 22/12/2008.
 // 
-// All code removed after 2.1.0 release since it was unmaintained. LLL
-//#define EFFECT_CATEGORIES
 
 // JKC Apr 2015, Menu item to manage effects.
 #define EXPERIMENTAL_EFFECT_MANAGEMENT
@@ -139,7 +137,7 @@
 
 #if USE_PORTMIXER
    //Automatically tries to find an acceptable input volume
-   //#define AUTOMATED_INPUT_LEVEL_ADJUSTMENT
+   //#define EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
 #endif
 
 // John (Thales) work to make the display show the result of the pan and gain sliders, rather than their input.

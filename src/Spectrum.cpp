@@ -18,6 +18,8 @@
 #include "Spectrum.h"
 #include "FFT.h"
 
+#include "Experimental.h"
+
 bool ComputeSpectrum(const float * data, int width,
                      int windowSize,
                      double WXUNUSED(rate), float *output,

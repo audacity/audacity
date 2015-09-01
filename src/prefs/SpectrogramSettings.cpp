@@ -27,6 +27,8 @@ Paul Licameli
 
 #include <cmath>
 
+#include "../Experimental.h"
+
 SpectrogramSettings::Globals::Globals()
 {
    LoadPrefs();
@@ -159,8 +161,8 @@ const wxArrayString &SpectrogramSettings::GetScaleNames()
          mContents.Add(_("Bark"));
          /* i18n-hint: The name of a frequency scale in psychoacoustics, abbreviates Equivalent Rectangular Bandwidth */
          mContents.Add(_("ERBS"));
-         /* i18n-hint: A mathematical formula where f stands for frequency */
-         mContents.Add(_("1 / f"));
+         /* i18n-hint: Time units, that is Period = 1 / Frequency */
+         mContents.Add(_("Period"));
       }
    };
 

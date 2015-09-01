@@ -23,6 +23,7 @@
 *//*******************************************************************/
 
 #include "Resample.h"
+#include "Prefs.h"
 
 #include <soxr.h>
 
@@ -99,4 +100,12 @@ int Resample::Process(double  factor,
    }
    *inBufferUsed = (int)idone;
    return (int)odone;
+}
+
+void Resample::SetMethod(const bool useBestMethod)
+{
+   if (useBestMethod)
+      mMethod = gPrefs->Read(GetBestMethodKey(), GetBestMethodDefault());
+   else
+      mMethod = gPrefs->Read(GetFastMethodKey(), GetFastMethodDefault());
 }

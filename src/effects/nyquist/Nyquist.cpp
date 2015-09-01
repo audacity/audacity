@@ -52,6 +52,7 @@ effects from this one class.
 #include "../../WaveTrack.h"
 #include "../../widgets/valnum.h"
 #include "../../Prefs.h"
+#include "../../prefs/WaveformSettings.h"
 
 #include "FileDialog.h"
 
@@ -66,6 +67,8 @@ effects from this one class.
 #include <ostream>
 #include <sstream>
 #include <float.h>
+
+#include "../../Experimental.h"
 
 enum
 {
@@ -799,14 +802,19 @@ bool NyquistEffect::ProcessOne()
       wxString type;
       wxString view;
       wxString bitFormat;
+
       switch (mCurTrack[0]->GetKind())
       {
          case Track::Wave:
             type = wxT("wave");
             switch (((WaveTrack *) mCurTrack[0])->GetDisplay())
             {
-               case WaveTrack::Waveform: view = wxT("\"Waveform\""); break;
-               case WaveTrack::Spectrum: view = wxT("\"Spectrum\""); break;
+               case WaveTrack::Waveform:
+                  view = (mCurTrack[0]->GetWaveformSettings().scaleType == 0) ? wxT("\"Waveform\"") : wxT("\"Waveform (dB)\"");
+                  break;
+               case WaveTrack::Spectrum:
+                  view = wxT("\"Spectrogram\"");
+                  break;
                default: view = wxT("NIL"); break;
             }
          break;
@@ -829,6 +837,7 @@ bool NyquistEffect::ProcessOne()
       cmd += wxString::Format(wxT("(putprop '*TRACK* %d 'INDEX)\n"), ++mTrackIndex);
       cmd += wxString::Format(wxT("(putprop '*TRACK* \"%s\" 'NAME)\n"), mCurTrack[0]->GetName().c_str());
       cmd += wxString::Format(wxT("(putprop '*TRACK* \"%s\" 'TYPE)\n"), type.c_str());
+      // Note: "View" property may change when Audacity's choice of track views has stabilized.
       cmd += wxString::Format(wxT("(putprop '*TRACK* %s 'VIEW)\n"), view.c_str());
       cmd += wxString::Format(wxT("(putprop '*TRACK* %d 'CHANNELS)\n"), mCurNumChannels);
       cmd += wxString::Format(wxT("(putprop '*TRACK* (float %s) 'START-TIME)\n"),

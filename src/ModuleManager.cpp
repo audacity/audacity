@@ -47,6 +47,8 @@ i.e. an alternative to the usual interface, for Audacity.
 
 #include <wx/arrimpl.cpp>
 
+#include "Experimental.h"
+
 #define initFnName      "ExtensionModuleInit"
 #define versionFnName   "GetVersionString"
 #define scriptFnName    "RegScriptServerFunc"

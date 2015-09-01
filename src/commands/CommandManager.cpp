@@ -115,6 +115,8 @@ CommandManager.  It holds the callback for one command.
 #include <gtk/gtk.h>
 #endif
 
+#include "../Experimental.h"
+
 // Shared by all projects
 static class CommandManagerEventMonitor : public wxEventFilter
 {

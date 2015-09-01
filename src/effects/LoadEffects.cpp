@@ -57,6 +57,8 @@
 #include "ChangeTempo.h"
 #endif
 
+#include "../Experimental.h"
+
 //
 // Include the SoundTouch effects, if requested
 //

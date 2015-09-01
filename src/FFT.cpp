@@ -46,6 +46,8 @@
 #include <stdio.h>
 #include <math.h>
 
+#include "Experimental.h"
+
 static int **gFFTBitTable = NULL;
 static const int MaxFastBits = 16;
 

@@ -30,6 +30,8 @@
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 
+#include "../Experimental.h"
+
 using std::min;
 
 RecordingPrefs::RecordingPrefs(wxWindow * parent)
@@ -123,7 +125,7 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 
-   #ifdef AUTOMATED_INPUT_LEVEL_ADJUSTMENT
+   #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
       S.StartStatic(_("Automated Recording Level Adjustment"));
       {
          S.TieCheckBox(_("Enable Automated Recording Level Adjustment."),
@@ -180,7 +182,7 @@ bool RecordingPrefs::Apply()
       gPrefs->Write(wxT("/AudioIO/LatencyDuration"), DEFAULT_LATENCY_DURATION);
    }
 
-   #ifdef AUTOMATED_INPUT_LEVEL_ADJUSTMENT
+   #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
       double targetpeak, deltapeak;
       gPrefs->Read(wxT("/AudioIO/TargetPeak"),  &targetpeak);
       gPrefs->Read(wxT("/AudioIO/DeltaPeakVolume"), &deltapeak);

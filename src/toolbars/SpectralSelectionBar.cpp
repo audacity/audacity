@@ -55,6 +55,8 @@ with changes in the SpectralSelectionBar.
 #include "../SelectedRegion.h"
 #include "../widgets/NumericTextCtrl.h"
 
+#include "../Experimental.h"
+
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
 
 IMPLEMENT_CLASS(SpectralSelectionBar, ToolBar);

@@ -12,6 +12,8 @@
 #ifndef __AUDACITY_COMMAND_MANAGER__
 #define __AUDACITY_COMMAND_MANAGER__
 
+#include "../Experimental.h"
+
 #include <wx/string.h>
 #include <wx/dynarray.h>
 #include <wx/menu.h>

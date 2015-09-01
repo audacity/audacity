@@ -29,6 +29,8 @@ MP3 and FFmpeg encoding libraries.
 
 #include "LibraryPrefs.h"
 
+#include "../Experimental.h"
+
 ////////////////////////////////////////////////////////////////////////////////
 
 #define ID_MP3_FIND_BUTTON          7001

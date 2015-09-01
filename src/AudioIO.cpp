@@ -318,7 +318,7 @@ writing audio.
    #include "NoteTrack.h"
 #endif
 
-#ifdef AUTOMATED_INPUT_LEVEL_ADJUSTMENT
+#ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
    #define LOWER_BOUND 0.0
    #define UPPER_BOUND 1.0
 #endif
@@ -876,7 +876,7 @@ AudioIO::AudioIO()
    mNumPauseFrames = 0;
 #endif
 
-#ifdef AUTOMATED_INPUT_LEVEL_ADJUSTMENT
+#ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
    mAILAActive = false;
 #endif
    mSilentBuf = NULL;
@@ -1811,7 +1811,7 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
       }
    }
 
-#ifdef AUTOMATED_INPUT_LEVEL_ADJUSTMENT
+#ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
    AILASetStartTime();
 #endif
 
@@ -3769,7 +3769,7 @@ void AudioIO::AllNotesOff()
 #endif
 
 // Automated Input Level Adjustment - Automatically tries to find an acceptable input volume
-#ifdef AUTOMATED_INPUT_LEVEL_ADJUSTMENT
+#ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
 void AudioIO::AILAInitialize() {
    gPrefs->Read(wxT("/AudioIO/AutomatedInputLevelAdjustment"), &mAILAActive,         false);
    gPrefs->Read(wxT("/AudioIO/TargetPeak"),            &mAILAGoalPoint,      AILA_DEF_TARGET_PEAK);

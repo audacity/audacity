@@ -40,6 +40,8 @@
 
 #include "../Tags.h"
 
+#include "../Experimental.h"
+
 #define FLAC_HEADER "fLaC"
 
 #define DESC _("FLAC files")
@@ -93,8 +95,6 @@ extern "C" {
 #undef LEGACY_FLAC
 #endif
 
-
-//#define EXPERIMENTAL_OD_FLAC
 
 class FLACImportFileHandle;
 

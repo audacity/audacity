@@ -29,6 +29,7 @@
 #include "../ShuttleGui.h"
 #include "../widgets/valnum.h"
 
+#include "../Experimental.h"
 
 enum
 {

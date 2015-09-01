@@ -58,6 +58,8 @@
 #include "../Theme.h"
 #include "../widgets/AButton.h"
 
+#include "../Experimental.h"
+
 IMPLEMENT_CLASS(ToolsToolBar, ToolBar);
 
 ////////////////////////////////////////////////////////////
