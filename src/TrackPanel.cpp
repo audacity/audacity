@@ -6258,7 +6258,7 @@ void TrackPanel::HandleWheelRotationInVRuler
                settings.NextHigherDBRange();
          }
 
-         if (event.CmdDown()) {
+         if (!event.CmdDown()) {
             // extra-special case that varies the db limit without changing
             // magnification
             const float extreme = (LINEAR_TO_DB(2) + newdBRange) / newdBRange;
@@ -6272,7 +6272,7 @@ void TrackPanel::HandleWheelRotationInVRuler
             }
          }
       }
-      else if (event.CmdDown()) {
+      else if (event.CmdDown() && !event.ShiftDown()) {
          HandleWaveTrackVZoom(
             mTracks, rect, event.m_y, event.m_y,
             wt, false, (event.m_wheelRotation < 0),
