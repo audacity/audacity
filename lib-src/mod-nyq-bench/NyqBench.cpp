@@ -170,7 +170,7 @@ extern "C"
          case AppQuiting: {
             wxASSERT(gBench != NULL);
             if (gBench) {
-               delete gBench;
+               gBench->Close(true);
                gBench = NULL;
             }
          }
@@ -270,7 +270,7 @@ void NyqTextCtrl::OnChar(wxKeyEvent & e)
    }
 }
 
-#if defined(__WXMAC__)
+#if defined(__WXMAC__REMOVED_UNTIL_ITS_PROVEN_THAT_IT_IS_STILL_NEEDED)
 #include <wx/mac/uma.h>
 
 // This is hackage to correct a problem on Leopard where the
