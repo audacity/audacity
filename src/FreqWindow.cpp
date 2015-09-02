@@ -993,7 +993,11 @@ void FreqWindow::Recalc()
    int windowFunc = mFuncChoice->GetSelection();
 
    wxWindow *hadFocus = FindFocus();
-   wxWindowDisabler *blocker = new wxWindowDisabler(mProgress);
+   // In wxMac, the skipped window MUST be a top level window.  I'd originally made it
+   // just the mProgress window with the idea of preventing user interaction with the
+   // controls while the plot was being recalculated.  This doesn't appear to be necessary
+   // so just use the the top level window instead.
+   wxWindowDisabler *blocker = new wxWindowDisabler(this);
    wxYieldIfNeeded();
 
    mAnalyst->Calculate(alg, windowFunc, mWindowSize, mRate,
