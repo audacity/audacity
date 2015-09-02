@@ -533,7 +533,7 @@ public:
 
    void OnDownload(wxCommandEvent & WXUNUSED(event))
    {
-      HelpSystem::ShowHelpDialog(this, wxT("FAQ_Installation_and_Plug-ins#ffdown"));
+      HelpSystem::ShowHelpDialog(this, wxT("FAQ:Installation_and_Plug-Ins#ffdown"));
    }
 
    wxString GetLibPath()
