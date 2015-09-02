@@ -84,7 +84,7 @@ copy "$(TargetPath)" "%25dest%25"
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <AdditionalIncludeDirectories>$(WXWIN)\lib\vc_dll\mswu;$(WXWIN)\include;../../include;../../win;../../src;../../src/include/win32;../../src/include;../../lib-src/libsndfile/win32;../../lib-src/libsndfile/src;../../lib-src/portaudio-v19/include;../../lib-src/portmixer/include;../../lib-src/portsmf;../../lib-src/libnyquist;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WXUSINGDLL;__WXMSW__;WIN32;NDEBUG;STRICT;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>wxDEBUG_LEVEL=0;WXUSINGDLL;__WXMSW__;WIN32;NDEBUG;STRICT;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeader />
       <WarningLevel>Level3</WarningLevel>
