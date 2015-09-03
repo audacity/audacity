@@ -1053,10 +1053,9 @@ void ProgressDialog::Init()
    // it before creating this object.  The reason is because the focus events
    // that are sent to the parent window after the wxWindowDisabler are created
    // are tossed and focus will not get restored to the parent once the disabler
-   // is deleted.
+   // is deleted.  (See bug #1173 for more info)
    //
    // So, we capture and restore the focus ourselves.
-
    mHadFocus = wxWindow::FindFocus();
 
 #if defined(__WXGTK__)
