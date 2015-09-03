@@ -160,7 +160,7 @@ const wxArrayString &SpectrogramSettings::GetScaleNames()
          /* i18n-hint: The name of a frequency scale in psychoacoustics, named for Heinrich Barkhausen */
          mContents.Add(_("Bark"));
          /* i18n-hint: The name of a frequency scale in psychoacoustics, abbreviates Equivalent Rectangular Bandwidth */
-         mContents.Add(_("ERBS"));
+         mContents.Add(_("ERB"));
          /* i18n-hint: Time units, that is Period = 1 / Frequency */
          mContents.Add(_("Period"));
       }
