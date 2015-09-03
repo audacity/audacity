@@ -2814,8 +2814,8 @@ void TrackPanel::StartSelection(int mouseXCoordinate, int trackLeftEdge)
       bool snappedPoint, snappedTime;
       if (mSnapManager->Snap(mCapturedTrack, mSelStart, false,
                              &s, &snappedPoint, &snappedTime)) {
-         //if (snappedPoint)
-            //mSnapLeft = mViewInfo->TimeToPosition(s, trackLeftEdge);
+         if (snappedPoint)
+            mSnapLeft = mViewInfo->TimeToPosition(s, trackLeftEdge);
       }
    }
 
