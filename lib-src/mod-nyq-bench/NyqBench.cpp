@@ -170,7 +170,7 @@ extern "C"
          case AppQuiting: {
             wxASSERT(gBench != NULL);
             if (gBench) {
-               gBench->Close(true);
+               gBench->Destroy();
                gBench = NULL;
             }
          }
