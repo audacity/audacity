@@ -1797,6 +1797,9 @@ void ExportFFmpegOptions::OnLoadPreset(wxCommandEvent& WXUNUSED(event))
    mCodecList->Append(mCodecNames);
 
    mPresets->LoadPreset(this,presetname);
+
+   DoOnFormatList();
+   DoOnCodecList();
 }
 
 ///
