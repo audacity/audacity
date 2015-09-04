@@ -2077,7 +2077,7 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
    // to exercise the bug that instigated this hack.)
    if (mIsBeingDeleted)
    {
-      evt.Skip();
+      event.Skip();
       return;
    }
 
