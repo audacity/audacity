@@ -983,7 +983,10 @@ AudioIO::~AudioIO()
 
    /* Delete is a "graceful" way to stop the thread.
       (Kill is the not-graceful way.) */
-   wxTheApp->Yield();
+
+   // This causes reentrancy issues during application shutdown
+   // wxTheApp->Yield();
+
    mThread->Delete();
 
    if(mSilentBuf)

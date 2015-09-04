@@ -2070,6 +2070,17 @@ void AudacityProject::OnMouseEvent(wxMouseEvent & event)
 //     and/or attempts to delete objects twice.
 void AudacityProject::OnCloseWindow(wxCloseEvent & event)
 {
+   // We are called for the wxEVT_CLOSE_WINDOW, wxEVT_END_SESSION, and
+   // wxEVT_QUERY_END_SESSION, so we have to protect against multiple
+   // entries.  This is a hack until the whole application termination
+   // process can be reviewed and reworked.  (See bug #964 for ways
+   // to exercise the bug that instigated this hack.)
+   if (mIsBeingDeleted)
+   {
+      evt.Skip();
+      return;
+   }
+
    if (event.CanVeto() && (::wxIsBusy() || mbBusyImporting))
    {
       event.Veto();
@@ -2259,10 +2270,10 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
    if (gActiveProject == this) {
       // Find a new active project
       if (gAudacityProjects.Count() > 0) {
-         gActiveProject = gAudacityProjects[0];
+         SetActiveProject(gAudacityProjects[0]);
       }
       else {
-         gActiveProject = NULL;
+         SetActiveProject(NULL);
       }
    }
 
@@ -2286,6 +2297,8 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
    }
 
    Destroy();
+
+   mIsBeingDeleted = true;
 }
 
 void AudacityProject::OnOpenAudioFile(wxCommandEvent & event)

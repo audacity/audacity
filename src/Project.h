@@ -671,6 +671,9 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 
    wxLongLong mLastSelectionAdjustment;
 
+   // See explanation in OnCloseWindow
+   bool mIsBeingDeleted;
+
    // CommandManager needs to use private methods
    friend class CommandManager;
 
