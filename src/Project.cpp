@@ -795,7 +795,8 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
      mMenuClose(false),
      mShownOnce(false),
      mbInitializingScrollbar(false),
-     mViewInfo(0.0, 1.0, ZoomInfo::GetDefaultZoom())
+     mViewInfo(0.0, 1.0, ZoomInfo::GetDefaultZoom()),
+     mIsBeingDeleted(false)
 {
    // Note that the first field of the status bar is a dummy, and it's width is set
    // to zero latter in the code. This field is needed for wxWidgets 2.8.12 because
@@ -1038,7 +1039,10 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
 
 AudacityProject::~AudacityProject()
 {
-   wxGetApp().GetRecentFiles()->RemoveMenu(mRecentFilesMenu);
+   if (wxGetApp().GetRecentFiles())
+   {
+      wxGetApp().GetRecentFiles()->RemoveMenu(mRecentFilesMenu);
+   }
 
    wxTheApp->Disconnect(EVT_AUDIOIO_CAPTURE,
                      wxCommandEventHandler(AudacityProject::OnCapture),

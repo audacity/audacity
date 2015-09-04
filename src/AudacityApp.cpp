@@ -1922,6 +1922,7 @@ int AudacityApp::OnExit()
 
    mRecentFiles->Save(*gPrefs, wxT("RecentFiles"));
    delete mRecentFiles;
+   mRecentFiles = NULL;
 
    FinishPreferences();
 
