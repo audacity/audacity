@@ -151,7 +151,8 @@ void ViewInfo::UpdatePrefs()
    gPrefs->Read(TracksBehaviorsPrefs::ScrollingPreferenceKey(), &bScrollBeyondZero,
                 TracksBehaviorsPrefs::ScrollingPreferenceDefault());
 #endif
-
+   gPrefs->Read(wxT("/GUI/AdjustSelectionEdges"), &bAdjustSelectionEdges,
+      true);
 }
 
 void ViewInfo::SetBeforeScreenWidth(wxInt64 beforeWidth, wxInt64 screenWidth, double lowerBoundTime)

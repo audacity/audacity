@@ -180,6 +180,7 @@ public:
    bool bUpdateTrackIndicator;
 
    bool bScrollBeyondZero;
+   bool bAdjustSelectionEdges;
 
    // During timer update, grab the volatile stream time just once, so that
    // various other drawing code can use the exact same value.
