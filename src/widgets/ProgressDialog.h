@@ -67,6 +67,8 @@ public:
    void SetMessage(const wxString & message);
 
 protected:
+   wxWindow *mHadFocus;
+
    wxStaticText *mElapsed;
    wxStaticText *mRemaining;
    wxGauge *mGauge;
@@ -82,6 +84,7 @@ protected:
 
 private:
    void Init();
+   bool SearchForWindow(const wxWindowList & list, const wxWindow *searchfor) const;
    void OnCancel(wxCommandEvent & e);
    void OnStop(wxCommandEvent & e);
    void OnCloseWindow(wxCloseEvent & e);

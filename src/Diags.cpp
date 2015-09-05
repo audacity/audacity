@@ -36,7 +36,6 @@ count down so that we track how many times the event happens.
 
 #include <wx/stopwatch.h>
 #include "Diags.h"
-#include "Experimental.h"
 
 static wxStopWatch MasterWatch;
 static bool bStopWatchStarted = false;

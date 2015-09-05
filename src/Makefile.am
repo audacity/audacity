@@ -104,7 +104,7 @@ audacity_SOURCES = \
 	AudacityLogger.h \
 	AudioIO.cpp \
 	AudioIO.h \
-	AudioIOListenerer.h \
+	AudioIOListener.h \
 	AutoRecovery.cpp \
 	AutoRecovery.h \
 	BatchCommandDialog.cpp \
@@ -231,6 +231,7 @@ audacity_SOURCES = \
 	TrackPanel.h \
 	TrackPanelAx.cpp \
 	TrackPanelAx.h \
+	TrackPanelListener.h \
 	TranslatableStringArray.h \
 	UndoManager.cpp \
 	UndoManager.h \

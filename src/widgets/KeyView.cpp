@@ -53,7 +53,7 @@ KeyView::KeyView(wxWindow *parent,
                  wxWindowID id,
                  const wxPoint & pos,
                  const wxSize & size)
-: wxVListBox(parent, id, pos, size, wxBORDER_THEME),
+: wxVListBox(parent, id, pos, size, wxBORDER_THEME | wxHSCROLL | wxVSCROLL),
   mScrollX(0),
   mWidth(0)
 {

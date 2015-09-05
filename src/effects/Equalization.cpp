@@ -399,7 +399,7 @@ bool EffectEqualization::ValidateUI()
 
    // Update unnamed curve (so it's there for next time)
    //(done in a hurry, may not be the neatest -MJS)
-   if (mDirty && mDrawMode)
+   if (mDirty && !mDrawMode)
    {
       int numPoints = mLogEnvelope->GetNumberOfPoints();
       double *when = new double[numPoints];
@@ -987,12 +987,10 @@ bool EffectEqualization::TransferDataToWindow()
    if (mDrawMode)
    {
       mDraw->SetValue(true);
-      UpdateDraw();
    }
    else
    {
       mGraphic->SetValue(true);
-      UpdateGraphic();
    }
 
    TransferDataFromWindow();
@@ -1567,11 +1565,12 @@ void EffectEqualization::setCurve(int currentCurve)
 
          for(i=0;i<nCurvePoints;i++)
          {
-            if( mCurves[currentCurve].points[i].Freq >= 20)
+            double flog = log10(mCurves[currentCurve].points[i].Freq);
+            if( flog >= loLog )
             {
-               when = (log10(mCurves[currentCurve].points[i].Freq) - loLog)/denom;
+               when = (flog - loLog)/denom;
                value = mCurves[currentCurve].points[i].dB;
-               if(when <= 1)
+               if(when <= 1.)
                   env->Insert(when, value);
                else
                {  // we have a point beyond fs/2.  Insert it so that env code can use it.

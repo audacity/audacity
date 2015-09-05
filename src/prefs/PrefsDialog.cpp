@@ -309,7 +309,9 @@ PrefsDialog::PrefsDialog
    // Frankly, this is a hack to work around a bug in wxTreebook, and
    // will have to be revisited if we add another category to mCategories.
    // JKC later added a category and 20 onto the 7.
-   SetSizeHints(sz.x, sz.y + 7 + 20, 800, 627);
+   sz.y += 7 + 20;
+   SetSize(sz);
+   SetMinSize(sz);
 
    // Center after all that resizing, but make sure it doesn't end up
    // off-screen

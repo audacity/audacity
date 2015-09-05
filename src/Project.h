@@ -89,6 +89,8 @@ struct AudioIOStartStreamOptions;
 class WaveTrackArray;
 class Regions;
 
+class LWSlider;
+
 AudacityProject *CreateNewAudacityProject();
 AUDACITY_DLL_API AudacityProject *GetActiveProject();
 void RedrawAllProjects();
@@ -289,6 +291,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    void OnMouseEvent(wxMouseEvent & event);
    void OnIconize(wxIconizeEvent &event);
    void OnSize(wxSizeEvent & event);
+   void OnShow(wxShowEvent & event);
    void OnMove(wxMoveEvent & event);
    void OnScroll(wxScrollEvent & event);
    void OnCloseWindow(wxCloseEvent & event);
@@ -333,6 +336,13 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 
    bool IsSyncLocked();
    void SetSyncLock(bool flag);
+
+   void DoTrackMute(Track *pTrack, bool exclusive);
+   void DoTrackSolo(Track *pTrack, bool exclusive);
+   void SetTrackGain(Track * track, LWSlider * slider);
+   void SetTrackPan(Track * track, LWSlider * slider);
+
+   void RemoveTrack(Track * toRemove);
 
    // "exclusive" mute means mute the chosen track and unmute all others.
    void HandleTrackMute(Track *t, const bool exclusive);
@@ -385,11 +395,8 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    virtual void TP_DisplaySelection();
    virtual void TP_DisplayStatusMessage(wxString msg);
 
-   virtual int TP_GetCurrentTool();
    virtual ToolsToolBar * TP_GetToolsToolBar();
-   virtual ControlToolBar * TP_GetControlToolBar();
 
-   virtual void TP_OnPlayKey();
    virtual void TP_PushState(wxString longDesc, wxString shortDesc,
                              int flags);
    virtual void TP_ModifyState(bool bWantsAutoSave);    // if true, writes auto-save file. Should set only if you really want the state change restored after
@@ -571,6 +578,8 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    // dialog for missing alias warnings
    wxDialog            *mAliasMissingWarningDialog;
 
+   bool mShownOnce;
+
    // Project owned meters
    Meter *mPlaybackMeter;
    Meter *mCaptureMeter;
@@ -602,8 +611,6 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    bool mNormalizeOnLoad;  //lda
    bool mShowId3Dialog; //lda
    bool mEmptyCanBeDirty;
-
-   bool mScrollBeyondZero;
 
    bool mSelectAllOnNone;
 
@@ -658,6 +665,14 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 
    // Keyboard capture
    wxWindow *mKeyboardCaptureHandler;
+
+   double mSeekShort;
+   double mSeekLong;
+
+   wxLongLong mLastSelectionAdjustment;
+
+   // See explanation in OnCloseWindow
+   bool mIsBeingDeleted;
 
    // CommandManager needs to use private methods
    friend class CommandManager;

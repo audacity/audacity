@@ -170,7 +170,7 @@ extern "C"
          case AppQuiting: {
             wxASSERT(gBench != NULL);
             if (gBench) {
-               delete gBench;
+               gBench->Destroy();
                gBench = NULL;
             }
          }
@@ -270,7 +270,7 @@ void NyqTextCtrl::OnChar(wxKeyEvent & e)
    }
 }
 
-#if defined(__WXMAC__)
+#if defined(__WXMAC__REMOVED_UNTIL_ITS_PROVEN_THAT_IT_IS_STILL_NEEDED)
 #include <wx/mac/uma.h>
 
 // This is hackage to correct a problem on Leopard where the
@@ -326,17 +326,18 @@ void NyqTextCtrl::OnUpdate(wxUpdateUIEvent & e)
       int lpos = wxMax(0, pos - 1);
    
       wxString text = GetRange(lpos, pos);
-   
-      if (text[0] == wxT('(')) {
-         wxLongToLongHashMap::const_iterator left = mLeftParens.find(lpos);
-         if (left != mLeftParens.end()) {
-            Colorize(lpos, left->second);
+      if (text.Length() > 0) {
+         if (text[0] == wxT('(')) {
+            wxLongToLongHashMap::const_iterator left = mLeftParens.find(lpos);
+            if (left != mLeftParens.end()) {
+               Colorize(lpos, left->second);
+            }
          }
-      }
-      else if (text[0] == wxT(')')) {
-         wxLongToLongHashMap::const_iterator right = mRightParens.find(lpos);
-         if (right != mRightParens.end()) {
-            Colorize(right->second, lpos);
+         else if (text[0] == wxT(')')) {
+            wxLongToLongHashMap::const_iterator right = mRightParens.find(lpos);
+            if (right != mRightParens.end()) {
+               Colorize(right->second, lpos);
+            }
          }
       }
 

@@ -101,6 +101,8 @@ It handles initialization and termination by subclassing wxApp.
 
 #include "import/Import.h"
 
+#include "Experimental.h"
+
 #if defined(EXPERIMENTAL_CRASH_REPORT)
 #include <wx/debugrpt.h>
 #include <wx/evtloop.h>
@@ -1920,6 +1922,7 @@ int AudacityApp::OnExit()
 
    mRecentFiles->Save(*gPrefs, wxT("RecentFiles"));
    delete mRecentFiles;
+   mRecentFiles = NULL;
 
    FinishPreferences();
 

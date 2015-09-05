@@ -318,7 +318,7 @@ writing audio.
    #include "NoteTrack.h"
 #endif
 
-#ifdef AUTOMATED_INPUT_LEVEL_ADJUSTMENT
+#ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
    #define LOWER_BOUND 0.0
    #define UPPER_BOUND 1.0
 #endif
@@ -876,7 +876,7 @@ AudioIO::AudioIO()
    mNumPauseFrames = 0;
 #endif
 
-#ifdef AUTOMATED_INPUT_LEVEL_ADJUSTMENT
+#ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
    mAILAActive = false;
 #endif
    mSilentBuf = NULL;
@@ -983,7 +983,10 @@ AudioIO::~AudioIO()
 
    /* Delete is a "graceful" way to stop the thread.
       (Kill is the not-graceful way.) */
-   wxTheApp->Yield();
+
+   // This causes reentrancy issues during application shutdown
+   // wxTheApp->Yield();
+
    mThread->Delete();
 
    if(mSilentBuf)
@@ -1811,7 +1814,7 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
       }
    }
 
-#ifdef AUTOMATED_INPUT_LEVEL_ADJUSTMENT
+#ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
    AILASetStartTime();
 #endif
 
@@ -3769,7 +3772,7 @@ void AudioIO::AllNotesOff()
 #endif
 
 // Automated Input Level Adjustment - Automatically tries to find an acceptable input volume
-#ifdef AUTOMATED_INPUT_LEVEL_ADJUSTMENT
+#ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
 void AudioIO::AILAInitialize() {
    gPrefs->Read(wxT("/AudioIO/AutomatedInputLevelAdjustment"), &mAILAActive,         false);
    gPrefs->Read(wxT("/AudioIO/TargetPeak"),            &mAILAGoalPoint,      AILA_DEF_TARGET_PEAK);
@@ -4023,19 +4026,29 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
    }  // end recording VU meter update
 
    // Stop recording if 'silence' is detected
+   //
+   // LL:  We'd gotten a little "dangerous" with the control toolbar calls
+   //      here because we are not running in the main GUI thread.  Eventually
+   //      the toolbar attempts to update the active project's status bar.
+   //      But, since we're not in the main thread, we can get all manner of
+   //      really weird failures.  Or none at all which is even worse, since
+   //      we don't know a problem exists.
+   //
+   //      By using CallAfter(), we can schedule the call to the toolbar
+   //      to run in the main GUI thread after the next event loop iteration.
    if(gAudioIO->mPauseRec && inputBuffer && gAudioIO->mInputMeter) {
       if(gAudioIO->mInputMeter->GetMaxPeak() < gAudioIO->mSilenceLevel ) {
          if(!gAudioIO->IsPaused()) {
             AudacityProject *p = GetActiveProject();
-            wxCommandEvent dummyEvt;
-            p->GetControlToolBar()->OnPause(dummyEvt);
+            ControlToolBar *bar = p->GetControlToolBar();
+            bar->CallAfter(&ControlToolBar::Pause);
          }
       }
       else {
          if(gAudioIO->IsPaused()) {
             AudacityProject *p = GetActiveProject();
-            wxCommandEvent dummyEvt;
-            p->GetControlToolBar()->OnPause(dummyEvt);
+            ControlToolBar *bar = p->GetControlToolBar();
+            bar->CallAfter(&ControlToolBar::Pause);
          }
       }
    }

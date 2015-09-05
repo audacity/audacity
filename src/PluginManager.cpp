@@ -48,6 +48,8 @@
 
 #include <wx/arrimpl.cpp>
 
+#include "Experimental.h"
+
 WX_DECLARE_STRING_HASH_MAP(wxArrayString, ProviderMap);
 
 // ============================================================================

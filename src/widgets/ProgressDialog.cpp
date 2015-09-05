@@ -1017,7 +1017,30 @@ ProgressDialog::~ProgressDialog()
       mDisable = NULL;
    }
 
-   Beep();
+   if (IsShown())
+   {
+      Show(false);
+
+      Beep();
+   }
+
+#if defined(__WXGTK__)
+   // Under GTK, when applying any effect that prompts the user, it's more than
+   // like that FindFocus() will return NULL.  So, make sure something has focus.
+   if (GetParent()) {
+      GetParent()->SetFocus();
+   }
+#endif
+
+   // Restore saved focus, but only if the window still exists.
+   //
+   // It is possible that it was a deferred deletion and it was deleted since
+   // we captured the focused window.  So, we need to verify that the window
+   // still exists by searching all of the wxWidgets windows.  It's the only
+   // sure way.
+   if (mHadFocus && SearchForWindow(wxTopLevelWindows, mHadFocus)) {
+      mHadFocus->SetFocus();
+   }
 }
 
 void ProgressDialog::Init()
@@ -1025,6 +1048,24 @@ void ProgressDialog::Init()
    mLastValue = 0;
    mDisable = NULL;
    mIsTransparent = true;
+
+   // There's a problem where the focus is not returned to the window that had
+   // it before creating this object.  The reason is because the focus events
+   // that are sent to the parent window after the wxWindowDisabler are created
+   // are tossed and focus will not get restored to the parent once the disabler
+   // is deleted.  (See bug #1173 for more info)
+   //
+   // So, we capture and restore the focus ourselves.
+   mHadFocus = wxWindow::FindFocus();
+
+#if defined(__WXGTK__)
+   // Under GTK, when applying any effect that prompts the user, it's more than
+   // likely that FindFocus() will return NULL.  So, make sure something has focus.
+   if (GetParent())
+   {
+      GetParent()->SetFocus();
+   }
+#endif
 }
 
 bool ProgressDialog::Create(const wxString & title,
@@ -1402,6 +1443,25 @@ void ProgressDialog::SetMessage(const wxString & message)
          wxDialog::Update();
       }
    }
+}
+
+//
+// Recursivaly search the window list for the given window.
+//
+bool ProgressDialog::SearchForWindow(const wxWindowList & list, const wxWindow *searchfor) const
+{
+   wxWindowList::compatibility_iterator node = list.GetFirst();
+   while (node)
+   {
+      wxWindow *win = node->GetData();
+      if (win == searchfor || SearchForWindow(win->GetChildren(), searchfor))
+      {
+         return true;
+      }
+      node = node->GetNext();
+   }
+
+   return false;
 }
 
 void ProgressDialog::OnCancel(wxCommandEvent & WXUNUSED(event))

@@ -55,6 +55,8 @@ Track classes.
 #include "prefs/SpectrumPrefs.h"
 #include "prefs/WaveformPrefs.h"
 
+#include "Experimental.h"
+
 using std::max;
 
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
@@ -109,6 +111,7 @@ WaveTrack::WaveTrack(DirManager *projDirManager, sampleFormat format, double rat
    mDisplayLocations = NULL;
    mDisplayNumLocationsAllocated = 0;
    mLastScaleType = -1;
+   mLastdBRange = -1;
    mAutoSaveIdent = 0;
 }
 
@@ -121,6 +124,7 @@ WaveTrack::WaveTrack(WaveTrack &orig):
         ? new WaveformSettings(*orig.mpWaveformSettings) : 0)
 {
    mLastScaleType = -1;
+   mLastdBRange = -1;
 
    mLegacyProjectFileOffset = 0;
 
@@ -281,6 +285,16 @@ WaveTrack::ValidateWaveTrackDisplay(WaveTrackDisplay display)
    default:
       return MinDisplay;
    }
+}
+
+void WaveTrack::SetLastScaleType()
+{
+   mLastScaleType = GetWaveformSettings().scaleType;
+}
+
+void WaveTrack::SetLastdBRange()
+{
+   mLastdBRange = GetWaveformSettings().dBRange;
 }
 
 void WaveTrack::GetDisplayBounds(float *min, float *max)

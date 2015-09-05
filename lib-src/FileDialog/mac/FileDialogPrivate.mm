@@ -1,4 +1,4 @@
-//
+///
 // Copied from wxWidgets 3.0.2 and modified to support additional features
 //
 /////////////////////////////////////////////////////////////////////////////
@@ -509,20 +509,17 @@ void FileDialog::SetupExtraControls(WXWindow nativeWindow)
         m_filterPanel->SetSizer( verticalSizer );
         m_filterPanel->Layout();
 
-        NSSize ss = [[accView superview] frame].size;
         wxSize ws = m_filterPanel->GetBestSize();
-        ws.SetWidth( wxMax( (wxCoord) ss.width, ws.GetWidth() ) );
-
         m_filterPanel->SetSize(ws);
+        m_filterPanel->SetMinSize(ws);
     }
 
     if ( accView != nil )
     {
         [accView removeFromSuperview];
+        [accView setAutoresizingMask:NSViewWidthSizable];
 
         [panel setAccessoryView:accView];
-
-        [accView setAutoresizingMask:NSViewWidthSizable];
     }
 }
 
@@ -728,6 +725,8 @@ void FileDialog::ModalFinishedCallback(void* panel, int returnCode)
 
     if ( m_delegate )
     {
+        [[NSNotificationCenter defaultCenter] removeObserver:m_delegate];
+         
         [m_delegate release];
         m_delegate = nil;
     }

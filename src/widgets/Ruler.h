@@ -11,7 +11,9 @@
 #ifndef __AUDACITY_RULER__
 #define __AUDACITY_RULER__
 
+#include <wx/bitmap.h>
 #include <wx/dc.h>
+#include <wx/dcmemory.h>
 #include <wx/event.h>
 #include <wx/font.h>
 #include <wx/panel.h>
@@ -333,6 +335,9 @@ private:
    AudacityProject *mProject;
    TrackList *mTracks;
 
+   wxBitmap *mBack;
+   wxMemoryDC mBackDC;
+
    wxRect mOuter;
    wxRect mInner;
 
@@ -345,6 +350,7 @@ private:
    double mIndTime;
    bool   mQuickPlayInd;
    double mQuickPlayPos;
+   double mLastQuickPlayX;
 
    SnapManager *mSnapManager;
    bool mIsSnapped;

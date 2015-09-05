@@ -37,6 +37,8 @@
 #include "DeviceManager.h"
 #include "toolbars/DeviceToolBar.h"
 
+#include "Experimental.h"
+
 DeviceManager DeviceManager::dm;
 
 /// Gets the singleton instance

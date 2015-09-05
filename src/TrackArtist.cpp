@@ -183,6 +183,8 @@ audio tracks.
 #include "Theme.h"
 #include "AllThemeResources.h"
 
+#include "Experimental.h"
+
 #undef PROFILE_WAVEFORM
 #ifdef PROFILE_WAVEFORM
    #ifdef __WXMSW__
@@ -703,10 +705,12 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
 
             float min, max;
             wt->GetDisplayBounds(&min, &max);
-            if (wt->GetLastScaleType() != scaleType)
+            if (wt->GetLastScaleType() != scaleType &&
+                wt->GetLastScaleType() != -1)
             {
                // do a translation into the linear space
-               wt->SetLastScaleType(scaleType);
+               wt->SetLastScaleType();
+               wt->SetLastdBRange();
                float sign = (min >= 0 ? 1 : -1);
                if (min != 0.) {
                   min = DB_TO_LINEAR(fabs(min) * dBRange - dBRange);
@@ -741,11 +745,14 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
 
             float min, max;
             wt->GetDisplayBounds(&min, &max);
+            float lastdBRange;
 
-            if (wt->GetLastScaleType() != scaleType)
+            if (wt->GetLastScaleType() != scaleType &&
+                wt->GetLastScaleType() != -1)
             {
                // do a translation into the dB space
-               wt->SetLastScaleType(scaleType);
+               wt->SetLastScaleType();
+               wt->SetLastdBRange();
                float sign = (min >= 0 ? 1 : -1);
                if (min != 0.) {
                   min = (LINEAR_TO_DB(fabs(min)) + dBRange) / dBRange;
@@ -762,6 +769,30 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
                   max *= sign;
                }
                wt->SetDisplayBounds(min, max);
+            }
+            else if (dBRange != (lastdBRange = wt->GetLastdBRange())) {
+               wt->SetLastdBRange();
+               // Remap the max of the scale
+               const float sign = (max >= 0 ? 1 : -1);
+               float newMax = max;
+               if (max != 0.) {
+
+// Ugh, duplicating from TrackPanel.cpp
+#define ZOOMLIMIT 0.001f
+
+                  const float extreme = LINEAR_TO_DB(2);
+                  // recover dB value of max
+                  const float dB = std::min(extreme, (float(fabs(max)) * lastdBRange - lastdBRange));
+                  // find new scale position, but old max may get trimmed if the db limit rises
+                  // Don't trim it to zero though, but leave max and limit distinct
+                  newMax = sign * std::max(ZOOMLIMIT, (dBRange + dB) / dBRange);
+                  // Adjust the min of the scale if we can,
+                  // so the db Limit remains where it was on screen, but don't violate extremes
+                  if (min != 0.)
+                     min = std::max(-extreme, newMax * min / max);
+               }
+
+               wt->SetDisplayBounds(min, newMax);
             }
 
             if (max > 0) {
@@ -1766,21 +1797,6 @@ void TrackArtist::DrawClipWaveform(WaveTrack *track,
 
    const double pps =
       averagePixelsPerSample * rate;
-   if (!params.showIndividualSamples) {
-      // The WaveClip class handles the details of computing the shape
-      // of the waveform.  The only way GetWaveDisplay will fail is if
-      // there's a serious error, like some of the waveform data can't
-      // be loaded.  So if the function returns false, we can just exit.
-
-      // Note that we compute the full width display even if there is a
-      // fisheye hiding part of it, because of the caching.  If the
-      // fisheye moves over the background, there is then less to do when
-      // redrawing.
-
-      if (!clip->GetWaveDisplay(display,
-            t0, pps, isLoadingOD))
-         return;
-   }
 
    // For each portion separately, we will decide to draw
    // it as min/max/rms or as individual samples.
@@ -1792,6 +1808,32 @@ void TrackArtist::DrawClipWaveform(WaveTrack *track,
    const double threshold1 = 0.5 * rate;
    // Require at least 3 pixels per sample for drawing the draggable points.
    const double threshold2 = 3 * rate;
+
+   {
+      bool showIndividualSamples = false;
+      for (unsigned ii = 0; !showIndividualSamples && ii < nPortions; ++ii) {
+         const WavePortion &portion = portions[ii];
+         showIndividualSamples =
+            !portion.inFisheye && portion.averageZoom > threshold1;
+      }
+
+      if (!showIndividualSamples) {
+         // The WaveClip class handles the details of computing the shape
+         // of the waveform.  The only way GetWaveDisplay will fail is if
+         // there's a serious error, like some of the waveform data can't
+         // be loaded.  So if the function returns false, we can just exit.
+
+         // Note that we compute the full width display even if there is a
+         // fisheye hiding part of it, because of the caching.  If the
+         // fisheye moves over the background, there is then less to do when
+         // redrawing.
+
+         if (!clip->GetWaveDisplay(display,
+            t0, pps, isLoadingOD))
+            return;
+      }
+   }
+
    for (unsigned ii = 0; ii < nPortions; ++ii) {
       WavePortion &portion = portions[ii];
       const bool showIndividualSamples = portion.averageZoom > threshold1;

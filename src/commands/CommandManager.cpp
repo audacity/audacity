@@ -115,6 +115,8 @@ CommandManager.  It holds the callback for one command.
 #include <gtk/gtk.h>
 #endif
 
+#include "../Experimental.h"
+
 // Shared by all projects
 static class CommandManagerEventMonitor : public wxEventFilter
 {
@@ -856,10 +858,10 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & name,
       entry->id = wxID_ABOUT;
 #endif
 
-   entry->defaultKey = entry->key;
    entry->name = name;
    entry->label = label;
    entry->key = KeyStringNormalize(accel.BeforeFirst(wxT('\t')));
+   entry->defaultKey = entry->key;
    entry->labelPrefix = labelPrefix;
    entry->labelTop = wxMenuItem::GetLabelText(mCurrentMenuName);
    entry->menu = menu;

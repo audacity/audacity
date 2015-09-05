@@ -18,12 +18,15 @@
 #include <wx/defs.h>
 #include <wx/dynarray.h>
 #include <wx/string.h>
-
-#include "Project.h"
-#include "Track.h"
-#include "ViewInfo.h"
-#include "WaveClip.h"
 #include "widgets/NumericTextCtrl.h"
+
+class AudacityProject;
+class Track;
+class TrackArray;
+class TrackClipArray;
+class WaveClip;
+class TrackList;
+class ZoomInfo;
 
 class TrackClip
 {

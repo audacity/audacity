@@ -29,6 +29,8 @@
 
 #include "EffectsPrefs.h"
 
+#include "../Experimental.h"
+
 EffectsPrefs::EffectsPrefs(wxWindow * parent)
 :  PrefsPanel(parent, _("Effects"))
 {

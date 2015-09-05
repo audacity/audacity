@@ -244,10 +244,15 @@ void ExportFFmpeg::Destroy()
 bool ExportFFmpeg::CheckFileName(wxFileName & WXUNUSED(filename), int WXUNUSED(format))
 {
    bool result = true;
-   if (!CheckFFmpegPresence())
+
+   // Show "Locate FFmpeg" dialog
+   if (!CheckFFmpegPresence(true))
    {
-      result = false;
+      FFmpegLibsInst->FindLibs(NULL);
+      FFmpegLibsInst->FreeLibs();
+      return LoadFFmpeg(true);
    }
+
    return result;
 }
 
@@ -978,10 +983,6 @@ int ExportFFmpeg::AskResample(int bitrate, int rate, int lowrate, int highrate, 
 
 wxWindow *ExportFFmpeg::OptionsCreate(wxWindow *parent, int format)
 {
-   if (!CheckFFmpegPresence(true)) {
-      return ExportPlugin::OptionsCreate(parent, format);
-   }
-
    // subformat index may not correspond directly to fmts[] index, convert it
    mSubFormat = AdjustFormatIndex(format);
    if (mSubFormat == FMT_M4A)

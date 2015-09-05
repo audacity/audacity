@@ -53,7 +53,7 @@ class NyqTextCtrl:public wxTextCtrl
    void GoNext();
 
  private:
-#if defined(__WXMAC__)
+#if defined(__WXMAC__REMOVED_UNTIL_ITS_PROVEN_THAT_IT_IS_STILL_NEEDED)
    void OnKeyDown(wxKeyEvent & e);
 #endif
    void OnKeyUp(wxKeyEvent & e);

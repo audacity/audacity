@@ -16,6 +16,7 @@ LRN
 #include "../Audacity.h"   // keep ffmpeg before wx because they interact
 #include "../FFmpeg.h"     // and Audacity.h before FFmpeg for config*.h
 
+#include <wx/hashmap.h>
 #include <wx/listimpl.cpp>
 #include "../xml/XMLFileReader.h"
 #include "../FileNames.h"
@@ -306,7 +307,7 @@ private:
 class FFmpegPreset
 {
 public:
-   FFmpegPreset(wxString &name);
+   FFmpegPreset();
    ~FFmpegPreset();
 
    wxString mPresetName;
@@ -314,7 +315,7 @@ public:
 
 };
 
-WX_DECLARE_LIST(FFmpegPreset,FFmpegPresetList);
+WX_DECLARE_STRING_HASH_MAP(FFmpegPreset, FFmpegPresetMap);
 
 class FFmpegPresets : XMLTagHandler
 {
@@ -338,8 +339,9 @@ public:
 
 private:
 
-   FFmpegPresetList *mPresets;
+   FFmpegPresetMap mPresets;
    FFmpegPreset *mPreset; // valid during XML parsing only
+   bool mAbortImport; // tells importer to ignore the rest of the import
 };
 
 #endif

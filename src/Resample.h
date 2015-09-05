@@ -17,7 +17,6 @@
 #include <wx/intl.h>
 #include <wx/string.h>
 
-#include "Prefs.h"
 #include "SampleFormat.h"
 
 class Resample
@@ -75,13 +74,7 @@ class Resample
                         int     outBufferLen);
 
  protected:
-   void SetMethod(const bool useBestMethod)
-   {
-      if (useBestMethod)
-         mMethod = gPrefs->Read(GetBestMethodKey(), GetBestMethodDefault());
-      else
-         mMethod = gPrefs->Read(GetFastMethodKey(), GetFastMethodDefault());
-   };
+   void SetMethod(const bool useBestMethod);
 
  protected:
    int   mMethod; // resampler-specific enum for resampling method
