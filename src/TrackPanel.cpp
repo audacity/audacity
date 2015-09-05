@@ -2643,8 +2643,8 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
             mSelStartValid = false;
             ExtendFreqSelection(event.m_y, rect.y, rect.height);
             UpdateSelectionDisplay();
-            // Frequency selection doesn't persist (yet?), so skip this:
-            // MakeParentModifyState(false);
+            // Frequency selection persists too, so do this:
+            MakeParentModifyState(false);
 
             return;
          }
