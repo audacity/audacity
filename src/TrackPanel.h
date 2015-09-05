@@ -800,7 +800,7 @@ protected:
    bool mScrubSeekPress;
 
    wxRect mLastScrubRect, mNextScrubRect;
-   wxString mScrubSpeedText;
+   wxString mLastScrubSpeedText, mNextScrubSpeedText;
 #endif
 
 #ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
