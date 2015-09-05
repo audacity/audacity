@@ -7545,7 +7545,7 @@ void TrackPanel::TimerUpdateScrubbing(double playPos)
 #endif
             wxT("%.2f");
 
-      mScrubSpeedText = wxString::Format(format, speed);
+      mNextScrubSpeedText = wxString::Format(format, speed);
 
       // Find the origin for drawing text
       wxCoord width, height;
@@ -7553,7 +7553,7 @@ void TrackPanel::TimerUpdateScrubbing(double playPos)
          wxClientDC dc(this);
          static const wxFont labelFont(24, wxSWISS, wxNORMAL, wxNORMAL);
          dc.SetFont(labelFont);
-         dc.GetTextExtent(mScrubSpeedText, &width, &height);
+         dc.GetTextExtent(mNextScrubSpeedText, &width, &height);
       }
       xx = std::max(0, std::min(panelWidth - width, xx - width / 2));
 
@@ -7593,7 +7593,8 @@ std::pair<wxRect, bool> TrackPanel::GetScrubSpeedRectangle()
 
    const bool outdated =
       (mLastScrubRect != mNextScrubRect) ||
-      (!mLastScrubRect.IsEmpty() && !ShouldDrawScrubSpeed());
+      (!mLastScrubRect.IsEmpty() && !ShouldDrawScrubSpeed()) ||
+      (mLastScrubSpeedText != mNextScrubSpeedText);
    return std::make_pair(
       rect,
       outdated
@@ -7627,6 +7628,7 @@ void TrackPanel::DoDrawScrubSpeed(wxDC &dc)
       return;
 
    mLastScrubRect = mNextScrubRect;
+   mLastScrubSpeedText = mNextScrubSpeedText;
    const bool seeking = PollIsSeeking();
    if (// Draw for (non-scroll) scrub, sometimes, but never for seek
        (!seeking && mScrubSpeedDisplayCountdown > 0)
@@ -7652,7 +7654,7 @@ void TrackPanel::DoDrawScrubSpeed(wxDC &dc)
 #endif
          dc.SetTextForeground(clrNoScroll);
 
-      dc.DrawText(mScrubSpeedText, mLastScrubRect.GetX(), mLastScrubRect.GetY());
+      dc.DrawText(mLastScrubSpeedText, mLastScrubRect.GetX(), mLastScrubRect.GetY());
    }
 }
 #endif
