@@ -975,7 +975,7 @@ void AudacityProject::CreateMenusAndCommands()
    c->SetDefaultFlags(AudioIONotBusyFlag, AudioIONotBusyFlag);
 
 #ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
-   c->AddItem(wxT("ManageGenerators"), _("Manage..."), FN(OnManageGenerators));
+   c->AddItem(wxT("ManageGenerators"), _("Add / Remove Plug-ins..."), FN(OnManageGenerators));
    c->AddSeparator();
 #endif
 
@@ -1002,7 +1002,7 @@ void AudacityProject::CreateMenusAndCommands()
       buildMenuLabel.Printf(_("Repeat Last Effect"));
 
 #ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
-   c->AddItem(wxT("ManageEffects"), _("Manage..."), FN(OnManageEffects));
+   c->AddItem(wxT("ManageEffects"), _("Add / Remove Plug-ins..."), FN(OnManageEffects));
    c->AddSeparator();
 #endif
 
@@ -1026,7 +1026,7 @@ void AudacityProject::CreateMenusAndCommands()
    c->BeginMenu(_("&Analyze"));
 
 #ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
-   c->AddItem(wxT("ManageAnalyzers"), _("Manage..."), FN(OnManageAnalyzers));
+   c->AddItem(wxT("ManageAnalyzers"), _("Add / Remove Plug-ins..."), FN(OnManageAnalyzers));
    c->AddSeparator();
 #endif
 
