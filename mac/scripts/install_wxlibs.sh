@@ -14,39 +14,49 @@ resolve()
 
 update_paths()
 {
-   path=$(resolve "${1}")
-   base="${path##*/}"
-   cp -p "${path}" "${LIBPATH}"
-   seen="${seen}:${path}"
+   local indent="${1}"
+   local path=$(resolve "${2}")
+   local base="${path##*/}"
 
-   echo "Updating library = '$path'"
+   if [ -e "${LIBPATH}/${base}" ]
+   then
+      return
+   fi
+   
+   printf "%${indent}.${indent}cCopying '${path}' into bundle\n" " "
+   cp -p "${path}" "${LIBPATH}"
 
    for lib in $(otool -L "${path}" | awk '/libwx.*dylib /{print $1}')
    do
       path=$(resolve "${lib}")
+
+      printf "%${indent}.${indent}cChanging '${lib}' to '@loader_path/../Frameworks/${path##*/}'\n" " "
       install_name_tool -change "${lib}" "@loader_path/../Frameworks/${path##*/}" "${LIBPATH}/${base}"
 
-      if [[ ! ${seen} =~ .*:${path}.* ]]
-      then
-         update_paths "${path}"
-      fi
+      update_paths $((indent + 2)) "${path}"
    done
 }
 
-BUILT_PRODUCTS_DIR=/tmp/Audacity.dst/Audacity/Audacity.app/Contents
-EXECUTABLE_PATH=MacOS/audacity
-FRAMEWORKS_FOLDER_PATH=Frameworks
+# For testing
+# BUILT_PRODUCTS_DIR=/tmp/Audacity.app/Contents
+# EXECUTABLE_PATH=MacOS/audacity
+# FRAMEWORKS_FOLDER_PATH=Frameworks
+
 EXEPATH="${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}"
 LIBPATH="${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}"
 
 mkdir -p "${LIBPATH}"
 
-seen=""
-for lib in $(otool -L "${EXEPATH}" | awk '/libwx/{print $1}')
+echo "Updating Audacity executable"
+
+for lib in $(otool -L "${EXEPATH}" | awk '/libwx.*dylib /{print $1}')
 do
    path=$(resolve "${lib}")
+
+   printf "Changing '${lib}' to '@executable_path/../Frameworks/${path##*/}'\n"
    install_name_tool -change "${lib}" "@executable_path/../Frameworks/${path##*/}" "${EXEPATH}"
-   update_paths "${path}"
+
+   update_paths 2 "${path}"
 done
 
 exit 0
