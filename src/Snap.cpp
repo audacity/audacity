@@ -16,7 +16,6 @@
 
 #include "Project.h"
 #include "LabelTrack.h"
-#include "TrackPanel.h"
 #include "WaveTrack.h"
 
 #include <wx/arrimpl.cpp>

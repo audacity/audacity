@@ -436,7 +436,6 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
      mRuler(ruler),
      mTrackArtist(nullptr),
      mRefreshBacking(false),
-     mConverter(NumericConverter::TIME),
      mAutoScrolling(false),
      mVertScrollRemainder(0),
      vrulerSize(36,0)
@@ -474,8 +473,6 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    mSlideCursor   = MakeCursor( wxCURSOR_SIZEWE,    TimeCursorXpm,    16, 16);
    mZoomInCursor  = MakeCursor( wxCURSOR_MAGNIFIER, ZoomInCursorXpm,  19, 15);
    mZoomOutCursor = MakeCursor( wxCURSOR_MAGNIFIER, ZoomOutCursorXpm, 19, 15);
-   mLabelCursorLeft  = MakeCursor( wxCURSOR_ARROW,  LabelCursorLeftXpm, 19, 15);
-   mLabelCursorRight = MakeCursor( wxCURSOR_ARROW,  LabelCursorRightXpm, 16, 16);
    
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    mBottomFrequencyCursor =
@@ -1357,7 +1354,7 @@ bool TrackPanel::SetCursorByActivity( )
    case IsAdjustingLabel:
    case IsSelectingLabelText:
       return true;
-#ifdef USE_MIDI
+#if 0
    case IsStretching:
       SetCursor( unsafe
          ? *mDisabledCursor
