@@ -107,6 +107,7 @@ WaveTrack::WaveTrack(DirManager *projDirManager, sampleFormat format, double rat
    SetName(GetDefaultName());
    mDisplayMin = -1.0;
    mDisplayMax = 1.0;
+   mSpectrumMin = mSpectrumMax = -1; // so values will default to settings
    mDisplayNumLocations = 0;
    mDisplayLocations = NULL;
    mDisplayNumLocationsAllocated = 0;
@@ -147,6 +148,8 @@ void WaveTrack::Init(const WaveTrack &orig)
    mDisplay = orig.mDisplay;
    mDisplayMin = orig.mDisplayMin;
    mDisplayMax = orig.mDisplayMax;
+   mSpectrumMin = orig.mSpectrumMin;
+   mSpectrumMax = orig.mSpectrumMax;
    mDisplayNumLocations = 0;
    mDisplayLocations = NULL;
    mDisplayNumLocationsAllocated = 0;
@@ -297,7 +300,7 @@ void WaveTrack::SetLastdBRange()
    mLastdBRange = GetWaveformSettings().dBRange;
 }
 
-void WaveTrack::GetDisplayBounds(float *min, float *max)
+void WaveTrack::GetDisplayBounds(float *min, float *max) const
 {
    *min = mDisplayMin;
    *max = mDisplayMax;
@@ -307,6 +310,56 @@ void WaveTrack::SetDisplayBounds(float min, float max)
 {
    mDisplayMin = min;
    mDisplayMax = max;
+}
+
+void WaveTrack::GetSpectrumBounds(float *min, float *max) const
+{
+   const double rate = GetRate();
+
+   const SpectrogramSettings &settings = GetSpectrogramSettings();
+   const SpectrogramSettings::ScaleType type = settings.scaleType;
+
+   const float top = (rate / 2.);
+
+   float bottom;
+   if (type == SpectrogramSettings::stLinear)
+      bottom = 0.0f;
+   else if (type == SpectrogramSettings::stPeriod) {
+      // special case
+      const int half = settings.GetFFTLength() / 2;
+      // EAC returns no data for below this frequency:
+      const float bin2 = rate / half;
+      bottom = bin2;
+   }
+   else
+      // logarithmic, etc.
+      bottom = 1.0f;
+
+   {
+      float spectrumMax = mSpectrumMax;
+      if (spectrumMax < 0)
+         spectrumMax = settings.maxFreq;
+      if (spectrumMax < 0)
+         *max = top;
+      else
+         *max = std::max(bottom, std::min(top, spectrumMax));
+   }
+
+   {
+      float spectrumMin = mSpectrumMin;
+      if (spectrumMin < 0)
+         spectrumMin = settings.minFreq;
+      if (spectrumMin < 0)
+         *min = std::max(bottom, top / 1000.0f);
+      else
+         *min = std::max(bottom, std::min(top, spectrumMin));
+   }
+}
+
+void WaveTrack::SetSpectrumBounds(float min, float max)
+{
+   mSpectrumMin = min;
+   mSpectrumMax = max;
 }
 
 Track *WaveTrack::Duplicate()

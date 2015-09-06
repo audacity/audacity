@@ -57,7 +57,7 @@ public:
       stMel,
       stBark,
       stErb,
-      stUndertone,
+      stPeriod,
 
       stNumScaleTypes,
    };
@@ -87,24 +87,12 @@ public:
 
    // If "bins" is false, units are Hz
    NumberScale GetScale
-      (double rate, bool bins) const;
+      (float minFreq, float maxFreq, double rate, bool bins) const;
 
-private:
    int minFreq;
    int maxFreq;
-   int logMinFreq;
-   int logMaxFreq;
-public:
-   int GetMinFreq(double rate) const;
-   int GetMaxFreq(double rate) const;
-   int GetLogMinFreq(double rate) const;
-   int GetLogMaxFreq(double rate) const;
-   bool SpectralSelectionEnabled() const;
 
-   void SetMinFreq(int freq);
-   void SetMaxFreq(int freq);
-   void SetLogMinFreq(int freq);
-   void SetLogMaxFreq(int freq);
+   bool SpectralSelectionEnabled() const;
 
 public:
    int range;
