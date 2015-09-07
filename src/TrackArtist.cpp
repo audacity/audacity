@@ -831,6 +831,10 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
       }
       else {
          wxASSERT(display == WaveTrack::Spectrum);
+         const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
+         float minFreq, maxFreq;
+         wt->GetSpectrumBounds(&minFreq, &maxFreq);
+
          switch (wt->GetSpectrogramSettings().scaleType) {
          default:
             wxASSERT(false);
@@ -840,11 +844,6 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
 
             if (rect.height < 60)
                return;
-
-            const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
-            const double rate = wt->GetRate();
-            const int maxFreq = settings.GetMaxFreq(rate);
-            const int minFreq = settings.GetMinFreq(rate);
 
             /*
             draw the ruler
@@ -872,17 +871,12 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
          case SpectrogramSettings::stMel:
          case SpectrogramSettings::stBark:
          case SpectrogramSettings::stErb:
-         case SpectrogramSettings::stUndertone:
+         case SpectrogramSettings::stPeriod:
          {
             // SpectrumLog
 
             if (rect.height < 10)
                return;
-
-            const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
-            const double rate = wt->GetRate();
-            const int maxFreq = settings.GetLogMaxFreq(rate);
-            const int minFreq = settings.GetLogMinFreq(rate);
 
             /*
             draw the ruler
@@ -897,7 +891,8 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
             vruler->SetUnits(wxT(""));
             vruler->SetLog(true);
             NumberScale scale
-               (wt->GetSpectrogramSettings().GetScale(wt->GetRate(), false).Reversal());
+               (wt->GetSpectrogramSettings().GetScale
+                  (minFreq, maxFreq, wt->GetRate(), false).Reversal());
             vruler->SetNumberScale(&scale);
          }
          break;
@@ -2183,16 +2178,12 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
          t0, pps);
    }
 
-   // Legacy special-case treatment of log scale
-   const SpectrogramSettings::ScaleType scaleType = settings.scaleType;
-   const int minFreq =
-      scaleType == SpectrogramSettings::stLinear
-      ? settings.GetMinFreq(rate) : settings.GetLogMinFreq(rate);
-   const int maxFreq =
-      scaleType == SpectrogramSettings::stLinear
-      ? settings.GetMaxFreq(rate) : settings.GetLogMaxFreq(rate);
+   float minFreq, maxFreq;
+   track->GetSpectrumBounds(&minFreq, &maxFreq);
 
-   const NumberScale numberScale(settings.GetScale(rate, true));
+   const SpectrogramSettings::ScaleType scaleType = settings.scaleType;
+
+   const NumberScale numberScale(settings.GetScale(minFreq, maxFreq, rate, true));
 
 #ifdef EXPERIMENTAL_FFT_Y_GRID
    const float

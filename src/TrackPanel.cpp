@@ -1037,7 +1037,7 @@ AudacityProject * TrackPanel::GetProject() const
 }
 
 /// AS: This gets called on our wx timer events.
-void TrackPanel::OnTimer(wxTimerEvent& event)
+void TrackPanel::OnTimer(wxTimerEvent& )
 {
    mTimeCount++;
    // AS: If the user is dragging the mouse and there is a track that
@@ -3467,7 +3467,9 @@ double TrackPanel::PositionToFrequency(const WaveTrack *wt,
       return -1;
 
    const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
-   const NumberScale numberScale(settings.GetScale(rate, false));
+   float minFreq, maxFreq;
+   wt->GetSpectrumBounds(&minFreq, &maxFreq);
+   const NumberScale numberScale(settings.GetScale(minFreq, maxFreq, rate, false));
    const double p = double(mouseYCoordinate - trackTopEdge) / trackHeight;
    return numberScale.PositionToValue(1.0 - p);
 }
@@ -3481,7 +3483,9 @@ wxInt64 TrackPanel::FrequencyToPosition(const WaveTrack *wt,
    const double rate = wt->GetRate();
 
    const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
-   const NumberScale numberScale(settings.GetScale(rate, false));
+   float minFreq, maxFreq;
+   wt->GetSpectrumBounds(&minFreq, &maxFreq);
+   const NumberScale numberScale(settings.GetScale(minFreq, maxFreq, rate, false));
    const float p = numberScale.ValueToPosition(frequency);
    return trackTopEdge + wxInt64((1.0 - p) * trackHeight);
 }
@@ -4612,20 +4616,14 @@ void TrackPanel::HandleWaveTrackVZoom
    const double rate = track->GetRate();
    const float halfrate = rate / 2;
    const SpectrogramSettings &settings = track->GetSpectrogramSettings();
-   NumberScale scale(track->GetSpectrogramSettings().GetScale(rate, false));
+   NumberScale scale;
    const bool spectral = (track->GetDisplay() == WaveTrack::Spectrum);
    const bool spectrumLinear = spectral &&
       (track->GetSpectrogramSettings().scaleType == SpectrogramSettings::stLinear);
 
    if (spectral) {
-      if (spectrumLinear) {
-         min = settings.GetMinFreq(rate);
-         max = settings.GetMaxFreq(rate);
-      }
-      else {
-         min = settings.GetLogMinFreq(rate);
-         max = settings.GetLogMaxFreq(rate);
-      }
+      track->GetSpectrumBounds(&min, &max);
+      scale = (settings.GetScale(min, max, rate, false));
       const int fftLength = settings.GetFFTLength();
       const float binSize = rate / fftLength;
       const int minBins =
@@ -4797,28 +4795,9 @@ void TrackPanel::HandleWaveTrackVZoom
    }
 
    if (spectral) {
-      if (spectrumLinear) {
-         SpectrogramSettings &settings = track->GetSpectrogramSettings();
-         settings.SetMinFreq(min);
-         settings.SetMaxFreq(max);
-         if (partner) {
-            // To do:  share memory with reference counting?
-            SpectrogramSettings &settings = partner->GetSpectrogramSettings();
-            settings.SetMinFreq(min);
-            settings.SetMaxFreq(max);
-         }
-      }
-      else {
-         SpectrogramSettings &settings = track->GetSpectrogramSettings();
-         settings.SetLogMinFreq(min);
-         settings.SetLogMaxFreq(max);
-         if (partner) {
-            // To do:  share memory with reference counting?
-            SpectrogramSettings &settings = partner->GetSpectrogramSettings();
-            settings.SetLogMinFreq(min);
-            settings.SetLogMaxFreq(max);
-         }
-      }
+      track->SetSpectrumBounds(min, max);
+      if (partner)
+         partner->SetSpectrumBounds(min, max);
    }
    else {
       track->SetDisplayBounds(min, max);
@@ -6287,36 +6266,23 @@ void TrackPanel::HandleWheelRotationInVRuler
             const float delta = steps * movement / height;
             SpectrogramSettings &settings = wt->GetIndependentSpectrogramSettings();
             const bool isLinear = settings.scaleType == SpectrogramSettings::stLinear;
+            float bottom, top;
+            wt->GetSpectrumBounds(&bottom, &top);
             const double rate = wt->GetRate();
-            const float maxFreq = float(rate) / 2.0f;
-            const NumberScale numberScale(settings.GetScale(rate, false));
+            const float bound = rate / 2;
+            const NumberScale numberScale(settings.GetScale(bottom, top, rate, false));
             float newTop =
-               std::min(maxFreq, numberScale.PositionToValue(1.0f + delta));
+               std::min(bound, numberScale.PositionToValue(1.0f + delta));
             const float newBottom =
                std::max((isLinear ? 0.0f : 1.0f),
                         numberScale.PositionToValue(numberScale.ValueToPosition(newTop) - 1.0f));
             newTop =
-               std::min(maxFreq,
+               std::min(bound,
                         numberScale.PositionToValue(numberScale.ValueToPosition(newBottom) + 1.0f));
-            if (isLinear) {
-               settings.SetMinFreq(newBottom);
-               settings.SetMaxFreq(newTop);
-            }
-            else {
-               settings.SetLogMinFreq(newBottom);
-               settings.SetLogMaxFreq(newTop);
-            }
-            if (partner) {
-               SpectrogramSettings &partnerSettings = partner->GetIndependentSpectrogramSettings();
-               if (isLinear) {
-                  partnerSettings.SetMinFreq(newBottom);
-                  partnerSettings.SetMaxFreq(newTop);
-               }
-               else {
-                  partnerSettings.SetLogMinFreq(newBottom);
-                  partnerSettings.SetLogMaxFreq(newTop);
-               }
-            }
+
+            wt->SetSpectrumBounds(newBottom, newTop);
+            if (partner)
+               partner->SetSpectrumBounds(newBottom, newTop);
          }
          else {
             float topLimit = 2.0;

@@ -22,7 +22,7 @@ enum NumberScaleType {
    nstMel,
    nstBark,
    nstErb,
-   nstUndertone,
+   nstPeriod,
 
    nstNumScaleTypes,
 };
@@ -31,6 +31,10 @@ enum NumberScaleType {
 class NumberScale
 {
 public:
+   NumberScale()
+      : mType(nstLinear), mValue0(0), mValue1(1), mUnit(1)
+   {}
+
    NumberScale(NumberScaleType type,
       float value0, float value1, float unit)
       : mType(type)
@@ -71,10 +75,10 @@ public:
          mUnit = unit;
       }
       break;
-      case nstUndertone:
+      case nstPeriod:
       {
-         mValue0 = hzToUndertone(value0);
-         mValue1 = hzToUndertone(value1);
+         mValue0 = hzToPeriod(value0);
+         mValue1 = hzToPeriod(value1);
          mUnit = unit;
       }
       break;
@@ -144,12 +148,12 @@ public:
       return 676170.4 / (47.06538 - exp(0.08950404 * erb)) - 14678.49;
    }
 
-   static inline float hzToUndertone(float hz)
+   static inline float hzToPeriod(float hz)
    {
       return -1.0 / std::max (1.0f, hz);
    }
 
-   static inline float undertoneToHz(float u)
+   static inline float periodToHz(float u)
    {
       return -1.0 / u;
    }
@@ -170,8 +174,8 @@ public:
          return barkToHz(mValue0 + pp * (mValue1 - mValue0)) / mUnit;
       case nstErb:
          return erbToHz(mValue0 + pp * (mValue1 - mValue0)) / mUnit;
-      case nstUndertone:
-         return undertoneToHz(mValue0 + pp * (mValue1 - mValue0)) / mUnit;
+      case nstPeriod:
+         return periodToHz(mValue0 + pp * (mValue1 - mValue0)) / mUnit;
       }
    }
 
@@ -199,8 +203,8 @@ public:
             return barkToHz(mValue) / mUnit;
          case nstErb:
             return erbToHz(mValue) / mUnit;
-         case nstUndertone:
-            return undertoneToHz(mValue) / mUnit;
+         case nstPeriod:
+            return periodToHz(mValue) / mUnit;
          }
       }
 
@@ -211,7 +215,7 @@ public:
          case nstMel:
          case nstBark:
          case nstErb:
-         case nstUndertone:
+         case nstPeriod:
             mValue += mStep;
             break;
          case nstLogarithmic:
@@ -239,7 +243,7 @@ public:
       case nstMel:
       case nstBark:
       case nstErb:
-      case nstUndertone:
+      case nstPeriod:
          return Iterator
             (mType,
              nPositions == 1 ? 0 : (mValue1 - mValue0) / (nPositions - 1),
@@ -268,13 +272,13 @@ public:
          return ((hzToBark(val * mUnit) - mValue0) / (mValue1 - mValue0));
       case nstErb:
          return ((hzToErb(val * mUnit) - mValue0) / (mValue1 - mValue0));
-      case nstUndertone:
-         return ((hzToUndertone(val * mUnit) - mValue0) / (mValue1 - mValue0));
+      case nstPeriod:
+         return ((hzToPeriod(val * mUnit) - mValue0) / (mValue1 - mValue0));
       }
    }
 
 private:
-   const NumberScaleType mType;
+   NumberScaleType mType;
    float mValue0;
    float mValue1;
    float mUnit;
