@@ -21,14 +21,6 @@ lib-src/mod-nyq-bench/NyqBench.h
 lib-src/mod-script-pipe/PipeServer.cpp
 lib-src/mod-script-pipe/ScripterCallback.cpp
 lib-src/mod-script-pipe/ScripterCallback.h
-lib-src/mod-track-panel/ModTrackPanelCallback.cpp
-lib-src/mod-track-panel/ModTrackPanelCallback.h
-lib-src/mod-track-panel/Registrar.cpp
-lib-src/mod-track-panel/Registrar.h
-lib-src/mod-track-panel/SkewedRuler.cpp
-lib-src/mod-track-panel/SkewedRuler.h
-lib-src/mod-track-panel/TrackPanel2.cpp
-lib-src/mod-track-panel/TrackPanel2.h
 src/AColor.cpp
 src/AColor.h
 src/AboutDialog.cpp
