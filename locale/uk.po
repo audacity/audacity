@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Audacity 2.0.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2015-09-07 12:40+0100\n"
-"PO-Revision-Date: 2015-06-14 13:38+0300\n"
+"PO-Revision-Date: 2015-09-07 17:37+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <translation@linux.org.ua>\n"
 "Language: uk\n"
@@ -50,144 +50,131 @@ msgid "Error"
 msgstr "Помилка"
 
 #: lib-src/FileDialog/mac/FileDialogPrivate.mm:483
-#, fuzzy
 msgid "File type:"
-msgstr "Тип &фільтрування:"
+msgstr "Тип файлів:"
 
 #: lib-src/FileDialog/win/FileDialogPrivate.cpp:860
 #, c-format
 msgid "File dialog failed with error code %0lx."
 msgstr ""
+"Діалогове вікно для роботи з файлами повідомило про помилку з кодом %0lx."
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:195
-#, fuzzy
 msgid "&Nyquist Workbench..."
-msgstr "Запит до Nyquist…"
+msgstr "С&тенд Nyquist…"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:752
 msgid "&Undo\tCtrl+Z"
-msgstr ""
+msgstr "&Вернути\tCtrl+Z"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:753
 msgid "&Redo\tCtrl+Y"
-msgstr ""
+msgstr "&Повторити\tCtrl+Y"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:755
 msgid "Cu&t\tCtrl+X"
-msgstr ""
+msgstr "Ви&різати\tCtrl+X"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:756
 msgid "&Copy\tCtrl+C"
-msgstr ""
+msgstr "&Копіювати\tCtrl+C"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:757
-#, fuzzy
 msgid "&Paste\tCtrl+V"
-msgstr "Вст&авити"
+msgstr "Вст&авити\tCtrl+V"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:758
 msgid "Cle&ar\tCtrl+L"
-msgstr ""
+msgstr "Сп&орожнити\tCtrl+L"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:760
-#, fuzzy
 msgid "Select A&ll\tCtrl+A"
-msgstr "&Позначити усі"
+msgstr "Поз&начити все\tCtrl+A"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:762
 msgid "&Find...\tCtrl+F"
-msgstr ""
+msgstr "Зна&йти…\tCtrl+F"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:765
 msgid "&Matching Paren\tF8"
-msgstr ""
+msgstr "В&ідповідна дужка\tF8"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:766
 msgid "&Top S-expr\tF9"
-msgstr ""
+msgstr "&Найвищий S-вираз\tF9"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:767
 msgid "&Higher S-expr\tF10"
-msgstr ""
+msgstr "В&ищий S-вираз\tF10"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:768
 msgid "&Previous S-expr\tF11"
-msgstr ""
+msgstr "&Попередній S-вираз\tF11"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:769
 msgid "&Next S-expr\tF12"
-msgstr ""
+msgstr "Нас&тупний S-вираз\tF12"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:770
 msgid "&Go to"
-msgstr ""
+msgstr "&Перейти до"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:776
-#, fuzzy
 msgid "Select &Font..."
-msgstr "&Шрифт…"
+msgstr "Вибрати &шрифт…"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:778
-#, fuzzy
 msgid "Split &Vertically"
-msgstr "Розмістити по &вертикалі"
+msgstr "Розділити &вертикально"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:779
-#, fuzzy
 msgid "Split &Horizontally"
-msgstr "Горизонтальна"
+msgstr "Розділити &горизонтально"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:781
-#, fuzzy
 msgid "Show S&cript"
-msgstr "Показати вивід"
+msgstr "Показати с&крипт"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:782
-#, fuzzy
 msgid "Show &Output"
-msgstr "Показати вивід"
+msgstr "Показати &виведені дані"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:785
-#, fuzzy
 msgid "&Large Icons"
-msgstr "Велика зала"
+msgstr "&Великі піктограми"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:786
 msgid "&Small Icons"
-msgstr ""
+msgstr "&Малі піктограми"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:787
-#, fuzzy
 msgid "Toolbar"
-msgstr "П&енали"
+msgstr "Панель інструментів"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:791
 msgid "&Go\tF5"
-msgstr ""
+msgstr "Пере&хід\tF5"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:792
-#, fuzzy
 msgid "&Stop\tF6"
-msgstr "Зупинити"
+msgstr "З&упинити\tF6"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:796
 #: lib-src/mod-nyq-bench/NyqBench.cpp:799
-#, fuzzy
 msgid "&About"
-msgstr "Про програму"
+msgstr "Пр&о програму"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:922
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1607
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1622
 msgid "Script"
-msgstr ""
+msgstr "Скрипт"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:950
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1610
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1619
-#, fuzzy
 msgid "Output"
-msgstr "Результат ефекту"
+msgstr "Виведення"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1058
 #: src/effects/nyquist/Nyquist.cpp:2065
@@ -203,7 +190,7 @@ msgstr "скрипти Nyquist (*.ny)|*.ny|скрипти Lisp (*.lsp)|*.lsp|у�
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1089
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1119
 msgid "Script was not saved."
-msgstr ""
+msgstr "Скрипти не збережено."
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1090
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1120
@@ -221,53 +208,51 @@ msgstr "Збереження скрипту Nyquist"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1203
 msgid "Find dialog"
-msgstr ""
+msgstr "Діалогове вікно пошуку"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1422
 msgid "Harvey Lubin (logo)"
-msgstr ""
+msgstr "Harvey Lubin (логотип)"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1423
 msgid "Tango Icon Gallery (toolbar icons)"
-msgstr ""
+msgstr "Галерея піктограм Tango (піктограми панелі інструментів)"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1424
 msgid "Leland Lucius"
-msgstr ""
+msgstr "Leland Lucius"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1425
 msgid "(C) 2009 by Leland Lucius"
-msgstr ""
+msgstr "© Leland Lucius, 2009"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1426
 msgid ""
 "External Audacity module which provides a simple IDE for writing effects."
 msgstr ""
+"Зовнішній модуль Audacity, який забезпечує роботу простого комплексного "
+"середовища розробки для створення ефектів."
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1427
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1495
-#, fuzzy
 msgid "Nyquist Effect Workbench"
-msgstr "Ефекти Nyquist"
+msgstr "Стенд ефектів Nyquist"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1494
-#, fuzzy
 msgid "No matches found"
-msgstr "Пристроїв не виявлено"
+msgstr "Відповідників не знайдено"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1631
 msgid "Code has been modified.  Are you sure?"
-msgstr ""
+msgstr "До коду внесено зміни. Ви справді цього хочете?"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1645
-#, fuzzy
 msgid "Untitled"
-msgstr "без назви"
+msgstr "Без назви"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1651
-#, fuzzy
 msgid "Nyquist Effect Workbench - "
-msgstr "Ефекти Nyquist"
+msgstr "Стенд ефектів Nyquist – "
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1715 src/PluginManager.cpp:492
 #: src/prefs/ModulePrefs.cpp:102
@@ -276,46 +261,39 @@ msgstr "Новий"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1715
 msgid "New script"
-msgstr ""
+msgstr "Новий скрипт"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1716
-#, fuzzy
 msgid "Open"
-msgstr "&Відкрити…"
+msgstr "Відкрити"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1716
-#, fuzzy
 msgid "Open script"
-msgstr "Відкрити недавні"
+msgstr "Відкрити скрипт"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1717
-#, fuzzy
 msgid "Save"
-msgstr "&Зберегти"
+msgstr "Зберегти"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1717
-#, fuzzy
 msgid "Save script"
-msgstr "Збереження скрипту Nyquist"
+msgstr "Зберегти скрипт"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1718
-#, fuzzy
 msgid "Save As"
-msgstr "Зберегти як…"
+msgstr "Зберегти як"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1718
-#, fuzzy
 msgid "Save script as..."
-msgstr "Зберегти проект &як…"
+msgstr "Зберегти скрипт як…"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1720 src/toolbars/EditToolBar.cpp:204
 msgid "Copy"
 msgstr "Копіювати"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1720
-#, fuzzy
 msgid "Copy to clipboard"
-msgstr "Вирізати у буфер"
+msgstr "Скопіювати до буфера"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1721 src/Menus.cpp:3862
 #: src/toolbars/EditToolBar.cpp:203
@@ -323,9 +301,8 @@ msgid "Cut"
 msgstr "Вирізати"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1721
-#, fuzzy
 msgid "Cut to clipboard"
-msgstr "Вирізати у буфер"
+msgstr "Вирізати до буфера"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1722 src/Menus.cpp:4158
 #: src/Menus.cpp:4182 src/Menus.cpp:4287 src/toolbars/EditToolBar.cpp:137
@@ -334,29 +311,24 @@ msgid "Paste"
 msgstr "Вставити"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1722
-#, fuzzy
 msgid "Paste from clipboard"
-msgstr "Вставка з буферу"
+msgstr "Вставити з буфера"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1723
-#, fuzzy
 msgid "Clear"
-msgstr "Сп&орожнити"
+msgstr "Спорожнити"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1723
-#, fuzzy
 msgid "Clear selection"
-msgstr "В&иміряти позначене"
+msgstr "Спорожнити позначене"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1724
-#, fuzzy
 msgid "Select All"
-msgstr "&Позначити усі"
+msgstr "Позначити все"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1724
-#, fuzzy
 msgid "Select all text"
-msgstr "&Позначити усі"
+msgstr "Позначити увесь текст"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1726 src/prefs/KeyConfigPrefs.cpp:885
 #: src/toolbars/EditToolBar.cpp:146 src/toolbars/EditToolBar.cpp:208
@@ -365,9 +337,8 @@ msgid "Undo"
 msgstr "Вернути"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1726
-#, fuzzy
 msgid "Undo last change"
-msgstr "Зміна формату"
+msgstr "Скасувати останню зміну"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1727 src/prefs/KeyConfigPrefs.cpp:888
 #: src/toolbars/EditToolBar.cpp:148 src/toolbars/EditToolBar.cpp:209
@@ -377,61 +348,56 @@ msgstr "Повторити"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1727
 msgid "Redo previous change"
-msgstr ""
+msgstr "Повторити попередню зміну"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1729
 msgid "Find"
-msgstr ""
+msgstr "Знайти"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1729
-#, fuzzy
 msgid "Find text"
-msgstr "Зауваження щодо &пошуку"
+msgstr "Знайти текст"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1731
-#, fuzzy
 msgid "Match"
-msgstr "Пакет"
+msgstr "Відповідник"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1731
 msgid "Go to matching paren"
-msgstr ""
+msgstr "Перейти до відповідної дужки"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1732
-#, fuzzy
 msgid "Top"
-msgstr "на початок"
+msgstr "Нагору"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1732
 msgid "Go to top S-expr"
-msgstr ""
+msgstr "Перейти до найвищого S-виразу"
 
 #. i18n-hint: a direction.
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1733 src/Menus.cpp:3045
 msgid "Up"
-msgstr "вище"
+msgstr "Вище"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1733
 msgid "Go to higher S-expr"
-msgstr ""
+msgstr "Перейти до вищого S-виразу"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1734
-#, fuzzy
 msgid "Previous"
-msgstr "Попередній інструмент"
+msgstr "Попередній"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1734
 msgid "Go to previous S-expr"
-msgstr ""
+msgstr "Перейти до попереднього S-виразу"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1735
-#, fuzzy
 msgid "Next"
-msgstr "Наступний інструмент"
+msgstr "Наступний"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1735
 msgid "Go to next S-expr"
-msgstr ""
+msgstr "Перейти до наступного S-виразу"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1737 src/Menus.cpp:5781
 #: src/Menus.cpp:5786 src/Menus.cpp:5791 src/effects/Contrast.cpp:220
@@ -440,9 +406,8 @@ msgid "Start"
 msgstr "Початок"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1737
-#, fuzzy
 msgid "Start script"
-msgstr "Збереження скрипту Nyquist"
+msgstr "Запустити скрипт"
 
 #. i18n-hint: (verb) Stop playing audio
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1738 src/Menus.cpp:1119
@@ -452,18 +417,16 @@ msgid "Stop"
 msgstr "Зупинити"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1738
-#, fuzzy
 msgid "Stop script"
-msgstr "Збереження скрипту Nyquist"
+msgstr "Зупинити скрипт"
 
 #: lib-src/mod-track-panel/TrackPanel2.cpp:54
 msgid "Panel 1"
-msgstr ""
+msgstr "Панель 1"
 
 #: lib-src/mod-track-panel/TrackPanel2.cpp:68
-#, fuzzy
 msgid "Diagnostics"
-msgstr "запуск самодіагностики"
+msgstr "Діагностика"
 
 #. i18n-hint: "OK... Audacious" appears on a button at the
 #. * foot of the 'About Audacity' dialog box, after some text to read.
@@ -644,7 +607,7 @@ msgstr "Відтворення аудіо та запис"
 
 #: src/AboutDialog.cpp:437
 msgid "Cross-platform GUI library"
-msgstr ""
+msgstr "Бібліотека для побудови графічних інтерфейсів на різних платформах"
 
 #: src/AboutDialog.cpp:441
 msgid "Features"
@@ -3052,7 +3015,7 @@ msgstr "&Створення"
 
 #: src/Menus.cpp:978 src/Menus.cpp:1005 src/Menus.cpp:1029
 msgid "Add / Remove Plug-ins..."
-msgstr ""
+msgstr "Додати або вилучити додатки…"
 
 #: src/Menus.cpp:994
 msgid "Effe&ct"
@@ -5249,9 +5212,8 @@ msgid "Ma&ke Stereo Track"
 msgstr "З&робити доріжку стереофонічною"
 
 #: src/TrackPanel.cpp:698
-#, fuzzy
 msgid "R&ight Channel"
-msgstr "Правий канал"
+msgstr "&Правий канал"
 
 #: src/TrackPanel.cpp:699
 msgid "&Left Channel"
@@ -5262,7 +5224,6 @@ msgid "&Mono"
 msgstr "&Моно"
 
 #: src/TrackPanel.cpp:714
-#, fuzzy
 msgid "Split Stereo to &Mono"
 msgstr "Поділити стерео на &моно"
 
@@ -5291,19 +5252,16 @@ msgid "&Spectrogram"
 msgstr "Спек&трограма"
 
 #: src/TrackPanel.cpp:761
-#, fuzzy
 msgid "S&pectrogram Settings..."
-msgstr "Спектрограми"
+msgstr "Пара&метри спектрограми…"
 
 #: src/TrackPanel.cpp:769
-#, fuzzy
 msgid "&Format"
-msgstr "Формат:"
+msgstr "&Формат"
 
 #: src/TrackPanel.cpp:773
-#, fuzzy
 msgid "&Rate"
-msgstr "Встановити частоту дискретизації"
+msgstr "&Частота"
 
 #: src/TrackPanel.cpp:778
 msgid "Up &Octave"
@@ -5326,18 +5284,16 @@ msgid "L&ogarithmic"
 msgstr "Л&огарифмічний"
 
 #: src/TrackPanel.cpp:792
-#, fuzzy
 msgid "&Range..."
-msgstr "Керування…"
+msgstr "&Діапазон…"
 
 #: src/TrackPanel.cpp:793
 msgid "Logarithmic &Interpolation"
 msgstr "Логарифмічна &інтерполяція"
 
 #: src/TrackPanel.cpp:808
-#, fuzzy
 msgid "&Name..."
-msgstr "Н&азва…"
+msgstr "&Назва…"
 
 #: src/TrackPanel.cpp:810
 msgid "Move Track &Up"
@@ -5357,16 +5313,15 @@ msgstr "Пересунути доріжку у &кінець"
 
 #: src/TrackPanel.cpp:826
 msgid "Zoom In\tLeft-Click/Left-Drag"
-msgstr ""
+msgstr "Збільшити\tКлацання лівою/Перетягування лівою кнопкою"
 
 #: src/TrackPanel.cpp:827
-#, fuzzy
 msgid "Zoom Out\tShift-Left-Click"
-msgstr "Shift — ← — Клацання"
+msgstr "Зменшити\tShift і клацання лівою"
 
 #: src/TrackPanel.cpp:828
 msgid "Zoom to Fit\tShift-Right-Click"
-msgstr ""
+msgstr "Підібрати за розміром\tShift і клацання правою"
 
 #: src/TrackPanel.cpp:1706
 msgid ""
@@ -7154,31 +7109,28 @@ msgid "kHz"
 msgstr "КГц"
 
 #: src/effects/Equalization.cpp:758
-#, fuzzy
 msgid "&EQ Type:"
-msgstr "Тип:"
+msgstr "&Тип EQ:"
 
 #: src/effects/Equalization.cpp:766
 msgid "&Draw"
-msgstr ""
+msgstr "&Малювати"
 
 #: src/effects/Equalization.cpp:767
 msgid "Draw Curves"
 msgstr "Малювати криві"
 
 #: src/effects/Equalization.cpp:769
-#, fuzzy
 msgid "&Graphic"
-msgstr "&Графічний EQ"
+msgstr "&Графіка"
 
 #: src/effects/Equalization.cpp:770
 msgid "Graphic EQ"
 msgstr "Графічний EQ"
 
 #: src/effects/Equalization.cpp:785
-#, fuzzy
 msgid "Interpolation type"
-msgstr "Інтерполяція"
+msgstr "Тип інтерполяції"
 
 #: src/effects/Equalization.cpp:794
 msgid "Li&near Frequency Scale"
@@ -7217,14 +7169,12 @@ msgid "&Invert"
 msgstr "&Інвертувати"
 
 #: src/effects/Equalization.cpp:871
-#, fuzzy
 msgid "Show g&rid lines"
-msgstr "Показувати приховані файли"
+msgstr "Показувати лінії сі&тки"
 
 #: src/effects/Equalization.cpp:872
-#, fuzzy
 msgid "Show grid lines"
-msgstr "Показувати приховані файли"
+msgstr "Показувати лінії сітки"
 
 #: src/effects/Equalization.cpp:894
 msgid "&Processing: "
@@ -8108,14 +8058,12 @@ msgid "Feedback in percent"
 msgstr "Зворотній зв’язок у відсотках"
 
 #: src/effects/Phaser.cpp:310 src/effects/Wahwah.cpp:282
-#, fuzzy
 msgid "Output gain (dB):"
-msgstr "&Рівень відлуння (дБ):"
+msgstr "Підсилення на виході (дБ):"
 
 #: src/effects/Phaser.cpp:315 src/effects/Wahwah.cpp:287
-#, fuzzy
 msgid "Output gain (dB)"
-msgstr "&Рівень відлуння (дБ):"
+msgstr "Підсилення на виході (дБ)"
 
 #: src/effects/Phaser.h:30
 msgid "Phaser"
@@ -8161,23 +8109,20 @@ msgid "Repeats the selection the specified number of times"
 msgstr "Повторює позначений фрагмент вказану кількість разів"
 
 #: src/effects/Repeat.cpp:178
-#, fuzzy
 msgid "Number of repeats to add:"
-msgstr "Кількість повторів:"
+msgstr "Кількість повторів для додавання:"
 
 #: src/effects/Repeat.cpp:185
-#, fuzzy
 msgid "Current selection length: dd:hh:mm:ss"
-msgstr "Нова тривалість вибраного: dd:hh:mm:ss"
+msgstr "Поточна довжина позначеного: dd:hh:mm:ss"
 
 #: src/effects/Repeat.cpp:186
 msgid "New selection length: dd:hh:mm:ss"
 msgstr "Нова тривалість вибраного: dd:hh:mm:ss"
 
 #: src/effects/Repeat.cpp:227
-#, fuzzy
 msgid "Current selection length: "
-msgstr "Нова тривалість вибраного: "
+msgstr "Поточна довжина позначеного: "
 
 #: src/effects/Repeat.cpp:237
 msgid "New selection length: "
@@ -8185,7 +8130,7 @@ msgstr "Нова тривалість вибраного: "
 
 #: src/effects/Repeat.cpp:240
 msgid "Warning: No repeats."
-msgstr ""
+msgstr "Попередження: немає повторів."
 
 #: src/effects/Repeat.h:23
 msgid "Repeat"
@@ -8969,18 +8914,17 @@ msgstr "Параметри ефектів Audio Unit"
 #: src/effects/audiounits/AudioUnitEffect.cpp:319
 #: src/effects/audiounits/AudioUnitEffect.cpp:401
 msgid "Full"
-msgstr ""
+msgstr "Повний"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:320
 #: src/effects/audiounits/AudioUnitEffect.cpp:405
-#, fuzzy
 msgid "Generic"
-msgstr "&Створення"
+msgstr "Типовий"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:321
 #: src/effects/audiounits/AudioUnitEffect.cpp:409
 msgid "Basic"
-msgstr ""
+msgstr "Базовий"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:347
 msgid ""
@@ -8994,27 +8938,27 @@ msgid "not work for all Audio Unit effects."
 msgstr "це працює не для усіх ефектів Audio Unit."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:362
-#, fuzzy
 msgid "User Interface"
-msgstr "Інтерфейс"
+msgstr "Інтерфейс користувача"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:365
 msgid ""
 "Select \"Full\" to use the graphical interface if supplied by the Audio Unit."
 msgstr ""
+"Виберіть «Повний», щоб скористатися графічним інтерфейсом, якщо такий "
+"надається Audio Unit."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:366
 msgid " Select \"Generic\" to use the system supplied generic interface."
-msgstr ""
+msgstr " Виберіть «Типовий», щоб скористатися типовим інтерфейсом системи."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:367
 msgid " Select \"Basic\" for A basic text-only interface. "
-msgstr ""
+msgstr " Виберіть «Базовий», щоб скористатися базовим текстовим інтерфейсом. "
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:372
-#, fuzzy
 msgid "Select &interface"
-msgstr "Стягнути вибір ліворуч"
+msgstr "Вибір і&нтерфейсу"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:453
 msgid "Export Audio Unit Presets"
@@ -9145,11 +9089,13 @@ msgid ""
 "Maximum allowed selection is 2147483647 samples\n"
 "(about 13.5 hours at 44100 Hz sample rate)."
 msgstr ""
+"Позначний фрагмент є надто довгим для коду Nyquist.\n"
+"Максимальна можлива довжина позначення складає 2147483647 семплів\n"
+"(близько 13,5 годин із частотою дискретизації 44100 Гц)."
 
 #: src/effects/nyquist/Nyquist.cpp:591
-#, fuzzy
 msgid "Nyquist Error"
-msgstr "Запит до Nyquist"
+msgstr "Помилка Nyquist"
 
 #: src/effects/nyquist/Nyquist.cpp:682
 msgid "Nyquist"
@@ -9160,9 +9106,8 @@ msgid "Nyquist Output: "
 msgstr "Вивід Nyquist: "
 
 #: src/effects/nyquist/Nyquist.cpp:1002 src/effects/nyquist/Nyquist.cpp:1005
-#, fuzzy
 msgid "Processing complete."
-msgstr "Обробка: "
+msgstr "Обробку завершено."
 
 #: src/effects/nyquist/Nyquist.cpp:1028 src/effects/nyquist/Nyquist.cpp:1037
 msgid "Nyquist returned the value:"
@@ -9301,7 +9246,7 @@ msgstr "Програма"
 
 #: src/export/Export.cpp:235
 msgid "No format specific options"
-msgstr ""
+msgstr "Немає специфічних для формату параметрів"
 
 #: src/export/Export.cpp:303
 msgid "Export Audio"
@@ -9382,9 +9327,8 @@ msgid "Advanced Mixing Options"
 msgstr "Додаткові параметри мікшування"
 
 #: src/export/Export.cpp:880
-#, fuzzy
 msgid "Format Options"
-msgstr "Загальні параметри"
+msgstr "Параметри форматування"
 
 #: src/export/Export.cpp:1076
 #, c-format
@@ -9631,9 +9575,8 @@ msgid "%.2f kbps"
 msgstr "%.2f кбіт/с"
 
 #: src/export/ExportFFmpegDialogs.cpp:431
-#, fuzzy
 msgid "Open custom FFmpeg format options"
-msgstr "Нетиповий експорт до FFmpeg"
+msgstr "Відкрити вікно нетипових параметрів форматування FFmpeg"
 
 #: src/export/ExportFFmpegDialogs.cpp:566
 #, c-format
@@ -9659,9 +9602,9 @@ msgid "Preset '%s' does not exist."
 msgstr "Шаблона «%s» не існує."
 
 #: src/export/ExportFFmpegDialogs.cpp:761
-#, fuzzy, c-format
+#, c-format
 msgid "Replace preset '%s'?"
-msgstr "Вилучити шаблон «%s»?"
+msgstr "Замінити шаблон «%s»?"
 
 #: src/export/ExportFFmpegDialogs.cpp:1190
 msgid "LC"
@@ -9720,9 +9663,8 @@ msgid "Log search"
 msgstr "Пошук за журналом"
 
 #: src/export/ExportFFmpegDialogs.cpp:1307
-#, fuzzy
 msgid "Configure custom FFmpeg options"
-msgstr "Нетиповий експорт до FFmpeg"
+msgstr "Налаштувати нетипові параметри FFmpeg"
 
 #: src/export/ExportFFmpegDialogs.cpp:1400
 msgid "Preset:"
@@ -10422,22 +10364,20 @@ msgstr ""
 "файлів."
 
 #: src/export/ExportMultiple.cpp:249
-#, fuzzy
 msgid "Export files to:"
-msgstr "Каталог для експорту:"
+msgstr "Експортувати файли до:"
 
 #: src/export/ExportMultiple.cpp:254
 msgid "Folder:"
-msgstr ""
+msgstr "Тека:"
 
 #: src/export/ExportMultiple.cpp:259
 msgid "Create"
 msgstr "Створити"
 
 #: src/export/ExportMultiple.cpp:270
-#, fuzzy
 msgid "Options:"
-msgstr "Параметри…"
+msgstr "Параметри:"
 
 #: src/export/ExportMultiple.cpp:296
 msgid "Split files based on:"
@@ -11443,9 +11383,8 @@ msgid "S&how 'How to Get Help' dialog box at program start up"
 msgstr "По&казувати під час запуску вікно «Як дістати довідку?»"
 
 #: src/prefs/GUIPrefs.cpp:119
-#, fuzzy
 msgid "Meter dB &range:"
-msgstr "&Діап. інд./форми хв. у дБ:"
+msgstr "&Діапазон індикатора у дБ:"
 
 #: src/prefs/GUIPrefs.cpp:126
 msgid "&Language:"
@@ -11815,7 +11754,7 @@ msgstr "Модулів не знайдено"
 
 #: src/prefs/MousePrefs.cpp:59
 msgid "Ctrl"
-msgstr ""
+msgstr "Ctrl"
 
 #: src/prefs/MousePrefs.cpp:64
 msgid "Mouse"
@@ -11880,9 +11819,8 @@ msgid "Select Clip or Entire Track"
 msgstr "Вибрати ділянку або всю доріжку"
 
 #: src/prefs/MousePrefs.cpp:114
-#, fuzzy
 msgid "-Left-Click"
-msgstr "← — Клацання"
+msgstr "-клацання лівою"
 
 #: src/prefs/MousePrefs.cpp:114
 msgid "Scrub"
@@ -11890,18 +11828,16 @@ msgstr "Витерти"
 
 #: src/prefs/MousePrefs.cpp:115 src/prefs/MousePrefs.cpp:140
 #: src/prefs/MousePrefs.cpp:150
-#, fuzzy
 msgid "-Left-Drag"
-msgstr "← — Перетягування"
+msgstr "-перетягування лівою"
 
 #: src/prefs/MousePrefs.cpp:115
 msgid "Seek"
 msgstr "Позиціювання"
 
 #: src/prefs/MousePrefs.cpp:118
-#, fuzzy
 msgid "-Left-Double-Click"
-msgstr "Подвійне-клацання-лівою"
+msgstr "-подвійне клацання лівою"
 
 #: src/prefs/MousePrefs.cpp:118
 msgid "Scroll-scrub"
@@ -12036,9 +11972,8 @@ msgid "Scroll left or right"
 msgstr "Прокручування ліворуч або праворуч"
 
 #: src/prefs/MousePrefs.cpp:166
-#, fuzzy
 msgid "-Wheel-Rotate"
-msgstr "Обертання коліщатка"
+msgstr "-обертання коліщатка"
 
 #: src/prefs/MousePrefs.cpp:166
 msgid "Zoom in or out on Mouse Pointer"
@@ -12246,33 +12181,31 @@ msgstr "0 означає без кінця"
 #. i18n-hint: The name of a frequency scale in psychoacoustics
 #: src/prefs/SpectrogramSettings.cpp:155
 msgid "Mel"
-msgstr ""
+msgstr "Мел"
 
 #. i18n-hint: The name of a frequency scale in psychoacoustics, named for Heinrich Barkhausen
 #: src/prefs/SpectrogramSettings.cpp:157
 msgid "Bark"
-msgstr ""
+msgstr "Кора"
 
 #. i18n-hint: The name of a frequency scale in psychoacoustics, abbreviates Equivalent Rectangular Bandwidth
 #: src/prefs/SpectrogramSettings.cpp:159
 msgid "ERB"
-msgstr ""
+msgstr "ЕПС"
 
 #. i18n-hint: Time units, that is Period = 1 / Frequency
 #: src/prefs/SpectrogramSettings.cpp:161
-#, fuzzy
 msgid "Period"
-msgstr "Період кадру"
+msgstr "Період"
 
 #: src/prefs/SpectrogramSettings.cpp:177
-#, fuzzy
 msgid "Frequencies"
-msgstr "Частота"
+msgstr "Частоти"
 
 #. i18n-hint: the Reassignment algorithm for spectrograms
 #: src/prefs/SpectrogramSettings.cpp:179
 msgid "Reassignment"
-msgstr ""
+msgstr "Перепризначення"
 
 #. i18n-hint: EAC abbreviates "Enhanced Autocorrelation"
 #: src/prefs/SpectrogramSettings.cpp:181
@@ -12304,9 +12237,8 @@ msgid "The frequency gain must be no more than 60 dB/dec"
 msgstr "Збільшення частоти має не перевищувати 60 дБ/dec"
 
 #: src/prefs/SpectrumPrefs.cpp:36
-#, fuzzy
 msgid "Spectrogram Settings"
-msgstr "Спектрограми"
+msgstr "Параметри спектрограми"
 
 #: src/prefs/SpectrumPrefs.cpp:36
 msgid "Spectrograms"
@@ -12326,14 +12258,12 @@ msgstr "32768 — найточніше"
 
 #. i18n-hint: use is a verb
 #: src/prefs/SpectrumPrefs.cpp:163 src/prefs/WaveformPrefs.cpp:83
-#, fuzzy
 msgid "Use Preferences"
-msgstr "Параметри: "
+msgstr "Використати налаштування"
 
 #: src/prefs/SpectrumPrefs.cpp:170 src/prefs/WaveformPrefs.cpp:91
-#, fuzzy
 msgid "S&cale"
-msgstr "Масштаб"
+msgstr "&Масштаб"
 
 #: src/prefs/SpectrumPrefs.cpp:175
 msgid "Mi&nimum Frequency (Hz):"
@@ -12345,7 +12275,7 @@ msgstr "Ма&ксимальна частота (Гц):"
 
 #: src/prefs/SpectrumPrefs.cpp:188
 msgid "Colors"
-msgstr ""
+msgstr "Кольори"
 
 #: src/prefs/SpectrumPrefs.cpp:193
 msgid "&Gain (dB):"
@@ -12364,14 +12294,12 @@ msgid "S&how the spectrum using grayscale colors"
 msgstr "Показувати спектр у ві&дтінках сірого"
 
 #: src/prefs/SpectrumPrefs.cpp:215
-#, fuzzy
 msgid "Algorithm"
-msgstr "&Алгоритм:"
+msgstr "Алгоритм"
 
 #: src/prefs/SpectrumPrefs.cpp:220
-#, fuzzy
 msgid "A&lgorithm"
-msgstr "&Алгоритм:"
+msgstr "&Алгоритм"
 
 #: src/prefs/SpectrumPrefs.cpp:224
 msgid "Window &size:"
@@ -12386,9 +12314,8 @@ msgid "&Zero padding factor"
 msgstr "&Нульовий коефіцієнт полів"
 
 #: src/prefs/SpectrumPrefs.cpp:247
-#, fuzzy
 msgid "Ena&ble Spectral Selection"
-msgstr "Спектральний вибір"
+msgstr "&Увімкнути спектральний вибір"
 
 #: src/prefs/SpectrumPrefs.cpp:252
 msgid "Show a grid along the &Y-axis"
@@ -12416,14 +12343,12 @@ msgid "&Quantize Notes"
 msgstr "Зауваження щодо &квантизації"
 
 #: src/prefs/SpectrumPrefs.cpp:285
-#, fuzzy
 msgid "Global settings"
-msgstr "Завантажити параметри:"
+msgstr "Загальні параметри"
 
 #: src/prefs/SpectrumPrefs.cpp:287
-#, fuzzy
 msgid "Ena&ble spectral selection"
-msgstr "&Увімкнути або вимкнути спектральний вибір"
+msgstr "&Увімкнути спектральний вибір"
 
 #: src/prefs/SpectrumPrefs.cpp:306
 msgid "The maximum frequency must be an integer"
@@ -12636,14 +12561,12 @@ msgid "&Importing uncompressed audio files"
 msgstr "&Імпортування нестиснених звукових файлів"
 
 #: src/prefs/WaveformPrefs.cpp:29
-#, fuzzy
 msgid "Waveforms"
-msgstr "Хвиля"
+msgstr "Хвилі"
 
 #: src/prefs/WaveformPrefs.cpp:96
-#, fuzzy
 msgid "Waveform dB &range"
-msgstr "&Діап. інд./форми хв. у дБ:"
+msgstr "Ді&апазон хвилі у дБ"
 
 #. i18n-hint: These are strings for the status bar, and indicate whether Audacity
 #. is playing or recording or stopped, and whether it is paused.
@@ -12859,9 +12782,9 @@ msgid "Recording Volume (Unavailable; use system mixer.)"
 msgstr "Гучність запису (недоступна, скористайтеся мікшером системи)"
 
 #: src/toolbars/MixerToolBar.cpp:298
-#, fuzzy, c-format
+#, c-format
 msgid "Playback Volume: %%.2f%s"
-msgstr "Гучність відтворення: %.2f%s"
+msgstr "Гучність відтворення: %%.2f%s"
 
 #: src/toolbars/MixerToolBar.cpp:298
 msgid " (emulated)"
