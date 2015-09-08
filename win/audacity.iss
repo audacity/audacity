@@ -271,7 +271,7 @@ Name: "nb"; MessagesFile: "compiler:Languages\Norwegian.isl"
 Name: "nl"; MessagesFile: "compiler:Languages\Dutch.isl"
 Name: "oc"; MessagesFile: "{#Get('Occitan.isl')}"
 Name: "pl"; MessagesFile: "compiler:Languages\Polish.isl"
-Name: "pt"; MessagesFile: "compiler:Languages\Portuguese.isl"
+Name: "pt_PT"; MessagesFile: "compiler:Languages\Portuguese.isl"
 Name: "pt_BR"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
 Name: "ro"; MessagesFile: "{#Get('Romanian.isl')}"
 Name: "ru"; MessagesFile: "compiler:Languages\Russian.isl"
@@ -285,7 +285,7 @@ Name: "tg"; MessagesFile: "{#Dummy('Tajik', '0428')}"
 Name: "tr"; MessagesFile: "compiler:Languages\Turkish.isl"
 Name: "uk"; MessagesFile: "compiler:Languages\Ukrainian.isl"
 Name: "vi"; MessagesFile: "{#Get('Vietnamese.isl')}"
-Name: "zh"; MessagesFile: "{#Get('ChineseSimplified.isl')}"
+Name: "zh_CN"; MessagesFile: "{#Get('ChineseSimplified.isl')}"
 Name: "zh_TW"; MessagesFile: "{#Get('ChineseTraditional.isl')}"
 
 ; To include additional translations add it to the win/InnoSetupLanguages directory.
@@ -350,7 +350,7 @@ nb.ResetPrefs=Reset Preferences
 nl.ResetPrefs=Voorkeuren herstellen?
 oc.ResetPrefs=Reset Preferences
 pl.ResetPrefs=Zresetować ustawienia?
-pt.ResetPrefs=Reconfigurar as Preferências?
+pt_PT.ResetPrefs=Reconfigurar as Preferências?
 pt_BR.ResetPrefs=Redefinir Preferências?
 ro.ResetPrefs=Reset Preferences
 ru.ResetPrefs=Сбросить Параметры?
@@ -364,5 +364,5 @@ tg.ResetPrefs=Reset Preferences
 tr.ResetPrefs=Ayarlar Sıfırlansın mı?
 uk.ResetPrefs=Відновити початкові значення параметрів?
 vi.ResetPrefs=Reset Preferences
-zh.ResetPrefs=重置配置吗？
+zh_CN.ResetPrefs=重置配置吗？
 zh_TW.ResetPrefs=是否重設偏好設定？
