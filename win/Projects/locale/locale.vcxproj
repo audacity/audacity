@@ -108,7 +108,7 @@ goto :EOF
     <msgfmt Include="..\..\..\locale\nl.po" />
     <msgfmt Include="..\..\..\locale\oc.po" />
     <msgfmt Include="..\..\..\locale\pl.po" />
-    <msgfmt Include="..\..\..\locale\pt.po" />
+    <msgfmt Include="..\..\..\locale\pt_PT.po" />
     <msgfmt Include="..\..\..\locale\pt_BR.po" />
     <msgfmt Include="..\..\..\locale\ro.po" />
     <msgfmt Include="..\..\..\locale\ru.po" />
@@ -122,7 +122,7 @@ goto :EOF
     <msgfmt Include="..\..\..\locale\tr.po" />
     <msgfmt Include="..\..\..\locale\uk.po" />
     <msgfmt Include="..\..\..\locale\vi.po" />
-    <msgfmt Include="..\..\..\locale\zh.po" />
+    <msgfmt Include="..\..\..\locale\zh_CN.po" />
     <msgfmt Include="..\..\..\locale\zh_TW.po" />
   </ItemGroup>
   <ItemGroup>
