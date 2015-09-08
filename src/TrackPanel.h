@@ -745,9 +745,6 @@ protected:
 
    static wxString gSoloPref;
 
-   // Keeps track of extra fractional vertical scroll steps
-   double mVertScrollRemainder;
-
  protected:
 
    // The screenshot class needs to access internals

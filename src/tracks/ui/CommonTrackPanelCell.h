@@ -20,13 +20,21 @@ class AUDACITY_DLL_API CommonTrackPanelCell /* not final */
    : public TrackPanelCell
 {
 public:
-   CommonTrackPanelCell() {}
+   CommonTrackPanelCell()
+      : mVertScrollRemainder(0.0)
+   {}
 
    virtual ~CommonTrackPanelCell() = 0;
 
    virtual Track *FindTrack() = 0;
 
 protected:
+   unsigned HandleWheelRotation
+      (const TrackPanelMouseEvent &event,
+      AudacityProject *pProject) override;
+
+private:
+   double mVertScrollRemainder;
 };
 
 #endif
