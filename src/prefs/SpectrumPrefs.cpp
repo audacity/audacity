@@ -41,6 +41,10 @@ SpectrumPrefs::SpectrumPrefs(wxWindow * parent, WaveTrack *wt)
       SpectrogramSettings &settings = wt->GetSpectrogramSettings();
       mDefaulted = (&SpectrogramSettings::defaults() == &settings);
       mTempSettings = settings;
+      float minFreq, maxFreq;
+      wt->GetSpectrumBounds(&minFreq, &maxFreq);
+      mTempSettings.maxFreq = maxFreq;
+      mTempSettings.minFreq = minFreq;
    }
    else  {
       mTempSettings = SpectrogramSettings::defaults();
@@ -389,9 +393,11 @@ bool SpectrumPrefs::Apply()
       else {
          SpectrogramSettings *pSettings =
             &mWt->GetIndependentSpectrogramSettings();
+         mWt->SetSpectrumBounds(mTempSettings.minFreq, mTempSettings.maxFreq);
          *pSettings = mTempSettings;
          if (partner) {
             pSettings = &partner->GetIndependentSpectrogramSettings();
+            partner->SetSpectrumBounds(mTempSettings.minFreq, mTempSettings.maxFreq);
             *pSettings = mTempSettings;
          }
       }
