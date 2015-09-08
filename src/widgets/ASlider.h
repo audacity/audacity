@@ -142,6 +142,8 @@ class LWSlider
 
    void Move(const wxPoint &newpos);
 
+   void AdjustSize(const wxSize & sz);
+
    void OnPaint(wxDC &dc);
    void OnSize(wxSizeEvent & event);
    void OnMouseEvent(wxMouseEvent & event);

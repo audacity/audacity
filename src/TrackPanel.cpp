@@ -5300,9 +5300,9 @@ void TrackPanel::HandleSliders(wxMouseEvent &event, bool pan)
    WaveTrack *capturedTrack = (WaveTrack *) mCapturedTrack;
 
    if (pan)
-      slider = mTrackInfo.PanSlider(capturedTrack);
+      slider = mTrackInfo.PanSlider(capturedTrack, true);
    else
-      slider = mTrackInfo.GainSlider(capturedTrack);
+      slider = mTrackInfo.GainSlider(capturedTrack, true);
 
    slider->OnMouseEvent(event);
 
@@ -7718,7 +7718,7 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec,
       mTrackInfo.DrawMuteSolo(dc, rect, t, (captured && mMouseCapture == IsMuting), false, HasSoloButton());
       mTrackInfo.DrawMuteSolo(dc, rect, t, (captured && mMouseCapture == IsSoloing), true, HasSoloButton());
 
-      mTrackInfo.DrawSliders(dc, (WaveTrack *)t, rect);
+      mTrackInfo.DrawSliders(dc, (WaveTrack *)t, rect, captured);
       if (!t->GetMinimized()) {
 
          int offset = 8;
@@ -9648,6 +9648,11 @@ TrackInfo::TrackInfo(TrackPanel * pParentIn)
                         wxSize(sliderRect.width, sliderRect.height),
                         DB_SLIDER);
    mGain->SetDefaultValue(1.0);
+   mGainCaptured = new LWSlider(pParent, _("Gain"),
+                                wxPoint(sliderRect.x, sliderRect.y),
+                                wxSize(sliderRect.width, sliderRect.height),
+                                DB_SLIDER);
+   mGainCaptured->SetDefaultValue(1.0);
 
    GetPanRect(rect, sliderRect);
 
@@ -9657,6 +9662,11 @@ TrackInfo::TrackInfo(TrackPanel * pParentIn)
                        wxSize(sliderRect.width, sliderRect.height),
                        PAN_SLIDER);
    mPan->SetDefaultValue(0.0);
+   mPanCaptured = new LWSlider(pParent, _("Pan"),
+                               wxPoint(sliderRect.x, sliderRect.y),
+                               wxSize(sliderRect.width, sliderRect.height),
+                               PAN_SLIDER);
+   mPanCaptured->SetDefaultValue(0.0);
 
    int fontSize = 10;
    mFont.Create(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
@@ -9677,7 +9687,9 @@ TrackInfo::TrackInfo(TrackPanel * pParentIn)
 
 TrackInfo::~TrackInfo()
 {
+   delete mGainCaptured;
    delete mGain;
+   delete mPanCaptured;
    delete mPan;
 }
 
@@ -10000,43 +10012,53 @@ void TrackInfo::DrawVelocitySlider(wxDC *dc, NoteTrack *t, wxRect rect) const
 }
 #endif
 
-void TrackInfo::DrawSliders(wxDC *dc, WaveTrack *t, wxRect rect) const
+void TrackInfo::DrawSliders(wxDC *dc, WaveTrack *t, wxRect rect, bool captured) const
 {
    wxRect sliderRect;
 
    GetGainRect(rect, sliderRect);
    if (sliderRect.y + sliderRect.height < rect.y + rect.height - 19) {
-      GainSlider(t)->OnPaint(*dc);
+      GainSlider(t, captured)->OnPaint(*dc);
    }
 
    GetPanRect(rect, sliderRect);
    if (sliderRect.y + sliderRect.height < rect.y + rect.height - 19) {
-      PanSlider(t)->OnPaint(*dc);
+      PanSlider(t, captured)->OnPaint(*dc);
    }
 }
 
-LWSlider * TrackInfo::GainSlider(WaveTrack *t) const
+LWSlider * TrackInfo::GainSlider(WaveTrack *t, bool captured) const
 {
    wxRect rect(kLeftInset, t->GetY() - pParent->GetViewInfo()->vpos + kTopInset, 1, t->GetHeight());
    wxRect sliderRect;
    GetGainRect(rect, sliderRect);
 
-   mGain->Move(wxPoint(sliderRect.x, sliderRect.y));
-   mGain->Set(t->GetGain());
+   wxPoint pos = sliderRect.GetPosition();
+   float gain = t->GetGain();
 
-   return mGain;
+   mGain->Move(pos);
+   mGain->Set(gain);
+   mGainCaptured->Move(pos);
+   mGainCaptured->Set(gain);
+
+   return captured ? mGainCaptured : mGain;
 }
 
-LWSlider * TrackInfo::PanSlider(WaveTrack *t) const
+LWSlider * TrackInfo::PanSlider(WaveTrack *t, bool captured) const
 {
    wxRect rect(kLeftInset, t->GetY() - pParent->GetViewInfo()->vpos + kTopInset, 1, t->GetHeight());
    wxRect sliderRect;
    GetPanRect(rect, sliderRect);
 
-   mPan->Move(wxPoint(sliderRect.x, sliderRect.y));
-   mPan->Set(t->GetPan());
+   wxPoint pos = sliderRect.GetPosition();
+   float pan = t->GetPan();
 
-   return mPan;
+   mPan->Move(pos);
+   mPan->Set(pan);
+   mPanCaptured->Move(pos);
+   mPanCaptured->Set(pan);
+
+   return captured ? mPanCaptured : mPan;
 }
 
 static TrackPanel * TrackPanelFactory(wxWindow * parent,

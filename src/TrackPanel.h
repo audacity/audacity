@@ -90,7 +90,7 @@ private:
 #ifdef EXPERIMENTAL_MIDI_OUT
    void DrawVelocitySlider(wxDC * dc, NoteTrack *t, wxRect rect) const ;
 #endif
-   void DrawSliders(wxDC * dc, WaveTrack *t, wxRect rect) const;
+   void DrawSliders(wxDC * dc, WaveTrack *t, wxRect rect, bool captured) const;
 
    // Draw the minimize button *and* the sync-lock track icon, if necessary.
    void DrawMinimize(wxDC * dc, const wxRect & rect, Track * t, bool down) const;
@@ -105,12 +105,14 @@ private:
    void GetSyncLockIconRect(const wxRect & rect, wxRect &dest) const;
 
 public:
-   LWSlider * GainSlider(WaveTrack *t) const;
-   LWSlider * PanSlider(WaveTrack *t) const;
+   LWSlider * GainSlider(WaveTrack *t, bool captured = false) const;
+   LWSlider * PanSlider(WaveTrack *t, bool captured = false) const;
 
 private:
    TrackPanel * pParent;
    wxFont mFont;
+   LWSlider *mGainCaptured;
+   LWSlider *mPanCaptured;
    LWSlider *mGain;
    LWSlider *mPan;
 
