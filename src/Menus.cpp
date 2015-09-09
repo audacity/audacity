@@ -104,6 +104,9 @@ simplifies construction of menu items.
 #include "toolbars/DeviceToolBar.h"
 #include "toolbars/MixerToolBar.h"
 #include "toolbars/TranscriptionToolBar.h"
+
+#include "tracks/ui/SelectHandle.h"
+
 #include "widgets/LinkingHtmlWindow.h"
 
 #include "Experimental.h"
@@ -5879,7 +5882,7 @@ void AudacityProject::DoNextPeakFrequency(bool up)
    }
 
    if (pTrack) {
-      mTrackPanel->SnapCenterOnce(pTrack, up);
+      SelectHandle::Instance().SnapCenterOnce(mViewInfo, pTrack, up);
       mTrackPanel->Refresh(false);
       ModifyState(false);
    }

@@ -15,8 +15,12 @@ Paul Licameli split from TrackPanel.cpp
 #include "LabelGlyphHandle.h"
 #include "LabelTextHandle.h"
 
+#include "../../ui/SelectHandle.h"
+
 #include "../../../HitTestResult.h"
+#include "../../../Project.h"
 #include "../../../TrackPanelMouseEvent.h"
+#include "../../../toolbars/ToolsToolBar.h"
 
 HitTestResult LabelTrack::HitTest
 (const TrackPanelMouseEvent &evt,
@@ -37,6 +41,12 @@ HitTestResult LabelTrack::HitTest
       // Missed glyph, try text box
       // This hit test does not define its own messages or cursor
       HitTestResult defaultResult = Track::HitTest(evt, pProject);
+      if (!defaultResult.handle) {
+         // In case of multi tool, default to selection.
+         const ToolsToolBar *const pTtb = pProject->GetToolsToolBar();
+         if (pTtb->IsDown(multiTool))
+            defaultResult = SelectHandle::HitTest(evt, pProject, this);
+      }
       result = LabelTextHandle::HitTest(event, this);
       if (result.handle)
          // Use any cursor or status message change from catchall,

@@ -2224,6 +2224,8 @@ void AudacityProject::OnToolBarUpdate(wxCommandEvent & event)
 // The projects tracklist has been updated
 void AudacityProject::OnTrackListUpdated(wxCommandEvent & event)
 {
+   GetSelectionState().TrackListUpdated( *GetTracks() );
+
    mViewInfo.track = NULL;
 
    event.Skip();

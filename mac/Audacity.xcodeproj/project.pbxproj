@@ -1238,6 +1238,8 @@
 		5E7396691DAFDB5600BA0A4D /* LabelDefaultClickHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E7396631DAFDB5600BA0A4D /* LabelDefaultClickHandle.cpp */; };
 		5E73966A1DAFDB5600BA0A4D /* LabelGlyphHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E7396651DAFDB5600BA0A4D /* LabelGlyphHandle.cpp */; };
 		5E73966B1DAFDB5600BA0A4D /* LabelTextHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E7396671DAFDB5600BA0A4D /* LabelTextHandle.cpp */; };
+		5E73966E1DAFDB8500BA0A4D /* StretchHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E73966C1DAFDB8500BA0A4D /* StretchHandle.cpp */; };
+		5E7396711DAFDB9D00BA0A4D /* SelectHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E73966F1DAFDB9D00BA0A4D /* SelectHandle.cpp */; };
 		5E74D2E31CC4429700D88B0B /* EditCursorOverlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E74D2DD1CC4429700D88B0B /* EditCursorOverlay.cpp */; };
 		5E74D2E41CC4429700D88B0B /* PlayIndicatorOverlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E74D2DF1CC4429700D88B0B /* PlayIndicatorOverlay.cpp */; };
 		5E74D2E51CC4429700D88B0B /* Scrubbing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E74D2E11CC4429700D88B0B /* Scrubbing.cpp */; };
@@ -3085,6 +3087,10 @@
 		5E7396661DAFDB5600BA0A4D /* LabelGlyphHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LabelGlyphHandle.h; sourceTree = "<group>"; };
 		5E7396671DAFDB5600BA0A4D /* LabelTextHandle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LabelTextHandle.cpp; sourceTree = "<group>"; };
 		5E7396681DAFDB5600BA0A4D /* LabelTextHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LabelTextHandle.h; sourceTree = "<group>"; };
+		5E73966C1DAFDB8500BA0A4D /* StretchHandle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StretchHandle.cpp; sourceTree = "<group>"; };
+		5E73966D1DAFDB8500BA0A4D /* StretchHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StretchHandle.h; sourceTree = "<group>"; };
+		5E73966F1DAFDB9D00BA0A4D /* SelectHandle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SelectHandle.cpp; sourceTree = "<group>"; };
+		5E7396701DAFDB9D00BA0A4D /* SelectHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectHandle.h; sourceTree = "<group>"; };
 		5E74D2D91CC4427B00D88B0B /* TrackPanelCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackPanelCell.h; sourceTree = "<group>"; };
 		5E74D2DA1CC4427B00D88B0B /* TrackPanelCellIterator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackPanelCellIterator.h; sourceTree = "<group>"; };
 		5E74D2DD1CC4429700D88B0B /* EditCursorOverlay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditCursorOverlay.cpp; sourceTree = "<group>"; };
@@ -5797,6 +5803,7 @@
 				5E7396451DAFD8F200BA0A4D /* EnvelopeHandle.cpp */,
 				5E74D2DF1CC4429700D88B0B /* PlayIndicatorOverlay.cpp */,
 				5E74D2E11CC4429700D88B0B /* Scrubbing.cpp */,
+				5E73966F1DAFDB9D00BA0A4D /* SelectHandle.cpp */,
 				5E73964E1DAFD98400BA0A4D /* SliderHandle.cpp */,
 				5E7396421DAFD8C600BA0A4D /* TimeShiftHandle.cpp */,
 				5E7396571DAFDA3600BA0A4D /* TrackButtonHandles.cpp */,
@@ -5812,6 +5819,7 @@
 				5E7396461DAFD8F200BA0A4D /* EnvelopeHandle.h */,
 				5E74D2E01CC4429700D88B0B /* PlayIndicatorOverlay.h */,
 				5E74D2E21CC4429700D88B0B /* Scrubbing.h */,
+				5E7396701DAFDB9D00BA0A4D /* SelectHandle.h */,
 				5E73964F1DAFD98400BA0A4D /* SliderHandle.h */,
 				5E7396431DAFD8C600BA0A4D /* TimeShiftHandle.h */,
 				5E7396581DAFDA3600BA0A4D /* TrackButtonHandles.h */,
@@ -5851,6 +5859,8 @@
 				5EA0181E1EC7B226001F2996 /* NoteTrackUI.cpp */,
 				5EA0181F1EC7B226001F2996 /* NoteTrackVRulerControls.cpp */,
 				5EA018201EC7B226001F2996 /* NoteTrackVRulerControls.h */,
+				5E73966C1DAFDB8500BA0A4D /* StretchHandle.cpp */,
+				5E73966D1DAFDB8500BA0A4D /* StretchHandle.h */,
 			);
 			path = ui;
 			sourceTree = "<group>";
@@ -7657,6 +7667,7 @@
 				1790B15109883BFD008A330A /* StereoToMono.cpp in Sources */,
 				1790B15209883BFD008A330A /* ToneGen.cpp in Sources */,
 				5E74D2E31CC4429700D88B0B /* EditCursorOverlay.cpp in Sources */,
+				5E7396711DAFDB9D00BA0A4D /* SelectHandle.cpp in Sources */,
 				1790B15309883BFD008A330A /* TruncSilence.cpp in Sources */,
 				1790B15409883BFD008A330A /* TwoPassSimpleMono.cpp in Sources */,
 				1790B15809883BFD008A330A /* Wahwah.cpp in Sources */,
@@ -7787,6 +7798,7 @@
 				283B3D4D0BC21EBE00FA01D5 /* FileDialog.cpp in Sources */,
 				2809C4B80BCB7E560006010F /* FileIO.cpp in Sources */,
 				285DE1FA0BF03C7800A20DF0 /* Screenshot.cpp in Sources */,
+				5E73966E1DAFDB8500BA0A4D /* StretchHandle.cpp in Sources */,
 				2801A6460BF9268700648258 /* ImportQT.cpp in Sources */,
 				2891B2870C531D2C0044FBE3 /* FindClipping.cpp in Sources */,
 				283AA0EB0C56ED08002CBD34 /* ErrorDialog.cpp in Sources */,

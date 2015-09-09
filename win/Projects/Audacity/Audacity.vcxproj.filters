@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="src">
@@ -1040,6 +1040,12 @@
     <ClCompile Include="..\..\..\src\tracks\labeltrack\ui\LabelDefaultClickHandle.cpp">
       <Filter>src\tracks\labeltrack\ui</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\ui\SelectHandle.cpp">
+      <Filter>src\tracks\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\playabletrack\notetrack\ui\StretchHandle.cpp">
+      <Filter>src\tracks\playabletrack\notetrack\ui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\AboutDialog.h">
@@ -2070,6 +2076,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\tracks\labeltrack\ui\LabelDefaultClickHandle.h">
       <Filter>src\tracks\labeltrack\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\ui\SelectHandle.h">
+      <Filter>src\tracks\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\playabletrack\notetrack\ui\StretchHandle.h">
+      <Filter>src\tracks\playabletrack\notetrack\ui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

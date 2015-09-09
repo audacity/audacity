@@ -336,115 +336,27 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
    virtual MixerBoard* GetMixerBoard();
 
    virtual bool IsAudioActive();
-   virtual bool IsUnsafe();
    virtual void HandleTrackSpecificMouseEvent(wxMouseEvent & event);
-
-   virtual void ScrollDuringDrag();
-
-   // Working out where to dispatch the event to.
-   virtual int DetermineToolToUse( ToolsToolBar * pTtb, const wxMouseEvent & event);
-#ifdef USE_MIDI
-   // data for NoteTrack interactive stretch operations:
-   // Stretching applies to a selected region after quantizing the
-   // region to beat boundaries (subbeat stretching is not supported,
-   // but maybe it should be enabled with shift or ctrl or something)
-   // Stretching can drag the left boundary (the right stays fixed),
-   // the right boundary (the left stays fixed), or the center (splits
-   // the selection into two parts: when left part grows, the right
-   // part shrinks, keeping the leftmost and rightmost boundaries
-   // fixed.
-   enum StretchEnum {
-      stretchNone = 0, // false value!
-      stretchLeft,
-      stretchCenter,
-      stretchRight
-   };
-   struct StretchState {
-      StretchEnum mMode { stretchCenter }; // remembers what to drag
-
-      using QuantizedTimeAndBeat = std::pair< double, double >;
-
-      bool mStretching {}; // true between mouse down and mouse up
-      double mOrigT0 {};
-      double mOrigT1 {};
-      QuantizedTimeAndBeat mBeatCenter { 0, 0 };
-      QuantizedTimeAndBeat mBeat0 { 0, 0 };
-      QuantizedTimeAndBeat mBeat1 { 0, 0 };
-      double mLeftBeats {}; // how many beats from left to cursor
-      double mRightBeats {}; // how many beats from cursor to right
-   } mStretchState;
-
-   virtual StretchEnum HitTestStretch
-      ( const Track *track, const wxRect &rect, const wxMouseEvent & event,
-        StretchState *pState = nullptr );
-   wxCursor *ChooseStretchCursor( StretchEnum mode );
-   static StretchEnum ChooseStretchMode
-      ( const wxMouseEvent &event, const wxRect &rect, const ViewInfo &viewInfo,
-        const NoteTrack *nt, StretchState *pState = nullptr );
-   virtual void Stretch(int mouseXCoordinate, int trackLeftEdge, Track *pTrack);
-#endif
-
-   // AS: Selection handling
 
 public:
    size_t GetTrackCount() const;
    size_t GetSelectedTrackCount() const;
 
 protected:
-   virtual void HandleSelect(wxMouseEvent & event);
-   virtual void SelectionHandleDrag(wxMouseEvent &event, Track *pTrack);
-
-   virtual void SelectionHandleClick(wxMouseEvent &event,
-                                     Track* pTrack, wxRect rect);
-   virtual void StartSelection (int mouseXCoordinate, int trackLeftEdge);
-   virtual void ExtendSelection(int mouseXCoordinate, int trackLeftEdge,
-                        Track *pTrack);
    virtual void UpdateSelectionDisplay();
 
 public:
    virtual void UpdateAccessibility();
    void MessageForScreenReader(const wxString& message);
 
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-public:
-   void SnapCenterOnce (const WaveTrack *pTrack, bool up);
-protected:
-   void StartSnappingFreqSelection (const WaveTrack *pTrack);
-   void MoveSnappingFreqSelection (int mouseYCoordinate,
-                                   int trackTopEdge,
-                                   int trackHeight, Track *pTrack);
-   void StartFreqSelection (int mouseYCoordinate, int trackTopEdge,
-                            int trackHeight, Track *pTrack);
-   void ExtendFreqSelection(int mouseYCoordinate, int trackTopEdge,
-                            int trackHeight);
-   void ResetFreqSelectionPin(double hintFrequency, bool logF);
-
-#endif
-
-protected:
-   // AS: Cursor handling
-   virtual bool SetCursorByActivity( );
-   virtual void SetCursorAndTipWhenSelectTool
-      ( Track * t, const wxMouseEvent & event, const wxRect &rect, bool bMultiToolMode, wxString &tip, const wxCursor ** ppCursor );
-   virtual void SetCursorAndTipByTool( int tool, const wxMouseEvent & event, wxString &tip );
-
-public:
    virtual void HandleCursor(wxMouseEvent & event);
-
-protected:
-   virtual void MaySetOnDemandTip( Track * t, wxString &tip );
 
    // MM: Handle mouse wheel rotation
    virtual void HandleWheelRotation(wxMouseEvent & event);
 
-public:
    virtual void MakeParentRedrawScrollbars();
 
 protected:
-   // AS: Pushing the state preserves state for Undo operations.
-   virtual void MakeParentPushState(const wxString &desc, const wxString &shortDesc); // use UndoPush::AUTOSAVE
-   virtual void MakeParentPushState(const wxString &desc, const wxString &shortDesc,
-                            UndoPush flags);
    virtual void MakeParentModifyState(bool bWantsAutoSave);    // if true, writes auto-save file. Should set only if you really want the state change restored after
                                                                // a crash, as it can take many seconds for large (eg. 10 track-hours) projects
 
@@ -558,41 +470,11 @@ protected:
 
    bool mRefreshBacking;
 
-   SelectedRegion mInitialSelection;
-   SelectionState &GetSelectionState();
-   std::unique_ptr<SelectionStateChanger> mSelectionStateChanger{};
-
-   bool mSelStartValid;
-   double mSelStart;
-
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   enum eFreqSelMode {
-      FREQ_SEL_INVALID,
-
-      FREQ_SEL_SNAPPING_CENTER,
-      FREQ_SEL_PINNED_CENTER,
-      FREQ_SEL_DRAG_CENTER,
-
-      FREQ_SEL_FREE,
-      FREQ_SEL_TOP_FREE,
-      FREQ_SEL_BOTTOM_FREE,
-   }  mFreqSelMode;
-   // Following holds:
-   // the center for FREQ_SEL_PINNED_CENTER,
-   // the ratio of top to center (== center to bottom) for FREQ_SEL_DRAG_CENTER,
-   // a frequency boundary for FREQ_SEL_FREE, FREQ_SEL_TOP_FREE, or
-   // FREQ_SEL_BOTTOM_FREE,
-   // and is ignored otherwise.
-   double mFreqSelPin;
-   const WaveTrack *mFreqSelTrack = NULL;
-   std::unique_ptr<SpectrumAnalyst> mFrequencySnapper;
 
 protected:
 
 #endif
-
-   Track *mCapturedTrack;
-   wxRect mCapturedRect;
 
    bool mRedrawAfterStop;
 
@@ -601,72 +483,13 @@ protected:
    int mMouseMostRecentX;
    int mMouseMostRecentY;
 
-   // Handles snapping the selection boundaries or track boundaries to
-   // line up with existing tracks or labels.  mSnapLeft and mSnapRight
-   // are the horizontal index of pixels to display user feedback
-   // guidelines so the user knows when such snapping is taking place.
-   std::unique_ptr<SnapManager> mSnapManager;
-
-   wxInt64 mSnapLeft { -1 };
-   wxInt64 mSnapRight { -1 };
-
-public:
-   wxInt64 GetSnapLeft () const
-   {
-         return mSnapLeft ;
-   }
-   wxInt64 GetSnapRight() const
-   {
-         return mSnapRight;
-   }
-
-protected:
-
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   void HandleCenterFrequencyCursor
-      (bool shiftDown, wxString &tip, const wxCursor ** ppCursor);
-
-   void HandleCenterFrequencyClick
-      (bool shiftDown, const WaveTrack *pTrack, double value);
-
-   double PositionToFrequency(const WaveTrack *wt,
-                              bool maySnap,
-                              wxInt64 mouseYCoordinate,
-                              wxInt64 trackTopEdge,
-                              int trackHeight) const;
-   wxInt64 FrequencyToPosition(const WaveTrack *wt,
-                               double frequency,
-                               wxInt64 trackTopEdge,
-                               int trackHeight) const;
-#endif
-
-   enum SelectionBoundary {
-      SBNone,
-      SBLeft, SBRight,
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-      SBBottom, SBTop, SBCenter, SBWidth,
-#endif
-   };
-   SelectionBoundary ChooseTimeBoundary
-      (double selend, bool onlyWithinSnapDistance,
-       wxInt64 *pPixelDist = NULL, double *pPinValue = NULL) const;
-   SelectionBoundary ChooseBoundary
-      (const wxMouseEvent & event, const Track *pTrack,
-       const wxRect &rect,
-       bool mayDragWidth,
-       bool onlyWithinSnapDistance,
-       double *pPinValue = NULL) const;
-
-   bool mAutoScrolling;
-
 public:
    // Old enumeration of click-and-drag states, which will shrink and disappear
    // as UIHandle subclasses take over the repsonsibilities.
    enum   MouseCaptureEnum
    {
-      IsUncaptured=0,   // This is the normal state for the mouse
+      IsUncaptured = 0,
       IsClosing,
-      IsSelecting,
       IsMuting,
       IsSoloing,
       IsMinimizing,
@@ -674,24 +497,6 @@ public:
    };
 
 protected:
-   enum MouseCaptureEnum mMouseCapture;
-
-   virtual void SetCapturedTrack( Track * t, enum MouseCaptureEnum MouseCapture=IsUncaptured );
-
-   std::unique_ptr<wxCursor>
-      mArrowCursor, mSelectCursor,
-      mEnvelopeCursor, // doubles as the center frequency cursor
-                              // for spectral selection
-      mDisabledCursor, mAdjustLeftSelectionCursor, mAdjustRightSelectionCursor;
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   std::unique_ptr<wxCursor>
-      mBottomFrequencyCursor, mTopFrequencyCursor, mBandWidthCursor;
-#endif
-#ifdef USE_MIDI
-   std::unique_ptr<wxCursor>
-      mStretchCursor, mStretchLeftCursor, mStretchRightCursor;
-#endif
-
    friend class TrackPanelAx;
 
 #if wxUSE_ACCESSIBILITY
@@ -706,8 +511,6 @@ public:
 protected:
 
    static wxString gSoloPref;
-
- protected:
 
    // The screenshot class needs to access internals
    friend class ScreenshotCommand;
@@ -765,11 +568,4 @@ enum : int {
 //the bottom of a track that can be used for vertical track resizing.
 #define TRACK_RESIZE_REGION 5
 
-//This constant determines the size of the horizontal region (in pixels) around
-//the right and left selection bounds that can be used for horizontal selection adjusting
-//(or, vertical distance around top and bottom bounds in spectrograms,
-// for vertical selection adjusting)
-#define SELECTION_RESIZE_REGION 3
-
 #endif
-

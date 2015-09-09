@@ -17,6 +17,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Project.h"
 #include "../../toolbars/ToolsToolBar.h"
 
+#include "../ui/SelectHandle.h"
 #include "EnvelopeHandle.h"
 #include "../playabletrack/wavetrack/ui/SampleHandle.h"
 #include "ZoomHandle.h"
@@ -40,10 +41,10 @@ HitTestResult Track::HitTest
          return ZoomHandle::HitAnywhere(event.event, pProject);
       case slideTool:
          return TimeShiftHandle::HitAnywhere(pProject);
-
       case selectTool:
+         return SelectHandle::HitTest(event, pProject, this);
+
       default:
-         // cases not yet implemented
          // fallthru
          ;
       }

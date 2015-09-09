@@ -1,0 +1,339 @@
+/**********************************************************************
+
+Audacity: A Digital Audio Editor
+
+StretchHandle.cpp
+
+Paul Licameli split from TrackPanel.cpp
+
+**********************************************************************/
+
+#include "../../../../Audacity.h"
+
+#ifdef USE_MIDI
+
+#include "StretchHandle.h"
+
+#include "../../../../HitTestResult.h"
+#include "../../../../NoteTrack.h"
+#include "../../../../Project.h"
+#include "../../../../RefreshCode.h"
+#include "../../../../TrackPanelMouseEvent.h"
+#include "../../../../UndoManager.h"
+#include "../../../../../images/Cursors.h"
+
+#include <algorithm>
+
+StretchHandle::StretchHandle()
+{
+}
+
+StretchHandle &StretchHandle::Instance()
+{
+   static StretchHandle instance;
+   return instance;
+}
+
+HitTestPreview StretchHandle::HitPreview( StretchEnum stretchMode, bool unsafe )
+{
+   static auto disabledCursor =
+      ::MakeCursor(wxCURSOR_NO_ENTRY, DisabledCursorXpm, 16, 16);
+   static auto stretchLeftCursor =
+      ::MakeCursor(wxCURSOR_BULLSEYE, StretchLeftCursorXpm, 16, 16);
+   static auto stretchRightCursor =
+      ::MakeCursor(wxCURSOR_BULLSEYE, StretchRightCursorXpm, 16, 16);
+   static auto stretchCursor =
+      ::MakeCursor(wxCURSOR_BULLSEYE, StretchCursorXpm, 16, 16);
+
+   if (unsafe) {
+      return { _(""), &*disabledCursor };
+   }
+   else {
+      wxCursor *pCursor = NULL;
+      switch (stretchMode) {
+      default:
+         wxASSERT(false);
+      case stretchLeft:
+         pCursor = &*stretchLeftCursor; break;
+      case stretchCenter:
+         pCursor = &*stretchCursor; break;
+      case stretchRight:
+         pCursor = &*stretchRightCursor; break;
+      }
+      return {
+         _("Click and drag to stretch selected region."),
+         pCursor
+      };
+   }
+}
+
+HitTestResult StretchHandle::HitTest
+   ( const TrackPanelMouseEvent &evt, const AudacityProject *pProject,
+     NoteTrack *pTrack, StretchState &stretchState)
+{
+   const wxMouseEvent &event = evt.event;
+
+   // later, we may want a different policy, but for now, stretch is
+   // selected when the cursor is near the center of the track and
+   // within the selection
+
+   const ViewInfo &viewInfo = pProject->GetViewInfo();
+   const bool unsafe = pProject->IsAudioActive();
+   if (!pTrack || !pTrack->GetSelected() || pTrack->GetKind() != Track::Note)
+      return {};
+
+   const wxRect &rect = evt.rect;
+   int center = rect.y + rect.height / 2;
+   int distance = abs(event.m_y - center);
+   const int yTolerance = 10;
+   wxInt64 leftSel = viewInfo.TimeToPosition(viewInfo.selectedRegion.t0(), rect.x);
+   wxInt64 rightSel = viewInfo.TimeToPosition(viewInfo.selectedRegion.t1(), rect.x);
+   // Something is wrong if right edge comes before left edge
+   wxASSERT(!(rightSel < leftSel));
+   if (!(leftSel <= event.m_x && event.m_x <= rightSel &&
+         distance < yTolerance))
+      return {};
+
+   // find nearest beat to sel0, sel1
+   static const double minPeriod = 0.05; // minimum beat period
+   stretchState.mBeatCenter = { 0, 0 };
+
+   auto t0 = viewInfo.selectedRegion.t0();
+   stretchState.mBeat0 = pTrack->NearestBeatTime( t0 );
+   stretchState.mOrigSel0Quantized = stretchState.mBeat0.first;
+
+   auto t1 = viewInfo.selectedRegion.t1();
+   stretchState.mBeat1 = pTrack->NearestBeatTime( t1 );
+   stretchState.mOrigSel1Quantized = stretchState.mBeat1.first;
+
+   // If there is not (almost) a beat to stretch that is slower
+   // than 20 beats per second, don't stretch
+   if ( within( stretchState.mBeat0.second,
+                stretchState.mBeat1.second, 0.9 ) ||
+       ( stretchState.mBeat1.first - stretchState.mBeat0.first ) /
+          ( stretchState.mBeat1.second - stretchState.mBeat0.second )
+            < minPeriod )
+      return {};
+
+   auto selStart = viewInfo.PositionToTime( event.m_x, rect.x );
+   stretchState.mBeatCenter = pTrack->NearestBeatTime( selStart );
+   bool startNewSelection = true;
+   if ( within( stretchState.mBeat0.second,
+                stretchState.mBeatCenter.second, 0.1 ) ) {
+      stretchState.mMode = stretchLeft;
+      stretchState.mLeftBeats = 0;
+      stretchState.mRightBeats =
+         stretchState.mBeat1.second - stretchState.mBeat0.second;
+   }
+   else if ( within( stretchState.mBeat1.second,
+                     stretchState.mBeatCenter.second, 0.1 ) ) {
+      stretchState.mMode = stretchRight;
+      stretchState.mLeftBeats =
+         stretchState.mBeat1.second - stretchState.mBeat0.second;
+      stretchState.mRightBeats = 0;
+   }
+   else {
+      stretchState.mMode = stretchCenter;
+      stretchState.mLeftBeats =
+         stretchState.mBeat1.second - stretchState.mBeatCenter.second;
+      stretchState.mRightBeats =
+         stretchState.mBeatCenter.second - stretchState.mBeat0.second;
+   }
+
+   return {
+      HitPreview( stretchState.mMode, unsafe ),
+      &Instance()
+   };
+}
+
+StretchHandle::~StretchHandle()
+{
+}
+
+UIHandle::Result StretchHandle::Click
+(const TrackPanelMouseEvent &evt, AudacityProject *pProject)
+{
+   using namespace RefreshCode;
+   const bool unsafe = pProject->IsAudioActive();
+   const wxMouseEvent &event = evt.event;
+
+   if (unsafe ||
+       event.LeftDClick() ||
+       !event.LeftDown() ||
+       evt.pCell == NULL)
+      return Cancelled;
+
+
+   mLeftEdge = evt.rect.GetLeft();
+   mpTrack = static_cast<NoteTrack*>(evt.pCell);
+   ViewInfo &viewInfo = pProject->GetViewInfo();
+
+   // We must have hit if we got here, but repeat some
+   // calculations that set members
+   HitTest( evt, pProject, mpTrack, mStretchState );
+
+   viewInfo.selectedRegion.setTimes
+      ( mStretchState.mBeat0.first, mStretchState.mBeat1.first );
+
+   // Full refresh since the label area may need to indicate
+   // newly selected tracks. (I'm really not sure if the label area
+   // needs to be refreshed or how to just refresh non-label areas.-RBD)
+
+   return RefreshAll | UpdateSelection;
+}
+
+UIHandle::Result StretchHandle::Drag
+(const TrackPanelMouseEvent &evt, AudacityProject *pProject)
+{
+   using namespace RefreshCode;
+   const bool unsafe = pProject->IsAudioActive();
+   if (unsafe) {
+      this->Cancel(pProject);
+      return RefreshAll | Cancelled;
+   }
+
+   const wxMouseEvent &event = evt.event;
+   const int x = event.m_x;
+
+   Track *clickedTrack =
+      static_cast<CommonTrackPanelCell*>(evt.pCell)->FindTrack();
+
+   if (clickedTrack == NULL && mpTrack != NULL)
+      clickedTrack = mpTrack;
+   Stretch(pProject, x, mLeftEdge, clickedTrack);
+   return RefreshAll;
+}
+
+HitTestPreview StretchHandle::Preview
+(const TrackPanelMouseEvent &, const AudacityProject *pProject)
+{
+   const bool unsafe = pProject->IsAudioActive();
+   return HitPreview( mStretchState.mMode, unsafe );
+}
+
+UIHandle::Result StretchHandle::Release
+(const TrackPanelMouseEvent &, AudacityProject *pProject,
+ wxWindow *)
+{
+   using namespace RefreshCode;
+
+   const bool unsafe = pProject->IsAudioActive();
+   if (unsafe) {
+      this->Cancel(pProject);
+      return RefreshAll | Cancelled;
+   }
+
+   bool left;
+   ViewInfo &viewInfo = pProject->GetViewInfo();
+   if ( pProject->IsSyncLocked() &&
+        ( ( left = mStretchState.mMode == stretchLeft ) ||
+          mStretchState.mMode == stretchRight ) ) {
+      SyncLockedTracksIterator syncIter( pProject->GetTracks() );
+      for ( auto track = syncIter.StartWith( mpTrack ); track != nullptr;
+           track = syncIter.Next() ) {
+         if ( track != mpTrack ) {
+            if ( left ) {
+               auto origT0 = mStretchState.mOrigSel0Quantized;
+               auto diff = viewInfo.selectedRegion.t0() - origT0;
+               if ( diff > 0)
+                  track->SyncLockAdjust( origT0 + diff, origT0 );
+               else
+                  track->SyncLockAdjust( origT0, origT0 - diff );
+               track->Offset( diff );
+            }
+            else {
+               auto origT1 = mStretchState.mOrigSel1Quantized;
+               auto diff = viewInfo.selectedRegion.t1() - origT1;
+               track->SyncLockAdjust( origT1, origT1 + diff );
+            }
+         }
+      }
+   }
+
+   /* i18n-hint: (noun) The track that is used for MIDI notes which can be
+   dragged to change their duration.*/
+   pProject->PushState(_("Stretch Note Track"),
+      /* i18n-hint: In the history list, indicates a MIDI note has
+      been dragged to change its duration (stretch it). Using either past
+      or present tense is fine here.  If unsure, go for whichever is
+      shorter.*/
+      _("Stretch"),
+      UndoPush::CONSOLIDATE | UndoPush::AUTOSAVE);
+   return RefreshAll;
+}
+
+UIHandle::Result StretchHandle::Cancel(AudacityProject *pProject)
+{
+   pProject->RollbackState();
+   return RefreshCode::RefreshNone;
+}
+
+void StretchHandle::Stretch(AudacityProject *pProject, int mouseXCoordinate, int trackLeftEdge,
+   Track *pTrack)
+{
+   ViewInfo &viewInfo = pProject->GetViewInfo();
+   TrackList *const trackList = pProject->GetTracks();
+
+   if (pTrack == NULL && mpTrack != NULL)
+      pTrack = mpTrack;
+
+   if (!pTrack || pTrack->GetKind() != Track::Note) {
+      return;
+   }
+
+   NoteTrack *pNt = static_cast<NoteTrack *>(pTrack);
+   double moveto =
+      std::max(0.0, viewInfo.PositionToTime(mouseXCoordinate, trackLeftEdge));
+
+   auto t1 = viewInfo.selectedRegion.t1();
+   auto t0 = viewInfo.selectedRegion.t0();
+   double dur, left_dur, right_dur;
+
+   // check to make sure tempo is not higher than 20 beats per second
+   // (In principle, tempo can be higher, but not infinity.)
+   double minPeriod = 0.05; // minimum beat period
+
+   // make sure target duration is not too short
+   // Take quick exit if so, without changing the selection.
+   switch ( mStretchState.mMode ) {
+   case stretchLeft: {
+      dur = t1 - moveto;
+      if (dur < mStretchState.mRightBeats * minPeriod)
+         return;
+      pNt->StretchRegion
+         ( mStretchState.mBeat0, mStretchState.mBeat1, dur );
+      pNt->Offset( moveto - t0 );
+      mStretchState.mBeat0.first = moveto;
+      viewInfo.selectedRegion.setT0(moveto);
+      break;
+   }
+   case stretchRight: {
+      dur = moveto - t0;
+      if (dur < mStretchState.mLeftBeats * minPeriod)
+         return;
+      pNt->StretchRegion
+         ( mStretchState.mBeat0, mStretchState.mBeat1, dur );
+      viewInfo.selectedRegion.setT1(moveto);
+      mStretchState.mBeat1.first = moveto;
+      viewInfo.selectedRegion.setT0(moveto);
+      break;
+   }
+   case stretchCenter: {
+      left_dur = moveto - t0;
+      right_dur = t1 - moveto;
+      if ( left_dur < mStretchState.mLeftBeats * minPeriod ||
+           right_dur < mStretchState.mRightBeats * minPeriod )
+         return;
+      pNt->StretchRegion
+         ( mStretchState.mBeatCenter, mStretchState.mBeat1, right_dur );
+      pNt->StretchRegion
+         ( mStretchState.mBeat0, mStretchState.mBeatCenter, left_dur );
+      mStretchState.mBeatCenter.first = moveto;
+      break;
+   }
+   default:
+      wxASSERT(false);
+      break;
+   }
+}
+#endif
