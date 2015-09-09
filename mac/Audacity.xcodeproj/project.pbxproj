@@ -6758,7 +6758,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "[ \"${CONFIGURATION}\" = \"Release\" ] && \"${PROJECT_DIR}/scripts/install_wxlibs.sh\" || exit 0";
+			shellScript = "\"${PROJECT_DIR}/scripts/install_wxlibs.sh\"";
 			showEnvVarsInLog = 0;
 		};
 		288F0980131A400F0008E860 /* Install manual */ = {
