@@ -821,7 +821,6 @@
 		28884965131B6CF600B59735 /* oc.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884934131B6CF600B59735 /* oc.po */; };
 		28884966131B6CF600B59735 /* pl.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884935131B6CF600B59735 /* pl.po */; };
 		28884967131B6CF600B59735 /* pt_BR.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884936131B6CF600B59735 /* pt_BR.po */; };
-		28884968131B6CF600B59735 /* pt.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884937131B6CF600B59735 /* pt.po */; };
 		28884969131B6CF600B59735 /* ro.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884938131B6CF600B59735 /* ro.po */; };
 		2888496A131B6CF600B59735 /* ru.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884939131B6CF600B59735 /* ru.po */; };
 		2888496B131B6CF600B59735 /* sk.po in Sources */ = {isa = PBXBuildFile; fileRef = 2888493A131B6CF600B59735 /* sk.po */; };
@@ -830,7 +829,6 @@
 		28884970131B6CF600B59735 /* uk.po in Sources */ = {isa = PBXBuildFile; fileRef = 2888493F131B6CF600B59735 /* uk.po */; };
 		28884971131B6CF600B59735 /* vi.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884940131B6CF600B59735 /* vi.po */; };
 		28884972131B6CF600B59735 /* zh_TW.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884941131B6CF600B59735 /* zh_TW.po */; };
-		28884973131B6CF600B59735 /* zh.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884942131B6CF600B59735 /* zh.po */; };
 		2888A1631AE25F9A00E06FDC /* Diags.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2888A1611AE25F9A00E06FDC /* Diags.cpp */; };
 		288A1FF91AF37EC000DC8F71 /* fixed_intrin_sse2.c in Sources */ = {isa = PBXBuildFile; fileRef = 288A1FF01AF37EC000DC8F71 /* fixed_intrin_sse2.c */; };
 		288A1FFA1AF37EC000DC8F71 /* fixed_intrin_ssse3.c in Sources */ = {isa = PBXBuildFile; fileRef = 288A1FF11AF37EC000DC8F71 /* fixed_intrin_ssse3.c */; };
@@ -918,6 +916,8 @@
 		28CA9E801AE60C53005C0BFE /* trackpoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED2707180EF9C51D007D4FFD /* trackpoint.cpp */; };
 		28CA9E811AE60C53005C0BFE /* trackpoint.h in Headers */ = {isa = PBXBuildFile; fileRef = ED2707190EF9C51D007D4FFD /* trackpoint.h */; };
 		28CA9E821AE60C53005C0BFE /* utils.h in Headers */ = {isa = PBXBuildFile; fileRef = ED27071B0EF9C51D007D4FFD /* utils.h */; };
+		28CBD65F1B9F7DF7003AC5EE /* pt_PT.po in Resources */ = {isa = PBXBuildFile; fileRef = 28CBD65D1B9F7DF7003AC5EE /* pt_PT.po */; };
+		28CBD6601B9F7DF7003AC5EE /* zh_CN.po in Resources */ = {isa = PBXBuildFile; fileRef = 28CBD65E1B9F7DF7003AC5EE /* zh_CN.po */; };
 		28CC03A81AD386CF00826380 /* phasevocoder.c in Sources */ = {isa = PBXBuildFile; fileRef = 28CC03A01AD386CF00826380 /* phasevocoder.c */; };
 		28CC03A91AD386CF00826380 /* phasevocoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 28CC03A11AD386CF00826380 /* phasevocoder.h */; };
 		28CC03AA1AD386CF00826380 /* pvshell.c in Sources */ = {isa = PBXBuildFile; fileRef = 28CC03A21AD386CF00826380 /* pvshell.c */; };
@@ -2534,7 +2534,6 @@
 		28884934131B6CF600B59735 /* oc.po */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 5; name = oc.po; path = ../locale/oc.po; sourceTree = SOURCE_ROOT; };
 		28884935131B6CF600B59735 /* pl.po */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 5; name = pl.po; path = ../locale/pl.po; sourceTree = SOURCE_ROOT; };
 		28884936131B6CF600B59735 /* pt_BR.po */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 5; name = pt_BR.po; path = ../locale/pt_BR.po; sourceTree = SOURCE_ROOT; };
-		28884937131B6CF600B59735 /* pt.po */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 5; name = pt.po; path = ../locale/pt.po; sourceTree = SOURCE_ROOT; };
 		28884938131B6CF600B59735 /* ro.po */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 5; name = ro.po; path = ../locale/ro.po; sourceTree = SOURCE_ROOT; };
 		28884939131B6CF600B59735 /* ru.po */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 5; name = ru.po; path = ../locale/ru.po; sourceTree = SOURCE_ROOT; };
 		2888493A131B6CF600B59735 /* sk.po */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 5; name = sk.po; path = ../locale/sk.po; sourceTree = SOURCE_ROOT; };
@@ -2544,7 +2543,6 @@
 		2888493F131B6CF600B59735 /* uk.po */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 5; name = uk.po; path = ../locale/uk.po; sourceTree = SOURCE_ROOT; };
 		28884940131B6CF600B59735 /* vi.po */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 5; name = vi.po; path = ../locale/vi.po; sourceTree = SOURCE_ROOT; };
 		28884941131B6CF600B59735 /* zh_TW.po */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 5; name = zh_TW.po; path = ../locale/zh_TW.po; sourceTree = SOURCE_ROOT; };
-		28884942131B6CF600B59735 /* zh.po */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 5; name = zh.po; path = ../locale/zh.po; sourceTree = SOURCE_ROOT; };
 		2888A1611AE25F9A00E06FDC /* Diags.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Diags.cpp; sourceTree = "<group>"; };
 		2888A1621AE25F9A00E06FDC /* Diags.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Diags.h; sourceTree = "<group>"; };
 		288A1FF01AF37EC000DC8F71 /* fixed_intrin_sse2.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fixed_intrin_sse2.c; sourceTree = "<group>"; };
@@ -2634,6 +2632,8 @@
 		28C3946B1818356800FDDAC9 /* AudacityLogger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AudacityLogger.cpp; sourceTree = "<group>"; };
 		28C3946C1818356800FDDAC9 /* AudacityLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudacityLogger.h; sourceTree = "<group>"; };
 		28C8211C1B5C661E00B53328 /* ViewInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ViewInfo.cpp; sourceTree = "<group>"; };
+		28CBD65D1B9F7DF7003AC5EE /* pt_PT.po */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = pt_PT.po; path = ../locale/pt_PT.po; sourceTree = "<group>"; };
+		28CBD65E1B9F7DF7003AC5EE /* zh_CN.po */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = zh_CN.po; path = ../locale/zh_CN.po; sourceTree = "<group>"; };
 		28CC03A01AD386CF00826380 /* phasevocoder.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = phasevocoder.c; sourceTree = "<group>"; };
 		28CC03A11AD386CF00826380 /* phasevocoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = phasevocoder.h; sourceTree = "<group>"; };
 		28CC03A21AD386CF00826380 /* pvshell.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pvshell.c; sourceTree = "<group>"; };
@@ -5141,7 +5141,7 @@
 				28884934131B6CF600B59735 /* oc.po */,
 				28884935131B6CF600B59735 /* pl.po */,
 				28884936131B6CF600B59735 /* pt_BR.po */,
-				28884937131B6CF600B59735 /* pt.po */,
+				28CBD65D1B9F7DF7003AC5EE /* pt_PT.po */,
 				28884938131B6CF600B59735 /* ro.po */,
 				28884939131B6CF600B59735 /* ru.po */,
 				2888493A131B6CF600B59735 /* sk.po */,
@@ -5154,8 +5154,8 @@
 				2888493E131B6CF600B59735 /* tr.po */,
 				2888493F131B6CF600B59735 /* uk.po */,
 				28884940131B6CF600B59735 /* vi.po */,
+				28CBD65E1B9F7DF7003AC5EE /* zh_CN.po */,
 				28884941131B6CF600B59735 /* zh_TW.po */,
-				28884942131B6CF600B59735 /* zh.po */,
 			);
 			includeInIndex = 1;
 			name = locale;
@@ -6394,7 +6394,7 @@
 				1790AFAE09883B6D008A330A /* Frameworks */,
 				28032580131DB4960059D002 /* Copy plug-ins */,
 				28032560131DAFAF0059D002 /* Copy nyquist */,
-				28708D631B17C3C400496FEB /* Install wxWidgets libs */,
+				28708D631B17C3C400496FEB /* Copy wxWidgets libs */,
 				288F0980131A400F0008E860 /* Install manual */,
 				282413DA131D52CE009FD931 /* Install plugins */,
 				2892CE28131AFB1900E1E17D /* Install miscellany */,
@@ -6669,11 +6669,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				174F73D0098D516D009CD6E0 /* Audacity.icns in Resources */,
+				28CBD65F1B9F7DF7003AC5EE /* pt_PT.po in Resources */,
 				174F73D1098D516D009CD6E0 /* AudacityAIFF.icns in Resources */,
 				174F73D2098D516D009CD6E0 /* AudacityAU.icns in Resources */,
 				174F73D3098D516D009CD6E0 /* AudacityMP3.icns in Resources */,
 				174F73D4098D516D009CD6E0 /* AudacityOGG.icns in Resources */,
 				174F73D5098D516D009CD6E0 /* AudacityProject.icns in Resources */,
+				28CBD6601B9F7DF7003AC5EE /* zh_CN.po in Resources */,
 				289FC6051B5EE9A400D1B13F /* hy.po in Resources */,
 				28EA4A091B7B162500723B3E /* Build.txt in Resources */,
 				174F73D6098D516D009CD6E0 /* AudacityWAV.icns in Resources */,
@@ -6744,19 +6746,20 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PROJECT_DIR}/scripts/install_ladspa_plugins.sh\"";
 		};
-		28708D631B17C3C400496FEB /* Install wxWidgets libs */ = {
+		28708D631B17C3C400496FEB /* Copy wxWidgets libs */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 8;
+			buildActionMask = 12;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Install wxWidgets libs";
+			name = "Copy wxWidgets libs";
 			outputPaths = (
 			);
-			runOnlyForDeploymentPostprocessing = 1;
+			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PROJECT_DIR}/scripts/install_wxlibs.sh\"";
+			showEnvVarsInLog = 0;
 		};
 		288F0980131A400F0008E860 /* Install manual */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -7513,7 +7516,6 @@
 				28884965131B6CF600B59735 /* oc.po in Sources */,
 				28884966131B6CF600B59735 /* pl.po in Sources */,
 				28884967131B6CF600B59735 /* pt_BR.po in Sources */,
-				28884968131B6CF600B59735 /* pt.po in Sources */,
 				28884969131B6CF600B59735 /* ro.po in Sources */,
 				2888496A131B6CF600B59735 /* ru.po in Sources */,
 				2888496B131B6CF600B59735 /* sk.po in Sources */,
@@ -7528,7 +7530,6 @@
 				28884971131B6CF600B59735 /* vi.po in Sources */,
 				289D127A1B44D57F00B5B6AA /* VSTControlOSX.mm in Sources */,
 				28884972131B6CF600B59735 /* zh_TW.po in Sources */,
-				28884973131B6CF600B59735 /* zh.po in Sources */,
 				EDF3B7B01588C0D50032D35F /* Paulstretch.cpp in Sources */,
 				ED920CAF15B19F61008CA12C /* ModulePrefs.cpp in Sources */,
 				EDD2431416934A6100D9DEC2 /* BassTreble.cpp in Sources */,
