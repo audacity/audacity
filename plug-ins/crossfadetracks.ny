@@ -8,16 +8,21 @@
 ;copyright "Released under terms of the GNU General Public License version 2"
 
 ;; crossfadetracks.ny by Steve Daulton Nov 2014.
+;; Modified by Gary Campbell 4/11/15 : added control to reverse the tracks,
+;;   9/9/15 changed preview selection to match 2.1.1 source.
 ;; Released under terms of the GNU General Public License version 2:
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html .
 
 ;control type "Fade type" choice "Constant Gain,Constant Power 1,Constant Power 2,Custom Curve" 0
 ;control curve "Custom curve" real "" 0 0 1
+;control fadeout-track-ctl "Track to fade out" choice "Top,Bottom", 0 
 
 (defun crossfade (type)
+  (let ((fadeout-track (+ 1 fadeout-track-ctl)) ; 1=top track, 2=bottom track
+	)
   (mult *track*
     (cond
-      ((= (get '*track* 'index) 1)  ; fade out.
+      ((= (get '*track* 'index) fadeout-track)  ; fade out.
         (case type
           (0 (pwlv 1 1 0))
           (1 (osc (hz-to-step (/ (get-duration 4))) 1 *sine-table* 90))
@@ -29,7 +34,7 @@
           (0 (pwlv 0 1 1))
           (1 (osc (hz-to-step (/ (get-duration 4))) 1))
           (2 (s-sqrt (pwlv 0 1 1)))
-          (T (custom curve 1)))))))
+          (T (custom curve 1))))))))
 
 (defun custom (curve inout)
   ;; 'epsilon' defines the curvature of a logarithmc curve.
