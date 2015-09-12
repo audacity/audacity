@@ -555,21 +555,32 @@ void GetDefaultWindowRect(wxRect *defRect)
 {
    *defRect = wxGetClientDisplayRect();
 
-   defRect->width = 940;
-   defRect->height = 674;
+   int width = 940;
+   int height = 674;
 
    //These conditional values assist in improving placement and size
    //of new windows on different platforms.
 #ifdef __WXGTK__
-   defRect->height += 20;
+   height += 20;
 #endif
 
 #ifdef __WXMSW__
-   defRect->height += 40;
+   height += 40;
 #endif
+
 #ifdef __WXMAC__
-   defRect->height += 55;
+   height += 55;
 #endif
+
+   if (width < defRect->width)
+   {
+      defRect->width = width;
+   }
+
+   if (height < defRect->height)
+   {
+      defRect->height = height;
+   }
 }
 
 bool IsWindowAccessible(wxRect *requestedRect)
@@ -638,6 +649,20 @@ void GetNextWindowPlacement(wxRect *nextRect, bool *pMaximized, bool *pIconized)
       windowRect = defaultRect;
    }
 #endif
+
+   // Make sure initial sizes fit within the display bounds
+   if (normalRect.GetRight() > defaultRect.GetRight()) {
+      normalRect.SetRight(defaultRect.GetRight());
+   }
+   if (normalRect.GetBottom() > defaultRect.GetBottom()) {
+      normalRect.SetBottom(defaultRect.GetBottom());
+   }
+   if (windowRect.GetRight() > defaultRect.GetRight()) {
+      windowRect.SetRight(defaultRect.GetRight());
+   }
+   if (windowRect.GetBottom() > defaultRect.GetBottom()) {
+      windowRect.SetBottom(defaultRect.GetBottom());
+   }
 
    if (gAudacityProjects.IsEmpty()) {
       if (*pMaximized || *pIconized) {
