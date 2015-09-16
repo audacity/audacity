@@ -282,6 +282,8 @@ public:
 
    ~AdornedRulerPanel();
 
+   virtual bool AcceptsFocus() const { return false; };
+
 public:
    static int GetRulerHeight() { return 28; }
    void SetLeftOffset(int offset);

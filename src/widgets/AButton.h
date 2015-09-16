@@ -56,6 +56,9 @@ class AButton: public wxWindow {
 
    virtual ~ AButton();
 
+   virtual bool AcceptsFocus() const { return false; };
+   virtual bool AcceptsFocusFromKeyboard() const { return true; };
+
    // Associate a set of four images (button up, highlight, button down,
    // disabled) with one nondefault state of the button
    virtual void SetAlternateImages(unsigned idx,

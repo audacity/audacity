@@ -53,6 +53,8 @@ class ToolDock:public wxPanel
    ToolDock( ToolManager *manager, wxWindow *parent, int dockid );
    ~ToolDock();
 
+   virtual bool AcceptsFocus() const { return false; };
+
    void LayoutToolBars();
    void Expose( int type, bool show );
    int GetOrder( ToolBar *bar );

@@ -113,6 +113,9 @@ class Meter : public wxPanel
 
    ~Meter();
 
+   virtual bool AcceptsFocus() const { return false; };
+   virtual bool AcceptsFocusFromKeyboard() const { return true; };
+
    void UpdatePrefs();
    void Clear();
 

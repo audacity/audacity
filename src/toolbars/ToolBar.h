@@ -87,6 +87,8 @@ class ToolBar:public wxPanel
    ToolBar(int type, const wxString & label, const wxString & section, bool resizable = false);
    virtual ~ToolBar();
 
+   virtual bool AcceptsFocus() const { return false; };
+
    virtual void Create(wxWindow *parent);
    virtual void EnableDisableButtons() = 0;
    virtual void ReCreateButtons();
