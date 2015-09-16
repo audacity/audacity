@@ -361,6 +361,9 @@ bool SpectrumPrefs::Validate()
 
 bool SpectrumPrefs::Apply()
 {
+   if (!Validate())
+      return false;
+
    const bool isOpenPage = this->IsShown();
 
    WaveTrack *const partner =
