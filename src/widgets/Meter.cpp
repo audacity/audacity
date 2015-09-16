@@ -414,8 +414,11 @@ void Meter::OnErase(wxEraseEvent & WXUNUSED(event))
 
 void Meter::OnPaint(wxPaintEvent & WXUNUSED(event))
 {
-//   wxDC *paintDC = wxAutoBufferedPaintDCFactory(this);
+#if defined(__WXMAC__)
    wxPaintDC *paintDC = new wxPaintDC(this);
+#else
+   wxDC *paintDC = wxAutoBufferedPaintDCFactory(this);
+#endif
    wxDC & destDC = *paintDC;
 
    if (mLayoutValid == false)
