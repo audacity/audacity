@@ -4626,8 +4626,12 @@ void TrackPanel::HandleWaveTrackVZoom
       scale = (settings.GetScale(min, max, rate, false));
       const int fftLength = settings.GetFFTLength();
       const float binSize = rate / fftLength;
-      const int minBins =
-         std::min(10, fftLength / 2); //minimum 10 freq bins, unless there are less
+
+      // JKC:  Following discussions of Bug 1208 I'm allowing zooming in 
+      // down to one bin.
+//      const int minBins =
+//         std::min(10, fftLength / 2); //minimum 10 freq bins, unless there are less
+      const int minBins = 1;
       minBand = minBins * binSize;
    }
    else
