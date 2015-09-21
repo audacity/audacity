@@ -1529,7 +1529,7 @@ void AudacityProject::SetHorizontalThumb(double scrollto)
 {
    wxInt64 max = mHsbar->GetRange() - mHsbar->GetThumbSize();
    int pos = std::min(max, std::max(wxInt64(0), PixelWidthBeforeTime(scrollto)));
-   mHsbar->SetThumbPosition(pos);
+   mHsbar->SetThumbPosition(pos * mViewInfo.sbarScale);
 }
 
 //
