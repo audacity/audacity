@@ -405,7 +405,8 @@ void AButton::OnMouseEvent(wxMouseEvent & event)
    if (mEnabled && event.IsButton()) {
       if (event.ButtonIsDown(wxMOUSE_BTN_ANY)) {
          mIsClicking = true;
-         CaptureMouse();
+         if( !HasCapture() )
+            CaptureMouse();
       }
       else if (mIsClicking) {
          mIsClicking = false;
