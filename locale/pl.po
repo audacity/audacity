@@ -3581,7 +3581,7 @@ msgstr "Zaznacz jakiś nieskompresowany plik dźwiękowy..."
 
 #: src/Menus.cpp:5524
 msgid "All files|*"
-msgstr "Wszystkie pliki!*"
+msgstr "Wszystkie pliki|*"
 
 #: src/Menus.cpp:5549 src/Menus.cpp:5550
 msgid "Edit Metadata Tags"
