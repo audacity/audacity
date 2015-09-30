@@ -557,6 +557,8 @@ bool Exporter::GetFilename()
    mFilename.SetPath(gPrefs->Read(wxT("/Export/Path"), ::wxGetCwd()));
    mFilename.SetName(mProject->GetName());
    while (true) {
+      // Must reset each iteration
+      mBook = NULL;
 
       FileDialog fd(mProject,
                     mFileDialogTitle,
