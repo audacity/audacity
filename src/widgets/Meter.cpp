@@ -1494,7 +1494,7 @@ void Meter::RepaintBarsNow()
       // Invalidate the bars so they get redrawn
       for (int i = 0; i < mNumBars; i++)
       {
-         Refresh(false, &mBar[i].r);
+         Refresh(false);
       }
 
       // Immediate redraw (using wxPaintDC)
