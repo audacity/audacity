@@ -3713,6 +3713,15 @@ void AudacityProject::AddImportedTracks(wxString fileName,
    PushState(wxString::Format(_("Imported '%s'"), fileName.c_str()),
              _("Import"));
 
+#if defined(__WXGTK__)
+   // See bug #1224
+   // The track panel hasn't we been fully created, so the OnZoomFit() will not give
+   // expected results due to a window width of zero.  Should be safe to yield here to
+   // allow the creattion to complete.  If this becomes a problem, it "might" be possible
+   // to queue a dummy event to trigger the OnZoomFit().
+   wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI | wxEVT_CATEGORY_USER_INPUT);
+#endif
+
    OnZoomFit();
 
    mTrackPanel->SetFocus();
