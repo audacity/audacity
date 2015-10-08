@@ -152,7 +152,7 @@ void BatchProcessDialog::OnApplyToProject(wxCommandEvent & WXUNUSED(event))
    }
    wxString name = mChains->GetItemText(item);
 
-   wxDialog d(this, wxID_ANY, GetTitle());
+   wxDialog d(this, wxID_ANY, GetTitle(), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxWS_EX_TRANSIENT);
    d.SetName(d.GetTitle());
    ShuttleGui S(&d, eIsCreating);
 
@@ -173,7 +173,18 @@ void BatchProcessDialog::OnApplyToProject(wxCommandEvent & WXUNUSED(event))
    d.CenterOnScreen();
    d.Move(-1, 0);
    d.Show();
+   d.Update();
+
+   // It seems that wxWidgets (3.0.2) exhibits different behavior for Windows and Linux
+   // than it does for OSX when calling Hide(). (See bug #1221 for symptoms)
+   //
+   // So, as a workaround, just move the dialog offscreen.
+#if !defined(__WXMAC__)
+   wxPoint pos = GetPosition();
+   Move(14000, 14000);
+#else
    Hide();
+#endif
 
    gPrefs->Write(wxT("/Batch/ActiveChain"), name);
    gPrefs->Flush();
@@ -187,7 +198,11 @@ void BatchProcessDialog::OnApplyToProject(wxCommandEvent & WXUNUSED(event))
    delete wd;
 
    if (!success) {
+#if !defined(__WXMAC__)
+      Move(pos);
+#else
       Show();
+#endif
       return;
    }
 
