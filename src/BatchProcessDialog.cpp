@@ -174,7 +174,7 @@ void BatchProcessDialog::OnApplyToProject(wxCommandEvent & WXUNUSED(event))
    pD->Move(-1, 0);
    pD->Show();
 
-   Hide();
+   Hide();// Caused Bug #1221
 
    gPrefs->Write(wxT("/Batch/ActiveChain"), name);
    gPrefs->Flush();
@@ -192,9 +192,14 @@ void BatchProcessDialog::OnApplyToProject(wxCommandEvent & WXUNUSED(event))
       return;
    }
 //   pD->Destroy();
+
+   wxWindow * pWnd = this->GetParent();
+   // Under Linux an EndModal() here is the cause of Bug #1221.
+   // But sending a close message instead is OK.
    wxCloseEvent Evt;
    Evt.SetEventObject( this);
    ProcessWindowEvent( Evt );
+   pWnd->SetFocus();
 }
 
 void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
@@ -277,9 +282,9 @@ void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
 
    files.Sort();
 
-   wxDialog d(this, wxID_ANY, GetTitle());
-   d.SetName(d.GetTitle());
-   ShuttleGui S(&d, eIsCreating);
+   wxDialog * pD = new wxDialog(this, wxID_ANY, GetTitle());
+   pD->SetName(pD->GetTitle());
+   ShuttleGui S(pD, eIsCreating);
 
    S.StartVerticalLay(false);
    {
@@ -320,17 +325,17 @@ void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
       mList->SetInitialSize(sz);
    }
 
-   d.Layout();
-   d.Fit();
-   d.SetSizeHints(d.GetSize());
-   d.CenterOnScreen();
-   d.Move(-1, 0);
-   d.Show();
+   pD->Layout();
+   pD->Fit();
+   pD->SetSizeHints(pD->GetSize());
+   pD->CenterOnScreen();
+   pD->Move(-1, 0);
+   pD->Show();
    Hide();
 
    mBatchCommands.ReadChain(name);
    for (i = 0; i < (int)files.GetCount(); i++) {
-      wxWindowDisabler wd(&d);
+      wxWindowDisabler wd(pD);
       if (i > 0) {
          //Clear the arrow in previous item.
          mList->SetItemImage(i - 1, 0, 0);
@@ -344,7 +349,7 @@ void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
          break;
       }
 
-      if (!d.IsShown() || mAbort) {
+      if (!pD->IsShown() || mAbort) {
          break;
       }
       UndoManager *um = project->GetUndoManager();
@@ -354,12 +359,23 @@ void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
    }
    project->OnRemoveTracks();
 
-   EndModal(wxID_OK);
+   wxWindow * pWnd = this->GetParent();
+   // Under Linux an EndModal() here is the cause of Bug #1221.
+   // But sending a close message instead is OK.
+   wxCloseEvent Evt;
+   Evt.SetEventObject( this);
+   ProcessWindowEvent( Evt );
+   pWnd->SetFocus();
 }
 
 void BatchProcessDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
 {
-   EndModal(wxID_CANCEL);
+   // Under Linux an EndModal() here is the cause of Bug #1221.
+   // But sending a close message instead is OK.
+   wxCloseEvent Evt;
+   Evt.SetEventObject( this);
+   ProcessWindowEvent( Evt );
+   //EndModal(wxID_CANCEL);
 }
 
 /////////////////////////////////////////////////////////////////////
