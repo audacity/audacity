@@ -152,9 +152,9 @@ void BatchProcessDialog::OnApplyToProject(wxCommandEvent & WXUNUSED(event))
    }
    wxString name = mChains->GetItemText(item);
 
-   wxDialog d(this, wxID_ANY, GetTitle(), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxWS_EX_TRANSIENT);
-   d.SetName(d.GetTitle());
-   ShuttleGui S(&d, eIsCreating);
+   wxDialog * pD = new wxDialog(this, wxID_ANY, GetTitle());
+   pD->SetName(pD->GetTitle());
+   ShuttleGui S(pD, eIsCreating);
 
    S.StartHorizontalLay(wxCENTER, false);
    {
@@ -168,23 +168,13 @@ void BatchProcessDialog::OnApplyToProject(wxCommandEvent & WXUNUSED(event))
    }
    S.EndHorizontalLay();
 
-   d.Layout();
-   d.Fit();
-   d.CenterOnScreen();
-   d.Move(-1, 0);
-   d.Show();
-   d.Update();
+   pD->Layout();
+   pD->Fit();
+   pD->CenterOnScreen();
+   pD->Move(-1, 0);
+   pD->Show();
 
-   // It seems that wxWidgets (3.0.2) exhibits different behavior for Windows and Linux
-   // than it does for OSX when calling Hide(). (See bug #1221 for symptoms)
-   //
-   // So, as a workaround, just move the dialog offscreen.
-#if !defined(__WXMAC__)
-   wxPoint pos = GetPosition();
-   Move(14000, 14000);
-#else
    Hide();
-#endif
 
    gPrefs->Write(wxT("/Batch/ActiveChain"), name);
    gPrefs->Flush();
@@ -193,20 +183,18 @@ void BatchProcessDialog::OnApplyToProject(wxCommandEvent & WXUNUSED(event))
 
    // The disabler must get deleted before the EndModal() call.  Otherwise,
    // the menus on OSX will remain disabled.
-   wxWindowDisabler *wd = new wxWindowDisabler(&d);
+   wxWindowDisabler *wd = new wxWindowDisabler(pD);
    bool success = mBatchCommands.ApplyChain();
    delete wd;
 
    if (!success) {
-#if !defined(__WXMAC__)
-      Move(pos);
-#else
       Show();
-#endif
       return;
    }
-
-   EndModal(wxID_OK);
+//   pD->Destroy();
+   wxCloseEvent Evt;
+   Evt.SetEventObject( this);
+   ProcessWindowEvent( Evt );
 }
 
 void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
