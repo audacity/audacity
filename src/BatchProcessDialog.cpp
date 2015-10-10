@@ -197,6 +197,7 @@ void BatchProcessDialog::OnApplyToProject(wxCommandEvent & WXUNUSED(event))
    // Under Linux an EndModal() here is the cause of Bug #1221.
    // But sending a close message instead is OK.
    wxCloseEvent Evt;
+   Evt.SetId( wxID_OK );
    Evt.SetEventObject( this);
    ProcessWindowEvent( Evt );
    pWnd->SetFocus();
@@ -363,6 +364,7 @@ void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
    // Under Linux an EndModal() here is the cause of Bug #1221.
    // But sending a close message instead is OK.
    wxCloseEvent Evt;
+   Evt.SetId( wxID_OK );
    Evt.SetEventObject( this);
    ProcessWindowEvent( Evt );
    pWnd->SetFocus();
@@ -370,12 +372,17 @@ void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
 
 void BatchProcessDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
 {
+#if 1
+   Hide();
    // Under Linux an EndModal() here is the cause of Bug #1221.
    // But sending a close message instead is OK.
    wxCloseEvent Evt;
+   Evt.SetId( wxID_CANCEL );
    Evt.SetEventObject( this);
    ProcessWindowEvent( Evt );
-   //EndModal(wxID_CANCEL);
+#else
+   EndModal(wxID_CANCEL);
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////
