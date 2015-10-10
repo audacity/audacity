@@ -174,7 +174,12 @@ void BatchProcessDialog::OnApplyToProject(wxCommandEvent & WXUNUSED(event))
    pD->Move(-1, 0);
    pD->Show();
 
-   Hide();// Caused Bug #1221
+   // The Hide() on the next line seems to tickle a bug in wx3,
+   // giving rise to our Bug #1221.  The problem is that on Linux 
+   // the 'Hide' converts us from a Modal into a regular dialog,
+   // as far as closing is concerned.  On Linux we can't close with
+   // EndModal() anymore after this.
+   Hide();
 
    gPrefs->Write(wxT("/Batch/ActiveChain"), name);
    gPrefs->Flush();
@@ -191,15 +196,18 @@ void BatchProcessDialog::OnApplyToProject(wxCommandEvent & WXUNUSED(event))
       Show();
       return;
    }
-//   pD->Destroy();
 
    wxWindow * pWnd = this->GetParent();
-   // Under Linux an EndModal() here is the cause of Bug #1221.
+#if !defined(__WXMAC__)
+   // Under Linux an EndModal() here crashes (Bug #1221).
    // But sending a close message instead is OK.
    wxCloseEvent Evt;
    Evt.SetId( wxID_OK );
    Evt.SetEventObject( this);
    ProcessWindowEvent( Evt );
+#else
+   EndModal(wxID_OK);
+#endif
    pWnd->SetFocus();
 }
 
@@ -361,20 +369,27 @@ void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
    project->OnRemoveTracks();
 
    wxWindow * pWnd = this->GetParent();
-   // Under Linux an EndModal() here is the cause of Bug #1221.
+   // Under Linux an EndModal() here crashes (Bug #1221).
    // But sending a close message instead is OK.
+#if !defined(__WXMAC__)
    wxCloseEvent Evt;
    Evt.SetId( wxID_OK );
    Evt.SetEventObject( this);
    ProcessWindowEvent( Evt );
+#else
+   EndModal(wxID_OK);
+#endif 
    pWnd->SetFocus();
 }
 
 void BatchProcessDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
 {
-#if 1
+#if !defined(__WXMAC__)
+   // It is possible that we could just do EndModal()
+   // here even on Linux.  However, we know the alternative way of
+   // closing works, if we are hidden, so we hide and then do that.
    Hide();
-   // Under Linux an EndModal() here is the cause of Bug #1221.
+   // Under Linux an EndModal() here potentially crashes (Bug #1221).
    // But sending a close message instead is OK.
    wxCloseEvent Evt;
    Evt.SetId( wxID_CANCEL );
