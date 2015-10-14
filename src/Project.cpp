@@ -572,13 +572,24 @@ void GetDefaultWindowRect(wxRect *defRect)
    height += 55;
 #endif
 
+   // Use screen size where it is smaller than the values we would like.
+   // Otherwise use the values we would like, and centred.
    if (width < defRect->width)
    {
+      defRect->x = (defRect->width - width)/2;
       defRect->width = width;
    }
 
    if (height < defRect->height)
    {
+      defRect->y = (defRect->height - height)/2;
+      // Bug 1119 workaround
+      // Small adjustment for very small Mac screens.
+      // If there is only a tiny space at the top
+      // then instead of vertical centre, align to bottom.
+      const int pixelsFormenu = 60;
+      if( defRect->y < pixelsFormenu )
+         defRect->y *=2;
       defRect->height = height;
    }
 }
@@ -639,29 +650,30 @@ void GetNextWindowPlacement(wxRect *nextRect, bool *pMaximized, bool *pIconized)
       windowRect = defaultRect;
    }
 
+   wxRect screenRect = wxGetClientDisplayRect();
+
 #if defined(__WXMAC__)
    // On OSX, the top of the window should never be less than the menu height,
    // so something is amiss if it is
-   if (normalRect.y < defaultRect.y) {
+   if (normalRect.y < screenRect.y) {
       normalRect = defaultRect;
    }
-   if (windowRect.y < defaultRect.y) {
+   if (windowRect.y < screenRect.y) {
       windowRect = defaultRect;
    }
 #endif
 
+
    // Make sure initial sizes fit within the display bounds
-   if (normalRect.GetRight() > defaultRect.GetRight()) {
-      normalRect.SetRight(defaultRect.GetRight());
+   // We used to trim the sizes which could result in ridiculously small windows.
+   // contributing to bug 1243.
+   // Now instead if the window doesn't fit the screen, we use the default 
+   // window instead, which we know does.
+   if (!screenRect.Contains( normalRect )) {
+      normalRect = defaultRect;
    }
-   if (normalRect.GetBottom() > defaultRect.GetBottom()) {
-      normalRect.SetBottom(defaultRect.GetBottom());
-   }
-   if (windowRect.GetRight() > defaultRect.GetRight()) {
-      windowRect.SetRight(defaultRect.GetRight());
-   }
-   if (windowRect.GetBottom() > defaultRect.GetBottom()) {
-      windowRect.SetBottom(defaultRect.GetBottom());
+   if (!screenRect.Contains( windowRect )) {
+      windowRect = defaultRect;
    }
 
    if (gAudacityProjects.IsEmpty()) {
@@ -700,7 +712,6 @@ void GetNextWindowPlacement(wxRect *nextRect, bool *pMaximized, bool *pIconized)
       nextRect->y += inc;
    }
 
-   wxRect screenRect = wxGetClientDisplayRect();
 
    //Have we hit the right side of the screen?
    wxPoint bottomRight = nextRect->GetBottomRight();
