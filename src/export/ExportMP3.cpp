@@ -1602,6 +1602,7 @@ void ExportMP3::Destroy()
 
 bool ExportMP3::CheckFileName(wxFileName & WXUNUSED(filename), int WXUNUSED(format))
 {
+#ifndef DISABLE_DYNAMIC_LOADING_LAME
    MP3Exporter exporter;
 
    if (!exporter.LoadLibrary(wxTheApp->GetTopWindow(), MP3Exporter::Maybe)) {
@@ -1611,6 +1612,7 @@ bool ExportMP3::CheckFileName(wxFileName & WXUNUSED(filename), int WXUNUSED(form
 
       return false;
    }
+#endif // DISABLE_DYNAMIC_LOADING_LAME
 
    return true;
 }
