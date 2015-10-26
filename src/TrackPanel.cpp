@@ -531,7 +531,6 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
 
    mWaveTrackMenu = NULL;
    mChannelItemsInsertionPoint = 0;
-   mShowMono = false;
    
    mNoteTrackMenu = NULL;
    mLabelTrackMenu = NULL;
@@ -761,9 +760,11 @@ void TrackPanel::BuildMenus(void)
    mWaveTrackMenu->Append(OnSpectrogramSettingsID, _("S&pectrogram Settings..."));
    mWaveTrackMenu->AppendSeparator();
 
+   // include both mono and stereo items as a work around for bug 1250
    mChannelItemsInsertionPoint = mWaveTrackMenu->GetMenuItemCount();
    ShowMonoItems(mWaveTrackMenu, mChannelItemsInsertionPoint);
-   mShowMono = true;
+   mChannelItemsInsertionPoint = mWaveTrackMenu->GetMenuItemCount();
+   ShowStereoItems(mWaveTrackMenu, mChannelItemsInsertionPoint);
    mWaveTrackMenu->AppendSeparator();
 
    mWaveTrackMenu->Append(0, _("&Format"), mFormatMenu);
@@ -8300,33 +8301,26 @@ void TrackPanel::OnTrackMenu(Track *t)
          (next && isMono && !next->GetLinked() &&
           next->GetKind() == Track::Wave);
 
-      if (isMono != mShowMono) {
-         if (isMono) {
-            HideStereoItems(theMenu);
-            ShowMonoItems(theMenu, mChannelItemsInsertionPoint);
-         }
-         else {
-            HideMonoItems(theMenu);
-            ShowStereoItems(theMenu, mChannelItemsInsertionPoint);
-         }
-         mShowMono = isMono;
+      theMenu->Enable(OnSwapChannelsID, t->GetLinked());
+      theMenu->Enable(OnMergeStereoID, canMakeStereo);
+      theMenu->Enable(OnSplitStereoID, t->GetLinked());
+      theMenu->Enable(OnSplitStereoMonoID, t->GetLinked());
+
+      // We only need to set check marks. Clearing checks causes problems on Linux (bug 851)
+      switch (t->GetChannel()) {
+      case Track::LeftChannel:
+         theMenu->Check(OnChannelLeftID, true);
+         break;
+      case Track::RightChannel:
+         theMenu->Check(OnChannelRightID, true);
+         break;
+      default:
+         theMenu->Check(OnChannelMonoID, true);
       }
 
-      if (isMono) {
-         theMenu->Enable(OnMergeStereoID, canMakeStereo);
-
-         // We only need to set check marks. Clearing checks causes problems on Linux (bug 851)
-         switch (t->GetChannel()) {
-         case Track::LeftChannel:
-            theMenu->Check(OnChannelLeftID, true);
-            break;
-         case Track::RightChannel:
-            theMenu->Check(OnChannelRightID, true);
-            break;
-         default:
-            theMenu->Check(OnChannelMonoID, true);
-         }
-      }
+      theMenu->Enable(OnChannelMonoID, !t->GetLinked());
+      theMenu->Enable(OnChannelLeftID, !t->GetLinked());
+      theMenu->Enable(OnChannelRightID, !t->GetLinked());
 
       WaveTrack *const track = (WaveTrack *)t;
       const int display = track->GetDisplay();
