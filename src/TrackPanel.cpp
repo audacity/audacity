@@ -687,43 +687,6 @@ TrackPanel::~TrackPanel()
    delete mInitialTrackSelection;
 }
 
-namespace
-{
-
-   void ShowMonoItems(wxMenu *pMenu, size_t pos)
-   {
-      // Insert in the reverse of the sequence in which they appear
-      pMenu->Insert(pos, OnMergeStereoID, _("Ma&ke Stereo Track"));
-      pMenu->InsertRadioItem(pos, OnChannelRightID, _("R&ight Channel"));
-      pMenu->InsertRadioItem(pos, OnChannelLeftID, _("&Left Channel"));
-      pMenu->InsertRadioItem(pos, OnChannelMonoID, _("&Mono"));
-   }
-
-   void HideMonoItems(wxMenu *pMenu)
-   {
-      pMenu->Delete(OnChannelMonoID);
-      pMenu->Delete(OnChannelLeftID);
-      pMenu->Delete(OnChannelRightID);
-      pMenu->Delete(OnMergeStereoID);
-   }
-
-   void ShowStereoItems(wxMenu *pMenu, size_t pos)
-   {
-      // Insert in the reverse of the sequence in which they appear
-      pMenu->Insert(pos, OnSplitStereoMonoID, _("Split Stereo to &Mono"));
-      pMenu->Insert(pos, OnSplitStereoID, _("Spl&it Stereo Track"));
-      pMenu->Insert(pos, OnSwapChannelsID, _("Swap Stereo &Channels"));
-   }
-
-   void HideStereoItems(wxMenu *pMenu)
-   {
-      pMenu->Delete(OnSwapChannelsID);
-      pMenu->Delete(OnSplitStereoID);
-      pMenu->Delete(OnSplitStereoMonoID);
-   }
-
-}
-
 void TrackPanel::BuildMenus(void)
 {
    // Get rid of existing menus
@@ -761,17 +724,21 @@ void TrackPanel::BuildMenus(void)
    mWaveTrackMenu->AppendSeparator();
 
    // include both mono and stereo items as a work around for bug 1250
-   mChannelItemsInsertionPoint = mWaveTrackMenu->GetMenuItemCount();
-   ShowMonoItems(mWaveTrackMenu, mChannelItemsInsertionPoint);
-   mChannelItemsInsertionPoint = mWaveTrackMenu->GetMenuItemCount();
-   ShowStereoItems(mWaveTrackMenu, mChannelItemsInsertionPoint);
+
+   mWaveTrackMenu->AppendRadioItem(OnChannelMonoID, _("&Mono"));
+   mWaveTrackMenu->AppendRadioItem(OnChannelLeftID, _("&Left Channel"));
+   mWaveTrackMenu->AppendRadioItem(OnChannelRightID, _("&Right Channel"));
+   mWaveTrackMenu->Append(OnMergeStereoID, _("Ma&ke Stereo Track"));
+   mWaveTrackMenu->Append(OnSwapChannelsID, _("Swap Stereo &Channels"));
+   mWaveTrackMenu->Append(OnSplitStereoID, _("Spl&it Stereo Track"));
+   mWaveTrackMenu->Append(OnSplitStereoMonoID, _("Split Stereo to Mo&no"));
    mWaveTrackMenu->AppendSeparator();
 
    mWaveTrackMenu->Append(0, _("&Format"), mFormatMenu);
 
    mWaveTrackMenu->AppendSeparator();
 
-   mWaveTrackMenu->Append(0, _("&Rate"), mRateMenu);
+   mWaveTrackMenu->Append(0, _("Rat&e"), mRateMenu);
 
    /* build the pop-down menu used on note (MIDI) tracks */
    mNoteTrackMenu = new wxMenu();
