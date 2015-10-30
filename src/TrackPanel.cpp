@@ -8274,15 +8274,22 @@ void TrackPanel::OnTrackMenu(Track *t)
       theMenu->Enable(OnSplitStereoMonoID, t->GetLinked());
 
       // We only need to set check marks. Clearing checks causes problems on Linux (bug 851)
+      // + Setting unchecked items to false is to get round a linux bug
       switch (t->GetChannel()) {
       case Track::LeftChannel:
          theMenu->Check(OnChannelLeftID, true);
+         theMenu->Check(OnChannelRightID, false);
+         theMenu->Check(OnChannelMonoID, false);
          break;
       case Track::RightChannel:
          theMenu->Check(OnChannelRightID, true);
+         theMenu->Check(OnChannelLeftID, false);
+         theMenu->Check(OnChannelMonoID, false);
          break;
       default:
          theMenu->Check(OnChannelMonoID, true);
+         theMenu->Check(OnChannelLeftID, false);
+         theMenu->Check(OnChannelRightID, false);
       }
 
       theMenu->Enable(OnChannelMonoID, !t->GetLinked());
