@@ -287,7 +287,7 @@ bool LabelDialog::Show(bool show)
 
    // Set initial row
    // (This will not work until the grid is actually displayed)
-   if (mInitialRow != -1) {
+   if (show && mInitialRow != -1) {
       mGrid->SetGridCursor(mInitialRow, Col_Label);
    }
 
