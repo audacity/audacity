@@ -1022,7 +1022,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
 
    int widths[] = {0, GetControlToolBar()->WidthForStatusBar(mStatusBar), -1, 150};
    mStatusBar->SetStatusWidths(4, widths);
-   wxString msg = wxString::Format(_("Welcome to Audacity version %s"),
+   wxString msg = wxString::Format(_("Welcome to Audacity version %s-vi"),
                                    AUDACITY_VERSION_STRING);
    mStatusBar->SetStatusText(msg, mainStatusBarField);
    mStatusBar->SetStatusText(GetControlToolBar()->StateForStatusBar(), stateStatusBarField);

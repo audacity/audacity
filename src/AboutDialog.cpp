@@ -246,7 +246,7 @@ visit our <a href=\"http://forum.audacityteam.org/\">forum</a>.");
          localeStr +
          wxT("\"></head>") +
       wxT("<body bgcolor=\"#ffffff\"><center>") +
-      wxT("<h3>Audacity ") + wxString(AUDACITY_VERSION_STRING) + wxT("</h3>")+
+      wxT("<h3>Audacity ") + wxString(AUDACITY_VERSION_STRING) + wxT("-vi </h3>")+
       _("free, open source, cross-platform software for recording and editing sounds<br>") +
       wxT("<a href=\"http://audacityteam.org/\">http://audacityteam.org/</a>") +
       wxT("<p><br>") + par1Str +
