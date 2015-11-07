@@ -61,24 +61,34 @@ MSVC++ STEP 2:  Build wxWidgets
    "C\wxWidgets-3.0.2\build\msw\wx_dll.sln" instead of wx_dll.dsw.
 
 
-2.2. If you want to use the wxWidgets accessibility features, we have 
-   modified one of the wxWidgets files. Rather than provide a patch, 
-   we store the modified file in the Audacity code repository, and you 
-   can replace the corresponding wxWidgets file. You will need to 
-   download Audacity (next step) to get these. 
+2.2. We have patched wxWidgets with three patches.  You should apply all 
+   three.  You can do this in one step by copying the folder
+     "audacity\win\wxWidgets_additions\wxWidgets-3.02\"
+   over your: 
+     "C:\wxWidgets-3.0.2\"
+   This applies the three patches.
+      1: accessibility.       Enables accessibility features.
+                              Less diagnostics in release builds.
+      2: changeset_14f05...   Allows disabling HiDPI 'awareness'.
+      3: changeset_0797a...   Fix bug in accessibility.
+   The 'less diagnostics' in patch 1 gives the same level of diagnostics as
+   we had with wxWidgets 2.8.12.  We found that some diagnostics in release
+   builds that came in with wx 3.0.2 were causing us more problems than they 
+   were solving.
+   HiDPI awareness is for high definition monitors, but does not work 
+   well for Audacity yet.  
+   
+   The details of the patches are in the .diff files in the 
+     "audacity\win\wxWidgets_additions\"
+   folder.
+   
+   If you don't want to patch wxWidgets you can still build Audacity 
+   without applying these patches.  You will need to comment out the line:
+     wxMSWDisableSettingHighDPIAware()
+   in AudacityApp.cpp, and your compiled version won't support accessibility 
+   features.
 
-   In "audacity\win\wxWidgets_additions" is one .h file. 
-   You may want to make a backup of the wxWidgets original of it, 
-   in "C:\wxWidgets-3.0.2\include\wx\msw\setup.h", 
-   e.g., by renaming it "setup.h.bak" before copying the replacement, 
-   in case you also build without these accessibility features. 
-
-   Copy "audacity\win\wxWidgets_additions\setup.h" to 
-   "C:\wxWidgets-3.0.2\include\wx\msw\setup.h".
-
-   Audacity releases are built with these accessibility features.
-
-
+   
 2.3. Build wxWidgets for all configurations of Audacity that you want.
 
    With Visual Studio 2013 C++ and wxWidgets 3.0.2, 
