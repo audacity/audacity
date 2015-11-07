@@ -35,9 +35,9 @@ AppVerName=Audacity {#AppVersion}
 ; Specify AppVersion as well, so it appears in the Add/Remove Programs entry. 
 AppVersion={#AppVersion}
 AppPublisher="Audacity Team"
-AppPublisherURL=http://web.audacityteam.org
-AppSupportURL=http://web.audacityteam.org
-AppUpdatesURL=http://web.audacityteam.org
+AppPublisherURL=http://audacityteam.org
+AppSupportURL=http://audacityteam.org
+AppUpdatesURL=http://audacityteam.org
 ChangesAssociations=yes
 
 DefaultDirName={pf}\Audacity
@@ -95,13 +95,13 @@ Source: "..\presets\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
 ; Don't use the WXWIN environment variable, because...
 ; 1) Can't get the documented {%WXWIN|default dir} parsing to work.
 ; 2) Need the DLL's in the release dir for testing, anyway.
-Source: "..\win\release\wxbase28u_net_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\win\release\wxbase28u_xml_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\win\release\wxbase28u_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\win\release\wxmsw28u_adv_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\win\release\wxmsw28u_core_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\win\release\wxmsw28u_html_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\win\release\wxmsw28u_qa_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\win\release\wxbase30u_net_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\win\release\wxbase30u_xml_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\win\release\wxbase30u_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\win\release\wxmsw30u_adv_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\win\release\wxmsw30u_core_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\win\release\wxmsw30u_html_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\win\release\wxmsw30u_qa_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
 
 ; MSVC runtime DLLs. Some users can't put these in the system dir, so just put them in the EXE dir.
 ; It's legal, per http://www.fsf.org/licensing/licenses/gpl-faq.html#WindowsRuntimeAndGPL .
