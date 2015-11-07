@@ -209,9 +209,10 @@ and re-build the "help" project.
 5.2. To support languages other than English in your build of Audacity,
 you must enable and build the optional "locale" project. This is 
 required for a full release. You will need to obtain msgfmt.exe from
-https://sourceforge.net/projects/gettext/ . Add the location of 
-the directory containing msgfmt.exe to your Path environment variable. 
-Alternatively, put msgfmt.exe somewhere already in the Path, 
+https://sourceforge.net/projects/cppcms/files/boost_locale/gettext_for_windows/
+ Add the location of the directory containing msgfmt.exe to your Path 
+environment variable. Alternatively, put msgfmt.exe somewhere already in the 
+Path, 
 e.g., C:\Windows.
 
 
