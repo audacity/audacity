@@ -56,6 +56,9 @@ win/Release
 win/Projects/*/Debug
 win/Projects/*/Release
 
+# All those help files
+help/manual*
+
 # Misc
 src/RevisionIdent.h
 win/resetPrefs.txt
