@@ -166,6 +166,7 @@ Type: files; Name: "{app}\Plug-Ins\sc4.dll"
 Type: files; Name: "{app}\Modules\mod-script-pipe.dll"
 Type: files; Name: "{app}\Modules\mod-script-pipe.exp"
 Type: files; Name: "{app}\Modules\mod-script-pipe.lib"
+Type: files; Name: "{app}\Modules\mod-nyq-bench.dll"
 
 ;get rid of the Modules dir, if it is empty
 Type: dirifempty; Name: "{app}\Modules"
