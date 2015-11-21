@@ -2129,6 +2129,9 @@ bool VSTEffect::Load()
    // symbols.
    //
    // Once we define a proper external API, the flags can be removed.
+#ifndef RTLD_DEEPBIND
+#define RTLD_DEEPBIND 0
+#endif
    void *lib = dlopen((const char *)wxString(realPath).ToUTF8(), RTLD_NOW | RTLD_LOCAL | RTLD_DEEPBIND);
    if (!lib) 
    {
