@@ -277,6 +277,8 @@ public:
 
    // We don't need or want to accept focus.
    bool AcceptsFocus() const { return false; }
+   // So that wxPanel is not included in Tab traversal - see wxWidgets bug 15581
+   bool AcceptsFocusFromKeyboard() const { return false; }
 
    void ForceRecalc();
 

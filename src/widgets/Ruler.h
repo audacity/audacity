@@ -257,6 +257,8 @@ class AUDACITY_DLL_API RulerPanel : public wxPanel {
 
    // We don't need or want to accept focus.
    bool AcceptsFocus() const { return false; }
+   // So that wxPanel is not included in Tab traversal - see wxWidgets bug 15581
+   bool AcceptsFocusFromKeyboard() const { return false; }
 
  public:
 

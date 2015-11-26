@@ -143,6 +143,8 @@ public:
 
    // We don't need or want to accept focus.
    bool AcceptsFocus() const;
+   // So that wxPanel is not included in Tab traversal - see wxWidgets bug 15581
+   bool AcceptsFocusFromKeyboard() const;
 
    void SetFreqRange(double lo, double hi);
    void SetDbRange(double min, double max);

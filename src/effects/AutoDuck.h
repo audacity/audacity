@@ -108,6 +108,9 @@ private:
    };
 
    virtual bool AcceptsFocus() const {return false;}
+   // So that wxPanel is not included in Tab traversal - see wxWidgets bug 15581
+   virtual bool AcceptsFocusFromKeyboard() const {return false;}
+
 
    void OnPaint(wxPaintEvent & evt);
    void OnMouseCaptureChanged(wxMouseCaptureChangedEvent & evt);

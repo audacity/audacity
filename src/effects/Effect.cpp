@@ -2742,6 +2742,12 @@ public:
       return mAcceptsFocus;
    }
 
+   // So that wxPanel is not included in Tab traversal, when required - see wxWidgets bug 15581
+   virtual bool AcceptsFocusFromKeyboard() const
+   {
+      return mAcceptsFocus;
+   }
+
    // ============================================================================
    // EffectPanel implementation
    // ============================================================================

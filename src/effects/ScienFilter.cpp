@@ -1055,6 +1055,11 @@ bool EffectScienFilterPanel::AcceptsFocus() const
    return false;
 }
 
+bool EffectScienFilterPanel::AcceptsFocusFromKeyboard() const
+{
+   return false;
+}
+
 void EffectScienFilterPanel::OnSize(wxSizeEvent & WXUNUSED(evt))
 {
    Refresh(false);
