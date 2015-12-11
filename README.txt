@@ -256,16 +256,16 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 5. Compilation instructions
 
-First you must download wxWidgets. Audacity 2.1.1 requires wxWidgets 3.0.2
-from:
+First you must download wxWidgets. Audacity 2.1.2 requires wxWidgets 3.0.x, 
+preferably 3.0.2, which can be obtained from:
 
    http://www.wxWidgets.org/ .
 
 The libsndfile library is also required and is included in Audacity obtained 
-from SVN. 
+from GitHub. 
  
 CMake ( http://www.cmake.org/ ) is required to build the local copy of 
-libsoxr (Audacity's default resampling library) unless you install 
+the libsoxr resampling library used by Audacity, unless you install 
 libsoxr-dev and use that system library.
 
 Installation of other libraries is optional, see:
