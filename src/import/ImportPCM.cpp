@@ -416,8 +416,8 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
       // samples in the tracks.
 
       // PRL:  guard against excessive memory buffer allocation in case of many channels
-      __int64 maxBlock = std::min(maxBlockSize,
-         __int64(std::numeric_limits<int>::max() /
+      sampleCount maxBlock = std::min(maxBlockSize,
+         sampleCount(std::numeric_limits<int>::max() /
                  (mInfo.channels * SAMPLE_SIZE(mFormat)))
       );
       if (maxBlock < 1)
