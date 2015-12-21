@@ -10,6 +10,11 @@ This requires a patch to wxWidgets:
 
    accessibility.diff
 
+In some cases (see bug #1266 and http://reviews.llvm.org/D13647#eeab044e), the
+wxWidgets wxRenameFile function can fail.  This patch provides a workaround:
+
+   fix_rename.diff
+   
 Other patches that need to be applied to wxWidgets 3.0.2.  These should not
 be required for later versions:
 

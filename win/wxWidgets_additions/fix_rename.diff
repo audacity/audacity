@@ -1,0 +1,32 @@
+--- orig/wxWidgets-3.0.2/src/common/filefn.cpp	2014-10-06 16:33:44.000000000 -0500
++++ wxWidgets-3.0.2/src/common/filefn.cpp	2015-12-21 03:00:28.542150200 -0600
+@@ -1161,7 +1161,8 @@
+ bool
+ wxRenameFile(const wxString& file1, const wxString& file2, bool overwrite)
+ {
+-    if ( !overwrite && wxFileExists(file2) )
++    bool exists = wxFileExists(file2);
++    if ( !overwrite && exists )
+     {
+         wxLogSysError
+         (
+@@ -1174,8 +1175,17 @@
+ 
+ #if !defined(__WXWINCE__)
+     // Normal system call
+-  if ( wxRename (file1, file2) == 0 )
+-    return true;
++  unsigned long doserrno = 0;
++  for (int i = 0; i < 2000; i++)
++  {
++    if ( wxRename (file1, file2) == 0 )
++	  return true;
++    unsigned long doserrno;
++    _get_doserrno(&doserrno);
++	if (doserrno != ERROR_ACCESS_DENIED && (doserrno == ERROR_ALREADY_EXISTS && exists))
++      break;
++    wxMilliSleep(1);
++  }
+ #endif
+ 
+   // Try to copy
