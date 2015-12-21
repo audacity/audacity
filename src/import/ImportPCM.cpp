@@ -53,6 +53,8 @@
 #include "../WaveTrack.h"
 #include "ImportPlugin.h"
 
+#include <algorithm>
+
 #ifdef USE_LIBID3TAG
    #include <id3tag.h>
    // DM: the following functions were supposed to have been
@@ -413,15 +415,29 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
       // samples from the file and store our own local copy of the
       // samples in the tracks.
 
-      samplePtr srcbuffer = NewSamples(maxBlockSize * mInfo.channels,
-                                       mFormat);
-      samplePtr buffer = NewSamples(maxBlockSize, mFormat);
+      // PRL:  guard against excessive memory buffer allocation in case of many channels
+      __int64 maxBlock = std::min(maxBlockSize,
+         __int64(std::numeric_limits<int>::max() /
+                 (mInfo.channels * SAMPLE_SIZE(mFormat)))
+      );
+      if (maxBlock < 1)
+         return eProgressFailed;
+
+      samplePtr srcbuffer;
+      while (NULL == (srcbuffer = NewSamples(maxBlock * mInfo.channels, mFormat)))
+      {
+         maxBlock >>= 1;
+         if (maxBlock < 1)
+            return eProgressFailed;
+      }
+
+      samplePtr buffer = NewSamples(maxBlock, mFormat);
 
       unsigned long framescompleted = 0;
 
       long block;
       do {
-         block = maxBlockSize;
+         block = maxBlock;
 
          if (mFormat == int16Sample)
             block = sf_readf_short(mFile, (short *)srcbuffer, block);
