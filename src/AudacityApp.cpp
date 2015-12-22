@@ -1232,6 +1232,8 @@ bool AudacityApp::OnInit()
    AddUniquePathToPathList(progPath, audacityPathList);
    AddUniquePathToPathList(progPath+wxT("\\Languages"), audacityPathList);
 
+   // See bug #1271 for explanation of location
+   tmpDirLoc = FileNames::MkDir(wxStandardPaths::Get().GetUserLocalDataDir());
    defaultTempDir.Printf(wxT("%s\\audacity_temp"),
                          tmpDirLoc.c_str());
 #endif //__WXWSW__
