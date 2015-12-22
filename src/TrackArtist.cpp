@@ -3170,8 +3170,6 @@ void TrackArtist::UpdatePrefs()
 {
    mdBrange = gPrefs->Read(ENV_DB_KEY, mdBrange);
    mShowClipping = gPrefs->Read(wxT("/GUI/ShowClipping"), mShowClipping);
-
-   gPrefs->Flush();
 }
 
 // Draws the sync-lock bitmap, tiled; always draws stationary relative to the DC

@@ -43,7 +43,7 @@ bool ShuttlePrefs::TransferBool( const wxString & Name, bool & bValue, const boo
    }
    else
    {
-      return (gPrefs->Write( Name, bValue ) && gPrefs->Flush());
+      return gPrefs->Write( Name, bValue );
    }
    return true;
 }
@@ -57,7 +57,7 @@ bool ShuttlePrefs::TransferDouble( const wxString & Name, double & dValue, const
    }
    else
    {
-      return (gPrefs->Write( Name, dValue ) && gPrefs->Flush());
+      return gPrefs->Write( Name, dValue );
    }
    return true;
 }
@@ -71,7 +71,7 @@ bool ShuttlePrefs::TransferInt( const wxString & Name, int & iValue, const int &
    }
    else
    {
-      return (gPrefs->Write( Name, iValue ) && gPrefs->Flush());
+      return gPrefs->Write( Name, iValue );
    }
    return true;
 }
@@ -85,7 +85,7 @@ bool ShuttlePrefs::TransferString( const wxString & Name, wxString & strValue, c
    }
    else
    {
-      return (gPrefs->Write( Name, strValue ) && gPrefs->Flush());
+      return gPrefs->Write( Name, strValue );
    }
    return true;
 }

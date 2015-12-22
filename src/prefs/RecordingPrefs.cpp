@@ -189,7 +189,6 @@ bool RecordingPrefs::Apply()
       if (targetpeak + deltapeak > 100.0 || targetpeak - deltapeak < 0.0)
       {
          gPrefs->Write(wxT("/AudioIO/DeltaPeakVolume"), min(100.0 - targetpeak, targetpeak));
-         gPrefs->Flush();
       }
 
       int value;
@@ -201,7 +200,7 @@ bool RecordingPrefs::Apply()
       if (value < 0)
          gPrefs->Write(wxT("/AudioIO/NumberAnalysis"), AILA_DEF_NUMBER_ANALYSIS);
    #endif
-   return gPrefs->Flush();
+   return true;
 }
 
 PrefsPanel *RecordingPrefsFactory::Create(wxWindow *parent)

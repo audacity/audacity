@@ -216,6 +216,8 @@ bool ExportPCMOptions::TransferDataFromWindow()
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
 
+   gPrefs->Flush();
+
    WriteExportFormatPref(GetFormat());
 
    return true;
