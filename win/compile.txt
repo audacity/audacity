@@ -61,16 +61,18 @@ MSVC++ STEP 2:  Build wxWidgets
    "C\wxWidgets-3.0.2\build\msw\wx_dll.sln" instead of wx_dll.dsw.
 
 
-2.2. We have patched wxWidgets with three patches.  You should apply all 
-   three.  You can do this in one step by copying the folder
+2.2. We have patched wxWidgets with four patches.  You should apply all 
+   four.  You can do this in one step by copying the folder
      "audacity\win\wxWidgets_additions\wxWidgets-3.0.2\"
    over your: 
      "C:\wxWidgets-3.0.2\"
-   This applies the three patches.
-      1: accessibility.       Enables accessibility features.
-                              Less diagnostics in release builds.
-      2: changeset_14f05...   Allows disabling HiDPI 'awareness'.
-      3: changeset_0797a...   Fix bug in accessibility.
+   This applies the four patches.
+      1: accessibility.diff	Enables accessibility features.
+            			Less diagnostics in release builds.
+      2: changeset_14f05...	Allows disabling HiDPI 'awareness'.
+      3: changeset_0797a...	Fix bug in accessibility.
+      4: fix_rename.diff	Workaround for failures in the wxWidgets
+      				wxRenameFile function.
    The 'less diagnostics' in patch 1 gives the same level of diagnostics as
    we had with wxWidgets 2.8.12.  We found that some diagnostics in release
    builds that came in with wx 3.0.2 were causing us more problems than they 
@@ -91,9 +93,9 @@ MSVC++ STEP 2:  Build wxWidgets
    
 2.3. Build wxWidgets for all configurations of Audacity that you want.
 
-   * Use the "DLL Unicode Release" configuration to use in a 
+   * Use the "DLL Release" configuration to use in a 
      "Release" version of Audacity.
-   * Build "DLL Unicode Debug" configuration to use in a
+   * Build "DLL Debug" configuration to use in a
      "Debug" version of Audacity.
 
    See "MSVC++ STEP 6:  Build Audacity" for the differences
