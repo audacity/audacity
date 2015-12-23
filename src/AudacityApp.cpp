@@ -1234,7 +1234,7 @@ bool AudacityApp::OnInit()
 
    // See bug #1271 for explanation of location
    tmpDirLoc = FileNames::MkDir(wxStandardPaths::Get().GetUserLocalDataDir());
-   defaultTempDir.Printf(wxT("%s\\audacity_temp"),
+   defaultTempDir.Printf(wxT("%s\\SessionData"),
                          tmpDirLoc.c_str());
 #endif //__WXWSW__
 
