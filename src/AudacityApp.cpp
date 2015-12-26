@@ -1504,6 +1504,24 @@ void AudacityApp::OnReceiveCommand(AppCommandEvent &event)
    mCmdHandler->OnReceiveCommand(event);
 }
 
+// We now disallow temp directory name that puts it where cleaner apps will 
+// try to clean out the files.  
+bool AudacityApp::IsTempDirectoryNameOK( const wxString & Name ){
+#ifndef  __WXMSW__ 
+   return true;
+#else
+   wxFileName tmpFile;
+   tmpFile.AssignTempFileName(wxT("nn"));
+   // use Long Path to expand out any abbreviated long substrings.
+   wxString BadPath = tmpFile.GetLongPath();
+   ::wxRemoveFile(tmpFile.GetFullPath());
+   BadPath = BadPath.BeforeLast( '\\' ) + "\\";
+   wxFileName cmpFile( Name );
+   wxString NameCanonical = cmpFile.GetLongPath( ) + "\\";
+   return !(NameCanonical.StartsWith( BadPath ));
+#endif
+}
+
 bool AudacityApp::InitTempDir()
 {
    // We need to find a temp directory location.
@@ -1523,8 +1541,9 @@ bool AudacityApp::InitTempDir()
    wxLogNull logNo;
 
    // Try temp dir that was stored in prefs first
-
-   if (tempFromPrefs != wxT("")) {
+   if( !IsTempDirectoryNameOK( tempFromPrefs ) ){
+      ;// Bad name?  Don't try and use it.
+   } else if (tempFromPrefs != wxT("")) {
       if (wxDirExists(tempFromPrefs))
          temp = tempFromPrefs;
       else if (wxMkdir(tempFromPrefs, 0755))
@@ -1555,7 +1574,11 @@ bool AudacityApp::InitTempDir()
 
    if (temp == wxT("")) {
       // Failed
-      wxMessageBox(_("Audacity could not find a place to store temporary files.\nPlease enter an appropriate directory in the preferences dialog."));
+      if( !IsTempDirectoryNameOK( tempFromPrefs ) ) {
+         wxMessageBox(_("Audacity could not find a safe place to store temporary files.\nAudacity needs a place where automatic cleanup programs won't delete the temporary files.\nPlease enter an appropriate directory in the preferences dialog."));
+      } else {
+         wxMessageBox(_("Audacity could not find a place to store temporary files.\nPlease enter an appropriate directory in the preferences dialog."));
+      }
 
       // Only want one page of the preferences
       DirectoriesPrefsFactory directoriesPrefsFactory;

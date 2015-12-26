@@ -181,6 +181,7 @@ class AudacityApp:public wxApp {
                                    const wxArrayString & pathList,
                                    wxArrayString &results,
                                    int flags = wxDIR_FILES);
+   static bool IsTempDirectoryNameOK( const wxString & Name );
 
    FileHistory *GetRecentFiles() {return mRecentFiles;}
    void AddFileToHistory(const wxString & name);
