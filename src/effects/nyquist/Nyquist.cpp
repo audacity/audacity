@@ -377,6 +377,34 @@ bool NyquistEffect::SetAutomationParameters(EffectAutomationParameters & parms)
 
 bool NyquistEffect::Init()
 {
+   // As of Audacity 2.1.2 rc1, 'spectral' effects are allowed only if
+   // the selected track(s) are in a spectrogram view, and there is at
+   // least one frequency bound and Spectral Selection is enabled for the
+   // selected track(s) - (but don't apply to Nyquist Prompt).
+
+   if (!mIsPrompt && mIsSpectral) {
+      AudacityProject *project = GetActiveProject();
+      bool bAllowSpectralEditing = true;
+
+      SelectedTrackListOfKindIterator sel(Track::Wave, project->GetTracks());
+      for (WaveTrack *t = (WaveTrack *) sel.First(); t; t = (WaveTrack *) sel.Next()) {
+         if (t->GetDisplay() != WaveTrack::Spectrum ||
+             !(t->GetSpectrogramSettings().SpectralSelectionEnabled())) {
+            bAllowSpectralEditing = false;
+            break;
+         }
+      }
+
+      if (!bAllowSpectralEditing || ((mF0 < 0.0) && (mF1 < 0.0))) {
+         wxMessageBox(_("To use 'Spectral effects', enable 'Spectral Selection'\n"
+                        "in the track Spectrogram settings and select the\n"
+                        "frequency range for the effect to act on."), 
+            _("Error"), wxOK | wxICON_EXCLAMATION | wxCENTRE);
+
+         return false;
+      }
+   }
+
    if (!mIsPrompt && !mExternal)
    {
       //TODO: If we want to auto-add parameters from spectral selection,
@@ -621,27 +649,25 @@ bool NyquistEffect::Process()
             wxString centerHz = wxT("nil");
             wxString bandwidth = wxT("nil");
 
-            const WaveTrack::WaveTrackDisplay display = mCurTrack[0]->GetDisplay();
-            const bool bAllowSpectralEditing =
-               (display == WaveTrack::Spectrum) &&
-               mCurTrack[0]->GetSpectrogramSettings().SpectralSelectionEnabled();
-
-            if (bAllowSpectralEditing) {
 #if defined(EXPERIMENTAL_SPECTRAL_EDITING)
-               if (mF0 >= 0.0) {
-                  lowHz.Printf(wxT("(float %s)"), Internat::ToString(mF0).c_str());
-               }
+            if (mF0 >= 0.0) {
+               lowHz.Printf(wxT("(float %s)"), Internat::ToString(mF0).c_str());
+            }
 
-               if (mF1 >= 0.0) {
-                  highHz.Printf(wxT("(float %s)"), Internat::ToString(mF1).c_str());
-               }
+            if (mF1 >= 0.0) {
+               highHz.Printf(wxT("(float %s)"), Internat::ToString(mF1).c_str());
+            }
 
-               if ((mF0 >= 0.0) && (mF1 >= 0.0)) {
-                  centerHz.Printf(wxT("(float %s)"), Internat::ToString(sqrt(mF0 * mF1)).c_str());
-               }
+            if ((mF0 >= 0.0) && (mF1 >= 0.0)) {
+               centerHz.Printf(wxT("(float %s)"), Internat::ToString(sqrt(mF0 * mF1)).c_str());
+            }
 
-               if ((mF0 > 0.0) && (mF1 >= mF0)) {
-                  bandwidth.Printf(wxT("(float %s)"), Internat::ToString(log(mF1 / mF0) / log(2.0)).c_str());
+            if ((mF0 > 0.0) && (mF1 >= mF0)) {
+               // with very small values, bandwidth calculation may be inf.
+               // (Observed on Linux)
+               double bw = log(mF1 / mF0) / log(2.0);
+               if (!isinf(bw)) {
+                  bandwidth.Printf(wxT("(float %s)"), Internat::ToString(bw).c_str());
                }
             }
 
@@ -1346,6 +1372,9 @@ void NyquistEffect::Parse(wxString line)
       else if (tokens[1] == wxT("analyze")) {
          mType = EffectTypeAnalyze;
       }
+      if (len >= 3 && tokens[2] == wxT("spectral")) {;
+         mIsSpectral = true;
+      }
       return;
    }
 
@@ -1582,6 +1611,7 @@ bool NyquistEffect::ParseProgram(wxInputStream & stream)
    mIsSal = false;
    mControls.Clear();
    mCategories.Clear();
+   mIsSpectral = false;
 
    mFoundType = false;
    while (!stream.Eof() && stream.IsOk())

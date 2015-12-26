@@ -180,6 +180,7 @@ private:
    bool              mCompiler;
    bool              mIsSal;
    bool              mExternal;
+   bool              mIsSpectral;
    /** True if the code to execute is obtained interactively from the user via
     * the "Nyquist Prompt", false for all other effects (lisp code read from
     * files)
