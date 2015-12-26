@@ -1990,8 +1990,11 @@ void ExportFFmpegOptions::OnOK(wxCommandEvent& WXUNUSED(event))
    if (selcdc > -1) gPrefs->Write(wxT("/FileFormats/FFmpegCodec"),mCodecList->GetString(selcdc));
    if (selfmt > -1) gPrefs->Write(wxT("/FileFormats/FFmpegFormat"),mFormatList->GetString(selfmt));
    gPrefs->Flush();
+
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
+
+   gPrefs->Flush();
 
    EndModal(wxID_OK);
 

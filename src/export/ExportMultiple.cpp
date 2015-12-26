@@ -522,6 +522,8 @@ void ExportMultiple::OnExport(wxCommandEvent& WXUNUSED(event))
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
 
+   gPrefs->Flush();
+
    // Make sure the output directory is in good shape
    if (!DirOk()) {
       return;

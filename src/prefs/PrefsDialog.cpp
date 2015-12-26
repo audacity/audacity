@@ -407,6 +407,8 @@ void PrefsDialog::OnOK(wxCommandEvent & WXUNUSED(event))
    else
       mUniquePage->Apply();
 
+   gPrefs->Flush();
+
    SavePreferredPage();
 
 #if USE_PORTMIXER
@@ -443,7 +445,6 @@ void PrefsDialog::OnOK(wxCommandEvent & WXUNUSED(event))
 
    WaveformSettings::defaults().LoadPrefs();
 
-   gPrefs->Flush();
    EndModal(true);
 }
 

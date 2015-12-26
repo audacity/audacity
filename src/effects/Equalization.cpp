@@ -1391,14 +1391,17 @@ void EffectEqualization::LoadCurves(wxString fileName, bool append)
       }
       if( !fn.FileExists() )
       {
-         wxString errorMessage;
-         errorMessage.Printf(_("EQCurves.xml and EQDefaultCurves.xml were not found on your system.\nPlease press 'help' to visit the download page.\n\nSave the curves at %s"), FileNames::DataDir().c_str());
-         ShowErrorDialog(mUIParent, _("EQCurves.xml and EQDefaultCurves.xml missing"),
-            errorMessage, wxT("http://wiki.audacityteam.org/wiki/EQCurvesDownload"), false);
+         // LLL:  Is there really a need for an error message at all???
+         //wxString errorMessage;
+         //errorMessage.Printf(_("EQCurves.xml and EQDefaultCurves.xml were not found on your system.\nPlease press 'help' to visit the download page.\n\nSave the curves at %s"), FileNames::DataDir().c_str());
+         //ShowErrorDialog(mUIParent, _("EQCurves.xml and EQDefaultCurves.xml missing"),
+         //   errorMessage, wxT("http://wiki.audacityteam.org/wiki/EQCurvesDownload"), false);
+
          // Have another go at finding EQCurves.xml in the data dir, in case 'help' helped
          fn = wxFileName( FileNames::DataDir(), wxT("EQDefaultCurves.xml") );
          if( !fn.FileExists() )
          {
+            mCurves.Clear();
             mCurves.Add( _("unnamed") );   // we still need a default curve to use
             return;
          }
