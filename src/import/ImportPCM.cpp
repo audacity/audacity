@@ -451,16 +451,15 @@ ProgressResult PCMImportFileHandle::Import(TrackFactory *trackFactory,
       if (maxBlock < 1)
          return ProgressResult::Failed;
 
-      SampleBuffer srcbuffer;
+      SampleBuffer srcbuffer, buffer;
       wxASSERT(mInfo.channels >= 0);
-      while (NULL == srcbuffer.Allocate(maxBlock * mInfo.channels, mFormat).ptr())
+      while (NULL == srcbuffer.Allocate(maxBlock * mInfo.channels, mFormat).ptr() ||
+             NULL == buffer.Allocate(maxBlock, mFormat).ptr())
       {
          maxBlock /= 2;
          if (maxBlock < 1)
             return ProgressResult::Failed;
       }
-
-      SampleBuffer buffer(maxBlock, mFormat);
 
       decltype(fileTotalFrames) framescompleted = 0;
 
