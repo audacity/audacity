@@ -3293,8 +3293,8 @@ void AudacityProject::OnZeroCrossing()
 
 /// OnEffect() takes a PluginID and has the EffectManager execute the assocated effect.
 ///
-/// At the moment flags are used only to indicate whether to prompt for parameters and
-/// whether to save the state to history.
+/// At the moment flags are used only to indicate whether to prompt for parameters,
+/// whether to save the state to history and whether to allow 'Repeat Last Effect'.
 bool AudacityProject::OnEffect(const PluginID & ID, int flags)
 {
    const PluginDescriptor *plug = PluginManager::Get().GetPlugin(ID);
@@ -3360,19 +3360,26 @@ bool AudacityProject::OnEffect(const PluginID & ID, int flags)
       return false;
    }
 
+   if (em.GetSkipStateFlag())
+      flags = flags | OnEffectFlags::kSkipState;
+
    if (!(flags & OnEffectFlags::kSkipState))
    {
       wxString shortDesc = em.GetEffectName(ID);
       wxString longDesc = em.GetEffectDescription(ID);
       PushState(longDesc, shortDesc);
+   }
 
+   if (!(flags & OnEffectFlags::kDontRepeatLast))
+   {
       // Only remember a successful effect, don't rmemeber insert,
       // or analyze effects.
       if (type == EffectTypeProcess) {
+         wxString shortDesc = em.GetEffectName(ID);
          mLastEffect = ID;
          wxString lastEffectDesc;
          /* i18n-hint: %s will be the name of the effect which will be
-            * repeated if this menu item is chosen */
+          * repeated if this menu item is chosen */
          lastEffectDesc.Printf(_("Repeat %s"), shortDesc.c_str());
          mCommandManager.Modify(wxT("RepeatLastEffect"), lastEffectDesc);
       }

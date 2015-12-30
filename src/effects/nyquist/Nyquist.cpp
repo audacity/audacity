@@ -437,6 +437,9 @@ bool NyquistEffect::CheckWhetherSkipEffect()
 bool NyquistEffect::Process()
 {
    bool success = true;
+   mProjectChanged = false;
+   EffectManager & em = EffectManager::Get();
+   em.SetSkipStateFlag(false);
 
    if (mExternal) {
       mProgress->Hide();
@@ -622,6 +625,8 @@ bool NyquistEffect::Process()
          if (mCurLen > NYQ_MAX_LEN) {
             wxMessageBox(_("Selection too long for Nyquist code.\nMaximum allowed selection is 2147483647 samples\n(about 13.5 hours at 44100 Hz sample rate)."),
                          _("Nyquist Error"), wxOK | wxCENTRE);
+            if (!mProjectChanged)
+               em.SetSkipStateFlag(true);
             return false;
          }
 
@@ -720,6 +725,9 @@ bool NyquistEffect::Process()
    ReplaceProcessedTracks(success);
 
    mDebug = false;
+
+   if (!mProjectChanged)
+      em.SetSkipStateFlag(true);
 
    return success;
 }
@@ -1091,6 +1099,7 @@ bool NyquistEffect::ProcessOne()
    }
 
    if (rval == nyx_labels) {
+      mProjectChanged = true;
       unsigned int numLabels = nyx_get_num_labels();
       unsigned int l;
       LabelTrack *ltrack = NULL;
@@ -1233,7 +1242,7 @@ bool NyquistEffect::ProcessOne()
       delete mOutputTrack[i];
       mOutputTrack[i] = NULL;
    }
-
+   mProjectChanged = true;
    return true;
 }
 

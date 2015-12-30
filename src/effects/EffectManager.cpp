@@ -42,6 +42,7 @@ EffectManager::EffectManager()
    mRealtimeSuspended = true;
    mRealtimeLatency = 0;
    mRealtimeLock.Leave();
+   mSkipStateFlag = false;
 
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
    mRack = NULL;
@@ -92,6 +93,7 @@ bool EffectManager::DoEffect(const PluginID & ID,
                              bool shouldPrompt /* = true */)
 
 {
+   this->SetSkipStateFlag(false);
    Effect *effect = GetEffect(ID);
    
    if (!effect)
@@ -169,6 +171,16 @@ bool EffectManager::IsHidden(const PluginID & ID)
    }
 
    return false;
+}
+
+void EffectManager::SetSkipStateFlag(bool flag)
+{
+   mSkipStateFlag = flag;
+}
+
+bool EffectManager::GetSkipStateFlag()
+{
+   return mSkipStateFlag;
 }
 
 bool EffectManager::SupportsAutomation(const PluginID & ID)

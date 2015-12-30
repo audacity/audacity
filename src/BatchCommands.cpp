@@ -608,7 +608,8 @@ bool BatchCommands::ApplyEffectCommand(const PluginID & ID, const wxString & com
    {
       // and apply the effect...
       res = project->OnEffect(ID, AudacityProject::OnEffectFlags::kConfigured |
-                                  AudacityProject::OnEffectFlags::kSkipState);
+                                  AudacityProject::OnEffectFlags::kSkipState |
+                                  AudacityProject::OnEffectFlags::kDontRepeatLast);
    }
 
    EffectManager::Get().SetBatchProcessing(ID, false);

@@ -39,6 +39,7 @@
 #include "../Audacity.h"
 #include "../Experimental.h"
 #include "NoiseReduction.h"
+#include "EffectManager.h"
 
 #include "../ShuttleGui.h"
 #include "../Prefs.h"
@@ -1616,6 +1617,9 @@ void EffectNoiseReduction::Dialog::EnableDisableSensitivityControls()
 
 void EffectNoiseReduction::Dialog::OnGetProfile(wxCommandEvent & WXUNUSED(event))
 {
+   // Project has not be changed so skip pushing state
+   EffectManager::Get().SetSkipStateFlag(true);
+
    if (!TransferDataFromWindow())
       return;
 
