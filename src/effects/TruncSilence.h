@@ -57,7 +57,21 @@ public:
 
    // Effect implementation
 
+   virtual double CalcPreviewInputLength(double previewLength);
    virtual bool Startup();
+
+   // Analyze a single track to find silences
+   // If inputLength is not NULL we are calculating the minimum
+   // amount of input for previewing.
+   virtual bool Analyze(RegionList &silenceList,
+                        RegionList &trackSilences,
+                        WaveTrack* wt,
+                        sampleCount* silentFrame,
+                        sampleCount* index,
+                        int whichTrack,
+                        double* inputLength = NULL,
+                        double* minInputLength = NULL);
+
    virtual bool Process();
    virtual void PopulateOrExchange(ShuttleGui & S);
    virtual bool TransferDataToWindow();
@@ -68,7 +82,7 @@ private:
 
    //ToDo ... put BlendFrames in Effects, Project, or other class
    void BlendFrames(float* buffer, int leftIndex, int rightIndex, int blendFrameCount);
-   void Intersect(RegionList &dest, const RegionList &src);
+   void Intersect(RegionList &dest, const RegionList & src);
 
    void OnControlChange(wxCommandEvent & evt);
    void UpdateUI();

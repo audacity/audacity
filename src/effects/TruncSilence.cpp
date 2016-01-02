@@ -58,6 +58,13 @@ Param( Compress,  double,  XO("Compress"),   50.0,       0.0,     99.9,         
 
 static const sampleCount DEF_BlendFrameCount = 100;
 
+// Lower bound on the amount of silence to find at a time -- this avoids
+// detecting silence repeatedly in low-frequency sounds.
+static const double DEF_MinTruncMs = 0.001; 
+
+// Typical fraction of total time taken by detection (better to guess low)
+const double detectFrac = 0.4;
+
 #include <wx/listimpl.cpp>
 WX_DEFINE_LIST(RegionList);
 
@@ -154,6 +161,41 @@ bool EffectTruncSilence::SetAutomationParameters(EffectAutomationParameters & pa
 
 // Effect implementation
 
+double EffectTruncSilence::CalcPreviewInputLength(double previewLength)
+{
+   double inputLength = mT1 - mT0;
+   double minInputLength = inputLength;
+
+   // Master list of silent regions
+   RegionList silences;
+   silences.DeleteContents(true);
+
+   // Start with the whole selection silent
+   Region *sel = new Region;
+   sel->start = mT0;
+   sel->end = mT1;
+   silences.push_back(sel);
+
+   SelectedTrackListOfKindIterator iter(Track::Wave, mTracks);
+   int whichTrack = 0;
+
+   for (Track *t = iter.First(); t; t = iter.Next()) {
+      WaveTrack *wt = (WaveTrack *)t;
+
+      RegionList trackSilences;
+      trackSilences.DeleteContents(true);
+
+      sampleCount index = wt->TimeToLongSamples(mT0);
+      sampleCount silentFrame = 0; // length of the current silence
+
+      Analyze(silences, trackSilences, wt, &silentFrame, &index, whichTrack, &inputLength, &minInputLength);
+
+      whichTrack++;
+   }
+   return inputLength;
+}
+
+
 bool EffectTruncSilence::Startup()
 {
    wxString base = wxT("/Effects/TruncateSilence/");
@@ -206,16 +248,8 @@ bool EffectTruncSilence::Startup()
 
 bool EffectTruncSilence::Process()
 {
-   // Typical fraction of total time taken by detection (better to guess low)
-   const double detectFrac = .4;
-
    // Copy tracks
    CopyInputTracks(Track::All);
-
-   // Lower bound on the amount of silence to find at a time -- this avoids
-   // detecting silence repeatedly in low-frequency sounds.
-   const double minTruncMs = 0.001;
-   double truncDbSilenceThreshold = Enums::Db2Signal[mTruncDbChoiceIndex];
 
    // Master list of silent regions; it is responsible for deleting them.
    // This list should always be kept in order.
@@ -237,111 +271,19 @@ bool EffectTruncSilence::Process()
 
       // Smallest silent region to detect in frames
       sampleCount minSilenceFrames =
-            sampleCount(wxMax( mInitialAllowedSilence, minTruncMs) *
-                  wt->GetRate());
+            sampleCount(wxMax( mInitialAllowedSilence, DEF_MinTruncMs) * wt->GetRate());
 
       //
       // Scan the track for silences
       //
       RegionList trackSilences;
       trackSilences.DeleteContents(true);
-      sampleCount blockLen = wt->GetMaxBlockSize();
-      sampleCount start = wt->TimeToLongSamples(mT0);
-      sampleCount end = wt->TimeToLongSamples(mT1);
 
-      // Allocate buffer
-      float *buffer = new float[blockLen];
+      sampleCount index = wt->TimeToLongSamples(mT0);
+      sampleCount silentFrame = 0;
 
-      sampleCount index = start;
-      sampleCount silentFrames = 0;
-      bool cancelled = false;
-
-      // Keep position in overall silences list for optimization
-      RegionList::iterator rit(silences.begin());
-
-      while (index < end)
-      {
-         // Show progress dialog, test for cancellation
-         cancelled = TotalProgress(
-               detectFrac * (whichTrack + index / (double)end) /
-               (double)GetNumWaveTracks());
-         if (cancelled)
-         {
-            break;
-         }
-
-         //
-         // Optimization: if not in a silent region skip ahead to the next one
-         //
-         double curTime = wt->LongSamplesToTime(index);
-         for ( ; rit != silences.end(); ++rit)
-         {
-            // Find the first silent region ending after current time
-            if ((*rit)->end >= curTime)
-            {
-               break;
-            }
-         }
-
-         if (rit == silences.end())
-         {
-            // No more regions -- no need to process the rest of the track
-            break;
-         }
-         else if ((*rit)->start > curTime)
-         {
-            // End current silent region, skip ahead
-            if (silentFrames >= minSilenceFrames) 
-            {
-               Region *r = new Region;
-               r->start = wt->LongSamplesToTime(index - silentFrames);
-               r->end = wt->LongSamplesToTime(index);
-               trackSilences.push_back(r);
-            }
-            silentFrames = 0;
-
-            index = wt->TimeToLongSamples((*rit)->start);
-         }
-         //
-         // End of optimization
-         //
-
-         // Limit size of current block if we've reached the end
-         sampleCount count = blockLen;
-         if ((index + count) > end) 
-         {
-            count = end - index;
-         }
-
-         // Fill buffer
-         wt->Get((samplePtr)(buffer), floatSample, index, count);
-
-         // Look for silences in current block
-         for (sampleCount i = 0; i < count; ++i) 
-         {
-            if (fabs(buffer[i]) < truncDbSilenceThreshold) 
-            {
-               ++silentFrames;
-            }
-            else 
-            {
-               if (silentFrames >= minSilenceFrames)
-               {
-                  // Record the silent region
-                  Region *r = new Region;
-                  r->start = wt->LongSamplesToTime(index + i - silentFrames);
-                  r->end = wt->LongSamplesToTime(index + i);
-                  trackSilences.push_back(r);
-               }
-               silentFrames = 0;
-            }
-         }
-
-         // Next block
-         index += count;
-      }
-
-      delete [] buffer;
+      // Detect silences
+      bool cancelled = !(Analyze(silences, trackSilences, wt, &silentFrame, &index, whichTrack));
 
       // Buffer has been freed, so we're OK to return if cancelled
       if (cancelled)
@@ -350,11 +292,11 @@ bool EffectTruncSilence::Process()
          return false;
       }
 
-      if (silentFrames >= minSilenceFrames)
+      if (silentFrame >= minSilenceFrames)
       {
          // Track ended in silence -- record region
          Region *r = new Region;
-         r->start = wt->LongSamplesToTime(index - silentFrames);
+         r->start = wt->LongSamplesToTime(index - silentFrame);
          r->end = wt->LongSamplesToTime(index);
          trackSilences.push_back(r);
       }
@@ -479,6 +421,164 @@ bool EffectTruncSilence::Process()
 
    return true;
 }
+
+bool EffectTruncSilence::Analyze(RegionList& silenceList,
+                                 RegionList& trackSilences,
+                                 WaveTrack* wt,
+                                 sampleCount* silentFrame,
+                                 sampleCount* index,
+                                 int whichTrack,
+                                 double* inputLength /*= NULL*/,
+                                 double* minInputLength /*= NULL*/)
+{
+   // Smallest silent region to detect in frames
+   sampleCount minSilenceFrames = sampleCount(wxMax( mInitialAllowedSilence, DEF_MinTruncMs) * wt->GetRate());
+
+   double truncDbSilenceThreshold = Enums::Db2Signal[mTruncDbChoiceIndex];
+   sampleCount blockLen = wt->GetMaxBlockSize();
+   sampleCount start = wt->TimeToLongSamples(mT0);
+   sampleCount end = wt->TimeToLongSamples(mT1);
+   sampleCount outLength = 0;
+
+   double previewLength;
+   gPrefs->Read(wxT("/AudioIO/EffectsPreviewLen"), &previewLength, 6.0);
+   // Minimum required length in samples.
+   const sampleCount previewLen = previewLength * wt->GetRate();
+
+   // Keep position in overall silences list for optimization
+   RegionList::iterator rit(silenceList.begin());
+
+   // Allocate buffer
+   float *buffer = new float[blockLen];
+
+   // Loop through current track
+   while (*index < end) {
+      if (inputLength && ((outLength >= previewLen) || (*index - start > wt->TimeToLongSamples(*minInputLength)))) {
+         *inputLength = std::min<double>(*inputLength, *minInputLength);
+         if (outLength >= previewLen) {
+            *minInputLength = *inputLength;
+         }
+         return true;
+      }
+
+      if (!inputLength) {
+         // Show progress dialog, test for cancellation
+         bool cancelled = TotalProgress(
+               detectFrac * (whichTrack + (*index - start) / (double)(end - start)) /
+               (double)GetNumWaveTracks());
+         if (cancelled) {
+            delete [] buffer;
+            return false;
+         }
+      }
+
+      // Optimization: if not in a silent region skip ahead to the next one
+
+      double curTime = wt->LongSamplesToTime(*index);
+      for ( ; rit != silenceList.end(); ++rit) {
+         // Find the first silent region ending after current time
+         if ((*rit)->end >= curTime) {
+            break;
+         }
+      }
+
+      if (rit == silenceList.end()) {
+         // No more regions -- no need to process the rest of the track
+         if (inputLength) {
+            // Add available samples up to previewLength.
+            sampleCount remainingTrackSamples = wt->TimeToLongSamples(wt->GetEndTime()) - *index;
+            sampleCount requiredTrackSamples = previewLen - outLength;
+            outLength += (remainingTrackSamples > requiredTrackSamples)? requiredTrackSamples : remainingTrackSamples;
+         }
+
+         break;
+      }
+      else if ((*rit)->start > curTime) {
+         // End current silent region, skip ahead
+         if (*silentFrame >= minSilenceFrames)  {
+            Region *r = new Region;
+            r->start = wt->LongSamplesToTime(*index - *silentFrame);
+            r->end = wt->LongSamplesToTime(*index);
+            trackSilences.push_back(r);
+         }
+         *silentFrame = 0;
+         sampleCount newIndex = wt->TimeToLongSamples((*rit)->start);
+         if (inputLength) {
+            sampleCount requiredTrackSamples = previewLen - outLength;
+            // Add non-silent sample to outLength
+            outLength += ((newIndex - *index) > requiredTrackSamples)? requiredTrackSamples : newIndex - *index;
+         }
+
+         *index = newIndex;
+      }
+      // End of optimization
+
+      // Limit size of current block if we've reached the end
+      sampleCount count = blockLen;
+      if ((*index + count) > end) {
+         count = end - *index;
+      }
+
+      // Fill buffer
+      wt->Get((samplePtr)(buffer), floatSample, *index, count);
+
+      // Look for silenceList in current block
+      for (sampleCount i = 0; i < count; ++i) {
+         if (inputLength && ((outLength >= previewLen) || (outLength > wt->TimeToLongSamples(*minInputLength)))) {
+            *inputLength = wt->LongSamplesToTime(*index + i) - wt->LongSamplesToTime(start);
+            break;
+         }
+
+         if (fabs(buffer[i]) < truncDbSilenceThreshold) {
+            (*silentFrame)++;
+         }
+         else {
+            sampleCount allowed = 0;
+            if (*silentFrame >= minSilenceFrames) {
+               if (inputLength) {
+                  switch (mActionIndex) {
+                     case kTruncate:
+                        outLength += wt->TimeToLongSamples(mTruncLongestAllowedSilence);
+                        break;
+                     case kCompress:
+                        allowed = wt->TimeToLongSamples(mInitialAllowedSilence);
+                        outLength += allowed +
+                                       (*silentFrame - allowed) * mSilenceCompressPercent / 100.0;
+                        break;
+                     // default: // Not currently used.
+                  }
+               }
+
+               // Record the silent region
+               Region *r = new Region;
+               r->start = wt->LongSamplesToTime(*index + i - *silentFrame);
+               r->end = wt->LongSamplesToTime(*index + i);
+               trackSilences.push_back(r);
+            }
+            else if (inputLength) {   // included as part of non-silence
+               outLength += *silentFrame;
+            }
+            *silentFrame = 0;
+            if (inputLength) {
+                ++outLength;   // Add non-silent sample to outLength
+            }
+         }
+      }
+      // Next block
+      *index += count;
+   }
+   delete [] buffer;
+
+   if (inputLength) {
+      *inputLength = std::min<double>(*inputLength, *minInputLength);
+      if (outLength >= previewLen) {
+         *minInputLength = *inputLength;
+      }
+   }
+
+   return true;
+}
+
 
 void EffectTruncSilence::PopulateOrExchange(ShuttleGui & S)
 {

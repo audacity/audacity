@@ -571,7 +571,9 @@ bool NyquistEffect::Process()
       mProps += wxString::Format(wxT("(putprop '*PROJECT* (float %s) 'PREVIEW-DURATION)\n"),
                                  Internat::ToString(previewLen).c_str());
 
-
+      // *PREVIEWP* is true when previewing (better than relying on track view).
+      wxString isPreviewing = (this->IsPreviewing())? wxT("T") : wxT("NIL");
+      mProps += wxString::Format(wxT("(setf *PREVIEWP* %s)\n"), isPreviewing.c_str());
 
       mProps += wxString::Format(wxT("(putprop '*SELECTION* (float %s) 'START)\n"),
                                  Internat::ToString(mT0).c_str());

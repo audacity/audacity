@@ -2431,11 +2431,6 @@ bool Effect::IsHidden()
 
 void Effect::Preview(bool dryOnly)
 {
-    if (mIsLinearEffect)
-       wxLogDebug(wxT("Linear Effect"));
-    else
-       wxLogDebug(wxT("Non-linear Effect"));
-
    if (mNumTracks == 0) { // nothing to preview
       return;
    }
@@ -2553,8 +2548,9 @@ void Effect::Preview(bool dryOnly)
          playbackTracks.Add(src);
          src = (WaveTrack *) iter.Next();
       }
-      if (isNyquist && isGenerator)
-         t1 = mT1;
+      // Some effects (Paulstretch) may need to generate more
+      // than previewLen, so take the min.
+      t1 = std::min(mT0 + previewLen, mT1);
 
 #ifdef EXPERIMENTAL_MIDI_OUT
       NoteTrackArray empty;
@@ -2569,7 +2565,6 @@ void Effect::Preview(bool dryOnly)
 
       if (token) {
          int previewing = eProgressSuccess;
-wxLogDebug(wxT("mT0 %.3f   t1 %.3f"),mT0,t1);
          // The progress dialog must be deleted before stopping the stream
          // to allow events to flow to the app during StopStream processing.
          // The progress dialog blocks these events.

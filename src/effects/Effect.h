@@ -334,6 +334,9 @@ protected:
    // (such as fade effects) need to know the full selection length.
    void SetPreviewFullSelectionFlag(bool previewDurationFlag);
 
+   // Use this if the effect needs to know if it is previewing
+   bool IsPreviewing() { return mIsPreview; }
+
    // Most effects only require selected tracks to be copied for Preview.
    // If IncludeNotSelectedPreviewTracks(true), then non-linear effects have
    // preview copies of all wave tracks.
