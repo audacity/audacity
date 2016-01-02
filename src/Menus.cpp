@@ -4797,10 +4797,14 @@ void AudacityProject::OnSplitNew()
    for (Track *n = iter.First(); n; n = iter.Next()) {
       if (n->GetSelected()) {
          Track *dest = NULL;
+         double newt0 = 0, newt1 = 0;
          double offset = n->GetOffset();
          if (n->GetKind() == Track::Wave) {
-            ((WaveTrack*)n)->SplitCut(mViewInfo.selectedRegion.t0(),
-                                      mViewInfo.selectedRegion.t1(), &dest);
+            // Clips must be aligned to sample positions or the new clip will not fit in the gap where it came from
+            offset = ((WaveTrack*)n)->LongSamplesToTime(((WaveTrack*)n)->TimeToLongSamples(offset));
+            newt0 = ((WaveTrack*)n)->LongSamplesToTime(((WaveTrack*)n)->TimeToLongSamples(mViewInfo.selectedRegion.t0()));
+            newt1 = ((WaveTrack*)n)->LongSamplesToTime(((WaveTrack*)n)->TimeToLongSamples(mViewInfo.selectedRegion.t1()));
+            ((WaveTrack*)n)->SplitCut(newt0, newt1, &dest);
          }
 #if 0
          // LL:  For now, just skip all non-wave tracks since the other do not
@@ -4814,7 +4818,7 @@ void AudacityProject::OnSplitNew()
             dest->SetChannel(n->GetChannel());
             dest->SetLinked(n->GetLinked());
             dest->SetName(n->GetName());
-            dest->SetOffset(wxMax(mViewInfo.selectedRegion.t0(), offset));
+            dest->SetOffset(wxMax(newt0, offset));
             mTracks->Add(dest);
          }
       }
