@@ -1585,29 +1585,26 @@ struct ClipParameters
       hiddenMid = rect;
 
       // If the left edge of the track is to the right of the left
-      // edge of the display, then there's some blank area to the
+      // edge of the display, then there's some unused area to the
       // left of the track.  Reduce the "hiddenMid"
       hiddenLeftOffset = 0;
       if (tpre < 0) {
-         hiddenLeftOffset = std::min(rect.width, int(
-            zoomInfo.TimeToPosition(tOffset, 0
-               , true
-            )
-         ));
+         // Fix Bug #1296 caused by premature conversion to (int).
+         wxInt64 time64 = zoomInfo.TimeToPosition(tOffset, 0 , false);
+         hiddenLeftOffset = (time64 < rect.width) ? (int)time64 : rect.width;
+
          hiddenMid.x += hiddenLeftOffset;
          hiddenMid.width -= hiddenLeftOffset;
       }
 
       // If the right edge of the track is to the left of the the right
-      // edge of the display, then there's some blank area to the right
+      // edge of the display, then there's some unused area to the right
       // of the track.  Reduce the "hiddenMid" rect by the
       // size of the blank area.
       if (tpost > t1) {
-         const int hiddenRightOffset = std::min(rect.width, int(
-            zoomInfo.TimeToPosition(tOffset + t1, 0
-               , true
-            )
-         ));
+         wxInt64 time64 = zoomInfo.TimeToPosition(tOffset+t1, 0 , false);
+         const int hiddenRightOffset = (time64 < rect.width) ? (int)time64 : rect.width;
+
          hiddenMid.width = std::max(0, hiddenRightOffset - hiddenLeftOffset);
       }
 
@@ -1617,29 +1614,25 @@ struct ClipParameters
       mid = rect;
 
       // If the left edge of the track is to the right of the left
-      // edge of the display, then there's some blank area to the
-      // left of the track.  Reduce the "hiddenMid"
+      // edge of the display, then there's some unused area to the
+      // left of the track.  Reduce the "mid"
       leftOffset = 0;
       if (tpre < 0) {
-         leftOffset = std::min(rect.width, int(
-            zoomInfo.TimeToPosition(tOffset, 0
-               , false
-            )
-         ));
+         wxInt64 time64 = zoomInfo.TimeToPosition(tOffset, 0 , false);
+         leftOffset = (time64 < rect.width) ? (int)time64 : rect.width;
+
          mid.x += leftOffset;
          mid.width -= leftOffset;
       }
 
       // If the right edge of the track is to the left of the the right
-      // edge of the display, then there's some blank area to the right
-      // of the track.  Reduce the "hiddenMid" rect by the
+      // edge of the display, then there's some unused area to the right
+      // of the track.  Reduce the "mid" rect by the
       // size of the blank area.
       if (tpost > t1) {
-         const int distortedRightOffset = std::min(rect.width, int(
-            zoomInfo.TimeToPosition(tOffset + t1, 0
-               , false
-            )
-         ));
+         wxInt64 time64 = zoomInfo.TimeToPosition(tOffset+t1, 0 , false);
+         const int distortedRightOffset = (time64 < rect.width) ? (int)time64 : rect.width;
+
          mid.width = std::max(0, distortedRightOffset - leftOffset);
       }
    }
