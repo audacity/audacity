@@ -1590,7 +1590,9 @@ struct ClipParameters
       hiddenLeftOffset = 0;
       if (tpre < 0) {
          // Fix Bug #1296 caused by premature conversion to (int).
-         wxInt64 time64 = zoomInfo.TimeToPosition(tOffset, 0 , false);
+         wxInt64 time64 = zoomInfo.TimeToPosition(tOffset, 0 , true);
+         if( time64 < 0 )
+            time64 = 0;
          hiddenLeftOffset = (time64 < rect.width) ? (int)time64 : rect.width;
 
          hiddenMid.x += hiddenLeftOffset;
@@ -1602,12 +1604,13 @@ struct ClipParameters
       // of the track.  Reduce the "hiddenMid" rect by the
       // size of the blank area.
       if (tpost > t1) {
-         wxInt64 time64 = zoomInfo.TimeToPosition(tOffset+t1, 0 , false);
+         wxInt64 time64 = zoomInfo.TimeToPosition(tOffset+t1, 0 , true);
+         if( time64 < 0 )
+            time64 = 0;
          const int hiddenRightOffset = (time64 < rect.width) ? (int)time64 : rect.width;
 
          hiddenMid.width = std::max(0, hiddenRightOffset - hiddenLeftOffset);
       }
-
       // The variable "mid" will be the rectangle containing the
       // actual waveform, as distorted by the fisheye,
       // as opposed to any blank area before or after the track.
@@ -1619,6 +1622,8 @@ struct ClipParameters
       leftOffset = 0;
       if (tpre < 0) {
          wxInt64 time64 = zoomInfo.TimeToPosition(tOffset, 0 , false);
+         if( time64 < 0 )
+            time64 = 0;
          leftOffset = (time64 < rect.width) ? (int)time64 : rect.width;
 
          mid.x += leftOffset;
@@ -1631,6 +1636,8 @@ struct ClipParameters
       // size of the blank area.
       if (tpost > t1) {
          wxInt64 time64 = zoomInfo.TimeToPosition(tOffset+t1, 0 , false);
+         if( time64 < 0 )
+            time64 = 0;
          const int distortedRightOffset = (time64 < rect.width) ? (int)time64 : rect.width;
 
          mid.width = std::max(0, distortedRightOffset - leftOffset);

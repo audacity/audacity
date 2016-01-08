@@ -58,9 +58,13 @@ wxInt64 ZoomInfo::TimeToPosition(double projectTime,
    , bool // ignoreFisheye
 ) const
 {
-   return floor(0.5 +
-      zoom * (projectTime - h) + origin
-   );
+   double t = 0.5 + zoom * (projectTime - h) + origin ;
+   if( t < wxINT64_MIN )
+      return wxINT64_MIN;
+   if( t > wxINT64_MAX )
+      return wxINT64_MAX;
+   t = floor( t );
+   return t;
 }
 
 bool ZoomInfo::ZoomInAvailable() const
