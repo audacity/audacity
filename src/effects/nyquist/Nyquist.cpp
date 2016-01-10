@@ -40,6 +40,7 @@ effects from this one class.
 #include <wx/txtstrm.h>
 #include <wx/valgen.h>
 #include <wx/wfstream.h>
+#include <wx/numformatter.h>
 
 #include "../../AudacityApp.h"
 #include "../../FileNames.h"
@@ -482,6 +483,8 @@ bool NyquistEffect::Process()
 
       mProps += wxString::Format(wxT("(putprop '*AUDACITY* (list %d %d %d) 'VERSION)\n"), AUDACITY_VERSION, AUDACITY_RELEASE, AUDACITY_REVISION);
 
+      mProps += wxString::Format(wxT("(setf *DECIMAL-SEPARATOR* #\\%c)\n"), wxNumberFormatter::GetDecimalSeparator());
+
       mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* \"%s\" 'BASE)\n"), EscapeString(FileNames::BaseDir()).c_str());
       mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* \"%s\" 'DATA)\n"), EscapeString(FileNames::DataDir()).c_str());
       mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* \"%s\" 'HELP)\n"), EscapeString(FileNames::HtmlHelpDir().RemoveLast()).c_str());
@@ -868,10 +871,28 @@ bool NyquistEffect::ProcessOne()
       // Note: "View" property may change when Audacity's choice of track views has stabilized.
       cmd += wxString::Format(wxT("(putprop '*TRACK* %s 'VIEW)\n"), view.c_str());
       cmd += wxString::Format(wxT("(putprop '*TRACK* %d 'CHANNELS)\n"), mCurNumChannels);
+
+      double startTime = 0.0;
+      double endTime = 0.0;
+
+      if (mCurTrack[0]->GetLinked()) {
+         startTime = std::min<double>(mCurTrack[0]->GetStartTime(), mCurTrack[0]->GetLink()->GetStartTime());
+      }
+      else {
+         startTime = mCurTrack[0]->GetStartTime();
+      }
+
+      if (mCurTrack[0]->GetLinked()) {
+         endTime = std::max<double>(mCurTrack[0]->GetEndTime(), mCurTrack[0]->GetLink()->GetEndTime());
+      }
+      else {
+         endTime = mCurTrack[0]->GetEndTime();
+      }
+
       cmd += wxString::Format(wxT("(putprop '*TRACK* (float %s) 'START-TIME)\n"),
-                              Internat::ToString(mCurTrack[0]->GetStartTime()).c_str());
+                              Internat::ToString(startTime).c_str());
       cmd += wxString::Format(wxT("(putprop '*TRACK* (float %s) 'END-TIME)\n"),
-                              Internat::ToString(mCurTrack[0]->GetEndTime()).c_str());
+                              Internat::ToString(endTime).c_str());
       cmd += wxString::Format(wxT("(putprop '*TRACK* (float %s) 'GAIN)\n"),
                               Internat::ToString(mCurTrack[0]->GetGain()).c_str());
       cmd += wxString::Format(wxT("(putprop '*TRACK* (float %s) 'PAN)\n"),

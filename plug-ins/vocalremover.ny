@@ -22,8 +22,8 @@
 
 ;control action "Remove vocals or view Help" choice "Remove vocals,View Help" 0
 ;control band-choice "Removal choice" choice "Simple (entire spectrum),Remove frequency band,Retain frequency band" 0
-;control low-range "Lower frequency band limit (Hz)" string " " "500"
-;control high-range "Upper frequency band limit (Hz)" string " " "2000"
+;control low-range "Frequency band from (Hz)" float-text "" 500 0 nil
+;control high-range "Frequency band to (Hz)" float-text "" 2000 0 nil
 
 
 ; Initialize globals
@@ -57,9 +57,6 @@ audio in a particular frequency range (such as low drums
 or bass), try 'Retain frequency band'. This only removes
 frequencies outside the limits, retaining the others."))
 
-(defun string-to-list (str)
-  (read (make-string-input-stream (format nil "(~a)" str))))
-
 
 ;;; ERROR CHECKING:
 
@@ -72,39 +69,21 @@ frequencies outside the limits, retaining the others."))
                       channels, use 'Make Stereo Track' on the Track~%~
                       Drop-Down Menu, then run Vocal Remover again.~%"))))
 
+(defmacro validate (Hz)
+;; Filters become unstable when very close to 0 Hz or
+;; Nyquist frequency, so disable.
+  `(if (or (< ,Hz 1)(> ,hz (- (/ *sound-srate* 2) 1)))
+       (setf ,Hz nil)))
+
 ;;; Check that frequency range is valid
 (defun check-range ()
-  (setq low-range (first (string-to-list low-range)))
-  (setq high-range (first (string-to-list high-range)))
-  (if (or (not (numberp low-range))
-          (not (numberp high-range))
-          (< low-range 0)
-          (> low-range 20000)
-          (< high-range 0)
-          (> high-range 20000))
-      (progn
-        (if (= band-choice 1)
-            (setf band-type "remove")
-            (setf band-type "retain"))
-        (setf message (format nil
-                        "~a~%~
-                        Enter both a lower and an upper limit for the~%~
-                        frequency band you want to ~a.~%~
-                        You entered: \"~a\"   \"~a\"~%~%~
-                        Both values must be between 0 and 20000."
-                        message
-                        band-type
-                        low-range
-                        high-range)))
-      ;; Else ensure that high-range > low-range.
-      (let ((temp low-range))
-        (when (> low-range high-range)
-          (setq low-range high-range)
-          (setq high-range temp))))
-  ;; Range values must cannot be higher than Nyquist frequency.
-  (setq low-range (min low-range (/ *sound-srate* 2)))
-  (setq high-range (min high-range (/ *sound-srate* 2))))
-      
+  ;; Ensure min < max
+  (when (< high-range low-range)
+    (let ((temp low-range))
+      (setf low-range high-range)
+      (setf high-range temp)))
+  (validate low-range)
+  (validate high-range))
 
 (defun show-message ()
   ;; output to both message box and to debug window
@@ -118,13 +97,27 @@ frequencies outside the limits, retaining the others."))
 ;;; DSP FUNCTIONS:
 
 (defun bandpass (sig low high)
-  (lowpass8
-    (highpass8 sig low)
-    high))
+  (cond
+    ((and low high) ;bandpass
+      (lowpass8
+        (highpass8 sig low)
+        high))
+    (low (highpass8 sig low))
+    (high (lowpass8 sig high))
+    (t sig)))
 
 (defun bandstop (sig low high)
-  (sum (lowpass8 sig low)
-       (highpass8 sig high)))
+  (if (< (/ (- high low) low) 0.1)
+      (format t "Warning:~%~
+              Selected band-stop filter is~%~
+              ~a Hz to ~a Hz.~%~
+              A very narrow stop-band filter may have~%~
+              unexpected results.~%~%"
+              low high))
+  (let ((low-sig (if low (lowpass8 sig low)(s-rest 1))))
+    (sum
+      low-sig
+      (if high (highpass8 (diff sig low-sig) high)(s-rest 1)))))
 
 (defun CentrePanRemove ()
   (cond
