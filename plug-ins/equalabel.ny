@@ -15,75 +15,65 @@
 ;; This version by Steve Daulton (http://easyspacepro.com) 2016
 
 ;control mode "Use 'Number of labels' OR 'Label interval'" choice "Number of Labels,Label Interval" 0
-;control number "Number of labels" int-text "" 10 1 1000
-;control interval "Label interval (seconds)" float-text "" 60 0.001 1000
+;control totalnum "Number of labels" int-text "" 10 1 1000
+;control interval "Label interval (seconds)" float-text "" 60 0.001 3600
 ;control adjust "Adjust label interval to fit length" choice "No,Yes" 0
 ;control labeltext "Label text" string "" "Label" ""
 ;control zeros "Minimum number of digits in label" choice "None - text only,1 (before label),2 (before label),3 (before label),1 (after label),2 (after label),3 (after label)" 2
-;control labelnum "Begin numbering from" int-text "" 1 0 nil
+;control firstnum "Begin numbering from" int-text "" 1 0 nil
 
 
 (defun make-labels ()
-  (when (and (= mode 1)(= adjust 1)) ;adjust interval to fit
-      (setf interval (get-interval)))
-  (validate)
-  (let ((labels ()))
-    (cond
-      ((= mode 0) ;number of labels
-        (setf interval (/ (get-duration 1) number))
-        (do* ((i 0 (1+ i))
-              (labelnum labelnum (1+ labelnum)))
-             ((= i number))
-          (push (make-label (* i interval) labelnum) labels))
-        ;print what we've done to debug window
-        (if (= number 1)
-            (format t "1 label requested.")
-            (format t "~a labels at intervals of ~a seconds."
-              number interval)))
-      (t
-        (setf counter 0)
-        (do* ((i 0 (1+ i))
-              (labelnum labelnum (1+ labelnum))
-              (time 0 (* i interval)))
-             ((>= (round-to-sample time) (get-duration 1)))
-          (incf counter)
-          (push (make-label time labelnum) labels))
-        ;print what we've done to debug window
-        (if (and (= adjust 0)(/= (* counter interval)(get-duration 1)))
-            (if (= counter 1)
-                (format t "1 label requested.")
-                (format t "~a labels at regular intervals of ~a seconds.~%~
-                  Final label at ~a seconds from end of selection."
-                  counter
-                  interval
-                  (- (get-duration 1) (* (1- counter) interval))))
-            (format t "~a labels at regular intervals of ~a seconds."
-              counter interval))))
-    ;return labels
-    labels))
+"Generate labels at regular intervals"
+  (setf labels ())
+  ;; Get parameters
+  (case mode
+    (0  ;Number of Labels
+        (setf interval (/ (get-duration 1) totalnum)))
+    (1  (setf totalnum (get-interval-count))
+        (when (= adjust 1)
+          (setf interval (/ (get-duration 1) totalnum)))
+        (check-number-of-labels)))
+  ;; Loop for required number of labels
+  (do* ((count 0 (1+ count))
+        (time 0 (* count interval)))
+       ((= count totalnum) labels)
+    (push (make-one-label time (+ firstnum count)) labels)))
 
-(defun validate ()
-  (when (= mode 1)  ;Label interval
-    (when (> (get-duration 1) (round-to-sample (* 1000 interval)))
-      (throw 'err
-        (format nil "Too many labels.~%~%~
-          Selection length is ~a seconds and~%~
-          Label interval is ~a seconds~%~
-          giving a total of ~a labels.~%~
-          Maximum number of labels from this effect is 1000.~%~
-          Please use a shorter selection, or a longer Label interval."
-          (trim-trailing-zeros (get-duration 1))
-          (trim-trailing-zeros interval)
-          (if (= adjust 1)
-              (round (/ (get-duration 1) interval))
-              (1+ (round (/ (get-duration 1) interval)))))))))
+(defun check-number-of-labels ()
+"Throw error if excessive number of labels ('Interval' mode only)"
+  (when (> totalnum 1000)
+    (throw 'err
+      (format nil "Too many labels.~%~%~
+        Selection length is ~a seconds and~%~
+        Label interval is ~a seconds~%~
+        giving a total of ~a labels.~%~
+        Maximum number of labels from this effect is 1000.~%~
+        Please use a shorter selection, or a longer Label interval."
+        (formatgg (get-duration 1))
+        (formatgg interval)
+        (if (= adjust 1)
+            (round (/ (get-duration 1) interval))
+            (1+ (round (/ (get-duration 1) interval))))))))
 
-(defun round-to-sample (time)
-"Round time in seconds to nearest sample period."
-  (let ((samples (round (* time *sound-srate*))))
-    (/ samples *sound-srate*)))
+(defun get-interval-count ()
+"Number of labels when interval is specified"
+  (case adjust
+    ;; Interval is user input value
+    (0  (let ((n (truncate (/ (get-duration 1) interval))))
+          (if (< (* n interval)(get-duration 1))
+              (1+ n)
+              n)))
+    ;; Adjust interval to fit length
+    (1  (let* ((min-num (truncate (/ (get-duration 1) interval)))
+               (max-num (1+ min-num)))
+          (if (and (> min-num 0)
+                   (< (abs (- interval (/ (get-duration 1) min-num)))
+                      (abs (- interval (/ (get-duration 1) max-num)))))
+              min-num
+              max-num)))))
 
-(defun make-label (time num)
+(defun make-one-label (time num)
 "Make a single label"
   (let* ((num-text (format nil "~a" num))
          (non-zero-digits (length num-text)))
@@ -96,26 +86,16 @@
       (setf text (format nil "~a~a" labeltext num-text)))
     (list time text)))
 
-(defun get-interval ()
-"Get adjusted interval to fit duration"
-  (let* ((min-num (truncate (/ (get-duration 1) interval)))
-         (max-num (1+ min-num)))
-    (if (and (> min-num 0)
-             (< (abs (- interval (/ (get-duration 1) min-num)))
-                (abs (- interval (/ (get-duration 1) max-num)))))
-        (/ (get-duration 1) min-num)
-        (/ (get-duration 1) max-num))))
-
 (defun lasttrackp ()
 "true when processing the final selected track"
   (let ((index (get '*track* 'index))
         (num (length (get '*selection* 'tracks))))
     (= index num)))
 
-(defun trim-trailing-zeros (num)
-  ;; sometimes need more precission than "%g".
+(defun formatgg (num)
+"Similar to float-format %g but more decimal places"
   (cond
-   ((/= num (truncate num)) ; not integer
+    ((/= num (truncate num)) ; not integer
       (setf *float-format* "%.5f")
       (let ((numtxt (format nil "~a" num)))
         (do* ((i (1- (length numtxt)) (1- i))
@@ -130,9 +110,8 @@
 (setf num-before-text (<= zeros 3))
 (setf zeros (1+ (rem (1- zeros) 3)))
 
-;; Analyze plug-ins may return text message per track
-;; but we only want error messages once, and we only want
-;; one set of labels.
+;; Analyze plug-ins may return text message per track but
+;; we only want error messages once, and only one set of labels.
 (if (lasttrackp)
     (catch 'err (make-labels))
     nil)
