@@ -1103,7 +1103,10 @@ void AudacityProject::UpdatePrefsVariables()
    gPrefs->Read(wxT("/GUI/Help"), &mHelpPref, wxT("InBrowser") );
    gPrefs->Read(wxT("/GUI/SelectAllOnNone"), &mSelectAllOnNone, true);
    gPrefs->Read(wxT("/GUI/ShowSplashScreen"), &mShowSplashScreen, true);
-   gPrefs->Read(wxT("/GUI/Solo"), &mSoloPref, wxT("Standard") );
+   gPrefs->Read(wxT("/GUI/Solo"), &mSoloPref, wxT("Simple"));
+   // Update the old default to the new default.
+   if (mSoloPref == wxT("Standard"))
+      mSoloPref = wxT("Simple");
    gPrefs->Read(wxT("/GUI/TracksFitVerticallyZoomed"), &mTracksFitVerticallyZoomed, false);
    //   gPrefs->Read(wxT("/GUI/UpdateSpectrogram"), &mViewInfo.bUpdateSpectrogram, true);
 

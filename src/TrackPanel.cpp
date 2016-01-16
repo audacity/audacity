@@ -863,7 +863,7 @@ void TrackPanel::UpdatePrefs()
       true);
    gPrefs->Read(wxT("/GUI/CircularTrackNavigation"), &mCircularTrackNavigation,
       false);
-   gPrefs->Read(wxT("/GUI/Solo"), &mSoloPref, wxT("Standard") );
+   gPrefs->Read(wxT("/GUI/Solo"), &mSoloPref, wxT("Simple"));
 
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
    bool temp = WaveTrack::mMonoAsVirtualStereo;

@@ -49,12 +49,12 @@ TracksPrefs::~TracksPrefs()
 
 void TracksPrefs::Populate()
 {
-   mSoloCodes.Add(wxT("Standard"));
    mSoloCodes.Add(wxT("Simple"));
+   mSoloCodes.Add(wxT("Multi"));
    mSoloCodes.Add(wxT("None"));
 
-   mSoloChoices.Add(_("Standard"));
    mSoloChoices.Add(_("Simple"));
+   mSoloChoices.Add(_("Multi-track"));
    mSoloChoices.Add(_("None"));
 
 
