@@ -103,7 +103,7 @@ WaveTrack::WaveTrack(DirManager *projDirManager, sampleFormat format, double rat
    mRate = (int) rate;
    mGain = 1.0;
    mPan = 0.0;
-   SetDefaultName(_("Audio Track"));
+   SetDefaultName(gPrefs->Read(wxT("/GUI/TrackNames/DefaultTrackName"), _("Audio Track")));
    SetName(GetDefaultName());
    mDisplayMin = -1.0;
    mDisplayMax = 1.0;

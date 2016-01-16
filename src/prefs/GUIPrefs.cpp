@@ -146,9 +146,6 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
       S.TieCheckBox(_("&Beep on completion of longer activities"),
                     wxT("/GUI/BeepOnCompletion"),
                     false);
-      S.TieCheckBox(_("&Show track name in waveform display"),
-                    wxT("/GUI/ShowTrackNameInWaveform"),
-                    false);
       S.TieCheckBox(_("Re&tain labels if selection snaps to a label edge"),
                     wxT("/GUI/RetainLabels"),
                     false);

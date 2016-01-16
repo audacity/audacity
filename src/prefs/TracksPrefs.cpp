@@ -30,8 +30,6 @@
 
 #include "../Experimental.h"
 
-////////////////////////////////////////////////////////////////////////////////
-
 TracksPrefs::TracksPrefs(wxWindow * parent)
 :  PrefsPanel(parent, _("Tracks"))
 {
@@ -96,15 +94,23 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
 
       S.StartMultiColumn(2);
       {
-
-         S.TieChoice(_("Default &View Mode:"),
+         S.TieChoice(_("Default &view mode:"),
                      wxT("/GUI/DefaultViewModeNew"),
                      0,
                      mViewChoices,
                      mViewCodes);
          S.SetSizeHints(mViewChoices);
+
+         S.TieTextBox(_("Default audio track &name:"),
+                      wxT("/GUI/TrackNames/DefaultTrackName"),
+                      _("Audio Track"),
+                      30);
       }
       S.EndMultiColumn();
+
+      S.TieCheckBox(_("Sho&w track name in waveform display"),
+                  wxT("/GUI/ShowTrackNameInWaveform"),
+                  false);
    }
    S.EndStatic();
 

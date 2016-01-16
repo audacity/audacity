@@ -51,6 +51,7 @@
 #include <wx/timer.h>
 #endif
 #include <wx/tooltip.h>
+#include <wx/datetime.h>
 
 #include "TranscriptionToolBar.h"
 #include "MeterToolBar.h"
@@ -896,11 +897,64 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
          t1 = 1000000000.0;     // record for a long, long time (tens of years)
       }
       else {
+         bool recordingNameCustom, useTrackNumber, useDateStamp, useTimeStamp;
+         wxString defaultTrackName, defaultRecordingTrackName;
+         int numTracks = 0;
+
+         for (Track *tt = it.First(); tt; tt = it.Next()) {
+            if (tt->GetKind() == Track::Wave && !tt->GetLinked())
+               numTracks++;
+         }
+         numTracks++;
+         
          recordingChannels = gPrefs->Read(wxT("/AudioIO/RecordChannels"), 2);
+
+         gPrefs->Read(wxT("/GUI/TrackNames/RecordingNameCustom"), &recordingNameCustom, false);
+         gPrefs->Read(wxT("/GUI/TrackNames/TrackNumber"), &useTrackNumber, false);
+         gPrefs->Read(wxT("/GUI/TrackNames/DateStamp"), &useDateStamp, false);
+         gPrefs->Read(wxT("/GUI/TrackNames/TimeStamp"), &useTimeStamp, false);
+         /* i18n-hint: The default name for an audio track. */
+         gPrefs->Read(wxT("/GUI/TrackNames/DefaultTrackName"),&defaultTrackName, _("Audio Track"));
+         gPrefs->Read(wxT("/GUI/TrackNames/RecodingTrackName"), &defaultRecordingTrackName, defaultTrackName);
+
+         wxString baseTrackName = recordingNameCustom? defaultRecordingTrackName : defaultTrackName;
+
          for (int c = 0; c < recordingChannels; c++) {
             WaveTrack *newTrack = p->GetTrackFactory()->NewWaveTrack();
 
             newTrack->SetOffset(t0);
+            wxString nameSuffix = wxString(wxT(""));
+
+            if (useTrackNumber) {
+               nameSuffix += wxString::Format(wxT("%d"), numTracks + c);
+            }
+
+            if (useDateStamp) {
+               if (!nameSuffix.IsEmpty()) {
+                  nameSuffix += wxT("_");
+               }
+               nameSuffix += wxDateTime::Now().FormatISODate();
+            }
+
+            if (useTimeStamp) {
+               if (!nameSuffix.IsEmpty()) {
+                  nameSuffix += wxT("_");
+               }
+               nameSuffix += wxDateTime::Now().FormatISOTime();
+            }
+
+            // ISO standard would be nice, but ":" is unsafe for file name.
+            nameSuffix.Replace(wxT(":"), wxT("-"));
+
+            if (baseTrackName.IsEmpty()) {
+               newTrack->SetName(nameSuffix);
+            }
+            else if (nameSuffix.IsEmpty()) {
+               newTrack->SetName(baseTrackName);
+            }
+            else {
+               newTrack->SetName(baseTrackName + wxT("_") + nameSuffix);
+            }
 
             if (recordingChannels > 2)
               newTrack->SetMinimized(true);
