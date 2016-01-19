@@ -57,6 +57,7 @@ for drawing different aspects of the label and its text box.
 #include "AColor.h"
 #include "Project.h"
 #include "TrackArtist.h"
+#include "TrackPanel.h"
 #include "commands/CommandManager.h"
 
 #include "effects/TimeWarper.h"
@@ -98,6 +99,7 @@ LabelTrack::LabelTrack(DirManager * projDirManager):
    mSelIndex(-1),
    mMouseOverLabelLeft(-1),
    mMouseOverLabelRight(-1),
+   mpRestoreFocus(0),
    mClipLen(0.0),
    mIsAdjustingLabel(false)
 {
@@ -1839,6 +1841,10 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
       case WXK_NUMPAD_ENTER:
 
       case WXK_ESCAPE:
+         if (mpRestoreFocus) {
+            GetActiveProject()->GetTrackPanel()->SetFocusedTrack(mpRestoreFocus);
+            mpRestoreFocus = 0;
+         }
          mSelIndex = -1;
          break;
 
@@ -2641,7 +2647,7 @@ int LabelTrack::GetLabelIndex(double t, double t1)
 }
 
 int LabelTrack::AddLabel(const SelectedRegion &selectedRegion,
-                         const wxString &title)
+                         const wxString &title, Track *pRestoreFocus)
 {
    LabelStruct *l = new LabelStruct(selectedRegion, title);
    mCurrentCursorPos = title.length();
@@ -2667,6 +2673,8 @@ int LabelTrack::AddLabel(const SelectedRegion &selectedRegion,
    //      If the label is added during actions like import, then the
    //      mDrawCursor flag will be reset once the action is complete.
    mDrawCursor = true;
+
+   mpRestoreFocus = pRestoreFocus;
 
    return pos;
 }

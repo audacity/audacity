@@ -6306,12 +6306,13 @@ void AudacityProject::OnRescanDevices()
    DeviceManager::Instance()->Rescan();
 }
 
-int AudacityProject::DoAddLabel(const SelectedRegion &region)
+int AudacityProject::DoAddLabel(const SelectedRegion &region, bool preserveFocus)
 {
    LabelTrack *lt = NULL;
 
    // If the focused track is a label track, use that
-   Track *t = mTrackPanel->GetFocusedTrack();
+   Track *const pFocusedTrack = mTrackPanel->GetFocusedTrack();
+   Track *t = pFocusedTrack;
    if (t && t->GetKind() == Track::Label) {
       lt = (LabelTrack *) t;
    }
@@ -6346,7 +6347,7 @@ int AudacityProject::DoAddLabel(const SelectedRegion &region)
 //   SelectNone();
    lt->SetSelected(true);
 
-   int index = lt->AddLabel(region);
+   int index = lt->AddLabel(region, wxString(), (preserveFocus ? pFocusedTrack : 0));
 
    PushState(_("Added label"), _("Label"));
 
@@ -6380,7 +6381,7 @@ void AudacityProject::OnAddLabelPlaying()
    if (GetAudioIOToken()>0 &&
        gAudioIO->IsStreamActive(GetAudioIOToken())) {
       double indicator = gAudioIO->GetStreamTime();
-      DoAddLabel(SelectedRegion(indicator, indicator));
+      DoAddLabel(SelectedRegion(indicator, indicator), true);
    }
 }
 

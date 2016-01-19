@@ -40,7 +40,7 @@ double NearestZeroCrossing(double t0);
 
 public:
 //Adds label and returns index of label in labeltrack.
-int DoAddLabel(const SelectedRegion& region);
+int DoAddLabel(const SelectedRegion& region, bool preserveFocus = false);
 
 private:
 
