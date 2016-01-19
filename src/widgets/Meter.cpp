@@ -245,6 +245,11 @@ Meter::Meter(AudacityProject *project,
    SetAccessible(new MeterAx(this));
 #endif
 
+   // Do this BEFORE UpdatePrefs()!
+   mRuler.SetFonts(GetFont(), GetFont(), GetFont());
+   mRuler.SetFlip(mStyle != MixerTrackCluster);
+   mRuler.SetLabelEdges(true);
+
    UpdatePrefs();
 
    wxColour backgroundColour =
@@ -309,10 +314,6 @@ Meter::Meter(AudacityProject *project,
          mIcon = new wxBitmap(SpeakerMenuNarrow_xpm);
       }
    }
-
-   mRuler.SetFonts(GetFont(), GetFont(), GetFont());
-   mRuler.SetFlip(true);
-   mRuler.SetLabelEdges(true);
 
    mTimer.SetOwner(this, OnMeterUpdateID);
    // TODO: Yikes.  Hard coded sample rate.

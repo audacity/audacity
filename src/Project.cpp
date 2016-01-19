@@ -1127,7 +1127,7 @@ void AudacityProject::UpdatePrefs()
       mTrackPanel->UpdatePrefs();
    }
    if (mMixerBoard)
-      mMixerBoard->ResizeTrackClusters(); // in case prefs "/GUI/Solo" changed
+      mMixerBoard->UpdatePrefs();
 
    if (mToolManager) {
       mToolManager->UpdatePrefs();

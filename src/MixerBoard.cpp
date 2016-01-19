@@ -342,6 +342,12 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
    #endif
 }
 
+void MixerTrackCluster::UpdatePrefs()
+{
+   mMeter->UpdatePrefs(); // in case meter range has changed
+   HandleResize(); // in case prefs "/GUI/Solo" changed
+}
+
 void MixerTrackCluster::HandleResize() // For wxSizeEvents, update gain slider and meter.
 {
    wxSize scrolledWindowClientSize = this->GetParent()->GetClientSize();
@@ -1034,6 +1040,12 @@ MixerBoard::~MixerBoard()
       wxCommandEventHandler(MixerBoard::OnTimer),
       NULL,
       this);
+}
+
+void MixerBoard::UpdatePrefs()
+{
+   for (unsigned int nClusterIndex = 0; nClusterIndex < mMixerTrackClusters.GetCount(); nClusterIndex++)
+      mMixerTrackClusters[nClusterIndex]->UpdatePrefs();
 }
 
 // Reassign mixer input strips (MixerTrackClusters) to Track Clusters
