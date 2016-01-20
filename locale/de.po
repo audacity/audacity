@@ -12308,11 +12308,11 @@ msgstr "Bei kürzeren Aktualisierungsintervallen reagiert die Aussteuerungsanzei
 
 #: src/widgets/Meter.cpp:1935
 msgid "Meter refresh rate per second [1-100]: "
-msgstr "Aktualisierungsintervall in Sekunden [1-100]: "
+msgstr "Aktualisierungen pro Sekunde [1-100]: "
 
 #: src/widgets/Meter.cpp:1938
 msgid "Meter refresh rate per second [1-100]"
-msgstr "Aktualisierungsintervall in Sekunden [1-100]"
+msgstr "Aktualisierungen pro Sekunde [1-100]"
 
 #: src/widgets/Meter.cpp:1949
 msgid "Meter Style"
