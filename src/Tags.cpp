@@ -436,21 +436,10 @@ void Tags::SetTag(const wxString & name, const wxString & value)
 
    // Didn't find the tag
    if (iter == mXref.end()) {
-      // Intention was to delete so no need to add it
-      if (value.IsEmpty()) {
-         return;
-      }
 
       // Add a new tag
       mXref[key] = name;
       mMap[name] = value;
-      return;
-   }
-
-   // Intention was to delete
-   if (value.IsEmpty()) {
-      mMap.erase(iter->second);
-      mXref.erase(iter);
       return;
    }
 
@@ -876,6 +865,7 @@ bool TagsEditor::TransferDataToWindow()
    size_t i;
    wxString n;
    wxString v;
+   TagMap popTagMap;
 
    // Disable redrawing until we're done
    mGrid->BeginBatch();
@@ -901,16 +891,17 @@ bool TagsEditor::TransferDataToWindow()
          mGrid->SetReadOnly(i, 1);
       }
 
-      mLocal.SetTag(labelmap[i].name, wxEmptyString);
+      popTagMap[ labelmap[i].name ] = mGrid->GetCellValue(i, 1);
    }
 
    // Populate the rest
    for (bool cont = mLocal.GetFirst(n, v); cont; cont = mLocal.GetNext(n, v)) {
-      mGrid->AppendRows();
-
-      mGrid->SetCellValue(i, 0, n);
-      mGrid->SetCellValue(i, 1, v);
-      i++;
+      if ( popTagMap.find(n) == popTagMap.end() ) {
+         mGrid->AppendRows();
+         mGrid->SetCellValue(i, 0, n);
+         mGrid->SetCellValue(i, 1, v);
+	 i++;
+      }
    }
 
    // Add an extra one to help with initial sizing and to show it can be done
@@ -921,6 +912,8 @@ bool TagsEditor::TransferDataToWindow()
 
    // Set the editors
    SetEditors();
+   Layout();
+   Fit();
 
    return true;
 }
