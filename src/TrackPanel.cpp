@@ -775,10 +775,14 @@ void TrackPanel::BuildCommonDropMenuItems(wxMenu * menu)
 {
    menu->Append(OnSetNameID, _("&Name..."));
    menu->AppendSeparator();
-   menu->Append(OnMoveUpID, _("Move Track &Up"));
-   menu->Append(OnMoveDownID, _("Move Track &Down"));
-   menu->Append(OnMoveTopID, _("Move Track to &Top"));
-   menu->Append(OnMoveBottomID, _("Move Track to &Bottom"));
+   menu->Append(OnMoveUpID, _("Move Track &Up") + wxT("\t") + 
+                           (GetProject()->GetCommandManager()->GetKeyFromName(wxT("TrackMoveUp"))));
+   menu->Append(OnMoveDownID, _("Move Track &Down") + wxT("\t") + 
+                           (GetProject()->GetCommandManager()->GetKeyFromName(wxT("TrackMoveDown"))));
+   menu->Append(OnMoveTopID, _("Move Track to &Top") + wxT("\t") + 
+                           (GetProject()->GetCommandManager()->GetKeyFromName(wxT("TrackMoveTop"))));
+   menu->Append(OnMoveBottomID, _("Move Track to &Bottom") + wxT("\t") + 
+                           (GetProject()->GetCommandManager()->GetKeyFromName(wxT("TrackMoveBottom"))));
    menu->AppendSeparator();
 
 }
