@@ -435,10 +435,13 @@ bool EffectChangeSpeed::TransferDataToWindow()
 
 bool EffectChangeSpeed::TransferDataFromWindow()
 {
+   // mUIParent->TransferDataFromWindow() loses some precision, so save and restore it.
+   double exactPercent = m_PercentChange;
    if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
    {
       return false;
    }
+   m_PercentChange = exactPercent;
 
    SetPrivateConfig(GetCurrentSettingsGroup(), wxT("TimeFormat"), mFormat);
    SetPrivateConfig(GetCurrentSettingsGroup(), wxT("VinylChoice"), mFromVinyl);
