@@ -24,6 +24,8 @@ greater use in future.
 #include "../Audacity.h"
 #include "Effect.h"
 
+#include <algorithm>
+
 #include <wx/defs.h>
 #include <wx/hashmap.h>
 #include <wx/msgdlg.h>

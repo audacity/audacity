@@ -18,6 +18,8 @@
 #include "../Audacity.h"
 #include "TruncSilence.h"
 
+#include <algorithm>
+
 #include <limits>
 #include <math.h>
 

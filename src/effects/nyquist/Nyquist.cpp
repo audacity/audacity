@@ -26,6 +26,8 @@ effects from this one class.
 
 #include "../../Audacity.h"
 
+#include <algorithm>
+
 #include <math.h>
 #include <locale.h>
 
