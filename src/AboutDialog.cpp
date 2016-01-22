@@ -97,6 +97,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Mitch Golden"), roleContributor);
    AddCredit(wxT("Brian Gunlogson"), roleContributor);
    AddCredit(wxT("Andrew Hallendorff"), roleContributor);
+   AddCredit(wxT("Robert H\x00e4nggi"), roleContributor);
    AddCredit(wxT("Daniel Horgan"), roleContributor);
    AddCredit(wxT("David Hostetler"), roleContributor);
    AddCredit(wxT("Steve Jolly"), roleContributor);
