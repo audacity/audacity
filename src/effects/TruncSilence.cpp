@@ -23,6 +23,8 @@
 #include <limits>
 #include <math.h>
 
+#include <wx/checkbox.h>
+#include <wx/choice.h>
 #include <wx/valgen.h>
 
 #include "../Prefs.h"
@@ -57,6 +59,7 @@ Param( ActIndex,  int,     XO("Action"),     kTruncate,  0,       kNumActions - 
 Param( Minimum,   double,  XO("Minimum"),    0.5,        0.001,   10000.0,                   1  );
 Param( Truncate,  double,  XO("Truncate"),   0.5,        0.0,     10000.0,                   1  );
 Param( Compress,  double,  XO("Compress"),   50.0,       0.0,     99.9,                      1  );
+Param( Independent, bool,  XO("Independent"), false,     false,   true,                      1  );
 
 static const sampleCount DEF_BlendFrameCount = 100;
 
@@ -84,6 +87,7 @@ EffectTruncSilence::EffectTruncSilence()
    mSilenceCompressPercent = DEF_Compress;
    mTruncDbChoiceIndex = DEF_DbIndex;
    mActionIndex = DEF_ActIndex;
+   mbIndependent = DEF_Independent;
 
    SetLinearEffectFlag(false);
 
@@ -130,6 +134,7 @@ bool EffectTruncSilence::GetAutomationParameters(EffectAutomationParameters & pa
    parms.Write(KEY_Minimum, mInitialAllowedSilence);
    parms.Write(KEY_Truncate, mTruncLongestAllowedSilence);
    parms.Write(KEY_Compress, mSilenceCompressPercent);
+   parms.Write(KEY_Independent, mbIndependent);
    
    return true;
 }
@@ -145,12 +150,14 @@ bool EffectTruncSilence::SetAutomationParameters(EffectAutomationParameters & pa
    ReadAndVerifyDouble(Compress);
    ReadAndVerifyEnum(DbIndex, mDbChoices);
    ReadAndVerifyEnum(ActIndex, actions);
+   ReadAndVerifyBool(Independent);
 
    mInitialAllowedSilence = Minimum;
    mTruncLongestAllowedSilence = Truncate;
    mSilenceCompressPercent = Compress;
    mTruncDbChoiceIndex = DbIndex;
    mActionIndex = ActIndex;
+   mbIndependent = Independent;
 
    // Readjust for 2.1.0 or before
    if (mActionIndex >= kNumActions)
@@ -163,7 +170,7 @@ bool EffectTruncSilence::SetAutomationParameters(EffectAutomationParameters & pa
 
 // Effect implementation
 
-double EffectTruncSilence::CalcPreviewInputLength(double previewLength)
+double EffectTruncSilence::CalcPreviewInputLength(double /* previewLength */)
 {
    double inputLength = mT1 - mT0;
    double minInputLength = inputLength;
@@ -182,7 +189,7 @@ double EffectTruncSilence::CalcPreviewInputLength(double previewLength)
    int whichTrack = 0;
 
    for (Track *t = iter.First(); t; t = iter.Next()) {
-      WaveTrack *wt = (WaveTrack *)t;
+      WaveTrack *const wt = static_cast<WaveTrack *>(t);
 
       RegionList trackSilences;
       trackSilences.DeleteContents(true);
@@ -250,6 +257,83 @@ bool EffectTruncSilence::Startup()
 
 bool EffectTruncSilence::Process()
 {
+   const bool success =
+      mbIndependent
+      ? ProcessIndependently()
+      : ProcessAll();
+
+   if (success)
+      ReplaceProcessedTracks(true);
+
+   return success;
+}
+
+bool EffectTruncSilence::ProcessIndependently()
+{
+   unsigned nGroups = 0;
+
+   // Check if it's permissible
+   {
+      SelectedTrackListOfKindIterator iter(Track::Wave, mTracks);
+      for (Track *track = iter.First(); track;
+         track = iter.Next(true) // skip linked tracks
+      ) {
+         Track *const link = track->GetLink();
+         SyncLockedTracksIterator syncIter(mTracks);
+         for (Track *track2 = syncIter.First(track); track2; track2 = syncIter.Next()) {
+            if (track2->GetKind() == Track::Wave &&
+               !(track2 == track || track2 == link) &&
+               track2->GetSelected()) {
+               ::wxMessageBox(_("When truncating independently, there may only be one selected audio track in each sync-lock group."));
+               return false;
+            }
+         }
+
+         ++nGroups;
+      }
+   }
+
+   if (nGroups == 0)
+      // nothing to do
+      return true;
+
+   // Now do the work
+
+   // Copy tracks
+   CopyInputTracks(Track::All);
+   double newT1 = 0.0;
+
+   {
+      unsigned iGroup = 0;
+      SelectedTrackListOfKindIterator iter(Track::Wave, mOutputTracks);
+      for (Track *track = iter.First(); track;
+         ++iGroup, track = iter.Next(true) // skip linked tracks
+      ) {
+         Track *const link = track->GetLink();
+         Track *const last = link ? link : track;
+
+         RegionList silences;
+         silences.DeleteContents(true);
+
+         if (!FindSilences(silences, track, last))
+            return false;
+         // Treat tracks in the sync lock group only
+         SyncLockedTracksIterator syncIter(mOutputTracks);
+         Track *const syncFirst = syncIter.First(track);
+         double totalCutLen = 0.0;
+         if (!DoRemoval(silences, iGroup, nGroups, syncFirst, syncIter.Last(), totalCutLen))
+            return false;
+         newT1 = std::max(newT1, mT1 - totalCutLen);
+      }
+   }
+
+   mT1 = newT1;
+
+   return true;
+}
+
+bool EffectTruncSilence::ProcessAll()
+{
    // Copy tracks
    CopyInputTracks(Track::All);
 
@@ -258,6 +342,23 @@ bool EffectTruncSilence::Process()
    RegionList silences;
    silences.DeleteContents(true);
 
+   SelectedTrackListOfKindIterator iter(Track::Wave, mTracks);
+   if (FindSilences(silences, iter.First(), iter.Last())) {
+      TrackListIterator iterOut(mOutputTracks);
+      double totalCutLen = 0.0;
+      Track *const first = iterOut.First();
+      if (DoRemoval(silences, 0, 1, first, iterOut.Last(), totalCutLen)) {
+         mT1 -= totalCutLen;
+         return true;
+      }
+   }
+
+   return false;
+}
+
+bool EffectTruncSilence::FindSilences
+   (RegionList &silences, Track *firstTrack, Track *lastTrack)
+{
    // Start with the whole selection silent
    Region *sel = new Region;
    sel->start = mT0;
@@ -267,13 +368,15 @@ bool EffectTruncSilence::Process()
    // Remove non-silent regions in each track
    SelectedTrackListOfKindIterator iter(Track::Wave, mTracks);
    int whichTrack = 0;
-   for (Track *t = iter.First(); t; t = iter.Next())
+   bool lastSeen = false;
+   for (Track *t = iter.StartWith(firstTrack); !lastSeen && t; t = iter.Next())
    {
-      WaveTrack *wt = (WaveTrack *)t;
+      lastSeen = (t == lastTrack);
+      WaveTrack *const wt = static_cast<WaveTrack *>(t);
 
       // Smallest silent region to detect in frames
       sampleCount minSilenceFrames =
-            sampleCount(wxMax( mInitialAllowedSilence, DEF_MinTruncMs) * wt->GetRate());
+         sampleCount(std::max(mInitialAllowedSilence, DEF_MinTruncMs) * wt->GetRate());
 
       //
       // Scan the track for silences
@@ -308,6 +411,13 @@ bool EffectTruncSilence::Process()
       whichTrack++;
    }
 
+   return true;
+}
+
+bool EffectTruncSilence::DoRemoval
+(const RegionList &silences, unsigned iGroup, unsigned nGroups, Track *firstTrack, Track *lastTrack,
+ double &totalCutLen)
+{
    //
    // Now remove the silent regions from all selected / sync-lock selected tracks.
    //
@@ -315,14 +425,15 @@ bool EffectTruncSilence::Process()
    // Loop over detected regions in reverse (so cuts don't change time values
    // down the line)
    int whichReg = 0;
-   RegionList::reverse_iterator rit;
-   double totalCutLen = 0.0;  // For cutting selection at the end
+   RegionList::const_reverse_iterator rit;
    for (rit = silences.rbegin(); rit != silences.rend(); ++rit)
    {
       Region *r = *rit;
 
       // Progress dialog and cancellation. Do additional cleanup before return.
-      if (TotalProgress(detectFrac + (1 - detectFrac) * whichReg / (double)silences.size()))
+      const double frac = detectFrac +
+         (1 - detectFrac) * (iGroup + whichReg / double(silences.size())) / nGroups;
+      if (TotalProgress(frac))
       {
          ReplaceProcessedTracks(false);
          return false;
@@ -340,14 +451,14 @@ bool EffectTruncSilence::Process()
       switch (mActionIndex)
       {
       case kTruncate:
-         outLength = wxMin(mTruncLongestAllowedSilence, inLength);
+         outLength = std::min(mTruncLongestAllowedSilence, inLength);
          break;
       case kCompress:
          outLength = mInitialAllowedSilence +
                         (inLength - mInitialAllowedSilence) * mSilenceCompressPercent / 100.0;
          break;
       default: // Not currently used.
-         outLength = wxMin(mInitialAllowedSilence +
+         outLength = std::min(mInitialAllowedSilence +
                               (inLength - mInitialAllowedSilence) * mSilenceCompressPercent / 100.0,
                            mTruncLongestAllowedSilence);
       }
@@ -356,22 +467,24 @@ bool EffectTruncSilence::Process()
       totalCutLen += cutLen;
 
       TrackListIterator iterOut(mOutputTracks);
-      for (Track *t = iterOut.First(); t; t = iterOut.Next())
+      bool lastSeen = false;
+      for (Track *t = iterOut.StartWith(firstTrack); t && !lastSeen; t = iterOut.Next())
       {
+         lastSeen = (t == lastTrack);
+         if (!(t->GetSelected() || t->IsSyncLockSelected()))
+            continue;
+
          // Don't waste time past the end of a track
          if (t->GetEndTime() < r->start)
-         {
             continue;
-         }
 
-         if (t->GetKind() == Track::Wave && (
-                  t->GetSelected() || t->IsSyncLockSelected()))
+         double cutStart = (r->start + r->end - cutLen) / 2;
+         double cutEnd = cutStart + cutLen;
+         if (t->GetKind() == Track::Wave)
          {
             // In WaveTracks, clear with a cross-fade
-            WaveTrack *wt = (WaveTrack *)t;
+            WaveTrack *const wt = static_cast<WaveTrack*>(t);
             sampleCount blendFrames = mBlendFrameCount;
-            double cutStart = (r->start + r->end - cutLen) / 2;
-            double cutEnd = cutStart + cutLen;
             // Round start/end times to frame boundaries
             cutStart = wt->LongSamplesToTime(wt->TimeToLongSamples(cutStart));
             cutEnd = wt->LongSamplesToTime(wt->TimeToLongSamples(cutEnd));
@@ -406,20 +519,12 @@ bool EffectTruncSilence::Process()
             delete [] buf1;
             delete [] buf2;
          }
-         else if (t->GetSelected() || t->IsSyncLockSelected())
-         {
+         else
             // Non-wave tracks: just do a sync-lock adjust
-            double cutStart = (r->start + r->end - cutLen) / 2;
-            double cutEnd = cutStart + cutLen;
             t->SyncLockAdjust(cutEnd, cutStart);
-         }
       }
       ++whichReg;
    }
-
-   mT1 -= totalCutLen;
-
-   ReplaceProcessedTracks(true);
 
    return true;
 }
@@ -434,7 +539,7 @@ bool EffectTruncSilence::Analyze(RegionList& silenceList,
                                  double* minInputLength /*= NULL*/)
 {
    // Smallest silent region to detect in frames
-   sampleCount minSilenceFrames = sampleCount(wxMax( mInitialAllowedSilence, DEF_MinTruncMs) * wt->GetRate());
+   sampleCount minSilenceFrames = sampleCount(std::max( mInitialAllowedSilence, DEF_MinTruncMs) * wt->GetRate());
 
    double truncDbSilenceThreshold = Enums::Db2Signal[mTruncDbChoiceIndex];
    sampleCount blockLen = wt->GetMaxBlockSize();
@@ -642,7 +747,14 @@ void EffectTruncSilence::PopulateOrExchange(ShuttleGui & S)
          S.AddUnits(wxT("percent"));
       }
       S.EndMultiColumn();
-   }
+
+      S.StartMultiColumn(2, wxALIGN_CENTER_HORIZONTAL);
+      {
+         mIndependent = S.AddCheckBox(_("Truncate tracks independently"),
+            mbIndependent ? wxT("true") : wxT("false"));
+      }
+   S.EndMultiColumn();
+}
    S.EndStatic();
 
    UpdateUI();
@@ -664,6 +776,8 @@ bool EffectTruncSilence::TransferDataFromWindow()
    {
       return false;
    }
+
+   mbIndependent = mIndependent->IsChecked();
 
    return true;
 }
@@ -807,6 +921,7 @@ void EffectTruncSilence::Intersect(RegionList &dest, const RegionList &src)
    }
 }
 
+/*
 void EffectTruncSilence::BlendFrames(float* buffer, int blendFrameCount, int leftIndex, int rightIndex)
 {
    float* bufOutput = &buffer[leftIndex];
@@ -822,6 +937,7 @@ void EffectTruncSilence::BlendFrames(float* buffer, int blendFrameCount, int lef
       afterFactor  += adjFactor;
    }
 }
+*/
 
 void EffectTruncSilence::UpdateUI()
 {

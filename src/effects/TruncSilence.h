@@ -18,15 +18,16 @@
 #define __AUDACITY_EFFECT_TRUNC_SILENCE__
 
 #include <wx/arrstr.h>
-#include <wx/choice.h>
 #include <wx/event.h>
 #include <wx/list.h>
 #include <wx/string.h>
-#include <wx/textctrl.h>
 
 #include "Effect.h"
 
 class ShuttleGui;
+class wxChoice;
+class wxTextCtrl;
+class wxCheckBox;
 
 #define TRUNCATESILENCE_PLUGIN_SYMBOL XO("Truncate Silence")
 
@@ -81,18 +82,28 @@ private:
    // EffectTruncSilence implementation
 
    //ToDo ... put BlendFrames in Effects, Project, or other class
-   void BlendFrames(float* buffer, int leftIndex, int rightIndex, int blendFrameCount);
+   // void BlendFrames(float* buffer, int leftIndex, int rightIndex, int blendFrameCount);
    void Intersect(RegionList &dest, const RegionList & src);
 
    void OnControlChange(wxCommandEvent & evt);
    void UpdateUI();
 
+   bool ProcessIndependently();
+   bool ProcessAll();
+   bool FindSilences
+      (RegionList &silences, Track *firstTrack, Track *lastTrack);
+   bool DoRemoval
+      (const RegionList &silences, unsigned iGroup, unsigned nGroups, Track *firstTrack, Track *lastTrack,
+       double &totalCutLen);
+
 private:
+
    int mTruncDbChoiceIndex;
    int mActionIndex;
    double mInitialAllowedSilence;
    double mTruncLongestAllowedSilence;
    double mSilenceCompressPercent;
+   bool mbIndependent;
 
    wxArrayString mDbChoices;
 
@@ -103,6 +114,7 @@ private:
    wxTextCtrl *mInitialAllowedSilenceT;
    wxTextCtrl *mTruncLongestAllowedSilenceT;
    wxTextCtrl *mSilenceCompressPercentT;
+   wxCheckBox *mIndependent;
 
    DECLARE_EVENT_TABLE();
 };
