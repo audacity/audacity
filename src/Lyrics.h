@@ -18,6 +18,8 @@
 #include <wx/panel.h>
 #include <wx/textctrl.h>
 
+class LabelTrack;
+
 
 #define LYRICS_DEFAULT_WIDTH 608
 #define LYRICS_DEFAULT_HEIGHT 280
@@ -73,7 +75,7 @@ class Lyrics : public wxPanel
    virtual ~Lyrics();
 
    void Clear();
-   void Add(double t, wxString syllable);
+   void AddLabels(const LabelTrack *pLT);
    void Finish(double finalT);
 
    int FindSyllable(long startChar); // Find the syllable whose char0 <= startChar <= char1.
@@ -103,6 +105,8 @@ class Lyrics : public wxPanel
    void HandleLayout();
 
 private:
+   void Add(double t, wxString syllable, wxString &highlightText);
+
    unsigned int GetDefaultFontSize() const; // Depends on mLyricsStyle. Call only after mLyricsStyle is set.
 
    void SetDrawnFont(wxDC *dc); // for kBouncingBallLyrics

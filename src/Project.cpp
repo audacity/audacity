@@ -4096,9 +4096,7 @@ void AudacityProject::UpdateLyrics()
 
    Lyrics* pLyricsPanel = mLyricsWindow->GetLyricsPanel();
    pLyricsPanel->Clear();
-   for (int i = 0; i < pLabelTrack->GetNumLabels(); i++)
-      pLyricsPanel->Add(pLabelTrack->GetLabel(i)->getT0(),
-                        pLabelTrack->GetLabel(i)->title);
+   pLyricsPanel->AddLabels(pLabelTrack);
    pLyricsPanel->Finish(pLabelTrack->GetEndTime());
    pLyricsPanel->Update(this->GetSel0());
 }
