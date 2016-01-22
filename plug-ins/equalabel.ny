@@ -14,7 +14,7 @@
 ;; Alex S.Brown, Dominic Mazzoni, Pierre M.I., Gale Andrews, Steve Daulton.
 ;; This version by Steve Daulton (http://easyspacepro.com) 2016
 
-;control mode "Use 'Number of labels' OR 'Label interval'" choice "Number of Labels,Label Interval" 0
+;control mode "Use 'Number of labels' OR 'Label interval'" choice "Number of labels,Label interval" 0
 ;control totalnum "Number of labels" int-text "" 10 1 1000
 ;control interval "Label interval (seconds)" float-text "" 60 0.001 3600
 ;control adjust "Adjust label interval to fit length" choice "No,Yes" 0
