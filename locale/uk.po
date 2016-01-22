@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Audacity 2.0.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2015-09-07 12:40+0100\n"
-"PO-Revision-Date: 2015-09-07 17:37+0300\n"
+"POT-Creation-Date: 2015-11-15 16:28+0200\n"
+"PO-Revision-Date: 2015-11-15 16:32+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <translation@linux.org.ua>\n"
 "Language: uk\n"
@@ -34,8 +34,8 @@ msgstr "Будь ласка, виберіть наявний файл."
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp:92 src/AutoRecovery.cpp:159
 #: src/AutoRecovery.cpp:196 src/Menus.cpp:4028 src/Menus.cpp:4040
-#: src/Menus.cpp:6628 src/Menus.cpp:6707 src/Project.cpp:2740
-#: src/Project.cpp:4720 src/Project.cpp:4739 src/TrackPanel.cpp:9056
+#: src/Menus.cpp:6628 src/Menus.cpp:6707 src/Project.cpp:2778
+#: src/Project.cpp:4767 src/Project.cpp:4786 src/TrackPanel.cpp:9028
 #: src/WaveTrack.cpp:1310 src/WaveTrack.cpp:1329 src/WaveTrack.cpp:2532
 #: src/effects/Contrast.cpp:66 src/effects/Contrast.cpp:72
 #: src/effects/Contrast.cpp:82 src/effects/Contrast.cpp:88
@@ -195,8 +195,8 @@ msgstr "Скрипти не збережено."
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1090
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1120
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1632 src/AudacityLogger.cpp:313
-#: src/export/Export.cpp:621 src/export/Export.cpp:642
-#: src/export/Export.cpp:686 src/import/ImportPCM.cpp:238
+#: src/export/Export.cpp:623 src/export/Export.cpp:644
+#: src/export/Export.cpp:688 src/import/ImportPCM.cpp:238
 #: src/widgets/Warning.cpp:55
 msgid "Warning"
 msgstr "Попередження"
@@ -420,23 +420,6 @@ msgstr "Зупинити"
 msgid "Stop script"
 msgstr "Зупинити скрипт"
 
-#: lib-src/mod-track-panel/TrackPanel2.cpp:54
-msgid "Panel 1"
-msgstr "Панель 1"
-
-#: lib-src/mod-track-panel/TrackPanel2.cpp:68
-msgid "Diagnostics"
-msgstr "Діагностика"
-
-#. i18n-hint: "OK... Audacious" appears on a button at the
-#. * foot of the 'About Audacity' dialog box, after some text to read.
-#. * In English it is slightly humorous alternative to an 'OK' button.
-#. * If the humour doesn't work in your language, then just use whatever
-#. * you would use for a translation for 'OK' on a button.
-#: lib-src/mod-track-panel/TrackPanel2.cpp:84 src/AboutDialog.cpp:199
-msgid "OK... Audacious!"
-msgstr "Гаразд… Круто!"
-
 #: src/AboutDialog.cpp:57 src/AboutDialog.cpp:79
 msgid "co-founder"
 msgstr "співзасновник"
@@ -448,6 +431,15 @@ msgstr "контроль якості"
 #: src/AboutDialog.cpp:179
 msgid "About Audacity"
 msgstr "Про Audacity"
+
+#. i18n-hint: "OK... Audacious" appears on a button at the
+#. * foot of the 'About Audacity' dialog box, after some text to read.
+#. * In English it is slightly humorous alternative to an 'OK' button.
+#. * If the humour doesn't work in your language, then just use whatever
+#. * you would use for a translation for 'OK' on a button.
+#: src/AboutDialog.cpp:199
+msgid "OK... Audacious!"
+msgstr "Гаразд… Круто!"
 
 #: src/AboutDialog.cpp:215
 msgid ""
@@ -1147,11 +1139,11 @@ msgstr "Застосувати до поточного &проекту"
 msgid "Apply to &Files..."
 msgstr "Застосувати до &файлів…"
 
-#: src/BatchProcessDialog.cpp:111 src/BatchProcessDialog.cpp:299
+#: src/BatchProcessDialog.cpp:111 src/BatchProcessDialog.cpp:316
 msgid "&Cancel"
 msgstr "&Скасувати"
 
-#: src/BatchProcessDialog.cpp:150 src/BatchProcessDialog.cpp:203
+#: src/BatchProcessDialog.cpp:150 src/BatchProcessDialog.cpp:220
 msgid "No chain selected"
 msgstr "Не вибрано ланцюжка"
 
@@ -1160,119 +1152,119 @@ msgstr "Не вибрано ланцюжка"
 msgid "Applying '%s' to current project"
 msgstr "Застосування «%s» до поточного проекту"
 
-#: src/BatchProcessDialog.cpp:213
+#: src/BatchProcessDialog.cpp:230
 msgid "Please save and close the current project first."
 msgstr "Спочатку збережіть та закрийте поточний проект."
 
-#: src/BatchProcessDialog.cpp:218
+#: src/BatchProcessDialog.cpp:235
 msgid "Select file(s) for batch processing..."
 msgstr "Оберіть файл(и) для пакетної обробки…"
 
 #. i18n-hint: The vertical bars and * are essential here.
-#: src/BatchProcessDialog.cpp:243 src/Project.cpp:2370
+#: src/BatchProcessDialog.cpp:260 src/Project.cpp:2408
 msgid "All files|*|All supported files|"
 msgstr "Усі файли|*|Усі файли, що підтримуються|"
 
-#: src/BatchProcessDialog.cpp:283
+#: src/BatchProcessDialog.cpp:300
 msgid "Applying..."
 msgstr "Застосування…"
 
-#: src/BatchProcessDialog.cpp:293
+#: src/BatchProcessDialog.cpp:310
 msgid "File"
 msgstr "Файл"
 
-#: src/BatchProcessDialog.cpp:413 src/BatchProcessDialog.cpp:417
-#: src/BatchProcessDialog.cpp:418
+#: src/BatchProcessDialog.cpp:454 src/BatchProcessDialog.cpp:458
+#: src/BatchProcessDialog.cpp:459
 msgid "Edit Chains"
 msgstr "Редагувати ланцюжки"
 
-#: src/BatchProcessDialog.cpp:470
+#: src/BatchProcessDialog.cpp:511
 msgid "&Chains"
 msgstr "&Ланцюги"
 
-#: src/BatchProcessDialog.cpp:489 src/Tags.cpp:789
+#: src/BatchProcessDialog.cpp:530 src/Tags.cpp:789
 msgid "&Add"
 msgstr "&Додати"
 
-#: src/BatchProcessDialog.cpp:490 src/LabelDialog.cpp:129 src/Tags.cpp:790
+#: src/BatchProcessDialog.cpp:531 src/LabelDialog.cpp:129 src/Tags.cpp:790
 msgid "&Remove"
 msgstr "&Вилучити"
 
-#: src/BatchProcessDialog.cpp:491
+#: src/BatchProcessDialog.cpp:532
 msgid "Re&name"
 msgstr "Перей&менувати"
 
-#: src/BatchProcessDialog.cpp:497
+#: src/BatchProcessDialog.cpp:538
 msgid "C&hain (Double-Click or press SPACE to edit)"
 msgstr "Лан&цюжок (Для редагування двічі клацніть або натисніть пробіл)"
 
 #. i18n-hint: This is the number of the command in the list
-#: src/BatchProcessDialog.cpp:507
+#: src/BatchProcessDialog.cpp:548
 msgid "Num"
 msgstr "№"
 
-#: src/BatchProcessDialog.cpp:508
+#: src/BatchProcessDialog.cpp:549
 msgid "Command  "
 msgstr "Команда "
 
-#: src/BatchProcessDialog.cpp:509 src/effects/Contrast.cpp:213
+#: src/BatchProcessDialog.cpp:550 src/effects/Contrast.cpp:213
 msgid "Parameters"
 msgstr "Параметри"
 
-#: src/BatchProcessDialog.cpp:513
+#: src/BatchProcessDialog.cpp:554
 msgid "&Insert"
 msgstr "Вст&авити"
 
-#: src/BatchProcessDialog.cpp:514
+#: src/BatchProcessDialog.cpp:555
 msgid "De&lete"
 msgstr "В&илучити"
 
-#: src/BatchProcessDialog.cpp:515 src/effects/Equalization.cpp:3018
+#: src/BatchProcessDialog.cpp:556 src/effects/Equalization.cpp:3018
 msgid "Move &Up"
 msgstr "В&гору"
 
-#: src/BatchProcessDialog.cpp:516 src/effects/Equalization.cpp:3019
+#: src/BatchProcessDialog.cpp:557 src/effects/Equalization.cpp:3019
 msgid "Move &Down"
 msgstr "В&низ"
 
-#: src/BatchProcessDialog.cpp:517 src/effects/Equalization.cpp:3025
+#: src/BatchProcessDialog.cpp:558 src/effects/Equalization.cpp:3025
 msgid "De&faults"
 msgstr "Ти&пові"
 
 #. i18n-hint: This is the last item in a list.
-#: src/BatchProcessDialog.cpp:561
+#: src/BatchProcessDialog.cpp:602
 msgid "- END -"
 msgstr "- КІНЕЦЬ -"
 
-#: src/BatchProcessDialog.cpp:588
+#: src/BatchProcessDialog.cpp:629
 #, c-format
 msgid "%s changed"
 msgstr "%s змінено"
 
-#: src/BatchProcessDialog.cpp:589
+#: src/BatchProcessDialog.cpp:630
 msgid "Do you want to save the changes?"
 msgstr "Зберегти зміни?"
 
-#: src/BatchProcessDialog.cpp:726
+#: src/BatchProcessDialog.cpp:767
 msgid "Enter name of new chain"
 msgstr "Введіть назву нового ланцюжка"
 
-#: src/BatchProcessDialog.cpp:727
+#: src/BatchProcessDialog.cpp:768
 msgid "Name of new chain"
 msgstr "Назва нового ланцюжка"
 
-#: src/BatchProcessDialog.cpp:738
+#: src/BatchProcessDialog.cpp:779
 msgid "Name must not be blank"
 msgstr "Назва не може бути порожньою"
 
 #. i18n-hint: The %c will be replaced with 'forbidden characters', like '/' and '\'.
-#: src/BatchProcessDialog.cpp:748
+#: src/BatchProcessDialog.cpp:789
 #, c-format
 msgid "Names may not contain '%c' and '%c'"
 msgstr "Назва не може містити символів '%c' та '%c'"
 
 #. i18n-hint: %s will be replaced by the name of a file.
-#: src/BatchProcessDialog.cpp:779
+#: src/BatchProcessDialog.cpp:820
 #, c-format
 msgid "Are you sure you want to delete %s?"
 msgstr "Ви справді бажаєте вилучити %s?"
@@ -1848,7 +1840,7 @@ msgstr ""
 "Лише libavformat.so|libavformat*.so*|Динамічно з’єднані бібліотеки (*.so*)|*."
 "so*|Усі файли (*)|*"
 
-#: src/FreqWindow.cpp:208 src/prefs/TracksPrefs.cpp:70
+#: src/FreqWindow.cpp:208
 msgid "Spectrum"
 msgstr "Спектр"
 
@@ -1886,7 +1878,7 @@ msgid "Log frequency"
 msgstr "Частота запису журналу"
 
 #. i18n-hint: short form of 'decibels'.
-#: src/FreqWindow.cpp:285 src/FreqWindow.cpp:688 src/effects/AutoDuck.cpp:438
+#: src/FreqWindow.cpp:285 src/FreqWindow.cpp:691 src/effects/AutoDuck.cpp:438
 #: src/effects/AutoDuck.cpp:478 src/effects/AutoDuck.cpp:776
 #: src/effects/Compressor.cpp:701 src/effects/Compressor.cpp:709
 #: src/effects/Equalization.cpp:642 src/effects/Equalization.cpp:669
@@ -1896,8 +1888,8 @@ msgstr "Частота запису журналу"
 #: src/effects/ScienFilter.cpp:386 src/effects/ScienFilter.cpp:415
 #: src/effects/ScienFilter.cpp:423 src/effects/ScienFilter.cpp:490
 #: src/effects/ScienFilter.cpp:519 src/effects/ScienFilter.cpp:583
-#: src/effects/ScienFilter.cpp:591 src/widgets/Meter.cpp:1969
-#: src/widgets/Meter.cpp:1970
+#: src/effects/ScienFilter.cpp:591 src/widgets/Meter.cpp:1972
+#: src/widgets/Meter.cpp:1973
 msgid "dB"
 msgstr "дБ"
 
@@ -1941,13 +1933,13 @@ msgstr "В&ісь:"
 msgid "&Grids"
 msgstr "Сі&тка"
 
-#: src/FreqWindow.cpp:579
+#: src/FreqWindow.cpp:582
 msgid "To plot the spectrum, all selected tracks must be the same sample rate."
 msgstr ""
 "Для побудови спектрограми усі позначені доріжки повинні мати однакову "
 "частоту дискретизації."
 
-#: src/FreqWindow.cpp:603
+#: src/FreqWindow.cpp:606
 #, c-format
 msgid ""
 "Too much audio was selected.  Only the first %.1f seconds of audio will be "
@@ -1956,13 +1948,13 @@ msgstr ""
 "Вибрано надто велику звукову ділянку. Будуть проаналізовані лише перші %.1f "
 "секунд звуку."
 
-#: src/FreqWindow.cpp:658
+#: src/FreqWindow.cpp:661
 msgid "Not enough data selected."
 msgstr "Вибрано недостатньо даних."
 
 #. i18n-hint: This is the abbreviation for "Hertz", or
 #. cycles per second.
-#: src/FreqWindow.cpp:734 src/effects/ChangePitch.cpp:266
+#: src/FreqWindow.cpp:737 src/effects/ChangePitch.cpp:266
 #: src/effects/Equalization.cpp:696 src/effects/Equalization.cpp:734
 #: src/effects/ScienFilter.cpp:510 src/import/ImportRaw.cpp:427
 #: src/widgets/NumericTextCtrl.cpp:473
@@ -1970,52 +1962,52 @@ msgid "Hz"
 msgstr "Гц"
 
 #. i18n-hint: short form of 'seconds'.
-#: src/FreqWindow.cpp:740 src/effects/AutoDuck.cpp:779
+#: src/FreqWindow.cpp:743 src/effects/AutoDuck.cpp:779
 msgid "s"
 msgstr "с"
 
 #. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
-#: src/FreqWindow.cpp:933
+#: src/FreqWindow.cpp:937
 #, c-format
 msgid "%d Hz (%s) = %d dB"
 msgstr "%d Гц (%s) = %d дБ"
 
-#: src/FreqWindow.cpp:934
+#: src/FreqWindow.cpp:938
 #, c-format
 msgid "%d Hz (%s) = %.1f dB"
 msgstr "%d Гц (%s) = %.1f дБ"
 
 #. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
 #. * the %.4f are numbers, and 'sec' should be an abbreviation for seconds
-#: src/FreqWindow.cpp:942
+#: src/FreqWindow.cpp:946
 #, c-format
 msgid "%.4f sec (%d Hz) (%s) = %f"
 msgstr "%.4f сек (%d Гц) (%s) = %f"
 
-#: src/FreqWindow.cpp:944
+#: src/FreqWindow.cpp:948
 #, c-format
 msgid "%.4f sec (%d Hz) (%s) = %.3f"
 msgstr "%.4f сек (%d Гц) (%s) = %.3f"
 
-#: src/FreqWindow.cpp:1029
+#: src/FreqWindow.cpp:1033
 msgid "spectrum.txt"
 msgstr "spectrum.txt"
 
-#: src/FreqWindow.cpp:1031
+#: src/FreqWindow.cpp:1035
 msgid "Export Spectral Data As:"
 msgstr "Експортувати результати спектрального аналізу у файл:"
 
-#: src/FreqWindow.cpp:1047 src/LabelDialog.cpp:646 src/Menus.cpp:3559
+#: src/FreqWindow.cpp:1051 src/LabelDialog.cpp:646 src/Menus.cpp:3559
 #: src/effects/Contrast.cpp:487 src/prefs/KeyConfigPrefs.cpp:389
 #: src/prefs/KeyConfigPrefs.cpp:972
 msgid "Couldn't write to file: "
 msgstr "Не вдається записати у файл: "
 
-#: src/FreqWindow.cpp:1054
+#: src/FreqWindow.cpp:1058
 msgid "Frequency (Hz)\tLevel (dB)"
 msgstr "Частота (Гц)\tРівень (дБ)"
 
-#: src/FreqWindow.cpp:1060
+#: src/FreqWindow.cpp:1064
 msgid "Lag (seconds)\tFrequency (Hz)\tLevel"
 msgstr "Відставання (сек)\tЧастота (Гц)\tРівень"
 
@@ -2299,8 +2291,8 @@ msgstr "Виберіть тестовий файл, що містить позн
 msgid "Text files (*.txt)|*.txt|All files|*"
 msgstr "Текстові файли (*.txt)|*.txt|Усі файли|*.*"
 
-#: src/LabelDialog.cpp:576 src/Menus.cpp:5456 src/Project.cpp:2561
-#: src/Project.cpp:2574
+#: src/LabelDialog.cpp:576 src/Menus.cpp:5456 src/Project.cpp:2599
+#: src/Project.cpp:2612
 msgid "Could not open file: "
 msgstr "Не вдається відкрити файл: "
 
@@ -2351,13 +2343,13 @@ msgstr "Вст&авити"
 msgid "&Delete Label"
 msgstr "Ви&лучити мітку"
 
-#: src/LabelTrack.cpp:2056 src/LabelTrack.cpp:2071 src/TrackPanel.cpp:6379
-#: src/TrackPanel.cpp:6423 src/TrackPanel.cpp:6792
+#: src/LabelTrack.cpp:2056 src/LabelTrack.cpp:2071 src/TrackPanel.cpp:6351
+#: src/TrackPanel.cpp:6395 src/TrackPanel.cpp:6764
 msgid "Modified Label"
 msgstr "Позначка змінена"
 
 #: src/LabelTrack.cpp:2057 src/LabelTrack.cpp:2072 src/LabelTrack.cpp:2084
-#: src/TrackPanel.cpp:6380 src/TrackPanel.cpp:6424 src/TrackPanel.cpp:6793
+#: src/TrackPanel.cpp:6352 src/TrackPanel.cpp:6396 src/TrackPanel.cpp:6765
 msgid "Label Edit"
 msgstr "Редагування мітки"
 
@@ -3106,7 +3098,7 @@ msgstr "Інструмент вибору"
 msgid "Envelope Tool"
 msgstr "Зміна обвідної"
 
-#: src/Menus.cpp:1107 src/TrackPanel.cpp:4850 src/TrackPanel.cpp:4869
+#: src/Menus.cpp:1107 src/TrackPanel.cpp:4822 src/TrackPanel.cpp:4841
 #: src/toolbars/ToolsToolBar.cpp:160 src/toolbars/ToolsToolBar.cpp:197
 msgid "Draw Tool"
 msgstr "Зміна обвідної"
@@ -3499,7 +3491,7 @@ msgid "Moved"
 msgstr "Пересунуто"
 
 #. i18n-hint: The direction of movement will be up, down, to top or to bottom..
-#: src/Menus.cpp:3058 src/TrackPanel.cpp:5550
+#: src/Menus.cpp:3058 src/TrackPanel.cpp:5522
 msgid "Move Track"
 msgstr "Перемістити доріжку"
 
@@ -3722,7 +3714,7 @@ msgstr "Позначені ділянки звуку від’єднано"
 msgid "Detach Labeled Audio"
 msgstr "Від’єднати позначений звук"
 
-#: src/Menus.cpp:4729 src/TrackPanel.cpp:8642
+#: src/Menus.cpp:4729 src/TrackPanel.cpp:8614
 msgid "Split"
 msgstr "Розділити"
 
@@ -3970,15 +3962,15 @@ msgstr ""
 "кінцевою точкою проекту."
 
 #: src/Menus.cpp:6650 src/Menus.cpp:6718 src/export/ExportFFmpeg.cpp:921
-#: src/export/ExportMP3.cpp:1906
+#: src/export/ExportMP3.cpp:1908
 msgid "Resample"
 msgstr "Змінити частоту"
 
-#: src/Menus.cpp:6679 src/TrackPanel.cpp:9027
+#: src/Menus.cpp:6679 src/TrackPanel.cpp:8999
 msgid "New sample rate (Hz):"
 msgstr "Нова частота дискретизації (Гц):"
 
-#: src/Menus.cpp:6707 src/TrackPanel.cpp:9056
+#: src/Menus.cpp:6707 src/TrackPanel.cpp:9028
 msgid "The entered value is invalid"
 msgstr "Введене значення є некоректним"
 
@@ -4004,15 +3996,15 @@ msgid "Mixing and rendering tracks"
 msgstr "Мікшування та зведення доріжок"
 
 #. i18n-hint: title of the MIDI Velocity slider
-#: src/MixerBoard.cpp:215 src/TrackPanel.cpp:5369 src/widgets/ASlider.cpp:401
+#: src/MixerBoard.cpp:215 src/TrackPanel.cpp:5341 src/widgets/ASlider.cpp:401
 msgid "Velocity"
 msgstr "Швидкість"
 
 #. i18n-hint: title of the Gain slider, used to adjust the volume
 #. i18n-hint: Title of the Gain slider, used to adjust the volume
 #: src/MixerBoard.cpp:224 src/MixerBoard.cpp:227 src/MixerBoard.cpp:402
-#: src/Project.cpp:4898 src/TrackPanel.cpp:5365 src/TrackPanel.cpp:9646
-#: src/effects/Phaser.cpp:54 src/effects/Wahwah.cpp:51
+#: src/Project.cpp:4945 src/TrackPanel.cpp:5337 src/TrackPanel.cpp:9618
+#: src/TrackPanel.cpp:9623 src/effects/Phaser.cpp:54 src/effects/Wahwah.cpp:51
 #: src/widgets/ASlider.cpp:383
 msgid "Gain"
 msgstr "Гучність"
@@ -4023,20 +4015,20 @@ msgstr "Музичний інструмент"
 
 #. i18n-hint: Title of the Pan slider, used to move the sound left or right
 #: src/MixerBoard.cpp:264 src/MixerBoard.cpp:266 src/MixerBoard.cpp:421
-#: src/Project.cpp:4915 src/TrackPanel.cpp:5365 src/TrackPanel.cpp:9655
-#: src/widgets/ASlider.cpp:373
+#: src/Project.cpp:4962 src/TrackPanel.cpp:5337 src/TrackPanel.cpp:9632
+#: src/TrackPanel.cpp:9637 src/widgets/ASlider.cpp:373
 msgid "Pan"
 msgstr "Панорама"
 
 #. i18n-hint: This is on a button that will silence all the other tracks.
 #: src/MixerBoard.cpp:279 src/MixerBoard.cpp:329 src/MixerBoard.cpp:1443
-#: src/TrackPanel.cpp:9945
+#: src/TrackPanel.cpp:9929
 msgid "Mute"
 msgstr "Тиша"
 
 #. i18n-hint: This is on a button that will silence this track.
 #: src/MixerBoard.cpp:293 src/MixerBoard.cpp:330 src/MixerBoard.cpp:1493
-#: src/TrackPanel.cpp:9943
+#: src/TrackPanel.cpp:9927
 msgid "Solo"
 msgstr "Соло"
 
@@ -4044,11 +4036,11 @@ msgstr "Соло"
 msgid "Signal Level Meter"
 msgstr "Індикатор рівня сигналу"
 
-#: src/MixerBoard.cpp:402 src/TrackPanel.cpp:5364
+#: src/MixerBoard.cpp:402 src/TrackPanel.cpp:5336
 msgid "Moved gain slider"
 msgstr "Регулятор рівня переміщено"
 
-#: src/MixerBoard.cpp:421 src/TrackPanel.cpp:5364
+#: src/MixerBoard.cpp:421 src/TrackPanel.cpp:5336
 msgid "Moved pan slider"
 msgstr "Регулятор панорами переміщено"
 
@@ -4213,7 +4205,7 @@ msgstr ""
 "\n"
 "%s"
 
-#: src/PluginManager.cpp:981
+#: src/PluginManager.cpp:984
 #, c-format
 msgid ""
 "Enabling effect:\n"
@@ -4260,25 +4252,25 @@ msgstr "Друк"
 #. i18n-hint: This is an experimental feature where the main panel in
 #. Audacity is put on a notebook tab, and this is the name on that tab.
 #. Other tabs in that notebook may have instruments, patch panels etc.
-#: src/Project.cpp:885
+#: src/Project.cpp:921
 msgid "Main Mix"
 msgstr "Головний мікшер"
 
-#: src/Project.cpp:1014
+#: src/Project.cpp:1050
 #, c-format
 msgid "Welcome to Audacity version %s"
 msgstr "Ласкаво просимо до Audacity версії %s"
 
 #. i18n-hint: E.g this is recovered audio that had been lost.
-#: src/Project.cpp:1232
+#: src/Project.cpp:1268
 msgid "(Recovered)"
 msgstr "(Відновлено)"
 
-#: src/Project.cpp:2136
+#: src/Project.cpp:2174
 msgid "Save changes before closing?"
 msgstr "Зберегти зміни перед закриттям?"
 
-#: src/Project.cpp:2139
+#: src/Project.cpp:2177
 msgid ""
 "\n"
 "If saved, the project will have no tracks.\n"
@@ -4295,21 +4287,21 @@ msgstr ""
 "доки всі доріжки не буде відкрито, а потім виберіть\n"
 "Файл > Зберегти проект."
 
-#: src/Project.cpp:2142
+#: src/Project.cpp:2180
 msgid "Save changes?"
 msgstr "Зберегти зміни?"
 
-#: src/Project.cpp:2399
+#: src/Project.cpp:2437
 msgid "Select one or more audio files..."
 msgstr "Виберіть один чи більше звукових файлів…"
 
-#: src/Project.cpp:2435
+#: src/Project.cpp:2473
 #, c-format
 msgid "%s is already open in another window."
 msgstr "%s вже відкрито у іншому вікні."
 
-#: src/Project.cpp:2438 src/Project.cpp:2603 src/Project.cpp:2800
-#: src/Project.cpp:2990
+#: src/Project.cpp:2476 src/Project.cpp:2641 src/Project.cpp:2838
+#: src/Project.cpp:3028
 msgid "Error Opening Project"
 msgstr "Помилка під час відкриття файла проекту"
 
@@ -4317,11 +4309,11 @@ msgstr "Помилка під час відкриття файла проект�
 #. * and save dialogues, for the option that only shows project files created
 #. * with Audacity. Do not include pipe symbols or .aup (this extension will
 #. * now be added automatically for the Save Projects dialogues).
-#: src/Project.cpp:2452 src/Project.cpp:3841
+#: src/Project.cpp:2490 src/Project.cpp:3888
 msgid "Audacity projects"
 msgstr "Проекти Audacity"
 
-#: src/Project.cpp:2505
+#: src/Project.cpp:2543
 #, c-format
 msgid ""
 "This file was saved by Audacity version %s. The format has changed. \n"
@@ -4347,15 +4339,15 @@ msgstr ""
 "\n"
 "Відкрити файл зараз?"
 
-#: src/Project.cpp:2515
+#: src/Project.cpp:2553
 msgid "1.0 or earlier"
 msgstr "1.0 або ранішою"
 
-#: src/Project.cpp:2520 src/Project.cpp:3077
+#: src/Project.cpp:2558 src/Project.cpp:3115
 msgid "Warning - Opening Old Project File"
 msgstr "Попередження: відкриття застарілого файла проекту"
 
-#: src/Project.cpp:2554
+#: src/Project.cpp:2592
 msgid ""
 "You are trying to open an automatically created backup file.\n"
 "Doing this may result in severe data loss.\n"
@@ -4368,19 +4360,19 @@ msgstr ""
 "\n"
 "Будь ласка, спробуйте відкрити справжній файл проекту Audacity."
 
-#: src/Project.cpp:2555
+#: src/Project.cpp:2593
 msgid "Warning - Backup File Detected"
 msgstr "Попередження: виявлено файл резервної копії"
 
-#: src/Project.cpp:2562 src/xml/XMLWriter.cpp:269
+#: src/Project.cpp:2600 src/xml/XMLWriter.cpp:269
 msgid "Error Opening File"
 msgstr "Помилка під час відкриття файла"
 
-#: src/Project.cpp:2575
+#: src/Project.cpp:2613
 msgid "Error opening file"
 msgstr "Помилка під час відкриття файла"
 
-#: src/Project.cpp:2581
+#: src/Project.cpp:2619
 #, c-format
 msgid ""
 "File may be invalid or corrupted: \n"
@@ -4389,11 +4381,11 @@ msgstr ""
 "Можливо файл є некоректним або пошкодженим: \n"
 "%s"
 
-#: src/Project.cpp:2582
+#: src/Project.cpp:2620
 msgid "Error Opening File or Project"
 msgstr "Помилка під час відкриття файла або проекту"
 
-#: src/Project.cpp:2602
+#: src/Project.cpp:2640
 msgid ""
 "Audacity was unable to convert an Audacity 1.0 project to the new project "
 "format."
@@ -4401,37 +4393,37 @@ msgstr ""
 "Audacity не вдається перетворити проект формату Audacity 1.0 у проект нового "
 "формату."
 
-#: src/Project.cpp:2637
+#: src/Project.cpp:2675
 msgid "Could not decode file: "
 msgstr "Не вдалося декодувати файл: "
 
-#: src/Project.cpp:2638
+#: src/Project.cpp:2676
 msgid "Error decoding file"
 msgstr "Помилка під час спроби декодування файла"
 
-#: src/Project.cpp:2736
+#: src/Project.cpp:2774
 msgid "Project was recovered"
 msgstr "Проект було відновлено"
 
-#: src/Project.cpp:2736
+#: src/Project.cpp:2774
 msgid "Recover"
 msgstr "Відновити"
 
-#: src/Project.cpp:2739
+#: src/Project.cpp:2777
 msgid "Could not remove old auto save file"
 msgstr "Не вдалося вилучити старий файл автозбереження"
 
-#: src/Project.cpp:2887 src/Project.cpp:2888
+#: src/Project.cpp:2925 src/Project.cpp:2926
 msgid "<unrecognized version -- possibly corrupt project file>"
 msgstr "<невідома версія — файл проекту може бути пошкоджено>"
 
-#: src/Project.cpp:2988
+#: src/Project.cpp:3026
 #, c-format
 msgid "Couldn't find the project data folder: \"%s\""
 msgstr "Не вдається знайти теку з даними проекту: «%s»"
 
 #. i18n-hint: %s will be replaced by the version number.
-#: src/Project.cpp:3041
+#: src/Project.cpp:3079
 #, c-format
 msgid ""
 "This file was saved using Audacity %s.\n"
@@ -4442,11 +4434,11 @@ msgstr ""
 "Ви використовуєте Audacity версії %s. Щоб відкрити цей файл, слід оновити  "
 "версію програми."
 
-#: src/Project.cpp:3045
+#: src/Project.cpp:3083
 msgid "Can't open project file"
 msgstr "Не вдається відкрити файл проекту"
 
-#: src/Project.cpp:3335
+#: src/Project.cpp:3373
 msgid ""
 "Your project is now empty.\n"
 "If saved, the project will have no tracks.\n"
@@ -4467,11 +4459,11 @@ msgstr ""
 "\n"
 "Все одно зберегти?"
 
-#: src/Project.cpp:3336
+#: src/Project.cpp:3374
 msgid "Warning - Empty Project"
 msgstr "Попередження про порожній проект"
 
-#: src/Project.cpp:3395
+#: src/Project.cpp:3433
 #, c-format
 msgid ""
 "Could not save project. Path not found.  Try creating \n"
@@ -4480,12 +4472,12 @@ msgstr ""
 "Не вдалося зберегти проект. Не знайдено відповідного каталогу. Спробуйте \n"
 "створити каталог «%s» перед зберіганням проекту з цією назвою."
 
-#: src/Project.cpp:3397 src/Project.cpp:3434 src/Project.cpp:3457
-#: src/Project.cpp:3773 src/Project.cpp:3859
+#: src/Project.cpp:3435 src/Project.cpp:3472 src/Project.cpp:3495
+#: src/Project.cpp:3820 src/Project.cpp:3906
 msgid "Error Saving Project"
 msgstr "Помилка під час спроби збереження файла проекту"
 
-#: src/Project.cpp:3432
+#: src/Project.cpp:3470
 #, c-format
 msgid ""
 "Could not save project. Perhaps %s \n"
@@ -4494,31 +4486,31 @@ msgstr ""
 "Не вдається зберегти проект. Можливо, відсутні права запису на %s,\n"
 "або не вистачає вільного простору на диску."
 
-#: src/Project.cpp:3455 src/Project.cpp:4702 src/Tags.cpp:1167
+#: src/Project.cpp:3493 src/Project.cpp:4749 src/Tags.cpp:1167
 #: src/effects/Equalization.cpp:1503
 #, c-format
 msgid "Couldn't write to file \"%s\": %s"
 msgstr "Не вдалося виконати запис до файла «%s»: %s"
 
-#: src/Project.cpp:3530
+#: src/Project.cpp:3568
 #, c-format
 msgid "Saved %s"
 msgstr "Збережено %s"
 
-#: src/Project.cpp:3686
+#: src/Project.cpp:3724
 #, c-format
 msgid "Imported '%s'"
 msgstr "Імпортовано файл «%s»"
 
-#: src/Project.cpp:3687
+#: src/Project.cpp:3725
 msgid "Import"
 msgstr "Імпорт"
 
-#: src/Project.cpp:3723
+#: src/Project.cpp:3770
 msgid "Error Importing"
 msgstr "Помилка під час спроби імпортування"
 
-#: src/Project.cpp:3772 src/Project.cpp:3858
+#: src/Project.cpp:3819 src/Project.cpp:3905
 msgid ""
 "The project was not saved because the file name provided would overwrite "
 "another project.\n"
@@ -4528,11 +4520,11 @@ msgstr ""
 "до перезапису іншого проекту.\n"
 "Будь ласка, повторіть спробу, вказавши назву, яку ще не використано."
 
-#: src/Project.cpp:3803
+#: src/Project.cpp:3850
 msgid "<untitled>"
 msgstr "<без назви>"
 
-#: src/Project.cpp:3809
+#: src/Project.cpp:3856
 msgid ""
 "'Save Compressed Project' is for an Audacity project, not an audio file.\n"
 "For an audio file that will open in other apps, use 'Export'.\n"
@@ -4555,12 +4547,12 @@ msgstr ""
 "оскільки виконується \n"
 "імпортування кожної зі стиснених доріжок.\n"
 
-#: src/Project.cpp:3820
+#: src/Project.cpp:3867
 #, c-format
 msgid "Save Compressed Project \"%s\" As..."
 msgstr "Зберегти стиснений проект «%s» як…"
 
-#: src/Project.cpp:3825
+#: src/Project.cpp:3872
 msgid ""
 "'Save Project' is for an Audacity project, not an audio file.\n"
 "For an audio file that will open in other apps, use 'Export'.\n"
@@ -4570,53 +4562,53 @@ msgstr ""
 "Для звукових файлів, які відкриватимуться у інших програмах, скористайтеся "
 "дією «Експортувати».\n"
 
-#: src/Project.cpp:3830
+#: src/Project.cpp:3877
 #, c-format
 msgid "Save Project \"%s\" As..."
 msgstr "Зберегти проект «%s» як…"
 
-#: src/Project.cpp:3902
+#: src/Project.cpp:3949
 msgid "Created new project"
 msgstr "Створено новий проект"
 
-#: src/Project.cpp:4124
+#: src/Project.cpp:4171
 #, c-format
 msgid "Deleted %.2f seconds at t=%.2f"
 msgstr "Вилучено %.2f секунд починаючи з t=%.2f"
 
-#: src/Project.cpp:4127
+#: src/Project.cpp:4174
 msgid "Delete"
 msgstr "Вилучити"
 
-#: src/Project.cpp:4329
+#: src/Project.cpp:4376
 #, c-format
 msgid "Disk space remains for recording %d hours and %d minutes."
 msgstr "Простір диску, що залишився для запису, %d годин та %d хвилин."
 
-#: src/Project.cpp:4332
+#: src/Project.cpp:4379
 #, c-format
 msgid "Disk space remains for recording 1 hour and %d minutes."
 msgstr "Простір диску, що залишився для запису, 1 година та %d хвилин."
 
-#: src/Project.cpp:4335
+#: src/Project.cpp:4382
 #, c-format
 msgid "Disk space remains for recording %d minutes."
 msgstr "Простір диску, що залишився для запису, %d хвилин."
 
-#: src/Project.cpp:4338
+#: src/Project.cpp:4385
 #, c-format
 msgid "Disk space remains for recording %d seconds."
 msgstr "Простір диску, що залишився для запису, %d секунд."
 
-#: src/Project.cpp:4341
+#: src/Project.cpp:4388
 msgid "Out of disk space"
 msgstr "Скінчився вільний простір на диску"
 
-#: src/Project.cpp:4363
+#: src/Project.cpp:4410
 msgid "On-demand import and waveform calculation complete."
 msgstr "Поточне імпортування та обчислення форми хвилі виконано."
 
-#: src/Project.cpp:4368
+#: src/Project.cpp:4415
 #, c-format
 msgid ""
 "Import(s) complete. Running %d on-demand waveform calculations. Overall %2.0f"
@@ -4625,7 +4617,7 @@ msgstr ""
 "Імпортування завершено. Виконується %d поточних обчислень форми хвилі. "
 "Виконано %2.0f%%."
 
-#: src/Project.cpp:4371
+#: src/Project.cpp:4418
 #, c-format
 msgid ""
 "Import complete. Running an on-demand waveform calculation. %2.0f%% complete."
@@ -4633,45 +4625,45 @@ msgstr ""
 "Імпортування завершено. Виконується поточне обчислення форми хвилі. Виконано "
 "%2.0f%%."
 
-#: src/Project.cpp:4704
+#: src/Project.cpp:4751
 msgid "Error Writing Autosave File"
 msgstr "Помилка під час запису файла автозбереження"
 
-#: src/Project.cpp:4719
+#: src/Project.cpp:4766
 msgid "Could not create autosave file: "
 msgstr "Не вдалося створити файл автозбереження: "
 
-#: src/Project.cpp:4738
+#: src/Project.cpp:4785
 msgid "Could not remove old autosave file: "
 msgstr "Не вдалося вилучити старий файл автозбереження: "
 
-#: src/Project.cpp:4767
+#: src/Project.cpp:4814
 #, c-format
 msgid "Actual Rate: %d"
 msgstr "Фактична частота %d"
 
-#: src/Project.cpp:4789
+#: src/Project.cpp:4836
 msgid "Recorded Audio"
 msgstr "Записано звук"
 
-#: src/Project.cpp:4789 src/toolbars/ControlToolBar.cpp:177
+#: src/Project.cpp:4836 src/toolbars/ControlToolBar.cpp:177
 msgid "Record"
 msgstr "Записати"
 
-#: src/Project.cpp:4898
+#: src/Project.cpp:4945
 msgid "Adjusted gain"
 msgstr "Підсилення скореговано"
 
-#: src/Project.cpp:4915
+#: src/Project.cpp:4962
 msgid "Adjusted Pan"
 msgstr "Панорамування скореговано"
 
-#: src/Project.cpp:4954
+#: src/Project.cpp:5001
 #, c-format
 msgid "Removed track '%s.'"
 msgstr "Вилучено доріжку '%s.'"
 
-#: src/Project.cpp:4956
+#: src/Project.cpp:5003
 msgid "Track Remove"
 msgstr "Вилучити доріжку"
 
@@ -4777,7 +4769,7 @@ msgid "Mixer"
 msgstr "Мікшер"
 
 #: src/Screenshot.cpp:387 src/toolbars/MeterToolBar.cpp:173
-#: src/widgets/Meter.cpp:2187
+#: src/widgets/Meter.cpp:2190
 msgid "Meter"
 msgstr "Індикатор"
 
@@ -5207,123 +5199,123 @@ msgstr "Очікування на початок запису о %s.\n"
 msgid "Audacity Timer Record - Waiting for Start"
 msgstr "Запис за таймером Audacity — Очікування початку"
 
-#: src/TrackPanel.cpp:697
-msgid "Ma&ke Stereo Track"
-msgstr "З&робити доріжку стереофонічною"
-
-#: src/TrackPanel.cpp:698
-msgid "R&ight Channel"
-msgstr "&Правий канал"
-
-#: src/TrackPanel.cpp:699
-msgid "&Left Channel"
-msgstr "&Лівий канал"
-
-#: src/TrackPanel.cpp:700
-msgid "&Mono"
-msgstr "&Моно"
-
-#: src/TrackPanel.cpp:714
-msgid "Split Stereo to &Mono"
-msgstr "Поділити стерео на &моно"
-
-#: src/TrackPanel.cpp:715
-msgid "Spl&it Stereo Track"
-msgstr "Роз&ділити стереодоріжку"
-
-#: src/TrackPanel.cpp:716
-msgid "Swap Stereo &Channels"
-msgstr "Поміняти місцями &канали стерео"
-
-#: src/TrackPanel.cpp:748
+#: src/TrackPanel.cpp:710
 msgid "&Other..."
 msgstr "&Інше…"
 
-#: src/TrackPanel.cpp:758
+#: src/TrackPanel.cpp:720
 msgid "Wa&veform"
 msgstr "&Хвиля"
 
-#: src/TrackPanel.cpp:759
+#: src/TrackPanel.cpp:721
 msgid "&Waveform (dB)"
 msgstr "&Хвиля (дБ)"
 
-#: src/TrackPanel.cpp:760
+#: src/TrackPanel.cpp:722
 msgid "&Spectrogram"
 msgstr "Спек&трограма"
 
-#: src/TrackPanel.cpp:761
+#: src/TrackPanel.cpp:723
 msgid "S&pectrogram Settings..."
 msgstr "Пара&метри спектрограми…"
 
-#: src/TrackPanel.cpp:769
+#: src/TrackPanel.cpp:728
+msgid "&Mono"
+msgstr "&Моно"
+
+#: src/TrackPanel.cpp:729
+msgid "&Left Channel"
+msgstr "&Лівий канал"
+
+#: src/TrackPanel.cpp:730
+msgid "&Right Channel"
+msgstr "&Правий канал"
+
+#: src/TrackPanel.cpp:731
+msgid "Ma&ke Stereo Track"
+msgstr "З&робити доріжку стереофонічною"
+
+#: src/TrackPanel.cpp:732
+msgid "Swap Stereo &Channels"
+msgstr "Поміняти місцями &канали стерео"
+
+#: src/TrackPanel.cpp:733
+msgid "Spl&it Stereo Track"
+msgstr "Роз&ділити стереодоріжку"
+
+#: src/TrackPanel.cpp:734
+msgid "Split Stereo to Mo&no"
+msgstr "Поділити стерео на &моно"
+
+#: src/TrackPanel.cpp:737
 msgid "&Format"
 msgstr "&Формат"
 
-#: src/TrackPanel.cpp:773
-msgid "&Rate"
-msgstr "&Частота"
+#: src/TrackPanel.cpp:741
+msgid "Rat&e"
+msgstr "Встановити &частоту"
 
-#: src/TrackPanel.cpp:778
+#: src/TrackPanel.cpp:746
 msgid "Up &Octave"
 msgstr "Октаво&ю вище"
 
-#: src/TrackPanel.cpp:779
+#: src/TrackPanel.cpp:747
 msgid "Down Octa&ve"
 msgstr "О&ктавою нижче"
 
-#: src/TrackPanel.cpp:784
+#: src/TrackPanel.cpp:752
 msgid "&Font..."
 msgstr "&Шрифт…"
 
-#: src/TrackPanel.cpp:789
+#: src/TrackPanel.cpp:757
 msgid "&Linear"
 msgstr "&Лінійний"
 
-#: src/TrackPanel.cpp:790
+#: src/TrackPanel.cpp:758
 msgid "L&ogarithmic"
 msgstr "Л&огарифмічний"
 
-#: src/TrackPanel.cpp:792
+#: src/TrackPanel.cpp:760
 msgid "&Range..."
 msgstr "&Діапазон…"
 
-#: src/TrackPanel.cpp:793
+#: src/TrackPanel.cpp:761
 msgid "Logarithmic &Interpolation"
 msgstr "Логарифмічна &інтерполяція"
 
-#: src/TrackPanel.cpp:808
+#: src/TrackPanel.cpp:776
 msgid "&Name..."
 msgstr "&Назва…"
 
-#: src/TrackPanel.cpp:810
+#: src/TrackPanel.cpp:778
 msgid "Move Track &Up"
 msgstr "Пересунути доріжку &вище"
 
-#: src/TrackPanel.cpp:811
+#: src/TrackPanel.cpp:779
 msgid "Move Track &Down"
 msgstr "Перемістити доріжку в&низ"
 
-#: src/TrackPanel.cpp:812
+#: src/TrackPanel.cpp:780
 msgid "Move Track to &Top"
 msgstr "Пересунути доріжку &нижче"
 
-#: src/TrackPanel.cpp:813
+#: src/TrackPanel.cpp:781
 msgid "Move Track to &Bottom"
 msgstr "Пересунути доріжку у &кінець"
 
-#: src/TrackPanel.cpp:826
+#: src/TrackPanel.cpp:794
 msgid "Zoom In\tLeft-Click/Left-Drag"
 msgstr "Збільшити\tКлацання лівою/Перетягування лівою кнопкою"
 
-#: src/TrackPanel.cpp:827
+#: src/TrackPanel.cpp:795
 msgid "Zoom Out\tShift-Left-Click"
 msgstr "Зменшити\tShift і клацання лівою"
 
-#: src/TrackPanel.cpp:828
+#: src/TrackPanel.cpp:796
 msgid "Zoom to Fit\tShift-Right-Click"
 msgstr "Підібрати за розміром\tShift і клацання правою"
 
-#: src/TrackPanel.cpp:1706
+#: src/TrackPanel.cpp:1674
 msgid ""
 "Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom "
 "region."
@@ -5331,7 +5323,7 @@ msgstr ""
 "Клацання — вертикальне збільшення, Shift+клацання — зменшення, перетягування "
 "— визначення області масштабування."
 
-#: src/TrackPanel.cpp:1711
+#: src/TrackPanel.cpp:1679
 msgid ""
 "Click to verticaly zoom in, Shift-click to zoom out, Drag to create a "
 "particular zoom region."
@@ -5339,93 +5331,93 @@ msgstr ""
 "Клацання — вертикальне збільшення, Shift+клацання — зменшення, перетягування "
 "з натиснутою кнопкою — вибір області масштабування."
 
-#: src/TrackPanel.cpp:1717
+#: src/TrackPanel.cpp:1685
 msgid "Drag the track vertically to change the order of the tracks."
 msgstr ""
 "Щоб змінити порядок представлення доріжок, перетягніть цю доріжку вгору/вниз."
 
-#: src/TrackPanel.cpp:1731
+#: src/TrackPanel.cpp:1699
 msgid "Click and drag to adjust relative size of stereo tracks."
 msgstr ""
 "Клацніть та перетягніть позначку для коригування відносного розміру "
 "стереодоріжок."
 
-#: src/TrackPanel.cpp:1734
+#: src/TrackPanel.cpp:1702
 msgid "Click and drag to resize the track."
 msgstr "Клацніть та перетягніть для зміни розміру доріжки."
 
-#: src/TrackPanel.cpp:1765
+#: src/TrackPanel.cpp:1733
 msgid "Drag one or more label boundaries."
 msgstr "Перетягнути одну чи більше меж позначок."
 
-#: src/TrackPanel.cpp:1766
+#: src/TrackPanel.cpp:1734
 msgid "Drag label boundary."
 msgstr "Перетягнути межу позначки."
 
-#: src/TrackPanel.cpp:1811 src/TrackPanel.cpp:1818
+#: src/TrackPanel.cpp:1779 src/TrackPanel.cpp:1786
 msgid "Click and drag to move center selection frequency."
 msgstr ""
 "Затисніть кнопку миші і перетягніть вказівник для пересування середини "
 "діапазону частот."
 
-#: src/TrackPanel.cpp:1812
+#: src/TrackPanel.cpp:1780
 msgid "Click and drag to move center selection frequency to a spectral peak."
 msgstr ""
 "Затисніть кнопку миші і перетягніть вказівник для пересування середини "
 "діапазону частот до спектрального піка."
 
 #. i18n-hint: These are the names of a menu and a command in that menu
-#: src/TrackPanel.cpp:1869
+#: src/TrackPanel.cpp:1837
 msgid "Edit, Preferences..."
 msgstr "Зміни, Параметри…"
 
-#: src/TrackPanel.cpp:1874
+#: src/TrackPanel.cpp:1842
 #, c-format
 msgid "Multi-Tool Mode: %s for Mouse and Keyboard Preferences."
 msgstr ""
 "Універсальний інструмент: натисніть %s для налаштовування миші та клавіатури"
 
-#: src/TrackPanel.cpp:1905
+#: src/TrackPanel.cpp:1873
 msgid "Click and drag to set frequency bandwidth."
 msgstr ""
 "Натисніть кнопку миші і перетягніть вказівник, щоб встановити смугу частот."
 
-#: src/TrackPanel.cpp:1931
+#: src/TrackPanel.cpp:1899
 msgid "Click and drag to stretch within selected region."
 msgstr ""
 "Натисніть кнопку миші і перетягніть вказівник, щоб розтягнути позначену "
 "ділянку."
 
-#: src/TrackPanel.cpp:1946
+#: src/TrackPanel.cpp:1914
 msgid "Click to move selection boundary to cursor."
 msgstr "Клацніть, щоб пересунути межу позначеного у позицію вказівника."
 
-#: src/TrackPanel.cpp:1952
+#: src/TrackPanel.cpp:1920
 msgid "Click and drag to move left selection boundary."
 msgstr "Клацніть та перетягніть для переміщення лівої межі вибраної ділянки."
 
-#: src/TrackPanel.cpp:1956
+#: src/TrackPanel.cpp:1924
 msgid "Click and drag to move right selection boundary."
 msgstr "Клацніть та перетягніть для переміщення правої межі вибраної ділянки."
 
-#: src/TrackPanel.cpp:1961
+#: src/TrackPanel.cpp:1929
 msgid "Click and drag to move bottom selection frequency."
 msgstr ""
 "Затисніть кнопку миші і перетягніть вказівник для пересування нижньої "
 "частоти."
 
-#: src/TrackPanel.cpp:1965
+#: src/TrackPanel.cpp:1933
 msgid "Click and drag to move top selection frequency."
 msgstr ""
 "Затисніть кнопку миші і перетягніть вказівник для пересування верхньої "
 "частоти."
 
-#: src/TrackPanel.cpp:1972
+#: src/TrackPanel.cpp:1940
 msgid "Click and drag to adjust frequency bandwidth."
 msgstr ""
 "Затисніть кнопку миші і перетягніть вказівник для коригування смуги частот."
 
-#: src/TrackPanel.cpp:2720 src/TrackPanel.cpp:2728
+#: src/TrackPanel.cpp:2688 src/TrackPanel.cpp:2696
 msgid "Click and drag to stretch selected region."
 msgstr ""
 "Натисніть кнопку миші і перетягніть вказівник, щоб розширити позначену "
@@ -5433,7 +5425,7 @@ msgstr ""
 
 #. i18n-hint: (noun) The track that is used for MIDI notes which can be
 #. dragged to change their duration.
-#: src/TrackPanel.cpp:2763 src/TrackPanel.cpp:3331
+#: src/TrackPanel.cpp:2731 src/TrackPanel.cpp:3299
 msgid "Stretch Note Track"
 msgstr "Розтягнути нотну доріжку"
 
@@ -5441,275 +5433,275 @@ msgstr "Розтягнути нотну доріжку"
 #. been dragged to change its duration (stretch it). Using either past
 #. or present tense is fine here.  If unsure, go for whichever is
 #. shorter.
-#: src/TrackPanel.cpp:2768 src/TrackPanel.cpp:3331
+#: src/TrackPanel.cpp:2736 src/TrackPanel.cpp:3299
 msgid "Stretch"
 msgstr "Розтягнути"
 
 #. i18n-hint: (verb) Audacity has just adjusted the envelope .
-#: src/TrackPanel.cpp:3677
+#: src/TrackPanel.cpp:3645
 msgid "Adjusted envelope."
 msgstr "Обвідна скорегована."
 
 #. i18n-hint: The envelope is a curve that controls the audio loudness.
-#: src/TrackPanel.cpp:3679 src/prefs/MousePrefs.cpp:144
+#: src/TrackPanel.cpp:3647 src/prefs/MousePrefs.cpp:144
 msgid "Envelope"
 msgstr "Обвідна"
 
-#: src/TrackPanel.cpp:3848
+#: src/TrackPanel.cpp:3816
 msgid "Moved clip to another track"
 msgstr "Область переміщено до іншої доріжки"
 
 #. i18n-hint: a direction as in left or right.
-#: src/TrackPanel.cpp:3854
+#: src/TrackPanel.cpp:3822
 msgid "right"
 msgstr "правий"
 
 #. i18n-hint: a direction as in left or right.
-#: src/TrackPanel.cpp:3856
+#: src/TrackPanel.cpp:3824
 msgid "left"
 msgstr "лівий"
 
 #. i18n-hint: %s is a direction like left or right
-#: src/TrackPanel.cpp:3858
+#: src/TrackPanel.cpp:3826
 #, c-format
 msgid "Time shifted tracks/clips %s %.02f seconds"
 msgstr "Доріжку/область зміщено на %s %.02f секунд"
 
-#: src/TrackPanel.cpp:3862 src/prefs/MousePrefs.cpp:138
+#: src/TrackPanel.cpp:3830 src/prefs/MousePrefs.cpp:138
 #: src/prefs/MousePrefs.cpp:139 src/prefs/MousePrefs.cpp:140
 msgid "Time-Shift"
 msgstr "Зсув у часі"
 
-#: src/TrackPanel.cpp:4850
+#: src/TrackPanel.cpp:4822
 msgid "To use Draw, choose 'Waveform' in the Track Drop-down Menu."
 msgstr ""
 "Щоб використати Малювання, виберіть пункт «Форма хвилі» у спадному меню "
 "доріжки."
 
-#: src/TrackPanel.cpp:4869
+#: src/TrackPanel.cpp:4841
 msgid "To use Draw, zoom in further until you can see the individual samples."
 msgstr ""
 "Щоб використати Малювання, збільшуйте частину доріжки, аж доки не побачите "
 "окремі фрагменти."
 
-#: src/TrackPanel.cpp:5114
+#: src/TrackPanel.cpp:5086
 msgid "Moved Samples"
 msgstr "Пересунуті семли"
 
-#: src/TrackPanel.cpp:5115
+#: src/TrackPanel.cpp:5087
 msgid "Sample Edit"
 msgstr "Редагування семплу"
 
-#: src/TrackPanel.cpp:5369
+#: src/TrackPanel.cpp:5341
 msgid "Moved velocity slider"
 msgstr "Пересунуто повзунок швидкості"
 
-#: src/TrackPanel.cpp:5546
+#: src/TrackPanel.cpp:5518
 msgid "up"
 msgstr "вгору"
 
-#: src/TrackPanel.cpp:5546
+#: src/TrackPanel.cpp:5518
 msgid "down"
 msgstr "вниз"
 
-#: src/TrackPanel.cpp:5547
+#: src/TrackPanel.cpp:5519
 #, c-format
 msgid "Moved '%s' %s"
 msgstr "Переміщено «%s» %s"
 
-#: src/TrackPanel.cpp:6632
+#: src/TrackPanel.cpp:6604
 msgid "Expanded Cut Line"
 msgstr "Розширена лінія розрізу"
 
-#: src/TrackPanel.cpp:6632
+#: src/TrackPanel.cpp:6604
 msgid "Expand"
 msgstr "Розгорнути"
 
-#: src/TrackPanel.cpp:6645
+#: src/TrackPanel.cpp:6617
 msgid "Merged Clips"
 msgstr "Об'єднані фрагменти"
 
-#: src/TrackPanel.cpp:6645
+#: src/TrackPanel.cpp:6617
 msgid "Merge"
 msgstr "Об'єднати"
 
-#: src/TrackPanel.cpp:6656
+#: src/TrackPanel.cpp:6628
 msgid "Removed Cut Line"
 msgstr "Вилучено лінію розрізу"
 
-#: src/TrackPanel.cpp:6656 src/effects/EffectRack.cpp:235
+#: src/TrackPanel.cpp:6628 src/effects/EffectRack.cpp:235
 msgid "Remove"
 msgstr "Вилучити"
 
-#: src/TrackPanel.cpp:8567 src/TrackPanel.cpp:8570
+#: src/TrackPanel.cpp:8539 src/TrackPanel.cpp:8542
 msgid "Stereo, "
 msgstr "Стерео, "
 
-#: src/TrackPanel.cpp:8574
+#: src/TrackPanel.cpp:8546
 msgid "Mono, "
 msgstr "Моно, "
 
-#: src/TrackPanel.cpp:8576
+#: src/TrackPanel.cpp:8548
 msgid "Left, "
 msgstr "Лівий, "
 
-#: src/TrackPanel.cpp:8578
+#: src/TrackPanel.cpp:8550
 msgid "Right, "
 msgstr "Правий, "
 
-#: src/TrackPanel.cpp:8590
+#: src/TrackPanel.cpp:8562
 msgid "Left Channel"
 msgstr "Лівий канал"
 
-#: src/TrackPanel.cpp:8590
+#: src/TrackPanel.cpp:8562
 msgid "Right Channel"
 msgstr "Правий канал"
 
-#: src/TrackPanel.cpp:8591
+#: src/TrackPanel.cpp:8563
 msgid "Mono"
 msgstr "Моно"
 
-#: src/TrackPanel.cpp:8600 src/TrackPanel.cpp:8909
+#: src/TrackPanel.cpp:8572 src/TrackPanel.cpp:8881
 #, c-format
 msgid "Changed '%s' to %s"
 msgstr "«%s» змінено на %s"
 
-#: src/TrackPanel.cpp:8603
+#: src/TrackPanel.cpp:8575
 msgid "Channel"
 msgstr "Канал"
 
-#: src/TrackPanel.cpp:8630
+#: src/TrackPanel.cpp:8602
 #, c-format
 msgid "Swapped Channels in '%s'"
 msgstr "Виконано обмін каналів у «%s»"
 
-#: src/TrackPanel.cpp:8632
+#: src/TrackPanel.cpp:8604
 msgid "Swap Channels"
 msgstr "Обмін каналів"
 
-#: src/TrackPanel.cpp:8640
+#: src/TrackPanel.cpp:8612
 #, c-format
 msgid "Split stereo track '%s'"
 msgstr "Розділити стереодоріжку «%s»"
 
-#: src/TrackPanel.cpp:8649
+#: src/TrackPanel.cpp:8621
 #, c-format
 msgid "Split Stereo to Mono '%s'"
 msgstr "Поділити стерео на моно «%s»"
 
-#: src/TrackPanel.cpp:8651
+#: src/TrackPanel.cpp:8623
 msgid "Split to Mono"
 msgstr "Розділити на моно"
 
-#: src/TrackPanel.cpp:8744
+#: src/TrackPanel.cpp:8716
 #, c-format
 msgid "Made '%s' a stereo track"
 msgstr "Зробити «%s» стереодоріжку"
 
-#: src/TrackPanel.cpp:8747
+#: src/TrackPanel.cpp:8719
 msgid "Make Stereo"
 msgstr "Зробити стереофонічною"
 
-#: src/TrackPanel.cpp:8866
+#: src/TrackPanel.cpp:8838
 #, c-format
 msgid "Changed '%s' to %s Hz"
 msgstr "«%s» змінено на %s Гц"
 
-#: src/TrackPanel.cpp:8868
+#: src/TrackPanel.cpp:8840
 msgid "Rate Change"
 msgstr "Змінити частоту"
 
-#: src/TrackPanel.cpp:8913
+#: src/TrackPanel.cpp:8885
 msgid "Format Change"
 msgstr "Зміна формату"
 
-#: src/TrackPanel.cpp:9000
+#: src/TrackPanel.cpp:8972
 msgid "Set Rate"
 msgstr "Встановити частоту дискретизації"
 
-#: src/TrackPanel.cpp:9077
+#: src/TrackPanel.cpp:9049
 msgid "Change lower speed limit (%) to:"
 msgstr "Змінити нижню межу швидкості (%) на:"
 
-#: src/TrackPanel.cpp:9078 src/TrackPanel.cpp:9079
+#: src/TrackPanel.cpp:9050 src/TrackPanel.cpp:9051
 msgid "Lower speed limit"
 msgstr "Межа зниження швидкості"
 
-#: src/TrackPanel.cpp:9084
+#: src/TrackPanel.cpp:9056
 msgid "Change upper speed limit (%) to:"
 msgstr "Змінити верхню межу швидкості (%) на:"
 
-#: src/TrackPanel.cpp:9085 src/TrackPanel.cpp:9086
+#: src/TrackPanel.cpp:9057 src/TrackPanel.cpp:9058
 msgid "Upper speed limit"
 msgstr "Верхня межа швидкості"
 
-#: src/TrackPanel.cpp:9094
+#: src/TrackPanel.cpp:9066
 #, c-format
 msgid "Set range to '%ld' - '%ld'"
 msgstr "Встановити межу як '%ld' — '%ld'"
 
 #. i18n-hint: (verb)
-#: src/TrackPanel.cpp:9099
+#: src/TrackPanel.cpp:9071
 msgid "Set Range"
 msgstr "Встановити діапазон"
 
-#: src/TrackPanel.cpp:9110
+#: src/TrackPanel.cpp:9082
 msgid "Set time track display to linear"
 msgstr "Встановити лінійний режим показу на доріжці"
 
-#: src/TrackPanel.cpp:9110 src/TrackPanel.cpp:9119
+#: src/TrackPanel.cpp:9082 src/TrackPanel.cpp:9091
 msgid "Set Display"
 msgstr "Встановити режим показу"
 
-#: src/TrackPanel.cpp:9119
+#: src/TrackPanel.cpp:9091
 msgid "Set time track display to logarithmic"
 msgstr "Встановити логарифмічний режим показу на доріжці"
 
-#: src/TrackPanel.cpp:9128
+#: src/TrackPanel.cpp:9100
 msgid "Set time track interpolation to linear"
 msgstr "Встановити лінійний режим інтерполяції"
 
-#: src/TrackPanel.cpp:9128 src/TrackPanel.cpp:9131
+#: src/TrackPanel.cpp:9100 src/TrackPanel.cpp:9103
 msgid "Set Interpolation"
 msgstr "Встановити режим інтерполяції"
 
-#: src/TrackPanel.cpp:9131
+#: src/TrackPanel.cpp:9103
 msgid "Set time track interpolation to logarithmic"
 msgstr "Встановити логарифмічний режим інтерполяції"
 
-#: src/TrackPanel.cpp:9237
+#: src/TrackPanel.cpp:9209
 msgid "Change track name to:"
 msgstr "Змінити назву доріжки на:"
 
-#: src/TrackPanel.cpp:9238
+#: src/TrackPanel.cpp:9210
 msgid "Track Name"
 msgstr "Назва доріжки"
 
-#: src/TrackPanel.cpp:9251
+#: src/TrackPanel.cpp:9223
 #, c-format
 msgid "Renamed '%s' to '%s'"
 msgstr "Назву змінено з «%s» на «%s»"
 
-#: src/TrackPanel.cpp:9254
+#: src/TrackPanel.cpp:9226
 msgid "Name Change"
 msgstr "Зміна назви"
 
 #. i18n-hint: (noun) This is the font for the label track.
-#: src/TrackPanel.cpp:9290
+#: src/TrackPanel.cpp:9262
 msgid "Label Track Font"
 msgstr "Шрифт доріжки для позначок"
 
 #. i18n-hint: (noun) The name of the typeface
-#: src/TrackPanel.cpp:9304 src/TrackPanel.cpp:9311
+#: src/TrackPanel.cpp:9276 src/TrackPanel.cpp:9283
 msgid "Face name"
 msgstr "Назва шрифту"
 
 #. i18n-hint: (noun) The size of the typeface
-#: src/TrackPanel.cpp:9316 src/TrackPanel.cpp:9323
+#: src/TrackPanel.cpp:9288 src/TrackPanel.cpp:9295
 msgid "Face size"
 msgstr "Розмір шрифту"
 
-#: src/TrackPanel.cpp:9668
+#: src/TrackPanel.cpp:9650
 msgid "Stereo, 999999Hz"
 msgstr "Стерео, 999999Гц"
 
@@ -8516,8 +8508,8 @@ msgid "Time Scale"
 msgstr "Шкала часу"
 
 #: src/effects/ToneGen.cpp:44 src/prefs/SpectrogramSettings.cpp:152
-#: src/prefs/WaveformSettings.cpp:157 src/widgets/Meter.cpp:1973
-#: src/widgets/Meter.cpp:1974
+#: src/prefs/WaveformSettings.cpp:157 src/widgets/Meter.cpp:1976
+#: src/widgets/Meter.cpp:1977
 msgid "Linear"
 msgstr "Лінійна"
 
@@ -9264,11 +9256,11 @@ msgstr "Всі дані звукових доріжок замінено тиш�
 msgid "Unable to export"
 msgstr "Не вдалося експортувати"
 
-#: src/export/Export.cpp:616
+#: src/export/Export.cpp:618
 msgid "Are you sure you want to export the file as \""
 msgstr "Ви справді хочете експортувати дані до файла з назвою «"
 
-#: src/export/Export.cpp:636
+#: src/export/Export.cpp:638
 #, c-format
 msgid ""
 "You are about to export a %s file with the name \"%s\".\n"
@@ -9285,11 +9277,11 @@ msgstr ""
 "\n"
 "Ви справді бажаєте експортувати файл з цією назвою?"
 
-#: src/export/Export.cpp:650
+#: src/export/Export.cpp:652
 msgid "Sorry, pathnames longer than 256 characters not supported."
 msgstr "Шляхи, що містять більш ніж 256 символів, не підтримуються."
 
-#: src/export/Export.cpp:668
+#: src/export/Export.cpp:670
 msgid ""
 "You are attempting to overwrite an aliased file that is missing.\n"
 "The file cannot be written because the path is needed to restore the "
@@ -9307,47 +9299,47 @@ msgstr ""
 "Якщо ви все ще бажаєте експортувати дані, будь ласка, вкажіть іншу назву "
 "файла або теки."
 
-#: src/export/Export.cpp:682
+#: src/export/Export.cpp:684
 #, c-format
 msgid "A file named \"%s\" already exists.  Replace?"
 msgstr "Файл з назвою «%s» вже існує.  Замінити?"
 
-#: src/export/Export.cpp:796
+#: src/export/Export.cpp:798
 msgid ""
 "Your tracks will be mixed down to two stereo channels in the exported file."
 msgstr "У експортованому файлі доріжки будуть зведені у два стереоканали."
 
-#: src/export/Export.cpp:803
+#: src/export/Export.cpp:805
 msgid ""
 "Your tracks will be mixed down to a single mono channel in the exported file."
 msgstr "У експортованому файлі доріжки будуть зведені у один моноканал."
 
-#: src/export/Export.cpp:816
+#: src/export/Export.cpp:818
 msgid "Advanced Mixing Options"
 msgstr "Додаткові параметри мікшування"
 
-#: src/export/Export.cpp:880
+#: src/export/Export.cpp:882
 msgid "Format Options"
 msgstr "Параметри форматування"
 
-#: src/export/Export.cpp:1076
+#: src/export/Export.cpp:1078
 #, c-format
 msgid "Channel: %2d"
 msgstr "Канал: %2d"
 
-#: src/export/Export.cpp:1194
+#: src/export/Export.cpp:1196
 msgid " - L"
 msgstr " - Л"
 
-#: src/export/Export.cpp:1196
+#: src/export/Export.cpp:1198
 msgid " - R"
 msgstr " - П"
 
-#: src/export/Export.cpp:1218
+#: src/export/Export.cpp:1220
 msgid "Mixer Panel"
 msgstr "Панель мікшера"
 
-#: src/export/Export.cpp:1224 src/export/Export.cpp:1271
+#: src/export/Export.cpp:1226 src/export/Export.cpp:1273
 #, c-format
 msgid "Output Channels: %2d"
 msgstr "Вихідні канали: %2d"
@@ -9522,7 +9514,7 @@ msgstr "Експорт вибраних звукових даних як %s"
 msgid "Exporting entire file as %s"
 msgstr "Експорт всього файла як %s"
 
-#: src/export/ExportFFmpeg.cpp:912 src/export/ExportMP3.cpp:1897
+#: src/export/ExportFFmpeg.cpp:912 src/export/ExportMP3.cpp:1899
 msgid "Invalid sample rate"
 msgstr "Некоректна частота дискретизації"
 
@@ -9544,11 +9536,11 @@ msgstr ""
 "Набір частоти дискретизації проекту (%d) та швидкості (%d кб/с)\n"
 "не підтримується поточним форматом файла виводу.  "
 
-#: src/export/ExportFFmpeg.cpp:932 src/export/ExportMP3.cpp:1917
+#: src/export/ExportFFmpeg.cpp:932 src/export/ExportMP3.cpp:1919
 msgid "You may resample to one of the rates below."
 msgstr "Ви можете змінити частоту на одну з наведених нижче."
 
-#: src/export/ExportFFmpeg.cpp:960 src/export/ExportMP3.cpp:1940
+#: src/export/ExportFFmpeg.cpp:960 src/export/ExportMP3.cpp:1942
 msgid "Sample Rates"
 msgstr "Частоти дискретизації"
 
@@ -10114,7 +10106,7 @@ msgid "Cannot export MP2 with this sample rate and bit rate"
 msgstr ""
 "Не вдалося експортувати MP2 з цією частотою дискретизації та бітовою частотою"
 
-#: src/export/ExportMP2.cpp:246 src/export/ExportMP3.cpp:1743
+#: src/export/ExportMP2.cpp:246 src/export/ExportMP3.cpp:1745
 #: src/export/ExportOGG.cpp:188
 msgid "Unable to open target file for writing"
 msgstr "Не вдається відкрити кінцевий файл для запису"
@@ -10272,58 +10264,58 @@ msgstr ""
 msgid "MP3 Files"
 msgstr "Файли MP3"
 
-#: src/export/ExportMP3.cpp:1608 src/export/ExportMP3.cpp:1645
+#: src/export/ExportMP3.cpp:1609 src/export/ExportMP3.cpp:1647
 msgid "Could not open MP3 encoding library!"
 msgstr "Не вдається відкрити бібліотеку для експорту у MP3!"
 
-#: src/export/ExportMP3.cpp:1637
+#: src/export/ExportMP3.cpp:1639
 msgid "Could not initialize MP3 encoding library!"
 msgstr "Не вдалося ініціалізувати бібліотеку кодування MP3!"
 
-#: src/export/ExportMP3.cpp:1653
+#: src/export/ExportMP3.cpp:1655
 msgid "Not a valid or supported MP3 encoding library!"
 msgstr "Неправильна, або непідтримувана бібліотека стиснення MP3!"
 
-#: src/export/ExportMP3.cpp:1732
+#: src/export/ExportMP3.cpp:1734
 msgid "Unable to initialize MP3 stream"
 msgstr "Не вдалося започаткувати потік MP3"
 
-#: src/export/ExportMP3.cpp:1776
+#: src/export/ExportMP3.cpp:1778
 #, c-format
 msgid "Exporting selected audio with %s preset"
 msgstr "Експорт вибраного аудіо за шаблоном %s"
 
-#: src/export/ExportMP3.cpp:1777
+#: src/export/ExportMP3.cpp:1779
 #, c-format
 msgid "Exporting entire file with %s preset"
 msgstr "Експорт цілого файла за шаблоном %s"
 
-#: src/export/ExportMP3.cpp:1782
+#: src/export/ExportMP3.cpp:1784
 #, c-format
 msgid "Exporting selected audio with VBR quality %s"
 msgstr "Експорт вибраного аудіо з якістю VBR %s"
 
-#: src/export/ExportMP3.cpp:1783
+#: src/export/ExportMP3.cpp:1785
 #, c-format
 msgid "Exporting entire file with VBR quality %s"
 msgstr "Експорт цілого файла з якістю VBR %s"
 
-#: src/export/ExportMP3.cpp:1788
+#: src/export/ExportMP3.cpp:1790
 #, c-format
 msgid "Exporting selected audio at %d Kbps"
 msgstr "Експорт вибраного аудіо на швидкості %d кб/с"
 
-#: src/export/ExportMP3.cpp:1789
+#: src/export/ExportMP3.cpp:1791
 #, c-format
 msgid "Exporting entire file at %d Kbps"
 msgstr "Експорт цілого файла на швидкості %d кб/с"
 
-#: src/export/ExportMP3.cpp:1823
+#: src/export/ExportMP3.cpp:1825
 #, c-format
 msgid "Error %ld returned from MP3 encoder"
 msgstr "Модуль кодування MP3 повернув помилку %ld"
 
-#: src/export/ExportMP3.cpp:1911
+#: src/export/ExportMP3.cpp:1913
 #, c-format
 msgid ""
 "The project sample rate (%d) is not supported by the MP3\n"
@@ -10332,7 +10324,7 @@ msgstr ""
 "Частота дискретизації проекту (%d) не підтримується форматом\n"
 "файлів MP3.  "
 
-#: src/export/ExportMP3.cpp:1914
+#: src/export/ExportMP3.cpp:1916
 #, c-format
 msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
@@ -10341,7 +10333,7 @@ msgstr ""
 "Набір частоти дискретизації проекту (%d) та швидкості (%d кб/с)\n"
 "не підтримується форматом файлів MP3.  "
 
-#: src/export/ExportMP3.cpp:2086
+#: src/export/ExportMP3.cpp:2088
 msgid "MP3 export library not found"
 msgstr "Не знайдено бібліотеку експорту до MP3"
 
@@ -12487,6 +12479,10 @@ msgstr "Проста"
 msgid "Waveform (dB)"
 msgstr "Хвиля (дБ)"
 
+#: src/prefs/TracksPrefs.cpp:70
+msgid "Spectrogram"
+msgstr "Спектрограма"
+
 #: src/prefs/TracksPrefs.cpp:88
 msgid "&Update display while playing"
 msgstr "&Оновлювати відображення під час відтворення"
@@ -12953,43 +12949,43 @@ msgstr "Швидкість програвання"
 msgid "Play-at-speed"
 msgstr "Відтворити-на-швидкості"
 
-#: src/widgets/AButton.cpp:443
+#: src/widgets/AButton.cpp:444
 msgid " (disabled)"
 msgstr " (вимкнено)"
 
-#: src/widgets/AButton.cpp:622 src/widgets/Meter.cpp:2113
+#: src/widgets/AButton.cpp:623 src/widgets/Meter.cpp:2116
 msgid "Press"
 msgstr "Натисніть"
 
-#: src/widgets/AButton.cpp:701
+#: src/widgets/AButton.cpp:702
 msgid "Button"
 msgstr "Кнопка"
 
 #. i18n-hint: One-letter abbreviation for Left, in the Pan slider
 #. i18n-hint: One-letter abbreviation for Left, in VU Meter
-#: src/widgets/ASlider.cpp:794 src/widgets/Meter.cpp:1187
+#: src/widgets/ASlider.cpp:802 src/widgets/Meter.cpp:1190
 msgid "L"
 msgstr "Л"
 
 #. i18n-hint: One-letter abbreviation for Right, in the Pan slider
 #. i18n-hint: One-letter abbreviation for Right, in VU Meter
-#: src/widgets/ASlider.cpp:797 src/widgets/Meter.cpp:1189
+#: src/widgets/ASlider.cpp:805 src/widgets/Meter.cpp:1192
 msgid "R"
 msgstr "П"
 
-#: src/widgets/ASlider.cpp:1017
+#: src/widgets/ASlider.cpp:1025
 msgid "Center"
 msgstr "Центр"
 
-#: src/widgets/ASlider.cpp:1023
+#: src/widgets/ASlider.cpp:1031
 msgid "Left"
 msgstr "Ліворуч"
 
-#: src/widgets/ASlider.cpp:1023
+#: src/widgets/ASlider.cpp:1031
 msgid "Right"
 msgstr "Праворуч"
 
-#: src/widgets/ASlider.cpp:1034
+#: src/widgets/ASlider.cpp:1042
 msgid "+"
 msgstr "+"
 
@@ -13037,47 +13033,47 @@ msgstr "Довідка у інтернеті"
 msgid "Menu"
 msgstr "Меню"
 
-#: src/widgets/Meter.cpp:586
+#: src/widgets/Meter.cpp:589
 msgid "Click to Start Monitoring"
 msgstr "Клацніть, щоб почати спостереження"
 
-#: src/widgets/Meter.cpp:587
+#: src/widgets/Meter.cpp:590
 msgid "Click for Monitoring"
 msgstr "Клацніть для спостереження"
 
-#: src/widgets/Meter.cpp:588
+#: src/widgets/Meter.cpp:591
 msgid "Click to Start"
 msgstr "Клацніть, щоб розпочати"
 
-#: src/widgets/Meter.cpp:589
+#: src/widgets/Meter.cpp:592
 msgid "Click"
 msgstr "Клацання"
 
-#: src/widgets/Meter.cpp:683 src/widgets/Meter.cpp:1867
+#: src/widgets/Meter.cpp:686 src/widgets/Meter.cpp:1870
 msgid "Stop Monitoring"
 msgstr "Припинити спостереження"
 
-#: src/widgets/Meter.cpp:685 src/widgets/Meter.cpp:1869
+#: src/widgets/Meter.cpp:688 src/widgets/Meter.cpp:1872
 msgid "Start Monitoring"
 msgstr "Почати спостереження"
 
-#: src/widgets/Meter.cpp:689 src/widgets/Meter.cpp:1873
+#: src/widgets/Meter.cpp:692 src/widgets/Meter.cpp:1876
 msgid "Preferences..."
 msgstr "Параметри…"
 
-#: src/widgets/Meter.cpp:1920
+#: src/widgets/Meter.cpp:1923
 msgid "Recording Meter Preferences"
 msgstr "Параметри індикатора запису"
 
-#: src/widgets/Meter.cpp:1920
+#: src/widgets/Meter.cpp:1923
 msgid "Playback Meter Preferences"
 msgstr "Параметри індикатора відтворення"
 
-#: src/widgets/Meter.cpp:1930
+#: src/widgets/Meter.cpp:1933
 msgid "Refresh Rate"
 msgstr "Частота оновлення"
 
-#: src/widgets/Meter.cpp:1932
+#: src/widgets/Meter.cpp:1935
 msgid ""
 "Higher refresh rates make the meter show more frequent\n"
 "changes. A rate of 30 per second or less should prevent\n"
@@ -13087,65 +13083,65 @@ msgstr ""
 "індикаторі рівня. Значення частоти 30 за секунду або менше має запобігти\n"
 "розривам у відтворенні звуку на повільних комп’ютерах."
 
-#: src/widgets/Meter.cpp:1935
+#: src/widgets/Meter.cpp:1938
 msgid "Meter refresh rate per second [1-100]: "
 msgstr "Частота оновлення індикатора (разів за секунду) [1-100]: "
 
-#: src/widgets/Meter.cpp:1938
+#: src/widgets/Meter.cpp:1941
 msgid "Meter refresh rate per second [1-100]"
 msgstr "Частота оновлення індикатора (разів за секунду) [1-100]"
 
-#: src/widgets/Meter.cpp:1949
+#: src/widgets/Meter.cpp:1952
 msgid "Meter Style"
 msgstr "Стиль"
 
-#: src/widgets/Meter.cpp:1953 src/widgets/Meter.cpp:1954
+#: src/widgets/Meter.cpp:1956 src/widgets/Meter.cpp:1957
 msgid "Gradient"
 msgstr "Градієнт"
 
-#: src/widgets/Meter.cpp:1957 src/widgets/Meter.cpp:1958
+#: src/widgets/Meter.cpp:1960 src/widgets/Meter.cpp:1961
 msgid "RMS"
 msgstr "СКВ"
 
-#: src/widgets/Meter.cpp:1965
+#: src/widgets/Meter.cpp:1968
 msgid "Meter Type"
 msgstr "Тип"
 
-#: src/widgets/Meter.cpp:1981
+#: src/widgets/Meter.cpp:1984
 msgid "Orientation"
 msgstr "Орієнтація"
 
-#: src/widgets/Meter.cpp:1985 src/widgets/Meter.cpp:1986
+#: src/widgets/Meter.cpp:1988 src/widgets/Meter.cpp:1989
 msgid "Automatic"
 msgstr "Автоматично"
 
-#: src/widgets/Meter.cpp:1989 src/widgets/Meter.cpp:1990
+#: src/widgets/Meter.cpp:1992 src/widgets/Meter.cpp:1993
 msgid "Horizontal"
 msgstr "Горизонтальна"
 
-#: src/widgets/Meter.cpp:1993 src/widgets/Meter.cpp:1994
+#: src/widgets/Meter.cpp:1996 src/widgets/Meter.cpp:1997
 msgid "Vertical"
 msgstr "Вертикальна"
 
-#: src/widgets/Meter.cpp:2196
+#: src/widgets/Meter.cpp:2199
 msgid " Monitoring "
 msgstr " Спостереження "
 
-#: src/widgets/Meter.cpp:2200
+#: src/widgets/Meter.cpp:2203
 msgid " Active "
 msgstr " Активний "
 
-#: src/widgets/Meter.cpp:2214
+#: src/widgets/Meter.cpp:2217
 #, c-format
 msgid " Peak %2.f dB"
 msgstr " Пік — %2.f дБ"
 
-#: src/widgets/Meter.cpp:2218
+#: src/widgets/Meter.cpp:2221
 #, c-format
 msgid " Peak %.2f "
 msgstr " Пік — %.2f "
 
-#: src/widgets/Meter.cpp:2223
+#: src/widgets/Meter.cpp:2226
 msgid " Clipped "
 msgstr " Обрізано "
 
@@ -13587,6 +13583,18 @@ msgstr "Помилка під час закриття файла"
 msgid "Error Writing to File"
 msgstr "Помилка під час спроби запису файла"
 
+#~ msgid "Panel 1"
+#~ msgstr "Панель 1"
+
+#~ msgid "Diagnostics"
+#~ msgstr "Діагностика"
+
+#~ msgid "R&ight Channel"
+#~ msgstr "&Правий канал"
+
+#~ msgid "&Rate"
+#~ msgstr "&Частота"
+
 #~ msgid "<DIR>"
 #~ msgstr "<КАТАЛОГ>"
 
@@ -13665,14 +13673,8 @@ msgstr "Помилка під час спроби запису файла"
 #~ msgid "Pitc&h (EAC)"
 #~ msgstr "&Висота тону (EAC)"
 
-#~ msgid "&Right Channel"
-#~ msgstr "&Правий канал"
-
 #~ msgid "Set Sample &Format"
 #~ msgstr "Встановити &формат семплу"
-
-#~ msgid "Set Rat&e"
-#~ msgstr "Встановити &частоту"
 
 #~ msgid "Set Ra&nge..."
 #~ msgstr "Встановити ді&апазон…"
@@ -13820,9 +13822,6 @@ msgstr "Помилка під час спроби запису файла"
 
 #~ msgid "FFT Window"
 #~ msgstr "Вікно FFT"
-
-#~ msgid "Spectrogram"
-#~ msgstr "Спектрограма"
 
 #~ msgid "Spectrogram log(f)"
 #~ msgstr "Спектрограма ln(f)"
