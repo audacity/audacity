@@ -1280,6 +1280,34 @@ bool AudacityProject::GetIsEmpty()
    return mTracks->IsEmpty();
 }
 
+bool AudacityProject::SnapSelection()
+{
+   if (mSnapTo != SNAP_OFF) {
+      SelectedRegion &selectedRegion = mViewInfo.selectedRegion;
+      NumericConverter nc(NumericConverter::TIME, GetSelectionFormat(), 0, GetRate());
+      const bool nearest = (mSnapTo == SNAP_NEAREST);
+
+      const double oldt0 = selectedRegion.t0();
+      const double oldt1 = selectedRegion.t1();
+
+      nc.ValueToControls(oldt0, nearest);
+      nc.ControlsToValue();
+      const double t0 = nc.GetValue();
+
+      nc.ValueToControls(oldt1, nearest);
+      nc.ControlsToValue();
+      const double t1 = nc.GetValue();
+
+      if (t0 != oldt0 || t1 != oldt1) {
+         selectedRegion.setTimes(t0, t1);
+         TP_DisplaySelection();
+         return true;
+      }
+   }
+
+   return false;
+}
+
 double AudacityProject::AS_GetRate()
 {
    return mRate;
@@ -1304,6 +1332,8 @@ void AudacityProject::AS_SetSnapTo(int snap)
    gPrefs->Write(wxT("/SnapTo"), mSnapTo);
    gPrefs->Flush();
 
+   SnapSelection();
+
    RedrawProject();
 }
 
@@ -1318,6 +1348,9 @@ void AudacityProject::AS_SetSelectionFormat(const wxString & format)
 
    gPrefs->Write(wxT("/SelectionFormat"), mSelectionFormat);
    gPrefs->Flush();
+
+   if (SnapSelection() && GetTrackPanel())
+      GetTrackPanel()->Refresh(false);
 }
 
 double AudacityProject::SSBL_GetRate() const
@@ -4649,12 +4682,14 @@ void AudacityProject::TP_DisplaySelection()
       (mViewInfo.selectedRegion.f0(), mViewInfo.selectedRegion.f1());
 #endif
 
-   if (!gAudioIO->IsBusy() && !mLockPlayRegion)
-      mRuler->SetPlayRegion(mViewInfo.selectedRegion.t0(),
-                            mViewInfo.selectedRegion.t1());
-   else
-      // Cause ruler redraw anyway, because we may be zooming or scrolling
-      mRuler->Refresh();
+   if (mRuler) {
+      if (!gAudioIO->IsBusy() && !mLockPlayRegion)
+         mRuler->SetPlayRegion(mViewInfo.selectedRegion.t0(),
+         mViewInfo.selectedRegion.t1());
+      else
+         // Cause ruler redraw anyway, because we may be zooming or scrolling
+         mRuler->Refresh();
+   }
 }
 
 

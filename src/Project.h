@@ -433,6 +433,10 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 
    wxStatusBar* GetStatusBar() { return mStatusBar; }
 
+private:
+   bool SnapSelection();
+
+public:
    // SelectionBarListener callback methods
 
    virtual double AS_GetRate();
