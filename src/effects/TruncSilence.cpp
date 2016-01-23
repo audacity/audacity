@@ -28,6 +28,7 @@
 #include <wx/valgen.h>
 
 #include "../Prefs.h"
+#include "../Project.h"
 #include "../ShuttleGui.h"
 #include "../WaveTrack.h"
 #include "../widgets/valnum.h"
@@ -272,20 +273,24 @@ bool EffectTruncSilence::ProcessIndependently()
 {
    unsigned nGroups = 0;
 
+   const bool syncLock = ::GetActiveProject()->IsSyncLocked();
+
    // Check if it's permissible
    {
       SelectedTrackListOfKindIterator iter(Track::Wave, mTracks);
       for (Track *track = iter.First(); track;
          track = iter.Next(true) // skip linked tracks
       ) {
-         Track *const link = track->GetLink();
-         SyncLockedTracksIterator syncIter(mTracks);
-         for (Track *track2 = syncIter.First(track); track2; track2 = syncIter.Next()) {
-            if (track2->GetKind() == Track::Wave &&
-               !(track2 == track || track2 == link) &&
-               track2->GetSelected()) {
-               ::wxMessageBox(_("When truncating independently, there may only be one selected audio track in each sync-lock group."));
-               return false;
+         if (syncLock) {
+            Track *const link = track->GetLink();
+            SyncLockedTracksIterator syncIter(mTracks);
+            for (Track *track2 = syncIter.First(track); track2; track2 = syncIter.Next()) {
+               if (track2->GetKind() == Track::Wave &&
+                  !(track2 == track || track2 == link) &&
+                  track2->GetSelected()) {
+                  ::wxMessageBox(_("When truncating independently, there may only be one selected audio track in each sync-lock group."));
+                  return false;
+               }
             }
          }
 
@@ -318,10 +323,18 @@ bool EffectTruncSilence::ProcessIndependently()
          if (!FindSilences(silences, track, last))
             return false;
          // Treat tracks in the sync lock group only
-         SyncLockedTracksIterator syncIter(mOutputTracks);
-         Track *const syncFirst = syncIter.First(track);
+         Track *groupFirst, *groupLast;
+         if (syncLock) {
+            SyncLockedTracksIterator syncIter(mOutputTracks);
+            groupFirst = syncIter.First(track);
+            groupLast = syncIter.Last(track);
+         }
+         else {
+            groupFirst = track;
+            groupLast = last;
+         }
          double totalCutLen = 0.0;
-         if (!DoRemoval(silences, iGroup, nGroups, syncFirst, syncIter.Last(), totalCutLen))
+         if (!DoRemoval(silences, iGroup, nGroups, groupFirst, groupLast, totalCutLen))
             return false;
          newT1 = std::max(newT1, mT1 - totalCutLen);
       }
