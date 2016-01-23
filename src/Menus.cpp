@@ -6347,7 +6347,23 @@ int AudacityProject::DoAddLabel(const SelectedRegion &region, bool preserveFocus
 //   SelectNone();
    lt->SetSelected(true);
 
-   int index = lt->AddLabel(region, wxString(), (preserveFocus ? pFocusedTrack : 0));
+   int focusTrackNumber = -1;
+   if (pFocusedTrack && preserveFocus) {
+      // Must remember the track to re-focus after finishing a label edit.
+      // do NOT identify it by a pointer, which might dangle!  Identify
+      // by position.
+      TrackListIterator iter(GetTracks());
+      Track *track = iter.First();
+      do
+         ++focusTrackNumber;
+      while (track != pFocusedTrack &&
+             NULL != (track = iter.Next()));
+      if (!track)
+         // How could we not find it?
+         focusTrackNumber = -1;
+   }
+
+   int index = lt->AddLabel(region, wxString(), focusTrackNumber);
 
    PushState(_("Added label"), _("Label"));
 

@@ -99,7 +99,7 @@ LabelTrack::LabelTrack(DirManager * projDirManager):
    mSelIndex(-1),
    mMouseOverLabelLeft(-1),
    mMouseOverLabelRight(-1),
-   mpRestoreFocus(0),
+   mRestoreFocus(-1),
    mClipLen(0.0),
    mIsAdjustingLabel(false)
 {
@@ -1841,9 +1841,14 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
       case WXK_NUMPAD_ENTER:
 
       case WXK_ESCAPE:
-         if (mpRestoreFocus) {
-            GetActiveProject()->GetTrackPanel()->SetFocusedTrack(mpRestoreFocus);
-            mpRestoreFocus = 0;
+         if (mRestoreFocus >= 0) {
+            TrackListIterator iter(GetActiveProject()->GetTracks());
+            Track *track = iter.First();
+            while (track && mRestoreFocus--)
+               track = iter.Next();
+            if (track)
+               GetActiveProject()->GetTrackPanel()->SetFocusedTrack(track);
+            mRestoreFocus = -1;
          }
          mSelIndex = -1;
          break;
@@ -2647,7 +2652,7 @@ int LabelTrack::GetLabelIndex(double t, double t1)
 }
 
 int LabelTrack::AddLabel(const SelectedRegion &selectedRegion,
-                         const wxString &title, Track *pRestoreFocus)
+                         const wxString &title, int restoreFocus)
 {
    LabelStruct *l = new LabelStruct(selectedRegion, title);
    mCurrentCursorPos = title.length();
@@ -2674,7 +2679,7 @@ int LabelTrack::AddLabel(const SelectedRegion &selectedRegion,
    //      mDrawCursor flag will be reset once the action is complete.
    mDrawCursor = true;
 
-   mpRestoreFocus = pRestoreFocus;
+   mRestoreFocus = restoreFocus;
 
    return pos;
 }
