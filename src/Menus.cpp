@@ -3982,7 +3982,7 @@ void AudacityProject::OnPaste()
    Track *c = clipIter.First();
    if (c == NULL)
       return;
-   Track *f = NULL;
+   Track *ff = NULL;
    Track *tmpSrc = NULL;
    Track *tmpC = NULL;
    Track *prev = NULL;
@@ -3994,8 +3994,9 @@ void AudacityProject::OnPaste()
    while (n && c) {
       if (n->GetSelected()) {
          bAdvanceClipboard = true;
-         if (tmpC) c = tmpC;
-         if (c->GetKind() != n->GetKind()){
+         if (tmpC)
+            c = tmpC;
+         if (c->GetKind() != n->GetKind()) {
             if (!bTrackTypeMismatch) {
                tmpSrc = prev;
                tmpC = c;
@@ -4005,7 +4006,7 @@ void AudacityProject::OnPaste()
             c = tmpSrc;
 
             // If the types still don't match...
-            while (c && c->GetKind() != n->GetKind()){
+            while (c && c->GetKind() != n->GetKind()) {
                prev = c;
                c = clipIter.Next();
             }
@@ -4013,7 +4014,7 @@ void AudacityProject::OnPaste()
 
          // Handle case where the first track in clipboard
          // is of different type than the first selected track
-         if (!c){
+         if (!c) {
             c = tmpC;
             while (n && (c->GetKind() != n->GetKind() || !n->GetSelected()))
             {
@@ -4023,13 +4024,14 @@ void AudacityProject::OnPaste()
                }
                n = iter.Next();
             }
-            if (!n) c = NULL;
+            if (!n)
+               c = NULL;
          }
 
          // The last possible case for cross-type pastes: triggered when we try to
          // paste 1+ tracks from one type into 1+ tracks of another type. If
          // there's a mix of types, this shouldn't run.
-         if (!c){
+         if (!c) {
             wxMessageBox(
                _("Pasting one type of track into another is not allowed."),
                _("Error"), wxICON_ERROR, this);
@@ -4048,8 +4050,8 @@ void AudacityProject::OnPaste()
             break;
          }
 
-         if (!f)
-            f = n;
+         if (!ff)
+            ff = n;
 
          if (msClipProject != this && c->GetKind() == Track::Wave)
             ((WaveTrack *) c)->Lock();
@@ -4083,11 +4085,7 @@ void AudacityProject::OnPaste()
             n = iter.Next();
 
             if (n->GetKind() == Track::Wave) {
-               //printf("Checking to see if we need to pre-clear the track\n");
-               if (!((WaveTrack *) n)->IsEmpty(t0, t1)) {
-                  ((WaveTrack *) n)->Clear(t0, t1);
-               }
-               bPastedSomething |= ((WaveTrack *)n)->Paste(t0, c);
+               bPastedSomething |= ((WaveTrack *)n)->ClearAndPaste(t0, t1, c, true, true);
             }
             else
             {
@@ -4121,12 +4119,13 @@ void AudacityProject::OnPaste()
       TrackListOfKindIterator clipWaveIter(Track::Wave, msClipboard);
       c = clipWaveIter.Last();
 
-      while (n){
-         if (n->GetSelected() && n->GetKind()==Track::Wave){
-            if (c && c->GetKind() == Track::Wave){
+      while (n) {
+         if (n->GetSelected() && n->GetKind()==Track::Wave) {
+            if (c && c->GetKind() == Track::Wave) {
                bPastedSomething |=
                   ((WaveTrack *)n)->ClearAndPaste(t0, t1, (WaveTrack *)c, true, true);
-            }else{
+            }
+            else {
                WaveTrack *tmp;
                tmp = mTrackFactory->NewWaveTrack( ((WaveTrack*)n)->GetSampleFormat(), ((WaveTrack*)n)->GetRate());
                bool bResult = tmp->InsertSilence(0.0, msClipT1 - msClipT0); // MJS: Is this correct?
@@ -4166,8 +4165,8 @@ void AudacityProject::OnPaste()
 
       RedrawProject();
 
-      if (f)
-         mTrackPanel->EnsureVisible(f);
+      if (ff)
+         mTrackPanel->EnsureVisible(ff);
    }
 }
 
