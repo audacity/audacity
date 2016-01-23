@@ -6564,6 +6564,20 @@ void TrackPanel::OnMouseEvent(wxMouseEvent & event)
    }
 }
 
+namespace {
+   int FindMergeLine(WaveTrack *track, double time)
+   {
+      const double tolerance = 0.5 / track->GetRate();
+      for (int ii = 0, nn = track->GetNumCachedLocations(); ii < nn; ++ii) {
+         WaveTrack::Location loc = track->GetCachedLocation(ii);
+         if (loc.typ == WaveTrackLocation::locationMergePoint &&
+            fabs(time - loc.pos) < tolerance)
+            return ii;
+      }
+      return -1;
+   }
+}
+
 bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &rect, wxMouseEvent &event)
 {
    // FIXME: Disable this and return true when CutLines aren't showing?
@@ -6610,13 +6624,20 @@ bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &rect, 
             }
          }
          else if (mCapturedTrackLocation.typ == WaveTrackLocation::locationMergePoint) {
+            const double pos = mCapturedTrackLocation.pos;
             if (!track->MergeClips(mCapturedTrackLocation.clipidx1, mCapturedTrackLocation.clipidx2))
                return false;
 
             WaveTrack* linked = (WaveTrack*)mTracks->GetLink(track);
-            if (linked &&
-                  !linked->MergeClips(mCapturedTrackLocation.clipidx1, mCapturedTrackLocation.clipidx2))
+            if (linked) {
+               // Don't assume correspondence of merge points across channels!
+               int idx = FindMergeLine(linked, pos);
+               if (idx >= 0) {
+                  WaveTrack::Location location = linked->GetCachedLocation(idx);
+                  if (!linked->MergeClips(location.clipidx1, location.clipidx2))
                      return false;
+               }
+            }
 
             MakeParentPushState(_("Merged Clips"),_("Merge"), PUSH_CONSOLIDATE);
             handled = true;
