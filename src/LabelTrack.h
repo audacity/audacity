@@ -205,7 +205,7 @@ class AUDACITY_DLL_API LabelTrack : public Track
 
    //This returns the index of the label we just added.
    int AddLabel(const SelectedRegion &region, const wxString &title = wxT(""),
-      Track *pRestoreFocus = 0);
+      int restoreFocus = -1);
    //And this tells us the index, if there is a label already there.
    int GetLabelIndex(double t, double t1);
 
@@ -268,7 +268,7 @@ class AUDACITY_DLL_API LabelTrack : public Track
    bool mResetCursorPos;               /// flag to reset cursor position(used in the dragging the glygh)
    bool mRightDragging;                /// flag to tell if it's a valid dragging
    bool mDrawCursor;                   /// flag to tell if drawing the cursor or not
-   Track *mpRestoreFocus;              /// Restore focus to this track when done editing
+   int mRestoreFocus;              /// Restore focus to this track when done editing
 
    // Set in copied label tracks
    double mClipLen;
