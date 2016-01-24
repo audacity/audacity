@@ -2577,7 +2577,7 @@ bool WaveTrack::MergeClips(int clipidx1, int clipidx2)
    WaveClip* clip1 = GetClipByIndex(clipidx1);
    WaveClip* clip2 = GetClipByIndex(clipidx2);
 
-   if (!clip2) // Could happen if one track of a linked pair had a split and the other didn't.
+   if (!clip1 || !clip2) // Could happen if one track of a linked pair had a split and the other didn't.
       return false;
 
    // Append data from second clip to first clip
