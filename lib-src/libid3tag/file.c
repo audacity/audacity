@@ -29,6 +29,10 @@
 # include <stdlib.h>
 # include <string.h>
 
+#ifdef _MSC_VER
+#  include <io.h>
+#endif
+
 # ifdef HAVE_UNISTD_H
 #  include <unistd.h>
 # endif

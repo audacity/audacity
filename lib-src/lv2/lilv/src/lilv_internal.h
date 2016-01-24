@@ -30,7 +30,7 @@ extern "C" {
 #    include <windows.h>
 #    define dlopen(path, flags) LoadLibrary(path)
 #    define dlclose(lib)        FreeLibrary((HMODULE)lib)
-#    ifdef _MSC_VER
+#    if _MSC_VER < 1900
 #        define __func__ __FUNCTION__
 #        define INFINITY DBL_MAX + DBL_MAX
 #        define NAN      INFINITY - INFINITY
