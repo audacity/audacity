@@ -559,8 +559,6 @@ protected:
 
    virtual wxString TrackSubText(Track *t);
 
-   virtual bool MoveClipToTrack(WaveClip *clip, WaveTrack* dst);
-
    TrackInfo mTrackInfo;
  public:
     TrackInfo *GetTrackInfo() { return &mTrackInfo; }

@@ -2313,7 +2313,8 @@ void WaveTrack::MoveClipToTrack(WaveClip *clip, WaveTrack* dest)
       if (it->GetData() == clip) {
          WaveClip* clip = it->GetData(); //vvv ANSWER-ME: Why declare and assign this to another variable, when we just verified the 'clip' parameter is the right value?!
          mClips.DeleteNode(it);
-         dest->mClips.Append(clip);
+         if (dest)
+            dest->mClips.Append(clip);
          return; // JKC iterator is now 'defunct' so better return straight away.
       }
    }

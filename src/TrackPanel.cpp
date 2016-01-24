@@ -3817,7 +3817,7 @@ void TrackPanel::HandleSlide(wxMouseEvent & event)
       wxString msg;
       bool consolidate;
       if (mDidSlideVertically) {
-         msg.Printf(_("Moved clip to another track"));
+         msg.Printf(_("Moved clips to another track"));
          consolidate = false;
       }
       else {
@@ -3833,6 +3833,51 @@ void TrackPanel::HandleSlide(wxMouseEvent & event)
       }
       MakeParentPushState(msg, _("Time-Shift"),
          consolidate ? (PUSH_CONSOLIDATE) : (PUSH_AUTOSAVE));
+   }
+}
+
+namespace {
+   // Don't count right channels.
+   WaveTrack *NthAudioTrack(TrackList &list, int nn)
+   {
+      if (nn >= 0) {
+         TrackListOfKindIterator iter(Track::Wave, &list);
+         Track *pTrack = iter.First();
+         while (pTrack && nn--)
+            pTrack = iter.Next(true);
+         return static_cast<WaveTrack*>(pTrack);
+      }
+
+      return NULL;
+   }
+
+   // Don't count right channels.
+   int TrackPosition(TrackList &list, Track *pFindTrack)
+   {
+      Track *const partner = pFindTrack->GetLink();
+      TrackListOfKindIterator iter(Track::Wave, &list);
+      int nn = 0;
+      for (Track *pTrack = iter.First(); pTrack; pTrack = iter.Next(true), ++nn) {
+         if (pTrack == pFindTrack ||
+             pTrack == partner)
+            return nn;
+      }
+      return -1;
+   }
+
+   WaveClip *FindClipAtTime(WaveTrack *pTrack, double time)
+   {
+      if (pTrack) {
+         // WaveClip::GetClipAtX doesn't work unless the clip is on the screen and can return bad info otherwise
+         // instead calculate the time manually
+         double rate = pTrack->GetRate();
+         sampleCount s0 = (sampleCount)(time * rate + 0.5);
+
+         if (s0 >= 0)
+            return pTrack->GetClipAtSample(s0);
+      }
+
+      return 0;
    }
 }
 
@@ -3902,18 +3947,11 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
          // Check for stereo partner
          Track *partner = mTracks->GetLink(vt);
          if (mCapturedClip && partner && partner->GetKind() == Track::Wave) {
-            // WaveClip::GetClipAtX doesn't work unless the clip is on the screen and can return bad info otherwise
-            // instead calculate the time manually
-            double rate = ((WaveTrack*)partner)->GetRate();
-            const double tt = mViewInfo->PositionToTime(event.m_x, GetLeftOffset());
-            sampleCount s0 = (sampleCount)(tt * rate + 0.5);
-
-            if (s0 >= 0) {
-               WaveClip *clip = ((WaveTrack *)partner)->GetClipAtSample(s0);
-               if (clip) {
-                  mCapturedClipArray.Add(TrackClip(partner, clip));
-               }
-            }
+            WaveClip *const clip =
+               FindClipAtTime(static_cast<WaveTrack*>(partner),
+                  mViewInfo->PositionToTime(event.m_x, GetLeftOffset()));
+            if (clip)
+               mCapturedClipArray.Add(TrackClip(partner, clip));
          }
       }
 
@@ -4086,10 +4124,11 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
    // happens relative to the original horizontal position of
    // each clip...
 #ifdef USE_MIDI
-   if (mCapturedClipArray.size()) {
+   if (mCapturedClipArray.size())
 #else
-   if (mCapturedClip) {
+   if (mCapturedClip)
 #endif
+   {
       for(i=0; i<mCapturedClipArray.size(); i++) {
          if (mCapturedClipArray[i].clip)
             mCapturedClipArray[i].clip->Offset(-mHSlideAmount);
@@ -4186,61 +4225,97 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
 
    // Scroll during vertical drag.
    // EnsureVisible(mouseTrack); //vvv Gale says this has problems on Linux, per bug 393 thread. Revert for 2.0.2.
+   bool slidVertically = false;
 
-   //If the mouse is over a track that isn't the captured track,
-   //drag the clip to the mousetrack
+   // If the mouse is over a track that isn't the captured track,
+   // decide which tracks the captured clips should go to.
    if (mCapturedClip && mouseTrack != mCapturedTrack /*&&
        !mCapturedClipIsSelection*/)
    {
-      // Make sure we always have the first linked track of a stereo track
-      if (!mouseTrack->GetLinked() && mTracks->GetLink(mouseTrack))
-         mouseTrack =
-#ifndef USE_MIDI
-                      (WaveTrack *)
-#endif
-                                    mTracks->GetLink(mouseTrack);
+      const int diff =
+         TrackPosition(*mTracks, mouseTrack) -
+         TrackPosition(*mTracks, mCapturedTrack);
+      for (unsigned ii = 0, nn = mCapturedClipArray.size(); ii < nn; ++ii) {
+         TrackClip &trackClip = mCapturedClipArray[ii];
+         if (trackClip.clip) {
+            // Move all clips up or down by an equal count of audio tracks.
+            Track *const pSrcTrack = trackClip.track;
+            Track *pDstTrack = NthAudioTrack(*mTracks,
+               diff + TrackPosition(*mTracks, pSrcTrack));
+            // Can only move mono to mono, or left to left, or right to right
+            // And that must be so for each captured clip
+            bool stereo = (pSrcTrack->GetLink() != 0);
+            if (pDstTrack && stereo && !pSrcTrack->GetLinked())
+               pDstTrack = pDstTrack->GetLink();
+            bool ok = pDstTrack &&
+               (stereo == (pDstTrack->GetLink() != 0)) &&
+               (!stereo || (pSrcTrack->GetLinked() == pDstTrack->GetLinked()));
+            if (ok)
+               trackClip.dstTrack = pDstTrack;
+            else
+               return;
+         }
+      }
 
-      // Temporary apply the offset because we want to see if the
-      // track fits with the desired offset
-      for(i=0; i<mCapturedClipArray.size(); i++)
-         if (mCapturedClipArray[i].clip)
-            mCapturedClipArray[i].clip->Offset(desiredSlideAmount);
-      // See if it can be moved
-      if (MoveClipToTrack(mCapturedClip,
-                          (WaveTrack*)mouseTrack)) {
+      // Having passed that test, remove clips temporarily from their
+      // tracks, so moving clips don't interfere with each other
+      // when we call CanInsertClip()
+      for (unsigned ii = 0, nn = mCapturedClipArray.size(); ii < nn;  ++ii) {
+         TrackClip &trackClip = mCapturedClipArray[ii];
+         WaveClip *const pSrcClip = trackClip.clip;
+         if (pSrcClip)
+            static_cast<WaveTrack*>(trackClip.track)->MoveClipToTrack(pSrcClip, NULL);
+      }
+
+      // Now check that the move is possible
+      bool ok = true;
+      for (unsigned ii = 0, nn = mCapturedClipArray.size(); ok && ii < nn; ++ii) {
+         TrackClip &trackClip = mCapturedClipArray[ii];
+         WaveClip *const pSrcClip = trackClip.clip;
+         if (pSrcClip)
+            ok = static_cast<WaveTrack*>(trackClip.dstTrack)->CanInsertClip(pSrcClip);
+      }
+      
+      if (!ok) {
+         // Failure -- put clips back where they were
+         for (unsigned ii = 0, nn = mCapturedClipArray.size(); ii < nn;  ++ii) {
+            TrackClip &trackClip = mCapturedClipArray[ii];
+            WaveClip *const pSrcClip = trackClip.clip;
+            if (pSrcClip) {
+               static_cast<WaveTrack*>(trackClip.track)->AddClip(pSrcClip);
+            }
+         }
+         return;
+      }
+      else {
+         // Do the vertical moves of clips
+         for (unsigned ii = 0, nn = mCapturedClipArray.size(); ii < nn; ++ii) {
+            TrackClip &trackClip = mCapturedClipArray[ii];
+            WaveClip *const pSrcClip = trackClip.clip;
+            if (pSrcClip) {
+               Track *const dstTrack = trackClip.dstTrack;
+               static_cast<WaveTrack*>(dstTrack)->AddClip(pSrcClip);
+               trackClip.track = dstTrack;
+            }
+         }
+
          mCapturedTrack = mouseTrack;
          mDidSlideVertically = true;
 
-         if (mCapturedClipIsSelection) {
-            // Slide the selection, too
-            mViewInfo->selectedRegion.move(desiredSlideAmount);
-         }
-
          // Make the offset permanent; start from a "clean slate"
-         mHSlideAmount = 0.0;
-         desiredSlideAmount = 0.0;
          mMouseClickX = event.m_x;
       }
-      else {
-         // Undo the offset
-         for(i=0; i<mCapturedClipArray.size(); i++)
-            if (mCapturedClipArray[i].clip)
-               mCapturedClipArray[i].clip->Offset(-desiredSlideAmount);
-      }
 
-      Refresh(false);
+      // Not done yet, check for horizontal movement.
+      slidVertically = true;
    }
 
-   if (mSlideUpDownOnly)
+   if (desiredSlideAmount == 0.0) {
+      Refresh(false);
       return;
+   }
 
-   // Determine desired amount to slide
    mHSlideAmount = desiredSlideAmount;
-
-   if (mHSlideAmount == 0.0) {
-      Refresh(false);
-      return;
-   }
 
 #ifdef USE_MIDI
    if (mCapturedClipArray.size())
@@ -4305,15 +4380,22 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
       }
    }
    else {
+      // For Shift key down, or
       // For non wavetracks, specifically label tracks ...
       mCapturedTrack->Offset(mHSlideAmount);
       Track* link = mTracks->GetLink(mCapturedTrack);
       if (link)
          link->Offset(mHSlideAmount);
    }
+
    if (mCapturedClipIsSelection) {
       // Slide the selection, too
       mViewInfo->selectedRegion.move(mHSlideAmount);
+   }
+
+   if (slidVertically) {
+      // new origin
+      mHSlideAmount = 0;
    }
 
    Refresh(false);
@@ -9487,101 +9569,6 @@ void TrackPanel::DisplaySelection()
    // DM: Note that the Selection Bar can actually MODIFY the selection
    // if snap-to mode is on!!!
    mListener->TP_DisplaySelection();
-}
-
-bool TrackPanel::MoveClipToTrack(WaveClip *clip, WaveTrack* dst)
-{
-   WaveTrack *src  = NULL;
-   WaveClip *clip2 = NULL;
-   WaveTrack *src2 = NULL;
-   WaveTrack *dst2 = NULL;
-   size_t i;
-
-#ifdef USE_MIDI
-   // dst could be a note track. Can't move clip to a note track.
-   // EXPLAIN: How could dst be a note track (pointer)? It's declared to be a WaveTrack*. I think this test is pointless.
-   if (dst->GetKind() != Track::Wave) return false;
-#endif
-
-   for (i = 0; i < mCapturedClipArray.size(); i++) {
-      if (clip == mCapturedClipArray[i].clip) {
-         src = (WaveTrack*)mCapturedClipArray[i].track;
-         break;
-      }
-   }
-
-   if (!src)
-      return false;
-
-   // Make sure we have the first track of two stereo tracks
-   // with both source and destination
-   if (!src->GetLinked() && mTracks->GetLink(src)) {
-      // set it to NULL in case there is no L channel clip
-      clip = NULL;
-
-      // find the first track by getting the linked track from src
-      // assumes that mCapturedArray[i].clip and .track is not NULL.
-      for (i = 0; i < mCapturedClipArray.size(); i++) {
-         if (mTracks->GetLink(src) == mCapturedClipArray[i].track) {
-            clip = mCapturedClipArray[i].clip;
-            break;
-         }
-      }
-
-      src = (WaveTrack*)mTracks->GetLink(src);
-   }
-   if (!dst->GetLinked() && mTracks->GetLink(dst))
-      dst = (WaveTrack*)mTracks->GetLink(dst);
-
-   // Get the second track of two stereo tracks
-   src2 = (WaveTrack*)mTracks->GetLink(src);
-   dst2 = (WaveTrack*)mTracks->GetLink(dst);
-
-   for (i = 0; i < mCapturedClipArray.size(); i++) {
-      if (mCapturedClipArray[i].track == src2) {
-         clip2 = mCapturedClipArray[i].clip;
-         break;
-      }
-   }
-
-   if ((src2 && !dst2) || (dst2 && !src2))
-      return false; // cannot move stereo- to mono track or other way around
-
-   // if only the right clip of a stereo pair is being dragged, use clip instead of clip2 to get mono behavior.
-   if (!clip && clip2) {
-      clip  = clip2;
-      src   = src2;
-      dst   = dst2;
-      clip2 = NULL;
-      src2 = dst2 = NULL;
-   }
-
-   if (!dst->CanInsertClip(clip))
-      return false;
-
-   if (clip2) {
-      // we should have a source and dest track
-      if (!dst2 || !src2)
-         return false;
-
-      if (!dst2->CanInsertClip(clip2))
-         return false;
-   }
-
-   src->MoveClipToTrack(clip, dst);
-   if (src2)
-      src2->MoveClipToTrack(clip2, dst2);
-
-   // update the captured clip array.
-   for (i = 0; i < mCapturedClipArray.size(); i++) {
-      if (clip && mCapturedClipArray[i].clip == clip) {
-         mCapturedClipArray[i].track = dst;
-      } else if (clip2 && mCapturedClipArray[i].clip == clip2) {
-         mCapturedClipArray[i].track = dst2;
-      }
-   }
-
-   return true;
 }
 
 Track *TrackPanel::GetFocusedTrack()

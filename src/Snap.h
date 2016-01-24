@@ -34,10 +34,12 @@ public:
    TrackClip(Track *t, WaveClip *c)
    {
       track = origTrack = t;
+      dstTrack = NULL;
       clip = c;
    }
    Track *track;
    Track *origTrack;
+   Track *dstTrack;
    WaveClip *clip;
 };
 
