@@ -117,6 +117,15 @@
     <ClCompile Include="..\..\..\lib-src\portaudio-v19\src\os\win\pa_x86_plain_converters.c">
       <Filter>Source Files\os</Filter>
     </ClCompile>
+    <ClCompile Include="$(UseAsioSdk)\common\asio.cpp">
+      <Filter>Source Files\hostapi\asio</Filter>
+    </ClCompile>
+    <ClCompile Include="$(UseAsioSdk)\host\asiodrivers.cpp">
+      <Filter>Source Files\hostapi\asio</Filter>
+    </ClCompile>
+    <ClCompile Include="$(UseAsioSdk)\host\pc\asiolist.cpp">
+      <Filter>Source Files\hostapi\asio</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\lib-src\portaudio-v19\src\common\pa_allocation.h">

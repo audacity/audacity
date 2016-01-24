@@ -87,7 +87,7 @@ typedef mad_fixed_t mad_sample_t;
 #  endif
 # endif
 
-# define MAD_F_MIN		((mad_fixed_t) -0x80000000L)
+# define MAD_F_MIN		((mad_fixed_t) -0x80000000LL)
 # define MAD_F_MAX		((mad_fixed_t) +0x7fffffffL)
 
 # define MAD_F_ONE		MAD_F(0x10000000)
@@ -460,7 +460,7 @@ mad_fixed_t mad_f_mul_inline(mad_fixed_t x, mad_fixed_t y)
 # if !defined(MAD_F_MLA)
 #  define MAD_F_ML0(hi, lo, x, y)	((lo)  = mad_f_mul((x), (y)))
 #  define MAD_F_MLA(hi, lo, x, y)	((lo) += mad_f_mul((x), (y)))
-#  define MAD_F_MLN(hi, lo)		((lo)  = -(lo))
+#  define MAD_F_MLN(hi, lo)		((lo)  = 0-(lo))
 #  define MAD_F_MLZ(hi, lo)		((void) (hi), (mad_fixed_t) (lo))
 # endif
 

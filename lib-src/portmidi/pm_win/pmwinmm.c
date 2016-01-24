@@ -38,15 +38,15 @@
 
 /* callback routines */
 static void CALLBACK winmm_in_callback(HMIDIIN hMidiIn,
-                                       WORD wMsg, DWORD dwInstance, 
-                                       DWORD dwParam1, DWORD dwParam2);
+                                       UINT wMsg, DWORD_PTR dwInstance, 
+                                       DWORD_PTR dwParam1, DWORD_PTR dwParam2);
 static void CALLBACK winmm_streamout_callback(HMIDIOUT hmo, UINT wMsg,
-                                              DWORD dwInstance, DWORD dwParam1, 
-                                              DWORD dwParam2);
+                                              DWORD_PTR dwInstance, DWORD_PTR dwParam1, 
+                                              DWORD_PTR dwParam2);
 #ifdef USE_SYSEX_BUFFERS
 static void CALLBACK winmm_out_callback(HMIDIOUT hmo, UINT wMsg,
-                                        DWORD dwInstance, DWORD dwParam1, 
-                                        DWORD dwParam2);
+                                        DWORD_PTR dwInstance, DWORD_PTR dwParam1, 
+                                        DWORD_PTR dwParam2);
 #endif
 
 extern pm_fns_node pm_winmm_in_dictionary;
@@ -164,7 +164,7 @@ static void pm_winmm_general_inputs()
     UINT i;
     WORD wRtn;
     midi_num_inputs = midiInGetNumDevs();
-    midi_in_caps = (MIDIINCAPS *) pm_alloc(sizeof(MIDIINCAPS) * 
+    midi_in_caps = (MIDIINCAPSA *) pm_alloc(sizeof(MIDIINCAPSA) * 
                                            midi_num_inputs);
     if (midi_in_caps == NULL) {
         /* if you can't open a particular system-level midi interface
@@ -175,13 +175,13 @@ static void pm_winmm_general_inputs()
     }
 
     for (i = 0; i < midi_num_inputs; i++) {
-        wRtn = midiInGetDevCaps(i, (LPMIDIINCAPS) & midi_in_caps[i],
-                                sizeof(MIDIINCAPS));
+        wRtn = midiInGetDevCapsA(i, (LPMIDIINCAPSA) & midi_in_caps[i],
+                                sizeof(MIDIINCAPSA));
         if (wRtn == MMSYSERR_NOERROR) {
             /* ignore errors here -- if pm_descriptor_max is exceeded, some
                devices will not be accessible. */
             pm_add_device("MMSystem", midi_in_caps[i].szPname, TRUE,
-                          (void *) i, &pm_winmm_in_dictionary);
+                          i, &pm_winmm_in_dictionary);
         }
     }
 }
@@ -194,12 +194,12 @@ static void pm_winmm_mapper_input()
         can, but current system fails to retrieve input mapper
         capabilities) then you still should retrieve some formof
         setup info. */
-    wRtn = midiInGetDevCaps((UINT) MIDIMAPPER,
-                            (LPMIDIINCAPS) & midi_in_mapper_caps, 
-                            sizeof(MIDIINCAPS));
+    wRtn = midiInGetDevCapsA((UINT) MIDIMAPPER,
+                            (LPMIDIINCAPSA) & midi_in_mapper_caps, 
+                            sizeof(MIDIINCAPSA));
     if (wRtn == MMSYSERR_NOERROR) {
         pm_add_device("MMSystem", midi_in_mapper_caps.szPname, TRUE,
-                      (void *) MIDIMAPPER, &pm_winmm_in_dictionary);
+                      MIDIMAPPER, &pm_winmm_in_dictionary);
     }
 }
 
@@ -209,7 +209,7 @@ static void pm_winmm_general_outputs()
     UINT i;
     DWORD wRtn;
     midi_num_outputs = midiOutGetNumDevs();
-    midi_out_caps = pm_alloc( sizeof(MIDIOUTCAPS) * midi_num_outputs );
+    midi_out_caps = pm_alloc( sizeof(MIDIOUTCAPSA) * midi_num_outputs );
 
     if (midi_out_caps == NULL) {
         /* no error is reported -- see pm_winmm_general_inputs */
@@ -217,11 +217,11 @@ static void pm_winmm_general_outputs()
     }
 
     for (i = 0; i < midi_num_outputs; i++) {
-        wRtn = midiOutGetDevCaps(i, (LPMIDIOUTCAPS) & midi_out_caps[i],
-                                 sizeof(MIDIOUTCAPS));
+        wRtn = midiOutGetDevCapsA(i, (LPMIDIOUTCAPSA) & midi_out_caps[i],
+                                 sizeof(MIDIOUTCAPSA));
         if (wRtn == MMSYSERR_NOERROR) {
             pm_add_device("MMSystem", midi_out_caps[i].szPname, FALSE,
-                          (void *) i, &pm_winmm_out_dictionary);
+                          i, &pm_winmm_out_dictionary);
         }
     }
 }
@@ -233,11 +233,11 @@ static void pm_winmm_mapper_output()
     /* Note: if MIDIMAPPER opened as output (pseudo MIDI device
         maps device independent messages into device dependant ones,
         via NT midimapper program) you still should get some setup info */
-    wRtn = midiOutGetDevCaps((UINT) MIDIMAPPER, (LPMIDIOUTCAPS)
-                             & midi_out_mapper_caps, sizeof(MIDIOUTCAPS));
+    wRtn = midiOutGetDevCapsA((UINT) MIDIMAPPER, (LPMIDIOUTCAPSA)
+                             & midi_out_mapper_caps, sizeof(MIDIOUTCAPSA));
     if (wRtn == MMSYSERR_NOERROR) {
         pm_add_device("MMSystem", midi_out_mapper_caps.szPname, FALSE,
-                      (void *) MIDIMAPPER, &pm_winmm_out_dictionary);
+                      MIDIMAPPER, &pm_winmm_out_dictionary);
     }
 }
 
@@ -263,7 +263,7 @@ static int str_copy_len(char *dst, char *src, int len)
     strncpy(dst, src, len);
     /* just in case suffex is greater then len, terminate with zero */
     dst[len - 1] = 0;
-    return strlen(dst);
+    return (int)strlen(dst);
 }
 
 
@@ -282,7 +282,7 @@ static void winmm_get_host_error(PmInternal * midi, char * msg, UINT len)
             if (m->error != MMSYSERR_NOERROR) {
                 int n = str_copy_len(msg, hdr1, len);
                 /* read and record host error */
-                int err = midiInGetErrorText(m->error, msg + n, len - n);
+                int err = midiInGetErrorTextA(m->error, msg + n, len - n);
                 assert(err == MMSYSERR_NOERROR);
                 m->error = MMSYSERR_NOERROR;
             }
@@ -291,7 +291,7 @@ static void winmm_get_host_error(PmInternal * midi, char * msg, UINT len)
         if (m) {
             if (m->error != MMSYSERR_NOERROR) {
                 int n = str_copy_len(msg, hdr1, len);
-                int err = midiOutGetErrorText(m->error, msg + n, len - n);
+                int err = midiOutGetErrorTextA(m->error, msg + n, len - n);
                 assert(err == MMSYSERR_NOERROR);
                 m->error = MMSYSERR_NOERROR;
             }
@@ -666,10 +666,10 @@ static PmError winmm_in_close(PmInternal *midi)
 /* Callback function executed via midiInput SW interrupt (via midiInOpen). */
 static void FAR PASCAL winmm_in_callback(
     HMIDIIN hMidiIn,    /* midiInput device Handle */
-    WORD wMsg,          /* midi msg */
-    DWORD dwInstance,   /* application data */
-    DWORD dwParam1,     /* MIDI data */
-    DWORD dwParam2)    /* device timestamp (wrt most recent midiInStart) */
+    UINT wMsg,          /* midi msg */
+    DWORD_PTR dwInstance,   /* application data */
+    DWORD_PTR dwParam1,     /* MIDI data */
+    DWORD_PTR dwParam2)    /* device timestamp (wrt most recent midiInStart) */
 {
     static int entry = 0;
     PmInternal *midi = (PmInternal *) dwInstance;
@@ -688,7 +688,7 @@ static void FAR PASCAL winmm_in_callback(
          * hardware interrupt? -- but I've seen reentrant behavior 
          * using a debugger, so it happens.
          */
-        long new_driver_time;
+        DWORD_PTR new_driver_time;
         EnterCriticalSection(&m->lock);
 
         /* dwParam1 is MIDI data received, packed into DWORD w/ 1st byte of
@@ -709,8 +709,8 @@ static void FAR PASCAL winmm_in_callback(
             PmEvent event;
             if (midi->time_proc)
                 dwParam2 = (*midi->time_proc)(midi->time_info);
-            event.timestamp = dwParam2;
-            event.message = dwParam1;
+            event.timestamp = (PmTimestamp)dwParam2;
+            event.message = (PmMessage)dwParam1;
             pm_read_short(midi, &event);
         }
         LeaveCriticalSection(&m->lock);
@@ -731,7 +731,7 @@ static void FAR PASCAL winmm_in_callback(
         /* assume yes and iterate through them */
         while (remaining > 0) {
             unsigned int amt = pm_read_bytes(midi, data + processed, 
-                                             remaining, dwParam2);
+                                             remaining, (PmTimestamp)dwParam2);
             remaining -= amt;
             processed += amt;
         }
@@ -1298,8 +1298,8 @@ static PmTimestamp winmm_synchronize(PmInternal *midi)
 #ifdef USE_SYSEX_BUFFERS
 /* winmm_out_callback -- recycle sysex buffers */
 static void CALLBACK winmm_out_callback(HMIDIOUT hmo, UINT wMsg,
-                                        DWORD dwInstance, DWORD dwParam1, 
-                                        DWORD dwParam2)
+                                        DWORD_PTR dwInstance, DWORD_PTR dwParam1, 
+                                        DWORD_PTR dwParam2)
 {
     PmInternal *midi = (PmInternal *) dwInstance;
     midiwinmm_type m = (midiwinmm_type) midi->descriptor;
@@ -1328,7 +1328,7 @@ static void CALLBACK winmm_out_callback(HMIDIOUT hmo, UINT wMsg,
 
 /* winmm_streamout_callback -- unprepare (free) buffer header */
 static void CALLBACK winmm_streamout_callback(HMIDIOUT hmo, UINT wMsg,
-        DWORD dwInstance, DWORD dwParam1, DWORD dwParam2)
+        DWORD_PTR dwInstance, DWORD_PTR dwParam1, DWORD_PTR dwParam2)
 {
     PmInternal *midi = (PmInternal *) dwInstance;
     midiwinmm_type m = (midiwinmm_type) midi->descriptor;

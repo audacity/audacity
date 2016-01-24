@@ -328,7 +328,7 @@ private void callrun()
 
     /* remove first call from timebase */
     call = remove_call(timebase);
-    if (debug) gprintf(TRANS, "callrun call %lx\n", (ulong)call);
+    if (debug) gprintf(TRANS, "callrun call %llx\n", (unsigned long long)call);
     insert_base(timebase);
     virttime = call->u.e.time;          /* virtual time of the call */
     if (moxcdebug) callshow(call);

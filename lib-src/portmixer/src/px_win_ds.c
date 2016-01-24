@@ -73,7 +73,7 @@ static void dprintf(const char *format, ...)
 
    if (cnt > 0) {
       buf[cnt] = '\0';
-      OutputDebugString(buf);
+      OutputDebugStringA(buf);
    }
 }
 #endif
@@ -96,8 +96,8 @@ int OpenMixer_Win_DirectSound(px_mixer *Px, int index)
    ULONG bytes;
    LPGUID guidIn;
    LPGUID guidOut;
-   UINT deviceIn = -1;
-   UINT deviceOut = -1;
+   ULONG deviceIn = -1;
+   ULONG deviceOut = -1;
    int ret = FALSE;
 
    guidIn = PaWinDS_GetStreamInputGUID(Px->pa_stream);

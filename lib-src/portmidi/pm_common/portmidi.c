@@ -100,7 +100,7 @@ descriptor_type descriptors = NULL;
  * otherwise returns pmNoError
  */
 PmError pm_add_device(char *interf, char *name, int input, 
-                      void *descriptor, pm_fns_type dictionary) {
+                      unsigned long descriptor, pm_fns_type dictionary) {
     if (pm_descriptor_index >= pm_descriptor_max) {
         // expand descriptors
         descriptor_type new_descriptors = (descriptor_type) 

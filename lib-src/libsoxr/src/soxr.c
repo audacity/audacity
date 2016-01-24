@@ -607,7 +607,7 @@ soxr_error_t soxr_oneshot(
     soxr_quality_spec_t const * q_spec,
     soxr_runtime_spec_t const * runtime_spec)
 {
-  soxr_t resampler;
+  soxr_t resampler = NULL;
   soxr_error_t error = q_spec? q_spec->e : 0;
   if (!error) {
     soxr_quality_spec_t q_spec1;

@@ -66,7 +66,7 @@ static void dprintf(const char *format, ...)
 
    if (cnt > 0) {
       buf[cnt] = '\0';
-      OutputDebugString(buf);
+      OutputDebugStringA(buf);
    }
 }
 #endif
@@ -82,7 +82,7 @@ DEFINE_GUID(IID_IAudioEndpointVolume, 0x5CDF2C82, 0x841E, 0x4546,
 #define DRV_QUERYFUNCTIONINSTANCEID       (DRV_RESERVED + 17)
 #define DRV_QUERYFUNCTIONINSTANCEIDSIZE   (DRV_RESERVED + 18)
 
-int open_ep_mixers(px_mixer *Px, UINT deviceIn, UINT deviceOut)
+int open_ep_mixers(px_mixer *Px, ULONG deviceIn, ULONG deviceOut)
 {
    PxEPInfo *info;
    IMMDeviceEnumerator *denum = NULL;
@@ -240,7 +240,7 @@ fail:
    return cleanup(Px);
 }
 
-int open_ep_mixers_byid(px_mixer *Px, wchar_t *deviceIn, wchar_t *deviceOut)
+int open_ep_mixers_byid(px_mixer *Px, const wchar_t *deviceIn, const wchar_t *deviceOut)
 {
    PxEPInfo *info;
    IMMDeviceEnumerator *denum = NULL;

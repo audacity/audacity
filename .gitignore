@@ -54,8 +54,10 @@ mac/build
 win/*.opendb
 win/Debug
 win/Release
+win/x64
 win/Projects/*/Debug
 win/Projects/*/Release
+win/Projects/*/x64
 win/Projects/*/*.user
 
 # All those help files

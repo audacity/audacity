@@ -61,7 +61,7 @@ paDynamicLib PaDL_Load( char *name )
     paDynamicLib lib;
 
 #if defined(WIN32)
-    lib = LoadLibrary(name);
+    lib = LoadLibraryA(name);
 #else
     lib = dlopen(name, RTLD_LAZY);
 #endif

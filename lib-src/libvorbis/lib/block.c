@@ -860,7 +860,7 @@ int vorbis_synthesis_blockin(vorbis_dsp_state *v,vorbis_block *vb){
       if(b->sample_count>v->granulepos){
         /* corner case; if this is both the first and last audio page,
            then spec says the end is cut, not beginning */
-       long extra=b->sample_count-vb->granulepos;
+		ogg_int64_t extra=b->sample_count-vb->granulepos;
 
         /* we use ogg_int64_t for granule positions because a
            uint64 isn't universally available.  Unfortunately,
@@ -898,7 +898,7 @@ int vorbis_synthesis_blockin(vorbis_dsp_state *v,vorbis_block *vb){
     if(vb->granulepos!=-1 && v->granulepos!=vb->granulepos){
 
       if(v->granulepos>vb->granulepos){
-        long extra=v->granulepos-vb->granulepos;
+		ogg_int64_t extra=v->granulepos-vb->granulepos;
 
         if(extra)
           if(vb->eofflag){

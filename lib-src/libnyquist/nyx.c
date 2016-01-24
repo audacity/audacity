@@ -1410,7 +1410,7 @@ LVAL xechoenabled()
 
 #if defined(WIN32)
 
-static WIN32_FIND_DATA FindFileData;
+static WIN32_FIND_DATAA FindFileData;
 static HANDLE hFind = INVALID_HANDLE_VALUE;
 #define OSDIR_LIST_READY 0
 #define OSDIR_LIST_STARTED 1
@@ -1433,11 +1433,11 @@ int osdir_list_start(char *path)
       osdir_list_finish(); // close previously interrupted listing
    }
 
-   hFind = FindFirstFile(osdir_path, &FindFileData); // get the "."
+   hFind = FindFirstFileA(osdir_path, &FindFileData); // get the "."
    if (hFind == INVALID_HANDLE_VALUE) {
       return FALSE;
    }
-   if (FindNextFile(hFind, &FindFileData) == 0) {
+   if (FindNextFileA(hFind, &FindFileData) == 0) {
       return FALSE; // get the ".."
    }
 
@@ -1449,7 +1449,7 @@ int osdir_list_start(char *path)
 /* osdir_list_next -- read the next entry from a directory */
 const char *osdir_list_next()
 {
-   if (FindNextFile(hFind, &FindFileData) == 0) {
+   if (FindNextFileA(hFind, &FindFileData) == 0) {
       osdir_list_status = OSDIR_LIST_DONE;
       return NULL;
    }
