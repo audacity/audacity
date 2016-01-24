@@ -6613,9 +6613,20 @@ bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &rect, 
             if (track->ExpandCutLine(mCapturedTrackLocation.pos, &cutlineStart, &cutlineEnd))
             {
                WaveTrack* linked = (WaveTrack*)mTracks->GetLink(track);
-               if (linked &&
-                     !linked->ExpandCutLine(mCapturedTrackLocation.pos))
-                        return false;
+               if (linked) {
+                  // Expand the cutline in the opposite channel if it is present.
+
+                  // PRL:  Do NOT report that the event is not handled if the other
+                  // channel doesn't also have a cutline to expand at the same time.
+                  // Just ignore the return.  Bug1310.
+
+                  /* bool success = */
+                     linked->ExpandCutLine(mCapturedTrackLocation.pos);
+                  /*
+                  if (!success)
+                     return false;
+                  */
+               }
 
                mViewInfo->selectedRegion.setTimes(cutlineStart, cutlineEnd);
                DisplaySelection();
