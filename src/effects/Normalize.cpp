@@ -65,7 +65,7 @@ wxString EffectNormalize::GetSymbol()
 
 wxString EffectNormalize::GetDescription()
 {
-   return XO("Sets the peak amplitude of a one or more tracks");
+   return XO("Sets the peak amplitude of one or more tracks");
 }
 
 // EffectIdentInterface implementation
