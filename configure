@@ -2887,7 +2887,7 @@ ac_configure="$SHELL $ac_aux_dir/configure"  # Please don't use this var.
 
 
 
-am__api_version='1.15'
+am__api_version='1.14'
 
 # Find a good install program.  We prefer a C program (faster),
 # so one script is as good as another.  But avoid the broken or
@@ -3079,7 +3079,7 @@ else
 $as_echo "$as_me: WARNING: 'missing' script is too old or missing" >&2;}
 fi
 
-if test x"${install_sh+set}" != xset; then
+if test x"${install_sh}" != xset; then
   case $am_aux_dir in
   *\ * | *\	*)
     install_sh="\${SHELL} '$am_aux_dir/install-sh'" ;;
@@ -3407,8 +3407,8 @@ MAKEINFO=${MAKEINFO-"${am_missing_run}makeinfo"}
 # <http://lists.gnu.org/archive/html/automake/2012-07/msg00014.html>
 mkdir_p='$(MKDIR_P)'
 
-# We need awk for the "check" target (and possibly the TAP driver).  The
-# system "awk" is bad on some platforms.
+# We need awk for the "check" target.  The system "awk" is bad on
+# some platforms.
 # Always define AMTAR for backward compatibility.  Yes, it's still used
 # in the wild :-(  We should find a proper way to deprecate it ...
 AMTAR='$${TAR-tar}'
@@ -21131,12 +21131,12 @@ if test -n "$SBSMS_CFLAGS"; then
     pkg_cv_SBSMS_CFLAGS="$SBSMS_CFLAGS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"sbsms >= 1.6.0\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "sbsms >= 1.6.0") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"sbsms >= 2.2.0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "sbsms >= 2.2.0") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_SBSMS_CFLAGS=`$PKG_CONFIG --cflags "sbsms >= 1.6.0" 2>/dev/null`
+  pkg_cv_SBSMS_CFLAGS=`$PKG_CONFIG --cflags "sbsms >= 2.2.0" 2>/dev/null`
 else
   pkg_failed=yes
 fi
@@ -21147,12 +21147,12 @@ if test -n "$SBSMS_LIBS"; then
     pkg_cv_SBSMS_LIBS="$SBSMS_LIBS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"sbsms >= 1.6.0\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "sbsms >= 1.6.0") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"sbsms >= 2.2.0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "sbsms >= 2.2.0") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_SBSMS_LIBS=`$PKG_CONFIG --libs "sbsms >= 1.6.0" 2>/dev/null`
+  pkg_cv_SBSMS_LIBS=`$PKG_CONFIG --libs "sbsms >= 2.2.0" 2>/dev/null`
 else
   pkg_failed=yes
 fi
@@ -21170,9 +21170,9 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        SBSMS_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "sbsms >= 1.6.0" 2>&1`
+	        SBSMS_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "sbsms >= 2.2.0" 2>&1`
         else
-	        SBSMS_PKG_ERRORS=`$PKG_CONFIG --print-errors "sbsms >= 1.6.0" 2>&1`
+	        SBSMS_PKG_ERRORS=`$PKG_CONFIG --print-errors "sbsms >= 2.2.0" 2>&1`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$SBSMS_PKG_ERRORS" >&5
