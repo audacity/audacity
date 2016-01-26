@@ -185,7 +185,7 @@ wxString ExportPlugin::GetMask(int index)
    wxString mask = GetDescription(index) + wxT("|");
 
    // Build the mask
-   wxString ext = GetExtension(index);
+   // wxString ext = GetExtension(index);
    wxArrayString exts = GetExtensions(index);
    for (size_t i = 0; i < exts.GetCount(); i++) {
       mask += wxT("*.") + exts[i] + wxT(";");

@@ -38,7 +38,7 @@ class AUDACITY_DLL_API FormatInfo
       ~FormatInfo(){};
       wxString mFormat;
       wxString mDescription;
-      wxString mExtension;
+      // wxString mExtension;
       wxArrayString mExtensions;
       wxString mMask;
       int mMaxChannels;
