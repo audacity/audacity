@@ -185,7 +185,7 @@ wxString ExportPlugin::GetMask(int index)
    wxString mask = GetDescription(index) + wxT("|");
 
    // Build the mask
-   wxString ext = GetExtension(index);
+   // wxString ext = GetExtension(index);
    wxArrayString exts = GetExtensions(index);
    for (size_t i = 0; i < exts.GetCount(); i++) {
       mask += wxT("*.") + exts[i] + wxT(";");
@@ -204,7 +204,7 @@ bool ExportPlugin::GetCanMetaData(int index)
    return mFormatInfos[index].mCanMetaData;
 }
 
-bool ExportPlugin::IsExtension(wxString & ext, int index)
+bool ExportPlugin::IsExtension(const wxString & ext, int index)
 {
    bool isext = false;
    for (int i = index; i < GetFormatCount(); i = GetFormatCount())
