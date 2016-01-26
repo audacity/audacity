@@ -680,9 +680,11 @@ sampleCount Mixer::Process(sampleCount maxToProcess)
 
       double t = (double)mSamplePos[i] / (double)track->GetRate();
       if (mT0 > mT1)
-         mTime = std::max(t, mT1);
+         // backwards (as possibly in scrubbing)
+         mTime = std::max(std::min(t, mTime), mT1);
       else
-         mTime = std::min(t, mT1);
+         // forwards (the usual)
+         mTime = std::min(std::max(t, mTime), mT1);
    }
    if(mInterleaved) {
       for(int c=0; c<mNumChannels; c++) {
