@@ -1043,7 +1043,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    // Create tags object
    mTags = new Tags();
 
-   mTrackFactory = new TrackFactory(mDirManager);
+   mTrackFactory = new TrackFactory(mDirManager, &mViewInfo);
 
    int widths[] = {0, GetControlToolBar()->WidthForStatusBar(mStatusBar), -1, 150};
    mStatusBar->SetStatusWidths(4, widths);

@@ -432,7 +432,7 @@ void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
 
    // Create a TimeTrack if we haven't done so already
    if (!mTimeTrack) {
-      mTimeTrack = new TimeTrack(p->GetDirManager());
+      mTimeTrack = p->GetTrackFactory()->NewTimeTrack();
       if (!mTimeTrack) {
          return;
       }

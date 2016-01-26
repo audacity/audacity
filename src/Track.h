@@ -35,6 +35,7 @@ class LabelTrack;
 class TimeTrack;
 class WaveTrack;
 class AudacityProject;
+class ZoomInfo;
 
 WX_DEFINE_USER_EXPORTED_ARRAY(Track*, TrackArray, class AUDACITY_DLL_API);
 WX_DEFINE_USER_EXPORTED_ARRAY(WaveTrack*, WaveTrackArray, class AUDACITY_DLL_API);
@@ -446,12 +447,14 @@ class AUDACITY_DLL_API TrackList:public wxEvtHandler
 class AUDACITY_DLL_API TrackFactory
 {
  private:
-   TrackFactory(DirManager *dirManager):
+   TrackFactory(DirManager *dirManager, const ZoomInfo *zoomInfo):
       mDirManager(dirManager)
+      , mZoomInfo(zoomInfo)
    {
    }
 
-   DirManager *mDirManager;
+   DirManager *const mDirManager;
+   const ZoomInfo *const mZoomInfo;
    friend class AudacityProject;
    friend class BenchmarkDialog;
 

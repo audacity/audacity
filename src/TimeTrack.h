@@ -27,7 +27,7 @@ class TimeTrack: public Track {
 
  public:
 
-   TimeTrack(DirManager * projDirManager);
+   TimeTrack(DirManager * projDirManager, const ZoomInfo *zoomInfo);
    /** @brief Copy-Constructor - create a new TimeTrack:: which is an independent copy of the original
     *
     * Calls TimeTrack::Init() to copy the track metadata, then does a bunch of manipulations on the
@@ -117,6 +117,7 @@ class TimeTrack: public Track {
    void testMe();
 
  private:
+   const ZoomInfo  *const mZoomInfo;
    Envelope        *mEnvelope;
    Ruler           *mRuler;
    double           mRangeLower;

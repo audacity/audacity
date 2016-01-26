@@ -26,6 +26,7 @@ class TimeTrack;
 class SnapManager;
 class NumberScale;
 class TrackList;
+class ZoomInfo;
 
 class AUDACITY_DLL_API Ruler {
  public:
@@ -127,7 +128,7 @@ class AUDACITY_DLL_API Ruler {
    void SetCustomMajorLabels(wxArrayString *label, int numLabel, int start, int step);
    void SetCustomMinorLabels(wxArrayString *label, int numLabel, int start, int step);
 
-   void SetUseZoomInfo(int leftOffset);
+   void SetUseZoomInfo(int leftOffset, const ZoomInfo *zoomInfo);
 
    //
    // Drawing
@@ -231,7 +232,7 @@ private:
    int          mGridLineLength; //        end
    wxString     mUnits;
    bool         mTwoTone;
-   bool         mUseZoomInfo;
+   const ZoomInfo *mUseZoomInfo;
    int          mLeftOffset;
 
    NumberScale *mpNumberScale;
@@ -335,7 +336,7 @@ private:
    bool mIsWE;
 
    Ruler mRuler;
-   ViewInfo *mViewInfo;
+   ViewInfo *const mViewInfo;
    AudacityProject *mProject;
    TrackList *mTracks;
 

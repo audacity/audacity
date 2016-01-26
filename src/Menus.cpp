@@ -6258,7 +6258,7 @@ void AudacityProject::OnNewTimeTrack()
       return;
    }
 
-   TimeTrack *t = new TimeTrack(mDirManager);
+   TimeTrack *t = mTrackFactory->NewTimeTrack();
 
    SelectNone();
 
