@@ -30,6 +30,7 @@
 class wxMenu;
 class wxRect;
 
+class EnvelopeEditor;
 class LabelTrack;
 class SpectrumAnalyst;
 class TrackPanel;
@@ -808,6 +809,9 @@ protected:
 
    // Keeps track of extra fractional vertical scroll steps
    double mVertScrollRemainder;
+
+   std::unique_ptr<EnvelopeEditor> mEnvelopeEditor;
+   std::unique_ptr<EnvelopeEditor> mEnvelopeEditorRight;
 
  protected:
 

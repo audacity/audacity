@@ -264,7 +264,6 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
    WaveClip* GetClipAtX(int xcoord);
    Sequence* GetSequenceAtX(int xcoord);
    Envelope* GetEnvelopeAtX(int xcoord);
-   Envelope* GetActiveEnvelope(void);
 
    WaveClip* GetClipAtSample(sampleCount sample);
 

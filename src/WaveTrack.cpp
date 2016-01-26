@@ -2228,18 +2228,6 @@ Envelope* WaveTrack::GetEnvelopeAtX(int xcoord)
       return NULL;
 }
 
-// Search for any active DragPoint on the current track
-Envelope* WaveTrack::GetActiveEnvelope(void)
-{
-   for (const auto &clip : mClips)
-   {
-      Envelope* env = clip->GetEnvelope() ;
-      if (env->GetDragPoint() >= 0)
-         return env;
-   }
-   return NULL;
-}
-
 Sequence* WaveTrack::GetSequenceAtX(int xcoord)
 {
    WaveClip* clip = GetClipAtX(xcoord);

@@ -1926,7 +1926,7 @@ void TrackArtist::DrawClipWaveform(const WaveTrack *track,
 
    if (drawEnvelope) {
       DrawEnvelope(dc, mid, env, zoomMin, zoomMax, dB, dBRange);
-      clip->GetEnvelope()->DrawPoints(dc, rect, zoomInfo, dB, dBRange, zoomMin, zoomMax);
+      clip->GetEnvelope()->DrawPoints(dc, rect, zoomInfo, dB, dBRange, zoomMin, zoomMax, true);
    }
 
    // Draw arrows on the left side if the track extends to the left of the
@@ -3209,7 +3209,7 @@ void TrackArtist::DrawTimeTrack(const TimeTrack *track,
       upper = LINEAR_TO_DB(std::max(1.0e-7, upper)) / mdBrange + 1.0;
    }
    track->GetEnvelope()->DrawPoints(dc, envRect, zoomInfo,
-               track->GetDisplayLog(), mdBrange, lower, upper);
+               track->GetDisplayLog(), mdBrange, lower, upper, false);
 }
 
 void TrackArtist::UpdatePrefs()
