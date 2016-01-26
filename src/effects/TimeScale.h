@@ -50,10 +50,12 @@ public:
    // Effect implementation
 
    virtual bool Init();
+   virtual void Preview(bool dryOnly);
    virtual bool Process();
    virtual void PopulateOrExchange(ShuttleGui & S);
    virtual bool TransferDataToWindow();
    virtual bool TransferDataFromWindow();
+   virtual double CalcPreviewInputLength(double previewLength);
 
 private:
    // EffectTimeScale implementation
@@ -82,6 +84,10 @@ private:
    void Update_Slider_RatePercentChangeEnd();
 
 private:
+   bool bPreview;
+   double previewSelectedDuration;
+   SlideType slideTypeRate;
+   SlideType slideTypePitch;
    double m_RatePercentChangeStart;
    double m_RatePercentChangeEnd;
    double m_PitchHalfStepsStart;

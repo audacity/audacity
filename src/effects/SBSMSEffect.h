@@ -28,7 +28,8 @@ public:
    void setParameters(double rateStart, double rateEnd, double pitchStart, double pitchEnd,
                       SlideType rateSlideType, SlideType pitchSlideType,
                       bool bLinkRatePitch, bool bRateReferenceInput, bool bPitchReferenceInput);
-
+   static double getInvertedStretchedTime(double rateStart, double rateEnd, SlideType slideType, double outputTime);
+   static double getRate(double rateStart, double rateEnd, SlideType slideType, double t);
 private:
    bool ProcessLabelTrack(Track *track);
    double rateStart, rateEnd, pitchStart, pitchEnd;

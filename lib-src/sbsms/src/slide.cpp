@@ -11,8 +11,10 @@ public:
   virtual ~SlideImp() {}
   virtual float getTotalStretch()=0;
   virtual float getStretchedTime(float t)=0;
+  virtual float getInverseStretchedTime(float t)=0;
   virtual float getRate(float t)=0;
   virtual float getStretch(float t)=0;
+  virtual float getMeanStretch(float t0, float t1)=0;
   virtual float getRate()=0;
   virtual float getStretch()=0;
   virtual void step()=0;
@@ -28,10 +30,16 @@ public:
   float getStretchedTime(float t) {
     return t;
   }
+  float getInverseStretchedTime(float t) {
+    return t;
+  }
   float getRate(float t) {
     return 1.0f;
   }
   float getStretch(float t) {
+    return 1.0f;
+  }
+  float getMeanStretch(float t0, float t1) {
     return 1.0f;
   }
   float getRate() {
@@ -55,10 +63,16 @@ public:
   float getStretchedTime(float t) {
     return t / rate;
   }
+  float getInverseStretchedTime(float t) {
+    return rate * t;
+  }
   float getRate(float t) {
     return rate;
   }
   float getStretch(float t) {
+    return 1.0f / rate;
+  }
+  float getMeanStretch(float t0, float t1) {
     return 1.0f / rate;
   }
   float getRate() {
@@ -90,11 +104,17 @@ public:
     float ratet = getRate(t);
     return log(ratet / rate0) / (rate1 - rate0);
   }
+  float getInverseStretchedTime(float t) {
+    return (exp((rate1-rate0)*t)-1.0f)*rate0/(rate1-rate0);
+  }
   float getRate(float t) {
     return rate0 + (rate1 - rate0) * t;
   }
   float getStretch(float t) {
     return 1.0f / getRate(t);
+  }
+  float getMeanStretch(float t0, float t1) {
+    return log(getRate(t1)/getRate(t0))/((rate1-rate0)*(t1-t0));
   }
   float getRate() {
     return (float)val;
@@ -126,11 +146,21 @@ public:
   float getStretchedTime(float t) {
     return (sqrt(rate0 * rate0 + (rate1 * rate1 - rate0 * rate0) * t) - rate0) * 2.0f / (rate1 * rate1 - rate0 * rate0);
   }
+  float getInverseStretchedTime(float t) {
+    float r12 = rate1 * rate1 - rate0 * rate0;
+    float s = 0.5f * r12 * t + rate0;
+    return (s * s - rate0 * rate0) / r12;
+  }
   float getRate(float t) {
-    return rate0 + (sqrt(rate0 * rate0 + (rate1 * rate1 - rate0 * rate0) * t) - rate0);
+    return sqrt(rate0 * rate0 + (rate1 * rate1 - rate0 * rate0) * t);
   }
   float getStretch(float t) {
     return 1.0f / getRate(t);
+  }
+  float getMeanStretch(float t0, float t1) {
+    float r02 = rate0 * rate0;
+    float r102 = rate1 * rate1 - r02;
+    return 2.0f * (sqrt(r02 + r102*t1) - sqrt(r02 + r102 * t0)) / (r102 * (t1 - t0));
   }
   float getRate() {
     return getRate((float)val);
@@ -162,11 +192,18 @@ public:
   float getStretchedTime(float t) {
     return t / rate0 * (1.0f + 0.5f * t * (rate0 / rate1 - 1.0f));
   }
+  float getInverseStretchedTime(float t) {
+    float s = 1.0f / rate1 - 1.0f / rate0;
+    return (-1.0f / rate0 + sqrt(1/(rate0*rate0)-2.0f*t*s)) / s;
+  }
   float getRate(float t) {
     return 1.0f / getStretch(t);
   }
   float getStretch(float t) {
     return (1.0f / rate0 + (1.0f / rate1 - 1.0f / rate0) * t);
+  }
+  float getMeanStretch(float t0, float t1) {
+    return ((t1 + t0) * (rate0 - rate1)  - 2.0f * rate1) / (2.0f * rate0 * rate1);
   }
   float getRate() {
     return (float)(1.0 / val);
@@ -200,11 +237,17 @@ public:
   float getStretchedTime(float t) {
     return c1 * (pow(c0, t) - 1.0f);
   }
+  float getInverseStretchedTime(float t) {
+    return log(t/c1 + 1.0f) * c1 * rate0;
+  }
   float getRate(float t) {
     return rate0 * pow(c0, -t);
   }
   float getStretch(float t) {
     return pow(c0, t) / rate0;
+  }
+  float getMeanStretch(float t0, float t1) {
+    return (pow(c0,t1) - pow(c0,t0)) / (c1 * (t1 - t0));
   }
   float getRate() {
     return getRate((float)val);
@@ -226,22 +269,30 @@ public:
   GeometricInputSlide(float rate0, float rate1, const SampleCountType &n) {
     this->rate0 = rate0;
     this->rate1 = rate1;
+    this->c0 = rate0 / rate1;
+    this->log01 = log(c0);
     if(n) {
       val = rate0;
       inc = pow((double)rate1 / rate0, 1.0 / (double)n);
     }
   }
   float getTotalStretch() {
-    return (rate1 - rate0) / (log(rate1 / rate0) * (rate0 * rate1));
+    return (rate0 - rate1) / (log01 * (rate0 * rate1));
   }
   float getStretchedTime(float t) {
-    return (float)(pow(rate0 / rate1, t) - 1.0) / (rate0 * log(rate0 / rate1));
+    return (float)(pow(rate0 / rate1, t) - 1.0) / (rate0 * log01);
+  }
+  float getInverseStretchedTime(float t) {
+    return log(t * rate0 * log01 + 1.0f) / log01;
   }
   float getRate(float t) {
     return rate0 * pow(rate1 / rate0, t);
   }
   float getStretch(float t) {
     return 1.0f / getRate(t);
+  }
+  float getMeanStretch(float t0, float t1) {
+    return (pow(c0,t1) - pow(c0,t0)) / (rate0 * log01 * (t1 - t0));
   }
   float getRate() {
     return (float)val;
@@ -253,7 +304,7 @@ public:
     val *= inc;
   }
 protected:
-  float rate0, rate1;
+  float rate0, rate1, c0, log01;
   double val, inc;
 };
 
@@ -276,12 +327,18 @@ public:
   float getStretchedTime(float t) {
     return log(r10 / rate0 * t + 1.0f) / r10;
   }
+  float getInverseStretchedTime(float t) {
+    return rate0 / r10 * (exp(t * r10) - 1.0f);
+  }
   float getRate(float t) {
     float t1 = getStretchedTime(t) / totalStretch;
     return rate0 * pow(rate1 / rate0, t1);
   }
   float getStretch(float t) {
     return 1.0f / getRate(t);
+  }
+  float getMeanStretch(float t0, float t1) {
+    return log((rate0 + r10 * t1)/(rate0 + r10 * t0)) /(r10 * (t1 - t0));
   }
   float getRate() {
     return getRate((float)val);
@@ -347,6 +404,16 @@ float Slide :: getStretchedTime(float t)
   if(t > 1.0f) t = 1.0f;
   return imp->getStretchedTime(t);
 }
+  
+float Slide :: getMeanStretch(float t0, float t1) {
+  if(t0 < 0.0f) t0 = 0.0f;
+  return imp->getMeanStretch(t0,t1);
+}
+  
+float Slide :: getInverseStretchedTime(float t)
+{
+  return imp->getInverseStretchedTime(t);
+}
 
 float Slide :: getRate()
 {
@@ -374,6 +441,7 @@ public:
                            SBSMSQuality *quality);
   ~SBSMSInterfaceSlidingImp() {}
   inline float getStretch(float t);
+  inline float getMeanStretch(float t0, float t1);
   inline float getPitch(float t);
   inline long getPresamples();
   SampleCountType getSamplesToInput();
@@ -388,8 +456,7 @@ protected:
   SampleCountType samplesToInput;
   SampleCountType samplesToOutput;
 };
-
-
+  
 SBSMSInterfaceSlidingImp :: SBSMSInterfaceSlidingImp(Slide *stretchSlide,
                                                      Slide *pitchSlide, 
                                                      bool bPitchReferenceInput,
@@ -414,7 +481,8 @@ SBSMSInterfaceSlidingImp :: SBSMSInterfaceSlidingImp(Slide *stretchSlide,
     int inFrameSize = quality->getFrameSize();
     while(samplesIn < samplesToInput) {
       float t = (float)samplesIn / (float)samplesToInput;
-      stretch = stretchSlide->getStretch(t);
+      float t1 =(float)(samplesIn + inFrameSize) / (float)samplesToInput;
+      stretch = stretchSlide->getMeanStretch(t,t1);
       outFrameSizefloat += stretch * inFrameSize;
       int outFrameSize = (int) outFrameSizefloat;
       outFrameSizefloat -= (float) outFrameSize;
@@ -432,6 +500,12 @@ float SBSMSInterfaceSlidingImp :: getStretch(float t)
   return stretchScale * stretchSlide->getStretch(t);
 }
 
+float SBSMSInterfaceSliding :: getMeanStretch(float t0, float t1) { return imp->getMeanStretch(t0, t1); }
+float SBSMSInterfaceSlidingImp :: getMeanStretch(float t0, float t1)
+{
+  return stretchSlide->getMeanStretch(t0, t1);
+}
+  
 float SBSMSInterfaceSliding :: getPitch(float t) { return imp->getPitch(t); }
 float SBSMSInterfaceSlidingImp :: getPitch(float t)
 {

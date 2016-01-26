@@ -72,6 +72,11 @@ EffectTimeScale::EffectTimeScale()
    m_PitchPercentChangeStart = DEF_PitchPercentStart;
    m_PitchPercentChangeEnd = DEF_PitchPercentEnd;
 
+   slideTypeRate = SlideLinearOutputRate;
+   slideTypePitch = SlideLinearOutputRate;
+   bPreview = false;
+   previewSelectedDuration = 0.0;
+   
    SetLinearEffectFlag(true);
 }
 
@@ -143,13 +148,42 @@ bool EffectTimeScale::Init()
    return true;
 }
 
+double EffectTimeScale::CalcPreviewInputLength(double previewLength)
+{
+   double inputLength = Effect::GetDuration();
+   if(inputLength == 0.0) {
+      return 0.0;
+   } else {
+      double rateStart = PercentChangeToRatio(m_RatePercentChangeStart);
+      double rateEnd = PercentChangeToRatio(m_RatePercentChangeEnd);
+      double tOut = previewLength/inputLength;
+      double t = EffectSBSMS::getInvertedStretchedTime(rateStart,rateEnd,slideTypeRate,tOut);
+      return t * inputLength;
+   }
+}
+
+void EffectTimeScale::Preview(bool dryOnly)
+{
+   previewSelectedDuration = Effect::GetDuration();
+   bPreview = true;
+   Effect::Preview(dryOnly);
+   bPreview = false;
+}
+
 bool EffectTimeScale::Process()
 {
    double pitchStart = PercentChangeToRatio(m_PitchPercentChangeStart);
    double pitchEnd = PercentChangeToRatio(m_PitchPercentChangeEnd);
    double rateStart = PercentChangeToRatio(m_RatePercentChangeStart);
    double rateEnd = PercentChangeToRatio(m_RatePercentChangeEnd);
-   EffectSBSMS::setParameters(rateStart,rateEnd,pitchStart,pitchEnd,SlideLinearOutputRate,SlideLinearOutputRate,false,false,false);
+  
+   if(bPreview) {
+      double t = (mT1-mT0) / previewSelectedDuration;
+      rateEnd = EffectSBSMS::getRate(rateStart,rateEnd,slideTypeRate,t);
+      pitchEnd = EffectSBSMS::getRate(pitchStart,pitchEnd,slideTypePitch,t);
+   }
+   
+   EffectSBSMS::setParameters(rateStart,rateEnd,pitchStart,pitchEnd,slideTypeRate,slideTypePitch,false,false,false);
    return EffectSBSMS::Process();
 }
 
