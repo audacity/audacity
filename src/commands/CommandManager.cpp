@@ -884,8 +884,8 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & name,
 
    // Key from preferences overridse the default key given
    gPrefs->SetPath(wxT("/NewKeys"));
-   if (gPrefs->HasEntry(name)) {
-      entry->key = KeyStringNormalize(gPrefs->Read(name, entry->key));
+   if (gPrefs->HasEntry(entry->name)) {
+      entry->key = KeyStringNormalize(gPrefs->Read(entry->name, entry->key));
    }
    gPrefs->SetPath(wxT("/"));
 
@@ -911,7 +911,7 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & name,
       }
    }
 #endif
-   mCommandNameHash[name] = entry;
+   mCommandNameHash[entry->name] = entry;
 
    if (entry->key != wxT("")) {
       mCommandKeyHash[entry->key] = entry;
