@@ -105,7 +105,8 @@ class AudacityApp:public wxApp {
 
    int FilterEvent(wxEvent & event);
 
-   void InitLang( const wxString & lang );
+   // Returns the language actually used which is not lang if lang cannot be found.
+   wxString InitLang( const wxString & lang );
 
    // These are currently only used on Mac OS, where it's
    // possible to have a menu bar but no windows open.  It doesn't

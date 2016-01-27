@@ -182,7 +182,7 @@ void InitPreferences()
    }
 
    // Initialize the language
-   wxGetApp().InitLang(langCode);
+   langCode = wxGetApp().InitLang(langCode);
 
    // User requested that the preferences be completely reset
    if (resetPrefs)

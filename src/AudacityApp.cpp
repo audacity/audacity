@@ -985,8 +985,10 @@ wxLanguageInfo userLangs[] =
 };
 #endif
 
-void AudacityApp::InitLang( const wxString & lang )
+wxString AudacityApp::InitLang( const wxString & lang )
 {
+   wxString result = lang;
+
    if (mLocale)
       delete mLocale;
 
@@ -1001,10 +1003,18 @@ void AudacityApp::InitLang( const wxString & lang )
    wxSetEnv(wxT("LANG"), wxT("en_US.UTF-8"));
 #endif
 
-   const wxLanguageInfo *info = wxLocale::FindLanguageInfo(lang);
-   if (!lang)
+   const wxLanguageInfo *info = NULL;
+   if (!lang.empty()) {
+      info = wxLocale::FindLanguageInfo(lang);
+      if (!info)
+         ::wxMessageBox(wxString::Format(_("Language \"%s\" is unknown"), lang));
+   }
+   if (!info)
    {
-      return;
+      result = GetSystemLanguageCode();
+      info = wxLocale::FindLanguageInfo(result);
+      if (!info)
+         return result;
    }
    mLocale = new wxLocale(info->Language);
 
@@ -1035,6 +1045,8 @@ void AudacityApp::InitLang( const wxString & lang )
       wxCommandEvent evt(EVT_LANGUAGE_CHANGE);
       ProcessEvent(evt);
    }
+
+   return result;
 }
 
 void AudacityApp::OnFatalException()
