@@ -849,9 +849,16 @@ void AudacityProject::CreateMenusAndCommands()
 
    c->AddSeparator();
 
-   c->AddItem(wxT("Stereo to Mono"), _("Stereo Trac&k to Mono"), FN(OnStereoToMono),
-              AudioIONotBusyFlag | StereoRequiredFlag | WaveTracksSelectedFlag,
-              AudioIONotBusyFlag | StereoRequiredFlag | WaveTracksSelectedFlag);
+   {
+      // Stereo to Mono is an oddball command that is also subject to control by the
+      // plug-in manager, as if an effect.  Decide whether to show or hide it.
+      const PluginID ID = EffectManager::Get().GetEffectByIdentifier(wxT("StereoToMono"));
+      const PluginDescriptor *plug = PluginManager::Get().GetPlugin(ID);
+      if (plug)
+         c->AddItem(wxT("Stereo to Mono"), _("Stereo Trac&k to Mono"), FN(OnStereoToMono),
+            AudioIONotBusyFlag | StereoRequiredFlag | WaveTracksSelectedFlag,
+            AudioIONotBusyFlag | StereoRequiredFlag | WaveTracksSelectedFlag);
+   }
    c->AddItem(wxT("MixAndRender"), _("Mi&x and Render"), FN(OnMixAndRender),
               AudioIONotBusyFlag | WaveTracksSelectedFlag,
               AudioIONotBusyFlag | WaveTracksSelectedFlag);
@@ -3298,7 +3305,9 @@ void AudacityProject::OnZeroCrossing()
 bool AudacityProject::OnEffect(const PluginID & ID, int flags)
 {
    const PluginDescriptor *plug = PluginManager::Get().GetPlugin(ID);
-   wxASSERT(plug != NULL);
+   if (!plug)
+      return false;
+
    EffectType type = plug->GetEffectType();
 
    // Make sure there's no activity since the effect is about to be applied
