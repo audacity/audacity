@@ -6423,7 +6423,8 @@ void AudacityProject::OnEditLabels()
 
 void AudacityProject::OnApplyChain()
 {
-   BatchProcessDialog dlg(this);
+   // Bug1299:  Make Track panel the parent so it gets focus back
+   BatchProcessDialog dlg(GetTrackPanel());
    dlg.ShowModal();
    ModifyUndoMenuItems();
 }
