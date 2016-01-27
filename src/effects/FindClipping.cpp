@@ -58,7 +58,7 @@ wxString EffectFindClipping::GetSymbol()
 
 wxString EffectFindClipping::GetDescription()
 {
-   return XO("This displays runs of clipped samples in a Label Track");
+   return XO("This creates labels where clipping is detected");
 }
 
 // EffectIdentInterface implementation
