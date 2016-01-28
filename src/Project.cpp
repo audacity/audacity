@@ -1560,24 +1560,23 @@ double AudacityProject::ScrollingLowerBoundTime() const
    return std::min(mTracks->GetStartTime(), -screen / 2.0);
 }
 
-wxInt64 AudacityProject::PixelWidthBeforeTime(double scrollto) const
+// PRL: Bug1197: we seem to need to compute all in double, to avoid differing results on Mac
+// That's why ViewInfo::TimeRangeToPixelWidth was defined, with some regret.
+double AudacityProject::PixelWidthBeforeTime(double scrollto) const
 {
    const double lowerBound = ScrollingLowerBoundTime();
    return
-      mViewInfo.TimeToPosition(scrollto, 0
-      , true
-      ) -
-      mViewInfo.TimeToPosition(lowerBound, 0
-      , true
-      );
+      // Ignoring fisheye is correct here
+      mViewInfo.TimeRangeToPixelWidth(scrollto - lowerBound);
 }
 
 void AudacityProject::SetHorizontalThumb(double scrollto)
 {
-   wxInt64 max = mHsbar->GetRange() - mHsbar->GetThumbSize();
-   int pos = std::min(max,
-                std::max(wxInt64(0),
-                   wxInt64(PixelWidthBeforeTime(scrollto) * mViewInfo.sbarScale)));
+   const int max = mHsbar->GetRange() - mHsbar->GetThumbSize();
+   const int pos =
+      std::min(max,
+         std::max(0,
+            int(floor(0.5 + PixelWidthBeforeTime(scrollto) * mViewInfo.sbarScale))));
    mHsbar->SetThumbPosition(pos);
 }
 
@@ -1751,7 +1750,8 @@ void AudacityProject::FixScrollbars()
       int scaledSbarH = (int)(mViewInfo.sbarH * mViewInfo.sbarScale);
       int scaledSbarScreen = (int)(mViewInfo.sbarScreen * mViewInfo.sbarScale);
       int scaledSbarTotal = (int)(mViewInfo.sbarTotal * mViewInfo.sbarScale);
-      const int offset = mViewInfo.sbarScale * PixelWidthBeforeTime(0.0);
+      const int offset =
+         int(floor(0.5 + mViewInfo.sbarScale * PixelWidthBeforeTime(0.0)));
 
       mHsbar->SetScrollbar(scaledSbarH + offset, scaledSbarScreen, scaledSbarTotal,
          scaledSbarScreen, TRUE);
