@@ -445,11 +445,11 @@ sampleCount Mixer::MixVariableRates(int *channelFlags, WaveTrack *track,
    // Find the last sample
    double endTime = track->GetEndTime();
    double startTime = track->GetStartTime();
-   const sampleCount endPos =
-      track->TimeToLongSamples(std::max(startTime, std::min(endTime, mT1)));
-   const sampleCount startPos =
-      track->TimeToLongSamples(std::max(startTime, std::min(endTime, mT0)));
-   const bool backwards = (endPos < startPos);
+   const bool backwards = (mT1 < mT0);
+   const double tEnd = backwards
+      ? std::max(startTime, mT1)
+      : std::min(endTime, mT1);
+   const sampleCount endPos = track->TimeToLongSamples(tEnd);
    // Find the time corresponding to the start of the queue, for use with time track
    double t = (*pos + (backwards ? *queueLen : - *queueLen)) / trackRate;
 
@@ -498,7 +498,7 @@ sampleCount Mixer::MixVariableRates(int *channelFlags, WaveTrack *track,
 
             if (backwards)
                ReverseSamples((samplePtr)&queue[0], floatSample,
-                              *queueStart, getLen);
+                              *queueLen, getLen);
 
             *queueLen += getLen;
          }
@@ -577,9 +577,10 @@ sampleCount Mixer::MixSameRate(int *channelFlags, WaveTrack *track,
    const double t = *pos / track->GetRate();
    const double trackEndTime = track->GetEndTime();
    const double trackStartTime = track->GetStartTime();
-   const double tEnd = std::max(trackStartTime, std::min(trackEndTime, mT1));
-   const double tStart = std::max(trackStartTime, std::min(trackEndTime, mT0));
-   const bool backwards = (tEnd < tStart);
+   const bool backwards = (mT1 < mT0);
+   const double tEnd = backwards
+      ? std::max(trackStartTime, mT1)
+      : std::min(trackEndTime, mT1);
 
    //don't process if we're at the end of the selection or track.
    if ((backwards ? t <= tEnd : t >= tEnd))
