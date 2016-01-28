@@ -62,6 +62,10 @@ public:
       , bool ignoreFisheye = false
    ) const;
 
+   // This always ignores the fisheye.  Use with caution!
+   // You should prefer to call TimeToPosition twice, for endpoints, and take the difference!
+   double TimeRangeToPixelWidth(double timeRange) const;
+
    double OffsetTimeByPixels(double time, wxInt64 offset, bool ignoreFisheye = false) const
    {
       return PositionToTime(offset + TimeToPosition(time, ignoreFisheye), ignoreFisheye);

@@ -384,7 +384,8 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 
    double ScrollingLowerBoundTime() const;
    // How many pixels are covered by the period from lowermost scrollable time, to the given time:
-   wxInt64 PixelWidthBeforeTime(double scrollto) const;
+   // PRL: Bug1197: we seem to need to compute all in double, to avoid differing results on Mac
+   double PixelWidthBeforeTime(double scrollto) const;
    void SetHorizontalThumb(double scrollto);
 
    // TrackPanel access
