@@ -369,7 +369,7 @@ void AudacityProject::CreateMenusAndCommands()
 
    c->AddSeparator();
 
-   c->AddItem(wxT("EditMetaData"), _("Edit Me&tadata..."), FN(OnEditMetadata));
+   c->AddItem(wxT("EditMetaData"), _("Edit Me&tadata Tags..."), FN(OnEditMetadata));
 
    c->AddSeparator();
 
