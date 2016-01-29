@@ -327,7 +327,7 @@ bool EffectTruncSilence::ProcessIndependently()
          if (syncLock) {
             SyncLockedTracksIterator syncIter(mOutputTracks);
             groupFirst = syncIter.First(track);
-            groupLast = syncIter.Last(track);
+            groupLast = syncIter.Last();
          }
          else {
             groupFirst = track;
