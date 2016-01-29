@@ -364,8 +364,8 @@ bool Sequence::GetRMS(sampleCount start, sampleCount len,
       float blockMin, blockMax, blockRMS;
       mBlock->Item(b)->f->GetMinMax(&blockMin, &blockMax, &blockRMS);
 
-      sumsq += blockRMS * blockRMS * mBlock->Item(block0)->f->GetLength();
-      length += mBlock->Item(block0)->f->GetLength();
+      sumsq += blockRMS * blockRMS * mBlock->Item(b)->f->GetLength();
+      length += mBlock->Item(b)->f->GetLength();
    }
 
    // Now we take the first and last blocks into account, noting that the
@@ -393,6 +393,9 @@ bool Sequence::GetRMS(sampleCount start, sampleCount len,
       sumsq += partialRMS * partialRMS * l0;
       length += l0;
    }
+
+   // PRL: catch bugs like 1320:
+   wxASSERT(length == len);
 
    *outRMS = sqrt(sumsq/length);
 
