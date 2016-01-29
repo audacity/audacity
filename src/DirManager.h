@@ -21,6 +21,7 @@
 #include "xml/XMLTagHandler.h"
 
 class wxHashTable;
+class BlockArray;
 class BlockFile;
 class SequenceTest;
 
@@ -101,7 +102,11 @@ class DirManager: public XMLTagHandler {
    // For debugging only
    int GetRefCount(BlockFile * f);
 
-   void SetLoadingTarget(BlockFile **target) { mLoadingTarget = target; }
+   void SetLoadingTarget(BlockArray *pArray, unsigned idx)
+   {
+      mLoadingTarget = pArray;
+      mLoadingTargetIdx = idx;
+   }
    void SetLoadingFormat(sampleFormat format) { mLoadingFormat = format; }
    void SetLoadingBlockLength(sampleCount len) { mLoadingBlockLen = len; }
    void SetMaxSamples(sampleCount max) { mMaxSamples = max; }
@@ -186,7 +191,8 @@ class DirManager: public XMLTagHandler {
 
    wxArrayString aliasList;
 
-   BlockFile **mLoadingTarget;
+   BlockArray *mLoadingTarget;
+   unsigned mLoadingTargetIdx;
    sampleFormat mLoadingFormat;
    sampleCount mLoadingBlockLen;
 

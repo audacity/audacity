@@ -11,6 +11,7 @@
 #ifndef __AUDACITY_SEQUENCE__
 #define __AUDACITY_SEQUENCE__
 
+#include <vector>
 #include <wx/string.h>
 #include <wx/dynarray.h>
 
@@ -36,8 +37,23 @@ class SeqBlock {
    BlockFile * f;
    ///the sample in the global wavetrack that this block starts at.
    sampleCount start;
+
+   SeqBlock()
+      : f(NULL), start(0)
+   {}
+
+   SeqBlock(BlockFile *f_, sampleCount start_)
+      : f(f_), start(start_)
+   {}
+
+   // Construct a SeqBlock with changed start, same file
+   SeqBlock Plus(sampleCount delta) const
+   {
+      return SeqBlock(f, start + delta);
+   }
 };
-WX_DEFINE_ARRAY(SeqBlock *, BlockArray);
+class BlockArray : public std::vector<SeqBlock> {};
+WX_DEFINE_ARRAY(SeqBlock *, BlockPtrArray);
 
 class Sequence: public XMLTagHandler {
  public:
@@ -214,15 +230,15 @@ class Sequence: public XMLTagHandler {
    int FindBlock(sampleCount pos, sampleCount lo,
                  sampleCount guess, sampleCount hi) const;
 
-   bool AppendBlock(SeqBlock *b);
+   bool AppendBlock(SeqBlock &b);
 
    bool Read(samplePtr buffer, sampleFormat format,
-             SeqBlock * b,
+             const SeqBlock &b,
              sampleCount start, sampleCount len) const;
 
    // These are the two ways to write data to a block
    bool FirstWrite(samplePtr buffer, SeqBlock * b, sampleCount len);
-   bool CopyWrite(samplePtr buffer, SeqBlock * b,
+   bool CopyWrite(samplePtr buffer,    SeqBlock &b,
                   sampleCount start, sampleCount len);
 
    // Both block-writing methods and AppendAlias call this

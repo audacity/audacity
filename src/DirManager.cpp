@@ -98,6 +98,7 @@
 #include "Internat.h"
 #include "Project.h"
 #include "Prefs.h"
+#include "Sequence.h"
 #include "widgets/Warning.h"
 #include "widgets/MultiDialog.h"
 
@@ -349,6 +350,7 @@ DirManager::DirManager()
    projName = wxT("");
 
    mLoadingTarget = NULL;
+   mLoadingTargetIdx = 0;
    mMaxSamples = -1;
 
    // toplevel pool hash is fully populated to begin
@@ -1009,10 +1011,12 @@ bool DirManager::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 
    BlockFile* pBlockFile = NULL;
 
-   if( !wxStricmp(tag, wxT("silentblockfile")) ) {
+   BlockFile *&target = mLoadingTarget->at(mLoadingTargetIdx).f;
+   
+   if (!wxStricmp(tag, wxT("silentblockfile"))) {
       // Silent blocks don't actually have a file associated, so
       // we don't need to worry about the hash table at all
-      *mLoadingTarget = SilentBlockFile::BuildFromXML(*this, attrs);
+      target = SilentBlockFile::BuildFromXML(*this, attrs);
       return true;
    }
    else if ( !wxStricmp(tag, wxT("simpleblockfile")) )
@@ -1074,7 +1078,7 @@ bool DirManager::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       return false;
    }
    else
-      *mLoadingTarget = pBlockFile;
+      target = pBlockFile;
 
    //
    // If the block we loaded is already in the hash table, then the
@@ -1082,21 +1086,21 @@ bool DirManager::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    // return a reference to the existing object instead.
    //
 
-   wxString name = (*mLoadingTarget)->GetFileName().GetName();
+   wxString name = target->GetFileName().GetName();
    BlockFile *retrieved = mBlockFileHash[name];
    if (retrieved) {
       // Lock it in order to delete it safely, i.e. without having
       // it delete the file, too...
-      (*mLoadingTarget)->Lock();
-      delete (*mLoadingTarget);
+      target->Lock();
+      delete target;
 
       Ref(retrieved); // Add one to its reference count
-      *mLoadingTarget = retrieved;
+      target = retrieved;
       return true;
    }
 
    // This is a new object
-   mBlockFileHash[name]=*mLoadingTarget;
+   mBlockFileHash[name] = target;
    // MakeBlockFileName wasn't used so we must add the directory
    // balancing information
    BalanceInfoAdd(name);
