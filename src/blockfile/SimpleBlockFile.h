@@ -42,7 +42,7 @@ typedef struct {
    wxUint32 channels;   // number of interleaved channels
 } auHeader;
 
-class SimpleBlockFile /* not final */ : public BlockFile {
+class PROFILE_DLL_API SimpleBlockFile /* not final */ : public BlockFile {
  public:
 
    // Constructor / Destructor

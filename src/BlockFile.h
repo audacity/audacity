@@ -38,7 +38,7 @@ class SummaryInfo {
 
 
 
-class BlockFile /* not final */ {
+class PROFILE_DLL_API BlockFile /* not final */ {
  public:
 
    // Constructor / Destructor
