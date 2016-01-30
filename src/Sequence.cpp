@@ -200,18 +200,12 @@ bool Sequence::ConvertToSampleFormat(sampleFormat format, bool* pbChanged)
       //    from the old blocks... Oh no!
 
       // Using Blockify will handle the cases where len > the new mMaxSamples. Previous code did not.
-      BlockArray* pSplitBlockArray = Blockify(bufferNew, len);
-      bSuccess = (pSplitBlockArray->size() > 0);
+      const sampleCount blockstart = oldSeqBlock.start;
+      const unsigned prevSize = newBlockArray.size();
+      Blockify(newBlockArray, blockstart, bufferNew, len);
+      bSuccess = (newBlockArray.size() > prevSize);
       if (bSuccess)
-      {
-         const sampleCount blockstart = mBlock.at(i).start;
-         for (size_t j = 0; j < pSplitBlockArray->size(); j++)
-         {
-            newBlockArray.push_back(pSplitBlockArray->at(j).Plus(blockstart));
-         }
          *pbChanged = true;
-      }
-      delete pSplitBlockArray;
 
       DeleteSamples(bufferNew);
       DeleteSamples(bufferOld);
@@ -574,12 +568,7 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
    // then resplit it all
    BlockArray newBlock;
    newBlock.reserve(numBlocks + srcNumBlocks + 2);
-   int newNumBlocks = 0;
-
-   for (int i = 0; i < b; i++) {
-      newBlock.push_back(mBlock.at(i));
-      newNumBlocks++;
-   }
+   newBlock.insert(newBlock.end(), mBlock.begin(), mBlock.begin() + b);
 
    SeqBlock &splitBlock = mBlock.at(b);
    sampleCount splitLen = splitBlock.f->GetLength();
@@ -599,12 +588,7 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
            splitBlock, splitPoint,
            splitLen - splitPoint);
 
-      BlockArray *split = Blockify(sumBuffer, sum);
-      for (i = 0; i < split->size(); i++) {
-         newBlock.push_back(split->at(i).Plus(splitBlock.start));
-         newNumBlocks++;
-      }
-      delete split;
+      Blockify(newBlock, splitBlock.start, sumBuffer, sum);
       DeleteSamples(sumBuffer);
    } else {
 
@@ -623,12 +607,7 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
       src->Get(leftBuffer + splitPoint*sampleSize,
                mSampleFormat, 0, srcFirstTwoLen);
 
-      BlockArray *split = Blockify(leftBuffer, leftLen);
-      for (i = 0; i < split->size(); i++) {
-         newBlock.push_back(split->at(i).Plus(splitBlock.start));
-         newNumBlocks++;
-      }
-      delete split;
+      Blockify(newBlock, splitBlock.start, leftBuffer, leftLen);
       DeleteSamples(leftBuffer);
 
       for (i = 2; i < srcNumBlocks - 2; i++) {
@@ -640,7 +619,6 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
          }
 
          newBlock.push_back(SeqBlock(file, block.start + s));
-         newNumBlocks++;
       }
 
       const SeqBlock &penultimate = srcBlock.at(srcNumBlocks - 2);
@@ -659,12 +637,7 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
 
       sampleCount pos = s + lastStart;
 
-      split = Blockify(rightBuffer, rightLen);
-      for (i = 0; i < split->size(); i++) {
-         newBlock.push_back(split->at(i).Plus(pos));
-         newNumBlocks++;
-      }
-      delete split;
+      Blockify(newBlock, pos, rightBuffer, rightLen);
       DeleteSamples(rightBuffer);
    }
 
@@ -672,10 +645,8 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
 
    // Copy remaining blocks to new block array and
    // swap the new block array in for the old
-   for (i = b + 1; i < numBlocks; i++) {
+   for (i = b + 1; i < numBlocks; i++)
       newBlock.push_back(mBlock.at(i).Plus(addedLen));
-      newNumBlocks++;
-   }
 
    mBlock.swap(newBlock);
 
@@ -1617,29 +1588,26 @@ bool Sequence::Append(samplePtr buffer, sampleFormat format,
    return true;
 }
 
-BlockArray *Sequence::Blockify(samplePtr buffer, sampleCount len)
+void Sequence::Blockify(BlockArray &list, sampleCount start, samplePtr buffer, sampleCount len)
 {
-   BlockArray *list = new BlockArray();
    if (len <= 0)
-      return list;
+      return;
 
-   list->reserve(10);
-
-   int num = (len + (mMaxSamples - 1)) / mMaxSamples;
+   const int num = (len + (mMaxSamples - 1)) / mMaxSamples;
+   list.reserve(list.size() + num);
 
    for (int i = 0; i < num; i++) {
       SeqBlock b;
 
-      b.start = i * len / num;
-      int newLen = ((i + 1) * len / num) - b.start;
-      samplePtr bufStart = buffer + (b.start * SAMPLE_SIZE(mSampleFormat));
+      const sampleCount offset = i * len / num;
+      b.start = start + offset;
+      int newLen = ((i + 1) * len / num) - offset;
+      samplePtr bufStart = buffer + (offset * SAMPLE_SIZE(mSampleFormat));
 
       b.f = mDirManager->NewSimpleBlockFile(bufStart, newLen, mSampleFormat);
 
-      list->push_back(b);
+      list.push_back(b);
    }
-
-   return list;
 }
 
 bool Sequence::Delete(sampleCount start, sampleCount len)
@@ -1657,7 +1625,6 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
    LockDeleteUpdateMutex();
 
    unsigned int numBlocks = mBlock.size();
-   unsigned int newNumBlocks = 0;
 
    unsigned int b0 = FindBlock(start);
    unsigned int b1 = FindBlock(start + len - 1);
@@ -1705,11 +1672,8 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
 
    // Copy the blocks before the deletion point over to
    // the new array
+   newBlock.insert(newBlock.end(), mBlock.begin(), mBlock.begin() + b0);
    unsigned int i;
-   for (i = 0; i < b0; i++) {
-      newBlock.push_back(mBlock.at(i));
-      newNumBlocks++;
-   }
 
    // First grab the samples in block b0 before the deletion point
    // into preBuffer.  If this is enough samples for its own block,
@@ -1727,7 +1691,6 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
          DeleteSamples(preBuffer);
 
          newBlock.push_back(SeqBlock(pFile, preBlock.start));
-         newNumBlocks++;
 
          if (b0 != b1) {
             mDirManager->Deref(preBlock.f);
@@ -1743,13 +1706,8 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
          Read(sumBuffer + prepreLen*sampleSize, mSampleFormat,
               preBlock, 0, preBufferLen);
 
-         BlockArray *split = Blockify(sumBuffer, sum);
-         newBlock.at(b0 - 1) = split->at(0).Plus(prepreBlock.start);
-         for (i = 1; i < split->size(); i++) {
-            newBlock.push_back(split->at(i).Plus(prepreBlock.start));
-            newNumBlocks++;
-         }
-         delete split;
+         newBlock.erase(newBlock.end() - 1);
+         Blockify(newBlock, prepreBlock.start, sumBuffer, sum);
 
          DeleteSamples(sumBuffer);
 
@@ -1791,7 +1749,6 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
          DeleteSamples(postBuffer);
 
          newBlock.push_back(SeqBlock(file, start));
-         newNumBlocks++;
 
          mDirManager->Deref(postBlock.f);
       } else {
@@ -1805,12 +1762,7 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
          Read(sumBuffer + (postBufferLen * sampleSize), mSampleFormat,
               postpostBlock, 0, postpostLen);
 
-         BlockArray *split = Blockify(sumBuffer, sum);
-         for (i = 0; i < split->size(); i++) {
-            newBlock.push_back(split->at(i).Plus(start));
-            newNumBlocks++;
-         }
-         delete split;
+         Blockify(newBlock, start, sumBuffer, sum);
          b1++;
 
          DeleteSamples(sumBuffer);
@@ -1825,10 +1777,8 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
    }
 
    // Copy the remaining blocks over from the old array
-   for (i = b1 + 1; i < numBlocks; i++) {
+   for (i = b1 + 1; i < numBlocks; i++)
       newBlock.push_back(mBlock.at(i).Plus(-len));
-      newNumBlocks++;
-   }
 
    // Substitute our new array for the old one
    mBlock.swap(newBlock);

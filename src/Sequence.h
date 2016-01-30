@@ -246,7 +246,7 @@ class Sequence: public XMLTagHandler {
    void *GetSummary(samplePtr buffer, sampleCount len,
                     float *min, float *max, float *rms);
 
-   BlockArray *Blockify(samplePtr buffer, sampleCount len);
+   void Blockify(BlockArray &list, sampleCount start, samplePtr buffer, sampleCount len);
 
  public:
 
