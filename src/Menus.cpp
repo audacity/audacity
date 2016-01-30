@@ -5566,7 +5566,7 @@ void AudacityProject::OnImportRaw()
 void AudacityProject::OnEditMetadata()
 {
    if (mTags->ShowEditDialog(this, _("Edit Metadata Tags"), true))
-      PushState(_("Edit Metadata Tags"), _("Edit Metadata"));
+      PushState(_("Edit Metadata Tags"), _("Metadata Tags"));
 }
 
 void AudacityProject::HandleMixAndRender(bool toNewTrack)
