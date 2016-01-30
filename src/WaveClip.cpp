@@ -366,7 +366,7 @@ bool WaveClip::SetSamples(samplePtr buffer, sampleFormat format,
 
 BlockArray* WaveClip::GetSequenceBlockArray()
 {
-   return mSequence->GetBlockArray();
+   return &mSequence->GetBlockArray();
 }
 
 double WaveClip::GetStartTime() const

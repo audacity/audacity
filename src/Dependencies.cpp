@@ -72,10 +72,10 @@ static void GetAllSeqBlocks(AudacityProject *project,
          while(node) {
             WaveClip *clip = node->GetData();
             Sequence *sequence = clip->GetSequence();
-            BlockArray *blocks = sequence->GetBlockArray();
+            BlockArray &blocks = sequence->GetBlockArray();
             int i;
-            for (i = 0; i < (int)blocks->size(); i++)
-               outBlocks->push_back(&blocks->at(i));
+            for (i = 0; i < (int)blocks.size(); i++)
+               outBlocks->push_back(&blocks.at(i));
             node = node->GetNext();
          }
       }

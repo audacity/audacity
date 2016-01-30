@@ -188,7 +188,7 @@ class Sequence: public XMLTagHandler {
    // you're doing!
    //
 
-   BlockArray *GetBlockArray() {return mBlock;}
+   BlockArray &GetBlockArray() {return mBlock;}
 
    ///
    void LockDeleteUpdateMutex(){mDeleteUpdateMutex.Lock();}
@@ -208,7 +208,7 @@ class Sequence: public XMLTagHandler {
 
    DirManager   *mDirManager;
 
-   BlockArray   *mBlock;
+   BlockArray    mBlock;
    sampleFormat  mSampleFormat;
    sampleCount   mNumSamples;
 
@@ -230,7 +230,7 @@ class Sequence: public XMLTagHandler {
    int FindBlock(sampleCount pos, sampleCount lo,
                  sampleCount guess, sampleCount hi) const;
 
-   bool AppendBlock(SeqBlock &b);
+   bool AppendBlock(const SeqBlock &b);
 
    bool Read(samplePtr buffer, sampleFormat format,
              const SeqBlock &b,
