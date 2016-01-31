@@ -4222,10 +4222,17 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
                len = gAudioIO->mPlaybackBuffers[t]->Get((samplePtr)tempBufs[chanCnt],
                                                          floatSample,
                                                          (int)framesPerBuffer);
+               if (len < framesPerBuffer)
+                  // Pad with zeroes to the end, in case of a short channel
+                  memset((void*)&tempBufs[chanCnt][len], 0,
+                     (framesPerBuffer - len) * sizeof(float));
+
                chanCnt++;
             }
-            // There should not be a difference of len in different loop passes...
-            // but anyway take a max.
+
+            // PRL:  Bug1104:
+            // There can be a difference of len in different loop passes if one channel
+            // of a stereo track ends before the other!  Take a max!
             maxLen = std::max(maxLen, len);
 
 
@@ -4256,6 +4263,9 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
                                                      (int)framesPerBuffer);
             }
 #endif
+
+            // Last channel seen now
+            len = maxLen;
 
             if( !cut && selected )
             {
