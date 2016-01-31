@@ -365,6 +365,7 @@
     <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqstk\src\WaveLoop.cpp" />
     <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqstk\src\WvIn.cpp" />
     <ClCompile Include="..\..\..\lib-src\libnyquist\nyx.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\RngSupport.cpp" />
     <ClCompile Include="..\..\..\lib-src\libnyquist\xlextstart.c" />
   </ItemGroup>
   <ItemGroup>
@@ -376,6 +377,7 @@
     <ClInclude Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\sliderdata.h" />
     <ClInclude Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\sndsliders.h" />
     <ClInclude Include="..\..\..\lib-src\libnyquist\nyx.h" />
+    <ClInclude Include="..\..\..\lib-src\libnyquist\RngSupport.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

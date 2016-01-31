@@ -647,6 +647,7 @@
     <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\pvshell.c">
       <Filter>nyquist\nyqsrc</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\libnyquist\RngSupport.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\lib-src\libnyquist\nyquist\ffts\src\fftext.h">
@@ -671,5 +672,6 @@
     <ClInclude Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\pvshell.h">
       <Filter>nyquist\nyqsrc</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\libnyquist\RngSupport.h" />
   </ItemGroup>
 </Project>
