@@ -208,6 +208,11 @@
     (snd-white *rslt* *SOUND-SRATE* d)))
 
 
+(defun noiseg (&optional (dur 1.0))
+  (let ((d (get-duration dur)))
+    (snd-whiteg *rslt* *SOUND-SRATE* d)))
+
+
 (defun noise-gate (snd &optional (lookahead 0.5) (risetime 0.02) (falltime 0.5)
                                                  (floor 0.01) (threshold 0.01))
   (let ((rms (lp (mult snd snd) (/ *control-srate* 10.0))))

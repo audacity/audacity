@@ -648,6 +648,9 @@
       <Filter>nyquist\nyqsrc</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\lib-src\libnyquist\RngSupport.cpp" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\whiteg.c">
+      <Filter>nyquist\tran</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\lib-src\libnyquist\nyquist\ffts\src\fftext.h">

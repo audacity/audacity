@@ -296,6 +296,7 @@
     <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\tonev.c" />
     <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\upsample.c" />
     <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\white.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\whiteg.c" />
     <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\xlisp\extern.c" />
     <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\xlisp\path.c" />
     <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\xlisp\security.c" />
