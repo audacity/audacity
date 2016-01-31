@@ -4224,8 +4224,8 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
                                                          (int)framesPerBuffer);
                chanCnt++;
             }
-            // There can be a difference of len in different loop passes if one channel
-            // of a stereo track ends before the other!  Take a max!
+            // There should not be a difference of len in different loop passes...
+            // but anyway take a max.
             maxLen = std::max(maxLen, len);
 
 
@@ -4256,9 +4256,6 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
                                                      (int)framesPerBuffer);
             }
 #endif
-
-            // Last channel seen now
-            len = maxLen;
 
             if( !cut && selected )
             {
