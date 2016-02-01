@@ -1430,53 +1430,52 @@ void TrackPanel::OnPaint(wxPaintEvent & /* event */)
    wxStopWatch sw;
 #endif
 
-   // Construct the paint DC on the heap so that it may be deleted
-   // early
-   wxPaintDC *dc = new wxPaintDC(this);
-
-   // Retrieve the damage rectangle
-   wxRect box = GetUpdateRegion().GetBox();
-
-   // Recreate the backing bitmap if we have a full refresh
-   // (See TrackPanel::Refresh())
-   if (mRefreshBacking || (box == GetRect()))
    {
-      // Reset (should a mutex be used???)
-      mRefreshBacking = false;
+      wxPaintDC dc(this);
 
-      if (mResizeBacking)
+      // Retrieve the damage rectangle
+      wxRect box = GetUpdateRegion().GetBox();
+
+      // Recreate the backing bitmap if we have a full refresh
+      // (See TrackPanel::Refresh())
+      if (mRefreshBacking || (box == GetRect()))
       {
-         // Reset
-         mResizeBacking = false;
+         // Reset (should a mutex be used???)
+         mRefreshBacking = false;
 
-         // Delete the backing bitmap
-         if (mBacking)
+         if (mResizeBacking)
          {
-            mBackingDC.SelectObject(wxNullBitmap);
-            delete mBacking;
-            mBacking = NULL;
+            // Reset
+            mResizeBacking = false;
+
+            // Delete the backing bitmap
+            if (mBacking)
+            {
+               mBackingDC.SelectObject(wxNullBitmap);
+               delete mBacking;
+               mBacking = NULL;
+            }
+
+            wxSize sz = GetClientSize();
+            mBacking = new wxBitmap();
+            mBacking->Create(sz.x, sz.y); //, *dc);
+            mBackingDC.SelectObject(*mBacking);
          }
 
-         wxSize sz = GetClientSize();
-         mBacking = new wxBitmap();
-         mBacking->Create(sz.x, sz.y); //, *dc);
-         mBackingDC.SelectObject(*mBacking);
+         // Redraw the backing bitmap
+         DrawTracks(&mBackingDC);
+
+         // Copy it to the display
+         dc.Blit(0, 0, mBacking->GetWidth(), mBacking->GetHeight(), &mBackingDC, 0, 0);
+      }
+      else
+      {
+         // Copy full, possibly clipped, damage rectangle
+         dc.Blit(box.x, box.y, box.width, box.height, &mBackingDC, box.x, box.y);
       }
 
-      // Redraw the backing bitmap
-      DrawTracks(&mBackingDC);
-
-      // Copy it to the display
-      dc->Blit(0, 0, mBacking->GetWidth(), mBacking->GetHeight(), &mBackingDC, 0, 0);
+      // Done with the clipped DC
    }
-   else
-   {
-      // Copy full, possibly clipped, damage rectangle
-      dc->Blit(box.x, box.y, box.width, box.height, &mBackingDC, box.x, box.y);
-   }
-
-   // Done with the clipped DC
-   delete dc;
 
    // Drawing now goes directly to the client area.  It can't use the paint DC
    // becuase the paint DC might be clipped and DrawOverlays() may need to draw

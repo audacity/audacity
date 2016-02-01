@@ -188,9 +188,11 @@ void BatchProcessDialog::OnApplyToProject(wxCommandEvent & WXUNUSED(event))
 
    // The disabler must get deleted before the EndModal() call.  Otherwise,
    // the menus on OSX will remain disabled.
-   wxWindowDisabler *wd = new wxWindowDisabler(pD);
-   bool success = mBatchCommands.ApplyChain();
-   delete wd;
+   bool success;
+   {
+      wxWindowDisabler wd(pD);
+      success = mBatchCommands.ApplyChain();
+   }
 
    if (!success) {
       Show();

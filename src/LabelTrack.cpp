@@ -2013,42 +2013,42 @@ void LabelTrack::ShowContextMenu()
 {
    wxWindow *parent = wxWindow::FindFocus();
 
-   wxMenu *menu = new wxMenu();
-   menu->Bind(wxEVT_MENU, &LabelTrack::OnContextMenu, this);
-
-   menu->Append(OnCutSelectedTextID, _("Cu&t"));
-   menu->Append(OnCopySelectedTextID, _("&Copy"));
-   menu->Append(OnPasteSelectedTextID, _("&Paste"));
-   menu->Append(OnDeleteSelectedLabelID, _("&Delete Label"));
-
-   menu->Enable(OnCutSelectedTextID, IsTextSelected());
-   menu->Enable(OnCopySelectedTextID, IsTextSelected());
-   menu->Enable(OnPasteSelectedTextID, IsTextClipSupported());
-   menu->Enable(OnDeleteSelectedLabelID, true);
-
-   const LabelStruct *ls = GetLabel(mSelIndex);
-
-   wxClientDC dc(parent);
-
-   if (msFont.Ok())
    {
-      dc.SetFont(msFont);
-   }
+      wxMenu menu;
+      menu.Bind(wxEVT_MENU, &LabelTrack::OnContextMenu, this);
 
-   int x;
-   if (mMouseXPos != -1)
-   {
-      x = mMouseXPos;
-   }
-   else
-   {
-      dc.GetTextExtent(ls->title.Left(mCurrentCursorPos), &x, NULL);
-      x += ls->xText;
-   }
+      menu.Append(OnCutSelectedTextID, _("Cu&t"));
+      menu.Append(OnCopySelectedTextID, _("&Copy"));
+      menu.Append(OnPasteSelectedTextID, _("&Paste"));
+      menu.Append(OnDeleteSelectedLabelID, _("&Delete Label"));
 
-   parent->PopupMenu(menu, x, ls->y + (mIconHeight / 2) - 1);
+      menu.Enable(OnCutSelectedTextID, IsTextSelected());
+      menu.Enable(OnCopySelectedTextID, IsTextSelected());
+      menu.Enable(OnPasteSelectedTextID, IsTextClipSupported());
+      menu.Enable(OnDeleteSelectedLabelID, true);
 
-   delete menu;
+      const LabelStruct *ls = GetLabel(mSelIndex);
+
+      wxClientDC dc(parent);
+
+      if (msFont.Ok())
+      {
+         dc.SetFont(msFont);
+      }
+
+      int x;
+      if (mMouseXPos != -1)
+      {
+         x = mMouseXPos;
+      }
+      else
+      {
+         dc.GetTextExtent(ls->title.Left(mCurrentCursorPos), &x, NULL);
+         x += ls->xText;
+      }
+
+      parent->PopupMenu(&menu, x, ls->y + (mIconHeight / 2) - 1);
+   }
 
    // it's an invalid dragging event
    SetWrongDragging(true);

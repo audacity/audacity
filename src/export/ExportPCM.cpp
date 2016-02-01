@@ -493,46 +493,46 @@ int ExportPCM::Export(AudacityProject *project,
                             info.channels, maxBlockLen, true,
                             rate, format, true, mixerSpec);
 
-   ProgressDialog *progress = new ProgressDialog(wxFileName(fName).GetName(),
-      selectionOnly ?
-      wxString::Format(_("Exporting the selected audio as %s"),
-                       formatStr.c_str()) :
-      wxString::Format(_("Exporting the entire project as %s"),
-                       formatStr.c_str()));
+   {
+      ProgressDialog progress(wxFileName(fName).GetName(),
+         selectionOnly ?
+         wxString::Format(_("Exporting the selected audio as %s"),
+         formatStr.c_str()) :
+         wxString::Format(_("Exporting the entire project as %s"),
+         formatStr.c_str()));
 
-   while(updateResult == eProgressSuccess) {
-      sampleCount samplesWritten;
-      sampleCount numSamples = mixer->Process(maxBlockLen);
+      while (updateResult == eProgressSuccess) {
+         sampleCount samplesWritten;
+         sampleCount numSamples = mixer->Process(maxBlockLen);
 
-      if (numSamples == 0)
-         break;
+         if (numSamples == 0)
+            break;
 
-      samplePtr mixed = mixer->GetBuffer();
+         samplePtr mixed = mixer->GetBuffer();
 
-      ODManager::LockLibSndFileMutex();
-      if (format == int16Sample)
-         samplesWritten = sf_writef_short(sf, (short *)mixed, numSamples);
-      else
-         samplesWritten = sf_writef_float(sf, (float *)mixed, numSamples);
-      ODManager::UnlockLibSndFileMutex();
+         ODManager::LockLibSndFileMutex();
+         if (format == int16Sample)
+            samplesWritten = sf_writef_short(sf, (short *)mixed, numSamples);
+         else
+            samplesWritten = sf_writef_float(sf, (float *)mixed, numSamples);
+         ODManager::UnlockLibSndFileMutex();
 
-      if (samplesWritten != numSamples) {
-        char buffer2[1000];
-        sf_error_str(sf, buffer2, 1000);
-        wxMessageBox(wxString::Format(
-           /* i18n-hint: %s will be the error message from libsndfile, which
-            * is usually something unhelpful (and untranslated) like "system
-            * error" */
-           _("Error while writing %s file (disk full?).\nLibsndfile says \"%s\""),
-           formatStr.c_str(),
-           wxString::FromAscii(buffer2).c_str()));
-        break;
+         if (samplesWritten != numSamples) {
+            char buffer2[1000];
+            sf_error_str(sf, buffer2, 1000);
+            wxMessageBox(wxString::Format(
+               /* i18n-hint: %s will be the error message from libsndfile, which
+                * is usually something unhelpful (and untranslated) like "system
+                * error" */
+                _("Error while writing %s file (disk full?).\nLibsndfile says \"%s\""),
+                formatStr.c_str(),
+                wxString::FromAscii(buffer2).c_str()));
+            break;
+         }
+
+         updateResult = progress.Update(mixer->MixGetCurrentTime() - t0, t1 - t0);
       }
-
-      updateResult = progress->Update(mixer->MixGetCurrentTime()-t0, t1-t0);
    }
-
-   delete progress;
 
    delete mixer;
 

@@ -6148,38 +6148,38 @@ void AudacityProject::OnScoreAlign()
    mTracks->GetWaveTracks(true /* selectionOnly */,
                           &numWaveTracksSelected, &waveTracks);
 
-   Mixer *mix = new Mixer(numWaveTracksSelected,   // int numInputTracks
-                          waveTracks,              // WaveTrack **inputTracks
-                          mTracks->GetTimeTrack(), // TimeTrack *timeTrack
-                          0.0,                     // double startTime
-                          endTime,                 // double stopTime
-                          2,                       // int numOutChannels
-                          44100,                   // int outBufferSize
-                          true,                    // bool outInterleaved
-                          mRate,                   // double outRate
-                          floatSample,             // sampleFormat outFormat
-                          true,                    // bool highQuality = true
-                          NULL);                   // MixerSpec *mixerSpec = NULL
-   delete [] waveTracks;
+   int result;
+   {
+      Mixer mix(numWaveTracksSelected,   // int numInputTracks
+         waveTracks,              // WaveTrack **inputTracks
+         mTracks->GetTimeTrack(), // TimeTrack *timeTrack
+         0.0,                     // double startTime
+         endTime,                 // double stopTime
+         2,                       // int numOutChannels
+         44100,                   // int outBufferSize
+         true,                    // bool outInterleaved
+         mRate,                   // double outRate
+         floatSample,             // sampleFormat outFormat
+         true,                    // bool highQuality = true
+         NULL);                   // MixerSpec *mixerSpec = NULL
+      delete [] waveTracks;
 
-   ASAProgress *progress = new ASAProgress;
+      ASAProgress progress;
 
-   // There's a lot of adjusting made to incorporate the note track offset into
-   // the note track while preserving the position of notes within beats and
-   // measures. For debugging, you can see just the pre-scorealign note track
-   // manipulation by setting SKIP_ACTUAL_SCORE_ALIGNMENT. You could then, for
-   // example, save the modified note track in ".gro" form to read the details.
-   //#define SKIP_ACTUAL_SCORE_ALIGNMENT 1
+      // There's a lot of adjusting made to incorporate the note track offset into
+      // the note track while preserving the position of notes within beats and
+      // measures. For debugging, you can see just the pre-scorealign note track
+      // manipulation by setting SKIP_ACTUAL_SCORE_ALIGNMENT. You could then, for
+      // example, save the modified note track in ".gro" form to read the details.
+      //#define SKIP_ACTUAL_SCORE_ALIGNMENT 1
 #ifndef SKIP_ACTUAL_SCORE_ALIGNMENT
-   int result = scorealign((void *) mix, &mixer_process,
-                           2 /* channels */, 44100.0 /* srate */, endTime,
-                           alignedNoteTrack->GetSequence(), progress, params);
+      result = scorealign((void *) &mix, &mixer_process,
+         2 /* channels */, 44100.0 /* srate */, endTime,
+         alignedNoteTrack->GetSequence(), &progress, params);
 #else
-   int result = SA_SUCCESS;
+      result = SA_SUCCESS;
 #endif
-
-   delete progress;
-   delete mix;
+   }
 
    if (result == SA_SUCCESS) {
       mTracks->Replace(nt, alignedNoteTrack, true);

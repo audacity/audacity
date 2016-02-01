@@ -253,73 +253,73 @@ int ExportOGG::Export(AudacityProject *project,
                             t0, t1,
                             numChannels, SAMPLES_PER_RUN, false,
                             rate, floatSample, true, mixerSpec);
-   delete [] waveTracks;
+   delete[] waveTracks;
 
-   ProgressDialog *progress = new ProgressDialog(wxFileName(fName).GetName(),
-      selectionOnly ?
-      _("Exporting the selected audio as Ogg Vorbis") :
-      _("Exporting the entire project as Ogg Vorbis"));
+   {
+      ProgressDialog progress(wxFileName(fName).GetName(),
+         selectionOnly ?
+         _("Exporting the selected audio as Ogg Vorbis") :
+         _("Exporting the entire project as Ogg Vorbis"));
 
-   while (updateResult == eProgressSuccess && !eos) {
-      float **vorbis_buffer = vorbis_analysis_buffer(&dsp, SAMPLES_PER_RUN);
-      sampleCount samplesThisRun = mixer->Process(SAMPLES_PER_RUN);
+      while (updateResult == eProgressSuccess && !eos) {
+         float **vorbis_buffer = vorbis_analysis_buffer(&dsp, SAMPLES_PER_RUN);
+         sampleCount samplesThisRun = mixer->Process(SAMPLES_PER_RUN);
 
-      if (samplesThisRun == 0) {
-         // Tell the library that we wrote 0 bytes - signalling the end.
-         vorbis_analysis_wrote(&dsp, 0);
-      }
-      else {
+         if (samplesThisRun == 0) {
+            // Tell the library that we wrote 0 bytes - signalling the end.
+            vorbis_analysis_wrote(&dsp, 0);
+         }
+         else {
 
-         for (int i = 0; i < numChannels; i++) {
-            float *temp = (float *)mixer->GetBuffer(i);
-            memcpy(vorbis_buffer[i], temp, sizeof(float)*SAMPLES_PER_RUN);
+            for (int i = 0; i < numChannels; i++) {
+               float *temp = (float *)mixer->GetBuffer(i);
+               memcpy(vorbis_buffer[i], temp, sizeof(float)*SAMPLES_PER_RUN);
+            }
+
+            // tell the encoder how many samples we have
+            vorbis_analysis_wrote(&dsp, samplesThisRun);
          }
 
-         // tell the encoder how many samples we have
-         vorbis_analysis_wrote(&dsp, samplesThisRun);
-      }
+         // I don't understand what this call does, so here is the comment
+         // from the example, verbatim:
+         //
+         //    vorbis does some data preanalysis, then divvies up blocks
+         //    for more involved (potentially parallel) processing. Get
+         //    a single block for encoding now
+         while (vorbis_analysis_blockout(&dsp, &block) == 1) {
 
-      // I don't understand what this call does, so here is the comment
-      // from the example, verbatim:
-      //
-      //    vorbis does some data preanalysis, then divvies up blocks
-      //    for more involved (potentially parallel) processing. Get
-      //    a single block for encoding now
-      while (vorbis_analysis_blockout(&dsp, &block) == 1) {
+            // analysis, assume we want to use bitrate management
+            vorbis_analysis(&block, NULL);
+            vorbis_bitrate_addblock(&block);
 
-         // analysis, assume we want to use bitrate management
-         vorbis_analysis(&block, NULL);
-         vorbis_bitrate_addblock(&block);
+            while (vorbis_bitrate_flushpacket(&dsp, &packet)) {
 
-         while (vorbis_bitrate_flushpacket(&dsp, &packet)) {
+               // add the packet to the bitstream
+               ogg_stream_packetin(&stream, &packet);
 
-            // add the packet to the bitstream
-            ogg_stream_packetin(&stream, &packet);
+               // From vorbis-tools-1.0/oggenc/encode.c:
+               //   If we've gone over a page boundary, we can do actual output,
+               //   so do so (for however many pages are available).
 
-            // From vorbis-tools-1.0/oggenc/encode.c:
-            //   If we've gone over a page boundary, we can do actual output,
-            //   so do so (for however many pages are available).
+               while (!eos) {
+                  int result = ogg_stream_pageout(&stream, &page);
+                  if (!result) {
+                     break;
+                  }
 
-            while (!eos) {
-               int result = ogg_stream_pageout(&stream, &page);
-               if (!result) {
-                  break;
-               }
+                  outFile.Write(page.header, page.header_len);
+                  outFile.Write(page.body, page.body_len);
 
-               outFile.Write(page.header, page.header_len);
-               outFile.Write(page.body, page.body_len);
-
-               if (ogg_page_eos(&page)) {
-                  eos = 1;
+                  if (ogg_page_eos(&page)) {
+                     eos = 1;
+                  }
                }
             }
          }
+
+         updateResult = progress.Update(mixer->MixGetCurrentTime() - t0, t1 - t0);
       }
-
-      updateResult = progress->Update(mixer->MixGetCurrentTime()-t0, t1-t0);
    }
-
-   delete progress;;
 
    delete mixer;
 

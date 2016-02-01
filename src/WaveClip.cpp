@@ -1731,7 +1731,7 @@ bool WaveClip::Resample(int rate, ProgressDialog *progress)
       return true; // Nothing to do
 
    double factor = (double)rate / (double)mRate;
-   ::Resample* resample = new ::Resample(true, factor, factor); // constant rate resampling
+   ::Resample resample(true, factor, factor); // constant rate resampling
 
    int bufsize = 65536;
    float* inBuffer = new float[bufsize];
@@ -1764,7 +1764,7 @@ bool WaveClip::Resample(int rate, ProgressDialog *progress)
       }
 
       int inBufferUsed = 0;
-      outGenerated = resample->Process(factor, inBuffer, inLen, isLast,
+      outGenerated = resample.Process(factor, inBuffer, inLen, isLast,
                                            &inBufferUsed, outBuffer, bufsize);
 
       pos += inBufferUsed;
@@ -1795,7 +1795,6 @@ bool WaveClip::Resample(int rate, ProgressDialog *progress)
 
    delete[] inBuffer;
    delete[] outBuffer;
-   delete resample;
 
    if (error)
    {

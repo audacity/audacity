@@ -272,35 +272,35 @@ int ExportMP2::Export(AudacityProject *project,
                             t0, t1,
                             stereo? 2: 1, pcmBufferSize, true,
                             rate, int16Sample, true, mixerSpec);
-   delete [] waveTracks;
-
-   ProgressDialog *progress = new ProgressDialog(wxFileName(fName).GetName(),
-      selectionOnly ?
-      wxString::Format(_("Exporting selected audio at %ld kbps"), bitrate) :
-      wxString::Format(_("Exporting entire file at %ld kbps"), bitrate));
+   delete[] waveTracks;
 
    int updateResult = eProgressSuccess;
-   while(updateResult == eProgressSuccess) {
-      sampleCount pcmNumSamples = mixer->Process(pcmBufferSize);
+   {
+      ProgressDialog progress(wxFileName(fName).GetName(),
+         selectionOnly ?
+         wxString::Format(_("Exporting selected audio at %ld kbps"), bitrate) :
+         wxString::Format(_("Exporting entire file at %ld kbps"), bitrate));
 
-      if (pcmNumSamples == 0)
-         break;
+      while (updateResult == eProgressSuccess) {
+         sampleCount pcmNumSamples = mixer->Process(pcmBufferSize);
 
-      short *pcmBuffer = (short *)mixer->GetBuffer();
+         if (pcmNumSamples == 0)
+            break;
 
-      int mp2BufferNumBytes = twolame_encode_buffer_interleaved(
+         short *pcmBuffer = (short *)mixer->GetBuffer();
+
+         int mp2BufferNumBytes = twolame_encode_buffer_interleaved(
             encodeOptions,
             pcmBuffer,
             pcmNumSamples,
             mp2Buffer,
             mp2BufferSize);
 
-      outFile.Write(mp2Buffer, mp2BufferNumBytes);
+         outFile.Write(mp2Buffer, mp2BufferNumBytes);
 
-      updateResult = progress->Update(mixer->MixGetCurrentTime()-t0, t1-t0);
+         updateResult = progress.Update(mixer->MixGetCurrentTime() - t0, t1 - t0);
+      }
    }
-
-   delete progress;
 
    delete mixer;
 

@@ -1154,6 +1154,16 @@ void Effect::SetBatchProcessing(bool start)
    }
 }
 
+namespace {
+   struct SetProgress {
+      SetProgress(ProgressDialog *& mProgress_, ProgressDialog *progress)
+         : mProgress(mProgress_)
+      { mProgress = progress; }
+      ~SetProgress() { mProgress = nullptr; }
+      ProgressDialog *& mProgress;
+   };
+}
+
 bool Effect::DoEffect(wxWindow *parent,
                       double projectRate,
                       TrackList *list,
@@ -1230,12 +1240,11 @@ bool Effect::DoEffect(wxWindow *parent,
    bool skipFlag = CheckWhetherSkipEffect();
    if (skipFlag == false)
    {
-      mProgress = new ProgressDialog(GetName(),
-                                     wxString::Format(_("Applying %s..."), GetName().c_str()),
-                                     pdlgHideStopButton);
+      ProgressDialog progress(GetName(),
+         wxString::Format(_("Applying %s..."), GetName().c_str()),
+         pdlgHideStopButton);
+      SetProgress sp(mProgress, &progress);
       returnVal = Process();
-      delete mProgress;
-      mProgress = NULL;
    }
 
    End();
@@ -1870,22 +1879,20 @@ bool Effect::ProcessTrack(int count,
    if (isGenerator)
    {
       AudacityProject *p = GetActiveProject();
-      StepTimeWarper *warper = new StepTimeWarper(mT0 + genLength, genLength - (mT1 - mT0));
+      StepTimeWarper warper(mT0 + genLength, genLength - (mT1 - mT0));
 
       // Transfer the data from the temporary tracks to the actual ones
       genLeft->Flush();
       // mT1 gives us the NEW selection. We want to replace up to GetSel1().
-      left->ClearAndPaste(mT0, p->GetSel1(), genLeft, true, true, warper);
+      left->ClearAndPaste(mT0, p->GetSel1(), genLeft, true, true, &warper);
       delete genLeft;
 
       if (genRight)
       {
          genRight->Flush();
-         right->ClearAndPaste(mT0, mT1, genRight, true, true, warper);
+         right->ClearAndPaste(mT0, mT1, genRight, true, true, &warper);
          delete genRight;
       }
-
-      delete warper;
    }
 
    // Allow the plugin to cleanup
@@ -2529,14 +2536,13 @@ void Effect::Preview(bool dryOnly)
 
    // Apply effect
    if (!dryOnly) {
-      mProgress = new ProgressDialog(GetName(),
-            _("Preparing preview"),
-            pdlgHideCancelButton); // Have only "Stop" button.
+      ProgressDialog progress(GetName(),
+         _("Preparing preview"),
+         pdlgHideCancelButton); // Have only "Stop" button.
+      SetProgress sp(mProgress, &progress);
       mIsPreview = true;
       success = Process();
       mIsPreview = false;
-      delete mProgress;
-      mProgress = NULL;
    }
 
    if (success)
@@ -2570,15 +2576,15 @@ void Effect::Preview(bool dryOnly)
          // The progress dialog must be deleted before stopping the stream
          // to allow events to flow to the app during StopStream processing.
          // The progress dialog blocks these events.
-         ProgressDialog *progress =
-            new ProgressDialog(GetName(), _("Previewing"), pdlgHideCancelButton);
+         {
+            ProgressDialog progress
+               (GetName(), _("Previewing"), pdlgHideCancelButton);
 
-         while (gAudioIO->IsStreamActive(token) && previewing == eProgressSuccess) {
-            ::wxMilliSleep(100);
-            previewing = progress->Update(gAudioIO->GetStreamTime() - mT0, t1 - mT0);
+            while (gAudioIO->IsStreamActive(token) && previewing == eProgressSuccess) {
+               ::wxMilliSleep(100);
+               previewing = progress.Update(gAudioIO->GetStreamTime() - mT0, t1 - mT0);
+            }
          }
-
-         delete progress;
 
          gAudioIO->StopStream();
 
@@ -3207,14 +3213,14 @@ void EffectUIHost::OnDebug(wxCommandEvent & evt)
 
 void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
 {
-   wxMenu *menu = new wxMenu();
+   wxMenu menu;
    wxMenu *sub;
 
    LoadUserPresets();
 
    if (mUserPresets.GetCount() == 0)
    {
-      menu->Append(kUserPresetsDummyID, _("User Presets"))->Enable(false);
+      menu.Append(kUserPresetsDummyID, _("User Presets"))->Enable(false);
    }
    else
    {
@@ -3223,14 +3229,14 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
       {
          sub->Append(kUserPresetsID + i, mUserPresets[i]);
       }
-      menu->Append(0, _("User Presets"), sub);
+      menu.Append(0, _("User Presets"), sub);
    }
 
-   menu->Append(kSaveAsID, _("Save Preset..."));
+   menu.Append(kSaveAsID, _("Save Preset..."));
 
    if (mUserPresets.GetCount() == 0)
    {
-      menu->Append(kDeletePresetDummyID, _("Delete Preset"))->Enable(false);
+      menu.Append(kDeletePresetDummyID, _("Delete Preset"))->Enable(false);
    }
    else
    {
@@ -3239,10 +3245,10 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
       {
          sub->Append(kDeletePresetID + i, mUserPresets[i]);
       }
-      menu->Append(0, _("Delete Preset"), sub);
+      menu.Append(0, _("Delete Preset"), sub);
    }
 
-   menu->AppendSeparator();
+   menu.AppendSeparator();
 
    wxArrayString factory = mEffect->GetFactoryPresets();
 
@@ -3262,14 +3268,14 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
          sub->Append(kFactoryPresetsID + i, label);
       }
    }
-   menu->Append(0, _("Factory Presets"), sub);
+   menu.Append(0, _("Factory Presets"), sub);
 
-   menu->AppendSeparator();
-   menu->Append(kImportID, _("Import..."))->Enable(mClient->CanExportPresets());
-   menu->Append(kExportID, _("Export..."))->Enable(mClient->CanExportPresets());
-   menu->AppendSeparator();
-   menu->Append(kOptionsID, _("Options..."))->Enable(mClient->HasOptions());
-   menu->AppendSeparator();
+   menu.AppendSeparator();
+   menu.Append(kImportID, _("Import..."))->Enable(mClient->CanExportPresets());
+   menu.Append(kExportID, _("Export..."))->Enable(mClient->CanExportPresets());
+   menu.AppendSeparator();
+   menu.Append(kOptionsID, _("Options..."))->Enable(mClient->HasOptions());
+   menu.AppendSeparator();
 
    sub = new wxMenu();
 
@@ -3279,13 +3285,11 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
    sub->Append(kDummyID, wxString::Format(_("Vendor: %s"), mEffect->GetVendor().c_str()));
    sub->Append(kDummyID, wxString::Format(_("Description: %s"), mEffect->GetDescription().c_str()));
 
-   menu->Append(0, _("About"), sub);
+   menu.Append(0, _("About"), sub);
 
    wxWindow *btn = FindWindow(kMenuID);
    wxRect r = btn->GetRect();
-   btn->PopupMenu(menu, r.GetLeft(), r.GetBottom());
-
-   delete menu;
+   btn->PopupMenu(&menu, r.GetLeft(), r.GetBottom());
 }
 
 void EffectUIHost::OnEnable(wxCommandEvent & WXUNUSED(evt))

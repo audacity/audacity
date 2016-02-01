@@ -332,8 +332,8 @@ bool EffectEqualization48x::TrackCompare()
    wxArrayPtrVoid SecondOMap;
    SecondIMap.Clear();
    SecondOMap.Clear();
-
-   TrackList      *SecondOutputTracks = new TrackList();
+   
+   TrackList      SecondOutputTracks(true);
 
    //iterate over tracks of type trackType (All types if Track::All)
    TrackListOfKindIterator aIt(mEffectEqualization->mOutputTracksType, mEffectEqualization->mTracks);
@@ -345,14 +345,14 @@ bool EffectEqualization48x::TrackCompare()
          (mEffectEqualization->mOutputTracksType == Track::All && aTrack->IsSyncLockSelected()))
       {
          Track *o = aTrack->Duplicate();
-         SecondOutputTracks->Add(o);
+         SecondOutputTracks.Add(o);
          SecondIMap.Add(aTrack);
          SecondIMap.Add(o);
       }
    }
 
    for(int i=0;i<2;i++) {
-      SelectedTrackListOfKindIterator iter(Track::Wave, i?mEffectEqualization->mOutputTracks:SecondOutputTracks);
+      SelectedTrackListOfKindIterator iter(Track::Wave, i ? mEffectEqualization->mOutputTracks : &SecondOutputTracks);
       i?sMathPath=sMathPath:sMathPath=0;
       WaveTrack *track = (WaveTrack *) iter.First();
       int count = 0;
@@ -375,7 +375,7 @@ bool EffectEqualization48x::TrackCompare()
       }
    }
    SelectedTrackListOfKindIterator iter(Track::Wave, mEffectEqualization->mOutputTracks);
-   SelectedTrackListOfKindIterator iter2(Track::Wave, SecondOutputTracks);
+   SelectedTrackListOfKindIterator iter2(Track::Wave, &SecondOutputTracks);
    WaveTrack *track =  (WaveTrack *) iter.First();
    WaveTrack *track2 = (WaveTrack *) iter2.First();
    while (track) {
@@ -393,7 +393,6 @@ bool EffectEqualization48x::TrackCompare()
       track = (WaveTrack *) iter.Next();
       track2 = (WaveTrack *) iter2.Next();
    }
-   delete SecondOutputTracks;
    FreeBuffersWorkers();
    mEffectEqualization->ReplaceProcessedTracks(!bBreakLoop); 
    return bBreakLoop;

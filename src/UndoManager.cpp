@@ -57,15 +57,14 @@ void UndoManager::CalculateSpaceUsage()
    space.Clear();
    space.Add(0, stack.GetCount());
 
-   Set *prev = new Set;
-   Set *cur = new Set;
+   Set s1, s2;
+   Set *prev = &s1;
+   Set *cur = &s2;
 
    for (size_t i = 0, cnt = stack.GetCount(); i < cnt; i++)
    {
       // Swap map pointers
-      Set *swap = prev;
-      prev = cur;
-      cur = swap;
+      std::swap(cur, prev);
 
       // And clean out the NEW current map
       cur->clear();
@@ -102,8 +101,6 @@ void UndoManager::CalculateSpaceUsage()
       }
    }
 
-   delete cur;
-   delete prev;
    TIMER_STOP( space_calc );
 }
 
