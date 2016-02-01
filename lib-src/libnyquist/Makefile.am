@@ -24,7 +24,7 @@ AM_CFLAGS = $(INC) $(PORTAUDIO_CFLAGS) $(SNDFILE_CFLAGS) \
    -DCMTSTUFF -DEXT
 
 AM_CXXFLAGS = $(INC) $(PORTAUDIO_CFLAGS) $(SNDFILE_CFLAGS) \
-   -DCMTSTUFF -DEXT
+   -DCMTSTUFF -DEXT -std=c++11
 
 # define the output library (link with -lportSMF)
 lib_LIBRARIES = libnyquist.a
@@ -399,6 +399,8 @@ libnyquist_a_SOURCES = \
    nyquist/tran/upsample.h \
    nyquist/tran/white.c \
    nyquist/tran/white.h \
+   nyquist/tran/whiteg.c \
+   nyquist/tran/whiteg.h \
    nyquist/xlisp/extern.c \
    nyquist/xlisp/extern.h \
    nyquist/xlisp/osdefs.h \
@@ -432,6 +434,8 @@ libnyquist_a_SOURCES = \
    nyquist/xlisp/xlsys.c \
    nyx.c \
    nyx.h \
+   RngSupport.cpp \
+   RngSupport.h \
    $(NULL)
 
 EXTRA_DIST = \

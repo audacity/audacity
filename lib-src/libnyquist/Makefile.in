@@ -269,8 +269,9 @@ am_libnyquist_a_OBJECTS = nyquist/cmt/cext.$(OBJEXT) \
 	nyquist/tran/stkrev.$(OBJEXT) nyquist/tran/tapf.$(OBJEXT) \
 	nyquist/tran/tapv.$(OBJEXT) nyquist/tran/tone.$(OBJEXT) \
 	nyquist/tran/tonev.$(OBJEXT) nyquist/tran/upsample.$(OBJEXT) \
-	nyquist/tran/white.$(OBJEXT) nyquist/xlisp/extern.$(OBJEXT) \
-	nyquist/xlisp/path.$(OBJEXT) nyquist/xlisp/security.$(OBJEXT) \
+	nyquist/tran/white.$(OBJEXT) nyquist/tran/whiteg.$(OBJEXT) \
+	nyquist/xlisp/extern.$(OBJEXT) nyquist/xlisp/path.$(OBJEXT) \
+	nyquist/xlisp/security.$(OBJEXT) \
 	nyquist/xlisp/xlbfun.$(OBJEXT) nyquist/xlisp/xlcont.$(OBJEXT) \
 	nyquist/xlisp/xldbug.$(OBJEXT) nyquist/xlisp/xldmem.$(OBJEXT) \
 	nyquist/xlisp/xleval.$(OBJEXT) nyquist/xlisp/xlfio.$(OBJEXT) \
@@ -282,7 +283,8 @@ am_libnyquist_a_OBJECTS = nyquist/cmt/cext.$(OBJEXT) \
 	nyquist/xlisp/xlpp.$(OBJEXT) nyquist/xlisp/xlprin.$(OBJEXT) \
 	nyquist/xlisp/xlread.$(OBJEXT) nyquist/xlisp/xlstr.$(OBJEXT) \
 	nyquist/xlisp/xlsubr.$(OBJEXT) nyquist/xlisp/xlsym.$(OBJEXT) \
-	nyquist/xlisp/xlsys.$(OBJEXT) nyx.$(OBJEXT)
+	nyquist/xlisp/xlsys.$(OBJEXT) nyx.$(OBJEXT) \
+	RngSupport.$(OBJEXT)
 libnyquist_a_OBJECTS = $(am_libnyquist_a_OBJECTS)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
@@ -487,7 +489,7 @@ AM_CFLAGS = $(INC) $(PORTAUDIO_CFLAGS) $(SNDFILE_CFLAGS) \
    -DCMTSTUFF -DEXT
 
 AM_CXXFLAGS = $(INC) $(PORTAUDIO_CFLAGS) $(SNDFILE_CFLAGS) \
-   -DCMTSTUFF -DEXT
+   -DCMTSTUFF -DEXT -std=c++11
 
 
 # define the output library (link with -lportSMF)
@@ -863,6 +865,8 @@ libnyquist_a_SOURCES = \
    nyquist/tran/upsample.h \
    nyquist/tran/white.c \
    nyquist/tran/white.h \
+   nyquist/tran/whiteg.c \
+   nyquist/tran/whiteg.h \
    nyquist/xlisp/extern.c \
    nyquist/xlisp/extern.h \
    nyquist/xlisp/osdefs.h \
@@ -896,6 +900,8 @@ libnyquist_a_SOURCES = \
    nyquist/xlisp/xlsys.c \
    nyx.c \
    nyx.h \
+   RngSupport.cpp \
+   RngSupport.h \
    $(NULL)
 
 EXTRA_DIST = \
@@ -1553,6 +1559,8 @@ nyquist/tran/upsample.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
 	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
 nyquist/tran/white.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
 	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/whiteg.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
 nyquist/xlisp/$(am__dirstamp):
 	@$(MKDIR_P) nyquist/xlisp
 	@: > nyquist/xlisp/$(am__dirstamp)
@@ -1630,6 +1638,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/RngSupport.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nyx.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@nyquist/cmt/$(DEPDIR)/cext.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@nyquist/cmt/$(DEPDIR)/cleanup.Po@am__quote@
@@ -1806,6 +1815,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/tonev.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/upsample.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/white.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/whiteg.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@nyquist/xlisp/$(DEPDIR)/extern.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@nyquist/xlisp/$(DEPDIR)/path.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@nyquist/xlisp/$(DEPDIR)/security.Po@am__quote@
