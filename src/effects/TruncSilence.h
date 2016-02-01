@@ -31,10 +31,7 @@ class wxCheckBox;
 
 #define TRUNCATESILENCE_PLUGIN_SYMBOL XO("Truncate Silence")
 
-// Declaration of RegionList
-struct REGION;
-typedef struct REGION Region;
-WX_DECLARE_LIST(Region, RegionList);
+class RegionList;
 
 class EffectTruncSilence : public Effect
 {

@@ -4476,32 +4476,26 @@ void AudacityProject::GetRegionsByLabel( Regions &regions )
             const LabelStruct *ls = lt->GetLabel( i );
             if( ls->selectedRegion.t0() >= mViewInfo.selectedRegion.t0() &&
                 ls->selectedRegion.t1() <= mViewInfo.selectedRegion.t1() )
-            {
-               Region *region = new Region;
-               region->start = ls->getT0();
-               region->end = ls->getT1();
-               regions.Add( region );
-            }
+               regions.push_back(Region(ls->getT0(), ls->getT1()));
          }
       }
 
    //anything to do ?
-   if( regions.GetCount() == 0 )
+   if( regions.size() == 0 )
       return;
 
    //sort and remove unnecessary regions
-   regions.Sort( Region::cmp );
+   std::sort(regions.begin(), regions.end());
    unsigned int selected = 1;
-   while( selected < regions.GetCount() )
+   while( selected < regions.size() )
    {
-      Region *cur = regions.Item( selected );
-      Region *last = regions.Item( selected - 1 );
-      if( cur->start < last->end )
+      const Region &cur = regions.at( selected );
+      Region &last = regions.at( selected - 1 );
+      if( cur.start < last.end )
       {
-         if( cur->end > last->end )
-            last->end = cur->end;
-         delete cur;
-         regions.RemoveAt( selected );
+         if( cur.end > last.end )
+            last.end = cur.end;
+         regions.erase( regions.begin() + selected );
       }
       else
          selected++;
@@ -4520,7 +4514,7 @@ void AudacityProject::EditByLabel( EditFunction action,
    Regions regions;
 
    GetRegionsByLabel( regions );
-   if( regions.GetCount() == 0 )
+   if( regions.size() == 0 )
       return;
 
    TrackListIterator iter( mTracks );
@@ -4546,15 +4540,13 @@ void AudacityProject::EditByLabel( EditFunction action,
             (allTracks || n->GetSelected() || (bSyncLockedTracks && n->IsSyncLockSelected())))
       {
          WaveTrack *wt = ( WaveTrack* )n;
-         for( int i = ( int )regions.GetCount() - 1; i >= 0; i-- )
-            ( wt->*action )( regions.Item( i )->start, regions.Item( i )->end );
+         for (int i = (int)regions.size() - 1; i >= 0; i--) {
+            const Region &region = regions.at(i);
+            (wt->*action)(region.start, region.end);
+         }
       }
       n = iter.Next();
    }
-
-   //delete label regions
-   for( unsigned int i = 0; i < regions.GetCount(); i++ )
-      delete regions.Item( i );
 }
 
 //Executes the edit function on all selected wave tracks with
@@ -4568,7 +4560,7 @@ void AudacityProject::EditClipboardByLabel( EditDestFunction action )
    Regions regions;
 
    GetRegionsByLabel( regions );
-   if( regions.GetCount() == 0 )
+   if( regions.size() == 0 )
       return;
 
    TrackListIterator iter( mTracks );
@@ -4594,10 +4586,11 @@ void AudacityProject::EditClipboardByLabel( EditDestFunction action )
       {
          WaveTrack *wt = ( WaveTrack* )n;
          WaveTrack *merged = NULL;
-         for( int i = ( int )regions.GetCount() - 1; i >= 0; i-- )
+         for( int i = ( int )regions.size() - 1; i >= 0; i-- )
          {
             Track *dest = NULL;
-            ( wt->*action )( regions.Item( i )->start, regions.Item( i )->end,
+            const Region &region = regions.at(i);
+            ( wt->*action )( region.start, region.end,
                              &dest );
             if( dest )
             {
@@ -4610,10 +4603,9 @@ void AudacityProject::EditClipboardByLabel( EditDestFunction action )
                {
                   // Paste to the beginning; unless this is the first region,
                   // offset the track to account for time between the regions
-                  if (i < (int)regions.GetCount() - 1) {
+                  if (i < (int)regions.size() - 1)
                      merged->Offset(
-                           regions.Item(i+1)->start - regions.Item(i)->end);
-                  }
+                        regions.at(i + 1).start - region.end);
 
                   bool bResult = merged->Paste( 0.0 , dest );
                   wxASSERT(bResult); // TO DO: Actually handle this.
@@ -4621,21 +4613,18 @@ void AudacityProject::EditClipboardByLabel( EditDestFunction action )
                }
             }
             else  // nothing copied but there is a 'region', so the 'region' must be a 'point label' so offset
-               if (i < (int)regions.GetCount() - 1)
-                  if( merged )
-                     merged->Offset(regions.Item(i+1)->start - regions.Item(i)->end);
+               if (i < (int)regions.size() - 1)
+                  if (merged)
+                     merged->Offset(
+                        regions.at(i + 1).start - region.end);
          }
          if( merged )
             msClipboard->Add( merged );
       }
    }
 
-   msClipT0 = regions.Item(0)->start;
-   msClipT1 = regions.Item(regions.GetCount() - 1)->end;
-
-   //delete label regions
-   for( unsigned int i = 0; i < regions.GetCount(); i++ )
-      delete regions.Item( i );
+   msClipT0 = regions.front().start;
+   msClipT1 = regions.back().end;
 }
 
 

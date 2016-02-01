@@ -1481,10 +1481,9 @@ bool WaveTrack::Disjoin(double t0, double t1)
                      seqEnd = curSamplePos;
                   if( seqEnd - seqStart + 1 > minSamples )
                   {
-                     Region *region = new Region;
-                     region->start = seqStart / GetRate() + clip->GetStartTime();
-                     region->end = seqEnd / GetRate() + clip->GetStartTime();
-                     regions.Add( region );
+                     regions.push_back(Region(
+                        seqStart / GetRate() + clip->GetStartTime(),
+                        seqEnd / GetRate() + clip->GetStartTime()));
                   }
                   seqStart = -1;
                }
@@ -1493,10 +1492,10 @@ bool WaveTrack::Disjoin(double t0, double t1)
       }
    }
 
-   for( unsigned int i = 0; i < regions.GetCount(); i++ )
+   for( unsigned int i = 0; i < regions.size(); i++ )
    {
-      SplitDelete( regions.Item( i )->start, regions.Item( i )->end );
-      delete regions.Item( i );
+      const Region &region = regions.at(i);
+      SplitDelete(region.start, region.end );
    }
 
    delete[] buffer;

@@ -19,7 +19,7 @@
 #include "TruncSilence.h"
 
 #include <algorithm>
-
+#include <list>
 #include <limits>
 #include <math.h>
 
@@ -32,6 +32,9 @@
 #include "../ShuttleGui.h"
 #include "../WaveTrack.h"
 #include "../widgets/valnum.h"
+
+// Declaration of RegionList
+class RegionList : public std::list < Region > {};
 
 enum kActions
 {
@@ -70,9 +73,6 @@ static const double DEF_MinTruncMs = 0.001;
 
 // Typical fraction of total time taken by detection (better to guess low)
 const double detectFrac = 0.4;
-
-#include <wx/listimpl.cpp>
-WX_DEFINE_LIST(RegionList);
 
 BEGIN_EVENT_TABLE(EffectTruncSilence, wxEvtHandler)
    EVT_CHOICE(wxID_ANY, EffectTruncSilence::OnControlChange)
@@ -178,13 +178,9 @@ double EffectTruncSilence::CalcPreviewInputLength(double /* previewLength */)
 
    // Master list of silent regions
    RegionList silences;
-   silences.DeleteContents(true);
 
    // Start with the whole selection silent
-   Region *sel = new Region;
-   sel->start = mT0;
-   sel->end = mT1;
-   silences.push_back(sel);
+   silences.push_back(Region(mT0, mT1));
 
    SelectedTrackListOfKindIterator iter(Track::Wave, mTracks);
    int whichTrack = 0;
@@ -193,7 +189,6 @@ double EffectTruncSilence::CalcPreviewInputLength(double /* previewLength */)
       WaveTrack *const wt = static_cast<WaveTrack *>(t);
 
       RegionList trackSilences;
-      trackSilences.DeleteContents(true);
 
       sampleCount index = wt->TimeToLongSamples(mT0);
       sampleCount silentFrame = 0; // length of the current silence
@@ -318,7 +313,6 @@ bool EffectTruncSilence::ProcessIndependently()
          Track *const last = link ? link : track;
 
          RegionList silences;
-         silences.DeleteContents(true);
 
          if (!FindSilences(silences, track, last))
             return false;
@@ -350,10 +344,9 @@ bool EffectTruncSilence::ProcessAll()
    // Copy tracks
    CopyInputTracks(Track::All);
 
-   // Master list of silent regions; it is responsible for deleting them.
+   // Master list of silent regions.
    // This list should always be kept in order.
    RegionList silences;
-   silences.DeleteContents(true);
 
    SelectedTrackListOfKindIterator iter(Track::Wave, mTracks);
    if (FindSilences(silences, iter.First(), iter.Last())) {
@@ -373,10 +366,7 @@ bool EffectTruncSilence::FindSilences
    (RegionList &silences, Track *firstTrack, Track *lastTrack)
 {
    // Start with the whole selection silent
-   Region *sel = new Region;
-   sel->start = mT0;
-   sel->end = mT1;
-   silences.push_back(sel);
+   silences.push_back(Region(mT0, mT1));
 
    // Remove non-silent regions in each track
    SelectedTrackListOfKindIterator iter(Track::Wave, mTracks);
@@ -395,7 +385,6 @@ bool EffectTruncSilence::FindSilences
       // Scan the track for silences
       //
       RegionList trackSilences;
-      trackSilences.DeleteContents(true);
 
       sampleCount index = wt->TimeToLongSamples(mT0);
       sampleCount silentFrame = 0;
@@ -413,10 +402,10 @@ bool EffectTruncSilence::FindSilences
       if (silentFrame >= minSilenceFrames)
       {
          // Track ended in silence -- record region
-         Region *r = new Region;
-         r->start = wt->LongSamplesToTime(index - silentFrame);
-         r->end = wt->LongSamplesToTime(index);
-         trackSilences.push_back(r);
+         trackSilences.push_back(Region(
+            wt->LongSamplesToTime(index - silentFrame),
+            wt->LongSamplesToTime(index)
+         ));
       }
 
       // Intersect with the overall silent region list
@@ -441,7 +430,8 @@ bool EffectTruncSilence::DoRemoval
    RegionList::const_reverse_iterator rit;
    for (rit = silences.rbegin(); rit != silences.rend(); ++rit)
    {
-      Region *r = *rit;
+      const Region &region = *rit;
+      const Region *const r = &region;
 
       // Progress dialog and cancellation. Do additional cleanup before return.
       const double frac = detectFrac +
@@ -597,7 +587,7 @@ bool EffectTruncSilence::Analyze(RegionList& silenceList,
       double curTime = wt->LongSamplesToTime(*index);
       for ( ; rit != silenceList.end(); ++rit) {
          // Find the first silent region ending after current time
-         if ((*rit)->end >= curTime) {
+         if (rit->end >= curTime) {
             break;
          }
       }
@@ -613,16 +603,16 @@ bool EffectTruncSilence::Analyze(RegionList& silenceList,
 
          break;
       }
-      else if ((*rit)->start > curTime) {
+      else if (rit->start > curTime) {
          // End current silent region, skip ahead
          if (*silentFrame >= minSilenceFrames)  {
-            Region *r = new Region;
-            r->start = wt->LongSamplesToTime(*index - *silentFrame);
-            r->end = wt->LongSamplesToTime(*index);
-            trackSilences.push_back(r);
+            trackSilences.push_back(Region(
+               wt->LongSamplesToTime(*index - *silentFrame),
+               wt->LongSamplesToTime(*index)
+            ));
          }
          *silentFrame = 0;
-         sampleCount newIndex = wt->TimeToLongSamples((*rit)->start);
+         sampleCount newIndex = wt->TimeToLongSamples(rit->start);
          if (inputLength) {
             sampleCount requiredTrackSamples = previewLen - outLength;
             // Add non-silent sample to outLength
@@ -673,7 +663,10 @@ bool EffectTruncSilence::Analyze(RegionList& silenceList,
                Region *r = new Region;
                r->start = wt->LongSamplesToTime(*index + i - *silentFrame);
                r->end = wt->LongSamplesToTime(*index + i);
-               trackSilences.push_back(r);
+               trackSilences.push_back(Region(
+                  wt->LongSamplesToTime(*index + i - *silentFrame),
+                  wt->LongSamplesToTime(*index + i)
+               ));
             }
             else if (inputLength) {   // included as part of non-silence
                outLength += *silentFrame;
@@ -805,7 +798,7 @@ void EffectTruncSilence::Intersect(RegionList &dest, const RegionList &src)
    // Any time we reach the end of the dest list we're finished
    if (destIter == dest.end())
       return;
-   Region *curDest = *destIter;
+   RegionList::iterator curDest = destIter;
 
    // Operation: find non-silent regions in src, remove them from dest.
    double nsStart = curDest->start;
@@ -824,17 +817,16 @@ void EffectTruncSilence::Intersect(RegionList &dest, const RegionList &src)
    while (srcIter != src.end() || lastRun)
    {
       // Don't use curSrc unless lastRun is false!
-      Region *curSrc;
+      RegionList::const_iterator curSrc;
 
       if (lastRun)
       {
          // The last non-silent region extends as far as possible
-         curSrc = NULL;
          nsEnd = std::numeric_limits<double>::max();
       }
       else
       {
-         curSrc = *srcIter;
+         curSrc = srcIter;
          nsEnd = curSrc->start;
       }
 
@@ -848,16 +840,14 @@ void EffectTruncSilence::Intersect(RegionList &dest, const RegionList &src)
             {
                return;
             }
-            curDest = *destIter;
+            curDest = destIter;
          }
 
          // Check for splitting dest region in two
          if (nsStart > curDest->start && nsEnd < curDest->end)
          {
             // The second region
-            Region *r = new Region;
-            r->start = nsEnd;
-            r->end = curDest->end;
+            Region r(nsEnd, curDest->end);
 
             // The first region
             curDest->end = nsStart;
@@ -871,16 +861,12 @@ void EffectTruncSilence::Intersect(RegionList &dest, const RegionList &src)
             // versions it returns the wrong value. Second, in some versions,
             // it crashes when you insert at list end.
             if (nextIt == dest.end())
-            {
-               dest.Append(r);
-            }
+               dest.push_back(r);
             else
-            {
                dest.insert(nextIt, r);
-            }
             ++destIter;          // (now points at the newly-inserted region)
 
-            curDest = *destIter;
+            curDest = destIter;
          }
 
          // Check for truncating the end of dest region
@@ -894,7 +880,7 @@ void EffectTruncSilence::Intersect(RegionList &dest, const RegionList &src)
             {
                return;
             }
-            curDest = *destIter;
+            curDest = destIter;
          }
 
          // Check for all dest regions that need to be removed completely
@@ -905,7 +891,7 @@ void EffectTruncSilence::Intersect(RegionList &dest, const RegionList &src)
             {
                return;
             }
-            curDest = *destIter;
+            curDest = destIter;
          }
 
          // Check for truncating the beginning of dest region
