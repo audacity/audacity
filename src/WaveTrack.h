@@ -536,7 +536,7 @@ private:
    const WaveTrack *mPTrack;
    sampleCount mBufferSize;
    Buffer mBuffers[2];
-   SampleBuffer mOverlapBuffer;
+   GrowableSampleBuffer mOverlapBuffer;
    int mNValidBuffers;
 };
 

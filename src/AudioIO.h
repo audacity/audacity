@@ -648,8 +648,7 @@ private:
    double              mCutPreviewGapStart;
    double              mCutPreviewGapLen;
 
-   samplePtr mSilentBuf;
-   sampleCount mLastSilentBufSize;
+   GrowableSampleBuffer mSilentBuf;
 
    AudioIOListener*    mListener;
 

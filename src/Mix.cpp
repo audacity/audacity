@@ -294,11 +294,11 @@ Mixer::Mixer(int numInputTracks, WaveTrack **inputTracks,
       mInterleavedBufferSize = mBufferSize;
    }
 
-   mBuffer = new samplePtr[mNumBuffers];
-   mTemp = new samplePtr[mNumBuffers];
+   mBuffer = new SampleBuffer[mNumBuffers];
+   mTemp = new SampleBuffer[mNumBuffers];
    for (int c = 0; c < mNumBuffers; c++) {
-      mBuffer[c] = NewSamples(mInterleavedBufferSize, mFormat);
-      mTemp[c] = NewSamples(mInterleavedBufferSize, floatSample);
+      mBuffer[c].Allocate(mInterleavedBufferSize, mFormat);
+      mTemp[c].Allocate(mInterleavedBufferSize, floatSample);
    }
    mFloatBuffer = new float[mInterleavedBufferSize];
 
@@ -356,10 +356,6 @@ Mixer::~Mixer()
 {
    int i;
 
-   for (i = 0; i < mNumBuffers; i++) {
-      DeleteSamples(mBuffer[i]);
-      DeleteSamples(mTemp[i]);
-   }
    delete[] mBuffer;
    delete[] mTemp;
    delete[] mInputTrack;
@@ -386,12 +382,12 @@ void Mixer::ApplyTrackGains(bool apply)
 void Mixer::Clear()
 {
    for (int c = 0; c < mNumBuffers; c++) {
-      memset(mTemp[c], 0, mInterleavedBufferSize * SAMPLE_SIZE(floatSample));
+      memset(mTemp[c].ptr(), 0, mInterleavedBufferSize * SAMPLE_SIZE(floatSample));
    }
 }
 
 void MixBuffers(int numChannels, int *channelFlags, float *gains,
-                samplePtr src, samplePtr *dests,
+                samplePtr src, SampleBuffer *dests,
                 int len, bool interleaved)
 {
    for (int c = 0; c < numChannels; c++) {
@@ -402,10 +398,10 @@ void MixBuffers(int numChannels, int *channelFlags, float *gains,
       int skip;
 
       if (interleaved) {
-         destPtr = dests[0] + c*SAMPLE_SIZE(floatSample);
+         destPtr = dests[0].ptr() + c*SAMPLE_SIZE(floatSample);
          skip = numChannels;
       } else {
-         destPtr = dests[c];
+         destPtr = dests[c].ptr();
          skip = 1;
       }
 
@@ -689,9 +685,9 @@ sampleCount Mixer::Process(sampleCount maxToProcess)
    }
    if(mInterleaved) {
       for(int c=0; c<mNumChannels; c++) {
-         CopySamples(mTemp[0] + (c * SAMPLE_SIZE(floatSample)),
+         CopySamples(mTemp[0].ptr() + (c * SAMPLE_SIZE(floatSample)),
             floatSample,
-            mBuffer[0] + (c * SAMPLE_SIZE(mFormat)),
+            mBuffer[0].ptr() + (c * SAMPLE_SIZE(mFormat)),
             mFormat,
             maxOut,
             mHighQuality,
@@ -701,9 +697,9 @@ sampleCount Mixer::Process(sampleCount maxToProcess)
    }
    else {
       for(int c=0; c<mNumBuffers; c++) {
-         CopySamples(mTemp[c],
+         CopySamples(mTemp[c].ptr(),
             floatSample,
-            mBuffer[c],
+            mBuffer[c].ptr(),
             mFormat,
             maxOut,
             mHighQuality);
@@ -719,12 +715,12 @@ sampleCount Mixer::Process(sampleCount maxToProcess)
 
 samplePtr Mixer::GetBuffer()
 {
-   return mBuffer[0];
+   return mBuffer[0].ptr();
 }
 
 samplePtr Mixer::GetBuffer(int channel)
 {
-   return mBuffer[channel];
+   return mBuffer[channel].ptr();
 }
 
 double Mixer::MixGetCurrentTime()

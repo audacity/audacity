@@ -302,7 +302,6 @@ WaveClip::WaveClip(DirManager *projDirManager, sampleFormat format, int rate)
    mWaveCache = new WaveCache();
    mSpecCache = new SpecCache();
    mSpecPxCache = new SpecPxCache(1);
-   mAppendBuffer = NULL;
    mAppendBufferLen = 0;
    mDirty = 0;
    mIsPlaceholder = false;
@@ -328,7 +327,6 @@ WaveClip::WaveClip(const WaveClip& orig, DirManager *projDirManager)
    for (WaveClipList::compatibility_iterator it=orig.mCutLines.GetFirst(); it; it=it->GetNext())
       mCutLines.Append(new WaveClip(*it->GetData(), projDirManager));
 
-   mAppendBuffer = NULL;
    mAppendBufferLen = 0;
    mDirty = 0;
    mIsPlaceholder = orig.GetIsPlaceholder();
@@ -344,9 +342,6 @@ WaveClip::~WaveClip()
    delete mWaveCache;
    delete mSpecCache;
    delete mSpecPxCache;
-
-   if (mAppendBuffer)
-      DeleteSamples(mAppendBuffer);
 
    mCutLines.DeleteContents(true);
    mCutLines.Clear();
@@ -668,10 +663,10 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
                sampleCount j;
 
                if (seqFormat == floatSample)
-                  b = &((float *)mAppendBuffer)[left];
+                  b = &((float *)mAppendBuffer.ptr())[left];
                else {
                   b = new float[len];
-                  CopySamples(mAppendBuffer + left*SAMPLE_SIZE(seqFormat),
+                  CopySamples(mAppendBuffer.ptr() + left*SAMPLE_SIZE(seqFormat),
                               seqFormat,
                               (samplePtr)b, floatSample, len);
                }
@@ -1263,18 +1258,18 @@ bool WaveClip::Append(samplePtr buffer, sampleFormat format,
    sampleCount blockSize = mSequence->GetIdealAppendLen();
    sampleFormat seqFormat = mSequence->GetSampleFormat();
 
-   if (!mAppendBuffer)
-      mAppendBuffer = NewSamples(maxBlockSize, seqFormat);
+   if (!mAppendBuffer.ptr())
+      mAppendBuffer.Allocate(maxBlockSize, seqFormat);
 
    for(;;) {
       if (mAppendBufferLen >= blockSize) {
          bool success =
-            mSequence->Append(mAppendBuffer, seqFormat, blockSize,
+            mSequence->Append(mAppendBuffer.ptr(), seqFormat, blockSize,
                               blockFileLog);
          if (!success)
             return false;
-         memmove(mAppendBuffer,
-                 mAppendBuffer + blockSize * SAMPLE_SIZE(seqFormat),
+         memmove(mAppendBuffer.ptr(),
+                 mAppendBuffer.ptr() + blockSize * SAMPLE_SIZE(seqFormat),
                  (mAppendBufferLen - blockSize) * SAMPLE_SIZE(seqFormat));
          mAppendBufferLen -= blockSize;
          blockSize = mSequence->GetIdealAppendLen();
@@ -1288,7 +1283,7 @@ bool WaveClip::Append(samplePtr buffer, sampleFormat format,
          toCopy = len;
 
       CopySamples(buffer, format,
-                  mAppendBuffer + mAppendBufferLen * SAMPLE_SIZE(seqFormat),
+                  mAppendBuffer.ptr() + mAppendBufferLen * SAMPLE_SIZE(seqFormat),
                   seqFormat,
                   toCopy,
                   true, // high quality
@@ -1337,7 +1332,7 @@ bool WaveClip::Flush()
 
    bool success = true;
    if (mAppendBufferLen > 0) {
-      success = mSequence->Append(mAppendBuffer, mSequence->GetSampleFormat(), mAppendBufferLen);
+      success = mSequence->Append(mAppendBuffer.ptr(), mSequence->GetSampleFormat(), mAppendBufferLen);
       if (success) {
          mAppendBufferLen = 0;
          UpdateEnvelopeTrackLen();

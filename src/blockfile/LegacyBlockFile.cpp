@@ -66,8 +66,8 @@ void ComputeLegacySummaryInfo(wxFileName fileName,
    //
 
    float *summary = new float[info->frames64K * fields];
-   samplePtr data = NewSamples(info->frames64K * fields,
-                               info->format);
+   SampleBuffer data(info->frames64K * fields,
+      info->format);
 
    wxLogNull *silence=0;
    wxFFile summaryFile(fileName.GetFullPath(), wxT("rb"));
@@ -79,10 +79,10 @@ void ComputeLegacySummaryInfo(wxFileName fileName,
                    fileName.GetFullPath().c_str());
 
       read=info->frames64K * info->bytesPerFrame;
-      memset(data,0,read);
+      memset(data.ptr(), 0, read);
    }else{
       summaryFile.Seek(info->offset64K);
-      read = summaryFile.Read(data,
+      read = summaryFile.Read(data.ptr(),
                               info->frames64K *
                               info->bytesPerFrame);
    }
@@ -91,7 +91,7 @@ void ComputeLegacySummaryInfo(wxFileName fileName,
 
    int count = read / info->bytesPerFrame;
 
-   CopySamples(data, info->format,
+   CopySamples(data.ptr(), info->format,
                (samplePtr)summary, floatSample, count);
 
    (*min) = FLT_MAX;
@@ -111,7 +111,6 @@ void ComputeLegacySummaryInfo(wxFileName fileName,
    else
       (*rms) = 0;
 
-   DeleteSamples(data);
    delete[] summary;
 }
 
@@ -235,7 +234,7 @@ int LegacyBlockFile::ReadData(samplePtr data, sampleFormat format,
          (mSummaryInfo.totalSummaryBytes / SAMPLE_SIZE(mFormat));
    sf_seek(sf, seekstart , SEEK_SET);
 
-   samplePtr buffer = NewSamples(len, floatSample);
+   SampleBuffer buffer(len, floatSample);
    int framesRead = 0;
 
    // If both the src and dest formats are integer formats,
@@ -258,14 +257,12 @@ int LegacyBlockFile::ReadData(samplePtr data, sampleFormat format,
       // Otherwise, let libsndfile handle the conversion and
       // scaling, and pass us normalized data as floats.  We can
       // then convert to whatever format we want.
-      framesRead = sf_readf_float(sf, (float *)buffer, len);
-      CopySamples(buffer, floatSample,
+      framesRead = sf_readf_float(sf, (float *)buffer.ptr(), len);
+      CopySamples(buffer.ptr(), floatSample,
                   (samplePtr)data, format, framesRead);
    }
 
    sf_close(sf);
-
-   DeleteSamples(buffer);
 
    return framesRead;
 }

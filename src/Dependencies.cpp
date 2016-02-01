@@ -202,11 +202,13 @@ static void RemoveDependencies(AudacityProject *project,
 
          // Convert it from an aliased file to an actual file in the project.
          unsigned int len = aliasBlockFile->GetLength();
-         samplePtr buffer = NewSamples(len, format);
-         f->ReadData(buffer, format, 0, len);
-         BlockFile *newBlockFile =
-            dirManager->NewSimpleBlockFile(buffer, len, format);
-         DeleteSamples(buffer);
+         BlockFile *newBlockFile;
+         {
+            SampleBuffer buffer(len, format);
+            f->ReadData(buffer.ptr(), format, 0, len);
+            newBlockFile =
+               dirManager->NewSimpleBlockFile(buffer.ptr(), len, format);
+         }
 
          // Update our hash so we know what block files we've done
          blockFileHash[f] = newBlockFile;

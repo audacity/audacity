@@ -308,7 +308,7 @@ int ODDecodeBlockFile::WriteODDecodeBlockFile()
 
    // To build the summary data, call ReadData (implemented by the
    // derived classes) to get the sample data
-   samplePtr sampleData;// = NewSamples(mLen, floatSample);
+   SampleBuffer sampleData;// = NewSamples(mLen, floatSample);
    int ret;
    //use the decoder here.
    mDecoderMutex.Lock();
@@ -334,7 +334,7 @@ int ODDecodeBlockFile::WriteODDecodeBlockFile()
    //TODO: we may need to write a version of WriteSimpleBlockFile that uses threadsafe FILE vs wxFile
    bool bSuccess =
       WriteSimpleBlockFile(
-         sampleData,
+         sampleData.ptr(),
          mLen,
          mFormat,
          NULL);//summaryData);
@@ -342,7 +342,6 @@ int ODDecodeBlockFile::WriteODDecodeBlockFile()
 
    mFileNameMutex.Unlock();
 
-   DeleteSamples(sampleData);
 //   delete [] (char *) summaryData;
 
 

@@ -25,17 +25,16 @@
 #include "RingBuffer.h"
 
 RingBuffer::RingBuffer(sampleFormat format, int size)
+   : mFormat(format)
+   , mBufferSize(size > 64 ? size : 64)
+   , mBuffer(mBufferSize, mFormat)
 {
-   mFormat = format;
-   mBufferSize = (size > 64? size: 64);
    mStart = 0;
    mEnd = 0;
-   mBuffer = NewSamples(mBufferSize, mFormat);
 }
 
 RingBuffer::~RingBuffer()
 {
-   DeleteSamples(mBuffer);
 }
 
 int RingBuffer::Len()
@@ -74,7 +73,7 @@ int RingBuffer::Put(samplePtr buffer, sampleFormat format,
          block = mBufferSize - pos;
 
       CopySamples(src, format,
-                  mBuffer + pos * SAMPLE_SIZE(mFormat), mFormat,
+                  mBuffer.ptr() + pos * SAMPLE_SIZE(mFormat), mFormat,
                   block);
 
       src += block * SAMPLE_SIZE(format);
@@ -116,7 +115,7 @@ int RingBuffer::Get(samplePtr buffer, sampleFormat format,
       if (block > mBufferSize - mStart)
          block = mBufferSize - mStart;
 
-      CopySamples(mBuffer + mStart * SAMPLE_SIZE(mFormat), mFormat,
+      CopySamples(mBuffer.ptr() + mStart * SAMPLE_SIZE(mFormat), mFormat,
                   dest, format,
                   block);
 

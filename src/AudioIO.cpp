@@ -879,9 +879,6 @@ AudioIO::AudioIO()
 #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
    mAILAActive = false;
 #endif
-   mSilentBuf = NULL;
-   mLastSilentBufSize = 0;
-
    mStreamToken = 0;
 
    mLastPaError = paNoError;
@@ -988,9 +985,6 @@ AudioIO::~AudioIO()
    // wxTheApp->Yield();
 
    mThread->Delete();
-
-   if(mSilentBuf)
-      DeleteSamples(mSilentBuf);
 
    delete mThread;
 
@@ -3364,16 +3358,9 @@ void AudioIO::FillBuffers()
                // numbers of samples for all channels for this pass of the do-loop.
                if(processed < frames && mPlayMode != PLAY_STRAIGHT)
                {
-                  if(mLastSilentBufSize < frames)
-                  {
-                     //delete old if necessary
-                     if(mSilentBuf)
-                        DeleteSamples(mSilentBuf);
-                     mLastSilentBufSize = frames;
-                     mSilentBuf = NewSamples(mLastSilentBufSize, floatSample);
-                     ClearSamples(mSilentBuf, floatSample, 0, mLastSilentBufSize);
-                  }
-                  mPlaybackBuffers[i]->Put(mSilentBuf, floatSample, frames - processed);
+                  mSilentBuf.Resize(frames, floatSample);
+                  ClearSamples(mSilentBuf.ptr(), floatSample, 0, frames);
+                  mPlaybackBuffers[i]->Put(mSilentBuf.ptr(), floatSample, frames - processed);
                }
             }
 
@@ -3463,28 +3450,25 @@ void AudioIO::FillBuffers()
 
             if( mFactor == 1.0 )
             {
-               samplePtr temp = NewSamples(avail, trackFormat);
-               mCaptureBuffers[i]->Get   (temp, trackFormat, avail);
-               (*mCaptureTracks)[i]-> Append(temp, trackFormat, avail, 1,
+               SampleBuffer temp(avail, trackFormat);
+               mCaptureBuffers[i]->Get   (temp.ptr(), trackFormat, avail);
+               (*mCaptureTracks)[i]-> Append(temp.ptr(), trackFormat, avail, 1,
                                           &appendLog);
-               DeleteSamples(temp);
             }
             else
             {
                int size = lrint(avail * mFactor);
-               samplePtr temp1 = NewSamples(avail, floatSample);
-               samplePtr temp2 = NewSamples(size, floatSample);
-               mCaptureBuffers[i]->Get(temp1, floatSample, avail);
+               SampleBuffer temp1(avail, floatSample);
+               SampleBuffer temp2(size, floatSample);
+               mCaptureBuffers[i]->Get(temp1.ptr(), floatSample, avail);
                /* we are re-sampling on the fly. The last resampling call
                 * must flush any samples left in the rate conversion buffer
                 * so that they get recorded
                 */
-               size = mResample[i]->Process(mFactor, (float *)temp1, avail, !IsStreamActive(),
-                                            &size, (float *)temp2, size);
-               (*mCaptureTracks)[i]-> Append(temp2, floatSample, size, 1,
+               size = mResample[i]->Process(mFactor, (float *)temp1.ptr(), avail, !IsStreamActive(),
+                                            &size, (float *)temp2.ptr(), size);
+               (*mCaptureTracks)[i]-> Append(temp2.ptr(), floatSample, size, 1,
                                           &appendLog);
-               DeleteSamples(temp1);
-               DeleteSamples(temp2);
             }
 
             if (!appendLog.IsEmpty())

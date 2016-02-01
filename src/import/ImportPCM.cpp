@@ -423,15 +423,15 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
       if (maxBlock < 1)
          return eProgressFailed;
 
-      samplePtr srcbuffer;
-      while (NULL == (srcbuffer = NewSamples(maxBlock * mInfo.channels, mFormat)))
+      SampleBuffer srcbuffer;
+      while (NULL == srcbuffer.Allocate(maxBlock * mInfo.channels, mFormat).ptr())
       {
          maxBlock >>= 1;
          if (maxBlock < 1)
             return eProgressFailed;
       }
 
-      samplePtr buffer = NewSamples(maxBlock, mFormat);
+      SampleBuffer buffer(maxBlock, mFormat);
 
       unsigned long framescompleted = 0;
 
@@ -440,25 +440,25 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
          block = maxBlock;
 
          if (mFormat == int16Sample)
-            block = sf_readf_short(mFile, (short *)srcbuffer, block);
+            block = sf_readf_short(mFile, (short *)srcbuffer.ptr(), block);
          //import 24 bit int as float and have the append function convert it.  This is how PCMAliasBlockFile works too.
          else
-            block = sf_readf_float(mFile, (float *)srcbuffer, block);
+            block = sf_readf_float(mFile, (float *)srcbuffer.ptr(), block);
 
          if (block) {
             for(c=0; c<mInfo.channels; c++) {
                if (mFormat==int16Sample) {
                   for(int j=0; j<block; j++)
-                     ((short *)buffer)[j] =
-                        ((short *)srcbuffer)[mInfo.channels*j+c];
+                     ((short *)buffer.ptr())[j] =
+                        ((short *)srcbuffer.ptr())[mInfo.channels*j+c];
                }
                else {
                   for(int j=0; j<block; j++)
-                     ((float *)buffer)[j] =
-                        ((float *)srcbuffer)[mInfo.channels*j+c];
+                     ((float *)buffer.ptr())[j] =
+                        ((float *)srcbuffer.ptr())[mInfo.channels*j+c];
                }
 
-               channels[c]->Append(buffer, (mFormat == int16Sample)?int16Sample:floatSample, block);
+               channels[c]->Append(buffer.ptr(), (mFormat == int16Sample)?int16Sample:floatSample, block);
             }
             framescompleted += block;
          }
@@ -469,9 +469,6 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
             break;
 
       } while (block > 0);
-
-      DeleteSamples(buffer);
-      DeleteSamples(srcbuffer);
    }
 
    if (updateResult == eProgressFailed || updateResult == eProgressCancelled) {

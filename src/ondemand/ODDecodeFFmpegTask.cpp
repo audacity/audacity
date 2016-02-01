@@ -68,7 +68,7 @@ public:
    ///this->ReadData(sampleData, floatSample, 0, mLen);
    ///This class should call ReadHeader() first, so it knows the length, and can prepare
    ///the file object if it needs to.
-   virtual int Decode(samplePtr & data, sampleFormat & format, sampleCount start, sampleCount len, unsigned int channel);
+   virtual int Decode(SampleBuffer & data, sampleFormat & format, sampleCount start, sampleCount len, unsigned int channel);
 
    ///This is a must implement abstract virtual in the superclass.
    ///However it doesn't do anything because ImportFFMpeg does all that for us.
@@ -296,12 +296,12 @@ ODFFmpegDecoder::~ODFFmpegDecoder()
 #define kDecodeSampleAllowance 400000
 //number of jump backwards seeks
 #define kMaxSeekRewindAttempts 8
-int ODFFmpegDecoder::Decode(samplePtr & data, sampleFormat & format, sampleCount start, sampleCount len, unsigned int channel)
+int ODFFmpegDecoder::Decode(SampleBuffer & data, sampleFormat & format, sampleCount start, sampleCount len, unsigned int channel)
 {
    format = mScs[mStreamIndex]->m_osamplefmt;
 
-   data = NewSamples(len, format);
-   samplePtr bufStart = data;
+   data.Allocate(len, format);
+   samplePtr bufStart = data.ptr();
    streamContext* sc = NULL;
 
    // printf("start %llu len %llu\n", start, len);

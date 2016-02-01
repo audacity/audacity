@@ -428,7 +428,7 @@ int SimpleBlockFile::ReadData(samplePtr data, sampleFormat format,
       mSilentLog=FALSE;
 
       sf_seek(sf, start, SEEK_SET);
-      samplePtr buffer = NewSamples(len, floatSample);
+      SampleBuffer buffer(len, floatSample);
 
       int framesRead = 0;
 
@@ -456,12 +456,10 @@ int SimpleBlockFile::ReadData(samplePtr data, sampleFormat format,
          // Otherwise, let libsndfile handle the conversion and
          // scaling, and pass us normalized data as floats.  We can
          // then convert to whatever format we want.
-         framesRead = sf_readf_float(sf, (float *)buffer, len);
-         CopySamples(buffer, floatSample,
+         framesRead = sf_readf_float(sf, (float *)buffer.ptr(), len);
+         CopySamples(buffer.ptr(), floatSample,
                      (samplePtr)data, format, framesRead);
       }
-
-      DeleteSamples(buffer);
 
       sf_close(sf);
 

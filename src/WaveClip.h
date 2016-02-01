@@ -392,7 +392,7 @@ protected:
    WaveCache    *mWaveCache;
    ODLock       mWaveCacheMutex;
    SpecCache    *mSpecCache;
-   samplePtr     mAppendBuffer;
+   SampleBuffer  mAppendBuffer;
    sampleCount   mAppendBufferLen;
 
    // Cut Lines are nothing more than ordinary wave clips, with the
