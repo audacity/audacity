@@ -321,7 +321,6 @@ int ExportCL::Export(AudacityProject *project,
                       Tags *WXUNUSED(metadata),
                       int WXUNUSED(subformat))
 {
-   ExportCLProcess *p;
    wxString output;
    wxString cmd;
    bool show;
@@ -359,8 +358,8 @@ int ExportCL::Export(AudacityProject *project,
 #endif
 
    // Kick off the command
-   p = new ExportCLProcess(&output);
-   rc = wxExecute(cmd, wxEXEC_ASYNC, p);
+   ExportCLProcess process(&output);
+   rc = wxExecute(cmd, wxEXEC_ASYNC, &process);
 
 #if defined(__WXMSW__)
    if (!opath.IsEmpty()) {
@@ -371,8 +370,8 @@ int ExportCL::Export(AudacityProject *project,
    if (!rc) {
       wxMessageBox(wxString::Format(_("Cannot export audio to %s"),
                                     fName.c_str()));
-      p->Detach();
-      p->CloseOutput();
+      process.Detach();
+      process.CloseOutput();
 
       return false;
    }
@@ -416,7 +415,7 @@ int ExportCL::Export(AudacityProject *project,
    header.dataLen          = wxUINT32_SWAP_ON_BE(sampleBytes);
 
    // write the header
-   wxOutputStream *os = p->GetOutputStream();
+   wxOutputStream *os = process.GetOutputStream();
    os->Write(&header, sizeof(wav_header));
 
    // Mix 'em up
@@ -448,10 +447,10 @@ int ExportCL::Export(AudacityProject *project,
       _("Exporting the entire project using command-line encoder"));
 
    // Start piping the mixed data to the command
-   while (updateResult == eProgressSuccess && p->IsActive() && os->IsOk()) {
+   while (updateResult == eProgressSuccess && process.IsActive() && os->IsOk()) {
       // Capture any stdout and stderr from the command
-      Drain(p->GetInputStream(), &output);
-      Drain(p->GetErrorStream(), &output);
+      Drain(process.GetInputStream(), &output);
+      Drain(process.GetErrorStream(), &output);
 
       // Need to mix another block
       if (numBytes == 0) {
@@ -495,16 +494,16 @@ int ExportCL::Export(AudacityProject *project,
    delete progress;
 
    // Should make the process die
-   p->CloseOutput();
+   process.CloseOutput();
 
    // Wait for process to terminate
-   while (p->IsActive()) {
+   while (process.IsActive()) {
       wxMilliSleep(10);
       wxTheApp->Yield();
    }
 
    // Display output on error or if the user wants to see it
-   if (p->GetStatus() != 0 || show) {
+   if (process.GetStatus() != 0 || show) {
       // TODO use ShowInfoDialog() instead.
       wxDialog dlg(NULL,
                    wxID_ANY,
@@ -531,7 +530,6 @@ int ExportCL::Export(AudacityProject *project,
    // Clean up
    delete mixer;
    delete[] waveTracks;
-   delete p;
 
    return updateResult;
 }
