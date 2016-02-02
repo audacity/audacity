@@ -3,6 +3,7 @@
  * data for Nyquist memory allocation.
  */
 
+#include <stddef.h>
 #include <stdio.h>
 #include <assert.h>
 #include "xlisp.h"
