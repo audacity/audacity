@@ -213,8 +213,8 @@ int ImportRaw(wxWindow *parent, wxString fileName,
    sampleCount maxBlockSize = channels[0]->GetMaxBlockSize();
    int updateResult = eProgressSuccess;
 
-   samplePtr srcbuffer = NewSamples(maxBlockSize * numChannels, format);
-   samplePtr buffer = NewSamples(maxBlockSize, format);
+   SampleBuffer srcbuffer(maxBlockSize * numChannels, format);
+   SampleBuffer buffer(maxBlockSize, format);
 
    sampleCount framescompleted = 0;
 
@@ -233,24 +233,24 @@ int ImportRaw(wxWindow *parent, wxString fileName,
          block = totalFrames - framescompleted;
 
       if (format == int16Sample)
-         block = sf_readf_short(sndFile, (short *)srcbuffer, block);
+         block = sf_readf_short(sndFile, (short *)srcbuffer.ptr(), block);
       else
-         block = sf_readf_float(sndFile, (float *)srcbuffer, block);
+         block = sf_readf_float(sndFile, (float *)srcbuffer.ptr(), block);
 
       if (block) {
          for(c=0; c<numChannels; c++) {
             if (format==int16Sample) {
                for(int j=0; j<block; j++)
-                  ((short *)buffer)[j] =
-                     ((short *)srcbuffer)[numChannels*j+c];
+                  ((short *)buffer.ptr())[j] =
+                     ((short *)srcbuffer.ptr())[numChannels*j+c];
             }
             else {
                for(int j=0; j<block; j++)
-                  ((float *)buffer)[j] =
-                     ((float *)srcbuffer)[numChannels*j+c];
+                  ((float *)buffer.ptr())[j] =
+                     ((float *)srcbuffer.ptr())[numChannels*j+c];
             }
 
-            channels[c]->Append(buffer, format, block);
+            channels[c]->Append(buffer.ptr(), format, block);
          }
          framescompleted += block;
       }
