@@ -17,6 +17,7 @@
 #include "Experimental.h"
 #include "widgets/ProgressDialog.h"
 
+#include <vector>
 #include <wx/gdicmn.h>
 #include <wx/longlong.h>
 #include <wx/thread.h>
@@ -40,17 +41,21 @@ class TimeWarper;
 
 /// \brief Structure to hold region of a wavetrack and a comparison function
 /// for sortability.
-typedef struct REGION
+struct Region
 {
+   Region() : start(0), end(0) {}
+   Region(double start_, double end_) : start(start_), end(end_) {}
+
    double start, end;
 
    //used for sorting
-   static int cmp( REGION **a, REGION **b )
+   bool operator < (const Region &b) const
    {
-      return ( ( *a )->start < ( *b )->start ) ? -1 : 1;
+      return this->start < b.start;
    }
-}Region;
-WX_DEFINE_ARRAY( Region*, Regions );
+};
+
+class Regions : public std::vector < Region > {};
 
 class Envelope;
 

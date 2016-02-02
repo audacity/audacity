@@ -145,21 +145,22 @@ public:
          for(size_t i=0;i<mRegions.size();i++)
          {
             //if the regions intersect OR are pixel adjacent
-            if(mRegions[i]->start <= invalEnd+1
-               && mRegions[i]->end >= invalStart-1)
+            InvalidRegion &region = mRegions[i];
+            if(region.start <= invalEnd+1
+               && region.end >= invalStart-1)
             {
                //take the union region
-               if(mRegions[i]->start > invalStart)
-                  mRegions[i]->start = invalStart;
-               if(mRegions[i]->end < invalEnd)
-                  mRegions[i]->end = invalEnd;
+               if(region.start > invalStart)
+                  region.start = invalStart;
+               if(region.end < invalEnd)
+                  region.end = invalEnd;
                added=true;
                break;
             }
 
             //this bit doesn't make sense because it assumes we add in order - now we go backwards after the initial OD finishes
 //            //this array is sorted by start/end points and has no overlaps.   If we've passed all possible intersections, insert.  The array will remain sorted.
-//            if(mRegions[i]->end < invalStart)
+//            if(region.end < invalStart)
 //            {
 //               InvalidRegion* newRegion = new InvalidRegion(invalStart,invalEnd);
 //               mRegions.insert(mRegions.begin()+i,newRegion);
@@ -170,7 +171,7 @@ public:
 
       if(!added)
       {
-         InvalidRegion* newRegion = new InvalidRegion(invalStart,invalEnd);
+         InvalidRegion newRegion(invalStart,invalEnd);
          mRegions.insert(mRegions.begin(),newRegion);
       }
 
@@ -179,24 +180,24 @@ public:
       for(size_t i=1;i<mRegions.size();i++)
       {
          //if the regions intersect OR are pixel adjacent
-         if(mRegions[i]->start <= mRegions[i-1]->end+1
-            && mRegions[i]->end >= mRegions[i-1]->start-1)
+         InvalidRegion &region = mRegions[i];
+         InvalidRegion &prevRegion = mRegions[i - 1];
+         if(region.start <= prevRegion.end+1
+            && region.end >= prevRegion.start-1)
          {
             //take the union region
-            if(mRegions[i]->start > mRegions[i-1]->start)
-               mRegions[i]->start = mRegions[i-1]->start;
-            if(mRegions[i]->end < mRegions[i-1]->end)
-               mRegions[i]->end = mRegions[i-1]->end;
+            if(region.start > prevRegion.start)
+               region.start = prevRegion.start;
+            if(region.end < prevRegion.end)
+               region.end = prevRegion.end;
 
-            //now we must delete the previous region
-            delete mRegions[i-1];
             mRegions.erase(mRegions.begin()+i-1);
                //musn't forget to reset cursor
                i--;
          }
 
          //if we are past the end of the region we added, we are past the area of regions that might be oversecting.
-         if(mRegions[i]->start > invalEnd)
+         if(region.start > invalEnd)
          {
             break;
          }
@@ -205,15 +206,11 @@ public:
 
    //lock before calling these in a section.  unlock after finished.
    int GetNumInvalidRegions() const {return mRegions.size();}
-   int GetInvalidRegionStart(int i) const {return mRegions[i]->start;}
-   int GetInvalidRegionEnd(int i) const {return mRegions[i]->end;}
+   int GetInvalidRegionStart(int i) const {return mRegions[i].start;}
+   int GetInvalidRegionEnd(int i) const {return mRegions[i].end;}
 
    void ClearInvalidRegions()
    {
-      for(size_t i =0;i<mRegions.size();i++)
-      {
-         delete mRegions[i];
-      }
       mRegions.clear();
    }
 
@@ -257,7 +254,7 @@ public:
    }
 
 protected:
-   std::vector<InvalidRegion*> mRegions;
+   std::vector<InvalidRegion> mRegions;
    ODLock mRegionsMutex;
 
 };
