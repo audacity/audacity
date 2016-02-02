@@ -1758,6 +1758,12 @@ AdornedRulerPanel::~AdornedRulerPanel()
                         wxCommandEventHandler(AdornedRulerPanel::OnCapture),
                         NULL,
                         this);
+
+   if (mBack)
+   {
+      mBackDC.SelectObject(wxNullBitmap);
+      delete mBack;
+   }
 }
 
 void AdornedRulerPanel::UpdatePrefs()
