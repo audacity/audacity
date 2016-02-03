@@ -246,7 +246,8 @@ class Sequence: public XMLTagHandler {
              const SeqBlock &b,
              sampleCount start, sampleCount len) const;
 
-   bool CopyWrite(samplePtr buffer,    SeqBlock &b,
+   bool CopyWrite(SampleBuffer &scratch,
+                  samplePtr buffer,    SeqBlock &b,
                   sampleCount start, sampleCount len);
 
    void Blockify(BlockArray &list, sampleCount start, samplePtr buffer, sampleCount len);
