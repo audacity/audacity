@@ -242,8 +242,6 @@ class Sequence: public XMLTagHandler {
    void CalcSummaryInfo();
 
    int FindBlock(sampleCount pos) const;
-   int FindBlock(sampleCount pos, sampleCount lo,
-                 sampleCount guess, sampleCount hi) const;
 
    bool AppendBlock(const SeqBlock &b);
 

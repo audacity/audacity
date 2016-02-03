@@ -1046,40 +1046,48 @@ void Sequence::WriteXML(XMLWriter &xmlFile)
    xmlFile.EndTag(wxT("sequence"));
 }
 
-int Sequence::FindBlock(sampleCount pos, sampleCount lo,
-                        sampleCount guess, sampleCount hi) const
-{
-   const SeqBlock &block = mBlock.at(guess);
-   wxASSERT(block.f->GetLength() > 0);
-   wxASSERT(lo <= guess && guess <= hi && lo <= hi);
-
-   if (pos >= block.start &&
-       pos < block.start + block.f->GetLength())
-      return guess;
-
-   //this is a binary search, but we probably could benefit by something more like
-   //dictionary search where we guess something smarter than the binary division
-   //of the unsearched area, since samples are usually proportional to block file number.
-   if (pos < block.start)
-      return FindBlock(pos, lo, (lo + guess) / 2, guess);
-   else
-      return FindBlock(pos, guess + 1, (guess + 1 + hi) / 2, hi);
-}
-
 int Sequence::FindBlock(sampleCount pos) const
 {
-   wxASSERT(pos >= 0 && pos <= mNumSamples);
-
-   int numBlocks = mBlock.size();
+   wxASSERT(pos >= 0 && pos < mNumSamples);
 
    if (pos == 0)
       return 0;
 
-   if (pos == mNumSamples)
-      return (numBlocks - 1);
+   int numBlocks = mBlock.size();
 
-   int rval = FindBlock(pos, 0, numBlocks / 2, numBlocks);
+   sampleCount lo = 0, loSamples = 0;
+   sampleCount hi = numBlocks, hiSamples = mNumSamples;
+   sampleCount guess;
 
+   while (true) {
+      //this is not a binary search, but a
+      //dictionary search where we guess something smarter than the binary division
+      //of the unsearched area, since samples are usually proportional to block file number.
+      const double frac = double(pos - loSamples) / (hiSamples - loSamples);
+      guess = std::min(hi - 1, lo + sampleCount(frac * (hi - lo)));
+      const SeqBlock &block = mBlock.at(guess);
+
+      wxASSERT(block.f->GetLength() > 0);
+      wxASSERT(lo <= guess && guess < hi && lo < hi);
+
+      if (pos < block.start) {
+         wxASSERT(lo != guess);
+         hi = guess;
+         hiSamples = block.start;
+      }
+      else {
+         const sampleCount nextStart = block.start + block.f->GetLength();
+         if (pos < nextStart)
+            break;
+         else {
+            wxASSERT(guess < hi - 1);
+            lo = guess + 1;
+            loSamples = nextStart;
+         }
+      }
+   }
+
+   const int rval = guess;
    wxASSERT(rval >= 0 && rval < numBlocks &&
             pos >= mBlock.at(rval).start &&
             pos < mBlock.at(rval).start + mBlock.at(rval).f->GetLength());
