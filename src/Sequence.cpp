@@ -461,7 +461,7 @@ bool Sequence::Copy(sampleCount s0, sampleCount s1, Sequence **dest)
 
    DeleteSamples(buffer);
 
-   return true;
+   return ConsistencyCheck(wxT("Sequence::Copy()"));
 }
 
 bool Sequence::Paste(sampleCount s, const Sequence *src)
@@ -756,7 +756,7 @@ bool Sequence::AppendBlock(const SeqBlock &b)
    mNumSamples += newBlock.f->GetLength();
 
    // Don't do a consistency check here because this
-   // function gets called in an inner loop
+   // function gets called in an inner loop.
 
    return true;
 }
@@ -1869,6 +1869,9 @@ void Sequence::AppendBlockFile(BlockFile* blockFile)
 {
    mBlock.push_back(SeqBlock(blockFile, mNumSamples));
    mNumSamples += blockFile->GetLength();
+
+   // PRL:  I hoisted the intended consistency check out of the inner loop
+   // See RecordingRecoveryHandler::HandleXMLEndTag
 
 #ifdef VERY_SLOW_CHECKING
    ConsistencyCheck(wxT("AppendBlockFile"));

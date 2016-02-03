@@ -283,6 +283,28 @@ RecordingRecoveryHandler::RecordingRecoveryHandler(AudacityProject* proj)
    mNumChannels = -1;
 }
 
+int RecordingRecoveryHandler::FindTrack() const
+{
+   WaveTrackArray tracks = mProject->GetTracks()->GetWaveTrackArray(false);
+   int index;
+   if (mAutoSaveIdent)
+   {
+      for (index = 0; index < (int)tracks.GetCount(); index++)
+      {
+         if (tracks[index]->GetAutoSaveIdent() == mAutoSaveIdent)
+         {
+            break;
+         }
+      }
+   }
+   else
+   {
+      index = tracks.GetCount() - mNumChannels + mChannel;
+   }
+
+   return index;
+}
+
 bool RecordingRecoveryHandler::HandleXMLTag(const wxChar *tag,
                                             const wxChar **attrs)
 {
@@ -296,23 +318,9 @@ bool RecordingRecoveryHandler::HandleXMLTag(const wxChar *tag,
          return false;
       }
 
-      // We need to find the track and sequence where the blockfile belongs
       WaveTrackArray tracks = mProject->GetTracks()->GetWaveTrackArray(false);
-      int index;
-      if (mAutoSaveIdent)
-      {
-         for (index = 0; index < (int) tracks.GetCount(); index++)
-         {
-            if (tracks[index]->GetAutoSaveIdent() == mAutoSaveIdent)
-            {
-               break;
-            }
-         }
-      }
-      else
-      {
-         index = tracks.GetCount() - mNumChannels + mChannel;
-      }
+      int index = FindTrack();
+      // We need to find the track and sequence where the blockfile belongs
 
       if (index < 0 || index >= (int) tracks.GetCount())
       {
@@ -389,6 +397,29 @@ bool RecordingRecoveryHandler::HandleXMLTag(const wxChar *tag,
    }
 
    return true;
+}
+
+void RecordingRecoveryHandler::HandleXMLEndTag(const wxChar *tag)
+{
+   if (wxStrcmp(tag, wxT("simpleblockfile")) == 0)
+      // Still in inner looop
+      return;
+
+   WaveTrackArray tracks = mProject->GetTracks()->GetWaveTrackArray(false);
+   int index = FindTrack();
+   // We need to find the track and sequence where the blockfile belongs
+
+   if (index < 0 || index >= (int)tracks.GetCount()) {
+      // This should only happen if there is a bug
+      wxASSERT(false);
+   }
+   else {
+      WaveTrack* track = tracks.Item(index);
+      WaveClip*  clip = track->NewestOrNewClip();
+      Sequence* seq = clip->GetSequence();
+
+      seq->ConsistencyCheck(wxT("RecordingRecoveryHandler::HandleXMLEndTag"));
+   }
 }
 
 XMLTagHandler* RecordingRecoveryHandler::HandleXMLChild(const wxChar *tag)
