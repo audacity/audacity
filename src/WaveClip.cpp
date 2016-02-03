@@ -1708,7 +1708,7 @@ void WaveClip::CloseLock()
 {
    GetSequence()->CloseLock();
    for (WaveClipList::compatibility_iterator it = mCutLines.GetFirst(); it; it=it->GetNext())
-      it->GetData()->Lock();
+      it->GetData()->CloseLock();
 }
 
 void WaveClip::Unlock()

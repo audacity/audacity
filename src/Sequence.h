@@ -58,9 +58,6 @@ WX_DEFINE_ARRAY(SeqBlock *, BlockPtrArray);
 class Sequence: public XMLTagHandler {
  public:
 
-   // Temporary: only until we delete TrackArtist once and for all
-   friend class TrackArtist;
-
    //
    // Static methods
    //
@@ -82,7 +79,7 @@ class Sequence: public XMLTagHandler {
       return new Sequence(*this, projDirManager);
    }
 
-   virtual ~Sequence();
+   ~Sequence();
 
    //
    // Editing
@@ -102,7 +99,7 @@ class Sequence: public XMLTagHandler {
    // where[p] up to (but excluding) where[p + 1].
    // bl is negative wherever data are not yet available.
    // Return true if successful.
-   bool GetWaveDisplay(float *min, float *max, float *rms,int* bl,
+   bool GetWaveDisplay(float *min, float *max, float *rms, int* bl,
                        int len, const sampleCount *where);
 
    bool Copy(sampleCount s0, sampleCount s1, Sequence **dest);
@@ -114,7 +111,7 @@ class Sequence: public XMLTagHandler {
    bool Delete(sampleCount start, sampleCount len);
    bool AppendAlias(wxString fullPath,
                     sampleCount start,
-                    sampleCount len, int channel,bool useOD);
+                    sampleCount len, int channel, bool useOD);
 
    bool AppendCoded(wxString fName, sampleCount start,
                             sampleCount len, int channel, int decodeType);
@@ -162,7 +159,7 @@ class Sequence: public XMLTagHandler {
    //
 
    sampleFormat GetSampleFormat() const;
-   bool SetSampleFormat(sampleFormat format);
+   // bool SetSampleFormat(sampleFormat format);
    bool ConvertToSampleFormat(sampleFormat format, bool* pbChanged);
 
    //
@@ -239,7 +236,7 @@ class Sequence: public XMLTagHandler {
    // Private methods
    //
 
-   void CalcSummaryInfo();
+   void DerefAllFiles();
 
    int FindBlock(sampleCount pos) const;
 
@@ -249,15 +246,8 @@ class Sequence: public XMLTagHandler {
              const SeqBlock &b,
              sampleCount start, sampleCount len) const;
 
-   // These are the two ways to write data to a block
-   bool FirstWrite(samplePtr buffer, SeqBlock * b, sampleCount len);
    bool CopyWrite(samplePtr buffer,    SeqBlock &b,
                   sampleCount start, sampleCount len);
-
-   // Both block-writing methods and AppendAlias call this
-   // method to write the summary data
-   void *GetSummary(samplePtr buffer, sampleCount len,
-                    float *min, float *max, float *rms);
 
    void Blockify(BlockArray &list, sampleCount start, samplePtr buffer, sampleCount len);
 
@@ -269,11 +259,11 @@ class Sequence: public XMLTagHandler {
 
    // This function makes sure that the track isn't messed up
    // because of inconsistent block starts & lengths
-   bool ConsistencyCheck(const wxChar *whereStr);
+   bool ConsistencyCheck(const wxChar *whereStr) const;
 
    // This function prints information to stdout about the blocks in the
    // tracks and indicates if there are inconsistencies.
-   void DebugPrintf(wxString *dest);
+   void DebugPrintf(wxString *dest) const;
 };
 
 #endif // __AUDACITY_SEQUENCE__

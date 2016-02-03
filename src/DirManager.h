@@ -109,7 +109,10 @@ class DirManager: public XMLTagHandler {
    }
    void SetLoadingFormat(sampleFormat format) { mLoadingFormat = format; }
    void SetLoadingBlockLength(sampleCount len) { mLoadingBlockLen = len; }
-   void SetMaxSamples(sampleCount max) { mMaxSamples = max; }
+
+   // Note: following affects only the loading of block files when opening a project
+   void SetLoadingMaxSamples(sampleCount max) { mMaxSamples = max; }
+
    bool HandleXMLTag(const wxChar *tag, const wxChar **attrs);
    XMLTagHandler *HandleXMLChild(const wxChar * WXUNUSED(tag)) { return NULL; }
    void WriteXML(XMLWriter & WXUNUSED(xmlFile)) { wxASSERT(false); } // This class only reads tags.
