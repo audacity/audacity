@@ -1622,7 +1622,7 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
    //TODO: add a ref-deref mechanism to SeqBlock/BlockArray so we don't have to make this a critical section.
    //On-demand threads iterate over the mBlocks and the GUI thread deletes them, so for now put a mutex here over
    //both functions,
-   LockDeleteUpdateMutex();
+   DeleteUpdateMutexLocker locker(*this);
 
    unsigned int numBlocks = mBlock.size();
 
@@ -1661,7 +1661,6 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
       mDirManager->Deref(oldFile);
 
       mNumSamples -= len;
-      UnlockDeleteUpdateMutex();
 
       return ConsistencyCheck(wxT("Delete - branch one"));
    }
@@ -1786,7 +1785,6 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
    // Update total number of samples and do a consistency check.
    mNumSamples -= len;
 
-   UnlockDeleteUpdateMutex();
    return ConsistencyCheck(wxT("Delete - branch two"));
 }
 

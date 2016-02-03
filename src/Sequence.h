@@ -194,6 +194,21 @@ class Sequence: public XMLTagHandler {
    void LockDeleteUpdateMutex(){mDeleteUpdateMutex.Lock();}
    void UnlockDeleteUpdateMutex(){mDeleteUpdateMutex.Unlock();}
 
+   // RAII idiom wrapping the functions above
+   struct DeleteUpdateMutexLocker {
+      DeleteUpdateMutexLocker(Sequence &sequence)
+         : mSequence(sequence)
+      {
+         mSequence.LockDeleteUpdateMutex();
+      }
+      ~DeleteUpdateMutexLocker()
+      {
+         mSequence.UnlockDeleteUpdateMutex();
+      }
+   private:
+      Sequence &mSequence;
+   };
+
  private:
 
    //

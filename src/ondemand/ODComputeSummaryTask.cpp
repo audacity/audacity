@@ -190,7 +190,7 @@ void ODComputeSummaryTask::Update()
             seq = clip->GetSequence();
             //This lock may be way too big since the whole file is one sequence.
             //TODO: test for large files and find a way to break it down.
-            seq->LockDeleteUpdateMutex();
+            Sequence::DeleteUpdateMutexLocker locker(*seq);
 
             //See Sequence::Delete() for why need this for now..
             //We don't need the mBlockFilesMutex here because it is only for the vector list.
@@ -223,7 +223,6 @@ void ODComputeSummaryTask::Update()
                   tempBlocks.insert(tempBlocks.begin() + insertCursor++, odpcmaFile);
                }
             }
-            seq->UnlockDeleteUpdateMutex();
             node = node->GetNext();
          }
       }
