@@ -252,6 +252,9 @@ class Sequence: public XMLTagHandler {
 
    void Blockify(BlockArray &list, sampleCount start, samplePtr buffer, sampleCount len);
 
+   bool Get(int b, samplePtr buffer, sampleFormat format,
+      sampleCount start, sampleCount len) const;
+
  public:
 
    //

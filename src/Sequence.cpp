@@ -439,7 +439,7 @@ bool Sequence::Copy(sampleCount s0, sampleCount s1, Sequence **dest)
       BlockFile *const file = block0.f;
       blocklen = std::min(s1, block0.start + file->GetLength()) - s0;
       wxASSERT(file->IsAlias() || (blocklen <= mMaxSamples)); // Vaughan, 2012-02-29
-      Get(buffer.ptr(), mSampleFormat, s0, blocklen);
+      Get(b0, buffer.ptr(), mSampleFormat, s0, blocklen);
 
       (*dest)->Append(buffer.ptr(), mSampleFormat, blocklen);
    }
@@ -457,7 +457,7 @@ bool Sequence::Copy(sampleCount s0, sampleCount s1, Sequence **dest)
       blocklen = (s1 - block.start);
       wxASSERT(file->IsAlias() || (blocklen <= mMaxSamples)); // Vaughan, 2012-02-29
       if (blocklen < file->GetLength()) {
-         Get(buffer.ptr(), mSampleFormat, block.start, blocklen);
+         Get(b1, buffer.ptr(), mSampleFormat, block.start, blocklen);
          (*dest)->Append(buffer.ptr(), mSampleFormat, blocklen);
       }
       else
@@ -548,7 +548,7 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
 
       int splitPoint = s - block.start;
       Read(buffer.ptr(), mSampleFormat, block, 0, splitPoint);
-      src->Get(buffer.ptr() + splitPoint*sampleSize,
+      src->Get(0, buffer.ptr() + splitPoint*sampleSize,
                mSampleFormat, 0, addedLen);
       Read(buffer.ptr() + (splitPoint + addedLen)*sampleSize,
            mSampleFormat, block,
@@ -587,7 +587,7 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
 
       SampleBuffer sumBuffer(sum, mSampleFormat);
       Read(sumBuffer.ptr(), mSampleFormat, splitBlock, 0, splitPoint);
-      src->Get(sumBuffer.ptr() + splitPoint * sampleSize,
+      src->Get(0, sumBuffer.ptr() + splitPoint * sampleSize,
                mSampleFormat,
                0, addedLen);
       Read(sumBuffer.ptr() + (splitPoint + addedLen) * sampleSize, mSampleFormat,
@@ -617,7 +617,7 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
       SampleBuffer sampleBuffer(std::max(leftLen, rightLen), mSampleFormat);
 
       Read(sampleBuffer.ptr(), mSampleFormat, splitBlock, 0, splitPoint);
-      src->Get(sampleBuffer.ptr() + splitPoint*sampleSize,
+      src->Get(0, sampleBuffer.ptr() + splitPoint*sampleSize,
          mSampleFormat, 0, srcFirstTwoLen);
 
       Blockify(newBlock, splitBlock.start, sampleBuffer.ptr(), leftLen);
@@ -634,7 +634,7 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
       }
 
       sampleCount lastStart = penultimate.start;
-      src->Get(sampleBuffer.ptr(), mSampleFormat,
+      src->Get(srcNumBlocks - 2, sampleBuffer.ptr(), mSampleFormat,
                lastStart, srcLastTwoLen);
       Read(sampleBuffer.ptr() + srcLastTwoLen * sampleSize, mSampleFormat,
            splitBlock, splitPoint, rightSplit);
@@ -1166,13 +1166,19 @@ bool Sequence::CopyWrite(SampleBuffer &scratch,
 }
 
 bool Sequence::Get(samplePtr buffer, sampleFormat format,
-                   sampleCount start, sampleCount len) const
+   sampleCount start, sampleCount len) const
 {
    if (start < 0 || start >= mNumSamples ||
-       start+len > mNumSamples)
+      start + len > mNumSamples)
       return false;
    int b = FindBlock(start);
 
+   return Get(b, buffer, format, start, len);
+}
+
+bool Sequence::Get(int b, samplePtr buffer, sampleFormat format,
+   sampleCount start, sampleCount len) const
+{
    while (len) {
       const SeqBlock &block = mBlock.at(b);
       const sampleCount bstart = (start - (block.start));
