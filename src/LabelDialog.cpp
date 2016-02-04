@@ -55,10 +55,11 @@ enum Column
 class RowData
 {
  public:
-   RowData() {};
+   RowData(int index_, const wxString &title_, SelectedRegion selectedRegion_)
+      : index(index_), title(title_), selectedRegion(selectedRegion_)
+   {}
 
    int index;
-
    wxString title;
    SelectedRegion selectedRegion;
 };
@@ -214,18 +215,11 @@ LabelDialog::LabelDialog(wxWindow *parent,
 
 LabelDialog::~LabelDialog()
 {
-   int cnt = mData.GetCount();
-
-   // Delete any RowData we've allocated
-   while (cnt) {
-      RowData *rd = mData[--cnt];
-      delete rd;
-   }
 }
 
 bool LabelDialog::TransferDataToWindow()
 {
-   int cnt = mData.GetCount();
+   int cnt = mData.size();
    int i;
 
    // Set the editor parameters.  Do this each time since they may change
@@ -248,15 +242,15 @@ bool LabelDialog::TransferDataToWindow()
 
    // Populate the rows
    for (i = 0; i < cnt; i++) {
-      RowData *rd = mData[i];
+      RowData &rd = mData[i];
 
       // Set the cell contents
-      mGrid->SetCellValue(i, Col_Track, TrackName(rd->index));
-      mGrid->SetCellValue(i, Col_Label, rd->title);
+      mGrid->SetCellValue(i, Col_Track, TrackName(rd.index));
+      mGrid->SetCellValue(i, Col_Label, rd.title);
       mGrid->SetCellValue(i, Col_Stime,
-         wxString::Format(wxT("%g"), rd->selectedRegion.t0()));
+         wxString::Format(wxT("%g"), rd.selectedRegion.t0()));
       mGrid->SetCellValue(i, Col_Etime,
-         wxString::Format(wxT("%g"), rd->selectedRegion.t1()));
+         wxString::Format(wxT("%g"), rd.selectedRegion.t1()));
 
       // PRL: to do: -- populate future additional selection fields
       // and write event code to update them from controls
@@ -296,7 +290,7 @@ bool LabelDialog::Show(bool show)
 
 bool LabelDialog::TransferDataFromWindow()
 {
-   int cnt = mData.GetCount();
+   int cnt = mData.size();
    int i;
    TrackListIterator iter(mTracks);
    Track *t;
@@ -329,12 +323,12 @@ bool LabelDialog::TransferDataFromWindow()
 
    // Repopulate with updated labels
    for (i = 0; i < cnt; i++) {
-      RowData *rd = mData[i];
+      RowData &rd = mData[i];
 
       // Look for track with matching index
       tndx = 1;
       for (t = iter.First(); t; t = iter.Next()) {
-         if (t->GetKind() == Track::Label && rd->index == tndx++) {
+         if (t->GetKind() == Track::Label && rd.index == tndx++) {
             break;
          }
       }
@@ -343,7 +337,7 @@ bool LabelDialog::TransferDataFromWindow()
          return false;
 
       // Add the label to it
-      ((LabelTrack *) t)->AddLabel(rd->selectedRegion, rd->title);
+      ((LabelTrack *) t)->AddLabel(rd.selectedRegion, rd.title);
       ((LabelTrack *) t)->Unselect();
    }
 
@@ -387,7 +381,7 @@ void LabelDialog::FindAllLabels()
 
    FindInitialRow();
 
-   if (mData.GetCount() == 0) {
+   if (mData.size() == 0) {
       wxCommandEvent e;
       OnInsert(e);
    }
@@ -405,19 +399,14 @@ void LabelDialog::AddLabels(LabelTrack *t)
    // Add each label in the track
    for (i = 0; i < t->GetNumLabels(); i++) {
       const LabelStruct *ls = t->GetLabel(i);
-      RowData *rd = new RowData();
 
-      rd->index = tndx;
-      rd->selectedRegion = ls->selectedRegion;
-      rd->title = ls->title;
-
-      mData.Add(rd);
+      mData.push_back(RowData(tndx, ls->title, ls->selectedRegion));
    }
 }
 
 void LabelDialog::FindInitialRow()
 {
-   int cnt = mData.GetCount();
+   int cnt = mData.size();
    mInitialRow = -1;
 
    if (cnt == 0)
@@ -431,7 +420,7 @@ void LabelDialog::FindInitialRow()
    int i;
    for (i = 0; i < cnt; i++)
    {
-      dist = t0 - mData[i]->selectedRegion.t0();
+      dist = t0 - mData[i].selectedRegion.t0();
       if (dist >= 0.0 && dist < distMin)
       {
          mInitialRow = i;
@@ -446,10 +435,10 @@ void LabelDialog::FindInitialRow()
       double t0Min = std::numeric_limits<double>::max();
       for (i = 0; i < cnt; i++)
       {
-         if (mData[i]->selectedRegion.t0() < t0Min)
+         if (mData[i].selectedRegion.t0() < t0Min)
          {
             mInitialRow  = i;
-            t0Min = mData[i]->selectedRegion.t0();
+            t0Min = mData[i].selectedRegion.t0();
          }
       }
    }
@@ -466,8 +455,7 @@ void LabelDialog::OnUpdate(wxCommandEvent &event)
 
 void LabelDialog::OnInsert(wxCommandEvent &event)
 {
-   RowData *rd = new RowData();
-   int cnt = mData.GetCount();
+   int cnt = mData.size();
    int row = 0;
    int index = 0;
 
@@ -487,16 +475,11 @@ void LabelDialog::OnInsert(wxCommandEvent &event)
       }
    }
 
-   // Initialize the new label
-   rd->index = index;
-   rd->selectedRegion = SelectedRegion();
-   rd->title = wxT("");
-
-   // Insert it before or after the current row
+   // Insert new label before or after the current row
    if (event.GetId() == ID_INSERTA && row < cnt) {
       row++;
    }
-   mData.Insert(rd, row);
+   mData.insert(mData.begin() + row, RowData(index, wxT(""), SelectedRegion()));
 
    // Repopulate the grid
    TransferDataToWindow();
@@ -512,7 +495,7 @@ void LabelDialog::OnRemove(wxCommandEvent & WXUNUSED(event))
 {
    int row = mGrid->GetGridCursorRow();
    int col = mGrid->GetGridCursorCol();
-   int cnt = mData.GetCount();
+   int cnt = mData.size();
 
    // Don't try to remove if no labels exist
    if (cnt == 0) {
@@ -525,10 +508,9 @@ void LabelDialog::OnRemove(wxCommandEvent & WXUNUSED(event))
    }
 
    // Remove the row
-   RowData *rd = mData[row];
-   mTrackNames.RemoveAt(rd->index);
-   mData.RemoveAt(row);
-   delete rd;
+   RowData &rd = mData[row];
+   mTrackNames.RemoveAt(rd.index);
+   mData.erase(mData.begin() + row);
 
    // Repopulate the grid
    TransferDataToWindow();
@@ -540,7 +522,7 @@ void LabelDialog::OnRemove(wxCommandEvent & WXUNUSED(event))
    mGrid->SetGridCursor(row, col);
 
    // Make sure focus isn't lost
-   if (mData.GetCount() == 0 && wxWindow::FindFocus() == mGrid->GetGridWindow()) {
+   if (mData.size() == 0 && wxWindow::FindFocus() == mGrid->GetGridWindow()) {
       wxWindow *ok = wxWindow::FindWindowById( wxID_OK, this);
       if (ok) {
          ok->SetFocus();
@@ -595,7 +577,7 @@ void LabelDialog::OnImport(wxCommandEvent & WXUNUSED(event))
 
 void LabelDialog::OnExport(wxCommandEvent & WXUNUSED(event))
 {
-   int cnt = mData.GetCount();
+   int cnt = mData.size();
 
    // Silly user (could just disable the button, but that's a hassle ;-))
    if (cnt == 0) {
@@ -652,9 +634,9 @@ void LabelDialog::OnExport(wxCommandEvent & WXUNUSED(event))
    int i;
 
    for (i = 0; i < cnt; i++) {
-      RowData *rd = mData[i];
+      RowData &rd = mData[i];
 
-      lt->AddLabel(rd->selectedRegion, rd->title);
+      lt->AddLabel(rd.selectedRegion, rd.title);
    }
 
    // Export them and clean
@@ -681,9 +663,8 @@ void LabelDialog::OnSelectCell(wxGridEvent &event)
 
    if (!mData.empty())
    {
-      RowData *rd;
-      rd = mData[event.GetRow()];
-      mViewInfo->selectedRegion = rd->selectedRegion;
+      RowData &rd = mData[event.GetRow()];
+      mViewInfo->selectedRegion = rd.selectedRegion;
 
       GetActiveProject()->RedrawProject();
    }
@@ -695,7 +676,6 @@ void LabelDialog::OnCellChange(wxGridEvent &event)
 {
    static bool guard = false;
    int row = event.GetRow();
-   RowData *rd;
 
    // Guard against recursion which can happen when a change to the "new label" row
    // is made.  When InsertRow() is done in TransferDataToWindow(), checks are made
@@ -709,7 +689,7 @@ void LabelDialog::OnCellChange(wxGridEvent &event)
 
    // The change was to an existing label, so go process it based
    // on which column was changed.
-   rd = mData[row];
+   RowData *rd = &mData[row];
    switch (event.GetCol())
    {
       case Col_Track:
