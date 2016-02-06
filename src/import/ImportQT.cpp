@@ -317,8 +317,9 @@ int QTImportFileHandle::Import(TrackFactory *trackFactory,
       AudioBufferList *abl = (AudioBufferList *)
          calloc(1, offsetof(AudioBufferList, mBuffers) + (sizeof(AudioBuffer) * numchan));
       abl->mNumberBuffers = numchan;
-   
-      WaveTrack **channels = new WaveTrack *[numchan];
+
+      std::unique_ptr<WaveTrack*[]> channelsArray(new WaveTrack*[numchan]);
+      WaveTrack **const channels = channelsArray.get();
    
       int c;
       for (c = 0; c < numchan; c++) {
@@ -381,8 +382,6 @@ int QTImportFileHandle::Import(TrackFactory *trackFactory,
          for (c = 0; c < numchan; c++) {
             delete channels[c];
          }
-   
-         delete [] channels;
       }
    
       for (c = 0; c < numchan; c++) {

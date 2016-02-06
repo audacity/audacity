@@ -23,6 +23,7 @@ the audio, rather than actually finding the clicks.
 
 #include "../Audacity.h"
 
+#include <memory>
 #include <math.h>
 
 #include <wx/intl.h>
@@ -144,11 +145,11 @@ bool EffectRepair::ProcessOne(int count, WaveTrack * track,
                               sampleCount len,
                               sampleCount repairStart, sampleCount repairLen)
 {
-   float *buffer = new float[len];
+   std::unique_ptr<float[]> bufferArray(new float[len]);
+   float *const buffer = bufferArray.get();
    track->Get((samplePtr) buffer, floatSample, start, len);
    InterpolateAudio(buffer, len, repairStart, repairLen);
    track->Set((samplePtr)&buffer[repairStart], floatSample,
               start + repairStart, repairLen);
-   delete[] buffer;
    return !TrackProgress(count, 1.0); // TrackProgress returns true on Cancel.
 }

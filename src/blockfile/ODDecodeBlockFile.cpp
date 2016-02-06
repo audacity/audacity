@@ -342,9 +342,6 @@ int ODDecodeBlockFile::WriteODDecodeBlockFile()
 
    mFileNameMutex.Unlock();
 
-//   delete [] (char *) summaryData;
-
-
    mDataAvailableMutex.Lock();
    mDataAvailable=true;
    mDataAvailableMutex.Unlock();

@@ -26,6 +26,8 @@
 #include "../Audacity.h"
 #include "../Internat.h"
 
+#include <memory>
+
 #ifdef _WIN32
    #include <windows.h>
    #include <wx/msw/winundef.h>
@@ -217,7 +219,8 @@ bool XMLTagHandler::ReadXMLTag(const char *tag, const char **attrs)
 // const char **out_attrs = new char (const char *)[tmp_attrs.GetCount()+1];
 // however MSVC doesn't like the constness in this position, so this is now
 // added by a cast after creating the array of pointers-to-non-const chars.
-   const wxChar **out_attrs = (const wxChar**)new wxChar *[tmp_attrs.GetCount()+1];
+   std::unique_ptr<const wxChar*[]> out_attrsArray(new const wxChar*[tmp_attrs.GetCount()+1]);
+   const wxChar **const out_attrs = out_attrsArray.get();
    for (size_t i=0; i<tmp_attrs.GetCount(); i++) {
       out_attrs[i] = tmp_attrs[i].c_str();
    }
@@ -225,7 +228,6 @@ bool XMLTagHandler::ReadXMLTag(const char *tag, const char **attrs)
 
    bool result = HandleXMLTag(UTF8CTOWX(tag).c_str(), out_attrs);
 
-   delete[] out_attrs;
    return result;
 }
 

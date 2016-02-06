@@ -14,6 +14,7 @@
 *//*******************************************************************/
 
 #include <algorithm>
+#include <memory>
 
 #include "Audacity.h"
 
@@ -2833,9 +2834,9 @@ wxString PluginManager::ConvertID(const PluginID & ID)
    if (ID.StartsWith(wxT("base64:")))
    {
       wxString id = ID.Mid(7);
-      char *buf = new char[id.Length() / 4 * 3];
+      std::unique_ptr<char[]> bufArray(new char[id.Length() / 4 * 3]);
+      char *const buf = bufArray.get();
       id =  wxString::FromUTF8(buf, b64decode(id, buf));
-      delete [] buf;
       return id;
    }
 

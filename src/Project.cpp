@@ -342,7 +342,8 @@ public:
             Size dataSize = 0;
             GetFlavorDataSize((DragReference)m_currentDrag, theItem, theType, &dataSize);
 
-            Ptr theData = new char[dataSize];
+            std::unique_ptr<char[]> theDataArray(new char[dataSize]);
+            const Ptr theData = theDataArray.get();
             GetFlavorData((DragReference)m_currentDrag, theItem, theType, (void*) theData, &dataSize, 0L);
 
             wxString name;
@@ -352,8 +353,6 @@ public:
             else if (theType == kDragFlavorTypeHFS) {
                name = wxMacFSSpec2MacFilename(&((HFSFlavor *)theData)->fileSpec);
             }
-
-            delete[] theData;
 
             if (!firstFileAdded) {
                // reset file list

@@ -21,6 +21,7 @@
 #include <float.h>
 #include <math.h>
 
+#include <memory>
 #include <wx/filefn.h>
 #include <wx/file.h>
 #include <wx/ffile.h>
@@ -65,7 +66,8 @@ void ComputeLegacySummaryInfo(wxFileName fileName,
    // 64K summary data
    //
 
-   float *summary = new float[info->frames64K * fields];
+   std::unique_ptr<float[]> summaryArray(new float[info->frames64K * fields]);
+   float *const summary = summaryArray.get();
    SampleBuffer data(info->frames64K * fields,
       info->format);
 
@@ -110,8 +112,6 @@ void ComputeLegacySummaryInfo(wxFileName fileName,
       (*rms) = sqrt(sumsq / count);
    else
       (*rms) = 0;
-
-   delete[] summary;
 }
 
 /// Construct a LegacyBlockFile memory structure that will point to an

@@ -23,6 +23,7 @@ for each problem encountered, since there can be many orphans.
 
 #include "MultiDialog.h"
 
+#include <memory>
 #include <wx/button.h>
 #include <wx/dialog.h>
 #include <wx/intl.h>
@@ -86,7 +87,8 @@ MultiDialog::MultiDialog(wxWindow * pParent,
 
    int count=0;
    while(buttons[count])count++;
-   wxString *buttonLabels = new wxString[count];
+   std::unique_ptr<wxString[]> buttonLabelsArray(new wxString[count]);
+   wxString *const buttonLabels = buttonLabelsArray.get();
 
    count=0;
    while(buttons[count]){
@@ -129,7 +131,6 @@ MultiDialog::MultiDialog(wxWindow * pParent,
    SetSizer(mainSizer);
    mainSizer->Fit(this);
    mainSizer->SetSizeHints(this);
-   delete[] buttonLabels;
 }
 
 void MultiDialog::OnOK(wxCommandEvent & WXUNUSED(event))
