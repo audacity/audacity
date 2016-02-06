@@ -636,7 +636,7 @@ protected:
    // and is ignored otherwise.
    double mFreqSelPin;
    const WaveTrack *mFreqSelTrack;
-   std::auto_ptr<SpectrumAnalyst> mFrequencySnapper;
+   std::unique_ptr<SpectrumAnalyst> mFrequencySnapper;
 
    // For toggling of spectral seletion
    double mLastF0;
