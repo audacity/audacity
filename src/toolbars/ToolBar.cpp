@@ -700,7 +700,7 @@ AButton * ToolBar::MakeButton(teBmps eUp,
    int xoff = (size.GetWidth() - theTheme.Image(eStandardUp).GetWidth())/2;
    int yoff = (size.GetHeight() - theTheme.Image(eStandardUp).GetHeight())/2;
 
-   typedef std::auto_ptr<wxImage> wxImagePtr;
+   typedef std::unique_ptr<wxImage> wxImagePtr;
    wxImagePtr up2        (OverlayImage(eUp,     eStandardUp, xoff, yoff));
    wxImagePtr hilite2    (OverlayImage(eHilite, eStandardUp, xoff, yoff));
    wxImagePtr down2      (OverlayImage(eDown,   eStandardDown, xoff + 1, yoff + 1));
@@ -726,7 +726,7 @@ void ToolBar::MakeAlternateImages(AButton &button, int idx,
    int xoff = (size.GetWidth() - theTheme.Image(eStandardUp).GetWidth())/2;
    int yoff = (size.GetHeight() - theTheme.Image(eStandardUp).GetHeight())/2;
 
-   typedef std::auto_ptr<wxImage> wxImagePtr;
+   typedef std::unique_ptr<wxImage> wxImagePtr;
    wxImagePtr up        (OverlayImage(eUp,     eStandardUp, xoff, yoff));
    wxImagePtr hilite    (OverlayImage(eHilite, eStandardUp, xoff, yoff));
    wxImagePtr down      (OverlayImage(eDown,   eStandardDown, xoff + 1, yoff + 1));
