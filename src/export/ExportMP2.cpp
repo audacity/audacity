@@ -181,12 +181,12 @@ public:
                double t0,
                double t1,
                MixerSpec *mixerSpec = NULL,
-               Tags *metadata = NULL,
+               const Tags *metadata = NULL,
                int subformat = 0) override;
 
 private:
 
-   int AddTags(AudacityProject *project, char **buffer, bool *endOfFile, Tags *tags);
+   int AddTags(AudacityProject *project, char **buffer, bool *endOfFile, const Tags *tags);
 #ifdef USE_LIBID3TAG
    void AddFrame(struct id3_tag *tp, const wxString & n, const wxString & v, const char *name);
 #endif
@@ -211,7 +211,7 @@ void ExportMP2::Destroy()
 
 int ExportMP2::Export(AudacityProject *project,
                int channels, const wxString &fName,
-               bool selectionOnly, double t0, double t1, MixerSpec *mixerSpec, Tags *metadata,
+               bool selectionOnly, double t0, double t1, MixerSpec *mixerSpec, const Tags *metadata,
                int WXUNUSED(subformat))
 {
    bool stereo = (channels == 2);
@@ -339,7 +339,7 @@ wxWindow *ExportMP2::OptionsCreate(wxWindow *parent, int format)
 }
 
 // returns buffer len; caller frees
-int ExportMP2::AddTags(AudacityProject * WXUNUSED(project), char **buffer, bool *endOfFile, Tags *tags)
+int ExportMP2::AddTags(AudacityProject * WXUNUSED(project), char **buffer, bool *endOfFile, const Tags *tags)
 {
 #ifdef USE_LIBID3TAG
    struct id3_tag *tp = id3_tag_new();

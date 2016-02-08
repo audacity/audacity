@@ -190,12 +190,12 @@ public:
                double t0,
                double t1,
                MixerSpec *mixerSpec = NULL,
-               Tags *metadata = NULL,
+               const Tags *metadata = NULL,
                int subformat = 0) override;
 
 private:
 
-   bool GetMetadata(AudacityProject *project, Tags *tags);
+   bool GetMetadata(AudacityProject *project, const Tags *tags);
 
    FLAC__StreamMetadata *mMetadata;
 };
@@ -225,7 +225,7 @@ int ExportFLAC::Export(AudacityProject *project,
                         double t0,
                         double t1,
                         MixerSpec *mixerSpec,
-                        Tags *metadata,
+                        const Tags *metadata,
                         int WXUNUSED(subformat))
 {
    double    rate    = project->GetRate();
@@ -380,7 +380,7 @@ wxWindow *ExportFLAC::OptionsCreate(wxWindow *parent, int format)
 //      expects that array to be valid until the stream is initialized.
 //
 //      This has been fixed in 1.1.4.
-bool ExportFLAC::GetMetadata(AudacityProject *project, Tags *tags)
+bool ExportFLAC::GetMetadata(AudacityProject *project, const Tags *tags)
 {
    // Retrieve tags if needed
    if (tags == NULL)

@@ -371,27 +371,33 @@ int Tags::GetGenre(const wxString & name)
    return 255;
 }
 
-bool Tags::HasTag(const wxString & name)
+bool Tags::HasTag(const wxString & name) const
 {
    wxString key = name;
    key.UpperCase();
 
-   TagMap::iterator iter = mXref.find(key);
+   auto iter = mXref.find(key);
    return (iter != mXref.end());
 }
 
-wxString Tags::GetTag(const wxString & name)
+wxString Tags::GetTag(const wxString & name) const
 {
    wxString key = name;
    key.UpperCase();
 
-   TagMap::iterator iter = mXref.find(key);
+   auto iter = mXref.find(key);
 
    if (iter == mXref.end()) {
       return wxEmptyString;
    }
 
-   return mMap[iter->second];
+   auto iter2 = mMap.find(iter->second);
+   if (iter2 == mMap.end()) {
+      wxASSERT(false);
+      return wxEmptyString;
+   }
+   else
+      return iter2->second;
 }
 
 Tags::Iterators Tags::GetRange() const

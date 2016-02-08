@@ -97,8 +97,8 @@ class AUDACITY_DLL_API Tags: public XMLTagHandler {
    wxString GetGenre(int value);
    int GetGenre(const wxString & name);
 
-   bool HasTag(const wxString & name);
-   wxString GetTag(const wxString & name);
+   bool HasTag(const wxString & name) const;
+   wxString GetTag(const wxString & name) const;
 
    using IterPair = std::pair<TagMap::const_iterator, TagMap::const_iterator>;
    struct Iterators : public IterPair {

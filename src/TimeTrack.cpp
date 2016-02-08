@@ -64,7 +64,7 @@ TimeTrack::TimeTrack(DirManager *projDirManager, const ZoomInfo *zoomInfo):
    blankPen.SetColour(214, 214, 214);
 }
 
-TimeTrack::TimeTrack(TimeTrack &orig):
+TimeTrack::TimeTrack(const TimeTrack &orig):
    Track(orig)
    , mZoomInfo(orig.mZoomInfo)
 {
@@ -109,7 +109,7 @@ TimeTrack::~TimeTrack()
    delete mRuler;
 }
 
-Track *TimeTrack::Duplicate()
+Track *TimeTrack::Duplicate() const
 {
    return new TimeTrack(*this);
 }

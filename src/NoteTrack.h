@@ -57,7 +57,7 @@ class AUDACITY_DLL_API NoteTrack:public Track {
    NoteTrack(DirManager * projDirManager);
    virtual ~NoteTrack();
 
-   virtual Track *Duplicate();
+   virtual Track *Duplicate() const;
 
    virtual int GetKind() const { return Note; }
 

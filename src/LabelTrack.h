@@ -139,7 +139,7 @@ class AUDACITY_DLL_API LabelTrack : public Track
    virtual double GetStartTime() const;
    virtual double GetEndTime() const;
 
-   virtual Track *Duplicate();
+   virtual Track *Duplicate() const;
 
    virtual void SetSelected(bool s);
 

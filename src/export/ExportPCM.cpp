@@ -320,7 +320,7 @@ public:
                double t0,
                double t1,
                MixerSpec *mixerSpec = NULL,
-               Tags *metadata = NULL,
+               const Tags *metadata = NULL,
                int subformat = 0) override;
    // optional
    wxString GetExtension(int index);
@@ -329,8 +329,8 @@ public:
 private:
 
    char *AdjustString(const wxString & wxStr, int sf_format);
-   bool AddStrings(AudacityProject *project, SNDFILE *sf, Tags *tags, int sf_format);
-   void AddID3Chunk(wxString fName, Tags *tags, int sf_format);
+   bool AddStrings(AudacityProject *project, SNDFILE *sf, const Tags *tags, int sf_format);
+   void AddID3Chunk(wxString fName, const Tags *tags, int sf_format);
 
 };
 
@@ -395,7 +395,7 @@ int ExportPCM::Export(AudacityProject *project,
                        double t0,
                        double t1,
                        MixerSpec *mixerSpec,
-                       Tags *metadata,
+                       const Tags *metadata,
                        int subformat)
 {
    double       rate = project->GetRate();
@@ -664,7 +664,7 @@ char *ExportPCM::AdjustString(const wxString & wxStr, int sf_format)
    return pDest;
 }
 
-bool ExportPCM::AddStrings(AudacityProject * WXUNUSED(project), SNDFILE *sf, Tags *tags, int sf_format)
+bool ExportPCM::AddStrings(AudacityProject * WXUNUSED(project), SNDFILE *sf, const Tags *tags, int sf_format)
 {
    if (tags->HasTag(TAG_TITLE)) {
       char * ascii7Str = AdjustString(tags->GetTag(TAG_TITLE), sf_format);
@@ -741,7 +741,7 @@ bool ExportPCM::AddStrings(AudacityProject * WXUNUSED(project), SNDFILE *sf, Tag
    return true;
 }
 
-void ExportPCM::AddID3Chunk(wxString fName, Tags *tags, int sf_format)
+void ExportPCM::AddID3Chunk(wxString fName, const Tags *tags, int sf_format)
 {
 #ifdef USE_LIBID3TAG
    struct id3_tag *tp = id3_tag_new();

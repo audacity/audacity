@@ -135,7 +135,7 @@ NoteTrack::~NoteTrack()
    }
 }
 
-Track *NoteTrack::Duplicate()
+Track *NoteTrack::Duplicate() const
 {
    NoteTrack *duplicate = new NoteTrack(mDirManager);
    duplicate->Init(*this);

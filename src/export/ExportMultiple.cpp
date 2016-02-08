@@ -911,7 +911,7 @@ int ExportMultiple::DoExport(int channels,
                               bool selectedOnly,
                               double t0,
                               double t1,
-                              Tags tags)
+                              const Tags &tags)
 {
    wxLogDebug(wxT("Doing multiple Export: File name \"%s\""), (name.GetFullName()).c_str());
    wxLogDebug(wxT("Channels: %i, Start: %lf, End: %lf "), channels, t0, t1);

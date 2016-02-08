@@ -1133,7 +1133,7 @@ double LabelTrack::GetEndTime() const
    return end;
 }
 
-Track *LabelTrack::Duplicate()
+Track *LabelTrack::Duplicate() const
 {
    return new LabelTrack(*this);
 }

@@ -182,7 +182,7 @@ bool UndoManager::RedoAvailable()
    return (current < (int)stack.size() - 1);
 }
 
-void UndoManager::ModifyState(TrackList * l,
+void UndoManager::ModifyState(const TrackList * l,
                               const SelectedRegion &selectedRegion)
 {
    if (current == wxNOT_FOUND) {
@@ -195,8 +195,8 @@ void UndoManager::ModifyState(TrackList * l,
 
    // Duplicate
    auto tracksCopy = std::make_unique<TrackList>(true);
-   TrackListIterator iter(l);
-   Track *t = iter.First();
+   TrackListConstIterator iter(l);
+   const Track *t = iter.First();
    while (t) {
       tracksCopy->Add(t->Duplicate());
       t = iter.Next();
@@ -208,7 +208,7 @@ void UndoManager::ModifyState(TrackList * l,
    SonifyEndModifyState();
 }
 
-void UndoManager::PushState(TrackList * l,
+void UndoManager::PushState(const TrackList * l,
                             const SelectedRegion &selectedRegion,
                             const wxString &longDescription,
                             const wxString &shortDescription,
@@ -237,8 +237,8 @@ void UndoManager::PushState(TrackList * l,
    }
 
    auto tracksCopy = std::make_unique<TrackList>(true);
-   TrackListIterator iter(l);
-   Track *t = iter.First();
+   TrackListConstIterator iter(l);
+   const Track *t = iter.First();
    while (t) {
       tracksCopy->Add(t->Duplicate());
       t = iter.Next();

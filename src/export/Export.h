@@ -110,7 +110,7 @@ public:
                        double t0,
                        double t1,
                        MixerSpec *mixerSpec = NULL,
-                       Tags *metadata = NULL,
+                       const Tags *metadata = NULL,
                        int subformat = 0) = 0;
 
 protected:
