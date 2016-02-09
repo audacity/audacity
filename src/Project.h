@@ -84,6 +84,7 @@ class MixerBoard;
 class MixerBoardFrame;
 
 struct AudioIOStartStreamOptions;
+struct UndoState;
 
 class WaveTrackArray;
 class Regions;
@@ -498,7 +499,7 @@ public:
    void InitialState();
    void ModifyState(bool bWantsAutoSave);    // if true, writes auto-save file. Should set only if you really want the state change restored after
                                              // a crash, as it can take many seconds for large (eg. 10 track-hours) projects
-   void PopState(TrackList * l);
+   void PopState(const UndoState &state);
 
    void UpdateLyrics();
    void UpdateMixerBoard();

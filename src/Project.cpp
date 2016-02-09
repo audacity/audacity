@@ -4052,10 +4052,12 @@ void AudacityProject::ModifyState(bool bWantsAutoSave)
 // LL:  Is there a memory leak here as "l" and "t" are not deleted???
 // Vaughan, 2010-08-29: No, as "l" is a TrackList* of an Undo stack state.
 //    Need to keep it and its tracks "t" available for Undo/Redo/SetStateTo.
-void AudacityProject::PopState(TrackList * l)
+void AudacityProject::PopState(const UndoState &state)
 {
+   TrackList *const tracks = state.tracks.get();
+
    mTracks->Clear(true);
-   TrackListIterator iter(l);
+   TrackListIterator iter(tracks);
    Track *t = iter.First();
    bool odUsed = false;
    ODComputeSummaryTask* computeTask = NULL;
@@ -4104,9 +4106,9 @@ void AudacityProject::PopState(TrackList * l)
 
 void AudacityProject::SetStateTo(unsigned int n)
 {
-   TrackList *l =
+   const UndoState &state =
        GetUndoManager()->SetStateTo(n, &mViewInfo.selectedRegion);
-   PopState(l);
+   PopState(state);
 
    HandleResize();
    mTrackPanel->SetFocusedTrack(NULL);

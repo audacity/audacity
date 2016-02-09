@@ -3772,8 +3772,8 @@ void AudacityProject::OnUndo()
       return;
    }
 
-   TrackList *l = GetUndoManager()->Undo(&mViewInfo.selectedRegion);
-   PopState(l);
+   const UndoState &state = GetUndoManager()->Undo(&mViewInfo.selectedRegion);
+   PopState(state);
 
    mTrackPanel->SetFocusedTrack(NULL);
    mTrackPanel->EnsureVisible(mTrackPanel->GetFirstSelectedTrack());
@@ -3797,8 +3797,8 @@ void AudacityProject::OnRedo()
       return;
    }
 
-   TrackList *l = GetUndoManager()->Redo(&mViewInfo.selectedRegion);
-   PopState(l);
+   const UndoState &state = GetUndoManager()->Redo(&mViewInfo.selectedRegion);
+   PopState(state);
 
    mTrackPanel->SetFocusedTrack(NULL);
    mTrackPanel->EnsureVisible(mTrackPanel->GetFirstSelectedTrack());

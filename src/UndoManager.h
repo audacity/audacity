@@ -57,24 +57,14 @@
 class Track;
 class TrackList;
 
-struct UndoStackElem {
-
-   UndoStackElem(std::unique_ptr<TrackList> &&tracks_,
-      const wxString &description_,
-      const wxString &shortDescription_,
-      const SelectedRegion &selectedRegion_)
-      : tracks(std::move(tracks_))
-      , description(description_)
-      , shortDescription(shortDescription_)
-      , selectedRegion(selectedRegion_)
+struct UndoStackElem;
+struct UndoState {
+   UndoState(std::unique_ptr<TrackList> &&tracks_, const SelectedRegion &selectedRegion_)
+      : tracks(std::move(tracks_)), selectedRegion(selectedRegion_)
    {}
 
-   ~UndoStackElem();
-
    std::unique_ptr<TrackList> tracks;
-   wxString description;
-   wxString shortDescription;
-   SelectedRegion selectedRegion;
+   SelectedRegion selectedRegion; // by value
 };
 
 using UndoStack = std::vector <std::unique_ptr<UndoStackElem>> ;
@@ -115,9 +105,9 @@ class AUDACITY_DLL_API UndoManager {
    wxLongLong_t GetLongDescription(unsigned int n, wxString *desc, wxString *size);
    void SetLongDescription(unsigned int n, const wxString &desc);
 
-   TrackList *SetStateTo(unsigned int n, SelectedRegion *selectedRegion);
-   TrackList *Undo(SelectedRegion *selectedRegion);
-   TrackList *Redo(SelectedRegion *selectedRegion);
+   const UndoState &SetStateTo(unsigned int n, SelectedRegion *selectedRegion);
+   const UndoState &Undo(SelectedRegion *selectedRegion);
+   const UndoState &Redo(SelectedRegion *selectedRegion);
 
    bool UndoAvailable();
    bool RedoAvailable();
