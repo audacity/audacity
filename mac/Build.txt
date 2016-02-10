@@ -1,12 +1,13 @@
-At this time, the newest SDK version that Audacity can build with
-is 10.6.  To build Audacity using Xcode 5.1 or newer, you need
-to extract the 10.6 SDK from an earlier version of Xcode.
+At this time, the newest SDK version that Audacity can be build with is 10.6. 
+To build Audacity using Xcode 5.1 or newer, you need to extract the 10.6 SDK 
+from an earlier version of Xcode.
 
-In the instructions below, Xcode 4.3.3 (for the 10.6 SDK) and
-Xcode 5.1.1 will be used.  Xcode 6.1.1, 6.3, 6.4.1, and 7.0
-have been verified to work as well.
+In the instructions below, Xcode 4.3.3 (for the 10.6 SDK) and Xcode 5.1.1 will 
+be used.  Xcode 6.1.1, 6.3, 6.4.1, 7.0, and 7.2 have been verified to work as well.
 
 1) Download Xcode 5.1.1 or greater and install it to /Applications
+   https://itunes.apple.com/de/app/xcode/id497799835?mt=12
+
 2) Download Xcode 4.3.3 and open it in Finder
 3) Right click the "Xcode.app" bundle and select "Show Package Contents"
 4) Navigate down the directories to get to:
@@ -23,6 +24,9 @@ have been verified to work as well.
 
    http://sourceforge.net/projects/wxwindows/files/3.0.2/wxWidgets-3.0.2.tar.bz2
 
+   IMPORTANT: Don't use wxWidgets from a package manager! It will have a wrong setup 
+              and end with errors while compiling.
+
 7) Once the download is complete, untar it (your browser may have already done this):
 
    tar xf wxWidgets-3.0.2.tar.bz2
@@ -36,12 +40,20 @@ have been verified to work as well.
 
    sudo <path to Audacity source>/mac/build_wxwidgets
 
-You should now be able to build Audacity using either the Xcode application or the
-xcodebuild command line tool.
+You should now be able to build Audacity using either the xcodebuild command line tool
+(below El Capitan):
 
-If you need Audacity to use languages other than English, then you'll have to install
-the gettext suite of tools (to get the msgfmt command).  The source can be downloaded
-from:
+   cd <path to Audacity source>
+   ./configure
+   make
+   sudo make install
+
+or the Xcode application:
+
+   open <path to Audacity source>/mac/Audacity.xcodeproj
+
+(10) If you need Audacity to use languages other than English, then you'll have to install
+the gettext suite of tools (to get the msgfmt command).  The source can be downloaded from:
 
    ftp://ftp.gnu.org/gnu/gettext/gettext-latest.tar.gz
 
@@ -54,4 +66,17 @@ And install:
    cd gexttext-latest
    ./configure
    sudo make install
-   
+
+El Capitan) Configure uses llvm and has several errors with compiler directives. You
+            should use the Xcode project in this case.
+
+   IMPORTANT: Don't do the recommended changes by Xcode. It will change your setup to 
+              64 bit (conflict with Quicktime in wxWidgets) and newest OS as target 
+              platform, which has to be 10.6.
+
+   IMPORTANT: Mac OSX 10.11 El Capitan needs crt1.o and dylib1.o for compiling. Either 
+              you add '-L/usr/lib' AT THE END of WX_LDFLAGS (Debug and Release) in 
+              Build Settings in Xcode or you copy them to you 10.6 SDK folder:
+
+   cp /usr/lib/crt1.o /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk/usr/lib
+   cp /usr/lib/dylib1.o /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk/usr/lib
