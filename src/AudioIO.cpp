@@ -1107,8 +1107,13 @@ void AudioIO::HandleDeviceChange()
       return;
 
    // get the selected record and playback devices
-   int playDeviceNum = getPlayDevIndex();
-   int recDeviceNum = getRecordDevIndex();
+   const int playDeviceNum = getPlayDevIndex();
+   const int recDeviceNum = getRecordDevIndex();
+
+   // If no change needed, return
+   if (mCachedPlaybackIndex == playDeviceNum &&
+       mCachedCaptureIndex == recDeviceNum)
+       return;
 
    // cache playback/capture rates
    mCachedPlaybackRates = GetSupportedPlaybackRates(playDeviceNum);
