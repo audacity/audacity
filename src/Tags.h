@@ -33,6 +33,7 @@
 #include "widgets/Grid.h"
 #include "xml/XMLTagHandler.h"
 
+#include <utility>
 #include <wx/dialog.h>
 #include <wx/hashmap.h>
 #include <wx/notebook.h>
@@ -99,8 +100,14 @@ class AUDACITY_DLL_API Tags: public XMLTagHandler {
    bool HasTag(const wxString & name);
    wxString GetTag(const wxString & name);
 
-   bool GetFirst(wxString & name, wxString & value);
-   bool GetNext(wxString & name, wxString & value);
+   using IterPair = std::pair<TagMap::const_iterator, TagMap::const_iterator>;
+   struct Iterators : public IterPair {
+      Iterators(IterPair p) : IterPair(p) {}
+      // Define begin() and end() for convenience in range-for
+      auto begin() -> decltype(first) const { return first; }
+      auto end() -> decltype(second) const { return second; }
+   };
+   Iterators GetRange() const;
 
    void SetTag(const wxString & name, const wxString & value);
    void SetTag(const wxString & name, const int & value);
@@ -111,7 +118,6 @@ class AUDACITY_DLL_API Tags: public XMLTagHandler {
  private:
    void LoadDefaults();
 
-   TagMap::iterator mIter;
    TagMap mXref;
    TagMap mMap;
 

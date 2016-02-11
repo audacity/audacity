@@ -349,8 +349,10 @@ bool ExportOGG::FillComment(AudacityProject *project, vorbis_comment *comment, T
 
    vorbis_comment_init(comment);
 
-   wxString n, v;
-   for (bool cont = metadata->GetFirst(n, v); cont; cont = metadata->GetNext(n, v)) {
+   wxString n;
+   for (const auto &pair : metadata->GetRange()) {
+      n = pair.first;
+      const auto &v = pair.second;
       if (n == TAG_YEAR) {
          n = wxT("DATE");
       }

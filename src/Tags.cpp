@@ -394,30 +394,9 @@ wxString Tags::GetTag(const wxString & name)
    return mMap[iter->second];
 }
 
-bool Tags::GetFirst(wxString & name, wxString & value)
+Tags::Iterators Tags::GetRange() const
 {
-   mIter = mMap.begin();
-   if (mIter == mMap.end()) {
-      return false;
-   }
-
-   name = mIter->first;
-   value = mIter->second;
-
-   return true;
-}
-
-bool Tags::GetNext(wxString & name, wxString & value)
-{
-   ++mIter;
-   if (mIter == mMap.end()) {
-      return false;
-   }
-
-   name = mIter->first;
-   value = mIter->second;
-
-   return true;
+   return std::make_pair(mMap.begin(), mMap.end());
 }
 
 void Tags::SetTag(const wxString & name, const wxString & value)
@@ -510,8 +489,9 @@ void Tags::WriteXML(XMLWriter &xmlFile)
 {
    xmlFile.StartTag(wxT("tags"));
 
-   wxString n, v;
-   for (bool cont = GetFirst(n, v); cont; cont = GetNext(n, v)) {
+   for (const auto &pair : GetRange()) {
+      const auto &n = pair.first;
+      const auto &v = pair.second;
       xmlFile.StartTag(wxT("tag"));
       xmlFile.WriteAttr(wxT("name"), n);
       xmlFile.WriteAttr(wxT("value"), v);
@@ -863,8 +843,6 @@ bool TagsEditor::TransferDataFromWindow()
 bool TagsEditor::TransferDataToWindow()
 {
    size_t i;
-   wxString n;
-   wxString v;
    TagMap popTagMap;
 
    // Disable redrawing until we're done
@@ -895,12 +873,14 @@ bool TagsEditor::TransferDataToWindow()
    }
 
    // Populate the rest
-   for (bool cont = mLocal.GetFirst(n, v); cont; cont = mLocal.GetNext(n, v)) {
-      if ( popTagMap.find(n) == popTagMap.end() ) {
+   for (const auto &pair : mLocal.GetRange()) {
+      const auto &n = pair.first;
+      const auto &v = pair.second;
+      if (popTagMap.find(n) == popTagMap.end()) {
          mGrid->AppendRows();
          mGrid->SetCellValue(i, 0, n);
          mGrid->SetCellValue(i, 1, v);
-	 i++;
+         i++;
       }
    }
 
@@ -1186,8 +1166,9 @@ void TagsEditor::OnSaveDefaults(wxCommandEvent & WXUNUSED(event))
    gPrefs->DeleteGroup(wxT("/Tags"));
 
    // Write out each tag
-   wxString n, v;
-   for (bool cont = mLocal.GetFirst(n, v); cont; cont = mLocal.GetNext(n, v)) {
+   for (const auto &pair : mLocal.GetRange()) {
+      const auto &n = pair.first;
+      const auto &v = pair.second;
       gPrefs->Write(wxT("/Tags/") + n, v);
    }
    gPrefs->Flush();

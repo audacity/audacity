@@ -746,8 +746,9 @@ void ExportPCM::AddID3Chunk(wxString fName, Tags *tags, int sf_format)
 #ifdef USE_LIBID3TAG
    struct id3_tag *tp = id3_tag_new();
 
-   wxString n, v;
-   for (bool cont = tags->GetFirst(n, v); cont; cont = tags->GetNext(n, v)) {
+   for (const auto &pair : tags->GetRange()) {
+      const auto &n = pair.first;
+      const auto &v = pair.second;
       const char *name = "TXXX";
 
       if (n.CmpNoCase(TAG_TITLE) == 0) {
