@@ -77,6 +77,8 @@ class AUDACITY_DLL_API Tags: public XMLTagHandler {
    Tags();  // constructor
    virtual ~Tags();
 
+   std::shared_ptr<Tags> Duplicate() const;
+
    Tags & operator= (const Tags & src );
 
    bool ShowEditDialog(wxWindow *parent, const wxString &title, bool force = false);

@@ -233,6 +233,11 @@ Tags::~Tags()
 {
 }
 
+std::shared_ptr<Tags> Tags::Duplicate() const
+{
+   return std::make_shared<Tags>(*this);
+}
+
 Tags & Tags::operator=(const Tags & src)
 {
    mEditTitle = src.mEditTitle;

@@ -5582,8 +5582,24 @@ void AudacityProject::OnImportRaw()
 
 void AudacityProject::OnEditMetadata()
 {
-   if (mTags->ShowEditDialog(this, _("Edit Metadata Tags"), true))
-      PushState(_("Edit Metadata Tags"), _("Metadata Tags"));
+   (void)DoEditMetadata(_("Edit Metadata Tags"), _("Metadata Tags"), true);
+}
+
+bool AudacityProject::DoEditMetadata
+(const wxString &title, const wxString &shortUndoDescription, bool force)
+{
+   // Back up my tags
+   auto newTags = mTags->Duplicate();
+
+   if (newTags->ShowEditDialog(this, title, force)) {
+      // Commit the change to project state only now.
+      mTags = newTags;
+      PushState(title, shortUndoDescription);
+
+      return true;
+   }
+
+   return false;
 }
 
 void AudacityProject::HandleMixAndRender(bool toNewTrack)

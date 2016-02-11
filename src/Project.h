@@ -185,7 +185,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    DirManager *GetDirManager();
    TrackFactory *GetTrackFactory();
    AdornedRulerPanel *GetRulerPanel();
-   Tags *GetTags();
+   const Tags *GetTags();
    int GetAudioIOToken() const;
    bool IsAudioActive() const;
    void SetAudioIOToken(int token);
@@ -526,7 +526,10 @@ public:
    wxMenu *mRecentFilesMenu;
 
    // Tags (artist name, song properties, MP3 ID3 info, etc.)
-   Tags *mTags;
+   // The structure may be shared with undo history entries
+   // To keep undo working correctly, always replace this with a new duplicate
+   // BEFORE doing any editing of it!
+   std::shared_ptr<Tags> mTags;
 
    // List of tracks and display info
    TrackList *mTracks;

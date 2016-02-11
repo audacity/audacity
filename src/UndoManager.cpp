@@ -31,6 +31,7 @@ UndoManager
 #include "WaveTrack.h"          // temp
 #include "NoteTrack.h"  // for Sonify* function declarations
 #include "Diags.h"
+#include "Tags.h"
 
 #include "UndoManager.h"
 
@@ -41,8 +42,9 @@ struct UndoStackElem {
    UndoStackElem(std::unique_ptr<TrackList> &&tracks_,
       const wxString &description_,
       const wxString &shortDescription_,
-      const SelectedRegion &selectedRegion_)
-      : state(std::move(tracks_), selectedRegion_)
+      const SelectedRegion &selectedRegion_,
+      const std::shared_ptr<Tags> &tags_)
+      : state(std::move(tracks_), tags_, selectedRegion_)
       , description(description_)
       , shortDescription(shortDescription_)
    {
@@ -196,7 +198,8 @@ bool UndoManager::RedoAvailable()
 }
 
 void UndoManager::ModifyState(const TrackList * l,
-                              const SelectedRegion &selectedRegion)
+                              const SelectedRegion &selectedRegion,
+                              const std::shared_ptr<Tags> &tags)
 {
    if (current == wxNOT_FOUND) {
       return;
@@ -217,12 +220,15 @@ void UndoManager::ModifyState(const TrackList * l,
 
    // Replace
    stack[current]->state.tracks = std::move(tracksCopy);
+   stack[current]->state.tags = tags;
+
    stack[current]->state.selectedRegion = selectedRegion;
    SonifyEndModifyState();
 }
 
 void UndoManager::PushState(const TrackList * l,
                             const SelectedRegion &selectedRegion,
+                            const std::shared_ptr<Tags> &tags,
                             const wxString &longDescription,
                             const wxString &shortDescription,
                             UndoPush flags)
@@ -233,7 +239,7 @@ void UndoManager::PushState(const TrackList * l,
    if (((flags & UndoPush::CONSOLIDATE) != UndoPush::MINIMAL) && lastAction == longDescription &&
        consolidationCount < 2) {
       consolidationCount++;
-      ModifyState(l, selectedRegion);
+      ModifyState(l, selectedRegion, tags);
       // MB: If the "saved" state was modified by ModifyState, reset
       //  it so that UnsavedChanges returns true.
       if (current == saved) {
@@ -257,10 +263,14 @@ void UndoManager::PushState(const TrackList * l,
       t = iter.Next();
    }
 
+   // Assume tags was duplicted before any changes.
+   // Just save a new shared_ptr to it.
    stack.emplace_back(
       std::make_unique<UndoStackElem>
-         (std::move(tracksCopy), longDescription, shortDescription, selectedRegion)
+         (std::move(tracksCopy),
+            longDescription, shortDescription, selectedRegion, tags)
    );
+
    current++;
 
    if (saved >= current) {

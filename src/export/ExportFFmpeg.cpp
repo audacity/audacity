@@ -312,7 +312,8 @@ bool ExportFFmpeg::Init(const char *shortname, AudacityProject *project, const T
    if (!InitCodecs(project))
       return false;
 
-   if (metadata == NULL) metadata = project->GetTags();
+   if (metadata == NULL)
+      metadata = project->GetTags();
 
    // Add metadata BEFORE writing the header.
    // At the moment that works with ffmpeg-git and ffmpeg-0.5 for MP4.
