@@ -22,6 +22,7 @@
 #include "../Audacity.h"
 #include "FindClipping.h"
 
+#include <memory>
 #include <math.h>
 
 #include <wx/intl.h>
@@ -161,7 +162,8 @@ bool EffectFindClipping::ProcessOne(LabelTrack * l,
       return true;
    }
 
-   float *buffer = new float[blockSize];
+   std::unique_ptr<float[]> bufferArray(new float[blockSize]);
+   float *const buffer = bufferArray.get();
 
    float *ptr = buffer;
 
@@ -218,8 +220,6 @@ bool EffectFindClipping::ProcessOne(LabelTrack * l,
       s++;
       block--;
    }
-
-   delete [] buffer;
 
    return bGoodResult;
 }

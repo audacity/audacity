@@ -5007,8 +5007,10 @@ void TrackPanel::HandleSampleEditingClick( wxMouseEvent & event )
 
       //Get the region of samples around the selected point
       int sampleRegionSize = 1 + 2 * (SMOOTHING_KERNEL_RADIUS + SMOOTHING_BRUSH_RADIUS);
-      float *sampleRegion = new float[sampleRegionSize];
-      float * newSampleRegion = new float[1 + 2 * SMOOTHING_BRUSH_RADIUS];
+      std::unique_ptr<float[]> sampleRegionArray(new float[sampleRegionSize]);
+      float *const sampleRegion = sampleRegionArray.get();
+      std::unique_ptr<float[]> newSampleRegionArray(new float[1 + 2 * SMOOTHING_BRUSH_RADIUS]);
+      float *const newSampleRegion = newSampleRegionArray.get();
 
       //Get a sample  from the track to do some tricks on.
       mDrawingTrack->Get((samplePtr)sampleRegion, floatSample,
@@ -5054,10 +5056,6 @@ void TrackPanel::HandleSampleEditingClick( wxMouseEvent & event )
       }
       //Set the sample to the point of the mouse event
       mDrawingTrack->Set((samplePtr)newSampleRegion, floatSample, mDrawingStartSample - SMOOTHING_BRUSH_RADIUS, 1 + 2 * SMOOTHING_BRUSH_RADIUS);
-
-      //Clean this up right away to avoid a memory leak
-      delete[] sampleRegion;
-      delete[] newSampleRegion;
 
       mDrawingLastDragSampleValue = 0;
    }

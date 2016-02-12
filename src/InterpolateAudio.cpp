@@ -11,6 +11,7 @@
 #include <math.h>
 #include <stdlib.h>
 
+#include <memory>
 #include <wx/defs.h>
 
 #include "InterpolateAudio.h"
@@ -97,13 +98,13 @@ void InterpolateAudio(float *buffer, int len,
       // performs poorly when interpolating to the left.  If
       // we're asked to interpolate the left side of a buffer,
       // we just reverse the problem and try it that way.
-      float *buffer2 = new float[len];
+      std::unique_ptr<float> buffer2Array(new float[len]);
+      float *const buffer2 = buffer2Array.get();
       for(i=0; i<len; i++)
          buffer2[len-1-i] = buffer[i];
       InterpolateAudio(buffer2, len, len-numBad, numBad);
       for(i=0; i<len; i++)
          buffer[len-1-i] = buffer2[i];
-      delete[] buffer2;
       return;
    }
 

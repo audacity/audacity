@@ -280,7 +280,7 @@ void AButton::SetAlternateIdx(unsigned idx)
 
 void AButton::FollowModifierKeys()
 {
-   if(!mListener.get())
+   if(!mListener)
       mListener.reset(new Listener(this));
 }
 

@@ -456,7 +456,7 @@ bool EffectNoiseReduction::PromptUser(wxWindow *parent)
    // from an automation dialog, the only case in which we can
    // get here without any wavetracks.
    return mSettings->PromptUser(this, parent,
-      (mStatistics.get() != 0), (GetNumWaveTracks() == 0));
+      bool(mStatistics), (GetNumWaveTracks() == 0));
 }
 
 bool EffectNoiseReduction::Settings::PromptUser
@@ -1291,7 +1291,7 @@ bool EffectNoiseReduction::Worker::ProcessOne
 
    StartNewTrack();
 
-   std::auto_ptr<WaveTrack> outputTrack(
+   std::unique_ptr<WaveTrack> outputTrack(
       mDoProfile ? NULL
       : factory.NewWaveTrack(track->GetSampleFormat(), track->GetRate()));
 

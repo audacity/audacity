@@ -3204,7 +3204,8 @@ double AudacityProject::NearestZeroCrossing(double t0)
 {
    // Window is 1/100th of a second.
    int windowSize = (int)(GetRate() / 100);
-   float *dist = new float[windowSize];
+   std::unique_ptr<float[]> distArray(new float[windowSize]);
+   float *const dist = distArray.get();
    int i, j;
 
    for(i=0; i<windowSize; i++)
@@ -3219,7 +3220,8 @@ double AudacityProject::NearestZeroCrossing(double t0)
       }
       WaveTrack *one = (WaveTrack *)track;
       int oneWindowSize = (int)(one->GetRate() / 100);
-      float *oneDist = new float[oneWindowSize];
+      std::unique_ptr<float> oneDistArray(new float[oneWindowSize]);
+      float *const oneDist = oneDistArray.get();
       sampleCount s = one->TimeToLongSamples(t0);
       // fillTwo to ensure that missing values are treated as 2, and hence do not
       // get used as zero crossings.
@@ -3260,7 +3262,6 @@ double AudacityProject::NearestZeroCrossing(double t0)
          dist[i] += 0.1 * (abs(i - windowSize/2)) / float(windowSize/2);
       }
 
-      delete [] oneDist;
       track = iter.Next();
    }
 
@@ -3273,8 +3274,6 @@ double AudacityProject::NearestZeroCrossing(double t0)
          min = dist[i];
       }
    }
-
-   delete [] dist;
 
    return t0 + (argmin - windowSize/2)/GetRate();
 }

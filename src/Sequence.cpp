@@ -31,6 +31,7 @@
 #include "Audacity.h"
 
 #include <algorithm>
+#include <memory>
 #include <float.h>
 #include <math.h>
 
@@ -1311,7 +1312,8 @@ bool Sequence::GetWaveDisplay(float *min, float *max, float *rms, int* bl,
    // ... unless the mNumSamples ceiling applies, and then there are other defenses
    const sampleCount s1 =
       std::min(mNumSamples, std::max(1 + where[len - 1], where[len]));
-   float *temp = new float[mMaxSamples];
+   std::unique_ptr<float[]> tempArray(new float[mMaxSamples]);
+   float *const temp = tempArray.get();
 
    int pixel = 0;
 
@@ -1488,8 +1490,6 @@ bool Sequence::GetWaveDisplay(float *min, float *max, float *rms, int* bl,
    } // for each block file
 
    wxASSERT(pixel == len);
-
-   delete[] temp;
 
    return true;
 }

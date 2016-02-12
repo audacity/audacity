@@ -560,7 +560,7 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
          return true;
       }
 
-      std::auto_ptr<WaveCache> oldCache(mWaveCache);
+      std::unique_ptr<WaveCache> oldCache(mWaveCache);
       mWaveCache = 0;
 
       int oldX0 = 0;
@@ -599,7 +599,7 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
       // with the current one, re-use as much of the cache as
       // possible
 
-      if (oldCache.get()) {
+      if (oldCache) {
 
          //TODO: only load inval regions if
          //necessary.  (usually is the case, so no rush.)
@@ -1111,7 +1111,7 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
       // a complete hit, because of the complications of time reassignment
       match = false;
 
-   std::auto_ptr<SpecCache> oldCache(mSpecCache);
+   std::unique_ptr<SpecCache> oldCache(mSpecCache);
    mSpecCache = 0;
 
    const double tstep = 1.0 / pixelsPerSecond;
@@ -1149,7 +1149,7 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
    // Optimization: if the old cache is good and overlaps
    // with the current one, re-use as much of the cache as
    // possible
-   if (oldCache.get()) {
+   if (oldCache) {
       memcpy(&mSpecCache->freq[half * copyBegin],
          &oldCache->freq[half * (copyBegin + oldX0)],
          half * (copyEnd - copyBegin) * sizeof(float));
@@ -1437,7 +1437,7 @@ bool WaveClip::Paste(double t0, const WaveClip* other)
    const bool clipNeedsResampling = other->mRate != mRate;
    const bool clipNeedsNewFormat =
       other->mSequence->GetSampleFormat() != mSequence->GetSampleFormat();
-   std::auto_ptr<WaveClip> newClip;
+   std::unique_ptr<WaveClip> newClip;
    const WaveClip* pastedClip;
 
    if (clipNeedsResampling || clipNeedsNewFormat)

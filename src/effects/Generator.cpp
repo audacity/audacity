@@ -65,7 +65,7 @@ bool Generator::Process()
          {
             AudacityProject *p = GetActiveProject();
             // Create a temporary track
-            std::auto_ptr<WaveTrack> tmp(
+            std::unique_ptr<WaveTrack> tmp(
                mFactory->NewWaveTrack(track->GetSampleFormat(),
                track->GetRate())
             );
@@ -120,7 +120,8 @@ bool BlockGenerator::GenerateTrack(WaveTrack *tmp,
    bool bGoodResult = true;
    numSamples = track.TimeToLongSamples(GetDuration());
    sampleCount i = 0;
-   float *data = new float[tmp->GetMaxBlockSize()];
+   std::unique_ptr<float[]> dataArray(new float[tmp->GetMaxBlockSize()]);
+   float *const data = dataArray.get();
    sampleCount block = 0;
 
    while ((i < numSamples) && bGoodResult) {
@@ -138,6 +139,5 @@ bool BlockGenerator::GenerateTrack(WaveTrack *tmp,
       if (TrackProgress(ntrack, (double)i / numSamples))
          bGoodResult = false;
    }
-   delete[] data;
    return bGoodResult;
 }
