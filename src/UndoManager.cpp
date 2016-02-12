@@ -36,6 +36,10 @@ UndoManager
 
 WX_DECLARE_HASH_SET(BlockFile *, wxPointerHash, wxPointerEqual, Set );
 
+UndoStackElem::~UndoStackElem()
+{
+}
+
 UndoManager::UndoManager()
 {
    current = -1;
@@ -54,14 +58,14 @@ void UndoManager::CalculateSpaceUsage()
    TIMER_START( "CalculateSpaceUsage", space_calc );
    TrackListOfKindIterator iter(Track::Wave);
 
-   space.Clear();
-   space.Add(0, stack.GetCount());
+   space.clear();
+   space.resize(stack.size(), 0);
 
    Set s1, s2;
    Set *prev = &s1;
    Set *cur = &s2;
 
-   for (size_t i = 0, cnt = stack.GetCount(); i < cnt; i++)
+   for (size_t i = 0, cnt = stack.size(); i < cnt; i++)
    {
       // Swap map pointers
       std::swap(cur, prev);
@@ -70,7 +74,7 @@ void UndoManager::CalculateSpaceUsage()
       cur->clear();
 
       // Scan all tracks at current level
-      WaveTrack *wt = (WaveTrack *) iter.First(stack[i]->tracks);
+      WaveTrack *wt = (WaveTrack *) iter.First(stack[i]->tracks.get());
       while (wt)
       {
          // Scan all clips within current track
@@ -109,8 +113,8 @@ wxLongLong_t UndoManager::GetLongDescription(unsigned int n, wxString *desc,
 {
    n -= 1; // 1 based to zero based
 
-   wxASSERT(n < stack.Count());
-   wxASSERT(space.Count() == stack.Count());
+   wxASSERT(n < stack.size());
+   wxASSERT(space.size() == stack.size());
 
    *desc = stack[n]->description;
 
@@ -123,7 +127,7 @@ void UndoManager::GetShortDescription(unsigned int n, wxString *desc)
 {
    n -= 1; // 1 based to zero based
 
-   wxASSERT(n < stack.Count());
+   wxASSERT(n < stack.size());
 
    *desc = stack[n]->shortDescription;
 }
@@ -132,19 +136,14 @@ void UndoManager::SetLongDescription(unsigned int n, const wxString &desc)
 {
    n -= 1;
 
-   wxASSERT(n < stack.Count());
+   wxASSERT(n < stack.size());
 
    stack[n]->description = desc;
 }
 
 void UndoManager::RemoveStateAt(int n)
 {
-   stack[n]->tracks->Clear(true);
-   delete stack[n]->tracks;
-
-   UndoStackElem *tmpStackElem = stack[n];
-   stack.RemoveAt(n);
-   delete tmpStackElem;
+   stack.erase(stack.begin() + n);
 }
 
 
@@ -160,12 +159,12 @@ void UndoManager::RemoveStates(int num)
 
 void UndoManager::ClearStates()
 {
-   RemoveStates(stack.Count());
+   RemoveStates(stack.size());
 }
 
 unsigned int UndoManager::GetNumStates()
 {
-   return stack.Count();
+   return stack.size();
 }
 
 unsigned int UndoManager::GetCurrentState()
@@ -180,7 +179,7 @@ bool UndoManager::UndoAvailable()
 
 bool UndoManager::RedoAvailable()
 {
-   return (current < (int)stack.Count() - 1);
+   return (current < (int)stack.size() - 1);
 }
 
 void UndoManager::ModifyState(TrackList * l,
@@ -191,12 +190,11 @@ void UndoManager::ModifyState(TrackList * l,
    }
 
    SonifyBeginModifyState();
-   // Delete current
-   stack[current]->tracks->Clear(true);
-   delete stack[current]->tracks;
+   // Delete current -- not necessary, but let's reclaim space early
+   stack[current]->tracks.reset();
 
    // Duplicate
-   TrackList *tracksCopy = new TrackList();
+   auto tracksCopy = std::make_unique<TrackList>(true);
    TrackListIterator iter(l);
    Track *t = iter.First();
    while (t) {
@@ -205,7 +203,7 @@ void UndoManager::ModifyState(TrackList * l,
    }
 
    // Replace
-   stack[current]->tracks = tracksCopy;
+   stack[current]->tracks = std::move(tracksCopy);
    stack[current]->selectedRegion = selectedRegion;
    SonifyEndModifyState();
 }
@@ -234,11 +232,11 @@ void UndoManager::PushState(TrackList * l,
    consolidationCount = 0;
 
    i = current + 1;
-   while (i < stack.Count()) {
+   while (i < stack.size()) {
       RemoveStateAt(i);
    }
 
-   TrackList *tracksCopy = new TrackList();
+   auto tracksCopy = std::make_unique<TrackList>(true);
    TrackListIterator iter(l);
    Track *t = iter.First();
    while (t) {
@@ -246,13 +244,10 @@ void UndoManager::PushState(TrackList * l,
       t = iter.Next();
    }
 
-   UndoStackElem *push = new UndoStackElem();
-   push->tracks = tracksCopy;
-   push->selectedRegion = selectedRegion;
-   push->description = longDescription;
-   push->shortDescription = shortDescription;
-
-   stack.Add(push);
+   stack.emplace_back(
+      std::make_unique<UndoStackElem>
+         (std::move(tracksCopy), longDescription, shortDescription, selectedRegion)
+   );
    current++;
 
    if (saved >= current) {
@@ -267,11 +262,11 @@ TrackList *UndoManager::SetStateTo(unsigned int n,
 {
    n -= 1;
 
-   wxASSERT(n < stack.Count());
+   wxASSERT(n < stack.size());
 
    current = n;
 
-   if (current == int(stack.Count()-1)) {
+   if (current == int(stack.size()-1)) {
       *selectedRegion = stack[current]->selectedRegion;
    }
    else {
@@ -281,7 +276,7 @@ TrackList *UndoManager::SetStateTo(unsigned int n,
    lastAction = wxT("");
    consolidationCount = 0;
 
-   return stack[current]->tracks;
+   return stack[current]->tracks.get();
 }
 
 TrackList *UndoManager::Undo(SelectedRegion *selectedRegion)
@@ -295,7 +290,7 @@ TrackList *UndoManager::Undo(SelectedRegion *selectedRegion)
    lastAction = wxT("");
    consolidationCount = 0;
 
-   return stack[current]->tracks;
+   return stack[current]->tracks.get();
 }
 
 TrackList *UndoManager::Redo(SelectedRegion *selectedRegion)
@@ -322,7 +317,7 @@ TrackList *UndoManager::Redo(SelectedRegion *selectedRegion)
    lastAction = wxT("");
    consolidationCount = 0;
 
-   return stack[current]->tracks;
+   return stack[current]->tracks.get();
 }
 
 bool UndoManager::UnsavedChanges()

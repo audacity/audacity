@@ -48,7 +48,8 @@
 #ifndef __AUDACITY_UNDOMANAGER__
 #define __AUDACITY_UNDOMANAGER__
 
-#include <wx/dynarray.h>
+#include <memory>
+#include <vector>
 #include <wx/string.h>
 #include "ondemand/ODTaskThread.h"
 #include "SelectedRegion.h"
@@ -57,16 +58,27 @@ class Track;
 class TrackList;
 
 struct UndoStackElem {
-   TrackList *tracks;
+
+   UndoStackElem(std::unique_ptr<TrackList> &&tracks_,
+      const wxString &description_,
+      const wxString &shortDescription_,
+      const SelectedRegion &selectedRegion_)
+      : tracks(std::move(tracks_))
+      , description(description_)
+      , shortDescription(shortDescription_)
+      , selectedRegion(selectedRegion_)
+   {}
+
+   ~UndoStackElem();
+
+   std::unique_ptr<TrackList> tracks;
    wxString description;
    wxString shortDescription;
    SelectedRegion selectedRegion;
 };
 
-WX_DEFINE_USER_EXPORTED_ARRAY(UndoStackElem *, UndoStack, class AUDACITY_DLL_API);
-// wxWidgets arrays have a base size and to use wxLongLong_t we need to use DOUBLE
-// to ensure we get a size big enough to hold a wxLongLong_t.
-WX_DEFINE_USER_EXPORTED_ARRAY_DOUBLE(wxLongLong_t, SpaceArray, class AUDACITY_DLL_API);
+using UndoStack = std::vector <std::unique_ptr<UndoStackElem>> ;
+using SpaceArray = std::vector <wxLongLong_t> ;
 
 // These flags control what extra to do on a PushState
 // Default is AUTOSAVE

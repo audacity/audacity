@@ -29,7 +29,6 @@
 
 class wxTextFile;
 class DirManager;
-class UndoStack;
 class Track;
 class LabelTrack;
 class TimeTrack;
