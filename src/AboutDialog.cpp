@@ -41,9 +41,6 @@ hold information about one contributor to Audacity.
 #include "ShuttleGui.h"
 #include "widgets/LinkingHtmlWindow.h"
 
-#include <wx/listimpl.cpp>
-WX_DEFINE_LIST(AboutDialogCreditItemsList);
-
 #include "Theme.h"
 #include "AllThemeResources.h"
 
@@ -209,7 +206,6 @@ AboutDialog::AboutDialog(wxWindow * parent)
 
 void AboutDialog::PopulateAudacityPage( ShuttleGui & S )
 {
-   creditItems.DeleteContents(true); // Switch on automatic deletion of list items.
    CreateCreditsList();
 
    wxString par1Str = _(
@@ -866,24 +862,20 @@ wxT("POSSIBILITY OF SUCH DAMAGES.\n");
    S.EndNotebookPage();
 }
 
-void AboutDialog::AddCredit(const wxString& description, Role role)
+void AboutDialog::AddCredit(wxString &&description, Role role)
 {
-   AboutDialogCreditItem* item = new AboutDialogCreditItem();
-   item->description = description;
-   item->role = role;
-   creditItems.Append(item);
+   creditItems.emplace_back(std::move(description), role);
 }
 
 wxString AboutDialog::GetCreditsByRole(AboutDialog::Role role)
 {
    wxString s;
 
-   for (AboutDialogCreditItemsList::compatibility_iterator p=creditItems.GetFirst(); p; p = p->GetNext())
+   for (const auto &item : creditItems)
    {
-      AboutDialogCreditItem* item = p->GetData();
-      if (item->role == role)
+      if (item.role == role)
       {
-         s += item->description;
+         s += item.description;
          s += wxT("<br>");
       }
    }
