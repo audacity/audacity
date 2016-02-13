@@ -60,7 +60,7 @@ WX_DECLARE_HASH_MAP(BlockFile *, bool,
 // in the current set of tracks.  Enumerating that array allows
 // you to process all block files in the current set.
 static void GetAllSeqBlocks(AudacityProject *project,
-                            BlockArray *outBlocks)
+                            BlockPtrArray *outBlocks)
 {
    TrackList *tracks = project->GetTracks();
    TrackListIterator iter(tracks);
@@ -72,10 +72,10 @@ static void GetAllSeqBlocks(AudacityProject *project,
          while(node) {
             WaveClip *clip = node->GetData();
             Sequence *sequence = clip->GetSequence();
-            BlockArray *blocks = sequence->GetBlockArray();
+            BlockArray &blocks = sequence->GetBlockArray();
             int i;
-            for (i = 0; i < (int)blocks->GetCount(); i++)
-               outBlocks->Add(blocks->Item(i));
+            for (i = 0; i < (int)blocks.size(); i++)
+               outBlocks->push_back(&blocks.at(i));
             node = node->GetNext();
          }
       }
@@ -92,11 +92,11 @@ static void ReplaceBlockFiles(AudacityProject *project,
                               ReplacedBlockFileHash &hash)
 {
    DirManager *dirManager = project->GetDirManager();
-   BlockArray blocks;
+   BlockPtrArray blocks;
    GetAllSeqBlocks(project, &blocks);
 
    int i;
-   for (i = 0; i < (int)blocks.GetCount(); i++) {
+   for (i = 0; i < (int)blocks.size(); i++) {
       if (hash.count(blocks[i]->f) > 0) {
          BlockFile *src = blocks[i]->f;
          BlockFile *dst = hash[src];
@@ -114,14 +114,14 @@ void FindDependencies(AudacityProject *project,
 {
    sampleFormat format = project->GetDefaultFormat();
 
-   BlockArray blocks;
+   BlockPtrArray blocks;
    GetAllSeqBlocks(project, &blocks);
 
    AliasedFileHash aliasedFileHash;
    BoolBlockFileHash blockFileHash;
 
    int i;
-   for (i = 0; i < (int)blocks.GetCount(); i++) {
+   for (i = 0; i < (int)blocks.size(); i++) {
       BlockFile *f = blocks[i]->f;
       if (f->IsAlias() && (blockFileHash.count(f) == 0))
       {
@@ -181,13 +181,13 @@ static void RemoveDependencies(AudacityProject *project,
       aliasedFileHash[fileNameStr] = &aliasedFiles->Item(i);
    }
 
-   BlockArray blocks;
+   BlockPtrArray blocks;
    GetAllSeqBlocks(project, &blocks);
 
    const sampleFormat format = project->GetDefaultFormat();
    ReplacedBlockFileHash blockFileHash;
    wxLongLong completedBytes = 0;
-   for (i = 0; i < blocks.GetCount(); i++) {
+   for (i = 0; i < blocks.size(); i++) {
       BlockFile *f = blocks[i]->f;
       if (f->IsAlias() && (blockFileHash.count(f) == 0))
       {

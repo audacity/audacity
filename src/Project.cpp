@@ -3737,10 +3737,11 @@ void AudacityProject::AddImportedTracks(wxString fileName,
       if (newTracks[i]->GetKind() == WaveTrack::Wave)
       {
          WaveClip* clip = ((WaveTrack*)newTracks[i])->GetClipByIndex(0);
-         if (clip && clip->GetSequence()->GetBlockArray()->GetCount())
+         BlockArray &blocks = clip->GetSequence()->GetBlockArray();
+         if (clip && blocks.size())
          {
-            SeqBlock* block = clip->GetSequence()->GetBlockArray()->Item(0);
-            if (block->f->IsAlias())
+            SeqBlock& block = blocks.at(0);
+            if (block.f->IsAlias())
             {
                mImportedDependencies = true;
             }
@@ -5189,7 +5190,7 @@ void AudacityProject::CaptureKeyboard(wxWindow *handler)
 }
 
 // static
-void AudacityProject::ReleaseKeyboard(wxWindow *handler)
+void AudacityProject::ReleaseKeyboard(wxWindow * /* handler */)
 {
    AudacityProject *project = GetActiveProject();
    if (project)

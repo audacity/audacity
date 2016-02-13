@@ -383,7 +383,7 @@ void ThemeBase::RegisterImage( int &iIndex, const wxImage &Image, const wxString
    wxASSERT( iIndex == -1 ); // Don't initialise same bitmap twice!
    mImages.Add( Image );
 
-#ifdef __WXMAC__
+#ifdef __APPLE__
    // On Mac, bitmaps with alpha don't work.
    // So we convert to a mask and use that.
    // It isn't quite as good, as alpha gives smoother edges.

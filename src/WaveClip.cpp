@@ -366,7 +366,7 @@ bool WaveClip::SetSamples(samplePtr buffer, sampleFormat format,
 
 BlockArray* WaveClip::GetSequenceBlockArray()
 {
-   return mSequence->GetBlockArray();
+   return &mSequence->GetBlockArray();
 }
 
 double WaveClip::GetStartTime() const
@@ -1708,7 +1708,7 @@ void WaveClip::CloseLock()
 {
    GetSequence()->CloseLock();
    for (WaveClipList::compatibility_iterator it = mCutLines.GetFirst(); it; it=it->GetNext())
-      it->GetData()->Lock();
+      it->GetData()->CloseLock();
 }
 
 void WaveClip::Unlock()
