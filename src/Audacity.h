@@ -161,4 +161,34 @@ void QuitAudacity();
 // Marks strings for extraction only...must use wxGetTranslation() to translate.
 #define XO(s) wxT(s)
 
+#include <memory>
+#include <utility>
+
+// Reviewed, certified, non-leaky uses of new that immediately entrust their results to RAII objects.
+// You may use it in new code when constructing a wxWindow subclass with non-NULL parent window.
+// You may use it in new code when the new expression is the constructor argument for a standard smart
+// pointer like std::unique_ptr or std::shared_ptr.
+#define safenew new
+
+#if !defined(__WXMSW__)
+namespace std {
+// replicate make_unique, enough for our purposes
+
+// "scalar" version
+template<class X, class... Args> inline
+   unique_ptr<X> make_unique(Args&&... args)
+{
+   return (unique_ptr<X>(safenew X(forward<Args>(args)...)));
+}
+
+// array version
+template<class X> inline
+   unique_ptr<X[]> make_unique(size_t count)
+{
+   return (unique_ptr<X[]>(safenew X[count]()));
+}
+
+}
+#endif
+
 #endif // __AUDACITY_H__
