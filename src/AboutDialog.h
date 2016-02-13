@@ -11,6 +11,7 @@
 #ifndef __AUDACITY_ABOUT_DLG__
 #define __AUDACITY_ABOUT_DLG__
 
+#include <vector>
 #include <wx/dialog.h>
 #include <wx/sizer.h>
 #include <wx/statbmp.h>
@@ -21,9 +22,26 @@ class ShuttleGui;
 struct AboutDialogCreditItem {
    wxString description;
    int role;
+
+   AboutDialogCreditItem(wxString &&description_, int role_)
+      : description(description_), role(role_)
+   {}
+
+   // No copy
+   AboutDialogCreditItem(const AboutDialogCreditItem&) = delete;
+   AboutDialogCreditItem& operator= (const AboutDialogCreditItem&) = delete;
+
+   // Move constructor, because wxString lacks one
+   AboutDialogCreditItem(AboutDialogCreditItem &&moveMe)
+      : role(moveMe.role)
+   {
+      description.swap(moveMe.description);
+   }
+
+   ~AboutDialogCreditItem() {}
 };
 
-WX_DECLARE_LIST(AboutDialogCreditItem, AboutDialogCreditItemsList);
+using AboutDialogCreditItemsList = std::vector<AboutDialogCreditItem>;
 
 class AboutDialog:public wxDialog {
    DECLARE_DYNAMIC_CLASS(AboutDialog)
@@ -57,7 +75,7 @@ class AboutDialog:public wxDialog {
    void PopulateInformationPage (ShuttleGui & S );
 
    void CreateCreditsList();
-   void AddCredit(const wxString& description, Role role);
+   void AddCredit(wxString &&description, Role role);
    wxString GetCreditsByRole(AboutDialog::Role role);
 
    void AddBuildinfoRow( wxString* htmlstring, const wxChar * libname, const wxChar * libdesc, wxString status);
