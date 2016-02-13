@@ -2247,13 +2247,13 @@ NyquistOutputDialog::NyquistOutputDialog(wxWindow * parent, wxWindowID id,
    wxButton   *button;
    wxControl  *item;
 
-   item = new wxStaticText(this, -1, prompt);
+   item = safenew wxStaticText(this, -1, prompt);
    item->SetName(prompt);  // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    mainSizer->Add(item, 0, wxALIGN_LEFT | wxLEFT | wxTOP | wxRIGHT, 10);
 
    // TODO use ShowInfoDialog() instead.
    // Beware this dialog MUST work with screen readers.
-   item = new wxTextCtrl(this, -1, message,
+   item = safenew wxTextCtrl(this, -1, message,
                          wxDefaultPosition, wxSize(400, 200),
                          wxTE_MULTILINE | wxTE_READONLY);
    mainSizer->Add(item, 0, wxALIGN_LEFT | wxALL, 10);
@@ -2261,7 +2261,7 @@ NyquistOutputDialog::NyquistOutputDialog(wxWindow * parent, wxWindowID id,
    hSizer = new wxBoxSizer(wxHORIZONTAL);
 
    /* i18n-hint: In most languages OK is to be translated as OK.  It appears on a button.*/
-   button = new wxButton(this, wxID_OK, _("OK"));
+   button = safenew wxButton(this, wxID_OK, _("OK"));
    button->SetDefault();
    hSizer->Add(button, 0, wxALIGN_CENTRE | wxALL, 5);
 

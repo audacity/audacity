@@ -78,7 +78,7 @@ void HelpSystem::ShowInfoDialog( wxWindow *parent,
    S.EndHorizontalLay();
 
    // Next three lines add a tiny dragger.
-   wxStatusBar * pBar = new wxStatusBar( &dlog );
+   wxStatusBar * pBar = safenew wxStatusBar( &dlog );
    pBar->SetSize( 18, 38);
    S.AddWindow( pBar, wxALIGN_BOTTOM|wxALIGN_RIGHT );
 
@@ -135,7 +135,7 @@ void HelpSystem::ShowHtmlText(wxWindow *pParent,
       }
       S.EndHorizontalLay();
 
-      html = new LinkingHtmlWindow(pPan, wxID_ANY,
+      html = safenew LinkingHtmlWindow(pPan, wxID_ANY,
                                    wxDefaultPosition,
                                    bIsFile ? wxSize(500, 400) : wxSize(480, 240),
                                    wxHW_SCROLLBAR_AUTO | wxSUNKEN_BORDER);

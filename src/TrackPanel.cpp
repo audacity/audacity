@@ -9392,7 +9392,7 @@ void TrackPanel::OnSetFont(wxCommandEvent & WXUNUSED(event))
 
          /* i18n-hint: (noun) The name of the typeface*/
          S.AddPrompt(_("Face name"));
-         lb = new wxListBox(&dlg, wxID_ANY,
+         lb = safenew wxListBox(&dlg, wxID_ANY,
                             wxDefaultPosition,
                             wxDefaultSize,
                             facenames,
@@ -9404,7 +9404,7 @@ void TrackPanel::OnSetFont(wxCommandEvent & WXUNUSED(event))
 
          /* i18n-hint: (noun) The size of the typeface*/
          S.AddPrompt(_("Face size"));
-         sc = new wxSpinCtrl(&dlg, wxID_ANY,
+         sc = safenew wxSpinCtrl(&dlg, wxID_ANY,
                              wxString::Format(wxT("%ld"), fontsize),
                              wxDefaultPosition,
                              wxDefaultSize,

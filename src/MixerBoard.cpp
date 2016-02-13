@@ -190,10 +190,10 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
    wxSize ctrlSize(size.GetWidth() - kQuadrupleInset, TRACK_NAME_HEIGHT);
    mStaticText_TrackName =
       #ifdef EXPERIMENTAL_MIDI_OUT
-         new wxStaticText(this, -1, mTrack->GetName(), ctrlPos, ctrlSize,
+      safenew wxStaticText(this, -1, mTrack->GetName(), ctrlPos, ctrlSize,
                            wxALIGN_CENTRE | wxST_NO_AUTORESIZE | wxSUNKEN_BORDER);
       #else
-         new wxStaticText(this, -1, mLeftTrack->GetName(), ctrlPos, ctrlSize,
+      safenew wxStaticText(this, -1, mLeftTrack->GetName(), ctrlPos, ctrlSize,
                            wxALIGN_CENTRE | 0x0001 | wxBORDER_SUNKEN);
       #endif
    //v Useful when different tracks are different colors, but not now.
@@ -241,7 +241,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
 #endif
    wxASSERT(bitmap);
    mBitmapButton_MusicalInstrument =
-      new wxBitmapButton(this, ID_BITMAPBUTTON_MUSICAL_INSTRUMENT, *bitmap,
+      safenew wxBitmapButton(this, ID_BITMAPBUTTON_MUSICAL_INSTRUMENT, *bitmap,
                            ctrlPos, ctrlSize,
                            wxBU_AUTODRAW, wxDefaultValidator,
                            _("Musical Instrument"));

@@ -270,7 +270,7 @@ void ExportMultiple::PopulateOrExchange(ShuttleGui& S)
             S.AddPrompt(_("Options:"));
             if (!mBook)
             {
-               mBook = new wxSimplebook(S.GetParent(), OptionsID, wxDefaultPosition, wxDefaultSize, wxBORDER_STATIC);
+               mBook = safenew wxSimplebook(S.GetParent(), OptionsID, wxDefaultPosition, wxDefaultSize, wxBORDER_STATIC);
                for (size_t i = 0; i < mPlugins.GetCount(); i++)
                {
                   for (int j = 0; j < mPlugins[i]->GetFormatCount(); j++)

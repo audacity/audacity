@@ -114,13 +114,13 @@ ErrorDialog::ErrorDialog(
 
    wxBoxSizer *hSizer = new wxBoxSizer(wxHORIZONTAL);
 
-   wxStaticText *statText = new wxStaticText(this, -1, message);
+   wxStaticText *statText = safenew wxStaticText(this, -1, message);
    mainSizer->Add(statText, 0, wxALIGN_LEFT|wxALL, 5);
 
-   wxButton *help = new wxButton(this, wxID_HELP, _("Help"));
+   wxButton *help = safenew wxButton(this, wxID_HELP, _("Help"));
    hSizer->Add(help, 0, wxALIGN_LEFT|wxALL, 5);
 
-   wxButton *ok = new wxButton(this, wxID_OK, _("OK"));
+   wxButton *ok = safenew wxButton(this, wxID_OK, _("OK"));
    ok->SetDefault();
    ok->SetFocus();
    hSizer->Add(ok, 0, wxALIGN_RIGHT|wxALL, 5);

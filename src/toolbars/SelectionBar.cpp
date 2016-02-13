@@ -129,7 +129,7 @@ void SelectionBar::Populate()
    // Top row (mostly labels)
    //
 
-   mainSizer->Add(new wxStaticText(this, -1, _("Project Rate (Hz):"),
+   mainSizer->Add(safenew wxStaticText(this, -1, _("Project Rate (Hz):"),
    // LLL:  On my Ubuntu 7.04 install, the label wraps to two lines
    //       and I could not figure out why.  Thus...hackage.
 #if defined(__WXGTK__)
@@ -141,24 +141,24 @@ void SelectionBar::Populate()
 
    mainSizer->Add(5, 1);
 
-   mainSizer->Add(new wxStaticText(this, -1, _("Snap To:")),
+   mainSizer->Add(safenew wxStaticText(this, -1, _("Snap To:")),
                0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 
-   mainSizer->Add(new wxStaticText(this, -1, _("Selection Start:")),
+   mainSizer->Add(safenew wxStaticText(this, -1, _("Selection Start:")),
                0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 
    bool showSelectionLength = false;
    gPrefs->Read(wxT("/ShowSelectionLength"), &showSelectionLength);
 
    hSizer = new wxBoxSizer(wxHORIZONTAL);
-   mRightEndButton = new wxRadioButton(this, OnEndRadioID, _("End"),
+   mRightEndButton = safenew wxRadioButton(this, OnEndRadioID, _("End"),
                                        wxDefaultPosition, wxDefaultSize,
                                        wxRB_GROUP);
    mRightEndButton->SetName(_("End"));
    mRightEndButton->SetValue(!showSelectionLength);
    hSizer->Add(mRightEndButton,
                0, wxRIGHT | wxALIGN_CENTER_VERTICAL, 5);
-   mRightLengthButton = new wxRadioButton(this, OnLengthRadioID, _("Length"));
+   mRightLengthButton = safenew wxRadioButton(this, OnLengthRadioID, _("Length"));
    mRightLengthButton->SetName(_("Length"));
    mRightLengthButton->SetValue(showSelectionLength);
    hSizer->Add(mRightLengthButton,
@@ -169,7 +169,7 @@ void SelectionBar::Populate()
       // so it's probably been fixed.  But, it doesn't hurt to have this
       // in for all versions.
       wxRadioButton* dummyButton =
-         new wxRadioButton(this, wxID_ANY, _("hidden"),
+         safenew wxRadioButton(this, wxID_ANY, _("hidden"),
                            wxDefaultPosition, wxDefaultSize,
                            wxRB_GROUP);
       dummyButton->Disable();
@@ -179,14 +179,14 @@ void SelectionBar::Populate()
 
    mainSizer->Add(5, 1);
 
-   mainSizer->Add(new wxStaticText(this, -1, _("Audio Position:")),
+   mainSizer->Add(safenew wxStaticText(this, -1, _("Audio Position:")),
                   0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 0);
 
    //
    // Middle row (mostly time controls)
    //
 
-   mRateBox = new wxComboBox(this, OnRateID,
+   mRateBox = safenew wxComboBox(this, OnRateID,
                              wxT(""),
                              wxDefaultPosition, wxSize(80, -1));
    mRateBox->SetName(_("Project Rate (Hz):"));
@@ -226,12 +226,12 @@ void SelectionBar::Populate()
 
    mainSizer->Add(mRateBox, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 
-   mainSizer->Add(new wxStaticLine(this, -1, wxDefaultPosition,
+   mainSizer->Add(safenew wxStaticLine(this, -1, wxDefaultPosition,
                                    wxSize(1, toolbarSingle),
                                    wxLI_VERTICAL),
                   0,  wxRIGHT, 5);
 
-   mSnapTo = new wxChoice(this, OnSnapToID,
+   mSnapTo = safenew wxChoice(this, OnSnapToID,
                           wxDefaultPosition, wxDefaultSize,
                           SnapManager::GetSnapLabels());
    mainSizer->Add(mSnapTo,
@@ -265,7 +265,7 @@ void SelectionBar::Populate()
    mRightTime->EnableMenu();
    mainSizer->Add(mRightTime, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 
-   mainSizer->Add(new wxStaticLine(this, -1, wxDefaultPosition,
+   mainSizer->Add(safenew wxStaticLine(this, -1, wxDefaultPosition,
                                    wxSize(1, toolbarSingle),
                                    wxLI_VERTICAL),
                   0, wxRIGHT, 5);

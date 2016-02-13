@@ -134,7 +134,7 @@ void SpectralSelectionBar::Populate()
       _("Center frequency and Width"),
       _("Low and High Frequencies"),
    };
-   mChoice = new wxChoice
+   mChoice = safenew wxChoice
       (this, OnChoiceID, wxDefaultPosition, wxDefaultSize, 2, choices,
        0, wxDefaultValidator, _("Spectral Selection"));
    mChoice->SetSelection(mbCenterAndWidth ? 0 : 1);

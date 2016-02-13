@@ -135,9 +135,9 @@ ExpandingToolBar::ExpandingToolBar(wxWindow* parent,
    mDragImage(NULL),
    mTopLevelParent(NULL)
 {
-   mMainPanel = new wxPanel(this, -1,
+   mMainPanel = safenew wxPanel(this, -1,
                             wxDefaultPosition, wxSize(1, 1));
-   mExtraPanel = new wxPanel(this, -1,
+   mExtraPanel = safenew wxPanel(this, -1,
                              wxDefaultPosition, wxSize(1, 1));
 
    mGrabber = NULL;

@@ -86,8 +86,9 @@ LyricsWindow::LyricsWindow(AudacityProject *parent):
    //
    //wxToolBar* pToolBar = this->CreateToolBar();
    //const int kHorizMargin = 8;
+   //wxASSERT(pToolBar); // To justify safenew
    //wxRadioButton* pRadioButton_BouncingBall =
-   //   new wxRadioButton(pToolBar, kID_RadioButton_BouncingBall, _("Bouncing Ball"), wxPoint(kHorizMargin, 4),
+   //   safenew wxRadioButton(pToolBar, kID_RadioButton_BouncingBall, _("Bouncing Ball"), wxPoint(kHorizMargin, 4),
    //       wxDefaultSize, wxRB_GROUP);
    //// Reposition to center vertically.
    //wxSize tbSize = pToolBar->GetSize();
@@ -98,7 +99,7 @@ LyricsWindow::LyricsWindow(AudacityProject *parent):
    //
    //int left = kHorizMargin + btnSize.GetWidth() + kHorizMargin; //vvv Doesn't actually work. Probably need sizers.
    //wxRadioButton* pRadioButton_Highlight =
-   //   new wxRadioButton(pToolBar, kID_RadioButton_Highlight, _("Highlight"), wxPoint(left, top));
+   //   safenew wxRadioButton(pToolBar, kID_RadioButton_Highlight, _("Highlight"), wxPoint(left, top));
    //pToolBar->AddControl(pRadioButton_Highlight);
    //
    //panelPos.x += tbSize.GetHeight();

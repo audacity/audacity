@@ -755,7 +755,7 @@ wxDialog( parent, id, title, position, size, style | wxRESIZE_BORDER )
 
    wxBoxSizer *vertSizer = new wxBoxSizer( wxVERTICAL );
    wxArrayString *choices = mFile->GetStreamInfo();
-   StreamList = new wxListBox(this, -1, wxDefaultPosition, wxDefaultSize, *choices , wxLB_EXTENDED | wxLB_ALWAYS_SB);
+   StreamList = safenew wxListBox(this, -1, wxDefaultPosition, wxDefaultSize, *choices , wxLB_EXTENDED | wxLB_ALWAYS_SB);
 
    vertSizer->Add( StreamList, 1, wxEXPAND | wxALIGN_LEFT | wxALL, 5 );
 

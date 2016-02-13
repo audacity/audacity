@@ -74,10 +74,10 @@ MultiDialog::MultiDialog(wxWindow * pParent,
 
    wxBitmap bitmap = wxArtProvider::GetIcon(wxART_WARNING,
                                             wxART_MESSAGE_BOX);
-   wxStaticBitmap *icon = new wxStaticBitmap(this, -1, bitmap);
+   wxStaticBitmap *icon = safenew wxStaticBitmap(this, -1, bitmap);
    iconAndTextSizer->Add( icon, 0, wxCENTER );
 
-   wxStaticText *statText = new wxStaticText(this, -1, message);
+   wxStaticText *statText = safenew wxStaticText(this, -1, message);
    statText->SetName(message); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    iconAndTextSizer->Add(statText, 1, wxCENTER|wxLEFT,15 );
 
@@ -94,7 +94,7 @@ MultiDialog::MultiDialog(wxWindow * pParent,
       count++;
    }
 
-   mRadioBox = new wxRadioBox(this,-1,
+   mRadioBox = safenew wxRadioBox(this,-1,
                          boxMsg,
                          wxDefaultPosition, wxDefaultSize,
                          count, buttonLabels,
@@ -109,14 +109,14 @@ MultiDialog::MultiDialog(wxWindow * pParent,
    wxButton* pButton;
    if(log)
    {
-      pButton = new wxButton(this, ID_SHOW_LOG_BUTTON, _("Show Log for Details"));
+      pButton = safenew wxButton(this, ID_SHOW_LOG_BUTTON, _("Show Log for Details"));
       buttonSizer->Add(pButton, 0, wxALIGN_LEFT | wxALL, 5);
       pButton->SetDefault(); // Encourage user to look at files.
 
       buttonSizer->AddSpacer(40);
    }
 
-   pButton = new wxButton(this, wxID_OK, _("OK"));
+   pButton = safenew wxButton(this, wxID_OK, _("OK"));
    if(!log)
       pButton->SetDefault();
    buttonSizer->Add(pButton, 0, wxALIGN_RIGHT | wxALL, 5);

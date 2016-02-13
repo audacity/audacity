@@ -1454,7 +1454,7 @@ bool LV2Effect::BuildFancy()
    }
 
    // Use a panel to host the plugins GUI
-   mContainer = new wxPanel(mParent, wxID_ANY);
+   mContainer = safenew wxPanel(mParent, wxID_ANY);
    if (!mContainer)
    {
       lilv_uis_free(uis);
@@ -1579,7 +1579,8 @@ bool LV2Effect::BuildPlain()
    mFields = new wxTextCtrl *[ctrlcnt];
 
    wxSizer *outerSizer = new wxBoxSizer(wxVERTICAL);
-   wxScrolledWindow *w = new wxScrolledWindow(mParent,
+   wxASSERT(mParent); // To justify safenew
+   wxScrolledWindow *const w = safenew wxScrolledWindow(mParent,
                                               wxID_ANY,
                                               wxDefaultPosition,
                                               wxDefaultSize,
@@ -1601,7 +1602,7 @@ bool LV2Effect::BuildPlain()
 
       wxBoxSizer *sizer = new wxBoxSizer(wxHORIZONTAL);
    
-      wxWindow *item = new wxStaticText(w, 0, _("&Duration:"));
+      wxWindow *item = safenew wxStaticText(w, 0, _("&Duration:"));
       sizer->Add(item, 0, wxALIGN_CENTER | wxALL, 5);
       mDuration = new
          NumericTextCtrl(NumericConverter::TIME,
@@ -1650,7 +1651,8 @@ bool LV2Effect::BuildPlain()
          {
             gridSizer->Add(1, 1, 0);
 
-            wxButton *b = new wxButton(w, ID_Triggers + p, labelText);
+            wxASSERT(w); // To justify safenew
+            wxButton *b = safenew wxButton(w, ID_Triggers + p, labelText);
             gridSizer->Add(b, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
 
             gridSizer->Add(1, 1, 0);
@@ -1659,14 +1661,14 @@ bool LV2Effect::BuildPlain()
             continue;
          }
 
-         wxWindow *item = new wxStaticText(w, wxID_ANY, labelText + wxT(":"),
+         wxWindow *item = safenew wxStaticText(w, wxID_ANY, labelText + wxT(":"),
                                            wxDefaultPosition, wxDefaultSize,
                                            wxALIGN_RIGHT);
          gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
 
          if (ctrl.mToggle)
          {
-            wxCheckBox *c = new wxCheckBox(w, ID_Toggles + p, wxT(""));
+            wxCheckBox *c = safenew wxCheckBox(w, ID_Toggles + p, wxT(""));
             c->SetName(labelText);
             c->SetValue(ctrl.mVal > 0);
             gridSizer->Add(c, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
@@ -1691,7 +1693,7 @@ bool LV2Effect::BuildPlain()
                s = 0;
             }
 
-            wxChoice *c = new wxChoice(w, ID_Choices + p);
+            wxChoice *c = safenew wxChoice(w, ID_Choices + p);
             c->SetName(labelText);
             c->Append(ctrl.mScaleLabels);
             c->SetSelection(s);
@@ -1711,7 +1713,7 @@ bool LV2Effect::BuildPlain()
          }
          else
          {
-            mFields[p] = new wxTextCtrl(w, ID_Texts + p, wxT(""));
+            mFields[p] = safenew wxTextCtrl(w, ID_Texts + p, wxT(""));
             mFields[p]->SetName(labelText);
             gridSizer->Add(mFields[p], 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
 
@@ -1754,7 +1756,7 @@ bool LV2Effect::BuildPlain()
                {
                   str = Internat::ToDisplayString(ctrl.mLo);
                }
-               item = new wxStaticText(w, wxID_ANY, str);
+               item = safenew wxStaticText(w, wxID_ANY, str);
                gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
             }
             else
@@ -1762,7 +1764,7 @@ bool LV2Effect::BuildPlain()
                gridSizer->Add(1, 1, 0);
             }
 
-            mSliders[p] = new wxSlider(w, ID_Sliders + p,
+            mSliders[p] = safenew wxSlider(w, ID_Sliders + p,
                                        0, 0, 1000,
                                        wxDefaultPosition,
                                        wxSize(150, -1));
@@ -1780,7 +1782,7 @@ bool LV2Effect::BuildPlain()
                {
                   str = Internat::ToDisplayString(ctrl.mHi);
                }
-               item = new wxStaticText(w, wxID_ANY, str);
+               item = safenew wxStaticText(w, wxID_ANY, str);
                gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
             }
             else

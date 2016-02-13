@@ -923,7 +923,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    // Not using a notebook, so we place the track panel inside another panel,
    // this keeps the notebook code and normal code consistant and also
    // paves the way for adding additional windows inside the track panel.
-   mMainPanel = new wxPanel(this, -1,
+   mMainPanel = safenew wxPanel(this, -1,
       wxDefaultPosition,
       wxDefaultSize,
       wxNO_BORDER);

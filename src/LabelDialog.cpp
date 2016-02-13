@@ -110,7 +110,7 @@ LabelDialog::LabelDialog(wxWindow *parent,
 
    // A little instruction
    wxStaticText *instruct =
-      new wxStaticText(this,
+      safenew wxStaticText(this,
                        wxID_ANY,
                        _("Press F2 or double click to edit cell contents."));
    instruct->SetName(instruct->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
@@ -125,11 +125,11 @@ LabelDialog::LabelDialog(wxWindow *parent,
 
    // Create the action buttons
    wxBoxSizer *hs = new wxBoxSizer(wxHORIZONTAL);
-   hs->Add(new wxButton(this, ID_INSERTA, _("Insert &After")), 1, wxCENTER | wxALL, 5);
-   hs->Add(new wxButton(this, ID_INSERTB, _("Insert &Before")), 1, wxCENTER | wxALL, 5);
-   hs->Add(new wxButton(this, ID_REMOVE,  _("&Remove")), 1, wxCENTER | wxALL, 5);
-   hs->Add(new wxButton(this, ID_IMPORT,  _("&Import...")), 1, wxCENTER | wxALL, 5);
-   hs->Add(new wxButton(this, ID_EXPORT,  _("&Export...")), 1, wxCENTER | wxALL, 5);
+   hs->Add(safenew wxButton(this, ID_INSERTA, _("Insert &After")), 1, wxCENTER | wxALL, 5);
+   hs->Add(safenew wxButton(this, ID_INSERTB, _("Insert &Before")), 1, wxCENTER | wxALL, 5);
+   hs->Add(safenew wxButton(this, ID_REMOVE, _("&Remove")), 1, wxCENTER | wxALL, 5);
+   hs->Add(safenew wxButton(this, ID_IMPORT, _("&Import...")), 1, wxCENTER | wxALL, 5);
+   hs->Add(safenew wxButton(this, ID_EXPORT, _("&Export...")), 1, wxCENTER | wxALL, 5);
    vs->Add(hs, 0, wxEXPAND | wxCENTER | wxALL, 5);
 
    // Create the exit buttons

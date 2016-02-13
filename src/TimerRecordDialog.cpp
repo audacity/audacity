@@ -356,7 +356,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
       S.StartStatic(_("Start Date and Time"), true);
       {
          m_pDatePickerCtrl_Start =
-            new wxDatePickerCtrl(this, // wxWindow *parent,
+            safenew wxDatePickerCtrl(this, // wxWindow *parent,
                                  ID_DATEPICKER_START, // wxWindowID id,
                                  m_DateTime_Start); // const wxDateTime& dt = wxDefaultDateTime,
                                  // const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDP_DEFAULT | wxDP_SHOWCENTURY, const wxValidator& validator = wxDefaultValidator, const wxString& name = "datectrl")
@@ -378,7 +378,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
       S.StartStatic(_("End Date and Time"), true);
       {
          m_pDatePickerCtrl_End =
-            new wxDatePickerCtrl(this, // wxWindow *parent,
+            safenew wxDatePickerCtrl(this, // wxWindow *parent,
                                  ID_DATEPICKER_END, // wxWindowID id,
                                  m_DateTime_End); // const wxDateTime& dt = wxDefaultDateTime,
                                  // const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDP_DEFAULT | wxDP_SHOWCENTURY, const wxValidator& validator = wxDefaultValidator, const wxString& name = "datectrl")

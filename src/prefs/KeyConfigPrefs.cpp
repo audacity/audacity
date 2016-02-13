@@ -200,7 +200,7 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
             mFilterLabel = S.AddVariableText(_("Searc&h:"));
 
             if (!mFilter) {
-               mFilter = new wxTextCtrl(this,
+               mFilter = safenew wxTextCtrl(this,
                                         FilterID,
                                         wxT(""),
                                         wxDefaultPosition,
@@ -241,7 +241,7 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
       S.StartThreeColumn();
       {
          if (!mKey) {
-            mKey = new wxTextCtrl(this,
+            mKey = safenew wxTextCtrl(this,
                                   CurrentComboID,
                                   wxT(""),
                                   wxDefaultPosition,
@@ -769,7 +769,7 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
       S.StartThreeColumn();
       {
          if (!mKey) {
-            mKey = new wxTextCtrl(this,
+            mKey = safenew wxTextCtrl(this,
                                   CurrentComboID,
                                   wxT(""),
                                   wxDefaultPosition,

@@ -255,7 +255,7 @@ void TranscriptionToolBar::Populate()
       TRANSLATABLE("Direction Changes (High Threshold)")
    };
 
-   mKeyTypeChoice = new wxChoice(this, TTB_KeyType,
+   mKeyTypeChoice = safenew wxChoice(this, TTB_KeyType,
                                  wxDefaultPosition,
                                  wxDefaultSize,
                                  5,

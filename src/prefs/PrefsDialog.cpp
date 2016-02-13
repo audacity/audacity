@@ -217,7 +217,7 @@ PrefsDialog::PrefsDialog
    {
       wxASSERT(factories.size() > 0);
       if (!uniquePage) {
-         mCategories = new wxTreebookExt(this, wxID_ANY, mTitlePrefix);
+         mCategories = safenew wxTreebookExt(this, wxID_ANY, mTitlePrefix);
          S.StartHorizontalLay(wxALIGN_LEFT | wxEXPAND, true);
          {
             S.Prop(1);

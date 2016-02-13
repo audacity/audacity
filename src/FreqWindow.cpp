@@ -304,7 +304,7 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
       {
          S.StartVerticalLay();
          {
-            mPanScroller = new wxScrollBar(this, FreqPanScrollerID,
+            mPanScroller = safenew wxScrollBar(this, FreqPanScrollerID,
                wxDefaultPosition, wxDefaultSize, wxSB_VERTICAL);
             mPanScroller->SetName(_("Scroll"));
             S.Prop(1);
@@ -314,12 +314,12 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
 
          S.StartVerticalLay();
          {
-            wxStaticBitmap *zi = new wxStaticBitmap(this, wxID_ANY, wxBitmap(ZoomIn));
+            wxStaticBitmap *zi = safenew wxStaticBitmap(this, wxID_ANY, wxBitmap(ZoomIn));
             S.AddWindow((wxWindow *) zi, wxALIGN_CENTER);
 
             S.AddSpace(5);
 
-            mZoomSlider = new wxSlider(this, FreqZoomSliderID, 100, 1, 100,
+            mZoomSlider = safenew wxSlider(this, FreqZoomSliderID, 100, 1, 100,
                wxDefaultPosition, wxDefaultSize, wxSL_VERTICAL);
             S.Prop(1);
             S.AddWindow(mZoomSlider, wxALIGN_CENTER_HORIZONTAL);
@@ -327,7 +327,7 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
 
             S.AddSpace(5);
 
-            wxStaticBitmap *zo = new wxStaticBitmap(this, wxID_ANY, wxBitmap(ZoomOut));
+            wxStaticBitmap *zo = safenew wxStaticBitmap(this, wxID_ANY, wxBitmap(ZoomOut));
             S.AddWindow((wxWindow *) zo, wxALIGN_CENTER);
          }
          S.EndVerticalLay();

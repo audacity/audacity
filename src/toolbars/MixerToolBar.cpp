@@ -80,7 +80,7 @@ void MixerToolBar::Populate()
    if( mRecordBitmap == NULL )
       mRecordBitmap = new wxBitmap(theTheme.Bitmap(bmpMic));
 
-   Add(new wxStaticBitmap(this,
+   Add(safenew wxStaticBitmap(this,
                           wxID_ANY,
                           *mRecordBitmap), 0, wxALIGN_CENTER);
 
@@ -93,7 +93,7 @@ void MixerToolBar::Populate()
    if( mPlayBitmap == NULL )
       mPlayBitmap = new wxBitmap(theTheme.Bitmap(bmpSpeaker));
 
-   Add(new wxStaticBitmap(this,
+   Add(safenew wxStaticBitmap(this,
                           wxID_ANY,
                           *mPlayBitmap), 0, wxALIGN_CENTER);
 

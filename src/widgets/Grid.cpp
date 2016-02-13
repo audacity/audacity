@@ -278,7 +278,7 @@ wxGridCellEditor *ChoiceEditor::Clone() const
 
 void ChoiceEditor::Create(wxWindow* parent, wxWindowID id, wxEvtHandler* evtHandler)
 {
-   m_control = new wxChoice(parent,
+   m_control = safenew wxChoice(parent,
                             id,
                             wxDefaultPosition,
                             wxDefaultSize,

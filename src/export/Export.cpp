@@ -225,7 +225,8 @@ bool ExportPlugin::DisplayOptions(wxWindow * WXUNUSED(parent), int WXUNUSED(form
 
 wxWindow *ExportPlugin::OptionsCreate(wxWindow *parent, int WXUNUSED(format))
 {
-   wxPanel *p = new wxPanel(parent, wxID_ANY);
+   wxASSERT(parent); // To justify safenew
+   wxPanel *p = safenew wxPanel(parent, wxID_ANY);
    ShuttleGui S(p, eIsCreatingFromPrefs);
 
    S.StartHorizontalLay(wxCENTER);
@@ -881,7 +882,7 @@ void Exporter::CreateUserPane(wxWindow *parent)
       {
          S.StartStatic(_("Format Options"), 1);
          {
-            mBook = new wxSimplebook(parent);
+            mBook = safenew wxSimplebook(S.GetParent());
             S.AddWindow(mBook, wxEXPAND);
                                   
             for (size_t i = 0; i < mPlugins.GetCount(); i++)
@@ -1224,10 +1225,10 @@ ExportMixerDialog::ExportMixerDialog( TrackList *tracks, bool selectedOnly,
 
    wxString label;
    label.Printf( _( "Output Channels: %2d" ), mMixerSpec->GetNumChannels() );
-   mChannelsText = new wxStaticText( this, -1, label);
+   mChannelsText = safenew wxStaticText(this, -1, label);
    horSizer->Add( mChannelsText, 0, wxALIGN_LEFT | wxALL, 5 );
 
-   wxSlider *channels = new wxSlider( this, ID_SLIDER_CHANNEL,
+   wxSlider *channels = safenew wxSlider( this, ID_SLIDER_CHANNEL,
          mMixerSpec->GetNumChannels(), 1, mMixerSpec->GetMaxNumChannels(),
          wxDefaultPosition, wxSize( 300, -1 ) );
    channels->SetName(label);
