@@ -152,7 +152,7 @@ bool ODDecodeBlockFile::Read64K(float *buffer, sampleCount start, sampleCount le
 }
 
 /// If the summary has been computed,
-/// Construct a new PCMAliasBlockFile based on this one.
+/// Construct a NEW PCMAliasBlockFile based on this one.
 /// otherwise construct an ODPCMAliasBlockFile that still needs to be computed.
 /// @param newFileName The filename to copy the summary data to.
 BlockFile *ODDecodeBlockFile::Copy(wxFileName newFileName)
@@ -173,7 +173,7 @@ BlockFile *ODDecodeBlockFile::Copy(wxFileName newFileName)
                                                    mAudioFileName, mAliasStart,
                                                    mLen, mAliasChannel, mType,
                                                    mMin, mMax, mRMS,IsSummaryAvailable());
-      //The client code will need to schedule this blockfile for OD decoding if it is going to a new track.
+      //The client code will need to schedule this blockfile for OD decoding if it is going to a NEW track.
       //It can do this by checking for IsDataAvailable()==false.
    }
 

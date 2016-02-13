@@ -223,7 +223,7 @@ bool LabelDialog::TransferDataToWindow()
    int i;
 
    // Set the editor parameters.  Do this each time since they may change
-   // due to new tracks and change in NumericTextCtrl format.  Rate won't
+   // due to NEW tracks and change in NumericTextCtrl format.  Rate won't
    // change but might as well leave it here.
    mChoiceEditor->SetChoices(mTrackNames);
    mTimeEditor->SetFormat(mFormat);
@@ -314,7 +314,7 @@ bool LabelDialog::TransferDataFromWindow()
       // Extract the name
       wxString name = mTrackNames[tndx + 1].AfterFirst(wxT('-')).Mid(1);
 
-      // Create the new track and add to track list
+      // Create the NEW track and add to track list
       LabelTrack *newTrack = new LabelTrack(mDirManager);
       newTrack->SetName(name);
       mTracks->Add(newTrack);
@@ -356,7 +356,7 @@ bool LabelDialog::Validate()
 
 wxString LabelDialog::TrackName(int & index, wxString dflt)
 {
-   // Generate a new track name if the passed index is out of range
+   // Generate a NEW track name if the passed index is out of range
    if (index < 1 || index >= (int)mTrackNames.GetCount()) {
       index = mTrackNames.GetCount();
       mTrackNames.Add(wxString::Format(wxT("%d - %s"), index, dflt.c_str()));
@@ -393,7 +393,7 @@ void LabelDialog::AddLabels(LabelTrack *t)
    int tndx = 0;
    int i;
 
-   // Add a new track name
+   // Add a NEW track name
    TrackName(tndx, t->GetName());
 
    // Add each label in the track
@@ -446,7 +446,7 @@ void LabelDialog::FindInitialRow()
 
 void LabelDialog::OnUpdate(wxCommandEvent &event)
 {
-   // Remember the new format and repopulate grid
+   // Remember the NEW format and repopulate grid
    mFormat = event.GetString();
    TransferDataToWindow();
 
@@ -475,7 +475,7 @@ void LabelDialog::OnInsert(wxCommandEvent &event)
       }
    }
 
-   // Insert new label before or after the current row
+   // Insert NEW label before or after the current row
    if (event.GetId() == ID_INSERTA && row < cnt) {
       row++;
    }
@@ -484,7 +484,7 @@ void LabelDialog::OnInsert(wxCommandEvent &event)
    // Repopulate the grid
    TransferDataToWindow();
 
-   // Reposition cursor to new row/col and put user into edit mode to
+   // Reposition cursor to NEW row/col and put user into edit mode to
    // set the label name
    mGrid->SetGridCursor(row, Col_Label);
    mGrid->EnableCellEditControl(true);
@@ -677,7 +677,7 @@ void LabelDialog::OnCellChange(wxGridEvent &event)
    static bool guard = false;
    int row = event.GetRow();
 
-   // Guard against recursion which can happen when a change to the "new label" row
+   // Guard against recursion which can happen when a change to the "NEW label" row
    // is made.  When InsertRow() is done in TransferDataToWindow(), checks are made
    // within wxGrid to see if the edit control is active and since it hasn't yet
    // been marked inactive on the first time through here, we get entered again.
@@ -719,7 +719,7 @@ void LabelDialog::OnChangeTrack(wxGridEvent & WXUNUSED(event), int row, RowData 
 {
    wxString val = mGrid->GetCellValue(row, Col_Track);
 
-   // User selected the "New..." choice so ask for a new name
+   // User selected the "New..." choice so ask for a NEW name
    if (mTrackNames.Index(val) == 0) {
       wxTextEntryDialog d(this,
                           _("New Label Track"),
@@ -734,7 +734,7 @@ void LabelDialog::OnChangeTrack(wxGridEvent & WXUNUSED(event), int row, RowData 
          return;
       }
 
-      // Force generation of a new track name
+      // Force generation of a NEW track name
       rd->index = 0;
       TrackName(rd->index, d.GetValue());
    }

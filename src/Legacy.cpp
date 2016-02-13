@@ -20,7 +20,7 @@ AutoRollbackRenamer.
 
 \class AutoRollbackRenamer
 \brief AutoRollbackRenamer handles the renaming of files
-which is needed when producing a new version of a file which may fail.
+which is needed when producing a NEW version of a file which may fail.
 On failure the old version is put back in place.
 
 *//*******************************************************************/

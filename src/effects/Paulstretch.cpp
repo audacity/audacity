@@ -412,17 +412,17 @@ void PaulStretch::set_rap(float newrap)
 
 void PaulStretch::process(float *smps,int nsmps)
 {
-   //add new samples to the pool
+   //add NEW samples to the pool
    if ((smps!=NULL)&&(nsmps!=0)){
       if (nsmps>poolsize){
          nsmps=poolsize;
       }
       int nleft=poolsize-nsmps;
 
-      //move left the samples from the pool to make room for new samples
+      //move left the samples from the pool to make room for NEW samples
       for (int i=0;i<nleft;i++) in_pool[i]=in_pool[i+nsmps];
 
-      //add new samples to the pool
+      //add NEW samples to the pool
       for (int i=0;i<nsmps;i++) in_pool[i+nleft]=smps[i];
    }
 

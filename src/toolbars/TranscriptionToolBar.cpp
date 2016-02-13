@@ -816,7 +816,7 @@ void TranscriptionToolBar::OnAutomateSelection(wxCommandEvent & WXUNUSED(event))
                if( newStart==start)
                   break;
 
-               //Adjust len by the new start position
+               //Adjust len by the NEW start position
                len -= (newStart - start);
 
                //Adjust len by the minimum word size
@@ -824,7 +824,7 @@ void TranscriptionToolBar::OnAutomateSelection(wxCommandEvent & WXUNUSED(event))
 
 
 
-               //OK, now we have found a new starting point.  A 'word' should be at least
+               //OK, now we have found a NEW starting point.  A 'word' should be at least
                //50 ms long, so jump ahead minWordSize
 
                newEnd   = mVk->OffForward(*(WaveTrack*)t,newStart+minWordSize, len);
@@ -835,7 +835,7 @@ void TranscriptionToolBar::OnAutomateSelection(wxCommandEvent & WXUNUSED(event))
                   break;
 
 
-               //Adjust len by the new word end
+               //Adjust len by the NEW word end
                len -= (newEnd - newStart);
 
                //Calculate the start and end of the words, in seconds

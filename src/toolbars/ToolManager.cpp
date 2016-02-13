@@ -539,7 +539,7 @@ void ToolManager::Reset()
          // in turn floater will have mParent (the entire App) as its
          // parent.
 
-         // Maybe construct a new floater
+         // Maybe construct a NEW floater
          // this happens if we have just been bounced out of a dock.
          if( floater == NULL ) {
             floater = new ToolFrame( mParent, this, bar, wxPoint(-1,-1) );
@@ -709,7 +709,7 @@ void ToolManager::ReadConfig()
          
 
 
-         // Construct a new floater
+         // Construct a NEW floater
          ToolFrame *f = new ToolFrame( mParent, this, bar, wxPoint( x, y ) );
 
          // Set the width and height
@@ -1124,7 +1124,7 @@ void ToolManager::OnMouse( wxMouseEvent & event )
 }
 
 //
-// Deal with new capture lost event
+// Deal with NEW capture lost event
 //
 void ToolManager::OnCaptureLost( wxMouseCaptureLostEvent & event )
 {
@@ -1240,7 +1240,7 @@ void ToolManager::OnGrabber( GrabberEvent & event )
       mDragBar->SetDocked( NULL, true );
       mDragBar->SetPositioned();
 
-      // Construct a new floater
+      // Construct a NEW floater
       mDragWindow = new ToolFrame( mParent, this, mDragBar, mp );
 
       // Make sure the ferry is visible

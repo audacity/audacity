@@ -437,7 +437,7 @@ void Tags::SetTag(const wxString & name, const wxString & value)
    // Didn't find the tag
    if (iter == mXref.end()) {
 
-      // Add a new tag
+      // Add a NEW tag
       mXref[key] = name;
       mMap[name] = value;
       return;
@@ -552,7 +552,7 @@ public:
    {
       wxGridCellChoiceEditor::SetParameters(params);
 
-      // Refresh the wxComboBox with new values
+      // Refresh the wxComboBox with NEW values
       if (Combo()) {
          Combo()->Clear();
          Combo()->Append(m_choices);

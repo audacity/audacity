@@ -12,7 +12,7 @@
 \brief The SplashDialog shows help information for Audacity when
 Audacity starts up.
 
-It was written for the benefit of new users who do not want to
+It was written for the benefit of NEW users who do not want to
 read the manual.  The text of the dialog is kept short to increase the
 chance of it being read.  The content is designed to reduce the
 most commonly asked questions about Audacity.

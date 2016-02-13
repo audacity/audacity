@@ -1857,7 +1857,7 @@ bool LV2Effect::BuildPlain()
    wxSize sz2 = mParent->GetMinSize();
    w->SetSizeHints(wxSize(-1, wxMin(sz1.y, sz2.y)));
 
-   // And let the parent reduce to the new minimum if possible
+   // And let the parent reduce to the NEW minimum if possible
    mParent->SetSizeHints(w->GetMinSize());
 
    TransferDataToWindow();

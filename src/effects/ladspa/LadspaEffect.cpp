@@ -1449,7 +1449,7 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
    wxSize sz2 = mParent->GetMinSize();
    w->SetSizeHints(wxSize(wxMin(sz1.x, sz2.x), wxMin(sz1.y, sz2.y)));
 
-   // And let the parent reduce to the new minimum if possible
+   // And let the parent reduce to the NEW minimum if possible
    mParent->SetSizeHints(-1, -1);
 
    return true;

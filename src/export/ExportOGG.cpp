@@ -239,7 +239,7 @@ int ExportOGG::Export(AudacityProject *project,
    ogg_stream_packetin(&stream, &codebook_header);
 
    // Flushing these headers now guarentees that audio data will
-   // start on a new page, which apparently makes streaming easier
+   // start on a NEW page, which apparently makes streaming easier
    while (ogg_stream_flush(&stream, &page)) {
       outFile.Write(page.header, page.header_len);
       outFile.Write(page.body, page.body_len);

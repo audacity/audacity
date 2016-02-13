@@ -226,7 +226,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    void OpenFile(wxString fileName, bool addtohistory = true);
    bool WarnOfLegacyFile( );
 
-   // If pNewTrackList is passed in non-NULL, it gets filled with the pointers to new tracks.
+   // If pNewTrackList is passed in non-NULL, it gets filled with the pointers to NEW tracks.
    bool Import(wxString fileName, WaveTrackArray *pTrackArray = NULL);
 
    void AddImportedTracks(wxString fileName,

@@ -81,7 +81,7 @@ class ODTask
 
    virtual void StopUsingWaveTrack(WaveTrack* track);
 
-   ///Replaces all instances to a wavetrack with a new one, effectively transferring the task.
+   ///Replaces all instances to a wavetrack with a NEW one, effectively transferring the task.
    ///ODTask has no wavetrack, so it does nothing.  But subclasses that do should override this.
    virtual void ReplaceWaveTrack(WaveTrack* oldTrack,WaveTrack* newTrack);
 

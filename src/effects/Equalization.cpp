@@ -1061,7 +1061,7 @@ bool EffectEqualization::TransferDataFromWindow()
 bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
                                     sampleCount start, sampleCount len)
 {
-   // create a new WaveTrack to hold all of the output, including 'tails' each end
+   // create a NEW WaveTrack to hold all of the output, including 'tails' each end
    AudacityProject *p = GetActiveProject();
    WaveTrack *output = p->GetTrackFactory()->NewWaveTrack(floatSample, t->GetRate());
 
@@ -1162,7 +1162,7 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
       //output has one waveclip for the total length, even though
       //t might have whitespace seperating multiple clips
       //we want to maintain the original clip structure, so
-      //only paste the intersections of the new clip.
+      //only paste the intersections of the NEW clip.
 
       //Find the bits of clips that need replacing
       std::vector<std::pair<double, double> > clipStartEndTimes;
@@ -1185,18 +1185,18 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
          clipRealStartEndTimes.push_back(std::pair<double,double>(clipStartT,clipEndT));
 
          if( clipStartT < startT )  // does selection cover the whole clip?
-            clipStartT = startT; // don't copy all the new clip
+            clipStartT = startT; // don't copy all the NEW clip
          if( clipEndT > startT + lenT )  // does selection cover the whole clip?
-            clipEndT = startT + lenT; // don't copy all the new clip
+            clipEndT = startT + lenT; // don't copy all the NEW clip
 
          //save them
          clipStartEndTimes.push_back(std::pair<double,double>(clipStartT,clipEndT));
       }
-      //now go thru and replace the old clips with new
+      //now go thru and replace the old clips with NEW
       for(unsigned int i=0;i<clipStartEndTimes.size();i++)
       {
          Track *toClipOutput;
-         //remove the old audio and get the new
+         //remove the old audio and get the NEW
          t->Clear(clipStartEndTimes[i].first,clipStartEndTimes[i].second);
          output->Copy(clipStartEndTimes[i].first-startT+offsetT0,clipStartEndTimes[i].second-startT+offsetT0, &toClipOutput);
          if(toClipOutput)
@@ -1619,7 +1619,7 @@ void EffectEqualization::setCurve(wxString curveName)
 }
 
 //
-// Set new curve selection (safe to call outside of the UI)
+// Set NEW curve selection (safe to call outside of the UI)
 //
 void EffectEqualization::Select( int curve )
 {
@@ -1758,7 +1758,7 @@ bool EffectEqualization::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       return true;
    }
 
-   // Located a new curve
+   // Located a NEW curve
    if( !wxStrcmp(tag, wxT("curve") ) )
    {
       // Process the attributes
@@ -1768,7 +1768,7 @@ bool EffectEqualization::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          const wxChar *attr = *attrs++;
          const wxChar *value = *attrs++;
 
-         // Create a new curve and name it
+         // Create a NEW curve and name it
          if( !wxStrcmp( attr, wxT("name") ) )
          {
             const wxString strValue = value;
@@ -1803,7 +1803,7 @@ bool EffectEqualization::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       return true;
    }
 
-   // Located a new point
+   // Located a NEW point
    if( !wxStrcmp( tag, wxT("point") ) )
    {
       // Set defaults in case attributes are missing
@@ -1837,7 +1837,7 @@ bool EffectEqualization::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          }
       }
 
-      // Create a new point
+      // Create a NEW point
       mCurves[ mCurves.GetCount() - 1 ].points.Add( EQPoint( f, d ) );
 
       // Tell caller it was processed
@@ -1884,7 +1884,7 @@ void EffectEqualization::WriteXML(XMLWriter &xmlFile)
    int curve;
    for( curve = 0; curve < numCurves; curve++ )
    {
-      // Start a new curve
+      // Start a NEW curve
       xmlFile.StartTag( wxT( "curve" ) );
       xmlFile.WriteAttr( wxT( "name" ), mCurves[ curve ].Name );
 
@@ -1893,7 +1893,7 @@ void EffectEqualization::WriteXML(XMLWriter &xmlFile)
       int point;
       for( point = 0; point < numPoints; point++ )
       {
-         // Write new point
+         // Write NEW point
          xmlFile.StartTag( wxT( "point" ) );
          xmlFile.WriteAttr( wxT( "f" ), mCurves[ curve ].points[ point ].Freq, 12 );
          xmlFile.WriteAttr( wxT( "d" ), mCurves[ curve ].points[ point ].dB, 12 );
@@ -2516,7 +2516,7 @@ void EffectEqualization::OnSliderDBMAX(wxCommandEvent & WXUNUSED(event))
 //
 void EffectEqualization::OnCurve(wxCommandEvent & WXUNUSED(event))
 {
-   // Select new curve
+   // Select NEW curve
    setCurve( mCurve->GetCurrentSelection() );
    if( !mDrawMode )
       UpdateGraphic();
@@ -3222,11 +3222,11 @@ void EditCurvesDialog::OnRename(wxCommandEvent & WXUNUSED(event))
          }
       }
       else if( item == (numCurves-1) ) // renaming 'unnamed'
-      {  // Create a new entry
+      {  // Create a NEW entry
          mEditCurves.Add( EQCurve( wxT("unnamed") ) );
          // Copy over the points
          mEditCurves[ numCurves ].points = mEditCurves[ numCurves - 1 ].points;
-         // Give the original unnamed entry the new name
+         // Give the original unnamed entry the NEW name
          mEditCurves[ numCurves - 1 ].Name = name;
          numCurves++;
       }

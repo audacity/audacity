@@ -81,9 +81,9 @@ void Envelope::Mirror(bool mirror)
 /// Rescale function for time tracks (could also be used for other tracks though).
 /// This is used to load old time track project files where the envelope used a 0 to 1
 /// range instead of storing the actual time track values. This function will change the range of the envelope
-/// and rescale all envelope points accordingly (unlike SetRange, which clamps the envelope points to the new range).
-/// @minValue - the new minimum value
-/// @maxValue - the new maximum value
+/// and rescale all envelope points accordingly (unlike SetRange, which clamps the envelope points to the NEW range).
+/// @minValue - the NEW minimum value
+/// @maxValue - the NEW maximum value
 void Envelope::Rescale(double minValue, double maxValue)
 {
    double oldMinValue = mMinValue;
@@ -117,7 +117,7 @@ void Envelope::SetRange(double minValue, double maxValue) {
    mMaxValue = maxValue;
    mDefaultValue = ClampValue(mDefaultValue);
    for( unsigned int i = 0; i < mEnv.size(); i++ )
-      mEnv[i].SetVal(mEnv[i].GetVal()); // this clamps the value to the new range
+      mEnv[i].SetVal(mEnv[i].GetVal()); // this clamps the value to the NEW range
 }
 
 EnvPoint *Envelope::AddPointAtEnd( double t, double val )
@@ -325,7 +325,7 @@ float Envelope::ValueOfPixel( int y, int height, bool upper,
       return ClampValue(-v);
 }
 
-/// HandleMouseButtonDown either finds an existing control point or adds a new one
+/// HandleMouseButtonDown either finds an existing control point or adds a NEW one
 /// which is then recorded as the point to drag.
 /// This is slightly complicated by there possibly being four control points for
 /// a given time value:
@@ -672,13 +672,13 @@ Old analysis of cases:
 // parts is unchanged.
 //
 // 1) This may introduce a discontnuity in the envelope at a boundary between the
-//    old and new clips.  In that case we must ensure there are envelope points
+//    old and NEW clips.  In that case we must ensure there are envelope points
 //    at sample positions immediately before and immediately after the boundary.
 // 2) If the points have the same value we only need one of them.
 // 3) If the points have the same value AND it is the same as the value interpolated
 //    from the rest of the envelope then we don't need it at all.
 //
-// We do the same for the left and right edge of the new clip.
+// We do the same for the left and right edge of the NEW clip.
 //
 // Even simpler: we could always add two points at a boundary and then call
 // RemoveUnneededPoints() (provided that function behaves correctly).
@@ -729,7 +729,7 @@ Old analysis of cases:
             }
          }
          else {
-            if(onPoint) {  // Case 7: move the point L and insert a new one to the R
+            if(onPoint) {  // Case 7: move the point L and insert a NEW one to the R
                mEnv[pos].SetT(mEnv[pos].GetT() - mTrackEpsilon);
                Insert(t0 + mTrackEpsilon, splitval);
                someToShift = true;
@@ -764,11 +764,11 @@ Old analysis of cases:
       mTrackLen += deltat;
    }
    else {   // Case 10:
-      if( mTrackLen == 0 ) // creating a new envelope
+      if( mTrackLen == 0 ) // creating a NEW envelope
       {
          mTrackLen = e->mTrackLen;
          mOffset = e->mOffset;
-         //wxLogDebug(wxT("Case 10, new env/clip: mTrackLen %f mOffset %f t0 %f"), mTrackLen, mOffset, t0);
+         //wxLogDebug(wxT("Case 10, NEW env/clip: mTrackLen %f mOffset %f t0 %f"), mTrackLen, mOffset, t0);
       }
       else
       {
@@ -915,7 +915,7 @@ void Envelope::GetPoints(double *bufferWhen,
  * because you are working in relative time inside the envelope
  * @param when the time in seconds when the envelope point should be created.
  * @param value the envelope value to use at the given point.
- * @return the index of the new envelope point within array of envelope points.
+ * @return the index of the NEW envelope point within array of envelope points.
  */
 int Envelope::Insert(double when, double value)
 {
@@ -959,7 +959,7 @@ int Envelope::Insert(double when, double value)
 
    }
    else {
-     // Add new
+     // Add NEW
      EnvPoint e(this, when, value);
      if (i < len) {
         Insert(i, e);

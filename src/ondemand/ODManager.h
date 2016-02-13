@@ -70,7 +70,7 @@ class ODManager
    ///removes a wavetrack and notifies its associated tasks to stop using its reference.
    void RemoveWaveTrack(WaveTrack* track);
 
-   ///if it shares a queue/task, creates a new queue/task for the track, and removes it from any previously existing tasks.
+   ///if it shares a queue/task, creates a NEW queue/task for the track, and removes it from any previously existing tasks.
    void MakeWaveTrackIndependent(WaveTrack* track);
 
    ///attach the track in question to another, already existing track's queues and tasks.  Remove the task/tracks.
@@ -126,7 +126,7 @@ class ODManager
    ///Start the main loop for the manager.
    void Start();
 
-   ///Remove references in our array to Tasks that have been completed/Schedule new ones
+   ///Remove references in our array to Tasks that have been completed/Schedule NEW ones
    void UpdateQueues();
 
    //instance

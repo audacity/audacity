@@ -564,7 +564,7 @@ bool NoteTrack::Shift(double t) // t is always seconds
       int m = ROUND(t * tempo / beats_per_measure);
       // need at least 1 measure, so if we rounded down to zero, fix it
       if (m == 0) m = 1;
-      // compute new tempo so that m measures at new tempo take t seconds
+      // compute NEW tempo so that m measures at new tempo take t seconds
       tempo = beats_per_measure * m / t; // in beats per second
       mSeq->insert_silence(0.0, beats_per_measure * m);
       mSeq->set_tempo(tempo * 60.0 /* bpm */, 0.0, beats_per_measure * m);
@@ -617,7 +617,7 @@ Alg_seq_ptr NoteTrack::MakeExportableSeq()
    // extend past "start" (because "all" parameter is set to false)
    Alg_seq_ptr seq = mSeq->copy(start, mSeq->get_dur() - start, false);
    if (offset > 0) {
-      // swap seq and mSeq so that Shift operates on the new copy
+      // swap seq and mSeq so that Shift operates on the NEW copy
       Alg_seq_ptr old_seq = mSeq;
       mSeq = seq;
       Shift(offset);
@@ -673,7 +673,7 @@ Alg_seq_ptr NoteTrack::MakeExportableSeq()
       double beat = mSeq->get_time_map()->time_to_beat(start);
       // Find the time signature in mSeq in effect at start (beat):
       int i = mSeq->time_sig.find_beat(beat);
-      // i is where you would insert a new time sig at beat,
+      // i is where you would insert a NEW time sig at beat,
       // Case 1: beat coincides with a time sig at i. Time signature
       // at beat means that there is a barline at beat, so when beat
       // is shifted to 0, the relative barline positions are preserved
@@ -711,7 +711,7 @@ Alg_seq_ptr NoteTrack::MakeExportableSeq()
             // beat
             double bar = tsp->beat + beats_per_measure * (int(measures) + 1);
             double bar_offset = bar - beat;
-            // insert new time signature at bar_offset in new sequence
+            // insert NEW time signature at bar_offset in new sequence
             // It will have the same time signature, but the position will
             // force a barline to match the barlines in mSeq
             seq->set_time_sig(bar_offset, tsp->num, tsp->den);

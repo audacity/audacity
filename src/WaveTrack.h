@@ -193,7 +193,7 @@ class AUDACITY_DLL_API WaveTrack : public Track {
     * after the last Append.
     *
     * If there is an existing WaveClip in the WaveTrack then the data is
-    * appended to that clip. If there are no WaveClips in the track, then a new
+    * appended to that clip. If there are no WaveClips in the track, then a NEW
     * one is created.
     */
    bool Append(samplePtr buffer, sampleFormat format,
@@ -311,7 +311,7 @@ class AUDACITY_DLL_API WaveTrack : public Track {
    // be cleaner if this could be removed, though...
    WaveClipList::compatibility_iterator GetClipIterator() { return mClips.GetFirst(); }
 
-   // Create new clip and add it to this track. Returns a pointer
+   // Create NEW clip and add it to this track. Returns a pointer
    // to the newly created clip.
    WaveClip* CreateClip();
 
@@ -355,7 +355,7 @@ class AUDACITY_DLL_API WaveTrack : public Track {
    // existing clips).
    bool CanInsertClip(WaveClip* clip);
 
-   // Move a clip into a new track. This will remove the clip
+   // Move a clip into a NEW track. This will remove the clip
    // in this cliplist and add it to the cliplist of the
    // other track (if that is not NULL). No fancy additional stuff is done.
    // unused   void MoveClipToTrack(int clipIndex, WaveTrack* dest);
@@ -386,7 +386,7 @@ class AUDACITY_DLL_API WaveTrack : public Track {
    bool RemoveCutLine(double cutLinePosition);
 
    // This track has been merged into a stereo track.  Copy shared parameters
-   // from the new partner.
+   // from the NEW partner.
    virtual void Merge(const Track &orig);
 
    // Resample track (i.e. all clips in the track)

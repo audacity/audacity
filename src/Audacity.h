@@ -29,7 +29,7 @@
 // to 1.
 #define IS_ALPHA 1
 
-// Increment as appropriate every time we release a new version.
+// Increment as appropriate every time we release a NEW version.
 #define AUDACITY_VERSION   2
 #define AUDACITY_RELEASE   1
 #define AUDACITY_REVISION  3

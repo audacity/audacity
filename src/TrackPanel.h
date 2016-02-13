@@ -514,7 +514,7 @@ public:
    ViewInfo * GetViewInfo(){ return mViewInfo;}
    TrackPanelListener * GetListener(){ return mListener;}
    AdornedRulerPanel * GetRuler(){ return mRuler;}
-// JKC and here is a factory function which just does 'new' in standard Audacity.
+// JKC and here is a factory function which just does 'NEW' in standard Audacity.
    static TrackPanel *(*FactoryFunction)(wxWindow * parent,
               wxWindowID id,
               const wxPoint & pos,

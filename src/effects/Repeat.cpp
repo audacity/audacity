@@ -161,7 +161,7 @@ bool EffectRepeat::Process()
 
    if (bGoodResult)
    {
-      // Select the new bits + original bit
+      // Select the NEW bits + original bit
       mT1 = maxDestLen;
    }
 

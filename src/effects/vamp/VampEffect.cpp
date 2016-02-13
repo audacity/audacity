@@ -414,7 +414,7 @@ bool VampEffect::Process()
    {
       // if there is another track beyond this one and any linked one,
       // then we're processing more than one track.  That means we
-      // should use the originating track name in each new label
+      // should use the originating track name in each NEW label
       // track's name, to make clear which is which
       multiple = true;
    }

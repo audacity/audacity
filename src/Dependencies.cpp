@@ -227,7 +227,7 @@ static void RemoveDependencies(AudacityProject *project,
    // blockfiles in the Sequences, so we do that next...
    ReplaceBlockFiles(project, blockFileHash);
 
-   // Subtract one from reference count of new block files; they're
+   // Subtract one from reference count of NEW block files; they're
    // now all referenced the proper number of times by the Sequences
    ReplacedBlockFileHash::iterator it;
    for( it = blockFileHash.begin(); it != blockFileHash.end(); ++it )

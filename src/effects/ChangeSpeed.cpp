@@ -629,7 +629,7 @@ void EffectChangeSpeed::OnChoice_Vinyl(wxCommandEvent & WXUNUSED(evt))
       SetPrivateConfig(GetCurrentSettingsGroup(), wxT("VinylChoice"), mFromVinyl);
    }
 
-   // If mFromVinyl & mToVinyl are set, then there's a new percent change.
+   // If mFromVinyl & mToVinyl are set, then there's a NEW percent change.
    if ((mFromVinyl != kVinyl_NA) && (mToVinyl != kVinyl_NA))
    {
       double fromRPM;

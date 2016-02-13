@@ -79,7 +79,7 @@ class DirManager: public XMLTagHandler {
    bool ContainsBlockFile(wxString filepath) const;
 
    // Adds one to the reference count of the block file,
-   // UNLESS it is "locked", then it makes a new copy of
+   // UNLESS it is "locked", then it makes a NEW copy of
    // the BlockFile.
    BlockFile *CopyBlockFile(BlockFile *b);
 

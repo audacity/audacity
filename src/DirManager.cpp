@@ -24,7 +24,7 @@
 \brief Creates and manages BlockFile objects.
 
   This class manages the files that a project uses to store most
-  of its data.  It creates new BlockFile objects, which can
+  of its data.  It creates NEW BlockFile objects, which can
   be used to store any type of data.  BlockFiles support all of
   the common file operations, but they also support reference
   counting, so two different parts of a project can point to
@@ -32,8 +32,8 @@
 
   For example, a track might contain 10 blocks of data representing
   its audio.  If you copy the last 5 blocks and paste at the
-  end of the file, no new blocks need to be created - we just store
-  pointers to new ones.  When part of a track is deleted, the
+  end of the file, no NEW blocks need to be created - we just store
+  pointers to NEW ones.  When part of a track is deleted, the
   affected blocks decrement their reference counts, and when they
   reach zero they are deleted.  This same mechanism is also used
   to implement Undo.
@@ -439,7 +439,7 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
          return false;
    }
 
-   /* Move all files into this new directory.  Files which are
+   /* Move all files into this NEW directory.  Files which are
       "locked" get copied instead of moved.  (This happens when
       we perform a Save As - the files which belonged to the last
       saved version of the old project must not be moved,
@@ -510,9 +510,9 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
    // blockfiles.  Cleanup code trigger is the same
    if (mBlockFileHash.size()>0){
       // Clean up after ourselves; look for empty directories in the old
-      // and new project directories.  The easiest way to do this is to
+      // and NEW project directories.  The easiest way to do this is to
       // recurse depth-first and rmdir every directory seen in old and
-      // new; rmdir will fail on non-empty dirs.
+      // NEW; rmdir will fail on non-empty dirs.
 
       wxArrayString dirlist;
       count = RecursivelyEnumerate(cleanupLoc1, dirlist, wxEmptyString, false, true);
@@ -583,7 +583,7 @@ wxFileName DirManager::MakeBlockFilePath(wxString value){
    }
 
    if(value.GetChar(0)==wxT('e')){
-      // this file is located in a new style two-deep subdirectory tree
+      // this file is located in a NEW style two-deep subdirectory tree
       wxString topdir=value.Mid(0,3);
       wxString middir=wxT("d");
       middir.Append(value.Mid(3,2));
@@ -786,7 +786,7 @@ wxFileName DirManager::MakeBlockFileName()
 
       if(dirMidPool.empty()){
 
-         // is there a toplevel directory with space for a new subdir?
+         // is there a toplevel directory with space for a NEW subdir?
 
          if(!dirTopPool.empty()){
 
@@ -798,7 +798,7 @@ wxFileName DirManager::MakeBlockFileName()
 
 
             // search for unused midlevels; linear search adequate
-            // add 32 new topnum/midnum dirs full of  prospective filenames to midpool
+            // add 32 NEW topnum/midnum dirs full of  prospective filenames to midpool
             for(midnum=0;midnum<256;midnum++){
                midkey=(topnum<<8)+midnum;
                if(BalanceMidAdd(topnum,midkey)){
@@ -953,7 +953,7 @@ bool DirManager::ContainsBlockFile(wxString filepath) const
 }
 
 // Adds one to the reference count of the block file,
-// UNLESS it is "locked", then it makes a new copy of
+// UNLESS it is "locked", then it makes a NEW copy of
 // the BlockFile.
 BlockFile *DirManager::CopyBlockFile(BlockFile *b)
 {
@@ -979,7 +979,7 @@ BlockFile *DirManager::CopyBlockFile(BlockFile *b)
    {
       wxFileName newFile = MakeBlockFileName();
 
-      // We assume that the new file should have the same extension
+      // We assume that the NEW file should have the same extension
       // as the existing file
       newFile.SetExt(b->GetFileName().GetExt());
 
@@ -1099,7 +1099,7 @@ bool DirManager::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       return true;
    }
 
-   // This is a new object
+   // This is a NEW object
    mBlockFileHash[name] = target;
    // MakeBlockFileName wasn't used so we must add the directory
    // balancing information
@@ -1142,7 +1142,7 @@ bool DirManager::MoveOrCopyToNewProjectDirectory(BlockFile *f, bool copy)
             ::wxMilliSleep(50);
 
          //check to make sure the oldfile exists.
-         //if it doesn't, we can assume it was written to the new name, which is fine.
+         //if it doesn't, we can assume it was written to the NEW name, which is fine.
          if (oldFileName.FileExists())
          {
             bool ok = wxCopyFile(oldFileName.GetFullPath(),
@@ -1209,7 +1209,7 @@ bool DirManager::EnsureSafeFilename(wxFileName fName)
       return true;
 
    /* i18n-hint: 'old' is part of a filename used when a file is renamed. */
-   // Figure out what the new name for the existing file would be.
+   // Figure out what the NEW name for the existing file would be.
    /* i18n-hint: e.g. Try to go from "mysong.wav" to "mysong-old1.wav". */
    // Keep trying until we find a filename that doesn't exist.
 
@@ -1313,7 +1313,7 @@ bool DirManager::EnsureSafeFilename(wxFileName fName)
       }
       else
       {
-         //point the aliases to the new filename.
+         //point the aliases to the NEW filename.
          BlockHash::iterator iter = mBlockFileHash.begin();
          while (iter != mBlockFileHash.end())
          {

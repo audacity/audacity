@@ -130,7 +130,7 @@ bool CrossFader::CrossFadeMix(samplePtr buffer, sampleFormat format, sampleCount
       short *dest = (short *)buffer;
       vector<short*> shortSeq;
 
-      //Copy the sequences over to the new vector, casting as you go.
+      //Copy the sequences over to the NEW vector, casting as you go.
       for(int i = 0; i < numclips; i++)
          shortSeq.push_back((short*)tmpSequence[i]);
 
@@ -177,7 +177,7 @@ bool CrossFader::CrossFadeMix(samplePtr buffer, sampleFormat format, sampleCount
       vector<int *> intSeq;
 
 
-      //Copy the sequences over to the new vector, casting as you go.
+      //Copy the sequences over to the NEW vector, casting as you go.
       for(int i = 0; i < numclips; i++)
          intSeq.push_back((int*)tmpSequence[i]);
 

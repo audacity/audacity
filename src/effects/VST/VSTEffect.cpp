@@ -2051,7 +2051,7 @@ bool VSTEffect::Load()
       return false;
    }
 
-   // Try to locate the new plugin entry point
+   // Try to locate the NEW plugin entry point
    pluginMain = (vstPluginMain) dlsym(mModule, "VSTPluginMain");
 
    // If not found, try finding the old entry point

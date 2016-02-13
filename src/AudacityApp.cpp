@@ -792,21 +792,21 @@ bool AudacityApp::MRUOpen(wxString fullPathStr) {
             return false;
 
          // DMM: If the project is dirty, that means it's been touched at
-         // all, and it's not safe to open a new project directly in its
-         // place.  Only if the project is brand-new clean and the user
+         // all, and it's not safe to open a NEW project directly in its
+         // place.  Only if the project is brand-NEW clean and the user
          // hasn't done any action at all is it safe for Open to take place
          // inside the current project.
          //
-         // If you try to Open a new project inside the current window when
+         // If you try to Open a NEW project inside the current window when
          // there are no tracks, but there's an Undo history, etc, then
-         // bad things can happen, including data files moving to the new
+         // bad things can happen, including data files moving to the NEW
          // project directory, etc.
          if (!proj || proj->GetDirty() || !proj->GetIsEmpty()) {
             proj = CreateNewAudacityProject();
          }
          // This project is clean; it's never been touched.  Therefore
          // all relevant member variables are in their initial state,
-         // and it's okay to open a new project inside this window.
+         // and it's okay to open a NEW project inside this window.
          proj->OpenFile(fullPathStr);
       }
       else {

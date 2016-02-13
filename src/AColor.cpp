@@ -102,7 +102,7 @@ void AColor::Arrow(wxDC & dc, wxCoord x, wxCoord y, int width, bool down)
 void AColor::Line(wxDC & dc, wxCoord x1, wxCoord y1, wxCoord x2, wxCoord y2)
 {
    // As of 2.8.9 (possibly earlier), wxDC::DrawLine() on the Mac draws the
-   // last point since it is now based on the new wxGraphicsContext system.
+   // last point since it is now based on the NEW wxGraphicsContext system.
    // Make the other platforms do the same thing since the other platforms
    // "may" follow they get wxGraphicsContext going.
 #if defined(__WXMAC__) || defined(__WXGTK3__)

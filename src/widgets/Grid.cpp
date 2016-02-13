@@ -464,7 +464,7 @@ void Grid::OnKeyDown(wxKeyEvent &event)
          }
 
 #if wxUSE_ACCESSIBILITY
-         // Make sure the new cell is made available to the screen reader
+         // Make sure the NEW cell is made available to the screen reader
          mAx->SetCurrentCell(GetGridCursorRow(), GetGridCursorCol());
 #endif
       }
@@ -512,7 +512,7 @@ void Grid::OnKeyDown(wxKeyEvent &event)
          MakeCellVisible(GetGridCursorRow(), GetGridCursorCol());
 
 #if wxUSE_ACCESSIBILITY
-         // Make sure the new cell is made available to the screen reader
+         // Make sure the NEW cell is made available to the screen reader
          mAx->SetCurrentCell(GetGridCursorRow(), GetGridCursorCol());
 #endif
       }
@@ -535,7 +535,7 @@ void Grid::OnKeyDown(wxKeyEvent &event)
 
             // This looks strange, but what it does is selects the cell when
             // enter is pressed after editing.  Without it, Jaws and Window-Eyes
-            // do not speak the new cell contents (the one below the edited one).
+            // do not speak the NEW cell contents (the one below the edited one).
             SetGridCursor(GetGridCursorRow(), GetGridCursorCol());
          }
          break;

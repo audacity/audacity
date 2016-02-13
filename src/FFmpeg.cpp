@@ -346,7 +346,7 @@ int import_ffmpeg_decode_frame(streamContext *sc, bool flushing)
 
    if (flushing)
    {
-      // If we're flushing the decoders we don't actually have any new data to decode.
+      // If we're flushing the decoders we don't actually have any NEW data to decode.
       pDecode = NULL;
       nDecodeSiz = 0;
    }

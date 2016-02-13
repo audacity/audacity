@@ -1885,7 +1885,7 @@ wxRadioButton * ShuttleGuiBase::TieRadioButton(
 
 // We're now into ShuttleGuiBase sizer and misc functions.
 
-/// The Ids increment as we add new controls.
+/// The Ids increment as we add NEW controls.
 /// However, the user can force the id manually, for example
 /// if they need a specific Id for a button, and then let it
 /// resume normal numbering later.

@@ -448,7 +448,7 @@ void CommandManager::PurgeData()
 
 
 ///
-/// Makes a new menubar for placement on the top of a project
+/// Makes a NEW menubar for placement on the top of a project
 /// Names it according to the passed-in string argument.
 ///
 /// If the menubar already exists, simply returns it.
@@ -497,7 +497,7 @@ wxMenuBar * CommandManager::CurrentMenuBar() const
 
 
 ///
-/// This starts a new menu
+/// This starts a NEW menu
 ///
 void CommandManager::BeginMenu(const wxString & tName)
 {
@@ -523,7 +523,7 @@ void CommandManager::EndMenu()
 
 
 ///
-/// This starts a new submenu, and names it according to
+/// This starts a NEW submenu, and names it according to
 /// the function's argument.
 wxMenu* CommandManager::BeginSubMenu(const wxString & tName)
 {
@@ -550,7 +550,7 @@ void CommandManager::EndSubMenu()
    //Save the submenu's information
    SubMenuListEntry *tmpSubMenu = mSubMenuList[submenu_count];
 
-   //Pop off the new submenu so CurrentMenu returns the parent of the submenu
+   //Pop off the NEW submenu so CurrentMenu returns the parent of the submenu
    mSubMenuList.RemoveAt(submenu_count);
 
    //Add the submenu to the current menu
@@ -798,7 +798,7 @@ int CommandManager::NextIdentifier(int ID)
    return ID;
 }
 
-///Given all of the information for a command, comes up with a new unique
+///Given all of the information for a command, comes up with a NEW unique
 ///ID, adds it to a list, and returns the ID.
 ///WARNING: Does this conflict with the identifiers set for controls/windows?
 ///If it does, a workaround may be to keep controls below wxID_LOWEST
@@ -840,7 +840,7 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & name,
    // wxMac 2.5 and higher will do special things with the
    // Preferences, Exit (Quit), and About menu items,
    // if we give them the right IDs.
-   // Otherwise we just pick increasing ID numbers for each new
+   // Otherwise we just pick increasing ID numbers for each NEW
    // command.  Note that the name string we are comparing
    // ("About", "Preferences") is the internal command name
    // (untranslated), not the label that actually appears in the

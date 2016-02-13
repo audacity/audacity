@@ -433,7 +433,7 @@ void EffectNoiseRemoval::RotateHistoryWindows()
       mImagFFTs[i] = mImagFFTs[i-1];
    }
 
-   // Reuse the last buffers as the new first window
+   // Reuse the last buffers as the NEW first window
    mSpectrums[0] = lastSpectrum;
    mGains[0] = lastGain;
    mRealFFTs[0] = lastRealFFT;

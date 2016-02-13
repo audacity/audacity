@@ -95,7 +95,7 @@ void Track::Init(const Track &orig)
          mDirManager->Deref(); // MM: unreference old DirManager
       }
 
-      // MM: Assign and ref new DirManager
+      // MM: Assign and ref NEW DirManager
       mDirManager = orig.mDirManager;
       mDirManager->Ref();
    }

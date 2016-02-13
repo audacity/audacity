@@ -210,9 +210,9 @@ void WaveTrack::SetOffset(double o)
 WaveTrack::WaveTrackDisplay WaveTrack::FindDefaultViewMode()
 {
    // PRL:  Bugs 1043, 1044
-   // 2.1.1 writes a new key for this preference, which got new values,
+   // 2.1.1 writes a NEW key for this preference, which got new values,
    // to avoid confusing version 2.1.0 if it reads the preference file afterwards.
-   // Prefer the new preference key if it is present
+   // Prefer the NEW preference key if it is present
 
    WaveTrack::WaveTrackDisplay viewMode;
    gPrefs->Read(wxT("/GUI/DefaultViewModeNew"), (int*)&viewMode, -1);
@@ -883,11 +883,11 @@ bool WaveTrack::ClearAndPaste(double t0, // Start of time to clear
    // Now, clear the selection
    if (HandleClear(t0, t1, false, false)) {
 
-      // And paste in the new data
+      // And paste in the NEW data
       if (Paste(t0, src)) {
          unsigned int i;
 
-         // First, merge the new clip(s) in with the existing clips
+         // First, merge the NEW clip(s) in with the existing clips
          if (merge && splits.GetCount() > 0)
          {
             WaveClipArray clips;
@@ -1065,7 +1065,7 @@ bool WaveTrack::HandleClear(double t0, double t1,
                } else
                {
                   // Delete in the middle of the clip...we actually create two
-                  // new clips out of the left and right halves...
+                  // NEW clips out of the left and right halves...
 
                   WaveClip *left = new WaveClip(*clip, mDirManager);
                   left->Clear(t0, clip->GetEndTime());
@@ -1205,9 +1205,9 @@ bool WaveTrack::Paste(double t0, Track *src)
    // Currently, two modes are implemented:
    //
    // - If a single clip should be pasted, and it should be pasted inside another
-   //   clip, no new clips are generated. The audio is simply inserted.
+   //   clip, no NEW clips are generated. The audio is simply inserted.
    //   This resembles the old (pre-multiclip support) behaviour. However, if
-   //   the clip is pasted outside of any clip, a new clip is generated. This is
+   //   the clip is pasted outside of any clip, a NEW clip is generated. This is
    //   the only behaviour which is different to what was done before, but it
    //   shouldn't confuse users too much.
    //
@@ -1316,10 +1316,10 @@ bool WaveTrack::Paste(double t0, Track *src)
          return insideClip->Paste(t0, other->GetClipByIndex(0));
       }
 
-      // Just fall through and exhibit new behaviour
+      // Just fall through and exhibit NEW behaviour
    }
 
-   // Insert new clips
+   // Insert NEW clips
    //printf("paste: multi clip mode!\n");
 
    if (!editClipCanMove && !IsEmpty(t0, t0+insertDuration-1.0/mRate))
@@ -1465,7 +1465,7 @@ bool WaveTrack::Disjoin(double t0, double t1)
          {
             sampleCount curSamplePos = start + done + i;
 
-            //start a new sequence
+            //start a NEW sequence
             if( buffer[ i ] == 0.0 && seqStart == -1 )
                seqStart = curSamplePos;
             else if( buffer[ i ] != 0.0 || curSamplePos == end - 1 )
@@ -1757,7 +1757,7 @@ void WaveTrack::HandleXMLEndTag(const wxChar * WXUNUSED(tag))
 XMLTagHandler *WaveTrack::HandleXMLChild(const wxChar *tag)
 {
    //
-   // This is legacy code (1.2 and previous) and is not called for new projects!
+   // This is legacy code (1.2 and previous) and is not called for NEW projects!
    //
    if (!wxStrcmp(tag, wxT("sequence")) || !wxStrcmp(tag, wxT("envelope")))
    {
@@ -1782,7 +1782,7 @@ XMLTagHandler *WaveTrack::HandleXMLChild(const wxChar *tag)
    }
 
    //
-   // This is for the new file format (post-1.2)
+   // This is for the NEW file format (post-1.2)
    //
    if (!wxStrcmp(tag, wxT("waveclip")))
       return CreateClip();
@@ -2355,7 +2355,7 @@ bool WaveTrack::CanOffsetClip(WaveClip* clip, double amount,
       if (*allowedAmount == amount)
          return true;
 
-      // Check if the new calculated amount would not violate
+      // Check if the NEW calculated amount would not violate
       // any other constraint
       if (!CanOffsetClip(clip, *allowedAmount, NULL)) {
          *allowedAmount = 0; // play safe and don't allow anything
@@ -2415,7 +2415,7 @@ bool WaveTrack::SplitAt(double t)
             return false;
          }
 
-         //offset the new clip by the splitpoint (noting that it is already offset to c->GetStartTime())
+         //offset the NEW clip by the splitpoint (noting that it is already offset to c->GetStartTime())
          sampleCount here = llrint(floor(((t - c->GetStartTime()) * mRate) + 0.5));
          newClip->Offset((double)here/(double)mRate);
          mClips.Append(newClip);

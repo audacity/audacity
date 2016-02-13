@@ -1034,7 +1034,7 @@ void EffectNoiseReduction::Worker::GatherStatistics(Statistics &statistics)
    ++statistics.mTrackWindows;
 
    {
-      // new statistics
+      // NEW statistics
       const float *pPower = &mQueue[0]->mSpectrums[0];
       float *pSum = &statistics.mSums[0];
       for (int jj = 0; jj < mSpectrumSize; ++jj) {
@@ -1080,7 +1080,7 @@ bool EffectNoiseReduction::Worker::Classify(const Statistics &statistics, int ba
       }
 #endif
    // New methods suppose an exponential distribution of power values
-   // in the noise; new sensitivity is meant to be log of probability
+   // in the noise; NEW sensitivity is meant to be log of probability
    // that noise strays above the threshold.  Call that probability
    // 1 - F.  The quantile function of an exponential distribution is
    // log (1 - F) * mean.  Thus simply multiply mean by sensitivity
@@ -1568,7 +1568,7 @@ void EffectNoiseReduction::Dialog::DisableControlsIfIsolating()
    // If Isolate is chosen, disable controls that define
    // "what to do with noise" rather than "what is noise."
    // Else, enable them.
-   // This does NOT include sensitivity, new or old, nor
+   // This does NOT include sensitivity, NEW or old, nor
    // the choice of window functions, size, or step.
    // The method choice is not included, because it affects
    // which sensitivity slider is operative, and that is part

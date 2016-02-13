@@ -417,7 +417,7 @@ public:
 
          mProject->Import(sortednames[i]);
       }
-      mProject->HandleResize(); // Adjust scrollers for new track sizes.
+      mProject->HandleResize(); // Adjust scrollers for NEW track sizes.
 
       ODManager::Resume();
 
@@ -490,7 +490,7 @@ AudacityProject *CreateNewAudacityProject()
    bool bIconized;
    GetNextWindowPlacement(&wndRect, &bMaximized, &bIconized);
 
-   //Create and show a new project
+   //Create and show a NEW project
    AudacityProject *p = new AudacityProject(NULL, -1,
                                             wxDefaultPosition,
                                             wxSize(wndRect.width, wndRect.height));
@@ -511,7 +511,7 @@ AudacityProject *CreateNewAudacityProject()
    //Initialise the Listener
    gAudioIO->SetListener(p);
 
-   //Set the new project as active:
+   //Set the NEW project as active:
    SetActiveProject(p);
 
    // Okay, GetActiveProject() is ready. Now we can get its CommandManager,
@@ -559,7 +559,7 @@ void GetDefaultWindowRect(wxRect *defRect)
    int height = 674;
 
    //These conditional values assist in improving placement and size
-   //of new windows on different platforms.
+   //of NEW windows on different platforms.
 #ifdef __WXGTK__
    height += 20;
 #endif
@@ -946,7 +946,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    SetSizer( bs );
    bs->Layout();
 
-   // The right hand side translates to new TrackPanel(... in normal
+   // The right hand side translates to NEW TrackPanel(... in normal
    // Audacity without additional DLLs.
    mTrackPanel = TrackPanel::FactoryFunction(pPage,
                                              TrackPanelID,
@@ -1104,7 +1104,7 @@ void AudacityProject::UpdatePrefsVariables()
    gPrefs->Read(wxT("/GUI/SelectAllOnNone"), &mSelectAllOnNone, true);
    gPrefs->Read(wxT("/GUI/ShowSplashScreen"), &mShowSplashScreen, true);
    gPrefs->Read(wxT("/GUI/Solo"), &mSoloPref, wxT("Simple"));
-   // Update the old default to the new default.
+   // Update the old default to the NEW default.
    if (mSoloPref == wxT("Standard"))
       mSoloPref = wxT("Simple");
    gPrefs->Read(wxT("/GUI/TracksFitVerticallyZoomed"), &mTracksFitVerticallyZoomed, false);
@@ -1920,7 +1920,7 @@ void AudacityProject::OnShow(wxShowEvent & event)
    //  applicable with wxWidgets 3.0 because it's based on changing the
    //  gdk event handler, a change that would be overridden by wxWidgets's
    //  own gdk event handler change.
-   //  Instead, as a new workaround, specifically protect those processings
+   //  Instead, as a NEW workaround, specifically protect those processings
    //  of wxShowEvent and wxTimerEvent that try to do clipboard operations
    //  from being executed within Yield(). This is done by delaying their
    //  execution by posting pure wxWidgets events - which are never executed
@@ -2179,7 +2179,7 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
    // audio, and if so, make sure Audio I/O is completely finished.
    // The main point of this is to properly push the state
    // and flush the tracks once we've completely finished
-   // recording new state.
+   // recording NEW state.
    // This code is derived from similar code in
    // AudacityProject::~AudacityProject() and TrackPanel::OnTimer().
    if (GetAudioIOToken()>0 &&
@@ -2346,7 +2346,7 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
    AllProjectsDeleteUnlock();
 
    if (gActiveProject == this) {
-      // Find a new active project
+      // Find a NEW active project
       if (gAudacityProjects.Count() > 0) {
          SetActiveProject(gAudacityProjects[0]);
       }
@@ -2547,22 +2547,22 @@ void AudacityProject::OpenFiles(AudacityProject *proj)
       gPrefs->Flush();
 
       // DMM: If the project is dirty, that means it's been touched at
-      // all, and it's not safe to open a new project directly in its
-      // place.  Only if the project is brand-new clean and the user
+      // all, and it's not safe to open a NEW project directly in its
+      // place.  Only if the project is brand-NEW clean and the user
       // hasn't done any action at all is it safe for Open to take place
       // inside the current project.
       //
-      // If you try to Open a new project inside the current window when
+      // If you try to Open a NEW project inside the current window when
       // there are no tracks, but there's an Undo history, etc, then
-      // bad things can happen, including data files moving to the new
+      // bad things can happen, including data files moving to the NEW
       // project directory, etc.
       if (!proj || proj->mDirty || !proj->mTracks->IsEmpty()) {
-         // Open in a new window
+         // Open in a NEW window
          proj = CreateNewAudacityProject();
       }
       // This project is clean; it's never been touched.  Therefore
       // all relevant member variables are in their initial state,
-      // and it's okay to open a new project inside this window.
+      // and it's okay to open a NEW project inside this window.
       proj->OpenFile(fileName);
    }
 
@@ -2612,7 +2612,7 @@ void AudacityProject::OpenFile(wxString fileName, bool addtohistory)
    // Vaughan, 2011-03-25: This was done previously in AudacityProject::OpenFiles()
    //    and AudacityApp::MRUOpen(), but if you open an aup file by double-clicking it
    //    from, e.g., Win Explorer, it would bypass those, get to here with no check,
-   //    then open a new project from the same data with no warning.
+   //    then open a NEW project from the same data with no warning.
    //    This was reported in http://bugzilla.audacityteam.org/show_bug.cgi?id=137#c17,
    //    but is not really part of that bug. Anyway, prevent it!
    if (AudacityProject::IsAlreadyOpen(fileName))
@@ -2670,7 +2670,7 @@ void AudacityProject::OpenFile(wxString fileName, bool addtohistory)
       // If they bail out, return and do no more.
       if( !WarnOfLegacyFile() )
          return;
-      // Convert to the new format.
+      // Convert to the NEW format.
       bool success = ConvertLegacyProjectFile(wxFileName(fileName));
       if (!success) {
          wxMessageBox(_("Audacity was unable to convert an Audacity 1.0 project to the new project format."),
@@ -2799,7 +2799,7 @@ void AudacityProject::OpenFile(wxString fileName, bool addtohistory)
 
       if (mIsRecovered)
       {
-         // This project has been recovered, so write a new auto-save file
+         // This project has been recovered, so write a NEW auto-save file
          // now and then DELETE the old one in the auto-save folder. Note that
          // at this point mFileName != fileName, because when opening a
          // recovered file mFileName is faked to point to the original file
@@ -2913,7 +2913,7 @@ void AudacityProject::OpenFile(wxString fileName, bool addtohistory)
                   newTasks[i]->AddWaveTrack((WaveTrack*)tr);
             }
 
-            //create whatever new tasks we need to.
+            //create whatever NEW tasks we need to.
             //we want at most one instance of each class for the project
             while((odFlags|createdODTasks) != createdODTasks)
             {
@@ -3157,7 +3157,7 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 
    if (wxStrcmp(tag, wxT("audacityproject")) &&
        wxStrcmp(tag, wxT("project"))) {
-      // If the tag name is not one of these two (the new name is
+      // If the tag name is not one of these two (the NEW name is
       // "project" with an Audacity namespace, but we don't detect
       // the namespace yet), then we don't know what the error is
       return false;
@@ -3483,10 +3483,10 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
       else
       {
          // We are about to move files from the current directory to
-         // the new directory.  We need to make sure files that belonged
+         // the NEW directory.  We need to make sure files that belonged
          // to the last saved project don't get erased, so we "lock" them, so that
          // SetProject() copies instead of moves the files.
-         // (Otherwise the new project would be fine, but the old one would
+         // (Otherwise the NEW project would be fine, but the old one would
          // be empty of all of its files.)
 
          if (mLastSavedTracks && !overwrite)
@@ -3732,7 +3732,7 @@ void AudacityProject::AddImportedTracks(wxString fileName,
          newTracks[i]->SetName(trackNameBase);
       }
 
-      // Check if new track contains aliased blockfiles and if yes,
+      // Check if NEW track contains aliased blockfiles and if yes,
       // remember this to show a warning later
       if (newTracks[i]->GetKind() == WaveTrack::Wave)
       {
@@ -3786,7 +3786,7 @@ void AudacityProject::AddImportedTracks(wxString fileName,
    //   HandleResize();
 }
 
-// If pNewTrackList is passed in non-NULL, it gets filled with the pointers to new tracks.
+// If pNewTrackList is passed in non-NULL, it gets filled with the pointers to NEW tracks.
 bool AudacityProject::Import(wxString fileName, WaveTrackArray* pTrackArray /*= NULL*/)
 {
    Track **newTracks;
@@ -3847,7 +3847,7 @@ bool AudacityProject::SaveAs(const wxString & newFileName, bool bWantSaveCompres
 {
    wxString oldFileName = mFileName;
 
-   //check to see if the new project file already exists.
+   //check to see if the NEW project file already exists.
    //We should only overwrite it if this project already has the same name, where the user
    //simply chose to use the save as command although the save command would have the effect.
    if(mFileName!=newFileName && wxFileExists(newFileName)) {
@@ -3933,7 +3933,7 @@ For an audio file that will open in other apps, use 'Export'.\n"),
    filename.SetExt(wxT("aup"));
    fName = filename.GetFullPath();
 
-   //check to see if the new project file already exists.
+   //check to see if the NEW project file already exists.
    //We should only overwrite it if this project already has the same name, where the user
    //simply chose to use the save as command although the save command would have the effect.
    if (mFileName != fName && filename.FileExists()) {
@@ -4781,7 +4781,7 @@ void AudacityProject::AutoSave()
       return;
    }
 
-   // Now that we have a new auto-save file, DELETE the old one
+   // Now that we have a NEW auto-save file, DELETE the old one
    DeleteCurrentAutoSaveFile();
 
    if (!mAutoSaveFileName.IsEmpty())

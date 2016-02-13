@@ -93,7 +93,7 @@ bool ExportPlugin::CheckFileName(wxFileName & WXUNUSED(filename), int WXUNUSED(f
   return true;
 }
 
-/** \brief Add a new entry to the list of formats this plug-in can export
+/** \brief Add a NEW entry to the list of formats this plug-in can export
  *
  * To configure the format use SetFormat, SetCanMetaData etc with the index of
  * the format.

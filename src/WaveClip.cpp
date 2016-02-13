@@ -105,7 +105,7 @@ public:
    };
 
 
-   //Thread safe call to add a new region to invalidate.  If it overlaps with other regions, it unions the them.
+   //Thread safe call to add a NEW region to invalidate.  If it overlaps with other regions, it unions the them.
    void AddInvalidRegion(sampleCount sampleStart, sampleCount sampleEnd)
    {
       //use pps to figure out where we are.  (pixels per second)
@@ -456,7 +456,7 @@ void findCorrection(const std::vector<sampleCount> &oldWhere, int oldLen, int ne
    // What sample would go in where[0] with no correction?
    const double guessWhere0 = t0 * rate;
 
-   if ( // Skip if old and new are disjoint:
+   if ( // Skip if old and NEW are disjoint:
       oldWhereLast <= guessWhere0 ||
       guessWhere0 + newLen * samplesPerPixel <= oldWhere0 ||
       // Skip unless denom rounds off to at least 1.
@@ -474,7 +474,7 @@ void findCorrection(const std::vector<sampleCount> &oldWhere, int oldLen, int ne
       oldX0 = floor(0.5 + oldLen * (guessWhere0 - oldWhere0) / denom);
       // What sample count would the old cache have put there?
       const double where0 = oldWhere0 + double(oldX0) * samplesPerPixel;
-      // What correction is needed to align the new cache with the old?
+      // What correction is needed to align the NEW cache with the old?
       const double correction0 = where0 - guessWhere0;
       correction = std::max(-samplesPerPixel, std::min(samplesPerPixel, correction0));
       wxASSERT(correction == correction0);
@@ -1580,7 +1580,7 @@ bool WaveClip::ClearAndAddCutLine(double t0, double t1)
       return false;
    newClip->SetOffset(clip_t0-mOffset);
 
-   // Sort out cutlines that belong to the new cutline
+   // Sort out cutlines that belong to the NEW cutline
    WaveClipList::compatibility_iterator nextIt;
 
    for (WaveClipList::compatibility_iterator it = mCutLines.GetFirst(); it; it=nextIt)

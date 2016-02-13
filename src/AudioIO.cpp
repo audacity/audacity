@@ -243,7 +243,7 @@
   all notes off messages, but the FillMidiBuffers() loop will exit
   if mNextEvent is NULL, so we create a "fake" mNextEvent for this
   special "event" of sending all notes off. After that, we destroy
-  the iterator and use PrepareMidiIterator() to set up a new one.
+  the iterator and use PrepareMidiIterator() to set up a NEW one.
   At each iteration, time must advance by (mT1 - mT0), so the
   accumulated time is held in mMidiLoopOffset.
 
@@ -414,7 +414,7 @@ struct AudioIO::ScrubQueue
       {
          Entry &previous = mEntries[(mLeadingIdx + Size - 1) % Size];
 
-         // Use the previous end as new start.
+         // Use the previous end as NEW start.
          const double startTime = previous.mS1 / mRate;
          // Might reject the request because of zero duration,
          // or a too-short "stutter"
@@ -1794,7 +1794,7 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
       EffectManager & em = EffectManager::Get();
       em.RealtimeInitialize();
 
-      // The following adds a new effect processor for each logical track and the
+      // The following adds a NEW effect processor for each logical track and the
       // group determination should mimic what is done in audacityAudioCallback()
       // when calling RealtimeProcess().
       int group = 0;
@@ -1819,7 +1819,7 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
 
    if (options.pStartTime)
    {
-      // Calculate the new time position
+      // Calculate the NEW time position
       mTime = std::max(mT0, std::min(mT1, *options.pStartTime));
       // Reset mixer positions for all playback tracks
       unsigned numMixers = mPlaybackTracks->GetCount();
@@ -2325,7 +2325,7 @@ void AudioIO::StopStream()
                      WaveTrack* trackP = playbackTracks[j];
                      if( track == trackP )
                      {
-                        if( track->GetStartTime() != mT0 )  // in a new track if these are equal
+                        if( track->GetStartTime() != mT0 )  // in a NEW track if these are equal
                         {
                            appendRecord = true;
                            break;
@@ -2342,7 +2342,7 @@ void AudioIO::StopStream()
                      wxASSERT(bResult); // TO DO: Actually handle this.
                   }
                   else
-                  {  // recording into a new track
+                  {  // recording into a NEW track
                      track->SetOffset(track->GetStartTime() + recordingOffset);
                      if(track->GetEndTime() < 0.)
                      {
@@ -3943,7 +3943,7 @@ static void DoSoftwarePlaythrough(const void *inputBuffer,
 int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
                           unsigned long framesPerBuffer,
 // If there were more of these conditionally used arguments, it 
-// could make sense to make a new macro that looks like this:
+// could make sense to make a NEW macro that looks like this:
 // USEDIF( EXPERIMENTAL_MIDI_OUT, timeInfo )
 #ifdef EXPERIMENTAL_MIDI_OUT
                           const PaStreamCallbackTimeInfo *timeInfo,
@@ -4107,7 +4107,7 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
                wxMilliSleep( 50 );
             }
 
-            // Calculate the new time position
+            // Calculate the NEW time position
             gAudioIO->mTime += gAudioIO->mSeek;
             gAudioIO->mTime = gAudioIO->LimitStreamTime(gAudioIO->mTime);
             gAudioIO->mSeek = 0.0;

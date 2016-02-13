@@ -81,7 +81,7 @@ bool EffectStereoToMono::Process()
 
    if(mLeftTrack)
    {
-      // create a new WaveTrack to hold all of the output
+      // create a NEW WaveTrack to hold all of the output
       AudacityProject *p = GetActiveProject();
       mOutTrack = p->GetTrackFactory()->NewWaveTrack(floatSample, mLeftTrack->GetRate());
    }

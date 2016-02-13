@@ -1100,12 +1100,12 @@ void MixerBoard::UpdateTrackClusters()
          }
          else
          {
-            // Not already showing it. Add a new MixerTrackCluster.
+            // Not already showing it. Add a NEW MixerTrackCluster.
             wxPoint clusterPos(
                (kInset +                                       // extra inset to left for first one, so it's double
                   (nClusterIndex *
                      (kInset + kMixerTrackClusterWidth)) +     // left margin and width for each to its left
-                  kInset),                                     // plus left margin for new cluster
+                  kInset),                                     // plus left margin for NEW cluster
                kInset);
             wxSize clusterSize(kMixerTrackClusterWidth, nClusterHeight);
             pMixerTrackCluster =

@@ -145,7 +145,7 @@ void      ReverseSamples(samplePtr buffer, sampleFormat format,
                          int start, int len);
 
 //
-// This must be called on startup and everytime new ditherers
+// This must be called on startup and everytime NEW ditherers
 // are set in preferences.
 //
 

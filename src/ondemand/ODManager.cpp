@@ -134,7 +134,7 @@ void ODManager::RemoveTaskIfInQueue(ODTask* task)
 
 }
 
-///Adds a new task to the queue.  Creates a queue if the tracks associated with the task is not in the list
+///Adds a NEW task to the queue.  Creates a queue if the tracks associated with the task is not in the list
 ///
 ///@param task the task to add
 ///@param lockMutex locks the mutexes if true (default).  This function is used within other ODManager calls, which many need to set this to false.
@@ -161,7 +161,7 @@ void ODManager::AddNewTask(ODTask* task, bool lockMutex)
    }
    else
    {
-      //Make a new one, add it to the local track queue, and to the immediate running task list,
+      //Make a NEW one, add it to the local track queue, and to the immediate running task list,
       //since this task is definitely at the head
       queue = new ODWaveTrackTaskQueue();
       queue->AddTask(task);
@@ -251,7 +251,7 @@ void ODManager::Start()
       mTerminateMutex.Unlock();
 //    printf("ODManager thread running \n");
 
-      //we should look at our WaveTrack queues to see if we can process a new task to the running queue.
+      //we should look at our WaveTrack queues to see if we can process a NEW task to the running queue.
       UpdateQueues();
 
       //start some threads if necessary
@@ -272,7 +272,7 @@ void ODManager::Start()
          mCurrentThreadsMutex.Unlock();
 
          mTasksMutex.Lock();
-         //detach a new thread.
+         //detach a NEW thread.
          thread = new ODTaskThread(mTasks[0]);//task);
          //thread->SetPriority(10);//default is 50.
          thread->Create();
@@ -404,7 +404,7 @@ void ODManager::ReplaceWaveTrack(WaveTrack* oldTrack,WaveTrack* newTrack)
    mQueuesMutex.Unlock();
 }
 
-///if it shares a queue/task, creates a new queue/task for the track, and removes it from any previously existing tasks.
+///if it shares a queue/task, creates a NEW queue/task for the track, and removes it from any previously existing tasks.
 void ODManager::MakeWaveTrackIndependent(WaveTrack* track)
 {
    ODWaveTrackTaskQueue* owner=NULL;
@@ -485,7 +485,7 @@ void ODManager::DemandTrackUpdate(WaveTrack* track, double seconds)
    mQueuesMutex.Unlock();
 }
 
-///remove tasks from ODWaveTrackTaskQueues that have been done.  Schedules new ones if they exist
+///remove tasks from ODWaveTrackTaskQueues that have been done.  Schedules NEW ones if they exist
 ///Also remove queues that have become empty.
 void ODManager::UpdateQueues()
 {

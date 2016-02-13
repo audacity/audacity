@@ -1400,7 +1400,7 @@ bool SpectrumAnalyst::Calculate(Algorithm alg, int windowFunc,
          if (mProcessed[i] < 0.0)
             mProcessed[i] = float(0.0);
 
-      // Find new min/max
+      // Find NEW min/max
       mYMin = mProcessed[0];
       mYMax = mProcessed[0];
       for (int i = 1; i < half; i++)

@@ -45,8 +45,8 @@ LegacyAliasBlockFile::~LegacyAliasBlockFile()
 {
 }
 
-/// Construct a new LegacyAliasBlockFile based on this one, but writing
-/// the summary data to a new file.
+/// Construct a NEW LegacyAliasBlockFile based on this one, but writing
+/// the summary data to a NEW file.
 ///
 /// @param newFileName The filename to copy the summary data to.
 BlockFile *LegacyAliasBlockFile::Copy(wxFileName newFileName)

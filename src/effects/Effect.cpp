@@ -1874,7 +1874,7 @@ bool Effect::ProcessTrack(int count,
 
       // Transfer the data from the temporary tracks to the actual ones
       genLeft->Flush();
-      // mT1 gives us the new selection. We want to replace up to GetSel1().
+      // mT1 gives us the NEW selection. We want to replace up to GetSel1().
       left->ClearAndPaste(mT0, p->GetSel1(), genLeft, true, true, warper);
       delete genLeft;
 
@@ -2167,15 +2167,15 @@ void Effect::ReplaceProcessedTracks(const bool bGoodResult)
       Track *t = (Track *) mIMap[i];
       if (t == NULL)
       {
-         // This track is a new addition to output tracks; add it to mTracks
+         // This track is a NEW addition to output tracks; add it to mTracks
          mTracks->Add(o);
       }
       else
       {
-         // Replace mTracks entry with the new track
+         // Replace mTracks entry with the NEW track
          mTracks->Replace(t, o, false);
 
-         // Swap the wavecache track the ondemand task uses, since now the new
+         // Swap the wavecache track the ondemand task uses, since now the NEW
          // one will be kept in the project
          if (ODManager::IsInstanceCreated()) {
             ODManager::Instance()->ReplaceWaveTrack((WaveTrack *)t,
@@ -2293,7 +2293,7 @@ bool Effect::RealtimeAddProcessor(int group, int chans, float rate)
          ochans -= mNumAudioOut;
       }
 
-      // Add a new processor
+      // Add a NEW processor
       RealtimeAddProcessor(gchans, rate);
 
       // Bump to next processor
@@ -2481,7 +2481,7 @@ void Effect::Preview(bool dryOnly)
    // Save the original track list
    TrackList *saveTracks = mTracks;
 
-   // Build new tracklist from rendering tracks
+   // Build NEW tracklist from rendering tracks
    mTracks = new TrackList();
 
    // Linear Effect preview optimised by pre-mixing to one track.

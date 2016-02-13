@@ -399,7 +399,7 @@ void Meter::UpdatePrefs()
    // Set the desired orientation (resets ruler orientation)
    SetActiveStyle(mDesiredStyle);
 
-   // Reset to ensure new size is retrieved when language changes
+   // Reset to ensure NEW size is retrieved when language changes
    mLeftSize = wxSize(0, 0);
    mRightSize = wxSize(0, 0);
 
@@ -429,7 +429,7 @@ void Meter::OnPaint(wxPaintEvent & WXUNUSED(event))
          delete mBitmap;
       }
    
-      // Create a new one using current size and select into the DC
+      // Create a NEW one using current size and select into the DC
       mBitmap = new wxBitmap();
       mBitmap->Create(mWidth, mHeight, destDC);
       wxMemoryDC dc;
