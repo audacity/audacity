@@ -15,7 +15,7 @@
 
 #include "Effect.h"
 
-#include <memory>
+#include "../MemoryX.h"
 
 #define NOISEREDUCTION_PLUGIN_SYMBOL XO("Noise Reduction")
 

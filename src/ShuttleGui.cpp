@@ -94,8 +94,9 @@ for registering for changes.
 
 
 #include "Audacity.h"
+#include "ShuttleGui.h"
 
-#include <memory>
+#include "MemoryX.h"
 #include <wx/wx.h>
 #include <wx/wxprec.h>
 #include <wx/listctrl.h>
@@ -104,7 +105,6 @@ for registering for changes.
 #include <wx/spinctrl.h>
 #include "Internat.h"
 #include "Experimental.h"
-#include "ShuttleGui.h"
 #include "Shuttle.h"
 #include "WrappedType.h"
 

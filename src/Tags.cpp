@@ -30,6 +30,9 @@
 
 *//*******************************************************************/
 
+#include "Audacity.h"
+#include "Tags.h"
+
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
 
@@ -38,9 +41,6 @@
 #include <wx/window.h>
 #endif
 
-#include "Tags.h"
-
-#include "Audacity.h"
 #include "FileDialog.h"
 #include "FileNames.h"
 #include "Internat.h"

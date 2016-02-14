@@ -93,6 +93,7 @@
 #include "audacity/ConfigInterface.h"
 
 #include "VSTEffect.h"
+#include "../../MemoryX.h"
 
 // NOTE:  To debug the subprocess, use wxLogDebug and, on Windows, Debugview
 //        from TechNet (Sysinternals).

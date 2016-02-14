@@ -22,7 +22,7 @@
 #include "WaveClip.h"
 
 #include <math.h>
-#include <memory>
+#include "MemoryX.h"
 #include <functional>
 #include <vector>
 #include <wx/log.h>

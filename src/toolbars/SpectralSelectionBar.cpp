@@ -29,6 +29,7 @@ with changes in the SpectralSelectionBar.
 #include "../Audacity.h"
 
 #include <algorithm>
+#include "../MemoryX.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>

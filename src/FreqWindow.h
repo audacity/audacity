@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_FREQ_WINDOW__
 #define __AUDACITY_FREQ_WINDOW__
 
-#include <memory>
+#include "MemoryX.h"
 #include <vector>
 #include <wx/brush.h>
 #include <wx/dcmemory.h>

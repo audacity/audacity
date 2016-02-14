@@ -35,7 +35,7 @@ Track classes.
 #include <float.h>
 #include <math.h>
 #include <algorithm>
-#include <memory>
+#include "MemoryX.h"
 
 #include "float_cast.h"
 

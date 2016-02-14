@@ -21,9 +21,10 @@
 
 *//*******************************************************************/
 
+#include "../Audacity.h"
 #include "XMLTagHandler.h"
 
-#include "../Audacity.h"
+#include "../MemoryX.h"
 #include "../Internat.h"
 
 #ifdef _WIN32
