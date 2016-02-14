@@ -138,7 +138,7 @@ public:
          //        hide Audacity failures in the subprocess, so if you're having an unruley
          //        VST or odd Audacity failures, comment it out and you might get more info.
          //wxHandleFatalExceptions();
-         VSTEffectsModule::Check(wxTheApp->argv[2]);
+         VSTEffectsModule::Check(wxTheApp->argv[2].c_str());
 
          // Returning false causes default processing to display a message box, but we don't
          // want that so disable logging.

@@ -54,7 +54,7 @@ class ODDecodeTask:public ODTask
    ///Return the task name
    virtual const char* GetTaskName(){return "ODDecodeTask";}
 
-   virtual const wxChar* GetTip(){return _("Decoding Waveform");}
+   virtual const wxChar* GetTip(){return _("Decoding Waveform").c_str();}
 
    ///Subclasses should override to return respective type.
    virtual unsigned int GetODType(){return eODNone;}

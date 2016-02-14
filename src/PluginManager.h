@@ -161,7 +161,7 @@ typedef std::map<PluginID, PluginDescriptor> PluginMap;
 
 typedef wxArrayString PluginIDList;
 
-class ProviderMap;
+//class ProviderMap;
 class PluginRegistrationDialog;
 
 class PluginManager : public PluginManagerInterface

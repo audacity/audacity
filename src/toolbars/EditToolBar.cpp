@@ -130,41 +130,41 @@ void EditToolBar::Populate()
 
    /* Buttons */
    AddButton(bmpCut, bmpCut, bmpCutDisabled, ETBCutID,
-      _("Cut selection"));
+      _("Cut selection").c_str());
    AddButton(bmpCopy, bmpCopy, bmpCopyDisabled, ETBCopyID,
-      _("Copy selection"));
+      _("Copy selection").c_str());
    AddButton(bmpPaste, bmpPaste, bmpPasteDisabled, ETBPasteID,
-      _("Paste"));
+      _("Paste").c_str());
    AddButton(bmpTrim, bmpTrim, bmpTrimDisabled, ETBTrimID,
-      _("Trim audio outside selection"));
+      _("Trim audio outside selection").c_str());
    AddButton(bmpSilence, bmpSilence, bmpSilenceDisabled, ETBSilenceID,
-      _("Silence audio selection"));
+      _("Silence audio selection").c_str());
 
    AddSeparator();
 
    AddButton(bmpUndo, bmpUndo, bmpUndoDisabled, ETBUndoID,
-      _("Undo"));
+      _("Undo").c_str());
    AddButton(bmpRedo, bmpRedo, bmpRedoDisabled, ETBRedoID,
-      _("Redo"));
+      _("Redo").c_str());
 
    AddSeparator();
 
 #ifdef EXPERIMENTAL_SYNC_LOCK
    AddButton(bmpSyncLockTracksUp, bmpSyncLockTracksDown, bmpSyncLockTracksDisabled, ETBSyncLockID,
-               _("Sync-Lock Tracks"), true);
+               _("Sync-Lock Tracks").c_str(), true);
 
    AddSeparator();
 #endif
 
    AddButton(bmpZoomIn, bmpZoomIn, bmpZoomInDisabled, ETBZoomInID,
-      _("Zoom In"));
+      _("Zoom In").c_str());
    AddButton(bmpZoomOut, bmpZoomOut, bmpZoomOutDisabled, ETBZoomOutID,
-      _("Zoom Out"));
+      _("Zoom Out").c_str());
 
    AddButton(bmpZoomSel, bmpZoomSel, bmpZoomSelDisabled, ETBZoomSelID,
-      _("Fit selection in window"));
+      _("Fit selection in window").c_str());
    AddButton(bmpZoomFit, bmpZoomFit, bmpZoomFitDisabled, ETBZoomFitID,
-      _("Fit project in window"));
+      _("Fit project in window").c_str());
 
    mButtons[ETBZoomInID]->SetEnabled(false);
    mButtons[ETBZoomOutID]->SetEnabled(false);

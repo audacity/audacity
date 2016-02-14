@@ -90,27 +90,27 @@ ToolsToolBar::ToolsToolBar()
 
       mMessageOfTool[selectTool] =
 #if defined(__WXMAC__)
-         _("Click and drag to select audio, Command-Click to scrub, Command-Double-Click to scroll-scrub, Command-drag to seek")
+         _("Click and drag to select audio, Command-Click to scrub, Command-Double-Click to scroll-scrub, Command-drag to seek").c_str()
 #else
-         _("Click and drag to select audio, Ctrl-Click to scrub, Ctrl-Double-Click to scroll-scrub, Ctrl-drag to seek")
+         _("Click and drag to select audio, Ctrl-Click to scrub, Ctrl-Double-Click to scroll-scrub, Ctrl-drag to seek").c_str()
 #endif
          ;
 
 #else
-      mMessageOfTool[selectTool] = _("Click and drag to select audio");
+      mMessageOfTool[selectTool] = _("Click and drag to select audio").c_str();
 #endif
    }
 
-   mMessageOfTool[envelopeTool] = _("Click and drag to edit the amplitude envelope");
-   mMessageOfTool[drawTool] = _("Click and drag to edit the samples");
+   mMessageOfTool[envelopeTool] = _("Click and drag to edit the amplitude envelope").c_str();
+   mMessageOfTool[drawTool] = _("Click and drag to edit the samples").c_str();
 #if defined( __WXMAC__ )
-   mMessageOfTool[zoomTool] = _("Click to Zoom In, Shift-Click to Zoom Out");
+   mMessageOfTool[zoomTool] = _("Click to Zoom In, Shift-Click to Zoom Out").c_str();
 #elif defined( __WXMSW__ )
-   mMessageOfTool[zoomTool] = _("Drag to Zoom Into Region, Right-Click to Zoom Out");
+   mMessageOfTool[zoomTool] = _("Drag to Zoom Into Region, Right-Click to Zoom Out").c_str();
 #elif defined( __WXGTK__ )
-   mMessageOfTool[zoomTool] = _("Left=Zoom In, Right=Zoom Out, Middle=Normal");
+   mMessageOfTool[zoomTool] = _("Left=Zoom In, Right=Zoom Out, Middle=Normal").c_str();
 #endif
-   mMessageOfTool[slideTool] = _("Click and drag to move a track in time");
+   mMessageOfTool[slideTool] = _("Click and drag to move a track in time").c_str();
    mMessageOfTool[multiTool] = wxT(""); // multi-mode tool
 
    bool multiToolActive = false;
@@ -192,12 +192,12 @@ void ToolsToolBar::Populate()
    Add( mToolSizer );
 
    /* Tools */
-   mTool[ selectTool   ] = MakeTool( bmpIBeam, selectTool, _("Selection Tool") );
-   mTool[ envelopeTool ] = MakeTool( bmpEnvelope, envelopeTool, _("Envelope Tool") );
-   mTool[ drawTool     ] = MakeTool( bmpDraw, drawTool, _("Draw Tool") );
-   mTool[ zoomTool     ] = MakeTool( bmpZoom, zoomTool, _("Zoom Tool") );
-   mTool[ slideTool    ] = MakeTool( bmpTimeShift, slideTool, _("Slide Tool") );
-   mTool[ multiTool    ] = MakeTool( bmpMulti, multiTool, _("Multi Tool") );
+   mTool[ selectTool   ] = MakeTool( bmpIBeam, selectTool, _("Selection Tool").c_str() );
+   mTool[ envelopeTool ] = MakeTool( bmpEnvelope, envelopeTool, _("Envelope Tool").c_str() );
+   mTool[ drawTool     ] = MakeTool( bmpDraw, drawTool, _("Draw Tool").c_str() );
+   mTool[ zoomTool     ] = MakeTool( bmpZoom, zoomTool, _("Zoom Tool").c_str() );
+   mTool[ slideTool    ] = MakeTool( bmpTimeShift, slideTool, _("Slide Tool").c_str() );
+   mTool[ multiTool    ] = MakeTool( bmpMulti, multiTool, _("Multi Tool").c_str() );
 
    mTool[mCurrentTool]->PushDown();
 

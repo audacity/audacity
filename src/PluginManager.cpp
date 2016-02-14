@@ -50,7 +50,7 @@
 
 #include "Experimental.h"
 
-WX_DECLARE_STRING_HASH_MAP(wxArrayString, ProviderMap);
+//WX_DECLARE_STRING_HASH_MAP(wxArrayString, ProviderMap);
 
 // ============================================================================
 //

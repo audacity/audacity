@@ -63,13 +63,13 @@ const wxChar *GetSampleFormatStr(sampleFormat format)
    switch(format) {
    case int16Sample:
       /* i18n-hint: Audio data bit depth (precision): 16-bit integers */
-      return _("16-bit PCM");
+      return _("16-bit PCM").c_str();
    case int24Sample:
       /* i18n-hint: Audio data bit depth (precision): 24-bit integers */
-      return _("24-bit PCM");
+      return _("24-bit PCM").c_str();
    case floatSample:
       /* i18n-hint: Audio data bit depth (precision): 32-bit floating point */
-      return _("32-bit float");
+      return _("32-bit float").c_str();
    }
    return wxT("Unknown format"); // compiler food
 }

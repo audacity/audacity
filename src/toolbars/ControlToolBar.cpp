@@ -155,26 +155,26 @@ void ControlToolBar::Populate()
    MakeButtonBackgroundsLarge();
 
    mPause = MakeButton(bmpPause, bmpPause, bmpPauseDisabled,
-      ID_PAUSE_BUTTON,  true,  _("Pause"));
+      ID_PAUSE_BUTTON,  true,  _("Pause").c_str());
 
    mPlay = MakeButton( bmpPlay, bmpPlay, bmpPlayDisabled,
-      ID_PLAY_BUTTON, true, _("Play"));
+      ID_PLAY_BUTTON, true, _("Play").c_str());
    MakeAlternateImages(*mPlay, 1, bmpLoop, bmpLoop, bmpLoopDisabled);
    MakeAlternateImages(*mPlay, 2,
       bmpCutPreview, bmpCutPreview, bmpCutPreviewDisabled);
    mPlay->FollowModifierKeys();
 
    mStop = MakeButton( bmpStop, bmpStop, bmpStopDisabled ,
-      ID_STOP_BUTTON, false, _("Stop"));
+      ID_STOP_BUTTON, false, _("Stop").c_str());
 
    mRewind = MakeButton(bmpRewind, bmpRewind, bmpRewindDisabled,
-      ID_REW_BUTTON, false, _("Skip to Start"));
+      ID_REW_BUTTON, false, _("Skip to Start").c_str());
 
    mFF = MakeButton(bmpFFwd, bmpFFwd, bmpFFwdDisabled,
-      ID_FF_BUTTON, false, _("Skip to End"));
+      ID_FF_BUTTON, false, _("Skip to End").c_str());
 
    mRecord = MakeButton(bmpRecord, bmpRecord, bmpRecordDisabled,
-      ID_RECORD_BUTTON, true, _("Record"));
+      ID_RECORD_BUTTON, true, _("Record").c_str());
    MakeAlternateImages(*mRecord, 1, bmpAppendRecord, bmpAppendRecord,
       bmpAppendRecordDisabled);
    mRecord->FollowModifierKeys();

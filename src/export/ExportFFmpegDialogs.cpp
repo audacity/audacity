@@ -1187,20 +1187,20 @@ int ExportFFmpegOptions::iAACProfileValues[] = {
 
 /// Names of AAC profiles to be displayed
 const wxChar *ExportFFmpegOptions::iAACProfileNames[] = {
-   _("LC"),
-   _("Main"),
+   _("LC").c_str(),
+   _("Main").c_str(),
    /*_("SSR"),*/ //SSR is not supported
-   _("LTP")
+   _("LTP").c_str()
 };
 
 /// List of export types
 ExposedFormat ExportFFmpegOptions::fmts[] =
 {
-   {FMT_M4A,   wxT("M4A"),    wxT("m4a"), wxT("ipod"), 48,  AV_VERSION_INT(-1,-1,-1), true,  _("M4A (AAC) Files (FFmpeg)"),         AV_CODEC_ID_AAC,    true},
-   {FMT_AC3,   wxT("AC3"),    wxT("ac3"), wxT("ac3"),  7,   AV_VERSION_INT(0,0,0),    false, _("AC3 Files (FFmpeg)"),               AV_CODEC_ID_AC3,    true},
-   {FMT_AMRNB, wxT("AMRNB"),  wxT("amr"), wxT("amr"),  1,   AV_VERSION_INT(0,0,0),    false, _("AMR (narrow band) Files (FFmpeg)"), AV_CODEC_ID_AMR_NB, true},
-   {FMT_WMA2,  wxT("WMA"),    wxT("wma"), wxT("asf"),  2,   AV_VERSION_INT(52,53,0),  false, _("WMA (version 2) Files (FFmpeg)"),   AV_CODEC_ID_WMAV2,  true},
-   {FMT_OTHER, wxT("FFMPEG"), wxT(""),    wxT(""),     255, AV_VERSION_INT(-1,-1,-1), true,  _("Custom FFmpeg Export"),             AV_CODEC_ID_NONE,   true}
+   {FMT_M4A,   wxT("M4A"),    wxT("m4a"), wxT("ipod"), 48,  AV_VERSION_INT(-1,-1,-1), true,  _("M4A (AAC) Files (FFmpeg)").c_str(),         AV_CODEC_ID_AAC,    true},
+   {FMT_AC3,   wxT("AC3"),    wxT("ac3"), wxT("ac3"),  7,   AV_VERSION_INT(0,0,0),    false, _("AC3 Files (FFmpeg)").c_str(),               AV_CODEC_ID_AC3,    true},
+   {FMT_AMRNB, wxT("AMRNB"),  wxT("amr"), wxT("amr"),  1,   AV_VERSION_INT(0,0,0),    false, _("AMR (narrow band) Files (FFmpeg)").c_str(), AV_CODEC_ID_AMR_NB, true},
+   {FMT_WMA2,  wxT("WMA"),    wxT("wma"), wxT("asf"),  2,   AV_VERSION_INT(52,53,0),  false, _("WMA (version 2) Files (FFmpeg)").c_str(),   AV_CODEC_ID_WMAV2,  true},
+   {FMT_OTHER, wxT("FFMPEG"), wxT(""),    wxT(""),     255, AV_VERSION_INT(-1,-1,-1), true,  _("Custom FFmpeg Export").c_str(),             AV_CODEC_ID_NONE,   true}
 };
 
 /// Sample rates supported by AAC encoder (must end with zero-element)
@@ -1292,7 +1292,7 @@ ApplicableFor ExportFFmpegOptions::apptable[] =
 };
 
 /// Prediction order method - names. Labels are indices of this array.
-const wxChar *ExportFFmpegOptions::PredictionOrderMethodNames[] = { _("Estimate"), _("2-level"), _("4-level"), _("8-level"), _("Full search"), _("Log search")};
+const wxChar *ExportFFmpegOptions::PredictionOrderMethodNames[] = { _("Estimate").c_str(), _("2-level").c_str(), _("4-level").c_str(), _("8-level").c_str(), _("Full search").c_str(), _("Log search").c_str()};
 
 
 ExportFFmpegOptions::~ExportFFmpegOptions()

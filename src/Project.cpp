@@ -2617,7 +2617,7 @@ void AudacityProject::OpenFile(wxString fileName, bool addtohistory)
    int numRead = ff->Read(buf, 15);
    if (numRead != 15) {
       wxMessageBox(wxString::Format(_("File may be invalid or corrupted: \n%s"),
-                   (const wxChar*)fileName), _("Error Opening File or Project"),
+                   fileName.c_str()), _("Error Opening File or Project"),
                    wxOK | wxCENTRE, this);
       ff->Close();
       delete ff;
