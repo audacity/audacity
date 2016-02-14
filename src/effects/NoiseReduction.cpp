@@ -1020,7 +1020,7 @@ void EffectNoiseReduction::Worker::FinishTrack
    // were input.
    // Well, not exactly, but not more than one step-size of extra samples
    // at the end.
-   // We'll delete them later in ProcessOne.
+   // We'll DELETE them later in ProcessOne.
 
    FloatVector empty(mStepSize);
 

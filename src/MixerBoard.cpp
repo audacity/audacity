@@ -1132,7 +1132,7 @@ void MixerBoard::UpdateTrackClusters()
       // This can happen only on things like Undo New Audio Track or Undo Import
       // that don't call RemoveTrackCluster explicitly.
       // We've already updated the track pointers for the clusters to the left, so just remove all the rest.
-      // Keep nClusterIndex constant and successively delete from left to right.
+      // Keep nClusterIndex constant and successively DELETE from left to right.
       for (unsigned int nCounter = nClusterIndex; nCounter < nClusterCount; nCounter++)
 #ifdef EXPERIMENTAL_MIDI_OUT
          this->RemoveTrackCluster(mMixerTrackClusters[nClusterIndex]->mTrack);
@@ -1204,7 +1204,7 @@ void MixerBoard::RemoveTrackCluster(const WaveTrack* pTrack)
       return; // Couldn't find it.
 
    mMixerTrackClusters.RemoveAt(nIndex);
-   pMixerTrackCluster->Destroy(); // delete is unsafe on wxWindow.
+   pMixerTrackCluster->Destroy(); // DELETE is unsafe on wxWindow.
 
    // Close the gap, if any.
    wxPoint pos;

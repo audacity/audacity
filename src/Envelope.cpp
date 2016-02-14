@@ -489,7 +489,7 @@ void Envelope::MoveDraggedPoint( wxMouseEvent & event, wxRect & r,
    // We no longer tolerate multiple envelope points at the same t.
    // epsilon is less than the time offset of a single sample
    // TODO: However because mTrackEpsilon assumes 200KHz this use
-   // of epsilon is a tad bogus.  What we need to do instead is delete
+   // of epsilon is a tad bogus.  What we need to do instead is DELETE
    // a duplicated point on a mouse up.
    double newWhen = zoomInfo.PositionToTime(event.m_x, r.x) - mOffset;
 

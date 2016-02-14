@@ -482,7 +482,7 @@ public:
    // Command Handling
    bool TryToMakeActionAllowed( wxUint32 & flags, wxUint32 flagsRqd, wxUint32 mask );
 
-   ///Prevents delete from external thread - for e.g. use of GetActiveProject
+   ///Prevents DELETE from external thread - for e.g. use of GetActiveProject
    static void AllProjectsDeleteLock();
    static void AllProjectsDeleteUnlock();
 

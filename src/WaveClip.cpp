@@ -1539,7 +1539,7 @@ bool WaveClip::Clear(double t0, double t1)
          double cutlinePosition = mOffset + clip->GetOffset();
          if (cutlinePosition >= t0 && cutlinePosition <= t1)
          {
-            // This cutline is within the area, delete it
+            // This cutline is within the area, DELETE it
             delete clip;
             mCutLines.DeleteNode(it);
          } else

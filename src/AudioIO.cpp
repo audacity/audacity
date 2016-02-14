@@ -1721,7 +1721,7 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
             mPlaybackBuffers = new RingBuffer* [mPlaybackTracks->GetCount()];
             mPlaybackMixers  = new Mixer*      [mPlaybackTracks->GetCount()];
 
-            // Set everything to zero in case we have to delete these due to a memory exception.
+            // Set everything to zero in case we have to DELETE these due to a memory exception.
             memset(mPlaybackBuffers, 0, sizeof(RingBuffer*)*mPlaybackTracks->GetCount());
             memset(mPlaybackMixers, 0, sizeof(Mixer*)*mPlaybackTracks->GetCount());
 
@@ -1764,7 +1764,7 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
             mResample = new Resample* [mCaptureTracks->GetCount()];
             mFactor = sampleRate / mRate;
 
-            // Set everything to zero in case we have to delete these due to a memory exception.
+            // Set everything to zero in case we have to DELETE these due to a memory exception.
             memset(mCaptureBuffers, 0, sizeof(RingBuffer*)*mCaptureTracks->GetCount());
             memset(mResample, 0, sizeof(Resample*)*mCaptureTracks->GetCount());
 

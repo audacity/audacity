@@ -237,7 +237,7 @@ int MP3ImportFileHandle::Import(TrackFactory *trackFactory, Track ***outTracks,
       /* failure */
       /* printf("failure\n"); */
 
-      /* delete everything */
+      /* DELETE everything */
       for (chn = 0; chn < mPrivateData.numChannels; chn++) {
          delete mPrivateData.channels[chn];
       }

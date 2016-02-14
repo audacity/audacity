@@ -18,7 +18,7 @@ from.  For any type there should only be one ODDecodeTask associated with
 a given track.
 There could be the ODBlockFiles of several FLACs in one track (after copy and pasting),
 so things aren't as simple as they seem - the implementation needs to be
-robust enough to allow all the user changes such as copy/paste, delete, and so on.
+robust enough to allow all the user changes such as copy/paste, DELETE, and so on.
 
 *//*******************************************************************/
 

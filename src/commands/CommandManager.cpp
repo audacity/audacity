@@ -420,7 +420,7 @@ void CommandManager::PurgeData()
    for(i=0; i<mCommandList.GetCount(); i++)
    {
       CommandListEntry *tmpEntry = mCommandList[i];
-      // JKC: We only want to delete each callbacks once.
+      // JKC: We only want to DELETE each callbacks once.
       // AddItemList() may have inserted the same callback
       // several times over.
       if( tmpEntry->callback != pCallback )

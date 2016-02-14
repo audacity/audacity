@@ -3287,7 +3287,7 @@ void EditCurvesDialog::OnDelete(wxCommandEvent & WXUNUSED(event))
       PopulateList(mEditCurves.GetCount()-1);   // set 'unnamed' as the selected curve
    else
       PopulateList(highlight);   // user said 'No' to deletion
-#else // 'delete all N' code
+#else // 'DELETE all N' code
    int count = mList->GetSelectedItemCount();
    long item = mList->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
    // Create the prompt

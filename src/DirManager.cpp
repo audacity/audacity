@@ -265,7 +265,7 @@ static int RecursivelyRemoveEmptyDirs(wxString dirPath,
       // Have to recheck dir.HasSubDirs() again, in case they all were deleted in recursive calls.
       if (!dir.HasSubDirs() && !dir.HasFiles() && (dirPath.Right(5) != wxT("_data")))
       {
-         // No subdirs or files. It's empty so delete it.
+         // No subdirs or files. It's empty so DELETE it.
          // Vaughan, 2010-07-07:
          // Note that, per http://src.chromium.org/svn/trunk/src/base/file_util_win.cc, among others,
          // "Some versions of Windows return ERROR_FILE_NOT_FOUND (0x2) when deleting
@@ -371,7 +371,7 @@ DirManager::DirManager()
 
 DirManager::~DirManager()
 {
-   wxASSERT(mRef == 0); // MM: Otherwise, we shouldn't delete it
+   wxASSERT(mRef == 0); // MM: Otherwise, we shouldn't DELETE it
 
    numDirManagers--;
    if (numDirManagers == 0) {
@@ -389,7 +389,7 @@ void DirManager::CleanTempDir()
 
    wxArrayString filePathArray;
 
-   // Subtract 1 because we don't want to delete the global temp directory,
+   // Subtract 1 because we don't want to DELETE the global temp directory,
    // which this will find and list last.
    int count =
       RecursivelyEnumerate(globaltemp, filePathArray, wxT("project*"), true, true) - 1;
@@ -727,7 +727,7 @@ void DirManager::BalanceInfoDel(wxString file)
             // back if its needed (unlike the dirTopPool hash)
             dirMidPool.erase(midkey);
 
-            // delete the actual directory
+            // DELETE the actual directory
             wxString dir=(projFull != wxT("")? projFull: mytemp);
             dir += wxFILE_SEP_PATH;
             dir += file.Mid(0,3);
@@ -747,7 +747,7 @@ void DirManager::BalanceInfoDel(wxString file)
             }else{
                if(--dirTopPool[topnum]<1){
                   // do *not* erase the hash entry from dirTopPool
-                  // *do* delete the actual directory
+                  // *do* DELETE the actual directory
                   wxString dir=(projFull != wxT("")? projFull: mytemp);
                   dir += wxFILE_SEP_PATH;
                   dir += file.Mid(0,3);
@@ -1072,7 +1072,7 @@ bool DirManager::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          (pBlockFile->GetLength() > mMaxSamples))
    {
       // See http://bugzilla.audacityteam.org/show_bug.cgi?id=451#c13.
-      // Lock pBlockFile so that the ~BlockFile() will not delete the file on disk.
+      // Lock pBlockFile so that the ~BlockFile() will not DELETE the file on disk.
       pBlockFile->Lock();
       delete pBlockFile;
       return false;
@@ -1082,15 +1082,15 @@ bool DirManager::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 
    //
    // If the block we loaded is already in the hash table, then the
-   // object we just loaded is a duplicate, so we delete it and
+   // object we just loaded is a duplicate, so we DELETE it and
    // return a reference to the existing object instead.
    //
 
    wxString name = target->GetFileName().GetName();
    BlockFile *retrieved = mBlockFileHash[name];
    if (retrieved) {
-      // Lock it in order to delete it safely, i.e. without having
-      // it delete the file, too...
+      // Lock it in order to DELETE it safely, i.e. without having
+      // it DELETE the file, too...
       target->Lock();
       delete target;
 
@@ -1358,7 +1358,7 @@ void DirManager::Deref()
 
    --mRef;
 
-   // MM: Automatically delete if refcount reaches zero
+   // MM: Automatically DELETE if refcount reaches zero
    if (mRef == 0)
       delete this;
 }
@@ -1376,7 +1376,7 @@ int DirManager::ProjectFSCK(const bool bForceError, const bool bAutoRecoverMode)
    // all done in sequence, then the user was prompted for each type of error.
    // The enumerations are now interleaved with prompting, because, for example,
    // user choosing to replace missing aliased block files with silence
-   // needs to put in SilentBlockFiles and delete the corresponding auf files,
+   // needs to put in SilentBlockFiles and DELETE the corresponding auf files,
    // so those would then not be cumulated in missingAUFHash.
    // We still do the FindX methods outside the conditionals,
    // so the log always shows all found errors.
@@ -1656,7 +1656,7 @@ other projects. \
       ProgressDialog* pProgress =
          new ProgressDialog(_("Progress"),
                               _("Cleaning up unused directories in project data"));
-      // nDirCount is for updating pProgress. +1 because we may delete dirPath.
+      // nDirCount is for updating pProgress. +1 because we may DELETE dirPath.
       int nDirCount = RecursivelyCountSubdirs(dirPath) + 1;
       RecursivelyRemoveEmptyDirs(dirPath, nDirCount, pProgress);
       delete pProgress;

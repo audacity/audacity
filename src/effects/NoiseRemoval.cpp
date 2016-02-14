@@ -446,7 +446,7 @@ void EffectNoiseRemoval::FinishTrack()
    // windows until we've output exactly as many samples as
    // were input.
    // Well, not exactly, but not more than mWindowSize/2 extra samples at the end.
-   // We'll delete them later in ProcessOne.
+   // We'll DELETE them later in ProcessOne.
 
    float *empty = new float[mWindowSize / 2];
    int i;

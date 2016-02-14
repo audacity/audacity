@@ -309,7 +309,7 @@ IntegerValidatorBase::IsCharOk(const wxString& val, int pos, wxChar ch) const
       // we're limited to -5..15 range and the current value is 12, then the
       // new value would be (invalid) -12. We consider it better to let the
       // user do this because perhaps he is going to press Delete key next to
-      // make it -2 and forcing him to delete 1 first would be unnatural.
+      // make it -2 and forcing him to DELETE 1 first would be unnatural.
       //
       // TODO: It would be nice to indicate that the current control contents
       //       is invalid (if it's indeed going to be the case) once

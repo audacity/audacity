@@ -53,7 +53,7 @@ void CommandHandler::OnReceiveCommand(AppCommandEvent &event)
    // different project.
    cmd->Apply(*mCurrentContext);
 
-   // Done with the command so delete it.
+   // Done with the command so DELETE it.
    delete cmd;
 
    // Redraw the project

@@ -193,7 +193,7 @@ void BlockFile::Deinit()
 /// This method also has the side effect of setting the mMin, mMax,
 /// and mRMS members of this class.
 ///
-/// You must not delete the returned buffer; it is static to this
+/// You must not DELETE the returned buffer; it is static to this
 /// method.
 ///
 /// @param buffer A buffer containing the sample data to be analyzed

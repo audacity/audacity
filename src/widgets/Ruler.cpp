@@ -1544,7 +1544,7 @@ void Ruler::SetCustomMajorLabels(wxArrayString *label, int numLabel, int start, 
       mMajorLabels[i].text = label->Item(i);
       mMajorLabels[i].pos  = start + i*step;
    }
-   //Remember: delete majorlabels....
+   //Remember: DELETE majorlabels....
 }
 
 void Ruler::SetCustomMinorLabels(wxArrayString *label, int numLabel, int start, int step)
@@ -1558,7 +1558,7 @@ void Ruler::SetCustomMinorLabels(wxArrayString *label, int numLabel, int start, 
       mMinorLabels[i].text = label->Item(i);
       mMinorLabels[i].pos  = start + i*step;
    }
-   //Remember: delete majorlabels....
+   //Remember: DELETE majorlabels....
 }
 
 void Ruler::Label::Draw(wxDC&dc, bool twoTone) const

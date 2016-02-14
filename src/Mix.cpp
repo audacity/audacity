@@ -42,7 +42,7 @@
 #include "TimeTrack.h"
 #include "float_cast.h"
 
-//TODO-MB: wouldn't it make more sense to delete the time track after 'mix and render'?
+//TODO-MB: wouldn't it make more sense to DELETE the time track after 'mix and render'?
 bool MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
                   double rate, sampleFormat format,
                   double startTime, double endTime,

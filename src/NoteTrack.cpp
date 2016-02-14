@@ -499,7 +499,7 @@ bool NoteTrack::Trim(double t0, double t1)
    if (t1 <= t0)
       return false;
    mSeq->convert_to_seconds();
-   // delete way beyond duration just in case something is out there:
+   // DELETE way beyond duration just in case something is out there:
    mSeq->clear(t1 - GetOffset(), mSeq->get_dur() + 10000.0, false);
    // Now that stuff beyond selection is cleared, clear before selection:
    mSeq->clear(0.0, t0 - GetOffset(), false);
@@ -842,7 +842,7 @@ void NoteTrack::WriteXML(XMLWriter &xmlFile)
    xmlFile.WriteAttr(wxT("data"), wxString(data.str().c_str(), wxConvUTF8));
    xmlFile.EndTag(wxT("notetrack"));
    if (this != saveme) {
-      delete saveme; // delete the duplicate
+      delete saveme; // DELETE the duplicate
    }
 }
 

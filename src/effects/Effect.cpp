@@ -2124,14 +2124,14 @@ void Effect::AddToOutputTracks(Track *t)
 }
 
 // If bGoodResult, replace mTracks tracks with successfully processed mOutputTracks copies.
-// Else clear and delete mOutputTracks copies.
+// Else clear and DELETE mOutputTracks copies.
 void Effect::ReplaceProcessedTracks(const bool bGoodResult)
 {
    wxASSERT(mOutputTracks != NULL); // Make sure we at least did the CopyInputTracks().
 
    if (!bGoodResult) {
       // Processing failed or was cancelled so throw away the processed tracks.
-      mOutputTracks->Clear(true); // true => delete the tracks
+      mOutputTracks->Clear(true); // true => DELETE the tracks
 
       // Reset map
       mIMap.Clear();
@@ -2161,7 +2161,7 @@ void Effect::ReplaceProcessedTracks(const bool bGoodResult)
       // This should never happen
       wxASSERT(i < cnt);
 
-      // Remove the track from the output list...don't delete it
+      // Remove the track from the output list...don't DELETE it
       x = iterOut.RemoveCurrent(false);
 
       Track *t = (Track *) mIMap[i];
@@ -2599,7 +2599,7 @@ void Effect::Preview(bool dryOnly)
    delete mOutputTracks;
    mOutputTracks = NULL;
 
-   mTracks->Clear(true); // true => delete the tracks
+   mTracks->Clear(true); // true => DELETE the tracks
    delete mTracks;
 
    mTracks = saveTracks;

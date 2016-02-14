@@ -79,7 +79,7 @@ public:
    /// Returns relationship between a region described and this label; if
    /// parent is set, it will consider point labels at the very beginning
    /// and end of parent to be within a region that borders them (this makes
-   /// it possible to delete capture all labels with a Select All).
+   /// it possible to DELETE capture all labels with a Select All).
    TimeRelations RegionRelation(double reg_t0, double reg_t1,
                                 LabelTrack *parent = NULL);
 

@@ -1701,13 +1701,13 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
             //IF the label is not blank THEN get rid of a letter or letters according to cursor position
             if (len > 0)
             {
-               // IF there are some highlighted letters, THEN delete them
+               // IF there are some highlighted letters, THEN DELETE them
                if (mLabels[mSelIndex]->highlighted) {
                   RemoveSelectedText();
                }
                else
                {
-                  // delete one letter
+                  // DELETE one letter
                   if (mCurrentCursorPos > 0) {
                      mLabels[mSelIndex]->title.Remove(mCurrentCursorPos-1, 1);
                      mCurrentCursorPos--;
@@ -1716,7 +1716,7 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
             }
             else
             {
-               // ELSE no text in text box, so delete whole label.
+               // ELSE no text in text box, so DELETE whole label.
                DeleteLabel( mSelIndex );
             }
             mInitialCursorPos = mCurrentCursorPos;
@@ -1732,13 +1732,13 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
             //If the label is not blank get rid of a letter according to cursor position
             if (len > 0)
             {
-               // if there are some highlighted letters, delete them
+               // if there are some highlighted letters, DELETE them
                if (mLabels[mSelIndex]->highlighted) {
                   RemoveSelectedText();
                }
                else
                {
-                  // delete one letter
+                  // DELETE one letter
                   if (mCurrentCursorPos < len) {
                      mLabels[mSelIndex]->title.Remove(mCurrentCursorPos, 1);
                   }
@@ -1746,7 +1746,7 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
             }
             else
             {
-               // delete whole label if no text in text box
+               // DELETE whole label if no text in text box
                DeleteLabel( mSelIndex );
             }
             mInitialCursorPos = mCurrentCursorPos;
@@ -2085,7 +2085,7 @@ void LabelTrack::OnContextMenu(wxCommandEvent & evt)
       }
       break;
 
-   /// delete selected label
+   /// DELETE selected label
    case OnDeleteSelectedLabelID:
       int ndx = GetLabelIndex(p->GetSel0(), p->GetSel1());
       if (ndx != -1)

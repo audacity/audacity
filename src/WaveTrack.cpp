@@ -609,7 +609,7 @@ bool WaveTrack::Trim (double t0, double t1)
    }
 
    //if inside0 is false, then the left selector was between
-   //clips, so delete everything to its left.
+   //clips, so DELETE everything to its left.
    if(false == inside1)
    {
       if (!Clear(t1,GetEndTime()))
@@ -974,7 +974,7 @@ bool WaveTrack::ClearAndPaste(double t0, // Start of time to clear
    for (int ii = cuts.GetCount(); ii--;)
       delete cuts[ii];
 
-   // If we created a default time warper, we need to delete it
+   // If we created a default time warper, we need to DELETE it
    if (effectWarper == NULL)
       delete warper;
 
@@ -1080,7 +1080,7 @@ bool WaveTrack::HandleClear(double t0, double t1,
                }
             }
             else { // (We are not doing a split cut)
-               /* We are going to delete part of the clip here. The clip may
+               /* We are going to DELETE part of the clip here. The clip may
                 * have envelope points, and we need to ensure that the envelope
                 * outside of the cleared region is not affected. This means
                 * putting in "glue" points where the clip enters and leaves the
@@ -1445,7 +1445,7 @@ bool WaveTrack::Disjoin(double t0, double t1)
          endTime = t1;
 
       //simply look for a sequence of zeroes and if the sequence
-      //is greater than minimum number, split-delete the region
+      //is greater than minimum number, split-DELETE the region
 
       sampleCount seqStart = -1;
       sampleCount start, end;
@@ -1527,7 +1527,7 @@ bool WaveTrack::Join(double t0, double t1)
       }
    }
 
-   //if there are no clips to delete, nothing to do
+   //if there are no clips to DELETE, nothing to do
    if( clipsToDelete.GetCount() == 0 )
       return true;
 
@@ -2499,7 +2499,7 @@ void WaveTrack::UpdateLocationsCache()
    wxASSERT(curpos == mDisplayNumLocations);
 }
 
-// Expand cut line (that is, re-insert audio, then delete audio saved in cut line)
+// Expand cut line (that is, re-insert audio, then DELETE audio saved in cut line)
 bool WaveTrack::ExpandCutLine(double cutLinePosition, double* cutlineStart,
                               double* cutlineEnd)
 {

@@ -2145,7 +2145,7 @@ void AudacityProject::OnMouseEvent(wxMouseEvent & event)
 // LL: All objects that have a reference to the DirManager should
 //     be deleted before the final mDirManager->Deref() in this
 //     routine.  Failing to do so can cause unwanted recursion
-//     and/or attempts to delete objects twice.
+//     and/or attempts to DELETE objects twice.
 void AudacityProject::OnCloseWindow(wxCloseEvent & event)
 {
    // We are called for the wxEVT_CLOSE_WINDOW, wxEVT_END_SESSION, and
@@ -2253,7 +2253,7 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
    quitOnClose = !mMenuClose;
 #endif
 
-   // DanH: If we're definitely about to quit, delete the clipboard.
+   // DanH: If we're definitely about to quit, DELETE the clipboard.
    //       Doing this after Deref'ing the DirManager causes problems.
    if ((gAudacityProjects.GetCount() == 1) && (quitOnClose || gIsQuitting))
       DeleteClipboard();
@@ -2264,8 +2264,8 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
    // SetMenuBar(NULL);
 
    // Lock all blocks in all tracks of the last saved version, so that
-   // the blockfiles aren't deleted on disk when we delete the blockfiles
-   // in memory.  After it's locked, delete the data structure so that
+   // the blockfiles aren't deleted on disk when we DELETE the blockfiles
+   // in memory.  After it's locked, DELETE the data structure so that
    // there's no memory leak.
    if (mLastSavedTracks) {
       TrackListIterator iter(mLastSavedTracks);
@@ -2332,7 +2332,7 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
    // references to the DirManager.
    mUndoManager.ClearStates();
 
-   // MM: Tell the DirManager it can now delete itself
+   // MM: Tell the DirManager it can now DELETE itself
    // if it finds it is no longer needed. If it is still
    // used (f.e. by the clipboard), it will recognize this
    // and will destroy itself later.
@@ -2800,7 +2800,7 @@ void AudacityProject::OpenFile(wxString fileName, bool addtohistory)
       if (mIsRecovered)
       {
          // This project has been recovered, so write a new auto-save file
-         // now and then delete the old one in the auto-save folder. Note that
+         // now and then DELETE the old one in the auto-save folder. Note that
          // at this point mFileName != fileName, because when opening a
          // recovered file mFileName is faked to point to the original file
          // which has been recovered, not the one in the auto-save folder.
@@ -3533,7 +3533,7 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
       delete pException;
 
       // When XMLWriter throws an exception, it tries to close it before,
-      // so we can at least try to delete the incomplete file and move the
+      // so we can at least try to DELETE the incomplete file and move the
       // backup file over.
       if (safetyFileName != wxT(""))
       {
@@ -3548,14 +3548,14 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
       mWantSaveCompressed = false; // Don't want this mode for AudacityProject::WriteXML() any more.
    else
    {
-      // Now that we have saved the file, we can delete the auto-saved version
+      // Now that we have saved the file, we can DELETE the auto-saved version
       DeleteCurrentAutoSaveFile();
 
       if (mIsRecovered)
       {
          // This was a recovered file, that is, we have just overwritten the
          // old, crashed .aup file. There may still be orphaned blockfiles in
-         // this directory left over from the crash, so we delete them now
+         // this directory left over from the crash, so we DELETE them now
          mDirManager->RemoveOrphanBlockfiles();
 
          // Before we saved this, this was a recovered project, but now it is
@@ -3595,7 +3595,7 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
       mUndoManager.StateSaved();
    }
 
-   // If we get here, saving the project was successful, so we can delete
+   // If we get here, saving the project was successful, so we can DELETE
    // the .bak file (because it now does not fit our block files anymore
    // anyway).
    if (safetyFileName != wxT(""))
@@ -3916,7 +3916,7 @@ For an audio file that will open in other apps, use 'Export'.\n"),
 
    // JKC: I removed 'wxFD_OVERWRITE_PROMPT' because we are checking
    // for overwrite ourselves later, and we disallow it.
-   // We disallow overwrite because we would have to delete the many
+   // We disallow overwrite because we would have to DELETE the many
    // smaller files too, or prompt to move them.
    wxString fName = FileSelector(sDialogTitle,
                                  filename.GetPath(),
@@ -4781,7 +4781,7 @@ void AudacityProject::AutoSave()
       return;
    }
 
-   // Now that we have a new auto-save file, delete the old one
+   // Now that we have a new auto-save file, DELETE the old one
    DeleteCurrentAutoSaveFile();
 
    if (!mAutoSaveFileName.IsEmpty())

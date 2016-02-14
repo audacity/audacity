@@ -118,7 +118,7 @@ class ODManager
   protected:
    //private constructor - Singleton.
    ODManager();
-   //private constructor - delete with static method Quit()
+   //private constructor - DELETE with static method Quit()
    virtual ~ODManager();
    ///Launches a thread for the manager and starts accepting Tasks.
    void Init();

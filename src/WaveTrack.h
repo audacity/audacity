@@ -379,7 +379,7 @@ class AUDACITY_DLL_API WaveTrack : public Track {
    int GetNumCachedLocations() { return mDisplayNumLocations; }
    Location GetCachedLocation(int index) { return mDisplayLocations[index]; }
 
-   // Expand cut line (that is, re-insert audio, then delete audio saved in cut line)
+   // Expand cut line (that is, re-insert audio, then DELETE audio saved in cut line)
    bool ExpandCutLine(double cutLinePosition, double* cutlineStart = NULL, double* cutlineEnd = NULL);
 
    // Remove cut line, without expanding the audio in it
@@ -522,7 +522,7 @@ public:
    // Uses fillZero always
    // Returns null on failure
    // Returned pointer may be invalidated if Get is called again
-   // Do not delete[] the pointer
+   // Do not DELETE[] the pointer
    constSamplePtr Get(sampleFormat format, sampleCount start, sampleCount len);
 
 private:

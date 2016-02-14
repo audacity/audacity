@@ -256,7 +256,7 @@ mStreamIndex(streamIndex)
    //ODDecodeBlockFiles that point to FFmpeg files.
 }
 
-//we have taken ownership, so delete the ffmpeg stuff allocated in ImportFFmpeg that was given to us.
+//we have taken ownership, so DELETE the ffmpeg stuff allocated in ImportFFmpeg that was given to us.
 ODFFmpegDecoder::~ODFFmpegDecoder()
 {
    if (FFmpegLibsInst->ValidLibsLoaded())
@@ -274,7 +274,7 @@ ODFFmpegDecoder::~ODFFmpegDecoder()
    }
    free(mScs);
 
-   //delete our caches.
+   //DELETE our caches.
    while(mDecodeCache.size())
    {
       free(mDecodeCache[0]->samplePtr);

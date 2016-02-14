@@ -313,7 +313,7 @@ void QuitAudacity(bool bForce)
    //temporarilly commented out till it is added to all projects
    //delete Profiler::Instance();
 
-   //delete the static lock for audacity projects
+   //DELETE the static lock for audacity projects
    AudacityProject::DeleteAllProjectsDeleteLock();
 
    //remove our logger

@@ -72,7 +72,7 @@ ODManager::ODManager()
    mQueueNotEmptyCond = new ODCondition(&mQueueNotEmptyCondLock);
 }
 
-//private destructor - delete with static method Quit()
+//private destructor - DELETE with static method Quit()
 ODManager::~ODManager()
 {
    //get rid of all the queues.  The queues get rid of the tasks, so we don't worry abut them.
@@ -361,7 +361,7 @@ void ODManager::Quit()
       pMan->mTerminate = true;
       pMan->mTerminateMutex.Unlock();
 
-      //This while loop waits for ODTasks to finish and the delete removes all tasks from the Queue.
+      //This while loop waits for ODTasks to finish and the DELETE removes all tasks from the Queue.
       //This function is called from the main audacity event thread, so there should not be more requests for pMan
       pMan->mTerminatedMutex.Lock();
       while(!pMan->mTerminated)
@@ -431,7 +431,7 @@ void ODManager::MakeWaveTrackIndependent(WaveTrack* track)
 bool ODManager::MakeWaveTrackDependent(WaveTrack* dependentTrack,WaveTrack* masterTrack)
 {
    //First, check to see if the task lists are mergeable.  If so, we can simply add this track to the other task and queue,
-   //then delete this one.
+   //then DELETE this one.
    ODWaveTrackTaskQueue* masterQueue=NULL;
    ODWaveTrackTaskQueue* dependentQueue=NULL;
    unsigned int dependentIndex = 0;
@@ -494,7 +494,7 @@ void ODManager::UpdateQueues()
    {
       if(mQueues[i]->IsFrontTaskComplete())
       {
-         //this should delete and remove the front task instance.
+         //this should DELETE and remove the front task instance.
          mQueues[i]->RemoveFrontTask();
          //schedule next.
          if(!mQueues[i]->IsEmpty())
@@ -508,7 +508,7 @@ void ODManager::UpdateQueues()
          }
       }
 
-      //if the queue is empty delete it.
+      //if the queue is empty DELETE it.
       if(mQueues[i]->IsEmpty())
       {
          delete mQueues[i];

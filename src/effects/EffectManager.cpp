@@ -53,7 +53,7 @@ EffectManager::~EffectManager()
 {
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
    // wxWidgets has already destroyed the rack since it was derived from wxFrame. So
-   // no need to delete it here.
+   // no need to DELETE it here.
 #endif
 
    EffectMap::iterator iter = mHostEffects.begin();

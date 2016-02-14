@@ -491,7 +491,7 @@ void AudacityProject::CreateMenusAndCommands()
    c->BeginSubMenu(_("R&emove Special"));
    /* i18n-hint: (verb) Do a special kind of cut*/
    c->AddItem(wxT("SplitCut"), _("Spl&it Cut"), FN(OnSplitCut), wxT("Ctrl+Alt+X"));
-   /* i18n-hint: (verb) Do a special kind of delete*/
+   /* i18n-hint: (verb) Do a special kind of DELETE*/
    c->AddItem(wxT("SplitDelete"), _("Split D&elete"), FN(OnSplitDelete), wxT("Ctrl+Alt+K"));
 
    c->AddSeparator();
@@ -4653,9 +4653,9 @@ void AudacityProject::OnSplitDeleteLabels()
   EditByLabel( &WaveTrack::SplitDelete, false );
 
   PushState(
-  /* i18n-hint: (verb) Audacity has just done a special kind of delete on the labeled audio regions */
+  /* i18n-hint: (verb) Audacity has just done a special kind of DELETE on the labeled audio regions */
      _( "Split Deleted labeled audio regions" ),
-  /* i18n-hint: (verb) Do a special kind of delete on labeled audio regions*/
+  /* i18n-hint: (verb) Do a special kind of DELETE on labeled audio regions*/
      _( "Split Delete Labeled Audio" ) );
 
   RedrawProject();

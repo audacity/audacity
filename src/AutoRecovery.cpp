@@ -758,12 +758,12 @@ bool AutoSaveFile::Decode(const wxString & fileName)
 
    try
    {
-	   out.Open(tempName, wxT("wb"));
-	   opened = out.IsOpened();
+      out.Open(tempName, wxT("wb"));
+      opened = out.IsOpened();
    }
    catch (XMLFileWriterException* pException)
    {
-	   delete pException;
+      delete pException;
    }
 
    if (!opened)

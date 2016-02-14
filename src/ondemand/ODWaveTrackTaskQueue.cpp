@@ -26,7 +26,7 @@ ODWaveTrackTaskQueue::ODWaveTrackTaskQueue()
 
 ODWaveTrackTaskQueue::~ODWaveTrackTaskQueue()
 {
-   //we need to delete all ODTasks.  We will have to block or wait until block for the active ones.
+   //we need to DELETE all ODTasks.  We will have to block or wait until block for the active ones.
    for(unsigned int i=0;i<mTasks.size();i++)
    {
       mTasks[i]->TerminateAndBlock();//blocks if active.

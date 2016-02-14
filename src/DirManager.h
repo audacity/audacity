@@ -156,7 +156,7 @@ class DirManager: public XMLTagHandler {
    // This should only be used by the auto save functionality
    void SetLocalTempDir(wxString path);
 
-   // Do not delete any temporary files on exit. This is only called if
+   // Do not DELETE any temporary files on exit. This is only called if
    // auto recovery is cancelled and should be retried later
    static void SetDontDeleteTempFiles() { dontDeleteTempFiles = true; }
 

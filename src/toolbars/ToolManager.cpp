@@ -529,7 +529,7 @@ void ToolManager::Reset()
          // when we dock, we reparent, so bar is no longer a child of floater.
          dock->Dock( bar );
          Expose( ndx, expose );
-         //OK (and good) to delete floater, as bar is no longer in it.
+         //OK (and good) to DELETE floater, as bar is no longer in it.
          if( floater )
             floater->Destroy();
       }

@@ -1628,7 +1628,7 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
 
    int sampleSize = SAMPLE_SIZE(mSampleFormat);
 
-   // Special case: if the samples to delete are all within a single
+   // Special case: if the samples to DELETE are all within a single
    // block and the resulting length is not too small, perform the
    // deletion within this block:
    SeqBlock *pBlock;
@@ -1717,7 +1717,7 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
       mDirManager->Deref(preBlock.f);
    }
 
-   // Next, delete blocks strictly between b0 and b1
+   // Next, DELETE blocks strictly between b0 and b1
    for (i = b0 + 1; i < b1; i++) {
       mDirManager->Deref(mBlock[i].f);
    }

@@ -151,7 +151,7 @@ LabelDialog::LabelDialog(wxWindow *parent,
    /* i18n-hint: (noun) of a label*/
    mGrid->SetColLabelValue(3,_("End Time"));
 
-   // Create and remember editors.  No need to delete these as the wxGrid will
+   // Create and remember editors.  No need to DELETE these as the wxGrid will
    // do it for us.
    mChoiceEditor = (ChoiceEditor *) mGrid->GetDefaultEditorForType(GRID_VALUE_CHOICE);
    mTimeEditor = (TimeEditor *) mGrid->GetDefaultEditorForType(GRID_VALUE_TIME);

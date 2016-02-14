@@ -70,7 +70,7 @@ int EffectStereoToMono::GetAudioOutCount()
 
 bool EffectStereoToMono::Process()
 {
-   // Do not use mWaveTracks here.  We will possibly delete tracks,
+   // Do not use mWaveTracks here.  We will possibly DELETE tracks,
    // so we must use the "real" tracklist.
    this->CopyInputTracks(); // Set up mOutputTracks.
    bool bGoodResult = true;

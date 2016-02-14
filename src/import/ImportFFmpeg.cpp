@@ -603,7 +603,7 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
          }
          tasks.push_back(odTask);
       }
-      //Now we add the tasks and let them run, or delete them if the user cancelled
+      //Now we add the tasks and let them run, or DELETE them if the user cancelled
       for(int i=0; i < (int)tasks.size(); i++) {
          if(res==eProgressSuccess)
             ODManager::Instance()->AddNewTask(tasks[i]);
