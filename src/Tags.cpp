@@ -1154,14 +1154,12 @@ void TagsEditor::OnSave(wxCommandEvent & WXUNUSED(event))
       // Close the file
       writer.Close();
    }
-   catch (XMLFileWriterException* pException)
+   catch (const XMLFileWriterException &exception)
    {
       wxMessageBox(wxString::Format(
          _("Couldn't write to file \"%s\": %s"),
-         fn.c_str(), pException->GetMessage().c_str()),
+         fn.c_str(), exception.GetMessage().c_str()),
          _("Error Saving Tags File"), wxICON_ERROR, this);
-
-      delete pException;
    }
 }
 

@@ -314,9 +314,8 @@ bool ConvertLegacyProjectFile(wxFileName filename)
    {
       xmlFile.Open(name, wxT("wb"));
    }
-   catch (XMLFileWriterException* pException)
+   catch (const XMLFileWriterException&)
    {
-      delete pException;
       return false;
    }
 
@@ -360,10 +359,9 @@ bool ConvertLegacyProjectFile(wxFileName filename)
       xmlFile.EndTag(wxT("audacityproject"));
       xmlFile.Close();
    }
-   catch (XMLFileWriterException* pException)
+   catch (const XMLFileWriterException&)
    {
       // Error writing XML file (e.g. disk full)
-      delete pException;
       return false;
    }
 

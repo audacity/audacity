@@ -384,13 +384,11 @@ void KeyConfigPrefs::OnExport(wxCommandEvent & WXUNUSED(event))
       mManager->WriteXML(prefFile);
       prefFile.Close();
    }
-   catch (XMLFileWriterException* pException)
+   catch (const XMLFileWriterException &)
    {
       wxMessageBox(_("Couldn't write to file: ") + file,
                    _("Error Exporting Keyboard Shortcuts"),
                    wxOK | wxCENTRE, this);
-
-      delete pException;
    }
 }
 
@@ -967,13 +965,11 @@ void KeyConfigPrefs::OnExport(wxCommandEvent & WXUNUSED(event))
       mManager->WriteXML(prefFile);
       prefFile.Close();
    }
-   catch (XMLFileWriterException* pException)
+   catch (const XMLFileWriterException &)
    {
       wxMessageBox(_("Couldn't write to file: ") + file,
                    _("Error Exporting Keyboard Shortcuts"),
                    wxOK | wxCENTRE, this);
-
-      delete pException;
    }
 }
 

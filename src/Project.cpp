@@ -3523,14 +3523,12 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
 
       saveFile.Close();
    }
-   catch (XMLFileWriterException* pException)
+   catch (const XMLFileWriterException &exception)
    {
       wxMessageBox(wxString::Format(
          _("Couldn't write to file \"%s\": %s"),
-         mFileName.c_str(), pException->GetMessage().c_str()),
+         mFileName.c_str(), exception.GetMessage().c_str()),
          _("Error Saving Project"), wxICON_ERROR);
-
-      delete pException;
 
       // When XMLWriter throws an exception, it tries to close it before,
       // so we can at least try to DELETE the incomplete file and move the
@@ -4769,14 +4767,12 @@ void AudacityProject::AutoSave()
       buffer.Write(saveFile);
       saveFile.Close();
    }
-   catch (XMLFileWriterException* pException)
+   catch (const XMLFileWriterException &exception)
    {
       wxMessageBox(wxString::Format(
          _("Couldn't write to file \"%s\": %s"),
-         (fn + wxT(".tmp")).c_str(), pException->GetMessage().c_str()),
+         (fn + wxT(".tmp")).c_str(), exception.GetMessage().c_str()),
          _("Error Writing Autosave File"), wxICON_ERROR, this);
-
-      delete pException;
 
       return;
    }

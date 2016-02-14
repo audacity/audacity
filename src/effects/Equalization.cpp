@@ -1500,14 +1500,12 @@ void EffectEqualization::SaveCurves(wxString fileName)
       // Close the file
       eqFile.Close();
    }
-   catch (XMLFileWriterException* pException)
+   catch (const XMLFileWriterException &exception)
    {
       wxMessageBox(wxString::Format(
          _("Couldn't write to file \"%s\": %s"),
-         fn.GetFullPath().c_str(), pException->GetMessage().c_str()),
+         fn.GetFullPath().c_str(), exception.GetMessage().c_str()),
          _("Error Saving Equalization Curves"), wxICON_ERROR, mUIParent);
-
-      delete pException;
    }
 }
 
