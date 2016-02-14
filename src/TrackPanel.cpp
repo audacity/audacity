@@ -10065,7 +10065,8 @@ static TrackPanel * TrackPanelFactory(wxWindow * parent,
    TrackPanelListener * listener,
    AdornedRulerPanel * ruler)
 {
-   return new TrackPanel(
+   wxASSERT(parent); // to justify safenew
+   return safenew TrackPanel(
       parent,
       id,
       pos,

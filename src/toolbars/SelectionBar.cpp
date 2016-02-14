@@ -251,13 +251,13 @@ void SelectionBar::Populate()
                     NULL,
                     this);
 
-   mLeftTime = new NumericTextCtrl(
+   mLeftTime = safenew NumericTextCtrl(
       NumericConverter::TIME, this, OnLeftTimeID, formatName, 0.0, mRate);
    mLeftTime->SetName(_("Selection Start:"));
    mLeftTime->EnableMenu();
    mainSizer->Add(mLeftTime, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 
-   mRightTime = new NumericTextCtrl(
+   mRightTime = safenew NumericTextCtrl(
       NumericConverter::TIME, this, OnRightTimeID, formatName, 0.0, mRate);
    mRightTime->SetName(wxString(_("Selection ")) + (showSelectionLength ?
                                                    _("Length") :
@@ -270,7 +270,7 @@ void SelectionBar::Populate()
                                    wxLI_VERTICAL),
                   0, wxRIGHT, 5);
 
-   mAudioTime = new NumericTextCtrl(
+   mAudioTime = safenew NumericTextCtrl(
       NumericConverter::TIME, this, wxID_ANY, formatName, 0.0, mRate);
    mAudioTime->SetName(_("Audio Position:"));
    mAudioTime->EnableMenu();

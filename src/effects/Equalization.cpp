@@ -599,7 +599,7 @@ bool EffectEqualization::CloseUI()
 
 void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
 {
-   wxWindow *parent = S.GetParent();
+   wxWindow *const parent = S.GetParent();
 
    LoadCurves();
 
@@ -634,7 +634,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
          // -------------------------------------------------------------------
          S.StartVerticalLay();
          {
-            mdBRuler = new RulerPanel(parent, wxID_ANY);
+            mdBRuler = safenew RulerPanel(parent, wxID_ANY);
             mdBRuler->ruler.SetBounds(0, 0, 100, 100); // Ruler can't handle small sizes
             mdBRuler->ruler.SetOrientation(wxVERTICAL);
             mdBRuler->ruler.SetRange(60.0, -120.0);
@@ -653,7 +653,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
          }
          S.EndVerticalLay();
 
-         mPanel = new EqualizationPanel(this, parent);
+         mPanel = safenew EqualizationPanel(this, parent);
          S.Prop(1);
          S.AddWindow(mPanel, wxEXPAND | wxALIGN_LEFT | wxALIGN_TOP);
          S.SetSizeHints(wxDefaultCoord, wxDefaultCoord);
@@ -687,7 +687,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
          // Column 1 is empty
          S.AddSpace(1, 1);
 
-         mFreqRuler  = new RulerPanel(parent, wxID_ANY);
+         mFreqRuler  = safenew RulerPanel(parent, wxID_ANY);
          mFreqRuler->ruler.SetBounds(0, 0, 100, 100); // Ruler can't handle small sizes
          mFreqRuler->ruler.SetOrientation(wxHORIZONTAL);
          mFreqRuler->ruler.SetLog(true);

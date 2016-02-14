@@ -64,6 +64,7 @@ class PrefsPanel:public wxPanel
 class PrefsPanelFactory
 {
 public:
+   // Precondition: parent != NULL
    virtual PrefsPanel *Create(wxWindow *parent) = 0;
 };
 

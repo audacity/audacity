@@ -241,5 +241,6 @@ bool LibraryPrefs::Apply()
 
 PrefsPanel *LibraryPrefsFactory::Create(wxWindow *parent)
 {
-   return new LibraryPrefs(parent);
+   wxASSERT(parent); // to justify safenew
+   return safenew LibraryPrefs(parent);
 }

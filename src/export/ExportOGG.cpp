@@ -337,7 +337,8 @@ int ExportOGG::Export(AudacityProject *project,
 
 wxWindow *ExportOGG::OptionsCreate(wxWindow *parent, int format)
 {
-   return new ExportOGGOptions(parent, format);
+   wxASSERT(parent); // to justify safenew
+   return safenew ExportOGGOptions(parent, format);
 }
 
 bool ExportOGG::FillComment(AudacityProject *project, vorbis_comment *comment, Tags *metadata)

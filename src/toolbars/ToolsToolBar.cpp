@@ -124,8 +124,6 @@ ToolsToolBar::ToolsToolBar()
 
 ToolsToolBar::~ToolsToolBar()
 {
-   for (int i = 0; i < 5; i++)
-      delete mTool[i];
 }
 
 void ToolsToolBar::RegenerateToolsTooltips()

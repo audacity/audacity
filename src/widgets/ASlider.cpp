@@ -202,7 +202,7 @@ SliderDialog::SliderDialog(wxWindow * parent, wxWindowID id,
                                15);
       mTextCtrl->SetValidator(wxTextValidator(wxFILTER_NUMERIC));
 
-      mSlider = new ASlider(this,
+      mSlider = safenew ASlider(this,
                             wxID_ANY,
                             title,
                             wxDefaultPosition,

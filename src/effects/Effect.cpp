@@ -2884,7 +2884,7 @@ bool EffectUIHost::Initialize()
    wxBoxSizer *vs = new wxBoxSizer(wxVERTICAL);
    wxBoxSizer *hs = new wxBoxSizer(wxHORIZONTAL);
 
-   EffectPanel *w = new EffectPanel(this);
+   EffectPanel *w = safenew EffectPanel(this);
 
    // Try to give the window a sensible default/minimum size
    w->SetMinSize(wxSize(wxMax(600, mParent->GetSize().GetWidth() * 2 / 3),

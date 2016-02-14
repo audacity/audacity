@@ -2884,7 +2884,7 @@ void VSTEffect::BuildPlain()
    {
       wxControl *item = safenew wxStaticText(scroller, 0, _("Duration:"));
       gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 5);
-      mDuration = new
+      mDuration = safenew
          NumericTextCtrl(NumericConverter::TIME,
                          scroller,
                          ID_Duration,

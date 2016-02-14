@@ -1604,7 +1604,7 @@ bool LV2Effect::BuildPlain()
    
       wxWindow *item = safenew wxStaticText(w, 0, _("&Duration:"));
       sizer->Add(item, 0, wxALIGN_CENTER | wxALL, 5);
-      mDuration = new
+      mDuration = safenew
          NumericTextCtrl(NumericConverter::TIME,
                          w,
                          ID_Duration,
@@ -1707,7 +1707,7 @@ bool LV2Effect::BuildPlain()
          {
             gridSizer->Add(1, 1, 0);
             gridSizer->Add(1, 1, 0);
-            LV2EffectMeter *m = new LV2EffectMeter(w, ctrl);
+            LV2EffectMeter *m = safenew LV2EffectMeter(w, ctrl);
             gridSizer->Add(m, 0, wxALIGN_CENTER_VERTICAL | wxEXPAND);
             gridSizer->Add(1, 1, 0);
          }

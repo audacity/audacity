@@ -125,5 +125,6 @@ bool PlaybackPrefs::Apply()
 
 PrefsPanel *PlaybackPrefsFactory::Create(wxWindow *parent)
 {
-   return new PlaybackPrefs(parent);
+   wxASSERT(parent); // to justify safenew
+   return safenew PlaybackPrefs(parent);
 }

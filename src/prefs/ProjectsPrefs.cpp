@@ -82,5 +82,6 @@ bool ProjectsPrefs::Apply()
 
 PrefsPanel *ProjectsPrefsFactory::Create(wxWindow *parent)
 {
-   return new ProjectsPrefs(parent);
+   wxASSERT(parent); // to justify safenew
+   return safenew ProjectsPrefs(parent);
 }

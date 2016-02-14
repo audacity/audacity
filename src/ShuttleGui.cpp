@@ -2077,8 +2077,8 @@ RulerPanel * ShuttleGui::AddRulerVertical(float low, float hi, const wxString & 
 //    return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), RulerPanel);
    RulerPanel * pRulerPanel;
    miProp=0;
-   mpWind = pRulerPanel = new RulerPanel(
-      mpParent,
+   mpWind = pRulerPanel = safenew RulerPanel(
+      GetParent(),
       miId,
       wxDefaultPosition,
       wxDefaultSize

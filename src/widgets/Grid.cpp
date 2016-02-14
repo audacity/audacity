@@ -44,7 +44,8 @@ TimeEditor::~TimeEditor()
 
 void TimeEditor::Create(wxWindow *parent, wxWindowID id, wxEvtHandler *handler)
 {
-   m_control = new NumericTextCtrl(NumericConverter::TIME, parent,
+   wxASSERT(parent); // to justify safenew
+   m_control = safenew NumericTextCtrl(NumericConverter::TIME, parent,
                                 wxID_ANY,
                                 mFormat,
                                 mOld,

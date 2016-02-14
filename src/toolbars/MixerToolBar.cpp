@@ -84,7 +84,7 @@ void MixerToolBar::Populate()
                           wxID_ANY,
                           *mRecordBitmap), 0, wxALIGN_CENTER);
 
-   mInputSlider = new ASlider(this, wxID_ANY, _("Recording Volume"),
+   mInputSlider = safenew ASlider(this, wxID_ANY, _("Recording Volume"),
                               wxDefaultPosition, wxSize(130, 25));
    mInputSlider->SetScroll(0.1f, 2.0f);
    mInputSlider->SetName(_("Slider Recording"));
@@ -97,7 +97,7 @@ void MixerToolBar::Populate()
                           wxID_ANY,
                           *mPlayBitmap), 0, wxALIGN_CENTER);
 
-   mOutputSlider = new ASlider(this, wxID_ANY, _("Playback Volume"),
+   mOutputSlider = safenew ASlider(this, wxID_ANY, _("Playback Volume"),
                                wxDefaultPosition, wxSize(130, 25));
    mOutputSlider->SetScroll(0.1f, 2.0f);
    mOutputSlider->SetName(_("Slider Playback"));

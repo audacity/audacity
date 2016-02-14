@@ -342,7 +342,10 @@ EffectRack *EffectManager::GetRack()
 {
    if (!mRack)
    {
-      mRack = new EffectRack();
+      // EffectRack is constructed with the current project as owner, so safenew is OK
+      mRack = safenew EffectRack();
+      // Make sure what I just commented remains true:
+      wxASSERT(mRack->GetParent());
       mRack->CenterOnParent();
    }
 

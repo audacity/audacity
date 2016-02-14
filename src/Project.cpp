@@ -897,7 +897,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    //
    // Create the horizontal ruler
    //
-   mRuler = new AdornedRulerPanel( this,
+   mRuler = safenew AdornedRulerPanel( this,
                                    wxID_ANY,
                                    wxDefaultPosition,
                                    wxSize( -1, AdornedRulerPanel::GetRulerHeight() ),
@@ -962,8 +962,8 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    //      will be given the focus even if we try to SetFocus().  By
    //      creating the scrollbars after the TrackPanel, we resolve
    //      several focus problems.
-   mHsbar = new ScrollBar(pPage, HSBarID, wxSB_HORIZONTAL);
-   mVsbar = new ScrollBar(pPage, VSBarID, wxSB_VERTICAL);
+   mHsbar = safenew ScrollBar(pPage, HSBarID, wxSB_HORIZONTAL);
+   mVsbar = safenew ScrollBar(pPage, VSBarID, wxSB_VERTICAL);
 
    // LLL: When Audacity starts or becomes active after returning from
    //      another application, the first window that can accept focus

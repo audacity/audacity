@@ -5255,7 +5255,7 @@ void AudacityProject::OnHistory()
 void AudacityProject::OnKaraoke()
 {
    if (!mLyricsWindow)
-      mLyricsWindow = new LyricsWindow(this);
+      mLyricsWindow = safenew LyricsWindow(this);
    mLyricsWindow->Show();
    UpdateLyrics();
    mLyricsWindow->Raise();
@@ -5265,7 +5265,7 @@ void AudacityProject::OnMixerBoard()
 {
    if (!mMixerBoardFrame)
    {
-      mMixerBoardFrame = new MixerBoardFrame(this);
+      mMixerBoardFrame = safenew MixerBoardFrame(this);
       mMixerBoard = mMixerBoardFrame->mMixerBoard;
    }
    mMixerBoardFrame->Show();

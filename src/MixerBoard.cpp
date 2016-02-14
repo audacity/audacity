@@ -209,7 +209,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
 #ifdef EXPERIMENTAL_MIDI_OUT
    if (mNoteTrack) {
       mSlider_Gain =
-         new MixerTrackSlider(
+         safenew MixerTrackSlider(
                this, ID_SLIDER_GAIN,
                /* i18n-hint: title of the MIDI Velocity slider */
                _("Velocity"),
@@ -218,7 +218,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
    } else
 #endif
    mSlider_Gain =
-      new MixerTrackSlider(
+      safenew MixerTrackSlider(
             this, ID_SLIDER_GAIN,
             /* i18n-hint: title of the Gain slider, used to adjust the volume */
             _("Gain"),
@@ -258,7 +258,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
       ctrlSize.x--;
 
    mSlider_Pan =
-      new MixerTrackSlider(
+      safenew MixerTrackSlider(
             this, ID_SLIDER_PAN,
             /* i18n-hint: Title of the Pan slider, used to move the sound left or right */
             _("Pan"),
@@ -271,7 +271,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
    ctrlPos.y += PAN_HEIGHT + kDoubleInset;
    ctrlSize.Set(mMixerBoard->mMuteSoloWidth, MUTE_SOLO_HEIGHT);
    mToggleButton_Mute =
-      new AButton(this, ID_TOGGLEBUTTON_MUTE,
+      safenew AButton(this, ID_TOGGLEBUTTON_MUTE,
                   ctrlPos, ctrlSize,
                   *(mMixerBoard->mImageMuteUp), *(mMixerBoard->mImageMuteOver),
                   *(mMixerBoard->mImageMuteDown), *(mMixerBoard->mImageMuteDisabled),
@@ -285,7 +285,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
 
    ctrlPos.y += MUTE_SOLO_HEIGHT;
    mToggleButton_Solo =
-      new AButton(this, ID_TOGGLEBUTTON_SOLO,
+      safenew AButton(this, ID_TOGGLEBUTTON_SOLO,
                   ctrlPos, ctrlSize,
                   *(mMixerBoard->mImageSoloUp), *(mMixerBoard->mImageSoloOver),
                   *(mMixerBoard->mImageSoloDown), *(mMixerBoard->mImageSoloDisabled),
@@ -308,7 +308,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
    if (mLeftTrack) {
 #endif
    mMeter =
-      new Meter(GetActiveProject(), // AudacityProject* project,
+      safenew Meter(GetActiveProject(), // AudacityProject* project,
                 this, -1, // wxWindow* parent, wxWindowID id,
                 false, // bool isInput
                 ctrlPos, ctrlSize, // const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize,
@@ -984,7 +984,7 @@ MixerBoard::MixerBoard(AudacityProject* pProject,
    mProject = pProject;
 
    mScrolledWindow =
-      new MixerBoardScrolledWindow(
+      safenew MixerBoardScrolledWindow(
          pProject, // AudacityProject* project,
          this, -1, // wxWindow* parent, wxWindowID id = -1,
          this->GetClientAreaOrigin(), // const wxPoint& pos = wxDefaultPosition,
@@ -1109,7 +1109,7 @@ void MixerBoard::UpdateTrackClusters()
                kInset);
             wxSize clusterSize(kMixerTrackClusterWidth, nClusterHeight);
             pMixerTrackCluster =
-               new MixerTrackCluster(mScrolledWindow, this, mProject,
+               safenew MixerTrackCluster(mScrolledWindow, this, mProject,
                                        (WaveTrack*)pLeftTrack, (WaveTrack*)pRightTrack,
                                        clusterPos, clusterSize);
             if (pMixerTrackCluster)
@@ -1758,7 +1758,7 @@ MixerBoardFrame::MixerBoardFrame(AudacityProject* parent)
             //    wxDEFAULT_FRAME_STYLE | wxFRAME_FLOAT_ON_PARENT)
             wxDEFAULT_FRAME_STYLE)
 {
-   mMixerBoard = new MixerBoard(parent, this, wxDefaultPosition, kDefaultSize);
+   mMixerBoard = safenew MixerBoard(parent, this, wxDefaultPosition, kDefaultSize);
 
    this->SetSizeHints(MIXER_BOARD_MIN_WIDTH, MIXER_BOARD_MIN_HEIGHT);
 

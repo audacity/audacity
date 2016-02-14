@@ -83,8 +83,9 @@ public:
    virtual bool IsExtension(const wxString & ext, int index);
 
    virtual bool DisplayOptions(wxWindow *parent, int format = 0);
-
-   virtual wxWindow *OptionsCreate(wxWindow *parent, int format);
+   
+   // Precondition: parent != NULL
+   virtual wxWindow *OptionsCreate(wxWindow *parent, int format) = 0;
 
    virtual bool CheckFileName(wxFileName &filename, int format = 0);
 

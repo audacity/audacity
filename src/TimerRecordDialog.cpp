@@ -364,7 +364,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
          m_pDatePickerCtrl_Start->SetRange(wxDateTime::Today(), wxInvalidDateTime); // No backdating.
          S.AddWindow(m_pDatePickerCtrl_Start);
 
-         m_pTimeTextCtrl_Start = new NumericTextCtrl(
+         m_pTimeTextCtrl_Start = safenew NumericTextCtrl(
             NumericConverter::TIME, this, ID_TIMETEXT_START);
          m_pTimeTextCtrl_Start->SetName(_("Start Time"));
          m_pTimeTextCtrl_Start->SetFormatString(strFormat);
@@ -386,7 +386,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
          m_pDatePickerCtrl_End->SetName(_("End Date"));
          S.AddWindow(m_pDatePickerCtrl_End);
 
-         m_pTimeTextCtrl_End = new NumericTextCtrl(
+         m_pTimeTextCtrl_End = safenew NumericTextCtrl(
             NumericConverter::TIME, this, ID_TIMETEXT_END);
          m_pTimeTextCtrl_End->SetName(_("End Time"));
          m_pTimeTextCtrl_End->SetFormatString(strFormat);
@@ -407,7 +407,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
           * seconds.
           */
          wxString strFormat1 = _("099 days 024 h 060 m 060 s");
-         m_pTimeTextCtrl_Duration = new NumericTextCtrl(
+         m_pTimeTextCtrl_Duration = safenew NumericTextCtrl(
             NumericConverter::TIME, this, ID_TIMETEXT_DURATION);
          m_pTimeTextCtrl_Duration->SetName(_("Duration"));
          m_pTimeTextCtrl_Duration->SetFormatString(strFormat1);

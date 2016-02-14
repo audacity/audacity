@@ -208,5 +208,6 @@ bool ThemePrefs::Apply()
 
 PrefsPanel *ThemePrefsFactory::Create(wxWindow *parent)
 {
-   return new ThemePrefs(parent);
+   wxASSERT(parent); // to justify safenew
+   return safenew ThemePrefs(parent);
 }

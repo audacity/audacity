@@ -1216,7 +1216,7 @@ ExportMixerDialog::ExportMixerDialog( TrackList *tracks, bool selectedOnly,
 
    wxBoxSizer *vertSizer = new wxBoxSizer( wxVERTICAL );
 
-   wxWindow *mixerPanel = new ExportMixerPanel( mMixerSpec, mTrackNames, this,
+   wxWindow *mixerPanel = safenew ExportMixerPanel( mMixerSpec, mTrackNames, this,
          ID_MIXERPANEL, wxDefaultPosition, wxSize( 400, -1 ) );
    mixerPanel->SetName(_("Mixer Panel"));
    vertSizer->Add( mixerPanel, 1, wxEXPAND | wxALIGN_CENTRE | wxALL, 5 );

@@ -1196,7 +1196,7 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
       {
          item = safenew wxStaticText(w, 0, _("Duration:"));
          gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 5);
-         mDuration = new
+         mDuration = safenew
             NumericTextCtrl(NumericConverter::TIME,
                             w,
                             ID_Duration,
@@ -1431,7 +1431,7 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
          upper = floorf(upper * 1000000.0) / 1000000.0;
          mInputControls[p] = roundf(mInputControls[p] * 1000000.0) / 1000000.0;
 
-         mMeters[p] = new LadspaEffectMeter(w, mOutputControls[p], lower, upper);
+         mMeters[p] = safenew LadspaEffectMeter(w, mOutputControls[p], lower, upper);
          mMeters[p]->SetName(labelText);
          gridSizer->Add(mMeters[p], 1, wxEXPAND | wxALIGN_CENTER_VERTICAL | wxALL, 5);
       }

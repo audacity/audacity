@@ -402,8 +402,8 @@ ToolManager::ToolManager( AudacityProject *parent )
                      this );
 
    // Create the top and bottom docks
-   mTopDock = new ToolDock( this, mParent, TopDockID );
-   mBotDock = new ToolDock( this, mParent, BotDockID );
+   mTopDock = safenew ToolDock( this, mParent, TopDockID );
+   mBotDock = safenew ToolDock( this, mParent, BotDockID );
 
    // Create all of the toolbars
    mBars[ ToolsBarID ]         = new ToolsToolBar();
@@ -542,7 +542,7 @@ void ToolManager::Reset()
          // Maybe construct a NEW floater
          // this happens if we have just been bounced out of a dock.
          if( floater == NULL ) {
-            floater = new ToolFrame( mParent, this, bar, wxPoint(-1,-1) );
+            floater = safenew ToolFrame( mParent, this, bar, wxPoint(-1,-1) );
             bar->Reparent( floater );
          }
 
@@ -710,7 +710,7 @@ void ToolManager::ReadConfig()
 
 
          // Construct a NEW floater
-         ToolFrame *f = new ToolFrame( mParent, this, bar, wxPoint( x, y ) );
+         ToolFrame *f = safenew ToolFrame( mParent, this, bar, wxPoint( x, y ) );
 
          // Set the width and height
          if( width[ ndx ] != -1 && height[ ndx ] != -1 )

@@ -983,27 +983,28 @@ int ExportFFmpeg::AskResample(int bitrate, int rate, int lowrate, int highrate, 
 
 wxWindow *ExportFFmpeg::OptionsCreate(wxWindow *parent, int format)
 {
+   wxASSERT(parent); // to justify safenew
    // subformat index may not correspond directly to fmts[] index, convert it
    mSubFormat = AdjustFormatIndex(format);
    if (mSubFormat == FMT_M4A)
    {
-      return new ExportFFmpegAACOptions(parent, format);
+      return safenew ExportFFmpegAACOptions(parent, format);
    }
    else if (mSubFormat == FMT_AC3)
    {
-      return new ExportFFmpegAC3Options(parent, format);
+      return safenew ExportFFmpegAC3Options(parent, format);
    }
    else if (mSubFormat == FMT_AMRNB)
    {
-      return new ExportFFmpegAMRNBOptions(parent, format);
+      return safenew ExportFFmpegAMRNBOptions(parent, format);
    }
    else if (mSubFormat == FMT_WMA2)
    {
-      return new ExportFFmpegWMAOptions(parent, format);
+      return safenew ExportFFmpegWMAOptions(parent, format);
    }
    else if (mSubFormat == FMT_OTHER)
    {
-      return new ExportFFmpegCustomOptions(parent, format);
+      return safenew ExportFFmpegCustomOptions(parent, format);
    }
 
    return ExportPlugin::OptionsCreate(parent, format);

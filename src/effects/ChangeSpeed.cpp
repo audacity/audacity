@@ -362,7 +362,7 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
          {
             S.AddPrompt(_("Current Length:"));
 
-            mpFromLengthCtrl = new
+            mpFromLengthCtrl = safenew
                   NumericTextCtrl(NumericConverter::TIME,
                                  S.GetParent(),
                                  wxID_ANY,
@@ -378,7 +378,7 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
 
             S.AddPrompt(_("New Length:"));
 
-            mpToLengthCtrl = new
+            mpToLengthCtrl = safenew
                   NumericTextCtrl(NumericConverter::TIME,
                                  S.GetParent(),
                                  ID_ToLength,

@@ -230,7 +230,7 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
       S.StartHorizontalLay(wxEXPAND, 1);
       {
          if (!mView) {
-            mView = new KeyView(this, CommandsListID);
+            mView = safenew KeyView(this, CommandsListID);
             mView->SetName(_("Bindings"));
          }
          S.Prop(true);
@@ -1209,5 +1209,6 @@ void KeyConfigPrefs::Cancel()
 
 PrefsPanel *KeyConfigPrefsFactory::Create(wxWindow *parent)
 {
-   return new KeyConfigPrefs(parent);
+   wxASSERT(parent); // to justify safenew
+   return safenew KeyConfigPrefs(parent);
 }

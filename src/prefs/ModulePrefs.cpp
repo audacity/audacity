@@ -163,7 +163,6 @@ void ModulePrefs::SetModuleStatus( wxString fname, int iStatus ){
 
 PrefsPanel *ModulePrefsFactory::Create(wxWindow *parent)
 {
-   return new ModulePrefs(parent);
+   wxASSERT(parent); // to justify safenew
+   return safenew ModulePrefs(parent);
 }
-
-

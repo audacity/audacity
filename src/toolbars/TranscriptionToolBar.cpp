@@ -193,7 +193,7 @@ void TranscriptionToolBar::Populate()
 
    //Add a slider that controls the speed of playback.
    const int SliderWidth=100;
-   mPlaySpeedSlider = new ASlider(this,
+   mPlaySpeedSlider = safenew ASlider(this,
                                   TTB_PlaySpeedSlider,
                                   _("Playback Speed"),
                                   wxDefaultPosition,
@@ -236,7 +236,7 @@ void TranscriptionToolBar::Populate()
    AddButton(bmpTnCalibrate, bmpTnCalibrateDisabled, TTB_Calibrate,
       TRANSLATABLE("Calibrate voicekey"));
 
-   mSensitivitySlider = new ASlider(this,
+   mSensitivitySlider = safenew ASlider(this,
                                     TTB_SensitivitySlider,
                                     TRANSLATABLE("Adjust Sensitivity"),
                                     wxDefaultPosition,
