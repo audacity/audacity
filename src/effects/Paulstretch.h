@@ -40,6 +40,7 @@ public:
 
    // Effect implementation
 
+   virtual double CalcPreviewInputLength(double previewLength);
    virtual bool Process();
    virtual void PopulateOrExchange(ShuttleGui & S);
    virtual bool TransferDataToWindow();
@@ -49,12 +50,13 @@ private:
    // EffectPaulstretch implementation
    
    void OnText(wxCommandEvent & evt);
+   int GetBufferSize(double rate);
 
    bool ProcessOne(WaveTrack *track, double t0, double t1, int count);
 
 private:
-   float amount;
-   float time_resolution;  //seconds
+   float mAmount;
+   float mTime_resolution;  //seconds
    double m_t1;
 
    DECLARE_EVENT_TABLE();

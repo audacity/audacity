@@ -1869,7 +1869,8 @@ int ExportMP3::Export(AudacityProject *project,
 
 wxWindow *ExportMP3::OptionsCreate(wxWindow *parent, int format)
 {
-   return new ExportMP3Options(parent, format);
+   wxASSERT(parent); // to justify safenew
+   return safenew ExportMP3Options(parent, format);
 }
 
 int ExportMP3::FindValue(CHOICES *choices, int cnt, int needle, int def)

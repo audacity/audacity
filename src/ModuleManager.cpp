@@ -495,7 +495,7 @@ void ModuleManager::UnloadModule(ModuleInterface *module)
          mLibs.erase(module);
       }
 
-      delete module; //After terminating and unloading, we can safely delete the module
+      delete module; //After terminating and unloading, we can safely DELETE the module
    }
 }
 

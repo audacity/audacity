@@ -15,7 +15,7 @@
 class ExportPlugin;
 
 /** The only part of this class which is publically accessible is the
- * factory method New_ExportCL() which creates a new ExportCL object and
+ * factory method New_ExportCL() which creates a NEW ExportCL object and
  * returns a pointer to it. The rest of the class declaration is in ExportCL.cpp
  */
 ExportPlugin *New_ExportCL();

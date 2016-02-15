@@ -2051,7 +2051,7 @@ bool VSTEffect::Load()
       return false;
    }
 
-   // Try to locate the new plugin entry point
+   // Try to locate the NEW plugin entry point
    pluginMain = (vstPluginMain) dlsym(mModule, "VSTPluginMain");
 
    // If not found, try finding the old entry point
@@ -2129,6 +2129,9 @@ bool VSTEffect::Load()
    // symbols.
    //
    // Once we define a proper external API, the flags can be removed.
+#ifndef RTLD_DEEPBIND
+#define RTLD_DEEPBIND 0
+#endif
    void *lib = dlopen((const char *)wxString(realPath).ToUTF8(), RTLD_NOW | RTLD_LOCAL | RTLD_DEEPBIND);
    if (!lib) 
    {
@@ -2847,7 +2850,8 @@ void VSTEffect::BuildFancy()
 void VSTEffect::BuildPlain()
 {
    wxBoxSizer *mainSizer = new wxBoxSizer(wxVERTICAL);
-   wxScrolledWindow *scroller = new wxScrolledWindow(mParent,
+   wxASSERT(mParent); // To justify safenew
+   wxScrolledWindow *const scroller = safenew wxScrolledWindow(mParent,
                                                      wxID_ANY,
                                                      wxDefaultPosition,
                                                      wxDefaultSize,
@@ -2878,9 +2882,9 @@ void VSTEffect::BuildPlain()
    // Add the duration control for generators
    if (GetType() == EffectTypeGenerate)
    {
-      wxControl *item = new wxStaticText(scroller, 0, _("Duration:"));
+      wxControl *item = safenew wxStaticText(scroller, 0, _("Duration:"));
       gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 5);
-      mDuration = new
+      mDuration = safenew
          NumericTextCtrl(NumericConverter::TIME,
                          scroller,
                          ID_Duration,
@@ -2921,7 +2925,7 @@ void VSTEffect::BuildPlain()
 
    for (int i = 0; i < mAEffect->numParams; i++)
    {
-      mNames[i] = new wxStaticText(scroller,
+      mNames[i] = safenew wxStaticText(scroller,
                                    wxID_ANY,
                                    wxEmptyString,
                                    wxDefaultPosition,
@@ -2929,7 +2933,7 @@ void VSTEffect::BuildPlain()
                                    wxALIGN_RIGHT | wxST_NO_AUTORESIZE);
       gridSizer->Add(mNames[i], 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 5);
 
-      mSliders[i] = new wxSlider(scroller,
+      mSliders[i] = safenew wxSlider(scroller,
                                  ID_Sliders + i,
                                  0,
                                  0,
@@ -2938,7 +2942,7 @@ void VSTEffect::BuildPlain()
                                  wxSize(200, -1));
       gridSizer->Add(mSliders[i], 0, wxALIGN_CENTER_VERTICAL | wxEXPAND | wxALL, 5);
 
-      mDisplays[i] = new wxStaticText(scroller,
+      mDisplays[i] = safenew wxStaticText(scroller,
                                       wxID_ANY,
                                       wxEmptyString,
                                       wxDefaultPosition,
@@ -2946,7 +2950,7 @@ void VSTEffect::BuildPlain()
                                       wxALIGN_RIGHT | wxST_NO_AUTORESIZE);
       gridSizer->Add(mDisplays[i], 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 5);
 
-      mLabels[i] = new wxStaticText(scroller,
+      mLabels[i] = safenew wxStaticText(scroller,
                                     wxID_ANY,
                                     wxEmptyString,
                                     wxDefaultPosition,

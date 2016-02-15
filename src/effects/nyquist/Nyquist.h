@@ -199,6 +199,7 @@ private:
    bool              mEnablePreview;
    bool              mDebug;
    bool              mRedirectOutput;
+   bool              mProjectChanged;
    wxString          mDebugOutput;
 
    int               mVersion;

@@ -214,12 +214,12 @@ static bool RecoverAllProjects(AudacityProject** pproj)
          *pproj = NULL;
       } else
       {
-         // Create new project window
+         // Create NEW project window
          proj = CreateNewAudacityProject();
       }
 
       // Open project. When an auto-save file has been opened successfully,
-      // the opened auto-save file is automatically deleted and a new one
+      // the opened auto-save file is automatically deleted and a NEW one
       // is created.
       proj->OpenFile(files[i], false);
    }
@@ -283,6 +283,28 @@ RecordingRecoveryHandler::RecordingRecoveryHandler(AudacityProject* proj)
    mNumChannels = -1;
 }
 
+int RecordingRecoveryHandler::FindTrack() const
+{
+   WaveTrackArray tracks = mProject->GetTracks()->GetWaveTrackArray(false);
+   int index;
+   if (mAutoSaveIdent)
+   {
+      for (index = 0; index < (int)tracks.GetCount(); index++)
+      {
+         if (tracks[index]->GetAutoSaveIdent() == mAutoSaveIdent)
+         {
+            break;
+         }
+      }
+   }
+   else
+   {
+      index = tracks.GetCount() - mNumChannels + mChannel;
+   }
+
+   return index;
+}
+
 bool RecordingRecoveryHandler::HandleXMLTag(const wxChar *tag,
                                             const wxChar **attrs)
 {
@@ -296,23 +318,9 @@ bool RecordingRecoveryHandler::HandleXMLTag(const wxChar *tag,
          return false;
       }
 
-      // We need to find the track and sequence where the blockfile belongs
       WaveTrackArray tracks = mProject->GetTracks()->GetWaveTrackArray(false);
-      int index;
-      if (mAutoSaveIdent)
-      {
-         for (index = 0; index < (int) tracks.GetCount(); index++)
-         {
-            if (tracks[index]->GetAutoSaveIdent() == mAutoSaveIdent)
-            {
-               break;
-            }
-         }
-      }
-      else
-      {
-         index = tracks.GetCount() - mNumChannels + mChannel;
-      }
+      int index = FindTrack();
+      // We need to find the track and sequence where the blockfile belongs
 
       if (index < 0 || index >= (int) tracks.GetCount())
       {
@@ -326,10 +334,14 @@ bool RecordingRecoveryHandler::HandleXMLTag(const wxChar *tag,
       Sequence* seq = clip->GetSequence();
 
       // Load the blockfile from the XML
-      BlockFile* blockFile = NULL;
       DirManager* dirManager = mProject->GetDirManager();
       dirManager->SetLoadingFormat(seq->GetSampleFormat());
-      dirManager->SetLoadingTarget(&blockFile);
+
+      BlockArray array;
+      array.resize(1);
+      dirManager->SetLoadingTarget(&array, 0);
+      BlockFile *& blockFile = array[0].f;
+
       if (!dirManager->HandleXMLTag(tag, attrs) || !blockFile)
       {
          // This should only happen if there is a bug
@@ -385,6 +397,29 @@ bool RecordingRecoveryHandler::HandleXMLTag(const wxChar *tag,
    }
 
    return true;
+}
+
+void RecordingRecoveryHandler::HandleXMLEndTag(const wxChar *tag)
+{
+   if (wxStrcmp(tag, wxT("simpleblockfile")) == 0)
+      // Still in inner looop
+      return;
+
+   WaveTrackArray tracks = mProject->GetTracks()->GetWaveTrackArray(false);
+   int index = FindTrack();
+   // We need to find the track and sequence where the blockfile belongs
+
+   if (index < 0 || index >= (int)tracks.GetCount()) {
+      // This should only happen if there is a bug
+      wxASSERT(false);
+   }
+   else {
+      WaveTrack* track = tracks.Item(index);
+      WaveClip*  clip = track->NewestOrNewClip();
+      Sequence* seq = clip->GetSequence();
+
+      seq->ConsistencyCheck(wxT("RecordingRecoveryHandler::HandleXMLEndTag"));
+   }
 }
 
 XMLTagHandler* RecordingRecoveryHandler::HandleXMLChild(const wxChar *tag)
@@ -723,12 +758,11 @@ bool AutoSaveFile::Decode(const wxString & fileName)
 
    try
    {
-	   out.Open(tempName, wxT("wb"));
-	   opened = out.IsOpened();
+      out.Open(tempName, wxT("wb"));
+      opened = out.IsOpened();
    }
-   catch (XMLFileWriterException* pException)
+   catch (const XMLFileWriterException&)
    {
-	   delete pException;
    }
 
    if (!opened)

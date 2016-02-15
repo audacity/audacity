@@ -45,6 +45,7 @@ class TimeEditor:public wxGridCellEditor
 
    ~TimeEditor();
 
+   // Precondition: parent != NULL
    void Create(wxWindow *parent, wxWindowID id, wxEvtHandler *handler);
 
    bool IsAcceptedKey(wxKeyEvent &event);

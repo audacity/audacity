@@ -13,6 +13,7 @@
 
 #include <stdlib.h>
 #include <algorithm>
+#include <vector>
 
 #include <wx/dynarray.h>
 #include <wx/brush.h>
@@ -28,25 +29,19 @@ class wxTextFile;
 
 class DirManager;
 class Envelope;
+class EnvPoint;
 
 class ZoomInfo;
 
 class EnvPoint : public XMLTagHandler {
 
 public:
-   EnvPoint(Envelope *envelope, double t, double val)
-   {
-      mEnvelope = envelope;
-      mT = t;
-      mVal = ClampValue(val);
-   }
+   inline EnvPoint(Envelope *envelope, double t, double val);
 
-   double ClampValue(double val); // this calls mEnvelope->ClampValue(), implementation is below the Envelope class
-
-   double GetT() { return mT; }
+   double GetT() const { return mT; }
    void SetT(double t) { mT = t; }
-   double GetVal() { return mVal; }
-   void SetVal(double val) { mVal = ClampValue(val); }
+   double GetVal() const { return mVal; }
+   inline void SetVal(double val);
 
    bool HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    {
@@ -77,12 +72,7 @@ private:
 
 };
 
-// TODO: Become an array of EnvPoint rather than of pointers to.
-//    Really? wxWidgets help says:
-//    "wxArray is suitable for storing integer types and pointers which it does not
-//       treat as objects in any way..."
-//    And why is this a TODO in any case, if it works correctly?
-WX_DEFINE_ARRAY(EnvPoint *, EnvArray);
+typedef std::vector<EnvPoint> EnvArray;
 
 class Envelope : public XMLTagHandler {
  public:
@@ -114,7 +104,7 @@ class Envelope : public XMLTagHandler {
    // Newfangled XML file I/O
    virtual bool HandleXMLTag(const wxChar *tag, const wxChar **attrs);
    virtual XMLTagHandler *HandleXMLChild(const wxChar *tag);
-   virtual void WriteXML(XMLWriter &xmlFile);
+   virtual void WriteXML(XMLWriter &xmlFile) const;
 
    void DrawPoints(wxDC & dc, const wxRect & r, const ZoomInfo &zoomInfo,
              bool dB, double dBRange,
@@ -181,11 +171,20 @@ class Envelope : public XMLTagHandler {
     * Returns 0 if point moved, -1 if not found.*/
    int Move(double when, double value);
 
-   /** \brief delete a point by it's position in array */
+   /** \brief DELETE a point by its position in array */
    void Delete(int point);
+
+   /** \brief insert a point */
+   void Insert(int point, const EnvPoint &p);
 
    /** \brief Return number of points */
    int GetNumberOfPoints() const;
+
+   /** \brief Accessor for points */
+   const EnvPoint &operator[] (int index) const
+   {
+      return mEnv[index];
+   }
 
    /** \brief Returns the sets of when and value pairs */
    void GetPoints(double *bufferWhen,
@@ -227,6 +226,7 @@ private:
 
    /** \brief Number of pixels contour is from the true envelope. */
    int mContourOffset;
+
    double mInitialVal;
 
    // These are used in dragging.
@@ -249,9 +249,16 @@ private:
 
 };
 
-inline double EnvPoint::ClampValue(double val)
+inline EnvPoint::EnvPoint(Envelope *envelope, double t, double val)
 {
-   return mEnvelope->ClampValue(val);
+   mEnvelope = envelope;
+   mT = t;
+   mVal = mEnvelope->ClampValue(val);
+}
+
+inline void EnvPoint::SetVal(double val)
+{
+   mVal = mEnvelope->ClampValue(val);
 }
 
 #endif

@@ -16,10 +16,10 @@
 
 
   JKC: This file solves a problem of how to avoid forking the
-  code base when working on new features e.g:
+  code base when working on NEW features e.g:
     - Additional displays in Audacity
     - Modular architecture.
-  Add #defines in here for the new features, and make your code
+  Add #defines in here for the NEW features, and make your code
   conditional on those #defines.
 
   All the #defines are positive, i.e., when defined,
@@ -42,7 +42,7 @@
 #define EXPERIMENTAL_SCIENCE_FILTERS
 
 // LLL, 01 Oct 2013:
-// new key assignment view for preferences
+// NEW key assignment view for preferences
 #define EXPERIMENTAL_KEY_VIEW
 
 // feature to link audio tracks to a label track
@@ -160,7 +160,7 @@
 // Define to enable the device change handler
 //#define EXPERIMENTAL_DEVICE_CHANGE_HANDLER
 
-// Define for new noise reduction effect from Paul Licameli.
+// Define for NEW noise reduction effect from Paul Licameli.
 #define EXPERIMENTAL_NOISE_REDUCTION
 
 // Define to enable Nyquist audio clip boundary control (Steve Daulton Dec 2014)

@@ -26,6 +26,8 @@ effects from this one class.
 
 #include "../../Audacity.h"
 
+#include <algorithm>
+
 #include <math.h>
 #include <locale.h>
 
@@ -40,6 +42,7 @@ effects from this one class.
 #include <wx/txtstrm.h>
 #include <wx/valgen.h>
 #include <wx/wfstream.h>
+#include <wx/numformatter.h>
 
 #include "../../AudacityApp.h"
 #include "../../FileNames.h"
@@ -436,6 +439,9 @@ bool NyquistEffect::CheckWhetherSkipEffect()
 bool NyquistEffect::Process()
 {
    bool success = true;
+   mProjectChanged = false;
+   EffectManager & em = EffectManager::Get();
+   em.SetSkipStateFlag(false);
 
    if (mExternal) {
       mProgress->Hide();
@@ -481,6 +487,8 @@ bool NyquistEffect::Process()
       mProps = wxEmptyString;
 
       mProps += wxString::Format(wxT("(putprop '*AUDACITY* (list %d %d %d) 'VERSION)\n"), AUDACITY_VERSION, AUDACITY_RELEASE, AUDACITY_REVISION);
+
+      mProps += wxString::Format(wxT("(setf *DECIMAL-SEPARATOR* #\\%c)\n"), wxNumberFormatter::GetDecimalSeparator());
 
       mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* \"%s\" 'BASE)\n"), EscapeString(FileNames::BaseDir()).c_str());
       mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* \"%s\" 'DATA)\n"), EscapeString(FileNames::DataDir()).c_str());
@@ -571,7 +579,9 @@ bool NyquistEffect::Process()
       mProps += wxString::Format(wxT("(putprop '*PROJECT* (float %s) 'PREVIEW-DURATION)\n"),
                                  Internat::ToString(previewLen).c_str());
 
-
+      // *PREVIEWP* is true when previewing (better than relying on track view).
+      wxString isPreviewing = (this->IsPreviewing())? wxT("T") : wxT("NIL");
+      mProps += wxString::Format(wxT("(setf *PREVIEWP* %s)\n"), isPreviewing.c_str());
 
       mProps += wxString::Format(wxT("(putprop '*SELECTION* (float %s) 'START)\n"),
                                  Internat::ToString(mT0).c_str());
@@ -617,6 +627,8 @@ bool NyquistEffect::Process()
          if (mCurLen > NYQ_MAX_LEN) {
             wxMessageBox(_("Selection too long for Nyquist code.\nMaximum allowed selection is 2147483647 samples\n(about 13.5 hours at 44100 Hz sample rate)."),
                          _("Nyquist Error"), wxOK | wxCENTRE);
+            if (!mProjectChanged)
+               em.SetSkipStateFlag(true);
             return false;
          }
 
@@ -715,6 +727,9 @@ bool NyquistEffect::Process()
    ReplaceProcessedTracks(success);
 
    mDebug = false;
+
+   if (!mProjectChanged)
+      em.SetSkipStateFlag(true);
 
    return success;
 }
@@ -866,10 +881,28 @@ bool NyquistEffect::ProcessOne()
       // Note: "View" property may change when Audacity's choice of track views has stabilized.
       cmd += wxString::Format(wxT("(putprop '*TRACK* %s 'VIEW)\n"), view.c_str());
       cmd += wxString::Format(wxT("(putprop '*TRACK* %d 'CHANNELS)\n"), mCurNumChannels);
+
+      double startTime = 0.0;
+      double endTime = 0.0;
+
+      if (mCurTrack[0]->GetLinked()) {
+         startTime = std::min<double>(mCurTrack[0]->GetStartTime(), mCurTrack[0]->GetLink()->GetStartTime());
+      }
+      else {
+         startTime = mCurTrack[0]->GetStartTime();
+      }
+
+      if (mCurTrack[0]->GetLinked()) {
+         endTime = std::max<double>(mCurTrack[0]->GetEndTime(), mCurTrack[0]->GetLink()->GetEndTime());
+      }
+      else {
+         endTime = mCurTrack[0]->GetEndTime();
+      }
+
       cmd += wxString::Format(wxT("(putprop '*TRACK* (float %s) 'START-TIME)\n"),
-                              Internat::ToString(mCurTrack[0]->GetStartTime()).c_str());
+                              Internat::ToString(startTime).c_str());
       cmd += wxString::Format(wxT("(putprop '*TRACK* (float %s) 'END-TIME)\n"),
-                              Internat::ToString(mCurTrack[0]->GetEndTime()).c_str());
+                              Internat::ToString(endTime).c_str());
       cmd += wxString::Format(wxT("(putprop '*TRACK* (float %s) 'GAIN)\n"),
                               Internat::ToString(mCurTrack[0]->GetGain()).c_str());
       cmd += wxString::Format(wxT("(putprop '*TRACK* (float %s) 'PAN)\n"),
@@ -1068,6 +1101,7 @@ bool NyquistEffect::ProcessOne()
    }
 
    if (rval == nyx_labels) {
+      mProjectChanged = true;
       unsigned int numLabels = nyx_get_num_labels();
       unsigned int l;
       LabelTrack *ltrack = NULL;
@@ -1210,7 +1244,7 @@ bool NyquistEffect::ProcessOne()
       delete mOutputTrack[i];
       mOutputTrack[i] = NULL;
    }
-
+   mProjectChanged = true;
    return true;
 }
 
@@ -2213,13 +2247,13 @@ NyquistOutputDialog::NyquistOutputDialog(wxWindow * parent, wxWindowID id,
    wxButton   *button;
    wxControl  *item;
 
-   item = new wxStaticText(this, -1, prompt);
+   item = safenew wxStaticText(this, -1, prompt);
    item->SetName(prompt);  // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    mainSizer->Add(item, 0, wxALIGN_LEFT | wxLEFT | wxTOP | wxRIGHT, 10);
 
    // TODO use ShowInfoDialog() instead.
    // Beware this dialog MUST work with screen readers.
-   item = new wxTextCtrl(this, -1, message,
+   item = safenew wxTextCtrl(this, -1, message,
                          wxDefaultPosition, wxSize(400, 200),
                          wxTE_MULTILINE | wxTE_READONLY);
    mainSizer->Add(item, 0, wxALIGN_LEFT | wxALL, 10);
@@ -2227,7 +2261,7 @@ NyquistOutputDialog::NyquistOutputDialog(wxWindow * parent, wxWindowID id,
    hSizer = new wxBoxSizer(wxHORIZONTAL);
 
    /* i18n-hint: In most languages OK is to be translated as OK.  It appears on a button.*/
-   button = new wxButton(this, wxID_OK, _("OK"));
+   button = safenew wxButton(this, wxID_OK, _("OK"));
    button->SetDefault();
    hSizer->Add(button, 0, wxALIGN_CENTRE | wxALL, 5);
 

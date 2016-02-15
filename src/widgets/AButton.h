@@ -164,7 +164,7 @@ class AButton: public wxWindow {
    wxRect mFocusRect;
    bool mForceFocusRect;
 
-   std::auto_ptr<Listener> mListener;
+   std::unique_ptr<Listener> mListener;
 
 public:
 

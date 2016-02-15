@@ -226,7 +226,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    void OpenFile(wxString fileName, bool addtohistory = true);
    bool WarnOfLegacyFile( );
 
-   // If pNewTrackList is passed in non-NULL, it gets filled with the pointers to new tracks.
+   // If pNewTrackList is passed in non-NULL, it gets filled with the pointers to NEW tracks.
    bool Import(wxString fileName, WaveTrackArray *pTrackArray = NULL);
 
    void AddImportedTracks(wxString fileName,
@@ -384,7 +384,8 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 
    double ScrollingLowerBoundTime() const;
    // How many pixels are covered by the period from lowermost scrollable time, to the given time:
-   wxInt64 PixelWidthBeforeTime(double scrollto) const;
+   // PRL: Bug1197: we seem to need to compute all in double, to avoid differing results on Mac
+   double PixelWidthBeforeTime(double scrollto) const;
    void SetHorizontalThumb(double scrollto);
 
    // TrackPanel access
@@ -433,6 +434,10 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 
    wxStatusBar* GetStatusBar() { return mStatusBar; }
 
+private:
+   bool SnapSelection();
+
+public:
    // SelectionBarListener callback methods
 
    virtual double AS_GetRate();
@@ -477,7 +482,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    // Command Handling
    bool TryToMakeActionAllowed( wxUint32 & flags, wxUint32 flagsRqd, wxUint32 mask );
 
-   ///Prevents delete from external thread - for e.g. use of GetActiveProject
+   ///Prevents DELETE from external thread - for e.g. use of GetActiveProject
    static void AllProjectsDeleteLock();
    static void AllProjectsDeleteUnlock();
 

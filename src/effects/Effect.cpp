@@ -24,6 +24,8 @@ greater use in future.
 #include "../Audacity.h"
 #include "Effect.h"
 
+#include <algorithm>
+
 #include <wx/defs.h>
 #include <wx/hashmap.h>
 #include <wx/msgdlg.h>
@@ -1872,7 +1874,7 @@ bool Effect::ProcessTrack(int count,
 
       // Transfer the data from the temporary tracks to the actual ones
       genLeft->Flush();
-      // mT1 gives us the new selection. We want to replace up to GetSel1().
+      // mT1 gives us the NEW selection. We want to replace up to GetSel1().
       left->ClearAndPaste(mT0, p->GetSel1(), genLeft, true, true, warper);
       delete genLeft;
 
@@ -2122,14 +2124,14 @@ void Effect::AddToOutputTracks(Track *t)
 }
 
 // If bGoodResult, replace mTracks tracks with successfully processed mOutputTracks copies.
-// Else clear and delete mOutputTracks copies.
+// Else clear and DELETE mOutputTracks copies.
 void Effect::ReplaceProcessedTracks(const bool bGoodResult)
 {
    wxASSERT(mOutputTracks != NULL); // Make sure we at least did the CopyInputTracks().
 
    if (!bGoodResult) {
       // Processing failed or was cancelled so throw away the processed tracks.
-      mOutputTracks->Clear(true); // true => delete the tracks
+      mOutputTracks->Clear(true); // true => DELETE the tracks
 
       // Reset map
       mIMap.Clear();
@@ -2159,21 +2161,21 @@ void Effect::ReplaceProcessedTracks(const bool bGoodResult)
       // This should never happen
       wxASSERT(i < cnt);
 
-      // Remove the track from the output list...don't delete it
+      // Remove the track from the output list...don't DELETE it
       x = iterOut.RemoveCurrent(false);
 
       Track *t = (Track *) mIMap[i];
       if (t == NULL)
       {
-         // This track is a new addition to output tracks; add it to mTracks
+         // This track is a NEW addition to output tracks; add it to mTracks
          mTracks->Add(o);
       }
       else
       {
-         // Replace mTracks entry with the new track
+         // Replace mTracks entry with the NEW track
          mTracks->Replace(t, o, false);
 
-         // Swap the wavecache track the ondemand task uses, since now the new
+         // Swap the wavecache track the ondemand task uses, since now the NEW
          // one will be kept in the project
          if (ODManager::IsInstanceCreated()) {
             ODManager::Instance()->ReplaceWaveTrack((WaveTrack *)t,
@@ -2291,7 +2293,7 @@ bool Effect::RealtimeAddProcessor(int group, int chans, float rate)
          ochans -= mNumAudioOut;
       }
 
-      // Add a new processor
+      // Add a NEW processor
       RealtimeAddProcessor(gchans, rate);
 
       // Bump to next processor
@@ -2431,11 +2433,6 @@ bool Effect::IsHidden()
 
 void Effect::Preview(bool dryOnly)
 {
-    if (mIsLinearEffect)
-       wxLogDebug(wxT("Linear Effect"));
-    else
-       wxLogDebug(wxT("Non-linear Effect"));
-
    if (mNumTracks == 0) { // nothing to preview
       return;
    }
@@ -2484,7 +2481,7 @@ void Effect::Preview(bool dryOnly)
    // Save the original track list
    TrackList *saveTracks = mTracks;
 
-   // Build new tracklist from rendering tracks
+   // Build NEW tracklist from rendering tracks
    mTracks = new TrackList();
 
    // Linear Effect preview optimised by pre-mixing to one track.
@@ -2553,8 +2550,9 @@ void Effect::Preview(bool dryOnly)
          playbackTracks.Add(src);
          src = (WaveTrack *) iter.Next();
       }
-      if (isNyquist && isGenerator)
-         t1 = mT1;
+      // Some effects (Paulstretch) may need to generate more
+      // than previewLen, so take the min.
+      t1 = std::min(mT0 + previewLen, mT1);
 
 #ifdef EXPERIMENTAL_MIDI_OUT
       NoteTrackArray empty;
@@ -2569,7 +2567,6 @@ void Effect::Preview(bool dryOnly)
 
       if (token) {
          int previewing = eProgressSuccess;
-wxLogDebug(wxT("mT0 %.3f   t1 %.3f"),mT0,t1);
          // The progress dialog must be deleted before stopping the stream
          // to allow events to flow to the app during StopStream processing.
          // The progress dialog blocks these events.
@@ -2602,7 +2599,7 @@ wxLogDebug(wxT("mT0 %.3f   t1 %.3f"),mT0,t1);
    delete mOutputTracks;
    mOutputTracks = NULL;
 
-   mTracks->Clear(true); // true => delete the tracks
+   mTracks->Clear(true); // true => DELETE the tracks
    delete mTracks;
 
    mTracks = saveTracks;
@@ -2858,7 +2855,8 @@ int EffectUIHost::ShowModal()
 #if defined(__WXMSW__)
    // Swap the Close and Apply buttons
    wxSizer *sz = mApplyBtn->GetContainingSizer();
-   wxButton *apply = new wxButton(mApplyBtn->GetParent(), wxID_APPLY);
+   wxASSERT(mApplyBtn->GetParent()); // To justify safenew
+   wxButton *apply = safenew wxButton(mApplyBtn->GetParent(), wxID_APPLY);
    sz->Replace(mCloseBtn, apply);
    sz->Replace(mApplyBtn, mCloseBtn);
    sz->Layout();
@@ -2886,7 +2884,7 @@ bool EffectUIHost::Initialize()
    wxBoxSizer *vs = new wxBoxSizer(wxVERTICAL);
    wxBoxSizer *hs = new wxBoxSizer(wxHORIZONTAL);
 
-   EffectPanel *w = new EffectPanel(this);
+   EffectPanel *w = safenew EffectPanel(this);
 
    // Try to give the window a sensible default/minimum size
    w->SetMinSize(wxSize(wxMax(600, mParent->GetSize().GetWidth() * 2 / 3),
@@ -2904,8 +2902,8 @@ bool EffectUIHost::Initialize()
    hs->Add(w, 1, wxEXPAND);
    vs->Add(hs, 1, wxEXPAND);
 
-   wxPanel *buttonPanel = new wxPanel(this, wxID_ANY);
-   wxPanel *bar = new wxPanel(buttonPanel, wxID_ANY);
+   wxPanel *buttonPanel = safenew wxPanel(this, wxID_ANY);
+   wxPanel *const bar = safenew wxPanel(buttonPanel, wxID_ANY);
 
    // This fools NVDA into not saying "Panel" when the dialog gets focus
    bar->SetName(wxT("\a"));
@@ -2927,12 +2925,14 @@ bool EffectUIHost::Initialize()
 
    if (!mIsGUI)
    {
-      mMenuBtn = new wxButton(bar, kMenuID, _("&Manage"));
+      wxASSERT(bar); // To justify safenew
+      mMenuBtn = safenew wxButton(bar, kMenuID, _("&Manage"));
       bs->Add(mMenuBtn, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
    }
    else
    {
-      mMenuBtn = new wxBitmapButton(bar, kMenuID, CreateBitmap(effect_menu_xpm, true, false));
+      wxASSERT(bar); // To justify safenew
+      mMenuBtn = safenew wxBitmapButton(bar, kMenuID, CreateBitmap(effect_menu_xpm, true, false));
 #if defined(__WXMAC__)
       mMenuBtn->SetName(_("&Manage"));
 #else
@@ -2950,13 +2950,15 @@ bool EffectUIHost::Initialize()
       {
          if (mSupportsRealtime)
          {
-            mPlayToggleBtn = new wxButton(bar, kPlayID, _("Start &Playback"));
+            wxASSERT(bar); // To justify safenew
+            mPlayToggleBtn = safenew wxButton(bar, kPlayID, _("Start &Playback"));
             mPlayToggleBtn->SetToolTip(_("Start and stop playback"));
             bs->Add(mPlayToggleBtn, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
          }
          else if (mEffect->GetType() != EffectTypeAnalyze)
          {
-            mPlayToggleBtn = new wxButton(bar, kPlayID, _("&Preview"));
+            wxASSERT(bar); // To justify safenew
+            mPlayToggleBtn = safenew wxButton(bar, kPlayID, _("&Preview"));
             mPlayToggleBtn->SetToolTip(_("Preview effect"));
             bs->Add(mPlayToggleBtn, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
          }
@@ -2967,7 +2969,8 @@ bool EffectUIHost::Initialize()
          mPlayDisabledBM = CreateBitmap(effect_play_disabled_xpm, true, false);
          mStopBM = CreateBitmap(effect_stop_xpm, true, false);
          mStopDisabledBM = CreateBitmap(effect_stop_disabled_xpm, true, false);
-         bb = new wxBitmapButton(bar, kPlayID, mPlayBM);
+         wxASSERT(bar); // To justify safenew
+         bb = safenew wxBitmapButton(bar, kPlayID, mPlayBM);
          bb->SetBitmapDisabled(mPlayDisabledBM);
          mPlayBtn = bb;
          bs->Add(mPlayBtn);
@@ -2986,12 +2989,14 @@ bool EffectUIHost::Initialize()
       {
          if (!mIsGUI)
          {
-            mRewindBtn = new wxButton(bar, kRewindID, _("Skip &Backward"));
+            wxASSERT(bar); // To justify safenew
+            mRewindBtn = safenew wxButton(bar, kRewindID, _("Skip &Backward"));
             bs->Add(mRewindBtn, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
          }
          else
          {
-            bb = new wxBitmapButton(bar, kRewindID, CreateBitmap(effect_rewind_xpm, true, true));
+            wxASSERT(bar); // To justify safenew
+            bb = safenew wxBitmapButton(bar, kRewindID, CreateBitmap(effect_rewind_xpm, true, true));
             bb->SetBitmapDisabled(CreateBitmap(effect_rewind_disabled_xpm, true, true));
             mRewindBtn = bb;
 #if defined(__WXMAC__)
@@ -3005,12 +3010,14 @@ bool EffectUIHost::Initialize()
 
          if (!mIsGUI)
          {
-            mFFwdBtn = new wxButton(bar, kFFwdID, _("Skip &Forward"));
+            wxASSERT(bar); // To justify safenew
+            mFFwdBtn = safenew wxButton(bar, kFFwdID, _("Skip &Forward"));
             bs->Add(mFFwdBtn, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
          }
          else
          {
-            bb = new wxBitmapButton(bar, kFFwdID, CreateBitmap(effect_ffwd_xpm, true, true));
+            wxASSERT(bar); // To justify safenew
+            bb = safenew wxBitmapButton(bar, kFFwdID, CreateBitmap(effect_ffwd_xpm, true, true));
             bb->SetBitmapDisabled(CreateBitmap(effect_ffwd_disabled_xpm, true, true));
             mFFwdBtn = bb;
 #if defined(__WXMAC__)
@@ -3024,7 +3031,7 @@ bool EffectUIHost::Initialize()
 
          bs->Add(5, 5);
 
-         mEnableCb = new wxCheckBox(bar, kEnableID, _("&Enable"));
+         mEnableCb = safenew wxCheckBox(bar, kEnableID, _("&Enable"));
          mEnableCb->SetValue(mEnabled);
          mEnableCb->SetName(_("Enable"));
          bs->Add(mEnableCb, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);

@@ -23,7 +23,7 @@ wxImage *ChangeImageColour(wxImage * srcImage, wxColour & dstColour);
 // This function takes a source image, which it assumes to
 // be grayscale, and smoothly changes the overall color
 // to the specified color, and returns the result as a
-// new image.  This works well for grayscale 3D images.
+// NEW image.  This works well for grayscale 3D images.
 // Audacity uses this routines to make the buttons
 // (skip-start, play, stop, record, skip-end) adapt to
 // the color scheme of the user.
@@ -33,7 +33,7 @@ wxImage *ChangeImageColour(wxImage * srcImage,
 
 // Takes a background image, foreground image, and mask
 // (i.e. the alpha channel for the foreground), and
-// returns an new image where the foreground has been
+// returns an NEW image where the foreground has been
 // overlaid onto the background using alpha-blending,
 // at location (xoff, yoff).
 wxImage *OverlayImage(wxImage * background, wxImage * foreground,

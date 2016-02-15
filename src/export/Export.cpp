@@ -93,7 +93,7 @@ bool ExportPlugin::CheckFileName(wxFileName & WXUNUSED(filename), int WXUNUSED(f
   return true;
 }
 
-/** \brief Add a new entry to the list of formats this plug-in can export
+/** \brief Add a NEW entry to the list of formats this plug-in can export
  *
  * To configure the format use SetFormat, SetCanMetaData etc with the index of
  * the format.
@@ -185,7 +185,7 @@ wxString ExportPlugin::GetMask(int index)
    wxString mask = GetDescription(index) + wxT("|");
 
    // Build the mask
-   wxString ext = GetExtension(index);
+   // wxString ext = GetExtension(index);
    wxArrayString exts = GetExtensions(index);
    for (size_t i = 0; i < exts.GetCount(); i++) {
       mask += wxT("*.") + exts[i] + wxT(";");
@@ -204,7 +204,7 @@ bool ExportPlugin::GetCanMetaData(int index)
    return mFormatInfos[index].mCanMetaData;
 }
 
-bool ExportPlugin::IsExtension(wxString & ext, int index)
+bool ExportPlugin::IsExtension(const wxString & ext, int index)
 {
    bool isext = false;
    for (int i = index; i < GetFormatCount(); i = GetFormatCount())
@@ -225,7 +225,8 @@ bool ExportPlugin::DisplayOptions(wxWindow * WXUNUSED(parent), int WXUNUSED(form
 
 wxWindow *ExportPlugin::OptionsCreate(wxWindow *parent, int WXUNUSED(format))
 {
-   wxPanel *p = new wxPanel(parent, wxID_ANY);
+   wxASSERT(parent); // To justify safenew
+   wxPanel *p = safenew wxPanel(parent, wxID_ANY);
    ShuttleGui S(p, eIsCreatingFromPrefs);
 
    S.StartHorizontalLay(wxCENTER);
@@ -392,7 +393,7 @@ bool Exporter::Process(AudacityProject *project, bool selectedOnly, double t0, d
 
    // Let user edit MetaData
    if (mPlugins[mFormat]->GetCanMetaData(mSubFormat)) {
-      if (!(project->GetTags()->ShowEditDialog(project, _("Edit Metadata"), mProject->GetShowId3Dialog()))) {
+      if (!(project->GetTags()->ShowEditDialog(project, _("Edit Metadata Tags"), mProject->GetShowId3Dialog()))) {
          return false;
       }
    }
@@ -881,7 +882,7 @@ void Exporter::CreateUserPane(wxWindow *parent)
       {
          S.StartStatic(_("Format Options"), 1);
          {
-            mBook = new wxSimplebook(parent);
+            mBook = safenew wxSimplebook(S.GetParent());
             S.AddWindow(mBook, wxEXPAND);
                                   
             for (size_t i = 0; i < mPlugins.GetCount(); i++)
@@ -1215,7 +1216,7 @@ ExportMixerDialog::ExportMixerDialog( TrackList *tracks, bool selectedOnly,
 
    wxBoxSizer *vertSizer = new wxBoxSizer( wxVERTICAL );
 
-   wxWindow *mixerPanel = new ExportMixerPanel( mMixerSpec, mTrackNames, this,
+   wxWindow *mixerPanel = safenew ExportMixerPanel( mMixerSpec, mTrackNames, this,
          ID_MIXERPANEL, wxDefaultPosition, wxSize( 400, -1 ) );
    mixerPanel->SetName(_("Mixer Panel"));
    vertSizer->Add( mixerPanel, 1, wxEXPAND | wxALIGN_CENTRE | wxALL, 5 );
@@ -1224,10 +1225,10 @@ ExportMixerDialog::ExportMixerDialog( TrackList *tracks, bool selectedOnly,
 
    wxString label;
    label.Printf( _( "Output Channels: %2d" ), mMixerSpec->GetNumChannels() );
-   mChannelsText = new wxStaticText( this, -1, label);
+   mChannelsText = safenew wxStaticText(this, -1, label);
    horSizer->Add( mChannelsText, 0, wxALIGN_LEFT | wxALL, 5 );
 
-   wxSlider *channels = new wxSlider( this, ID_SLIDER_CHANNEL,
+   wxSlider *channels = safenew wxSlider( this, ID_SLIDER_CHANNEL,
          mMixerSpec->GetNumChannels(), 1, mMixerSpec->GetMaxNumChannels(),
          wxDefaultPosition, wxSize( 300, -1 ) );
    channels->SetName(label);

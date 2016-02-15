@@ -117,7 +117,7 @@ void ThemePrefs::PopulateOrExchange(ShuttleGui & S)
 
          // This next button is only provided in Debug mode.
          // It is for developers who are compiling Audacity themselves
-         // and who who wish to generate a new ThemeAsCeeCode.h and compile it in.
+         // and who who wish to generate a NEW ThemeAsCeeCode.h and compile it in.
 #ifdef __WXDEBUG__
          S.Id(idSaveThemeAsCode).AddButton(wxT("Output Sourcery"));
 #endif
@@ -208,5 +208,6 @@ bool ThemePrefs::Apply()
 
 PrefsPanel *ThemePrefsFactory::Create(wxWindow *parent)
 {
-   return new ThemePrefs(parent);
+   wxASSERT(parent); // to justify safenew
+   return safenew ThemePrefs(parent);
 }

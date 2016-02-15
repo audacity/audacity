@@ -312,7 +312,7 @@ void EffectDtmf::PopulateOrExchange(ShuttleGui & S)
       S.Id(ID_Amplitude).AddTextBox(_("Amplitude (0-1):"), wxT(""), 10)->SetValidator(vldAmp);
 
       S.AddPrompt(_("Duration:"));
-      mDtmfDurationT = new
+      mDtmfDurationT = safenew
          NumericTextCtrl(NumericConverter::TIME,
                          S.GetParent(),
                          ID_Duration,

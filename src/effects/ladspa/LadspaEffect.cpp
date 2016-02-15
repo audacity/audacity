@@ -1165,7 +1165,8 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
    memset(mFields, 0, mData->PortCount * sizeof(wxTextCtrl *));
 
    wxBoxSizer *mainSizer = new wxBoxSizer(wxVERTICAL);
-   wxScrolledWindow *w = new wxScrolledWindow(mParent,
+   wxASSERT(mParent); // To justify safenew
+   wxScrolledWindow *const w = safenew wxScrolledWindow(mParent,
                                               wxID_ANY,
                                               wxDefaultPosition,
                                               wxDefaultSize,
@@ -1193,9 +1194,9 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
       // Add the duration control for generators
       if (GetType() == EffectTypeGenerate)
       {
-         item = new wxStaticText(w, 0, _("Duration:"));
+         item = safenew wxStaticText(w, 0, _("Duration:"));
          gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 5);
-         mDuration = new
+         mDuration = safenew
             NumericTextCtrl(NumericConverter::TIME,
                             w,
                             ID_Duration,
@@ -1222,7 +1223,7 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
          }
 
          wxString labelText = LAT1CTOWX(mData->PortNames[p]);
-         item = new wxStaticText(w, 0, labelText + wxT(":"));
+         item = safenew wxStaticText(w, 0, labelText + wxT(":"));
          gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 5);
 
          wxString fieldText;
@@ -1230,7 +1231,7 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
 
          if (LADSPA_IS_HINT_TOGGLED(hint.HintDescriptor))
          {
-            mToggles[p] = new wxCheckBox(w, ID_Toggles + p, wxT(""));
+            mToggles[p] = safenew wxCheckBox(w, ID_Toggles + p, wxT(""));
             mToggles[p]->SetName(labelText);
             mToggles[p]->SetValue(mInputControls[p] > 0);
             gridSizer->Add(mToggles[p], 0, wxALL, 5);
@@ -1285,7 +1286,7 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
          // Don't specify a value at creation time.  This prevents unwanted events
          // being sent to the OnTextCtrl() handler before the associated slider
          // has been created.
-         mFields[p] = new wxTextCtrl(w, ID_Texts + p);
+         mFields[p] = safenew wxTextCtrl(w, ID_Texts + p);
          mFields[p]->SetName(labelText);
          gridSizer->Add(mFields[p], 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
 
@@ -1300,7 +1301,7 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
             {
                str = Internat::ToDisplayString(lower);
             }
-            item = new wxStaticText(w, 0, str);
+            item = safenew wxStaticText(w, 0, str);
             gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 5);
          }
          else
@@ -1308,7 +1309,7 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
             gridSizer->Add(1, 1, 0);
          }
 
-         mSliders[p] = new wxSlider(w, ID_Sliders + p,
+         mSliders[p] = safenew wxSlider(w, ID_Sliders + p,
                                     0, 0, 1000,
                                     wxDefaultPosition,
                                     wxSize(200, -1));
@@ -1325,7 +1326,7 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
             {
                str = Internat::ToDisplayString(upper);
             }
-            item = new wxStaticText(w, 0, str);
+            item = safenew wxStaticText(w, 0, str);
             gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT | wxALL, 5);
          }
          else
@@ -1394,7 +1395,7 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
          }
          
          wxString labelText = LAT1CTOWX(mData->PortNames[p]);
-         item = new wxStaticText(w, 0, labelText + wxT(":"));
+         item = safenew wxStaticText(w, 0, labelText + wxT(":"));
          gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 5);
 
          LADSPA_PortRangeHint hint = mData->PortRangeHints[p];
@@ -1430,7 +1431,7 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
          upper = floorf(upper * 1000000.0) / 1000000.0;
          mInputControls[p] = roundf(mInputControls[p] * 1000000.0) / 1000000.0;
 
-         mMeters[p] = new LadspaEffectMeter(w, mOutputControls[p], lower, upper);
+         mMeters[p] = safenew LadspaEffectMeter(w, mOutputControls[p], lower, upper);
          mMeters[p]->SetName(labelText);
          gridSizer->Add(mMeters[p], 1, wxEXPAND | wxALIGN_CENTER_VERTICAL | wxALL, 5);
       }
@@ -1449,7 +1450,7 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
    wxSize sz2 = mParent->GetMinSize();
    w->SetSizeHints(wxSize(wxMin(sz1.x, sz2.x), wxMin(sz1.y, sz2.y)));
 
-   // And let the parent reduce to the new minimum if possible
+   // And let the parent reduce to the NEW minimum if possible
    mParent->SetSizeHints(-1, -1);
 
    return true;

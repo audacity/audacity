@@ -152,7 +152,7 @@ void BatchProcessDialog::OnApplyToProject(wxCommandEvent & WXUNUSED(event))
    }
    wxString name = mChains->GetItemText(item);
 
-   wxDialog * pD = new wxDialog(this, wxID_ANY, GetTitle());
+   wxDialog * pD = safenew wxDialog(this, wxID_ANY, GetTitle());
    pD->SetName(pD->GetTitle());
    ShuttleGui S(pD, eIsCreating);
 
@@ -197,7 +197,6 @@ void BatchProcessDialog::OnApplyToProject(wxCommandEvent & WXUNUSED(event))
       return;
    }
 
-   wxWindow * pWnd = this->GetParent();
 #if !defined(__WXMAC__)
    // Under Linux an EndModal() here crashes (Bug #1221).
    // But sending a close message instead is OK.
@@ -208,7 +207,9 @@ void BatchProcessDialog::OnApplyToProject(wxCommandEvent & WXUNUSED(event))
 #else
    EndModal(wxID_OK);
 #endif
-   pWnd->SetFocus();
+
+   // Raise myself again, and the parent window with me
+   Show();
 }
 
 void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
@@ -291,7 +292,7 @@ void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
 
    files.Sort();
 
-   wxDialog * pD = new wxDialog(this, wxID_ANY, GetTitle());
+   wxDialog * pD = safenew wxDialog(this, wxID_ANY, GetTitle());
    pD->SetName(pD->GetTitle());
    ShuttleGui S(pD, eIsCreating);
 
@@ -368,7 +369,6 @@ void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
    }
    project->OnRemoveTracks();
 
-   wxWindow * pWnd = this->GetParent();
    // Under Linux an EndModal() here crashes (Bug #1221).
    // But sending a close message instead is OK.
 #if !defined(__WXMAC__)
@@ -379,7 +379,9 @@ void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
 #else
    EndModal(wxID_OK);
 #endif 
-   pWnd->SetFocus();
+
+   // Raise myself again, and the parent window with me
+   Show();
 }
 
 void BatchProcessDialog::OnCancel(wxCommandEvent & WXUNUSED(event))

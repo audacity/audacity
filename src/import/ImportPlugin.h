@@ -74,7 +74,7 @@ public:
 
    // Get unique string ID of this plugin, usually it corresponds
    // to the underlying library, i.e. "libsndfile", "libflac", "libav"
-   // These MUST NOT change across Audacity versions (but new IDs can
+   // These MUST NOT change across Audacity versions (but NEW IDs can
    // be added).
    virtual wxString GetPluginStringID() = 0;
 

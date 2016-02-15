@@ -134,7 +134,7 @@ void SpectralSelectionBar::Populate()
       _("Center frequency and Width"),
       _("Low and High Frequencies"),
    };
-   mChoice = new wxChoice
+   mChoice = safenew wxChoice
       (this, OnChoiceID, wxDefaultPosition, wxDefaultSize, 2, choices,
        0, wxDefaultValidator, _("Spectral Selection"));
    mChoice->SetSelection(mbCenterAndWidth ? 0 : 1);
@@ -146,28 +146,28 @@ void SpectralSelectionBar::Populate()
 
    wxBoxSizer *subSizer = new wxBoxSizer(wxHORIZONTAL);
 
-   mCenterCtrl = new NumericTextCtrl(
+   mCenterCtrl = safenew NumericTextCtrl(
       NumericConverter::FREQUENCY, this, OnCenterID, frequencyFormatName, 0.0);
    mCenterCtrl->SetInvalidValue(SelectedRegion::UndefinedFrequency);
    mCenterCtrl->SetName(_("Center Frequency:"));
    mCenterCtrl->EnableMenu();
    subSizer->Add(mCenterCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 
-   mWidthCtrl = new NumericTextCtrl(
+   mWidthCtrl = safenew NumericTextCtrl(
       NumericConverter::BANDWIDTH, this, OnWidthID, bandwidthFormatName, 0.0);
    mWidthCtrl->SetInvalidValue(-1.0);
    mWidthCtrl->SetName(wxString(_("Bandwidth:")));
    mWidthCtrl->EnableMenu();
    subSizer->Add(mWidthCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 0);
 
-   mLowCtrl = new NumericTextCtrl(
+   mLowCtrl = safenew NumericTextCtrl(
       NumericConverter::FREQUENCY, this, OnLowID, frequencyFormatName, 0.0);
    mLowCtrl->SetInvalidValue(SelectedRegion::UndefinedFrequency);
    mLowCtrl->SetName(_("Low Frequency:"));
    mLowCtrl->EnableMenu();
    subSizer->Add(mLowCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 
-   mHighCtrl = new NumericTextCtrl(
+   mHighCtrl = safenew NumericTextCtrl(
       NumericConverter::FREQUENCY, this, OnHighID, frequencyFormatName, 0.0);
    mHighCtrl->SetInvalidValue(SelectedRegion::UndefinedFrequency);
    mHighCtrl->SetName(wxString(_("High Frequency:")));

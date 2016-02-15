@@ -31,11 +31,12 @@
 
 TimeTrack *TrackFactory::NewTimeTrack()
 {
-   return new TimeTrack(mDirManager);
+   return new TimeTrack(mDirManager, mZoomInfo);
 }
 
-TimeTrack::TimeTrack(DirManager *projDirManager):
+TimeTrack::TimeTrack(DirManager *projDirManager, const ZoomInfo *zoomInfo):
    Track(projDirManager)
+   , mZoomInfo(zoomInfo)
 {
    mHeight = 100;
 
@@ -55,7 +56,7 @@ TimeTrack::TimeTrack(DirManager *projDirManager):
    SetName(GetDefaultName());
 
    mRuler = new Ruler;
-   mRuler->SetUseZoomInfo(0);
+   mRuler->SetUseZoomInfo(0, mZoomInfo);
    mRuler->SetLabelEdges(false);
    mRuler->SetFormat(Ruler::TimeFormat);
 
@@ -65,6 +66,7 @@ TimeTrack::TimeTrack(DirManager *projDirManager):
 
 TimeTrack::TimeTrack(TimeTrack &orig):
    Track(orig)
+   , mZoomInfo(orig.mZoomInfo)
 {
    Init(orig);	// this copies the TimeTrack metadata (name, range, etc)
 
@@ -80,7 +82,7 @@ TimeTrack::TimeTrack(TimeTrack &orig):
 
    ///@TODO: Give Ruler:: a copy-constructor instead of this?
    mRuler = new Ruler;
-   mRuler->SetUseZoomInfo(0);
+   mRuler->SetUseZoomInfo(0, mZoomInfo);
    mRuler->SetLabelEdges(false);
    mRuler->SetFormat(Ruler::TimeFormat);
 
@@ -250,7 +252,7 @@ void TimeTrack::Draw(wxDC & dc, const wxRect & r, const ZoomInfo &zoomInfo)
    mRuler->SetFlip(false);  // If we don't do this, the Ruler doesn't redraw itself when the envelope is modified.
                             // I have no idea why!
                             //
-                            // LL:  It's because the ruler only Invalidate()s when the new value is different
+                            // LL:  It's because the ruler only Invalidate()s when the NEW value is different
                             //      than the current value.
    mRuler->SetFlip(GetHeight() > 75 ? true : true); // MB: so why don't we just call Invalidate()? :)
    mRuler->Draw(dc, this);

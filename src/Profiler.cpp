@@ -55,7 +55,7 @@ Profiler::~Profiler()
 
       fclose(log);
 
-      //delete everything.
+      //DELETE everything.
       for(int i=0;i<(int)mTasks.size();i++)
          delete mTasks[i];
    }

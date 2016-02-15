@@ -1754,7 +1754,8 @@ bool AudioUnitEffect::PopulateUI(wxWindow *parent)
 
    wxBoxSizer *mainSizer = new wxBoxSizer(wxVERTICAL);
 
-   wxPanel *container = new wxPanel(mParent, wxID_ANY);
+   wxASSERT(mParent); // To justify safenew
+   wxPanel *container = safenew wxPanel(mParent, wxID_ANY);
    mainSizer->Add(container, 1, wxEXPAND);
 
    mParent->SetSizer(mainSizer);

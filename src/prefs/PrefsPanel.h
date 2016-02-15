@@ -20,7 +20,7 @@ ThemePrefs.
   global preferences object gPrefs, and instructing the applicable parts
   of the program to re-read the preference options.
 
-  To actually add a the new panel, edit the PrefsDialog constructor
+  To actually add a the NEW panel, edit the PrefsDialog constructor
   to append the panel to its list of panels.
 
 *//*******************************************************************/
@@ -64,6 +64,7 @@ class PrefsPanel:public wxPanel
 class PrefsPanelFactory
 {
 public:
+   // Precondition: parent != NULL
    virtual PrefsPanel *Create(wxWindow *parent) = 0;
 };
 

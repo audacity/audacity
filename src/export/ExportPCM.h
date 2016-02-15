@@ -14,7 +14,7 @@
 class ExportPlugin;
 
 /** The only part of this class which is publically accessible is the
- * factory method New_ExportPCM() which creates a new ExportPCM object and
+ * factory method New_ExportPCM() which creates a NEW ExportPCM object and
  * returns a pointer to it. The rest of the class declaration is in ExportPCM.cpp
  */
 ExportPlugin *New_ExportPCM();

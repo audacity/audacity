@@ -10,7 +10,7 @@
   the entire track hierarchy.  The UndoManager makes a duplicate
   of every single track using its Duplicate method, which should
   increment reference counts.  If we were not at the top of
-  the stack when this is called, delete above first.
+  the stack when this is called, DELETE above first.
 
   If a minor change is made, for example changing the visual
   display of a track or changing the selection, you can call

@@ -337,7 +337,7 @@ void AudacityProject::CreateMenusAndCommands()
    c->BeginMenu(_("&File"));
    c->SetDefaultFlags(AudioIONotBusyFlag, AudioIONotBusyFlag);
 
-   /*i18n-hint: "New" is an action (verb) to create a new project*/
+   /*i18n-hint: "New" is an action (verb) to create a NEW project*/
    c->AddItem(wxT("New"), _("&New").c_str(), FN(OnNew), wxT("Ctrl+N"),
               AudioIONotBusyFlag,
               AudioIONotBusyFlag);
@@ -369,7 +369,7 @@ void AudacityProject::CreateMenusAndCommands()
 
    c->AddSeparator();
 
-   c->AddItem(wxT("EditMetaData"), _("Edit Me&tadata...").c_str(), FN(OnEditMetadata));
+   c->AddItem(wxT("EditMetaData"), _("Edit Me&tadata Tags...").c_str(), FN(OnEditMetadata));
 
    c->AddSeparator();
 
@@ -491,7 +491,7 @@ void AudacityProject::CreateMenusAndCommands()
    c->BeginSubMenu(_("R&emove Special"));
    /* i18n-hint: (verb) Do a special kind of cut*/
    c->AddItem(wxT("SplitCut"), _("Spl&it Cut").c_str(), FN(OnSplitCut), wxT("Ctrl+Alt+X"));
-   /* i18n-hint: (verb) Do a special kind of delete*/
+   /* i18n-hint: (verb) Do a special kind of DELETE*/
    c->AddItem(wxT("SplitDelete"), _("Split D&elete").c_str(), FN(OnSplitDelete), wxT("Ctrl+Alt+K"));
 
    c->AddSeparator();
@@ -849,9 +849,16 @@ void AudacityProject::CreateMenusAndCommands()
 
    c->AddSeparator();
 
-   c->AddItem(wxT("Stereo to Mono"), _("Stereo Trac&k to Mono").c_str(), FN(OnStereoToMono),
-              AudioIONotBusyFlag | StereoRequiredFlag | WaveTracksSelectedFlag,
-              AudioIONotBusyFlag | StereoRequiredFlag | WaveTracksSelectedFlag);
+   {
+      // Stereo to Mono is an oddball command that is also subject to control by the
+      // plug-in manager, as if an effect.  Decide whether to show or hide it.
+      const PluginID ID = EffectManager::Get().GetEffectByIdentifier(wxT("StereoToMono"));
+      const PluginDescriptor *plug = PluginManager::Get().GetPlugin(ID);
+      if (plug)
+         c->AddItem(wxT("Stereo to Mono"), _("Stereo Trac&k to Mono").c_str(), FN(OnStereoToMono),
+            AudioIONotBusyFlag | StereoRequiredFlag | WaveTracksSelectedFlag,
+            AudioIONotBusyFlag | StereoRequiredFlag | WaveTracksSelectedFlag);
+   }
    c->AddItem(wxT("MixAndRender"), _("Mi&x and Render").c_str(), FN(OnMixAndRender),
               AudioIONotBusyFlag | WaveTracksSelectedFlag,
               AudioIONotBusyFlag | WaveTracksSelectedFlag);
@@ -2229,7 +2236,7 @@ void AudacityProject::OnPlayStop()
       toolbar->StopPlaying();
    }
    else if (gAudioIO->IsStreamActive()) {
-      //If this project isn't playing, but another one is, stop playing the old and start the new.
+      //If this project isn't playing, but another one is, stop playing the old and start the NEW.
 
       //find out which project we need;
       AudacityProject* otherProject = NULL;
@@ -3293,12 +3300,14 @@ void AudacityProject::OnZeroCrossing()
 
 /// OnEffect() takes a PluginID and has the EffectManager execute the assocated effect.
 ///
-/// At the moment flags are used only to indicate whether to prompt for parameters and
-/// whether to save the state to history.
+/// At the moment flags are used only to indicate whether to prompt for parameters,
+/// whether to save the state to history and whether to allow 'Repeat Last Effect'.
 bool AudacityProject::OnEffect(const PluginID & ID, int flags)
 {
    const PluginDescriptor *plug = PluginManager::Get().GetPlugin(ID);
-   wxASSERT(plug != NULL);
+   if (!plug)
+      return false;
+
    EffectType type = plug->GetEffectType();
 
    // Make sure there's no activity since the effect is about to be applied
@@ -3331,7 +3340,7 @@ bool AudacityProject::OnEffect(const PluginID & ID, int flags)
    if (count == 0) {
       // No tracks were selected...
       if (type == EffectTypeGenerate) {
-         // Create a new track for the generated audio...
+         // Create a NEW track for the generated audio...
          newTrack = mTrackFactory->NewWaveTrack();
          mTracks->Add(newTrack);
          newTrack->SetSelected(true);
@@ -3360,19 +3369,26 @@ bool AudacityProject::OnEffect(const PluginID & ID, int flags)
       return false;
    }
 
+   if (em.GetSkipStateFlag())
+      flags = flags | OnEffectFlags::kSkipState;
+
    if (!(flags & OnEffectFlags::kSkipState))
    {
       wxString shortDesc = em.GetEffectName(ID);
       wxString longDesc = em.GetEffectDescription(ID);
       PushState(longDesc, shortDesc);
+   }
 
+   if (!(flags & OnEffectFlags::kDontRepeatLast))
+   {
       // Only remember a successful effect, don't rmemeber insert,
       // or analyze effects.
       if (type == EffectTypeProcess) {
+         wxString shortDesc = em.GetEffectName(ID);
          mLastEffect = ID;
          wxString lastEffectDesc;
          /* i18n-hint: %s will be the name of the effect which will be
-            * repeated if this menu item is chosen */
+          * repeated if this menu item is chosen */
          lastEffectDesc.Printf(_("Repeat %s"), shortDesc.c_str());
          mCommandManager.Modify(wxT("RepeatLastEffect"), lastEffectDesc);
       }
@@ -3960,7 +3976,7 @@ void AudacityProject::OnPaste()
    if (this->HandlePasteText())
       return;
 
-   // If nothing's selected, we just insert new tracks.
+   // If nothing's selected, we just insert NEW tracks.
    if (this->HandlePasteNothingSelected())
       return;
 
@@ -3975,7 +3991,7 @@ void AudacityProject::OnPaste()
    Track *c = clipIter.First();
    if (c == NULL)
       return;
-   Track *f = NULL;
+   Track *ff = NULL;
    Track *tmpSrc = NULL;
    Track *tmpC = NULL;
    Track *prev = NULL;
@@ -3987,8 +4003,9 @@ void AudacityProject::OnPaste()
    while (n && c) {
       if (n->GetSelected()) {
          bAdvanceClipboard = true;
-         if (tmpC) c = tmpC;
-         if (c->GetKind() != n->GetKind()){
+         if (tmpC)
+            c = tmpC;
+         if (c->GetKind() != n->GetKind()) {
             if (!bTrackTypeMismatch) {
                tmpSrc = prev;
                tmpC = c;
@@ -3998,7 +4015,7 @@ void AudacityProject::OnPaste()
             c = tmpSrc;
 
             // If the types still don't match...
-            while (c && c->GetKind() != n->GetKind()){
+            while (c && c->GetKind() != n->GetKind()) {
                prev = c;
                c = clipIter.Next();
             }
@@ -4006,7 +4023,7 @@ void AudacityProject::OnPaste()
 
          // Handle case where the first track in clipboard
          // is of different type than the first selected track
-         if (!c){
+         if (!c) {
             c = tmpC;
             while (n && (c->GetKind() != n->GetKind() || !n->GetSelected()))
             {
@@ -4016,13 +4033,14 @@ void AudacityProject::OnPaste()
                }
                n = iter.Next();
             }
-            if (!n) c = NULL;
+            if (!n)
+               c = NULL;
          }
 
          // The last possible case for cross-type pastes: triggered when we try to
          // paste 1+ tracks from one type into 1+ tracks of another type. If
          // there's a mix of types, this shouldn't run.
-         if (!c){
+         if (!c) {
             wxMessageBox(
                _("Pasting one type of track into another is not allowed."),
                _("Error"), wxICON_ERROR, this);
@@ -4041,8 +4059,8 @@ void AudacityProject::OnPaste()
             break;
          }
 
-         if (!f)
-            f = n;
+         if (!ff)
+            ff = n;
 
          if (msClipProject != this && c->GetKind() == Track::Wave)
             ((WaveTrack *) c)->Lock();
@@ -4076,11 +4094,7 @@ void AudacityProject::OnPaste()
             n = iter.Next();
 
             if (n->GetKind() == Track::Wave) {
-               //printf("Checking to see if we need to pre-clear the track\n");
-               if (!((WaveTrack *) n)->IsEmpty(t0, t1)) {
-                  ((WaveTrack *) n)->Clear(t0, t1);
-               }
-               bPastedSomething |= ((WaveTrack *)n)->Paste(t0, c);
+               bPastedSomething |= ((WaveTrack *)n)->ClearAndPaste(t0, t1, c, true, true);
             }
             else
             {
@@ -4114,12 +4128,13 @@ void AudacityProject::OnPaste()
       TrackListOfKindIterator clipWaveIter(Track::Wave, msClipboard);
       c = clipWaveIter.Last();
 
-      while (n){
-         if (n->GetSelected() && n->GetKind()==Track::Wave){
-            if (c && c->GetKind() == Track::Wave){
+      while (n) {
+         if (n->GetSelected() && n->GetKind()==Track::Wave) {
+            if (c && c->GetKind() == Track::Wave) {
                bPastedSomething |=
                   ((WaveTrack *)n)->ClearAndPaste(t0, t1, (WaveTrack *)c, true, true);
-            }else{
+            }
+            else {
                WaveTrack *tmp;
                tmp = mTrackFactory->NewWaveTrack( ((WaveTrack*)n)->GetSampleFormat(), ((WaveTrack*)n)->GetRate());
                bool bResult = tmp->InsertSilence(0.0, msClipT1 - msClipT0); // MJS: Is this correct?
@@ -4159,8 +4174,8 @@ void AudacityProject::OnPaste()
 
       RedrawProject();
 
-      if (f)
-         mTrackPanel->EnsureVisible(f);
+      if (ff)
+         mTrackPanel->EnsureVisible(ff);
    }
 }
 
@@ -4198,7 +4213,7 @@ bool AudacityProject::HandlePasteText()
 }
 
 // Return true if nothing selected, regardless of paste result.
-// If nothing was selected, create and paste into new tracks.
+// If nothing was selected, create and paste into NEW tracks.
 // (This was formerly the second part of overly-long OnPaste.)
 bool AudacityProject::HandlePasteNothingSelected()
 {
@@ -4296,7 +4311,7 @@ bool AudacityProject::HandlePasteNothingSelected()
 }
 
 
-// Creates a new label in each selected label track with text from the system
+// Creates a NEW label in each selected label track with text from the system
 // clipboard
 void AudacityProject::OnPasteNewLabel()
 {
@@ -4342,7 +4357,7 @@ void AudacityProject::OnPasteNewLabel()
       if (plt)
          plt->Unselect();
 
-      // Add a new label, paste into it
+      // Add a NEW label, paste into it
       // Paul L:  copy whatever defines the selected region, not just times
       lt->AddLabel(mViewInfo.selectedRegion);
       if (lt->PasteSelectedText(mViewInfo.selectedRegion.t0(),
@@ -4638,9 +4653,9 @@ void AudacityProject::OnSplitDeleteLabels()
   EditByLabel( &WaveTrack::SplitDelete, false );
 
   PushState(
-  /* i18n-hint: (verb) Audacity has just done a special kind of delete on the labeled audio regions */
+  /* i18n-hint: (verb) Audacity has just done a special kind of DELETE on the labeled audio regions */
      _( "Split Deleted labeled audio regions" ),
-  /* i18n-hint: (verb) Do a special kind of delete on labeled audio regions*/
+  /* i18n-hint: (verb) Do a special kind of DELETE on labeled audio regions*/
      _( "Split Delete Labeled Audio" ) );
 
   RedrawProject();
@@ -4790,10 +4805,14 @@ void AudacityProject::OnSplitNew()
    for (Track *n = iter.First(); n; n = iter.Next()) {
       if (n->GetSelected()) {
          Track *dest = NULL;
+         double newt0 = 0, newt1 = 0;
          double offset = n->GetOffset();
          if (n->GetKind() == Track::Wave) {
-            ((WaveTrack*)n)->SplitCut(mViewInfo.selectedRegion.t0(),
-                                      mViewInfo.selectedRegion.t1(), &dest);
+            // Clips must be aligned to sample positions or the NEW clip will not fit in the gap where it came from
+            offset = ((WaveTrack*)n)->LongSamplesToTime(((WaveTrack*)n)->TimeToLongSamples(offset));
+            newt0 = ((WaveTrack*)n)->LongSamplesToTime(((WaveTrack*)n)->TimeToLongSamples(mViewInfo.selectedRegion.t0()));
+            newt1 = ((WaveTrack*)n)->LongSamplesToTime(((WaveTrack*)n)->TimeToLongSamples(mViewInfo.selectedRegion.t1()));
+            ((WaveTrack*)n)->SplitCut(newt0, newt1, &dest);
          }
 #if 0
          // LL:  For now, just skip all non-wave tracks since the other do not
@@ -4807,7 +4826,7 @@ void AudacityProject::OnSplitNew()
             dest->SetChannel(n->GetChannel());
             dest->SetLinked(n->GetLinked());
             dest->SetName(n->GetName());
-            dest->SetOffset(wxMax(mViewInfo.selectedRegion.t0(), offset));
+            dest->SetOffset(wxMax(newt0, offset));
             mTracks->Add(dest);
          }
       }
@@ -5236,7 +5255,7 @@ void AudacityProject::OnHistory()
 void AudacityProject::OnKaraoke()
 {
    if (!mLyricsWindow)
-      mLyricsWindow = new LyricsWindow(this);
+      mLyricsWindow = safenew LyricsWindow(this);
    mLyricsWindow->Show();
    UpdateLyrics();
    mLyricsWindow->Raise();
@@ -5246,7 +5265,7 @@ void AudacityProject::OnMixerBoard()
 {
    if (!mMixerBoardFrame)
    {
-      mMixerBoardFrame = new MixerBoardFrame(this);
+      mMixerBoardFrame = safenew MixerBoardFrame(this);
       mMixerBoard = mMixerBoardFrame->mMixerBoard;
    }
    mMixerBoardFrame->Show();
@@ -5427,7 +5446,7 @@ void AudacityProject::OnImport()
 
    gPrefs->Flush();
 
-   HandleResize(); // Adjust scrollers for new track sizes.
+   HandleResize(); // Adjust scrollers for NEW track sizes.
    ODManager::Resume();
 }
 
@@ -5541,13 +5560,13 @@ void AudacityProject::OnImportRaw()
       return;
 
    AddImportedTracks(fileName, newTracks, numTracks);
-   HandleResize(); // Adjust scrollers for new track sizes.
+   HandleResize(); // Adjust scrollers for NEW track sizes.
 }
 
 void AudacityProject::OnEditMetadata()
 {
    if (mTags->ShowEditDialog(this, _("Edit Metadata Tags"), true))
-      PushState(_("Edit Metadata Tags"), _("Edit Metadata"));
+      PushState(_("Edit Metadata Tags"), _("Metadata Tags"));
 }
 
 void AudacityProject::HandleMixAndRender(bool toNewTrack)
@@ -5587,7 +5606,7 @@ void AudacityProject::HandleMixAndRender(bool toNewTrack)
             t = iter.Next();
       }
 
-      // Add new tracks
+      // Add NEW tracks
 
       mTracks->Add(newLeft);
       if (newRight)
@@ -6248,7 +6267,7 @@ void AudacityProject::OnNewTimeTrack()
       return;
    }
 
-   TimeTrack *t = new TimeTrack(mDirManager);
+   TimeTrack *t = mTrackFactory->NewTimeTrack();
 
    SelectNone();
 
@@ -6295,12 +6314,13 @@ void AudacityProject::OnRescanDevices()
    DeviceManager::Instance()->Rescan();
 }
 
-int AudacityProject::DoAddLabel(const SelectedRegion &region)
+int AudacityProject::DoAddLabel(const SelectedRegion &region, bool preserveFocus)
 {
    LabelTrack *lt = NULL;
 
    // If the focused track is a label track, use that
-   Track *t = mTrackPanel->GetFocusedTrack();
+   Track *const pFocusedTrack = mTrackPanel->GetFocusedTrack();
+   Track *t = pFocusedTrack;
    if (t && t->GetKind() == Track::Label) {
       lt = (LabelTrack *) t;
    }
@@ -6321,7 +6341,7 @@ int AudacityProject::DoAddLabel(const SelectedRegion &region)
       }
    }
 
-   // If none found, start a new label track and use it
+   // If none found, start a NEW label track and use it
    if (!lt) {
       lt = new LabelTrack(mDirManager);
       mTracks->Add(lt);
@@ -6335,7 +6355,23 @@ int AudacityProject::DoAddLabel(const SelectedRegion &region)
 //   SelectNone();
    lt->SetSelected(true);
 
-   int index = lt->AddLabel(region);
+   int focusTrackNumber = -1;
+   if (pFocusedTrack && preserveFocus) {
+      // Must remember the track to re-focus after finishing a label edit.
+      // do NOT identify it by a pointer, which might dangle!  Identify
+      // by position.
+      TrackListIterator iter(GetTracks());
+      Track *track = iter.First();
+      do
+         ++focusTrackNumber;
+      while (track != pFocusedTrack &&
+             NULL != (track = iter.Next()));
+      if (!track)
+         // How could we not find it?
+         focusTrackNumber = -1;
+   }
+
+   int index = lt->AddLabel(region, wxString(), focusTrackNumber);
 
    PushState(_("Added label"), _("Label"));
 
@@ -6369,7 +6405,7 @@ void AudacityProject::OnAddLabelPlaying()
    if (GetAudioIOToken()>0 &&
        gAudioIO->IsStreamActive(GetAudioIOToken())) {
       double indicator = gAudioIO->GetStreamTime();
-      DoAddLabel(SelectedRegion(indicator, indicator));
+      DoAddLabel(SelectedRegion(indicator, indicator), true);
    }
 }
 
@@ -6845,7 +6881,7 @@ void AudacityProject::SeekLeftOrRight
                   : t0 + multiplier * quietSeekStepPositive
          ));
 
-         // Make sure new position is in view.
+         // Make sure NEW position is in view.
          GetTrackPanel()->ScrollIntoView(mViewInfo.selectedRegion.t0());
       }
       GetTrackPanel()->Refresh(false);
@@ -6913,7 +6949,7 @@ void AudacityProject::SeekLeftOrRight
                   : t1 + multiplier * quietSeekStepPositive
          ));
 
-         // Make sure new position is in view.
+         // Make sure NEW position is in view.
          GetTrackPanel()->ScrollIntoView(mViewInfo.selectedRegion.t1());
       }
       GetTrackPanel()->Refresh(false);
@@ -6955,7 +6991,7 @@ void AudacityProject::SeekLeftOrRight
          GetTrackPanel()->Refresh(false);
       }
 
-      // Make sure new position is in view
+      // Make sure NEW position is in view
       GetTrackPanel()->ScrollIntoView(mViewInfo.selectedRegion.t1());
    }
 }

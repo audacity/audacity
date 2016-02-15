@@ -75,7 +75,7 @@ void SnapManager::Reinit()
       return;
    }
 
-   // Save new settings
+   // Save NEW settings
    mSnapTo = snapTo;
    mRate = rate;
    mFormat = format;

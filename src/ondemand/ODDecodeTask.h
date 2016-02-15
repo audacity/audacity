@@ -18,7 +18,7 @@ from.  For any type there should only be one ODDecodeTask associated with
 a given track.
 There could be the ODBlockFiles of several FLACs in one track (after copy and pasting),
 so things aren't as simple as they seem - the implementation needs to be
-robust enough to allow all the user changes such as copy/paste, delete, and so on.
+robust enough to allow all the user changes such as copy/paste, DELETE, and so on.
 
 *//*******************************************************************/
 
@@ -117,7 +117,7 @@ public:
    ///This class should call ReadHeader() first, so it knows the length, and can prepare
    ///the file object if it needs to.
    ///returns negative value for failure, 0 or positive value for success.
-   virtual int Decode(samplePtr & data, sampleFormat & format, sampleCount start, sampleCount len, unsigned int channel)=0;
+   virtual int Decode(SampleBuffer & data, sampleFormat & format, sampleCount start, sampleCount len, unsigned int channel)=0;
 
    wxString GetFileName(){return mFName;}
 

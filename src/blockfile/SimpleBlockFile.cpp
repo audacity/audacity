@@ -36,7 +36,7 @@ default is to disable caching.
   memory, so they are never read from disk in the current session.
 
 * Write-caching: If caching is enabled and the parameter allowDeferredWrite
-  is enabled at the block file constructor, new block files are held in memory
+  is enabled at the block file constructor, NEW block files are held in memory
   and written to disk only when WriteCacheToDisk() is called. This is used
   during recording to prevent disk access. After recording, WriteCacheToDisk()
   will be called on all block files and they will be written to disk. During
@@ -428,7 +428,7 @@ int SimpleBlockFile::ReadData(samplePtr data, sampleFormat format,
       mSilentLog=FALSE;
 
       sf_seek(sf, start, SEEK_SET);
-      samplePtr buffer = NewSamples(len, floatSample);
+      SampleBuffer buffer(len, floatSample);
 
       int framesRead = 0;
 
@@ -456,12 +456,10 @@ int SimpleBlockFile::ReadData(samplePtr data, sampleFormat format,
          // Otherwise, let libsndfile handle the conversion and
          // scaling, and pass us normalized data as floats.  We can
          // then convert to whatever format we want.
-         framesRead = sf_readf_float(sf, (float *)buffer, len);
-         CopySamples(buffer, floatSample,
+         framesRead = sf_readf_float(sf, (float *)buffer.ptr(), len);
+         CopySamples(buffer.ptr(), floatSample,
                      (samplePtr)data, format, framesRead);
       }
-
-      DeleteSamples(buffer);
 
       sf_close(sf);
 
@@ -531,7 +529,7 @@ BlockFile *SimpleBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
 
 /// Create a copy of this BlockFile, but using a different disk file.
 ///
-/// @param newFileName The name of the new file to use.
+/// @param newFileName The name of the NEW file to use.
 BlockFile *SimpleBlockFile::Copy(wxFileName newFileName)
 {
    BlockFile *newBlockFile = new SimpleBlockFile(newFileName, mLen,

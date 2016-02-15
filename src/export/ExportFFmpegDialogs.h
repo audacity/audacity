@@ -277,7 +277,7 @@ private:
    /// Retreives a list of formats compatible to codec
    ///\param id Codec ID
    ///\param selfmt format selected at the moment
-   ///\return index of the selfmt in new format list or -1 if it is not in the list
+   ///\return index of the selfmt in NEW format list or -1 if it is not in the list
    int FetchCompatibleFormatList(AVCodecID id, wxString *selfmt);
 
    /// Retreives codec list from libavcodec
@@ -286,7 +286,7 @@ private:
    /// Retreives a list of codecs compatible to format
    ///\param fmt Format short name
    ///\param id id of the codec selected at the moment
-   ///\return index of the id in new codec list or -1 if it is not in the list
+   ///\return index of the id in NEW codec list or -1 if it is not in the list
    int FetchCompatibleCodecList(const wxChar *fmt, AVCodecID id);
 
    /// Retreives list of presets from configuration file

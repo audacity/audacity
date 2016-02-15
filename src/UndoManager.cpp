@@ -67,7 +67,7 @@ void UndoManager::CalculateSpaceUsage()
       prev = cur;
       cur = swap;
 
-      // And clean out the new current map
+      // And clean out the NEW current map
       cur->clear();
 
       // Scan all tracks at current level
@@ -80,9 +80,9 @@ void UndoManager::CalculateSpaceUsage()
          {
             // Scan all blockfiles within current clip
             BlockArray *blocks = it->GetData()->GetSequenceBlockArray();
-            for (size_t b = 0, cnt = blocks->GetCount(); b < cnt; b++)
+            for (size_t b = 0, cnt = blocks->size(); b < cnt; b++)
             {
-               BlockFile *file = blocks->Item(b)->f;
+               BlockFile *file = blocks->at(b).f;
 
                // Accumulate space used by the file if the file didn't exist
                // in the previous level

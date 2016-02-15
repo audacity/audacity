@@ -40,7 +40,7 @@ class RingBuffer {
    int           mStart;
    int           mEnd;
    int           mBufferSize;
-   samplePtr     mBuffer;
+   SampleBuffer  mBuffer;
 };
 
 #endif /*  __AUDACITY_RING_BUFFER__ */

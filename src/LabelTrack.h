@@ -79,7 +79,7 @@ public:
    /// Returns relationship between a region described and this label; if
    /// parent is set, it will consider point labels at the very beginning
    /// and end of parent to be within a region that borders them (this makes
-   /// it possible to delete capture all labels with a Select All).
+   /// it possible to DELETE capture all labels with a Select All).
    TimeRelations RegionRelation(double reg_t0, double reg_t1,
                                 LabelTrack *parent = NULL);
 
@@ -204,7 +204,8 @@ class AUDACITY_DLL_API LabelTrack : public Track
    const LabelStruct *GetLabel(int index) const;
 
    //This returns the index of the label we just added.
-   int AddLabel(const SelectedRegion &region, const wxString &title = wxT(""));
+   int AddLabel(const SelectedRegion &region, const wxString &title = wxT(""),
+      int restoreFocus = -1);
    //And this tells us the index, if there is a label already there.
    int GetLabelIndex(double t, double t1);
 
@@ -267,6 +268,7 @@ class AUDACITY_DLL_API LabelTrack : public Track
    bool mResetCursorPos;               /// flag to reset cursor position(used in the dragging the glygh)
    bool mRightDragging;                /// flag to tell if it's a valid dragging
    bool mDrawCursor;                   /// flag to tell if drawing the cursor or not
+   int mRestoreFocus;              /// Restore focus to this track when done editing
 
    // Set in copied label tracks
    double mClipLen;

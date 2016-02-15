@@ -402,8 +402,8 @@ ToolManager::ToolManager( AudacityProject *parent )
                      this );
 
    // Create the top and bottom docks
-   mTopDock = new ToolDock( this, mParent, TopDockID );
-   mBotDock = new ToolDock( this, mParent, BotDockID );
+   mTopDock = safenew ToolDock( this, mParent, TopDockID );
+   mBotDock = safenew ToolDock( this, mParent, BotDockID );
 
    // Create all of the toolbars
    mBars[ ToolsBarID ]         = new ToolsToolBar();
@@ -529,7 +529,7 @@ void ToolManager::Reset()
          // when we dock, we reparent, so bar is no longer a child of floater.
          dock->Dock( bar );
          Expose( ndx, expose );
-         //OK (and good) to delete floater, as bar is no longer in it.
+         //OK (and good) to DELETE floater, as bar is no longer in it.
          if( floater )
             floater->Destroy();
       }
@@ -539,10 +539,10 @@ void ToolManager::Reset()
          // in turn floater will have mParent (the entire App) as its
          // parent.
 
-         // Maybe construct a new floater
+         // Maybe construct a NEW floater
          // this happens if we have just been bounced out of a dock.
          if( floater == NULL ) {
-            floater = new ToolFrame( mParent, this, bar, wxPoint(-1,-1) );
+            floater = safenew ToolFrame( mParent, this, bar, wxPoint(-1,-1) );
             bar->Reparent( floater );
          }
 
@@ -709,8 +709,8 @@ void ToolManager::ReadConfig()
          
 
 
-         // Construct a new floater
-         ToolFrame *f = new ToolFrame( mParent, this, bar, wxPoint( x, y ) );
+         // Construct a NEW floater
+         ToolFrame *f = safenew ToolFrame( mParent, this, bar, wxPoint( x, y ) );
 
          // Set the width and height
          if( width[ ndx ] != -1 && height[ ndx ] != -1 )
@@ -1124,7 +1124,7 @@ void ToolManager::OnMouse( wxMouseEvent & event )
 }
 
 //
-// Deal with new capture lost event
+// Deal with NEW capture lost event
 //
 void ToolManager::OnCaptureLost( wxMouseCaptureLostEvent & event )
 {
@@ -1240,7 +1240,7 @@ void ToolManager::OnGrabber( GrabberEvent & event )
       mDragBar->SetDocked( NULL, true );
       mDragBar->SetPositioned();
 
-      // Construct a new floater
+      // Construct a NEW floater
       mDragWindow = new ToolFrame( mParent, this, mDragBar, mp );
 
       // Make sure the ferry is visible

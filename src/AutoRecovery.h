@@ -26,7 +26,7 @@
 // Show auto recovery dialog if there are projects to recover. Should be
 // called once at Audacity startup.
 //
-// This function possibly opens new project windows while it recovers all
+// This function possibly opens NEW project windows while it recovers all
 // projects. If so, it will re-use *pproj, if != NULL and set it to NULL.
 //
 // Returns: True, if the start of Audacity should continue as normal
@@ -46,12 +46,16 @@ class RecordingRecoveryHandler: public XMLTagHandler
 public:
    RecordingRecoveryHandler(AudacityProject* proj);
    virtual bool HandleXMLTag(const wxChar *tag, const wxChar **attrs);
+   virtual void HandleXMLEndTag(const wxChar *tag);
    virtual XMLTagHandler *HandleXMLChild(const wxChar *tag);
 
    // This class only knows reading tags
    virtual void WriteXML(XMLWriter & WXUNUSED(xmlFile)) { wxASSERT(false); }
 
 private:
+
+   int FindTrack() const;
+
    AudacityProject* mProject;
    int mChannel;
    int mNumChannels;

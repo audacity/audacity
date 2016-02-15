@@ -13,6 +13,7 @@
 #define __AUDACITY_RECORDING_PREFS__
 
 #include <wx/defs.h>
+#include <wx/textctrl.h>
 
 #include <wx/window.h>
 
@@ -30,6 +31,13 @@ class RecordingPrefs :public PrefsPanel
  private:
    void Populate();
    void PopulateOrExchange(ShuttleGui & S);
+   void OnToggleCustomName(wxCommandEvent & Evt);
+
+   wxTextCtrl *mToggleCustomName;
+   bool mUseCustomTrackName;
+   bool mOldNameChoice;
+
+   DECLARE_EVENT_TABLE();
 };
 
 class RecordingPrefsFactory : public PrefsPanelFactory

@@ -202,7 +202,7 @@ SliderDialog::SliderDialog(wxWindow * parent, wxWindowID id,
                                15);
       mTextCtrl->SetValidator(wxTextValidator(wxFILTER_NUMERIC));
 
-      mSlider = new ASlider(this,
+      mSlider = safenew ASlider(this,
                             wxID_ANY,
                             title,
                             wxDefaultPosition,
@@ -1392,8 +1392,8 @@ void LWSlider::SetSpeed(float speed)
    mSpeed = speed;
 }
 
-// Given the mouse slider coordinate in fromPos, compute the new value
-// of the slider when clicking to set a new position.
+// Given the mouse slider coordinate in fromPos, compute the NEW value
+// of the slider when clicking to set a NEW position.
 float LWSlider::ClickPositionToValue(int fromPos, bool shiftDown)
 {
    int nSpan;
@@ -1436,7 +1436,7 @@ float LWSlider::ClickPositionToValue(int fromPos, bool shiftDown)
    return val;
 }
 
-// Given the mouse slider coordinate in fromPos, compute the new value
+// Given the mouse slider coordinate in fromPos, compute the NEW value
 // of the slider during a drag.
 float LWSlider::DragPositionToValue(int fromPos, bool shiftDown)
 {

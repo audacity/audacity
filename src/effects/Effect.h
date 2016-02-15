@@ -50,7 +50,7 @@ class WaveTrack;
 
 // TODO:  Apr-06-2015
 // TODO:  Much more cleanup of old methods and variables is needed, but
-// TODO:  can't be done until after all effects are using the new API.
+// TODO:  can't be done until after all effects are using the NEW API.
 
 class AUDACITY_DLL_API Effect : public wxEvtHandler,
                                 public EffectClientInterface,
@@ -334,6 +334,9 @@ protected:
    // (such as fade effects) need to know the full selection length.
    void SetPreviewFullSelectionFlag(bool previewDurationFlag);
 
+   // Use this if the effect needs to know if it is previewing
+   bool IsPreviewing() { return mIsPreview; }
+
    // Most effects only require selected tracks to be copied for Preview.
    // If IncludeNotSelectedPreviewTracks(true), then non-linear effects have
    // preview copies of all wave tracks.
@@ -346,10 +349,10 @@ protected:
 
    // If bGoodResult, replace mWaveTracks tracks in mTracks with successfully processed
    // mOutputTracks copies, get rid of old mWaveTracks, and set mWaveTracks to mOutputTracks.
-   // Else clear and delete mOutputTracks copies.
+   // Else clear and DELETE mOutputTracks copies.
    void ReplaceProcessedTracks(const bool bGoodResult);
 
-   // Use this to append a new output track.
+   // Use this to append a NEW output track.
    void AddToOutputTracks(Track *t);
 
 //
@@ -360,7 +363,7 @@ protected:
 //
 protected:
    ProgressDialog *mProgress;
-   double         mProjectRate; // Sample rate of the project - new tracks should
+   double         mProjectRate; // Sample rate of the project - NEW tracks should
                                // be created with this rate...
    double         mSampleRate;
    TrackFactory   *mFactory;
@@ -463,7 +466,7 @@ private:
 
 
 // FIXME:
-// FIXME:  Remove this once all effects are using the new dialog
+// FIXME:  Remove this once all effects are using the NEW dialog
 // FIXME:
 
 #define ID_EFFECT_PREVIEW ePreviewID

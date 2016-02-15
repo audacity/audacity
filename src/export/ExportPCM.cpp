@@ -168,6 +168,7 @@ ExportPCMOptions::ExportPCMOptions(wxWindow *parent, int selformat)
    PopulateOrExchange(S);
 
    TransferDataToWindow();
+   TransferDataFromWindow();
 }
 
 ExportPCMOptions::~ExportPCMOptions()
@@ -268,6 +269,8 @@ void ExportPCMOptions::OnHeaderChoice(wxCommandEvent & WXUNUSED(evt))
    mEncodingFromChoice = sel;
    mEncodingChoice->SetSelection(sel);
    ValidatePair(GetFormat());
+
+   TransferDataFromWindow();
 }
 
 int ExportPCMOptions::GetFormat()
@@ -320,7 +323,8 @@ public:
                Tags *metadata = NULL,
                int subformat = 0);
    // optional
-   wxString GetExtension(int index = WXSIZEOF(kFormats));
+   wxString GetExtension(int index);
+   virtual bool CheckFileName(wxFileName &filename, int format);
 
 private:
 
@@ -873,10 +877,11 @@ void ExportPCM::AddID3Chunk(wxString fName, Tags *tags, int sf_format)
 
 wxWindow *ExportPCM::OptionsCreate(wxWindow *parent, int format)
 {
+   wxASSERT(parent); // to justify safenew
    // default, full user control
    if (format < 0 || format >= WXSIZEOF(kFormats))
    {
-      return new ExportPCMOptions(parent, format);
+      return safenew ExportPCMOptions(parent, format);
    }
 
    return ExportPlugin::OptionsCreate(parent, format);
@@ -892,6 +897,24 @@ wxString ExportPCM::GetExtension(int index)
       // return the default
       return ExportPlugin::GetExtension(index);
    }
+}
+
+bool ExportPCM::CheckFileName(wxFileName &filename, int format)
+{
+   if (format == WXSIZEOF(kFormats) &&
+       IsExtension(filename.GetExt(), format)) {
+      // PRL:  Bug1217
+      // If the user left the extension blank, then the
+      // file dialog will have defaulted the extension, beyond our control,
+      // to the first in the wildcard list or (Linux) the last-saved extension,
+      // ignoring what we try to do with the additional drop-down mHeaderChoice.
+      // Here we can intercept file name processing and impose the correct default.
+      // However this has the consequence that in case an explicit extension was typed,
+      // we override it without asking.
+      filename.SetExt(GetExtension(format));
+   }
+
+   return ExportPlugin::CheckFileName(filename, format);
 }
 
 ExportPlugin *New_ExportPCM()

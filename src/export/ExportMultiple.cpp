@@ -270,7 +270,7 @@ void ExportMultiple::PopulateOrExchange(ShuttleGui& S)
             S.AddPrompt(_("Options:"));
             if (!mBook)
             {
-               mBook = new wxSimplebook(S.GetParent(), OptionsID, wxDefaultPosition, wxDefaultSize, wxBORDER_STATIC);
+               mBook = safenew wxSimplebook(S.GetParent(), OptionsID, wxDefaultPosition, wxDefaultSize, wxBORDER_STATIC);
                for (size_t i = 0; i < mPlugins.GetCount(); i++)
                {
                   for (int j = 0; j < mPlugins[i]->GetFormatCount(); j++)
@@ -708,7 +708,7 @@ int ExportMultiple::ExportMultipleByLabel(bool byName,
       setting.filetags.SetTag(TAG_TITLE, title);
       setting.filetags.SetTag(TAG_TRACK, l+1);
       // let the user have a crack at editing it, exit if cancelled
-      if (!setting.filetags.ShowEditDialog(mProject,_("Edit Metadata"), tagsPrompt))
+      if (!setting.filetags.ShowEditDialog(mProject,_("Edit Metadata Tags"), tagsPrompt))
          return false;
 
       /* add the settings to the array of settings to be used for export */
@@ -846,7 +846,7 @@ int ExportMultiple::ExportMultipleByTrack(bool byName,
       setting.filetags.SetTag(TAG_TITLE, title);
       setting.filetags.SetTag(TAG_TRACK, l+1);
       // let the user have a crack at editing it, exit if cancelled
-      if (!setting.filetags.ShowEditDialog(mProject,_("Edit Metadata"), tagsPrompt))
+      if (!setting.filetags.ShowEditDialog(mProject,_("Edit Metadata Tags"), tagsPrompt))
          return false;
 
       /* add the settings to the array of settings to be used for export */

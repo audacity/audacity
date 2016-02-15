@@ -30,8 +30,6 @@
 
 #include "../Experimental.h"
 
-////////////////////////////////////////////////////////////////////////////////
-
 TracksPrefs::TracksPrefs(wxWindow * parent)
 :  PrefsPanel(parent, _("Tracks"))
 {
@@ -49,12 +47,12 @@ TracksPrefs::~TracksPrefs()
 
 void TracksPrefs::Populate()
 {
-   mSoloCodes.Add(wxT("Standard"));
    mSoloCodes.Add(wxT("Simple"));
+   mSoloCodes.Add(wxT("Multi"));
    mSoloCodes.Add(wxT("None"));
 
-   mSoloChoices.Add(_("Standard"));
    mSoloChoices.Add(_("Simple"));
+   mSoloChoices.Add(_("Multi-track"));
    mSoloChoices.Add(_("None"));
 
 
@@ -96,15 +94,23 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
 
       S.StartMultiColumn(2);
       {
-
-         S.TieChoice(_("Default &View Mode:"),
+         S.TieChoice(_("Default &view mode:"),
                      wxT("/GUI/DefaultViewModeNew"),
                      0,
                      mViewChoices,
                      mViewCodes);
          S.SetSizeHints(mViewChoices);
+
+         S.TieTextBox(_("Default audio track &name:"),
+                      wxT("/GUI/TrackNames/DefaultTrackName"),
+                      _("Audio Track"),
+                      30);
       }
       S.EndMultiColumn();
+
+      S.TieCheckBox(_("Sho&w track name in waveform display"),
+                  wxT("/GUI/ShowTrackNameInWaveform"),
+                  false);
    }
    S.EndStatic();
 
@@ -158,5 +164,6 @@ bool TracksPrefs::Apply()
 
 PrefsPanel *TracksPrefsFactory::Create(wxWindow *parent)
 {
-   return new TracksPrefs(parent);
+   wxASSERT(parent); // to justify safenew
+   return safenew TracksPrefs(parent);
 }

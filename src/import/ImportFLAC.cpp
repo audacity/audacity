@@ -348,7 +348,7 @@ bool FLACImportFileHandle::Init()
    ODFlacDecoder* odDecoder = (ODFlacDecoder*)mDecoderTask->CreateFileDecoder(mFilename);
    if(!odDecoder || !odDecoder->ReadHeader())
    {
-      //delete the task only if it failed to read - otherwise the OD man takes care of it.
+      //DELETE the task only if it failed to read - otherwise the OD man takes care of it.
       delete mDecoderTask;
       return false;
    }
@@ -550,7 +550,7 @@ int FLACImportFileHandle::Import(TrackFactory *trackFactory,
 
 FLACImportFileHandle::~FLACImportFileHandle()
 {
-   //don't delete mFile if we are using OD.
+   //don't DELETE mFile if we are using OD.
 #ifndef EXPERIMENTAL_OD_FLAC
    mFile->finish();
    delete mFile;

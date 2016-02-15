@@ -342,8 +342,9 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
 
    HoldPrint(true);
 
+   ZoomInfo zoomInfo(0.0, ZoomInfo::GetDefaultZoom());
    DirManager *d = new DirManager();
-   TrackFactory *fact = new TrackFactory(d);
+   TrackFactory *fact = new TrackFactory(d, &zoomInfo);
    WaveTrack *t = fact->NewWaveTrack(int16Sample);
    Track *tmp = NULL;
 

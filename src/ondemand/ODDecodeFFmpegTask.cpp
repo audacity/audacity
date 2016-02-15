@@ -68,7 +68,7 @@ public:
    ///this->ReadData(sampleData, floatSample, 0, mLen);
    ///This class should call ReadHeader() first, so it knows the length, and can prepare
    ///the file object if it needs to.
-   virtual int Decode(samplePtr & data, sampleFormat & format, sampleCount start, sampleCount len, unsigned int channel);
+   virtual int Decode(SampleBuffer & data, sampleFormat & format, sampleCount start, sampleCount len, unsigned int channel);
 
    ///This is a must implement abstract virtual in the superclass.
    ///However it doesn't do anything because ImportFFMpeg does all that for us.
@@ -114,7 +114,7 @@ ODDecodeFFmpegTask::ODDecodeFFmpegTask(void* scs,int numStreams, WaveTrack*** ch
    mChannels=channels;
    mFormatContext = formatContext;
    mStreamIndex = streamIndex;
-   //TODO we probably need to create a new WaveTrack*** pointer and copy.
+   //TODO we probably need to create a NEW WaveTrack*** pointer and copy.
    //same for streamContext, but we should also use a ref counting system - this should be added to streamContext
  //  mScs = (streamContext**)malloc(sizeof(streamContext**)*mFormatContext->nb_streams);
 }
@@ -185,7 +185,7 @@ bool ODFFmpegDecoder::SeekingAllowed()
    if(!audioStreamExists)
       goto test_failed;
    //TODO: now try a seek and see if dts/pts (decode/presentation timestamp) is updated as we expected it to be.
-   //This should be done using a new AVFormatContext clone so that we don't ruin the file pointer if we fail.
+   //This should be done using a NEW AVFormatContext clone so that we don't ruin the file pointer if we fail.
 //   url_fseek(mFormatContext->pb,0,SEEK_SET);
 
 
@@ -256,7 +256,7 @@ mStreamIndex(streamIndex)
    //ODDecodeBlockFiles that point to FFmpeg files.
 }
 
-//we have taken ownership, so delete the ffmpeg stuff allocated in ImportFFmpeg that was given to us.
+//we have taken ownership, so DELETE the ffmpeg stuff allocated in ImportFFmpeg that was given to us.
 ODFFmpegDecoder::~ODFFmpegDecoder()
 {
    if (FFmpegLibsInst->ValidLibsLoaded())
@@ -274,7 +274,7 @@ ODFFmpegDecoder::~ODFFmpegDecoder()
    }
    free(mScs);
 
-   //delete our caches.
+   //DELETE our caches.
    while(mDecodeCache.size())
    {
       free(mDecodeCache[0]->samplePtr);
@@ -296,19 +296,19 @@ ODFFmpegDecoder::~ODFFmpegDecoder()
 #define kDecodeSampleAllowance 400000
 //number of jump backwards seeks
 #define kMaxSeekRewindAttempts 8
-int ODFFmpegDecoder::Decode(samplePtr & data, sampleFormat & format, sampleCount start, sampleCount len, unsigned int channel)
+int ODFFmpegDecoder::Decode(SampleBuffer & data, sampleFormat & format, sampleCount start, sampleCount len, unsigned int channel)
 {
    format = mScs[mStreamIndex]->m_osamplefmt;
 
-   data = NewSamples(len, format);
-   samplePtr bufStart = data;
+   data.Allocate(len, format);
+   samplePtr bufStart = data.ptr();
    streamContext* sc = NULL;
 
    // printf("start %llu len %llu\n", start, len);
    //TODO update this to work with seek - this only works linearly now.
    if(mCurrentPos > start && mCurrentPos  <= start+len + kDecodeSampleAllowance)
    {
-      //this next call takes data, start and len as reference variables and updates them to reflect the new area that is needed.
+      //this next call takes data, start and len as reference variables and updates them to reflect the NEW area that is needed.
       FillDataFromCache(bufStart, format, start,len,channel);
    }
 
@@ -448,10 +448,10 @@ int ODFFmpegDecoder::Decode(samplePtr & data, sampleFormat & format, sampleCount
       }
    }
 
-   //this next call takes data, start and len as reference variables and updates them to reflect the new area that is needed.
+   //this next call takes data, start and len as reference variables and updates them to reflect the NEW area that is needed.
    FillDataFromCache(bufStart, format, start, len, channel);
 
-   // CHECK: not sure if we need this.  In any case it has to be updated for the new float case (not just int16)
+   // CHECK: not sure if we need this.  In any case it has to be updated for the NEW float case (not just int16)
    //if for some reason we couldn't get the samples, fill them with silence
    /*
    int16_t* outBuf = (int16_t*) bufStart;
@@ -466,7 +466,7 @@ int ODFFmpegDecoder::Decode(samplePtr & data, sampleFormat & format, sampleCount
 // the minimum amount of cache entries necessary to warrant a binary search.
 #define kODFFmpegSearchThreshold 10
 ///returns the number of samples filled in from start.
-//also updates data and len to reflect new unfilled area - start is unmodified.
+//also updates data and len to reflect NEW unfilled area - start is unmodified.
 int ODFFmpegDecoder::FillDataFromCache(samplePtr & data, sampleFormat outFormat, sampleCount &start, sampleCount& len, unsigned int channel)
 {
    if(mDecodeCache.size() <= 0)
@@ -600,7 +600,7 @@ int ODFFmpegDecoder::DecodeFrame(streamContext *sc, bool flushing)
       //stick it in the cache.
       //TODO- consider growing/unioning a few cache buffers like WaveCache does.
       //however we can't use wavecache as it isn't going to handle our stereo interleaved part, and isn't for samples
-      //However if other ODDecode tasks need this, we should do a new class for caching.
+      //However if other ODDecode tasks need this, we should do a NEW class for caching.
       FFMpegDecodeCache* cache = new FFMpegDecodeCache;
       //len is number of samples per channel
       cache->numChannels = sc->m_stream->codec->channels;
@@ -630,7 +630,7 @@ void ODFFmpegDecoder::InsertCache(FFMpegDecodeCache* cache) {
       //check greater than OR equals because we want to insert infront of old dupes.
       if(mDecodeCache[guess]->start>= cache->start) {
 //         if(mDecodeCache[guess]->start == cache->start) {
-//            printf("dupe! start cache %llu start new cache %llu, mCurrentPos %llu\n",mDecodeCache[guess]->start, cache->start, mCurrentPos);
+//            printf("dupe! start cache %llu start NEW cache %llu, mCurrentPos %llu\n",mDecodeCache[guess]->start, cache->start, mCurrentPos);
 //         }
          searchEnd = guess;
       }

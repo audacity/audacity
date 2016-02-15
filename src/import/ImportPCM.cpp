@@ -243,7 +243,7 @@ static wxString AskCopyOrEdit()
       wxBoxSizer *vbox = new wxBoxSizer(wxVERTICAL);
       dialog.SetSizer(vbox);
 
-      wxStaticText *message = new wxStaticText(&dialog, -1, wxString::Format(_("\
+      wxStaticText *message = safenew wxStaticText(&dialog, -1, wxString::Format(_("\
 When importing uncompressed audio files you can either copy them \
 into the project, or read them directly from their current location (without copying).\n\n\
 Your current preference is set to %s.\n\n\
@@ -259,19 +259,19 @@ How do you want to import the current file(s)?"), oldCopyPref == wxT("copy") ? _
 
       vbox->Add(message, 1, wxALL | wxEXPAND, 10);
 
-      wxStaticBox *box = new wxStaticBox(&dialog, -1, _("Choose an import method"));
+      wxStaticBox *box = safenew wxStaticBox(&dialog, -1, _("Choose an import method"));
       box->SetName(box->GetLabel());
       wxStaticBoxSizer *boxsizer = new wxStaticBoxSizer(box, wxVERTICAL);
 
-      wxRadioButton *copyRadio  = new wxRadioButton(&dialog, -1, _("Make a &copy of the files before editing (safer)"), wxDefaultPosition, wxDefaultSize, wxRB_GROUP);
+      wxRadioButton *copyRadio  = safenew wxRadioButton(&dialog, -1, _("Make a &copy of the files before editing (safer)"), wxDefaultPosition, wxDefaultSize, wxRB_GROUP);
       boxsizer->Add(copyRadio, 0, wxALL);
       copyRadio->SetName(wxStripMenuCodes(copyRadio->GetLabel()));
 
-      wxRadioButton *aliasRadio = new wxRadioButton(&dialog, -1, _("Read the files &directly from the original (faster)"));
+      wxRadioButton *aliasRadio = safenew wxRadioButton(&dialog, -1, _("Read the files &directly from the original (faster)"));
       boxsizer->Add(aliasRadio, 0, wxALL);
       aliasRadio->SetName(wxStripMenuCodes(aliasRadio->GetLabel()));
 
-      wxCheckBox *dontAskNextTimeBox = new wxCheckBox(&dialog, -1, _("Don't &warn again and always use my choice above"));
+      wxCheckBox *dontAskNextTimeBox = safenew wxCheckBox(&dialog, -1, _("Don't &warn again and always use my choice above"));
       boxsizer->Add(dontAskNextTimeBox, 0, wxALL);
       vbox->Add(boxsizer, 0, wxALL, 10);
       dontAskNextTimeBox->SetName(wxStripMenuCodes(dontAskNextTimeBox->GetLabel()));
@@ -423,15 +423,15 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
       if (maxBlock < 1)
          return eProgressFailed;
 
-      samplePtr srcbuffer;
-      while (NULL == (srcbuffer = NewSamples(maxBlock * mInfo.channels, mFormat)))
+      SampleBuffer srcbuffer;
+      while (NULL == srcbuffer.Allocate(maxBlock * mInfo.channels, mFormat).ptr())
       {
          maxBlock >>= 1;
          if (maxBlock < 1)
             return eProgressFailed;
       }
 
-      samplePtr buffer = NewSamples(maxBlock, mFormat);
+      SampleBuffer buffer(maxBlock, mFormat);
 
       unsigned long framescompleted = 0;
 
@@ -440,25 +440,25 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
          block = maxBlock;
 
          if (mFormat == int16Sample)
-            block = sf_readf_short(mFile, (short *)srcbuffer, block);
+            block = sf_readf_short(mFile, (short *)srcbuffer.ptr(), block);
          //import 24 bit int as float and have the append function convert it.  This is how PCMAliasBlockFile works too.
          else
-            block = sf_readf_float(mFile, (float *)srcbuffer, block);
+            block = sf_readf_float(mFile, (float *)srcbuffer.ptr(), block);
 
          if (block) {
             for(c=0; c<mInfo.channels; c++) {
                if (mFormat==int16Sample) {
                   for(int j=0; j<block; j++)
-                     ((short *)buffer)[j] =
-                        ((short *)srcbuffer)[mInfo.channels*j+c];
+                     ((short *)buffer.ptr())[j] =
+                        ((short *)srcbuffer.ptr())[mInfo.channels*j+c];
                }
                else {
                   for(int j=0; j<block; j++)
-                     ((float *)buffer)[j] =
-                        ((float *)srcbuffer)[mInfo.channels*j+c];
+                     ((float *)buffer.ptr())[j] =
+                        ((float *)srcbuffer.ptr())[mInfo.channels*j+c];
                }
 
-               channels[c]->Append(buffer, (mFormat == int16Sample)?int16Sample:floatSample, block);
+               channels[c]->Append(buffer.ptr(), (mFormat == int16Sample)?int16Sample:floatSample, block);
             }
             framescompleted += block;
          }
@@ -469,9 +469,6 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
             break;
 
       } while (block > 0);
-
-      DeleteSamples(buffer);
-      DeleteSamples(srcbuffer);
    }
 
    if (updateResult == eProgressFailed || updateResult == eProgressCancelled) {

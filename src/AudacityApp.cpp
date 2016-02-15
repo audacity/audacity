@@ -132,7 +132,7 @@ It handles initialization and termination by subclassing wxApp.
 // These lines ensure that Audacity gets WindowsXP themes.
 // Without them we get the old-style Windows98/2000 look under XP.
 #  if !defined(__WXWINCE__)
-#     pragma comment(linker, "\"/manifestdependency:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='X86' publicKeyToken='6595b64144ccf1df'\"")
+#     pragma comment(linker,"\"/manifestdependency:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #  endif
 
 // These lines allows conditional inclusion of the various libraries
@@ -313,7 +313,7 @@ void QuitAudacity(bool bForce)
    //temporarilly commented out till it is added to all projects
    //delete Profiler::Instance();
 
-   //delete the static lock for audacity projects
+   //DELETE the static lock for audacity projects
    AudacityProject::DeleteAllProjectsDeleteLock();
 
    //remove our logger
@@ -792,21 +792,21 @@ bool AudacityApp::MRUOpen(wxString fullPathStr) {
             return false;
 
          // DMM: If the project is dirty, that means it's been touched at
-         // all, and it's not safe to open a new project directly in its
-         // place.  Only if the project is brand-new clean and the user
+         // all, and it's not safe to open a NEW project directly in its
+         // place.  Only if the project is brand-NEW clean and the user
          // hasn't done any action at all is it safe for Open to take place
          // inside the current project.
          //
-         // If you try to Open a new project inside the current window when
+         // If you try to Open a NEW project inside the current window when
          // there are no tracks, but there's an Undo history, etc, then
-         // bad things can happen, including data files moving to the new
+         // bad things can happen, including data files moving to the NEW
          // project directory, etc.
          if (!proj || proj->GetDirty() || !proj->GetIsEmpty()) {
             proj = CreateNewAudacityProject();
          }
          // This project is clean; it's never been touched.  Therefore
          // all relevant member variables are in their initial state,
-         // and it's okay to open a new project inside this window.
+         // and it's okay to open a NEW project inside this window.
          proj->OpenFile(fullPathStr);
       }
       else {
@@ -985,8 +985,10 @@ wxLanguageInfo userLangs[] =
 };
 #endif
 
-void AudacityApp::InitLang( const wxString & lang )
+wxString AudacityApp::InitLang( const wxString & lang )
 {
+   wxString result = lang;
+
    if (mLocale)
       delete mLocale;
 
@@ -1001,10 +1003,18 @@ void AudacityApp::InitLang( const wxString & lang )
    wxSetEnv(wxT("LANG"), wxT("en_US.UTF-8"));
 #endif
 
-   const wxLanguageInfo *info = wxLocale::FindLanguageInfo(lang);
-   if (!lang)
+   const wxLanguageInfo *info = NULL;
+   if (!lang.empty()) {
+      info = wxLocale::FindLanguageInfo(lang);
+      if (!info)
+         ::wxMessageBox(wxString::Format(_("Language \"%s\" is unknown"), lang));
+   }
+   if (!info)
    {
-      return;
+      result = GetSystemLanguageCode();
+      info = wxLocale::FindLanguageInfo(result);
+      if (!info)
+         return result;
    }
    mLocale = new wxLocale(info->Language);
 
@@ -1035,6 +1045,8 @@ void AudacityApp::InitLang( const wxString & lang )
       wxCommandEvent evt(EVT_LANGUAGE_CHANGE);
       ProcessEvent(evt);
    }
+
+   return result;
 }
 
 void AudacityApp::OnFatalException()

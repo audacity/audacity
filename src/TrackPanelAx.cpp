@@ -333,7 +333,7 @@ wxAccStatus TrackPanelAx::GetName( int childId, wxString* name )
             // Many of translations of the strings with a leading space omitted
             // the leading space. Therefore a space has been added using wxT(" ").
             // Because screen readers won't be affected by multiple spaces, the
-            // leading spaces have not been removed, so that no new translations are needed.
+            // leading spaces have not been removed, so that no NEW translations are needed.
             /* i18n-hint: This is for screen reader software and indicates that
                on this track mute is on.*/
             name->Append( wxT(" ") + wxString(_( " Mute On" )) );

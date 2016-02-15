@@ -44,7 +44,8 @@ TimeEditor::~TimeEditor()
 
 void TimeEditor::Create(wxWindow *parent, wxWindowID id, wxEvtHandler *handler)
 {
-   m_control = new NumericTextCtrl(NumericConverter::TIME, parent,
+   wxASSERT(parent); // to justify safenew
+   m_control = safenew NumericTextCtrl(NumericConverter::TIME, parent,
                                 wxID_ANY,
                                 mFormat,
                                 mOld,
@@ -278,7 +279,7 @@ wxGridCellEditor *ChoiceEditor::Clone() const
 
 void ChoiceEditor::Create(wxWindow* parent, wxWindowID id, wxEvtHandler* evtHandler)
 {
-   m_control = new wxChoice(parent,
+   m_control = safenew wxChoice(parent,
                             id,
                             wxDefaultPosition,
                             wxDefaultSize,
@@ -464,7 +465,7 @@ void Grid::OnKeyDown(wxKeyEvent &event)
          }
 
 #if wxUSE_ACCESSIBILITY
-         // Make sure the new cell is made available to the screen reader
+         // Make sure the NEW cell is made available to the screen reader
          mAx->SetCurrentCell(GetGridCursorRow(), GetGridCursorCol());
 #endif
       }
@@ -512,7 +513,7 @@ void Grid::OnKeyDown(wxKeyEvent &event)
          MakeCellVisible(GetGridCursorRow(), GetGridCursorCol());
 
 #if wxUSE_ACCESSIBILITY
-         // Make sure the new cell is made available to the screen reader
+         // Make sure the NEW cell is made available to the screen reader
          mAx->SetCurrentCell(GetGridCursorRow(), GetGridCursorCol());
 #endif
       }
@@ -535,7 +536,7 @@ void Grid::OnKeyDown(wxKeyEvent &event)
 
             // This looks strange, but what it does is selects the cell when
             // enter is pressed after editing.  Without it, Jaws and Window-Eyes
-            // do not speak the new cell contents (the one below the edited one).
+            // do not speak the NEW cell contents (the one below the edited one).
             SetGridCursor(GetGridCursorRow(), GetGridCursorCol());
          }
          break;

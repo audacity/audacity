@@ -200,6 +200,18 @@ bool EffectSBSMS::ProcessLabelTrack(Track *t)
    return true;
 }
 
+double EffectSBSMS::getInvertedStretchedTime(double rateStart, double rateEnd, SlideType slideType, double outputTime)
+{
+   Slide slide(slideType,rateStart,rateEnd,0);
+   return slide.getInverseStretchedTime(outputTime);
+}
+
+double EffectSBSMS::getRate(double rateStart, double rateEnd, SlideType slideType, double t)
+{
+   Slide slide(slideType,rateStart,rateEnd,0);
+   return slide.getRate(t);
+}
+
 bool EffectSBSMS::Process()
 {
    bool bGoodResult = true;
@@ -307,6 +319,8 @@ bool EffectSBSMS::Process()
                                                        bPitchReferenceInput,
                                                        samplesToProcess,0,
                                                        NULL);
+               
+             
             } else {
               rb.bPitch = false;
               outSlideType = (srProcess==srTrack?SlideIdentity:SlideConstant);
@@ -330,7 +344,7 @@ bool EffectSBSMS::Process()
                                                       samplesToProcess,processPresamples,
                                                       rb.quality);
             }
-
+            
             Resampler resampler(outResampleCB,&rb,outSlideType);
 
             audio outBuf[SBSMSOutBlockSize];

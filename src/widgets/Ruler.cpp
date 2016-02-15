@@ -155,7 +155,7 @@ Ruler::Ruler()
 
    mTwoTone = false;
 
-   mUseZoomInfo = false;
+   mUseZoomInfo = NULL;
 }
 
 Ruler::~Ruler()
@@ -973,8 +973,8 @@ void Ruler::Update()
 void Ruler::Update(TimeTrack* timetrack)// Envelope *speedEnv, long minSpeed, long maxSpeed )
 {
    const ZoomInfo *zoomInfo = NULL;
-   if (mUseZoomInfo && !mLog && mOrientation == wxHORIZONTAL)
-      zoomInfo = &GetActiveProject()->GetZoomInfo();
+   if (!mLog && mOrientation == wxHORIZONTAL)
+      zoomInfo = mUseZoomInfo;
 
    // This gets called when something has been changed
    // (i.e. we've been invalidated).  Recompute all
@@ -1544,7 +1544,7 @@ void Ruler::SetCustomMajorLabels(wxArrayString *label, int numLabel, int start, 
       mMajorLabels[i].text = label->Item(i);
       mMajorLabels[i].pos  = start + i*step;
    }
-   //Remember: delete majorlabels....
+   //Remember: DELETE majorlabels....
 }
 
 void Ruler::SetCustomMinorLabels(wxArrayString *label, int numLabel, int start, int step)
@@ -1558,7 +1558,7 @@ void Ruler::SetCustomMinorLabels(wxArrayString *label, int numLabel, int start, 
       mMinorLabels[i].text = label->Item(i);
       mMinorLabels[i].pos  = start + i*step;
    }
-   //Remember: delete majorlabels....
+   //Remember: DELETE majorlabels....
 }
 
 void Ruler::Label::Draw(wxDC&dc, bool twoTone) const
@@ -1577,10 +1577,10 @@ void Ruler::Label::Draw(wxDC&dc, bool twoTone) const
    }
 }
 
-void Ruler::SetUseZoomInfo(int leftOffset)
+void Ruler::SetUseZoomInfo(int leftOffset, const ZoomInfo *zoomInfo)
 {
    mLeftOffset = leftOffset;
-   mUseZoomInfo = true;
+   mUseZoomInfo = zoomInfo;
 }
 
 //
@@ -1680,6 +1680,7 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* parent,
                                      const wxSize& size,
                                      ViewInfo *viewinfo)
 :  wxPanel(parent, id, pos, size)
+, mViewInfo(viewinfo)
 {
    SetLabel( _("Timeline") );
    SetName(GetLabel());
@@ -1707,8 +1708,6 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* parent,
    mMouseEventState = mesNone;
    mIsDragging = false;
 
-   mViewInfo = viewinfo;
-
    mOuter = GetClientRect();
 
    mInner = mOuter;
@@ -1717,7 +1716,7 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* parent,
    mInner.width -= 2;      // -2 for left and right bevels
    mInner.height -= 3;     // -3 for top and bottom bevels and bottom line
 
-   mRuler.SetUseZoomInfo(mLeftOffset);
+   mRuler.SetUseZoomInfo(mLeftOffset, mViewInfo);
    mRuler.SetBounds(mInner.GetLeft(),
                     mInner.GetTop(),
                     mInner.GetRight(),
@@ -1759,6 +1758,12 @@ AdornedRulerPanel::~AdornedRulerPanel()
                         wxCommandEventHandler(AdornedRulerPanel::OnCapture),
                         NULL,
                         this);
+
+   if (mBack)
+   {
+      mBackDC.SelectObject(wxNullBitmap);
+      delete mBack;
+   }
 }
 
 void AdornedRulerPanel::UpdatePrefs()
@@ -2457,7 +2462,7 @@ void AdornedRulerPanel::DoDrawSelection(wxDC * dc)
 void AdornedRulerPanel::SetLeftOffset(int offset)
 {
    mLeftOffset = offset;
-   mRuler.SetUseZoomInfo(offset);
+   mRuler.SetUseZoomInfo(offset, mViewInfo);
 }
 
 void AdornedRulerPanel::DrawCursor(double time)

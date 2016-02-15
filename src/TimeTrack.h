@@ -27,8 +27,8 @@ class TimeTrack: public Track {
 
  public:
 
-   TimeTrack(DirManager * projDirManager);
-   /** @brief Copy-Constructor - create a new TimeTrack:: which is an independent copy of the original
+   TimeTrack(DirManager * projDirManager, const ZoomInfo *zoomInfo);
+   /** @brief Copy-Constructor - create a NEW TimeTrack:: which is an independent copy of the original
     *
     * Calls TimeTrack::Init() to copy the track metadata, then does a bunch of manipulations on the
     * Envelope:: and Ruler:: members in order to copy one to the other - unfortunately both lack a
@@ -74,7 +74,7 @@ class TimeTrack: public Track {
    /** @brief Compute the integral warp factor between two non-warped time points
     *
     * Calculate the relative length increase of the chosen segment from the original sound.
-    * So if this time track has a low value (i.e. makes the sound slower), the new warped
+    * So if this time track has a low value (i.e. makes the sound slower), the NEW warped
     * sound will be *longer* than the original sound, so the return value of this function
     * is larger.
     * @param t0 The starting time to calculate from
@@ -117,6 +117,7 @@ class TimeTrack: public Track {
    void testMe();
 
  private:
+   const ZoomInfo  *const mZoomInfo;
    Envelope        *mEnvelope;
    Ruler           *mRuler;
    double           mRangeLower;

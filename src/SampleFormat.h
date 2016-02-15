@@ -56,10 +56,10 @@ class SampleBuffer {
 
 public:
    SampleBuffer()
-      : mCount(0), mPtr(0)
+      : mPtr(0)
    {}
    SampleBuffer(int count, sampleFormat format)
-      : mCount(count), mPtr(NewSamples(mCount, format))
+      : mPtr(NewSamples(count, format))
    {}
    ~SampleBuffer()
    {
@@ -67,28 +67,59 @@ public:
    }
 
    // WARNING!  May not preserve contents.
-   void Resize(int count, sampleFormat format)
+   SampleBuffer &Allocate(int count, sampleFormat format)
    {
-      if (mCount < count) {
-         Free();
-         mPtr = NewSamples(count, format);
-         mCount = count;
-      }
+      Free();
+      mPtr = NewSamples(count, format);
+      return *this;
    }
+
 
    void Free()
    {
       DeleteSamples(mPtr);
       mPtr = 0;
-      mCount = 0;
    }
 
    samplePtr ptr() const { return mPtr; }
 
 
 private:
-   int mCount;
    samplePtr mPtr;
+};
+
+class GrowableSampleBuffer : private SampleBuffer
+{
+public:
+   GrowableSampleBuffer()
+      : SampleBuffer()
+      , mCount(0)
+   {}
+
+   GrowableSampleBuffer(int count, sampleFormat format)
+      : SampleBuffer(count, format)
+      , mCount(count)
+   {}
+
+   GrowableSampleBuffer &Resize(int count, sampleFormat format)
+   {
+      if (!ptr() || mCount < count) {
+         Allocate(count, format);
+         mCount = count;
+      }
+      return *this;
+   }
+
+   void Free()
+   {
+      SampleBuffer::Free();
+      mCount = 0;
+   }
+
+   using SampleBuffer::ptr;
+
+private:
+   int mCount;
 };
 
 //
@@ -114,7 +145,7 @@ void      ReverseSamples(samplePtr buffer, sampleFormat format,
                          int start, int len);
 
 //
-// This must be called on startup and everytime new ditherers
+// This must be called on startup and everytime NEW ditherers
 // are set in preferences.
 //
 

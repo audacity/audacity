@@ -78,6 +78,8 @@ public:
                      const wxSize& size = wxDefaultSize);
    virtual ~MixerTrackCluster() {}
 
+   void UpdatePrefs();
+
    void HandleResize(); // For wxSizeEvents, update gain slider and meter.
 
    void HandleSliderGain(const bool bWantPushState = false);
@@ -202,6 +204,8 @@ public:
                const wxPoint& pos = wxDefaultPosition,
                const wxSize& size = wxDefaultSize);
    virtual ~MixerBoard();
+
+   void UpdatePrefs();
 
    // Add clusters for any tracks we're not yet showing.
    // Update pointers for tracks we're aleady showing.

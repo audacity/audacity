@@ -116,7 +116,7 @@ int PCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
    ODManager::LockLibSndFileMutex();
    sf_seek(sf, mAliasStart + start, SEEK_SET);
    ODManager::UnlockLibSndFileMutex();
-   samplePtr buffer = NewSamples(len * info.channels, floatSample);
+   SampleBuffer buffer(len * info.channels, floatSample);
 
    int framesRead = 0;
 
@@ -127,34 +127,33 @@ int PCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
       // read 16-bit data directly.  This is a pretty common
       // case, as most audio files are 16-bit.
       ODManager::LockLibSndFileMutex();
-      framesRead = sf_readf_short(sf, (short *)buffer, len);
+      framesRead = sf_readf_short(sf, (short *)buffer.ptr(), len);
       ODManager::UnlockLibSndFileMutex();
       for (int i = 0; i < framesRead; i++)
          ((short *)data)[i] =
-            ((short *)buffer)[(info.channels * i) + mAliasChannel];
+            ((short *)buffer.ptr())[(info.channels * i) + mAliasChannel];
    }
    else {
       // Otherwise, let libsndfile handle the conversion and
       // scaling, and pass us normalized data as floats.  We can
       // then convert to whatever format we want.
       ODManager::LockLibSndFileMutex();
-      framesRead = sf_readf_float(sf, (float *)buffer, len);
+      framesRead = sf_readf_float(sf, (float *)buffer.ptr(), len);
       ODManager::UnlockLibSndFileMutex();
-      float *bufferPtr = &((float *)buffer)[mAliasChannel];
+      float *bufferPtr = &((float *)buffer.ptr())[mAliasChannel];
       CopySamples((samplePtr)bufferPtr, floatSample,
                   (samplePtr)data, format,
                   framesRead, true, info.channels);
    }
 
-   DeleteSamples(buffer);
    ODManager::LockLibSndFileMutex();
    sf_close(sf);
    ODManager::UnlockLibSndFileMutex();
    return framesRead;
 }
 
-/// Construct a new PCMAliasBlockFile based on this one, but writing
-/// the summary data to a new file.
+/// Construct a NEW PCMAliasBlockFile based on this one, but writing
+/// the summary data to a NEW file.
 ///
 /// @param newFileName The filename to copy the summary data to.
 BlockFile *PCMAliasBlockFile::Copy(wxFileName newFileName)

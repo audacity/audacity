@@ -514,7 +514,8 @@ public:
    ViewInfo * GetViewInfo(){ return mViewInfo;}
    TrackPanelListener * GetListener(){ return mListener;}
    AdornedRulerPanel * GetRuler(){ return mRuler;}
-// JKC and here is a factory function which just does 'new' in standard Audacity.
+// JKC and here is a factory function which just does 'NEW' in standard Audacity.
+   // Precondition: parent != NULL
    static TrackPanel *(*FactoryFunction)(wxWindow * parent,
               wxWindowID id,
               const wxPoint & pos,
@@ -558,8 +559,6 @@ protected:
    int mLabelTrackStartYPos;
 
    virtual wxString TrackSubText(Track *t);
-
-   virtual bool MoveClipToTrack(WaveClip *clip, WaveTrack* dst);
 
    TrackInfo mTrackInfo;
  public:
@@ -638,7 +637,7 @@ protected:
    // and is ignored otherwise.
    double mFreqSelPin;
    const WaveTrack *mFreqSelTrack;
-   std::auto_ptr<SpectrumAnalyst> mFrequencySnapper;
+   std::unique_ptr<SpectrumAnalyst> mFrequencySnapper;
 
    // For toggling of spectral seletion
    double mLastF0;

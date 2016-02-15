@@ -506,7 +506,7 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
          break;
       }
 
-      // There is a possibility that number of channels will change over time, but we do not have WaveTracks for new channels. Remember the number of channels and stick to it.
+      // There is a possibility that number of channels will change over time, but we do not have WaveTracks for NEW channels. Remember the number of channels and stick to it.
       mScs[s]->m_initialchannels = mScs[s]->m_stream->codec->channels;
       mChannels[s] = new WaveTrack *[mScs[s]->m_stream->codec->channels];
       int c;
@@ -603,7 +603,7 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
          }
          tasks.push_back(odTask);
       }
-      //Now we add the tasks and let them run, or delete them if the user cancelled
+      //Now we add the tasks and let them run, or DELETE them if the user cancelled
       for(int i=0; i < (int)tasks.size(); i++) {
          if(res==eProgressSuccess)
             ODManager::Instance()->AddNewTask(tasks[i]);
@@ -682,7 +682,7 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
       *outNumTracks += mScs[s]->m_initialchannels;
    }
 
-   // Create new tracks
+   // Create NEW tracks
    *outTracks = new Track *[*outNumTracks];
 
    // Copy audio from mChannels to newly created tracks (destroying mChannels elements in process)

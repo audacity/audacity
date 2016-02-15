@@ -176,8 +176,8 @@ class AUDACITY_DLL_API Mixer {
    int              mInterleavedBufferSize;
    sampleFormat     mFormat;
    bool             mInterleaved;
-   samplePtr       *mBuffer;
-   samplePtr       *mTemp;
+   SampleBuffer    *mBuffer;
+   SampleBuffer    *mTemp;
    float           *mFloatBuffer;
    double           mRate;
    double           mSpeed;

@@ -1095,7 +1095,7 @@ bool ProgressDialog::Create(const wxString & title,
 
    v = new wxBoxSizer(wxVERTICAL);
 
-   mMessage = new wxStaticText(this,
+   mMessage = safenew wxStaticText(this,
                                wxID_ANY,
                                message,
                                wxDefaultPosition,
@@ -1108,7 +1108,7 @@ bool ProgressDialog::Create(const wxString & title,
    //
    //
    //
-   mGauge = new wxGauge(this,
+   mGauge = safenew wxGauge(this,
                         wxID_ANY,
                         1000,
                         wxDefaultPosition,
@@ -1122,7 +1122,7 @@ bool ProgressDialog::Create(const wxString & title,
    //
    wxFlexGridSizer *g = new wxFlexGridSizer(2, 2, 10, 10);
 
-   w = new wxStaticText(this,
+   w = safenew wxStaticText(this,
                         wxID_ANY,
                         _("Elapsed Time:"),
                         wxDefaultPosition,
@@ -1131,7 +1131,7 @@ bool ProgressDialog::Create(const wxString & title,
    w->SetName(w->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    g->Add(w, 0, wxALIGN_RIGHT);
 
-   mElapsed = new wxStaticText(this,
+   mElapsed = safenew wxStaticText(this,
                                wxID_ANY,
                                wxT("00:00:00"),
                                wxDefaultPosition,
@@ -1144,7 +1144,7 @@ bool ProgressDialog::Create(const wxString & title,
    //
    //
    //
-   w = new wxStaticText(this,
+   w = safenew wxStaticText(this,
                         wxID_ANY,
                         _("Remaining Time:"),
                         wxDefaultPosition,
@@ -1153,7 +1153,7 @@ bool ProgressDialog::Create(const wxString & title,
    w->SetName(w->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    g->Add(w, 0, wxALIGN_RIGHT);
 
-   mRemaining = new wxStaticText(this,
+   mRemaining = safenew wxStaticText(this,
                                  wxID_ANY,
                                  wxT("00:00:00"),
                                  wxDefaultPosition,
@@ -1169,13 +1169,13 @@ bool ProgressDialog::Create(const wxString & title,
 
    if (!(flags & pdlgHideStopButton))
    {
-      w = new wxButton(this, wxID_OK, _("Stop"));
+      w = safenew wxButton(this, wxID_OK, _("Stop"));
       h->Add(w, 0, wxRIGHT, 10);
    }
 
    if (!(flags & pdlgHideCancelButton))
    {
-      w = new wxButton(this, wxID_CANCEL, _("Cancel"));
+      w = safenew wxButton(this, wxID_CANCEL, _("Cancel"));
       h->Add(w, 0, wxRIGHT, 10);
    }
 

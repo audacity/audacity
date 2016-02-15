@@ -339,7 +339,7 @@ public:
                     double* cutLineStart = NULL,
                     double *cutLineEnd = NULL);
 
-   /** Expand cut line (that is, re-insert audio, then delete audio saved in
+   /** Expand cut line (that is, re-insert audio, then DELETE audio saved in
     * cut line). Returns true if a cut line could be found and sucessfully
     * expanded, false otherwise */
    bool ExpandCutLine(double cutLinePosition);
@@ -392,7 +392,7 @@ protected:
    WaveCache    *mWaveCache;
    ODLock       mWaveCacheMutex;
    SpecCache    *mSpecCache;
-   samplePtr     mAppendBuffer;
+   SampleBuffer  mAppendBuffer;
    sampleCount   mAppendBufferLen;
 
    // Cut Lines are nothing more than ordinary wave clips, with the

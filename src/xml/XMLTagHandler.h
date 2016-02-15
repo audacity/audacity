@@ -91,7 +91,7 @@ class AUDACITY_DLL_API XMLTagHandler {
    virtual void HandleXMLContent(const wxString & WXUNUSED(content)) {}
 
    // If the XML document has children of your tag, this method
-   // should be called.  Typically you should construct a new
+   // should be called.  Typically you should construct a NEW
    // object for the child, insert it into your own local data
    // structures, and then return it.  If you do not wish to
    // handle this child, return NULL and it will be ignored.

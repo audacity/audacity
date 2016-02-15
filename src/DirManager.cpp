@@ -24,7 +24,7 @@
 \brief Creates and manages BlockFile objects.
 
   This class manages the files that a project uses to store most
-  of its data.  It creates new BlockFile objects, which can
+  of its data.  It creates NEW BlockFile objects, which can
   be used to store any type of data.  BlockFiles support all of
   the common file operations, but they also support reference
   counting, so two different parts of a project can point to
@@ -32,8 +32,8 @@
 
   For example, a track might contain 10 blocks of data representing
   its audio.  If you copy the last 5 blocks and paste at the
-  end of the file, no new blocks need to be created - we just store
-  pointers to new ones.  When part of a track is deleted, the
+  end of the file, no NEW blocks need to be created - we just store
+  pointers to NEW ones.  When part of a track is deleted, the
   affected blocks decrement their reference counts, and when they
   reach zero they are deleted.  This same mechanism is also used
   to implement Undo.
@@ -98,6 +98,7 @@
 #include "Internat.h"
 #include "Project.h"
 #include "Prefs.h"
+#include "Sequence.h"
 #include "widgets/Warning.h"
 #include "widgets/MultiDialog.h"
 
@@ -264,7 +265,7 @@ static int RecursivelyRemoveEmptyDirs(wxString dirPath,
       // Have to recheck dir.HasSubDirs() again, in case they all were deleted in recursive calls.
       if (!dir.HasSubDirs() && !dir.HasFiles() && (dirPath.Right(5) != wxT("_data")))
       {
-         // No subdirs or files. It's empty so delete it.
+         // No subdirs or files. It's empty so DELETE it.
          // Vaughan, 2010-07-07:
          // Note that, per http://src.chromium.org/svn/trunk/src/base/file_util_win.cc, among others,
          // "Some versions of Windows return ERROR_FILE_NOT_FOUND (0x2) when deleting
@@ -349,6 +350,7 @@ DirManager::DirManager()
    projName = wxT("");
 
    mLoadingTarget = NULL;
+   mLoadingTargetIdx = 0;
    mMaxSamples = -1;
 
    // toplevel pool hash is fully populated to begin
@@ -369,7 +371,7 @@ DirManager::DirManager()
 
 DirManager::~DirManager()
 {
-   wxASSERT(mRef == 0); // MM: Otherwise, we shouldn't delete it
+   wxASSERT(mRef == 0); // MM: Otherwise, we shouldn't DELETE it
 
    numDirManagers--;
    if (numDirManagers == 0) {
@@ -387,7 +389,7 @@ void DirManager::CleanTempDir()
 
    wxArrayString filePathArray;
 
-   // Subtract 1 because we don't want to delete the global temp directory,
+   // Subtract 1 because we don't want to DELETE the global temp directory,
    // which this will find and list last.
    int count =
       RecursivelyEnumerate(globaltemp, filePathArray, wxT("project*"), true, true) - 1;
@@ -437,7 +439,7 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
          return false;
    }
 
-   /* Move all files into this new directory.  Files which are
+   /* Move all files into this NEW directory.  Files which are
       "locked" get copied instead of moved.  (This happens when
       we perform a Save As - the files which belonged to the last
       saved version of the old project must not be moved,
@@ -508,9 +510,9 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
    // blockfiles.  Cleanup code trigger is the same
    if (mBlockFileHash.size()>0){
       // Clean up after ourselves; look for empty directories in the old
-      // and new project directories.  The easiest way to do this is to
+      // and NEW project directories.  The easiest way to do this is to
       // recurse depth-first and rmdir every directory seen in old and
-      // new; rmdir will fail on non-empty dirs.
+      // NEW; rmdir will fail on non-empty dirs.
 
       wxArrayString dirlist;
       count = RecursivelyEnumerate(cleanupLoc1, dirlist, wxEmptyString, false, true);
@@ -581,7 +583,7 @@ wxFileName DirManager::MakeBlockFilePath(wxString value){
    }
 
    if(value.GetChar(0)==wxT('e')){
-      // this file is located in a new style two-deep subdirectory tree
+      // this file is located in a NEW style two-deep subdirectory tree
       wxString topdir=value.Mid(0,3);
       wxString middir=wxT("d");
       middir.Append(value.Mid(3,2));
@@ -725,7 +727,7 @@ void DirManager::BalanceInfoDel(wxString file)
             // back if its needed (unlike the dirTopPool hash)
             dirMidPool.erase(midkey);
 
-            // delete the actual directory
+            // DELETE the actual directory
             wxString dir=(projFull != wxT("")? projFull: mytemp);
             dir += wxFILE_SEP_PATH;
             dir += file.Mid(0,3);
@@ -745,7 +747,7 @@ void DirManager::BalanceInfoDel(wxString file)
             }else{
                if(--dirTopPool[topnum]<1){
                   // do *not* erase the hash entry from dirTopPool
-                  // *do* delete the actual directory
+                  // *do* DELETE the actual directory
                   wxString dir=(projFull != wxT("")? projFull: mytemp);
                   dir += wxFILE_SEP_PATH;
                   dir += file.Mid(0,3);
@@ -784,7 +786,7 @@ wxFileName DirManager::MakeBlockFileName()
 
       if(dirMidPool.empty()){
 
-         // is there a toplevel directory with space for a new subdir?
+         // is there a toplevel directory with space for a NEW subdir?
 
          if(!dirTopPool.empty()){
 
@@ -796,7 +798,7 @@ wxFileName DirManager::MakeBlockFileName()
 
 
             // search for unused midlevels; linear search adequate
-            // add 32 new topnum/midnum dirs full of  prospective filenames to midpool
+            // add 32 NEW topnum/midnum dirs full of  prospective filenames to midpool
             for(midnum=0;midnum<256;midnum++){
                midkey=(topnum<<8)+midnum;
                if(BalanceMidAdd(topnum,midkey)){
@@ -951,7 +953,7 @@ bool DirManager::ContainsBlockFile(wxString filepath) const
 }
 
 // Adds one to the reference count of the block file,
-// UNLESS it is "locked", then it makes a new copy of
+// UNLESS it is "locked", then it makes a NEW copy of
 // the BlockFile.
 BlockFile *DirManager::CopyBlockFile(BlockFile *b)
 {
@@ -977,7 +979,7 @@ BlockFile *DirManager::CopyBlockFile(BlockFile *b)
    {
       wxFileName newFile = MakeBlockFileName();
 
-      // We assume that the new file should have the same extension
+      // We assume that the NEW file should have the same extension
       // as the existing file
       newFile.SetExt(b->GetFileName().GetExt());
 
@@ -1009,10 +1011,12 @@ bool DirManager::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 
    BlockFile* pBlockFile = NULL;
 
-   if( !wxStricmp(tag, wxT("silentblockfile")) ) {
+   BlockFile *&target = mLoadingTarget->at(mLoadingTargetIdx).f;
+   
+   if (!wxStricmp(tag, wxT("silentblockfile"))) {
       // Silent blocks don't actually have a file associated, so
       // we don't need to worry about the hash table at all
-      *mLoadingTarget = SilentBlockFile::BuildFromXML(*this, attrs);
+      target = SilentBlockFile::BuildFromXML(*this, attrs);
       return true;
    }
    else if ( !wxStricmp(tag, wxT("simpleblockfile")) )
@@ -1068,35 +1072,35 @@ bool DirManager::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          (pBlockFile->GetLength() > mMaxSamples))
    {
       // See http://bugzilla.audacityteam.org/show_bug.cgi?id=451#c13.
-      // Lock pBlockFile so that the ~BlockFile() will not delete the file on disk.
+      // Lock pBlockFile so that the ~BlockFile() will not DELETE the file on disk.
       pBlockFile->Lock();
       delete pBlockFile;
       return false;
    }
    else
-      *mLoadingTarget = pBlockFile;
+      target = pBlockFile;
 
    //
    // If the block we loaded is already in the hash table, then the
-   // object we just loaded is a duplicate, so we delete it and
+   // object we just loaded is a duplicate, so we DELETE it and
    // return a reference to the existing object instead.
    //
 
-   wxString name = (*mLoadingTarget)->GetFileName().GetName();
+   wxString name = target->GetFileName().GetName();
    BlockFile *retrieved = mBlockFileHash[name];
    if (retrieved) {
-      // Lock it in order to delete it safely, i.e. without having
-      // it delete the file, too...
-      (*mLoadingTarget)->Lock();
-      delete (*mLoadingTarget);
+      // Lock it in order to DELETE it safely, i.e. without having
+      // it DELETE the file, too...
+      target->Lock();
+      delete target;
 
       Ref(retrieved); // Add one to its reference count
-      *mLoadingTarget = retrieved;
+      target = retrieved;
       return true;
    }
 
-   // This is a new object
-   mBlockFileHash[name]=*mLoadingTarget;
+   // This is a NEW object
+   mBlockFileHash[name] = target;
    // MakeBlockFileName wasn't used so we must add the directory
    // balancing information
    BalanceInfoAdd(name);
@@ -1138,7 +1142,7 @@ bool DirManager::MoveOrCopyToNewProjectDirectory(BlockFile *f, bool copy)
             ::wxMilliSleep(50);
 
          //check to make sure the oldfile exists.
-         //if it doesn't, we can assume it was written to the new name, which is fine.
+         //if it doesn't, we can assume it was written to the NEW name, which is fine.
          if (oldFileName.FileExists())
          {
             bool ok = wxCopyFile(oldFileName.GetFullPath(),
@@ -1205,7 +1209,7 @@ bool DirManager::EnsureSafeFilename(wxFileName fName)
       return true;
 
    /* i18n-hint: 'old' is part of a filename used when a file is renamed. */
-   // Figure out what the new name for the existing file would be.
+   // Figure out what the NEW name for the existing file would be.
    /* i18n-hint: e.g. Try to go from "mysong.wav" to "mysong-old1.wav". */
    // Keep trying until we find a filename that doesn't exist.
 
@@ -1309,7 +1313,7 @@ bool DirManager::EnsureSafeFilename(wxFileName fName)
       }
       else
       {
-         //point the aliases to the new filename.
+         //point the aliases to the NEW filename.
          BlockHash::iterator iter = mBlockFileHash.begin();
          while (iter != mBlockFileHash.end())
          {
@@ -1354,7 +1358,7 @@ void DirManager::Deref()
 
    --mRef;
 
-   // MM: Automatically delete if refcount reaches zero
+   // MM: Automatically DELETE if refcount reaches zero
    if (mRef == 0)
       delete this;
 }
@@ -1372,7 +1376,7 @@ int DirManager::ProjectFSCK(const bool bForceError, const bool bAutoRecoverMode)
    // all done in sequence, then the user was prompted for each type of error.
    // The enumerations are now interleaved with prompting, because, for example,
    // user choosing to replace missing aliased block files with silence
-   // needs to put in SilentBlockFiles and delete the corresponding auf files,
+   // needs to put in SilentBlockFiles and DELETE the corresponding auf files,
    // so those would then not be cumulated in missingAUFHash.
    // We still do the FindX methods outside the conditionals,
    // so the log always shows all found errors.
@@ -1652,7 +1656,7 @@ other projects. \
       ProgressDialog* pProgress =
          new ProgressDialog(_("Progress"),
                               _("Cleaning up unused directories in project data"));
-      // nDirCount is for updating pProgress. +1 because we may delete dirPath.
+      // nDirCount is for updating pProgress. +1 because we may DELETE dirPath.
       int nDirCount = RecursivelyCountSubdirs(dirPath) + 1;
       RecursivelyRemoveEmptyDirs(dirPath, nDirCount, pProgress);
       delete pProgress;

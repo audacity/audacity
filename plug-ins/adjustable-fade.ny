@@ -19,14 +19,15 @@
 ;control type "Fade Type" choice "Fade Up,Fade Down,S-Curve Up,S-Curve Down" 0
 ;control curve "Mid-fade Adjust (%)" real "" 0 -100 100
 ;control units "Start/End as" choice "% of Original,dB Gain" 0 
-;control gain-string-0 "Start (or end)" string "" "0" ""
-;control gain-string-1 "End (or start)" string "" "100" ""
+;control gain0 "Start (or end)" float-text "" 0 nil nil
+;control gain1 "End (or start)" float-text "" 100 nil nil
 ;control preset "   Handy Presets\n(override controls)" choice "None Selected,Linear In,Linear Out,Exponential In,Exponential Out,Logarithmic In,Logarithmic Out,Rounded In,Rounded Out,Cosine In,Cosine Out,S-Curve In,S-Curve Out" 0
 
 
 (defun get-input (sig)
 "Preview takes the entire selection so that we know the correct
 selection length, but preview only needs to process preview length."
+;; (if *previewp* sig (multichan-expand #'trim-input sig)))
   (if (get '*track* 'view)  ;NIL if preview
       sig
       (multichan-expand #'trim-input sig)))
@@ -37,42 +38,23 @@ selection length, but preview only needs to process preview length."
                   (get '*project* 'preview-duration))))
     (setf sig (extract-abs 0 dur *track*))))
 
-
-(setq err "")
-; bad things may happen outside of the slider range.
-(setq curve (min 1 (max -1 (/ curve 100.0))))
-
-;;; Convert string to value
-(defun string-to-val (string)
-  (setq val-array 
-    (read (make-string-input-stream (format nil "(~a)" string))))
-  (if (and (= (length val-array) 1)
-           (numberp (car val-array)))
-      (let ((val (float (car val-array))))
-        (case units
-          (0 (/ val 100))
-          (t (db-to-linear val))))))
-
-;;; invalid string error
-(defun invalid-string (x y)
-  (unless x 
-    (setf err (format nil "~aYou entered \"~a\"~%~
-      \"Start (or end):\" must be one number.~%"
-      err
-      gain-string-0)))
-  (unless y
-    (setf err (format nil "~aYou entered \"~a\"~%~
-      \"End (or start):\" must be one number.~%"
-      err gain-string-1)))
-  err)
-
 ;;; invalid values
 (defun check-values (x y)
-  (when (or (< x 0)(< y 0))
-    (setf err (format nil "~a% values cannot be negative.~%" err))))
+  (if (= units 0)  ;percentage values
+    (cond
+      ((or (< x 0)(< y 0))
+        (throw 'err (format nil "~aPercentage values cannot be negative." err)))
+      ((or (> x 1000)(> y 1000))
+        (throw 'err (format nil "~aPercentage values cannot be more than 1000 %." err))))
+    (cond   ;dB values
+      ((or (> x 100)(> y 100))
+        (throw 'err (format nil "~adB values cannot be more than +100 dB.~%~%~
+                                 Hint: 6 dB doubles the amplitude~%~
+                                 \t-6 dB halves the amplitude." err))))))
 
 ;;; select and apply fade
 (defun fade (sig type curve g0 g1)
+  (check-values gain0 gain1)
   (mult (get-input sig)
     (case preset
       (0  (case type                  ; Custom fade
@@ -154,8 +136,8 @@ selection length, but preview only needs to process preview length."
   (setf env
     (control-srate-abs *sound-srate*      ; sound srate required for accuracy.
       (cond
-        ((= g0 g1) g0)                    ; amplify
-        ((> g0 g1)                        ; fade down
+        ((= g0 g1) g0)    ; amplify
+        ((> g0 g1)        ; fade down
           (snd-exp 
             (mult (pwlv (- 1 curve) 1 1)
               (snd-log (raised-cosin 90)))))
@@ -181,8 +163,8 @@ selection length, but preview only needs to process preview length."
       (if (= direction 0)
         (setf env (pwev x 1 1))
         (setf env (pwev 1 1 x)))      
-      (mult (/ (- 1 x))                   ; normalize to 0 dB
-        (diff env x)))))                  ; drop down to silence
+      (mult (/ (- 1 x))     ; normalize to 0 dB
+        (diff env x)))))    ; drop down to silence
 
 ;;; curve scaling for S-curve
 (defun exp-scale-mid (x)
@@ -190,11 +172,18 @@ selection length, but preview only needs to process preview length."
     (/ (- (exp (- 1 x)) e)
       (- 1 e))))
 
-(let ((gain0 (string-to-val gain-string-0))
-      (gain1 (string-to-val gain-string-1)))
-  (if (and gain0 gain1)
-    (check-values gain0 gain1)
-    (setf err (format nil "~a" (invalid-string gain0 gain1))))
-  (if (= (length err) 0)
-      (fade *track* type curve gain0 gain1)
-      (format nil "Error.~%~a." err)))
+(defmacro gainscale (gain type)
+  `(setf ,gain
+      (if (= ,type 0)  ; percent
+          (/ ,gain 100.0)
+          (db-to-linear ,gain))))
+
+
+(setf curve (/ curve 100.0))
+(setf gain0 (gainscale gain0 units))
+(setf gain1 (gainscale gain1 units))
+(setf err "Error\n\n")
+
+
+(catch 'err (fade *track* type curve gain0 gain1))
+

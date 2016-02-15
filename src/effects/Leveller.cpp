@@ -80,7 +80,7 @@ wxString EffectLeveller::GetSymbol()
 
 wxString EffectLeveller::GetDescription()
 {
-   return XO("Leveler is a simple, combined compressor and limiter effect for reducing the dynamic range of audio");
+   return XO("Leveller is a simple, combined compressor and limiter effect for reducing the dynamic range of audio");
 }
 
 // EffectIdentInterface implementation

@@ -374,5 +374,6 @@ bool DevicePrefs::Apply()
 
 PrefsPanel *DevicePrefsFactory::Create(wxWindow *parent)
 {
-   return new DevicePrefs(parent);
+   wxASSERT(parent); // to justify safenew
+   return safenew DevicePrefs(parent);
 }

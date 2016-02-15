@@ -256,7 +256,13 @@ public:
    void SetStretchyRow( int i );
 
 //--Some Additions since June 2007 that don't fit in elsewhere...
-   wxWindow * GetParent() {return mpParent;};
+   wxWindow * GetParent()
+   {
+      // This assertion justifies the use of safenew in many places where GetParent()
+      // is used to construct a window
+      wxASSERT(mpParent != NULL);
+      return mpParent;
+   }
    ShuttleGuiBase & Prop( int iProp );
    int GetId() {return miIdNext;};
    void UseUpId();

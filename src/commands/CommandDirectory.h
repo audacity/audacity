@@ -49,7 +49,7 @@ public:
    /// Get a pointer to the singleton instance
    static CommandDirectory *Get();
 
-   /// Manually delete the singleton instance
+   /// Manually DELETE the singleton instance
    static void Destroy();
 };
 

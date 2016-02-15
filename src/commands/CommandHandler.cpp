@@ -44,7 +44,7 @@ void CommandHandler::OnReceiveCommand(AppCommandEvent &event)
    Command *cmd = event.GetCommand();
 
    // JKC: In case the user changed the project, let us track that.
-   // This saves us the embarrassment (crash) of a new project
+   // This saves us the embarrassment (crash) of a NEW project
    // being opened, the old one closed and still trying to act
    // on the old one.
    SetProject( GetActiveProject() );
@@ -53,7 +53,7 @@ void CommandHandler::OnReceiveCommand(AppCommandEvent &event)
    // different project.
    cmd->Apply(*mCurrentContext);
 
-   // Done with the command so delete it.
+   // Done with the command so DELETE it.
    delete cmd;
 
    // Redraw the project

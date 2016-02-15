@@ -86,5 +86,6 @@ bool WarningsPrefs::Apply()
 
 PrefsPanel *WarningsPrefsFactory::Create(wxWindow *parent)
 {
-   return new WarningsPrefs(parent);
+   wxASSERT(parent); // to justify safenew
+   return safenew WarningsPrefs(parent);
 }

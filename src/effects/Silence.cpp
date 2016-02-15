@@ -58,7 +58,7 @@ void EffectSilence::PopulateOrExchange(ShuttleGui & S)
       S.StartHorizontalLay();
       {
          S.AddPrompt(_("Duration:"));
-         mDurationT = new
+         mDurationT = safenew
             NumericTextCtrl(NumericConverter::TIME,
                               S.GetParent(),
                               wxID_ANY,

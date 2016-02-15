@@ -47,6 +47,7 @@ libaudacity_la_SOURCES = \
 	$(NULL)
 
 audacity_CPPFLAGS = \
+	-std=c++11 \
 	-Wno-deprecated-declarations \
 	-D__STDC_CONSTANT_MACROS \
 	-DLIBDIR=\"$(libdir)\" \

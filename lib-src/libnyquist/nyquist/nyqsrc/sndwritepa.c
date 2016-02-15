@@ -246,7 +246,7 @@ long lookup_format(long format, long mode, long bits, long swap)
         sf_format |= (swap ? SF_ENDIAN_LITTLE : SF_ENDIAN_BIG);
 #endif
 #ifdef XL_LITTLE_ENDIAN
-        sf_format |= (swap ? SF_ENDIAN_LITTLE : SF_ENDIAN_LITTLE);
+        sf_format |= (swap ? SF_ENDIAN_BIG : SF_ENDIAN_LITTLE);
 #endif        
         break;
     default: 

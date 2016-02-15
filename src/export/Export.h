@@ -38,7 +38,7 @@ class AUDACITY_DLL_API FormatInfo
       ~FormatInfo(){};
       wxString mFormat;
       wxString mDescription;
-      wxString mExtension;
+      // wxString mExtension;
       wxArrayString mExtensions;
       wxString mMask;
       int mMaxChannels;
@@ -80,11 +80,12 @@ public:
    virtual int GetMaxChannels(int index);
    virtual bool GetCanMetaData(int index);
 
-   virtual bool IsExtension(wxString & ext, int index);
+   virtual bool IsExtension(const wxString & ext, int index);
 
    virtual bool DisplayOptions(wxWindow *parent, int format = 0);
-
-   virtual wxWindow *OptionsCreate(wxWindow *parent, int format);
+   
+   // Precondition: parent != NULL
+   virtual wxWindow *OptionsCreate(wxWindow *parent, int format) = 0;
 
    virtual bool CheckFileName(wxFileName &filename, int format = 0);
 

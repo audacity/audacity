@@ -225,7 +225,7 @@ void EffectNoise::PopulateOrExchange(ShuttleGui & S)
       S.AddTextBox(_("Amplitude (0-1):"), wxT(""), 12)->SetValidator(vldAmp);
 
       S.AddPrompt(_("Duration:"));
-      mNoiseDurationT = new
+      mNoiseDurationT = safenew
          NumericTextCtrl(NumericConverter::TIME,
                          S.GetParent(),
                          wxID_ANY,
