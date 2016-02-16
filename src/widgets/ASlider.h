@@ -239,7 +239,7 @@ class LWSlider
    wxBitmap *mThumbBitmap;
 
    // AD: True if this object owns *mThumbBitmap (sometimes mThumbBitmap points
-   // to an object we shouldn't delete) -- once we get theming totally right
+   // to an object we shouldn't DELETE) -- once we get theming totally right
    // this should go away
    bool mThumbBitmapAllocated;
 

@@ -17,7 +17,7 @@
   is considered to be a click.
 
   The structure was largely stolen from Domonic Mazzoni's NoiseRemoval
-  module, and reworked for the new effect.
+  module, and reworked for the NEW effect.
 
   This file is intended to become part of Audacity.  You may modify
   and/or distribute it under the same terms as Audacity itself.

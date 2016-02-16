@@ -42,7 +42,7 @@
 #include "TimeTrack.h"
 #include "float_cast.h"
 
-//TODO-MB: wouldn't it make more sense to delete the time track after 'mix and render'?
+//TODO-MB: wouldn't it make more sense to DELETE the time track after 'mix and render'?
 bool MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
                   double rate, sampleFormat format,
                   double startTime, double endTime,
@@ -119,7 +119,7 @@ bool MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
       t = iter.Next();
    }
 
-   /* create the destination track (new track) */
+   /* create the destination track (NEW track) */
    if ((numWaves == 1) || ((numWaves == 2) && (usefulIter.First()->GetLink() != NULL)))
       oneinput = true;
    // only one input track (either 1 mono or one linked stereo pair)
@@ -763,7 +763,7 @@ void Mixer::Reposition(double t)
 
 void Mixer::SetTimesAndSpeed(double t0, double t1, double speed)
 {
-   wxASSERT(isfinite(speed));
+   wxASSERT(std::isfinite(speed));
    mT0 = t0;
    mT1 = t1;
    mSpeed = fabs(speed);

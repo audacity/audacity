@@ -112,5 +112,6 @@ bool ImportExportPrefs::Apply()
 
 PrefsPanel *ImportExportPrefsFactory::Create(wxWindow *parent)
 {
-   return new ImportExportPrefs(parent);
+   wxASSERT(parent); // to justify safenew
+   return safenew ImportExportPrefs(parent);
 }

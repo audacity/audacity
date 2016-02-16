@@ -205,5 +205,6 @@ bool MousePrefs::Apply()
 
 PrefsPanel *MousePrefsFactory::Create(wxWindow *parent)
 {
-   return new MousePrefs(parent);
+   wxASSERT(parent); // to justify safenew
+   return safenew MousePrefs(parent);
 }

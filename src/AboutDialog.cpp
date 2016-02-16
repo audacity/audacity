@@ -41,9 +41,6 @@ hold information about one contributor to Audacity.
 #include "ShuttleGui.h"
 #include "widgets/LinkingHtmlWindow.h"
 
-#include <wx/listimpl.cpp>
-WX_DEFINE_LIST(AboutDialogCreditItemsList);
-
 #include "Theme.h"
 #include "AllThemeResources.h"
 
@@ -197,7 +194,7 @@ AboutDialog::AboutDialog(wxWindow * parent)
     * In English it is slightly humorous alternative to an 'OK' button.
     * If the humour doesn't work in your language, then just use whatever
     * you would use for a translation for 'OK' on a button. */
-   wxButton *ok = new wxButton(S.GetParent(), wxID_OK, _("OK... Audacious!"));
+   wxButton *ok = safenew wxButton(S.GetParent(), wxID_OK, _("OK... Audacious!"));
    ok->SetDefault();
    S.Prop(0).AddWindow( ok );
 
@@ -209,7 +206,6 @@ AboutDialog::AboutDialog(wxWindow * parent)
 
 void AboutDialog::PopulateAudacityPage( ShuttleGui & S )
 {
-   creditItems.DeleteContents(true); // Switch on automatic deletion of list items.
    CreateCreditsList();
 
    wxString par1Str = _(
@@ -290,7 +286,7 @@ visit our <a href=\"http://forum.audacityteam.org/\">forum</a>.");
    S.StartVerticalLay(1);
 
    //v For now, change to AudacityLogoWithName via old-fashioned way, not Theme.
-   logo = new wxBitmap((const char **) AudacityLogoWithName_xpm); //v
+   wxBitmap *const logo = new wxBitmap((const char **) AudacityLogoWithName_xpm); //v
 
    // JKC: Resize to 50% of size.  Later we may use a smaller xpm as
    // our source, but this allows us to tweak the size - if we want to.
@@ -302,7 +298,7 @@ visit our <a href=\"http://forum.audacityteam.org/\">forum</a>.");
    wxBitmap RescaledBitmap( RescaledImage );
 
    icon =
-       new wxStaticBitmap(S.GetParent(), -1,
+       safenew wxStaticBitmap(S.GetParent(), -1,
                           //*logo, //v
                           //v theTheme.Bitmap(bmpAudacityLogo), wxPoint(93, 10), wxSize(215, 190));
                           //v theTheme.Bitmap(bmpAudacityLogoWithName),
@@ -312,7 +308,7 @@ visit our <a href=\"http://forum.audacityteam.org/\">forum</a>.");
    delete logo;
    S.Prop(0).AddWindow( icon );
 
-   HtmlWindow *html = new LinkingHtmlWindow(S.GetParent(), -1,
+   HtmlWindow *html = safenew LinkingHtmlWindow(S.GetParent(), -1,
                                          wxDefaultPosition,
                                          wxSize(ABOUT_DIALOG_WIDTH, 359),
                                          wxHW_SCROLLBAR_AUTO | wxSUNKEN_BORDER);
@@ -336,7 +332,7 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
    wxString informationStr;   // string to build up list of information in
    S.StartNotebookPage( _("Build Information") );  // start the tab
    S.StartVerticalLay(2);  // create the window
-   HtmlWindow *html = new LinkingHtmlWindow(S.GetParent(), -1, wxDefaultPosition,
+   HtmlWindow *html = safenew LinkingHtmlWindow(S.GetParent(), -1, wxDefaultPosition,
                            wxSize(ABOUT_DIALOG_WIDTH, 264),
                            wxHW_SCROLLBAR_AUTO | wxSUNKEN_BORDER);
    // create a html pane in it to put the content in.
@@ -563,7 +559,7 @@ void AboutDialog::PopulateLicensePage( ShuttleGui & S )
 {
    S.StartNotebookPage( _("GPL License") );
    S.StartVerticalLay(1);
-   HtmlWindow *html = new LinkingHtmlWindow(S.GetParent(), -1,
+   HtmlWindow *html = safenew LinkingHtmlWindow(S.GetParent(), -1,
                                          wxDefaultPosition,
                                          wxSize(ABOUT_DIALOG_WIDTH, 264),
                                          wxHW_SCROLLBAR_AUTO | wxSUNKEN_BORDER);
@@ -866,24 +862,20 @@ wxT("POSSIBILITY OF SUCH DAMAGES.\n");
    S.EndNotebookPage();
 }
 
-void AboutDialog::AddCredit(const wxString& description, Role role)
+void AboutDialog::AddCredit(wxString &&description, Role role)
 {
-   AboutDialogCreditItem* item = new AboutDialogCreditItem();
-   item->description = description;
-   item->role = role;
-   creditItems.Append(item);
+   creditItems.emplace_back(std::move(description), role);
 }
 
 wxString AboutDialog::GetCreditsByRole(AboutDialog::Role role)
 {
    wxString s;
 
-   for (AboutDialogCreditItemsList::compatibility_iterator p=creditItems.GetFirst(); p; p = p->GetNext())
+   for (const auto &item : creditItems)
    {
-      AboutDialogCreditItem* item = p->GetData();
-      if (item->role == role)
+      if (item.role == role)
       {
-         s += item->description;
+         s += item.description;
          s += wxT("<br>");
       }
    }
@@ -926,8 +918,6 @@ void AboutDialog::AddBuildinfoRow( wxString* htmlstring, const wxChar * libname,
 
 AboutDialog::~AboutDialog()
 {
-   delete icon;
-//   delete logo;
 }
 
 void AboutDialog::OnOK(wxCommandEvent & WXUNUSED(event))

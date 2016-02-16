@@ -179,7 +179,7 @@ static void AddSourcesFromStream(int deviceIndex, const PaDeviceInfo *info, std:
 static bool IsInputDeviceAMapperDevice(const PaDeviceInfo *info)
 {
    // For Windows only, portaudio returns the default mapper object
-   // as the first index after a new hostApi index is detected (true for MME and DS)
+   // as the first index after a NEW hostApi index is detected (true for MME and DS)
    // this is a bit of a hack, but there's no other way to find out which device is a mapper,
    // I've looked at string comparisons, but if the system is in a different language this breaks.
 #ifdef __WXMSW__
@@ -252,7 +252,7 @@ static void AddSources(int deviceIndex, int rate, std::vector<DeviceSourceMap> *
 }
 
 
-/// Gets a new list of devices by terminating and restarting portaudio
+/// Gets a NEW list of devices by terminating and restarting portaudio
 /// Assumes that DeviceManager is only used on the main thread.
 void DeviceManager::Rescan()
 {
@@ -260,7 +260,7 @@ void DeviceManager::Rescan()
    this->mInputDeviceSourceMaps.clear();
    this->mOutputDeviceSourceMaps.clear();
 
-   // if we are doing a second scan then restart portaudio to get new devices
+   // if we are doing a second scan then restart portaudio to get NEW devices
    if (m_inited) {
       // check to see if there is a stream open - can happen if monitoring,
       // but otherwise Rescan() should not be available to the user.

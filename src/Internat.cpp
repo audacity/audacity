@@ -170,7 +170,7 @@ wxString Internat::FormatSize(double size)
 //
 // On Windows, wxString::mb_str() can return a NULL pointer if the
 // conversion to multi-byte fails.  So, based on direction intent,
-// returns a pointer to an empty string or prompts for a new name.
+// returns a pointer to an empty string or prompts for a NEW name.
 //
 char *Internat::VerifyFilename(const wxString &s, bool input)
 {

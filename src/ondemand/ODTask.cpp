@@ -356,7 +356,7 @@ void ODTask::StopUsingWaveTrack(WaveTrack* track)
    mWaveTrackMutex.Unlock();
 }
 
-///Replaces all instances to a wavetrack with a new one, effectively transferring the task.
+///Replaces all instances to a wavetrack with a NEW one, effectively transferring the task.
 void ODTask::ReplaceWaveTrack(WaveTrack* oldTrack,WaveTrack* newTrack)
 {
    mWaveTrackMutex.Lock();

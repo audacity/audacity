@@ -599,7 +599,7 @@ bool EffectEqualization::CloseUI()
 
 void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
 {
-   wxWindow *parent = S.GetParent();
+   wxWindow *const parent = S.GetParent();
 
    LoadCurves();
 
@@ -634,7 +634,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
          // -------------------------------------------------------------------
          S.StartVerticalLay();
          {
-            mdBRuler = new RulerPanel(parent, wxID_ANY);
+            mdBRuler = safenew RulerPanel(parent, wxID_ANY);
             mdBRuler->ruler.SetBounds(0, 0, 100, 100); // Ruler can't handle small sizes
             mdBRuler->ruler.SetOrientation(wxVERTICAL);
             mdBRuler->ruler.SetRange(60.0, -120.0);
@@ -653,7 +653,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
          }
          S.EndVerticalLay();
 
-         mPanel = new EqualizationPanel(this, parent);
+         mPanel = safenew EqualizationPanel(this, parent);
          S.Prop(1);
          S.AddWindow(mPanel, wxEXPAND | wxALIGN_LEFT | wxALIGN_TOP);
          S.SetSizeHints(wxDefaultCoord, wxDefaultCoord);
@@ -687,7 +687,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
          // Column 1 is empty
          S.AddSpace(1, 1);
 
-         mFreqRuler  = new RulerPanel(parent, wxID_ANY);
+         mFreqRuler  = safenew RulerPanel(parent, wxID_ANY);
          mFreqRuler->ruler.SetBounds(0, 0, 100, 100); // Ruler can't handle small sizes
          mFreqRuler->ruler.SetOrientation(wxHORIZONTAL);
          mFreqRuler->ruler.SetLog(true);
@@ -719,12 +719,12 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
          szrG = S.GetSizer();
 
          // Panel used to host the sliders since they will be positioned manually.
-         mGraphicPanel = new wxPanel(parent, wxID_ANY, wxDefaultPosition, wxSize(-1, 150));
+         mGraphicPanel = safenew wxPanel(parent, wxID_ANY, wxDefaultPosition, wxSize(-1, 150));
          S.Prop(1).AddWindow(mGraphicPanel, wxEXPAND);
 
          for (int i = 0; (i < NUMBER_OF_BANDS) && (kThirdOct[i] <= mHiFreq); ++i)
          {
-            mSliders[i] = new wxSlider(mGraphicPanel, ID_Slider + i, 0, -20, +20,
+            mSliders[i] = safenew wxSlider(mGraphicPanel, ID_Slider + i, 0, -20, +20,
                wxDefaultPosition, wxDefaultSize, wxSL_VERTICAL | wxSL_INVERSE);
 
             mSliders[i]->Connect(wxEVT_ERASE_BACKGROUND, wxEraseEventHandler(EffectEqualization::OnErase));
@@ -1061,7 +1061,7 @@ bool EffectEqualization::TransferDataFromWindow()
 bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
                                     sampleCount start, sampleCount len)
 {
-   // create a new WaveTrack to hold all of the output, including 'tails' each end
+   // create a NEW WaveTrack to hold all of the output, including 'tails' each end
    AudacityProject *p = GetActiveProject();
    WaveTrack *output = p->GetTrackFactory()->NewWaveTrack(floatSample, t->GetRate());
 
@@ -1162,7 +1162,7 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
       //output has one waveclip for the total length, even though
       //t might have whitespace seperating multiple clips
       //we want to maintain the original clip structure, so
-      //only paste the intersections of the new clip.
+      //only paste the intersections of the NEW clip.
 
       //Find the bits of clips that need replacing
       std::vector<std::pair<double, double> > clipStartEndTimes;
@@ -1185,18 +1185,18 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
          clipRealStartEndTimes.push_back(std::pair<double,double>(clipStartT,clipEndT));
 
          if( clipStartT < startT )  // does selection cover the whole clip?
-            clipStartT = startT; // don't copy all the new clip
+            clipStartT = startT; // don't copy all the NEW clip
          if( clipEndT > startT + lenT )  // does selection cover the whole clip?
-            clipEndT = startT + lenT; // don't copy all the new clip
+            clipEndT = startT + lenT; // don't copy all the NEW clip
 
          //save them
          clipStartEndTimes.push_back(std::pair<double,double>(clipStartT,clipEndT));
       }
-      //now go thru and replace the old clips with new
+      //now go thru and replace the old clips with NEW
       for(unsigned int i=0;i<clipStartEndTimes.size();i++)
       {
          Track *toClipOutput;
-         //remove the old audio and get the new
+         //remove the old audio and get the NEW
          t->Clear(clipStartEndTimes[i].first,clipStartEndTimes[i].second);
          output->Copy(clipStartEndTimes[i].first-startT+offsetT0,clipStartEndTimes[i].second-startT+offsetT0, &toClipOutput);
          if(toClipOutput)
@@ -1500,14 +1500,12 @@ void EffectEqualization::SaveCurves(wxString fileName)
       // Close the file
       eqFile.Close();
    }
-   catch (XMLFileWriterException* pException)
+   catch (const XMLFileWriterException &exception)
    {
       wxMessageBox(wxString::Format(
          _("Couldn't write to file \"%s\": %s"),
-         fn.GetFullPath().c_str(), pException->GetMessage().c_str()),
+         fn.GetFullPath().c_str(), exception.GetMessage().c_str()),
          _("Error Saving Equalization Curves"), wxICON_ERROR, mUIParent);
-
-      delete pException;
    }
 }
 
@@ -1619,7 +1617,7 @@ void EffectEqualization::setCurve(wxString curveName)
 }
 
 //
-// Set new curve selection (safe to call outside of the UI)
+// Set NEW curve selection (safe to call outside of the UI)
 //
 void EffectEqualization::Select( int curve )
 {
@@ -1758,7 +1756,7 @@ bool EffectEqualization::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       return true;
    }
 
-   // Located a new curve
+   // Located a NEW curve
    if( !wxStrcmp(tag, wxT("curve") ) )
    {
       // Process the attributes
@@ -1768,7 +1766,7 @@ bool EffectEqualization::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          const wxChar *attr = *attrs++;
          const wxChar *value = *attrs++;
 
-         // Create a new curve and name it
+         // Create a NEW curve and name it
          if( !wxStrcmp( attr, wxT("name") ) )
          {
             const wxString strValue = value;
@@ -1803,7 +1801,7 @@ bool EffectEqualization::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       return true;
    }
 
-   // Located a new point
+   // Located a NEW point
    if( !wxStrcmp( tag, wxT("point") ) )
    {
       // Set defaults in case attributes are missing
@@ -1837,7 +1835,7 @@ bool EffectEqualization::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          }
       }
 
-      // Create a new point
+      // Create a NEW point
       mCurves[ mCurves.GetCount() - 1 ].points.Add( EQPoint( f, d ) );
 
       // Tell caller it was processed
@@ -1884,7 +1882,7 @@ void EffectEqualization::WriteXML(XMLWriter &xmlFile)
    int curve;
    for( curve = 0; curve < numCurves; curve++ )
    {
-      // Start a new curve
+      // Start a NEW curve
       xmlFile.StartTag( wxT( "curve" ) );
       xmlFile.WriteAttr( wxT( "name" ), mCurves[ curve ].Name );
 
@@ -1893,7 +1891,7 @@ void EffectEqualization::WriteXML(XMLWriter &xmlFile)
       int point;
       for( point = 0; point < numPoints; point++ )
       {
-         // Write new point
+         // Write NEW point
          xmlFile.StartTag( wxT( "point" ) );
          xmlFile.WriteAttr( wxT( "f" ), mCurves[ curve ].points[ point ].Freq, 12 );
          xmlFile.WriteAttr( wxT( "d" ), mCurves[ curve ].points[ point ].dB, 12 );
@@ -2516,7 +2514,7 @@ void EffectEqualization::OnSliderDBMAX(wxCommandEvent & WXUNUSED(event))
 //
 void EffectEqualization::OnCurve(wxCommandEvent & WXUNUSED(event))
 {
-   // Select new curve
+   // Select NEW curve
    setCurve( mCurve->GetCurrentSelection() );
    if( !mDrawMode )
       UpdateGraphic();
@@ -3222,11 +3220,11 @@ void EditCurvesDialog::OnRename(wxCommandEvent & WXUNUSED(event))
          }
       }
       else if( item == (numCurves-1) ) // renaming 'unnamed'
-      {  // Create a new entry
+      {  // Create a NEW entry
          mEditCurves.Add( EQCurve( wxT("unnamed") ) );
          // Copy over the points
          mEditCurves[ numCurves ].points = mEditCurves[ numCurves - 1 ].points;
-         // Give the original unnamed entry the new name
+         // Give the original unnamed entry the NEW name
          mEditCurves[ numCurves - 1 ].Name = name;
          numCurves++;
       }
@@ -3287,7 +3285,7 @@ void EditCurvesDialog::OnDelete(wxCommandEvent & WXUNUSED(event))
       PopulateList(mEditCurves.GetCount()-1);   // set 'unnamed' as the selected curve
    else
       PopulateList(highlight);   // user said 'No' to deletion
-#else // 'delete all N' code
+#else // 'DELETE all N' code
    int count = mList->GetSelectedItemCount();
    long item = mList->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
    // Create the prompt

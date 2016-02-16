@@ -783,5 +783,6 @@ void ExtImportPrefsDropTarget::SetDataObject(wxDataObject* data)
 
 PrefsPanel *ExtImportPrefsFactory::Create(wxWindow *parent)
 {
-   return new ExtImportPrefs(parent);
+   wxASSERT(parent); // to justify safenew
+   return safenew ExtImportPrefs(parent);
 }

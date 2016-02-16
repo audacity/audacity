@@ -53,7 +53,7 @@ EffectManager::~EffectManager()
 {
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
    // wxWidgets has already destroyed the rack since it was derived from wxFrame. So
-   // no need to delete it here.
+   // no need to DELETE it here.
 #endif
 
    EffectMap::iterator iter = mHostEffects.begin();
@@ -342,7 +342,10 @@ EffectRack *EffectManager::GetRack()
 {
    if (!mRack)
    {
-      mRack = new EffectRack();
+      // EffectRack is constructed with the current project as owner, so safenew is OK
+      mRack = safenew EffectRack();
+      // Make sure what I just commented remains true:
+      wxASSERT(mRack->GetParent());
       mRack->CenterOnParent();
    }
 
@@ -371,7 +374,7 @@ void EffectManager::RealtimeSetEffects(const EffectArray & effects)
    {
       Effect *e = mRealtimeEffects[i];
 
-      // Scan the new chain for the effect
+      // Scan the NEW chain for the effect
       for (int j = 0; j < newCount; j++)
       {
          // Found it so we're done
@@ -382,14 +385,14 @@ void EffectManager::RealtimeSetEffects(const EffectArray & effects)
          }
       }
 
-      // Must not have been in the new chain, so tell it to cleanup
+      // Must not have been in the NEW chain, so tell it to cleanup
       if (e && mRealtimeActive)
       {
          e->RealtimeFinalize();
       }
    }
       
-   // Tell any new effects to get ready
+   // Tell any NEW effects to get ready
    for (int i = 0; i < newCount; i++)
    {
       Effect *e = newEffects[i];
@@ -417,7 +420,7 @@ void EffectManager::RealtimeSetEffects(const EffectArray & effects)
       delete [] mRealtimeEffects;
    }
 
-   // And install the new one
+   // And install the NEW one
    mRealtimeEffects = newEffects;
    mRealtimeCount = newCount;
 
@@ -630,7 +633,7 @@ sampleCount EffectManager::RealtimeProcess(int group, int chans, float **buffers
    float **obuf = (float **) alloca(chans * sizeof(float *));
 
    // And populate the input with the buffers we've been given while allocating
-   // new output buffers
+   // NEW output buffers
    for (int i = 0; i < chans; i++)
    {
       ibuf[i] = buffers[i];

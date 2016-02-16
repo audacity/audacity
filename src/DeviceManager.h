@@ -54,7 +54,7 @@ class DeviceManager
    /// Releases memory assosiated with the singleton
    static void Destroy();
 
-   /// Gets a new list of devices by terminating and restarting portaudio
+   /// Gets a NEW list of devices by terminating and restarting portaudio
    /// Assumes that DeviceManager is only used on the main thread.
    void Rescan();
 

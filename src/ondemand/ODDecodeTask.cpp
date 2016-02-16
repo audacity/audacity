@@ -22,7 +22,7 @@ updating the ODPCMAliasBlockFile and the GUI of the newly available data.
 #include "../WaveTrack.h"
 #include <wx/wx.h>
 
-///Creates a new task that computes summaries for a wavetrack that needs to be specified through SetWaveTrack()
+///Creates a NEW task that computes summaries for a wavetrack that needs to be specified through SetWaveTrack()
 ODDecodeTask::ODDecodeTask()
 {
    mMaxBlockFiles = 0;
@@ -184,7 +184,7 @@ void ODDecodeTask::Update()
    }
    mWaveTrackMutex.Unlock();
 
-   //get the new order.
+   //get the NEW order.
    OrderBlockFiles(tempBlocks);
 }
 

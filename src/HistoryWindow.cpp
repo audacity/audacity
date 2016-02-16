@@ -98,7 +98,7 @@ HistoryWindow::HistoryWindow(AudacityProject *parent, UndoManager *manager):
             S.AddVariableText(wxT(""))->Hide();
 
             S.AddPrompt(_("&Levels To Discard"));
-            mLevels = new wxSpinCtrl(this,
+            mLevels = safenew wxSpinCtrl(this,
                                      ID_LEVELS,
                                      wxT("1"),
                                      wxDefaultPosition,

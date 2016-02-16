@@ -175,7 +175,7 @@ class AUDACITY_DLL_API AudioIO {
 
    static double GetMaxScrubSpeed() { return 32.0; } // Is five octaves enough for your amusement?
    static double GetMinScrubSpeed() { return 0.01; }
-   /** \brief enqueue a new end time, using the last end as the new start,
+   /** \brief enqueue a NEW end time, using the last end as the new start,
    * to be played over the same duration, as between this and the last
    * enqueuing (or the starting of the stream).  Except, we do not exceed maximum
    * scrub speed, so may need to adjust either the start or the end.
@@ -188,8 +188,8 @@ class AUDACITY_DLL_API AudioIO {
    */
    bool EnqueueScrubByPosition(double endTime, double maxSpeed, bool maySkip);
 
-   /** \brief enqueue a new positive or negative scrubbing speed,
-   * using the last end as the new start,
+   /** \brief enqueue a NEW positive or negative scrubbing speed,
+   * using the last end as the NEW start,
    * to be played over the same duration, as between this and the last
    * enqueueing (or the starting of the stream).  Except, we do not exceed maximum
    * scrub speed, so may need to adjust either the start or the end.
@@ -214,7 +214,7 @@ class AUDACITY_DLL_API AudioIO {
     *
     * Doesn't return true if the device has been closed but some disk i/o or
     * cleanup is still going on. If you want to know if it's safe to start a
-    * new stream, use IsBusy() */
+    * NEW stream, use IsBusy() */
    bool IsStreamActive();
    bool IsStreamActive(int token);
 

@@ -323,7 +323,7 @@ BlockFile *LegacyBlockFile::BuildFromXML(wxString projDir, const wxChar **attrs,
 
 /// Create a copy of this BlockFile, but using a different disk file.
 ///
-/// @param newFileName The name of the new file to use.
+/// @param newFileName The name of the NEW file to use.
 BlockFile *LegacyBlockFile::Copy(wxFileName newFileName)
 {
    BlockFile *newBlockFile = new LegacyBlockFile(newFileName,

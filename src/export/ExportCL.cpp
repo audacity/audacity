@@ -536,7 +536,8 @@ int ExportCL::Export(AudacityProject *project,
 
 wxWindow *ExportCL::OptionsCreate(wxWindow *parent, int format)
 {
-   return new ExportCLOptions(parent, format);
+   wxASSERT(parent); // to justify safenew
+   return safenew ExportCLOptions(parent, format);
 }
 
 ExportPlugin *New_ExportCL()

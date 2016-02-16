@@ -93,7 +93,7 @@ Lyrics::Lyrics(wxWindow* parent, wxWindowID id,
    this->SetBackgroundColour(*wxWHITE);
 
    mHighlightTextCtrl =
-      new HighlightTextCtrl(this, -1, // wxWindow* parent, wxWindowID id,
+      safenew HighlightTextCtrl(this, -1, // wxWindow* parent, wxWindowID id,
                               wxT(""), // const wxString& value = wxT(""),
                               wxPoint(0, 0), // const wxPoint& pos = wxDefaultPosition,
                               size); // const wxSize& size = wxDefaultSize

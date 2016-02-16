@@ -237,7 +237,7 @@ int MP3ImportFileHandle::Import(TrackFactory *trackFactory, Track ***outTracks,
       /* failure */
       /* printf("failure\n"); */
 
-      /* delete everything */
+      /* DELETE everything */
       for (chn = 0; chn < mPrivateData.numChannels; chn++) {
          delete mPrivateData.channels[chn];
       }
@@ -441,7 +441,7 @@ enum mad_flow input_cb(void *_data, struct mad_stream *stream)
     *  your existing buffer from stream.next_frame to the end.
     *
     *  This usually amounts to calling memmove() on this unconsumed portion
-    *  of the buffer and appending new data after it, before calling
+    *  of the buffer and appending NEW data after it, before calling
     *  mad_stream_buffer()"
     *           -- Rob Leslie, on the mad-dev mailing list */
 

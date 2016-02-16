@@ -210,7 +210,7 @@ bool ODPCMAliasBlockFile::Read64K(float *buffer, sampleCount start, sampleCount 
 }
 
 /// If the summary has been computed,
-/// Construct a new PCMAliasBlockFile based on this one.
+/// Construct a NEW PCMAliasBlockFile based on this one.
 /// otherwise construct an ODPCMAliasBlockFile that still needs to be computed.
 /// @param newFileName The filename to copy the summary data to.
 BlockFile *ODPCMAliasBlockFile::Copy(wxFileName newFileName)
@@ -238,7 +238,7 @@ BlockFile *ODPCMAliasBlockFile::Copy(wxFileName newFileName)
                                                    mAliasedFileName, mAliasStart,
                                                    mLen, mAliasChannel,
                                                    mMin, mMax, mRMS,IsSummaryAvailable());
-      //The client code will need to schedule this blockfile for OD summarizing if it is going to a new track.
+      //The client code will need to schedule this blockfile for OD summarizing if it is going to a NEW track.
    }
 
    UnlockRead();
@@ -452,7 +452,7 @@ void ODPCMAliasBlockFile::WriteSummary()
 /// This method also has the side effect of setting the mMin, mMax,
 /// and mRMS members of this class.
 ///
-/// Unlike BlockFile's implementation You SHOULD delete the returned buffer.
+/// Unlike BlockFile's implementation You SHOULD DELETE the returned buffer.
 /// this is protected so it shouldn't be hard to deal with - just override
 /// all BlockFile methods that use this method.
 ///
@@ -696,7 +696,7 @@ bool ODPCMAliasBlockFile::ReadSummary(void *data)
 
    if( !summaryFile.IsOpened() ){
 
-      // new model; we need to return valid data
+      // NEW model; we need to return valid data
       memset(data,0,(size_t)mSummaryInfo.totalSummaryBytes);
 
       // we silence the logging for this operation in this object
@@ -708,7 +708,7 @@ bool ODPCMAliasBlockFile::ReadSummary(void *data)
       mFileNameMutex.Unlock();
       return true;
 
-   }else mSilentLog=FALSE; // worked properly, any future error is new
+   }else mSilentLog=FALSE; // worked properly, any future error is NEW
 
    int read = summaryFile.Read(data, (size_t)mSummaryInfo.totalSummaryBytes);
 

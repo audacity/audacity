@@ -38,7 +38,7 @@ class SilentBlockFile : public BlockFile {
    virtual int ReadData(samplePtr data, sampleFormat format,
                         sampleCount start, sampleCount len);
 
-   /// Create a new block file identical to this one
+   /// Create a NEW block file identical to this one
    virtual BlockFile *Copy(wxFileName newFileName);
    /// Write an XML representation of this file
    virtual void SaveXML(XMLWriter &xmlFile);

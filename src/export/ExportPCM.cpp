@@ -877,10 +877,11 @@ void ExportPCM::AddID3Chunk(wxString fName, Tags *tags, int sf_format)
 
 wxWindow *ExportPCM::OptionsCreate(wxWindow *parent, int format)
 {
+   wxASSERT(parent); // to justify safenew
    // default, full user control
    if (format < 0 || format >= WXSIZEOF(kFormats))
    {
-      return new ExportPCMOptions(parent, format);
+      return safenew ExportPCMOptions(parent, format);
    }
 
    return ExportPlugin::OptionsCreate(parent, format);

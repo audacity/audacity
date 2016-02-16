@@ -19,7 +19,7 @@ Load On-Demand implementation of the AliasBlockFile for PCM files.
 to load large files more quickly, we take skip computing the summary data and put
 ODPCMAliasBlockFiles in the sequence as place holders.  A background thread loads and
 computes the summary data into these classes.
-ODPCMAliasBlockFiles are unlike all other BlockFiles are not immutable (for the most part,) because when new
+ODPCMAliasBlockFiles are unlike all other BlockFiles are not immutable (for the most part,) because when NEW
 summary data is computed for an existing ODPCMAliasBlockFile we save the buffer then and write the Summary File.
 
 All BlockFile methods that treat the summary data as a buffer that exists in its BlockFile
@@ -74,7 +74,7 @@ class ODPCMAliasBlockFile : public PCMAliasBlockFile
    /// Returns the 64K summary data block
    virtual bool Read64K(float *buffer, sampleCount start, sampleCount len);
 
-   ///Makes new ODPCMAliasBlockFile or PCMAliasBlockFile depending on summary availability
+   ///Makes NEW ODPCMAliasBlockFile or PCMAliasBlockFile depending on summary availability
    virtual BlockFile *Copy(wxFileName fileName);
 
    ///Saves as xml ODPCMAliasBlockFile or PCMAliasBlockFile depending on summary availability

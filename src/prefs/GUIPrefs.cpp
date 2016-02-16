@@ -178,5 +178,6 @@ bool GUIPrefs::Apply()
 
 PrefsPanel *GUIPrefsFactory::Create(wxWindow *parent)
 {
-   return new GUIPrefs(parent);
+   wxASSERT(parent); // to justify safenew
+   return safenew GUIPrefs(parent);
 }

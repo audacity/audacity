@@ -334,7 +334,8 @@ int ExportMP2::Export(AudacityProject *project,
 
 wxWindow *ExportMP2::OptionsCreate(wxWindow *parent, int format)
 {
-   return new ExportMP2Options(parent, format);
+   wxASSERT(parent); // to justify safenew
+   return safenew ExportMP2Options(parent, format);
 }
 
 // returns buffer len; caller frees

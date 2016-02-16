@@ -26,7 +26,7 @@ ODWaveTrackTaskQueue::ODWaveTrackTaskQueue()
 
 ODWaveTrackTaskQueue::~ODWaveTrackTaskQueue()
 {
-   //we need to delete all ODTasks.  We will have to block or wait until block for the active ones.
+   //we need to DELETE all ODTasks.  We will have to block or wait until block for the active ones.
    for(unsigned int i=0;i<mTasks.size();i++)
    {
       mTasks[i]->TerminateAndBlock();//blocks if active.
@@ -202,7 +202,7 @@ void ODWaveTrackTaskQueue::DemandTrackUpdate(WaveTrack* track, double seconds)
 }
 
 
-//Replaces all instances of a wavetracck with a new one (effectively transferes the task.)
+//Replaces all instances of a wavetracck with a NEW one (effectively transferes the task.)
 void ODWaveTrackTaskQueue::ReplaceWaveTrack(WaveTrack* oldTrack, WaveTrack* newTrack)
 {
    if(oldTrack)
@@ -285,7 +285,7 @@ bool ODWaveTrackTaskQueue::IsFrontTaskComplete()
    mTasksMutex.Lock();
    if(mTasks.size())
    {
-      //there is a chance the task got updated and now has more to do, (like when it is joined with a new track)
+      //there is a chance the task got updated and now has more to do, (like when it is joined with a NEW track)
       //check.
       mTasks[0]->RecalculatePercentComplete();
       bool ret;

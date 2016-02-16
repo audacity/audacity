@@ -152,7 +152,7 @@ void BatchProcessDialog::OnApplyToProject(wxCommandEvent & WXUNUSED(event))
    }
    wxString name = mChains->GetItemText(item);
 
-   wxDialog * pD = new wxDialog(this, wxID_ANY, GetTitle());
+   wxDialog * pD = safenew wxDialog(this, wxID_ANY, GetTitle());
    pD->SetName(pD->GetTitle());
    ShuttleGui S(pD, eIsCreating);
 
@@ -292,7 +292,7 @@ void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
 
    files.Sort();
 
-   wxDialog * pD = new wxDialog(this, wxID_ANY, GetTitle());
+   wxDialog * pD = safenew wxDialog(this, wxID_ANY, GetTitle());
    pD->SetName(pD->GetTitle());
    ShuttleGui S(pD, eIsCreating);
 

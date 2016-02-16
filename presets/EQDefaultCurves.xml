@@ -92,5 +92,14 @@
 		<point f="6000.000000000000" d="0.000000000000"/>
 		<point f="10000.000000000000" d="-110.000000000000"/>
 	</curve>
+	<curve name="Low rolloff for speech">
+		<point f="50.0" d="-120.0"/>
+		<point f="60.0" d="-50.0"/>
+		<point f="65.0" d="-24.0"/>
+		<point f="70.0" d="-12.0"/>
+		<point f="80.0" d="-4.0"/>
+		<point f="90.0" d="-1.0"/>
+		<point f="100.0" d="0.0"/>
+	</curve>
 	<curve name="unnamed"/>
 </equalizationeffect>

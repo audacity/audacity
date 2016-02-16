@@ -174,7 +174,7 @@ bool Sequence::ConvertToSampleFormat(sampleFormat format, bool* pbChanged)
    mMaxSamples = mMinSamples * 2;
 
    BlockArray newBlockArray;
-   // Use the ratio of old to new mMaxSamples to make a reasonable guess at allocation.
+   // Use the ratio of old to NEW mMaxSamples to make a reasonable guess at allocation.
    newBlockArray.reserve(1 + mBlock.size() * ((float)oldMaxSamples / (float)mMaxSamples));
 
    bool bSuccess = true;
@@ -204,7 +204,7 @@ bool Sequence::ConvertToSampleFormat(sampleFormat format, bool* pbChanged)
          //    If so, need to special-case (len < mMinSamples) and start combining data
          //    from the old blocks... Oh no!
 
-         // Using Blockify will handle the cases where len > the new mMaxSamples. Previous code did not.
+         // Using Blockify will handle the cases where len > the NEW mMaxSamples. Previous code did not.
          const sampleCount blockstart = oldSeqBlock.start;
          const unsigned prevSize = newBlockArray.size();
          Blockify(newBlockArray, blockstart, bufferNew.ptr(), len);
@@ -221,7 +221,7 @@ bool Sequence::ConvertToSampleFormat(sampleFormat format, bool* pbChanged)
 
       DerefAllFiles();
 
-      // Replace with new blocks.
+      // Replace with NEW blocks.
       mBlock.swap(newBlockArray);
    }
    else
@@ -540,7 +540,7 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
    // and the following test fails, perhaps we could test
    // whether coalescence with the previous block is possible.
    if (largerBlockLen <= mMaxSamples) {
-      // Special case: we can fit all of the new samples inside of
+      // Special case: we can fit all of the NEW samples inside of
       // one block!
 
       SeqBlock &block = *pBlock;
@@ -644,8 +644,8 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
 
    mDirManager->Deref(splitBlock.f);
 
-   // Copy remaining blocks to new block array and
-   // swap the new block array in for the old
+   // Copy remaining blocks to NEW block array and
+   // swap the NEW block array in for the old
    for (i = b + 1; i < numBlocks; i++)
       newBlock.push_back(mBlock[i].Plus(addedLen));
 
@@ -670,7 +670,7 @@ bool Sequence::InsertSilence(sampleCount s0, sampleCount len)
    if (len <= 0)
       return true;
 
-   // Create a new track containing as much silence as we
+   // Create a NEW track containing as much silence as we
    // need to insert, and then call Paste to do the insertion.
    // We make use of a SilentBlockFile, which takes up no
    // space on disk.
@@ -1145,7 +1145,7 @@ bool Sequence::CopyWrite(SampleBuffer &scratch,
 {
    // We don't ever write to an existing block; to support Undo,
    // we copy the old block entirely into memory, dereference it,
-   // make the change, and then write the new block to disk.
+   // make the change, and then write the NEW block to disk.
 
    const sampleCount length = b.f->GetLength();
    wxASSERT(length <= mMaxSamples);
@@ -1552,7 +1552,7 @@ bool Sequence::Append(samplePtr buffer, sampleFormat format,
       mNumSamples += addLen;
       buffer += addLen * SAMPLE_SIZE(format);
    }
-   // Append the rest as new blocks
+   // Append the rest as NEW blocks
    while (len) {
       const sampleCount idealSamples = GetIdealBlockSize();
       const sampleCount l = std::min(idealSamples, len);
@@ -1628,7 +1628,7 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
 
    int sampleSize = SAMPLE_SIZE(mSampleFormat);
 
-   // Special case: if the samples to delete are all within a single
+   // Special case: if the samples to DELETE are all within a single
    // block and the resulting length is not too small, perform the
    // deletion within this block:
    SeqBlock *pBlock;
@@ -1665,12 +1665,12 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
       return ConsistencyCheck(wxT("Delete - branch one"));
    }
 
-   // Create a new array of blocks
+   // Create a NEW array of blocks
    BlockArray newBlock;
    newBlock.reserve(numBlocks - (b1 - b0) + 2);
 
    // Copy the blocks before the deletion point over to
-   // the new array
+   // the NEW array
    newBlock.insert(newBlock.end(), mBlock.begin(), mBlock.begin() + b0);
    unsigned int i;
 
@@ -1717,7 +1717,7 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
       mDirManager->Deref(preBlock.f);
    }
 
-   // Next, delete blocks strictly between b0 and b1
+   // Next, DELETE blocks strictly between b0 and b1
    for (i = b0 + 1; i < b1; i++) {
       mDirManager->Deref(mBlock[i].f);
    }
@@ -1770,7 +1770,7 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
    for (i = b1 + 1; i < numBlocks; i++)
       newBlock.push_back(mBlock[i].Plus(-len));
 
-   // Substitute our new array for the old one
+   // Substitute our NEW array for the old one
    mBlock.swap(newBlock);
 
    // Update total number of samples and do a consistency check.

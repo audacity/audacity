@@ -370,7 +370,8 @@ int ExportFLAC::Export(AudacityProject *project,
 
 wxWindow *ExportFLAC::OptionsCreate(wxWindow *parent, int format)
 {
-   return new ExportFLACOptions(parent, format);
+   wxASSERT(parent); // to justify safenew
+   return safenew ExportFLACOptions(parent, format);
 }
 
 // LL:  There's a bug in libflac++ 1.1.2 that prevents us from using

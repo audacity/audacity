@@ -29,7 +29,7 @@ void ComputeLegacySummaryInfo(wxFileName fileName,
 // Audacity BlockFile formats (versions 0.98 through 1.0, or
 // versions 1.1.0 through 1.1.2).  You can load a BlockFile
 // in this format, and you can save information about it
-// back to disk, but you can't create a new one from new
+// back to disk, but you can't create a NEW one from new
 // sample data.
 //
 class LegacyBlockFile : public BlockFile {
@@ -53,7 +53,7 @@ class LegacyBlockFile : public BlockFile {
    virtual int ReadData(samplePtr data, sampleFormat format,
                         sampleCount start, sampleCount len);
 
-   /// Create a new block file identical to this one
+   /// Create a NEW block file identical to this one
    virtual BlockFile *Copy(wxFileName newFileName);
    /// Write an XML representation of this file
    virtual void SaveXML(XMLWriter &xmlFile);

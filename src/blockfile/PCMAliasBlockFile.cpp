@@ -152,8 +152,8 @@ int PCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
    return framesRead;
 }
 
-/// Construct a new PCMAliasBlockFile based on this one, but writing
-/// the summary data to a new file.
+/// Construct a NEW PCMAliasBlockFile based on this one, but writing
+/// the summary data to a NEW file.
 ///
 /// @param newFileName The filename to copy the summary data to.
 BlockFile *PCMAliasBlockFile::Copy(wxFileName newFileName)

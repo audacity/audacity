@@ -621,7 +621,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
       }
 
       wxString path = plug.GetPath();
-      ItemData & item = mItems[path];  // will create new entry
+      ItemData & item = mItems[path];  // will create NEW entry
       item.plugs.Add(&plug);
       item.path = path;
       item.state = plug.IsEnabled() ? STATE_Enabled : STATE_Disabled;
@@ -2138,9 +2138,9 @@ void PluginManager::CheckForUpdates()
       pathIndex.Add(plug.GetPath().BeforeFirst(wxT(';')));
    }
 
-   // Check all known plugins to ensure they are still valid and scan for new ones.
+   // Check all known plugins to ensure they are still valid and scan for NEW ones.
    // 
-   // All new plugins get a stub entry created that will remain in place until the
+   // All NEW plugins get a stub entry created that will remain in place until the
    // user enables or disables the plugin.
    //
    // Becuase we use the plugins "path" as returned by the providers, we can actually
@@ -2179,7 +2179,7 @@ void PluginManager::CheckForUpdates()
                if (pathIndex.Index(path) == wxNOT_FOUND)
                {
                   PluginID ID = plugID + wxT("_") + path;
-                  PluginDescriptor & plug = mPlugins[ID];  // This will create a new descriptor
+                  PluginDescriptor & plug = mPlugins[ID];  // This will create a NEW descriptor
                   plug.SetPluginType(PluginTypeStub);
                   plug.SetID(ID);
                   plug.SetProviderID(plugID);
@@ -2483,7 +2483,7 @@ PluginDescriptor & PluginManager::CreatePlugin(const PluginID & id,
                                                IdentInterface *ident,
                                                PluginType type)
 {
-   // This will either create a new entry or replace an existing entry
+   // This will either create a NEW entry or replace an existing entry
    PluginDescriptor & plug = mPlugins[id];
 
    plug.SetPluginType(type);

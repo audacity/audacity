@@ -47,7 +47,7 @@ wxImage *ChangeImageColour(wxImage * srcImage,
    // This function takes a source image, which it assumes to
    // be grayscale, and smoothly changes the overall color
    // to the specified color, and returns the result as a
-   // new image.  This works well for grayscale 3D images.
+   // NEW image.  This works well for grayscale 3D images.
    // Audacity uses this routines to make the buttons
    // (skip-start, play, stop, record, skip-end) adapt to
    // the color scheme of the user.
@@ -95,7 +95,7 @@ wxImage *ChangeImageColour(wxImage * srcImage,
 
 /// Takes a background image, foreground image, and mask
 /// (i.e. the alpha channel for the foreground), and
-/// returns an new image where the foreground has been
+/// returns an NEW image where the foreground has been
 /// overlaid onto the background using alpha-blending,
 /// at location (xoff, yoff).
 wxImage *OverlayImage(wxImage * background, wxImage * foreground,
@@ -129,7 +129,7 @@ wxImage *OverlayImage(wxImage * background, wxImage * foreground,
    hCutoff = (bgHeight - yoff > hCutoff) ? hCutoff : bgHeight - yoff;
 
 
-   //Make a new image the size of the background
+   //Make a NEW image the size of the background
    wxImage * dstImage = new wxImage(bgWidth, bgHeight);
    unsigned char *dst = dstImage->GetData();
    memcpy(dst, bg, bgWidth * bgHeight * 3);
@@ -161,7 +161,7 @@ wxImage *OverlayImage(wxImage * background, wxImage * foreground,
 
 /// Takes a background image, foreground image, and mask
 /// (i.e. the alpha channel for the foreground), and
-/// returns an new image where the foreground has been
+/// returns an NEW image where the foreground has been
 /// overlaid onto the background using alpha-blending,
 /// at location (xoff, yoff).
 wxImage *OverlayImage(teBmps eBack, teBmps eForeground,
@@ -204,7 +204,7 @@ wxImage *OverlayImage(teBmps eBack, teBmps eForeground,
    wCutoff = (bgWidth - xoff > wCutoff) ? wCutoff : bgWidth - xoff;
    hCutoff = (bgHeight - yoff > hCutoff) ? hCutoff : bgHeight - yoff;
 
-   //Make a new image the size of the background
+   //Make a NEW image the size of the background
    wxImage * dstImage = new wxImage(bgWidth, bgHeight);
    unsigned char *dst = dstImage->GetData();
    memcpy(dst, bg, bgWidth * bgHeight * 3);

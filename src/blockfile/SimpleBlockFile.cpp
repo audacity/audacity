@@ -36,7 +36,7 @@ default is to disable caching.
   memory, so they are never read from disk in the current session.
 
 * Write-caching: If caching is enabled and the parameter allowDeferredWrite
-  is enabled at the block file constructor, new block files are held in memory
+  is enabled at the block file constructor, NEW block files are held in memory
   and written to disk only when WriteCacheToDisk() is called. This is used
   during recording to prevent disk access. After recording, WriteCacheToDisk()
   will be called on all block files and they will be written to disk. During
@@ -529,7 +529,7 @@ BlockFile *SimpleBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
 
 /// Create a copy of this BlockFile, but using a different disk file.
 ///
-/// @param newFileName The name of the new file to use.
+/// @param newFileName The name of the NEW file to use.
 BlockFile *SimpleBlockFile::Copy(wxFileName newFileName)
 {
    BlockFile *newBlockFile = new SimpleBlockFile(newFileName, mLen,

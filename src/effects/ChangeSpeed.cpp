@@ -362,7 +362,7 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
          {
             S.AddPrompt(_("Current Length:"));
 
-            mpFromLengthCtrl = new
+            mpFromLengthCtrl = safenew
                   NumericTextCtrl(NumericConverter::TIME,
                                  S.GetParent(),
                                  wxID_ANY,
@@ -378,7 +378,7 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
 
             S.AddPrompt(_("New Length:"));
 
-            mpToLengthCtrl = new
+            mpToLengthCtrl = safenew
                   NumericTextCtrl(NumericConverter::TIME,
                                  S.GetParent(),
                                  ID_ToLength,
@@ -629,7 +629,7 @@ void EffectChangeSpeed::OnChoice_Vinyl(wxCommandEvent & WXUNUSED(evt))
       SetPrivateConfig(GetCurrentSettingsGroup(), wxT("VinylChoice"), mFromVinyl);
    }
 
-   // If mFromVinyl & mToVinyl are set, then there's a new percent change.
+   // If mFromVinyl & mToVinyl are set, then there's a NEW percent change.
    if ((mFromVinyl != kVinyl_NA) && (mToVinyl != kVinyl_NA))
    {
       double fromRPM;

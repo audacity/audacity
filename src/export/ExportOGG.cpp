@@ -239,7 +239,7 @@ int ExportOGG::Export(AudacityProject *project,
    ogg_stream_packetin(&stream, &codebook_header);
 
    // Flushing these headers now guarentees that audio data will
-   // start on a new page, which apparently makes streaming easier
+   // start on a NEW page, which apparently makes streaming easier
    while (ogg_stream_flush(&stream, &page)) {
       outFile.Write(page.header, page.header_len);
       outFile.Write(page.body, page.body_len);
@@ -337,7 +337,8 @@ int ExportOGG::Export(AudacityProject *project,
 
 wxWindow *ExportOGG::OptionsCreate(wxWindow *parent, int format)
 {
-   return new ExportOGGOptions(parent, format);
+   wxASSERT(parent); // to justify safenew
+   return safenew ExportOGGOptions(parent, format);
 }
 
 bool ExportOGG::FillComment(AudacityProject *project, vorbis_comment *comment, Tags *metadata)

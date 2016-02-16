@@ -164,5 +164,6 @@ bool TracksPrefs::Apply()
 
 PrefsPanel *TracksPrefsFactory::Create(wxWindow *parent)
 {
-   return new TracksPrefs(parent);
+   wxASSERT(parent); // to justify safenew
+   return safenew TracksPrefs(parent);
 }

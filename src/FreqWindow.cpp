@@ -277,7 +277,7 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
 
       S.StartVerticalLay(2);
       {
-         vRuler = new RulerPanel(this, wxID_ANY);
+         vRuler = safenew RulerPanel(this, wxID_ANY);
          vRuler->ruler.SetBounds(0, 0, 100, 100); // Ruler can't handle small sizes
          vRuler->ruler.SetOrientation(wxVERTICAL);
          vRuler->ruler.SetRange(0.0, -dBRange);
@@ -295,7 +295,7 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
       }
       S.EndVerticalLay();
 
-      mFreqPlot = new FreqPlot(this);
+      mFreqPlot = safenew FreqPlot(this);
       mFreqPlot->SetMinSize(wxSize(wxDefaultCoord, FREQ_WINDOW_HEIGHT));
       S.Prop(1);
       S.AddWindow(mFreqPlot, wxEXPAND);
@@ -304,7 +304,7 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
       {
          S.StartVerticalLay();
          {
-            mPanScroller = new wxScrollBar(this, FreqPanScrollerID,
+            mPanScroller = safenew wxScrollBar(this, FreqPanScrollerID,
                wxDefaultPosition, wxDefaultSize, wxSB_VERTICAL);
             mPanScroller->SetName(_("Scroll"));
             S.Prop(1);
@@ -314,12 +314,12 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
 
          S.StartVerticalLay();
          {
-            wxStaticBitmap *zi = new wxStaticBitmap(this, wxID_ANY, wxBitmap(ZoomIn));
+            wxStaticBitmap *zi = safenew wxStaticBitmap(this, wxID_ANY, wxBitmap(ZoomIn));
             S.AddWindow((wxWindow *) zi, wxALIGN_CENTER);
 
             S.AddSpace(5);
 
-            mZoomSlider = new wxSlider(this, FreqZoomSliderID, 100, 1, 100,
+            mZoomSlider = safenew wxSlider(this, FreqZoomSliderID, 100, 1, 100,
                wxDefaultPosition, wxDefaultSize, wxSL_VERTICAL);
             S.Prop(1);
             S.AddWindow(mZoomSlider, wxALIGN_CENTER_HORIZONTAL);
@@ -327,7 +327,7 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
 
             S.AddSpace(5);
 
-            wxStaticBitmap *zo = new wxStaticBitmap(this, wxID_ANY, wxBitmap(ZoomOut));
+            wxStaticBitmap *zo = safenew wxStaticBitmap(this, wxID_ANY, wxBitmap(ZoomOut));
             S.AddWindow((wxWindow *) zo, wxALIGN_CENTER);
          }
          S.EndVerticalLay();
@@ -344,7 +344,7 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
 
       S.StartHorizontalLay(wxEXPAND, 0);
       {
-         hRuler  = new RulerPanel(this, wxID_ANY);
+         hRuler  = safenew RulerPanel(this, wxID_ANY);
          hRuler->ruler.SetBounds(0, 0, 100, 100); // Ruler can't handle small sizes
          hRuler->ruler.SetOrientation(wxHORIZONTAL);
          hRuler->ruler.SetLog(true);
@@ -477,7 +477,7 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
    
    S.AddSpace(5);
 
-   mProgress = new FreqGauge(this); //, wxID_ANY, wxST_SIZEGRIP);
+   mProgress = safenew FreqGauge(this); //, wxID_ANY, wxST_SIZEGRIP);
    S.AddWindow(mProgress, wxEXPAND);
 
    // Log-frequency axis works for spectrum plots only.
@@ -1400,7 +1400,7 @@ bool SpectrumAnalyst::Calculate(Algorithm alg, int windowFunc,
          if (mProcessed[i] < 0.0)
             mProcessed[i] = float(0.0);
 
-      // Find new min/max
+      // Find NEW min/max
       mYMin = mProcessed[0];
       mYMax = mProcessed[0];
       for (int i = 1; i < half; i++)

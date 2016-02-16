@@ -252,5 +252,6 @@ void RecordingPrefs::OnToggleCustomName(wxCommandEvent & Evt)
 
 PrefsPanel *RecordingPrefsFactory::Create(wxWindow *parent)
 {
-   return new RecordingPrefs(parent);
+   wxASSERT(parent); // to justify safenew
+   return safenew RecordingPrefs(parent);
 }

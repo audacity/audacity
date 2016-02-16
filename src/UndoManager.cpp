@@ -67,7 +67,7 @@ void UndoManager::CalculateSpaceUsage()
       prev = cur;
       cur = swap;
 
-      // And clean out the new current map
+      // And clean out the NEW current map
       cur->clear();
 
       // Scan all tracks at current level

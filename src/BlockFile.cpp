@@ -193,7 +193,7 @@ void BlockFile::Deinit()
 /// This method also has the side effect of setting the mMin, mMax,
 /// and mRMS members of this class.
 ///
-/// You must not delete the returned buffer; it is static to this
+/// You must not DELETE the returned buffer; it is static to this
 /// method.
 ///
 /// @param buffer A buffer containing the sample data to be analyzed
@@ -568,7 +568,7 @@ void AliasBlockFile::WriteSummary()
 
    if( !summaryFile.IsOpened() ){
       // Never silence the Log w.r.t write errors; they always count
-      // as new errors
+      // as NEW errors
       wxLogError(wxT("Unable to write summary data to file %s"),
                    mFileName.GetFullPath().c_str());
       // If we can't write, there's nothing to do.
@@ -602,7 +602,7 @@ bool AliasBlockFile::ReadSummary(void *data)
 
    if( !summaryFile.IsOpened() ){
 
-      // new model; we need to return valid data
+      // NEW model; we need to return valid data
       memset(data,0,(size_t)mSummaryInfo.totalSummaryBytes);
       if(silence) delete silence;
 
@@ -613,7 +613,7 @@ bool AliasBlockFile::ReadSummary(void *data)
       mSilentLog=TRUE;
       return true;
 
-   }else mSilentLog=FALSE; // worked properly, any future error is new
+   }else mSilentLog=FALSE; // worked properly, any future error is NEW
 
    if(silence) delete silence;
 

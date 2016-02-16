@@ -19,7 +19,7 @@ and grids used by Audacity.
 This will be split up into separate include files to reduce the amount
 of recompilation on a change.
 
-Meantime, do NOT delete any of these declarations, even if they're
+Meantime, do NOT DELETE any of these declarations, even if they're
 unused, as they're all offset by prior declarations.
 
 To add an image, you give its size and name like so:
