@@ -16275,6 +16275,13 @@ else
 fi
 
 
+if [ "$IMPLEMENTATION" = gtk ]
+then
+	OBJCXX=$CXX
+	AM_OBJCXXFLAGS=$AM_CXXFLAGS
+	OBJCXXFLAGS=$CXXFLAGS
+fi
+
 echo "Implementation to use: $IMPLEMENTATION"
 
 ac_config_files="$ac_config_files Makefile"

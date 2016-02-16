@@ -122,6 +122,16 @@ AM_CONDITIONAL([GTK], test "$IMPLEMENTATION" = "gtk")
 AM_CONDITIONAL([MAC], test "$IMPLEMENTATION" = "mac")
 AM_CONDITIONAL([WINDOWS], test "$IMPLEMENTATION" = "win")
 
+dnl Automake uses the Ojective-C++ linker in any case, so we have to overwrite
+dnl the variables it's using with the correct C++ counterparts (only those used
+dnl for linking).
+if [[ "$IMPLEMENTATION" = gtk ]]
+then
+	OBJCXX=$CXX
+	AM_OBJCXXFLAGS=$AM_CXXFLAGS
+	OBJCXXFLAGS=$CXXFLAGS
+fi
+
 echo "Implementation to use: $IMPLEMENTATION"
 
 AC_CONFIG_FILES([Makefile])
