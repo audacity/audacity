@@ -10,7 +10,7 @@
 *******************************************************************//**
 
 \file Project.cpp
-\brief Implements AudacityProject, DropTarget, and FileObject.
+\brief Implements AudacityProject, DropTarget, and FileObject.F
 Includes Menus.cpp.
 
 *//****************************************************************//**
@@ -3738,7 +3738,7 @@ void AudacityProject::AddImportedTracks(wxString fileName,
          BlockArray &blocks = clip->GetSequence()->GetBlockArray();
          if (clip && blocks.size())
          {
-            SeqBlock& block = blocks.at(0);
+            SeqBlock& block = blocks[0];
             if (block.f->IsAlias())
             {
                mImportedDependencies = true;
