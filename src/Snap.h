@@ -57,16 +57,17 @@ const int kPixelTolerance = 4;
 class SnapPoint
 {
 public:
-   SnapPoint(double t, Track *track)
+   explicit
+   SnapPoint(double t_ = 0.0, Track *track_ = nullptr)
+      : t(t_), track(track_)
    {
-      this->t = t;
-      this->track = track;
    }
+
    double t;
    Track *track;
 };
 
-WX_DEFINE_SORTED_ARRAY(SnapPoint *, SnapPointArray);
+using SnapPointArray = std::vector < SnapPoint > ;
 
 class SnapManager
 {
