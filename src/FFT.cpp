@@ -494,7 +494,7 @@ const wxChar *WindowFuncName(int whichFunction)
    switch (whichFunction) {
    default:
    case eWinFuncRectangular:
-      return _("Rectangular");
+      return _("Rectangular").c_str();
    case eWinFuncBartlett:
       return wxT("Bartlett");
    case eWinFuncHamming:

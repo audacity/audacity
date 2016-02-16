@@ -44,7 +44,7 @@ class ODComputeSummaryTask:public ODTask
    ///Return the task name
    virtual const char* GetTaskName(){return "ODComputeSummaryTask";}
 
-   virtual const wxChar* GetTip(){return _("Import complete. Calculating waveform");}
+   virtual const wxChar* GetTip(){return _("Import complete. Calculating waveform").c_str();}
 
    virtual bool UsesCustomWorkUntilPercentage(){return true;}
    virtual float ComputeNextWorkUntilPercentageComplete();

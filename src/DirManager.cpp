@@ -396,7 +396,7 @@ void DirManager::CleanTempDir()
    if (count == 0)
       return;
 
-   RecursivelyRemove(filePathArray, count, true, true, _("Cleaning up temporary files"));
+   RecursivelyRemove(filePathArray, count, true, true, _("Cleaning up temporary files").c_str());
 }
 
 bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const bool bCreate)
@@ -522,7 +522,7 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
       //      count += RecursivelyEnumerate(cleanupLoc2, dirlist, wxEmptyString, false, true);
 
       if (count > 0)
-         RecursivelyRemove(dirlist, count, false, true, _("Cleaning up cache directories"));
+         RecursivelyRemove(dirlist, count, false, true, _("Cleaning up cache directories").c_str());
    }
    return true;
 }
@@ -1394,8 +1394,8 @@ int DirManager::ProjectFSCK(const bool bForceError, const bool bAutoRecoverMode)
          "Found problems with <sequence> when checking project file." */
       wxString msg = _("Project check read faulty Sequence tags.");
       const wxChar *buttons[] =
-         {_("Close project immediately with no changes"),
-            _("Continue with repairs noted in log, and check for more errors. This will save the project in its current state, unless you \"Close project immediately\" on further error alerts."),
+         {_("Close project immediately with no changes").c_str(),
+            _("Continue with repairs noted in log, and check for more errors. This will save the project in its current state, unless you \"Close project immediately\" on further error alerts.").c_str(),
             NULL};
       wxLog::FlushActive(); // MultiDialog has "Show Log..." button, so make sure log is current.
       action = ShowMultiDialog(msg, _("Warning - Problems Reading Sequence Tags"), buttons);
@@ -1413,7 +1413,7 @@ int DirManager::ProjectFSCK(const bool bForceError, const bool bAutoRecoverMode)
       wxEmptyString,
       true, false,
       mBlockFileHash.size(),  // rough guess of how many BlockFiles will be found/processed, for progress
-      _("Inspecting project file data"));
+      _("Inspecting project file data").c_str());
 
    //
    // MISSING ALIASED AUDIO FILES
@@ -1447,9 +1447,9 @@ _("Project check of \"%s\" folder \
          wxString msg;
          msg.Printf(msgA, this->projName.c_str(), (long long) missingAliasedFilePathHash.size());
          const wxChar *buttons[] =
-            {_("Close project immediately with no changes"),
-               _("Treat missing audio as silence (this session only)"),
-               _("Replace missing audio with silence (permanent immediately)."),
+            {_("Close project immediately with no changes").c_str(),
+               _("Treat missing audio as silence (this session only)").c_str(),
+               _("Replace missing audio with silence (permanent immediately).").c_str(),
                NULL};
          wxLog::FlushActive(); // MultiDialog has "Show Log..." button, so make sure log is current.
          action = ShowMultiDialog(msg, _("Warning - Missing Aliased File(s)"), buttons);
@@ -1509,9 +1509,9 @@ _("Project check of \"%s\" folder \
 \nfrom the current audio in the project.");
          wxString msg;
          msg.Printf(msgA, this->projName.c_str(), (long long) missingAUFHash.size());
-         const wxChar *buttons[] = {_("Regenerate alias summary files (safe and recommended)"),
-                                    _("Fill in silence for missing display data (this session only)"),
-                                    _("Close project immediately with no further changes"),
+         const wxChar *buttons[] = {_("Regenerate alias summary files (safe and recommended)").c_str(),
+                                    _("Fill in silence for missing display data (this session only)").c_str(),
+                                    _("Close project immediately with no further changes").c_str(),
                                     NULL};
          wxLog::FlushActive(); // MultiDialog has "Show Log..." button, so make sure log is current.
          action = ShowMultiDialog(msg, _("Warning - Missing Alias Summary File(s)"), buttons);
@@ -1568,9 +1568,9 @@ _("Project check of \"%s\" folder \
          wxString msg;
          msg.Printf(msgA, this->projName.c_str(), (long long) missingAUHash.size());
          const wxChar *buttons[] =
-            {_("Close project immediately with no further changes"),
-               _("Treat missing audio as silence (this session only)"),
-               _("Replace missing audio with silence (permanent immediately)"),
+            {_("Close project immediately with no further changes").c_str(),
+               _("Treat missing audio as silence (this session only)").c_str(),
+               _("Replace missing audio with silence (permanent immediately)").c_str(),
                NULL};
          wxLog::FlushActive(); // MultiDialog has "Show Log..." button, so make sure log is current.
          action = ShowMultiDialog(msg, _("Warning - Missing Audio Data Block File(s)"), buttons);
@@ -1627,9 +1627,9 @@ other projects. \
          msg.Printf(msgA, this->projName.c_str(), (int)orphanFilePathArray.GetCount());
 
          const wxChar *buttons[] =
-            {_("Continue without deleting; ignore the extra files this session"),
-            _("Close project immediately with no further changes"),
-            _("Delete orphan files (permanent immediately)"),
+            {_("Continue without deleting; ignore the extra files this session").c_str(),
+            _("Close project immediately with no further changes").c_str(),
+            _("Delete orphan files (permanent immediately)").c_str(),
             NULL};
          wxLog::FlushActive(); // MultiDialog has "Show Log..." button, so make sure log is current.
          action = ShowMultiDialog(msg, _("Warning - Orphan Block File(s)"), buttons);
@@ -1818,7 +1818,7 @@ void DirManager::RemoveOrphanBlockfiles()
       wxEmptyString,
       true, false,
       mBlockFileHash.size(),  // rough guess of how many BlockFiles will be found/processed, for progress
-      _("Inspecting project file data"));
+      _("Inspecting project file data").c_str());
 
    wxArrayString orphanFilePathArray;
    this->FindOrphanBlockFiles(

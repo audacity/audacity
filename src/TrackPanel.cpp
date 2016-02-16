@@ -8677,8 +8677,8 @@ static int channels[] = { Track::LeftChannel, Track::RightChannel,
    Track::MonoChannel
 };
 
-static const wxChar *channelmsgs[] = { _("Left Channel"), _("Right Channel"),
-   _("Mono")
+static const wxChar *channelmsgs[] = { _("Left Channel").c_str(), _("Right Channel").c_str(),
+   _("Mono").c_str()
 };
 
 void TrackPanel::OnChannelChange(wxCommandEvent & event)

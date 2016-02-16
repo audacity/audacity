@@ -97,9 +97,9 @@ enum DiscriminationMethod {
 const struct DiscriminationMethodInfo {
    const wxChar *name;
 } discriminationMethodInfo[DM_N_METHODS] = {
-      { _("Median") },
-      { _("Second greatest") },
-      { _("Old") },
+      { _("Median").c_str() },
+      { _("Second greatest").c_str() },
+      { _("Old").c_str() },
 };
 
 // magic number used only in the old statistics
@@ -130,13 +130,13 @@ const struct WindowTypesInfo {
    // is the product of the windows' two constant terms,
    // plus one half the product of the first cosine coefficients.
 
-   { _("none, Hann (2.0.6 behavior)"),    2, { 1, 0, 0 },            { 0.5, -0.5, 0 }, 0.5 },
-   { _("Hann, none"),                     2, { 0.5, -0.5, 0 },       { 1, 0, 0 },      0.5 },
-   { _("Hann, Hann (default)"),           4, { 0.5, -0.5, 0 },       { 0.5, -0.5, 0 }, 0.375 },
-   { _("Blackman, Hann"),                 4, { 0.42, -0.5, 0.08 },   { 0.5, -0.5, 0 }, 0.335 },
-   { _("Hamming, none"),                  2, { 0.54, -0.46, 0.0 },   { 1, 0, 0 },      0.54 },
-   { _("Hamming, Hann"),                  4, { 0.54, -0.46, 0.0 },   { 0.5, -0.5, 0 }, 0.385 },
-   { _("Hamming, Reciprocal Hamming"),    2, { 0.54, -0.46, 0.0 },   { 1, 0, 0 }, 1.0 }, // output window is special
+   { _("none, Hann (2.0.6 behavior)").c_str(),    2, { 1, 0, 0 },            { 0.5, -0.5, 0 }, 0.5 },
+   { _("Hann, none").c_str(),                     2, { 0.5, -0.5, 0 },       { 1, 0, 0 },      0.5 },
+   { _("Hann, Hann (default)").c_str(),           4, { 0.5, -0.5, 0 },       { 0.5, -0.5, 0 }, 0.375 },
+   { _("Blackman, Hann").c_str(),                 4, { 0.42, -0.5, 0.08 },   { 0.5, -0.5, 0 }, 0.335 },
+   { _("Hamming, none").c_str(),                  2, { 0.54, -0.46, 0.0 },   { 1, 0, 0 },      0.54 },
+   { _("Hamming, Hann").c_str(),                  4, { 0.54, -0.46, 0.0 },   { 0.5, -0.5, 0 }, 0.385 },
+   { _("Hamming, Reciprocal Hamming").c_str(),    2, { 0.54, -0.46, 0.0 },   { 1, 0, 0 }, 1.0 }, // output window is special
 };
 
 enum {

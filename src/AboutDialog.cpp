@@ -357,65 +357,65 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
 
    #ifdef USE_LIBMAD
    /* i18n-hint: This is what the library (libmad) does - imports MP3 files */
-   AddBuildinfoRow(&informationStr, wxT("libmad"), _("MP3 Importing"), enabled);
+   AddBuildinfoRow(&informationStr, wxT("libmad"), _("MP3 Importing").c_str(), enabled);
    #else
-   AddBuildinfoRow(&informationStr, wxT("libmad"), _("MP3 Importing"), disabled);
+   AddBuildinfoRow(&informationStr, wxT("libmad"), _("MP3 Importing").c_str(), disabled);
    #endif
 
    /* i18n-hint: Ogg is the container format. Vorbis is the compression codec.
     * Both are proper nouns and shouldn't be translated */
    #ifdef USE_LIBVORBIS
    AddBuildinfoRow(&informationStr, wxT("libvorbis"),
-         _("Ogg Vorbis Import and Export"), enabled);
+         _("Ogg Vorbis Import and Export").c_str(), enabled);
    #else
    AddBuildinfoRow(&informationStr, wxT("libvorbis"),
-         _("Ogg Vorbis Import and Export"), disabled);
+         _("Ogg Vorbis Import and Export").c_str(), disabled);
    #endif
 
    #ifdef USE_LIBID3TAG
-   AddBuildinfoRow(&informationStr, wxT("libid3tag"), _("ID3 tag support"),
+   AddBuildinfoRow(&informationStr, wxT("libid3tag"), _("ID3 tag support").c_str(),
          enabled);
    #else
-   AddBuildinfoRow(&informationStr, wxT("libid3tag"), _("ID3 tag support"),
+   AddBuildinfoRow(&informationStr, wxT("libid3tag"), _("ID3 tag support").c_str(),
          disabled);
    #endif
 
    /* i18n-hint: FLAC stands for Free Lossless Audio Codec, but is effectively
     * a proper noun and so shouldn't be translated */
    # if USE_LIBFLAC
-   AddBuildinfoRow(&informationStr, wxT("libflac"), _("FLAC import and export"),
+   AddBuildinfoRow(&informationStr, wxT("libflac"), _("FLAC import and export").c_str(),
          enabled);
    # else
-   AddBuildinfoRow(&informationStr, wxT("libflac"), _("FLAC import and export"),
+   AddBuildinfoRow(&informationStr, wxT("libflac"), _("FLAC import and export").c_str(),
          disabled);
    # endif
 
    # if USE_LIBTWOLAME
-   AddBuildinfoRow(&informationStr, wxT("libtwolame"), _("MP2 export"),
+   AddBuildinfoRow(&informationStr, wxT("libtwolame"), _("MP2 export").c_str(),
          enabled);
    # else
-   AddBuildinfoRow(&informationStr, wxT("libtwolame"), _("MP2 export"),
+   AddBuildinfoRow(&informationStr, wxT("libtwolame"), _("MP2 export").c_str(),
          disabled);
    # endif
 
    # if USE_QUICKTIME
-   AddBuildinfoRow(&informationStr, wxT("QuickTime"), _("Import via QuickTime"),
+   AddBuildinfoRow(&informationStr, wxT("QuickTime"), _("Import via QuickTime").c_str(),
          enabled);
    # else
-   AddBuildinfoRow(&informationStr, wxT("QuickTime"), _("Import via QuickTime"),
+   AddBuildinfoRow(&informationStr, wxT("QuickTime"), _("Import via QuickTime").c_str(),
          disabled);
    # endif
 
    #ifdef USE_FFMPEG
-   AddBuildinfoRow(&informationStr, wxT("ffmpeg"), _("FFmpeg Import/Export"), enabled);
+   AddBuildinfoRow(&informationStr, wxT("ffmpeg"), _("FFmpeg Import/Export").c_str(), enabled);
    #else
-   AddBuildinfoRow(&informationStr, wxT("ffmpeg"), _("FFmpeg Import/Export"), disabled);
+   AddBuildinfoRow(&informationStr, wxT("ffmpeg"), _("FFmpeg Import/Export").c_str(), disabled);
    #endif
 
    #ifdef USE_GSTREAMER
-   AddBuildinfoRow(&informationStr, wxT("gstreamer"), _("Import via GStreamer"), enabled);
+   AddBuildinfoRow(&informationStr, wxT("gstreamer"), _("Import via GStreamer").c_str(), enabled);
    #else
-   AddBuildinfoRow(&informationStr, wxT("gstreamer"), _("Import via GStreamer"), disabled);
+   AddBuildinfoRow(&informationStr, wxT("gstreamer"), _("Import via GStreamer").c_str(), disabled);
    #endif
 
    informationStr += wxT("</table>\n");  //end table of file format libraries
@@ -425,13 +425,13 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
    informationStr += wxT("</h3>\n<table>");  // start table of features
 
    AddBuildinfoRow(&informationStr, wxT("libsoxr"),
-         _("Sample rate conversion"), enabled);
+         _("Sample rate conversion").c_str(), enabled);
 
    AddBuildinfoRow(&informationStr, wxT("PortAudio"),
-         _("Audio playback and recording"), wxString(wxT("v19")));
+         _("Audio playback and recording").c_str(), wxString(wxT("v19")));
 
    AddBuildinfoRow(&informationStr, wxT("wxWidgets"),
-         _("Cross-platform GUI library"), wxVERSION_NUM_DOT_STRING_T);
+         _("Cross-platform GUI library").c_str(), wxVERSION_NUM_DOT_STRING_T);
 
    informationStr += wxT("</table>\n");  //end table of libraries
    informationStr += wxT("<h3>");
@@ -439,74 +439,74 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
    informationStr += wxT("</h3>\n<table>");  // start table of features
 
    # if USE_NYQUIST
-   AddBuildinfoRow(&informationStr, wxT("Nyquist"), _("Plug-in support"),
+   AddBuildinfoRow(&informationStr, wxT("Nyquist"), _("Plug-in support").c_str(),
          enabled);
    # else
-   AddBuildinfoRow(&informationStr, wxT("Nyquist"), _("Plug-in support"),
+   AddBuildinfoRow(&informationStr, wxT("Nyquist"), _("Plug-in support").c_str(),
          disabled);
    # endif
 
    # if USE_LADSPA
-   AddBuildinfoRow(&informationStr, wxT("LADSPA"), _("Plug-in support"),
+   AddBuildinfoRow(&informationStr, wxT("LADSPA"), _("Plug-in support").c_str(),
          enabled);
    # else
-   AddBuildinfoRow(&informationStr, wxT("LADSPA"), _("Plug-in support"),
+   AddBuildinfoRow(&informationStr, wxT("LADSPA"), _("Plug-in support").c_str(),
          disabled);
    # endif
 
    # if USE_VAMP
-   AddBuildinfoRow(&informationStr, wxT("Vamp"), _("Plug-in support"),
+   AddBuildinfoRow(&informationStr, wxT("Vamp"), _("Plug-in support").c_str(),
          enabled);
    # else
-   AddBuildinfoRow(&informationStr, wxT("Vamp"), _("Plug-in support"),
+   AddBuildinfoRow(&informationStr, wxT("Vamp"), _("Plug-in support").c_str(),
          disabled);
    # endif
 
    # if USE_AUDIO_UNITS
-   AddBuildinfoRow(&informationStr, wxT("Audio Units"), _("Plug-in support"),
+   AddBuildinfoRow(&informationStr, wxT("Audio Units"), _("Plug-in support").c_str(),
          enabled);
    # else
-   AddBuildinfoRow(&informationStr, wxT("Audio Units"), _("Plug-in support"),
+   AddBuildinfoRow(&informationStr, wxT("Audio Units"), _("Plug-in support").c_str(),
          disabled);
    # endif
 
    # if USE_VST
-   AddBuildinfoRow(&informationStr, wxT("VST"), _("Plug-in support"),
+   AddBuildinfoRow(&informationStr, wxT("VST"), _("Plug-in support").c_str(),
          enabled);
    # else
-   AddBuildinfoRow(&informationStr, wxT("VST"), _("Plug-in support"),
+   AddBuildinfoRow(&informationStr, wxT("VST"), _("Plug-in support").c_str(),
          disabled);
    # endif
 
    # if USE_LV2
-   AddBuildinfoRow(&informationStr, wxT("LV2"), _("Plug-in support"),
+   AddBuildinfoRow(&informationStr, wxT("LV2"), _("Plug-in support").c_str(),
          enabled);
    # else
-   AddBuildinfoRow(&informationStr, wxT("LV2"), _("Plug-in support"),
+   AddBuildinfoRow(&informationStr, wxT("LV2"), _("Plug-in support").c_str(),
          disabled);
    # endif
 
    # if USE_PORTMIXER
-   AddBuildinfoRow(&informationStr, wxT("PortMixer"), _("Sound card mixer support"),
+   AddBuildinfoRow(&informationStr, wxT("PortMixer"), _("Sound card mixer support").c_str(),
          enabled);
    # else
-   AddBuildinfoRow(&informationStr, wxT("PortMixer"), _("Sound card mixer support"),
+   AddBuildinfoRow(&informationStr, wxT("PortMixer"), _("Sound card mixer support").c_str(),
          disabled);
    # endif
 
    # if USE_SOUNDTOUCH
-   AddBuildinfoRow(&informationStr, wxT("SoundTouch"), _("Pitch and Tempo Change support"),
+   AddBuildinfoRow(&informationStr, wxT("SoundTouch"), _("Pitch and Tempo Change support").c_str(),
          enabled);
    # else
-   AddBuildinfoRow(&informationStr, wxT("SoundTouch"), _("Pitch and Tempo Change support"),
+   AddBuildinfoRow(&informationStr, wxT("SoundTouch"), _("Pitch and Tempo Change support").c_str(),
          disabled);
    # endif
 
    # if USE_SBSMS
-   AddBuildinfoRow(&informationStr, wxT("SBSMS"), _("Extreme Pitch and Tempo Change support"),
+   AddBuildinfoRow(&informationStr, wxT("SBSMS"), _("Extreme Pitch and Tempo Change support").c_str(),
          enabled);
    # else
-   AddBuildinfoRow(&informationStr, wxT("SBSMS"), _("Extreme Pitch and Tempo Change support"),
+   AddBuildinfoRow(&informationStr, wxT("SBSMS"), _("Extreme Pitch and Tempo Change support").c_str(),
          disabled);
    # endif
 
@@ -518,32 +518,32 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
    informationStr += wxT("</h3>\n<table>");
 
    // Current date
-   AddBuildinfoRow(&informationStr, _("Program build date: "), __TDATE__);
+   AddBuildinfoRow(&informationStr, _("Program build date: ").c_str(), __TDATE__);
 
 // Uncomment the next two lines to test hyperlinks work from here.
 //   AddBuildinfoRow(&informationStr, wxT("Link Test:"), 
 //      wxT("<a href=\"https:web.audacityteam.org\">Click bait</a>") );
 
-   AddBuildinfoRow(&informationStr, _("Commit Id:"),
+   AddBuildinfoRow(&informationStr, _("Commit Id:").c_str(),
 #include "RevisionIdent.h"
 );
 
 #ifdef __WXDEBUG__
-   AddBuildinfoRow(&informationStr, _("Build type:"), _("Debug build"));
+   AddBuildinfoRow(&informationStr, _("Build type:").c_str(), _("Debug build").c_str());
 #else
-   AddBuildinfoRow(&informationStr, _("Build type:"), _("Release build"));
+   AddBuildinfoRow(&informationStr, _("Build type:").c_str(), _("Release build").c_str());
 #endif
 
    // Install prefix
    /* i18n-hint: The directory audacity is installed into (on *nix systems) */
 #ifdef __WXGTK__
-   AddBuildinfoRow(&informationStr, _("Installation Prefix: "), \
+   AddBuildinfoRow(&informationStr, _("Installation Prefix: ").c_str(), \
          wxT(INSTALL_PREFIX));
 #endif
 
    // Location of settings
-   AddBuildinfoRow(&informationStr,_("Settings folder: "), \
-      FileNames::DataDir());
+   AddBuildinfoRow(&informationStr,_("Settings folder: ").c_str(), \
+      FileNames::DataDir().c_str());
    // end of table
    informationStr += wxT("</table>\n");
 

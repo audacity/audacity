@@ -390,7 +390,7 @@ int Importer::Import(wxString fName,
       while (importPluginNode)
       {
          ImportPlugin *plugin = importPluginNode->GetData();
-         if (plugin->GetPluginFormatDescription().CompareTo(type) == 0)
+         if (plugin->GetPluginFormatDescription().CompareTo(type.c_str()) == 0)
          {
             // This plugin corresponds to user-selected filter, try it first.
             wxLogDebug(wxT("Inserting %s"),plugin->GetPluginStringID().c_str());

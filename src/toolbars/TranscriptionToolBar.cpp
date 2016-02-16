@@ -186,7 +186,7 @@ void TranscriptionToolBar::Populate()
    MakeButtonBackgroundsSmall();
 
    AddButton(bmpPlay,     bmpPlayDisabled,   TTB_PlaySpeed,
-      _("Play at selected speed"));
+      _("Play at selected speed").c_str());
    MakeAlternateImages(bmpLoop, bmpLoopDisabled, TTB_PlaySpeed, 1);
    MakeAlternateImages(bmpCutPreview, bmpCutPreviewDisabled, TTB_PlaySpeed, 2);
    mButtons[TTB_PlaySpeed]->FollowModifierKeys();
