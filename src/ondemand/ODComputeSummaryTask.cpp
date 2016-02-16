@@ -205,7 +205,7 @@ void ODComputeSummaryTask::Update()
             for(i=0; i<(int)blocks->size(); i++)
             {
                //if there is data but no summary, this blockfile needs summarizing.
-               SeqBlock &block = blocks->at(i);
+               SeqBlock &block = (*blocks)[i];
                BlockFile *const file = block.f;
                if(file->IsDataAvailable() && !file->IsSummaryAvailable())
                {

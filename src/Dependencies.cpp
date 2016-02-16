@@ -75,7 +75,7 @@ static void GetAllSeqBlocks(AudacityProject *project,
             BlockArray &blocks = sequence->GetBlockArray();
             int i;
             for (i = 0; i < (int)blocks.size(); i++)
-               outBlocks->push_back(&blocks.at(i));
+               outBlocks->push_back(&blocks[i]);
             node = node->GetNext();
          }
       }

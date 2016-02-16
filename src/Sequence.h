@@ -53,7 +53,7 @@ class SeqBlock {
    }
 };
 class BlockArray : public std::vector<SeqBlock> {};
-WX_DEFINE_ARRAY(SeqBlock *, BlockPtrArray);
+using BlockPtrArray = std::vector<SeqBlock*>; // non-owning pointers
 
 class Sequence: public XMLTagHandler {
  public:

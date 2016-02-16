@@ -82,7 +82,7 @@ void UndoManager::CalculateSpaceUsage()
             BlockArray *blocks = it->GetData()->GetSequenceBlockArray();
             for (size_t b = 0, cnt = blocks->size(); b < cnt; b++)
             {
-               BlockFile *file = blocks->at(b).f;
+               BlockFile *file = (*blocks)[b].f;
 
                // Accumulate space used by the file if the file didn't exist
                // in the previous level

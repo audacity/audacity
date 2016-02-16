@@ -157,7 +157,7 @@ void ODDecodeTask::Update()
             for (i = 0; i<(int)blocks->size(); i++)
             {
                //since we have more than one ODBlockFile, we will need type flags to cast.
-               SeqBlock &block = blocks->at(i);
+               SeqBlock &block = (*blocks)[i];
                BlockFile *const file = block.f;
                ODDecodeBlockFile *oddbFile;
                if (!file->IsDataAvailable() &&
