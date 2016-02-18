@@ -2162,10 +2162,10 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
    // and then paint this directly to our offscreen
    // bitmap.  Note that this could be optimized even
    // more, but for now this is not bad.  -dmazzoni
-   wxImage *image = new wxImage((int)mid.width, (int)mid.height);
-   if (!image)
+   wxImage image((int)mid.width, (int)mid.height);
+   if (!image.IsOk())
       return;
-   unsigned char *data = image->GetData();
+   unsigned char *data = image.GetData();
 
    const int half = settings.GetFFTLength() / 2;
    const double binUnit = rate / (2 * half);
@@ -2471,7 +2471,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
       } // each yy
    } // each xx
 
-   wxBitmap converted = wxBitmap(*image);
+   wxBitmap converted = wxBitmap(image);
 
    wxMemoryDC memDC;
 
@@ -2479,7 +2479,6 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
 
    dc.Blit(mid.x, mid.y, mid.width, mid.height, &memDC, 0, 0, wxCOPY, FALSE);
 
-   delete image;
 #ifdef EXPERIMENTAL_FFT_Y_GRID
    delete[] yGrid;
 #endif //EXPERIMENTAL_FFT_Y_GRID

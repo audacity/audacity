@@ -826,11 +826,12 @@ bool WaveTrack::ClearAndPaste(double t0, // Start of time to clear
    }
 
    // If provided time warper was NULL, use a default one that does nothing
+   IdentityTimeWarper localWarper;
    TimeWarper *warper = NULL;
    if (effectWarper != NULL) {
       warper = effectWarper;
    } else {
-      warper = new IdentityTimeWarper();
+      warper = &localWarper;
    }
 
    // Align to a sample
@@ -973,10 +974,6 @@ bool WaveTrack::ClearAndPaste(double t0, // Start of time to clear
    // Delete cutlines that fell outside of resulting clips
    for (int ii = cuts.GetCount(); ii--;)
       delete cuts[ii];
-
-   // If we created a default time warper, we need to DELETE it
-   if (effectWarper == NULL)
-      delete warper;
 
    return true;
 }
@@ -1645,9 +1642,7 @@ sampleCount WaveTrack::GetMaxBlockSize() const
    {
       // We really need the maximum block size, so create a
       // temporary sequence to get it.
-      Sequence *tempseq = new Sequence(mDirManager, mFormat);
-      maxblocksize = tempseq->GetMaxBlockSize();
-      delete tempseq;
+      maxblocksize = Sequence{ mDirManager, mFormat }.GetMaxBlockSize();
    }
 
    wxASSERT(maxblocksize > 0);

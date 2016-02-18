@@ -692,14 +692,9 @@ bool FFmpegLibs::LoadLibs(wxWindow * WXUNUSED(parent), bool showerr)
    {
       wxLogError(wxT("Failed to load libraries altogether."));
       int dontShowDlg;
-      FFmpegNotFoundDialog *dlg;
       gPrefs->Read(wxT("/FFmpeg/NotFoundDontShow"),&dontShowDlg,0);
       if ((dontShowDlg == 0) && (showerr))
-      {
-         dlg = new FFmpegNotFoundDialog(NULL);
-         dlg->ShowModal();
-         delete dlg;
-      }
+         FFmpegNotFoundDialog{nullptr}.ShowModal();
    }
    */
    // Oh well, just give up

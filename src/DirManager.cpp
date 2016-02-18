@@ -445,63 +445,61 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
       saved version of the old project must not be moved,
       otherwise the old project would not be safe.) */
 
-   /*i18n-hint: This title appears on a dialog that indicates the progress in doing something.*/
-   ProgressDialog *progress = new ProgressDialog(_("Progress"),
-                                                 _("Saving project data files"));
-
-   int total = mBlockFileHash.size();
-   int count=0;
-
-   BlockHash::iterator iter = mBlockFileHash.begin();
-   bool success = true;
-   while ((iter != mBlockFileHash.end()) && success)
    {
-      BlockFile *b = iter->second;
+      /*i18n-hint: This title appears on a dialog that indicates the progress in doing something.*/
+      ProgressDialog progress(_("Progress"),
+         _("Saving project data files"));
 
-      if (b->IsLocked())
-         success = CopyToNewProjectDirectory(b);
-      else{
-         success = MoveToNewProjectDirectory(b);
-      }
-
-      progress->Update(count, total);
-
-      ++iter;
-      count++;
-   }
-
-   if (!success) {
-      // If the move failed, we try to move/copy as many files
-      // back as possible so that no damage was done.  (No sense
-      // in checking for errors this time around - there's nothing
-      // that could be done about it.)
-      // Likely causes: directory was not writeable, disk was full
-
-      projFull = oldLoc;
+      int total = mBlockFileHash.size();
 
       BlockHash::iterator iter = mBlockFileHash.begin();
-      while (iter != mBlockFileHash.end())
+      bool success = true;
+      int count = 0;
+      while ((iter != mBlockFileHash.end()) && success)
       {
          BlockFile *b = iter->second;
-         MoveToNewProjectDirectory(b);
 
-         if (count>=0)
-            progress->Update(count, total);
+         if (b->IsLocked())
+            success = CopyToNewProjectDirectory(b);
+         else{
+            success = MoveToNewProjectDirectory(b);
+         }
+
+         progress.Update(count, total);
 
          ++iter;
-         count--;
+         count++;
       }
 
-      this->projFull = oldFull;
-      this->projPath = oldPath;
-      this->projName = oldName;
+      if (!success) {
+         // If the move failed, we try to move/copy as many files
+         // back as possible so that no damage was done.  (No sense
+         // in checking for errors this time around - there's nothing
+         // that could be done about it.)
+         // Likely causes: directory was not writeable, disk was full
 
-      delete progress;
+         projFull = oldLoc;
 
-      return false;
+         BlockHash::iterator iter = mBlockFileHash.begin();
+         while (iter != mBlockFileHash.end())
+         {
+            BlockFile *b = iter->second;
+            MoveToNewProjectDirectory(b);
+
+            if (count >= 0)
+               progress.Update(count, total);
+
+            ++iter;
+            count--;
+         }
+
+         this->projFull = oldFull;
+         this->projPath = oldPath;
+         this->projName = oldName;
+
+         return false;
+      }
    }
-
-   delete progress;
 
    // Some subtlety; SetProject is used both to move a temp project
    // into a permanent home as well as just set up path variables when
@@ -515,7 +513,7 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
       // NEW; rmdir will fail on non-empty dirs.
 
       wxArrayString dirlist;
-      count = RecursivelyEnumerate(cleanupLoc1, dirlist, wxEmptyString, false, true);
+      const int count = RecursivelyEnumerate(cleanupLoc1, dirlist, wxEmptyString, false, true);
 
       //This destroys the empty dirs of the OD block files, which are yet to come.
       //Dont know if this will make the project dirty, but I doubt it. (mchinen)
@@ -1653,13 +1651,12 @@ other projects. \
    if ((nResult != FSCKstatus_CLOSE_REQ) && !ODManager::HasLoadedODFlag())
    {
       // Remove any empty directories.
-      ProgressDialog* pProgress =
-         new ProgressDialog(_("Progress"),
-                              _("Cleaning up unused directories in project data"));
+      ProgressDialog pProgress
+         (_("Progress"),
+         _("Cleaning up unused directories in project data"));
       // nDirCount is for updating pProgress. +1 because we may DELETE dirPath.
       int nDirCount = RecursivelyCountSubdirs(dirPath) + 1;
-      RecursivelyRemoveEmptyDirs(dirPath, nDirCount, pProgress);
-      delete pProgress;
+      RecursivelyRemoveEmptyDirs(dirPath, nDirCount, &pProgress);
    }
 
    // Summarize and flush the log.

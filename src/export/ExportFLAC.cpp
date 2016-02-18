@@ -325,38 +325,38 @@ int ExportFLAC::Export(AudacityProject *project,
       tmpsmplbuf[i] = (FLAC__int32 *) calloc(SAMPLES_PER_RUN, sizeof(FLAC__int32));
    }
 
-   ProgressDialog *progress = new ProgressDialog(wxFileName(fName).GetName(),
+   {
+      ProgressDialog progress(wxFileName(fName).GetName(),
          selectionOnly ?
          _("Exporting the selected audio as FLAC") :
          _("Exporting the entire project as FLAC"));
 
-   while (updateResult == eProgressSuccess) {
-      sampleCount samplesThisRun = mixer->Process(SAMPLES_PER_RUN);
-      if (samplesThisRun == 0) { //stop encoding
-         break;
-      }
-      else {
-         for (i = 0; i < numChannels; i++) {
-            samplePtr mixed = mixer->GetBuffer(i);
-            if (format == int24Sample) {
-               for (j = 0; j < samplesThisRun; j++) {
-                  tmpsmplbuf[i][j] = ((int *) mixed)[j];
-               }
-            }
-            else {
-               for (j = 0; j < samplesThisRun; j++) {
-                  tmpsmplbuf[i][j] = ((short *) mixed)[j];
-               }
-            }
+      while (updateResult == eProgressSuccess) {
+         sampleCount samplesThisRun = mixer->Process(SAMPLES_PER_RUN);
+         if (samplesThisRun == 0) { //stop encoding
+            break;
          }
-         encoder.process(tmpsmplbuf, samplesThisRun);
+         else {
+            for (i = 0; i < numChannels; i++) {
+               samplePtr mixed = mixer->GetBuffer(i);
+               if (format == int24Sample) {
+                  for (j = 0; j < samplesThisRun; j++) {
+                     tmpsmplbuf[i][j] = ((int *)mixed)[j];
+                  }
+               }
+               else {
+                  for (j = 0; j < samplesThisRun; j++) {
+                     tmpsmplbuf[i][j] = ((short *)mixed)[j];
+                  }
+               }
+            }
+            encoder.process(tmpsmplbuf, samplesThisRun);
+         }
+         updateResult = progress.Update(mixer->MixGetCurrentTime() - t0, t1 - t0);
       }
-      updateResult = progress->Update(mixer->MixGetCurrentTime()-t0, t1-t0);
+      f.Detach(); // libflac closes the file
+      encoder.finish();
    }
-   f.Detach(); // libflac closes the file
-   encoder.finish();
-
-   delete progress;
 
    for (i = 0; i < numChannels; i++) {
       free(tmpsmplbuf[i]);

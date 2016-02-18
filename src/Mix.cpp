@@ -161,38 +161,39 @@ bool MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
       endTime = mixEndTime;
    }
 
-   Mixer *mixer = new Mixer(numWaves, waveArray,
-                            Mixer::WarpOptions(tracks->GetTimeTrack()),
-                            startTime, endTime, mono ? 1 : 2, maxBlockLen, false,
-                            rate, format);
+   Mixer mixer(numWaves, waveArray,
+      Mixer::WarpOptions(tracks->GetTimeTrack()),
+      startTime, endTime, mono ? 1 : 2, maxBlockLen, false,
+      rate, format);
 
    ::wxSafeYield();
-   ProgressDialog *progress = new ProgressDialog(_("Mix and Render"),
-                                                 _("Mixing and rendering tracks"));
 
    int updateResult = eProgressSuccess;
-   while(updateResult == eProgressSuccess) {
-      sampleCount blockLen = mixer->Process(maxBlockLen);
+   {
+      ProgressDialog progress(_("Mix and Render"),
+         _("Mixing and rendering tracks"));
 
-      if (blockLen == 0)
-         break;
+      while (updateResult == eProgressSuccess) {
+         sampleCount blockLen = mixer.Process(maxBlockLen);
 
-      if (mono) {
-         samplePtr buffer = mixer->GetBuffer();
-         mixLeft->Append(buffer, format, blockLen);
+         if (blockLen == 0)
+            break;
+
+         if (mono) {
+            samplePtr buffer = mixer.GetBuffer();
+            mixLeft->Append(buffer, format, blockLen);
+         }
+         else {
+            samplePtr buffer;
+            buffer = mixer.GetBuffer(0);
+            mixLeft->Append(buffer, format, blockLen);
+            buffer = mixer.GetBuffer(1);
+            mixRight->Append(buffer, format, blockLen);
+         }
+
+         updateResult = progress.Update(mixer.MixGetCurrentTime() - startTime, endTime - startTime);
       }
-      else {
-         samplePtr buffer;
-         buffer = mixer->GetBuffer(0);
-         mixLeft->Append(buffer, format, blockLen);
-         buffer = mixer->GetBuffer(1);
-         mixRight->Append(buffer, format, blockLen);
-      }
-
-      updateResult = progress->Update(mixer->MixGetCurrentTime() - startTime, endTime - startTime);
    }
-
-   delete progress;
 
    mixLeft->Flush();
    if (!mono)
@@ -222,7 +223,6 @@ bool MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
    }
 
    delete[] waveArray;
-   delete mixer;
 
    return (updateResult == eProgressSuccess || updateResult == eProgressStopped);
 }

@@ -2161,24 +2161,23 @@ void EffectEqualization::ErrMin(void)
    double correction = 1.6;
    bool flag;
    int j=0;
-   Envelope *testEnvelope;
-   testEnvelope = new Envelope();
-   testEnvelope->SetInterpolateDB(false);
-   testEnvelope->Mirror(false);
-   testEnvelope->SetRange(-120.0, 60.0);
-   testEnvelope->Flatten(0.);
-   testEnvelope->SetTrackLen(1.0);
-   testEnvelope->CopyFrom(mLogEnvelope, 0.0, 1.0);
+   Envelope testEnvelope;
+   testEnvelope.SetInterpolateDB(false);
+   testEnvelope.Mirror(false);
+   testEnvelope.SetRange(-120.0, 60.0);
+   testEnvelope.Flatten(0.);
+   testEnvelope.SetTrackLen(1.0);
+   testEnvelope.CopyFrom(mLogEnvelope, 0.0, 1.0);
 
    for(i=0; i < NUM_PTS; i++)
-      vals[i] = testEnvelope->GetValue(mWhens[i]);
+      vals[i] = testEnvelope.GetValue(mWhens[i]);
 
    //   Do error minimisation
    error = 0.;
-   GraphicEQ(testEnvelope);
+   GraphicEQ(&testEnvelope);
    for(i=0; i < NUM_PTS; i++)   //calc initial error
    {
-      double err = vals[i] - testEnvelope->GetValue(mWhens[i]);
+      double err = vals[i] - testEnvelope.GetValue(mWhens[i]);
       error += err*err;
    }
    oldError = error;
@@ -2208,11 +2207,11 @@ void EffectEqualization::ErrMin(void)
             mEQVals[i] = -20.;
             flag = false;
          }
-         GraphicEQ(testEnvelope);         //calculate envelope
+         GraphicEQ(&testEnvelope);         //calculate envelope
          error = 0.;
          for(int k=0; k < NUM_PTS; k++)  //calculate error
          {
-            double err = vals[k] - testEnvelope->GetValue(mWhens[k]);
+            double err = vals[k] - testEnvelope.GetValue(mWhens[k]);
             error += err*err;
          }
       }
@@ -2231,9 +2230,8 @@ void EffectEqualization::ErrMin(void)
    if( error > .0025 * mBandsInUse ) // not within 0.05dB on each slider, on average
    {
       Select( (int) mCurves.GetCount()-1 );
-      EnvelopeUpdated(testEnvelope, false);
+      EnvelopeUpdated(&testEnvelope, false);
    }
-   delete testEnvelope;
 }
 
 void EffectEqualization::GraphicEQ(Envelope *env)

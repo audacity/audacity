@@ -476,9 +476,7 @@ void ContrastDialog::OnExport(wxCommandEvent & WXUNUSED(event))
 
    wxTextFile f(fName);
 #ifdef __WXMAC__
-   wxFile *temp = new wxFile();
-   temp->Create(fName);
-   delete temp;
+   wxFile{}.Create(fName);
 #else
    f.Create();
 #endif

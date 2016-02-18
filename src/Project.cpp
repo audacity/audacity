@@ -1026,17 +1026,17 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
 
    // loads either the XPM or the windows resource, depending on the platform
 #if !defined(__WXMAC__) && !defined(__WXX11__)
-   wxIcon *ic;
-   #if defined(__WXMSW__)
-      ic = new wxIcon(wxICON(AudacityLogo));
-   #elif defined(__WXGTK__)
-      ic = new wxIcon(wxICON(AudacityLogoAlpha));
-   #else
-      ic = new wxIcon();
+   {
+#if defined(__WXMSW__)
+      wxIcon ic{ wxICON(AudacityLogo) };
+#elif defined(__WXGTK__)
+      wxIcon ic{wxICON(AudacityLogoAlpha)};
+#else
+      wxIcon ic{};
       ic.CopyFromBitmap(theTheme.Bitmap(bmpAudacityLogo48x48));
-   #endif
-   SetIcon(*ic);
-   delete ic;
+#endif
+      SetIcon(ic);
+   }
 #endif
    mIconized = false;
 
@@ -1473,9 +1473,8 @@ void AudacityProject::FinishAutoScroll()
 
    // Call our Scroll method which updates our ViewInfo variables
    // to reflect the positions of the scrollbars
-   wxScrollEvent *dummy = new wxScrollEvent();
-   OnScroll(*dummy);
-   delete dummy;
+   wxScrollEvent dummy;
+   OnScroll(dummy);
 
    mAutoScrolling = false;
 }
@@ -1590,9 +1589,8 @@ void AudacityProject::TP_ScrollWindow(double scrollto)
 
    // Call our Scroll method which updates our ViewInfo variables
    // to reflect the positions of the scrollbars
-   wxScrollEvent *dummy = new wxScrollEvent();
-   OnScroll(*dummy);
-   delete dummy;
+   wxScrollEvent dummy;
+   OnScroll(dummy);
 }
 
 //
@@ -2643,25 +2641,24 @@ void AudacityProject::OpenFile(wxString fileName, bool addtohistory)
    // for a long time searching for line breaks.  So, we look for our
    // signature at the beginning of the file first:
 
-   wxFFile *ff = new wxFFile(fileName, wxT("rb"));
-   if (!ff->IsOpened()) {
-      wxMessageBox(_("Could not open file: ") + fileName,
-                   _("Error opening file"),
-                   wxOK | wxCENTRE, this);
-   }
    char buf[16];
-   int numRead = ff->Read(buf, 15);
-   if (numRead != 15) {
-      wxMessageBox(wxString::Format(_("File may be invalid or corrupted: \n%s"),
-                   (const wxChar*)fileName), _("Error Opening File or Project"),
-                   wxOK | wxCENTRE, this);
-      ff->Close();
-      delete ff;
-      return;
+   {
+      wxFFile ff(fileName, wxT("rb"));
+      if (!ff.IsOpened()) {
+         wxMessageBox(_("Could not open file: ") + fileName,
+            _("Error opening file"),
+            wxOK | wxCENTRE, this);
+      }
+      int numRead = ff.Read(buf, 15);
+      if (numRead != 15) {
+         wxMessageBox(wxString::Format(_("File may be invalid or corrupted: \n%s"),
+            (const wxChar*)fileName), _("Error Opening File or Project"),
+            wxOK | wxCENTRE, this);
+         ff.Close();
+         return;
+      }
+      buf[15] = 0;
    }
-   buf[15] = 0;
-   ff->Close();
-   delete ff;
 
    wxString temp = LAT1CTOWX(buf);
 
@@ -3617,21 +3614,19 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
       WaveTrack* pWaveTrack;
       TrackListOfKindIterator iter(Track::Wave, mTracks);
       unsigned int numWaveTracks = 0;
-      TrackList* pSavedTrackList = new TrackList();
+
+      TrackList pSavedTrackList(true);
       for (pTrack = iter.First(); pTrack != NULL; pTrack = iter.Next())
       {
          numWaveTracks++;
          pWaveTrack = (WaveTrack*)pTrack;
          pSavedTrack = mTrackFactory->DuplicateWaveTrack(*pWaveTrack);
-         pSavedTrackList->Add(pSavedTrack);
+         pSavedTrackList.Add(pSavedTrack);
       }
 
       if (numWaveTracks == 0)
-      {
          // Nothing to save compressed => success. Delete the copies and go.
-         delete pSavedTrackList;
          return true;
-      }
 
       // Okay, now some bold state-faking to default values.
       for (pTrack = iter.First(); pTrack != NULL; pTrack = iter.Next())
@@ -3683,7 +3678,7 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
       }
 
       // Restore the saved track states and clean up.
-      TrackListIterator savedTrackIter(pSavedTrackList);
+      TrackListIterator savedTrackIter(&pSavedTrackList);
       for (pTrack = iter.First(), pSavedTrack = savedTrackIter.First();
             ((pTrack != NULL) && (pSavedTrack != NULL));
             pTrack = iter.Next(), pSavedTrack = savedTrackIter.Next())
@@ -3696,9 +3691,6 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
          pWaveTrack->SetGain(((WaveTrack*)pSavedTrack)->GetGain());
          pWaveTrack->SetPan(((WaveTrack*)pSavedTrack)->GetPan());
       }
-
-      pSavedTrackList->Clear(true);
-      delete pSavedTrackList;
 
       return bSuccess;
    }

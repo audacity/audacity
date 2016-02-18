@@ -589,12 +589,12 @@ void LabelDialog::OnExport(wxCommandEvent & WXUNUSED(event))
    wxString fName = mTrackNames[mTrackNames.GetCount() - 1].AfterFirst(wxT('-')).Mid(1);
 
    fName = FileSelector(_("Export Labels As:"),
-                        wxEmptyString,
-                        fName.c_str(),
-                        wxT("txt"),
-                        wxT("*.txt"),
-                        wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
-                        this);
+      wxEmptyString,
+      fName.c_str(),
+      wxT("txt"),
+      wxT("*.txt"),
+      wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
+      this);
 
    if (fName == wxT(""))
       return;
@@ -617,9 +617,7 @@ void LabelDialog::OnExport(wxCommandEvent & WXUNUSED(event))
 
    wxTextFile f(fName);
 #ifdef __WXMAC__
-   wxFile *temp = new wxFile();
-   temp->Create(fName);
-   delete temp;
+   wxFile{}.Create(fName);
 #else
    f.Create();
 #endif

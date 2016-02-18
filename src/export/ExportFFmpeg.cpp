@@ -831,29 +831,28 @@ int ExportFFmpeg::Export(AudacityProject *project,
       t0, t1,
       channels, pcmBufferSize, true,
       mSampleRate, int16Sample, true, mixerSpec);
-   delete [] waveTracks;
-
-   ProgressDialog *progress = new ProgressDialog(wxFileName(fName).GetName(),
-      selectionOnly ?
-      wxString::Format(_("Exporting selected audio as %s"), ExportFFmpegOptions::fmts[mSubFormat].description) :
-   wxString::Format(_("Exporting entire file as %s"), ExportFFmpegOptions::fmts[mSubFormat].description));
+   delete[] waveTracks;
 
    int updateResult = eProgressSuccess;
+   {
+      ProgressDialog progress(wxFileName(fName).GetName(),
+         selectionOnly ?
+         wxString::Format(_("Exporting selected audio as %s"), ExportFFmpegOptions::fmts[mSubFormat].description) :
+         wxString::Format(_("Exporting entire file as %s"), ExportFFmpegOptions::fmts[mSubFormat].description));
 
-   while(updateResult == eProgressSuccess) {
-      sampleCount pcmNumSamples = mixer->Process(pcmBufferSize);
+      while (updateResult == eProgressSuccess) {
+         sampleCount pcmNumSamples = mixer->Process(pcmBufferSize);
 
-      if (pcmNumSamples == 0)
-         break;
+         if (pcmNumSamples == 0)
+            break;
 
-      short *pcmBuffer = (short *)mixer->GetBuffer();
+         short *pcmBuffer = (short *)mixer->GetBuffer();
 
-      EncodeAudioFrame(pcmBuffer,(pcmNumSamples)*sizeof(int16_t)*mChannels);
+         EncodeAudioFrame(pcmBuffer, (pcmNumSamples)*sizeof(int16_t)*mChannels);
 
-      updateResult = progress->Update(mixer->MixGetCurrentTime()-t0, t1-t0);
+         updateResult = progress.Update(mixer->MixGetCurrentTime() - t0, t1 - t0);
+      }
    }
-
-   delete progress;
 
    delete mixer;
 

@@ -165,9 +165,9 @@ static void RemoveDependencies(AudacityProject *project,
 {
    DirManager *dirManager = project->GetDirManager();
 
-   ProgressDialog *progress =
-      new ProgressDialog(_("Removing Dependencies"),
-                         _("Copying audio data into project..."));
+   ProgressDialog progress
+      (_("Removing Dependencies"),
+      _("Copying audio data into project..."));
    int updateResult = eProgressSuccess;
 
    // Hash aliasedFiles based on their full paths and
@@ -215,7 +215,7 @@ static void RemoveDependencies(AudacityProject *project,
 
          // Update the progress bar
          completedBytes += SAMPLE_SIZE(format) * len;
-         updateResult = progress->Update(completedBytes, totalBytesToProcess);
+         updateResult = progress.Update(completedBytes, totalBytesToProcess);
          if (updateResult != eProgressSuccess)
            break;
       }
@@ -235,8 +235,6 @@ static void RemoveDependencies(AudacityProject *project,
       BlockFile *f = it->second;
       dirManager->Deref(f);
    }
-
-   delete progress;
 }
 
 //

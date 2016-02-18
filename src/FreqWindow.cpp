@@ -1001,14 +1001,14 @@ void FreqWindow::Recalc()
    // just the mProgress window with the idea of preventing user interaction with the
    // controls while the plot was being recalculated.  This doesn't appear to be necessary
    // so just use the the top level window instead.
-   wxWindowDisabler *blocker = new wxWindowDisabler(this);
-   wxYieldIfNeeded();
+   {
+      wxWindowDisabler blocker(this);
+      wxYieldIfNeeded();
 
-   mAnalyst->Calculate(alg, windowFunc, mWindowSize, mRate,
-                       mData, mDataLen,
-                       &mYMin, &mYMax, mProgress);
-
-   delete blocker;
+      mAnalyst->Calculate(alg, windowFunc, mWindowSize, mRate,
+         mData, mDataLen,
+         &mYMin, &mYMax, mProgress);
+   }
    if (hadFocus) {
       hadFocus->SetFocus();
    }
@@ -1033,16 +1033,14 @@ void FreqWindow::OnExport(wxCommandEvent & WXUNUSED(event))
    wxString fName = _("spectrum.txt");
 
    fName = FileSelector(_("Export Spectral Data As:"),
-                        wxEmptyString, fName, wxT("txt"), wxT("*.txt"), wxFD_SAVE | wxRESIZE_BORDER, this);
+      wxEmptyString, fName, wxT("txt"), wxT("*.txt"), wxFD_SAVE | wxRESIZE_BORDER, this);
 
    if (fName == wxT(""))
       return;
 
    wxTextFile f(fName);
 #ifdef __WXMAC__
-   wxFile *temp = new wxFile();
-   temp->Create(fName);
-   delete temp;
+   wxFile{}.Create(fName);
 #else
    f.Create();
 #endif

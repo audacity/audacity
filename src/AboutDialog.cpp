@@ -285,27 +285,28 @@ visit our <a href=\"http://forum.audacityteam.org/\">forum</a>.");
    S.StartNotebookPage( wxT("Audacity") );
    S.StartVerticalLay(1);
 
-   //v For now, change to AudacityLogoWithName via old-fashioned way, not Theme.
-   wxBitmap *const logo = new wxBitmap((const char **) AudacityLogoWithName_xpm); //v
+   {
+      //v For now, change to AudacityLogoWithName via old-fashioned way, not Theme.
+      wxBitmap logo(AudacityLogoWithName_xpm); //v
 
-   // JKC: Resize to 50% of size.  Later we may use a smaller xpm as
-   // our source, but this allows us to tweak the size - if we want to.
-   // It also makes it easier to revert to full size if we decide to.
-   const float fScale=0.5f;// smaller size.
-   wxImage RescaledImage( logo->ConvertToImage() );
-   // wxIMAGE_QUALITY_HIGH not supported by wxWidgets 2.6.1, or we would use it here.
-   RescaledImage.Rescale( int(LOGOWITHNAME_WIDTH * fScale), int(LOGOWITHNAME_HEIGHT *fScale) );
-   wxBitmap RescaledBitmap( RescaledImage );
+      // JKC: Resize to 50% of size.  Later we may use a smaller xpm as
+      // our source, but this allows us to tweak the size - if we want to.
+      // It also makes it easier to revert to full size if we decide to.
+      const float fScale = 0.5f;// smaller size.
+      wxImage RescaledImage(logo.ConvertToImage());
+      // wxIMAGE_QUALITY_HIGH not supported by wxWidgets 2.6.1, or we would use it here.
+      RescaledImage.Rescale(int(LOGOWITHNAME_WIDTH * fScale), int(LOGOWITHNAME_HEIGHT *fScale));
+      wxBitmap RescaledBitmap(RescaledImage);
 
-   icon =
-       safenew wxStaticBitmap(S.GetParent(), -1,
-                          //*logo, //v
-                          //v theTheme.Bitmap(bmpAudacityLogo), wxPoint(93, 10), wxSize(215, 190));
-                          //v theTheme.Bitmap(bmpAudacityLogoWithName),
-                          RescaledBitmap,
-                          wxDefaultPosition,
-                          wxSize(int(LOGOWITHNAME_WIDTH*fScale), int(LOGOWITHNAME_HEIGHT*fScale)));
-   delete logo;
+      icon =
+         safenew wxStaticBitmap(S.GetParent(), -1,
+         //*logo, //v
+         //v theTheme.Bitmap(bmpAudacityLogo), wxPoint(93, 10), wxSize(215, 190));
+         //v theTheme.Bitmap(bmpAudacityLogoWithName),
+         RescaledBitmap,
+         wxDefaultPosition,
+         wxSize(int(LOGOWITHNAME_WIDTH*fScale), int(LOGOWITHNAME_HEIGHT*fScale)));
+   }
    S.Prop(0).AddWindow( icon );
 
    HtmlWindow *html = safenew LinkingHtmlWindow(S.GetParent(), -1,

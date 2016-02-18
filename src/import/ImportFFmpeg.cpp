@@ -310,15 +310,12 @@ ImportFileHandle *FFmpegImportPlugin::Open(wxString filename)
       if (!FFmpegLibsInst->ValidLibsLoaded())
       {
          int dontShowDlg;
-         FFmpegNotFoundDialog *dlg;
          gPrefs->Read(wxT("/FFmpeg/NotFoundDontShow"),&dontShowDlg,0);
          if (dontShowDlg == 0 && newsession)
          {
             gPrefs->Write(wxT("/NewImportingSession"), false);
             gPrefs->Flush();
-            dlg = new FFmpegNotFoundDialog(NULL);
-            dlg->ShowModal();
-            delete dlg;
+            FFmpegNotFoundDialog{ nullptr }.ShowModal();
          }
       }
    }
