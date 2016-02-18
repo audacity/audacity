@@ -2887,179 +2887,175 @@ int EffectUIHost::ShowModal()
 
 bool EffectUIHost::Initialize()
 {
+   wxBoxSizer *vs = new wxBoxSizer(wxVERTICAL);
+   wxBoxSizer *hs = new wxBoxSizer(wxHORIZONTAL);
+
    EffectPanel *w = safenew EffectPanel(this);
+
+   // Try to give the window a sensible default/minimum size
+   w->SetMinSize(wxSize(wxMax(600, mParent->GetSize().GetWidth() * 2 / 3),
+                        mParent->GetSize().GetHeight() / 2));
+
+   mDisableTransport = !gAudioIO->IsAvailable(mProject);
+   mPlaying = gAudioIO->IsStreamActive(); // not exactly right, but will suffice
+   mCapturing = gAudioIO->IsStreamActive() && gAudioIO->GetNumCaptureChannels() > 0;
+
+   if (!mClient->PopulateUI(w))
    {
-      auto vs = std::make_unique<wxBoxSizer>(wxVERTICAL);
-      {
-         auto hs = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
+      return false;
+   }
 
-         // Try to give the window a sensible default/minimum size
-         w->SetMinSize(wxSize(wxMax(600, mParent->GetSize().GetWidth() * 2 / 3),
-            mParent->GetSize().GetHeight() / 2));
+   hs->Add(w, 1, wxEXPAND);
+   vs->Add(hs, 1, wxEXPAND);
 
-         mDisableTransport = !gAudioIO->IsAvailable(mProject);
-         mPlaying = gAudioIO->IsStreamActive(); // not exactly right, but will suffice
-         mCapturing = gAudioIO->IsStreamActive() && gAudioIO->GetNumCaptureChannels() > 0;
+   wxPanel *buttonPanel = safenew wxPanel(this, wxID_ANY);
+   wxPanel *const bar = safenew wxPanel(buttonPanel, wxID_ANY);
 
-         if (!mClient->PopulateUI(w))
-         {
-            return false;
-         }
+   // This fools NVDA into not saying "Panel" when the dialog gets focus
+   bar->SetName(wxT("\a"));
+   bar->SetLabel(wxT("\a"));
 
-         hs->Add(w, 1, wxEXPAND);
-         vs->Add(hs.release(), 1, wxEXPAND);
-      }
+   wxBoxSizer *bs = new wxBoxSizer(wxHORIZONTAL);
 
-      wxPanel *buttonPanel = safenew wxPanel(this, wxID_ANY);
-      wxPanel *const bar = safenew wxPanel(buttonPanel, wxID_ANY);
+   mSupportsRealtime = mEffect->SupportsRealtime();
+   mIsGUI = mClient->IsGraphicalUI();
+   mIsBatch = mEffect->IsBatchProcessing();
 
-      // This fools NVDA into not saying "Panel" when the dialog gets focus
-      bar->SetName(wxT("\a"));
-      bar->SetLabel(wxT("\a"));
+   wxBitmapButton *bb;
 
-      wxBoxSizer *bs = new wxBoxSizer(wxHORIZONTAL);
-
-      mSupportsRealtime = mEffect->SupportsRealtime();
-      mIsGUI = mClient->IsGraphicalUI();
-      mIsBatch = mEffect->IsBatchProcessing();
-
-      wxBitmapButton *bb;
-
-      int margin = 0;
+   int margin = 0;
 
 #if defined(__WXMAC__)
-      margin = 3; // I'm sure it's needed because of the order things are created...
+   margin = 3; // I'm sure it's needed because of the order things are created...
 #endif   
 
+   if (!mIsGUI)
+   {
+      wxASSERT(bar); // To justify safenew
+      mMenuBtn = safenew wxButton(bar, kMenuID, _("&Manage"));
+      bs->Add(mMenuBtn, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
+   }
+   else
+   {
+      wxASSERT(bar); // To justify safenew
+      mMenuBtn = safenew wxBitmapButton(bar, kMenuID, CreateBitmap(effect_menu_xpm, true, false));
+#if defined(__WXMAC__)
+      mMenuBtn->SetName(_("&Manage"));
+#else
+      mMenuBtn->SetLabel(_("&Manage"));
+#endif
+      bs->Add(mMenuBtn);
+   }
+   mMenuBtn->SetToolTip(_("Manage presets and options"));
+
+   bs->Add(5, 5);
+
+   if (!mIsBatch)
+   {
       if (!mIsGUI)
       {
-         wxASSERT(bar); // To justify safenew
-         mMenuBtn = safenew wxButton(bar, kMenuID, _("&Manage"));
-         bs->Add(mMenuBtn, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
+         if (mSupportsRealtime)
+         {
+            wxASSERT(bar); // To justify safenew
+            mPlayToggleBtn = safenew wxButton(bar, kPlayID, _("Start &Playback"));
+            mPlayToggleBtn->SetToolTip(_("Start and stop playback"));
+            bs->Add(mPlayToggleBtn, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
+         }
+         else if (mEffect->GetType() != EffectTypeAnalyze)
+         {
+            wxASSERT(bar); // To justify safenew
+            mPlayToggleBtn = safenew wxButton(bar, kPlayID, _("&Preview"));
+            mPlayToggleBtn->SetToolTip(_("Preview effect"));
+            bs->Add(mPlayToggleBtn, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
+         }
       }
       else
       {
+         mPlayBM = CreateBitmap(effect_play_xpm, true, false);
+         mPlayDisabledBM = CreateBitmap(effect_play_disabled_xpm, true, false);
+         mStopBM = CreateBitmap(effect_stop_xpm, true, false);
+         mStopDisabledBM = CreateBitmap(effect_stop_disabled_xpm, true, false);
          wxASSERT(bar); // To justify safenew
-         mMenuBtn = safenew wxBitmapButton(bar, kMenuID, CreateBitmap(effect_menu_xpm, true, false));
+         bb = safenew wxBitmapButton(bar, kPlayID, mPlayBM);
+         bb->SetBitmapDisabled(mPlayDisabledBM);
+         mPlayBtn = bb;
+         bs->Add(mPlayBtn);
+         if (!mSupportsRealtime)
+         {
+            mPlayBtn->SetToolTip(_("Preview effect"));
 #if defined(__WXMAC__)
-         mMenuBtn->SetName(_("&Manage"));
+            mPlayBtn->SetName(_("Preview effect"));
 #else
-         mMenuBtn->SetLabel(_("&Manage"));
+            mPlayBtn->SetLabel(_("&Preview effect"));
 #endif
-         bs->Add(mMenuBtn);
+         }
       }
-      mMenuBtn->SetToolTip(_("Manage presets and options"));
 
-      bs->Add(5, 5);
-
-      if (!mIsBatch)
+      if (mSupportsRealtime)
       {
          if (!mIsGUI)
          {
-            if (mSupportsRealtime)
-            {
-               wxASSERT(bar); // To justify safenew
-               mPlayToggleBtn = safenew wxButton(bar, kPlayID, _("Start &Playback"));
-               mPlayToggleBtn->SetToolTip(_("Start and stop playback"));
-               bs->Add(mPlayToggleBtn, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
-            }
-            else if (mEffect->GetType() != EffectTypeAnalyze)
-            {
-               wxASSERT(bar); // To justify safenew
-               mPlayToggleBtn = safenew wxButton(bar, kPlayID, _("&Preview"));
-               mPlayToggleBtn->SetToolTip(_("Preview effect"));
-               bs->Add(mPlayToggleBtn, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
-            }
+            wxASSERT(bar); // To justify safenew
+            mRewindBtn = safenew wxButton(bar, kRewindID, _("Skip &Backward"));
+            bs->Add(mRewindBtn, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
          }
          else
          {
-            mPlayBM = CreateBitmap(effect_play_xpm, true, false);
-            mPlayDisabledBM = CreateBitmap(effect_play_disabled_xpm, true, false);
-            mStopBM = CreateBitmap(effect_stop_xpm, true, false);
-            mStopDisabledBM = CreateBitmap(effect_stop_disabled_xpm, true, false);
             wxASSERT(bar); // To justify safenew
-            bb = safenew wxBitmapButton(bar, kPlayID, mPlayBM);
-            bb->SetBitmapDisabled(mPlayDisabledBM);
-            mPlayBtn = bb;
-            bs->Add(mPlayBtn);
-            if (!mSupportsRealtime)
-            {
-               mPlayBtn->SetToolTip(_("Preview effect"));
+            bb = safenew wxBitmapButton(bar, kRewindID, CreateBitmap(effect_rewind_xpm, true, true));
+            bb->SetBitmapDisabled(CreateBitmap(effect_rewind_disabled_xpm, true, true));
+            mRewindBtn = bb;
 #if defined(__WXMAC__)
-               mPlayBtn->SetName(_("Preview effect"));
+            mRewindBtn->SetName(_("Skip &Backward"));
 #else
-               mPlayBtn->SetLabel(_("&Preview effect"));
+            mRewindBtn->SetLabel(_("Skip &Backward"));
 #endif
-            }
+            bs->Add(mRewindBtn);
          }
+         mRewindBtn->SetToolTip(_("Skip backward"));
 
-         if (mSupportsRealtime)
+         if (!mIsGUI)
          {
-            if (!mIsGUI)
-            {
-               wxASSERT(bar); // To justify safenew
-               mRewindBtn = safenew wxButton(bar, kRewindID, _("Skip &Backward"));
-               bs->Add(mRewindBtn, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
-            }
-            else
-            {
-               wxASSERT(bar); // To justify safenew
-               bb = safenew wxBitmapButton(bar, kRewindID, CreateBitmap(effect_rewind_xpm, true, true));
-               bb->SetBitmapDisabled(CreateBitmap(effect_rewind_disabled_xpm, true, true));
-               mRewindBtn = bb;
-#if defined(__WXMAC__)
-               mRewindBtn->SetName(_("Skip &Backward"));
-#else
-               mRewindBtn->SetLabel(_("Skip &Backward"));
-#endif
-               bs->Add(mRewindBtn);
-            }
-            mRewindBtn->SetToolTip(_("Skip backward"));
-
-            if (!mIsGUI)
-            {
-               wxASSERT(bar); // To justify safenew
-               mFFwdBtn = safenew wxButton(bar, kFFwdID, _("Skip &Forward"));
-               bs->Add(mFFwdBtn, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
-            }
-            else
-            {
-               wxASSERT(bar); // To justify safenew
-               bb = safenew wxBitmapButton(bar, kFFwdID, CreateBitmap(effect_ffwd_xpm, true, true));
-               bb->SetBitmapDisabled(CreateBitmap(effect_ffwd_disabled_xpm, true, true));
-               mFFwdBtn = bb;
-#if defined(__WXMAC__)
-               mFFwdBtn->SetName(_("Skip &Foreward"));
-#else
-               mFFwdBtn->SetLabel(_("Skip &Foreward"));
-#endif
-               bs->Add(mFFwdBtn);
-            }
-            mFFwdBtn->SetToolTip(_("Skip forward"));
-
-            bs->Add(5, 5);
-
-            mEnableCb = safenew wxCheckBox(bar, kEnableID, _("&Enable"));
-            mEnableCb->SetValue(mEnabled);
-            mEnableCb->SetName(_("Enable"));
-            bs->Add(mEnableCb, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
+            wxASSERT(bar); // To justify safenew
+            mFFwdBtn = safenew wxButton(bar, kFFwdID, _("Skip &Forward"));
+            bs->Add(mFFwdBtn, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
          }
+         else
+         {
+            wxASSERT(bar); // To justify safenew
+            bb = safenew wxBitmapButton(bar, kFFwdID, CreateBitmap(effect_ffwd_xpm, true, true));
+            bb->SetBitmapDisabled(CreateBitmap(effect_ffwd_disabled_xpm, true, true));
+            mFFwdBtn = bb;
+#if defined(__WXMAC__)
+            mFFwdBtn->SetName(_("Skip &Foreward"));
+#else
+            mFFwdBtn->SetLabel(_("Skip &Foreward"));
+#endif
+            bs->Add(mFFwdBtn);
+         }
+         mFFwdBtn->SetToolTip(_("Skip forward"));
+
+         bs->Add(5, 5);
+
+         mEnableCb = safenew wxCheckBox(bar, kEnableID, _("&Enable"));
+         mEnableCb->SetValue(mEnabled);
+         mEnableCb->SetName(_("Enable"));
+         bs->Add(mEnableCb, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
       }
-
-      bar->SetSizerAndFit(bs);
-
-      long buttons = eApplyButton + eCloseButton;
-      if (mEffect->mUIDebug)
-      {
-         buttons += eDebugButton;
-      }
-
-      buttonPanel->SetSizer(CreateStdButtonSizer(buttonPanel, buttons, bar).release());
-      vs->Add(buttonPanel, 0, wxEXPAND);
-
-      SetSizer(vs.release());
    }
 
+   bar->SetSizerAndFit(bs);
+
+   long buttons = eApplyButton + eCloseButton;
+   if (mEffect->mUIDebug)
+   {
+      buttons += eDebugButton;
+   }
+
+   buttonPanel->SetSizer(CreateStdButtonSizer(buttonPanel, buttons, bar));
+   vs->Add(buttonPanel, 0, wxEXPAND);
+
+   SetSizer(vs);
    Layout();
    Fit();
    Center();

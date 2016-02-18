@@ -186,7 +186,8 @@ AButton * ToolsToolBar::MakeTool( teBmps eTool,
 void ToolsToolBar::Populate()
 {
    MakeButtonBackgroundsSmall();
-   Add(mToolSizer = safenew wxGridSizer(2, 3, 1, 1));
+   mToolSizer = new wxGridSizer( 2, 3, 1, 1 );
+   Add( mToolSizer );
 
    /* Tools */
    mTool[ selectTool   ] = MakeTool( bmpIBeam, selectTool, _("Selection Tool") );

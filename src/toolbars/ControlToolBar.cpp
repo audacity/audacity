@@ -282,8 +282,8 @@ void ControlToolBar::ArrangeButtons()
       Detach( mSizer );
       delete mSizer;
    }
-
-   Add((mSizer = safenew wxBoxSizer(wxHORIZONTAL)), 1, wxEXPAND);
+   mSizer = new wxBoxSizer( wxHORIZONTAL );
+   Add( mSizer, 1, wxEXPAND );
 
    // Start with a little extra space
    mSizer->Add( 5, 55 );

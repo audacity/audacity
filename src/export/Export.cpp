@@ -1212,41 +1212,34 @@ ExportMixerDialog::ExportMixerDialog( TrackList *tracks, bool selectedOnly,
    if (maxNumChannels > 32)
       maxNumChannels = 32;
 
-   mMixerSpec = new MixerSpec(numTracks, maxNumChannels);
-   
-   wxBoxSizer *vertSizer;
-   {
-      auto uVertSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
-      vertSizer = uVertSizer.get();
+   mMixerSpec = new MixerSpec( numTracks, maxNumChannels );
 
-      wxWindow *mixerPanel = safenew ExportMixerPanel(mMixerSpec, mTrackNames, this,
-         ID_MIXERPANEL, wxDefaultPosition, wxSize(400, -1));
-      mixerPanel->SetName(_("Mixer Panel"));
-      vertSizer->Add(mixerPanel, 1, wxEXPAND | wxALIGN_CENTRE | wxALL, 5);
+   wxBoxSizer *vertSizer = new wxBoxSizer( wxVERTICAL );
 
-      {
-         auto horSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
+   wxWindow *mixerPanel = safenew ExportMixerPanel( mMixerSpec, mTrackNames, this,
+         ID_MIXERPANEL, wxDefaultPosition, wxSize( 400, -1 ) );
+   mixerPanel->SetName(_("Mixer Panel"));
+   vertSizer->Add( mixerPanel, 1, wxEXPAND | wxALIGN_CENTRE | wxALL, 5 );
 
-         wxString label;
-         label.Printf(_("Output Channels: %2d"), mMixerSpec->GetNumChannels());
-         mChannelsText = safenew wxStaticText(this, -1, label);
-         horSizer->Add(mChannelsText, 0, wxALIGN_LEFT | wxALL, 5);
+   wxBoxSizer *horSizer = new wxBoxSizer( wxHORIZONTAL );
 
-         wxSlider *channels = safenew wxSlider(this, ID_SLIDER_CHANNEL,
-            mMixerSpec->GetNumChannels(), 1, mMixerSpec->GetMaxNumChannels(),
-            wxDefaultPosition, wxSize(300, -1));
-         channels->SetName(label);
-         horSizer->Add(channels, 0, wxEXPAND | wxALL, 5);
+   wxString label;
+   label.Printf( _( "Output Channels: %2d" ), mMixerSpec->GetNumChannels() );
+   mChannelsText = safenew wxStaticText(this, -1, label);
+   horSizer->Add( mChannelsText, 0, wxALIGN_LEFT | wxALL, 5 );
 
-         vertSizer->Add(horSizer.release(), 0, wxALIGN_CENTRE | wxALL, 5);
-      }
+   wxSlider *channels = safenew wxSlider( this, ID_SLIDER_CHANNEL,
+         mMixerSpec->GetNumChannels(), 1, mMixerSpec->GetMaxNumChannels(),
+         wxDefaultPosition, wxSize( 300, -1 ) );
+   channels->SetName(label);
+   horSizer->Add( channels, 0, wxEXPAND | wxALL, 5 );
 
-      vertSizer->Add(CreateStdButtonSizer(this, eCancelButton | eOkButton).release(), 0, wxEXPAND);
+   vertSizer->Add( horSizer, 0, wxALIGN_CENTRE | wxALL, 5 );
 
-      SetAutoLayout(true);
-      SetSizer(uVertSizer.release());
-   }
+   vertSizer->Add( CreateStdButtonSizer(this, eCancelButton|eOkButton), 0, wxEXPAND );
 
+   SetAutoLayout( true );
+   SetSizer( vertSizer );
    vertSizer->Fit( this );
    vertSizer->SetSizeHints( this );
 
