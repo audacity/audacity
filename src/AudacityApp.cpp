@@ -317,7 +317,7 @@ void QuitAudacity(bool bForce)
    AudacityProject::DeleteAllProjectsDeleteLock();
 
    //remove our logger
-   delete wxLog::SetActiveTarget(NULL);
+   std::unique_ptr<wxLog>{ wxLog::SetActiveTarget(NULL) }; // DELETE
 
    if (bForce)
    {
@@ -1147,7 +1147,7 @@ bool AudacityApp::OnInit()
    // Ensure we have an event loop during initialization
    wxEventLoopGuarantor eventLoop;
 
-   delete wxLog::SetActiveTarget(new AudacityLogger);
+   std::unique_ptr < wxLog > { wxLog::SetActiveTarget(new AudacityLogger) }; // DELETE
 
    mLocale = NULL;
 
