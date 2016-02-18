@@ -414,7 +414,7 @@ bool Sequence::Copy(sampleCount s0, sampleCount s1, Sequence **dest)
 {
    *dest = 0;
 
-   if (s0 >= s1 || s0 >= mNumSamples || s1 >= mNumSamples || s1 < 0)
+   if (s0 >= s1 || s0 >= mNumSamples || s1 < 0)
       return false;
 
    int numBlocks = mBlock.size();
