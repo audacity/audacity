@@ -707,7 +707,7 @@ wxStaticBox * ShuttleGuiBase::StartStatic(const wxString &Str, int iProp)
       Str );
    pBox->SetLabel( Str );
    pBox->SetName(wxStripMenuCodes(Str));
-   mpSubSizer = new wxStaticBoxSizer(
+   mpSubSizer = std::make_unique<wxStaticBoxSizer>(
       pBox,
       wxVERTICAL );
    miSizerProp = iProp;
@@ -973,7 +973,7 @@ void ShuttleGuiBase::StartHorizontalLay( int PositionFlags, int iProp)
    if( mShuttleMode != eIsCreating )
       return;
    miSizerProp=iProp;
-   mpSubSizer = new wxBoxSizer( wxHORIZONTAL );
+   mpSubSizer = std::make_unique<wxBoxSizer>( wxHORIZONTAL );
    UpdateSizersCore( false, PositionFlags | wxALL );
 }
 
@@ -989,7 +989,7 @@ void ShuttleGuiBase::StartVerticalLay(int iProp)
    if( mShuttleMode != eIsCreating )
       return;
    miSizerProp=iProp;
-   mpSubSizer = new wxBoxSizer( wxVERTICAL );
+   mpSubSizer = std::make_unique<wxBoxSizer>( wxVERTICAL );
    UpdateSizers();
 }
 
@@ -1004,7 +1004,7 @@ void ShuttleGuiBase::StartMultiColumn(int nCols, int PositionFlags)
 {
    if( mShuttleMode != eIsCreating )
       return;
-   mpSubSizer = new wxFlexGridSizer( nCols );
+   mpSubSizer = std::make_unique<wxFlexGridSizer>( nCols );
    UpdateSizersCore( false, PositionFlags | wxALL );
 }
 
@@ -1935,16 +1935,16 @@ void ShuttleGuiBase::UpdateSizersCore(bool bPrepend, int Flags)
    {
       // When adding sizers into sizers, don't add a border.
       // unless it's a static box sizer.
-      if( wxDynamicCast( mpSubSizer, wxStaticBoxSizer ))
+      wxSizer *const pSubSizer = mpSubSizer.get();
+      if (wxDynamicCast(pSubSizer, wxStaticBoxSizer))
       {
-         mpSizer->Add( mpSubSizer,miSizerProp, Flags , miBorder);
+         mpSizer->Add( mpSubSizer.release(), miSizerProp, Flags , miBorder);
       }
       else
       {
-         mpSizer->Add( mpSubSizer,miSizerProp, Flags ,0);//miBorder);
+         mpSizer->Add( mpSubSizer.release(), miSizerProp, Flags ,0);//miBorder);
       }
-      mpSizer = mpSubSizer;
-      mpSubSizer = NULL;
+      mpSizer = pSubSizer;
       PushSizer();
    }
    mpLastWind = mpWind;
@@ -2116,7 +2116,7 @@ AttachableScrollBar * ShuttleGui::AddAttachableScrollBar( long style )
    return pAttachableScrollBar;
 }
 
-wxSizer *CreateStdButtonSizer(wxWindow *parent, long buttons, wxWindow *extra)
+std::unique_ptr<wxSizer> CreateStdButtonSizer(wxWindow *parent, long buttons, wxWindow *extra)
 {
    wxASSERT(parent != NULL); // To justify safenew
 
@@ -2136,7 +2136,7 @@ wxSizer *CreateStdButtonSizer(wxWindow *parent, long buttons, wxWindow *extra)
    }
 
    wxButton *b = NULL;
-   wxStdDialogButtonSizer *bs = new wxStdDialogButtonSizer();
+   auto bs = std::make_unique<wxStdDialogButtonSizer>();
 
    if( buttons & eOkButton )
    {
@@ -2226,9 +2226,8 @@ wxSizer *CreateStdButtonSizer(wxWindow *parent, long buttons, wxWindow *extra)
       bs->Insert( lastLastSpacer + 1, b, 0, wxALIGN_CENTER | wxLEFT | wxRIGHT, margin );
    }
 
-   wxSizer * s;
-   s = new wxBoxSizer( wxVERTICAL );
-   s->Add( bs, 1, wxEXPAND | wxALL, 7 );
+   std::unique_ptr<wxSizer> s = std::make_unique<wxBoxSizer>( wxVERTICAL );
+   s->Add( bs.release(), 1, wxEXPAND | wxALL, 7 );
    s->Add( 0, 3 );   // a little extra space
 
    return s;

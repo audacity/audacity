@@ -113,8 +113,7 @@ void MeterToolBar::ReCreateButtons()
 
 void MeterToolBar::Populate()
 {
-   mSizer = new wxGridBagSizer();
-   Add( mSizer, 1, wxEXPAND );
+   Add((mSizer = safenew wxGridBagSizer()), 1, wxEXPAND);
 
    if( mWhichMeters & kWithRecordMeter ){
       //JKC: Record on left, playback on right.  Left to right flow

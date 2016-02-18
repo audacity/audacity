@@ -430,8 +430,7 @@ void ToolBar::ReCreateButtons()
    ms->Add( mGrabber, 0, wxEXPAND | wxALIGN_LEFT | wxALIGN_TOP | wxRIGHT, 1 );
 
    // Use a box sizer for laying out controls
-   mHSizer = new wxBoxSizer( wxHORIZONTAL );
-   ms->Add( mHSizer, 1, wxEXPAND );
+   ms->Add((mHSizer = safenew wxBoxSizer(wxHORIZONTAL)), 1, wxEXPAND);
 
    // (Re)Establish dock state
    SetDocked( GetDock(), false );

@@ -105,38 +105,42 @@ LabelDialog::LabelDialog(wxWindow *parent,
 {
    SetName(GetTitle());
 
-   // Create the main sizer
-   wxBoxSizer *vs = new wxBoxSizer(wxVERTICAL);
+   {
+      // Create the main sizer
+      auto vs = std::make_unique<wxBoxSizer>(wxVERTICAL);
 
-   // A little instruction
-   wxStaticText *instruct =
-      safenew wxStaticText(this,
-                       wxID_ANY,
-                       _("Press F2 or double click to edit cell contents."));
-   instruct->SetName(instruct->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
-   vs->Add(instruct,
-           0,
-           wxALIGN_LEFT | wxALL,
-           5);
+      // A little instruction
+      wxStaticText *instruct =
+         safenew wxStaticText(this,
+         wxID_ANY,
+         _("Press F2 or double click to edit cell contents."));
+      instruct->SetName(instruct->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+      vs->Add(instruct,
+         0,
+         wxALIGN_LEFT | wxALL,
+         5);
 
-   // Create the main sizer
-   mGrid = new Grid(this, wxID_ANY);
-   vs->Add(mGrid, 1, wxEXPAND | wxALL, 5);
+      // Create the main sizer
+      mGrid = new Grid(this, wxID_ANY);
+      vs->Add(mGrid, 1, wxEXPAND | wxALL, 5);
 
-   // Create the action buttons
-   wxBoxSizer *hs = new wxBoxSizer(wxHORIZONTAL);
-   hs->Add(safenew wxButton(this, ID_INSERTA, _("Insert &After")), 1, wxCENTER | wxALL, 5);
-   hs->Add(safenew wxButton(this, ID_INSERTB, _("Insert &Before")), 1, wxCENTER | wxALL, 5);
-   hs->Add(safenew wxButton(this, ID_REMOVE, _("&Remove")), 1, wxCENTER | wxALL, 5);
-   hs->Add(safenew wxButton(this, ID_IMPORT, _("&Import...")), 1, wxCENTER | wxALL, 5);
-   hs->Add(safenew wxButton(this, ID_EXPORT, _("&Export...")), 1, wxCENTER | wxALL, 5);
-   vs->Add(hs, 0, wxEXPAND | wxCENTER | wxALL, 5);
+      // Create the action buttons
+      {
+         auto hs = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
+         hs->Add(safenew wxButton(this, ID_INSERTA, _("Insert &After")), 1, wxCENTER | wxALL, 5);
+         hs->Add(safenew wxButton(this, ID_INSERTB, _("Insert &Before")), 1, wxCENTER | wxALL, 5);
+         hs->Add(safenew wxButton(this, ID_REMOVE, _("&Remove")), 1, wxCENTER | wxALL, 5);
+         hs->Add(safenew wxButton(this, ID_IMPORT, _("&Import...")), 1, wxCENTER | wxALL, 5);
+         hs->Add(safenew wxButton(this, ID_EXPORT, _("&Export...")), 1, wxCENTER | wxALL, 5);
+         vs->Add(hs.release(), 0, wxEXPAND | wxCENTER | wxALL, 5);
+      }
 
-   // Create the exit buttons
-   vs->Add(CreateStdButtonSizer(this, eCancelButton|eOkButton), 0, wxEXPAND);
+      // Create the exit buttons
+      vs->Add(CreateStdButtonSizer(this, eCancelButton | eOkButton).release(), 0, wxEXPAND);
 
-   // Make it so
-   SetSizer(vs);
+      // Make it so
+      SetSizer(vs.release());
+   }
 
    // Build the initial (empty) grid
    mGrid->CreateGrid(0, Col_Max);
