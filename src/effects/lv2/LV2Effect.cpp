@@ -1465,11 +1465,11 @@ bool LV2Effect::BuildFancy()
    wxSizerItem *si = NULL;
    if (vs)
    {
-      wxBoxSizer *hs = new wxBoxSizer(wxHORIZONTAL);
+      auto hs = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
       if (hs)
       {
          si = hs->Add(mContainer, 1, wxCENTER | wxEXPAND);
-         vs->Add(hs, 0, wxCENTER);
+         vs->Add(hs.release(), 0, wxCENTER);
       }
    }
    
@@ -1578,281 +1578,290 @@ bool LV2Effect::BuildPlain()
    mSliders = new wxSlider *[ctrlcnt];
    mFields = new wxTextCtrl *[ctrlcnt];
 
-   wxSizer *outerSizer = new wxBoxSizer(wxVERTICAL);
+   wxSizer *innerSizer;
+
    wxASSERT(mParent); // To justify safenew
    wxScrolledWindow *const w = safenew wxScrolledWindow(mParent,
-                                              wxID_ANY,
-                                              wxDefaultPosition,
-                                              wxDefaultSize,
-                                              wxVSCROLL | wxTAB_TRAVERSAL);
-   w->SetScrollRate(0, 20);
+      wxID_ANY,
+      wxDefaultPosition,
+      wxDefaultSize,
+      wxVSCROLL | wxTAB_TRAVERSAL);
 
-   // This fools NVDA into not saying "Panel" when the dialog gets focus
-   w->SetName(wxT("\a"));
-   w->SetLabel(wxT("\a"));
-
-   outerSizer->Add(w, 1, wxEXPAND);
-
-   wxSizer *innerSizer = new wxBoxSizer(wxVERTICAL);
-
-   if (GetType() == EffectTypeGenerate)
    {
-      // Add the length control
-      wxSizer *groupSizer = new wxStaticBoxSizer(wxVERTICAL, w, _("Generator"));
+      auto outerSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
+      w->SetScrollRate(0, 20);
 
-      wxBoxSizer *sizer = new wxBoxSizer(wxHORIZONTAL);
-   
-      wxWindow *item = safenew wxStaticText(w, 0, _("&Duration:"));
-      sizer->Add(item, 0, wxALIGN_CENTER | wxALL, 5);
-      mDuration = safenew
-         NumericTextCtrl(NumericConverter::TIME,
-                         w,
-                         ID_Duration,
-                         mHost->GetDurationFormat(),
-                         mHost->GetDuration(),
-                         mSampleRate,
-                         wxDefaultPosition,
-                         wxDefaultSize,
-                         true);
-      mDuration->SetName(_("Duration"));
-      mDuration->EnableMenu();
-      sizer->Add(mDuration, 0, wxALIGN_CENTER | wxALL, 5);
+      // This fools NVDA into not saying "Panel" when the dialog gets focus
+      w->SetName(wxT("\a"));
+      w->SetLabel(wxT("\a"));
 
-      groupSizer->Add(sizer, 0, wxALIGN_CENTER | wxALL, 5);
-      innerSizer->Add(groupSizer, 0, wxEXPAND | wxALL, 5);
-   }
+      outerSizer->Add(w, 1, wxEXPAND);
 
-   mGroups.Sort();
-
-   for (size_t i = 0, cnt = mGroups.GetCount(); i < cnt; i++)
-   {
-      wxString label = mGroups[i];
-      if (label.IsEmpty())
       {
-         label = _("Effect Settings");
-      }
-      wxSizer *groupSizer = new wxStaticBoxSizer(wxVERTICAL, w, label);
+         auto uInnerSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
+         innerSizer = uInnerSizer.get();
 
-      wxFlexGridSizer *gridSizer = new wxFlexGridSizer(numCols, 5, 5);
-      gridSizer->AddGrowableCol(3);
-
-      const wxArrayInt & params = mGroupMap[mGroups[i]];
-      for (size_t pi = 0, cnt = params.GetCount(); pi < cnt; pi++)
-      {
-         int p = params[pi];
-         LV2Port & ctrl = mControls[p];
-         wxString labelText = ctrl.mName;
-         if (!ctrl.mUnits.IsEmpty())
+         if (GetType() == EffectTypeGenerate)
          {
-            labelText += wxT(" (") + ctrl.mUnits + wxT(")");
+            // Add the length control
+            auto groupSizer = std::make_unique<wxStaticBoxSizer>(wxVERTICAL, w, _("Generator"));
+
+            auto sizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
+
+            wxWindow *item = safenew wxStaticText(w, 0, _("&Duration:"));
+            sizer->Add(item, 0, wxALIGN_CENTER | wxALL, 5);
+            mDuration = safenew
+               NumericTextCtrl(NumericConverter::TIME,
+               w,
+               ID_Duration,
+               mHost->GetDurationFormat(),
+               mHost->GetDuration(),
+               mSampleRate,
+               wxDefaultPosition,
+               wxDefaultSize,
+               true);
+            mDuration->SetName(_("Duration"));
+            mDuration->EnableMenu();
+            sizer->Add(mDuration, 0, wxALIGN_CENTER | wxALL, 5);
+
+            groupSizer->Add(sizer.release(), 0, wxALIGN_CENTER | wxALL, 5);
+            innerSizer->Add(groupSizer.release(), 0, wxEXPAND | wxALL, 5);
          }
 
-         if (ctrl.mTrigger)
+         mGroups.Sort();
+
+         for (size_t i = 0, cnt = mGroups.GetCount(); i < cnt; i++)
          {
-            gridSizer->Add(1, 1, 0);
-
-            wxASSERT(w); // To justify safenew
-            wxButton *b = safenew wxButton(w, ID_Triggers + p, labelText);
-            gridSizer->Add(b, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
-
-            gridSizer->Add(1, 1, 0);
-            gridSizer->Add(1, 1, 0);
-            gridSizer->Add(1, 1, 0);
-            continue;
-         }
-
-         wxWindow *item = safenew wxStaticText(w, wxID_ANY, labelText + wxT(":"),
-                                           wxDefaultPosition, wxDefaultSize,
-                                           wxALIGN_RIGHT);
-         gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
-
-         if (ctrl.mToggle)
-         {
-            wxCheckBox *c = safenew wxCheckBox(w, ID_Toggles + p, wxT(""));
-            c->SetName(labelText);
-            c->SetValue(ctrl.mVal > 0);
-            gridSizer->Add(c, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
-
-            gridSizer->Add(1, 1, 0);
-            gridSizer->Add(1, 1, 0);
-            gridSizer->Add(1, 1, 0);
-         }
-         else if (ctrl.mEnumeration)      // Check before integer
-         {
-            int s;
-            for (s = (int) ctrl.mScaleValues.GetCount() - 1; s >= 0; s--)
+            wxString label = mGroups[i];
+            if (label.IsEmpty())
             {
-               if (ctrl.mVal >= ctrl.mScaleValues[s])
+               label = _("Effect Settings");
+            }
+            auto groupSizer = std::make_unique<wxStaticBoxSizer>(wxVERTICAL, w, label);
+
+            auto gridSizer = std::make_unique<wxFlexGridSizer>(numCols, 5, 5);
+            gridSizer->AddGrowableCol(3);
+
+            const wxArrayInt & params = mGroupMap[mGroups[i]];
+            for (size_t pi = 0, cnt = params.GetCount(); pi < cnt; pi++)
+            {
+               int p = params[pi];
+               LV2Port & ctrl = mControls[p];
+               wxString labelText = ctrl.mName;
+               if (!ctrl.mUnits.IsEmpty())
                {
-                  break;
+                  labelText += wxT(" (") + ctrl.mUnits + wxT(")");
                }
-            }
 
-            if (s < 0)
-            {
-               s = 0;
-            }
-
-            wxChoice *c = safenew wxChoice(w, ID_Choices + p);
-            c->SetName(labelText);
-            c->Append(ctrl.mScaleLabels);
-            c->SetSelection(s);
-            gridSizer->Add(c, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
-
-            gridSizer->Add(1, 1, 0);
-            gridSizer->Add(1, 1, 0);
-            gridSizer->Add(1, 1, 0);
-         }
-         else if (!ctrl.mInput)
-         {
-            gridSizer->Add(1, 1, 0);
-            gridSizer->Add(1, 1, 0);
-            LV2EffectMeter *m = safenew LV2EffectMeter(w, ctrl);
-            gridSizer->Add(m, 0, wxALIGN_CENTER_VERTICAL | wxEXPAND);
-            gridSizer->Add(1, 1, 0);
-         }
-         else
-         {
-            mFields[p] = safenew wxTextCtrl(w, ID_Texts + p, wxT(""));
-            mFields[p]->SetName(labelText);
-            gridSizer->Add(mFields[p], 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
-
-            float rate = ctrl.mSampleRate ? mSampleRate : 1.0;
-
-            ctrl.mVal = ctrl.mDef;
-            ctrl.mLo = ctrl.mMin * rate;
-            ctrl.mHi = ctrl.mMax * rate;
-            ctrl.mTmp = ctrl.mDef * rate;
-
-            if (ctrl.mInteger)
-            {
-               IntegerValidator<float> vld(&ctrl.mTmp);
-               vld.SetRange(ctrl.mLo, ctrl.mHi);
-               mFields[p]->SetValidator(vld);
-            }
-            else
-            {
-               FloatingPointValidator<float> vld(6, &ctrl.mTmp);
-               vld.SetRange(ctrl.mLo, ctrl.mHi);
-
-               // Set number of decimal places
-               float range = ctrl.mHi - ctrl.mLo;
-               int style = range < 10 ? NUM_VAL_THREE_TRAILING_ZEROES :
-                           range < 100 ? NUM_VAL_TWO_TRAILING_ZEROES :
-                           NUM_VAL_ONE_TRAILING_ZERO;
-               vld.SetStyle(style);
-
-               mFields[p]->SetValidator(vld);
-            }
-
-            if (ctrl.mHasLo)
-            {
-               wxString str;
-               if (ctrl.mInteger || ctrl.mSampleRate)
+               if (ctrl.mTrigger)
                {
-                  str.Printf(wxT("%d"), lrintf(ctrl.mLo));
+                  gridSizer->Add(1, 1, 0);
+
+                  wxASSERT(w); // To justify safenew
+                  wxButton *b = safenew wxButton(w, ID_Triggers + p, labelText);
+                  gridSizer->Add(b, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
+
+                  gridSizer->Add(1, 1, 0);
+                  gridSizer->Add(1, 1, 0);
+                  gridSizer->Add(1, 1, 0);
+                  continue;
                }
-               else
-               {
-                  str = Internat::ToDisplayString(ctrl.mLo);
-               }
-               item = safenew wxStaticText(w, wxID_ANY, str);
+
+               wxWindow *item = safenew wxStaticText(w, wxID_ANY, labelText + wxT(":"),
+                  wxDefaultPosition, wxDefaultSize,
+                  wxALIGN_RIGHT);
                gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
-            }
-            else
-            {
-               gridSizer->Add(1, 1, 0);
-            }
 
-            mSliders[p] = safenew wxSlider(w, ID_Sliders + p,
-                                       0, 0, 1000,
-                                       wxDefaultPosition,
-                                       wxSize(150, -1));
-            mSliders[p]->SetName(labelText);
-            gridSizer->Add(mSliders[p], 0, wxALIGN_CENTER_VERTICAL | wxEXPAND);
-
-            if (ctrl.mHasHi)
-            {
-               wxString str;
-               if (ctrl.mInteger || ctrl.mSampleRate)
+               if (ctrl.mToggle)
                {
-                  str.Printf(wxT("%d"), lrintf(ctrl.mHi));
+                  wxCheckBox *c = safenew wxCheckBox(w, ID_Toggles + p, wxT(""));
+                  c->SetName(labelText);
+                  c->SetValue(ctrl.mVal > 0);
+                  gridSizer->Add(c, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
+
+                  gridSizer->Add(1, 1, 0);
+                  gridSizer->Add(1, 1, 0);
+                  gridSizer->Add(1, 1, 0);
+               }
+               else if (ctrl.mEnumeration)      // Check before integer
+               {
+                  int s;
+                  for (s = (int)ctrl.mScaleValues.GetCount() - 1; s >= 0; s--)
+                  {
+                     if (ctrl.mVal >= ctrl.mScaleValues[s])
+                     {
+                        break;
+                     }
+                  }
+
+                  if (s < 0)
+                  {
+                     s = 0;
+                  }
+
+                  wxChoice *c = safenew wxChoice(w, ID_Choices + p);
+                  c->SetName(labelText);
+                  c->Append(ctrl.mScaleLabels);
+                  c->SetSelection(s);
+                  gridSizer->Add(c, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
+
+                  gridSizer->Add(1, 1, 0);
+                  gridSizer->Add(1, 1, 0);
+                  gridSizer->Add(1, 1, 0);
+               }
+               else if (!ctrl.mInput)
+               {
+                  gridSizer->Add(1, 1, 0);
+                  gridSizer->Add(1, 1, 0);
+                  LV2EffectMeter *m = safenew LV2EffectMeter(w, ctrl);
+                  gridSizer->Add(m, 0, wxALIGN_CENTER_VERTICAL | wxEXPAND);
+                  gridSizer->Add(1, 1, 0);
                }
                else
                {
-                  str = Internat::ToDisplayString(ctrl.mHi);
+                  mFields[p] = safenew wxTextCtrl(w, ID_Texts + p, wxT(""));
+                  mFields[p]->SetName(labelText);
+                  gridSizer->Add(mFields[p], 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
+
+                  float rate = ctrl.mSampleRate ? mSampleRate : 1.0;
+
+                  ctrl.mVal = ctrl.mDef;
+                  ctrl.mLo = ctrl.mMin * rate;
+                  ctrl.mHi = ctrl.mMax * rate;
+                  ctrl.mTmp = ctrl.mDef * rate;
+
+                  if (ctrl.mInteger)
+                  {
+                     IntegerValidator<float> vld(&ctrl.mTmp);
+                     vld.SetRange(ctrl.mLo, ctrl.mHi);
+                     mFields[p]->SetValidator(vld);
+                  }
+                  else
+                  {
+                     FloatingPointValidator<float> vld(6, &ctrl.mTmp);
+                     vld.SetRange(ctrl.mLo, ctrl.mHi);
+
+                     // Set number of decimal places
+                     float range = ctrl.mHi - ctrl.mLo;
+                     int style = range < 10 ? NUM_VAL_THREE_TRAILING_ZEROES :
+                        range < 100 ? NUM_VAL_TWO_TRAILING_ZEROES :
+                        NUM_VAL_ONE_TRAILING_ZERO;
+                     vld.SetStyle(style);
+
+                     mFields[p]->SetValidator(vld);
+                  }
+
+                  if (ctrl.mHasLo)
+                  {
+                     wxString str;
+                     if (ctrl.mInteger || ctrl.mSampleRate)
+                     {
+                        str.Printf(wxT("%d"), lrintf(ctrl.mLo));
+                     }
+                     else
+                     {
+                        str = Internat::ToDisplayString(ctrl.mLo);
+                     }
+                     item = safenew wxStaticText(w, wxID_ANY, str);
+                     gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
+                  }
+                  else
+                  {
+                     gridSizer->Add(1, 1, 0);
+                  }
+
+                  mSliders[p] = safenew wxSlider(w, ID_Sliders + p,
+                     0, 0, 1000,
+                     wxDefaultPosition,
+                     wxSize(150, -1));
+                  mSliders[p]->SetName(labelText);
+                  gridSizer->Add(mSliders[p], 0, wxALIGN_CENTER_VERTICAL | wxEXPAND);
+
+                  if (ctrl.mHasHi)
+                  {
+                     wxString str;
+                     if (ctrl.mInteger || ctrl.mSampleRate)
+                     {
+                        str.Printf(wxT("%d"), lrintf(ctrl.mHi));
+                     }
+                     else
+                     {
+                        str = Internat::ToDisplayString(ctrl.mHi);
+                     }
+                     item = safenew wxStaticText(w, wxID_ANY, str);
+                     gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
+                  }
+                  else
+                  {
+                     gridSizer->Add(1, 1, 0);
+                  }
                }
-               item = safenew wxStaticText(w, wxID_ANY, str);
-               gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
             }
-            else
+
+            groupSizer->Add(gridSizer.release(), 1, wxEXPAND | wxALL, 5);
+            innerSizer->Add(groupSizer.release(), 0, wxEXPAND | wxALL, 5);
+         }
+
+         innerSizer->Layout();
+
+         // Calculate the maximum width of all columns (bypass Generator sizer)
+         wxArrayInt widths;
+         widths.Add(0, numCols);
+
+         size_t cnt = innerSizer->GetChildren().GetCount();
+         for (size_t i = (GetType() == EffectTypeGenerate); i < cnt; i++)
+         {
+            wxSizer *groupSizer = innerSizer->GetItem(i)->GetSizer();
+            wxFlexGridSizer *gridSizer = (wxFlexGridSizer *)groupSizer->GetItem((size_t)0)->GetSizer();
+
+            size_t items = gridSizer->GetChildren().GetCount();
+            int cols = gridSizer->GetCols();
+
+            for (size_t j = 0; j < items; j++)
             {
-               gridSizer->Add(1, 1, 0);
+               wxSizerItem *item = gridSizer->GetItem(j);
+               widths[j % cols] = wxMax(widths[j % cols], item->GetSize().GetWidth());
             }
          }
-      }
 
-      groupSizer->Add(gridSizer, 1, wxEXPAND | wxALL, 5);
-      innerSizer->Add(groupSizer, 0, wxEXPAND | wxALL, 5);
-   }
-
-   innerSizer->Layout();
-
-   // Calculate the maximum width of all columns (bypass Generator sizer)
-   wxArrayInt widths;
-   widths.Add(0, numCols);
-
-   size_t cnt = innerSizer->GetChildren().GetCount();
-   for (size_t i = (GetType() == EffectTypeGenerate); i < cnt; i++)
-   {
-      wxSizer *groupSizer = innerSizer->GetItem(i)->GetSizer();
-      wxFlexGridSizer *gridSizer = (wxFlexGridSizer *)groupSizer->GetItem((size_t) 0)->GetSizer();
-
-      size_t items = gridSizer->GetChildren().GetCount();
-      int cols = gridSizer->GetCols();
-
-      for (size_t j = 0; j < items; j++)
-      {
-         wxSizerItem *item = gridSizer->GetItem(j);
-         widths[j % cols] = wxMax(widths[j % cols], item->GetSize().GetWidth());
-      }
-   }
-
-   // Set each column in all of the groups to the same width.
-   for (size_t i = (GetType() == EffectTypeGenerate); i < cnt; i++)
-   {
-      wxSizer *groupSizer = innerSizer->GetItem(i)->GetSizer();
-      wxFlexGridSizer *gridSizer = (wxFlexGridSizer *)groupSizer->GetItem((size_t) 0)->GetSizer();
-
-      size_t items = gridSizer->GetChildren().GetCount();
-      int cols = gridSizer->GetCols();
-
-      for (size_t j = 0; j < items; j++)
-      {
-         wxSizerItem *item = gridSizer->GetItem(j);
-
-         int flags = item->GetFlag();
-         if (flags & wxEXPAND)
+         // Set each column in all of the groups to the same width.
+         for (size_t i = (GetType() == EffectTypeGenerate); i < cnt; i++)
          {
-            continue;
+            wxSizer *groupSizer = innerSizer->GetItem(i)->GetSizer();
+            wxFlexGridSizer *gridSizer = (wxFlexGridSizer *)groupSizer->GetItem((size_t)0)->GetSizer();
+
+            size_t items = gridSizer->GetChildren().GetCount();
+            int cols = gridSizer->GetCols();
+
+            for (size_t j = 0; j < items; j++)
+            {
+               wxSizerItem *item = gridSizer->GetItem(j);
+
+               int flags = item->GetFlag();
+               if (flags & wxEXPAND)
+               {
+                  continue;
+               }
+
+               if (flags & wxALIGN_RIGHT)
+               {
+                  flags = (flags & ~wxALL) | wxLEFT;
+               }
+               else
+               {
+                  flags = (flags & ~wxALL) | wxRIGHT;
+               }
+               item->SetFlag(flags);
+
+               item->SetBorder(widths[j % cols] - item->GetMinSize().GetWidth());
+            }
          }
 
-         if (flags & wxALIGN_RIGHT)
-         {
-            flags = (flags & ~wxALL) | wxLEFT;
-         }
-         else
-         {
-            flags = (flags & ~wxALL) | wxRIGHT;
-         }
-         item->SetFlag(flags);
-
-         item->SetBorder(widths[j % cols] - item->GetMinSize().GetWidth());
+         w->SetSizer(uInnerSizer.release());
       }
+
+      mParent->SetSizer(outerSizer.release());
    }
-   
-   w->SetSizer(innerSizer);
-   mParent->SetSizer(outerSizer);
 
    // Try to give the window a sensible default/minimum size
    wxSize sz1 = innerSizer->GetMinSize();

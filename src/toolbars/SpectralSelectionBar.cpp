@@ -123,8 +123,8 @@ void SpectralSelectionBar::Populate()
       ? mListener->SSBL_GetBandwidthSelectionFormatName()
       : wxString(wxEmptyString);
 
-   wxFlexGridSizer *mainSizer = new wxFlexGridSizer(1, 1, 1);
-   Add(mainSizer, 0, wxALIGN_CENTER_VERTICAL);
+   wxFlexGridSizer *mainSizer;
+   Add((mainSizer = safenew wxFlexGridSizer(1, 1, 1)), 0, wxALIGN_CENTER_VERTICAL);
 
    //
    // Top row, choice box
@@ -144,42 +144,44 @@ void SpectralSelectionBar::Populate()
    // Bottom row, split into two columns, each with one control
    //
 
-   wxBoxSizer *subSizer = new wxBoxSizer(wxHORIZONTAL);
+   {
+      auto subSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
 
-   mCenterCtrl = safenew NumericTextCtrl(
-      NumericConverter::FREQUENCY, this, OnCenterID, frequencyFormatName, 0.0);
-   mCenterCtrl->SetInvalidValue(SelectedRegion::UndefinedFrequency);
-   mCenterCtrl->SetName(_("Center Frequency:"));
-   mCenterCtrl->EnableMenu();
-   subSizer->Add(mCenterCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
+      mCenterCtrl = safenew NumericTextCtrl(
+         NumericConverter::FREQUENCY, this, OnCenterID, frequencyFormatName, 0.0);
+      mCenterCtrl->SetInvalidValue(SelectedRegion::UndefinedFrequency);
+      mCenterCtrl->SetName(_("Center Frequency:"));
+      mCenterCtrl->EnableMenu();
+      subSizer->Add(mCenterCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 
-   mWidthCtrl = safenew NumericTextCtrl(
-      NumericConverter::BANDWIDTH, this, OnWidthID, bandwidthFormatName, 0.0);
-   mWidthCtrl->SetInvalidValue(-1.0);
-   mWidthCtrl->SetName(wxString(_("Bandwidth:")));
-   mWidthCtrl->EnableMenu();
-   subSizer->Add(mWidthCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 0);
+      mWidthCtrl = safenew NumericTextCtrl(
+         NumericConverter::BANDWIDTH, this, OnWidthID, bandwidthFormatName, 0.0);
+      mWidthCtrl->SetInvalidValue(-1.0);
+      mWidthCtrl->SetName(wxString(_("Bandwidth:")));
+      mWidthCtrl->EnableMenu();
+      subSizer->Add(mWidthCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 0);
 
-   mLowCtrl = safenew NumericTextCtrl(
-      NumericConverter::FREQUENCY, this, OnLowID, frequencyFormatName, 0.0);
-   mLowCtrl->SetInvalidValue(SelectedRegion::UndefinedFrequency);
-   mLowCtrl->SetName(_("Low Frequency:"));
-   mLowCtrl->EnableMenu();
-   subSizer->Add(mLowCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
+      mLowCtrl = safenew NumericTextCtrl(
+         NumericConverter::FREQUENCY, this, OnLowID, frequencyFormatName, 0.0);
+      mLowCtrl->SetInvalidValue(SelectedRegion::UndefinedFrequency);
+      mLowCtrl->SetName(_("Low Frequency:"));
+      mLowCtrl->EnableMenu();
+      subSizer->Add(mLowCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 
-   mHighCtrl = safenew NumericTextCtrl(
-      NumericConverter::FREQUENCY, this, OnHighID, frequencyFormatName, 0.0);
-   mHighCtrl->SetInvalidValue(SelectedRegion::UndefinedFrequency);
-   mHighCtrl->SetName(wxString(_("High Frequency:")));
-   mHighCtrl->EnableMenu();
-   subSizer->Add(mHighCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 0);
+      mHighCtrl = safenew NumericTextCtrl(
+         NumericConverter::FREQUENCY, this, OnHighID, frequencyFormatName, 0.0);
+      mHighCtrl->SetInvalidValue(SelectedRegion::UndefinedFrequency);
+      mHighCtrl->SetName(wxString(_("High Frequency:")));
+      mHighCtrl->EnableMenu();
+      subSizer->Add(mHighCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 0);
 
-   mCenterCtrl->Show(mbCenterAndWidth);
-   mWidthCtrl->Show(mbCenterAndWidth);
-   mLowCtrl->Show(!mbCenterAndWidth);
-   mHighCtrl->Show(!mbCenterAndWidth);
+      mCenterCtrl->Show(mbCenterAndWidth);
+      mWidthCtrl->Show(mbCenterAndWidth);
+      mLowCtrl->Show(!mbCenterAndWidth);
+      mHighCtrl->Show(!mbCenterAndWidth);
 
-   mainSizer->Add(subSizer, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 0);
+      mainSizer->Add(subSizer.release(), 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 0);
+   }
 
    mainSizer->Layout();
 
