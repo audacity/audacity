@@ -1168,7 +1168,11 @@ bool Sequence::CopyWrite(SampleBuffer &scratch,
 bool Sequence::Get(samplePtr buffer, sampleFormat format,
    sampleCount start, sampleCount len) const
 {
-   if (start < 0 || start >= mNumSamples ||
+   if (start == mNumSamples) {
+      return len == 0;
+   }
+
+   if (start < 0 || start > mNumSamples ||
       start + len > mNumSamples)
       return false;
    int b = FindBlock(start);
