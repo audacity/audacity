@@ -213,7 +213,7 @@ int MP3ImportFileHandle::Import(TrackFactory *trackFactory, Track ***outTracks,
 
    mPrivateData.file        = mFile;
    mPrivateData.inputBuffer = new unsigned char [INPUT_BUFFER_SIZE];
-   mPrivateData.progress    = mProgress;
+   mPrivateData.progress    = mProgress.get();
    mPrivateData.channels    = NULL;
    mPrivateData.updateResult= eProgressSuccess;
    mPrivateData.id3checked  = false;

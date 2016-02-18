@@ -69,25 +69,27 @@ void ComputeLegacySummaryInfo(wxFileName fileName,
    SampleBuffer data(info->frames64K * fields,
       info->format);
 
-   wxLogNull *silence=0;
-   wxFFile summaryFile(fileName.GetFullPath(), wxT("rb"));
    int read;
-   if(Silent)silence= new wxLogNull();
+   {
+      Maybe<wxLogNull> silence{};
+      wxFFile summaryFile(fileName.GetFullPath(), wxT("rb"));
+      if (Silent)
+         silence.create();
 
-   if( !summaryFile.IsOpened() ) {
-      wxLogWarning(wxT("Unable to access summary file %s; substituting silence for remainder of session"),
-                   fileName.GetFullPath().c_str());
+      if (!summaryFile.IsOpened()) {
+         wxLogWarning(wxT("Unable to access summary file %s; substituting silence for remainder of session"),
+            fileName.GetFullPath().c_str());
 
-      read=info->frames64K * info->bytesPerFrame;
-      memset(data.ptr(), 0, read);
-   }else{
-      summaryFile.Seek(info->offset64K);
-      read = summaryFile.Read(data.ptr(),
-                              info->frames64K *
-                              info->bytesPerFrame);
+         read = info->frames64K * info->bytesPerFrame;
+         memset(data.ptr(), 0, read);
+      }
+      else{
+         summaryFile.Seek(info->offset64K);
+         read = summaryFile.Read(data.ptr(),
+            info->frames64K *
+            info->bytesPerFrame);
+      }
    }
-
-   if(silence) delete silence;
 
    int count = read / info->bytesPerFrame;
 
@@ -151,22 +153,23 @@ LegacyBlockFile::~LegacyBlockFile()
 bool LegacyBlockFile::ReadSummary(void *data)
 {
    wxFFile summaryFile(mFileName.GetFullPath(), wxT("rb"));
-   wxLogNull *silence=0;
-   if(mSilentLog)silence= new wxLogNull();
+   int read;
+   {
+      Maybe<wxLogNull> silence{};
+      if (mSilentLog)
+         silence.create();
 
-   if( !summaryFile.IsOpened() ){
+      if (!summaryFile.IsOpened()){
 
-      memset(data,0,(size_t)mSummaryInfo.totalSummaryBytes);
+         memset(data, 0, (size_t)mSummaryInfo.totalSummaryBytes);
 
-      if(silence) delete silence;
-      mSilentLog=TRUE;
+         mSilentLog = TRUE;
 
-      return true;
+         return true;
+      }
+
+      read = summaryFile.Read(data, (size_t)mSummaryInfo.totalSummaryBytes);
    }
-
-   int read = summaryFile.Read(data, (size_t)mSummaryInfo.totalSummaryBytes);
-
-   if(silence) delete silence;
    mSilentLog=FALSE;
 
    return (read == mSummaryInfo.totalSummaryBytes);
@@ -215,19 +218,20 @@ int LegacyBlockFile::ReadData(samplePtr data, sampleFormat format,
       sf = sf_open_fd(f.fd(), SFM_READ, &info, FALSE);
    }
 
-   wxLogNull *silence=0;
-   if(mSilentLog)silence= new wxLogNull();
+   {
+      Maybe<wxLogNull> silence{};
+      if (mSilentLog)
+         silence.create();
 
-   if (!sf){
+      if (!sf){
 
-      memset(data,0,SAMPLE_SIZE(format)*len);
+         memset(data, 0, SAMPLE_SIZE(format)*len);
 
-      if(silence) delete silence;
-      mSilentLog=TRUE;
+         mSilentLog = TRUE;
 
-      return len;
+         return len;
+      }
    }
-   if(silence) delete silence;
    mSilentLog=FALSE;
 
    sf_count_t seekstart = start +
