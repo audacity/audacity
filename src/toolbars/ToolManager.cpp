@@ -118,25 +118,28 @@ class ToolFrame:public wxFrame
       mBar = bar;
 
       // Transfer the bar to the ferry
-      bar->Reparent( this );
+      bar->Reparent(this);
 
-      // We use a sizer to maintain proper spacing
-      wxBoxSizer *s = new wxBoxSizer( wxHORIZONTAL );
-
-      // Add the bar to the sizer
-      s->Add( bar, 1, wxEXPAND | wxALL, border );
-
-      // Add space for the resize grabber
-      if( bar->IsResizable() )
       {
-         s->Add( sizerW, 1 );
-         width += sizerW;
+         // We use a sizer to maintain proper spacing
+         auto s = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
+
+         // Add the bar to the sizer
+         s->Add(bar, 1, wxEXPAND | wxALL, border);
+
+         // Add space for the resize grabber
+         if (bar->IsResizable())
+         {
+            s->Add(sizerW, 1);
+            width += sizerW;
+         }
+
+         SetSize(width + 2, bar->GetDockedSize().y + 2);
+
+         // Attach the sizer and resize the window to fit
+         SetSizer(s.release());
       }
 
-      SetSize( width + 2, bar->GetDockedSize().y + 2 );
-
-      // Attach the sizer and resize the window to fit
-      SetSizer( s );
       Layout();
 
       // Inform toolbar of change

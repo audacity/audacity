@@ -422,34 +422,35 @@ void ToolBar::ReCreateButtons()
    mGrabber = NULL;
    mResizer = NULL;
 
-   // Create the main sizer
-   wxBoxSizer *ms = new wxBoxSizer( wxHORIZONTAL );
-
-   // Create the grabber and add it to the main sizer
-   mGrabber = safenew Grabber( this, mType );
-   ms->Add( mGrabber, 0, wxEXPAND | wxALIGN_LEFT | wxALIGN_TOP | wxRIGHT, 1 );
-
-   // Use a box sizer for laying out controls
-   mHSizer = new wxBoxSizer( wxHORIZONTAL );
-   ms->Add( mHSizer, 1, wxEXPAND );
-
-   // (Re)Establish dock state
-   SetDocked( GetDock(), false );
-
-   // Go add all the rest of the gadgets
-   Populate();
-
-   // Add some space for the resize border
-   if( IsResizable() )
    {
-      // Create the resizer and add it to the main sizer
-      mResizer = safenew ToolBarResizer( this );
-      ms->Add( mResizer, 0, wxEXPAND | wxALIGN_TOP | wxLEFT, 1 );
-      mResizer->SetToolTip( _("Click and drag to resize toolbar") );
-   }
+      // Create the main sizer
+      auto ms = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
 
-   // Set the sizer
-   SetSizerAndFit( ms );
+      // Create the grabber and add it to the main sizer
+      mGrabber = safenew Grabber(this, mType);
+      ms->Add(mGrabber, 0, wxEXPAND | wxALIGN_LEFT | wxALIGN_TOP | wxRIGHT, 1);
+
+      // Use a box sizer for laying out controls
+      ms->Add((mHSizer = safenew wxBoxSizer(wxHORIZONTAL)), 1, wxEXPAND);
+
+      // (Re)Establish dock state
+      SetDocked(GetDock(), false);
+
+      // Go add all the rest of the gadgets
+      Populate();
+
+      // Add some space for the resize border
+      if (IsResizable())
+      {
+         // Create the resizer and add it to the main sizer
+         mResizer = safenew ToolBarResizer(this);
+         ms->Add(mResizer, 0, wxEXPAND | wxALIGN_TOP | wxLEFT, 1);
+         mResizer->SetToolTip(_("Click and drag to resize toolbar"));
+      }
+
+      // Set the sizer
+      SetSizerAndFit(ms.release());
+   }
 
    // Recalculate the height to be a multiple of toolbarSingle
    const int tbs = toolbarSingle + toolbarGap;

@@ -2242,33 +2242,39 @@ NyquistOutputDialog::NyquistOutputDialog(wxWindow * parent, wxWindowID id,
 {
    SetName(GetTitle());
 
-   wxBoxSizer *mainSizer = new wxBoxSizer(wxVERTICAL);
-   wxBoxSizer *hSizer;
-   wxButton   *button;
-   wxControl  *item;
+   wxBoxSizer *mainSizer;
+   {
+      auto uMainSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
+      mainSizer = uMainSizer.get();
+      wxButton   *button;
+      wxControl  *item;
 
-   item = safenew wxStaticText(this, -1, prompt);
-   item->SetName(prompt);  // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
-   mainSizer->Add(item, 0, wxALIGN_LEFT | wxLEFT | wxTOP | wxRIGHT, 10);
+      item = safenew wxStaticText(this, -1, prompt);
+      item->SetName(prompt);  // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+      mainSizer->Add(item, 0, wxALIGN_LEFT | wxLEFT | wxTOP | wxRIGHT, 10);
 
-   // TODO use ShowInfoDialog() instead.
-   // Beware this dialog MUST work with screen readers.
-   item = safenew wxTextCtrl(this, -1, message,
-                         wxDefaultPosition, wxSize(400, 200),
-                         wxTE_MULTILINE | wxTE_READONLY);
-   mainSizer->Add(item, 0, wxALIGN_LEFT | wxALL, 10);
+      // TODO use ShowInfoDialog() instead.
+      // Beware this dialog MUST work with screen readers.
+      item = safenew wxTextCtrl(this, -1, message,
+         wxDefaultPosition, wxSize(400, 200),
+         wxTE_MULTILINE | wxTE_READONLY);
+      mainSizer->Add(item, 0, wxALIGN_LEFT | wxALL, 10);
 
-   hSizer = new wxBoxSizer(wxHORIZONTAL);
+      {
+         auto hSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
 
-   /* i18n-hint: In most languages OK is to be translated as OK.  It appears on a button.*/
-   button = safenew wxButton(this, wxID_OK, _("OK"));
-   button->SetDefault();
-   hSizer->Add(button, 0, wxALIGN_CENTRE | wxALL, 5);
+         /* i18n-hint: In most languages OK is to be translated as OK.  It appears on a button.*/
+         button = safenew wxButton(this, wxID_OK, _("OK"));
+         button->SetDefault();
+         hSizer->Add(button, 0, wxALIGN_CENTRE | wxALL, 5);
 
-   mainSizer->Add(hSizer, 0, wxALIGN_CENTRE | wxLEFT | wxBOTTOM | wxRIGHT, 5);
+         mainSizer->Add(hSizer.release(), 0, wxALIGN_CENTRE | wxLEFT | wxBOTTOM | wxRIGHT, 5);
+      }
 
-   SetAutoLayout(true);
-   SetSizer(mainSizer);
+      SetAutoLayout(true);
+      SetSizer(uMainSizer.release());
+   }
+
    mainSizer->Fit(this);
    mainSizer->SetSizeHints(this);
 }

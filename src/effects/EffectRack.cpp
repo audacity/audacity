@@ -104,31 +104,38 @@ EffectRack::EffectRack()
    mRemovePushed = CreateBitmap(remove_16x16_xpm, false, true);
    mRemoveRaised = CreateBitmap(remove_16x16_xpm, true, true);
 
-   wxBoxSizer *bs = new wxBoxSizer(wxVERTICAL);
-   mPanel = safenew wxPanel(this, wxID_ANY);
-   bs->Add(mPanel, 1, wxEXPAND);
-   SetSizer(bs);
+   {
+      auto bs = std::make_unique<wxBoxSizer>(wxVERTICAL);
+      mPanel = safenew wxPanel(this, wxID_ANY);
+      bs->Add(mPanel, 1, wxEXPAND);
+      SetSizer(bs.release());
+   }
 
-   wxBoxSizer *hs = new wxBoxSizer(wxHORIZONTAL);
-   wxASSERT(mPanel); // To justify safenew
-   hs->Add(safenew wxButton(mPanel, wxID_APPLY, _("&Apply")), 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
-   hs->AddStretchSpacer();
-   mLatency = safenew wxStaticText(mPanel, wxID_ANY, _("Latency: 0"));
-   hs->Add(mLatency, 0, wxALIGN_CENTER);
-   hs->AddStretchSpacer();
-   hs->Add(safenew wxToggleButton(mPanel, wxID_CLEAR, _("&Bypass")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+   {
+      auto bs = std::make_unique<wxBoxSizer>(wxVERTICAL);
+      {
+         auto hs = std::make_uniqie<wxBoxSizer>(wxHORIZONTAL);
+         wxASSERT(mPanel); // To justify safenew
+         hs->Add(safenew wxButton(mPanel, wxID_APPLY, _("&Apply")), 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+         hs->AddStretchSpacer();
+         mLatency = safenew wxStaticText(mPanel, wxID_ANY, _("Latency: 0"));
+         hs->Add(mLatency, 0, wxALIGN_CENTER);
+         hs->AddStretchSpacer();
+         hs->Add(safenew wxToggleButton(mPanel, wxID_CLEAR, _("&Bypass")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+         bs->Add(hs.release(), 0, wxEXPAND);
+      }
+      bs->Add(safenew wxStaticLine(mPanel, wxID_ANY), 0, wxEXPAND);
 
-   bs = new wxBoxSizer(wxVERTICAL);
-   bs->Add(hs, 0, wxEXPAND);
-   bs->Add(safenew wxStaticLine(mPanel, wxID_ANY), 0, wxEXPAND);
+      {
+         auto uMainSizer = make_uniqie<wxFlexGridSizer>(7);
+         uMainSizer->AddGrowableCol(6);
+         uMainSizer->SetHGap(0);
+         uMainSizer->SetVGap(0);
+         bs->Add((mMainSizer = uMainSizer.release()), 1, wxEXPAND);
+      }
 
-   mMainSizer = new wxFlexGridSizer(7);
-   mMainSizer->AddGrowableCol(6);
-   mMainSizer->SetHGap(0);
-   mMainSizer->SetVGap(0);
-   bs->Add(mMainSizer, 1, wxEXPAND);
-
-   mPanel->SetSizer(bs);
+      mPanel->SetSizer(bs.release());
+   }
 
    wxString oldPath = gPrefs->GetPath();
    gPrefs->SetPath(wxT("/EffectsRack"));

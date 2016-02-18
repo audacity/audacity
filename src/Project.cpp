@@ -927,7 +927,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
       wxDefaultPosition,
       wxDefaultSize,
       wxNO_BORDER);
-   mMainPanel->SetSizer( new wxBoxSizer(wxVERTICAL) );
+   mMainPanel->SetSizer( safenew wxBoxSizer(wxVERTICAL) );
    pPage = mMainPanel;
    // Set the colour here to the track panel background to avoid
    // flicker when Audacity starts up.
@@ -937,13 +937,17 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    //pPage->SetBackgroundColour( theTheme.Colour( clrDark ));
 #endif
 
-   wxBoxSizer *bs = new wxBoxSizer( wxVERTICAL );
-   bs->Add( mToolManager->GetTopDock(), 0, wxEXPAND | wxALIGN_TOP );
-   bs->Add( mRuler, 0, wxEXPAND );
-   bs->Add( pPage, 1, wxEXPAND );
-   bs->Add( mToolManager->GetBotDock(), 0, wxEXPAND );
-   SetAutoLayout( true );
-   SetSizer( bs );
+   wxBoxSizer *bs;
+   {
+      auto ubs = std::make_unique<wxBoxSizer>(wxVERTICAL);
+      bs = ubs.get();
+      bs->Add(mToolManager->GetTopDock(), 0, wxEXPAND | wxALIGN_TOP);
+      bs->Add(mRuler, 0, wxEXPAND);
+      bs->Add(pPage, 1, wxEXPAND);
+      bs->Add(mToolManager->GetBotDock(), 0, wxEXPAND);
+      SetAutoLayout(true);
+      SetSizer(ubs.release());
+   }
    bs->Layout();
 
    // The right hand side translates to NEW TrackPanel(... in normal
@@ -972,33 +976,37 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    //      keyboard focus problems.
    pPage->MoveBeforeInTabOrder(mToolManager->GetTopDock());
 
-   bs = (wxBoxSizer *) pPage->GetSizer();
+   bs = (wxBoxSizer *)pPage->GetSizer();
 
-   wxBoxSizer *hs;
-   wxBoxSizer *vs;
+   {
+      // Top horizontal grouping
+      auto hs = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
 
-   // Top horizontal grouping
-   hs = new wxBoxSizer( wxHORIZONTAL );
+      // Track panel
+      hs->Add(mTrackPanel, 1, wxEXPAND | wxALIGN_LEFT | wxALIGN_TOP);
 
-   // Track panel
-   hs->Add( mTrackPanel, 1, wxEXPAND | wxALIGN_LEFT | wxALIGN_TOP );
+      {
+         // Vertical grouping
+         auto vs = std::make_unique<wxBoxSizer>(wxVERTICAL);
 
-   // Vertical grouping
-   vs = new wxBoxSizer( wxVERTICAL );
+         // Vertical scroll bar
+         vs->Add(mVsbar, 1, wxEXPAND | wxALIGN_TOP);
+         hs->Add(vs.release(), 0, wxEXPAND | wxALIGN_TOP);
+      }
 
-   // Vertical scroll bar
-   vs->Add( mVsbar, 1, wxEXPAND | wxALIGN_TOP );
-   hs->Add( vs, 0, wxEXPAND | wxALIGN_TOP );
-   bs->Add( hs, 1, wxEXPAND | wxALIGN_LEFT | wxALIGN_TOP );
+      bs->Add(hs.release(), 1, wxEXPAND | wxALIGN_LEFT | wxALIGN_TOP);
+   }
 
-   // Bottom horizontal grouping
-   hs = new wxBoxSizer( wxHORIZONTAL );
+   {
+      // Bottom horizontal grouping
+      auto hs = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
 
-   // Bottom scrollbar
-   hs->Add( mTrackPanel->GetLeftOffset() - 1, 0 );
-   hs->Add( mHsbar, 1, wxALIGN_BOTTOM );
-   hs->Add( mVsbar->GetSize().GetWidth(), 0 );
-   bs->Add( hs, 0, wxEXPAND | wxALIGN_LEFT );
+      // Bottom scrollbar
+      hs->Add(mTrackPanel->GetLeftOffset() - 1, 0);
+      hs->Add(mHsbar, 1, wxALIGN_BOTTOM);
+      hs->Add(mVsbar->GetSize().GetWidth(), 0);
+      bs->Add(hs.release(), 0, wxEXPAND | wxALIGN_LEFT);
+   }
 
    // Lay it out
    pPage->SetAutoLayout(true);
