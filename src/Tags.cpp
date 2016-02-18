@@ -743,7 +743,7 @@ void TagsEditor::PopulateOrExchange(ShuttleGui & S)
       S.EndHorizontalLay();
 
       if (mGrid == NULL) {
-         mGrid = new Grid(S.GetParent(),
+         mGrid = safenew Grid(S.GetParent(),
                           wxID_ANY,
                           wxDefaultPosition,
                           wxDefaultSize,
