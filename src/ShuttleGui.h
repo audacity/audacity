@@ -313,7 +313,7 @@ protected:
    // Proportion set by user rather than default.
    int miPropSetByUser;
 
-   std::unique_ptr<wxSizer> mpSubSizer;
+   wxSizer * mpSubSizer;
    wxSizer * mpSizer;
    wxWindow * mpParent;
    wxWindow * mpWind;
@@ -358,7 +358,7 @@ enum
    eCloseID       = wxID_CANCEL
 };
 
-AUDACITY_DLL_API std::unique_ptr<wxSizer> CreateStdButtonSizer( wxWindow *parent,
+AUDACITY_DLL_API wxSizer *CreateStdButtonSizer( wxWindow *parent,
                                long buttons = eOkButton | eCancelButton,
                                wxWindow *extra = NULL );
 

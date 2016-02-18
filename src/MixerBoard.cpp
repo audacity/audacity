@@ -1002,7 +1002,7 @@ MixerBoard::MixerBoard(AudacityProject* pProject,
    mScrolledWindow->SetVirtualSize(size);
 
    /* This doesn't work to make the mScrolledWindow automatically resize, so do it explicitly in OnSize.
-         auto pBoxSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
+         wxBoxSizer* pBoxSizer = new wxBoxSizer(wxVERTICAL);
          pBoxSizer->Add(mScrolledWindow, 0, wxExpand, 0);
          this->SetAutoLayout(true);
          this->SetSizer(pBoxSizer);

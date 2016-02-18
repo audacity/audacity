@@ -114,6 +114,7 @@ void SelectionBar::Populate()
    SetFont(wxFont(9, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
 
    wxFlexGridSizer *mainSizer;
+   wxBoxSizer *hSizer;
 
    /* we don't actually need a control yet, but we want to use it's methods
     * to do some look-ups, so we'll have to create one. We can't make the
@@ -121,7 +122,8 @@ void SelectionBar::Populate()
     * runtime */
    wxString formatName = mListener ? mListener->AS_GetSelectionFormat() : wxString(wxEmptyString);
 
-   Add((mainSizer = safenew wxFlexGridSizer(7, 1, 1)), 0, wxALIGN_CENTER_VERTICAL);
+   mainSizer = new wxFlexGridSizer(7, 1, 1);
+   Add(mainSizer, 0, wxALIGN_CENTER_VERTICAL);
 
    //
    // Top row (mostly labels)
@@ -148,20 +150,19 @@ void SelectionBar::Populate()
    bool showSelectionLength = false;
    gPrefs->Read(wxT("/ShowSelectionLength"), &showSelectionLength);
 
-   {
-      auto hSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
-      mRightEndButton = safenew wxRadioButton(this, OnEndRadioID, _("End"),
-         wxDefaultPosition, wxDefaultSize,
-         wxRB_GROUP);
-      mRightEndButton->SetName(_("End"));
-      mRightEndButton->SetValue(!showSelectionLength);
-      hSizer->Add(mRightEndButton,
-         0, wxRIGHT | wxALIGN_CENTER_VERTICAL, 5);
-      mRightLengthButton = safenew wxRadioButton(this, OnLengthRadioID, _("Length"));
-      mRightLengthButton->SetName(_("Length"));
-      mRightLengthButton->SetValue(showSelectionLength);
-      hSizer->Add(mRightLengthButton,
-         0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
+   hSizer = new wxBoxSizer(wxHORIZONTAL);
+   mRightEndButton = safenew wxRadioButton(this, OnEndRadioID, _("End"),
+                                       wxDefaultPosition, wxDefaultSize,
+                                       wxRB_GROUP);
+   mRightEndButton->SetName(_("End"));
+   mRightEndButton->SetValue(!showSelectionLength);
+   hSizer->Add(mRightEndButton,
+               0, wxRIGHT | wxALIGN_CENTER_VERTICAL, 5);
+   mRightLengthButton = safenew wxRadioButton(this, OnLengthRadioID, _("Length"));
+   mRightLengthButton->SetName(_("Length"));
+   mRightLengthButton->SetValue(showSelectionLength);
+   hSizer->Add(mRightLengthButton,
+               0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 #if defined(__WXMSW__)
       // Refer to Microsoft KB article 261192 for an explanation as
       // to why this is needed.  We've only experienced it under Win2k
@@ -169,13 +170,12 @@ void SelectionBar::Populate()
       // in for all versions.
       wxRadioButton* dummyButton =
          safenew wxRadioButton(this, wxID_ANY, _("hidden"),
-         wxDefaultPosition, wxDefaultSize,
-         wxRB_GROUP);
+                           wxDefaultPosition, wxDefaultSize,
+                           wxRB_GROUP);
       dummyButton->Disable();
       dummyButton->Hide();
 #endif
-      mainSizer->Add(hSizer.release(), 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 0);
-   }
+   mainSizer->Add(hSizer, 0,  wxALIGN_CENTER_VERTICAL | wxRIGHT, 0);
 
    mainSizer->Add(5, 1);
 

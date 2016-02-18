@@ -109,33 +109,28 @@ ErrorDialog::ErrorDialog(
 #if 0
    // Original non ShuttleGui based code.
    // Layout did not look good on Windows.
-   wxBoxSizer mainSizer;
-   {
-      auto uMainSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
-      mainSizer = uMainSizer.get();
-      wxBoxSizer *vSizer = new wxBoxSizer(wxVERTICAL);
+   wxBoxSizer *mainSizer = new wxBoxSizer(wxVERTICAL);
+   wxBoxSizer *vSizer = new wxBoxSizer(wxVERTICAL);
 
-      wxBoxSizer *hSizer = new wxBoxSizer(wxHORIZONTAL);
+   wxBoxSizer *hSizer = new wxBoxSizer(wxHORIZONTAL);
 
-      wxStaticText *statText = safenew wxStaticText(this, -1, message);
-      mainSizer->Add(statText, 0, wxALIGN_LEFT|wxALL, 5);
+   wxStaticText *statText = safenew wxStaticText(this, -1, message);
+   mainSizer->Add(statText, 0, wxALIGN_LEFT|wxALL, 5);
 
-      wxButton *help = safenew wxButton(this, wxID_HELP, _("Help"));
-      hSizer->Add(help, 0, wxALIGN_LEFT|wxALL, 5);
+   wxButton *help = safenew wxButton(this, wxID_HELP, _("Help"));
+   hSizer->Add(help, 0, wxALIGN_LEFT|wxALL, 5);
 
-      wxButton *ok = safenew wxButton(this, wxID_OK, _("OK"));
-      ok->SetDefault();
-      ok->SetFocus();
-      hSizer->Add(ok, 0, wxALIGN_RIGHT|wxALL, 5);
+   wxButton *ok = safenew wxButton(this, wxID_OK, _("OK"));
+   ok->SetDefault();
+   ok->SetFocus();
+   hSizer->Add(ok, 0, wxALIGN_RIGHT|wxALL, 5);
 
-      vSizer->Add(hSizer, 0, wxALIGN_CENTER|wxALL, 5);
+   vSizer->Add(hSizer, 0, wxALIGN_CENTER|wxALL, 5);
 
-      mainSizer->Add(vSizer, 0, wxALL, 15 );
+   mainSizer->Add(vSizer, 0, wxALL, 15 );
 
-      SetAutoLayout(true);
-      SetSizer(uMainSizer.release());
-   }
-
+   SetAutoLayout(true);
+   SetSizer(mainSizer);
    mainSizer->Fit(this);
    mainSizer->SetSizeHints(this);
 #endif

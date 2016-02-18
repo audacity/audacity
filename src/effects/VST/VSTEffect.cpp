@@ -2825,14 +2825,12 @@ void VSTEffect::BuildFancy()
       return;
    }
 
-   {
-      auto mainSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
+   wxBoxSizer *mainSizer = new wxBoxSizer(wxVERTICAL);
 
-      mainSizer->Add(mControl, 0, wxALIGN_CENTER);
+   mainSizer->Add(mControl, 0, wxALIGN_CENTER);
 
-      mParent->SetMinSize(wxDefaultSize);
-      mParent->SetSizer(mainSizer.release());
-   }
+   mParent->SetMinSize(wxDefaultSize);
+   mParent->SetSizer(mainSizer);
 
    NeedEditIdle(true);
 
@@ -2843,125 +2841,118 @@ void VSTEffect::BuildFancy()
 
 void VSTEffect::BuildPlain()
 {
+   wxBoxSizer *mainSizer = new wxBoxSizer(wxVERTICAL);
    wxASSERT(mParent); // To justify safenew
    wxScrolledWindow *const scroller = safenew wxScrolledWindow(mParent,
-      wxID_ANY,
-      wxDefaultPosition,
-      wxDefaultSize,
-      wxVSCROLL | wxTAB_TRAVERSAL);
+                                                     wxID_ANY,
+                                                     wxDefaultPosition,
+                                                     wxDefaultSize,
+                                                     wxVSCROLL | wxTAB_TRAVERSAL);
 
-   {
-      auto mainSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
+   // Try to give the window a sensible default/minimum size
+   scroller->SetMinSize(wxSize(wxMax(600, mParent->GetSize().GetWidth() * 2 / 3),
+                        mParent->GetSize().GetHeight() / 2));
+   scroller->SetScrollRate(0, 20);
 
-      // Try to give the window a sensible default/minimum size
-      scroller->SetMinSize(wxSize(wxMax(600, mParent->GetSize().GetWidth() * 2 / 3),
-         mParent->GetSize().GetHeight() / 2));
-      scroller->SetScrollRate(0, 20);
+   // This fools NVDA into not saying "Panel" when the dialog gets focus
+   scroller->SetName(wxT("\a"));
+   scroller->SetLabel(wxT("\a"));
 
-      // This fools NVDA into not saying "Panel" when the dialog gets focus
-      scroller->SetName(wxT("\a"));
-      scroller->SetLabel(wxT("\a"));
-
-      mainSizer->Add(scroller, 1, wxEXPAND | wxALL, 5);
-      mParent->SetSizer(mainSizer.release());
-   }
+   mainSizer->Add(scroller, 1, wxEXPAND | wxALL, 5);
+   mParent->SetSizer(mainSizer);
 
    mNames = new wxStaticText *[mAEffect->numParams];
    mSliders = new wxSlider *[mAEffect->numParams];
    mDisplays = new wxStaticText *[mAEffect->numParams];
    mLabels = new wxStaticText *[mAEffect->numParams];
 
+   wxSizer *paramSizer = new wxStaticBoxSizer(wxVERTICAL, scroller, _("Effect Settings"));
+
+   wxFlexGridSizer *gridSizer = new wxFlexGridSizer(4, 0, 0);
+   gridSizer->AddGrowableCol(1);
+
+   // Add the duration control for generators
+   if (GetType() == EffectTypeGenerate)
    {
-      auto paramSizer = std::make_unique<wxStaticBoxSizer>(wxVERTICAL, scroller, _("Effect Settings"));
-
-      {
-         auto gridSizer = std::make_unique<wxFlexGridSizer>(4, 0, 0);
-         gridSizer->AddGrowableCol(1);
-
-         // Add the duration control for generators
-         if (GetType() == EffectTypeGenerate)
-         {
-            wxControl *item = safenew wxStaticText(scroller, 0, _("Duration:"));
-            gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 5);
-            mDuration = safenew
-               NumericTextCtrl(NumericConverter::TIME,
-               scroller,
-               ID_Duration,
-               mHost->GetDurationFormat(),
-               mHost->GetDuration(),
-               mSampleRate,
-               wxDefaultPosition,
-               wxDefaultSize,
-               true);
-            mDuration->SetName(_("Duration"));
-            mDuration->EnableMenu();
-            gridSizer->Add(mDuration, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
-            gridSizer->Add(1, 1, 0);
-            gridSizer->Add(1, 1, 0);
-         }
-
-         // Find the longest parameter name.
-         int namew = 0;
-         int w;
-         int h;
-         for (int i = 0; i < mAEffect->numParams; i++)
-         {
-            wxString text = GetString(effGetParamName, i);
-
-            if (text.Right(1) != wxT(':'))
-            {
-               text += wxT(':');
-            }
-
-            scroller->GetTextExtent(text, &w, &h);
-            if (w > namew)
-            {
-               namew = w;
-            }
-         }
-
-         scroller->GetTextExtent(wxT("HHHHHHHH"), &w, &h);
-
-         for (int i = 0; i < mAEffect->numParams; i++)
-         {
-            mNames[i] = safenew wxStaticText(scroller,
-               wxID_ANY,
-               wxEmptyString,
-               wxDefaultPosition,
-               wxSize(namew, -1),
-               wxALIGN_RIGHT | wxST_NO_AUTORESIZE);
-            gridSizer->Add(mNames[i], 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 5);
-
-            mSliders[i] = safenew wxSlider(scroller,
-               ID_Sliders + i,
-               0,
-               0,
-               1000,
-               wxDefaultPosition,
-               wxSize(200, -1));
-            gridSizer->Add(mSliders[i], 0, wxALIGN_CENTER_VERTICAL | wxEXPAND | wxALL, 5);
-
-            mDisplays[i] = safenew wxStaticText(scroller,
-               wxID_ANY,
-               wxEmptyString,
-               wxDefaultPosition,
-               wxSize(w, -1),
-               wxALIGN_RIGHT | wxST_NO_AUTORESIZE);
-            gridSizer->Add(mDisplays[i], 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 5);
-
-            mLabels[i] = safenew wxStaticText(scroller,
-               wxID_ANY,
-               wxEmptyString,
-               wxDefaultPosition,
-               wxSize(w, -1),
-               wxALIGN_LEFT | wxST_NO_AUTORESIZE);
-            gridSizer->Add(mLabels[i], 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT | wxALL, 5);
-         }
-
-         paramSizer->Add(gridSizer.release(), 1, wxEXPAND | wxALL, 5);
-      }
-      scroller->SetSizer(paramSizer.release());
+      wxControl *item = safenew wxStaticText(scroller, 0, _("Duration:"));
+      gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 5);
+      mDuration = safenew
+         NumericTextCtrl(NumericConverter::TIME,
+                         scroller,
+                         ID_Duration,
+                         mHost->GetDurationFormat(),
+                         mHost->GetDuration(),
+                         mSampleRate,
+                         wxDefaultPosition,
+                         wxDefaultSize,
+                         true);
+      mDuration->SetName(_("Duration"));
+      mDuration->EnableMenu();
+      gridSizer->Add(mDuration, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
+      gridSizer->Add(1, 1, 0);
+      gridSizer->Add(1, 1, 0);
    }
+
+   // Find the longest parameter name.
+   int namew = 0;
+   int w;
+   int h;
+   for (int i = 0; i < mAEffect->numParams; i++)
+   {
+      wxString text = GetString(effGetParamName, i);
+
+      if (text.Right(1) != wxT(':'))
+      {
+         text += wxT(':');
+      }
+
+      scroller->GetTextExtent(text, &w, &h);
+      if (w > namew)
+      {
+         namew = w;
+      }
+   }
+
+   scroller->GetTextExtent(wxT("HHHHHHHH"), &w, &h);
+
+   for (int i = 0; i < mAEffect->numParams; i++)
+   {
+      mNames[i] = safenew wxStaticText(scroller,
+                                   wxID_ANY,
+                                   wxEmptyString,
+                                   wxDefaultPosition,
+                                   wxSize(namew, -1),
+                                   wxALIGN_RIGHT | wxST_NO_AUTORESIZE);
+      gridSizer->Add(mNames[i], 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 5);
+
+      mSliders[i] = safenew wxSlider(scroller,
+                                 ID_Sliders + i,
+                                 0,
+                                 0,
+                                 1000,
+                                 wxDefaultPosition,
+                                 wxSize(200, -1));
+      gridSizer->Add(mSliders[i], 0, wxALIGN_CENTER_VERTICAL | wxEXPAND | wxALL, 5);
+
+      mDisplays[i] = safenew wxStaticText(scroller,
+                                      wxID_ANY,
+                                      wxEmptyString,
+                                      wxDefaultPosition,
+                                      wxSize(w, -1),
+                                      wxALIGN_RIGHT | wxST_NO_AUTORESIZE);
+      gridSizer->Add(mDisplays[i], 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 5);
+
+      mLabels[i] = safenew wxStaticText(scroller,
+                                    wxID_ANY,
+                                    wxEmptyString,
+                                    wxDefaultPosition,
+                                    wxSize(w, -1),
+                                    wxALIGN_LEFT | wxST_NO_AUTORESIZE);
+      gridSizer->Add(mLabels[i], 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT | wxALL, 5);
+   }
+
+   paramSizer->Add(gridSizer, 1, wxEXPAND | wxALL, 5);
+   scroller->SetSizer(paramSizer);
 
    RefreshParameters();
 

@@ -240,8 +240,8 @@ static wxString AskCopyOrEdit()
       wxDialog dialog(NULL, -1, wxString(_("Warning")));
       dialog.SetName(dialog.GetTitle());
 
-      wxBoxSizer *vbox;
-      dialog.SetSizer(vbox = safenew wxBoxSizer(wxVERTICAL));
+      wxBoxSizer *vbox = new wxBoxSizer(wxVERTICAL);
+      dialog.SetSizer(vbox);
 
       wxStaticText *message = safenew wxStaticText(&dialog, -1, wxString::Format(_("\
 When importing uncompressed audio files you can either copy them \
@@ -261,27 +261,19 @@ How do you want to import the current file(s)?"), oldCopyPref == wxT("copy") ? _
 
       wxStaticBox *box = safenew wxStaticBox(&dialog, -1, _("Choose an import method"));
       box->SetName(box->GetLabel());
+      wxStaticBoxSizer *boxsizer = new wxStaticBoxSizer(box, wxVERTICAL);
 
-      wxRadioButton *aliasRadio;
-      wxRadioButton *copyRadio;
-      wxCheckBox *dontAskNextTimeBox;
+      wxRadioButton *copyRadio  = safenew wxRadioButton(&dialog, -1, _("Make a &copy of the files before editing (safer)"), wxDefaultPosition, wxDefaultSize, wxRB_GROUP);
+      boxsizer->Add(copyRadio, 0, wxALL);
+      copyRadio->SetName(wxStripMenuCodes(copyRadio->GetLabel()));
 
-      {
-         auto boxsizer = std::make_unique<wxStaticBoxSizer>(box, wxVERTICAL);
+      wxRadioButton *aliasRadio = safenew wxRadioButton(&dialog, -1, _("Read the files &directly from the original (faster)"));
+      boxsizer->Add(aliasRadio, 0, wxALL);
+      aliasRadio->SetName(wxStripMenuCodes(aliasRadio->GetLabel()));
 
-         copyRadio = safenew wxRadioButton(&dialog, -1, _("Make a &copy of the files before editing (safer)"), wxDefaultPosition, wxDefaultSize, wxRB_GROUP);
-         boxsizer->Add(copyRadio, 0, wxALL);
-         copyRadio->SetName(wxStripMenuCodes(copyRadio->GetLabel()));
-
-         aliasRadio = safenew wxRadioButton(&dialog, -1, _("Read the files &directly from the original (faster)"));
-         boxsizer->Add(aliasRadio, 0, wxALL);
-         aliasRadio->SetName(wxStripMenuCodes(aliasRadio->GetLabel()));
-
-         dontAskNextTimeBox = safenew wxCheckBox(&dialog, -1, _("Don't &warn again and always use my choice above"));
-         boxsizer->Add(dontAskNextTimeBox, 0, wxALL);
-         vbox->Add(boxsizer.release(), 0, wxALL, 10);
-      }
-
+      wxCheckBox *dontAskNextTimeBox = safenew wxCheckBox(&dialog, -1, _("Don't &warn again and always use my choice above"));
+      boxsizer->Add(dontAskNextTimeBox, 0, wxALL);
+      vbox->Add(boxsizer, 0, wxALL, 10);
       dontAskNextTimeBox->SetName(wxStripMenuCodes(dontAskNextTimeBox->GetLabel()));
 
 
