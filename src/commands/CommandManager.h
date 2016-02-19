@@ -34,15 +34,25 @@ public:
 
 struct MenuBarListEntry
 {
+   MenuBarListEntry(const wxString &name_, wxMenuBar *menubar_)
+      : name(name_), menubar(menubar_)
+   {}
+
    wxString name;
    wxMenuBar *menubar;
 };
 
 struct SubMenuListEntry
 {
+   SubMenuListEntry(const wxString &name_, wxMenu *menu_)
+      : name(name_), menu(menu_)
+   {}
+
    wxString name;
    wxMenu *menu;
 };
+
+using CommandFunctorPointer = std::shared_ptr <CommandFunctor>;
 
 struct CommandListEntry
 {
@@ -54,7 +64,7 @@ struct CommandListEntry
    wxString labelPrefix;
    wxString labelTop;
    wxMenu *menu;
-   CommandFunctor *callback;
+   CommandFunctorPointer callback;
    bool multi;
    int index;
    int count;
@@ -66,8 +76,8 @@ struct CommandListEntry
    wxUint32 mask;
 };
 
-WX_DEFINE_USER_EXPORTED_ARRAY(MenuBarListEntry *, MenuBarList, class AUDACITY_DLL_API);
-WX_DEFINE_USER_EXPORTED_ARRAY(SubMenuListEntry *, SubMenuList, class AUDACITY_DLL_API);
+using MenuBarList = std::vector < MenuBarListEntry >;
+using SubMenuList = std::vector < SubMenuListEntry >;
 WX_DEFINE_USER_EXPORTED_ARRAY(CommandListEntry *, CommandList, class AUDACITY_DLL_API);
 
 WX_DECLARE_STRING_HASH_MAP_WITH_DECL(CommandListEntry *, CommandNameHash, class AUDACITY_DLL_API);
@@ -105,35 +115,35 @@ class AUDACITY_DLL_API CommandManager: public XMLTagHandler
 
    void InsertItem(const wxString & name,
                    const wxString & label,
-                   CommandFunctor *callback,
+                   const CommandFunctorPointer &callback,
                    const wxString & after,
                    int checkmark = -1);
 
    void AddItemList(const wxString & name,
                     const wxArrayString & labels,
-                    CommandFunctor *callback);
+                    const CommandFunctorPointer &callback);
 
    void AddCheck(const wxChar *name,
                  const wxChar *label,
-                 CommandFunctor *callback,
+                 const CommandFunctorPointer &callback,
                  int checkmark = 0);
 
    void AddCheck(const wxChar *name,
                  const wxChar *label,
-                 CommandFunctor *callback,
+                 const CommandFunctorPointer &callback,
                  int checkmark,
                  unsigned int flags,
                  unsigned int mask);
 
    void AddItem(const wxChar *name,
                 const wxChar *label,
-                CommandFunctor *callback,
+                const CommandFunctorPointer &callback,
                 unsigned int flags = NoFlagsSpecifed,
                 unsigned int mask = NoFlagsSpecifed);
 
    void AddItem(const wxChar *name,
                 const wxChar *label_in,
-                CommandFunctor *callback,
+                const CommandFunctorPointer &callback,
                 const wxChar *accel,
                 unsigned int flags = NoFlagsSpecifed,
                 unsigned int mask = NoFlagsSpecifed,
@@ -145,20 +155,20 @@ class AUDACITY_DLL_API CommandManager: public XMLTagHandler
    // keyboard shortcut.
    void AddCommand(const wxChar *name,
                    const wxChar *label,
-                   CommandFunctor *callback,
+                   const CommandFunctorPointer &callback,
                    unsigned int flags = NoFlagsSpecifed,
                    unsigned int mask = NoFlagsSpecifed);
 
    void AddCommand(const wxChar *name,
                    const wxChar *label,
-                   CommandFunctor *callback,
+                   const CommandFunctorPointer &callback,
                    const wxChar *accel,
                    unsigned int flags = NoFlagsSpecifed,
                    unsigned int mask = NoFlagsSpecifed);
 
    void AddGlobalCommand(const wxChar *name,
                          const wxChar *label,
-                         CommandFunctor *callback,
+                         const CommandFunctorPointer &callback,
                          const wxChar *accel);
    //
    // Command masks
@@ -242,7 +252,7 @@ protected:
    CommandListEntry *NewIdentifier(const wxString & name,
                                    const wxString & label,
                                    wxMenu *menu,
-                                   CommandFunctor *callback,
+                                   const CommandFunctorPointer &callback,
                                    bool multi,
                                    int index,
                                    int count);
@@ -250,7 +260,7 @@ protected:
                                    const wxString & label,
                                    const wxString & accel,
                                    wxMenu *menu,
-                                   CommandFunctor *callback,
+                                   const CommandFunctorPointer &callback,
                                    bool multi,
                                    int index,
                                    int count);

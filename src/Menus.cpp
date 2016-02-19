@@ -198,9 +198,9 @@ void AudacityProjectCommandFunctor::operator()(int index, const wxEvent * evt)
       (mProject->*(mCommandFunction)) ();
 }
 
-#define FN(X) new AudacityProjectCommandFunctor(this, &AudacityProject:: X )
-#define FNI(X, I) new AudacityProjectCommandFunctor(this, &AudacityProject:: X, I)
-#define FNS(X, S) new AudacityProjectCommandFunctor(this, &AudacityProject:: X, S)
+#define FN(X) CommandFunctorPointer{safenew AudacityProjectCommandFunctor(this, &AudacityProject:: X )}
+#define FNI(X, I) CommandFunctorPointer{safenew AudacityProjectCommandFunctor(this, &AudacityProject:: X, I)}
+#define FNS(X, S) CommandFunctorPointer{safenew AudacityProjectCommandFunctor(this, &AudacityProject:: X, S)}
 
 //
 // Effects menu arrays
