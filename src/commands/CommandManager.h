@@ -14,6 +14,7 @@
 
 #include "../Experimental.h"
 
+#include <vector>
 #include <wx/string.h>
 #include <wx/dynarray.h>
 #include <wx/menu.h>
