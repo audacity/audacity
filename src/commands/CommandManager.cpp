@@ -413,29 +413,12 @@ CommandManager::~CommandManager()
 
 void CommandManager::PurgeData()
 {
-   // Delete callback functors BEFORE clearing mCommandList!
-   // These are the items created within 'FN()'
-   size_t i;
-   CommandFunctor * pCallback = NULL;
-   for(i=0; i<mCommandList.GetCount(); i++)
-   {
-      CommandListEntry *tmpEntry = mCommandList[i];
-      // JKC: We only want to DELETE each callbacks once.
-      // AddItemList() may have inserted the same callback
-      // several times over.
-      if( tmpEntry->callback != pCallback )
-      {
-         pCallback = tmpEntry->callback;
-         delete pCallback;
-      }
-   }
-
    // mCommandList contains pointers to CommandListEntrys
-   // mMenuBarList contains pointers to MenuBarListEntrys.
-   // mSubMenuList contains pointers to SubMenuListEntrys
+   // mMenuBarList contains MenuBarListEntrys.
+   // mSubMenuList contains SubMenuListEntrys
    WX_CLEAR_ARRAY( mCommandList );
-   WX_CLEAR_ARRAY( mMenuBarList );
-   WX_CLEAR_ARRAY( mSubMenuList );
+   mMenuBarList.clear();
+   mSubMenuList.clear();
 
    mCommandNameHash.clear();
    mCommandKeyHash.clear();
@@ -458,14 +441,10 @@ wxMenuBar *CommandManager::AddMenuBar(const wxString & sMenu)
    if (menuBar)
       return menuBar;
 
-   MenuBarListEntry *tmpEntry = new MenuBarListEntry;
+   const auto result = new wxMenuBar{};
+   mMenuBarList.emplace_back(sMenu, result);
 
-   tmpEntry->menubar = new wxMenuBar();
-   tmpEntry->name = sMenu;
-
-   mMenuBarList.Add(tmpEntry);
-
-   return tmpEntry->menubar;
+   return result;
 }
 
 
@@ -474,10 +453,10 @@ wxMenuBar *CommandManager::AddMenuBar(const wxString & sMenu)
 ///
 wxMenuBar * CommandManager::GetMenuBar(const wxString & sMenu) const
 {
-   for(unsigned int i = 0; i < mMenuBarList.GetCount(); i++)
+   for (const auto &entry : mMenuBarList)
    {
-      if(!mMenuBarList[i]->name.Cmp(sMenu))
-         return mMenuBarList[i]->menubar;
+      if(!entry.name.Cmp(sMenu))
+         return entry.menubar;
    }
 
    return NULL;
@@ -489,10 +468,10 @@ wxMenuBar * CommandManager::GetMenuBar(const wxString & sMenu) const
 /// last on in the mMenuBarList.
 wxMenuBar * CommandManager::CurrentMenuBar() const
 {
-   if(mMenuBarList.IsEmpty())
+   if(mMenuBarList.empty())
       return NULL;
 
-   return mMenuBarList[mMenuBarList.GetCount()-1]->menubar;
+   return mMenuBarList.back().menubar;
 }
 
 
@@ -527,15 +506,10 @@ void CommandManager::EndMenu()
 /// the function's argument.
 wxMenu* CommandManager::BeginSubMenu(const wxString & tName)
 {
-   SubMenuListEntry *tmpEntry = new SubMenuListEntry;
-
-   tmpEntry->menu = new wxMenu();
-   tmpEntry->name = tName;
-
-   mSubMenuList.Add(tmpEntry);
+   const auto result = new wxMenu{};
+   mSubMenuList.emplace_back(tName, result);
    mbSeparatorAllowed = false;
-
-   return(tmpEntry->menu);
+   return result;
 }
 
 
@@ -545,19 +519,15 @@ wxMenu* CommandManager::BeginSubMenu(const wxString & tName)
 /// after BeginSubMenu() is called but before EndSubMenu() is called.
 void CommandManager::EndSubMenu()
 {
-   size_t submenu_count = mSubMenuList.GetCount()-1;
-
    //Save the submenu's information
-   SubMenuListEntry *tmpSubMenu = mSubMenuList[submenu_count];
+   SubMenuListEntry tmpSubMenu = mSubMenuList.back();
 
    //Pop off the NEW submenu so CurrentMenu returns the parent of the submenu
-   mSubMenuList.RemoveAt(submenu_count);
+   mSubMenuList.pop_back();
 
    //Add the submenu to the current menu
-   CurrentMenu()->Append(0, tmpSubMenu->name, tmpSubMenu->menu, tmpSubMenu->name);
+   CurrentMenu()->Append(0, tmpSubMenu.name, tmpSubMenu.menu, tmpSubMenu.name);
    mbSeparatorAllowed = true;
-
-   delete tmpSubMenu;
 }
 
 
@@ -566,10 +536,10 @@ void CommandManager::EndSubMenu()
 ///  end of the mSubMenuList (or NULL, if it doesn't exist).
 wxMenu * CommandManager::CurrentSubMenu() const
 {
-   if(mSubMenuList.IsEmpty())
+   if(mSubMenuList.empty())
       return NULL;
 
-   return mSubMenuList[mSubMenuList.GetCount()-1]->menu;
+   return mSubMenuList.back().menu;
 }
 
 ///
@@ -596,7 +566,7 @@ wxMenu * CommandManager::CurrentMenu() const
 /// given functor will be called
 void CommandManager::InsertItem(const wxString & name,
                                 const wxString & label_in,
-                                CommandFunctor *callback,
+                                const CommandFunctorPointer &callback,
                                 const wxString & after,
                                 int checkmark)
 {
@@ -665,7 +635,7 @@ void CommandManager::InsertItem(const wxString & name,
 
 void CommandManager::AddCheck(const wxChar *name,
                               const wxChar *label,
-                              CommandFunctor *callback,
+                              const CommandFunctorPointer &callback,
                               int checkmark)
 {
    AddItem(name, label, callback, wxT(""), (unsigned int)NoFlagsSpecifed, (unsigned int)NoFlagsSpecifed, checkmark);
@@ -673,7 +643,7 @@ void CommandManager::AddCheck(const wxChar *name,
 
 void CommandManager::AddCheck(const wxChar *name,
                               const wxChar *label,
-                              CommandFunctor *callback,
+                              const CommandFunctorPointer &callback,
                               int checkmark,
                               unsigned int flags,
                               unsigned int mask)
@@ -683,7 +653,7 @@ void CommandManager::AddCheck(const wxChar *name,
 
 void CommandManager::AddItem(const wxChar *name,
                              const wxChar *label,
-                             CommandFunctor *callback,
+                             const CommandFunctorPointer &callback,
                              unsigned int flags,
                              unsigned int mask)
 {
@@ -692,7 +662,7 @@ void CommandManager::AddItem(const wxChar *name,
 
 void CommandManager::AddItem(const wxChar *name,
                              const wxChar *label_in,
-                             CommandFunctor *callback,
+                             const CommandFunctorPointer &callback,
                              const wxChar *accel,
                              unsigned int flags,
                              unsigned int mask,
@@ -726,7 +696,7 @@ void CommandManager::AddItem(const wxChar *name,
 /// all of the items at once.
 void CommandManager::AddItemList(const wxString & name,
                                  const wxArrayString & labels,
-                                 CommandFunctor *callback)
+                                 const CommandFunctorPointer &callback)
 {
    for (size_t i = 0, cnt = labels.GetCount(); i < cnt; i++) {
       CommandListEntry *entry = NewIdentifier(name,
@@ -746,7 +716,7 @@ void CommandManager::AddItemList(const wxString & name,
 /// given function pointer will be called (via the CommandManagerListener)
 void CommandManager::AddCommand(const wxChar *name,
                                 const wxChar *label,
-                                CommandFunctor *callback,
+                                const CommandFunctorPointer &callback,
                                 unsigned int flags,
                                 unsigned int mask)
 {
@@ -755,7 +725,7 @@ void CommandManager::AddCommand(const wxChar *name,
 
 void CommandManager::AddCommand(const wxChar *name,
                                 const wxChar *label_in,
-                                CommandFunctor *callback,
+                                const CommandFunctorPointer &callback,
                                 const wxChar *accel,
                                 unsigned int flags,
                                 unsigned int mask)
@@ -769,7 +739,7 @@ void CommandManager::AddCommand(const wxChar *name,
 
 void CommandManager::AddGlobalCommand(const wxChar *name,
                                       const wxChar *label_in,
-                                      CommandFunctor *callback,
+                                      const CommandFunctorPointer &callback,
                                       const wxChar *accel)
 {
    CommandListEntry *entry = NewIdentifier(name, label_in, accel, NULL, callback, false, 0, 0);
@@ -806,7 +776,7 @@ int CommandManager::NextIdentifier(int ID)
 CommandListEntry *CommandManager::NewIdentifier(const wxString & name,
                                                 const wxString & label,
                                                 wxMenu *menu,
-                                                CommandFunctor *callback,
+                                                const CommandFunctorPointer &callback,
                                                 bool multi,
                                                 int index,
                                                 int count)
@@ -825,7 +795,7 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & name,
                                                 const wxString & label,
                                                 const wxString & accel,
                                                 wxMenu *menu,
-                                                CommandFunctor *callback,
+                                                const CommandFunctorPointer &callback,
                                                 bool multi,
                                                 int index,
                                                 int count)
@@ -833,8 +803,8 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & name,
    CommandListEntry *entry = new CommandListEntry;
 
    wxString labelPrefix;
-   if (!mSubMenuList.IsEmpty()) {
-      labelPrefix = mSubMenuList[mSubMenuList.GetCount() - 1]->name;
+   if (!mSubMenuList.empty()) {
+      labelPrefix = mSubMenuList.back().name;
    }
 
    // wxMac 2.5 and higher will do special things with the
