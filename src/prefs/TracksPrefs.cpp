@@ -108,7 +108,7 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
       }
       S.EndMultiColumn();
 
-      S.TieCheckBox(_("Sho&w track name in waveform display"),
+      S.TieCheckBox(_("Sho&w audio track name as overlay"),
                   wxT("/GUI/ShowTrackNameInWaveform"),
                   false);
    }
