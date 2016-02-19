@@ -100,7 +100,7 @@ void ExtImportPrefs::PopulateOrExchange(ShuttleGui & S)
          bool fillRuleTable = false;
          if (RuleTable == NULL)
          {
-            RuleTable = new Grid(S.GetParent(),EIPRuleTable);
+            RuleTable = safenew Grid(S.GetParent(),EIPRuleTable);
 
             RuleTable->SetColLabelSize(RuleTable->GetDefaultRowSize());
 #if EXTIMPORT_MIME_SUPPORT
@@ -783,5 +783,6 @@ void ExtImportPrefsDropTarget::SetDataObject(wxDataObject* data)
 
 PrefsPanel *ExtImportPrefsFactory::Create(wxWindow *parent)
 {
-   return new ExtImportPrefs(parent);
+   wxASSERT(parent); // to justify safenew
+   return safenew ExtImportPrefs(parent);
 }

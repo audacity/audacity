@@ -52,9 +52,7 @@ class AboutDialog:public wxDialog {
 
    void OnOK(wxCommandEvent & event);
 
-   wxBoxSizer *topsizer;
    wxStaticBitmap *icon;
-   wxBitmap *logo; //v
 
     DECLARE_EVENT_TABLE()
 

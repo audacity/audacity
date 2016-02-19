@@ -344,8 +344,7 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
 
    ZoomInfo zoomInfo(0.0, ZoomInfo::GetDefaultZoom());
    DirManager *d = new DirManager();
-   TrackFactory *fact = new TrackFactory(d, &zoomInfo);
-   WaveTrack *t = fact->NewWaveTrack(int16Sample);
+   WaveTrack *const t = TrackFactory{ d, &zoomInfo }.NewWaveTrack(int16Sample);
    Track *tmp = NULL;
 
    t->SetRate(1);
@@ -540,7 +539,6 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
    delete[]small2;
    delete[]block;
 
-   delete fact;
    d->Deref();
 
    Sequence::SetMaxDiskBlockSize(oldBlockSize);

@@ -332,11 +332,11 @@ void Dither::Apply(enum DitherType ditherType,
             DITHER(RectangleDither, dest, destFormat, destStride, source, sourceFormat, sourceStride, len);
             break;
         case triangle:
-            Reset(); // reset dither filter for this new conversion
+            Reset(); // reset dither filter for this NEW conversion
             DITHER(TriangleDither, dest, destFormat, destStride, source, sourceFormat, sourceStride, len);
             break;
         case shaped:
-            Reset(); // reset dither filter for this new conversion
+            Reset(); // reset dither filter for this NEW conversion
             DITHER(ShapedDither, dest, destFormat, destStride, source, sourceFormat, sourceStride, len);
             break;
         default:

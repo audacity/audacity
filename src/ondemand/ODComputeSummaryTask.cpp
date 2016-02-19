@@ -27,7 +27,7 @@ updating the ODPCMAliasBlockFile and the GUI of the newly available data.
 //36 blockfiles > 3 minutes stereo 44.1kHz per ODTask::DoSome
 #define kNumBlockFilesPerDoSome 36
 
-///Creates a new task that computes summaries for a wavetrack that needs to be specified through SetWaveTrack()
+///Creates a NEW task that computes summaries for a wavetrack that needs to be specified through SetWaveTrack()
 ODComputeSummaryTask::ODComputeSummaryTask()
 {
    mMaxBlockFiles = 0;
@@ -205,7 +205,7 @@ void ODComputeSummaryTask::Update()
             for(i=0; i<(int)blocks->size(); i++)
             {
                //if there is data but no summary, this blockfile needs summarizing.
-               SeqBlock &block = blocks->at(i);
+               SeqBlock &block = (*blocks)[i];
                BlockFile *const file = block.f;
                if(file->IsDataAvailable() && !file->IsSummaryAvailable())
                {
@@ -229,7 +229,7 @@ void ODComputeSummaryTask::Update()
    }
    mWaveTrackMutex.Unlock();
 
-   //get the new order.
+   //get the NEW order.
    mBlockFilesMutex.Lock();
    OrderBlockFiles(tempBlocks);
    mBlockFilesMutex.Unlock();

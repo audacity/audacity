@@ -214,12 +214,12 @@ static bool RecoverAllProjects(AudacityProject** pproj)
          *pproj = NULL;
       } else
       {
-         // Create new project window
+         // Create NEW project window
          proj = CreateNewAudacityProject();
       }
 
       // Open project. When an auto-save file has been opened successfully,
-      // the opened auto-save file is automatically deleted and a new one
+      // the opened auto-save file is automatically deleted and a NEW one
       // is created.
       proj->OpenFile(files[i], false);
    }
@@ -248,9 +248,7 @@ bool ShowAutoRecoveryDialogIfNeeded(AudacityProject** pproj,
       // This must be done before "dlg" is declared.
       wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI);
 
-      AutoRecoveryDialog *dlg = new AutoRecoveryDialog(NULL); //*pproj);
-      int ret = dlg->ShowModal();
-      delete dlg;
+      int ret = AutoRecoveryDialog{nullptr}.ShowModal();
 
       switch (ret)
       {
@@ -758,12 +756,11 @@ bool AutoSaveFile::Decode(const wxString & fileName)
 
    try
    {
-	   out.Open(tempName, wxT("wb"));
-	   opened = out.IsOpened();
+      out.Open(tempName, wxT("wb"));
+      opened = out.IsOpened();
    }
-   catch (XMLFileWriterException* pException)
+   catch (const XMLFileWriterException&)
    {
-	   delete pException;
    }
 
    if (!opened)

@@ -114,7 +114,6 @@ void SelectionBar::Populate()
    SetFont(wxFont(9, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
 
    wxFlexGridSizer *mainSizer;
-   wxBoxSizer *hSizer;
 
    /* we don't actually need a control yet, but we want to use it's methods
     * to do some look-ups, so we'll have to create one. We can't make the
@@ -122,14 +121,13 @@ void SelectionBar::Populate()
     * runtime */
    wxString formatName = mListener ? mListener->AS_GetSelectionFormat() : wxString(wxEmptyString);
 
-   mainSizer = new wxFlexGridSizer(7, 1, 1);
-   Add(mainSizer, 0, wxALIGN_CENTER_VERTICAL);
+   Add((mainSizer = safenew wxFlexGridSizer(7, 1, 1)), 0, wxALIGN_CENTER_VERTICAL);
 
    //
    // Top row (mostly labels)
    //
 
-   mainSizer->Add(new wxStaticText(this, -1, _("Project Rate (Hz):"),
+   mainSizer->Add(safenew wxStaticText(this, -1, _("Project Rate (Hz):"),
    // LLL:  On my Ubuntu 7.04 install, the label wraps to two lines
    //       and I could not figure out why.  Thus...hackage.
 #if defined(__WXGTK__)
@@ -141,52 +139,54 @@ void SelectionBar::Populate()
 
    mainSizer->Add(5, 1);
 
-   mainSizer->Add(new wxStaticText(this, -1, _("Snap To:")),
+   mainSizer->Add(safenew wxStaticText(this, -1, _("Snap To:")),
                0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 
-   mainSizer->Add(new wxStaticText(this, -1, _("Selection Start:")),
+   mainSizer->Add(safenew wxStaticText(this, -1, _("Selection Start:")),
                0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 
    bool showSelectionLength = false;
    gPrefs->Read(wxT("/ShowSelectionLength"), &showSelectionLength);
 
-   hSizer = new wxBoxSizer(wxHORIZONTAL);
-   mRightEndButton = new wxRadioButton(this, OnEndRadioID, _("End"),
-                                       wxDefaultPosition, wxDefaultSize,
-                                       wxRB_GROUP);
-   mRightEndButton->SetName(_("End"));
-   mRightEndButton->SetValue(!showSelectionLength);
-   hSizer->Add(mRightEndButton,
-               0, wxRIGHT | wxALIGN_CENTER_VERTICAL, 5);
-   mRightLengthButton = new wxRadioButton(this, OnLengthRadioID, _("Length"));
-   mRightLengthButton->SetName(_("Length"));
-   mRightLengthButton->SetValue(showSelectionLength);
-   hSizer->Add(mRightLengthButton,
-               0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
+   {
+      auto hSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
+      mRightEndButton = safenew wxRadioButton(this, OnEndRadioID, _("End"),
+         wxDefaultPosition, wxDefaultSize,
+         wxRB_GROUP);
+      mRightEndButton->SetName(_("End"));
+      mRightEndButton->SetValue(!showSelectionLength);
+      hSizer->Add(mRightEndButton,
+         0, wxRIGHT | wxALIGN_CENTER_VERTICAL, 5);
+      mRightLengthButton = safenew wxRadioButton(this, OnLengthRadioID, _("Length"));
+      mRightLengthButton->SetName(_("Length"));
+      mRightLengthButton->SetValue(showSelectionLength);
+      hSizer->Add(mRightLengthButton,
+         0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 #if defined(__WXMSW__)
       // Refer to Microsoft KB article 261192 for an explanation as
       // to why this is needed.  We've only experienced it under Win2k
       // so it's probably been fixed.  But, it doesn't hurt to have this
       // in for all versions.
       wxRadioButton* dummyButton =
-         new wxRadioButton(this, wxID_ANY, _("hidden"),
-                           wxDefaultPosition, wxDefaultSize,
-                           wxRB_GROUP);
+         safenew wxRadioButton(this, wxID_ANY, _("hidden"),
+         wxDefaultPosition, wxDefaultSize,
+         wxRB_GROUP);
       dummyButton->Disable();
       dummyButton->Hide();
 #endif
-   mainSizer->Add(hSizer, 0,  wxALIGN_CENTER_VERTICAL | wxRIGHT, 0);
+      mainSizer->Add(hSizer.release(), 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 0);
+   }
 
    mainSizer->Add(5, 1);
 
-   mainSizer->Add(new wxStaticText(this, -1, _("Audio Position:")),
+   mainSizer->Add(safenew wxStaticText(this, -1, _("Audio Position:")),
                   0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 0);
 
    //
    // Middle row (mostly time controls)
    //
 
-   mRateBox = new wxComboBox(this, OnRateID,
+   mRateBox = safenew wxComboBox(this, OnRateID,
                              wxT(""),
                              wxDefaultPosition, wxSize(80, -1));
    mRateBox->SetName(_("Project Rate (Hz):"));
@@ -226,12 +226,12 @@ void SelectionBar::Populate()
 
    mainSizer->Add(mRateBox, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 
-   mainSizer->Add(new wxStaticLine(this, -1, wxDefaultPosition,
+   mainSizer->Add(safenew wxStaticLine(this, -1, wxDefaultPosition,
                                    wxSize(1, toolbarSingle),
                                    wxLI_VERTICAL),
                   0,  wxRIGHT, 5);
 
-   mSnapTo = new wxChoice(this, OnSnapToID,
+   mSnapTo = safenew wxChoice(this, OnSnapToID,
                           wxDefaultPosition, wxDefaultSize,
                           SnapManager::GetSnapLabels());
    mainSizer->Add(mSnapTo,
@@ -251,13 +251,13 @@ void SelectionBar::Populate()
                     NULL,
                     this);
 
-   mLeftTime = new NumericTextCtrl(
+   mLeftTime = safenew NumericTextCtrl(
       NumericConverter::TIME, this, OnLeftTimeID, formatName, 0.0, mRate);
    mLeftTime->SetName(_("Selection Start:"));
    mLeftTime->EnableMenu();
    mainSizer->Add(mLeftTime, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 
-   mRightTime = new NumericTextCtrl(
+   mRightTime = safenew NumericTextCtrl(
       NumericConverter::TIME, this, OnRightTimeID, formatName, 0.0, mRate);
    mRightTime->SetName(wxString(_("Selection ")) + (showSelectionLength ?
                                                    _("Length") :
@@ -265,12 +265,12 @@ void SelectionBar::Populate()
    mRightTime->EnableMenu();
    mainSizer->Add(mRightTime, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 
-   mainSizer->Add(new wxStaticLine(this, -1, wxDefaultPosition,
+   mainSizer->Add(safenew wxStaticLine(this, -1, wxDefaultPosition,
                                    wxSize(1, toolbarSingle),
                                    wxLI_VERTICAL),
                   0, wxRIGHT, 5);
 
-   mAudioTime = new NumericTextCtrl(
+   mAudioTime = safenew NumericTextCtrl(
       NumericConverter::TIME, this, wxID_ANY, formatName, 0.0, mRate);
    mAudioTime->SetName(_("Audio Position:"));
    mAudioTime->EnableMenu();

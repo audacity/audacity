@@ -266,5 +266,6 @@ bool DirectoriesPrefs::Apply()
 
 PrefsPanel *DirectoriesPrefsFactory::Create(wxWindow *parent)
 {
-   return new DirectoriesPrefs(parent);
+   wxASSERT(parent); // to justify safenew
+   return safenew DirectoriesPrefs(parent);
 }

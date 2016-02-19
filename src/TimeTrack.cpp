@@ -252,7 +252,7 @@ void TimeTrack::Draw(wxDC & dc, const wxRect & r, const ZoomInfo &zoomInfo)
    mRuler->SetFlip(false);  // If we don't do this, the Ruler doesn't redraw itself when the envelope is modified.
                             // I have no idea why!
                             //
-                            // LL:  It's because the ruler only Invalidate()s when the new value is different
+                            // LL:  It's because the ruler only Invalidate()s when the NEW value is different
                             //      than the current value.
    mRuler->SetFlip(GetHeight() > 75 ? true : true); // MB: so why don't we just call Invalidate()? :)
    mRuler->Draw(dc, this);

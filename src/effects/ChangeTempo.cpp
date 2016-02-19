@@ -324,7 +324,7 @@ void EffectChangeTempo::OnText_ToBPM(wxCommandEvent & WXUNUSED(evt))
 
    m_bLoopDetect = true;
 
-   // If FromBPM has already been set, then there's a new percent change.
+   // If FromBPM has already been set, then there's a NEW percent change.
    if (m_FromBPM != 0.0 && m_ToBPM != 0.0)
    {
       m_PercentChange = ((m_ToBPM * 100.0) / m_FromBPM) - 100.0;
@@ -379,14 +379,14 @@ void EffectChangeTempo::Update_Slider_PercentChange()
 }
 
 void EffectChangeTempo::Update_Text_ToBPM()
-// Use m_FromBPM & m_PercentChange to set new m_ToBPM & control.
+// Use m_FromBPM & m_PercentChange to set NEW m_ToBPM & control.
 {
    m_ToBPM = (((m_FromBPM * (100.0 + m_PercentChange)) / 100.0));
    m_pTextCtrl_ToBPM->GetValidator()->TransferToWindow();
 }
 
 void EffectChangeTempo::Update_Text_ToLength()
-// Use m_FromLength & m_PercentChange to set new m_ToLength & control.
+// Use m_FromLength & m_PercentChange to set NEW m_ToLength & control.
 {
    m_ToLength = (m_FromLength * 100.0) / (100.0 + m_PercentChange);
    m_pTextCtrl_ToLength->GetValidator()->TransferToWindow();

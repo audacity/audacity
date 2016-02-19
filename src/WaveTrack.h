@@ -193,7 +193,7 @@ class AUDACITY_DLL_API WaveTrack : public Track {
     * after the last Append.
     *
     * If there is an existing WaveClip in the WaveTrack then the data is
-    * appended to that clip. If there are no WaveClips in the track, then a new
+    * appended to that clip. If there are no WaveClips in the track, then a NEW
     * one is created.
     */
    bool Append(samplePtr buffer, sampleFormat format,
@@ -311,7 +311,7 @@ class AUDACITY_DLL_API WaveTrack : public Track {
    // be cleaner if this could be removed, though...
    WaveClipList::compatibility_iterator GetClipIterator() { return mClips.GetFirst(); }
 
-   // Create new clip and add it to this track. Returns a pointer
+   // Create NEW clip and add it to this track. Returns a pointer
    // to the newly created clip.
    WaveClip* CreateClip();
 
@@ -355,7 +355,7 @@ class AUDACITY_DLL_API WaveTrack : public Track {
    // existing clips).
    bool CanInsertClip(WaveClip* clip);
 
-   // Move a clip into a new track. This will remove the clip
+   // Move a clip into a NEW track. This will remove the clip
    // in this cliplist and add it to the cliplist of the
    // other track (if that is not NULL). No fancy additional stuff is done.
    // unused   void MoveClipToTrack(int clipIndex, WaveTrack* dest);
@@ -379,14 +379,14 @@ class AUDACITY_DLL_API WaveTrack : public Track {
    int GetNumCachedLocations() { return mDisplayNumLocations; }
    Location GetCachedLocation(int index) { return mDisplayLocations[index]; }
 
-   // Expand cut line (that is, re-insert audio, then delete audio saved in cut line)
+   // Expand cut line (that is, re-insert audio, then DELETE audio saved in cut line)
    bool ExpandCutLine(double cutLinePosition, double* cutlineStart = NULL, double* cutlineEnd = NULL);
 
    // Remove cut line, without expanding the audio in it
    bool RemoveCutLine(double cutLinePosition);
 
    // This track has been merged into a stereo track.  Copy shared parameters
-   // from the new partner.
+   // from the NEW partner.
    virtual void Merge(const Track &orig);
 
    // Resample track (i.e. all clips in the track)
@@ -522,7 +522,7 @@ public:
    // Uses fillZero always
    // Returns null on failure
    // Returned pointer may be invalidated if Get is called again
-   // Do not delete[] the pointer
+   // Do not DELETE[] the pointer
    constSamplePtr Get(sampleFormat format, sampleCount start, sampleCount len);
 
 private:

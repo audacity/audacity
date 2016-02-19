@@ -42,7 +42,7 @@
 #include "TimeTrack.h"
 #include "float_cast.h"
 
-//TODO-MB: wouldn't it make more sense to delete the time track after 'mix and render'?
+//TODO-MB: wouldn't it make more sense to DELETE the time track after 'mix and render'?
 bool MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
                   double rate, sampleFormat format,
                   double startTime, double endTime,
@@ -119,7 +119,7 @@ bool MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
       t = iter.Next();
    }
 
-   /* create the destination track (new track) */
+   /* create the destination track (NEW track) */
    if ((numWaves == 1) || ((numWaves == 2) && (usefulIter.First()->GetLink() != NULL)))
       oneinput = true;
    // only one input track (either 1 mono or one linked stereo pair)
@@ -161,38 +161,39 @@ bool MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
       endTime = mixEndTime;
    }
 
-   Mixer *mixer = new Mixer(numWaves, waveArray,
-                            Mixer::WarpOptions(tracks->GetTimeTrack()),
-                            startTime, endTime, mono ? 1 : 2, maxBlockLen, false,
-                            rate, format);
+   Mixer mixer(numWaves, waveArray,
+      Mixer::WarpOptions(tracks->GetTimeTrack()),
+      startTime, endTime, mono ? 1 : 2, maxBlockLen, false,
+      rate, format);
 
    ::wxSafeYield();
-   ProgressDialog *progress = new ProgressDialog(_("Mix and Render"),
-                                                 _("Mixing and rendering tracks"));
 
    int updateResult = eProgressSuccess;
-   while(updateResult == eProgressSuccess) {
-      sampleCount blockLen = mixer->Process(maxBlockLen);
+   {
+      ProgressDialog progress(_("Mix and Render"),
+         _("Mixing and rendering tracks"));
 
-      if (blockLen == 0)
-         break;
+      while (updateResult == eProgressSuccess) {
+         sampleCount blockLen = mixer.Process(maxBlockLen);
 
-      if (mono) {
-         samplePtr buffer = mixer->GetBuffer();
-         mixLeft->Append(buffer, format, blockLen);
+         if (blockLen == 0)
+            break;
+
+         if (mono) {
+            samplePtr buffer = mixer.GetBuffer();
+            mixLeft->Append(buffer, format, blockLen);
+         }
+         else {
+            samplePtr buffer;
+            buffer = mixer.GetBuffer(0);
+            mixLeft->Append(buffer, format, blockLen);
+            buffer = mixer.GetBuffer(1);
+            mixRight->Append(buffer, format, blockLen);
+         }
+
+         updateResult = progress.Update(mixer.MixGetCurrentTime() - startTime, endTime - startTime);
       }
-      else {
-         samplePtr buffer;
-         buffer = mixer->GetBuffer(0);
-         mixLeft->Append(buffer, format, blockLen);
-         buffer = mixer->GetBuffer(1);
-         mixRight->Append(buffer, format, blockLen);
-      }
-
-      updateResult = progress->Update(mixer->MixGetCurrentTime() - startTime, endTime - startTime);
    }
-
-   delete progress;
 
    mixLeft->Flush();
    if (!mono)
@@ -222,7 +223,6 @@ bool MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
    }
 
    delete[] waveArray;
-   delete mixer;
 
    return (updateResult == eProgressSuccess || updateResult == eProgressStopped);
 }
@@ -763,7 +763,7 @@ void Mixer::Reposition(double t)
 
 void Mixer::SetTimesAndSpeed(double t0, double t1, double speed)
 {
-   wxASSERT(isfinite(speed));
+   wxASSERT(std::isfinite(speed));
    mT0 = t0;
    mT1 = t1;
    mSpeed = fabs(speed);

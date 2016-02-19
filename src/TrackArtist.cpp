@@ -56,7 +56,7 @@ existing bitmap can be used for waveform images. Audacity also
 draws directly to the screen to update the time indicator during
 playback. To move the indicator, one column of pixels is drawn to
 the screen to remove the indicator. Then the indicator is drawn at
-a new time location.
+a NEW time location.
 
 The track panel consists of many components. The tree of calls that
 update the bitmap looks like this:
@@ -783,7 +783,7 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
                   const float extreme = LINEAR_TO_DB(2);
                   // recover dB value of max
                   const float dB = std::min(extreme, (float(fabs(max)) * lastdBRange - lastdBRange));
-                  // find new scale position, but old max may get trimmed if the db limit rises
+                  // find NEW scale position, but old max may get trimmed if the db limit rises
                   // Don't trim it to zero though, but leave max and limit distinct
                   newMax = sign * std::max(ZOOMLIMIT, (dBRange + dB) / dBRange);
                   // Adjust the min of the scale if we can,
@@ -2162,10 +2162,10 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
    // and then paint this directly to our offscreen
    // bitmap.  Note that this could be optimized even
    // more, but for now this is not bad.  -dmazzoni
-   wxImage *image = new wxImage((int)mid.width, (int)mid.height);
-   if (!image)
+   wxImage image((int)mid.width, (int)mid.height);
+   if (!image.IsOk())
       return;
-   unsigned char *data = image->GetData();
+   unsigned char *data = image.GetData();
 
    const int half = settings.GetFFTLength() / 2;
    const double binUnit = rate / (2 * half);
@@ -2471,7 +2471,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
       } // each yy
    } // each xx
 
-   wxBitmap converted = wxBitmap(*image);
+   wxBitmap converted = wxBitmap(image);
 
    wxMemoryDC memDC;
 
@@ -2479,7 +2479,6 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
 
    dc.Blit(mid.x, mid.y, mid.width, mid.height, &memDC, 0, 0, wxCOPY, FALSE);
 
-   delete image;
 #ifdef EXPERIMENTAL_FFT_Y_GRID
    delete[] yGrid;
 #endif //EXPERIMENTAL_FFT_Y_GRID
@@ -2742,7 +2741,7 @@ void TrackArtist::DrawNoteBackground(NoteTrack *track, wxDC &dc,
    double beats_per_measure = 4.0;
    while (true) {
       if (i < sigs.length() && sigs[i].beat < next_bar_beat + ALG_EPS) {
-         // new time signature takes effect
+         // NEW time signature takes effect
          Alg_time_sig &sig = sigs[i++];
          next_bar_beat = sig.beat;
          beats_per_measure = (sig.num * 4.0) / sig.den;

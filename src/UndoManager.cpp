@@ -57,17 +57,16 @@ void UndoManager::CalculateSpaceUsage()
    space.Clear();
    space.Add(0, stack.GetCount());
 
-   Set *prev = new Set;
-   Set *cur = new Set;
+   Set s1, s2;
+   Set *prev = &s1;
+   Set *cur = &s2;
 
    for (size_t i = 0, cnt = stack.GetCount(); i < cnt; i++)
    {
       // Swap map pointers
-      Set *swap = prev;
-      prev = cur;
-      cur = swap;
+      std::swap(cur, prev);
 
-      // And clean out the new current map
+      // And clean out the NEW current map
       cur->clear();
 
       // Scan all tracks at current level
@@ -82,7 +81,7 @@ void UndoManager::CalculateSpaceUsage()
             BlockArray *blocks = it->GetData()->GetSequenceBlockArray();
             for (size_t b = 0, cnt = blocks->size(); b < cnt; b++)
             {
-               BlockFile *file = blocks->at(b).f;
+               BlockFile *file = (*blocks)[b].f;
 
                // Accumulate space used by the file if the file didn't exist
                // in the previous level
@@ -102,8 +101,6 @@ void UndoManager::CalculateSpaceUsage()
       }
    }
 
-   delete cur;
-   delete prev;
    TIMER_STOP( space_calc );
 }
 

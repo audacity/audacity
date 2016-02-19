@@ -447,7 +447,7 @@ bool EffectTruncSilence::DoRemoval
       if ((r->end - r->start) < (mInitialAllowedSilence - 0.000000001))
          continue;
 
-      // Find new silence length as requested
+      // Find NEW silence length as requested
       double inLength = r->end - r->start;
       double outLength;
 

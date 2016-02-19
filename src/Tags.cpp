@@ -437,7 +437,7 @@ void Tags::SetTag(const wxString & name, const wxString & value)
    // Didn't find the tag
    if (iter == mXref.end()) {
 
-      // Add a new tag
+      // Add a NEW tag
       mXref[key] = name;
       mMap[name] = value;
       return;
@@ -552,7 +552,7 @@ public:
    {
       wxGridCellChoiceEditor::SetParameters(params);
 
-      // Refresh the wxComboBox with new values
+      // Refresh the wxComboBox with NEW values
       if (Combo()) {
          Combo()->Clear();
          Combo()->Append(m_choices);
@@ -743,7 +743,7 @@ void TagsEditor::PopulateOrExchange(ShuttleGui & S)
       S.EndHorizontalLay();
 
       if (mGrid == NULL) {
-         mGrid = new Grid(S.GetParent(),
+         mGrid = safenew Grid(S.GetParent(),
                           wxID_ANY,
                           wxDefaultPosition,
                           wxDefaultSize,
@@ -1154,14 +1154,12 @@ void TagsEditor::OnSave(wxCommandEvent & WXUNUSED(event))
       // Close the file
       writer.Close();
    }
-   catch (XMLFileWriterException* pException)
+   catch (const XMLFileWriterException &exception)
    {
       wxMessageBox(wxString::Format(
          _("Couldn't write to file \"%s\": %s"),
-         fn.c_str(), pException->GetMessage().c_str()),
+         fn.c_str(), exception.GetMessage().c_str()),
          _("Error Saving Tags File"), wxICON_ERROR, this);
-
-      delete pException;
    }
 }
 

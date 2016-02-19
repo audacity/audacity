@@ -422,34 +422,35 @@ void ToolBar::ReCreateButtons()
    mGrabber = NULL;
    mResizer = NULL;
 
-   // Create the main sizer
-   wxBoxSizer *ms = new wxBoxSizer( wxHORIZONTAL );
-
-   // Create the grabber and add it to the main sizer
-   mGrabber = new Grabber( this, mType );
-   ms->Add( mGrabber, 0, wxEXPAND | wxALIGN_LEFT | wxALIGN_TOP | wxRIGHT, 1 );
-
-   // Use a box sizer for laying out controls
-   mHSizer = new wxBoxSizer( wxHORIZONTAL );
-   ms->Add( mHSizer, 1, wxEXPAND );
-
-   // (Re)Establish dock state
-   SetDocked( GetDock(), false );
-
-   // Go add all the rest of the gadgets
-   Populate();
-
-   // Add some space for the resize border
-   if( IsResizable() )
    {
-      // Create the resizer and add it to the main sizer
-      mResizer = new ToolBarResizer( this );
-      ms->Add( mResizer, 0, wxEXPAND | wxALIGN_TOP | wxLEFT, 1 );
-      mResizer->SetToolTip( _("Click and drag to resize toolbar") );
-   }
+      // Create the main sizer
+      auto ms = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
 
-   // Set the sizer
-   SetSizerAndFit( ms );
+      // Create the grabber and add it to the main sizer
+      mGrabber = safenew Grabber(this, mType);
+      ms->Add(mGrabber, 0, wxEXPAND | wxALIGN_LEFT | wxALIGN_TOP | wxRIGHT, 1);
+
+      // Use a box sizer for laying out controls
+      ms->Add((mHSizer = safenew wxBoxSizer(wxHORIZONTAL)), 1, wxEXPAND);
+
+      // (Re)Establish dock state
+      SetDocked(GetDock(), false);
+
+      // Go add all the rest of the gadgets
+      Populate();
+
+      // Add some space for the resize border
+      if (IsResizable())
+      {
+         // Create the resizer and add it to the main sizer
+         mResizer = safenew ToolBarResizer(this);
+         ms->Add(mResizer, 0, wxEXPAND | wxALIGN_TOP | wxLEFT, 1);
+         mResizer->SetToolTip(_("Click and drag to resize toolbar"));
+      }
+
+      // Set the sizer
+      SetSizerAndFit(ms.release());
+   }
 
    // Recalculate the height to be a multiple of toolbarSingle
    const int tbs = toolbarSingle + toolbarGap;
@@ -700,7 +701,7 @@ AButton * ToolBar::MakeButton(teBmps eUp,
    int xoff = (size.GetWidth() - theTheme.Image(eStandardUp).GetWidth())/2;
    int yoff = (size.GetHeight() - theTheme.Image(eStandardUp).GetHeight())/2;
 
-   typedef std::auto_ptr<wxImage> wxImagePtr;
+   typedef std::unique_ptr<wxImage> wxImagePtr;
    wxImagePtr up2        (OverlayImage(eUp,     eStandardUp, xoff, yoff));
    wxImagePtr hilite2    (OverlayImage(eHilite, eStandardUp, xoff, yoff));
    wxImagePtr down2      (OverlayImage(eDown,   eStandardDown, xoff + 1, yoff + 1));
@@ -726,7 +727,7 @@ void ToolBar::MakeAlternateImages(AButton &button, int idx,
    int xoff = (size.GetWidth() - theTheme.Image(eStandardUp).GetWidth())/2;
    int yoff = (size.GetHeight() - theTheme.Image(eStandardUp).GetHeight())/2;
 
-   typedef std::auto_ptr<wxImage> wxImagePtr;
+   typedef std::unique_ptr<wxImage> wxImagePtr;
    wxImagePtr up        (OverlayImage(eUp,     eStandardUp, xoff, yoff));
    wxImagePtr hilite    (OverlayImage(eHilite, eStandardUp, xoff, yoff));
    wxImagePtr down      (OverlayImage(eDown,   eStandardDown, xoff + 1, yoff + 1));

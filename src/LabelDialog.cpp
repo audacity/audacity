@@ -105,38 +105,42 @@ LabelDialog::LabelDialog(wxWindow *parent,
 {
    SetName(GetTitle());
 
-   // Create the main sizer
-   wxBoxSizer *vs = new wxBoxSizer(wxVERTICAL);
+   {
+      // Create the main sizer
+      auto vs = std::make_unique<wxBoxSizer>(wxVERTICAL);
 
-   // A little instruction
-   wxStaticText *instruct =
-      new wxStaticText(this,
-                       wxID_ANY,
-                       _("Press F2 or double click to edit cell contents."));
-   instruct->SetName(instruct->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
-   vs->Add(instruct,
-           0,
-           wxALIGN_LEFT | wxALL,
-           5);
+      // A little instruction
+      wxStaticText *instruct =
+         safenew wxStaticText(this,
+         wxID_ANY,
+         _("Press F2 or double click to edit cell contents."));
+      instruct->SetName(instruct->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+      vs->Add(instruct,
+         0,
+         wxALIGN_LEFT | wxALL,
+         5);
 
-   // Create the main sizer
-   mGrid = new Grid(this, wxID_ANY);
-   vs->Add(mGrid, 1, wxEXPAND | wxALL, 5);
+      // Create the main sizer
+      mGrid = new Grid(this, wxID_ANY);
+      vs->Add(mGrid, 1, wxEXPAND | wxALL, 5);
 
-   // Create the action buttons
-   wxBoxSizer *hs = new wxBoxSizer(wxHORIZONTAL);
-   hs->Add(new wxButton(this, ID_INSERTA, _("Insert &After")), 1, wxCENTER | wxALL, 5);
-   hs->Add(new wxButton(this, ID_INSERTB, _("Insert &Before")), 1, wxCENTER | wxALL, 5);
-   hs->Add(new wxButton(this, ID_REMOVE,  _("&Remove")), 1, wxCENTER | wxALL, 5);
-   hs->Add(new wxButton(this, ID_IMPORT,  _("&Import...")), 1, wxCENTER | wxALL, 5);
-   hs->Add(new wxButton(this, ID_EXPORT,  _("&Export...")), 1, wxCENTER | wxALL, 5);
-   vs->Add(hs, 0, wxEXPAND | wxCENTER | wxALL, 5);
+      // Create the action buttons
+      {
+         auto hs = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
+         hs->Add(safenew wxButton(this, ID_INSERTA, _("Insert &After")), 1, wxCENTER | wxALL, 5);
+         hs->Add(safenew wxButton(this, ID_INSERTB, _("Insert &Before")), 1, wxCENTER | wxALL, 5);
+         hs->Add(safenew wxButton(this, ID_REMOVE, _("&Remove")), 1, wxCENTER | wxALL, 5);
+         hs->Add(safenew wxButton(this, ID_IMPORT, _("&Import...")), 1, wxCENTER | wxALL, 5);
+         hs->Add(safenew wxButton(this, ID_EXPORT, _("&Export...")), 1, wxCENTER | wxALL, 5);
+         vs->Add(hs.release(), 0, wxEXPAND | wxCENTER | wxALL, 5);
+      }
 
-   // Create the exit buttons
-   vs->Add(CreateStdButtonSizer(this, eCancelButton|eOkButton), 0, wxEXPAND);
+      // Create the exit buttons
+      vs->Add(CreateStdButtonSizer(this, eCancelButton | eOkButton).release(), 0, wxEXPAND);
 
-   // Make it so
-   SetSizer(vs);
+      // Make it so
+      SetSizer(vs.release());
+   }
 
    // Build the initial (empty) grid
    mGrid->CreateGrid(0, Col_Max);
@@ -151,7 +155,7 @@ LabelDialog::LabelDialog(wxWindow *parent,
    /* i18n-hint: (noun) of a label*/
    mGrid->SetColLabelValue(3,_("End Time"));
 
-   // Create and remember editors.  No need to delete these as the wxGrid will
+   // Create and remember editors.  No need to DELETE these as the wxGrid will
    // do it for us.
    mChoiceEditor = (ChoiceEditor *) mGrid->GetDefaultEditorForType(GRID_VALUE_CHOICE);
    mTimeEditor = (TimeEditor *) mGrid->GetDefaultEditorForType(GRID_VALUE_TIME);
@@ -223,7 +227,7 @@ bool LabelDialog::TransferDataToWindow()
    int i;
 
    // Set the editor parameters.  Do this each time since they may change
-   // due to new tracks and change in NumericTextCtrl format.  Rate won't
+   // due to NEW tracks and change in NumericTextCtrl format.  Rate won't
    // change but might as well leave it here.
    mChoiceEditor->SetChoices(mTrackNames);
    mTimeEditor->SetFormat(mFormat);
@@ -314,7 +318,7 @@ bool LabelDialog::TransferDataFromWindow()
       // Extract the name
       wxString name = mTrackNames[tndx + 1].AfterFirst(wxT('-')).Mid(1);
 
-      // Create the new track and add to track list
+      // Create the NEW track and add to track list
       LabelTrack *newTrack = new LabelTrack(mDirManager);
       newTrack->SetName(name);
       mTracks->Add(newTrack);
@@ -356,7 +360,7 @@ bool LabelDialog::Validate()
 
 wxString LabelDialog::TrackName(int & index, wxString dflt)
 {
-   // Generate a new track name if the passed index is out of range
+   // Generate a NEW track name if the passed index is out of range
    if (index < 1 || index >= (int)mTrackNames.GetCount()) {
       index = mTrackNames.GetCount();
       mTrackNames.Add(wxString::Format(wxT("%d - %s"), index, dflt.c_str()));
@@ -393,7 +397,7 @@ void LabelDialog::AddLabels(LabelTrack *t)
    int tndx = 0;
    int i;
 
-   // Add a new track name
+   // Add a NEW track name
    TrackName(tndx, t->GetName());
 
    // Add each label in the track
@@ -446,7 +450,7 @@ void LabelDialog::FindInitialRow()
 
 void LabelDialog::OnUpdate(wxCommandEvent &event)
 {
-   // Remember the new format and repopulate grid
+   // Remember the NEW format and repopulate grid
    mFormat = event.GetString();
    TransferDataToWindow();
 
@@ -475,7 +479,7 @@ void LabelDialog::OnInsert(wxCommandEvent &event)
       }
    }
 
-   // Insert new label before or after the current row
+   // Insert NEW label before or after the current row
    if (event.GetId() == ID_INSERTA && row < cnt) {
       row++;
    }
@@ -484,7 +488,7 @@ void LabelDialog::OnInsert(wxCommandEvent &event)
    // Repopulate the grid
    TransferDataToWindow();
 
-   // Reposition cursor to new row/col and put user into edit mode to
+   // Reposition cursor to NEW row/col and put user into edit mode to
    // set the label name
    mGrid->SetGridCursor(row, Col_Label);
    mGrid->EnableCellEditControl(true);
@@ -589,12 +593,12 @@ void LabelDialog::OnExport(wxCommandEvent & WXUNUSED(event))
    wxString fName = mTrackNames[mTrackNames.GetCount() - 1].AfterFirst(wxT('-')).Mid(1);
 
    fName = FileSelector(_("Export Labels As:"),
-                        wxEmptyString,
-                        fName.c_str(),
-                        wxT("txt"),
-                        wxT("*.txt"),
-                        wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
-                        this);
+      wxEmptyString,
+      fName.c_str(),
+      wxT("txt"),
+      wxT("*.txt"),
+      wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
+      this);
 
    if (fName == wxT(""))
       return;
@@ -617,9 +621,7 @@ void LabelDialog::OnExport(wxCommandEvent & WXUNUSED(event))
 
    wxTextFile f(fName);
 #ifdef __WXMAC__
-   wxFile *temp = new wxFile();
-   temp->Create(fName);
-   delete temp;
+   wxFile{}.Create(fName);
 #else
    f.Create();
 #endif
@@ -677,7 +679,7 @@ void LabelDialog::OnCellChange(wxGridEvent &event)
    static bool guard = false;
    int row = event.GetRow();
 
-   // Guard against recursion which can happen when a change to the "new label" row
+   // Guard against recursion which can happen when a change to the "NEW label" row
    // is made.  When InsertRow() is done in TransferDataToWindow(), checks are made
    // within wxGrid to see if the edit control is active and since it hasn't yet
    // been marked inactive on the first time through here, we get entered again.
@@ -719,7 +721,7 @@ void LabelDialog::OnChangeTrack(wxGridEvent & WXUNUSED(event), int row, RowData 
 {
    wxString val = mGrid->GetCellValue(row, Col_Track);
 
-   // User selected the "New..." choice so ask for a new name
+   // User selected the "New..." choice so ask for a NEW name
    if (mTrackNames.Index(val) == 0) {
       wxTextEntryDialog d(this,
                           _("New Label Track"),
@@ -734,7 +736,7 @@ void LabelDialog::OnChangeTrack(wxGridEvent & WXUNUSED(event), int row, RowData 
          return;
       }
 
-      // Force generation of a new track name
+      // Force generation of a NEW track name
       rd->index = 0;
       TrackName(rd->index, d.GetValue());
    }

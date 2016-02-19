@@ -333,13 +333,14 @@ void ScreenFrame::PopulateOrExchange(ShuttleGui & S)
             S.Id(IdMainWindowLarge).AddButton(_("Resize Large"));
             /* i18n-hint: Bkgnd is short for background and appears on a small button
              * It is OK to just translate this item as if it said 'Blue' */
-            mBlue = new wxToggleButton(p,
+            wxASSERT(p); // To justify safenew
+            mBlue = safenew wxToggleButton(p,
                                        IdToggleBackgroundBlue,
                                        _("Blue Bkgnd"));
             S.AddWindow(mBlue);
             /* i18n-hint: Bkgnd is short for background and appears on a small button
              * It is OK to just translate this item as if it said 'White' */
-            mWhite = new wxToggleButton(p,
+            mWhite = safenew wxToggleButton(p,
                                         IdToggleBackgroundWhite,
                                         _("White Bkgnd"));
             S.AddWindow(mWhite);

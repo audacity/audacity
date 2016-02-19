@@ -50,7 +50,7 @@ class WaveTrack;
 
 // TODO:  Apr-06-2015
 // TODO:  Much more cleanup of old methods and variables is needed, but
-// TODO:  can't be done until after all effects are using the new API.
+// TODO:  can't be done until after all effects are using the NEW API.
 
 class AUDACITY_DLL_API Effect : public wxEvtHandler,
                                 public EffectClientInterface,
@@ -349,10 +349,10 @@ protected:
 
    // If bGoodResult, replace mWaveTracks tracks in mTracks with successfully processed
    // mOutputTracks copies, get rid of old mWaveTracks, and set mWaveTracks to mOutputTracks.
-   // Else clear and delete mOutputTracks copies.
+   // Else clear and DELETE mOutputTracks copies.
    void ReplaceProcessedTracks(const bool bGoodResult);
 
-   // Use this to append a new output track.
+   // Use this to append a NEW output track.
    void AddToOutputTracks(Track *t);
 
 //
@@ -362,8 +362,8 @@ protected:
 // may be needed by any particular subclass of Effect.
 //
 protected:
-   ProgressDialog *mProgress;
-   double         mProjectRate; // Sample rate of the project - new tracks should
+   ProgressDialog *mProgress; // Temporary pointer, NOT deleted in destructor.
+   double         mProjectRate; // Sample rate of the project - NEW tracks should
                                // be created with this rate...
    double         mSampleRate;
    TrackFactory   *mFactory;
@@ -466,7 +466,7 @@ private:
 
 
 // FIXME:
-// FIXME:  Remove this once all effects are using the new dialog
+// FIXME:  Remove this once all effects are using the NEW dialog
 // FIXME:
 
 #define ID_EFFECT_PREVIEW ePreviewID

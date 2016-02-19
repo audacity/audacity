@@ -399,7 +399,7 @@ void Meter::UpdatePrefs()
    // Set the desired orientation (resets ruler orientation)
    SetActiveStyle(mDesiredStyle);
 
-   // Reset to ensure new size is retrieved when language changes
+   // Reset to ensure NEW size is retrieved when language changes
    mLeftSize = wxSize(0, 0);
    mRightSize = wxSize(0, 0);
 
@@ -429,7 +429,7 @@ void Meter::OnPaint(wxPaintEvent & WXUNUSED(event))
          delete mBitmap;
       }
    
-      // Create a new one using current size and select into the DC
+      // Create a NEW one using current size and select into the DC
       mBitmap = new wxBitmap();
       mBitmap->Create(mWidth, mHeight, destDC);
       wxMemoryDC dc;
@@ -679,18 +679,18 @@ void Meter::OnMouse(wxMouseEvent &evt)
    if (evt.RightDown() ||
        (evt.ButtonDown() && mIconRect.Contains(evt.m_x, evt.m_y)))
    {
-      wxMenu *menu = new wxMenu();
+      wxMenu menu;
       // Note: these should be kept in the same order as the enum
       if (mIsInput) {
          wxMenuItem *mi;
          if (mMonitoring)
-            mi = menu->Append(OnMonitorID, _("Stop Monitoring"));
+            mi = menu.Append(OnMonitorID, _("Stop Monitoring"));
          else
-            mi = menu->Append(OnMonitorID, _("Start Monitoring"));
+            mi = menu.Append(OnMonitorID, _("Start Monitoring"));
          mi->Enable(!mActive || mMonitoring);
       }
 
-      menu->Append(OnPreferencesID, _("Preferences..."));
+      menu.Append(OnPreferencesID, _("Preferences..."));
 
       if (evt.RightDown()) {
          ShowMenu(evt.GetPosition());
@@ -698,8 +698,6 @@ void Meter::OnMouse(wxMouseEvent &evt)
       else {
          ShowMenu(wxPoint(mIconRect.x + 1, mIconRect.y + mIconRect.height + 1));
       }
-
-      delete menu;
    }
    else if (evt.LeftDown()) {
       if (mIsInput) {
@@ -1863,22 +1861,22 @@ void Meter::RestoreState(void *state)
 
 void Meter::ShowMenu(const wxPoint & pos)
 {
-   wxMenu *menu = new wxMenu();
+   wxMenu menu;
    // Note: these should be kept in the same order as the enum
    if (mIsInput) {
       wxMenuItem *mi;
       if (mMonitoring)
-         mi = menu->Append(OnMonitorID, _("Stop Monitoring"));
+         mi = menu.Append(OnMonitorID, _("Stop Monitoring"));
       else
-         mi = menu->Append(OnMonitorID, _("Start Monitoring"));
+         mi = menu.Append(OnMonitorID, _("Start Monitoring"));
       mi->Enable(!mActive || mMonitoring);
    }
 
-   menu->Append(OnPreferencesID, _("Preferences..."));
+   menu.Append(OnPreferencesID, _("Preferences..."));
 
    mAccSilent = true;      // temporarily make screen readers say (close to) nothing on focus events
 
-   PopupMenu(menu, pos);
+   PopupMenu(&menu, pos);
 
    /* if stop/start monitoring was chosen in the menu, then by this point
    OnMonitoring has been called and variables which affect the accessibility
@@ -1891,8 +1889,6 @@ void Meter::ShowMenu(const wxPoint & pos)
                                 wxOBJID_CLIENT,
                                 wxACC_SELF);
 #endif
-
-   delete menu;
 }
 
 void Meter::OnMonitor(wxCommandEvent & WXUNUSED(event))

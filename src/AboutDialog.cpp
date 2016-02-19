@@ -194,7 +194,7 @@ AboutDialog::AboutDialog(wxWindow * parent)
     * In English it is slightly humorous alternative to an 'OK' button.
     * If the humour doesn't work in your language, then just use whatever
     * you would use for a translation for 'OK' on a button. */
-   wxButton *ok = new wxButton(S.GetParent(), wxID_OK, _("OK... Audacious!"));
+   wxButton *ok = safenew wxButton(S.GetParent(), wxID_OK, _("OK... Audacious!"));
    ok->SetDefault();
    S.Prop(0).AddWindow( ok );
 
@@ -285,30 +285,31 @@ visit our <a href=\"http://forum.audacityteam.org/\">forum</a>.");
    S.StartNotebookPage( wxT("Audacity") );
    S.StartVerticalLay(1);
 
-   //v For now, change to AudacityLogoWithName via old-fashioned way, not Theme.
-   logo = new wxBitmap((const char **) AudacityLogoWithName_xpm); //v
+   {
+      //v For now, change to AudacityLogoWithName via old-fashioned way, not Theme.
+      wxBitmap logo(AudacityLogoWithName_xpm); //v
 
-   // JKC: Resize to 50% of size.  Later we may use a smaller xpm as
-   // our source, but this allows us to tweak the size - if we want to.
-   // It also makes it easier to revert to full size if we decide to.
-   const float fScale=0.5f;// smaller size.
-   wxImage RescaledImage( logo->ConvertToImage() );
-   // wxIMAGE_QUALITY_HIGH not supported by wxWidgets 2.6.1, or we would use it here.
-   RescaledImage.Rescale( int(LOGOWITHNAME_WIDTH * fScale), int(LOGOWITHNAME_HEIGHT *fScale) );
-   wxBitmap RescaledBitmap( RescaledImage );
+      // JKC: Resize to 50% of size.  Later we may use a smaller xpm as
+      // our source, but this allows us to tweak the size - if we want to.
+      // It also makes it easier to revert to full size if we decide to.
+      const float fScale = 0.5f;// smaller size.
+      wxImage RescaledImage(logo.ConvertToImage());
+      // wxIMAGE_QUALITY_HIGH not supported by wxWidgets 2.6.1, or we would use it here.
+      RescaledImage.Rescale(int(LOGOWITHNAME_WIDTH * fScale), int(LOGOWITHNAME_HEIGHT *fScale));
+      wxBitmap RescaledBitmap(RescaledImage);
 
-   icon =
-       new wxStaticBitmap(S.GetParent(), -1,
-                          //*logo, //v
-                          //v theTheme.Bitmap(bmpAudacityLogo), wxPoint(93, 10), wxSize(215, 190));
-                          //v theTheme.Bitmap(bmpAudacityLogoWithName),
-                          RescaledBitmap,
-                          wxDefaultPosition,
-                          wxSize(int(LOGOWITHNAME_WIDTH*fScale), int(LOGOWITHNAME_HEIGHT*fScale)));
-   delete logo;
+      icon =
+         safenew wxStaticBitmap(S.GetParent(), -1,
+         //*logo, //v
+         //v theTheme.Bitmap(bmpAudacityLogo), wxPoint(93, 10), wxSize(215, 190));
+         //v theTheme.Bitmap(bmpAudacityLogoWithName),
+         RescaledBitmap,
+         wxDefaultPosition,
+         wxSize(int(LOGOWITHNAME_WIDTH*fScale), int(LOGOWITHNAME_HEIGHT*fScale)));
+   }
    S.Prop(0).AddWindow( icon );
 
-   HtmlWindow *html = new LinkingHtmlWindow(S.GetParent(), -1,
+   HtmlWindow *html = safenew LinkingHtmlWindow(S.GetParent(), -1,
                                          wxDefaultPosition,
                                          wxSize(ABOUT_DIALOG_WIDTH, 359),
                                          wxHW_SCROLLBAR_AUTO | wxSUNKEN_BORDER);
@@ -332,7 +333,7 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
    wxString informationStr;   // string to build up list of information in
    S.StartNotebookPage( _("Build Information") );  // start the tab
    S.StartVerticalLay(2);  // create the window
-   HtmlWindow *html = new LinkingHtmlWindow(S.GetParent(), -1, wxDefaultPosition,
+   HtmlWindow *html = safenew LinkingHtmlWindow(S.GetParent(), -1, wxDefaultPosition,
                            wxSize(ABOUT_DIALOG_WIDTH, 264),
                            wxHW_SCROLLBAR_AUTO | wxSUNKEN_BORDER);
    // create a html pane in it to put the content in.
@@ -559,7 +560,7 @@ void AboutDialog::PopulateLicensePage( ShuttleGui & S )
 {
    S.StartNotebookPage( _("GPL License") );
    S.StartVerticalLay(1);
-   HtmlWindow *html = new LinkingHtmlWindow(S.GetParent(), -1,
+   HtmlWindow *html = safenew LinkingHtmlWindow(S.GetParent(), -1,
                                          wxDefaultPosition,
                                          wxSize(ABOUT_DIALOG_WIDTH, 264),
                                          wxHW_SCROLLBAR_AUTO | wxSUNKEN_BORDER);
@@ -918,8 +919,6 @@ void AboutDialog::AddBuildinfoRow( wxString* htmlstring, const wxChar * libname,
 
 AboutDialog::~AboutDialog()
 {
-   delete icon;
-//   delete logo;
 }
 
 void AboutDialog::OnOK(wxCommandEvent & WXUNUSED(event))

@@ -141,7 +141,7 @@ bool EffectReverse::ProcessOneWave(int count, WaveTrack * track, sampleCount sta
    bool checkedFirstClip = false;
 
    // used in calculating the offset of clips to rearrange
-   // holds the new end position of the current clip
+   // holds the NEW end position of the current clip
    sampleCount currentEnd = (sampleCount)end;
 
    WaveClipList revClips; // holds the reversed clips

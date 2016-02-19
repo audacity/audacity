@@ -72,13 +72,13 @@
 #include "xml/XMLTagHandler.h"
 
 // PRL:  These lines allow you to remove Project.h above.
-// They must be included before the definition of macro new below.
+// They must be included before the definition of macro NEW below.
 #include <set>
 #include <map>
 
 //#ifdef __WXMSW__
 // Enable this to diagnose memory leaks too!
-//    #include <wx/msw/msvcrt.h>      // redefines the new() operator
+//    #include <wx/msw/msvcrt.h>      // redefines the NEW() operator
 //#endif
 
 #if __WXMSW__

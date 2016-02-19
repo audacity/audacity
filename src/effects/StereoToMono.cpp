@@ -70,7 +70,7 @@ int EffectStereoToMono::GetAudioOutCount()
 
 bool EffectStereoToMono::Process()
 {
-   // Do not use mWaveTracks here.  We will possibly delete tracks,
+   // Do not use mWaveTracks here.  We will possibly DELETE tracks,
    // so we must use the "real" tracklist.
    this->CopyInputTracks(); // Set up mOutputTracks.
    bool bGoodResult = true;
@@ -81,7 +81,7 @@ bool EffectStereoToMono::Process()
 
    if(mLeftTrack)
    {
-      // create a new WaveTrack to hold all of the output
+      // create a NEW WaveTrack to hold all of the output
       AudacityProject *p = GetActiveProject();
       mOutTrack = p->GetTrackFactory()->NewWaveTrack(floatSample, mLeftTrack->GetRate());
    }

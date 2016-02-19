@@ -831,29 +831,28 @@ int ExportFFmpeg::Export(AudacityProject *project,
       t0, t1,
       channels, pcmBufferSize, true,
       mSampleRate, int16Sample, true, mixerSpec);
-   delete [] waveTracks;
-
-   ProgressDialog *progress = new ProgressDialog(wxFileName(fName).GetName(),
-      selectionOnly ?
-      wxString::Format(_("Exporting selected audio as %s"), ExportFFmpegOptions::fmts[mSubFormat].description) :
-   wxString::Format(_("Exporting entire file as %s"), ExportFFmpegOptions::fmts[mSubFormat].description));
+   delete[] waveTracks;
 
    int updateResult = eProgressSuccess;
+   {
+      ProgressDialog progress(wxFileName(fName).GetName(),
+         selectionOnly ?
+         wxString::Format(_("Exporting selected audio as %s"), ExportFFmpegOptions::fmts[mSubFormat].description) :
+         wxString::Format(_("Exporting entire file as %s"), ExportFFmpegOptions::fmts[mSubFormat].description));
 
-   while(updateResult == eProgressSuccess) {
-      sampleCount pcmNumSamples = mixer->Process(pcmBufferSize);
+      while (updateResult == eProgressSuccess) {
+         sampleCount pcmNumSamples = mixer->Process(pcmBufferSize);
 
-      if (pcmNumSamples == 0)
-         break;
+         if (pcmNumSamples == 0)
+            break;
 
-      short *pcmBuffer = (short *)mixer->GetBuffer();
+         short *pcmBuffer = (short *)mixer->GetBuffer();
 
-      EncodeAudioFrame(pcmBuffer,(pcmNumSamples)*sizeof(int16_t)*mChannels);
+         EncodeAudioFrame(pcmBuffer, (pcmNumSamples)*sizeof(int16_t)*mChannels);
 
-      updateResult = progress->Update(mixer->MixGetCurrentTime()-t0, t1-t0);
+         updateResult = progress.Update(mixer->MixGetCurrentTime() - t0, t1 - t0);
+      }
    }
-
-   delete progress;
 
    delete mixer;
 
@@ -983,27 +982,28 @@ int ExportFFmpeg::AskResample(int bitrate, int rate, int lowrate, int highrate, 
 
 wxWindow *ExportFFmpeg::OptionsCreate(wxWindow *parent, int format)
 {
+   wxASSERT(parent); // to justify safenew
    // subformat index may not correspond directly to fmts[] index, convert it
    mSubFormat = AdjustFormatIndex(format);
    if (mSubFormat == FMT_M4A)
    {
-      return new ExportFFmpegAACOptions(parent, format);
+      return safenew ExportFFmpegAACOptions(parent, format);
    }
    else if (mSubFormat == FMT_AC3)
    {
-      return new ExportFFmpegAC3Options(parent, format);
+      return safenew ExportFFmpegAC3Options(parent, format);
    }
    else if (mSubFormat == FMT_AMRNB)
    {
-      return new ExportFFmpegAMRNBOptions(parent, format);
+      return safenew ExportFFmpegAMRNBOptions(parent, format);
    }
    else if (mSubFormat == FMT_WMA2)
    {
-      return new ExportFFmpegWMAOptions(parent, format);
+      return safenew ExportFFmpegWMAOptions(parent, format);
    }
    else if (mSubFormat == FMT_OTHER)
    {
-      return new ExportFFmpegCustomOptions(parent, format);
+      return safenew ExportFFmpegCustomOptions(parent, format);
    }
 
    return ExportPlugin::OptionsCreate(parent, format);

@@ -440,58 +440,58 @@ int ExportCL::Export(AudacityProject *project,
    samplePtr mixed = NULL;
    int updateResult = eProgressSuccess;
 
-   // Prepare the progress display
-   ProgressDialog *progress = new ProgressDialog(_("Export"),
-      selectionOnly ?
-      _("Exporting the selected audio using command-line encoder") :
-      _("Exporting the entire project using command-line encoder"));
+   {
+      // Prepare the progress display
+      ProgressDialog progress(_("Export"),
+         selectionOnly ?
+         _("Exporting the selected audio using command-line encoder") :
+         _("Exporting the entire project using command-line encoder"));
 
-   // Start piping the mixed data to the command
-   while (updateResult == eProgressSuccess && process.IsActive() && os->IsOk()) {
-      // Capture any stdout and stderr from the command
-      Drain(process.GetInputStream(), &output);
-      Drain(process.GetErrorStream(), &output);
+      // Start piping the mixed data to the command
+      while (updateResult == eProgressSuccess && process.IsActive() && os->IsOk()) {
+         // Capture any stdout and stderr from the command
+         Drain(process.GetInputStream(), &output);
+         Drain(process.GetErrorStream(), &output);
 
-      // Need to mix another block
-      if (numBytes == 0) {
-         sampleCount numSamples = mixer->Process(maxBlockLen);
-         if (numSamples == 0) {
-            break;
-         }
+         // Need to mix another block
+         if (numBytes == 0) {
+            sampleCount numSamples = mixer->Process(maxBlockLen);
+            if (numSamples == 0) {
+               break;
+            }
 
-         mixed = mixer->GetBuffer();
-         numBytes = numSamples * channels;
+            mixed = mixer->GetBuffer();
+            numBytes = numSamples * channels;
 
-         // Byte-swapping is neccesary on big-endian machines, since
-         // WAV files are little-endian
+            // Byte-swapping is neccesary on big-endian machines, since
+            // WAV files are little-endian
 #if wxBYTE_ORDER == wxBIG_ENDIAN
-         wxUint16 *buffer = (wxUint16 *) mixed;
-         for (int i = 0; i < numBytes; i++) {
-            buffer[i] = wxUINT16_SWAP_ON_BE(buffer[i]);
-         }
+            wxUint16 *buffer = (wxUint16 *) mixed;
+            for (int i = 0; i < numBytes; i++) {
+               buffer[i] = wxUINT16_SWAP_ON_BE(buffer[i]);
+            }
 #endif
-         numBytes *= SAMPLE_SIZE(int16Sample);
-      }
-
-      // Don't write too much at once...pipes may not be able to handle it
-      size_t bytes = wxMin(numBytes, 4096);
-      numBytes -= bytes;
-
-      while (bytes > 0) {
-         os->Write(mixed, bytes);
-         if (!os->IsOk()) {
-            break;
+            numBytes *= SAMPLE_SIZE(int16Sample);
          }
-         bytes -= os->LastWrite();
-         mixed += os->LastWrite();
+
+         // Don't write too much at once...pipes may not be able to handle it
+         size_t bytes = wxMin(numBytes, 4096);
+         numBytes -= bytes;
+
+         while (bytes > 0) {
+            os->Write(mixed, bytes);
+            if (!os->IsOk()) {
+               break;
+            }
+            bytes -= os->LastWrite();
+            mixed += os->LastWrite();
+         }
+
+         // Update the progress display
+         updateResult = progress.Update(mixer->MixGetCurrentTime() - t0, t1 - t0);
       }
-
-      // Update the progress display
-      updateResult = progress->Update(mixer->MixGetCurrentTime()-t0, t1-t0);
+      // Done with the progress display
    }
-
-   // Done with the progress display
-   delete progress;
 
    // Should make the process die
    process.CloseOutput();
@@ -536,7 +536,8 @@ int ExportCL::Export(AudacityProject *project,
 
 wxWindow *ExportCL::OptionsCreate(wxWindow *parent, int format)
 {
-   return new ExportCLOptions(parent, format);
+   wxASSERT(parent); // to justify safenew
+   return safenew ExportCLOptions(parent, format);
 }
 
 ExportPlugin *New_ExportCL()

@@ -171,7 +171,7 @@ class Envelope : public XMLTagHandler {
     * Returns 0 if point moved, -1 if not found.*/
    int Move(double when, double value);
 
-   /** \brief delete a point by its position in array */
+   /** \brief DELETE a point by its position in array */
    void Delete(int point);
 
    /** \brief insert a point */

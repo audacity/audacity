@@ -54,8 +54,8 @@ private:
    class Worker;
    friend class Dialog;
 
-   std::auto_ptr<Settings> mSettings;
-   std::auto_ptr<Statistics> mStatistics;
+   std::unique_ptr<Settings> mSettings;
+   std::unique_ptr<Statistics> mStatistics;
 };
 
 #endif

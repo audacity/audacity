@@ -212,7 +212,7 @@ class ToolBarArea : public wxPanel
 
    void CollapseAll(bool now = false);
 
-   // Does not add or delete the window, just relates to layout...
+   // Does not add or DELETE the window, just relates to layout...
    void AddChild(ExpandingToolBar *child);
    void RemoveChild(ExpandingToolBar *child);
 

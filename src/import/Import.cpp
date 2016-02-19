@@ -310,16 +310,16 @@ void Importer::WriteImportItems()
       gPrefs->Write (name, val);
       gPrefs->Flush();
    }
-   /* If we used to have more items than we have now, delete the excess items.
+   /* If we used to have more items than we have now, DELETE the excess items.
    We just keep deleting items and incrementing until we find there aren't any
-   more to delete.*/
+   more to DELETE.*/
    i = this->mExtImportItems->Count();
    do {
      name.Printf (wxT("/ExtImportItems/Item%d"), (int)i);
-     // No item to delete?  Then it's time to finish.
+     // No item to DELETE?  Then it's time to finish.
      if (!gPrefs->Read(name, &val))
         break;
-     // Failure to delete probably means a read-only config file.
+     // Failure to DELETE probably means a read-only config file.
      // no point continuing.
      // TODO: Possibly report (once).
      if( !gPrefs->DeleteEntry (name, false))
@@ -751,19 +751,24 @@ wxDialog( parent, id, title, position, size, style | wxRESIZE_BORDER )
    mFile = _mFile;
    scount = mFile->GetStreamCount();
    for (wxInt32 i = 0; i < scount; i++)
-      mFile->SetStreamUsage(i,FALSE);
+      mFile->SetStreamUsage(i, FALSE);
 
-   wxBoxSizer *vertSizer = new wxBoxSizer( wxVERTICAL );
-   wxArrayString *choices = mFile->GetStreamInfo();
-   StreamList = new wxListBox(this, -1, wxDefaultPosition, wxDefaultSize, *choices , wxLB_EXTENDED | wxLB_ALWAYS_SB);
+   wxBoxSizer *vertSizer;
+   {
+      auto uVertSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
+      vertSizer = uVertSizer.get();
 
-   vertSizer->Add( StreamList, 1, wxEXPAND | wxALIGN_LEFT | wxALL, 5 );
+      wxArrayString *choices = mFile->GetStreamInfo();
+      StreamList = safenew wxListBox(this, -1, wxDefaultPosition, wxDefaultSize, *choices, wxLB_EXTENDED | wxLB_ALWAYS_SB);
 
-   vertSizer->Add( CreateStdButtonSizer(this, eCancelButton|eOkButton), 0, wxEXPAND );
+      vertSizer->Add(StreamList, 1, wxEXPAND | wxALIGN_LEFT | wxALL, 5);
 
-   SetAutoLayout( true );
+      vertSizer->Add(CreateStdButtonSizer(this, eCancelButton | eOkButton).release(), 0, wxEXPAND);
 
-   SetSizer( vertSizer );
+      SetAutoLayout(true);
+
+      SetSizer(uVertSizer.release());
+   }
 
    vertSizer->Fit( this );
 

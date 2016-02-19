@@ -213,7 +213,7 @@ private:
    int mMouseX;
    int mMouseY;
 
-   std::auto_ptr<SpectrumAnalyst> mAnalyst;
+   std::unique_ptr<SpectrumAnalyst> mAnalyst;
 
    DECLARE_EVENT_TABLE();
 

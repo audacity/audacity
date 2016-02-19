@@ -37,7 +37,6 @@ private:
    void OnDontShow( wxCommandEvent & Evt );
 
    HtmlWindow * mpHtml;
-   wxStaticBitmap* m_pIcon;
    wxBitmap* m_pLogo; //vvv
    static SplashDialog * pSelf;
 };

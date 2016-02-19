@@ -133,7 +133,7 @@ public:
    ExtImportItems *GetImportItems() { return mExtImportItems; };
 
    /**
-    * Allocates new ExtImportItem, fills it with default data
+    * Allocates NEW ExtImportItem, fills it with default data
     * and returns a pointer to it.
     */
     ExtImportItem *CreateDefaultImportItem();

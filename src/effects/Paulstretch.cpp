@@ -290,11 +290,11 @@ bool EffectPaulstretch::ProcessOne(WaveTrack *track,double t0,double t1,int coun
 
    WaveTrack * outputTrack = mFactory->NewWaveTrack(track->GetSampleFormat(),track->GetRate());
 
-   PaulStretch *stretch=new PaulStretch(amount,stretch_buf_size,track->GetRate());
+   PaulStretch stretch(amount,stretch_buf_size,track->GetRate());
 
-   sampleCount nget=stretch->get_nsamples_for_fill();
+   sampleCount nget=stretch.get_nsamples_for_fill();
 
-   int bufsize=stretch->poolsize;
+   int bufsize=stretch.poolsize;
    float *buffer0=new float[bufsize];
    float *bufferptr0=buffer0;
    sampleCount outs=0;
@@ -308,13 +308,13 @@ bool EffectPaulstretch::ProcessOne(WaveTrack *track,double t0,double t1,int coun
 
    while (s<len){
       track->Get((samplePtr)bufferptr0,floatSample,start+s,nget);
-      stretch->process(buffer0,nget);
+      stretch.process(buffer0,nget);
 
       if (first_time) {
-         stretch->process(buffer0,0);
+         stretch.process(buffer0,0);
       };
 
-      outs+=stretch->out_bufsize;
+      outs+=stretch.out_bufsize;
       s+=nget;
 
       if (first_time){//blend the the start of the selection
@@ -322,7 +322,7 @@ bool EffectPaulstretch::ProcessOne(WaveTrack *track,double t0,double t1,int coun
          first_time=false;
          for (int i=0;i<fade_len;i++){
             float fi=(float)i/(float)fade_len;
-            stretch->out_buf[i]=stretch->out_buf[i]*fi+(1.0-fi)*fade_track_smps[i];
+            stretch.out_buf[i]=stretch.out_buf[i]*fi+(1.0-fi)*fade_track_smps[i];
          };
       };
       if (s>=len){//blend the end of the selection
@@ -330,13 +330,13 @@ bool EffectPaulstretch::ProcessOne(WaveTrack *track,double t0,double t1,int coun
          for (int i=0;i<fade_len;i++){
             float fi=(float)i/(float)fade_len;
             int i2=bufsize/2-1-i;
-            stretch->out_buf[i2]=stretch->out_buf[i2]*fi+(1.0-fi)*fade_track_smps[fade_len-1-i];
+            stretch.out_buf[i2]=stretch.out_buf[i2]*fi+(1.0-fi)*fade_track_smps[fade_len-1-i];
          };
       };
 
-      outputTrack->Append((samplePtr)stretch->out_buf,floatSample,stretch->out_bufsize);
+      outputTrack->Append((samplePtr)stretch.out_buf,floatSample,stretch.out_bufsize);
 
-      nget=stretch->get_nsamples();
+      nget=stretch.get_nsamples();
       if (TrackProgress(count, (s / (double) len))) {
          cancelled=true;
          break;
@@ -352,7 +352,6 @@ bool EffectPaulstretch::ProcessOne(WaveTrack *track,double t0,double t1,int coun
       m_t1 = mT0 + outputTrack->GetEndTime();
    }
 
-   delete stretch;
    delete []buffer0;
 
    delete outputTrack;
@@ -412,17 +411,17 @@ void PaulStretch::set_rap(float newrap)
 
 void PaulStretch::process(float *smps,int nsmps)
 {
-   //add new samples to the pool
+   //add NEW samples to the pool
    if ((smps!=NULL)&&(nsmps!=0)){
       if (nsmps>poolsize){
          nsmps=poolsize;
       }
       int nleft=poolsize-nsmps;
 
-      //move left the samples from the pool to make room for new samples
+      //move left the samples from the pool to make room for NEW samples
       for (int i=0;i<nleft;i++) in_pool[i]=in_pool[i+nsmps];
 
-      //add new samples to the pool
+      //add NEW samples to the pool
       for (int i=0;i<nsmps;i++) in_pool[i+nleft]=smps[i];
    }
 

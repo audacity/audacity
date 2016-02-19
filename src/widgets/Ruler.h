@@ -320,7 +320,7 @@ private:
    void DoDrawCursor(wxDC * dc);
    void DoDrawSelection(wxDC * dc);
    void DoDrawIndicator(wxDC * dc);
-   void DrawQuickPlayIndicator(wxDC * dc /*NULL to delete old only*/);
+   void DrawQuickPlayIndicator(wxDC * dc /*NULL to DELETE old only*/);
    void DoDrawPlayRegion(wxDC * dc);
 
    double Pos2Time(int p, bool ignoreFisheye = false);

@@ -1154,6 +1154,16 @@ void Effect::SetBatchProcessing(bool start)
    }
 }
 
+namespace {
+   struct SetProgress {
+      SetProgress(ProgressDialog *& mProgress_, ProgressDialog *progress)
+         : mProgress(mProgress_)
+      { mProgress = progress; }
+      ~SetProgress() { mProgress = nullptr; }
+      ProgressDialog *& mProgress;
+   };
+}
+
 bool Effect::DoEffect(wxWindow *parent,
                       double projectRate,
                       TrackList *list,
@@ -1230,12 +1240,11 @@ bool Effect::DoEffect(wxWindow *parent,
    bool skipFlag = CheckWhetherSkipEffect();
    if (skipFlag == false)
    {
-      mProgress = new ProgressDialog(GetName(),
-                                     wxString::Format(_("Applying %s..."), GetName().c_str()),
-                                     pdlgHideStopButton);
+      ProgressDialog progress(GetName(),
+         wxString::Format(_("Applying %s..."), GetName().c_str()),
+         pdlgHideStopButton);
+      SetProgress sp(mProgress, &progress);
       returnVal = Process();
-      delete mProgress;
-      mProgress = NULL;
    }
 
    End();
@@ -1870,22 +1879,20 @@ bool Effect::ProcessTrack(int count,
    if (isGenerator)
    {
       AudacityProject *p = GetActiveProject();
-      StepTimeWarper *warper = new StepTimeWarper(mT0 + genLength, genLength - (mT1 - mT0));
+      StepTimeWarper warper(mT0 + genLength, genLength - (mT1 - mT0));
 
       // Transfer the data from the temporary tracks to the actual ones
       genLeft->Flush();
-      // mT1 gives us the new selection. We want to replace up to GetSel1().
-      left->ClearAndPaste(mT0, p->GetSel1(), genLeft, true, true, warper);
+      // mT1 gives us the NEW selection. We want to replace up to GetSel1().
+      left->ClearAndPaste(mT0, p->GetSel1(), genLeft, true, true, &warper);
       delete genLeft;
 
       if (genRight)
       {
          genRight->Flush();
-         right->ClearAndPaste(mT0, mT1, genRight, true, true, warper);
+         right->ClearAndPaste(mT0, mT1, genRight, true, true, &warper);
          delete genRight;
       }
-
-      delete warper;
    }
 
    // Allow the plugin to cleanup
@@ -2124,14 +2131,14 @@ void Effect::AddToOutputTracks(Track *t)
 }
 
 // If bGoodResult, replace mTracks tracks with successfully processed mOutputTracks copies.
-// Else clear and delete mOutputTracks copies.
+// Else clear and DELETE mOutputTracks copies.
 void Effect::ReplaceProcessedTracks(const bool bGoodResult)
 {
    wxASSERT(mOutputTracks != NULL); // Make sure we at least did the CopyInputTracks().
 
    if (!bGoodResult) {
       // Processing failed or was cancelled so throw away the processed tracks.
-      mOutputTracks->Clear(true); // true => delete the tracks
+      mOutputTracks->Clear(true); // true => DELETE the tracks
 
       // Reset map
       mIMap.Clear();
@@ -2161,21 +2168,21 @@ void Effect::ReplaceProcessedTracks(const bool bGoodResult)
       // This should never happen
       wxASSERT(i < cnt);
 
-      // Remove the track from the output list...don't delete it
+      // Remove the track from the output list...don't DELETE it
       x = iterOut.RemoveCurrent(false);
 
       Track *t = (Track *) mIMap[i];
       if (t == NULL)
       {
-         // This track is a new addition to output tracks; add it to mTracks
+         // This track is a NEW addition to output tracks; add it to mTracks
          mTracks->Add(o);
       }
       else
       {
-         // Replace mTracks entry with the new track
+         // Replace mTracks entry with the NEW track
          mTracks->Replace(t, o, false);
 
-         // Swap the wavecache track the ondemand task uses, since now the new
+         // Swap the wavecache track the ondemand task uses, since now the NEW
          // one will be kept in the project
          if (ODManager::IsInstanceCreated()) {
             ODManager::Instance()->ReplaceWaveTrack((WaveTrack *)t,
@@ -2293,7 +2300,7 @@ bool Effect::RealtimeAddProcessor(int group, int chans, float rate)
          ochans -= mNumAudioOut;
       }
 
-      // Add a new processor
+      // Add a NEW processor
       RealtimeAddProcessor(gchans, rate);
 
       // Bump to next processor
@@ -2481,7 +2488,7 @@ void Effect::Preview(bool dryOnly)
    // Save the original track list
    TrackList *saveTracks = mTracks;
 
-   // Build new tracklist from rendering tracks
+   // Build NEW tracklist from rendering tracks
    mTracks = new TrackList();
 
    // Linear Effect preview optimised by pre-mixing to one track.
@@ -2529,14 +2536,13 @@ void Effect::Preview(bool dryOnly)
 
    // Apply effect
    if (!dryOnly) {
-      mProgress = new ProgressDialog(GetName(),
-            _("Preparing preview"),
-            pdlgHideCancelButton); // Have only "Stop" button.
+      ProgressDialog progress(GetName(),
+         _("Preparing preview"),
+         pdlgHideCancelButton); // Have only "Stop" button.
+      SetProgress sp(mProgress, &progress);
       mIsPreview = true;
       success = Process();
       mIsPreview = false;
-      delete mProgress;
-      mProgress = NULL;
    }
 
    if (success)
@@ -2570,15 +2576,15 @@ void Effect::Preview(bool dryOnly)
          // The progress dialog must be deleted before stopping the stream
          // to allow events to flow to the app during StopStream processing.
          // The progress dialog blocks these events.
-         ProgressDialog *progress =
-            new ProgressDialog(GetName(), _("Previewing"), pdlgHideCancelButton);
+         {
+            ProgressDialog progress
+               (GetName(), _("Previewing"), pdlgHideCancelButton);
 
-         while (gAudioIO->IsStreamActive(token) && previewing == eProgressSuccess) {
-            ::wxMilliSleep(100);
-            previewing = progress->Update(gAudioIO->GetStreamTime() - mT0, t1 - mT0);
+            while (gAudioIO->IsStreamActive(token) && previewing == eProgressSuccess) {
+               ::wxMilliSleep(100);
+               previewing = progress.Update(gAudioIO->GetStreamTime() - mT0, t1 - mT0);
+            }
          }
-
-         delete progress;
 
          gAudioIO->StopStream();
 
@@ -2599,7 +2605,7 @@ void Effect::Preview(bool dryOnly)
    delete mOutputTracks;
    mOutputTracks = NULL;
 
-   mTracks->Clear(true); // true => delete the tracks
+   mTracks->Clear(true); // true => DELETE the tracks
    delete mTracks;
 
    mTracks = saveTracks;
@@ -2855,7 +2861,8 @@ int EffectUIHost::ShowModal()
 #if defined(__WXMSW__)
    // Swap the Close and Apply buttons
    wxSizer *sz = mApplyBtn->GetContainingSizer();
-   wxButton *apply = new wxButton(mApplyBtn->GetParent(), wxID_APPLY);
+   wxASSERT(mApplyBtn->GetParent()); // To justify safenew
+   wxButton *apply = safenew wxButton(mApplyBtn->GetParent(), wxID_APPLY);
    sz->Replace(mCloseBtn, apply);
    sz->Replace(mApplyBtn, mCloseBtn);
    sz->Layout();
@@ -2880,166 +2887,181 @@ int EffectUIHost::ShowModal()
 
 bool EffectUIHost::Initialize()
 {
-   wxBoxSizer *vs = new wxBoxSizer(wxVERTICAL);
-   wxBoxSizer *hs = new wxBoxSizer(wxHORIZONTAL);
-
-   EffectPanel *w = new EffectPanel(this);
-
-   // Try to give the window a sensible default/minimum size
-   w->SetMinSize(wxSize(wxMax(600, mParent->GetSize().GetWidth() * 2 / 3),
-                        mParent->GetSize().GetHeight() / 2));
-
-   mDisableTransport = !gAudioIO->IsAvailable(mProject);
-   mPlaying = gAudioIO->IsStreamActive(); // not exactly right, but will suffice
-   mCapturing = gAudioIO->IsStreamActive() && gAudioIO->GetNumCaptureChannels() > 0;
-
-   if (!mClient->PopulateUI(w))
+   EffectPanel *w = safenew EffectPanel(this);
    {
-      return false;
-   }
+      auto vs = std::make_unique<wxBoxSizer>(wxVERTICAL);
+      {
+         auto hs = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
 
-   hs->Add(w, 1, wxEXPAND);
-   vs->Add(hs, 1, wxEXPAND);
+         // Try to give the window a sensible default/minimum size
+         w->SetMinSize(wxSize(wxMax(600, mParent->GetSize().GetWidth() * 2 / 3),
+            mParent->GetSize().GetHeight() / 2));
 
-   wxPanel *buttonPanel = new wxPanel(this, wxID_ANY);
-   wxPanel *bar = new wxPanel(buttonPanel, wxID_ANY);
+         mDisableTransport = !gAudioIO->IsAvailable(mProject);
+         mPlaying = gAudioIO->IsStreamActive(); // not exactly right, but will suffice
+         mCapturing = gAudioIO->IsStreamActive() && gAudioIO->GetNumCaptureChannels() > 0;
 
-   // This fools NVDA into not saying "Panel" when the dialog gets focus
-   bar->SetName(wxT("\a"));
-   bar->SetLabel(wxT("\a"));
+         if (!mClient->PopulateUI(w))
+         {
+            return false;
+         }
 
-   wxBoxSizer *bs = new wxBoxSizer(wxHORIZONTAL);
+         hs->Add(w, 1, wxEXPAND);
+         vs->Add(hs.release(), 1, wxEXPAND);
+      }
 
-   mSupportsRealtime = mEffect->SupportsRealtime();
-   mIsGUI = mClient->IsGraphicalUI();
-   mIsBatch = mEffect->IsBatchProcessing();
+      wxPanel *buttonPanel = safenew wxPanel(this, wxID_ANY);
+      wxPanel *const bar = safenew wxPanel(buttonPanel, wxID_ANY);
 
-   wxBitmapButton *bb;
+      // This fools NVDA into not saying "Panel" when the dialog gets focus
+      bar->SetName(wxT("\a"));
+      bar->SetLabel(wxT("\a"));
 
-   int margin = 0;
+      {
+         auto bs = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
+
+         mSupportsRealtime = mEffect->SupportsRealtime();
+         mIsGUI = mClient->IsGraphicalUI();
+         mIsBatch = mEffect->IsBatchProcessing();
+
+         wxBitmapButton *bb;
+
+         int margin = 0;
 
 #if defined(__WXMAC__)
-   margin = 3; // I'm sure it's needed because of the order things are created...
+         margin = 3; // I'm sure it's needed because of the order things are created...
 #endif   
 
-   if (!mIsGUI)
-   {
-      mMenuBtn = new wxButton(bar, kMenuID, _("&Manage"));
-      bs->Add(mMenuBtn, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
-   }
-   else
-   {
-      mMenuBtn = new wxBitmapButton(bar, kMenuID, CreateBitmap(effect_menu_xpm, true, false));
-#if defined(__WXMAC__)
-      mMenuBtn->SetName(_("&Manage"));
-#else
-      mMenuBtn->SetLabel(_("&Manage"));
-#endif
-      bs->Add(mMenuBtn);
-   }
-   mMenuBtn->SetToolTip(_("Manage presets and options"));
-
-   bs->Add(5, 5);
-
-   if (!mIsBatch)
-   {
-      if (!mIsGUI)
-      {
-         if (mSupportsRealtime)
-         {
-            mPlayToggleBtn = new wxButton(bar, kPlayID, _("Start &Playback"));
-            mPlayToggleBtn->SetToolTip(_("Start and stop playback"));
-            bs->Add(mPlayToggleBtn, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
-         }
-         else if (mEffect->GetType() != EffectTypeAnalyze)
-         {
-            mPlayToggleBtn = new wxButton(bar, kPlayID, _("&Preview"));
-            mPlayToggleBtn->SetToolTip(_("Preview effect"));
-            bs->Add(mPlayToggleBtn, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
-         }
-      }
-      else
-      {
-         mPlayBM = CreateBitmap(effect_play_xpm, true, false);
-         mPlayDisabledBM = CreateBitmap(effect_play_disabled_xpm, true, false);
-         mStopBM = CreateBitmap(effect_stop_xpm, true, false);
-         mStopDisabledBM = CreateBitmap(effect_stop_disabled_xpm, true, false);
-         bb = new wxBitmapButton(bar, kPlayID, mPlayBM);
-         bb->SetBitmapDisabled(mPlayDisabledBM);
-         mPlayBtn = bb;
-         bs->Add(mPlayBtn);
-         if (!mSupportsRealtime)
-         {
-            mPlayBtn->SetToolTip(_("Preview effect"));
-#if defined(__WXMAC__)
-            mPlayBtn->SetName(_("Preview effect"));
-#else
-            mPlayBtn->SetLabel(_("&Preview effect"));
-#endif
-         }
-      }
-
-      if (mSupportsRealtime)
-      {
          if (!mIsGUI)
          {
-            mRewindBtn = new wxButton(bar, kRewindID, _("Skip &Backward"));
-            bs->Add(mRewindBtn, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
+            wxASSERT(bar); // To justify safenew
+            mMenuBtn = safenew wxButton(bar, kMenuID, _("&Manage"));
+            bs->Add(mMenuBtn, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
          }
          else
          {
-            bb = new wxBitmapButton(bar, kRewindID, CreateBitmap(effect_rewind_xpm, true, true));
-            bb->SetBitmapDisabled(CreateBitmap(effect_rewind_disabled_xpm, true, true));
-            mRewindBtn = bb;
+            wxASSERT(bar); // To justify safenew
+            mMenuBtn = safenew wxBitmapButton(bar, kMenuID, CreateBitmap(effect_menu_xpm, true, false));
 #if defined(__WXMAC__)
-            mRewindBtn->SetName(_("Skip &Backward"));
+            mMenuBtn->SetName(_("&Manage"));
 #else
-            mRewindBtn->SetLabel(_("Skip &Backward"));
+            mMenuBtn->SetLabel(_("&Manage"));
 #endif
-            bs->Add(mRewindBtn);
+            bs->Add(mMenuBtn);
          }
-         mRewindBtn->SetToolTip(_("Skip backward"));
-
-         if (!mIsGUI)
-         {
-            mFFwdBtn = new wxButton(bar, kFFwdID, _("Skip &Forward"));
-            bs->Add(mFFwdBtn, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
-         }
-         else
-         {
-            bb = new wxBitmapButton(bar, kFFwdID, CreateBitmap(effect_ffwd_xpm, true, true));
-            bb->SetBitmapDisabled(CreateBitmap(effect_ffwd_disabled_xpm, true, true));
-            mFFwdBtn = bb;
-#if defined(__WXMAC__)
-            mFFwdBtn->SetName(_("Skip &Foreward"));
-#else
-            mFFwdBtn->SetLabel(_("Skip &Foreward"));
-#endif
-            bs->Add(mFFwdBtn);
-         }
-         mFFwdBtn->SetToolTip(_("Skip forward"));
+         mMenuBtn->SetToolTip(_("Manage presets and options"));
 
          bs->Add(5, 5);
 
-         mEnableCb = new wxCheckBox(bar, kEnableID, _("&Enable"));
-         mEnableCb->SetValue(mEnabled);
-         mEnableCb->SetName(_("Enable"));
-         bs->Add(mEnableCb, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
+         if (!mIsBatch)
+         {
+            if (!mIsGUI)
+            {
+               if (mSupportsRealtime)
+               {
+                  wxASSERT(bar); // To justify safenew
+                  mPlayToggleBtn = safenew wxButton(bar, kPlayID, _("Start &Playback"));
+                  mPlayToggleBtn->SetToolTip(_("Start and stop playback"));
+                  bs->Add(mPlayToggleBtn, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
+               }
+               else if (mEffect->GetType() != EffectTypeAnalyze)
+               {
+                  wxASSERT(bar); // To justify safenew
+                  mPlayToggleBtn = safenew wxButton(bar, kPlayID, _("&Preview"));
+                  mPlayToggleBtn->SetToolTip(_("Preview effect"));
+                  bs->Add(mPlayToggleBtn, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
+               }
+            }
+            else
+            {
+               mPlayBM = CreateBitmap(effect_play_xpm, true, false);
+               mPlayDisabledBM = CreateBitmap(effect_play_disabled_xpm, true, false);
+               mStopBM = CreateBitmap(effect_stop_xpm, true, false);
+               mStopDisabledBM = CreateBitmap(effect_stop_disabled_xpm, true, false);
+               wxASSERT(bar); // To justify safenew
+               bb = safenew wxBitmapButton(bar, kPlayID, mPlayBM);
+               bb->SetBitmapDisabled(mPlayDisabledBM);
+               mPlayBtn = bb;
+               bs->Add(mPlayBtn);
+               if (!mSupportsRealtime)
+               {
+                  mPlayBtn->SetToolTip(_("Preview effect"));
+#if defined(__WXMAC__)
+                  mPlayBtn->SetName(_("Preview effect"));
+#else
+                  mPlayBtn->SetLabel(_("&Preview effect"));
+#endif
+               }
+            }
+
+            if (mSupportsRealtime)
+            {
+               if (!mIsGUI)
+               {
+                  wxASSERT(bar); // To justify safenew
+                  mRewindBtn = safenew wxButton(bar, kRewindID, _("Skip &Backward"));
+                  bs->Add(mRewindBtn, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
+               }
+               else
+               {
+                  wxASSERT(bar); // To justify safenew
+                  bb = safenew wxBitmapButton(bar, kRewindID, CreateBitmap(effect_rewind_xpm, true, true));
+                  bb->SetBitmapDisabled(CreateBitmap(effect_rewind_disabled_xpm, true, true));
+                  mRewindBtn = bb;
+#if defined(__WXMAC__)
+                  mRewindBtn->SetName(_("Skip &Backward"));
+#else
+                  mRewindBtn->SetLabel(_("Skip &Backward"));
+#endif
+                  bs->Add(mRewindBtn);
+               }
+               mRewindBtn->SetToolTip(_("Skip backward"));
+
+               if (!mIsGUI)
+               {
+                  wxASSERT(bar); // To justify safenew
+                  mFFwdBtn = safenew wxButton(bar, kFFwdID, _("Skip &Forward"));
+                  bs->Add(mFFwdBtn, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
+               }
+               else
+               {
+                  wxASSERT(bar); // To justify safenew
+                  bb = safenew wxBitmapButton(bar, kFFwdID, CreateBitmap(effect_ffwd_xpm, true, true));
+                  bb->SetBitmapDisabled(CreateBitmap(effect_ffwd_disabled_xpm, true, true));
+                  mFFwdBtn = bb;
+#if defined(__WXMAC__)
+                  mFFwdBtn->SetName(_("Skip &Foreward"));
+#else
+                  mFFwdBtn->SetLabel(_("Skip &Foreward"));
+#endif
+                  bs->Add(mFFwdBtn);
+               }
+               mFFwdBtn->SetToolTip(_("Skip forward"));
+
+               bs->Add(5, 5);
+
+               mEnableCb = safenew wxCheckBox(bar, kEnableID, _("&Enable"));
+               mEnableCb->SetValue(mEnabled);
+               mEnableCb->SetName(_("Enable"));
+               bs->Add(mEnableCb, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
+            }
+         }
+
+         bar->SetSizerAndFit(bs.release());
       }
+
+      long buttons = eApplyButton + eCloseButton;
+      if (mEffect->mUIDebug)
+      {
+         buttons += eDebugButton;
+      }
+
+      buttonPanel->SetSizer(CreateStdButtonSizer(buttonPanel, buttons, bar).release());
+      vs->Add(buttonPanel, 0, wxEXPAND);
+
+      SetSizer(vs.release());
    }
 
-   bar->SetSizerAndFit(bs);
-
-   long buttons = eApplyButton + eCloseButton;
-   if (mEffect->mUIDebug)
-   {
-      buttons += eDebugButton;
-   }
-
-   buttonPanel->SetSizer(CreateStdButtonSizer(buttonPanel, buttons, bar));
-   vs->Add(buttonPanel, 0, wxEXPAND);
-
-   SetSizer(vs);
    Layout();
    Fit();
    Center();
@@ -3197,14 +3219,14 @@ void EffectUIHost::OnDebug(wxCommandEvent & evt)
 
 void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
 {
-   wxMenu *menu = new wxMenu();
+   wxMenu menu;
    wxMenu *sub;
 
    LoadUserPresets();
 
    if (mUserPresets.GetCount() == 0)
    {
-      menu->Append(kUserPresetsDummyID, _("User Presets"))->Enable(false);
+      menu.Append(kUserPresetsDummyID, _("User Presets"))->Enable(false);
    }
    else
    {
@@ -3213,14 +3235,14 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
       {
          sub->Append(kUserPresetsID + i, mUserPresets[i]);
       }
-      menu->Append(0, _("User Presets"), sub);
+      menu.Append(0, _("User Presets"), sub);
    }
 
-   menu->Append(kSaveAsID, _("Save Preset..."));
+   menu.Append(kSaveAsID, _("Save Preset..."));
 
    if (mUserPresets.GetCount() == 0)
    {
-      menu->Append(kDeletePresetDummyID, _("Delete Preset"))->Enable(false);
+      menu.Append(kDeletePresetDummyID, _("Delete Preset"))->Enable(false);
    }
    else
    {
@@ -3229,10 +3251,10 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
       {
          sub->Append(kDeletePresetID + i, mUserPresets[i]);
       }
-      menu->Append(0, _("Delete Preset"), sub);
+      menu.Append(0, _("Delete Preset"), sub);
    }
 
-   menu->AppendSeparator();
+   menu.AppendSeparator();
 
    wxArrayString factory = mEffect->GetFactoryPresets();
 
@@ -3252,14 +3274,14 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
          sub->Append(kFactoryPresetsID + i, label);
       }
    }
-   menu->Append(0, _("Factory Presets"), sub);
+   menu.Append(0, _("Factory Presets"), sub);
 
-   menu->AppendSeparator();
-   menu->Append(kImportID, _("Import..."))->Enable(mClient->CanExportPresets());
-   menu->Append(kExportID, _("Export..."))->Enable(mClient->CanExportPresets());
-   menu->AppendSeparator();
-   menu->Append(kOptionsID, _("Options..."))->Enable(mClient->HasOptions());
-   menu->AppendSeparator();
+   menu.AppendSeparator();
+   menu.Append(kImportID, _("Import..."))->Enable(mClient->CanExportPresets());
+   menu.Append(kExportID, _("Export..."))->Enable(mClient->CanExportPresets());
+   menu.AppendSeparator();
+   menu.Append(kOptionsID, _("Options..."))->Enable(mClient->HasOptions());
+   menu.AppendSeparator();
 
    sub = new wxMenu();
 
@@ -3269,13 +3291,11 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
    sub->Append(kDummyID, wxString::Format(_("Vendor: %s"), mEffect->GetVendor().c_str()));
    sub->Append(kDummyID, wxString::Format(_("Description: %s"), mEffect->GetDescription().c_str()));
 
-   menu->Append(0, _("About"), sub);
+   menu.Append(0, _("About"), sub);
 
    wxWindow *btn = FindWindow(kMenuID);
    wxRect r = btn->GetRect();
-   btn->PopupMenu(menu, r.GetLeft(), r.GetBottom());
-
-   delete menu;
+   btn->PopupMenu(&menu, r.GetLeft(), r.GetBottom());
 }
 
 void EffectUIHost::OnEnable(wxCommandEvent & WXUNUSED(evt))

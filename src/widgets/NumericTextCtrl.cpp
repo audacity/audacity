@@ -21,7 +21,7 @@ in the selection bar of Audacity.
   exact way that a single value is split into several fields,
   such as the hh:mm:ss format.  The advantage of this format string
   is that it is very small and compact, but human-readable and
-  somewhat intuitive, so that it's easy to add new layouts
+  somewhat intuitive, so that it's easy to add NEW layouts
   in the future.  It's also designed to make it easier to add
   i18n support, since the way that numbers are displayed in different
   languages could conceivably vary a lot.
@@ -108,7 +108,7 @@ in the selection bar of Audacity.
   Summary of format string rules:
 
   - The characters '0-9', '*', and '#' are numeric.  Any sequence of
-    these characters is treated as defining a new field by specifying
+    these characters is treated as defining a NEW field by specifying
     its range.  All other characters become delimiters between fields.
     (The one exception is that '.' is treated as numeric after the
     optional '|'.)
@@ -1980,7 +1980,7 @@ wxAccStatus NumericTextCtrlAx::GetName(int childId, wxString *name)
       int cnt = mFields.GetCount();
       wxString decimal = wxLocale::GetInfo(wxLOCALE_DECIMAL_POINT, wxLOCALE_CAT_NUMBER);
 
-      // If the new field is the last field, then check it to see if
+      // If the NEW field is the last field, then check it to see if
       // it represents fractions of a second.
       // PRL: click a digit of the control and use left and right arrow keys
       // to exercise this code

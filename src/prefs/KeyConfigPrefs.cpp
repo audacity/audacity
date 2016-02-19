@@ -14,7 +14,7 @@
 \brief A PrefsPanel for keybindings.
 
 The code for displaying keybindings is similar to code in MousePrefs.
-It would be nice to create a new 'Bindings' class which both
+It would be nice to create a NEW 'Bindings' class which both
 KeyConfigPrefs and MousePrefs use.
 
 *//*********************************************************************/
@@ -200,7 +200,7 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
             mFilterLabel = S.AddVariableText(_("Searc&h:"));
 
             if (!mFilter) {
-               mFilter = new wxTextCtrl(this,
+               mFilter = safenew wxTextCtrl(this,
                                         FilterID,
                                         wxT(""),
                                         wxDefaultPosition,
@@ -230,7 +230,7 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
       S.StartHorizontalLay(wxEXPAND, 1);
       {
          if (!mView) {
-            mView = new KeyView(this, CommandsListID);
+            mView = safenew KeyView(this, CommandsListID);
             mView->SetName(_("Bindings"));
          }
          S.Prop(true);
@@ -241,7 +241,7 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
       S.StartThreeColumn();
       {
          if (!mKey) {
-            mKey = new wxTextCtrl(this,
+            mKey = safenew wxTextCtrl(this,
                                   CurrentComboID,
                                   wxT(""),
                                   wxDefaultPosition,
@@ -384,13 +384,11 @@ void KeyConfigPrefs::OnExport(wxCommandEvent & WXUNUSED(event))
       mManager->WriteXML(prefFile);
       prefFile.Close();
    }
-   catch (XMLFileWriterException* pException)
+   catch (const XMLFileWriterException &)
    {
       wxMessageBox(_("Couldn't write to file: ") + file,
                    _("Error Exporting Keyboard Shortcuts"),
                    wxOK | wxCENTRE, this);
-
-      delete pException;
    }
 }
 
@@ -771,7 +769,7 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
       S.StartThreeColumn();
       {
          if (!mKey) {
-            mKey = new wxTextCtrl(this,
+            mKey = safenew wxTextCtrl(this,
                                   CurrentComboID,
                                   wxT(""),
                                   wxDefaultPosition,
@@ -967,13 +965,11 @@ void KeyConfigPrefs::OnExport(wxCommandEvent & WXUNUSED(event))
       mManager->WriteXML(prefFile);
       prefFile.Close();
    }
-   catch (XMLFileWriterException* pException)
+   catch (const XMLFileWriterException &)
    {
       wxMessageBox(_("Couldn't write to file: ") + file,
                    _("Error Exporting Keyboard Shortcuts"),
                    wxOK | wxCENTRE, this);
-
-      delete pException;
    }
 }
 
@@ -1213,5 +1209,6 @@ void KeyConfigPrefs::Cancel()
 
 PrefsPanel *KeyConfigPrefsFactory::Create(wxWindow *parent)
 {
-   return new KeyConfigPrefs(parent);
+   wxASSERT(parent); // to justify safenew
+   return safenew KeyConfigPrefs(parent);
 }

@@ -79,7 +79,7 @@ class DirManager: public XMLTagHandler {
    bool ContainsBlockFile(wxString filepath) const;
 
    // Adds one to the reference count of the block file,
-   // UNLESS it is "locked", then it makes a new copy of
+   // UNLESS it is "locked", then it makes a NEW copy of
    // the BlockFile.
    BlockFile *CopyBlockFile(BlockFile *b);
 
@@ -156,7 +156,7 @@ class DirManager: public XMLTagHandler {
    // This should only be used by the auto save functionality
    void SetLocalTempDir(wxString path);
 
-   // Do not delete any temporary files on exit. This is only called if
+   // Do not DELETE any temporary files on exit. This is only called if
    // auto recovery is cancelled and should be retried later
    static void SetDontDeleteTempFiles() { dontDeleteTempFiles = true; }
 

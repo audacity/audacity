@@ -332,8 +332,8 @@ bool EffectEqualization48x::TrackCompare()
    wxArrayPtrVoid SecondOMap;
    SecondIMap.Clear();
    SecondOMap.Clear();
-
-   TrackList      *SecondOutputTracks = new TrackList();
+   
+   TrackList      SecondOutputTracks(true);
 
    //iterate over tracks of type trackType (All types if Track::All)
    TrackListOfKindIterator aIt(mEffectEqualization->mOutputTracksType, mEffectEqualization->mTracks);
@@ -345,14 +345,14 @@ bool EffectEqualization48x::TrackCompare()
          (mEffectEqualization->mOutputTracksType == Track::All && aTrack->IsSyncLockSelected()))
       {
          Track *o = aTrack->Duplicate();
-         SecondOutputTracks->Add(o);
+         SecondOutputTracks.Add(o);
          SecondIMap.Add(aTrack);
          SecondIMap.Add(o);
       }
    }
 
    for(int i=0;i<2;i++) {
-      SelectedTrackListOfKindIterator iter(Track::Wave, i?mEffectEqualization->mOutputTracks:SecondOutputTracks);
+      SelectedTrackListOfKindIterator iter(Track::Wave, i ? mEffectEqualization->mOutputTracks : &SecondOutputTracks);
       i?sMathPath=sMathPath:sMathPath=0;
       WaveTrack *track = (WaveTrack *) iter.First();
       int count = 0;
@@ -375,7 +375,7 @@ bool EffectEqualization48x::TrackCompare()
       }
    }
    SelectedTrackListOfKindIterator iter(Track::Wave, mEffectEqualization->mOutputTracks);
-   SelectedTrackListOfKindIterator iter2(Track::Wave, SecondOutputTracks);
+   SelectedTrackListOfKindIterator iter2(Track::Wave, &SecondOutputTracks);
    WaveTrack *track =  (WaveTrack *) iter.First();
    WaveTrack *track2 = (WaveTrack *) iter2.First();
    while (track) {
@@ -393,7 +393,6 @@ bool EffectEqualization48x::TrackCompare()
       track = (WaveTrack *) iter.Next();
       track2 = (WaveTrack *) iter2.Next();
    }
-   delete SecondOutputTracks;
    FreeBuffersWorkers();
    mEffectEqualization->ReplaceProcessedTracks(!bBreakLoop); 
    return bBreakLoop;
@@ -516,7 +515,7 @@ bool EffectEqualization48x::ProcessTail(WaveTrack * t, WaveTrack * output, sampl
    //output has one waveclip for the total length, even though 
    //t might have whitespace seperating multiple clips
    //we want to maintain the original clip structure, so
-   //only paste the intersections of the new clip.
+   //only paste the intersections of the NEW clip.
 
    //Find the bits of clips that need replacing
    std::vector<std::pair<double, double> > clipStartEndTimes;
@@ -539,18 +538,18 @@ bool EffectEqualization48x::ProcessTail(WaveTrack * t, WaveTrack * output, sampl
       clipRealStartEndTimes.push_back(std::pair<double,double>(clipStartT,clipEndT));            
 
       if( clipStartT < startT )  // does selection cover the whole clip?
-         clipStartT = startT; // don't copy all the new clip
+         clipStartT = startT; // don't copy all the NEW clip
       if( clipEndT > startT + lenT )  // does selection cover the whole clip?
-         clipEndT = startT + lenT; // don't copy all the new clip
+         clipEndT = startT + lenT; // don't copy all the NEW clip
 
       //save them
       clipStartEndTimes.push_back(std::pair<double,double>(clipStartT,clipEndT));
    }
-   //now go thru and replace the old clips with new
+   //now go thru and replace the old clips with NEW
    for(unsigned int i=0;i<clipStartEndTimes.size();i++)
    {
       Track *toClipOutput;
-      //remove the old audio and get the new
+      //remove the old audio and get the NEW
       t->Clear(clipStartEndTimes[i].first,clipStartEndTimes[i].second);
       //         output->Copy(clipStartEndTimes[i].first-startT+offsetT0,clipStartEndTimes[i].second-startT+offsetT0, &toClipOutput);   
       output->Copy(clipStartEndTimes[i].first-startT,clipStartEndTimes[i].second-startT, &toClipOutput);   

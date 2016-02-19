@@ -1752,12 +1752,16 @@ bool AudioUnitEffect::PopulateUI(wxWindow *parent)
    mDialog = (wxDialog *) wxGetTopLevelParent(parent);
    mParent = parent;
 
-   wxBoxSizer *mainSizer = new wxBoxSizer(wxVERTICAL);
+   wxPanel *container;
+   {
+      auto mainSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
 
-   wxPanel *container = new wxPanel(mParent, wxID_ANY);
-   mainSizer->Add(container, 1, wxEXPAND);
+      wxASSERT(mParent); // To justify safenew
+      container = safenew wxPanel(mParent, wxID_ANY);
+      mainSizer->Add(container, 1, wxEXPAND);
 
-   mParent->SetSizer(mainSizer);
+      mParent->SetSizer(mainSizer.release());
+   }
 
    if (mUIType == wxT("Plain"))
    {
@@ -1779,10 +1783,12 @@ bool AudioUnitEffect::PopulateUI(wxWindow *parent)
          return false;
       }
 
-      wxBoxSizer *innerSizer = new wxBoxSizer(wxVERTICAL);
-   
-      innerSizer->Add(mControl, 1, wxEXPAND);
-      container->SetSizer(innerSizer);
+      {
+         auto innerSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
+
+         innerSizer->Add(mControl, 1, wxEXPAND);
+         container->SetSizer(innerSizer.release());
+      }
 
       mParent->SetMinSize(wxDefaultSize);
    }

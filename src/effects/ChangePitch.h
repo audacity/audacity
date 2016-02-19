@@ -71,13 +71,13 @@ private:
    virtual void DeduceFrequencies();
 
    // calculations
-   void Calc_ToPitch(); // Update m_nToPitch from new m_dSemitonesChange.
+   void Calc_ToPitch(); // Update m_nToPitch from NEW m_dSemitonesChange.
    void Calc_ToOctave();
    void Calc_SemitonesChange_fromPitches();
    void Calc_SemitonesChange_fromOctaveChange();
    void Calc_SemitonesChange_fromPercentChange();
    void Calc_ToFrequency(); // Update m_ToFrequency from m_FromFrequency & m_dPercentChange.
-   void Calc_PercentChange(); // Update m_dPercentChange based on new m_dSemitonesChange.
+   void Calc_PercentChange(); // Update m_dPercentChange based on NEW m_dSemitonesChange.
 
    // handlers
    void OnChoice_FromPitch(wxCommandEvent & evt);

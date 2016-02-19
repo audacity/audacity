@@ -164,7 +164,7 @@ class AUDACITY_DLL_API CommandManager: public XMLTagHandler
    // Command masks
    //
 
-   // For new items/commands
+   // For NEW items/commands
    void SetDefaultFlags(wxUint32 flags, wxUint32 mask);
 
    void SetCommandFlags(wxString name, wxUint32 flags, wxUint32 mask);

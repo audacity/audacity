@@ -513,5 +513,6 @@ SpectrumPrefsFactory::SpectrumPrefsFactory(WaveTrack *wt)
 
 PrefsPanel *SpectrumPrefsFactory::Create(wxWindow *parent)
 {
-   return new SpectrumPrefs(parent, mWt);
+   wxASSERT(parent); // to justify safenew
+   return safenew SpectrumPrefs(parent, mWt);
 }

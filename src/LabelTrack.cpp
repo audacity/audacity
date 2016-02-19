@@ -107,7 +107,7 @@ LabelTrack::LabelTrack(DirManager * projDirManager):
    SetName(GetDefaultName());
 
    // Label tracks are narrow
-   // Default is to allow two rows so that new users get the
+   // Default is to allow two rows so that NEW users get the
    // idea that labels can 'stack' when they would overlap.
    SetHeight(73);
 
@@ -770,7 +770,7 @@ void LabelTrack::Draw(wxDC & dc, const wxRect & r,
    // We need to set mTextHeight to something sensible,
    // guarding against the case where there are no
    // labels or all are empty strings, which for example
-   // happens with a new label track.
+   // happens with a NEW label track.
    dc.GetTextExtent(wxT("Demo Text x^y"), &textWidth, &textHeight);
    mTextHeight = (int)textHeight;
    ComputeLayout( r, zoomInfo );
@@ -1159,7 +1159,7 @@ void LabelTrack::SetSelected(bool s)
 /// rather than a linear one.
 int LabelTrack::OverGlyph(int x, int y)
 {
-   //Determine the new selection.
+   //Determine the NEW selection.
    LabelStruct * pLabel;
    int result=0;
    const int d1=10; //distance in pixels, used for have we hit drag handle.
@@ -1334,7 +1334,7 @@ LabelStruct::TimeRelations LabelStruct::RegionRelation(
 /// @iLabel - index of label, -1 for none.
 /// @iEdge - which edge is requested to move, -1 for left +1 for right.
 /// @bAllowSwapping - if we can switch which edge is being dragged.
-/// fNewTime - the new time for this edge of the label.
+/// fNewTime - the NEW time for this edge of the label.
 void LabelTrack::MayAdjustLabel( int iLabel, int iEdge, bool bAllowSwapping, double fNewTime)
 {
    if( iLabel < 0 )
@@ -1435,7 +1435,7 @@ bool LabelTrack::HandleGlyphDragRelease(const wxMouseEvent & evt,
       if( mSelIndex >=0 )
       {
          //Set the selection region to be equal to
-         //the new size of the label.
+         //the NEW size of the label.
          *newSel = mLabels[mSelIndex]->selectedRegion;
       }
       SortLabels();
@@ -1610,7 +1610,7 @@ void LabelTrack::HandleClick(const wxMouseEvent & evt,
 #if defined(__WXGTK__) && (HAVE_GTK)
       if (evt.MiddleDown()) {
          // Check for a click outside of the selected label's text box; in this
-         // case PasteSelectedText() will start a new label at the click
+         // case PasteSelectedText() will start a NEW label at the click
          // location
          if (mSelIndex != -1) {
             if (!OverTextBox(mLabels[mSelIndex], evt.m_x, evt.m_y))
@@ -1701,13 +1701,13 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
             //IF the label is not blank THEN get rid of a letter or letters according to cursor position
             if (len > 0)
             {
-               // IF there are some highlighted letters, THEN delete them
+               // IF there are some highlighted letters, THEN DELETE them
                if (mLabels[mSelIndex]->highlighted) {
                   RemoveSelectedText();
                }
                else
                {
-                  // delete one letter
+                  // DELETE one letter
                   if (mCurrentCursorPos > 0) {
                      mLabels[mSelIndex]->title.Remove(mCurrentCursorPos-1, 1);
                      mCurrentCursorPos--;
@@ -1716,7 +1716,7 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
             }
             else
             {
-               // ELSE no text in text box, so delete whole label.
+               // ELSE no text in text box, so DELETE whole label.
                DeleteLabel( mSelIndex );
             }
             mInitialCursorPos = mCurrentCursorPos;
@@ -1732,13 +1732,13 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
             //If the label is not blank get rid of a letter according to cursor position
             if (len > 0)
             {
-               // if there are some highlighted letters, delete them
+               // if there are some highlighted letters, DELETE them
                if (mLabels[mSelIndex]->highlighted) {
                   RemoveSelectedText();
                }
                else
                {
-                  // delete one letter
+                  // DELETE one letter
                   if (mCurrentCursorPos < len) {
                      mLabels[mSelIndex]->title.Remove(mCurrentCursorPos, 1);
                   }
@@ -1746,7 +1746,7 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
             }
             else
             {
-               // delete whole label if no text in text box
+               // DELETE whole label if no text in text box
                DeleteLabel( mSelIndex );
             }
             mInitialCursorPos = mCurrentCursorPos;
@@ -1961,9 +1961,9 @@ bool LabelTrack::OnChar(SelectedRegion &WXUNUSED(newSel), wxKeyEvent & event)
       return false;
    }
    
-   // If we've reached this point and aren't currently editing, add new label
+   // If we've reached this point and aren't currently editing, add NEW label
    if (mSelIndex < 0) {
-      // Don't create a new label for a space
+      // Don't create a NEW label for a space
       if (wxIsspace(charCode)) {
          event.Skip();
          return false;
@@ -2013,42 +2013,42 @@ void LabelTrack::ShowContextMenu()
 {
    wxWindow *parent = wxWindow::FindFocus();
 
-   wxMenu *menu = new wxMenu();
-   menu->Bind(wxEVT_MENU, &LabelTrack::OnContextMenu, this);
-
-   menu->Append(OnCutSelectedTextID, _("Cu&t"));
-   menu->Append(OnCopySelectedTextID, _("&Copy"));
-   menu->Append(OnPasteSelectedTextID, _("&Paste"));
-   menu->Append(OnDeleteSelectedLabelID, _("&Delete Label"));
-
-   menu->Enable(OnCutSelectedTextID, IsTextSelected());
-   menu->Enable(OnCopySelectedTextID, IsTextSelected());
-   menu->Enable(OnPasteSelectedTextID, IsTextClipSupported());
-   menu->Enable(OnDeleteSelectedLabelID, true);
-
-   const LabelStruct *ls = GetLabel(mSelIndex);
-
-   wxClientDC dc(parent);
-
-   if (msFont.Ok())
    {
-      dc.SetFont(msFont);
-   }
+      wxMenu menu;
+      menu.Bind(wxEVT_MENU, &LabelTrack::OnContextMenu, this);
 
-   int x;
-   if (mMouseXPos != -1)
-   {
-      x = mMouseXPos;
-   }
-   else
-   {
-      dc.GetTextExtent(ls->title.Left(mCurrentCursorPos), &x, NULL);
-      x += ls->xText;
-   }
+      menu.Append(OnCutSelectedTextID, _("Cu&t"));
+      menu.Append(OnCopySelectedTextID, _("&Copy"));
+      menu.Append(OnPasteSelectedTextID, _("&Paste"));
+      menu.Append(OnDeleteSelectedLabelID, _("&Delete Label"));
 
-   parent->PopupMenu(menu, x, ls->y + (mIconHeight / 2) - 1);
+      menu.Enable(OnCutSelectedTextID, IsTextSelected());
+      menu.Enable(OnCopySelectedTextID, IsTextSelected());
+      menu.Enable(OnPasteSelectedTextID, IsTextClipSupported());
+      menu.Enable(OnDeleteSelectedLabelID, true);
 
-   delete menu;
+      const LabelStruct *ls = GetLabel(mSelIndex);
+
+      wxClientDC dc(parent);
+
+      if (msFont.Ok())
+      {
+         dc.SetFont(msFont);
+      }
+
+      int x;
+      if (mMouseXPos != -1)
+      {
+         x = mMouseXPos;
+      }
+      else
+      {
+         dc.GetTextExtent(ls->title.Left(mCurrentCursorPos), &x, NULL);
+         x += ls->xText;
+      }
+
+      parent->PopupMenu(&menu, x, ls->y + (mIconHeight / 2) - 1);
+   }
 
    // it's an invalid dragging event
    SetWrongDragging(true);
@@ -2085,7 +2085,7 @@ void LabelTrack::OnContextMenu(wxCommandEvent & evt)
       }
       break;
 
-   /// delete selected label
+   /// DELETE selected label
    case OnDeleteSelectedLabelID:
       int ndx = GetLabelIndex(p->GetSel0(), p->GetSel1());
       if (ndx != -1)
@@ -2367,7 +2367,7 @@ bool LabelTrack::Load(wxTextFile * in, DirManager * dirManager)
       l->selectedRegion.setT0(t0, false);
       // Legacy file format does not include label end-times.
       l->selectedRegion.collapseToT0();
-      // PRL: nothing new to do, legacy file support
+      // PRL: nothing NEW to do, legacy file support
       l->title = in->GetNextLine();
       mLabels.Add(l);
    }
@@ -2697,7 +2697,7 @@ void LabelTrack::DeleteLabel(int index)
       mCurrentCursorPos = 1;
    }
    // IF we removed a label before the selected label
-   // THEN the new selected label number is one less.
+   // THEN the NEW selected label number is one less.
    else if( index < mSelIndex )
    {
       mSelIndex--;

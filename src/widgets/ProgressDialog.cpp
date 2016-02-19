@@ -1087,101 +1087,111 @@ bool ProgressDialog::Create(const wxString & title,
    }
    SetName(GetTitle());
 
-   wxBoxSizer *v;
    wxWindow *w;
    wxSize ds;
 
    SetExtraStyle(GetExtraStyle() | wxWS_EX_TRANSIENT);
 
-   v = new wxBoxSizer(wxVERTICAL);
-
-   mMessage = new wxStaticText(this,
-                               wxID_ANY,
-                               message,
-                               wxDefaultPosition,
-                               wxDefaultSize,
-                               wxALIGN_LEFT);
-   mMessage->SetName(message); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
-   v->Add(mMessage, 1, wxEXPAND | wxALL, 10);
-   ds.y += mMessage->GetSize().y + 20;
-
-   //
-   //
-   //
-   mGauge = new wxGauge(this,
-                        wxID_ANY,
-                        1000,
-                        wxDefaultPosition,
-                        wxDefaultSize,
-                        wxGA_HORIZONTAL);
-   v->Add(mGauge, 0, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, 10);
-   ds.y += mGauge->GetSize().y + 10;
-
-   //
-   //
-   //
-   wxFlexGridSizer *g = new wxFlexGridSizer(2, 2, 10, 10);
-
-   w = new wxStaticText(this,
-                        wxID_ANY,
-                        _("Elapsed Time:"),
-                        wxDefaultPosition,
-                        wxDefaultSize,
-                        wxALIGN_RIGHT);
-   w->SetName(w->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
-   g->Add(w, 0, wxALIGN_RIGHT);
-
-   mElapsed = new wxStaticText(this,
-                               wxID_ANY,
-                               wxT("00:00:00"),
-                               wxDefaultPosition,
-                               wxDefaultSize,
-                               wxALIGN_LEFT);
-   mElapsed->SetName(mElapsed->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
-   g->Add(mElapsed, 0, wxALIGN_LEFT);
-   ds.y += mElapsed->GetSize().y + 10;
-
-   //
-   //
-   //
-   w = new wxStaticText(this,
-                        wxID_ANY,
-                        _("Remaining Time:"),
-                        wxDefaultPosition,
-                        wxDefaultSize,
-                        wxALIGN_RIGHT);
-   w->SetName(w->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
-   g->Add(w, 0, wxALIGN_RIGHT);
-
-   mRemaining = new wxStaticText(this,
-                                 wxID_ANY,
-                                 wxT("00:00:00"),
-                                 wxDefaultPosition,
-                                 wxDefaultSize,
-                                 wxALIGN_LEFT);
-   mRemaining->SetName(mRemaining->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
-   g->Add(mRemaining, 0, wxALIGN_LEFT);
-
-   v->Add(g, 0, wxALIGN_CENTER | wxLEFT | wxRIGHT | wxBOTTOM, 10);
-   ds.y += mRemaining->GetSize().y + 10;
-
-   wxBoxSizer *h = new wxBoxSizer(wxHORIZONTAL);
-
-   if (!(flags & pdlgHideStopButton))
+   wxFlexGridSizer *g;
+   wxBoxSizer *h;
    {
-      w = new wxButton(this, wxID_OK, _("Stop"));
-      h->Add(w, 0, wxRIGHT, 10);
+      auto v = std::make_unique<wxBoxSizer>(wxVERTICAL);
+
+      mMessage = safenew wxStaticText(this,
+         wxID_ANY,
+         message,
+         wxDefaultPosition,
+         wxDefaultSize,
+         wxALIGN_LEFT);
+      mMessage->SetName(message); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+      v->Add(mMessage, 1, wxEXPAND | wxALL, 10);
+      ds.y += mMessage->GetSize().y + 20;
+
+      //
+      //
+      //
+      mGauge = safenew wxGauge(this,
+         wxID_ANY,
+         1000,
+         wxDefaultPosition,
+         wxDefaultSize,
+         wxGA_HORIZONTAL);
+      v->Add(mGauge, 0, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, 10);
+      ds.y += mGauge->GetSize().y + 10;
+
+      //
+      //
+      //
+      {
+         auto ug = std::make_unique<wxFlexGridSizer>(2, 2, 10, 10);
+         g = ug.get();
+
+         w = safenew wxStaticText(this,
+            wxID_ANY,
+            _("Elapsed Time:"),
+            wxDefaultPosition,
+            wxDefaultSize,
+            wxALIGN_RIGHT);
+         w->SetName(w->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+         g->Add(w, 0, wxALIGN_RIGHT);
+
+         mElapsed = safenew wxStaticText(this,
+            wxID_ANY,
+            wxT("00:00:00"),
+            wxDefaultPosition,
+            wxDefaultSize,
+            wxALIGN_LEFT);
+         mElapsed->SetName(mElapsed->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+         g->Add(mElapsed, 0, wxALIGN_LEFT);
+         ds.y += mElapsed->GetSize().y + 10;
+
+         //
+         //
+         //
+         w = safenew wxStaticText(this,
+            wxID_ANY,
+            _("Remaining Time:"),
+            wxDefaultPosition,
+            wxDefaultSize,
+            wxALIGN_RIGHT);
+         w->SetName(w->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+         g->Add(w, 0, wxALIGN_RIGHT);
+
+         mRemaining = safenew wxStaticText(this,
+            wxID_ANY,
+            wxT("00:00:00"),
+            wxDefaultPosition,
+            wxDefaultSize,
+            wxALIGN_LEFT);
+         mRemaining->SetName(mRemaining->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+         g->Add(mRemaining, 0, wxALIGN_LEFT);
+
+         v->Add(ug.release(), 0, wxALIGN_CENTER | wxLEFT | wxRIGHT | wxBOTTOM, 10);
+      }
+
+      ds.y += mRemaining->GetSize().y + 10;
+
+      {
+         auto uh = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
+         h = uh.get();
+
+         if (!(flags & pdlgHideStopButton))
+         {
+            w = safenew wxButton(this, wxID_OK, _("Stop"));
+            h->Add(w, 0, wxRIGHT, 10);
+         }
+
+         if (!(flags & pdlgHideCancelButton))
+         {
+            w = safenew wxButton(this, wxID_CANCEL, _("Cancel"));
+            h->Add(w, 0, wxRIGHT, 10);
+         }
+
+         v->Add(uh.release(), 0, wxALIGN_RIGHT | wxRIGHT | wxBOTTOM, 10);
+      }
+
+      SetSizer(v.release());
    }
-
-   if (!(flags & pdlgHideCancelButton))
-   {
-      w = new wxButton(this, wxID_CANCEL, _("Cancel"));
-      h->Add(w, 0, wxRIGHT, 10);
-   }
-
-   v->Add(h, 0, wxALIGN_RIGHT | wxRIGHT | wxBOTTOM, 10);
-
-   SetSizer(v);
    Layout();
 
    ds.x = wxMax(g->GetSize().x, h->GetSize().x) + 10;

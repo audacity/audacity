@@ -170,5 +170,6 @@ bool EffectsPrefs::Apply()
 
 PrefsPanel *EffectsPrefsFactory::Create(wxWindow *parent)
 {
-   return new EffectsPrefs(parent);
+   wxASSERT(parent); // to justify safenew
+   return safenew EffectsPrefs(parent);
 }

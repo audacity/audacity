@@ -77,8 +77,8 @@ private:
    void Update_Text_PercentChange();   // Update control per current m_PercentChange.
    void Update_Text_Multiplier();      // Update control per current m_PercentChange.
    void Update_Slider_PercentChange(); // Update control per current m_PercentChange.
-   void Update_Vinyl();                // Update Vinyl controls for new percent change.
-   void Update_TimeCtrl_ToLength();    // Update target length controls for new percent change.
+   void Update_Vinyl();                // Update Vinyl controls for NEW percent change.
+   void Update_TimeCtrl_ToLength();    // Update target length controls for NEW percent change.
    void UpdateUI();                    // Enable / disable OK / preview.
 
 private:

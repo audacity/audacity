@@ -226,7 +226,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
          S.AddFixedText(_("&Foreground:"), false);
          if (S.GetMode() == eIsCreating)
          {
-            mForegroundStartT = new
+            mForegroundStartT = safenew
                NumericTextCtrl(NumericConverter::TIME, this,
                          ID_FOREGROUNDSTART_T,
                          _("hh:mm:ss + hundredths"),
@@ -242,7 +242,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
 
          if (S.GetMode() == eIsCreating)
          {
-            mForegroundEndT = new
+            mForegroundEndT = safenew
                NumericTextCtrl(NumericConverter::TIME, this,
                          ID_FOREGROUNDEND_T,
                          _("hh:mm:ss + hundredths"),
@@ -264,7 +264,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
          S.AddFixedText(_("&Background:"));
          if (S.GetMode() == eIsCreating)
          {
-            mBackgroundStartT = new
+            mBackgroundStartT = safenew
                NumericTextCtrl(NumericConverter::TIME, this,
                          ID_BACKGROUNDSTART_T,
                          _("hh:mm:ss + hundredths"),
@@ -280,7 +280,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
 
          if (S.GetMode() == eIsCreating)
          {
-            mBackgroundEndT = new
+            mBackgroundEndT = safenew
                NumericTextCtrl(NumericConverter::TIME, this,
                          ID_BACKGROUNDEND_T,
                          _("hh:mm:ss + hundredths"),
@@ -476,9 +476,7 @@ void ContrastDialog::OnExport(wxCommandEvent & WXUNUSED(event))
 
    wxTextFile f(fName);
 #ifdef __WXMAC__
-   wxFile *temp = new wxFile();
-   temp->Create(fName);
-   delete temp;
+   wxFile{}.Create(fName);
 #else
    f.Create();
 #endif

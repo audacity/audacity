@@ -84,5 +84,6 @@ BatchPrefs::~BatchPrefs()
 
 PrefsPanel *BatchPrefsFactory::Create(wxWindow *parent)
 {
-   return new BatchPrefs(parent);
+   wxASSERT(parent); // to justify safenew
+   return safenew BatchPrefs(parent);
 }

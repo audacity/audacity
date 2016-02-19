@@ -1792,47 +1792,47 @@ int ExportMP3::Export(AudacityProject *project,
                    brate);
    }
 
-   ProgressDialog *progress = new ProgressDialog(wxFileName(fName).GetName(), title);
+   {
+      ProgressDialog progress(wxFileName(fName).GetName(), title);
 
-   while (updateResult == eProgressSuccess) {
-      sampleCount blockLen = mixer->Process(inSamples);
+      while (updateResult == eProgressSuccess) {
+         sampleCount blockLen = mixer->Process(inSamples);
 
-      if (blockLen == 0) {
-         break;
-      }
+         if (blockLen == 0) {
+            break;
+         }
 
-      short *mixed = (short *)mixer->GetBuffer();
+         short *mixed = (short *)mixer->GetBuffer();
 
-      if (blockLen < inSamples) {
-         if (channels > 1) {
-            bytes = exporter.EncodeRemainder(mixed,  blockLen , buffer);
+         if (blockLen < inSamples) {
+            if (channels > 1) {
+               bytes = exporter.EncodeRemainder(mixed, blockLen, buffer);
+            }
+            else {
+               bytes = exporter.EncodeRemainderMono(mixed, blockLen, buffer);
+            }
          }
          else {
-            bytes = exporter.EncodeRemainderMono(mixed,  blockLen , buffer);
+            if (channels > 1) {
+               bytes = exporter.EncodeBuffer(mixed, buffer);
+            }
+            else {
+               bytes = exporter.EncodeBufferMono(mixed, buffer);
+            }
          }
-      }
-      else {
-         if (channels > 1) {
-            bytes = exporter.EncodeBuffer(mixed, buffer);
+
+         if (bytes < 0) {
+            wxString msg;
+            msg.Printf(_("Error %ld returned from MP3 encoder"), bytes);
+            wxMessageBox(msg);
+            break;
          }
-         else {
-            bytes = exporter.EncodeBufferMono(mixed, buffer);
-         }
+
+         outFile.Write(buffer, bytes);
+
+         updateResult = progress.Update(mixer->MixGetCurrentTime() - t0, t1 - t0);
       }
-
-      if (bytes < 0) {
-         wxString msg;
-         msg.Printf(_("Error %ld returned from MP3 encoder"), bytes);
-         wxMessageBox(msg);
-         break;
-      }
-
-      outFile.Write(buffer, bytes);
-
-      updateResult = progress->Update(mixer->MixGetCurrentTime()-t0, t1-t0);
    }
-
-   delete progress;
 
    delete mixer;
 
@@ -1869,7 +1869,8 @@ int ExportMP3::Export(AudacityProject *project,
 
 wxWindow *ExportMP3::OptionsCreate(wxWindow *parent, int format)
 {
-   return new ExportMP3Options(parent, format);
+   wxASSERT(parent); // to justify safenew
+   return safenew ExportMP3Options(parent, format);
 }
 
 int ExportMP3::FindValue(CHOICES *choices, int cnt, int needle, int def)

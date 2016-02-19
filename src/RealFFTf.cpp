@@ -101,7 +101,7 @@ HFFT InitializeFFT(int fftlen)
    }
 
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
-   // new SSE FFT routines work on live data
+   // NEW SSE FFT routines work on live data
    for(i=0;i<32;i++)
       if((1<<i)&fftlen)
          h->pow2Bits=i;
@@ -128,7 +128,7 @@ static HFFT hFFTArray[MAX_HFFT] = { NULL };
 static int nFFTLockCount[MAX_HFFT] = { 0 };
 
 /* Get a handle to the FFT tables of the desired length */
-/* This version keeps common tables rather than allocating a new table every time */
+/* This version keeps common tables rather than allocating a NEW table every time */
 HFFT GetFFT(int fftlen)
 {
    int h,n = fftlen/2;
@@ -141,7 +141,7 @@ HFFT GetFFT(int fftlen)
       nFFTLockCount[h]++;
       return hFFTArray[h];
    } else {
-      // All buffers used, so fall back to allocating a new set of tables
+      // All buffers used, so fall back to allocating a NEW set of tables
       return InitializeFFT(fftlen);;
    }
 }

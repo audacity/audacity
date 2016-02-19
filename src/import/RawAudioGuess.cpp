@@ -714,7 +714,7 @@ static int Guess16Bit(int numTests, char **rawData,
       float signL, signR, unsignL, unsignR;
       int i;
 
-      /* Extract a new array of the MSBs only: */
+      /* Extract a NEW array of the MSBs only: */
 
       for (i = 0; i < dataSize / 2; i++)
          rawData2[i] = rawData[test][2 * i + (evenMSB ? 0 : 1)];
@@ -765,7 +765,7 @@ static int Guess16Bit(int numTests, char **rawData,
       float leftChannel, rightChannel, combinedChannel;
       int i;
 
-      /* Extract a new array of the MSBs only: */
+      /* Extract a NEW array of the MSBs only: */
 
       for (i = 0; i < dataSize / 2; i++)
          rawData2[i] = rawData[test][2 * i + (evenMSB ? 0 : 1)];
@@ -806,7 +806,7 @@ static int Guess16Bit(int numTests, char **rawData,
          float redundant;
          int i;
 
-         /* Extract a new array of the MSBs only: */
+         /* Extract a NEW array of the MSBs only: */
 
          for (i = 0; i < dataSize / 2; i++)
             rawData2[i] = rawData[test][2 * i + (evenMSB ? 0 : 1)];
@@ -858,7 +858,7 @@ static int Guess16Bit(int numTests, char **rawData,
       float former, latter;
       int i, offs;
 
-      /* Extract a new array of the MSBs only: */
+      /* Extract a NEW array of the MSBs only: */
 
       if (guessStereo)
          for (i = 0; i < (dataSize/4)-1; i++)

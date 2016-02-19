@@ -621,7 +621,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
       }
 
       wxString path = plug.GetPath();
-      ItemData & item = mItems[path];  // will create new entry
+      ItemData & item = mItems[path];  // will create NEW entry
       item.plugs.Add(&plug);
       item.path = path;
       item.state = plug.IsEnabled() ? STATE_Enabled : STATE_Disabled;
@@ -969,57 +969,57 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
    // Make sure the progress dialog is deleted before we call EndModal() or
    // we will leave the project window in an unusable state on OSX.
    // See bug #1192.
-   ProgressDialog *progress = new ProgressDialog(GetTitle(), msg, pdlgHideStopButton);
-   progress->CenterOnParent();
-
-   int i = 0;
-   for (ItemDataMap::iterator iter = mItems.begin(); iter != mItems.end(); ++iter)
    {
-      ItemData & item = iter->second;
-      wxString path = item.path;
+      ProgressDialog progress(GetTitle(), msg, pdlgHideStopButton);
+      progress.CenterOnParent();
 
-      if (item.state == STATE_Enabled && item.plugs[0]->GetPluginType() == PluginTypeStub)
+      int i = 0;
+      for (ItemDataMap::iterator iter = mItems.begin(); iter != mItems.end(); ++iter)
       {
-         last3 = last3.AfterFirst(wxT('\n')) + item.path + wxT("\n");
-         int status = progress->Update(++i, enableCount, wxString::Format(_("Enabling effect:\n\n%s"), last3.c_str()));
-         if (!status)
-         {
-            break;
-         }
+         ItemData & item = iter->second;
+         wxString path = item.path;
 
-         // Try to register the plugin via each provider until one succeeds
-         for (size_t j = 0, cnt = item.plugs.GetCount(); j < cnt; j++)
+         if (item.state == STATE_Enabled && item.plugs[0]->GetPluginType() == PluginTypeStub)
          {
-            if (mm.RegisterPlugin(item.plugs[j]->GetProviderID(), path))
+            last3 = last3.AfterFirst(wxT('\n')) + item.path + wxT("\n");
+            int status = progress.Update(++i, enableCount, wxString::Format(_("Enabling effect:\n\n%s"), last3.c_str()));
+            if (!status)
             {
-               for (size_t j = 0, cnt = item.plugs.GetCount(); j < cnt; j++)
-               {
-                  pm.mPlugins.erase(item.plugs[j]->GetProviderID() + wxT("_") + path);
-               }
                break;
+            }
+
+            // Try to register the plugin via each provider until one succeeds
+            for (size_t j = 0, cnt = item.plugs.GetCount(); j < cnt; j++)
+            {
+               if (mm.RegisterPlugin(item.plugs[j]->GetProviderID(), path))
+               {
+                  for (size_t j = 0, cnt = item.plugs.GetCount(); j < cnt; j++)
+                  {
+                     pm.mPlugins.erase(item.plugs[j]->GetProviderID() + wxT("_") + path);
+                  }
+                  break;
+               }
+            }
+         }
+         else if (item.state == STATE_New)
+         {
+            for (size_t j = 0, cnt = item.plugs.GetCount(); j < cnt; j++)
+            {
+               item.plugs[j]->SetValid(false);
+            }
+         }
+         else if (item.state != STATE_New)
+         {
+            for (size_t j = 0, cnt = item.plugs.GetCount(); j < cnt; j++)
+            {
+               item.plugs[j]->SetEnabled(item.state == STATE_Enabled);
+               item.plugs[j]->SetValid(item.valid);
             }
          }
       }
-      else if (item.state == STATE_New)
-      {
-         for (size_t j = 0, cnt = item.plugs.GetCount(); j < cnt; j++)
-         {
-            item.plugs[j]->SetValid(false);
-         }
-      }
-      else if (item.state != STATE_New)
-      {
-         for (size_t j = 0, cnt = item.plugs.GetCount(); j < cnt; j++)
-         {
-            item.plugs[j]->SetEnabled(item.state == STATE_Enabled);
-            item.plugs[j]->SetValid(item.valid);
-         }
-      }
+
+      pm.Save();
    }
-
-   pm.Save();
-
-   delete progress;
 
    EndModal(wxID_OK);
 }
@@ -2138,9 +2138,9 @@ void PluginManager::CheckForUpdates()
       pathIndex.Add(plug.GetPath().BeforeFirst(wxT(';')));
    }
 
-   // Check all known plugins to ensure they are still valid and scan for new ones.
+   // Check all known plugins to ensure they are still valid and scan for NEW ones.
    // 
-   // All new plugins get a stub entry created that will remain in place until the
+   // All NEW plugins get a stub entry created that will remain in place until the
    // user enables or disables the plugin.
    //
    // Becuase we use the plugins "path" as returned by the providers, we can actually
@@ -2179,7 +2179,7 @@ void PluginManager::CheckForUpdates()
                if (pathIndex.Index(path) == wxNOT_FOUND)
                {
                   PluginID ID = plugID + wxT("_") + path;
-                  PluginDescriptor & plug = mPlugins[ID];  // This will create a new descriptor
+                  PluginDescriptor & plug = mPlugins[ID];  // This will create a NEW descriptor
                   plug.SetPluginType(PluginTypeStub);
                   plug.SetID(ID);
                   plug.SetProviderID(plugID);
@@ -2483,7 +2483,7 @@ PluginDescriptor & PluginManager::CreatePlugin(const PluginID & id,
                                                IdentInterface *ident,
                                                PluginType type)
 {
-   // This will either create a new entry or replace an existing entry
+   // This will either create a NEW entry or replace an existing entry
    PluginDescriptor & plug = mPlugins[id];
 
    plug.SetPluginType(type);

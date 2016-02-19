@@ -282,8 +282,8 @@ void ControlToolBar::ArrangeButtons()
       Detach( mSizer );
       delete mSizer;
    }
-   mSizer = new wxBoxSizer( wxHORIZONTAL );
-   Add( mSizer, 1, wxEXPAND );
+
+   Add((mSizer = safenew wxBoxSizer(wxHORIZONTAL)), 1, wxEXPAND);
 
    // Start with a little extra space
    mSizer->Add( 5, 55 );
@@ -832,7 +832,8 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
 
       // If SHIFT key was down, the user wants append to tracks
       int recordingChannels = 0;
-      TrackList *tracksCopy = NULL;
+      TrackList tracksCopy(true);
+      bool tracksCopied = false;
       bool shifted = mRecord->WasShiftDown();
       if (shifted) {
          bool sel = false;
@@ -872,12 +873,12 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
                   playbackTracks.Remove(wt);
                t1 = wt->GetEndTime();
                if (t1 < t0) {
-                  if (!tracksCopy) {
-                     tracksCopy = new TrackList();
+                  if (!tracksCopied) {
+                     tracksCopied = true;
                      TrackListIterator iter(t);
                      Track *trk = iter.First();
                      while (trk) {
-                        tracksCopy->Add(trk->Duplicate());
+                        tracksCopy.Add(trk->Duplicate());
                         trk = iter.Next();
                      }
                   }
@@ -1000,17 +1001,13 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
       if (success) {
          p->SetAudioIOToken(token);
          mBusyProject = p;
-         if (shifted && tracksCopy) {
-            tracksCopy->Clear(true);
-            delete tracksCopy;
-         }
       }
       else {
          if (shifted) {
             // Restore the tracks to remove any inserted silence
-            if (tracksCopy) {
+            if (tracksCopied) {
                t->Clear(true);
-               TrackListIterator iter(tracksCopy);
+               TrackListIterator iter(&tracksCopy);
                Track *trk = iter.First();
                while (trk)
                {
@@ -1018,7 +1015,6 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
                   trk = iter.RemoveCurrent();
                   t->Add(tmp);
                }
-               delete tracksCopy;
             }
          }
          else {
@@ -1131,7 +1127,7 @@ void ControlToolBar::ClearCutPreviewTracks()
 {
    if (mCutPreviewTracks)
    {
-      mCutPreviewTracks->Clear(true); /* delete track contents too */
+      mCutPreviewTracks->Clear(true); /* DELETE track contents too */
       delete mCutPreviewTracks;
       mCutPreviewTracks = NULL;
    }

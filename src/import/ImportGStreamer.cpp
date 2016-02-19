@@ -156,7 +156,7 @@ public:
    ///\param tags - List of tags
    void OnTag(GstAppSink *appsink, GstTagList *tags);
 
-   ///! Called when a new samples are queued
+   ///! Called when a NEW samples are queued
    ///\param c - stream context
    ///\param sample - gstreamer sample
    void OnNewSample(GStreamContext *c, GstSample *sample);
@@ -426,7 +426,7 @@ GStreamerPadRemovedCallback(GstElement * WXUNUSED(element),
 }
 
 // ----------------------------------------------------------------------------
-// Handle the "new-sample" signal from uridecodebin
+// Handle the "NEW-sample" signal from uridecodebin
 static GstFlowReturn
 GStreamerNewSample(GstAppSink *appsink, gpointer data)
 {
@@ -495,7 +495,7 @@ GStreamerImportFileHandle::OnPadAdded(GstPad *pad)
       return;
    }
 
-   // Allocate a new stream context
+   // Allocate a NEW stream context
    GStreamContext *c = g_new0(GStreamContext, 1);
    if (!c)
    {
@@ -655,11 +655,11 @@ GStreamerImportFileHandle::OnPadRemoved(GstPad *pad)
 }
 
 // ----------------------------------------------------------------------------
-// Handle the "new-sample" message
+// Handle the "NEW-sample" message
 void
 GStreamerImportFileHandle::OnNewSample(GStreamContext *c, GstSample *sample)
 {
-   // Allocate new tracks
+   // Allocate NEW tracks
    //
    // It is done here because, at least in the case of chained oggs,
    // not all streams are known ahead of time.
@@ -1135,7 +1135,7 @@ GStreamerImportFileHandle::Import(TrackFactory *trackFactory,
       }
    }
 
-   // Create new tracks
+   // Create NEW tracks
    *outTracks = new Track *[*outNumTracks];
 
    // Copy audio from mChannels to newly created tracks (destroying mChannels in process)

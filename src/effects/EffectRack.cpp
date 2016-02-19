@@ -104,30 +104,38 @@ EffectRack::EffectRack()
    mRemovePushed = CreateBitmap(remove_16x16_xpm, false, true);
    mRemoveRaised = CreateBitmap(remove_16x16_xpm, true, true);
 
-   wxBoxSizer *bs = new wxBoxSizer(wxVERTICAL);
-   mPanel = new wxPanel(this, wxID_ANY);
-   bs->Add(mPanel, 1, wxEXPAND);
-   SetSizer(bs);
+   {
+      auto bs = std::make_unique<wxBoxSizer>(wxVERTICAL);
+      mPanel = safenew wxPanel(this, wxID_ANY);
+      bs->Add(mPanel, 1, wxEXPAND);
+      SetSizer(bs.release());
+   }
 
-   wxBoxSizer *hs = new wxBoxSizer(wxHORIZONTAL);
-   hs->Add(new wxButton(mPanel, wxID_APPLY, _("&Apply")), 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
-   hs->AddStretchSpacer();
-   mLatency = new wxStaticText(mPanel, wxID_ANY, _("Latency: 0"));
-   hs->Add(mLatency, 0, wxALIGN_CENTER);
-   hs->AddStretchSpacer();
-   hs->Add(new wxToggleButton(mPanel, wxID_CLEAR, _("&Bypass")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+   {
+      auto bs = std::make_unique<wxBoxSizer>(wxVERTICAL);
+      {
+         auto hs = std::make_uniqie<wxBoxSizer>(wxHORIZONTAL);
+         wxASSERT(mPanel); // To justify safenew
+         hs->Add(safenew wxButton(mPanel, wxID_APPLY, _("&Apply")), 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+         hs->AddStretchSpacer();
+         mLatency = safenew wxStaticText(mPanel, wxID_ANY, _("Latency: 0"));
+         hs->Add(mLatency, 0, wxALIGN_CENTER);
+         hs->AddStretchSpacer();
+         hs->Add(safenew wxToggleButton(mPanel, wxID_CLEAR, _("&Bypass")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+         bs->Add(hs.release(), 0, wxEXPAND);
+      }
+      bs->Add(safenew wxStaticLine(mPanel, wxID_ANY), 0, wxEXPAND);
 
-   bs = new wxBoxSizer(wxVERTICAL);
-   bs->Add(hs, 0, wxEXPAND);
-   bs->Add(new wxStaticLine(mPanel, wxID_ANY), 0, wxEXPAND);
+      {
+         auto uMainSizer = make_uniqie<wxFlexGridSizer>(7);
+         uMainSizer->AddGrowableCol(6);
+         uMainSizer->SetHGap(0);
+         uMainSizer->SetVGap(0);
+         bs->Add((mMainSizer = uMainSizer.release()), 1, wxEXPAND);
+      }
 
-   mMainSizer = new wxFlexGridSizer(7);
-   mMainSizer->AddGrowableCol(6);
-   mMainSizer->SetHGap(0);
-   mMainSizer->SetVGap(0);
-   bs->Add(mMainSizer, 1, wxEXPAND);
-
-   mPanel->SetSizer(bs);
+      mPanel->SetSizer(bs.release());
+   }
 
    wxString oldPath = gPrefs->GetPath();
    gPrefs->SetPath(wxT("/EffectsRack"));
@@ -176,7 +184,8 @@ void EffectRack::Add(Effect *effect, bool active, bool favorite)
 
    wxBitmapButton *bb;
  
-   bb = new wxBitmapButton(mPanel, ID_POWER + mNumEffects, mPowerRaised);
+   wxASSERT(mPanel); // To justify safenew
+   bb = safenew wxBitmapButton(mPanel, ID_POWER + mNumEffects, mPowerRaised);
    bb->SetBitmapSelected(mPowerRaised);
    bb->SetName(_("Active State"));
    bb->SetToolTip(_("Set effect active state"));
@@ -193,27 +202,27 @@ void EffectRack::Add(Effect *effect, bool active, bool favorite)
    }
    mMainSizer->Add(bb, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
-   bb = new wxBitmapButton(mPanel, ID_EDITOR + mNumEffects, mSettingsRaised);
+   bb = safenew wxBitmapButton(mPanel, ID_EDITOR + mNumEffects, mSettingsRaised);
    bb->SetBitmapSelected(mSettingsPushed);
    bb->SetName(_("Show/Hide Editor"));
    bb->SetToolTip(_("Open/close effect editor"));
    mMainSizer->Add(bb, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
-   bb = new wxBitmapButton(mPanel, ID_UP + mNumEffects, mUpRaised);
+   bb = safenew wxBitmapButton(mPanel, ID_UP + mNumEffects, mUpRaised);
    bb->SetBitmapSelected(mUpPushed);
    bb->SetBitmapDisabled(mUpDisabled);
    bb->SetName(_("Move Up"));
    bb->SetToolTip(_("Move effect up in the rack"));
    mMainSizer->Add(bb, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
-   bb = new wxBitmapButton(mPanel, ID_DOWN + mNumEffects, mDownRaised);
+   bb = safenew wxBitmapButton(mPanel, ID_DOWN + mNumEffects, mDownRaised);
    bb->SetBitmapSelected(mDownPushed);
    bb->SetBitmapDisabled(mDownDisabled);
    bb->SetName(_("Move Down"));
    bb->SetToolTip(_("Move effect down in the rack"));
    mMainSizer->Add(bb, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
-   bb = new wxBitmapButton(mPanel, ID_FAV + mNumEffects, mFavRaised);
+   bb = safenew wxBitmapButton(mPanel, ID_FAV + mNumEffects, mFavRaised);
    bb->SetBitmapSelected(mFavPushed);
    bb->SetName(_("Favorite"));
    bb->SetToolTip(_("Mark effect as a favorite"));
@@ -230,13 +239,13 @@ void EffectRack::Add(Effect *effect, bool active, bool favorite)
    }
    mMainSizer->Add(bb, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
-   bb = new wxBitmapButton(mPanel, ID_REMOVE + mNumEffects, mRemoveRaised);
+   bb = safenew wxBitmapButton(mPanel, ID_REMOVE + mNumEffects, mRemoveRaised);
    bb->SetBitmapSelected(mRemovePushed);
    bb->SetName(_("Remove"));
    bb->SetToolTip(_("Remove effect from the rack"));
    mMainSizer->Add(bb, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
-   wxStaticText *text = new wxStaticText(mPanel, ID_NAME + mNumEffects, effect->GetName());
+   wxStaticText *text = safenew wxStaticText(mPanel, ID_NAME + mNumEffects, effect->GetName());
    text->SetToolTip(_("Name of the effect"));
    mMainSizer->Add(text, 0, wxEXPAND | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxALL, 5);
 

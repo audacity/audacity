@@ -93,7 +93,7 @@ void DeviceToolBar::Populate()
 {
    DeinitChildren();
    // Hosts
-   mHost = new wxChoice(this,
+   mHost = safenew wxChoice(this,
                         wxID_ANY,
                         wxDefaultPosition,
                         wxDefaultSize);
@@ -104,17 +104,17 @@ void DeviceToolBar::Populate()
    if( mRecordBitmap == NULL )
       mRecordBitmap = new wxBitmap(theTheme.Bitmap(bmpMic));
 
-   Add(new wxStaticBitmap(this,
+   Add(safenew wxStaticBitmap(this,
                           wxID_ANY,
                           *mRecordBitmap), 0, wxALIGN_CENTER);
 
-   mInput = new wxChoice(this,
+   mInput = safenew wxChoice(this,
                          wxID_ANY,
                          wxDefaultPosition,
                          wxDefaultSize);
    Add(mInput, 0, wxALIGN_CENTER);
 
-   mInputChannels = new wxChoice(this,
+   mInputChannels = safenew wxChoice(this,
                          wxID_ANY,
                          wxDefaultPosition,
                          wxDefaultSize);
@@ -123,11 +123,11 @@ void DeviceToolBar::Populate()
    // Output device
    if( mPlayBitmap == NULL )
       mPlayBitmap = new wxBitmap(theTheme.Bitmap(bmpSpeaker));
-   Add(new wxStaticBitmap(this,
+   Add(safenew wxStaticBitmap(this,
                           wxID_ANY,
                           *mPlayBitmap), 0, wxALIGN_CENTER);
 
-   mOutput = new wxChoice(this,
+   mOutput = safenew wxChoice(this,
                                wxID_ANY,
                                wxDefaultPosition,
                                wxDefaultSize);

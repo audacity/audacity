@@ -152,7 +152,7 @@ void BatchProcessDialog::OnApplyToProject(wxCommandEvent & WXUNUSED(event))
    }
    wxString name = mChains->GetItemText(item);
 
-   wxDialog * pD = new wxDialog(this, wxID_ANY, GetTitle());
+   wxDialog * pD = safenew wxDialog(this, wxID_ANY, GetTitle());
    pD->SetName(pD->GetTitle());
    ShuttleGui S(pD, eIsCreating);
 
@@ -188,9 +188,11 @@ void BatchProcessDialog::OnApplyToProject(wxCommandEvent & WXUNUSED(event))
 
    // The disabler must get deleted before the EndModal() call.  Otherwise,
    // the menus on OSX will remain disabled.
-   wxWindowDisabler *wd = new wxWindowDisabler(pD);
-   bool success = mBatchCommands.ApplyChain();
-   delete wd;
+   bool success;
+   {
+      wxWindowDisabler wd(pD);
+      success = mBatchCommands.ApplyChain();
+   }
 
    if (!success) {
       Show();
@@ -292,7 +294,7 @@ void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
 
    files.Sort();
 
-   wxDialog * pD = new wxDialog(this, wxID_ANY, GetTitle());
+   wxDialog * pD = safenew wxDialog(this, wxID_ANY, GetTitle());
    pD->SetName(pD->GetTitle());
    ShuttleGui S(pD, eIsCreating);
 
