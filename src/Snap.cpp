@@ -10,6 +10,7 @@
 
 #include "Snap.h"
 
+#include <algorithm>
 #include <cstdlib>
 
 #include "Project.h"

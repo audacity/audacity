@@ -28,8 +28,8 @@ struct AboutDialogCreditItem {
    {}
 
    // No copy
-   AboutDialogCreditItem(const AboutDialogCreditItem&) = delete;
-   AboutDialogCreditItem& operator= (const AboutDialogCreditItem&) = delete;
+   AboutDialogCreditItem(const AboutDialogCreditItem&) PROHIBITED;
+   AboutDialogCreditItem& operator= (const AboutDialogCreditItem&) PROHIBITED;
 
    // Move constructor, because wxString lacks one
    AboutDialogCreditItem(AboutDialogCreditItem &&moveMe)

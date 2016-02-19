@@ -15,6 +15,7 @@
 #ifndef __AUDACITY_SNAP__
 #define __AUDACITY_SNAP__
 
+#include <vector>
 #include <wx/defs.h>
 #include <wx/dynarray.h>
 #include <wx/string.h>

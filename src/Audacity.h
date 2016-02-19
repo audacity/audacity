@@ -164,9 +164,12 @@ void QuitAudacity();
 #include <memory>
 #include <utility>
 
-// Reviewed, certified, non-leaky uses of new that immediately entrust their results to RAII objects.
-// You may use it in new code when constructing a wxWindow subclass with non-NULL parent window.
-// You may use it in new code when the new expression is the constructor argument for a standard smart
+// This renames a good use of this C++ keyword that we don't need to review when hunting for leaks.
+#define PROHIBITED = delete
+
+// Reviewed, certified, non-leaky uses of NEW that immediately entrust their results to RAII objects.
+// You may use it in NEW code when constructing a wxWindow subclass with non-NULL parent window.
+// You may use it in NEW code when the NEW expression is the constructor argument for a standard smart
 // pointer like std::unique_ptr or std::shared_ptr.
 #define safenew new
 
@@ -181,8 +184,8 @@ void QuitAudacity();
    auto q = std::make_unique<Myclass[]>(count);
    q[0].DoSomethingElse();
 
-   The first hides naked new and delete from the source code.
-   The second hides new[] and delete[].  Both of course ensure destruction if
+   The first hides naked NEW and DELETE from the source code.
+   The second hides NEW[] and DELETE[].  Both of course ensure destruction if
    you don't use something like std::move(p) or q.release().  Both expressions require
    that you identify the type only once, which is brief and less error prone.
 
