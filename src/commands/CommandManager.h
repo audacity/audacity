@@ -79,7 +79,10 @@ struct CommandListEntry
 
 using MenuBarList = std::vector < MenuBarListEntry >;
 using SubMenuList = std::vector < SubMenuListEntry >;
-WX_DEFINE_USER_EXPORTED_ARRAY(CommandListEntry *, CommandList, class AUDACITY_DLL_API);
+
+// This is an array of pointers, not structures, because the hash maps also point to them,
+// so we don't want the structures to relocate with vector operations.
+using CommandList = std::vector < std::unique_ptr<CommandListEntry> > ;
 
 WX_DECLARE_STRING_HASH_MAP_WITH_DECL(CommandListEntry *, CommandNameHash, class AUDACITY_DLL_API);
 WX_DECLARE_HASH_MAP_WITH_DECL(int, CommandListEntry *, wxIntegerHash, wxIntegerEqual, CommandIDHash, class AUDACITY_DLL_API);
@@ -96,6 +99,9 @@ class AUDACITY_DLL_API CommandManager: public XMLTagHandler
 
    CommandManager();
    virtual ~CommandManager();
+
+   CommandManager(const CommandManager&) = delete;
+   CommandManager &operator= (const CommandManager&) = delete;
 
    void PurgeData();
 
