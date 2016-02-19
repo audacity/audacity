@@ -11,10 +11,9 @@
 #ifndef _IMPORT_
 #define _IMPORT_
 
+#include <vector>
 #include <wx/arrstr.h>
 #include <wx/string.h>
-#include <wx/list.h>
-#include <wx/listimpl.cpp>
 #include <wx/dialog.h>
 #include <wx/listbox.h>
 #include <wx/tokenzr.h>
@@ -41,7 +40,7 @@ public:
 
 class ExtImportItem;
 
-WX_DECLARE_LIST(Format, FormatList);
+using FormatList = std::vector<Format> ;
 WX_DEFINE_ARRAY_PTR(ImportPlugin *, ImportPluginPtrArray);
 WX_DECLARE_OBJARRAY(ExtImportItem, ExtImportItems);
 

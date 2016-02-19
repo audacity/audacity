@@ -241,10 +241,9 @@ void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
    wxString filter;
    wxString all;
 
-   l.DeleteContents(true);
    Importer::Get().GetSupportedImportFormats(&l);
-   for (FormatList::compatibility_iterator n = l.GetFirst(); n; n = n->GetNext()) {
-      Format *f = n->GetData();
+   for (const auto &format : l) {
+      const Format *f = &format;
 
       wxString newfilter = f->formatName + wxT("|");
       for (size_t i = 0; i < f->formatExtensions.size(); i++) {

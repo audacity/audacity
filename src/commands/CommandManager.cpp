@@ -415,7 +415,7 @@ void CommandManager::PurgeData()
    // mCommandList contains pointers to CommandListEntrys
    // mMenuBarList contains MenuBarListEntrys.
    // mSubMenuList contains SubMenuListEntrys
-   WX_CLEAR_ARRAY( mCommandList );
+   mCommandList.clear();
    mMenuBarList.clear();
    mSubMenuList.clear();
 
@@ -791,74 +791,80 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & name,
 }
 
 CommandListEntry *CommandManager::NewIdentifier(const wxString & name,
-                                                const wxString & label,
-                                                const wxString & accel,
-                                                wxMenu *menu,
-                                                const CommandFunctorPointer &callback,
-                                                bool multi,
-                                                int index,
-                                                int count)
+   const wxString & label,
+   const wxString & accel,
+   wxMenu *menu,
+   const CommandFunctorPointer &callback,
+   bool multi,
+   int index,
+   int count)
 {
-   CommandListEntry *entry = new CommandListEntry;
+   {
+      auto entry = std::make_unique<CommandListEntry>();
 
-   wxString labelPrefix;
-   if (!mSubMenuList.empty()) {
-      labelPrefix = mSubMenuList.back().name;
-   }
+      wxString labelPrefix;
+      if (!mSubMenuList.empty()) {
+         labelPrefix = mSubMenuList.back().name;
+      }
 
-   // wxMac 2.5 and higher will do special things with the
-   // Preferences, Exit (Quit), and About menu items,
-   // if we give them the right IDs.
-   // Otherwise we just pick increasing ID numbers for each NEW
-   // command.  Note that the name string we are comparing
-   // ("About", "Preferences") is the internal command name
-   // (untranslated), not the label that actually appears in the
-   // menu (which might be translated).
+      // wxMac 2.5 and higher will do special things with the
+      // Preferences, Exit (Quit), and About menu items,
+      // if we give them the right IDs.
+      // Otherwise we just pick increasing ID numbers for each NEW
+      // command.  Note that the name string we are comparing
+      // ("About", "Preferences") is the internal command name
+      // (untranslated), not the label that actually appears in the
+      // menu (which might be translated).
 
-   mCurrentID = NextIdentifier(mCurrentID);
-   entry->id = mCurrentID;
+      mCurrentID = NextIdentifier(mCurrentID);
+      entry->id = mCurrentID;
 
 #if defined(__WXMAC__)
-   if (name == wxT("Preferences"))
-      entry->id = wxID_PREFERENCES;
-   else if (name == wxT("Exit"))
-      entry->id = wxID_EXIT;
-   else if (name == wxT("About"))
-      entry->id = wxID_ABOUT;
+      if (name == wxT("Preferences"))
+         entry->id = wxID_PREFERENCES;
+      else if (name == wxT("Exit"))
+         entry->id = wxID_EXIT;
+      else if (name == wxT("About"))
+         entry->id = wxID_ABOUT;
 #endif
 
-   entry->name = name;
-   entry->label = label;
-   entry->key = KeyStringNormalize(accel.BeforeFirst(wxT('\t')));
-   entry->defaultKey = entry->key;
-   entry->labelPrefix = labelPrefix;
-   entry->labelTop = wxMenuItem::GetLabelText(mCurrentMenuName);
-   entry->menu = menu;
-   entry->callback = callback;
-   entry->multi = multi;
-   entry->index = index;
-   entry->count = count;
-   entry->flags = mDefaultFlags;
-   entry->mask = mDefaultMask;
-   entry->enabled = true;
-   entry->skipKeydown = (accel.Find(wxT("\tskipKeydown")) != wxNOT_FOUND);
-   entry->wantKeyup = (accel.Find(wxT("\twantKeyup")) != wxNOT_FOUND) || entry->skipKeydown;
-   entry->isGlobal = false;
+      entry->name = name;
+      entry->label = label;
+      entry->key = KeyStringNormalize(accel.BeforeFirst(wxT('\t')));
+      entry->defaultKey = entry->key;
+      entry->labelPrefix = labelPrefix;
+      entry->labelTop = wxMenuItem::GetLabelText(mCurrentMenuName);
+      entry->menu = menu;
+      entry->callback = callback;
+      entry->multi = multi;
+      entry->index = index;
+      entry->count = count;
+      entry->flags = mDefaultFlags;
+      entry->mask = mDefaultMask;
+      entry->enabled = true;
+      entry->skipKeydown = (accel.Find(wxT("\tskipKeydown")) != wxNOT_FOUND);
+      entry->wantKeyup = (accel.Find(wxT("\twantKeyup")) != wxNOT_FOUND) || entry->skipKeydown;
+      entry->isGlobal = false;
 
-   // For key bindings for commands with a list, such as effects,
-   // the name in prefs is the category name plus the effect name.
-   if (multi) {
-      entry->name = wxString::Format( wxT("%s:%s"), name.c_str(), label.c_str() );
+      // For key bindings for commands with a list, such as effects,
+      // the name in prefs is the category name plus the effect name.
+      if (multi) {
+         entry->name = wxString::Format(wxT("%s:%s"), name.c_str(), label.c_str());
+      }
+
+      // Key from preferences overridse the default key given
+      gPrefs->SetPath(wxT("/NewKeys"));
+      if (gPrefs->HasEntry(entry->name)) {
+         entry->key = KeyStringNormalize(gPrefs->Read(entry->name, entry->key));
+      }
+      gPrefs->SetPath(wxT("/"));
+
+      mCommandList.push_back(std::move(entry));
+      // Don't use the variable entry eny more!
    }
 
-   // Key from preferences overridse the default key given
-   gPrefs->SetPath(wxT("/NewKeys"));
-   if (gPrefs->HasEntry(entry->name)) {
-      entry->key = KeyStringNormalize(gPrefs->Read(entry->name, entry->key));
-   }
-   gPrefs->SetPath(wxT("/"));
-
-   mCommandList.Add(entry);
+   // New variable
+   CommandListEntry *entry = &*mCommandList.back();
    mCommandIDHash[entry->id] = entry;
 
 #if defined(__WXDEBUG__)
@@ -965,8 +971,7 @@ void CommandManager::EnableUsingFlags(wxUint32 flags, wxUint32 mask)
 {
    unsigned int i;
 
-   for(i=0; i<mCommandList.GetCount(); i++) {
-      CommandListEntry *entry = mCommandList[i];
+   for(const auto &entry : mCommandList) {
       if (entry->multi && entry->index != 0)
          continue;
 
@@ -974,7 +979,7 @@ void CommandManager::EnableUsingFlags(wxUint32 flags, wxUint32 mask)
       if (combinedMask) {
          bool enable = ((flags & combinedMask) ==
                         (entry->flags & combinedMask));
-         Enable(entry, enable);
+         Enable(entry.get(), enable);
       }
    }
 }
@@ -1020,7 +1025,7 @@ void CommandManager::SetKeyFromName(wxString name, wxString key)
 
 void CommandManager::SetKeyFromIndex(int i, wxString key)
 {
-   CommandListEntry *entry = mCommandList[i];
+   const auto &entry = mCommandList[i];
    entry->key = KeyStringNormalize(key);
 }
 
@@ -1154,13 +1159,13 @@ bool CommandManager::HandleTextualCommand(wxString & Str, wxUint32 flags, wxUint
    unsigned int i;
 
    // Linear search for now...
-   for (i = 0; i < mCommandList.GetCount(); i++)
+   for (const auto &entry : mCommandList)
    {
-      if (!mCommandList[i]->multi)
+      if (!entry->multi)
       {
-         if( Str.IsSameAs( mCommandList[i]->name ))
+         if( Str.IsSameAs( entry->name ))
          {
-            return HandleCommandEntry( mCommandList[i], flags, mask);
+            return HandleCommandEntry( entry.get(), flags, mask);
          }
       }
    }
@@ -1192,10 +1197,8 @@ void CommandManager::GetCategories(wxArrayString &cats)
 {
    cats.Clear();
 
-   size_t cnt = mCommandList.GetCount();
-
-   for (size_t i = 0; i < cnt; i++) {
-      wxString cat = mCommandList[i]->labelTop;
+   for (const auto &entry : mCommandList) {
+      wxString cat = entry->labelTop;
       if (cats.Index(cat) == wxNOT_FOUND) {
          cats.Add(cat);
       }
@@ -1224,26 +1227,22 @@ void CommandManager::GetCategories(wxArrayString &cats)
 void CommandManager::GetAllCommandNames(wxArrayString &names,
                                         bool includeMultis)
 {
-   unsigned int i;
-
-   for(i=0; i<mCommandList.GetCount(); i++) {
-      if (!mCommandList[i]->multi)
-         names.Add(mCommandList[i]->name);
+   for(const auto &entry : mCommandList) {
+      if (!entry->multi)
+         names.Add(entry->name);
       else if( includeMultis )
-         names.Add(mCommandList[i]->name + wxT(":")/*+ mCommandList[i]->label*/);
+         names.Add(entry->name + wxT(":")/*+ mCommandList[i]->label*/);
    }
 }
 
 void CommandManager::GetAllCommandLabels(wxArrayString &names,
                                         bool includeMultis)
 {
-   unsigned int i;
-
-   for(i=0; i<mCommandList.GetCount(); i++) {
-      if (!mCommandList[i]->multi)
-         names.Add(mCommandList[i]->label);
+   for(const auto &entry : mCommandList) {
+      if (!entry->multi)
+         names.Add(entry->label);
       else if( includeMultis )
-         names.Add(mCommandList[i]->label);
+         names.Add(entry->label);
    }
 }
 
@@ -1258,29 +1257,27 @@ void CommandManager::GetAllCommandData(
 #endif
    bool includeMultis)
 {
-   unsigned int i;
-
-   for(i=0; i<mCommandList.GetCount(); i++) {
-      if (!mCommandList[i]->multi)
+   for(const auto &entry : mCommandList) {
+      if (!entry->multi)
       {
-         names.Add(mCommandList[i]->name);
-         keys.Add(mCommandList[i]->key);
-         default_keys.Add( mCommandList[i]->defaultKey);
-         labels.Add(mCommandList[i]->label);
-         categories.Add(mCommandList[i]->labelTop);
+         names.Add(entry->name);
+         keys.Add(entry->key);
+         default_keys.Add(entry->defaultKey);
+         labels.Add(entry->label);
+         categories.Add(entry->labelTop);
 #if defined(EXPERIMENTAL_KEY_VIEW)
-         prefixes.Add(mCommandList[i]->labelPrefix);
+         prefixes.Add(entry->labelPrefix);
 #endif
       }
       else if( includeMultis )
       {
-         names.Add(mCommandList[i]->name);
-         keys.Add(mCommandList[i]->key);
-         default_keys.Add( mCommandList[i]->defaultKey);
-         labels.Add(mCommandList[i]->label);
-         categories.Add(mCommandList[i]->labelTop);
+         names.Add(entry->name);
+         keys.Add(entry->key);
+         default_keys.Add(entry->defaultKey);
+         labels.Add(entry->label);
+         categories.Add(entry->labelTop);
 #if defined(EXPERIMENTAL_KEY_VIEW)
-         prefixes.Add(mCommandList[i]->labelPrefix);
+         prefixes.Add(entry->labelPrefix);
 #endif
       }
    }
@@ -1389,19 +1386,17 @@ XMLTagHandler *CommandManager::HandleXMLChild(const wxChar * WXUNUSED(tag))
 
 void CommandManager::WriteXML(XMLWriter &xmlFile)
 {
-   unsigned int j;
-
    xmlFile.StartTag(wxT("audacitykeyboard"));
    xmlFile.WriteAttr(wxT("audacityversion"), AUDACITY_VERSION_STRING);
 
-   for(j=0; j<mCommandList.GetCount(); j++) {
-      wxString label = mCommandList[j]->label;
+   for(const auto &entry : mCommandList) {
+      wxString label = entry->label;
       label = wxMenuItem::GetLabelText(label.BeforeFirst(wxT('\t')));
 
       xmlFile.StartTag(wxT("command"));
-      xmlFile.WriteAttr(wxT("name"), mCommandList[j]->name);
+      xmlFile.WriteAttr(wxT("name"), entry->name);
       xmlFile.WriteAttr(wxT("label"), label);
-      xmlFile.WriteAttr(wxT("key"), mCommandList[j]->key);
+      xmlFile.WriteAttr(wxT("key"), entry->key);
       xmlFile.EndTag(wxT("command"));
    }
 
@@ -1450,7 +1445,7 @@ void CommandManager::SetCommandFlags(wxUint32 flags, wxUint32 mask, ...)
 #if defined(__WXDEBUG__)
 void CommandManager::CheckDups()
 {
-   int cnt = mCommandList.GetCount();
+   int cnt = mCommandList.size();
    for (size_t j = 0;  (int)j < cnt; j++) {
       if (mCommandList[j]->key.IsEmpty()) {
          continue;
