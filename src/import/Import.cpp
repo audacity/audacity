@@ -62,7 +62,6 @@ and ImportLOF.cpp.
 
 WX_DEFINE_LIST(ImportPluginList);
 WX_DEFINE_LIST(UnusableImportPluginList);
-WX_DEFINE_LIST(FormatList);
 WX_DEFINE_OBJARRAY(ExtImportItems);
 
 // ============================================================================
@@ -138,8 +137,8 @@ void Importer::GetSupportedImportFormats(FormatList *formatList)
    while(importPluginNode)
    {
       ImportPlugin *importPlugin = importPluginNode->GetData();
-      formatList->Append(new Format(importPlugin->GetPluginFormatDescription(),
-                                    importPlugin->GetSupportedExtensions()));
+      formatList->emplace_back(importPlugin->GetPluginFormatDescription(),
+                               importPlugin->GetSupportedExtensions());
       importPluginNode = importPluginNode->GetNext();
    }
 }

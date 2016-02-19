@@ -2413,12 +2413,11 @@ wxArrayString AudacityProject::ShowOpenDialog(wxString extraformat, wxString ext
    }
 
    // Construct the filter
-   l.DeleteContents(true);
    Importer::Get().GetSupportedImportFormats(&l);
 
-   for (FormatList::compatibility_iterator n = l.GetFirst(); n; n = n->GetNext()) {
+   for (const auto &format : l) {
       /* this loop runs once per supported _format_ */
-      Format *f = n->GetData();
+      const Format *f = &format;
 
       wxString newfilter = f->formatName + wxT("|");
       // bung format name into string plus | separator
