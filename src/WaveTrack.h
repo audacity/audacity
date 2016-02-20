@@ -336,8 +336,6 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
    // Get access to the clips in the tracks.
    const WaveClipList &GetClips() const { return mClips; }
 
-   WaveClipList::compatibility_iterator GetClipIterator() { return mClips.GetFirst(); }
-
    // Create NEW clip and add it to this track. Returns a pointer
    // to the newly created clip.
    WaveClip* CreateClip();
@@ -357,7 +355,7 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
    WaveClip* RightmostOrNewClip();
 
    // Get the linear index of a given clip (-1 if the clip is not found)
-   int GetClipIndex(WaveClip* clip);
+   int GetClipIndex(WaveClip* clip) const;
 
    // Get the nth clip in this WaveTrack (will return NULL if not found).
    // Use this only in special cases (like getting the linked clip), because
