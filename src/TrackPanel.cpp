@@ -6655,11 +6655,12 @@ namespace {
    int FindMergeLine(WaveTrack *track, double time)
    {
       const double tolerance = 0.5 / track->GetRate();
-      for (int ii = 0, nn = track->GetNumCachedLocations(); ii < nn; ++ii) {
-         WaveTrack::Location loc = track->GetCachedLocation(ii);
+      int ii = 0;
+      for (const auto loc: track->GetCachedLocations()) {
          if (loc.typ == WaveTrackLocation::locationMergePoint &&
             fabs(time - loc.pos) < tolerance)
             return ii;
+         ++ii;
       }
       return -1;
    }
@@ -6731,7 +6732,7 @@ bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &rect, 
                // Don't assume correspondence of merge points across channels!
                int idx = FindMergeLine(linked, pos);
                if (idx >= 0) {
-                  WaveTrack::Location location = linked->GetCachedLocation(idx);
+                  WaveTrack::Location location = linked->GetCachedLocations()[idx];
                   if (!linked->MergeClips(location.clipidx1, location.clipidx2))
                      return false;
                }
@@ -6770,10 +6771,8 @@ bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &rect, 
 
 bool TrackPanel::IsOverCutline(WaveTrack * track, wxRect &rect, wxMouseEvent &event)
 {
-   for (int i=0; i<track->GetNumCachedLocations(); i++)
+   for (auto loc: track->GetCachedLocations())
    {
-      WaveTrack::Location loc = track->GetCachedLocation(i);
-
       const double x = mViewInfo->TimeToPosition(loc.pos);
       if (x >= 0 && x < rect.width)
       {

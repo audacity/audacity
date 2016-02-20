@@ -375,9 +375,8 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
    // Cache special locations (e.g. cut lines) for later speedy access
    void UpdateLocationsCache();
 
-   // Get number of cached locations
-   int GetNumCachedLocations() { return mDisplayNumLocations; }
-   Location GetCachedLocation(int index) { return mDisplayLocations[index]; }
+   // Get cached locations
+   const std::vector<Location> &GetCachedLocations() const { return mDisplayLocationsCache; }
 
    // Expand cut line (that is, re-insert audio, then DELETE audio saved in cut line)
    bool ExpandCutLine(double cutLinePosition, double* cutlineStart = NULL, double* cutlineEnd = NULL);
@@ -477,9 +476,7 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
    WaveTrackDisplay mDisplay;
    int           mLastScaleType; // last scale type choice
    int           mLastdBRange;
-   int           mDisplayNumLocations;
-   int           mDisplayNumLocationsAllocated;
-   Location*       mDisplayLocations;
+   mutable std::vector <Location> mDisplayLocationsCache;
 
    //
    // Protected methods

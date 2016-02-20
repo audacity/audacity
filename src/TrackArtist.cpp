@@ -1480,8 +1480,7 @@ void TrackArtist::DrawWaveform(WaveTrack *track,
    // Update cache for locations, e.g. cutlines and merge points
    track->UpdateLocationsCache();
 
-   for (int i = 0; i<track->GetNumCachedLocations(); i++) {
-      WaveTrack::Location loc = track->GetCachedLocation(i);
+   for (const auto loc : track->GetCachedLocations()) {
       const int xx = zoomInfo.TimeToPosition(loc.pos);
       if (xx >= 0 && xx < rect.width) {
          dc.SetPen(*wxGREY_PEN);

@@ -18,6 +18,13 @@ struct WaveTrackLocation {
       locationMergePoint
    };
 
+   explicit
+   WaveTrackLocation
+   (double pos_ = 0.0, LocationType typ_ = locationCutLine,
+    int clipidx1_ = -1, int clipidx2_ = -1)
+    : pos(pos_), typ(typ_), clipidx1(clipidx1_), clipidx2(clipidx2_)
+   {}
+
    // Position of track location
    double pos;
 

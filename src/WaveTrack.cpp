@@ -108,9 +108,6 @@ WaveTrack::WaveTrack(DirManager *projDirManager, sampleFormat format, double rat
    mDisplayMin = -1.0;
    mDisplayMax = 1.0;
    mSpectrumMin = mSpectrumMax = -1; // so values will default to settings
-   mDisplayNumLocations = 0;
-   mDisplayLocations = NULL;
-   mDisplayNumLocationsAllocated = 0;
    mLastScaleType = -1;
    mLastdBRange = -1;
    mAutoSaveIdent = 0;
@@ -150,9 +147,7 @@ void WaveTrack::Init(const WaveTrack &orig)
    mDisplayMax = orig.mDisplayMax;
    mSpectrumMin = orig.mSpectrumMin;
    mSpectrumMax = orig.mSpectrumMax;
-   mDisplayNumLocations = 0;
-   mDisplayLocations = NULL;
-   mDisplayNumLocationsAllocated = 0;
+   mDisplayLocationsCache.clear();
 }
 
 void WaveTrack::Merge(const Track &orig)
@@ -181,8 +176,6 @@ WaveTrack::~WaveTrack()
    for (WaveClipList::compatibility_iterator it=GetClipIterator(); it; it=it->GetNext())
       delete it->GetData();
    mClips.Clear();
-   if (mDisplayLocations)
-      delete [] mDisplayLocations;
 
    delete mpSpectrumSettings;
    delete mpWaveformSettings;
@@ -2437,33 +2430,26 @@ void WaveTrack::UpdateLocationsCache()
 
    FillSortedClipArray(clips);
 
-   mDisplayNumLocations = 0;
+   mDisplayLocationsCache.clear();
 
    // Count number of display locations
+   int num = 0;
    for (i = 0; i < clips.GetCount(); i++)
    {
       WaveClip* clip = clips.Item(i);
 
-      mDisplayNumLocations += clip->GetCutLines()->GetCount();
+      num += clip->GetCutLines()->GetCount();
 
       if (i > 0 && fabs(clips.Item(i - 1)->GetEndTime() -
                   clip->GetStartTime()) < WAVETRACK_MERGE_POINT_TOLERANCE)
-         mDisplayNumLocations++;
+         ++num;
    }
 
-   if (mDisplayNumLocations == 0)
+   if (num == 0)
       return;
 
    // Alloc necessary number of display locations
-   if (mDisplayNumLocations > mDisplayNumLocationsAllocated)
-   {
-      // Only realloc, if we need more space than before. Otherwise
-      // just use block from before.
-      if (mDisplayLocations)
-         delete[] mDisplayLocations;
-      mDisplayLocations = new Location[mDisplayNumLocations];
-      mDisplayNumLocationsAllocated = mDisplayNumLocations;
-   }
+   mDisplayLocationsCache.reserve(num);
 
    // Add all display locations to cache
    int curpos = 0;
@@ -2477,9 +2463,10 @@ void WaveTrack::UpdateLocationsCache()
            it = it->GetNext())
       {
          // Add cut line expander point
-         mDisplayLocations[curpos].typ = WaveTrackLocation::locationCutLine;
-         mDisplayLocations[curpos].pos =
-            clip->GetOffset() + it->GetData()->GetOffset();
+         mDisplayLocationsCache.push_back(WaveTrackLocation{
+            clip->GetOffset() + it->GetData()->GetOffset(),
+            WaveTrackLocation::locationCutLine
+         });
          curpos++;
       }
 
@@ -2491,16 +2478,18 @@ void WaveTrack::UpdateLocationsCache()
                                           < WAVETRACK_MERGE_POINT_TOLERANCE)
          {
             // Add merge point
-            mDisplayLocations[curpos].typ = WaveTrackLocation::locationMergePoint;
-            mDisplayLocations[curpos].pos = clips.Item(i-1)->GetEndTime();
-            mDisplayLocations[curpos].clipidx1 = mClips.IndexOf(previousClip);
-            mDisplayLocations[curpos].clipidx2 = mClips.IndexOf(clip);
+            mDisplayLocationsCache.push_back(WaveTrackLocation{
+               clips.Item(i - 1)->GetEndTime(),
+               WaveTrackLocation::locationMergePoint,
+               mClips.IndexOf(previousClip),
+               mClips.IndexOf(clip)
+            });
             curpos++;
          }
       }
    }
 
-   wxASSERT(curpos == mDisplayNumLocations);
+   wxASSERT(curpos == num);
 }
 
 // Expand cut line (that is, re-insert audio, then DELETE audio saved in cut line)
