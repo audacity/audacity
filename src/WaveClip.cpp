@@ -42,8 +42,6 @@
 
 #include "Experimental.h"
 
-WX_DEFINE_LIST(WaveClipList);
-
 class WaveCache {
 public:
    WaveCache()

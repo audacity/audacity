@@ -24,7 +24,6 @@
 
 #include <wx/gdicmn.h>
 #include <wx/longlong.h>
-#include <wx/list.h>
 #include <wx/msgdlg.h>
 
 #include <vector>
@@ -150,7 +149,7 @@ public:
 
 class WaveClip;
 
-WX_DECLARE_USER_EXPORTED_LIST(WaveClip, WaveClipList, AUDACITY_DLL_API);
+using WaveClipList = std::vector < WaveClip* > ;
 WX_DEFINE_USER_EXPORTED_ARRAY_PTR(WaveClip*, WaveClipArray, class AUDACITY_DLL_API);
 
 // A bundle of arrays needed for drawing waveforms.  The object may or may not

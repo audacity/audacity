@@ -40,7 +40,6 @@ class CrossFader
   void SetTriangularCrossFade(){mType = FT_TRIANGULAR;};
   void SetExponentialCrossFade(){mType = FT_EXPONENTIAL;};
 
-  void AddClip( WaveClip * clip);
   void ClearClips();
   //Produces samples according to crossfading rules.
   bool  GetSamples(samplePtr buffer, sampleFormat format,

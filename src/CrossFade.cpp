@@ -78,7 +78,7 @@ bool CrossFader::CrossFadeMix(samplePtr buffer, sampleFormat format, sampleCount
    //this could be 'optimized' by getting all of the sequences and then
    //iterating through each of them.
 
-   int numclips = mClips.GetCount();
+   int numclips = mClips.size();
 
    //create vectors to store the important info for each clip.
    std::vector<sampleCount> clipStart(numclips);
@@ -263,13 +263,7 @@ bool CrossFader::CrossFadeMix(samplePtr buffer, sampleFormat format, sampleCount
 }
 
 
-void CrossFader::AddClip( WaveClip * clip)
-{
-   mClips.Append(clip);
-}
-
 void CrossFader::ClearClips()
 {
-   if(mClips.GetCount())
-      mClips.Clear();
+   mClips.clear();
 }
