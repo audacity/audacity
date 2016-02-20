@@ -137,7 +137,7 @@ void SnapManager::Reinit()
                for (size_t j = 0, cnt = mClipExclusions->size(); j < cnt; ++j)
                {
                   if ((*mClipExclusions)[j].track == waveTrack &&
-                      (*mClipExclusions)[j].clip == clip)
+                      (*mClipExclusions)[j].clip == clip.get())
                   {
                      skip = true;
                      break;

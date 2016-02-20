@@ -1472,7 +1472,7 @@ void TrackArtist::DrawWaveform(const WaveTrack *track,
          selectedRegion, zoomInfo);
 
    for (const auto &clip: track->GetClips())
-      DrawClipWaveform(track, clip, dc, rect, selectedRegion, zoomInfo,
+      DrawClipWaveform(track, clip.get(), dc, rect, selectedRegion, zoomInfo,
                        drawEnvelope, bigPoints,
                        dB, muted);
 
@@ -2011,7 +2011,7 @@ void TrackArtist::DrawSpectrum(const WaveTrack *track,
 
    WaveTrackCache cache(track);
    for (const auto &clip: track->GetClips()) {
-      DrawClipSpectrum(cache, clip, dc, rect, selectedRegion, zoomInfo);
+      DrawClipSpectrum(cache, clip.get(), dc, rect, selectedRegion, zoomInfo);
    }
 }
 

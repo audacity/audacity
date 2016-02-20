@@ -3429,14 +3429,14 @@ void TrackPanel::AddClipsToCaptured(Track *t, double t0, double t1)
             // Avoid getting clips that were already captured
             bool newClip = true;
             for (unsigned int i = 0; i < mCapturedClipArray.size(); ++i) {
-               if (mCapturedClipArray[i].clip == clip) {
+               if (mCapturedClipArray[i].clip == clip.get()) {
                   newClip = false;
                   break;
                }
             }
 
             if (newClip)
-               mCapturedClipArray.push_back(TrackClip(t, clip));
+               mCapturedClipArray.push_back(TrackClip(t, clip.get()));
          }
       }
    }
@@ -3634,7 +3634,8 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
          TrackClip &trackClip = mCapturedClipArray[ii];
          WaveClip *const pSrcClip = trackClip.clip;
          if (pSrcClip)
-            static_cast<WaveTrack*>(trackClip.track)->MoveClipToTrack(pSrcClip, NULL);
+            trackClip.holder =
+            static_cast<WaveTrack*>(trackClip.track)->RemoveAndReturnClip(pSrcClip);
       }
 
       // Now check that the move is possible
@@ -3652,7 +3653,7 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
             TrackClip &trackClip = mCapturedClipArray[ii];
             WaveClip *const pSrcClip = trackClip.clip;
             if (pSrcClip) {
-               static_cast<WaveTrack*>(trackClip.track)->AddClip(pSrcClip);
+               static_cast<WaveTrack*>(trackClip.track)->AddClip(std::move(trackClip.holder));
             }
          }
          return;
@@ -3664,7 +3665,7 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
             WaveClip *const pSrcClip = trackClip.clip;
             if (pSrcClip) {
                Track *const dstTrack = trackClip.dstTrack;
-               static_cast<WaveTrack*>(dstTrack)->AddClip(pSrcClip);
+               static_cast<WaveTrack*>(dstTrack)->AddClip(std::move(trackClip.holder));
                trackClip.track = dstTrack;
             }
          }

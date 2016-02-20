@@ -320,7 +320,7 @@ WaveClip::WaveClip(const WaveClip& orig, DirManager *projDirManager)
    mSpecPxCache = std::make_unique<SpecPxCache>(1);
 
    for (const auto &clip: orig.mCutLines)
-      mCutLines.push_back(new WaveClip(*clip, projDirManager));
+      mCutLines.push_back(make_movable<WaveClip>(*clip, projDirManager));
 
    mAppendBufferLen = 0;
    mDirty = 0;
@@ -329,9 +329,6 @@ WaveClip::WaveClip(const WaveClip& orig, DirManager *projDirManager)
 
 WaveClip::~WaveClip()
 {
-   for (const auto &clip : mCutLines)
-      delete clip;
-   mCutLines.clear();
 }
 
 void WaveClip::SetOffset(double offset)
@@ -1362,11 +1359,12 @@ XMLTagHandler *WaveClip::HandleXMLChild(const wxChar *tag)
    else if (!wxStrcmp(tag, wxT("waveclip")))
    {
       // Nested wave clips are cut lines
-      WaveClip *newCutLine = new WaveClip(mSequence->GetDirManager(),
-                                mSequence->GetSampleFormat(), mRate);
-      mCutLines.push_back(newCutLine);
-      return newCutLine;
-   } else
+      mCutLines.push_back(
+         make_movable<WaveClip>(mSequence->GetDirManager(),
+            mSequence->GetSampleFormat(), mRate));
+      return mCutLines.back().get();
+   }
+   else
       return NULL;
 }
 
@@ -1445,10 +1443,9 @@ bool WaveClip::Paste(double t0, const WaveClip* other)
       // Paste cut lines contained in pasted clip
       for (const auto &cutline: pastedClip->mCutLines)
       {
-         WaveClip* newCutLine = new WaveClip(*cutline,
-                                             mSequence->GetDirManager());
-         newCutLine->Offset(t0 - mOffset);
-         mCutLines.push_back(newCutLine);
+         mCutLines.push_back(
+            make_movable<WaveClip>(*cutline, mSequence->GetDirManager()));
+         mCutLines.back()->Offset(t0 - mOffset);
       }
 
       result = true;
@@ -1506,12 +1503,11 @@ bool WaveClip::Clear(double t0, double t1)
       // May delete as we iterate, so don't use range-for
       for (auto it = mCutLines.begin(); it != mCutLines.end();)
       {
-         WaveClip* clip = *it;
+         WaveClip* clip = it->get();
          double cutlinePosition = mOffset + clip->GetOffset();
          if (cutlinePosition >= t0 && cutlinePosition <= t1)
          {
             // This cutline is within the area, DELETE it
-            delete clip;
             it = mCutLines.erase(it);
          }
          else
@@ -1541,9 +1537,8 @@ bool WaveClip::ClearAndAddCutLine(double t0, double t1)
    if (t0 > GetEndTime() || t1 < GetStartTime())
       return true; // time out of bounds
 
-   WaveClip *newClip = new WaveClip(mSequence->GetDirManager(),
-                                    mSequence->GetSampleFormat(),
-                                    mRate);
+   auto newClip = make_movable<WaveClip>
+      (mSequence->GetDirManager(), mSequence->GetSampleFormat(), mRate);
    double clip_t0 = t0;
    double clip_t1 = t1;
    if (clip_t0 < GetStartTime())
@@ -1559,12 +1554,12 @@ bool WaveClip::ClearAndAddCutLine(double t0, double t1)
    // May delete as we iterate, so don't use range-for
    for (auto it = mCutLines.begin(); it != mCutLines.end();)
    {
-      WaveClip* clip = *it;
+      WaveClip* clip = it->get();
       double cutlinePosition = mOffset + clip->GetOffset();
       if (cutlinePosition >= t0 && cutlinePosition <= t1)
       {
          clip->SetOffset(cutlinePosition - newClip->GetOffset() - mOffset);
-         newClip->mCutLines.push_back(clip);
+         newClip->mCutLines.push_back(std::move(*it)); // transfer ownership!!
          it = mCutLines.erase(it);
       }
       else
@@ -1592,14 +1587,11 @@ bool WaveClip::ClearAndAddCutLine(double t0, double t1)
 
       MarkChanged();
 
-      mCutLines.push_back(newClip);
+      mCutLines.push_back(std::move(newClip));
       return true;
    }
    else
-   {
-      delete newClip;
       return false;
-   }
 }
 
 bool WaveClip::FindCutLine(double cutLinePosition,
@@ -1628,10 +1620,9 @@ bool WaveClip::ExpandCutLine(double cutLinePosition)
       const auto &cutline = *it;
       if (fabs(mOffset + cutline->GetOffset() - cutLinePosition) < 0.0001)
       {
-         if (!Paste(mOffset+cutline->GetOffset(), cutline))
+         if (!Paste(mOffset+cutline->GetOffset(), cutline.get()))
             return false;
-         delete cutline;
-         mCutLines.erase(it);
+         mCutLines.erase(it); // deletes cutline!
          return true;
       }
    }
@@ -1646,8 +1637,7 @@ bool WaveClip::RemoveCutLine(double cutLinePosition)
       const auto &cutline = *it;
       if (fabs(mOffset + cutline->GetOffset() - cutLinePosition) < 0.0001)
       {
-         delete cutline;
-         mCutLines.erase(it);
+         mCutLines.erase(it); // deletes cutline!
          return true;
       }
    }
@@ -1657,8 +1647,6 @@ bool WaveClip::RemoveCutLine(double cutLinePosition)
 
 void WaveClip::RemoveAllCutLines()
 {
-   for (const auto &cutLine : mCutLines)
-      delete cutLine;
    mCutLines.clear();
 }
 

@@ -384,17 +384,12 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
    // existing clips).
    bool CanInsertClip(WaveClip* clip);
 
-   // Move a clip into a NEW track. This will remove the clip
-   // in this cliplist and add it to the cliplist of the
-   // other track (if that is not NULL). No fancy additional stuff is done.
-   // unused   void MoveClipToTrack(int clipIndex, WaveTrack* dest);
-   void MoveClipToTrack(WaveClip *clip, WaveTrack* dest);
-
-   // Remove the clip from the track and return a pointer to it.
-   WaveClip* RemoveAndReturnClip(WaveClip* clip);
+   // Remove the clip from the track and return a SMART pointer to it.
+   // You assume responsibility for its memory!
+   movable_ptr<WaveClip> RemoveAndReturnClip(WaveClip* clip);
 
    // Append a clip to the track
-   void AddClip(WaveClip* clip);
+   void AddClip(movable_ptr<WaveClip> &&clip); // Call using std::move
 
    // Merge two clips, that is append data from clip2 to clip1,
    // then remove clip2 from track.

@@ -115,7 +115,7 @@ bool EffectReverse::ProcessOneWave(int count, WaveTrack * track, sampleCount sta
    const auto &clips = track->GetClips();
    // Beware, the array grows as we loop over it.  Use integer subscripts, not iterators.
    for (int ii = 0; ii < clips.size(); ++ii) {
-      const auto &clip = clips[ii];
+      const auto &clip = clips[ii].get();
       sampleCount clipStart = clip->GetStartSample();
       sampleCount clipEnd = clip->GetEndSample();
       if (clipStart < start && clipEnd > start && clipEnd <= end) { // the reverse selection begins at the inside of a clip
@@ -189,15 +189,12 @@ bool EffectReverse::ProcessOneWave(int count, WaveTrack * track, sampleCount sta
                currentEnd = (sampleCount)(currentEnd - (clipEnd - clipStart) - (nextClipStart - clipEnd));
             }
 
-            clip = track->RemoveAndReturnClip(clip); // detach the clip from track
-            clip->SetOffset(track->LongSamplesToTime(track->TimeToLongSamples(offsetStartTime))); // align time to a sample and set offset
-            revClips.push_back(clip);
-
+            revClips.push_back(track->RemoveAndReturnClip(clip)); // detach the clip from track
+            revClips.back()->SetOffset(track->LongSamplesToTime(track->TimeToLongSamples(offsetStartTime))); // align time to a sample and set offset
          }
       }
       else if (clipStart >= end) { // clip is after the selection region
-         clip = track->RemoveAndReturnClip(clip); // simply remove and append to otherClips
-         otherClips.push_back(clip);
+         otherClips.push_back(track->RemoveAndReturnClip(clip)); // simply remove and append to otherClips
       }
    }
 
@@ -207,10 +204,10 @@ bool EffectReverse::ProcessOneWave(int count, WaveTrack * track, sampleCount sta
    // PRL:  I don't think that matters, the sequence of storage of clips in the track
    // is not elsewhere assumed to be by time
    for (auto it = revClips.rbegin(), end = revClips.rend(); it != end; ++it)
-      track->AddClip(*it);
+      track->AddClip(std::move(*it));
 
-   for (const auto &clip : otherClips)
-      track->AddClip(clip);
+   for (auto &clip : otherClips)
+      track->AddClip(std::move(clip));
 
    return rValue;
 }

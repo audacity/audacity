@@ -149,8 +149,9 @@ public:
 
 class WaveClip;
 
-using WaveClipHolders = std::vector < WaveClip* > ;
-using WaveClipConstHolders = std::vector < const WaveClip* > ;
+// Array of pointers that assume ownership
+using WaveClipHolders = std::vector < movable_ptr< WaveClip > >;
+using WaveClipConstHolders = std::vector < movable_ptr< const WaveClip > >;
 
 // Temporary arrays of mere pointers
 using WaveClipPointers = std::vector < WaveClip* >;
@@ -207,6 +208,7 @@ class AUDACITY_DLL_API WaveClip final : public XMLTagHandler
 {
 private:
    // It is an error to copy a WaveClip without specifying the DirManager.
+
    WaveClip(const WaveClip&) PROHIBITED;
    WaveClip& operator= (const WaveClip&) PROHIBITED;
 

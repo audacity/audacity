@@ -43,6 +43,7 @@ public:
    Track *origTrack;
    Track *dstTrack;
    WaveClip *clip;
+   movable_ptr<WaveClip> holder;
 };
 
 class TrackClipArray : public std::vector < TrackClip > {};
