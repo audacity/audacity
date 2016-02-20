@@ -1397,7 +1397,9 @@ bool WaveClip::CreateFromCopy(double t0, double t1, const WaveClip* other)
    }
 
    mEnvelope = std::make_unique<Envelope>();
-   mEnvelope->CopyFrom(other->mEnvelope.get(), (double)s0/mRate, (double)s1/mRate);
+   mEnvelope->CopyFrom(other->mEnvelope.get(),
+      mOffset + (double)s0/mRate,
+      mOffset + (double)s1/mRate);
 
    MarkChanged();
 
@@ -1546,6 +1548,7 @@ bool WaveClip::ClearAndAddCutLine(double t0, double t1)
    if (clip_t1 > GetEndTime())
       clip_t1 = GetEndTime();
 
+   newClip->SetOffset(this->mOffset);
    if (!newClip->CreateFromCopy(clip_t0, clip_t1, this))
       return false;
    newClip->SetOffset(clip_t0-mOffset);
