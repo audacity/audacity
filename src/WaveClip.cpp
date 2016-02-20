@@ -321,8 +321,8 @@ WaveClip::WaveClip(const WaveClip& orig, DirManager *projDirManager)
    mSpecCache = std::make_unique<SpecCache>();
    mSpecPxCache = std::make_unique<SpecPxCache>(1);
 
-   for (WaveClipList::compatibility_iterator it=orig.mCutLines.GetFirst(); it; it=it->GetNext())
-      mCutLines.Append(new WaveClip(*it->GetData(), projDirManager));
+   for (const auto &clip: orig.mCutLines)
+      mCutLines.push_back(new WaveClip(*clip, projDirManager));
 
    mAppendBufferLen = 0;
    mDirty = 0;
@@ -331,8 +331,9 @@ WaveClip::WaveClip(const WaveClip& orig, DirManager *projDirManager)
 
 WaveClip::~WaveClip()
 {
-   mCutLines.DeleteContents(true);
-   mCutLines.Clear();
+   for (const auto &clip : mCutLines)
+      delete clip;
+   mCutLines.clear();
 }
 
 void WaveClip::SetOffset(double offset)
@@ -1365,7 +1366,7 @@ XMLTagHandler *WaveClip::HandleXMLChild(const wxChar *tag)
       // Nested wave clips are cut lines
       WaveClip *newCutLine = new WaveClip(mSequence->GetDirManager(),
                                 mSequence->GetSampleFormat(), mRate);
-      mCutLines.Append(newCutLine);
+      mCutLines.push_back(newCutLine);
       return newCutLine;
    } else
       return NULL;
@@ -1379,8 +1380,8 @@ void WaveClip::WriteXML(XMLWriter &xmlFile)
    mSequence->WriteXML(xmlFile);
    mEnvelope->WriteXML(xmlFile);
 
-   for (WaveClipList::compatibility_iterator it=mCutLines.GetFirst(); it; it=it->GetNext())
-      it->GetData()->WriteXML(xmlFile);
+   for (const auto &clip: mCutLines)
+      clip->WriteXML(xmlFile);
 
    xmlFile.EndTag(wxT("waveclip"));
 }
@@ -1444,13 +1445,12 @@ bool WaveClip::Paste(double t0, const WaveClip* other)
       OffsetCutLines(t0, pastedClip->GetEndTime() - pastedClip->GetStartTime());
 
       // Paste cut lines contained in pasted clip
-      for (WaveClipList::compatibility_iterator it = pastedClip->mCutLines.GetFirst(); it; it=it->GetNext())
+      for (const auto &cutline: pastedClip->mCutLines)
       {
-         WaveClip* cutline = it->GetData();
          WaveClip* newCutLine = new WaveClip(*cutline,
                                              mSequence->GetDirManager());
          newCutLine->Offset(t0 - mOffset);
-         mCutLines.Append(newCutLine);
+         mCutLines.push_back(newCutLine);
       }
 
       result = true;
@@ -1505,22 +1505,24 @@ bool WaveClip::Clear(double t0, double t1)
       if (clip_t1 > GetEndTime())
          clip_t1 = GetEndTime();
 
-      WaveClipList::compatibility_iterator nextIt;
-
-      for (WaveClipList::compatibility_iterator it = mCutLines.GetFirst(); it; it=nextIt)
+      // May delete as we iterate, so don't use range-for
+      for (auto it = mCutLines.begin(); it != mCutLines.end();)
       {
-         nextIt = it->GetNext();
-         WaveClip* clip = it->GetData();
+         WaveClip* clip = *it;
          double cutlinePosition = mOffset + clip->GetOffset();
          if (cutlinePosition >= t0 && cutlinePosition <= t1)
          {
             // This cutline is within the area, DELETE it
             delete clip;
-            mCutLines.DeleteNode(it);
-         } else
-         if (cutlinePosition >= t1)
+            it = mCutLines.erase(it);
+         }
+         else
          {
-            clip->Offset(clip_t0-clip_t1);
+            if (cutlinePosition >= t1)
+            {
+               clip->Offset(clip_t0 - clip_t1);
+            }
+            ++it;
          }
       }
 
@@ -1556,22 +1558,24 @@ bool WaveClip::ClearAndAddCutLine(double t0, double t1)
    newClip->SetOffset(clip_t0-mOffset);
 
    // Sort out cutlines that belong to the NEW cutline
-   WaveClipList::compatibility_iterator nextIt;
-
-   for (WaveClipList::compatibility_iterator it = mCutLines.GetFirst(); it; it=nextIt)
+   // May delete as we iterate, so don't use range-for
+   for (auto it = mCutLines.begin(); it != mCutLines.end();)
    {
-      nextIt = it->GetNext();
-      WaveClip* clip = it->GetData();
+      WaveClip* clip = *it;
       double cutlinePosition = mOffset + clip->GetOffset();
       if (cutlinePosition >= t0 && cutlinePosition <= t1)
       {
          clip->SetOffset(cutlinePosition - newClip->GetOffset() - mOffset);
-         newClip->mCutLines.Append(clip);
-         mCutLines.DeleteNode(it);
-      } else
-      if (cutlinePosition >= t1)
+         newClip->mCutLines.push_back(clip);
+         it = mCutLines.erase(it);
+      }
+      else
       {
-         clip->Offset(clip_t0-clip_t1);
+         if (cutlinePosition >= t1)
+         {
+            clip->Offset(clip_t0 - clip_t1);
+         }
+         ++it;
       }
    }
 
@@ -1590,9 +1594,10 @@ bool WaveClip::ClearAndAddCutLine(double t0, double t1)
 
       MarkChanged();
 
-      mCutLines.Append(newClip);
+      mCutLines.push_back(newClip);
       return true;
-   } else
+   }
+   else
    {
       delete newClip;
       return false;
@@ -1603,9 +1608,8 @@ bool WaveClip::FindCutLine(double cutLinePosition,
                            double* cutlineStart /* = NULL */,
                            double* cutlineEnd /* = NULL */)
 {
-   for (WaveClipList::compatibility_iterator it = mCutLines.GetFirst(); it; it=it->GetNext())
+   for (const auto &cutline: mCutLines)
    {
-      WaveClip* cutline = it->GetData();
       if (fabs(mOffset + cutline->GetOffset() - cutLinePosition) < 0.0001)
       {
          if (cutlineStart)
@@ -1621,15 +1625,15 @@ bool WaveClip::FindCutLine(double cutLinePosition,
 
 bool WaveClip::ExpandCutLine(double cutLinePosition)
 {
-   for (WaveClipList::compatibility_iterator it = mCutLines.GetFirst(); it; it=it->GetNext())
+   for (auto it = mCutLines.begin(); it != mCutLines.end(); ++it)
    {
-      WaveClip* cutline = it->GetData();
+      const auto &cutline = *it;
       if (fabs(mOffset + cutline->GetOffset() - cutLinePosition) < 0.0001)
       {
          if (!Paste(mOffset+cutline->GetOffset(), cutline))
             return false;
          delete cutline;
-         mCutLines.DeleteNode(it);
+         mCutLines.erase(it);
          return true;
       }
    }
@@ -1639,12 +1643,13 @@ bool WaveClip::ExpandCutLine(double cutLinePosition)
 
 bool WaveClip::RemoveCutLine(double cutLinePosition)
 {
-   for (WaveClipList::compatibility_iterator it = mCutLines.GetFirst(); it; it=it->GetNext())
+   for (auto it = mCutLines.begin(); it != mCutLines.end(); ++it)
    {
-      if (fabs(mOffset + it->GetData()->GetOffset() - cutLinePosition) < 0.0001)
+      const auto &cutline = *it;
+      if (fabs(mOffset + cutline->GetOffset() - cutLinePosition) < 0.0001)
       {
-         delete it->GetData();
-         mCutLines.DeleteNode(it);
+         delete cutline;
+         mCutLines.erase(it);
          return true;
       }
    }
@@ -1654,19 +1659,15 @@ bool WaveClip::RemoveCutLine(double cutLinePosition)
 
 void WaveClip::RemoveAllCutLines()
 {
-   while (!mCutLines.IsEmpty())
-   {
-      WaveClipList::compatibility_iterator head = mCutLines.GetFirst();
-      delete head->GetData();
-      mCutLines.DeleteNode(head);
-   }
+   for (const auto &cutLine : mCutLines)
+      delete cutLine;
+   mCutLines.clear();
 }
 
 void WaveClip::OffsetCutLines(double t0, double len)
 {
-   for (WaveClipList::compatibility_iterator it = mCutLines.GetFirst(); it; it=it->GetNext())
+   for (const auto &cutLine : mCutLines)
    {
-      WaveClip* cutLine = it->GetData();
       if (mOffset + cutLine->GetOffset() >= t0)
          cutLine->Offset(len);
    }
@@ -1675,22 +1676,22 @@ void WaveClip::OffsetCutLines(double t0, double len)
 void WaveClip::Lock()
 {
    GetSequence()->Lock();
-   for (WaveClipList::compatibility_iterator it = mCutLines.GetFirst(); it; it=it->GetNext())
-      it->GetData()->Lock();
+   for (const auto &cutline: mCutLines)
+      cutline->Lock();
 }
 
 void WaveClip::CloseLock()
 {
    GetSequence()->CloseLock();
-   for (WaveClipList::compatibility_iterator it = mCutLines.GetFirst(); it; it=it->GetNext())
-      it->GetData()->CloseLock();
+   for (const auto &cutline: mCutLines)
+      cutline->CloseLock();
 }
 
 void WaveClip::Unlock()
 {
    GetSequence()->Unlock();
-   for (WaveClipList::compatibility_iterator it = mCutLines.GetFirst(); it; it=it->GetNext())
-      it->GetData()->Unlock();
+   for (const auto &cutline: mCutLines)
+      cutline->Unlock();
 }
 
 void WaveClip::SetRate(int rate)
