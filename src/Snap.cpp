@@ -128,11 +128,9 @@ void SnapManager::Reinit()
       }
       else if (track->GetKind() == Track::Wave)
       {
-         WaveTrack *waveTrack = (WaveTrack *)track;
-         WaveClipList::compatibility_iterator it;
-         for (it = waveTrack->GetClipIterator(); it; it = it->GetNext())
+         WaveTrack *waveTrack = static_cast<WaveTrack *>(track);
+         for (const auto &clip: waveTrack->GetClips())
          {
-            WaveClip *clip = it->GetData();
             if (mClipExclusions)
             {
                bool skip = false;

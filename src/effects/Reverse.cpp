@@ -112,9 +112,10 @@ bool EffectReverse::ProcessOneWave(int count, WaveTrack * track, sampleCount sta
    // STEP 1:
    // If a reverse selection begins and/or ends at the inside of a clip
    // perform a split at the start and/or end of the reverse selection
-   WaveClipList::compatibility_iterator node = track->GetClipIterator();
-   while (node) {
-      WaveClip *clip = node->GetData();
+   const auto &clips = track->GetClips();
+   // Beware, the array grows as we loop over it.  Use integer subscripts, not iterators.
+   for (int ii = 0; ii < clips.size(); ++ii) {
+      const auto &clip = clips[ii];
       sampleCount clipStart = clip->GetStartSample();
       sampleCount clipEnd = clip->GetEndSample();
       if (clipStart < start && clipEnd > start && clipEnd <= end) { // the reverse selection begins at the inside of a clip
@@ -131,7 +132,6 @@ bool EffectReverse::ProcessOneWave(int count, WaveTrack * track, sampleCount sta
          splitTime = track->LongSamplesToTime(end);
          track->SplitAt(splitTime);
       }
-      node = node->GetNext();
    }
 
    //STEP 2:
@@ -192,29 +192,26 @@ bool EffectReverse::ProcessOneWave(int count, WaveTrack * track, sampleCount sta
 
             clip = track->RemoveAndReturnClip(clip); // detach the clip from track
             clip->SetOffset(track->LongSamplesToTime(track->TimeToLongSamples(offsetStartTime))); // align time to a sample and set offset
-            revClips.Append(clip);
+            revClips.push_back(clip);
 
          }
       }
       else if (clipStart >= end) { // clip is after the selection region
          clip = track->RemoveAndReturnClip(clip); // simply remove and append to otherClips
-         otherClips.Append(clip);
+         otherClips.push_back(clip);
       }
    }
 
    // STEP 3: Append the clips from
    // revClips and otherClips back to the track
-   size_t revClipsCount = revClips.GetCount();
-   for (i = 0; i < revClipsCount; i++) {
-      WaveClipList::compatibility_iterator node = revClips.Item(revClipsCount - 1 - i); // the last clip of revClips is appended to the track first
-      WaveClip *clip = node->GetData();
-      track->AddClip(clip);
-   }
+   // the last clip of revClips is appended to the track first
+   // PRL:  I don't think that matters, the sequence of storage of clips in the track
+   // is not elsewhere assumed to be by time
+   for (auto it = revClips.rbegin(), end = revClips.rend(); it != end; ++it)
+      track->AddClip(*it);
 
-   for (i = 0; i < otherClips.GetCount(); i++) {
-      WaveClipList::compatibility_iterator node = otherClips.Item(i);
-      track->AddClip(node->GetData());
-   }
+   for (const auto &clip : otherClips)
+      track->AddClip(clip);
 
    return rValue;
 }

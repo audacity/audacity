@@ -178,15 +178,11 @@ void ODComputeSummaryTask::Update()
    {
       if(mWaveTracks[j])
       {
-         WaveClip *clip;
          BlockArray *blocks;
          Sequence *seq;
 
          //gather all the blockfiles that we should process in the wavetrack.
-         WaveClipList::compatibility_iterator node = mWaveTracks[j]->GetClipIterator();
-
-         while(node) {
-            clip = node->GetData();
+         for (const auto &clip : mWaveTracks[j]->GetClips()) {
             seq = clip->GetSequence();
             //This lock may be way too big since the whole file is one sequence.
             //TODO: test for large files and find a way to break it down.
@@ -223,7 +219,6 @@ void ODComputeSummaryTask::Update()
                   tempBlocks.insert(tempBlocks.begin() + insertCursor++, odpcmaFile);
                }
             }
-            node = node->GetNext();
          }
       }
    }

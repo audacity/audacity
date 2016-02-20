@@ -520,13 +520,11 @@ bool EffectEqualization48x::ProcessTail(WaveTrack * t, WaveTrack * output, sampl
    //Find the bits of clips that need replacing
    std::vector<std::pair<double, double> > clipStartEndTimes;
    std::vector<std::pair<double, double> > clipRealStartEndTimes; //the above may be truncated due to a clip being partially selected
-   for (WaveClipList::compatibility_iterator it=t->GetClipIterator(); it; it=it->GetNext())
+   for (const auto &clip: t->GetClips())
    {
-      WaveClip *clip;
       double clipStartT;
       double clipEndT;
 
-      clip = it->GetData();
       clipStartT = clip->GetStartTime();
       clipEndT = clip->GetEndTime();
       if( clipEndT <= startT )

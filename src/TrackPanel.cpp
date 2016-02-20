@@ -3422,12 +3422,8 @@ void TrackPanel::AddClipsToCaptured(Track *t, double t0, double t1)
 {
    if (t->GetKind() == Track::Wave)
    {
-      WaveClipList::compatibility_iterator it =
-         ((WaveTrack *)t)->GetClipIterator();
-      while (it)
+      for(const auto &clip: static_cast<WaveTrack*>(t)->GetClips())
       {
-         WaveClip *clip = it->GetData();
-
          if ( ! clip->AfterClip(t0) && ! clip->BeforeClip(t1) )
          {
             // Avoid getting clips that were already captured
@@ -3442,7 +3438,6 @@ void TrackPanel::AddClipsToCaptured(Track *t, double t0, double t1)
             if (newClip)
                mCapturedClipArray.push_back(TrackClip(t, clip));
          }
-         it = it->GetNext();
       }
    }
    else

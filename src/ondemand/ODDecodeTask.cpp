@@ -136,15 +136,11 @@ void ODDecodeTask::Update()
    {
       if(mWaveTracks[j])
       {
-         WaveClip *clip;
          BlockArray *blocks;
          Sequence *seq;
 
          //gather all the blockfiles that we should process in the wavetrack.
-         WaveClipList::compatibility_iterator node = mWaveTracks[j]->GetClipIterator();
-
-         while(node) {
-            clip = node->GetData();
+         for (const auto &clip : mWaveTracks[j]->GetClips()) {
             seq = clip->GetSequence();
             //TODO:this lock is way to big since the whole file is one sequence.  find a way to break it down.
             seq->LockDeleteUpdateMutex();
@@ -179,7 +175,6 @@ void ODDecodeTask::Update()
             }
 
             seq->UnlockDeleteUpdateMutex();
-            node = node->GetNext();
          }
       }
    }

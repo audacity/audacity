@@ -333,9 +333,9 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
     */
    double LongSamplesToTime(sampleCount pos) const;
 
-   // Get access to the clips in the tracks. This is used by
-   // track artists and also by TrackPanel when sliding...it would
-   // be cleaner if this could be removed, though...
+   // Get access to the clips in the tracks.
+   const WaveClipList &GetClips() const { return mClips; }
+
    WaveClipList::compatibility_iterator GetClipIterator() { return mClips.GetFirst(); }
 
    // Create NEW clip and add it to this track. Returns a pointer

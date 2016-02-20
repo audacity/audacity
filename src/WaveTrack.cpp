@@ -2631,9 +2631,8 @@ void WaveTrack::FillSortedClipArray(WaveClipArray& clips) const
 {
    clips.Empty();
 
-   for (WaveClipList::compatibility_iterator it =
-      const_cast<WaveTrack*>(this)->GetClipIterator(); it; it=it->GetNext())
-      clips.Add(it->GetData());
+   for (const auto &clip: GetClips())
+      clips.Add(clip);
 
    clips.Sort(SortClipArrayCmpFunc);
 }
