@@ -17,7 +17,6 @@
 
 #include <vector>
 #include <wx/defs.h>
-#include <wx/dynarray.h>
 #include <wx/string.h>
 #include "widgets/NumericTextCtrl.h"
 
@@ -32,19 +31,21 @@ class ZoomInfo;
 class TrackClip
 {
 public:
-   TrackClip(Track *t, WaveClip *c)
-   {
-      track = origTrack = t;
-      dstTrack = NULL;
-      clip = c;
-   }
+   TrackClip(Track *t, WaveClip *c);
+
+#ifndef __AUDACITY_OLD_STD__
+   TrackClip(TrackClip&&) = default;
+#endif
+
+   ~TrackClip();
+
    Track *track;
    Track *origTrack;
    Track *dstTrack;
    WaveClip *clip;
 };
 
-WX_DECLARE_USER_EXPORTED_OBJARRAY(TrackClip, TrackClipArray, AUDACITY_DLL_API);
+class TrackClipArray : public std::vector < TrackClip > {};
 
 enum
 {

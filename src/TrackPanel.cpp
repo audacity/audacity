@@ -1819,7 +1819,7 @@ void TrackPanel::HandleSelect(wxMouseEvent & event)
                selectedClip->GetOffset(), selectedClip->GetEndTime());
          }
          //Also, capture this track for dragging until we up-click.
-         mCapturedClipArray.Add(TrackClip(w, selectedClip));
+         mCapturedClipArray.push_back(TrackClip(w, selectedClip));
 
          mMouseCapture = IsSliding;
 
@@ -3304,7 +3304,7 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
       // The captured clip is the focus, but we need to create a list
       // of all clips that have to move, also...
 
-      mCapturedClipArray.Clear();
+      mCapturedClipArray.clear();
 
       // First, if click was in selection, capture selected clips; otherwise
       // just the clicked-on clip
@@ -3319,7 +3319,7 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
          }
       }
       else {
-         mCapturedClipArray.Add(TrackClip(vt, mCapturedClip));
+         mCapturedClipArray.push_back(TrackClip(vt, mCapturedClip));
 
          // Check for stereo partner
          Track *partner = mTracks->GetLink(vt);
@@ -3328,7 +3328,7 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
                FindClipAtTime(static_cast<WaveTrack*>(partner),
                   mViewInfo->PositionToTime(event.m_x, GetLeftOffset()));
             if (clip)
-               mCapturedClipArray.Add(TrackClip(partner, clip));
+               mCapturedClipArray.push_back(TrackClip(partner, clip));
          }
       }
 
@@ -3375,7 +3375,7 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
 
    } else {
       mCapturedClip = NULL;
-      mCapturedClipArray.Clear();
+      mCapturedClipArray.clear();
    }
 
    mSlideUpDownOnly = event.CmdDown() && !multiToolModeActive;
@@ -3440,7 +3440,7 @@ void TrackPanel::AddClipsToCaptured(Track *t, double t0, double t1)
             }
 
             if (newClip)
-               mCapturedClipArray.Add(TrackClip(t, clip));
+               mCapturedClipArray.push_back(TrackClip(t, clip));
          }
          it = it->GetNext();
       }
@@ -3467,7 +3467,7 @@ void TrackPanel::AddClipsToCaptured(Track *t, double t0, double t1)
                return;
          }
 #endif
-         mCapturedClipArray.Add(TrackClip(t, NULL));
+         mCapturedClipArray.push_back(TrackClip(t, NULL));
       }
    }
 }
