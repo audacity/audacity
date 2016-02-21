@@ -216,10 +216,6 @@ OBJCXXLINK = $(LIBTOOL) $(AM_V_lt) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(OBJCXXLD) $(AM_OBJCXXFLAGS) $(OBJCXXFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
 AM_V_OBJCXXLD = $(am__v_OBJCXXLD_@AM_V@)
-# Overwrite C++ variables with values for Objective-C, because in the end there
-# is only one linker command that should be configured correctly.
-@MAC_TRUE@CXXLINK = $(OBJCXXLINK)
-@MAC_TRUE@AM_V_CXXLD = $(AM_V_OBJCXXLD)
 am__v_OBJCXXLD_ = $(am__v_OBJCXXLD_@AM_DEFAULT_V@)
 am__v_OBJCXXLD_0 = @echo "  OBJCXXLD" $@;
 am__v_OBJCXXLD_1 = 
@@ -524,8 +520,8 @@ win/$(DEPDIR)/$(am__dirstamp):
 win/libFileDialog_la-FileDialogPrivate.lo: win/$(am__dirstamp) \
 	win/$(DEPDIR)/$(am__dirstamp)
 
-libFileDialog.la: $(libFileDialog_la_OBJECTS) $(libFileDialog_la_DEPENDENCIES) $(EXTRA_libFileDialog_la_DEPENDENCIES)
-	$(AM_V_CXXLD)$(CXXLINK) -rpath $(libdir) $(libFileDialog_la_OBJECTS) $(libFileDialog_la_LIBADD) $(LIBS)
+libFileDialog.la: $(libFileDialog_la_OBJECTS) $(libFileDialog_la_DEPENDENCIES) $(EXTRA_libFileDialog_la_DEPENDENCIES) 
+	$(AM_V_OBJCXXLD)$(OBJCXXLINK) -rpath $(libdir) $(libFileDialog_la_OBJECTS) $(libFileDialog_la_LIBADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
