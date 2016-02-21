@@ -1406,10 +1406,14 @@ bool AudacityApp::OnInit()
       fileMenu->Append(wxID_ABOUT, _("&About Audacity..."));
       fileMenu->Append(wxID_PREFERENCES, wxString(_("&Preferences...")) + wxT("\tCtrl+,"));
 
-      wxMenuBar *menuBar = new wxMenuBar();
-      menuBar->Append(fileMenu, _("&File"));
+      {
+         auto menuBar = std::make_unique<wxMenuBar>();
+         menuBar->Append(fileMenu, _("&File"));
 
-      wxMenuBar::MacSetCommonMenuBar(menuBar);
+         // PRL:  Are we sure wxWindows will not leak this menuBar?
+         // The online documentation is not explicit.
+         wxMenuBar::MacSetCommonMenuBar(menuBar.release());
+      }
 
       mRecentFiles->UseMenu(recentMenu);
       mRecentFiles->AddFilesToMenu(recentMenu);

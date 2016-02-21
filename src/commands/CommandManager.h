@@ -40,7 +40,7 @@ struct MenuBarListEntry
    {}
 
    wxString name;
-   wxMenuBar *menubar;
+   wxMenuBar *menubar; // This structure does not assume memory ownership!
 };
 
 struct SubMenuListEntry
@@ -109,7 +109,7 @@ class AUDACITY_DLL_API CommandManager: public XMLTagHandler
    // Creating menus and adding commands
    //
 
-   wxMenuBar *AddMenuBar(const wxString & sMenu);
+   std::unique_ptr<wxMenuBar> AddMenuBar(const wxString & sMenu);
 
    void BeginMenu(const wxString & tName);
    void EndMenu();

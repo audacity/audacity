@@ -433,15 +433,17 @@ void CommandManager::PurgeData()
 /// Makes a NEW menubar for placement on the top of a project
 /// Names it according to the passed-in string argument.
 ///
-/// If the menubar already exists, simply returns it.
-wxMenuBar *CommandManager::AddMenuBar(const wxString & sMenu)
+/// If the menubar already exists, that's unexpected.
+std::unique_ptr<wxMenuBar> CommandManager::AddMenuBar(const wxString & sMenu)
 {
    wxMenuBar *menuBar = GetMenuBar(sMenu);
-   if (menuBar)
-      return menuBar;
+   if (menuBar) {
+      wxASSERT(false);
+      return {};
+   }
 
-   const auto result = new wxMenuBar{};
-   mMenuBarList.emplace_back(sMenu, result);
+   auto result = std::make_unique<wxMenuBar>();
+   mMenuBarList.emplace_back(sMenu, result.get());
 
    return result;
 }
@@ -491,7 +493,7 @@ void CommandManager::BeginMenu(const wxString & tName)
 ///
 void CommandManager::EndMenu()
 {
-   // Add the menu to the menubard after all menu items have been
+   // Add the menu to the menubar after all menu items have been
    // added to the menu to allow OSX to rearrange special menu
    // items like Preferences, About, and Quit.
    CurrentMenuBar()->Append(mCurrentMenu, mCurrentMenuName);

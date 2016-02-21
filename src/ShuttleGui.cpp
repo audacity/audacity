@@ -672,20 +672,20 @@ ShuttleGuiBase & ShuttleGuiBase::Prop( int iProp )
 
 wxMenuBar * ShuttleGuiBase::AddMenuBar( )
 {
-   mpMenuBar = new wxMenuBar( );
+   auto menuBar = std::make_unique<wxMenuBar>();
+   mpMenuBar = menuBar.get();
 
    wxFrame * pFrame = (wxFrame*)mpParent;
    pFrame->SetThemeEnabled( true );
    mpMenuBar->SetThemeEnabled( true );
-   pFrame->SetMenuBar(mpMenuBar);
+   pFrame->SetMenuBar(menuBar.release());
 
    return mpMenuBar;
 }
 
 wxMenu * ShuttleGuiBase::AddMenu( const wxString & Title )
 {
-   mpMenu = new wxMenu;
-   mpMenuBar->Append( mpMenu, Title );
+   mpMenuBar->Append( (mpMenu = safenew wxMenu), Title );
    return mpMenu;
 }
 
