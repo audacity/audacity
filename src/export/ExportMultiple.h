@@ -74,7 +74,7 @@ private:
     * @param tags Metadata to include in the file (if possible).
     */
    int DoExport(int channels,
-                 wxFileName name,
+                 const wxFileName &name,
                  bool selectedOnly,
                  double t0,
                  double t1,

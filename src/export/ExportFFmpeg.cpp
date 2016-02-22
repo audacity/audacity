@@ -98,7 +98,7 @@ public:
    ~ExportFFmpeg() override;
 
    /// Callback, called from GetFilename
-   bool CheckFileName(wxFileName &filename, int format = 0);
+   bool CheckFileName(wxFileName &filename, int format = 0) override;
 
    /// Format intialization
    bool Init(const char *shortname, AudacityProject *project, const Tags *metadata, int subformat);
