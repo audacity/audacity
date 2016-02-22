@@ -453,7 +453,7 @@ wxArrayString VSTEffectsModule::FindPlugins(PluginManagerInterface & pm)
 bool VSTEffectsModule::RegisterPlugin(PluginManagerInterface & pm, const wxString & path)
 {
    // TODO:  Fix this for external usage
-   wxString cmdpath = PlatformCompatibility::GetExecutablePath();
+   const wxString &cmdpath = PlatformCompatibility::GetExecutablePath();
 
    wxString effectIDs = wxT("0;");
    wxStringTokenizer effectTzr(effectIDs, wxT(";"));
@@ -2198,8 +2198,7 @@ bool VSTEffect::Load()
          }
          if (mName.length() == 0)
          {
-            wxFileName f(realPath);
-            mName = f.GetName();
+            mName = wxFileName{realPath}.GetName();
          }
 
          if (mVstVersion >= 2)
@@ -3481,10 +3480,11 @@ bool VSTEffect::LoadXML(const wxFileName & fn)
 void VSTEffect::SaveFXB(const wxFileName & fn)
 {
    // Create/Open the file
-   wxFFile f(fn.GetFullPath(), wxT("wb"));
+   const wxString fullPath{fn.GetFullPath()};
+   wxFFile f(fullPath, wxT("wb"));
    if (!f.IsOpened())
    {
-      wxMessageBox(wxString::Format(_("Could not open file: \"%s\""), fn.GetFullPath().c_str()),
+      wxMessageBox(wxString::Format(_("Could not open file: \"%s\""), fullPath.c_str()),
                    _("Error Saving VST Presets"),
                    wxOK | wxCENTRE,
                    mParent);
@@ -3551,7 +3551,7 @@ void VSTEffect::SaveFXB(const wxFileName & fn)
 
    if (f.Error())
    {
-      wxMessageBox(wxString::Format(_("Error writing to file: \"%s\""), fn.GetFullPath().c_str()),
+      wxMessageBox(wxString::Format(_("Error writing to file: \"%s\""), fullPath.c_str()),
                    _("Error Saving VST Presets"),
                    wxOK | wxCENTRE,
                    mParent);
@@ -3565,10 +3565,11 @@ void VSTEffect::SaveFXB(const wxFileName & fn)
 void VSTEffect::SaveFXP(const wxFileName & fn)
 {
    // Create/Open the file
-   wxFFile f(fn.GetFullPath(), wxT("wb"));
+   const wxString fullPath{ fn.GetFullPath() };
+   wxFFile f(fullPath, wxT("wb"));
    if (!f.IsOpened())
    {
-      wxMessageBox(wxString::Format(_("Could not open file: \"%s\""), fn.GetFullPath().c_str()),
+      wxMessageBox(wxString::Format(_("Could not open file: \"%s\""), fullPath.c_str()),
                    _("Error Saving VST Presets"),
                    wxOK | wxCENTRE,
                    mParent);
@@ -3583,7 +3584,7 @@ void VSTEffect::SaveFXP(const wxFileName & fn)
    f.Write(buf.GetData(), buf.GetDataLen());
    if (f.Error())
    {
-      wxMessageBox(wxString::Format(_("Error writing to file: \"%s\""), fn.GetFullPath().c_str()),
+      wxMessageBox(wxString::Format(_("Error writing to file: \"%s\""), fullPath.c_str()),
                    _("Error Saving VST Presets"),
                    wxOK | wxCENTRE,
                    mParent);

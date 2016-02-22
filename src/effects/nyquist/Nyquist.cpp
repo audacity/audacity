@@ -152,8 +152,8 @@ NyquistEffect::NyquistEffect(const wxString &fName)
       return;
    }
 
-   mName = wxFileName(fName).GetName();
-   mFileName = wxFileName(fName);
+   mFileName = fName;
+   mName = mFileName.GetName();
    mFileModified = mFileName.GetModificationTime();
    ParseFile();
 }

@@ -206,8 +206,8 @@ bool LadspaEffectsModule::RegisterPlugin(PluginManagerInterface & pm, const wxSt
 {
    // Since we now have builtin VST support, ignore the VST bridge as it
    // causes duplicate menu entries to appear.
-   wxFileName f(path);
-   if (f.GetName().CmpNoCase(wxT("vst-bridge")) == 0) {
+   wxFileName ff(path);
+   if (ff.GetName().CmpNoCase(wxT("vst-bridge")) == 0) {
       return false;
    }
 
@@ -216,9 +216,9 @@ bool LadspaEffectsModule::RegisterPlugin(PluginManagerInterface & pm, const wxSt
    // directory to be the plug-in's directory.
    wxString envpath;
    bool hadpath = wxGetEnv(wxT("PATH"), &envpath);
-   wxSetEnv(wxT("PATH"), f.GetPath() + wxFILE_SEP_PATH + envpath);
-   wxString saveOldCWD = f.GetCwd();
-   f.SetCwd();
+   wxSetEnv(wxT("PATH"), ff.GetPath() + wxFILE_SEP_PATH + envpath);
+   wxString saveOldCWD = ff.GetCwd();
+   ff.SetCwd();
    
    int index = 0;
    LADSPA_Descriptor_Function mainFn = NULL;
@@ -1572,12 +1572,12 @@ bool LadspaEffect::Load()
       return true;
    }
 
-   wxFileName f = mPath;
+   wxFileName ff = mPath;
    wxString envpath;
    bool hadpath = wxGetEnv(wxT("PATH"), &envpath);
-   wxSetEnv(wxT("PATH"), f.GetPath() + wxFILE_SEP_PATH + envpath);
-   wxString saveOldCWD = f.GetCwd();
-   f.SetCwd();
+   wxSetEnv(wxT("PATH"), ff.GetPath() + wxFILE_SEP_PATH + envpath);
+   wxString saveOldCWD = ff.GetCwd();
+   ff.SetCwd();
 
    LADSPA_Descriptor_Function mainFn = NULL;
 
