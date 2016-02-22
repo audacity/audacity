@@ -2349,7 +2349,7 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
 
 void AudacityProject::OnOpenAudioFile(wxCommandEvent & event)
 {
-   wxString cmd = event.GetString();
+   const wxString &cmd = event.GetString();
 
    if (!cmd.IsEmpty()) {
       OpenFile(cmd);
@@ -2466,7 +2466,7 @@ wxArrayString AudacityProject::ShowOpenDialog(const wxString &extraformat, const
 // static method, can be called outside of a project
 bool AudacityProject::IsAlreadyOpen(const wxString & projPathName)
 {
-   wxFileName newProjPathName(projPathName);
+   const wxFileName newProjPathName(projPathName);
    size_t numProjects = gAudacityProjects.Count();
    for (size_t i = 0; i < numProjects; i++)
    {
@@ -2504,7 +2504,7 @@ void AudacityProject::OpenFiles(AudacityProject *proj)
    ODManager::Pause();
 
    for (size_t ff = 0; ff < selectedFiles.GetCount(); ff++) {
-      wxString fileName = selectedFiles[ff];
+      const wxString &fileName = selectedFiles[ff];
 
       // Make sure it isn't already open.
       if (AudacityProject::IsAlreadyOpen(fileName))
@@ -2569,13 +2569,11 @@ bool AudacityProject::WarnOfLegacyFile( )
 //    See comment in AudacityApp::MRUOpen().
 void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
 {
-   wxString fileName(fileNameArg);
-
    // On Win32, we may be given a short (DOS-compatible) file name on rare
    // occassions (e.g. stuff like "C:\PROGRA~1\AUDACI~1\PROJEC~1.AUP"). We
    // convert these to long file name first.
-   fileName = PlatformCompatibility::ConvertSlashInFileName(
-      PlatformCompatibility::GetLongFileName(fileName));
+   wxString fileName = PlatformCompatibility::ConvertSlashInFileName(
+      PlatformCompatibility::GetLongFileName(fileNameArg));
 
    // Make sure it isn't already open.
    // Vaughan, 2011-03-25: This was done previously in AudacityProject::OpenFiles()
@@ -2639,7 +2637,7 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
       if( !WarnOfLegacyFile() )
          return;
       // Convert to the NEW format.
-      bool success = ConvertLegacyProjectFile(wxFileName(fileName));
+      bool success = ConvertLegacyProjectFile(wxFileName{ fileName });
       if (!success) {
          wxMessageBox(_("Audacity was unable to convert an Audacity 1.0 project to the new project format."),
                       _("Error Opening Project"),

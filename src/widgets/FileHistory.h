@@ -37,7 +37,7 @@ class AUDACITY_DLL_API FileHistory
    void AddFilesToMenu(wxMenu *menu);
 
    size_t GetCount();
-   wxString GetHistoryFile(size_t i) const;
+   const wxString &GetHistoryFile(size_t i) const;
 
  private:
    size_t mMaxFiles;
