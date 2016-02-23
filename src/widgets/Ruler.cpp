@@ -204,7 +204,7 @@ void Ruler::SetLog(bool log)
    }
 }
 
-void Ruler::SetUnits(wxString units)
+void Ruler::SetUnits(const wxString &units)
 {
    // Specify the name of the units (like "dB") if you
    // want numbers like "1.6" formatted as "1.6 dB".

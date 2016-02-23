@@ -84,8 +84,9 @@ protected:
 
     // Return the string which would result from inserting the given character
     // at the specified position.
-    wxString GetValueAfterInsertingChar(wxString val, int pos, wxChar ch) const
+    wxString GetValueAfterInsertingChar(const wxString &valArg, int pos, wxChar ch) const
     {
+        wxString val(valArg);
         val.insert(pos, ch);
         return val;
     }
@@ -236,7 +237,7 @@ protected:
     {
         LongestValueType value;
         return BaseValidator::FromString(s, &value) ? NormalizeValue(value)
-                                                    : wxString();
+                                                    : wxEmptyString;
     }
 
 private:
