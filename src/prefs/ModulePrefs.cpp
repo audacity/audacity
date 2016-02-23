@@ -138,7 +138,7 @@ bool ModulePrefs::Apply()
 
 
 // static function that tells us about a module.
-int ModulePrefs::GetModuleStatus( wxString fname ){
+int ModulePrefs::GetModuleStatus(const wxString &fname){
    // Default status is NEW module, and we will ask once.
    int iStatus = kModuleNew;
 
@@ -152,7 +152,7 @@ int ModulePrefs::GetModuleStatus( wxString fname ){
    return iStatus;
 }
 
-void ModulePrefs::SetModuleStatus( wxString fname, int iStatus ){
+void ModulePrefs::SetModuleStatus(const wxString &fname, int iStatus){
    wxString ShortName = wxFileName( fname ).GetName();
    wxString PrefName = wxString( wxT("/Module/") ) + ShortName.Lower();
    gPrefs->Write( PrefName, iStatus );
