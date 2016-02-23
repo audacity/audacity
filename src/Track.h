@@ -322,10 +322,10 @@ class AUDACITY_DLL_API SyncLockedTracksIterator : public TrackListIterator
    virtual ~SyncLockedTracksIterator() {}
 
    // Iterate functions
-   Track *First(Track *member);
-   Track *Next(bool skiplinked = false);
-   Track *Prev(bool skiplinked = false);
-   Track *Last(bool skiplinked = false);
+   Track *StartWith(Track *member) override;
+   Track *Next(bool skiplinked = false) override;
+   Track *Prev(bool skiplinked = false) override;
+   Track *Last(bool skiplinked = false) override;
 
  private:
    bool mInLabelSection;

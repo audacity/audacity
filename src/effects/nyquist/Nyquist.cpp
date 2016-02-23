@@ -616,7 +616,7 @@ bool NyquistEffect::Process()
 
          // Check whether we're in the same group as the last selected track
          SyncLockedTracksIterator gIter(mOutputTracks);
-         Track *gt = gIter.First(mCurTrack[0]);
+         Track *gt = gIter.StartWith(mCurTrack[0]);
          mFirstInGroup = !gtLast || (gtLast != gt);
          gtLast = gt;
 
@@ -1228,7 +1228,7 @@ bool NyquistEffect::ProcessOne()
       if (mFirstInGroup) {
          SyncLockedTracksIterator git(mOutputTracks);
          Track *t;
-         for (t = git.First(mCurTrack[i]); t; t = git.Next())
+         for (t = git.StartWith(mCurTrack[i]); t; t = git.Next())
          {
             if (!t->GetSelected() && t->IsSyncLockSelected()) {
                t->SyncLockAdjust(mT1, mT0 + out->GetEndTime());

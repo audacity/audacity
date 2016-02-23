@@ -942,7 +942,7 @@ void TrackPanel::SelectTrackLength(Track *t)
 {
    AudacityProject *p = GetActiveProject();
    SyncLockedTracksIterator it(mTracks);
-   Track *t1 = it.First(t);
+   Track *t1 = it.StartWith(t);
    double minOffset = t->GetOffset();
    double maxEnd = t->GetEndTime();
 
@@ -3968,7 +3968,7 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
             if (mCapturedClipArray[i].clip) {
                // Iterate over sync-lock group tracks.
                SyncLockedTracksIterator git(mTracks);
-               for ( Track *t = git.First(mCapturedClipArray[i].track);
+               for (Track *t = git.StartWith(mCapturedClipArray[i].track);
                      t; t = git.Next() )
                {
                   AddClipsToCaptured(t,
@@ -3984,7 +3984,7 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
             if (nt->GetKind() == Track::Note) {
                // Iterate over sync-lock group tracks.
                SyncLockedTracksIterator git(mTracks);
-               for (Track *t = git.First(nt); t; t = git.Next())
+               for (Track *t = git.StartWith(nt); t; t = git.Next())
                {
                   AddClipsToCaptured(t, nt->GetStartTime(), nt->GetEndTime());
                   if (t->GetKind() != Track::Wave)

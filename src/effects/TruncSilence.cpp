@@ -279,7 +279,7 @@ bool EffectTruncSilence::ProcessIndependently()
          if (syncLock) {
             Track *const link = track->GetLink();
             SyncLockedTracksIterator syncIter(mTracks);
-            for (Track *track2 = syncIter.First(track); track2; track2 = syncIter.Next()) {
+            for (Track *track2 = syncIter.StartWith(track); track2; track2 = syncIter.Next()) {
                if (track2->GetKind() == Track::Wave &&
                   !(track2 == track || track2 == link) &&
                   track2->GetSelected()) {
@@ -320,7 +320,7 @@ bool EffectTruncSilence::ProcessIndependently()
          Track *groupFirst, *groupLast;
          if (syncLock) {
             SyncLockedTracksIterator syncIter(mOutputTracks);
-            groupFirst = syncIter.First(track);
+            groupFirst = syncIter.StartWith(track);
             groupLast = syncIter.Last();
          }
          else {
