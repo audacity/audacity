@@ -242,35 +242,6 @@ wxWindow *ExportPlugin::OptionsCreate(wxWindow *parent, int WXUNUSED(format))
    return p;
 }
 
-int ExportPlugin::Export(AudacityProject *project,
-                          int channels,
-                          wxString fName,
-                          bool selectedOnly,
-                          double t0,
-                          double t1,
-                          MixerSpec *mixerSpec,
-                          Tags * WXUNUSED(metadata),
-                          int subformat)
-{
-   if (project == NULL) {
-      project = GetActiveProject();
-   }
-
-  return DoExport(project, channels, fName, selectedOnly, t0, t1, mixerSpec, subformat);
-}
-
-int ExportPlugin::DoExport(AudacityProject * WXUNUSED(project),
-                            int WXUNUSED(channels),
-                            wxString WXUNUSED(fName),
-                            bool WXUNUSED(selectedOnly),
-                            double WXUNUSED(t0),
-                            double WXUNUSED(t1),
-                            MixerSpec * WXUNUSED(mixerSpec),
-                            int WXUNUSED(subformat))
-{
-   return false;
-}
-
 //Create a mixer by computing the time warp factor
 Mixer* ExportPlugin::CreateMixer(int numInputTracks, WaveTrack **inputTracks,
          TimeTrack *timeTrack,
@@ -952,7 +923,7 @@ ExportMixerPanel::~ExportMixerPanel()
 }
 
 //set the font on memDC such that text can fit in specified width and height
-void ExportMixerPanel::SetFont( wxMemoryDC &memDC, wxString text, int width,
+void ExportMixerPanel::SetFont(wxMemoryDC &memDC, const wxString &text, int width,
       int height )
 {
    int l = 0, u = 13, m, w, h;

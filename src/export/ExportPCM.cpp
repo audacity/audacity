@@ -315,13 +315,13 @@ public:
    wxWindow *OptionsCreate(wxWindow *parent, int format);
    int Export(AudacityProject *project,
                int channels,
-               wxString fName,
+               const wxString &fName,
                bool selectedOnly,
                double t0,
                double t1,
                MixerSpec *mixerSpec = NULL,
                Tags *metadata = NULL,
-               int subformat = 0);
+               int subformat = 0) override;
    // optional
    wxString GetExtension(int index);
    virtual bool CheckFileName(wxFileName &filename, int format);
@@ -390,7 +390,7 @@ void ExportPCM::Destroy()
  */
 int ExportPCM::Export(AudacityProject *project,
                        int numChannels,
-                       wxString fName,
+                       const wxString &fName,
                        bool selectionOnly,
                        double t0,
                        double t1,
