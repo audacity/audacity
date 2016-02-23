@@ -1141,6 +1141,13 @@ bool Exporter::SetAutoExportOptions(AudacityProject *project) {
 		break;
 	}
 
+	// Let user edit MetaData
+	if (mPlugins[mFormat]->GetCanMetaData(mSubFormat)) {
+		if (!(mProject->GetTags()->ShowEditDialog(mProject, _("Edit Metadata Tags"), mProject->GetShowId3Dialog()))) {
+			return false;
+		}
+	}
+
 	return true;
 }
 
