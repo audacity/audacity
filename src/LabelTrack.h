@@ -221,8 +221,11 @@ class AUDACITY_DLL_API LabelTrack final : public Track
 
    // This pastes labels without shifting existing ones
    bool PasteOver(double t, Track *src);
-   bool SplitCut(double b, double e, Track **dest);
-   bool SplitDelete(double b, double e);
+
+   // PRL:  These functions were not used because they were not overrides!  Was that right?
+   //bool SplitCut(double b, double e, Track **dest) /* not override */;
+   //bool SplitDelete(double b, double e) /* not override */;
+
    void ShiftLabelsOnInsert(double length, double pt);
    void ChangeLabelsOnReverse(double b, double e);
    void ScaleLabels(double b, double e, double change);

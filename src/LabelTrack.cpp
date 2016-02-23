@@ -184,6 +184,7 @@ bool LabelTrack::Clear(double b, double e)
    return true;
 }
 
+#if 0
 //used when we want to use clear only on the labels
 bool LabelTrack::SplitDelete(double b, double e)
 {
@@ -204,6 +205,8 @@ bool LabelTrack::SplitDelete(double b, double e)
 
    return true;
 }
+#endif
+
 void LabelTrack::ShiftLabelsOnInsert(double length, double pt)
 {
    for (unsigned int i=0;i<mLabels.GetCount();i++) {
@@ -2405,6 +2408,7 @@ bool LabelTrack::Cut(double t0, double t1, Track **dest)
    return true;
 }
 
+#if 0
 bool LabelTrack::SplitCut(double t0, double t1, Track ** dest)
 {
    // SplitCut() == Copy() + SplitDelete()
@@ -2416,6 +2420,7 @@ bool LabelTrack::SplitCut(double t0, double t1, Track ** dest)
 
    return true;
 }
+#endif
 
 bool LabelTrack::Copy(double t0, double t1, Track ** dest)
 {
