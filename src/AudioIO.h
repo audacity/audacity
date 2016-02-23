@@ -388,7 +388,7 @@ class AUDACITY_DLL_API AudioIO {
    /** \brief Ensure selected device names are valid
     *
     */
-   static bool ValidateDeviceNames(wxString play, wxString rec);
+   static bool ValidateDeviceNames(const wxString &play, const wxString &rec);
 
    /** \brief Function to automatically set an acceptable volume
     *
@@ -475,7 +475,7 @@ private:
     * and would be neater done once. If the device isn't found, return the
     * default device index.
     */
-   static int getRecordDevIndex(wxString devName = wxT(""));
+   static int getRecordDevIndex(const wxString &devName = wxEmptyString);
    /** \brief get the index of the device selected in the preferences.
     *
     * If the device isn't found, returns -1
@@ -491,7 +491,7 @@ private:
     * and would be neater done once. If the device isn't found, return the
     * default device index.
     */
-   static int getPlayDevIndex(wxString devName = wxT(""));
+   static int getPlayDevIndex(const wxString &devName = wxEmptyString);
 
    /** \brief Array of audio sample rates to try to use
     *

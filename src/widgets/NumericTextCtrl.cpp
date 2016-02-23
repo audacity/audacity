@@ -1163,7 +1163,7 @@ IMPLEMENT_CLASS(NumericTextCtrl, wxControl)
 NumericTextCtrl::NumericTextCtrl(NumericConverter::Type type,
                            wxWindow *parent,
                            wxWindowID id,
-                           wxString formatName,
+                           const wxString &formatName,
                            double timeValue,
                            double sampleRate,
                            const wxPoint &pos,

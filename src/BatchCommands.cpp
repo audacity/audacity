@@ -411,7 +411,7 @@ bool BatchCommands::IsMono()
    return mono;
 }
 
-wxString BatchCommands::BuildCleanFileName(wxString fileName, wxString extension)
+wxString BatchCommands::BuildCleanFileName(const wxString &fileName, const wxString &extension)
 {
    wxFileName newFileName(fileName);
    wxString justName = newFileName.GetName();

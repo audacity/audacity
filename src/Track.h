@@ -153,9 +153,9 @@ class AUDACITY_DLL_API Track: public XMLTagHandler
    virtual void Merge(const Track &orig);
 
    wxString GetName() const { return mName; }
-   void SetName( wxString n ) { mName = n; }
+   void SetName( const wxString &n ) { mName = n; }
    wxString GetDefaultName() const { return mDefaultName; }
-   void SetDefaultName( wxString n ) { mDefaultName = n; }
+   void SetDefaultName( const wxString &n ) { mDefaultName = n; }
 
    bool GetSelected() const { return mSelected; }
    bool GetMute    () const { return mMute;     }

@@ -78,7 +78,7 @@ class LWSlider
 
    // MM: Construct customizable slider
    LWSlider(wxWindow * parent,
-            wxString name,
+            const wxString &name,
             const wxPoint &pos,
             const wxSize &size,
             float minValue,
@@ -92,7 +92,7 @@ class LWSlider
 
    // Construct predefined slider
    LWSlider(wxWindow * parent,
-            wxString name,
+            const wxString &name,
             const wxPoint &pos,
             const wxSize &size,
             int style,
@@ -101,7 +101,7 @@ class LWSlider
             int orientation = wxHORIZONTAL); // wxHORIZONTAL or wxVERTICAL. wxVERTICAL is currently only for DB_SLIDER.
 
    void Init(wxWindow * parent,
-             wxString name,
+             const wxString &name,
              const wxPoint &pos,
              const wxSize &size,
              float minValue,
@@ -255,7 +255,7 @@ class ASlider :public wxPanel
  public:
    ASlider( wxWindow * parent,
             wxWindowID id,
-            wxString name,
+            const wxString &name,
             const wxPoint & pos,
             const wxSize & size,
             int style = FRAC_SLIDER,

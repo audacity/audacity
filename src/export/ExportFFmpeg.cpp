@@ -140,13 +140,13 @@ public:
    ///\return true if export succeded
    int Export(AudacityProject *project,
       int channels,
-      wxString fName,
+      const wxString &fName,
       bool selectedOnly,
       double t0,
       double t1,
       MixerSpec *mixerSpec = NULL,
       Tags *metadata = NULL,
-      int subformat = 0);
+      int subformat = 0) override;
 
 private:
 
@@ -791,7 +791,7 @@ bool ExportFFmpeg::EncodeAudioFrame(int16_t *pFrame, int frameSize)
 
 
 int ExportFFmpeg::Export(AudacityProject *project,
-                       int channels, wxString fName,
+                       int channels, const wxString &fName,
                        bool selectionOnly, double t0, double t1, MixerSpec *mixerSpec, Tags *metadata, int subformat)
 {
    if (!CheckFFmpegPresence())

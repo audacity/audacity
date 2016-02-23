@@ -724,7 +724,7 @@ Alg_seq_ptr NoteTrack::MakeExportableSeq()
 }
 
 
-bool NoteTrack::ExportMIDI(wxString f)
+bool NoteTrack::ExportMIDI(const wxString &f)
 {
    Alg_seq_ptr seq = MakeExportableSeq();
    bool rslt = seq->smf_write(f.mb_str());
@@ -732,7 +732,7 @@ bool NoteTrack::ExportMIDI(wxString f)
    return rslt;
 }
 
-bool NoteTrack::ExportAllegro(wxString f)
+bool NoteTrack::ExportAllegro(const wxString &f)
 {
    double offset = GetOffset();
    bool in_seconds;

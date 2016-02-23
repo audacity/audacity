@@ -708,7 +708,7 @@ bool Sequence::InsertSilence(sampleCount s0, sampleCount len)
    return bResult && ConsistencyCheck(wxT("InsertSilence"));
 }
 
-bool Sequence::AppendAlias(wxString fullPath,
+bool Sequence::AppendAlias(const wxString &fullPath,
                            sampleCount start,
                            sampleCount len, int channel, bool useOD)
 {
@@ -728,7 +728,7 @@ bool Sequence::AppendAlias(wxString fullPath,
    return true;
 }
 
-bool Sequence::AppendCoded(wxString fName, sampleCount start,
+bool Sequence::AppendCoded(const wxString &fName, sampleCount start,
                             sampleCount len, int channel, int decodeType)
 {
    // Quick check to make sure that it doesn't overflow

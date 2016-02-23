@@ -561,12 +561,12 @@ wxString DirManager::GetDataFilesDir() const
    return projFull != wxT("")? projFull: mytemp;
 }
 
-void DirManager::SetLocalTempDir(wxString path)
+void DirManager::SetLocalTempDir(const wxString &path)
 {
    mytemp = path;
 }
 
-wxFileName DirManager::MakeBlockFilePath(wxString value){
+wxFileName DirManager::MakeBlockFilePath(const wxString &value) {
 
    wxFileName dir;
    dir.AssignDir(GetDataFilesDir());
@@ -596,7 +596,7 @@ wxFileName DirManager::MakeBlockFilePath(wxString value){
 }
 
 bool DirManager::AssignFile(wxFileName &fileName,
-                            wxString value,
+                            const wxString &value,
                             bool diskcheck)
 {
    wxFileName dir=MakeBlockFilePath(value);
@@ -678,7 +678,7 @@ void DirManager::BalanceFileAdd(int midkey)
    }
 }
 
-void DirManager::BalanceInfoAdd(wxString file)
+void DirManager::BalanceInfoAdd(const wxString &file)
 {
    const wxChar *s=file.c_str();
    if(s[0]==wxT('e')){
@@ -698,7 +698,7 @@ void DirManager::BalanceInfoAdd(wxString file)
 // Note that this will try to clean up directories out from under even
 // locked blockfiles; this is actually harmless as the rmdir will fail
 // on non-empty directories.
-void DirManager::BalanceInfoDel(wxString file)
+void DirManager::BalanceInfoDel(const wxString &file)
 {
    const wxChar *s=file.c_str();
    if(s[0]==wxT('e')){
@@ -887,7 +887,7 @@ BlockFile *DirManager::NewSimpleBlockFile(
 }
 
 BlockFile *DirManager::NewAliasBlockFile(
-                                 wxString aliasedFile, sampleCount aliasStart,
+                                 const wxString &aliasedFile, sampleCount aliasStart,
                                  sampleCount aliasLen, int aliasChannel)
 {
    wxFileName fileName = MakeBlockFileName();
@@ -903,7 +903,7 @@ BlockFile *DirManager::NewAliasBlockFile(
 }
 
 BlockFile *DirManager::NewODAliasBlockFile(
-                                 wxString aliasedFile, sampleCount aliasStart,
+                                 const wxString &aliasedFile, sampleCount aliasStart,
                                  sampleCount aliasLen, int aliasChannel)
 {
    wxFileName fileName = MakeBlockFileName();
@@ -919,7 +919,7 @@ BlockFile *DirManager::NewODAliasBlockFile(
 }
 
 BlockFile *DirManager::NewODDecodeBlockFile(
-                                 wxString aliasedFile, sampleCount aliasStart,
+                                 const wxString &aliasedFile, sampleCount aliasStart,
                                  sampleCount aliasLen, int aliasChannel, int decodeType)
 {
    wxFileName fileName = MakeBlockFileName();
@@ -943,7 +943,7 @@ bool DirManager::ContainsBlockFile(BlockFile *b) const
    return it != mBlockFileHash.end() && it->second == b;
 }
 
-bool DirManager::ContainsBlockFile(wxString filepath) const
+bool DirManager::ContainsBlockFile(const wxString &filepath) const
 {
    // check what the hash returns in case the blockfile is from a different project
    BlockHash::const_iterator it = mBlockFileHash.find(filepath);

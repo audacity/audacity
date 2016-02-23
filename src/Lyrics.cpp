@@ -143,7 +143,7 @@ void Lyrics::AddLabels(const LabelTrack *pLT)
    mHighlightTextCtrl->AppendText(highlightText);
 }
 
-void Lyrics::Add(double t, wxString syllable, wxString &highlightText)
+void Lyrics::Add(double t, const wxString &syllable, wxString &highlightText)
 {
    int i = mSyllables.GetCount();
 

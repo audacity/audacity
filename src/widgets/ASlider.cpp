@@ -342,7 +342,7 @@ static const wxPoint2DDouble disabledRightEnd[] =
 
 // Construct customizable slider
 LWSlider::LWSlider(wxWindow * parent,
-                     wxString name,
+                     const wxString &name,
                      const wxPoint &pos,
                      const wxSize &size,
                      float minValue,
@@ -412,7 +412,7 @@ void LWSlider::SetStyle(int style)
 
 // Construct predefined slider
 LWSlider::LWSlider(wxWindow *parent,
-                   wxString name,
+                   const wxString &name,
                    const wxPoint &pos,
                    const wxSize &size,
                    int style,
@@ -475,7 +475,7 @@ LWSlider::LWSlider(wxWindow *parent,
 }
 
 void LWSlider::Init(wxWindow * parent,
-                    wxString name,
+                    const wxString &name,
                     const wxPoint &pos,
                     const wxSize &size,
                     float minValue,
@@ -1582,7 +1582,7 @@ END_EVENT_TABLE()
 
 ASlider::ASlider( wxWindow * parent,
                   wxWindowID id,
-                  wxString name,
+                  const wxString &name,
                   const wxPoint & pos,
                   const wxSize & size,
                   int style,

@@ -52,7 +52,7 @@ class LabelDialog:public wxDialog
    void FindAllLabels();
    void AddLabels(LabelTrack *t);
    void FindInitialRow();
-   wxString TrackName(int & index, wxString dflt = _("Label Track"));
+   wxString TrackName(int & index, const wxString &dflt = _("Label Track"));
 
    void OnUpdate(wxCommandEvent &event);
    void OnInsert(wxCommandEvent &event);

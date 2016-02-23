@@ -182,7 +182,7 @@ public:
    wxString GetPluginFormatDescription();
 
    ///! Probes the file and opens it if appropriate
-   ImportFileHandle *Open(wxString Filename);
+   ImportFileHandle *Open(const wxString &Filename) override;
 };
 
 ///! Does acual import, returned by FFmpegImportPlugin::Open
@@ -292,7 +292,7 @@ wxString FFmpegImportPlugin::GetPluginFormatDescription()
    return DESC;
 }
 
-ImportFileHandle *FFmpegImportPlugin::Open(wxString filename)
+ImportFileHandle *FFmpegImportPlugin::Open(const wxString &filename)
 {
    FFmpegImportFileHandle *handle = new FFmpegImportFileHandle(filename);
 

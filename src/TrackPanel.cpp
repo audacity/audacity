@@ -1491,7 +1491,7 @@ void TrackPanel::OnPaint(wxPaintEvent & /* event */)
 
 /// Makes our Parent (well, whoever is listening to us) push their state.
 /// this causes application state to be preserved on a stack for undo ops.
-void TrackPanel::MakeParentPushState(wxString desc, wxString shortDesc,
+void TrackPanel::MakeParentPushState(const wxString &desc, const wxString &shortDesc,
                                      int flags)
 {
    mListener->TP_PushState(desc, shortDesc, flags);

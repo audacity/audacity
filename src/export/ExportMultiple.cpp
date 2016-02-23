@@ -619,7 +619,7 @@ bool ExportMultiple::DirOk()
 }
 
 int ExportMultiple::ExportMultipleByLabel(bool byName,
-   wxString prefix, bool addNumber)
+   const wxString &prefix, bool addNumber)
 {
    wxASSERT(mProject);
    bool tagsPrompt = mProject->GetShowId3Dialog();
@@ -737,7 +737,7 @@ int ExportMultiple::ExportMultipleByLabel(bool byName,
 }
 
 int ExportMultiple::ExportMultipleByTrack(bool byName,
-   wxString prefix, bool addNumber)
+   const wxString &prefix, bool addNumber)
 {
    wxASSERT(mProject);
    bool tagsPrompt = mProject->GetShowId3Dialog();
@@ -953,7 +953,7 @@ int ExportMultiple::DoExport(int channels,
    return success;
 }
 
-wxString ExportMultiple::MakeFileName(wxString input)
+wxString ExportMultiple::MakeFileName(const wxString &input)
 {
    wxString newname; // name we are generating
 

@@ -2022,7 +2022,7 @@ bool Effect::TotalProgress(double frac)
    return (updateResult != eProgressSuccess);
 }
 
-bool Effect::TrackProgress(int whichTrack, double frac, wxString msg)
+bool Effect::TrackProgress(int whichTrack, double frac, const wxString &msg)
 {
    int updateResult = (mProgress ?
       mProgress->Update(whichTrack + frac, (double) mNumTracks, msg) :
@@ -2030,7 +2030,7 @@ bool Effect::TrackProgress(int whichTrack, double frac, wxString msg)
    return (updateResult != eProgressSuccess);
 }
 
-bool Effect::TrackGroupProgress(int whichGroup, double frac, wxString msg)
+bool Effect::TrackGroupProgress(int whichGroup, double frac, const wxString &msg)
 {
    int updateResult = (mProgress ?
       mProgress->Update(whichGroup + frac, (double) mNumGroups, msg) :

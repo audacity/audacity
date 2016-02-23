@@ -156,9 +156,9 @@ void MultiDialog::OnShowLog(wxCommandEvent & WXUNUSED(event))
 }
 
 
-int ShowMultiDialog(wxString message,
-   wxString title,
-   const wxChar **buttons, wxString boxMsg, bool log)
+int ShowMultiDialog(const wxString &message,
+   const wxString &title,
+   const wxChar **buttons, const wxString &boxMsg, bool log)
 {
    wxWindow * pParent = wxGetApp().GetTopWindow();
 

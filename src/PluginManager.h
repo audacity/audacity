@@ -301,7 +301,7 @@ private:
    // case, we use base64 encoding.
    wxString ConvertID(const PluginID & ID);
    wxString b64encode(const void *in, int len);
-   int b64decode(wxString in, void *out);
+   int b64decode(const wxString &in, void *out);
 
 private:
    static PluginManager *mInstance;

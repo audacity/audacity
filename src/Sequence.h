@@ -109,11 +109,11 @@ class Sequence: public XMLTagHandler {
    bool Append(samplePtr buffer, sampleFormat format, sampleCount len,
                XMLWriter* blockFileLog=NULL);
    bool Delete(sampleCount start, sampleCount len);
-   bool AppendAlias(wxString fullPath,
+   bool AppendAlias(const wxString &fullPath,
                     sampleCount start,
                     sampleCount len, int channel, bool useOD);
 
-   bool AppendCoded(wxString fName, sampleCount start,
+   bool AppendCoded(const wxString &fName, sampleCount start,
                             sampleCount len, int channel, int decodeType);
 
    ///gets an int with OD flags so that we can determine which ODTasks should be run on this track after save/open, etc.

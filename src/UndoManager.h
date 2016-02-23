@@ -82,7 +82,7 @@ class AUDACITY_DLL_API UndoManager {
 
    void PushState(TrackList * l,
                   const SelectedRegion &selectedRegion,
-                  wxString longDescription, wxString shortDescription,
+                  const wxString &longDescription, const wxString &shortDescription,
                   int flags = PUSH_AUTOSAVE);
    void ModifyState(TrackList * l,
                     const SelectedRegion &selectedRegion);
@@ -94,7 +94,7 @@ class AUDACITY_DLL_API UndoManager {
 
    void GetShortDescription(unsigned int n, wxString *desc);
    wxLongLong_t GetLongDescription(unsigned int n, wxString *desc, wxString *size);
-   void SetLongDescription(unsigned int n, wxString desc);
+   void SetLongDescription(unsigned int n, const wxString &desc);
 
    TrackList *SetStateTo(unsigned int n, SelectedRegion *selectedRegion);
    TrackList *Undo(SelectedRegion *selectedRegion);

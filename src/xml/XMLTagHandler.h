@@ -32,10 +32,10 @@ public:
    static bool IsGoodString(const wxString & str);
 
    static bool IsGoodFileName(const wxString & strFileName, const wxString & strDirName = wxEmptyString);
-   static bool IsGoodFileString(wxString str);
+   static bool IsGoodFileString(const wxString &str);
    static bool IsGoodSubdirName(const wxString & strSubdirName, const wxString & strDirName = wxEmptyString);
    static bool IsGoodPathName(const wxString & strPathName);
-   static bool IsGoodPathString(wxString str);
+   static bool IsGoodPathString(const wxString &str);
 
    /** @brief Check that the supplied string can be converted to a long (32bit)
 	* integer.

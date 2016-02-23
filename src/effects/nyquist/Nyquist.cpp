@@ -114,7 +114,7 @@ BEGIN_EVENT_TABLE(NyquistEffect, wxEvtHandler)
                      wxEVT_COMMAND_CHOICE_SELECTED, NyquistEffect::OnChoice)
 END_EVENT_TABLE()
 
-NyquistEffect::NyquistEffect(wxString fName)
+NyquistEffect::NyquistEffect(const wxString &fName)
 {
    mAction = _("Applying Nyquist Effect...");
    mInputCmd = wxEmptyString;
@@ -1290,7 +1290,7 @@ void NyquistEffect::RedirectOutput()
    mRedirectOutput = true;
 }
 
-void NyquistEffect::SetCommand(wxString cmd)
+void NyquistEffect::SetCommand(const wxString &cmd)
 {
    mExternal = true;
 
@@ -1312,7 +1312,7 @@ void NyquistEffect::Stop()
    mStop = true;
 }
 
-wxString NyquistEffect::UnQuote(wxString s)
+wxString NyquistEffect::UnQuote(const wxString &s)
 {
    wxString out;
    int len = s.Length();
@@ -1324,7 +1324,7 @@ wxString NyquistEffect::UnQuote(wxString s)
    return s;
 }
 
-double NyquistEffect::GetCtrlValue(wxString s)
+double NyquistEffect::GetCtrlValue(const wxString &s)
 {
    /* For this to work correctly requires that the plug-in header is
     * parsed on each run so that the correct value for "half-srate" may
@@ -1341,10 +1341,10 @@ double NyquistEffect::GetCtrlValue(wxString s)
    }
    */
 
-   return Internat::CompatibleToDouble(s);;
+   return Internat::CompatibleToDouble(s);
 }
 
-void NyquistEffect::Parse(wxString line)
+void NyquistEffect::Parse(const wxString &line)
 {
    wxArrayString tokens;
 
@@ -2237,7 +2237,7 @@ END_EVENT_TABLE()
 NyquistOutputDialog::NyquistOutputDialog(wxWindow * parent, wxWindowID id,
                                        const wxString & title,
                                        const wxString & prompt,
-                                       wxString message)
+                                       const wxString &message)
 :  wxDialog(parent, id, title)
 {
    SetName(GetTitle());

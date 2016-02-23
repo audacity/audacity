@@ -53,7 +53,7 @@ public:
    bool Load();
    void Unload();
    int Dispatch(ModuleDispatchTypes type);
-   void * GetSymbol(wxString name);
+   void * GetSymbol(const wxString &name);
 
 private:
    wxString mName;

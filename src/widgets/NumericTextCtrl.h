@@ -136,7 +136,7 @@ class NumericTextCtrl: public wxControl, public NumericConverter
    NumericTextCtrl(NumericConverter::Type type,
                    wxWindow *parent,
                    wxWindowID id,
-                   wxString formatName = wxEmptyString,
+                   const wxString &formatName = wxEmptyString,
                    double value = 0.0,
                    double sampleRate = 44100,
                    const wxPoint &pos = wxDefaultPosition,

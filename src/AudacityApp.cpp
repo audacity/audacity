@@ -769,7 +769,7 @@ END_EVENT_TABLE()
 // TODO: Would be nice to make this handle not opening a file with more panache.
 //  - Inform the user if DefaultOpenPath not set.
 //  - Switch focus to correct instance of project window, if already open.
-bool AudacityApp::MRUOpen(wxString fullPathStr) {
+bool AudacityApp::MRUOpen(const wxString &fullPathStr) {
    // Most of the checks below are copied from AudacityProject::OpenFiles.
    // - some rationalisation might be possible.
 
@@ -1630,7 +1630,7 @@ bool AudacityApp::InitTempDir()
 //
 // Use "dir" for creating lockfiles (on OS X and Unix).
 
-bool AudacityApp::CreateSingleInstanceChecker(wxString dir)
+bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
 {
    wxString name = wxString::Format(wxT("audacity-lock-%s"), wxGetUserId().c_str());
    mChecker = new wxSingleInstanceChecker();
@@ -1868,12 +1868,12 @@ wxCmdLineParser *AudacityApp::ParseCommandLine()
 }
 
 // static
-void AudacityApp::AddUniquePathToPathList(wxString path,
+void AudacityApp::AddUniquePathToPathList(const wxString &pathArg,
                                           wxArrayString &pathList)
 {
-   wxFileName pathNorm = path;
+   wxFileName pathNorm = pathArg;
    pathNorm.Normalize();
-   path = pathNorm.GetFullPath();
+   wxString path = pathNorm.GetFullPath();
 
    for(unsigned int i=0; i<pathList.GetCount(); i++) {
       if (wxFileName(path) == wxFileName(pathList[i]))
@@ -1884,9 +1884,10 @@ void AudacityApp::AddUniquePathToPathList(wxString path,
 }
 
 // static
-void AudacityApp::AddMultiPathsToPathList(wxString multiPathString,
+void AudacityApp::AddMultiPathsToPathList(const wxString &multiPathStringArg,
                                           wxArrayString &pathList)
 {
+   wxString multiPathString(multiPathStringArg);
    while (multiPathString != wxT("")) {
       wxString onePath = multiPathString.BeforeFirst(wxPATH_SEP[0]);
       multiPathString = multiPathString.AfterFirst(wxPATH_SEP[0]);

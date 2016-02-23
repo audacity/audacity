@@ -957,7 +957,7 @@ void CommandManager::Enable(CommandListEntry *entry, bool enabled)
    }
 }
 
-void CommandManager::Enable(wxString name, bool enabled)
+void CommandManager::Enable(const wxString &name, bool enabled)
 {
    CommandListEntry *entry = mCommandNameHash[name];
    if (!entry || !entry->menu) {
@@ -997,7 +997,7 @@ bool CommandManager::GetEnabled(const wxString &name)
    return entry->enabled;
 }
 
-void CommandManager::Check(wxString name, bool checked)
+void CommandManager::Check(const wxString &name, bool checked)
 {
    CommandListEntry *entry = mCommandNameHash[name];
    if (!entry || !entry->menu) {
@@ -1008,7 +1008,7 @@ void CommandManager::Check(wxString name, bool checked)
 }
 
 ///Changes the label text of a menu item
-void CommandManager::Modify(wxString name, wxString newLabel)
+void CommandManager::Modify(const wxString &name, const wxString &newLabel)
 {
    CommandListEntry *entry = mCommandNameHash[name];
    if (entry && entry->menu) {
@@ -1017,7 +1017,7 @@ void CommandManager::Modify(wxString name, wxString newLabel)
    }
 }
 
-void CommandManager::SetKeyFromName(wxString name, wxString key)
+void CommandManager::SetKeyFromName(const wxString &name, const wxString &key)
 {
    CommandListEntry *entry = mCommandNameHash[name];
    if (entry) {
@@ -1025,7 +1025,7 @@ void CommandManager::SetKeyFromName(wxString name, wxString key)
    }
 }
 
-void CommandManager::SetKeyFromIndex(int i, wxString key)
+void CommandManager::SetKeyFromIndex(int i, const wxString &key)
 {
    const auto &entry = mCommandList[i];
    entry->key = KeyStringNormalize(key);
@@ -1284,7 +1284,7 @@ void CommandManager::GetAllCommandData(
       }
    }
 }
-wxString CommandManager::GetLabelFromName(wxString name)
+wxString CommandManager::GetLabelFromName(const wxString &name)
 {
    CommandListEntry *entry = mCommandNameHash[name];
    if (!entry)
@@ -1293,7 +1293,7 @@ wxString CommandManager::GetLabelFromName(wxString name)
    return entry->label;
 }
 
-wxString CommandManager::GetPrefixedLabelFromName(wxString name)
+wxString CommandManager::GetPrefixedLabelFromName(const wxString &name)
 {
    CommandListEntry *entry = mCommandNameHash[name];
    if (!entry)
@@ -1310,7 +1310,7 @@ wxString CommandManager::GetPrefixedLabelFromName(wxString name)
 #endif
 }
 
-wxString CommandManager::GetCategoryFromName(wxString name)
+wxString CommandManager::GetCategoryFromName(const wxString &name)
 {
    CommandListEntry *entry = mCommandNameHash[name];
    if (!entry)
@@ -1319,7 +1319,7 @@ wxString CommandManager::GetCategoryFromName(wxString name)
    return entry->labelTop;
 }
 
-wxString CommandManager::GetKeyFromName(wxString name)
+wxString CommandManager::GetKeyFromName(const wxString &name)
 {
    CommandListEntry *entry = mCommandNameHash[name];
    if (!entry)
@@ -1328,7 +1328,7 @@ wxString CommandManager::GetKeyFromName(wxString name)
    return entry->key;
 }
 
-wxString CommandManager::GetDefaultKeyFromName(wxString name)
+wxString CommandManager::GetDefaultKeyFromName(const wxString &name)
 {
    CommandListEntry *entry = mCommandNameHash[name];
    if (!entry)
@@ -1411,7 +1411,7 @@ void CommandManager::SetDefaultFlags(wxUint32 flags, wxUint32 mask)
    mDefaultMask = mask;
 }
 
-void CommandManager::SetCommandFlags(wxString name,
+void CommandManager::SetCommandFlags(const wxString &name,
                                      wxUint32 flags, wxUint32 mask)
 {
    CommandListEntry *entry = mCommandNameHash[name];

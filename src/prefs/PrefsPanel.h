@@ -43,7 +43,7 @@ ThemePrefs.
 class PrefsPanel:public wxPanel
 {
  public:
-   PrefsPanel(wxWindow * parent, wxString title)
+   PrefsPanel(wxWindow * parent, const wxString &title)
    :  wxPanel(parent, wxID_ANY)
    {
       SetLabel(title);     // Provide visual label

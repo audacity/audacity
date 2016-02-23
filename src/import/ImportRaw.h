@@ -17,7 +17,7 @@ class WaveTrack;
 class DirManager;
 class wxWindow;
 
-int ImportRaw(wxWindow *parent, wxString fileName,
+int ImportRaw(wxWindow *parent, const wxString &fileName,
               TrackFactory *trackFactory, Track ***outTracks);
 
 #endif

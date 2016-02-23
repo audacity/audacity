@@ -168,7 +168,7 @@ int Module::Dispatch(ModuleDispatchTypes type)
    return 0;
 }
 
-void * Module::GetSymbol(wxString name)
+void * Module::GetSymbol(const wxString &name)
 {
    return mLib->GetSymbol(name);
 }

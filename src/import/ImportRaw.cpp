@@ -93,7 +93,7 @@ class ImportRawDialog:public wxDialog {
    DECLARE_EVENT_TABLE()
 };
 
-int ImportRaw(wxWindow *parent, wxString fileName,
+int ImportRaw(wxWindow *parent, const wxString &fileName,
               TrackFactory *trackFactory, Track ***outTracks)
 {
    int encoding = 0; // Guess Format

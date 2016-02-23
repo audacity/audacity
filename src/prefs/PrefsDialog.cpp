@@ -448,7 +448,7 @@ void PrefsDialog::OnOK(wxCommandEvent & WXUNUSED(event))
    EndModal(true);
 }
 
-void PrefsDialog::SelectPageByName(wxString pageName)
+void PrefsDialog::SelectPageByName(const wxString &pageName)
 {
    if (mCategories) {
       size_t n = mCategories->GetPageCount();

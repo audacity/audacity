@@ -53,7 +53,7 @@ END_EVENT_TABLE()
 
 MixerTrackSlider::MixerTrackSlider(wxWindow * parent,
                                     wxWindowID id,
-                                    wxString name,
+                                    const wxString &name,
                                     const wxPoint & pos,
                                     const wxSize & size,
                                     int style /*= FRAC_SLIDER*/,
