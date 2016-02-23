@@ -163,7 +163,7 @@ public:
 
    // Auto Export from Timer Recording
    bool ProcessFromTimed(AudacityProject *project, bool selectedOnly, double t0, double t1, wxFileName fnFile, int iFormat, int iSubFormat, int iFilterIndex);
-   void SetAutoExportOptions(AudacityProject *project);
+   bool SetAutoExportOptions(AudacityProject *project);
    int GetAutoExportFormat();
    int GetAutoExportSubFormat();
    int GetAutoExportFilterIndex();

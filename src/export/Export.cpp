@@ -972,7 +972,7 @@ wxFileName Exporter::GetAutoExportFileName() {
 	return mFilename;
 }
 
-void Exporter::SetAutoExportOptions(AudacityProject *project) {
+bool Exporter::SetAutoExportOptions(AudacityProject *project) {
 	mFormat = -1;
 	mProject = project;
 
@@ -1023,12 +1023,12 @@ void Exporter::SetAutoExportOptions(AudacityProject *project) {
 		mDialog->PopEventHandler();
 
 		if (result == wxID_CANCEL) {
-			return;
+			return false;
 		}
 
 		mFilename = fd.GetPath();
 		if (mFilename == wxT("")) {
-			return;
+			return false;
 		}
 
 		mFormat = fd.GetFilterIndex();
@@ -1140,6 +1140,8 @@ void Exporter::SetAutoExportOptions(AudacityProject *project) {
 
 		break;
 	}
+
+	return true;
 }
 
 //----------------------------------------------------------------------------

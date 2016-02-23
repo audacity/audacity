@@ -255,16 +255,16 @@ void TimerRecordDialog::OnAutoExportPathButton_Click(wxCommandEvent& WXUNUSED(ev
 	Exporter eExporter;
 
 	// Call the Exporter to set the options required
-	eExporter.SetAutoExportOptions(pProject);
+	if (eExporter.SetAutoExportOptions(pProject)) {
+		// Populate the options so that we can destroy this instance of the Exporter
+		m_fnAutoExportFile = eExporter.GetAutoExportFileName();
+		m_iAutoExportFormat = eExporter.GetAutoExportFormat();
+		m_iAutoExportSubFormat = eExporter.GetAutoExportSubFormat();
+		m_iAutoExportFilterIndex = eExporter.GetAutoExportFilterIndex();
 
-	// Populate the options so that we can destroy this instance of the Exporter
-	m_fnAutoExportFile = eExporter.GetAutoExportFileName();
-	m_iAutoExportFormat = eExporter.GetAutoExportFormat();
-	m_iAutoExportSubFormat = eExporter.GetAutoExportSubFormat();
-	m_iAutoExportFilterIndex = eExporter.GetAutoExportFilterIndex();
-
-	// Update the text controls
-	this->UpdateTextBoxControls();
+		// Update the text controls
+		this->UpdateTextBoxControls();
+	}
 }
 
 void TimerRecordDialog::OnAutoSaveCheckBox_Change(wxCommandEvent& WXUNUSED(event)) {
@@ -288,14 +288,15 @@ void TimerRecordDialog::OnOK(wxCommandEvent& WXUNUSED(event))
    // Validate that we have a Save and/or Export path setup if the appropriate check box is ticked
    wxString sTemp = m_fnAutoSaveFile.GetFullPath();
    if (m_pTimerAutoSaveCheckBoxCtrl->IsChecked()) {
-	   if (!m_fnAutoSaveFile.IsOk() || m_fnAutoSaveFile.GetFullPath() == "") {
+	   if (!m_fnAutoSaveFile.IsOk() || m_fnAutoSaveFile.IsDir()) {
 		   wxMessageBox(_("Auto save path is invalid."),
 			   _("Error in Auto Save"), wxICON_EXCLAMATION | wxOK);
 		   return;
 	   }
    }
    if (m_pTimerAutoExportCheckBoxCtrl->IsChecked()) {
-	   if (!m_fnAutoExportFile.IsOk() || !m_fnAutoExportFile.IsFileWritable()) {
+
+	   if (!m_fnAutoExportFile.IsOk() || m_fnAutoExportFile.IsDir()) {
 		   wxMessageBox(_("Auto export path is invalid."),
 			   _("Error in Auto Export"), wxICON_EXCLAMATION | wxOK);
 		   return;
@@ -637,9 +638,6 @@ bool TimerRecordDialog::TransferDataFromWindow()
    // Pull the settings from the auto save/export controls and write to the pref file
    m_bAutoSaveEnabled = m_pTimerAutoSaveCheckBoxCtrl->GetValue();
    m_bAutoExportEnabled = m_pTimerAutoExportCheckBoxCtrl->GetValue();
-
-   wxString sAutoSavePath = m_fnAutoSaveFile.GetPath();
-   wxString sAutoExportPath = m_fnAutoExportFile.GetPath();
 
    // Save the options back to the prefs file
    gPrefs->Write("/TimerRecord/AutoSave", m_bAutoSaveEnabled);
