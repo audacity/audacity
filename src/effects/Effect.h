@@ -154,7 +154,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    virtual double GetDefaultDuration();
    virtual double GetDuration();
    virtual wxString GetDurationFormat();
-   virtual wxString GetSelectionFormat(); // time format in Selection toolbar
+   virtual wxString GetSelectionFormat() /* not override? */; // time format in Selection toolbar
    virtual void SetDuration(double duration);
 
    virtual bool Apply();
@@ -165,7 +165,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    virtual wxString GetUserPresetsGroup(const wxString & name);
    virtual wxString GetCurrentSettingsGroup();
    virtual wxString GetFactoryDefaultsGroup();
-   virtual wxString GetSavedStateGroup();
+   virtual wxString GetSavedStateGroup() /* not override? */;
 
    // ConfigClientInterface implementation
 
