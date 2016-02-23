@@ -68,7 +68,7 @@ public:
    /** @param fName File name of the Nyquist script defining this effect. If
     * an empty string, then prompt the user for the Nyquist code to interpret.
     */
-   NyquistEffect(wxString fName);
+   NyquistEffect(const wxString &fName);
    virtual ~NyquistEffect();
 
    // IdentInterface implementation
@@ -106,7 +106,7 @@ public:
 
    // For Nyquist Workbench support
    void RedirectOutput();
-   void SetCommand(wxString cmd);
+   void SetCommand(const wxString &cmd);
    void Continue();
    void Break();
    void Stop();
@@ -152,10 +152,10 @@ private:
    void ParseFile();
    bool ParseCommand(const wxString & cmd);
    bool ParseProgram(wxInputStream & stream);
-   void Parse(wxString line);
+   void Parse(const wxString &line);
 
-   wxString UnQuote(wxString s);
-   double GetCtrlValue(wxString s);
+   wxString UnQuote(const wxString &s);
+   double GetCtrlValue(const wxString &s);
 
    void OnLoad(wxCommandEvent & evt);
    void OnSave(wxCommandEvent & evt);
@@ -248,7 +248,7 @@ public:
    NyquistOutputDialog(wxWindow * parent, wxWindowID id,
                        const wxString & title,
                        const wxString & prompt,
-                       wxString message);
+                       const wxString &message);
 
 private:
    void OnOk(wxCommandEvent & event);

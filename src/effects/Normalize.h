@@ -56,10 +56,10 @@ public:
 private:
    // EffectNormalize implementation
 
-   bool ProcessOne(WaveTrack * t, wxString msg);
-   virtual void AnalyseTrack(WaveTrack * track, wxString msg);
+   bool ProcessOne(WaveTrack * t, const wxString &msg);
+   virtual void AnalyseTrack(WaveTrack * track, const wxString &msg);
    virtual void AnalyzeData(float *buffer, sampleCount len);
-   bool AnalyseDC(WaveTrack * track, wxString msg);
+   bool AnalyseDC(WaveTrack * track, const wxString &msg);
    virtual void ProcessData(float *buffer, sampleCount len);
 
    void OnUpdateUI(wxCommandEvent & evt);

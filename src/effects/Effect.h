@@ -309,11 +309,11 @@ protected:
 
    // Pass a fraction between 0.0 and 1.0, for the current track
    // (when doing one track at a time)
-   bool TrackProgress(int whichTrack, double frac, wxString = wxT(""));
+   bool TrackProgress(int whichTrack, double frac, const wxString & = wxEmptyString);
 
    // Pass a fraction between 0.0 and 1.0, for the current track group
    // (when doing stereo groups at a time)
-   bool TrackGroupProgress(int whichGroup, double frac, wxString = wxT(""));
+   bool TrackGroupProgress(int whichGroup, double frac, const wxString & = wxEmptyString);
 
    int GetNumWaveTracks() { return mNumTracks; }
 
