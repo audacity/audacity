@@ -39,12 +39,12 @@ void DecoratedCommand::Progress(double completed)
    mCommand->Progress(completed);
 }
 
-void DecoratedCommand::Status(wxString message)
+void DecoratedCommand::Status(const wxString &message)
 {
    mCommand->Status(message);
 }
 
-void DecoratedCommand::Error(wxString message)
+void DecoratedCommand::Error(const wxString &message)
 {
    mCommand->Error(message);
 }
@@ -162,12 +162,12 @@ void CommandImplementation::Progress(double completed)
    mOutput->Progress(completed);
 }
 
-void CommandImplementation::Status(wxString status)
+void CommandImplementation::Status(const wxString &status)
 {
    mOutput->Status(status);
 }
 
-void CommandImplementation::Error(wxString message)
+void CommandImplementation::Error(const wxString &message)
 {
    mOutput->Error(message);
 }

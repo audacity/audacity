@@ -40,15 +40,15 @@ private:
    bool mBackground;
    wxColour mBackColor;
 
-   wxString MakeFileName(wxString path, wxString basename);
+   wxString MakeFileName(const wxString &path, const wxString &basename);
 
    wxRect GetBackgroundRect();
-   void Capture(wxString basename,
+   void Capture(const wxString &basename,
          wxWindow *window,
          int x, int y, int width, int height,
          bool bg = false);
-   void CaptureToolbar(ToolManager *man, int type, wxString name);
-   void CaptureDock(wxWindow *win, wxString fileName);
+   void CaptureToolbar(ToolManager *man, int type, const wxString &name);
+   void CaptureDock(wxWindow *win, const wxString &fileName);
 
 public:
    wxTopLevelWindow *GetFrontWindow(AudacityProject *project);

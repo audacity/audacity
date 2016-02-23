@@ -87,7 +87,7 @@ void CommandBuilder::Success(Command *cmd)
 }
 
 void CommandBuilder::BuildCommand(const wxString &cmdName,
-                                  wxString cmdParams)
+                                  const wxString &cmdParamsArg)
 {
    // Stage 1: create a Command object of the right type
 
@@ -106,7 +106,7 @@ void CommandBuilder::BuildCommand(const wxString &cmdName,
       wxASSERT(type != NULL);
       mCommand = type->Create(output);
       mCommand->SetParameter(wxT("CommandName"), cmdName);
-      mCommand->SetParameter(wxT("ParamString"), cmdParams);
+      mCommand->SetParameter(wxT("ParamString"), cmdParamsArg);
       Success(new ApplyAndSendResponse(mCommand));
       return;
    }
@@ -117,7 +117,7 @@ void CommandBuilder::BuildCommand(const wxString &cmdName,
    // Stage 2: set the parameters
 
    ShuttleCli shuttle;
-   shuttle.mParams = cmdParams;
+   shuttle.mParams = cmdParamsArg;
    shuttle.mbStoreInClient = true;
 
    ParamValueMap::const_iterator iter;
@@ -137,6 +137,8 @@ void CommandBuilder::BuildCommand(const wxString &cmdName,
    }
 
    // Check for unrecognised parameters
+
+   wxString cmdParams(cmdParamsArg);
 
    while (cmdParams != wxEmptyString)
    {
@@ -166,8 +168,10 @@ void CommandBuilder::BuildCommand(const wxString &cmdName,
    Success(new ApplyAndSendResponse(mCommand));
 }
 
-void CommandBuilder::BuildCommand(wxString cmdString)
+void CommandBuilder::BuildCommand(const wxString &cmdStringArg)
 {
+   wxString cmdString(cmdStringArg);
+
    // Find the command name terminator...  If there is more than one word and
    // no terminator, the command is badly formed
    cmdString.Trim(true); cmdString.Trim(false);

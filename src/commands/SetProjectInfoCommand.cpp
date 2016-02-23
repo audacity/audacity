@@ -75,7 +75,7 @@ bool SetProjectInfoCommand::Apply(CommandExecutionContext context)
 
 
 // ***********************  Private Methods *******************
-void SetProjectInfoCommand::SetAllTracksParam(TrackList *projTracks, wxString boolValueStr, Setter functPtrToSetter)
+void SetProjectInfoCommand::SetAllTracksParam(TrackList *projTracks, const wxString &boolValueStr, Setter functPtrToSetter)
 {
    unsigned int i=0;
    TrackListIterator iter(projTracks);

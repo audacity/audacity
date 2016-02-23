@@ -31,8 +31,8 @@ class CommandBuilder
 
       void Failure(const wxString &msg = wxEmptyString);
       void Success(Command *cmd);
-      void BuildCommand(const wxString &cmdName, wxString cmdParams);
-      void BuildCommand(wxString cmdString);
+      void BuildCommand(const wxString &cmdName, const wxString &cmdParams);
+      void BuildCommand(const wxString &cmdString);
    public:
       CommandBuilder(const wxString &cmdString);
       CommandBuilder(const wxString &cmdName,
