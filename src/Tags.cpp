@@ -534,7 +534,7 @@ public:
    {
    }
 
-   virtual void PaintBackground(const wxRect& WXUNUSED(rectCell), wxGridCellAttr * WXUNUSED(attr))
+   void PaintBackground(wxDC&, const wxRect& WXUNUSED(rectCell), const wxGridCellAttr & WXUNUSED(attr)) override
    {
       // Ignore it (a must on the Mac as the erasure causes problems.)
    }
