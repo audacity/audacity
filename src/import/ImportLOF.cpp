@@ -113,7 +113,7 @@ public:
 
    wxString GetPluginStringID() { return wxT("lof"); }
    wxString GetPluginFormatDescription();
-   ImportFileHandle *Open(wxString Filename);
+   ImportFileHandle *Open(const wxString &Filename) override;
 };
 
 
@@ -181,7 +181,7 @@ wxString LOFImportPlugin::GetPluginFormatDescription()
     return DESC;
 }
 
-ImportFileHandle *LOFImportPlugin::Open(wxString filename)
+ImportFileHandle *LOFImportPlugin::Open(const wxString &filename)
 {
    // Check if it is a binary file
    wxFile binaryFile;

@@ -92,7 +92,7 @@ public:
 
    wxString GetPluginStringID() { return wxT("liboggvorbis"); }
    wxString GetPluginFormatDescription();
-   ImportFileHandle *Open(wxString Filename);
+   ImportFileHandle *Open(const wxString &Filename) override;
 };
 
 
@@ -171,7 +171,7 @@ wxString OggImportPlugin::GetPluginFormatDescription()
     return DESC;
 }
 
-ImportFileHandle *OggImportPlugin::Open(wxString filename)
+ImportFileHandle *OggImportPlugin::Open(const wxString &filename)
 {
    OggVorbis_File *vorbisFile = new OggVorbis_File;
    wxFFile *file = new wxFFile(filename, wxT("rb"));

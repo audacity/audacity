@@ -114,7 +114,7 @@ public:
 
    wxString GetPluginStringID() { return wxT("libmad"); }
    wxString GetPluginFormatDescription();
-   ImportFileHandle *Open(wxString Filename);
+   ImportFileHandle *Open(const wxString &Filename) override;
 };
 
 class MP3ImportFileHandle : public ImportFileHandle
@@ -176,7 +176,7 @@ wxString MP3ImportPlugin::GetPluginFormatDescription()
    return DESC;
 }
 
-ImportFileHandle *MP3ImportPlugin::Open(wxString Filename)
+ImportFileHandle *MP3ImportPlugin::Open(const wxString &Filename)
 {
    wxFile *file = new wxFile(Filename);
 

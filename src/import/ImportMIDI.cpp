@@ -25,7 +25,7 @@
 #include "../NoteTrack.h"
 #include "ImportMIDI.h"
 
-bool ImportMIDI(wxString fName, NoteTrack * dest)
+bool ImportMIDI(const wxString &fName, NoteTrack * dest)
 {
    if (fName.Length() <= 4){
       wxMessageBox( _("Could not open file ") + fName + _(": Filename too short."));

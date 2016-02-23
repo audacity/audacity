@@ -348,7 +348,7 @@ ExtImportItem *Importer::CreateDefaultImportItem()
 }
 
 // returns number of tracks imported
-int Importer::Import(wxString fName,
+int Importer::Import(const wxString &fName,
                      TrackFactory *trackFactory,
                      Track *** tracks,
                      Tags *tags,
