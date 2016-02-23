@@ -2397,7 +2397,7 @@ void AudacityProject::OnOpenAudioFile(wxCommandEvent & event)
 }
 
 // static method, can be called outside of a project
-wxArrayString AudacityProject::ShowOpenDialog(wxString extraformat, wxString extrafilter)
+wxArrayString AudacityProject::ShowOpenDialog(const wxString &extraformat, const wxString &extrafilter)
 {
    FormatList l;
    wxString filter;  ///< List of file format names and extensions, separated
@@ -2605,8 +2605,10 @@ bool AudacityProject::WarnOfLegacyFile( )
 
 // FIXME? This should return a result that is checked.
 //    See comment in AudacityApp::MRUOpen().
-void AudacityProject::OpenFile(wxString fileName, bool addtohistory)
+void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
 {
+   wxString fileName(fileNameArg);
+
    // On Win32, we may be given a short (DOS-compatible) file name on rare
    // occassions (e.g. stuff like "C:\PROGRA~1\AUDACI~1\PROJEC~1.AUP"). We
    // convert these to long file name first.
@@ -3704,7 +3706,7 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
 #endif
 
 
-void AudacityProject::AddImportedTracks(wxString fileName,
+void AudacityProject::AddImportedTracks(const wxString &fileName,
                                         Track **newTracks, int numTracks)
 {
    SelectNone();
@@ -3784,7 +3786,7 @@ void AudacityProject::AddImportedTracks(wxString fileName,
 }
 
 // If pNewTrackList is passed in non-NULL, it gets filled with the pointers to NEW tracks.
-bool AudacityProject::Import(wxString fileName, WaveTrackArray* pTrackArray /*= NULL*/)
+bool AudacityProject::Import(const wxString &fileName, WaveTrackArray* pTrackArray /*= NULL*/)
 {
    Track **newTracks;
    int numTracks;
@@ -3994,8 +3996,8 @@ void AudacityProject::InitialState()
    this->UpdateMixerBoard();
 }
 
-void AudacityProject::PushState(wxString desc,
-                                wxString shortDesc,
+void AudacityProject::PushState(const wxString &desc,
+                                const wxString &shortDesc,
                                 int flags )
 {
    mUndoManager.PushState(mTracks, mViewInfo.selectedRegion,
@@ -4627,7 +4629,7 @@ void AudacityProject::EditClipboardByLabel( EditDestFunction action )
 
 
 // TrackPanel callback method
-void AudacityProject::TP_DisplayStatusMessage(wxString msg)
+void AudacityProject::TP_DisplayStatusMessage(const wxString &msg)
 {
    mStatusBar->SetStatusText(msg, mainStatusBarField);
    mLastStatusUpdateTime = ::wxGetUTCTime();
@@ -4696,7 +4698,7 @@ void AudacityProject::RefreshTPTrack(Track* pTrk, bool refreshbacking /*= true*/
 
 
 // TrackPanel callback method
-void AudacityProject::TP_PushState(wxString desc, wxString shortDesc,
+void AudacityProject::TP_PushState(const wxString &desc, const wxString &shortDesc,
                                    int flags)
 {
    PushState(desc, shortDesc, flags);

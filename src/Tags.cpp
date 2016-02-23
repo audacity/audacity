@@ -521,7 +521,7 @@ void Tags::WriteXML(XMLWriter &xmlFile)
    xmlFile.EndTag(wxT("tags"));
 }
 
-bool Tags::ShowEditDialog(wxWindow *parent, wxString title, bool force)
+bool Tags::ShowEditDialog(wxWindow *parent, const wxString &title, bool force)
 {
    if (force) {
       TagsEditor dlg(parent, title, this, mEditTitle, mEditTrackNumber);
@@ -639,7 +639,7 @@ BEGIN_EVENT_TABLE(TagsEditor, wxDialog)
 END_EVENT_TABLE()
 
 TagsEditor::TagsEditor(wxWindow * parent,
-                       wxString title,
+                       const wxString &title,
                        Tags * tags,
                        bool editTitle,
                        bool editTrack)

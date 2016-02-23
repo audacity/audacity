@@ -30,7 +30,7 @@ class TimeDialog:public wxDialog
               double time,
               const wxString &prompt = _("Duration"));
 
-   void SetFormatString(wxString formatString);
+   void SetFormatString(const wxString &formatString);
    void SetSampleRate(double sampleRate);
    void SetTimeValue(double newTime);
    const double GetTimeValue();

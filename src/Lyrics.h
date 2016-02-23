@@ -105,7 +105,7 @@ class Lyrics : public wxPanel
    void HandleLayout();
 
 private:
-   void Add(double t, wxString syllable, wxString &highlightText);
+   void Add(double t, const wxString &syllable, wxString &highlightText);
 
    unsigned int GetDefaultFontSize() const; // Depends on mLyricsStyle. Call only after mLyricsStyle is set.
 

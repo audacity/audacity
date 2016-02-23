@@ -153,7 +153,7 @@ void HandlePageSetup(wxWindow *parent)
    (*gPageSetupData) = pageSetupDialog.GetPageSetupData();
 }
 
-void HandlePrint(wxWindow *parent, wxString name, TrackList *tracks)
+void HandlePrint(wxWindow *parent, const wxString &name, TrackList *tracks)
 {
    if (gPageSetupData == NULL)
       gPageSetupData = new wxPageSetupDialogData();

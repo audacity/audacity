@@ -18,7 +18,7 @@ class wxWindow;
 class TrackList;
 
 void HandlePageSetup(wxWindow *parent);
-void HandlePrint(wxWindow *parent, wxString name, TrackList *tracks);
+void HandlePrint(wxWindow *parent, const wxString &name, TrackList *tracks);
 
 #endif // __AUDACITY_PRINTING__
 

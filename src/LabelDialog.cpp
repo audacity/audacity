@@ -358,7 +358,7 @@ bool LabelDialog::Validate()
    return true;
 }
 
-wxString LabelDialog::TrackName(int & index, wxString dflt)
+wxString LabelDialog::TrackName(int & index, const wxString &dflt)
 {
    // Generate a NEW track name if the passed index is out of range
    if (index < 1 || index >= (int)mTrackNames.GetCount()) {
