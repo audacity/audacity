@@ -685,36 +685,5 @@ public:
    DECLARE_EVENT_TABLE()
 };
 
-typedef void (AudacityProject::*audCommandFunction)();
-typedef void (AudacityProject::*audCommandKeyFunction)(const wxEvent *);
-typedef void (AudacityProject::*audCommandListFunction)(int);
-typedef bool (AudacityProject::*audCommandPluginFunction)(const PluginID &, int);
-
-// Previously this was in menus.cpp, and the declaration of the
-// command functor was not visible anywhere else.
-class AUDACITY_DLL_API AudacityProjectCommandFunctor : public CommandFunctor
-{
-public:
-   AudacityProjectCommandFunctor(AudacityProject *project,
-      audCommandFunction commandFunction);
-   AudacityProjectCommandFunctor(AudacityProject *project,
-      audCommandKeyFunction commandFunction);
-   AudacityProjectCommandFunctor(AudacityProject *project,
-      audCommandListFunction commandFunction);
-   AudacityProjectCommandFunctor(AudacityProject *project,
-      audCommandPluginFunction commandFunction,
-      const PluginID & pluginID);
-
-   virtual void operator()(int index = 0, const wxEvent *evt = NULL);
-
-private:
-   AudacityProject *mProject;
-   audCommandFunction mCommandFunction;
-   audCommandKeyFunction mCommandKeyFunction;
-   audCommandListFunction mCommandListFunction;
-   audCommandPluginFunction mCommandPluginFunction;
-   PluginID mPluginID;
-};
-
 #endif
 

@@ -30,7 +30,7 @@ class AUDACITY_DLL_API CommandFunctor
 public:
    CommandFunctor(){};
    virtual ~CommandFunctor(){};
-   virtual void operator()(int index = 0, const wxEvent *e = NULL) = 0;
+   virtual void operator()(int index, const wxEvent *e) = 0;
 };
 
 struct MenuBarListEntry
