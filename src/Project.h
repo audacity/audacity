@@ -90,6 +90,7 @@ class Regions;
 
 class LWSlider;
 class UndoManager;
+enum class UndoPush;
 
 AudacityProject *CreateNewAudacityProject();
 AUDACITY_DLL_API AudacityProject *GetActiveProject();
@@ -399,7 +400,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    virtual ToolsToolBar * TP_GetToolsToolBar();
 
    virtual void TP_PushState(const wxString &longDesc, const wxString &shortDesc,
-                             int flags) override;
+                             UndoPush flags) override;
    virtual void TP_ModifyState(bool bWantsAutoSave);    // if true, writes auto-save file. Should set only if you really want the state change restored after
                                                         // a crash, as it can take many seconds for large (eg. 10 track-hours) projects
    virtual void TP_RedrawScrollbars();
@@ -486,8 +487,8 @@ public:
    static void AllProjectsDeleteLock();
    static void AllProjectsDeleteUnlock();
 
-   void PushState(const wxString &desc, const wxString &shortDesc); // use PUSH_AUTOSAVE
-   void PushState(const wxString &desc, const wxString &shortDesc, int flags);
+   void PushState(const wxString &desc, const wxString &shortDesc); // use UndoPush::AUTOSAVE
+   void PushState(const wxString &desc, const wxString &shortDesc, UndoPush flags);
    void RollbackState();
 
  private:

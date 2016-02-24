@@ -1493,14 +1493,14 @@ void TrackPanel::OnPaint(wxPaintEvent & /* event */)
 /// Makes our Parent (well, whoever is listening to us) push their state.
 /// this causes application state to be preserved on a stack for undo ops.
 void TrackPanel::MakeParentPushState(const wxString &desc, const wxString &shortDesc,
-                                     int flags)
+                                     UndoPush flags)
 {
    mListener->TP_PushState(desc, shortDesc, flags);
 }
 
 void TrackPanel::MakeParentPushState(const wxString &desc, const wxString &shortDesc)
 {
-   MakeParentPushState(desc, shortDesc, PUSH_AUTOSAVE);
+   MakeParentPushState(desc, shortDesc, UndoPush::AUTOSAVE);
 }
 
 void TrackPanel::MakeParentModifyState(bool bWantsAutoSave)
@@ -3306,7 +3306,7 @@ void TrackPanel::Stretch(int mouseXCoordinate, int trackLeftEdge,
       break;
    }
    MakeParentPushState(_("Stretch Note Track"), _("Stretch"),
-      PUSH_CONSOLIDATE | PUSH_AUTOSAVE);
+      UndoPush::CONSOLIDATE | UndoPush::AUTOSAVE);
    mStretched = true;
    Refresh(false);
 }
@@ -3837,7 +3837,7 @@ void TrackPanel::HandleSlide(wxMouseEvent & event)
          consolidate = true;
       }
       MakeParentPushState(msg, _("Time-Shift"),
-         consolidate ? (PUSH_CONSOLIDATE) : (PUSH_AUTOSAVE));
+         consolidate ? (UndoPush::CONSOLIDATE) : (UndoPush::AUTOSAVE));
    }
 }
 
@@ -5176,7 +5176,7 @@ void TrackPanel::HandleSampleEditingButtonUp( wxMouseEvent & WXUNUSED(event))
    mDrawingTrack=NULL;       //Set this to NULL so it will catch improper drag events.
    MakeParentPushState(_("Moved Samples"),
                        _("Sample Edit"),
-                       PUSH_CONSOLIDATE|PUSH_AUTOSAVE);
+                       UndoPush::CONSOLIDATE | UndoPush::AUTOSAVE);
 }
 
 
@@ -5426,7 +5426,7 @@ void TrackPanel::HandleSliders(wxMouseEvent &event, bool pan)
 #endif
       MakeParentPushState(pan ? _("Moved pan slider") : _("Moved gain slider"),
                           pan ? _("Pan") : _("Gain"),
-                          PUSH_CONSOLIDATE);
+                          UndoPush::CONSOLIDATE);
 #ifdef EXPERIMENTAL_MIDI_OUT
     } else {
       MakeParentPushState(_("Moved velocity slider"), _("Velocity"), true);
@@ -6441,7 +6441,7 @@ void TrackPanel::OnKeyDown(wxKeyEvent & event)
    if (lt->OnKeyDown(mViewInfo->selectedRegion, event))
       MakeParentPushState(_("Modified Label"),
                           _("Label Edit"),
-                          PUSH_CONSOLIDATE);
+                          UndoPush::CONSOLIDATE);
 
    // Make sure caret is in view
    int x;
@@ -6485,7 +6485,7 @@ void TrackPanel::OnChar(wxKeyEvent & event)
    if (((LabelTrack *)t)->OnChar(mViewInfo->selectedRegion, event))
       MakeParentPushState(_("Modified Label"),
                           _("Label Edit"),
-                          PUSH_CONSOLIDATE);
+                          UndoPush::CONSOLIDATE);
 
    // If selection modified, refresh
    // Otherwise, refresh track display if the keystroke was handled
@@ -6737,7 +6737,7 @@ bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &rect, 
                }
             }
 
-            MakeParentPushState(_("Merged Clips"),_("Merge"), PUSH_CONSOLIDATE);
+            MakeParentPushState(_("Merged Clips"),_("Merge"), UndoPush::CONSOLIDATE);
             handled = true;
          }
       }
@@ -6886,7 +6886,7 @@ void TrackPanel::HandleGlyphDragRelease(LabelTrack * lTrack, wxMouseEvent & even
       *mViewInfo, &mViewInfo->selectedRegion)) {
       MakeParentPushState(_("Modified Label"),
          _("Label Edit"),
-         PUSH_CONSOLIDATE);
+         UndoPush::CONSOLIDATE);
    }
 
    //If we are adjusting a label on a labeltrack, do not do anything

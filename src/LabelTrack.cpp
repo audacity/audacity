@@ -2067,7 +2067,7 @@ void LabelTrack::OnContextMenu(wxCommandEvent & evt)
       {
          p->PushState(_("Modified Label"),
                       _("Label Edit"),
-                      PUSH_CONSOLIDATE);
+                      UndoPush::CONSOLIDATE);
       }
       break;
 
@@ -2082,7 +2082,7 @@ void LabelTrack::OnContextMenu(wxCommandEvent & evt)
       {
          p->PushState(_("Modified Label"),
                       _("Label Edit"),
-                      true /* consolidate */);
+                      UndoPush::CONSOLIDATE);
       }
       break;
 
@@ -2094,7 +2094,7 @@ void LabelTrack::OnContextMenu(wxCommandEvent & evt)
          DeleteLabel(ndx);
          p->PushState(_("Deleted Label"),
                       _("Label Edit"),
-                      true /* consolidate */);
+                      UndoPush::CONSOLIDATE);
       }
       break;
    }

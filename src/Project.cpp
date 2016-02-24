@@ -4001,12 +4001,12 @@ void AudacityProject::InitialState()
 
 void AudacityProject::PushState(const wxString &desc, const wxString &shortDesc)
 {
-   PushState(desc, shortDesc, PUSH_AUTOSAVE);
+   PushState(desc, shortDesc, UndoPush::AUTOSAVE);
 }
 
 void AudacityProject::PushState(const wxString &desc,
                                 const wxString &shortDesc,
-                                int flags )
+                                UndoPush flags )
 {
    GetUndoManager()->PushState(mTracks, mViewInfo.selectedRegion,
                           desc, shortDesc, flags);
@@ -4033,7 +4033,7 @@ void AudacityProject::PushState(const wxString &desc,
 
    if (GetTracksFitVerticallyZoomed())
       this->DoZoomFitV();
-   if( (flags & PUSH_AUTOSAVE)!= 0)
+   if((flags & UndoPush::AUTOSAVE) != UndoPush::MINIMAL)
       AutoSave();
 }
 
@@ -4707,7 +4707,7 @@ void AudacityProject::RefreshTPTrack(Track* pTrk, bool refreshbacking /*= true*/
 
 // TrackPanel callback method
 void AudacityProject::TP_PushState(const wxString &desc, const wxString &shortDesc,
-                                   int flags)
+                                   UndoPush flags)
 {
    PushState(desc, shortDesc, flags);
 }
@@ -4973,7 +4973,7 @@ void AudacityProject::SetTrackGain(Track * track, LWSlider * slider)
    if (link)
       link->SetGain(newValue);
 
-   PushState(_("Adjusted gain"), _("Gain"), PUSH_CONSOLIDATE);
+   PushState(_("Adjusted gain"), _("Gain"), UndoPush::CONSOLIDATE);
 
    GetTrackPanel()->RefreshTrack(track);
 }
@@ -4990,7 +4990,7 @@ void AudacityProject::SetTrackPan(Track * track, LWSlider * slider)
    if (link)
       link->SetPan(newValue);
 
-   PushState(_("Adjusted Pan"), _("Pan"), PUSH_CONSOLIDATE);
+   PushState(_("Adjusted Pan"), _("Pan"), UndoPush::CONSOLIDATE);
 
    GetTrackPanel()->RefreshTrack(track);
 }

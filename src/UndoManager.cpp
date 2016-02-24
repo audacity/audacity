@@ -214,12 +214,12 @@ void UndoManager::PushState(TrackList * l,
                             const SelectedRegion &selectedRegion,
                             const wxString &longDescription,
                             const wxString &shortDescription,
-                            int flags)
+                            UndoPush flags)
 {
    unsigned int i;
 
    // If consolidate is set to true, group up to 3 identical operations.
-   if (((flags&PUSH_CONSOLIDATE)!=0) && lastAction == longDescription &&
+   if (((flags & UndoPush::CONSOLIDATE) != UndoPush::MINIMAL) && lastAction == longDescription &&
        consolidationCount < 2) {
       consolidationCount++;
       ModifyState(l, selectedRegion);

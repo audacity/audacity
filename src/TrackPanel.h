@@ -457,9 +457,9 @@ protected:
    virtual void MakeParentRedrawScrollbars();
 
    // AS: Pushing the state preserves state for Undo operations.
-   virtual void MakeParentPushState(const wxString &desc, const wxString &shortDesc); // use PUSH_AUTOSAVE
+   virtual void MakeParentPushState(const wxString &desc, const wxString &shortDesc); // use UndoPush::AUTOSAVE
    virtual void MakeParentPushState(const wxString &desc, const wxString &shortDesc,
-                            int flags);
+                            UndoPush flags);
    virtual void MakeParentModifyState(bool bWantsAutoSave);    // if true, writes auto-save file. Should set only if you really want the state change restored after
                                                                // a crash, as it can take many seconds for large (eg. 10 track-hours) projects
 

@@ -69,11 +69,18 @@ WX_DEFINE_USER_EXPORTED_ARRAY(UndoStackElem *, UndoStack, class AUDACITY_DLL_API
 WX_DEFINE_USER_EXPORTED_ARRAY_DOUBLE(wxLongLong_t, SpaceArray, class AUDACITY_DLL_API);
 
 // These flags control what extra to do on a PushState
-// Default is PUSH_AUTOSAVE
-// Frequent/faster actions use PUSH_CONSOLIDATE
-const int PUSH_MINIMAL = 0;
-const int PUSH_CONSOLIDATE = 1;
-const int PUSH_AUTOSAVE = 2;
+// Default is AUTOSAVE
+// Frequent/faster actions use CONSOLIDATE
+enum class UndoPush {
+   MINIMAL = 0,
+   CONSOLIDATE = 1 << 0,
+   AUTOSAVE = 1 << 1
+};
+
+inline UndoPush operator | (UndoPush a, UndoPush b)
+{ return static_cast<UndoPush>(static_cast<int>(a) | static_cast<int>(b)); }
+inline UndoPush operator & (UndoPush a, UndoPush b)
+{ return static_cast<UndoPush>(static_cast<int>(a) & static_cast<int>(b)); }
 
 class AUDACITY_DLL_API UndoManager {
  public:
@@ -83,7 +90,7 @@ class AUDACITY_DLL_API UndoManager {
    void PushState(TrackList * l,
                   const SelectedRegion &selectedRegion,
                   const wxString &longDescription, const wxString &shortDescription,
-                  int flags = PUSH_AUTOSAVE);
+                  UndoPush flags = UndoPush::AUTOSAVE);
    void ModifyState(TrackList * l,
                     const SelectedRegion &selectedRegion);
    void ClearStates();
