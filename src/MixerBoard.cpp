@@ -27,6 +27,7 @@
 #endif
 #include "Project.h"
 #include "TrackPanel.h" // for EVT_TRACK_PANEL_TIMER
+#include "UndoManager.h"
 #include "WaveTrack.h"
 
 #include "widgets/Meter.h"

@@ -22,6 +22,7 @@ in a background thread.
 #include "ODManager.h"
 #include "../WaveTrack.h"
 #include "../Project.h"
+#include "../UndoManager.h"
 //temporarilly commented out till it is added to all projects
 //#include "../Profiler.h"
 

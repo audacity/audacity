@@ -119,6 +119,7 @@ simplifies construction of menu items.
 
 #include "Snap.h"
 
+#include "UndoManager.h"
 #include "WaveTrack.h"
 
 #if defined(EXPERIMENTAL_CRASH_REPORT)
@@ -1598,10 +1599,10 @@ void AudacityProject::CreateRecentFilesMenu(CommandManager *c)
 void AudacityProject::ModifyUndoMenuItems()
 {
    wxString desc;
-   int cur = mUndoManager.GetCurrentState();
+   int cur = GetUndoManager()->GetCurrentState();
 
-   if (mUndoManager.UndoAvailable()) {
-      mUndoManager.GetShortDescription(cur, &desc);
+   if (GetUndoManager()->UndoAvailable()) {
+      GetUndoManager()->GetShortDescription(cur, &desc);
       mCommandManager.Modify(wxT("Undo"),
                              wxString::Format(_("&Undo %s"),
                                               desc.c_str()));
@@ -1611,8 +1612,8 @@ void AudacityProject::ModifyUndoMenuItems()
                              wxString::Format(_("&Undo")));
    }
 
-   if (mUndoManager.RedoAvailable()) {
-      mUndoManager.GetShortDescription(cur+1, &desc);
+   if (GetUndoManager()->RedoAvailable()) {
+      GetUndoManager()->GetShortDescription(cur+1, &desc);
       mCommandManager.Modify(wxT("Redo"),
                              wxString::Format(_("&Redo %s"),
                                               desc.c_str()));
@@ -1756,16 +1757,16 @@ wxUint32 AudacityProject::GetUpdateFlags()
    if((msClipT1 - msClipT0) > 0.0)
       flags |= ClipboardFlag;
 
-   if (mUndoManager.UnsavedChanges())
+   if (GetUndoManager()->UnsavedChanges())
       flags |= UnsavedChangesFlag;
 
    if (!mLastEffect.IsEmpty())
       flags |= HasLastEffectFlag;
 
-   if (mUndoManager.UndoAvailable())
+   if (GetUndoManager()->UndoAvailable())
       flags |= UndoAvailableFlag;
 
-   if (mUndoManager.RedoAvailable())
+   if (GetUndoManager()->RedoAvailable())
       flags |= RedoAvailableFlag;
 
    if (ZoomInAvailable() && (flags & TracksExistFlag))
@@ -3761,7 +3762,7 @@ void AudacityProject::OnPrint()
 
 void AudacityProject::OnUndo()
 {
-   if (!mUndoManager.UndoAvailable()) {
+   if (!GetUndoManager()->UndoAvailable()) {
       wxMessageBox(_("Nothing to undo"));
       return;
    }
@@ -3771,7 +3772,7 @@ void AudacityProject::OnUndo()
       return;
    }
 
-   TrackList *l = mUndoManager.Undo(&mViewInfo.selectedRegion);
+   TrackList *l = GetUndoManager()->Undo(&mViewInfo.selectedRegion);
    PopState(l);
 
    mTrackPanel->SetFocusedTrack(NULL);
@@ -3787,7 +3788,7 @@ void AudacityProject::OnUndo()
 
 void AudacityProject::OnRedo()
 {
-   if (!mUndoManager.RedoAvailable()) {
+   if (!GetUndoManager()->RedoAvailable()) {
       wxMessageBox(_("Nothing to redo"));
       return;
    }
@@ -3796,7 +3797,7 @@ void AudacityProject::OnRedo()
       return;
    }
 
-   TrackList *l = mUndoManager.Redo(&mViewInfo.selectedRegion);
+   TrackList *l = GetUndoManager()->Redo(&mViewInfo.selectedRegion);
    PopState(l);
 
    mTrackPanel->SetFocusedTrack(NULL);
@@ -5262,7 +5263,7 @@ void AudacityProject::OnShowClipping()
 void AudacityProject::OnHistory()
 {
    if (!mHistoryWindow)
-      mHistoryWindow = new HistoryWindow(this, &mUndoManager);
+      mHistoryWindow = new HistoryWindow(this, GetUndoManager());
    mHistoryWindow->Show();
    mHistoryWindow->Raise();
    mHistoryWindow->UpdateDisplay();

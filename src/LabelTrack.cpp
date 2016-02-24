@@ -58,6 +58,7 @@ for drawing different aspects of the label and its text box.
 #include "Project.h"
 #include "TrackArtist.h"
 #include "TrackPanel.h"
+#include "UndoManager.h"
 #include "commands/CommandManager.h"
 
 #include "effects/TimeWarper.h"

@@ -22,7 +22,6 @@
 #include "Experimental.h"
 
 #include "DirManager.h"
-#include "UndoManager.h"
 #include "ViewInfo.h"
 #include "TrackPanelListener.h"
 #include "AudioIOListener.h"
@@ -90,6 +89,7 @@ class WaveTrackArray;
 class Regions;
 
 class LWSlider;
+class UndoManager;
 
 AudacityProject *CreateNewAudacityProject();
 AUDACITY_DLL_API AudacityProject *GetActiveProject();
@@ -157,7 +157,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    AudioIOStartStreamOptions GetDefaultPlayOptions();
 
    TrackList *GetTracks() { return mTracks; }
-   UndoManager *GetUndoManager() { return &mUndoManager; }
+   UndoManager *GetUndoManager() { return mUndoManager.get(); }
 
    sampleFormat GetDefaultFormat() { return mDefaultFormat; }
 
@@ -486,8 +486,8 @@ public:
    static void AllProjectsDeleteLock();
    static void AllProjectsDeleteUnlock();
 
-   void PushState(const wxString &desc, const wxString &shortDesc,
-                  int flags = PUSH_AUTOSAVE);
+   void PushState(const wxString &desc, const wxString &shortDesc); // use PUSH_AUTOSAVE
+   void PushState(const wxString &desc, const wxString &shortDesc, int flags);
    void RollbackState();
 
  private:
@@ -546,7 +546,7 @@ public:
    static ODLock *msAllProjectDeleteMutex;
 
    // History/Undo manager
-   UndoManager mUndoManager;
+   std::unique_ptr<UndoManager> mUndoManager;
    bool mDirty;
 
    // Commands

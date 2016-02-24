@@ -181,6 +181,7 @@ is time to refresh some aspect of the screen.
 #include "TimeTrack.h"
 #include "TrackArtist.h"
 #include "TrackPanelAx.h"
+#include "UndoManager.h"
 #include "WaveTrack.h"
 
 #include "commands/Keyboard.h"
@@ -1495,6 +1496,11 @@ void TrackPanel::MakeParentPushState(const wxString &desc, const wxString &short
                                      int flags)
 {
    mListener->TP_PushState(desc, shortDesc, flags);
+}
+
+void TrackPanel::MakeParentPushState(const wxString &desc, const wxString &shortDesc)
+{
+   MakeParentPushState(desc, shortDesc, PUSH_AUTOSAVE);
 }
 
 void TrackPanel::MakeParentModifyState(bool bWantsAutoSave)

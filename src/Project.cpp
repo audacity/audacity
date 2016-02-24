@@ -143,6 +143,8 @@ scroll information.  It also has some status flags.
 
 #include "FileDialog.h"
 
+#include "UndoManager.h"
+
 #include "toolbars/ToolManager.h"
 #include "toolbars/ControlToolBar.h"
 #include "toolbars/DeviceToolBar.h"
@@ -796,6 +798,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
      mSelectionFormat(gPrefs->Read(wxT("/SelectionFormat"), wxT(""))),
      mFrequencySelectionFormatName(gPrefs->Read(wxT("/FrequencySelectionFormatName"), wxT(""))),
      mBandwidthSelectionFormatName(gPrefs->Read(wxT("/BandwidthSelectionFormatName"), wxT(""))),
+     mUndoManager(safenew UndoManager),
      mDirty(false),
      mRuler(NULL),
      mTrackPanel(NULL),
@@ -2211,7 +2214,7 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
    // We may not bother to prompt the user to save, if the
    // project is now empty.
    if (event.CanVeto() && (mEmptyCanBeDirty || bHasTracks)) {
-      if (mUndoManager.UnsavedChanges()) {
+      if (GetUndoManager()->UnsavedChanges()) {
 
          wxString Message = _("Save changes before closing?");
          if( !bHasTracks )
@@ -2336,7 +2339,7 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
 
    // This must be done before the following Deref() since it holds
    // references to the DirManager.
-   mUndoManager.ClearStates();
+   GetUndoManager()->ClearStates();
 
    // MM: Tell the DirManager it can now DELETE itself
    // if it finds it is no longer needed. If it is still
@@ -3411,7 +3414,7 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
       bool bHasTracks = (iter.First() != NULL);
       if (!bHasTracks)
       {
-         if (mUndoManager.UnsavedChanges() && mEmptyCanBeDirty) {
+         if (GetUndoManager()->UnsavedChanges() && mEmptyCanBeDirty) {
             int result = wxMessageBox(_("Your project is now empty.\nIf saved, the project will have no tracks.\n\nTo save any previously open tracks:\nClick 'No', Edit > Undo until all tracks\nare open, then File > Save Project.\n\nSave anyway?"),
                                       _("Warning - Empty Project"),
                                       wxYES_NO | wxICON_QUESTION, this);
@@ -3596,7 +3599,7 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
          t = iter.Next();
       }
 
-      mUndoManager.StateSaved();
+      GetUndoManager()->StateSaved();
    }
 
    // If we get here, saving the project was successful, so we can DELETE
@@ -3979,12 +3982,12 @@ void AudacityProject::InitialState()
       mImportXMLTagHandler = NULL;
    }
 
-   mUndoManager.ClearStates();
+   GetUndoManager()->ClearStates();
 
-   mUndoManager.PushState(mTracks, mViewInfo.selectedRegion,
+   GetUndoManager()->PushState(mTracks, mViewInfo.selectedRegion,
                           _("Created new project"), wxT(""));
 
-   mUndoManager.StateSaved();
+   GetUndoManager()->StateSaved();
 
    if (mHistoryWindow)
       mHistoryWindow->UpdateDisplay();
@@ -3996,11 +3999,16 @@ void AudacityProject::InitialState()
    this->UpdateMixerBoard();
 }
 
+void AudacityProject::PushState(const wxString &desc, const wxString &shortDesc)
+{
+   PushState(desc, shortDesc, PUSH_AUTOSAVE);
+}
+
 void AudacityProject::PushState(const wxString &desc,
                                 const wxString &shortDesc,
                                 int flags )
 {
-   mUndoManager.PushState(mTracks, mViewInfo.selectedRegion,
+   GetUndoManager()->PushState(mTracks, mViewInfo.selectedRegion,
                           desc, shortDesc, flags);
 
    mDirty = true;
@@ -4036,7 +4044,7 @@ void AudacityProject::RollbackState()
 
 void AudacityProject::ModifyState(bool bWantsAutoSave)
 {
-   mUndoManager.ModifyState(mTracks, mViewInfo.selectedRegion);
+   GetUndoManager()->ModifyState(mTracks, mViewInfo.selectedRegion);
    if (bWantsAutoSave)
       AutoSave();
 }
@@ -4097,7 +4105,7 @@ void AudacityProject::PopState(TrackList * l)
 void AudacityProject::SetStateTo(unsigned int n)
 {
    TrackList *l =
-       mUndoManager.SetStateTo(n, &mViewInfo.selectedRegion);
+       GetUndoManager()->SetStateTo(n, &mViewInfo.selectedRegion);
    PopState(l);
 
    HandleResize();
