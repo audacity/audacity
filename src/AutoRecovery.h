@@ -41,7 +41,7 @@ bool ShowAutoRecoveryDialogIfNeeded(AudacityProject** pproj,
 //
 // XML Handler for a <recordingrecovery> tag
 //
-class RecordingRecoveryHandler: public XMLTagHandler
+class RecordingRecoveryHandler final : public XMLTagHandler
 {
 public:
    RecordingRecoveryHandler(AudacityProject* proj);
@@ -73,7 +73,7 @@ WX_DECLARE_STRING_HASH_MAP_WITH_DECL(short, NameMap, class AUDACITY_DLL_API);
 WX_DECLARE_HASH_MAP_WITH_DECL(short, wxString, wxIntegerHash, wxIntegerEqual, IdMap, class AUDACITY_DLL_API);
 WX_DECLARE_OBJARRAY_WITH_DECL(IdMap, IdMapArray, class AUDACITY_DLL_API);
 
-class AUDACITY_DLL_API AutoSaveFile : public XMLWriter
+class AUDACITY_DLL_API AutoSaveFile final : public XMLWriter
 {
 public:
 

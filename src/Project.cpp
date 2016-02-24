@@ -223,7 +223,7 @@ private:
 // This wrapper prevents the scrollbars from retaining focus after being
 // used.  Otherwise, the only way back to the track panel is to click it
 // and that causes your original location to be lost.
-class ScrollBar:public wxScrollBar
+class ScrollBar final : public wxScrollBar
 {
 public:
    ScrollBar(wxWindow* parent, wxWindowID id, long style)
@@ -274,7 +274,7 @@ void SetActiveProject(AudacityProject * project)
 }
 
 #if wxUSE_DRAG_AND_DROP
-class FileObject: public wxFileDataObject
+class FileObject final : public wxFileDataObject
 {
 public:
    FileObject()
@@ -299,7 +299,7 @@ public:
    }
 };
 
-class DropTarget: public wxFileDropTarget
+class DropTarget final : public wxFileDropTarget
 {
 public:
    DropTarget(AudacityProject *proj)

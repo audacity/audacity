@@ -31,7 +31,7 @@ class LabelTrack;
 class ShuttleGui;
 class TrackListIterator;
 
-class ExportMultiple : public wxDialog
+class ExportMultiple final : public wxDialog
 {
 public:
 
@@ -169,7 +169,7 @@ private:
 
 };
 
-class SuccessDialog : public wxDialog
+class SuccessDialog final : public wxDialog
 {
 public:
    SuccessDialog(wxWindow *parent, wxWindowID id, const wxString &title) :
@@ -181,7 +181,7 @@ private:
    DECLARE_EVENT_TABLE()
 };
 
-class MouseEvtHandler : public wxEvtHandler
+class MouseEvtHandler final : public wxEvtHandler
 {
 public:
    void OnMouse(wxMouseEvent& event);

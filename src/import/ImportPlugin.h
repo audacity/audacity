@@ -68,7 +68,7 @@ class Tags;
 
 class ImportFileHandle;
 
-class ImportPlugin
+class ImportPlugin /* not final */
 {
 public:
 
@@ -114,7 +114,7 @@ protected:
 };
 
 
-class ImportFileHandle
+class ImportFileHandle /* not final */
 {
 public:
    ImportFileHandle(const wxString & filename)

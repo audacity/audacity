@@ -22,7 +22,7 @@ class LabelTrack;
 
 #define FINDCLIPPING_PLUGIN_SYMBOL XO("Find Clipping")
 
-class EffectFindClipping : public Effect
+class EffectFindClipping final : public Effect
 {
 public:
    EffectFindClipping();

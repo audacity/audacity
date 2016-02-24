@@ -321,7 +321,7 @@ wxArrayString LadspaEffectsModule::GetSearchPaths()
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-class LadspaEffectOptionsDialog:public wxDialog
+class LadspaEffectOptionsDialog final : public wxDialog
 {
 public:
    LadspaEffectOptionsDialog(wxWindow * parent, EffectHostInterface *host);
@@ -422,7 +422,7 @@ enum
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-class LadspaEffectMeter : public wxWindow
+class LadspaEffectMeter final : public wxWindow
 {
 public:
    LadspaEffectMeter(wxWindow *parent, const float & val, float min, float max);

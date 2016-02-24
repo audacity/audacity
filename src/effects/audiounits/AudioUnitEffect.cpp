@@ -286,7 +286,7 @@ OSType AudioUnitEffectsModule::ToOSType(const wxString & type)
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-class AudioUnitEffectOptionsDialog:public wxDialog
+class AudioUnitEffectOptionsDialog final : public wxDialog
 {
 public:
    AudioUnitEffectOptionsDialog(wxWindow * parent, EffectHostInterface *host);
@@ -426,7 +426,7 @@ void AudioUnitEffectOptionsDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
 #define PRESET_LOCAL_PATH wxT("/Library/Audio/Presets")
 #define PRESET_USER_PATH wxT("~/Library/Audio/Presets")
 
-class AudioUnitEffectExportDialog:public wxDialog
+class AudioUnitEffectExportDialog final : public wxDialog
 {
 public:
    AudioUnitEffectExportDialog(wxWindow * parent, AudioUnitEffect *effect);
@@ -600,7 +600,7 @@ void AudioUnitEffectExportDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-class AudioUnitEffectImportDialog:public wxDialog
+class AudioUnitEffectImportDialog final : public wxDialog
 {
 public:
    AudioUnitEffectImportDialog(wxWindow * parent, AudioUnitEffect *effect);

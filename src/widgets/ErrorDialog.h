@@ -18,7 +18,7 @@
 
 class AudacityProject;
 
-class ErrorDialog : public wxDialog
+class ErrorDialog /* not final */ : public wxDialog
 {
 public:
    // constructors and destructors
@@ -41,7 +41,7 @@ private:
 };
 
 // Helper class to make browser "simulate" a modal dialog
-class HtmlTextHelpDialog : public BrowserFrame
+class HtmlTextHelpDialog final : public BrowserFrame
 {
 public:
    HtmlTextHelpDialog() : BrowserFrame()

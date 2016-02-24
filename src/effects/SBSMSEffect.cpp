@@ -83,7 +83,7 @@ public:
    WaveTrack *outputRightTrack;
 };
 
-class SBSMSEffectInterface : public SBSMSInterfaceSliding {
+class SBSMSEffectInterface final : public SBSMSInterfaceSliding {
 public:
    SBSMSEffectInterface(Resampler *resampler,
                         Slide *rateSlide, Slide *pitchSlide,

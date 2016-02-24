@@ -19,7 +19,7 @@
 
 #define INVERT_PLUGIN_SYMBOL XO("Invert")
 
-class EffectInvert : public Effect
+class EffectInvert final : public Effect
 {
 public:
    EffectInvert();

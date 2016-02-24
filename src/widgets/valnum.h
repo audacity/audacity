@@ -38,7 +38,7 @@ enum NumValidatorStyle
 // Base class for all numeric validators.
 // ----------------------------------------------------------------------------
 
-class NumValidatorBase : public wxValidator
+class NumValidatorBase /* not final */ : public wxValidator
 {
 public:
     // Change the validator style. Usually it's specified during construction.
@@ -144,7 +144,7 @@ namespace Private
 // The template argument T is just the type handled by the validator that will
 // inherit from this one.
 template <class B, typename T>
-class NumValidator : public B
+class NumValidator final : public B
 {
 public:
     typedef B BaseValidator;
@@ -269,7 +269,7 @@ private:
 // type-dependent code of wxIntegerValidator<> and always works with values of
 // type LongestValueType. It is not meant to be used directly, please use
 // IntegerValidator<> only instead.
-class IntegerValidatorBase : public NumValidatorBase
+class IntegerValidatorBase /* not final */ : public NumValidatorBase
 {
 protected:
     // Define the type we use here, it should be the maximal-sized integer type
@@ -328,7 +328,7 @@ private:
 // (short, int or long and long long if supported) and their unsigned versions
 // as well.
 template <typename T>
-class IntegerValidator
+class IntegerValidator final
     : public Private::NumValidator<IntegerValidatorBase, T>
 {
 public:
@@ -369,7 +369,7 @@ MakeIntegerValidator(T *value, int style = NUM_VAL_DEFAULT)
 
 // Similar to IntegerValidatorBase, this class is not meant to be used
 // directly, only FloatingPointValidator<> should be used in the user code.
-class FloatingPointValidatorBase : public NumValidatorBase
+class FloatingPointValidatorBase /* not final */ : public NumValidatorBase
 {
 public:
     // Set precision i.e. the number of digits shown (and accepted on input)
@@ -429,7 +429,7 @@ private:
 // Validator for floating point numbers. It can be used with float, double or
 // long double values.
 template <typename T>
-class FloatingPointValidator
+class FloatingPointValidator final
     : public Private::NumValidator<FloatingPointValidatorBase, T>
 {
 public:

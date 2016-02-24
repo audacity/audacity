@@ -67,7 +67,7 @@ class ImageRoll
 
 // A very simple class that just display an ImageRoll that doesn't
 // do anything
-class ImageRollPanel : public wxPanel
+class ImageRollPanel final : public wxPanel
 {
  public:
    DECLARE_DYNAMIC_CLASS(ImageRollPanel);

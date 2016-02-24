@@ -38,7 +38,7 @@ class wxListEvent;
 class wxButton;
 class ShuttleGui;
 
-class BatchProcessDialog:public wxDialog {
+class BatchProcessDialog final : public wxDialog {
  public:
    // constructors and destructors
    BatchProcessDialog(wxWindow * parent);
@@ -62,7 +62,7 @@ class BatchProcessDialog:public wxDialog {
    DECLARE_EVENT_TABLE()
 };
 
-class EditChainsDialog:public wxDialog
+class EditChainsDialog final : public wxDialog
 {
 public:
    EditChainsDialog(wxWindow * parent);

@@ -32,7 +32,7 @@ void ComputeLegacySummaryInfo(wxFileName fileName,
 // back to disk, but you can't create a NEW one from new
 // sample data.
 //
-class LegacyBlockFile : public BlockFile {
+class LegacyBlockFile final : public BlockFile {
  public:
 
    // Constructor / Destructor

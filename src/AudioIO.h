@@ -127,7 +127,7 @@ struct AudioIOStartStreamOptions
 #endif
 };
 
-class AUDACITY_DLL_API AudioIO {
+class AUDACITY_DLL_API AudioIO final {
 
  public:
    AudioIO();

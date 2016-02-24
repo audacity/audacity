@@ -38,7 +38,7 @@ class ShuttleGui;
 class SpectrogramSettings;
 class WaveTrack;
 
-class SpectrumPrefs:public PrefsPanel
+class SpectrumPrefs final : public PrefsPanel
 {
  public:
    SpectrumPrefs(wxWindow * parent, WaveTrack *wt);
@@ -96,7 +96,7 @@ class SpectrumPrefs:public PrefsPanel
    bool mPopulating;
 };
 
-class SpectrumPrefsFactory : public PrefsPanelFactory
+class SpectrumPrefsFactory final : public PrefsPanelFactory
 {
 public:
    explicit SpectrumPrefsFactory(WaveTrack *wt = 0);

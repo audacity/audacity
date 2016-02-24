@@ -23,7 +23,7 @@ class ShuttleGui;
 
 #define NOISE_PLUGIN_SYMBOL XO("Noise")
 
-class EffectNoise : public Effect
+class EffectNoise final : public Effect
 {
 public:
    EffectNoise();

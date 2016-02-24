@@ -21,7 +21,7 @@ class wxChoice;
 class wxStaticText;
 struct DeviceSourceMap;
 
-class DeviceToolBar:public ToolBar {
+class DeviceToolBar final : public ToolBar {
 
  public:
 

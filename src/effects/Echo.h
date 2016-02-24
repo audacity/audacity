@@ -22,7 +22,7 @@ class ShuttleGui;
 
 #define ECHO_PLUGIN_SYMBOL XO("Echo")
 
-class EffectEcho : public Effect
+class EffectEcho final : public Effect
 {
 public:
    EffectEcho();

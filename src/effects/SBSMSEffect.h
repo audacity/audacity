@@ -21,7 +21,7 @@
 #include "sbsms.h"
 using namespace _sbsms_;
 
-class EffectSBSMS : public Effect
+class EffectSBSMS /* not final */ : public Effect
 {
 public:
    virtual bool Process();

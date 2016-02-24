@@ -101,7 +101,7 @@ static const wxChar *exts[] =
    wxT("lof")
 };
 
-class LOFImportPlugin : public ImportPlugin
+class LOFImportPlugin final : public ImportPlugin
 {
 public:
    LOFImportPlugin()
@@ -117,7 +117,7 @@ public:
 };
 
 
-class LOFImportFileHandle : public ImportFileHandle
+class LOFImportFileHandle final : public ImportFileHandle
 {
 public:
    LOFImportFileHandle(const wxString & name, wxTextFile *file);

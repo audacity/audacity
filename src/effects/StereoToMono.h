@@ -17,7 +17,7 @@
 
 #define STEREOTOMONO_PLUGIN_SYMBOL XO("Stereo To Mono")
 
-class EffectStereoToMono : public Effect
+class EffectStereoToMono final : public Effect
 {
 public:
    EffectStereoToMono();

@@ -36,7 +36,7 @@
 static wxPrintData *gPrintData = NULL;
 static wxPageSetupData *gPageSetupData = NULL;
 
-class AudacityPrintout : public wxPrintout
+class AudacityPrintout final : public wxPrintout
 {
  public:
    AudacityPrintout(wxString title,

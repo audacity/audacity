@@ -896,7 +896,7 @@ void ShuttleGuiBase::EndNotebookPage()
 
 // Doxygen description is at the start of the file
 // this is a wxPanel with erase background disabled.
-class InvisiblePanel : public wxPanel
+class InvisiblePanel final : public wxPanel
 {
 public:
    InvisiblePanel(

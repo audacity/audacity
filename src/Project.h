@@ -128,7 +128,7 @@ enum StatusBarField {
 DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_CAPTURE_KEY, -1);
 
 // XML handler for <import> tag
-class ImportXMLTagHandler : public XMLTagHandler
+class ImportXMLTagHandler final : public XMLTagHandler
 {
  public:
    ImportXMLTagHandler(AudacityProject* pProject) { mProject = pProject; }
@@ -144,7 +144,7 @@ class ImportXMLTagHandler : public XMLTagHandler
    AudacityProject* mProject;
 };
 
-class AUDACITY_DLL_API AudacityProject:  public wxFrame,
+class AUDACITY_DLL_API AudacityProject final : public wxFrame,
                                      public TrackPanelListener,
                                      public SelectionBarListener,
                                      public SpectralSelectionBarListener,

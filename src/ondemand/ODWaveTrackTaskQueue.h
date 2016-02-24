@@ -28,7 +28,7 @@ tasks associated with a WaveTrack.
 class WaveTrack;
 class ODTask;
 /// A class representing a modular task to be used with the On-Demand structures.
-class ODWaveTrackTaskQueue
+class ODWaveTrackTaskQueue final
 {
  public:
 

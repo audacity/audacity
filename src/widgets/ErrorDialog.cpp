@@ -40,7 +40,7 @@ Gives an Error message with an option for help.
 #include "ErrorDialog.h"
 
 // special case for alias missing dialog because we keep track of if it exists.
-class AliasedFileMissingDialog : public ErrorDialog
+class AliasedFileMissingDialog final : public ErrorDialog
 {
    public:
    AliasedFileMissingDialog(AudacityProject *parent,

@@ -125,7 +125,7 @@ DECLARE_MODULE_ENTRY(AudacityModule)
 // ============================================================================
 DECLARE_BUILTIN_MODULE(VSTBuiltin);
 
-class VSTSubEntry : public wxModule
+class VSTSubEntry final : public wxModule
 {
 public:
    bool OnInit()
@@ -175,7 +175,7 @@ enum InfoKeys
    kKeyEnd
 };
 
-class VSTSubProcess : public wxProcess,
+class VSTSubProcess final : public wxProcess,
                       public EffectIdentInterface
 {
 public:
@@ -698,7 +698,7 @@ void VSTEffectsModule::Check(const wxChar *path)
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-class VSTEffectOptionsDialog:public wxDialog
+class VSTEffectOptionsDialog final : public wxDialog
 {
 public:
    VSTEffectOptionsDialog(wxWindow * parent, EffectHostInterface *host);
@@ -833,7 +833,7 @@ void VSTEffectOptionsDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-class VSTEffectTimer : public wxTimer
+class VSTEffectTimer final : public wxTimer
 {
 public:
    VSTEffectTimer(VSTEffect *effect)

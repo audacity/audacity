@@ -170,7 +170,7 @@ bool LoadFFmpeg(bool showerror);
 /// If Audacity failed to load libav*, this dialog
 /// shows up and tells user about that. It will pop-up
 /// again and again until it is disabled.
-class FFmpegNotFoundDialog : public wxDialog
+class FFmpegNotFoundDialog final : public wxDialog
 {
 public:
 

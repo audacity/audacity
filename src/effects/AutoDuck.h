@@ -28,7 +28,7 @@ class ShuttleGui;
 
 #define AUTODUCK_PLUGIN_SYMBOL XO("Auto Duck")
 
-class EffectAutoDuck : public Effect
+class EffectAutoDuck final : public Effect
 {
 public:
    EffectAutoDuck();
@@ -90,7 +90,7 @@ private:
    friend class EffectAutoDuckPanel;
 };
 
-class EffectAutoDuckPanel : public wxPanel
+class EffectAutoDuckPanel final : public wxPanel
 {
 public:
    EffectAutoDuckPanel(wxWindow *parent, EffectAutoDuck *effect);

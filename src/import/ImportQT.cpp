@@ -70,7 +70,7 @@ void GetQTImportPlugin(ImportPluginList *importPluginList,
 
 #define kQTAudioPropertyID_MaxAudioSampleSize   'mssz'
 
-class QTImportPlugin : public ImportPlugin
+class QTImportPlugin final : public ImportPlugin
 {
  public:
    QTImportPlugin()
@@ -117,7 +117,7 @@ class QTImportPlugin : public ImportPlugin
    bool mInitialized;
 };
 
-class QTImportFileHandle : public ImportFileHandle
+class QTImportFileHandle final : public ImportFileHandle
 {
  public:
    QTImportFileHandle(const wxString & name, Movie movie)

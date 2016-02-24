@@ -21,7 +21,7 @@
 
 class ShuttleGui;
 
-class RecordingPrefs :public PrefsPanel
+class RecordingPrefs final : public PrefsPanel
 {
  public:
    RecordingPrefs(wxWindow * parent);
@@ -40,7 +40,7 @@ class RecordingPrefs :public PrefsPanel
    DECLARE_EVENT_TABLE();
 };
 
-class RecordingPrefsFactory : public PrefsPanelFactory
+class RecordingPrefsFactory final : public PrefsPanelFactory
 {
 public:
    virtual PrefsPanel *Create(wxWindow *parent);

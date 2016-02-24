@@ -71,7 +71,7 @@ WX_DECLARE_STRING_HASH_MAP_WITH_DECL( wxString, TagMap,class AUDACITY_DLL_API );
 #define TAG_SOFTWARE wxT("Software")
 #define TAG_COPYRIGHT wxT("Copyright")
 
-class AUDACITY_DLL_API Tags: public XMLTagHandler {
+class AUDACITY_DLL_API Tags final : public XMLTagHandler {
 
  public:
    Tags();  // constructor
@@ -129,7 +129,7 @@ class AUDACITY_DLL_API Tags: public XMLTagHandler {
    bool mEditTrackNumber;
 };
 
-class TagsEditor: public wxDialog
+class TagsEditor final : public wxDialog
 {
  public:
    // constructors and destructors

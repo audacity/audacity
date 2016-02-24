@@ -26,7 +26,7 @@ class ShuttleGui;
 
 #define TIMESCALE_PLUGIN_SYMBOL XO("Time Scale")
 
-class EffectTimeScale : public EffectSBSMS
+class EffectTimeScale final : public EffectSBSMS
 {
 public:
    EffectTimeScale();

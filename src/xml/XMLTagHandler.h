@@ -66,7 +66,7 @@ public:
 };
 
 
-class AUDACITY_DLL_API XMLTagHandler {
+class AUDACITY_DLL_API XMLTagHandler /* not final */ {
  public:
    XMLTagHandler(){};
    virtual ~XMLTagHandler(){};

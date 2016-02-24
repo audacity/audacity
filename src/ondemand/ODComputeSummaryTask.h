@@ -26,7 +26,7 @@ class ODPCMAliasBlockFile;
 class WaveTrack;
 
 /// A class representing a modular task to be used with the On-Demand structures.
-class ODComputeSummaryTask:public ODTask
+class ODComputeSummaryTask final : public ODTask
 {
  public:
 

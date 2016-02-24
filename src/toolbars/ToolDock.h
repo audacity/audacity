@@ -45,7 +45,7 @@ enum
    DockCount = 2
 };
 
-class ToolDock:public wxPanel
+class ToolDock final : public wxPanel
 {
 
  public:

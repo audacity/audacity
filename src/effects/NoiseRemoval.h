@@ -32,7 +32,7 @@ class WaveTrack;
 
 #include "../RealFFTf.h"
 
-class EffectNoiseRemoval : public Effect
+class EffectNoiseRemoval final : public Effect
 {
 public:
    EffectNoiseRemoval();
@@ -128,7 +128,7 @@ private:
 
 // Declare window functions
 
-class NoiseRemovalDialog: public EffectDialog
+class NoiseRemovalDialog final : public EffectDialog
 {
 public:
    // constructors and destructors

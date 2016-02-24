@@ -68,7 +68,7 @@ class KeyViewAx;
 #endif
 
 // The KeyView class
-class KeyView : public wxVListBox
+class KeyView final : public wxVListBox
 {
 public:
    KeyView(wxWindow *parent,
@@ -173,8 +173,7 @@ private:
 // wxAccessible object providing information for KeyView.
 // ----------------------------------------------------------------------------
 
-class KeyViewAx
-: public wxWindowAccessible
+class KeyViewAx final : public wxWindowAccessible
 {
 public:
 

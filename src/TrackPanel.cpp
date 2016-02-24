@@ -8846,7 +8846,7 @@ void TrackPanel::OnMergeStereo(wxCommandEvent & WXUNUSED(event))
    Refresh(false);
 }
 
-class ViewSettingsDialog : public PrefsDialog
+class ViewSettingsDialog final : public PrefsDialog
 {
 public:
    ViewSettingsDialog
@@ -9356,7 +9356,7 @@ void TrackPanel::OnSetName(wxCommandEvent & WXUNUSED(event))
 // Small helper class to enumerate all fonts in the system
 // We use this because the default implementation of
 // wxFontEnumerator::GetFacenames() has changed between wx2.6 and 2.8
-class TrackPanelFontEnumerator : public wxFontEnumerator
+class TrackPanelFontEnumerator final : public wxFontEnumerator
 {
 public:
    TrackPanelFontEnumerator(wxArrayString* fontNames) :

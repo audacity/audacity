@@ -18,7 +18,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-class NyquistEffectsModule : public ModuleInterface
+class NyquistEffectsModule final : public ModuleInterface
 {
 public:
    NyquistEffectsModule(ModuleManagerInterface *moduleManager, const wxString *path);

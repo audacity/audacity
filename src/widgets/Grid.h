@@ -35,7 +35,7 @@ class NumericTextCtrl;
 // ----------------------------------------------------------------------------
 #define GRID_VALUE_TIME wxT("Time")
 
-class TimeEditor:public wxGridCellEditor
+class TimeEditor final : public wxGridCellEditor
 {
  public:
 
@@ -87,7 +87,7 @@ class TimeEditor:public wxGridCellEditor
 // wxGridCellRenderer for the NumericTextCtrl.
 // ----------------------------------------------------------------------------
 
-class TimeRenderer : public wxGridCellRenderer
+class TimeRenderer final : public wxGridCellRenderer
 {
  public:
     void Draw(wxGrid &grid,
@@ -114,7 +114,7 @@ class TimeRenderer : public wxGridCellRenderer
 // ----------------------------------------------------------------------------
 #define GRID_VALUE_CHOICE wxT("Choice")
 
-class ChoiceEditor : public wxGridCellEditor, wxEvtHandler
+class ChoiceEditor final : public wxGridCellEditor, wxEvtHandler
 {
 public:
 
@@ -181,8 +181,7 @@ public:
 // wxGrid with support for accessibility.
 // ----------------------------------------------------------------------------
 
-class Grid
-: public wxGrid
+class Grid final : public wxGrid
 {
 
  public:
@@ -234,8 +233,7 @@ class Grid
 // wxAccessible object providing grid information for Grid.
 // ----------------------------------------------------------------------------
 
-class GridAx
-: public wxWindowAccessible
+class GridAx final : public wxWindowAccessible
 {
 
  public:

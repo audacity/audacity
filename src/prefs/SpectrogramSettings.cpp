@@ -144,7 +144,7 @@ SpectrogramSettings& SpectrogramSettings::defaults()
 //static
 const wxArrayString &SpectrogramSettings::GetScaleNames()
 {
-   class ScaleNamesArray : public TranslatableStringArray
+   class ScaleNamesArray final : public TranslatableStringArray
    {
       virtual void Populate()
       {
@@ -169,7 +169,7 @@ const wxArrayString &SpectrogramSettings::GetScaleNames()
 //static
 const wxArrayString &SpectrogramSettings::GetAlgorithmNames()
 {
-   class AlgorithmNamesArray : public TranslatableStringArray
+   class AlgorithmNamesArray final : public TranslatableStringArray
    {
       virtual void Populate()
       {

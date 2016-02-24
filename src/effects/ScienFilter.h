@@ -35,7 +35,7 @@ class ShuttleGui;
 
 class EffectScienFilterPanel;
 
-class EffectScienFilter : public Effect
+class EffectScienFilter final : public Effect
 {
 public:
    EffectScienFilter();
@@ -135,7 +135,7 @@ private:
    friend class EffectScienFilterPanel;
 };
 
-class EffectScienFilterPanel : public wxPanel
+class EffectScienFilterPanel final : public wxPanel
 {
 public:
    EffectScienFilterPanel(EffectScienFilter *effect, wxWindow *parent);

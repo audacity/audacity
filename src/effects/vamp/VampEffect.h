@@ -32,7 +32,7 @@ class LabelTrack;
 #define VAMPEFFECTS_VERSION wxT("1.0.0.0")
 #define VAMPEFFECTS_FAMILY wxT("Vamp")
 
-class VampEffect : public Effect
+class VampEffect final : public Effect
 {
 public:
    VampEffect(Vamp::Plugin *plugin,

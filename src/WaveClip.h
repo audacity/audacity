@@ -201,7 +201,7 @@ public:
    }
 };
 
-class AUDACITY_DLL_API WaveClip : public XMLTagHandler
+class AUDACITY_DLL_API WaveClip final : public XMLTagHandler
 {
 private:
    // It is an error to copy a WaveClip without specifying the DirManager.

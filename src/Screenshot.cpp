@@ -40,7 +40,7 @@ class CommandType;
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class ScreenFrame:public wxFrame
+class ScreenFrame final : public wxFrame
 {
  public:
    // constructors and destructors
@@ -133,7 +133,7 @@ void CloseScreenshotTools()
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class ScreenFrameTimer:public wxTimer
+class ScreenFrameTimer final : public wxTimer
 {
  public:
    ScreenFrameTimer(ScreenFrame *frame,

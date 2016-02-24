@@ -31,7 +31,7 @@ enum {
 };
 
 
-class ModulePrefs:public PrefsPanel
+class ModulePrefs final : public PrefsPanel
 {
  public:
    ModulePrefs(wxWindow * parent);
@@ -50,7 +50,7 @@ class ModulePrefs:public PrefsPanel
    wxArrayString mPaths;
 };
 
-class ModulePrefsFactory : public PrefsPanelFactory
+class ModulePrefsFactory final : public PrefsPanelFactory
 {
 public:
    virtual PrefsPanel *Create(wxWindow *parent);

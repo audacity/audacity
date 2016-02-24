@@ -68,7 +68,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-class LV2EffectsModule : public ModuleInterface
+class LV2EffectsModule final : public ModuleInterface
 {
 public:
    LV2EffectsModule(ModuleManagerInterface *moduleManager, const wxString *path);

@@ -33,7 +33,7 @@ class wxCheckBox;
 
 class RegionList;
 
-class EffectTruncSilence : public Effect
+class EffectTruncSilence final : public Effect
 {
 public:
    EffectTruncSilence();

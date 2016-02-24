@@ -15,7 +15,7 @@
 #include "PCMAliasBlockFile.h"
 
 /// An AliasBlockFile that references uncompressed data in an existing file
-class LegacyAliasBlockFile : public PCMAliasBlockFile
+class LegacyAliasBlockFile final : public PCMAliasBlockFile
 {
  public:
 

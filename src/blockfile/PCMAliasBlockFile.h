@@ -15,7 +15,7 @@
 #include "../DirManager.h"
 
 /// An AliasBlockFile that references uncompressed data in an existing file
-class PCMAliasBlockFile : public AliasBlockFile
+class PCMAliasBlockFile /* not final */ : public AliasBlockFile
 {
  public:
    /// Constructs a PCMAliasBlockFile, writing the summary to disk

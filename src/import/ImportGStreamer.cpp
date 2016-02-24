@@ -101,7 +101,7 @@ struct GStreamContext
 };
 
 ///! Does actual import, returned by GStreamerImportPlugin::Open
-class GStreamerImportFileHandle : public ImportFileHandle
+class GStreamerImportFileHandle final : public ImportFileHandle
 {
 public:
    GStreamerImportFileHandle(const wxString & name);
@@ -178,7 +178,7 @@ private:
 
 /// A representative of GStreamer loader in
 /// the Audacity import plugin list
-class GStreamerImportPlugin : public ImportPlugin
+class GStreamerImportPlugin final : public ImportPlugin
 {
 public:
    ///! Constructor

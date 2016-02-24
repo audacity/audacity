@@ -65,7 +65,7 @@ typedef std::map<wxString, ModuleMain *> ModuleMainMap;
 typedef std::map<wxString, ModuleInterface *> ModuleMap;
 typedef std::map<ModuleInterface *, wxDynamicLibrary *> LibraryMap;
 
-class ModuleManager : public ModuleManagerInterface
+class ModuleManager final : public ModuleManagerInterface
 {
 public:
    ModuleManager();

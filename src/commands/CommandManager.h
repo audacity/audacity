@@ -25,7 +25,7 @@
 
 #include "audacity/Types.h"
 
-class AUDACITY_DLL_API CommandFunctor
+class AUDACITY_DLL_API CommandFunctor /* not final */
 {
 public:
    CommandFunctor(){};
@@ -89,7 +89,7 @@ WX_DECLARE_HASH_MAP_WITH_DECL(int, CommandListEntry *, wxIntegerHash, wxIntegerE
 
 class AudacityProject;
 
-class AUDACITY_DLL_API CommandManager: public XMLTagHandler
+class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
 {
  public:
 

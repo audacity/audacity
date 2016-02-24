@@ -125,7 +125,7 @@ private:
 const int DragThreshold = 3;// Anything over 3 pixels is a drag, else a click.
 
 
-class AUDACITY_DLL_API TrackPanel:public wxPanel {
+class AUDACITY_DLL_API TrackPanel final : public wxPanel {
  public:
 
    TrackPanel(wxWindow * parent,
@@ -577,7 +577,7 @@ protected:
 
    TrackArtist *mTrackArtist;
 
-   class AUDACITY_DLL_API AudacityTimer:public wxTimer {
+   class AUDACITY_DLL_API AudacityTimer final : public wxTimer {
    public:
      virtual void Notify() {
        // (From Debian)

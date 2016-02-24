@@ -37,7 +37,7 @@ enum {
    ID_FILE_LIST
 };
 
-class AutoRecoveryDialog : public wxDialog
+class AutoRecoveryDialog final : public wxDialog
 {
 public:
    AutoRecoveryDialog(wxWindow *parent);

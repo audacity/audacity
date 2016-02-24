@@ -20,14 +20,14 @@
 
 #include <AudioUnit/AudioComponent.h>
 
-class AUControlImpl : public wxWidgetCocoaImpl
+class AUControlImpl final : public wxWidgetCocoaImpl
 {
 public :
    AUControlImpl(wxWindowMac *peer, NSView *view);
    ~AUControlImpl();
 };
 
-class AUControl : public wxControl
+class AUControl final : public wxControl
 {
 public:
    AUControl();

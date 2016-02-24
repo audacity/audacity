@@ -21,7 +21,7 @@
 
 #define SILENCE_PLUGIN_SYMBOL XO("Silence")
 
-class EffectSilence : public Generator
+class EffectSilence final : public Generator
 {
 public:
    EffectSilence();

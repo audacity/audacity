@@ -51,7 +51,7 @@
 
 class ModuleInterface;
 
-class PluginManagerInterface
+class PluginManagerInterface /* not final */
 {
 public:
    virtual ~PluginManagerInterface() {};

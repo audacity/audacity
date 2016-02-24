@@ -34,7 +34,7 @@ using namespace soundtouch;
 
 class WaveTrack;
 
-class EffectSoundTouch : public Effect
+class EffectSoundTouch /* not final */ : public Effect
 {
 public:
 

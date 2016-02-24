@@ -86,7 +86,7 @@ class MeterUpdateQueue
 
 class MeterAx;
 
-class Meter : public wxPanel
+class Meter final : public wxPanel
 {
    DECLARE_DYNAMIC_CLASS(Meter)
 
@@ -285,7 +285,7 @@ class Meter : public wxPanel
 
 #if wxUSE_ACCESSIBILITY
 
-class MeterAx: public wxWindowAccessible
+class MeterAx final : public wxWindowAccessible
 {
 public:
    MeterAx(wxWindow * window);

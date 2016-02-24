@@ -14,7 +14,7 @@
 
 #include "Shuttle.h"
 
-class ShuttlePrefs : public Shuttle
+class ShuttlePrefs final : public Shuttle
 {
 public:
    // constructors and destructors

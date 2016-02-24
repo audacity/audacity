@@ -238,7 +238,7 @@ private:
    NumberScale *mpNumberScale;
 };
 
-class AUDACITY_DLL_API RulerPanel : public wxPanel {
+class AUDACITY_DLL_API RulerPanel final : public wxPanel {
    DECLARE_DYNAMIC_CLASS(RulerPanel)
 
  public:
@@ -274,7 +274,7 @@ private:
 // Once TrackPanel uses wxSizers, we will derive it from some
 // wxWindow and the GetSize and SetSize functions
 // will then be wxWidgets functions instead.
-class AUDACITY_DLL_API AdornedRulerPanel : public wxPanel
+class AUDACITY_DLL_API AdornedRulerPanel final : public wxPanel
 {
 public:
    AdornedRulerPanel(AudacityProject* parent,

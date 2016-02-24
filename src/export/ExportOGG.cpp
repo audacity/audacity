@@ -42,7 +42,7 @@
 // ExportOGGOptions
 //----------------------------------------------------------------------------
 
-class ExportOGGOptions : public wxPanel
+class ExportOGGOptions final : public wxPanel
 {
 public:
 
@@ -123,7 +123,7 @@ bool ExportOGGOptions::TransferDataFromWindow()
 
 #define SAMPLES_PER_RUN 8192
 
-class ExportOGG : public ExportPlugin
+class ExportOGG final : public ExportPlugin
 {
 public:
 

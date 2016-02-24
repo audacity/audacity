@@ -61,7 +61,7 @@ WX_DEFINE_ARRAY_PTR(VSTEffect *, VSTEffectArray);
 DECLARE_LOCAL_EVENT_TYPE(EVT_SIZEWINDOW, -1);
 DECLARE_LOCAL_EVENT_TYPE(EVT_UPDATEDISPLAY, -1);
 
-class VSTEffect : public wxEvtHandler, 
+class VSTEffect final : public wxEvtHandler,
                   public EffectClientInterface,
                   public EffectUIClientInterface,
                   public XMLTagHandler,
@@ -329,7 +329,7 @@ private:
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-class VSTEffectsModule : public ModuleInterface
+class VSTEffectsModule final : public ModuleInterface
 {
 public:
    VSTEffectsModule(ModuleManagerInterface *moduleManager, const wxString *path);

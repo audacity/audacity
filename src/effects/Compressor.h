@@ -28,7 +28,7 @@ class ShuttleGui;
 
 #define COMPRESSOR_PLUGIN_SYMBOL XO("Compressor")
 
-class EffectCompressor : public EffectTwoPassSimpleMono
+class EffectCompressor final : public EffectTwoPassSimpleMono
 {
 public:
 
@@ -133,7 +133,7 @@ private:
    DECLARE_EVENT_TABLE();
 };
 
-class EffectCompressorPanel: public wxPanel
+class EffectCompressorPanel final : public wxPanel
 {
 public:
    EffectCompressorPanel(wxWindow *parent,

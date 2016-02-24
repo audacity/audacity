@@ -43,7 +43,7 @@ struct AboutDialogCreditItem {
 
 using AboutDialogCreditItemsList = std::vector<AboutDialogCreditItem>;
 
-class AboutDialog:public wxDialog {
+class AboutDialog final : public wxDialog {
    DECLARE_DYNAMIC_CLASS(AboutDialog)
 
  public:

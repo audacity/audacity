@@ -23,7 +23,7 @@ class wxRect;
 class ToolManager;
 class CommandOutputTarget;
 
-class ScreenshotCommandType : public CommandType
+class ScreenshotCommandType final : public CommandType
 {
 public:
    virtual wxString BuildName();
@@ -31,7 +31,7 @@ public:
    virtual Command *Create(CommandOutputTarget *target);
 };
 
-class ScreenshotCommand : public CommandImplementation
+class ScreenshotCommand final : public CommandImplementation
 {
 private:
    // May need to ignore the screenshot dialog

@@ -20,7 +20,7 @@
 
 class ShuttleGui;
 
-class BatchPrefs : public PrefsPanel
+class BatchPrefs final : public PrefsPanel
 {
 public:
    BatchPrefs(wxWindow * parent);
@@ -34,7 +34,7 @@ private:
    DECLARE_EVENT_TABLE();
 };
 
-class BatchPrefsFactory : public PrefsPanelFactory
+class BatchPrefsFactory final : public PrefsPanelFactory
 {
 public:
    virtual PrefsPanel *Create(wxWindow *parent);

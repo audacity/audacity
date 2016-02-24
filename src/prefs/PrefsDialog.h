@@ -29,7 +29,7 @@ class PrefsPanelFactory;
 #define CONST const
 #endif
 
-class PrefsDialog:public wxDialog
+class PrefsDialog /* not final */ : public wxDialog
 {
  public:
     // An array of PrefsNode specifies the tree of pages in pre-order traversal.
@@ -86,7 +86,7 @@ private:
 
 // This adds code appropriate only to the original use of PrefsDialog for
 // global settings -- not its reuses elsewhere as in View Settings
-class GlobalPrefsDialog : public PrefsDialog
+class GlobalPrefsDialog final : public PrefsDialog
 {
 public:
    GlobalPrefsDialog(wxWindow * parent, Factories &factories = DefaultFactories());

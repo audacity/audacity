@@ -17,7 +17,7 @@
 ///
 /// XMLWriter
 ///
-class AUDACITY_DLL_API XMLWriter {
+class AUDACITY_DLL_API XMLWriter /* not final */ {
 
  public:
 
@@ -60,7 +60,7 @@ class AUDACITY_DLL_API XMLWriter {
 ///
 /// XMLFileWriter
 ///
-class AUDACITY_DLL_API XMLFileWriter:public wxFFile, public XMLWriter {
+class AUDACITY_DLL_API XMLFileWriter final : public wxFFile, public XMLWriter {
 
  public:
 
@@ -100,7 +100,7 @@ protected:
 ///
 /// XMLStringWriter
 ///
-class XMLStringWriter:public wxString, public XMLWriter {
+class XMLStringWriter final : public wxString, public XMLWriter {
 
  public:
 

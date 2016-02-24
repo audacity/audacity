@@ -22,7 +22,7 @@ class ShuttleGui;
 
 #define REPEAT_PLUGIN_SYMBOL XO("Repeat")
 
-class EffectRepeat : public Effect
+class EffectRepeat final : public Effect
 {
 public:
    EffectRepeat();

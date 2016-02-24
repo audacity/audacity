@@ -48,7 +48,7 @@ WX_DECLARE_OBJARRAY(NumericField, NumericFieldArray);
 class DigitInfo;
 WX_DECLARE_OBJARRAY(DigitInfo, DigitInfoArray);
 
-class NumericConverter
+class NumericConverter /* not final */
 {
 public:
 
@@ -62,6 +62,8 @@ public:
                     const wxString & formatName = wxEmptyString,
                     double value = 0.0f,
                     double sampleRate = 1.0f /* to prevent div by 0 */);
+
+   virtual ~NumericConverter();
 
    virtual void ValueToControls();
    virtual void ValueToControls(double rawValue, bool nearest = true);
@@ -126,7 +128,7 @@ protected:
    int mDefaultNdx;
 };
 
-class NumericTextCtrl: public wxControl, public NumericConverter
+class NumericTextCtrl final : public wxControl, public NumericConverter
 {
    friend class NumericTextCtrlAx;
 
@@ -224,7 +226,7 @@ private:
 
 #if wxUSE_ACCESSIBILITY
 
-class NumericTextCtrlAx: public wxWindowAccessible
+class NumericTextCtrlAx final : public wxWindowAccessible
 {
 public:
    NumericTextCtrlAx(NumericTextCtrl * ctrl);

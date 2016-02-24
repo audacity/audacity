@@ -39,7 +39,7 @@ around to NEW positions.
 
 DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_GRABBER_CLICKED, -1)
 
-class GrabberEvent:public wxCommandEvent
+class GrabberEvent final : public wxCommandEvent
 {
  public:
 
@@ -92,7 +92,7 @@ typedef void (wxEvtHandler::*GrabberEventFunction)(GrabberEvent &);
 
 #define grabberWidth 10
 
-class Grabber:public wxWindow
+class Grabber final : public wxWindow
 {
 
  public:

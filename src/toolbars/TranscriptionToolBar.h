@@ -64,7 +64,7 @@ enum
    TTBNumButtons
 };
 
-class TranscriptionToolBar:public ToolBar {
+class TranscriptionToolBar final : public ToolBar {
 
  public:
 

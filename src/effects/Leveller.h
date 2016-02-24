@@ -20,7 +20,7 @@ class ShuttleGui;
 
 #define LEVELLER_PLUGIN_SYMBOL XO("Leveller")
 
-class EffectLeveller : public Effect
+class EffectLeveller final : public Effect
 {
 public:
    EffectLeveller();

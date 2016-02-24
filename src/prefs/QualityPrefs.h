@@ -23,7 +23,7 @@
 
 class ShuttleGui;
 
-class QualityPrefs :public PrefsPanel
+class QualityPrefs final : public PrefsPanel
 {
  public:
    QualityPrefs(wxWindow * parent);
@@ -53,7 +53,7 @@ class QualityPrefs :public PrefsPanel
    DECLARE_EVENT_TABLE();
 };
 
-class QualityPrefsFactory : public PrefsPanelFactory
+class QualityPrefsFactory final : public PrefsPanelFactory
 {
 public:
    virtual PrefsPanel *Create(wxWindow *parent);

@@ -596,7 +596,7 @@ static wxArrayString ofqueue;
 #define IPC_APPL wxT("audacity")
 #define IPC_TOPIC wxT("System")
 
-class IPCConn : public wxConnection
+class IPCConn final : public wxConnection
 {
 public:
    IPCConn()
@@ -619,7 +619,7 @@ public:
    }
 };
 
-class IPCServ : public wxServer
+class IPCServ final : public wxServer
 {
 public:
    IPCServ(const wxString & appl)

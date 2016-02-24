@@ -19,7 +19,7 @@
 
 #include "SampleFormat.h"
 
-class Resample
+class Resample final
 {
  public:
    /// Resamplers may have more than one method, offering a
@@ -33,7 +33,7 @@ class Resample
    // dMinFactor and dMaxFactor specify the range of factors for variable-rate resampling.
    // For constant-rate, pass the same value for both.
    Resample(const bool useBestMethod, const double dMinFactor, const double dMaxFactor);
-   virtual ~Resample();
+   ~Resample();
 
    static int GetNumMethods();
    static wxString GetMethodName(int index);

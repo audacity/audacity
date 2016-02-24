@@ -148,7 +148,7 @@ enum {
 // member functions of AudacityProject
 
 using audCommandFunction = void (AudacityProject::*)();
-class VoidFunctor : public CommandFunctor
+class VoidFunctor final : public CommandFunctor
 {
 public:
    explicit VoidFunctor(AudacityProject *project, audCommandFunction pfn)
@@ -161,7 +161,7 @@ private:
 };
 
 using audCommandKeyFunction = void (AudacityProject::*)(const wxEvent *);
-class KeyFunctor : public CommandFunctor
+class KeyFunctor final : public CommandFunctor
 {
 public:
    explicit KeyFunctor(AudacityProject *project, audCommandKeyFunction pfn)
@@ -174,7 +174,7 @@ private:
 };
 
 using audCommandListFunction = void (AudacityProject::*)(int);
-class ListFunctor : public CommandFunctor
+class ListFunctor final : public CommandFunctor
 {
 public:
    explicit ListFunctor(AudacityProject *project, audCommandListFunction pfn)
@@ -187,7 +187,7 @@ private:
 };
 
 using audCommandPluginFunction = bool (AudacityProject::*)(const PluginID &, int);
-class PluginFunctor : public CommandFunctor
+class PluginFunctor final : public CommandFunctor
 {
 public:
    explicit PluginFunctor(AudacityProject *project, const PluginID &id, audCommandPluginFunction pfn)
@@ -5981,7 +5981,7 @@ void AudacityProject::OnAlignMoveSel(int index)
 #define COLLECT_TIMING_DATA
 
 // Audacity Score Align Progress class -- progress reports come here
-class ASAProgress : public SAProgress {
+class ASAProgress final : public SAProgress {
  private:
    float mTotalWork;
    float mFrames[2];

@@ -149,7 +149,7 @@ void WaveformSettings::NextHigherDBRange()
 //static
 const wxArrayString &WaveformSettings::GetScaleNames()
 {
-   class ScaleNamesArray : public TranslatableStringArray
+   class ScaleNamesArray final : public TranslatableStringArray
    {
       virtual void Populate()
       {

@@ -22,7 +22,7 @@
 #include "CommandType.h"
 #include "Command.h"
 
-class HelpCommandType : public CommandType
+class HelpCommandType final : public CommandType
 {
 public:
    virtual wxString BuildName();
@@ -30,7 +30,7 @@ public:
    virtual Command *Create(CommandOutputTarget *target);
 };
 
-class HelpCommand : public CommandImplementation
+class HelpCommand final : public CommandImplementation
 {
 public:
    HelpCommand(HelpCommandType &type, CommandOutputTarget *target)

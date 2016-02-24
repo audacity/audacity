@@ -352,7 +352,7 @@ private:
 // EffectNoiseReduction::Dialog
 //----------------------------------------------------------------------------
 
-class EffectNoiseReduction::Dialog: public EffectDialog
+class EffectNoiseReduction::Dialog final : public EffectDialog
 {
 public:
    // constructors and destructors

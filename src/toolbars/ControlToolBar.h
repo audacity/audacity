@@ -35,7 +35,7 @@ struct AudioIOStartStreamOptions;
 class SelectedRegion;
 
 // In the GUI, ControlToolBar appears as the "Transport Toolbar". "Control Toolbar" is historic.
-class ControlToolBar:public ToolBar {
+class ControlToolBar final : public ToolBar {
 
  public:
 

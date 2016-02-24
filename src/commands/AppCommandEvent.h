@@ -23,7 +23,7 @@ DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, wxEVT_APP_COMMAND_RECEIVED, -1);
 
 class Command;
 
-class AppCommandEvent : public wxCommandEvent
+class AppCommandEvent final : public wxCommandEvent
 {
 private:
    Command *mCommand;

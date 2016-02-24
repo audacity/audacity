@@ -33,7 +33,7 @@ for each problem encountered, since there can be many orphans.
 #include <wx/artprov.h>
 #include <wx/radiobox.h>
 
-class MultiDialog : public wxDialog
+class MultiDialog final : public wxDialog
 {
 public:
    MultiDialog(wxWindow * pParent, 

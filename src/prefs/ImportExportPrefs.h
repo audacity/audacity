@@ -21,7 +21,7 @@
 
 class ShuttleGui;
 
-class ImportExportPrefs :public PrefsPanel
+class ImportExportPrefs final : public PrefsPanel
 {
  public:
    ImportExportPrefs(wxWindow * parent);
@@ -33,7 +33,7 @@ class ImportExportPrefs :public PrefsPanel
    void PopulateOrExchange(ShuttleGui & S);
 };
 
-class ImportExportPrefsFactory : public PrefsPanelFactory
+class ImportExportPrefsFactory final : public PrefsPanelFactory
 {
 public:
    virtual PrefsPanel *Create(wxWindow *parent);

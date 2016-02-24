@@ -102,7 +102,7 @@ struct private_data {
    bool id3checked;
 };
 
-class MP3ImportPlugin : public ImportPlugin
+class MP3ImportPlugin final : public ImportPlugin
 {
 public:
    MP3ImportPlugin():
@@ -117,7 +117,7 @@ public:
    ImportFileHandle *Open(const wxString &Filename) override;
 };
 
-class MP3ImportFileHandle : public ImportFileHandle
+class MP3ImportFileHandle final : public ImportFileHandle
 {
 public:
    MP3ImportFileHandle(wxFile *file, wxString filename):

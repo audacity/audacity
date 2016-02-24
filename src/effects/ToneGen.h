@@ -25,7 +25,7 @@ class ShuttleGui;
 #define CHIRP_PLUGIN_SYMBOL XO("Chirp")
 #define TONE_PLUGIN_SYMBOL XO("Tone")
 
-class EffectToneGen : public Effect
+class EffectToneGen final : public Effect
 {
 public:
    EffectToneGen(bool isChirp);

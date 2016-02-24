@@ -40,7 +40,7 @@ ThemePrefs.
 #define TOP_LEVEL_BORDER       5
 #define GENERIC_CONTROL_BORDER 5
 
-class PrefsPanel:public wxPanel
+class PrefsPanel /* not final */ : public wxPanel
 {
  public:
    PrefsPanel(wxWindow * parent, const wxString &title)
@@ -61,7 +61,7 @@ class PrefsPanel:public wxPanel
    virtual void Cancel();
 };
 
-class PrefsPanelFactory
+class PrefsPanelFactory /* not final */
 {
 public:
    // Precondition: parent != NULL

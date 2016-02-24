@@ -21,7 +21,7 @@
 
 class ShuttleGui;
 
-class ThemePrefs :public PrefsPanel
+class ThemePrefs final : public PrefsPanel
 {
  public:
    ThemePrefs(wxWindow * parent);
@@ -41,7 +41,7 @@ class ThemePrefs :public PrefsPanel
    DECLARE_EVENT_TABLE();
 };
 
-class ThemePrefsFactory : public PrefsPanelFactory
+class ThemePrefsFactory final : public PrefsPanelFactory
 {
 public:
    virtual PrefsPanel *Create(wxWindow *parent);

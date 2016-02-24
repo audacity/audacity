@@ -22,7 +22,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-class VampEffectsModule : public ModuleInterface
+class VampEffectsModule final : public ModuleInterface
 {
 public:
    VampEffectsModule(ModuleManagerInterface *moduleManager, const wxString *path);

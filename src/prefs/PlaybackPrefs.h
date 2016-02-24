@@ -20,7 +20,7 @@
 
 class ShuttleGui;
 
-class PlaybackPrefs :public PrefsPanel
+class PlaybackPrefs final : public PrefsPanel
 {
  public:
    PlaybackPrefs(wxWindow * parent);
@@ -32,7 +32,7 @@ class PlaybackPrefs :public PrefsPanel
    void PopulateOrExchange(ShuttleGui & S);
 };
 
-class PlaybackPrefsFactory : public PrefsPanelFactory
+class PlaybackPrefsFactory final : public PrefsPanelFactory
 {
 public:
    virtual PrefsPanel *Create(wxWindow *parent);

@@ -21,7 +21,7 @@
 
 #include "aeffectx.h"
 
-class VSTControlImpl : public wxWidgetCocoaImpl
+class VSTControlImpl final : public wxWidgetCocoaImpl
 {
 public :
    VSTControlImpl(wxWindowMac *peer, NSView *view);

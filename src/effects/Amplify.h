@@ -27,7 +27,7 @@
 
 class ShuttleGui;
 
-class EffectAmplify : public Effect
+class EffectAmplify final : public Effect
 {
 public:
    EffectAmplify();

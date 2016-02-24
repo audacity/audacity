@@ -221,7 +221,7 @@ private:
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-class AudioUnitEffectsModule : public ModuleInterface
+class AudioUnitEffectsModule final : public ModuleInterface
 {
 public:
    AudioUnitEffectsModule(ModuleManagerInterface *moduleManager, const wxString *path);

@@ -69,7 +69,7 @@
 
 #define DESC _("WAV, AIFF, and other uncompressed types")
 
-class PCMImportPlugin : public ImportPlugin
+class PCMImportPlugin final : public ImportPlugin
 {
 public:
    PCMImportPlugin()
@@ -86,7 +86,7 @@ public:
 };
 
 
-class PCMImportFileHandle : public ImportFileHandle
+class PCMImportFileHandle final : public ImportFileHandle
 {
 public:
    PCMImportFileHandle(wxString name, SNDFILE *file, SF_INFO info);

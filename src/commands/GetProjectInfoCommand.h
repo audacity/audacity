@@ -19,7 +19,7 @@
 #include "Command.h"
 #include "CommandType.h"
 
-class GetProjectInfoCommandType : public CommandType
+class GetProjectInfoCommandType final : public CommandType
 {
 public:
    virtual wxString BuildName();
@@ -28,7 +28,7 @@ public:
 };
 
 
-class GetProjectInfoCommand : public CommandImplementation
+class GetProjectInfoCommand final : public CommandImplementation
 {
 public:
    GetProjectInfoCommand(CommandType &type, CommandOutputTarget *target)

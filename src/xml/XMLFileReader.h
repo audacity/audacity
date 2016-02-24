@@ -15,7 +15,7 @@
 
 #include "XMLTagHandler.h"
 
-class AUDACITY_DLL_API XMLFileReader {
+class AUDACITY_DLL_API XMLFileReader final {
  public:
    XMLFileReader();
    virtual ~XMLFileReader();

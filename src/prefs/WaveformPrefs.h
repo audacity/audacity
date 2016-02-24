@@ -20,7 +20,7 @@ class WaveTrack;
 class wxCheckBox;
 class wxChoice;
 
-class WaveformPrefs :public PrefsPanel
+class WaveformPrefs final : public PrefsPanel
 {
 public:
    WaveformPrefs(wxWindow * parent, WaveTrack *wt);
@@ -56,7 +56,7 @@ private:
    bool mPopulating;
 };
 
-class WaveformPrefsFactory : public PrefsPanelFactory
+class WaveformPrefsFactory final : public PrefsPanelFactory
 {
 public:
    explicit WaveformPrefsFactory(WaveTrack *wt = 0);

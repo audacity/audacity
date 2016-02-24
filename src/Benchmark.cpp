@@ -42,7 +42,7 @@ of the BlockFile system.
 
 #include "FileDialog.h"
 
-class BenchmarkDialog: public wxDialog
+class BenchmarkDialog final : public wxDialog
 {
 public:
    // constructors and destructors

@@ -2719,7 +2719,7 @@ void EffectDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-class EffectPanel : public wxPanel
+class EffectPanel final : public wxPanel
 {
 public:
    EffectPanel(wxWindow *parent)

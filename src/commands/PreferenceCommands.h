@@ -25,7 +25,7 @@
 
 // GetPreference
 
-class GetPreferenceCommandType : public CommandType
+class GetPreferenceCommandType final : public CommandType
 {
 public:
    virtual wxString BuildName();
@@ -33,7 +33,7 @@ public:
    virtual Command *Create(CommandOutputTarget *target);
 };
 
-class GetPreferenceCommand : public CommandImplementation
+class GetPreferenceCommand final : public CommandImplementation
 {
 public:
    GetPreferenceCommand(CommandType &type,
@@ -47,7 +47,7 @@ public:
 
 // SetPreference
 
-class SetPreferenceCommandType : public CommandType
+class SetPreferenceCommandType final : public CommandType
 {
 public:
    virtual wxString BuildName();
@@ -55,7 +55,7 @@ public:
    virtual Command *Create(CommandOutputTarget *target);
 };
 
-class SetPreferenceCommand : public CommandImplementation
+class SetPreferenceCommand final : public CommandImplementation
 {
 public:
    SetPreferenceCommand(CommandType &type,

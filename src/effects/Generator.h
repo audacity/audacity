@@ -21,7 +21,7 @@
 #include "Effect.h"
 
 // Base class for Generators (effects which fill a given duration)
-class Generator : public Effect
+class Generator /* not final */ : public Effect
 {
 public:
    Generator() { }
@@ -55,7 +55,7 @@ protected:
 
 // Abstract generator which creates the sound in discrete blocks, whilst
 // showing a progress bar
-class BlockGenerator : public Generator {
+class BlockGenerator /* not final */ : public Generator {
 public:
    BlockGenerator() { }
 protected:

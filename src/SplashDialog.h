@@ -21,7 +21,7 @@ class AudacityProject;
 class wxCheckbox;
 class HtmlWindow;
 
-class SplashDialog:public wxDialog {
+class SplashDialog final : public wxDialog {
    DECLARE_DYNAMIC_CLASS(SplashDialog)
 public:
    SplashDialog(wxWindow * parent);

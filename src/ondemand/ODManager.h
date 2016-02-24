@@ -40,7 +40,7 @@ int CompareNoCaseFileName(const wxString& first, const wxString& second);
 /// number of threads.
 class WaveTrack;
 class ODWaveTrackTaskQueue;
-class ODManager
+class ODManager final
 {
  public:
    ///Gets the singleton instance - this is a function pointer that points to one of the below two instance calls.
@@ -212,7 +212,7 @@ class ODManagerHelperThread {
    int mPriority;
 };
 #else
-   class ODManagerHelperThread : public wxThread
+   class ODManagerHelperThread final : public wxThread
    {
       public:
       ///Constructs a ODTaskThread

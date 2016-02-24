@@ -23,7 +23,7 @@
 class ODFileDecoder;
 class WaveTrack;
 /// A class representing a modular task to be used with the On-Demand structures.
-class ODDecodeFFmpegTask:public ODDecodeTask
+class ODDecodeFFmpegTask final : public ODDecodeTask
 {
  public:
 

@@ -23,7 +23,7 @@ class CommandOutputTarget;
 class CommandSignature;
 class wxString;
 
-class CommandType
+class CommandType /* not final */
 {
 private:
    wxString *mName;

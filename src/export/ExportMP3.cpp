@@ -259,7 +259,7 @@ static void InitMP3_Statics()
    }
 }
 
-class ExportMP3Options : public wxPanel
+class ExportMP3Options final : public wxPanel
 {
 public:
 
@@ -556,7 +556,7 @@ int ExportMP3Options::FindIndex(CHOICES *choices, int cnt, int needle, int def)
 #define ID_BROWSE 5000
 #define ID_DLOAD  5001
 
-class FindDialog : public wxDialog
+class FindDialog final : public wxDialog
 {
 public:
 
@@ -1551,7 +1551,7 @@ static void dump_config( 	lame_global_flags*	gfp )
 // ExportMP3
 //----------------------------------------------------------------------------
 
-class ExportMP3 : public ExportPlugin
+class ExportMP3 final : public ExportPlugin
 {
 public:
 

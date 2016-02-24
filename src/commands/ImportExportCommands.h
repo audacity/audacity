@@ -22,7 +22,7 @@
 
 // Import
 
-class ImportCommandType : public CommandType
+class ImportCommandType final : public CommandType
 {
 public:
    virtual wxString BuildName();
@@ -30,7 +30,7 @@ public:
    virtual Command *Create(CommandOutputTarget *target);
 };
 
-class ImportCommand : public CommandImplementation
+class ImportCommand final : public CommandImplementation
 {
 public:
    ImportCommand(CommandType &type,
@@ -44,7 +44,7 @@ public:
 
 // Export
 
-class ExportCommandType : public CommandType
+class ExportCommandType final : public CommandType
 {
 public:
    virtual wxString BuildName();
@@ -52,7 +52,7 @@ public:
    virtual Command *Create(CommandOutputTarget *target);
 };
 
-class ExportCommand : public CommandImplementation
+class ExportCommand final : public CommandImplementation
 {
 public:
    ExportCommand(CommandType &type,

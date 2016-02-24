@@ -21,7 +21,7 @@
 
 class ShuttleGui;
 
-class ProjectsPrefs :public PrefsPanel
+class ProjectsPrefs final : public PrefsPanel
 {
  public:
    ProjectsPrefs(wxWindow * parent);
@@ -33,7 +33,7 @@ class ProjectsPrefs :public PrefsPanel
    void PopulateOrExchange(ShuttleGui & S);
 };
 
-class ProjectsPrefsFactory : public PrefsPanelFactory
+class ProjectsPrefsFactory final : public PrefsPanelFactory
 {
 public:
    virtual PrefsPanel *Create(wxWindow *parent);

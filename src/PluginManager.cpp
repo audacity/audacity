@@ -59,7 +59,7 @@ WX_DECLARE_STRING_HASH_MAP(wxArrayString, ProviderMap);
 // ============================================================================
 #if wxUSE_ACCESSIBILITY
 
-class CheckListAx: public wxWindowAccessible
+class CheckListAx final : public wxWindowAccessible
 {
 public:
    CheckListAx(wxListCtrl * window);
@@ -414,7 +414,7 @@ enum
    COL_COUNT
 };
 
-class PluginRegistrationDialog : public wxDialog
+class PluginRegistrationDialog final : public wxDialog
 {
 public:
    // constructors and destructors

@@ -27,7 +27,7 @@ class ShuttleGui;
 
 #define DTMFTONES_PLUGIN_SYMBOL XO("DTMF Tones")
 
-class EffectDtmf : public Effect
+class EffectDtmf final : public Effect
 {
 public:
    EffectDtmf();

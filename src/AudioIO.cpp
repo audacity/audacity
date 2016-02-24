@@ -770,16 +770,16 @@ class AudioThread {
 
 // The normal wxThread-derived AudioThread class for all other
 // platforms:
-class AudioThread : public wxThread {
+class AudioThread final : public wxThread {
  public:
    AudioThread():wxThread(wxTHREAD_JOINABLE) {}
-   virtual ExitCode Entry();
+   ExitCode Entry() override;
 };
 
 #endif
 
 #ifdef EXPERIMENTAL_MIDI_OUT
-class MidiThread : public AudioThread {
+class MidiThread final : public AudioThread {
  public:
    virtual ExitCode Entry();
 };

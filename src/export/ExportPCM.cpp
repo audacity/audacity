@@ -92,7 +92,7 @@ static void WriteExportFormatPref(int format)
 #define ID_HEADER_CHOICE           7102
 #define ID_ENCODING_CHOICE         7103
 
-class ExportPCMOptions : public wxPanel
+class ExportPCMOptions final : public wxPanel
 {
 public:
 
@@ -303,7 +303,7 @@ bool ExportPCMOptions::ValidatePair(int format)
 // ExportPCM Class
 //----------------------------------------------------------------------------
 
-class ExportPCM : public ExportPlugin
+class ExportPCM final : public ExportPlugin
 {
 public:
 

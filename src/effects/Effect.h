@@ -52,7 +52,7 @@ class WaveTrack;
 // TODO:  Much more cleanup of old methods and variables is needed, but
 // TODO:  can't be done until after all effects are using the NEW API.
 
-class AUDACITY_DLL_API Effect : public wxEvtHandler,
+class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
                                 public EffectClientInterface,
                                 public EffectUIClientInterface,
                                 public EffectHostInterface
@@ -472,7 +472,7 @@ private:
 #define ID_EFFECT_PREVIEW ePreviewID
 
 // Base dialog for regular effect
-class AUDACITY_DLL_API EffectDialog:public wxDialog
+class AUDACITY_DLL_API EffectDialog /* not final */ : public wxDialog
 {
 public:
    // constructors and destructors
@@ -499,7 +499,7 @@ private:
 };
 
 //
-class EffectUIHost : public wxDialog,
+class EffectUIHost final : public wxDialog,
                      public EffectUIHostInterface
 {
 public:
@@ -587,7 +587,7 @@ private:
    DECLARE_EVENT_TABLE();
 };
 
-class EffectPresetsDialog : public wxDialog
+class EffectPresetsDialog final : public wxDialog
 {
 public:
    EffectPresetsDialog(wxWindow *parent, Effect *effect);

@@ -28,7 +28,7 @@ class ShuttleGui;
 
 #define CLICKREMOVAL_PLUGIN_SYMBOL XO("Click Removal")
 
-class EffectClickRemoval : public Effect
+class EffectClickRemoval final : public Effect
 {
 public:
    EffectClickRemoval();

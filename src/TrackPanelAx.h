@@ -20,9 +20,9 @@
 
 #include "TrackPanel.h"
 
-class TrackPanelAx
+class TrackPanelAx final
 #if wxUSE_ACCESSIBILITY
-   :public wxWindowAccessible
+   : public wxWindowAccessible
 #endif
 {
 public:

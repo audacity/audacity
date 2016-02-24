@@ -82,7 +82,7 @@ static int iBitrates[] = {
    192, 224, 256, 320, 384
 };
 
-class ExportMP2Options : public wxPanel
+class ExportMP2Options final : public wxPanel
 {
 public:
    ExportMP2Options(wxWindow *parent, int format);
@@ -164,7 +164,7 @@ bool ExportMP2Options::TransferDataFromWindow()
 // ExportMP2
 //----------------------------------------------------------------------------
 
-class ExportMP2 : public ExportPlugin
+class ExportMP2 final : public ExportPlugin
 {
 public:
 

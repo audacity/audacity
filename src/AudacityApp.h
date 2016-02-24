@@ -96,7 +96,7 @@ enum
 
 class BlockFile;
 
-class AudacityApp:public wxApp {
+class AudacityApp final : public wxApp {
  public:
    AudacityApp();
    virtual bool OnInit(void);

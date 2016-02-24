@@ -84,7 +84,7 @@ private:
    std::vector<float> mProcessed;
 };
 
-class FreqGauge : public wxStatusBar
+class FreqGauge final : public wxStatusBar
 {
 public:
    FreqGauge(wxWindow * parent);
@@ -104,7 +104,7 @@ private:
    int mMargin;
 };
 
-class FreqPlot : public wxWindow
+class FreqPlot final : public wxWindow
 {
 public:
    FreqPlot(wxWindow *parent);
@@ -123,7 +123,7 @@ private:
     DECLARE_EVENT_TABLE();
 };
 
-class FreqWindow : public wxDialog
+class FreqWindow final : public wxDialog
 {
 public:
    FreqWindow(wxWindow *parent, wxWindowID id,

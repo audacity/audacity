@@ -61,7 +61,7 @@
 //
 // ============================================================================
 
-class ModuleInterface : public IdentInterface
+class ModuleInterface  /* not final */ : public IdentInterface
 {
 public:
    virtual ~ModuleInterface() {};
@@ -106,7 +106,7 @@ public:
 //
 // ============================================================================
 
-class ModuleManagerInterface
+class ModuleManagerInterface /* not final */
 {
 public:
    virtual ~ModuleManagerInterface() {};

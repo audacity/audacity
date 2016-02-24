@@ -19,7 +19,7 @@
 class NumericTextCtrl;
 class ShuttleGui;
 
-class TimeDialog:public wxDialog
+class TimeDialog final : public wxDialog
 {
  public:
 

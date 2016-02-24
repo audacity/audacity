@@ -34,7 +34,7 @@ WX_DECLARE_HASH_MAP(wxString, BlockFile*, wxStringHash, wxStringEqual, BlockHash
 
 wxMemorySize GetFreeMemory();
 
-class DirManager: public XMLTagHandler {
+class DirManager final : public XMLTagHandler {
  public:
 
    // MM: Construct DirManager with refcount=1

@@ -82,7 +82,7 @@ private:
 
 };
 
-class AUDACITY_DLL_API ThemeBase
+class AUDACITY_DLL_API ThemeBase /* not final */
 {
 public:
    ThemeBase(void);
@@ -136,7 +136,7 @@ protected:
 };
 
 
-class AUDACITY_DLL_API Theme : public ThemeBase
+class AUDACITY_DLL_API Theme final : public ThemeBase
 {
 public:
    Theme(void);

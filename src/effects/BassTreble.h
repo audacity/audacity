@@ -25,7 +25,7 @@ class ShuttleGui;
 
 #define BASSTREBLE_PLUGIN_SYMBOL XO("Bass and Treble")
 
-class EffectBassTreble : public Effect
+class EffectBassTreble final : public Effect
 {
 public:
    EffectBassTreble();

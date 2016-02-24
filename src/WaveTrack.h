@@ -59,7 +59,7 @@ class Regions : public std::vector < Region > {};
 
 class Envelope;
 
-class AUDACITY_DLL_API WaveTrack : public Track {
+class AUDACITY_DLL_API WaveTrack final : public Track {
 
  private:
 

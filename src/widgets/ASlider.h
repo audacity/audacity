@@ -248,7 +248,7 @@ class LWSlider
    bool mEnabled;
 };
 
-class ASlider :public wxPanel
+class ASlider /* not final */ : public wxPanel
 {
    friend class ASliderAx;
 
@@ -317,7 +317,7 @@ class ASlider :public wxPanel
 // This is a modal dialog that contains an ASlider
 // and a text-entry box which can be used to set the
 // value of a slider.
-class SliderDialog: public wxDialog
+class SliderDialog final : public wxDialog
 {
  public:
    SliderDialog(wxWindow * parent, wxWindowID id,
@@ -349,7 +349,7 @@ class SliderDialog: public wxDialog
 
 #if wxUSE_ACCESSIBILITY
 
-class ASliderAx: public wxWindowAccessible
+class ASliderAx final : public wxWindowAccessible
 {
 public:
    ASliderAx(wxWindow * window);

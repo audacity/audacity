@@ -27,7 +27,7 @@ class ShuttleGui;
 
 #define CHANGETEMPO_PLUGIN_SYMBOL XO("Change Tempo")
 
-class EffectChangeTempo : public EffectSoundTouch
+class EffectChangeTempo final : public EffectSoundTouch
 {
 public:
    EffectChangeTempo();

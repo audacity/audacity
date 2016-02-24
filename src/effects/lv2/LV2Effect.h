@@ -91,7 +91,7 @@ WX_DEFINE_ARRAY_PTR(LilvInstance *, LV2SlaveArray);
 
 class LV2EffectSettingsDialog;
 
-class LV2Effect : public wxEvtHandler,
+class LV2Effect final : public wxEvtHandler,
                   public EffectClientInterface,
                   public EffectUIClientInterface
 {

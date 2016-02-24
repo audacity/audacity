@@ -19,7 +19,7 @@
 
 #define NOISEREDUCTION_PLUGIN_SYMBOL XO("Noise Reduction")
 
-class EffectNoiseReduction: public Effect {
+class EffectNoiseReduction final : public Effect {
 public:
 
    EffectNoiseReduction();

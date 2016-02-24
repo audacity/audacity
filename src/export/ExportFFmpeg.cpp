@@ -90,7 +90,7 @@ static int AdjustFormatIndex(int format)
 // ExportFFmpeg
 //----------------------------------------------------------------------------
 
-class ExportFFmpeg : public ExportPlugin
+class ExportFFmpeg final : public ExportPlugin
 {
 public:
 

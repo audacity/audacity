@@ -76,7 +76,7 @@ BEGIN_EVENT_TABLE(PrefsDialog, wxDialog)
 END_EVENT_TABLE()
 
 
-class wxTreebookExt : public wxTreebook
+class wxTreebookExt final : public wxTreebook
 {
 public:
    wxTreebookExt( wxWindow *parent,

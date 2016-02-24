@@ -26,7 +26,7 @@ to that system.
 #include "CommandType.h"
 #include "../BatchCommands.h"
 
-class BatchEvalCommandType : public CommandType
+class BatchEvalCommandType final : public CommandType
 {
 public:
    virtual wxString BuildName();
@@ -34,7 +34,7 @@ public:
    virtual Command *Create(CommandOutputTarget *target);
 };
 
-class BatchEvalCommand : public CommandImplementation
+class BatchEvalCommand final : public CommandImplementation
 {
 public:
    BatchEvalCommand(CommandType &type,

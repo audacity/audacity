@@ -18,7 +18,7 @@
 #define FADEIN_PLUGIN_SYMBOL XO("Fade In")
 #define FADEOUT_PLUGIN_SYMBOL XO("Fade Out")
 
-class EffectFade : public Effect
+class EffectFade final : public Effect
 {
 public:
    EffectFade(bool fadeIn = false);

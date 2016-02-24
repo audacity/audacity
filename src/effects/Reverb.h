@@ -26,7 +26,7 @@ class ShuttleGui;
 
 struct Reverb_priv_t;
 
-class EffectReverb : public Effect
+class EffectReverb final : public Effect
 {
 public:
    EffectReverb();

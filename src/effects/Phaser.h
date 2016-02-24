@@ -46,7 +46,7 @@ public:
 
 WX_DECLARE_OBJARRAY(EffectPhaserState, EffectPhaserStateArray);
 
-class EffectPhaser : public Effect
+class EffectPhaser final : public Effect
 {
 public:
    EffectPhaser();

@@ -24,7 +24,7 @@
 #include "Command.h"
 #include "CommandType.h"
 
-class MessageCommandType : public CommandType
+class MessageCommandType final : public CommandType
 {
 public:
    virtual wxString BuildName();
@@ -32,7 +32,7 @@ public:
    virtual Command *Create(CommandOutputTarget *target);
 };
 
-class MessageCommand : public CommandImplementation
+class MessageCommand final : public CommandImplementation
 {
 public:
    MessageCommand(CommandType &type,

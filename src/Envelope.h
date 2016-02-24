@@ -33,7 +33,7 @@ class EnvPoint;
 
 class ZoomInfo;
 
-class EnvPoint : public XMLTagHandler {
+class EnvPoint final : public XMLTagHandler {
 
 public:
    inline EnvPoint(Envelope *envelope, double t, double val);
@@ -74,7 +74,7 @@ private:
 
 typedef std::vector<EnvPoint> EnvArray;
 
-class Envelope : public XMLTagHandler {
+class Envelope final : public XMLTagHandler {
  public:
    Envelope();
    void Initialize(int numPoints);

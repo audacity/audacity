@@ -16,14 +16,14 @@
 
 #include "aeffectx.h"
 
-class VSTEffectLink
+class VSTEffectLink /* not final */
 {
 public:
    virtual ~VSTEffectLink() {};
    virtual intptr_t callDispatcher(int opcode, int index, intptr_t value, void *ptr, float opt) = 0;
 };
 
-class VSTControlBase : public wxControl
+class VSTControlBase /* not final */ : public wxControl
 {
 public:
    VSTControlBase()

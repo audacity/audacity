@@ -445,7 +445,7 @@ class FFmpegNotFoundDialog;
 #define ID_FFMPEG_DLOAD  5001
 
 /// Allows user to locate libav* libraries
-class FindFFmpegDialog : public wxDialog
+class FindFFmpegDialog final : public wxDialog
 {
 public:
 

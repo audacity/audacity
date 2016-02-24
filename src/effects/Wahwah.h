@@ -43,7 +43,7 @@ public:
 
 WX_DECLARE_OBJARRAY(EffectWahwahState, EffectWahwahStateArray);
 
-class EffectWahwah : public Effect
+class EffectWahwah final : public Effect
 {
 public:
    EffectWahwah();

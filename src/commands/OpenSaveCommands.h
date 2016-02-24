@@ -22,7 +22,7 @@
 
 // Open
 
-class OpenProjectCommandType : public CommandType
+class OpenProjectCommandType final : public CommandType
 {
 public:
    virtual wxString BuildName();
@@ -30,7 +30,7 @@ public:
    virtual Command *Create(CommandOutputTarget *target);
 };
 
-class OpenProjectCommand : public CommandImplementation
+class OpenProjectCommand final : public CommandImplementation
 {
 public:
    OpenProjectCommand(CommandType &type,
@@ -44,7 +44,7 @@ public:
 
 // Save
 
-class SaveProjectCommandType : public CommandType
+class SaveProjectCommandType final : public CommandType
 {
 public:
    virtual wxString BuildName();
@@ -52,7 +52,7 @@ public:
    virtual Command *Create(CommandOutputTarget *target);
 };
 
-class SaveProjectCommand : public CommandImplementation
+class SaveProjectCommand final : public CommandImplementation
 {
 public:
    SaveProjectCommand(CommandType &type,

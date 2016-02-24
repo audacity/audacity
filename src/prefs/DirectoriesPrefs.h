@@ -18,7 +18,7 @@
 
 class ShuttleGui;
 
-class DirectoriesPrefs :public PrefsPanel
+class DirectoriesPrefs final : public PrefsPanel
 {
  public:
    DirectoriesPrefs(wxWindow * parent);
@@ -38,7 +38,7 @@ class DirectoriesPrefs :public PrefsPanel
    DECLARE_EVENT_TABLE();
 };
 
-class DirectoriesPrefsFactory : public PrefsPanelFactory
+class DirectoriesPrefsFactory final : public PrefsPanelFactory
 {
 public:
    virtual PrefsPanel *Create(wxWindow *parent);

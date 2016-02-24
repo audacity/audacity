@@ -40,7 +40,7 @@ typedef struct DeviceSourceMap {
 
 wxString MakeDeviceSourceString(const DeviceSourceMap *map);
 
-class DeviceManager
+class DeviceManager final
 #if defined(EXPERIMENTAL_DEVICE_CHANGE_HANDLER)
 #if defined(HAVE_DEVICE_CHANGE)
 :  public DeviceChangeHandler

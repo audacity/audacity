@@ -78,7 +78,7 @@
 //
 // Constructor
 //
-class ToolFrame:public wxFrame
+class ToolFrame final : public wxFrame
 {
  public:
 

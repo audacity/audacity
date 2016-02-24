@@ -56,20 +56,20 @@ of the warped region.
 #ifndef __TIMEWARPER__
 #define __TIMEWARPER__
 
-class TimeWarper
+class TimeWarper /* not final */
 {
 public:
    virtual ~TimeWarper() { }
    virtual double Warp(double originalTime) const = 0;
 };
 
-class IdentityTimeWarper : public TimeWarper
+class IdentityTimeWarper final : public TimeWarper
 {
 public:
    virtual double Warp(double originalTime) const;
 };
 
-class ShiftTimeWarper : public TimeWarper
+class ShiftTimeWarper final : public TimeWarper
 {
 private:
    TimeWarper *mWarper;
@@ -82,7 +82,7 @@ public:
    virtual double Warp(double originalTime) const;
 };
 
-class LinearTimeWarper : public TimeWarper
+class LinearTimeWarper final : public TimeWarper
 {
 private:
    double mScale;
@@ -96,7 +96,7 @@ public:
    virtual double Warp(double originalTime) const;
 };
 
-class LinearInputRateTimeWarper : public TimeWarper
+class LinearInputRateTimeWarper final : public TimeWarper
 {
 private:
    LinearTimeWarper mRateWarper;
@@ -109,7 +109,7 @@ public:
    virtual double Warp(double originalTime) const;
 };
 
-class LinearOutputRateTimeWarper : public TimeWarper
+class LinearOutputRateTimeWarper final : public TimeWarper
 {
 private:
    LinearTimeWarper mTimeWarper;
@@ -124,7 +124,7 @@ public:
    virtual double Warp(double originalTime) const;
 };
 
-class LinearInputStretchTimeWarper : public TimeWarper
+class LinearInputStretchTimeWarper final : public TimeWarper
 {
 private:
    LinearTimeWarper mTimeWarper;
@@ -137,7 +137,7 @@ public:
    virtual double Warp(double originalTime) const;
 };
 
-class LinearOutputStretchTimeWarper : public TimeWarper
+class LinearOutputStretchTimeWarper final : public TimeWarper
 {
 private:
    LinearTimeWarper mTimeWarper;
@@ -150,7 +150,7 @@ public:
    virtual double Warp(double originalTime) const;
 };
 
-class GeometricInputTimeWarper : public TimeWarper
+class GeometricInputTimeWarper final : public TimeWarper
 {
 private:
    LinearTimeWarper mTimeWarper;
@@ -163,7 +163,7 @@ public:
    virtual double Warp(double originalTime) const;
 };
 
-class GeometricOutputTimeWarper : public TimeWarper
+class GeometricOutputTimeWarper final : public TimeWarper
 {
 private:
    LinearTimeWarper mTimeWarper;
@@ -176,7 +176,7 @@ public:
    virtual double Warp(double originalTime) const;
 };
 
-class StepTimeWarper : public TimeWarper
+class StepTimeWarper final : public TimeWarper
 {
 private:
    double mTStep;
@@ -188,7 +188,7 @@ public:
 
 
 // Note: this assumes that tStart is a fixed point of warper->warp()
-class RegionTimeWarper : public TimeWarper
+class RegionTimeWarper final : public TimeWarper
 {
 private:
    TimeWarper *mWarper;

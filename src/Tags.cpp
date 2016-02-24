@@ -526,7 +526,7 @@ bool Tags::ShowEditDialog(wxWindow *parent, const wxString &title, bool force)
 // ComboEditor - Wrapper to prevent unwanted background erasure
 //
 
-class ComboEditor:public wxGridCellChoiceEditor
+class ComboEditor final : public wxGridCellChoiceEditor
 {
 public:
    ComboEditor(const wxArrayString& choices, bool allowOthers = false)

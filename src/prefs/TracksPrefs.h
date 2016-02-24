@@ -22,7 +22,7 @@
 
 class ShuttleGui;
 
-class TracksPrefs :public PrefsPanel
+class TracksPrefs final : public PrefsPanel
 {
  public:
    TracksPrefs(wxWindow * parent);
@@ -39,7 +39,7 @@ class TracksPrefs :public PrefsPanel
    wxArrayString mViewChoices;
 };
 
-class TracksPrefsFactory : public PrefsPanelFactory
+class TracksPrefsFactory final : public PrefsPanelFactory
 {
 public:
    virtual PrefsPanel *Create(wxWindow *parent);

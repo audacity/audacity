@@ -26,7 +26,7 @@ void CloseScoreAlignDialog();
 
 // Declare window functions
 
-class ScoreAlignDialog : public wxDialog
+class ScoreAlignDialog final : public wxDialog
 {
 public:
    ScoreAlignParams p;

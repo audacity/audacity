@@ -60,7 +60,7 @@ in which buttons can be placed.
 //
 #define RWIDTH 4
 
-class ToolBarResizer : public wxWindow
+class ToolBarResizer final : public wxWindow
 {
 public:
    ToolBarResizer(ToolBar *mBar);

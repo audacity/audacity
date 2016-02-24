@@ -30,7 +30,7 @@ should be reference-counted.
 #include "../src/Project.h"
 
 /// Interface for objects that can receive command progress information
-class CommandProgressTarget
+class CommandProgressTarget /* not final */
 {
 public:
    virtual ~CommandProgressTarget() {}
@@ -38,7 +38,7 @@ public:
 };
 
 /// Used to ignore a command's progress updates
-class NullProgressTarget : public CommandProgressTarget
+class NullProgressTarget final : public CommandProgressTarget
 {
 public:
    virtual ~NullProgressTarget() {}
@@ -62,7 +62,7 @@ public:
 };
 
 /// Interface for objects that can receive (string) messages from a command
-class CommandMessageTarget
+class CommandMessageTarget /* not final */
 {
 public:
    virtual ~CommandMessageTarget() {}
@@ -70,7 +70,7 @@ public:
 };
 
 ///
-class ProgressToMessageTarget : public CommandProgressTarget
+class ProgressToMessageTarget final : public CommandProgressTarget
 {
 private:
    CommandMessageTarget &mTarget;
@@ -89,7 +89,7 @@ public:
 };
 
 /// Used to ignore a command's message updates
-class NullMessageTarget : public CommandMessageTarget
+class NullMessageTarget final : public CommandMessageTarget
 {
 public:
    virtual ~NullMessageTarget() {}
@@ -97,7 +97,7 @@ public:
 };
 
 /// Displays messages from a command in a wxMessageBox
-class MessageBoxTarget : public CommandMessageTarget
+class MessageBoxTarget final : public CommandMessageTarget
 {
 public:
    virtual ~MessageBoxTarget() {}
@@ -108,7 +108,7 @@ public:
 };
 
 /// Displays messages from a command in a wxStatusBar
-class StatusBarTarget : public CommandMessageTarget
+class StatusBarTarget final : public CommandMessageTarget
 {
 private:
    wxStatusBar &mStatus;
@@ -123,7 +123,7 @@ public:
 };
 
 /// Adds messages to a response queue (to be sent back to a script)
-class ResponseQueueTarget : public CommandMessageTarget
+class ResponseQueueTarget final : public CommandMessageTarget
 {
 private:
    ResponseQueue &mResponseQueue;
@@ -142,7 +142,7 @@ public:
 };
 
 /// Sends messages to two message targets at once
-class CombinedMessageTarget : public CommandMessageTarget
+class CombinedMessageTarget final : public CommandMessageTarget
 {
 private:
    CommandMessageTarget *m1, *m2;

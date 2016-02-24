@@ -58,7 +58,7 @@ typedef enum EffectType
    EffectTypeAnalyze
 } EffectType;
 
-class AUDACITY_DLL_API EffectIdentInterface : public IdentInterface
+class AUDACITY_DLL_API EffectIdentInterface  /* not final */ : public IdentInterface
 {
 public:
    virtual ~EffectIdentInterface() {};
@@ -88,7 +88,7 @@ public:
 class EffectUIHostInterface;
 class EffectUIClientInterface;
 
-class AUDACITY_DLL_API EffectHostInterface : public ConfigClientInterface
+class AUDACITY_DLL_API EffectHostInterface  /* not final */ : public ConfigClientInterface
 {
 public:
    virtual ~EffectHostInterface() {};
@@ -110,7 +110,7 @@ public:
    virtual wxString GetFactoryDefaultsGroup() = 0;
 };
 
-class AUDACITY_DLL_API EffectClientInterface : public EffectIdentInterface
+class AUDACITY_DLL_API EffectClientInterface  /* not final */ : public EffectIdentInterface
 {
 public:
    virtual ~EffectClientInterface() {};
@@ -162,7 +162,7 @@ public:
    virtual ~EffectUIHostInterface() {};
 };
 
-class AUDACITY_DLL_API EffectUIClientInterface
+class AUDACITY_DLL_API EffectUIClientInterface /* not final */
 {
 public:
    virtual ~EffectUIClientInterface() {};

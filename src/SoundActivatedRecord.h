@@ -20,7 +20,7 @@
 
 class ShuttleGui;
 
-class SoundActivatedRecord : public wxDialog
+class SoundActivatedRecord final : public wxDialog
 {
 public:
    SoundActivatedRecord(wxWindow* parent);

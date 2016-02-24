@@ -27,7 +27,7 @@ class ShuttleGui;
 
 #define CHANGESPEED_PLUGIN_SYMBOL XO("Change Speed")
 
-class EffectChangeSpeed : public Effect
+class EffectChangeSpeed final : public Effect
 {
 public:
    EffectChangeSpeed();

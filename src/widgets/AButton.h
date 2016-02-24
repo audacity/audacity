@@ -24,7 +24,7 @@
 
 #include "ImageRoll.h"
 
-class AButton: public wxWindow {
+class AButton final : public wxWindow {
    friend class AButtonAx;
    class Listener;
 
@@ -173,7 +173,7 @@ public:
 
 #if wxUSE_ACCESSIBILITY
 
-class AButtonAx: public wxWindowAccessible
+class AButtonAx final : public wxWindowAccessible
 {
 public:
    AButtonAx(wxWindow * window);

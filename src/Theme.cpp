@@ -477,7 +477,7 @@ void FlowPacker::RectMid( int &x, int &y )
 /// The trick used here is that wxWidgets can write a PNG image to a stream.
 /// By writing to a custom stream, we get to see each byte of data in turn, convert
 /// it to text, put in commas, and then write that out to our own text stream.
-class SourceOutputStream : public wxOutputStream
+class SourceOutputStream final : public wxOutputStream
 {
 public:
    SourceOutputStream(){;};

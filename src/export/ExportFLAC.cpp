@@ -47,7 +47,7 @@ and libvorbis examples, Monty <monty@xiph.org>
 // ExportFLACOptions Class
 //----------------------------------------------------------------------------
 
-class ExportFLACOptions : public wxPanel
+class ExportFLACOptions final : public wxPanel
 {
 public:
 
@@ -173,7 +173,7 @@ static struct
 
 //----------------------------------------------------------------------------
 
-class ExportFLAC : public ExportPlugin
+class ExportFLAC final : public ExportPlugin
 {
 public:
 

@@ -41,7 +41,7 @@ class ToolFrame;
 /// class ToolManager
 ////////////////////////////////////////////////////////////
 
-class ToolManager:public wxEvtHandler
+class ToolManager final : public wxEvtHandler
 {
 
  public:

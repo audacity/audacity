@@ -27,7 +27,7 @@ class wxSizeEvent;
 class SelectionBarListener;
 class NumericTextCtrl;
 
-class SelectionBar:public ToolBar {
+class SelectionBar final : public ToolBar {
 
  public:
 

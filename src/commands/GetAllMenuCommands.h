@@ -23,7 +23,7 @@ channel.
 #include "Command.h"
 #include "CommandType.h"
 
-class GetAllMenuCommandsType : public CommandType
+class GetAllMenuCommandsType final : public CommandType
 {
 public:
    virtual wxString BuildName();
@@ -31,7 +31,7 @@ public:
    virtual Command *Create(CommandOutputTarget *target);
 };
 
-class GetAllMenuCommands : public CommandImplementation
+class GetAllMenuCommands final : public CommandImplementation
 {
 public:
    GetAllMenuCommands(CommandType &type,

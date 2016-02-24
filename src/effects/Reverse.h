@@ -19,7 +19,7 @@
 
 #define REVERSE_PLUGIN_SYMBOL XO("Reverse")
 
-class EffectReverse : public Effect
+class EffectReverse final : public Effect
 {
 public:
    EffectReverse();

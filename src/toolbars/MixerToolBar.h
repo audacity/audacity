@@ -21,7 +21,7 @@ class wxStaticBitmap;
 
 class ASlider;
 
-class MixerToolBar:public ToolBar {
+class MixerToolBar final : public ToolBar {
 
  public:
 

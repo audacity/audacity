@@ -58,7 +58,7 @@ enum {
    ETBNumButtons
 };
 
-class EditToolBar:public ToolBar {
+class EditToolBar final : public ToolBar {
 
  public:
 

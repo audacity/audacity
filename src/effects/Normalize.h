@@ -24,7 +24,7 @@ class ShuttleGui;
 
 #define NORMALIZE_PLUGIN_SYMBOL XO("Normalize")
 
-class EffectNormalize : public Effect
+class EffectNormalize final : public Effect
 {
 public:
    EffectNormalize();

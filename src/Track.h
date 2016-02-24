@@ -47,7 +47,7 @@ WX_DEFINE_USER_EXPORTED_ARRAY(NoteTrack*, NoteTrackArray, class AUDACITY_DLL_API
 class TrackList;
 struct TrackListNode;
 
-class AUDACITY_DLL_API Track: public XMLTagHandler
+class AUDACITY_DLL_API Track /* not final */ : public XMLTagHandler
 {
 
  // To be TrackDisplay
@@ -218,7 +218,7 @@ struct TrackListNode
    TrackListNode *prev;
 };
 
-class AUDACITY_DLL_API TrackListIterator
+class AUDACITY_DLL_API TrackListIterator /* not final */
 {
  public:
    TrackListIterator(TrackList * val = NULL);
@@ -265,7 +265,7 @@ private:
 
 // TrackListCondIterator (base class for iterators that iterate over all tracks)
 // that meet a condition)
-class AUDACITY_DLL_API TrackListCondIterator: public TrackListIterator
+class AUDACITY_DLL_API TrackListCondIterator /* not final */ : public TrackListIterator
 {
    public:
       TrackListCondIterator(TrackList *val = NULL)
@@ -288,7 +288,7 @@ class AUDACITY_DLL_API TrackListCondIterator: public TrackListIterator
 //
 // Based on TrackListIterator and returns only tracks of the specified type.
 //
-class AUDACITY_DLL_API TrackListOfKindIterator: public TrackListCondIterator
+class AUDACITY_DLL_API TrackListOfKindIterator /* not final */ : public TrackListCondIterator
 {
  public:
    TrackListOfKindIterator(int kind, TrackList * val = NULL);
@@ -306,7 +306,7 @@ class AUDACITY_DLL_API TrackListOfKindIterator: public TrackListCondIterator
 //
 // Based on TrackListOfKindIterator and returns only tracks selected.
 //
-class AUDACITY_DLL_API SelectedTrackListOfKindIterator: public TrackListOfKindIterator
+class AUDACITY_DLL_API SelectedTrackListOfKindIterator final : public TrackListOfKindIterator
 {
  public:
     SelectedTrackListOfKindIterator(int kind, TrackList * val = NULL) : TrackListOfKindIterator(kind, val) {}
@@ -321,7 +321,7 @@ class AUDACITY_DLL_API SelectedTrackListOfKindIterator: public TrackListOfKindIt
 //
 // Based on TrackListIterator returns only the currently visible tracks.
 //
-class AUDACITY_DLL_API VisibleTrackIterator: public TrackListCondIterator
+class AUDACITY_DLL_API VisibleTrackIterator final : public TrackListCondIterator
 {
  public:
    VisibleTrackIterator(AudacityProject *project);
@@ -338,7 +338,7 @@ class AUDACITY_DLL_API VisibleTrackIterator: public TrackListCondIterator
 
 // SyncLockedTracksIterator returns only tracks belonging to the sync-locked tracks
 // in which the starting track is a member.
-class AUDACITY_DLL_API SyncLockedTracksIterator : public TrackListIterator
+class AUDACITY_DLL_API SyncLockedTracksIterator final : public TrackListIterator
 {
  public:
    SyncLockedTracksIterator(TrackList * val);
@@ -370,7 +370,7 @@ DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_TRACKLIST_RESIZED, -1);
 // track that was added.
 DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_TRACKLIST_UPDATED, -1);
 
-class AUDACITY_DLL_API TrackList:public wxEvtHandler
+class AUDACITY_DLL_API TrackList final : public wxEvtHandler
 {
  public:
    // Create an empty TrackList

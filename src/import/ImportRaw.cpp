@@ -57,7 +57,7 @@ and sample size to help you importing data of an unknown format.
 
 #include "sndfile.h"
 
-class ImportRawDialog:public wxDialog {
+class ImportRawDialog final : public wxDialog {
 
   public:
    ImportRawDialog(wxWindow * parent,

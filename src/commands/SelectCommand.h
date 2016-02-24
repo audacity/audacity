@@ -19,7 +19,7 @@
 #include "CommandType.h"
 #include "Command.h"
 
-class SelectCommandType : public CommandType
+class SelectCommandType final : public CommandType
 {
 public:
    virtual wxString BuildName();
@@ -27,7 +27,7 @@ public:
    virtual Command *Create(CommandOutputTarget *target);
 };
 
-class SelectCommand : public CommandImplementation
+class SelectCommand final : public CommandImplementation
 {
 public:
    SelectCommand(SelectCommandType &type, CommandOutputTarget *target)

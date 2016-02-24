@@ -23,7 +23,7 @@ name.
 #include "Command.h"
 #include "CommandType.h"
 
-class ExecMenuCommandType : public CommandType
+class ExecMenuCommandType final : public CommandType
 {
 public:
    virtual wxString BuildName();
@@ -31,7 +31,7 @@ public:
    virtual Command *Create(CommandOutputTarget *target);
 };
 
-class ExecMenuCommand : public CommandImplementation
+class ExecMenuCommand final : public CommandImplementation
 {
 public:
    ExecMenuCommand(CommandType &type,

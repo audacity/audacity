@@ -69,7 +69,7 @@ URILIST
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-class LV2EffectMeter : public wxWindow
+class LV2EffectMeter final : public wxWindow
 {
 public:
    LV2EffectMeter(wxWindow *parent, const LV2Port & ctrl);
@@ -167,7 +167,7 @@ void LV2EffectMeter::OnSize(wxSizeEvent & WXUNUSED(evt))
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-class LV2EffectSettingsDialog : public wxDialog
+class LV2EffectSettingsDialog final : public wxDialog
 {
 public:
    LV2EffectSettingsDialog(wxWindow *parent, LV2Effect *effect);

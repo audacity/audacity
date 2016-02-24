@@ -98,7 +98,7 @@ extern "C" {
 
 class FLACImportFileHandle;
 
-class MyFLACFile : public FLAC::Decoder::File
+class MyFLACFile final : public FLAC::Decoder::File
 {
  public:
    MyFLACFile(FLACImportFileHandle *handle) : mFile(handle)
@@ -126,7 +126,7 @@ class MyFLACFile : public FLAC::Decoder::File
 };
 
 
-class FLACImportPlugin : public ImportPlugin
+class FLACImportPlugin final : public ImportPlugin
 {
  public:
    FLACImportPlugin():
@@ -142,7 +142,7 @@ class FLACImportPlugin : public ImportPlugin
 };
 
 
-class FLACImportFileHandle : public ImportFileHandle
+class FLACImportFileHandle final : public ImportFileHandle
 {
    friend class MyFLACFile;
 public:

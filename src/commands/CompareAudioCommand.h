@@ -22,7 +22,7 @@ classes
 
 class WaveTrack;
 
-class CompareAudioCommandType : public CommandType
+class CompareAudioCommandType final : public CommandType
 {
 public:
    virtual wxString BuildName();
@@ -30,7 +30,7 @@ public:
    virtual Command *Create(CommandOutputTarget *target);
 };
 
-class CompareAudioCommand : public CommandImplementation
+class CompareAudioCommand final : public CommandImplementation
 {
 private:
    double mT0, mT1;

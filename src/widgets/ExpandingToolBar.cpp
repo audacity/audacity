@@ -276,7 +276,7 @@ void ExpandingToolBar::TryAutoCollapse()
 #endif
 }
 
-class ExpandingToolBarEvtHandler : public wxEvtHandler
+class ExpandingToolBarEvtHandler final : public wxEvtHandler
 {
  public:
    ExpandingToolBarEvtHandler(ExpandingToolBar *toolbar,

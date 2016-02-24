@@ -39,7 +39,7 @@
 // ExportCLOptions
 //----------------------------------------------------------------------------
 
-class ExportCLOptions : public wxPanel
+class ExportCLOptions final : public wxPanel
 {
 public:
    ExportCLOptions(wxWindow *parent, int format);
@@ -206,7 +206,7 @@ static void Drain(wxInputStream *s, wxString *o)
    }
 }
 
-class ExportCLProcess : public wxProcess
+class ExportCLProcess final : public wxProcess
 {
 public:
    ExportCLProcess(wxString *output)
@@ -274,7 +274,7 @@ struct wav_header {
    wxUint32 dataLen;          /* length of all samples in bytes */
 };
 
-class ExportCL : public ExportPlugin
+class ExportCL final : public ExportPlugin
 {
 public:
 

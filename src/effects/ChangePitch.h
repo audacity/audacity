@@ -33,7 +33,7 @@ class ShuttleGui;
 
 #define CHANGEPITCH_PLUGIN_SYMBOL XO("Change Pitch")
 
-class EffectChangePitch : public EffectSoundTouch
+class EffectChangePitch final : public EffectSoundTouch
 {
 public:
    EffectChangePitch();

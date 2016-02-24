@@ -43,7 +43,7 @@ Some of these methods have been overridden only because they used the unsafe wxL
 #include <wx/thread.h>
 
 /// An AliasBlockFile that references uncompressed data in an existing file
-class ODPCMAliasBlockFile : public PCMAliasBlockFile
+class ODPCMAliasBlockFile final : public PCMAliasBlockFile
 {
  public:
    /// Constructs a PCMAliasBlockFile, writing the summary to disk

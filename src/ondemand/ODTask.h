@@ -35,7 +35,7 @@ class WaveTrack;
 DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_ODTASK_COMPLETE, -1)
 
 /// A class representing a modular task to be used with the On-Demand structures.
-class ODTask
+class ODTask /* not final */
 {
  public:
    enum {

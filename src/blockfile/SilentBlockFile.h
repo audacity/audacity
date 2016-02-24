@@ -21,7 +21,7 @@
 #include "../DirManager.h"
 
 /// A BlockFile containing nothing but silence.  Saves disk space.
-class SilentBlockFile : public BlockFile {
+class SilentBlockFile final : public BlockFile {
  public:
 
    // Constructor / Destructor

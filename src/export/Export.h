@@ -50,7 +50,7 @@ WX_DECLARE_USER_EXPORTED_OBJARRAY(FormatInfo, FormatInfoArray, AUDACITY_DLL_API)
 //----------------------------------------------------------------------------
 // ExportPlugin
 //----------------------------------------------------------------------------
-class AUDACITY_DLL_API ExportPlugin
+class AUDACITY_DLL_API ExportPlugin /* not final */
 {
 public:
 
@@ -131,7 +131,7 @@ WX_DEFINE_USER_EXPORTED_ARRAY_PTR(wxWindow *, WindowPtrArray, class AUDACITY_DLL
 //----------------------------------------------------------------------------
 // Exporter
 //----------------------------------------------------------------------------
-class  AUDACITY_DLL_API Exporter : public wxEvtHandler
+class  AUDACITY_DLL_API Exporter final : public wxEvtHandler
 {
 public:
 
@@ -195,7 +195,7 @@ private:
 //----------------------------------------------------------------------------
 // ExportMixerPanel
 //----------------------------------------------------------------------------
-class ExportMixerPanel: public wxPanel
+class ExportMixerPanel final : public wxPanel
 {
 public:
    ExportMixerPanel( MixerSpec *mixerSpec, wxArrayString trackNames,
@@ -228,7 +228,7 @@ private:
 //----------------------------------------------------------------------------
 // ExportMixerDialog
 //----------------------------------------------------------------------------
-class ExportMixerDialog : public wxDialog
+class ExportMixerDialog final : public wxDialog
 {
 public:
    // constructors and destructors

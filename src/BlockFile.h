@@ -38,7 +38,7 @@ class SummaryInfo {
 
 
 
-class BlockFile {
+class BlockFile /* not final */ {
  public:
 
    // Constructor / Destructor
@@ -178,7 +178,7 @@ class BlockFile {
 /// This is a common base class for all alias block files.  It handles
 /// reading and writing summary data, leaving very little for derived
 /// classes to need to implement.
-class AliasBlockFile : public BlockFile
+class AliasBlockFile /* not final */ : public BlockFile
 {
  public:
 

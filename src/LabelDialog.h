@@ -30,7 +30,7 @@ class ViewInfo;
 
 typedef std::vector<RowData> RowDataArray;
 
-class LabelDialog:public wxDialog
+class LabelDialog final : public wxDialog
 {
  public:
 

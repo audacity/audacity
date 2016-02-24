@@ -25,7 +25,7 @@
 #include <wx/event.h>
 #include <wx/timer.h>
 
-class DeviceChangeInterface
+class DeviceChangeInterface /* not final */
 {
 public:
    virtual ~DeviceChangeInterface() {};

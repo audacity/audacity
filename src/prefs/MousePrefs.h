@@ -19,7 +19,7 @@
 
 class ShuttleGui;
 
-class MousePrefs :public PrefsPanel
+class MousePrefs final : public PrefsPanel
 {
  public:
    MousePrefs(wxWindow * parent);
@@ -38,7 +38,7 @@ class MousePrefs :public PrefsPanel
    wxListCtrl * mList;
 };
 
-class MousePrefsFactory : public PrefsPanelFactory
+class MousePrefsFactory final : public PrefsPanelFactory
 {
 public:
    virtual PrefsPanel *Create(wxWindow *parent);

@@ -18,7 +18,7 @@ class ShuttleGui;
 
 #define PAULSTRETCH_PLUGIN_SYMBOL XO("Paulstretch")
 
-class EffectPaulstretch : public Effect
+class EffectPaulstretch final : public Effect
 {
 public:
    EffectPaulstretch();

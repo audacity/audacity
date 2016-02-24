@@ -157,7 +157,7 @@ private:
 // ImportStreamDialog
 //----------------------------------------------------------------------------
 
-class ImportStreamDialog: public wxDialog
+class ImportStreamDialog final : public wxDialog
 {
 public:
    // constructors and destructors

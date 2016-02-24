@@ -21,7 +21,7 @@
 
 class WaveTrack;
 
-class EffectSimpleMono : public Effect
+class EffectSimpleMono /* not final */ : public Effect
 {
 public:
    virtual bool Process();

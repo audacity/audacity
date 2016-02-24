@@ -29,7 +29,7 @@ class Meter;
 const int kWithRecordMeter = 1;
 const int kWithPlayMeter = 2;
 
-class MeterToolBar:public ToolBar {
+class MeterToolBar final : public ToolBar {
 
  public:
 

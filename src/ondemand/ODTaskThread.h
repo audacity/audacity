@@ -125,7 +125,7 @@ protected:
 #else
 
 
-class ODTaskThread : public wxThread
+class ODTaskThread final : public wxThread
 {
 public:
    ///Constructs a ODTaskThread
@@ -142,7 +142,7 @@ protected:
 
 
 //a wrapper for wxMutex.
-class AUDACITY_DLL_API ODLock : public wxMutex
+class AUDACITY_DLL_API ODLock final : public wxMutex
 {
 public:
    ///Constructs a ODTaskThread
@@ -151,7 +151,7 @@ public:
   virtual ~ODLock(){}
 };
 
-class ODCondition : public wxCondition
+class ODCondition final : public wxCondition
 {
 public:
    ODCondition(ODLock *lock):wxCondition(*lock){}

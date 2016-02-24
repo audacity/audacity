@@ -44,7 +44,7 @@ enum {
    lastTool = multiTool
 };
 
-class ToolsToolBar:public ToolBar {
+class ToolsToolBar final : public ToolBar {
 
  public:
 

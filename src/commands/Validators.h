@@ -43,7 +43,7 @@ a certain criterion. This is a base validator which allows anything.
 #ifndef __VALIDATORS__
 #define __VALIDATORS__
 
-class Validator
+class Validator /* not final */
 {
 private:
    wxVariant mConverted;
@@ -81,7 +81,7 @@ public:
    }
 };
 
-class OptionValidator : public Validator
+class OptionValidator final : public Validator
 {
 private:
    wxArrayString mOptions;
@@ -120,7 +120,7 @@ public:
    }
 };
 
-class BoolValidator : public Validator
+class BoolValidator final : public Validator
 {
 public:
    virtual bool Validate(const wxVariant &v)
@@ -140,7 +140,7 @@ public:
    }
 };
 
-class BoolArrayValidator : public Validator
+class BoolArrayValidator final : public Validator
 {
 public:
    virtual bool Validate(const wxVariant &v)
@@ -164,7 +164,7 @@ public:
    }
 };
 
-class DoubleValidator : public Validator
+class DoubleValidator final : public Validator
 {
 public:
    virtual bool Validate(const wxVariant &v)
@@ -184,7 +184,7 @@ public:
    }
 };
 
-class RangeValidator : public Validator
+class RangeValidator final : public Validator
 {
 private:
    double mLower, mUpper;
@@ -209,7 +209,7 @@ public:
    }
 };
 
-class IntValidator : public Validator
+class IntValidator final : public Validator
 {
 public:
    virtual bool Validate(const wxVariant &v)
@@ -231,7 +231,7 @@ public:
 };
 
 /*
-class AndValidator : public Validator
+class AndValidator final : public Validator
 {
 private:
    Validator &v1, &v2;

@@ -164,7 +164,7 @@ typedef wxArrayString PluginIDList;
 class ProviderMap;
 class PluginRegistrationDialog;
 
-class PluginManager : public PluginManagerInterface
+class PluginManager final : public PluginManagerInterface
 {
 public:
    PluginManager();

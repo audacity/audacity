@@ -42,7 +42,7 @@ class ODFlacDecoder;
 class ODFLACFile;
 
 /// A class representing a modular task to be used with the On-Demand structures.
-class ODDecodeFlacTask:public ODDecodeTask
+class ODDecodeFlacTask final : public ODDecodeTask
 {
  public:
 
@@ -61,7 +61,7 @@ class ODDecodeFlacTask:public ODDecodeTask
 };
 
 
-class ODFLACFile : public FLAC::Decoder::File
+class ODFLACFile final : public FLAC::Decoder::File
 {
  public:
    ODFLACFile(ODFlacDecoder *decoder) : mDecoder(decoder)
@@ -91,7 +91,7 @@ class ODFLACFile : public FLAC::Decoder::File
 
 
 ///class to decode a particular file (one per file).  Saves info such as filename and length (after the header is read.)
-class ODFlacDecoder:public ODFileDecoder
+class ODFlacDecoder final : public ODFileDecoder
 {
    friend class ODFLACFile;
 public:

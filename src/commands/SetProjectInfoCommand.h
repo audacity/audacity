@@ -23,7 +23,7 @@
 class Track;
 class TrackList;
 
-class SetProjectInfoCommandType : public CommandType
+class SetProjectInfoCommandType final : public CommandType
 {
 public:
    virtual wxString BuildName();
@@ -32,7 +32,7 @@ public:
 };
 
 
-class SetProjectInfoCommand : public CommandImplementation
+class SetProjectInfoCommand final : public CommandImplementation
 {
 public:
    SetProjectInfoCommand(CommandType &type, CommandOutputTarget *target)

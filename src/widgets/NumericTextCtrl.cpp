@@ -753,6 +753,10 @@ void NumericConverter::PrintDebugInfo()
    printf("\n");
 }
 
+NumericConverter::~NumericConverter()
+{
+}
+
 void NumericConverter::ValueToControls()
 {
    ValueToControls(mValue);

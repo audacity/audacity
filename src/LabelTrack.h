@@ -108,7 +108,7 @@ const int NUM_GLYPH_HIGHLIGHTS = 4;
 const int MAX_NUM_ROWS =80;
 
 
-class AUDACITY_DLL_API LabelTrack : public Track
+class AUDACITY_DLL_API LabelTrack final : public Track
 {
    friend class LabelStruct;
 

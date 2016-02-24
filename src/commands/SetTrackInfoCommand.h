@@ -19,7 +19,7 @@
 #include "Command.h"
 #include "CommandType.h"
 
-class SetTrackInfoCommandType : public CommandType
+class SetTrackInfoCommandType final : public CommandType
 {
 public:
    virtual wxString BuildName();
@@ -27,7 +27,7 @@ public:
    virtual Command *Create(CommandOutputTarget *target);
 };
 
-class SetTrackInfoCommand : public CommandImplementation
+class SetTrackInfoCommand final : public CommandImplementation
 {
 public:
    SetTrackInfoCommand(CommandType &type, CommandOutputTarget *target)

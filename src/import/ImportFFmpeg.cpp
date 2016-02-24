@@ -167,7 +167,7 @@ class FFmpegImportFileHandle;
 
 /// A representative of FFmpeg loader in
 /// the Audacity import plugin list
-class FFmpegImportPlugin : public ImportPlugin
+class FFmpegImportPlugin final : public ImportPlugin
 {
 public:
    FFmpegImportPlugin():
@@ -186,7 +186,7 @@ public:
 };
 
 ///! Does acual import, returned by FFmpegImportPlugin::Open
-class FFmpegImportFileHandle : public ImportFileHandle
+class FFmpegImportFileHandle final : public ImportFileHandle
 {
 
 public:

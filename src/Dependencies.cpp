@@ -241,7 +241,7 @@ static void RemoveDependencies(AudacityProject *project,
 // DependencyDialog
 //
 
-class DependencyDialog : public wxDialog
+class DependencyDialog final : public wxDialog
 {
 public:
    DependencyDialog(wxWindow *parent,

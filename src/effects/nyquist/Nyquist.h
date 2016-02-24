@@ -61,7 +61,7 @@ public:
 
 WX_DECLARE_USER_EXPORTED_OBJARRAY(NyqControl,  NyqControlArray, AUDACITY_DLL_API);
 
-class AUDACITY_DLL_API NyquistEffect : public Effect
+class AUDACITY_DLL_API NyquistEffect final : public Effect
 {
 public:
 
@@ -242,7 +242,7 @@ private:
    friend class NyquistEffectsModule;
 };
 
-class NyquistOutputDialog : public wxDialog
+class NyquistOutputDialog final : public wxDialog
 {
 public:
    NyquistOutputDialog(wxWindow * parent, wxWindowID id,

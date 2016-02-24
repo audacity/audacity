@@ -80,7 +80,7 @@ void GetOGGImportPlugin(ImportPluginList *importPluginList,
 #include "../WaveTrack.h"
 #include "ImportPlugin.h"
 
-class OggImportPlugin : public ImportPlugin
+class OggImportPlugin final : public ImportPlugin
 {
 public:
    OggImportPlugin()
@@ -96,7 +96,7 @@ public:
 };
 
 
-class OggImportFileHandle : public ImportFileHandle
+class OggImportFileHandle final : public ImportFileHandle
 {
 public:
    OggImportFileHandle(const wxString & filename,

@@ -19,7 +19,7 @@
 
 class Effect;
 
-class BatchCommands {
+class BatchCommands final {
  public:
    // constructors and destructors
    BatchCommands();

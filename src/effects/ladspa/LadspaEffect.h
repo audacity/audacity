@@ -36,7 +36,7 @@ WX_DEFINE_ARRAY_PTR(LADSPA_Handle, LadspaSlaveArray);
 
 class LadspaEffectMeter;
 
-class LadspaEffect : public wxEvtHandler,
+class LadspaEffect final : public wxEvtHandler,
                      public EffectClientInterface,
                      public EffectUIClientInterface
 {
@@ -202,7 +202,7 @@ private:
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-class LadspaEffectsModule : public ModuleInterface
+class LadspaEffectsModule final : public ModuleInterface
 {
 public:
    LadspaEffectsModule(ModuleManagerInterface *moduleManager, const wxString *path);

@@ -52,7 +52,7 @@ typedef struct _FFmpegDecodeCache
 //------ ODFFmpegDecoder declaration and defs - here because we strip dependencies from .h files
 
 ///class to decode a particular file (one per file).  Saves info such as filename and length (after the header is read.)
-class ODFFmpegDecoder:public ODFileDecoder
+class ODFFmpegDecoder final : public ODFileDecoder
 {
 
 

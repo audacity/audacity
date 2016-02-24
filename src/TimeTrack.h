@@ -23,7 +23,7 @@ class Envelope;
 class Ruler;
 class ZoomInfo;
 
-class TimeTrack: public Track {
+class TimeTrack final : public Track {
 
  public:
 

@@ -19,7 +19,7 @@
 
 class WaveTrack;
 
-class EffectRepair : public Effect
+class EffectRepair final : public Effect
 {
 public:
    EffectRepair();

@@ -24,7 +24,7 @@
 
 #include "Experimental.h"
 
-class AudacityLogger:public wxEvtHandler, public wxLog {
+class AudacityLogger final : public wxEvtHandler, public wxLog {
  public:
    AudacityLogger();
    virtual ~AudacityLogger();

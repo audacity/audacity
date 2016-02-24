@@ -37,7 +37,7 @@ class ODFileDecoder;
 
 
 /// A class representing a modular task to be used with the On-Demand structures.
-class ODDecodeTask:public ODTask
+class ODDecodeTask /* not final */ : public ODTask
 {
  public:
    ODDecodeTask();
@@ -96,7 +96,7 @@ protected:
 };
 
 ///class to decode a particular file (one per file).  Saves info such as filename and length (after the header is read.)
-class ODFileDecoder
+class ODFileDecoder /* not final */
 {
 public:
    ///This should handle unicode converted to UTF-8 on mac/linux, but OD TODO:check on windows

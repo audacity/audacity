@@ -31,7 +31,7 @@ the ability to not see similar warnings again for this session.
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 
-class WarningDialog : public wxDialog
+class WarningDialog final : public wxDialog
 {
  public:
    // constructors and destructors

@@ -79,7 +79,7 @@ enum
    ToolBarCount
 };
 
-class ToolBar:public wxPanel
+class ToolBar /* not final */ : public wxPanel
 {
 
  public:

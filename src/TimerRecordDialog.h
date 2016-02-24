@@ -26,7 +26,7 @@ class wxTimerEvent;
 class NumericTextCtrl;
 class ShuttleGui;
 
-class TimerRecordDialog : public wxDialog
+class TimerRecordDialog final : public wxDialog
 {
 public:
    TimerRecordDialog(wxWindow* parent);

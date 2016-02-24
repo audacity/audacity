@@ -117,7 +117,7 @@ CommandManager.  It holds the callback for one command.
 #include "../Experimental.h"
 
 // Shared by all projects
-static class CommandManagerEventMonitor : public wxEventFilter
+static class CommandManagerEventMonitor final : public wxEventFilter
 {
 public:
    CommandManagerEventMonitor()

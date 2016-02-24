@@ -22,7 +22,7 @@
 
 class ShuttleGui;
 
-class LibraryPrefs :public PrefsPanel
+class LibraryPrefs final : public PrefsPanel
 {
  public:
    LibraryPrefs(wxWindow * parent);
@@ -46,7 +46,7 @@ class LibraryPrefs :public PrefsPanel
    DECLARE_EVENT_TABLE();
 };
 
-class LibraryPrefsFactory : public PrefsPanelFactory
+class LibraryPrefsFactory final : public PrefsPanelFactory
 {
 public:
    virtual PrefsPanel *Create(wxWindow *parent);

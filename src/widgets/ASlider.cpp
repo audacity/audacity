@@ -82,7 +82,7 @@ const int sliderFontSize = 12;
 // TipPanel
 //
 
-class TipPanel : public wxPopupWindow
+class TipPanel final : public wxPopupWindow
 {
  public:
    TipPanel(wxWindow *parent, const wxString & label);

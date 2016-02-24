@@ -46,7 +46,7 @@ struct SBSMSFrame {
 
 typedef long (*SBSMSResampleCB)(void *cbData, SBSMSFrame *frame);
 
-class SBSMSInterface {
+class SBSMSInterface /* not final */ {
  public:
   virtual ~SBSMSInterface() {}
   virtual long samples(audio *buf, long n) { return 0; }
@@ -141,7 +141,7 @@ class Slide {
  
 class SBSMSInterfaceSlidingImp;
 
-class SBSMSInterfaceSliding : public SBSMSInterface {
+class SBSMSInterfaceSliding /* not final */ : public SBSMSInterface {
 public:
   SBSMSInterfaceSliding(Slide *rateSlide, 
                         Slide *pitchSlide, 

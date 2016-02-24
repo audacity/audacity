@@ -57,7 +57,7 @@ public:
 };
 
 // Interface
-class Command
+class Command /* not final */
 {
 public:
    virtual void Progress(double completed) = 0;
@@ -71,7 +71,7 @@ public:
 };
 
 // Command which wraps another command
-class DecoratedCommand : public Command
+class DecoratedCommand /* not final */ : public Command
 {
 protected:
    Command *mCommand;
@@ -94,7 +94,7 @@ public:
 
 // Decorator command that performs the given command and then outputs a status
 // message according to the result
-class ApplyAndSendResponse : public DecoratedCommand
+class ApplyAndSendResponse final : public DecoratedCommand
 {
 public:
    ApplyAndSendResponse(Command *cmd)
@@ -104,7 +104,7 @@ public:
    virtual bool Apply(CommandExecutionContext context);
 };
 
-class CommandImplementation : public Command
+class CommandImplementation /* not final */ : public Command
 {
 private:
    CommandType &mType;

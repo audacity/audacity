@@ -27,7 +27,7 @@ class wxSizeEvent;
 class SpectralSelectionBarListener;
 class NumericTextCtrl;
 
-class SpectralSelectionBar :public ToolBar {
+class SpectralSelectionBar final : public ToolBar {
 
 public:
 

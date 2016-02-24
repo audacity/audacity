@@ -27,7 +27,7 @@ class WaveTrack;
 
 // Declare window functions
 
-class ContrastDialog:public wxDialog
+class ContrastDialog final : public wxDialog
 {
 public:
    // constructors and destructors

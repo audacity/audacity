@@ -20,7 +20,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-class BuiltinEffectsModule : public ModuleInterface
+class BuiltinEffectsModule final : public ModuleInterface
 {
 public:
    BuiltinEffectsModule(ModuleManagerInterface *moduleManager, const wxString *path);

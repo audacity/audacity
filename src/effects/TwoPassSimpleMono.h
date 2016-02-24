@@ -17,7 +17,7 @@
 
 class WaveTrack;
 
-class EffectTwoPassSimpleMono : public Effect
+class EffectTwoPassSimpleMono /* not final */ : public Effect
 {
 public:
    // Effect implementation

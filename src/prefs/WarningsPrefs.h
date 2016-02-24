@@ -21,7 +21,7 @@
 
 class ShuttleGui;
 
-class WarningsPrefs :public PrefsPanel
+class WarningsPrefs final : public PrefsPanel
 {
  public:
    WarningsPrefs(wxWindow * parent);
@@ -33,7 +33,7 @@ class WarningsPrefs :public PrefsPanel
    void PopulateOrExchange(ShuttleGui & S);
 };
 
-class WarningsPrefsFactory : public PrefsPanelFactory
+class WarningsPrefsFactory final : public PrefsPanelFactory
 {
 public:
    virtual PrefsPanel *Create(wxWindow *parent);

@@ -22,7 +22,7 @@
 
 class ShuttleGui;
 
-class EffectsPrefs :public PrefsPanel
+class EffectsPrefs final : public PrefsPanel
 {
  public:
    EffectsPrefs(wxWindow * parent);
@@ -34,7 +34,7 @@ class EffectsPrefs :public PrefsPanel
    void PopulateOrExchange(ShuttleGui & S);
 };
 
-class EffectsPrefsFactory : public PrefsPanelFactory
+class EffectsPrefsFactory final : public PrefsPanelFactory
 {
 public:
    virtual PrefsPanel *Create(wxWindow *parent);
