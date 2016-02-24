@@ -237,7 +237,7 @@ protected:
     {
         LongestValueType value;
         return BaseValidator::FromString(s, &value) ? NormalizeValue(value)
-                                                    : wxEmptyString;
+                                                    : wxString();
     }
 
 private:
