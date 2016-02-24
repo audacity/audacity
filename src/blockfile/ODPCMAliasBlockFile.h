@@ -57,34 +57,34 @@ class ODPCMAliasBlockFile final : public PCMAliasBlockFile
    virtual ~ODPCMAliasBlockFile();
 
    //checks to see if summary data has been computed and written to disk yet.  Thread safe.  Blocks if we are writing summary data.
-   virtual bool IsSummaryAvailable();
+   bool IsSummaryAvailable() override;
 
    /// Returns TRUE if the summary has not yet been written, but is actively being computed and written to disk
-   virtual bool IsSummaryBeingComputed(){return mSummaryBeingComputed;}
+   bool IsSummaryBeingComputed() override { return mSummaryBeingComputed; }
 
    //Calls that rely on summary files need to be overidden
-   virtual wxLongLong GetSpaceUsage();
+   wxLongLong GetSpaceUsage() override;
    /// Gets extreme values for the specified region
-   virtual void GetMinMax(sampleCount start, sampleCount len,
-                          float *outMin, float *outMax, float *outRMS);
+   void GetMinMax(sampleCount start, sampleCount len,
+                          float *outMin, float *outMax, float *outRMS) override;
    /// Gets extreme values for the entire block
-   virtual void GetMinMax(float *outMin, float *outMax, float *outRMS);
+   void GetMinMax(float *outMin, float *outMax, float *outRMS) override;
    /// Returns the 256 byte summary data block
-   virtual bool Read256(float *buffer, sampleCount start, sampleCount len);
+   bool Read256(float *buffer, sampleCount start, sampleCount len) override;
    /// Returns the 64K summary data block
-   virtual bool Read64K(float *buffer, sampleCount start, sampleCount len);
+   bool Read64K(float *buffer, sampleCount start, sampleCount len) override;
 
    ///Makes NEW ODPCMAliasBlockFile or PCMAliasBlockFile depending on summary availability
-   virtual BlockFile *Copy(wxFileName fileName);
+   BlockFile *Copy(wxFileName fileName) override;
 
    ///Saves as xml ODPCMAliasBlockFile or PCMAliasBlockFile depending on summary availability
-   virtual void SaveXML(XMLWriter &xmlFile);
+   void SaveXML(XMLWriter &xmlFile) override;
 
    ///Reconstructs from XML a ODPCMAliasBlockFile and reschedules it for OD loading
    static BlockFile *BuildFromXML(DirManager &dm, const wxChar **attrs);
 
    ///Writes the summary file if summary data is available
-   virtual void Recover(void);
+   void Recover(void) override;
 
    ///A public interface to WriteSummary
    void DoWriteSummary();
@@ -117,33 +117,33 @@ class ODPCMAliasBlockFile final : public PCMAliasBlockFile
    //Below calls are overrided just so we can take wxlog calls out, which are not threadsafe.
 
    /// Reads the specified data from the aliased file using libsndfile
-   virtual int ReadData(samplePtr data, sampleFormat format,
-                        sampleCount start, sampleCount len);
+   int ReadData(samplePtr data, sampleFormat format,
+                        sampleCount start, sampleCount len) override;
 
    /// Read the summary into a buffer
-   virtual bool ReadSummary(void *data);
+   bool ReadSummary(void *data) override;
 
    ///sets the file name the summary info will be saved in.  threadsafe.
-   virtual void SetFileName(wxFileName &name);
-   virtual wxFileName GetFileName();
+   void SetFileName(wxFileName &name) override;
+   wxFileName GetFileName() override;
 
    //when the file closes, it locks the blockfiles, but it calls this so we can check if it has been saved before.
-   virtual void CloseLock();
+   void CloseLock() override;
 
    /// Prevents a read on other threads.
-   virtual void LockRead();
+   void LockRead() override;
    /// Allows reading on other threads.
-   virtual void UnlockRead();
+   void UnlockRead() override;
 
-  protected:
-   virtual void WriteSummary();
-   virtual void *CalcSummary(samplePtr buffer, sampleCount len,
-                             sampleFormat format);
+protected:
+   void WriteSummary() override;
+   void *CalcSummary(samplePtr buffer, sampleCount len,
+      sampleFormat format) override;
 
   private:
    //Thread-safe versions
-   virtual void Ref();
-   virtual bool Deref();
+   void Ref() override;
+   bool Deref() override;
    //needed for Ref/Deref access.
    friend class DirManager;
    friend class ODComputeSummaryTask;

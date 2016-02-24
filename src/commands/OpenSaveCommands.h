@@ -25,9 +25,9 @@
 class OpenProjectCommandType final : public CommandType
 {
 public:
-   virtual wxString BuildName();
-   virtual void BuildSignature(CommandSignature &signature);
-   virtual Command *Create(CommandOutputTarget *target);
+   wxString BuildName() override;
+   void BuildSignature(CommandSignature &signature) override;
+   Command *Create(CommandOutputTarget *target) override;
 };
 
 class OpenProjectCommand final : public CommandImplementation
@@ -39,7 +39,7 @@ public:
    { }
 
    virtual ~OpenProjectCommand();
-   virtual bool Apply(CommandExecutionContext context);
+   bool Apply(CommandExecutionContext context) override;
 };
 
 // Save
@@ -47,9 +47,9 @@ public:
 class SaveProjectCommandType final : public CommandType
 {
 public:
-   virtual wxString BuildName();
-   virtual void BuildSignature(CommandSignature &signature);
-   virtual Command *Create(CommandOutputTarget *target);
+   wxString BuildName() override;
+   void BuildSignature(CommandSignature &signature) override;
+   Command *Create(CommandOutputTarget *target) override;
 };
 
 class SaveProjectCommand final : public CommandImplementation
@@ -61,5 +61,5 @@ public:
    { }
 
    virtual ~SaveProjectCommand();
-   virtual bool Apply(CommandExecutionContext context);
+   bool Apply(CommandExecutionContext context) override;
 };

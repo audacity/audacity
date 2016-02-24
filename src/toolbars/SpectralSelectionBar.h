@@ -36,10 +36,10 @@ public:
 
    void Create(wxWindow *parent);
 
-   virtual void Populate();
-   virtual void Repaint(wxDC * WXUNUSED(dc)) {};
-   virtual void EnableDisableButtons() {};
-   virtual void UpdatePrefs();
+   void Populate() override;
+   void Repaint(wxDC * WXUNUSED(dc)) override {};
+   void EnableDisableButtons() override {};
+   void UpdatePrefs() override;
 
    void SetFrequencies(double bottom, double top);
    void SetFrequencySelectionFormatName(const wxString & formatName);

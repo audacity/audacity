@@ -34,28 +34,28 @@ public:
 
    // IdentInterface implementation
 
-   virtual wxString GetSymbol();
-   virtual wxString GetName();
-   virtual wxString GetDescription();
+   wxString GetSymbol() override;
+   wxString GetName() override;
+   wxString GetDescription() override;
 
    // EffectIdentInterface implementation
 
-   virtual EffectType GetType();
+   EffectType GetType() override;
 
    // EffectClientInterface implementation
 
-   virtual bool GetAutomationParameters(EffectAutomationParameters & parms);
-   virtual bool SetAutomationParameters(EffectAutomationParameters & parms);
+   bool GetAutomationParameters(EffectAutomationParameters & parms) override;
+   bool SetAutomationParameters(EffectAutomationParameters & parms) override;
 
    // Effect implementation
 
-   virtual bool Init();
-   virtual void Preview(bool dryOnly);
-   virtual bool Process();
-   virtual void PopulateOrExchange(ShuttleGui & S);
-   virtual bool TransferDataToWindow();
-   virtual bool TransferDataFromWindow();
-   virtual double CalcPreviewInputLength(double previewLength);
+   bool Init() override;
+   void Preview(bool dryOnly) override;
+   bool Process() override;
+   void PopulateOrExchange(ShuttleGui & S) override;
+   bool TransferDataToWindow() override;
+   bool TransferDataFromWindow() override;
+   double CalcPreviewInputLength(double previewLength) override;
 
 private:
    // EffectTimeScale implementation

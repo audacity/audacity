@@ -62,26 +62,26 @@ class PROFILE_DLL_API SimpleBlockFile /* not final */ : public BlockFile {
    // Reading
 
    /// Read the summary section of the disk file
-   virtual bool ReadSummary(void *data);
+   bool ReadSummary(void *data) override;
    /// Read the data section of the disk file
-   virtual int ReadData(samplePtr data, sampleFormat format,
-                        sampleCount start, sampleCount len);
+   int ReadData(samplePtr data, sampleFormat format,
+                        sampleCount start, sampleCount len) override;
 
    /// Create a NEW block file identical to this one
-   virtual BlockFile *Copy(wxFileName newFileName);
+   BlockFile *Copy(wxFileName newFileName) override;
    /// Write an XML representation of this file
-   virtual void SaveXML(XMLWriter &xmlFile);
+   void SaveXML(XMLWriter &xmlFile) override;
 
-   virtual wxLongLong GetSpaceUsage();
-   virtual void Recover();
+   wxLongLong GetSpaceUsage() override;
+   void Recover() override;
 
    static BlockFile *BuildFromXML(DirManager &dm, const wxChar **attrs);
 
-   virtual bool GetNeedWriteCacheToDisk();
-   virtual void WriteCacheToDisk();
+   bool GetNeedWriteCacheToDisk() override;
+   void WriteCacheToDisk() override;
 
-   virtual bool GetNeedFillCache() { return !mCache.active; }
-   virtual void FillCache();
+   bool GetNeedFillCache() override { return !mCache.active; }
+   void FillCache() override;
 
  protected:
 

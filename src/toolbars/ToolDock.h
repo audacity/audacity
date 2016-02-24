@@ -53,7 +53,7 @@ class ToolDock final : public wxPanel
    ToolDock( ToolManager *manager, wxWindow *parent, int dockid );
    ~ToolDock();
 
-   virtual bool AcceptsFocus() const { return false; };
+   bool AcceptsFocus() const override { return false; };
 
    void LayoutToolBars();
    void Expose( int type, bool show );

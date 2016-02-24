@@ -93,7 +93,7 @@ public:
    void ExitLoop() { // this will cause the thread to drop from the loops
       mExitLoop=true;
    }
-   virtual void* Entry();
+   void* Entry() override;
    BufferInfo* mBufferInfoList;
    int mBufferInfoCount, mThreadID;
    wxMutex *mMutex;

@@ -146,7 +146,7 @@ const wxArrayString &SpectrogramSettings::GetScaleNames()
 {
    class ScaleNamesArray final : public TranslatableStringArray
    {
-      virtual void Populate()
+      void Populate() override
       {
          // Keep in correspondence with enum SpectrogramSettings::ScaleType:
          mContents.Add(_("Linear"));
@@ -171,7 +171,7 @@ const wxArrayString &SpectrogramSettings::GetAlgorithmNames()
 {
    class AlgorithmNamesArray final : public TranslatableStringArray
    {
-      virtual void Populate()
+      void Populate() override
       {
          // Keep in correspondence with enum SpectrogramSettings::Algorithm:
          mContents.Add(_("Frequencies"));

@@ -25,7 +25,7 @@ class PlaybackPrefs final : public PrefsPanel
  public:
    PlaybackPrefs(wxWindow * parent);
    virtual ~PlaybackPrefs();
-   virtual bool Apply();
+   bool Apply() override;
 
  private:
    void Populate();
@@ -35,7 +35,7 @@ class PlaybackPrefs final : public PrefsPanel
 class PlaybackPrefsFactory final : public PrefsPanelFactory
 {
 public:
-   virtual PrefsPanel *Create(wxWindow *parent);
+   PrefsPanel *Create(wxWindow *parent) override;
 };
 
 #endif

@@ -36,7 +36,7 @@ class ModulePrefs final : public PrefsPanel
  public:
    ModulePrefs(wxWindow * parent);
    ~ModulePrefs();
-   virtual bool Apply();
+   bool Apply() override;
 
    static int GetModuleStatus( const wxString &fname );
    static void SetModuleStatus( const wxString &fname, int iStatus );
@@ -53,6 +53,6 @@ class ModulePrefs final : public PrefsPanel
 class ModulePrefsFactory final : public PrefsPanelFactory
 {
 public:
-   virtual PrefsPanel *Create(wxWindow *parent);
+   PrefsPanel *Create(wxWindow *parent) override;
 };
 #endif

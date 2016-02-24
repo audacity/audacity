@@ -25,23 +25,23 @@ public:
 
    // IdentInterface implementation
 
-   virtual wxString GetSymbol();
-   virtual wxString GetDescription();
+   wxString GetSymbol() override;
+   wxString GetDescription() override;
 
    // EffectIdentInterface implementation
 
-   virtual EffectType GetType();
-   virtual bool IsInteractive();
+   EffectType GetType() override;
+   bool IsInteractive() override;
 
    // EffectClientInterface implementation
 
-   virtual int GetAudioInCount();
-   virtual int GetAudioOutCount();
+   int GetAudioInCount() override;
+   int GetAudioOutCount() override;
 
    // Effect implementation
 
-   virtual bool Process();
-   virtual bool IsHidden();
+   bool Process() override;
+   bool IsHidden() override;
 
 private:
    // EffectStereoToMono implementation

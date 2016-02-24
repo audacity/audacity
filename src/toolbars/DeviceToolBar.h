@@ -33,10 +33,10 @@ class DeviceToolBar final : public ToolBar {
    void UpdatePrefs();
 
    void DeinitChildren();
-   virtual void Populate();
-   virtual void Repaint(wxDC * WXUNUSED(dc)) {};
-   virtual void EnableDisableButtons();
-   virtual bool Layout();
+   void Populate() override;
+   void Repaint(wxDC * WXUNUSED(dc)) override {};
+   void EnableDisableButtons() override;
+   bool Layout() override;
    void OnFocus(wxFocusEvent &event);
    void OnCaptureKey(wxCommandEvent &event);
 
@@ -45,7 +45,7 @@ class DeviceToolBar final : public ToolBar {
    /// When the prefs don't exist this value is used.
    /// It should be small enough to work on tiny screens
    int GetInitialWidth() { return 620; }
-   virtual int GetMinToolbarWidth() { return 200; }
+   int GetMinToolbarWidth() override { return 200; }
 
    void ShowInputDialog();
    void ShowOutputDialog();

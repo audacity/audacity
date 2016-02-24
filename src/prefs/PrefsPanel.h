@@ -52,6 +52,7 @@ class PrefsPanel /* not final */ : public wxPanel
 
    virtual ~PrefsPanel();
 
+   // NEW virtuals
    virtual bool Apply() = 0;
 
    // If it returns True, the Apply button is added below the panel

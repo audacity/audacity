@@ -6009,7 +6009,7 @@ class ASAProgress final : public SAProgress {
          fclose(mTimeFile);
       #endif
    }
-   virtual void set_phase(int i) {
+   void set_phase(int i) override {
       float work[2]; // chromagram computation work estimates
       float work2, work3 = 0; // matrix and smoothing work estimates
       SAProgress::set_phase(i);
@@ -6067,7 +6067,7 @@ class ASAProgress final : public SAProgress {
                 (ms * 0.001) / (wxMax(mFrames[0], mFrames[1]) * iterations));
       }
    }
-   virtual bool set_feature_progress(float s) {
+   bool set_feature_progress(float s) override {
       float work;
       if (phase == 0) {
          float f = s / frame_period;
@@ -6080,7 +6080,7 @@ class ASAProgress final : public SAProgress {
       int updateResult = mProgress->Update(int(work), int(mTotalWork));
       return (updateResult == eProgressSuccess);
    }
-   virtual bool set_matrix_progress(int cells) {
+   bool set_matrix_progress(int cells) override {
       mCellCount += cells;
       float work =
              (is_audio[0] ? AUDIO_WORK_UNIT : MIDI_WORK_UNIT) * mFrames[0] +
@@ -6089,7 +6089,7 @@ class ASAProgress final : public SAProgress {
       int updateResult = mProgress->Update(int(work), int(mTotalWork));
       return (updateResult == eProgressSuccess);
    }
-   virtual bool set_smoothing_progress(int i) {
+   bool set_smoothing_progress(int i) override {
       iterations = i;
       float work =
              (is_audio[0] ? AUDIO_WORK_UNIT : MIDI_WORK_UNIT) * mFrames[0] +

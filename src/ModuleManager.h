@@ -75,7 +75,7 @@ public:
    // ModuleManagerInterface implementation
    // -------------------------------------------------------------------------
 
-   virtual void RegisterModule(ModuleInterface *module);
+   void RegisterModule(ModuleInterface *module) override;
 
    // -------------------------------------------------------------------------
    // ModuleManager implementation

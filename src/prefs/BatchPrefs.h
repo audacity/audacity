@@ -25,7 +25,7 @@ class BatchPrefs final : public PrefsPanel
 public:
    BatchPrefs(wxWindow * parent);
    ~BatchPrefs();
-   virtual bool Apply();
+   bool Apply() override;
 
 private:
    void Populate();
@@ -37,6 +37,6 @@ private:
 class BatchPrefsFactory final : public PrefsPanelFactory
 {
 public:
-   virtual PrefsPanel *Create(wxWindow *parent);
+   PrefsPanel *Create(wxWindow *parent) override;
 };
 #endif

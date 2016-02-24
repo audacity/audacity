@@ -31,8 +31,8 @@ class MidiIOPrefs final : public PrefsPanel
  public:
    MidiIOPrefs(wxWindow * parent);
    virtual ~MidiIOPrefs();
-   virtual bool Apply();
-   virtual bool Validate();
+   bool Apply() override;
+   bool Validate() override;
 
  private:
    void Populate();
@@ -65,7 +65,7 @@ class MidiIOPrefs final : public PrefsPanel
 class MidiIOPrefsFactory final : public PrefsPanelFactory
 {
 public:
-   virtual PrefsPanel *Create(wxWindow *parent);
+   PrefsPanel *Create(wxWindow *parent) override;
 };
 #endif
 

@@ -73,34 +73,34 @@ public:
 
    // IdentInterface implementation
 
-   virtual wxString GetPath();
-   virtual wxString GetSymbol();
-   virtual wxString GetName();
-   virtual wxString GetVendor();
-   virtual wxString GetVersion();
-   virtual wxString GetDescription();
+   wxString GetPath() override;
+   wxString GetSymbol() override;
+   wxString GetName() override;
+   wxString GetVendor() override;
+   wxString GetVersion() override;
+   wxString GetDescription() override;
 
    // EffectIdentInterface implementation
 
-   virtual EffectType GetType();
-   virtual wxString GetFamily();
-   virtual bool IsInteractive();
-   virtual bool IsDefault();
+   EffectType GetType() override;
+   wxString GetFamily() override;
+   bool IsInteractive() override;
+   bool IsDefault() override;
 
    // EffectClientInterface implementation
 
-   virtual bool GetAutomationParameters(EffectAutomationParameters & parms);
-   virtual bool SetAutomationParameters(EffectAutomationParameters & parms);
+   bool GetAutomationParameters(EffectAutomationParameters & parms) override;
+   bool SetAutomationParameters(EffectAutomationParameters & parms) override;
 
    // Effect implementation
    
-   virtual bool Init();
-   virtual bool CheckWhetherSkipEffect();
-   virtual bool Process();
-   virtual bool ShowInterface(wxWindow *parent, bool forceModal = false);
-   virtual void PopulateOrExchange(ShuttleGui & S);
-   virtual bool TransferDataToWindow();
-   virtual bool TransferDataFromWindow();
+   bool Init() override;
+   bool CheckWhetherSkipEffect() override;
+   bool Process() override;
+   bool ShowInterface(wxWindow *parent, bool forceModal = false) override;
+   void PopulateOrExchange(ShuttleGui & S) override;
+   bool TransferDataToWindow() override;
+   bool TransferDataFromWindow() override;
 
    // NyquistEffect implementation
 

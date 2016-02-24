@@ -131,7 +131,7 @@ public:
    void Destroy();
 
    // Required
-   virtual wxWindow *OptionsCreate(wxWindow *parent, int format);
+   wxWindow *OptionsCreate(wxWindow *parent, int format) override;
 
    int Export(AudacityProject *project,
                int channels,

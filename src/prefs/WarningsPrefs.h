@@ -26,7 +26,7 @@ class WarningsPrefs final : public PrefsPanel
  public:
    WarningsPrefs(wxWindow * parent);
    ~WarningsPrefs();
-   virtual bool Apply();
+   bool Apply() override;
 
  private:
    void Populate();
@@ -36,6 +36,6 @@ class WarningsPrefs final : public PrefsPanel
 class WarningsPrefsFactory final : public PrefsPanelFactory
 {
 public:
-   virtual PrefsPanel *Create(wxWindow *parent);
+   PrefsPanel *Create(wxWindow *parent) override;
 };
 #endif

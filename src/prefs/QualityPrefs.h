@@ -29,7 +29,7 @@ class QualityPrefs final : public PrefsPanel
    QualityPrefs(wxWindow * parent);
    virtual ~QualityPrefs();
 
-   virtual bool Apply();
+   bool Apply() override;
 
  private:
    void Populate();
@@ -56,6 +56,6 @@ class QualityPrefs final : public PrefsPanel
 class QualityPrefsFactory final : public PrefsPanelFactory
 {
 public:
-   virtual PrefsPanel *Create(wxWindow *parent);
+   PrefsPanel *Create(wxWindow *parent) override;
 };
 #endif

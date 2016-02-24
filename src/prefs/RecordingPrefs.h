@@ -26,7 +26,7 @@ class RecordingPrefs final : public PrefsPanel
  public:
    RecordingPrefs(wxWindow * parent);
    virtual ~RecordingPrefs();
-   virtual bool Apply();
+   bool Apply() override;
 
  private:
    void Populate();
@@ -43,6 +43,6 @@ class RecordingPrefs final : public PrefsPanel
 class RecordingPrefsFactory final : public PrefsPanelFactory
 {
 public:
-   virtual PrefsPanel *Create(wxWindow *parent);
+   PrefsPanel *Create(wxWindow *parent) override;
 };
 #endif

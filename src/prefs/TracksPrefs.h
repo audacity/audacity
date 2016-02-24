@@ -27,7 +27,7 @@ class TracksPrefs final : public PrefsPanel
  public:
    TracksPrefs(wxWindow * parent);
    ~TracksPrefs();
-   virtual bool Apply();
+   bool Apply() override;
 
  private:
    void Populate();
@@ -42,6 +42,6 @@ class TracksPrefs final : public PrefsPanel
 class TracksPrefsFactory final : public PrefsPanelFactory
 {
 public:
-   virtual PrefsPanel *Create(wxWindow *parent);
+   PrefsPanel *Create(wxWindow *parent) override;
 };
 #endif

@@ -46,7 +46,7 @@ public:
 
     // Called when the value in the window must be validated.
     // This function can pop up an error message.
-    virtual bool Validate(wxWindow * parent);
+    bool Validate(wxWindow * parent) override;
 
 protected:
     NumValidatorBase(int style)
@@ -182,7 +182,7 @@ public:
         SetMax(max);
     }
 
-    virtual bool TransferToWindow()
+    bool TransferToWindow() override
     {
         if ( m_value )
         {
@@ -196,7 +196,7 @@ public:
         return true;
     }
 
-    virtual bool TransferFromWindow()
+    bool TransferFromWindow() override
     {
         if ( m_value )
         {
@@ -233,7 +233,7 @@ protected:
 
     // Implement NumValidatorBase virtual method which is the same for
     // both integer and floating point numbers.
-    virtual wxString NormalizeString(const wxString& s) const
+    wxString NormalizeString(const wxString& s) const override
     {
         LongestValueType value;
         return BaseValidator::FromString(s, &value) ? NormalizeValue(value)
@@ -314,8 +314,8 @@ protected:
     }
 
     // Implement NumValidatorBase pure virtual method.
-    virtual bool IsCharOk(const wxString& val, int pos, wxChar ch) const;
-    virtual bool DoValidateNumber(wxString * errMsg) const;
+    bool IsCharOk(const wxString& val, int pos, wxChar ch) const override;
+    bool DoValidateNumber(wxString * errMsg) const override;
 
 private:
     // Minimal and maximal values accepted (inclusive).
@@ -348,7 +348,7 @@ public:
         this->DoSetMax(std::numeric_limits<ValueType>::max());
     }
 
-    virtual wxObject *Clone() const { return new IntegerValidator(*this); }
+    wxObject *Clone() const override { return new IntegerValidator(*this); }
 
 private:
     DECLARE_NO_ASSIGN_CLASS(IntegerValidator);
@@ -410,8 +410,8 @@ protected:
     }
 
     // Implement NumValidatorBase pure virtual method.
-    virtual bool IsCharOk(const wxString& val, int pos, wxChar ch) const;
-    virtual bool DoValidateNumber(wxString * errMsg) const;
+    bool IsCharOk(const wxString& val, int pos, wxChar ch) const override;
+    bool DoValidateNumber(wxString * errMsg) const override;
 
     //Checks that it doesn't have too many decimal digits.
     bool ValidatePrecision(const wxString& s) const;
@@ -457,7 +457,7 @@ public:
         this->SetPrecision(precision);
     }
 
-    virtual wxObject *Clone() const
+    wxObject *Clone() const override
     {
         return new FloatingPointValidator(*this);
     }

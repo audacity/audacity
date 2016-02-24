@@ -26,7 +26,7 @@ class ThemePrefs final : public PrefsPanel
  public:
    ThemePrefs(wxWindow * parent);
    ~ThemePrefs(void);
-   virtual bool Apply();
+   bool Apply() override;
 
  private:
    void Populate();
@@ -44,6 +44,6 @@ class ThemePrefs final : public PrefsPanel
 class ThemePrefsFactory final : public PrefsPanelFactory
 {
 public:
-   virtual PrefsPanel *Create(wxWindow *parent);
+   PrefsPanel *Create(wxWindow *parent) override;
 };
 #endif

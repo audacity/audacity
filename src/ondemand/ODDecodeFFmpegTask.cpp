@@ -68,11 +68,11 @@ public:
    ///this->ReadData(sampleData, floatSample, 0, mLen);
    ///This class should call ReadHeader() first, so it knows the length, and can prepare
    ///the file object if it needs to.
-   virtual int Decode(SampleBuffer & data, sampleFormat & format, sampleCount start, sampleCount len, unsigned int channel);
+   int Decode(SampleBuffer & data, sampleFormat & format, sampleCount start, sampleCount len, unsigned int channel) override;
 
    ///This is a must implement abstract virtual in the superclass.
    ///However it doesn't do anything because ImportFFMpeg does all that for us.
-   virtual bool ReadHeader() {return true;}
+   bool ReadHeader() override {return true;}
 
    bool SeekingAllowed() ;
 

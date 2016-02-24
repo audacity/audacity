@@ -28,7 +28,7 @@ class DevicePrefs final : public PrefsPanel
  public:
    DevicePrefs(wxWindow * parent);
    virtual ~DevicePrefs();
-   virtual bool Apply();
+   bool Apply() override;
 
  private:
    void Populate();
@@ -57,7 +57,7 @@ class DevicePrefs final : public PrefsPanel
 class DevicePrefsFactory final : public PrefsPanelFactory
 {
 public:
-   virtual PrefsPanel *Create(wxWindow *parent);
+   PrefsPanel *Create(wxWindow *parent) override;
 };
 
 #endif

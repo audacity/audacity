@@ -37,33 +37,33 @@ public:
 
    // IdentInterface implementation
 
-   virtual wxString GetSymbol();
-   virtual wxString GetDescription();
+   wxString GetSymbol() override;
+   wxString GetDescription() override;
 
    // EffectIdentInterface implementation
 
-   virtual EffectType GetType();
+   EffectType GetType() override;
 
    // EffectClientInterface implementation
 
-   virtual bool GetAutomationParameters(EffectAutomationParameters & parms);
-   virtual bool SetAutomationParameters(EffectAutomationParameters & parms);
+   bool GetAutomationParameters(EffectAutomationParameters & parms) override;
+   bool SetAutomationParameters(EffectAutomationParameters & parms) override;
 
    // Effect implementation
 
-   virtual bool Startup();
-   virtual void PopulateOrExchange(ShuttleGui & S);
-   virtual bool TransferDataToWindow();
-   virtual bool TransferDataFromWindow();
+   bool Startup() override;
+   void PopulateOrExchange(ShuttleGui & S) override;
+   bool TransferDataToWindow() override;
+   bool TransferDataFromWindow() override;
 
 protected:
    // EffectTwoPassSimpleMono implementation
 
-   virtual bool InitPass1();
-   virtual bool InitPass2();
-   virtual bool NewTrackPass1();
-   virtual bool ProcessPass2(float *buffer, sampleCount len);
-   virtual bool TwoBufferProcessPass1(float *buffer1, sampleCount len1, float *buffer2, sampleCount len2);
+   bool InitPass1() override;
+   bool InitPass2() override;
+   bool NewTrackPass1() override;
+   bool ProcessPass2(float *buffer, sampleCount len) override;
+   bool TwoBufferProcessPass1(float *buffer1, sampleCount len1, float *buffer2, sampleCount len2) override;
 
 private:
    // EffectCompressor implementation

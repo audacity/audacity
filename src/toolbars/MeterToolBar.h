@@ -38,14 +38,14 @@ class MeterToolBar final : public ToolBar {
 
    void Create(wxWindow *parent);
 
-   virtual void Populate();
-   virtual void ReCreateButtons();
-   virtual void Repaint(wxDC * WXUNUSED(dc)) {};
-   virtual void EnableDisableButtons() {};
-   virtual void UpdatePrefs();
+   void Populate() override;
+   void ReCreateButtons() override;
+   void Repaint(wxDC * WXUNUSED(dc)) override {};
+   void EnableDisableButtons() override {};
+   void UpdatePrefs() override;
 
-   virtual void OnSize(wxSizeEvent & event);
-   virtual bool Expose( bool show );
+   void OnSize(wxSizeEvent & event);
+   bool Expose(bool show) override;
 
    int GetInitialWidth() {return (mWhichMeters == 
       (kWithRecordMeter + kWithPlayMeter)) ? 338 : 460;} // Separate bars used to be smaller.

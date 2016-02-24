@@ -485,7 +485,7 @@ public:
    virtual ~SourceOutputStream();
 
 protected:
-   virtual size_t OnSysWrite(const void *buffer, size_t bufsize);
+   size_t OnSysWrite(const void *buffer, size_t bufsize) override;
    wxFile File;
    int nBytes;
 };

@@ -73,40 +73,40 @@ class TranscriptionToolBar final : public ToolBar {
 
    void Create(wxWindow *parent);
 
-   virtual void OnKeyEvent(wxKeyEvent & event);
-   virtual void OnPlaySpeed(wxCommandEvent & event);
-   virtual void OnSpeedSlider(wxCommandEvent & event);
+   void OnKeyEvent(wxKeyEvent & event);
+   void OnPlaySpeed(wxCommandEvent & event);
+   void OnSpeedSlider(wxCommandEvent & event);
 
-   virtual void Populate();
-   virtual void Repaint(wxDC * WXUNUSED(dc)) {};
-   virtual void EnableDisableButtons();
-   virtual void UpdatePrefs();
+   void Populate() override;
+   void Repaint(wxDC * WXUNUSED(dc)) override {};
+   void EnableDisableButtons() override;
+   void UpdatePrefs() override;
 
    void OnFocus(wxFocusEvent &event);
    void OnCaptureKey(wxCommandEvent &event);
 
 #ifdef EXPERIMENTAL_VOICE_DETECTION
-   virtual void OnStartOn(wxCommandEvent & event);
-   virtual void OnStartOff(wxCommandEvent & event);
-   virtual void OnEndOn(wxCommandEvent & event);
-   virtual void OnEndOff(wxCommandEvent & event);
-   virtual void OnSelectSound(wxCommandEvent & event);
-   virtual void OnSelectSilence(wxCommandEvent & event);
-   virtual void OnCalibrate(wxCommandEvent & event);
-   virtual void OnMakeLabel(wxCommandEvent & event);
-   virtual void OnAutomateSelection(wxCommandEvent & event);
-   virtual void OnSensitivitySlider(wxCommandEvent & event);
+   void OnStartOn(wxCommandEvent & event);
+   void OnStartOff(wxCommandEvent & event);
+   void OnEndOn(wxCommandEvent & event);
+   void OnEndOff(wxCommandEvent & event);
+   void OnSelectSound(wxCommandEvent & event);
+   void OnSelectSilence(wxCommandEvent & event);
+   void OnCalibrate(wxCommandEvent & event);
+   void OnMakeLabel(wxCommandEvent & event);
+   void OnAutomateSelection(wxCommandEvent & event);
+   void OnSensitivitySlider(wxCommandEvent & event);
 
-   virtual void Populate();
-   virtual void Repaint(wxDC * WXUNUSED(dc)) {}
-   virtual void EnableDisableButtons();
-   virtual void UpdatePrefs();
+   void Populate() override;
+   void Repaint(wxDC * WXUNUSED(dc)) override {}
+   void EnableDisableButtons() override;
+   void UpdatePrefs() override;
 
    void OnFocus(wxFocusEvent &event);
    void OnCaptureKey(wxCommandEvent &event);
 
-   virtual double GetSensitivity();
-   virtual void SetKeyType(wxCommandEvent & event);
+   double GetSensitivity();
+   void SetKeyType(wxCommandEvent & event);
 #endif
 
    void PlayAtSpeed(bool looped, bool cutPreview);

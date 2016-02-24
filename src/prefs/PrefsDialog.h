@@ -53,7 +53,7 @@ class PrefsDialog /* not final */ : public wxDialog
    virtual ~PrefsDialog();
 
    // Defined this so a protected virtual can be invoked after the constructor
-   virtual int ShowModal();
+   int ShowModal() override;
 
    void OnCategoryChange(wxCommandEvent & e);
    void OnOK(wxCommandEvent & e);
@@ -91,8 +91,8 @@ class GlobalPrefsDialog final : public PrefsDialog
 public:
    GlobalPrefsDialog(wxWindow * parent, Factories &factories = DefaultFactories());
    virtual ~GlobalPrefsDialog();
-   virtual long GetPreferredPage();
-   virtual void SavePreferredPage();
+   long GetPreferredPage() override;
+   void SavePreferredPage() override;
 };
 
 #endif

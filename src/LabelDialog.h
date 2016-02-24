@@ -42,7 +42,7 @@ class LabelDialog final : public wxDialog
                const wxString & format);
    ~LabelDialog();
 
-    virtual bool Show(bool show = true);
+    bool Show(bool show = true) override;
 
  private:
 

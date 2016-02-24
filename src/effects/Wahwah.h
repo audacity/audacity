@@ -51,35 +51,35 @@ public:
 
    // IdentInterface implementation
 
-   virtual wxString GetSymbol();
-   virtual wxString GetDescription();
+   wxString GetSymbol() override;
+   wxString GetDescription() override;
 
    // EffectIdentInterface implementation
 
-   virtual EffectType GetType();
-   virtual bool SupportsRealtime();
+   EffectType GetType() override;
+   bool SupportsRealtime() override;
 
    // EffectClientInterface implementation
 
-   virtual int GetAudioInCount();
-   virtual int GetAudioOutCount();
-   virtual bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL);
-   virtual sampleCount ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen);
-   virtual bool RealtimeInitialize();
-   virtual bool RealtimeAddProcessor(int numChannels, float sampleRate);
-   virtual bool RealtimeFinalize();
-   virtual sampleCount RealtimeProcess(int group,
+   int GetAudioInCount() override;
+   int GetAudioOutCount() override;
+   bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) override;
+   sampleCount ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen) override;
+   bool RealtimeInitialize() override;
+   bool RealtimeAddProcessor(int numChannels, float sampleRate) override;
+   bool RealtimeFinalize() override;
+   sampleCount RealtimeProcess(int group,
                                        float **inbuf,
                                        float **outbuf,
-                                       sampleCount numSamples);
-   virtual bool GetAutomationParameters(EffectAutomationParameters & parms);
-   virtual bool SetAutomationParameters(EffectAutomationParameters & parms);
+                                       sampleCount numSamples) override;
+   bool GetAutomationParameters(EffectAutomationParameters & parms) override;
+   bool SetAutomationParameters(EffectAutomationParameters & parms) override;
 
    // Effect implementation
 
-   virtual void PopulateOrExchange(ShuttleGui & S);
-   virtual bool TransferDataToWindow();
-   virtual bool TransferDataFromWindow();
+   void PopulateOrExchange(ShuttleGui & S) override;
+   bool TransferDataToWindow() override;
+   bool TransferDataFromWindow() override;
 
 private:
    // EffectWahwah implementation

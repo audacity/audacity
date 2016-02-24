@@ -29,22 +29,22 @@ public:
 
    // IdentInterface implementation
 
-   virtual wxString GetSymbol();
-   virtual wxString GetDescription();
+   wxString GetSymbol() override;
+   wxString GetDescription() override;
 
    // EffectIdentInterface implementation
 
-   virtual EffectType GetType();
+   EffectType GetType() override;
 
    // Effect implementation
 
 //   using Effect::TrackProgress;
 
-   virtual bool PromptUser(wxWindow *parent);
+   bool PromptUser(wxWindow *parent) override;
 
-   virtual bool Init();
-   virtual bool CheckWhetherSkipEffect();
-   virtual bool Process();
+   bool Init() override;
+   bool CheckWhetherSkipEffect() override;
+   bool Process() override;
 
    class Settings;
    class Statistics;

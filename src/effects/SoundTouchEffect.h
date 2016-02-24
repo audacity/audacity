@@ -40,7 +40,7 @@ public:
 
    // Effect implementation
 
-   virtual bool Process();
+   bool Process() override;
 
    // EffectSoundTouch implementation
 

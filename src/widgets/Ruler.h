@@ -285,7 +285,7 @@ public:
 
    ~AdornedRulerPanel();
 
-   virtual bool AcceptsFocus() const { return false; };
+   bool AcceptsFocus() const override { return false; };
 
 public:
    static int GetRulerHeight() { return 28; }

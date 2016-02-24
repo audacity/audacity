@@ -41,34 +41,34 @@ public:
 
    // IdentInterface implementation
 
-   virtual wxString GetSymbol();
-   virtual wxString GetDescription();
+   wxString GetSymbol() override;
+   wxString GetDescription() override;
 
    // EffectIdentInterface implementation
 
-   virtual EffectType GetType();
+   EffectType GetType() override;
 
    // EffectClientInterface implementation
 
-   virtual bool GetAutomationParameters(EffectAutomationParameters & parms);
-   virtual bool SetAutomationParameters(EffectAutomationParameters & parms);
-   virtual bool LoadFactoryDefaults();
+   bool GetAutomationParameters(EffectAutomationParameters & parms) override;
+   bool SetAutomationParameters(EffectAutomationParameters & parms) override;
+   bool LoadFactoryDefaults() override;
 
    // Effect implementation
 
-   virtual bool Init();
-   virtual bool Process();
-   virtual bool CheckWhetherSkipEffect();
-   virtual void PopulateOrExchange(ShuttleGui & S);
-   virtual bool TransferDataToWindow();
-   virtual bool TransferDataFromWindow();
+   bool Init() override;
+   bool Process() override;
+   bool CheckWhetherSkipEffect() override;
+   void PopulateOrExchange(ShuttleGui & S) override;
+   bool TransferDataToWindow() override;
+   bool TransferDataFromWindow() override;
 
 private:
    // EffectChangePitch implementation
 
    // Deduce m_FromFrequency from the samples at the beginning of
    // the selection. Then set some other params accordingly.
-   virtual void DeduceFrequencies();
+   void DeduceFrequencies();
 
    // calculations
    void Calc_ToPitch(); // Update m_nToPitch from NEW m_dSemitonesChange.

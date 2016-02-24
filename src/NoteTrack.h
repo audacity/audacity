@@ -57,13 +57,13 @@ class AUDACITY_DLL_API NoteTrack final : public Track {
    NoteTrack(DirManager * projDirManager);
    virtual ~NoteTrack();
 
-   virtual Track *Duplicate() const;
+   Track *Duplicate() const override;
 
-   virtual int GetKind() const { return Note; }
+   int GetKind() const override { return Note; }
 
-   virtual double GetOffset() const;
-   virtual double GetStartTime() const;
-   virtual double GetEndTime() const;
+   double GetOffset() const override;
+   double GetStartTime() const override;
+   double GetEndTime() const override;
 
    void WarpAndTransposeNotes(double t0, double t1,
                               const TimeWarper &warper, double semitones);
@@ -89,12 +89,12 @@ class AUDACITY_DLL_API NoteTrack final : public Track {
 //   }
 
    // High-level editing
-   virtual bool Cut  (double t0, double t1, Track **dest);
-   virtual bool Copy (double t0, double t1, Track **dest);
-   virtual bool Trim (double t0, double t1);
-   virtual bool Clear(double t0, double t1);
-   virtual bool Paste(double t, Track *src);
-   virtual bool Shift(double t);
+   bool Cut  (double t0, double t1, Track **dest) override;
+   bool Copy (double t0, double t1, Track **dest) override;
+   bool Trim (double t0, double t1) /* not override */;
+   bool Clear(double t0, double t1) override;
+   bool Paste(double t, Track *src) override;
+   bool Shift(double t) /* not override */;
 
 #ifdef EXPERIMENTAL_MIDI_OUT
    float GetGain() const { return mGain; }
@@ -169,9 +169,9 @@ class AUDACITY_DLL_API NoteTrack final : public Track {
    void SetGainPlacementRect(const wxRect &r) { mGainPlacementRect = r; }
 #endif
 
-   virtual bool HandleXMLTag(const wxChar *tag, const wxChar **attrs);
-   virtual XMLTagHandler *HandleXMLChild(const wxChar *tag);
-   virtual void WriteXML(XMLWriter &xmlFile);
+   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
+   XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
+   void WriteXML(XMLWriter &xmlFile) override;
 
    // channels are numbered as integers 0-15, visible channels
    // (mVisibleChannels) is a bit set. Channels are displayed as

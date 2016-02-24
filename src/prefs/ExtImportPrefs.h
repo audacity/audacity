@@ -47,7 +47,7 @@ class ExtImportPrefs final : public PrefsPanel
  public:
    ExtImportPrefs(wxWindow * parent);
    ~ExtImportPrefs();
-   virtual bool Apply();
+   bool Apply() override;
 
    void OnPluginKeyDown(wxListEvent& event);
    void OnPluginBeginDrag(wxListEvent& event);
@@ -111,6 +111,6 @@ class ExtImportPrefs final : public PrefsPanel
 class ExtImportPrefsFactory final : public PrefsPanelFactory
 {
 public:
-   virtual PrefsPanel *Create(wxWindow *parent);
+   PrefsPanel *Create(wxWindow *parent) override;
 };
 #endif

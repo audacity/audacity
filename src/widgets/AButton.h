@@ -56,12 +56,12 @@ class AButton final : public wxWindow {
 
    virtual ~ AButton();
 
-   virtual bool AcceptsFocus() const { return false; };
-   virtual bool AcceptsFocusFromKeyboard() const { return true; };
+   bool AcceptsFocus() const override { return false; }
+   bool AcceptsFocusFromKeyboard() const override { return true; }
 
    // Associate a set of four images (button up, highlight, button down,
    // disabled) with one nondefault state of the button
-   virtual void SetAlternateImages(unsigned idx,
+   void SetAlternateImages(unsigned idx,
                                    ImageRoll up,
                                    ImageRoll over,
                                    ImageRoll down,
@@ -69,44 +69,44 @@ class AButton final : public wxWindow {
 
    // Associate a set of four images (button up, highlight, button down,
    // disabled) with one nondefault state of the button
-   virtual void SetAlternateImages(unsigned idx,
+   void SetAlternateImages(unsigned idx,
                                    wxImage up,
                                    wxImage over,
                                    wxImage down,
                                    wxImage dis);
 
    // Choose state of the button
-   virtual void SetAlternateIdx(unsigned idx);
+   void SetAlternateIdx(unsigned idx);
 
    // Make the button change appearance with the modifier keys, no matter
    // where the mouse is:
    // Use state 2 when CTRL is down, else 1 when SHIFT is down, else 0
-   virtual void FollowModifierKeys();
+   void FollowModifierKeys();
 
-   virtual void SetFocusRect(wxRect & r);
+   void SetFocusRect(wxRect & r);
 
-   virtual bool IsEnabled() const { return mEnabled; }
-   virtual void Disable();
-   virtual void Enable();
+   bool IsEnabled() const { return mEnabled; }
+   void Disable();
+   void Enable();
    void SetEnabled(bool state) {
       state ? Enable() : Disable();
    }
 
-   virtual void PushDown();
-   virtual void PopUp();
+   void PushDown();
+   void PopUp();
 
-   virtual void OnErase(wxEraseEvent & event);
-   virtual void OnPaint(wxPaintEvent & event);
-   virtual void OnSize(wxSizeEvent & event);
-   virtual void OnMouseEvent(wxMouseEvent & event);
-   virtual void OnCaptureLost(wxMouseCaptureLostEvent & event );
-   virtual void OnKeyDown(wxKeyEvent & event);
-   virtual void OnSetFocus(wxFocusEvent & event);
-   virtual void OnKillFocus(wxFocusEvent & event);
+   void OnErase(wxEraseEvent & event);
+   void OnPaint(wxPaintEvent & event);
+   void OnSize(wxSizeEvent & event);
+   void OnMouseEvent(wxMouseEvent & event);
+   void OnCaptureLost(wxMouseCaptureLostEvent & event);
+   void OnKeyDown(wxKeyEvent & event);
+   void OnSetFocus(wxFocusEvent & event);
+   void OnKillFocus(wxFocusEvent & event);
 
-   virtual bool WasShiftDown(); // returns true if shift was held down
+   bool WasShiftDown(); // returns true if shift was held down
                                 // the last time the button was clicked
-   virtual bool WasControlDown(); // returns true if control was held down
+   bool WasControlDown(); // returns true if control was held down
                                   // the last time the button was clicked
    bool IsDown(){ return mButtonIsDown;}
    void SetButtonToggles( bool toggler ){ mToggle = toggler;}
@@ -184,14 +184,14 @@ public:
    // or > 0 (the action for a child).
    // Return wxACC_NOT_SUPPORTED if there is no default action for this
    // window (e.g. an edit control).
-   virtual wxAccStatus DoDefaultAction(int childId);
+   wxAccStatus DoDefaultAction(int childId) override;
 
    // Retrieves the address of an IDispatch interface for the specified child.
    // All objects must support this property.
-   virtual wxAccStatus GetChild( int childId, wxAccessible** child );
+   wxAccStatus GetChild(int childId, wxAccessible** child) override;
 
    // Gets the number of children.
-   virtual wxAccStatus GetChildCount(int* childCount);
+   wxAccStatus GetChildCount(int* childCount) override;
 
    // Gets the default action for this object (0) or > 0 (the action for a child).
    // Return wxACC_OK even if there is no action. actionName is the action, or the empty
@@ -199,33 +199,33 @@ public:
    // The retrieved string describes the action that is performed on an object,
    // not what the object does as a result. For example, a toolbar button that prints
    // a document has a default action of "Press" rather than "Prints the current document."
-   virtual wxAccStatus GetDefaultAction( int childId, wxString *actionName );
+   wxAccStatus GetDefaultAction(int childId, wxString *actionName) override;
 
    // Returns the description for this object or a child.
-   virtual wxAccStatus GetDescription( int childId, wxString *description );
+   wxAccStatus GetDescription(int childId, wxString *description) override;
 
    // Gets the window with the keyboard focus.
    // If childId is 0 and child is NULL, no object in
    // this subhierarchy has the focus.
    // If this object has the focus, child should be 'this'.
-   virtual wxAccStatus GetFocus( int *childId, wxAccessible **child );
+   wxAccStatus GetFocus(int *childId, wxAccessible **child) override;
 
    // Returns help text for this object or a child, similar to tooltip text.
-   virtual wxAccStatus GetHelpText( int childId, wxString *helpText );
+   wxAccStatus GetHelpText(int childId, wxString *helpText) override;
 
    // Returns the keyboard shortcut for this object or child.
    // Return e.g. ALT+K
-   virtual wxAccStatus GetKeyboardShortcut( int childId, wxString *shortcut );
+   wxAccStatus GetKeyboardShortcut(int childId, wxString *shortcut) override;
 
    // Returns the rectangle for this object (id = 0) or a child element (id > 0).
    // rect is in screen coordinates.
-   virtual wxAccStatus GetLocation( wxRect& rect, int elementId );
+   wxAccStatus GetLocation(wxRect& rect, int elementId) override;
 
    // Gets the name of the specified object.
-   virtual wxAccStatus GetName( int childId, wxString *name );
+   wxAccStatus GetName(int childId, wxString *name) override;
 
    // Returns a role constant.
-   virtual wxAccStatus GetRole( int childId, wxAccRole *role );
+   wxAccStatus GetRole(int childId, wxAccRole *role) override;
 
    // Gets a variant representing the selected children
    // of this object.
@@ -235,14 +235,14 @@ public:
    // - an integer representing the selected child element,
    //   or 0 if this object is selected (GetType() == wxT("long"))
    // - a "void*" pointer to a wxAccessible child object
-   virtual wxAccStatus GetSelections( wxVariant *selections );
+   wxAccStatus GetSelections(wxVariant *selections) override;
 
    // Returns a state constant.
-   virtual wxAccStatus GetState(int childId, long* state);
+   wxAccStatus GetState(int childId, long* state) override;
 
    // Returns a localized string representing the value for the object
    // or child.
-   virtual wxAccStatus GetValue(int childId, wxString* strValue);
+   wxAccStatus GetValue(int childId, wxString* strValue) override;
 
 };
 

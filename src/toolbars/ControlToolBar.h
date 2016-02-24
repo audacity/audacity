@@ -45,7 +45,7 @@ class ControlToolBar final : public ToolBar {
    void Create(wxWindow *parent);
 
    void UpdatePrefs();
-   virtual void OnKeyEvent(wxKeyEvent & event);
+   void OnKeyEvent(wxKeyEvent & event);
 
    // msmeyer: These are public, but it's far better to
    // call the "real" interface functions like PlayCurrentRegion() and
@@ -83,10 +83,10 @@ class ControlToolBar final : public ToolBar {
    void Pause();
 
    void Populate();
-   virtual void Repaint(wxDC *dc);
-   virtual void EnableDisableButtons();
+   void Repaint(wxDC *dc) override;
+   void EnableDisableButtons() override;
 
-   virtual void ReCreateButtons();
+   void ReCreateButtons() override;
    void RegenerateToolsTooltips();
 
    int WidthForStatusBar(wxStatusBar* const);

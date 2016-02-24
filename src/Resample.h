@@ -65,7 +65,7 @@ class Resample final
     @param outBufferLen How big outBuffer is.
     @return Number of output samples created by this call
    */
-   virtual int Process(double   factor,
+   int Process(double   factor,
                         float  *inBuffer,
                         int     inBufferLen,
                         bool    lastFlag,
