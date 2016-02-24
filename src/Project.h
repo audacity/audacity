@@ -220,17 +220,17 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
     * @return Array of file paths which the user selected to open (multiple
     * selections allowed).
     */
-   static wxArrayString ShowOpenDialog(wxString extraformat = wxEmptyString,
-         wxString extrafilter = wxEmptyString);
+   static wxArrayString ShowOpenDialog(const wxString &extraformat = wxEmptyString,
+         const wxString &extrafilter = wxEmptyString);
    static bool IsAlreadyOpen(const wxString & projPathName);
    static void OpenFiles(AudacityProject *proj);
-   void OpenFile(wxString fileName, bool addtohistory = true);
+   void OpenFile(const wxString &fileName, bool addtohistory = true);
    bool WarnOfLegacyFile( );
 
    // If pNewTrackList is passed in non-NULL, it gets filled with the pointers to NEW tracks.
-   bool Import(wxString fileName, WaveTrackArray *pTrackArray = NULL);
+   bool Import(const wxString &fileName, WaveTrackArray *pTrackArray = NULL);
 
-   void AddImportedTracks(wxString fileName,
+   void AddImportedTracks(const wxString &fileName,
                           Track **newTracks, int numTracks);
    void LockAllBlocks();
    void UnlockAllBlocks();
@@ -399,12 +399,12 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 
    // TrackPanel callback methods, overrides of TrackPanelListener
    virtual void TP_DisplaySelection();
-   virtual void TP_DisplayStatusMessage(wxString msg);
+   virtual void TP_DisplayStatusMessage(const wxString &msg) override;
 
    virtual ToolsToolBar * TP_GetToolsToolBar();
 
-   virtual void TP_PushState(wxString longDesc, wxString shortDesc,
-                             int flags);
+   virtual void TP_PushState(const wxString &longDesc, const wxString &shortDesc,
+                             int flags) override;
    virtual void TP_ModifyState(bool bWantsAutoSave);    // if true, writes auto-save file. Should set only if you really want the state change restored after
                                                         // a crash, as it can take many seconds for large (eg. 10 track-hours) projects
    virtual void TP_RedrawScrollbars();
@@ -491,7 +491,7 @@ public:
    static void AllProjectsDeleteLock();
    static void AllProjectsDeleteUnlock();
 
-   void PushState(wxString desc, wxString shortDesc,
+   void PushState(const wxString &desc, const wxString &shortDesc,
                   int flags = PUSH_AUTOSAVE);
    void RollbackState();
 
@@ -688,37 +688,6 @@ public:
    friend class CommandManager;
 
    DECLARE_EVENT_TABLE()
-};
-
-typedef void (AudacityProject::*audCommandFunction)();
-typedef void (AudacityProject::*audCommandKeyFunction)(const wxEvent *);
-typedef void (AudacityProject::*audCommandListFunction)(int);
-typedef bool (AudacityProject::*audCommandPluginFunction)(const PluginID &, int);
-
-// Previously this was in menus.cpp, and the declaration of the
-// command functor was not visible anywhere else.
-class AUDACITY_DLL_API AudacityProjectCommandFunctor : public CommandFunctor
-{
-public:
-   AudacityProjectCommandFunctor(AudacityProject *project,
-      audCommandFunction commandFunction);
-   AudacityProjectCommandFunctor(AudacityProject *project,
-      audCommandKeyFunction commandFunction);
-   AudacityProjectCommandFunctor(AudacityProject *project,
-      audCommandListFunction commandFunction);
-   AudacityProjectCommandFunctor(AudacityProject *project,
-      audCommandPluginFunction commandFunction,
-      const PluginID & pluginID);
-
-   virtual void operator()(int index = 0, const wxEvent *evt = NULL);
-
-private:
-   AudacityProject *mProject;
-   audCommandFunction mCommandFunction;
-   audCommandKeyFunction mCommandKeyFunction;
-   audCommandListFunction mCommandListFunction;
-   audCommandPluginFunction mCommandPluginFunction;
-   PluginID mPluginID;
 };
 
 #endif

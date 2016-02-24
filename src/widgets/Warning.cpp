@@ -81,8 +81,8 @@ void WarningDialog::OnOK(wxCommandEvent& WXUNUSED(event))
 }
 
 int ShowWarningDialog(wxWindow *parent,
-                      wxString internalDialogName,
-                      wxString message,
+                      const wxString &internalDialogName,
+                      const wxString &message,
                       bool showCancelButton)
 {
    wxString key(wxT("/Warnings/") + internalDialogName);

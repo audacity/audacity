@@ -79,7 +79,7 @@ class AUDACITY_DLL_API Ruler {
 
    // Specify the name of the units (like "dB") if you
    // want numbers like "1.6" formatted as "1.6 dB".
-   void SetUnits(wxString units);
+   void SetUnits(const wxString &units);
 
    // Logarithmic
    void SetLog(bool log);

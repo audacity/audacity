@@ -128,7 +128,7 @@ void UndoManager::GetShortDescription(unsigned int n, wxString *desc)
    *desc = stack[n]->shortDescription;
 }
 
-void UndoManager::SetLongDescription(unsigned int n, wxString desc)
+void UndoManager::SetLongDescription(unsigned int n, const wxString &desc)
 {
    n -= 1;
 
@@ -212,8 +212,8 @@ void UndoManager::ModifyState(TrackList * l,
 
 void UndoManager::PushState(TrackList * l,
                             const SelectedRegion &selectedRegion,
-                            wxString longDescription,
-                            wxString shortDescription,
+                            const wxString &longDescription,
+                            const wxString &shortDescription,
                             int flags)
 {
    unsigned int i;

@@ -82,7 +82,7 @@ public:
 
    wxString GetPluginStringID() { return wxT("libsndfile"); }
    wxString GetPluginFormatDescription();
-   ImportFileHandle *Open(wxString Filename);
+   ImportFileHandle *Open(const wxString &Filename) override;
 };
 
 
@@ -120,7 +120,7 @@ wxString PCMImportPlugin::GetPluginFormatDescription()
     return DESC;
 }
 
-ImportFileHandle *PCMImportPlugin::Open(wxString filename)
+ImportFileHandle *PCMImportPlugin::Open(const wxString &filename)
 {
    SF_INFO info;
    SNDFILE *file = NULL;

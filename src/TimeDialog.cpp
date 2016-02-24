@@ -103,7 +103,7 @@ const double TimeDialog::GetTimeValue()
    return mTime;
 }
 
-void TimeDialog::SetFormatString(wxString formatString)
+void TimeDialog::SetFormatString(const wxString &formatString)
 {
    mFormat = formatString;
    TransferDataToWindow();

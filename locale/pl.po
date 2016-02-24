@@ -3,22 +3,19 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# Grzegorz Pruchniakowski <gootector@o2.pl>, 2013-2015
 # Andrzej Supermocny <blackwhattack@gmail.com>, 2015
 # Aron <aron.plotnikowski@cryptolab.net>, 2013
-# Grzegorz Pruchniakowski <gootector@o2.pl>, 2013
-# Grzegorz Pruchniakowski <gootector@o2.pl>, 2013-2015
-# jacbob77 <jacbob77@tlen.pl>, 2012
-# jacbob77 <jacbob77@tlen.pl>, 2012
-# Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>, 2012
-# Patrick Mala <tatater56@gmail.com>, 2013
 # Patrick Mala <tatater56@gmail.com>, 2013
 # Aron <aron.plotnikowski@cryptolab.net>, 2013
+# jacbob77 <jacbob77@tlen.pl>, 2012
+# Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>, 2012
 msgid ""
 msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2015-09-07 12:40+0100\n"
-"PO-Revision-Date: 2015-09-13 16:20+0000\n"
+"PO-Revision-Date: 2015-10-07 14:36+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/klyok/audacity/language/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -1128,7 +1125,7 @@ msgstr "Zmień &nazwę"
 
 #: src/BatchProcessDialog.cpp:497
 msgid "C&hain (Double-Click or press SPACE to edit)"
-msgstr "T&or (Kliknij dwukrotnie myszką lub naciśnij spację, aby edytować)"
+msgstr "T&or (Kliknij podwójnie myszką lub naciśnij spację, aby edytować)"
 
 #. i18n-hint: This is the number of the command in the list
 #: src/BatchProcessDialog.cpp:507
@@ -3744,7 +3741,7 @@ msgstr "Usuń ścieżkę"
 
 #: src/Menus.cpp:6515
 msgid "Audio Device Info"
-msgstr "Informacja o urządzeniu dźwiękowym"
+msgstr "Informacje o urządzeniu dźwiękowym"
 
 #: src/Menus.cpp:6528 src/effects/nyquist/Nyquist.cpp:1945
 msgid "&Save"
@@ -3752,7 +3749,7 @@ msgstr "&Zapisz"
 
 #: src/Menus.cpp:6533 src/Menus.cpp:6544
 msgid "Save Device Info"
-msgstr "Zapisz informację o urządzeniu"
+msgstr "Zapisz informacje o urządzeniu"
 
 #: src/Menus.cpp:6544
 msgid "Unable to save device info"
@@ -4594,7 +4591,7 @@ msgstr "Debu&guj"
 
 #: src/Snap.cpp:359
 msgid "Off"
-msgstr "Wyłącz"
+msgstr "Wyłączone"
 
 #: src/Snap.cpp:360
 msgid "Nearest"
@@ -4996,15 +4993,15 @@ msgstr "Przenieś ścieżkę dźwiękową na sam &dół"
 
 #: src/TrackPanel.cpp:826
 msgid "Zoom In\tLeft-Click/Left-Drag"
-msgstr ""
+msgstr "Powiększ\tKliknij lewym przyciskiem myszki i przeciągnij"
 
 #: src/TrackPanel.cpp:827
 msgid "Zoom Out\tShift-Left-Click"
-msgstr ""
+msgstr "Pomniejsz\tKliknij lewym przyciskiem myszki z Shift"
 
 #: src/TrackPanel.cpp:828
 msgid "Zoom to Fit\tShift-Right-Click"
-msgstr ""
+msgstr "Dopasuj powiększenie\tKliknij prawym przyciskiem myszki z Shift"
 
 #: src/TrackPanel.cpp:1706
 msgid ""
@@ -5565,7 +5562,7 @@ msgstr "MaksymalnaPauza"
 msgid ""
 "Reduces (ducks) the volume of one or more tracks whenever the volume of a "
 "specified \"control\" track reaches a particular level"
-msgstr ""
+msgstr "Redukuje (ducks) ilość jednej lub większej liczby ścieżek, gdy objętość określona jako \"kontrola\" ścieżki osiągnie określony poziom"
 
 #: src/effects/AutoDuck.cpp:225
 msgid ""
@@ -7312,7 +7309,7 @@ msgstr "Krok 2"
 msgid ""
 "Select all of the audio you want filtered, choose how much noise you want\n"
 "filtered out, and then click 'OK' to reduce noise.\n"
-msgstr "Zaznacz cały dźwięk, który chcesz przefiltrować, wybierz ilość szumów do\nprzefiltrowania i kliknij na przycisk OK, aby usunąć szumy.\n"
+msgstr "Zaznacz cały dźwięk, który chcesz przefiltrować, wybierz ilość szumów do\nprzefiltrowania i kliknij na przycisk OK, aby zredukować szumy.\n"
 
 #: src/effects/NoiseReduction.cpp:1716 src/effects/NoiseRemoval.cpp:806
 msgid "Noise:"
@@ -8027,27 +8024,27 @@ msgstr "Stereo na mono"
 
 #: src/effects/TimeScale.cpp:44
 msgid "RatePercentChangeStart"
-msgstr ""
+msgstr "Początek procentowej zmiany częstotliwości"
 
 #: src/effects/TimeScale.cpp:45
 msgid "RatePercentChangeEnd"
-msgstr ""
+msgstr "Koniec procentowej zmiany częstotliwości"
 
 #: src/effects/TimeScale.cpp:46
 msgid "PitchHalfStepsStart"
-msgstr ""
+msgstr "Początek pół-kroków tonu"
 
 #: src/effects/TimeScale.cpp:47
 msgid "PitchHalfStepsEnd"
-msgstr ""
+msgstr "Koniec pół-kroków tonu"
 
 #: src/effects/TimeScale.cpp:48
 msgid "PitchPercentChangeStart"
-msgstr ""
+msgstr "Początek procentowej zmiany tonu"
 
 #: src/effects/TimeScale.cpp:49
 msgid "PitchPercentChangeEnd"
-msgstr ""
+msgstr "Koniec procentowej zmiany tonu"
 
 #: src/effects/TimeScale.cpp:91
 msgid "Sliding Time Scale/Pitch Shift"
@@ -8210,7 +8207,7 @@ msgstr "Kompresuj"
 msgid ""
 "Automatically reduces the length of passages where the volume is below a "
 "specified level"
-msgstr "Automatycznie zmniejsza długość fragmentów, w których wielkość jest poniżej określonego poziomu"
+msgstr "Automatycznie redukuje długość fragmentów, w których wielkość jest poniżej określonego poziomu"
 
 #: src/effects/TruncSilence.cpp:495
 msgid "Detect Silence"
@@ -12036,7 +12033,7 @@ msgstr "Częstotliwość projektu (Hz):"
 
 #: src/toolbars/SelectionBar.cpp:144
 msgid "Snap To:"
-msgstr "Przyczep do"
+msgstr "Przyczep do:"
 
 #: src/toolbars/SelectionBar.cpp:147 src/toolbars/SelectionBar.cpp:256
 msgid "Selection Start:"
@@ -12120,13 +12117,13 @@ msgstr "Dok z narzędziami"
 msgid ""
 "Click and drag to select audio, Command-Click to scrub, Command-Double-Click"
 " to scroll-scrub, Command-drag to seek"
-msgstr ""
+msgstr "Kliknij i przeciągnij, aby wybrać dźwięk; kliknij z Command, aby wyszorować; kliknij podwójnie z Command, aby przewinąć; przeciągnij z Command, aby szukać"
 
 #: src/toolbars/ToolsToolBar.cpp:95
 msgid ""
 "Click and drag to select audio, Ctrl-Click to scrub, Ctrl-Double-Click to "
 "scroll-scrub, Ctrl-drag to seek"
-msgstr ""
+msgstr "Kliknij i przeciągnij, aby wybrać dźwięk; kliknij z Ctrl, aby wyszorować; kliknij podwójnie z Ctrl, aby przewinąć; przeciągnij z Ctrl, aby szukać"
 
 #: src/toolbars/ToolsToolBar.cpp:100
 msgid "Click and drag to select audio"
@@ -12142,7 +12139,7 @@ msgstr "Kliknij i przeciągnij, aby edytować sampel"
 
 #: src/toolbars/ToolsToolBar.cpp:107
 msgid "Click to Zoom In, Shift-Click to Zoom Out"
-msgstr "Kliknij, aby zwiększyć podgląd; kliknij z klawiszem Shift, aby zmniejszyć"
+msgstr "Kliknij, aby zwiększyć podgląd; kliknij z Shift, aby zmniejszyć"
 
 #: src/toolbars/ToolsToolBar.cpp:109
 msgid "Drag to Zoom Into Region, Right-Click to Zoom Out"

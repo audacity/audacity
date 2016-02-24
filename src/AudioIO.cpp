@@ -841,7 +841,7 @@ wxString HostName(const PaDeviceInfo* info)
    return hostapiName;
 }
 
-bool AudioIO::ValidateDeviceNames(wxString play, wxString rec)
+bool AudioIO::ValidateDeviceNames(const wxString &play, const wxString &rec)
 {
    const PaDeviceInfo *pInfo = Pa_GetDeviceInfo(AudioIO::getPlayDevIndex(play));
    const PaDeviceInfo *rInfo = Pa_GetDeviceInfo(AudioIO::getRecordDevIndex(rec));
@@ -2920,8 +2920,9 @@ int AudioIO::getRecordSourceIndex(PxMixer *portMixer)
 }
 #endif
 
-int AudioIO::getPlayDevIndex(wxString devName)
+int AudioIO::getPlayDevIndex(const wxString &devNameArg)
 {
+   wxString devName(devNameArg);
    // if we don't get given a device, look up the preferences
    if (devName.IsEmpty())
    {
@@ -2973,8 +2974,9 @@ int AudioIO::getPlayDevIndex(wxString devName)
    return deviceNum;
 }
 
-int AudioIO::getRecordDevIndex(wxString devName)
+int AudioIO::getRecordDevIndex(const wxString &devNameArg)
 {
+   wxString devName(devNameArg);
    // if we don't get given a device, look up the preferences
    if (devName.IsEmpty())
    {

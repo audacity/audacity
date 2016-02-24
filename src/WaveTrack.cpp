@@ -1566,14 +1566,14 @@ bool WaveTrack::Append(samplePtr buffer, sampleFormat format,
                                         blockFileLog);
 }
 
-bool WaveTrack::AppendAlias(wxString fName, sampleCount start,
+bool WaveTrack::AppendAlias(const wxString &fName, sampleCount start,
                             sampleCount len, int channel,bool useOD)
 {
    return RightmostOrNewClip()->AppendAlias(fName, start, len, channel, useOD);
 }
 
 
-bool WaveTrack::AppendCoded(wxString fName, sampleCount start,
+bool WaveTrack::AppendCoded(const wxString &fName, sampleCount start,
                             sampleCount len, int channel, int decodeType)
 {
    return RightmostOrNewClip()->AppendCoded(fName, start, len, channel, decodeType);

@@ -1564,13 +1564,13 @@ public:
    wxWindow *OptionsCreate(wxWindow *parent, int format);
    int Export(AudacityProject *project,
                int channels,
-               wxString fName,
+               const wxString &fName,
                bool selectedOnly,
                double t0,
                double t1,
                MixerSpec *mixerSpec = NULL,
                Tags *metadata = NULL,
-               int subformat = 0);
+               int subformat = 0) override;
 
 private:
 
@@ -1619,7 +1619,7 @@ bool ExportMP3::CheckFileName(wxFileName & WXUNUSED(filename), int WXUNUSED(form
 
 int ExportMP3::Export(AudacityProject *project,
                        int channels,
-                       wxString fName,
+                       const wxString &fName,
                        bool selectionOnly,
                        double t0,
                        double t1,

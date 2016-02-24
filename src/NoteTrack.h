@@ -78,8 +78,8 @@ class AUDACITY_DLL_API NoteTrack:public Track {
    int GetVisibleChannels();
 
    Alg_seq_ptr MakeExportableSeq();
-   bool ExportMIDI(wxString f);
-   bool ExportAllegro(wxString f);
+   bool ExportMIDI(const wxString &f);
+   bool ExportAllegro(const wxString &f);
 
 /* REQUIRES PORTMIDI */
 //   int GetLastMidiPosition() const { return mLastMidiPosition; }

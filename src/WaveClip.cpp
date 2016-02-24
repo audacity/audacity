@@ -1297,7 +1297,7 @@ bool WaveClip::Append(samplePtr buffer, sampleFormat format,
    return true;
 }
 
-bool WaveClip::AppendAlias(wxString fName, sampleCount start,
+bool WaveClip::AppendAlias(const wxString &fName, sampleCount start,
                             sampleCount len, int channel,bool useOD)
 {
    bool result = mSequence->AppendAlias(fName, start, len, channel,useOD);
@@ -1309,7 +1309,7 @@ bool WaveClip::AppendAlias(wxString fName, sampleCount start,
    return result;
 }
 
-bool WaveClip::AppendCoded(wxString fName, sampleCount start,
+bool WaveClip::AppendCoded(const wxString &fName, sampleCount start,
                             sampleCount len, int channel, int decodeType)
 {
    bool result = mSequence->AppendCoded(fName, start, len, channel, decodeType);

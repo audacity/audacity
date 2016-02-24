@@ -138,7 +138,7 @@ class FLACImportPlugin : public ImportPlugin
 
    wxString GetPluginStringID() { return wxT("libflac"); }
    wxString GetPluginFormatDescription();
-   ImportFileHandle *Open(wxString Filename);
+   ImportFileHandle *Open(const wxString &Filename)  override;
 };
 
 
@@ -289,7 +289,7 @@ wxString FLACImportPlugin::GetPluginFormatDescription()
 }
 
 
-ImportFileHandle *FLACImportPlugin::Open(wxString filename)
+ImportFileHandle *FLACImportPlugin::Open(const wxString &filename)
 {
    // First check if it really is a FLAC file
 

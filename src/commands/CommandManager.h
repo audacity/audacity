@@ -30,7 +30,7 @@ class AUDACITY_DLL_API CommandFunctor
 public:
    CommandFunctor(){};
    virtual ~CommandFunctor(){};
-   virtual void operator()(int index = 0, const wxEvent *e = NULL) = 0;
+   virtual void operator()(int index, const wxEvent *e) = 0;
 };
 
 struct MenuBarListEntry
@@ -184,7 +184,7 @@ class AUDACITY_DLL_API CommandManager: public XMLTagHandler
    // For NEW items/commands
    void SetDefaultFlags(wxUint32 flags, wxUint32 mask);
 
-   void SetCommandFlags(wxString name, wxUint32 flags, wxUint32 mask);
+   void SetCommandFlags(const wxString &name, wxUint32 flags, wxUint32 mask);
    void SetCommandFlags(const wxChar **names,
                         wxUint32 flags, wxUint32 mask);
    // Pass multiple command names as const wxChar *, terminated by NULL
@@ -195,16 +195,16 @@ class AUDACITY_DLL_API CommandManager: public XMLTagHandler
    //
 
    void EnableUsingFlags(wxUint32 flags, wxUint32 mask);
-   void Enable(wxString name, bool enabled);
-   void Check(wxString name, bool checked);
-   void Modify(wxString name, wxString newLabel);
+   void Enable(const wxString &name, bool enabled);
+   void Check(const wxString &name, bool checked);
+   void Modify(const wxString &name, const wxString &newLabel);
 
    //
    // Modifying accelerators
    //
 
-   void SetKeyFromName(wxString name, wxString key);
-   void SetKeyFromIndex(int i, wxString key);
+   void SetKeyFromName(const wxString &name, const wxString &key);
+   void SetKeyFromIndex(int i, const wxString &key);
 
    //
    // Executing commands
@@ -231,11 +231,11 @@ class AUDACITY_DLL_API CommandManager: public XMLTagHandler
 #endif
       bool includeMultis);
 
-   wxString GetLabelFromName(wxString name);
-   wxString GetPrefixedLabelFromName(wxString name);
-   wxString GetCategoryFromName(wxString name);
-   wxString GetKeyFromName(wxString name);
-   wxString GetDefaultKeyFromName(wxString name);
+   wxString GetLabelFromName(const wxString &name);
+   wxString GetPrefixedLabelFromName(const wxString &name);
+   wxString GetCategoryFromName(const wxString &name);
+   wxString GetKeyFromName(const wxString &name);
+   wxString GetDefaultKeyFromName(const wxString &name);
 
    bool GetEnabled(const wxString &name);
 

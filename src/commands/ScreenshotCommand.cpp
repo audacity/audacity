@@ -152,7 +152,7 @@ static void Yield()
    }
 }
 
-void ScreenshotCommand::Capture(wxString filename,
+void ScreenshotCommand::Capture(const wxString &filename,
                           wxWindow *window,
                           int x, int y, int width, int height,
                           bool bg)
@@ -226,7 +226,7 @@ void ScreenshotCommand::Capture(wxString filename,
    ::wxBell();
 }
 
-void ScreenshotCommand::CaptureToolbar(ToolManager *man, int type, wxString name)
+void ScreenshotCommand::CaptureToolbar(ToolManager *man, int type, const wxString &name)
 {
    bool visible = man->IsVisible(type);
    if (!visible) {
@@ -251,7 +251,7 @@ void ScreenshotCommand::CaptureToolbar(ToolManager *man, int type, wxString name
    }
 }
 
-void ScreenshotCommand::CaptureDock(wxWindow *win, wxString fileName)
+void ScreenshotCommand::CaptureDock(wxWindow *win, const wxString &fileName)
 {
    int x = 0, y = 0;
    int width, height;
@@ -311,7 +311,7 @@ Command *ScreenshotCommandType::Create(CommandOutputTarget *target)
    return new ScreenshotCommand(*this, target);
 }
 
-wxString ScreenshotCommand::MakeFileName(wxString path, wxString basename)
+wxString ScreenshotCommand::MakeFileName(const wxString &path, const wxString &basename)
 {
    wxFileName prefixPath;
    prefixPath.AssignDir(path);

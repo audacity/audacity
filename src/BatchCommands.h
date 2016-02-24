@@ -33,7 +33,7 @@ class BatchCommands {
    void AbortBatch();
 
    // Utility functions for the special commands.
-   wxString BuildCleanFileName(wxString fileName, wxString extension);
+   wxString BuildCleanFileName(const wxString &fileName, const wxString &extension);
    bool WriteMp3File( const wxString & Name, int bitrate );
    double GetEndTime();
    bool IsMono();

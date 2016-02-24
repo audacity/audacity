@@ -31,7 +31,7 @@ public:
    wxString formatName;
    wxArrayString formatExtensions;
 
-   Format(wxString _formatName, wxArrayString _formatExtensions):
+   Format(const wxString &_formatName, const wxArrayString &_formatExtensions):
       formatName(_formatName),
       formatExtensions(_formatExtensions)
    {
@@ -139,7 +139,7 @@ public:
 
    // returns number of tracks imported
    // if zero, the import failed and errorMessage will be set.
-   int Import(wxString fName,
+   int Import(const wxString &fName,
               TrackFactory *trackFactory,
               Track *** tracks,
               Tags *tags,

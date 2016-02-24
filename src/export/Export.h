@@ -105,22 +105,13 @@ public:
     */
    virtual int Export(AudacityProject *project,
                        int channels,
-                       wxString fName,
+                       const wxString &fName,
                        bool selectedOnly,
                        double t0,
                        double t1,
                        MixerSpec *mixerSpec = NULL,
                        Tags *metadata = NULL,
-                       int subformat = 0);
-
-   virtual int DoExport(AudacityProject *project,
-                         int channels,
-                         wxString fName,
-                         bool selectedOnly,
-                         double t0,
-                         double t1,
-                         MixerSpec *mixerSpec,
-                         int subformat);
+                       int subformat = 0) = 0;
 
 protected:
    Mixer* CreateMixer(int numInputTracks, WaveTrack **inputTracks,
@@ -235,7 +226,7 @@ private:
    wxArrayString mTrackNames;
    int mBoxWidth, mChannelHeight, mTrackHeight;
 
-   void SetFont( wxMemoryDC &memDC, wxString text, int width, int height );
+   void SetFont( wxMemoryDC &memDC, const wxString &text, int width, int height );
    double Distance( wxPoint &a, wxPoint &b );
    bool IsOnLine( wxPoint p, wxPoint la, wxPoint lb );
 

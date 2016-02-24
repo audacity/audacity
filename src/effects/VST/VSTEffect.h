@@ -175,7 +175,7 @@ private:
 
    // Base64 encoding and decoding
    static wxString b64encode(const void *in, int len);
-   static int b64decode(wxString in, void *out);
+   static int b64decode(const wxString &in, void *out);
 
    // Realtime
    int GetChannelCount();

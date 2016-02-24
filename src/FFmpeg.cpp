@@ -715,7 +715,7 @@ bool FFmpegLibs::ValidLibsLoaded()
    return mLibsLoaded;
 }
 
-bool FFmpegLibs::InitLibs(wxString libpath_format, bool WXUNUSED(showerr))
+bool FFmpegLibs::InitLibs(const wxString &libpath_format, bool WXUNUSED(showerr))
 {
 #if !defined(DISABLE_DYNAMIC_LOADING_FFMPEG)
    FreeLibs();

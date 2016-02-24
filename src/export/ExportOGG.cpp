@@ -135,13 +135,13 @@ public:
 
    int Export(AudacityProject *project,
                int channels,
-               wxString fName,
+               const wxString &fName,
                bool selectedOnly,
                double t0,
                double t1,
                MixerSpec *mixerSpec = NULL,
                Tags *metadata = NULL,
-               int subformat = 0);
+               int subformat = 0) override;
 
 private:
 
@@ -166,7 +166,7 @@ void ExportOGG::Destroy()
 
 int ExportOGG::Export(AudacityProject *project,
                        int numChannels,
-                       wxString fName,
+                       const wxString &fName,
                        bool selectionOnly,
                        double t0,
                        double t1,

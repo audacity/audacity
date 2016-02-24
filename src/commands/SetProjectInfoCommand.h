@@ -48,7 +48,7 @@ private:
    typedef void (SetProjectInfoCommand::*Setter)(Track *trk, bool setting) const;
 
 // Uses the Function pointer to set a particular parameter within a loop of otherwise duplicate code
-   void SetAllTracksParam(TrackList *projTracks, wxString boolValueStr, Setter functPtrToSetter);
+   void SetAllTracksParam(TrackList *projTracks, const wxString &boolValueStr, Setter functPtrToSetter);
 
 // Function pointer to accessing a particular parameter within a loop of otherwise duplicate code
    void setSelected(Track *trk, bool setting) const;

@@ -51,11 +51,11 @@ public:
    //
    // Return true on success and stores the result in the provided location
    // which must be a valid non-NULL pointer.
-   static bool FromString(wxString s, long *val);
+   static bool FromString(const wxString &s, long *val);
 #ifdef HAS_LONG_LONG_T_DIFFERENT_FROM_LONG
-   static bool FromString(wxString s, wxLongLong_t *val);
+   static bool FromString(const wxString &s, wxLongLong_t *val);
 #endif // HAS_LONG_LONG_T_DIFFERENT_FROM_LONG
-   static bool FromString(wxString s, double *val);
+   static bool FromString(const wxString &s, double *val);
 
 
    // Get the decimal separator for the current locale. It is always defined
@@ -69,7 +69,7 @@ public:
 
 private:
    // Post-process the string representing an integer.
-   static wxString PostProcessIntString(wxString s, int style);
+   static wxString PostProcessIntString(const wxString &s, int style);
 
    // Add the thousands separators to a string representing a number without
    // the separators. This is used by ToString(Style_WithThousandsSep).

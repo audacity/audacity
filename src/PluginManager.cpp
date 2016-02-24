@@ -2896,7 +2896,7 @@ wxString PluginManager::b64encode(const void *in, int len)
    return out;
 }
 
-int PluginManager::b64decode(wxString in, void *out)
+int PluginManager::b64decode(const wxString &in, void *out)
 {
    int len = in.length();
    unsigned char *p = (unsigned char *) out;

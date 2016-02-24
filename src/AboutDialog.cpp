@@ -892,7 +892,7 @@ wxString AboutDialog::GetCreditsByRole(AboutDialog::Role role)
  *
  * Used when creating the build information tab to show if each optional
  * library is enabled or not, and what it does */
-void AboutDialog::AddBuildinfoRow( wxString* htmlstring, const wxChar * libname, const wxChar * libdesc, wxString status)
+void AboutDialog::AddBuildinfoRow( wxString* htmlstring, const wxChar * libname, const wxChar * libdesc, const wxString &status)
 {
    *htmlstring += wxT("<tr><td>");
    *htmlstring += libname;

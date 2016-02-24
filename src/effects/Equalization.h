@@ -141,11 +141,11 @@ private:
    void EnvelopeUpdated(Envelope *env, bool lin);
    bool IsLinear();
 
-   void LoadCurves(wxString fileName = wxT(""), bool append = false);
-   void SaveCurves(wxString fileName = wxT(""));
+   void LoadCurves(const wxString &fileName = wxEmptyString, bool append = false);
+   void SaveCurves(const wxString &fileName = wxEmptyString);
    void Select(int sel);
    void setCurve(int currentCurve);
-   void setCurve(wxString curveName);
+   void setCurve(const wxString &curveName);
    void setCurve(void);
    
    // XMLTagHandler callback methods for loading and saving
@@ -367,7 +367,7 @@ private:
 class SliderAx: public wxWindowAccessible
 {
 public:
-   SliderAx(wxWindow * window, wxString fmt);
+   SliderAx(wxWindow * window, const wxString &fmt);
 
    virtual ~ SliderAx();
 

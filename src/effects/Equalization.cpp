@@ -1362,7 +1362,7 @@ void EffectEqualization::Filter(sampleCount len, float *buffer)
 //
 // Load external curves with fallback to default, then message
 //
-void EffectEqualization::LoadCurves(wxString fileName, bool append)
+void EffectEqualization::LoadCurves(const wxString &fileName, bool append)
 {
    // Construct normal curve filename
    //
@@ -1460,7 +1460,7 @@ void EffectEqualization::LoadCurves(wxString fileName, bool append)
 //
 // Save curves to external file
 //
-void EffectEqualization::SaveCurves(wxString fileName)
+void EffectEqualization::SaveCurves(const wxString &fileName)
 {
    wxFileName fn;
    if( fileName == wxT(""))
@@ -1601,7 +1601,7 @@ void EffectEqualization::setCurve()
    setCurve((int) mCurves.GetCount()-1);
 }
 
-void EffectEqualization::setCurve(wxString curveName)
+void EffectEqualization::setCurve(const wxString &curveName)
 {
    unsigned i = 0;
    for( i = 0; i < mCurves.GetCount(); i++ )
@@ -3456,7 +3456,7 @@ void EditCurvesDialog::OnOK(wxCommandEvent & WXUNUSED(event))
 
 #if wxUSE_ACCESSIBILITY
 
-SliderAx::SliderAx( wxWindow * window, wxString fmt ):
+SliderAx::SliderAx(wxWindow * window, const wxString &fmt) :
 wxWindowAccessible( window )
 {
    mParent = window;

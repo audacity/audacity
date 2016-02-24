@@ -309,10 +309,10 @@ public:
    /// Flush must be called after last Append
    bool Flush();
 
-   bool AppendAlias(wxString fName, sampleCount start,
+   bool AppendAlias(const wxString &fName, sampleCount start,
                     sampleCount len, int channel,bool useOD);
 
-   bool AppendCoded(wxString fName, sampleCount start,
+   bool AppendCoded(const wxString &fName, sampleCount start,
                             sampleCount len, int channel, int decodeType);
 
    /// This name is consistent with WaveTrack::Clear. It performs a "Cut"

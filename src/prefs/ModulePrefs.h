@@ -38,8 +38,8 @@ class ModulePrefs:public PrefsPanel
    ~ModulePrefs();
    virtual bool Apply();
 
-   static int GetModuleStatus( wxString fname );
-   static void SetModuleStatus( wxString fname, int iStatus );
+   static int GetModuleStatus( const wxString &fname );
+   static void SetModuleStatus( const wxString &fname, int iStatus );
 
  private:
    void GetAllModuleStatuses();

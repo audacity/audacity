@@ -66,7 +66,7 @@ class CommandMessageTarget
 {
 public:
    virtual ~CommandMessageTarget() {}
-   virtual void Update(wxString message) = 0;
+   virtual void Update(const wxString &message) = 0;
 };
 
 ///
@@ -93,7 +93,7 @@ class NullMessageTarget : public CommandMessageTarget
 {
 public:
    virtual ~NullMessageTarget() {}
-   virtual void Update(wxString message) {}
+   virtual void Update(const wxString &message) override {}
 };
 
 /// Displays messages from a command in a wxMessageBox
@@ -101,7 +101,7 @@ class MessageBoxTarget : public CommandMessageTarget
 {
 public:
    virtual ~MessageBoxTarget() {}
-   virtual void Update(wxString message)
+   virtual void Update(const wxString &message) override
    {
       wxMessageBox(message);
    }
@@ -116,7 +116,7 @@ public:
    StatusBarTarget(wxStatusBar &sb)
       : mStatus(sb)
    {}
-   virtual void Update(wxString message)
+   virtual void Update(const wxString &message) override
    {
       mStatus.SetStatusText(message, 0);
    }
@@ -135,7 +135,7 @@ public:
    {
       mResponseQueue.AddResponse(wxString(wxT("\n")));
    }
-   virtual void Update(wxString message)
+   virtual void Update(const wxString &message) override
    {
       mResponseQueue.AddResponse(message);
    }
@@ -158,7 +158,7 @@ public:
       delete m1;
       delete m2;
    }
-   virtual void Update(wxString message)
+   virtual void Update(const wxString &message) override
    {
       m1->Update(message);
       m2->Update(message);
@@ -220,12 +220,12 @@ public:
       if (mProgressTarget)
          mProgressTarget->Update(completed);
    }
-   void Status(wxString status)
+   void Status(const wxString &status)
    {
       if (mStatusTarget)
          mStatusTarget->Update(status);
    }
-   void Error(wxString message)
+   void Error(const wxString &message)
    {
       if (mErrorTarget)
          mErrorTarget->Update(message);
