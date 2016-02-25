@@ -152,6 +152,14 @@ public:
 
    const ExportPluginArray GetPlugins();
 
+   // Auto Export from Timer Recording
+   bool ProcessFromTimed(AudacityProject *project, bool selectedOnly, double t0, double t1, wxFileName fnFile, int iFormat, int iSubFormat, int iFilterIndex);
+   bool SetAutoExportOptions(AudacityProject *project);
+   int GetAutoExportFormat();
+   int GetAutoExportSubFormat();
+   int GetAutoExportFilterIndex();
+   wxFileName GetAutoExportFileName();
+
 private:
 
    bool ExamineTracks();
