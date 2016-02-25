@@ -56,6 +56,8 @@ class Envelope;
 // Declared elsewhere, to reduce compilation dependencies
 class TrackPanelListener;
 
+enum class UndoPush : unsigned char;
+
 // JKC Nov 2011: Disabled warning C4251 which is to do with DLL linkage
 // and only a worry when there are DLLs using the structures.
 // Array classes are private in TrackInfo, so we will not
