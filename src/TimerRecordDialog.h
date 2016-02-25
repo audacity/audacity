@@ -36,7 +36,7 @@ public:
 
    void OnTimer(wxTimerEvent& event);
    ///Runs the wait for start dialog.  Returns false if the user clicks stop.
-   bool RunWaitDialog();
+   int RunWaitDialog();
 
 private:
    void OnDatePicker_Start(wxDateEvent& event);
@@ -65,6 +65,8 @@ private:
    void EnableDisableAutoControls(bool bEnable, int iControlGoup);
    void UpdateTextBoxControls();
 
+   int TimerRecordDialog::ExecutePostRecordActions();
+
 private:
    wxDateTime m_DateTime_Start;
    wxDateTime m_DateTime_End;
@@ -81,15 +83,18 @@ private:
 
    wxTimer m_timer;
 
-   // New Controls for Auto Save/Export
+   // Controls for Auto Save/Export
    wxCheckBox *m_pTimerAutoSaveCheckBoxCtrl;
    wxTextCtrl *m_pTimerSavePathTextCtrl;
-   wxButton *m_pTimerSavePathButtonCntrl;
+   wxButton *m_pTimerSavePathButtonCtrl;
    wxCheckBox *m_pTimerAutoExportCheckBoxCtrl;
    wxTextCtrl *m_pTimerExportPathTextCtrl;
    wxButton *m_pTimerExportPathButtonCtrl;
 
-   // New variables for the Auto Save/Export
+   // After Timer Record Options Choice
+   wxChoice *m_pTimerAfterCompleteChoiceCtrl;
+
+   // Variables for the Auto Save/Export
    bool m_bAutoSaveEnabled;
    wxFileName m_fnAutoSaveFile;
    bool m_bAutoExportEnabled;
@@ -97,6 +102,10 @@ private:
    int m_iAutoExportFormat;
    int m_iAutoExportSubFormat;
    int m_iAutoExportFilterIndex;
+
+   // Variables for After Timer Recording Option
+   wxString m_sTimerAfterCompleteOption;
+   wxArrayString m_sTimerAfterCompleteOptionsArray;
 
    DECLARE_EVENT_TABLE();
 };
