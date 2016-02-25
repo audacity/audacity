@@ -6319,14 +6319,35 @@ void AudacityProject::OnTimerRecord()
    {
       // Cancelled before recording - don't need to do anyting.
    }
-   else if(!dialog.RunWaitDialog())
+   else
    {
-      //RunWaitDialog() shows the "wait for start" as well as "recording" dialog
-      //if it returned false it means the user cancelled while the recording, so throw out the fresh track.
-      //However, we can't undo it here because the PushState() is called in TrackPanel::OnTimer(),
-      //which is blocked by this function.
-      //so instead we mark a flag to undo it there.
-      mTimerRecordCanceled = true;
+	   int iTimerRecordingOutcome = dialog.RunWaitDialog();
+	   switch (iTimerRecordingOutcome) {
+	   case -2: {
+		   // Canceled on the wait dialog
+		   // No action required
+	   } break;
+	   case -1: {
+		   // RunWaitDialog() shows the "wait for start" as well as "recording" dialog
+		   // if it returned -1 it means the user cancelled while the recording, so throw out the fresh track.
+		   // However, we can't undo it here because the PushState() is called in TrackPanel::OnTimer(),
+		   // which is blocked by this function.
+		   // so instead we mark a flag to undo it there.
+		   mTimerRecordCanceled = true;
+	   } break;
+	   case 0: {
+		   // No action required
+	   } break;
+	   case 1: {
+		   // Quit Audacity
+	   } break;
+	   case 2: {
+		   // Restart System
+	   } break;
+	   case 3: {
+		   // Shutdown System
+	   } break;
+	   }
    }
 }
 
