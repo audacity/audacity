@@ -40,11 +40,20 @@
 #define TIMER_ID 7000
 
 enum { // control IDs
-   ID_DATEPICKER_START = 10000,
-   ID_TIMETEXT_START,
-   ID_DATEPICKER_END,
-   ID_TIMETEXT_END,
-   ID_TIMETEXT_DURATION
+	ID_DATEPICKER_START = 10000,
+	ID_TIMETEXT_START,
+	ID_DATEPICKER_END,
+	ID_TIMETEXT_END,
+	ID_TIMETEXT_DURATION,
+	ID_AUTOSAVEPATH_BUTTON,
+	ID_AUTOEXPORTPATH_BUTTON,
+	ID_AUTOSAVE_CHECKBOX,
+	ID_AUTOEXPORT_CHECKBOX
+};
+
+enum {
+	CONTROL_GROUP_SAVE,
+	CONTROL_GROUP_EXPORT
 };
 
 const int kTimerInterval = 50; // ms
@@ -66,6 +75,13 @@ BEGIN_EVENT_TABLE(TimerRecordDialog, wxDialog)
    EVT_BUTTON(wxID_OK, TimerRecordDialog::OnOK)
 
    EVT_TIMER(TIMER_ID, TimerRecordDialog::OnTimer)
+
+   EVT_BUTTON(ID_AUTOSAVEPATH_BUTTON, TimerRecordDialog::OnAutoSavePathButton_Click)
+   EVT_BUTTON(ID_AUTOEXPORTPATH_BUTTON, TimerRecordDialog::OnAutoExportPathButton_Click)
+
+   EVT_CHECKBOX(ID_AUTOSAVE_CHECKBOX, TimerRecordDialog::OnAutoSaveCheckBox_Change)
+   EVT_CHECKBOX(ID_AUTOEXPORT_CHECKBOX, TimerRecordDialog::OnAutoExportCheckBox_Change)
+
 END_EVENT_TABLE()
 
 TimerRecordDialog::TimerRecordDialog(wxWindow* parent)
@@ -210,6 +226,55 @@ void TimerRecordDialog::OnTimeText_Duration(wxCommandEvent& WXUNUSED(event))
    this->UpdateEnd(); // Keep Start constant and update End for changed Duration.
 }
 
+// New events for timer recording automation
+void TimerRecordDialog::OnAutoSavePathButton_Click(wxCommandEvent& WXUNUSED(event))
+{
+	// JKC: I removed 'wxFD_OVERWRITE_PROMPT' because we are checking
+	// for overwrite ourselves later, and we disallow it.
+	// We disallow overwrite because we would have to delete the many
+	// smaller files too, or prompt to move them.
+	wxString fName = FileSelector(_T("Save Timer Recording As"),
+		m_fnAutoSaveFile.GetPath(),
+		m_fnAutoSaveFile.GetFullName(),
+		wxT("aup"),
+		_("Audacity projects") + wxT(" (*.aup)|*.aup"),
+		wxFD_SAVE | wxRESIZE_BORDER | wxFD_OVERWRITE_PROMPT,
+		this);
+
+	if (fName == wxT(""))
+		return;
+
+	m_fnAutoSaveFile = fName;
+	m_fnAutoSaveFile.SetExt(wxT("aup"));
+	this->UpdateTextBoxControls();
+}
+
+void TimerRecordDialog::OnAutoExportPathButton_Click(wxCommandEvent& WXUNUSED(event))
+{
+	AudacityProject* pProject = GetActiveProject();
+	Exporter eExporter;
+
+	// Call the Exporter to set the options required
+	if (eExporter.SetAutoExportOptions(pProject)) {
+		// Populate the options so that we can destroy this instance of the Exporter
+		m_fnAutoExportFile = eExporter.GetAutoExportFileName();
+		m_iAutoExportFormat = eExporter.GetAutoExportFormat();
+		m_iAutoExportSubFormat = eExporter.GetAutoExportSubFormat();
+		m_iAutoExportFilterIndex = eExporter.GetAutoExportFilterIndex();
+
+		// Update the text controls
+		this->UpdateTextBoxControls();
+	}
+}
+
+void TimerRecordDialog::OnAutoSaveCheckBox_Change(wxCommandEvent& WXUNUSED(event)) {
+	EnableDisableAutoControls(m_pTimerAutoSaveCheckBoxCtrl->GetValue(), CONTROL_GROUP_SAVE);
+}
+
+void TimerRecordDialog::OnAutoExportCheckBox_Change(wxCommandEvent& WXUNUSED(event)) {
+	EnableDisableAutoControls(m_pTimerAutoExportCheckBoxCtrl->GetValue(), CONTROL_GROUP_EXPORT);
+}
+
 void TimerRecordDialog::OnOK(wxCommandEvent& WXUNUSED(event))
 {
    this->TransferDataFromWindow();
@@ -220,12 +285,61 @@ void TimerRecordDialog::OnOK(wxCommandEvent& WXUNUSED(event))
       return;
    }
 
+   // Validate that we have a Save and/or Export path setup if the appropriate check box is ticked
+   wxString sTemp = m_fnAutoSaveFile.GetFullPath();
+   if (m_pTimerAutoSaveCheckBoxCtrl->IsChecked()) {
+	   if (!m_fnAutoSaveFile.IsOk() || m_fnAutoSaveFile.IsDir()) {
+		   wxMessageBox(_("Auto save path is invalid."),
+			   _("Error in Auto Save"), wxICON_EXCLAMATION | wxOK);
+		   return;
+	   }
+   }
+   if (m_pTimerAutoExportCheckBoxCtrl->IsChecked()) {
+
+	   if (!m_fnAutoExportFile.IsOk() || m_fnAutoExportFile.IsDir()) {
+		   wxMessageBox(_("Auto export path is invalid."),
+			   _("Error in Auto Export"), wxICON_EXCLAMATION | wxOK);
+		   return;
+	   }
+   }
+
    m_timer.Stop(); // Don't need to keep updating m_DateTime_Start to prevent backdating.
    this->EndModal(wxID_OK);
    wxLongLong duration = m_TimeSpan_Duration.GetSeconds();
    // this will assert if the duration won't fit in a long
    gPrefs->Write(wxT("/TimerRecord/LastDuration"), duration.ToLong());
    gPrefs->Flush();
+}
+
+void TimerRecordDialog::EnableDisableAutoControls(bool bEnable, int iControlGoup) {
+	if (iControlGoup == CONTROL_GROUP_EXPORT) {
+		// Enables or disables a control group based on the params
+		if (bEnable) {
+			m_pTimerExportPathTextCtrl->Enable();
+			m_pTimerExportPathButtonCtrl->Enable();
+		}
+		else {
+			m_pTimerExportPathTextCtrl->Disable();
+			m_pTimerExportPathButtonCtrl->Disable();
+		}
+	}
+	else if (iControlGoup == CONTROL_GROUP_SAVE) {
+		// Enables or disables a control group based on the params
+		if (bEnable) {
+			m_pTimerSavePathTextCtrl->Enable();
+			m_pTimerSavePathButtonCntrl->Enable();
+		}
+		else {
+			m_pTimerSavePathTextCtrl->Disable();
+			m_pTimerSavePathButtonCntrl->Disable();
+		}
+	}
+}
+
+void TimerRecordDialog::UpdateTextBoxControls() {
+	// Will update the text box controls
+	m_pTimerSavePathTextCtrl->SetValue(m_fnAutoSaveFile.GetFullPath());
+	m_pTimerExportPathTextCtrl->SetValue(m_fnAutoExportFile.GetFullPath());
 }
 
 ///Runs the wait for start dialog.  Returns false if the user clicks stop while we are recording
@@ -284,10 +398,32 @@ bool TimerRecordDialog::RunWaitDialog()
    if (updateResult == eProgressCancelled || updateResult == eProgressFailed)
       return false;
 
-   // Success, so let's automatically save it, for safety's sake. 
-   // If user hadn't saved it before, they'll see the Save As dialog.
-   // If user had saved it before, it will safely be saved, automatically. 
-   pProject->Save();
+   // Auto Save and Auto Export routines...
+   bool bOK = false;
+   wxString sErrorMessage = "";
+
+   // Do Auto Save?
+   if (m_bAutoSaveEnabled) {
+	   bOK = pProject->SaveFromTimed(m_fnAutoSaveFile);
+	   if (!bOK) {
+		   // Failed to save
+		   sErrorMessage = _T("Unable to automatically save the timer recording.");
+	   }
+   }
+
+   // Do Auto Export?
+   if (m_bAutoExportEnabled) {
+	   bOK = pProject->ExportFromTimed(m_fnAutoExportFile, m_iAutoExportFormat, m_iAutoExportSubFormat, m_iAutoExportFilterIndex);
+	   if (!bOK) {
+		   sErrorMessage = _T("Unable to automatically export the timer recording.");
+	   }
+   }
+
+   if (sErrorMessage != "") {
+	   // Any errors
+	   wxMessageBox(sErrorMessage, _T("Error"), wxICON_EXCLAMATION | wxOK);
+	   return false;
+   }
 
    return true;
 }
@@ -343,89 +479,133 @@ wxPrintf(wxT("%s\n"), dt.Format().c_str());
 
 void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
 {
-   S.SetBorder(5);
-   S.StartVerticalLay(true);
-   {
-      /* i18n-hint: This string is used to configure the controls for times when the recording is
-       * started and stopped. As such it is important that only the alphabetic parts of the string
-       * are translated, with the numbers left exactly as they are.
-       * The 'h' indicates the first number displayed is hours, the 'm' indicates the second number
-       * displayed is minutes, and the 's' indicates that the third number displayed is seconds.
-       */
-      wxString strFormat = _("099 h 060 m 060 s");
-      S.StartStatic(_("Start Date and Time"), true);
-      {
-         m_pDatePickerCtrl_Start =
-            safenew wxDatePickerCtrl(this, // wxWindow *parent,
-                                 ID_DATEPICKER_START, // wxWindowID id,
-                                 m_DateTime_Start); // const wxDateTime& dt = wxDefaultDateTime,
-                                 // const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDP_DEFAULT | wxDP_SHOWCENTURY, const wxValidator& validator = wxDefaultValidator, const wxString& name = "datectrl")
-         m_pDatePickerCtrl_Start->SetName(_("Start Date"));
-         m_pDatePickerCtrl_Start->SetRange(wxDateTime::Today(), wxInvalidDateTime); // No backdating.
-         S.AddWindow(m_pDatePickerCtrl_Start);
+	S.SetBorder(5);
+	S.StartTwoColumn();
+	{
+		S.StartVerticalLay(true);
+		{
+			/* i18n-hint: This string is used to configure the controls for times when the recording is
+			* started and stopped. As such it is important that only the alphabetic parts of the string
+			* are translated, with the numbers left exactly as they are.
+			* The 'h' indicates the first number displayed is hours, the 'm' indicates the second number
+			* displayed is minutes, and the 's' indicates that the third number displayed is seconds.
+			*/
+			wxString strFormat = _("099 h 060 m 060 s");
+			S.StartStatic(_("Start Date and Time"), true);
+			{
+				m_pDatePickerCtrl_Start =
+					new wxDatePickerCtrl(this, // wxWindow *parent,
+					ID_DATEPICKER_START, // wxWindowID id,
+					m_DateTime_Start); // const wxDateTime& dt = wxDefaultDateTime,
+				// const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDP_DEFAULT | wxDP_SHOWCENTURY, const wxValidator& validator = wxDefaultValidator, const wxString& name = "datectrl")
+				m_pDatePickerCtrl_Start->SetName(_("Start Date"));
+				m_pDatePickerCtrl_Start->SetRange(wxDateTime::Today(), wxInvalidDateTime); // No backdating.
+				S.AddWindow(m_pDatePickerCtrl_Start);
 
-         m_pTimeTextCtrl_Start = safenew NumericTextCtrl(
-            NumericConverter::TIME, this, ID_TIMETEXT_START);
-         m_pTimeTextCtrl_Start->SetName(_("Start Time"));
-         m_pTimeTextCtrl_Start->SetFormatString(strFormat);
-         m_pTimeTextCtrl_Start->
-            SetValue(wxDateTime_to_AudacityTime(m_DateTime_Start));
-         S.AddWindow(m_pTimeTextCtrl_Start);
-         m_pTimeTextCtrl_Start->EnableMenu(false);
-      }
-      S.EndStatic();
+				m_pTimeTextCtrl_Start = new NumericTextCtrl(
+					NumericConverter::TIME, this, ID_TIMETEXT_START);
+				m_pTimeTextCtrl_Start->SetName(_("Start Time"));
+				m_pTimeTextCtrl_Start->SetFormatString(strFormat);
+				m_pTimeTextCtrl_Start->
+					SetValue(wxDateTime_to_AudacityTime(m_DateTime_Start));
+				S.AddWindow(m_pTimeTextCtrl_Start);
+				m_pTimeTextCtrl_Start->EnableMenu(false);
+			}
+			S.EndStatic();
 
-      S.StartStatic(_("End Date and Time"), true);
-      {
-         m_pDatePickerCtrl_End =
-            safenew wxDatePickerCtrl(this, // wxWindow *parent,
-                                 ID_DATEPICKER_END, // wxWindowID id,
-                                 m_DateTime_End); // const wxDateTime& dt = wxDefaultDateTime,
-                                 // const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDP_DEFAULT | wxDP_SHOWCENTURY, const wxValidator& validator = wxDefaultValidator, const wxString& name = "datectrl")
-         m_pDatePickerCtrl_End->SetRange(m_DateTime_Start, wxInvalidDateTime); // No backdating.
-         m_pDatePickerCtrl_End->SetName(_("End Date"));
-         S.AddWindow(m_pDatePickerCtrl_End);
+			S.StartStatic(_("End Date and Time"), true);
+			{
+				m_pDatePickerCtrl_End =
+					new wxDatePickerCtrl(this, // wxWindow *parent,
+					ID_DATEPICKER_END, // wxWindowID id,
+					m_DateTime_End); // const wxDateTime& dt = wxDefaultDateTime,
+				// const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDP_DEFAULT | wxDP_SHOWCENTURY, const wxValidator& validator = wxDefaultValidator, const wxString& name = "datectrl")
+				m_pDatePickerCtrl_End->SetRange(m_DateTime_Start, wxInvalidDateTime); // No backdating.
+				m_pDatePickerCtrl_End->SetName(_("End Date"));
+				S.AddWindow(m_pDatePickerCtrl_End);
 
-         m_pTimeTextCtrl_End = safenew NumericTextCtrl(
-            NumericConverter::TIME, this, ID_TIMETEXT_END);
-         m_pTimeTextCtrl_End->SetName(_("End Time"));
-         m_pTimeTextCtrl_End->SetFormatString(strFormat);
-         m_pTimeTextCtrl_End->SetValue(wxDateTime_to_AudacityTime(m_DateTime_End));
-         S.AddWindow(m_pTimeTextCtrl_End);
-         m_pTimeTextCtrl_End->EnableMenu(false);
-      }
-      S.EndStatic();
+				m_pTimeTextCtrl_End = new NumericTextCtrl(
+					NumericConverter::TIME, this, ID_TIMETEXT_END);
+				m_pTimeTextCtrl_End->SetName(_("End Time"));
+				m_pTimeTextCtrl_End->SetFormatString(strFormat);
+				m_pTimeTextCtrl_End->SetValue(wxDateTime_to_AudacityTime(m_DateTime_End));
+				S.AddWindow(m_pTimeTextCtrl_End);
+				m_pTimeTextCtrl_End->EnableMenu(false);
+			}
+			S.EndStatic();
 
-      S.StartStatic(_("Duration"), true);
-      {
-         /* i18n-hint: This string is used to configure the controls which shows the recording
-          * duration. As such it is important that only the alphabetic parts of the string
-          * are translated, with the numbers left exactly as they are.
-          * The string 'days' indicates that the first number in the control will be the number of days,
-          * then the 'h' indicates the second number displayed is hours, the 'm' indicates the third
-          * number displayed is minutes, and the 's' indicates that the fourth number displayed is
-          * seconds.
-          */
-         wxString strFormat1 = _("099 days 024 h 060 m 060 s");
-         m_pTimeTextCtrl_Duration = safenew NumericTextCtrl(
-            NumericConverter::TIME, this, ID_TIMETEXT_DURATION);
-         m_pTimeTextCtrl_Duration->SetName(_("Duration"));
-         m_pTimeTextCtrl_Duration->SetFormatString(strFormat1);
-         m_pTimeTextCtrl_Duration->
-            SetValue(m_TimeSpan_Duration.GetSeconds().ToDouble());
-         S.AddWindow(m_pTimeTextCtrl_Duration);
-         m_pTimeTextCtrl_Duration->EnableMenu(false);
-      }
-      S.EndStatic();
-   }
-   S.EndVerticalLay();
+			S.StartStatic(_("Duration"), true);
+			{
+				/* i18n-hint: This string is used to configure the controls which shows the recording
+				* duration. As such it is important that only the alphabetic parts of the string
+				* are translated, with the numbers left exactly as they are.
+				* The string 'days' indicates that the first number in the control will be the number of days,
+				* then the 'h' indicates the second number displayed is hours, the 'm' indicates the third
+				* number displayed is minutes, and the 's' indicates that the fourth number displayed is
+				* seconds.
+				*/
+				wxString strFormat1 = _("099 days 024 h 060 m 060 s");
+				m_pTimeTextCtrl_Duration = new NumericTextCtrl(
+					NumericConverter::TIME, this, ID_TIMETEXT_DURATION);
+				m_pTimeTextCtrl_Duration->SetName(_("Duration"));
+				m_pTimeTextCtrl_Duration->SetFormatString(strFormat1);
+				m_pTimeTextCtrl_Duration->
+					SetValue(m_TimeSpan_Duration.GetSeconds().ToDouble());
+				S.AddWindow(m_pTimeTextCtrl_Duration);
+				m_pTimeTextCtrl_Duration->EnableMenu(false);
+			}
+			S.EndStatic();
+		}
+		S.EndVerticalLay();
 
-   S.AddStandardButtons();
+		S.StartVerticalLay(true);
+		{
+			bool bAutoSave = gPrefs->ReadBool("/TimerRecord/AutoSave", false);
+			bool bAutoExport = gPrefs->ReadBool("/TimerRecord/AutoExport", false);
 
-   Layout();
-   Fit();
-   SetMinSize(GetSize());
-   Center();
+			S.StartStatic(_T("Auto Save"), true);
+			{
+
+				// If checked, the project will be saved when the recording is completed
+				m_pTimerAutoSaveCheckBoxCtrl = S.Id(ID_AUTOSAVE_CHECKBOX).AddCheckBox(_T("Enable Auto Save?"), (bAutoSave ? "true" : "false"));
+
+				S.StartHorizontalLay(true);
+				{
+					m_pTimerSavePathTextCtrl = S.AddTextBox(_T("Save Project As:"), "", 50);
+					m_pTimerSavePathTextCtrl->SetEditable(false);
+					m_pTimerSavePathButtonCntrl = S.Id(ID_AUTOSAVEPATH_BUTTON).AddButton(_T("Select"));
+				}
+				S.EndHorizontalLay();
+				this->EnableDisableAutoControls(bAutoSave, CONTROL_GROUP_SAVE);
+			}
+			S.EndStatic();
+
+			S.StartStatic(_T("Auto Export"), true);
+			{
+				m_pTimerAutoExportCheckBoxCtrl = S.Id(ID_AUTOEXPORT_CHECKBOX).AddCheckBox(_T("Enable Auto Export?"), (bAutoExport ? "true" : "false"));
+				S.StartHorizontalLay(true);
+				{
+					m_pTimerExportPathTextCtrl = S.AddTextBox(_T("Export Project As:"), "", 50);
+					m_pTimerExportPathTextCtrl->SetEditable(false);
+					m_pTimerExportPathButtonCtrl = S.Id(ID_AUTOEXPORTPATH_BUTTON).AddButton(_T("Select"));
+				}
+				S.EndHorizontalLay();
+				this->EnableDisableAutoControls(bAutoExport, CONTROL_GROUP_EXPORT);
+			}
+			S.EndStatic();
+
+			S.AddSpace(120);
+
+		}
+		S.EndVerticalLay();
+	}
+
+	S.AddStandardButtons();
+
+	Layout();
+	Fit();
+	SetMinSize(GetSize());
+	Center();
 }
 
 bool TimerRecordDialog::TransferDataFromWindow()
@@ -454,6 +634,14 @@ bool TimerRecordDialog::TransferDataFromWindow()
    m_DateTime_End.SetSecond(sec);
 
    m_TimeSpan_Duration = m_DateTime_End - m_DateTime_Start;
+
+   // Pull the settings from the auto save/export controls and write to the pref file
+   m_bAutoSaveEnabled = m_pTimerAutoSaveCheckBoxCtrl->GetValue();
+   m_bAutoExportEnabled = m_pTimerAutoExportCheckBoxCtrl->GetValue();
+
+   // Save the options back to the prefs file
+   gPrefs->Write("/TimerRecord/AutoSave", m_bAutoSaveEnabled);
+   gPrefs->Write("/TimerRecord/AutoExport", m_bAutoExportEnabled);
 
    return true;
 }

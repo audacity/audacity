@@ -30,6 +30,7 @@
 #include "xml/XMLTagHandler.h"
 #include "toolbars/SelectionBarListener.h"
 #include "toolbars/SpectralSelectionBarListener.h"
+#include "export\Export.h";
 
 #include "MemoryX.h"
 #include <wx/defs.h>
@@ -274,6 +275,10 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    /** \brief returns a pointer to the wxDialog if it is displayed, NULL otherwise.
      */
    wxDialog *GetMissingAliasFileDialog();
+
+   // Timer Record Auto Save/Export Routines
+   bool SaveFromTimed(wxFileName fnPath, bool overwrite = false, bool fromSaveAs = true, bool bWantSaveCompressed = false);
+   bool ExportFromTimed(wxFileName fnFile, int iFormat, int iSubFormat, int iFilterIndex);
 
 #include "Menus.h"
 
