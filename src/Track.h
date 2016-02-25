@@ -29,7 +29,6 @@
 
 class wxTextFile;
 class DirManager;
-class UndoStack;
 class Track;
 class LabelTrack;
 class TimeTrack;
@@ -146,7 +145,7 @@ class AUDACITY_DLL_API Track: public XMLTagHandler
    virtual ~ Track();
 
    void Init(const Track &orig);
-   virtual Track *Duplicate() = 0;
+   virtual Track *Duplicate() const = 0;
 
    // Called when this track is merged to stereo with another, and should
    // take on some paramaters of its partner.
@@ -238,6 +237,30 @@ class AUDACITY_DLL_API TrackListIterator
  protected:
    TrackList *l;
    TrackListNode *cur;
+};
+
+class AUDACITY_DLL_API TrackListConstIterator
+{
+public:
+   TrackListConstIterator(const TrackList * val = NULL)
+      : mIter(const_cast<TrackList*>(val))
+   {}
+   ~TrackListConstIterator() {}
+
+   // Iterate functions
+   const Track *First(const TrackList * val = NULL)
+   { return mIter.First(const_cast<TrackList*>(val)); }
+   const Track *StartWith(const Track * val)
+   { return mIter.StartWith(const_cast<Track*>(val)); }
+   const Track *Next(bool skiplinked = false)
+   { return mIter.Next(skiplinked); }
+   const Track *Prev(bool skiplinked = false)
+   { return mIter.Prev(skiplinked); }
+   const Track *Last(bool skiplinked = false)
+   { return mIter.Last(skiplinked); }
+
+private:
+   TrackListIterator mIter;
 };
 
 // TrackListCondIterator (base class for iterators that iterate over all tracks)

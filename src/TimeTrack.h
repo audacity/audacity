@@ -35,7 +35,7 @@ class TimeTrack: public Track {
     * copy-constructor to encapsulate this.
     * @param orig The original track to copy from
     */
-   TimeTrack(TimeTrack &orig);
+   TimeTrack(const TimeTrack &orig);
 
    virtual ~TimeTrack();
 
@@ -131,7 +131,7 @@ class TimeTrack: public Track {
     * @param orig the TimeTrack to copy from
     */
    void Init(const TimeTrack &orig);
-   virtual Track *Duplicate();
+   virtual Track *Duplicate() const;
 
    friend class TrackFactory;
 

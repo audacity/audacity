@@ -116,7 +116,7 @@ WaveTrack::WaveTrack(DirManager *projDirManager, sampleFormat format, double rat
    mAutoSaveIdent = 0;
 }
 
-WaveTrack::WaveTrack(WaveTrack &orig):
+WaveTrack::WaveTrack(const WaveTrack &orig):
    Track(orig)
    , mpSpectrumSettings(orig.mpSpectrumSettings
         ? new SpectrogramSettings(*orig.mpSpectrumSettings) : 0
@@ -362,7 +362,7 @@ void WaveTrack::SetSpectrumBounds(float min, float max)
    mSpectrumMax = max;
 }
 
-Track *WaveTrack::Duplicate()
+Track *WaveTrack::Duplicate() const
 {
    return new WaveTrack(*this);
 }

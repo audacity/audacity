@@ -22,7 +22,6 @@
 #include "Experimental.h"
 
 #include "DirManager.h"
-#include "UndoManager.h"
 #include "ViewInfo.h"
 #include "TrackPanelListener.h"
 #include "AudioIOListener.h"
@@ -85,11 +84,14 @@ class MixerBoard;
 class MixerBoardFrame;
 
 struct AudioIOStartStreamOptions;
+struct UndoState;
 
 class WaveTrackArray;
 class Regions;
 
 class LWSlider;
+class UndoManager;
+enum class UndoPush;
 
 AudacityProject *CreateNewAudacityProject();
 AUDACITY_DLL_API AudacityProject *GetActiveProject();
@@ -157,7 +159,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    AudioIOStartStreamOptions GetDefaultPlayOptions();
 
    TrackList *GetTracks() { return mTracks; }
-   UndoManager *GetUndoManager() { return &mUndoManager; }
+   UndoManager *GetUndoManager() { return mUndoManager.get(); }
 
    sampleFormat GetDefaultFormat() { return mDefaultFormat; }
 
@@ -183,7 +185,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    DirManager *GetDirManager();
    TrackFactory *GetTrackFactory();
    AdornedRulerPanel *GetRulerPanel();
-   Tags *GetTags();
+   const Tags *GetTags();
    int GetAudioIOToken() const;
    bool IsAudioActive() const;
    void SetAudioIOToken(int token);
@@ -399,7 +401,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    virtual ToolsToolBar * TP_GetToolsToolBar();
 
    virtual void TP_PushState(const wxString &longDesc, const wxString &shortDesc,
-                             int flags) override;
+                             UndoPush flags) override;
    virtual void TP_ModifyState(bool bWantsAutoSave);    // if true, writes auto-save file. Should set only if you really want the state change restored after
                                                         // a crash, as it can take many seconds for large (eg. 10 track-hours) projects
    virtual void TP_RedrawScrollbars();
@@ -486,8 +488,8 @@ public:
    static void AllProjectsDeleteLock();
    static void AllProjectsDeleteUnlock();
 
-   void PushState(const wxString &desc, const wxString &shortDesc,
-                  int flags = PUSH_AUTOSAVE);
+   void PushState(const wxString &desc, const wxString &shortDesc); // use UndoPush::AUTOSAVE
+   void PushState(const wxString &desc, const wxString &shortDesc, UndoPush flags);
    void RollbackState();
 
  private:
@@ -497,7 +499,7 @@ public:
    void InitialState();
    void ModifyState(bool bWantsAutoSave);    // if true, writes auto-save file. Should set only if you really want the state change restored after
                                              // a crash, as it can take many seconds for large (eg. 10 track-hours) projects
-   void PopState(TrackList * l);
+   void PopState(const UndoState &state);
 
    void UpdateLyrics();
    void UpdateMixerBoard();
@@ -524,7 +526,10 @@ public:
    wxMenu *mRecentFilesMenu;
 
    // Tags (artist name, song properties, MP3 ID3 info, etc.)
-   Tags *mTags;
+   // The structure may be shared with undo history entries
+   // To keep undo working correctly, always replace this with a new duplicate
+   // BEFORE doing any editing of it!
+   std::shared_ptr<Tags> mTags;
 
    // List of tracks and display info
    TrackList *mTracks;
@@ -546,7 +551,7 @@ public:
    static ODLock *msAllProjectDeleteMutex;
 
    // History/Undo manager
-   UndoManager mUndoManager;
+   std::unique_ptr<UndoManager> mUndoManager;
    bool mDirty;
 
    // Commands

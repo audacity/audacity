@@ -13,6 +13,7 @@
 
 class ToolsToolBar;
 class ControlToolBar;
+enum class UndoPush;
 
 class AUDACITY_DLL_API TrackPanelListener {
 
@@ -26,7 +27,7 @@ class AUDACITY_DLL_API TrackPanelListener {
    virtual ToolsToolBar * TP_GetToolsToolBar() = 0;
 
    virtual void TP_PushState(const wxString &shortDesc, const wxString &longDesc,
-                            int flags = PUSH_AUTOSAVE) = 0;
+                            UndoPush flags) = 0;
    virtual void TP_ModifyState(bool bWantsAutoSave) = 0;    // if true, writes auto-save file. Should set only if you really want the state change restored after
                                                             // a crash, as it can take many seconds for large (eg. 10 track-hours) projects
    virtual void TP_RedrawScrollbars() = 0;

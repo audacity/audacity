@@ -42,6 +42,7 @@
 #include "../images/Arrow.xpm"
 #include "../images/Empty9x16.xpm"
 #include "BatchCommands.h"
+#include "Track.h"
 #include "UndoManager.h"
 
 #include "Theme.h"

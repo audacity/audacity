@@ -79,7 +79,7 @@ private:
                  bool selectedOnly,
                  double t0,
                  double t1,
-                 Tags tags);
+                 const Tags &tags);
    /** \brief Takes an arbitrary text string and converts it to a form that can
     * be used as a file name, if necessary prompting the user to edit the file
     * name produced */

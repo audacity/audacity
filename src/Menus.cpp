@@ -119,6 +119,7 @@ simplifies construction of menu items.
 
 #include "Snap.h"
 
+#include "UndoManager.h"
 #include "WaveTrack.h"
 
 #if defined(EXPERIMENTAL_CRASH_REPORT)
@@ -1598,10 +1599,10 @@ void AudacityProject::CreateRecentFilesMenu(CommandManager *c)
 void AudacityProject::ModifyUndoMenuItems()
 {
    wxString desc;
-   int cur = mUndoManager.GetCurrentState();
+   int cur = GetUndoManager()->GetCurrentState();
 
-   if (mUndoManager.UndoAvailable()) {
-      mUndoManager.GetShortDescription(cur, &desc);
+   if (GetUndoManager()->UndoAvailable()) {
+      GetUndoManager()->GetShortDescription(cur, &desc);
       mCommandManager.Modify(wxT("Undo"),
                              wxString::Format(_("&Undo %s"),
                                               desc.c_str()));
@@ -1611,8 +1612,8 @@ void AudacityProject::ModifyUndoMenuItems()
                              wxString::Format(_("&Undo")));
    }
 
-   if (mUndoManager.RedoAvailable()) {
-      mUndoManager.GetShortDescription(cur+1, &desc);
+   if (GetUndoManager()->RedoAvailable()) {
+      GetUndoManager()->GetShortDescription(cur+1, &desc);
       mCommandManager.Modify(wxT("Redo"),
                              wxString::Format(_("&Redo %s"),
                                               desc.c_str()));
@@ -1756,16 +1757,16 @@ wxUint32 AudacityProject::GetUpdateFlags()
    if((msClipT1 - msClipT0) > 0.0)
       flags |= ClipboardFlag;
 
-   if (mUndoManager.UnsavedChanges())
+   if (GetUndoManager()->UnsavedChanges())
       flags |= UnsavedChangesFlag;
 
    if (!mLastEffect.IsEmpty())
       flags |= HasLastEffectFlag;
 
-   if (mUndoManager.UndoAvailable())
+   if (GetUndoManager()->UndoAvailable())
       flags |= UndoAvailableFlag;
 
-   if (mUndoManager.RedoAvailable())
+   if (GetUndoManager()->RedoAvailable())
       flags |= RedoAvailableFlag;
 
    if (ZoomInAvailable() && (flags & TracksExistFlag))
@@ -3761,7 +3762,7 @@ void AudacityProject::OnPrint()
 
 void AudacityProject::OnUndo()
 {
-   if (!mUndoManager.UndoAvailable()) {
+   if (!GetUndoManager()->UndoAvailable()) {
       wxMessageBox(_("Nothing to undo"));
       return;
    }
@@ -3771,8 +3772,8 @@ void AudacityProject::OnUndo()
       return;
    }
 
-   TrackList *l = mUndoManager.Undo(&mViewInfo.selectedRegion);
-   PopState(l);
+   const UndoState &state = GetUndoManager()->Undo(&mViewInfo.selectedRegion);
+   PopState(state);
 
    mTrackPanel->SetFocusedTrack(NULL);
    mTrackPanel->EnsureVisible(mTrackPanel->GetFirstSelectedTrack());
@@ -3787,7 +3788,7 @@ void AudacityProject::OnUndo()
 
 void AudacityProject::OnRedo()
 {
-   if (!mUndoManager.RedoAvailable()) {
+   if (!GetUndoManager()->RedoAvailable()) {
       wxMessageBox(_("Nothing to redo"));
       return;
    }
@@ -3796,8 +3797,8 @@ void AudacityProject::OnRedo()
       return;
    }
 
-   TrackList *l = mUndoManager.Redo(&mViewInfo.selectedRegion);
-   PopState(l);
+   const UndoState &state = GetUndoManager()->Redo(&mViewInfo.selectedRegion);
+   PopState(state);
 
    mTrackPanel->SetFocusedTrack(NULL);
    mTrackPanel->EnsureVisible(mTrackPanel->GetFirstSelectedTrack());
@@ -5262,7 +5263,7 @@ void AudacityProject::OnShowClipping()
 void AudacityProject::OnHistory()
 {
    if (!mHistoryWindow)
-      mHistoryWindow = new HistoryWindow(this, &mUndoManager);
+      mHistoryWindow = new HistoryWindow(this, GetUndoManager());
    mHistoryWindow->Show();
    mHistoryWindow->Raise();
    mHistoryWindow->UpdateDisplay();
@@ -5581,8 +5582,24 @@ void AudacityProject::OnImportRaw()
 
 void AudacityProject::OnEditMetadata()
 {
-   if (mTags->ShowEditDialog(this, _("Edit Metadata Tags"), true))
-      PushState(_("Edit Metadata Tags"), _("Metadata Tags"));
+   (void)DoEditMetadata(_("Edit Metadata Tags"), _("Metadata Tags"), true);
+}
+
+bool AudacityProject::DoEditMetadata
+(const wxString &title, const wxString &shortUndoDescription, bool force)
+{
+   // Back up my tags
+   auto newTags = mTags->Duplicate();
+
+   if (newTags->ShowEditDialog(this, title, force)) {
+      // Commit the change to project state only now.
+      mTags = newTags;
+      PushState(title, shortUndoDescription);
+
+      return true;
+   }
+
+   return false;
 }
 
 void AudacityProject::HandleMixAndRender(bool toNewTrack)

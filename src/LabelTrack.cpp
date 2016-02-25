@@ -58,6 +58,7 @@ for drawing different aspects of the label and its text box.
 #include "Project.h"
 #include "TrackArtist.h"
 #include "TrackPanel.h"
+#include "UndoManager.h"
 #include "commands/CommandManager.h"
 
 #include "effects/TimeWarper.h"
@@ -1132,7 +1133,7 @@ double LabelTrack::GetEndTime() const
    return end;
 }
 
-Track *LabelTrack::Duplicate()
+Track *LabelTrack::Duplicate() const
 {
    return new LabelTrack(*this);
 }
@@ -2066,7 +2067,7 @@ void LabelTrack::OnContextMenu(wxCommandEvent & evt)
       {
          p->PushState(_("Modified Label"),
                       _("Label Edit"),
-                      PUSH_CONSOLIDATE);
+                      UndoPush::CONSOLIDATE);
       }
       break;
 
@@ -2081,7 +2082,7 @@ void LabelTrack::OnContextMenu(wxCommandEvent & evt)
       {
          p->PushState(_("Modified Label"),
                       _("Label Edit"),
-                      true /* consolidate */);
+                      UndoPush::CONSOLIDATE);
       }
       break;
 
@@ -2093,7 +2094,7 @@ void LabelTrack::OnContextMenu(wxCommandEvent & evt)
          DeleteLabel(ndx);
          p->PushState(_("Deleted Label"),
                       _("Label Edit"),
-                      true /* consolidate */);
+                      UndoPush::CONSOLIDATE);
       }
       break;
    }

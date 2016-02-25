@@ -143,6 +143,8 @@ scroll information.  It also has some status flags.
 
 #include "FileDialog.h"
 
+#include "UndoManager.h"
+
 #include "toolbars/ToolManager.h"
 #include "toolbars/ControlToolBar.h"
 #include "toolbars/DeviceToolBar.h"
@@ -796,6 +798,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
      mSelectionFormat(gPrefs->Read(wxT("/SelectionFormat"), wxT(""))),
      mFrequencySelectionFormatName(gPrefs->Read(wxT("/FrequencySelectionFormatName"), wxT(""))),
      mBandwidthSelectionFormatName(gPrefs->Read(wxT("/BandwidthSelectionFormatName"), wxT(""))),
+     mUndoManager(safenew UndoManager),
      mDirty(false),
      mRuler(NULL),
      mTrackPanel(NULL),
@@ -1023,6 +1026,9 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    // MM: Give track panel the focus to ensure keyboard commands work
    mTrackPanel->SetFocus();
 
+   // Create tags object
+   mTags = std::make_shared<Tags>();
+
    InitialState();
    FixScrollbars();
    mRuler->SetLeftOffset(mTrackPanel->GetLeftOffset());  // bevel on AdornedRuler
@@ -1047,9 +1053,6 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    }
 #endif
    mIconized = false;
-
-   // Create tags object
-   mTags = new Tags();
 
    mTrackFactory = new TrackFactory(mDirManager, &mViewInfo);
 
@@ -1247,9 +1250,9 @@ bool AudacityProject::IsAudioActive() const
       gAudioIO->IsStreamActive(GetAudioIOToken());
 }
 
-Tags *AudacityProject::GetTags()
+const Tags *AudacityProject::GetTags()
 {
-   return mTags;
+   return mTags.get();
 }
 
 wxString AudacityProject::GetName()
@@ -2211,7 +2214,7 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
    // We may not bother to prompt the user to save, if the
    // project is now empty.
    if (event.CanVeto() && (mEmptyCanBeDirty || bHasTracks)) {
-      if (mUndoManager.UnsavedChanges()) {
+      if (GetUndoManager()->UnsavedChanges()) {
 
          wxString Message = _("Save changes before closing?");
          if( !bHasTracks )
@@ -2317,8 +2320,7 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
    delete mTrackFactory;
    mTrackFactory = NULL;
 
-   delete mTags;
-   mTags = NULL;
+   mTags.reset();
 
    delete mImportXMLTagHandler;
    mImportXMLTagHandler = NULL;
@@ -2336,7 +2338,7 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
 
    // This must be done before the following Deref() since it holds
    // references to the DirManager.
-   mUndoManager.ClearStates();
+   GetUndoManager()->ClearStates();
 
    // MM: Tell the DirManager it can now DELETE itself
    // if it finds it is no longer needed. If it is still
@@ -3179,7 +3181,7 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 XMLTagHandler *AudacityProject::HandleXMLChild(const wxChar *tag)
 {
    if (!wxStrcmp(tag, wxT("tags"))) {
-      return mTags;
+      return mTags.get();
    }
 
    if (!wxStrcmp(tag, wxT("wavetrack"))) {
@@ -3411,7 +3413,7 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
       bool bHasTracks = (iter.First() != NULL);
       if (!bHasTracks)
       {
-         if (mUndoManager.UnsavedChanges() && mEmptyCanBeDirty) {
+         if (GetUndoManager()->UnsavedChanges() && mEmptyCanBeDirty) {
             int result = wxMessageBox(_("Your project is now empty.\nIf saved, the project will have no tracks.\n\nTo save any previously open tracks:\nClick 'No', Edit > Undo until all tracks\nare open, then File > Save Project.\n\nSave anyway?"),
                                       _("Warning - Empty Project"),
                                       wxYES_NO | wxICON_QUESTION, this);
@@ -3596,7 +3598,7 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
          t = iter.Next();
       }
 
-      mUndoManager.StateSaved();
+      GetUndoManager()->StateSaved();
    }
 
    // If we get here, saving the project was successful, so we can DELETE
@@ -3790,12 +3792,40 @@ bool AudacityProject::Import(const wxString &fileName, WaveTrackArray* pTrackArr
 {
    Track **newTracks;
    int numTracks;
-   wxString errorMessage=wxT("");
+   wxString errorMessage = wxEmptyString;
+
+   // Backup Tags, before the import.  Be prepared to roll back changes.
+   struct TempTags {
+      TempTags(std::shared_ptr<Tags> & pTags_)
+         : pTags(pTags_)
+      {
+         oldTags = pTags;
+         if (oldTags)
+            pTags = oldTags->Duplicate();
+      }
+
+      ~TempTags()
+      {
+         if (oldTags) {
+            // roll back
+            pTags = oldTags;
+         }
+      }
+
+      void Commit()
+      {
+         oldTags.reset();
+      }
+
+      std::shared_ptr<Tags> & pTags;
+      std::shared_ptr<Tags> oldTags;
+   };
+   TempTags tempTags(mTags);
 
    numTracks = Importer::Get().Import(fileName,
                                             mTrackFactory,
                                             &newTracks,
-                                            mTags,
+                                            mTags.get(),
                                             errorMessage);
 
    if (!errorMessage.IsEmpty()) {
@@ -3811,9 +3841,17 @@ bool AudacityProject::Import(const wxString &fileName, WaveTrackArray* pTrackArr
 
    wxGetApp().AddFileToHistory(fileName);
 
+   // no more errors
+   tempTags.Commit();
+
    // for LOF ("list of files") files, do not import the file as if it
    // were an audio file itself
    if (fileName.AfterLast('.').IsSameAs(wxT("lof"), false)) {
+      // PRL: don't redundantly do the steps below, because we already
+      // did it in case of LOF, because of some weird recursion back to this
+      // same function.  I think this should be untangled.
+
+      // So Undo history push is not bypassed, despite appearances.
       return false;
    }
 
@@ -3827,6 +3865,7 @@ bool AudacityProject::Import(const wxString &fileName, WaveTrackArray* pTrackArr
       }
    }
 
+   // PRL: Undo history is incremented inside this:
    AddImportedTracks(fileName, newTracks, numTracks);
 
    int mode = gPrefs->Read(wxT("/AudioFiles/NormalizeOnLoad"), 0L);
@@ -3979,12 +4018,12 @@ void AudacityProject::InitialState()
       mImportXMLTagHandler = NULL;
    }
 
-   mUndoManager.ClearStates();
+   GetUndoManager()->ClearStates();
 
-   mUndoManager.PushState(mTracks, mViewInfo.selectedRegion,
+   GetUndoManager()->PushState(mTracks, mViewInfo.selectedRegion, mTags,
                           _("Created new project"), wxT(""));
 
-   mUndoManager.StateSaved();
+   GetUndoManager()->StateSaved();
 
    if (mHistoryWindow)
       mHistoryWindow->UpdateDisplay();
@@ -3996,11 +4035,16 @@ void AudacityProject::InitialState()
    this->UpdateMixerBoard();
 }
 
+void AudacityProject::PushState(const wxString &desc, const wxString &shortDesc)
+{
+   PushState(desc, shortDesc, UndoPush::AUTOSAVE);
+}
+
 void AudacityProject::PushState(const wxString &desc,
                                 const wxString &shortDesc,
-                                int flags )
+                                UndoPush flags )
 {
-   mUndoManager.PushState(mTracks, mViewInfo.selectedRegion,
+   GetUndoManager()->PushState(mTracks, mViewInfo.selectedRegion, mTags,
                           desc, shortDesc, flags);
 
    mDirty = true;
@@ -4025,7 +4069,7 @@ void AudacityProject::PushState(const wxString &desc,
 
    if (GetTracksFitVerticallyZoomed())
       this->DoZoomFitV();
-   if( (flags & PUSH_AUTOSAVE)!= 0)
+   if((flags & UndoPush::AUTOSAVE) != UndoPush::MINIMAL)
       AutoSave();
 }
 
@@ -4036,7 +4080,7 @@ void AudacityProject::RollbackState()
 
 void AudacityProject::ModifyState(bool bWantsAutoSave)
 {
-   mUndoManager.ModifyState(mTracks, mViewInfo.selectedRegion);
+   GetUndoManager()->ModifyState(mTracks, mViewInfo.selectedRegion, mTags);
    if (bWantsAutoSave)
       AutoSave();
 }
@@ -4044,10 +4088,15 @@ void AudacityProject::ModifyState(bool bWantsAutoSave)
 // LL:  Is there a memory leak here as "l" and "t" are not deleted???
 // Vaughan, 2010-08-29: No, as "l" is a TrackList* of an Undo stack state.
 //    Need to keep it and its tracks "t" available for Undo/Redo/SetStateTo.
-void AudacityProject::PopState(TrackList * l)
+void AudacityProject::PopState(const UndoState &state)
 {
+   // Restore tags
+   mTags = state.tags;
+
+   TrackList *const tracks = state.tracks.get();
+
    mTracks->Clear(true);
-   TrackListIterator iter(l);
+   TrackListIterator iter(tracks);
    Track *t = iter.First();
    bool odUsed = false;
    ODComputeSummaryTask* computeTask = NULL;
@@ -4096,9 +4145,9 @@ void AudacityProject::PopState(TrackList * l)
 
 void AudacityProject::SetStateTo(unsigned int n)
 {
-   TrackList *l =
-       mUndoManager.SetStateTo(n, &mViewInfo.selectedRegion);
-   PopState(l);
+   const UndoState &state =
+       GetUndoManager()->SetStateTo(n, &mViewInfo.selectedRegion);
+   PopState(state);
 
    HandleResize();
    mTrackPanel->SetFocusedTrack(NULL);
@@ -4699,7 +4748,7 @@ void AudacityProject::RefreshTPTrack(Track* pTrk, bool refreshbacking /*= true*/
 
 // TrackPanel callback method
 void AudacityProject::TP_PushState(const wxString &desc, const wxString &shortDesc,
-                                   int flags)
+                                   UndoPush flags)
 {
    PushState(desc, shortDesc, flags);
 }
@@ -4965,7 +5014,7 @@ void AudacityProject::SetTrackGain(Track * track, LWSlider * slider)
    if (link)
       link->SetGain(newValue);
 
-   PushState(_("Adjusted gain"), _("Gain"), PUSH_CONSOLIDATE);
+   PushState(_("Adjusted gain"), _("Gain"), UndoPush::CONSOLIDATE);
 
    GetTrackPanel()->RefreshTrack(track);
 }
@@ -4982,7 +5031,7 @@ void AudacityProject::SetTrackPan(Track * track, LWSlider * slider)
    if (link)
       link->SetPan(newValue);
 
-   PushState(_("Adjusted Pan"), _("Pan"), PUSH_CONSOLIDATE);
+   PushState(_("Adjusted Pan"), _("Pan"), UndoPush::CONSOLIDATE);
 
    GetTrackPanel()->RefreshTrack(track);
 }

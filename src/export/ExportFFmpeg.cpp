@@ -101,16 +101,16 @@ public:
    bool CheckFileName(wxFileName &filename, int format = 0);
 
    /// Format intialization
-   bool Init(const char *shortname, AudacityProject *project, Tags *metadata, int subformat);
+   bool Init(const char *shortname, AudacityProject *project, const Tags *metadata, int subformat);
 
    /// Codec intialization
    bool InitCodecs(AudacityProject *project);
 
    /// Writes metadata
-   bool AddTags(Tags *metadata);
+   bool AddTags(const Tags *metadata);
 
    /// Sets individual metadata values
-   void SetMetadata(Tags *tags, const char *name, const wxChar *tag);
+   void SetMetadata(const Tags *tags, const char *name, const wxChar *tag);
 
    /// Encodes audio
    bool EncodeAudioFrame(int16_t *pFrame, int frameSize);
@@ -145,7 +145,7 @@ public:
       double t0,
       double t1,
       MixerSpec *mixerSpec = NULL,
-      Tags *metadata = NULL,
+      const Tags *metadata = NULL,
       int subformat = 0) override;
 
 private:
@@ -256,7 +256,7 @@ bool ExportFFmpeg::CheckFileName(wxFileName & WXUNUSED(filename), int WXUNUSED(f
    return result;
 }
 
-bool ExportFFmpeg::Init(const char *shortname, AudacityProject *project, Tags *metadata, int subformat)
+bool ExportFFmpeg::Init(const char *shortname, AudacityProject *project, const Tags *metadata, int subformat)
 {
    int err;
    //FFmpegLibsInst->LoadLibs(NULL,true); //Loaded at startup or from Prefs now
@@ -312,7 +312,8 @@ bool ExportFFmpeg::Init(const char *shortname, AudacityProject *project, Tags *m
    if (!InitCodecs(project))
       return false;
 
-   if (metadata == NULL) metadata = project->GetTags();
+   if (metadata == NULL)
+      metadata = project->GetTags();
 
    // Add metadata BEFORE writing the header.
    // At the moment that works with ffmpeg-git and ffmpeg-0.5 for MP4.
@@ -792,7 +793,7 @@ bool ExportFFmpeg::EncodeAudioFrame(int16_t *pFrame, int frameSize)
 
 int ExportFFmpeg::Export(AudacityProject *project,
                        int channels, const wxString &fName,
-                       bool selectionOnly, double t0, double t1, MixerSpec *mixerSpec, Tags *metadata, int subformat)
+                       bool selectionOnly, double t0, double t1, MixerSpec *mixerSpec, const Tags *metadata, int subformat)
 {
    if (!CheckFFmpegPresence())
       return false;
@@ -873,7 +874,7 @@ void AddStringTagANSI(char field[], int size, wxString value)
       memcpy(field,value.mb_str(),(int)strlen(value.mb_str()) > size -1 ? size -1 : strlen(value.mb_str()));
 }
 
-bool ExportFFmpeg::AddTags(Tags *tags)
+bool ExportFFmpeg::AddTags(const Tags *tags)
 {
    if (tags == NULL)
    {
@@ -891,7 +892,7 @@ bool ExportFFmpeg::AddTags(Tags *tags)
    return true;
 }
 
-void ExportFFmpeg::SetMetadata(Tags *tags, const char *name, const wxChar *tag)
+void ExportFFmpeg::SetMetadata(const Tags *tags, const char *name, const wxChar *tag)
 {
    if (tags->HasTag(tag))
    {

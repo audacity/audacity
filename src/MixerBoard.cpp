@@ -27,6 +27,7 @@
 #endif
 #include "Project.h"
 #include "TrackPanel.h" // for EVT_TRACK_PANEL_TIMER
+#include "UndoManager.h"
 #include "WaveTrack.h"
 
 #include "widgets/Meter.h"
@@ -405,7 +406,7 @@ void MixerTrackCluster::HandleSliderGain(const bool bWantPushState /*= false*/)
    mProject->RefreshTPTrack(mLeftTrack);
 #endif
    if (bWantPushState)
-      mProject->TP_PushState(_("Moved gain slider"), _("Gain"), PUSH_CONSOLIDATE );
+      mProject->TP_PushState(_("Moved gain slider"), _("Gain"), UndoPush::CONSOLIDATE );
 }
 
 void MixerTrackCluster::HandleSliderPan(const bool bWantPushState /*= false*/)
@@ -424,7 +425,7 @@ void MixerTrackCluster::HandleSliderPan(const bool bWantPushState /*= false*/)
 #endif
 
    if (bWantPushState)
-      mProject->TP_PushState(_("Moved pan slider"), _("Pan"), PUSH_CONSOLIDATE );
+      mProject->TP_PushState(_("Moved pan slider"), _("Pan"), UndoPush::CONSOLIDATE );
 }
 
 void MixerTrackCluster::ResetMeter(const bool bResetClipping)

@@ -140,12 +140,12 @@ public:
                double t0,
                double t1,
                MixerSpec *mixerSpec = NULL,
-               Tags *metadata = NULL,
+               const Tags *metadata = NULL,
                int subformat = 0) override;
 
 private:
 
-   bool FillComment(AudacityProject *project, vorbis_comment *comment, Tags *metadata);
+   bool FillComment(AudacityProject *project, vorbis_comment *comment, const Tags *metadata);
 };
 
 ExportOGG::ExportOGG()
@@ -171,7 +171,7 @@ int ExportOGG::Export(AudacityProject *project,
                        double t0,
                        double t1,
                        MixerSpec *mixerSpec,
-                       Tags *metadata,
+                       const Tags *metadata,
                        int WXUNUSED(subformat))
 {
    double    rate    = project->GetRate();
@@ -341,7 +341,7 @@ wxWindow *ExportOGG::OptionsCreate(wxWindow *parent, int format)
    return safenew ExportOGGOptions(parent, format);
 }
 
-bool ExportOGG::FillComment(AudacityProject *project, vorbis_comment *comment, Tags *metadata)
+bool ExportOGG::FillComment(AudacityProject *project, vorbis_comment *comment, const Tags *metadata)
 {
    // Retrieve tags from project if not over-ridden
    if (metadata == NULL)
@@ -349,8 +349,10 @@ bool ExportOGG::FillComment(AudacityProject *project, vorbis_comment *comment, T
 
    vorbis_comment_init(comment);
 
-   wxString n, v;
-   for (bool cont = metadata->GetFirst(n, v); cont; cont = metadata->GetNext(n, v)) {
+   wxString n;
+   for (const auto &pair : metadata->GetRange()) {
+      n = pair.first;
+      const auto &v = pair.second;
       if (n == TAG_YEAR) {
          n = wxT("DATE");
       }

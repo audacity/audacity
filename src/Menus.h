@@ -320,6 +320,7 @@ void OnImportMIDI();
 void OnImportRaw();
 
 void OnEditMetadata();
+bool DoEditMetadata(const wxString &title, const wxString &shortUndoDescription, bool force);
 
 void OnMixAndRender();
 void OnMixAndRenderToNewTrack();

@@ -72,10 +72,10 @@ class AUDACITY_DLL_API WaveTrack : public Track {
    WaveTrack(DirManager * projDirManager,
              sampleFormat format = (sampleFormat)0,
              double rate = 0);
-   WaveTrack(WaveTrack &orig);
+   WaveTrack(const WaveTrack &orig);
 
    void Init(const WaveTrack &orig);
-   virtual Track *Duplicate();
+   virtual Track *Duplicate() const;
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
    void VirtualStereoInit();
 #endif
