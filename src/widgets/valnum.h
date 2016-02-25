@@ -144,7 +144,7 @@ namespace Private
 // The template argument T is just the type handled by the validator that will
 // inherit from this one.
 template <class B, typename T>
-class NumValidator final : public B
+class NumValidator /* final */ : public B
 {
 public:
     typedef B BaseValidator;
