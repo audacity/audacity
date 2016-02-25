@@ -77,7 +77,7 @@ using SpaceArray = std::vector <wxLongLong_t> ;
 // These flags control what extra to do on a PushState
 // Default is AUTOSAVE
 // Frequent/faster actions use CONSOLIDATE
-enum class UndoPush {
+enum class UndoPush : unsigned char {
    MINIMAL = 0,
    CONSOLIDATE = 1 << 0,
    AUTOSAVE = 1 << 1

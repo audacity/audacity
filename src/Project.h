@@ -91,7 +91,7 @@ class Regions;
 
 class LWSlider;
 class UndoManager;
-enum class UndoPush;
+enum class UndoPush : unsigned char;
 
 AudacityProject *CreateNewAudacityProject();
 AUDACITY_DLL_API AudacityProject *GetActiveProject();

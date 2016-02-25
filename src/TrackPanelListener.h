@@ -13,7 +13,7 @@
 
 class ToolsToolBar;
 class ControlToolBar;
-enum class UndoPush;
+enum class UndoPush : unsigned char;
 
 class AUDACITY_DLL_API TrackPanelListener {
 
