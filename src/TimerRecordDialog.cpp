@@ -345,7 +345,7 @@ void TimerRecordDialog::EnableDisableAutoControls(bool bEnable, int iControlGoup
 		}
 	}
 
-	// Enable or disable the Choice box
+	// Enable or disable the Choice box - if there is no Save or Export then this will be disabled
 	if (m_pTimerAutoSaveCheckBoxCtrl->GetValue() || m_pTimerAutoExportCheckBoxCtrl->GetValue()) {
 		m_pTimerAfterCompleteChoiceCtrl->Enable();
 	}
