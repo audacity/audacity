@@ -55,10 +55,8 @@ int Sequence::sMaxDiskBlockSize = 1048576;
 Sequence::Sequence(DirManager * projDirManager, sampleFormat format)
    : mDirManager(projDirManager)
    , mSampleFormat(format)
-   , mNumSamples(0)
    , mMinSamples(sMaxDiskBlockSize / SAMPLE_SIZE(mSampleFormat) / 2)
    , mMaxSamples(mMinSamples * 2)
-   , mErrorOpening(false)
 {
    mDirManager->Ref();
 }
@@ -68,11 +66,9 @@ Sequence::Sequence(DirManager * projDirManager, sampleFormat format)
 // from one project to another
 Sequence::Sequence(const Sequence &orig, DirManager *projDirManager)
    : mDirManager(projDirManager)
-   , mNumSamples(0)
    , mSampleFormat(orig.mSampleFormat)
    , mMinSamples(orig.mMinSamples)
    , mMaxSamples(orig.mMaxSamples)
-   , mErrorOpening(false)
 {
    mDirManager->Ref();
 

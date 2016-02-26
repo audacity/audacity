@@ -204,8 +204,6 @@ PrefsDialog::PrefsDialog
             wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 , mFactories(factories)
-, mCategories(NULL)
-, mUniquePage(NULL)
 , mTitlePrefix(titlePrefix)
 {
    wxASSERT(factories.size() > 0);
