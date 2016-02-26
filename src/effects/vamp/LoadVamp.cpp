@@ -266,7 +266,7 @@ Plugin *VampEffectsModule::FindPlugin(const wxString & path,
    Plugin *vp = PluginLoader::getInstance()->loadPlugin(key, 48000); // rate doesn't matter here
    if (!vp)
    {
-      return false;
+      return nullptr;
    }
 
    // We limit the listed plugin outputs to those whose results can

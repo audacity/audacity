@@ -299,7 +299,7 @@ ImportFileHandle *FLACImportPlugin::Open(const wxString &filename)
    int cnt;
    wxFile binaryFile;
    if (!binaryFile.Open(filename)) {
-      return false; // File not found
+      return nullptr; // File not found
    }
 
 #ifdef USE_LIBID3TAG
@@ -316,7 +316,7 @@ ImportFileHandle *FLACImportPlugin::Open(const wxString &filename)
 
    if (cnt == wxInvalidOffset || strncmp(buf, FLAC_HEADER, 4) != 0) {
       // File is not a FLAC file
-      return false;
+      return nullptr;
    }
 
    // Open the file for import
@@ -325,7 +325,7 @@ ImportFileHandle *FLACImportPlugin::Open(const wxString &filename)
    bool success = handle->Init();
    if (!success) {
       delete handle;
-      return NULL;
+      return nullptr;
    }
 
    return handle;
