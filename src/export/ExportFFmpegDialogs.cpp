@@ -124,7 +124,7 @@ enum FFmpegExportCtrlID {
 #define FFMPEG_EXPORT_CTRL_ID_FIRST_ENTRY(name, num)  wxT(#name)
 #undef FFMPEG_EXPORT_CTRL_ID_ENTRY
 #define FFMPEG_EXPORT_CTRL_ID_ENTRY(name)             wxT(#name)
-static const wxChar *FFmpegExportCtrlIDNames[] = {
+static const wxString FFmpegExportCtrlIDNames[] = {
    FFMPEG_EXPORT_CTRL_ID_ENTRIES
 };
 
@@ -499,7 +499,7 @@ FFmpegPresets::~FFmpegPresets()
    WriteXML(writer);
 }
 
-void FFmpegPresets::ImportPresets(wxString &filename)
+void FFmpegPresets::ImportPresets(const wxString &filename)
 {
    mPreset = NULL;
    mAbortImport = false;
@@ -513,7 +513,7 @@ void FFmpegPresets::ImportPresets(wxString &filename)
    }
 }
 
-void FFmpegPresets::ExportPresets(wxString &filename)
+void FFmpegPresets::ExportPresets(const wxString &filename)
 {
    XMLFileWriter writer;
    // FIXME: Catch XMLFileWriterException
@@ -545,7 +545,7 @@ void FFmpegPresets::DeletePreset(wxString &name)
    }
 }
 
-FFmpegPreset *FFmpegPresets::FindPreset(wxString &name)
+FFmpegPreset *FFmpegPresets::FindPreset(const wxString &name)
 {
    FFmpegPresetMap::iterator iter = mPresets.find(name);
    if (iter != mPresets.end())
@@ -556,14 +556,14 @@ FFmpegPreset *FFmpegPresets::FindPreset(wxString &name)
    return NULL;
 }
 
-void FFmpegPresets::SavePreset(ExportFFmpegOptions *parent, wxString &name)
+void FFmpegPresets::SavePreset(ExportFFmpegOptions *parent, const wxString &name)
 {
    wxString format;
    wxString codec;
    FFmpegPreset *preset = FindPreset(name);
    if (preset)
    {
-      wxString query = wxString::Format(_("Overwrite preset '%s'?"),name.c_str());
+      wxString query = wxString::Format(_("Overwrite preset '%s'?"), name);
       int action = wxMessageBox(query,_("Confirm Overwrite"),wxYES_NO | wxCENTRE);
       if (action == wxNO) return;
    }
@@ -652,12 +652,12 @@ void FFmpegPresets::SavePreset(ExportFFmpegOptions *parent, wxString &name)
    }
 }
 
-void FFmpegPresets::LoadPreset(ExportFFmpegOptions *parent, wxString &name)
+void FFmpegPresets::LoadPreset(ExportFFmpegOptions *parent, const wxString &name)
 {
    FFmpegPreset *preset = FindPreset(name);
    if (!preset)
    {
-      wxMessageBox(wxString::Format(_("Preset '%s' does not exist."),name.c_str()));
+      wxMessageBox(wxString::Format(_("Preset '%s' does not exist."), name));
       return;
    }
 
@@ -731,7 +731,7 @@ void FFmpegPresets::LoadPreset(ExportFFmpegOptions *parent, wxString &name)
    }
 }
 
-bool FFmpegPresets::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
+bool FFmpegPresets::HandleXMLTag(const wxString &tag, const wxArrayString &attrs)
 {
    if (mAbortImport)
    {
@@ -745,20 +745,17 @@ bool FFmpegPresets::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 
    if (!wxStrcmp(tag,wxT("preset")))
    {
-      while (*attrs)
+      for (size_t i = 0; i < attrs.GetCount() / 2; ++i)
       {
-         const wxChar *attr = *attrs++;
-         wxString value = *attrs++;
-
-         if (!value)
-            break;
+         const wxString &attr = attrs[2*i];
+         const wxString &value = attrs[2*i+1];
 
          if (!wxStrcmp(attr,wxT("name")))
          {
             mPreset = FindPreset(value);
             if (mPreset)
             {
-               wxString query = wxString::Format(_("Replace preset '%s'?"), value.c_str());
+               wxString query = wxString::Format(_("Replace preset '%s'?"), value);
                int action = wxMessageBox(query, _("Confirm Overwrite"), wxYES_NO | wxCANCEL | wxCENTRE);
                if (action == wxCANCEL)
                {
@@ -785,13 +782,10 @@ bool FFmpegPresets::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    if (!wxStrcmp(tag,wxT("setctrlstate")) && mPreset)
    {
       long id = -1;
-      while (*attrs)
+      for (size_t i = 0; i < attrs.GetCount() / 2; ++i)
       {
-         const wxChar *attr = *attrs++;
-         const wxChar *value = *attrs++;
-
-         if (!value)
-            break;
+         const wxString &attr = attrs[2*i];
+         const wxString &value = attrs[2*i+1];
 
          if (!wxStrcmp(attr,wxT("id")))
          {
@@ -811,7 +805,7 @@ bool FFmpegPresets::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    return false;
 }
 
-XMLTagHandler *FFmpegPresets::HandleXMLChild(const wxChar *tag)
+XMLTagHandler *FFmpegPresets::HandleXMLChild(const wxString &tag)
 {
    if (mAbortImport)
    {
@@ -1173,8 +1167,6 @@ CompatibilityEntry ExportFFmpegOptions::CompatibilityList[] =
    { wxT("wav"), AV_CODEC_ID_FLAC },
    { wxT("wav"), AV_CODEC_ID_ADPCM_SWF },
    { wxT("wav"), AV_CODEC_ID_VORBIS },
-
-   { NULL, AV_CODEC_ID_NONE }
 };
 
 /// AAC profiles
@@ -1186,7 +1178,7 @@ int ExportFFmpegOptions::iAACProfileValues[] = {
 };
 
 /// Names of AAC profiles to be displayed
-const wxChar *ExportFFmpegOptions::iAACProfileNames[] = {
+const wxString ExportFFmpegOptions::iAACProfileNames[] = {
    _("LC"),
    _("Main"),
    /*_("SSR"),*/ //SSR is not supported
@@ -1292,7 +1284,7 @@ ApplicableFor ExportFFmpegOptions::apptable[] =
 };
 
 /// Prediction order method - names. Labels are indices of this array.
-const wxChar *ExportFFmpegOptions::PredictionOrderMethodNames[] = { _("Estimate"), _("2-level"), _("4-level"), _("8-level"), _("Full search"), _("Log search")};
+const wxString ExportFFmpegOptions::PredictionOrderMethodNames[] = { _("Estimate"), _("2-level"), _("4-level"), _("8-level"), _("Full search"), _("Log search")};
 
 
 ExportFFmpegOptions::~ExportFFmpegOptions()
@@ -1358,7 +1350,7 @@ void ExportFFmpegOptions::FetchFormatList()
       if (ofmt->audio_codec != AV_CODEC_ID_NONE)
       {
          mFormatNames.Add(wxString::FromUTF8(ofmt->name));
-         mFormatLongNames.Add(wxString::Format(wxT("%s - %s"),mFormatNames.Last().c_str(),wxString::FromUTF8(ofmt->long_name).c_str()));
+         mFormatLongNames.Add(wxString::Format(wxT("%s - %s"), mFormatNames.Last(), wxString::FromUTF8(ofmt->long_name)));
       }
    }
    // Show all formats
@@ -1378,7 +1370,7 @@ void ExportFFmpegOptions::FetchCodecList()
       if (codec->type == AVMEDIA_TYPE_AUDIO && av_codec_is_encoder(codec))
       {
          mCodecNames.Add(wxString::FromUTF8(codec->name));
-         mCodecLongNames.Add(wxString::Format(wxT("%s - %s"),mCodecNames.Last().c_str(),wxString::FromUTF8(codec->long_name).c_str()));
+         mCodecLongNames.Add(wxString::Format(wxT("%s - %s"), mCodecNames.Last(), wxString::FromUTF8(codec->long_name)));
       }
    }
    // Show all codecs
@@ -1561,7 +1553,7 @@ void ExportFFmpegOptions::FindSelectedFormat(wxString **name, wxString **longnam
    wxString selfmt = mFormatList->GetString(selections[0]);
 
    // Find it's index
-   int nFormat = mFormatNames.Index(selfmt.c_str());
+   int nFormat = mFormatNames.Index(selfmt);
    if (nFormat == wxNOT_FOUND) return;
 
    // Return short name and description
@@ -1582,7 +1574,7 @@ void ExportFFmpegOptions::FindSelectedCodec(wxString **name, wxString **longname
    wxString selcdc = mCodecList->GetString(selections[0]);
 
    // Find it's index
-   int nCodec = mCodecNames.Index(selcdc.c_str());
+   int nCodec = mCodecNames.Index(selcdc);
    if (nCodec == wxNOT_FOUND) return;
 
    // Return short name and description
@@ -1592,7 +1584,7 @@ void ExportFFmpegOptions::FindSelectedCodec(wxString **name, wxString **longname
 
 ///
 ///
-int ExportFFmpegOptions::FetchCompatibleCodecList(const wxChar *fmt, AVCodecID id)
+int ExportFFmpegOptions::FetchCompatibleCodecList(const wxString &fmt, AVCodecID id)
 {
    // By default assume that id is not in the list
    int index = -1;
@@ -1604,7 +1596,7 @@ int ExportFFmpegOptions::FetchCompatibleCodecList(const wxChar *fmt, AVCodecID i
    // Zero - format is not found at all
    int found = 0;
    wxString str(fmt);
-   for (int i = 0; CompatibilityList[i].fmt != NULL; i++)
+   for (size_t i = 0; i < WXSIZEOF(CompatibilityList); ++i)
    {
       if (str.Cmp(CompatibilityList[i].fmt) == 0)
       {
@@ -1624,7 +1616,7 @@ int ExportFFmpegOptions::FetchCompatibleCodecList(const wxChar *fmt, AVCodecID i
             // If it was selected - remember it's NEW index
             if ((id >= 0) && codec->id == id) index = mShownCodecNames.GetCount();
             mShownCodecNames.Add(wxString::FromUTF8(codec->name));
-            mShownCodecLongNames.Add(wxString::Format(wxT("%s - %s"),mShownCodecNames.Last().c_str(),wxString::FromUTF8(codec->long_name).c_str()));
+            mShownCodecLongNames.Add(wxString::Format(wxT("%s - %s"), mShownCodecNames.Last(), wxString::FromUTF8(codec->long_name)));
          }
       }
    }
@@ -1640,7 +1632,7 @@ int ExportFFmpegOptions::FetchCompatibleCodecList(const wxChar *fmt, AVCodecID i
             {
                if ((id >= 0) && codec->id == id) index = mShownCodecNames.GetCount();
                mShownCodecNames.Add(wxString::FromUTF8(codec->name));
-               mShownCodecLongNames.Add(wxString::Format(wxT("%s - %s"),mShownCodecNames.Last().c_str(),wxString::FromUTF8(codec->long_name).c_str()));
+               mShownCodecLongNames.Add(wxString::Format(wxT("%s - %s"), mShownCodecNames.Last(), wxString::FromUTF8(codec->long_name)));
             }
          }
       }
@@ -1649,7 +1641,7 @@ int ExportFFmpegOptions::FetchCompatibleCodecList(const wxChar *fmt, AVCodecID i
    // This allows us to provide limited support for NEW formats without modifying the compatibility list
    else if (found == 0)
    {
-      wxCharBuffer buf = str.ToUTF8();
+      wxScopedCharBuffer buf = str.utf8_str();
       AVOutputFormat *format = av_guess_format(buf,NULL,NULL);
       if (format != NULL)
       {
@@ -1658,7 +1650,7 @@ int ExportFFmpegOptions::FetchCompatibleCodecList(const wxChar *fmt, AVCodecID i
          {
             if ((id >= 0) && codec->id == id) index = mShownCodecNames.GetCount();
             mShownCodecNames.Add(wxString::FromUTF8(codec->name));
-            mShownCodecLongNames.Add(wxString::Format(wxT("%s - %s"),mShownCodecNames.Last().c_str(),wxString::FromUTF8(codec->long_name).c_str()));
+            mShownCodecLongNames.Add(wxString::Format(wxT("%s - %s"),mShownCodecNames.Last(), wxString::FromUTF8(codec->long_name)));
          }
       }
    }
@@ -1680,7 +1672,7 @@ int ExportFFmpegOptions::FetchCompatibleFormatList(AVCodecID id, wxString *selfm
    ofmt = NULL;
    wxArrayString FromList;
    // Find all formats compatible to this codec in compatibility list
-   for (int i = 0; CompatibilityList[i].fmt != NULL; i++)
+   for (size_t i = 0; i < WXSIZEOF(CompatibilityList); ++i)
    {
       if (CompatibilityList[i].codec == id || CompatibilityList[i].codec == AV_CODEC_ID_NONE)
       {
@@ -1688,13 +1680,13 @@ int ExportFFmpegOptions::FetchCompatibleFormatList(AVCodecID id, wxString *selfm
          FromList.Add(CompatibilityList[i].fmt);
          mShownFormatNames.Add(CompatibilityList[i].fmt);
          AVOutputFormat *tofmt = av_guess_format(wxString(CompatibilityList[i].fmt).ToUTF8(),NULL,NULL);
-         if (tofmt != NULL) mShownFormatLongNames.Add(wxString::Format(wxT("%s - %s"),CompatibilityList[i].fmt,wxString::FromUTF8(tofmt->long_name).c_str()));
+         if (tofmt != NULL) mShownFormatLongNames.Add(wxString::Format(wxT("%s - %s"), CompatibilityList[i].fmt, wxString::FromUTF8(tofmt->long_name)));
       }
    }
    bool found = false;
    if (selfmt != NULL)
    {
-      for (int i = 0; CompatibilityList[i].fmt != NULL; i++)
+      for (size_t i = 0; i < WXSIZEOF(CompatibilityList); ++i)
       {
          if (!selfmt->Cmp(CompatibilityList[i].fmt))
          {
@@ -1725,7 +1717,7 @@ int ExportFFmpegOptions::FetchCompatibleFormatList(AVCodecID id, wxString *selfm
             {
                if ((selfmt != NULL) && (selfmt->Cmp(wxString::FromUTF8(ofmt->name)) == 0)) index = mShownFormatNames.GetCount();
                mShownFormatNames.Add(wxString::FromUTF8(ofmt->name));
-               mShownFormatLongNames.Add(wxString::Format(wxT("%s - %s"),mShownFormatNames.Last().c_str(),wxString::FromUTF8(ofmt->long_name).c_str()));
+               mShownFormatLongNames.Add(wxString::Format(wxT("%s - %s"), mShownFormatNames.Last(), wxString::FromUTF8(ofmt->long_name)));
             }
          }
       }
@@ -1746,7 +1738,7 @@ void ExportFFmpegOptions::OnDeletePreset(wxCommandEvent& WXUNUSED(event))
       return;
    }
 
-   wxString query = wxString::Format(_("Delete preset '%s'?"),presetname.c_str());
+   wxString query = wxString::Format(_("Delete preset '%s'?"), presetname);
    int action = wxMessageBox(query,_("Confirm Deletion"),wxYES_NO | wxCENTRE);
    if (action == wxNO) return;
 
@@ -1769,7 +1761,7 @@ void ExportFFmpegOptions::OnSavePreset(wxCommandEvent& WXUNUSED(event))
       return;
    }
    mPresets->SavePreset(this,name);
-   int index = mPresetNames->Index(name.c_str(),false);
+   int index = mPresetNames->Index(name, false);
    if (index == -1)
    {
       mPresetNames->Add(name);
@@ -1902,7 +1894,7 @@ void ExportFFmpegOptions::DoOnFormatList()
       mFormatName->SetLabel(wxString(_("Failed to guess format")));
       return;
    }
-   mFormatName->SetLabel(wxString::Format(wxT("%s"),selfmtlong->c_str()));
+   mFormatName->SetLabel(wxString::Format(wxT("%s"), selfmtlong));
    int selcdcid = -1;
 
    if (selcdc != NULL)
@@ -1913,7 +1905,7 @@ void ExportFFmpegOptions::DoOnFormatList()
          selcdcid = cdc->id;
       }
    }
-   int newselcdc = FetchCompatibleCodecList(selfmt->c_str(), (AVCodecID)selcdcid);
+   int newselcdc = FetchCompatibleCodecList(*selfmt, (AVCodecID)selcdcid);
    if (newselcdc >= 0) mCodecList->Select(newselcdc);
 
    AVCodec *cdc = NULL;
@@ -1946,7 +1938,7 @@ void ExportFFmpegOptions::DoOnCodecList()
       mCodecName->SetLabel(wxString(_("Failed to find the codec")));
       return;
    }
-   mCodecName->SetLabel(wxString::Format(wxT("[%d] %s"), (int) cdc->id,selcdclong->c_str()));
+   mCodecName->SetLabel(wxString::Format(wxT("[%d] %s"), static_cast<int>(cdc->id), selcdclong));
 
    if (selfmt != NULL)
    {

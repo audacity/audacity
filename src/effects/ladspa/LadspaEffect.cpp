@@ -56,7 +56,7 @@ effects from this one class.
 // ============================================================================
 // List of effects that ship with Audacity.  These will be autoregistered.
 // ============================================================================
-const static wxChar *kShippedEffects[] =
+static const wxString kShippedEffects[] =
 {
    wxT("sc4_1882.dll"),
 };
@@ -159,7 +159,7 @@ bool LadspaEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
    wxArrayString pathList = GetSearchPaths();
    wxArrayString files;
 
-   for (int i = 0; i < WXSIZEOF(kShippedEffects); i++)
+   for (size_t i = 0; i < WXSIZEOF(kShippedEffects); ++i)
    {
       files.Clear();
       pm.FindFilesInPathList(kShippedEffects[i], pathList, files);
@@ -611,7 +611,7 @@ LadspaEffect::~LadspaEffect()
 
 wxString LadspaEffect::GetPath()
 {
-   return wxString::Format(wxT("%s;%d"), mPath.c_str(), mIndex);
+   return wxString::Format(wxT("%s;%d"), mPath, mIndex);
 }
 
 wxString LadspaEffect::GetSymbol()

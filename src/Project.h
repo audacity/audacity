@@ -133,8 +133,8 @@ class ImportXMLTagHandler final : public XMLTagHandler
  public:
    ImportXMLTagHandler(AudacityProject* pProject) { mProject = pProject; }
 
-   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
-   XMLTagHandler *HandleXMLChild(const wxChar * WXUNUSED(tag))  override { return NULL; }
+   bool HandleXMLTag(const wxString &tag, const wxArrayString &attrs) override;
+   XMLTagHandler *HandleXMLChild(const wxString &WXUNUSED(tag)) override { return NULL; }
 
    // Don't want a WriteXML method because ImportXMLTagHandler is not a WaveTrack.
    // <import> tags are instead written by AudacityProject::WriteXML.
@@ -382,7 +382,7 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    void FinishAutoScroll();
    void FixScrollbars();
 
-   void SafeDisplayStatusMessage(const wxChar *msg);
+   void SafeDisplayStatusMessage(const wxString &msg);
 
    double ScrollingLowerBoundTime() const;
    // How many pixels are covered by the period from lowermost scrollable time, to the given time:
@@ -467,8 +467,8 @@ public:
 
    // XMLTagHandler callback methods
 
-   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
-   XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
+   bool HandleXMLTag(const wxString &tag, const wxArrayString &attrs) override;
+   XMLTagHandler *HandleXMLChild(const wxString &tag) override;
    void WriteXML(XMLWriter &xmlFile) /* not override */;
 
    void WriteXMLHeader(XMLWriter &xmlFile);

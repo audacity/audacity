@@ -1849,7 +1849,7 @@ void TrackPanel::SetCursorAndTipWhenSelectTool( Track * t,
       /* i18n-hint: %s is usually replaced by "Ctrl+P" for Windows/Linux, "Command+," for Mac */
       tip = wxString::Format(
          _("Multi-Tool Mode: %s for Mouse and Keyboard Preferences."),
-         keyStr.c_str());
+         keyStr);
       // Later in this function we may point to some other string instead.
    }
 
@@ -3833,7 +3833,7 @@ void TrackPanel::HandleSlide(wxMouseEvent & event)
             _("left");
          /* i18n-hint: %s is a direction like left or right */
          msg.Printf(_("Time shifted tracks/clips %s %.02f seconds"),
-                    direction.c_str(), fabs(mHSlideAmount));
+                    direction, fabs(mHSlideAmount));
          consolidate = true;
       }
       MakeParentPushState(msg, _("Time-Shift"),
@@ -5608,8 +5608,8 @@ void TrackPanel::HandleRearrange(wxMouseEvent & event)
          wxString dir;
          dir = mRearrangeCount < 0 ? _("up") : _("down");
          MakeParentPushState(wxString::Format(_("Moved '%s' %s"),
-            mCapturedTrack->GetName().c_str(),
-            dir.c_str()),
+            mCapturedTrack->GetName(),
+            dir),
             _("Move Track"));
       }
 
@@ -7596,7 +7596,7 @@ void TrackPanel::TimerUpdateScrubbing(double playPos)
 #endif
             mMaxScrubSpeed;
 
-      const wxChar *format =
+      const wxString format =
 #ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
          mSmoothScrollingScrub
          ? seeking
@@ -8682,7 +8682,7 @@ static int channels[] = { Track::LeftChannel, Track::RightChannel,
    Track::MonoChannel
 };
 
-static const wxChar *channelmsgs[] = { _("Left Channel"), _("Right Channel"),
+static const wxString channelmsgs[] = { _("Left Channel"), _("Right Channel"),
    _("Mono")
 };
 
@@ -8693,7 +8693,7 @@ void TrackPanel::OnChannelChange(wxCommandEvent & event)
    wxASSERT(mPopupMenuTarget);
    mPopupMenuTarget->SetChannel(channels[id - OnChannelLeftID]);
    MakeParentPushState(wxString::Format(_("Changed '%s' to %s"),
-                        mPopupMenuTarget->GetName().c_str(),
+                        mPopupMenuTarget->GetName(),
                         channelmsgs[id - OnChannelLeftID]),
                         _("Channel"));
    Refresh(false);
@@ -8723,7 +8723,7 @@ void TrackPanel::OnSwapChannels(wxCommandEvent & WXUNUSED(event))
       SetFocusedTrack(partner);
 
    MakeParentPushState(wxString::Format(_("Swapped Channels in '%s'"),
-                                        mPopupMenuTarget->GetName().c_str()),
+                                        mPopupMenuTarget->GetName()),
                        _("Swap Channels"));
 
 }
@@ -8733,7 +8733,7 @@ void TrackPanel::OnSplitStereo(wxCommandEvent & WXUNUSED(event))
 {
    SplitStereo(true);
    MakeParentPushState(wxString::Format(_("Split stereo track '%s'"),
-                                        mPopupMenuTarget->GetName().c_str()),
+                                        mPopupMenuTarget->GetName()),
                        _("Split"));
 }
 
@@ -8742,7 +8742,7 @@ void TrackPanel::OnSplitStereoMono(wxCommandEvent & WXUNUSED(event))
 {
    SplitStereo(false);
    MakeParentPushState(wxString::Format(_("Split Stereo to Mono '%s'"),
-                                        mPopupMenuTarget->GetName().c_str()),
+                                        mPopupMenuTarget->GetName()),
                        _("Split to Mono"));
 }
 
@@ -8837,8 +8837,7 @@ void TrackPanel::OnMergeStereo(wxCommandEvent & WXUNUSED(event))
          }
 
       MakeParentPushState(wxString::Format(_("Made '%s' a stereo track"),
-                                           mPopupMenuTarget->GetName().
-                                           c_str()),
+                                           mPopupMenuTarget->GetName()),
                           _("Make Stereo"));
    } else
       mPopupMenuTarget->SetLinked(false);
@@ -8892,7 +8891,7 @@ void TrackPanel::OnSpectrogramSettings(wxCommandEvent &)
 
 ///  Set the Display mode based on the menu choice in the Track Menu.
 ///  Note that gModes MUST BE IN THE SAME ORDER AS THE MENU CHOICES!!
-///  const wxChar *gModes[] = { wxT("waveform"), wxT("waveformDB"),
+///  const wxString gModes[] = { wxT("waveform"), wxT("waveformDB"),
 ///  wxT("spectrum"), wxT("pitch") };
 void TrackPanel::OnSetDisplay(wxCommandEvent & event)
 {
@@ -8959,7 +8958,7 @@ void TrackPanel::SetRate(Track * pTrack, double rate)
    // Separate conversion of "rate" enables changing the decimals without affecting i18n
    wxString rateString = wxString::Format(wxT("%.3f"), rate);
    MakeParentPushState(wxString::Format(_("Changed '%s' to %s Hz"),
-                                        pTrack->GetName().c_str(), rateString.c_str()),
+                                        pTrack->GetName(), rateString),
                        _("Rate Change"));
 }
 
@@ -9002,8 +9001,7 @@ void TrackPanel::OnFormatChange(wxCommandEvent & event)
    }
 
    MakeParentPushState(wxString::Format(_("Changed '%s' to %s"),
-                                        mPopupMenuTarget->GetName().
-                                        c_str(),
+                                        mPopupMenuTarget->GetName(),
                                         GetSampleFormatStr(newFormat)),
                        _("Format Change"));
 
@@ -9344,8 +9342,8 @@ void TrackPanel::OnSetName(wxCommandEvent & WXUNUSED(event))
             pMixerBoard->UpdateName((WaveTrack*)t);
 
          MakeParentPushState(wxString::Format(_("Renamed '%s' to '%s'"),
-                                              oldName.c_str(),
-                                              newName.c_str()),
+                                              oldName,
+                                              newName),
                              _("Name Change"));
 
          Refresh(false);

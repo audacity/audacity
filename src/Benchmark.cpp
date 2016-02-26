@@ -57,7 +57,7 @@ private:
    void OnClear( wxCommandEvent &event );
    void OnClose( wxCommandEvent &event );
 
-   void Printf(const wxChar *format, ...);
+   void Printf(const wxString &format, ...);
    void HoldPrint(bool hold);
    void FlushPrint();
 
@@ -266,7 +266,7 @@ void BenchmarkDialog::OnClear(wxCommandEvent & WXUNUSED(event))
    mText->Clear();
 }
 
-void BenchmarkDialog::Printf(const wxChar *format, ...)
+void BenchmarkDialog::Printf(const wxString &format, ...)
 {
    va_list argptr;
    va_start(argptr, format);

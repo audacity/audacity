@@ -19,7 +19,7 @@
 // ============================================================================
 // List of effects that ship with Audacity.  These will be autoregistered.
 // ============================================================================
-const static wxChar *kShippedEffects[] =
+static const wxString kShippedEffects[] =
 {
    wxT("adjustable-fade.ny"),
    wxT("beat.ny"),
@@ -169,7 +169,7 @@ bool NyquistEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
       RegisterPlugin(pm, NYQUIST_PROMPT_ID);
    }
 
-   for (int i = 0; i < WXSIZEOF(kShippedEffects); i++)
+   for (size_t i = 0; i < WXSIZEOF(kShippedEffects); ++i)
    {
       files.Clear();
       pm.FindFilesInPathList(kShippedEffects[i], pathList, files);

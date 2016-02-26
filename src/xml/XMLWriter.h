@@ -28,7 +28,6 @@ class AUDACITY_DLL_API XMLWriter /* not final */ {
    virtual void EndTag(const wxString &name);
 
    virtual void WriteAttr(const wxString &name, const wxString &value);
-   virtual void WriteAttr(const wxString &name, const wxChar *value);
 
    virtual void WriteAttr(const wxString &name, int value);
    virtual void WriteAttr(const wxString &name, bool value);

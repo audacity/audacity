@@ -96,7 +96,7 @@
 
 #define DESC _("List of Files in basic text format")
 
-static const wxChar *exts[] =
+static const wxString exts[] =
 {
    wxT("lof")
 };

@@ -55,7 +55,7 @@ with changes in the SelectionBar.
 
 IMPLEMENT_CLASS(SelectionBar, ToolBar);
 
-const static wxChar *numbers[] =
+static const wxString numbers[] =
 {
    wxT("0"), wxT("1"), wxT("2"), wxT("3"), wxT("4"),
    wxT("5"), wxT("6"), wxT("7"), wxT("8"), wxT("9")
@@ -239,7 +239,7 @@ void SelectionBar::Populate()
    mSnapTo->SetName(_("Snap To"));
    mSnapTo->SetSelection(mListener ? mListener->AS_GetSnapTo() : SNAP_OFF);
    #if wxUSE_TOOLTIPS
-      mSnapTo->SetToolTip(wxString::Format(_("Snap Clicks/Selections to %s"), formatName.c_str()));
+      mSnapTo->SetToolTip(wxString::Format(_("Snap Clicks/Selections to %s"), formatName));
    #endif
 
    mSnapTo->Connect(wxEVT_SET_FOCUS,
@@ -374,7 +374,7 @@ void SelectionBar::OnUpdate(wxCommandEvent &evt)
    mListener->AS_SetSelectionFormat(format);
 
 #if wxUSE_TOOLTIPS
-   mSnapTo->SetToolTip(wxString::Format(_("Snap Clicks/Selections to %s"), format.c_str()));
+   mSnapTo->SetToolTip(wxString::Format(_("Snap Clicks/Selections to %s"), format));
 #endif
 
    // ToolBar::ReCreateButtons() will get rid of our sizers and controls
@@ -459,7 +459,7 @@ double SelectionBar::GetRightTime()
    }
 }
 
-void SelectionBar::SetField(const wxChar *msg, int fieldNum)
+void SelectionBar::SetField(const wxString &msg, int fieldNum)
 {
    if (fieldNum < 0 || fieldNum >= 10)
       return;

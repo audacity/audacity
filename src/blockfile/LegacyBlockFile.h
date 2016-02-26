@@ -60,7 +60,7 @@ class LegacyBlockFile final : public BlockFile {
    wxLongLong GetSpaceUsage() override;
    void Recover() override;
 
-   static BlockFile *BuildFromXML(const wxString &dir, const wxChar **attrs,
+   static BlockFile *BuildFromXML(const wxString &dir, const wxArrayString &attrs,
                                   sampleCount len,
                                   sampleFormat format);
 

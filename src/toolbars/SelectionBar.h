@@ -44,7 +44,7 @@ class SelectionBar final : public ToolBar {
    void SetTimes(double start, double end, double audio);
    double GetLeftTime();
    double GetRightTime();
-   void SetField(const wxChar *msg, int fieldNum);
+   void SetField(const wxString &msg, int fieldNum);
    void SetSnapTo(int);
    void SetSelectionFormat(const wxString & format);
    void SetRate(double rate);

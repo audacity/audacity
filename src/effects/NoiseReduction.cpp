@@ -94,8 +94,8 @@ enum DiscriminationMethod {
    DM_DEFAULT_METHOD = DM_SECOND_GREATEST,
 };
 
-const struct DiscriminationMethodInfo {
-   const wxChar *name;
+static const struct DiscriminationMethodInfo {
+	wxString name;
 } discriminationMethodInfo[DM_N_METHODS] = {
       { _("Median") },
       { _("Second greatest") },
@@ -104,7 +104,7 @@ const struct DiscriminationMethodInfo {
 
 // magic number used only in the old statistics
 // and the old discrimination
-const float minSignalTime = 0.05f;
+static const float minSignalTime = 0.05f;
 
 enum WindowTypes {
    WT_RECTANGULAR_HANN = 0, // 2.0.6 behavior, requires 1/2 step
@@ -119,8 +119,8 @@ enum WindowTypes {
    WT_DEFAULT_WINDOW_TYPES = WT_HANN_HANN
 };
 
-const struct WindowTypesInfo {
-   const wxChar *name;
+static const struct WindowTypesInfo {
+   wxString name;
    int minSteps;
    double inCoefficients[3];
    double outCoefficients[3];
@@ -484,7 +484,7 @@ namespace {
       typedef FieldType (StructureType::*MemberPointer);
 
       MemberPointer field;
-      const wxChar *name;
+      wxString name;
       FieldType defaultValue;
    };
 
@@ -1439,12 +1439,12 @@ struct ControlInfo {
    double valueMax;
    long sliderMax;
    // (valueMin - valueMax) / sliderMax is the value increment of the slider
-   const wxChar* format;
+   const wxString format;
    bool formatAsInt;
    const wxString textBoxCaption_;  wxString textBoxCaption() const { return wxGetTranslation(textBoxCaption_); }
    const wxString sliderName_;  wxString sliderName() const { return wxGetTranslation(sliderName_); }
 
-   ControlInfo(MemberPointer f, double vMin, double vMax, long sMax, const wxChar* fmt, bool fAsInt,
+   ControlInfo(MemberPointer f, double vMin, double vMax, long sMax, const wxString &fmt, bool fAsInt,
       const wxString &caption, const wxString &name)
       : field(f), valueMin(vMin), valueMax(vMax), sliderMax(sMax), format(fmt), formatAsInt(fAsInt)
       , textBoxCaption_(caption), sliderName_(name)

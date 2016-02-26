@@ -57,7 +57,7 @@ Param( WetOnly,      bool,    XO("WetOnly"),       false,   false,   true, 1  );
 
 static const struct
 {
-   const wxChar *name;
+   wxString name;
    EffectReverb::Params params;
 }
 FactoryPresets[] =
@@ -322,7 +322,7 @@ wxArrayString EffectReverb::GetFactoryPresets()
 
 bool EffectReverb::LoadFactoryPreset(int id)
 {
-   if (id < 0 || id >= (int) WXSIZEOF(FactoryPresets))
+   if (id < 0 || static_cast<size_t>(id) >= WXSIZEOF(FactoryPresets))
    {
       return false;
    }

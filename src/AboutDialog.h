@@ -76,8 +76,8 @@ class AboutDialog final : public wxDialog {
    void AddCredit(wxString &&description, Role role);
    wxString GetCreditsByRole(AboutDialog::Role role);
 
-   void AddBuildinfoRow( wxString* htmlstring, const wxChar * libname, const wxChar * libdesc, const wxString &status);
-   void AddBuildinfoRow( wxString* htmlstring, const wxChar * libname, const wxChar * libdesc);
+   void AddBuildinfoRow( wxString* htmlstring, const wxString &libname, const wxString &libdesc, const wxString &status);
+   void AddBuildinfoRow( wxString* htmlstring, const wxString &libname, const wxString &libdesc);
 };
 
 #endif

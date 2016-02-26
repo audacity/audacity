@@ -1342,15 +1342,15 @@ bool WaveClip::Flush()
    return success;
 }
 
-bool WaveClip::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
+bool WaveClip::HandleXMLTag(const wxString &tag, const wxArrayString &attrs)
 {
    if (!wxStrcmp(tag, wxT("waveclip")))
    {
       double dblValue;
-      while (*attrs)
+      for (size_t i = 0; i < attrs.GetCount(); i += 2)
       {
-         const wxChar *attr = *attrs++;
-         const wxChar *value = *attrs++;
+         const wxString &attr = attrs[i];
+         const wxString &value = attrs[i+1];
 
          if (!value)
             break;
@@ -1370,13 +1370,13 @@ bool WaveClip::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    return false;
 }
 
-void WaveClip::HandleXMLEndTag(const wxChar *tag)
+void WaveClip::HandleXMLEndTag(const wxString &tag)
 {
    if (!wxStrcmp(tag, wxT("waveclip")))
       UpdateEnvelopeTrackLen();
 }
 
-XMLTagHandler *WaveClip::HandleXMLChild(const wxChar *tag)
+XMLTagHandler *WaveClip::HandleXMLChild(const wxString &tag)
 {
    if (!wxStrcmp(tag, wxT("sequence")))
       return mSequence;

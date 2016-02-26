@@ -337,7 +337,7 @@ wxString TimerRecordDialog::GetDisplayDate( wxDateTime & dt )
 #endif
 
    // Use default formatting
-wxPrintf(wxT("%s\n"), dt.Format().c_str());
+wxPrintf(wxT("%s\n"), dt.Format());
    return dt.FormatDate() + wxT(" ") + dt.FormatTime();
 }
 
@@ -482,7 +482,7 @@ int TimerRecordDialog::WaitForStart()
    /* i18n-hint: A time specification like "Sunday 28th October 2007 15:16:17 GMT"
     * but hopefully translated by wxwidgets will be inserted into this */
    strMsg.Printf(_("Waiting to start recording at %s.\n"),
-                  GetDisplayDate(m_DateTime_Start).c_str());
+                  GetDisplayDate(m_DateTime_Start));
    wxDateTime startWait_DateTime = wxDateTime::UNow();
    wxTimeSpan waitDuration = m_DateTime_Start - startWait_DateTime;
    TimerProgressDialog

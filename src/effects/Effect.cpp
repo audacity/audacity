@@ -1081,8 +1081,8 @@ bool Effect::SetAutomationParameters(const wxString & parms)
       wxMessageBox(
          wxString::Format(
             _("Could not update effect \"%s\" with:\n%s"),
-            GetName().c_str(),
-            preset.c_str()
+            GetName(),
+            preset
          )
       );
 
@@ -1241,7 +1241,7 @@ bool Effect::DoEffect(wxWindow *parent,
    if (skipFlag == false)
    {
       ProgressDialog progress(GetName(),
-         wxString::Format(_("Applying %s..."), GetName().c_str()),
+         wxString::Format(_("Applying %s..."), GetName()),
          pdlgHideStopButton);
       SetProgress sp(mProgress, &progress);
       returnVal = Process();
@@ -3286,11 +3286,11 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
 
    sub = new wxMenu();
 
-   sub->Append(kDummyID, wxString::Format(_("Type: %s"), mEffect->GetFamily().c_str()));
-   sub->Append(kDummyID, wxString::Format(_("Name: %s"), mEffect->GetName().c_str()));
-   sub->Append(kDummyID, wxString::Format(_("Version: %s"), mEffect->GetVersion().c_str()));
-   sub->Append(kDummyID, wxString::Format(_("Vendor: %s"), mEffect->GetVendor().c_str()));
-   sub->Append(kDummyID, wxString::Format(_("Description: %s"), mEffect->GetDescription().c_str()));
+   sub->Append(kDummyID, wxString::Format(_("Type: %s"), mEffect->GetFamily()));
+   sub->Append(kDummyID, wxString::Format(_("Name: %s"), mEffect->GetName()));
+   sub->Append(kDummyID, wxString::Format(_("Version: %s"), mEffect->GetVersion()));
+   sub->Append(kDummyID, wxString::Format(_("Vendor: %s"), mEffect->GetVendor()));
+   sub->Append(kDummyID, wxString::Format(_("Description: %s"), mEffect->GetDescription()));
 
    menu.Append(0, _("About"), sub);
 
@@ -3478,7 +3478,7 @@ void EffectUIHost::OnDeletePreset(wxCommandEvent & evt)
 {
    wxString preset = mUserPresets[evt.GetId() - kDeletePresetID];
 
-   int res = wxMessageBox(wxString::Format(_("Are you sure you want to delete \"%s\"?"), preset.c_str()),
+   int res = wxMessageBox(wxString::Format(_("Are you sure you want to delete \"%s\"?"), preset),
                           _("Delete Preset"),
                           wxICON_QUESTION | wxYES_NO);
    if (res == wxYES)

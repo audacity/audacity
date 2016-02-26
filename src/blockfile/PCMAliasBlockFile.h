@@ -44,7 +44,7 @@ class PCMAliasBlockFile /* not final */ : public AliasBlockFile
    BlockFile *Copy(wxFileName fileName) override;
    void Recover() override;
 
-   static BlockFile *BuildFromXML(DirManager &dm, const wxChar **attrs);
+   static BlockFile *BuildFromXML(DirManager &dm, const wxArrayString &attrs);
 };
 
 #endif

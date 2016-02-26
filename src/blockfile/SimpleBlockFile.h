@@ -75,7 +75,7 @@ class PROFILE_DLL_API SimpleBlockFile /* not final */ : public BlockFile {
    wxLongLong GetSpaceUsage() override;
    void Recover() override;
 
-   static BlockFile *BuildFromXML(DirManager &dm, const wxChar **attrs);
+   static BlockFile *BuildFromXML(DirManager &dm, const wxArrayString &attrs);
 
    bool GetNeedWriteCacheToDisk() override;
    void WriteCacheToDisk() override;

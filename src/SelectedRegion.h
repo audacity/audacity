@@ -205,22 +205,22 @@ public:
    // as SelectedRegion is extended.  Therefore, this is not an
    // XMLTagHandler.
 
-   static const wxChar *sDefaultT0Name;
-   static const wxChar *sDefaultT1Name;
+   static const wxString sDefaultT0Name;
+   static const wxString sDefaultT1Name;
 
    // Serialize, not with tags of its own, but as attributes within a tag.
    // Don't add more legacy arguments as the structure grows.
    void WriteXMLAttributes
       (XMLWriter &xmlFile,
-       const wxChar *legacyT0Name = sDefaultT0Name,
-       const wxChar *legacyT1Name = sDefaultT1Name) const;
+       const wxString &legacyT0Name = sDefaultT0Name,
+       const wxString &legacyT1Name = sDefaultT1Name) const;
 
    // Return true iff the attribute is recognized.
    // Don't add more legacy arguments as the structure grows.
    bool HandleXMLAttribute
-      (const wxChar *attr, const wxChar *value,
-       const wxChar *legacyT0Name = sDefaultT0Name,
-       const wxChar *legacyT1Name = sDefaultT1Name);
+      (const wxString &attr, const wxString &value,
+       const wxString &legacyT0Name = sDefaultT0Name,
+       const wxString &legacyT1Name = sDefaultT1Name);
 
 private:
    bool ensureOrdering() 

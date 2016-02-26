@@ -42,7 +42,7 @@ Param( Amplitude, double,     XO("Amplitude"),  0.8,              0.001,   1.0, 
 
 static const double kFadeInOut = 250.0; // used for fadein/out needed to remove clicking noise
 
-const static wxChar *kSymbols[] =
+static const wxString kSymbols[] =
 {
    wxT("0"), wxT("1"), wxT("2"), wxT("3"),
    wxT("4"), wxT("5"), wxT("6"), wxT("7"),
@@ -233,7 +233,7 @@ bool EffectDtmf::SetAutomationParameters(EffectAutomationParameters & parms)
    ReadAndVerifyString(Sequence);
 
    wxString symbols;
-   for (unsigned int i = 0; i < WXSIZEOF(kSymbols); i++)
+   for (size_t i = 0; i < WXSIZEOF(kSymbols); i++)
    {
       symbols += kSymbols[i];
    }
@@ -429,7 +429,7 @@ void EffectDtmf::Recalculate()
    }
 }
 
-bool EffectDtmf::MakeDtmfTone(float *buffer, sampleCount len, float fs, wxChar tone, sampleCount last, sampleCount total, float amplitude)
+bool EffectDtmf::MakeDtmfTone(float *buffer, sampleCount len, float fs, char tone, sampleCount last, sampleCount total, float amplitude)
 {
 /*
   --------------------------------------------

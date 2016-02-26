@@ -178,13 +178,12 @@ char *Internat::VerifyFilename(const wxString &s, bool input)
    wxString name = s;
 
    if (input) {
-      if ((char *) (const char *)name.mb_str() == NULL) {
+      if (name.mb_str().length() == 0)
          name = wxEmptyString;
-      }
    }
    else {
       wxFileName f(name);
-      while ((char *) (const char *)name.mb_str() == NULL) {
+      while (name.mb_str().length() == NULL) {
          wxMessageBox(_("The specified filename could not be converted due to Unicode character use."));
 
          name = FileSelector(_("Specify New Filename:"),
@@ -199,7 +198,7 @@ char *Internat::VerifyFilename(const wxString &s, bool input)
 
    mFilename = name.mb_str();
 
-   return (char *) (const char *) mFilename;
+   return (char *) (const char *) mFilename; /* FUCK IT */
 }
 #endif
 

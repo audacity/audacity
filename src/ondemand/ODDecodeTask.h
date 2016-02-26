@@ -55,7 +55,7 @@ class ODDecodeTask /* not final */ : public ODTask
    ///Return the task name
    const char* GetTaskName() override { return "ODDecodeTask"; }
 
-   const wxChar* GetTip() override { return _("Decoding Waveform"); }
+   const wxString GetTip() override { return _("Decoding Waveform"); }
 
    ///Subclasses should override to return respective type.
    unsigned int GetODType() override { return eODNone; }

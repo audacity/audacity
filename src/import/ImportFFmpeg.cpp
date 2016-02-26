@@ -38,7 +38,7 @@ Licensed under the GNU General Public License v2 or later
 
 //TODO: remove non-audio extensions
 #if defined(USE_FFMPEG)
-static const wxChar *exts[] =
+static const wxString exts[] =
 {
    wxT("4xm"),
    wxT("MTV"),
@@ -234,7 +234,7 @@ public:
    ///\ tags - Audacity tags object
    ///\ tag - name of tag to set
    ///\ name - name of metadata item to retrieve
-   void GetMetadata(Tags *tags, const wxChar *tag, const char *name);
+   void GetMetadata(Tags *tags, const wxString &tag, const char *name);
 
    ///! Called by Import.cpp
    ///\return number of readable streams in the file
@@ -364,14 +364,14 @@ bool FFmpegImportFileHandle::Init()
    int err = ufile_fopen_input(&mFormatContext, mName);
    if (err < 0)
    {
-      wxLogError(wxT("FFmpeg : av_open_input_file() failed for file %s"),mName.c_str());
+      wxLogError(wxT("FFmpeg : av_open_input_file() failed for file %s"),mName);
       return false;
    }
 
    err = avformat_find_stream_info(mFormatContext, NULL);
    if (err < 0)
    {
-      wxLogError(wxT("FFmpeg: avformat_find_stream_info() failed for file %s"),mName.c_str());
+      wxLogError(wxT("FFmpeg: avformat_find_stream_info() failed for file %s"),mName);
       return false;
    }
 
@@ -439,7 +439,7 @@ bool FFmpegImportFileHandle::InitCodecs()
          {
             lang.FromUTF8(tag->value);
          }
-         strinfo.Printf(_("Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"),sc->m_stream->id,codec->name,lang.c_str(),bitrate.c_str(),sc->m_stream->codec->channels, duration);
+         strinfo.Printf(_("Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"),sc->m_stream->id,codec->name,lang,bitrate,sc->m_stream->codec->channels, duration);
          mStreamInfo->Add(strinfo);
          mScs[mNumStreams++] = sc;
       }
@@ -841,7 +841,7 @@ void FFmpegImportFileHandle::WriteMetadata(Tags *tags)
    GetMetadata(tags, TAG_GENRE, "genre");
 }
 
-void FFmpegImportFileHandle::GetMetadata(Tags *tags, const wxChar *tag, const char *name)
+void FFmpegImportFileHandle::GetMetadata(Tags *tags, const wxString &tag, const char *name)
 {
    AVDictionaryEntry *meta;
 

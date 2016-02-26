@@ -287,7 +287,7 @@ void ODPCMAliasBlockFile::SaveXML(XMLWriter &xmlFile)
 // BuildFromXML methods should always return a BlockFile, not NULL,
 // even if the result is flawed (e.g., refers to nonexistent file),
 // as testing will be done in DirManager::ProjectFSCK().
-BlockFile *ODPCMAliasBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
+BlockFile *ODPCMAliasBlockFile::BuildFromXML(DirManager &dm, const wxArrayString &attrs)
 {
    wxFileName summaryFileName;
    wxFileName aliasFileName;
@@ -295,14 +295,10 @@ BlockFile *ODPCMAliasBlockFile::BuildFromXML(DirManager &dm, const wxChar **attr
    int aliasChannel=0;
    long nValue;
 
-   while(*attrs)
+   for (size_t i = 0; i < attrs.GetCount() / 2; ++i)
    {
-      const wxChar *attr =  *attrs++;
-      const wxChar *value = *attrs++;
-      if (!value)
-         break;
-
-      const wxString strValue = value;
+      const wxString &attr = attrs[2*i];
+      const wxString &strValue = attrs[2*i+1];
       if (!wxStricmp(attr, wxT("summaryfile")) &&
             // Can't use XMLValueChecker::IsGoodFileName here, but do part of its test.
             XMLValueChecker::IsGoodFileString(strValue) &&

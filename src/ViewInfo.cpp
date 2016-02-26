@@ -152,7 +152,7 @@ void ViewInfo::WriteXMLAttributes(XMLWriter &xmlFile)
    xmlFile.WriteAttr(wxT("zoom"), zoom, 10);
 }
 
-bool ViewInfo::ReadXMLAttribute(const wxChar *attr, const wxChar *value)
+bool ViewInfo::ReadXMLAttribute(const wxString &attr, const wxString &value)
 {
    if (selectedRegion.HandleXMLAttribute(attr, value, wxT("sel0"), wxT("sel1")))
       return true;

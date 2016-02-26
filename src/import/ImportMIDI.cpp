@@ -47,7 +47,7 @@ bool ImportMIDI(const wxString &fName, NoteTrack * dest)
    }
 
    double offset = 0.0;
-   Alg_seq_ptr new_seq = new Alg_seq(fName.mb_str(), is_midi, &offset);
+   Alg_seq_ptr new_seq = new Alg_seq(OSINPUT(fName), is_midi, &offset);
 
    //Should we also check if(seq->tracks() == 0) ?
    if(new_seq->get_read_error() == alg_error_open){

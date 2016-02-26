@@ -148,7 +148,7 @@ void TranscriptionToolBar::Create(wxWindow * parent)
 AButton *TranscriptionToolBar::AddButton(
    teBmps eFore, teBmps eDisabled,
    int id,
-   const wxChar *label)
+   const wxString &label)
 {
    AButton *&r = mButtons[id];
 

@@ -327,9 +327,9 @@ void HelpSystem::ShowHelpDialog(wxWindow *parent,
 #endif
 
    wxLogMessage(wxT("Help button pressed: PageName %s, releasePageName %s"),
-              PageName.c_str(), releasePageName.c_str());
+              PageName, releasePageName);
    wxLogMessage(wxT("webHelpPage %s, localHelpPage %s"),
-              webHelpPage.c_str(), localHelpPage.c_str());
+              webHelpPage, localHelpPage);
 
    HelpSystem::ShowHelpDialog(
       parent, 

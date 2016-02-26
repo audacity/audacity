@@ -50,19 +50,15 @@ void SilentBlockFile::SaveXML(XMLWriter &xmlFile)
 // even if the result is flawed (e.g., refers to nonexistent file),
 // as testing will be done in DirManager::ProjectFSCK().
 /// static
-BlockFile *SilentBlockFile::BuildFromXML(DirManager & WXUNUSED(dm), const wxChar **attrs)
+BlockFile *SilentBlockFile::BuildFromXML(DirManager & WXUNUSED(dm), const wxArrayString &attrs)
 {
    long nValue;
    sampleCount len = 0;
 
-   while(*attrs)
+   for (size_t i = 0; i < attrs.GetCount() / 2; ++i)
    {
-       const wxChar *attr =  *attrs++;
-       const wxChar *value = *attrs++;
-       if (!value)
-         break;
-
-       const wxString strValue = value;
+       const wxString &attr = attrs[2*i];
+       const wxString &strValue = attrs[2*i+1];
        if (!wxStrcmp(attr, wxT("len")) &&
             XMLValueChecker::IsGoodInt(strValue) &&
             strValue.ToLong(&nValue) &&

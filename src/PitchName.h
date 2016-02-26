@@ -43,12 +43,12 @@ int PitchOctave(const double dMIDInote);
 // PitchName takes dMIDInote (per result from
 // FreqToMIDInote) and returns a standard pitch/note name [C, C#, etc.).
 // Sharps are the default, unless, bWantFlats is true.
-wxChar * PitchName(const double dMIDInote, const bool bWantFlats = false);
+wxString PitchName(const double dMIDInote, const bool bWantFlats = false);
 
 // PitchName_Absolute does the same thing as PitchName, but appends
 // the octave number, e.g., instead of "C" it will return "C4"
 // if the dMIDInote corresonds to middle C, i.e., is 60.
-wxChar * PitchName_Absolute(const double dMIDInote, const bool bWantFlats = false);
+wxString PitchName_Absolute(const double dMIDInote, const bool bWantFlats = false);
 
 double PitchToMIDInote(const unsigned int nPitchIndex, const int nPitchOctave);
 

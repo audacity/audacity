@@ -35,7 +35,7 @@ enum kTypes
    kNumTypes
 };
 
-static const wxChar *kTypeStrings[kNumTypes] =
+static const wxString kTypeStrings[kNumTypes] =
 {
    XO("White"),
    XO("Pink"),

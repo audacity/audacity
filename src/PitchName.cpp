@@ -53,97 +53,52 @@ int PitchOctave(const double dMIDInote)
    return ((int)((dMIDInote + dRound) / 12.0) - 1);
 }
 
-
-static wxChar gPitchName[10];
-static wxChar * pPitchName;
-
-wxChar * PitchName(const double dMIDInote, const bool bWantFlats /* = false */)
+wxString PitchName(const double dMIDInote, const bool bWantFlats /* = false */)
 {
-   pPitchName = gPitchName;
-
    switch (PitchIndex(dMIDInote)) {
    case 0:
-      *pPitchName++ = wxT('C');
+      return wxT("C");
       break;
    case 1:
-      if (bWantFlats) {
-         *pPitchName++ = wxT('D');
-         *pPitchName++ = wxT('b');
-      } else {
-         *pPitchName++ = wxT('C');
-         *pPitchName++ = wxT('#');
-      }
+      return bWantFlats ? wxT("Db") : wxT("C#");
       break;
    case 2:
-      *pPitchName++ = wxT('D');
+      return wxT("D");
       break;
    case 3:
-      if (bWantFlats) {
-         *pPitchName++ = wxT('E');
-         *pPitchName++ = wxT('b');
-      } else {
-         *pPitchName++ = wxT('D');
-         *pPitchName++ = wxT('#');
-      }
+      return bWantFlats ? wxT("Eb") : wxT("D#");
       break;
    case 4:
-      *pPitchName++ = wxT('E');
+      return wxT("E");
       break;
    case 5:
-      *pPitchName++ = wxT('F');
+      return wxT("F");
       break;
    case 6:
-      if (bWantFlats) {
-         *pPitchName++ = wxT('G');
-         *pPitchName++ = wxT('b');
-      } else {
-         *pPitchName++ = wxT('F');
-         *pPitchName++ = wxT('#');
-      }
+      return bWantFlats ? wxT("Gb") : wxT("F#");
       break;
    case 7:
-      *pPitchName++ = wxT('G');
+      return wxT("G");
       break;
    case 8:
-      if (bWantFlats) {
-         *pPitchName++ = wxT('A');
-         *pPitchName++ = wxT('b');
-      } else {
-         *pPitchName++ = wxT('G');
-         *pPitchName++ = wxT('#');
-      }
+      return bWantFlats ? wxT("Ab") : wxT("G#");
       break;
    case 9:
-      *pPitchName++ = wxT('A');
+      return wxT("A");
       break;
    case 10:
-      if (bWantFlats) {
-         *pPitchName++ = wxT('B');
-         *pPitchName++ = wxT('b');
-      } else {
-         *pPitchName++ = wxT('A');
-         *pPitchName++ = wxT('#');
-      }
+      return bWantFlats ? wxT("Bb") : wxT("A#");
       break;
    case 11:
-      *pPitchName++ = wxT('B');
+      return wxT("B");
       break;
    }
-
-   *pPitchName = wxT('\0');
-
-   return gPitchName;
+   return wxEmptyString;
 }
 
-wxChar * PitchName_Absolute(const double dMIDInote, const bool bWantFlats /* = false */)
+wxString PitchName_Absolute(const double dMIDInote, const bool bWantFlats /* = false */)
 {
-   PitchName(dMIDInote, bWantFlats);
-
-   // PitchName sets pPitchName to the next available char in gPitchName,
-   // so it's ready to append the register number.
-   wxSnprintf(pPitchName, 8, wxT("%d"), PitchOctave(dMIDInote));
-
-   return gPitchName;
+   return wxString::Format("%s%d", PitchName(dMIDInote, bWantFlats), PitchOctave(dMIDInote));
 }
 
 double PitchToMIDInote(const unsigned int nPitchIndex, const int nPitchOctave)

@@ -94,11 +94,11 @@ private:
 #define OSINPUT(X) Internat::VerifyFilename(X, true)
 #define OSOUTPUT(X) Internat::VerifyFilename(X, false)
 #elif defined(__WXMAC__)
-#define OSFILENAME(X) ((char *) (const char *)(X).fn_str())
+#define OSFILENAME(X) (X).fn_str()
 #define OSINPUT(X) OSFILENAME(X)
 #define OSOUTPUT(X) OSFILENAME(X)
 #else
-#define OSFILENAME(X) ((char *) (const char *)(X).mb_str())
+#define OSFILENAME(X) (X).utf8_str()
 #define OSINPUT(X) OSFILENAME(X)
 #define OSOUTPUT(X) OSFILENAME(X)
 #endif

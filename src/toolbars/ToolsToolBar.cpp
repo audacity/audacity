@@ -169,7 +169,7 @@ void ToolsToolBar::UpdatePrefs()
 }
 
 AButton * ToolsToolBar::MakeTool( teBmps eTool,
-   int id, const wxChar *label)
+   int id, const wxString &label)
 {
    AButton *button = ToolBar::MakeButton(
       bmpRecoloredUpSmall, bmpRecoloredDownSmall, bmpRecoloredHiliteSmall,
@@ -274,7 +274,7 @@ int ToolsToolBar::GetDownTool()
    return firstTool;  // Should never happen
 }
 
-const wxChar * ToolsToolBar::GetMessageForTool( int ToolNumber )
+wxString ToolsToolBar::GetMessageForTool(int ToolNumber)
 {
    wxASSERT( ToolNumber >= 0 );
    wxASSERT( ToolNumber < numTools );

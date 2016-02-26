@@ -79,11 +79,11 @@ class AUDACITY_DLL_API XMLTagHandler /* not final */ {
    // tag and the attribute-value pairs (null-terminated), and
    // return true on success, and false on failure.  If you return
    // false, you will not get any calls about children.
-   virtual bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) = 0;
+   virtual bool HandleXMLTag(const wxString &tag, const wxArrayString &attrs) = 0;
 
    // This method will be called when a closing tag is encountered.
    // It is optional to override this method.
-   virtual void HandleXMLEndTag(const wxChar * WXUNUSED(tag)) {}
+   virtual void HandleXMLEndTag(const wxString &WXUNUSED(tag)) {}
 
    // This method will be called when element content has been
    // encountered.
@@ -95,7 +95,7 @@ class AUDACITY_DLL_API XMLTagHandler /* not final */ {
    // object for the child, insert it into your own local data
    // structures, and then return it.  If you do not wish to
    // handle this child, return NULL and it will be ignored.
-   virtual XMLTagHandler *HandleXMLChild(const wxChar *tag) = 0;
+   virtual XMLTagHandler *HandleXMLChild(const wxString &tag) = 0;
 
    // These functions recieve data from expat.  They do charset
    // conversion and then pass the data to the handlers above.

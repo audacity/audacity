@@ -462,7 +462,7 @@ void ExportMultiple::OnCreate(wxCommandEvent& WXUNUSED(event))
    }
 
    ::wxMessageBox(wxString::Format(_("\"%s\" successfully created."),
-                                   fn.GetPath().c_str()),
+                                   fn.GetPath()),
                   _("Export Multiple"),
                   wxOK | wxCENTRE, this);
 }
@@ -606,7 +606,7 @@ bool ExportMultiple::DirOk()
    wxString prompt;
 
    prompt.Printf(_("\"%s\" doesn't exist.\n\nWould you like to create it?"),
-                 fn.GetFullPath().c_str());
+                 fn.GetFullPath());
 
    int action = wxMessageBox(prompt,
                              wxT("Warning"),
@@ -644,7 +644,7 @@ int ExportMultiple::ExportMultipleByLabel(bool byName,
    setting.destfile.SetPath(mDir->GetValue());
    setting.destfile.SetExt(mPlugins[mPluginIndex]->GetExtension(mSubFormatIndex));
    wxLogDebug(wxT("Plug-in index = %d, Sub-format = %d"), mPluginIndex, mSubFormatIndex);
-   wxLogDebug(wxT("File extension is %s"), setting.destfile.GetExt().c_str());
+   wxLogDebug(wxT("File extension is %s"), setting.destfile.GetExt());
    wxString name;    // used to hold file name whilst we mess with it
    wxString title;   // un-messed-with title of file for tagging with
 
@@ -686,7 +686,7 @@ int ExportMultiple::ExportMultipleByLabel(bool byName,
 
       // Numbering files...
       if (!byName) {
-         name.Printf(wxT("%s-%02d"), prefix.c_str(), l+1);
+         name.Printf(wxT("%s-%02d"), prefix, l+1);
       } else if (addNumber) {
          // Following discussion with GA, always have 2 digits
          // for easy file-name sorting (on Windows)
@@ -823,7 +823,7 @@ int ExportMultiple::ExportMultipleByTrack(bool byName,
          }
       }
       else {
-         name = (wxString::Format(wxT("%s-%02d"), prefix.c_str(), l+1));
+         name = wxString::Format(wxT("%s-%02d"), prefix, l+1);
       }
 
       // store sanitised and user checked name in object
@@ -913,7 +913,7 @@ int ExportMultiple::DoExport(int channels,
                               double t1,
                               const Tags &tags)
 {
-   wxLogDebug(wxT("Doing multiple Export: File name \"%s\""), (name.GetFullName()).c_str());
+   wxLogDebug(wxT("Doing multiple Export: File name \"%s\""), (name.GetFullName()));
    wxLogDebug(wxT("Channels: %i, Start: %lf, End: %lf "), channels, t0, t1);
    if (selectedOnly) wxLogDebug(wxT("Selected Region Only"));
    else wxLogDebug(wxT("Whole Project"));
@@ -928,7 +928,7 @@ int ExportMultiple::DoExport(int channels,
       int i = 2;
       wxString base(name.GetName());
       while (name.FileExists()) {
-         name.SetName(wxString::Format(wxT("%s-%d"), base.c_str(), i++));
+         name.SetName(wxString::Format(wxT("%s-%d"), base, i++));
       }
    }
 
@@ -964,7 +964,7 @@ wxString ExportMultiple::MakeFileName(const wxString &input)
    {  // need to get user to fix file name
       // build the dialog
       wxString msg;
-      msg.Printf(_("Label or track \"%s\" is not a legal file name. You cannot use any of: %s\nUse..."), input.c_str(), wxFileName::GetForbiddenChars().c_str());
+      msg.Printf(_("Label or track \"%s\" is not a legal file name. You cannot use any of: %s\nUse..."), input, wxFileName::GetForbiddenChars());
       wxTextEntryDialog dlg( this, msg, _("Save As..."), newname );
 
       // And tell the validator about excluded chars

@@ -268,9 +268,9 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
    // XMLTagHandler callback methods for loading and saving
    //
 
-   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
-   void HandleXMLEndTag(const wxChar *tag) override;
-   XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
+   bool HandleXMLTag(const wxString &tag, const wxArrayString &attrs) override;
+   void HandleXMLEndTag(const wxString &tag) override;
+   XMLTagHandler *HandleXMLChild(const wxString &tag) override;
    void WriteXML(XMLWriter &xmlFile) override;
 
    // Returns true if an error occurred while reading from XML

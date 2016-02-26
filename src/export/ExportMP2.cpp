@@ -415,7 +415,7 @@ void ExportMP2::AddFrame(struct id3_tag *tp, const wxString & n, const wxString 
    }
 
    id3_ucs4_t *ucs4 =
-      id3_utf8_ucs4duplicate((id3_utf8_t *) (const char *) v.mb_str(wxConvUTF8));
+      id3_utf8_ucs4duplicate(reinterpret_cast<const id3_utf8_t *>(static_cast<const char *>(v.utf8_str())));
 
    if (strcmp(name, ID3_FRAME_COMMENT) == 0) {
       // A hack to get around iTunes not recognizing the comment.  The
@@ -431,7 +431,7 @@ void ExportMP2::AddFrame(struct id3_tag *tp, const wxString & n, const wxString 
       id3_field_setstring(id3_frame_field(frame, 2), ucs4);
       free(ucs4);
 
-      ucs4 = id3_utf8_ucs4duplicate((id3_utf8_t *) (const char *) n.mb_str(wxConvUTF8));
+      ucs4 = id3_utf8_ucs4duplicate(reinterpret_cast<const id3_utf8_t *>(static_cast<const char *>(n.utf8_str())));
 
       id3_field_setstring(id3_frame_field(frame, 1), ucs4);
    }

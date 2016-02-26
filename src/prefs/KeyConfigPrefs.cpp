@@ -551,9 +551,9 @@ void KeyConfigPrefs::OnSet(wxCommandEvent & WXUNUSED(event))
       if (wxMessageBox(
             wxString::Format(
             _("The keyboard shortcut '%s' is already assigned to:\n\n\t'%s'\n\nClick OK to assign the shortcut to\n\n\t'%s'\n\ninstead.  Otherwise, click Cancel."),
-            key.c_str(),
-            oldlabel.c_str(),
-            newlabel.c_str()),
+            key,
+            oldlabel,
+            newlabel),
             _("Error"), wxOK | wxCANCEL | wxICON_STOP | wxCENTRE, this) == wxCANCEL)
       {
          return;
@@ -1051,8 +1051,8 @@ void KeyConfigPrefs::OnSet(wxCommandEvent & WXUNUSED(event))
       wxMessageBox(
          wxString::Format(
             _("The keyboard shortcut '%s' is already assigned to:\n\n'%s'"),
-            newKey.c_str(),
-            alreadyAssignedName.c_str()),
+            newKey,
+            alreadyAssignedName),
          _("Error"), wxICON_STOP | wxCENTRE, this);
       return;
    }

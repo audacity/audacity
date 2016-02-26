@@ -44,7 +44,7 @@ class ODComputeSummaryTask final : public ODTask
    ///Return the task name
    const char* GetTaskName() override { return "ODComputeSummaryTask"; }
 
-   const wxChar* GetTip() override { return _("Import complete. Calculating waveform"); }
+   const wxString GetTip() override { return _("Import complete. Calculating waveform"); }
 
    bool UsesCustomWorkUntilPercentage() override { return true; }
    float ComputeNextWorkUntilPercentageComplete() override;

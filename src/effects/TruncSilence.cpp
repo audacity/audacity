@@ -43,7 +43,7 @@ enum kActions
    kNumActions
 };
 
-static const wxChar *kActionStrings[kNumActions] =
+static const wxString kActionStrings[kNumActions] =
 {
    XO("Truncate Detected Silence"),
    XO("Compress Excess Silence")

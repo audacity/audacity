@@ -46,7 +46,7 @@
 
 #define DESC _("MP3 files")
 
-static const wxChar *exts[] =
+static const wxString exts[] =
 {
    wxT("mp3"),
    wxT("mp2"),

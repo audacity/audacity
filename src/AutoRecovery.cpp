@@ -303,8 +303,8 @@ int RecordingRecoveryHandler::FindTrack() const
    return index;
 }
 
-bool RecordingRecoveryHandler::HandleXMLTag(const wxChar *tag,
-                                            const wxChar **attrs)
+bool RecordingRecoveryHandler::HandleXMLTag(const wxString &tag,
+                                            const wxArrayString &attrs)
 {
    if (wxStrcmp(tag, wxT("simpleblockfile")) == 0)
    {
@@ -357,15 +357,10 @@ bool RecordingRecoveryHandler::HandleXMLTag(const wxChar *tag,
       // loop through attrs, which is a null-terminated list of
       // attribute-value pairs
       long nValue;
-      while(*attrs)
+      for (size_t i = 0; i < attrs.GetCount() / 2; ++i)
       {
-         const wxChar *attr = *attrs++;
-         const wxChar *value = *attrs++;
-
-         if (!value)
-            break;
-
-         const wxString strValue = value;
+         const wxString &attr = attrs[2*i];
+         const wxString &strValue = attrs[2*i+1];
          //this channels value does not correspond to WaveTrack::Left/Right/Mono, but which channel of the recording device
          //it came from, and thus we can't use XMLValueChecker::IsValidChannel on it.  Rather we compare to the next attribute value.
          if (wxStrcmp(attr, wxT("channel")) == 0)
@@ -397,7 +392,7 @@ bool RecordingRecoveryHandler::HandleXMLTag(const wxChar *tag,
    return true;
 }
 
-void RecordingRecoveryHandler::HandleXMLEndTag(const wxChar *tag)
+void RecordingRecoveryHandler::HandleXMLEndTag(const wxString &tag)
 {
    if (wxStrcmp(tag, wxT("simpleblockfile")) == 0)
       // Still in inner looop
@@ -420,7 +415,7 @@ void RecordingRecoveryHandler::HandleXMLEndTag(const wxChar *tag)
    }
 }
 
-XMLTagHandler* RecordingRecoveryHandler::HandleXMLChild(const wxChar *tag)
+XMLTagHandler* RecordingRecoveryHandler::HandleXMLChild(const wxString &tag)
 {
    if (wxStrcmp(tag, wxT("simpleblockfile")) == 0)
       return this; // HandleXMLTag also handles <simpleblockfile>
@@ -503,20 +498,16 @@ void AutoSaveFile::EndTag(const wxString & name)
    WriteName(name);
 }
 
-void AutoSaveFile::WriteAttr(const wxString & name, const wxChar *value)
-{
-   WriteAttr(name, wxString(value));
-}
-
 void AutoSaveFile::WriteAttr(const wxString & name, const wxString & value)
 {
    mBuffer.PutC(FT_String);
    WriteName(name);
 
-   int len = value.Length() * sizeof(wxChar);
-
+   wxScopedCharBuffer buf = value.utf8_str();
+   wxASSERT(buf.length() <= UINT_MAX);
+   unsigned int len = buf.length();
    mBuffer.Write(&len, sizeof(len));
-   mBuffer.Write(value.wx_str(), len);
+   mBuffer.Write(buf, len);
 }
 
 void AutoSaveFile::WriteAttr(const wxString & name, int value)
@@ -581,20 +572,24 @@ void AutoSaveFile::WriteData(const wxString & value)
 {
    mBuffer.PutC(FT_Data);
 
-   int len = value.Length() * sizeof(wxChar);
+   wxScopedCharBuffer buf = value.utf8_str();
+   wxASSERT(buf.length() <= UINT_MAX);
+   unsigned int len = buf.length();
 
    mBuffer.Write(&len, sizeof(len));
-   mBuffer.Write(value.wx_str(), len);
+   mBuffer.Write(buf, len);
 }
 
 void AutoSaveFile::Write(const wxString & value)
 {
    mBuffer.PutC(FT_Raw);
 
-   int len = value.Length() * sizeof(wxChar);
+   wxScopedCharBuffer buf = value.utf8_str();
+   wxASSERT(buf.length() <= UINT_MAX);
+   unsigned int len = buf.length();
 
    mBuffer.Write(&len, sizeof(len));
-   mBuffer.Write(value.wx_str(), len);
+   mBuffer.Write(buf, len);
 }
 
 void AutoSaveFile::WriteSubTree(const AutoSaveFile & value)
@@ -651,8 +646,9 @@ void AutoSaveFile::CheckSpace(wxMemoryOutputStream & os)
 
 void AutoSaveFile::WriteName(const wxString & name)
 {
-   wxASSERT(name.Length() * sizeof(wxChar) <= SHRT_MAX);
-   short len = name.Length() * sizeof(wxChar);
+   wxScopedCharBuffer buf = name.utf8_str();
+   wxASSERT(buf.length() <= USHRT_MAX);
+   unsigned short len = buf.length();
    short id;
 
    if (mNames.count(name))
@@ -668,7 +664,7 @@ void AutoSaveFile::WriteName(const wxString & name)
       mDict.PutC(FT_Name);
       mDict.Write(&id, sizeof(id));
       mDict.Write(&len, sizeof(len));
-      mDict.Write(name.wx_str(), len);
+      mDict.Write(buf, len);
    }
 
    CheckSpace(mBuffer);
@@ -796,14 +792,13 @@ bool AutoSaveFile::Decode(const wxString & fileName)
 
          case FT_Name:
          {
-            short len;
+            unsigned short len;
 
             in.Read(&id, sizeof(id));
             in.Read(&len, sizeof(len));
-            wxChar *name = new wxChar[len / sizeof(wxChar)];
+            char *name = new char[len];
             in.Read(name, len);
-
-            mIds[id] = wxString(name, len / sizeof(wxChar));
+            mIds[id] = wxString(name, wxConvUTF8, len);
             delete[] name;
          }
          break;
@@ -826,14 +821,14 @@ bool AutoSaveFile::Decode(const wxString & fileName)
 
          case FT_String:
          {
-            int len;
+            unsigned int len;
 
             in.Read(&id, sizeof(id));
             in.Read(&len, sizeof(len));
-            wxChar *val = new wxChar[len / sizeof(wxChar)];
+            char *val = new char[len];
             in.Read(val, len);
 
-            out.WriteAttr(mIds[id], wxString(val, len / sizeof(wxChar)));
+            out.WriteAttr(mIds[id], wxString(val, wxConvUTF8, len));
             delete[] val;
          }
          break;
@@ -921,26 +916,24 @@ bool AutoSaveFile::Decode(const wxString & fileName)
 
          case FT_Data:
          {
-            int len;
+            unsigned int len;
 
             in.Read(&len, sizeof(len));
-            wxChar *val = new wxChar[len / sizeof(wxChar)];
+            char *val = new char[len];
             in.Read(val, len);
-
-            out.WriteData(wxString(val, len / sizeof(wxChar)));
+            out.WriteData(wxString(val, wxConvUTF8, len));
             delete[] val;
          }
          break;
 
          case FT_Raw:
          {
-            int len;
+            unsigned int len;
 
             in.Read(&len, sizeof(len));
-            wxChar *val = new wxChar[len / sizeof(wxChar)];
+            char *val = new char[len];
             in.Read(val, len);
-
-            out.Write(wxString(val, len / sizeof(wxChar)));
+            out.Write(wxString(val, wxConvUTF8, len));
             delete[] val;
          }
          break;

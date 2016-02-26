@@ -50,7 +50,7 @@ enum kVinyl
    kNumVinyl
 };
 
-static const wxChar *kVinylStrings[kNumVinyl] =
+static const wxString kVinylStrings[kNumVinyl] =
 {
    wxT("33 1/3"),
    wxT("45"),

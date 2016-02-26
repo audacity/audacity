@@ -221,7 +221,7 @@ GetGStreamerImportPlugin(ImportPluginList *importPluginList,
    {
       wxLogMessage(wxT("Failed to initialize GStreamer. Error %d: %s"),
                    error->code,
-                   wxString::FromUTF8(error->message).c_str());
+                   wxString::FromUTF8(error->message));
       g_error_free(error);
       return;
    }
@@ -325,7 +325,7 @@ GStreamerImportPlugin::GetSupportedExtensions()
          for (guint i = 0; extensions[i] != NULL; i++)
          {
             wxString extension = wxString::FromUTF8(extensions[i]);
-            if (mExtensions.Index(extension.c_str(), false) == wxNOT_FOUND)
+            if (mExtensions.Index(extension, false) == wxNOT_FOUND)
             {
                mExtensions.Add(extension);
             }
@@ -343,7 +343,7 @@ GStreamerImportPlugin::GetSupportedExtensions()
    {
       extensions = extensions + wxT(" ") + mExtensions[i];
    }
-   wxLogMessage(wxT("%s"), extensions.c_str());
+   wxLogMessage(wxT("%s"), extensions);
 
    return mExtensions;
 }
@@ -984,7 +984,7 @@ GStreamerImportFileHandle::Init()
       wxString strinfo;
       strinfo.Printf(wxT("Index[%02d], Type[%s], Channels[%d], Rate[%d]"),
                      (unsigned int) i,
-                     wxString::FromUTF8(c->mType).c_str(),
+                     wxString::FromUTF8(c->mType),
                      (int) c->mNumChannels,
                      (int) c->mSampleRate);
       mStreamInfo.Add(strinfo);
@@ -1193,9 +1193,9 @@ GStreamerImportFileHandle::ProcessBusMessage(bool & success)
    }
 
    wxLogMessage(wxT("GStreamer: Got %s%s%s"),
-                wxString::FromUTF8(GST_MESSAGE_TYPE_NAME(msg)).c_str(),
+                wxString::FromUTF8(GST_MESSAGE_TYPE_NAME(msg)),
                 objname ? wxT(" from ") : wxT(""),
-                objname ? wxString::FromUTF8(objname).c_str() : wxT(""));
+                objname ? wxString::FromUTF8(objname) : wxT(""));
 
    if (objname != NULL)
    {
@@ -1218,13 +1218,13 @@ GStreamerImportFileHandle::ProcessBusMessage(bool & success)
             wxString m;
 
             m.Printf(wxT("%s%s%s"),
-               wxString::FromUTF8(err->message).c_str(),
+               wxString::FromUTF8(err->message),
                debug ? wxT("\n") : wxT(""),
-               debug ? wxString::FromUTF8(debug).c_str() : wxT(""));
+               debug ? wxString::FromUTF8(debug) : wxT(""));
 #if defined(_DEBUG)
             wxMessageBox(m, wxT("GStreamer Error:"));
 #else
-            wxLogMessage(wxT("GStreamer Error: %s"), m.c_str());
+            wxLogMessage(wxT("GStreamer Error: %s"), m);
 #endif
             g_error_free(err);
          }
@@ -1250,9 +1250,9 @@ GStreamerImportFileHandle::ProcessBusMessage(bool & success)
          if (err)
          {
             wxLogMessage(wxT("GStreamer Warning: %s%s%s"),
-                         wxString::FromUTF8(err->message).c_str(),
+                         wxString::FromUTF8(err->message),
                          debug ? wxT("\n") : wxT(""),
-                         debug ? wxString::FromUTF8(debug).c_str() : wxT(""));
+                         debug ? wxString::FromUTF8(debug) : wxT(""));
 
             g_error_free(err);
          }
@@ -1274,9 +1274,9 @@ GStreamerImportFileHandle::ProcessBusMessage(bool & success)
          if (err)
          {
             wxLogMessage(wxT("GStreamer Info: %s%s%s"),
-                         wxString::FromUTF8(err->message).c_str(),
+                         wxString::FromUTF8(err->message),
                          debug ? wxT("\n") : wxT(""),
-                         debug ? wxString::FromUTF8(debug).c_str() : wxT(""));
+                         debug ? wxString::FromUTF8(debug) : wxT(""));
 
             g_error_free(err);
          }
@@ -1386,7 +1386,7 @@ GStreamerImportFileHandle::OnTag(GstAppSink * WXUNUSED(appsink), GstTagList *tag
             GstDateTime *dt = (GstDateTime *) g_value_get_boxed(val);
             gchar *str = gst_date_time_to_iso8601_string(dt);
 
-            string = wxString::FromUTF8(str).c_str();
+            string = wxString::FromUTF8(str);
 
             g_free(str);
          }
@@ -1394,15 +1394,15 @@ GStreamerImportFileHandle::OnTag(GstAppSink * WXUNUSED(appsink), GstTagList *tag
          {
             gchar *str = gst_value_serialize(val);
 
-            string = wxString::FromUTF8(str).c_str();
+            string = wxString::FromUTF8(str);
 
             g_free(str);
          }
          else
          {
             wxLogMessage(wxT("Tag %s has unhandled type: %s"),
-                         wxString::FromUTF8(name).c_str(),
-                         wxString::FromUTF8(G_VALUE_TYPE_NAME(val)).c_str());
+                         wxString::FromUTF8(name),
+                         wxString::FromUTF8(G_VALUE_TYPE_NAME(val)));
             continue;
          }
 
@@ -1438,12 +1438,12 @@ GStreamerImportFileHandle::OnTag(GstAppSink * WXUNUSED(appsink), GstTagList *tag
          }
          else
          {
-            tag = wxString::FromUTF8(name).c_str();
+            tag = wxString::FromUTF8(name);
          }
 
          if (jcnt > 1)
          {
-            tag.Printf(wxT("%s:%d"), tag.c_str(), j);
+            tag.Printf(wxT("%s:%d"), tag, j);
          }
 
          // Store the tag

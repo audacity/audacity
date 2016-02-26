@@ -701,10 +701,10 @@ KeyView::RefreshBindings(const wxArrayString & names,
          node.isparent,
          node.iscat,
          node.ispfx,
-         node.name.c_str(),
-         node.category.c_str(),
-         node.prefix.c_str(),
-         node.label.c_str());
+         node.name,
+         node.category,
+         node.prefix,
+         node.label);
    }
 #endif
 
@@ -942,10 +942,10 @@ KeyView::RefreshLines()
          node.isparent,
          node.iscat,
          node.ispfx,
-         node.name.c_str(),
-         node.category.c_str(),
-         node.prefix.c_str(),
-         node.label.c_str());
+         node.name,
+         node.category,
+         node.prefix,
+         node.label);
    }
 #endif
 
@@ -1545,24 +1545,24 @@ KeyView::CmpKeyNodeByTree(KeyNode ***n1, KeyNode ***n2)
    if (t1->category == _("Command") && !t1->isparent)
    {
       // A "command" node, so prepend the highest hex value
-      k1.Printf(wxT("ffffffff%s"), t1->label.c_str());
+      k1.Printf(wxT("ffffffff%s"), t1->label);
    }
    else
    {
       // A "menu" node, so prepend the line number
-      k1.Printf(wxT("%08x%s"), (unsigned int) t1->line, t1->label.c_str());
+      k1.Printf(wxT("%08x%s"), (unsigned int) t1->line, t1->label);
    }
 
    // See above for explanation
    if (t2->category == _("Command") && !t2->isparent)
    {
       // A "command" node, so prepend the highest hex value
-      k2.Printf(wxT("ffffffff%s"), t2->label.c_str());
+      k2.Printf(wxT("ffffffff%s"), t2->label);
    }
    else
    {
       // A "menu" node, so prepend the line number
-      k2.Printf(wxT("%08x%s"), (unsigned int) t2->line, t2->label.c_str());
+      k2.Printf(wxT("%08x%s"), (unsigned int) t2->line, t2->label);
    }
 
    // See wxWidgets documentation for explanation of comparison results.

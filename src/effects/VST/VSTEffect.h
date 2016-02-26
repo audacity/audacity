@@ -210,10 +210,10 @@ private:
    void SaveXML(const wxFileName & fn);
    void SaveFXProgram(wxMemoryBuffer & buf, int index);
 
-   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
-   void HandleXMLEndTag(const wxChar *tag) override;
+   bool HandleXMLTag(const wxString &tag, const wxArrayString &attrs) override;
+   void HandleXMLEndTag(const wxString &tag) override;
    void HandleXMLContent(const wxString & content) override;
-   XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
+   XMLTagHandler *HandleXMLChild(const wxString &tag) override;
 
    // Utility methods
 
@@ -360,7 +360,7 @@ public:
 
    // VSTEffectModule implementation
 
-   static void Check(const wxChar *path);
+   static void Check(const wxString &path);
 
 private:
    ModuleManagerInterface *mModMan;

@@ -100,7 +100,7 @@ void EditToolBar::AddSeparator()
 AButton *EditToolBar::AddButton(
    teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled,
    int id,
-   const wxChar *label,
+   const wxString &label,
    bool toggle)
 {
    AButton *&r = mButtons[id];

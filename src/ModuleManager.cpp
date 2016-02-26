@@ -56,8 +56,7 @@ i.e. an alternative to the usual interface, for Audacity.
 
 typedef wxWindow * pwxWindow;
 typedef int (*tModuleInit)(int);
-//typedef wxString (*tVersionFn)();
-typedef wxChar * (*tVersionFn)();
+typedef wxString (*tVersionFn)();
 typedef pwxWindow (*tPanelFn)(int);
 
 // This variable will hold the address of a subroutine in 
@@ -117,8 +116,8 @@ bool Module::Load()
    tVersionFn versionFn = (tVersionFn)(mLib->GetSymbol(wxT(versionFnName)));
    if (versionFn == NULL){
       wxString ShortName = wxFileName( mName ).GetName();
-      wxMessageBox(wxString::Format(_("The module %s does not provide a version string.\nIt will not be loaded."), ShortName.c_str()), _("Module Unsuitable"));
-      wxLogMessage(wxString::Format(_("The module %s does not provide a version string.  It will not be loaded."), mName.c_str()));
+      wxMessageBox(wxString::Format(_("The module %s does not provide a version string.\nIt will not be loaded."), ShortName), _("Module Unsuitable"));
+      wxLogMessage(wxString::Format(_("The module %s does not provide a version string.  It will not be loaded."), mName));
       mLib->Unload();
       return false;
    }
@@ -126,8 +125,8 @@ bool Module::Load()
    wxString moduleVersion = versionFn();
    if( !moduleVersion.IsSameAs(AUDACITY_VERSION_STRING)) {
       wxString ShortName = wxFileName( mName ).GetName();
-      wxMessageBox(wxString::Format(_("The module %s is matched with Audacity version %s.\n\nIt will not be loaded."), ShortName.c_str(), moduleVersion.c_str()), _("Module Unsuitable"));
-      wxLogMessage(wxString::Format(_("The module %s is matched with Audacity version %s.  It will not be loaded."), mName.c_str(), moduleVersion.c_str()));
+      wxMessageBox(wxString::Format(_("The module %s is matched with Audacity version %s.\n\nIt will not be loaded."), ShortName, moduleVersion), _("Module Unsuitable"));
+      wxLogMessage(wxString::Format(_("The module %s is matched with Audacity version %s.  It will not be loaded."), mName, moduleVersion));
       mLib->Unload();
       return false;
    }
@@ -285,11 +284,11 @@ void ModuleManager::Initialize(CommandHandler &cmdHandler)
       {
          wxString ShortName = wxFileName( files[i] ).GetName();
          wxString msg;
-         msg.Printf(_("Module \"%s\" found."), ShortName.c_str());
+         msg.Printf(_("Module \"%s\" found."), ShortName);
          msg += _("\n\nOnly use modules from trusted sources");
-         const wxChar *buttons[] = {_("Yes"), _("No"), NULL};  // could add a button here for 'yes and remember that', and put it into the cfg file.  Needs more thought.
+         const wxString buttons[] = {_("Yes"), _("No")};  // could add a button here for 'yes and remember that', and put it into the cfg file.  Needs more thought.
          int action;
-         action = ShowMultiDialog(msg, _("Audacity Module Loader"), buttons, _("Try and load this module?"), false);
+         action = ShowMultiDialog(msg, _("Audacity Module Loader"), wxArrayString(WXSIZEOF(buttons), buttons), _("Try and load this module?"), false);
 #ifdef EXPERIMENTAL_MODULE_PREFS
          // If we're not prompting always, accept the answer permanantly
          if( iModuleStatus == kModuleNew ){

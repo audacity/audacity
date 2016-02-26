@@ -90,8 +90,8 @@ enum
 
 #define UNINITIALIZED_CONTROL ((double)99999999.99)
 
-static const wxChar *KEY_Version = XO("Version");
-static const wxChar *KEY_Command = XO("Command");
+static const wxString KEY_Version = XO("Version");
+static const wxString KEY_Command = XO("Command");
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -490,10 +490,10 @@ bool NyquistEffect::Process()
 
       mProps += wxString::Format(wxT("(setf *DECIMAL-SEPARATOR* #\\%c)\n"), wxNumberFormatter::GetDecimalSeparator());
 
-      mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* \"%s\" 'BASE)\n"), EscapeString(FileNames::BaseDir()).c_str());
-      mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* \"%s\" 'DATA)\n"), EscapeString(FileNames::DataDir()).c_str());
-      mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* \"%s\" 'HELP)\n"), EscapeString(FileNames::HtmlHelpDir().RemoveLast()).c_str());
-      mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* \"%s\" 'TEMP)\n"), EscapeString(FileNames::TempDir()).c_str());
+      mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* \"%s\" 'BASE)\n"), EscapeString(FileNames::BaseDir()));
+      mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* \"%s\" 'DATA)\n"), EscapeString(FileNames::DataDir()));
+      mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* \"%s\" 'HELP)\n"), EscapeString(FileNames::HtmlHelpDir().RemoveLast()));
+      mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* \"%s\" 'TEMP)\n"), EscapeString(FileNames::TempDir()));
 
       wxArrayString paths = NyquistEffect::GetNyquistSearchPath();
       wxString list;
@@ -501,7 +501,7 @@ bool NyquistEffect::Process()
       {
          list += wxT("\"") + EscapeString(paths[i]) + wxT("\" ");
       }
-      mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* (list %s) 'PLUGIN)\n"), list.RemoveLast().c_str());
+      mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* (list %s) 'PLUGIN)\n"), list.RemoveLast());
 
 
       // Date and time:
@@ -517,15 +517,15 @@ bool NyquistEffect::Process()
       mProps += wxString::Format(wxT("(setf *SYSTEM-TIME* (list %d %d %d %d %d))\n"),
                                  year, doy, now.GetHour(), now.GetMinute(), now.GetSecond());
 
-      mProps += wxString::Format(wxT("(putprop '*SYSTEM-TIME* \"%s\" 'DATE)\n"), now.FormatDate().c_str());
-      mProps += wxString::Format(wxT("(putprop '*SYSTEM-TIME* \"%s\" 'TIME)\n"), now.FormatTime().c_str());
-      mProps += wxString::Format(wxT("(putprop '*SYSTEM-TIME* \"%s\" 'ISO-DATE)\n"), now.FormatISODate().c_str());
-      mProps += wxString::Format(wxT("(putprop '*SYSTEM-TIME* \"%s\" 'ISO-TIME)\n"), now.FormatISOTime().c_str());
+      mProps += wxString::Format(wxT("(putprop '*SYSTEM-TIME* \"%s\" 'DATE)\n"), now.FormatDate());
+      mProps += wxString::Format(wxT("(putprop '*SYSTEM-TIME* \"%s\" 'TIME)\n"), now.FormatTime());
+      mProps += wxString::Format(wxT("(putprop '*SYSTEM-TIME* \"%s\" 'ISO-DATE)\n"), now.FormatISODate());
+      mProps += wxString::Format(wxT("(putprop '*SYSTEM-TIME* \"%s\" 'ISO-TIME)\n"), now.FormatISOTime());
       mProps += wxString::Format(wxT("(putprop '*SYSTEM-TIME* %d 'YEAR)\n"), year);
       mProps += wxString::Format(wxT("(putprop '*SYSTEM-TIME* %d 'DAY)\n"), dom);   // day of month
       mProps += wxString::Format(wxT("(putprop '*SYSTEM-TIME* %d 'MONTH)\n"), month);
-      mProps += wxString::Format(wxT("(putprop '*SYSTEM-TIME* \"%s\" 'MONTH-NAME)\n"), now.GetMonthName(month).c_str());
-      mProps += wxString::Format(wxT("(putprop '*SYSTEM-TIME* \"%s\" 'DAY-NAME)\n"), now.GetWeekDayName(day).c_str());
+      mProps += wxString::Format(wxT("(putprop '*SYSTEM-TIME* \"%s\" 'MONTH-NAME)\n"), now.GetMonthName(month));
+      mProps += wxString::Format(wxT("(putprop '*SYSTEM-TIME* \"%s\" 'DAY-NAME)\n"), now.GetWeekDayName(day));
 
 
       TrackListIterator all(project->GetTracks());
@@ -567,7 +567,7 @@ bool NyquistEffect::Process()
       // numbers to Nyquist, whereas using "%g" will use the user's
       // decimal separator which may be a comma in some countries.
       mProps += wxString::Format(wxT("(putprop '*PROJECT* (float %s) 'RATE)\n"),
-                                 Internat::ToString(project->GetRate()).c_str());
+                                 Internat::ToString(project->GetRate()));
       mProps += wxString::Format(wxT("(putprop '*PROJECT* %d 'TRACKS)\n"), numTracks);
       mProps += wxString::Format(wxT("(putprop '*PROJECT* %d 'WAVETRACKS)\n"), numWave);
       mProps += wxString::Format(wxT("(putprop '*PROJECT* %d 'LABELTRACKS)\n"), numLabel);
@@ -577,17 +577,17 @@ bool NyquistEffect::Process()
       double previewLen = 6.0;
       gPrefs->Read(wxT("/AudioIO/EffectsPreviewLen"), &previewLen);
       mProps += wxString::Format(wxT("(putprop '*PROJECT* (float %s) 'PREVIEW-DURATION)\n"),
-                                 Internat::ToString(previewLen).c_str());
+                                 Internat::ToString(previewLen));
 
       // *PREVIEWP* is true when previewing (better than relying on track view).
       wxString isPreviewing = (this->IsPreviewing())? wxT("T") : wxT("NIL");
-      mProps += wxString::Format(wxT("(setf *PREVIEWP* %s)\n"), isPreviewing.c_str());
+      mProps += wxString::Format(wxT("(setf *PREVIEWP* %s)\n"), isPreviewing);
 
       mProps += wxString::Format(wxT("(putprop '*SELECTION* (float %s) 'START)\n"),
-                                 Internat::ToString(mT0).c_str());
+                                 Internat::ToString(mT0));
       mProps += wxString::Format(wxT("(putprop '*SELECTION* (float %s) 'END)\n"),
-                                 Internat::ToString(mT1).c_str());
-      mProps += wxString::Format(wxT("(putprop '*SELECTION* (list %s) 'TRACKS)\n"), waveTrackList.c_str());
+                                 Internat::ToString(mT1));
+      mProps += wxString::Format(wxT("(putprop '*SELECTION* (list %s) 'TRACKS)\n"), waveTrackList);
       mProps += wxString::Format(wxT("(putprop '*SELECTION* %d 'CHANNELS)\n"), mNumSelectedChannels);
    }
 
@@ -663,15 +663,15 @@ bool NyquistEffect::Process()
 
 #if defined(EXPERIMENTAL_SPECTRAL_EDITING)
             if (mF0 >= 0.0) {
-               lowHz.Printf(wxT("(float %s)"), Internat::ToString(mF0).c_str());
+               lowHz.Printf(wxT("(float %s)"), Internat::ToString(mF0));
             }
 
             if (mF1 >= 0.0) {
-               highHz.Printf(wxT("(float %s)"), Internat::ToString(mF1).c_str());
+               highHz.Printf(wxT("(float %s)"), Internat::ToString(mF1));
             }
 
             if ((mF0 >= 0.0) && (mF1 >= 0.0)) {
-               centerHz.Printf(wxT("(float %s)"), Internat::ToString(sqrt(mF0 * mF1)).c_str());
+               centerHz.Printf(wxT("(float %s)"), Internat::ToString(sqrt(mF0 * mF1)));
             }
 
             if ((mF0 > 0.0) && (mF1 >= mF0)) {
@@ -679,15 +679,15 @@ bool NyquistEffect::Process()
                // (Observed on Linux)
                double bw = log(mF1 / mF0) / log(2.0);
                if (!isinf(bw)) {
-                  bandwidth.Printf(wxT("(float %s)"), Internat::ToString(bw).c_str());
+                  bandwidth.Printf(wxT("(float %s)"), Internat::ToString(bw));
                }
             }
 
 #endif
-            mPerTrackProps += wxString::Format(wxT("(putprop '*SELECTION* %s 'LOW-HZ)\n"), lowHz.c_str());
-            mPerTrackProps += wxString::Format(wxT("(putprop '*SELECTION* %s 'CENTER-HZ)\n"), centerHz.c_str());
-            mPerTrackProps += wxString::Format(wxT("(putprop '*SELECTION* %s 'HIGH-HZ)\n"), highHz.c_str());
-            mPerTrackProps += wxString::Format(wxT("(putprop '*SELECTION* %s 'BANDWIDTH)\n"), bandwidth.c_str());
+            mPerTrackProps += wxString::Format(wxT("(putprop '*SELECTION* %s 'LOW-HZ)\n"), lowHz);
+            mPerTrackProps += wxString::Format(wxT("(putprop '*SELECTION* %s 'CENTER-HZ)\n"), centerHz);
+            mPerTrackProps += wxString::Format(wxT("(putprop '*SELECTION* %s 'HIGH-HZ)\n"), highHz);
+            mPerTrackProps += wxString::Format(wxT("(putprop '*SELECTION* %s 'BANDWIDTH)\n"), bandwidth);
          }
 
          success = ProcessOne();
@@ -719,7 +719,7 @@ bool NyquistEffect::Process()
       NyquistOutputDialog dlog(mUIParent, -1,
                                _("Nyquist"),
                                _("Nyquist Output: "),
-                               mDebugOutput.c_str());
+                               mDebugOutput);
       dlog.CentreOnParent();
       dlog.ShowModal();
    }
@@ -876,10 +876,10 @@ bool NyquistEffect::ProcessOne()
       }
 
       cmd += wxString::Format(wxT("(putprop '*TRACK* %d 'INDEX)\n"), ++mTrackIndex);
-      cmd += wxString::Format(wxT("(putprop '*TRACK* \"%s\" 'NAME)\n"), mCurTrack[0]->GetName().c_str());
-      cmd += wxString::Format(wxT("(putprop '*TRACK* \"%s\" 'TYPE)\n"), type.c_str());
+      cmd += wxString::Format(wxT("(putprop '*TRACK* \"%s\" 'NAME)\n"), mCurTrack[0]->GetName());
+      cmd += wxString::Format(wxT("(putprop '*TRACK* \"%s\" 'TYPE)\n"), type);
       // Note: "View" property may change when Audacity's choice of track views has stabilized.
-      cmd += wxString::Format(wxT("(putprop '*TRACK* %s 'VIEW)\n"), view.c_str());
+      cmd += wxString::Format(wxT("(putprop '*TRACK* %s 'VIEW)\n"), view);
       cmd += wxString::Format(wxT("(putprop '*TRACK* %d 'CHANNELS)\n"), mCurNumChannels);
 
       double startTime = 0.0;
@@ -900,15 +900,15 @@ bool NyquistEffect::ProcessOne()
       }
 
       cmd += wxString::Format(wxT("(putprop '*TRACK* (float %s) 'START-TIME)\n"),
-                              Internat::ToString(startTime).c_str());
+                              Internat::ToString(startTime));
       cmd += wxString::Format(wxT("(putprop '*TRACK* (float %s) 'END-TIME)\n"),
-                              Internat::ToString(endTime).c_str());
+                              Internat::ToString(endTime));
       cmd += wxString::Format(wxT("(putprop '*TRACK* (float %s) 'GAIN)\n"),
-                              Internat::ToString(mCurTrack[0]->GetGain()).c_str());
+                              Internat::ToString(mCurTrack[0]->GetGain()));
       cmd += wxString::Format(wxT("(putprop '*TRACK* (float %s) 'PAN)\n"),
-                              Internat::ToString(mCurTrack[0]->GetPan()).c_str());
+                              Internat::ToString(mCurTrack[0]->GetPan()));
       cmd += wxString::Format(wxT("(putprop '*TRACK* (float %s) 'RATE)\n"),
-                              Internat::ToString(mCurTrack[0]->GetRate()).c_str());
+                              Internat::ToString(mCurTrack[0]->GetRate()));
 
       switch (mCurTrack[0]->GetSampleFormat())
       {
@@ -922,7 +922,7 @@ bool NyquistEffect::ProcessOne()
             bitFormat = wxT("32.0");
             break;
       }
-      cmd += wxString::Format(wxT("(putprop '*TRACK* %s 'FORMAT)\n"), bitFormat.c_str());
+      cmd += wxString::Format(wxT("(putprop '*TRACK* %s 'FORMAT)\n"), bitFormat);
 
       float maxPeak = 0.0;
       wxString clips;
@@ -934,8 +934,8 @@ bool NyquistEffect::ProcessOne()
          // Each clip is a list (start-time, end-time)
          for (size_t j = 0; j < ca.GetCount(); j++) {
             clips += wxString::Format(wxT("(list (float %s) (float %s))"),
-                                      Internat::ToString(ca[j]->GetStartTime()).c_str(),
-                                      Internat::ToString(ca[j]->GetEndTime()).c_str());
+                                      Internat::ToString(ca[j]->GetStartTime()),
+                                      Internat::ToString(ca[j]->GetEndTime()));
          }
          if (mCurNumChannels > 1) clips += wxT(" )");
 
@@ -946,9 +946,9 @@ bool NyquistEffect::ProcessOne()
       // A list of clips for mono, or an array of lists for multi-channel.
       cmd += wxString::Format(wxT("(putprop '*TRACK* %s%s ) 'CLIPS)\n"),
                               (mCurNumChannels == 1) ? wxT("(list ") : wxT("(vector "),
-                              clips.c_str());
+                              clips);
       cmd += wxString::Format(wxT("(putprop '*SELECTION* (float %s) 'PEAK-LEVEL)\n"),
-                              Internat::ToString(maxPeak).c_str());
+                              Internat::ToString(maxPeak));
    }
 
    if (GetType() == EffectTypeGenerate) {
@@ -988,20 +988,20 @@ bool NyquistEffect::ProcessOne()
          // numbers to Nyquist, whereas using "%f" will use the user's
          // decimal separator which may be a comma in some countries.
          cmd += wxString::Format(wxT("(setf %s %s)\n"),
-                                 mControls[j].var.c_str(),
-                                 Internat::ToString(mControls[j].val, 14).c_str());
+                                 mControls[j].var,
+                                 Internat::ToString(mControls[j].val, 14));
       }
       else if (mControls[j].type == NYQ_CTRL_INT ||
             mControls[j].type == NYQ_CTRL_INT_TEXT ||
             mControls[j].type == NYQ_CTRL_CHOICE) {
          cmd += wxString::Format(wxT("(setf %s %d)\n"),
-                                 mControls[j].var.c_str(),
+                                 mControls[j].var,
                                  (int)(mControls[j].val));
       }
       else if (mControls[j].type == NYQ_CTRL_STRING) {
          cmd += wxT("(setf ");
          // restrict variable names to 7-bit ASCII:
-         cmd += mControls[j].var.c_str();
+         cmd += mControls[j].var.ToAscii();
          cmd += wxT(" \"");
          cmd += EscapeString(mControls[j].valStr); // unrestricted value will become quoted UTF-8
          cmd += wxT("\")\n");
@@ -1050,7 +1050,7 @@ bool NyquistEffect::ProcessOne()
       mCurBuffer[i] = NULL;
    }
 
-   rval = nyx_eval_expression(cmd.mb_str(wxConvUTF8));
+   rval = nyx_eval_expression(cmd.utf8_str());
 
    // Audacity has no idea how long Nyquist processing will take, but
    // can monitor audio being returned.
@@ -1355,7 +1355,7 @@ void NyquistEffect::Parse(const wxString &line)
    wxString tok = wxT("");
 
    for (i = 1; i < len; i++) {
-      wxChar c = line[i];
+      auto c = line[i];
 
       if (c == wxT('\\')) {
          sl = true;
@@ -1567,7 +1567,7 @@ void NyquistEffect::Parse(const wxString &line)
          {
             wxString str;
             str.Printf(_("Bad Nyquist 'control' type specification: '%s' in plugin file '%s'.\nControl not created."),
-                       tokens[3].c_str(), mFileName.GetFullPath().c_str());
+                       tokens[3], mFileName.GetFullPath());
 
             // Too disturbing to show alert before Audacity frame is up.
             //    wxMessageBox(str, wxT("Nyquist Warning"), wxOK | wxICON_EXCLAMATION);

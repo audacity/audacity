@@ -58,7 +58,7 @@ void InitDitherers()
    gPrefs->Read(wxT("/Quality/HQDitherAlgorithm"), (long)Dither::shaped);
 }
 
-const wxChar *GetSampleFormatStr(sampleFormat format)
+wxString GetSampleFormatStr(sampleFormat format)
 {
    switch(format) {
    case int16Sample:

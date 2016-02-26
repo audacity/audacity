@@ -291,7 +291,7 @@ int ExportFLAC::Export(AudacityProject *project,
 #else
    wxFFile f;     // will be closed when it goes out of scope
    if (!f.Open(fName, wxT("w+b"))) {
-      wxMessageBox(wxString::Format(_("FLAC export couldn't open %s"), fName.c_str()));
+      wxMessageBox(wxString::Format(_("FLAC export couldn't open %s"), fName));
       return false;
    }
 
@@ -395,8 +395,8 @@ bool ExportFLAC::GetMetadata(AudacityProject *project, const Tags *tags)
       if (n == TAG_YEAR) {
          n = wxT("DATE");
       }
-      FLAC::Metadata::VorbisComment::Entry entry(n.mb_str(wxConvUTF8),
-                                                 v.mb_str(wxConvUTF8));
+      FLAC::Metadata::VorbisComment::Entry entry(n.utf8_str(),
+                                                 v.utf8_str());
       ::FLAC__metadata_object_vorbiscomment_append_comment(mMetadata,
                                                            entry.get_entry(),
                                                            true);

@@ -130,28 +130,28 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
                     const wxArrayString & labels,
                     const CommandFunctorPointer &callback);
 
-   void AddCheck(const wxChar *name,
-                 const wxChar *label,
+   void AddCheck(const wxString &name,
+                 const wxString &label,
                  const CommandFunctorPointer &callback,
                  int checkmark = 0);
 
-   void AddCheck(const wxChar *name,
-                 const wxChar *label,
+   void AddCheck(const wxString &name,
+                 const wxString &label,
                  const CommandFunctorPointer &callback,
                  int checkmark,
                  unsigned int flags,
                  unsigned int mask);
 
-   void AddItem(const wxChar *name,
-                const wxChar *label,
+   void AddItem(const wxString &name,
+                const wxString &label,
                 const CommandFunctorPointer &callback,
                 unsigned int flags = NoFlagsSpecifed,
                 unsigned int mask = NoFlagsSpecifed);
 
-   void AddItem(const wxChar *name,
-                const wxChar *label_in,
+   void AddItem(const wxString &name,
+                const wxString &label_in,
                 const CommandFunctorPointer &callback,
-                const wxChar *accel,
+                const wxString &accel,
                 unsigned int flags = NoFlagsSpecifed,
                 unsigned int mask = NoFlagsSpecifed,
                 int checkmark = -1);
@@ -160,23 +160,23 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
 
    // A command doesn't actually appear in a menu but might have a
    // keyboard shortcut.
-   void AddCommand(const wxChar *name,
-                   const wxChar *label,
+   void AddCommand(const wxString &name,
+                   const wxString &label,
                    const CommandFunctorPointer &callback,
                    unsigned int flags = NoFlagsSpecifed,
                    unsigned int mask = NoFlagsSpecifed);
 
-   void AddCommand(const wxChar *name,
-                   const wxChar *label,
+   void AddCommand(const wxString &name,
+                   const wxString &label,
                    const CommandFunctorPointer &callback,
-                   const wxChar *accel,
+                   const wxString &accel,
                    unsigned int flags = NoFlagsSpecifed,
                    unsigned int mask = NoFlagsSpecifed);
 
-   void AddGlobalCommand(const wxChar *name,
-                         const wxChar *label,
+   void AddGlobalCommand(const wxString &name,
+                         const wxString &label,
                          const CommandFunctorPointer &callback,
-                         const wxChar *accel);
+                         const wxString &accel);
    //
    // Command masks
    //
@@ -185,10 +185,10 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
    void SetDefaultFlags(wxUint32 flags, wxUint32 mask);
 
    void SetCommandFlags(const wxString &name, wxUint32 flags, wxUint32 mask);
-   void SetCommandFlags(const wxChar **names,
+   void SetCommandFlags(const wxArrayString &names,
                         wxUint32 flags, wxUint32 mask);
    // Pass multiple command names as const wxChar *, terminated by NULL
-   void SetCommandFlags(wxUint32 flags, wxUint32 mask, ...);
+   //void SetCommandFlags(wxUint32 flags, wxUint32 mask, ...);
 
    //
    // Modifying menus
@@ -299,9 +299,9 @@ protected:
    // Loading/Saving
    //
 
-   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
-   void HandleXMLEndTag(const wxChar *tag) override;
-   XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
+   bool HandleXMLTag(const wxString &tag, const wxArrayString &attrs) override;
+   void HandleXMLEndTag(const wxString &tag) override;
+   XMLTagHandler *HandleXMLChild(const wxString &tag) override;
 
 private:
    MenuBarList  mMenuBarList;

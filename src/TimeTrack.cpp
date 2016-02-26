@@ -139,19 +139,15 @@ double TimeTrack::SolveWarpedLength(double t0, double length)
    return GetEnvelope()->SolveIntegralOfInverse(t0, length);
 }
 
-bool TimeTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
+bool TimeTrack::HandleXMLTag(const wxString &tag, const wxArrayString &attrs)
 {
    if (!wxStrcmp(tag, wxT("timetrack"))) {
       mRescaleXMLValues = true; // will be set to false if upper/lower is found
       long nValue;
-      while(*attrs) {
-         const wxChar *attr = *attrs++;
-         const wxChar *value = *attrs++;
-
-         if (!value)
-            break;
-
-         const wxString strValue = value;
+      for (size_t i = 0; i < attrs.GetCount() / 2; ++i) {
+         const wxString &attr = attrs[2*i];
+         const wxString &value = attrs[2*i+1];
+         const wxString &strValue = strValue;
          if (!wxStrcmp(attr, wxT("name")) && XMLValueChecker::IsGoodString(strValue))
             mName = strValue;
          else if (!wxStrcmp(attr, wxT("height")) &&
@@ -192,7 +188,7 @@ bool TimeTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    return false;
 }
 
-void TimeTrack::HandleXMLEndTag(const wxChar * WXUNUSED(tag))
+void TimeTrack::HandleXMLEndTag(const wxString &WXUNUSED(tag))
 {
    if(mRescaleXMLValues)
    {
@@ -202,7 +198,7 @@ void TimeTrack::HandleXMLEndTag(const wxChar * WXUNUSED(tag))
    }
 }
 
-XMLTagHandler *TimeTrack::HandleXMLChild(const wxChar *tag)
+XMLTagHandler *TimeTrack::HandleXMLChild(const wxString &tag)
 {
    if (!wxStrcmp(tag, wxT("envelope")))
       return mEnvelope;

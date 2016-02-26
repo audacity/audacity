@@ -124,7 +124,7 @@ class TranscriptionToolBar final : public ToolBar {
    AButton *AddButton(
       teBmps eFore, teBmps eDisabled,
       int id,
-      const wxChar *label);
+      const wxString &label);
    void MakeAlternateImages(
       teBmps eFore, teBmps eDisabled,
       int id, unsigned altIdx);

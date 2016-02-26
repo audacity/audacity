@@ -143,8 +143,8 @@ class AUDACITY_DLL_API LabelTrack final : public Track
 
    void SetSelected(bool s) override;
 
-   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
-   XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
+   bool HandleXMLTag(const wxString &tag, const wxArrayString &attrs) override;
+   XMLTagHandler *HandleXMLChild(const wxString &tag) override;
    void WriteXML(XMLWriter &xmlFile) override;
 
 #if LEGACY_PROJECT_FILE_SUPPORT

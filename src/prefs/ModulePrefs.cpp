@@ -70,7 +70,7 @@ void ModulePrefs::GetAllModuleStatuses(){
             iStatus = kModuleNew;
             gPrefs->Write( str, iStatus );
          }
-         //wxLogDebug( wxT("Entry: %s Value: %i"), str.c_str(), iStatus );
+         //wxLogDebug( wxT("Entry: %s Value: %i"), str, iStatus );
          mModules.Add( str );
          mStatuses.Add( iStatus );
          mPaths.Add( fname );

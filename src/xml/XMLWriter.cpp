@@ -78,7 +78,7 @@ void XMLWriter::StartTag(const wxString &name)
       Write(wxT("\t"));
    }
 
-   Write(wxString::Format(wxT("<%s"), name.c_str()));
+   Write(wxString::Format(wxT("<%s"), name));
 
    mTagstack.Insert(name, 0);
    mHasKids[0] = true;
@@ -101,7 +101,7 @@ void XMLWriter::EndTag(const wxString &name)
                for (i = 0; i < mDepth - 1; i++) {
                   Write(wxT("\t"));
                }
-               Write(wxString::Format(wxT("</%s>\n"), name.c_str()));
+               Write(wxString::Format(wxT("</%s>\n"), name));
             }
          }
          else {
@@ -119,62 +119,57 @@ void XMLWriter::EndTag(const wxString &name)
 void XMLWriter::WriteAttr(const wxString &name, const wxString &value)
 {
    Write(wxString::Format(wxT(" %s=\"%s\""),
-      name.c_str(),
-      XMLEsc(value).c_str()));
-}
-
-void XMLWriter::WriteAttr(const wxString &name, const wxChar *value)
-{
-   WriteAttr(name, wxString(value));
+      name,
+      XMLEsc(value)));
 }
 
 void XMLWriter::WriteAttr(const wxString &name, int value)
 {
    Write(wxString::Format(wxT(" %s=\"%d\""),
-      name.c_str(),
+      name,
       value));
 }
 
 void XMLWriter::WriteAttr(const wxString &name, bool value)
 {
    Write(wxString::Format(wxT(" %s=\"%d\""),
-      name.c_str(),
+      name,
       value));
 }
 
 void XMLWriter::WriteAttr(const wxString &name, long value)
 {
    Write(wxString::Format(wxT(" %s=\"%ld\""),
-      name.c_str(),
+      name,
       value));
 }
 
 void XMLWriter::WriteAttr(const wxString &name, long long value)
 {
    Write(wxString::Format(wxT(" %s=\"%lld\""),
-      name.c_str(),
+      name,
       value));
 }
 
 void XMLWriter::WriteAttr(const wxString &name, size_t value)
 {
    Write(wxString::Format(wxT(" %s=\"%lld\""),
-      name.c_str(),
+      name,
       (long long) value));
 }
 
 void XMLWriter::WriteAttr(const wxString &name, float value, int digits)
 {
    Write(wxString::Format(wxT(" %s=\"%s\""),
-      name.c_str(),
-      Internat::ToString(value, digits).c_str()));
+      name,
+      Internat::ToString(value, digits)));
 }
 
 void XMLWriter::WriteAttr(const wxString &name, double value, int digits)
 {
    Write(wxString::Format(wxT(" %s=\"%s\""),
-      name.c_str(),
-      Internat::ToString(value, digits).c_str()));
+      name,
+      Internat::ToString(value, digits)));
 }
 
 void XMLWriter::WriteData(const wxString &value)
@@ -196,7 +191,7 @@ void XMLWriter::WriteSubTree(const wxString &value)
       mHasKids[0] = true;
    }
 
-   Write(value.c_str());
+   Write(value);
 }
 
 // See http://www.w3.org/TR/REC-xml for reference

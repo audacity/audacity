@@ -78,7 +78,7 @@ void ComputeLegacySummaryInfo(wxFileName fileName,
 
       if (!summaryFile.IsOpened()) {
          wxLogWarning(wxT("Unable to access summary file %s; substituting silence for remainder of session"),
-            fileName.GetFullPath().c_str());
+            fileName.GetFullPath());
 
          read = info->frames64K * info->bytesPerFrame;
          memset(data.ptr(), 0, read);
@@ -288,7 +288,7 @@ void LegacyBlockFile::SaveXML(XMLWriter &xmlFile)
 // even if the result is flawed (e.g., refers to nonexistent file),
 // as testing will be done in DirManager::ProjectFSCK().
 /// static
-BlockFile *LegacyBlockFile::BuildFromXML(const wxString &projDir, const wxChar **attrs,
+BlockFile *LegacyBlockFile::BuildFromXML(const wxString &projDir, const wxArrayString &attrs,
                                          sampleCount len, sampleFormat format)
 {
    wxFileName fileName;
@@ -296,14 +296,10 @@ BlockFile *LegacyBlockFile::BuildFromXML(const wxString &projDir, const wxChar *
    bool noRMS = false;
    long nValue;
 
-   while(*attrs)
+   for (size_t i = 0; i < attrs.GetCount() / 2; ++i)
    {
-      const wxChar *attr =  *attrs++;
-      const wxChar *value = *attrs++;
-      if (!value)
-         break;
-
-      const wxString strValue = value;
+      const wxString &attr = attrs[2*i];
+      const wxString &strValue = attrs[2*i+1];
       if (!wxStricmp(attr, wxT("name")) && XMLValueChecker::IsGoodFileName(strValue, projDir))
          //v Should this be
          //    dm.AssignFile(fileName, strValue, false);

@@ -45,9 +45,9 @@ class RecordingRecoveryHandler final : public XMLTagHandler
 {
 public:
    RecordingRecoveryHandler(AudacityProject* proj);
-   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
-   void HandleXMLEndTag(const wxChar *tag) override;
-   XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
+   bool HandleXMLTag(const wxString &tag, const wxArrayString &attrs) override;
+   void HandleXMLEndTag(const wxString &tag) override;
+   XMLTagHandler *HandleXMLChild(const wxString &tag) override;
 
    // This class only knows reading tags
    // void WriteXML(XMLWriter & WXUNUSED(xmlFile)) /* not override */ { wxASSERT(false); }
@@ -84,7 +84,6 @@ public:
    void EndTag(const wxString & name) override;
 
    void WriteAttr(const wxString & name, const wxString &value) override;
-   void WriteAttr(const wxString & name, const wxChar *value) override;
 
    void WriteAttr(const wxString & name, int value) override;
    void WriteAttr(const wxString & name, bool value) override;

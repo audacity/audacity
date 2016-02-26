@@ -732,21 +732,21 @@ void NumericConverter::PrintDebugInfo()
 {
    unsigned int i;
 
-   printf("%s", (const char *)mPrefix.mb_str());
+   wxPrintf("%s", mPrefix);
 
    for(i=0; i<mFields.GetCount(); i++) {
       if (mFields[i].frac) {
-         printf("(t * %d) %% %d '%s' ",
+         wxPrintf("(t * %d) %% %d '%s' ",
                 mFields[i].base,
                 mFields[i].range,
-                (const char *)mFields[i].label.mb_str());
+                mFields[i].label);
 
       }
       else {
-         printf("(t / %d) %% %d '%s' ",
+         wxPrintf("(t / %d) %% %d '%s' ",
                 mFields[i].base,
                 mFields[i].range,
-                (const char *)mFields[i].label.mb_str());
+                mFields[i].label);
       }
    }
 

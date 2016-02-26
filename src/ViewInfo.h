@@ -181,7 +181,7 @@ public:
    bool bScrollBeyondZero;
 
    void WriteXMLAttributes(XMLWriter &xmlFile);
-   bool ReadXMLAttribute(const wxChar *attr, const wxChar *value);
+   bool ReadXMLAttribute(const wxString &attr, const wxString &value);
 };
 
 #endif

@@ -86,7 +86,7 @@ enum kTypes
    kNumTypes
 };
 
-static const wxChar *kTypeStrings[] =
+static const wxString kTypeStrings[] =
 {
    /*i18n-hint: Butterworth is the name of the person after whom the filter type is named.*/
    XO("Butterworth"),
@@ -103,7 +103,7 @@ enum kSubTypes
    kNumSubTypes
 };
 
-static const wxChar *kSubTypeStrings[] =
+static const wxString kSubTypeStrings[] =
 {
    XO("Lowpass"),
    XO("Highpass")

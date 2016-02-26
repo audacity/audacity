@@ -166,7 +166,7 @@ enum
 //
 // Create the effect name array
 //
-static const wxChar *kEffectNames[] =
+static const wxString kEffectNames[] =
 {
    EFFECT_LIST
 };
@@ -174,7 +174,7 @@ static const wxChar *kEffectNames[] =
 //
 // Create the effect name array of excluded effects
 //
-static const wxChar *kExcludedNames[] =
+static const wxString kExcludedNames[] =
 {
    EXCLUDE_LIST
 };
