@@ -11,10 +11,10 @@ typedef unsigned int   UWORD;
 
 #ifdef DEBUG
 #define INLINE
-#else DEBUG
+#else /* DEBUG */
 /* #define INLINE inline */
 #define INLINE
-#endif DEBUG
+#endif /* DEBUG */
 
 /*
  * FilterUp() - Applies a filter to a given sample when up-converting.
