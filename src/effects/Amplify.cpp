@@ -128,8 +128,10 @@ bool EffectAmplify::GetAutomationParameters(EffectAutomationParameters & parms)
 
 bool EffectAmplify::SetAutomationParameters(EffectAutomationParameters & parms)
 {
+   ReadAndVerifyFloat(Amp);
    ReadAndVerifyFloat(Ratio);
 
+   mAmp = Amp;
    mRatio = Ratio;
 
    return true;
