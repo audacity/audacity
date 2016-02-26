@@ -168,7 +168,7 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
 
    virtual bool SplitAt(double t);
    virtual bool Split( double t0, double t1 );
-   virtual bool CutAndAddCutLine(double t0, double t1, Track **dest);
+   // bool CutAndAddCutLine(double t0, double t1, Track **dest);
    virtual bool ClearAndAddCutLine(double t0, double t1);
 
    virtual bool SplitCut   (double t0, double t1, Track **dest);

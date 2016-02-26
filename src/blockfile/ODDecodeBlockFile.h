@@ -116,7 +116,7 @@ class ODDecodeBlockFile final : public SimpleBlockFile
 
    ///Returns the type of audiofile this blockfile is loaded from.
    virtual unsigned int GetDecodeType(){return mType;}
-   virtual void SetDecodeType(unsigned int type){mType=type;}
+   // virtual void SetDecodeType(unsigned int type){mType=type;}
 
    ///sets the amount of samples the clip associated with this blockfile is offset in the wavetrack (non effecting)
    void SetClipOffset(sampleCount numSamples){mClipOffset= numSamples;}

@@ -558,6 +558,7 @@ bool WaveTrack::SplitCut(double t0, double t1, Track **dest)
    return SplitDelete(t0, t1);
 }
 
+#if 0
 bool WaveTrack::CutAndAddCutLine(double t0, double t1, Track **dest)
 {
    if (t1 < t0)
@@ -568,6 +569,7 @@ bool WaveTrack::CutAndAddCutLine(double t0, double t1, Track **dest)
       return false;
    return ClearAndAddCutLine(t0, t1);
 }
+#endif
 
 
 
