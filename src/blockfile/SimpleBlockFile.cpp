@@ -345,21 +345,21 @@ bool SimpleBlockFile::ReadSummary(void *data)
 
       wxFFile file(mFileName.GetFullPath(), wxT("rb"));
 
-      wxLogNull *silence=0;
-      if(mSilentLog)silence= new wxLogNull();
+      {
+         Maybe<wxLogNull> silence{};
+         if (mSilentLog)
+            silence.create();
 
-      if(!file.IsOpened() ){
+         if (!file.IsOpened()){
 
-         memset(data,0,(size_t)mSummaryInfo.totalSummaryBytes);
+            memset(data, 0, (size_t)mSummaryInfo.totalSummaryBytes);
 
-         if(silence) delete silence;
-         mSilentLog=TRUE;
+            mSilentLog = TRUE;
 
-         return true;
+            return true;
 
+         }
       }
-
-      if(silence) delete silence;
       mSilentLog=FALSE;
 
       // The offset is just past the au header
@@ -400,31 +400,31 @@ int SimpleBlockFile::ReadData(samplePtr data, sampleFormat format,
       //wxLogDebug("SimpleBlockFile::ReadData(): Reading data from disk.");
 
       SF_INFO info;
-      wxLogNull *silence=0;
-      if(mSilentLog)silence= new wxLogNull();
-
-      memset(&info, 0, sizeof(info));
-
       wxFile f;   // will be closed when it goes out of scope
       SNDFILE *sf = NULL;
+      {
+         Maybe<wxLogNull> silence{};
+         if (mSilentLog)
+            silence.create();
 
-      if (f.Open(mFileName.GetFullPath())) {
-         // Even though there is an sf_open() that takes a filename, use the one that
-         // takes a file descriptor since wxWidgets can open a file with a Unicode name and
-         // libsndfile can't (under Windows).
-         sf = sf_open_fd(f.fd(), SFM_READ, &info, FALSE);
+         memset(&info, 0, sizeof(info));
+
+         if (f.Open(mFileName.GetFullPath())) {
+            // Even though there is an sf_open() that takes a filename, use the one that
+            // takes a file descriptor since wxWidgets can open a file with a Unicode name and
+            // libsndfile can't (under Windows).
+            sf = sf_open_fd(f.fd(), SFM_READ, &info, FALSE);
+         }
+
+         if (!sf) {
+
+            memset(data, 0, SAMPLE_SIZE(format)*len);
+
+            mSilentLog = TRUE;
+
+            return len;
+         }
       }
-
-      if (!sf) {
-
-         memset(data,0,SAMPLE_SIZE(format)*len);
-
-         if(silence) delete silence;
-         mSilentLog=TRUE;
-
-         return len;
-      }
-      if(silence) delete silence;
       mSilentLog=FALSE;
 
       sf_seek(sf, start, SEEK_SET);

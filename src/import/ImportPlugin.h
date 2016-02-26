@@ -119,17 +119,12 @@ class ImportFileHandle /* not final */
 public:
    ImportFileHandle(const wxString & filename)
    :  mFilename(filename),
-   mProgress(NULL)
+   mProgress{}
    {
    }
 
    virtual ~ImportFileHandle()
    {
-      if (mProgress != NULL)
-      {
-         delete mProgress;
-         mProgress = NULL;
-      }
    }
 
    // The importer should call this to create the progress dialog and
@@ -140,8 +135,7 @@ public:
       wxString title;
 
       title.Printf(_("Importing %s"), GetFileDescription().c_str());
-      mProgress = new ProgressDialog(title,
-                                     f.GetFullName());
+      mProgress.create(title, f.GetFullName());
    }
 
    // This is similar to GetImporterDescription, but if possible the
@@ -170,7 +164,7 @@ public:
 
 protected:
    wxString mFilename;
-   ProgressDialog *mProgress;
+   Maybe<ProgressDialog> mProgress;
 };
 
 

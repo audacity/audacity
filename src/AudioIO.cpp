@@ -1343,72 +1343,67 @@ bool AudioIO::StartPortAudioStream(double sampleRate,
    mNumPlaybackChannels = numPlaybackChannels;
    mNumCaptureChannels = numCaptureChannels;
 
-   PaStreamParameters *playbackParameters = NULL;
-   PaStreamParameters *captureParameters = NULL;
+   bool usePlayback = false, useCapture = false;
+   PaStreamParameters playbackParameters{};
+   PaStreamParameters captureParameters{};
 
    double latencyDuration = DEFAULT_LATENCY_DURATION;
    gPrefs->Read(wxT("/AudioIO/LatencyDuration"), &latencyDuration);
 
    if( numPlaybackChannels > 0)
    {
-      playbackParameters = new PaStreamParameters;
+      usePlayback = true;
+
       // this sets the device index to whatever is "right" based on preferences,
       // then defaults
-      playbackParameters->device = getPlayDevIndex();
+      playbackParameters.device = getPlayDevIndex();
 
       const PaDeviceInfo *playbackDeviceInfo;
-      playbackDeviceInfo = Pa_GetDeviceInfo( playbackParameters->device );
+      playbackDeviceInfo = Pa_GetDeviceInfo( playbackParameters.device );
 
       if( playbackDeviceInfo == NULL )
-      {
-         delete playbackParameters;
          return false;
-      }
 
       // regardless of source formats, we always mix to float
-      playbackParameters->sampleFormat = paFloat32;
-      playbackParameters->hostApiSpecificStreamInfo = NULL;
-      playbackParameters->channelCount = mNumPlaybackChannels;
+      playbackParameters.sampleFormat = paFloat32;
+      playbackParameters.hostApiSpecificStreamInfo = NULL;
+      playbackParameters.channelCount = mNumPlaybackChannels;
 
       if (mSoftwarePlaythrough)
-         playbackParameters->suggestedLatency =
+         playbackParameters.suggestedLatency =
             playbackDeviceInfo->defaultLowOutputLatency;
       else
-         playbackParameters->suggestedLatency = latencyDuration/1000.0;
+         playbackParameters.suggestedLatency = latencyDuration/1000.0;
 
       mOutputMeter = mOwningProject->GetPlaybackMeter();
    }
 
    if( numCaptureChannels > 0)
    {
+      useCapture = true;
       mCaptureFormat = captureFormat;
 
-      captureParameters = new PaStreamParameters;
       const PaDeviceInfo *captureDeviceInfo;
       // retrieve the index of the device set in the prefs, or a sensible
       // default if it isn't set/valid
-      captureParameters->device = getRecordDevIndex();
+      captureParameters.device = getRecordDevIndex();
 
-      captureDeviceInfo = Pa_GetDeviceInfo( captureParameters->device );
+      captureDeviceInfo = Pa_GetDeviceInfo( captureParameters.device );
 
       if( captureDeviceInfo == NULL )
-      {
-         delete captureParameters;
-         delete playbackParameters;
          return false;
-      }
 
-      captureParameters->sampleFormat =
+      captureParameters.sampleFormat =
          AudacityToPortAudioSampleFormat(mCaptureFormat);
 
-      captureParameters->hostApiSpecificStreamInfo = NULL;
-      captureParameters->channelCount = mNumCaptureChannels;
+      captureParameters.hostApiSpecificStreamInfo = NULL;
+      captureParameters.channelCount = mNumCaptureChannels;
 
       if (mSoftwarePlaythrough)
-         captureParameters->suggestedLatency =
+         captureParameters.suggestedLatency =
             captureDeviceInfo->defaultHighInputLatency;
       else
-         captureParameters->suggestedLatency = latencyDuration/1000.0;
+         captureParameters.suggestedLatency = latencyDuration/1000.0;
 
       mInputMeter = mOwningProject->GetCaptureMeter();
    }
@@ -1429,7 +1424,8 @@ bool AudioIO::StartPortAudioStream(double sampleRate,
 #endif
 #endif
    mLastPaError = Pa_OpenStream( &mPortStreamV19,
-                                 captureParameters, playbackParameters,
+                                 useCapture ? &captureParameters : NULL,
+                                 usePlayback ? &playbackParameters : NULL,
                                  mRate, paFramesPerBufferUnspecified,
                                  paNoFlag,
                                  audacityAudioCallback, NULL );
@@ -1456,10 +1452,6 @@ bool AudioIO::StartPortAudioStream(double sampleRate,
       #endif
    }
 #endif
-
-   // these may be null, but deleting a null pointer should never crash.
-   delete captureParameters;
-   delete playbackParameters;
 
    return (mLastPaError == paNoError);
 }

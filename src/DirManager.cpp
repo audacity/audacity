@@ -197,7 +197,6 @@ static int RecursivelyEnumerate(wxString dirPath,
    return count;
 }
 
-
 static int RecursivelyEnumerateWithProgress(wxString dirPath,
                                              wxArrayString& filePathArray, // output: all files in dirPath tree
                                              wxString dirspec,
@@ -205,19 +204,16 @@ static int RecursivelyEnumerateWithProgress(wxString dirPath,
                                              int progress_count,
                                              const wxChar* message)
 {
-   ProgressDialog *progress = NULL;
+   Maybe<ProgressDialog> progress{};
 
    if (message)
-      progress = new ProgressDialog(_("Progress"), message);
+      progress.create( _("Progress"), message );
 
    int count = RecursivelyEnumerate(
                   dirPath, filePathArray, dirspec,
                   bFiles, bDirs,
                   progress_count, 0,
-                  progress);
-
-   if (progress)
-      delete progress;
+                  progress.get());
 
    return count;
 }
@@ -291,10 +287,10 @@ static void RecursivelyRemove(wxArrayString& filePathArray, int count,
                               bool bFiles, bool bDirs,
                               const wxChar* message = NULL)
 {
-   ProgressDialog *progress = NULL;
+   Maybe<ProgressDialog> progress{};
 
    if (message)
-      progress = new ProgressDialog(_("Progress"), message);
+      progress.create( _("Progress"), message );
 
    for (int i = 0; i < count; i++) {
       const wxChar *file = filePathArray[i].c_str();
@@ -305,9 +301,6 @@ static void RecursivelyRemove(wxArrayString& filePathArray, int count,
       if (progress)
          progress->Update(i, count);
    }
-
-   if (progress)
-      delete progress;
 }
 
 

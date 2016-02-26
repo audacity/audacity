@@ -242,4 +242,118 @@ namespace std {
 }
 #endif
 
+/*
+* template class Maybe<X>
+* Can be used for monomorphic objects that are stack-allocable, but only conditionally constructed.
+* You might also use it as a member.
+* Initialize with create(), then use like a smart pointer,
+* with *, ->, get(), reset(), or in if()
+*/
+
+template<typename X>
+class Maybe {
+public:
+
+   // Construct as NULL
+   Maybe() {}
+
+   // Supply the copy and move, so you might use this as a class member too
+   Maybe(const Maybe &that)
+   {
+      if (that.get())
+         create(*that);
+   }
+
+   Maybe& operator= (const Maybe &that)
+   {
+      if (this != &that) {
+         if (that.get())
+            create(*that);
+         else
+            reset();
+      }
+      return *this;
+   }
+
+   Maybe(Maybe &&that)
+   {
+      if (that.get())
+         create(::std::move(*that));
+   }
+
+   Maybe& operator= (Maybe &&that)
+   {
+      if (this != &that) {
+         if (that.get())
+            create(::std::move(*that));
+         else
+            reset();
+      }
+      return *this;
+   }
+
+   // Make an object in the buffer, passing constructor arguments,
+   // but destroying any previous object first
+   // Note that if constructor throws, we remain in a consistent
+   // NULL state -- giving exception safety but only weakly
+   // (previous value was lost if present)
+   template<typename... Args>
+   void create(Args... args)
+   {
+      // Lose any old value
+      reset();
+      // Create new value
+      pp = safenew(address()) X( std::forward<Args>(args)... );
+   }
+
+   // Destroy any object that was built in it
+   ~Maybe()
+   {
+      reset();
+   }
+
+   // Pointer-like operators
+
+   // Dereference, with the usual bad consequences if NULL
+   X &operator* () const
+   {
+      return *pp;
+   }
+
+   X *operator-> () const
+   {
+      return pp;
+   }
+
+   X* get() const
+   {
+      return pp;
+   }
+
+   void reset()
+   {
+      if (pp)
+         pp->~X(), pp = nullptr;
+   }
+
+   // So you can say if(ptr)
+   explicit operator bool() const
+   {
+      return pp != nullptr;
+   }
+
+private:
+   X* address()
+   {
+      return reinterpret_cast<X*>(&storage);
+   }
+
+   // Data
+   typename ::std::aligned_storage<
+      sizeof(X)
+      // , alignof(X) // Not here yet in all compilers
+   >::type storage{};
+   X* pp{ nullptr };
+};
+
 #endif // __AUDACITY_H__

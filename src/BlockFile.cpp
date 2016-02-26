@@ -597,25 +597,27 @@ AliasBlockFile::~AliasBlockFile()
 bool AliasBlockFile::ReadSummary(void *data)
 {
    wxFFile summaryFile(mFileName.GetFullPath(), wxT("rb"));
-   wxLogNull *silence=0;
-   if(mSilentLog)silence= new wxLogNull();
 
-   if( !summaryFile.IsOpened() ){
+   {
+      Maybe<wxLogNull> silence{};
+      if (mSilentLog)
+         silence.create();
 
-      // NEW model; we need to return valid data
-      memset(data,0,(size_t)mSummaryInfo.totalSummaryBytes);
-      if(silence) delete silence;
+      if (!summaryFile.IsOpened()){
 
-      // we silence the logging for this operation in this object
-      // after first occurrence of error; it's already reported and
-      // spewing at the user will complicate the user's ability to
-      // deal
-      mSilentLog=TRUE;
-      return true;
+         // NEW model; we need to return valid data
+         memset(data, 0, (size_t)mSummaryInfo.totalSummaryBytes);
 
-   }else mSilentLog=FALSE; // worked properly, any future error is NEW
+         // we silence the logging for this operation in this object
+         // after first occurrence of error; it's already reported and
+         // spewing at the user will complicate the user's ability to
+         // deal
+         mSilentLog = TRUE;
+         return true;
 
-   if(silence) delete silence;
+      }
+      else mSilentLog = FALSE; // worked properly, any future error is NEW
+   }
 
    int read = summaryFile.Read(data, (size_t)mSummaryInfo.totalSummaryBytes);
 
