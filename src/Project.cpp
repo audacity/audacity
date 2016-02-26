@@ -453,7 +453,7 @@ bool ImportXMLTagHandler::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 
    WaveTrackArray trackArray;
    mProject->Import(strAttr, &trackArray);
-   if (trackArray.IsEmpty())
+   if (trackArray.empty())
       return false;
 
    // Handle other attributes, now that we have the tracks.
@@ -461,7 +461,7 @@ bool ImportXMLTagHandler::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    const wxChar** pAttr;
    bool bSuccess = true;
 
-   for (size_t i = 0; i < trackArray.GetCount(); i++)
+   for (size_t i = 0; i < trackArray.size(); i++)
    {
       // Most of the "import" tag attributes are the same as for "wavetrack" tags,
       // so apply them via WaveTrack::HandleXMLTag().
@@ -3822,7 +3822,7 @@ bool AudacityProject::Import(const wxString &fileName, WaveTrackArray* pTrackArr
    if (pTrackArray) {
       for (int i = 0; i < numTracks; i++) {
          if (newTracks[i]->GetKind() == Track::Wave) {
-            pTrackArray->Add((WaveTrack *)newTracks[i]);
+            pTrackArray->push_back(static_cast<WaveTrack *>(newTracks[i]));
          }
       }
    }

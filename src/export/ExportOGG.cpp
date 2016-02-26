@@ -175,7 +175,7 @@ int ExportOGG::Export(AudacityProject *project,
                        int WXUNUSED(subformat))
 {
    double    rate    = project->GetRate();
-   TrackList *tracks = project->GetTracks();
+   const TrackList *tracks = project->GetTracks();
    double    quality = (gPrefs->Read(wxT("/FileFormats/OggExportQuality"), 50)/(float)100.0);
 
    wxLogNull logNo;            // temporarily disable wxWidgets error messages
@@ -245,15 +245,13 @@ int ExportOGG::Export(AudacityProject *project,
       outFile.Write(page.body, page.body_len);
    }
 
-   int numWaveTracks;
-   WaveTrack **waveTracks;
-   tracks->GetWaveTracks(selectionOnly, &numWaveTracks, &waveTracks);
-   Mixer *mixer = CreateMixer(numWaveTracks, waveTracks,
+   const WaveTrackConstArray waveTracks =
+      tracks->GetWaveTrackConstArray(selectionOnly, false);
+   Mixer *mixer = CreateMixer(waveTracks,
                             tracks->GetTimeTrack(),
                             t0, t1,
                             numChannels, SAMPLES_PER_RUN, false,
                             rate, floatSample, true, mixerSpec);
-   delete[] waveTracks;
 
    {
       ProgressDialog progress(wxFileName(fName).GetName(),

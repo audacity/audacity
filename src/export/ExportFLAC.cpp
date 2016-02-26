@@ -229,7 +229,7 @@ int ExportFLAC::Export(AudacityProject *project,
                         int WXUNUSED(subformat))
 {
    double    rate    = project->GetRate();
-   TrackList *tracks = project->GetTracks();
+   const TrackList *tracks = project->GetTracks();
 
    wxLogNull logNo;            // temporarily disable wxWidgets error messages
    int updateResult = eProgressSuccess;
@@ -309,15 +309,13 @@ int ExportFLAC::Export(AudacityProject *project,
       ::FLAC__metadata_object_delete(mMetadata);
    }
 
-   int numWaveTracks;
-   WaveTrack **waveTracks;
-   tracks->GetWaveTracks(selectionOnly, &numWaveTracks, &waveTracks);
-   Mixer *mixer = CreateMixer(numWaveTracks, waveTracks,
+   const WaveTrackConstArray waveTracks =
+      tracks->GetWaveTrackConstArray(selectionOnly, false);
+   Mixer *mixer = CreateMixer(waveTracks,
                             tracks->GetTimeTrack(),
                             t0, t1,
                             numChannels, SAMPLES_PER_RUN, false,
                             rate, format, true, mixerSpec);
-   delete [] waveTracks;
 
    int i, j;
    FLAC__int32 **tmpsmplbuf = new FLAC__int32*[numChannels];

@@ -30,6 +30,7 @@ class TrackList;
 class MixerSpec;
 class TimeTrack;
 class Mixer;
+class WaveTrackConstArray;
 
 class AUDACITY_DLL_API FormatInfo
 {
@@ -114,8 +115,8 @@ public:
                        int subformat = 0) = 0;
 
 protected:
-   Mixer* CreateMixer(int numInputTracks, WaveTrack **inputTracks,
-         TimeTrack *timeTrack,
+   Mixer* CreateMixer(const WaveTrackConstArray &inputTracks,
+         const TimeTrack *timeTrack,
          double startTime, double stopTime,
          int numOutChannels, int outBufferSize, bool outInterleaved,
          double outRate, sampleFormat outFormat,
@@ -232,7 +233,7 @@ class ExportMixerDialog final : public wxDialog
 {
 public:
    // constructors and destructors
-   ExportMixerDialog( TrackList * tracks, bool selectedOnly, int maxNumChannels,
+   ExportMixerDialog( const TrackList * tracks, bool selectedOnly, int maxNumChannels,
          wxWindow *parent, wxWindowID id, const wxString &title,
          const wxPoint& pos = wxDefaultPosition,
          const wxSize& size = wxDefaultSize,

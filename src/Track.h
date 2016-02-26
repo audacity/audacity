@@ -13,6 +13,7 @@
 
 #include "Audacity.h"
 
+#include <vector>
 #include <wx/dynarray.h>
 #include <wx/event.h>
 #include <wx/gdicmn.h>
@@ -37,7 +38,15 @@ class AudacityProject;
 class ZoomInfo;
 
 WX_DEFINE_USER_EXPORTED_ARRAY(Track*, TrackArray, class AUDACITY_DLL_API);
-WX_DEFINE_USER_EXPORTED_ARRAY(WaveTrack*, WaveTrackArray, class AUDACITY_DLL_API);
+class WaveTrackArray : public std::vector < WaveTrack* > {
+};
+class WaveTrackConstArray : public std::vector < const WaveTrack* > {
+public:
+   WaveTrackConstArray() {}
+   // I'd like to use an inherited constructor, but that's not here yet in MSVC compiler...
+   WaveTrackConstArray
+      (std::initializer_list<value_type> tracks) : std::vector<value_type>(tracks) {}
+};
 
 #if defined(USE_MIDI)
 class NoteTrack;
@@ -417,6 +426,7 @@ class AUDACITY_DLL_API TrackList final : public wxEvtHandler
    bool Move(Track * t, bool up) { return up ? MoveUp(t) : MoveDown(t); }
 
    TimeTrack *GetTimeTrack();
+   const TimeTrack *GetTimeTrack() const;
 
    /** \brief Find out how many channels this track list mixes to
    *
@@ -424,11 +434,10 @@ class AUDACITY_DLL_API TrackList final : public wxEvtHandler
    * Mono, Stereo etc. @param selectionOnly Whether to consider the entire track
    * list or only the selected members of it
    */
-   int GetNumExportChannels(bool selectionOnly);
+   int GetNumExportChannels(bool selectionOnly) const;
 
-   WaveTrackArray GetWaveTrackArray(bool selectionOnly);
-   /** Consider this function depricated in favor of GetWaveTrackArray */
-   void GetWaveTracks(bool selectionOnly, int *num, WaveTrack ***tracks);
+   WaveTrackArray GetWaveTrackArray(bool selectionOnly, bool includeMuted = true);
+   WaveTrackConstArray GetWaveTrackConstArray(bool selectionOnly, bool includeMuted = true) const;
 
 #if defined(USE_MIDI)
    NoteTrackArray GetNoteTrackArray(bool selectionOnly);

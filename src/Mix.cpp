@@ -49,14 +49,10 @@ bool MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
                   WaveTrack **newLeft, WaveTrack **newRight)
 {
    // This function was formerly known as "Quick Mix".
-   WaveTrack **waveArray;
    Track *t;
-   int numWaves = 0; /* number of wave tracks in the selection */
-   int numMono = 0;  /* number of mono, centre-panned wave tracks in selection*/
    bool mono = false;   /* flag if output can be mono without loosing anything*/
    bool oneinput = false;  /* flag set to true if there is only one input track
                               (mono or stereo) */
-   int w;
 
    TrackListIterator iter(tracks);
    SelectedTrackListOfKindIterator usefulIter(Track::Wave, tracks);
@@ -64,6 +60,8 @@ bool MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
    // selected WaveTracks. The tracklist is (confusingly) the list of all
    // tracks in the project
 
+   int numWaves = 0; /* number of wave tracks in the selection */
+   int numMono = 0;  /* number of mono, centre-panned wave tracks in selection*/
    t = iter.First();
    while (t) {
       if (t->GetSelected() && t->GetKind() == Track::Wave) {
@@ -89,13 +87,12 @@ bool MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
    double mixEndTime = 0.0;   /* end time of last track to end */
    double tstart, tend;    // start and end times for one track.
 
-   waveArray = new WaveTrack *[numWaves];
-   w = 0;
+   WaveTrackConstArray waveArray;
    t = iter.First();
 
    while (t) {
       if (t->GetSelected() && t->GetKind() == Track::Wave) {
-         waveArray[w++] = (WaveTrack *) t;
+         waveArray.push_back(static_cast<WaveTrack *>(t));
          tstart = t->GetStartTime();
          tend = t->GetEndTime();
          if (tend > mixEndTime)
@@ -161,7 +158,7 @@ bool MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
       endTime = mixEndTime;
    }
 
-   Mixer mixer(numWaves, waveArray,
+   Mixer mixer(waveArray,
       Mixer::WarpOptions(tracks->GetTimeTrack()),
       startTime, endTime, mono ? 1 : 2, maxBlockLen, false,
       rate, format);
@@ -221,9 +218,6 @@ bool MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
    printf("Max number of tracks to mix in real time: %f\n", maxTracks);
 #endif
    }
-
-   delete[] waveArray;
-
    return (updateResult == eProgressSuccess || updateResult == eProgressStopped);
 }
 
@@ -247,7 +241,7 @@ Mixer::WarpOptions::WarpOptions(double min, double max)
    }
 }
 
-Mixer::Mixer(int numInputTracks, WaveTrack **inputTracks,
+Mixer::Mixer(const WaveTrackConstArray &inputTracks,
              const WarpOptions &warpOptions,
              double startTime, double stopTime,
              int numOutChannels, int outBufferSize, bool outInterleaved,
@@ -256,9 +250,10 @@ Mixer::Mixer(int numInputTracks, WaveTrack **inputTracks,
 {
    int i;
 
+   const auto numInputTracks = inputTracks.size();
    mHighQuality = highQuality;
    mNumInputTracks = numInputTracks;
-   mInputTrack = new WaveTrack*[mNumInputTracks];
+   mInputTrack = new const WaveTrack*[mNumInputTracks];
 
    // mSamplePos holds for each track the next sample position not
    // yet processed.
@@ -415,7 +410,7 @@ void MixBuffers(int numChannels, int *channelFlags, float *gains,
    }
 }
 
-sampleCount Mixer::MixVariableRates(int *channelFlags, WaveTrack *track,
+sampleCount Mixer::MixVariableRates(int *channelFlags, const WaveTrack *track,
                                     sampleCount *pos, float *queue,
                                     int *queueStart, int *queueLen,
                                     Resample * pResample)
@@ -565,7 +560,7 @@ sampleCount Mixer::MixVariableRates(int *channelFlags, WaveTrack *track,
    return out;
 }
 
-sampleCount Mixer::MixSameRate(int *channelFlags, WaveTrack *track,
+sampleCount Mixer::MixSameRate(int *channelFlags, const WaveTrack *track,
                                sampleCount *pos)
 {
    int slen = mMaxOut;
@@ -639,7 +634,7 @@ sampleCount Mixer::Process(sampleCount maxToProcess)
 
    Clear();
    for(i=0; i<mNumInputTracks; i++) {
-      WaveTrack *track = mInputTrack[i];
+      const WaveTrack *track = mInputTrack[i];
       for(j=0; j<mNumChannels; j++)
          channelFlags[j] = 0;
 

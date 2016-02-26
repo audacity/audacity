@@ -2641,7 +2641,7 @@ void Effect::Preview(bool dryOnly)
       SelectedTrackListOfKindIterator iter(Track::Wave, mTracks);
       WaveTrack *src = (WaveTrack *) iter.First();
       while (src) {
-         playbackTracks.Add(src);
+         playbackTracks.push_back(src);
          src = (WaveTrack *) iter.Next();
       }
       // Some effects (Paulstretch) may need to generate more

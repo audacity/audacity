@@ -105,7 +105,6 @@ END_EVENT_TABLE()
 
 ExportMultiple::ExportMultiple(AudacityProject *project)
 : wxDialog(project, wxID_ANY, wxString(_("Export Multiple")))
-, mIterator(new TrackListIterator)
 {
    SetName(GetTitle());
 
@@ -141,7 +140,6 @@ ExportMultiple::ExportMultiple(AudacityProject *project)
 
 ExportMultiple::~ExportMultiple()
 {
-   delete mIterator;
 }
 
 void ExportMultiple::CountTracksAndLabels()
@@ -150,8 +148,9 @@ void ExportMultiple::CountTracksAndLabels()
    mNumLabels = 0;
    mNumWaveTracks = 0;
 
-   Track* pTrack;
-   for (pTrack = mIterator->First(mTracks); pTrack != NULL; pTrack = mIterator->Next())
+   const Track* pTrack;
+   TrackListConstIterator iter;
+   for (pTrack = iter.First(mTracks); pTrack != NULL; pTrack = iter.Next())
    {
       switch (pTrack->GetKind())
       {
@@ -746,7 +745,7 @@ int ExportMultiple::ExportMultipleByTrack(bool byName,
    int numTracks = 0;
    int ok = eProgressSuccess;
    wxArrayString otherNames;
-   wxArrayPtrVoid selected;   /**< Array of pointers to the tracks which were
+   std::vector<Track*> selected; /**< Array of pointers to the tracks which were
                                 selected when we started */
    ExportKitArray exportSettings; // dynamic array we will use to store the
                                   // settings needed to do the exports with in
@@ -759,13 +758,14 @@ int ExportMultiple::ExportMultipleByTrack(bool byName,
    wxString title;   // un-messed-with title of file for tagging with
 
    /* Remember which tracks were selected, and set them to unselected */
-   for (tr = mIterator->First(mTracks); tr != NULL; tr = mIterator->Next()) {
+   TrackListIterator iter;
+   for (tr = iter.First(mTracks); tr != NULL; tr = iter.Next()) {
       if (tr->GetKind() != Track::Wave) {
          continue;
       }
 
       if (tr->GetSelected()) {
-         selected.Add(tr);
+         selected.push_back(tr);
          tr->SetSelected(false);
       }
 
@@ -775,7 +775,7 @@ int ExportMultiple::ExportMultipleByTrack(bool byName,
    }
 
    /* Examine all tracks in turn, collecting export information */
-   for (tr = mIterator->First(mTracks); tr != NULL; tr = mIterator->Next()) {
+   for (tr = iter.First(mTracks); tr != NULL; tr = iter.Next()) {
 
       // Want only non-muted wave tracks.
       if ((tr->GetKind() != Track::Wave)  || tr->GetMute())
@@ -788,7 +788,7 @@ int ExportMultiple::ExportMultipleByTrack(bool byName,
       // Check for a linked track
       tr2 = NULL;
       if (tr->GetLinked()) {
-         tr2 = mIterator->Next();
+         tr2 = iter.Next();
          if (tr2) {
 
             // Make sure it gets included
@@ -819,7 +819,7 @@ int ExportMultiple::ExportMultipleByTrack(bool byName,
          name = title;
          if (addNumber) {
             name.Prepend(
-				wxString::Format(wxT("%02d-"), l+1));
+               wxString::Format(wxT("%02d-"), l+1));
          }
       }
       else {
@@ -858,7 +858,7 @@ int ExportMultiple::ExportMultipleByTrack(bool byName,
    // loop
    int count = 0; // count the number of sucessful runs
    ExportKit activeSetting;  // pointer to the settings in use for this export
-   for (tr = mIterator->First(mTracks); tr != NULL; tr = mIterator->Next()) {
+   for (tr = iter.First(mTracks); tr != NULL; tr = iter.Next()) {
 
       // Want only non-muted wave tracks.
       if ((tr->GetKind() != Track::Wave) || (tr->GetMute() == true)) {
@@ -871,7 +871,7 @@ int ExportMultiple::ExportMultipleByTrack(bool byName,
       // Check for a linked track
       tr2 = NULL;
       if (tr->GetLinked()) {
-         tr2 = mIterator->Next();
+         tr2 = iter.Next();
          if (tr2) {
             // Select it also
             tr2->SetSelected(true);
@@ -900,7 +900,7 @@ int ExportMultiple::ExportMultipleByTrack(bool byName,
 
    // Restore the selection states
    for (size_t i = 0; i < mSelected.GetCount(); i++) {
-      ((Track *) selected[i])->SetSelected(true);
+      selected[i]->SetSelected(true);
    }
 
    return ok;

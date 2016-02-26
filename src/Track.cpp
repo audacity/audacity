@@ -1153,15 +1153,20 @@ TimeTrack *TrackList::GetTimeTrack()
    return NULL;
 }
 
-int TrackList::GetNumExportChannels(bool selectionOnly)
+const TimeTrack *TrackList::GetTimeTrack() const
+{
+   return const_cast<TrackList*>(this)->GetTimeTrack();
+}
+
+int TrackList::GetNumExportChannels(bool selectionOnly) const
 {
    /* counters for tracks panned different places */
    int numLeft = 0;
    int numRight = 0;
    int numMono = 0;
    /* track iteration kit */
-   Track *tr;
-   TrackListIterator iter;
+   const Track *tr;
+   TrackListConstIterator iter;
 
    for (tr = iter.First(this); tr != NULL; tr = iter.Next()) {
 
@@ -1214,48 +1219,34 @@ int TrackList::GetNumExportChannels(bool selectionOnly)
    return 1;
 }
 
-void TrackList::GetWaveTracks(bool selectionOnly,
-                              int *num, WaveTrack ***tracks)
-{
-   int i;
-   *num = 0;
+namespace {
+   template<typename Array>
+   Array GetWaveTracks(TrackListNode *p, bool selectionOnly, bool includeMuted)
+   {
+      Array waveTrackArray;
 
-   TrackListNode *p = head;
-   while (p) {
-      if (p->t->GetKind() == Track::Wave && !(p->t->GetMute()) &&
-          (p->t->GetSelected() || !selectionOnly)) {
-         (*num)++;
-      }
-      p = p->next;
-   }
+      while (p) {
+         if (p->t->GetKind() == Track::Wave &&
+            (includeMuted || !p->t->GetMute()) &&
+            (p->t->GetSelected() || !selectionOnly)) {
+            waveTrackArray.push_back(static_cast<WaveTrack*>(p->t));
+         }
 
-   *tracks = new WaveTrack*[*num];
-   p = head;
-   i = 0;
-   while (p) {
-      if (p->t->GetKind() == Track::Wave && !(p->t->GetMute()) &&
-          (p->t->GetSelected() || !selectionOnly)) {
-         (*tracks)[i++] = (WaveTrack *)p->t;
+         p = p->next;
       }
-      p = p->next;
+
+      return waveTrackArray;
    }
 }
 
-WaveTrackArray TrackList::GetWaveTrackArray(bool selectionOnly)
+WaveTrackArray TrackList::GetWaveTrackArray(bool selectionOnly, bool includeMuted)
 {
-   WaveTrackArray waveTrackArray;
+   return GetWaveTracks<WaveTrackArray>(head, selectionOnly, includeMuted);
+}
 
-   TrackListNode *p = head;
-   while (p) {
-      if (p->t->GetKind() == Track::Wave &&
-          (p->t->GetSelected() || !selectionOnly)) {
-         waveTrackArray.Add((WaveTrack*)p->t);
-      }
-
-      p = p->next;
-   }
-
-   return waveTrackArray;
+WaveTrackConstArray TrackList::GetWaveTrackConstArray(bool selectionOnly, bool includeMuted) const
+{
+   return GetWaveTracks<WaveTrackConstArray>(head, selectionOnly, includeMuted);
 }
 
 #if defined(USE_MIDI)

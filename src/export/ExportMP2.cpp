@@ -217,7 +217,7 @@ int ExportMP2::Export(AudacityProject *project,
    bool stereo = (channels == 2);
    long bitrate = gPrefs->Read(wxT("/FileFormats/MP2Bitrate"), 160);
    double rate = project->GetRate();
-   TrackList *tracks = project->GetTracks();
+   const TrackList *tracks = project->GetTracks();
 
    wxLogNull logNo;             /* temporarily disable wxWidgets error messages */
 
@@ -264,15 +264,13 @@ int ExportMP2::Export(AudacityProject *project,
    // We have to multiply by 4 because one sample is 2 bytes wide!
    unsigned char* mp2Buffer = new unsigned char[mp2BufferSize];
 
-   int numWaveTracks;
-   WaveTrack **waveTracks;
-   tracks->GetWaveTracks(selectionOnly, &numWaveTracks, &waveTracks);
-   Mixer *mixer = CreateMixer(numWaveTracks, waveTracks,
+   const WaveTrackConstArray waveTracks =
+      tracks->GetWaveTrackConstArray(selectionOnly, false);
+   Mixer *mixer = CreateMixer(waveTracks,
                             tracks->GetTimeTrack(),
                             t0, t1,
                             stereo? 2: 1, pcmBufferSize, true,
                             rate, int16Sample, true, mixerSpec);
-   delete[] waveTracks;
 
    int updateResult = eProgressSuccess;
    {

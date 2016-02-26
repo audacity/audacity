@@ -419,11 +419,10 @@ int ExportCL::Export(AudacityProject *project,
    os->Write(&header, sizeof(wav_header));
 
    // Mix 'em up
-   int numWaveTracks;
-   WaveTrack **waveTracks;
-   TrackList *tracks = project->GetTracks();
-   tracks->GetWaveTracks(selectionOnly, &numWaveTracks, &waveTracks);
-   Mixer *mixer = CreateMixer(numWaveTracks,
+   const TrackList *tracks = project->GetTracks();
+   const WaveTrackConstArray waveTracks =
+      tracks->GetWaveTrackConstArray(selectionOnly, false);
+   Mixer *mixer = CreateMixer(
                             waveTracks,
                             tracks->GetTimeTrack(),
                             t0,
@@ -529,7 +528,6 @@ int ExportCL::Export(AudacityProject *project,
 
    // Clean up
    delete mixer;
-   delete[] waveTracks;
 
    return updateResult;
 }

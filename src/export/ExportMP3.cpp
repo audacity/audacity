@@ -1631,7 +1631,7 @@ int ExportMP3::Export(AudacityProject *project,
 #ifndef DISABLE_DYNAMIC_LOADING_LAME
    wxWindow *parent = project;
 #endif // DISABLE_DYNAMIC_LOADING_LAME
-   TrackList *tracks = project->GetTracks();
+   const TrackList *tracks = project->GetTracks();
    MP3Exporter exporter;
 
 #ifdef DISABLE_DYNAMIC_LOADING_LAME
@@ -1762,15 +1762,13 @@ int ExportMP3::Export(AudacityProject *project,
    unsigned char *buffer = new unsigned char[bufferSize];
    wxASSERT(buffer);
 
-   int numWaveTracks;
-   WaveTrack **waveTracks;
-   tracks->GetWaveTracks(selectionOnly, &numWaveTracks, &waveTracks);
-   Mixer *mixer = CreateMixer(numWaveTracks, waveTracks,
+   const WaveTrackConstArray waveTracks =
+      tracks->GetWaveTrackConstArray(selectionOnly, false);
+   Mixer *mixer = CreateMixer(waveTracks,
                             tracks->GetTimeTrack(),
                             t0, t1,
                             channels, inSamples, true,
                             rate, int16Sample, true, mixerSpec);
-   delete [] waveTracks;
 
    wxString title;
    if (rmode == MODE_SET) {

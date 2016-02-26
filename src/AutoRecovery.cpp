@@ -287,7 +287,7 @@ int RecordingRecoveryHandler::FindTrack() const
    int index;
    if (mAutoSaveIdent)
    {
-      for (index = 0; index < (int)tracks.GetCount(); index++)
+      for (index = 0; index < (int)tracks.size(); index++)
       {
          if (tracks[index]->GetAutoSaveIdent() == mAutoSaveIdent)
          {
@@ -297,7 +297,7 @@ int RecordingRecoveryHandler::FindTrack() const
    }
    else
    {
-      index = tracks.GetCount() - mNumChannels + mChannel;
+      index = tracks.size() - mNumChannels + mChannel;
    }
 
    return index;
@@ -320,14 +320,14 @@ bool RecordingRecoveryHandler::HandleXMLTag(const wxChar *tag,
       int index = FindTrack();
       // We need to find the track and sequence where the blockfile belongs
 
-      if (index < 0 || index >= (int) tracks.GetCount())
+      if (index < 0 || index >= (int)tracks.size())
       {
          // This should only happen if there is a bug
          wxASSERT(false);
          return false;
       }
 
-      WaveTrack* track = tracks.Item(index);
+      WaveTrack* track = tracks[index];
       WaveClip*  clip = track->NewestOrNewClip();
       Sequence* seq = clip->GetSequence();
 
@@ -407,12 +407,12 @@ void RecordingRecoveryHandler::HandleXMLEndTag(const wxChar *tag)
    int index = FindTrack();
    // We need to find the track and sequence where the blockfile belongs
 
-   if (index < 0 || index >= (int)tracks.GetCount()) {
+   if (index < 0 || index >= (int)tracks.size()) {
       // This should only happen if there is a bug
       wxASSERT(false);
    }
    else {
-      WaveTrack* track = tracks.Item(index);
+      WaveTrack* track = tracks[index];
       WaveClip*  clip = track->NewestOrNewClip();
       Sequence* seq = clip->GetSequence();
 
