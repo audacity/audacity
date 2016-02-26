@@ -327,7 +327,7 @@ void OnMixAndRenderToNewTrack();
 void HandleMixAndRender(bool toNewTrack);
 
 private:
-SelectedRegion mRegionSave;
+   SelectedRegion mRegionSave{};
 public:
 void OnSelectionSave();
 void OnSelectionRestore();

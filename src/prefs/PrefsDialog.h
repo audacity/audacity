@@ -76,8 +76,8 @@ class PrefsDialog /* not final */ : public wxDialog
 
 private:
    void RecordExpansionState();
-   wxTreebook *mCategories;
-   PrefsPanel *mUniquePage;
+   wxTreebook *mCategories{};
+   PrefsPanel *mUniquePage{};
    Factories &mFactories;
    const wxString mTitlePrefix;
 

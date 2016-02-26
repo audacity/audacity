@@ -471,6 +471,8 @@ void TrackArtist::DrawTrack(const Track * t,
       case WaveTrack::Spectrum:
          DrawSpectrum(wt, dc, rect, selectedRegion, zoomInfo);
          break;
+      default:
+         wxASSERT(false);
       }
 
 #if defined(__WXMAC__)
@@ -835,7 +837,7 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
          float minFreq, maxFreq;
          wt->GetSpectrumBounds(&minFreq, &maxFreq);
 
-         switch (wt->GetSpectrogramSettings().scaleType) {
+         switch (settings.scaleType) {
          default:
             wxASSERT(false);
          case SpectrogramSettings::stLinear:

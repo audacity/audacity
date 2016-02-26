@@ -583,7 +583,9 @@ wxFileName DirManager::MakeBlockFilePath(const wxString &value) {
       dir.AppendDir(middir);
 
       if(!dir.DirExists() && !dir.Mkdir(0777,wxPATH_MKDIR_FULL))
+      { // need braces to avoid compiler warning about ambiguous else, see the macro
          wxLogSysError(_("mkdir in DirManager::MakeBlockFilePath failed."));
+      }
    }
    return dir;
 }
@@ -1219,8 +1221,10 @@ bool DirManager::EnsureSafeFilename(wxFileName fName)
 
    wxFile testFile(renamedFileName.GetFullPath(), wxFile::write);
    if (!testFile.IsOpened()) {
-      wxLogSysError(_("Unable to open/create test file."),
+      { // need braces to avoid compiler warning about ambiguous else, see the macro
+         wxLogSysError(_("Unable to open/create test file."),
                     renamedFileName.GetFullPath().c_str());
+      }
       return false;
    }
 
@@ -1229,8 +1233,10 @@ bool DirManager::EnsureSafeFilename(wxFileName fName)
 
    if (!wxRemoveFile(renamedFileName.GetFullPath())) {
       /* i18n-hint: %s is the name of a file.*/
-      wxLogSysError(_("Unable to remove '%s'."),
+      { // need braces to avoid compiler warning about ambiguous else, see the macro
+         wxLogSysError(_("Unable to remove '%s'."),
                     renamedFileName.GetFullPath().c_str());
+      }
       return false;
    }
 

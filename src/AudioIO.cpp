@@ -2332,6 +2332,7 @@ void AudioIO::StopStream()
                      else
                         bResult = track->InsertSilence(mT0, recordingOffset); // put silence in
                      wxASSERT(bResult); // TO DO: Actually handle this.
+                     wxUnusedVar(bResult);
                   }
                   else
                   {  // recording into a NEW track

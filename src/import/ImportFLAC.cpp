@@ -215,6 +215,9 @@ void MyFLACFile::metadata_callback(const FLAC__StreamMetadata *metadata)
       case FLAC__METADATA_TYPE_PICTURE:		// ignore pictures
       case FLAC__METADATA_TYPE_UNDEFINED:	// do nothing with this either
       break;
+
+      case FLAC__MAX_METADATA_TYPE: // suppress compiler warning
+         wxASSERT(false);
    }
 }
 
@@ -296,7 +299,7 @@ ImportFileHandle *FLACImportPlugin::Open(const wxString &filename)
    int cnt;
    wxFile binaryFile;
    if (!binaryFile.Open(filename)) {
-      return false; // File not found
+      return nullptr; // File not found
    }
 
 #ifdef USE_LIBID3TAG
@@ -313,7 +316,7 @@ ImportFileHandle *FLACImportPlugin::Open(const wxString &filename)
 
    if (cnt == wxInvalidOffset || strncmp(buf, FLAC_HEADER, 4) != 0) {
       // File is not a FLAC file
-      return false;
+      return nullptr;
    }
 
    // Open the file for import
@@ -322,7 +325,7 @@ ImportFileHandle *FLACImportPlugin::Open(const wxString &filename)
    bool success = handle->Init();
    if (!success) {
       delete handle;
-      return NULL;
+      return nullptr;
    }
 
    return handle;
@@ -476,6 +479,7 @@ int FLACImportFileHandle::Import(TrackFactory *trackFactory,
       if(!useOD)
          res = (mFile->process_until_end_of_stream() != 0);
    #endif
+      wxUnusedVar(res);
 
    //add the task to the ODManager
    if(useOD)

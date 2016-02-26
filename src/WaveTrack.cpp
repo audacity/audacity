@@ -912,6 +912,7 @@ bool WaveTrack::ClearAndPaste(double t0, // Start of time to clear
                   if (i > 0) {
                      bool bResult = MergeClips(GetClipIndex(clips[i - 1]), GetClipIndex(clip));
                      wxASSERT(bResult); // TO DO: Actually handle this.
+                     wxUnusedVar(bResult);
                   }
                   break;
                }
@@ -931,6 +932,7 @@ bool WaveTrack::ClearAndPaste(double t0, // Start of time to clear
                   if (i < clips.GetCount() - 1) {
                      bool bResult = MergeClips(GetClipIndex(clip), GetClipIndex(clips[i + 1]));
                      wxASSERT(bResult); // TO DO: Actually handle this.
+                     wxUnusedVar(bResult);
                   }
                   break;
                }
@@ -1170,9 +1172,11 @@ bool WaveTrack::SyncLockAdjust(double oldT1, double newT1)
 
          bool bResult = tmp->InsertSilence(0.0, newT1 - oldT1);
          wxASSERT(bResult); // TO DO: Actually handle this.
+         wxUnusedVar(bResult);
          tmp->Flush();
          bResult = Paste(oldT1, tmp);
          wxASSERT(bResult); // TO DO: Actually handle this.
+         wxUnusedVar(bResult);
          delete tmp;
       }
    }
@@ -1241,6 +1245,7 @@ bool WaveTrack::Paste(double t0, Track *src)
             Cut(t0, GetEndTime()+1.0/mRate, &tmp);
             bool bResult = Paste(t0 + insertDuration, tmp);
             wxASSERT(bResult); // TO DO: Actually handle this.
+            wxUnusedVar(bResult);
             delete tmp;
          }
       } else
@@ -1545,12 +1550,14 @@ bool WaveTrack::Join(double t0, double t1)
          //printf("Adding %.6f seconds of silence\n");
          bool bResult = newClip->InsertSilence(t, addedSilence);
          wxASSERT(bResult); // TO DO: Actually handle this.
+         wxUnusedVar(bResult);
          t += addedSilence;
       }
 
       //printf("Pasting at %.6f\n", t);
       bool bResult = newClip->Paste(t, clip);
       wxASSERT(bResult); // TO DO: Actually handle this.
+      wxUnusedVar(bResult);
       t = newClip->GetEndTime();
 
       mClips.DeleteObject(clip);

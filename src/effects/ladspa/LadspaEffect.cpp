@@ -1409,6 +1409,8 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
             wxString bound;
             float lower = 0.0;
             float upper = 1.0;
+
+            /*
             bool haslo = false;
             bool hashi = false;
             bool forceint = false;
@@ -1431,6 +1433,7 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
                upper *= mSampleRate;
                forceint = true;
             }
+            */
 
             // Limit to the UI precision
             lower = ceilf(lower * 1000000.0) / 1000000.0;

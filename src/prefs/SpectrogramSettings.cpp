@@ -57,10 +57,6 @@ SpectrogramSettings::Globals
 }
 
 SpectrogramSettings::SpectrogramSettings()
-   : hFFT(0)
-   , window(0)
-   , dWindow(0)
-   , tWindow(0)
 {
    LoadPrefs();
 }
@@ -93,10 +89,10 @@ SpectrogramSettings::SpectrogramSettings(const SpectrogramSettings &other)
 #endif
 
    // Do not copy these!
-   , hFFT(0)
-   , window(0)
-   , tWindow(0)
-   , dWindow(0)
+   , hFFT{}
+   , window{}
+   , tWindow{}
+   , dWindow{}
 {
 }
 

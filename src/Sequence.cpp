@@ -55,10 +55,8 @@ int Sequence::sMaxDiskBlockSize = 1048576;
 Sequence::Sequence(DirManager * projDirManager, sampleFormat format)
    : mDirManager(projDirManager)
    , mSampleFormat(format)
-   , mNumSamples(0)
    , mMinSamples(sMaxDiskBlockSize / SAMPLE_SIZE(mSampleFormat) / 2)
    , mMaxSamples(mMinSamples * 2)
-   , mErrorOpening(false)
 {
    mDirManager->Ref();
 }
@@ -68,11 +66,9 @@ Sequence::Sequence(DirManager * projDirManager, sampleFormat format)
 // from one project to another
 Sequence::Sequence(const Sequence &orig, DirManager *projDirManager)
    : mDirManager(projDirManager)
-   , mNumSamples(0)
    , mSampleFormat(orig.mSampleFormat)
    , mMinSamples(orig.mMinSamples)
    , mMaxSamples(orig.mMaxSamples)
-   , mErrorOpening(false)
 {
    mDirManager->Ref();
 
@@ -418,11 +414,13 @@ bool Sequence::Copy(sampleCount s0, sampleCount s1, Sequence **dest)
       return false;
 
    int numBlocks = mBlock.size();
+
    int b0 = FindBlock(s0);
    const int b1 = FindBlock(s1 - 1);
    wxASSERT(b0 >= 0);
    wxASSERT(b0 < numBlocks);
    wxASSERT(b1 < numBlocks);
+   wxUnusedVar(numBlocks);
    wxASSERT(b0 <= b1);
 
    *dest = new Sequence(mDirManager, mSampleFormat);

@@ -70,10 +70,8 @@ WaveformSettings& WaveformSettings::defaults()
    return instance;
 }
 
-bool WaveformSettings::Validate(bool quiet)
+bool WaveformSettings::Validate(bool /* quiet */)
 {
-   quiet;
-
    scaleType = ScaleType(
       std::max(0, std::min(int(stNumScaleTypes) - 1, int(scaleType)))
    );

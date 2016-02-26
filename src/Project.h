@@ -473,7 +473,7 @@ public:
 
    void WriteXMLHeader(XMLWriter &xmlFile);
 
-   PlayMode mLastPlayMode;
+   PlayMode mLastPlayMode{ normalPlay };
    ViewInfo mViewInfo;
 
    // Audio IO callback methods
@@ -553,7 +553,7 @@ public:
 
    // History/Undo manager
    std::unique_ptr<UndoManager> mUndoManager;
-   bool mDirty;
+   bool mDirty{ false };
 
    // Commands
 
@@ -568,39 +568,39 @@ public:
 
    wxStatusBar *mStatusBar;
 
-   AdornedRulerPanel *mRuler;
-   TrackPanel *mTrackPanel;
-   TrackFactory *mTrackFactory;
+   AdornedRulerPanel *mRuler{};
+   TrackPanel *mTrackPanel{};
+   TrackFactory *mTrackFactory{};
    wxPanel * mMainPanel;
    wxScrollBar *mHsbar;
    wxScrollBar *mVsbar;
-   bool mAutoScrolling;
-   bool mActive;
+   bool mAutoScrolling{ false };
+   bool mActive{ true };
    bool mIconized;
 
-   HistoryWindow *mHistoryWindow;
-   LyricsWindow* mLyricsWindow;
-   MixerBoard* mMixerBoard;
-   MixerBoardFrame* mMixerBoardFrame;
+   HistoryWindow *mHistoryWindow{};
+   LyricsWindow* mLyricsWindow{};
+   MixerBoard* mMixerBoard{};
+   MixerBoardFrame* mMixerBoardFrame{};
 
-   FreqWindow *mFreqWindow;
-   ContrastDialog *mContrastDialog;
+   FreqWindow *mFreqWindow{};
+   ContrastDialog *mContrastDialog{};
 
    // dialog for missing alias warnings
-   wxDialog            *mAliasMissingWarningDialog;
+   wxDialog            *mAliasMissingWarningDialog{};
 
-   bool mShownOnce;
+   bool mShownOnce{ false };
 
    // Project owned meters
-   Meter *mPlaybackMeter;
-   Meter *mCaptureMeter;
+   Meter *mPlaybackMeter{};
+   Meter *mCaptureMeter{};
 
  public:
-   ToolManager *mToolManager;
+    ToolManager *mToolManager{};
    bool mShowSplashScreen;
    wxString mHelpPref;
    wxString mSoloPref;
-   bool mbBusyImporting; // used to fix bug 584
+   bool mbBusyImporting{ false }; // used to fix bug 584
 
    void SetNormalizedWindowState(wxRect pSizeAndLocation) {  mNormalizedWindowState = pSizeAndLocation;   }
    wxRect GetNormalizedWindowState() const { return mNormalizedWindowState;   }
@@ -615,12 +615,12 @@ public:
 #define kAudacitySortByName (1 << 2)
    void SortTracks(int flags);
 
-   int  mAudioIOToken;
+   int  mAudioIOToken{ -1 };
 
-   bool mIsDeleting;
-   bool mTracksFitVerticallyZoomed;  //lda
+   bool mIsDeleting{ false };
+   bool mTracksFitVerticallyZoomed{ false };  //lda
    bool mNormalizeOnLoad;  //lda
-   bool mShowId3Dialog; //lda
+   bool mShowId3Dialog{ true }; //lda
    bool mEmptyCanBeDirty;
 
    bool mSelectAllOnNone;
@@ -630,33 +630,33 @@ public:
    bool mLockPlayRegion;
 
    // See AudacityProject::OnActivate() for an explanation of this.
-   wxWindow *mLastFocusedWindow;
+   wxWindow *mLastFocusedWindow{};
 
-   ImportXMLTagHandler* mImportXMLTagHandler;
+   ImportXMLTagHandler* mImportXMLTagHandler{};
 
    // Last auto-save file name and path (empty if none)
    wxString mAutoSaveFileName;
 
    // Are we currently auto-saving or not?
-   bool mAutoSaving;
+   bool mAutoSaving{ false };
 
    // Has this project been recovered from an auto-saved version
-   bool mIsRecovered;
+   bool mIsRecovered{ false };
 
    // The auto-save data dir the project has been recovered from
    wxString mRecoveryAutoSaveDataDir;
 
    // The handler that handles recovery of <recordingrecovery> tags
-   RecordingRecoveryHandler* mRecordingRecoveryHandler;
+   RecordingRecoveryHandler* mRecordingRecoveryHandler{};
 
    // Dependencies have been imported and a warning should be shown on save
-   bool mImportedDependencies;
+   bool mImportedDependencies{ false };
 
-   bool mWantSaveCompressed;
+   bool mWantSaveCompressed{ false };
    wxArrayString mStrOtherNamesArray; // used to make sure compressed file names are unique
 
    // Last effect applied to this project
-   PluginID mLastEffect;
+   PluginID mLastEffect{};
    
    // The screenshot class needs to access internals
    friend class ScreenshotCommand;
@@ -664,18 +664,18 @@ public:
    wxRect mNormalizedWindowState;
 
    //flag for cancellation of timer record.
-   bool mTimerRecordCanceled;
+   bool mTimerRecordCanceled{ false  };
 
    // Are we currently closing as the result of a menu command?
-   bool mMenuClose;
+   bool mMenuClose{ false };
 
-   bool mbInitializingScrollbar;
+   bool mbInitializingScrollbar{ false };
 
    // Flag that we're recoding.
-   bool mIsCapturing;
+   bool mIsCapturing{ false };
 
    // Keyboard capture
-   wxWindow *mKeyboardCaptureHandler;
+   wxWindow *mKeyboardCaptureHandler{};
 
    double mSeekShort;
    double mSeekLong;
@@ -683,7 +683,7 @@ public:
    wxLongLong mLastSelectionAdjustment;
 
    // See explanation in OnCloseWindow
-   bool mIsBeingDeleted;
+   bool mIsBeingDeleted{ false };
 
    // CommandManager needs to use private methods
    friend class CommandManager;

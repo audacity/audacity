@@ -222,12 +222,12 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
 
    BlockArray    mBlock;
    sampleFormat  mSampleFormat;
-   sampleCount   mNumSamples;
+   sampleCount   mNumSamples{ 0 };
 
    sampleCount   mMinSamples; // min samples per block
    sampleCount   mMaxSamples; // max samples per block
 
-   bool          mErrorOpening;
+   bool          mErrorOpening{ false };
 
    ///To block the Delete() method against the ODCalcSummaryTask::Update() method
    ODLock   mDeleteUpdateMutex;

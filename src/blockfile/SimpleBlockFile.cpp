@@ -111,6 +111,7 @@ SimpleBlockFile::SimpleBlockFile(wxFileName baseFileName,
    {
       bool bSuccess = WriteSimpleBlockFile(sampleData, sampleLen, format, NULL);
       wxASSERT(bSuccess); // TODO: Handle failure here by alert to user and undo partial op.
+      wxUnusedVar(bSuccess);
    }
 
    if (useCache) {

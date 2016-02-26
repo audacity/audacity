@@ -1336,6 +1336,7 @@ bool EffectNoiseReduction::Worker::ProcessOne
       outputTrack->HandleClear(tLen, outputTrack->GetEndTime(), false, false);
       bool bResult = track->ClearAndPaste(t0, t0 + tLen, &*outputTrack, true, false);
       wxASSERT(bResult); // TO DO: Actually handle this.
+      wxUnusedVar(bResult);
    }
 
    return bLoopSuccess;
