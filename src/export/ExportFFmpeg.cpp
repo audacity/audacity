@@ -589,6 +589,12 @@ static int encode_audio(AVCodecContext *avctx, AVPacket *pkt, int16_t *audio_sam
             case AV_SAMPLE_FMT_FLTP:
                ((float*)(frame->data[ch]))[i] = audio_samples[ch + i*avctx->channels] / 32767.;
                break;
+            case AV_SAMPLE_FMT_NONE:
+            case AV_SAMPLE_FMT_DBL:
+            case AV_SAMPLE_FMT_DBLP:
+            case AV_SAMPLE_FMT_NB:
+               wxASSERT(false);
+               break;
             }
          }
       }

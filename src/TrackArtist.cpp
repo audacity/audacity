@@ -471,6 +471,8 @@ void TrackArtist::DrawTrack(const Track * t,
       case WaveTrack::Spectrum:
          DrawSpectrum(wt, dc, rect, selectedRegion, zoomInfo);
          break;
+      default:
+         wxASSERT(false);
       }
 
 #if defined(__WXMAC__)
