@@ -57,7 +57,7 @@ class ODWaveTrackTaskQueue final
    void MakeWaveTrackIndependent(WaveTrack* track);
 
    ///returns whether or not this queue's task list and another's can merge together, as when we make two mono tracks stereo.
-   virtual bool CanMergeWith(ODWaveTrackTaskQueue* otherQueue);
+   bool CanMergeWith(ODWaveTrackTaskQueue* otherQueue);
    void MergeWaveTrack(WaveTrack* track);
 
 

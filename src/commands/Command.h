@@ -76,9 +76,9 @@ class DecoratedCommand /* not final */ : public Command
 protected:
    Command *mCommand;
 public:
-   virtual void Progress(double completed);
-   virtual void Status(const wxString &message) override;
-   virtual void Error(const wxString &message) override;
+   void Progress(double completed) override;
+   void Status(const wxString &message) override;
+   void Error(const wxString &message) override;
 
    DecoratedCommand(Command *cmd)
       : mCommand(cmd)
@@ -86,10 +86,9 @@ public:
       wxASSERT(cmd != NULL);
    }
    virtual ~DecoratedCommand();
-   virtual wxString GetName();
-   virtual CommandSignature &GetSignature();
-   virtual bool SetParameter(const wxString &paramName, const wxVariant &paramValue);
-   virtual bool Apply(CommandExecutionContext context) = 0;
+   wxString GetName() override;
+   CommandSignature &GetSignature() override;
+   bool SetParameter(const wxString &paramName, const wxVariant &paramValue) override;
 };
 
 // Decorator command that performs the given command and then outputs a status
@@ -101,7 +100,7 @@ public:
       : DecoratedCommand(cmd)
    { }
 
-   virtual bool Apply(CommandExecutionContext context);
+   bool Apply(CommandExecutionContext context) override;
 };
 
 class CommandImplementation /* not final */ : public Command
@@ -155,7 +154,7 @@ public:
 
    /// Actually carry out the command. Return true if successful and false
    /// otherwise.
-   virtual bool Apply(CommandExecutionContext context);
+   bool Apply(CommandExecutionContext context) override;
 };
 
 #endif /* End of include guard: __COMMAND__ */

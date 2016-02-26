@@ -2740,13 +2740,13 @@ public:
    // wxWindow implementation
    // ============================================================================
 
-   virtual bool AcceptsFocus() const
+   bool AcceptsFocus() const override
    {
       return mAcceptsFocus;
    }
 
    // So that wxPanel is not included in Tab traversal, when required - see wxWidgets bug 15581
-   virtual bool AcceptsFocusFromKeyboard() const
+   bool AcceptsFocusFromKeyboard() const override
    {
       return mAcceptsFocus;
    }

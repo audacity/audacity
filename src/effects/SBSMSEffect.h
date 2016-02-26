@@ -24,7 +24,7 @@ using namespace _sbsms_;
 class EffectSBSMS /* not final */ : public Effect
 {
 public:
-   virtual bool Process();
+   bool Process() override;
    void setParameters(double rateStart, double rateEnd, double pitchStart, double pitchEnd,
                       SlideType rateSlideType, SlideType pitchSlideType,
                       bool bLinkRatePitch, bool bRateReferenceInput, bool bPitchReferenceInput);

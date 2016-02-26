@@ -133,12 +133,12 @@ class ImportXMLTagHandler final : public XMLTagHandler
  public:
    ImportXMLTagHandler(AudacityProject* pProject) { mProject = pProject; }
 
-   virtual bool HandleXMLTag(const wxChar *tag, const wxChar **attrs);
-   virtual XMLTagHandler *HandleXMLChild(const wxChar * WXUNUSED(tag)) { return NULL; }
+   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
+   XMLTagHandler *HandleXMLChild(const wxChar * WXUNUSED(tag))  override { return NULL; }
 
    // Don't want a WriteXML method because ImportXMLTagHandler is not a WaveTrack.
    // <import> tags are instead written by AudacityProject::WriteXML.
-   //    virtual void WriteXML(XMLWriter &xmlFile) { wxASSERT(false); }
+   //    void WriteXML(XMLWriter &xmlFile) /* not override */ { wxASSERT(false); }
 
  private:
    AudacityProject* mProject;
@@ -390,26 +390,27 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    double PixelWidthBeforeTime(double scrollto) const;
    void SetHorizontalThumb(double scrollto);
 
+   // PRL:  old and incorrect comment below, these functions are used elsewhere than TrackPanel
    // TrackPanel access
-   virtual wxSize GetTPTracksUsableArea();
-   virtual void RefreshTPTrack(Track* pTrk, bool refreshbacking = true);
+   wxSize GetTPTracksUsableArea() /* not override */;
+   void RefreshTPTrack(Track* pTrk, bool refreshbacking = true) /* not override */;
 
    // TrackPanel callback methods, overrides of TrackPanelListener
-   virtual void TP_DisplaySelection();
-   virtual void TP_DisplayStatusMessage(const wxString &msg) override;
+   void TP_DisplaySelection() override;
+   void TP_DisplayStatusMessage(const wxString &msg) override;
 
-   virtual ToolsToolBar * TP_GetToolsToolBar();
+   ToolsToolBar * TP_GetToolsToolBar() override;
 
-   virtual void TP_PushState(const wxString &longDesc, const wxString &shortDesc,
+   void TP_PushState(const wxString &longDesc, const wxString &shortDesc,
                              UndoPush flags) override;
-   virtual void TP_ModifyState(bool bWantsAutoSave);    // if true, writes auto-save file. Should set only if you really want the state change restored after
+   void TP_ModifyState(bool bWantsAutoSave) override;    // if true, writes auto-save file. Should set only if you really want the state change restored after
                                                         // a crash, as it can take many seconds for large (eg. 10 track-hours) projects
-   virtual void TP_RedrawScrollbars();
-   virtual void TP_ScrollLeft();
-   virtual void TP_ScrollRight();
-   virtual void TP_ScrollWindow(double scrollto);
-   virtual void TP_ScrollUpDown(int delta);
-   virtual void TP_HandleResize();
+   void TP_RedrawScrollbars() override;
+   void TP_ScrollLeft() override;
+   void TP_ScrollRight() override;
+   void TP_ScrollWindow(double scrollto) override;
+   void TP_ScrollUpDown(int delta) override;
+   void TP_HandleResize() override;
 
    // ToolBar
 
@@ -442,33 +443,33 @@ private:
 public:
    // SelectionBarListener callback methods
 
-   virtual double AS_GetRate();
-   virtual void AS_SetRate(double rate);
-   virtual int AS_GetSnapTo();
-   virtual void AS_SetSnapTo(int snap);
-   virtual const wxString & AS_GetSelectionFormat();
-   virtual void AS_SetSelectionFormat(const wxString & format);
-   virtual void AS_ModifySelection(double &start, double &end, bool done);
+   double AS_GetRate() override;
+   void AS_SetRate(double rate) override;
+   int AS_GetSnapTo() override;
+   void AS_SetSnapTo(int snap) override;
+   const wxString & AS_GetSelectionFormat() override;
+   void AS_SetSelectionFormat(const wxString & format) override;
+   void AS_ModifySelection(double &start, double &end, bool done) override;
 
    // SpectralSelectionBarListener callback methods
 
-   virtual double SSBL_GetRate() const;
+   double SSBL_GetRate() const override;
 
-   virtual const wxString & SSBL_GetFrequencySelectionFormatName();
-   virtual void SSBL_SetFrequencySelectionFormatName(const wxString & formatName);
+   const wxString & SSBL_GetFrequencySelectionFormatName() override;
+   void SSBL_SetFrequencySelectionFormatName(const wxString & formatName) override;
 
-   virtual const wxString & SSBL_GetBandwidthSelectionFormatName();
-   virtual void SSBL_SetBandwidthSelectionFormatName(const wxString & formatName);
+   const wxString & SSBL_GetBandwidthSelectionFormatName() override;
+   void SSBL_SetBandwidthSelectionFormatName(const wxString & formatName) override;
 
-   virtual void SSBL_ModifySpectralSelection(double &bottom, double &top, bool done);
+   void SSBL_ModifySpectralSelection(double &bottom, double &top, bool done) override;
 
    void SetStateTo(unsigned int n);
 
    // XMLTagHandler callback methods
 
-   virtual bool HandleXMLTag(const wxChar *tag, const wxChar **attrs);
-   virtual XMLTagHandler *HandleXMLChild(const wxChar *tag);
-   virtual void WriteXML(XMLWriter &xmlFile);
+   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
+   XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
+   void WriteXML(XMLWriter &xmlFile) /* not override */;
 
    void WriteXMLHeader(XMLWriter &xmlFile);
 
@@ -476,10 +477,10 @@ public:
    ViewInfo mViewInfo;
 
    // Audio IO callback methods
-   virtual void OnAudioIORate(int rate);
-   virtual void OnAudioIOStartRecording();
-   virtual void OnAudioIOStopRecording();
-   virtual void OnAudioIONewBlockFiles(const AutoSaveFile & blockFileLog);
+   void OnAudioIORate(int rate) override;
+   void OnAudioIOStartRecording() override;
+   void OnAudioIOStopRecording() override;
+   void OnAudioIONewBlockFiles(const AutoSaveFile & blockFileLog) override;
 
    // Command Handling
    bool TryToMakeActionAllowed( wxUint32 & flags, wxUint32 flagsRqd, wxUint32 mask );

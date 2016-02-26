@@ -194,10 +194,7 @@ class AUDACITY_DLL_API Track /* not final */ : public XMLTagHandler
 
    virtual int GetKind() const { return None; }
 
-   // XMLTagHandler callback methods
-
-   virtual bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) = 0;
-   virtual XMLTagHandler *HandleXMLChild(const wxChar *tag) = 0;
+   // XMLTagHandler callback methods -- NEW virtual for writing
    virtual void WriteXML(XMLWriter &xmlFile) = 0;
 
    // Returns true if an error was encountered while trying to
@@ -273,13 +270,14 @@ class AUDACITY_DLL_API TrackListCondIterator /* not final */ : public TrackListI
       virtual ~TrackListCondIterator() {}
 
       // Iteration functions
-      Track *First(TrackList *val = NULL);
-      Track *StartWith(Track *val);
-      Track *Next(bool skiplinked = false);
-      Track *Prev(bool skiplinked = false);
-      Track *Last(bool skiplinked = false);
+      Track *First(TrackList *val = NULL) override;
+      Track *StartWith(Track *val) override;
+      Track *Next(bool skiplinked = false) override;
+      Track *Prev(bool skiplinked = false) override;
+      Track *Last(bool skiplinked = false) override;
 
    protected:
+      // NEW virtual
       virtual bool Condition(Track *t) = 0;
 };
 
@@ -295,7 +293,7 @@ class AUDACITY_DLL_API TrackListOfKindIterator /* not final */ : public TrackLis
    virtual ~TrackListOfKindIterator() {}
 
  protected:
-   virtual bool Condition(Track *t);
+   virtual bool Condition(Track *t) override;
 
  private:
    int kind;
@@ -313,7 +311,7 @@ class AUDACITY_DLL_API SelectedTrackListOfKindIterator final : public TrackListO
    virtual ~SelectedTrackListOfKindIterator() {}
 
  protected:
-   bool Condition(Track *t);
+   bool Condition(Track *t) override;
 };
 
 //
@@ -328,7 +326,7 @@ class AUDACITY_DLL_API VisibleTrackIterator final : public TrackListCondIterator
    virtual ~VisibleTrackIterator() {}
 
  protected:
-   bool Condition(Track *t);
+   bool Condition(Track *t) override;
 
  private:
    AudacityProject *mProject;
@@ -450,8 +448,8 @@ class AUDACITY_DLL_API TrackList final : public wxEvtHandler
 
 #if LEGACY_PROJECT_FILE_SUPPORT
    // File I/O
-   virtual bool Load(wxTextFile * in, DirManager * dirManager);
-   virtual bool Save(wxTextFile * out, bool overwrite);
+   bool Load(wxTextFile * in, DirManager * dirManager) override;
+   bool Save(wxTextFile * out, bool overwrite) override;
 #endif
 
  private:

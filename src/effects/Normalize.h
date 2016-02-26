@@ -32,35 +32,35 @@ public:
 
    // IdentInterface implementation
 
-   virtual wxString GetSymbol();
-   virtual wxString GetDescription();
+   wxString GetSymbol() override;
+   wxString GetDescription() override;
 
    // EffectIdentInterface implementation
 
-   virtual EffectType GetType();
+   EffectType GetType() override;
 
    // EffectClientInterface implementation
 
-   virtual bool GetAutomationParameters(EffectAutomationParameters & parms);
-   virtual bool SetAutomationParameters(EffectAutomationParameters & parms);
+   bool GetAutomationParameters(EffectAutomationParameters & parms) override;
+   bool SetAutomationParameters(EffectAutomationParameters & parms) override;
 
    // Effect implementation
 
-   virtual bool CheckWhetherSkipEffect();
-   virtual bool Startup();
-   virtual bool Process();
-   virtual void PopulateOrExchange(ShuttleGui & S);
-   virtual bool TransferDataToWindow();
-   virtual bool TransferDataFromWindow();
+   bool CheckWhetherSkipEffect() override;
+   bool Startup() override;
+   bool Process() override;
+   void PopulateOrExchange(ShuttleGui & S) override;
+   bool TransferDataToWindow() override;
+   bool TransferDataFromWindow() override;
 
 private:
    // EffectNormalize implementation
 
    bool ProcessOne(WaveTrack * t, const wxString &msg);
-   virtual void AnalyseTrack(WaveTrack * track, const wxString &msg);
-   virtual void AnalyzeData(float *buffer, sampleCount len);
+   void AnalyseTrack(WaveTrack * track, const wxString &msg);
+   void AnalyzeData(float *buffer, sampleCount len);
    bool AnalyseDC(WaveTrack * track, const wxString &msg);
-   virtual void ProcessData(float *buffer, sampleCount len);
+   void ProcessData(float *buffer, sampleCount len);
 
    void OnUpdateUI(wxCommandEvent & evt);
    void UpdateUI();

@@ -40,20 +40,20 @@ public:
 
    // IdentInterface implementation
 
-   virtual wxString GetSymbol();
-   virtual wxString GetDescription();
+   wxString GetSymbol() override;
+   wxString GetDescription() override;
 
    // EffectIdentInterface implementation
 
-   virtual EffectType GetType();
-   virtual bool SupportsAutomation();
+   EffectType GetType() override;
+   bool SupportsAutomation() override;
 
    // Effect implementation
 
-   virtual bool PromptUser();
-   virtual bool Init();
-   virtual bool CheckWhetherSkipEffect();
-   virtual bool Process();
+   bool PromptUser() override;
+   bool Init() override;
+   bool CheckWhetherSkipEffect() override;
+   bool Process() override;
 
 private:
 

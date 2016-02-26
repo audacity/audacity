@@ -31,8 +31,8 @@ class AUDACITY_DLL_API LinkingHtmlWindow final : public HtmlWindow
                      const wxPoint& pos = wxDefaultPosition,
                      const wxSize& size = wxDefaultSize,
                      long style = wxHW_SCROLLBAR_AUTO);
-   virtual void OnLinkClicked(const wxHtmlLinkInfo& link);
-   //virtual void OnSetTitle(const wxString& title);
+   void OnLinkClicked(const wxHtmlLinkInfo& link) override;
+   //void OnSetTitle(const wxString& title) override;
 
 };
 
@@ -46,7 +46,7 @@ public:
    void OnKeyDown(wxKeyEvent & event);
 
    void UpdateButtons();
-   //virtual void SetLabel(const wxString& label);
+   //void SetLabel(const wxString& label) override;
 
 
    HtmlWindow * mpHtml;

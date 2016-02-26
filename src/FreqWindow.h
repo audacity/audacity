@@ -130,7 +130,7 @@ public:
               const wxString & title, const wxPoint & pos);
    virtual ~ FreqWindow();
 
-   virtual bool Show( bool show = true );
+   bool Show( bool show = true ) override;
 
 private:
    void GetAudio();

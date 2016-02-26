@@ -119,10 +119,10 @@ class MyFLACFile final : public FLAC::Decoder::File
    bool                  mWasError;
    wxArrayString         mComments;
  protected:
-   virtual FLAC__StreamDecoderWriteStatus write_callback(const FLAC__Frame *frame,
-                                                         const FLAC__int32 * const buffer[]);
-   virtual void metadata_callback(const FLAC__StreamMetadata *metadata);
-   virtual void error_callback(FLAC__StreamDecoderErrorStatus status);
+   FLAC__StreamDecoderWriteStatus write_callback(const FLAC__Frame *frame,
+                                                         const FLAC__int32 * const buffer[]) override;
+   void metadata_callback(const FLAC__StreamMetadata *metadata) override;
+   void error_callback(FLAC__StreamDecoderErrorStatus status) override;
 };
 
 

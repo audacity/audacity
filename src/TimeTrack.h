@@ -40,24 +40,24 @@ class TimeTrack final : public Track {
    virtual ~TimeTrack();
 
    // Identifying the type of track
-   virtual int GetKind() const { return Time; }
+   int GetKind() const override { return Time; }
 
    // TimeTrack parameters
 
-   virtual double GetOffset() const { return 0.0; }
-   virtual void SetOffset(double /* t */) {}
+   double GetOffset() const override { return 0.0; }
+   void SetOffset(double /* t */) override {}
 
-   virtual double GetStartTime() const { return 0.0; }
-   virtual double GetEndTime() const { return 0.0; }
+   double GetStartTime() const override { return 0.0; }
+   double GetEndTime() const override { return 0.0; }
 
    void Draw(wxDC & dc, const wxRect & r, const ZoomInfo &zoomInfo);
 
    // XMLTagHandler callback methods for loading and saving
 
-   virtual bool HandleXMLTag(const wxChar *tag, const wxChar **attrs);
-   virtual void HandleXMLEndTag(const wxChar *tag);
-   virtual XMLTagHandler *HandleXMLChild(const wxChar *tag);
-   virtual void WriteXML(XMLWriter &xmlFile);
+   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
+   void HandleXMLEndTag(const wxChar *tag) override;
+   XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
+   void WriteXML(XMLWriter &xmlFile) override;
 
    // Lock and unlock the track: you must lock the track before
    // doing a copy and paste between projects.
@@ -131,7 +131,7 @@ class TimeTrack final : public Track {
     * @param orig the TimeTrack to copy from
     */
    void Init(const TimeTrack &orig);
-   virtual Track *Duplicate() const;
+   Track *Duplicate() const override;
 
    friend class TrackFactory;
 

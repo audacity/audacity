@@ -31,13 +31,13 @@ class ODDecodeFFmpegTask final : public ODDecodeTask
    ODDecodeFFmpegTask(void* scs,int numStreams, WaveTrack*** channels, void* formatContext, int streamIndex);
    virtual ~ODDecodeFFmpegTask();
 
-   virtual ODTask* Clone();
+   ODTask* Clone() override;
    ///Creates an ODFileDecoder that decodes a file of filetype the subclass handles.
-   virtual ODFileDecoder* CreateFileDecoder(const wxString & fileName);
+   ODFileDecoder* CreateFileDecoder(const wxString & fileName) override;
 
    ///Lets other classes know that this class handles the ffmpeg type
    ///Subclasses should override to return respective type.
-   virtual unsigned int GetODType(){return eODFFMPEG;}
+   unsigned int GetODType() override {return eODFFMPEG;}
 
  protected:
    WaveTrack*** mChannels;

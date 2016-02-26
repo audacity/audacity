@@ -8857,12 +8857,12 @@ public:
    {
    }
 
-   virtual long GetPreferredPage()
+   long GetPreferredPage() override
    {
       return mPage;
    }
 
-   virtual void SavePreferredPage()
+   void SavePreferredPage() override
    {
    }
 
@@ -9362,7 +9362,7 @@ public:
    TrackPanelFontEnumerator(wxArrayString* fontNames) :
       mFontNames(fontNames) {}
 
-   virtual bool OnFacename(const wxString& font)
+   bool OnFacename(const wxString& font) override
    {
       mFontNames->Add(font);
       return true;

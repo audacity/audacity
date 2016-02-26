@@ -26,7 +26,7 @@ class ProjectsPrefs final : public PrefsPanel
  public:
    ProjectsPrefs(wxWindow * parent);
    ~ProjectsPrefs();
-   virtual bool Apply();
+   bool Apply() override;
 
  private:
    void Populate();
@@ -36,6 +36,6 @@ class ProjectsPrefs final : public PrefsPanel
 class ProjectsPrefsFactory final : public PrefsPanelFactory
 {
 public:
-   virtual PrefsPanel *Create(wxWindow *parent);
+   PrefsPanel *Create(wxWindow *parent) override;
 };
 #endif

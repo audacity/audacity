@@ -122,7 +122,7 @@ class AUDACITY_DLL_API LabelTrack final : public Track
    LabelTrack(const LabelTrack &orig);
 
    virtual ~ LabelTrack();
-   virtual void SetOffset(double dOffset);
+   void SetOffset(double dOffset) override;
 
    static void ResetFont();
 
@@ -133,37 +133,37 @@ class AUDACITY_DLL_API LabelTrack final : public Track
    int getSelectedIndex() const { return mSelIndex; }
    bool IsAdjustingLabel() const { return mIsAdjustingLabel; }
 
-   virtual int GetKind() const { return Label; }
+   int GetKind() const override { return Label; }
 
-   virtual double GetOffset() const;
-   virtual double GetStartTime() const;
-   virtual double GetEndTime() const;
+   double GetOffset() const override;
+   double GetStartTime() const override;
+   double GetEndTime() const override;
 
-   virtual Track *Duplicate() const;
+   Track *Duplicate() const override;
 
-   virtual void SetSelected(bool s);
+   void SetSelected(bool s) override;
 
-   virtual bool HandleXMLTag(const wxChar *tag, const wxChar **attrs);
-   virtual XMLTagHandler *HandleXMLChild(const wxChar *tag);
-   virtual void WriteXML(XMLWriter &xmlFile);
+   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
+   XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
+   void WriteXML(XMLWriter &xmlFile) override;
 
 #if LEGACY_PROJECT_FILE_SUPPORT
-   virtual bool Load(wxTextFile * in, DirManager * dirManager);
-   virtual bool Save(wxTextFile * out, bool overwrite);
+   bool Load(wxTextFile * in, DirManager * dirManager) override;
+   bool Save(wxTextFile * out, bool overwrite) override;
 #endif
 
-   virtual bool Cut  (double t0, double t1, Track ** dest);
+   bool Cut  (double t0, double t1, Track ** dest) override;
    // JKC Do not add the const modifier to Copy(), Clear()
    // or Paste() because then it
    // is no longer recognised as a virtual function matching the
    // one in Track.
-   virtual bool Copy (double t0, double t1, Track ** dest);// const;
-   virtual bool Clear(double t0, double t1);
-   virtual bool Paste(double t, Track * src);
+   bool Copy (double t0, double t1, Track ** dest) override;// const;
+   bool Clear(double t0, double t1) override;
+   bool Paste(double t, Track * src) override;
    bool Repeat(double t0, double t1, int n);
 
-   virtual bool Silence(double t0, double t1);
-   virtual bool InsertSilence(double t, double len);
+   bool Silence(double t0, double t1) override;
+   bool InsertSilence(double t, double len) override;
    int OverGlyph(int x, int y);
    static wxBitmap & GetGlyph( int i);
 
@@ -221,8 +221,11 @@ class AUDACITY_DLL_API LabelTrack final : public Track
 
    // This pastes labels without shifting existing ones
    bool PasteOver(double t, Track *src);
-   bool SplitCut(double b, double e, Track **dest);
-   bool SplitDelete(double b, double e);
+
+   // PRL:  These functions were not used because they were not overrides!  Was that right?
+   //bool SplitCut(double b, double e, Track **dest) /* not override */;
+   //bool SplitDelete(double b, double e) /* not override */;
+
    void ShiftLabelsOnInsert(double length, double pt);
    void ChangeLabelsOnReverse(double b, double e);
    void ScaleLabels(double b, double e, double change);

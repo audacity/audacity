@@ -28,9 +28,9 @@
 class GetPreferenceCommandType final : public CommandType
 {
 public:
-   virtual wxString BuildName();
-   virtual void BuildSignature(CommandSignature &signature);
-   virtual Command *Create(CommandOutputTarget *target);
+   wxString BuildName() override;
+   void BuildSignature(CommandSignature &signature) override;
+   Command *Create(CommandOutputTarget *target) override;
 };
 
 class GetPreferenceCommand final : public CommandImplementation
@@ -42,7 +42,7 @@ public:
    { }
 
    virtual ~GetPreferenceCommand();
-   virtual bool Apply(CommandExecutionContext context);
+   bool Apply(CommandExecutionContext context) override;
 };
 
 // SetPreference
@@ -50,9 +50,9 @@ public:
 class SetPreferenceCommandType final : public CommandType
 {
 public:
-   virtual wxString BuildName();
-   virtual void BuildSignature(CommandSignature &signature);
-   virtual Command *Create(CommandOutputTarget *target);
+   wxString BuildName() override;
+   void BuildSignature(CommandSignature &signature) override;
+   Command *Create(CommandOutputTarget *target) override;
 };
 
 class SetPreferenceCommand final : public CommandImplementation
@@ -64,7 +64,7 @@ public:
    { }
 
    virtual ~SetPreferenceCommand();
-   virtual bool Apply(CommandExecutionContext context);
+   bool Apply(CommandExecutionContext context) override;
 };
 
 #endif /* End of include guard: __PREFERENCECOMMANDS__ */

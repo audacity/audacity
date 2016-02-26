@@ -27,17 +27,17 @@ public:
 
    // IdentInterface implementation
 
-   virtual wxString GetSymbol();
-   virtual wxString GetDescription();
+   wxString GetSymbol() override;
+   wxString GetDescription() override;
 
    // EffectIdentInterface implementation
 
-   virtual EffectType GetType();
-   virtual bool IsInteractive();
+   EffectType GetType() override;
+   bool IsInteractive() override;
 
    // Effect implementation
 
-   virtual bool Process();
+   bool Process() override;
 
 private:
    // EffectReverse implementation

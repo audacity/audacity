@@ -45,19 +45,20 @@ class ODDecodeTask /* not final */ : public ODTask
 
    virtual ODTask* Clone()=0;
 
+   // NEW virtual:
    virtual bool SeekingAllowed();
 
    ///changes the tasks associated with this Waveform to process the task from a different point in the track
    ///this is overridden from ODTask because certain classes don't allow users to seek sometimes, or not at all.
-   virtual void DemandTrackUpdate(WaveTrack* track, double seconds);
+   void DemandTrackUpdate(WaveTrack* track, double seconds) override;
 
    ///Return the task name
-   virtual const char* GetTaskName(){return "ODDecodeTask";}
+   const char* GetTaskName() override { return "ODDecodeTask"; }
 
-   virtual const wxChar* GetTip(){return _("Decoding Waveform");}
+   const wxChar* GetTip() override { return _("Decoding Waveform"); }
 
    ///Subclasses should override to return respective type.
-   virtual unsigned int GetODType(){return eODNone;}
+   unsigned int GetODType() override { return eODNone; }
 
    ///Creates an ODFileDecoder that decodes a file of filetype the subclass handles.
    virtual ODFileDecoder* CreateFileDecoder(const wxString & fileName)=0;
@@ -67,6 +68,7 @@ class ODDecodeTask /* not final */ : public ODTask
    ///Blocks that have IsDataAvailable()==false are blockfiles to be decoded.  if BlockFile::GetDecodeType()==ODDecodeTask::GetODType() then
    ///this decoder should handle it.  Decoders are accessible with the methods below.  These aren't thread-safe and should only
    ///be called from the decoding thread.
+   // NEW virtuals:
    virtual ODFileDecoder* GetOrCreateMatchingFileDecoder(ODDecodeBlockFile* blockFile);
    virtual int GetNumFileDecoders();
 
@@ -74,14 +76,14 @@ class ODDecodeTask /* not final */ : public ODTask
 protected:
 
    ///recalculates the percentage complete.
-   virtual void CalculatePercentComplete();
+   void CalculatePercentComplete() override;
 
    ///Computes and writes the data for one BlockFile if it still has a refcount.
-   virtual void DoSomeInternal();
+   void DoSomeInternal() override;
 
    ///Readjusts the blockfile order in the default manner.  If we have had an ODRequest
    ///Then it updates in the OD manner.
-   virtual void Update();
+   void Update() override;
 
    ///Orders the input as either On-Demand or default layered order.
    void OrderBlockFiles(std::vector<ODDecodeBlockFile*> &unorderedBlocks);

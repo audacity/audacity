@@ -24,7 +24,7 @@ class MousePrefs final : public PrefsPanel
  public:
    MousePrefs(wxWindow * parent);
    ~MousePrefs();
-   virtual bool Apply();
+   bool Apply() override;
 
  private:
    void Populate();
@@ -41,6 +41,6 @@ class MousePrefs final : public PrefsPanel
 class MousePrefsFactory final : public PrefsPanelFactory
 {
 public:
-   virtual PrefsPanel *Create(wxWindow *parent);
+   PrefsPanel *Create(wxWindow *parent) override;
 };
 #endif

@@ -22,7 +22,7 @@ class EffectTwoPassSimpleMono /* not final */ : public Effect
 public:
    // Effect implementation
 
-   virtual bool Process();
+   bool Process() override;
 
 protected:
    // EffectTwoPassSimpleMono implemetation
@@ -30,8 +30,10 @@ protected:
    // Override these methods if you need to initialize something
    // before each pass. Return None if processing should stop.
    // These should not depend on mOutputTracks having been set up via CopyInputTracks().
-   virtual bool InitPass1();
-   virtual bool InitPass2();
+   bool InitPass1() override;
+   bool InitPass2() override;
+
+   // NEW virtuals
 
    // Override these methods if you need to do things
    // before every track (including the first one)
@@ -50,6 +52,8 @@ protected:
    { if(buffer1 != NULL) return ProcessPass1(buffer1, len1); else return true; }
    virtual bool TwoBufferProcessPass2(float *buffer1, sampleCount len1, float * WXUNUSED(buffer2), sampleCount WXUNUSED(len2))
    { if(buffer1 != NULL) return ProcessPass2(buffer1, len1); else return true; }
+
+   // End of NEW virtuals
 
    // Call this if you know in advance that no second pass will be needed.
    // This is used as a hint for the progress bar

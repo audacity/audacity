@@ -41,27 +41,27 @@ public:
 
    // IdentInterface implementation
 
-   virtual wxString GetSymbol();
-   virtual wxString GetDescription();
+   wxString GetSymbol() override;
+   wxString GetDescription() override;
 
    // EffectIdentInterface implementation
 
-   virtual EffectType GetType();
+   EffectType GetType() override;
 
    // EffectClientInterface implementation
 
-   virtual bool GetAutomationParameters(EffectAutomationParameters & parms);
-   virtual bool SetAutomationParameters(EffectAutomationParameters & parms);
+   bool GetAutomationParameters(EffectAutomationParameters & parms) override;
+   bool SetAutomationParameters(EffectAutomationParameters & parms) override;
 
    // Effect implementation
 
-   virtual double CalcPreviewInputLength(double previewLength);
-   virtual bool Startup();
+   double CalcPreviewInputLength(double previewLength) override;
+   bool Startup() override;
 
    // Analyze a single track to find silences
    // If inputLength is not NULL we are calculating the minimum
    // amount of input for previewing.
-   virtual bool Analyze(RegionList &silenceList,
+   bool Analyze(RegionList &silenceList,
                         RegionList &trackSilences,
                         WaveTrack* wt,
                         sampleCount* silentFrame,
@@ -70,10 +70,10 @@ public:
                         double* inputLength = NULL,
                         double* minInputLength = NULL);
 
-   virtual bool Process();
-   virtual void PopulateOrExchange(ShuttleGui & S);
-   virtual bool TransferDataToWindow();
-   virtual bool TransferDataFromWindow();
+   bool Process() override;
+   void PopulateOrExchange(ShuttleGui & S) override;
+   bool TransferDataToWindow() override;
+   bool TransferDataFromWindow() override;
 
 private:
    // EffectTruncSilence implementation

@@ -143,8 +143,8 @@ public:
 public:
    ~Theme(void);
 public:
-   virtual void EnsureInitialised();
-   virtual void ApplyUpdatedImages();
+   void EnsureInitialised() override;
+   void ApplyUpdatedImages() override;
    void RegisterImages();
    void RegisterColours();
    bool mbInitialised;

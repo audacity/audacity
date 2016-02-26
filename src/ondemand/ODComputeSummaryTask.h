@@ -36,32 +36,32 @@ class ODComputeSummaryTask final : public ODTask
    ODComputeSummaryTask();
    virtual ~ODComputeSummaryTask(){};
 
-   virtual ODTask* Clone();
+   ODTask* Clone() override;
 
    ///Subclasses should override to return respective type.
-   virtual unsigned int GetODType(){return eODPCMSummary;}
+   unsigned int GetODType() override { return eODPCMSummary; }
 
    ///Return the task name
-   virtual const char* GetTaskName(){return "ODComputeSummaryTask";}
+   const char* GetTaskName() override { return "ODComputeSummaryTask"; }
 
-   virtual const wxChar* GetTip(){return _("Import complete. Calculating waveform");}
+   const wxChar* GetTip() override { return _("Import complete. Calculating waveform"); }
 
-   virtual bool UsesCustomWorkUntilPercentage(){return true;}
-   virtual float ComputeNextWorkUntilPercentageComplete();
+   bool UsesCustomWorkUntilPercentage() override { return true; }
+   float ComputeNextWorkUntilPercentageComplete() override;
 
    ///releases memory that the ODTask owns.  Subclasses should override.
-   virtual void Terminate();
+   void Terminate() override;
 
 protected:
    ///recalculates the percentage complete.
-   virtual void CalculatePercentComplete();
+   void CalculatePercentComplete() override;
 
    ///Computes and writes the data for one BlockFile if it still has a refcount.
-   virtual void DoSomeInternal();
+   void DoSomeInternal() override;
 
    ///Readjusts the blockfile order in the default manner.  If we have had an ODRequest
    ///Then it updates in the OD manner.
-   virtual void Update();
+   void Update() override;
 
    ///Orders the input as either On-Demand or default layered order.
    void OrderBlockFiles(std::vector<ODPCMAliasBlockFile*> &unorderedBlocks);

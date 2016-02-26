@@ -68,7 +68,7 @@ class GrabberEvent final : public wxCommandEvent
       mPos = pos;
    }
 
-   virtual wxEvent *Clone() const
+   wxEvent *Clone() const override
    {
       return new GrabberEvent(*this);
    }

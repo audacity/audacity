@@ -34,7 +34,7 @@ public:
    AppCommandEvent(const AppCommandEvent &event);
    ~AppCommandEvent();
 
-   virtual wxEvent *Clone() const;
+   wxEvent *Clone() const override;
    void SetCommand(Command *cmd);
    Command *GetCommand();
 

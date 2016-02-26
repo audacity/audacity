@@ -29,9 +29,9 @@ to that system.
 class BatchEvalCommandType final : public CommandType
 {
 public:
-   virtual wxString BuildName();
-   virtual void BuildSignature(CommandSignature &signature);
-   virtual Command *Create(CommandOutputTarget *target);
+   wxString BuildName() override;
+   void BuildSignature(CommandSignature &signature) override;
+   Command *Create(CommandOutputTarget *target) override;
 };
 
 class BatchEvalCommand final : public CommandImplementation
@@ -43,7 +43,7 @@ public:
    { }
 
    virtual ~BatchEvalCommand();
-   virtual bool Apply(CommandExecutionContext context);
+   bool Apply(CommandExecutionContext context) override;
 };
 
 #endif /* End of include guard: __BATCHEVALCOMMAND__ */

@@ -55,6 +55,7 @@ public:
    ProgressDialog(const wxString & title, const wxString & message = wxEmptyString, int flags = pdlgDefaultFlags);
    virtual ~ProgressDialog();
 
+   // NEW virtual?  It doesn't override wxDialog
    virtual bool Create(const wxString & title, const wxString & message = wxEmptyString, int flags = pdlgDefaultFlags);
 
    int Update(int value, const wxString & message = wxEmptyString);

@@ -324,7 +324,7 @@ public:
                int subformat = 0) override;
    // optional
    wxString GetExtension(int index);
-   virtual bool CheckFileName(wxFileName &filename, int format);
+   bool CheckFileName(wxFileName &filename, int format) override;
 
 private:
 

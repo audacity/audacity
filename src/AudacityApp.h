@@ -99,9 +99,9 @@ class BlockFile;
 class AudacityApp final : public wxApp {
  public:
    AudacityApp();
-   virtual bool OnInit(void);
-   virtual int OnExit(void);
-   virtual void OnFatalException();
+   bool OnInit(void) override;
+   int OnExit(void) override;
+   void OnFatalException() override;
 
    int FilterEvent(wxEvent & event);
 
@@ -151,9 +151,9 @@ class AudacityApp final : public wxApp {
 
    #ifdef __WXMAC__
     // In response to Apple Events
-    virtual void MacOpenFile(const wxString &fileName) ;
-    virtual void MacPrintFile(const wxString &fileName) ;
-    virtual void MacNewFile() ;
+    void MacOpenFile(const wxString &fileName)  override;
+    void MacPrintFile(const wxString &fileName)  override;
+    void MacNewFile()  override;
    #endif
 
    #if defined(__WXMSW__) && !defined(__WXUNIVERSAL__) && !defined(__CYGWIN__)

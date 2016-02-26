@@ -579,7 +579,7 @@ protected:
 
    class AUDACITY_DLL_API AudacityTimer final : public wxTimer {
    public:
-     virtual void Notify() {
+     void Notify() override{
        // (From Debian)
        //
        // Don't call parent->OnTimer(..) directly here, but instead post

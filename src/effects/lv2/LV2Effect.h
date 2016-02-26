@@ -101,83 +101,83 @@ public:
 
    // IdentInterface implementation
 
-   virtual wxString GetPath();
-   virtual wxString GetSymbol();
-   virtual wxString GetName();
-   virtual wxString GetVendor();
-   virtual wxString GetVersion();
-   virtual wxString GetDescription();
+   wxString GetPath() override;
+   wxString GetSymbol() override;
+   wxString GetName() override;
+   wxString GetVendor() override;
+   wxString GetVersion() override;
+   wxString GetDescription() override;
 
    // EffectIdentInterface implementation
 
-   virtual EffectType GetType();
-   virtual wxString GetFamily();
-   virtual bool IsInteractive();
-   virtual bool IsDefault();
-   virtual bool IsLegacy();
-   virtual bool SupportsRealtime();
-   virtual bool SupportsAutomation();
+   EffectType GetType() override;
+   wxString GetFamily() override;
+   bool IsInteractive() override;
+   bool IsDefault() override;
+   bool IsLegacy() override;
+   bool SupportsRealtime() override;
+   bool SupportsAutomation() override;
 
    // EffectClientInterface implementation
 
-   virtual bool SetHost(EffectHostInterface *host);
+   bool SetHost(EffectHostInterface *host) override;
 
-   virtual int GetAudioInCount();
-   virtual int GetAudioOutCount();
+   int GetAudioInCount() override;
+   int GetAudioOutCount() override;
 
-   virtual int GetMidiInCount();
-   virtual int GetMidiOutCount();
+   int GetMidiInCount() override;
+   int GetMidiOutCount() override;
 
-   virtual void SetSampleRate(sampleCount rate);
-   virtual sampleCount SetBlockSize(sampleCount maxBlockSize);
+   void SetSampleRate(sampleCount rate) override;
+   sampleCount SetBlockSize(sampleCount maxBlockSize) override;
 
-   virtual sampleCount GetLatency();
-   virtual sampleCount GetTailSize();
+   sampleCount GetLatency() override;
+   sampleCount GetTailSize() override;
 
-   virtual bool IsReady();
-   virtual bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL);
-   virtual bool ProcessFinalize();
-   virtual sampleCount ProcessBlock(float **inbuf, float **outbuf, sampleCount size);
+   bool IsReady() override;
+   bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) override;
+   bool ProcessFinalize() override;
+   sampleCount ProcessBlock(float **inbuf, float **outbuf, sampleCount size) override;
 
-   virtual bool RealtimeInitialize();
-   virtual bool RealtimeAddProcessor(int numChannels, float sampleRate);
-   virtual bool RealtimeFinalize();
-   virtual bool RealtimeSuspend();
-   virtual bool RealtimeResume();
-   virtual bool RealtimeProcessStart();
-   virtual sampleCount RealtimeProcess(int group,
+   bool RealtimeInitialize() override;
+   bool RealtimeAddProcessor(int numChannels, float sampleRate) override;
+   bool RealtimeFinalize() override;
+   bool RealtimeSuspend() override;
+   bool RealtimeResume() override;
+   bool RealtimeProcessStart() override;
+   sampleCount RealtimeProcess(int group,
                                        float **inbuf,
                                        float **outbuf,
-                                       sampleCount numSamples);
-   virtual bool RealtimeProcessEnd();
+                                       sampleCount numSamples) override;
+   bool RealtimeProcessEnd() override;
 
-   virtual bool ShowInterface(wxWindow *parent, bool forceModal = false);
+   bool ShowInterface(wxWindow *parent, bool forceModal = false) override;
 
-   virtual bool GetAutomationParameters(EffectAutomationParameters & parms);
-   virtual bool SetAutomationParameters(EffectAutomationParameters & parms);
+   bool GetAutomationParameters(EffectAutomationParameters & parms) override;
+   bool SetAutomationParameters(EffectAutomationParameters & parms) override;
 
    // EffectUIClientInterface implementation
 
-   virtual void SetHostUI(EffectUIHostInterface *host);
-   virtual bool PopulateUI(wxWindow *parent);
-   virtual bool IsGraphicalUI();
-   virtual bool ValidateUI();
-   virtual bool HideUI();
-   virtual bool CloseUI();
+   void SetHostUI(EffectUIHostInterface *host) override;
+   bool PopulateUI(wxWindow *parent) override;
+   bool IsGraphicalUI() override;
+   bool ValidateUI() override;
+   bool HideUI() override;
+   bool CloseUI() override;
 
-   virtual bool LoadUserPreset(const wxString & name);
-   virtual bool SaveUserPreset(const wxString & name);
+   bool LoadUserPreset(const wxString & name) override;
+   bool SaveUserPreset(const wxString & name) override;
 
-   virtual wxArrayString GetFactoryPresets();
-   virtual bool LoadFactoryPreset(int id);
-   virtual bool LoadFactoryDefaults();
+   wxArrayString GetFactoryPresets() override;
+   bool LoadFactoryPreset(int id) override;
+   bool LoadFactoryDefaults() override;
 
-   virtual bool CanExportPresets();
-   virtual void ExportPresets();
-   virtual void ImportPresets();
+   bool CanExportPresets() override;
+   void ExportPresets() override;
+   void ImportPresets() override;
 
-   virtual bool HasOptions();
-   virtual void ShowOptions();
+   bool HasOptions() override;
+   void ShowOptions() override;
 
    // LV2Effect implementation
 

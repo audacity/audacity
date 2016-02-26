@@ -89,8 +89,8 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
    typedef WaveTrackLocation Location;
 
    virtual ~WaveTrack();
-   virtual double GetOffset() const;
-   virtual void SetOffset (double o);
+   double GetOffset() const override;
+   void SetOffset(double o) override;
 
    /** @brief Get the time at which the first clip in the track starts
     *
@@ -109,9 +109,9 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
    // Identifying the type of track
    //
 
-   virtual int GetKind() const { return Wave; }
+   int GetKind() const override { return Wave; }
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   virtual int GetMinimizedHeight() const;
+   int GetMinimizedHeight() const override;
 #endif
    //
    // WaveTrack parameters
@@ -153,34 +153,34 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
    // High-level editing
    //
 
-   virtual bool Cut  (double t0, double t1, Track **dest);
-   virtual bool Copy (double t0, double t1, Track **dest);
-   virtual bool Clear(double t0, double t1);
-   virtual bool Paste(double t0, Track *src);
-   virtual bool ClearAndPaste(double t0, double t1,
+   bool Cut(double t0, double t1, Track **dest) override;
+   bool Copy(double t0, double t1, Track **dest) override;
+   bool Clear(double t0, double t1) override;
+   bool Paste(double t0, Track *src) override;
+   bool ClearAndPaste(double t0, double t1,
                               Track *src,
                               bool preserve = true,
                               bool merge = true,
-                              TimeWarper *effectWarper = NULL);
+                              TimeWarper *effectWarper = NULL) /* not override */;
 
-   virtual bool Silence(double t0, double t1);
-   virtual bool InsertSilence(double t, double len);
+   bool Silence(double t0, double t1) override;
+   bool InsertSilence(double t, double len) override;
 
-   virtual bool SplitAt(double t);
-   virtual bool Split( double t0, double t1 );
-   virtual bool CutAndAddCutLine(double t0, double t1, Track **dest);
-   virtual bool ClearAndAddCutLine(double t0, double t1);
+   bool SplitAt(double t) /* not override */;
+   bool Split(double t0, double t1) /* not override */;
+   // bool CutAndAddCutLine(double t0, double t1, Track **dest) /* not override */;
+   bool ClearAndAddCutLine(double t0, double t1) /* not override */;
 
-   virtual bool SplitCut   (double t0, double t1, Track **dest);
-   virtual bool SplitDelete(double t0, double t1);
-   virtual bool Join       (double t0, double t1);
-   virtual bool Disjoin    (double t0, double t1);
+   bool SplitCut(double t0, double t1, Track **dest) /* not override */;
+   bool SplitDelete(double t0, double t1) /* not override */;
+   bool Join(double t0, double t1) /* not override */;
+   bool Disjoin(double t0, double t1) /* not override */;
 
-   virtual bool Trim (double t0, double t1);
+   bool Trim(double t0, double t1) /* not override */;
 
    bool HandleClear(double t0, double t1, bool addCutLines, bool split);
 
-   virtual bool SyncLockAdjust(double oldT1, double newT1);
+   bool SyncLockAdjust(double oldT1, double newT1) override;
 
    /** @brief Returns true if there are no WaveClips in the specified region
     *
@@ -268,13 +268,13 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
    // XMLTagHandler callback methods for loading and saving
    //
 
-   virtual bool HandleXMLTag(const wxChar *tag, const wxChar **attrs);
-   virtual void HandleXMLEndTag(const wxChar *tag);
-   virtual XMLTagHandler *HandleXMLChild(const wxChar *tag);
-   virtual void WriteXML(XMLWriter &xmlFile);
+   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
+   void HandleXMLEndTag(const wxChar *tag) override;
+   XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
+   void WriteXML(XMLWriter &xmlFile) override;
 
    // Returns true if an error occurred while reading from XML
-   virtual bool GetErrorOpening();
+   bool GetErrorOpening() override;
 
    //
    // Lock and unlock the track: you must lock the track before
@@ -387,7 +387,7 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
 
    // This track has been merged into a stereo track.  Copy shared parameters
    // from the NEW partner.
-   virtual void Merge(const Track &orig);
+   void Merge(const Track &orig) override;
 
    // Resample track (i.e. all clips in the track)
    bool Resample(int rate, ProgressDialog *progress = NULL);

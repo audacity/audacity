@@ -56,7 +56,7 @@ public:
    wxString mParams;
    ShuttleCli(){ mParams = wxT("") ;}
    virtual ~ShuttleCli() {}
-   virtual bool ExchangeWithMaster(const wxString & Name);
+   bool ExchangeWithMaster(const wxString & Name) override;
 };
 
 #endif

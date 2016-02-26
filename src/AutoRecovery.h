@@ -45,12 +45,12 @@ class RecordingRecoveryHandler final : public XMLTagHandler
 {
 public:
    RecordingRecoveryHandler(AudacityProject* proj);
-   virtual bool HandleXMLTag(const wxChar *tag, const wxChar **attrs);
-   virtual void HandleXMLEndTag(const wxChar *tag);
-   virtual XMLTagHandler *HandleXMLChild(const wxChar *tag);
+   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
+   void HandleXMLEndTag(const wxChar *tag) override;
+   XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
 
    // This class only knows reading tags
-   virtual void WriteXML(XMLWriter & WXUNUSED(xmlFile)) { wxASSERT(false); }
+   // void WriteXML(XMLWriter & WXUNUSED(xmlFile)) /* not override */ { wxASSERT(false); }
 
 private:
 
@@ -80,31 +80,32 @@ public:
    AutoSaveFile(size_t allocSize = 1024 * 1024);
    virtual ~AutoSaveFile();
 
-   virtual void StartTag(const wxString & name);
-   virtual void EndTag(const wxString & name);
+   void StartTag(const wxString & name) override;
+   void EndTag(const wxString & name) override;
 
-   virtual void WriteAttr(const wxString & name, const wxString &value);
-   virtual void WriteAttr(const wxString & name, const wxChar *value);
+   void WriteAttr(const wxString & name, const wxString &value) override;
+   void WriteAttr(const wxString & name, const wxChar *value) override;
 
-   virtual void WriteAttr(const wxString & name, int value);
-   virtual void WriteAttr(const wxString & name, bool value);
-   virtual void WriteAttr(const wxString & name, long value);
-   virtual void WriteAttr(const wxString & name, long long value);
-   virtual void WriteAttr(const wxString & name, size_t value);
-   virtual void WriteAttr(const wxString & name, float value, int digits = -1);
-   virtual void WriteAttr(const wxString & name, double value, int digits = -1);
+   void WriteAttr(const wxString & name, int value) override;
+   void WriteAttr(const wxString & name, bool value) override;
+   void WriteAttr(const wxString & name, long value) override;
+   void WriteAttr(const wxString & name, long long value) override;
+   void WriteAttr(const wxString & name, size_t value) override;
+   void WriteAttr(const wxString & name, float value, int digits = -1) override;
+   void WriteAttr(const wxString & name, double value, int digits = -1) override;
 
-   virtual void WriteData(const wxString & value);
+   void WriteData(const wxString & value) override;
+   void Write(const wxString & data) override;
 
-   virtual void WriteSubTree(const AutoSaveFile & value);
+   // Non-override functions
+   void WriteSubTree(const AutoSaveFile & value);
 
-   virtual void Write(const wxString & data);
-   virtual bool Write(wxFFile & file) const;
-   virtual bool Append(wxFFile & file) const;
+   bool Write(wxFFile & file) const;
+   bool Append(wxFFile & file) const;
 
-   virtual bool IsEmpty() const;
+   bool IsEmpty() const;
 
-   virtual bool Decode(const wxString & fileName);
+   bool Decode(const wxString & fileName);
 
 private:
    void WriteName(const wxString & name);

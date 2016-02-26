@@ -151,7 +151,7 @@ const wxArrayString &WaveformSettings::GetScaleNames()
 {
    class ScaleNamesArray final : public TranslatableStringArray
    {
-      virtual void Populate()
+      void Populate() override
       {
          // Keep in correspondence with enum WaveTrack::WaveTrackDisplay:
          mContents.Add(_("Linear"));

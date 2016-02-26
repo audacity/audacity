@@ -47,7 +47,7 @@ class ScreenFrame final : public wxFrame
    ScreenFrame(wxWindow *parent, wxWindowID id);
    virtual ~ScreenFrame();
 
-   virtual bool ProcessEvent(wxEvent & event);
+   bool ProcessEvent(wxEvent & event) override;
 
  private:
    void Populate();
@@ -143,7 +143,7 @@ class ScreenFrameTimer final : public wxTimer
       evt = event.Clone();
    }
 
-   virtual void Notify()
+   void Notify() override
    {
       evt->SetEventObject(NULL);
       screenFrame->ProcessEvent(*evt);

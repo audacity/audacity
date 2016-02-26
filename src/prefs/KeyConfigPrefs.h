@@ -39,8 +39,8 @@ class KeyConfigPrefs final : public PrefsPanel
 public:
    KeyConfigPrefs(wxWindow * parent);
    ~KeyConfigPrefs();
-   virtual bool Apply();
-   virtual void Cancel();
+   bool Apply() override;
+   void Cancel() override;
 
 private:
    void Populate();
@@ -107,8 +107,8 @@ class KeyConfigPrefs final : public PrefsPanel
  public:
    KeyConfigPrefs(wxWindow * parent);
    ~KeyConfigPrefs();
-   virtual bool Apply();
-   virtual void Cancel();
+   bool Apply() override;
+   void Cancel() override;
 
  private:
    void Populate();
@@ -151,6 +151,6 @@ class KeyConfigPrefs final : public PrefsPanel
 class KeyConfigPrefsFactory final : public PrefsPanelFactory
 {
 public:
-   virtual PrefsPanel *Create(wxWindow *parent);
+   PrefsPanel *Create(wxWindow *parent) override;
 };
 #endif

@@ -42,7 +42,7 @@ class NullProgressTarget final : public CommandProgressTarget
 {
 public:
    virtual ~NullProgressTarget() {}
-   virtual void Update(double WXUNUSED(completed)) {}
+   void Update(double WXUNUSED(completed)) override {}
 };
 
 /// Sends command progress information to a ProgressDialog
@@ -55,7 +55,7 @@ public:
       : mProgress(pd)
    {}
    virtual ~GUIProgressTarget() {}
-   virtual void Update(double completed)
+   void Update(double completed) override
    {
       mProgress.Update(completed);
    }
@@ -82,7 +82,7 @@ public:
    {
       // delete &mTarget;
    }
-   virtual void Update(double completed)
+   void Update(double completed) override
    {
       mTarget.Update(wxString::Format(wxT("%.2f%%"), completed*100));
    }
@@ -93,7 +93,7 @@ class NullMessageTarget final : public CommandMessageTarget
 {
 public:
    virtual ~NullMessageTarget() {}
-   virtual void Update(const wxString &message) override {}
+   void Update(const wxString &message) override {}
 };
 
 /// Displays messages from a command in a wxMessageBox
@@ -101,7 +101,7 @@ class MessageBoxTarget final : public CommandMessageTarget
 {
 public:
    virtual ~MessageBoxTarget() {}
-   virtual void Update(const wxString &message) override
+   void Update(const wxString &message) override
    {
       wxMessageBox(message);
    }
@@ -116,7 +116,7 @@ public:
    StatusBarTarget(wxStatusBar &sb)
       : mStatus(sb)
    {}
-   virtual void Update(const wxString &message) override
+   void Update(const wxString &message) override
    {
       mStatus.SetStatusText(message, 0);
    }
@@ -135,7 +135,7 @@ public:
    {
       mResponseQueue.AddResponse(wxString(wxT("\n")));
    }
-   virtual void Update(const wxString &message) override
+   void Update(const wxString &message) override
    {
       mResponseQueue.AddResponse(message);
    }
@@ -158,7 +158,7 @@ public:
       delete m1;
       delete m2;
    }
-   virtual void Update(const wxString &message) override
+   void Update(const wxString &message) override
    {
       m1->Update(message);
       m2->Update(message);

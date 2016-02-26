@@ -25,9 +25,9 @@ class WaveformPrefs final : public PrefsPanel
 public:
    WaveformPrefs(wxWindow * parent, WaveTrack *wt);
    virtual ~WaveformPrefs();
-   virtual bool Apply();
-   virtual bool ShowsApplyButton();
-   virtual bool Validate();
+   bool Apply() override;
+   bool ShowsApplyButton() override;
+   bool Validate() override;
 
 private:
    void Populate();
@@ -60,7 +60,7 @@ class WaveformPrefsFactory final : public PrefsPanelFactory
 {
 public:
    explicit WaveformPrefsFactory(WaveTrack *wt = 0);
-   virtual PrefsPanel *Create(wxWindow *parent);
+   PrefsPanel *Create(wxWindow *parent) override;
 
 private:
    WaveTrack *const mWt;

@@ -24,13 +24,14 @@ class WaveTrack;
 class EffectSimpleMono /* not final */ : public Effect
 {
 public:
-   virtual bool Process();
+   bool Process() override;
 
 protected:
 
    // Override this method if you need to do things
    // before every track (including the first one)
-   virtual bool NewTrackSimpleMono();
+   // NEW override
+   virtual bool NewTrackSimpleMono() = 0;
 
    // Override this method to actually process audio
    virtual bool ProcessSimpleMono(float *buffer, sampleCount len) = 0;

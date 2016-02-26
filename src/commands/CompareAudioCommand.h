@@ -25,9 +25,9 @@ class WaveTrack;
 class CompareAudioCommandType final : public CommandType
 {
 public:
-   virtual wxString BuildName();
-   virtual void BuildSignature(CommandSignature &signature);
-   virtual Command *Create(CommandOutputTarget *target);
+   wxString BuildName() override;
+   void BuildSignature(CommandSignature &signature) override;
+   Command *Create(CommandOutputTarget *target) override;
 };
 
 class CompareAudioCommand final : public CommandImplementation
@@ -41,13 +41,13 @@ private:
    bool GetSelection(AudacityProject &proj);
 
 protected:
-   virtual double CompareSample(double value1, double value2);
+   double CompareSample(double value1, double value2) /* not override */;
 
 public:
    CompareAudioCommand(CommandType &type, CommandOutputTarget *target)
       : CommandImplementation(type, target)
    { }
-   virtual bool Apply(CommandExecutionContext context);
+   bool Apply(CommandExecutionContext context) override;
 };
 
 #endif /* End of include guard: __COMPAREAUDIOCOMMAND__ */

@@ -35,29 +35,29 @@ public:
 
    // IdentInterface implementation
 
-   virtual wxString GetSymbol();
-   virtual wxString GetDescription();
+   wxString GetSymbol() override;
+   wxString GetDescription() override;
 
    // EffectIdentInterface implementation
 
-   virtual EffectType GetType();
+   EffectType GetType() override;
 
    // EffectClientInterface implementation
 
-   virtual bool GetAutomationParameters(EffectAutomationParameters & parms);
-   virtual bool SetAutomationParameters(EffectAutomationParameters & parms);
-   virtual bool LoadFactoryDefaults();
+   bool GetAutomationParameters(EffectAutomationParameters & parms) override;
+   bool SetAutomationParameters(EffectAutomationParameters & parms) override;
+   bool LoadFactoryDefaults() override;
 
    // Effect implementation
 
-   virtual bool CheckWhetherSkipEffect();
-   virtual double CalcPreviewInputLength(double previewLength);
-   virtual bool Startup();
-   virtual bool Init();
-   virtual bool Process();
-   virtual void PopulateOrExchange(ShuttleGui & S);
-   virtual bool TransferDataFromWindow();
-   virtual bool TransferDataToWindow();
+   bool CheckWhetherSkipEffect() override;
+   double CalcPreviewInputLength(double previewLength) override;
+   bool Startup() override;
+   bool Init() override;
+   bool Process() override;
+   void PopulateOrExchange(ShuttleGui & S) override;
+   bool TransferDataFromWindow() override;
+   bool TransferDataToWindow() override;
 
 private:
    // EffectChangeSpeed implementation

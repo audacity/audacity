@@ -27,7 +27,7 @@ class GUIPrefs final : public PrefsPanel
  public:
    GUIPrefs(wxWindow * parent);
    ~GUIPrefs();
-   virtual bool Apply();
+   bool Apply() override;
 
    static void GetRangeChoices(wxArrayString *pChoices, wxArrayString *pCodes);
 
@@ -48,6 +48,6 @@ class GUIPrefs final : public PrefsPanel
 class GUIPrefsFactory final : public PrefsPanelFactory
 {
 public:
-   virtual PrefsPanel *Create(wxWindow *parent);
+   PrefsPanel *Create(wxWindow *parent) override;
 };
 #endif

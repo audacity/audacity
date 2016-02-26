@@ -98,13 +98,13 @@ class Envelope final : public XMLTagHandler {
 #if LEGACY_PROJECT_FILE_SUPPORT
    // File I/O
 
-   virtual bool Load(wxTextFile * in, DirManager * dirManager);
-   virtual bool Save(wxTextFile * out, bool overwrite);
+   bool Load(wxTextFile * in, DirManager * dirManager) override;
+   bool Save(wxTextFile * out, bool overwrite) override;
 #endif
    // Newfangled XML file I/O
-   virtual bool HandleXMLTag(const wxChar *tag, const wxChar **attrs);
-   virtual XMLTagHandler *HandleXMLChild(const wxChar *tag);
-   virtual void WriteXML(XMLWriter &xmlFile) const;
+   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
+   XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
+   void WriteXML(XMLWriter &xmlFile) const /* not override */;
 
    void DrawPoints(wxDC & dc, const wxRect & r, const ZoomInfo &zoomInfo,
              bool dB, double dBRange,

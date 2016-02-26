@@ -135,7 +135,7 @@ public:
 
 protected:
    ///Executes a part of the task
-   virtual void* Entry();
+   void* Entry() override;
    ODTask* mTask;
 
 };

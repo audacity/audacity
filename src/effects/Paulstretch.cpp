@@ -59,7 +59,7 @@ public:
    void set_rap(float newrap);//set the current stretch value
 
 protected:
-   virtual void process_spectrum(float *WXUNUSED(freq)){};
+   void process_spectrum(float *WXUNUSED(freq)) {};
    float samplerate;
 
 private:

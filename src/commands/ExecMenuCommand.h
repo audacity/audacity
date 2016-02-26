@@ -26,9 +26,9 @@ name.
 class ExecMenuCommandType final : public CommandType
 {
 public:
-   virtual wxString BuildName();
-   virtual void BuildSignature(CommandSignature &signature);
-   virtual Command *Create(CommandOutputTarget *target);
+   wxString BuildName() override;
+   void BuildSignature(CommandSignature &signature) override;
+   Command *Create(CommandOutputTarget *target) override;
 };
 
 class ExecMenuCommand final : public CommandImplementation
@@ -39,7 +39,7 @@ public:
       : CommandImplementation(type, target)
    { }
    virtual ~ExecMenuCommand() { }
-   virtual bool Apply(CommandExecutionContext context);
+   bool Apply(CommandExecutionContext context) override;
 };
 
 #endif /* End of include guard: __EXECMENUCOMMAND__ */
