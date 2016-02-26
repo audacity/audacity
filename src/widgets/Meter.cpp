@@ -237,6 +237,11 @@ Meter::Meter(AudacityProject *project,
    mIcon(NULL),
    mAccSilent(false)
 {
+   // Suppress warnings about the header file
+   wxUnusedVar(SpeakerMenu_xpm);
+   wxUnusedVar(MicMenu_xpm);
+   wxUnusedVar(PrefStyles);
+
    mStyle = mDesiredStyle;
 
    mIsFocused = false;

@@ -4658,6 +4658,7 @@ void AudacityProject::EditClipboardByLabel( EditDestFunction action )
 
                   bool bResult = merged->Paste( 0.0 , dest );
                   wxASSERT(bResult); // TO DO: Actually handle this.
+                  wxUnusedVar(bResult);
                   delete dest;
                }
             }

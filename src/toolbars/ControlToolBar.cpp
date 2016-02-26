@@ -889,6 +889,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
                   wt->Clear(t1, t0);
                   bool bResult = wt->Paste(t1, newTrack);
                   wxASSERT(bResult); // TO DO: Actually handle this.
+                  wxUnusedVar(bResult);
                   delete newTrack;
                }
                newRecordingTracks.Add(wt);

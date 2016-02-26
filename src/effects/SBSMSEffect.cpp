@@ -416,6 +416,7 @@ bool EffectSBSMS::Process()
                leftTrack->ClearAndPaste(mCurT0, mCurT1, rb.outputLeftTrack,
                                           true, false, GetTimeWarper());
             wxASSERT(bResult); // TO DO: Actually handle this.
+            wxUnusedVar(bResult);
 
             if(rightTrack)
             {

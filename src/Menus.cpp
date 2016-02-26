@@ -4156,6 +4156,7 @@ void AudacityProject::OnPaste()
                tmp = mTrackFactory->NewWaveTrack( ((WaveTrack*)n)->GetSampleFormat(), ((WaveTrack*)n)->GetRate());
                bool bResult = tmp->InsertSilence(0.0, msClipT1 - msClipT0); // MJS: Is this correct?
                wxASSERT(bResult); // TO DO: Actually handle this.
+               wxUnusedVar(bResult);
                tmp->Flush();
 
                bPastedSomething |=
@@ -4292,6 +4293,7 @@ bool AudacityProject::HandlePasteNothingSelected()
 
          bool bResult = pNewTrack->Paste(0.0, pClip);
          wxASSERT(bResult); // TO DO: Actually handle this.
+         wxUnusedVar(bResult);
          mTracks->Add(pNewTrack);
          pNewTrack->SetSelected(true);
 

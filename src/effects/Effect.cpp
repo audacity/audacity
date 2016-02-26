@@ -1731,6 +1731,7 @@ bool Effect::ProcessTrack(int count,
          return false;
       }
       wxASSERT(processed == curBlockSize);
+      wxUnusedVar(processed);
 
       // Bump to next input buffer position
       if (inputRemaining)

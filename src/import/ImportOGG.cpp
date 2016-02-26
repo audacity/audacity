@@ -173,6 +173,12 @@ wxString OggImportPlugin::GetPluginFormatDescription()
 
 ImportFileHandle *OggImportPlugin::Open(const wxString &filename)
 {
+   // Suppress some compiler warnings about unused global variables in the library header
+   wxUnusedVar(OV_CALLBACKS_DEFAULT);
+   wxUnusedVar(OV_CALLBACKS_NOCLOSE);
+   wxUnusedVar(OV_CALLBACKS_STREAMONLY);
+   wxUnusedVar(OV_CALLBACKS_STREAMONLY_NOCLOSE);
+
    OggVorbis_File *vorbisFile = new OggVorbis_File;
    wxFFile *file = new wxFFile(filename, wxT("rb"));
 

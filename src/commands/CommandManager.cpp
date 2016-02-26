@@ -971,8 +971,6 @@ void CommandManager::Enable(const wxString &name, bool enabled)
 
 void CommandManager::EnableUsingFlags(wxUint32 flags, wxUint32 mask)
 {
-   unsigned int i;
-
    for(const auto &entry : mCommandList) {
       if (entry->multi && entry->index != 0)
          continue;
@@ -1158,8 +1156,6 @@ bool CommandManager::HandleMenuID(int id, wxUint32 flags, wxUint32 mask)
 /// code to run.
 bool CommandManager::HandleTextualCommand(wxString & Str, wxUint32 flags, wxUint32 mask)
 {
-   unsigned int i;
-
    // Linear search for now...
    for (const auto &entry : mCommandList)
    {

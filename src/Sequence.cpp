@@ -418,11 +418,13 @@ bool Sequence::Copy(sampleCount s0, sampleCount s1, Sequence **dest)
       return false;
 
    int numBlocks = mBlock.size();
+
    int b0 = FindBlock(s0);
    const int b1 = FindBlock(s1 - 1);
    wxASSERT(b0 >= 0);
    wxASSERT(b0 < numBlocks);
    wxASSERT(b1 < numBlocks);
+   wxUnusedVar(numBlocks);
    wxASSERT(b0 <= b1);
 
    *dest = new Sequence(mDirManager, mSampleFormat);

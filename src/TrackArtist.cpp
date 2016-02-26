@@ -835,7 +835,7 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
          float minFreq, maxFreq;
          wt->GetSpectrumBounds(&minFreq, &maxFreq);
 
-         switch (wt->GetSpectrogramSettings().scaleType) {
+         switch (settings.scaleType) {
          default:
             wxASSERT(false);
          case SpectrogramSettings::stLinear:

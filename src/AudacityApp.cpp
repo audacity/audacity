@@ -236,6 +236,7 @@ It handles initialization and termination by subclassing wxApp.
 DEFINE_EVENT_TYPE(EVT_OPEN_AUDIO_FILE);
 DEFINE_EVENT_TYPE(EVT_LANGUAGE_CHANGE);
 
+#if 0
 #ifdef __WXGTK__
 static void wxOnAssert(const wxChar *fileName, int lineNumber, const wxChar *msg)
 {
@@ -251,6 +252,7 @@ static void wxOnAssert(const wxChar *fileName, int lineNumber, const wxChar *msg
 
    exit(0);
 }
+#endif
 #endif
 
 static bool gInited = false;

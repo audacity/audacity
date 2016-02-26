@@ -476,6 +476,7 @@ int FLACImportFileHandle::Import(TrackFactory *trackFactory,
       if(!useOD)
          res = (mFile->process_until_end_of_stream() != 0);
    #endif
+      wxUnusedVar(res);
 
    //add the task to the ODManager
    if(useOD)
