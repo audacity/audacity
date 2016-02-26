@@ -11,6 +11,9 @@ before_install:
     - git show -s --format="wxT(\"<a href=\\\"http://github.com/audacity/audacity/commit/%H\\\">%h</a> of %cd\")"
     - git show -s --format="wxT(\"<a href=\\\"http://github.com/audacity/audacity/commit/%H\\\">%h</a> of %cd\")" > ./src/RevisionIdent.h
     - export CXX="g++-4.8" CC="gcc-4.8"
+    - FLAGS="-Wall -Wextra"
+    - export CFLAGS="$CFLAGS $FLAGS"
+    - export CXXFLAGS="$CXXFLAGS $FLAGS"
 language:
     - cpp
 script:
