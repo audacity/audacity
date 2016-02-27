@@ -40,6 +40,7 @@ greater use in future.
 #include "audacity/ConfigInterface.h"
 
 #include "../AudioIO.h"
+#include "../LabelTrack.h"
 #include "../Mix.h"
 #include "../Prefs.h"
 #include "../Project.h"
@@ -2129,6 +2130,88 @@ void Effect::AddToOutputTracks(Track *t)
    mOutputTracks->Add(t);
    mIMap.Add(NULL);
    mOMap.Add(t);
+}
+
+Effect::AddedAnalysisTrack::AddedAnalysisTrack(Effect *pEffect, const wxString &name)
+   : mpEffect(pEffect)
+{
+   std::unique_ptr < LabelTrack > pTrack{ pEffect->mFactory->NewLabelTrack() };
+   mpTrack = pTrack.get();
+   if (!name.empty())
+      pTrack->SetName(name);
+   pEffect->mTracks->Add(pTrack.release());
+}
+
+Effect::AddedAnalysisTrack::AddedAnalysisTrack(AddedAnalysisTrack &&that)
+{
+   mpEffect = that.mpEffect;
+   mpTrack = that.mpTrack;
+   that.Commit();
+}
+
+void Effect::AddedAnalysisTrack::Commit()
+{
+   mpEffect = nullptr;
+}
+
+Effect::AddedAnalysisTrack::~AddedAnalysisTrack()
+{
+   if (mpEffect) {
+      // not committed -- DELETE the label track
+      mpEffect->mTracks->Remove(mpTrack, true);
+   }
+}
+
+auto Effect::AddAnalysisTrack(const wxString &name) -> AddedAnalysisTrack
+{
+   return {this, name};
+}
+
+Effect::ModifiedAnalysisTrack::ModifiedAnalysisTrack
+   (Effect *pEffect, const LabelTrack *pOrigTrack, const wxString &name)
+   : mpEffect(pEffect)
+   , mpOrigTrack(pOrigTrack)
+{
+   Track *newTrack{};
+
+   // copy LabelTrack here, so it can be undone on cancel
+   pOrigTrack->Copy(pOrigTrack->GetStartTime(), pOrigTrack->GetEndTime(), &newTrack);
+
+   mpTrack = static_cast<LabelTrack*>(newTrack);
+
+   // Why doesn't LabelTrack::Copy complete the job? :
+   mpTrack->SetOffset(pOrigTrack->GetStartTime());
+   if (!name.empty())
+      mpTrack->SetName(name);
+
+   pEffect->mTracks->Replace(mpOrigTrack, mpTrack, false);
+}
+
+Effect::ModifiedAnalysisTrack::ModifiedAnalysisTrack(ModifiedAnalysisTrack &&that)
+{
+   mpEffect = that.mpEffect;
+   mpTrack = that.mpTrack;
+   mpOrigTrack = that.mpOrigTrack;
+   that.Commit();
+}
+
+void Effect::ModifiedAnalysisTrack::Commit()
+{
+   mpEffect = nullptr;
+}
+
+Effect::ModifiedAnalysisTrack::~ModifiedAnalysisTrack()
+{
+   if (mpEffect) {
+      // not committed -- DELETE the label track
+      mpEffect->mTracks->Replace(mpTrack, mpOrigTrack, true);
+   }
+}
+
+auto Effect::ModifyAnalysisTrack
+   (const LabelTrack *pOrigTrack, const wxString &name) -> ModifiedAnalysisTrack
+{
+   return{ this, pOrigTrack, name };
 }
 
 // If bGoodResult, replace mTracks tracks with successfully processed mOutputTracks copies.

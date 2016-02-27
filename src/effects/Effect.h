@@ -40,6 +40,7 @@ class ShuttleGui;
 #define BUILTIN_EFFECT_PREFIX wxT("Built-in Effect: ")
 
 class AudacityProject;
+class LabelTrack;
 class SelectedRegion;
 class TimeWarper;
 class EffectUIHost;
@@ -349,6 +350,69 @@ protected:
    // doing the processing on them, and replacing the originals only on success (and not cancel).
    void CopyInputTracks(); // trackType = Track::Wave
    void CopyInputTracks(int trackType);
+
+   // For the use of analyzers, which don't need to make output wave tracks,
+   // but may need to add label tracks.
+   class AddedAnalysisTrack {
+      friend Effect;
+      AddedAnalysisTrack(Effect *pEffect, const wxString &name);
+      AddedAnalysisTrack(const AddedAnalysisTrack&) PROHIBITED;
+
+   public:
+
+      AddedAnalysisTrack() {}
+
+      // So you can have a vector of them
+      AddedAnalysisTrack(AddedAnalysisTrack &&that);
+
+      LabelTrack *get() const { return mpTrack; }
+
+      // Call this to indicate successful completion of the analyzer.
+      void Commit();
+
+      // Destructor undoes the addition of the analysis track if not committed.
+      ~AddedAnalysisTrack();
+
+   private:
+      Effect *mpEffect{};
+      LabelTrack *mpTrack{};
+   };
+
+   // Set name to given value if that is not empty, else use default name
+   AddedAnalysisTrack AddAnalysisTrack(const wxString &name = wxString());
+
+   // For the use of analyzers, which don't need to make output wave tracks,
+   // but may need to modify label tracks.
+   class ModifiedAnalysisTrack {
+      friend Effect;
+      ModifiedAnalysisTrack
+         (Effect *pEffect, const LabelTrack *pOrigTrack, const wxString &name);
+      ModifiedAnalysisTrack(const ModifiedAnalysisTrack&) PROHIBITED;
+
+   public:
+
+      ModifiedAnalysisTrack();
+
+      // So you can have a vector of them
+      ModifiedAnalysisTrack(ModifiedAnalysisTrack &&that);
+
+      LabelTrack *get() const { return mpTrack; }
+
+      // Call this to indicate successful completion of the analyzer.
+      void Commit();
+
+      // Destructor undoes the modification of the analysis track if not committed.
+      ~ModifiedAnalysisTrack();
+
+   private:
+      Effect *mpEffect{};
+      LabelTrack *mpTrack{};
+      const LabelTrack *mpOrigTrack{};
+   };
+
+   // Set name to given value if that is not empty, else use default name
+   ModifiedAnalysisTrack ModifyAnalysisTrack
+      (const LabelTrack *pOrigTrack, const wxString &name = wxString());
 
    // If bGoodResult, replace mWaveTracks tracks in mTracks with successfully processed
    // mOutputTracks copies, get rid of old mWaveTracks, and set mWaveTracks to mOutputTracks.
