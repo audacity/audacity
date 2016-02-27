@@ -720,8 +720,10 @@ TrackList::TrackList(const TrackList &that)
 
 TrackList& TrackList::operator= (const TrackList &that)
 {
-   this->Clear(mDestructorDeletesTracks);
-   DoAssign(that);
+   if (this != &that) {
+      this->Clear(mDestructorDeletesTracks);
+      DoAssign(that);
+   }
    return *this;
 }
 
