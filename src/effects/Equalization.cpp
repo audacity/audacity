@@ -140,6 +140,11 @@ enum kInterpolations
    kNumInterpolations
 };
 
+// Increment whenever EQCurves.xml is updated
+#define EQCURVES_VERSION   1
+#define EQCURVES_REVISION  0
+#define UPDATE_ALL 0 // 0 = merge new presets only, 1 = Update all factory presets.
+
 static const wxString kInterpStrings[kNumInterpolations] =
 {
    /* i18n-hint: Technical term for a kind of curve.*/
@@ -1373,8 +1378,21 @@ void EffectEqualization::LoadCurves(const wxString &fileName, bool append)
    //       expects the ".audacity" portion to be a directory.
    // MJS:  I don't know what the above means, or if I have broken it.
    wxFileName fn;
-   if(fileName == wxT(""))
+
+   if(fileName == wxT("")) {
+      // Check if presets are up to date.
+      wxString eqCurvesCurrentVersion = wxString(wxT("%d.%d"), EQCURVES_VERSION, EQCURVES_REVISION);
+      wxString eqCurvesInstalledVersion = wxT("");
+      gPrefs->Read(wxT("/Effects/Equalization/PresetVersion"), &eqCurvesInstalledVersion, wxT(""));
+
+      bool needUpdate = (eqCurvesCurrentVersion == eqCurvesInstalledVersion);
+      
+      // UpdateDefaultCurves allows us to import new factory presets only,
+      // or update all factory preset curves.
+      if (needUpdate)
+         this->UpdateDefaultCurves( UPDATE_ALL != 0 );
       fn = wxFileName( FileNames::DataDir(), wxT("EQCurves.xml") );
+   }
    else
       fn = wxFileName(fileName); // user is loading a specific set of curves
 
@@ -1457,6 +1475,123 @@ void EffectEqualization::LoadCurves(const wxString &fileName, bool append)
 
    return;
 }
+
+//
+// Update presets to match Audacity version.
+//
+void EffectEqualization::UpdateDefaultCurves(bool updateAll /* false */)
+{
+   if (mCurves.GetCount() == 0)
+      return;
+
+   /* i18n-hint: name of the 'unnamed' custom curve */
+   wxString unnamed = _("unnamed");
+
+   // Save the "unnamed" curve and remove it so we can add it back as the final curve.
+   EQCurve userUnnamed(wxT("temp"));
+   userUnnamed = mCurves.Last();
+   mCurves.RemoveAt(mCurves.Count()-1);
+
+   EQCurveArray userCurves = mCurves;
+   mCurves.Clear();
+   wxFileName fn;
+
+   XMLFileReader reader;
+   fn = wxFileName( FileNames::DataDir(), wxT("EQDefaultCurves.xml") );
+
+   if(!fn.FileExists() || !reader.Parse(this, fn.GetFullPath())) {
+      wxLogError(wxT("%s could not be read."), fn.GetFullPath().c_str());
+      return;
+   }
+
+   EQCurveArray defaultCurves = mCurves;
+   mCurves.Clear(); // clear now so that we can sort then add back.
+
+   // Remove "unnamed" if it exists.
+   if (defaultCurves.Last().Name == unnamed) {
+      defaultCurves.RemoveAt(defaultCurves.Count()-1);
+   }
+   else {
+      wxLogError(wxT("Error in EQDefaultCurves.xml"));
+   }
+
+   int numUserCurves = userCurves.GetCount();
+   int numDefaultCurves = defaultCurves.GetCount();
+   EQCurve tempCurve(wxT("test"));
+
+   if (updateAll) {
+      // Update all factory preset curves.
+      // Sort and add factory defaults first;
+      mCurves = defaultCurves;
+      mCurves.Sort(SortCurvesByName);
+      // then add remaining user curves:
+      for (int curveCount = 0; curveCount < numUserCurves; curveCount++) {
+         bool isCustom = true;
+         tempCurve = userCurves[curveCount];
+         // is the name in the dfault set?
+         for (int defCurveCount = 0; defCurveCount < numDefaultCurves; defCurveCount++) {
+            if (tempCurve.Name == mCurves[defCurveCount].Name) {
+               isCustom = false;
+               break;
+            }
+         }
+         // if tempCurve is not in the default set, add it to mCurves.
+         if (isCustom) {
+            mCurves.Add(tempCurve);
+         }
+      }
+   }
+   else {
+      // Import new factory defaults but retain all user modified curves.
+      for (int defCurveCount = 0; defCurveCount < numDefaultCurves; defCurveCount++) {
+         bool isUserCurve = false;
+         // Add if the curve is in the user's set (preserve user's copy)
+         for (int userCurveCount = 0; userCurveCount < numUserCurves; userCurveCount++) {
+            if (userCurves[userCurveCount].Name == defaultCurves[defCurveCount].Name) {
+               isUserCurve = true;
+               mCurves.Add(userCurves[userCurveCount]);
+               break;
+            }
+         }
+         if (!isUserCurve) {
+            mCurves.Add(defaultCurves[defCurveCount]);
+         }
+      }
+      mCurves.Sort(SortCurvesByName);
+      // now add the rest of the user's curves.
+      for (int userCurveCount = 0; userCurveCount < numUserCurves; userCurveCount++) {
+         bool isDefaultCurve = false;
+         tempCurve = userCurves[userCurveCount];
+         for (int defCurveCount = 0; defCurveCount < numDefaultCurves; defCurveCount++) {
+            if (tempCurve.Name == defaultCurves[defCurveCount].Name) {
+               isDefaultCurve = true;
+               break;
+            }
+         }
+         if (!isDefaultCurve) {
+            mCurves.Add(tempCurve);
+         }
+      }
+   }
+   defaultCurves.Clear();
+   userCurves.Clear();
+
+   // Add back old "unnamed"
+   if(userUnnamed.Name == unnamed) {
+      mCurves.Add( userUnnamed );   // we always need a default curve to use
+   }
+
+   SaveCurves();
+
+   // Write current EqCurve version number
+   // TODO: Probably better if we used pluginregistry.cfg
+   wxString eqCurvesCurrentVersion = wxString::Format(wxT("%d.%d"), EQCURVES_VERSION, EQCURVES_REVISION);
+   gPrefs->Write(wxT("/Effects/Equalization/PresetVersion"), eqCurvesCurrentVersion);
+   gPrefs->Flush();
+
+   return;
+}
+
 
 //
 // Save curves to external file

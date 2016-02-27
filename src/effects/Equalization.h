@@ -143,6 +143,8 @@ private:
 
    void LoadCurves(const wxString &fileName = wxEmptyString, bool append = false);
    void SaveCurves(const wxString &fileName = wxEmptyString);
+   // Merge new curves only or update all factory presets.
+   void UpdateDefaultCurves( bool updateAll = false);
    void Select(int sel);
    void setCurve(int currentCurve);
    void setCurve(const wxString &curveName);
@@ -257,6 +259,11 @@ private:
    wxSlider *mdBMinSlider;
    wxSlider *mdBMaxSlider;
    wxSlider *mSliders[NUMBER_OF_BANDS];
+
+   static int wxCMPFUNC_CONV SortCurvesByName (EQCurve **first, EQCurve **second)
+   {
+      return (*first)->Name.CmpNoCase((*second)->Name);
+   }
 
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
    wxRadioButton *mMathProcessingType[5]; // default, sse, sse threaded, AVX, AVX threaded (note AVX is not implemented yet
