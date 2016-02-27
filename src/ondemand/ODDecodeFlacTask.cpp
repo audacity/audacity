@@ -79,9 +79,6 @@ void ODFLACFile::metadata_callback(const FLAC__StreamMetadata *metadata)
       case FLAC__METADATA_TYPE_PICTURE:		// ignore pictures
       case FLAC__METADATA_TYPE_UNDEFINED:	// do nothing with this either
       break;
-
-      case FLAC__MAX_METADATA_TYPE: // suppress compiler warning
-         break;
    }
 }
 
