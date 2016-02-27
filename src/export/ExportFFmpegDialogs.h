@@ -37,13 +37,13 @@ enum FFmpegExposedFormat
 struct ExposedFormat
 {
    FFmpegExposedFormat fmtid; //!< one of the FFmpegExposedFormat
-   const wxChar *name;        //!< format name (internal, should be unique; if not - export dialog may show unusual behaviour)
-   const wxChar *extension;   //!< default extension for this format. More extensions may be added later via AddExtension.
-   const wxChar *shortname;   //!< used to guess the format
+   wxString name;        //!< format name (internal, should be unique; if not - export dialog may show unusual behaviour)
+   wxString extension;   //!< default extension for this format. More extensions may be added later via AddExtension.
+   wxString shortname;   //!< used to guess the format
    int maxchannels;           //!< how much channels this format could handle
    int canmetadata;           //!< !=0 if format supports metadata, -1 any avformat version, otherwise version support added
    bool canutf8;              //!< true if format supports metadata in UTF-8, false otherwise
-   const wxChar *description; //!< format description (will be shown in export dialog)
+   wxString description; //!< format description (will be shown in export dialog)
    AVCodecID codecid;         //!< codec ID (see libavcodec/avcodec.h)
    bool compiledIn;           //!< support for this codec/format is compiled in (checked at runtime)
 };
@@ -52,7 +52,7 @@ struct ExposedFormat
 /// Describes format-codec compatibility
 struct CompatibilityEntry
 {
-   const wxChar *fmt; //!< format, recognizeable by guess_format()
+   wxString fmt; //!< format, recognizeable by guess_format()
    AVCodecID codec;   //!< codec ID
 };
 
@@ -198,11 +198,11 @@ public:
    // Static tables
    static CompatibilityEntry CompatibilityList[];
    static int iAACProfileValues[];
-   static const wxChar *iAACProfileNames[];
+   static const wxString iAACProfileNames[];
    static ExposedFormat fmts[];
    static const int iAACSampleRates[];
    static ApplicableFor apptable[];
-   static const wxChar *PredictionOrderMethodNames[];
+   static const wxString PredictionOrderMethodNames[];
 
 private:
 
@@ -287,7 +287,7 @@ private:
    ///\param fmt Format short name
    ///\param id id of the codec selected at the moment
    ///\return index of the id in NEW codec list or -1 if it is not in the list
-   int FetchCompatibleCodecList(const wxChar *fmt, AVCodecID id);
+   int FetchCompatibleCodecList(const wxString &fmt, AVCodecID id);
 
    /// Retreives list of presets from configuration file
    void FetchPresetList();
@@ -324,16 +324,16 @@ public:
    ~FFmpegPresets();
 
    wxArrayString *GetPresetList();
-   void LoadPreset(ExportFFmpegOptions *parent, wxString &name);
-   void SavePreset(ExportFFmpegOptions *parent, wxString &name);
+   void LoadPreset(ExportFFmpegOptions *parent, const wxString &name);
+   void SavePreset(ExportFFmpegOptions *parent, const wxString &name);
    void DeletePreset(wxString &name);
-   FFmpegPreset *FindPreset(wxString &name);
+   FFmpegPreset *FindPreset(const wxString &name);
 
-   void ImportPresets(wxString &filename);
-   void ExportPresets(wxString &filename);
+   void ImportPresets(const wxString &filename);
+   void ExportPresets(const wxString &filename);
 
-   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs);
-   XMLTagHandler *HandleXMLChild(const wxChar *tag);
+   bool HandleXMLTag(const wxString &tag, const wxArrayString &attrs);
+   XMLTagHandler *HandleXMLChild(const wxString &tag);
    void WriteXMLHeader(XMLWriter &xmlFile);
    void WriteXML(XMLWriter &xmlFile);
 

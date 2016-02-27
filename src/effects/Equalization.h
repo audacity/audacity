@@ -72,7 +72,6 @@ class EQCurve
 {
 public:
    EQCurve( const wxString & name = wxEmptyString ) { Name = name; }
-   EQCurve( const wxChar * name ) { Name = name; }
    wxString Name;
    EQPointArray points;
 };
@@ -151,8 +150,8 @@ private:
    void setCurve(void);
    
    // XMLTagHandler callback methods for loading and saving
-   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs);
-   XMLTagHandler *HandleXMLChild(const wxChar *tag);
+   bool HandleXMLTag(const wxString &tag, const wxArrayString &attrs);
+   XMLTagHandler *HandleXMLChild(const wxString &tag);
    void WriteXML(XMLWriter &xmlFile);
 
    void UpdateCurves();

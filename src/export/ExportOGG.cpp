@@ -356,9 +356,7 @@ bool ExportOGG::FillComment(AudacityProject *project, vorbis_comment *comment, c
       if (n == TAG_YEAR) {
          n = wxT("DATE");
       }
-      vorbis_comment_add_tag(comment,
-                             (char *) (const char *) n.mb_str(wxConvUTF8),
-                             (char *) (const char *) v.mb_str(wxConvUTF8));
+      vorbis_comment_add_tag(comment, n.utf8_str(), v.utf8_str());
    }
 
    return true;

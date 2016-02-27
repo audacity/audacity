@@ -42,7 +42,7 @@ typedef enum {
 #define SAMPLE_SIZE_DISK(SampleFormat) ((SampleFormat == int24Sample) ? \
    3 : SAMPLE_SIZE(SampleFormat) )
 
-const wxChar *GetSampleFormatStr(sampleFormat format);
+wxString GetSampleFormatStr(sampleFormat format);
 
 //
 // Allocating/Freeing Samples

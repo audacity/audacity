@@ -246,7 +246,7 @@ void Envelope::DrawPoints(wxDC & dc, const wxRect & r, const ZoomInfo &zoomInfo,
    }
 }
 
-bool Envelope::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
+bool Envelope::HandleXMLTag(const wxString &tag, const wxArrayString &attrs)
 {
    // Return unless it's the envelope tag.
    if (wxStrcmp(tag, wxT("envelope")))
@@ -255,12 +255,9 @@ bool Envelope::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    int numPoints = 0;
    long nValue = -1;
 
-   while (*attrs) {
-      const wxChar *attr = *attrs++;
-      const wxChar *value = *attrs++;
-      if (!value)
-         break;
-      const wxString strValue = value;
+   for (size_t i = 0; i < attrs.GetCount() / 2; ++i) {
+      const wxString &attr = attrs[2*i];
+      const wxString &strValue = attrs[2*i+1];;
       if( !wxStrcmp(attr, wxT("numpoints")) &&
             XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
          numPoints = nValue;
@@ -273,7 +270,7 @@ bool Envelope::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    return true;
 }
 
-XMLTagHandler *Envelope::HandleXMLChild(const wxChar *tag)
+XMLTagHandler *Envelope::HandleXMLChild(const wxString &tag)
 {
    if (wxStrcmp(tag, wxT("controlpoint")))
       return NULL;

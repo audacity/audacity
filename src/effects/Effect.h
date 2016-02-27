@@ -658,14 +658,14 @@ inline long TrapLong(long x, long min, long max)
 // Helper macros for defining, reading and verifying effect parameters
 
 #define Param(name, type, key, def, min, max, scale) \
-   static const wxChar * KEY_ ## name = (key); \
+   static const wxString KEY_ ## name = (key); \
    static const type DEF_ ## name = (def); \
    static const type MIN_ ## name = (min); \
    static const type MAX_ ## name = (max); \
    static const type SCL_ ## name = (scale);
 
 #define PBasic(name, type, key, def) \
-   static const wxChar * KEY_ ## name = (key); \
+   static const wxString KEY_ ## name = (key); \
    static const type DEF_ ## name = (def);
 
 #define PRange(name, type, key, def, min, max) \

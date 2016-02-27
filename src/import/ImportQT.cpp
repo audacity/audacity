@@ -17,7 +17,7 @@
 
 #define DESC _("QuickTime files")
 
-static const wxChar *exts[] =
+static const wxString exts[] =
 {
    wxT("mov"),
    wxT("aac"),
@@ -409,8 +409,8 @@ done:
 
 static const struct
 {
-   const OSType key;
-   const wxChar *name;
+   OSType key;
+   wxString name;
 }
 names[] =
 {
@@ -445,7 +445,7 @@ void QTImportFileHandle::AddMetadata(Tags *tags)
       return;
    }
 
-   for (int i = 0; i < WXSIZEOF(names); i++) {
+   for (size_t i = 0; i < WXSIZEOF(names); ++i) {
       QTMetaDataItem item = kQTMetaDataItemUninitialized;
       OSType key = names[i].key;
 

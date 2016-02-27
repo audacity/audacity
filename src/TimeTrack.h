@@ -54,9 +54,9 @@ class TimeTrack final : public Track {
 
    // XMLTagHandler callback methods for loading and saving
 
-   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
-   void HandleXMLEndTag(const wxChar *tag) override;
-   XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
+   bool HandleXMLTag(const wxString &tag, const wxArrayString &attrs) override;
+   void HandleXMLEndTag(const wxString &tag) override;
+   XMLTagHandler *HandleXMLChild(const wxString &tag) override;
    void WriteXML(XMLWriter &xmlFile) override;
 
    // Lock and unlock the track: you must lock the track before

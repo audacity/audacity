@@ -142,7 +142,7 @@ void DerivativeOfWindowFunc(int whichFunction, int NumSamples, bool extraSample,
  * Returns the name of the windowing function (for UI display)
  */
 
-const wxChar *WindowFuncName(int whichFunction);
+wxString WindowFuncName(int whichFunction);
 
 /*
  * Returns the number of windowing functions supported

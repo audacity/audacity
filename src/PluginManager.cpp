@@ -964,7 +964,7 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
                     mLongestPath + wxT("\n");
 
    wxString msg;
-   msg.Printf(_("Enabling effects:\n\n%s"), last3.c_str());
+   msg.Printf(_("Enabling effects:\n\n%s"), last3);
 
    // Make sure the progress dialog is deleted before we call EndModal() or
    // we will leave the project window in an unusable state on OSX.
@@ -982,7 +982,7 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
          if (item.state == STATE_Enabled && item.plugs[0]->GetPluginType() == PluginTypeStub)
          {
             last3 = last3.AfterFirst(wxT('\n')) + item.path + wxT("\n");
-            int status = progress.Update(++i, enableCount, wxString::Format(_("Enabling effect:\n\n%s"), last3.c_str()));
+            int status = progress.Update(++i, enableCount, wxString::Format(_("Enabling effect:\n\n%s"), last3));
             if (!status)
             {
                break;
@@ -2423,31 +2423,31 @@ IdentInterface *PluginManager::GetInstance(const PluginID & ID)
 PluginID PluginManager::GetID(ModuleInterface *module)
 {
    return wxString::Format(wxT("%s_%s_%s_%s_%s"),
-                           GetPluginTypeString(PluginTypeModule).c_str(),
+                           GetPluginTypeString(PluginTypeModule),
                            wxEmptyString,
-                           module->GetVendor().c_str(),
-                           module->GetName().c_str(),
-                           module->GetPath().c_str());
+                           module->GetVendor(),
+                           module->GetName(),
+                           module->GetPath());
 }
 
 PluginID PluginManager::GetID(EffectIdentInterface *effect)
 {
    return wxString::Format(wxT("%s_%s_%s_%s_%s"),
-                           GetPluginTypeString(PluginTypeEffect).c_str(),
-                           effect->GetFamily().c_str(),
-                           effect->GetVendor().c_str(),
-                           effect->GetName().c_str(),
-                           effect->GetPath().c_str());
+                           GetPluginTypeString(PluginTypeEffect),
+                           effect->GetFamily(),
+                           effect->GetVendor(),
+                           effect->GetName(),
+                           effect->GetPath());
 }
 
 PluginID PluginManager::GetID(ImporterInterface *importer)
 {
    return wxString::Format(wxT("%s_%s_%s_%s_%s"),
-                           GetPluginTypeString(PluginTypeImporter).c_str(),
+                           GetPluginTypeString(PluginTypeImporter),
                            wxEmptyString,
-                           importer->GetVendor().c_str(),
-                           importer->GetName().c_str(),
-                           importer->GetPath().c_str());
+                           importer->GetVendor(),
+                           importer->GetName(),
+                           importer->GetPath());
 }
 
 wxString PluginManager::GetPluginTypeString(PluginType type)
@@ -2651,7 +2651,7 @@ bool PluginManager::GetConfig(const wxString & key, sampleCount & value, sampleC
       wxdef.Printf(wxT("%Ld"), defval);
 
       result = GetSettings()->Read(key, &wxval, wxdef);
-      value = wxStrtoll(wxval.c_str(), &endptr, 10);
+      value = wxStrtoll(wxval, &endptr, 10);
    }
    
    return result;
@@ -2663,7 +2663,7 @@ bool PluginManager::SetConfig(const wxString & key, const wxString & value)
 
    if (!key.IsEmpty())
    {
-      wxString wxval = value.c_str();
+      wxString wxval = value;
       result = GetSettings()->Write(key, wxval);
       if (result)
       {
@@ -2853,7 +2853,7 @@ wxString PluginManager::ConvertID(const PluginID & ID)
 ////////////////////////////////////////////////////////////////////////////////
 
 // Lookup table for encoding
-const static wxChar cset[] = wxT("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/");
+static const wxString cset = wxT("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/");
 const static char padc = wxT('=');
 
 wxString PluginManager::b64encode(const void *in, int len)

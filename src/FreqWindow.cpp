@@ -925,28 +925,22 @@ void FreqWindow::PlotPaint(wxPaintEvent & event)
       wxString peak;
       wxString xpitch;
       wxString peakpitch;
-      const wxChar *xp;
-      const wxChar *pp;
 
       if (mAlg == SpectrumAnalyst::Spectrum) {
          xpitch = PitchName_Absolute(FreqToMIDInote(xPos));
          peakpitch = PitchName_Absolute(FreqToMIDInote(bestpeak));
-         xp = xpitch.c_str();
-         pp = peakpitch.c_str();
          /* i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#*/
-         cursor.Printf(_("%d Hz (%s) = %d dB"), int (xPos + 0.5), xp, int (value + 0.5));
-         peak.Printf(_("%d Hz (%s) = %.1f dB"), int (bestpeak + 0.5), pp, bestValue);
+         cursor.Printf(_("%d Hz (%s) = %d dB"), int (xPos + 0.5), xpitch, int (value + 0.5));
+         peak.Printf(_("%d Hz (%s) = %.1f dB"), int (bestpeak + 0.5), peakpitch, bestValue);
       } else if (xPos > 0.0 && bestpeak > 0.0) {
          xpitch = PitchName_Absolute(FreqToMIDInote(1.0 / xPos));
          peakpitch = PitchName_Absolute(FreqToMIDInote(1.0 / bestpeak));
-         xp = xpitch.c_str();
-         pp = peakpitch.c_str();
          /* i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
           * the %.4f are numbers, and 'sec' should be an abbreviation for seconds */
          cursor.Printf(_("%.4f sec (%d Hz) (%s) = %f"),
-                     xPos, int (1.0 / xPos + 0.5), xp, value);
+                     xPos, int (1.0 / xPos + 0.5), xpitch, value);
          peak.Printf(_("%.4f sec (%d Hz) (%s) = %.3f"),
-                     bestpeak, int (1.0 / bestpeak + 0.5), pp, bestValue);
+                     bestpeak, int (1.0 / bestpeak + 0.5), peakpitch, bestValue);
       }
       mCursorText->SetValue(cursor);
       mPeakText->SetValue(peak);

@@ -136,9 +136,9 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    // XMLTagHandler callback methods for loading and saving
    //
 
-   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
-   void HandleXMLEndTag(const wxChar *tag) override;
-   XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
+   bool HandleXMLTag(const wxString &tag, const wxArrayString &attrs) override;
+   void HandleXMLEndTag(const wxString &tag) override;
+   XMLTagHandler *HandleXMLChild(const wxString &tag) override;
    void WriteXML(XMLWriter &xmlFile) /* not override */;
 
    bool GetErrorOpening() { return mErrorOpening; }
@@ -263,7 +263,7 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
 
    // This function makes sure that the track isn't messed up
    // because of inconsistent block starts & lengths
-   bool ConsistencyCheck(const wxChar *whereStr) const;
+   bool ConsistencyCheck(const wxString &whereStr) const;
 
    // This function prints information to stdout about the blocks in the
    // tracks and indicates if there are inconsistencies.

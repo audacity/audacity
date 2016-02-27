@@ -489,7 +489,7 @@ void ContrastDialog::OnExport(wxCommandEvent & WXUNUSED(event))
    f.AddLine(wxT("==================================="));
    f.AddLine(_("WCAG 2.0 Success Criteria 1.4.7 Contrast Results"));
    f.AddLine(wxT(""));
-   f.AddLine(wxString::Format(_("Filename = %s."), project->GetFileName().c_str() ));
+   f.AddLine(wxString::Format(_("Filename = %s."), project->GetFileName() ));
    f.AddLine(wxT(""));
    f.AddLine(_("Foreground"));
    float t = (float)mForegroundStartT->GetValue();
@@ -555,7 +555,7 @@ void ContrastDialog::OnExport(wxCommandEvent & WXUNUSED(event))
    int minute = now.GetMinute();
    int second = now.GetSecond();
    sNow = wxString::Format(wxT("%d %s %02d %02dh %02dm %02ds"),
-        dom, monthName.c_str(), year, hour, minute, second);
+        dom, monthName, year, hour, minute, second);
    f.AddLine(sNow);
 
    f.AddLine(wxT("==================================="));

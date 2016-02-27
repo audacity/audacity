@@ -21,6 +21,6 @@
 // Return the zero-based index of the chosen button.
 int ShowMultiDialog(const wxString &message,
                     const wxString &title,
-                    const wxChar **buttons, const wxString &boxMsg = _("Please select an action"), bool log = true);
+                    const wxArrayString &buttons, const wxString &boxMsg = _("Please select an action"), bool log = true);
 
 #endif // __AUDACITY_MULTIDIALOG__

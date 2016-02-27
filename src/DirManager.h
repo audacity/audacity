@@ -52,7 +52,7 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
    // Returns true on success.
    // If SetProject is told NOT to create the directory
    // but it doesn't already exist, SetProject fails and returns false.
-   bool SetProject(wxString& newProjPath, wxString& newProjName, const bool bCreate);
+   bool SetProject(const wxString& newProjPath, const wxString& newProjName, const bool bCreate);
 
    wxString GetProjectDataDir();
    wxString GetProjectName();
@@ -83,7 +83,7 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
    // the BlockFile.
    BlockFile *CopyBlockFile(BlockFile *b);
 
-   BlockFile *LoadBlockFile(const wxChar **attrs, sampleFormat format);
+   BlockFile *LoadBlockFile(const wxArrayString &attrs, sampleFormat format);
    void SaveBlockFile(BlockFile *f, int depth, FILE *fp);
 
 #if LEGACY_PROJECT_FILE_SUPPORT
@@ -113,9 +113,9 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
    // Note: following affects only the loading of block files when opening a project
    void SetLoadingMaxSamples(sampleCount max) { mMaxSamples = max; }
 
-   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs);
-   XMLTagHandler *HandleXMLChild(const wxChar * WXUNUSED(tag)) { return NULL; }
-   void WriteXML(XMLWriter & WXUNUSED(xmlFile)) { wxASSERT(false); } // This class only reads tags.
+   bool HandleXMLTag(const wxString &tag, const wxArrayString &attrs);
+   XMLTagHandler *HandleXMLChild(const wxString &WXUNUSED(tag)) { return NULL; }
+   void WriteXML(XMLWriter &WXUNUSED(xmlFile)) { wxASSERT(false); } // This class only reads tags.
    bool AssignFile(wxFileName &filename, const wxString &value, bool check);
 
    // Clean the temp dir. Note that now where we have auto recovery the temp

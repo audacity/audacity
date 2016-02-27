@@ -169,8 +169,8 @@ class AUDACITY_DLL_API NoteTrack final : public Track {
    void SetGainPlacementRect(const wxRect &r) { mGainPlacementRect = r; }
 #endif
 
-   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
-   XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
+   bool HandleXMLTag(const wxString &tag, const wxArrayString &attrs) override;
+   XMLTagHandler *HandleXMLChild(const wxString &tag) override;
    void WriteXML(XMLWriter &xmlFile) override;
 
    // channels are numbered as integers 0-15, visible channels

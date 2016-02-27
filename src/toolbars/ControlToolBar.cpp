@@ -125,7 +125,7 @@ void ControlToolBar::Create(wxWindow * parent)
 AButton *ControlToolBar::MakeButton(teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled,
                                     int id,
                                     bool processdownevents,
-                                    const wxChar *label)
+                                    const wxString &label)
 {
    AButton *r = ToolBar::MakeButton(
       bmpRecoloredUpLarge, bmpRecoloredDownLarge, bmpRecoloredHiliteLarge,

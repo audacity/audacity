@@ -367,7 +367,7 @@ bool ConvertLegacyProjectFile(wxFileName filename)
 
    renamer.Finished();
 
-   ::wxMessageBox(wxString::Format(_("Converted a 1.0 project file to the new format.\nThe old file has been saved as '%s'"), backupName.c_str()),
+   ::wxMessageBox(wxString::Format(_("Converted a 1.0 project file to the new format.\nThe old file has been saved as '%s'"), backupName),
                   _("Opening Audacity Project"));
 
    return true;

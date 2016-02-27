@@ -97,7 +97,7 @@ class ControlToolBar final : public ToolBar {
    AButton *MakeButton(teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled,
       int id,
       bool processdownevents,
-      const wxChar *label);
+      const wxString &label);
 
    static
    void MakeAlternateImages(AButton &button, int idx,

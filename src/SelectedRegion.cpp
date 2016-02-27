@@ -13,17 +13,17 @@ Paul Licameli
 #include "xml/XMLWriter.h"
 
 #include "Experimental.h"
-const wxChar *SelectedRegion::sDefaultT0Name = wxT("selStart");
-const wxChar *SelectedRegion::sDefaultT1Name = wxT("selEnd");
+const wxString SelectedRegion::sDefaultT0Name = wxT("selStart");
+const wxString SelectedRegion::sDefaultT1Name = wxT("selEnd");
 
 namespace {
-const wxChar *sDefaultF0Name = wxT("selLow");
-const wxChar *sDefaultF1Name = wxT("selHigh");
+const wxString sDefaultF0Name = wxT("selLow");
+const wxString sDefaultF1Name = wxT("selHigh");
 }
 
 void SelectedRegion::WriteXMLAttributes
 (XMLWriter &xmlFile,
- const wxChar *legacyT0Name, const wxChar *legacyT1Name) const
+ const wxString &legacyT0Name, const wxString &legacyT1Name) const
 {
    xmlFile.WriteAttr(legacyT0Name, t0(), 10);
    xmlFile.WriteAttr(legacyT1Name, t1(), 10);
@@ -36,8 +36,8 @@ void SelectedRegion::WriteXMLAttributes
 }
 
 bool SelectedRegion::HandleXMLAttribute
-(const wxChar *attr, const wxChar *value,
- const wxChar *legacyT0Name, const wxChar *legacyT1Name)
+(const wxString &attr, const wxString &value,
+ const wxString &legacyT0Name, const wxString &legacyT1Name)
 {
    typedef bool (SelectedRegion::*Setter)(double, bool);
    Setter setter = 0;

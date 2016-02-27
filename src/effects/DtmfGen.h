@@ -62,7 +62,7 @@ private:
    // EffectDtmf implementation
 
    bool MakeDtmfTone(float *buffer, sampleCount len, float fs,
-                     wxChar tone, sampleCount last,
+                     char tone, sampleCount last,
                      sampleCount total, float amplitude);
    void Recalculate();
 

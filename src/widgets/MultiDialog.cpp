@@ -39,7 +39,7 @@ public:
    MultiDialog(wxWindow * pParent, 
                wxString message,
                wxString title,
-               const wxChar **buttons, wxString boxMsg, bool log);
+               const wxArrayString &buttons, wxString boxMsg, bool log);
    ~MultiDialog() {};
 
 private:
@@ -61,7 +61,7 @@ END_EVENT_TABLE()
 MultiDialog::MultiDialog(wxWindow * pParent,
                          wxString message,
                          wxString title,
-                         const wxChar **buttons, wxString boxMsg, bool log)
+                         const wxArrayString &buttons, wxString boxMsg, bool log)
    : wxDialog(pParent, wxID_ANY, title,
                wxDefaultPosition, wxDefaultSize,
                wxCAPTION) // not wxDEFAULT_DIALOG_STYLE because we don't want wxCLOSE_BOX and wxSYSTEM_MENU
@@ -91,21 +91,10 @@ MultiDialog::MultiDialog(wxWindow * pParent,
             vSizer->Add(iconAndTextSizer.release(), 0, wxALIGN_LEFT | wxALL, 5);
          }
 
-
-         int count = 0;
-         while (buttons[count])count++;
-         buttonLabels = new wxString[count];
-
-         count = 0;
-         while (buttons[count]){
-            buttonLabels[count] = buttons[count];
-            count++;
-         }
-
          mRadioBox = safenew wxRadioBox(this, -1,
             boxMsg,
             wxDefaultPosition, wxDefaultSize,
-            count, buttonLabels,
+            buttons,
             1, wxRA_SPECIFY_COLS);
          mRadioBox->SetName(boxMsg);
          mRadioBox->SetSelection(0);
@@ -158,7 +147,7 @@ void MultiDialog::OnShowLog(wxCommandEvent & WXUNUSED(event))
 
 int ShowMultiDialog(const wxString &message,
    const wxString &title,
-   const wxChar **buttons, const wxString &boxMsg, bool log)
+   const wxArrayString &buttons, const wxString &boxMsg, bool log)
 {
    wxWindow * pParent = wxGetApp().GetTopWindow();
 

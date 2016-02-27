@@ -468,7 +468,7 @@ bool VSTEffectsModule::RegisterPlugin(PluginManagerInterface & pm, const wxStrin
       wxString effectID = effectTzr.GetNextToken();
 
       wxString cmd;
-      cmd.Printf(wxT("\"%s\" %s \"%s;%s\""), cmdpath.c_str(), VSTCMDKEY, path.c_str(), effectID.c_str());
+      cmd.Printf(wxT("\"%s\" %s \"%s;%s\""), cmdpath, VSTCMDKEY, path, effectID);
 
       VSTSubProcess proc;
       try
@@ -481,7 +481,7 @@ bool VSTEffectsModule::RegisterPlugin(PluginManagerInterface & pm, const wxStrin
       }
       catch (...)
       {
-         wxLogMessage(_("VST plugin registration failed for %s\n"), path.c_str());
+         wxLogMessage(_("VST plugin registration failed for %s\n"), path);
          return false;
       }
 
@@ -518,7 +518,7 @@ bool VSTEffectsModule::RegisterPlugin(PluginManagerInterface & pm, const wxStrin
                if (idCnt > 3)
                {
                   progress.create( _("Scanning Shell VST"),
-                        wxString::Format(_("Registering %d of %d: %-64.64s"), 0, idCnt, proc.GetName().c_str()),
+                        wxString::Format(_("Registering %d of %d: %-64.64s"), 0, idCnt, proc.GetName()),
                         static_cast<int>(idCnt),
                         nullptr,
                         wxPD_APP_MODAL |
@@ -592,7 +592,7 @@ bool VSTEffectsModule::RegisterPlugin(PluginManagerInterface & pm, const wxStrin
                {
                   idNdx++;
                   cont = progress->Update(idNdx,
-                                          wxString::Format(_("Registering %d of %d: %-64.64s"), idNdx, idCnt, proc.GetName().c_str()));
+                                          wxString::Format(_("Registering %d of %d: %-64.64s"), idNdx, idCnt, proc.GetName()));
                }
 
                if (!skip && cont)
@@ -646,7 +646,7 @@ void VSTEffectsModule::DeleteInstance(IdentInterface *instance)
 // static
 //
 // Called from reinvokation of Audacity or DLL to check in a separate process
-void VSTEffectsModule::Check(const wxChar *path)
+void VSTEffectsModule::Check(const wxString &path)
 {
    VSTEffect effect(path);
    if (effect.SetHost(NULL))
@@ -663,16 +663,16 @@ void VSTEffectsModule::Check(const wxChar *path)
             subids += wxString::Format(wxT("%d;"), effectIDs[i]);
          }
 
-         out = wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeySubIDs, subids.RemoveLast().c_str());
+         out = wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeySubIDs, subids.RemoveLast());
       }
       else
       {
          out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyBegin, wxEmptyString);
-         out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyPath, effect.GetPath().c_str());
-         out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyName, effect.GetName().c_str());
-         out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyVendor, effect.GetVendor().c_str());
-         out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyVersion, effect.GetVersion().c_str());
-         out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyDescription, effect.GetDescription().c_str());
+         out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyPath, effect.GetPath());
+         out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyName, effect.GetName());
+         out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyVendor, effect.GetVendor());
+         out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyVersion, effect.GetVersion());
+         out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyDescription, effect.GetDescription());
          out += wxString::Format(wxT("%s%d=%d\n"), OUTPUTKEY, kKeyEffectType, effect.GetType());
          out += wxString::Format(wxT("%s%d=%d\n"), OUTPUTKEY, kKeyInteractive, effect.IsInteractive());
          out += wxString::Format(wxT("%s%d=%d\n"), OUTPUTKEY, kKeyAutomatable, effect.SupportsAutomation());
@@ -681,7 +681,7 @@ void VSTEffectsModule::Check(const wxChar *path)
 
       // We want to output info in one chunk to prevent output
       // from the effect intermixing with the info
-      const wxCharBuffer buf = out.ToUTF8();
+      const wxScopedCharBuffer &buf = out.utf8_str();
       fwrite(buf, 1, strlen(buf), stdout);
       fflush(stdout);
    }
@@ -997,9 +997,9 @@ intptr_t VSTEffect::AudioMaster(AEffect * effect,
 
 #if defined(VST_DEBUG)
 #if defined(__WXMSW__)
-         wxLogDebug(wxT("VST canDo: %s"), wxString::FromAscii((char *)ptr).c_str());
+         wxLogDebug(wxT("VST canDo: %s"), wxString::FromAscii(static_cast<const char *>(ptr));
 #else
-         wxPrintf(wxT("VST canDo: %s\n"), wxString::FromAscii((char *)ptr).c_str());
+         wxPrintf(wxT("VST canDo: %s\n"), wxString::FromAscii(static_cast<const char *>(ptr));
 #endif
 #endif
 
@@ -2679,7 +2679,7 @@ void VSTEffect::callSetChunk(bool isPgm, int len, void *buf, VstPatchChunkInfo *
 ////////////////////////////////////////////////////////////////////////////////
 
 // Lookup table for encoding
-const static wxChar cset[] = wxT("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/");
+static const wxString cset[] = wxT("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/");
 const static char padc = wxT('=');
 
 wxString VSTEffect::b64encode(const void *in, int len)
@@ -2746,7 +2746,6 @@ int VSTEffect::b64decode(const wxString &in, void *out)
       }
    }
 
-   //const char *a = in.mb_str();
    //Setup a vector to hold the result
    unsigned long temp = 0; //Holds decoded quanta
    int i = 0;
@@ -2999,14 +2998,14 @@ void VSTEffect::RefreshParameters(int skip)
       {
          text.Printf(wxT("%.5g"),callGetParameter(i));
       }
-      mDisplays[i]->SetLabel(wxString::Format(wxT("%8s"), text.c_str()));
+      mDisplays[i]->SetLabel(wxString::Format(wxT("%8s"), text));
       name += wxT(' ') + text;
 
       text = GetString(effGetParamDisplay, i);
       if (!text.IsEmpty())
       {
-         text.Printf(wxT("%-8s"), GetString(effGetParamLabel, i).c_str());
-         mLabels[i]->SetLabel(wxString::Format(wxT("%8s"), text.c_str()));
+         text.Printf(wxT("%-8s"), GetString(effGetParamLabel, i));
+         mLabels[i]->SetLabel(wxString::Format(wxT("%8s"), text));
          name += wxT(' ') + text;
       }
 
@@ -3480,7 +3479,7 @@ void VSTEffect::SaveFXB(const wxFileName & fn)
    wxFFile f(fn.GetFullPath(), wxT("wb"));
    if (!f.IsOpened())
    {
-      wxMessageBox(wxString::Format(_("Could not open file: \"%s\""), fn.GetFullPath().c_str()),
+      wxMessageBox(wxString::Format(_("Could not open file: \"%s\""), fn.GetFullPath()),
                    _("Error Saving VST Presets"),
                    wxOK | wxCENTRE,
                    mParent);
@@ -3547,7 +3546,7 @@ void VSTEffect::SaveFXB(const wxFileName & fn)
 
    if (f.Error())
    {
-      wxMessageBox(wxString::Format(_("Error writing to file: \"%s\""), fn.GetFullPath().c_str()),
+      wxMessageBox(wxString::Format(_("Error writing to file: \"%s\""), fn.GetFullPath()),
                    _("Error Saving VST Presets"),
                    wxOK | wxCENTRE,
                    mParent);
@@ -3564,7 +3563,7 @@ void VSTEffect::SaveFXP(const wxFileName & fn)
    wxFFile f(fn.GetFullPath(), wxT("wb"));
    if (!f.IsOpened())
    {
-      wxMessageBox(wxString::Format(_("Could not open file: \"%s\""), fn.GetFullPath().c_str()),
+      wxMessageBox(wxString::Format(_("Could not open file: \"%s\""), fn.GetFullPath()),
                    _("Error Saving VST Presets"),
                    wxOK | wxCENTRE,
                    mParent);
@@ -3579,7 +3578,7 @@ void VSTEffect::SaveFXP(const wxFileName & fn)
    f.Write(buf.GetData(), buf.GetDataLen());
    if (f.Error())
    {
-      wxMessageBox(wxString::Format(_("Error writing to file: \"%s\""), fn.GetFullPath().c_str()),
+      wxMessageBox(wxString::Format(_("Error writing to file: \"%s\""), fn.GetFullPath()),
                    _("Error Saving VST Presets"),
                    wxOK | wxCENTRE,
                    mParent);
@@ -3710,21 +3709,14 @@ void VSTEffect::SaveXML(const wxFileName & fn)
    return;
 }
 
-bool VSTEffect::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
+bool VSTEffect::HandleXMLTag(const wxString &tag, const wxArrayString &attrs)
 {
    if (wxStrcmp(tag, wxT("vstprogrampersistence")) == 0)
    {
-      while (*attrs)
+      for (size_t i = 0; i < attrs.GetCount() / 2; ++i)
       {
-         const wxChar *attr = *attrs++;
-         const wxChar *value = *attrs++;
-
-         if (!value)
-         {
-            break;
-         }
-
-         const wxString strValue = value;
+         const wxString &attr = attrs[2*i];
+         const wxString &strValue = attrs[2*i+1];
 
          if (wxStrcmp(attr, wxT("version")) == 0)
          {
@@ -3755,17 +3747,11 @@ bool VSTEffect::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       mXMLInfo.pluginVersion = mAEffect->version;
       mXMLInfo.numElements = mAEffect->numParams;
 
-      while (*attrs)
+      for (size_t i = 0; i < attrs.GetCount() / 2; ++i)
       {
-         const wxChar *attr = *attrs++;
-         const wxChar *value = *attrs++;
-
-         if (!value)
-         {
-            break;
-         }
-
-         const wxString strValue = value;
+         const wxString &attr = attrs[2*i];
+         const wxString &value = attrs[2*i+1];
+         const wxString &strValue = value;
 
          if (wxStrcmp(attr, wxT("name")) == 0)
          {
@@ -3826,17 +3812,10 @@ bool VSTEffect::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 
    if (wxStrcmp(tag, wxT("program")) == 0)
    {
-      while (*attrs)
+      for (size_t i = 0; i < attrs.GetCount() / 2; ++i)
       {
-         const wxChar *attr = *attrs++;
-         const wxChar *value = *attrs++;
-
-         if (!value)
-         {
-            break;
-         }
-
-         const wxString strValue = value;
+         const wxString &attr = attrs[2*i];
+         const wxString &strValue = attrs[2*i+1];
 
          if (wxStrcmp(attr, wxT("name")) == 0)
          {
@@ -3882,17 +3861,10 @@ bool VSTEffect::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    {
       long ndx = -1;
       double val = -1.0;
-      while (*attrs)
+      for (size_t i = 0; i < attrs.GetCount() / 2; ++i)
       {
-         const wxChar *attr = *attrs++;
-         const wxChar *value = *attrs++;
-
-         if (!value)
-         {
-            break;
-         }
-
-         const wxString strValue = value;
+         const wxString &attr = attrs[2*i];
+         const wxString &strValue = attrs[2*i+1];
 
          if (wxStrcmp(attr, wxT("index")) == 0)
          {
@@ -3950,7 +3922,7 @@ bool VSTEffect::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    return false;
 }
 
-void VSTEffect::HandleXMLEndTag(const wxChar *tag)
+void VSTEffect::HandleXMLEndTag(const wxString &tag)
 {
    if (wxStrcmp(tag, wxT("chunk")) == 0)
    {
@@ -3989,7 +3961,7 @@ void VSTEffect::HandleXMLContent(const wxString & content)
    }
 }
 
-XMLTagHandler *VSTEffect::HandleXMLChild(const wxChar *tag)
+XMLTagHandler *VSTEffect::HandleXMLChild(const wxString &tag)
 {
    if (wxStrcmp(tag, wxT("vstprogrampersistence")) == 0)
    {

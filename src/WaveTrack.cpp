@@ -1670,19 +1670,14 @@ bool WaveTrack::Flush()
    return RightmostOrNewClip()->Flush();
 }
 
-bool WaveTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
+bool WaveTrack::HandleXMLTag(const wxString &tag, const wxArrayString &attrs)
 {
    if (!wxStrcmp(tag, wxT("wavetrack"))) {
       double dblValue;
       long nValue;
-      while(*attrs) {
-         const wxChar *attr = *attrs++;
-         const wxChar *value = *attrs++;
-
-         if (!value)
-            break;
-
-         const wxString strValue = value;
+      for (size_t i = 0; i < attrs.GetCount() / 2; ++i) {
+         const wxString &attr = attrs[2*i];
+         const wxString &strValue = attrs[2*i+1];;
          if (!wxStrcmp(attr, wxT("rate")))
          {
             // mRate is an int, but "rate" in the project file is a float.
@@ -1751,14 +1746,14 @@ bool WaveTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    return false;
 }
 
-void WaveTrack::HandleXMLEndTag(const wxChar * WXUNUSED(tag))
+void WaveTrack::HandleXMLEndTag(const wxString &WXUNUSED(tag))
 {
    // In case we opened a pre-multiclip project, we need to
    // simulate closing the waveclip tag.
    NewestOrNewClip()->HandleXMLEndTag(wxT("waveclip"));
 }
 
-XMLTagHandler *WaveTrack::HandleXMLChild(const wxChar *tag)
+XMLTagHandler *WaveTrack::HandleXMLChild(const wxString &tag)
 {
    //
    // This is legacy code (1.2 and previous) and is not called for NEW projects!

@@ -489,7 +489,7 @@ int NumWindowFuncs()
    return eWinFuncCount;
 }
 
-const wxChar *WindowFuncName(int whichFunction)
+wxString WindowFuncName(int whichFunction)
 {
    switch (whichFunction) {
    default:

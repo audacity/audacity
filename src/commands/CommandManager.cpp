@@ -634,16 +634,16 @@ void CommandManager::InsertItem(const wxString & name,
 
 
 
-void CommandManager::AddCheck(const wxChar *name,
-                              const wxChar *label,
+void CommandManager::AddCheck(const wxString &name,
+                              const wxString &label,
                               const CommandFunctorPointer &callback,
                               int checkmark)
 {
    AddItem(name, label, callback, wxT(""), (unsigned int)NoFlagsSpecifed, (unsigned int)NoFlagsSpecifed, checkmark);
 }
 
-void CommandManager::AddCheck(const wxChar *name,
-                              const wxChar *label,
+void CommandManager::AddCheck(const wxString &name,
+                              const wxString &label,
                               const CommandFunctorPointer &callback,
                               int checkmark,
                               unsigned int flags,
@@ -652,8 +652,8 @@ void CommandManager::AddCheck(const wxChar *name,
    AddItem(name, label, callback, wxT(""), flags, mask, checkmark);
 }
 
-void CommandManager::AddItem(const wxChar *name,
-                             const wxChar *label,
+void CommandManager::AddItem(const wxString &name,
+                             const wxString &label,
                              const CommandFunctorPointer &callback,
                              unsigned int flags,
                              unsigned int mask)
@@ -661,10 +661,10 @@ void CommandManager::AddItem(const wxChar *name,
    AddItem(name, label, callback, wxT(""), flags, mask);
 }
 
-void CommandManager::AddItem(const wxChar *name,
-                             const wxChar *label_in,
+void CommandManager::AddItem(const wxString &name,
+                             const wxString &label_in,
                              const CommandFunctorPointer &callback,
-                             const wxChar *accel,
+                             const wxString &accel,
                              unsigned int flags,
                              unsigned int mask,
                              int checkmark)
@@ -715,8 +715,8 @@ void CommandManager::AddItemList(const wxString & name,
 ///
 /// Add a command that doesn't appear in a menu.  When the key is pressed, the
 /// given function pointer will be called (via the CommandManagerListener)
-void CommandManager::AddCommand(const wxChar *name,
-                                const wxChar *label,
+void CommandManager::AddCommand(const wxString &name,
+                                const wxString &label,
                                 const CommandFunctorPointer &callback,
                                 unsigned int flags,
                                 unsigned int mask)
@@ -724,10 +724,10 @@ void CommandManager::AddCommand(const wxChar *name,
    AddCommand(name, label, callback, wxT(""), flags, mask);
 }
 
-void CommandManager::AddCommand(const wxChar *name,
-                                const wxChar *label_in,
+void CommandManager::AddCommand(const wxString &name,
+                                const wxString &label_in,
                                 const CommandFunctorPointer &callback,
-                                const wxChar *accel,
+                                const wxString &accel,
                                 unsigned int flags,
                                 unsigned int mask)
 {
@@ -738,10 +738,10 @@ void CommandManager::AddCommand(const wxChar *name,
    }
 }
 
-void CommandManager::AddGlobalCommand(const wxChar *name,
-                                      const wxChar *label_in,
+void CommandManager::AddGlobalCommand(const wxString &name,
+                                      const wxString &label_in,
                                       const CommandFunctorPointer &callback,
-                                      const wxChar *accel)
+                                      const wxString &accel)
 {
    CommandListEntry *entry = NewIdentifier(name, label_in, accel, NULL, callback, false, 0, 0);
 
@@ -851,7 +851,7 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & name,
       // For key bindings for commands with a list, such as effects,
       // the name in prefs is the category name plus the effect name.
       if (multi) {
-         entry->name = wxString::Format(wxT("%s:%s"), name.c_str(), label.c_str());
+         entry->name = wxString::Format(wxT("%s:%s"), name, label);
       }
 
       // Key from preferences overridse the default key given
@@ -878,13 +878,13 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & name,
       if( prev->label != entry->label )
       {
          wxLogDebug(wxT("Command '%s' defined by '%s' and '%s'"),
-                    entry->name.c_str(),
-                    prev->label.BeforeFirst(wxT('\t')).c_str(),
-                    entry->label.BeforeFirst(wxT('\t')).c_str());
+                    entry->name,
+                    prev->label.BeforeFirst(wxT('\t')),
+                    entry->label.BeforeFirst(wxT('\t')));
          wxFAIL_MSG(wxString::Format(wxT("Command '%s' defined by '%s' and '%s'"),
-                    entry->name.c_str(),
-                    prev->label.BeforeFirst(wxT('\t')).c_str(),
-                    entry->label.BeforeFirst(wxT('\t')).c_str()));
+                    entry->name,
+                    prev->label.BeforeFirst(wxT('\t')),
+                    entry->label.BeforeFirst(wxT('\t'))));
       }
    }
 #endif
@@ -948,7 +948,7 @@ void CommandManager::Enable(CommandListEntry *entry, bool enabled)
             item->Enable(enabled);
          } else {
             wxLogDebug(wxT("Warning: Menu entry with id %i in %s not found"),
-                ID, (const wxChar*)entry->name);
+                ID, entry->name);
          }
          } else {
             wxLogDebug(wxT("Warning: Menu entry with id %i not in hash"), ID);
@@ -961,8 +961,7 @@ void CommandManager::Enable(const wxString &name, bool enabled)
 {
    CommandListEntry *entry = mCommandNameHash[name];
    if (!entry || !entry->menu) {
-      wxLogDebug(wxT("Warning: Unknown command enabled: '%s'"),
-                 (const wxChar*)name);
+      wxLogDebug(wxT("Warning: Unknown command enabled: '%s'"), name);
       return;
    }
 
@@ -988,8 +987,7 @@ bool CommandManager::GetEnabled(const wxString &name)
 {
    CommandListEntry *entry = mCommandNameHash[name];
    if (!entry || !entry->menu) {
-      wxLogDebug(wxT("Warning: command doesn't exist: '%s'"),
-                 (const wxChar*)name);
+      wxLogDebug(wxT("Warning: command doesn't exist: '%s'"), name);
       return false;
    }
    return entry->enabled;
@@ -1333,7 +1331,7 @@ wxString CommandManager::GetDefaultKeyFromName(const wxString &name)
    return entry->defaultKey;
 }
 
-bool CommandManager::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
+bool CommandManager::HandleXMLTag(const wxString &tag, const wxArrayString &attrs)
 {
    if (!wxStrcmp(tag, wxT("audacitykeyboard"))) {
       mXMLKeysRead = 0;
@@ -1343,12 +1341,9 @@ bool CommandManager::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       wxString name;
       wxString key;
 
-      while(*attrs) {
-         const wxChar *attr = *attrs++;
-         const wxChar *value = *attrs++;
-
-         if (!value)
-            break;
+      for (size_t i = 0; i < attrs.GetCount() / 2; ++i) {
+         const wxString &attr = attrs[2*i];
+         const wxString &value = attrs[2*i+1];
 
          if (!wxStrcmp(attr, wxT("name")) && XMLValueChecker::IsGoodString(value))
             name = value;
@@ -1367,7 +1362,7 @@ bool CommandManager::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    return true;
 }
 
-void CommandManager::HandleXMLEndTag(const wxChar *tag)
+void CommandManager::HandleXMLEndTag(const wxString &tag)
 {
    if (!wxStrcmp(tag, wxT("audacitykeyboard"))) {
       wxMessageBox(wxString::Format(_("Loaded %d keyboard shortcuts\n"),
@@ -1377,7 +1372,7 @@ void CommandManager::HandleXMLEndTag(const wxChar *tag)
    }
 }
 
-XMLTagHandler *CommandManager::HandleXMLChild(const wxChar * WXUNUSED(tag))
+XMLTagHandler *CommandManager::HandleXMLChild(const wxString &WXUNUSED(tag))
 {
    return this;
 }
@@ -1417,16 +1412,14 @@ void CommandManager::SetCommandFlags(const wxString &name,
    }
 }
 
-void CommandManager::SetCommandFlags(const wxChar **names,
+void CommandManager::SetCommandFlags(const wxArrayString &names,
                                      wxUint32 flags, wxUint32 mask)
 {
-   const wxChar **nptr = names;
-   while(*nptr) {
-      SetCommandFlags(wxString(*nptr), flags, mask);
-      nptr++;
-   }
+   for (auto n : names)
+      SetCommandFlags(n, flags, mask);
 }
 
+#if 0000000000000
 void CommandManager::SetCommandFlags(wxUint32 flags, wxUint32 mask, ...)
 {
    va_list list;
@@ -1439,6 +1432,7 @@ void CommandManager::SetCommandFlags(wxUint32 flags, wxUint32 mask, ...)
    }
    va_end(list);
 }
+#endif
 
 #if defined(__WXDEBUG__)
 void CommandManager::CheckDups()
@@ -1461,9 +1455,9 @@ void CommandManager::CheckDups()
          if (mCommandList[i]->key == mCommandList[j]->key) {
             wxString msg;
             msg.Printf(wxT("key combo '%s' assigned to '%s' and '%s'"),
-                       mCommandList[i]->key.c_str(),
-                       mCommandList[i]->label.BeforeFirst(wxT('\t')).c_str(),
-                       mCommandList[j]->label.BeforeFirst(wxT('\t')).c_str());
+                       mCommandList[i]->key,
+                       mCommandList[i]->label.BeforeFirst(wxT('\t')),
+                       mCommandList[j]->label.BeforeFirst(wxT('\t')));
             wxASSERT_MSG(mCommandList[i]->key != mCommandList[j]->key, msg);
          }
       }

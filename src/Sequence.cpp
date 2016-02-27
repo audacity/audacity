@@ -480,8 +480,8 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
       wxLogError(
          wxT("Sequence::Paste: sampleCount s %s is < 0 or > mNumSamples %s)."),
          // PRL:  Why bother with Internat when the above is just wxT?
-         Internat::ToString(((wxLongLong)s).ToDouble(), 0).c_str(),
-         Internat::ToString(((wxLongLong)mNumSamples).ToDouble(), 0).c_str());
+         Internat::ToString(((wxLongLong)s).ToDouble(), 0),
+         Internat::ToString(((wxLongLong)mNumSamples).ToDouble(), 0));
       wxASSERT(false);
       return false;
    }
@@ -492,8 +492,8 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
       wxLogError(
          wxT("Sequence::Paste: mNumSamples %s + src->mNumSamples %s would overflow."),
          // PRL:  Why bother with Internat when the above is just wxT?
-         Internat::ToString(((wxLongLong)mNumSamples).ToDouble(), 0).c_str(),
-         Internat::ToString(((wxLongLong)src->mNumSamples).ToDouble(), 0).c_str());
+         Internat::ToString(((wxLongLong)mNumSamples).ToDouble(), 0),
+         Internat::ToString(((wxLongLong)src->mNumSamples).ToDouble(), 0));
       wxASSERT(false);
       return false;
    }
@@ -819,7 +819,7 @@ sampleCount Sequence::GetBestBlockSize(sampleCount start) const
    return result;
 }
 
-bool Sequence::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
+bool Sequence::HandleXMLTag(const wxString &tag, const wxArrayString &attrs)
 {
    sampleCount nValue;
 
@@ -829,23 +829,18 @@ bool Sequence::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 
       // loop through attrs, which is a null-terminated list of
       // attribute-value pairs
-      while(*attrs) {
-         const wxChar *attr = *attrs++;
-         const wxChar *value = *attrs++;
-
-         if (!value)
-            break;
-
+      for (size_t i = 0; i < attrs.GetCount() / 2; ++i) {
+         const wxString &attr = attrs[2*i];
          // Both these attributes have non-negative integer counts of samples, so
          // we can test & convert here, making sure that values > 2^31 are OK
          // because long clips will need them.
-         const wxString strValue = value;
+         const wxString &strValue = attrs[2*i+1];
          if (!XMLValueChecker::IsGoodInt64(strValue) || !strValue.ToLongLong(&nValue) || (nValue < 0))
          {
             mErrorOpening = true;
             wxLogWarning(
                wxT("   Sequence has bad %s attribute value, %s, that should be a positive integer."),
-               attr, strValue.c_str());
+               attr, strValue);
             return false;
          }
 
@@ -879,14 +874,9 @@ bool Sequence::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 
    /* handle sequence tag and its attributes */
    if (!wxStrcmp(tag, wxT("sequence"))) {
-      while(*attrs) {
-         const wxChar *attr = *attrs++;
-         const wxChar *value = *attrs++;
-
-         if (!value)
-            break;
-
-         const wxString strValue = value;	// promote string, we need this for all
+      for (size_t i = 0; i < attrs.GetCount() / 2; ++i) {
+         const wxString &attr = attrs[2*i];
+         const wxString &strValue = attrs[2*i+1];	// promote string, we need this for all
 
          if (!wxStrcmp(attr, wxT("maxsamples")))
          {
@@ -948,7 +938,7 @@ bool Sequence::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    return false;
 }
 
-void Sequence::HandleXMLEndTag(const wxChar *tag)
+void Sequence::HandleXMLEndTag(const wxString &tag)
 {
    if (wxStrcmp(tag, wxT("sequence")) != 0)
       return;
@@ -972,8 +962,8 @@ void Sequence::HandleXMLEndTag(const wxChar *tag)
             wxLogWarning(
                wxT("   Sequence has missing block file with length %s > mMaxSamples %s.\n      Setting length to mMaxSamples. This will likely cause some block files to be considered orphans."),
                // PRL:  Why bother with Internat when the above is just wxT?
-               Internat::ToString(((wxLongLong)len).ToDouble(), 0).c_str(),
-               Internat::ToString(((wxLongLong)mMaxSamples).ToDouble(), 0).c_str());
+               Internat::ToString(((wxLongLong)len).ToDouble(), 0),
+               Internat::ToString(((wxLongLong)mMaxSamples).ToDouble(), 0));
             len = mMaxSamples;
          }
          block.f = new SilentBlockFile(len);
@@ -998,9 +988,9 @@ void Sequence::HandleXMLEndTag(const wxChar *tag)
             wxT("   Start (%s) for block file %s is not one sample past end of previous block (%s).\n")
             wxT("   Moving start so blocks are contiguous."),
             // PRL:  Why bother with Internat when the above is just wxT?
-            Internat::ToString(((wxLongLong)(block.start)).ToDouble(), 0).c_str(),
-            sFileAndExtension.c_str(),
-            Internat::ToString(((wxLongLong)numSamples).ToDouble(), 0).c_str());
+            Internat::ToString(((wxLongLong)(block.start)).ToDouble(), 0),
+            sFileAndExtension,
+            Internat::ToString(((wxLongLong)numSamples).ToDouble(), 0));
          block.start = numSamples;
          mErrorOpening = true;
       }
@@ -1010,14 +1000,14 @@ void Sequence::HandleXMLEndTag(const wxChar *tag)
       wxLogWarning(
          wxT("Gap detected in project file. Correcting sequence sample count from %s to %s."),
          // PRL:  Why bother with Internat when the above is just wxT?
-         Internat::ToString(((wxLongLong)mNumSamples).ToDouble(), 0).c_str(),
-         Internat::ToString(((wxLongLong)numSamples).ToDouble(), 0).c_str());
+         Internat::ToString(((wxLongLong)mNumSamples).ToDouble(), 0),
+         Internat::ToString(((wxLongLong)numSamples).ToDouble(), 0));
       mNumSamples = numSamples;
       mErrorOpening = true;
    }
 }
 
-XMLTagHandler *Sequence::HandleXMLChild(const wxChar *tag)
+XMLTagHandler *Sequence::HandleXMLChild(const wxString &tag)
 {
    if (!wxStrcmp(tag, wxT("waveblock")))
       return this;
@@ -1049,8 +1039,8 @@ void Sequence::WriteXML(XMLWriter &xmlFile)
          wxString sMsg =
             wxString::Format(
                _("Sequence has block file with length %s > mMaxSamples %s.\nTruncating to mMaxSamples."),
-               Internat::ToString(((wxLongLong)bb.f->GetLength()).ToDouble(), 0).c_str(),
-               Internat::ToString(((wxLongLong)mMaxSamples).ToDouble(), 0).c_str());
+               Internat::ToString(((wxLongLong)bb.f->GetLength()).ToDouble(), 0),
+               Internat::ToString(((wxLongLong)mMaxSamples).ToDouble(), 0));
          wxMessageBox(sMsg, _("Warning - Length in Writing Sequence"), wxICON_EXCLAMATION | wxOK);
          wxLogWarning(sMsg);
          bb.f->SetLength(mMaxSamples);
@@ -1781,7 +1771,7 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
    return ConsistencyCheck(wxT("Delete - branch two"));
 }
 
-bool Sequence::ConsistencyCheck(const wxChar *whereStr) const
+bool Sequence::ConsistencyCheck(const wxString &whereStr) const
 {
    unsigned int i;
    sampleCount pos = 0;
@@ -1806,7 +1796,7 @@ bool Sequence::ConsistencyCheck(const wxChar *whereStr) const
       wxLogError(wxT("*** Consistency check failed after %s. ***"), whereStr);
       wxString str;
       DebugPrintf(&str);
-      wxLogError(wxT("%s"), str.c_str());
+      wxLogError(wxT("%s"), str);
       wxLogError(wxT("*** Please report this error to feedback@audacityteam.org. ***\n\n")
                  wxT("Recommended course of action:\n")
                  wxT("Undo the failed operation(s), then export or save your work and quit."));

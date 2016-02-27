@@ -81,7 +81,7 @@ void LegacyAliasBlockFile::SaveXML(XMLWriter &xmlFile)
 // BuildFromXML methods should always return a BlockFile, not NULL,
 // even if the result is flawed (e.g., refers to nonexistent file),
 // as testing will be done in DirManager::ProjectFSCK().
-BlockFile *LegacyAliasBlockFile::BuildFromXML(const wxString &projDir, const wxChar **attrs)
+BlockFile *LegacyAliasBlockFile::BuildFromXML(const wxString &projDir, const wxArrayString &attrs)
 {
    wxFileName summaryFileName;
    wxFileName aliasFileName;
@@ -90,14 +90,10 @@ BlockFile *LegacyAliasBlockFile::BuildFromXML(const wxString &projDir, const wxC
    bool noRMS = false;
    long nValue;
 
-   while(*attrs)
+   for (size_t i = 0; i < attrs.GetCount() / 2; ++i)
    {
-      const wxChar *attr =  *attrs++;
-      const wxChar *value = *attrs++;
-      if (!value)
-         break;
-
-      const wxString strValue = value;
+      const wxString &attr = attrs[2*i];
+      const wxString &strValue = attrs[2*i+1];;
       if (!wxStricmp(attr, wxT("name")) && XMLValueChecker::IsGoodFileName(strValue, projDir))
          //v Should this be
          //    dm.AssignFile(summaryFileName, strValue, false);

@@ -139,7 +139,7 @@ bool MeterUpdateQueue::Put(MeterUpdateMsg &msg)
    if (len >= mBufferSize-1)
       return false;
 
-   //wxLogDebug(wxT("Put: %s"), msg.toString().c_str());
+   //wxLogDebug(wxT("Put: %s"), msg.toString());
 
    mBuffer[mEnd] = msg;
    mEnd = (mEnd+1)%mBufferSize;
@@ -175,7 +175,7 @@ const static int gap = 2;
 // Event used to notify all meters of preference changes
 DEFINE_EVENT_TYPE(EVT_METER_PREFERENCES_CHANGED);
 
-const static wxChar *PrefStyles[] =
+static const wxString PrefStyles[] =
 {
    wxT("AutomaticStereo"),
    wxT("HorizontalStereo"),

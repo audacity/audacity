@@ -50,14 +50,12 @@
    }
 #endif
 
-struct
+static const struct
 {
    int format;
-   const wxChar *name;
-   const wxChar *desc;
-}
-static const kFormats[] =
-{
+   const wxString name;
+   const wxString desc;
+} kFormats[] = {
    { SF_FORMAT_AIFF | SF_FORMAT_PCM_16,   wxT("AIFF"),   XO("AIFF (Apple) signed 16-bit PCM")    },
    { SF_FORMAT_WAV | SF_FORMAT_PCM_16,    wxT("WAV"),    XO("WAV (Microsoft) signed 16-bit PCM") },
    { SF_FORMAT_WAV | SF_FORMAT_FLOAT,     wxT("WAVFLT"), XO("WAV (Microsoft) 32-bit float PCM")  },
@@ -132,7 +130,7 @@ ExportPCMOptions::ExportPCMOptions(wxWindow *parent, int selformat)
 {
    int format;
 
-   if (selformat < 0 || selformat >= WXSIZEOF(kFormats))
+   if (selformat < 0 || static_cast<size_t>(selformat) >= WXSIZEOF(kFormats))
    {
       format = ReadExportFormatPref();
    }
@@ -328,9 +326,9 @@ public:
 
 private:
 
-   char *AdjustString(const wxString & wxStr, int sf_format);
+   wxCharBuffer AdjustString(const wxString &wxStr, int sf_format);
    bool AddStrings(AudacityProject *project, SNDFILE *sf, const Tags *tags, int sf_format);
-   void AddID3Chunk(wxString fName, const Tags *tags, int sf_format);
+   void AddID3Chunk(const wxString &fName, const Tags *tags, int sf_format);
 
 };
 
@@ -402,7 +400,7 @@ int ExportPCM::Export(AudacityProject *project,
    TrackList   *tracks = project->GetTracks();
    int sf_format;
 
-   if (subformat < 0 || subformat >= WXSIZEOF(kFormats))
+   if (subformat < 0 || static_cast<size_t>(subformat) >= WXSIZEOF(kFormats))
    {
       sf_format = ReadExportFormatPref();
    }
@@ -457,7 +455,7 @@ int ExportPCM::Export(AudacityProject *project,
 
    if (!sf) {
       wxMessageBox(wxString::Format(_("Cannot export audio to %s"),
-                                    fName.c_str()));
+                                    fName));
       return false;
    }
    // Retrieve tags if not given a set
@@ -497,9 +495,9 @@ int ExportPCM::Export(AudacityProject *project,
       ProgressDialog progress(wxFileName(fName).GetName(),
          selectionOnly ?
          wxString::Format(_("Exporting the selected audio as %s"),
-         formatStr.c_str()) :
+         formatStr) :
          wxString::Format(_("Exporting the entire project as %s"),
-         formatStr.c_str()));
+         formatStr));
 
       while (updateResult == eProgressSuccess) {
          sampleCount samplesWritten;
@@ -525,8 +523,8 @@ int ExportPCM::Export(AudacityProject *project,
                 * is usually something unhelpful (and untranslated) like "system
                 * error" */
                 _("Error while writing %s file (disk full?).\nLibsndfile says \"%s\""),
-                formatStr.c_str(),
-                wxString::FromAscii(buffer2).c_str()));
+                formatStr,
+                wxString::FromAscii(buffer2)));
             break;
          }
 
@@ -567,181 +565,89 @@ int ExportPCM::Export(AudacityProject *project,
    return updateResult;
 }
 
-char *ExportPCM::AdjustString(const wxString & wxStr, int sf_format)
+wxCharBuffer ExportPCM::AdjustString(const wxString & wxStr, int sf_format)
 {
    bool b_aiff = false;
    if ((sf_format & SF_FORMAT_TYPEMASK) == SF_FORMAT_AIFF)
          b_aiff = true;    // Apple AIFF file
 
    // We must convert the string to 7 bit ASCII
-   size_t  sz = wxStr.length();
-   if(sz == 0)
-      return NULL;
-   // Size for secure malloc in case of local wide char usage
-   size_t  sr = (sz+4) * 2;
-
-   char *pDest = (char *)malloc(sr);
-   if (!pDest)
-      return NULL;
-   char *pSrc = (char *)malloc(sr);
-   if (!pSrc)
-   {
-      free(pDest);
-      return NULL;
-   }
-   memset(pDest, 0, sr);
-   memset(pSrc, 0, sr);
-
-   if(wxStr.mb_str(wxConvISO8859_1))
-      strncpy(pSrc, wxStr.mb_str(wxConvISO8859_1), sz);
-   else if(wxStr.mb_str())
-      strncpy(pSrc, wxStr.mb_str(), sz);
-   else {
-      free(pDest);
-      free(pSrc);
-      return NULL;
-   }
-
-   char *pD = pDest;
-   char *pS = pSrc;
-   unsigned char c;
-
-   // ISO Latin to 7 bit ascii conversion table (best approximation)
-   static char aASCII7Table[256] = {
-      0x00, 0x5f, 0x5f, 0x5f, 0x5f, 0x5f, 0x5f, 0x5f,
-      0x5f, 0x09, 0x0a, 0x5f, 0x0d, 0x5f, 0x5f, 0x5f,
-      0x5f, 0x5f, 0x5f, 0x5f, 0x5f, 0x5f, 0x5f, 0x5f,
-      0x5f, 0x5f, 0x5f, 0x5f, 0x5f, 0x5f, 0x5f, 0x5f,
-      0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27,
-      0x28, 0x29, 0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f,
-      0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37,
-      0x38, 0x39, 0x3a, 0x3b, 0x3c, 0x3d, 0x3e, 0x3f,
-      0x40, 0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47,
-      0x48, 0x49, 0x4a, 0x4b, 0x4c, 0x4d, 0x4e, 0x4f,
-      0x50, 0x51, 0x52, 0x53, 0x54, 0x55, 0x56, 0x57,
-      0x58, 0x59, 0x5a, 0x5b, 0x5c, 0x5d, 0x5e, 0x5f,
-      0x60, 0x61, 0x62, 0x63, 0x64, 0x65, 0x66, 0x67,
-      0x68, 0x69, 0x6a, 0x6b, 0x6c, 0x6d, 0x6e, 0x6f,
-      0x70, 0x71, 0x72, 0x73, 0x74, 0x75, 0x76, 0x77,
-      0x78, 0x79, 0x7a, 0x7b, 0x7c, 0x7d, 0x7e, 0x7f,
-      0x45, 0x20, 0x2c, 0x53, 0x22, 0x2e, 0x2b, 0x2b,
-      0x5e, 0x25, 0x53, 0x28, 0x4f, 0x20, 0x5a, 0x20,
-      0x20, 0x27, 0x27, 0x22, 0x22, 0x2e, 0x2d, 0x5f,
-      0x22, 0x54, 0x73, 0x29, 0x6f, 0x20, 0x7a, 0x59,
-      0x20, 0x21, 0x63, 0x4c, 0x6f, 0x59, 0x7c, 0x53,
-      0x22, 0x43, 0x61, 0x22, 0x5f, 0x2d, 0x43, 0x2d,
-      0x6f, 0x7e, 0x32, 0x33, 0x27, 0x75, 0x50, 0x27,
-      0x2c, 0x31, 0x6f, 0x22, 0x5f, 0x5f, 0x5f, 0x3f,
-      0x41, 0x41, 0x41, 0x41, 0x41, 0x41, 0x41, 0x43,
-      0x45, 0x45, 0x45, 0x45, 0x49, 0x49, 0x49, 0x49,
-      0x44, 0x4e, 0x4f, 0x4f, 0x4f, 0x4f, 0x4f, 0x78,
-      0x4f, 0x55, 0x55, 0x55, 0x55, 0x59, 0x70, 0x53,
-      0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x63,
-      0x65, 0x65, 0x65, 0x65, 0x69, 0x69, 0x69, 0x69,
-      0x64, 0x6e, 0x6f, 0x6f, 0x6f, 0x6f, 0x6f, 0x2f,
-      0x6f, 0x75, 0x75, 0x75, 0x75, 0x79, 0x70, 0x79
-   };
-
-   size_t i;
-   for(i = 0; i < sr; i++) {
-      c = (unsigned char) *pS++;
-      *pD++ = aASCII7Table[c];
-      if(c == 0)
-         break;
-   }
-   *pD = '\0';
-
-   free(pSrc);
-
-   if(b_aiff) {
-      int len = (int)strlen(pDest);
-      if((len % 2) != 0) {
-         // In case of an odd length string, add a space char
-         strcat(pDest, " ");
-      }
-   }
-
-   return pDest;
+   wxCharBuffer buf = wxStr.ToAscii();
+   if (b_aiff && buf.length() % 2 != 0)
+      return (wxStr + " ").ToAscii();
+   return buf;
 }
 
 bool ExportPCM::AddStrings(AudacityProject * WXUNUSED(project), SNDFILE *sf, const Tags *tags, int sf_format)
 {
    if (tags->HasTag(TAG_TITLE)) {
-      char * ascii7Str = AdjustString(tags->GetTag(TAG_TITLE), sf_format);
+      const wxCharBuffer &buf = AdjustString(tags->GetTag(TAG_TITLE), sf_format);
+      const char *ascii7Str = buf;
       if (ascii7Str) {
          sf_set_string(sf, SF_STR_TITLE, ascii7Str);
-         free(ascii7Str);
       }
    }
 
    if (tags->HasTag(TAG_ALBUM)) {
-      char * ascii7Str = AdjustString(tags->GetTag(TAG_ALBUM), sf_format);
-      if (ascii7Str) {
+      const wxCharBuffer &buf = AdjustString(tags->GetTag(TAG_ALBUM), sf_format);
+      const char *ascii7Str = buf;
+      if (ascii7Str)
          sf_set_string(sf, SF_STR_ALBUM, ascii7Str);
-         free(ascii7Str);
-      }
    }
 
    if (tags->HasTag(TAG_ARTIST)) {
-      char * ascii7Str = AdjustString(tags->GetTag(TAG_ARTIST), sf_format);
-      if (ascii7Str) {
+      const wxCharBuffer &buf = AdjustString(tags->GetTag(TAG_ARTIST), sf_format);
+      const char *ascii7Str = buf;
+      if (ascii7Str)
          sf_set_string(sf, SF_STR_ARTIST, ascii7Str);
-         free(ascii7Str);
-      }
    }
 
    if (tags->HasTag(TAG_COMMENTS)) {
-      char * ascii7Str = AdjustString(tags->GetTag(TAG_COMMENTS), sf_format);
-      if (ascii7Str) {
+      const wxCharBuffer &buf = AdjustString(tags->GetTag(TAG_COMMENTS), sf_format);
+      const char *ascii7Str = buf;
+      if (ascii7Str)
          sf_set_string(sf, SF_STR_COMMENT, ascii7Str);
-         free(ascii7Str);
-      }
    }
 
    if (tags->HasTag(TAG_YEAR)) {
-      char * ascii7Str = AdjustString(tags->GetTag(TAG_YEAR), sf_format);
-      if (ascii7Str) {
+      const wxCharBuffer &buf = AdjustString(tags->GetTag(TAG_YEAR), sf_format);
+      const char *ascii7Str = buf;
+      if (ascii7Str)
          sf_set_string(sf, SF_STR_DATE, ascii7Str);
-         free(ascii7Str);
-      }
    }
 
    if (tags->HasTag(TAG_GENRE)) {
-      char * ascii7Str = AdjustString(tags->GetTag(TAG_GENRE), sf_format);
-      if (ascii7Str) {
+      const wxCharBuffer &buf = AdjustString(tags->GetTag(TAG_GENRE), sf_format);
+      const char *ascii7Str = buf;
+      if (ascii7Str)
          sf_set_string(sf, SF_STR_GENRE, ascii7Str);
-         free(ascii7Str);
-      }
    }
 
    if (tags->HasTag(TAG_COPYRIGHT)) {
-      char * ascii7Str = AdjustString(tags->GetTag(TAG_COPYRIGHT), sf_format);
-      if (ascii7Str) {
+      const wxCharBuffer &buf = AdjustString(tags->GetTag(TAG_COPYRIGHT), sf_format);
+      const char *ascii7Str = buf;
+      if (ascii7Str)
          sf_set_string(sf, SF_STR_COPYRIGHT, ascii7Str);
-         free(ascii7Str);
-      }
    }
 
    if (tags->HasTag(TAG_SOFTWARE)) {
-      char * ascii7Str = AdjustString(tags->GetTag(TAG_SOFTWARE), sf_format);
-      if (ascii7Str) {
+      const wxCharBuffer &buf = AdjustString(tags->GetTag(TAG_SOFTWARE), sf_format);
+      const char *ascii7Str = buf;
+      if (ascii7Str)
          sf_set_string(sf, SF_STR_SOFTWARE, ascii7Str);
-         free(ascii7Str);
-      }
    }
 
    if (tags->HasTag(TAG_TRACK)) {
-      char * ascii7Str = AdjustString(tags->GetTag(TAG_TRACK), sf_format);
-      if (ascii7Str) {
+      const wxCharBuffer &buf = AdjustString(tags->GetTag(TAG_TRACK), sf_format);
+      const char *ascii7Str = buf;
+      if (ascii7Str)
          sf_set_string(sf, SF_STR_TRACKNUMBER, ascii7Str);
-         free(ascii7Str);
-      }
    }
 
    return true;
 }
 
-void ExportPCM::AddID3Chunk(wxString fName, const Tags *tags, int sf_format)
+void ExportPCM::AddID3Chunk(const wxString &fName, const Tags *tags, int sf_format)
 {
 #ifdef USE_LIBID3TAG
    struct id3_tag *tp = id3_tag_new();
@@ -786,7 +692,7 @@ void ExportPCM::AddID3Chunk(wxString fName, const Tags *tags, int sf_format)
       }
 
       id3_ucs4_t *ucs4 =
-         id3_utf8_ucs4duplicate((id3_utf8_t *) (const char *) v.mb_str(wxConvUTF8));
+         id3_utf8_ucs4duplicate(reinterpret_cast<const id3_utf8_t *>(static_cast<const char *>(v.utf8_str())));
 
       if (strcmp(name, ID3_FRAME_COMMENT) == 0) {
          // A hack to get around iTunes not recognizing the comment.  The
@@ -802,7 +708,7 @@ void ExportPCM::AddID3Chunk(wxString fName, const Tags *tags, int sf_format)
          id3_field_setstring(id3_frame_field(frame, 2), ucs4);
          free(ucs4);
 
-         ucs4 = id3_utf8_ucs4duplicate((id3_utf8_t *) (const char *) n.mb_str(wxConvUTF8));
+         ucs4 = id3_utf8_ucs4duplicate(reinterpret_cast<const id3_utf8_t *>(static_cast<const char *>(n.utf8_str())));
 
          id3_field_setstring(id3_frame_field(frame, 1), ucs4);
       }
@@ -880,7 +786,7 @@ wxWindow *ExportPCM::OptionsCreate(wxWindow *parent, int format)
 {
    wxASSERT(parent); // to justify safenew
    // default, full user control
-   if (format < 0 || format >= WXSIZEOF(kFormats))
+   if (format < 0 || static_cast<size_t>(format) >= WXSIZEOF(kFormats))
    {
       return safenew ExportPCMOptions(parent, format);
    }

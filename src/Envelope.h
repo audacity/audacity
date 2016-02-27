@@ -43,12 +43,12 @@ public:
    double GetVal() const { return mVal; }
    inline void SetVal(double val);
 
-   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs)
+   bool HandleXMLTag(const wxString &tag, const wxArrayString &attrs)
    {
       if (!wxStrcmp(tag, wxT("controlpoint"))) {
-         while (*attrs) {
-            const wxChar *attr = *attrs++;
-            const wxChar *value = *attrs++;
+         for (size_t i = 0; i < attrs.GetCount() / 2; ++i) {
+            const wxString &attr = attrs[2*i];
+            const wxString &value = attrs[2*i+1];
             if (!wxStrcmp(attr, wxT("t")))
                SetT(Internat::CompatibleToDouble(value));
             else if (!wxStrcmp(attr, wxT("val")))
@@ -60,7 +60,7 @@ public:
          return false;
    }
 
-   XMLTagHandler *HandleXMLChild(const wxChar * WXUNUSED(tag))
+   XMLTagHandler *HandleXMLChild(const wxString &WXUNUSED(tag))
    {
       return NULL;
    }
@@ -102,8 +102,8 @@ class Envelope final : public XMLTagHandler {
    bool Save(wxTextFile * out, bool overwrite) override;
 #endif
    // Newfangled XML file I/O
-   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
-   XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
+   bool HandleXMLTag(const wxString &tag, const wxArrayString &attrs) override;
+   XMLTagHandler *HandleXMLChild(const wxString &tag) override;
    void WriteXML(XMLWriter &xmlFile) const /* not override */;
 
    void DrawPoints(wxDC & dc, const wxRect & r, const ZoomInfo &zoomInfo,

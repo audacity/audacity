@@ -265,7 +265,7 @@ public:
    ///\return libavformat library version or empty string?
    wxString GetLibraryVersion()
    {
-      return wxString::Format(wxT("F(%s),C(%s),U(%s)"),mAVFormatVersion.c_str(),mAVCodecVersion.c_str(),mAVUtilVersion.c_str());
+      return wxString::Format(wxT("F(%s),C(%s),U(%s)"),mAVFormatVersion,mAVCodecVersion,mAVUtilVersion);
    }
 
 #if defined(__WXMSW__)
@@ -392,7 +392,7 @@ FFmpegLibs *PickFFmpegLibs();
 void        DropFFmpegLibs();
 
 int ufile_fopen(AVIOContext **s, const wxString & name, int flags);
-int ufile_fopen_input(AVFormatContext **ic_ptr, wxString & name);
+int ufile_fopen_input(AVFormatContext **ic_ptr, const wxString &name);
 int ufile_close(AVIOContext *pb);
 
 typedef struct _streamContext

@@ -227,10 +227,10 @@ void AudioUnitEffectsModule::LoadAudioUnitsOfType(OSType inAUType,
             wxString name = wxCFStringRef::AsString(cfName);
       
             effects.Add(wxString::Format(wxT("%-4.4s/%-4.4s/%-4.4s/%s"),
-                        FromOSType(found.componentManufacturer).c_str(),
-                        FromOSType(found.componentType).c_str(),
-                        FromOSType(found.componentSubType).c_str(),
-                        name.c_str()));
+                        FromOSType(found.componentManufacturer),
+                        FromOSType(found.componentType),
+                        FromOSType(found.componentSubType),
+                        name));
    
             CFRelease(cfName);
          }
@@ -265,12 +265,12 @@ wxString AudioUnitEffectsModule::FromOSType(OSType type)
                 (type & 0x0000ff00) << 8  |
                 (type & 0x000000ff) << 24;
    
-   return wxString::FromUTF8((char *)&rev, 4).c_str();
+   return wxString::FromUTF8(reinterpret_cast<const char *>(&rev), 4); /* prone to be endian-dependent */
 }
 
 OSType AudioUnitEffectsModule::ToOSType(const wxString & type)
 {
-   wxCharBuffer buf = type.ToUTF8();
+   wxScopedCharBuffer buf = type.utf8_str();
 
    OSType rev = ((unsigned char)buf.data()[0]) << 24 |
                 ((unsigned char)buf.data()[1]) << 16 |
@@ -527,9 +527,9 @@ void AudioUnitEffectExportDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
       wxString path;
       path.Printf(wxT("%s/%s/%s/%s.aupreset"),
                   PRESET_USER_PATH,
-                  mEffect->mVendor.c_str(),
-                  mEffect->mName.c_str(),
-                  name.c_str());
+                  mEffect->mVendor,
+                  mEffect->mName,
+                  name);
       wxFileName fn(path);
       fn.Normalize();
       fn.Mkdir(0755, wxPATH_MKDIR_FULL);
@@ -665,8 +665,8 @@ void AudioUnitEffectImportDialog::PopulateOrExchange(ShuttleGui & S)
    wxString path;
    path.Printf(wxT("%s/%s/%s"),
                PRESET_LOCAL_PATH,
-               mEffect->mVendor.c_str(),
-               mEffect->mName.c_str());
+               mEffect->mVendor,
+               mEffect->mName);
    wxFileName fn(path);
    fn.Normalize();
    
@@ -720,8 +720,8 @@ void AudioUnitEffectImportDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
 
       wxString path;
       path.Printf(wxT("%s/%s.aupreset"),
-                  item.GetText().c_str(),
-                  mList->GetItemText(sel).c_str());
+                  item.GetText(),
+                  mList->GetItemText(sel));
 
       // Create the CFURL for the path
       CFURLRef url = CFURLCreateWithFileSystemPath(kCFAllocatorDefault,
@@ -1950,7 +1950,7 @@ bool AudioUnitEffect::SetRateAndChannels()
                                  sizeof(Float64));
    if (result != noErr)
    {
-      printf("%ls Didn't accept sample rate on global\n", GetName().wx_str());
+      wxPprintf("%s Didn't accept sample rate on global\n", GetName());
       return false;
    }
 
@@ -1964,7 +1964,7 @@ bool AudioUnitEffect::SetRateAndChannels()
                                     sizeof(Float64));
       if (result != noErr)
       {
-         printf("%ls Didn't accept sample rate on input\n", GetName().wx_str());
+         wxPrintf("%s Didn't accept sample rate on input\n", GetName());
          return false;
       }
 
@@ -1976,7 +1976,7 @@ bool AudioUnitEffect::SetRateAndChannels()
                                     sizeof(AudioStreamBasicDescription));
       if (result != noErr)
       {
-         printf("%ls didn't accept stream format on input\n", GetName().wx_str());
+         wxPrintf("%s didn't accept stream format on input\n", GetName());
          return false;
       }
    }
@@ -1991,7 +1991,7 @@ bool AudioUnitEffect::SetRateAndChannels()
                                     sizeof(Float64));
       if (result != noErr)
       {
-         printf("%ls Didn't accept sample rate on output\n", GetName().wx_str());
+         wxPrintf("%s Didn't accept sample rate on output\n", GetName());
          return false;
       }
    
@@ -2005,7 +2005,7 @@ bool AudioUnitEffect::SetRateAndChannels()
    
       if (result != noErr)
       {
-         printf("%ls didn't accept stream format on output\n", GetName().wx_str());
+         wxPrintf("%s didn't accept stream format on output\n", GetName());
          return false;
       }
    }

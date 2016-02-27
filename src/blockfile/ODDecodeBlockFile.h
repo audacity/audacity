@@ -83,7 +83,7 @@ class ODDecodeBlockFile final : public SimpleBlockFile
    void SaveXML(XMLWriter &xmlFile) override;
 
    ///Reconstructs from XML a ODPCMAliasBlockFile and reschedules it for OD loading
-   static BlockFile *BuildFromXML(DirManager &dm, const wxChar **attrs);
+   static BlockFile *BuildFromXML(DirManager &dm, const wxArrayString &attrs);
 
    ///Writes the summary file if summary data is available
    void Recover(void) override;

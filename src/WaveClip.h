@@ -367,9 +367,9 @@ public:
    // XMLTagHandler callback methods for loading and saving
    //
 
-   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
-   void HandleXMLEndTag(const wxChar *tag) override;
-   XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
+   bool HandleXMLTag(const wxString &tag, const wxArrayString &attrs) override;
+   void HandleXMLEndTag(const wxString &tag) override;
+   XMLTagHandler *HandleXMLChild(const wxString &tag) override;
    void WriteXML(XMLWriter &xmlFile) /* not override */;
 
    // Cache of values to colour pixels of Spectrogram - used by TrackArtist

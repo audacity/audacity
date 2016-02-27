@@ -2145,7 +2145,7 @@ void LabelTrack::Export(wxTextFile & f)
       f.AddLine(wxString::Format(wxT("%f\t%f\t%s"),
                                  (double)mLabels[i]->getT0(),
                                  (double)mLabels[i]->getT1(),
-                                 mLabels[i]->title.c_str()));
+                                 mLabels[i]->title));
    }
 }
 
@@ -2234,7 +2234,7 @@ void LabelTrack::Import(wxTextFile & in)
    SortLabels();
 }
 
-bool LabelTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
+bool LabelTrack::HandleXMLTag(const wxString &tag, const wxArrayString &attrs)
 {
    if (!wxStrcmp(tag, wxT("label"))) {
 
@@ -2243,14 +2243,10 @@ bool LabelTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 
       // loop through attrs, which is a null-terminated list of
       // attribute-value pairs
-      while(*attrs) {
-         const wxChar *attr = *attrs++;
-         const wxChar *value = *attrs++;
-
-         if (!value)
-            break;
-
-         const wxString strValue = value;
+      for (size_t i = 0; i < attrs.GetCount(); i += 2) {
+         const wxString &attr = attrs[2*i];
+         const wxString &value = attrs[2*i+1];
+         const wxString &strValue = value;
          if (!XMLValueChecker::IsGoodString(strValue))
          {
             return false;
@@ -2277,14 +2273,9 @@ bool LabelTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    }
    else if (!wxStrcmp(tag, wxT("labeltrack"))) {
       long nValue = -1;
-      while (*attrs) {
-         const wxChar *attr = *attrs++;
-         const wxChar *value = *attrs++;
-
-         if (!value)
-            return true;
-
-         const wxString strValue = value;
+      for (size_t i = 0; i < attrs.GetCount() / 2; ++i) {
+         const wxString &attr = attrs[2*i];
+         const wxString &strValue = attrs[2*i+1];
          if (!wxStrcmp(attr, wxT("name")) && XMLValueChecker::IsGoodString(strValue))
             mName = strValue;
          else if (!wxStrcmp(attr, wxT("numlabels")) &&
@@ -2315,7 +2306,7 @@ bool LabelTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    return false;
 }
 
-XMLTagHandler *LabelTrack::HandleXMLChild(const wxChar *tag)
+XMLTagHandler *LabelTrack::HandleXMLChild(const wxString &tag)
 {
    if (!wxStrcmp(tag, wxT("label")))
       return this;

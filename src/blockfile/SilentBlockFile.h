@@ -45,7 +45,7 @@ class SilentBlockFile final : public BlockFile {
    wxLongLong GetSpaceUsage() override;
    void Recover() override { };
 
-   static BlockFile *BuildFromXML(DirManager &dm, const wxChar **attrs);
+   static BlockFile *BuildFromXML(DirManager &dm, const wxArrayString &attrs);
 };
 
 #endif

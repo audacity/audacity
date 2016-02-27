@@ -62,7 +62,7 @@ class ToolsToolBar final : public ToolBar {
    bool IsDown(int tool);
    int GetDownTool();
 
-   const wxChar * GetMessageForTool( int ToolNumber );
+   wxString GetMessageForTool(int ToolNumber);
 
    void Populate();
    void Repaint(wxDC * WXUNUSED(dc)) override {};
@@ -72,13 +72,13 @@ class ToolsToolBar final : public ToolBar {
 
    void RegenerateToolsTooltips();
    wxImage *MakeToolImage(wxImage *tool, wxImage *mask, int style);
-   AButton *MakeTool(teBmps eTool, int id, const wxChar *label);
+   AButton *MakeTool(teBmps eTool, int id, const wxString &label);
 
    AButton *mTool[numTools];
    wxGridSizer *mToolSizer;
    int mCurrentTool;
 
-   const wxChar *mMessageOfTool[numTools];
+   wxString mMessageOfTool[numTools];
 
  public:
 

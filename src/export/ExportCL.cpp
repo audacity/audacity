@@ -342,7 +342,7 @@ int ExportCL::Export(AudacityProject *project,
    wxGetEnv(wxT("PATH"), &opath);
    npath = opath;
 
-   for (int i = 0; i < WXSIZEOF(paths); i++) {
+   for (size_t i = 0; i < WXSIZEOF(paths); ++i) {
       reg.SetName(paths[i]);
 
       if (reg.Exists()) {
@@ -354,7 +354,7 @@ int ExportCL::Export(AudacityProject *project,
       }
    }
 
-   wxSetEnv(wxT("PATH"),npath.c_str());
+   wxSetEnv(wxT("PATH"), npath);
 #endif
 
    // Kick off the command
@@ -363,13 +363,13 @@ int ExportCL::Export(AudacityProject *project,
 
 #if defined(__WXMSW__)
    if (!opath.IsEmpty()) {
-      wxSetEnv(wxT("PATH"),opath.c_str());
+      wxSetEnv(wxT("PATH"), opath);
    }
 #endif
 
    if (!rc) {
       wxMessageBox(wxString::Format(_("Cannot export audio to %s"),
-                                    fName.c_str()));
+                                    fName));
       process.Detach();
       process.CloseOutput();
 

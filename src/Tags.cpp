@@ -65,7 +65,7 @@
 #include <wx/combobox.h>
 #include <wx/display.h>
 
-static const wxChar *DefaultGenres[] =
+static const wxString DefaultGenres[] =
 {
    wxT("Blues"),
    wxT("Classic Rock"),
@@ -354,7 +354,7 @@ wxString Tags::GetUserGenre(int i)
 
 wxString Tags::GetGenre(int i)
 {
-   int cnt = WXSIZEOF(DefaultGenres);
+   size_t cnt = WXSIZEOF(DefaultGenres);
 
    if (i >= 0 && i < cnt) {
       return DefaultGenres[i];
@@ -365,7 +365,7 @@ wxString Tags::GetGenre(int i)
 
 int Tags::GetGenre(const wxString & name)
 {
-   int cnt = WXSIZEOF(DefaultGenres);
+   size_t cnt = WXSIZEOF(DefaultGenres);
 
    for (int i = 0; i < cnt; i++) {
       if (name.CmpNoCase(DefaultGenres[i])) {
@@ -442,7 +442,7 @@ void Tags::SetTag(const wxString & name, const int & value)
    SetTag(name, wxString::Format(wxT("%d"), value));
 }
 
-bool Tags::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
+bool Tags::HandleXMLTag(const wxString &tag, const wxArrayString &attrs)
 {
    if (wxStrcmp(tag, wxT("tags")) == 0) {
       return true;
@@ -451,11 +451,11 @@ bool Tags::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    if (wxStrcmp(tag, wxT("tag")) == 0) {
       wxString n, v;
 
-      while (*attrs) {
-         wxString attr = *attrs++;
+      for (size_t i = 0; i < attrs.GetCount(); i += 2) {
+         const wxString &attr = attrs[i];
          if (attr.IsEmpty())
             break;
-         wxString value = *attrs++;
+         const wxString &value = attrs[i+1];
 
          if (!XMLValueChecker::IsGoodString(attr) ||
              !XMLValueChecker::IsGoodString(value)) {
@@ -483,7 +483,7 @@ bool Tags::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    return false;
 }
 
-XMLTagHandler *Tags::HandleXMLChild(const wxChar *tag)
+XMLTagHandler *Tags::HandleXMLChild(const wxString &tag)
 {
    if (wxStrcmp(tag, wxT("tags")) == 0) {
       return this;
@@ -1149,7 +1149,7 @@ void TagsEditor::OnSave(wxCommandEvent & WXUNUSED(event))
    {
       wxMessageBox(wxString::Format(
          _("Couldn't write to file \"%s\": %s"),
-         fn.c_str(), exception.GetMessage().c_str()),
+         fn, exception.GetMessage()),
          _("Error Saving Tags File"), wxICON_ERROR, this);
    }
 }

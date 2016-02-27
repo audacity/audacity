@@ -110,7 +110,7 @@ public:
    bool AddTags(const Tags *metadata);
 
    /// Sets individual metadata values
-   void SetMetadata(const Tags *tags, const char *name, const wxChar *tag);
+   void SetMetadata(const Tags *tags, const char *name, const wxString &tag);
 
    /// Encodes audio
    bool EncodeAudioFrame(int16_t *pFrame, int frameSize);
@@ -193,7 +193,7 @@ ExportFFmpeg::ExportFFmpeg()
       if (newfmt < FMT_OTHER && FFmpegLibsInst->ValidLibsLoaded())
       {
          // Format/Codec support is compiled in?
-         AVOutputFormat *avoformat = av_guess_format(shortname.mb_str(), NULL, NULL);
+         AVOutputFormat *avoformat = av_guess_format(shortname.utf8_str(), NULL, NULL);
          AVCodec *avcodec = avcodec_find_encoder(ExportFFmpegOptions::fmts[newfmt].codecid);
          if (avoformat == NULL || avcodec == NULL)
          {
@@ -270,7 +270,7 @@ bool ExportFFmpeg::Init(const char *shortname, AudacityProject *project, const T
    // and the default video/audio codecs that the format uses.
    if ((mEncFormatDesc = av_guess_format(shortname, OSINPUT(mName), NULL)) == NULL)
    {
-      wxMessageBox(wxString::Format(_("FFmpeg : ERROR - Can't determine format description for file \"%s\"."), mName.c_str()),
+      wxMessageBox(wxString::Format(_("FFmpeg : ERROR - Can't determine format description for file \"%s\"."), mName),
                    _("FFmpeg Error"), wxOK|wxCENTER|wxICON_EXCLAMATION);
       return false;
    }
@@ -290,7 +290,7 @@ bool ExportFFmpeg::Init(const char *shortname, AudacityProject *project, const T
    // At the moment Audacity can export only one audio stream
    if ((mEncAudioStream = avformat_new_stream(mEncFormatCtx, NULL)) == NULL)
    {
-      wxMessageBox(wxString::Format(_("FFmpeg : ERROR - Can't add audio stream to output file \"%s\"."), mName.c_str()),
+      wxMessageBox(wxString::Format(_("FFmpeg : ERROR - Can't add audio stream to output file \"%s\"."), mName),
                    _("FFmpeg Error"), wxOK|wxCENTER|wxICON_EXCLAMATION);
       return false;
    }
@@ -302,7 +302,7 @@ bool ExportFFmpeg::Init(const char *shortname, AudacityProject *project, const T
    {
       if ((err = ufile_fopen(&mEncFormatCtx->pb, mName, AVIO_FLAG_WRITE)) < 0)
       {
-         wxMessageBox(wxString::Format(wxT("FFmpeg : ERROR - Can't open output file \"%s\" to write. Error code is %d."), mName.c_str(), err),
+         wxMessageBox(wxString::Format(wxT("FFmpeg : ERROR - Can't open output file \"%s\" to write. Error code is %d."), mName, err),
                       _("FFmpeg Error"), wxOK|wxCENTER|wxICON_EXCLAMATION);
          return false;
       }
@@ -326,7 +326,7 @@ bool ExportFFmpeg::Init(const char *shortname, AudacityProject *project, const T
    // Write headers to the output file.
    if ((err = avformat_write_header(mEncFormatCtx, NULL)) < 0)
    {
-      wxMessageBox(wxString::Format(_("FFmpeg : ERROR - Can't write headers to output file \"%s\". Error code is %d."), mName.c_str(),err),
+      wxMessageBox(wxString::Format(_("FFmpeg : ERROR - Can't write headers to output file \"%s\". Error code is %d."), mName,err),
                    _("FFmpeg Error"), wxOK|wxCENTER|wxICON_EXCLAMATION);
       return false;
    }
@@ -402,7 +402,7 @@ bool ExportFFmpeg::InitCodecs(AudacityProject *project)
       mEncAudioCodecCtx->sample_rate = gPrefs->Read(wxT("/FileFormats/FFmpegSampleRate"),(long)0);
       if (mEncAudioCodecCtx->sample_rate != 0) mSampleRate = mEncAudioCodecCtx->sample_rate;
       mEncAudioCodecCtx->bit_rate = gPrefs->Read(wxT("/FileFormats/FFmpegBitRate"), (long)0);
-      strncpy((char *)&mEncAudioCodecCtx->codec_tag,gPrefs->Read(wxT("/FileFormats/FFmpegTag"),wxT("")).mb_str(wxConvUTF8),4);
+      strncpy((char *)&mEncAudioCodecCtx->codec_tag, gPrefs->Read(wxT("/FileFormats/FFmpegTag"),wxT("")).utf8_str(), 4);
       mEncAudioCodecCtx->global_quality = gPrefs->Read(wxT("/FileFormats/FFmpegQuality"),(long)-99999);
       mEncAudioCodecCtx->cutoff = gPrefs->Read(wxT("/FileFormats/FFmpegCutOff"),(long)0);
       mEncAudioCodecCtx->flags2 = 0;
@@ -898,13 +898,13 @@ bool ExportFFmpeg::AddTags(const Tags *tags)
    return true;
 }
 
-void ExportFFmpeg::SetMetadata(const Tags *tags, const char *name, const wxChar *tag)
+void ExportFFmpeg::SetMetadata(const Tags *tags, const char *name, const wxString &tag)
 {
    if (tags->HasTag(tag))
    {
       wxString value = tags->GetTag(tag);
 
-      av_dict_set(&mEncFormatCtx->metadata, name, mSupportsUTF8 ? value.ToUTF8() : value.mb_str(), 0);
+      av_dict_set(&mEncFormatCtx->metadata, name, mSupportsUTF8 ? value.utf8_str() : value.ToAscii(), 0);
    }
 }
 

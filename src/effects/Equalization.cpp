@@ -164,7 +164,7 @@ static const double kThirdOct[] =
 //
 //     Name          Type        Key                     Def      Min      Max      Scale
 Param( FilterLength, int,     XO("FilterLength"),        4001,    21,      8191,    0      );
-Param( CurveName,    wxChar*, XO("CurveName"),           wxT("unnamed"), wxT(""), wxT(""), wxT(""));
+Param( CurveName,    wxString, XO("CurveName"),           wxT("unnamed"), wxT(""), wxT(""), wxT(""));
 Param( InterpLin,    bool,    XO("InterpolateLin"),      false,   false,   true,    false  );
 Param( InterpMeth,   int,     XO("InterpolationMethod"), 0,       0,       0,       0      );
 Param( DrawMode,     bool,    wxT(""),                   true,    false,   true,    false  );
@@ -1412,7 +1412,7 @@ void EffectEqualization::LoadCurves(const wxString &fileName, bool append)
       {
          // LLL:  Is there really a need for an error message at all???
          //wxString errorMessage;
-         //errorMessage.Printf(_("EQCurves.xml and EQDefaultCurves.xml were not found on your system.\nPlease press 'help' to visit the download page.\n\nSave the curves at %s"), FileNames::DataDir().c_str());
+         //errorMessage.Printf(_("EQCurves.xml and EQDefaultCurves.xml were not found on your system.\nPlease press 'help' to visit the download page.\n\nSave the curves at %s"), FileNames::DataDir());
          //ShowErrorDialog(mUIParent, _("EQCurves.xml and EQDefaultCurves.xml missing"),
          //   errorMessage, wxT("http://wiki.audacityteam.org/wiki/EQCurvesDownload"), false);
 
@@ -1442,7 +1442,7 @@ void EffectEqualization::LoadCurves(const wxString &fileName, bool append)
    {
       wxString msg;
       /* i18n-hint: EQ stands for 'Equalization'.*/
-      msg.Printf(_("Error Loading EQ Curves from file:\n%s\nError message says:\n%s"), fn.GetFullPath().c_str(), reader.GetErrorStr().c_str());
+      msg.Printf(_("Error Loading EQ Curves from file:\n%s\nError message says:\n%s"), fn.GetFullPath(), reader.GetErrorStr());
       // Inform user of load failure
       wxMessageBox( msg,
          _("Error Loading EQ Curves"),
@@ -1640,7 +1640,7 @@ void EffectEqualization::SaveCurves(const wxString &fileName)
    {
       wxMessageBox(wxString::Format(
          _("Couldn't write to file \"%s\": %s"),
-         fn.GetFullPath().c_str(), exception.GetMessage().c_str()),
+         fn.GetFullPath(), exception.GetMessage()),
          _("Error Saving Equalization Curves"), wxICON_ERROR, mUIParent);
    }
 }
@@ -1884,7 +1884,7 @@ void EffectEqualization::Flatten()
 //
 // Process XML tags and handle the ones we recognize
 //
-bool EffectEqualization::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
+bool EffectEqualization::HandleXMLTag(const wxString &tag, const wxArrayString &attrs)
 {
    // May want to add a version strings...
    if( !wxStrcmp( tag, wxT("equalizationeffect") ) )
@@ -1896,16 +1896,16 @@ bool EffectEqualization::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    if( !wxStrcmp(tag, wxT("curve") ) )
    {
       // Process the attributes
-      while( *attrs )
+      for (size_t i = 0; i < attrs.GetCount() / 2; ++i)
       {
          // Cache attr/value and bump to next
-         const wxChar *attr = *attrs++;
-         const wxChar *value = *attrs++;
+         const wxString &attr = attrs[2*i];
+         const wxString &value = attrs[2*i+1];
 
          // Create a NEW curve and name it
          if( !wxStrcmp( attr, wxT("name") ) )
          {
-            const wxString strValue = value;
+            const wxString &strValue = value;
             if (!XMLValueChecker::IsGoodString(strValue))
                return false;
             // check for a duplicate name and add (n) if there is one
@@ -1918,7 +1918,7 @@ bool EffectEqualization::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
                for(size_t i=0;i<mCurves.GetCount();i++)
                {
                   if(n>0)
-                     strValueTemp.Printf(wxT("%s (%d)"),strValue.c_str(),n);
+                     strValueTemp.Printf(wxT("%s (%d)"),strValue,n);
                   if(mCurves[i].Name == strValueTemp)
                   {
                      exists = true;
@@ -1946,12 +1946,10 @@ bool EffectEqualization::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 
       // Process the attributes
       double dblValue;
-      while( *attrs )
+      for (size_t i = 0; i < attrs.GetCount() / 2; ++i)
       {   // Cache attr/value and bump to next
-         const wxChar *attr = *attrs++;
-         const wxChar *value = *attrs++;
-
-         const wxString strValue = value;
+         const wxString &attr = attrs[2*i];
+         const wxString &strValue = attrs[2*i+1];
 
          // Get the frequency
          if( !wxStrcmp( attr, wxT("f") ) )
@@ -1985,7 +1983,7 @@ bool EffectEqualization::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 //
 // Return handler for recognized tags
 //
-XMLTagHandler *EffectEqualization::HandleXMLChild(const wxChar *tag)
+XMLTagHandler *EffectEqualization::HandleXMLChild(const wxString &tag)
 {
    if( !wxStrcmp( tag, wxT("equalizationeffect") ) )
    {
@@ -3510,7 +3508,7 @@ void EditCurvesDialog::OnExport( wxCommandEvent & WXUNUSED(event))
       mEffect->SaveCurves(fileName);
       mEffect->mCurves = temp;
       wxString message;
-      message.Printf(_("%d curves exported to %s"), i, fileName.c_str());
+      message.Printf(_("%d curves exported to %s"), i, fileName);
       wxMessageBox(message, _("Curves exported"));
    }
    else

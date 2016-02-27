@@ -727,7 +727,7 @@ Alg_seq_ptr NoteTrack::MakeExportableSeq()
 bool NoteTrack::ExportMIDI(const wxString &f)
 {
    Alg_seq_ptr seq = MakeExportableSeq();
-   bool rslt = seq->smf_write(f.mb_str());
+   bool rslt = seq->smf_write(f.utf8_str());
    if (seq != mSeq) delete seq;
    return rslt;
 }
@@ -742,19 +742,16 @@ bool NoteTrack::ExportAllegro(const wxString &f)
    } else {
        mSeq->convert_to_beats();
    }
-   return mSeq->write(f.mb_str(), offset);
+   return mSeq->write(f.utf8_str(), offset);
 }
 
 
-bool NoteTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
+bool NoteTrack::HandleXMLTag(const wxString &tag, const wxArrayString &attrs)
 {
    if (!wxStrcmp(tag, wxT("notetrack"))) {
-      while (*attrs) {
-         const wxChar *attr = *attrs++;
-         const wxChar *value = *attrs++;
-         if (!value)
-            break;
-         const wxString strValue = value;
+      for (size_t i = 0; i < attrs.GetCount() / 2; ++i) {
+         const wxString &attr = attrs[2*i];
+         const wxString &strValue = attrs[2*i+1];
          long nValue;
          double dblValue;
          if (!wxStrcmp(attr, wxT("name")) && XMLValueChecker::IsGoodString(strValue))
@@ -789,7 +786,7 @@ bool NoteTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
                   XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
             SetBottomNote(nValue);
          else if (!wxStrcmp(attr, wxT("data"))) {
-             std::string s(strValue.mb_str(wxConvUTF8));
+             std::string s(strValue.utf8_str());
              std::istringstream data(s);
              mSeq = new Alg_seq(data, false);
          }
@@ -799,7 +796,7 @@ bool NoteTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    return false;
 }
 
-XMLTagHandler *NoteTrack::HandleXMLChild(const wxChar * WXUNUSED(tag))
+XMLTagHandler *NoteTrack::HandleXMLChild(const wxString &WXUNUSED(tag))
 {
    return NULL;
 }

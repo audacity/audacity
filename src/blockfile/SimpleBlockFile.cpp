@@ -485,7 +485,7 @@ void SimpleBlockFile::SaveXML(XMLWriter &xmlFile)
 // even if the result is flawed (e.g., refers to nonexistent file),
 // as testing will be done in DirManager::ProjectFSCK().
 /// static
-BlockFile *SimpleBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
+BlockFile *SimpleBlockFile::BuildFromXML(DirManager &dm, const wxArrayString &attrs)
 {
    wxFileName fileName;
    float min = 0.0f, max = 0.0f, rms = 0.0f;
@@ -493,14 +493,10 @@ BlockFile *SimpleBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
    double dblValue;
    long nValue;
 
-   while(*attrs)
+   for (size_t i = 0; i < attrs.GetCount() / 2; ++i)
    {
-      const wxChar *attr =  *attrs++;
-      const wxChar *value = *attrs++;
-      if (!value)
-         break;
-
-      const wxString strValue = value;
+      const wxString &attr = attrs[2*i];
+      const wxString &strValue = attrs[2*i+1];
       if (!wxStricmp(attr, wxT("filename")) &&
             // Can't use XMLValueChecker::IsGoodFileName here, but do part of its test.
             XMLValueChecker::IsGoodFileString(strValue) &&

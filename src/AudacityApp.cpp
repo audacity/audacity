@@ -238,12 +238,12 @@ DEFINE_EVENT_TYPE(EVT_LANGUAGE_CHANGE);
 
 #if 0
 #ifdef __WXGTK__
-static void wxOnAssert(const wxChar *fileName, int lineNumber, const wxChar *msg)
+static void wxOnAssert(const wxString &fileName, int lineNumber, const wxString &msg)
 {
-   if (msg)
-      printf("ASSERTION FAILED: %s\n%s: %d\n", (const char *)wxString(msg).mb_str(), (const char *)wxString(fileName).mb_str(), lineNumber);
+   if (!msg.empty())
+      wxPrintf("ASSERTION FAILED: %s\n%s: %d\n", msg, fileName, lineNumber);
    else
-      printf("ASSERTION FAILED!\n%s: %d\n", (const char *)wxString(fileName).mb_str(), lineNumber);
+      wxPrintf("ASSERTION FAILED!\n%s: %d\n", fileName, lineNumber);
 
    // Force core dump
    int *i = 0;
@@ -814,7 +814,7 @@ bool AudacityApp::MRUOpen(const wxString &fullPathStr) {
       else {
          // File doesn't exist - remove file from history
          wxMessageBox(wxString::Format(_("%s could not be found.\n\nIt has been removed from the list of recent files."),
-                      fullPathStr.c_str()));
+                      fullPathStr));
          return(false);
       }
    }
@@ -917,7 +917,7 @@ The first detected missing file is:\n\
 %s\n\
 There may be additional missing files.\n\
 Choose File > Check Dependencies to view a list of \
-locations of the missing files."), missingFileName.c_str());
+locations of the missing files."), missingFileName);
 
          // if an old dialog exists, raise it if it is
          if (offendingProject->GetMissingAliasFileDialog()) {
@@ -1099,7 +1099,7 @@ void AudacityApp::GenerateCrashReport(wxDebugReport::Context ctx)
       dlg.ShowModal();
 
       wxLogMessage(wxT("Report generated to: %s"),
-                     rpt.GetCompressedFileName().c_str());
+                     rpt.GetCompressedFileName());
 
       rpt.Reset();
    }
@@ -1196,7 +1196,7 @@ bool AudacityApp::OnInit()
    wxString home = wxGetHomeDir();
 
    /* On Unix systems, the default temp dir is in /var/tmp. */
-   defaultTempDir.Printf(wxT("/var/tmp/audacity-%s"), wxGetUserId().c_str());
+   defaultTempDir.Printf(wxT("/var/tmp/audacity-%s"), wxGetUserId());
 
    wxString pathVar = wxGetenv(wxT("AUDACITY_PATH"));
    if (pathVar != wxT(""))
@@ -1205,7 +1205,7 @@ bool AudacityApp::OnInit()
 
 #ifdef AUDACITY_NAME
    AddUniquePathToPathList(wxString::Format(wxT("%s/.%s-files"),
-      home.c_str(), wxT(AUDACITY_NAME)),
+      home, wxT(AUDACITY_NAME)),
       audacityPathList);
    AddUniquePathToPathList(wxString::Format(wxT("%s/share/%s"),
       wxT(INSTALL_PREFIX), wxT(AUDACITY_NAME)),
@@ -1215,7 +1215,7 @@ bool AudacityApp::OnInit()
       audacityPathList);
 #else //AUDACITY_NAME
    AddUniquePathToPathList(wxString::Format(wxT("%s/.audacity-files"),
-      home.c_str()),
+      home),
       audacityPathList);
    AddUniquePathToPathList(wxString::Format(wxT("%s/share/audacity"),
       wxT(INSTALL_PREFIX)),
@@ -1249,7 +1249,7 @@ bool AudacityApp::OnInit()
    // See bug #1271 for explanation of location
    tmpDirLoc = FileNames::MkDir(wxStandardPaths::Get().GetUserLocalDataDir());
    defaultTempDir.Printf(wxT("%s\\SessionData"),
-      tmpDirLoc.c_str());
+      tmpDirLoc);
 #endif //__WXWSW__
 
 #ifdef __WXMAC__
@@ -1266,8 +1266,8 @@ bool AudacityApp::OnInit()
    AddUniquePathToPathList(progPath + wxT("/../Resources"), audacityPathList);
 
    defaultTempDir.Printf(wxT("%s/audacity-%s"),
-      tmpDirLoc.c_str(),
-      wxGetUserId().c_str());
+      tmpDirLoc,
+      wxGetUserId());
 #endif //__WXMAC__
 
    // Define languanges for which we have translations, but that are not yet
@@ -1582,7 +1582,7 @@ bool AudacityApp::InitTempDir()
    // Check temp directory ownership on *nix systems only
    #ifdef __UNIX__
    struct stat tempStatBuf;
-   if ( lstat(temp.mb_str(), &tempStatBuf) != 0 ) {
+   if ( lstat(temp.utf8_str(), &tempStatBuf) != 0 ) {
       temp.clear();
    }
    else {
@@ -1634,7 +1634,7 @@ bool AudacityApp::InitTempDir()
 
 bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
 {
-   wxString name = wxString::Format(wxT("audacity-lock-%s"), wxGetUserId().c_str());
+   wxString name = wxString::Format(wxT("audacity-lock-%s"), wxGetUserId());
    mChecker = new wxSingleInstanceChecker();
 
 #if defined(__UNIX__)
@@ -1733,7 +1733,8 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
             {
                // Send the filename
                wxString param = parser->GetParam(i);
-               sock->WriteMsg((const wxChar *) param.c_str(), (param.Len() + 1) * sizeof(wxChar));
+               wxScopedCharBuffer buf = param.utf8_str();
+               sock->WriteMsg(buf, buf.length());
             }
 
             sock->Destroy();
@@ -1813,13 +1814,13 @@ void AudacityApp::OnSocketEvent(wxSocketEvent & evt)
    }
 
    // Read the length of the filename and bail if we have a short read
-   wxChar name[PATH_MAX];
-   sock->ReadMsg(&name, sizeof(name));
+   char name[PATH_MAX];
+   sock->ReadMsg(name, sizeof(name));
    if (!sock->Error())
    {
       // Add the filename to the queue.  It will be opened by
       // the OnTimer() event when it is safe to do so.
-      ofqueue.Add(name);
+      ofqueue.Add(wxString(name, wxConvUTF8, sock->LastReadCount()));
    }
 }
 

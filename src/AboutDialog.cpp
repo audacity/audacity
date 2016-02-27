@@ -892,7 +892,7 @@ wxString AboutDialog::GetCreditsByRole(AboutDialog::Role role)
  *
  * Used when creating the build information tab to show if each optional
  * library is enabled or not, and what it does */
-void AboutDialog::AddBuildinfoRow( wxString* htmlstring, const wxChar * libname, const wxChar * libdesc, const wxString &status)
+void AboutDialog::AddBuildinfoRow( wxString* htmlstring, const wxString &libname, const wxString &libdesc, const wxString &status)
 {
    *htmlstring += wxT("<tr><td>");
    *htmlstring += libname;
@@ -907,7 +907,7 @@ void AboutDialog::AddBuildinfoRow( wxString* htmlstring, const wxChar * libname,
  *
  * Used when creating the build information tab to show build dates and
  * file paths */
-void AboutDialog::AddBuildinfoRow( wxString* htmlstring, const wxChar * libname, const wxChar * libdesc)
+void AboutDialog::AddBuildinfoRow( wxString* htmlstring, const wxString &libname, const wxString &libdesc)
 {
    *htmlstring += wxT("<tr><td>");
    *htmlstring += libname;

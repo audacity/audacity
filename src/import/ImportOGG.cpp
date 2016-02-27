@@ -45,7 +45,7 @@
 
 #define DESC _("Ogg Vorbis files")
 
-static const wxChar *exts[] =
+static const wxString exts[] =
 {
    wxT("ogg")
 };
@@ -323,7 +323,7 @@ int OggImportFileHandle::Import(TrackFactory *trackFactory, Track ***outTracks,
       if (bytesRead == OV_HOLE) {
          wxFileName f(mFilename);
          wxLogError(wxT("Ogg Vorbis importer: file %s is malformed, ov_read() reported a hole"),
-                    f.GetFullName().c_str());
+                    f.GetFullName());
          /* http://lists.xiph.org/pipermail/vorbis-dev/2001-February/003223.html
           * is the justification for doing this - best effort for malformed file,
           * hence the message.
