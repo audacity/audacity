@@ -189,6 +189,16 @@ const int sbarHjump = 30;       //STM: This is how far the thumb jumps when the 
 #include "AllThemeResources.h"
 #endif
 
+// Post Timer Recording Actions
+enum {
+	POST_TIMER_RECORD_CANCEL_WAIT = -2,
+	POST_TIMER__RECORD_CANCEL,
+	POST_TIMER__RECORD_NOTHING,
+	POST_TIMER__RECORD_CLOSE,
+	POST_TIMER__RECORD_RESTART,
+	POST_TIMER__RECORD_SHUTDOWN
+};
+
 ////////////////////////////////////////////////////////////
 /// Custom events
 ////////////////////////////////////////////////////////////

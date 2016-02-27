@@ -57,13 +57,15 @@ enum {
 	CONTROL_GROUP_EXPORT
 };
 
+// Post Timer Recording Actions
+// Ensure this matches the enum in Menus.cpp
 enum {
-	POST_RECORD_CANCEL_WAIT = -2,
-	POST_RECORD_CANCEL,
-	POST_RECORD_NOTHING,
-	POST_RECORD_CLOSE,
-	POST_RECORD_RESTART,
-	POST_RECORD_SHUTDOWN
+	POST_TIMER_RECORD_CANCEL_WAIT = -2,
+	POST_TIMER_RECORD_CANCEL,
+	POST_TIMER_RECORD_NOTHING,
+	POST_TIMER_RECORD_CLOSE,
+	POST_TIMER_RECORD_RESTART,
+	POST_TIMER_RECORD_SHUTDOWN
 };
 
 const int kTimerInterval = 50; // ms
@@ -350,7 +352,7 @@ void TimerRecordDialog::EnableDisableAutoControls(bool bEnable, int iControlGoup
 		m_pTimerAfterCompleteChoiceCtrl->Enable();
 	}
 	else {
-		m_pTimerAfterCompleteChoiceCtrl->SetSelection(POST_RECORD_NOTHING);
+		m_pTimerAfterCompleteChoiceCtrl->SetSelection(POST_TIMER_RECORD_NOTHING);
 		m_pTimerAfterCompleteChoiceCtrl->Disable();
 	}
 }
@@ -374,7 +376,7 @@ int TimerRecordDialog::RunWaitDialog()
    if (updateResult != eProgressSuccess)
    {
       // Don't proceed, but don't treat it as canceled recording. User just canceled waiting.
-      return -2;
+	   return POST_TIMER_RECORD_CANCEL_WAIT;
    }
    else
    {
@@ -414,7 +416,7 @@ int TimerRecordDialog::RunWaitDialog()
 
    // Let the caller handle cancellation or failure from recording progress.
    if (updateResult == eProgressCancelled || updateResult == eProgressFailed)
-      return -1;
+      return POST_TIMER_RECORD_CANCEL;
 
    return ExecutePostRecordActions();
 }
@@ -452,10 +454,10 @@ int TimerRecordDialog::ExecutePostRecordActions() {
 	// Check if we need to override the post recording action
 	bErrorOverride = ((m_bAutoSaveEnabled && !bSaveOK) || (m_bAutoExportEnabled && !bExportOK));
 	if (bErrorOverride) {
-		iPostRecordAction = POST_RECORD_NOTHING;
+		iPostRecordAction = POST_TIMER_RECORD_NOTHING;
 	}
 
-	if (iPostRecordAction == POST_RECORD_NOTHING) {
+	if (iPostRecordAction == POST_TIMER_RECORD_NOTHING) {
 		// If there is no post-record action then we can show a message indicating what has been done
 
 		wxString sMessage = _("Timer Recording Completed.");
@@ -478,6 +480,12 @@ int TimerRecordDialog::ExecutePostRecordActions() {
 		}
 
 		if (bErrorOverride) {
+
+			if (iOverriddenAction != iPostRecordAction) {
+				// Inform the user that we have overridden the selected action
+				sMessage.Printf("%s\n\After recording action '%s' has been canceled due to the error noted above.", sMessage, m_pTimerAfterCompleteChoiceCtrl->GetString(iOverriddenAction));
+			}
+
 			// Show Error Message Box
 			wxMessageBox(sMessage, _("Error"), wxICON_EXCLAMATION | wxOK);
 			return false;
@@ -487,14 +495,9 @@ int TimerRecordDialog::ExecutePostRecordActions() {
 			return true;
 		}
 	}
-	else {
-		// Carry out actions as per option selected
-		switch (iPostRecordAction) {
-		case POST_RECORD_CLOSE:
-			QuitAudacity(true);
-			break;
-		}
-	}
+
+	// Return the action as required
+	return iPostRecordAction;
 }
 
 wxString TimerRecordDialog::GetDisplayDate( wxDateTime & dt )
@@ -665,8 +668,10 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
 			{
 				m_sTimerAfterCompleteOptionsArray.Add(wxT("Do Nothing"));
 				m_sTimerAfterCompleteOptionsArray.Add(wxT("Close Audacity"));
+#ifdef __WINDOWS__
 				m_sTimerAfterCompleteOptionsArray.Add(wxT("Restart System"));
 				m_sTimerAfterCompleteOptionsArray.Add(wxT("Shutdown System"));
+#endif
 				m_sTimerAfterCompleteOption = wxT("Do Nothing");
 
 				m_pTimerAfterCompleteChoiceCtrl = S.AddChoice(_("After Recording Completed:"), m_sTimerAfterCompleteOption, &m_sTimerAfterCompleteOptionsArray);
