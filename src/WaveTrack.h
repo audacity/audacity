@@ -436,19 +436,19 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
    // Handle restriction of range of values of the enum from future versions
    static WaveTrackDisplay ValidateWaveTrackDisplay(WaveTrackDisplay display);
 
-   int GetLastScaleType() { return mLastScaleType; }
-   void SetLastScaleType();
+   int GetLastScaleType() const { return mLastScaleType; }
+   void SetLastScaleType() const;
 
-   int GetLastdBRange() { return mLastdBRange; }
-   void SetLastdBRange();
+   int GetLastdBRange() const { return mLastdBRange; }
+   void SetLastdBRange() const;
 
    WaveTrackDisplay GetDisplay() const { return mDisplay; }
    void SetDisplay(WaveTrackDisplay display) { mDisplay = display; }
 
    void GetDisplayBounds(float *min, float *max) const;
-   void SetDisplayBounds(float min, float max);
+   void SetDisplayBounds(float min, float max) const;
    void GetSpectrumBounds(float *min, float *max) const;
-   void SetSpectrumBounds(float min, float max);
+   void SetSpectrumBounds(float min, float max) const;
 
 
  protected:
@@ -468,14 +468,14 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
    // Data that should be part of GUIWaveTrack
    // and will be taken out of the WaveTrack class:
    //
-   float         mDisplayMin;
-   float         mDisplayMax;
-   float         mSpectrumMin;
-   float         mSpectrumMax;
+   mutable float         mDisplayMin;
+   mutable float         mDisplayMax;
+   mutable float         mSpectrumMin;
+   mutable float         mSpectrumMax;
 
    WaveTrackDisplay mDisplay;
-   int           mLastScaleType; // last scale type choice
-   int           mLastdBRange;
+   mutable int   mLastScaleType; // last scale type choice
+   mutable int           mLastdBRange;
    mutable std::vector <Location> mDisplayLocationsCache;
 
    //

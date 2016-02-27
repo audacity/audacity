@@ -63,9 +63,9 @@ class AUDACITY_DLL_API TrackArtist {
                   bool drawEnvelope, bool bigPoints, bool drawSliders,
                   bool hasSolo);
 
-   void DrawVRuler(Track *t, wxDC *dc, wxRect & rect);
+   void DrawVRuler(const Track *t, wxDC *dc, wxRect & rect);
 
-   void UpdateVRuler(Track *t, wxRect & rect);
+   void UpdateVRuler(const Track *t, wxRect & rect);
 
    void SetInset(int left, int top, int right, int bottom);
 

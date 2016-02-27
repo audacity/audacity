@@ -283,12 +283,12 @@ WaveTrack::ValidateWaveTrackDisplay(WaveTrackDisplay display)
    }
 }
 
-void WaveTrack::SetLastScaleType()
+void WaveTrack::SetLastScaleType() const
 {
    mLastScaleType = GetWaveformSettings().scaleType;
 }
 
-void WaveTrack::SetLastdBRange()
+void WaveTrack::SetLastdBRange() const
 {
    mLastdBRange = GetWaveformSettings().dBRange;
 }
@@ -299,7 +299,7 @@ void WaveTrack::GetDisplayBounds(float *min, float *max) const
    *max = mDisplayMax;
 }
 
-void WaveTrack::SetDisplayBounds(float min, float max)
+void WaveTrack::SetDisplayBounds(float min, float max) const
 {
    mDisplayMin = min;
    mDisplayMax = max;
@@ -349,7 +349,7 @@ void WaveTrack::GetSpectrumBounds(float *min, float *max) const
    }
 }
 
-void WaveTrack::SetSpectrumBounds(float min, float max)
+void WaveTrack::SetSpectrumBounds(float min, float max) const
 {
    mSpectrumMin = min;
    mSpectrumMax = max;

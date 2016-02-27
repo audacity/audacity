@@ -506,7 +506,7 @@ void TrackArtist::DrawTrack(const Track * t,
    }
 }
 
-void TrackArtist::DrawVRuler(Track *t, wxDC * dc, wxRect & rect)
+void TrackArtist::DrawVRuler(const Track *t, wxDC * dc, wxRect & rect)
 {
    int kind = t->GetKind();
 
@@ -584,7 +584,7 @@ void TrackArtist::DrawVRuler(Track *t, wxDC * dc, wxRect & rect)
       rect.height -= 1;
 
       //int bottom = GetBottom((NoteTrack *) t, rect);
-      NoteTrack *track = (NoteTrack *) t;
+      const NoteTrack *track = (NoteTrack *) t;
       track->PrepareIPitchToY(rect);
 
       wxPen hilitePen;
@@ -666,7 +666,7 @@ void TrackArtist::DrawVRuler(Track *t, wxDC * dc, wxRect & rect)
 
 }
 
-void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
+void TrackArtist::UpdateVRuler(const Track *t, wxRect & rect)
 {
    // Label tracks do not have a vruler
    if (t->GetKind() == Track::Label) {
@@ -675,7 +675,7 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
 
    // Time tracks
    if (t->GetKind() == Track::Time) {
-      TimeTrack *tt = (TimeTrack *)t;
+      const TimeTrack *tt = (TimeTrack *)t;
       float min, max;
       min = tt->GetRangeLower() * 100.0;
       max = tt->GetRangeUpper() * 100.0;
@@ -692,9 +692,9 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & rect)
    // All waves have a ruler in the info panel
    // The ruler needs a bevelled surround.
    if (t->GetKind() == Track::Wave) {
-      WaveTrack *wt = static_cast<WaveTrack*>(t);
+      const WaveTrack *wt = static_cast<const WaveTrack*>(t);
       const float dBRange =
-         static_cast<WaveTrack*>(wt)->GetWaveformSettings().dBRange;
+         wt->GetWaveformSettings().dBRange;
 
       const int display = wt->GetDisplay();
 

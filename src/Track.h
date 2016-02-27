@@ -72,7 +72,7 @@ class AUDACITY_DLL_API Track /* not final */ : public XMLTagHandler
    bool           mMinimized;
 
  public:
-   wxSize vrulerSize;
+   mutable wxSize vrulerSize;
 
    // This just returns a constant and can be overriden by subclasses
    // to specify a different height for the case that the track is minimized.
