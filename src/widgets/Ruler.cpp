@@ -970,7 +970,7 @@ void Ruler::Update()
   Update(NULL);
 }
 
-void Ruler::Update(TimeTrack* timetrack)// Envelope *speedEnv, long minSpeed, long maxSpeed )
+void Ruler::Update(const TimeTrack* timetrack)// Envelope *speedEnv, long minSpeed, long maxSpeed )
 {
    const ZoomInfo *zoomInfo = NULL;
    if (!mLog && mOrientation == wxHORIZONTAL)
@@ -1295,7 +1295,7 @@ void Ruler::Draw(wxDC& dc)
    Draw( dc, NULL);
 }
 
-void Ruler::Draw(wxDC& dc, TimeTrack* timetrack)
+void Ruler::Draw(wxDC& dc, const TimeTrack* timetrack)
 {
    mDC = &dc;
    if( mLength <=0 )

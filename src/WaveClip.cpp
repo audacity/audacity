@@ -502,7 +502,7 @@ fillWhere(std::vector<sampleCount> &where, int len, double bias, double correcti
 //
 
 bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
-                               double pixelsPerSecond, bool &isLoadingOD)
+                               double pixelsPerSecond, bool &isLoadingOD) const
 {
    const bool allocated = (display.where != 0);
 
@@ -1072,7 +1072,7 @@ void SpecCache::Populate
 bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
                               const float *& spectrogram, const sampleCount *& where,
                               int numPixels,
-                              double t0, double pixelsPerSecond)
+                              double t0, double pixelsPerSecond) const
 {
    const WaveTrack *const track = waveTrackCache.GetTrack();
    const SpectrogramSettings &settings = track->GetSpectrogramSettings();
@@ -1235,7 +1235,7 @@ void WaveClip::ClearDisplayRect()
    mDisplayRect.width = mDisplayRect.height = -1;
 }
 
-void WaveClip::SetDisplayRect(const wxRect& r)
+void WaveClip::SetDisplayRect(const wxRect& r) const
 {
    mDisplayRect = r;
 }

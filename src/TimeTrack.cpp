@@ -124,17 +124,17 @@ void TimeTrack::SetInterpolateLog(bool interpolateLog) {
 }
 
 //Compute the (average) warp factor between two non-warped time points
-double TimeTrack::ComputeWarpFactor(double t0, double t1)
+double TimeTrack::ComputeWarpFactor(double t0, double t1) const
 {
    return GetEnvelope()->AverageOfInverse(t0, t1);
 }
 
-double TimeTrack::ComputeWarpedLength(double t0, double t1)
+double TimeTrack::ComputeWarpedLength(double t0, double t1) const
 {
    return GetEnvelope()->IntegralOfInverse(t0, t1);
 }
 
-double TimeTrack::SolveWarpedLength(double t0, double length)
+double TimeTrack::SolveWarpedLength(double t0, double length) const
 {
    return GetEnvelope()->SolveIntegralOfInverse(t0, length);
 }
@@ -229,7 +229,7 @@ void TimeTrack::WriteXML(XMLWriter &xmlFile)
    xmlFile.EndTag(wxT("timetrack"));
 }
 
-void TimeTrack::Draw(wxDC & dc, const wxRect & r, const ZoomInfo &zoomInfo)
+void TimeTrack::Draw(wxDC & dc, const wxRect & r, const ZoomInfo &zoomInfo) const
 {
    double min = zoomInfo.PositionToTime(0);
    double max = zoomInfo.PositionToTime(r.width);

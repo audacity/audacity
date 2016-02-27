@@ -56,7 +56,7 @@ public:
    void DrawText( wxDC & dc, const wxRect & r);
    void DrawTextBox( wxDC & dc, const wxRect & r);
    void DrawHighlight( wxDC & dc, int xPos1, int xPos2, int charHeight);
-   void getXPos( wxDC & dc, int * xPos1, int cursorPos);
+   void getXPos( wxDC & dc, int * xPos1, int cursorPos) const;
    const SelectedRegion &getSelectedRegion() const { return selectedRegion; }
    double getDuration() const { return selectedRegion.duration(); }
    double getT0() const { return selectedRegion.t0(); }
@@ -128,7 +128,7 @@ class AUDACITY_DLL_API LabelTrack final : public Track
 
    void Draw(wxDC & dc, const wxRect & r,
              const SelectedRegion &selectedRegion,
-             const ZoomInfo &zoomInfo);
+             const ZoomInfo &zoomInfo) const;
 
    int getSelectedIndex() const { return mSelIndex; }
    bool IsAdjustingLabel() const { return mIsAdjustingLabel; }
@@ -258,29 +258,29 @@ class AUDACITY_DLL_API LabelTrack final : public Track
    static bool mbGlyphsReady;
    static wxBitmap mBoundaryGlyphs[NUM_GLYPH_CONFIGS * NUM_GLYPH_HIGHLIGHTS];
 
-   int xUsed[MAX_NUM_ROWS];
+   mutable int xUsed[MAX_NUM_ROWS];
 
    static int mFontHeight;
-   int mXPos1;                         /// left X pos of highlighted area
-   int mXPos2;                         /// right X pos of highlighted area
-   int mCurrentCursorPos;              /// current cursor position
-   int mInitialCursorPos;              /// initial cursor position
-   double mMouseXPos;                  /// mouse X pos
+   mutable int mXPos1;                         /// left X pos of highlighted area
+   mutable int mXPos2;                         /// right X pos of highlighted area
+   mutable int mCurrentCursorPos;              /// current cursor position
+   mutable int mInitialCursorPos;              /// initial cursor position
+   mutable double mMouseXPos;                  /// mouse X pos
    int mDragXPos;                      /// end X pos of dragging
    bool mInBox;                        /// flag to tell if the mouse is in text box
-   bool mResetCursorPos;               /// flag to reset cursor position(used in the dragging the glygh)
+   mutable bool mResetCursorPos;               /// flag to reset cursor position(used in the dragging the glygh)
    bool mRightDragging;                /// flag to tell if it's a valid dragging
-   bool mDrawCursor;                   /// flag to tell if drawing the cursor or not
+   mutable bool mDrawCursor;                   /// flag to tell if drawing the cursor or not
    int mRestoreFocus;              /// Restore focus to this track when done editing
 
    // Set in copied label tracks
    double mClipLen;
 
-   void ComputeLayout(const wxRect & r, const ZoomInfo &zoomInfo);
-   void ComputeTextPosition(const wxRect & r, int index);
-   void SetCurrentCursorPosition(wxDC & dc, int xPos);
+   void ComputeLayout(const wxRect & r, const ZoomInfo &zoomInfo) const;
+   void ComputeTextPosition(const wxRect & r, int index) const;
+   void SetCurrentCursorPosition(wxDC & dc, int xPos) const;
 
-   void calculateFontHeight(wxDC & dc);
+   void calculateFontHeight(wxDC & dc) const;
    void RemoveSelectedText();
 
    bool mIsAdjustingLabel;

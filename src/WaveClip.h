@@ -265,6 +265,7 @@ public:
                    sampleCount start, sampleCount len);
 
    Envelope* GetEnvelope() { return mEnvelope; }
+   const Envelope* GetEnvelope() const { return mEnvelope; }
    BlockArray* GetSequenceBlockArray();
 
    // Get low-level access to the sequence. Whenever possible, don't use this,
@@ -283,18 +284,18 @@ public:
    /** Getting high-level data from the for screen display and clipping
     * calculations and Contrast */
    bool GetWaveDisplay(WaveDisplay &display,
-                       double t0, double pixelsPerSecond, bool &isLoadingOD);
+                       double t0, double pixelsPerSecond, bool &isLoadingOD) const;
    bool GetSpectrogram(WaveTrackCache &cache,
                        const float *& spectrogram, const sampleCount *& where,
                        int numPixels,
-                       double t0, double pixelsPerSecond);
+                       double t0, double pixelsPerSecond) const;
    bool GetMinMax(float *min, float *max, double t0, double t1);
    bool GetRMS(float *rms, double t0, double t1);
 
    // Set/clear/get rectangle that this WaveClip fills on screen. This is
    // called by TrackArtist while actually drawing the tracks and clips.
    void ClearDisplayRect();
-   void SetDisplayRect(const wxRect& r);
+   void SetDisplayRect(const wxRect& r) const;
    void GetDisplayRect(wxRect* r);
 
    /** Whenever you do an operation to the sequence that will change the number
@@ -373,14 +374,14 @@ public:
    void WriteXML(XMLWriter &xmlFile) /* not override */;
 
    // Cache of values to colour pixels of Spectrogram - used by TrackArtist
-   SpecPxCache    *mSpecPxCache;
+   mutable SpecPxCache    *mSpecPxCache;
 
    // AWD, Oct 2009: for pasting whitespace at the end of selection
    bool GetIsPlaceholder() const { return mIsPlaceholder; }
    void SetIsPlaceholder(bool val) { mIsPlaceholder = val; }
 
 protected:
-   wxRect mDisplayRect;
+   mutable wxRect mDisplayRect;
 
    double mOffset;
    int mRate;
@@ -389,9 +390,9 @@ protected:
    Sequence *mSequence;
    Envelope *mEnvelope;
 
-   WaveCache    *mWaveCache;
-   ODLock       mWaveCacheMutex;
-   SpecCache    *mSpecCache;
+   mutable WaveCache    *mWaveCache;
+   mutable ODLock       mWaveCacheMutex;
+   mutable SpecCache    *mSpecCache;
    SampleBuffer  mAppendBuffer;
    sampleCount   mAppendBufferLen;
 

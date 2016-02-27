@@ -116,7 +116,7 @@ class AUDACITY_DLL_API NoteTrack final : public Track {
    // call this once before a series of calls to IPitchToY(). It
    // sets mBottom to offset of octave 0 so that mBottomNote
    // is located at r.y + r.height - (GetNoteMargin() + 1 + mPitchHeight)
-   void PrepareIPitchToY(const wxRect &r) {
+   void PrepareIPitchToY(const wxRect &r) const {
        mBottom = r.y + r.height - GetNoteMargin() - 1 - mPitchHeight +
           (mBottomNote / 12) * GetOctaveHeight() +
           GetNotePos(mBottomNote % 12);
@@ -197,7 +197,7 @@ class AUDACITY_DLL_API NoteTrack final : public Track {
    // mSeq variable. (TrackArtist should check to make sure this
    // flip-flop from mSeq to mSerializationBuffer happened an
    // even number of times, otherwise mSeq will be NULL).
-   char *mSerializationBuffer; // NULL means no buffer
+   mutable char *mSerializationBuffer; // NULL means no buffer
    long mSerializationLength;
 
    DirManager *mDirManager;
@@ -207,7 +207,7 @@ class AUDACITY_DLL_API NoteTrack final : public Track {
 #endif
 
    // mBottom is the Y offset of pitch 0 (normally off screen)
-   int mBottom;
+   mutable int mBottom;
    int mBottomNote;
    int mStartBottomNote;
    int mPitchHeight;

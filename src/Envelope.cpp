@@ -186,7 +186,7 @@ static void DrawPoint(wxDC & dc, const wxRect & r, int x, int y, bool top)
 /// TODO: This should probably move to track artist.
 void Envelope::DrawPoints(wxDC & dc, const wxRect & r, const ZoomInfo &zoomInfo,
                     bool dB, double dBRange,
-                    float zoomMin, float zoomMax)
+                    float zoomMin, float zoomMax) const
 {
    dc.SetPen(AColor::envelopePen);
    dc.SetBrush(*wxWHITE_BRUSH);
@@ -1151,7 +1151,7 @@ void Envelope::GetValues
       buffer[xx] = GetValue(zoomInfo.PositionToTime(xx, -leftOffset));
 }
 
-int Envelope::NumberOfPointsAfter(double t)
+int Envelope::NumberOfPointsAfter(double t) const
 {
    if( t >= mEnv[mEnv.size()-1].GetT() )
       return 0;
@@ -1169,7 +1169,7 @@ int Envelope::NumberOfPointsAfter(double t)
    }
 }
 
-double Envelope::NextPointAfter(double t)
+double Envelope::NextPointAfter(double t) const
 {
    if( mEnv[mEnv.size()-1].GetT() < t )
       return t;
@@ -1186,7 +1186,7 @@ double Envelope::NextPointAfter(double t)
    }
 }
 
-double Envelope::Average( double t0, double t1 )
+double Envelope::Average( double t0, double t1 ) const
 {
   if( t0 == t1 )
     return GetValue( t0 );
@@ -1194,7 +1194,7 @@ double Envelope::Average( double t0, double t1 )
     return Integral( t0, t1 ) / (t1 - t0);
 }
 
-double Envelope::AverageOfInverse( double t0, double t1 )
+double Envelope::AverageOfInverse( double t0, double t1 ) const
 {
   if( t0 == t1 )
     return 1.0 / GetValue( t0 );
@@ -1285,7 +1285,7 @@ static double SolveIntegrateInverseInterpolated(double y1, double y2, double tim
 
 // We should be able to write a very efficient memoizer for this
 // but make sure it gets reset when the envelope is changed.
-double Envelope::Integral( double t0, double t1 )
+double Envelope::Integral( double t0, double t1 ) const
 {
    if(t0 == t1)
       return 0.0;
@@ -1345,7 +1345,7 @@ double Envelope::Integral( double t0, double t1 )
    }
 }
 
-double Envelope::IntegralOfInverse( double t0, double t1 )
+double Envelope::IntegralOfInverse( double t0, double t1 ) const
 {
    if(t0 == t1)
       return 0.0;
@@ -1405,7 +1405,7 @@ double Envelope::IntegralOfInverse( double t0, double t1 )
    }
 }
 
-double Envelope::SolveIntegralOfInverse( double t0, double area )
+double Envelope::SolveIntegralOfInverse( double t0, double area ) const
 {
    if(area == 0.0)
       return t0;
@@ -1503,7 +1503,7 @@ double Envelope::SolveIntegralOfInverse( double t0, double area )
    }
 }
 
-void Envelope::print()
+void Envelope::print() const
 {
    for( unsigned int i = 0; i < mEnv.size(); i++ )
       printf( "(%.2f, %.2f)\n", mEnv[i].GetT(), mEnv[i].GetVal() );

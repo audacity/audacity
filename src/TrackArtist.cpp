@@ -1306,7 +1306,7 @@ void TrackArtist::DrawMinMaxRMS(wxDC &dc, const wxRect & rect, const double env[
 void TrackArtist::DrawIndividualSamples(wxDC &dc, int leftOffset, const wxRect &rect,
                                         float zoomMin, float zoomMax,
                                         bool dB, float dBRange,
-                                        WaveClip *clip,
+                                        const WaveClip *clip,
                                         const ZoomInfo &zoomInfo,
                                         bool bigPoints, bool showPoints, bool muted)
 {
@@ -1457,7 +1457,7 @@ void TrackArtist::DrawEnvLine(wxDC &dc, const wxRect &rect, int x0, int y0, int 
    }
 }
 
-void TrackArtist::DrawWaveform(WaveTrack *track,
+void TrackArtist::DrawWaveform(const WaveTrack *track,
                                wxDC & dc,
                                const wxRect & rect,
                                const SelectedRegion &selectedRegion,
@@ -1472,7 +1472,8 @@ void TrackArtist::DrawWaveform(WaveTrack *track,
    DrawBackgroundWithSelection(&dc, rect, track, blankSelectedBrush, blankBrush,
          selectedRegion, zoomInfo);
 
-   for (WaveClipList::compatibility_iterator it = track->GetClipIterator(); it; it = it->GetNext())
+   for (WaveClipList::compatibility_iterator it =
+      const_cast<WaveTrack*>(track)->GetClipIterator(); it; it = it->GetNext())
       DrawClipWaveform(track, it->GetData(), dc, rect, selectedRegion, zoomInfo,
                        drawEnvelope, bigPoints,
                        dB, muted);
@@ -1718,8 +1719,8 @@ void FindWavePortions
 }
 }
 
-void TrackArtist::DrawClipWaveform(WaveTrack *track,
-                                   WaveClip *clip,
+void TrackArtist::DrawClipWaveform(const WaveTrack *track,
+                                   const WaveClip *clip,
                                    wxDC & dc,
                                    const wxRect & rect,
                                    const SelectedRegion &selectedRegion,
@@ -2001,7 +2002,7 @@ void TrackArtist::DrawTimeSlider(wxDC & dc,
 }
 
 
-void TrackArtist::DrawSpectrum(WaveTrack *track,
+void TrackArtist::DrawSpectrum(const WaveTrack *track,
                                wxDC & dc,
                                const wxRect & rect,
                                const SelectedRegion &selectedRegion,
@@ -2011,7 +2012,8 @@ void TrackArtist::DrawSpectrum(WaveTrack *track,
          selectedRegion, zoomInfo);
 
    WaveTrackCache cache(track);
-   for (WaveClipList::compatibility_iterator it = track->GetClipIterator(); it; it = it->GetNext()) {
+   for (WaveClipList::compatibility_iterator it =
+      const_cast<WaveTrack*>(track)->GetClipIterator(); it; it = it->GetNext()) {
       DrawClipSpectrum(cache, it->GetData(), dc, rect, selectedRegion, zoomInfo);
    }
 }
@@ -2099,7 +2101,7 @@ AColor::ColorGradientChoice ChooseColorSet( float bin0, float bin1, float selBin
 
 
 void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
-                                   WaveClip *clip,
+                                   const WaveClip *clip,
                                    wxDC & dc,
                                    const wxRect & rect,
                                    const SelectedRegion &selectedRegion,
@@ -2669,7 +2671,7 @@ int PitchToY(double p, int bottom)
    sel is equal to rect, and the entire region is drawn with unselected
    background colors.
  */
-void TrackArtist::DrawNoteBackground(NoteTrack *track, wxDC &dc,
+void TrackArtist::DrawNoteBackground(const NoteTrack *track, wxDC &dc,
                                      const wxRect &rect, const wxRect &sel,
                                      const ZoomInfo &zoomInfo,
                                      const wxBrush &wb, const wxPen &wp,
@@ -2763,7 +2765,7 @@ graphics. Since there may be notes outside of the display region,
 reserve a half-note-height margin at the top and bottom of the
 window and draw out-of-bounds notes here instead.
 */
-void TrackArtist::DrawNoteTrack(NoteTrack *track,
+void TrackArtist::DrawNoteTrack(const NoteTrack *track,
                                 wxDC & dc,
                                 const wxRect & rect,
                                 const SelectedRegion &selectedRegion,
@@ -2786,7 +2788,7 @@ void TrackArtist::DrawNoteTrack(NoteTrack *track,
       Alg_track_ptr alg_track = Alg_seq::unserialize(track->mSerializationBuffer,
             track->mSerializationLength);
       assert(alg_track->get_type() == 's');
-      track->mSeq = seq = (Alg_seq_ptr) alg_track;
+      const_cast<NoteTrack*>(track)->mSeq = seq = (Alg_seq_ptr) alg_track;
       free(track->mSerializationBuffer);
       track->mSerializationBuffer = NULL;
    }
@@ -3133,7 +3135,7 @@ void TrackArtist::DrawNoteTrack(NoteTrack *track,
 #endif // USE_MIDI
 
 
-void TrackArtist::DrawLabelTrack(LabelTrack *track,
+void TrackArtist::DrawLabelTrack(const LabelTrack *track,
                                  wxDC & dc,
                                  const wxRect & rect,
                                  const SelectedRegion &selectedRegion,
@@ -3148,7 +3150,7 @@ void TrackArtist::DrawLabelTrack(LabelTrack *track,
    track->Draw(dc, rect, SelectedRegion(sel0, sel1), zoomInfo);
 }
 
-void TrackArtist::DrawTimeTrack(TimeTrack *track,
+void TrackArtist::DrawTimeTrack(const TimeTrack *track,
                                 wxDC & dc,
                                 const wxRect & rect,
                                 const ZoomInfo &zoomInfo)
@@ -3293,7 +3295,7 @@ void TrackArtist::DrawSyncLockTiles(wxDC *dc, wxRect rect)
 }
 
 void TrackArtist::DrawBackgroundWithSelection(wxDC *dc, const wxRect &rect,
-   Track *track, wxBrush &selBrush, wxBrush &unselBrush,
+   const Track *track, wxBrush &selBrush, wxBrush &unselBrush,
    const SelectedRegion &selectedRegion, const ZoomInfo &zoomInfo)
 {
    //MM: Draw background. We should optimize that a bit more.

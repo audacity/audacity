@@ -315,7 +315,7 @@ void LabelTrack::ResetFont()
 /// take priority over the ones earlier, so because centering
 /// is the first thing we do, it's the first thing we lose if
 /// we can't do everything we want to.
-void LabelTrack::ComputeTextPosition(const wxRect & r, int index)
+void LabelTrack::ComputeTextPosition(const wxRect & r, int index) const
 {
    // xExtra is extra space
    // between the text and the endpoints.
@@ -457,7 +457,7 @@ void LabelTrack::ComputeTextPosition(const wxRect & r, int index)
 /// ComputeLayout determines which row each label
 /// should be placed on, and reserves space for it.
 /// Function assumes that the labels are sorted.
-void LabelTrack::ComputeLayout(const wxRect & r, const ZoomInfo &zoomInfo)
+void LabelTrack::ComputeLayout(const wxRect & r, const ZoomInfo &zoomInfo) const
 {
    int i;
    int iRow;
@@ -710,7 +710,7 @@ void LabelStruct::DrawHighlight( wxDC & dc, int xPos1, int xPos2, int charHeight
       dc.DrawRectangle(xPos2-1, y-charHeight/2, xPos1-xPos2+1, charHeight);
 }
 
-void LabelStruct::getXPos( wxDC & dc, int * xPos1, int cursorPos)
+void LabelStruct::getXPos( wxDC & dc, int * xPos1, int cursorPos) const
 {
    *xPos1 = xText;
    if( cursorPos > 0)
@@ -744,7 +744,7 @@ bool LabelTrack::CalcCursorX(wxWindow * parent, int * x)
 ///   @param  r  the LabelTrack rectangle.
 void LabelTrack::Draw(wxDC & dc, const wxRect & r,
    const SelectedRegion &selectedRegion,
-   const ZoomInfo &zoomInfo)
+   const ZoomInfo &zoomInfo) const
 {
    if(msFont.Ok())
       dc.SetFont(msFont);
@@ -881,7 +881,7 @@ void LabelTrack::Draw(wxDC & dc, const wxRect & r,
 /// Set the cursor position according to x position of mouse
 /// uses GetTextExtent to find the character position
 /// corresponding to the x pixel position.
-void LabelTrack::SetCurrentCursorPosition(wxDC & dc, int xPos)
+void LabelTrack::SetCurrentCursorPosition(wxDC & dc, int xPos) const
 {
    // A bool indicator to see if set the cursor position or not
    bool finished = false;
@@ -925,7 +925,7 @@ void LabelTrack::SetCurrentCursorPosition(wxDC & dc, int xPos)
    }
 }
 
-void LabelTrack::calculateFontHeight(wxDC & dc)
+void LabelTrack::calculateFontHeight(wxDC & dc) const
 {
    int charDescent;
    int charLeading;

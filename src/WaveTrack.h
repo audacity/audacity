@@ -342,7 +342,7 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
 
    // Add all wave clips to the given array 'clips' and sort the array by
    // clip start time. The array is emptied prior to adding the clips.
-   void FillSortedClipArray(WaveClipArray& clips);
+   void FillSortedClipArray(WaveClipArray& clips) const;
 
    // Before calling 'Offset' on a clip, use this function to see if the
    // offsetting is allowed with respect to the other clips in this track.
@@ -373,7 +373,7 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
    bool MergeClips(int clipidx1, int clipidx2);
 
    // Cache special locations (e.g. cut lines) for later speedy access
-   void UpdateLocationsCache();
+   void UpdateLocationsCache() const;
 
    // Get cached locations
    const std::vector<Location> &GetCachedLocations() const { return mDisplayLocationsCache; }

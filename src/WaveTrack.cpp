@@ -2423,7 +2423,7 @@ bool WaveTrack::SplitAt(double t)
    return true;
 }
 
-void WaveTrack::UpdateLocationsCache()
+void WaveTrack::UpdateLocationsCache() const
 {
    unsigned int i;
    WaveClipArray clips;
@@ -2608,11 +2608,12 @@ static int SortClipArrayCmpFunc(WaveClip** clip1, WaveClip** clip2)
       return 1;
 }
 
-void WaveTrack::FillSortedClipArray(WaveClipArray& clips)
+void WaveTrack::FillSortedClipArray(WaveClipArray& clips) const
 {
    clips.Empty();
 
-   for (WaveClipList::compatibility_iterator it=GetClipIterator(); it; it=it->GetNext())
+   for (WaveClipList::compatibility_iterator it =
+      const_cast<WaveTrack*>(this)->GetClipIterator(); it; it=it->GetNext())
       clips.Add(it->GetData());
 
    clips.Sort(SortClipArrayCmpFunc);
