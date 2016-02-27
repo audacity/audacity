@@ -1181,7 +1181,7 @@ bool WaveTrack::SyncLockAdjust(double oldT1, double newT1)
    return true;
 }
 
-bool WaveTrack::Paste(double t0, Track *src)
+bool WaveTrack::Paste(double t0, const Track *src)
 {
    bool editClipCanMove = true;
    gPrefs->Read(wxT("/GUI/EditClipCanMove"), &editClipCanMove);

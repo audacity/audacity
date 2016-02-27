@@ -159,7 +159,7 @@ class AUDACITY_DLL_API LabelTrack final : public Track
    // one in Track.
    bool Copy (double t0, double t1, Track ** dest) override;// const;
    bool Clear(double t0, double t1) override;
-   bool Paste(double t, Track * src) override;
+   bool Paste(double t, const Track * src) override;
    bool Repeat(double t0, double t1, int n);
 
    bool Silence(double t0, double t1) override;
@@ -220,7 +220,7 @@ class AUDACITY_DLL_API LabelTrack final : public Track
    void MayMoveLabel( int iLabel, int iEdge, double fNewTime);
 
    // This pastes labels without shifting existing ones
-   bool PasteOver(double t, Track *src);
+   bool PasteOver(double t, const Track *src);
 
    // PRL:  These functions were not used because they were not overrides!  Was that right?
    //bool SplitCut(double b, double e, Track **dest) /* not override */;

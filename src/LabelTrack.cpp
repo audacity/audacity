@@ -2471,7 +2471,7 @@ bool LabelTrack::Copy(double t0, double t1, Track ** dest)
 }
 
 
-bool LabelTrack::PasteOver(double t, Track * src)
+bool LabelTrack::PasteOver(double t, const Track * src)
 {
    if (src->GetKind() != Track::Label)
       return false;
@@ -2497,7 +2497,7 @@ bool LabelTrack::PasteOver(double t, Track * src)
    return true;
 }
 
-bool LabelTrack::Paste(double t, Track *src)
+bool LabelTrack::Paste(double t, const Track *src)
 {
    if (src->GetKind() != Track::Label)
       return false;

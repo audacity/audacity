@@ -183,7 +183,7 @@ class AUDACITY_DLL_API Track /* not final */ : public XMLTagHandler
    virtual bool Cut  (double WXUNUSED(t0), double WXUNUSED(t1), Track ** WXUNUSED(dest)) {return false;}
    virtual bool Copy (double WXUNUSED(t0), double WXUNUSED(t1), Track ** WXUNUSED(dest)) {return false;}
    virtual bool Clear(double WXUNUSED(t0), double WXUNUSED(t1)) {return false;}
-   virtual bool Paste(double WXUNUSED(t), Track * WXUNUSED(src)) {return false;}
+   virtual bool Paste(double WXUNUSED(t), const Track * WXUNUSED(src)) {return false;}
 
    // This can be used to adjust a sync-lock selected track when the selection
    // is replaced by one of a different length.

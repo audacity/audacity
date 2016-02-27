@@ -520,7 +520,7 @@ bool NoteTrack::Clear(double t0, double t1)
    return true;
 }
 
-bool NoteTrack::Paste(double t, Track *src)
+bool NoteTrack::Paste(double t, const Track *src)
 {
    // Paste inserts src at time t. If src has a positive offset,
    // the offset is treated as silence which is also inserted. If

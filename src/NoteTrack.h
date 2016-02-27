@@ -93,7 +93,7 @@ class AUDACITY_DLL_API NoteTrack final : public Track {
    bool Copy (double t0, double t1, Track **dest) override;
    bool Trim (double t0, double t1) /* not override */;
    bool Clear(double t0, double t1) override;
-   bool Paste(double t, Track *src) override;
+   bool Paste(double t, const Track *src) override;
    bool Shift(double t) /* not override */;
 
 #ifdef EXPERIMENTAL_MIDI_OUT
