@@ -1390,45 +1390,22 @@ void EffectEqualization::LoadCurves(const wxString &fileName, bool append)
       // UpdateDefaultCurves allows us to import new factory presets only,
       // or update all factory preset curves.
       if (needUpdate)
-         this->UpdateDefaultCurves( UPDATE_ALL != 0 );
+         UpdateDefaultCurves( UPDATE_ALL != 0 );
       fn = wxFileName( FileNames::DataDir(), wxT("EQCurves.xml") );
    }
-   else
+   else {
       fn = wxFileName(fileName); // user is loading a specific set of curves
+   }
 
    // If requested file doesn't exist...
-   if( !fn.FileExists() )
-   {
-      // look in data dir first, in case the user has their own defaults (maybe downloaded ones)
-      fn = wxFileName( FileNames::DataDir(), wxT("EQDefaultCurves.xml") );
-      if( !fn.FileExists() )
-      {  // Default file not found in the data dir.  Fall back to Resources dir.
-         // See http://docs.wxwidgets.org/trunk/classwx_standard_paths.html#5514bf6288ee9f5a0acaf065762ad95d
-         static wxString resourcesDir;
-         resourcesDir = wxStandardPaths::Get().GetResourcesDir();
-         fn = wxFileName( resourcesDir, wxT("EQDefaultCurves.xml") );
-      }
-      if( !fn.FileExists() )
-      {
-         // LLL:  Is there really a need for an error message at all???
-         //wxString errorMessage;
-         //errorMessage.Printf(_("EQCurves.xml and EQDefaultCurves.xml were not found on your system.\nPlease press 'help' to visit the download page.\n\nSave the curves at %s"), FileNames::DataDir().c_str());
-         //ShowErrorDialog(mUIParent, _("EQCurves.xml and EQDefaultCurves.xml missing"),
-         //   errorMessage, wxT("http://wiki.audacityteam.org/wiki/EQCurvesDownload"), false);
-
-         // Have another go at finding EQCurves.xml in the data dir, in case 'help' helped
-         fn = wxFileName( FileNames::DataDir(), wxT("EQDefaultCurves.xml") );
-         if( !fn.FileExists() )
-         {
-            mCurves.Clear();
-            mCurves.Add( _("unnamed") );   // we still need a default curve to use
-            return;
-         }
-      }
+   if( !fn.FileExists() && !GetDefaultFileName(fn) ) {
+      mCurves.Clear();
+      mCurves.Add( _("unnamed") );   // we still need a default curve to use
+      return;
    }
 
    EQCurve tempCustom(wxT("temp"));
-   if( append == false) // Start from scratch
+   if( append == false ) // Start from scratch
       mCurves.Clear();
    else  // appending so copy and remove 'unnamed', to replace later
    {
@@ -1495,12 +1472,10 @@ void EffectEqualization::UpdateDefaultCurves(bool updateAll /* false */)
    EQCurveArray userCurves = mCurves;
    mCurves.Clear();
    wxFileName fn;
-
    XMLFileReader reader;
-   fn = wxFileName( FileNames::DataDir(), wxT("EQDefaultCurves.xml") );
 
-   if(!fn.FileExists() || !reader.Parse(this, fn.GetFullPath())) {
-      wxLogError(wxT("%s could not be read."), fn.GetFullPath().c_str());
+   if(!GetDefaultFileName(fn) || !reader.Parse(this, fn.GetFullPath())) {
+      wxLogError(wxT("EQDefaultCurves.xml could not be read."));
       return;
    }
 
@@ -1590,6 +1565,34 @@ void EffectEqualization::UpdateDefaultCurves(bool updateAll /* false */)
    gPrefs->Flush();
 
    return;
+}
+
+//
+// Get fully qualified filename of EQDefaultCurves.xml
+//
+bool EffectEqualization::GetDefaultFileName(wxFileName &fileName)
+{
+   // look in data dir first, in case the user has their own defaults (maybe downloaded ones)
+   fileName = wxFileName( FileNames::DataDir(), wxT("EQDefaultCurves.xml") );
+   if( !fileName.FileExists() )
+   {  // Default file not found in the data dir.  Fall back to Resources dir.
+      // See http://docs.wxwidgets.org/trunk/classwx_standard_paths.html#5514bf6288ee9f5a0acaf065762ad95d
+      static wxString resourcesDir;
+      resourcesDir = wxStandardPaths::Get().GetResourcesDir();
+      fileName = wxFileName( resourcesDir, wxT("EQDefaultCurves.xml") );
+   }
+   if( !fileName.FileExists() )
+   {
+      // LLL:  Is there really a need for an error message at all???
+      //wxString errorMessage;
+      //errorMessage.Printf(_("EQCurves.xml and EQDefaultCurves.xml were not found on your system.\nPlease press 'help' to visit the download page.\n\nSave the curves at %s"), FileNames::DataDir().c_str());
+      //ShowErrorDialog(mUIParent, _("EQCurves.xml and EQDefaultCurves.xml missing"),
+      //   errorMessage, wxT("http://wiki.audacityteam.org/wiki/EQCurvesDownload"), false);
+
+      // Have another go at finding EQCurves.xml in the data dir, in case 'help' helped
+      fileName = wxFileName( FileNames::DataDir(), wxT("EQDefaultCurves.xml") );
+   }
+   return (fileName.FileExists());
 }
 
 
