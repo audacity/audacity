@@ -383,6 +383,18 @@ class AUDACITY_DLL_API TrackList final : public wxEvtHandler
    // Create an empty TrackList
    TrackList(bool destructorDeletesTracks = false);
 
+   // Allow copy -- a deep copy that duplicates all tracks
+   TrackList(const TrackList &that);
+   TrackList &operator= (const TrackList &that);
+
+   // Allow move
+   TrackList(TrackList &&that);
+   TrackList& operator= (TrackList&&);
+
+   // Move is defined in terms of Swap
+   void Swap(TrackList &that);
+
+
    // Destructor
    virtual ~TrackList();
 
@@ -462,11 +474,13 @@ class AUDACITY_DLL_API TrackList final : public wxEvtHandler
 #endif
 
  private:
+   void DoAssign(const TrackList &that);
+       
    void RecalcPositions(const TrackListNode *node);
    void UpdatedEvent(const TrackListNode *node);
    void ResizedEvent(const TrackListNode *node);
 
-   void Swap(TrackListNode * s1, TrackListNode * s2);
+   void SwapNodes(TrackListNode * s1, TrackListNode * s2);
 
    TrackListNode *head;
    TrackListNode *tail;
