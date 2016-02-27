@@ -132,7 +132,7 @@ Track::~Track()
 }
 
 
-const TrackListNode *Track::GetNode()
+const TrackListNode *Track::GetNode() const
 {
    return mNode;
 }
@@ -837,18 +837,22 @@ void TrackList::AddToHead(Track * t)
    ResizedEvent(n);
 }
 
-void TrackList::Replace(Track * t, Track * with, bool deletetrack)
+void TrackList::Replace(const Track * t, const Track * with, bool deletetrack)
 {
-   if (t && with) {
-      TrackListNode *node = (TrackListNode *) t->GetNode();
+   Track *const mutableT = const_cast<Track*>(t);
+   Track *const mutableWith = const_cast<Track*>(with);
 
-      t->SetOwner(NULL, NULL);
+   if (mutableT && with) {
+      TrackListNode *node =
+         const_cast<TrackListNode *>(mutableT->GetNode());
+
+      mutableT->SetOwner(NULL, NULL);
       if (deletetrack) {
          delete t;
       }
 
-      node->t = with;
-      with->SetOwner(this, node);
+      node->t = mutableWith;
+      mutableWith->SetOwner(this, node);
       RecalcPositions(node);
       UpdatedEvent(node);
       ResizedEvent(node);

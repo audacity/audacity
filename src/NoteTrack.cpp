@@ -469,7 +469,7 @@ bool NoteTrack::Cut(double t0, double t1, Track **dest){
    return true;
 }
 
-bool NoteTrack::Copy(double t0, double t1, Track **dest){
+bool NoteTrack::Copy(double t0, double t1, Track **dest) const {
 
    //dest goes onto clipboard
    *dest = NULL; // This is redundant and matches WaveTrack::Copy

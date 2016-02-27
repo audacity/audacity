@@ -1270,7 +1270,7 @@ void LabelStruct::MoveLabel( int iEdge, double fNewTime)
 }
 
 LabelStruct::TimeRelations LabelStruct::RegionRelation(
-      double reg_t0, double reg_t1, LabelTrack * WXUNUSED(parent))
+      double reg_t0, double reg_t1, const LabelTrack * WXUNUSED(parent))
 {
    bool retainLabels = false;
 
@@ -2422,7 +2422,7 @@ bool LabelTrack::SplitCut(double t0, double t1, Track ** dest)
 }
 #endif
 
-bool LabelTrack::Copy(double t0, double t1, Track ** dest)
+bool LabelTrack::Copy(double t0, double t1, Track ** dest) const
 {
    *dest = new LabelTrack(GetDirManager());
    int len = mLabels.Count();

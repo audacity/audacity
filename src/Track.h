@@ -102,7 +102,7 @@ class AUDACITY_DLL_API Track /* not final */ : public XMLTagHandler
 #endif
    Track *GetLink() const;
 
-   const TrackListNode *GetNode();
+   const TrackListNode *GetNode() const;
    void SetOwner(TrackList *list, TrackListNode *node);
 
  // Keep in Track
@@ -181,7 +181,7 @@ class AUDACITY_DLL_API Track /* not final */ : public XMLTagHandler
    DirManager* GetDirManager() const { return mDirManager; }
 
    virtual bool Cut  (double WXUNUSED(t0), double WXUNUSED(t1), Track ** WXUNUSED(dest)) {return false;}
-   virtual bool Copy (double WXUNUSED(t0), double WXUNUSED(t1), Track ** WXUNUSED(dest)) {return false;}
+   virtual bool Copy (double WXUNUSED(t0), double WXUNUSED(t1), Track ** WXUNUSED(dest)) const {return false;}
    virtual bool Clear(double WXUNUSED(t0), double WXUNUSED(t1)) {return false;}
    virtual bool Paste(double WXUNUSED(t), const Track * WXUNUSED(src)) {return false;}
 
@@ -385,7 +385,8 @@ class AUDACITY_DLL_API TrackList final : public wxEvtHandler
    void AddToHead(Track * t);
 
    /// Replace first track with second track
-   void Replace(Track * t, Track * with, bool deletetrack = false);
+   /// Non-const function of TrackList, but it can take pointers to const tracks
+   void Replace(const Track * t, const Track * with, bool deletetrack = false);
 
    /// Remove this Track or all children of this TrackList.
    void Remove(Track * t, bool deletetrack = false);

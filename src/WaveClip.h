@@ -279,7 +279,7 @@ public:
    void MarkChanged() { mDirty++; }
 
    /// Create clip from copy, discarding previous information in the clip
-   bool CreateFromCopy(double t0, double t1, WaveClip* other);
+   bool CreateFromCopy(double t0, double t1, const WaveClip* other);
 
    /** Getting high-level data from the for screen display and clipping
     * calculations and Contrast */

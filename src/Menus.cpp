@@ -4592,7 +4592,7 @@ void AudacityProject::OnCutLabels()
 
   // Because of grouping the copy may need to operate on different tracks than
   // the clear, so we do these actions separately.
-  EditClipboardByLabel( &WaveTrack::Copy );
+  EditClipboardByLabel( &WaveTrack::CopyNonconst );
 
   if( gPrefs->Read( wxT( "/GUI/EnableCutLines" ), ( long )0 ) )
      EditByLabel( &WaveTrack::ClearAndAddCutLine, true );
@@ -4635,7 +4635,7 @@ void AudacityProject::OnCopyLabels()
   if( mViewInfo.selectedRegion.isPoint() )
      return;
 
-  EditClipboardByLabel( &WaveTrack::Copy );
+  EditClipboardByLabel( &WaveTrack::CopyNonconst );
 
   msClipProject = this;
 

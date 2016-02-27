@@ -81,7 +81,7 @@ public:
    /// and end of parent to be within a region that borders them (this makes
    /// it possible to DELETE capture all labels with a Select All).
    TimeRelations RegionRelation(double reg_t0, double reg_t1,
-                                LabelTrack *parent = NULL);
+                                const LabelTrack *parent = NULL);
 
 public:
    SelectedRegion selectedRegion;
@@ -157,7 +157,7 @@ class AUDACITY_DLL_API LabelTrack final : public Track
    // or Paste() because then it
    // is no longer recognised as a virtual function matching the
    // one in Track.
-   bool Copy (double t0, double t1, Track ** dest) override;// const;
+   bool Copy (double t0, double t1, Track ** dest) const override;
    bool Clear(double t0, double t1) override;
    bool Paste(double t, const Track * src) override;
    bool Repeat(double t0, double t1, int n);

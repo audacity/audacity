@@ -1407,7 +1407,7 @@ void WaveClip::WriteXML(XMLWriter &xmlFile)
    xmlFile.EndTag(wxT("waveclip"));
 }
 
-bool WaveClip::CreateFromCopy(double t0, double t1, WaveClip* other)
+bool WaveClip::CreateFromCopy(double t0, double t1, const WaveClip* other)
 {
    sampleCount s0, s1;
 

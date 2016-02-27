@@ -154,7 +154,8 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
    //
 
    bool Cut(double t0, double t1, Track **dest) override;
-   bool Copy(double t0, double t1, Track **dest) override;
+   bool Copy(double t0, double t1, Track **dest) const override;
+   bool CopyNonconst(double t0, double t1, Track **dest) /* not override */;
    bool Clear(double t0, double t1) override;
    bool Paste(double t0, const Track *src) override;
    bool ClearAndPaste(double t0, double t1,

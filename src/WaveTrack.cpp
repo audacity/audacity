@@ -623,7 +623,7 @@ bool WaveTrack::Trim (double t0, double t1)
 
 
 
-bool WaveTrack::Copy(double t0, double t1, Track **dest)
+bool WaveTrack::Copy(double t0, double t1, Track **dest) const
 {
    *dest = NULL;
 
@@ -636,9 +636,9 @@ bool WaveTrack::Copy(double t0, double t1, Track **dest)
 
    WaveClipList::compatibility_iterator it;
 
-   for (it=GetClipIterator(); it; it=it->GetNext())
+   for (it = const_cast<WaveTrack*>(this)->GetClipIterator(); it; it = it->GetNext())
    {
-      WaveClip *clip = it->GetData();
+      const WaveClip *clip = it->GetData();
 
       if (t0 <= clip->GetStartTime() && t1 >= clip->GetEndTime())
       {
@@ -711,6 +711,11 @@ bool WaveTrack::Copy(double t0, double t1, Track **dest)
    *dest = newTrack;
 
    return true;
+}
+
+bool WaveTrack::CopyNonconst(double t0, double t1, Track **dest)
+{
+   return Copy(t0, t1, dest);
 }
 
 bool WaveTrack::Clear(double t0, double t1)
