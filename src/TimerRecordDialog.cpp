@@ -60,7 +60,8 @@ enum {
 // Post Timer Recording Actions
 // Ensure this matches the enum in Menus.cpp
 enum {
-	POST_TIMER_RECORD_CANCEL_WAIT = -2,
+	POST_TIMER_RECORD_STOPPED = -3,
+	POST_TIMER_RECORD_CANCEL_WAIT,
 	POST_TIMER_RECORD_CANCEL,
 	POST_TIMER_RECORD_NOTHING,
 	POST_TIMER_RECORD_CLOSE,
@@ -418,10 +419,10 @@ int TimerRecordDialog::RunWaitDialog()
    if (updateResult == eProgressCancelled || updateResult == eProgressFailed)
       return POST_TIMER_RECORD_CANCEL;
 
-   return ExecutePostRecordActions();
+   return ExecutePostRecordActions((updateResult == eProgressStopped));
 }
 
-int TimerRecordDialog::ExecutePostRecordActions() {
+int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
 	// We no longer automaticall (and silently) call ->Save() when the 
 	// timer recording is completed!
 	// We can now Save and/or Export depending on the options selected by
@@ -453,14 +454,14 @@ int TimerRecordDialog::ExecutePostRecordActions() {
 
 	// Check if we need to override the post recording action
 	bErrorOverride = ((m_bAutoSaveEnabled && !bSaveOK) || (m_bAutoExportEnabled && !bExportOK));
-	if (bErrorOverride) {
+	if (bErrorOverride || bWasStopped) {
 		iPostRecordAction = POST_TIMER_RECORD_NOTHING;
 	}
 
 	if (iPostRecordAction == POST_TIMER_RECORD_NOTHING) {
 		// If there is no post-record action then we can show a message indicating what has been done
 
-		wxString sMessage = _("Timer Recording Completed.");
+		wxString sMessage = (bWasStopped ? _("Timer Recording Stopped.") : _("Timer Recording Completed."));
 
 		if (m_bAutoSaveEnabled) {
 			if (bSaveOK) {
@@ -483,16 +484,19 @@ int TimerRecordDialog::ExecutePostRecordActions() {
 
 			if (iOverriddenAction != iPostRecordAction) {
 				// Inform the user that we have overridden the selected action
-				sMessage.Printf("%s\n\After recording action '%s' has been canceled due to the error noted above.", sMessage, m_pTimerAfterCompleteChoiceCtrl->GetString(iOverriddenAction));
+				sMessage.Printf("%s\n\nSelected after recording action '%s' has been canceled due to the error(s) noted above.", sMessage, m_pTimerAfterCompleteChoiceCtrl->GetString(iOverriddenAction));
 			}
 
 			// Show Error Message Box
 			wxMessageBox(sMessage, _("Error"), wxICON_EXCLAMATION | wxOK);
-			return false;
 		}
 		else {
+
+			if (bWasStopped) {
+				sMessage.Printf("%s\n\nSelected after recording action '%s' has been cancelled as the recording was stopped.", sMessage, m_pTimerAfterCompleteChoiceCtrl->GetString(iOverriddenAction));
+			}
+
 			wxMessageBox(sMessage, _("Timer Recording"), wxICON_INFORMATION | wxOK);
-			return true;
 		}
 	}
 

@@ -147,7 +147,8 @@ enum {
 // Post Timer Recording Actions
 // Ensure this matches the enum in TimerRecordDialog.cpp
 enum {
-	POST_TIMER_RECORD_CANCEL_WAIT = -2,
+	POST_TIMER_RECORD_STOPPED = -3,
+	POST_TIMER_RECORD_CANCEL_WAIT,
 	POST_TIMER_RECORD_CANCEL,
 	POST_TIMER_RECORD_NOTHING,
 	POST_TIMER_RECORD_CLOSE,
