@@ -30,7 +30,6 @@
 #include "xml/XMLTagHandler.h"
 #include "toolbars/SelectionBarListener.h"
 #include "toolbars/SpectralSelectionBarListener.h"
-#include "export\Export.h";
 
 #include "MemoryX.h"
 #include <wx/defs.h>
