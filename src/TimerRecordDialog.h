@@ -65,7 +65,7 @@ private:
    void EnableDisableAutoControls(bool bEnable, int iControlGoup);
    void UpdateTextBoxControls();
 
-   int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped);
+   int ExecutePostRecordActions(bool bWasStopped);
 
 private:
    wxDateTime m_DateTime_Start;
