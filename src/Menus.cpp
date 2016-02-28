@@ -144,6 +144,18 @@ enum {
    kAlignTogether
 };
 
+// Post Timer Recording Actions
+// Ensure this matches the enum in TimerRecordDialog.cpp
+enum {
+	POST_TIMER_RECORD_STOPPED = -3,
+	POST_TIMER_RECORD_CANCEL_WAIT,
+	POST_TIMER_RECORD_CANCEL,
+	POST_TIMER_RECORD_NOTHING,
+	POST_TIMER_RECORD_CLOSE,
+	POST_TIMER_RECORD_RESTART,
+	POST_TIMER_RECORD_SHUTDOWN
+};
+
 // Define functor subclasses that dispatch to the correct call sequence on
 // member functions of AudacityProject
 
@@ -6327,14 +6339,42 @@ void AudacityProject::OnTimerRecord()
    {
       // Cancelled before recording - don't need to do anyting.
    }
-   else if(!dialog.RunWaitDialog())
+   else
    {
-      //RunWaitDialog() shows the "wait for start" as well as "recording" dialog
-      //if it returned false it means the user cancelled while the recording, so throw out the fresh track.
-      //However, we can't undo it here because the PushState() is called in TrackPanel::OnTimer(),
-      //which is blocked by this function.
-      //so instead we mark a flag to undo it there.
-      mTimerRecordCanceled = true;
+	   int iTimerRecordingOutcome = dialog.RunWaitDialog();
+	   switch (iTimerRecordingOutcome) {
+	   case POST_TIMER_RECORD_CANCEL_WAIT:
+		   // Canceled on the wait dialog
+		   // No action required
+	   break;
+	   case POST_TIMER_RECORD_CANCEL:
+		   // RunWaitDialog() shows the "wait for start" as well as "recording" dialog
+		   // if it returned POST_TIMER_RECORD_CANCEL it means the user cancelled while the recording, so throw out the fresh track.
+		   // However, we can't undo it here because the PushState() is called in TrackPanel::OnTimer(),
+		   // which is blocked by this function.
+		   // so instead we mark a flag to undo it there.
+		   mTimerRecordCanceled = true;
+	   break;
+	   case POST_TIMER_RECORD_NOTHING:
+		   // No action required
+	   break;
+	   case POST_TIMER_RECORD_CLOSE:
+		   // Quit Audacity
+		   exit(0);
+	   break;
+	   case POST_TIMER_RECORD_RESTART:
+		   // Restart System
+#ifdef __WINDOWS__
+		   system("shutdown /r /f /t 30");
+#endif
+	   break;
+	   case POST_TIMER_RECORD_SHUTDOWN:
+		   // Shutdown System
+#ifdef __WINDOWS__
+		   system("shutdown /s /f /t 30");
+#endif
+	   break;
+	   }
    }
 }
 

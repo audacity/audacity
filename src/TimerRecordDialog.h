@@ -20,6 +20,8 @@
 #include <wx/datectrl.h>
 #include <wx/calctrl.h>
 #include <wx/timer.h>
+#include <wx/checkbox.h>
+#include "export/Export.h"
 
 class wxTimerEvent;
 
@@ -34,7 +36,7 @@ public:
 
    void OnTimer(wxTimerEvent& event);
    ///Runs the wait for start dialog.  Returns false if the user clicks stop.
-   bool RunWaitDialog();
+   int RunWaitDialog();
 
 private:
    void OnDatePicker_Start(wxDateEvent& event);
@@ -54,6 +56,17 @@ private:
    void UpdateEnd(); // Update m_DateTime_End and ctrls based on m_DateTime_Start and m_TimeSpan_Duration.
    int WaitForStart();
 
+   // Timer Recording Automation Control Events
+   void OnAutoSavePathButton_Click(wxCommandEvent& event);
+   void OnAutoExportPathButton_Click(wxCommandEvent& event);
+   void OnAutoSaveCheckBox_Change(wxCommandEvent& event);
+   void OnAutoExportCheckBox_Change(wxCommandEvent& event);
+   // Timer Recording Automation Routines
+   void EnableDisableAutoControls(bool bEnable, int iControlGoup);
+   void UpdateTextBoxControls();
+
+   int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped);
+
 private:
    wxDateTime m_DateTime_Start;
    wxDateTime m_DateTime_End;
@@ -69,6 +82,30 @@ private:
    NumericTextCtrl* m_pTimeTextCtrl_Duration;
 
    wxTimer m_timer;
+
+   // Controls for Auto Save/Export
+   wxCheckBox *m_pTimerAutoSaveCheckBoxCtrl;
+   wxTextCtrl *m_pTimerSavePathTextCtrl;
+   wxButton *m_pTimerSavePathButtonCtrl;
+   wxCheckBox *m_pTimerAutoExportCheckBoxCtrl;
+   wxTextCtrl *m_pTimerExportPathTextCtrl;
+   wxButton *m_pTimerExportPathButtonCtrl;
+
+   // After Timer Record Options Choice
+   wxChoice *m_pTimerAfterCompleteChoiceCtrl;
+
+   // Variables for the Auto Save/Export
+   bool m_bAutoSaveEnabled;
+   wxFileName m_fnAutoSaveFile;
+   bool m_bAutoExportEnabled;
+   wxFileName m_fnAutoExportFile;
+   int m_iAutoExportFormat;
+   int m_iAutoExportSubFormat;
+   int m_iAutoExportFilterIndex;
+
+   // Variables for After Timer Recording Option
+   wxString m_sTimerAfterCompleteOption;
+   wxArrayString m_sTimerAfterCompleteOptionsArray;
 
    DECLARE_EVENT_TABLE();
 };
