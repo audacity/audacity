@@ -1381,11 +1381,11 @@ void EffectEqualization::LoadCurves(const wxString &fileName, bool append)
 
    if(fileName == wxT("")) {
       // Check if presets are up to date.
-      wxString eqCurvesCurrentVersion = wxString(wxT("%d.%d"), EQCURVES_VERSION, EQCURVES_REVISION);
+      wxString eqCurvesCurrentVersion = wxString::Format(wxT("%d.%d"), EQCURVES_VERSION, EQCURVES_REVISION);
       wxString eqCurvesInstalledVersion = wxT("");
       gPrefs->Read(wxT("/Effects/Equalization/PresetVersion"), &eqCurvesInstalledVersion, wxT(""));
 
-      bool needUpdate = (eqCurvesCurrentVersion == eqCurvesInstalledVersion);
+      bool needUpdate = (eqCurvesCurrentVersion != eqCurvesInstalledVersion);
       
       // UpdateDefaultCurves allows us to import new factory presets only,
       // or update all factory preset curves.
