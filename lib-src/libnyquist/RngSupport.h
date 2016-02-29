@@ -33,7 +33,7 @@ template <class RNG = nyq_generator>
 class RngSupport : RngSupportBase
 {
 private:
-    friend static std::vector<unsigned int> CreateRootSeedVector();
+    friend std::vector<unsigned int> CreateRootSeedVector();
 
     static RNG CreateRootGenerator()
     {
