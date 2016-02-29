@@ -20,6 +20,7 @@
 
 #include "Audacity.h"
 #include "TimerRecordDialog.h"
+#include "FileNames.h"
 
 #include <wx/defs.h>
 #include <wx/datetime.h>
@@ -127,6 +128,9 @@ TimerRecordDialog::TimerRecordDialog(wxWindow* parent)
 
    m_timer.SetOwner(this, TIMER_ID);
    m_timer.Start(kTimerInterval);
+
+   // Do we need to tidy up when the timer recording has been completed?
+   m_bProjectCleanupRequired = !(this->HaveFilesToRecover());
 }
 
 TimerRecordDialog::~TimerRecordDialog()
@@ -364,12 +368,51 @@ void TimerRecordDialog::UpdateTextBoxControls() {
 	m_pTimerExportPathTextCtrl->SetValue(m_fnAutoExportFile.GetFullPath());
 }
 
+// Copied from AutoRecovery.cpp - for use with Timer Recording Improvements
+bool TimerRecordDialog::HaveFilesToRecover()
+{
+	wxDir dir(FileNames::AutoSaveDir());
+	if (!dir.IsOpened())
+	{
+		wxMessageBox(_("Could not enumerate files in auto save directory."),
+			_("Error"), wxICON_STOP);
+		return false;
+	}
+
+	wxString filename;
+	bool c = dir.GetFirst(&filename, wxT("*.autosave"), wxDIR_FILES);
+
+	return c;
+}
+
+bool TimerRecordDialog::RemoveAllAutoSaveFiles()
+{
+	wxArrayString files;
+	wxDir::GetAllFiles(FileNames::AutoSaveDir(), &files,
+		wxT("*.autosave"), wxDIR_FILES);
+
+	for (unsigned int i = 0; i < files.GetCount(); i++)
+	{
+		if (!wxRemoveFile(files[i]))
+		{
+			// I don't think this error message is actually useful.
+			// -dmazzoni
+			//wxMessageBox(wxT("Could not remove auto save file: " + files[i]),
+			//             _("Error"), wxICON_STOP);
+			return false;
+		}
+	}
+
+	return true;
+}
+
 /// Runs the wait for start dialog.  Returns -1 if the user clicks stop while we are recording
 /// or if the post recording actions fail.
 int TimerRecordDialog::RunWaitDialog()
 {
-   AudacityProject* pProject = GetActiveProject();
-   int updateResult = eProgressSuccess;
+	AudacityProject* pProject = GetActiveProject();
+	
+	int updateResult = eProgressSuccess;
 
    if (m_DateTime_Start > wxDateTime::UNow())
       updateResult = this->WaitForStart();
@@ -498,6 +541,11 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
 
 			wxMessageBox(sMessage, _("Timer Recording"), wxICON_INFORMATION | wxOK);
 		}
+	}
+
+	// Do we need to cleanup the orphaned temporary project?
+	if (m_bProjectCleanupRequired && !bErrorOverride) {
+		RemoveAllAutoSaveFiles();
 	}
 
 	// Return the action as required

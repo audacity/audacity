@@ -64,6 +64,9 @@ private:
    // Timer Recording Automation Routines
    void EnableDisableAutoControls(bool bEnable, int iControlGoup);
    void UpdateTextBoxControls();
+   // Tidy up after Timer Recording
+   bool HaveFilesToRecover();
+   bool RemoveAllAutoSaveFiles();
 
    int ExecutePostRecordActions(bool bWasStopped);
 
@@ -93,6 +96,9 @@ private:
 
    // After Timer Record Options Choice
    wxChoice *m_pTimerAfterCompleteChoiceCtrl;
+
+   // After Timer Record do we need to clean up?
+   bool m_bProjectCleanupRequired;
 
    // Variables for the Auto Save/Export
    bool m_bAutoSaveEnabled;
