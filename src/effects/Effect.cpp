@@ -2145,7 +2145,7 @@ Effect::AddedAnalysisTrack::~AddedAnalysisTrack()
 {
    if (mpEffect) {
       // not committed -- DELETE the label track
-      mpEffect->mTracks->Remove(mpTrack, true);
+      mpEffect->mTracks->Remove(mpTrack);
    }
 }
 
@@ -2234,7 +2234,7 @@ void Effect::ReplaceProcessedTracks(const bool bGoodResult)
       while (i < cnt && mOMap[i] != o) {
          Track *t = (Track *) mIMap[i];
          if (t) {
-            mTracks->Remove(t, true);
+            mTracks->Remove(t);
          }
          i++;
       }
@@ -2273,7 +2273,7 @@ void Effect::ReplaceProcessedTracks(const bool bGoodResult)
    while (i < cnt) {
       Track *t = (Track *) mIMap[i];
       if (t) {
-         mTracks->Remove((Track *)mIMap[i], true);
+         mTracks->Remove((Track *)mIMap[i]);
       }
       i++;
    }

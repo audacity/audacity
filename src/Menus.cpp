@@ -3375,7 +3375,6 @@ bool AudacityProject::OnEffect(const PluginID & ID, int flags)
    if (!success) {
       if (newTrack) {
          mTracks->Remove(newTrack);
-         delete newTrack;
          mTrackPanel->Refresh(false);
       }
 
@@ -5635,7 +5634,7 @@ void AudacityProject::HandleMixAndRender(bool toNewTrack)
                 selectedCount++;
 
                 if (!toNewTrack) {
-                   t = iter.RemoveCurrent(true);
+                   t = iter.RemoveCurrent();
                 } else {
                    t = iter.Next();
                 };
@@ -6485,7 +6484,7 @@ void AudacityProject::OnRemoveTracks()
             mMixerBoard->RemoveTrackCluster((WaveTrack*)t);
          if (!f)
             f = l;         // Capture the track preceeding the first removed track
-         t = iter.RemoveCurrent(true);
+         t = iter.RemoveCurrent();
       }
       else {
          l = t;

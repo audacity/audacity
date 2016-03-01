@@ -257,7 +257,7 @@ class AUDACITY_DLL_API TrackListIterator /* not final */
    virtual Track *Prev(bool skiplinked = false);
    virtual Track *Last(bool skiplinked = false);
 
-   Track *RemoveCurrent(bool deletetrack = false); // returns next
+   Track *RemoveCurrent(); // returns next
 
  protected:
    friend TrackList;
@@ -435,7 +435,7 @@ class AUDACITY_DLL_API TrackList final : public wxEvtHandler, public ListOfTrack
 
    /// Remove this Track or all children of this TrackList.
    /// Return an iterator to what followed the removed track.
-   TrackNodePointer Remove(Track *t, bool deletetrack = false);
+   TrackNodePointer Remove(Track *t);
 
    /// Make the list empty
    void Clear(bool deleteTracks = false);

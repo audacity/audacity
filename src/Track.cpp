@@ -465,12 +465,12 @@ Track *TrackListIterator::Prev(bool skiplinked)
    return *cur;
 }
 
-Track *TrackListIterator::RemoveCurrent(bool deletetrack)
+Track *TrackListIterator::RemoveCurrent()
 {
    if (!l || l->isNull(cur))
       return nullptr;
 
-   cur = l->Remove(*cur, deletetrack);
+   cur = l->Remove(*cur);
 
    #ifdef DEBUG_TLI // if we are debugging this bit
    wxASSERT_MSG((!cur || (*l).Contains((*cur).t)), wxT("cur invalid after deletion of track."));   // check that cur is in the list
@@ -902,16 +902,13 @@ void TrackList::Replace(Track * t, Track * with, bool deletetrack)
    }
 }
 
-TrackNodePointer TrackList::Remove(Track *t, bool deletetrack)
+TrackNodePointer TrackList::Remove(Track *t)
 {
    TrackNodePointer result(end());
    if (t) {
       auto node = t->GetNode();
 
-      if (deletetrack)
-         delete t;
-      else
-         t->SetOwner(NULL, TrackNodePointer{});
+      delete t;
 
       if (!isNull(node)) {
          result = erase(node);

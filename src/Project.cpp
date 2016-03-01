@@ -5019,9 +5019,9 @@ void AudacityProject::RemoveTrack(Track * toRemove)
          pMixerBoard->RemoveTrackCluster((WaveTrack*)toRemove); // Will remove partner shown in same cluster.
    }
 
-   mTracks->Remove(toRemove, true);
+   mTracks->Remove(toRemove);
    if (partner) {
-      mTracks->Remove(partner, true);
+      mTracks->Remove(partner);
    }
 
    if (mTracks->IsEmpty()) {

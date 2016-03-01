@@ -1011,7 +1011,6 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
             // msmeyer: Delete recently added tracks if opening stream fails
             for (unsigned int i = 0; i < newRecordingTracks.size(); i++) {
                trackList->Remove(newRecordingTracks[i]);
-               delete newRecordingTracks[i];
             }
          }
 
