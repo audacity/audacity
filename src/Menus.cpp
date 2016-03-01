@@ -2398,7 +2398,7 @@ void AudacityProject::OnToogleAutomatedInputLevelAdjustment()
 }
 #endif
 
-double AudacityProject::GetTime(Track *t)
+double AudacityProject::GetTime(const Track *t)
 {
    double stime = 0.0;
 
@@ -2428,43 +2428,46 @@ double AudacityProject::GetTime(Track *t)
 //sort based on flags.  see Project.h for sort flags
 void AudacityProject::SortTracks(int flags)
 {
-   int ndx = 0;
+   size_t ndx = 0;
    int cmpValue;
-   wxArrayPtrVoid arr;
-   TrackListIterator iter(mTracks);
-   Track *track = iter.First();
+   std::vector<ListOfTracks::iterator> arr;
+   arr.reserve(mTracks->GetCount());
    bool lastTrackLinked = false;
    //sort by linked tracks. Assumes linked track follows owner in list.
-   while (track) {
+
+   // First find the permutation.
+   for (auto iter = mTracks->begin(), end = mTracks->end(); iter != end; ++iter) {
+      const auto &track = *iter;
       if(lastTrackLinked) {
          //insert after the last track since this track should be linked to it.
          ndx++;
       }
       else {
-         for (ndx = 0; ndx < (int)arr.GetCount(); ndx++) {
-            if(flags & kAudacitySortByName){
+         for (ndx = 0; ndx < arr.size(); ++ndx) {
+            Track &arrTrack = **arr[ndx];
+            if(flags & kAudacitySortByName) {
                //do case insensitive sort - cmpNoCase returns less than zero if the string is 'less than' its argument
                //also if we have case insensitive equality, then we need to sort by case as well
                //We sort 'b' before 'B' accordingly.  We uncharacteristically use greater than for the case sensitive
                //compare because 'b' is greater than 'B' in ascii.
-               cmpValue = track->GetName().CmpNoCase(((Track *) arr[ndx])->GetName());
+               cmpValue = track->GetName().CmpNoCase(arrTrack.GetName());
                if (cmpValue < 0 ||
-                   (0 == cmpValue && track->GetName().CompareTo(((Track *) arr[ndx])->GetName()) > 0) )
+                   (0 == cmpValue && track->GetName().CompareTo(arrTrack.GetName()) > 0) )
                   break;
             }
             //sort by time otherwise
-            else if(flags & kAudacitySortByTime){
+            else if(flags & kAudacitySortByTime) {
                //we have to search each track and all its linked ones to fine the minimum start time.
-               double time1,time2,tempTime;
-               Track* tempTrack;
-               int    candidatesLookedAt;
+               double time1, time2, tempTime;
+               const Track* tempTrack;
+               size_t candidatesLookedAt;
 
                candidatesLookedAt = 0;
-               tempTrack = track;
-               time1=time2=std::numeric_limits<double>::max(); //TODO: find max time value. (I don't think we have one yet)
-               while(tempTrack){
+               tempTrack = &*track;
+               time1 = time2 = std::numeric_limits<double>::max(); //TODO: find max time value. (I don't think we have one yet)
+               while(tempTrack) {
                   tempTime = GetTime(tempTrack);
-                  time1 = time1<tempTime? time1:tempTime;
+                  time1 = std::min(time1, tempTime);
                   if(tempTrack->GetLinked())
                      tempTrack = tempTrack->GetLink();
                   else
@@ -2472,13 +2475,13 @@ void AudacityProject::SortTracks(int flags)
                }
 
                //get candidate's (from sorted array) time
-               tempTrack = (Track *) arr[ndx];
-               while(tempTrack){
+               tempTrack = &arrTrack;
+               while(tempTrack) {
                   tempTime = GetTime(tempTrack);
-                  time2 = time2<tempTime? time2:tempTime;
-                  if(tempTrack->GetLinked() && (ndx+candidatesLookedAt <  (int)arr.GetCount()-1) ) {
+                  time2 = std::min(time2, tempTime);
+                  if(tempTrack->GetLinked() && (ndx+candidatesLookedAt < arr.size()-1) ) {
                      candidatesLookedAt++;
-                     tempTrack = (Track*) arr[ndx+candidatesLookedAt];
+                     tempTrack = &**arr[ndx+candidatesLookedAt];
                   }
                   else
                      tempTrack = NULL;
@@ -2491,15 +2494,13 @@ void AudacityProject::SortTracks(int flags)
             }
          }
       }
-      arr.Insert(track, ndx);
+      arr.insert(arr.begin() + ndx, iter);
 
       lastTrackLinked = track->GetLinked();
-      track = iter.RemoveCurrent();
    }
 
-   for (ndx = 0; ndx < (int)arr.GetCount(); ndx++) {
-      mTracks->Add((Track *)arr[ndx]);
-   }
+   // Now apply the permutation
+   mTracks->Permute(arr);
 }
 
 void AudacityProject::OnSortTime()

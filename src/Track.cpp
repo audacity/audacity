@@ -851,6 +851,19 @@ void TrackList::ResizedEvent(TrackNodePointer node)
    }
 }
 
+void TrackList::Permute(const std::vector<TrackNodePointer> &permutation)
+{
+   for (const auto iter : permutation) {
+      Track *track = *iter;
+      erase(iter);
+      track->SetOwner(this, insert(end(), track));
+   }
+   auto n = begin();
+   RecalcPositions(n);
+   UpdatedEvent(n);
+   ResizedEvent(n);
+}
+
 void TrackList::Add(Track * t)
 {
    push_back(t);

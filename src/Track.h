@@ -423,6 +423,9 @@ class AUDACITY_DLL_API TrackList final : public wxEvtHandler, public ListOfTrack
    friend class TrackListIterator;
    friend class SyncLockedTracksIterator;
 
+   /// For use in sorting:  assume each iterator points into this list, no duplications
+   void Permute(const std::vector<TrackNodePointer> &permutation);
+
    /// Add this Track or all children of this TrackList.
    void Add(Track * t);
    void AddToHead(Track * t);
