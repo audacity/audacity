@@ -2335,7 +2335,7 @@ bool VSTEffect::LoadParameters(const wxString & group)
 {
    wxString value;
 
-   VstPatchChunkInfo info = {1, mAEffect->uniqueID, mAEffect->version, mAEffect->numParams};
+   VstPatchChunkInfo info = {1, mAEffect->uniqueID, mAEffect->version, mAEffect->numParams, ""};
    mHost->GetPrivateConfig(group, wxT("UniqueID"), info.pluginUniqueID, info.pluginUniqueID);
    mHost->GetPrivateConfig(group, wxT("Version"), info.pluginVersion, info.pluginVersion);
    mHost->GetPrivateConfig(group, wxT("Elements"), info.numElements, info.numElements);
@@ -3130,7 +3130,8 @@ bool VSTEffect::LoadFXB(const wxFileName & fn)
          1,
          wxINT32_SWAP_ON_LE(iptr[4]),
          wxINT32_SWAP_ON_LE(iptr[5]),
-         wxINT32_SWAP_ON_LE(iptr[6])
+         wxINT32_SWAP_ON_LE(iptr[6]),
+         ""
       };
 
       // Ensure this program looks to belong to the current plugin
@@ -3324,7 +3325,8 @@ bool VSTEffect::LoadFXProgram(unsigned char **bptr, ssize_t & len, int index, bo
       1,
       wxINT32_SWAP_ON_LE(iptr[4]),
       wxINT32_SWAP_ON_LE(iptr[5]),
-      wxINT32_SWAP_ON_LE(iptr[6])
+      wxINT32_SWAP_ON_LE(iptr[6]),
+      ""
    };
 
    // Ensure this program looks to belong to the current plugin
