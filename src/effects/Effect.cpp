@@ -2184,7 +2184,9 @@ Effect::ModifiedAnalysisTrack::ModifiedAnalysisTrack
    if (!name.empty())
       mpTrack->SetName(name);
 
-   pEffect->mTracks->Replace(mpOrigTrack, mpTrack, false);
+   // mpOrigTrack came from mTracks which we own but expose as const to subclasses
+   // So it's okay that we cast it back to const
+   pEffect->mTracks->Replace(const_cast<LabelTrack*>(mpOrigTrack), mpTrack, false);
 }
 
 Effect::ModifiedAnalysisTrack::ModifiedAnalysisTrack(ModifiedAnalysisTrack &&that)
@@ -2204,7 +2206,9 @@ Effect::ModifiedAnalysisTrack::~ModifiedAnalysisTrack()
 {
    if (mpEffect) {
       // not committed -- DELETE the label track
-      mpEffect->mTracks->Replace(mpTrack, mpOrigTrack, true);
+      // mpOrigTrack came from mTracks which we own but expose as const to subclasses
+      // So it's okay that we cast it back to const
+      mpEffect->mTracks->Replace(mpTrack, const_cast<LabelTrack*>(mpOrigTrack), true);
    }
 }
 

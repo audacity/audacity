@@ -837,22 +837,19 @@ void TrackList::AddToHead(Track * t)
    ResizedEvent(n);
 }
 
-void TrackList::Replace(const Track * t, const Track * with, bool deletetrack)
+void TrackList::Replace(Track * t, Track * with, bool deletetrack)
 {
-   Track *const mutableT = const_cast<Track*>(t);
-   Track *const mutableWith = const_cast<Track*>(with);
-
-   if (mutableT && with) {
+   if (t && with) {
       TrackListNode *node =
-         const_cast<TrackListNode *>(mutableT->GetNode());
+         const_cast<TrackListNode *>(t->GetNode());
 
-      mutableT->SetOwner(NULL, NULL);
+      t->SetOwner(NULL, NULL);
       if (deletetrack) {
          delete t;
       }
 
-      node->t = mutableWith;
-      mutableWith->SetOwner(this, node);
+      node->t = with;
+      with->SetOwner(this, node);
       RecalcPositions(node);
       UpdatedEvent(node);
       ResizedEvent(node);
