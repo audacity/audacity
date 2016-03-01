@@ -15,6 +15,7 @@
 
 #include "MemoryX.h"
 #include <vector>
+#include <list>
 #include <wx/dynarray.h>
 #include <wx/event.h>
 #include <wx/gdicmn.h>
@@ -65,15 +66,20 @@ WX_DEFINE_USER_EXPORTED_ARRAY(NoteTrack*, NoteTrackArray, class AUDACITY_DLL_API
 #endif
 
 class TrackList;
-struct TrackListNode;
+
+using ListOfTracks = std::list<Track*>;
+using TrackNodePointer = ListOfTracks::iterator;
 
 class AUDACITY_DLL_API Track /* not final */ : public XMLTagHandler
 {
+   friend class TrackList;
+   friend class TrackListIterator;
+   friend class SyncLockedTracksIterator;
 
  // To be TrackDisplay
  protected:
    TrackList     *mList;
-   TrackListNode *mNode;
+   TrackNodePointer mNode{};
    int            mIndex;
    int            mY;
    int            mHeight;
@@ -122,8 +128,9 @@ class AUDACITY_DLL_API Track /* not final */ : public XMLTagHandler
 #endif
    Track *GetLink() const;
 
-   const TrackListNode *GetNode() const;
-   void SetOwner(TrackList *list, TrackListNode *node);
+ private:
+   TrackNodePointer GetNode() const;
+   void SetOwner(TrackList *list, TrackNodePointer node);
 
  // Keep in Track
 
@@ -237,13 +244,6 @@ class AUDACITY_DLL_API Track /* not final */ : public XMLTagHandler
    bool IsSyncLockSelected() const;
 };
 
-struct TrackListNode
-{
-   Track *t;
-   TrackListNode *next;
-   TrackListNode *prev;
-};
-
 class AUDACITY_DLL_API TrackListIterator /* not final */
 {
  public:
@@ -257,14 +257,13 @@ class AUDACITY_DLL_API TrackListIterator /* not final */
    virtual Track *Prev(bool skiplinked = false);
    virtual Track *Last(bool skiplinked = false);
 
-   Track *ReplaceCurrent(Track *t);                // returns original
    Track *RemoveCurrent(bool deletetrack = false); // returns next
 
  protected:
    friend TrackList;
 
    TrackList *l;
-   TrackListNode *cur;
+   TrackNodePointer cur{};
 };
 
 class AUDACITY_DLL_API TrackListConstIterator
@@ -399,7 +398,7 @@ DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_TRACKLIST_RESIZED, -1);
 // track that was added.
 DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_TRACKLIST_UPDATED, -1);
 
-class AUDACITY_DLL_API TrackList final : public wxEvtHandler
+class AUDACITY_DLL_API TrackList final : public wxEvtHandler, public ListOfTracks
 {
  public:
    // Create an empty TrackList
@@ -422,6 +421,7 @@ class AUDACITY_DLL_API TrackList final : public wxEvtHandler
 
    friend class Track;
    friend class TrackListIterator;
+   friend class SyncLockedTracksIterator;
 
    /// Add this Track or all children of this TrackList.
    void Add(Track * t);
@@ -431,7 +431,8 @@ class AUDACITY_DLL_API TrackList final : public wxEvtHandler
    void Replace(Track * t, Track * with, bool deletetrack = false);
 
    /// Remove this Track or all children of this TrackList.
-   void Remove(Track * t, bool deletetrack = false);
+   /// Return an iterator to what followed the removed track.
+   TrackNodePointer Remove(Track *t, bool deletetrack = false);
 
    /// Make the list empty
    void Clear(bool deleteTracks = false);
@@ -495,17 +496,21 @@ class AUDACITY_DLL_API TrackList final : public wxEvtHandler
    bool Save(wxTextFile * out, bool overwrite) override;
 #endif
 
- private:
+private:
+   bool isNull(TrackNodePointer p) const
+   { return p == end(); }
+   void setNull(TrackNodePointer &p)
+   { p = end(); }
+   bool hasPrev(TrackNodePointer p) const
+   { return p != begin(); }
+
    void DoAssign(const TrackList &that);
        
-   void RecalcPositions(const TrackListNode *node);
-   void UpdatedEvent(const TrackListNode *node);
-   void ResizedEvent(const TrackListNode *node);
+   void RecalcPositions(TrackNodePointer node);
+   void UpdatedEvent(TrackNodePointer node);
+   void ResizedEvent(TrackNodePointer node);
 
-   void SwapNodes(TrackListNode * s1, TrackListNode * s2);
-
-   TrackListNode *head;
-   TrackListNode *tail;
+   void SwapNodes(TrackNodePointer s1, TrackNodePointer s2);
 
    bool mDestructorDeletesTracks;
 };
