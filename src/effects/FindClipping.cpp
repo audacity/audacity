@@ -32,6 +32,7 @@
 
 #include "../LabelTrack.h"
 #include "../WaveTrack.h"
+#include "../MemoryX.h"
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //

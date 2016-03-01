@@ -54,6 +54,7 @@ out.
 #include <wx/math.h>
 
 #include "Internat.h"
+#include "MemoryX.h"
 
 // msmeyer: Define this to add debug output via printf()
 //#define DEBUG_BLOCKFILE

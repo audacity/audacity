@@ -33,6 +33,7 @@
 #include "widgets/Grid.h"
 #include "xml/XMLTagHandler.h"
 
+#include "MemoryX.h"
 #include <utility>
 #include <wx/dialog.h>
 #include <wx/hashmap.h>

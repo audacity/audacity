@@ -28,6 +28,7 @@
 #include <wx/log.h>
 
 #include "LegacyBlockFile.h"
+#include "../MemoryX.h"
 #include "../FileFormats.h"
 #include "../Internat.h"
 

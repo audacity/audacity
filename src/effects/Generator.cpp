@@ -22,7 +22,7 @@
 
 #include "TimeWarper.h"
 
-#include <memory>
+#include "../MemoryX.h"
 
 bool Generator::Process()
 {

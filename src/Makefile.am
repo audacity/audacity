@@ -163,6 +163,7 @@ audacity_SOURCES = \
 	MacroMagic.h \
 	Matrix.cpp \
 	Matrix.h \
+	MemoryX.h \
 	Menus.cpp \
 	Menus.h \
 	Mix.cpp \
