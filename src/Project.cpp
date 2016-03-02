@@ -3147,27 +3147,27 @@ XMLTagHandler *AudacityProject::HandleXMLChild(const wxChar *tag)
    }
 
    if (!wxStrcmp(tag, wxT("wavetrack"))) {
-      WaveTrack *newTrack = mTrackFactory->NewWaveTrack();
+      WaveTrack *newTrack = mTrackFactory->NewWaveTrack().release();
       mTracks->Add(newTrack);
       return newTrack;
    }
 
    #ifdef USE_MIDI
    if (!wxStrcmp(tag, wxT("notetrack"))) {
-      NoteTrack *newTrack = mTrackFactory->NewNoteTrack();
+      NoteTrack *newTrack = mTrackFactory->NewNoteTrack().release();
       mTracks->Add(newTrack);
       return newTrack;
    }
    #endif // USE_MIDI
 
    if (!wxStrcmp(tag, wxT("labeltrack"))) {
-      LabelTrack *newTrack = mTrackFactory->NewLabelTrack();
+      LabelTrack *newTrack = mTrackFactory->NewLabelTrack().release();
       mTracks->Add(newTrack);
       return newTrack;
    }
 
    if (!wxStrcmp(tag, wxT("timetrack"))) {
-      TimeTrack *newTrack = mTrackFactory->NewTimeTrack();
+      TimeTrack *newTrack = mTrackFactory->NewTimeTrack().release();
       mTracks->Add(newTrack);
       return newTrack;
    }
@@ -3593,7 +3593,7 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
       {
          numWaveTracks++;
          pWaveTrack = (WaveTrack*)pTrack;
-         pSavedTrack = mTrackFactory->DuplicateWaveTrack(*pWaveTrack);
+         pSavedTrack = mTrackFactory->DuplicateWaveTrack(*pWaveTrack).release();
          pSavedTrackList.Add(pSavedTrack);
       }
 

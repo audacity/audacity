@@ -16,6 +16,7 @@
 #include "ToolBar.h"
 #include "../Experimental.h"
 
+#include "../MemoryX.h"
 #include <wx/brush.h>
 #include <wx/pen.h>
 
@@ -152,7 +153,7 @@ class TranscriptionToolBar final : public ToolBar {
    int mBackgroundWidth;
    int mBackgroundHeight;
 
-   TimeTrack *mTimeTrack;
+   std::unique_ptr<TimeTrack> mTimeTrack;
 
  public:
 

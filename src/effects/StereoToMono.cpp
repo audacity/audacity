@@ -124,8 +124,6 @@ bool EffectStereoToMono::Process()
       count++;
    }
 
-   if(mOutTrack)
-      delete mOutTrack;
    this->ReplaceProcessedTracks(bGoodResult);
    return bGoodResult;
 }
@@ -164,7 +162,7 @@ bool EffectStereoToMono::ProcessOne(int count)
    double minStart = wxMin(mLeftTrack->GetStartTime(), mRightTrack->GetStartTime());
    bResult &= mLeftTrack->Clear(mLeftTrack->GetStartTime(), mLeftTrack->GetEndTime());
    bResult &= mOutTrack->Flush();
-   bResult &= mLeftTrack->Paste(minStart, mOutTrack);
+   bResult &= mLeftTrack->Paste(minStart, mOutTrack.get());
    mLeftTrack->SetLinked(false);
    mRightTrack->SetLinked(false);
    mLeftTrack->SetChannel(Track::MonoChannel);

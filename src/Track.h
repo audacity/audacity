@@ -520,13 +520,13 @@ class AUDACITY_DLL_API TrackFactory
  public:
    // These methods are defined in WaveTrack.cpp, NoteTrack.cpp,
    // LabelTrack.cpp, and TimeTrack.cpp respectively
-   WaveTrack* DuplicateWaveTrack(WaveTrack &orig);
-   WaveTrack *NewWaveTrack(sampleFormat format = (sampleFormat)0,
+   std::unique_ptr<WaveTrack> DuplicateWaveTrack(WaveTrack &orig);
+   std::unique_ptr<WaveTrack> NewWaveTrack(sampleFormat format = (sampleFormat)0,
                            double rate = 0);
-   LabelTrack *NewLabelTrack();
-   TimeTrack *NewTimeTrack();
+   std::unique_ptr<LabelTrack> NewLabelTrack();
+   std::unique_ptr<TimeTrack> NewTimeTrack();
 #if defined(USE_MIDI)
-   NoteTrack *NewNoteTrack();
+   std::unique_ptr<NoteTrack> NewNoteTrack();
 #endif
 };
 

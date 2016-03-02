@@ -98,9 +98,9 @@ SONFNS(AutoSave)
 
 
 
-NoteTrack *TrackFactory::NewNoteTrack()
+NoteTrack::Holder TrackFactory::NewNoteTrack()
 {
-   return new NoteTrack(mDirManager);
+   return std::make_unique<NoteTrack>(mDirManager);
 }
 
 NoteTrack::NoteTrack(DirManager * projDirManager):

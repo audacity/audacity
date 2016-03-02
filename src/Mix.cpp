@@ -121,7 +121,7 @@ bool MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
       oneinput = true;
    // only one input track (either 1 mono or one linked stereo pair)
 
-   WaveTrack *mixLeft = trackFactory->NewWaveTrack(format, rate);
+   WaveTrack *mixLeft = trackFactory->NewWaveTrack(format, rate).release();
    if (oneinput)
       mixLeft->SetName(usefulIter.First()->GetName()); /* set name of output track to be the same as the sole input track */
    else
@@ -132,7 +132,7 @@ bool MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
       mixLeft->SetChannel(Track::MonoChannel);
    }
    else {
-      mixRight = trackFactory->NewWaveTrack(format, rate);
+      mixRight = trackFactory->NewWaveTrack(format, rate).release();
       if (oneinput) {
          if (usefulIter.First()->GetLink() != NULL)   // we have linked track
             mixLeft->SetName(usefulIter.First()->GetLink()->GetName()); /* set name to match input track's right channel!*/

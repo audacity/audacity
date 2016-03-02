@@ -442,7 +442,7 @@ int FLACImportFileHandle::Import(TrackFactory *trackFactory,
 
    unsigned long c;
    for (c = 0; c < mNumChannels; c++) {
-      mChannels[c] = trackFactory->NewWaveTrack(mFormat, mSampleRate);
+      mChannels[c] = trackFactory->NewWaveTrack(mFormat, mSampleRate).release();
 
       if (mNumChannels == 2) {
          switch (c) {

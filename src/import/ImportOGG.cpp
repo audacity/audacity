@@ -261,7 +261,7 @@ int OggImportFileHandle::Import(TrackFactory *trackFactory, Track ***outTracks,
       mChannels[i] = new WaveTrack *[vi->channels];
 
       for (c = 0; c < vi->channels; c++) {
-         mChannels[i][c] = trackFactory->NewWaveTrack(mFormat, vi->rate);
+         mChannels[i][c] = trackFactory->NewWaveTrack(mFormat, vi->rate).release();
 
          if (vi->channels == 2) {
             switch (c) {

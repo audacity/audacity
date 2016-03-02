@@ -882,14 +882,13 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
                      tracksCopy = *trackList;
                   }
 
-                  WaveTrack *newTrack = p->GetTrackFactory()->NewWaveTrack();
+                  auto newTrack = p->GetTrackFactory()->NewWaveTrack();
                   newTrack->InsertSilence(0.0, t0 - t1);
                   newTrack->Flush();
                   wt->Clear(t1, t0);
-                  bool bResult = wt->Paste(t1, newTrack);
+                  bool bResult = wt->Paste(t1, newTrack.get());
                   wxASSERT(bResult); // TO DO: Actually handle this.
                   wxUnusedVar(bResult);
-                  delete newTrack;
                }
                newRecordingTracks.push_back(wt);
             }
@@ -921,7 +920,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
          wxString baseTrackName = recordingNameCustom? defaultRecordingTrackName : defaultTrackName;
 
          for (int c = 0; c < recordingChannels; c++) {
-            WaveTrack *newTrack = p->GetTrackFactory()->NewWaveTrack();
+            WaveTrack *newTrack = p->GetTrackFactory()->NewWaveTrack().release();
 
             newTrack->SetOffset(t0);
             wxString nameSuffix = wxString(wxT(""));

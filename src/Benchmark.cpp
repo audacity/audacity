@@ -344,7 +344,7 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
 
    ZoomInfo zoomInfo(0.0, ZoomInfo::GetDefaultZoom());
    DirManager *d = new DirManager();
-   WaveTrack *const t = TrackFactory{ d, &zoomInfo }.NewWaveTrack(int16Sample);
+   const auto t = TrackFactory{ d, &zoomInfo }.NewWaveTrack(int16Sample);
    Track *tmp = NULL;
 
    t->SetRate(1);
@@ -532,8 +532,6 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
  success:
    if (tmp)
       delete tmp;
-
-   delete t;
 
    delete[]small1;
    delete[]small2;

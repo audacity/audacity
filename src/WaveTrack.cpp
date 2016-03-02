@@ -63,15 +63,17 @@ using std::max;
 bool WaveTrack::mMonoAsVirtualStereo;
 #endif
 
-WaveTrack* TrackFactory::DuplicateWaveTrack(WaveTrack &orig)
+WaveTrack::Holder TrackFactory::DuplicateWaveTrack(WaveTrack &orig)
 {
-   return (WaveTrack*)(orig.Duplicate().release());
+   return std::unique_ptr<WaveTrack>
+   { static_cast<WaveTrack*>(orig.Duplicate().release()) };
 }
 
 
-WaveTrack *TrackFactory::NewWaveTrack(sampleFormat format, double rate)
+WaveTrack::Holder TrackFactory::NewWaveTrack(sampleFormat format, double rate)
 {
-   return new WaveTrack(mDirManager, format, rate);
+   return std::unique_ptr<WaveTrack>
+   { safenew WaveTrack(mDirManager, format, rate) };
 }
 
 WaveTrack::WaveTrack(DirManager *projDirManager, sampleFormat format, double rate) :
@@ -1166,16 +1168,15 @@ bool WaveTrack::SyncLockAdjust(double oldT1, double newT1)
          if (!p) return false;
          TrackFactory *f = p->GetTrackFactory();
          if (!f) return false;
-         WaveTrack *tmp = f->NewWaveTrack(GetSampleFormat(), GetRate());
+         auto tmp = f->NewWaveTrack(GetSampleFormat(), GetRate());
 
          bool bResult = tmp->InsertSilence(0.0, newT1 - oldT1);
          wxASSERT(bResult); // TO DO: Actually handle this.
          wxUnusedVar(bResult);
          tmp->Flush();
-         bResult = Paste(oldT1, tmp);
+         bResult = Paste(oldT1, tmp.get());
          wxASSERT(bResult); // TO DO: Actually handle this.
          wxUnusedVar(bResult);
-         delete tmp;
       }
    }
    else if (newT1 < oldT1) {

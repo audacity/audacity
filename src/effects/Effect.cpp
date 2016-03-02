@@ -1592,8 +1592,7 @@ bool Effect::ProcessTrack(int count,
 
    int chans = wxMin(mNumAudioOut, mNumChannels);
 
-   WaveTrack *genLeft = NULL;
-   WaveTrack *genRight = NULL;
+   std::unique_ptr<WaveTrack> genLeft, genRight;
    sampleCount genLength = 0;
    bool isGenerator = GetType() == EffectTypeGenerate;
    bool isProcessor = GetType() == EffectTypeProcess;
@@ -1719,16 +1718,6 @@ bool Effect::ProcessTrack(int count,
       }
       catch(...)
       {
-         if (genLeft)
-         {
-            delete genLeft;
-         }
-
-         if (genRight)
-         {
-            delete genRight;
-         }
-
          return false;
       }
       wxASSERT(processed == curBlockSize);
@@ -1886,14 +1875,12 @@ bool Effect::ProcessTrack(int count,
       // Transfer the data from the temporary tracks to the actual ones
       genLeft->Flush();
       // mT1 gives us the NEW selection. We want to replace up to GetSel1().
-      left->ClearAndPaste(mT0, p->GetSel1(), genLeft, true, true, &warper);
-      delete genLeft;
+      left->ClearAndPaste(mT0, p->GetSel1(), genLeft.get(), true, true, &warper);
 
       if (genRight)
       {
          genRight->Flush();
-         right->ClearAndPaste(mT0, mT1, genRight, true, true, &warper);
-         delete genRight;
+         right->ClearAndPaste(mT0, mT1, genRight.get(), true, true, &warper);
       }
    }
 
@@ -2135,7 +2122,7 @@ void Effect::AddToOutputTracks(Track *t)
 Effect::AddedAnalysisTrack::AddedAnalysisTrack(Effect *pEffect, const wxString &name)
    : mpEffect(pEffect)
 {
-   std::unique_ptr < LabelTrack > pTrack{ pEffect->mFactory->NewLabelTrack() };
+   LabelTrack::Holder pTrack{ pEffect->mFactory->NewLabelTrack() };
    mpTrack = pTrack.get();
    if (!name.empty())
       pTrack->SetName(name);

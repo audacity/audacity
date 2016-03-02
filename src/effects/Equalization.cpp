@@ -1076,7 +1076,7 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
 {
    // create a NEW WaveTrack to hold all of the output, including 'tails' each end
    AudacityProject *p = GetActiveProject();
-   WaveTrack *output = p->GetTrackFactory()->NewWaveTrack(floatSample, t->GetRate());
+   auto output = p->GetTrackFactory()->NewWaveTrack(floatSample, t->GetRate());
 
    int L = windowSize - (mM - 1);   //Process L samples at a go
    sampleCount s = start;
@@ -1233,7 +1233,6 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
    delete[] buffer;
    delete[] window1;
    delete[] window2;
-   delete output;
 
    return bLoopSuccess;
 }

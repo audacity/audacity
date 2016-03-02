@@ -1291,7 +1291,7 @@ bool EffectNoiseReduction::Worker::ProcessOne
 
    StartNewTrack();
 
-   std::unique_ptr<WaveTrack> outputTrack(
+   WaveTrack::Holder outputTrack(
       mDoProfile ? NULL
       : factory.NewWaveTrack(track->GetSampleFormat(), track->GetRate()));
 

@@ -53,7 +53,7 @@ private:
    sampleCount mEnd;
    WaveTrack *mLeftTrack;
    WaveTrack *mRightTrack;
-   WaveTrack *mOutTrack;
+   std::unique_ptr<WaveTrack> mOutTrack;
 };
 
 #endif

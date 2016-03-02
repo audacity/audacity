@@ -489,7 +489,7 @@ enum mad_flow output_cb(void *_data,
          Read(wxT("/SamplingRate/DefaultProjectSampleFormat"), floatSample);
 
       for(chn = 0; chn < channels; chn++) {
-         data->channels[chn] = data->trackFactory->NewWaveTrack(format, samplerate);
+         data->channels[chn] = data->trackFactory->NewWaveTrack(format, samplerate).release();
          data->channels[chn]->SetChannel(Track::MonoChannel);
       }
 

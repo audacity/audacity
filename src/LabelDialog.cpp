@@ -319,7 +319,7 @@ bool LabelDialog::TransferDataFromWindow()
       wxString name = mTrackNames[tndx + 1].AfterFirst(wxT('-')).Mid(1);
 
       // Create the NEW track and add to track list
-      LabelTrack *newTrack = mFactory.NewLabelTrack();
+      LabelTrack *newTrack = mFactory.NewLabelTrack().release();
       newTrack->SetName(name);
       mTracks->Add(newTrack);
       tndx++;
@@ -564,14 +564,13 @@ void LabelDialog::OnImport(wxCommandEvent & WXUNUSED(event))
       else {
          // Create a temporary label track and load the labels
          // into it
-         LabelTrack *lt = mFactory.NewLabelTrack();
+         auto lt = mFactory.NewLabelTrack();
          lt->Import(f);
 
          // Add the labesls to our collection
-         AddLabels(lt);
+         AddLabels(lt.get());
 
          // Done with the temporary track
-         delete lt;
      }
 
       // Repopulate the grid
@@ -632,7 +631,7 @@ void LabelDialog::OnExport(wxCommandEvent & WXUNUSED(event))
    }
 
    // Transfer our collection to a temporary label track
-   LabelTrack *lt = mFactory.NewLabelTrack();
+   auto lt = mFactory.NewLabelTrack();
    int i;
 
    for (i = 0; i < cnt; i++) {
@@ -643,7 +642,6 @@ void LabelDialog::OnExport(wxCommandEvent & WXUNUSED(event))
 
    // Export them and clean
    lt->Export(f);
-   delete lt;
 
 #ifdef __WXMAC__
    f.Write(wxTextFileType_Mac);

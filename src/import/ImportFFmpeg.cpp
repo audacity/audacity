@@ -509,7 +509,7 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
       int c;
       for (c = 0; c < mScs[s]->m_stream->codec->channels; c++)
       {
-         mChannels[s][c] = trackFactory->NewWaveTrack(mScs[s]->m_osamplefmt, mScs[s]->m_stream->codec->sample_rate);
+         mChannels[s][c] = trackFactory->NewWaveTrack(mScs[s]->m_osamplefmt, mScs[s]->m_stream->codec->sample_rate).release();
 
          if (mScs[s]->m_stream->codec->channels == 2)
          {

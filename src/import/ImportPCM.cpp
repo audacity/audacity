@@ -342,7 +342,7 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
 
    int c;
    for (c = 0; c < mInfo.channels; c++) {
-      channels[c] = trackFactory->NewWaveTrack(mFormat, mInfo.samplerate);
+      channels[c] = trackFactory->NewWaveTrack(mFormat, mInfo.samplerate).release();
 
       if (mInfo.channels > 1)
          switch (c) {

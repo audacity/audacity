@@ -3358,7 +3358,7 @@ bool AudacityProject::OnEffect(const PluginID & ID, int flags)
       // No tracks were selected...
       if (type == EffectTypeGenerate) {
          // Create a NEW track for the generated audio...
-         newTrack = mTrackFactory->NewWaveTrack();
+         newTrack = mTrackFactory->NewWaveTrack().release();
          mTracks->Add(newTrack);
          newTrack->SetSelected(true);
       }
@@ -4152,17 +4152,14 @@ void AudacityProject::OnPaste()
                   ((WaveTrack *)n)->ClearAndPaste(t0, t1, (WaveTrack *)c, true, true);
             }
             else {
-               WaveTrack *tmp;
-               tmp = mTrackFactory->NewWaveTrack( ((WaveTrack*)n)->GetSampleFormat(), ((WaveTrack*)n)->GetRate());
+               auto tmp = mTrackFactory->NewWaveTrack( ((WaveTrack*)n)->GetSampleFormat(), ((WaveTrack*)n)->GetRate());
                bool bResult = tmp->InsertSilence(0.0, msClipT1 - msClipT0); // MJS: Is this correct?
                wxASSERT(bResult); // TO DO: Actually handle this.
                wxUnusedVar(bResult);
                tmp->Flush();
 
                bPastedSomething |=
-                  ((WaveTrack *)n)->ClearAndPaste(t0, t1, tmp, true, true);
-
-               delete tmp;
+                  ((WaveTrack *)n)->ClearAndPaste(t0, t1, tmp.get(), true, true);
             }
          }
          else if (n->GetKind() == Track::Label && n->GetSelected())
@@ -4267,19 +4264,19 @@ bool AudacityProject::HandlePasteNothingSelected()
          case Track::Wave:
             {
                WaveTrack *w = (WaveTrack *)pClip;
-               pNewTrack = mTrackFactory->NewWaveTrack(w->GetSampleFormat(), w->GetRate());
+               pNewTrack = mTrackFactory->NewWaveTrack(w->GetSampleFormat(), w->GetRate()).release();
             }
             break;
          #ifdef USE_MIDI
             case Track::Note:
-               pNewTrack = mTrackFactory->NewNoteTrack();
+               pNewTrack = mTrackFactory->NewNoteTrack().release();
                break;
             #endif // USE_MIDI
          case Track::Label:
-            pNewTrack = mTrackFactory->NewLabelTrack();
+            pNewTrack = mTrackFactory->NewLabelTrack().release();
             break;
          case Track::Time:
-            pNewTrack = mTrackFactory->NewTimeTrack();
+            pNewTrack = mTrackFactory->NewTimeTrack().release();
             break;
          default:
             pClip = iterClip.Next();
@@ -4358,7 +4355,7 @@ void AudacityProject::OnPasteNewLabel()
 
       // If no match found, add one
       if (!t) {
-         t = GetTrackFactory()->NewLabelTrack();
+         t = GetTrackFactory()->NewLabelTrack().release();
          mTracks->Add(t);
       }
 
@@ -5495,7 +5492,7 @@ void AudacityProject::OnImportLabels()
          return;
       }
 
-      LabelTrack *newTrack = GetTrackFactory()->NewLabelTrack();
+      LabelTrack *newTrack = GetTrackFactory()->NewLabelTrack().release();
       wxString sTrackName;
       wxFileName::SplitPath(fileName, NULL, NULL, &sTrackName, NULL);
       newTrack->SetName(sTrackName);
@@ -5538,7 +5535,7 @@ void AudacityProject::OnImportMIDI()
 
 void AudacityProject::DoImportMIDI(const wxString &fileName)
 {
-   NoteTrack *newTrack = GetTrackFactory()->NewNoteTrack();
+   NoteTrack *newTrack = GetTrackFactory()->NewNoteTrack().release();
 
    if (::ImportMIDI(fileName, newTrack)) {
 
@@ -6253,7 +6250,7 @@ void AudacityProject::OnScoreAlign()
 
 void AudacityProject::OnNewWaveTrack()
 {
-   WaveTrack *t = mTrackFactory->NewWaveTrack(mDefaultFormat, mRate);
+   WaveTrack *t = mTrackFactory->NewWaveTrack(mDefaultFormat, mRate).release();
    SelectNone();
 
    mTracks->Add(t);
@@ -6267,7 +6264,7 @@ void AudacityProject::OnNewWaveTrack()
 
 void AudacityProject::OnNewStereoTrack()
 {
-   WaveTrack *t = mTrackFactory->NewWaveTrack(mDefaultFormat, mRate);
+   WaveTrack *t = mTrackFactory->NewWaveTrack(mDefaultFormat, mRate).release();
    t->SetChannel(Track::LeftChannel);
    SelectNone();
 
@@ -6275,7 +6272,7 @@ void AudacityProject::OnNewStereoTrack()
    t->SetSelected(true);
    t->SetLinked (true);
 
-   t = mTrackFactory->NewWaveTrack(mDefaultFormat, mRate);
+   t = mTrackFactory->NewWaveTrack(mDefaultFormat, mRate).release();
    t->SetChannel(Track::RightChannel);
 
    mTracks->Add(t);
@@ -6289,7 +6286,7 @@ void AudacityProject::OnNewStereoTrack()
 
 void AudacityProject::OnNewLabelTrack()
 {
-   LabelTrack *t = GetTrackFactory()->NewLabelTrack();
+   LabelTrack *t = GetTrackFactory()->NewLabelTrack().release();
 
    SelectNone();
 
@@ -6309,7 +6306,7 @@ void AudacityProject::OnNewTimeTrack()
       return;
    }
 
-   TimeTrack *t = mTrackFactory->NewTimeTrack();
+   TimeTrack *t = mTrackFactory->NewTimeTrack().release();
 
    SelectNone();
 
@@ -6385,7 +6382,7 @@ int AudacityProject::DoAddLabel(const SelectedRegion &region, bool preserveFocus
 
    // If none found, start a NEW label track and use it
    if (!lt) {
-      lt = GetTrackFactory()->NewLabelTrack();
+      lt = GetTrackFactory()->NewLabelTrack().release();
       mTracks->Add(lt);
    }
 

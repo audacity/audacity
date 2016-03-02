@@ -88,9 +88,9 @@ int LabelTrack::mTextHeight;
 
 int LabelTrack::mFontHeight=-1;
 
-LabelTrack *TrackFactory::NewLabelTrack()
+LabelTrack::Holder TrackFactory::NewLabelTrack()
 {
-   return new LabelTrack(mDirManager);
+   return std::make_unique<LabelTrack>(mDirManager);
 }
 
 LabelTrack::LabelTrack(DirManager * projDirManager):
