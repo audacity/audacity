@@ -2222,13 +2222,13 @@ void Effect::ReplaceProcessedTracks(const bool bGoodResult)
       return;
    }
 
-   TrackListIterator iterOut(mOutputTracks);
+   auto iterOut = mOutputTracks->begin(), iterEnd = mOutputTracks->end();
 
-   Track *x;
    size_t cnt = mOMap.GetCount();
    size_t i = 0;
 
-   for (Track *o = iterOut.First(); o; o = x, i++) {
+   for (; iterOut != iterEnd; ++i) {
+      Track *o = std::move(*iterOut);
       // If tracks were removed from mOutputTracks, then there will be
       // tracks in the map that must be removed from mTracks.
       while (i < cnt && mOMap[i] != o) {
@@ -2243,7 +2243,7 @@ void Effect::ReplaceProcessedTracks(const bool bGoodResult)
       wxASSERT(i < cnt);
 
       // Remove the track from the output list...don't DELETE it
-      x = iterOut.RemoveCurrent(false);
+      iterOut = mOutputTracks->erase(iterOut);
 
       Track *t = (Track *) mIMap[i];
       if (t == NULL)
@@ -2283,7 +2283,7 @@ void Effect::ReplaceProcessedTracks(const bool bGoodResult)
    mOMap.Clear();
 
    // Make sure we processed everything
-   wxASSERT(iterOut.First() == NULL);
+   wxASSERT(mOutputTracks->empty());
 
    // The output list is no longer needed
    delete mOutputTracks;
