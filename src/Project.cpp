@@ -3671,35 +3671,40 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
 
 
 void AudacityProject::AddImportedTracks(const wxString &fileName,
-                                        Track **newTracks, int numTracks)
+                                        TrackHolders &&newTracks)
 {
+   const auto numTracks = newTracks.size();
    SelectNone();
 
    bool initiallyEmpty = mTracks->IsEmpty();
    double newRate = 0;
    wxString trackNameBase = fileName.AfterLast(wxFILE_SEP_PATH).BeforeLast('.');
    bool isLinked = false;
-   for (int i = 0; i < numTracks; i++) {
-      if (newRate == 0 && newTracks[i]->GetKind() == Track::Wave) {
-         newRate = ((WaveTrack *)newTracks[i])->GetRate();
+   int i = -1;
+   for (auto &uNewTrack : newTracks) {
+      ++i;
+
+      Track *newTrack; // TO DO: use unique_ptr, not bare pointer
+      mTracks->Add(newTrack = ((Track*)(uNewTrack.get()))->Duplicate().release()); // Ack! Once mTracks holds a smart pointer, Duplicate() won't be needed.
+      if (newRate == 0 && newTrack->GetKind() == Track::Wave) {
+         newRate = ((WaveTrack *)newTrack)->GetRate();
       }
-      mTracks->Add(newTracks[i]);
-      newTracks[i]->SetSelected(true);
+      newTrack->SetSelected(true);
       //we need to check link status based on the first channel only.
       if(0==i)
-         isLinked = newTracks[i]->GetLinked();
+         isLinked = newTrack->GetLinked();
       if (numTracks > 2 || (numTracks > 1 && !isLinked) ) {
-         newTracks[i]->SetName(trackNameBase + wxString::Format(wxT(" %d" ), i + 1));
+         newTrack->SetName(trackNameBase + wxString::Format(wxT(" %d" ), i + 1));
       }
       else {
-         newTracks[i]->SetName(trackNameBase);
+         newTrack->SetName(trackNameBase);
       }
 
       // Check if NEW track contains aliased blockfiles and if yes,
       // remember this to show a warning later
-      if (newTracks[i]->GetKind() == WaveTrack::Wave)
+      if (newTrack->GetKind() == WaveTrack::Wave)
       {
-         WaveClip* clip = ((WaveTrack*)newTracks[i])->GetClipByIndex(0);
+         WaveClip* clip = ((WaveTrack*)newTrack)->GetClipByIndex(0);
          BlockArray &blocks = clip->GetSequence()->GetBlockArray();
          if (clip && blocks.size())
          {
@@ -3711,8 +3716,6 @@ void AudacityProject::AddImportedTracks(const wxString &fileName,
          }
       }
    }
-
-   delete[]newTracks;
 
    // Automatically assign rate of imported file to whole project,
    // if this is the first file that is imported
@@ -3747,13 +3750,14 @@ void AudacityProject::AddImportedTracks(const wxString &fileName,
 
    // Moved this call to higher levels to prevent flicker redrawing everything on each file.
    //   HandleResize();
+
+   newTracks.clear();
 }
 
 // If pNewTrackList is passed in non-NULL, it gets filled with the pointers to NEW tracks.
 bool AudacityProject::Import(const wxString &fileName, WaveTrackArray* pTrackArray /*= NULL*/)
 {
-   Track **newTracks;
-   int numTracks;
+   TrackHolders newTracks;
    wxString errorMessage = wxEmptyString;
 
    // Backup Tags, before the import.  Be prepared to roll back changes.
@@ -3784,9 +3788,9 @@ bool AudacityProject::Import(const wxString &fileName, WaveTrackArray* pTrackArr
    };
    TempTags tempTags(mTags);
 
-   numTracks = Importer::Get().Import(fileName,
+   bool success = Importer::Get().Import(fileName,
                                             mTrackFactory,
-                                            &newTracks,
+                                            newTracks,
                                             mTags.get(),
                                             errorMessage);
 
@@ -3798,7 +3802,7 @@ bool AudacityProject::Import(const wxString &fileName, WaveTrackArray* pTrackArr
       ShowErrorDialog(this, _("Error Importing"),
                  errorMessage, wxT("innerlink:wma-proprietary"));
    }
-   if (numTracks <= 0)
+   if (!success)
       return false;
 
    wxGetApp().AddFileToHistory(fileName);
@@ -3820,15 +3824,15 @@ bool AudacityProject::Import(const wxString &fileName, WaveTrackArray* pTrackArr
    // Have to set up newTrackList before calling AddImportedTracks,
    // because AddImportedTracks deletes newTracks.
    if (pTrackArray) {
-      for (int i = 0; i < numTracks; i++) {
-         if (newTracks[i]->GetKind() == Track::Wave) {
-            pTrackArray->push_back(static_cast<WaveTrack *>(newTracks[i]));
+      for (const auto &newTrack : newTracks) {
+         if (newTrack->GetKind() == Track::Wave) {
+            pTrackArray->push_back(static_cast<WaveTrack *>(newTrack.get()));
          }
       }
    }
 
    // PRL: Undo history is incremented inside this:
-   AddImportedTracks(fileName, newTracks, numTracks);
+   AddImportedTracks(fileName, std::move(newTracks));
 
    int mode = gPrefs->Read(wxT("/AudioFiles/NormalizeOnLoad"), 0L);
    if (mode == 1) {

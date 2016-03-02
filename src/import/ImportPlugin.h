@@ -64,6 +64,8 @@ but little else.
 
 #include "../widgets/ProgressDialog.h"
 
+#include "ImportRaw.h" // defines TrackHolders
+
 class TrackFactory;
 class Track;
 class Tags;
@@ -152,8 +154,8 @@ public:
    // do the actual import, creating whatever tracks are necessary with
    // the TrackFactory and calling the progress callback every iteration
    // through the importing loop
-   virtual int Import(TrackFactory *trackFactory, Track ***outTracks,
-                      int *outNumTracks, Tags *tags) = 0;
+   virtual int Import(TrackFactory *trackFactory, TrackHolders &outTracks,
+                      Tags *tags) = 0;
 
    // Return number of elements in stream list
    virtual wxInt32 GetStreamCount() = 0;

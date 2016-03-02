@@ -125,8 +125,8 @@ public:
 
    wxString GetFileDescription();
    int GetFileUncompressedBytes();
-   int Import(TrackFactory *trackFactory, Track ***outTracks,
-              int *outNumTracks, Tags *tags);
+   int Import(TrackFactory *trackFactory, TrackHolders &outTracks,
+              Tags *tags) override;
 
    wxInt32 GetStreamCount(){ return 1; }
 
@@ -229,9 +229,11 @@ int LOFImportFileHandle::GetFileUncompressedBytes()
    return 0;
 }
 
-int LOFImportFileHandle::Import(TrackFactory * WXUNUSED(trackFactory), Track *** WXUNUSED(outTracks),
-                                int * WXUNUSED(outNumTracks), Tags * WXUNUSED(tags))
+int LOFImportFileHandle::Import(TrackFactory * WXUNUSED(trackFactory), TrackHolders &outTracks,
+                                Tags * WXUNUSED(tags))
 {
+   outTracks.clear();
+
    wxASSERT(mTextFile->IsOpened());
 
    if(mTextFile->Eof())

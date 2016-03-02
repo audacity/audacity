@@ -41,6 +41,8 @@
 #include <wx/intl.h>
 #include <wx/dcclient.h>
 
+#include "import/ImportRaw.h" // defines TrackHolders
+
 const int AudacityProjectTimerID = 5200;
 
 class wxWindow;
@@ -235,7 +237,8 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    bool Import(const wxString &fileName, WaveTrackArray *pTrackArray = NULL);
 
    void AddImportedTracks(const wxString &fileName,
-                          Track **newTracks, int numTracks);
+                          TrackHolders &&newTracks);
+
    void LockAllBlocks();
    void UnlockAllBlocks();
    bool Save(bool overwrite = true, bool fromSaveAs = false, bool bWantSaveCompressed = false);

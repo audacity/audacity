@@ -5571,15 +5571,14 @@ void AudacityProject::OnImportRaw()
    gPrefs->Write(wxT("/DefaultOpenPath"), path);
    gPrefs->Flush();
 
-   Track **newTracks;
-   int numTracks;
+   TrackHolders newTracks;
 
-   numTracks = ::ImportRaw(this, fileName, mTrackFactory, &newTracks);
+   ::ImportRaw(this, fileName, mTrackFactory, newTracks);
 
-   if (numTracks <= 0)
+   if (newTracks.size() <= 0)
       return;
 
-   AddImportedTracks(fileName, newTracks, numTracks);
+   AddImportedTracks(fileName, std::move(newTracks));
    HandleResize(); // Adjust scrollers for NEW track sizes.
 }
 
