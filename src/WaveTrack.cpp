@@ -807,7 +807,7 @@ void WaveTrack::SetWaveformSettings(WaveformSettings *pSettings)
 //
 bool WaveTrack::ClearAndPaste(double t0, // Start of time to clear
                               double t1, // End of time to clear
-                              Track *src, // What to paste
+                              const Track *src, // What to paste
                               bool preserve, // Whether to reinsert splits/cuts
                               bool merge, // Whether to remove 'extra' splits
                               TimeWarper *effectWarper // How does time change

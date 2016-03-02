@@ -75,7 +75,7 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
    WaveTrack(const WaveTrack &orig);
 
    void Init(const WaveTrack &orig);
-   virtual Track *Duplicate() const;
+   virtual Track *Duplicate() const override;
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
    void VirtualStereoInit();
 #endif
@@ -159,7 +159,7 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
    bool Clear(double t0, double t1) override;
    bool Paste(double t0, const Track *src) override;
    bool ClearAndPaste(double t0, double t1,
-                              Track *src,
+                              const Track *src,
                               bool preserve = true,
                               bool merge = true,
                               TimeWarper *effectWarper = NULL) /* not override */;
