@@ -746,7 +746,7 @@ void TrackList::DoAssign(const TrackList &that)
    mDestructorDeletesTracks = true;
    TrackListConstIterator it(&that);
    for (const Track *track = it.First(); track; track = it.Next())
-      Add(track->Duplicate());
+      Add(track->Duplicate().release());
 }
 
 void TrackList::Swap(TrackList &that)

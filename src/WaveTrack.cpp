@@ -65,7 +65,7 @@ bool WaveTrack::mMonoAsVirtualStereo;
 
 WaveTrack* TrackFactory::DuplicateWaveTrack(WaveTrack &orig)
 {
-   return (WaveTrack*)(orig.Duplicate());
+   return (WaveTrack*)(orig.Duplicate().release());
 }
 
 
@@ -355,9 +355,9 @@ void WaveTrack::SetSpectrumBounds(float min, float max) const
    mSpectrumMax = max;
 }
 
-Track *WaveTrack::Duplicate() const
+Track::Holder WaveTrack::Duplicate() const
 {
-   return new WaveTrack(*this);
+   return Track::Holder{ safenew WaveTrack{ *this } };
 }
 
 double WaveTrack::GetRate() const

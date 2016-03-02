@@ -2117,7 +2117,7 @@ void Effect::CopyInputTracks(int trackType)
       if (aTrack->GetSelected() ||
             (trackType == Track::All && aTrack->IsSyncLockSelected()))
       {
-         Track *o = aTrack->Duplicate();
+         Track *o = aTrack->Duplicate().release();
          mOutputTracks->Add(o);
          mIMap.Add(aTrack);
          mOMap.Add(o);

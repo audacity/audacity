@@ -214,7 +214,7 @@ void UndoManager::ModifyState(const TrackList * l,
    TrackListConstIterator iter(l);
    const Track *t = iter.First();
    while (t) {
-      tracksCopy->Add(t->Duplicate());
+      tracksCopy->Add(t->Duplicate().release());
       t = iter.Next();
    }
 
@@ -259,7 +259,7 @@ void UndoManager::PushState(const TrackList * l,
    TrackListConstIterator iter(l);
    const Track *t = iter.First();
    while (t) {
-      tracksCopy->Add(t->Duplicate());
+      tracksCopy->Add(t->Duplicate().release());
       t = iter.Next();
    }
 

@@ -2751,7 +2751,7 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
             }
          }
 
-         mLastSavedTracks->Add(t->Duplicate());
+         mLastSavedTracks->Add(t->Duplicate().release());
          t = iter.Next();
       }
 
@@ -3549,7 +3549,7 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
       Track *t = iter.First();
       Track *dupT;
       while (t) {
-         dupT = t->Duplicate();
+         dupT = t->Duplicate().release();
          mLastSavedTracks->Add(dupT);
 
          //only after the xml has been saved we can mark it saved.
@@ -4066,8 +4066,7 @@ void AudacityProject::PopState(const UndoState &state)
 
    while (t)
    {
-      copyTrack=t->Duplicate();
-      mTracks->Add(copyTrack);
+      mTracks->Add(copyTrack = t->Duplicate().release());
 
       //add the track to OD if the manager exists.  later we might do a more rigorous check...
       if (copyTrack->GetKind() == Track::Wave)

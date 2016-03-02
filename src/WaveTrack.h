@@ -75,7 +75,9 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
    WaveTrack(const WaveTrack &orig);
 
    void Init(const WaveTrack &orig);
-   virtual Track *Duplicate() const override;
+
+   Track::Holder Duplicate() const override;
+
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
    void VirtualStereoInit();
 #endif
@@ -87,6 +89,7 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
 #endif
 
    typedef WaveTrackLocation Location;
+   using Holder = std::unique_ptr<WaveTrack>;
 
    virtual ~WaveTrack();
    double GetOffset() const override;

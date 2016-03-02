@@ -1098,11 +1098,11 @@ void ControlToolBar::SetupCutPreviewTracks(double WXUNUSED(playStart), double cu
       if (track1)
       {
          // Duplicate and change tracks
-         track1 = track1->Duplicate();
+         track1 = track1->Duplicate().release();
          track1->Clear(cutStart, cutEnd);
          if (track2)
          {
-            track2 = track2->Duplicate();
+            track2 = track2->Duplicate().release();
             track2->Clear(cutStart, cutEnd);
          }
 

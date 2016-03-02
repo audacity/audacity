@@ -109,9 +109,9 @@ TimeTrack::~TimeTrack()
    delete mRuler;
 }
 
-Track *TimeTrack::Duplicate() const
+Track::Holder TimeTrack::Duplicate() const
 {
-   return new TimeTrack(*this);
+   return std::make_unique<TimeTrack>(*this);
 }
 
 bool TimeTrack::GetInterpolateLog() const

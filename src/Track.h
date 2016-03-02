@@ -165,7 +165,9 @@ class AUDACITY_DLL_API Track /* not final */ : public XMLTagHandler
    virtual ~ Track();
 
    void Init(const Track &orig);
-   virtual Track *Duplicate() const = 0;
+
+   using Holder = std::unique_ptr<Track>;
+   virtual Holder Duplicate() const = 0;
 
    // Called when this track is merged to stereo with another, and should
    // take on some paramaters of its partner.

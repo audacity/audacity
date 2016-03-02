@@ -1136,9 +1136,9 @@ double LabelTrack::GetEndTime() const
    return end;
 }
 
-Track *LabelTrack::Duplicate() const
+Track::Holder LabelTrack::Duplicate() const
 {
-   return new LabelTrack(*this);
+   return std::make_unique<LabelTrack>( *this );
 }
 
 void LabelTrack::SetSelected(bool s)

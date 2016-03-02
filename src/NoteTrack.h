@@ -57,7 +57,8 @@ class AUDACITY_DLL_API NoteTrack final : public Track {
    NoteTrack(DirManager * projDirManager);
    virtual ~NoteTrack();
 
-   Track *Duplicate() const override;
+   using Holder = std::unique_ptr<NoteTrack>;
+   Track::Holder Duplicate() const override;
 
    int GetKind() const override { return Note; }
 
