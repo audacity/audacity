@@ -4595,20 +4595,18 @@ void AudacityProject::EditClipboardByLabel( EditDestFunction action )
       if( n->GetKind() == Track::Wave && ( allTracks || n->GetSelected() ) )
       {
          WaveTrack *wt = ( WaveTrack* )n;
-         WaveTrack *merged = NULL;
+         Track::Holder merged;
          for( int i = ( int )regions.size() - 1; i >= 0; i-- )
          {
-            Track *dest = NULL;
             const Region &region = regions.at(i);
-            ( wt->*action )( region.start, region.end,
-                             &dest );
+            auto dest = ( wt->*action )( region.start, region.end );
             if( dest )
             {
                dest->SetChannel( wt->GetChannel() );
                dest->SetLinked( wt->GetLinked() );
                dest->SetName( wt->GetName() );
                if( !merged )
-                  merged = ( WaveTrack* )dest;
+                  merged = std::move(dest);
                else
                {
                   // Paste to the beginning; unless this is the first region,
@@ -4617,10 +4615,9 @@ void AudacityProject::EditClipboardByLabel( EditDestFunction action )
                      merged->Offset(
                         regions.at(i + 1).start - region.end);
 
-                  bool bResult = merged->Paste( 0.0 , dest );
+                  bool bResult = merged->Paste( 0.0 , dest.get() );
                   wxASSERT(bResult); // TO DO: Actually handle this.
                   wxUnusedVar(bResult);
-                  delete dest;
                }
             }
             else  // nothing copied but there is a 'region', so the 'region' must be a 'point label' so offset
@@ -4630,7 +4627,7 @@ void AudacityProject::EditClipboardByLabel( EditDestFunction action )
                         regions.at(i + 1).start - region.end);
          }
          if( merged )
-            msClipboard->Add( merged );
+            msClipboard->Add( merged.release() );
       }
    }
 

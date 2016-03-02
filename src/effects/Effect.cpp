@@ -2160,12 +2160,10 @@ Effect::ModifiedAnalysisTrack::ModifiedAnalysisTrack
    : mpEffect(pEffect)
    , mpOrigTrack(pOrigTrack)
 {
-   Track *newTrack{};
-
    // copy LabelTrack here, so it can be undone on cancel
-   pOrigTrack->Copy(pOrigTrack->GetStartTime(), pOrigTrack->GetEndTime(), &newTrack);
+   auto newTrack = pOrigTrack->Copy(pOrigTrack->GetStartTime(), pOrigTrack->GetEndTime());
 
-   mpTrack = static_cast<LabelTrack*>(newTrack);
+   mpTrack = static_cast<LabelTrack*>(newTrack.get());
 
    // Why doesn't LabelTrack::Copy complete the job? :
    mpTrack->SetOffset(pOrigTrack->GetStartTime());
@@ -2174,7 +2172,7 @@ Effect::ModifiedAnalysisTrack::ModifiedAnalysisTrack
 
    // mpOrigTrack came from mTracks which we own but expose as const to subclasses
    // So it's okay that we cast it back to const
-   pEffect->mTracks->Replace(const_cast<LabelTrack*>(mpOrigTrack), mpTrack, false);
+   pEffect->mTracks->Replace(const_cast<LabelTrack*>(mpOrigTrack), newTrack.release(), false);
 }
 
 Effect::ModifiedAnalysisTrack::ModifiedAnalysisTrack(ModifiedAnalysisTrack &&that)
@@ -2595,13 +2593,12 @@ void Effect::Preview(bool dryOnly)
       WaveTrack *src = (WaveTrack *) iter.First();
       while (src)
       {
-         WaveTrack *dest;
          if (src->GetSelected() || mPreviewWithNotSelected) {
-            src->Copy(mT0, t1, (Track **) &dest);
+            auto dest = src->Copy(mT0, t1);
             dest->InsertSilence(0.0, mT0);
             dest->SetSelected(src->GetSelected());
-            dest->SetDisplay(WaveTrack::NoDisplay);
-            mTracks->Add(dest);
+            static_cast<WaveTrack*>(dest.get())->SetDisplay(WaveTrack::NoDisplay);
+            mTracks->Add(dest.release());
          }
          src = (WaveTrack *) iter.Next();
       }

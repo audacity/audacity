@@ -3815,7 +3815,6 @@ void AudacityProject::OnCut()
 {
    TrackListIterator iter(mTracks);
    Track *n = iter.First();
-   Track *dest;
 
    // This doesn't handle cutting labels, it handles
    // cutting the _text_ inside of labels, i.e. if you're
@@ -3837,22 +3836,22 @@ void AudacityProject::OnCut()
    n = iter.First();
    while (n) {
       if (n->GetSelected()) {
-         dest = NULL;
+         Track::Holder dest;
 #if defined(USE_MIDI)
          if (n->GetKind() == Track::Note)
             // Since portsmf has a built-in cut operator, we use that instead
-            n->Cut(mViewInfo.selectedRegion.t0(),
-                   mViewInfo.selectedRegion.t1(), &dest);
+            dest = n->Cut(mViewInfo.selectedRegion.t0(),
+                   mViewInfo.selectedRegion.t1());
          else
 #endif
-            n->Copy(mViewInfo.selectedRegion.t0(),
-                    mViewInfo.selectedRegion.t1(), &dest);
+            dest = n->Copy(mViewInfo.selectedRegion.t0(),
+                    mViewInfo.selectedRegion.t1());
 
          if (dest) {
             dest->SetChannel(n->GetChannel());
             dest->SetLinked(n->GetLinked());
             dest->SetName(n->GetName());
-            msClipboard->Add(dest);
+            msClipboard->Add(dest.release());
          }
       }
       n = iter.Next();
@@ -3904,21 +3903,21 @@ void AudacityProject::OnSplitCut()
 {
    TrackListIterator iter(mTracks);
    Track *n = iter.First();
-   Track *dest;
 
    ClearClipboard();
    while (n) {
       if (n->GetSelected()) {
-         dest = NULL;
+         Track::Holder dest;
          if (n->GetKind() == Track::Wave)
          {
-            ((WaveTrack*)n)->SplitCut(
+            dest = ((WaveTrack*)n)->SplitCut(
                mViewInfo.selectedRegion.t0(),
-               mViewInfo.selectedRegion.t1(), &dest);
-         } else
+               mViewInfo.selectedRegion.t1());
+         }
+         else
          {
-            n->Copy(mViewInfo.selectedRegion.t0(),
-                    mViewInfo.selectedRegion.t1(), &dest);
+            dest = n->Copy(mViewInfo.selectedRegion.t0(),
+                    mViewInfo.selectedRegion.t1());
             n->Silence(mViewInfo.selectedRegion.t0(),
                        mViewInfo.selectedRegion.t1());
          }
@@ -3926,7 +3925,7 @@ void AudacityProject::OnSplitCut()
             dest->SetChannel(n->GetChannel());
             dest->SetLinked(n->GetLinked());
             dest->SetName(n->GetName());
-            msClipboard->Add(dest);
+            msClipboard->Add(dest.release());
          }
       }
       n = iter.Next();
@@ -3948,7 +3947,6 @@ void AudacityProject::OnCopy()
    TrackListIterator iter(mTracks);
 
    Track *n = iter.First();
-   Track *dest;
 
    while (n) {
       if (n->GetSelected()) {
@@ -3966,14 +3964,13 @@ void AudacityProject::OnCopy()
    n = iter.First();
    while (n) {
       if (n->GetSelected()) {
-         dest = NULL;
-         n->Copy(mViewInfo.selectedRegion.t0(),
-                 mViewInfo.selectedRegion.t1(), &dest);
+         auto dest = n->Copy(mViewInfo.selectedRegion.t0(),
+                 mViewInfo.selectedRegion.t1());
          if (dest) {
             dest->SetChannel(n->GetChannel());
             dest->SetLinked(n->GetLinked());
             dest->SetName(n->GetName());
-            msClipboard->Add(dest);
+            msClipboard->Add(dest.release());
          }
       }
       n = iter.Next();
@@ -4560,13 +4557,12 @@ void AudacityProject::OnDuplicate()
 
    while (n) {
       if (n->GetSelected()) {
-         Track *dest = NULL;
-         n->Copy(mViewInfo.selectedRegion.t0(),
-                 mViewInfo.selectedRegion.t1(), &dest);
+         auto dest = n->Copy(mViewInfo.selectedRegion.t0(),
+                 mViewInfo.selectedRegion.t1());
          if (dest) {
             dest->Init(*n);
             dest->SetOffset(wxMax(mViewInfo.selectedRegion.t0(), n->GetOffset()));
-            mTracks->Add(dest);
+            mTracks->Add(dest.release());
          }
       }
 
@@ -4820,22 +4816,23 @@ void AudacityProject::OnSplitNew()
 
    for (Track *n = iter.First(); n; n = iter.Next()) {
       if (n->GetSelected()) {
-         Track *dest = NULL;
+         Track::Holder dest;
          double newt0 = 0, newt1 = 0;
          double offset = n->GetOffset();
          if (n->GetKind() == Track::Wave) {
+            const auto wt = static_cast<WaveTrack*>(n);
             // Clips must be aligned to sample positions or the NEW clip will not fit in the gap where it came from
-            offset = ((WaveTrack*)n)->LongSamplesToTime(((WaveTrack*)n)->TimeToLongSamples(offset));
-            newt0 = ((WaveTrack*)n)->LongSamplesToTime(((WaveTrack*)n)->TimeToLongSamples(mViewInfo.selectedRegion.t0()));
-            newt1 = ((WaveTrack*)n)->LongSamplesToTime(((WaveTrack*)n)->TimeToLongSamples(mViewInfo.selectedRegion.t1()));
-            ((WaveTrack*)n)->SplitCut(newt0, newt1, &dest);
+            offset = wt->LongSamplesToTime(wt->TimeToLongSamples(offset));
+            newt0 = wt->LongSamplesToTime(wt->TimeToLongSamples(mViewInfo.selectedRegion.t0()));
+            newt1 = wt->LongSamplesToTime(wt->TimeToLongSamples(mViewInfo.selectedRegion.t1()));
+            dest = wt->SplitCut(newt0, newt1);
          }
 #if 0
          // LL:  For now, just skip all non-wave tracks since the other do not
          //      yet support proper splitting.
          else {
-            n->Cut(mViewInfo.selectedRegion.t0(),
-                   mViewInfo.selectedRegion.t1(), &dest);
+            dest = n->Cut(mViewInfo.selectedRegion.t0(),
+                   mViewInfo.selectedRegion.t1());
          }
 #endif
          if (dest) {
@@ -4843,7 +4840,7 @@ void AudacityProject::OnSplitNew()
             dest->SetLinked(n->GetLinked());
             dest->SetName(n->GetName());
             dest->SetOffset(wxMax(newt0, offset));
-            mTracks->Add(dest);
+            mTracks->Add(dest.release());
          }
       }
 

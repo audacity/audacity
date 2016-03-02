@@ -1208,14 +1208,13 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
       //now go thru and replace the old clips with NEW
       for(unsigned int i=0;i<clipStartEndTimes.size();i++)
       {
-         Track *toClipOutput;
          //remove the old audio and get the NEW
          t->Clear(clipStartEndTimes[i].first,clipStartEndTimes[i].second);
-         output->Copy(clipStartEndTimes[i].first-startT+offsetT0,clipStartEndTimes[i].second-startT+offsetT0, &toClipOutput);
+         auto toClipOutput = output->Copy(clipStartEndTimes[i].first-startT+offsetT0,clipStartEndTimes[i].second-startT+offsetT0);
          if(toClipOutput)
          {
             //put the processed audio in
-            bool bResult = t->Paste(clipStartEndTimes[i].first, toClipOutput);
+            bool bResult = t->Paste(clipStartEndTimes[i].first, toClipOutput.get());
             wxASSERT(bResult); // TO DO: Actually handle this.
             wxUnusedVar(bResult);
             //if the clip was only partially selected, the Paste will have created a split line.  Join is needed to take care of this
@@ -1225,7 +1224,6 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
                !(clipRealStartEndTimes[i].first <= startT &&
                clipRealStartEndTimes[i].second >= startT+lenT) )
                t->Join(clipRealStartEndTimes[i].first,clipRealStartEndTimes[i].second);
-            delete toClipOutput;
          }
       }
    }

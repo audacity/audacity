@@ -31,6 +31,7 @@
 #include "toolbars/SelectionBarListener.h"
 #include "toolbars/SpectralSelectionBarListener.h"
 
+#include "MemoryX.h"
 #include <wx/defs.h>
 #include <wx/event.h>
 #include <wx/log.h>
@@ -92,6 +93,8 @@ class Regions;
 class LWSlider;
 class UndoManager;
 enum class UndoPush : unsigned char;
+
+class Track;
 
 AudacityProject *CreateNewAudacityProject();
 AUDACITY_DLL_API AudacityProject *GetActiveProject();
@@ -331,7 +334,7 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
 
 
    typedef bool (WaveTrack::* EditFunction)(double, double);
-   typedef bool (WaveTrack::* EditDestFunction)(double, double, Track**);
+   typedef std::unique_ptr<Track> (WaveTrack::* EditDestFunction)(double, double);
 
    void EditByLabel(EditFunction action, bool bSyncLockedTracks);
    void EditClipboardByLabel(EditDestFunction action );

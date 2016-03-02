@@ -307,16 +307,12 @@ bool Track::SyncLockAdjust(double oldT1, double newT1)
       if (oldT1 > GetEndTime())
          return true;
 
-      Track *tmp;
-      bool ret;
+      auto tmp = Cut(oldT1, GetEndTime());
+      if (!tmp) return false;
 
-      ret = Cut(oldT1, GetEndTime(), &tmp);
-      if (!ret) return false;
+      bool ret = Paste(newT1, tmp.get());
+      wxASSERT(ret); // TODO: handle this.
 
-      ret = Paste(newT1, tmp);
-      wxASSERT(ret);
-
-      delete tmp;
       return ret;
    }
    else if (newT1 < oldT1) {

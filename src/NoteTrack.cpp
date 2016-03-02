@@ -443,15 +443,13 @@ int NoteTrack::GetVisibleChannels()
    return mVisibleChannels;
 }
 
-bool NoteTrack::Cut(double t0, double t1, Track **dest){
-
-   //dest goes onto clipboard
-   *dest = NULL; // This is redundant
+Track::Holder NoteTrack::Cut(double t0, double t1)
+{
    if (t1 <= t0)
-      return false;
+      return{};
    double len = t1-t0;
 
-   NoteTrack *newTrack = new NoteTrack(mDirManager);
+   auto newTrack = std::make_unique<NoteTrack>(mDirManager);
 
    newTrack->Init(*this);
 
@@ -463,20 +461,16 @@ bool NoteTrack::Cut(double t0, double t1, Track **dest){
    //(mBottomNote, mDirManager, mLastMidiPosition,
    // mSerializationBuffer, mSerializationLength, mVisibleChannels)
 
-   *dest = newTrack;
-
-   return true;
+   return std::move(newTrack);
 }
 
-bool NoteTrack::Copy(double t0, double t1, Track **dest) const {
-
-   //dest goes onto clipboard
-   *dest = NULL; // This is redundant and matches WaveTrack::Copy
+Track::Holder NoteTrack::Copy(double t0, double t1) const
+{
    if (t1 <= t0)
-      return false;
+      return{};
    double len = t1-t0;
 
-   NoteTrack *newTrack = new NoteTrack(mDirManager);
+   auto newTrack = std::make_unique<NoteTrack>(mDirManager);
 
    newTrack->Init(*this);
 
@@ -488,9 +482,7 @@ bool NoteTrack::Copy(double t0, double t1, Track **dest) const {
    //(mBottomNote, mDirManager, mLastMidiPosition,
    // mSerializationBuffer, mSerializationLength, mVisibleChannels)
 
-   *dest = newTrack;
-
-   return true;
+   return std::move(newTrack);
 }
 
 bool NoteTrack::Trim(double t0, double t1)
