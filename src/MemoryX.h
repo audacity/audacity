@@ -172,10 +172,17 @@ private:
    }
 
    // Data
+#if 0
    typename ::std::aligned_storage<
       sizeof(X)
       // , alignof(X) // Not here yet in all compilers
    >::type storage{};
+#else
+   union {
+      double d;
+      char storage[sizeof(X)];
+   };
+#endif
    X* pp{ nullptr };
 };
 
