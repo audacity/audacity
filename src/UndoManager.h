@@ -48,7 +48,7 @@
 #ifndef __AUDACITY_UNDOMANAGER__
 #define __AUDACITY_UNDOMANAGER__
 
-#include <memory>
+#include "MemoryX.h"
 #include <vector>
 #include <wx/string.h>
 #include "ondemand/ODTaskThread.h"

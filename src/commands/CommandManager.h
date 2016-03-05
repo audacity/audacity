@@ -14,6 +14,7 @@
 
 #include "../Experimental.h"
 
+#include "../MemoryX.h"
 #include <vector>
 #include <wx/string.h>
 #include <wx/dynarray.h>

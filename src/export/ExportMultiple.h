@@ -29,7 +29,6 @@ class wxTextCtrl;
 class AudacityProject;
 class LabelTrack;
 class ShuttleGui;
-class TrackListIterator;
 
 class ExportMultiple final : public wxDialog
 {
@@ -109,8 +108,6 @@ private:
    AudacityProject *mProject;
    TrackList *mTracks;           /**< The list of tracks in the project that is
                                    being exported */
-   TrackListIterator *mIterator;  /**< Iterator used to work through all the
-                                   tracks in the project */
    LabelTrack *mLabels;
    int mNumLabels;
    int mNumWaveTracks;

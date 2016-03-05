@@ -869,8 +869,12 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
          for (Track *tt = it.First(); tt; tt = it.Next()) {
             if (tt->GetKind() == Track::Wave && (tt->GetSelected() || !sel)) {
                WaveTrack *wt = static_cast<WaveTrack *>(tt);
-               if (duplex)
-                  playbackTracks.Remove(wt);
+               if (duplex) {
+                  auto end = playbackTracks.end();
+                  auto it = std::find(playbackTracks.begin(), end, wt);
+                  if (it != end)
+                     playbackTracks.erase(it);
+               }
                t1 = wt->GetEndTime();
                if (t1 < t0) {
                   if (!tracksCopied) {
@@ -892,7 +896,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
                   wxUnusedVar(bResult);
                   delete newTrack;
                }
-               newRecordingTracks.Add(wt);
+               newRecordingTracks.push_back(wt);
             }
          }
 
@@ -974,13 +978,13 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
                newTrack->SetChannel( Track::MonoChannel );
             }
 
-            newRecordingTracks.Add(newTrack);
+            newRecordingTracks.push_back(newTrack);
          }
 
          // msmeyer: StartStream calls a callback which triggers auto-save, so
          // we add the tracks where recording is done into now. We remove them
          // later if starting the stream fails
-         for (unsigned int i = 0; i < newRecordingTracks.GetCount(); i++)
+         for (unsigned int i = 0; i < newRecordingTracks.size(); i++)
             t->Add(newRecordingTracks[i]);
       }
 
@@ -1020,7 +1024,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
          }
          else {
             // msmeyer: Delete recently added tracks if opening stream fails
-            for (unsigned int i = 0; i < newRecordingTracks.GetCount(); i++) {
+            for (unsigned int i = 0; i < newRecordingTracks.size(); i++) {
                t->Remove(newRecordingTracks[i]);
                delete newRecordingTracks[i];
             }

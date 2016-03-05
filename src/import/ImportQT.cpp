@@ -111,7 +111,7 @@ class QTImportPlugin final : public ImportPlugin
    wxString GetPluginStringID() { return wxT("quicktime"); }
 
    wxString GetPluginFormatDescription();
-   ImportFileHandle *Open(wxString Filename);
+   ImportFileHandle *Open(const wxString & Filename);
 
  private:
    bool mInitialized;
@@ -173,7 +173,7 @@ wxString QTImportPlugin::GetPluginFormatDescription()
    return DESC;
 }
 
-ImportFileHandle *QTImportPlugin::Open(wxString Filename)
+ImportFileHandle *QTImportPlugin::Open(const wxString & Filename)
 {
    OSErr err;
    FSRef inRef;

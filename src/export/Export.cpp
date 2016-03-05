@@ -243,15 +243,15 @@ wxWindow *ExportPlugin::OptionsCreate(wxWindow *parent, int WXUNUSED(format))
 }
 
 //Create a mixer by computing the time warp factor
-Mixer* ExportPlugin::CreateMixer(int numInputTracks, WaveTrack **inputTracks,
-         TimeTrack *timeTrack,
+Mixer* ExportPlugin::CreateMixer(const WaveTrackConstArray &inputTracks,
+         const TimeTrack *timeTrack,
          double startTime, double stopTime,
          int numOutChannels, int outBufferSize, bool outInterleaved,
          double outRate, sampleFormat outFormat,
          bool highQuality, MixerSpec *mixerSpec)
 {
    // MB: the stop time should not be warped, this was a bug.
-   return new Mixer(numInputTracks, inputTracks,
+   return new Mixer(inputTracks,
                   Mixer::WarpOptions(timeTrack),
                   startTime, stopTime,
                   numOutChannels, outBufferSize, outInterleaved,
@@ -431,9 +431,9 @@ bool Exporter::ExamineTracks()
    double earliestBegin = mT1;
    double latestEnd = mT0;
 
-   TrackList *tracks = mProject->GetTracks();
-   TrackListIterator iter1(tracks);
-   Track *tr = iter1.First();
+   const TrackList *tracks = mProject->GetTracks();
+   TrackListConstIterator iter1(tracks);
+   const Track *tr = iter1.First();
 
    while (tr) {
       if (tr->GetKind() == Track::Wave) {
@@ -1148,7 +1148,7 @@ BEGIN_EVENT_TABLE( ExportMixerDialog,wxDialog )
    EVT_SLIDER( ID_SLIDER_CHANNEL, ExportMixerDialog::OnSlider )
 END_EVENT_TABLE()
 
-ExportMixerDialog::ExportMixerDialog( TrackList *tracks, bool selectedOnly,
+ExportMixerDialog::ExportMixerDialog( const TrackList *tracks, bool selectedOnly,
       int maxNumChannels, wxWindow *parent, wxWindowID id, const wxString &title,
       const wxPoint &position, const wxSize& size, long style ) :
    wxDialog( parent, id, title, position, size, style | wxRESIZE_BORDER )
@@ -1156,9 +1156,9 @@ ExportMixerDialog::ExportMixerDialog( TrackList *tracks, bool selectedOnly,
    SetName(GetTitle());
 
    int numTracks = 0;
-   TrackListIterator iter( tracks );
+   TrackListConstIterator iter( tracks );
 
-   for( Track *t = iter.First(); t; t = iter.Next() )
+   for( const Track *t = iter.First(); t; t = iter.Next() )
    {
       if( t->GetKind() == Track::Wave && ( t->GetSelected() || !selectedOnly ) && !t->GetMute() )
       {

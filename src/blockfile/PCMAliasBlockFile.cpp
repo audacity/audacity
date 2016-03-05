@@ -18,6 +18,7 @@
 #include "PCMAliasBlockFile.h"
 #include "../FileFormats.h"
 #include "../Internat.h"
+#include "../MemoryX.h"
 
 #include "../ondemand/ODManager.h"
 #include "../AudioIO.h"

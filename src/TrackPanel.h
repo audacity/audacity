@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_TRACK_PANEL__
 #define __AUDACITY_TRACK_PANEL__
 
-#include <memory>
+#include "MemoryX.h"
 #include <vector>
 
 #include <wx/dcmemory.h>

@@ -1714,6 +1714,9 @@
     <ClInclude Include="..\..\..\src\TrackPanelListener.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\MemoryX.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\audacity.ico">

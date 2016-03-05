@@ -399,7 +399,7 @@ int ExportPCM::Export(AudacityProject *project,
                        int subformat)
 {
    double       rate = project->GetRate();
-   TrackList   *tracks = project->GetTracks();
+   const TrackList   *tracks = project->GetTracks();
    int sf_format;
 
    if (subformat < 0 || subformat >= WXSIZEOF(kFormats))
@@ -484,10 +484,9 @@ int ExportPCM::Export(AudacityProject *project,
 
    int updateResult = eProgressSuccess;
 
-   int numWaveTracks;
-   WaveTrack **waveTracks;
-   tracks->GetWaveTracks(selectionOnly, &numWaveTracks, &waveTracks);
-   Mixer *mixer = CreateMixer(numWaveTracks, waveTracks,
+   const WaveTrackConstArray waveTracks =
+      tracks->GetWaveTrackConstArray(selectionOnly, false);
+   Mixer *mixer = CreateMixer(waveTracks,
                             tracks->GetTimeTrack(),
                             t0, t1,
                             info.channels, maxBlockLen, true,
@@ -535,8 +534,6 @@ int ExportPCM::Export(AudacityProject *project,
    }
 
    delete mixer;
-
-   delete[] waveTracks;
 
    // Install the WAV metata in a "LIST" chunk at the end of the file
    if ((sf_format & SF_FORMAT_TYPEMASK) == SF_FORMAT_WAV ||

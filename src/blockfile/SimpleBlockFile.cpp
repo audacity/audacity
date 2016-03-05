@@ -70,6 +70,7 @@ to get its definition, rather than rolling our own.
 
 #include "sndfile.h"
 #include "../Internat.h"
+#include "../MemoryX.h"
 
 
 static wxUint32 SwapUintEndianess(wxUint32 in)

@@ -817,7 +817,7 @@ int ExportFFmpeg::Export(AudacityProject *project,
       return false;
    }
    mName = fName;
-   TrackList *tracks = project->GetTracks();
+   const TrackList *tracks = project->GetTracks();
    bool ret = true;
 
    if (mSubFormat >= FMT_LAST) return false;
@@ -830,15 +830,13 @@ int ExportFFmpeg::Export(AudacityProject *project,
    if (!ret) return false;
 
    int pcmBufferSize = 1024;
-   int numWaveTracks;
-   WaveTrack **waveTracks;
-   tracks->GetWaveTracks(selectionOnly, &numWaveTracks, &waveTracks);
-   Mixer *mixer = CreateMixer(numWaveTracks, waveTracks,
+   const WaveTrackConstArray waveTracks =
+      tracks->GetWaveTrackConstArray(selectionOnly, false);
+   Mixer *mixer = CreateMixer(waveTracks,
       tracks->GetTimeTrack(),
       t0, t1,
       channels, pcmBufferSize, true,
       mSampleRate, int16Sample, true, mixerSpec);
-   delete[] waveTracks;
 
    int updateResult = eProgressSuccess;
    {
