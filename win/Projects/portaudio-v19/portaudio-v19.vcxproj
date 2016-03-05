@@ -33,7 +33,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <PlatformToolset>v140</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
@@ -45,7 +45,7 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -68,8 +68,8 @@
     <UseWasapi>true</UseWasapi>
     <UseWmme>true</UseWmme>
     <UseDs>true</UseDs>
-    <UseAsioSdk Condition=" '$(ASIOSDK_DIR)' != '' And Exists($(ASIDSK_DIR))">$(ASIOSDK_DIR)</UseAsioSdk>
-    <UseJackSdk Condition=" '$(JACKSDK_DIR)' != '' And Exists($(JACKSDK_DIR))">$(JACKSDK_DIR)</UseJackSdk>
+    <UseAsioSdk Condition=" '$(ASIOSDK_DIR)' != '' And Exists('$(ASIOSDK_DIR)')">$(ASIOSDK_DIR)</UseAsioSdk>
+    <UseJackSdk Condition=" '$(JACKSDK_DIR)' != '' And Exists('$(JACKSDK_DIR)')">$(JACKSDK_DIR)</UseJackSdk>
   </PropertyGroup>
   <PropertyGroup>
     <SdkPreprocessorDefinitions Condition=" '$(UseWdmks)' != '' ">PA_USE_WDMKS=1;$(SdkPreprocessorDefinitions)</SdkPreprocessorDefinitions>
