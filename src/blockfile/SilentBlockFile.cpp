@@ -74,7 +74,7 @@ BlockFile *SilentBlockFile::BuildFromXML(DirManager & WXUNUSED(dm), const wxChar
 }
 
 /// Create a copy of this BlockFile
-BlockFile *SilentBlockFile::Copy(wxFileName newFileName)
+BlockFile *SilentBlockFile::Copy(wxFileName /* newFileName */)
 {
    BlockFile *newBlockFile = new SilentBlockFile(mLen);
 
