@@ -188,6 +188,16 @@ namespace std {
       // Give up ownership, don't destroy
       T* release() { T* result = p; p = nullptr; return result; }
 
+      void reset(T* __p = nullptr)
+      {
+         T* old__p = p;
+         p = __p;
+         if (old__p != nullptr)
+         {
+            delete[] old__p;
+         }
+      }
+
       // Equality tests
       bool operator== (nullptr_t) const { return p != nullptr; }
       template<typename U> friend bool operator== (nullptr_t, const unique_ptr<U>&);
