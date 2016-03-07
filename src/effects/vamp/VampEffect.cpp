@@ -43,6 +43,10 @@
 #include "../../LabelTrack.h"
 #include "../../WaveTrack.h"
 
+#ifdef __AUDACITY_OLD_STD__
+#include <list>
+#endif
+
 enum
 {
    ID_Program  =  10000,
@@ -419,7 +423,7 @@ bool VampEffect::Process()
       multiple = true;
    }
 
-   std::vector<Effect::AddedAnalysisTrack> addedTracks;
+   std::vector<std::shared_ptr<Effect::AddedAnalysisTrack>> addedTracks;
 
    while (left)
    {
@@ -492,7 +496,7 @@ bool VampEffect::Process()
             left->GetName().c_str(), GetName().c_str())
          : GetName()
       ));
-      LabelTrack *ltrack = addedTracks.back().get();
+      LabelTrack *ltrack = addedTracks.back()->get();
 
       float **data = new float *[channels]; // ANSWER-ME: Vigilant Sentry marks this as memory leak, var "data" not deleted.
       for (int c = 0; c < channels; ++c)
@@ -573,7 +577,7 @@ bool VampEffect::Process()
 
    // All completed without cancellation, so commit the addition of tracks now
    for (auto &addedTrack : addedTracks)
-      addedTrack.Commit();
+      addedTrack->Commit();
 
    return true;
 }

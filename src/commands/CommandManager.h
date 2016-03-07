@@ -83,7 +83,11 @@ using SubMenuList = std::vector < SubMenuListEntry >;
 
 // This is an array of pointers, not structures, because the hash maps also point to them,
 // so we don't want the structures to relocate with vector operations.
-using CommandList = std::vector < std::unique_ptr<CommandListEntry> > ;
+#ifdef __AUDACITY_OLD_STD__
+using CommandList = std::vector < std::shared_ptr<CommandListEntry> >;
+#else
+using CommandList = std::vector < std::unique_ptr<CommandListEntry> >;
+#endif
 
 WX_DECLARE_STRING_HASH_MAP_WITH_DECL(CommandListEntry *, CommandNameHash, class AUDACITY_DLL_API);
 WX_DECLARE_HASH_MAP_WITH_DECL(int, CommandListEntry *, wxIntegerHash, wxIntegerEqual, CommandIDHash, class AUDACITY_DLL_API);

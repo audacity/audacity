@@ -265,10 +265,17 @@ void UndoManager::PushState(const TrackList * l,
 
    // Assume tags was duplicted before any changes.
    // Just save a new shared_ptr to it.
+#ifdef __AUDACITY_OLD_STD__
+   stack.push_back(
+      std::make_shared<UndoStackElem>
+         (std::move(tracksCopy),
+            longDescription, shortDescription, selectedRegion, tags)
+#else
    stack.emplace_back(
       std::make_unique<UndoStackElem>
          (std::move(tracksCopy),
             longDescription, shortDescription, selectedRegion, tags)
+#endif
    );
 
    current++;

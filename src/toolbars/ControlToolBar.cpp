@@ -799,8 +799,8 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
    SetRecord(true, mRecord->WasShiftDown());
 
    if (p) {
-      TrackList *trackList = p->GetTracks();
-      TrackListIterator it(trackList);
+      TrackList *t = p->GetTracks();
+      TrackListIterator it(t);
       if(it.First() == NULL)
          mRecord->SetShift(false);
       double t0 = p->GetSel0();
@@ -818,7 +818,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
       gPrefs->Read(wxT("/AudioIO/Duplex"), &duplex, true);
 
       if(duplex){
-         playbackTracks = trackList->GetWaveTrackArray(false);
+         playbackTracks = t->GetWaveTrackArray(false);
 #ifdef EXPERIMENTAL_MIDI_OUT
          midiTracks = t->GetNoteTrackArray(false);
 #endif
@@ -832,7 +832,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
 
       // If SHIFT key was down, the user wants append to tracks
       int recordingChannels = 0;
-      TrackList tracksCopy{};
+      TrackList tracksCopy(true);
       bool tracksCopied = false;
       bool shifted = mRecord->WasShiftDown();
       if (shifted) {
@@ -879,7 +879,12 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
                if (t1 < t0) {
                   if (!tracksCopied) {
                      tracksCopied = true;
-                     tracksCopy = *trackList;
+                     TrackListIterator iter(t);
+                     Track *trk = iter.First();
+                     while (trk) {
+                        tracksCopy.Add(trk->Duplicate());
+                        trk = iter.Next();
+                     }
                   }
 
                   WaveTrack *newTrack = p->GetTrackFactory()->NewWaveTrack();
@@ -980,7 +985,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
          // we add the tracks where recording is done into now. We remove them
          // later if starting the stream fails
          for (unsigned int i = 0; i < newRecordingTracks.size(); i++)
-            trackList->Add(newRecordingTracks[i]);
+            t->Add(newRecordingTracks[i]);
       }
 
       //Automated Input Level Adjustment Initialization
@@ -1005,13 +1010,22 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
       else {
          if (shifted) {
             // Restore the tracks to remove any inserted silence
-            if (tracksCopied)
-               *trackList = std::move(tracksCopy);
+            if (tracksCopied) {
+               t->Clear(true);
+               TrackListIterator iter(&tracksCopy);
+               Track *trk = iter.First();
+               while (trk)
+               {
+                  Track *tmp = trk;
+                  trk = iter.RemoveCurrent();
+                  t->Add(tmp);
+               }
+            }
          }
          else {
             // msmeyer: Delete recently added tracks if opening stream fails
             for (unsigned int i = 0; i < newRecordingTracks.size(); i++) {
-               trackList->Remove(newRecordingTracks[i]);
+               t->Remove(newRecordingTracks[i]);
                delete newRecordingTracks[i];
             }
          }

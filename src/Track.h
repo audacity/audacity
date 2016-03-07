@@ -13,6 +13,7 @@
 
 #include "Audacity.h"
 
+#include "MemoryX.h"
 #include <vector>
 #include <wx/dynarray.h>
 #include <wx/event.h>
@@ -44,8 +45,18 @@ class WaveTrackConstArray : public std::vector < const WaveTrack* > {
 public:
    WaveTrackConstArray() {}
    // I'd like to use an inherited constructor, but that's not here yet in MSVC compiler...
+#ifdef __AUDACITY_OLD_STD__
+   WaveTrackConstArray
+      (std::initializer_list<value_type> tracks) 
+   {
+      reserve(tracks.size());
+      for (const auto &track : tracks)
+         push_back(track);
+   }
+#else
    WaveTrackConstArray
       (std::initializer_list<value_type> tracks) : std::vector<value_type>(tracks) {}
+#endif
 };
 
 #if defined(USE_MIDI)
@@ -383,18 +394,6 @@ class AUDACITY_DLL_API TrackList final : public wxEvtHandler
    // Create an empty TrackList
    TrackList(bool destructorDeletesTracks = false);
 
-   // Allow copy -- a deep copy that duplicates all tracks
-   TrackList(const TrackList &that);
-   TrackList &operator= (const TrackList &that);
-
-   // Allow move
-   TrackList(TrackList &&that);
-   TrackList& operator= (TrackList&&);
-
-   // Move is defined in terms of Swap
-   void Swap(TrackList &that);
-
-
    // Destructor
    virtual ~TrackList();
 
@@ -474,13 +473,11 @@ class AUDACITY_DLL_API TrackList final : public wxEvtHandler
 #endif
 
  private:
-   void DoAssign(const TrackList &that);
-       
    void RecalcPositions(const TrackListNode *node);
    void UpdatedEvent(const TrackListNode *node);
    void ResizedEvent(const TrackListNode *node);
 
-   void SwapNodes(TrackListNode * s1, TrackListNode * s2);
+   void Swap(TrackListNode * s1, TrackListNode * s2);
 
    TrackListNode *head;
    TrackListNode *tail;

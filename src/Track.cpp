@@ -713,49 +713,6 @@ TrackList::TrackList(bool destructorDeletesTracks)
    tail = NULL;
 }
 
-TrackList::TrackList(const TrackList &that)
-{
-   DoAssign(that);
-}
-
-TrackList& TrackList::operator= (const TrackList &that)
-{
-   if (this != &that) {
-      this->Clear(mDestructorDeletesTracks);
-      DoAssign(that);
-   }
-   return *this;
-}
-
-TrackList::TrackList(TrackList &&that)
-{
-   Swap(that);
-}
-
-TrackList &TrackList::operator= (TrackList &&that)
-{
-   if (this != &that) {
-      this->Clear(mDestructorDeletesTracks);
-      Swap(that);
-   }
-   return *this;
-}
-
-void TrackList::DoAssign(const TrackList &that)
-{
-   mDestructorDeletesTracks = true;
-   TrackListConstIterator it(&that);
-   for (const Track *track = it.First(); track; track = it.Next())
-      Add(track->Duplicate());
-}
-
-void TrackList::Swap(TrackList &that)
-{
-   std::swap(mDestructorDeletesTracks, that.mDestructorDeletesTracks);
-   std::swap(head, that.head);
-   std::swap(tail, that.tail);
-}
-
 TrackList::~TrackList()
 {
    Clear(mDestructorDeletesTracks);
@@ -1068,7 +1025,7 @@ bool TrackList::CanMoveDown(Track * t) const
 // The complication is that the tracks are stored in a single
 // linked list, and pairs of tracks are marked only by a flag
 // in one of the tracks.
-void TrackList::SwapNodes(TrackListNode * s1, TrackListNode * s2)
+void TrackList::Swap(TrackListNode * s1, TrackListNode * s2)
 {
    Track *link;
    Track *source[4];
@@ -1135,7 +1092,7 @@ bool TrackList::MoveUp(Track * t)
    if (t) {
       Track *p = GetPrev(t, true);
       if (p) {
-         SwapNodes((TrackListNode *)p->GetNode(), (TrackListNode *)t->GetNode());
+         Swap((TrackListNode *)p->GetNode(), (TrackListNode *)t->GetNode());
          return true;
       }
    }
@@ -1148,7 +1105,7 @@ bool TrackList::MoveDown(Track * t)
    if (t) {
       Track *n = GetNext(t, true);
       if (n) {
-         SwapNodes((TrackListNode *)t->GetNode(), (TrackListNode *)n->GetNode());
+         Swap((TrackListNode *)t->GetNode(), (TrackListNode *)n->GetNode());
          return true;
       }
    }

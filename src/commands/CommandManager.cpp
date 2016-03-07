@@ -443,7 +443,11 @@ std::unique_ptr<wxMenuBar> CommandManager::AddMenuBar(const wxString & sMenu)
    }
 
    auto result = std::make_unique<wxMenuBar>();
+#ifdef __AUDACITY_OLD_STD__
+   mMenuBarList.push_back(MenuBarListEntry{sMenu, result.get()});
+#else
    mMenuBarList.emplace_back(sMenu, result.get());
+#endif
 
    return result;
 }
@@ -508,7 +512,11 @@ void CommandManager::EndMenu()
 wxMenu* CommandManager::BeginSubMenu(const wxString & tName)
 {
    const auto result = new wxMenu{};
+#ifdef __AUDACITY_OLD_STD__
+   mSubMenuList.push_back(SubMenuListEntry{ tName, result });
+#else
    mSubMenuList.emplace_back(tName, result);
+#endif
    mbSeparatorAllowed = false;
    return result;
 }
@@ -802,7 +810,8 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & name,
    int count)
 {
    {
-      auto entry = std::make_unique<CommandListEntry>();
+      // Make a unique_ptr or shared_ptr as appropriate:
+      auto entry = CommandList::value_type{ safenew CommandListEntry() };
 
       wxString labelPrefix;
       if (!mSubMenuList.empty()) {

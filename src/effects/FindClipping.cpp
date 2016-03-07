@@ -94,7 +94,7 @@ bool EffectFindClipping::SetAutomationParameters(EffectAutomationParameters & pa
 
 bool EffectFindClipping::Process()
 {
-   Maybe<AddedAnalysisTrack> addedTrack;
+   std::shared_ptr<AddedAnalysisTrack> addedTrack;
    Maybe<ModifiedAnalysisTrack> modifiedTrack;
    Track *original = NULL;
    const wxString name{ _("Clipping") };
@@ -109,7 +109,7 @@ bool EffectFindClipping::Process()
    }
 
    if (!lt)
-      addedTrack.create(AddAnalysisTrack(name)), lt = addedTrack->get();
+      addedTrack = (AddAnalysisTrack(name)), lt = addedTrack->get();
    else
       modifiedTrack.create(ModifyAnalysisTrack(lt, name)), lt = modifiedTrack->get();
 
