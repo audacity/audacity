@@ -499,6 +499,9 @@ typedef struct PaWasapiStream
 	// thread is being started
     volatile BOOL running;
 
+	// stream has not or is no longer started
+	BOOL stopped;
+
     PA_THREAD_ID dwThreadId;
     HANDLE hThread;
 	HANDLE hCloseRequest;
@@ -2882,6 +2885,9 @@ static PaError OpenStream( struct PaUtilHostApiRepresentation *hostApi,
 	if (framesPerBuffer == 0)
 		framesPerBuffer = ((UINT32)sampleRate / 100) * 2;
 
+	stream->stopped = TRUE;
+	stream->running = FALSE;
+
 	// Try create device: Input
 	if (inputParameters != NULL)
     {
@@ -3546,6 +3552,7 @@ static PaError StartStream( PaStream *s )
 		// Signal: stream running.
 		stream->running = TRUE;
 	}
+	stream->stopped = FALSE;
 
     return result;
 
@@ -3587,6 +3594,7 @@ void _StreamFinish(PaWasapiStream *stream)
 	_StreamCleanup(stream);
 
     stream->running = FALSE;
+	stream->stopped = TRUE;
 }
 
 // ------------------------------------------------------------------------------------------
@@ -3620,7 +3628,7 @@ static PaError AbortStream( PaStream *s )
 // ------------------------------------------------------------------------------------------
 static PaError IsStreamStopped( PaStream *s )
 {
-	return !((PaWasapiStream *)s)->running;
+	return ((PaWasapiStream *)s)->stopped;
 }
 
 // ------------------------------------------------------------------------------------------
