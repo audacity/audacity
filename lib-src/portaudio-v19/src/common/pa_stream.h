@@ -152,6 +152,7 @@ typedef struct PaUtilStreamRepresentation {
     PaStreamFinishedCallback *streamFinishedCallback;
     void *userData;
     PaStreamInfo streamInfo;
+    PaHostApiTypeId hostApiType;
 } PaUtilStreamRepresentation;
 
 

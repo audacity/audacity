@@ -280,6 +280,21 @@ typedef struct PaWasapiStreamInfo
 } 
 PaWasapiStreamInfo;
 
+/** Returns Windows device ID for input stream
+
+ @param  pStream Pointer to PaStream to query.
+
+ @return non-null value pointing to static device ID
+*/
+const wchar_t *PaWasapi_GetInputDeviceID( PaStream* s );
+
+/** Returns Windows device ID for output stream
+
+ @param  pStream Pointer to PaStream to query.
+
+ @return non-null value pointing to static device ID
+*/
+const wchar_t *PaWasapi_GetOutputDeviceID( PaStream* s );
 
 /** Returns default sound format for device. Format is represented by PaWinWaveFormat or 
     WAVEFORMATEXTENSIBLE structure.
@@ -293,7 +308,6 @@ PaWasapiStreamInfo;
          or an error is encountered.
 */
 int PaWasapi_GetDeviceDefaultFormat( void *pFormat, unsigned int nFormatSize, PaDeviceIndex nDevice );
-
 
 /** Returns device role (PaWasapiDeviceRole enum).
 
