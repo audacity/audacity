@@ -71,7 +71,12 @@ struct UndoState {
    SelectedRegion selectedRegion; // by value
 };
 
-using UndoStack = std::vector <std::unique_ptr<UndoStackElem>> ;
+#ifdef __AUDACITY_OLD_STD__
+using UndoStack = std::vector <std::shared_ptr<UndoStackElem>>;
+#else
+using UndoStack = std::vector <std::unique_ptr<UndoStackElem>>;
+#endif
+
 using SpaceArray = std::vector <wxLongLong_t> ;
 
 // These flags control what extra to do on a PushState

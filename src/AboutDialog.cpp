@@ -865,7 +865,11 @@ wxT("POSSIBILITY OF SUCH DAMAGES.\n");
 
 void AboutDialog::AddCredit(wxString &&description, Role role)
 {
+#ifdef __AUDACITY_OLD_STD__
+   creditItems.push_back(AboutDialogCreditItem{ std::move(description), role });
+#else
    creditItems.emplace_back(std::move(description), role);
+#endif
 }
 
 wxString AboutDialog::GetCreditsByRole(AboutDialog::Role role)

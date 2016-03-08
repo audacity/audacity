@@ -138,8 +138,13 @@ void Importer::GetSupportedImportFormats(FormatList *formatList)
    while(importPluginNode)
    {
       ImportPlugin *importPlugin = importPluginNode->GetData();
+#ifdef __AUDACITY_OLD_STD__
+      formatList->push_back(Format{importPlugin->GetPluginFormatDescription(),
+                               importPlugin->GetSupportedExtensions()});
+#else
       formatList->emplace_back(importPlugin->GetPluginFormatDescription(),
                                importPlugin->GetSupportedExtensions());
+#endif
       importPluginNode = importPluginNode->GetNext();
    }
 }

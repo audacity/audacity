@@ -1,5 +1,5 @@
 /*
- * $Id: pa_trace.c 1812 2012-02-14 09:32:57Z robiwan $
+ * $Id: pa_trace.c 1916 2014-01-17 03:45:15Z philburk $
  * Portable Audio I/O Library Trace Facility
  * Store trace information in real-time for later printing.
  *
@@ -227,4 +227,12 @@ void PaUtil_DiscardHighSpeedLog( LogHandle hLog )
     PaUtil_FreeMemory(pLog);
 }
 
+#else
+/* This stub was added so that this file will generate a symbol.
+ * Otherwise linker/archiver programs will complain.
+ */
+int PaUtil_TraceStubToSatisfyLinker(void)
+{
+	return 0;
+}
 #endif /* TRACE_REALTIME_EVENTS */

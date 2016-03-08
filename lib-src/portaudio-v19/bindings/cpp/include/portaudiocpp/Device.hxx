@@ -60,8 +60,8 @@ namespace portaudio
 		bool isHostApiDefaultInputDevice() const; // extended
 		bool isHostApiDefaultOutputDevice() const; // extended
 
-		bool operator==(const Device &rhs);
-		bool operator!=(const Device &rhs);
+		bool operator==(const Device &rhs) const;
+		bool operator!=(const Device &rhs) const;
 
 		// host api reference
 		HostApi &hostApi();

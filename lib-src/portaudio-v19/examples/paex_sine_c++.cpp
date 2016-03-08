@@ -78,6 +78,12 @@ public:
             return false;
         }
 
+        const PaDeviceInfo* pInfo = Pa_GetDeviceInfo(index);
+        if (pInfo != 0)
+        {
+            printf("Output device name: '%s'\r", pInfo->name);
+        }
+
         outputParameters.channelCount = 2;       /* stereo output */
         outputParameters.sampleFormat = paFloat32; /* 32 bit floating point output */
         outputParameters.suggestedLatency = Pa_GetDeviceInfo( outputParameters.device )->defaultLowOutputLatency;
@@ -88,7 +94,7 @@ public:
             NULL, /* no input */
             &outputParameters,
             SAMPLE_RATE,
-            FRAMES_PER_BUFFER,
+            paFramesPerBufferUnspecified,
             paClipOff,      /* we won't output out of range samples so don't bother clipping them */
             &Sine::paCallback,
             this            /* Using 'this' for userData so we can cast to Sine* in paCallback method */
@@ -212,18 +218,38 @@ private:
     char message[20];
 };
 
+class ScopedPaHandler
+{
+public:
+    ScopedPaHandler()
+        : _result(Pa_Initialize())
+    {
+    }
+    ~ScopedPaHandler()
+    {
+        if (_result == paNoError)
+        {
+            Pa_Terminate();
+        }
+    }
+
+    PaError result() const { return _result; }
+
+private:
+    PaError _result;
+};
+
 
 /*******************************************************************/
 int main(void);
 int main(void)
 {
-    PaError err;
     Sine sine;
 
     printf("PortAudio Test: output sine wave. SR = %d, BufSize = %d\n", SAMPLE_RATE, FRAMES_PER_BUFFER);
     
-    err = Pa_Initialize();
-    if( err != paNoError ) goto error;
+    ScopedPaHandler paInit;
+    if( paInit.result() != paNoError ) goto error;
 
     if (sine.open(Pa_GetDefaultOutputDevice()))
     {
@@ -238,15 +264,12 @@ int main(void)
         sine.close();
     }
 
-    Pa_Terminate();
     printf("Test finished.\n");
-    
-    return err;
+    return paNoError;
 
 error:
-    Pa_Terminate();
     fprintf( stderr, "An error occured while using the portaudio stream\n" );
-    fprintf( stderr, "Error number: %d\n", err );
-    fprintf( stderr, "Error message: %s\n", Pa_GetErrorText( err ) );
-    return err;
+    fprintf( stderr, "Error number: %d\n", paInit.result() );
+    fprintf( stderr, "Error message: %s\n", Pa_GetErrorText( paInit.result() ) );
+    return 1;
 }

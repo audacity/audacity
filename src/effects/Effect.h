@@ -12,6 +12,8 @@
 #ifndef __AUDACITY_EFFECT__
 #define __AUDACITY_EFFECT__
 
+#include "../Audacity.h"
+#include "../MemoryX.h"
 #include <set>
 
 #include <wx/bmpbuttn.h>
@@ -379,7 +381,7 @@ protected:
    };
 
    // Set name to given value if that is not empty, else use default name
-   AddedAnalysisTrack AddAnalysisTrack(const wxString &name = wxString());
+   std::shared_ptr<AddedAnalysisTrack> AddAnalysisTrack(const wxString &name = wxString());
 
    // For the use of analyzers, which don't need to make output wave tracks,
    // but may need to modify label tracks.

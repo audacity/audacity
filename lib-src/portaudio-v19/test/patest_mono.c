@@ -4,7 +4,7 @@
 	@author Phil Burk  http://www.softsynth.com
 */
 /*
- * $Id: patest_mono.c 1097 2006-08-26 08:27:53Z rossb $
+ * $Id: patest_mono.c 1915 2014-01-16 17:51:26Z philburk $
  *
  * Authors:
  *    Ross Bencina <rossb@audiomulch.com>
@@ -153,3 +153,4 @@ error:
     fprintf( stderr, "Error message: %s\n", Pa_GetErrorText( err ) );
     return err;
 }
+

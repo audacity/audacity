@@ -7938,6 +7938,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++1z";
+				"CLANG_CXX_LANGUAGE_STANDARD[sdk=macosx10.6]" = "c++11";
+				"CLANG_CXX_LANGUAGE_STANDARD[sdk=macosx10.7]" = "c++1z";
+				"CLANG_CXX_LIBRARY[sdk=macosx10.6]" = "libstdc++";
+				"CLANG_CXX_LIBRARY[sdk=macosx10.7]" = "libc++";
 				CONFIG_DEBUG = yes;
 				CONFIG_FLAGS = "";
 				CONFIG_STATIC = no;
@@ -7951,9 +7956,17 @@
 				INFOPLIST_PREPROCESS = YES;
 				KEEP_PRIVATE_EXTERNS = YES;
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
+				OTHER_LDFLAGS = (
+					"-Xlinker",
+					"-headerpad_max_install_names",
+				);
 				SDKROOT = macosx10.6;
 				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386";
 				TOPLEVEL = ..;
+				WARNING_CFLAGS = (
+					"-Wno-inconsistent-missing-override",
+					"-Wno-potentially-evaluated-expression",
+				);
 				WX_CFLAGS = "-I$(WX_PREFIX)/lib/wx/include/osx_cocoa-unicode-$(WX_VER)-$(WX_FLAVOR) -I$(WX_PREFIX)/include/wx-$(WX_VER)-$(WX_FLAVOR) -D_FILE_OFFSET_BITS=64 -DwxDEBUG_LEVEL=1 -DWXUSINGDLL -D__WXMAC__ -D__WXOSX__ -D__WXOSX_COCOA__";
 				WX_CONFIG = "$(WX_PREFIX)/bin/wx-config";
 				WX_CXXFLAGS = "$(WX_CFLAGS)";
@@ -8252,6 +8265,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++1z";
+				"CLANG_CXX_LANGUAGE_STANDARD[sdk=macosx10.6]" = "c++11";
+				"CLANG_CXX_LANGUAGE_STANDARD[sdk=macosx10.7]" = "c++1z";
+				"CLANG_CXX_LIBRARY[sdk=macosx10.6]" = "libstdc++";
+				"CLANG_CXX_LIBRARY[sdk=macosx10.7]" = "libc++";
 				CONFIG_DEBUG = no;
 				CONFIG_FLAGS = "";
 				CONFIG_STATIC = no;
@@ -8265,9 +8283,17 @@
 				INFOPLIST_PREPROCESS = YES;
 				KEEP_PRIVATE_EXTERNS = YES;
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
+				OTHER_LDFLAGS = (
+					"-Xlinker",
+					"-headerpad_max_install_names",
+				);
 				SDKROOT = macosx10.6;
 				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386";
 				TOPLEVEL = ..;
+				WARNING_CFLAGS = (
+					"-Wno-inconsistent-missing-override",
+					"-Wno-potentially-evaluated-expression",
+				);
 				WX_CFLAGS = "-I$(WX_PREFIX)/lib/wx/include/osx_cocoa-unicode-$(WX_VER)-$(WX_FLAVOR) -I$(WX_PREFIX)/include/wx-$(WX_VER)-$(WX_FLAVOR) -D_FILE_OFFSET_BITS=64 -DwxDEBUG_LEVEL=0 -DWXUSINGDLL -D__WXMAC__ -D__WXOSX__ -D__WXOSX_COCOA__";
 				WX_CONFIG = "$(WX_PREFIX)/bin/wx-config";
 				WX_CXXFLAGS = "$(WX_CFLAGS)";

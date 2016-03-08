@@ -11,6 +11,7 @@
 #ifndef __AUDACITY_ABOUT_DLG__
 #define __AUDACITY_ABOUT_DLG__
 
+#include "MemoryX.h"
 #include <vector>
 #include <wx/dialog.h>
 #include <wx/sizer.h>
@@ -27,9 +28,14 @@ struct AboutDialogCreditItem {
       : description(description_), role(role_)
    {}
 
-   // No copy
+#ifdef __AUDACITY_OLD_STD__
+   AboutDialogCreditItem(const AboutDialogCreditItem&) = default;
+   AboutDialogCreditItem& operator= (const AboutDialogCreditItem&) = default;
+#else
+   // No copy, use the move
    AboutDialogCreditItem(const AboutDialogCreditItem&) PROHIBITED;
    AboutDialogCreditItem& operator= (const AboutDialogCreditItem&) PROHIBITED;
+#endif
 
    // Move constructor, because wxString lacks one
    AboutDialogCreditItem(AboutDialogCreditItem &&moveMe)
