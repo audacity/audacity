@@ -266,6 +266,11 @@ private:
       return (*first)->Name.CmpNoCase((*second)->Name);
    }
 
+   static int wxCMPFUNC_CONV SortCurvePoints (EQPoint **p0, EQPoint **p1)
+   {
+      return (*p0)->Freq > (*p1)->Freq;
+   }
+
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
    wxRadioButton *mMathProcessingType[5]; // default, sse, sse threaded, AVX, AVX threaded (note AVX is not implemented yet
    wxBoxSizer *szrM;
