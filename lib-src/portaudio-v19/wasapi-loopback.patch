@@ -1,7 +1,39 @@
-diff -wruN portaudio/src/hostapi/wasapi/pa_win_wasapi.c portaudio-v19/src/hostapi/wasapi/pa_win_wasapi.c
---- portaudio/src/hostapi/wasapi/pa_win_wasapi.c	2012-06-29 06:44:12.000000000 -0500
-+++ portaudio-v19/src/hostapi/wasapi/pa_win_wasapi.c	2012-12-31 14:46:16.533923600 -0600
-@@ -1052,6 +1055,8 @@
+diff --git a/lib-src/portaudio-v19/include/pa_win_wasapi.h b/lib-src/portaudio-v19/include/pa_win_wasapi.h
+index 1087157..e52d0a7 100644
+--- a/lib-src/portaudio-v19/include/pa_win_wasapi.h
++++ b/lib-src/portaudio-v19/include/pa_win_wasapi.h
+@@ -319,6 +319,16 @@ int PaWasapi_GetDeviceDefaultFormat( void *pFormat, unsigned int nFormatSize, Pa
+ int/*PaWasapiDeviceRole*/ PaWasapi_GetDeviceRole( PaDeviceIndex nDevice );
+ 
+ 
++/** Returns device loopback indicator.
++
++ @param nDevice device index.
++
++ @return 0 = Not loopback, 1 = loopback, < 0 = PaErrorCode
++         if PortAudio is not initialized or an error is encountered.
++*/
++int PaWasapi_IsLoopback( PaDeviceIndex nDevice );
++
++
+ /** Boost thread priority of calling thread (MMCSS). Use it for Blocking Interface only for thread
+     which makes calls to Pa_WriteStream/Pa_ReadStream.
+ 
+diff --git a/lib-src/portaudio-v19/src/hostapi/wasapi/pa_win_wasapi.c b/lib-src/portaudio-v19/src/hostapi/wasapi/pa_win_wasapi.c
+index 0026033..2e9dca8 100644
+--- a/lib-src/portaudio-v19/src/hostapi/wasapi/pa_win_wasapi.c
++++ b/lib-src/portaudio-v19/src/hostapi/wasapi/pa_win_wasapi.c
+@@ -375,6 +375,9 @@ typedef struct PaWasapiDeviceInfo
+ 
+ 	// Formfactor
+ 	EndpointFormFactor formFactor;
++
++	// Loopback indicator
++	int loopBack;
+ }
+ PaWasapiDeviceInfo;
+ 
+@@ -1179,6 +1182,8 @@ PaError PaWasapi_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiInd
      HRESULT hr = S_OK;
      IMMDeviceCollection* pEndPoints = NULL;
  	UINT i;
@@ -10,7 +42,7 @@ diff -wruN portaudio/src/hostapi/wasapi/pa_win_wasapi.c portaudio-v19/src/hostap
  
      if (!SetupAVRT())
  	{
-@@ -1148,6 +1153,19 @@
+@@ -1275,6 +1280,19 @@ PaError PaWasapi_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiInd
          }
      }
  
@@ -30,16 +62,16 @@ diff -wruN portaudio/src/hostapi/wasapi/pa_win_wasapi.c portaudio-v19/src/hostap
      hr = IMMDeviceEnumerator_EnumAudioEndpoints(paWasapi->enumerator, eAll, DEVICE_STATE_ACTIVE, &pEndPoints);
  	// We need to set the result to a value otherwise we will return paNoError
  	// [IF_FAILED_JUMP(hResult, error);]
-@@ -1158,6 +1176,8 @@
+@@ -1285,6 +1303,8 @@ PaError PaWasapi_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiInd
  	// [IF_FAILED_JUMP(hResult, error);]
  	IF_FAILED_INTERNAL_ERROR_JUMP(hr, result, error);
  
 +    paWasapi->deviceCount += renderCount;
 +
      paWasapi->devInfo = (PaWasapiDeviceInfo *)PaUtil_AllocateMemory(sizeof(PaWasapiDeviceInfo) * paWasapi->deviceCount);
- 	for (i = 0; i < paWasapi->deviceCount; ++i)
- 		memset(&paWasapi->devInfo[i], 0, sizeof(PaWasapiDeviceInfo));
-@@ -1181,7 +1201,7 @@
+     if (paWasapi->devInfo == NULL)
+ 	{
+@@ -1313,7 +1333,7 @@ PaError PaWasapi_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiInd
              goto error;
          }
  
@@ -48,7 +80,7 @@ diff -wruN portaudio/src/hostapi/wasapi/pa_win_wasapi.c portaudio-v19/src/hostap
  		{
  			DWORD state				  = 0;
              PaDeviceInfo *deviceInfo  = &deviceInfoArray[i];
-@@ -1191,7 +1211,7 @@
+@@ -1323,7 +1343,7 @@ PaError PaWasapi_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiInd
  			PA_DEBUG(("WASAPI: device idx: %02d\n", i));
  			PA_DEBUG(("WASAPI: ---------------\n"));
  
@@ -57,7 +89,7 @@ diff -wruN portaudio/src/hostapi/wasapi/pa_win_wasapi.c portaudio-v19/src/hostap
  			// We need to set the result to a value otherwise we will return paNoError
  			// [IF_FAILED_JUMP(hResult, error);]
  			IF_FAILED_INTERNAL_ERROR_JUMP(hr, result, error);
-@@ -1373,6 +1393,41 @@
+@@ -1513,6 +1533,43 @@ PaError PaWasapi_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiInd
  
              (*hostApi)->deviceInfos[i] = deviceInfo;
              ++(*hostApi)->info.deviceCount;
@@ -71,6 +103,8 @@ diff -wruN portaudio/src/hostapi/wasapi/pa_win_wasapi.c portaudio-v19/src/hostap
 +                memcpy(&paWasapi->devInfo[i + 1], &paWasapi->devInfo[i], sizeof(*paWasapi->devInfo));
 +
 +                i++;
++                paWasapi->devInfo[i].loopBack = 1;
++
 +                deviceInfo = &deviceInfoArray[i];
 +
 +                deviceInfo->maxInputChannels		 = deviceInfo->maxOutputChannels;
@@ -99,7 +133,37 @@ diff -wruN portaudio/src/hostapi/wasapi/pa_win_wasapi.c portaudio-v19/src/hostap
          }
      }
  
-@@ -2170,7 +2225,7 @@
+@@ -1691,6 +1748,29 @@ const wchar_t *PaWasapi_GetOutputDeviceID( PaStream* s )
+ }
+ 
+ // ------------------------------------------------------------------------------------------
++int PaWasapi_IsLoopback( PaDeviceIndex nDevice )
++{
++	PaError ret;
++	PaDeviceIndex index;
++
++	// Get API
++	PaWasapiHostApiRepresentation *paWasapi = _GetHostApi(&ret);
++	if (paWasapi == NULL)
++		return paNotInitialized;
++
++	// Get device index
++	ret = PaUtil_DeviceIndexToHostApiDeviceIndex(&index, nDevice, &paWasapi->inheritedHostApiRep);
++    if (ret != paNoError)
++        return ret;
++
++	// Validate index
++	if ((UINT32)index >= paWasapi->deviceCount)
++		return paInvalidDevice;
++
++	return paWasapi->devInfo[ index ].loopBack;
++}
++
++// ------------------------------------------------------------------------------------------
+ PaError PaWasapi_GetFramesPerHostBuffer( PaStream *pStream, unsigned int *nInput, unsigned int *nOutput )
+ {
+     PaWasapiStream *stream = (PaWasapiStream *)pStream;
+@@ -2336,7 +2416,7 @@ static HRESULT CreateAudioClient(PaWasapiStream *pStream, PaWasapiSubStream *pSu
  		}*/
  
  		// select mixer
@@ -108,7 +172,7 @@ diff -wruN portaudio/src/hostapi/wasapi/pa_win_wasapi.c portaudio-v19/src/hostap
  		if (pSub->monoMixer == NULL)
  		{
  			(*pa_error) = paInvalidChannelCount;
-@@ -2423,7 +2478,7 @@
+@@ -2621,7 +2701,7 @@ static HRESULT CreateAudioClient(PaWasapiStream *pStream, PaWasapiSubStream *pSu
  			}*/
  
  			// Select mixer
@@ -117,7 +181,7 @@ diff -wruN portaudio/src/hostapi/wasapi/pa_win_wasapi.c portaudio-v19/src/hostap
  			if (pSub->monoMixer == NULL)
  			{
  				(*pa_error) = paInvalidChannelCount;
-@@ -2728,6 +2786,9 @@
+@@ -2941,6 +3021,9 @@ static PaError OpenStream( struct PaUtilHostApiRepresentation *hostApi,
  		if (fullDuplex)
  			stream->in.streamFlags = 0; // polling interface is implemented for full-duplex mode also
  
@@ -127,12 +191,3 @@ diff -wruN portaudio/src/hostapi/wasapi/pa_win_wasapi.c portaudio-v19/src/hostap
  		// Fill parameters for Audio Client creation
  		stream->in.params.device_info       = info;
  		stream->in.params.stream_params     = (*inputParameters);
-@@ -3411,7 +3474,7 @@
- // ------------------------------------------------------------------------------------------
- static PaError IsStreamStopped( PaStream *s )
- {
--	return !((PaWasapiStream *)s)->running;
-+	return ((PaWasapiStream *)s)->stopped;
- }
- 
- // ------------------------------------------------------------------------------------------

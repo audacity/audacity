@@ -375,6 +375,9 @@ typedef struct PaWasapiDeviceInfo
 
 	// Formfactor
 	EndpointFormFactor formFactor;
+
+	// Loopback indicator
+	int loopBack;
 }
 PaWasapiDeviceInfo;
 
@@ -1179,6 +1182,8 @@ PaError PaWasapi_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiInd
     HRESULT hr = S_OK;
     IMMDeviceCollection* pEndPoints = NULL;
 	UINT i;
+    UINT renderCount;
+    UINT devIndex;
 
     if (!SetupAVRT())
 	{
@@ -1275,6 +1280,19 @@ PaError PaWasapi_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiInd
         }
     }
 
+    hr = IMMDeviceEnumerator_EnumAudioEndpoints(paWasapi->enumerator, eRender, DEVICE_STATE_ACTIVE, &pEndPoints);
+	// We need to set the result to a value otherwise we will return paNoError
+	// [IF_FAILED_JUMP(hResult, error);]
+	IF_FAILED_INTERNAL_ERROR_JUMP(hr, result, error);
+
+    hr = IMMDeviceCollection_GetCount(pEndPoints, &renderCount);
+	// We need to set the result to a value otherwise we will return paNoError
+	// [IF_FAILED_JUMP(hResult, error);]
+	IF_FAILED_INTERNAL_ERROR_JUMP(hr, result, error);
+
+    SAFE_RELEASE(pEndPoints);
+    pEndPoints = NULL;
+
     hr = IMMDeviceEnumerator_EnumAudioEndpoints(paWasapi->enumerator, eAll, DEVICE_STATE_ACTIVE, &pEndPoints);
 	// We need to set the result to a value otherwise we will return paNoError
 	// [IF_FAILED_JUMP(hResult, error);]
@@ -1284,6 +1302,8 @@ PaError PaWasapi_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiInd
 	// We need to set the result to a value otherwise we will return paNoError
 	// [IF_FAILED_JUMP(hResult, error);]
 	IF_FAILED_INTERNAL_ERROR_JUMP(hr, result, error);
+
+    paWasapi->deviceCount += renderCount;
 
     paWasapi->devInfo = (PaWasapiDeviceInfo *)PaUtil_AllocateMemory(sizeof(PaWasapiDeviceInfo) * paWasapi->deviceCount);
     if (paWasapi->devInfo == NULL)
@@ -1313,7 +1333,7 @@ PaError PaWasapi_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiInd
             goto error;
         }
 
-        for (i = 0; i < paWasapi->deviceCount; ++i)
+        for (devIndex = 0, i = 0; i < paWasapi->deviceCount; ++i, ++devIndex)
 		{
 			DWORD state				  = 0;
             PaDeviceInfo *deviceInfo  = &deviceInfoArray[i];
@@ -1323,7 +1343,7 @@ PaError PaWasapi_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiInd
 			PA_DEBUG(("WASAPI: device idx: %02d\n", i));
 			PA_DEBUG(("WASAPI: ---------------\n"));
 
-            hr = IMMDeviceCollection_Item(pEndPoints, i, &paWasapi->devInfo[i].device);
+            hr = IMMDeviceCollection_Item(pEndPoints, devIndex, &paWasapi->devInfo[i].device);
 			// We need to set the result to a value otherwise we will return paNoError
 			// [IF_FAILED_JUMP(hResult, error);]
 			IF_FAILED_INTERNAL_ERROR_JUMP(hr, result, error);
@@ -1513,6 +1533,43 @@ PaError PaWasapi_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiInd
 
             (*hostApi)->deviceInfos[i] = deviceInfo;
             ++(*hostApi)->info.deviceCount;
+
+            if (paWasapi->devInfo[i].flow == eRender)
+			{
+                char *deviceName;
+                UINT deviceNameLen;
+
+                memcpy(&deviceInfoArray[i + 1], deviceInfo, sizeof(*deviceInfo));
+                memcpy(&paWasapi->devInfo[i + 1], &paWasapi->devInfo[i], sizeof(*paWasapi->devInfo));
+
+                i++;
+                paWasapi->devInfo[i].loopBack = 1;
+
+                deviceInfo = &deviceInfoArray[i];
+
+                deviceInfo->maxInputChannels		 = deviceInfo->maxOutputChannels;
+                deviceInfo->defaultHighInputLatency  = deviceInfo->defaultHighOutputLatency;
+                deviceInfo->defaultLowInputLatency   = deviceInfo->defaultLowOutputLatency;
+                deviceInfo->maxOutputChannels		 = 0;
+                deviceInfo->defaultHighOutputLatency = 0;
+                deviceInfo->defaultLowOutputLatency  = 0;
+				PA_DEBUG(("WASAPI:%d| def.SR[%d] max.CH[%d] latency{hi[%f] lo[%f]}\n", i, (UINT32)deviceInfo->defaultSampleRate,
+					deviceInfo->maxInputChannels, (float)deviceInfo->defaultHighInputLatency, (float)deviceInfo->defaultLowInputLatency));
+
+                IMMDevice_AddRef(paWasapi->devInfo[i].device);
+
+                deviceName = (char *)PaUtil_GroupAllocateMemory(paWasapi->allocations, MAX_STR_LEN + 1);
+                if (deviceName == NULL)
+				{
+                    result = paInsufficientMemory;
+                    goto error;
+                }
+				_snprintf(deviceName, MAX_STR_LEN-1, "%s (loopback)", deviceInfo->name);
+                deviceInfo->name = deviceName;
+
+                (*hostApi)->deviceInfos[i] = deviceInfo;
+                ++(*hostApi)->info.deviceCount;
+            }
         }
     }
 
@@ -1688,6 +1745,29 @@ const wchar_t *PaWasapi_GetOutputDeviceID( PaStream* s )
         return stream->out.params.device_info->szDeviceID;
 
     return NULL;
+}
+
+// ------------------------------------------------------------------------------------------
+int PaWasapi_IsLoopback( PaDeviceIndex nDevice )
+{
+	PaError ret;
+	PaDeviceIndex index;
+
+	// Get API
+	PaWasapiHostApiRepresentation *paWasapi = _GetHostApi(&ret);
+	if (paWasapi == NULL)
+		return paNotInitialized;
+
+	// Get device index
+	ret = PaUtil_DeviceIndexToHostApiDeviceIndex(&index, nDevice, &paWasapi->inheritedHostApiRep);
+    if (ret != paNoError)
+        return ret;
+
+	// Validate index
+	if ((UINT32)index >= paWasapi->deviceCount)
+		return paInvalidDevice;
+
+	return paWasapi->devInfo[ index ].loopBack;
 }
 
 // ------------------------------------------------------------------------------------------
@@ -2336,7 +2416,7 @@ static HRESULT CreateAudioClient(PaWasapiStream *pStream, PaWasapiSubStream *pSu
 		}*/
 
 		// select mixer
-		pSub->monoMixer = _GetMonoToStereoMixer(WaveToPaFormat(&pSub->wavex), (pInfo->flow == eRender ? MIX_DIR__1TO2 : MIX_DIR__2TO1_L));
+		pSub->monoMixer = _GetMonoToStereoMixer(WaveToPaFormat(&pSub->wavex), (output ? MIX_DIR__1TO2 : MIX_DIR__2TO1_L));
 		if (pSub->monoMixer == NULL)
 		{
 			(*pa_error) = paInvalidChannelCount;
@@ -2621,7 +2701,7 @@ static HRESULT CreateAudioClient(PaWasapiStream *pStream, PaWasapiSubStream *pSu
 			}*/
 
 			// Select mixer
-			pSub->monoMixer = _GetMonoToStereoMixer(WaveToPaFormat(&pSub->wavex), (pInfo->flow == eRender ? MIX_DIR__1TO2 : MIX_DIR__2TO1_L));
+			pSub->monoMixer = _GetMonoToStereoMixer(WaveToPaFormat(&pSub->wavex), (output ? MIX_DIR__1TO2 : MIX_DIR__2TO1_L));
 			if (pSub->monoMixer == NULL)
 			{
 				(*pa_error) = paInvalidChannelCount;
@@ -2940,6 +3020,9 @@ static PaError OpenStream( struct PaUtilHostApiRepresentation *hostApi,
 		else
 		if (fullDuplex)
 			stream->in.streamFlags = 0; // polling interface is implemented for full-duplex mode also
+
+        if (info->flow == eRender)
+            stream->in.streamFlags |= AUDCLNT_STREAMFLAGS_LOOPBACK;
 
 		// Fill parameters for Audio Client creation
 		stream->in.params.device_info       = info;
