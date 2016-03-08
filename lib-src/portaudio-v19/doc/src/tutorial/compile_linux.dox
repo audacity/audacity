@@ -32,7 +32,7 @@ That will build PortAudio using Jack, ALSA and OSS in whatever combination they 
 To use PortAudio in your apps, you can simply install the .so files:
 
 @code
-make install
+sudo make install
 @endcode
 
 Projects built this way will expect PortAudio to be installed on target systems in order to run. If you want to build a more self-contained binary, you may use the libportaudio.a file:
@@ -41,10 +41,16 @@ Projects built this way will expect PortAudio to be installed on target systems 
 cp lib/.libs/libportaudio.a /YOUR/PROJECT/DIR
 @endcode
 
+On some systems you may need to use:
+
+@code
+cp /usr/local/lib/libportaudio.a /YOUR/PROJECT/DIR
+@endcode
+
 You may also need to copy portaudio.h, located in the include/ directory of PortAudio into your project. Note that you will usually need to link with the approriate libraries that you used, such as ALSA and JACK, as well as with librt and libpthread. For example:
 
 @code
-gcc -lrt -lasound -ljack -lpthread -o YOUR_BINARY main.c libportaudio.a
+gcc main.c libportaudio.a -lrt -lm -lasound -ljack -pthread -o YOUR_BINARY
 @endcode
 
 @section comp_linux4 Linux Extensions

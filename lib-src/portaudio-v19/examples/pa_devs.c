@@ -7,7 +7,7 @@
         ASIO support.
 */
 /*
- * $Id: pa_devs.c 1817 2012-02-22 12:44:10Z robiwan $
+ * $Id: pa_devs.c 1953 2015-04-10 04:00:09Z philburk $
  *
  * This program uses the PortAudio Portable Audio Library.
  * For more information see: http://www.portaudio.com
@@ -113,11 +113,10 @@ int main(void)
         printf( "ERROR: Pa_Initialize returned 0x%x\n", err );
         goto error;
     }
+    
+    printf( "PortAudio version: 0x%08X\n", Pa_GetVersion());
+    printf( "Version text: '%s'\n", Pa_GetVersionInfo()->versionText );
 
-    printf( "PortAudio version number = %d\nPortAudio version text = '%s'\n",
-            Pa_GetVersion(), Pa_GetVersionText() );
-
-            
     numDevices = Pa_GetDeviceCount();
     if( numDevices < 0 )
     {

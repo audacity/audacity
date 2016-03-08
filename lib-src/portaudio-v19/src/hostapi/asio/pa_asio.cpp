@@ -1,5 +1,5 @@
 /*
- * $Id: pa_asio.cpp 1879 2012-12-04 14:45:31Z rbencina $
+ * $Id: pa_asio.cpp 1890 2013-05-02 01:06:01Z rbencina $
  * Portable Audio I/O Library for ASIO Drivers
  *
  * Author: Stephane Letz

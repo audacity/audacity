@@ -1,5 +1,5 @@
 /*
- * $Id: pa_front.c 1880 2012-12-04 18:39:48Z rbencina $
+ * $Id: pa_front.c 1953 2015-04-10 04:00:09Z philburk $
  * Portable Audio I/O Library Multi-Host API front end
  * Validate function parameters and manage multiple host APIs.
  *
@@ -65,6 +65,7 @@
 #include <stdio.h>
 #include <memory.h>
 #include <string.h>
+#include <stdlib.h> /* needed for strtol() */
 #include <assert.h> /* needed by PA_VALIDATE_ENDIANNESS */
 
 #include "portaudio.h"
@@ -76,25 +77,63 @@
 #include "pa_trace.h" /* still usefull?*/
 #include "pa_debugprint.h"
 
+#ifndef PA_SVN_REVISION
+#include "pa_svnrevision.h"
+#endif
 
-#define PA_VERSION_  1899
-#define PA_VERSION_TEXT_ "PortAudio V19-devel (built " __DATE__  " " __TIME__ ")"
+/**
+ * This is incremented if we make incompatible API changes.
+ * This version scheme is based loosely on http://semver.org/
+ */
+#define paVersionMajor     19
 
+/**
+ * This is incremented when we add functionality in a backwards-compatible manner.
+ * Or it is set to zero when paVersionMajor is incremented.
+ */
+#define paVersionMinor      5
 
+/**
+ * This is incremented when we make backwards-compatible bug fixes.
+ * Or it is set to zero when paVersionMinor changes.
+ */
+#define paVersionSubMinor   0
 
+/**
+ * This is a combination of paVersionMajor, paVersionMinor and paVersionSubMinor.
+ * It will always increase so that version numbers can be compared as integers to 
+ * see which is later.
+ */
+#define paVersion  paMakeVersionNumber(paVersionMajor, paVersionMinor, paVersionSubMinor)
+
+#define STRINGIFY(x) #x
+#define TOSTRING(x) STRINGIFY(x)
+
+#define PA_VERSION_STRING_ TOSTRING(paVersionMajor) "." TOSTRING(paVersionMinor) "." TOSTRING(paVersionSubMinor)
+#define PA_VERSION_TEXT_   "PortAudio V" PA_VERSION_STRING_ "-devel, revision " TOSTRING(PA_SVN_REVISION)
 
 int Pa_GetVersion( void )
 {
-    return PA_VERSION_;
+    return paVersion;
 }
-
 
 const char* Pa_GetVersionText( void )
 {
     return PA_VERSION_TEXT_;
 }
 
+static PaVersionInfo versionInfo_ = {
+    .versionMajor = paVersionMajor,
+    .versionMinor = paVersionMinor,
+    .versionSubMinor = paVersionSubMinor,
+    .versionControlRevision = TOSTRING(PA_SVN_REVISION),
+    .versionText = PA_VERSION_TEXT_
+};
 
+const PaVersionInfo* Pa_GetVersionInfo()
+{
+    return &versionInfo_;
+}
 
 #define PA_LAST_HOST_ERROR_TEXT_LENGTH_  1024
 
@@ -1216,10 +1255,8 @@ PaError Pa_OpenStream( PaStream** stream,
                                   hostApiInputParametersPtr, hostApiOutputParametersPtr,
                                   sampleRate, framesPerBuffer, streamFlags, streamCallback, userData );
 
-    if( result == paNoError ) {
+    if( result == paNoError )
         AddOpenStream( *stream );
-        PA_STREAM_REP(*stream)->hostApiType = hostApi->info.type;
-    }
 
 
     PA_LOGAPI(("Pa_OpenStream returned:\n" ));
@@ -1731,32 +1768,6 @@ signed long Pa_GetStreamWriteAvailable( PaStream* stream )
     return result;
 }
 
-PaHostApiTypeId Pa_GetStreamHostApiType( PaStream* stream )
-{
-    PaError error = PaUtil_ValidateStreamPointer( stream );
-    PaHostApiTypeId result;
-
-#ifdef PA_LOG_API_CALLS
-    PaUtil_DebugPrint("Pa_GetStreamHostApiType called:\n" );
-    PaUtil_DebugPrint("\tPaStream* stream: 0x%p\n", stream );
-#endif
-
-    if( error == paNoError )
-    {
-        result = PA_STREAM_REP(stream)->hostApiType;
-    }
-    else
-    {
-        result = (PaHostApiTypeId) error;
-    }
-
-#ifdef PA_LOG_API_CALLS
-    PaUtil_DebugPrint("Pa_GetStreamHostApiType returned:\n" );
-    PaUtil_DebugPrint("\tPaError: %d ( %s )\n\n", result, Pa_GetErrorText( result ) );
-#endif
-
-    return result;
-}
 
 PaError Pa_GetSampleSize( PaSampleFormat format )
 {
