@@ -63,6 +63,7 @@ PaError PaWinDs_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiInde
 PaError PaAsio_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiIndex index );
 PaError PaWinWdm_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiIndex index );
 PaError PaWasapi_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiIndex index );
+PaError PaJack_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiIndex index );
 
 #ifdef __cplusplus
 }
@@ -90,6 +91,10 @@ PaUtilHostApiInitializer *paHostApiInitializers[] =
 
 #if PA_USE_WDMKS
         PaWinWdm_Initialize,
+#endif
+
+#if PA_USE_JACK
+        PaJack_Initialize,
 #endif
 
 #if PA_USE_SKELETON
