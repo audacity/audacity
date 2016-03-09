@@ -273,6 +273,7 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    bool SaveFromTimed(wxFileName fnPath, bool overwrite = false, bool fromSaveAs = true, bool bWantSaveCompressed = false);
    bool ExportFromTimed(wxFileName fnFile, int iFormat, int iSubFormat, int iFilterIndex);
    int GetOpenProjectCount();
+   bool IsProjectSaved();
 
 #include "Menus.h"
 

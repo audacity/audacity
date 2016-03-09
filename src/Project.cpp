@@ -5223,6 +5223,10 @@ int AudacityProject::GetOpenProjectCount() {
 	return gAudacityProjects.Count();
 }
 
+bool AudacityProject::IsProjectSaved() {
+	return (mDirManager->GetProjectName() != wxT(""));
+}
+
 bool AudacityProject::SaveFromTimed(wxFileName fnPath, bool overwrite /* = true */,
 	bool fromSaveAs /* = true */,
 	bool bWantSaveCompressed /*= false*/)

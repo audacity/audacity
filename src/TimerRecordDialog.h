@@ -31,7 +31,7 @@ class ShuttleGui;
 class TimerRecordDialog final : public wxDialog
 {
 public:
-   TimerRecordDialog(wxWindow* parent);
+   TimerRecordDialog(wxWindow* parent, bool bAlreadySaved);
    ~TimerRecordDialog();
 
    void OnTimer(wxTimerEvent& event);
@@ -108,6 +108,7 @@ private:
    int m_iAutoExportFormat;
    int m_iAutoExportSubFormat;
    int m_iAutoExportFilterIndex;
+   bool m_bProjectAlreadySaved;
 
    // Variables for After Timer Recording Option
    wxString m_sTimerAfterCompleteOption;
