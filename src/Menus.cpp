@@ -6329,6 +6329,14 @@ void AudacityProject::OnNewTimeTrack()
 
 void AudacityProject::OnTimerRecord()
 {
+	// MY: Due to improvements in how Timer Recording saves and/or exports
+	// it is now safer to disable Timer Recording when there is more than
+	// one open project.
+	if (GetOpenProjectCount() > 1) {
+		wxMessageBox(_("Timer Recording cannot be used with more than one open project.\n\nPlease close any additional projects and try again."), _("Timer Recording"), wxICON_INFORMATION | wxOK);
+		return;
+	}
+
    //we break the prompting and waiting dialogs into two sections
    //because they both give the user a chance to click cancel
    //and therefore remove the newly inserted track.
