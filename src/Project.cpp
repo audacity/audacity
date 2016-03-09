@@ -5202,11 +5202,14 @@ bool AudacityProject::ExportFromTimed(wxFileName fnFile, int iFormat, int iSubFo
 	return e.ProcessFromTimed(this, false, 0.0, mTracks->GetEndTime(), fnFile, iFormat, iSubFormat, iFilterIndex);
 }
 
+int AudacityProject::GetOpenProjectCount() {
+	return gAudacityProjects.Count();
+}
+
 bool AudacityProject::SaveFromTimed(wxFileName fnPath, bool overwrite /* = true */,
 	bool fromSaveAs /* = true */,
 	bool bWantSaveCompressed /*= false*/)
 {
-
 
 	if (!fnPath.DirExists()) {
 		// Directory does not exist - FAIL
