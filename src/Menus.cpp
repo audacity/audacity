@@ -6329,11 +6329,16 @@ void AudacityProject::OnTimerRecord()
 		return;
 	}
 
+	// MY: If the project has already been saved then we will pass that info to the 
+	// timer record dialog.  That way we can automatically populate the 
+	// automatic save field with the filename.
+	bool bProjectSaved = IsProjectSaved();
+
    //we break the prompting and waiting dialogs into two sections
    //because they both give the user a chance to click cancel
    //and therefore remove the newly inserted track.
 
-   TimerRecordDialog dialog(this /* parent */ );
+	TimerRecordDialog dialog(this, bProjectSaved); /* parent, project saved? */
    int modalResult = dialog.ShowModal();
    if (modalResult == wxID_CANCEL)
    {

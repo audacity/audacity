@@ -98,7 +98,7 @@ BEGIN_EVENT_TABLE(TimerRecordDialog, wxDialog)
 
 END_EVENT_TABLE()
 
-TimerRecordDialog::TimerRecordDialog(wxWindow* parent)
+TimerRecordDialog::TimerRecordDialog(wxWindow* parent, bool bAlreadySaved)
 : wxDialog(parent, -1, _("Audacity Timer Record"), wxDefaultPosition,
            wxDefaultSize, wxCAPTION)
 {
@@ -131,6 +131,9 @@ TimerRecordDialog::TimerRecordDialog(wxWindow* parent)
 
    // Do we need to tidy up when the timer recording has been completed?
    m_bProjectCleanupRequired = !(this->HaveFilesToRecover());
+
+   // Do we allow the user to change the Automatic Save file?
+   m_bProjectAlreadySaved = bAlreadySaved;
 }
 
 TimerRecordDialog::~TimerRecordDialog()
@@ -341,6 +344,12 @@ void TimerRecordDialog::EnableDisableAutoControls(bool bEnable, int iControlGoup
 		}
 	}
 	else if (iControlGoup == CONTROL_GROUP_SAVE) {
+
+		// MY: We are only allowed to change this if it is a new project
+		if (m_bProjectAlreadySaved) {
+			bEnable = false;
+		}
+
 		// Enables or disables a control group based on the params
 		if (bEnable) {
 			m_pTimerSavePathTextCtrl->Enable();
@@ -487,7 +496,15 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
 
 	// Do Auto Save?
 	if (m_bAutoSaveEnabled) {
-		bSaveOK = pProject->SaveFromTimed(m_fnAutoSaveFile);
+
+		// MY: If this project has already been saved then simply execute a Save here
+		if (m_bProjectAlreadySaved) {
+			pProject->Save();
+			bSaveOK = true;
+		}
+		else {
+			bSaveOK = pProject->SaveFromTimed(m_fnAutoSaveFile);
+		}
 	}
 
 	// Do Auto Export?
@@ -547,6 +564,9 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
 	if (m_bProjectCleanupRequired && !bErrorOverride) {
 		RemoveAllAutoSaveFiles();
 	}
+
+	// MY: Remove any orphaned .au files now
+
 
 	// Return the action as required
 	return iPostRecordAction;
@@ -695,7 +715,13 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
 
 				S.StartHorizontalLay(true);
 				{
-					m_pTimerSavePathTextCtrl = S.AddTextBox(_("Save Project As:"), "", 50);
+					wxString sSaveValue = "";
+					if (m_bProjectAlreadySaved) {
+						AudacityProject* pProject = GetActiveProject();
+						sSaveValue = pProject->GetFileName();
+					}
+
+					m_pTimerSavePathTextCtrl = S.AddTextBox(_("Save Project As:"), sSaveValue, 50);
 					m_pTimerSavePathTextCtrl->SetEditable(false);
 					m_pTimerSavePathButtonCtrl = S.Id(ID_AUTOSAVEPATH_BUTTON).AddButton(_("Select"));
 				}
