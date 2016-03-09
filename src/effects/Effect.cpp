@@ -1081,7 +1081,7 @@ bool Effect::SetAutomationParameters(const wxString & parms)
    {
       wxMessageBox(
          wxString::Format(
-            _("Could not update effect \"%s\" with:\n%s"),
+            _("%s: Could not load settings below. Default settings will be used.\n\n%s"),
             GetName().c_str(),
             preset.c_str()
          )
