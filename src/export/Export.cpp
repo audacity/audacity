@@ -886,7 +886,7 @@ void Exporter::OnFilterChanged(wxFileCtrlEvent & evt)
    mBook->ChangeSelection(index);
 }
 
-bool Exporter::ProcessFromTimed(AudacityProject *project, bool selectedOnly, double t0, double t1, wxFileName fnFile, int iFormat, int iSubFormat, int iFilterIndex)
+bool Exporter::ProcessFromTimerRecording(AudacityProject *project, bool selectedOnly, double t0, double t1, wxFileName fnFile, int iFormat, int iSubFormat, int iFilterIndex)
 {
 	// Save parms
 	mProject = project;
