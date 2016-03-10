@@ -5207,7 +5207,38 @@ int AudacityProject::GetOpenProjectCount() {
 }
 
 bool AudacityProject::IsProjectSaved() {
-	return (mDirManager->GetProjectName() != wxT(""));
+	wxString sProjectName = mDirManager->GetProjectName();
+	return (sProjectName != wxT(""));
+}
+
+bool AudacityProject::SaveFromTimerRecording(wxFileName fnFile) {
+	// MY: Will save the project to a new location a-la Save As
+	// and then tidy up after itself.
+
+	wxString sNewFileName = fnFile.GetFullPath();
+
+	// MY: If the project file already exists then bail out
+	// and send populate the message string (pointer) so
+	// we can tell the user what went wrong.
+	if (wxFileExists(sNewFileName)) {
+		return false;
+	}
+
+	mFileName = sNewFileName;
+	SetProjectTitle();
+
+	bool bSuccess = Save(false, true, false);
+
+	if (bSuccess) {
+		wxGetApp().AddFileToHistory(mFileName);
+	} else
+	{
+		// Reset file name on error
+		mFileName = "";
+		SetProjectTitle();
+	}
+
+	return bSuccess;
 }
 
 bool AudacityProject::SaveFromTimed(wxFileName fnPath, bool overwrite /* = true */,
