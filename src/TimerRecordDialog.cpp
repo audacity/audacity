@@ -118,6 +118,9 @@ TimerRecordDialog::TimerRecordDialog(wxWindow* parent, bool bAlreadySaved)
 
    m_pTimeTextCtrl_Duration = NULL;
 
+   // Do we allow the user to change the Automatic Save file?
+   m_bProjectAlreadySaved = bAlreadySaved;
+
    ShuttleGui S(this, eIsCreating);
    this->PopulateOrExchange(S);
 
@@ -132,8 +135,6 @@ TimerRecordDialog::TimerRecordDialog(wxWindow* parent, bool bAlreadySaved)
    // Do we need to tidy up when the timer recording has been completed?
    m_bProjectCleanupRequired = !(this->HaveFilesToRecover());
 
-   // Do we allow the user to change the Automatic Save file?
-   m_bProjectAlreadySaved = bAlreadySaved;
 }
 
 TimerRecordDialog::~TimerRecordDialog()
@@ -499,11 +500,10 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
 
 		// MY: If this project has already been saved then simply execute a Save here
 		if (m_bProjectAlreadySaved) {
-			pProject->Save();
-			bSaveOK = true;
+			bSaveOK = pProject->Save();
 		}
 		else {
-			bSaveOK = pProject->SaveFromTimed(m_fnAutoSaveFile);
+			bSaveOK = pProject->SaveFromTimerRecording(m_fnAutoSaveFile);
 		}
 	}
 
@@ -715,11 +715,8 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
 
 				S.StartHorizontalLay(true);
 				{
-					wxString sSaveValue = "";
-					if (m_bProjectAlreadySaved) {
-						AudacityProject* pProject = GetActiveProject();
-						sSaveValue = pProject->GetFileName();
-					}
+					AudacityProject* pProject = GetActiveProject();
+					wxString sSaveValue = pProject->GetFileName();
 
 					m_pTimerSavePathTextCtrl = S.AddTextBox(_("Save Project As:"), sSaveValue, 50);
 					m_pTimerSavePathTextCtrl->SetEditable(false);
