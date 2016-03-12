@@ -4,6 +4,10 @@
 // C++ standard header <memory> with a few extensions
 #include <memory>
 
+#ifndef safenew
+#define safenew new
+#endif
+
 // Conditional compilation switch indicating whether to rely on
 // std:: containers knowing about rvalue references
 #undef __AUDACITY_OLD_STD__
