@@ -1116,7 +1116,7 @@ void ControlToolBar::ClearCutPreviewTracks()
 {
    if (mCutPreviewTracks)
    {
-      mCutPreviewTracks->Clear(true); /* DELETE track contents too */
+      mCutPreviewTracks->Clear(); /* DELETE track contents too */
       delete mCutPreviewTracks;
       mCutPreviewTracks = NULL;
    }

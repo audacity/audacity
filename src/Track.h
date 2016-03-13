@@ -402,7 +402,7 @@ class AUDACITY_DLL_API TrackList final : public wxEvtHandler, public ListOfTrack
 {
  public:
    // Create an empty TrackList
-   TrackList(bool destructorDeletesTracks = false);
+   TrackList();
 
    // Allow copy -- a deep copy that duplicates all tracks
    TrackList(const TrackList &that);
@@ -438,7 +438,7 @@ class AUDACITY_DLL_API TrackList final : public wxEvtHandler, public ListOfTrack
    TrackNodePointer Remove(Track *t);
 
    /// Make the list empty
-   void Clear(bool deleteTracks = false);
+   void Clear();
 
    /** Select a track, and if it is linked to another track, select it, too. */
    void Select(Track * t, bool selected = true);
@@ -514,8 +514,6 @@ private:
    void ResizedEvent(TrackNodePointer node);
 
    void SwapNodes(TrackNodePointer s1, TrackNodePointer s2);
-
-   bool mDestructorDeletesTracks;
 };
 
 class AUDACITY_DLL_API TrackFactory

@@ -717,9 +717,8 @@ Track *SyncLockedTracksIterator::Last(bool skiplinked)
 DEFINE_EVENT_TYPE(EVT_TRACKLIST_RESIZED);
 DEFINE_EVENT_TYPE(EVT_TRACKLIST_UPDATED);
 
-TrackList::TrackList(bool destructorDeletesTracks)
+TrackList::TrackList()
 :  wxEvtHandler()
-, mDestructorDeletesTracks(destructorDeletesTracks)
 {
 }
 
@@ -732,7 +731,7 @@ TrackList::TrackList(const TrackList &that)
 TrackList& TrackList::operator= (const TrackList &that)
 {
    if (this != &that) {
-      this->Clear(mDestructorDeletesTracks);
+      this->Clear();
       DoAssign(that);
    }
    return *this;
@@ -746,7 +745,7 @@ TrackList::TrackList(TrackList &&that)
 TrackList &TrackList::operator= (TrackList &&that)
 {
    if (this != &that) {
-      this->Clear(mDestructorDeletesTracks);
+      this->Clear();
       Swap(that);
    }
    return *this;
@@ -754,7 +753,6 @@ TrackList &TrackList::operator= (TrackList &&that)
 
 void TrackList::DoAssign(const TrackList &that)
 {
-   mDestructorDeletesTracks = true;
    TrackListConstIterator it(&that);
    for (const Track *track = it.First(); track; track = it.Next())
       Add(track->Duplicate().release());
@@ -767,12 +765,11 @@ void TrackList::Swap(TrackList &that)
       (*it)->SetOwner(this, it);
    for (auto it = that.begin(), last = that.end(); it != last; ++it)
       (*it)->SetOwner(&that, it);
-   std::swap(mDestructorDeletesTracks, that.mDestructorDeletesTracks);
 }
 
 TrackList::~TrackList()
 {
-   Clear(mDestructorDeletesTracks);
+   Clear();
 }
 
 void TrackList::RecalcPositions(TrackNodePointer node)
@@ -923,12 +920,10 @@ TrackNodePointer TrackList::Remove(Track *t)
    return result;
 }
 
-void TrackList::Clear(bool deleteTracks /* = false */)
+void TrackList::Clear()
 {
-   if (deleteTracks)
-      for (auto track : *this)
-         delete track;
-
+   for (auto track : *this)
+      delete track;
    ListOfTracks::clear();
    UpdatedEvent(end());
 }

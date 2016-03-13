@@ -2247,7 +2247,7 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
          t = iter.Next();
       }
 
-      mLastSavedTracks->Clear(true);
+      mLastSavedTracks->Clear();
       delete mLastSavedTracks;
       mLastSavedTracks = NULL;
    }
@@ -2294,7 +2294,7 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
                        this);
 
    // Delete all the tracks to free up memory and DirManager references.
-   mTracks->Clear(true);
+   mTracks->Clear();
    delete mTracks;
    mTracks = NULL;
 
@@ -3539,7 +3539,7 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
       }
 
       if (mLastSavedTracks) {
-         mLastSavedTracks->Clear(true);
+         mLastSavedTracks->Clear();
          delete mLastSavedTracks;
       }
 
@@ -3588,7 +3588,7 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
       TrackListOfKindIterator iter(Track::Wave, mTracks);
       unsigned int numWaveTracks = 0;
 
-      TrackList pSavedTrackList(true);
+      TrackList pSavedTrackList{};
       for (pTrack = iter.First(); pTrack != NULL; pTrack = iter.Next())
       {
          numWaveTracks++;
@@ -4061,7 +4061,7 @@ void AudacityProject::PopState(const UndoState &state)
 
    TrackList *const tracks = state.tracks.get();
 
-   mTracks->Clear(true);
+   mTracks->Clear();
    TrackListIterator iter(tracks);
    Track *t = iter.First();
    bool odUsed = false;
@@ -4173,7 +4173,7 @@ TrackList *AudacityProject::GetClipboardTracks()
 void AudacityProject::DeleteClipboard()
 {
    if (msClipboard) {
-      msClipboard->Clear( true );
+      msClipboard->Clear();
       delete msClipboard;
       msClipboard = NULL;
    }
@@ -4195,7 +4195,7 @@ void AudacityProject::ClearClipboard()
    msClipT1 = 0.0;
    msClipProject = NULL;
    if (msClipboard) {
-      msClipboard->Clear(true);
+      msClipboard->Clear();
    }
 }
 

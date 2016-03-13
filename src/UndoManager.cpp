@@ -210,7 +210,7 @@ void UndoManager::ModifyState(const TrackList * l,
    stack[current]->state.tracks.reset();
 
    // Duplicate
-   auto tracksCopy = std::make_unique<TrackList>(true);
+   auto tracksCopy = std::make_unique<TrackList>();
    TrackListConstIterator iter(l);
    const Track *t = iter.First();
    while (t) {
@@ -255,7 +255,7 @@ void UndoManager::PushState(const TrackList * l,
       RemoveStateAt(i);
    }
 
-   auto tracksCopy = std::make_unique<TrackList>(true);
+   auto tracksCopy = std::make_unique<TrackList>();
    TrackListConstIterator iter(l);
    const Track *t = iter.First();
    while (t) {

@@ -2091,7 +2091,7 @@ void Effect::CopyInputTracks(int trackType)
    mIMap.Clear();
    mOMap.Clear();
 
-   mOutputTracks = new TrackList(true);
+   mOutputTracks = new TrackList();
    mOutputTracksType = trackType;
 
    //iterate over tracks of type trackType (All types if Track::All)
@@ -2212,7 +2212,7 @@ void Effect::ReplaceProcessedTracks(const bool bGoodResult)
 
    if (!bGoodResult) {
       // Processing failed or was cancelled so throw away the processed tracks.
-      mOutputTracks->Clear(true); // true => DELETE the tracks
+      mOutputTracks->Clear();
 
       // Reset map
       mIMap.Clear();
@@ -2677,7 +2677,7 @@ void Effect::Preview(bool dryOnly)
    delete mOutputTracks;
    mOutputTracks = NULL;
 
-   mTracks->Clear(true); // true => DELETE the tracks
+   mTracks->Clear();
    delete mTracks;
 
    mTracks = saveTracks;
