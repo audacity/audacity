@@ -2751,7 +2751,7 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
             }
          }
 
-         mLastSavedTracks->Add(t->Duplicate().release());
+         mLastSavedTracks->Add(t->Duplicate());
          t = iter.Next();
       }
 
@@ -3147,29 +3147,21 @@ XMLTagHandler *AudacityProject::HandleXMLChild(const wxChar *tag)
    }
 
    if (!wxStrcmp(tag, wxT("wavetrack"))) {
-      WaveTrack *newTrack = mTrackFactory->NewWaveTrack().release();
-      mTracks->Add(newTrack);
-      return newTrack;
+      return mTracks->Add(mTrackFactory->NewWaveTrack());
    }
 
    #ifdef USE_MIDI
    if (!wxStrcmp(tag, wxT("notetrack"))) {
-      NoteTrack *newTrack = mTrackFactory->NewNoteTrack().release();
-      mTracks->Add(newTrack);
-      return newTrack;
+      return mTracks->Add(mTrackFactory->NewNoteTrack());
    }
    #endif // USE_MIDI
 
    if (!wxStrcmp(tag, wxT("labeltrack"))) {
-      LabelTrack *newTrack = mTrackFactory->NewLabelTrack().release();
-      mTracks->Add(newTrack);
-      return newTrack;
+      return mTracks->Add(mTrackFactory->NewLabelTrack());
    }
 
    if (!wxStrcmp(tag, wxT("timetrack"))) {
-      TimeTrack *newTrack = mTrackFactory->NewTimeTrack().release();
-      mTracks->Add(newTrack);
-      return newTrack;
+      return mTracks->Add(mTrackFactory->NewTimeTrack());
    }
 
    if (!wxStrcmp(tag, wxT("recordingrecovery"))) {
@@ -3547,10 +3539,8 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
 
       TrackListIterator iter(mTracks);
       Track *t = iter.First();
-      Track *dupT;
       while (t) {
-         dupT = t->Duplicate().release();
-         mLastSavedTracks->Add(dupT);
+         mLastSavedTracks->Add(t->Duplicate());
 
          //only after the xml has been saved we can mark it saved.
          //thus is because the OD blockfiles change on  background thread while this is going on.
@@ -3582,19 +3572,17 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
       // but that code is really tied into the dialogs.
 
       // Copy the tracks because we're going to do some state changes before exporting.
-      Track* pSavedTrack;
       Track* pTrack;
       WaveTrack* pWaveTrack;
       TrackListOfKindIterator iter(Track::Wave, mTracks);
       unsigned int numWaveTracks = 0;
 
-      TrackList pSavedTrackList{};
+      TrackList pSavedTrackList;
       for (pTrack = iter.First(); pTrack != NULL; pTrack = iter.Next())
       {
          numWaveTracks++;
          pWaveTrack = (WaveTrack*)pTrack;
-         pSavedTrack = mTrackFactory->DuplicateWaveTrack(*pWaveTrack).release();
-         pSavedTrackList.Add(pSavedTrack);
+         pSavedTrackList.Add(mTrackFactory->DuplicateWaveTrack(*pWaveTrack));
       }
 
       if (numWaveTracks == 0)
@@ -3652,6 +3640,7 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
 
       // Restore the saved track states and clean up.
       TrackListIterator savedTrackIter(&pSavedTrackList);
+      Track *pSavedTrack;
       for (pTrack = iter.First(), pSavedTrack = savedTrackIter.First();
             ((pTrack != NULL) && (pSavedTrack != NULL));
             pTrack = iter.Next(), pSavedTrack = savedTrackIter.Next())
@@ -3684,8 +3673,7 @@ void AudacityProject::AddImportedTracks(const wxString &fileName,
    for (auto &uNewTrack : newTracks) {
       ++i;
 
-      Track *newTrack; // TO DO: use unique_ptr, not bare pointer
-      mTracks->Add(newTrack = ((Track*)(uNewTrack.get()))->Duplicate().release()); // Ack! Once mTracks holds a smart pointer, Duplicate() won't be needed.
+      auto newTrack = mTracks->Add(std::move(uNewTrack));
       if (newRate == 0 && newTrack->GetKind() == Track::Wave) {
          newRate = ((WaveTrack *)newTrack)->GetRate();
       }
@@ -4066,11 +4054,10 @@ void AudacityProject::PopState(const UndoState &state)
    Track *t = iter.First();
    bool odUsed = false;
    ODComputeSummaryTask* computeTask = NULL;
-   Track* copyTrack;
 
    while (t)
    {
-      mTracks->Add(copyTrack = t->Duplicate().release());
+      auto copyTrack = mTracks->Add(t->Duplicate());
 
       //add the track to OD if the manager exists.  later we might do a more rigorous check...
       if (copyTrack->GetKind() == Track::Wave)
@@ -4627,7 +4614,7 @@ void AudacityProject::EditClipboardByLabel( EditDestFunction action )
                         regions.at(i + 1).start - region.end);
          }
          if( merged )
-            msClipboard->Add( merged.release() );
+            msClipboard->Add( std::move(merged) );
       }
    }
 

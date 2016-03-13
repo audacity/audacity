@@ -920,7 +920,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
          wxString baseTrackName = recordingNameCustom? defaultRecordingTrackName : defaultTrackName;
 
          for (int c = 0; c < recordingChannels; c++) {
-            WaveTrack *newTrack = p->GetTrackFactory()->NewWaveTrack().release();
+            auto newTrack = p->GetTrackFactory()->NewWaveTrack();
 
             newTrack->SetOffset(t0);
             wxString nameSuffix = wxString(wxT(""));
@@ -972,14 +972,12 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
                newTrack->SetChannel( Track::MonoChannel );
             }
 
-            newRecordingTracks.push_back(newTrack);
+            // Let the list hold the track, and keep a pointer to it
+            newRecordingTracks.push_back(
+               static_cast<WaveTrack*>(
+                  trackList->Add(
+                     std::move(newTrack))));
          }
-
-         // msmeyer: StartStream calls a callback which triggers auto-save, so
-         // we add the tracks where recording is done into now. We remove them
-         // later if starting the stream fails
-         for (unsigned int i = 0; i < newRecordingTracks.size(); i++)
-            trackList->Add(newRecordingTracks[i]);
       }
 
       //Automated Input Level Adjustment Initialization
@@ -1096,18 +1094,19 @@ void ControlToolBar::SetupCutPreviewTracks(double WXUNUSED(playStart), double cu
       if (track1)
       {
          // Duplicate and change tracks
-         track1 = track1->Duplicate().release();
-         track1->Clear(cutStart, cutEnd);
+         auto new1 = track1->Duplicate();
+         new1->Clear(cutStart, cutEnd);
+         decltype(new1) new2{};
          if (track2)
          {
-            track2 = track2->Duplicate().release();
-            track2->Clear(cutStart, cutEnd);
+            new2 = track2->Duplicate();
+            new2->Clear(cutStart, cutEnd);
          }
 
          mCutPreviewTracks = new TrackList();
-         mCutPreviewTracks->Add(track1);
+         mCutPreviewTracks->Add(std::move(new1));
          if (track2)
-            mCutPreviewTracks->Add(track2);
+            mCutPreviewTracks->Add(std::move(new2));
       }
    }
 }

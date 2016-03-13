@@ -67,7 +67,8 @@ WX_DEFINE_USER_EXPORTED_ARRAY(NoteTrack*, NoteTrackArray, class AUDACITY_DLL_API
 
 class TrackList;
 
-using ListOfTracks = std::list<Track*>;
+using ListOfTracks = std::list<movable_ptr<Track>>;
+
 using TrackNodePointer = ListOfTracks::iterator;
 
 class AUDACITY_DLL_API Track /* not final */ : public XMLTagHandler
@@ -257,7 +258,7 @@ class AUDACITY_DLL_API TrackListIterator /* not final */
    virtual Track *Prev(bool skiplinked = false);
    virtual Track *Last(bool skiplinked = false);
 
-   Track *RemoveCurrent(); // returns next
+   Track *RemoveCurrent(); // deletes track, returns next
 
  protected:
    friend TrackList;
@@ -398,7 +399,7 @@ DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_TRACKLIST_RESIZED, -1);
 // track that was added.
 DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_TRACKLIST_UPDATED, -1);
 
-class AUDACITY_DLL_API TrackList final : public wxEvtHandler, public ListOfTracks
+class TrackList final : public wxEvtHandler, public ListOfTracks
 {
  public:
    // Create an empty TrackList
@@ -427,11 +428,18 @@ class AUDACITY_DLL_API TrackList final : public wxEvtHandler, public ListOfTrack
    void Permute(const std::vector<TrackNodePointer> &permutation);
 
    /// Add this Track or all children of this TrackList.
-   void Add(Track * t);
-   void AddToHead(Track * t);
+   template<typename TrackKind>
+   Track *Add(std::unique_ptr<TrackKind> &&t);
+   template<typename TrackKind>
+   Track *AddToHead(std::unique_ptr<TrackKind> &&t);
 
-   /// Replace first track with second track
-   void Replace(Track * t, Track * with, bool deletetrack = false);
+#ifdef __AUDACITY_OLD_STD__
+   template<typename TrackKind>
+   Track *Add(std::shared_ptr<TrackKind> &&t);
+#endif
+
+   /// Replace first track with second track, give back a holder
+   value_type Replace(Track * t, value_type &&with);
 
    /// Remove this Track or all children of this TrackList.
    /// Return an iterator to what followed the removed track.

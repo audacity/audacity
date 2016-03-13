@@ -319,9 +319,9 @@ bool LabelDialog::TransferDataFromWindow()
       wxString name = mTrackNames[tndx + 1].AfterFirst(wxT('-')).Mid(1);
 
       // Create the NEW track and add to track list
-      LabelTrack *newTrack = mFactory.NewLabelTrack().release();
+      auto newTrack = mFactory.NewLabelTrack();
       newTrack->SetName(name);
-      mTracks->Add(newTrack);
+      mTracks->Add(std::move(newTrack));
       tndx++;
    }
 

@@ -1120,8 +1120,7 @@ bool NyquistEffect::ProcessOne()
       }
 
       if (!ltrack) {
-         ltrack = mFactory->NewLabelTrack().release();
-         AddToOutputTracks((Track *)ltrack);
+         ltrack = static_cast<LabelTrack*>(AddToOutputTracks(mFactory->NewLabelTrack()));
       }
 
       for (l = 0; l < numLabels; l++) {
