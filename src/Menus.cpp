@@ -5607,14 +5607,15 @@ bool AudacityProject::DoEditMetadata
 
 void AudacityProject::HandleMixAndRender(bool toNewTrack)
 {
-   WaveTrack *newLeft = NULL;
-   WaveTrack *newRight = NULL;
-
    wxGetApp().SetMissingAliasedFileWarningShouldShow(true);
 
-   if (::MixAndRender(mTracks, mTrackFactory, mRate, mDefaultFormat, 0.0, 0.0,
-                      &newLeft, &newRight)) {
+   auto results =
+      ::MixAndRender(mTracks, mTrackFactory, mRate, mDefaultFormat, 0.0, 0.0);
+   auto &uNewLeft = results.first, &uNewRight = results.second;
+   const auto newLeft = uNewLeft.get();
+   const auto newRight = uNewRight.get();
 
+   if (newLeft) {
       // Remove originals, get stats on what tracks were mixed
 
       TrackListIterator iter(mTracks);
@@ -5644,9 +5645,9 @@ void AudacityProject::HandleMixAndRender(bool toNewTrack)
 
       // Add NEW tracks
 
-      mTracks->Add(newLeft);
+      mTracks->Add(uNewLeft.release());
       if (newRight)
-         mTracks->Add(newRight);
+         mTracks->Add(uNewRight.release());
 
       // If we're just rendering (not mixing), keep the track name the same
       if (selectedCount==1) {

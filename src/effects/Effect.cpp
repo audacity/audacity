@@ -2551,8 +2551,6 @@ void Effect::Preview(bool dryOnly)
       return;
 
    bool success = true;
-   WaveTrack *mixLeft = NULL;
-   WaveTrack *mixRight = NULL;
    double oldT0 = mT0;
    double oldT1 = mT1;
    // Most effects should stop at t1.
@@ -2568,9 +2566,10 @@ void Effect::Preview(bool dryOnly)
    // Linear Effect preview optimised by pre-mixing to one track.
    // Generators need to generate per track.
    if (mIsLinearEffect && !isGenerator) {
-      success = ::MixAndRender(saveTracks, mFactory, rate, floatSample, mT0, t1,
-                               &mixLeft, &mixRight);
-      if (!success) {
+      auto results = ::MixAndRender(saveTracks, mFactory, rate, floatSample, mT0, t1);
+      auto &mixLeft = results.first;
+      auto &mixRight = results.second;
+      if (!mixLeft) {
          delete mTracks;
          mTracks = saveTracks;
          return;
@@ -2580,12 +2579,12 @@ void Effect::Preview(bool dryOnly)
       mixLeft->InsertSilence(0.0, mT0);
       mixLeft->SetSelected(true);
       mixLeft->SetDisplay(WaveTrack::NoDisplay);
-      mTracks->Add(mixLeft);
+      mTracks->Add(mixLeft.release());
       if (mixRight) {
          mixRight->Offset(-mixRight->GetStartTime());
          mixRight->InsertSilence(0.0, mT0);
          mixRight->SetSelected(true);
-         mTracks->Add(mixRight);
+         mTracks->Add(mixRight.release());
       }
    }
    else {
