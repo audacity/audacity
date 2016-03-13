@@ -164,7 +164,7 @@ scroll information.  It also has some status flags.
 
 #include "../images/AudacityLogoAlpha.xpm"
 
-TrackList *AudacityProject::msClipboard = new TrackList();
+std::unique_ptr<TrackList> AudacityProject::msClipboard{ safenew TrackList() };
 double AudacityProject::msClipT0 = 0.0;
 double AudacityProject::msClipT1 = 0.0;
 AudacityProject *AudacityProject::msClipProject = NULL;
@@ -4166,17 +4166,13 @@ void AudacityProject::UpdateMixerBoard()
 //static
 TrackList *AudacityProject::GetClipboardTracks()
 {
-   return msClipboard;
+   return msClipboard.get();
 }
 
 //static
 void AudacityProject::DeleteClipboard()
 {
-   if (msClipboard) {
-      msClipboard->Clear();
-      delete msClipboard;
-      msClipboard = NULL;
-   }
+   msClipboard.reset();
 }
 
 //static

@@ -3999,7 +3999,7 @@ void AudacityProject::OnPaste()
    double t1 = mViewInfo.selectedRegion.t1();
 
    TrackListIterator iter(mTracks);
-   TrackListIterator clipIter(msClipboard);
+   TrackListIterator clipIter(msClipboard.get());
 
    Track *n = iter.First();
    Track *c = clipIter.First();
@@ -4139,7 +4139,7 @@ void AudacityProject::OnPaste()
    // selected tracks.
    if ( n && !c )
    {
-      TrackListOfKindIterator clipWaveIter(Track::Wave, msClipboard);
+      TrackListOfKindIterator clipWaveIter(Track::Wave, msClipboard.get());
       c = clipWaveIter.Last();
 
       while (n) {
@@ -4246,7 +4246,7 @@ bool AudacityProject::HandlePasteNothingSelected()
       return false;
    else
    {
-      TrackListIterator iterClip(msClipboard);
+      TrackListIterator iterClip(msClipboard.get());
       Track* pClip = iterClip.First();
       if (!pClip)
          return true; // nothing to paste
