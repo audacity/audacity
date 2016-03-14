@@ -86,7 +86,7 @@ BEGIN_EVENT_TABLE(LabelDialog, wxDialog)
 END_EVENT_TABLE()
 
 LabelDialog::LabelDialog(wxWindow *parent,
-                         DirManager *dirmanager,
+                         TrackFactory &factory,
                          TrackList *tracks,
                          ViewInfo &viewinfo,
                          double rate,
@@ -97,7 +97,7 @@ LabelDialog::LabelDialog(wxWindow *parent,
            wxDefaultPosition,
            wxSize(800, 600),
            wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER),
-  mDirManager(dirmanager),
+  mFactory(factory),
   mTracks(tracks),
   mViewInfo(&viewinfo),
   mRate(rate),
@@ -319,7 +319,7 @@ bool LabelDialog::TransferDataFromWindow()
       wxString name = mTrackNames[tndx + 1].AfterFirst(wxT('-')).Mid(1);
 
       // Create the NEW track and add to track list
-      LabelTrack *newTrack = new LabelTrack(mDirManager);
+      LabelTrack *newTrack = mFactory.NewLabelTrack();
       newTrack->SetName(name);
       mTracks->Add(newTrack);
       tndx++;
@@ -564,7 +564,7 @@ void LabelDialog::OnImport(wxCommandEvent & WXUNUSED(event))
       else {
          // Create a temporary label track and load the labels
          // into it
-         LabelTrack *lt = new LabelTrack(mDirManager);
+         LabelTrack *lt = mFactory.NewLabelTrack();
          lt->Import(f);
 
          // Add the labesls to our collection
@@ -632,7 +632,7 @@ void LabelDialog::OnExport(wxCommandEvent & WXUNUSED(event))
    }
 
    // Transfer our collection to a temporary label track
-   LabelTrack *lt = new LabelTrack(mDirManager);
+   LabelTrack *lt = mFactory.NewLabelTrack();
    int i;
 
    for (i = 0; i < cnt; i++) {

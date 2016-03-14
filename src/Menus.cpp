@@ -4358,7 +4358,7 @@ void AudacityProject::OnPasteNewLabel()
 
       // If no match found, add one
       if (!t) {
-         t = new LabelTrack(mDirManager);
+         t = GetTrackFactory()->NewLabelTrack();
          mTracks->Add(t);
       }
 
@@ -5495,7 +5495,7 @@ void AudacityProject::OnImportLabels()
          return;
       }
 
-      LabelTrack *newTrack = new LabelTrack(mDirManager);
+      LabelTrack *newTrack = GetTrackFactory()->NewLabelTrack();
       wxString sTrackName;
       wxFileName::SplitPath(fileName, NULL, NULL, &sTrackName, NULL);
       newTrack->SetName(sTrackName);
@@ -5538,7 +5538,7 @@ void AudacityProject::OnImportMIDI()
 
 void AudacityProject::DoImportMIDI(const wxString &fileName)
 {
-   NoteTrack *newTrack = new NoteTrack(mDirManager);
+   NoteTrack *newTrack = GetTrackFactory()->NewNoteTrack();
 
    if (::ImportMIDI(fileName, newTrack)) {
 
@@ -6289,7 +6289,7 @@ void AudacityProject::OnNewStereoTrack()
 
 void AudacityProject::OnNewLabelTrack()
 {
-   LabelTrack *t = new LabelTrack(mDirManager);
+   LabelTrack *t = GetTrackFactory()->NewLabelTrack();
 
    SelectNone();
 
@@ -6385,7 +6385,7 @@ int AudacityProject::DoAddLabel(const SelectedRegion &region, bool preserveFocus
 
    // If none found, start a NEW label track and use it
    if (!lt) {
-      lt = new LabelTrack(mDirManager);
+      lt = GetTrackFactory()->NewLabelTrack();
       mTracks->Add(lt);
    }
 
@@ -6455,7 +6455,7 @@ void AudacityProject::OnEditLabels()
 {
    wxString format = GetSelectionFormat();
 
-   LabelDialog dlg(this, mDirManager, mTracks, mViewInfo, mRate, format);
+   LabelDialog dlg(this, *GetTrackFactory(), mTracks, mViewInfo, mRate, format);
 
    if (dlg.ShowModal() == wxID_OK) {
       PushState(_("Edited labels"), _("Label"));

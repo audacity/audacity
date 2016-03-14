@@ -21,7 +21,7 @@
 #include "Internat.h"
 #include "widgets/Grid.h"
 
-class DirManager;
+class TrackFactory;
 class TrackList;
 class RowData;
 class EmptyLabelRenderer;
@@ -35,7 +35,7 @@ class LabelDialog final : public wxDialog
  public:
 
    LabelDialog(wxWindow *parent,
-               DirManager *dirmanager,
+               TrackFactory &factory,
                TrackList *tracks,
                ViewInfo &viewinfo,
                double rate,
@@ -76,7 +76,7 @@ class LabelDialog final : public wxDialog
 
    RowDataArray mData;
 
-   DirManager *mDirManager;
+   TrackFactory &mFactory;
    TrackList *mTracks;
    ViewInfo *mViewInfo;
    wxArrayString mTrackNames;
