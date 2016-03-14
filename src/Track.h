@@ -252,6 +252,8 @@ class AUDACITY_DLL_API TrackListIterator /* not final */
    Track *RemoveCurrent(bool deletetrack = false); // returns next
 
  protected:
+   friend TrackList;
+
    TrackList *l;
    TrackListNode *cur;
 };

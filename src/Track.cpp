@@ -754,6 +754,22 @@ void TrackList::Swap(TrackList &that)
    std::swap(mDestructorDeletesTracks, that.mDestructorDeletesTracks);
    std::swap(head, that.head);
    std::swap(tail, that.tail);
+
+   {
+      TrackListIterator iter(this);
+      for (Track *t = iter.First(); t; t = iter.Next()) {
+         t->SetOwner(NULL, NULL);
+         t->SetOwner(this, iter.cur);
+      }
+   }
+
+   {
+      TrackListIterator iter(&that);
+      for (Track *t = iter.First(); t; t = iter.Next()) {
+         t->SetOwner(NULL, NULL);
+         t->SetOwner(&that, iter.cur);
+      }
+   }
 }
 
 TrackList::~TrackList()
