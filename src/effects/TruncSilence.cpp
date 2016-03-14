@@ -320,7 +320,7 @@ bool EffectTruncSilence::ProcessIndependently()
          RegionList silences;
          silences.DeleteContents(true);
 
-         if (!FindSilences(silences, track, last))
+         if (!FindSilences(silences, mOutputTracks, track, last))
             return false;
          // Treat tracks in the sync lock group only
          Track *groupFirst, *groupLast;
@@ -356,7 +356,7 @@ bool EffectTruncSilence::ProcessAll()
    silences.DeleteContents(true);
 
    SelectedTrackListOfKindIterator iter(Track::Wave, mTracks);
-   if (FindSilences(silences, iter.First(), iter.Last())) {
+   if (FindSilences(silences, mTracks, iter.First(), iter.Last())) {
       TrackListIterator iterOut(mOutputTracks);
       double totalCutLen = 0.0;
       Track *const first = iterOut.First();
@@ -370,7 +370,7 @@ bool EffectTruncSilence::ProcessAll()
 }
 
 bool EffectTruncSilence::FindSilences
-   (RegionList &silences, Track *firstTrack, Track *lastTrack)
+   (RegionList &silences, TrackList *list, Track *firstTrack, Track *lastTrack)
 {
    // Start with the whole selection silent
    Region *sel = new Region;
@@ -379,7 +379,7 @@ bool EffectTruncSilence::FindSilences
    silences.push_back(sel);
 
    // Remove non-silent regions in each track
-   SelectedTrackListOfKindIterator iter(Track::Wave, mTracks);
+   SelectedTrackListOfKindIterator iter(Track::Wave, list);
    int whichTrack = 0;
    bool lastSeen = false;
    for (Track *t = iter.StartWith(firstTrack); !lastSeen && t; t = iter.Next())
