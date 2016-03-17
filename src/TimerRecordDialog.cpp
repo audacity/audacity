@@ -310,16 +310,16 @@ void TimerRecordDialog::OnOK(wxCommandEvent& WXUNUSED(event))
    wxString sTemp = m_fnAutoSaveFile.GetFullPath();
    if (m_pTimerAutoSaveCheckBoxCtrl->IsChecked()) {
 	   if (!m_fnAutoSaveFile.IsOk() || m_fnAutoSaveFile.IsDir()) {
-		   wxMessageBox(_("Auto save path is invalid."),
-			   _("Error in Auto Save"), wxICON_EXCLAMATION | wxOK);
+		   wxMessageBox(_("Automatic Save path is invalid."),
+			   _("Error in Automatic Save"), wxICON_EXCLAMATION | wxOK);
 		   return;
 	   }
    }
    if (m_pTimerAutoExportCheckBoxCtrl->IsChecked()) {
 
 	   if (!m_fnAutoExportFile.IsOk() || m_fnAutoExportFile.IsDir()) {
-		   wxMessageBox(_("Auto export path is invalid."),
-			   _("Error in Auto Export"), wxICON_EXCLAMATION | wxOK);
+		   wxMessageBox(_("Automatic Export path is invalid."),
+			   _("Error in Automatic Export"), wxICON_EXCLAMATION | wxOK);
 		   return;
 	   }
    }
