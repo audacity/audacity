@@ -544,7 +544,7 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
 		}
 		if (m_bAutoExportEnabled) {
 			if (bExportOK) {
-				sMessage.Printf("%s\n\nRecording exported: %s", sMessage, m_fnAutoSaveFile.GetFullPath());
+				sMessage.Printf("%s\n\nRecording exported: %s", sMessage, m_fnAutoExportFile.GetFullPath());
 			}
 			else {
 				sMessage.Printf("%s\n\nError exporting recording.", sMessage);
@@ -553,9 +553,9 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
 
 		if (bErrorOverride) {
 
-			if (iOverriddenAction != iPostRecordAction) {
+			if ((iOverriddenAction != iPostRecordAction) && (iOverriddenAction != POST_TIMER_RECORD_NOTHING)) {
 				// Inform the user that we have overridden the selected action
-				sMessage.Printf("%s\n\nSelected after recording action '%s' has been canceled due to the error(s) noted above.", sMessage, m_pTimerAfterCompleteChoiceCtrl->GetString(iOverriddenAction));
+				sMessage.Printf("%s\n\n'%s' has been canceled due to the error(s) noted above.", sMessage, m_pTimerAfterCompleteChoiceCtrl->GetString(iOverriddenAction));
 			}
 
 			// Show Error Message Box
@@ -563,8 +563,8 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
 		}
 		else {
 
-			if (bWasStopped) {
-				sMessage.Printf("%s\n\nSelected after recording action '%s' has been cancelled as the recording was stopped.", sMessage, m_pTimerAfterCompleteChoiceCtrl->GetString(iOverriddenAction));
+			if (bWasStopped && (iOverriddenAction != POST_TIMER_RECORD_NOTHING)) {
+				sMessage.Printf("%s\n\n'%s' has been cancelled as the recording was stopped.", sMessage, m_pTimerAfterCompleteChoiceCtrl->GetString(iOverriddenAction));
 			}
 
 			wxMessageBox(sMessage, _("Timer Recording"), wxICON_INFORMATION | wxOK);
@@ -576,8 +576,14 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
 		RemoveAllAutoSaveFiles();
 	}
 
-	// MY: Remove any orphaned .au files now
-
+	// MY: Display a wait dialog for Restart and Shutdown 
+	if (iPostRecordAction >= POST_TIMER_RECORD_CLOSE) {
+		int iDelayOutcome = PreSystemShutdownDelay(iPostRecordAction);
+		if (iDelayOutcome != eProgressSuccess) {
+			// Cancel the action!
+			iPostRecordAction = POST_TIMER_RECORD_NOTHING;
+		}
+	}
 
 	// Return the action as required
 	return iPostRecordAction;
@@ -878,4 +884,31 @@ int TimerRecordDialog::WaitForStart()
       bIsRecording = (m_DateTime_Start <= wxDateTime::UNow());
    }
    return updateResult;
+}
+
+int TimerRecordDialog::PreSystemShutdownDelay(int iActionIndex)
+{
+	wxString sMessage;
+	wxString sAction = m_pTimerAfterCompleteChoiceCtrl->GetString(iActionIndex);
+
+	sMessage.Printf(_("Timer Recording completed. '%s' will occur shortly...\n"), sAction);
+
+	wxDateTime dtNow = wxDateTime::UNow();
+	wxTimeSpan tsWait = wxTimeSpan(0, 1, 0, 0);
+	wxDateTime dtActionTime = dtNow.Add(tsWait);
+
+	TimerProgressDialog dlgAction(tsWait.GetMilliseconds().GetValue(),
+								  _("Audacity Timer Record - Waiting"),
+								  sMessage,
+								  pdlgHideStopButton);
+
+	int iUpdateResult = eProgressSuccess;
+	bool bIsTime = false;
+	while (iUpdateResult == eProgressSuccess && !bIsTime)
+	{
+		wxMilliSleep(10);
+		iUpdateResult = dlgAction.Update();
+		bIsTime = (dtActionTime <= wxDateTime::UNow());
+	}
+	return iUpdateResult;
 }
