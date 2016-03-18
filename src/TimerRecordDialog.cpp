@@ -265,6 +265,17 @@ void TimerRecordDialog::OnAutoSavePathButton_Click(wxCommandEvent& WXUNUSED(even
 	if (fName == wxT(""))
 		return;
 
+	// MY: If project already exits then abort - we do not allow users to overwrite an existing project
+	if (wxFileExists(fName)) {
+		wxMessageDialog m(
+			NULL,
+			_("The selected file name could not be used for Timer Recording because it would overwrite another project.\nPlease try again and select an original name."),
+			_("Error Saving Timer Recording Project"),
+			wxOK|wxICON_ERROR);
+		m.ShowModal();
+		return;
+	}
+
 	m_fnAutoSaveFile = fName;
 	m_fnAutoSaveFile.SetExt(wxT("aup"));
 	this->UpdateTextBoxControls();
