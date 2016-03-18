@@ -495,7 +495,7 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
 	int iOverriddenAction = iPostRecordAction;
 	bool bErrorOverride = false;
 
-	// Do Auto Save?
+	// Do Automatic Save?
 	if (m_bAutoSaveEnabled) {
 
 		// MY: If this project has already been saved then simply execute a Save here
@@ -507,7 +507,7 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
 		}
 	}
 
-	// Do Auto Export?
+	// Do Automatic Export?
 	if (m_bAutoExportEnabled) {
 		bExportOK = pProject->ExportFromTimerRecording(m_fnAutoExportFile, m_iAutoExportFormat, m_iAutoExportSubFormat, m_iAutoExportFilterIndex);
 	}
@@ -625,6 +625,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
 {
 	bool bAutoSave = gPrefs->ReadBool("/TimerRecord/AutoSave", false);
 	bool bAutoExport = gPrefs->ReadBool("/TimerRecord/AutoExport", false);
+	int iPostTimerRecordAction = gPrefs->ReadLong("/TimerRecord/PostAction", 0);
 
 	S.SetBorder(5);
 	S.StartMultiColumn(2, wxCENTER);
@@ -715,10 +716,16 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
 
 				S.StartHorizontalLay(true);
 				{
+					wxString sInitialValue = "";
+
 					AudacityProject* pProject = GetActiveProject();
 					wxString sSaveValue = pProject->GetFileName();
+					if (sSaveValue != "") {
+						m_fnAutoSaveFile.Assign(sSaveValue);
+						sInitialValue = "Current Project";
+					}
 
-					m_pTimerSavePathTextCtrl = S.AddTextBox(_("Save Project As:"), sSaveValue, 50);
+					m_pTimerSavePathTextCtrl = S.AddTextBox(_("Save Project As:"), sInitialValue, 50);
 					m_pTimerSavePathTextCtrl->SetEditable(false);
 					m_pTimerSavePathButtonCtrl = S.Id(ID_AUTOSAVEPATH_BUTTON).AddButton(_("Select"));
 				}
@@ -741,15 +748,22 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
 
 			S.StartStatic(_("Options"), true);
 			{
-				m_sTimerAfterCompleteOptionsArray.Add(wxT("Do Nothing"));
-				m_sTimerAfterCompleteOptionsArray.Add(wxT("Close Audacity"));
-#ifdef __WINDOWS__
-				m_sTimerAfterCompleteOptionsArray.Add(wxT("Restart System"));
-				m_sTimerAfterCompleteOptionsArray.Add(wxT("Shutdown System"));
-#endif
-				m_sTimerAfterCompleteOption = wxT("Do Nothing");
 
-				m_pTimerAfterCompleteChoiceCtrl = S.AddChoice(_("After Recording Completed:"), m_sTimerAfterCompleteOption, &m_sTimerAfterCompleteOptionsArray);
+				wxArrayString arrayOptions;
+				arrayOptions.Add(wxT("Do Nothing"));
+				arrayOptions.Add(wxT("Exit Audacity"));
+				arrayOptions.Add(wxT("Restart System"));
+				arrayOptions.Add(wxT("Shutdown System"));
+
+				m_sTimerAfterCompleteOptionsArray.Add(arrayOptions.Item(0));
+				m_sTimerAfterCompleteOptionsArray.Add(arrayOptions.Item(1));
+#ifdef __WINDOWS__
+				m_sTimerAfterCompleteOptionsArray.Add(arrayOptions.Item(2));
+				m_sTimerAfterCompleteOptionsArray.Add(arrayOptions.Item(3));
+#endif
+				m_sTimerAfterCompleteOption = arrayOptions.Item(iPostTimerRecordAction);
+
+				m_pTimerAfterCompleteChoiceCtrl = S.AddChoice(_("After Recording Completes:"), m_sTimerAfterCompleteOption, &m_sTimerAfterCompleteOptionsArray);
 			}
 			S.EndStatic();
 
@@ -800,9 +814,13 @@ bool TimerRecordDialog::TransferDataFromWindow()
    m_bAutoSaveEnabled = m_pTimerAutoSaveCheckBoxCtrl->GetValue();
    m_bAutoExportEnabled = m_pTimerAutoExportCheckBoxCtrl->GetValue();
 
+   // MY: Obtain the index from the choice control so we can save to the prefs file
+   int iPostRecordAction = m_pTimerAfterCompleteChoiceCtrl->GetSelection();
+
    // Save the options back to the prefs file
    gPrefs->Write("/TimerRecord/AutoSave", m_bAutoSaveEnabled);
    gPrefs->Write("/TimerRecord/AutoExport", m_bAutoExportEnabled);
+   gPrefs->Write("/TimerRecord/PostAction", iPostRecordAction);
 
    return true;
 }
