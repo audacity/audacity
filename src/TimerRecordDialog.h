@@ -70,6 +70,8 @@ private:
 
    int ExecutePostRecordActions(bool bWasStopped);
 
+   int PreSystemShutdownDelay(int iActionIndex);
+
 private:
    wxDateTime m_DateTime_Start;
    wxDateTime m_DateTime_End;
