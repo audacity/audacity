@@ -251,7 +251,8 @@ void NumValidatorBase::OnPaste(wxClipboardTextEvent& event)
    wxTextCtrl * const text = wxDynamicCast(m_validatorWindow, wxTextCtrl);
    const bool wasModified = text ? text->IsModified() : false;
 
-   control->ChangeValue(NormalizeString(val));
+   // Use SetValue because effect still needs EVT_TEXT (bug 1357)
+   control->SetValue(NormalizeString(val));
 
    if ( wasModified )
    {

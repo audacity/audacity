@@ -379,12 +379,7 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
       if (targetfile.AfterLast(wxT('.')).IsSameAs(wxT("mid"), false)
           ||  targetfile.AfterLast(wxT('.')).IsSameAs(wxT("midi"), false))
       {
-         NoteTrack *nTrack = new NoteTrack(mProject->GetDirManager());
-
-         if (::ImportMIDI(targetfile, nTrack))
-            mProject->GetTracks()->Add(nTrack);
-         else
-            delete nTrack;
+         mProject->DoImportMIDI(targetfile);
       }
 
       // If not a midi, open audio file

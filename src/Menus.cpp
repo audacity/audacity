@@ -192,7 +192,7 @@ class PluginFunctor final : public CommandFunctor
 public:
    explicit PluginFunctor(AudacityProject *project, const PluginID &id, audCommandPluginFunction pfn)
       : mPluginID{ id }, mProject{ project }, mCommandPluginFunction{ pfn } {}
-   void operator () (int index, const wxEvent *) override
+   void operator () (int, const wxEvent *) override
    { (mProject->*mCommandPluginFunction) (mPluginID, AudacityProject::OnEffectFlags::kNone); }
 private:
    const PluginID mPluginID;
@@ -5532,21 +5532,28 @@ void AudacityProject::OnImportMIDI()
       gPrefs->Write(wxT("/DefaultOpenPath"), path);
       gPrefs->Flush();
 
-      NoteTrack *newTrack = new NoteTrack(mDirManager);
-
-      if (::ImportMIDI(fileName, newTrack)) {
-
-         SelectNone();
-         mTracks->Add(newTrack);
-         newTrack->SetSelected(true);
-
-         PushState(wxString::Format(_("Imported MIDI from '%s'"),
-                                    fileName.c_str()), _("Import MIDI"));
-
-         RedrawProject();
-         mTrackPanel->EnsureVisible(newTrack);
-      }
+      DoImportMIDI(fileName);
    }
+}
+
+void AudacityProject::DoImportMIDI(const wxString &fileName)
+{
+   NoteTrack *newTrack = new NoteTrack(mDirManager);
+
+   if (::ImportMIDI(fileName, newTrack)) {
+
+      SelectNone();
+      mTracks->Add(newTrack);
+      newTrack->SetSelected(true);
+
+      PushState(wxString::Format(_("Imported MIDI from '%s'"),
+         fileName.c_str()), _("Import MIDI"));
+
+      RedrawProject();
+      mTrackPanel->EnsureVisible(newTrack);
+   }
+   else
+      delete newTrack;
 }
 #endif // USE_MIDI
 

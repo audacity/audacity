@@ -317,6 +317,7 @@ void OnRescanDevices();
 void OnImport();
 void OnImportLabels();
 void OnImportMIDI();
+void DoImportMIDI(const wxString &fileName);
 void OnImportRaw();
 
 void OnEditMetadata();

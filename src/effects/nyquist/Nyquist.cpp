@@ -380,6 +380,11 @@ bool NyquistEffect::SetAutomationParameters(EffectAutomationParameters & parms)
 
 bool NyquistEffect::Init()
 {
+   // EffectType may not be defined in script, so
+   // reset each time we call the Nyquist Prompt.
+   if (mIsPrompt)
+      mType = EffectTypeProcess;
+
    // As of Audacity 2.1.2 rc1, 'spectral' effects are allowed only if
    // the selected track(s) are in a spectrogram view, and there is at
    // least one frequency bound and Spectral Selection is enabled for the
