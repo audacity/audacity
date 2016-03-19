@@ -886,12 +886,21 @@ int TimerRecordDialog::WaitForStart()
    return updateResult;
 }
 
-int TimerRecordDialog::PreSystemShutdownDelay(int iActionIndex)
+int TimerRecordDialog::PreSystemShutdownDelay(int iActionIndex, bool bSaved, bool bExported)
 {
 	wxString sMessage;
 	wxString sAction = m_pTimerAfterCompleteChoiceCtrl->GetString(iActionIndex);
-
-	sMessage.Printf(_("Timer Recording completed. '%s' will occur shortly...\n"), sAction);
+	wxString sDone = "";
+	if (bSaved && bExported) {
+		sDone = "Saved and Exported";
+	}
+	else if (bSaved) {
+		sDone = "Saved";
+	}
+	else if (bExported) {
+		sDone = "Exported";
+	}
+	sMessage.Printf(_("Timer Recording completed.  Recording %s.  '%s' will occur shortly...\n"), sDone, sAction);
 
 	wxDateTime dtNow = wxDateTime::UNow();
 	wxTimeSpan tsWait = wxTimeSpan(0, 1, 0, 0);
