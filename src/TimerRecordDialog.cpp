@@ -578,7 +578,7 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
 
 	// MY: Display a wait dialog for Restart and Shutdown 
 	if (iPostRecordAction >= POST_TIMER_RECORD_CLOSE) {
-		int iDelayOutcome = PreSystemShutdownDelay(iPostRecordAction);
+		int iDelayOutcome = PreActionDelay(iPostRecordAction, (m_bAutoSaveEnabled && bSaveOK), (m_bAutoExportEnabled && bExportOK));
 		if (iDelayOutcome != eProgressSuccess) {
 			// Cancel the action!
 			iPostRecordAction = POST_TIMER_RECORD_NOTHING;
@@ -886,7 +886,7 @@ int TimerRecordDialog::WaitForStart()
    return updateResult;
 }
 
-int TimerRecordDialog::PreSystemShutdownDelay(int iActionIndex, bool bSaved, bool bExported)
+int TimerRecordDialog::PreActionDelay(int iActionIndex, bool bSaved, bool bExported)
 {
 	wxString sMessage;
 	wxString sAction = m_pTimerAfterCompleteChoiceCtrl->GetString(iActionIndex);
