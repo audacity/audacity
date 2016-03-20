@@ -343,7 +343,7 @@ void TimerRecordDialog::OnOK(wxCommandEvent& WXUNUSED(event))
 
 void TimerRecordDialog::EnableDisableAutoControls(bool bEnable, int iControlGoup) {
 	if (iControlGoup == CONTROL_GROUP_EXPORT) {
-		// Enables or disables a control group based on the params
+		// Enable or Disable the Export controls
 		if (bEnable) {
 			m_pTimerExportPathTextCtrl->Enable();
 			m_pTimerExportPathButtonCtrl->Enable();
@@ -354,19 +354,17 @@ void TimerRecordDialog::EnableDisableAutoControls(bool bEnable, int iControlGoup
 		}
 	}
 	else if (iControlGoup == CONTROL_GROUP_SAVE) {
-
-		// MY: We are only allowed to change this if it is a new project
-		if (m_bProjectAlreadySaved) {
-			bEnable = false;
-		}
-
-		// Enables or disables a control group based on the params
+		// Enable or Disable the Save controls
 		if (bEnable) {
 			m_pTimerSavePathTextCtrl->Enable();
 			m_pTimerSavePathButtonCtrl->Enable();
 		}
 		else {
 			m_pTimerSavePathTextCtrl->Disable();
+			m_pTimerSavePathButtonCtrl->Disable();
+		}
+		// MY: Disable the Save select button as the project has been saved already
+		if (m_bProjectAlreadySaved && bEnable) {
 			m_pTimerSavePathButtonCtrl->Disable();
 		}
 	}
@@ -574,13 +572,25 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
 		RemoveAllAutoSaveFiles();
 	}
 
-	// MY: Display a wait dialog for Restart and Shutdown 
+	// MY: Lets do some actions that only apply to Exit/Restart/Shutdown
 	if (iPostRecordAction >= POST_TIMER_RECORD_CLOSE) {
-		int iDelayOutcome = PreActionDelay(iPostRecordAction, (m_bAutoSaveEnabled && bSaveOK), (m_bAutoExportEnabled && bExportOK));
-		if (iDelayOutcome != eProgressSuccess) {
-			// Cancel the action!
-			iPostRecordAction = POST_TIMER_RECORD_NOTHING;
-		}
+		do {
+			// Lets show a warning dialog telling the user what is about to happen.
+			// If the user no longer wants to carry out this action then they can click
+			// Cancel and we will do POST_TIMER_RECORD_NOTHING instead.
+			int iDelayOutcome = PreActionDelay(iPostRecordAction, (m_bAutoSaveEnabled && bSaveOK), (m_bAutoExportEnabled && bExportOK));
+			if (iDelayOutcome != eProgressSuccess) {
+				// Cancel the action!
+				iPostRecordAction = POST_TIMER_RECORD_NOTHING;
+				break;
+			}
+
+			// If we have simply recorded, exported and then plan to Exit/Restart/Shutdown
+			// then we will have a temporary project setup.  Let's get rid of that!
+			if (m_bAutoExportEnabled && !m_bAutoSaveEnabled) {
+				DirManager::CleanTempDir();
+			}
+		} while (false);
 	}
 
 	// Return the action as required
@@ -739,6 +749,9 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
 
 				S.StartHorizontalLay();
 				{
+
+					
+
 					wxString sInitialValue = "";
 
 					AudacityProject* pProject = GetActiveProject();
@@ -748,8 +761,9 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
 						sInitialValue = "Current Project";
 					}
 
-					S.AddTitle(_("Save Project As:"));
-					m_pTimerSavePathTextCtrl = NewPathControl(this, ID_AUTOSAVEPATH_TEXT, _("Save Project As:"), _(""), 50);
+					S.AddPrompt(_("Save Project As:"));
+					m_pTimerSavePathTextCtrl = NewPathControl(this, ID_AUTOSAVEPATH_TEXT, _("Save Project As:"), _(sInitialValue), 50);
+					m_pTimerSavePathTextCtrl->SetEditable(false);
 					S.AddWindow(m_pTimerSavePathTextCtrl);
 					m_pTimerSavePathButtonCtrl = S.Id(ID_AUTOSAVEPATH_BUTTON).AddButton(_("Select"));
 				}
@@ -760,9 +774,9 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
 			S.StartStatic(_("Automatic Export"), true);
 			{
 				m_pTimerAutoExportCheckBoxCtrl = S.Id(ID_AUTOEXPORT_CHECKBOX).AddCheckBox(_("Enable Automatic &Export?"), (bAutoExport ? "true" : "false"));
-				S.StartHorizontalLay();
+				S.StartHorizontalLay(wxALIGN_CENTER_VERTICAL);
 				{
-					S.AddTitle(_("Export Project As:"));
+					S.AddPrompt(_("Export Project As:"));
 					m_pTimerExportPathTextCtrl = NewPathControl(this, ID_AUTOEXPORTPATH_TEXT, _("Export Project As:"), _(""), 50);
 					m_pTimerExportPathTextCtrl->SetEditable(false);
 					S.AddWindow(m_pTimerExportPathTextCtrl);
@@ -805,8 +819,8 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
 	SetMinSize(GetSize());
 	Center();
 
-//	EnableDisableAutoControls(bAutoSave, CONTROL_GROUP_SAVE);
-//	EnableDisableAutoControls(bAutoExport, CONTROL_GROUP_EXPORT);
+	EnableDisableAutoControls(bAutoSave, CONTROL_GROUP_SAVE);
+	EnableDisableAutoControls(bAutoExport, CONTROL_GROUP_EXPORT);
 }
 
 bool TimerRecordDialog::TransferDataFromWindow()
@@ -909,7 +923,7 @@ int TimerRecordDialog::PreActionDelay(int iActionIndex, bool bSaved, bool bExpor
 	else if (bExported) {
 		sDone = "Exported";
 	}
-	sMessage.Printf(_("Timer Recording completed.  Recording %s.  '%s' will occur shortly...\n"), sDone, sAction);
+	sMessage.Printf(_("Timer Recording completed: Recording has been %s as instructed.\n\n'%s' will occur shortly...\n"), sDone, sAction);
 
 	wxDateTime dtNow = wxDateTime::UNow();
 	wxTimeSpan tsWait = wxTimeSpan(0, 1, 0, 0);
