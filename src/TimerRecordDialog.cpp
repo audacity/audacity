@@ -758,7 +758,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
 					}
 
 					S.AddPrompt(_("Save Project As:"));
-					m_pTimerSavePathTextCtrl = NewPathControl(this, ID_AUTOSAVEPATH_TEXT, _("Save Project As:"), _(sInitialValue), 50);
+					m_pTimerSavePathTextCtrl = NewPathControl(this, ID_AUTOSAVEPATH_TEXT, _("Save Project As:"), _(sInitialValue));
 					m_pTimerSavePathTextCtrl->SetEditable(false);
 					S.AddWindow(m_pTimerSavePathTextCtrl);
 					m_pTimerSavePathButtonCtrl = S.Id(ID_AUTOSAVEPATH_BUTTON).AddButton(_("Select"));
@@ -773,7 +773,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
 				S.StartHorizontalLay();
 				{
 					S.AddPrompt(_("Export Project As:"));
-					m_pTimerExportPathTextCtrl = NewPathControl(this, ID_AUTOEXPORTPATH_TEXT, _("Export Project As:"), _(""), 50);
+					m_pTimerExportPathTextCtrl = NewPathControl(this, ID_AUTOEXPORTPATH_TEXT, _("Export Project As:"), _(""));
 					m_pTimerExportPathTextCtrl->SetEditable(false);
 					S.AddWindow(m_pTimerExportPathTextCtrl);
 					m_pTimerExportPathButtonCtrl = S.Id(ID_AUTOEXPORTPATH_BUTTON).AddButton(_("Select"));
