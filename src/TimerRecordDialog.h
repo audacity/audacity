@@ -27,8 +27,10 @@ class wxTimerEvent;
 
 class NumericTextCtrl;
 class ShuttleGui;
+class TimerRecordPathCtrl;
+class wxTextCtrl;
 
-class TimerRecordPathCtrl : public wxTextCtrl
+class TimerRecordPathCtrl final : public wxTextCtrl
 {
 	// MY: Class that inherits from the wxTextCtrl class.
 	// We override AcceptsFocusFromKeyboard in order to add
@@ -87,7 +89,7 @@ private:
    bool RemoveAllAutoSaveFiles();
 
    // Add Path Controls to Form
-   TimerRecordPathCtrl *NewPathControl(wxWindow *wParent, const int iID, const wxString &sCaption, const wxString &sValue, const int iChars);
+   TimerRecordPathCtrl *NewPathControl(wxWindow *wParent, const int iID, const wxString &sCaption, const wxString &sValue);
 
    int ExecutePostRecordActions(bool bWasStopped);
 
