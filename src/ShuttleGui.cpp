@@ -487,7 +487,6 @@ wxSpinCtrl * ShuttleGuiBase::AddSpinCtrl(const wxString &Prompt, int Value, int 
    return pSpinCtrl;
 }
 
-
 wxTextCtrl * ShuttleGuiBase::AddTextBox(const wxString &Caption, const wxString &Value, const int nChars)
 {
    UseUpId();
