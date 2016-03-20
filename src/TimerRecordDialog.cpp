@@ -47,7 +47,9 @@ enum { // control IDs
 	ID_TIMETEXT_END,
 	ID_TIMETEXT_DURATION,
 	ID_AUTOSAVEPATH_BUTTON,
+	ID_AUTOSAVEPATH_TEXT,
 	ID_AUTOEXPORTPATH_BUTTON,
+	ID_AUTOEXPORTPATH_TEXT,
 	ID_AUTOSAVE_CHECKBOX,
 	ID_AUTOEXPORT_CHECKBOX,
 	ID_AFTERCOMPLETE_COMBO
@@ -250,10 +252,6 @@ void TimerRecordDialog::OnTimeText_Duration(wxCommandEvent& WXUNUSED(event))
 // New events for timer recording automation
 void TimerRecordDialog::OnAutoSavePathButton_Click(wxCommandEvent& WXUNUSED(event))
 {
-	// JKC: I removed 'wxFD_OVERWRITE_PROMPT' because we are checking
-	// for overwrite ourselves later, and we disallow it.
-	// We disallow overwrite because we would have to delete the many
-	// smaller files too, or prompt to move them.
 	wxString fName = FileSelector(_T("Save Timer Recording As"),
 		m_fnAutoSaveFile.GetPath(),
 		m_fnAutoSaveFile.GetFullName(),
@@ -638,6 +636,14 @@ wxPrintf(wxT("%s\n"), dt.Format().c_str());
    return dt.FormatDate() + wxT(" ") + dt.FormatTime();
 }
 
+TimerRecordPathCtrl * TimerRecordDialog::NewPathControl(wxWindow *wParent, const int iID, const wxString &sCaption, const wxString &sValue, const int iChars)
+{
+	TimerRecordPathCtrl * pTextCtrl;
+	pTextCtrl = new TimerRecordPathCtrl(wParent, iID, sValue);
+	pTextCtrl->SetName(sCaption);
+	return pTextCtrl;
+}
+
 void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
 {
 	bool bAutoSave = gPrefs->ReadBool("/TimerRecord/AutoSave", false);
@@ -731,7 +737,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
 				// If checked, the project will be saved when the recording is completed
 				m_pTimerAutoSaveCheckBoxCtrl = S.Id(ID_AUTOSAVE_CHECKBOX).AddCheckBox(_("Enable &Automatic Save?"), (bAutoSave ? "true" : "false"));
 
-				S.StartHorizontalLay(true);
+				S.StartHorizontalLay();
 				{
 					wxString sInitialValue = "";
 
@@ -742,8 +748,9 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
 						sInitialValue = "Current Project";
 					}
 
-					m_pTimerSavePathTextCtrl = S.AddTextBox(_("Save Project As:"), sInitialValue, 50);
-					m_pTimerSavePathTextCtrl->SetEditable(false);
+					S.AddTitle(_("Save Project As:"));
+					m_pTimerSavePathTextCtrl = NewPathControl(this, ID_AUTOSAVEPATH_TEXT, _("Save Project As:"), _(""), 50);
+					S.AddWindow(m_pTimerSavePathTextCtrl);
 					m_pTimerSavePathButtonCtrl = S.Id(ID_AUTOSAVEPATH_BUTTON).AddButton(_("Select"));
 				}
 				S.EndHorizontalLay();
@@ -753,10 +760,12 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
 			S.StartStatic(_("Automatic Export"), true);
 			{
 				m_pTimerAutoExportCheckBoxCtrl = S.Id(ID_AUTOEXPORT_CHECKBOX).AddCheckBox(_("Enable Automatic &Export?"), (bAutoExport ? "true" : "false"));
-				S.StartHorizontalLay(true);
+				S.StartHorizontalLay();
 				{
-					m_pTimerExportPathTextCtrl = S.AddTextBox(_("Export Project As:"), "", 50);
+					S.AddTitle(_("Export Project As:"));
+					m_pTimerExportPathTextCtrl = NewPathControl(this, ID_AUTOEXPORTPATH_TEXT, _("Export Project As:"), _(""), 50);
 					m_pTimerExportPathTextCtrl->SetEditable(false);
+					S.AddWindow(m_pTimerExportPathTextCtrl);
 					m_pTimerExportPathButtonCtrl = S.Id(ID_AUTOEXPORTPATH_BUTTON).AddButton(_("Select"));
 				}
 				S.EndHorizontalLay();
@@ -796,8 +805,8 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
 	SetMinSize(GetSize());
 	Center();
 
-	EnableDisableAutoControls(bAutoSave, CONTROL_GROUP_SAVE);
-	EnableDisableAutoControls(bAutoExport, CONTROL_GROUP_EXPORT);
+//	EnableDisableAutoControls(bAutoSave, CONTROL_GROUP_SAVE);
+//	EnableDisableAutoControls(bAutoExport, CONTROL_GROUP_EXPORT);
 }
 
 bool TimerRecordDialog::TransferDataFromWindow()
