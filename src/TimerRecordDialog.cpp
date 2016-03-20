@@ -483,7 +483,7 @@ int TimerRecordDialog::RunWaitDialog()
 }
 
 int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
-	// We no longer automaticall (and silently) call ->Save() when the 
+	// We no longer automatically (and silently) call ->Save() when the 
 	// timer recording is completed!
 	// We can now Save and/or Export depending on the options selected by
 	// the user.
@@ -646,7 +646,7 @@ wxPrintf(wxT("%s\n"), dt.Format().c_str());
    return dt.FormatDate() + wxT(" ") + dt.FormatTime();
 }
 
-TimerRecordPathCtrl * TimerRecordDialog::NewPathControl(wxWindow *wParent, const int iID, const wxString &sCaption, const wxString &sValue, const int iChars)
+TimerRecordPathCtrl * TimerRecordDialog::NewPathControl(wxWindow *wParent, const int iID, const wxString &sCaption, const wxString &sValue)
 {
 	TimerRecordPathCtrl * pTextCtrl;
 	pTextCtrl = new TimerRecordPathCtrl(wParent, iID, sValue);
@@ -749,11 +749,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
 
 				S.StartHorizontalLay();
 				{
-
-					
-
 					wxString sInitialValue = "";
-
 					AudacityProject* pProject = GetActiveProject();
 					wxString sSaveValue = pProject->GetFileName();
 					if (sSaveValue != "") {
@@ -774,7 +770,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
 			S.StartStatic(_("Automatic Export"), true);
 			{
 				m_pTimerAutoExportCheckBoxCtrl = S.Id(ID_AUTOEXPORT_CHECKBOX).AddCheckBox(_("Enable Automatic &Export?"), (bAutoExport ? "true" : "false"));
-				S.StartHorizontalLay(wxALIGN_CENTER_VERTICAL);
+				S.StartHorizontalLay();
 				{
 					S.AddPrompt(_("Export Project As:"));
 					m_pTimerExportPathTextCtrl = NewPathControl(this, ID_AUTOEXPORTPATH_TEXT, _("Export Project As:"), _(""), 50);
