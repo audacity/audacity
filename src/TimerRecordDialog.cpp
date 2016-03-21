@@ -567,11 +567,6 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
 		}
 	}
 
-	// Do we need to cleanup the orphaned temporary project?
-	if (m_bProjectCleanupRequired && !bErrorOverride) {
-		RemoveAllAutoSaveFiles();
-	}
-
 	// MY: Lets do some actions that only apply to Exit/Restart/Shutdown
 	if (iPostRecordAction >= POST_TIMER_RECORD_CLOSE) {
 		do {
@@ -582,6 +577,8 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
 			if (iDelayOutcome != eProgressSuccess) {
 				// Cancel the action!
 				iPostRecordAction = POST_TIMER_RECORD_NOTHING;
+				// Set this to true to avoid any chance of the temp files being deleted
+				bErrorOverride = true;
 				break;
 			}
 
@@ -590,7 +587,16 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
 			if (m_bAutoExportEnabled && !m_bAutoSaveEnabled) {
 				DirManager::CleanTempDir();
 			}
+
+			// When ending the Audacity session (Exit/Restart/Shutdown) we always
+			// want to clean up those files!
+			RemoveAllAutoSaveFiles();
 		} while (false);
+	}
+
+	// Do we need to cleanup the orphaned temporary project?
+	if (m_bProjectCleanupRequired && !bErrorOverride) {
+		RemoveAllAutoSaveFiles();
 	}
 
 	// Return the action as required
