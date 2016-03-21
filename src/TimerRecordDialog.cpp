@@ -383,6 +383,11 @@ void TimerRecordDialog::UpdateTextBoxControls() {
 	// Will update the text box controls
 	m_pTimerSavePathTextCtrl->SetValue(m_fnAutoSaveFile.GetFullPath());
 	m_pTimerExportPathTextCtrl->SetValue(m_fnAutoExportFile.GetFullPath());
+
+	// MY: Ensure we still display "Current Project" if this has already been saved
+	if (m_bProjectAlreadySaved) {
+		m_pTimerSavePathTextCtrl->SetValue(_("Current Project"));
+	}
 }
 
 // Copied from AutoRecovery.cpp - for use with Timer Recording Improvements
@@ -587,10 +592,6 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
 			if (m_bAutoExportEnabled && !m_bAutoSaveEnabled) {
 				DirManager::CleanTempDir();
 			}
-
-			// When ending the Audacity session (Exit/Restart/Shutdown) we always
-			// want to clean up those files!
-			RemoveAllAutoSaveFiles();
 		} while (false);
 	}
 
@@ -760,11 +761,11 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
 					wxString sSaveValue = pProject->GetFileName();
 					if (sSaveValue != "") {
 						m_fnAutoSaveFile.Assign(sSaveValue);
-						sInitialValue = "Current Project";
+						sInitialValue = _("Current Project");
 					}
 
 					S.AddPrompt(_("Save Project As:"));
-					m_pTimerSavePathTextCtrl = NewPathControl(this, ID_AUTOSAVEPATH_TEXT, _("Save Project As:"), _(sInitialValue));
+					m_pTimerSavePathTextCtrl = NewPathControl(this, ID_AUTOSAVEPATH_TEXT, _("Save Project As:"), sInitialValue);
 					m_pTimerSavePathTextCtrl->SetEditable(false);
 					S.AddWindow(m_pTimerSavePathTextCtrl);
 					m_pTimerSavePathButtonCtrl = S.Id(ID_AUTOSAVEPATH_BUTTON).AddButton(_("Select…"));

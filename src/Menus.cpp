@@ -6337,9 +6337,15 @@ void AudacityProject::OnTimerRecord()
 		return;
 	}
 
-	// MY: If the project has already been saved then we will pass that info to the 
-	// timer record dialog.  That way we can automatically populate the 
-	// automatic save field with the filename.
+	// MY: If the project has unsaved changes then we no longer allow access
+	// to Timer Recording.  This decision has been taken as the safest approach
+	// preventing issues surrounding "dirty" projects when Automatic Save/Export
+	// is used in Timer Recording.
+	if (GetUndoManager()->UnsavedChanges()) {
+		wxMessageBox(_("Timer Recording cannot be used while you have unsaved changes.\n\nPlease save or close this project and try again."), _("Timer Recording"), wxICON_INFORMATION | wxOK);
+		return;
+	}
+	// We use this variable to display "Current Project" in the Timer Recording save project field
 	bool bProjectSaved = IsProjectSaved();
 
    //we break the prompting and waiting dialogs into two sections
