@@ -257,7 +257,7 @@ void TimerRecordDialog::OnAutoSavePathButton_Click(wxCommandEvent& WXUNUSED(even
 		m_fnAutoSaveFile.GetFullName(),
 		wxT("aup"),
 		_("Audacity projects") + wxT(" (*.aup)|*.aup"),
-		wxFD_SAVE | wxRESIZE_BORDER | wxFD_OVERWRITE_PROMPT,
+		wxFD_SAVE | wxRESIZE_BORDER,
 		this);
 
 	if (fName == wxT(""))
@@ -761,7 +761,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
 					m_pTimerSavePathTextCtrl = NewPathControl(this, ID_AUTOSAVEPATH_TEXT, _("Save Project As:"), _(sInitialValue));
 					m_pTimerSavePathTextCtrl->SetEditable(false);
 					S.AddWindow(m_pTimerSavePathTextCtrl);
-					m_pTimerSavePathButtonCtrl = S.Id(ID_AUTOSAVEPATH_BUTTON).AddButton(_("Select"));
+					m_pTimerSavePathButtonCtrl = S.Id(ID_AUTOSAVEPATH_BUTTON).AddButton(_("Select…"));
 				}
 				S.EndHorizontalLay();
 			}
@@ -776,7 +776,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
 					m_pTimerExportPathTextCtrl = NewPathControl(this, ID_AUTOEXPORTPATH_TEXT, _("Export Project As:"), _(""));
 					m_pTimerExportPathTextCtrl->SetEditable(false);
 					S.AddWindow(m_pTimerExportPathTextCtrl);
-					m_pTimerExportPathButtonCtrl = S.Id(ID_AUTOEXPORTPATH_BUTTON).AddButton(_("Select"));
+					m_pTimerExportPathButtonCtrl = S.Id(ID_AUTOEXPORTPATH_BUTTON).AddButton(_("Select…"));
 				}
 				S.EndHorizontalLay();
 			}
