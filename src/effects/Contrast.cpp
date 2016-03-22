@@ -59,7 +59,7 @@ float ContrastDialog::GetDB()
    float rms = float(0.0);
 
    AudacityProject *p = GetActiveProject();
-   TrackListOfKindIterator iter(Track::Wave, p->GetTracks());
+   SelectedTrackListOfKindIterator iter(Track::Wave, p->GetTracks());
    Track *t = iter.First();
    if(!t)
    {
