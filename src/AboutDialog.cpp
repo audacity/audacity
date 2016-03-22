@@ -321,7 +321,7 @@ visit our <a href=\"http://forum.audacityteam.org/\">forum</a>.");
       GetCreditsByRole(roleThanks) +
 
       wxT("<p><br>") + _("<b>Audacity&reg;</b> software is copyright")+
-      wxT("&copy; 1999-2015 Audacity Team.<br>") +
+      wxT("&copy; 1999-2016 Audacity Team.<br>") +
       _("The name <b>Audacity&reg;</b> is a registered trademark of Dominic Mazzoni.") +
       wxT("</center></font></body></html>");
 
