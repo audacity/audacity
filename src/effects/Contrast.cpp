@@ -50,75 +50,65 @@
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
 #include <wx/valtext.h>
+#include <wx/log.h>
 
 #include "../PlatformCompatibility.h"
 
 float ContrastDialog::GetDB()
 {
-   // FIXME: what if more than one track?
    float rms = float(0.0);
+   int numberSelecteTracks = 0;
 
    AudacityProject *p = GetActiveProject();
    SelectedTrackListOfKindIterator iter(Track::Wave, p->GetTracks());
    Track *t = iter.First();
-   if(!t)
-   {
-      wxMessageDialog m(NULL, _("No wave tracks exist."), _("Error"), wxOK);
-      m.ShowModal();
-      return 1234.0; // 'magic number', but the whole +ve dB range will 'almost' never occur
-   }
-   if(mT0 > mT1)
-   {
-      wxMessageDialog m(NULL, _("Start time after end time!\nPlease enter reasonable times."), _("Error"), wxOK);
-      m.ShowModal();
-      return 1234.0; // 'magic number', but the whole +ve dB range will 'almost' never occur
-   }
-   if(mT0 < t->GetStartTime())
-      mT0 = t->GetStartTime();
-   if(mT1 > t->GetEndTime())
-      mT1 = t->GetEndTime();
-   if(mT0 > mT1)
-   {
-      wxMessageDialog m(NULL, _("Times are not reasonable!\nPlease enter reasonable times."), _("Error"), wxOK);
-      m.ShowModal();
-      return 1234.0;
-   }
-   if(mT0 == mT1)
-   {
-      wxMessageDialog m(NULL, _("Nothing to measure.\nPlease select a section of a track."), _("Error"), wxOK);
-      m.ShowModal();
-      return 1234.0;
-   }
-   bool mSelected = false;
-   while(t) {
-      if( ((WaveTrack *)t)->GetSelected() )
-      {
-         if( mSelected == true ) // already measured one track
-         {
-            wxMessageDialog m(NULL, _("You can only measure one track at a time."), _("Error"), wxOK);
-            m.ShowModal();
-            return 1234.0;
-         }
-         else
-         {
-            ((WaveTrack *)t)->GetRMS(&rms, mT0, mT1);
-            mSelected = true;
-         }
+   while (t) {
+      // TODO: Handle stereo tracks
+      numberSelecteTracks++;
+
+      if (numberSelecteTracks > 1) {
+         wxMessageDialog m(NULL, _("You can only measure one track at a time."), _("Error"), wxOK);
+         m.ShowModal();
+         return 1234.0; //TODO: be rid of this magic number.
       }
+
+      if(mT0 > mT1)
+      {
+         wxMessageDialog m(NULL, _("Start time after end time!\nPlease enter reasonable times."), _("Error"), wxOK);
+         m.ShowModal();
+         return 1234.0; // 'magic number', but the whole +ve dB range will 'almost' never occur
+      }
+      if(mT0 < t->GetStartTime())
+         mT0 = t->GetStartTime();
+      if(mT1 > t->GetEndTime())
+         mT1 = t->GetEndTime();
+      if(mT0 > mT1)
+      {
+         wxMessageDialog m(NULL, _("Times are not reasonable!\nPlease enter reasonable times."), _("Error"), wxOK);
+         m.ShowModal();
+         return 1234.0;
+      }
+      if(mT0 == mT1)
+      {
+         wxMessageDialog m(NULL, _("Nothing to measure.\nPlease select a section of a track."), _("Error"), wxOK);
+         m.ShowModal();
+         return 1234.0;
+      }
+
+      ((WaveTrack *)t)->GetRMS(&rms, mT0, mT1);
       t = iter.Next();
    }
-   if( mSelected )
-   {
-      if( rms < 1.0E-30 )
-         return -60.0;
-      return LINEAR_TO_DB(rms);
-   }
-   else
-   {
-      wxMessageDialog m(NULL, _("Please select something to be measured."), _("Error"), wxOK);
+
+   if(numberSelecteTracks == 0) {
+      wxMessageDialog m(NULL, _("Please select an audio track."), _("Error"), wxOK);
       m.ShowModal();
-      return 1234.0;
+      return 1234.0; // 'magic number', but the whole +ve dB range will 'almost' never occur
    }
+
+   if( rms < 1.0E-30 )
+      return -60.0;
+
+   return LINEAR_TO_DB(rms);
 }
 
 double ContrastDialog::GetStartTime()
@@ -407,10 +397,10 @@ void ContrastDialog::OnUseSelectionB(wxCommandEvent & event)
 
 void ContrastDialog::results()
 {
-   if(foregrounddB == 1234.0) // magic number, but OK for now
+   if(foregrounddB == 1234.0) // FIXME: magic number
    {
       mForegroundRMSText->SetName(_("No foreground measured"));
-      mForegroundRMSText->ChangeValue(wxString::Format(wxT(" ")));
+      mForegroundRMSText->ChangeValue(wxString::Format(wxT("")));
    }
    else
    {
@@ -420,6 +410,7 @@ void ContrastDialog::results()
       else
          mForegroundRMSText->ChangeValue(wxString::Format(_("zero")));
    }
+
    if(backgrounddB == 1234.0)
    {
       mBackgroundRMSText->SetName(_("No background measured"));
@@ -578,11 +569,13 @@ void ContrastDialog::OnReset(wxCommandEvent & event)
    mForegroundEndT->SetValue(0.0);
    mBackgroundStartT->SetValue(0.0);
    mBackgroundEndT->SetValue(0.0);
-
-   wxCommandEvent dummyEvt;
-   OnGetForegroundDB(event);
-   OnGetBackgroundDB(event);
-   results();
+;
+   foregrounddB = 1234.0;
+   backgrounddB = 1234.0;
+   mForegroundRMSText->ChangeValue(wxT(""));
+   mBackgroundRMSText->ChangeValue(wxT(""));
+   mPassFailText->ChangeValue(wxT(""));
+   mDiffText->ChangeValue(wxT(""));
 }
 
 void ContrastDialog::OnChar(wxKeyEvent & event)
