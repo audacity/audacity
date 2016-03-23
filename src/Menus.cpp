@@ -6364,7 +6364,10 @@ void AudacityProject::OnTimerRecord()
 	   switch (iTimerRecordingOutcome) {
 	   case POST_TIMER_RECORD_CANCEL_WAIT:
 		   // Canceled on the wait dialog
-		   // No action required
+		   if (GetUndoManager()->UndoAvailable()) {
+			   // MY: We need to roll back what changes we have made here
+			   OnUndo();
+		   }
 	   break;
 	   case POST_TIMER_RECORD_CANCEL:
 		   // RunWaitDialog() shows the "wait for start" as well as "recording" dialog
