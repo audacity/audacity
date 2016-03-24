@@ -54,7 +54,7 @@
 
 #include "../PlatformCompatibility.h"
 
-#define DB_MIN_LIMIT -60.0 // Minimum dB level that we measure.
+#define DB_MIN_LIMIT -600.0 // Minimum dB level that we measure.
 #define DB_MAX_LIMIT 0.0   // TODO: We should probably fail WCAG2 if audio is massively distorted.
 #define WCAG2_PASS 20.0    // dB difference required to pass WCAG2 test.
 
@@ -119,7 +119,6 @@ bool ContrastDialog::GetDB(float &dB)
       return false;
    }
 
-   // FIXME: WHY?? 1.0E-30 linear is -600 dB !
    dB = (rms < 1.0E-30)? DB_MIN_LIMIT : LINEAR_TO_DB(rms);
    wxLogDebug(wxT("RMS = %g"), rms);
    return true;
