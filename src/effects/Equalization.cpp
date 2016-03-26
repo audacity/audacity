@@ -1479,12 +1479,18 @@ void EffectEqualization::UpdateDefaultCurves(bool updateAll /* false */)
 
    EQCurveArray userCurves = mCurves;
    mCurves.Clear();
-   wxFileName fn;
+   // We only wamt to look for the shipped EQDefaultCurves.xml
+   wxFileName fn = wxFileName(wxStandardPaths::Get().GetResourcesDir(),
+                              wxT("EQDefaultCurves.xml"));
+   wxLogDebug(wxT("Attempting to load EQDefaultCurves.xml from %s"),wxStandardPaths::Get().GetResourcesDir().c_str());
    XMLFileReader reader;
 
-   if(!GetDefaultFileName(fn) || !reader.Parse(this, fn.GetFullPath())) {
+   if(!reader.Parse(this, fn.GetFullPath())) {
       wxLogError(wxT("EQDefaultCurves.xml could not be read."));
       return;
+   }
+   else {
+      wxLogDebug(wxT("Loading EQDefaultCurves.xml successful."));
    }
 
    EQCurveArray defaultCurves = mCurves;

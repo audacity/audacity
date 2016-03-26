@@ -481,4 +481,25 @@ static char*THIS_FILE = __FILE__;
 #endif
 #endif
 
+// Frequently, we need to use a vector or list of unique_ptr if we can, but default
+// to shared_ptr if we can't (because containers know how to copy elements only,
+// not move them).
+#ifdef __AUDACITY_OLD_STD__
+template<typename T> using movable_ptr = std::shared_ptr<T>;
+#else
+template<typename T> using movable_ptr = std::unique_ptr<T>;
+#endif
+
+template<typename T, typename... Args>
+inline movable_ptr<T> make_movable(Args&&... args)
+{
+   return std::
+#ifdef __AUDACITY_OLD_STD__
+      make_shared
+#else
+      make_unique
+#endif
+      <T>(std::forward<Args>(args)...);
+}
+
 #endif // __AUDACITY_MEMORY_X_H__

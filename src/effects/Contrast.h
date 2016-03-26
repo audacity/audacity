@@ -80,11 +80,13 @@ private:
 
    float foregrounddB;
    float backgrounddB;
+   bool  mForegroundIsDefined;
+   bool  mBackgroundIsDefined;
    double mT0orig;
    double mT1orig;
 
    bool mDoBackground;
-   float GetDB();
+   bool GetDB(float & dB);
    double GetStartTime();
    void SetStartTime(double);
    double GetEndTime();
