@@ -31,6 +31,7 @@
 #include "toolbars/SelectionBarListener.h"
 #include "toolbars/SpectralSelectionBarListener.h"
 
+#include "MemoryX.h"
 #include <wx/defs.h>
 #include <wx/event.h>
 #include <wx/log.h>
@@ -39,6 +40,8 @@
 #include <wx/frame.h>
 #include <wx/intl.h>
 #include <wx/dcclient.h>
+
+#include "import/ImportRaw.h" // defines TrackHolders
 
 const int AudacityProjectTimerID = 5200;
 
@@ -92,6 +95,8 @@ class Regions;
 class LWSlider;
 class UndoManager;
 enum class UndoPush : unsigned char;
+
+class Track;
 
 AudacityProject *CreateNewAudacityProject();
 AUDACITY_DLL_API AudacityProject *GetActiveProject();
@@ -232,7 +237,8 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    bool Import(const wxString &fileName, WaveTrackArray *pTrackArray = NULL);
 
    void AddImportedTracks(const wxString &fileName,
-                          Track **newTracks, int numTracks);
+                          TrackHolders &&newTracks);
+
    void LockAllBlocks();
    void UnlockAllBlocks();
    bool Save(bool overwrite = true, bool fromSaveAs = false, bool bWantSaveCompressed = false);
@@ -331,7 +337,7 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
 
 
    typedef bool (WaveTrack::* EditFunction)(double, double);
-   typedef bool (WaveTrack::* EditDestFunction)(double, double, Track**);
+   typedef std::unique_ptr<Track> (WaveTrack::* EditDestFunction)(double, double);
 
    void EditByLabel(EditFunction action, bool bSyncLockedTracks);
    void EditClipboardByLabel(EditDestFunction action );
@@ -543,7 +549,7 @@ public:
    TrackList *mLastSavedTracks;
 
    // Clipboard (static because it is shared by all projects)
-   static TrackList *msClipboard;
+   static std::unique_ptr<TrackList> msClipboard;
    static AudacityProject *msClipProject;
    static double msClipT0;
    static double msClipT1;

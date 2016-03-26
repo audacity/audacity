@@ -2398,7 +2398,7 @@ void AudacityProject::OnToogleAutomatedInputLevelAdjustment()
 }
 #endif
 
-double AudacityProject::GetTime(Track *t)
+double AudacityProject::GetTime(const Track *t)
 {
    double stime = 0.0;
 
@@ -2428,43 +2428,46 @@ double AudacityProject::GetTime(Track *t)
 //sort based on flags.  see Project.h for sort flags
 void AudacityProject::SortTracks(int flags)
 {
-   int ndx = 0;
+   size_t ndx = 0;
    int cmpValue;
-   wxArrayPtrVoid arr;
-   TrackListIterator iter(mTracks);
-   Track *track = iter.First();
+   std::vector<ListOfTracks::iterator> arr;
+   arr.reserve(mTracks->GetCount());
    bool lastTrackLinked = false;
    //sort by linked tracks. Assumes linked track follows owner in list.
-   while (track) {
+
+   // First find the permutation.
+   for (auto iter = mTracks->begin(), end = mTracks->end(); iter != end; ++iter) {
+      const auto &track = *iter;
       if(lastTrackLinked) {
          //insert after the last track since this track should be linked to it.
          ndx++;
       }
       else {
-         for (ndx = 0; ndx < (int)arr.GetCount(); ndx++) {
-            if(flags & kAudacitySortByName){
+         for (ndx = 0; ndx < arr.size(); ++ndx) {
+            Track &arrTrack = **arr[ndx];
+            if(flags & kAudacitySortByName) {
                //do case insensitive sort - cmpNoCase returns less than zero if the string is 'less than' its argument
                //also if we have case insensitive equality, then we need to sort by case as well
                //We sort 'b' before 'B' accordingly.  We uncharacteristically use greater than for the case sensitive
                //compare because 'b' is greater than 'B' in ascii.
-               cmpValue = track->GetName().CmpNoCase(((Track *) arr[ndx])->GetName());
+               cmpValue = track->GetName().CmpNoCase(arrTrack.GetName());
                if (cmpValue < 0 ||
-                   (0 == cmpValue && track->GetName().CompareTo(((Track *) arr[ndx])->GetName()) > 0) )
+                   (0 == cmpValue && track->GetName().CompareTo(arrTrack.GetName()) > 0) )
                   break;
             }
             //sort by time otherwise
-            else if(flags & kAudacitySortByTime){
+            else if(flags & kAudacitySortByTime) {
                //we have to search each track and all its linked ones to fine the minimum start time.
-               double time1,time2,tempTime;
-               Track* tempTrack;
-               int    candidatesLookedAt;
+               double time1, time2, tempTime;
+               const Track* tempTrack;
+               size_t candidatesLookedAt;
 
                candidatesLookedAt = 0;
-               tempTrack = track;
-               time1=time2=std::numeric_limits<double>::max(); //TODO: find max time value. (I don't think we have one yet)
-               while(tempTrack){
+               tempTrack = &*track;
+               time1 = time2 = std::numeric_limits<double>::max(); //TODO: find max time value. (I don't think we have one yet)
+               while(tempTrack) {
                   tempTime = GetTime(tempTrack);
-                  time1 = time1<tempTime? time1:tempTime;
+                  time1 = std::min(time1, tempTime);
                   if(tempTrack->GetLinked())
                      tempTrack = tempTrack->GetLink();
                   else
@@ -2472,13 +2475,13 @@ void AudacityProject::SortTracks(int flags)
                }
 
                //get candidate's (from sorted array) time
-               tempTrack = (Track *) arr[ndx];
-               while(tempTrack){
+               tempTrack = &arrTrack;
+               while(tempTrack) {
                   tempTime = GetTime(tempTrack);
-                  time2 = time2<tempTime? time2:tempTime;
-                  if(tempTrack->GetLinked() && (ndx+candidatesLookedAt <  (int)arr.GetCount()-1) ) {
+                  time2 = std::min(time2, tempTime);
+                  if(tempTrack->GetLinked() && (ndx+candidatesLookedAt < arr.size()-1) ) {
                      candidatesLookedAt++;
-                     tempTrack = (Track*) arr[ndx+candidatesLookedAt];
+                     tempTrack = &**arr[ndx+candidatesLookedAt];
                   }
                   else
                      tempTrack = NULL;
@@ -2491,15 +2494,13 @@ void AudacityProject::SortTracks(int flags)
             }
          }
       }
-      arr.Insert(track, ndx);
+      arr.insert(arr.begin() + ndx, iter);
 
       lastTrackLinked = track->GetLinked();
-      track = iter.RemoveCurrent();
    }
 
-   for (ndx = 0; ndx < (int)arr.GetCount(); ndx++) {
-      mTracks->Add((Track *)arr[ndx]);
-   }
+   // Now apply the permutation
+   mTracks->Permute(arr);
 }
 
 void AudacityProject::OnSortTime()
@@ -3340,7 +3341,7 @@ bool AudacityProject::OnEffect(const PluginID & ID, int flags)
 
    TrackListIterator iter(mTracks);
    Track *t = iter.First();
-   WaveTrack *newTrack = NULL;
+   WaveTrack *newTrack{};
    wxWindow *focus = wxWindow::FindFocus();
 
    //double prevEndTime = mTracks->GetEndTime();
@@ -3358,8 +3359,7 @@ bool AudacityProject::OnEffect(const PluginID & ID, int flags)
       // No tracks were selected...
       if (type == EffectTypeGenerate) {
          // Create a NEW track for the generated audio...
-         newTrack = mTrackFactory->NewWaveTrack();
-         mTracks->Add(newTrack);
+         newTrack = static_cast<WaveTrack*>(mTracks->Add(mTrackFactory->NewWaveTrack()));
          newTrack->SetSelected(true);
       }
    }
@@ -3374,7 +3374,6 @@ bool AudacityProject::OnEffect(const PluginID & ID, int flags)
    if (!success) {
       if (newTrack) {
          mTracks->Remove(newTrack);
-         delete newTrack;
          mTrackPanel->Refresh(false);
       }
 
@@ -3815,7 +3814,6 @@ void AudacityProject::OnCut()
 {
    TrackListIterator iter(mTracks);
    Track *n = iter.First();
-   Track *dest;
 
    // This doesn't handle cutting labels, it handles
    // cutting the _text_ inside of labels, i.e. if you're
@@ -3837,22 +3835,22 @@ void AudacityProject::OnCut()
    n = iter.First();
    while (n) {
       if (n->GetSelected()) {
-         dest = NULL;
+         Track::Holder dest;
 #if defined(USE_MIDI)
          if (n->GetKind() == Track::Note)
             // Since portsmf has a built-in cut operator, we use that instead
-            n->Cut(mViewInfo.selectedRegion.t0(),
-                   mViewInfo.selectedRegion.t1(), &dest);
+            dest = n->Cut(mViewInfo.selectedRegion.t0(),
+                   mViewInfo.selectedRegion.t1());
          else
 #endif
-            n->Copy(mViewInfo.selectedRegion.t0(),
-                    mViewInfo.selectedRegion.t1(), &dest);
+            dest = n->Copy(mViewInfo.selectedRegion.t0(),
+                    mViewInfo.selectedRegion.t1());
 
          if (dest) {
             dest->SetChannel(n->GetChannel());
             dest->SetLinked(n->GetLinked());
             dest->SetName(n->GetName());
-            msClipboard->Add(dest);
+            msClipboard->Add(std::move(dest));
          }
       }
       n = iter.Next();
@@ -3904,21 +3902,21 @@ void AudacityProject::OnSplitCut()
 {
    TrackListIterator iter(mTracks);
    Track *n = iter.First();
-   Track *dest;
 
    ClearClipboard();
    while (n) {
       if (n->GetSelected()) {
-         dest = NULL;
+         Track::Holder dest;
          if (n->GetKind() == Track::Wave)
          {
-            ((WaveTrack*)n)->SplitCut(
+            dest = ((WaveTrack*)n)->SplitCut(
                mViewInfo.selectedRegion.t0(),
-               mViewInfo.selectedRegion.t1(), &dest);
-         } else
+               mViewInfo.selectedRegion.t1());
+         }
+         else
          {
-            n->Copy(mViewInfo.selectedRegion.t0(),
-                    mViewInfo.selectedRegion.t1(), &dest);
+            dest = n->Copy(mViewInfo.selectedRegion.t0(),
+                    mViewInfo.selectedRegion.t1());
             n->Silence(mViewInfo.selectedRegion.t0(),
                        mViewInfo.selectedRegion.t1());
          }
@@ -3926,7 +3924,7 @@ void AudacityProject::OnSplitCut()
             dest->SetChannel(n->GetChannel());
             dest->SetLinked(n->GetLinked());
             dest->SetName(n->GetName());
-            msClipboard->Add(dest);
+            msClipboard->Add(std::move(dest));
          }
       }
       n = iter.Next();
@@ -3948,7 +3946,6 @@ void AudacityProject::OnCopy()
    TrackListIterator iter(mTracks);
 
    Track *n = iter.First();
-   Track *dest;
 
    while (n) {
       if (n->GetSelected()) {
@@ -3966,14 +3963,13 @@ void AudacityProject::OnCopy()
    n = iter.First();
    while (n) {
       if (n->GetSelected()) {
-         dest = NULL;
-         n->Copy(mViewInfo.selectedRegion.t0(),
-                 mViewInfo.selectedRegion.t1(), &dest);
+         auto dest = n->Copy(mViewInfo.selectedRegion.t0(),
+                 mViewInfo.selectedRegion.t1());
          if (dest) {
             dest->SetChannel(n->GetChannel());
             dest->SetLinked(n->GetLinked());
             dest->SetName(n->GetName());
-            msClipboard->Add(dest);
+            msClipboard->Add(std::move(dest));
          }
       }
       n = iter.Next();
@@ -4002,7 +3998,7 @@ void AudacityProject::OnPaste()
    double t1 = mViewInfo.selectedRegion.t1();
 
    TrackListIterator iter(mTracks);
-   TrackListIterator clipIter(msClipboard);
+   TrackListIterator clipIter(msClipboard.get());
 
    Track *n = iter.First();
    Track *c = clipIter.First();
@@ -4142,7 +4138,7 @@ void AudacityProject::OnPaste()
    // selected tracks.
    if ( n && !c )
    {
-      TrackListOfKindIterator clipWaveIter(Track::Wave, msClipboard);
+      TrackListOfKindIterator clipWaveIter(Track::Wave, msClipboard.get());
       c = clipWaveIter.Last();
 
       while (n) {
@@ -4152,17 +4148,14 @@ void AudacityProject::OnPaste()
                   ((WaveTrack *)n)->ClearAndPaste(t0, t1, (WaveTrack *)c, true, true);
             }
             else {
-               WaveTrack *tmp;
-               tmp = mTrackFactory->NewWaveTrack( ((WaveTrack*)n)->GetSampleFormat(), ((WaveTrack*)n)->GetRate());
+               auto tmp = mTrackFactory->NewWaveTrack( ((WaveTrack*)n)->GetSampleFormat(), ((WaveTrack*)n)->GetRate());
                bool bResult = tmp->InsertSilence(0.0, msClipT1 - msClipT0); // MJS: Is this correct?
                wxASSERT(bResult); // TO DO: Actually handle this.
                wxUnusedVar(bResult);
                tmp->Flush();
 
                bPastedSomething |=
-                  ((WaveTrack *)n)->ClearAndPaste(t0, t1, tmp, true, true);
-
-               delete tmp;
+                  ((WaveTrack *)n)->ClearAndPaste(t0, t1, tmp.get(), true, true);
             }
          }
          else if (n->GetKind() == Track::Label && n->GetSelected())
@@ -4252,12 +4245,12 @@ bool AudacityProject::HandlePasteNothingSelected()
       return false;
    else
    {
-      TrackListIterator iterClip(msClipboard);
+      TrackListIterator iterClip(msClipboard.get());
       Track* pClip = iterClip.First();
       if (!pClip)
          return true; // nothing to paste
 
-      Track* pNewTrack;
+      Track::Holder pNewTrack;
       Track* pFirstNewTrack = NULL;
       while (pClip) {
          if ((msClipProject != this) && (pClip->GetKind() == Track::Wave))
@@ -4294,14 +4287,16 @@ bool AudacityProject::HandlePasteNothingSelected()
          bool bResult = pNewTrack->Paste(0.0, pClip);
          wxASSERT(bResult); // TO DO: Actually handle this.
          wxUnusedVar(bResult);
-         mTracks->Add(pNewTrack);
+
+         if (!pFirstNewTrack)
+            pFirstNewTrack = pNewTrack.get();
+
          pNewTrack->SetSelected(true);
+         mTracks->Add(std::move(pNewTrack));
 
          if (msClipProject != this && pClip->GetKind() == Track::Wave)
             ((WaveTrack *) pClip)->Unlock();
 
-         if (!pFirstNewTrack)
-            pFirstNewTrack = pNewTrack;
 
          pClip = iterClip.Next();
       }
@@ -4358,8 +4353,7 @@ void AudacityProject::OnPasteNewLabel()
 
       // If no match found, add one
       if (!t) {
-         t = new LabelTrack(mDirManager);
-         mTracks->Add(t);
+         t = mTracks->Add(GetTrackFactory()->NewLabelTrack());
       }
 
       // Select this track so the loop picks it up
@@ -4563,13 +4557,12 @@ void AudacityProject::OnDuplicate()
 
    while (n) {
       if (n->GetSelected()) {
-         Track *dest = NULL;
-         n->Copy(mViewInfo.selectedRegion.t0(),
-                 mViewInfo.selectedRegion.t1(), &dest);
+         auto dest = n->Copy(mViewInfo.selectedRegion.t0(),
+                 mViewInfo.selectedRegion.t1());
          if (dest) {
             dest->Init(*n);
             dest->SetOffset(wxMax(mViewInfo.selectedRegion.t0(), n->GetOffset()));
-            mTracks->Add(dest);
+            mTracks->Add(std::move(dest));
          }
       }
 
@@ -4823,22 +4816,23 @@ void AudacityProject::OnSplitNew()
 
    for (Track *n = iter.First(); n; n = iter.Next()) {
       if (n->GetSelected()) {
-         Track *dest = NULL;
+         Track::Holder dest;
          double newt0 = 0, newt1 = 0;
          double offset = n->GetOffset();
          if (n->GetKind() == Track::Wave) {
+            const auto wt = static_cast<WaveTrack*>(n);
             // Clips must be aligned to sample positions or the NEW clip will not fit in the gap where it came from
-            offset = ((WaveTrack*)n)->LongSamplesToTime(((WaveTrack*)n)->TimeToLongSamples(offset));
-            newt0 = ((WaveTrack*)n)->LongSamplesToTime(((WaveTrack*)n)->TimeToLongSamples(mViewInfo.selectedRegion.t0()));
-            newt1 = ((WaveTrack*)n)->LongSamplesToTime(((WaveTrack*)n)->TimeToLongSamples(mViewInfo.selectedRegion.t1()));
-            ((WaveTrack*)n)->SplitCut(newt0, newt1, &dest);
+            offset = wt->LongSamplesToTime(wt->TimeToLongSamples(offset));
+            newt0 = wt->LongSamplesToTime(wt->TimeToLongSamples(mViewInfo.selectedRegion.t0()));
+            newt1 = wt->LongSamplesToTime(wt->TimeToLongSamples(mViewInfo.selectedRegion.t1()));
+            dest = wt->SplitCut(newt0, newt1);
          }
 #if 0
          // LL:  For now, just skip all non-wave tracks since the other do not
          //      yet support proper splitting.
          else {
-            n->Cut(mViewInfo.selectedRegion.t0(),
-                   mViewInfo.selectedRegion.t1(), &dest);
+            dest = n->Cut(mViewInfo.selectedRegion.t0(),
+                   mViewInfo.selectedRegion.t1());
          }
 #endif
          if (dest) {
@@ -4846,7 +4840,7 @@ void AudacityProject::OnSplitNew()
             dest->SetLinked(n->GetLinked());
             dest->SetName(n->GetName());
             dest->SetOffset(wxMax(newt0, offset));
-            mTracks->Add(dest);
+            mTracks->Add(std::move(dest));
          }
       }
 
@@ -5495,7 +5489,7 @@ void AudacityProject::OnImportLabels()
          return;
       }
 
-      LabelTrack *newTrack = new LabelTrack(mDirManager);
+      auto newTrack = GetTrackFactory()->NewLabelTrack();
       wxString sTrackName;
       wxFileName::SplitPath(fileName, NULL, NULL, &sTrackName, NULL);
       newTrack->SetName(sTrackName);
@@ -5503,8 +5497,8 @@ void AudacityProject::OnImportLabels()
       newTrack->Import(f);
 
       SelectNone();
-      mTracks->Add(newTrack);
       newTrack->SetSelected(true);
+      mTracks->Add(std::move(newTrack));
 
       PushState(wxString::
                 Format(_("Imported labels from '%s'"), fileName.c_str()),
@@ -5538,22 +5532,20 @@ void AudacityProject::OnImportMIDI()
 
 void AudacityProject::DoImportMIDI(const wxString &fileName)
 {
-   NoteTrack *newTrack = new NoteTrack(mDirManager);
+   auto newTrack = GetTrackFactory()->NewNoteTrack();
 
-   if (::ImportMIDI(fileName, newTrack)) {
+   if (::ImportMIDI(fileName, newTrack.get())) {
 
       SelectNone();
-      mTracks->Add(newTrack);
-      newTrack->SetSelected(true);
+      auto pTrack = mTracks->Add(std::move(newTrack));
+      pTrack->SetSelected(true);
 
       PushState(wxString::Format(_("Imported MIDI from '%s'"),
          fileName.c_str()), _("Import MIDI"));
 
       RedrawProject();
-      mTrackPanel->EnsureVisible(newTrack);
+      mTrackPanel->EnsureVisible(pTrack);
    }
-   else
-      delete newTrack;
 }
 #endif // USE_MIDI
 
@@ -5577,15 +5569,14 @@ void AudacityProject::OnImportRaw()
    gPrefs->Write(wxT("/DefaultOpenPath"), path);
    gPrefs->Flush();
 
-   Track **newTracks;
-   int numTracks;
+   TrackHolders newTracks;
 
-   numTracks = ::ImportRaw(this, fileName, mTrackFactory, &newTracks);
+   ::ImportRaw(this, fileName, mTrackFactory, newTracks);
 
-   if (numTracks <= 0)
+   if (newTracks.size() <= 0)
       return;
 
-   AddImportedTracks(fileName, newTracks, numTracks);
+   AddImportedTracks(fileName, std::move(newTracks));
    HandleResize(); // Adjust scrollers for NEW track sizes.
 }
 
@@ -5613,14 +5604,13 @@ bool AudacityProject::DoEditMetadata
 
 void AudacityProject::HandleMixAndRender(bool toNewTrack)
 {
-   WaveTrack *newLeft = NULL;
-   WaveTrack *newRight = NULL;
-
    wxGetApp().SetMissingAliasedFileWarningShouldShow(true);
 
-   if (::MixAndRender(mTracks, mTrackFactory, mRate, mDefaultFormat, 0.0, 0.0,
-                      &newLeft, &newRight)) {
+   auto results =
+      ::MixAndRender(mTracks, mTrackFactory, mRate, mDefaultFormat, 0.0, 0.0);
+   auto &uNewLeft = results.first, &uNewRight = results.second;
 
+   if (uNewLeft) {
       // Remove originals, get stats on what tracks were mixed
 
       TrackListIterator iter(mTracks);
@@ -5639,7 +5629,7 @@ void AudacityProject::HandleMixAndRender(bool toNewTrack)
                 selectedCount++;
 
                 if (!toNewTrack) {
-                   t = iter.RemoveCurrent(true);
+                   t = iter.RemoveCurrent();
                 } else {
                    t = iter.Next();
                 };
@@ -5650,15 +5640,16 @@ void AudacityProject::HandleMixAndRender(bool toNewTrack)
 
       // Add NEW tracks
 
-      mTracks->Add(newLeft);
-      if (newRight)
-         mTracks->Add(newRight);
+      auto pNewLeft = mTracks->Add(std::move(uNewLeft));
+      decltype(pNewLeft) pNewRight{};
+      if (uNewRight)
+         pNewRight = mTracks->Add(std::move(uNewRight));
 
       // If we're just rendering (not mixing), keep the track name the same
       if (selectedCount==1) {
-         newLeft->SetName(firstName);
-         if (newRight)
-            newRight->SetName(firstName);
+         pNewLeft->SetName(firstName);
+         if (pNewRight)
+            pNewRight->SetName(firstName);
       }
 
       // Smart history/undo message
@@ -5671,7 +5662,7 @@ void AudacityProject::HandleMixAndRender(bool toNewTrack)
       }
       else {
          wxString msg;
-         if (newRight)
+         if (pNewRight)
             msg.Printf(_("Mixed and rendered %d tracks into one new stereo track"),
                        selectedCount);
          else
@@ -5681,8 +5672,8 @@ void AudacityProject::HandleMixAndRender(bool toNewTrack)
       }
 
       mTrackPanel->SetFocus();
-      mTrackPanel->SetFocusedTrack(newLeft);
-      mTrackPanel->EnsureVisible(newLeft);
+      mTrackPanel->SetFocusedTrack(pNewLeft);
+      mTrackPanel->EnsureVisible(pNewLeft);
       RedrawProject();
    }
 }
@@ -6253,10 +6244,9 @@ void AudacityProject::OnScoreAlign()
 
 void AudacityProject::OnNewWaveTrack()
 {
-   WaveTrack *t = mTrackFactory->NewWaveTrack(mDefaultFormat, mRate);
+   auto t = mTracks->Add(mTrackFactory->NewWaveTrack(mDefaultFormat, mRate));
    SelectNone();
 
-   mTracks->Add(t);
    t->SetSelected(true);
 
    PushState(_("Created new audio track"), _("New Track"));
@@ -6267,18 +6257,16 @@ void AudacityProject::OnNewWaveTrack()
 
 void AudacityProject::OnNewStereoTrack()
 {
-   WaveTrack *t = mTrackFactory->NewWaveTrack(mDefaultFormat, mRate);
+   auto t = mTracks->Add(mTrackFactory->NewWaveTrack(mDefaultFormat, mRate));
    t->SetChannel(Track::LeftChannel);
    SelectNone();
 
-   mTracks->Add(t);
    t->SetSelected(true);
    t->SetLinked (true);
 
-   t = mTrackFactory->NewWaveTrack(mDefaultFormat, mRate);
+   t = mTracks->Add(mTrackFactory->NewWaveTrack(mDefaultFormat, mRate));
    t->SetChannel(Track::RightChannel);
 
-   mTracks->Add(t);
    t->SetSelected(true);
 
    PushState(_("Created new stereo audio track"), _("New Track"));
@@ -6289,11 +6277,10 @@ void AudacityProject::OnNewStereoTrack()
 
 void AudacityProject::OnNewLabelTrack()
 {
-   LabelTrack *t = new LabelTrack(mDirManager);
+   auto t = mTracks->Add(GetTrackFactory()->NewLabelTrack());
 
    SelectNone();
 
-   mTracks->Add(t);
    t->SetSelected(true);
 
    PushState(_("Created new label track"), _("New Track"));
@@ -6309,11 +6296,10 @@ void AudacityProject::OnNewTimeTrack()
       return;
    }
 
-   TimeTrack *t = mTrackFactory->NewTimeTrack();
+   auto t = mTracks->AddToHead(mTrackFactory->NewTimeTrack());
 
    SelectNone();
 
-   mTracks->AddToHead(t);
    t->SetSelected(true);
 
    PushState(_("Created new time track"), _("New Track"));
@@ -6385,8 +6371,8 @@ int AudacityProject::DoAddLabel(const SelectedRegion &region, bool preserveFocus
 
    // If none found, start a NEW label track and use it
    if (!lt) {
-      lt = new LabelTrack(mDirManager);
-      mTracks->Add(lt);
+      lt = static_cast<LabelTrack*>
+         (mTracks->Add(GetTrackFactory()->NewLabelTrack()));
    }
 
 // LLL: Commented as it seemed a little forceful to remove users
@@ -6455,7 +6441,7 @@ void AudacityProject::OnEditLabels()
 {
    wxString format = GetSelectionFormat();
 
-   LabelDialog dlg(this, mDirManager, mTracks, mViewInfo, mRate, format);
+   LabelDialog dlg(this, *GetTrackFactory(), mTracks, mViewInfo, mRate, format);
 
    if (dlg.ShowModal() == wxID_OK) {
       PushState(_("Edited labels"), _("Label"));
@@ -6489,7 +6475,7 @@ void AudacityProject::OnRemoveTracks()
             mMixerBoard->RemoveTrackCluster((WaveTrack*)t);
          if (!f)
             f = l;         // Capture the track preceeding the first removed track
-         t = iter.RemoveCurrent(true);
+         t = iter.RemoveCurrent();
       }
       else {
          l = t;

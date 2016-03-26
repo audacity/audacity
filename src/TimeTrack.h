@@ -132,7 +132,9 @@ class TimeTrack final : public Track {
     * @param orig the TimeTrack to copy from
     */
    void Init(const TimeTrack &orig);
-   Track *Duplicate() const override;
+
+   using Holder = std::unique_ptr<TimeTrack>;
+   Track::Holder Duplicate() const override;
 
    friend class TrackFactory;
 

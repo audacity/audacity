@@ -1120,8 +1120,7 @@ bool NyquistEffect::ProcessOne()
       }
 
       if (!ltrack) {
-         ltrack = mFactory->NewLabelTrack();
-         AddToOutputTracks((Track *)ltrack);
+         ltrack = static_cast<LabelTrack*>(AddToOutputTracks(mFactory->NewLabelTrack()));
       }
 
       for (l = 0; l < numLabels; l++) {
@@ -1184,8 +1183,7 @@ bool NyquistEffect::ProcessOne()
 
    if (!success) {
       for(i = 0; i < outChannels; i++) {
-         delete mOutputTrack[i];
-         mOutputTrack[i] = NULL;
+         mOutputTrack[i].reset();
       }
       return false;
    }
@@ -1202,8 +1200,7 @@ bool NyquistEffect::ProcessOne()
                       wxT("Nyquist"),
                       wxOK | wxCENTRE, mUIParent);
          for (i = 0; i < outChannels; i++) {
-            delete mOutputTrack[i];
-            mOutputTrack[i] = NULL;
+            mOutputTrack[i].reset();
          }
          return true;
       }
@@ -1213,10 +1210,10 @@ bool NyquistEffect::ProcessOne()
       WaveTrack *out;
 
       if (outChannels == mCurNumChannels) {
-         out = mOutputTrack[i];
+         out = mOutputTrack[i].get();
       }
       else {
-         out = mOutputTrack[0];
+         out = mOutputTrack[0].get();
       }
 
       if (mMergeClips < 0) {
@@ -1246,8 +1243,7 @@ bool NyquistEffect::ProcessOne()
    }
 
    for (i = 0; i < outChannels; i++) {
-      delete mOutputTrack[i];
-      mOutputTrack[i] = NULL;
+      mOutputTrack[i].reset();
    }
    mProjectChanged = true;
    return true;

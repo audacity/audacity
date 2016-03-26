@@ -170,7 +170,7 @@ void OnZeroCrossing();
 void OnLockPlayRegion();
 void OnUnlockPlayRegion();
 
-double GetTime(Track *t);
+double GetTime(const Track *t);
 void OnSortTime();
 void OnSortName();
 

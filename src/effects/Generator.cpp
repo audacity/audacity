@@ -65,7 +65,7 @@ bool Generator::Process()
          {
             AudacityProject *p = GetActiveProject();
             // Create a temporary track
-            std::unique_ptr<WaveTrack> tmp(
+            WaveTrack::Holder tmp(
                mFactory->NewWaveTrack(track->GetSampleFormat(),
                track->GetRate())
             );

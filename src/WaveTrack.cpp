@@ -63,15 +63,17 @@ using std::max;
 bool WaveTrack::mMonoAsVirtualStereo;
 #endif
 
-WaveTrack* TrackFactory::DuplicateWaveTrack(WaveTrack &orig)
+WaveTrack::Holder TrackFactory::DuplicateWaveTrack(WaveTrack &orig)
 {
-   return (WaveTrack*)(orig.Duplicate());
+   return std::unique_ptr<WaveTrack>
+   { static_cast<WaveTrack*>(orig.Duplicate().release()) };
 }
 
 
-WaveTrack *TrackFactory::NewWaveTrack(sampleFormat format, double rate)
+WaveTrack::Holder TrackFactory::NewWaveTrack(sampleFormat format, double rate)
 {
-   return new WaveTrack(mDirManager, format, rate);
+   return std::unique_ptr<WaveTrack>
+   { safenew WaveTrack(mDirManager, format, rate) };
 }
 
 WaveTrack::WaveTrack(DirManager *projDirManager, sampleFormat format, double rate) :
@@ -355,9 +357,9 @@ void WaveTrack::SetSpectrumBounds(float min, float max) const
    mSpectrumMax = max;
 }
 
-Track *WaveTrack::Duplicate() const
+Track::Holder WaveTrack::Duplicate() const
 {
-   return new WaveTrack(*this);
+   return Track::Holder{ safenew WaveTrack{ *this } };
 }
 
 double WaveTrack::GetRate() const
@@ -529,38 +531,51 @@ bool WaveTrack::IsEmpty(double t0, double t1)
    return true;
 }
 
-bool WaveTrack::Cut(double t0, double t1, Track **dest)
+Track::Holder WaveTrack::Cut(double t0, double t1)
 {
    if (t1 < t0)
-      return false;
+      return{};
 
-   if (!Copy(t0, t1, dest))
-      return false;
+   auto tmp = Copy(t0, t1);
 
-   return Clear(t0, t1);
+   if (!tmp)
+      return{};
+
+   if (!Clear(t0, t1))
+      return{};
+
+   return std::move(tmp);
 }
 
-bool WaveTrack::SplitCut(double t0, double t1, Track **dest)
+Track::Holder WaveTrack::SplitCut(double t0, double t1)
 {
    if (t1 < t0)
-      return false;
+      return{};
 
    // SplitCut is the same as 'Copy', then 'SplitDelete'
-   if (!Copy(t0, t1, dest))
-      return false;
-   return SplitDelete(t0, t1);
+   auto tmp = Copy(t0, t1);
+   if (!tmp)
+      return{};
+   if (!SplitDelete(t0, t1))
+      return{};
+
+   return std::move(tmp);
 }
 
 #if 0
-bool WaveTrack::CutAndAddCutLine(double t0, double t1, Track **dest)
+Track::Holder WaveTrack::CutAndAddCutLine(double t0, double t1)
 {
    if (t1 < t0)
-      return false;
+      return {};
 
    // Cut is the same as 'Copy', then 'Delete'
-   if (!Copy(t0, t1, dest))
-      return false;
-   return ClearAndAddCutLine(t0, t1);
+   auto tmp = Copy(t0, t1);
+   if (!tmp)
+      return {};
+   if (!ClearAndAddCutLine(t0, t1))
+      return {};
+
+   return std::move(tmp);
 }
 #endif
 
@@ -623,14 +638,14 @@ bool WaveTrack::Trim (double t0, double t1)
 
 
 
-bool WaveTrack::Copy(double t0, double t1, Track **dest) const
+Track::Holder WaveTrack::Copy(double t0, double t1) const
 {
-   *dest = NULL;
-
    if (t1 <= t0)
-      return false;
+      return{};
 
-   WaveTrack *newTrack = new WaveTrack(mDirManager);
+   WaveTrack *newTrack;
+   Track::Holder result
+   { newTrack = safenew WaveTrack{ mDirManager } };
 
    newTrack->Init(*this);
 
@@ -708,14 +723,12 @@ bool WaveTrack::Copy(double t0, double t1, Track **dest) const
       }
    }
 
-   *dest = newTrack;
-
-   return true;
+   return std::move(result);
 }
 
-bool WaveTrack::CopyNonconst(double t0, double t1, Track **dest)
+Track::Holder WaveTrack::CopyNonconst(double t0, double t1)
 {
-   return Copy(t0, t1, dest);
+   return Copy(t0, t1);
 }
 
 bool WaveTrack::Clear(double t0, double t1)
@@ -1148,13 +1161,11 @@ bool WaveTrack::SyncLockAdjust(double oldT1, double newT1)
          bool clipsCanMove = true;
          gPrefs->Read(wxT("/GUI/EditClipCanMove"), &clipsCanMove);
          if (clipsCanMove) {
-            Track *tmp = NULL;
-            ret = Cut (oldT1, GetEndTime() + 1.0/GetRate(), &tmp);
+            auto tmp = Cut (oldT1, GetEndTime() + 1.0/GetRate());
             if (!ret) return false;
 
-            ret = Paste(newT1, tmp);
+            ret = Paste(newT1, tmp.get());
             wxASSERT(ret);
-            delete tmp;
          }
 
          return ret;
@@ -1166,16 +1177,15 @@ bool WaveTrack::SyncLockAdjust(double oldT1, double newT1)
          if (!p) return false;
          TrackFactory *f = p->GetTrackFactory();
          if (!f) return false;
-         WaveTrack *tmp = f->NewWaveTrack(GetSampleFormat(), GetRate());
+         auto tmp = f->NewWaveTrack(GetSampleFormat(), GetRate());
 
          bool bResult = tmp->InsertSilence(0.0, newT1 - oldT1);
          wxASSERT(bResult); // TO DO: Actually handle this.
          wxUnusedVar(bResult);
          tmp->Flush();
-         bResult = Paste(oldT1, tmp);
+         bResult = Paste(oldT1, tmp.get());
          wxASSERT(bResult); // TO DO: Actually handle this.
          wxUnusedVar(bResult);
-         delete tmp;
       }
    }
    else if (newT1 < oldT1) {
@@ -1239,12 +1249,10 @@ bool WaveTrack::Paste(double t0, const Track *src)
          // We need to insert multiple clips, so split the current clip and
          // move everything to the right, then try to paste again
          if (!IsEmpty(t0, GetEndTime())) {
-            Track *tmp = NULL;
-            Cut(t0, GetEndTime()+1.0/mRate, &tmp);
-            bool bResult = Paste(t0 + insertDuration, tmp);
+            auto tmp = Cut(t0, GetEndTime()+1.0/mRate);
+            bool bResult = Paste(t0 + insertDuration, tmp.get());
             wxASSERT(bResult); // TO DO: Actually handle this.
             wxUnusedVar(bResult);
-            delete tmp;
          }
       } else
       {

@@ -206,8 +206,8 @@ public:
 
    ///! Imports audio
    ///\return import status (see Import.cpp)
-   int Import(TrackFactory *trackFactory, Track ***outTracks,
-      int *outNumTracks, Tags *tags);
+   int Import(TrackFactory *trackFactory, TrackHolders &outTracks,
+      Tags *tags) override;
 
    ///! Reads next audio frame
    ///\return pointer to the stream context structure to which the frame belongs to or NULL on error, or 1 if stream is not to be imported.
@@ -272,7 +272,7 @@ private:
    bool                  mCancelled;     //!< True if importing was canceled by user
    bool                  mStopped;       //!< True if importing was stopped by user
    wxString              mName;
-   WaveTrack           ***mChannels;     //!< 2-dimentional array of WaveTrack's. First dimention - streams, second - channels of a stream. Length is mNumStreams
+   std::list<TrackHolders> mChannels;     //!< 2-dimentional array of WaveTrack's. First dimention - streams, second - channels of a stream. Length is mNumStreams
 #ifdef EXPERIMENTAL_OD_FFMPEG
    bool                  mUsingOD;
 #endif
@@ -348,7 +348,6 @@ FFmpegImportFileHandle::FFmpegImportFileHandle(const wxString & name)
    mCancelled = false;
    mStopped = false;
    mName = name;
-   mChannels = NULL;
    mProgressPos = 0;
    mProgressLen = 1;
 }
@@ -462,10 +461,10 @@ int FFmpegImportFileHandle::GetFileUncompressedBytes()
 }
 
 int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
-              Track ***outTracks,
-              int *outNumTracks,
+              TrackHolders &outTracks,
               Tags *tags)
 {
+   outTracks.clear();
 
    CreateProgress();
 
@@ -484,10 +483,13 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
       else i++;
    }
 
-   mChannels = new WaveTrack **[mNumStreams];
+   mChannels.resize(mNumStreams);
 
-   for (int s = 0; s < mNumStreams; s++)
+   int s = -1;
+   for (auto &stream : mChannels)
    {
+      ++s;
+
       switch (mScs[s]->m_stream->codec->sample_fmt)
       {
          case AV_SAMPLE_FMT_U8:
@@ -505,28 +507,30 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
 
       // There is a possibility that number of channels will change over time, but we do not have WaveTracks for NEW channels. Remember the number of channels and stick to it.
       mScs[s]->m_initialchannels = mScs[s]->m_stream->codec->channels;
-      mChannels[s] = new WaveTrack *[mScs[s]->m_stream->codec->channels];
-      int c;
-      for (c = 0; c < mScs[s]->m_stream->codec->channels; c++)
+      stream.resize(mScs[s]->m_stream->codec->channels);
+      int c = -1;
+      for (auto &channel : stream)
       {
-         mChannels[s][c] = trackFactory->NewWaveTrack(mScs[s]->m_osamplefmt, mScs[s]->m_stream->codec->sample_rate);
+         ++c;
+
+         channel = trackFactory->NewWaveTrack(mScs[s]->m_osamplefmt, mScs[s]->m_stream->codec->sample_rate);
 
          if (mScs[s]->m_stream->codec->channels == 2)
          {
             switch (c)
             {
             case 0:
-               mChannels[s][c]->SetChannel(Track::LeftChannel);
-               mChannels[s][c]->SetLinked(true);
+               channel->SetChannel(Track::LeftChannel);
+               channel->SetLinked(true);
                break;
             case 1:
-               mChannels[s][c]->SetChannel(Track::RightChannel);
+               channel->SetChannel(Track::RightChannel);
                break;
             }
          }
          else
          {
-            mChannels[s][c]->SetChannel(Track::MonoChannel);
+            channel->SetChannel(Track::MonoChannel);
          }
       }
    }
@@ -534,8 +538,11 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
    // Handles the start_time by creating silence. This may or may not be correct.
    // There is a possibility that we should ignore first N milliseconds of audio instead. I do not know.
    /// TODO: Nag FFmpeg devs about start_time until they finally say WHAT is this and HOW to handle it.
-   for (int s = 0; s < mNumStreams; s++)
+   s = -1;
+   for (auto &stream : mChannels)
    {
+      ++s;
+
       int64_t stream_delay = 0;
       if (mScs[s]->m_stream->start_time != int64_t(AV_NOPTS_VALUE) && mScs[s]->m_stream->start_time > 0)
       {
@@ -544,9 +551,12 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
       }
       if (stream_delay != 0)
       {
-         for (int c = 0; c < mScs[s]->m_stream->codec->channels; c++)
+         int c = -1;
+         for (auto &channel : stream)
          {
-            WaveTrack *t = mChannels[s][c];
+            ++c;
+
+            WaveTrack *t = channel.get();
             t->InsertSilence(0,double(stream_delay)/AV_TIME_BASE);
          }
       }
@@ -662,38 +672,18 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
 
    // Something bad happened - destroy everything!
    if (res == eProgressCancelled || res == eProgressFailed)
-   {
-      for (int s = 0; s < mNumStreams; s++)
-      {
-         delete[] mChannels[s];
-      }
-      delete[] mChannels;
-
       return res;
-   }
    //else if (res == 2), we just stop the decoding as if the file has ended
 
-   *outNumTracks = 0;
-   for (int s = 0; s < mNumStreams; s++)
-   {
-      *outNumTracks += mScs[s]->m_initialchannels;
-   }
-
-   // Create NEW tracks
-   *outTracks = new Track *[*outNumTracks];
-
    // Copy audio from mChannels to newly created tracks (destroying mChannels elements in process)
-   int trackindex = 0;
-   for (int s = 0; s < mNumStreams; s++)
+   for (auto &stream : mChannels)
    {
-      for(int c = 0; c < mScs[s]->m_initialchannels; c++)
+      for(auto &channel : stream)
       {
-         mChannels[s][c]->Flush();
-         (*outTracks)[trackindex++] = mChannels[s][c];
+         channel->Flush();
+         outTracks.push_back(std::move(channel));
       }
-      delete[] mChannels[s];
    }
-   delete[] mChannels;
 
    // Save metadata
    WriteMetadata(tags);
@@ -715,7 +705,8 @@ int FFmpegImportFileHandle::WriteData(streamContext *sc)
 {
    // Find the stream index in mScs array
    int streamid = -1;
-   for (int i = 0; i < mNumStreams; i++)
+   auto iter = mChannels.begin();
+   for (int i = 0; i < mNumStreams; ++iter, ++i)
    {
       if (mScs[i] == sc)
       {
@@ -793,9 +784,10 @@ int FFmpegImportFileHandle::WriteData(streamContext *sc)
    }
 
    // Write audio into WaveTracks
-   for (int chn=0; chn < nChannels; chn++)
+   auto iter2 = iter->begin();
+   for (int chn=0; chn < nChannels; ++iter2, ++chn)
    {
-      mChannels[streamid][chn]->Append((samplePtr)tmp[chn],sc->m_osamplefmt,index);
+      iter2->get()->Append((samplePtr)tmp[chn],sc->m_osamplefmt,index);
       free(tmp[chn]);
    }
 

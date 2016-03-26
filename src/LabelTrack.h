@@ -139,7 +139,8 @@ class AUDACITY_DLL_API LabelTrack final : public Track
    double GetStartTime() const override;
    double GetEndTime() const override;
 
-   Track *Duplicate() const override;
+   using Holder = std::unique_ptr<LabelTrack>;
+   Track::Holder Duplicate() const override;
 
    void SetSelected(bool s) override;
 
@@ -152,12 +153,12 @@ class AUDACITY_DLL_API LabelTrack final : public Track
    bool Save(wxTextFile * out, bool overwrite) override;
 #endif
 
-   bool Cut  (double t0, double t1, Track ** dest) override;
+   Track::Holder Cut  (double t0, double t1) override;
    // JKC Do not add the const modifier to Copy(), Clear()
    // or Paste() because then it
    // is no longer recognised as a virtual function matching the
    // one in Track.
-   bool Copy (double t0, double t1, Track ** dest) const override;
+   Track::Holder Copy (double t0, double t1) const override;
    bool Clear(double t0, double t1) override;
    bool Paste(double t, const Track * src) override;
    bool Repeat(double t0, double t1, int n);
@@ -223,7 +224,7 @@ class AUDACITY_DLL_API LabelTrack final : public Track
    bool PasteOver(double t, const Track *src);
 
    // PRL:  These functions were not used because they were not overrides!  Was that right?
-   //bool SplitCut(double b, double e, Track **dest) /* not override */;
+   //Track::Holder SplitCut(double b, double e) /* not override */;
    //bool SplitDelete(double b, double e) /* not override */;
 
    void ShiftLabelsOnInsert(double length, double pt);

@@ -43,10 +43,10 @@
 #include "float_cast.h"
 
 //TODO-MB: wouldn't it make more sense to DELETE the time track after 'mix and render'?
-bool MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
+std::pair<WaveTrack::Holder, WaveTrack::Holder>
+MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
                   double rate, sampleFormat format,
-                  double startTime, double endTime,
-                  WaveTrack **newLeft, WaveTrack **newRight)
+                  double startTime, double endTime)
 {
    // This function was formerly known as "Quick Mix".
    Track *t;
@@ -121,13 +121,13 @@ bool MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
       oneinput = true;
    // only one input track (either 1 mono or one linked stereo pair)
 
-   WaveTrack *mixLeft = trackFactory->NewWaveTrack(format, rate);
+   auto mixLeft = trackFactory->NewWaveTrack(format, rate);
    if (oneinput)
       mixLeft->SetName(usefulIter.First()->GetName()); /* set name of output track to be the same as the sole input track */
    else
       mixLeft->SetName(_("Mix"));
    mixLeft->SetOffset(mixStartTime);
-   WaveTrack *mixRight = 0;
+   decltype(mixLeft) mixRight{};
    if (mono) {
       mixLeft->SetChannel(Track::MonoChannel);
    }
@@ -197,14 +197,13 @@ bool MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
       mixRight->Flush();
    if (updateResult == eProgressCancelled || updateResult == eProgressFailed)
    {
-      delete mixLeft;
-      if (!mono)
-         delete mixRight;
-   } else {
-      *newLeft = mixLeft;
-      if (!mono)
-         *newRight = mixRight;
-
+      return{};
+   }
+   else {
+      return std::make_pair(
+         std::move(mixLeft),
+         std::move(mixRight)
+      );
 #if 0
    int elapsedMS = wxGetElapsedTime();
    double elapsedTime = elapsedMS * 0.001;
@@ -218,7 +217,6 @@ bool MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
    printf("Max number of tracks to mix in real time: %f\n", maxTracks);
 #endif
    }
-   return (updateResult == eProgressSuccess || updateResult == eProgressStopped);
 }
 
 Mixer::WarpOptions::WarpOptions(double min, double max)
