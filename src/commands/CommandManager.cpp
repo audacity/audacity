@@ -811,7 +811,7 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & name,
 {
    {
       // Make a unique_ptr or shared_ptr as appropriate:
-      auto entry = CommandList::value_type{ safenew CommandListEntry() };
+      auto entry = make_movable<CommandListEntry>();
 
       wxString labelPrefix;
       if (!mSubMenuList.empty()) {
