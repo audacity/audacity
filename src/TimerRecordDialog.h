@@ -32,20 +32,20 @@ class TimerRecordPathCtrl;
 
 class TimerRecordPathCtrl final : public wxTextCtrl
 {
-	// MY: Class that inherits from the wxTextCtrl class.
-	// We override AcceptsFocusFromKeyboard in order to add
-	// the text controls to the Tab Order.
+   // MY: Class that inherits from the wxTextCtrl class.
+   // We override AcceptsFocusFromKeyboard in order to add
+   // the text controls to the Tab Order.
 public:
-	TimerRecordPathCtrl(wxWindow * parent, wxWindowID id, const wxString &value
-		= wxEmptyString, const wxPoint &pos = wxDefaultPosition, const wxSize &
-		size = wxDefaultSize, long  style = 0, const wxValidator &  validator =
-		wxDefaultValidator, const wxString &  name = wxTextCtrlNameStr)
-		:wxTextCtrl(parent, id, value, pos, size, style, validator, name) {};
-	~TimerRecordPathCtrl() {};
+   TimerRecordPathCtrl(wxWindow * parent, wxWindowID id, const wxString &value
+      = wxEmptyString, const wxPoint &pos = wxDefaultPosition, const wxSize &
+      size = wxDefaultSize, long  style = 0, const wxValidator &  validator =
+      wxDefaultValidator, const wxString &  name = wxTextCtrlNameStr)
+      :wxTextCtrl(parent, id, value, pos, size, style, validator, name) {};
+   ~TimerRecordPathCtrl() {};
 
-	virtual bool AcceptsFocusFromKeyboard() const override {
-		return true;
-	}
+   virtual bool AcceptsFocusFromKeyboard() const override {
+      return true;
+   }
 };
 
 class TimerRecordDialog final : public wxDialog

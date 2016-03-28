@@ -5196,47 +5196,47 @@ void AudacityProject::ReleaseKeyboard(wxWindow * /* handler */)
 
 bool AudacityProject::ExportFromTimerRecording(wxFileName fnFile, int iFormat, int iSubFormat, int iFilterIndex)
 {
-	Exporter e;
+   Exporter e;
 
-	wxGetApp().SetMissingAliasedFileWarningShouldShow(true);
-	return e.ProcessFromTimerRecording(this, false, 0.0, mTracks->GetEndTime(), fnFile, iFormat, iSubFormat, iFilterIndex);
+   wxGetApp().SetMissingAliasedFileWarningShouldShow(true);
+   return e.ProcessFromTimerRecording(this, false, 0.0, mTracks->GetEndTime(), fnFile, iFormat, iSubFormat, iFilterIndex);
 }
 
 int AudacityProject::GetOpenProjectCount() {
-	return gAudacityProjects.Count();
+   return gAudacityProjects.Count();
 }
 
 bool AudacityProject::IsProjectSaved() {
-	wxString sProjectName = mDirManager->GetProjectName();
-	return (sProjectName != wxT(""));
+   wxString sProjectName = mDirManager->GetProjectName();
+   return (sProjectName != wxT(""));
 }
 
 bool AudacityProject::SaveFromTimerRecording(wxFileName fnFile) {
-	// MY: Will save the project to a new location a-la Save As
-	// and then tidy up after itself.
+   // MY: Will save the project to a new location a-la Save As
+   // and then tidy up after itself.
 
-	wxString sNewFileName = fnFile.GetFullPath();
+   wxString sNewFileName = fnFile.GetFullPath();
 
-	// MY: If the project file already exists then bail out
-	// and send populate the message string (pointer) so
-	// we can tell the user what went wrong.
-	if (wxFileExists(sNewFileName)) {
-		return false;
-	}
+   // MY: If the project file already exists then bail out
+   // and send populate the message string (pointer) so
+   // we can tell the user what went wrong.
+   if (wxFileExists(sNewFileName)) {
+      return false;
+   }
 
-	mFileName = sNewFileName;
-	SetProjectTitle();
+   mFileName = sNewFileName;
+   SetProjectTitle();
 
-	bool bSuccess = Save(false, true, false);
+   bool bSuccess = Save(false, true, false);
 
-	if (bSuccess) {
-		wxGetApp().AddFileToHistory(mFileName);
-	} else
-	{
-		// Reset file name on error
-		mFileName = "";
-		SetProjectTitle();
-	}
+   if (bSuccess) {
+      wxGetApp().AddFileToHistory(mFileName);
+   } else
+   {
+      // Reset file name on error
+      mFileName = "";
+      SetProjectTitle();
+   }
 
-	return bSuccess;
+   return bSuccess;
 }
