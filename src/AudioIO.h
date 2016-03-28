@@ -219,6 +219,7 @@ class AUDACITY_DLL_API AudioIO final {
    bool IsStreamActive(int token);
 
    wxLongLong GetLastPlaybackTime() const { return mLastPlaybackTimeMillis; }
+   AudacityProject *GetOwningProject() const { return mOwningProject; }
 
 #ifdef EXPERIMENTAL_MIDI_OUT
    /** \brief Compute the current PortMidi timestamp time.
