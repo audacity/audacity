@@ -70,7 +70,6 @@ class Shuttle;
 
 class WrappedType;
 
-
 class AUDACITY_DLL_API ShuttleGuiBase /* not final */
 {
 public:

@@ -5193,3 +5193,50 @@ void AudacityProject::ReleaseKeyboard(wxWindow * /* handler */)
 
    return;
 }
+
+bool AudacityProject::ExportFromTimerRecording(wxFileName fnFile, int iFormat, int iSubFormat, int iFilterIndex)
+{
+   Exporter e;
+
+   wxGetApp().SetMissingAliasedFileWarningShouldShow(true);
+   return e.ProcessFromTimerRecording(this, false, 0.0, mTracks->GetEndTime(), fnFile, iFormat, iSubFormat, iFilterIndex);
+}
+
+int AudacityProject::GetOpenProjectCount() {
+   return gAudacityProjects.Count();
+}
+
+bool AudacityProject::IsProjectSaved() {
+   wxString sProjectName = mDirManager->GetProjectName();
+   return (sProjectName != wxT(""));
+}
+
+bool AudacityProject::SaveFromTimerRecording(wxFileName fnFile) {
+   // MY: Will save the project to a new location a-la Save As
+   // and then tidy up after itself.
+
+   wxString sNewFileName = fnFile.GetFullPath();
+
+   // MY: If the project file already exists then bail out
+   // and send populate the message string (pointer) so
+   // we can tell the user what went wrong.
+   if (wxFileExists(sNewFileName)) {
+      return false;
+   }
+
+   mFileName = sNewFileName;
+   SetProjectTitle();
+
+   bool bSuccess = Save(false, true, false);
+
+   if (bSuccess) {
+      wxGetApp().AddFileToHistory(mFileName);
+   } else
+   {
+      // Reset file name on error
+      mFileName = "";
+      SetProjectTitle();
+   }
+
+   return bSuccess;
+}

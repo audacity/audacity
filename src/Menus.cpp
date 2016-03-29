@@ -144,6 +144,18 @@ enum {
    kAlignTogether
 };
 
+// Post Timer Recording Actions
+// Ensure this matches the enum in TimerRecordDialog.cpp
+enum {
+	POST_TIMER_RECORD_STOPPED = -3,
+	POST_TIMER_RECORD_CANCEL_WAIT,
+	POST_TIMER_RECORD_CANCEL,
+	POST_TIMER_RECORD_NOTHING,
+	POST_TIMER_RECORD_CLOSE,
+	POST_TIMER_RECORD_RESTART,
+	POST_TIMER_RECORD_SHUTDOWN
+};
+
 // Define functor subclasses that dispatch to the correct call sequence on
 // member functions of AudacityProject
 
@@ -6309,24 +6321,74 @@ void AudacityProject::OnNewTimeTrack()
 
 void AudacityProject::OnTimerRecord()
 {
+	// MY: Due to improvements in how Timer Recording saves and/or exports
+	// it is now safer to disable Timer Recording when there is more than
+	// one open project.
+	if (GetOpenProjectCount() > 1) {
+		wxMessageBox(_("Timer Recording cannot be used with more than one open project.\n\nPlease close any additional projects and try again."), _("Timer Recording"), wxICON_INFORMATION | wxOK);
+		return;
+	}
+
+	// MY: If the project has unsaved changes then we no longer allow access
+	// to Timer Recording.  This decision has been taken as the safest approach
+	// preventing issues surrounding "dirty" projects when Automatic Save/Export
+	// is used in Timer Recording.
+	if (GetUndoManager()->UnsavedChanges()) {
+		wxMessageBox(_("Timer Recording cannot be used while you have unsaved changes.\n\nPlease save or close this project and try again."), _("Timer Recording"), wxICON_INFORMATION | wxOK);
+		return;
+	}
+	// We use this variable to display "Current Project" in the Timer Recording save project field
+	bool bProjectSaved = IsProjectSaved();
+
    //we break the prompting and waiting dialogs into two sections
    //because they both give the user a chance to click cancel
    //and therefore remove the newly inserted track.
 
-   TimerRecordDialog dialog(this /* parent */ );
+	TimerRecordDialog dialog(this, bProjectSaved); /* parent, project saved? */
    int modalResult = dialog.ShowModal();
    if (modalResult == wxID_CANCEL)
    {
       // Cancelled before recording - don't need to do anyting.
    }
-   else if(!dialog.RunWaitDialog())
+   else
    {
-      //RunWaitDialog() shows the "wait for start" as well as "recording" dialog
-      //if it returned false it means the user cancelled while the recording, so throw out the fresh track.
-      //However, we can't undo it here because the PushState() is called in TrackPanel::OnTimer(),
-      //which is blocked by this function.
-      //so instead we mark a flag to undo it there.
-      mTimerRecordCanceled = true;
+	   int iTimerRecordingOutcome = dialog.RunWaitDialog();
+	   switch (iTimerRecordingOutcome) {
+	   case POST_TIMER_RECORD_CANCEL_WAIT:
+		   // Canceled on the wait dialog
+		   if (GetUndoManager()->UndoAvailable()) {
+			   // MY: We need to roll back what changes we have made here
+			   OnUndo();
+		   }
+	   break;
+	   case POST_TIMER_RECORD_CANCEL:
+		   // RunWaitDialog() shows the "wait for start" as well as "recording" dialog
+		   // if it returned POST_TIMER_RECORD_CANCEL it means the user cancelled while the recording, so throw out the fresh track.
+		   // However, we can't undo it here because the PushState() is called in TrackPanel::OnTimer(),
+		   // which is blocked by this function.
+		   // so instead we mark a flag to undo it there.
+		   mTimerRecordCanceled = true;
+	   break;
+	   case POST_TIMER_RECORD_NOTHING:
+		   // No action required
+	   break;
+	   case POST_TIMER_RECORD_CLOSE:
+		   // Quit Audacity
+		   exit(0);
+	   break;
+	   case POST_TIMER_RECORD_RESTART:
+		   // Restart System
+#ifdef __WINDOWS__
+		   system("shutdown /r /f /t 30");
+#endif
+	   break;
+	   case POST_TIMER_RECORD_SHUTDOWN:
+		   // Shutdown System
+#ifdef __WINDOWS__
+		   system("shutdown /s /f /t 30");
+#endif
+	   break;
+	   }
    }
 }
 
