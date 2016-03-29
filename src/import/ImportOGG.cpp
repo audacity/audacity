@@ -124,8 +124,8 @@ public:
 
    wxString GetFileDescription();
    int GetFileUncompressedBytes();
-   int Import(TrackFactory *trackFactory, Track ***outTracks,
-              int *outNumTracks, Tags *tags);
+   int Import(TrackFactory *trackFactory, TrackHolders &outTracks,
+              Tags *tags) override;
 
    wxInt32 GetStreamCount()
    {
@@ -155,7 +155,7 @@ private:
 
    int            *mStreamUsage;
    wxArrayString  *mStreamInfo;
-   WaveTrack    ***mChannels;
+   std::list<TrackHolders> mChannels;
 
    sampleFormat   mFormat;
 };
@@ -233,49 +233,55 @@ int OggImportFileHandle::GetFileUncompressedBytes()
    return 0;
 }
 
-int OggImportFileHandle::Import(TrackFactory *trackFactory, Track ***outTracks,
-                                int *outNumTracks, Tags *tags)
+int OggImportFileHandle::Import(TrackFactory *trackFactory, TrackHolders &outTracks,
+                                Tags *tags)
 {
+   outTracks.clear();
+
    wxASSERT(mFile->IsOpened());
 
    CreateProgress();
 
    //Number of streams used may be less than mVorbisFile->links,
    //but this way bitstream matches array index.
-   mChannels = new WaveTrack **[mVorbisFile->links];
+   mChannels.resize(mVorbisFile->links);
 
-   int i,c;
-   for (i = 0; i < mVorbisFile->links; i++)
+   int i = -1;
+   for (auto &link: mChannels)
    {
+      ++i;
+
       //Stream is not used
       if (mStreamUsage[i] == 0)
       {
          //This is just a padding to keep bitstream number and
          //array indices matched.
-         mChannels[i] = NULL;
          continue;
       }
 
       vorbis_info *vi = ov_info(mVorbisFile, i);
 
-      mChannels[i] = new WaveTrack *[vi->channels];
+      link.resize(vi->channels);
 
-      for (c = 0; c < vi->channels; c++) {
-         mChannels[i][c] = trackFactory->NewWaveTrack(mFormat, vi->rate);
+      int c = - 1;
+      for (auto &channel : link) {
+         ++c;
+
+         channel = trackFactory->NewWaveTrack(mFormat, vi->rate);
 
          if (vi->channels == 2) {
             switch (c) {
          case 0:
-            mChannels[i][c]->SetChannel(Track::LeftChannel);
-            mChannels[i][c]->SetLinked(true);
+            channel->SetChannel(Track::LeftChannel);
+            channel->SetLinked(true);
             break;
          case 1:
-            mChannels[i][c]->SetChannel(Track::RightChannel);
+            channel->SetChannel(Track::RightChannel);
             break;
             }
          }
          else {
-            mChannels[i][c]->SetChannel(Track::MonoChannel);
+            channel->SetChannel(Track::MonoChannel);
          }
       }
    }
@@ -340,10 +346,13 @@ int OggImportFileHandle::Import(TrackFactory *trackFactory, Track ***outTracks,
       samplesRead = bytesRead / mVorbisFile->vi[bitstream].channels / sizeof(short);
 
       /* give the data to the wavetracks */
+      auto iter = mChannels.begin();
+      std::advance(iter, bitstream);
       if (mStreamUsage[bitstream] != 0)
       {
-         for (c = 0; c < mVorbisFile->vi[bitstream].channels; c++)
-            mChannels[bitstream][c]->Append((char *)(mainBuffer + c),
+         auto iter2 = iter->begin();
+         for (int c = 0; c < mVorbisFile->vi[bitstream].channels; ++iter2, ++c)
+            iter2->get()->Append((char *)(mainBuffer + c),
             int16Sample,
             samplesRead,
             mVorbisFile->vi[bitstream].channels);
@@ -365,48 +374,21 @@ int OggImportFileHandle::Import(TrackFactory *trackFactory, Track ***outTracks,
      res = eProgressFailed;
 
    if (res == eProgressFailed || res == eProgressCancelled) {
-      for (i = 0; i < mVorbisFile->links; i++)
-      {
-         if (mChannels[i])
-         {
-            for(c = 0; c < mVorbisFile->vi[bitstream].channels; c++) {
-               if (mChannels[i][c])
-                  delete mChannels[i][c];
-            }
-            delete[] mChannels[i];
-         }
-      }
-      delete[] mChannels;
       return res;
    }
 
-   *outNumTracks = 0;
-   for (int s = 0; s < mVorbisFile->links; s++)
+   for (auto &link : mChannels)
    {
-      if (mStreamUsage[s] != 0)
-         *outNumTracks += mVorbisFile->vi[s].channels;
-   }
-
-   *outTracks = new Track *[*outNumTracks];
-
-   int trackindex = 0;
-   for (i = 0; i < mVorbisFile->links; i++)
-   {
-      if (mChannels[i])
-      {
-         for (c = 0; c < mVorbisFile->vi[i].channels; c++) {
-            mChannels[i][c]->Flush();
-            (*outTracks)[trackindex++] = mChannels[i][c];
-         }
-         delete[] mChannels[i];
+      for (auto &channel : link) {
+         channel->Flush();
+         outTracks.push_back(std::move(channel));
       }
    }
-   delete[] mChannels;
 
    //\todo { Extract comments from each stream? }
    if (mVorbisFile->vc[0].comments > 0) {
       tags->Clear();
-      for (c = 0; c < mVorbisFile->vc[0].comments; c++) {
+      for (int c = 0; c < mVorbisFile->vc[0].comments; c++) {
          wxString comment = UTF8CTOWX(mVorbisFile->vc[0].user_comments[c]);
          wxString name = comment.BeforeFirst(wxT('='));
          wxString value = comment.AfterFirst(wxT('='));

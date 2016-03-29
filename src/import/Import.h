@@ -11,6 +11,7 @@
 #ifndef _IMPORT_
 #define _IMPORT_
 
+#include "ImportRaw.h" // defines TrackHolders
 #include <vector>
 #include <wx/arrstr.h>
 #include <wx/string.h>
@@ -137,11 +138,10 @@ public:
     */
     ExtImportItem *CreateDefaultImportItem();
 
-   // returns number of tracks imported
-   // if zero, the import failed and errorMessage will be set.
-   int Import(const wxString &fName,
+   // if false, the import failed and errorMessage will be set.
+   bool Import(const wxString &fName,
               TrackFactory *trackFactory,
-              Track *** tracks,
+              TrackHolders &tracks,
               Tags *tags,
               wxString &errorMessage);
 

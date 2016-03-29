@@ -88,9 +88,9 @@ int LabelTrack::mTextHeight;
 
 int LabelTrack::mFontHeight=-1;
 
-LabelTrack *TrackFactory::NewLabelTrack()
+LabelTrack::Holder TrackFactory::NewLabelTrack()
 {
-   return new LabelTrack(mDirManager);
+   return std::make_unique<LabelTrack>(mDirManager);
 }
 
 LabelTrack::LabelTrack(DirManager * projDirManager):
@@ -1136,9 +1136,9 @@ double LabelTrack::GetEndTime() const
    return end;
 }
 
-Track *LabelTrack::Duplicate() const
+Track::Holder LabelTrack::Duplicate() const
 {
-   return new LabelTrack(*this);
+   return std::make_unique<LabelTrack>( *this );
 }
 
 void LabelTrack::SetSelected(bool s)
@@ -2398,33 +2398,36 @@ bool LabelTrack::Save(wxTextFile * out, bool overwrite)
 }
 #endif
 
-bool LabelTrack::Cut(double t0, double t1, Track **dest)
+Track::Holder LabelTrack::Cut(double t0, double t1)
 {
-   if (!Copy(t0, t1, dest))
-      return false;
+   auto tmp = Copy(t0, t1);
+   if (!tmp)
+      return{};
    if (!Clear(t0, t1))
-      return false;
+      return{};
 
-   return true;
+   return std::move(tmp);
 }
 
 #if 0
-bool LabelTrack::SplitCut(double t0, double t1, Track ** dest)
+Track::Holder LabelTrack::SplitCut(double t0, double t1)
 {
    // SplitCut() == Copy() + SplitDelete()
 
-   if (!Copy(t0, t1, dest))
-      return false;
+   Track::Holder tmp = Copy(t0, t1);
+   if (!tmp)
+      return {};
    if (!SplitDelete(t0, t1))
-      return false;
+      return {};
 
-   return true;
+   return std::move(tmp);
 }
 #endif
 
-bool LabelTrack::Copy(double t0, double t1, Track ** dest) const
+Track::Holder LabelTrack::Copy(double t0, double t1) const
 {
-   *dest = new LabelTrack(GetDirManager());
+   auto tmp = std::make_unique<LabelTrack>(GetDirManager());
+   const auto lt = static_cast<LabelTrack*>(tmp.get());
    int len = mLabels.Count();
 
    for (int i = 0; i < len; i++) {
@@ -2437,14 +2440,14 @@ bool LabelTrack::Copy(double t0, double t1, Track ** dest) const
                             label.getT0() - t0,
                             label.getT1() - t0,
                             label.title);
-         ((LabelTrack *) (*dest))->mLabels.Add(l);
+         lt->mLabels.Add(l);
       }
       else if (relation == LabelStruct::WITHIN_LABEL) {
          const LabelStruct &label = *mLabels[i];
          LabelStruct *l =
             new LabelStruct(label.selectedRegion, 0, t1-t0,
                             label.title);
-         ((LabelTrack *) (*dest))->mLabels.Add(l);
+         lt->mLabels.Add(l);
       }
       else if (relation == LabelStruct::BEGINS_IN_LABEL) {
          const LabelStruct &label = *mLabels[i];
@@ -2453,7 +2456,7 @@ bool LabelTrack::Copy(double t0, double t1, Track ** dest) const
                             0,
                             label.getT1() - t0,
                             label.title);
-         ((LabelTrack *) (*dest))->mLabels.Add(l);
+         lt->mLabels.Add(l);
       }
       else if (relation == LabelStruct::ENDS_IN_LABEL) {
          const LabelStruct &label = *mLabels[i];
@@ -2462,12 +2465,12 @@ bool LabelTrack::Copy(double t0, double t1, Track ** dest) const
                             label.getT0() - t0,
                             t1 - t0,
                             label.title);
-         ((LabelTrack *) (*dest))->mLabels.Add(l);
+         lt->mLabels.Add(l);
       }
    }
-   ((LabelTrack *) (*dest))->mClipLen = (t1 - t0);
+   lt->mClipLen = (t1 - t0);
 
-   return true;
+   return std::move(tmp);
 }
 
 

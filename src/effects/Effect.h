@@ -16,6 +16,7 @@
 #include "../MemoryX.h"
 #include <set>
 
+#include "../MemoryX.h"
 #include <wx/bmpbuttn.h>
 #include <wx/dynarray.h>
 #include <wx/intl.h>
@@ -36,6 +37,8 @@ class wxWindow;
 #include "../Shuttle.h"
 #include "../Internat.h"
 #include "../widgets/ProgressDialog.h"
+
+#include "../Track.h"
 
 class ShuttleGui;
 
@@ -409,7 +412,7 @@ protected:
    private:
       Effect *mpEffect{};
       LabelTrack *mpTrack{};
-      const LabelTrack *mpOrigTrack{};
+      movable_ptr<Track> mpOrigTrack{};
    };
 
    // Set name to given value if that is not empty, else use default name
@@ -422,7 +425,7 @@ protected:
    void ReplaceProcessedTracks(const bool bGoodResult);
 
    // Use this to append a NEW output track.
-   void AddToOutputTracks(Track *t);
+   Track *AddToOutputTracks(std::unique_ptr<Track> &&t);
 
 //
 // protected data

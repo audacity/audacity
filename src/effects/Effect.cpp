@@ -1592,8 +1592,7 @@ bool Effect::ProcessTrack(int count,
 
    int chans = wxMin(mNumAudioOut, mNumChannels);
 
-   WaveTrack *genLeft = NULL;
-   WaveTrack *genRight = NULL;
+   std::unique_ptr<WaveTrack> genLeft, genRight;
    sampleCount genLength = 0;
    bool isGenerator = GetType() == EffectTypeGenerate;
    bool isProcessor = GetType() == EffectTypeProcess;
@@ -1719,16 +1718,6 @@ bool Effect::ProcessTrack(int count,
       }
       catch(...)
       {
-         if (genLeft)
-         {
-            delete genLeft;
-         }
-
-         if (genRight)
-         {
-            delete genRight;
-         }
-
          return false;
       }
       wxASSERT(processed == curBlockSize);
@@ -1886,14 +1875,12 @@ bool Effect::ProcessTrack(int count,
       // Transfer the data from the temporary tracks to the actual ones
       genLeft->Flush();
       // mT1 gives us the NEW selection. We want to replace up to GetSel1().
-      left->ClearAndPaste(mT0, p->GetSel1(), genLeft, true, true, &warper);
-      delete genLeft;
+      left->ClearAndPaste(mT0, p->GetSel1(), genLeft.get(), true, true, &warper);
 
       if (genRight)
       {
          genRight->Flush();
-         right->ClearAndPaste(mT0, mT1, genRight, true, true, &warper);
-         delete genRight;
+         right->ClearAndPaste(mT0, mT1, genRight.get(), true, true, &warper);
       }
    }
 
@@ -2104,7 +2091,7 @@ void Effect::CopyInputTracks(int trackType)
    mIMap.Clear();
    mOMap.Clear();
 
-   mOutputTracks = new TrackList(true);
+   mOutputTracks = new TrackList();
    mOutputTracksType = trackType;
 
    //iterate over tracks of type trackType (All types if Track::All)
@@ -2117,29 +2104,28 @@ void Effect::CopyInputTracks(int trackType)
       if (aTrack->GetSelected() ||
             (trackType == Track::All && aTrack->IsSyncLockSelected()))
       {
-         Track *o = aTrack->Duplicate();
-         mOutputTracks->Add(o);
+         Track *o = mOutputTracks->Add(aTrack->Duplicate());
          mIMap.Add(aTrack);
          mOMap.Add(o);
       }
    }
 }
 
-void Effect::AddToOutputTracks(Track *t)
+Track *Effect::AddToOutputTracks(std::unique_ptr<Track> &&t)
 {
-   mOutputTracks->Add(t);
    mIMap.Add(NULL);
-   mOMap.Add(t);
+   mOMap.Add(t.get());
+   return mOutputTracks->Add(std::move(t));
 }
 
 Effect::AddedAnalysisTrack::AddedAnalysisTrack(Effect *pEffect, const wxString &name)
    : mpEffect(pEffect)
 {
-   std::unique_ptr < LabelTrack > pTrack{ pEffect->mFactory->NewLabelTrack() };
+   LabelTrack::Holder pTrack{ pEffect->mFactory->NewLabelTrack() };
    mpTrack = pTrack.get();
    if (!name.empty())
       pTrack->SetName(name);
-   pEffect->mTracks->Add(pTrack.release());
+   pEffect->mTracks->Add(std::move(pTrack));
 }
 
 Effect::AddedAnalysisTrack::AddedAnalysisTrack(AddedAnalysisTrack &&that)
@@ -2158,7 +2144,7 @@ Effect::AddedAnalysisTrack::~AddedAnalysisTrack()
 {
    if (mpEffect) {
       // not committed -- DELETE the label track
-      mpEffect->mTracks->Remove(mpTrack, true);
+      mpEffect->mTracks->Remove(mpTrack);
    }
 }
 
@@ -2171,14 +2157,11 @@ auto Effect::AddAnalysisTrack(const wxString &name) -> std::shared_ptr<AddedAnal
 Effect::ModifiedAnalysisTrack::ModifiedAnalysisTrack
    (Effect *pEffect, const LabelTrack *pOrigTrack, const wxString &name)
    : mpEffect(pEffect)
-   , mpOrigTrack(pOrigTrack)
 {
-   Track *newTrack{};
-
    // copy LabelTrack here, so it can be undone on cancel
-   pOrigTrack->Copy(pOrigTrack->GetStartTime(), pOrigTrack->GetEndTime(), &newTrack);
+   auto newTrack = pOrigTrack->Copy(pOrigTrack->GetStartTime(), pOrigTrack->GetEndTime());
 
-   mpTrack = static_cast<LabelTrack*>(newTrack);
+   mpTrack = static_cast<LabelTrack*>(newTrack.get());
 
    // Why doesn't LabelTrack::Copy complete the job? :
    mpTrack->SetOffset(pOrigTrack->GetStartTime());
@@ -2187,14 +2170,21 @@ Effect::ModifiedAnalysisTrack::ModifiedAnalysisTrack
 
    // mpOrigTrack came from mTracks which we own but expose as const to subclasses
    // So it's okay that we cast it back to const
-   pEffect->mTracks->Replace(const_cast<LabelTrack*>(mpOrigTrack), mpTrack, false);
+   mpOrigTrack =
+      pEffect->mTracks->Replace(const_cast<LabelTrack*>(pOrigTrack),
+#ifdef __AUDACITY_OLD_STD__
+      std::shared_ptr<Track>(newTrack.release())
+#else
+      std::move(newTrack)
+#endif
+   );
 }
 
 Effect::ModifiedAnalysisTrack::ModifiedAnalysisTrack(ModifiedAnalysisTrack &&that)
 {
    mpEffect = that.mpEffect;
    mpTrack = that.mpTrack;
-   mpOrigTrack = that.mpOrigTrack;
+   mpOrigTrack = std::move(that.mpOrigTrack);
    that.Commit();
 }
 
@@ -2209,7 +2199,7 @@ Effect::ModifiedAnalysisTrack::~ModifiedAnalysisTrack()
       // not committed -- DELETE the label track
       // mpOrigTrack came from mTracks which we own but expose as const to subclasses
       // So it's okay that we cast it back to const
-      mpEffect->mTracks->Replace(mpTrack, const_cast<LabelTrack*>(mpOrigTrack), true);
+      mpEffect->mTracks->Replace(mpTrack, std::move(mpOrigTrack));
    }
 }
 
@@ -2227,7 +2217,7 @@ void Effect::ReplaceProcessedTracks(const bool bGoodResult)
 
    if (!bGoodResult) {
       // Processing failed or was cancelled so throw away the processed tracks.
-      mOutputTracks->Clear(true); // true => DELETE the tracks
+      mOutputTracks->Clear();
 
       // Reset map
       mIMap.Clear();
@@ -2237,19 +2227,19 @@ void Effect::ReplaceProcessedTracks(const bool bGoodResult)
       return;
    }
 
-   TrackListIterator iterOut(mOutputTracks);
+   auto iterOut = mOutputTracks->begin(), iterEnd = mOutputTracks->end();
 
-   Track *x;
    size_t cnt = mOMap.GetCount();
    size_t i = 0;
 
-   for (Track *o = iterOut.First(); o; o = x, i++) {
+   for (; iterOut != iterEnd; ++i) {
+      ListOfTracks::value_type o = std::move(*iterOut);
       // If tracks were removed from mOutputTracks, then there will be
       // tracks in the map that must be removed from mTracks.
-      while (i < cnt && mOMap[i] != o) {
+      while (i < cnt && mOMap[i] != o.get()) {
          Track *t = (Track *) mIMap[i];
          if (t) {
-            mTracks->Remove(t, true);
+            mTracks->Remove(t);
          }
          i++;
       }
@@ -2258,28 +2248,26 @@ void Effect::ReplaceProcessedTracks(const bool bGoodResult)
       wxASSERT(i < cnt);
 
       // Remove the track from the output list...don't DELETE it
-      x = iterOut.RemoveCurrent(false);
+      iterOut = mOutputTracks->erase(iterOut);
 
       Track *t = (Track *) mIMap[i];
       if (t == NULL)
       {
          // This track is a NEW addition to output tracks; add it to mTracks
-         mTracks->Add(o);
+         mTracks->Add(std::move(o));
       }
       else
       {
          // Replace mTracks entry with the NEW track
-         mTracks->Replace(t, o, false);
+         WaveTrack *newTrack = static_cast<WaveTrack*>(o.get());
+         mTracks->Replace(t, std::move(o));
 
          // Swap the wavecache track the ondemand task uses, since now the NEW
          // one will be kept in the project
          if (ODManager::IsInstanceCreated()) {
             ODManager::Instance()->ReplaceWaveTrack((WaveTrack *)t,
-                                                    (WaveTrack *)o);
+                                                    newTrack);
          }
-
-         // No longer need the original track
-         delete t;
       }
    }
 
@@ -2288,7 +2276,7 @@ void Effect::ReplaceProcessedTracks(const bool bGoodResult)
    while (i < cnt) {
       Track *t = (Track *) mIMap[i];
       if (t) {
-         mTracks->Remove((Track *)mIMap[i], true);
+         mTracks->Remove((Track *)mIMap[i]);
       }
       i++;
    }
@@ -2298,7 +2286,7 @@ void Effect::ReplaceProcessedTracks(const bool bGoodResult)
    mOMap.Clear();
 
    // Make sure we processed everything
-   wxASSERT(iterOut.First() == NULL);
+   wxASSERT(mOutputTracks->empty());
 
    // The output list is no longer needed
    delete mOutputTracks;
@@ -2566,8 +2554,6 @@ void Effect::Preview(bool dryOnly)
       return;
 
    bool success = true;
-   WaveTrack *mixLeft = NULL;
-   WaveTrack *mixRight = NULL;
    double oldT0 = mT0;
    double oldT1 = mT1;
    // Most effects should stop at t1.
@@ -2583,9 +2569,10 @@ void Effect::Preview(bool dryOnly)
    // Linear Effect preview optimised by pre-mixing to one track.
    // Generators need to generate per track.
    if (mIsLinearEffect && !isGenerator) {
-      success = ::MixAndRender(saveTracks, mFactory, rate, floatSample, mT0, t1,
-                               &mixLeft, &mixRight);
-      if (!success) {
+      auto results = ::MixAndRender(saveTracks, mFactory, rate, floatSample, mT0, t1);
+      auto &mixLeft = results.first;
+      auto &mixRight = results.second;
+      if (!mixLeft) {
          delete mTracks;
          mTracks = saveTracks;
          return;
@@ -2595,12 +2582,12 @@ void Effect::Preview(bool dryOnly)
       mixLeft->InsertSilence(0.0, mT0);
       mixLeft->SetSelected(true);
       mixLeft->SetDisplay(WaveTrack::NoDisplay);
-      mTracks->Add(mixLeft);
+      mTracks->Add(std::move(mixLeft));
       if (mixRight) {
          mixRight->Offset(-mixRight->GetStartTime());
          mixRight->InsertSilence(0.0, mT0);
          mixRight->SetSelected(true);
-         mTracks->Add(mixRight);
+         mTracks->Add(std::move(mixRight));
       }
    }
    else {
@@ -2608,13 +2595,12 @@ void Effect::Preview(bool dryOnly)
       WaveTrack *src = (WaveTrack *) iter.First();
       while (src)
       {
-         WaveTrack *dest;
          if (src->GetSelected() || mPreviewWithNotSelected) {
-            src->Copy(mT0, t1, (Track **) &dest);
+            auto dest = src->Copy(mT0, t1);
             dest->InsertSilence(0.0, mT0);
             dest->SetSelected(src->GetSelected());
-            dest->SetDisplay(WaveTrack::NoDisplay);
-            mTracks->Add(dest);
+            static_cast<WaveTrack*>(dest.get())->SetDisplay(WaveTrack::NoDisplay);
+            mTracks->Add(std::move(dest));
          }
          src = (WaveTrack *) iter.Next();
       }
@@ -2694,7 +2680,7 @@ void Effect::Preview(bool dryOnly)
    delete mOutputTracks;
    mOutputTracks = NULL;
 
-   mTracks->Clear(true); // true => DELETE the tracks
+   mTracks->Clear();
    delete mTracks;
 
    mTracks = saveTracks;

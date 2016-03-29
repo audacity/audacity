@@ -86,7 +86,7 @@ BEGIN_EVENT_TABLE(LabelDialog, wxDialog)
 END_EVENT_TABLE()
 
 LabelDialog::LabelDialog(wxWindow *parent,
-                         DirManager *dirmanager,
+                         TrackFactory &factory,
                          TrackList *tracks,
                          ViewInfo &viewinfo,
                          double rate,
@@ -97,7 +97,7 @@ LabelDialog::LabelDialog(wxWindow *parent,
            wxDefaultPosition,
            wxSize(800, 600),
            wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER),
-  mDirManager(dirmanager),
+  mFactory(factory),
   mTracks(tracks),
   mViewInfo(&viewinfo),
   mRate(rate),
@@ -319,9 +319,9 @@ bool LabelDialog::TransferDataFromWindow()
       wxString name = mTrackNames[tndx + 1].AfterFirst(wxT('-')).Mid(1);
 
       // Create the NEW track and add to track list
-      LabelTrack *newTrack = new LabelTrack(mDirManager);
+      auto newTrack = mFactory.NewLabelTrack();
       newTrack->SetName(name);
-      mTracks->Add(newTrack);
+      mTracks->Add(std::move(newTrack));
       tndx++;
    }
 
@@ -564,14 +564,13 @@ void LabelDialog::OnImport(wxCommandEvent & WXUNUSED(event))
       else {
          // Create a temporary label track and load the labels
          // into it
-         LabelTrack *lt = new LabelTrack(mDirManager);
+         auto lt = mFactory.NewLabelTrack();
          lt->Import(f);
 
          // Add the labesls to our collection
-         AddLabels(lt);
+         AddLabels(lt.get());
 
          // Done with the temporary track
-         delete lt;
      }
 
       // Repopulate the grid
@@ -632,7 +631,7 @@ void LabelDialog::OnExport(wxCommandEvent & WXUNUSED(event))
    }
 
    // Transfer our collection to a temporary label track
-   LabelTrack *lt = new LabelTrack(mDirManager);
+   auto lt = mFactory.NewLabelTrack();
    int i;
 
    for (i = 0; i < cnt; i++) {
@@ -643,7 +642,6 @@ void LabelDialog::OnExport(wxCommandEvent & WXUNUSED(event))
 
    // Export them and clean
    lt->Export(f);
-   delete lt;
 
 #ifdef __WXMAC__
    f.Write(wxTextFileType_Mac);

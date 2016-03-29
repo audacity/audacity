@@ -288,7 +288,7 @@ bool EffectPaulstretch::ProcessOne(WaveTrack *track,double t0,double t1,int coun
    double adjust_amount=(double)len/((double)len-((double)stretch_buf_size*2.0));
    amount=1.0+(amount-1.0)*adjust_amount;
 
-   WaveTrack * outputTrack = mFactory->NewWaveTrack(track->GetSampleFormat(),track->GetRate());
+   auto outputTrack = mFactory->NewWaveTrack(track->GetSampleFormat(),track->GetRate());
 
    PaulStretch stretch(amount,stretch_buf_size,track->GetRate());
 
@@ -347,14 +347,13 @@ bool EffectPaulstretch::ProcessOne(WaveTrack *track,double t0,double t1,int coun
    outputTrack->Flush();
 
    track->Clear(t0,t1);
-   bool success = track->Paste(t0,outputTrack);
+   bool success = track->Paste(t0, outputTrack.get());
    if (!cancelled && success){
       m_t1 = mT0 + outputTrack->GetEndTime();
    }
 
    delete []buffer0;
 
-   delete outputTrack;
    return !cancelled;
 };
 

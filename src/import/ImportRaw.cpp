@@ -93,9 +93,10 @@ class ImportRawDialog final : public wxDialog {
    DECLARE_EVENT_TABLE()
 };
 
-int ImportRaw(wxWindow *parent, const wxString &fileName,
-              TrackFactory *trackFactory, Track ***outTracks)
+void ImportRaw(wxWindow *parent, const wxString &fileName,
+              TrackFactory *trackFactory, TrackHolders &outTracks)
 {
+   outTracks.clear();
    int encoding = 0; // Guess Format
    int numChannels = 0;
    sampleFormat format;
@@ -130,7 +131,7 @@ int ImportRaw(wxWindow *parent, const wxString &fileName,
    ImportRawDialog dlog(parent, encoding, numChannels, (int)offset, rate);
    dlog.ShowModal();
    if (!dlog.GetReturnCode())
-      return false;
+      return;
 
    encoding = dlog.mEncoding;
    numChannels = dlog.mChannels;
@@ -158,7 +159,7 @@ int ImportRaw(wxWindow *parent, const wxString &fileName,
       sf_error_str((SNDFILE *)NULL, str, 1000);
       printf("%s\n", str);
 
-      return 0;
+      return;
    }
 
    result = sf_command(sndFile, SFC_SET_RAW_START_OFFSET, &offset, sizeof(offset));
@@ -187,30 +188,32 @@ int ImportRaw(wxWindow *parent, const wxString &fileName,
        sf_subtype_more_than_16_bits(encoding))
       format = floatSample;
 
-   WaveTrack **channels = new WaveTrack *[numChannels];
+   TrackHolders channels(numChannels);
 
-   int c;
-   for (c = 0; c < numChannels; c++) {
-      channels[c] = trackFactory->NewWaveTrack(format, rate);
+   auto iter = channels.begin();
+   for (int c = 0; c < numChannels; ++iter, ++c) {
+      const auto channel =
+         (*iter = trackFactory->NewWaveTrack(format, rate)).get();
 
       if (numChannels > 1)
          switch (c) {
          case 0:
-            channels[c]->SetChannel(Track::LeftChannel);
+            channel->SetChannel(Track::LeftChannel);
             break;
          case 1:
-            channels[c]->SetChannel(Track::RightChannel);
+            channel->SetChannel(Track::RightChannel);
             break;
          default:
-            channels[c]->SetChannel(Track::MonoChannel);
+            channel->SetChannel(Track::MonoChannel);
          }
    }
 
+   const auto firstChannel = channels.begin()->get();
    if (numChannels == 2) {
-      channels[0]->SetLinked(true);
+      firstChannel->SetLinked(true);
    }
 
-   sampleCount maxBlockSize = channels[0]->GetMaxBlockSize();
+   sampleCount maxBlockSize = firstChannel->GetMaxBlockSize();
    int updateResult = eProgressSuccess;
 
    SampleBuffer srcbuffer(maxBlockSize * numChannels, format);
@@ -238,7 +241,8 @@ int ImportRaw(wxWindow *parent, const wxString &fileName,
          block = sf_readf_float(sndFile, (float *)srcbuffer.ptr(), block);
 
       if (block) {
-         for(c=0; c<numChannels; c++) {
+         auto iter = channels.begin();
+         for(int c=0; c<numChannels; ++iter, ++c) {
             if (format==int16Sample) {
                for(int j=0; j<block; j++)
                   ((short *)buffer.ptr())[j] =
@@ -250,7 +254,7 @@ int ImportRaw(wxWindow *parent, const wxString &fileName,
                      ((float *)srcbuffer.ptr())[numChannels*j+c];
             }
 
-            channels[c]->Append(buffer.ptr(), format, block);
+            iter->get()->Append(buffer.ptr(), format, block);
          }
          framescompleted += block;
       }
@@ -269,19 +273,13 @@ int ImportRaw(wxWindow *parent, const wxString &fileName,
      res = eProgressFailed;
 
    if (res == eProgressFailed || res == eProgressCancelled) {
-      for (c = 0; c < numChannels; c++)
-         delete channels[c];
-      delete[] channels;
-
       // It's a shame we can't return proper error code
-      return 0;
+      return;
    }
 
-   for (c = 0; c < numChannels; c++)
-      channels[c]->Flush();
-   *outTracks = (Track **)channels;
-
-   return numChannels;
+   for (const auto &channel : channels)
+      channel->Flush();
+   outTracks.swap(channels);
 }
 
 //

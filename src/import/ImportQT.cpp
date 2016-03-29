@@ -152,9 +152,8 @@ class QTImportFileHandle final : public ImportFileHandle
    }
 
    int Import(TrackFactory *trackFactory,
-              Track ***outTracks,
-              int *outNumTracks,
-              Tags *tags);
+              TrackHolders &outTracks,
+              Tags *tags) override;
 
  private:
    void AddMetadata(Tags *tags);
@@ -225,10 +224,11 @@ int QTImportFileHandle::GetFileUncompressedBytes()
 }
 
 int QTImportFileHandle::Import(TrackFactory *trackFactory,
-                               Track ***outTracks,
-                               int *outNumTracks,
+                               TrackHolders &outTracks,
                                Tags *tags)
 {
+   outTracks.clear();
+
    OSErr err = noErr;
    MovieAudioExtractionRef maer = NULL;
    int updateResult = eProgressSuccess;
@@ -318,7 +318,7 @@ int QTImportFileHandle::Import(TrackFactory *trackFactory,
          calloc(1, offsetof(AudioBufferList, mBuffers) + (sizeof(AudioBuffer) * numchan));
       abl->mNumberBuffers = numchan;
    
-      WaveTrack **channels = new WaveTrack *[numchan];
+      TrackHolders channels{ numchan };
    
       int c;
       for (c = 0; c < numchan; c++) {
@@ -370,19 +370,11 @@ int QTImportFileHandle::Import(TrackFactory *trackFactory,
       res = (updateResult == eProgressSuccess && err == noErr);
    
       if (res) {
-         for (c = 0; c < numchan; c++) {
-            channels[c]->Flush();
+         for (const auto &channel: channels) {
+            channel->Flush();
          }
    
-         *outTracks = (Track **) channels;
-         *outNumTracks = numchan;
-      }
-      else {
-         for (c = 0; c < numchan; c++) {
-            delete channels[c];
-         }
-   
-         delete [] channels;
+         outTracks.swap(channels);
       }
    
       for (c = 0; c < numchan; c++) {

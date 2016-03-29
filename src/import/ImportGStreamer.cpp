@@ -91,7 +91,7 @@ struct GStreamContext
    GstElement    *mConv;         // Audio converter
    GstElement    *mSink;         // Application sink
    bool           mUse;          // True if this stream should be imported
-   WaveTrack    **mChannels;     // Array of WaveTrack pointers, one for each channel
+   TrackHolders   mChannels;     // Array of WaveTrack pointers, one for each channel
    gint           mNumChannels;  // Number of channels
    gdouble        mSampleRate;   // Sample rate
    gchar         *mType;         // Audio type
@@ -130,9 +130,8 @@ public:
    ///! Imports audio
    ///\return import status (see Import.cpp)
    int Import(TrackFactory *trackFactory,
-              Track ***outTracks,
-              int *outNumTracks,
-              Tags *tags);
+              TrackHolders &outTracks,
+              Tags *tags) override;
 
    // =========================================================================
    // Handled within the gstreamer threads
@@ -496,7 +495,7 @@ GStreamerImportFileHandle::OnPadAdded(GstPad *pad)
    }
 
    // Allocate a NEW stream context
-   GStreamContext *c = g_new0(GStreamContext, 1);
+   GStreamContext *c = new GStreamContext, 1;
    if (!c)
    {
       WARN(mPipeline, ("OnPadAdded: unable to allocate stream context"));
@@ -663,7 +662,7 @@ GStreamerImportFileHandle::OnNewSample(GStreamContext *c, GstSample *sample)
    //
    // It is done here because, at least in the case of chained oggs,
    // not all streams are known ahead of time.
-   if (c->mChannels == NULL)
+   if (c->mChannels.empty())
    {
       // Get the sample format...no need to release caps or structure
       GstCaps *caps = gst_sample_get_caps(sample);
@@ -697,8 +696,8 @@ GStreamerImportFileHandle::OnNewSample(GStreamContext *c, GstSample *sample)
       }
 
       // Allocate the track array
-      c->mChannels = new WaveTrack *[c->mNumChannels];
-      if (!c->mChannels)
+      c->mChannels.resize(c->mNumChannels);
+      if (c->mChannels.size() != c->mNumChannels)
       {
          WARN(mPipeline, ("OnNewSample: unable to allocate track array"));
          return;
@@ -809,17 +808,7 @@ GStreamerImportFileHandle::~GStreamerImportFileHandle()
 
          // Remove any remaining channel data...will only happen if an error
          // occurred during streaming.
-         if (c->mChannels)
-         {
-            for (int ch = 0; ch < c->mNumChannels; ch++)
-            {
-               if (c->mChannels[ch])
-               {
-                  delete c->mChannels[ch];
-               }
-            }
-            delete[] c->mChannels;
-         }
+         c->mChannels.clear();
 
          // Remove the appsink element
          if (c->mSink)
@@ -840,7 +829,7 @@ GStreamerImportFileHandle::~GStreamerImportFileHandle()
          }
 
          // And finally get rid of the context
-         g_free(c);
+         delete c;
       }
       g_mutex_unlock(&mStreamsLock);
 
@@ -1014,10 +1003,11 @@ GStreamerImportFileHandle::GetFileUncompressedBytes()
 // Import streams
 int
 GStreamerImportFileHandle::Import(TrackFactory *trackFactory,
-                                  Track ***outTracks,
-                                  int *outNumTracks,
+                                  TrackHolders &outTracks,
                                   Tags *tags)
 {
+   outTracks.clear();
+
    // Save track factory pointer
    mTrackFactory = trackFactory;
 
@@ -1125,34 +1115,33 @@ GStreamerImportFileHandle::Import(TrackFactory *trackFactory,
    g_mutex_lock(&mStreamsLock);
 
    // Count the total number of tracks collected
-   *outNumTracks = 0;
+   int outNumTracks = 0;
    for (guint s = 0; s < mStreams->len; s++)
    {
       GStreamContext *c = (GStreamContext*)g_ptr_array_index(mStreams, s);
       if (c->mChannels)
       {
-         *outNumTracks += c->mNumChannels;
+         outNumTracks += c->mNumChannels;
       }
    }
 
    // Create NEW tracks
-   *outTracks = new Track *[*outNumTracks];
+   outTracks.resize(outNumTracks);
 
    // Copy audio from mChannels to newly created tracks (destroying mChannels in process)
    int trackindex = 0;
    for (guint s = 0; s < mStreams->len; s++)
    {
       GStreamContext *c = (GStreamContext*)g_ptr_array_index(mStreams, s);
-      if (c->mChannels)
+      if (c->mNumChannels)
       {
          for (int ch = 0; ch < c->mNumChannels; ch++)
          {
             c->mChannels[ch]->Flush();
-            (*outTracks)[trackindex++] = c->mChannels[ch];
+            outTracks[trackindex++] = std::move(c->mChannels[ch]);
          }
 
-         delete [] c->mChannels;
-         c->mChannels = NULL;
+         c->mChannels.clear();
       }
    }
    g_mutex_unlock(&mStreamsLock);

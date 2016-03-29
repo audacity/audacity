@@ -389,12 +389,12 @@ void ControlToolBar::Repaint( wxDC *dc )
 
 void ControlToolBar::EnableDisableButtons()
 {
-   //TIDY-ME: Button logic could be neater.
    AudacityProject *p = GetActiveProject();
    bool tracks = false;
+
    bool playing = mPlay->IsDown();
    bool recording = mRecord->IsDown();
-   bool busy = gAudioIO->IsBusy() || playing || recording;
+   bool notBusy = !gAudioIO->IsBusy();
 
    // Only interested in audio type tracks
    if (p) {
@@ -411,22 +411,18 @@ void ControlToolBar::EnableDisableButtons()
       }
    }
 
-   const bool enablePlay = (!recording) || (tracks && !busy);
-   mPlay->SetEnabled(enablePlay);
-   // Enable and disable the other play button 
-   if (p)
-   {
-      TranscriptionToolBar *const pttb = p->GetTranscriptionToolBar();
-      if (pttb)
-         pttb->SetEnabled(enablePlay);
+   if (p) {
+      TranscriptionToolBar *const playAtSpeedTB = p->GetTranscriptionToolBar();
+      if (playAtSpeedTB)
+         playAtSpeedTB->SetEnabled(CanStopAudioStream() && tracks && !recording);
    }
 
-   mRecord->SetEnabled(!busy && !playing);
-
-   mStop->SetEnabled(busy);
-   mRewind->SetEnabled(!busy);
-   mFF->SetEnabled(tracks && !busy);
-   mPause->SetEnabled(true);
+   mPlay->SetEnabled(CanStopAudioStream() && tracks && !recording);
+   mRecord->SetEnabled(CanStopAudioStream() && notBusy && !playing);
+   mStop->SetEnabled(CanStopAudioStream() && (playing || recording));
+   mRewind->SetEnabled(!playing && !recording);
+   mFF->SetEnabled(tracks && !playing && !recording);
+   mPause->SetEnabled(CanStopAudioStream());
 }
 
 void ControlToolBar::SetPlay(bool down, bool looped, bool cutPreview)
@@ -483,6 +479,9 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
                                    bool backwards, /* = false */
                                    bool playWhiteSpace /* = false */)
 {
+   if (!CanStopAudioStream())
+      return -1;
+
    // Uncomment this for laughs!
    // backwards = true;
 
@@ -667,6 +666,9 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
 void ControlToolBar::PlayCurrentRegion(bool looped /* = false */,
                                        bool cutpreview /* = false */)
 {
+   if (!CanStopAudioStream())
+      return;
+
    AudacityProject *p = GetActiveProject();
 
    if (p)
@@ -695,6 +697,8 @@ void ControlToolBar::OnKeyEvent(wxKeyEvent & event)
       return;
    }
 
+   // Does not appear to be needed on Linux. Perhaps on some other platform?
+   // If so, "!CanStopAudioStream()" should probably apply.
    if (event.GetKeyCode() == WXK_SPACE) {
       if (gAudioIO->IsStreamActive(GetActiveProject()->GetAudioIOToken())) {
          SetPlay(false);
@@ -713,6 +717,9 @@ void ControlToolBar::OnKeyEvent(wxKeyEvent & event)
 
 void ControlToolBar::OnPlay(wxCommandEvent & WXUNUSED(evt))
 {
+   if (!CanStopAudioStream())
+      return;
+
    StopPlaying();
 
    AudacityProject *p = GetActiveProject();
@@ -724,8 +731,17 @@ void ControlToolBar::OnPlay(wxCommandEvent & WXUNUSED(evt))
 
 void ControlToolBar::OnStop(wxCommandEvent & WXUNUSED(evt))
 {
-   StopPlaying();
-   UpdateStatusBar();
+   if (CanStopAudioStream()) {
+      StopPlaying();
+      UpdateStatusBar();
+   }
+}
+
+bool ControlToolBar::CanStopAudioStream()
+{
+   return (!gAudioIO->IsStreamActive() ||
+           gAudioIO->IsMonitoring() ||
+           gAudioIO->GetOwningProject() == GetActiveProject());
 }
 
 void ControlToolBar::PlayDefault()
@@ -739,6 +755,9 @@ void ControlToolBar::PlayDefault()
 
 void ControlToolBar::StopPlaying(bool stopStream /* = true*/)
 {
+   if (!CanStopAudioStream())
+      return;
+
    mStop->PushDown();
 
    SetStop(false);
@@ -779,8 +798,12 @@ void ControlToolBar::StopPlaying(bool stopStream /* = true*/)
 
 void ControlToolBar::Pause()
 {
-   wxCommandEvent dummy;
-   OnPause(dummy);
+   if (!CanStopAudioStream())
+      gAudioIO->SetPaused(!gAudioIO->IsPaused());
+   else {
+      wxCommandEvent dummy;
+      OnPause(dummy);
+   }
 }
 
 void ControlToolBar::OnRecord(wxCommandEvent &evt)
@@ -882,14 +905,13 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
                      tracksCopy = *trackList;
                   }
 
-                  WaveTrack *newTrack = p->GetTrackFactory()->NewWaveTrack();
+                  auto newTrack = p->GetTrackFactory()->NewWaveTrack();
                   newTrack->InsertSilence(0.0, t0 - t1);
                   newTrack->Flush();
                   wt->Clear(t1, t0);
-                  bool bResult = wt->Paste(t1, newTrack);
+                  bool bResult = wt->Paste(t1, newTrack.get());
                   wxASSERT(bResult); // TO DO: Actually handle this.
                   wxUnusedVar(bResult);
-                  delete newTrack;
                }
                newRecordingTracks.push_back(wt);
             }
@@ -921,7 +943,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
          wxString baseTrackName = recordingNameCustom? defaultRecordingTrackName : defaultTrackName;
 
          for (int c = 0; c < recordingChannels; c++) {
-            WaveTrack *newTrack = p->GetTrackFactory()->NewWaveTrack();
+            auto newTrack = p->GetTrackFactory()->NewWaveTrack();
 
             newTrack->SetOffset(t0);
             wxString nameSuffix = wxString(wxT(""));
@@ -973,21 +995,19 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
                newTrack->SetChannel( Track::MonoChannel );
             }
 
-            newRecordingTracks.push_back(newTrack);
+            // Let the list hold the track, and keep a pointer to it
+            newRecordingTracks.push_back(
+               static_cast<WaveTrack*>(
+                  trackList->Add(
+                     std::move(newTrack))));
          }
-
-         // msmeyer: StartStream calls a callback which triggers auto-save, so
-         // we add the tracks where recording is done into now. We remove them
-         // later if starting the stream fails
-         for (unsigned int i = 0; i < newRecordingTracks.size(); i++)
-            trackList->Add(newRecordingTracks[i]);
       }
 
       //Automated Input Level Adjustment Initialization
       #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
          gAudioIO->AILAInitialize();
       #endif
-         
+
       AudioIOStartStreamOptions options(p->GetDefaultPlayOptions());
       int token = gAudioIO->StartStream(playbackTracks,
                                         newRecordingTracks,
@@ -1012,7 +1032,6 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
             // msmeyer: Delete recently added tracks if opening stream fails
             for (unsigned int i = 0; i < newRecordingTracks.size(); i++) {
                trackList->Remove(newRecordingTracks[i]);
-               delete newRecordingTracks[i];
             }
          }
 
@@ -1031,6 +1050,10 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
 
 void ControlToolBar::OnPause(wxCommandEvent & WXUNUSED(evt))
 {
+   if (!CanStopAudioStream()) {
+      return;
+   }
+
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
    if (gAudioIO->IsScrubbing())
       // Pausing does not make sense.  Force the button
@@ -1098,18 +1121,19 @@ void ControlToolBar::SetupCutPreviewTracks(double WXUNUSED(playStart), double cu
       if (track1)
       {
          // Duplicate and change tracks
-         track1 = track1->Duplicate();
-         track1->Clear(cutStart, cutEnd);
+         auto new1 = track1->Duplicate();
+         new1->Clear(cutStart, cutEnd);
+         decltype(new1) new2{};
          if (track2)
          {
-            track2 = track2->Duplicate();
-            track2->Clear(cutStart, cutEnd);
+            new2 = track2->Duplicate();
+            new2->Clear(cutStart, cutEnd);
          }
 
          mCutPreviewTracks = new TrackList();
-         mCutPreviewTracks->Add(track1);
+         mCutPreviewTracks->Add(std::move(new1));
          if (track2)
-            mCutPreviewTracks->Add(track2);
+            mCutPreviewTracks->Add(std::move(new2));
       }
    }
 }
@@ -1118,7 +1142,7 @@ void ControlToolBar::ClearCutPreviewTracks()
 {
    if (mCutPreviewTracks)
    {
-      mCutPreviewTracks->Clear(true); /* DELETE track contents too */
+      mCutPreviewTracks->Clear(); /* DELETE track contents too */
       delete mCutPreviewTracks;
       mCutPreviewTracks = NULL;
    }

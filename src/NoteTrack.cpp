@@ -98,9 +98,9 @@ SONFNS(AutoSave)
 
 
 
-NoteTrack *TrackFactory::NewNoteTrack()
+NoteTrack::Holder TrackFactory::NewNoteTrack()
 {
-   return new NoteTrack(mDirManager);
+   return std::make_unique<NoteTrack>(mDirManager);
 }
 
 NoteTrack::NoteTrack(DirManager * projDirManager):
@@ -135,9 +135,9 @@ NoteTrack::~NoteTrack()
    }
 }
 
-Track *NoteTrack::Duplicate() const
+Track::Holder NoteTrack::Duplicate() const
 {
-   NoteTrack *duplicate = new NoteTrack(mDirManager);
+   auto duplicate = std::make_unique<NoteTrack>(mDirManager);
    duplicate->Init(*this);
    // Duplicate on NoteTrack moves data from mSeq to mSerializationBuffer
    // and from mSerializationBuffer to mSeq on alternate calls. Duplicate
@@ -169,7 +169,7 @@ Track *NoteTrack::Duplicate() const
 #ifdef EXPERIMENTAL_MIDI_OUT
    duplicate->SetGain(GetGain());
 #endif
-   return duplicate;
+   return std::move(duplicate);
 }
 
 
@@ -196,10 +196,10 @@ void NoteTrack::WarpAndTransposeNotes(double t0, double t1,
    // Since this is a duplicate and duplicates convert mSeq to
    // a text string for saving as XML, we probably have to
    // duplicate again to get back an mSeq
-   NoteTrack *nt = this;
-   double offset = nt->GetOffset(); // track is shifted this amount
+   double offset = this->GetOffset(); // track is shifted this amount
    if (!mSeq) { // replace saveme with an (unserialized) duplicate
-      nt = (NoteTrack *) this->Duplicate();
+      Track::Holder unt{ Duplicate() };
+      const auto nt = static_cast<NoteTrack*>(unt.get());
       wxASSERT(!mSeq && nt->mSeq && !nt->mSerializationBuffer);
       // swap mSeq and Buffer between this and nt
       nt->mSerializationBuffer = mSerializationBuffer;
@@ -208,7 +208,6 @@ void NoteTrack::WarpAndTransposeNotes(double t0, double t1,
       mSerializationLength = 0;
       mSeq = nt->mSeq;
       nt->mSeq = NULL;
-      delete nt; // delete the duplicate
    }
    mSeq->convert_to_seconds(); // make sure time units are right
    t1 -= offset; // adjust time range to compensate for track offset
@@ -444,15 +443,13 @@ int NoteTrack::GetVisibleChannels()
    return mVisibleChannels;
 }
 
-bool NoteTrack::Cut(double t0, double t1, Track **dest){
-
-   //dest goes onto clipboard
-   *dest = NULL; // This is redundant
+Track::Holder NoteTrack::Cut(double t0, double t1)
+{
    if (t1 <= t0)
-      return false;
+      return{};
    double len = t1-t0;
 
-   NoteTrack *newTrack = new NoteTrack(mDirManager);
+   auto newTrack = std::make_unique<NoteTrack>(mDirManager);
 
    newTrack->Init(*this);
 
@@ -464,20 +461,16 @@ bool NoteTrack::Cut(double t0, double t1, Track **dest){
    //(mBottomNote, mDirManager, mLastMidiPosition,
    // mSerializationBuffer, mSerializationLength, mVisibleChannels)
 
-   *dest = newTrack;
-
-   return true;
+   return std::move(newTrack);
 }
 
-bool NoteTrack::Copy(double t0, double t1, Track **dest) const {
-
-   //dest goes onto clipboard
-   *dest = NULL; // This is redundant and matches WaveTrack::Copy
+Track::Holder NoteTrack::Copy(double t0, double t1) const
+{
    if (t1 <= t0)
-      return false;
+      return{};
    double len = t1-t0;
 
-   NoteTrack *newTrack = new NoteTrack(mDirManager);
+   auto newTrack = std::make_unique<NoteTrack>(mDirManager);
 
    newTrack->Init(*this);
 
@@ -489,9 +482,7 @@ bool NoteTrack::Copy(double t0, double t1, Track **dest) const {
    //(mBottomNote, mDirManager, mLastMidiPosition,
    // mSerializationBuffer, mSerializationLength, mVisibleChannels)
 
-   *dest = newTrack;
-
-   return true;
+   return std::move(newTrack);
 }
 
 bool NoteTrack::Trim(double t0, double t1)
@@ -821,9 +812,11 @@ void NoteTrack::WriteXML(XMLWriter &xmlFile)
    // NoteTrack.) In this case, mSeq will be NULL. To avoid a crash
    // and perform WriteXML, we may need to restore NoteTracks from binary
    // blobs to regular data structures (with an Alg_seq member).
+   Track::Holder holder;
    NoteTrack *saveme = this;
    if (!mSeq) { // replace saveme with an (unserialized) duplicate
-      saveme = (NoteTrack *) this->Duplicate();
+      holder = Duplicate();
+      saveme = static_cast<NoteTrack*>(holder.get());
       assert(saveme->mSeq);
    }
    saveme->mSeq->write(data, true);
@@ -841,9 +834,6 @@ void NoteTrack::WriteXML(XMLWriter &xmlFile)
    xmlFile.WriteAttr(wxT("bottomnote"), saveme->mBottomNote);
    xmlFile.WriteAttr(wxT("data"), wxString(data.str().c_str(), wxConvUTF8));
    xmlFile.EndTag(wxT("notetrack"));
-   if (this != saveme) {
-      delete saveme; // DELETE the duplicate
-   }
 }
 
 void NoteTrack::StartVScroll()
