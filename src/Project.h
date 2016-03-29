@@ -275,6 +275,12 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
      */
    wxDialog *GetMissingAliasFileDialog();
 
+   // Timer Record Auto Save/Export Routines
+   bool SaveFromTimerRecording(wxFileName fnFile);
+   bool ExportFromTimerRecording(wxFileName fnFile, int iFormat, int iSubFormat, int iFilterIndex);
+   int GetOpenProjectCount();
+   bool IsProjectSaved();
+
 #include "Menus.h"
 
    CommandManager *GetCommandManager() { return &mCommandManager; }
