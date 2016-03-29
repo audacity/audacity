@@ -640,9 +640,9 @@ bool Exporter::GetFilename()
                 !mFilename.FileExists()) {
                // Warn and return to the dialog
                wxMessageBox(_("You are attempting to overwrite an aliased file that is missing.\n\
-The file cannot be written because the path is needed to restore the original audio to the project.\n\
-Choose File > Check Dependencies to view the locations of all missing files.\n\
-If you still wish to export, please choose a different filename or folder."));
+               The file cannot be written because the path is needed to restore the original audio to the project.\n\
+               Choose File > Check Dependencies to view the locations of all missing files.\n\
+               If you still wish to export, please choose a different filename or folder."));
                overwritingMissingAlias = true;
             }
          }
@@ -886,7 +886,14 @@ void Exporter::OnFilterChanged(wxFileCtrlEvent & evt)
    mBook->ChangeSelection(index);
 }
 
-bool Exporter::ProcessFromTimerRecording(AudacityProject *project, bool selectedOnly, double t0, double t1, wxFileName fnFile, int iFormat, int iSubFormat, int iFilterIndex)
+bool Exporter::ProcessFromTimerRecording(AudacityProject *project,
+                                         bool selectedOnly,
+                                         double t0,
+                                         double t1,
+                                         wxFileName fnFile,
+                                         int iFormat,
+                                         int iSubFormat,
+                                         int iFilterIndex)
 {
    // Save parms
    mProject = project;
@@ -1052,7 +1059,10 @@ bool Exporter::SetAutoExportOptions(AudacityProject *project) {
       }
       else if (!ext.IsEmpty() && !mPlugins[mFormat]->IsExtension(ext, mSubFormat) && ext.CmpNoCase(defext)) {
          wxString prompt;
-         prompt.Printf(_("You are about to export a %s file with the name \"%s\".\n\nNormally these files end in \".%s\", and some programs will not open files with nonstandard extensions.\n\nAre you sure you want to export the file under this name?"),
+         prompt.Printf(_("You are about to export a %s file with the name \"%s\".\n\n\
+                          Normally these files end in \".%s\", and some programs\n\
+                          will not open files with nonstandard extensions.\n\n\
+                          Are you sure you want to export the file under this name?"),
             mPlugins[mFormat]->GetFormat(mSubFormat).c_str(),
             mFilename.GetFullName().c_str(),
             defext.c_str());
@@ -1085,9 +1095,9 @@ bool Exporter::SetAutoExportOptions(AudacityProject *project) {
                !mFilename.FileExists()) {
                // Warn and return to the dialog
                wxMessageBox(_("You are attempting to overwrite an aliased file that is missing.\n\
-                                                                                                            The file cannot be written because the path is needed to restore the original audio to the project.\n\
-                                                                                                                                                                                                                                                            Choose File > Check Dependencies to view the locations of all missing files.\n\
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            If you still wish to export, please choose a different filename or folder."));
+                              The file cannot be written because the path is needed to restore the original audio to the project.\n\
+                              Choose File > Check Dependencies to view the locations of all missing files.\n\
+                              If you still wish to export, please choose a different filename or folder."));
                overwritingMissingAlias = true;
             }
          }
@@ -1114,7 +1124,8 @@ bool Exporter::SetAutoExportOptions(AudacityProject *project) {
 
    // Let user edit MetaData
    if (mPlugins[mFormat]->GetCanMetaData(mSubFormat)) {
-      if (!(project->DoEditMetadata(_("Edit Metadata Tags for Export"), _("Exported Tags"), mProject->GetShowId3Dialog()))) {
+      if (!(project->DoEditMetadata(_("Edit Metadata Tags for Export"),
+                                    _("Exported Tags"), mProject->GetShowId3Dialog()))) {
          return false;
       }
    }

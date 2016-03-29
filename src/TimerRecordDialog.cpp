@@ -51,8 +51,7 @@ enum { // control IDs
    ID_AUTOEXPORTPATH_BUTTON,
    ID_AUTOEXPORTPATH_TEXT,
    ID_AUTOSAVE_CHECKBOX,
-   ID_AUTOEXPORT_CHECKBOX,
-   ID_AFTERCOMPLETE_COMBO
+   ID_AUTOEXPORT_CHECKBOX
 };
 
 enum {
@@ -267,7 +266,8 @@ void TimerRecordDialog::OnAutoSavePathButton_Click(wxCommandEvent& WXUNUSED(even
    if (wxFileExists(fName)) {
       wxMessageDialog m(
          NULL,
-         _("The selected file name could not be used for Timer Recording because it would overwrite another project.\nPlease try again and select an original name."),
+         _("The selected file name could not be used\nfor Timer Recording because it would overwrite another project.\n\
+         Please try again and select an original name."),
          _("Error Saving Timer Recording Project"),
          wxOK|wxICON_ERROR);
       m.ShowModal();
@@ -521,7 +521,8 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
 
    // Do Automatic Export?
    if (m_bAutoExportEnabled) {
-      bExportOK = pProject->ExportFromTimerRecording(m_fnAutoExportFile, m_iAutoExportFormat, m_iAutoExportSubFormat, m_iAutoExportFilterIndex);
+      bExportOK = pProject->ExportFromTimerRecording(m_fnAutoExportFile, m_iAutoExportFormat,
+                                                     m_iAutoExportSubFormat, m_iAutoExportFilterIndex);
    }
 
    // Check if we need to override the post recording action
@@ -533,11 +534,13 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
    if (iPostRecordAction == POST_TIMER_RECORD_NOTHING) {
       // If there is no post-record action then we can show a message indicating what has been done
 
-      wxString sMessage = (bWasStopped ? _("Timer Recording Stopped.") : _("Timer Recording Completed."));
+      wxString sMessage = (bWasStopped ? _("Timer Recording Stopped.") :
+                                         _("Timer Recording Completed."));
 
       if (m_bAutoSaveEnabled) {
          if (bSaveOK) {
-            sMessage.Printf("%s\n\nRecording saved: %s", sMessage, m_fnAutoSaveFile.GetFullPath());
+            sMessage.Printf("%s\n\nRecording saved: %s",
+                            sMessage, m_fnAutoSaveFile.GetFullPath());
          }
          else {
             sMessage.Printf("%s\n\nError saving recording.", sMessage);
@@ -545,7 +548,8 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
       }
       if (m_bAutoExportEnabled) {
          if (bExportOK) {
-            sMessage.Printf("%s\n\nRecording exported: %s", sMessage, m_fnAutoExportFile.GetFullPath());
+            sMessage.Printf("%s\n\nRecording exported: %s",
+                            sMessage, m_fnAutoExportFile.GetFullPath());
          }
          else {
             sMessage.Printf("%s\n\nError exporting recording.", sMessage);
@@ -554,9 +558,12 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
 
       if (bErrorOverride) {
 
-         if ((iOverriddenAction != iPostRecordAction) && (iOverriddenAction != POST_TIMER_RECORD_NOTHING)) {
+         if ((iOverriddenAction != iPostRecordAction) &&
+             (iOverriddenAction != POST_TIMER_RECORD_NOTHING)) {
             // Inform the user that we have overridden the selected action
-            sMessage.Printf("%s\n\n'%s' has been canceled due to the error(s) noted above.", sMessage, m_pTimerAfterCompleteChoiceCtrl->GetString(iOverriddenAction));
+            sMessage.Printf("%s\n\n'%s' has been canceled due to the error(s) noted above.",
+                            sMessage,
+                            m_pTimerAfterCompleteChoiceCtrl->GetString(iOverriddenAction));
          }
 
          // Show Error Message Box
@@ -565,7 +572,9 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
       else {
 
          if (bWasStopped && (iOverriddenAction != POST_TIMER_RECORD_NOTHING)) {
-            sMessage.Printf("%s\n\n'%s' has been cancelled as the recording was stopped.", sMessage, m_pTimerAfterCompleteChoiceCtrl->GetString(iOverriddenAction));
+            sMessage.Printf("%s\n\n'%s' has been cancelled as the recording was stopped.",
+                            sMessage,
+                            m_pTimerAfterCompleteChoiceCtrl->GetString(iOverriddenAction));
          }
 
          wxMessageBox(sMessage, _("Timer Recording"), wxICON_INFORMATION | wxOK);
@@ -578,7 +587,8 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
          // Lets show a warning dialog telling the user what is about to happen.
          // If the user no longer wants to carry out this action then they can click
          // Cancel and we will do POST_TIMER_RECORD_NOTHING instead.
-         int iDelayOutcome = PreActionDelay(iPostRecordAction, (m_bAutoSaveEnabled && bSaveOK), (m_bAutoExportEnabled && bExportOK));
+         int iDelayOutcome = PreActionDelay(iPostRecordAction, (m_bAutoSaveEnabled && bSaveOK),
+                                            (m_bAutoExportEnabled && bExportOK));
          if (iDelayOutcome != eProgressSuccess) {
             // Cancel the action!
             iPostRecordAction = POST_TIMER_RECORD_NOTHING;
@@ -653,7 +663,8 @@ wxPrintf(wxT("%s\n"), dt.Format().c_str());
    return dt.FormatDate() + wxT(" ") + dt.FormatTime();
 }
 
-TimerRecordPathCtrl * TimerRecordDialog::NewPathControl(wxWindow *wParent, const int iID, const wxString &sCaption, const wxString &sValue)
+TimerRecordPathCtrl * TimerRecordDialog::NewPathControl(wxWindow *wParent, const int iID,
+                                                        const wxString &sCaption, const wxString &sValue)
 {
    TimerRecordPathCtrl * pTextCtrl;
    pTextCtrl = new TimerRecordPathCtrl(wParent, iID, sValue);
@@ -733,12 +744,10 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
             * seconds.
             */
             wxString strFormat1 = _("099 days 024 h 060 m 060 s");
-            m_pTimeTextCtrl_Duration = new NumericTextCtrl(
-               NumericConverter::TIME, this, ID_TIMETEXT_DURATION);
+            m_pTimeTextCtrl_Duration = new NumericTextCtrl(NumericConverter::TIME, this, ID_TIMETEXT_DURATION);
             m_pTimeTextCtrl_Duration->SetName(_("Duration"));
             m_pTimeTextCtrl_Duration->SetFormatString(strFormat1);
-            m_pTimeTextCtrl_Duration->
-               SetValue(m_TimeSpan_Duration.GetSeconds().ToDouble());
+            m_pTimeTextCtrl_Duration->SetValue(m_TimeSpan_Duration.GetSeconds().ToDouble());
             S.AddWindow(m_pTimeTextCtrl_Duration);
             m_pTimeTextCtrl_Duration->EnableMenu(false);
          }
@@ -750,42 +759,40 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
       {
          S.StartStatic(_("Automatic Save"), true);
          {
-
             // If checked, the project will be saved when the recording is completed
-            m_pTimerAutoSaveCheckBoxCtrl = S.Id(ID_AUTOSAVE_CHECKBOX).AddCheckBox(_("Enable &Automatic Save?"), (bAutoSave ? "true" : "false"));
-
-            S.StartHorizontalLay();
+            m_pTimerAutoSaveCheckBoxCtrl = S.Id(ID_AUTOSAVE_CHECKBOX).AddCheckBox(_("Enable &Automatic Save?"),
+                                                                                    (bAutoSave ? "true" : "false"));
+            S.StartMultiColumn(3, wxEXPAND);
             {
-               wxString sInitialValue = "";
+               wxString sInitialValue = wxT("");
                AudacityProject* pProject = GetActiveProject();
                wxString sSaveValue = pProject->GetFileName();
-               if (sSaveValue != "") {
+               if (sSaveValue != wxEmptyString) {
                   m_fnAutoSaveFile.Assign(sSaveValue);
                   sInitialValue = _("Current Project");
                }
-
                S.AddPrompt(_("Save Project As:"));
                m_pTimerSavePathTextCtrl = NewPathControl(this, ID_AUTOSAVEPATH_TEXT, _("Save Project As:"), sInitialValue);
                m_pTimerSavePathTextCtrl->SetEditable(false);
                S.AddWindow(m_pTimerSavePathTextCtrl);
-               m_pTimerSavePathButtonCtrl = S.Id(ID_AUTOSAVEPATH_BUTTON).AddButton(_("Select…"));
-            }
-            S.EndHorizontalLay();
+               m_pTimerSavePathButtonCtrl = S.Id(ID_AUTOSAVEPATH_BUTTON).AddButton(_("Select..."));
+               }
+            S.EndMultiColumn();
          }
          S.EndStatic();
 
          S.StartStatic(_("Automatic Export"), true);
          {
             m_pTimerAutoExportCheckBoxCtrl = S.Id(ID_AUTOEXPORT_CHECKBOX).AddCheckBox(_("Enable Automatic &Export?"), (bAutoExport ? "true" : "false"));
-            S.StartHorizontalLay();
+            S.StartMultiColumn(3, wxEXPAND);
             {
                S.AddPrompt(_("Export Project As:"));
                m_pTimerExportPathTextCtrl = NewPathControl(this, ID_AUTOEXPORTPATH_TEXT, _("Export Project As:"), _(""));
                m_pTimerExportPathTextCtrl->SetEditable(false);
                S.AddWindow(m_pTimerExportPathTextCtrl);
-               m_pTimerExportPathButtonCtrl = S.Id(ID_AUTOEXPORTPATH_BUTTON).AddButton(_("Select…"));
+               m_pTimerExportPathButtonCtrl = S.Id(ID_AUTOEXPORTPATH_BUTTON).AddButton(_("Select..."));
             }
-            S.EndHorizontalLay();
+            S.EndMultiColumn();
          }
          S.EndStatic();
 
@@ -806,7 +813,9 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
 #endif
             m_sTimerAfterCompleteOption = arrayOptions.Item(iPostTimerRecordAction);
 
-            m_pTimerAfterCompleteChoiceCtrl = S.AddChoice(_("After Recording Completes:"), m_sTimerAfterCompleteOption, &m_sTimerAfterCompleteOptionsArray);
+            m_pTimerAfterCompleteChoiceCtrl = S.AddChoice(_("After Recording Completes:"),
+                                                          m_sTimerAfterCompleteOption,
+                                                          &m_sTimerAfterCompleteOptionsArray);
          }
          S.EndStatic();
 
@@ -926,7 +935,8 @@ int TimerRecordDialog::PreActionDelay(int iActionIndex, bool bSaved, bool bExpor
    else if (bExported) {
       sDone = "Exported";
    }
-   sMessage.Printf(_("Timer Recording completed: Recording has been %s as instructed.\n\n'%s' will occur shortly...\n"), sDone, sAction);
+   sMessage.Printf(_("Timer Recording completed: Recording has been %s as instructed.\n\n'%s' will occur shortly...\n"),
+                   sDone, sAction);
 
    wxDateTime dtNow = wxDateTime::UNow();
    wxTimeSpan tsWait = wxTimeSpan(0, 1, 0, 0);
