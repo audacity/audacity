@@ -5254,3 +5254,36 @@ bool AudacityProject::ProjectHasTracks() {
    bool bHasTracks = (iter2.First() != NULL);
    return bHasTracks;
 }
+
+// MY: This routine will give an estimate of how many
+// minutes of recording time we have available.
+// This is called from TimerRecordDialog::OnOK() to allow
+// the user to resolve a potential disk space issue before
+// Timer Recording starts.
+// The calculations made are based on the user's current
+// preferences.
+int AudacityProject::GetEstimatedRecordingMinsLeftOnDisk() {
+
+   // Obtain the current settings
+   sampleFormat oCaptureFormat = (sampleFormat)
+      gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleFormat"), floatSample);
+   long lCaptureChannels;
+   gPrefs->Read(wxT("/AudioIO/RecordChannels"), &lCaptureChannels, 2L);
+
+   // Find out how much free space we have on disk
+   wxLongLong lFreeSpace = mDirManager->GetFreeDiskSpace();
+   if (lFreeSpace < 0) {
+      return 0;
+   }
+
+   // Calculate the remaining time
+   double dRecTime = 0.0;
+   dRecTime = lFreeSpace.GetHi() * 4294967296.0 + lFreeSpace.GetLo();
+   dRecTime /= SAMPLE_SIZE_DISK(oCaptureFormat);   
+   dRecTime /= lCaptureChannels;
+   dRecTime /= GetRate();
+
+   // Convert to minutes before returning
+   int iRecMins = (int)(dRecTime / 60.0);
+   return iRecMins;
+}

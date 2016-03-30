@@ -30,6 +30,12 @@ class NumericTextCtrl;
 class ShuttleGui;
 class TimerRecordPathCtrl;
 
+enum TimerRecordCompletedActions {
+   TR_ACTION_NOTHING = 0x00000000,
+   TR_ACTION_SAVED = 0x00000001,
+   TR_ACTION_EXPORTED = 0x00000002
+};
+
 class TimerRecordPathCtrl final : public wxTextCtrl
 {
    // MY: Class that inherits from the wxTextCtrl class.
@@ -93,7 +99,7 @@ private:
 
    int ExecutePostRecordActions(bool bWasStopped);
 
-   int PreActionDelay(int iActionIndex, bool bSaved, bool bExported);
+   int PreActionDelay(int iActionIndex, TimerRecordCompletedActions eCompletedActions);
 
 private:
    wxDateTime m_DateTime_Start;
