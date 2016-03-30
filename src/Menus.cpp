@@ -6318,8 +6318,7 @@ void AudacityProject::OnTimerRecord()
    // it is now safer to disable Timer Recording when there is more than
    // one open project.
    if (GetOpenProjectCount() > 1) {
-      wxMessageBox(_("Timer Recording cannot be used with more than one open project.\n\n\
-                     Please close any additional projects and try again."),
+      wxMessageBox(_("Timer Recording cannot be used with more than one open project.\n\nPlease close any additional projects and try again."),
                    _("Timer Recording"),
                    wxICON_INFORMATION | wxOK);
       return;
