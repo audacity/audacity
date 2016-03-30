@@ -5247,3 +5247,34 @@ bool AudacityProject::SaveFromTimerRecording(wxFileName fnFile) {
 
    return bSuccess;
 }
+
+// MY: This routine will give a *rough* estimate of how many
+// minutes of recording time we have available.
+// This is called from TimerRecordDialog::OnOK() to allow
+// the user to resolve issue before Timer Recording starts
+// and they end up losing a part of the recording.
+int AudacityProject::GetEstimatedRecordingMinsLeftOnDisk(int iChannels /* = 2 */) {
+   wxLongLong lFreeSpace = mDirManager->GetFreeDiskSpace();
+   if (lFreeSpace < 0) {
+      return 0;
+   }
+   double dRecTime = 0.0;
+   int iRecMins = 0;
+
+   dRecTime = lFreeSpace.GetHi() * 4294967296.0 + lFreeSpace.GetLo();
+
+   // MY: GetCaptureFormat() may not have been set yet, so we
+   // will use floatSample instead.
+   // dRecTime /= SAMPLE_SIZE_DISK(gAudioIO->GetCaptureFormat());
+   dRecTime /= SAMPLE_SIZE_DISK(floatSample);
+   // note size on disk (=3 for 24-bit) not in memory (=4 for 24-bit)
+   
+   // MY: GetNumCaptureChannels is only availavle when recording,
+   // so remove the below and use the passed in parameter instead.
+   // dRecTime /= gAudioIO->GetNumCaptureChannels();
+   dRecTime /= iChannels;
+
+   dRecTime /= GetRate();
+   iRecMins = (int)(dRecTime / 60.0);
+   return iRecMins;
+}
