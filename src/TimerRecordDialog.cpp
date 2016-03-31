@@ -266,8 +266,7 @@ void TimerRecordDialog::OnAutoSavePathButton_Click(wxCommandEvent& WXUNUSED(even
    if (wxFileExists(fName)) {
       wxMessageDialog m(
          NULL,
-         _("The selected file name could not be used\nfor Timer Recording because it would overwrite another project.\n\
-         Please try again and select an original name."),
+         _("The selected file name could not be used\nfor Timer Recording because it would overwrite another project.\nPlease try again and select an original name."),
          _("Error Saving Timer Recording Project"),
          wxOK|wxICON_ERROR);
       m.ShowModal();
