@@ -81,9 +81,9 @@ void CommandBuilder::BuildCommand(const wxString &cmdName,
 {
    // Stage 1: create a Command object of the right type
 
-   CommandMessageTarget *scriptOutput = ScriptCommandRelay::GetResponseTarget();
+   auto scriptOutput = ScriptCommandRelay::GetResponseTarget();
    auto output
-      = std::make_unique<CommandOutputTarget>(new NullProgressTarget(),
+      = std::make_unique<CommandOutputTarget>(std::make_unique<NullProgressTarget>(),
                                 scriptOutput,
                                 scriptOutput);
 

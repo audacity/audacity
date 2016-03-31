@@ -52,7 +52,7 @@ class ScriptCommandRelay
       static void PostCommand(AudacityProject *project, const CommandHolder &cmd);
       static void SendResponse(const wxString &response);
       static Response ReceiveResponse();
-      static ResponseQueueTarget *GetResponseTarget();
+      static std::shared_ptr<ResponseQueueTarget> GetResponseTarget();
 };
 
 #endif /* End of include guard: __SCRIPTCOMMANDRELAY__ */

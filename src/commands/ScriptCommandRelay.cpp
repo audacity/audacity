@@ -110,8 +110,8 @@ Response ScriptCommandRelay::ReceiveResponse()
 
 /// Get a pointer to a message target which allows commands to send responses
 /// back to a script.
-ResponseQueueTarget *ScriptCommandRelay::GetResponseTarget()
+std::shared_ptr<ResponseQueueTarget> ScriptCommandRelay::GetResponseTarget()
 {
    // This should be deleted by a Command destructor
-   return new ResponseQueueTarget(sResponseQueue);
+   return std::make_shared<ResponseQueueTarget>(sResponseQueue);
 }

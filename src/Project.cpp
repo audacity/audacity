@@ -4634,7 +4634,7 @@ void AudacityProject::SafeDisplayStatusMessage(const wxChar *msg)
 {
    auto target
       = std::make_unique<CommandOutputTarget>(TargetFactory::ProgressDefault(),
-                                new StatusBarTarget(*mStatusBar),
+                                std::make_shared<StatusBarTarget>(*mStatusBar),
                                 TargetFactory::MessageDefault());
    CommandType *type = CommandDirectory::Get()->LookUp(wxT("Message"));
    wxASSERT_MSG(type != NULL, wxT("Message command not found!"));
