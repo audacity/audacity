@@ -183,7 +183,7 @@ public:
    wxString GetPluginFormatDescription();
 
    ///! Probes the file and opens it if appropriate
-   ImportFileHandle *Open(const wxString &Filename) override;
+   std::unique_ptr<ImportFileHandle> Open(const wxString &Filename) override;
 };
 
 ///! Does acual import, returned by FFmpegImportPlugin::Open
@@ -293,9 +293,9 @@ wxString FFmpegImportPlugin::GetPluginFormatDescription()
    return DESC;
 }
 
-ImportFileHandle *FFmpegImportPlugin::Open(const wxString &filename)
+std::unique_ptr<ImportFileHandle> FFmpegImportPlugin::Open(const wxString &filename)
 {
-   FFmpegImportFileHandle *handle = new FFmpegImportFileHandle(filename);
+   auto handle = std::make_unique<FFmpegImportFileHandle>(filename);
 
    //Check if we're loading explicitly supported format
    wxString extension = filename.AfterLast(wxT('.'));
@@ -322,18 +322,16 @@ ImportFileHandle *FFmpegImportPlugin::Open(const wxString &filename)
    }
    if (!FFmpegLibsInst->ValidLibsLoaded())
    {
-      delete handle;
       return NULL;
    }
 
    // Open the file for import
    bool success = handle->Init();
    if (!success) {
-      delete handle;
       return NULL;
    }
 
-   return handle;
+   return std::move(handle);
 }
 
 

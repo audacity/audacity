@@ -92,7 +92,7 @@ public:
 
    wxString GetPluginStringID() { return wxT("liboggvorbis"); }
    wxString GetPluginFormatDescription();
-   ImportFileHandle *Open(const wxString &Filename) override;
+   std::unique_ptr<ImportFileHandle> Open(const wxString &Filename) override;
 };
 
 
@@ -171,7 +171,7 @@ wxString OggImportPlugin::GetPluginFormatDescription()
     return DESC;
 }
 
-ImportFileHandle *OggImportPlugin::Open(const wxString &filename)
+std::unique_ptr<ImportFileHandle> OggImportPlugin::Open(const wxString &filename)
 {
    // Suppress some compiler warnings about unused global variables in the library header
    wxUnusedVar(OV_CALLBACKS_DEFAULT);
@@ -219,7 +219,7 @@ ImportFileHandle *OggImportPlugin::Open(const wxString &filename)
       return NULL;
    }
 
-   return new OggImportFileHandle(filename, file, vorbisFile);
+   return std::make_unique<OggImportFileHandle>(filename, file, vorbisFile);
 }
 
 wxString OggImportFileHandle::GetFileDescription()

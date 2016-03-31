@@ -193,7 +193,7 @@ public:
    wxArrayString GetSupportedExtensions();
 
    ///! Probes the file and opens it if appropriate
-   ImportFileHandle *Open(wxString Filename);
+   std::unique_ptr<ImportFileHandle> Open(const wxString &Filename) override;
 };
 
 // ============================================================================
@@ -349,19 +349,17 @@ GStreamerImportPlugin::GetSupportedExtensions()
 
 // ----------------------------------------------------------------------------
 // Open the file and return an importer "file handle"
-ImportFileHandle *
-GStreamerImportPlugin::Open(wxString filename)
+std::unique_ptr<ImportFileHandle> GStreamerImportPlugin::Open(const wxString &filename)
 {
-   GStreamerImportFileHandle *handle = new GStreamerImportFileHandle(filename);
+   auto handle = std::make_unique<GStreamerImportFileHandle>(filename);
 
    // Initialize the handle
    if (!handle->Init())
    {
-      delete handle;
-      return NULL;
+      return nullptr;
    }
 
-   return handle;
+   return std::move(handle);
 }
 
 // ============================================================================

@@ -111,7 +111,7 @@ class QTImportPlugin final : public ImportPlugin
    wxString GetPluginStringID() { return wxT("quicktime"); }
 
    wxString GetPluginFormatDescription();
-   ImportFileHandle *Open(const wxString & Filename);
+   std::unique_ptr<ImportFileHandle> Open(const wxString & Filename) override;
 
  private:
    bool mInitialized;
@@ -172,7 +172,7 @@ wxString QTImportPlugin::GetPluginFormatDescription()
    return DESC;
 }
 
-ImportFileHandle *QTImportPlugin::Open(const wxString & Filename)
+std::unique_ptr<ImportFileHandle> QTImportPlugin::Open(const wxString & Filename)
 {
    OSErr err;
    FSRef inRef;
@@ -209,7 +209,7 @@ ImportFileHandle *QTImportPlugin::Open(const wxString & Filename)
       return NULL;
    }
 
-   return new QTImportFileHandle(Filename, theMovie);
+   return std::make_unique<QTImportFileHandle>(Filename, theMovie);
 }
 
 
