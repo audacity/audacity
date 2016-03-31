@@ -1581,7 +1581,6 @@ class ExportMP3 final : public ExportPlugin
 public:
 
    ExportMP3();
-   void Destroy();
    bool CheckFileName(wxFileName & filename, int format);
 
    // Required
@@ -1618,11 +1617,6 @@ ExportMP3::ExportMP3()
    SetMaxChannels(2,0);
    SetCanMetaData(true,0);
    SetDescription(_("MP3 Files"),0);
-}
-
-void ExportMP3::Destroy()
-{
-   delete this;
 }
 
 bool ExportMP3::CheckFileName(wxFileName & WXUNUSED(filename), int WXUNUSED(format))
@@ -2103,9 +2097,9 @@ void ExportMP3::AddFrame(struct id3_tag *tp, const wxString & n, const wxString 
 }
 #endif
 
-ExportPlugin *New_ExportMP3()
+movable_ptr<ExportPlugin> New_ExportMP3()
 {
-   return new ExportMP3();
+   return make_movable<ExportMP3>();
 }
 
 //----------------------------------------------------------------------------

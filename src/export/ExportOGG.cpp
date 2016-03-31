@@ -128,7 +128,6 @@ class ExportOGG final : public ExportPlugin
 public:
 
    ExportOGG();
-   void Destroy();
 
    // Required
    wxWindow *OptionsCreate(wxWindow *parent, int format) override;
@@ -157,11 +156,6 @@ ExportOGG::ExportOGG()
    SetMaxChannels(255,0);
    SetCanMetaData(true,0);
    SetDescription(_("Ogg Vorbis Files"),0);
-}
-
-void ExportOGG::Destroy()
-{
-   delete this;
 }
 
 int ExportOGG::Export(AudacityProject *project,
@@ -362,9 +356,9 @@ bool ExportOGG::FillComment(AudacityProject *project, vorbis_comment *comment, c
    return true;
 }
 
-ExportPlugin *New_ExportOGG()
+movable_ptr<ExportPlugin> New_ExportOGG()
 {
-   return new ExportOGG();
+   return make_movable<ExportOGG>();
 }
 
 #endif // USE_LIBVORBIS

@@ -169,7 +169,6 @@ class ExportMP2 final : public ExportPlugin
 public:
 
    ExportMP2();
-   void Destroy();
 
    // Required
 
@@ -202,11 +201,6 @@ ExportMP2::ExportMP2()
    SetMaxChannels(2,0);
    SetCanMetaData(true,0);
    SetDescription(_("MP2 Files"),0);
-}
-
-void ExportMP2::Destroy()
-{
-   delete this;
 }
 
 int ExportMP2::Export(AudacityProject *project,
@@ -443,9 +437,9 @@ void ExportMP2::AddFrame(struct id3_tag *tp, const wxString & n, const wxString 
 }
 #endif
 
-ExportPlugin *New_ExportMP2()
+movable_ptr<ExportPlugin> New_ExportMP2()
 {
-   return new ExportMP2();
+   return make_movable<ExportMP2>();
 }
 
 #endif // #ifdef USE_LIBTWOLAME

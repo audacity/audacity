@@ -75,7 +75,6 @@
 //----------------------------------------------------------------------------
 #include <wx/arrimpl.cpp>
 
-WX_DEFINE_USER_EXPORTED_OBJARRAY(ExportPluginArray);
 WX_DEFINE_USER_EXPORTED_OBJARRAY(FormatInfoArray);
 
 ExportPlugin::ExportPlugin()
@@ -110,11 +109,6 @@ int ExportPlugin::AddFormat()
 int ExportPlugin::GetFormatCount()
 {
    return mFormatInfos.Count();
-}
-
-void ExportPlugin::Destroy()
-{
-   delete this;
 }
 
 /**
@@ -299,11 +293,6 @@ Exporter::Exporter()
 
 Exporter::~Exporter()
 {
-   for (size_t i = 0; i < mPlugins.GetCount(); i++) {
-      mPlugins[i]->Destroy();
-   }
-   mPlugins.Clear();
-
    if (mMixerSpec) {
       delete mMixerSpec;
    }
@@ -318,9 +307,9 @@ void Exporter::SetFileDialogTitle( const wxString & DialogTitle )
 int Exporter::FindFormatIndex(int exportindex)
 {
    int c = 0;
-   for (size_t i = 0; i < mPlugins.GetCount(); i++)
+   for (const auto &pPlugin : mPlugins)
    {
-      for (int j = 0; j < mPlugins[i]->GetFormatCount(); j++)
+      for (int j = 0; j < pPlugin->GetFormatCount(); j++)
       {
          if (exportindex == c) return j;
          c++;
@@ -329,12 +318,12 @@ int Exporter::FindFormatIndex(int exportindex)
    return 0;
 }
 
-void Exporter::RegisterPlugin(ExportPlugin *ExportPlugin)
+void Exporter::RegisterPlugin(movable_ptr<ExportPlugin> &&ExportPlugin)
 {
-   mPlugins.Add(ExportPlugin);
+   mPlugins.push_back(std::move(ExportPlugin));
 }
 
-const ExportPluginArray Exporter::GetPlugins()
+const ExportPluginArray &Exporter::GetPlugins()
 {
    return mPlugins;
 }
@@ -399,10 +388,12 @@ bool Exporter::Process(AudacityProject *project, int numChannels,
    mT1 = t1;
    mActualName = mFilename;
 
-   for (size_t i = 0; i < mPlugins.GetCount(); i++) {
-      for (int j = 0; j < mPlugins[i]->GetFormatCount(); j++)
+   int i = -1;
+   for (const auto &pPlugin : mPlugins) {
+      ++i;
+      for (int j = 0; j < pPlugin->GetFormatCount(); j++)
       {
-         if (mPlugins[i]->GetFormat(j).IsSameAs(type, false))
+         if (pPlugin->GetFormat(j).IsSameAs(type, false))
          {
             mFormat = i;
             mSubFormat = j;
@@ -508,15 +499,19 @@ bool Exporter::GetFilename()
 
    mFilterIndex = 0;
 
-   for (size_t i = 0; i < mPlugins.GetCount(); i++) {
-      for (int j = 0; j < mPlugins[i]->GetFormatCount(); j++)
-      {
-         maskString += mPlugins[i]->GetMask(j) + wxT("|");
-         if (mPlugins[i]->GetFormat(j) == defaultFormat) {
-            mFormat = i;
-            mSubFormat = j;
+   {
+      int i = -1;
+      for (const auto &pPlugin : mPlugins) {
+         ++i;
+         for (int j = 0; j < pPlugin->GetFormatCount(); j++)
+         {
+            maskString += pPlugin->GetMask(j) + wxT("|");
+            if (mPlugins[i]->GetFormat(j) == defaultFormat) {
+               mFormat = i;
+               mSubFormat = j;
+            }
+            if (mFormat == -1) mFilterIndex++;
          }
-         if (mFormat == -1) mFilterIndex++;
       }
    }
    if (mFormat == -1)
@@ -561,9 +556,11 @@ bool Exporter::GetFilename()
       mFilterIndex = fd.GetFilterIndex();
 
       int c = 0;
-      for (size_t i = 0; i < mPlugins.GetCount(); i++)
+      int i = -1;
+      for (const auto &pPlugin : mPlugins)
       {
-         for (int j = 0; j < mPlugins[i]->GetFormatCount(); j++)
+         ++i;
+         for (int j = 0; j < pPlugin->GetFormatCount(); j++)
          {
             if (mFilterIndex == c)
             {
@@ -713,9 +710,11 @@ void Exporter::DisplayOptions(int index)
 {
    int c = 0;
    int mf = -1, msf = -1;
-   for (size_t i = 0; i < mPlugins.GetCount(); i++)
+   int i = -1;
+   for (const auto &pPlugin : mPlugins)
    {
-      for (int j = 0; j < mPlugins[i]->GetFormatCount(); j++)
+      ++i;
+      for (int j = 0; j < pPlugin->GetFormatCount(); j++)
       {
          if (index == c)
          {
@@ -856,11 +855,11 @@ void Exporter::CreateUserPane(wxWindow *parent)
             mBook = safenew wxSimplebook(S.GetParent());
             S.AddWindow(mBook, wxEXPAND);
                                   
-            for (size_t i = 0; i < mPlugins.GetCount(); i++)
+            for (const auto &pPlugin : mPlugins)
             {
-               for (int j = 0; j < mPlugins[i]->GetFormatCount(); j++)
+               for (int j = 0; j < pPlugin->GetFormatCount(); j++)
                {
-                  mBook->AddPage(mPlugins[i]->OptionsCreate(mBook, j), wxEmptyString);
+                  mBook->AddPage(pPlugin->OptionsCreate(mBook, j), wxEmptyString);
                }
             }
          }

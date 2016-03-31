@@ -178,7 +178,6 @@ class ExportFLAC final : public ExportPlugin
 public:
 
    ExportFLAC();
-   void Destroy();
 
    // Required
 
@@ -211,11 +210,6 @@ ExportFLAC::ExportFLAC()
    SetMaxChannels(FLAC__MAX_CHANNELS,0);
    SetCanMetaData(true,0);
    SetDescription(_("FLAC Files"),0);
-}
-
-void ExportFLAC::Destroy()
-{
-   delete this;
 }
 
 int ExportFLAC::Export(AudacityProject *project,
@@ -403,9 +397,9 @@ bool ExportFLAC::GetMetadata(AudacityProject *project, const Tags *tags)
    return true;
 }
 
-ExportPlugin *New_ExportFLAC()
+movable_ptr<ExportPlugin> New_ExportFLAC()
 {
-   return new ExportFLAC();
+   return make_movable<ExportFLAC>();
 }
 
 #endif // USE_LIBFLAC

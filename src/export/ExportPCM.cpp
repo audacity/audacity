@@ -308,7 +308,6 @@ class ExportPCM final : public ExportPlugin
 public:
 
    ExportPCM();
-   void Destroy();
 
    // Required
 
@@ -376,11 +375,6 @@ ExportPCM::ExportPCM()
 #endif
    SetExtensions(allext, format);
    SetMaxChannels(255, format);
-}
-
-void ExportPCM::Destroy()
-{
-   delete this;
 }
 
 /**
@@ -915,7 +909,7 @@ bool ExportPCM::CheckFileName(wxFileName &filename, int format)
    return ExportPlugin::CheckFileName(filename, format);
 }
 
-ExportPlugin *New_ExportPCM()
+movable_ptr<ExportPlugin> New_ExportPCM()
 {
-   return new ExportPCM();
+   return make_movable<ExportPCM>();
 }
