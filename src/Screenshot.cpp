@@ -9,6 +9,7 @@
 *******************************************************************/
 
 #include "Screenshot.h"
+#include "MemoryX.h"
 #include "commands/ScreenshotCommand.h"
 #include "commands/CommandTargets.h"
 #include "commands/CommandDirectory.h"
@@ -140,20 +141,20 @@ class ScreenFrameTimer final : public wxTimer
                     wxEvent & event)
    {
       screenFrame = frame;
-      evt = event.Clone();
+      evt.reset(event.Clone());
    }
 
    void Notify() override
    {
+      // Process timer notification just once, then destroy self
       evt->SetEventObject(NULL);
       screenFrame->ProcessEvent(*evt);
-      delete evt;
       delete this;
    }
 
  private:
    ScreenFrame *screenFrame;
-   wxEvent *evt;
+   std::unique_ptr<wxEvent> evt;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -463,7 +464,8 @@ bool ScreenFrame::ProcessEvent(wxEvent & e)
        e.GetEventType() == wxEVT_COMMAND_BUTTON_CLICKED &&
        id >= IdAllDelayedEvents && id <= IdLastDelayedEvent &&
        e.GetEventObject() != NULL) {
-      ScreenFrameTimer *timer = new ScreenFrameTimer(this, e);
+      // safenew because it's a one-shot that deletes itself
+      ScreenFrameTimer *timer = safenew ScreenFrameTimer(this, e);
       timer->Start(5000, true);
       return true;
    }
