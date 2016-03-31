@@ -418,6 +418,14 @@ public:
       ArrayOf<ArrayOf<X>>::operator=(std::move(that));
       return *this;
    }
+
+   using ArrayOf<ArrayOf<X>>::reinit;
+   void reinit(size_t countN, size_t countM, bool initialize = false)
+   {
+      reinit(countN, false);
+      for (size_t ii = 0; ii < countN; ++ii)
+         (*this)[ii].reinit(countM, initialize);
+   }
 };
 
 /*
