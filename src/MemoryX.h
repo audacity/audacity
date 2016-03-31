@@ -552,8 +552,10 @@ static char*THIS_FILE = __FILE__;
 // not move them).
 #ifdef __AUDACITY_OLD_STD__
 template<typename T> using movable_ptr = std::shared_ptr<T>;
+template<typename T, typename Deleter> using movable_ptr_with_deleter_base = std::shared_ptr<T>;
 #else
 template<typename T> using movable_ptr = std::unique_ptr<T>;
+template<typename T, typename Deleter> using movable_ptr_with_deleter_base = std::unique_ptr<T, Deleter>;
 #endif
 
 template<typename T, typename... Args>
@@ -566,6 +568,32 @@ inline movable_ptr<T> make_movable(Args&&... args)
       make_unique
 #endif
       <T>(std::forward<Args>(args)...);
+}
+
+template<typename T, typename Deleter> class movable_ptr_with_deleter
+   : public movable_ptr_with_deleter_base < T, Deleter >
+{
+public:
+   // Do not expose a constructor that takes only a pointer without deleter
+   // That is important when implemented with shared_ptr
+   movable_ptr_with_deleter() {};
+   movable_ptr_with_deleter(T* p, const Deleter &d)
+      : movable_ptr_with_deleter_base<T, Deleter>( p, d ) {}
+   movable_ptr_with_deleter &operator= (movable_ptr_with_deleter&& that)
+   {
+      if (this != &that) {
+         ((movable_ptr_with_deleter_base<T, Deleter>&)(*this)) =
+            std::move(that);
+      }
+      return *this;
+   }
+};
+
+template<typename T, typename Deleter, typename... Args>
+inline movable_ptr_with_deleter<T, Deleter>
+make_movable_with_deleter(const Deleter &d, Args&&... args)
+{
+   return movable_ptr_with_deleter(safenew T(std::forward<Args>(args...)), d);
 }
 
 #endif // __AUDACITY_MEMORY_X_H__
