@@ -72,7 +72,7 @@ using ModuleInterfaceHandle = movable_ptr_with_deleter<
 
 typedef std::map<wxString, ModuleMain *> ModuleMainMap;
 typedef std::map<wxString, ModuleInterfaceHandle> ModuleMap;
-typedef std::map<ModuleInterface *, wxDynamicLibrary *> LibraryMap;
+typedef std::map<ModuleInterface *, movable_ptr<wxDynamicLibrary>> LibraryMap;
 
 class ModuleManager final : public ModuleManagerInterface
 {

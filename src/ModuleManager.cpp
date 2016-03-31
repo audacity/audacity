@@ -449,7 +449,7 @@ void ModuleManager::InitializeBuiltins()
 
 ModuleInterface *ModuleManager::LoadModule(const wxString & path)
 {
-   wxDynamicLibrary *lib = new wxDynamicLibrary();
+   auto lib = std::make_unique<wxDynamicLibrary>();
 
    if (lib->Load(path, wxDL_NOW))
    {
@@ -468,7 +468,7 @@ ModuleInterface *ModuleManager::LoadModule(const wxString & path)
 
                auto module = handle.get();
                mDynModules[PluginManager::GetID(module)] = std::move(handle);
-               mLibs[module] = lib;
+               mLibs[module] = std::move(lib);
 
                return module;
             }
@@ -477,8 +477,6 @@ ModuleInterface *ModuleManager::LoadModule(const wxString & path)
 
       lib->Unload();
    }
-
-   delete lib;
 
    return NULL;
 }
@@ -490,11 +488,10 @@ void ModuleInterfaceDeleter::operator() (ModuleInterface *pInterface) const
       pInterface->Terminate();
 
       auto &libs = ModuleManager::Get().mLibs;
-      if (libs.find(pInterface) != libs.end())
-      {
-         libs[pInterface]->Unload();
-         libs.erase(pInterface);
-      }
+
+      auto iter = libs.find(pInterface);
+      if (iter != libs.end())
+         libs.erase(iter); // This causes unloading in ~wxDynamicLibrary
 
       delete pInterface;
    }
