@@ -75,9 +75,6 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    // DirManager as a parameter, because you might be copying
    // from one project to another...
    Sequence(const Sequence &orig, DirManager *projDirManager);
-   Sequence *Duplicate(DirManager *projDirManager) const {
-      return new Sequence(*this, projDirManager);
-   }
 
    ~Sequence();
 
