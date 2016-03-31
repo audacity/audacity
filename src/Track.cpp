@@ -1287,12 +1287,12 @@ namespace {
 
 WaveTrackArray TrackList::GetWaveTrackArray(bool selectionOnly, bool includeMuted)
 {
-   return GetWaveTracks<WaveTrackArray>(cbegin(), cend(), selectionOnly, includeMuted);
+   return GetWaveTracks<WaveTrackArray>(begin(), end(), selectionOnly, includeMuted);
 }
 
 WaveTrackConstArray TrackList::GetWaveTrackConstArray(bool selectionOnly, bool includeMuted) const
 {
-   return GetWaveTracks<WaveTrackConstArray>(cbegin(), cend(), selectionOnly, includeMuted);
+   return GetWaveTracks<WaveTrackConstArray>(begin(), end(), selectionOnly, includeMuted);
 }
 
 #if defined(USE_MIDI)
