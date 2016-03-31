@@ -16,6 +16,8 @@ Describes shared object that is used to access FFmpeg libraries.
 #if !defined(__AUDACITY_FFMPEG__)
 #define __AUDACITY_FFMPEG__
 
+#include "MemoryX.h"
+
 // TODO: Determine whether the libav* headers come from the FFmpeg or libav
 // project and set IS_FFMPEG_PROJECT depending on it.
 #define IS_FFMPEG_PROJECT 1
@@ -395,7 +397,7 @@ int ufile_fopen(AVIOContext **s, const wxString & name, int flags);
 int ufile_fopen_input(AVFormatContext **ic_ptr, wxString & name);
 int ufile_close(AVIOContext *pb);
 
-typedef struct _streamContext
+struct streamContext
 {
    bool                 m_use;                           // TRUE = this stream will be loaded into Audacity
    AVStream            *m_stream;                        // an AVStream *
@@ -421,7 +423,12 @@ typedef struct _streamContext
    int                  m_osamplesize;                   // output sample size in bytes
    sampleFormat         m_osamplefmt;                    // output sample format
 
-} streamContext;
+   streamContext() { memset(this, 0, sizeof(*this)); }
+   ~streamContext();
+};
+
+using Scs = ArrayOf<std::unique_ptr<streamContext>>;
+using ScsPtr = std::shared_ptr<Scs>;
 
 // common utility functions
 // utility calls that are shared with ImportFFmpeg and ODDecodeFFmpegTask
@@ -853,6 +860,14 @@ extern "C" {
       (linesize, nb_channels, nb_samples, sample_fmt, align)
    );
 };
+
+
+inline streamContext::~streamContext()
+{
+   if (m_decodedAudioSamples)
+      av_free(m_decodedAudioSamples);
+}
+
 #endif
 
 #endif // USE_FFMPEG
