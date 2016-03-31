@@ -796,30 +796,25 @@ void AudacityProject::CreateMenusAndCommands()
       /*i18n-hint: 'Transport' is the name given to the set of controls that
       play, record, pause etc. */
       c->BeginMenu(_("T&ransport"));
-      c->SetDefaultFlags(AudioIONotBusyFlag, AudioIONotBusyFlag);
+      c->SetDefaultFlags(CanStopAudioStreamFlag, CanStopAudioStreamFlag);
 
       /* i18n-hint: (verb) Start or Stop audio playback*/
-      c->AddItem(wxT("PlayStop"), _("Pl&ay/Stop"), FN(OnPlayStop), wxT("Space"),
-         AlwaysEnabledFlag,
-         AlwaysEnabledFlag);
-      c->AddItem(wxT("PlayStopSelect"), _("Play/Stop and &Set Cursor"), FN(OnPlayStopSelect), wxT("Shift+A"),
-         AlwaysEnabledFlag,
-         AlwaysEnabledFlag);
+      c->AddItem(wxT("PlayStop"), _("Pl&ay/Stop"), FN(OnPlayStop), wxT("Space"));
+      c->AddItem(wxT("PlayStopSelect"), _("Play/Stop and &Set Cursor"), FN(OnPlayStopSelect), wxT("Shift+A"));
       c->AddItem(wxT("PlayLooped"), _("&Loop Play"), FN(OnPlayLooped), wxT("Shift+Space"),
-         WaveTracksExistFlag | AudioIONotBusyFlag,
-         WaveTracksExistFlag | AudioIONotBusyFlag);
-      c->AddItem(wxT("Pause"), _("&Pause"), FN(OnPause), wxT("P"),
-         AlwaysEnabledFlag,
-         AlwaysEnabledFlag);
+         WaveTracksExistFlag | AudioIONotBusyFlag | CanStopAudioStreamFlag,
+         WaveTracksExistFlag | AudioIONotBusyFlag | CanStopAudioStreamFlag);
+      c->AddItem(wxT("Pause"), _("&Pause"), FN(OnPause), wxT("P"));
       c->AddItem(wxT("SkipStart"), _("S&kip to Start"), FN(OnSkipStart), wxT("Home"),
-         AudioIONotBusyFlag,
-         AudioIONotBusyFlag);
+                 AudioIONotBusyFlag, AudioIONotBusyFlag);
       c->AddItem(wxT("SkipEnd"), _("Skip to E&nd"), FN(OnSkipEnd), wxT("End"),
-         WaveTracksExistFlag | AudioIONotBusyFlag,
-         WaveTracksExistFlag | AudioIONotBusyFlag);
+                 WaveTracksExistFlag | AudioIONotBusyFlag,
+                 WaveTracksExistFlag | AudioIONotBusyFlag);
 
       c->AddSeparator();
 
+      c->SetDefaultFlags(AudioIONotBusyFlag | CanStopAudioStreamFlag,
+                         AudioIONotBusyFlag | CanStopAudioStreamFlag);
       /* i18n-hint: (verb)*/
       c->AddItem(wxT("Record"), _("&Record"), FN(OnRecord), wxT("R"));
       c->AddItem(wxT("TimerRecord"), _("&Timer Record..."), FN(OnTimerRecord), wxT("Shift+T"));
@@ -1808,6 +1803,10 @@ wxUint32 AudacityProject::GetUpdateFlags()
 
       if (!mIsCapturing)
       flags |= CaptureNotBusyFlag;
+
+   ControlToolBar *bar = GetControlToolBar();
+   if (bar->ControlToolBar::CanStopAudioStream())
+      flags |= CanStopAudioStreamFlag;
 
    return flags;
 }
