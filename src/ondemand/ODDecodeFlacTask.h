@@ -51,7 +51,7 @@ class ODDecodeFlacTask final : public ODDecodeTask
    virtual ~ODDecodeFlacTask();
 
 
-   ODTask* Clone() override;
+   std::unique_ptr<ODTask> Clone() const override;
    ///Creates an ODFileDecoder that decodes a file of filetype the subclass handles.
    ODFileDecoder* CreateFileDecoder(const wxString & fileName) override;
 

@@ -44,8 +44,6 @@ class ODDecodeTask /* not final */ : public ODTask
    ODDecodeTask();
    virtual ~ODDecodeTask(){};
 
-   virtual ODTask* Clone()=0;
-
    // NEW virtual:
    virtual bool SeekingAllowed();
 

@@ -506,7 +506,7 @@ int FLACImportFileHandle::Import(TrackFactory *trackFactory,
          {
             //if we have 3 more channels, they get imported on seperate tracks, so we add individual tasks for each.
             ODManager::Instance()->AddNewTask(mDecoderTask);
-            mDecoderTask=new ODDecodeFlacTask; //TODO: see if we need to use clone to keep the metadata.
+            mDecoderTask = new ODDecodeFlacTask; //TODO: see if we need to use clone to keep the metadata.
          }
       }
       //if we have mono or a linked track (stereo), we add ONE task for the one linked wave track
