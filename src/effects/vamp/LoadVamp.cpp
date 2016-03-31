@@ -37,7 +37,8 @@ using namespace Vamp::HostExt;
 DECLARE_MODULE_ENTRY(AudacityModule)
 {
    // Create and register the importer
-   return new VampEffectsModule(moduleManager, path);
+   // Trust the module manager not to leak this
+   return safenew VampEffectsModule(moduleManager, path);
 }
 
 // ============================================================================

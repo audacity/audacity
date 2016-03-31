@@ -56,7 +56,8 @@ Functions that find and load all LV2 plugins on the system.
 DECLARE_MODULE_ENTRY(AudacityModule)
 {
    // Create and register the importer
-   return new LV2EffectsModule(moduleManager, path);
+   // Trust the module manager not to leak this
+   return safenew LV2EffectsModule(moduleManager, path);
 }
 
 // ============================================================================

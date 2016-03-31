@@ -49,7 +49,8 @@
 DECLARE_MODULE_ENTRY(AudacityModule)
 {
    // Create and register the importer
-   return new AudioUnitEffectsModule(moduleManager, path);
+   // Trust the module manager not to leak this
+   return safenew AudioUnitEffectsModule(moduleManager, path);
 }
 
 // ============================================================================

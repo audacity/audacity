@@ -73,7 +73,8 @@ const static wxChar *kShippedEffects[] =
 DECLARE_MODULE_ENTRY(AudacityModule)
 {
    // Create and register the importer
-   return new LadspaEffectsModule(moduleManager, path);
+   // Trust the module manager not to leak this
+   return safenew LadspaEffectsModule(moduleManager, path);
 }
 
 // ============================================================================

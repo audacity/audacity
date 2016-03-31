@@ -213,15 +213,7 @@ ModuleManager::~ModuleManager()
    }
    mModules.Clear();
 
-   ModuleMap::iterator iter = mDynModules.begin();
-   while (iter != mDynModules.end())
-   {
-      UnloadModule(iter->second);
-
-      mDynModules.erase(iter->first);
-
-      iter = mDynModules.begin();
-   }
+   mDynModules.clear();
 
    if (pBuiltinModuleList != NULL)
    {
@@ -432,18 +424,25 @@ void ModuleManager::InitializeBuiltins()
 
    for (size_t i = 0, cnt = pBuiltinModuleList->GetCount(); i < cnt; i++)
    {
-      ModuleInterface *module = ((ModuleMain) (*pBuiltinModuleList)[i])(this, NULL);
+      ModuleInterfaceHandle module {
+         ((ModuleMain)(*pBuiltinModuleList)[i])(this, NULL), ModuleInterfaceDeleter{}
+      };
 
       if (module->Initialize())
       {
          // Register the provider
-         const PluginID & id = pm.RegisterPlugin(module);
+         ModuleInterface *pInterface = module.get();
+         const PluginID & id = pm.RegisterPlugin(pInterface);
 
          // Need to remember it 
-         mDynModules[id] = module;
+         mDynModules[id] = std::move(module);
 
          // Allow the module to auto-register children
-         module->AutoRegisterPlugins(pm);
+         pInterface->AutoRegisterPlugins(pm);
+      }
+      else
+      {
+         // Don't leak!  Destructor of module does that.
       }
    }
 }
@@ -459,19 +458,20 @@ ModuleInterface *ModuleManager::LoadModule(const wxString & path)
                                                             &success);
       if (success && audacityMain)
       {
-         ModuleInterface *module = audacityMain(this, &path);
-         if (module)
+         ModuleInterfaceHandle handle {
+            audacityMain(this, &path), ModuleInterfaceDeleter{}
+         };
+         if (handle)
          {
-            if (module->Initialize())
+            if (handle->Initialize())
             {
 
-               mDynModules[PluginManager::GetID(module)] = module;
+               auto module = handle.get();
+               mDynModules[PluginManager::GetID(module)] = std::move(handle);
                mLibs[module] = lib;
 
                return module;
             }
-            module->Terminate();
-            delete module;
          }
       }
 
@@ -483,35 +483,42 @@ ModuleInterface *ModuleManager::LoadModule(const wxString & path)
    return NULL;
 }
 
-void ModuleManager::UnloadModule(ModuleInterface *module)
+void ModuleInterfaceDeleter::operator() (ModuleInterface *pInterface) const
 {
-   if (module)
+   if (pInterface)
    {
-      module->Terminate();
+      pInterface->Terminate();
 
-      if (mLibs.find(module) != mLibs.end())
+      auto &libs = ModuleManager::Get().mLibs;
+      if (libs.find(pInterface) != libs.end())
       {
-         mLibs[module]->Unload();
-         mLibs.erase(module);
+         libs[pInterface]->Unload();
+         libs.erase(pInterface);
       }
 
-      delete module; //After terminating and unloading, we can safely DELETE the module
+      delete pInterface;
    }
 }
 
-void ModuleManager::RegisterModule(ModuleInterface *module)
+void ModuleManager::RegisterModule(ModuleInterface *inModule)
 {
-   PluginID id = PluginManager::GetID(module);
+   std::unique_ptr<ModuleInterface> module{ inModule };
+
+   PluginID id = PluginManager::GetID(module.get());
 
    if (mDynModules.find(id) != mDynModules.end())
    {
       // TODO:  Should we complain about a duplicate registeration????
+      // PRL:  Don't leak resources!
+      module->Terminate();
       return;
    }
 
-   mDynModules[id] = module;
+   mDynModules[id] = ModuleInterfaceHandle {
+      module.release(), ModuleInterfaceDeleter{}
+   };
 
-   PluginManager::Get().RegisterPlugin(module);
+   PluginManager::Get().RegisterPlugin(inModule);
 }
 
 void ModuleManager::FindAllPlugins(PluginIDList & providers, wxArrayString & paths)
@@ -575,7 +582,7 @@ IdentInterface *ModuleManager::CreateProviderInstance(const PluginID & providerI
 {
    if (path.IsEmpty() && mDynModules.find(providerID) != mDynModules.end())
    {
-      return mDynModules[providerID];
+      return mDynModules[providerID].get();
    }
 
    return LoadModule(path);

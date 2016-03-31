@@ -14,6 +14,7 @@
 
 #include <wx/dynlib.h>
 
+#include "MemoryX.h"
 #include <map>
 #include <vector>
 
@@ -61,16 +62,21 @@ private:
    fnModuleDispatch mDispatch;
 };
 
+struct ModuleInterfaceDeleter {
+   void operator ()(ModuleInterface *pInterface) const;
+};
+
+using ModuleInterfaceHandle = movable_ptr_with_deleter<
+   ModuleInterface, ModuleInterfaceDeleter
+>;
+
 typedef std::map<wxString, ModuleMain *> ModuleMainMap;
-typedef std::map<wxString, ModuleInterface *> ModuleMap;
+typedef std::map<wxString, ModuleInterfaceHandle> ModuleMap;
 typedef std::map<ModuleInterface *, wxDynamicLibrary *> LibraryMap;
 
 class ModuleManager final : public ModuleManagerInterface
 {
 public:
-   ModuleManager();
-   virtual ~ModuleManager();
-
    // -------------------------------------------------------------------------
    // ModuleManagerInterface implementation
    // -------------------------------------------------------------------------
@@ -102,11 +108,15 @@ public:
    bool IsPluginValid(const PluginID & provider, const wxString & path);
 
 private:
+   // I'm a singleton class
+   ModuleManager();
+   virtual ~ModuleManager();
+
    void InitializeBuiltins();
    ModuleInterface *LoadModule(const wxString & path);
-   void UnloadModule(ModuleInterface *module);
 
 private:
+   friend ModuleInterfaceDeleter;
    static ModuleManager *mInstance;
 
    ModuleMainMap mModuleMains;
