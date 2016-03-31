@@ -281,6 +281,8 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    int GetOpenProjectCount();
    bool IsProjectSaved();
 
+   bool ProjectHasTracks();
+
 #include "Menus.h"
 
    CommandManager *GetCommandManager() { return &mCommandManager; }

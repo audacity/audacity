@@ -2168,10 +2168,8 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
       gAudioIO->StopStream();
    }
 
-   // These two lines test for an 'empty' project.
-   // of course it could still have a history at this stage.
-   TrackListIterator iter2(mTracks);
-   bool bHasTracks = (iter2.First() != NULL);
+   // MY: Use routine here so other processes can make same check
+   bool bHasTracks = ProjectHasTracks();
 
    // We may not bother to prompt the user to save, if the
    // project is now empty.
@@ -5246,4 +5244,13 @@ bool AudacityProject::SaveFromTimerRecording(wxFileName fnFile) {
    }
 
    return bSuccess;
+}
+
+// MY: Does the project have any tracks?
+bool AudacityProject::ProjectHasTracks() {
+   // These two lines test for an 'empty' project.
+   // of course it could still have a history at this stage.
+   TrackListIterator iter2(mTracks);
+   bool bHasTracks = (iter2.First() != NULL);
+   return bHasTracks;
 }
