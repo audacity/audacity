@@ -28,13 +28,14 @@ DEFINE_EVENT_TYPE(wxEVT_APP_COMMAND_RECEIVED)
 IMPLEMENT_DYNAMIC_CLASS(AppCommandEvent, wxEvent)
 
 AppCommandEvent::AppCommandEvent(wxEventType commandType, int id)
-: wxCommandEvent(commandType, id), mCommand(NULL)
+: wxCommandEvent(commandType, id)
 { }
 
 // Copy constructor
-AppCommandEvent::AppCommandEvent(const AppCommandEvent &event) : wxCommandEvent(event)
+AppCommandEvent::AppCommandEvent(const AppCommandEvent &event)
+   : wxCommandEvent(event)
+   , mCommand(event.mCommand)
 {
-   this->mCommand = event.mCommand;
 }
 
 AppCommandEvent::~AppCommandEvent()
@@ -48,17 +49,13 @@ wxEvent *AppCommandEvent::Clone() const
 }
 
 /// Store a pointer to a command object
-void AppCommandEvent::SetCommand(Command *cmd)
+void AppCommandEvent::SetCommand(const CommandHolder &cmd)
 {
-   wxASSERT(NULL == mCommand);
+   wxASSERT(!mCommand);
    mCommand = cmd;
 }
 
-// When the command pointer is retrieved, the caller is responsible for
-// deletion.
-Command *AppCommandEvent::GetCommand()
+CommandHolder AppCommandEvent::GetCommand()
 {
-   Command *tmp = mCommand;
-   mCommand     = NULL;
-   return tmp;
+   return mCommand;
 }

@@ -51,7 +51,7 @@ void ScriptCommandRelay::Run()
 }
 
 /// Send a command to a project, to be applied in that context.
-void ScriptCommandRelay::PostCommand(AudacityProject *project, Command *cmd)
+void ScriptCommandRelay::PostCommand(AudacityProject *project, const CommandHolder &cmd)
 {
    wxASSERT(project != NULL);
    wxASSERT(cmd != NULL);
@@ -66,20 +66,22 @@ void ScriptCommandRelay::PostCommand(AudacityProject *project, Command *cmd)
 /// the GUI at a time causes problems with wxwidgets.
 int ExecCommand(wxString *pIn, wxString *pOut)
 {
-   CommandBuilder builder(*pIn);
-   if (builder.WasValid())
    {
-      AudacityProject *project = GetActiveProject();
-      project->SafeDisplayStatusMessage(wxT("Received script command"));
-      Command *cmd = builder.GetCommand();
-      ScriptCommandRelay::PostCommand(project, cmd);
+      CommandBuilder builder(*pIn);
+      if (builder.WasValid())
+      {
+         AudacityProject *project = GetActiveProject();
+         project->SafeDisplayStatusMessage(wxT("Received script command"));
+         CommandHolder cmd = builder.GetCommand();
+         ScriptCommandRelay::PostCommand(project, cmd);
 
-      *pOut = wxEmptyString;
-   } else
-   {
-      *pOut = wxT("Syntax error!\n");
-      *pOut += builder.GetErrorMessage() + wxT("\n");
-      builder.Cleanup();
+         *pOut = wxEmptyString;
+      }
+      else
+      {
+         *pOut = wxT("Syntax error!\n");
+         *pOut += builder.GetErrorMessage() + wxT("\n");
+      }
    }
 
    // Wait until all responses from the command have been received.

@@ -97,7 +97,7 @@ class ScreenFrame final : public wxFrame
    void OnCaptureFirstTrack(wxCommandEvent & event);
    void OnCaptureSecondTrack(wxCommandEvent & event);
 
-   ScreenshotCommand *CreateCommand();
+   std::unique_ptr<ScreenshotCommand> CreateCommand();
 
    wxCheckBox *mDelayCheckBox;
    wxTextCtrl *mDirectoryTextBox;
@@ -105,7 +105,7 @@ class ScreenFrame final : public wxFrame
    wxToggleButton *mWhite;
    wxStatusBar *mStatus;
 
-   ScreenshotCommand *mCommand;
+   std::unique_ptr<ScreenshotCommand> mCommand;
    CommandExecutionContext mContext;
 
    DECLARE_EVENT_TABLE()
@@ -253,16 +253,16 @@ BEGIN_EVENT_TABLE(ScreenFrame, wxFrame)
 END_EVENT_TABLE();
 
 // Must not be called before CreateStatusBar!
-ScreenshotCommand *ScreenFrame::CreateCommand()
+std::unique_ptr<ScreenshotCommand> ScreenFrame::CreateCommand()
 {
    wxASSERT(mStatus != NULL);
-   CommandOutputTarget *output =
-      new CommandOutputTarget(new NullProgressTarget(),
+   auto output =
+      std::make_unique<CommandOutputTarget>(new NullProgressTarget(),
                               new StatusBarTarget(*mStatus),
                               new MessageBoxTarget());
    CommandType *type = CommandDirectory::Get()->LookUp(wxT("Screenshot"));
    wxASSERT_MSG(type != NULL, wxT("Screenshot command doesn't exist!"));
-   return new ScreenshotCommand(*type, output, this);
+   return std::make_unique<ScreenshotCommand>(*type, std::move(output), this);
 }
 
 ScreenFrame::ScreenFrame(wxWindow * parent, wxWindowID id)
@@ -293,7 +293,6 @@ ScreenFrame::ScreenFrame(wxWindow * parent, wxWindowID id)
 
 ScreenFrame::~ScreenFrame()
 {
-   delete mCommand;
 }
 
 void ScreenFrame::Populate()

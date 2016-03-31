@@ -24,15 +24,15 @@ class GetProjectInfoCommandType final : public CommandType
 public:
    wxString BuildName() override;
    void BuildSignature(CommandSignature &signature) override;
-   Command *Create(CommandOutputTarget *target) override;
+   CommandHolder Create(std::unique_ptr<CommandOutputTarget> &&target) override;
 };
 
 
 class GetProjectInfoCommand final : public CommandImplementation
 {
 public:
-   GetProjectInfoCommand(CommandType &type, CommandOutputTarget *target)
-      : CommandImplementation(type, target)
+   GetProjectInfoCommand(CommandType &type, std::unique_ptr<CommandOutputTarget> &&target)
+      : CommandImplementation(type, std::move(target))
    { }
    virtual ~GetProjectInfoCommand()
    { }

@@ -30,9 +30,9 @@ void BatchEvalCommandType::BuildSignature(CommandSignature &signature)
    signature.AddParameter(wxT("ChainName"), wxT(""), chainValidator);
 }
 
-Command *BatchEvalCommandType::Create(CommandOutputTarget *target)
+CommandHolder BatchEvalCommandType::Create(std::unique_ptr<CommandOutputTarget> &&target)
 {
-   return new BatchEvalCommand(*this, target);
+   return std::make_shared<BatchEvalCommand>(*this, std::move(target));
 }
 
 bool BatchEvalCommand::Apply(CommandExecutionContext WXUNUSED(context))

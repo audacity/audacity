@@ -30,9 +30,9 @@ void GetPreferenceCommandType::BuildSignature(CommandSignature &signature)
    signature.AddParameter(wxT("PrefName"), wxT(""), prefNameValidator);
 }
 
-Command *GetPreferenceCommandType::Create(CommandOutputTarget *target)
+CommandHolder GetPreferenceCommandType::Create(std::unique_ptr<CommandOutputTarget> &&target)
 {
-   return new GetPreferenceCommand(*this, target);
+   return std::make_shared<GetPreferenceCommand>(*this, std::move(target));
 }
 
 bool GetPreferenceCommand::Apply(CommandExecutionContext WXUNUSED(context))
@@ -65,9 +65,9 @@ void SetPreferenceCommandType::BuildSignature(CommandSignature &signature)
    signature.AddParameter(wxT("PrefValue"), wxT(""), prefValueValidator);
 }
 
-Command *SetPreferenceCommandType::Create(CommandOutputTarget *target)
+CommandHolder SetPreferenceCommandType::Create(std::unique_ptr<CommandOutputTarget> &&target)
 {
-   return new SetPreferenceCommand(*this, target);
+   return std::make_shared<SetPreferenceCommand>(*this, std::move(target));
 }
 
 bool SetPreferenceCommand::Apply(CommandExecutionContext WXUNUSED(context))

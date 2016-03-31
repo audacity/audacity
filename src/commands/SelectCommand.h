@@ -24,14 +24,14 @@ class SelectCommandType final : public CommandType
 public:
    wxString BuildName() override;
    void BuildSignature(CommandSignature &signature) override;
-   Command *Create(CommandOutputTarget *target) override;
+   CommandHolder Create(std::unique_ptr<CommandOutputTarget> &&target) override;
 };
 
 class SelectCommand final : public CommandImplementation
 {
 public:
-   SelectCommand(SelectCommandType &type, CommandOutputTarget *target)
-      : CommandImplementation(type, target) { }
+   SelectCommand(SelectCommandType &type, std::unique_ptr<CommandOutputTarget> &&target)
+      : CommandImplementation(type, std::move(target)) { }
    bool Apply(CommandExecutionContext context) override;
 };
 

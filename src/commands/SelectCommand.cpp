@@ -49,9 +49,9 @@ void SelectCommandType::BuildSignature(CommandSignature &signature)
    signature.AddParameter(wxT("TrackName"), 0, trackNameValidator);
 }
 
-Command *SelectCommandType::Create(CommandOutputTarget *target)
+CommandHolder SelectCommandType::Create(std::unique_ptr<CommandOutputTarget> &&target)
 {
-   return new SelectCommand(*this, target);
+   return std::make_shared<SelectCommand>(*this, std::move(target));
 }
 
 bool SelectCommand::Apply(CommandExecutionContext context)

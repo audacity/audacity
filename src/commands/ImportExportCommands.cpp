@@ -31,9 +31,9 @@ void ImportCommandType::BuildSignature(CommandSignature &signature)
    signature.AddParameter(wxT("Filename"), wxT(""), filenameValidator);
 }
 
-Command *ImportCommandType::Create(CommandOutputTarget *target)
+CommandHolder ImportCommandType::Create(std::unique_ptr<CommandOutputTarget> &&target)
 {
-   return new ImportCommand(*this, target);
+   return std::make_shared<ImportCommand>(*this, std::move(target));
 }
 
 bool ImportCommand::Apply(CommandExecutionContext context)
@@ -66,9 +66,9 @@ void ExportCommandType::BuildSignature(CommandSignature &signature)
    signature.AddParameter(wxT("Channels"), 1, channelsValidator);
 }
 
-Command *ExportCommandType::Create(CommandOutputTarget *target)
+CommandHolder ExportCommandType::Create(std::unique_ptr<CommandOutputTarget> &&target)
 {
-   return new ExportCommand(*this, target);
+   return std::make_shared<ExportCommand>(*this, std::move(target));
 }
 
 bool ExportCommand::Apply(CommandExecutionContext context)

@@ -41,9 +41,9 @@ void SetProjectInfoCommandType::BuildSignature(CommandSignature &signature)
    signature.AddParameter(wxT(kSetOfTracksStr), wxT("x"), TracksSetValidator);
 }
 
-Command *SetProjectInfoCommandType::Create(CommandOutputTarget *target)
+CommandHolder SetProjectInfoCommandType::Create(std::unique_ptr<CommandOutputTarget> &&target)
 {
-   return new SetProjectInfoCommand(*this, target);
+   return std::make_shared<SetProjectInfoCommand>(*this, std::move(target));
 }
 
 

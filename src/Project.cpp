@@ -4632,13 +4632,13 @@ void AudacityProject::TP_DisplayStatusMessage(const wxString &msg)
 // (more overhead, but can be used from a non-GUI thread)
 void AudacityProject::SafeDisplayStatusMessage(const wxChar *msg)
 {
-   CommandOutputTarget *target
-      = new CommandOutputTarget(TargetFactory::ProgressDefault(),
+   auto target
+      = std::make_unique<CommandOutputTarget>(TargetFactory::ProgressDefault(),
                                 new StatusBarTarget(*mStatusBar),
                                 TargetFactory::MessageDefault());
    CommandType *type = CommandDirectory::Get()->LookUp(wxT("Message"));
    wxASSERT_MSG(type != NULL, wxT("Message command not found!"));
-   Command *statusCmd = type->Create(target);
+   CommandHolder statusCmd = type->Create(std::move(target));
    statusCmd->SetParameter(wxT("MessageString"), msg);
    ScriptCommandRelay::PostCommand(this, statusCmd);
 
