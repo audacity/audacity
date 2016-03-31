@@ -305,7 +305,7 @@ int ExportFLAC::Export(AudacityProject *project,
 
    const WaveTrackConstArray waveTracks =
       tracks->GetWaveTrackConstArray(selectionOnly, false);
-   Mixer *mixer = CreateMixer(waveTracks,
+   auto mixer = CreateMixer(waveTracks,
                             tracks->GetTimeTrack(),
                             t0, t1,
                             numChannels, SAMPLES_PER_RUN, false,
@@ -353,7 +353,6 @@ int ExportFLAC::Export(AudacityProject *project,
    for (i = 0; i < numChannels; i++) {
       free(tmpsmplbuf[i]);
    }
-   delete mixer;
 
    delete[] tmpsmplbuf;
 

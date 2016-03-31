@@ -116,7 +116,7 @@ public:
                        int subformat = 0) = 0;
 
 protected:
-   Mixer* CreateMixer(const WaveTrackConstArray &inputTracks,
+   std::unique_ptr<Mixer> CreateMixer(const WaveTrackConstArray &inputTracks,
          const TimeTrack *timeTrack,
          double startTime, double stopTime,
          int numOutChannels, int outBufferSize, bool outInterleaved,

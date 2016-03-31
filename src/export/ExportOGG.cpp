@@ -241,13 +241,13 @@ int ExportOGG::Export(AudacityProject *project,
 
    const WaveTrackConstArray waveTracks =
       tracks->GetWaveTrackConstArray(selectionOnly, false);
-   Mixer *mixer = CreateMixer(waveTracks,
-                            tracks->GetTimeTrack(),
-                            t0, t1,
-                            numChannels, SAMPLES_PER_RUN, false,
-                            rate, floatSample, true, mixerSpec);
-
    {
+      auto mixer = CreateMixer(waveTracks,
+         tracks->GetTimeTrack(),
+         t0, t1,
+         numChannels, SAMPLES_PER_RUN, false,
+         rate, floatSample, true, mixerSpec);
+
       ProgressDialog progress(wxFileName(fName).GetName(),
          selectionOnly ?
          _("Exporting the selected audio as Ogg Vorbis") :
@@ -312,8 +312,6 @@ int ExportOGG::Export(AudacityProject *project,
          updateResult = progress.Update(mixer->MixGetCurrentTime() - t0, t1 - t0);
       }
    }
-
-   delete mixer;
 
    ogg_stream_clear(&stream);
 

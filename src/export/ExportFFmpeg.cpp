@@ -831,7 +831,7 @@ int ExportFFmpeg::Export(AudacityProject *project,
    int pcmBufferSize = 1024;
    const WaveTrackConstArray waveTracks =
       tracks->GetWaveTrackConstArray(selectionOnly, false);
-   Mixer *mixer = CreateMixer(waveTracks,
+   auto mixer = CreateMixer(waveTracks,
       tracks->GetTimeTrack(),
       t0, t1,
       channels, pcmBufferSize, true,
@@ -857,8 +857,6 @@ int ExportFFmpeg::Export(AudacityProject *project,
          updateResult = progress.Update(mixer->MixGetCurrentTime() - t0, t1 - t0);
       }
    }
-
-   delete mixer;
 
    Finalize();
 

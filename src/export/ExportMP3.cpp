@@ -1788,33 +1788,33 @@ int ExportMP3::Export(AudacityProject *project,
 
    const WaveTrackConstArray waveTracks =
       tracks->GetWaveTrackConstArray(selectionOnly, false);
-   Mixer *mixer = CreateMixer(waveTracks,
-                            tracks->GetTimeTrack(),
-                            t0, t1,
-                            channels, inSamples, true,
-                            rate, int16Sample, true, mixerSpec);
-
-   wxString title;
-   if (rmode == MODE_SET) {
-      title.Printf(selectionOnly ?
-                   _("Exporting selected audio with %s preset") :
-                   _("Exporting entire file with %s preset"),
-                   FindName(setRates, WXSIZEOF(setRates), brate).c_str());
-   }
-   else if (rmode == MODE_VBR) {
-      title.Printf(selectionOnly ?
-                   _("Exporting selected audio with VBR quality %s") :
-                   _("Exporting entire file with VBR quality %s"),
-                   FindName(varRates, WXSIZEOF(varRates), brate).c_str());
-   }
-   else {
-      title.Printf(selectionOnly ?
-                   _("Exporting selected audio at %d Kbps") :
-                   _("Exporting entire file at %d Kbps"),
-                   brate);
-   }
-
    {
+      auto mixer = CreateMixer(waveTracks,
+         tracks->GetTimeTrack(),
+         t0, t1,
+         channels, inSamples, true,
+         rate, int16Sample, true, mixerSpec);
+
+      wxString title;
+      if (rmode == MODE_SET) {
+         title.Printf(selectionOnly ?
+            _("Exporting selected audio with %s preset") :
+            _("Exporting entire file with %s preset"),
+            FindName(setRates, WXSIZEOF(setRates), brate).c_str());
+      }
+      else if (rmode == MODE_VBR) {
+         title.Printf(selectionOnly ?
+            _("Exporting selected audio with VBR quality %s") :
+            _("Exporting entire file with VBR quality %s"),
+            FindName(varRates, WXSIZEOF(varRates), brate).c_str());
+      }
+      else {
+         title.Printf(selectionOnly ?
+            _("Exporting selected audio at %d Kbps") :
+            _("Exporting entire file at %d Kbps"),
+            brate);
+      }
+
       ProgressDialog progress(wxFileName(fName).GetName(), title);
 
       while (updateResult == eProgressSuccess) {
@@ -1855,8 +1855,6 @@ int ExportMP3::Export(AudacityProject *project,
          updateResult = progress.Update(mixer->MixGetCurrentTime() - t0, t1 - t0);
       }
    }
-
-   delete mixer;
 
    bytes = exporter.FinishStream(buffer);
 

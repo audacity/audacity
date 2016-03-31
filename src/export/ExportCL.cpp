@@ -416,7 +416,7 @@ int ExportCL::Export(AudacityProject *project,
    const TrackList *tracks = project->GetTracks();
    const WaveTrackConstArray waveTracks =
       tracks->GetWaveTrackConstArray(selectionOnly, false);
-   Mixer *mixer = CreateMixer(
+   auto mixer = CreateMixer(
                             waveTracks,
                             tracks->GetTimeTrack(),
                             t0,
@@ -519,9 +519,6 @@ int ExportCL::Export(AudacityProject *project,
 
       dlg.ShowModal();
    }
-
-   // Clean up
-   delete mixer;
 
    return updateResult;
 }
