@@ -327,16 +327,17 @@ bool BuiltinEffectsModule::IsPluginValid(const wxString & path)
 
 IdentInterface *BuiltinEffectsModule::CreateInstance(const wxString & path)
 {
+   // Acquires a resource for the application.
+   // Safety of this depends on complementary calls to DeleteInstance on the module manager side.
    return Instantiate(path);
 }
 
 void BuiltinEffectsModule::DeleteInstance(IdentInterface *instance)
 {
-   Effect *effect = dynamic_cast<Effect *>(instance);
-   if (effect)
-   {
-      delete effect;
-   }
+   // Releases the resource.
+   std::unique_ptr < Effect > {
+      dynamic_cast<Effect *>(instance)
+   };
 }
 
 // ============================================================================

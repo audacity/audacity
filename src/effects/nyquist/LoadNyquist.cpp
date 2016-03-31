@@ -226,24 +226,22 @@ bool NyquistEffectsModule::IsPluginValid(const wxString & path)
 
 IdentInterface *NyquistEffectsModule::CreateInstance(const wxString & path)
 {
-   NyquistEffect *effect = new NyquistEffect(path);
+   // Acquires a resource for the application.
+   auto effect = std::make_unique<NyquistEffect>(path);
    if (effect->IsOk())
    {
-      return effect;
+      // Safety of this depends on complementary calls to DeleteInstance on the module manager side.
+      return effect.release();
    }
-
-   delete effect;
 
    return NULL;
 }
 
 void NyquistEffectsModule::DeleteInstance(IdentInterface *instance)
 {
-   NyquistEffect *effect = dynamic_cast<NyquistEffect *>(instance);
-   if (effect)
-   {
-      delete effect;
-   }
+   std::unique_ptr < NyquistEffect > {
+      dynamic_cast<NyquistEffect *>(instance)
+   };
 }
 
 // ============================================================================

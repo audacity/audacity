@@ -1054,12 +1054,16 @@ PluginDescriptor::PluginDescriptor()
 
 PluginDescriptor::~PluginDescriptor()
 {
+   DeleteInstance();
+}
+
+void PluginDescriptor::DeleteInstance()
+{
    if (mInstance)
    {
       ModuleManager::Get().DeleteInstance(GetProviderID(), mInstance);
+      mInstance = nullptr;
    }
-
-   return;
 }
 
 bool PluginDescriptor::IsInstantiated() const
@@ -1086,6 +1090,12 @@ IdentInterface *PluginDescriptor::GetInstance()
 
 void PluginDescriptor::SetInstance(IdentInterface *instance)
 {
+   if (mInstance && mInstance != instance)
+   {
+      // Be sure not to leak resources!!
+      DeleteInstance();
+   }
+
    mInstance = instance;
 
    return;

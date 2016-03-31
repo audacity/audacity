@@ -176,6 +176,7 @@ bool AudioUnitEffectsModule::IsPluginValid(const wxString & path)
 
 IdentInterface *AudioUnitEffectsModule::CreateInstance(const wxString & path)
 {
+   // Acquires a resource for the application.
    wxString name;
    AudioComponent component = FindAudioUnit(path, name);
    if (component == NULL)
@@ -183,16 +184,15 @@ IdentInterface *AudioUnitEffectsModule::CreateInstance(const wxString & path)
       return NULL;
    }
 
-   return new AudioUnitEffect(path, name, component);
+   // Safety of this depends on complementary calls to DeleteInstance on the module manager side.
+   return safenew AudioUnitEffect(path, name, component);
 }
 
 void AudioUnitEffectsModule::DeleteInstance(IdentInterface *instance)
 {
-   AudioUnitEffect *effect = dynamic_cast<AudioUnitEffect *>(instance);
-   if (effect)
-   {
-      delete effect;
-   }
+   std::unique_ptr < AudioUnitEffect > {
+      dynamic_cast<AudioUnitEffect *>(instance)
+   };
 }
 
 // ============================================================================

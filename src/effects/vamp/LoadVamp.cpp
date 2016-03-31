@@ -234,13 +234,15 @@ bool VampEffectsModule::IsPluginValid(const wxString & path)
 
 IdentInterface *VampEffectsModule::CreateInstance(const wxString & path)
 {
+   // Acquires a resource for the application.
    int output;
    bool hasParameters;
 
    Plugin *vp = FindPlugin(path, output, hasParameters);
    if (vp)
    {
-      return new VampEffect(vp, path, output, hasParameters);
+      // Safety of this depends on complementary calls to DeleteInstance on the module manager side.
+      return safenew VampEffect(vp, path, output, hasParameters);
    }
 
    return NULL;
@@ -248,11 +250,9 @@ IdentInterface *VampEffectsModule::CreateInstance(const wxString & path)
 
 void VampEffectsModule::DeleteInstance(IdentInterface *instance)
 {
-   VampEffect *effect = dynamic_cast<VampEffect *>(instance);
-   if (effect)
-   {
-      delete effect;
-   }
+   std::unique_ptr < VampEffect > {
+      dynamic_cast<VampEffect *>(instance)
+   };
 }
 
 // VampEffectsModule implementation
