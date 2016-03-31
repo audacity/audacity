@@ -634,13 +634,14 @@ public:
    {
    };
 
-   wxConnectionBase *OnAcceptConnection(const wxString & topic)
+   wxConnectionBase *OnAcceptConnection(const wxString & topic) override
    {
       if (topic != IPC_TOPIC) {
          return NULL;
       }
 
-      return new IPCConn();
+      // Trust wxWidgets framework to delete it
+      return safenew IPCConn();
    };
 };
 
