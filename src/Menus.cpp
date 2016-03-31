@@ -5605,9 +5605,8 @@ void AudacityProject::HandleMixAndRender(bool toNewTrack)
 {
    wxGetApp().SetMissingAliasedFileWarningShouldShow(true);
 
-   auto results =
-      ::MixAndRender(mTracks, mTrackFactory, mRate, mDefaultFormat, 0.0, 0.0);
-   auto &uNewLeft = results.first, &uNewRight = results.second;
+   WaveTrack::Holder uNewLeft, uNewRight;
+   MixAndRender(mTracks, mTrackFactory, mRate, mDefaultFormat, 0.0, 0.0, uNewLeft, uNewRight);
 
    if (uNewLeft) {
       // Remove originals, get stats on what tracks were mixed

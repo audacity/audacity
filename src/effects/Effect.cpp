@@ -2569,9 +2569,8 @@ void Effect::Preview(bool dryOnly)
    // Linear Effect preview optimised by pre-mixing to one track.
    // Generators need to generate per track.
    if (mIsLinearEffect && !isGenerator) {
-      auto results = ::MixAndRender(saveTracks, mFactory, rate, floatSample, mT0, t1);
-      auto &mixLeft = results.first;
-      auto &mixRight = results.second;
+      WaveTrack::Holder mixLeft, mixRight;
+      MixAndRender(saveTracks, mFactory, rate, floatSample, mT0, t1, mixLeft, mixRight);
       if (!mixLeft) {
          delete mTracks;
          mTracks = saveTracks;

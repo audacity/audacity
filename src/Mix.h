@@ -13,7 +13,6 @@
 #define __AUDACITY_MIX__
 
 #include "MemoryX.h"
-#include <utility>
 #include <wx/string.h>
 
 #include "SampleFormat.h"
@@ -38,12 +37,10 @@ class WaveTrackConstArray;
  * no explicit time range to process, and the whole occupied length of the
  * input tracks is processed.
  */
-std::pair<
-   std::unique_ptr<WaveTrack>,
-   std::unique_ptr<WaveTrack>
-> MixAndRender(TrackList * tracks, TrackFactory *factory,
+void MixAndRender(TrackList * tracks, TrackFactory *factory,
                   double rate, sampleFormat format,
-                  double startTime, double endTime);
+                  double startTime, double endTime,
+                  std::unique_ptr<WaveTrack> &uLeft, std::unique_ptr<WaveTrack> &uRight);
 
 void MixBuffers(int numChannels, int *channelFlags, float *gains,
                 samplePtr src,
