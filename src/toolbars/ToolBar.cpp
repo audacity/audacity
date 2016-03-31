@@ -635,7 +635,6 @@ void ToolBar::MakeMacRecoloredImage(teBmps eBmpOut, teBmps eBmpIn )
 
 void ToolBar::MakeRecoloredImage( teBmps eBmpOut, teBmps eBmpIn )
 {
-   wxImage * pPattern;
    wxImage * pSrc = &theTheme.Image( eBmpIn );
 #if defined( __WXGTK__ )
    wxColour newColour = wxSystemSettings::GetColour( wxSYS_COLOUR_BACKGROUND );
@@ -644,10 +643,9 @@ void ToolBar::MakeRecoloredImage( teBmps eBmpOut, teBmps eBmpIn )
 #endif
    wxColour baseColour = wxColour( 204, 204, 204 );
 
-   pPattern = ChangeImageColour( pSrc, baseColour, newColour );
+   auto pPattern = ChangeImageColour( pSrc, baseColour, newColour );
 
-   theTheme.ReplaceImage( eBmpOut, pPattern);
-   delete pPattern;
+   theTheme.ReplaceImage( eBmpOut, pPattern.get());
 }
 
 void ToolBar:: MakeButtonBackgroundsLarge()
