@@ -23,7 +23,7 @@ wxString MessageCommandType::BuildName()
 
 void MessageCommandType::BuildSignature(CommandSignature &signature)
 {
-   Validator *stringValidator = new Validator();
+   Validator *stringValidator = new DefaultValidator();
    signature.AddParameter(wxT("MessageString"), wxT(""), stringValidator);
 }
 

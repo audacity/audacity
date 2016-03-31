@@ -26,7 +26,7 @@ wxString GetPreferenceCommandType::BuildName()
 
 void GetPreferenceCommandType::BuildSignature(CommandSignature &signature)
 {
-   Validator *prefNameValidator(new Validator());
+   Validator *prefNameValidator(new DefaultValidator());
    signature.AddParameter(wxT("PrefName"), wxT(""), prefNameValidator);
 }
 
@@ -59,9 +59,9 @@ wxString SetPreferenceCommandType::BuildName()
 
 void SetPreferenceCommandType::BuildSignature(CommandSignature &signature)
 {
-   Validator *prefNameValidator(new Validator());
+   Validator *prefNameValidator(new DefaultValidator());
    signature.AddParameter(wxT("PrefName"), wxT(""), prefNameValidator);
-   Validator *prefValueValidator(new Validator());
+   Validator *prefValueValidator(new DefaultValidator());
    signature.AddParameter(wxT("PrefValue"), wxT(""), prefValueValidator);
 }
 

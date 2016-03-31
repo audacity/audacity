@@ -24,7 +24,7 @@ wxString ExecMenuCommandType::BuildName()
 
 void ExecMenuCommandType::BuildSignature(CommandSignature &signature)
 {
-   Validator *menuCommandValidator(new Validator());
+   Validator *menuCommandValidator(new DefaultValidator());
    signature.AddParameter(wxT("CommandName"), wxT(""), menuCommandValidator);
 }
 

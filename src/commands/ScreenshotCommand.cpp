@@ -295,7 +295,7 @@ void ScreenshotCommandType::BuildSignature(CommandSignature &signature)
    backgroundValidator->AddOption(wxT("White"));
    backgroundValidator->AddOption(wxT("None"));
 
-   Validator *filePathValidator = new Validator();
+   Validator *filePathValidator = new DefaultValidator();
 
    signature.AddParameter(wxT("CaptureMode"),
                           wxT("fullscreen"),

@@ -27,7 +27,7 @@ wxString ImportCommandType::BuildName()
 
 void ImportCommandType::BuildSignature(CommandSignature &signature)
 {
-   Validator *filenameValidator(new Validator());
+   Validator *filenameValidator(new DefaultValidator());
    signature.AddParameter(wxT("Filename"), wxT(""), filenameValidator);
 }
 
@@ -59,7 +59,7 @@ void ExportCommandType::BuildSignature(CommandSignature &signature)
    modeValidator->AddOption(wxT("Selection"));
    signature.AddParameter(wxT("Mode"), wxT("All"), modeValidator);
 
-   Validator *filenameValidator(new Validator());
+   Validator *filenameValidator(new DefaultValidator());
    signature.AddParameter(wxT("Filename"), wxT("exported.wav"), filenameValidator);
 
    IntValidator *channelsValidator(new IntValidator());

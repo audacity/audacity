@@ -33,7 +33,7 @@ void SetTrackInfoCommandType::BuildSignature(CommandSignature &signature)
    OptionValidator *infoTypeValidator = new OptionValidator();
    infoTypeValidator->AddOption(wxT("Name"));
    signature.AddParameter(wxT("Type"), wxT("Name"), infoTypeValidator);
-   Validator *nameValidator = new Validator();
+   Validator *nameValidator = new DefaultValidator();
    signature.AddParameter(wxT("Name"), wxT("Unnamed"), nameValidator);
 }
 

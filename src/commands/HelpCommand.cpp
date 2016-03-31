@@ -24,7 +24,7 @@ wxString HelpCommandType::BuildName()
 
 void HelpCommandType::BuildSignature(CommandSignature &signature)
 {
-   Validator *commandNameValidator = new Validator();
+   Validator *commandNameValidator = new DefaultValidator();
    signature.AddParameter(wxT("CommandName"), wxT(""), commandNameValidator);
 }
 

@@ -45,7 +45,7 @@ void SelectCommandType::BuildSignature(CommandSignature &signature)
    IntValidator *lastTrackValidator = new IntValidator();
    signature.AddParameter(wxT("LastTrack"), 0, lastTrackValidator);
 
-   Validator *trackNameValidator = new Validator();
+   Validator *trackNameValidator = new DefaultValidator();
    signature.AddParameter(wxT("TrackName"), 0, trackNameValidator);
 }
 

@@ -28,7 +28,7 @@ void OpenProjectCommandType::BuildSignature(CommandSignature &signature)
 {
    BoolValidator *addToHistoryValidator(new BoolValidator());
    signature.AddParameter(wxT("AddToHistory"), true, addToHistoryValidator);
-   Validator *filenameValidator(new Validator());
+   Validator *filenameValidator(new DefaultValidator());
    signature.AddParameter(wxT("Filename"), wxT(""), filenameValidator);
 }
 
@@ -76,7 +76,7 @@ void SaveProjectCommandType::BuildSignature(CommandSignature &signature)
    signature.AddParameter(wxT("Compress"), false, saveCompressedValidator);
    signature.AddParameter(wxT("AddToHistory"), true, addToHistoryValidator);
 
-   Validator *filenameValidator(new Validator());
+   Validator *filenameValidator(new DefaultValidator());
    signature.AddParameter(wxT("Filename"), wxT(""), filenameValidator);
 }
 

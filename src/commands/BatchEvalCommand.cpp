@@ -22,11 +22,11 @@ wxString BatchEvalCommandType::BuildName()
 
 void BatchEvalCommandType::BuildSignature(CommandSignature &signature)
 {
-   Validator *commandNameValidator(new Validator());
+   Validator *commandNameValidator(new DefaultValidator());
    signature.AddParameter(wxT("CommandName"), wxT(""), commandNameValidator);
-   Validator *paramValidator(new Validator());
+   Validator *paramValidator(new DefaultValidator());
    signature.AddParameter(wxT("ParamString"), wxT(""), paramValidator);
-   Validator *chainValidator(new Validator());
+   Validator *chainValidator(new DefaultValidator());
    signature.AddParameter(wxT("ChainName"), wxT(""), chainValidator);
 }
 
