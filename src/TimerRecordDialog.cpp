@@ -327,7 +327,6 @@ void TimerRecordDialog::OnOK(wxCommandEvent& WXUNUSED(event))
       }
    }
    if (m_pTimerAutoExportCheckBoxCtrl->IsChecked()) {
-
       if (!m_fnAutoExportFile.IsOk() || m_fnAutoExportFile.IsDir()) {
          wxMessageBox(_("Automatic Export path is invalid."),
             _("Error in Automatic Export"), wxICON_EXCLAMATION | wxOK);
@@ -344,34 +343,19 @@ void TimerRecordDialog::OnOK(wxCommandEvent& WXUNUSED(event))
 }
 
 void TimerRecordDialog::EnableDisableAutoControls(bool bEnable, int iControlGoup) {
+
    if (iControlGoup == CONTROL_GROUP_EXPORT) {
-      // Enable or Disable the Export controls
-      if (bEnable) {
-         m_pTimerExportPathTextCtrl->Enable();
-         m_pTimerExportPathButtonCtrl->Enable();
-      }
-      else {
-         m_pTimerExportPathTextCtrl->Disable();
-         m_pTimerExportPathButtonCtrl->Disable();
-      }
-   }
-   else if (iControlGoup == CONTROL_GROUP_SAVE) {
-      // Enable or Disable the Save controls
-      if (bEnable) {
-         m_pTimerSavePathTextCtrl->Enable();
-         m_pTimerSavePathButtonCtrl->Enable();
-      }
-      else {
-         m_pTimerSavePathTextCtrl->Disable();
-         m_pTimerSavePathButtonCtrl->Disable();
-      }
+       m_pTimerExportPathTextCtrl->Enable( bEnable );
+       m_pTimerExportPathButtonCtrl->Enable( bEnable);
+   } else if (iControlGoup == CONTROL_GROUP_SAVE) {
+       m_pTimerSavePathTextCtrl->Enable( bEnable);
+       m_pTimerSavePathButtonCtrl->Enable(bEnable );
    }
 
    // Enable or disable the Choice box - if there is no Save or Export then this will be disabled
    if (m_pTimerAutoSaveCheckBoxCtrl->GetValue() || m_pTimerAutoExportCheckBoxCtrl->GetValue()) {
       m_pTimerAfterCompleteChoiceCtrl->Enable();
-   }
-   else {
+   } else {
       m_pTimerAfterCompleteChoiceCtrl->SetSelection(POST_TIMER_RECORD_NOTHING);
       m_pTimerAfterCompleteChoiceCtrl->Disable();
    }
@@ -392,8 +376,7 @@ void TimerRecordDialog::UpdateTextBoxControls() {
 bool TimerRecordDialog::HaveFilesToRecover()
 {
    wxDir dir(FileNames::AutoSaveDir());
-   if (!dir.IsOpened())
-   {
+   if (!dir.IsOpened()) {
       wxMessageBox(_("Could not enumerate files in auto save directory."),
          _("Error"), wxICON_STOP);
       return false;
@@ -437,13 +420,10 @@ int TimerRecordDialog::RunWaitDialog()
    if (m_DateTime_Start > wxDateTime::UNow())
       updateResult = this->WaitForStart();
 
-   if (updateResult != eProgressSuccess)
-   {
+   if (updateResult != eProgressSuccess)  {
       // Don't proceed, but don't treat it as canceled recording. User just canceled waiting.
       return POST_TIMER_RECORD_CANCEL_WAIT;
-   }
-   else
-   {
+   } else {
       // Record for specified time.
       pProject->OnRecord();
       bool bIsRecording = true;
@@ -466,8 +446,7 @@ int TimerRecordDialog::RunWaitDialog()
       this->OnTimer(dummyTimerEvent);
 
       // Loop for progress display during recording.
-      while (bIsRecording && (updateResult == eProgressSuccess))
-      {
+      while (bIsRecording && (updateResult == eProgressSuccess)) {
          wxMilliSleep(kTimerInterval);
          updateResult = progress.Update();
          bIsRecording = (wxDateTime::UNow() <= m_DateTime_End); // Call UNow() again for extra accuracy...
@@ -486,15 +465,14 @@ int TimerRecordDialog::RunWaitDialog()
 }
 
 int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
-   // We no longer automatically (and silently) call ->Save() when the 
-   // timer recording is completed!
-   // We can now Save and/or Export depending on the options selected by
-   // the user.
+   // MY: We no longer automatically (and silently) call ->Save() when the 
+   // timer recording is completed.  We can now Save and/or Export depending 
+   // on the options selected by the user.
    // Once completed, we can also close Audacity, restart the system or
    // shutdown the system.
    // If there was any error with the auto save or export then we will not do
    // the actions requested and instead present an error mesasge to the user.
-   // Finally, if there is no post-record action selected then we will output
+   // Finally, if there is no post-record action selected then we output
    // a dialog detailing what has been carried out instead.
 
    AudacityProject* pProject = GetActiveProject();
@@ -511,8 +489,7 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
       // MY: If this project has already been saved then simply execute a Save here
       if (m_bProjectAlreadySaved) {
          bSaveOK = pProject->Save();
-      }
-      else {
+      } else {
          bSaveOK = pProject->SaveFromTimerRecording(m_fnAutoSaveFile);
       }
    }
@@ -539,8 +516,7 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
          if (bSaveOK) {
             sMessage.Printf("%s\n\nRecording saved: %s",
                             sMessage, m_fnAutoSaveFile.GetFullPath());
-         }
-         else {
+         } else {
             sMessage.Printf("%s\n\nError saving recording.", sMessage);
          }
       }
@@ -548,8 +524,7 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
          if (bExportOK) {
             sMessage.Printf("%s\n\nRecording exported: %s",
                             sMessage, m_fnAutoExportFile.GetFullPath());
-         }
-         else {
+         } else {
             sMessage.Printf("%s\n\nError exporting recording.", sMessage);
          }
       }
@@ -566,8 +541,7 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
 
          // Show Error Message Box
          wxMessageBox(sMessage, _("Error"), wxICON_EXCLAMATION | wxOK);
-      }
-      else {
+      } else {
 
          if (bWasStopped && (iOverriddenAction != POST_TIMER_RECORD_NOTHING)) {
             sMessage.Printf("%s\n\n'%s' has been cancelled as the recording was stopped.",
@@ -919,21 +893,27 @@ int TimerRecordDialog::WaitForStart()
    return updateResult;
 }
 
+// TODO: Rather than two flags, an enum with the possibilities would be better.
 int TimerRecordDialog::PreActionDelay(int iActionIndex, bool bSaved, bool bExported)
 {
    wxString sMessage;
    wxString sAction = m_pTimerAfterCompleteChoiceCtrl->GetString(iActionIndex);
    wxString sDone = "";
    if (bSaved && bExported) {
-      sDone = "Saved and Exported";
+      sDone = _("Saved and Exported");
    }
    else if (bSaved) {
-      sDone = "Saved";
+      sDone = _("Saved");
    }
    else if (bExported) {
-      sDone = "Exported";
+      sDone = _("Exported");
    }
-   sMessage.Printf(_("Timer Recording completed: Recording has been %s as instructed.\n\n'%s' will occur shortly...\n"),
+   // TODO: The wording will sound better if there are complete messages for 
+   // the will-occur-shortly messages.
+   /* i18n-hint: The first %s will be a translation of 'Saved', 'Exported' or 
+    * 'Saved and Exported'. The second %s will be 'Exit Audacity' 
+    * 'Restart System' or 'Shutdown System' */
+   sMessage.Printf(_("Timer Recording completed: Recording has been %s.\n\n'%s' will occur shortly...\n"),
                    sDone, sAction);
 
    wxDateTime dtNow = wxDateTime::UNow();
