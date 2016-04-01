@@ -640,9 +640,9 @@ bool Exporter::GetFilename()
                 !mFilename.FileExists()) {
                // Warn and return to the dialog
                wxMessageBox(_("You are attempting to overwrite an aliased file that is missing.\n\
-The file cannot be written because the path is needed to restore the original audio to the project.\n\
-Choose File > Check Dependencies to view the locations of all missing files.\n\
-If you still wish to export, please choose a different filename or folder."));
+               The file cannot be written because the path is needed to restore the original audio to the project.\n\
+               Choose File > Check Dependencies to view the locations of all missing files.\n\
+               If you still wish to export, please choose a different filename or folder."));
                overwritingMissingAlias = true;
             }
          }
@@ -884,6 +884,253 @@ void Exporter::OnFilterChanged(wxFileCtrlEvent & evt)
    }
 
    mBook->ChangeSelection(index);
+}
+
+bool Exporter::ProcessFromTimerRecording(AudacityProject *project,
+                                         bool selectedOnly,
+                                         double t0,
+                                         double t1,
+                                         wxFileName fnFile,
+                                         int iFormat,
+                                         int iSubFormat,
+                                         int iFilterIndex)
+{
+   // Save parms
+   mProject = project;
+   mSelectedOnly = selectedOnly;
+   mT0 = t0;
+   mT1 = t1;
+
+   // Auto Export Parameters
+   mFilename = fnFile;
+   mFormat = iFormat;
+   mSubFormat = iSubFormat;
+   mFilterIndex = iFilterIndex;
+
+   // Gather track information
+   if (!ExamineTracks()) {
+      return false;
+   }
+
+   // Check for down mixing
+   if (!CheckMix()) {
+      return false;
+   }
+
+   // Ensure filename doesn't interfere with project files.
+   if (!CheckFilename()) {
+      return false;
+   }
+
+   // Export the tracks
+   bool success = ExportTracks();
+
+   // Get rid of mixerspec
+   if (mMixerSpec) {
+      delete mMixerSpec;
+      mMixerSpec = NULL;
+   }
+
+   return success;
+}
+
+int Exporter::GetAutoExportFormat() {
+   return mFormat;
+}
+
+int Exporter::GetAutoExportSubFormat() {
+   return mSubFormat;
+}
+
+int Exporter::GetAutoExportFilterIndex() {
+   return mFormat;
+}
+
+wxFileName Exporter::GetAutoExportFileName() {
+   return mFilename;
+}
+
+bool Exporter::SetAutoExportOptions(AudacityProject *project) {
+   mFormat = -1;
+   mProject = project;
+
+   wxString maskString;
+   wxString defaultFormat = gPrefs->Read(wxT("/Export/Format"),
+      wxT("WAV"));
+
+   mFilterIndex = 0;
+
+   for (size_t i = 0; i < mPlugins.GetCount(); i++) {
+      for (int j = 0; j < mPlugins[i]->GetFormatCount(); j++)
+      {
+         maskString += mPlugins[i]->GetMask(j) + wxT("|");
+         if (mPlugins[i]->GetFormat(j) == defaultFormat) {
+            mFormat = i;
+            mSubFormat = j;
+         }
+         if (mFormat == -1) mFilterIndex++;
+      }
+   }
+   if (mFormat == -1)
+   {
+      mFormat = 0;
+      mFilterIndex = 0;
+   }
+   maskString.RemoveLast();
+
+   mFilename.SetPath(gPrefs->Read(wxT("/Export/Path"), ::wxGetCwd()));
+   mFilename.SetName(mProject->GetName());
+   while (true) {
+      // Must reset each iteration
+      mBook = NULL;
+
+      FileDialog fd(mProject,
+         mFileDialogTitle,
+         mFilename.GetPath(),
+         mFilename.GetFullName(),
+         maskString,
+         wxFD_SAVE | wxRESIZE_BORDER);
+      mDialog = &fd;
+      mDialog->PushEventHandler(this);
+
+      fd.SetUserPaneCreator(CreateUserPaneCallback, (wxUIntPtr) this);
+      fd.SetFilterIndex(mFilterIndex);
+
+      int result = fd.ShowModal();
+
+      mDialog->PopEventHandler();
+
+      if (result == wxID_CANCEL) {
+         return false;
+      }
+
+      mFilename = fd.GetPath();
+      if (mFilename == wxT("")) {
+         return false;
+      }
+
+      mFormat = fd.GetFilterIndex();
+      mFilterIndex = fd.GetFilterIndex();
+
+      int c = 0;
+      for (size_t i = 0; i < mPlugins.GetCount(); i++)
+      {
+         for (int j = 0; j < mPlugins[i]->GetFormatCount(); j++)
+         {
+            if (mFilterIndex == c)
+            {
+               mFormat = i;
+               mSubFormat = j;
+            }
+            c++;
+         }
+      }
+
+      wxString ext = mFilename.GetExt();
+      wxString defext = mPlugins[mFormat]->GetExtension(mSubFormat).Lower();
+
+      //
+      // Check the extension - add the default if it's not there,
+      // and warn user if it's abnormal.
+      //
+      if (ext.IsEmpty()) {
+         //
+         // Make sure the user doesn't accidentally save the file
+         // as an extension with no name, like just plain ".wav".
+         //
+         if (mFilename.GetName().Left(1) == wxT(".")) {
+            wxString prompt = _("Are you sure you want to export the file as \"") +
+               mFilename.GetFullName() +
+               wxT("\"?\n");
+
+            int action = wxMessageBox(prompt,
+               _("Warning"),
+               wxYES_NO | wxICON_EXCLAMATION);
+            if (action != wxYES) {
+               continue;
+            }
+         }
+
+         mFilename.SetExt(defext);
+      }
+      else if (!mPlugins[mFormat]->CheckFileName(mFilename, mSubFormat))
+      {
+         continue;
+      }
+      else if (!ext.IsEmpty() && !mPlugins[mFormat]->IsExtension(ext, mSubFormat) && ext.CmpNoCase(defext)) {
+         wxString prompt;
+         prompt.Printf(_("You are about to export a %s file with the name \"%s\".\n\n\
+                          Normally these files end in \".%s\", and some programs\n\
+                          will not open files with nonstandard extensions.\n\n\
+                          Are you sure you want to export the file under this name?"),
+            mPlugins[mFormat]->GetFormat(mSubFormat).c_str(),
+            mFilename.GetFullName().c_str(),
+            defext.c_str());
+
+         int action = wxMessageBox(prompt,
+            _("Warning"),
+            wxYES_NO | wxICON_EXCLAMATION);
+         if (action != wxYES) {
+            continue;
+         }
+      }
+
+      if (mFilename.GetFullPath().Length() >= 256) {
+         wxMessageBox(_("Sorry, pathnames longer than 256 characters not supported."));
+         continue;
+      }
+
+      // Check to see if we are writing to a path that a missing aliased file existed at.
+      // This causes problems for the exporter, so we don't allow it.
+      // Overwritting non-missing aliased files is okay.
+      // Also, this can only happen for uncompressed audio.
+      bool overwritingMissingAlias;
+      overwritingMissingAlias = false;
+      for (size_t i = 0; i < gAudacityProjects.GetCount(); i++) {
+         AliasedFileArray aliasedFiles;
+         FindDependencies(gAudacityProjects[i], &aliasedFiles);
+         size_t j;
+         for (j = 0; j< aliasedFiles.GetCount(); j++) {
+            if (mFilename.GetFullPath() == aliasedFiles[j].mFileName.GetFullPath() &&
+               !mFilename.FileExists()) {
+               // Warn and return to the dialog
+               wxMessageBox(_("You are attempting to overwrite an aliased file that is missing.\n\
+                              The file cannot be written because the path is needed to restore the original audio to the project.\n\
+                              Choose File > Check Dependencies to view the locations of all missing files.\n\
+                              If you still wish to export, please choose a different filename or folder."));
+               overwritingMissingAlias = true;
+            }
+         }
+      }
+      if (overwritingMissingAlias)
+         continue;
+
+      if (mFilename.FileExists()) {
+         wxString prompt;
+
+         prompt.Printf(_("A file named \"%s\" already exists.  Replace?"),
+            mFilename.GetFullPath().c_str());
+
+         int action = wxMessageBox(prompt,
+            _("Warning"),
+            wxYES_NO | wxICON_EXCLAMATION);
+         if (action != wxYES) {
+            continue;
+         }
+      }
+
+      break;
+   }
+
+   // Let user edit MetaData
+   if (mPlugins[mFormat]->GetCanMetaData(mSubFormat)) {
+      if (!(project->DoEditMetadata(_("Edit Metadata Tags for Export"),
+                                    _("Exported Tags"), mProject->GetShowId3Dialog()))) {
+         return false;
+      }
+   }
+
+   return true;
 }
 
 //----------------------------------------------------------------------------
