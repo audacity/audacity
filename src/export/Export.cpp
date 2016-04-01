@@ -640,9 +640,9 @@ bool Exporter::GetFilename()
                 !mFilename.FileExists()) {
                // Warn and return to the dialog
                wxMessageBox(_("You are attempting to overwrite an aliased file that is missing.\n\
-The file cannot be written because the path is needed to restore the original audio to the project.\n\
-Choose File > Check Dependencies to view the locations of all missing files.\n\
-If you still wish to export, please choose a different filename or folder."));
+               The file cannot be written because the path is needed to restore the original audio to the project.\n\
+               Choose File > Check Dependencies to view the locations of all missing files.\n\
+               If you still wish to export, please choose a different filename or folder."));
                overwritingMissingAlias = true;
             }
          }
@@ -884,6 +884,88 @@ void Exporter::OnFilterChanged(wxFileCtrlEvent & evt)
    }
 
    mBook->ChangeSelection(index);
+}
+
+bool Exporter::ProcessFromTimerRecording(AudacityProject *project,
+                                         bool selectedOnly,
+                                         double t0,
+                                         double t1,
+                                         wxFileName fnFile,
+                                         int iFormat,
+                                         int iSubFormat,
+                                         int iFilterIndex)
+{
+   // Save parms
+   mProject = project;
+   mSelectedOnly = selectedOnly;
+   mT0 = t0;
+   mT1 = t1;
+
+   // Auto Export Parameters
+   mFilename = fnFile;
+   mFormat = iFormat;
+   mSubFormat = iSubFormat;
+   mFilterIndex = iFilterIndex;
+
+   // Gather track information
+   if (!ExamineTracks()) {
+      return false;
+   }
+
+   // Check for down mixing
+   if (!CheckMix()) {
+      return false;
+   }
+
+   // Ensure filename doesn't interfere with project files.
+   if (!CheckFilename()) {
+      return false;
+   }
+
+   // Export the tracks
+   bool success = ExportTracks();
+
+   // Get rid of mixerspec
+   if (mMixerSpec) {
+      delete mMixerSpec;
+      mMixerSpec = NULL;
+   }
+
+   return success;
+}
+
+int Exporter::GetAutoExportFormat() {
+   return mFormat;
+}
+
+int Exporter::GetAutoExportSubFormat() {
+   return mSubFormat;
+}
+
+int Exporter::GetAutoExportFilterIndex() {
+   return mFormat;
+}
+
+wxFileName Exporter::GetAutoExportFileName() {
+   return mFilename;
+}
+
+bool Exporter::SetAutoExportOptions(AudacityProject *project) {
+   mFormat = -1;
+   mProject = project;
+
+   if( GetFilename()==false )
+        return false;
+
+   // Let user edit MetaData
+   if (mPlugins[mFormat]->GetCanMetaData(mSubFormat)) {
+      if (!(project->DoEditMetadata(_("Edit Metadata Tags for Export"),
+                                    _("Exported Tags"), mProject->GetShowId3Dialog()))) {
+         return false;
+      }
+   }
+
+   return true;
 }
 
 //----------------------------------------------------------------------------

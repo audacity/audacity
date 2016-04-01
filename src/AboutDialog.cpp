@@ -120,6 +120,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxString(wxT("Jun Wan, ")) + _("developer"), roleContributor);
    AddCredit(wxString(wxT("Daniel Winzen, ")) + _("developer"), roleContributor);
    AddCredit(wxString(wxT("Tom Woodhams, ")) + _("developer"), roleContributor);
+   AddCredit(wxString(wxT("Mark Young, ")) + _("developer"), roleContributor);
    AddCredit(wxString(wxT("Wing Yu, ")) + _("developer"), roleContributor);
 
    // Translators
