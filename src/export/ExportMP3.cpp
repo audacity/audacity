@@ -65,6 +65,7 @@
 #include <wx/defs.h>
 
 #include <wx/choice.h>
+#include <wx/checkbox.h>
 #include <wx/dynlib.h>
 #include <wx/ffile.h>
 #include <wx/intl.h>
@@ -110,6 +111,7 @@
 
 #define CHANNEL_JOINT      0
 #define CHANNEL_STEREO     1
+#define CHANNEL_MONO       2
 
 #define QUALITY_0          0
 #define QUALITY_1          1
@@ -211,6 +213,7 @@ static CHOICES sampRates[] =
 #define ID_ABR 7002
 #define ID_CBR 7003
 #define ID_QUALITY 7004
+#define ID_MONO 7005
 
 static void InitMP3_Statics()
 {
@@ -275,6 +278,7 @@ public:
    void OnABR(wxCommandEvent& evt);
    void OnCBR(wxCommandEvent& evt);
    void OnQuality(wxCommandEvent& evt);
+   void OnMono(wxCommandEvent& evt);
 
    void LoadNames(CHOICES *choices, int count);
    wxArrayString GetNames(CHOICES *choices, int count);
@@ -285,6 +289,7 @@ private:
 
    wxRadioButton *mStereo;
    wxRadioButton *mJoint;
+   wxCheckBox    *mMono;
    wxRadioButton *mSET;
    wxRadioButton *mVBR;
    wxRadioButton *mABR;
@@ -306,6 +311,7 @@ BEGIN_EVENT_TABLE(ExportMP3Options, wxPanel)
    EVT_RADIOBUTTON(ID_ABR,    ExportMP3Options::OnABR)
    EVT_RADIOBUTTON(ID_CBR,    ExportMP3Options::OnCBR)
    EVT_CHOICE(wxID_ANY,       ExportMP3Options::OnQuality)
+   EVT_CHECKBOX(ID_MONO,      ExportMP3Options::OnMono)
 END_EVENT_TABLE()
 
 ///
@@ -403,14 +409,21 @@ void ExportMP3Options::PopulateOrExchange(ShuttleGui & S)
                mMode->Enable(enable);
    
                S.AddPrompt(_("Channel Mode:"));
-               S.StartTwoColumn();
+               S.StartMultiColumn(3, wxEXPAND);
                {
+                  bool mono = false;
+                  gPrefs->Read(wxT("/FileFormats/MP3ForceMono"), &mono, 0);
+
                   S.StartRadioButtonGroup(wxT("/FileFormats/MP3ChannelMode"), CHANNEL_JOINT);
                   {
                      mJoint = S.TieRadioButton(_("Joint Stereo"), CHANNEL_JOINT);
                      mStereo = S.TieRadioButton(_("Stereo"), CHANNEL_STEREO);
+                     mJoint->Enable(!mono);
+                     mStereo->Enable(!mono);
                   }
                   S.EndRadioButtonGroup();
+
+                  mMono = S.Id(ID_MONO).AddCheckBox(_("Force export to mono"), mono? wxT("true") : wxT("false"));
                }
                S.EndTwoColumn();
             }
@@ -504,6 +517,17 @@ void ExportMP3Options::OnQuality(wxCommandEvent& WXUNUSED(event))
    else {
       mCbrRate = fixRates[sel].label;
    }
+}
+
+void ExportMP3Options::OnMono(wxCommandEvent& evt)
+{
+   bool mono = false;
+   mono = mMono->GetValue();
+   mJoint->Enable(!mono);
+   mStereo->Enable(!mono);
+
+   gPrefs->Write(wxT("/FileFormats/MP3ForceMono"), mono);
+   gPrefs->Flush();
 }
 
 void ExportMP3Options::LoadNames(CHOICES *choices, int count)
@@ -1265,7 +1289,8 @@ int MP3Exporter::InitializeStream(int channels, int sampleRate)
 
    // Set the channel mode
    MPEG_mode mode;
-   if (channels == 1) {
+
+   if (channels == 1 || mChannel == CHANNEL_MONO) {
       mode = MONO;
    }
    else if (mChannel == CHANNEL_JOINT) {
@@ -1668,11 +1693,13 @@ int ExportMP3::Export(AudacityProject *project,
    int rmode;
    int vmode;
    int cmode;
+   bool forceMono;
 
    gPrefs->Read(wxT("/FileFormats/MP3Bitrate"), &brate, 128);
    gPrefs->Read(wxT("/FileFormats/MP3RateMode"), &rmode, MODE_CBR);
    gPrefs->Read(wxT("/FileFormats/MP3VarMode"), &vmode, ROUTINE_FAST);
    gPrefs->Read(wxT("/FileFormats/MP3ChannelMode"), &cmode, CHANNEL_STEREO);
+   gPrefs->Read(wxT("/FileFormats/MP3ForceMono"), &forceMono, 0);
 
    // Set the bitrate/quality and mode
    if (rmode == MODE_SET) {
@@ -1722,7 +1749,10 @@ int ExportMP3::Export(AudacityProject *project,
    }
 
    // Set the channel mode
-   if (cmode == CHANNEL_JOINT) {
+   if (forceMono) {
+      exporter.SetChannel(CHANNEL_MONO);
+   }
+   else if (cmode == CHANNEL_JOINT) {
       exporter.SetChannel(CHANNEL_JOINT);
    }
    else {
