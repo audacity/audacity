@@ -447,8 +447,8 @@ int TimerRecordDialog::RunWaitDialog()
 
       // Loop for progress display during recording.
       while (bIsRecording && (updateResult == eProgressSuccess)) {
-         wxMilliSleep(kTimerInterval);
          updateResult = progress.Update();
+         wxMilliSleep(kTimerInterval);
          bIsRecording = (wxDateTime::UNow() <= m_DateTime_End); // Call UNow() again for extra accuracy...
       }
    }
@@ -886,8 +886,8 @@ int TimerRecordDialog::WaitForStart()
    bool bIsRecording = false;
    while (updateResult == eProgressSuccess && !bIsRecording)
    {
-      wxMilliSleep(10);
       updateResult = progress.Update();
+      wxMilliSleep(10);
       bIsRecording = (m_DateTime_Start <= wxDateTime::UNow());
    }
    return updateResult;
@@ -929,8 +929,8 @@ int TimerRecordDialog::PreActionDelay(int iActionIndex, bool bSaved, bool bExpor
    bool bIsTime = false;
    while (iUpdateResult == eProgressSuccess && !bIsTime)
    {
-      wxMilliSleep(10);
       iUpdateResult = dlgAction.Update();
+      wxMilliSleep(10);
       bIsTime = (dtActionTime <= wxDateTime::UNow());
    }
    return iUpdateResult;
