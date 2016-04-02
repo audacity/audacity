@@ -32,6 +32,7 @@ Licensed under the GNU General Public License v2 or later
 #endif
 
 #include "../Experimental.h"
+#include "../MemoryX.h"
 
 
 #define DESC _("FFmpeg-compatible files")
@@ -256,14 +257,14 @@ public:
    void SetStreamUsage(wxInt32 StreamID, bool Use)
    {
       if (StreamID < mNumStreams)
-         mScs[StreamID]->m_use = Use;
+         mScs->get()[StreamID]->m_use = Use;
    }
 
 private:
 
    AVFormatContext      *mFormatContext; //!< Format description, also contains metadata and some useful info
    int                   mNumStreams;    //!< mNumstreams is less or equal to mFormatContext->nb_streams
-   streamContext       **mScs;           //!< Array of pointers to stream contexts. Length is mNumStreams.
+   ScsPtr                mScs;           //!< Points to array of pointers to stream contexts, which may be shared with a decoder task.
    wxArrayString        *mStreamInfo;    //!< Array of stream descriptions. Length is mNumStreams
 
    wxInt64               mProgressPos;   //!< Current timestamp, file position or whatever is used as first argument for Update()
@@ -344,7 +345,6 @@ FFmpegImportFileHandle::FFmpegImportFileHandle(const wxString & name)
    mStreamInfo = new wxArrayString();
    mFormatContext = NULL;
    mNumStreams = 0;
-   mScs = NULL;
    mCancelled = false;
    mStopped = false;
    mName = name;
@@ -382,15 +382,14 @@ bool FFmpegImportFileHandle::InitCodecs()
 {
    // Allocate the array of pointers to hold stream contexts pointers
    // Some of the allocated space may be unused (corresponds to video, subtitle, or undecodeable audio streams)
-   mScs = (streamContext**)malloc(sizeof(streamContext**)*mFormatContext->nb_streams);
+   mScs = std::make_shared<Scs>(mFormatContext->nb_streams);
    // Fill the stream contexts
    for (unsigned int i = 0; i < mFormatContext->nb_streams; i++)
    {
       if (mFormatContext->streams[i]->codec->codec_type == AVMEDIA_TYPE_AUDIO)
       {
          //Create a context
-         streamContext *sc = new streamContext;
-         memset(sc,0,sizeof(*sc));
+         auto sc = std::make_unique<streamContext>();
 
          sc->m_stream = mFormatContext->streams[i];
          sc->m_codecCtx = sc->m_stream->codec;
@@ -400,14 +399,12 @@ bool FFmpegImportFileHandle::InitCodecs()
          {
             wxLogError(wxT("FFmpeg : avcodec_find_decoder() failed. Index[%02d], Codec[%02x - %s]"),i,sc->m_codecCtx->codec_id,sc->m_codecCtx->codec_name);
             //FFmpeg can't decode this stream, skip it
-            delete sc;
             continue;
          }
          if (codec->type != sc->m_codecCtx->codec_type)
          {
             wxLogError(wxT("FFmpeg : Codec type mismatch, skipping. Index[%02d], Codec[%02x - %s]"),i,sc->m_codecCtx->codec_id,sc->m_codecCtx->codec_name);
             //Non-audio codec reported as audio? Nevertheless, we don't need THIS.
-            delete sc;
             continue;
          }
 
@@ -415,7 +412,6 @@ bool FFmpegImportFileHandle::InitCodecs()
          {
             wxLogError(wxT("FFmpeg : avcodec_open() failed. Index[%02d], Codec[%02x - %s]"),i,sc->m_codecCtx->codec_id,sc->m_codecCtx->codec_name);
             //Can't open decoder - skip this stream
-            delete sc;
             continue;
          }
 
@@ -440,7 +436,7 @@ bool FFmpegImportFileHandle::InitCodecs()
          }
          strinfo.Printf(_("Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"),sc->m_stream->id,codec->name,lang.c_str(),bitrate.c_str(),sc->m_stream->codec->channels, duration);
          mStreamInfo->Add(strinfo);
-         mScs[mNumStreams++] = sc;
+         mScs->get()[mNumStreams++] = std::move(sc);
       }
       //for video and unknown streams do nothing
    }
@@ -469,14 +465,14 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
    CreateProgress();
 
    // Remove stream contexts which are not marked for importing and adjust mScs and mNumStreams accordingly
+   const auto scs = mScs->get();
    for (int i = 0; i < mNumStreams;)
    {
-      if (!mScs[i]->m_use)
+      if (!scs[i]->m_use)
       {
-         delete mScs[i];
          for (int j = i; j < mNumStreams - 1; j++)
          {
-            mScs[j] = mScs[j+1];
+            scs[j] = std::move(scs[j+1]);
          }
          mNumStreams--;
       }
@@ -490,32 +486,33 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
    {
       ++s;
 
-      switch (mScs[s]->m_stream->codec->sample_fmt)
+      auto sc = scs[s].get();
+      switch (sc->m_stream->codec->sample_fmt)
       {
          case AV_SAMPLE_FMT_U8:
          case AV_SAMPLE_FMT_S16:
          case AV_SAMPLE_FMT_U8P:
          case AV_SAMPLE_FMT_S16P:
-            mScs[s]->m_osamplesize = sizeof(int16_t);
-            mScs[s]->m_osamplefmt = int16Sample;
+            sc->m_osamplesize = sizeof(int16_t);
+            sc->m_osamplefmt = int16Sample;
          break;
          default:
-            mScs[s]->m_osamplesize = sizeof(float);
-            mScs[s]->m_osamplefmt = floatSample;
+            sc->m_osamplesize = sizeof(float);
+            sc->m_osamplefmt = floatSample;
          break;
       }
 
       // There is a possibility that number of channels will change over time, but we do not have WaveTracks for NEW channels. Remember the number of channels and stick to it.
-      mScs[s]->m_initialchannels = mScs[s]->m_stream->codec->channels;
-      stream.resize(mScs[s]->m_stream->codec->channels);
+      sc->m_initialchannels = sc->m_stream->codec->channels;
+      stream.resize(sc->m_stream->codec->channels);
       int c = -1;
       for (auto &channel : stream)
       {
          ++c;
 
-         channel = trackFactory->NewWaveTrack(mScs[s]->m_osamplefmt, mScs[s]->m_stream->codec->sample_rate);
+         channel = trackFactory->NewWaveTrack(sc->m_osamplefmt, sc->m_stream->codec->sample_rate);
 
-         if (mScs[s]->m_stream->codec->channels == 2)
+         if (sc->m_stream->codec->channels == 2)
          {
             switch (c)
             {
@@ -544,10 +541,11 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
       ++s;
 
       int64_t stream_delay = 0;
-      if (mScs[s]->m_stream->start_time != int64_t(AV_NOPTS_VALUE) && mScs[s]->m_stream->start_time > 0)
+      auto sc = scs[s].get();
+      if (sc->m_stream->start_time != int64_t(AV_NOPTS_VALUE) && sc->m_stream->start_time > 0)
       {
-         stream_delay = mScs[s]->m_stream->start_time;
-         wxLogDebug(wxT("Stream %d start_time = %lld, that would be %f milliseconds."), s, (long long) mScs[s]->m_stream->start_time, double(mScs[s]->m_stream->start_time)/AV_TIME_BASE*1000);
+         stream_delay = sc->m_stream->start_time;
+         wxLogDebug(wxT("Stream %d start_time = %lld, that would be %f milliseconds."), s, (long long) sc->m_stream->start_time, double(sc->m_stream->start_time)/AV_TIME_BASE*1000);
       }
       if (stream_delay != 0)
       {
@@ -573,22 +571,26 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
    if (mUsingOD) {
       std::vector<ODDecodeFFmpegTask*> tasks;
       //append blockfiles to each stream and add an individual ODDecodeTask for each one.
-      for (int s = 0; s < mNumStreams; s++) {
-         ODDecodeFFmpegTask* odTask=new ODDecodeFFmpegTask(mScs,mNumStreams,mChannels,mFormatContext, s);
+      s = -1;
+      for (const auto &stream : mChannels) {
+         ++s;
+         ODDecodeFFmpegTask* odTask =
+            new ODDecodeFFmpegTask(mScs, ODDecodeFFmpegTask::FromList(mChannels), mFormatContext, s);
          odTask->CreateFileDecoder(mFilename);
 
          //each stream has different duration.  We need to know it if seeking is to be allowed.
          sampleCount sampleDuration = 0;
-         if (mScs[s]->m_stream->duration > 0)
-            sampleDuration = ((sampleCount)mScs[s]->m_stream->duration * mScs[s]->m_stream->time_base.num) *mScs[s]->m_stream->codec->sample_rate / mScs[s]->m_stream->time_base.den;
+         auto sc = scs[s].get();
+         if (sc->m_stream->duration > 0)
+            sampleDuration = ((sampleCount)sc->m_stream->duration * sc->m_stream->time_base.num), sc->m_stream->codec->sample_rate / sc->m_stream->time_base.den;
          else
-            sampleDuration = ((sampleCount)mFormatContext->duration *mScs[s]->m_stream->codec->sample_rate) / AV_TIME_BASE;
+            sampleDuration = ((sampleCount)mFormatContext->duration *sc->m_stream->codec->sample_rate) / AV_TIME_BASE;
 
-         //      printf(" OD duration samples %qi, sr %d, secs %d\n",sampleDuration, (int)mScs[s]->m_stream->codec->sample_rate,(int)sampleDuration/mScs[s]->m_stream->codec->sample_rate);
+         //      printf(" OD duration samples %qi, sr %d, secs %d\n",sampleDuration, (int)sc->m_stream->codec->sample_rate, (int)sampleDuration/sc->m_stream->codec->sample_rate);
 
          //for each wavetrack within the stream add coded blockfiles
-         for (int c = 0; c < mScs[s]->m_stream->codec->channels; c++) {
-            WaveTrack *t = mChannels[s][c];
+         for (int c = 0; c < sc->m_stream->codec->channels; c++) {
+            WaveTrack *t = stream[c].get();
             odTask->AddWaveTrack(t);
 
             sampleCount maxBlockSize = t->GetMaxBlockSize();
@@ -598,12 +600,12 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
                if (i + blockLen > sampleDuration)
                   blockLen = sampleDuration - i;
 
-               t->AppendCoded(mFilename, i, blockLen, c,ODTask::eODFFMPEG);
+               t->AppendCoded(mFilename, i, blockLen, c, ODTask::eODFFMPEG);
 
                // This only works well for single streams since we assume
                // each stream is of the same duration and channels
-               res = mProgress->Update(i+sampleDuration*c+ sampleDuration*mScs[s]->m_stream->codec->channels*s,
-                                       sampleDuration*mScs[s]->m_stream->codec->channels*mNumStreams);
+               res = mProgress->Update(i+sampleDuration*c+ sampleDuration*sc->m_stream->codec->channels*s,
+                                       sampleDuration*sc->m_stream->codec->channels*mNumStreams);
                if (res != eProgressSuccess)
                   break;
             }
@@ -621,10 +623,9 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
       }
    } else {
 #endif
-   streamContext *sc = NULL;
 
    // Read next frame.
-   while ((sc = ReadNextFrame()) != NULL && (res == eProgressSuccess))
+   for (streamContext *sc; (sc = ReadNextFrame()) != NULL && (res == eProgressSuccess);)
    {
       // ReadNextFrame returns 1 if stream is not to be imported
       if (sc != (streamContext*)1)
@@ -654,14 +655,15 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
    {
       for (int i = 0; i < mNumStreams; i++)
       {
-         if (DecodeFrame(mScs[i], true) == 0)
+         auto sc = scs[i].get();
+         if (DecodeFrame(sc, true) == 0)
          {
-            WriteData(mScs[i]);
+            WriteData(sc);
 
-            if (mScs[i]->m_pktValid)
+            if (sc->m_pktValid)
             {
-               av_free_packet(&mScs[i]->m_pkt);
-               mScs[i]->m_pktValid = 0;
+               av_free_packet(&sc->m_pkt);
+               sc->m_pktValid = 0;
             }
          }
       }
@@ -693,7 +695,11 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
 
 streamContext *FFmpegImportFileHandle::ReadNextFrame()
 {
-   return import_ffmpeg_read_next_frame(mFormatContext, mScs, mNumStreams);
+   // Get pointer to array of contiguous unique_ptrs
+   auto scs = mScs->get();
+   // This reinterpret_cast to array of plain pointers is innocent
+   return import_ffmpeg_read_next_frame
+      (mFormatContext, reinterpret_cast<streamContext**>(scs), mNumStreams);
 }
 
 int FFmpegImportFileHandle::DecodeFrame(streamContext *sc, bool flushing)
@@ -706,9 +712,10 @@ int FFmpegImportFileHandle::WriteData(streamContext *sc)
    // Find the stream index in mScs array
    int streamid = -1;
    auto iter = mChannels.begin();
+   auto scs = mScs->get();
    for (int i = 0; i < mNumStreams; ++iter, ++i)
    {
-      if (mScs[i] == sc)
+      if (scs[i].get() == sc)
       {
          streamid = i;
          break;
@@ -858,14 +865,6 @@ FFmpegImportFileHandle::~FFmpegImportFileHandle()
       av_log_set_callback(av_log_default_callback);
    }
 
-   for (int i = 0; i < mNumStreams; i++)
-   {
-      if (mScs[i]->m_decodedAudioSamples != NULL)
-         av_free(mScs[i]->m_decodedAudioSamples);
-
-      delete mScs[i];
-   }
-   free(mScs);
 #ifdef EXPERIMENTAL_OD_FFMPEG
    }//mUsingOD
 #endif

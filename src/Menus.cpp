@@ -5617,9 +5617,8 @@ void AudacityProject::HandleMixAndRender(bool toNewTrack)
 {
    wxGetApp().SetMissingAliasedFileWarningShouldShow(true);
 
-   auto results =
-      ::MixAndRender(mTracks, mTrackFactory, mRate, mDefaultFormat, 0.0, 0.0);
-   auto &uNewLeft = results.first, &uNewRight = results.second;
+   WaveTrack::Holder uNewLeft, uNewRight;
+   MixAndRender(mTracks, mTrackFactory, mRate, mDefaultFormat, 0.0, 0.0, uNewLeft, uNewRight);
 
    if (uNewLeft) {
       // Remove originals, get stats on what tracks were mixed
@@ -6336,9 +6335,8 @@ void AudacityProject::OnTimerRecord()
    // to Timer Recording.  This decision has been taken as the safest approach
    // preventing issues surrounding "dirty" projects when Automatic Save/Export
    // is used in Timer Recording.
-   if (GetUndoManager()->UnsavedChanges()) {
-      wxMessageBox(_("Timer Recording cannot be used while you have unsaved changes.\n\n\
-                     Please save or close this project and try again."),
+   if ((GetUndoManager()->UnsavedChanges()) && (ProjectHasTracks() || mEmptyCanBeDirty)) {
+      wxMessageBox(_("Timer Recording cannot be used while you have unsaved changes.\n\nPlease save or close this project and try again."),
                    _("Timer Recording"),
                    wxICON_INFORMATION | wxOK);
       return;
