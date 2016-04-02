@@ -155,12 +155,12 @@ ODTask *ODDecodeFFmpegTask::Clone()
 ODFileDecoder* ODDecodeFFmpegTask::CreateFileDecoder(const wxString & fileName)
 {
    // Open the file for import
-   ODFFmpegDecoder *decoder =
-      new ODFFmpegDecoder(fileName, mScs, ODDecodeFFmpegTask::Streams{ mChannels },
+   auto decoder =
+      make_movable<ODFFmpegDecoder>(fileName, mScs, ODDecodeFFmpegTask::Streams{ mChannels },
       (AVFormatContext*)mFormatContext, mStreamIndex);
 
-   mDecoders.push_back(decoder);
-   return decoder;
+   mDecoders.push_back(std::move(decoder));
+   return mDecoders.back().get();
 
 }
 
