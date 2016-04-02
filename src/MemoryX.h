@@ -364,10 +364,7 @@ public:
    ArrayOf() {}
    explicit ArrayOf(size_t count, bool initialize = false)
    {
-      if (initialize)
-         this->reset(safenew X[count]{});
-      else
-         this->reset(safenew X[count]);
+      reinit(count, initialize);
    }
    ArrayOf(const ArrayOf&) = delete;
    ArrayOf& operator= (ArrayOf &&that)
@@ -379,6 +376,14 @@ public:
    {
       std::unique_ptr<X[]>::operator=(std::move(that));
       return *this;
+   }
+
+   void reinit(size_t count, bool initialize = false)
+   {
+      if (initialize)
+         std::unique_ptr<X[]>::reset(safenew X[count]{});
+      else
+         std::unique_ptr<X[]>::reset(safenew X[count]);
    }
 };
 
