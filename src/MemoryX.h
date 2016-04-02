@@ -593,7 +593,7 @@ template<typename T, typename Deleter, typename... Args>
 inline movable_ptr_with_deleter<T, Deleter>
 make_movable_with_deleter(const Deleter &d, Args&&... args)
 {
-   return movable_ptr_with_deleter<T, Deleter>(safenew T(std::forward<Args>(args...)), d);
+   return movable_ptr_with_deleter<T, Deleter>(safenew T(std::forward<Args>(args)...), d);
 }
 
 #endif // __AUDACITY_MEMORY_X_H__
