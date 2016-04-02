@@ -365,9 +365,9 @@ public:
    explicit ArrayOf(size_t count, bool initialize = false)
    {
       if (initialize)
-         reset(safenew X[count]{});
+         this->reset(safenew X[count]{});
       else
-         reset(safenew X[count]);
+         this->reset(safenew X[count]);
    }
    ArrayOf(const ArrayOf&) = delete;
    ArrayOf& operator= (ArrayOf &&that)
