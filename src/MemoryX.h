@@ -367,6 +367,11 @@ public:
       reinit(count, initialize);
    }
    ArrayOf(const ArrayOf&) = delete;
+   ArrayOf(ArrayOf&& that)
+      : std::unique_ptr < X[] >
+         (std::move((std::unique_ptr < X[] >&)(that)))
+   {
+   }
    ArrayOf& operator= (ArrayOf &&that)
    {
       std::unique_ptr<X[]>::operator=(std::move(that));
