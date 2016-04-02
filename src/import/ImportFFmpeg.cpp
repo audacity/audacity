@@ -345,7 +345,6 @@ FFmpegImportFileHandle::FFmpegImportFileHandle(const wxString & name)
    mStreamInfo = new wxArrayString();
    mFormatContext = NULL;
    mNumStreams = 0;
-   mScs = NULL;
    mCancelled = false;
    mStopped = false;
    mName = name;
