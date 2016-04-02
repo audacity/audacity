@@ -78,6 +78,43 @@ static double wxDateTime_to_AudacityTime(wxDateTime& dateTime)
    return (dateTime.GetHour() * 3600.0) + (dateTime.GetMinute() * 60.0) + dateTime.GetSecond();
 };
 
+
+// The purpose of the DatePickerCtrlAx class is to make to wxDatePickerCtrl more accessible for
+// the NVDA screen reader.
+// By default the msaa state of wxDatePickerCtrl is always normal (0x0), and this causes nvda not
+// to read the control when the user tabs to it. This class
+// modifies the state to be focusable + focused (when it's the focus).
+// Note that even with this class NVDA still doesn't read the new selected part of the control when left/right
+// arrow keys are used.
+
+#if wxUSE_ACCESSIBILITY
+
+class DatePickerCtrlAx final : public wxWindowAccessible
+{
+public:
+   DatePickerCtrlAx(wxDatePickerCtrl * ctrl) : wxWindowAccessible(ctrl), mCtrl(ctrl) {};
+
+   virtual ~ DatePickerCtrlAx() {};
+
+   // Returns a state constant.
+   wxAccStatus GetState(int childId, long *state) override;
+
+private:
+   wxDatePickerCtrl *mCtrl;
+};
+
+// Returns a state constant.
+wxAccStatus DatePickerCtrlAx::GetState(int WXUNUSED(childId), long *state)
+{
+   *state = wxACC_STATE_SYSTEM_FOCUSABLE;
+   *state |= (mCtrl == wxWindow::FindFocus() ? wxACC_STATE_SYSTEM_FOCUSED : 0);
+
+   return wxACC_OK;
+}
+
+#endif // wxUSE_ACCESSIBILITY
+
+
 BEGIN_EVENT_TABLE(TimerRecordDialog, wxDialog)
    EVT_DATE_CHANGED(ID_DATEPICKER_START, TimerRecordDialog::OnDatePicker_Start)
    EVT_TEXT(ID_TIMETEXT_START, TimerRecordDialog::OnTimeText_Start)
@@ -671,6 +708,9 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
             // const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDP_DEFAULT | wxDP_SHOWCENTURY, const wxValidator& validator = wxDefaultValidator, const wxString& name = "datectrl")
             m_pDatePickerCtrl_Start->SetName(_("Start Date"));
             m_pDatePickerCtrl_Start->SetRange(wxDateTime::Today(), wxInvalidDateTime); // No backdating.
+#if wxUSE_ACCESSIBILITY
+            m_pDatePickerCtrl_Start->SetAccessible( new DatePickerCtrlAx(m_pDatePickerCtrl_Start));
+#endif
             S.AddWindow(m_pDatePickerCtrl_Start);
 
             m_pTimeTextCtrl_Start = new NumericTextCtrl(
@@ -693,6 +733,9 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
             // const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDP_DEFAULT | wxDP_SHOWCENTURY, const wxValidator& validator = wxDefaultValidator, const wxString& name = "datectrl")
             m_pDatePickerCtrl_End->SetRange(m_DateTime_Start, wxInvalidDateTime); // No backdating.
             m_pDatePickerCtrl_End->SetName(_("End Date"));
+#if wxUSE_ACCESSIBILITY
+            m_pDatePickerCtrl_End->SetAccessible( new DatePickerCtrlAx(m_pDatePickerCtrl_End));
+#endif
             S.AddWindow(m_pDatePickerCtrl_End);
 
             m_pTimeTextCtrl_End = new NumericTextCtrl(
