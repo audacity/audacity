@@ -351,8 +351,7 @@ void TimerRecordDialog::OnOK(wxCommandEvent& WXUNUSED(event))
 
    if (iMinsRecording >= iMinsLeft) {
       wxMessageDialog dlgMessage(NULL,
-         _("You may not have enough free disk space to complete this timer recording.\n\n") +
-         _("Do you wish to continue?"),
+         _("You may not have enough free disk space to complete this timer recording, based on your current settings.\n\nDo you wish to continue?"),
          _("Timer Recording Disk Space Warning"),
          wxYES_NO | wxNO_DEFAULT | wxICON_WARNING);
       if (dlgMessage.ShowModal() != wxID_YES) {

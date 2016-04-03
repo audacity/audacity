@@ -5248,33 +5248,35 @@ bool AudacityProject::SaveFromTimerRecording(wxFileName fnFile) {
    return bSuccess;
 }
 
-// MY: This routine will give a *rough* estimate of how many
+// MY: This routine will give an estimate of how many
 // minutes of recording time we have available.
 // This is called from TimerRecordDialog::OnOK() to allow
 // the user to resolve a potential disk space issue before
-// Timer Recording starts - avoiding a loss of part of the
-// recording.
-int AudacityProject::GetEstimatedRecordingMinsLeftOnDisk(int iChannels /* = 2 */) {
+// Timer Recording starts.
+// The calculations made are based on the user's current
+// preferences.
+int AudacityProject::GetEstimatedRecordingMinsLeftOnDisk() {
+
+   // Obtain the current settings
+   sampleFormat oCaptureFormat = (sampleFormat)
+      gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleFormat"), floatSample);
+   long lCaptureChannels;
+   gPrefs->Read(wxT("/AudioIO/RecordChannels"), &lCaptureChannels, 2L);
+
+   // Find out how much free space we have on disk
    wxLongLong lFreeSpace = mDirManager->GetFreeDiskSpace();
    if (lFreeSpace < 0) {
       return 0;
    }
+
+   // Calculate the remaining time
    double dRecTime = 0.0;
-   int iRecMins = 0;
-
    dRecTime = lFreeSpace.GetHi() * 4294967296.0 + lFreeSpace.GetLo();
-
-   // Using the default sample size of floatSample
-   dRecTime /= SAMPLE_SIZE_DISK(floatSample);
-   // note size on disk (=3 for 24-bit) not in memory (=4 for 24-bit)
-   
-   // GetNumCaptureChannels() is only availavle when recording
-   // so use the number of channels as passed in (default 2)
-   dRecTime /= iChannels;
-
+   dRecTime /= SAMPLE_SIZE_DISK(oCaptureFormat);   
+   dRecTime /= lCaptureChannels;
    dRecTime /= GetRate();
 
    // Convert to minutes before returning
-   iRecMins = (int)(dRecTime / 60.0);
+   int iRecMins = (int)(dRecTime / 60.0);
    return iRecMins;
 }
