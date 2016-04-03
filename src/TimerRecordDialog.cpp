@@ -336,19 +336,22 @@ void TimerRecordDialog::OnOK(wxCommandEvent& WXUNUSED(event))
       }
    }
 
-   // MY: We should do a (rough) check here that we have enough
-   // disk space to complete this Timer Recording.
+   // MY: Estimate here if we have enough disk space to
+   // complete this Timer Recording.
    // If we dont think there is enough space then ask the user
    // if they want to continue.
    // We don't stop the user from starting the recording 
    // as its possible that they plan to free up some
    // space before the recording begins
    AudacityProject* pProject = GetActiveProject();
-   // Get minutes left based on default sample size
-   // and two channels
+
+   // How many minutes do we have left on the recording?
    int iMinsLeft = pProject->GetEstimatedRecordingMinsLeftOnDisk();
+
+   // How many minutes will this recording require?
    int iMinsRecording = m_TimeSpan_Duration.GetMinutes();
 
+   // Do we have enough space?
    if (iMinsRecording >= iMinsLeft) {
       wxMessageDialog dlgMessage(NULL,
          _("You may not have enough free disk space to complete this timer recording, based on your current settings.\n\nDo you wish to continue?"),
