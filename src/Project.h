@@ -283,6 +283,9 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
 
    bool ProjectHasTracks();
 
+   // Rotune to estimate how many minutes of recording time are left on disk
+   int GetEstimatedRecordingMinsLeftOnDisk();
+
 #include "Menus.h"
 
    CommandManager *GetCommandManager() { return &mCommandManager; }
