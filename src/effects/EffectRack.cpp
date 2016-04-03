@@ -114,7 +114,7 @@ EffectRack::EffectRack()
    {
       auto bs = std::make_unique<wxBoxSizer>(wxVERTICAL);
       {
-         auto hs = std::make_uniqie<wxBoxSizer>(wxHORIZONTAL);
+         auto hs = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
          wxASSERT(mPanel); // To justify safenew
          hs->Add(safenew wxButton(mPanel, wxID_APPLY, _("&Apply")), 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
          hs->AddStretchSpacer();
@@ -127,7 +127,7 @@ EffectRack::EffectRack()
       bs->Add(safenew wxStaticLine(mPanel, wxID_ANY), 0, wxEXPAND);
 
       {
-         auto uMainSizer = make_uniqie<wxFlexGridSizer>(7);
+         auto uMainSizer = std::make_unique<wxFlexGridSizer>(7);
          uMainSizer->AddGrowableCol(6);
          uMainSizer->SetHGap(0);
          uMainSizer->SetVGap(0);

@@ -6128,7 +6128,6 @@ void AudacityProject::OnScoreAlign()
    int numNoteTracksSelected = 0;
    int numOtherTracksSelected = 0;
    NoteTrack *nt;
-   NoteTrack *alignedNoteTrack;
    double endTime = 0.0;
 
    // Iterate through once to make sure that there is exactly
@@ -6167,14 +6166,14 @@ void AudacityProject::OnScoreAlign()
    //pushing the state before the change is wrong (I think)
    //PushState(_("Sync MIDI with Audio"), _("Sync MIDI with Audio"));
    // Make a copy of the note track in case alignment is canceled or fails
-   alignedNoteTrack = (NoteTrack *) nt->Duplicate();
+   auto holder = nt->Duplicate();
+   auto alignedNoteTrack = static_cast<NoteTrack*>(holder.get());
    // Duplicate() on note tracks serializes seq to a buffer, but we need
    // the seq, so Duplicate again and discard the track with buffer. The
    // test is here in case Duplicate() is changed in the future.
    if (alignedNoteTrack->GetSequence() == NULL) {
-      NoteTrack *temp = (NoteTrack *) alignedNoteTrack->Duplicate();
-      delete alignedNoteTrack;
-      alignedNoteTrack = temp;
+      holder = alignedNoteTrack->Duplicate();
+      alignedNoteTrack = static_cast<NoteTrack*>(holder.get());
       assert(alignedNoteTrack->GetSequence());
    }
    // Remove offset from NoteTrack because audio is
@@ -6187,15 +6186,14 @@ void AudacityProject::OnScoreAlign()
    }
    alignedNoteTrack->SetOffset(0);
 
-   WaveTrack **waveTracks;
-   mTracks->GetWaveTracks(true /* selectionOnly */,
-                          &numWaveTracksSelected, &waveTracks);
+   WaveTrackConstArray waveTracks =
+      mTracks->GetWaveTrackConstArray(true /* selectionOnly */);
 
    int result;
    {
-      Mixer mix(numWaveTracksSelected,   // int numInputTracks
-         waveTracks,              // WaveTrack **inputTracks
-         mTracks->GetTimeTrack(), // TimeTrack *timeTrack
+      Mixer mix(
+         waveTracks,              // const WaveTrackConstArray &inputTracks
+         Mixer::WarpOptions{ mTracks->GetTimeTrack() }, // const WarpOptions &warpOptions
          0.0,                     // double startTime
          endTime,                 // double stopTime
          2,                       // int numOutChannels
@@ -6205,7 +6203,6 @@ void AudacityProject::OnScoreAlign()
          floatSample,             // sampleFormat outFormat
          true,                    // bool highQuality = true
          NULL);                   // MixerSpec *mixerSpec = NULL
-      delete [] waveTracks;
 
       ASAProgress progress;
 
@@ -6225,7 +6222,7 @@ void AudacityProject::OnScoreAlign()
    }
 
    if (result == SA_SUCCESS) {
-      mTracks->Replace(nt, alignedNoteTrack, true);
+      mTracks->Replace(nt, std::move(holder));
       RedrawProject();
       wxMessageBox(wxString::Format(
          _("Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs."),
@@ -6233,7 +6230,6 @@ void AudacityProject::OnScoreAlign()
          params.mAudioStart, params.mAudioEnd));
       PushState(_("Sync MIDI with Audio"), _("Sync MIDI with Audio"));
    } else if (result == SA_TOOSHORT) {
-      delete alignedNoteTrack;
       wxMessageBox(wxString::Format(
          _("Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs."),
          params.mMidiStart, params.mMidiEnd,
@@ -6241,11 +6237,9 @@ void AudacityProject::OnScoreAlign()
    } else if (result == SA_CANCEL) {
       // wrong way to recover...
       //GetActiveProject()->OnUndo(); // recover any changes to note track
-      delete alignedNoteTrack;
       return; // no message when user cancels alignment
    } else {
       //GetActiveProject()->OnUndo(); // recover any changes to note track
-      delete alignedNoteTrack;
       wxMessageBox(_("Internal error reported by alignment process."));
    }
 }

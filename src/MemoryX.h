@@ -364,12 +364,14 @@ public:
    ArrayOf() {}
    explicit ArrayOf(size_t count, bool initialize = false)
    {
-      if (initialize)
-         this->reset(safenew X[count]{});
-      else
-         this->reset(safenew X[count]);
+      reinit(count, initialize);
    }
    ArrayOf(const ArrayOf&) = delete;
+   ArrayOf(ArrayOf&& that)
+      : std::unique_ptr < X[] >
+         (std::move((std::unique_ptr < X[] >&)(that)))
+   {
+   }
    ArrayOf& operator= (ArrayOf &&that)
    {
       std::unique_ptr<X[]>::operator=(std::move(that));
@@ -379,6 +381,14 @@ public:
    {
       std::unique_ptr<X[]>::operator=(std::move(that));
       return *this;
+   }
+
+   void reinit(size_t count, bool initialize = false)
+   {
+      if (initialize)
+         std::unique_ptr<X[]>::reset(safenew X[count]{});
+      else
+         std::unique_ptr<X[]>::reset(safenew X[count]);
    }
 };
 
@@ -407,6 +417,14 @@ public:
    {
       ArrayOf<ArrayOf<X>>::operator=(std::move(that));
       return *this;
+   }
+
+   using ArrayOf<ArrayOf<X>>::reinit;
+   void reinit(size_t countN, size_t countM, bool initialize = false)
+   {
+      reinit(countN, false);
+      for (size_t ii = 0; ii < countN; ++ii)
+         (*this)[ii].reinit(countM, initialize);
    }
 };
 

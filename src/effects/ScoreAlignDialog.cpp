@@ -106,7 +106,7 @@ ScoreAlignDialog::ScoreAlignDialog(wxWindow *parent, ScoreAlignParams &params)
    mFramePeriodText = S.AddVariableText(SA_DFT_FRAME_PERIOD_TEXT, true,
                                       wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
-   mWindowSizeLabel = S.AddVariableText(_("Window Size":), true,
+   mWindowSizeLabel = S.AddVariableText(_("Window Size:"), true,
                                       wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
    S.SetStyle(wxSL_HORIZONTAL);
    mWindowSizeSlider = S.Id(ID_WINDOWSIZE).AddSlider(wxT(""),

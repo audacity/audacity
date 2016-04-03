@@ -893,7 +893,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
    S.EndMultiColumn();
 
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
-   if (m_pEffect->mEffectEqualization48x)
+   if (mEffectEqualization48x)
    {
       // -------------------------------------------------------------------
       // ROW 6: Processing routine selection
@@ -2860,15 +2860,15 @@ void EffectEqualization::OnProcessingRadio(wxCommandEvent & event)
    int testEvent=event.GetId();
    switch(testEvent)
    {
-   case defaultMathRadioID: EffectEqualization48x::SetMathPath(MATH_FUNCTION_ORIGINAL);
+   case ID_DefaultMath: EffectEqualization48x::SetMathPath(MATH_FUNCTION_ORIGINAL);
       break;
-   case sSERadioID: EffectEqualization48x::SetMathPath(MATH_FUNCTION_SSE);
+   case ID_SSE: EffectEqualization48x::SetMathPath(MATH_FUNCTION_SSE);
       break;
-   case sSEThreadedRadioID: EffectEqualization48x::SetMathPath(MATH_FUNCTION_THREADED | MATH_FUNCTION_SSE);
+   case ID_SSEThreaded: EffectEqualization48x::SetMathPath(MATH_FUNCTION_THREADED | MATH_FUNCTION_SSE);
       break;
-   case aVXRadioID: testEvent=2;
+   case ID_AVX: testEvent = 2;
       break;
-   case aVXThreadedRadioID: testEvent=2;
+   case ID_AVXThreaded: testEvent = 2;
       break;
    }
 
@@ -2876,8 +2876,8 @@ void EffectEqualization::OnProcessingRadio(wxCommandEvent & event)
 
 void EffectEqualization::OnBench( wxCommandEvent & event)
 {
-   m_pEffect->mBench=true;
-   OnOk(event);
+   mBench=true;
+   // OnOk(event);
 }
 
 #endif
@@ -3611,35 +3611,6 @@ void EditCurvesDialog::OnDefaults( wxCommandEvent & WXUNUSED(event))
    mEffect->mCurves = temp;
    PopulateList(0);  // update the EditCurvesDialog dialog
 }
-
-#ifdef EXPERIMENTAL_EQ_SSE_THREADED
-
-void EqualizationDialog::OnProcessingRadio(wxCommandEvent & event)
-{
-   int testEvent=event.GetId();
-   switch(testEvent)
-   {
-   case defaultMathRadioID: EffectEqualization48x::SetMathPath(MATH_FUNCTION_ORIGINAL);
-      break;
-   case sSERadioID: EffectEqualization48x::SetMathPath(MATH_FUNCTION_SSE);
-      break;
-   case sSEThreadedRadioID: EffectEqualization48x::SetMathPath(MATH_FUNCTION_THREADED | MATH_FUNCTION_SSE);
-      break;
-   case aVXRadioID: testEvent=2;
-      break;
-   case aVXThreadedRadioID: testEvent=2;
-      break;
-   }
-
-};
-
-void EqualizationDialog::OnBench( wxCommandEvent & event)
-{
-   m_pEffect->mBench=true;
-   OnOk(event);
-}
-
-#endif
 
 void EditCurvesDialog::OnOK(wxCommandEvent & WXUNUSED(event))
 {

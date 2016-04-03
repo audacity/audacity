@@ -851,6 +851,12 @@
     <ClCompile Include="..\..\..\src\effects\VST\VSTControlMSW.cpp">
       <Filter>src\effects\VST</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\Equalization48x.cpp">
+      <Filter>src\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\RealFFTf48x.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\AboutDialog.h">
@@ -1715,6 +1721,12 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\MemoryX.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\Equalization48x.h">
+      <Filter>src\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\RealFFTf48x.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
