@@ -1199,14 +1199,12 @@ bool ProgressDialog::Create(const wxString & title,
          {
             w = safenew wxButton(this, wxID_OK, _("Stop"));
             h->Add(w, 0, wxRIGHT, 10);
-            m_btnStop = w;
          }
 
          if (!(flags & pdlgHideCancelButton))
          {
             w = safenew wxButton(this, wxID_CANCEL, _("Cancel"));
             h->Add(w, 0, wxRIGHT, 10);
-            m_btnCancel = w;
          }
 
          v->Add(uh.release(), 0, wxALIGN_RIGHT | wxRIGHT | wxBOTTOM, 10);
@@ -1504,17 +1502,8 @@ bool ProgressDialog::SearchForWindow(const wxWindowList & list, const wxWindow *
 
 void ProgressDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
 {
-   if (m_bConfirmAction) {
-      wxString sPrompt = _("Are you sure you wish to cancel?");
-      wxMessageDialog dlgMessage(this,
-                                 sPrompt,
-                                 _("Confirm Cancel"),
-                                 wxYES_NO | wxICON_QUESTION | wxNO_DEFAULT | wxSTAY_ON_TOP);
-      int iAction = dlgMessage.ShowModal();
-      if (iAction != wxID_YES) {
-         m_btnCancel->SetFocus();
-         return;
-      }
+   if (!ConfirmAction(_("Are you sure you wish to cancel?"), _("Confirm Cancel"), wxID_CANCEL)) {
+      return;
    }
    FindWindowById(wxID_CANCEL, this)->Disable();
    mCancel = true;
@@ -1522,17 +1511,8 @@ void ProgressDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
 
 void ProgressDialog::OnStop(wxCommandEvent & WXUNUSED(event))
 {
-   if (m_bConfirmAction) {
-      wxString sPrompt = _("Are you sure you wish to stop?");
-      wxMessageDialog dlgMessage(this,
-         sPrompt,
-         _("Confirm Stop"),
-         wxYES_NO | wxICON_QUESTION | wxNO_DEFAULT | wxSTAY_ON_TOP);
-      int iAction = dlgMessage.ShowModal();
-      if (iAction != wxID_YES) {
-         m_btnStop->SetFocus();
-         return;
-      }
+   if (!ConfirmAction(_("Are you sure you wish to stop?"), _("Confirm Stop"), wxID_OK)) {
+      return;
    }
    FindWindowById(wxID_OK, this)->Disable();
    mCancel = false;
@@ -1541,16 +1521,8 @@ void ProgressDialog::OnStop(wxCommandEvent & WXUNUSED(event))
 
 void ProgressDialog::OnCloseWindow(wxCloseEvent & WXUNUSED(event))
 {
-   if (m_bConfirmAction) {
-      wxString sPrompt = _("Are you sure you wish to close?");
-      wxMessageDialog dlgMessage(this,
-         sPrompt,
-         _("Confirm Close"),
-         wxYES_NO | wxICON_QUESTION | wxNO_DEFAULT | wxSTAY_ON_TOP);
-      int iAction = dlgMessage.ShowModal();
-      if (iAction != wxID_YES) {
-         return;
-      }
+   if (!ConfirmAction(_("Are you sure you wish to close?"), _("Confirm Close"))) {
+      return;
    }
    mCancel = true;
 }
@@ -1584,6 +1556,33 @@ void ProgressDialog::Beep() const
          s.Play(wxSOUND_SYNC);
       }
    }
+}
+
+// MY: Confirm action taken by user.
+// Returns TRUE if the user confirms Yes
+bool ProgressDialog::ConfirmAction(const wxString & sPrompt,
+                                   const wxString & sTitle,
+                                   int iButtonID /* = -1 */) {
+
+   // Check if confirmations are enabled?
+   // If not then return TRUE
+   if (m_bConfirmAction == false) {
+      return true;
+   }
+
+   wxMessageDialog dlgMessage(this,
+      sPrompt,
+      sTitle,
+      wxYES_NO | wxICON_QUESTION | wxNO_DEFAULT | wxSTAY_ON_TOP);
+   int iAction = dlgMessage.ShowModal();
+
+   bool bReturn = (iAction == wxID_YES);
+   if ((bReturn == false) && (iButtonID > -1)) {
+      // Set the focus back to the relevant button
+      FindWindowById(iButtonID, this)->SetFocus();
+   }
+
+   return bReturn;
 }
 
 TimerProgressDialog::TimerProgressDialog(const wxLongLong_t duration,

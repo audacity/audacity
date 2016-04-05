@@ -96,10 +96,6 @@ protected:
    bool m_bShowElapsedTime = true;
    bool m_bConfirmAction = false;
 
-   // MY: Declare the buttons so we can se the focus on them later
-   wxWindow *m_btnStop;
-   wxWindow *m_btnCancel;
-
 private:
    void Init();
    bool SearchForWindow(const wxWindowList & list, const wxWindow *searchfor) const;
@@ -107,6 +103,10 @@ private:
    void OnStop(wxCommandEvent & e);
    void OnCloseWindow(wxCloseEvent & e);
    void Beep() const;
+   
+   bool ConfirmAction(const wxString & sPrompt,
+                      const wxString & sTitle,
+                      int iButtonID = -1);
 
 private:
    // This guarantees we have an active event loop...possible during OnInit()
