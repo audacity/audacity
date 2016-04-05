@@ -875,7 +875,7 @@ void AudacityProject::CreateMenusAndCommands()
          // plug-in manager, as if an effect.  Decide whether to show or hide it.
          const PluginID ID = EffectManager::Get().GetEffectByIdentifier(wxT("StereoToMono"));
          const PluginDescriptor *plug = PluginManager::Get().GetPlugin(ID);
-         if (plug)
+         if (plug && plug->IsEnabled())
             c->AddItem(wxT("Stereo to Mono"), _("Stereo Trac&k to Mono"), FN(OnStereoToMono),
             AudioIONotBusyFlag | StereoRequiredFlag | WaveTracksSelectedFlag,
             AudioIONotBusyFlag | StereoRequiredFlag | WaveTracksSelectedFlag);
