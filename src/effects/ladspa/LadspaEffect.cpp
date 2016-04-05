@@ -239,6 +239,11 @@ bool LadspaEffectsModule::RegisterPlugin(PluginManagerInterface & pm, const wxSt
    }
 
    if (lib.IsLoaded()) {
+      // PRL:  I suspect Bug1257 -- Crash when enabling Amplio2 -- is the fault of a timing-
+      // dependent multi-threading bug in the Amplio2 library itself, in case the unload of the .dll
+      // comes too soon after the load.  I saw the bug in Release builds but not Debug.
+      // A sleep of even 1 ms was enough to fix the problem for me, but let's be even more generous.
+      ::wxMilliSleep(10);
       lib.Unload();
    }
 
