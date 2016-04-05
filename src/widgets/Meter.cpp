@@ -1942,7 +1942,7 @@ void Meter::OnPreferences(wxCommandEvent & WXUNUSED(event))
                                 10);
             rate->SetName(_("Meter refresh rate per second [1-100]"));
             IntegerValidator<long> vld(&mMeterRefreshRate);
-            vld.SetRange(0, 100);
+            vld.SetRange(1, 100);
             rate->SetValidator(vld);
          }
          S.EndHorizontalLay();
