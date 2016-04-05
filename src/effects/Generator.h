@@ -69,7 +69,7 @@ protected:
                               sampleCount block) = 0;
 
    // Generate the track, one block at a time, & adding the results to tmp
-   bool GenerateTrack(WaveTrack *tmp, const WaveTrack &track, int ntrack);
+   bool GenerateTrack(WaveTrack *tmp, const WaveTrack &track, int ntrack) override;
 };
 
 #endif

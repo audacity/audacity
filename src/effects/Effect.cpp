@@ -763,7 +763,6 @@ void Effect::SetDuration(double seconds)
    }
 
    mDuration = seconds;
-   mT1 = mT0 + mDuration;
 
    mIsSelection = false;
 
