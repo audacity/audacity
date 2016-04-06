@@ -349,7 +349,7 @@ ToolManager::ToolManager( AudacityProject *parent, wxWindow *topDockParent )
    pt[ 2 ].y = 0;
 
    // Create the shaped region
-   mDown = new wxRegion( 3, &pt[0] );
+   mDown = std::make_unique<wxRegion>( 3, &pt[0] );
 
    // Create the down arrow
    pt[ 0 ].x = 9;
@@ -360,7 +360,7 @@ ToolManager::ToolManager( AudacityProject *parent, wxWindow *topDockParent )
    pt[ 2 ].y = 18;
 
    // Create the shaped region
-   mLeft = new wxRegion( 3, &pt[0] );
+   mLeft = std::make_unique<wxRegion>( 3, &pt[0] );
 
    // Create the indicator frame
    mIndicator = new wxFrame( NULL,
@@ -465,10 +465,6 @@ ToolManager::~ToolManager()
 
    // Must destroy the window since it doesn't have a parent
    mIndicator->Destroy();
-
-   // Delete the indicator regions
-   delete mLeft;
-   delete mDown;
 }
 
 // This table describes the default configuration of the toolbars as
@@ -1159,14 +1155,14 @@ void ToolManager::OnMouse( wxMouseEvent & event )
                p.x = dr.GetLeft() + ( dr.GetWidth() / 2 )
                  - (box.GetWidth() / 2);
                p.y = dr.GetBottom() - box.GetHeight();
-               mCurrent = mDown;
+               mCurrent = mDown.get();
             }
             else
             {
                p.x = dr.GetLeft() + r.GetLeft();
                p.y = dr.GetTop() + r.GetTop() +
                   ( ( r.GetHeight() - mLeft->GetBox().GetHeight() ) / 2 );
-               mCurrent = mLeft;
+               mCurrent = mLeft.get();
             }
 
             // Change the shape while hidden and then show it if okay

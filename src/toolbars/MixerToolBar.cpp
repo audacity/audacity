@@ -66,8 +66,6 @@ MixerToolBar::MixerToolBar()
 
 MixerToolBar::~MixerToolBar()
 {
-   delete mPlayBitmap;
-   delete mRecordBitmap;
 }
 
 void MixerToolBar::Create(wxWindow *parent)
@@ -78,7 +76,7 @@ void MixerToolBar::Create(wxWindow *parent)
 void MixerToolBar::Populate()
 {
    if( mRecordBitmap == NULL )
-      mRecordBitmap = new wxBitmap(theTheme.Bitmap(bmpMic));
+      mRecordBitmap = std::make_unique<wxBitmap>(theTheme.Bitmap(bmpMic));
 
    Add(safenew wxStaticBitmap(this,
                           wxID_ANY,
@@ -91,7 +89,7 @@ void MixerToolBar::Populate()
    Add(mInputSlider, 0, wxALIGN_CENTER);
 
    if( mPlayBitmap == NULL )
-      mPlayBitmap = new wxBitmap(theTheme.Bitmap(bmpSpeaker));
+      mPlayBitmap = std::make_unique<wxBitmap>(theTheme.Bitmap(bmpSpeaker));
 
    Add(safenew wxStaticBitmap(this,
                           wxID_ANY,
