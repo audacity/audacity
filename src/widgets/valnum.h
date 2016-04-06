@@ -11,6 +11,7 @@
 #ifndef _WIDGETS_VALNUM_H_
 #define _WIDGETS_VALNUM_H_
 
+#include "../MemoryX.h"
 #include <wx/defs.h>
 
 #if wxUSE_VALIDATORS
