@@ -88,7 +88,6 @@ public:
    // -------------------------------------------------------------------------
 
    static ModuleManager & Get();
-   static void Destroy();
 
    void Initialize(CommandHandler & cmdHandler);
    int Dispatch(ModuleDispatchTypes type);
@@ -110,14 +109,15 @@ public:
 private:
    // I'm a singleton class
    ModuleManager();
-   virtual ~ModuleManager();
+   ~ModuleManager();
 
    void InitializeBuiltins();
    ModuleInterface *LoadModule(const wxString & path);
 
 private:
    friend ModuleInterfaceDeleter;
-   static ModuleManager *mInstance;
+   friend std::default_delete<ModuleManager>;
+   static std::unique_ptr<ModuleManager> mInstance;
 
    ModuleMainMap mModuleMains;
    ModuleMap mDynModules;

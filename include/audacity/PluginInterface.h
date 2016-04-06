@@ -54,7 +54,6 @@ class ModuleInterface;
 class PluginManagerInterface /* not final */
 {
 public:
-   virtual ~PluginManagerInterface() {};
 
    virtual bool IsPluginRegistered(const wxString & path) = 0;
 

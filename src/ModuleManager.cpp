@@ -180,7 +180,7 @@ void * Module::GetSymbol(const wxString &name)
 // ============================================================================
 
 // The one and only ModuleManager
-ModuleManager *ModuleManager::mInstance = NULL;
+std::unique_ptr<ModuleManager> ModuleManager::mInstance{};
 
 // Provide builtin modules a means to identify themselves
 static wxArrayPtrVoid *pBuiltinModuleList = NULL;
@@ -358,19 +358,10 @@ ModuleManager & ModuleManager::Get()
 {
    if (!mInstance)
    {
-      mInstance = new ModuleManager();
+      mInstance.reset(safenew ModuleManager);
    }
 
    return *mInstance;
-}
-
-void ModuleManager::Destroy()
-{
-   if (mInstance)
-   {
-      delete mInstance;
-      mInstance = NULL;
-   }
 }
 
 bool ModuleManager::DiscoverProviders()
