@@ -74,6 +74,7 @@ private:
    void OnTimeText_Duration(wxCommandEvent & event);
 
    void OnOK(wxCommandEvent& event);
+   void OnHelpButtonClick(wxCommandEvent& event);
 
    wxString GetDisplayDate(wxDateTime & dt);
    void PopulateOrExchange(ShuttleGui& S);
@@ -98,8 +99,9 @@ private:
    TimerRecordPathCtrl *NewPathControl(wxWindow *wParent, const int iID, const wxString &sCaption, const wxString &sValue);
 
    int ExecutePostRecordActions(bool bWasStopped);
-
    int PreActionDelay(int iActionIndex, TimerRecordCompletedActions eCompletedActions);
+
+   wxString GetHoursMinsString(int iMinutes);
 
 private:
    wxDateTime m_DateTime_Start;

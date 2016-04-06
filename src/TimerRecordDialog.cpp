@@ -31,6 +31,7 @@
 #include <wx/timer.h>
 #include <wx/dynlib.h> //<! For windows.h
 #include <wx/msgdlg.h>
+#include <wx/utils.h>  // To allow us to launch help
 
 #include "ShuttleGui.h"
 #include "Project.h"
@@ -125,6 +126,7 @@ BEGIN_EVENT_TABLE(TimerRecordDialog, wxDialog)
    EVT_TEXT(ID_TIMETEXT_DURATION, TimerRecordDialog::OnTimeText_Duration)
 
    EVT_BUTTON(wxID_OK, TimerRecordDialog::OnOK)
+   EVT_BUTTON(wxID_HELP, TimerRecordDialog::OnHelpButtonClick)
 
    EVT_TIMER(TIMER_ID, TimerRecordDialog::OnTimer)
 
@@ -344,6 +346,52 @@ void TimerRecordDialog::OnAutoExportCheckBox_Change(wxCommandEvent& WXUNUSED(eve
    EnableDisableAutoControls(m_pTimerAutoExportCheckBoxCtrl->GetValue(), CONTROL_GROUP_EXPORT);
 }
 
+void TimerRecordDialog::OnHelpButtonClick(wxCommandEvent& WXUNUSED(event))
+{
+   bool bHelpOpenedOK = wxLaunchDefaultBrowser("http://manual.audacityteam.org/o/man/timer_record.html", wxBROWSER_NEW_WINDOW);
+   if (!bHelpOpenedOK) {
+      // Error
+      wxMessageBox(_("Unable to open default browser at the manual page for Timer Recording."), _("Error"), wxICON_EXCLAMATION | wxOK);
+   }
+}
+
+wxString TimerRecordDialog::GetHoursMinsString(int iMinutes) {
+   
+   wxString sFormatted = "";
+   wxString sHours = "";
+   wxString sMins = "";
+
+   if (iMinutes < 1) {
+      // Less than a minute...
+      sFormatted = _("Less than 1 minute");
+      return sFormatted;
+   }
+
+   // Calculate
+   int iHours = iMinutes / 60;
+   int iMins = iMinutes % 60;
+
+   // Format the hours
+   if (iHours == 1) {
+      sHours = _("1 hour and ");
+   }
+   else if (iHours > 1) {
+      sHours.Printf(_("%d hours and"), iHours);
+   }
+
+   // Format the minutes
+   if (iMins == 1) {
+      sMins = _("1 minute");
+   }
+   else if (iMins > 1) {
+      sMins.Printf(_("%d minutes"), iMins);
+   }
+
+   // Build the string
+   sFormatted.Printf("%s %s", sHours, sMins);
+   return sFormatted;
+}
+
 void TimerRecordDialog::OnOK(wxCommandEvent& WXUNUSED(event))
 {
    this->TransferDataFromWindow();
@@ -380,7 +428,7 @@ void TimerRecordDialog::OnOK(wxCommandEvent& WXUNUSED(event))
    // space before the recording begins
    AudacityProject* pProject = GetActiveProject();
 
-   // How many minutes do we have left on the recording?
+   // How many minutes do we have left on the disc?
    int iMinsLeft = pProject->GetEstimatedRecordingMinsLeftOnDisk();
 
    // How many minutes will this recording require?
@@ -388,8 +436,21 @@ void TimerRecordDialog::OnOK(wxCommandEvent& WXUNUSED(event))
 
    // Do we have enough space?
    if (iMinsRecording >= iMinsLeft) {
+
+      // Format the strings
+      wxString sRemainingTime = "";
+      sRemainingTime = GetHoursMinsString(iMinsLeft);
+      wxString sPlannedTime = "";
+      sPlannedTime = GetHoursMinsString(iMinsRecording);
+
+      // Create the message string
+      wxString sMessage = "";
+      sMessage.Printf("You may not have enough free disk space to complete this timer recording, based on your current settings.\n\nDo you wish to continue?\n\nPlanned recording duration:   %s\nRecording time remaining on disc:   %s",
+         sPlannedTime,
+         sRemainingTime);
+
       wxMessageDialog dlgMessage(NULL,
-         _("You may not have enough free disk space to complete this timer recording, based on your current settings.\n\nDo you wish to continue?"),
+         sMessage,
          _("Timer Recording Disk Space Warning"),
          wxYES_NO | wxNO_DEFAULT | wxICON_WARNING);
       if (dlgMessage.ShowModal() != wxID_YES) {
@@ -617,7 +678,7 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
       } else {
 
          if (bWasStopped && (iOverriddenAction != POST_TIMER_RECORD_NOTHING)) {
-            sMessage.Printf("%s\n\n'%s' has been cancelled as the recording was stopped.",
+            sMessage.Printf("%s\n\n'%s' has been canceled as the recording was stopped.",
                             sMessage,
                             m_pTimerAfterCompleteChoiceCtrl->GetString(iOverriddenAction));
          }
@@ -884,7 +945,8 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
    }
    S.EndMultiColumn();
 
-   S.AddStandardButtons();
+   // MY: Added the help button here
+   S.AddStandardButtons(eOkButton | eCancelButton | eHelpButton);
 
    Layout();
    Fit();
