@@ -1977,7 +1977,6 @@ int AudacityApp::OnExit()
 #endif
 
    DeinitFFT();
-   BlockFile::Deinit();
 
    DeinitAudioIO();
 

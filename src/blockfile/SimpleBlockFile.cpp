@@ -123,8 +123,9 @@ SimpleBlockFile::SimpleBlockFile(wxFileName baseFileName,
       mCache.sampleData = new char[sampleLen * SAMPLE_SIZE(format)];
       memcpy(mCache.sampleData,
              sampleData, sampleLen * SAMPLE_SIZE(format));
+      ArrayOf<char> cleanup;
       void* summaryData = BlockFile::CalcSummary(sampleData, sampleLen,
-                                                format);
+         format, cleanup);
       mCache.summaryData = new char[mSummaryInfo.totalSummaryBytes];
       memcpy(mCache.summaryData, summaryData,
              (size_t)mSummaryInfo.totalSummaryBytes);
@@ -207,8 +208,11 @@ bool SimpleBlockFile::WriteSimpleBlockFile(
    header.channels = 1;
 
    // Write the file
+   ArrayOf<char> cleanup;
    if (!summaryData)
-      summaryData = /*BlockFile::*/CalcSummary(sampleData, sampleLen, format); //mchinen:allowing virtual override of calc summary for ODDecodeBlockFile.
+      summaryData = /*BlockFile::*/CalcSummary(sampleData, sampleLen, format, cleanup);
+      //mchinen:allowing virtual override of calc summary for ODDecodeBlockFile.
+      // PRL: cleanup fixes a possible memory leak!
 
    size_t nBytesToWrite = sizeof(header);
    size_t nBytesWritten = file.Write(&header, nBytesToWrite);
