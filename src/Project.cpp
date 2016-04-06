@@ -3000,8 +3000,7 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
       TrackListIterator triter(GetTracks());
       tr = triter.First();
 
-      std::vector<ODTask*> newTasks;
-      ODTask* newTask;
+      std::vector<movable_ptr<ODTask>> newTasks;
       //std::vector<ODDecodeTask*> decodeTasks;
       unsigned int createdODTasks=0;
       while (tr) {
@@ -3021,16 +3020,16 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
             //we want at most one instance of each class for the project
             while((odFlags|createdODTasks) != createdODTasks)
             {
-               newTask=NULL;
+               movable_ptr<ODTask> newTask;
 #ifdef EXPERIMENTAL_OD_FLAC
                if(!(createdODTasks&ODTask::eODFLAC) && odFlags & ODTask::eODFLAC) {
-                  newTask= new ODDecodeFlacTask;
+                  newTask = make_movable<ODDecodeFlacTask>();
                   createdODTasks= createdODTasks | ODTask::eODFLAC;
                }
                else
 #endif
                if(!(createdODTasks&ODTask::eODPCMSummary) && odFlags & ODTask::eODPCMSummary) {
-                  newTask=new ODComputeSummaryTask;
+                  newTask = make_movable<ODComputeSummaryTask>();
                   createdODTasks= createdODTasks | ODTask::eODPCMSummary;
                }
                else {
@@ -3041,14 +3040,14 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
                if(newTask)
                {
                   newTask->AddWaveTrack((WaveTrack*)tr);
-                  newTasks.push_back(newTask);
+                  newTasks.push_back(std::move(newTask));
                }
             }
          }
          tr = triter.Next();
       }
       for(unsigned int i=0;i<newTasks.size();i++)
-         ODManager::Instance()->AddNewTask(newTasks[i]);
+         ODManager::Instance()->AddNewTask(std::move(newTasks[i]));
 
          //release the flag.
       ODManager::UnmarkLoadedODFlag();
@@ -4167,7 +4166,7 @@ void AudacityProject::PopState(const UndoState &state)
    TrackListIterator iter(tracks);
    Track *t = iter.First();
    bool odUsed = false;
-   ODComputeSummaryTask* computeTask = NULL;
+   movable_ptr<ODComputeSummaryTask> computeTask;
 
    while (t)
    {
@@ -4187,7 +4186,7 @@ void AudacityProject::PopState(const UndoState &state)
          {
             if(!odUsed)
             {
-               computeTask=new ODComputeSummaryTask;
+               computeTask = make_movable<ODComputeSummaryTask>();
                odUsed=true;
             }
             computeTask->AddWaveTrack((WaveTrack*)copyTrack);
@@ -4198,7 +4197,7 @@ void AudacityProject::PopState(const UndoState &state)
 
    //add the task.
    if(odUsed)
-      ODManager::Instance()->AddNewTask(computeTask);
+      ODManager::Instance()->AddNewTask(std::move(computeTask));
 
    HandleResize();
 

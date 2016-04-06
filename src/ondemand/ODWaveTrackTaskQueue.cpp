@@ -16,6 +16,7 @@ tasks associated with a WaveTrack.
 
 *//*******************************************************************/
 
+#include "../Audacity.h"
 #include "ODWaveTrackTaskQueue.h"
 #include "ODTask.h"
 #include "ODManager.h"
@@ -31,8 +32,8 @@ ODWaveTrackTaskQueue::~ODWaveTrackTaskQueue()
    {
       mTasks[i]->TerminateAndBlock();//blocks if active.
       //small chance we may have rea-added the task back into the queue from a diff thread.  - so remove it if we have.
-      ODManager::Instance()->RemoveTaskIfInQueue(mTasks[i]);
-      delete mTasks[i];
+      ODManager::Instance()->RemoveTaskIfInQueue(mTasks[i].get());
+      mTasks[i].reset();
    }
 
 }
@@ -100,10 +101,12 @@ void ODWaveTrackTaskQueue::AddWaveTrack(WaveTrack* track)
    mTracksMutex.Unlock();
 }
 
-void ODWaveTrackTaskQueue::AddTask(ODTask* task)
+void ODWaveTrackTaskQueue::AddTask(movable_ptr<ODTask> &&mtask)
 {
+   ODTask *task = mtask.get();
+
    mTasksMutex.Lock();
-   mTasks.push_back(task);
+   mTasks.push_back(std::move(mtask));
    mTasksMutex.Unlock();
 
    //take all of the tracks in the task.
@@ -172,7 +175,7 @@ void ODWaveTrackTaskQueue::MakeWaveTrackIndependent(WaveTrack* track)
             mTasksMutex.Unlock();
             //AddNewTask locks the m_queuesMutex which is already locked by ODManager::MakeWaveTrackIndependent,
             //so we pass a boolean flag telling it not to lock again.
-            ODManager::Instance()->AddNewTask(task.release(), false);
+            ODManager::Instance()->AddNewTask(std::move(task), false);
             mTasksMutex.Lock();
          }
          mTasksMutex.Unlock();
@@ -256,7 +259,7 @@ ODTask* ODWaveTrackTaskQueue::GetTask(size_t x)
    ODTask* ret = NULL;
    mTasksMutex.Lock();
    if (x < mTasks.size())
-      ret = mTasks[x];
+      ret = mTasks[x].get();
    mTasksMutex.Unlock();
    return ret;
 }
@@ -304,7 +307,6 @@ void ODWaveTrackTaskQueue::RemoveFrontTask()
    if(mTasks.size())
    {
       //wait for the task to stop running.
-      delete mTasks[0];
       mTasks.erase(mTasks.begin());
    }
    mTasksMutex.Unlock();
@@ -317,7 +319,7 @@ ODTask* ODWaveTrackTaskQueue::GetFrontTask()
    if(mTasks.size())
    {
       mTasksMutex.Unlock();
-      return mTasks[0];
+      return mTasks[0].get();
    }
    mTasksMutex.Unlock();
    return NULL;

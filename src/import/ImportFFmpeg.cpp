@@ -578,13 +578,13 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
    //at this point we know the file is good and that we have to load the number of channels in mScs[s]->m_stream->codec->channels;
    //so for OD loading we create the tracks and releasee the modal lock after starting the ODTask.
    if (mUsingOD) {
-      std::vector<ODDecodeFFmpegTask*> tasks;
+      std::vector<movable_ptr<ODDecodeFFmpegTask>> tasks;
       //append blockfiles to each stream and add an individual ODDecodeTask for each one.
       s = -1;
       for (const auto &stream : mChannels) {
          ++s;
-         ODDecodeFFmpegTask* odTask =
-            new ODDecodeFFmpegTask(mScs, ODDecodeFFmpegTask::FromList(mChannels), mContext, s);
+         auto odTask =
+            make_movable<ODDecodeFFmpegTask>(mScs, ODDecodeFFmpegTask::FromList(mChannels), mContext, s);
          odTask->CreateFileDecoder(mFilename);
 
          //each stream has different duration.  We need to know it if seeking is to be allowed.
@@ -619,17 +619,12 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
                   break;
             }
          }
-         tasks.push_back(odTask);
+         tasks.push_back(std::move(odTask));
       }
       //Now we add the tasks and let them run, or DELETE them if the user cancelled
-      for(int i=0; i < (int)tasks.size(); i++) {
-         if(res==eProgressSuccess)
-            ODManager::Instance()->AddNewTask(tasks[i]);
-         else
-            {
-               delete tasks[i];
-            }
-      }
+      if (res == eProgressSuccess)
+         for (int i = 0; i < (int)tasks.size(); i++)
+            ODManager::Instance()->AddNewTask(std::move(tasks[i]));
    } else {
 #endif
 

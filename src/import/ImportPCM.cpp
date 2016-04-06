@@ -408,7 +408,7 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
 
       if(useOD)
       {
-         ODComputeSummaryTask* computeTask=new ODComputeSummaryTask;
+         auto computeTask = make_movable<ODComputeSummaryTask>();
          bool moreThanStereo = mInfo.channels>2;
          for (const auto &channel : channels)
          {
@@ -416,13 +416,13 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
             if(moreThanStereo)
             {
                //if we have 3 more channels, they get imported on seperate tracks, so we add individual tasks for each.
-               ODManager::Instance()->AddNewTask(computeTask);
-               computeTask=new ODComputeSummaryTask;
+               ODManager::Instance()->AddNewTask(std::move(computeTask));
+               computeTask = make_movable<ODComputeSummaryTask>();
             }
          }
          //if we have a linked track, we add ONE task.
          if(!moreThanStereo)
-            ODManager::Instance()->AddNewTask(computeTask);
+            ODManager::Instance()->AddNewTask(std::move(computeTask));
       }
    }
    else {
