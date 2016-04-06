@@ -28,13 +28,13 @@ void OpenProjectCommandType::BuildSignature(CommandSignature &signature)
 {
    BoolValidator *addToHistoryValidator(new BoolValidator());
    signature.AddParameter(wxT("AddToHistory"), true, addToHistoryValidator);
-   Validator *filenameValidator(new Validator());
+   Validator *filenameValidator(new DefaultValidator());
    signature.AddParameter(wxT("Filename"), wxT(""), filenameValidator);
 }
 
-Command *OpenProjectCommandType::Create(CommandOutputTarget *target)
+CommandHolder OpenProjectCommandType::Create(std::unique_ptr<CommandOutputTarget> &&target)
 {
-   return new OpenProjectCommand(*this, target);
+   return std::make_shared<OpenProjectCommand>(*this, std::move(target));
 }
 
 bool OpenProjectCommand::Apply(CommandExecutionContext context)
@@ -76,13 +76,13 @@ void SaveProjectCommandType::BuildSignature(CommandSignature &signature)
    signature.AddParameter(wxT("Compress"), false, saveCompressedValidator);
    signature.AddParameter(wxT("AddToHistory"), true, addToHistoryValidator);
 
-   Validator *filenameValidator(new Validator());
+   Validator *filenameValidator(new DefaultValidator());
    signature.AddParameter(wxT("Filename"), wxT(""), filenameValidator);
 }
 
-Command *SaveProjectCommandType::Create(CommandOutputTarget *target)
+CommandHolder SaveProjectCommandType::Create(std::unique_ptr<CommandOutputTarget> &&target)
 {
-   return new SaveProjectCommand(*this, target);
+   return std::make_shared<SaveProjectCommand>(*this, std::move(target));
 }
 
 bool SaveProjectCommand::Apply(CommandExecutionContext context)

@@ -13,6 +13,7 @@
 #include "audacity/PluginInterface.h"
 
 #include "Effect.h"
+#include "../MemoryX.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -52,7 +53,7 @@ public:
 private:
    // BuiltinEffectModule implementation
 
-   Effect *Instantiate(const wxString & path);
+   std::unique_ptr<Effect> Instantiate(const wxString & path);
 
 private:
    ModuleManagerInterface *mModMan;

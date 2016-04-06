@@ -112,7 +112,8 @@
 DECLARE_MODULE_ENTRY(AudacityModule)
 {
    // Create our effects module and register
-   return new VSTEffectsModule(moduleManager, path);
+   // Trust the module manager not to leak this
+   return safenew VSTEffectsModule(moduleManager, path);
 }
 
 // ============================================================================
@@ -623,17 +624,17 @@ bool VSTEffectsModule::IsPluginValid(const wxString & path)
 
 IdentInterface *VSTEffectsModule::CreateInstance(const wxString & path)
 {
+   // Acquires a resource for the application.
    // For us, the ID is simply the path to the effect
-   return new VSTEffect(path);
+   // Safety of this depends on complementary calls to DeleteInstance on the module manager side.
+   return safenew VSTEffect(path);
 }
 
 void VSTEffectsModule::DeleteInstance(IdentInterface *instance)
 {
-   VSTEffect *effect = dynamic_cast<VSTEffect *>(instance);
-   if (effect)
-   {
-      delete effect;
-   }
+   std::unique_ptr < VSTEffect > {
+      dynamic_cast<VSTEffect *>(instance)
+   };
 }
 
 // ============================================================================

@@ -35,11 +35,11 @@ ODComputeSummaryTask::ODComputeSummaryTask()
    mHasUpdateRan=false;
 }
 
-ODTask* ODComputeSummaryTask::Clone()
+std::unique_ptr<ODTask> ODComputeSummaryTask::Clone() const
 {
-   ODComputeSummaryTask* clone = new ODComputeSummaryTask;
-   clone->mDemandSample=GetDemandSample();
-   return clone;
+   auto clone = std::make_unique<ODComputeSummaryTask>();
+   clone->mDemandSample = GetDemandSample();
+   return std::move(clone);
 }
 
 

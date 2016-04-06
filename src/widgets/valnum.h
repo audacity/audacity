@@ -348,7 +348,8 @@ public:
         this->DoSetMax(std::numeric_limits<ValueType>::max());
     }
 
-    wxObject *Clone() const override { return new IntegerValidator(*this); }
+    // Clone is required by wxwidgets; implemented via copy constructor
+    wxObject *Clone() const override { return safenew IntegerValidator(*this); }
 
 private:
     DECLARE_NO_ASSIGN_CLASS(IntegerValidator);
@@ -457,9 +458,10 @@ public:
         this->SetPrecision(precision);
     }
 
+    // Clone is required by wxwidgets; implemented via copy constructor
     wxObject *Clone() const override
     {
-        return new FloatingPointValidator(*this);
+        return safenew FloatingPointValidator(*this);
     }
 
 private:

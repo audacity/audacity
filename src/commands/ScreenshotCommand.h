@@ -28,7 +28,7 @@ class ScreenshotCommandType final : public CommandType
 public:
    wxString BuildName() override;
    void BuildSignature(CommandSignature &signature) override;
-   Command *Create(CommandOutputTarget *target) override;
+   CommandHolder Create(std::unique_ptr<CommandOutputTarget> &&target) override;
 };
 
 class ScreenshotCommand final : public CommandImplementation
@@ -53,9 +53,9 @@ private:
 public:
    wxTopLevelWindow *GetFrontWindow(AudacityProject *project);
    ScreenshotCommand(CommandType &type,
-                     CommandOutputTarget *output,
+                     std::unique_ptr<CommandOutputTarget> &&output,
                      wxWindow *ignore = NULL)
-      : CommandImplementation(type, output),
+      : CommandImplementation(type, std::move(output)),
         mIgnore(ignore),
         mBackground(false)
    { }

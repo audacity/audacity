@@ -634,13 +634,14 @@ public:
    {
    };
 
-   wxConnectionBase *OnAcceptConnection(const wxString & topic)
+   wxConnectionBase *OnAcceptConnection(const wxString & topic) override
    {
       if (topic != IPC_TOPIC) {
          return NULL;
       }
 
-      return new IPCConn();
+      // Trust wxWidgets framework to delete it
+      return safenew IPCConn();
    };
 };
 
@@ -1982,10 +1983,6 @@ int AudacityApp::OnExit()
 
    // Terminate the PluginManager (must be done before deleting the locale)
    PluginManager::Get().Terminate();
-
-   // Done with plugins and modules
-   PluginManager::Destroy();
-   ModuleManager::Destroy();
 
    if (mLocale)
       delete mLocale;

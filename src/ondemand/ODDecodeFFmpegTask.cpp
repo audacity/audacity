@@ -140,13 +140,13 @@ ODDecodeFFmpegTask::~ODDecodeFFmpegTask()
 }
 
 
-ODTask *ODDecodeFFmpegTask::Clone()
+std::unique_ptr<ODTask> ODDecodeFFmpegTask::Clone() const
 {
    auto clone = std::make_unique<ODDecodeFFmpegTask>(mScs, Streams{ mChannels }, mFormatContext, mStreamIndex);
    clone->mDemandSample=GetDemandSample();
 
    //the decoders and blockfiles should not be copied.  They are created as the task runs.
-   return clone.release();
+   return std::move(clone);
 }
 
 ///Creates an ODFileDecoder that decodes a file of filetype the subclass handles.

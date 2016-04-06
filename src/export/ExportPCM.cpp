@@ -308,7 +308,6 @@ class ExportPCM final : public ExportPlugin
 public:
 
    ExportPCM();
-   void Destroy();
 
    // Required
 
@@ -376,11 +375,6 @@ ExportPCM::ExportPCM()
 #endif
    SetExtensions(allext, format);
    SetMaxChannels(255, format);
-}
-
-void ExportPCM::Destroy()
-{
-   delete this;
 }
 
 /**
@@ -486,13 +480,13 @@ int ExportPCM::Export(AudacityProject *project,
 
    const WaveTrackConstArray waveTracks =
       tracks->GetWaveTrackConstArray(selectionOnly, false);
-   Mixer *mixer = CreateMixer(waveTracks,
-                            tracks->GetTimeTrack(),
-                            t0, t1,
-                            info.channels, maxBlockLen, true,
-                            rate, format, true, mixerSpec);
-
    {
+      auto mixer = CreateMixer(waveTracks,
+         tracks->GetTimeTrack(),
+         t0, t1,
+         info.channels, maxBlockLen, true,
+         rate, format, true, mixerSpec);
+
       ProgressDialog progress(wxFileName(fName).GetName(),
          selectionOnly ?
          wxString::Format(_("Exporting the selected audio as %s"),
@@ -521,19 +515,17 @@ int ExportPCM::Export(AudacityProject *project,
             sf_error_str(sf, buffer2, 1000);
             wxMessageBox(wxString::Format(
                /* i18n-hint: %s will be the error message from libsndfile, which
-                * is usually something unhelpful (and untranslated) like "system
-                * error" */
-                _("Error while writing %s file (disk full?).\nLibsndfile says \"%s\""),
-                formatStr.c_str(),
-                wxString::FromAscii(buffer2).c_str()));
+                  * is usually something unhelpful (and untranslated) like "system
+                  * error" */
+                  _("Error while writing %s file (disk full?).\nLibsndfile says \"%s\""),
+                  formatStr.c_str(),
+                  wxString::FromAscii(buffer2).c_str()));
             break;
          }
 
          updateResult = progress.Update(mixer->MixGetCurrentTime() - t0, t1 - t0);
       }
    }
-
-   delete mixer;
 
    // Install the WAV metata in a "LIST" chunk at the end of the file
    if ((sf_format & SF_FORMAT_TYPEMASK) == SF_FORMAT_WAV ||
@@ -915,7 +907,7 @@ bool ExportPCM::CheckFileName(wxFileName &filename, int format)
    return ExportPlugin::CheckFileName(filename, format);
 }
 
-ExportPlugin *New_ExportPCM()
+movable_ptr<ExportPlugin> New_ExportPCM()
 {
-   return new ExportPCM();
+   return make_movable<ExportPCM>();
 }

@@ -27,6 +27,7 @@ in a background thread.
 #include "../BlockFile.h"
 #include "../Project.h"
 
+#include "../MemoryX.h"
 #include <vector>
 #include <wx/wx.h>
 class WaveTrack;
@@ -54,7 +55,7 @@ class ODTask /* not final */
    virtual ~ODTask(){};
 
    //clones everything except information about the tracks.
-   virtual ODTask* Clone()=0;
+   virtual std::unique_ptr<ODTask> Clone() const = 0;
 
    ///Subclasses should override to return respective type.
    virtual unsigned int GetODType(){return eODNone;}
@@ -101,7 +102,7 @@ class ODTask /* not final */
 
    virtual const char* GetTaskName(){return "ODTask";}
 
-   virtual sampleCount GetDemandSample();
+   virtual sampleCount GetDemandSample() const;
 
    virtual void SetDemandSample(sampleCount sample);
 
@@ -159,7 +160,7 @@ class ODTask /* not final */
    ODLock     mWaveTrackMutex;
 
    volatile sampleCount mDemandSample;
-   ODLock      mDemandSampleMutex;
+   mutable ODLock      mDemandSampleMutex;
 
    volatile bool mIsRunning;
    ODLock mIsRunningMutex;

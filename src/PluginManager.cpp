@@ -1054,12 +1054,16 @@ PluginDescriptor::PluginDescriptor()
 
 PluginDescriptor::~PluginDescriptor()
 {
+   DeleteInstance();
+}
+
+void PluginDescriptor::DeleteInstance()
+{
    if (mInstance)
    {
       ModuleManager::Get().DeleteInstance(GetProviderID(), mInstance);
+      mInstance = nullptr;
    }
-
-   return;
 }
 
 bool PluginDescriptor::IsInstantiated() const
@@ -1086,6 +1090,12 @@ IdentInterface *PluginDescriptor::GetInstance()
 
 void PluginDescriptor::SetInstance(IdentInterface *instance)
 {
+   if (mInstance && mInstance != instance)
+   {
+      // Be sure not to leak resources!!
+      DeleteInstance();
+   }
+
    mInstance = instance;
 
    return;
@@ -1656,7 +1666,7 @@ bool PluginManager::RemovePrivateConfig(const PluginID & ID, const wxString & gr
 // ============================================================================
 
 // The one and only PluginManager
-PluginManager *PluginManager::mInstance = NULL;
+std::unique_ptr<PluginManager> PluginManager::mInstance{};
 
 // ----------------------------------------------------------------------------
 // Creation/Destruction
@@ -1669,6 +1679,9 @@ PluginManager::PluginManager()
 
 PluginManager::~PluginManager()
 {
+   // Ensure termination (harmless if already done)
+   Terminate();
+
    if (mSettings)
    {
       delete mSettings;
@@ -1690,18 +1703,10 @@ PluginManager & PluginManager::Get()
 {
    if (!mInstance)
    {
-      mInstance = new PluginManager();
+      mInstance.reset(safenew PluginManager);
    }
 
    return *mInstance;
-}
-
-void PluginManager::Destroy()
-{
-   if (mInstance)
-   {
-      delete mInstance;
-   }
 }
 
 void PluginManager::Initialize()

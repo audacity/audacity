@@ -128,7 +128,6 @@ class ExportOGG final : public ExportPlugin
 public:
 
    ExportOGG();
-   void Destroy();
 
    // Required
    wxWindow *OptionsCreate(wxWindow *parent, int format) override;
@@ -157,11 +156,6 @@ ExportOGG::ExportOGG()
    SetMaxChannels(255,0);
    SetCanMetaData(true,0);
    SetDescription(_("Ogg Vorbis Files"),0);
-}
-
-void ExportOGG::Destroy()
-{
-   delete this;
 }
 
 int ExportOGG::Export(AudacityProject *project,
@@ -247,13 +241,13 @@ int ExportOGG::Export(AudacityProject *project,
 
    const WaveTrackConstArray waveTracks =
       tracks->GetWaveTrackConstArray(selectionOnly, false);
-   Mixer *mixer = CreateMixer(waveTracks,
-                            tracks->GetTimeTrack(),
-                            t0, t1,
-                            numChannels, SAMPLES_PER_RUN, false,
-                            rate, floatSample, true, mixerSpec);
-
    {
+      auto mixer = CreateMixer(waveTracks,
+         tracks->GetTimeTrack(),
+         t0, t1,
+         numChannels, SAMPLES_PER_RUN, false,
+         rate, floatSample, true, mixerSpec);
+
       ProgressDialog progress(wxFileName(fName).GetName(),
          selectionOnly ?
          _("Exporting the selected audio as Ogg Vorbis") :
@@ -319,8 +313,6 @@ int ExportOGG::Export(AudacityProject *project,
       }
    }
 
-   delete mixer;
-
    ogg_stream_clear(&stream);
 
    vorbis_block_clear(&block);
@@ -362,9 +354,9 @@ bool ExportOGG::FillComment(AudacityProject *project, vorbis_comment *comment, c
    return true;
 }
 
-ExportPlugin *New_ExportOGG()
+movable_ptr<ExportPlugin> New_ExportOGG()
 {
-   return new ExportOGG();
+   return make_movable<ExportOGG>();
 }
 
 #endif // USE_LIBVORBIS

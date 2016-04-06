@@ -11,6 +11,8 @@
 #ifndef __AUDACITY_EXPORT__
 #define __AUDACITY_EXPORT__
 
+#include "../MemoryX.h"
+#include <vector>
 #include <wx/dialog.h>
 #include <wx/dynarray.h>
 #include <wx/filename.h>
@@ -57,7 +59,6 @@ public:
 
    ExportPlugin();
    virtual ~ExportPlugin();
-   virtual void Destroy();
 
    int AddFormat();
    void SetFormat(const wxString & format, int index);
@@ -115,7 +116,7 @@ public:
                        int subformat = 0) = 0;
 
 protected:
-   Mixer* CreateMixer(const WaveTrackConstArray &inputTracks,
+   std::unique_ptr<Mixer> CreateMixer(const WaveTrackConstArray &inputTracks,
          const TimeTrack *timeTrack,
          double startTime, double stopTime,
          int numOutChannels, int outBufferSize, bool outInterleaved,
@@ -126,7 +127,7 @@ private:
    FormatInfoArray mFormatInfos;
 };
 
-WX_DECLARE_USER_EXPORTED_OBJARRAY(ExportPlugin *, ExportPluginArray, AUDACITY_DLL_API);
+using ExportPluginArray = std::vector < movable_ptr< ExportPlugin > > ;
 WX_DEFINE_USER_EXPORTED_ARRAY_PTR(wxWindow *, WindowPtrArray, class AUDACITY_DLL_API);
 
 //----------------------------------------------------------------------------
@@ -140,7 +141,7 @@ public:
    virtual ~Exporter();
 
    void SetFileDialogTitle( const wxString & DialogTitle );
-   void RegisterPlugin(ExportPlugin *plugin);
+   void RegisterPlugin(movable_ptr<ExportPlugin> &&plugin);
 
    bool Process(AudacityProject *project, bool selectedOnly,
                 double t0, double t1);
@@ -151,7 +152,7 @@ public:
    void DisplayOptions(int index);
    int FindFormatIndex(int exportindex);
 
-   const ExportPluginArray GetPlugins();
+   const ExportPluginArray &GetPlugins();
 
    // Auto Export from Timer Recording
    bool ProcessFromTimerRecording(AudacityProject *project,

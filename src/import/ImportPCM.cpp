@@ -82,7 +82,7 @@ public:
 
    wxString GetPluginStringID() { return wxT("libsndfile"); }
    wxString GetPluginFormatDescription();
-   ImportFileHandle *Open(const wxString &Filename) override;
+   std::unique_ptr<ImportFileHandle> Open(const wxString &Filename) override;
 };
 
 
@@ -120,7 +120,7 @@ wxString PCMImportPlugin::GetPluginFormatDescription()
     return DESC;
 }
 
-ImportFileHandle *PCMImportPlugin::Open(const wxString &filename)
+std::unique_ptr<ImportFileHandle> PCMImportPlugin::Open(const wxString &filename)
 {
    SF_INFO info;
    SNDFILE *file = NULL;
@@ -180,7 +180,7 @@ ImportFileHandle *PCMImportPlugin::Open(const wxString &filename)
       return NULL;
    }
 
-   return new PCMImportFileHandle(filename, file, info);
+   return std::make_unique<PCMImportFileHandle>(filename, file, info);
 }
 
 PCMImportFileHandle::PCMImportFileHandle(wxString name,
