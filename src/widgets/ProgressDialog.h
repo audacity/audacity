@@ -20,6 +20,7 @@
 
 #include "../Audacity.h"
 
+#include "../MemoryX.h"
 #include <wx/defs.h>
 #include <wx/evtloop.h>
 #include <wx/gauge.h>
@@ -113,7 +114,7 @@ private:
    // This guarantees we have an active event loop...possible during OnInit()
    wxEventLoopGuarantor mLoop;
 
-   wxWindowDisabler *mDisable;
+   std::unique_ptr<wxWindowDisabler> mDisable;
 
    wxStaticText *mMessage;
    int mLastW;

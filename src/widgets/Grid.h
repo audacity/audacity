@@ -11,6 +11,8 @@
 #ifndef __AUDACITY_WIDGETS_GRID__
 #define __AUDACITY_WIDGETS_GRID__
 
+#include "../MemoryX.h"
+#include <vector>
 #include <wx/defs.h>
 #include <wx/choice.h>
 #include <wx/dynarray.h>
@@ -224,7 +226,7 @@ class Grid final : public wxGrid
 
 #if wxUSE_ACCESSIBILITY
    GridAx *mAx;
-   wxArrayPtrVoid mChildren;
+   std::vector<movable_ptr<GridAx>> mChildren;
    int mObjNdx;
 #endif
 

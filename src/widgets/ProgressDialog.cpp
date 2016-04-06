@@ -1013,11 +1013,7 @@ ProgressDialog::~ProgressDialog()
 {
    // Delete the window disabler before hiding the dialog to allow
    // focus to return to the original window.
-   if (mDisable)
-   {
-      delete mDisable;
-      mDisable = NULL;
-   }
+   mDisable.reset();
 
    if (IsShown())
    {
@@ -1261,7 +1257,7 @@ bool ProgressDialog::Create(const wxString & title,
    // while waiting for Timer Record to start -- and then also
    // while it's recording, it has a ProgressDialog, so really,
    // no editing in any project until Timer Record finishes.
-   mDisable = new wxWindowDisabler(this);
+   mDisable = std::make_unique<wxWindowDisabler>(this);
 
    return true;
 }

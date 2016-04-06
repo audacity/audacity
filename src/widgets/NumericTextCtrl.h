@@ -15,6 +15,7 @@
 #ifndef __AUDACITY_TIME_TEXT_CTRL__
 #define __AUDACITY_TIME_TEXT_CTRL__
 
+#include "../MemoryX.h"
 #include <wx/defs.h>
 #include <wx/dynarray.h>
 #include <wx/event.h>
@@ -193,10 +194,9 @@ private:
    bool           mMenuEnabled;
    bool           mReadOnly;
 
-   wxBitmap      *mBackgroundBitmap;
+   std::unique_ptr<wxBitmap> mBackgroundBitmap;
 
-   wxFont        *mDigitFont;
-   wxFont        *mLabelFont;
+   std::unique_ptr<wxFont> mDigitFont, mLabelFont;
    int            mDigitBoxW;
    int            mDigitBoxH;
    int            mDigitW;
