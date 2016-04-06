@@ -42,6 +42,7 @@
 #include "Meter.h"
 #include "../AudacityApp.h"
 
+#include <algorithm>
 #include <wx/defs.h>
 #include <wx/dialog.h>
 #include <wx/dcbuffer.h>
@@ -72,6 +73,9 @@
 #include "../AllThemeResources.h"
 #include "../Experimental.h"
 #include "../widgets/valnum.h"
+
+static const long MIN_REFRESH_RATE = 1;
+static const long MAX_REFRESH_RATE = 100;
 
 /* Updates to the meter are passed accross via meter updates, each contained in
  * a MeterUpdateMsg object */
@@ -375,7 +379,9 @@ void Meter::UpdatePrefs()
 {
    mDBRange = gPrefs->Read(ENV_DB_KEY, ENV_DB_RANGE);
 
-   mMeterRefreshRate = gPrefs->Read(Key(wxT("RefreshRate")), 30);
+   mMeterRefreshRate =
+      std::max(MIN_REFRESH_RATE, std::min(MAX_REFRESH_RATE,
+         gPrefs->Read(Key(wxT("RefreshRate")), 30)));
    mGradient = gPrefs->Read(Key(wxT("Bars")), wxT("Gradient")) == wxT("Gradient");
    mDB = gPrefs->Read(Key(wxT("Type")), wxT("dB")) == wxT("dB");
    mMeterDisabled = gPrefs->Read(Key(wxT("Disabled")), (long)0);
@@ -1942,7 +1948,8 @@ void Meter::OnPreferences(wxCommandEvent & WXUNUSED(event))
                                 10);
             rate->SetName(_("Meter refresh rate per second [1-100]"));
             IntegerValidator<long> vld(&mMeterRefreshRate);
-            vld.SetRange(0, 100);
+
+            vld.SetRange(MIN_REFRESH_RATE, MAX_REFRESH_RATE);
             rate->SetValidator(vld);
          }
          S.EndHorizontalLay();

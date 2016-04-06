@@ -1345,6 +1345,7 @@ void PluginDescriptor::SetImporterExtensions(const wxArrayString & extensions)
 #define KEY_EFFECTTYPE_ANALYZE         wxT("Analyze")
 #define KEY_EFFECTTYPE_GENERATE        wxT("Generate")
 #define KEY_EFFECTTYPE_PROCESS         wxT("Process")
+#define KEY_EFFECTTYPE_HIDDEN          wxT("Hidden")
 #define KEY_IMPORTERIDENT              wxT("ImporterIdent")
 #define KEY_IMPORTERFILTER             wxT("ImporterFilter")
 #define KEY_IMPORTEREXTENSIONS         wxT("ImporterExtensions")
@@ -1909,6 +1910,10 @@ void PluginManager::LoadGroup(PluginType type)
             {
                plug.SetEffectType(EffectTypeProcess);
             }
+            else if (strVal.IsSameAs(KEY_EFFECTTYPE_HIDDEN))
+            {
+               plug.SetEffectType(EffectTypeHidden);
+            }
             else
             {
                continue;
@@ -2086,6 +2091,10 @@ void PluginManager::SaveGroup(PluginType type)
             else if (etype == EffectTypeProcess)
             {
                stype = KEY_EFFECTTYPE_PROCESS;
+            }
+            else if (etype == EffectTypeHidden)
+            {
+               stype = KEY_EFFECTTYPE_HIDDEN;
             }
             mRegistry->Write(KEY_EFFECTTYPE, stype);
             mRegistry->Write(KEY_EFFECTFAMILY, plug.GetEffectFamily(false));

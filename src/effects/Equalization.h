@@ -235,9 +235,6 @@ private:
    wxSizer *szrH;
    wxSizer *szrI;
    wxSizer *szrL;
-#ifdef EXPERIMENTAL_EQ_SSE_THREADED
-   wxSizer *szrM;
-#endif
    wxSizer *szr1;
    wxSizer *szr2;
    wxSizer *szr3;

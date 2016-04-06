@@ -268,7 +268,7 @@ ODFileDecoder* ODDecodeTask::GetOrCreateMatchingFileDecoder(ODDecodeBlockFile* b
       if(mDecoders[i]->GetFileName()==blockFile->GetAudioFileName().GetFullPath() &&
          GetODType() == blockFile->GetDecodeType() )
       {
-         ret = mDecoders[i];
+         ret = mDecoders[i].get();
          break;
       }
    }

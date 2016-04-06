@@ -349,12 +349,92 @@ namespace std {
 #endif
 
 /*
-* template class Maybe<X>
-* Can be used for monomorphic objects that are stack-allocable, but only conditionally constructed.
-* You might also use it as a member.
-* Initialize with create(), then use like a smart pointer,
-* with *, ->, get(), reset(), or in if()
-*/
+ * ArrayOf<X>
+ * Not to be confused with std::array (which takes a fixed size) or std::vector
+ * This maintains a pointer allocated by NEW X[].  It's cheap: only one pointer,
+ * with no size and capacity information for resizing as for vector, and if X is
+ * a built-in numeric or pointer type, by default there is no zero filling at
+ * allocation time.
+ */
+
+template<typename X>
+class ArrayOf : public std::unique_ptr<X[]>
+{
+public:
+   ArrayOf() {}
+   explicit ArrayOf(size_t count, bool initialize = false)
+   {
+      reinit(count, initialize);
+   }
+   ArrayOf(const ArrayOf&) = delete;
+   ArrayOf(ArrayOf&& that)
+      : std::unique_ptr < X[] >
+         (std::move((std::unique_ptr < X[] >&)(that)))
+   {
+   }
+   ArrayOf& operator= (ArrayOf &&that)
+   {
+      std::unique_ptr<X[]>::operator=(std::move(that));
+      return *this;
+   }
+   ArrayOf& operator= (std::unique_ptr<X[]> &&that)
+   {
+      std::unique_ptr<X[]>::operator=(std::move(that));
+      return *this;
+   }
+
+   void reinit(size_t count, bool initialize = false)
+   {
+      if (initialize)
+         std::unique_ptr<X[]>::reset(safenew X[count]{});
+      else
+         std::unique_ptr<X[]>::reset(safenew X[count]);
+   }
+};
+
+/*
+ * ArraysOf<X>
+ * This simplifies arrays of arrays, each array separately allocated with NEW[]
+ * But it might be better to use std::Array<ArrayOf<X>, N> for some small constant N
+ * Or use just one array when sub-arrays have a common size and are not large.
+ */
+template<typename X>
+class ArraysOf : public ArrayOf<ArrayOf<X>>
+{
+public:
+   ArraysOf() {}
+   explicit ArraysOf(size_t N)
+      : ArrayOf<ArrayOf<X>>( N )
+   {}
+   ArraysOf(size_t N, size_t M, bool initialize = false)
+      : ArrayOf<ArrayOf<X>>( N )
+   {
+      for (size_t ii = 0; ii < N; ++ii)
+         (*this)[ii] = ArrayOf<X>{ M, initialize };
+   }
+   ArraysOf(const ArraysOf&) = delete;
+   ArraysOf& operator= (ArraysOf&& that)
+   {
+      ArrayOf<ArrayOf<X>>::operator=(std::move(that));
+      return *this;
+   }
+
+   using ArrayOf<ArrayOf<X>>::reinit;
+   void reinit(size_t countN, size_t countM, bool initialize = false)
+   {
+      reinit(countN, false);
+      for (size_t ii = 0; ii < countN; ++ii)
+         (*this)[ii].reinit(countM, initialize);
+   }
+};
+
+/*
+ * template class Maybe<X>
+ * Can be used for monomorphic objects that are stack-allocable, but only conditionally constructed.
+ * You might also use it as a member.
+ * Initialize with create(), then use like a smart pointer,
+ * with *, ->, get(), reset(), or in if()
+ */
 
 // Placement-new is used below, and that does not cooperate with the DEBUG_NEW for Visual Studio
 #ifdef _DEBUG
@@ -490,8 +570,10 @@ static char*THIS_FILE = __FILE__;
 // not move them).
 #ifdef __AUDACITY_OLD_STD__
 template<typename T> using movable_ptr = std::shared_ptr<T>;
+template<typename T, typename Deleter> using movable_ptr_with_deleter_base = std::shared_ptr<T>;
 #else
 template<typename T> using movable_ptr = std::unique_ptr<T>;
+template<typename T, typename Deleter> using movable_ptr_with_deleter_base = std::unique_ptr<T, Deleter>;
 #endif
 
 template<typename T, typename... Args>
@@ -504,6 +586,32 @@ inline movable_ptr<T> make_movable(Args&&... args)
       make_unique
 #endif
       <T>(std::forward<Args>(args)...);
+}
+
+template<typename T, typename Deleter> class movable_ptr_with_deleter
+   : public movable_ptr_with_deleter_base < T, Deleter >
+{
+public:
+   // Do not expose a constructor that takes only a pointer without deleter
+   // That is important when implemented with shared_ptr
+   movable_ptr_with_deleter() {};
+   movable_ptr_with_deleter(T* p, const Deleter &d)
+      : movable_ptr_with_deleter_base<T, Deleter>( p, d ) {}
+   movable_ptr_with_deleter &operator= (movable_ptr_with_deleter&& that)
+   {
+      if (this != &that) {
+         ((movable_ptr_with_deleter_base<T, Deleter>&)(*this)) =
+            std::move(that);
+      }
+      return *this;
+   }
+};
+
+template<typename T, typename Deleter, typename... Args>
+inline movable_ptr_with_deleter<T, Deleter>
+make_movable_with_deleter(const Deleter &d, Args&&... args)
+{
+   return movable_ptr_with_deleter<T, Deleter>(safenew T(std::forward<Args>(args)...), d);
 }
 
 #endif // __AUDACITY_MEMORY_X_H__

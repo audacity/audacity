@@ -2168,10 +2168,8 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
       gAudioIO->StopStream();
    }
 
-   // These two lines test for an 'empty' project.
-   // of course it could still have a history at this stage.
-   TrackListIterator iter2(mTracks);
-   bool bHasTracks = (iter2.First() != NULL);
+   // MY: Use routine here so other processes can make same check
+   bool bHasTracks = ProjectHasTracks();
 
    // We may not bother to prompt the user to save, if the
    // project is now empty.
@@ -5192,4 +5190,67 @@ void AudacityProject::ReleaseKeyboard(wxWindow * /* handler */)
    }
 
    return;
+}
+
+bool AudacityProject::ExportFromTimerRecording(wxFileName fnFile, int iFormat, int iSubFormat, int iFilterIndex)
+{
+   Exporter e;
+
+   wxGetApp().SetMissingAliasedFileWarningShouldShow(true);
+   return e.ProcessFromTimerRecording(this, false, 0.0, mTracks->GetEndTime(), fnFile, iFormat, iSubFormat, iFilterIndex);
+}
+
+int AudacityProject::GetOpenProjectCount() {
+   return gAudacityProjects.Count();
+}
+
+bool AudacityProject::IsProjectSaved() {
+   wxString sProjectName = mDirManager->GetProjectName();
+   return (sProjectName != wxT(""));
+}
+
+bool AudacityProject::SaveFromTimerRecording(wxFileName fnFile) {
+   // MY: Will save the project to a new location a-la Save As
+   // and then tidy up after itself.
+
+   wxString sNewFileName = fnFile.GetFullPath();
+
+   // MY: To allow SaveAs from Timer Recording we need to check what
+   // the value of mFileName is befoer we change it.
+   wxString sOldFilename = "";
+   if (IsProjectSaved()) {
+      sOldFilename = mFileName;
+   }
+
+   // MY: If the project file already exists then bail out
+   // and send populate the message string (pointer) so
+   // we can tell the user what went wrong.
+   if (wxFileExists(sNewFileName)) {
+      return false;
+   }
+
+   mFileName = sNewFileName;
+   SetProjectTitle();
+
+   bool bSuccess = Save(false, true, false);
+
+   if (bSuccess) {
+      wxGetApp().AddFileToHistory(mFileName);
+   } else
+   {
+      // Reset file name on error
+      mFileName = sOldFilename;
+      SetProjectTitle();
+   }
+
+   return bSuccess;
+}
+
+// MY: Does the project have any tracks?
+bool AudacityProject::ProjectHasTracks() {
+   // These two lines test for an 'empty' project.
+   // of course it could still have a history at this stage.
+   TrackListIterator iter2(mTracks);
+   bool bHasTracks = (iter2.First() != NULL);
+   return bHasTracks;
 }

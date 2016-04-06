@@ -312,10 +312,10 @@ ODFileDecoder* ODDecodeFlacTask::CreateFileDecoder(const wxString & fileName)
    }
 */
    // Open the file for import
-   ODFlacDecoder *decoder = new ODFlacDecoder(fileName);
+   auto decoder = make_movable<ODFlacDecoder>(fileName);
 
-   mDecoders.push_back(decoder);
-   return decoder;
+   mDecoders.push_back(std::move(decoder));
+   return mDecoders.back().get();
 
 }
 

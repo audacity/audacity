@@ -424,13 +424,13 @@ void ODPCMAliasBlockFile::WriteSummary()
    SampleBuffer sampleData(mLen, floatSample);
    this->ReadData(sampleData.ptr(), floatSample, 0, mLen);
 
+   ArrayOf<char> cleanup;
    void *summaryData = CalcSummary(sampleData.ptr(), mLen,
-                                            floatSample);
+                                            floatSample, cleanup);
 
    //summaryFile.Write(summaryData, mSummaryInfo.totalSummaryBytes);
    fwrite(summaryData, 1, mSummaryInfo.totalSummaryBytes, summaryFile);
    fclose(summaryFile);
-   delete [] (char *) summaryData;
 
 
     //     printf("write successful. filename: %s\n", fileNameChar);
@@ -460,9 +460,10 @@ void ODPCMAliasBlockFile::WriteSummary()
 /// @param len    The length of the sample data
 /// @param format The format of the sample data.
 void *ODPCMAliasBlockFile::CalcSummary(samplePtr buffer, sampleCount len,
-                             sampleFormat format)
+                             sampleFormat format, ArrayOf<char> &cleanup)
 {
-   char* localFullSummary = new char[mSummaryInfo.totalSummaryBytes];
+   cleanup.reinit(mSummaryInfo.totalSummaryBytes);
+   char* localFullSummary = cleanup.get();
 
    memcpy(localFullSummary, aheaderTag, aheaderTagLen);
 

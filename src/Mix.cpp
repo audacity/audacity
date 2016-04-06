@@ -43,11 +43,13 @@
 #include "float_cast.h"
 
 //TODO-MB: wouldn't it make more sense to DELETE the time track after 'mix and render'?
-std::pair<WaveTrack::Holder, WaveTrack::Holder>
-MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
+void MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
                   double rate, sampleFormat format,
-                  double startTime, double endTime)
+                  double startTime, double endTime,
+                  WaveTrack::Holder &uLeft, WaveTrack::Holder &uRight)
 {
+   uLeft.reset(), uRight.reset();
+
    // This function was formerly known as "Quick Mix".
    Track *t;
    bool mono = false;   /* flag if output can be mono without loosing anything*/
@@ -197,13 +199,11 @@ MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
       mixRight->Flush();
    if (updateResult == eProgressCancelled || updateResult == eProgressFailed)
    {
-      return{};
+      return;
    }
    else {
-      return std::make_pair(
-         std::move(mixLeft),
-         std::move(mixRight)
-      );
+      uLeft = std::move(mixLeft),
+         uRight = std::move(mixRight);
 #if 0
    int elapsedMS = wxGetElapsedTime();
    double elapsedTime = elapsedMS * 0.001;

@@ -359,26 +359,17 @@ void EffectManager::ShowRack()
 
 void EffectManager::RealtimeSetEffects(const EffectArray & effects)
 {
-   int newCount = (int) effects.GetCount();
-   Effect **newEffects = new Effect *[newCount];
-   for (int i = 0; i < newCount; i++)
-   {
-      newEffects[i] = effects[i];
-   }
-
    // Block RealtimeProcess()
    RealtimeSuspend();
 
    // Tell any effects no longer in the chain to clean up
-   for (int i = 0; i < mRealtimeCount; i++)
+   for (auto e: mRealtimeEffects)
    {
-      Effect *e = mRealtimeEffects[i];
-
       // Scan the NEW chain for the effect
-      for (int j = 0; j < newCount; j++)
+      for (auto e1: effects)
       {
          // Found it so we're done
-         if (e == newEffects[j])
+         if (e == e1)
          {
             e = NULL;
             break;
@@ -393,17 +384,16 @@ void EffectManager::RealtimeSetEffects(const EffectArray & effects)
    }
       
    // Tell any NEW effects to get ready
-   for (int i = 0; i < newCount; i++)
+   for (auto e : effects)
    {
-      Effect *e = newEffects[i];
-
       // Scan the old chain for the effect
-      for (int j = 0; j < mRealtimeCount; j++)
+      for (auto e1 : mRealtimeEffects)
       {
          // Found it so tell effect to get ready
-         if (e == mRealtimeEffects[j])
+         if (e == e1)
          {
             e = NULL;
+            break;
          }
       }
 
@@ -414,15 +404,8 @@ void EffectManager::RealtimeSetEffects(const EffectArray & effects)
       }
    }
 
-   // Get rid of the old chain
-   if (mRealtimeEffects)
-   {
-      delete [] mRealtimeEffects;
-   }
-
    // And install the NEW one
-   mRealtimeEffects = newEffects;
-   mRealtimeCount = newCount;
+   mRealtimeEffects = effects;
 
    // Allow RealtimeProcess() to, well, process 
    RealtimeResume();

@@ -20,6 +20,7 @@
 
 #include "Effect.h"
 
+#include "../MemoryX.h"
 #include <wx/dialog.h>
 #include <wx/slider.h>
 
@@ -30,7 +31,12 @@ class wxString;
 class Envelope;
 class WaveTrack;
 
+class wxRadioButton;
+class wxTextCtrl;
+
 #include "../RealFFTf.h"
+
+#define NOISEREMOVAL_PLUGIN_SYMBOL XO("Noise Removal")
 
 class EffectNoiseRemoval final : public Effect
 {
@@ -50,7 +56,7 @@ public:
 
    // Effect implementation
 
-   bool PromptUser() override;
+   bool PromptUser(wxWindow *parent) override;
    bool Init() override;
    bool CheckWhetherSkipEffect() override;
    bool Process() override;
@@ -94,7 +100,7 @@ private:
    void Cleanup();
 
    // Variables that only exist during processing
-   WaveTrack            *mOutputTrack;
+   std::unique_ptr<WaveTrack> mOutputTrack;
    sampleCount       mInSampleCount;
    sampleCount       mOutSampleCount;
    int                   mInputPos;

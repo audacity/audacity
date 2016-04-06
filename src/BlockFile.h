@@ -12,6 +12,7 @@
 #ifndef __AUDACITY_BLOCKFILE__
 #define __AUDACITY_BLOCKFILE__
 
+#include "MemoryX.h"
 #include <wx/string.h>
 #include <wx/ffile.h>
 #include <wx/filename.h>
@@ -46,8 +47,6 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
    /// Construct a BlockFile.
    BlockFile(wxFileName fileName, sampleCount samples);
    virtual ~BlockFile();
-
-   static void Deinit();
 
    // Reading
 
@@ -147,7 +146,9 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
  protected:
    /// Calculate summary data for the given sample data
    virtual void *CalcSummary(samplePtr buffer, sampleCount len,
-                             sampleFormat format);
+                             sampleFormat format,
+                             // This gets filled, if the caller needs to deallocate.  Else it is null.
+                             ArrayOf<char> &cleanup);
    /// Read the summary section of the file.  Derived classes implement.
    virtual bool ReadSummary(void *data) = 0;
 
@@ -159,7 +160,7 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
    int mLockCount;
    int mRefCount;
 
-   static char *fullSummary;
+   static ArrayOf<char> fullSummary;
 
  protected:
    wxFileName mFileName;
