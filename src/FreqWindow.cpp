@@ -245,7 +245,7 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
    gPrefs->Read(wxT("/FreqWindow/DrawGrid"), &mDrawGrid, true);
 
    long size;
-   gPrefs->Read(wxT("/FreqWindow/SizeChoice"), &mSize, 2);
+   gPrefs->Read(wxT("/FreqWindow/SizeChoice"), &mSize, 3);
    sizeChoices[mSize].ToLong(&size);
    mWindowSize = size;
 
@@ -254,7 +254,7 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
    mAlg = static_cast<SpectrumAnalyst::Algorithm>(alg);
 
    gPrefs->Read(wxT("/FreqWindow/FuncChoice"), &mFunc, 3);
-   gPrefs->Read(wxT("/FreqWindow/AxisChoice"), &mAxis, 0);
+   gPrefs->Read(wxT("/FreqWindow/AxisChoice"), &mAxis, 1);
    gPrefs->Read(ENV_DB_KEY, &dBRange, ENV_DB_RANGE);
    if(dBRange < 90.)
       dBRange = 90.;
@@ -474,7 +474,7 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
    // -------------------------------------------------------------------
    // ROW 8: Spacer
    // -------------------------------------------------------------------
-   
+
    S.AddSpace(5);
 
    mProgress = safenew FreqGauge(this); //, wxID_ANY, wxST_SIZEGRIP);
@@ -487,7 +487,7 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
       mAxisChoice->Disable();
    }
    mLogAxis = mAxis != 0;
-         
+
    mCloseButton->SetDefault();
    mCloseButton->SetFocus();
 

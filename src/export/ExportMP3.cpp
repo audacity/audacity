@@ -147,24 +147,24 @@ typedef struct
 static CHOICES fixRates[] =
 {
    /* i18n-hint: kbps is the bitrate of the MP3 file, kilobits per second*/
-   {wxT(""),   8},
-   {wxT(""),  16},
-   {wxT(""),  24},
-   {wxT(""),  32},
-   {wxT(""),  40},
-   {wxT(""),  48},
-   {wxT(""),  56},
-   {wxT(""),  64},
-   {wxT(""),  80},
-   {wxT(""),  96},
-   {wxT(""), 112},
-   {wxT(""), 128},
-   {wxT(""), 144},
-   {wxT(""), 160},
-   {wxT(""), 192},
-   {wxT(""), 224},
+   {wxT(""), 320},
    {wxT(""), 256},
-   {wxT(""), 320}
+   {wxT(""), 224},
+   {wxT(""), 192},
+   {wxT(""), 160},
+   {wxT(""), 144},
+   {wxT(""), 128},
+   {wxT(""), 112},
+   {wxT(""),  96},
+   {wxT(""),  80},
+   {wxT(""),  64},
+   {wxT(""),  56},
+   {wxT(""),  48},
+   {wxT(""),  40},
+   {wxT(""),  32},
+   {wxT(""),  24},
+   {wxT(""),  16},
+   {wxT(""),   8}
 };
 
 static CHOICES varRates[] =
@@ -178,7 +178,7 @@ static CHOICES varRates[] =
    {wxT(""), QUALITY_6},
    {wxT(""), QUALITY_7},
    {wxT(""), QUALITY_8},
-   {wxT(""), QUALITY_9},
+   {wxT(""), QUALITY_9}
 };
 
 static CHOICES varModes[] =
@@ -192,7 +192,7 @@ static CHOICES setRates[] =
    {wxT(""), PRESET_INSANE  },
    {wxT(""), PRESET_EXTREME },
    {wxT(""), PRESET_STANDARD},
-   {wxT(""), PRESET_MEDIUM  },
+   {wxT(""), PRESET_MEDIUM  }
 };
 
 static CHOICES sampRates[] =
@@ -205,7 +205,7 @@ static CHOICES sampRates[] =
    {wxT(""), 24000    },
    {wxT(""), 32000    },
    {wxT(""), 44100    },
-   {wxT(""), 48000    },
+   {wxT(""), 48000    }
 };
 
 #define ID_SET 7000
