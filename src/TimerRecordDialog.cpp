@@ -31,13 +31,13 @@
 #include <wx/timer.h>
 #include <wx/dynlib.h> //<! For windows.h
 #include <wx/msgdlg.h>
-#include <wx/utils.h>  // To allow us to launch help
 
 #include "ShuttleGui.h"
 #include "Project.h"
 #include "Internat.h"
 #include "Prefs.h"
 #include "widgets/NumericTextCtrl.h"
+#include "widgets/HelpSystem.h"
 
 #define TIMER_ID 7000
 
@@ -348,11 +348,7 @@ void TimerRecordDialog::OnAutoExportCheckBox_Change(wxCommandEvent& WXUNUSED(eve
 
 void TimerRecordDialog::OnHelpButtonClick(wxCommandEvent& WXUNUSED(event))
 {
-   bool bHelpOpenedOK = wxLaunchDefaultBrowser("http://manual.audacityteam.org/o/man/timer_record.html", wxBROWSER_NEW_WINDOW);
-   if (!bHelpOpenedOK) {
-      // Error
-      wxMessageBox(_("Unable to open default browser at the manual page for Timer Recording."), _("Error"), wxICON_EXCLAMATION | wxOK);
-   }
+   HelpSystem::ShowHelpDialog(this, wxT("Timer_Record"));
 }
 
 wxString TimerRecordDialog::GetHoursMinsString(int iMinutes) {
@@ -556,8 +552,8 @@ int TimerRecordDialog::RunWaitDialog()
       wxString sPostAction = m_pTimerAfterCompleteChoiceCtrl->GetString(m_pTimerAfterCompleteChoiceCtrl->GetSelection());
       wxString strMsg;
       strMsg.Printf(_("Recording start:\t\t\t%s\n") +
-         _("Recording end:\t\t\t%s\n") +
-         _("Duration:\t\t\t%s\n\n") +
+         _("Duration:\t\t\t%s\n") +
+         _("Recording end:\t\t\t%s\n\n") +
          _("Automatic Save Enabled:\t\t%s\n") +
          _("Automatic Export Enabled:\t\t%s\n") +
          _("Post Timer Recording Action:\t%s"),
