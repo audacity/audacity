@@ -639,8 +639,8 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
    if (iPostRecordAction == POST_TIMER_RECORD_NOTHING) {
       // If there is no post-record action then we can show a message indicating what has been done
 
-      wxString sMessage = (bWasStopped ? _("Timer Recording Stopped.") :
-                                         _("Timer Recording Completed."));
+      wxString sMessage = (bWasStopped ? _("Timer Recording stopped.") :
+                                         _("Timer Recording completed."));
 
       if (m_bAutoSaveEnabled) {
          if (bSaveOK) {
@@ -917,10 +917,10 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
          {
 
             wxArrayString arrayOptions;
-            arrayOptions.Add(_("Do Nothing"));
-            arrayOptions.Add(_("Exit Audacity"));
-            arrayOptions.Add(_("Restart System"));
-            arrayOptions.Add(_("Shutdown System"));
+            arrayOptions.Add(_("Do nothing"));
+            arrayOptions.Add(_("Exit audacity"));
+            arrayOptions.Add(_("Restart system"));
+            arrayOptions.Add(_("Shutdown system"));
 
             m_sTimerAfterCompleteOptionsArray.Add(arrayOptions.Item(0));
             m_sTimerAfterCompleteOptionsArray.Add(arrayOptions.Item(1));
