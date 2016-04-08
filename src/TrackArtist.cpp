@@ -274,12 +274,11 @@ TrackArtist::TrackArtist()
    UpdatePrefs();
 
    SetColours();
-   vruler = new Ruler;
+   vruler = std::make_unique<Ruler>();
 }
 
 TrackArtist::~TrackArtist()
 {
-   delete vruler;
 }
 
 void TrackArtist::SetColours()

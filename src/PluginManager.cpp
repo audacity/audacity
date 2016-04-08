@@ -1681,11 +1681,6 @@ PluginManager::~PluginManager()
 {
    // Ensure termination (harmless if already done)
    Terminate();
-
-   if (mSettings)
-   {
-      delete mSettings;
-   }
 }
 
 // ----------------------------------------------------------------------------
@@ -1750,20 +1745,19 @@ void PluginManager::Terminate()
 void PluginManager::Load()
 {
    // Create/Open the registry
-   mRegistry = new wxFileConfig(wxEmptyString, wxEmptyString, FileNames::PluginRegistry());
+   wxFileConfig registry(wxEmptyString, wxEmptyString, FileNames::PluginRegistry());
 
    // If this group doesn't exist then we have something that's not a registry.
    // We should probably warn the user, but it's pretty unlikely that this will happen.
-   if (!mRegistry->HasGroup(REGROOT))
+   if (!registry.HasGroup(REGROOT))
    {
       // Must start over
-      mRegistry->DeleteAll();
-      delete mRegistry;
+      registry.DeleteAll();
       return;
    }
 
    // Check for a registry version that we can understand
-   wxString regver = mRegistry->Read(REGVERKEY);
+   wxString regver = registry.Read(REGVERKEY);
    if (regver < REGVERCUR )
    {
       // This is where we'd put in conversion code when the
@@ -1774,25 +1768,23 @@ void PluginManager::Load()
    }
 
    // Load all provider plugins first
-   LoadGroup(PluginTypeModule);
+   LoadGroup(&registry, PluginTypeModule);
 
    // Now the rest
-   LoadGroup(PluginTypeEffect);
-   LoadGroup(PluginTypeExporter);
-   LoadGroup(PluginTypeImporter);
+   LoadGroup(&registry, PluginTypeEffect);
+   LoadGroup(&registry, PluginTypeExporter);
+   LoadGroup(&registry, PluginTypeImporter);
 
-   LoadGroup(PluginTypeStub);
+   LoadGroup(&registry, PluginTypeStub);
 
    // Not used by 2.1.1 or greater, but must load to allow users to switch between 2.1.0
    // and 2.1.1+.  This should be removed after a few releases past 2.1.0.
-   LoadGroup(PluginTypeNone);
-
-   delete mRegistry;
+   LoadGroup(&registry, PluginTypeNone);
 
    return;
 }
 
-void PluginManager::LoadGroup(PluginType type)
+void PluginManager::LoadGroup(wxFileConfig *pRegistry, PluginType type)
 {
    wxString strVal;
    bool boolVal;
@@ -1801,22 +1793,22 @@ void PluginManager::LoadGroup(PluginType type)
    wxString group = GetPluginTypeString(type);
    wxString cfgPath = REGROOT + group + wxCONFIG_PATH_SEPARATOR;
 
-   mRegistry->SetPath(cfgPath);
-   for (bool cont = mRegistry->GetFirstGroup(groupName, groupIndex);
+   pRegistry->SetPath(cfgPath);
+   for (bool cont = pRegistry->GetFirstGroup(groupName, groupIndex);
         cont;
-        mRegistry->SetPath(cfgPath),
-        cont = mRegistry->GetNextGroup(groupName, groupIndex))
+        pRegistry->SetPath(cfgPath),
+        cont = pRegistry->GetNextGroup(groupName, groupIndex))
    {
       PluginDescriptor plug;
 
-      mRegistry->SetPath(groupName);
+      pRegistry->SetPath(groupName);
 
       groupName = ConvertID(groupName);
 
       // Bypass group if the ID is already in use
       if (mPlugins.find(groupName) != mPlugins.end())
       {
-         mRegistry->SetPath(wxT(".."));
+         pRegistry->SetPath(wxT(".."));
 
          continue;
       }
@@ -1826,7 +1818,7 @@ void PluginManager::LoadGroup(PluginType type)
       plug.SetPluginType(type);
 
       // Get the provider ID and bypass group if not found
-      if (!mRegistry->Read(KEY_PROVIDERID, &strVal, wxEmptyString))
+      if (!pRegistry->Read(KEY_PROVIDERID, &strVal, wxEmptyString))
       {
          // Bypass group if the provider isn't valid
          if (!strVal.IsEmpty() && mPlugins.find(strVal) == mPlugins.end())
@@ -1837,50 +1829,50 @@ void PluginManager::LoadGroup(PluginType type)
       plug.SetProviderID(PluginID(strVal));
 
       // Get the path (optional)
-      mRegistry->Read(KEY_PATH, &strVal, wxEmptyString);
+      pRegistry->Read(KEY_PATH, &strVal, wxEmptyString);
       plug.SetPath(strVal);
 
       // Get the name and bypass group if not found
-      if (!mRegistry->Read(KEY_NAME, &strVal))
+      if (!pRegistry->Read(KEY_NAME, &strVal))
       {
          continue;
       }
       plug.SetName(strVal);
 
       // Get the symbol...use name if not found
-      if (!mRegistry->Read(KEY_SYMBOL, &strVal))
+      if (!pRegistry->Read(KEY_SYMBOL, &strVal))
       {
          strVal = plug.GetName();
       }
       plug.SetSymbol(strVal);
 
       // Get the version and bypass group if not found
-      if (!mRegistry->Read(KEY_VERSION, &strVal))
+      if (!pRegistry->Read(KEY_VERSION, &strVal))
       {
          continue;
       }
       plug.SetVersion(strVal);
 
       // Get the vendor and bypass group if not found
-      if (!mRegistry->Read(KEY_VENDOR, &strVal))
+      if (!pRegistry->Read(KEY_VENDOR, &strVal))
       {
          continue;
       }
       plug.SetVendor(strVal);
 
       // Get the description and bypass group if not found
-      if (!mRegistry->Read(KEY_DESCRIPTION, &strVal))
+      if (!pRegistry->Read(KEY_DESCRIPTION, &strVal))
       {
          continue;
       }
       plug.SetDescription(strVal);
 
       // Is it enabled...default to no if not found
-      mRegistry->Read(KEY_ENABLED, &boolVal, false);
+      pRegistry->Read(KEY_ENABLED, &boolVal, false);
       plug.SetEnabled(boolVal);
 
       // Is it valid...default to no if not found
-      mRegistry->Read(KEY_VALID, &boolVal, false);
+      pRegistry->Read(KEY_VALID, &boolVal, false);
       plug.SetValid(boolVal);
 
       switch (type)
@@ -1894,7 +1886,7 @@ void PluginManager::LoadGroup(PluginType type)
          case PluginTypeEffect:
          {
             // Get the effect type and bypass group if not found
-            if (!mRegistry->Read(KEY_EFFECTTYPE, &strVal))
+            if (!pRegistry->Read(KEY_EFFECTTYPE, &strVal))
             {
                continue;
             }
@@ -1925,35 +1917,35 @@ void PluginManager::LoadGroup(PluginType type)
             }
 
             // Get the effect family and bypass group if not found
-            if (!mRegistry->Read(KEY_EFFECTFAMILY, &strVal))
+            if (!pRegistry->Read(KEY_EFFECTFAMILY, &strVal))
             {
                continue;
             }
             plug.SetEffectFamily(strVal);
 
             // Is it a default (above the line) effect and bypass group if not found
-            if (!mRegistry->Read(KEY_EFFECTDEFAULT, &boolVal))
+            if (!pRegistry->Read(KEY_EFFECTDEFAULT, &boolVal))
             {
                continue;
             }
             plug.SetEffectDefault(boolVal);
 
             // Is it an interactive effect and bypass group if not found
-            if (!mRegistry->Read(KEY_EFFECTINTERACTIVE, &boolVal))
+            if (!pRegistry->Read(KEY_EFFECTINTERACTIVE, &boolVal))
             {
                continue;
             }
             plug.SetEffectInteractive(boolVal);
 
             // Is it a realtime capable effect and bypass group if not found
-            if (!mRegistry->Read(KEY_EFFECTREALTIME, &boolVal))
+            if (!pRegistry->Read(KEY_EFFECTREALTIME, &boolVal))
             {
                continue;
             }
             plug.SetEffectRealtime(boolVal);
 
             // Does the effect support automation...bypass group if not found
-            if (!mRegistry->Read(KEY_EFFECTAUTOMATABLE, &boolVal))
+            if (!pRegistry->Read(KEY_EFFECTAUTOMATABLE, &boolVal))
             {
                continue;
             }
@@ -1964,21 +1956,21 @@ void PluginManager::LoadGroup(PluginType type)
          case PluginTypeImporter:
          {
             // Get the importer identifier and bypass group if not found
-            if (!mRegistry->Read(KEY_IMPORTERIDENT, &strVal))
+            if (!pRegistry->Read(KEY_IMPORTERIDENT, &strVal))
             {
                continue;
             }
             plug.SetImporterIdentifier(strVal);
 
             // Get the importer filter description and bypass group if not found
-            if (!mRegistry->Read(KEY_IMPORTERFILTER, &strVal))
+            if (!pRegistry->Read(KEY_IMPORTERFILTER, &strVal))
             {
                continue;
             }
             plug.SetImporterFilterDescription(strVal);
 
             // Get the importer extensions and bypass group if not found
-            if (!mRegistry->Read(KEY_IMPORTEREXTENSIONS, &strVal))
+            if (!pRegistry->Read(KEY_IMPORTEREXTENSIONS, &strVal))
             {
                continue;
             }
@@ -2021,34 +2013,32 @@ void PluginManager::LoadGroup(PluginType type)
 void PluginManager::Save()
 {
    // Create/Open the registry
-   mRegistry = new wxFileConfig(wxEmptyString, wxEmptyString, FileNames::PluginRegistry());
+   wxFileConfig registry(wxEmptyString, wxEmptyString, FileNames::PluginRegistry());
 
    // Clear it out
-   mRegistry->DeleteAll();
+   registry.DeleteAll();
 
    // Write the version string
-   mRegistry->Write(REGVERKEY, REGVERCUR);
+   registry.Write(REGVERKEY, REGVERCUR);
 
    // Save the individual groups
-   SaveGroup(PluginTypeEffect);
-   SaveGroup(PluginTypeExporter);
-   SaveGroup(PluginTypeImporter);
-   SaveGroup(PluginTypeStub);
+   SaveGroup(&registry, PluginTypeEffect);
+   SaveGroup(&registry, PluginTypeExporter);
+   SaveGroup(&registry, PluginTypeImporter);
+   SaveGroup(&registry, PluginTypeStub);
 
    // Not used by 2.1.1 or greater, but must save to allow users to switch between 2.1.0
    // and 2.1.1+.  This should be removed after a few releases past 2.1.0.
-   SaveGroup(PluginTypeNone);
+   SaveGroup(&registry, PluginTypeNone);
 
    // And now the providers
-   SaveGroup(PluginTypeModule);
+   SaveGroup(&registry, PluginTypeModule);
 
    // Just to be safe
-   mRegistry->Flush();
-
-   delete mRegistry;
+   registry.Flush();
 }
 
-void PluginManager::SaveGroup(PluginType type)
+void PluginManager::SaveGroup(wxFileConfig *pRegistry, PluginType type)
 {
    wxString group = GetPluginTypeString(type);
    for (PluginMap::iterator iter = mPlugins.begin(); iter != mPlugins.end(); ++iter)
@@ -2060,17 +2050,17 @@ void PluginManager::SaveGroup(PluginType type)
          continue;
       }
 
-      mRegistry->SetPath(REGROOT + group + wxCONFIG_PATH_SEPARATOR + ConvertID(plug.GetID()));
+      pRegistry->SetPath(REGROOT + group + wxCONFIG_PATH_SEPARATOR + ConvertID(plug.GetID()));
 
-      mRegistry->Write(KEY_PATH, plug.GetPath());
-      mRegistry->Write(KEY_SYMBOL, plug.GetSymbol());
-      mRegistry->Write(KEY_NAME, plug.GetName(false));
-      mRegistry->Write(KEY_VERSION, plug.GetVersion(false));
-      mRegistry->Write(KEY_VENDOR, plug.GetVendor(false));
-      mRegistry->Write(KEY_DESCRIPTION, plug.GetDescription(false));
-      mRegistry->Write(KEY_PROVIDERID, plug.GetProviderID());
-      mRegistry->Write(KEY_ENABLED, plug.IsEnabled());
-      mRegistry->Write(KEY_VALID, plug.IsValid());
+      pRegistry->Write(KEY_PATH, plug.GetPath());
+      pRegistry->Write(KEY_SYMBOL, plug.GetSymbol());
+      pRegistry->Write(KEY_NAME, plug.GetName(false));
+      pRegistry->Write(KEY_VERSION, plug.GetVersion(false));
+      pRegistry->Write(KEY_VENDOR, plug.GetVendor(false));
+      pRegistry->Write(KEY_DESCRIPTION, plug.GetDescription(false));
+      pRegistry->Write(KEY_PROVIDERID, plug.GetProviderID());
+      pRegistry->Write(KEY_ENABLED, plug.IsEnabled());
+      pRegistry->Write(KEY_VALID, plug.IsValid());
 
       switch (type)
       {
@@ -2101,19 +2091,19 @@ void PluginManager::SaveGroup(PluginType type)
             {
                stype = KEY_EFFECTTYPE_HIDDEN;
             }
-            mRegistry->Write(KEY_EFFECTTYPE, stype);
-            mRegistry->Write(KEY_EFFECTFAMILY, plug.GetEffectFamily(false));
-            mRegistry->Write(KEY_EFFECTDEFAULT, plug.IsEffectDefault());
-            mRegistry->Write(KEY_EFFECTINTERACTIVE, plug.IsEffectInteractive());
-            mRegistry->Write(KEY_EFFECTREALTIME, plug.IsEffectRealtime());
-            mRegistry->Write(KEY_EFFECTAUTOMATABLE, plug.IsEffectAutomatable());
+            pRegistry->Write(KEY_EFFECTTYPE, stype);
+            pRegistry->Write(KEY_EFFECTFAMILY, plug.GetEffectFamily(false));
+            pRegistry->Write(KEY_EFFECTDEFAULT, plug.IsEffectDefault());
+            pRegistry->Write(KEY_EFFECTINTERACTIVE, plug.IsEffectInteractive());
+            pRegistry->Write(KEY_EFFECTREALTIME, plug.IsEffectRealtime());
+            pRegistry->Write(KEY_EFFECTAUTOMATABLE, plug.IsEffectAutomatable());
          }
          break;
 
          case PluginTypeImporter:
          {
-            mRegistry->Write(KEY_IMPORTERIDENT, plug.GetImporterIdentifier());
-            mRegistry->Write(KEY_IMPORTERFILTER, plug.GetImporterFilterDescription());
+            pRegistry->Write(KEY_IMPORTERIDENT, plug.GetImporterIdentifier());
+            pRegistry->Write(KEY_IMPORTERFILTER, plug.GetImporterFilterDescription());
             const wxArrayString & extensions = plug.GetImporterExtensions();
             wxString strExt;
             for (size_t i = 0, cnt = extensions.size(); i < cnt; i++)
@@ -2121,7 +2111,7 @@ void PluginManager::SaveGroup(PluginType type)
                strExt += extensions[i] + wxT(":");
             }
             strExt.RemoveLast(1);
-            mRegistry->Write(KEY_IMPORTEREXTENSIONS, strExt);
+            pRegistry->Write(KEY_IMPORTEREXTENSIONS, strExt);
          }
          break;
 
@@ -2517,7 +2507,7 @@ wxFileConfig *PluginManager::GetSettings()
 {
    if (!mSettings)
    {
-      mSettings = new wxFileConfig(wxEmptyString, wxEmptyString, FileNames::PluginSettings());
+      mSettings = std::make_unique<wxFileConfig>(wxEmptyString, wxEmptyString, FileNames::PluginSettings());
 
       // Check for a settings version that we can understand
       if (mSettings->HasEntry(SETVERKEY))
@@ -2540,7 +2530,7 @@ wxFileConfig *PluginManager::GetSettings()
       }
    }
 
-   return mSettings;
+   return mSettings.get();
 }
 
 bool PluginManager::HasGroup(const wxString & group)

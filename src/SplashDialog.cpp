@@ -83,7 +83,7 @@ void SplashDialog::Populate( ShuttleGui & S )
    S.StartVerticalLay(1);
 
    //v For now, change to AudacityLogoWithName via old-fashioned ways, not Theme.
-   m_pLogo = new wxBitmap((const char **) AudacityLogoWithName_xpm); //v
+   m_pLogo = std::make_unique<wxBitmap>((const char **) AudacityLogoWithName_xpm); //v
 
    // JKC: Resize to 50% of size.  Later we may use a smaller xpm as
    // our source, but this allows us to tweak the size - if we want to.
@@ -123,7 +123,6 @@ void SplashDialog::Populate( ShuttleGui & S )
 
 SplashDialog::~SplashDialog()
 {
-   delete m_pLogo;
 }
 
 void SplashDialog::OnDontShow( wxCommandEvent & Evt )

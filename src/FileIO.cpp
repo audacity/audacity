@@ -20,21 +20,19 @@
 FileIO::FileIO(const wxString & name, FileIOMode mode)
 : mName(name),
   mMode(mode),
-  mInputStream(NULL),
-  mOutputStream(NULL),
   mOpen(false)
 {
    wxString scheme;
 
       if (mMode == FileIO::Input) {
-         mInputStream = new wxFFileInputStream(mName);
+         mInputStream = std::make_unique<wxFFileInputStream>(mName);
          if (mInputStream == NULL || !mInputStream->IsOk()) {
             wxPrintf(wxT("Couldn't get input stream: %s\n"), name.c_str());
             return;
          }
       }
       else {
-         mOutputStream = new wxFFileOutputStream(mName);
+         mOutputStream = std::make_unique<wxFFileOutputStream>(mName);
          if (mOutputStream == NULL || !mOutputStream->IsOk()) {
             wxPrintf(wxT("Couldn't get output stream: %s\n"), name.c_str());
             return;
@@ -56,16 +54,8 @@ bool FileIO::IsOpened()
 
 void FileIO::Close()
 {
-   if (mOutputStream) {
-      delete mOutputStream;
-      mOutputStream = NULL;
-   }
-
-   if (mInputStream) {
-      delete mInputStream;
-      mInputStream = NULL;
-   }
-
+   mOutputStream.reset();
+   mInputStream.reset();
    mOpen = false;
 }
 

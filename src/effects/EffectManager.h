@@ -35,6 +35,7 @@ effects.
 
 WX_DEFINE_USER_EXPORTED_ARRAY(Effect *, EffectArray, class AUDACITY_DLL_API);
 WX_DECLARE_STRING_HASH_MAP_WITH_DECL(Effect *, EffectMap, class AUDACITY_DLL_API);
+WX_DECLARE_STRING_HASH_MAP_WITH_DECL(std::shared_ptr<Effect>, EffectOwnerMap, class AUDACITY_DLL_API);
 
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
 class EffectRack;
@@ -127,7 +128,7 @@ private:
 
 private:
    EffectMap mEffects;
-   EffectMap mHostEffects;
+   EffectOwnerMap mHostEffects;
 
    int mNumEffects;
 

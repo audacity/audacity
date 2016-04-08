@@ -67,6 +67,7 @@
 
 #include "Prefs.h"
 
+std::unique_ptr<wxFileConfig> ugPrefs {};
 wxFileConfig *gPrefs = NULL;
 int gMenusDirty = 0;
 
@@ -134,9 +135,11 @@ void InitPreferences()
 
    wxFileName configFileName(FileNames::DataDir(), wxT("audacity.cfg"));
 
-   gPrefs = new wxFileConfig(appName, wxEmptyString,
-                             configFileName.GetFullPath(),
-                             wxEmptyString, wxCONFIG_USE_LOCAL_FILE);
+   ugPrefs = std::make_unique<wxFileConfig>
+      (appName, wxEmptyString,
+       configFileName.GetFullPath(),
+       wxEmptyString, wxCONFIG_USE_LOCAL_FILE);
+   gPrefs = ugPrefs.get();
 
    wxConfigBase::Set(gPrefs);
 
@@ -318,7 +321,7 @@ void FinishPreferences()
 {
    if (gPrefs) {
       wxConfigBase::Set(NULL);
-      delete gPrefs;
+      ugPrefs.reset();
       gPrefs = NULL;
    }
 }

@@ -314,7 +314,7 @@ void QuitAudacity(bool bForce)
 
    //print out profile if we have one by deleting it
    //temporarilly commented out till it is added to all projects
-   //delete Profiler::Instance();
+   //DELETE Profiler::Instance();
 
    //remove our logger
    std::unique_ptr<wxLog>{ wxLog::SetActiveTarget(NULL) }; // DELETE
@@ -994,8 +994,7 @@ wxString AudacityApp::InitLang( const wxString & lang )
 {
    wxString result = lang;
 
-   if (mLocale)
-      delete mLocale;
+   mLocale.reset();
 
 #if defined(__WXMAC__)
    // This should be reviewed again during the wx3 conversion.
@@ -1021,7 +1020,7 @@ wxString AudacityApp::InitLang( const wxString & lang )
       if (!info)
          return result;
    }
-   mLocale = new wxLocale(info->Language);
+   mLocale = std::make_unique<wxLocale>(info->Language);
 
    for(unsigned int i=0; i<audacityPathList.GetCount(); i++)
       mLocale->AddCatalogLookupPathPrefix(audacityPathList[i]);
@@ -1182,9 +1181,6 @@ bool AudacityApp::OnInit()
    m_aliasMissingWarningShouldShow = true;
    m_LastMissingBlockFile = NULL;
 
-   mChecker = NULL;
-   mIPCServ = NULL;
-
 #if defined(__WXMAC__)
    // Disable window animation
    wxSystemOptions::SetOption(wxMAC_WINDOW_PLAIN_TRANSITION, 1);
@@ -1330,7 +1326,7 @@ bool AudacityApp::OnInit()
 #endif
 
    // TODO - read the number of files to store in history from preferences
-   mRecentFiles = new FileHistory(ID_RECENT_LAST - ID_RECENT_FIRST + 1, ID_RECENT_CLEAR);
+   mRecentFiles = std::make_unique<FileHistory>(ID_RECENT_LAST - ID_RECENT_FIRST + 1, ID_RECENT_CLEAR);
    mRecentFiles->Load(*gPrefs, wxT("RecentFiles"));
 
    theTheme.EnsureInitialised();
@@ -1547,15 +1543,8 @@ bool AudacityApp::OnInit()
 
 void AudacityApp::InitCommandHandler()
 {
-   mCmdHandler = new CommandHandler(*this);
+   mCmdHandler = std::make_unique<CommandHandler>(*this);
    //SetNextHandler(mCmdHandler);
-}
-
-void AudacityApp::DeInitCommandHandler()
-{
-   wxASSERT(NULL != mCmdHandler);
-   delete mCmdHandler;
-   mCmdHandler = NULL;
 }
 
 // AppCommandEvent callback - just pass the event on to the CommandHandler
@@ -1701,7 +1690,8 @@ bool AudacityApp::InitTempDir()
 bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
 {
    wxString name = wxString::Format(wxT("audacity-lock-%s"), wxGetUserId().c_str());
-   mChecker = new wxSingleInstanceChecker();
+   mChecker.reset();
+   auto checker = std::make_unique<wxSingleInstanceChecker>();
 
 #if defined(__UNIX__)
    wxString sockFile(dir + wxT("/.audacity.sock"));
@@ -1709,7 +1699,7 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
 
    wxString runningTwoCopiesStr = _("Running two copies of Audacity simultaneously may cause\ndata loss or cause your system to crash.\n\n");
 
-   if (!mChecker->Create(name, dir)) {
+   if (!checker->Create(name, dir)) {
       // Error initializing the wxSingleInstanceChecker.  We don't know
       // whether there is another instance running or not.
 
@@ -1721,12 +1711,10 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
                                 _("Error Locking Temporary Folder"),
                                 wxYES_NO | wxICON_EXCLAMATION,
                                 NULL);
-      if (action == wxNO) {
-         delete mChecker;
+      if (action == wxNO)
          return false;
-      }
    }
-   else if ( mChecker->IsAnotherRunning() ) {
+   else if ( checker->IsAnotherRunning() ) {
       // Parse the command line to ensure correct syntax, but
       // ignore options and only use the filenames, if any.
       auto parser = ParseCommandLine();
@@ -1747,7 +1735,7 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
       // where the server may not have been fully initialized.
       for (int i = 0; i < 50; i++)
       {
-         wxConnectionBase *conn = client.MakeConnection(wxEmptyString, IPC_APPL, IPC_TOPIC);
+         std::unique_ptr<wxConnectionBase> conn{ client.MakeConnection(wxEmptyString, IPC_APPL, IPC_TOPIC) };
          if (conn)
          {
             bool ok = false;
@@ -1764,8 +1752,6 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
                // Send an empty string to force existing Audacity to front
                ok = conn->Execute(wxEmptyString);
             }
-
-            delete conn;
 
             if (ok)
                return false;
@@ -1816,19 +1802,18 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
          _("Use the New or Open commands in the currently running Audacity\nprocess to open multiple projects simultaneously.\n");
       wxMessageBox(prompt, _("Audacity is already running"),
             wxOK | wxICON_ERROR);
-      delete mChecker;
       return false;
    }
 
 #if defined(__WXMSW__)
    // Create the DDE IPC server
-   mIPCServ = new IPCServ(IPC_APPL);
+   mIPCServ = std::make_unique<IPCServ>(IPC_APPL);
 #else
    int mask = umask(077);
    remove(OSFILENAME(sockFile));
    wxUNIXaddress addr;
    addr.Filename(sockFile);
-   mIPCServ = new wxSocketServer(addr, wxSOCKET_NOWAIT);
+   mIPCServ = std::make_unique<wxSocketServer>(addr, wxSOCKET_NOWAIT);
    umask(mask);
 
    if (!mIPCServ || !mIPCServ->IsOk())
@@ -1841,6 +1826,7 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
    mIPCServ->SetNotify(wxSOCKET_CONNECTION_FLAG);
    mIPCServ->Notify(true);
 #endif
+   mChecker = std::move(checker);
    return true;
 }
 
@@ -2021,11 +2007,7 @@ int AudacityApp::OnExit()
       }
    }
 
-   DeInitCommandHandler();
-
    mRecentFiles->Save(*gPrefs, wxT("RecentFiles"));
-   delete mRecentFiles;
-   mRecentFiles = NULL;
 
    FinishPreferences();
 
@@ -2040,9 +2022,6 @@ int AudacityApp::OnExit()
    // Terminate the PluginManager (must be done before deleting the locale)
    PluginManager::Get().Terminate();
 
-   if (mLocale)
-      delete mLocale;
-
    if (mIPCServ)
    {
 #if defined(__UNIX__)
@@ -2052,11 +2031,7 @@ int AudacityApp::OnExit()
          remove(OSFILENAME(addr.Filename()));
       }
 #endif
-      delete mIPCServ;
    }
-
-   if (mChecker)
-      delete mChecker;
 
    return 0;
 }
