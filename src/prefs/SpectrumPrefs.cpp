@@ -382,11 +382,11 @@ bool SpectrumPrefs::Apply()
 
    if (mWt) {
       if (mDefaulted) {
-         mWt->SetSpectrogramSettings(NULL);
+         mWt->SetSpectrogramSettings({});
          // ... and so that the vertical scale also defaults:
          mWt->SetSpectrumBounds(-1, -1);
          if (partner) {
-            partner->SetSpectrogramSettings(NULL);
+            partner->SetSpectrogramSettings({});
             partner->SetSpectrumBounds(-1, -1);
          }
       }

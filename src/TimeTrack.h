@@ -67,8 +67,8 @@ class TimeTrack final : public Track {
 
    // Access the track's speed envelope
 
-   Envelope *GetEnvelope() { return mEnvelope; }
-   const Envelope *GetEnvelope() const { return mEnvelope; }
+   Envelope *GetEnvelope() { return mEnvelope.get(); }
+   const Envelope *GetEnvelope() const { return mEnvelope.get(); }
 
    //Note: The meaning of this function has changed (December 2012)
    //Previously this function did something that was close to the opposite (but not entirely accurate).
@@ -119,8 +119,8 @@ class TimeTrack final : public Track {
 
  private:
    const ZoomInfo  *const mZoomInfo;
-   Envelope        *mEnvelope;
-   Ruler           *mRuler;
+   std::unique_ptr<Envelope> mEnvelope;
+   std::unique_ptr<Ruler> mRuler;
    double           mRangeLower;
    double           mRangeUpper;
    bool             mDisplayLog;

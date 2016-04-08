@@ -145,12 +145,12 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
    const SpectrogramSettings &GetSpectrogramSettings() const;
    SpectrogramSettings &GetSpectrogramSettings();
    SpectrogramSettings &GetIndependentSpectrogramSettings();
-   void SetSpectrogramSettings(SpectrogramSettings *pSettings);
+   void SetSpectrogramSettings(std::unique_ptr<SpectrogramSettings> &&pSettings);
 
    const WaveformSettings &GetWaveformSettings() const;
    WaveformSettings &GetWaveformSettings();
    WaveformSettings &GetIndependentWaveformSettings();
-   void SetWaveformSettings(WaveformSettings *pSettings);
+   void SetWaveformSettings(std::unique_ptr<WaveformSettings> &&pSettings);
 
    //
    // High-level editing
@@ -219,8 +219,8 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
    ///gets an int with OD flags so that we can determine which ODTasks should be run on this track after save/open, etc.
    unsigned int GetODFlags();
 
-   ///Deletes all clips' wavecaches.  Careful, This may not be threadsafe.
-   void DeleteWaveCaches();
+   ///Invalidates all clips' wavecaches.  Careful, This may not be threadsafe.
+   void ClearWaveCaches();
 
    ///Adds an invalid region to the wavecache so it redraws that portion only.
    void  AddInvalidRegion(sampleCount startSample, sampleCount endSample);
@@ -520,8 +520,8 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
    double mLegacyProjectFileOffset;
    int mAutoSaveIdent;
 
-   SpectrogramSettings *mpSpectrumSettings;
-   WaveformSettings *mpWaveformSettings;
+   std::unique_ptr<SpectrogramSettings> mpSpectrumSettings;
+   std::unique_ptr<WaveformSettings> mpWaveformSettings;
 };
 
 // This is meant to be a short-lived object, during whose lifetime,
