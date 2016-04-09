@@ -120,7 +120,7 @@ public:
 class LOFImportFileHandle final : public ImportFileHandle
 {
 public:
-   LOFImportFileHandle(const wxString & name, wxTextFile *file);
+   LOFImportFileHandle(const wxString & name, std::unique_ptr<wxTextFile> &&file);
    ~LOFImportFileHandle();
 
    wxString GetFileDescription();
@@ -144,7 +144,7 @@ private:
    void doDuration();
    void doScrollOffset();
 
-   wxTextFile *mTextFile;
+   std::unique_ptr<wxTextFile> mTextFile;
    wxFileName mLOFFileName;  /**< The name of the LOF file, which is used to
                                 interpret relative paths in it */
    AudacityProject *mProject;
@@ -161,9 +161,10 @@ private:
    double            scrollOffset;
 };
 
-LOFImportFileHandle::LOFImportFileHandle(const wxString & name, wxTextFile *file)
+LOFImportFileHandle::LOFImportFileHandle
+   (const wxString & name, std::unique_ptr<wxTextFile> &&file)
 :  ImportFileHandle(name),
-   mTextFile(file)
+   mTextFile(std::move(file))
    , mLOFFileName{name}
 {
    mProject = GetActiveProject();
@@ -211,16 +212,13 @@ std::unique_ptr<ImportFileHandle> LOFImportPlugin::Open(const wxString &filename
    binaryFile.Close();
 
    // Now open the file again as text file
-   wxTextFile *file = new wxTextFile(filename);
+   auto file = std::make_unique<wxTextFile>(filename);
    file->Open();
 
    if (!file->IsOpened())
-   {
-      delete file;
       return nullptr;
-   }
 
-   return std::make_unique<LOFImportFileHandle>(filename, file);
+   return std::make_unique<LOFImportFileHandle>(filename, std::move(file));
 }
 
 wxString LOFImportFileHandle::GetFileDescription()
@@ -501,10 +499,4 @@ void LOFImportFileHandle::doScrollOffset()
 
 LOFImportFileHandle::~LOFImportFileHandle()
 {
-   if(mTextFile)
-   {
-      if (mTextFile->IsOpened())
-         mTextFile->Close();
-      delete mTextFile;
-   }
 }

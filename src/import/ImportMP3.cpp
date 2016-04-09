@@ -120,9 +120,9 @@ public:
 class MP3ImportFileHandle final : public ImportFileHandle
 {
 public:
-   MP3ImportFileHandle(wxFile *file, wxString filename):
+   MP3ImportFileHandle(std::unique_ptr<wxFile> &&file, wxString filename):
       ImportFileHandle(filename),
-      mFile(file)
+      mFile(std::move(file))
    {
    }
 
@@ -146,7 +146,7 @@ public:
 private:
    void ImportID3(Tags *tags);
 
-   wxFile *mFile;
+   std::unique_ptr<wxFile> mFile;
    void *mUserData;
    struct private_data mPrivateData;
    mad_decoder mDecoder;
@@ -182,17 +182,15 @@ wxString MP3ImportPlugin::GetPluginFormatDescription()
 
 std::unique_ptr<ImportFileHandle> MP3ImportPlugin::Open(const wxString &Filename)
 {
-   wxFile *file = new wxFile(Filename);
+   auto file = std::make_unique<wxFile>(Filename);
 
-   if (!file->IsOpened()) {
-      delete file;
+   if (!file->IsOpened())
       return nullptr;
-   }
 
    /* There's no way to tell if this is a valid mp3 file before actually
     * decoding, so we return a valid FileHandle. */
 
-   return std::make_unique<MP3ImportFileHandle>(file, Filename);
+   return std::make_unique<MP3ImportFileHandle>(std::move(file), Filename);
 }
 
 wxString MP3ImportFileHandle::GetFileDescription()
@@ -215,7 +213,7 @@ int MP3ImportFileHandle::Import(TrackFactory *trackFactory, TrackHolders &outTra
 
    /* Prepare decoder data, initialize decoder */
 
-   mPrivateData.file        = mFile;
+   mPrivateData.file        = mFile.get();
    mPrivateData.inputBuffer = new unsigned char [INPUT_BUFFER_SIZE];
    mPrivateData.progress    = mProgress.get();
    mPrivateData.updateResult= eProgressSuccess;
@@ -260,12 +258,6 @@ int MP3ImportFileHandle::Import(TrackFactory *trackFactory, TrackHolders &outTra
 
 MP3ImportFileHandle::~MP3ImportFileHandle()
 {
-   if(mFile) {
-      if (mFile->IsOpened()) {
-         mFile->Close();
-      }
-      delete mFile;
-   }
 }
 
 void MP3ImportFileHandle::ImportID3(Tags *tags)

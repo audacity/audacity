@@ -168,7 +168,7 @@ public:
 
 private:
    sampleFormat          mFormat;
-   MyFLACFile           *mFile;
+   std::unique_ptr<MyFLACFile> mFile;
    wxFFile               mHandle;
    unsigned long         mSampleRate;
    unsigned long         mNumChannels;
@@ -343,7 +343,7 @@ FLACImportFileHandle::FLACImportFileHandle(const wxString & name)
 {
    mFormat = (sampleFormat)
       gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleFormat"), floatSample);
-   mFile = new MyFLACFile(this);
+   mFile = std::make_unique<MyFLACFile>(this);
 }
 
 bool FLACImportFileHandle::Init()
@@ -554,7 +554,6 @@ FLACImportFileHandle::~FLACImportFileHandle()
    //don't DELETE mFile if we are using OD.
 #ifndef EXPERIMENTAL_OD_FLAC
    mFile->finish();
-   delete mFile;
 #endif
 }
 

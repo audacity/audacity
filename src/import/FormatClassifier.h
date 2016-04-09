@@ -72,7 +72,7 @@ private:
    SpecPowerMeter       mMeter;
 
 #ifdef FORMATCLASSIFIER_SIGNAL_DEBUG
-   DebugWriter*         mpWriter;
+   std::unique_ptr<DebugWriter> mpWriter;
 #endif
 
    float*               mSigBuffer;
