@@ -715,12 +715,15 @@ TagsEditor::TagsEditor(wxWindow * parent,
 
 TagsEditor::~TagsEditor()
 {
-   delete mGrid;
+   // This DELETE is not needed because wxWidgets owns the grid.
+// DELETE mGrid;
+
 // TODO:  Need to figure out if these should be deleted.  Looks like the wxGrid
 //        code takes ownership and uses reference counting, but there's been
 //        cases where they show up as memory leaks.
-//   delete mStringRenderer;
-//   delete mComboEditor;
+//  PRL: Fixed the leaks, see commit c87eb0804bc5f40659b133cab6e2ade061959645
+//   DELETE mStringRenderer;
+//   DELETE mComboEditor;
 }
 
 void TagsEditor::PopulateOrExchange(ShuttleGui & S)
@@ -740,10 +743,9 @@ void TagsEditor::PopulateOrExchange(ShuttleGui & S)
                           wxDefaultSize,
                           wxSUNKEN_BORDER);
 
-         mStringRenderer = new wxGridCellStringRenderer;
-         mComboEditor = new ComboEditor(wxArrayString(), true);
-
-         mGrid->RegisterDataType(wxT("Combo"), mStringRenderer, mComboEditor);
+         mGrid->RegisterDataType(wxT("Combo"),
+            (mStringRenderer = safenew wxGridCellStringRenderer),
+            (mComboEditor = safenew ComboEditor(wxArrayString(), true)));
 
          mGrid->SetColLabelSize(mGrid->GetDefaultRowSize());
 
