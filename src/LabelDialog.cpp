@@ -156,7 +156,8 @@ LabelDialog::LabelDialog(wxWindow *parent,
    mGrid->SetColLabelValue(3,_("End Time"));
 
    // Create and remember editors.  No need to DELETE these as the wxGrid will
-   // do it for us.
+   // do it for us.  (The DecRef() that is needed after GetDefaultEditorForType
+   // becomes the duty of the wxGridCellAttr objects after we set them in the grid.)
    mChoiceEditor = (ChoiceEditor *) mGrid->GetDefaultEditorForType(GRID_VALUE_CHOICE);
    mTimeEditor = (TimeEditor *) mGrid->GetDefaultEditorForType(GRID_VALUE_TIME);
 
@@ -168,7 +169,10 @@ LabelDialog::LabelDialog(wxWindow *parent,
 
    // Initialize and set the time column attributes
    attr = new wxGridCellAttr();
+
+   // Don't need DecRef() after this GetDefaultRendererForType.
    attr->SetRenderer(mGrid->GetDefaultRendererForType(GRID_VALUE_TIME));
+
    attr->SetEditor(mTimeEditor);
    attr->SetAlignment(wxALIGN_CENTER, wxALIGN_CENTER);
    mGrid->SetColAttr(Col_Stime, attr);
@@ -800,9 +804,11 @@ void LabelDialog::OnOK(wxCommandEvent & WXUNUSED(event))
 void LabelDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
 {
    if (mGrid->IsCellEditControlShown()) {
-      mGrid->GetCellEditor(mGrid->GetGridCursorRow(),
-                           mGrid->GetGridCursorCol())
-                           ->Reset();
+      auto editor = mGrid->GetCellEditor(mGrid->GetGridCursorRow(),
+         mGrid->GetGridCursorCol());
+      editor->Reset();
+      // To avoid memory leak, don't forget DecRef()!
+      editor->DecRef();
       mGrid->HideCellEditControl();
       return;
    }
