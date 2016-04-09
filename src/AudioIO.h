@@ -18,11 +18,18 @@
 #include "Experimental.h"
 
 #ifdef USE_MIDI
+
 #ifdef EXPERIMENTAL_MIDI_OUT
 #include "portmidi.h"
 #include "porttime.h"
 #include "allegro.h"
+
+#include <vector>
+class NoteTrack;
+using NoteTrackArray = std::vector < NoteTrack* >;
+
 #endif // EXPERIMENTAL_MIDI_OUT
+
 #endif // USE_MIDI
 
 #if USE_PORTMIXER
