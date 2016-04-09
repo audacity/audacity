@@ -246,7 +246,7 @@ public:
 
    ///! Called by Import.cpp
    ///\return array of strings - descriptions of the streams
-   wxArrayString *GetStreamInfo()
+   const wxArrayString &GetStreamInfo() override
    {
       return mStreamInfo;
    }
@@ -266,7 +266,7 @@ private:
    AVFormatContext      *mFormatContext; //!< Format description, also contains metadata and some useful info
    int                   mNumStreams;    //!< mNumstreams is less or equal to mFormatContext->nb_streams
    ScsPtr                mScs;           //!< Points to array of pointers to stream contexts, which may be shared with a decoder task.
-   wxArrayString        *mStreamInfo;    //!< Array of stream descriptions. Length is mNumStreams
+   wxArrayString         mStreamInfo;    //!< Array of stream descriptions. Length is mNumStreams
 
    wxInt64               mProgressPos;   //!< Current timestamp, file position or whatever is used as first argument for Update()
    wxInt64               mProgressLen;   //!< Duration, total length or whatever is used as second argument for Update()
@@ -341,7 +341,6 @@ FFmpegImportFileHandle::FFmpegImportFileHandle(const wxString & name)
 {
    PickFFmpegLibs();
 
-   mStreamInfo = new wxArrayString();
    mFormatContext = NULL;
    mNumStreams = 0;
    mCancelled = false;
@@ -442,7 +441,7 @@ bool FFmpegImportFileHandle::InitCodecs()
             lang.FromUTF8(tag->value);
          }
          strinfo.Printf(_("Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"),sc->m_stream->id,codec->name,lang.c_str(),bitrate.c_str(),sc->m_stream->codec->channels, duration);
-         mStreamInfo->Add(strinfo);
+         mStreamInfo.Add(strinfo);
          mScs->get()[mNumStreams++] = std::move(sc);
       }
       //for video and unknown streams do nothing
@@ -863,8 +862,6 @@ FFmpegImportFileHandle::~FFmpegImportFileHandle()
 {
    // Do this before unloading the libraries
    mContext.reset();
-
-   delete mStreamInfo;
 
    DropFFmpegLibs();
 }

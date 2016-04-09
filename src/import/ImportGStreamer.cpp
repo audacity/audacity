@@ -120,7 +120,7 @@ public:
 
    ///! Called by Import.cpp
    ///\return array of strings - descriptions of the streams
-   wxArrayString *GetStreamInfo();
+   const wxArrayString &GetStreamInfo() override;
 
    ///! Called by Import.cpp
    ///\param index - index of the stream in mStreamInfo and mStreams arrays
@@ -870,10 +870,10 @@ GStreamerImportFileHandle::GetStreamCount()
 
 // ----------------------------------------------------------------------------
 // Return array of strings - descriptions of the streams
-wxArrayString *
+const wxArrayString &
 GStreamerImportFileHandle::GetStreamInfo()
 {
-   return &mStreamInfo;
+   return mStreamInfo;
 }
 
 // ----------------------------------------------------------------------------

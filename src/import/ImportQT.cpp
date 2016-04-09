@@ -142,9 +142,10 @@ class QTImportFileHandle final : public ImportFileHandle
       return 1;
    }
 
-   wxArrayString *GetStreamInfo()
+   const wxArrayString &GetStreamInfo() override
    {
-      return NULL;
+      static wxArrayString empty;
+      return empty;
    }
 
    void SetStreamUsage(wxInt32 StreamID, bool Use)

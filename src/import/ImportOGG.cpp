@@ -109,13 +109,12 @@ public:
       mFormat = (sampleFormat)
          gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleFormat"), floatSample);
 
-      mStreamInfo = new wxArrayString();
       mStreamUsage = new int[vorbisFile->links];
       for (int i = 0; i < vorbisFile->links; i++)
       {
          wxString strinfo;
          strinfo.Printf(wxT("Index[%02x] Version[%d], Channels[%d], Rate[%ld]"), (unsigned int) i,vorbisFile->vi[i].version,vorbisFile->vi[i].channels,vorbisFile->vi[i].rate);
-         mStreamInfo->Add(strinfo);
+         mStreamInfo.Add(strinfo);
          mStreamUsage[i] = 0;
       }
 
@@ -135,7 +134,7 @@ public:
          return 0;
    }
 
-   wxArrayString *GetStreamInfo()
+   const wxArrayString &GetStreamInfo() override
    {
       return mStreamInfo;
    }
@@ -154,7 +153,7 @@ private:
    OggVorbis_File *mVorbisFile;
 
    int            *mStreamUsage;
-   wxArrayString  *mStreamInfo;
+   wxArrayString   mStreamInfo;
    std::list<TrackHolders> mChannels;
 
    sampleFormat   mFormat;
@@ -410,7 +409,6 @@ OggImportFileHandle::~OggImportFileHandle()
    ov_clear(mVorbisFile);
    mFile->Detach();    // so that it doesn't try to close the file (ov_clear()
                        // did that already)
-   delete mStreamInfo;
    delete[] mStreamUsage;
    delete mVorbisFile;
    delete mFile;
