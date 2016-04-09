@@ -159,9 +159,9 @@ class AUDACITY_DLL_API AudioIO final {
     * If successful, returns a token identifying this particular stream
     * instance.  For use with IsStreamActive() below */
 
-   int StartStream(WaveTrackArray playbackTracks, WaveTrackArray captureTracks,
+   int StartStream(const WaveTrackArray &playbackTracks, const WaveTrackArray &captureTracks,
 #ifdef EXPERIMENTAL_MIDI_OUT
-                   NoteTrackArray midiTracks,
+                   const NoteTrackArray &midiTracks,
 #endif
                    double sampleRate, double t0, double t1,
                    const AudioIOStartStreamOptions &options =

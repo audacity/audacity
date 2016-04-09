@@ -1487,10 +1487,10 @@ void AudioIO::StartMonitoring(double sampleRate)
    mLastPaError = Pa_StartStream( mPortStreamV19 );
 }
 
-int AudioIO::StartStream(WaveTrackArray playbackTracks,
-                         WaveTrackArray captureTracks,
+int AudioIO::StartStream(const WaveTrackArray &playbackTracks,
+                         const WaveTrackArray &captureTracks,
 #ifdef EXPERIMENTAL_MIDI_OUT
-                         NoteTrackArray midiPlaybackTracks,
+                         const NoteTrackArray &midiPlaybackTracks,
 #endif
                          double sampleRate, double t0, double t1,
                          const AudioIOStartStreamOptions &options)
