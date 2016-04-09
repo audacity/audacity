@@ -21,6 +21,7 @@
 #include "ODDecodeTask.h"
 #include "ODTaskThread.h"
 
+struct FFmpegContext;
 class ODFileDecoder;
 class WaveTrack;
 /// A class representing a modular task to be used with the On-Demand structures.
@@ -33,7 +34,7 @@ public:
    static Streams FromList(const std::list<TrackHolders> &channels);
 
    /// Constructs an ODTask
-   ODDecodeFFmpegTask(const ScsPtr &scs, Streams &&channels, void* formatContext, int streamIndex);
+   ODDecodeFFmpegTask(const ScsPtr &scs, Streams &&channels, const std::shared_ptr<FFmpegContext> &context, int streamIndex);
    virtual ~ODDecodeFFmpegTask();
 
    std::unique_ptr<ODTask> Clone() const override;
@@ -49,7 +50,7 @@ protected:
    Streams mChannels;
 
    ScsPtr mScs;
-   void* mFormatContext;
+   std::shared_ptr<FFmpegContext> mContext;
    int   mStreamIndex;
 };
 #endif //__ODDECODEFFMPEGTASK__
