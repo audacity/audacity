@@ -198,7 +198,7 @@ struct GstObjHandle
    {
       that.obj = nullptr;
    }
-   GstObjHandle &operator= (const GstObjHandle&& that)
+   GstObjHandle &operator= (GstObjHandle&& that)
    {
       if (this != &that) {
          unref();
@@ -294,7 +294,7 @@ private:
    bool                    mAsyncDone;    //!< true = 1st async-done message received
 
    GMutex                  mStreamsLock;  //!< Mutex protecting the mStreams array
-   std::vector< movable_ptr<GStreamContext>> mStreams;      //!< Array of pointers to stream contexts
+   std::vector<movable_ptr<GStreamContext>> mStreams;      //!< Array of pointers to stream contexts
 };
 
 /// A representative of GStreamer loader in
@@ -334,7 +334,7 @@ GetGStreamerImportPlugin(ImportPluginList *importPluginList,
                 GST_VERSION_MICRO,
                 GST_VERSION_NANO);
 
-   // Initializa gstreamer
+   // Initialize gstreamer
    GErrorHandle error;
    int argc = 0;
    char **argv = NULL;
@@ -636,8 +636,6 @@ GStreamerImportFileHandle::OnPadAdded(GstPad *pad)
 
       {
          // Allocate a NEW stream context
-         // PRL: This g_ptr_array stuff is primitive exception-unsafe memory management.
-         // Do we really need to use it to interoperate with the library?
          auto uc = make_movable<GStreamContext>();
          c = uc.get();
          if (!c)
@@ -953,7 +951,6 @@ GStreamerImportFileHandle::~GStreamerImportFileHandle()
       }
 
       // Done with the context array
-      mStreams.clear();
    }
 
    // Release the decoder
