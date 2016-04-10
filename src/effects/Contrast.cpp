@@ -587,7 +587,7 @@ void ContrastDialog::OnExport(wxCommandEvent & WXUNUSED(event))
    f.Close();
 }
 
-void ContrastDialog::OnReset(wxCommandEvent & event)
+void ContrastDialog::OnReset(wxCommandEvent & /*event*/)
 {
    bFGset = false;   // TODO: Is this necessary?
    bBGset = false;   // TODO: Is this necessary?
