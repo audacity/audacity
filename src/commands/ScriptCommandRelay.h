@@ -17,6 +17,7 @@
 #define __SCRIPTCOMMANDRELAY__
 
 #include "../Audacity.h"
+#include "../MemoryX.h"
 
 class CommandHandler;
 class ResponseQueue;
@@ -24,6 +25,7 @@ class Response;
 class ResponseQueueTarget;
 class AudacityProject;
 class Command;
+using CommandHolder = std::shared_ptr<Command>;
 class wxString;
 
 typedef int (*tpExecScriptServerFunc)( wxString * pIn, wxString * pOut);
@@ -47,10 +49,10 @@ class ScriptCommandRelay
       static void SetCommandHandler(CommandHandler &ch);
 
       static void Run();
-      static void PostCommand(AudacityProject *project, Command *cmd);
+      static void PostCommand(AudacityProject *project, const CommandHolder &cmd);
       static void SendResponse(const wxString &response);
       static Response ReceiveResponse();
-      static ResponseQueueTarget *GetResponseTarget();
+      static std::shared_ptr<ResponseQueueTarget> GetResponseTarget();
 };
 
 #endif /* End of include guard: __SCRIPTCOMMANDRELAY__ */

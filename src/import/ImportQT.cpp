@@ -111,7 +111,7 @@ class QTImportPlugin final : public ImportPlugin
    wxString GetPluginStringID() { return wxT("quicktime"); }
 
    wxString GetPluginFormatDescription();
-   ImportFileHandle *Open(const wxString & Filename);
+   std::unique_ptr<ImportFileHandle> Open(const wxString & Filename) override;
 
  private:
    bool mInitialized;
@@ -142,9 +142,10 @@ class QTImportFileHandle final : public ImportFileHandle
       return 1;
    }
 
-   wxArrayString *GetStreamInfo()
+   const wxArrayString &GetStreamInfo() override
    {
-      return NULL;
+      static wxArrayString empty;
+      return empty;
    }
 
    void SetStreamUsage(wxInt32 StreamID, bool Use)
@@ -152,9 +153,8 @@ class QTImportFileHandle final : public ImportFileHandle
    }
 
    int Import(TrackFactory *trackFactory,
-              Track ***outTracks,
-              int *outNumTracks,
-              Tags *tags);
+              TrackHolders &outTracks,
+              Tags *tags) override;
 
  private:
    void AddMetadata(Tags *tags);
@@ -173,7 +173,7 @@ wxString QTImportPlugin::GetPluginFormatDescription()
    return DESC;
 }
 
-ImportFileHandle *QTImportPlugin::Open(const wxString & Filename)
+std::unique_ptr<ImportFileHandle> QTImportPlugin::Open(const wxString & Filename)
 {
    OSErr err;
    FSRef inRef;
@@ -210,7 +210,7 @@ ImportFileHandle *QTImportPlugin::Open(const wxString & Filename)
       return NULL;
    }
 
-   return new QTImportFileHandle(Filename, theMovie);
+   return std::make_unique<QTImportFileHandle>(Filename, theMovie);
 }
 
 
@@ -225,10 +225,11 @@ int QTImportFileHandle::GetFileUncompressedBytes()
 }
 
 int QTImportFileHandle::Import(TrackFactory *trackFactory,
-                               Track ***outTracks,
-                               int *outNumTracks,
+                               TrackHolders &outTracks,
                                Tags *tags)
 {
+   outTracks.clear();
+
    OSErr err = noErr;
    MovieAudioExtractionRef maer = NULL;
    int updateResult = eProgressSuccess;
@@ -318,7 +319,7 @@ int QTImportFileHandle::Import(TrackFactory *trackFactory,
          calloc(1, offsetof(AudioBufferList, mBuffers) + (sizeof(AudioBuffer) * numchan));
       abl->mNumberBuffers = numchan;
    
-      WaveTrack **channels = new WaveTrack *[numchan];
+      TrackHolders channels{ numchan };
    
       int c;
       for (c = 0; c < numchan; c++) {
@@ -370,19 +371,11 @@ int QTImportFileHandle::Import(TrackFactory *trackFactory,
       res = (updateResult == eProgressSuccess && err == noErr);
    
       if (res) {
-         for (c = 0; c < numchan; c++) {
-            channels[c]->Flush();
+         for (const auto &channel: channels) {
+            channel->Flush();
          }
    
-         *outTracks = (Track **) channels;
-         *outNumTracks = numchan;
-      }
-      else {
-         for (c = 0; c < numchan; c++) {
-            delete channels[c];
-         }
-   
-         delete [] channels;
+         outTracks.swap(channels);
       }
    
       for (c = 0; c < numchan; c++) {

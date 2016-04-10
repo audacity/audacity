@@ -380,6 +380,11 @@ bool NyquistEffect::SetAutomationParameters(EffectAutomationParameters & parms)
 
 bool NyquistEffect::Init()
 {
+   // EffectType may not be defined in script, so
+   // reset each time we call the Nyquist Prompt.
+   if (mIsPrompt)
+      mType = EffectTypeProcess;
+
    // As of Audacity 2.1.2 rc1, 'spectral' effects are allowed only if
    // the selected track(s) are in a spectrogram view, and there is at
    // least one frequency bound and Spectral Selection is enabled for the
@@ -1047,7 +1052,7 @@ bool NyquistEffect::ProcessOne()
 
    int i;
    for (i = 0; i < mCurNumChannels; i++) {
-      mCurBuffer[i] = NULL;
+      mCurBuffer[i].Free();
    }
 
    rval = nyx_eval_expression(cmd.mb_str(wxConvUTF8));
@@ -1115,8 +1120,7 @@ bool NyquistEffect::ProcessOne()
       }
 
       if (!ltrack) {
-         ltrack = mFactory->NewLabelTrack();
-         AddToOutputTracks((Track *)ltrack);
+         ltrack = static_cast<LabelTrack*>(AddToOutputTracks(mFactory->NewLabelTrack()));
       }
 
       for (l = 0; l < numLabels; l++) {
@@ -1172,24 +1176,21 @@ bool NyquistEffect::ProcessOne()
       }
 
       mOutputTrack[i] = mFactory->NewWaveTrack(format, rate);
-      mCurBuffer[i] = NULL;
+      mCurBuffer[i].Free();
    }
 
    int success = nyx_get_audio(StaticPutCallback, (void *)this);
 
    if (!success) {
       for(i = 0; i < outChannels; i++) {
-         delete mOutputTrack[i];
-         mOutputTrack[i] = NULL;
+         mOutputTrack[i].reset();
       }
       return false;
    }
 
    for (i = 0; i < outChannels; i++) {
       mOutputTrack[i]->Flush();
-      if (mCurBuffer[i]) {
-         DeleteSamples(mCurBuffer[i]);
-      }
+      mCurBuffer[i].Free();
       mOutputTime = mOutputTrack[i]->GetEndTime();
 
       if (mOutputTime <= 0) {
@@ -1197,8 +1198,7 @@ bool NyquistEffect::ProcessOne()
                       wxT("Nyquist"),
                       wxOK | wxCENTRE, mUIParent);
          for (i = 0; i < outChannels; i++) {
-            delete mOutputTrack[i];
-            mOutputTrack[i] = NULL;
+            mOutputTrack[i].reset();
          }
          return true;
       }
@@ -1208,10 +1208,10 @@ bool NyquistEffect::ProcessOne()
       WaveTrack *out;
 
       if (outChannels == mCurNumChannels) {
-         out = mOutputTrack[i];
+         out = mOutputTrack[i].get();
       }
       else {
-         out = mOutputTrack[0];
+         out = mOutputTrack[0].get();
       }
 
       if (mMergeClips < 0) {
@@ -1241,8 +1241,7 @@ bool NyquistEffect::ProcessOne()
    }
 
    for (i = 0; i < outChannels; i++) {
-      delete mOutputTrack[i];
-      mOutputTrack[i] = NULL;
+      mOutputTrack[i].reset();
    }
    mProjectChanged = true;
    return true;
@@ -1712,16 +1711,15 @@ int NyquistEffect::StaticGetCallback(float *buffer, int channel,
 int NyquistEffect::GetCallback(float *buffer, int ch,
                                long start, long len, long WXUNUSED(totlen))
 {
-   if (mCurBuffer[ch]) {
+   if (mCurBuffer[ch].ptr()) {
       if ((mCurStart[ch] + start) < mCurBufferStart[ch] ||
           (mCurStart[ch] + start)+len >
           mCurBufferStart[ch]+mCurBufferLen[ch]) {
-         delete[] mCurBuffer[ch];
-         mCurBuffer[ch] = NULL;
+         mCurBuffer[ch].Free();
       }
    }
 
-   if (!mCurBuffer[ch]) {
+   if (!mCurBuffer[ch].ptr()) {
       mCurBufferStart[ch] = (mCurStart[ch] + start);
       mCurBufferLen[ch] = mCurTrack[ch]->GetBestBlockSize(mCurBufferStart[ch]);
 
@@ -1733,8 +1731,8 @@ int NyquistEffect::GetCallback(float *buffer, int ch,
          mCurBufferLen[ch] = mCurStart[ch] + mCurLen - mCurBufferStart[ch];
       }
 
-      mCurBuffer[ch] = NewSamples(mCurBufferLen[ch], floatSample);
-      if (!mCurTrack[ch]->Get(mCurBuffer[ch], floatSample,
+      mCurBuffer[ch].Allocate(mCurBufferLen[ch], floatSample);
+      if (!mCurTrack[ch]->Get(mCurBuffer[ch].ptr(), floatSample,
                               mCurBufferStart[ch], mCurBufferLen[ch])) {
 
          wxPrintf(wxT("GET error\n"));
@@ -1744,7 +1742,7 @@ int NyquistEffect::GetCallback(float *buffer, int ch,
    }
 
    long offset = (mCurStart[ch] + start) - mCurBufferStart[ch];
-   CopySamples(mCurBuffer[ch] + offset*SAMPLE_SIZE(floatSample), floatSample,
+   CopySamples(mCurBuffer[ch].ptr() + offset*SAMPLE_SIZE(floatSample), floatSample,
                (samplePtr)buffer, floatSample,
                len);
 

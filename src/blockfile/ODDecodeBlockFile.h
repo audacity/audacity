@@ -156,7 +156,7 @@ class ODDecodeBlockFile final : public SimpleBlockFile
 
 //   void WriteSimpleBlockFile() override;
    void *CalcSummary(samplePtr buffer, sampleCount len,
-                             sampleFormat format) override;
+                             sampleFormat format, ArrayOf<char> &cleanup) override;
    //The on demand type.
    unsigned int mType;
 

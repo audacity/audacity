@@ -235,9 +235,6 @@ private:
    wxSizer *szrH;
    wxSizer *szrI;
    wxSizer *szrL;
-#ifdef EXPERIMENTAL_EQ_SSE_THREADED
-   wxSizer *szrM;
-#endif
    wxSizer *szr1;
    wxSizer *szr2;
    wxSizer *szr3;
@@ -264,6 +261,11 @@ private:
    static int wxCMPFUNC_CONV SortCurvesByName (EQCurve **first, EQCurve **second)
    {
       return (*first)->Name.CmpNoCase((*second)->Name);
+   }
+
+   static int wxCMPFUNC_CONV SortCurvePoints (EQPoint **p0, EQPoint **p1)
+   {
+      return (*p0)->Freq > (*p1)->Freq;
    }
 
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED

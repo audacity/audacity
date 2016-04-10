@@ -92,7 +92,6 @@ TranscriptionToolBar::TranscriptionToolBar()
 : ToolBar(TranscriptionBarID, _("Transcription"), wxT("Transcription"))
 {
    mPlaySpeed = 1.0 * 100.0;
-   mTimeTrack = NULL;
 #ifdef EXPERIMENTAL_VOICE_DETECTION
    mVk = new VoiceKey();
 #endif
@@ -103,10 +102,6 @@ TranscriptionToolBar::~TranscriptionToolBar()
 #ifdef EXPERIMENTAL_VOICE_DETECTION
    delete mVk;
 #endif
-   if (mTimeTrack) {
-      delete mTimeTrack;
-      mTimeTrack = NULL;
-   }
 }
 
 void TranscriptionToolBar::Create(wxWindow * parent)
@@ -463,7 +458,7 @@ void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
 #endif
       AudioIOStartStreamOptions options(p->GetDefaultPlayOptions());
       options.playLooped = looped;
-      options.timeTrack = mTimeTrack;
+      options.timeTrack = mTimeTrack.get();
       p->GetControlToolBar()->PlayPlayRegion
          (SelectedRegion(playRegionStart, playRegionEnd),
           options,

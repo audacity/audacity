@@ -3,11 +3,19 @@
 MACRO(ADD_EXAMPLE appl_name)
    ADD_EXECUTABLE(${appl_name} "${appl_name}.c")
    TARGET_LINK_LIBRARIES(${appl_name} portaudio_static)
+   SET_TARGET_PROPERTIES(${appl_name}
+      PROPERTIES
+      FOLDER "Examples C"
+   )
 ENDMACRO(ADD_EXAMPLE)
 
 MACRO(ADD_EXAMPLE_CPP appl_name)
    ADD_EXECUTABLE(${appl_name} "${appl_name}.cpp")
    TARGET_LINK_LIBRARIES(${appl_name} portaudio_static)
+   SET_TARGET_PROPERTIES(${appl_name}
+      PROPERTIES
+      FOLDER "Examples C++"
+   )
 ENDMACRO(ADD_EXAMPLE_CPP)
 
 ADD_EXAMPLE(pa_devs)

@@ -52,8 +52,6 @@ public:
       if(leftBuffer)          free(leftBuffer);
       if(rightBuffer)         free(rightBuffer);
       if(SBSMSBuf)            free(SBSMSBuf);
-      if(outputLeftTrack)     delete outputLeftTrack;
-      if(outputRightTrack)    delete outputRightTrack;
       if(quality)             delete quality;
       if(sbsms)               delete sbsms;
       if(iface)           delete iface;
@@ -79,8 +77,8 @@ public:
    // Not required by callbacks, but makes for easier cleanup
    Resampler *resampler;
    SBSMSQuality *quality;
-   WaveTrack *outputLeftTrack;
-   WaveTrack *outputRightTrack;
+   std::unique_ptr<WaveTrack> outputLeftTrack;
+   std::unique_ptr<WaveTrack> outputRightTrack;
 };
 
 class SBSMSEffectInterface final : public SBSMSInterfaceSliding {
@@ -413,7 +411,7 @@ bool EffectSBSMS::Process()
                rb.outputRightTrack->Flush();
 
             bool bResult =
-               leftTrack->ClearAndPaste(mCurT0, mCurT1, rb.outputLeftTrack,
+               leftTrack->ClearAndPaste(mCurT0, mCurT1, rb.outputLeftTrack.get(),
                                           true, false, GetTimeWarper());
             wxASSERT(bResult); // TO DO: Actually handle this.
             wxUnusedVar(bResult);
@@ -421,7 +419,7 @@ bool EffectSBSMS::Process()
             if(rightTrack)
             {
                bResult =
-                  rightTrack->ClearAndPaste(mCurT0, mCurT1, rb.outputRightTrack,
+                  rightTrack->ClearAndPaste(mCurT0, mCurT1, rb.outputRightTrack.get(),
                                              true, false, GetTimeWarper());
                wxASSERT(bResult); // TO DO: Actually handle this.
             }

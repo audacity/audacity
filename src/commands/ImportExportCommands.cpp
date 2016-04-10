@@ -27,13 +27,13 @@ wxString ImportCommandType::BuildName()
 
 void ImportCommandType::BuildSignature(CommandSignature &signature)
 {
-   Validator *filenameValidator(new Validator());
+   Validator *filenameValidator(new DefaultValidator());
    signature.AddParameter(wxT("Filename"), wxT(""), filenameValidator);
 }
 
-Command *ImportCommandType::Create(CommandOutputTarget *target)
+CommandHolder ImportCommandType::Create(std::unique_ptr<CommandOutputTarget> &&target)
 {
-   return new ImportCommand(*this, target);
+   return std::make_shared<ImportCommand>(*this, std::move(target));
 }
 
 bool ImportCommand::Apply(CommandExecutionContext context)
@@ -59,16 +59,16 @@ void ExportCommandType::BuildSignature(CommandSignature &signature)
    modeValidator->AddOption(wxT("Selection"));
    signature.AddParameter(wxT("Mode"), wxT("All"), modeValidator);
 
-   Validator *filenameValidator(new Validator());
+   Validator *filenameValidator(new DefaultValidator());
    signature.AddParameter(wxT("Filename"), wxT("exported.wav"), filenameValidator);
 
    IntValidator *channelsValidator(new IntValidator());
    signature.AddParameter(wxT("Channels"), 1, channelsValidator);
 }
 
-Command *ExportCommandType::Create(CommandOutputTarget *target)
+CommandHolder ExportCommandType::Create(std::unique_ptr<CommandOutputTarget> &&target)
 {
-   return new ExportCommand(*this, target);
+   return std::make_shared<ExportCommand>(*this, std::move(target));
 }
 
 bool ExportCommand::Apply(CommandExecutionContext context)

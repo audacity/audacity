@@ -28,6 +28,7 @@ robust enough to allow all the user changes such as copy/paste, DELETE, and so o
 #ifndef __AUDACITY_ODDecodeTask__
 #define __AUDACITY_ODDecodeTask__
 
+#include "../MemoryX.h"
 #include <vector>
 #include "ODTask.h"
 #include "ODTaskThread.h"
@@ -42,8 +43,6 @@ class ODDecodeTask /* not final */ : public ODTask
  public:
    ODDecodeTask();
    virtual ~ODDecodeTask(){};
-
-   virtual ODTask* Clone()=0;
 
    // NEW virtual:
    virtual bool SeekingAllowed();
@@ -90,7 +89,7 @@ protected:
 
 
    std::vector<ODDecodeBlockFile*> mBlockFiles;
-   std::vector<ODFileDecoder*> mDecoders;
+   std::vector<movable_ptr<ODFileDecoder>> mDecoders;
 
    int mMaxBlockFiles;
    int mComputedBlockFiles;

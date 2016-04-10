@@ -69,8 +69,8 @@ typedef enum PaWasapiFlags
              method can only provide 15-20ms latency. */
     paWinWasapiPolling                  = (1 << 3),
 
-    /* forces custom thread priority setting. must be used if PaWasapiStreamInfo::threadPriority 
-       is set to custom value. */
+    /* forces custom thread priority setting, must be used if PaWasapiStreamInfo::threadPriority 
+       is set to a custom value */
     paWinWasapiThreadPriority           = (1 << 4)
 }
 PaWasapiFlags;
@@ -91,7 +91,7 @@ typedef void (*PaWasapiHostProcessorCallback) (void *inputBuffer,  long inputFra
                                                void *outputBuffer, long outputFrames,
                                                void *userData);
 
-/* Device role */
+/* Device role. */
 typedef enum PaWasapiDeviceRole
 {
     eRoleRemoteNetworkDevice = 0,
@@ -109,7 +109,7 @@ typedef enum PaWasapiDeviceRole
 PaWasapiDeviceRole;
 
 
-/* Jack connection type */
+/* Jack connection type. */
 typedef enum PaWasapiJackConnectionType
 {
     eJackConnTypeUnknown,
@@ -128,10 +128,10 @@ typedef enum PaWasapiJackConnectionType
 PaWasapiJackConnectionType;
 
 
-/* Jack geometric location */
+/* Jack geometric location. */
 typedef enum PaWasapiJackGeoLocation
 {
-	eJackGeoLocUnk = 0,
+    eJackGeoLocUnk = 0,
     eJackGeoLocRear = 0x1, /* matches EPcxGeoLocation::eGeoLocRear */
     eJackGeoLocFront,
     eJackGeoLocLeft,
@@ -151,7 +151,7 @@ typedef enum PaWasapiJackGeoLocation
 PaWasapiJackGeoLocation;
 
 
-/* Jack general location */
+/* Jack general location. */
 typedef enum PaWasapiJackGenLocation
 {
     eJackGenLocPrimaryBox = 0,
@@ -162,7 +162,7 @@ typedef enum PaWasapiJackGenLocation
 PaWasapiJackGenLocation;
 
 
-/* Jack's type of port */
+/* Jack's type of port. */
 typedef enum PaWasapiJackPortConnection
 {
     eJackPortConnJack = 0,
@@ -173,7 +173,7 @@ typedef enum PaWasapiJackPortConnection
 PaWasapiJackPortConnection;
 
 
-/* Thread priority */
+/* Thread priority. */
 typedef enum PaWasapiThreadPriority
 {
     eThreadPriorityNone = 0,
@@ -200,6 +200,42 @@ typedef struct PaWasapiJackDescription
     unsigned int               isConnected;
 }
 PaWasapiJackDescription;
+
+
+/* Stream category.
+   Note:
+    - values are equal to WASAPI AUDIO_STREAM_CATEGORY enum
+    - supported since Windows 8.0, noop on earler versions
+    - values 1,2 are deprecated on Windows 10 and not included into enumeration
+*/
+typedef enum PaWasapiStreamCategory
+{
+    eAudioCategoryOther           = 0,
+    eAudioCategoryCommunications  = 3,
+    eAudioCategoryAlerts          = 4,
+    eAudioCategorySoundEffects    = 5,
+    eAudioCategoryGameEffects     = 6,
+    eAudioCategoryGameMedia       = 7,
+    eAudioCategoryGameChat        = 8,
+    eAudioCategorySpeech          = 9,
+    eAudioCategoryMovie           = 10,
+    eAudioCategoryMedia           = 11
+}
+PaWasapiStreamCategory;
+
+
+/* Stream option.
+   Note:
+    - values are equal to WASAPI AUDCLNT_STREAMOPTIONS enum
+    - supported since Windows 8.1, noop on earler versions
+*/
+typedef enum PaWasapiStreamOption
+{
+    eStreamOptionNone        = 0, //!< default
+    eStreamOptionRaw         = 1, //!< bypass WASAPI Audio Engine DSP effects, supported since Windows 8.1
+    eStreamOptionMatchFormat = 2  //!< force WASAPI Audio Engine into a stream format, supported since Windows 10
+}
+PaWasapiStreamOption;
 
 
 /* Stream descriptor. */
@@ -235,9 +271,30 @@ typedef struct PaWasapiStreamInfo
        to setup thread priority.
     */
     PaWasapiThreadPriority threadPriority;
+
+    /* Stream category. */
+    PaWasapiStreamCategory streamCategory;
+
+    /* Stream option. */
+    PaWasapiStreamOption streamOption;
 } 
 PaWasapiStreamInfo;
 
+/** Returns Windows device ID for input stream
+
+ @param  pStream Pointer to PaStream to query.
+
+ @return non-null value pointing to static device ID
+*/
+const wchar_t *PaWasapi_GetInputDeviceID( PaStream* s );
+
+/** Returns Windows device ID for output stream
+
+ @param  pStream Pointer to PaStream to query.
+
+ @return non-null value pointing to static device ID
+*/
+const wchar_t *PaWasapi_GetOutputDeviceID( PaStream* s );
 
 /** Returns default sound format for device. Format is represented by PaWinWaveFormat or 
     WAVEFORMATEXTENSIBLE structure.
@@ -251,7 +308,6 @@ PaWasapiStreamInfo;
          or an error is encountered.
 */
 int PaWasapi_GetDeviceDefaultFormat( void *pFormat, unsigned int nFormatSize, PaDeviceIndex nDevice );
-
 
 /** Returns device role (PaWasapiDeviceRole enum).
 
@@ -272,15 +328,6 @@ int/*PaWasapiDeviceRole*/ PaWasapi_GetDeviceRole( PaDeviceIndex nDevice );
 */
 int PaWasapi_IsLoopback( PaDeviceIndex nDevice );
 
-/** Returns Windows device ID.
-
- @param nDevice device index.
-
- @return 0 = Not loopback, 1 = loopback, < 0 = PaErrorCode
-         if PortAudio is not initialized or an error is encountered.
-*/
-const wchar_t *PaWasapi_GetInputDeviceID( PaStream* s );
-const wchar_t *PaWasapi_GetOutputDeviceID( PaStream* s );
 
 /** Boost thread priority of calling thread (MMCSS). Use it for Blocking Interface only for thread
     which makes calls to Pa_WriteStream/Pa_ReadStream.
@@ -322,7 +369,7 @@ PaError PaWasapi_GetFramesPerHostBuffer( PaStream *pStream, unsigned int *nInput
 
 /** Get number of jacks associated with a WASAPI device.  Use this method to determine if
     there are any jacks associated with the provided WASAPI device.  Not all audio devices
-	will support this capability.  This is valid for both input and output devices.
+    will support this capability.  This is valid for both input and output devices.
  @param  nDevice  device index.
  @param  jcount   Number of jacks is returned in this variable
  @return Error code indicating success or failure
@@ -333,9 +380,9 @@ PaError PaWasapi_GetJackCount(PaDeviceIndex nDevice, int *jcount);
 
 /** Get the jack description associated with a WASAPI device and jack number
     Before this function is called, use PaWasapi_GetJackCount to determine the
-	number of jacks associated with device.  If jcount is greater than zero, then
-	each jack from 0 to jcount can be queried with this function to get the jack
-	description.
+    number of jacks associated with device.  If jcount is greater than zero, then
+    each jack from 0 to jcount can be queried with this function to get the jack
+    description.
  @param  nDevice  device index.
  @param  jindex   Which jack to return information
  @param  KSJACK_DESCRIPTION This structure filled in on success.
@@ -366,7 +413,7 @@ PaError PaWasapi_GetJackDescription(PaDeviceIndex nDevice, int jindex, PaWasapiJ
         This is the most powerful WASAPI implementation which provides glitch-free
         audio at around 3ms latency in Exclusive mode. Lowest possible latency for this mode is 
         3 ms for HD Audio class audio chips. For the Shared mode latency can not be 
-		lower than 20 ms.
+        lower than 20 ms.
 
         2) Poll-Driven:
         Polling is another 2-nd method to operate with WASAPI. It is less efficient than Event-Driven

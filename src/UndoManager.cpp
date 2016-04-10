@@ -210,7 +210,7 @@ void UndoManager::ModifyState(const TrackList * l,
    stack[current]->state.tracks.reset();
 
    // Duplicate
-   auto tracksCopy = std::make_unique<TrackList>(true);
+   auto tracksCopy = std::make_unique<TrackList>();
    TrackListConstIterator iter(l);
    const Track *t = iter.First();
    while (t) {
@@ -255,7 +255,7 @@ void UndoManager::PushState(const TrackList * l,
       RemoveStateAt(i);
    }
 
-   auto tracksCopy = std::make_unique<TrackList>(true);
+   auto tracksCopy = std::make_unique<TrackList>();
    TrackListConstIterator iter(l);
    const Track *t = iter.First();
    while (t) {
@@ -265,8 +265,8 @@ void UndoManager::PushState(const TrackList * l,
 
    // Assume tags was duplicted before any changes.
    // Just save a new shared_ptr to it.
-   stack.emplace_back(
-      std::make_unique<UndoStackElem>
+   stack.push_back(
+      make_movable<UndoStackElem>
          (std::move(tracksCopy),
             longDescription, shortDescription, selectedRegion, tags)
    );

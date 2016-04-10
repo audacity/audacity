@@ -170,7 +170,7 @@ void OnZeroCrossing();
 void OnLockPlayRegion();
 void OnUnlockPlayRegion();
 
-double GetTime(Track *t);
+double GetTime(const Track *t);
 void OnSortTime();
 void OnSortName();
 
@@ -317,6 +317,7 @@ void OnRescanDevices();
 void OnImport();
 void OnImportLabels();
 void OnImportMIDI();
+void DoImportMIDI(const wxString &fileName);
 void OnImportRaw();
 
 void OnEditMetadata();

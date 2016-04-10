@@ -42,6 +42,7 @@ out.
 
 *//*******************************************************************/
 
+#include "Audacity.h"
 #include "BlockFile.h"
 
 #include <float.h>
@@ -86,7 +87,7 @@ SummaryInfo::SummaryInfo(sampleCount samples)
    totalSummaryBytes = offset256 + (frames256 * bytesPerFrame);
 }
 
-char *BlockFile::fullSummary = 0;
+ArrayOf<char> BlockFile::fullSummary;
 
 /// Initializes the base BlockFile data.  The block is initially
 /// unlocked and its reference count is 1.
@@ -181,11 +182,6 @@ bool BlockFile::Deref()
       return false;
 }
 
-void BlockFile::Deinit()
-{
-   if(fullSummary)delete[] fullSummary;
-}
-
 /// Get a buffer containing a summary block describing this sample
 /// data.  This must be called by derived classes when they
 /// are constructed, to allow them to construct their summary data,
@@ -201,15 +197,17 @@ void BlockFile::Deinit()
 /// @param len    The length of the sample data
 /// @param format The format of the sample data.
 void *BlockFile::CalcSummary(samplePtr buffer, sampleCount len,
-                             sampleFormat format)
+                             sampleFormat format, ArrayOf<char> &cleanup)
 {
-   if(fullSummary)delete[] fullSummary;
-   fullSummary = new char[mSummaryInfo.totalSummaryBytes];
+   // Caller has nothing to deallocate
+   cleanup.reset();
 
-   memcpy(fullSummary, headerTag, headerTagLen);
+   fullSummary.reinit(mSummaryInfo.totalSummaryBytes);
 
-   float *summary64K = (float *)(fullSummary + mSummaryInfo.offset64K);
-   float *summary256 = (float *)(fullSummary + mSummaryInfo.offset256);
+   memcpy(fullSummary.get(), headerTag, headerTagLen);
+
+   float *summary64K = (float *)(fullSummary.get() + mSummaryInfo.offset64K);
+   float *summary256 = (float *)(fullSummary.get() + mSummaryInfo.offset256);
 
    float *fbuffer = new float[len];
    CopySamples(buffer, format,
@@ -303,7 +301,7 @@ void *BlockFile::CalcSummary(samplePtr buffer, sampleCount len,
 
    delete[] fbuffer;
 
-   return fullSummary;
+   return fullSummary.get();
 }
 
 static void ComputeMinMax256(float *summary256,
@@ -581,8 +579,9 @@ void AliasBlockFile::WriteSummary()
    SampleBuffer sampleData(mLen, floatSample);
    this->ReadData(sampleData.ptr(), floatSample, 0, mLen);
 
+   ArrayOf<char> cleanup;
    void *summaryData = BlockFile::CalcSummary(sampleData.ptr(), mLen,
-                                            floatSample);
+                                            floatSample, cleanup);
    summaryFile.Write(summaryData, mSummaryInfo.totalSummaryBytes);
 }
 

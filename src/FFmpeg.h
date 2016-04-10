@@ -16,6 +16,8 @@ Describes shared object that is used to access FFmpeg libraries.
 #if !defined(__AUDACITY_FFMPEG__)
 #define __AUDACITY_FFMPEG__
 
+#include "MemoryX.h"
+
 // TODO: Determine whether the libav* headers come from the FFmpeg or libav
 // project and set IS_FFMPEG_PROJECT depending on it.
 #define IS_FFMPEG_PROJECT 1
@@ -391,38 +393,21 @@ FFmpegLibs *PickFFmpegLibs();
 ///! anymore, or just decrements it's reference count
 void        DropFFmpegLibs();
 
+// This object allows access to the AVFormatContext,
+// and its destructor cleans up memory and file handles
+struct FFmpegContext {
+   FFmpegContext() {}
+   ~FFmpegContext();
+
+   AVIOContext *pb{};
+   AVFormatContext *ic_ptr{};
+};
+
 int ufile_fopen(AVIOContext **s, const wxString & name, int flags);
-int ufile_fopen_input(AVFormatContext **ic_ptr, wxString & name);
+int ufile_fopen_input(std::unique_ptr<FFmpegContext> &context_ptr, wxString & name);
 int ufile_close(AVIOContext *pb);
 
-typedef struct _streamContext
-{
-   bool                 m_use;                           // TRUE = this stream will be loaded into Audacity
-   AVStream            *m_stream;                        // an AVStream *
-   AVCodecContext      *m_codecCtx;                      // pointer to m_stream->codec
-
-   AVPacket             m_pkt;                           // the last AVPacket we read for this stream
-   int                  m_pktValid;                      // is m_pkt valid?
-   uint8_t             *m_pktDataPtr;                    // pointer into m_pkt.data
-   int                  m_pktRemainingSiz;
-
-   int64_t              m_pts;                           // the current presentation time of the input stream
-   int64_t              m_ptsOffset;                     // packets associated with stream are relative to this
-
-   int                  m_frameValid;                    // is m_decodedVideoFrame/m_decodedAudioSamples valid?
-   uint8_t             *m_decodedAudioSamples;           // decoded audio samples stored here
-   unsigned int         m_decodedAudioSamplesSiz;        // current size of m_decodedAudioSamples
-   int                  m_decodedAudioSamplesValidSiz;   // # valid bytes in m_decodedAudioSamples
-   int                  m_initialchannels;               // number of channels allocated when we begin the importing. Assumes that number of channels doesn't change on the fly.
-
-   int                  m_samplesize;                    // input sample size in bytes
-   AVSampleFormat       m_samplefmt;                     // input sample format
-
-   int                  m_osamplesize;                   // output sample size in bytes
-   sampleFormat         m_osamplefmt;                    // output sample format
-
-} streamContext;
-
+struct streamContext;
 // common utility functions
 // utility calls that are shared with ImportFFmpeg and ODDecodeFFmpegTask
 streamContext *import_ffmpeg_read_next_frame(AVFormatContext* formatContext,
@@ -853,7 +838,46 @@ extern "C" {
       (linesize, nb_channels, nb_samples, sample_fmt, align)
    );
 };
+
+
 #endif
+
+struct streamContext
+{
+   bool                 m_use;                           // TRUE = this stream will be loaded into Audacity
+   AVStream            *m_stream;                        // an AVStream *
+   AVCodecContext      *m_codecCtx;                      // pointer to m_stream->codec
+
+   AVPacket             m_pkt;                           // the last AVPacket we read for this stream
+   int                  m_pktValid;                      // is m_pkt valid?
+   uint8_t             *m_pktDataPtr;                    // pointer into m_pkt.data
+   int                  m_pktRemainingSiz;
+
+   int64_t              m_pts;                           // the current presentation time of the input stream
+   int64_t              m_ptsOffset;                     // packets associated with stream are relative to this
+
+   int                  m_frameValid;                    // is m_decodedVideoFrame/m_decodedAudioSamples valid?
+   uint8_t             *m_decodedAudioSamples;           // decoded audio samples stored here
+   unsigned int         m_decodedAudioSamplesSiz;        // current size of m_decodedAudioSamples
+   int                  m_decodedAudioSamplesValidSiz;   // # valid bytes in m_decodedAudioSamples
+   int                  m_initialchannels;               // number of channels allocated when we begin the importing. Assumes that number of channels doesn't change on the fly.
+
+   int                  m_samplesize;                    // input sample size in bytes
+   AVSampleFormat       m_samplefmt;                     // input sample format
+
+   int                  m_osamplesize;                   // output sample size in bytes
+   sampleFormat         m_osamplefmt;                    // output sample format
+
+   streamContext() { memset(this, 0, sizeof(*this)); }
+   ~streamContext()
+   {
+      if (m_decodedAudioSamples)
+         av_free(m_decodedAudioSamples);
+   }
+};
+
+using Scs = ArrayOf<std::unique_ptr<streamContext>>;
+using ScsPtr = std::shared_ptr<Scs>;
 
 #endif // USE_FFMPEG
 #endif // __AUDACITY_FFMPEG__

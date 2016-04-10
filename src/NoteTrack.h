@@ -57,7 +57,8 @@ class AUDACITY_DLL_API NoteTrack final : public Track {
    NoteTrack(DirManager * projDirManager);
    virtual ~NoteTrack();
 
-   Track *Duplicate() const override;
+   using Holder = std::unique_ptr<NoteTrack>;
+   Track::Holder Duplicate() const override;
 
    int GetKind() const override { return Note; }
 
@@ -89,8 +90,8 @@ class AUDACITY_DLL_API NoteTrack final : public Track {
 //   }
 
    // High-level editing
-   bool Cut  (double t0, double t1, Track **dest) override;
-   bool Copy (double t0, double t1, Track **dest) const override;
+   Track::Holder Cut  (double t0, double t1) override;
+   Track::Holder Copy (double t0, double t1) const override;
    bool Trim (double t0, double t1) /* not override */;
    bool Clear(double t0, double t1) override;
    bool Paste(double t, const Track *src) override;

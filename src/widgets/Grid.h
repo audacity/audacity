@@ -67,7 +67,7 @@ class TimeEditor final : public wxGridCellEditor
    void SetFormat(const wxString &format);
    void SetRate(double rate);
 
-   wxGridCellEditor *Clone() const;
+   wxGridCellEditor *Clone() const override;
    wxString GetValue() const;
 
    NumericTextCtrl *GetTimeCtrl() const { return (NumericTextCtrl *)m_control; }
@@ -104,7 +104,7 @@ class TimeRenderer final : public wxGridCellRenderer
                       int row,
                       int col);
 
-   wxGridCellRenderer *Clone() const;
+   wxGridCellRenderer *Clone() const override;
 };
 
 // ----------------------------------------------------------------------------
@@ -141,7 +141,7 @@ public:
 
    void Reset();
 
-   wxGridCellEditor *Clone() const;
+   wxGridCellEditor *Clone() const override;
 
    void SetChoices(const wxArrayString &choices);
    wxString GetValue() const;

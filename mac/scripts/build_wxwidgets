@@ -1,0 +1,85 @@
+#!/bin/sh
+#
+# You can use this to build wxWidgets.  Just run it from within the root of the
+# wxWidgets source tree like so:
+#
+#  sudo <path to this script>/build_wxwidgets
+#
+
+# Currently, Audacity is built using the 10.6 SDK, but you may choose to target
+# 10.7 or greater by changing this variable.
+min=10.6
+
+# You shouldn't need to change this, but just in case you put Xcode in a non-standard
+# location, update this appropriately.
+sdk="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX${min}.sdk/"
+
+if [ ! -d "${sdk}" ]
+then
+   echo "You must install the ${min} SDK at this location:"
+   echo "${sdk}"
+   exit 1
+fi
+
+max=${min/./}0
+ver="-DMAC_OS_X_VERSION_MAX_ALLOWED=${max} -mmacosx-version-min=${min}"
+arch='-arch i386'
+
+std=''
+stdlib='-stdlib=libstdc++'
+if [ ${max} -gt 1060 ]
+then
+   std='-std=c++1z'
+   stdlib='-stdlib=libc++'
+fi
+
+export CPPFLAGS="${ver}"
+export CFLAGS1="$arch ${ver} -isysroot $sdk"
+export CXXFLAGS1="$arch ${ver} -isysroot $sdk ${std} ${stdlib}"
+export LDFLAGS1="$arch ${ver} -syslibroot,$sdk ${std} ${stdlib}"
+
+# Make sure our flags are included
+export CC="gcc $CFLAGS1"
+export CXX="g++ $CXXFLAGS1"
+export LD="g++ $LDFLAGS1"
+
+# Build a specific configuration
+function bld
+{
+   rm -rf "${1}"
+   mkdir -p "${1}"
+   pushd "${1}"
+   shift
+
+   ../configure --disable-accessibility \
+                --disable-compat26 \
+                --disable-compat28 \
+                --with-expat=builtin \
+                --with-zlib=builtin \
+                --with-regex=builtin \
+                --enable-universal_binary=no \
+                --enable-unicode=yes \
+                --enable-webkit=no \
+                --with-macosx-version-min=${min} \
+                ${@}
+   export LDFLAGS="${LDFLAGS1}"
+   xcrun make -j 4
+   export LDFLAGS=""
+   popd
+}
+
+# Install a specific configuration
+function inst
+{
+   pushd "${1}"
+   xcrun make install
+   popd
+}
+
+# Build all configurations
+bld bld_debug --enable-debug=yes --enable-static=no --enable-shared=yes --with-flavour=debug
+bld bld_release --enable-debug=no --enable-static=no --enable-shared=yes --with-flavour=release
+
+# Install all configurations
+inst bld_debug
+inst bld_release

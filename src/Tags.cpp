@@ -715,12 +715,15 @@ TagsEditor::TagsEditor(wxWindow * parent,
 
 TagsEditor::~TagsEditor()
 {
-   delete mGrid;
+   // This DELETE is not needed because wxWidgets owns the grid.
+// DELETE mGrid;
+
 // TODO:  Need to figure out if these should be deleted.  Looks like the wxGrid
 //        code takes ownership and uses reference counting, but there's been
 //        cases where they show up as memory leaks.
-//   delete mStringRenderer;
-//   delete mComboEditor;
+//  PRL: Fixed the leaks, see commit c87eb0804bc5f40659b133cab6e2ade061959645
+//   DELETE mStringRenderer;
+//   DELETE mComboEditor;
 }
 
 void TagsEditor::PopulateOrExchange(ShuttleGui & S)
@@ -740,10 +743,9 @@ void TagsEditor::PopulateOrExchange(ShuttleGui & S)
                           wxDefaultSize,
                           wxSUNKEN_BORDER);
 
-         mStringRenderer = new wxGridCellStringRenderer;
-         mComboEditor = new ComboEditor(wxArrayString(), true);
-
-         mGrid->RegisterDataType(wxT("Combo"), mStringRenderer, mComboEditor);
+         mGrid->RegisterDataType(wxT("Combo"),
+            (mStringRenderer = safenew wxGridCellStringRenderer),
+            (mComboEditor = safenew ComboEditor(wxArrayString(), true)));
 
          mGrid->SetColLabelSize(mGrid->GetDefaultRowSize());
 
@@ -1245,9 +1247,11 @@ void TagsEditor::OnOk(wxCommandEvent & WXUNUSED(event))
 void TagsEditor::OnCancel(wxCommandEvent & WXUNUSED(event))
 {
    if (mGrid->IsCellEditControlShown()) {
-      mGrid->GetCellEditor(mGrid->GetGridCursorRow(),
-                           mGrid->GetGridCursorCol())
-                           ->Reset();
+      auto editor = mGrid->GetCellEditor(mGrid->GetGridCursorRow(),
+         mGrid->GetGridCursorCol());
+      editor->Reset();
+      // To avoid memory leak, don't forget DecRef()!
+      editor->DecRef();
       mGrid->HideCellEditControl();
       return;
    }
@@ -1262,6 +1266,7 @@ void TagsEditor::SetEditors()
    for (int i = 0; i < cnt; i++) {
       wxString label = mGrid->GetCellValue(i, 0);
       if (label.CmpNoCase(LABEL_GENRE) == 0) {
+         // This use of GetDefaultEditorForType does not require DecRef.
          mGrid->SetCellEditor(i, 1, mGrid->GetDefaultEditorForType(wxT("Combo")));
       }
       else {
@@ -1285,7 +1290,11 @@ void TagsEditor::PopulateGenres()
       parm = parm + (i == 0 ? wxT("") : wxT(",")) + g[i];
    }
 
-   mGrid->GetDefaultEditorForType(wxT("Combo"))->SetParameters(parm);
+   // Here was a memory leak!  wxWidgets docs for wxGrid::GetDefaultEditorForType() say:
+   // "The caller must call DecRef() on the returned pointer."
+   auto editor = mGrid->GetDefaultEditorForType(wxT("Combo"));
+   editor->SetParameters(parm);
+   editor->DecRef();
 }
 
 bool TagsEditor::IsWindowRectValid(const wxRect *windowRect) const

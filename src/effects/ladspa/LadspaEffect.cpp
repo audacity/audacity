@@ -73,7 +73,8 @@ const static wxChar *kShippedEffects[] =
 DECLARE_MODULE_ENTRY(AudacityModule)
 {
    // Create and register the importer
-   return new LadspaEffectsModule(moduleManager, path);
+   // Trust the module manager not to leak this
+   return safenew LadspaEffectsModule(moduleManager, path);
 }
 
 // ============================================================================
@@ -239,6 +240,11 @@ bool LadspaEffectsModule::RegisterPlugin(PluginManagerInterface & pm, const wxSt
    }
 
    if (lib.IsLoaded()) {
+      // PRL:  I suspect Bug1257 -- Crash when enabling Amplio2 -- is the fault of a timing-
+      // dependent multi-threading bug in the Amplio2 library itself, in case the unload of the .dll
+      // comes too soon after the load.  I saw the bug in Release builds but not Debug.
+      // A sleep of even 1 ms was enough to fix the problem for me, but let's be even more generous.
+      ::wxMilliSleep(10);
       lib.Unload();
    }
 
@@ -256,6 +262,7 @@ bool LadspaEffectsModule::IsPluginValid(const wxString & path)
 
 IdentInterface *LadspaEffectsModule::CreateInstance(const wxString & path)
 {
+   // Acquires a resource for the application.
    // For us, the path is two words.
    // 1)  The library's path
    // 2)  The LADSPA descriptor index
@@ -263,16 +270,15 @@ IdentInterface *LadspaEffectsModule::CreateInstance(const wxString & path)
    wxString realPath = path.BeforeFirst(wxT(';'));
    path.AfterFirst(wxT(';')).ToLong(&index);
 
-   return new LadspaEffect(realPath, (int) index);
+   // Safety of this depends on complementary calls to DeleteInstance on the module manager side.
+   return safenew LadspaEffect(realPath, (int)index);
 }
 
 void LadspaEffectsModule::DeleteInstance(IdentInterface *instance)
 {
-   LadspaEffect *effect = dynamic_cast<LadspaEffect *>(instance);
-   if (effect)
-   {
-      delete effect;
-   }
+   std::unique_ptr < LadspaEffect > {
+      dynamic_cast<LadspaEffect *>(instance)
+   };
 }
 
 wxArrayString LadspaEffectsModule::GetSearchPaths()

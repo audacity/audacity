@@ -418,10 +418,8 @@ END_EVENT_TABLE()
 
 /// Makes a cursor from an XPM, uses CursorId as a fallback.
 /// TODO:  Move this function to some other source file for reuse elsewhere.
-wxCursor * MakeCursor( int WXUNUSED(CursorId), const char * pXpm[36],  int HotX, int HotY )
+std::unique_ptr<wxCursor> MakeCursor( int WXUNUSED(CursorId), const char * pXpm[36],  int HotX, int HotY )
 {
-   wxCursor * pCursor;
-
 #ifdef CURSORS_SIZE32
    const int HotAdjust =0;
 #else
@@ -434,9 +432,7 @@ wxCursor * MakeCursor( int WXUNUSED(CursorId), const char * pXpm[36],  int HotX,
 
    Image.SetOption( wxIMAGE_OPTION_CUR_HOTSPOT_X, HotX-HotAdjust );
    Image.SetOption( wxIMAGE_OPTION_CUR_HOTSPOT_Y, HotY-HotAdjust );
-   pCursor = new wxCursor( Image );
-
-   return pCursor;
+   return std::make_unique<wxCursor>( Image );
 }
 
 
@@ -523,12 +519,12 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
                                      StretchRightCursorXpm, 16, 16);
 #endif
 
-   mArrowCursor = new wxCursor(wxCURSOR_ARROW);
-   mSmoothCursor = new wxCursor(wxCURSOR_SPRAYCAN);
-   mResizeCursor = new wxCursor(wxCURSOR_SIZENS);
-   mRearrangeCursor = new wxCursor(wxCURSOR_HAND);
-   mAdjustLeftSelectionCursor = new wxCursor(wxCURSOR_POINT_LEFT);
-   mAdjustRightSelectionCursor = new wxCursor(wxCURSOR_POINT_RIGHT);
+   mArrowCursor = std::make_unique<wxCursor>(wxCURSOR_ARROW);
+   mSmoothCursor = std::make_unique<wxCursor>(wxCURSOR_SPRAYCAN);
+   mResizeCursor = std::make_unique<wxCursor>(wxCURSOR_SIZENS);
+   mRearrangeCursor = std::make_unique<wxCursor>(wxCURSOR_HAND);
+   mAdjustLeftSelectionCursor = std::make_unique<wxCursor>(wxCURSOR_POINT_LEFT);
+   mAdjustRightSelectionCursor = std::make_unique<wxCursor>(wxCURSOR_POINT_RIGHT);
 
    mWaveTrackMenu = NULL;
    mChannelItemsInsertionPoint = 0;
@@ -651,31 +647,6 @@ TrackPanel::~TrackPanel()
    }
    delete mTrackArtist;
 
-   delete mArrowCursor;
-   delete mPencilCursor;
-   delete mSelectCursor;
-   delete mEnvelopeCursor;
-   delete mDisabledCursor;
-   delete mSlideCursor;
-   delete mResizeCursor;
-   delete mSmoothCursor;
-   delete mZoomInCursor;
-   delete mZoomOutCursor;
-   delete mLabelCursorLeft;
-   delete mLabelCursorRight;
-   delete mRearrangeCursor;
-   delete mAdjustLeftSelectionCursor;
-   delete mAdjustRightSelectionCursor;
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   delete mBottomFrequencyCursor;
-   delete mTopFrequencyCursor;
-   delete mBandWidthCursor;
-#endif
-#if USE_MIDI
-   delete mStretchCursor;
-   delete mStretchLeftCursor;
-   delete mStretchRightCursor;
-#endif
 
    delete mSnapManager;
 
@@ -1796,7 +1767,7 @@ void TrackPanel::HandleCenterFrequencyCursor
 
 #endif
 
-   *ppCursor = mEnvelopeCursor;
+   *ppCursor = mEnvelopeCursor.get();
 }
 
 void TrackPanel::HandleCenterFrequencyClick
@@ -1832,7 +1803,7 @@ void TrackPanel::SetCursorAndTipWhenSelectTool( Track * t,
 {
    // Do not set the default cursor here and re-set later, that causes
    // flashing.
-   *ppCursor = mSelectCursor;
+   *ppCursor = mSelectCursor.get();
 
    //In Multi-tool mode, give multitool prompt if no-special-hit.
    if( bMultiToolMode ) {
@@ -1880,7 +1851,7 @@ void TrackPanel::SetCursorAndTipWhenSelectTool( Track * t,
       isSpectralSelectionTrack(t)) {
       // Not shift-down, but center frequency snapping toggle is on
       tip = _("Click and drag to set frequency bandwidth.");
-      *ppCursor = mEnvelopeCursor;
+      *ppCursor = mEnvelopeCursor.get();
       return;
    }
 #endif
@@ -1906,7 +1877,7 @@ void TrackPanel::SetCursorAndTipWhenSelectTool( Track * t,
       case SBRight:
          if ( HitTestStretch(t, rect, event)) {
             tip = _("Click and drag to stretch within selected region.");
-            *ppCursor = mStretchCursor;
+            *ppCursor = mStretchCursor.get();
             return;
          }
          break;
@@ -1927,27 +1898,27 @@ void TrackPanel::SetCursorAndTipWhenSelectTool( Track * t,
          break;
       case SBLeft:
          tip = _("Click and drag to move left selection boundary.");
-         *ppCursor = mAdjustLeftSelectionCursor;
+         *ppCursor = mAdjustLeftSelectionCursor.get();
          return;
       case SBRight:
          tip = _("Click and drag to move right selection boundary.");
-         *ppCursor = mAdjustRightSelectionCursor;
+         *ppCursor = mAdjustRightSelectionCursor.get();
          return;
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
       case SBBottom:
          tip = _("Click and drag to move bottom selection frequency.");
-         *ppCursor = mBottomFrequencyCursor;
+         *ppCursor = mBottomFrequencyCursor.get();
          return;
       case SBTop:
          tip = _("Click and drag to move top selection frequency.");
-         *ppCursor = mTopFrequencyCursor;
+         *ppCursor = mTopFrequencyCursor.get();
          return;
       case SBCenter:
          HandleCenterFrequencyCursor(bShiftDown, tip, ppCursor);
          return;
       case SBWidth:
          tip = _("Click and drag to adjust frequency bandwidth.");
-         *ppCursor = mBandWidthCursor;
+         *ppCursor = mBandWidthCursor.get();
          return;
 #endif
       default:
@@ -5429,7 +5400,7 @@ void TrackPanel::HandleSliders(wxMouseEvent &event, bool pan)
                           UndoPush::CONSOLIDATE);
 #ifdef EXPERIMENTAL_MIDI_OUT
     } else {
-      MakeParentPushState(_("Moved velocity slider"), _("Velocity"), true);
+      MakeParentPushState(_("Moved velocity slider"), _("Velocity"), UndoPush::CONSOLIDATE);
     }
 #endif
       SetCapturedTrack( NULL );
@@ -10000,13 +9971,18 @@ void TrackInfo::DrawVelocitySlider(wxDC *dc, NoteTrack *t, wxRect rect) const
 {
     wxRect gainRect;
     int index = t->GetIndex();
-    EnsureSufficientSliders(index);
+
+    //EnsureSufficientSliders(index);
+
     GetGainRect(rect, gainRect);
     if (gainRect.y + gainRect.height < rect.y + rect.height - 19) {
-       mGains[index]->SetStyle(VEL_SLIDER);
+       auto &gain = mGain; // mGains[index];
+       gain->SetStyle(VEL_SLIDER);
        GainSlider(index)->Move(wxPoint(gainRect.x, gainRect.y));
        GainSlider(index)->Set(t->GetGain());
-       GainSlider(index)->OnPaint(*dc, t->GetSelected());
+       GainSlider(index)->OnPaint(*dc
+          // , t->GetSelected()
+       );
     }
 }
 #endif

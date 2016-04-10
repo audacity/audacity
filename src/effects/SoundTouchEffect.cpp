@@ -176,12 +176,11 @@ bool EffectSoundTouch::Process()
 bool EffectSoundTouch::ProcessOne(WaveTrack *track,
                                   sampleCount start, sampleCount end)
 {
-   WaveTrack *outputTrack;
    sampleCount s;
 
    mSoundTouch->setSampleRate((unsigned int)(track->GetRate()+0.5));
 
-   outputTrack = mFactory->NewWaveTrack(track->GetSampleFormat(), track->GetRate());
+   auto outputTrack = mFactory->NewWaveTrack(track->GetSampleFormat(), track->GetRate());
 
    //Get the length of the buffer (as double). len is
    //used simple to calculate a progress meter, so it is easier
@@ -245,13 +244,10 @@ bool EffectSoundTouch::ProcessOne(WaveTrack *track,
 
    // Take the output track and insert it in place of the original
    // sample data
-   track->ClearAndPaste(mCurT0, mCurT1, outputTrack, true, false, GetTimeWarper());
+   track->ClearAndPaste(mCurT0, mCurT1, outputTrack.get(), true, false, GetTimeWarper());
 
    double newLength = outputTrack->GetEndTime();
    m_maxNewLength = wxMax(m_maxNewLength, newLength);
-
-   // Delete the outputTrack now that its data is inserted in place
-   delete outputTrack;
 
    //Return true because the effect processing succeeded.
    return true;
@@ -262,9 +258,9 @@ bool EffectSoundTouch::ProcessStereo(WaveTrack* leftTrack, WaveTrack* rightTrack
 {
    mSoundTouch->setSampleRate((unsigned int)(leftTrack->GetRate()+0.5));
 
-   WaveTrack* outputLeftTrack = mFactory->NewWaveTrack(leftTrack->GetSampleFormat(),
+   auto outputLeftTrack = mFactory->NewWaveTrack(leftTrack->GetSampleFormat(),
                                                        leftTrack->GetRate());
-   WaveTrack* outputRightTrack = mFactory->NewWaveTrack(rightTrack->GetSampleFormat(),
+   auto outputRightTrack = mFactory->NewWaveTrack(rightTrack->GetSampleFormat(),
                                                         rightTrack->GetRate());
 
    //Get the length of the buffer (as double). len is
@@ -310,7 +306,7 @@ bool EffectSoundTouch::ProcessStereo(WaveTrack* leftTrack, WaveTrack* rightTrack
       //Get back samples from SoundTouch
       unsigned int outputCount = mSoundTouch->numSamples();
       if (outputCount > 0)
-         this->ProcessStereoResults(outputCount, outputLeftTrack, outputRightTrack);
+         this->ProcessStereoResults(outputCount, outputLeftTrack.get(), outputRightTrack.get());
 
       //Increment sourceSampleCount one blockfull of samples
       sourceSampleCount += blockSize;
@@ -336,7 +332,7 @@ bool EffectSoundTouch::ProcessStereo(WaveTrack* leftTrack, WaveTrack* rightTrack
 
    unsigned int outputCount = mSoundTouch->numSamples();
    if (outputCount > 0)
-      this->ProcessStereoResults(outputCount, outputLeftTrack, outputRightTrack);
+      this->ProcessStereoResults(outputCount, outputLeftTrack.get(), outputRightTrack.get());
 
    // Flush the output WaveTracks (since they're buffered, too)
    outputLeftTrack->Flush();
@@ -349,18 +345,14 @@ bool EffectSoundTouch::ProcessStereo(WaveTrack* leftTrack, WaveTrack* rightTrack
 
    // Take the output tracks and insert in place of the original
    // sample data.
-   leftTrack->ClearAndPaste(mCurT0, mCurT1, outputLeftTrack, true, false, GetTimeWarper());
-   rightTrack->ClearAndPaste(mCurT0, mCurT1, outputRightTrack, true, false, GetTimeWarper());
+   leftTrack->ClearAndPaste(mCurT0, mCurT1, outputLeftTrack.get(), true, false, GetTimeWarper());
+   rightTrack->ClearAndPaste(mCurT0, mCurT1, outputRightTrack.get(), true, false, GetTimeWarper());
 
    // Track the longest result length
    double newLength = outputLeftTrack->GetEndTime();
    m_maxNewLength = wxMax(m_maxNewLength, newLength);
    newLength = outputRightTrack->GetEndTime();
    m_maxNewLength = wxMax(m_maxNewLength, newLength);
-
-   // Delete the outputTracks now that their data are inserted in place.
-   delete outputLeftTrack;
-   delete outputRightTrack;
 
    //Return true because the effect processing succeeded.
    return true;

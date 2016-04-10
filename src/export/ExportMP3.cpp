@@ -65,6 +65,7 @@
 #include <wx/defs.h>
 
 #include <wx/choice.h>
+#include <wx/checkbox.h>
 #include <wx/dynlib.h>
 #include <wx/ffile.h>
 #include <wx/intl.h>
@@ -110,6 +111,7 @@
 
 #define CHANNEL_JOINT      0
 #define CHANNEL_STEREO     1
+#define CHANNEL_MONO       2
 
 #define QUALITY_0          0
 #define QUALITY_1          1
@@ -145,24 +147,24 @@ typedef struct
 static CHOICES fixRates[] =
 {
    /* i18n-hint: kbps is the bitrate of the MP3 file, kilobits per second*/
-   {wxT(""),   8},
-   {wxT(""),  16},
-   {wxT(""),  24},
-   {wxT(""),  32},
-   {wxT(""),  40},
-   {wxT(""),  48},
-   {wxT(""),  56},
-   {wxT(""),  64},
-   {wxT(""),  80},
-   {wxT(""),  96},
-   {wxT(""), 112},
-   {wxT(""), 128},
-   {wxT(""), 144},
-   {wxT(""), 160},
-   {wxT(""), 192},
-   {wxT(""), 224},
+   {wxT(""), 320},
    {wxT(""), 256},
-   {wxT(""), 320}
+   {wxT(""), 224},
+   {wxT(""), 192},
+   {wxT(""), 160},
+   {wxT(""), 144},
+   {wxT(""), 128},
+   {wxT(""), 112},
+   {wxT(""),  96},
+   {wxT(""),  80},
+   {wxT(""),  64},
+   {wxT(""),  56},
+   {wxT(""),  48},
+   {wxT(""),  40},
+   {wxT(""),  32},
+   {wxT(""),  24},
+   {wxT(""),  16},
+   {wxT(""),   8}
 };
 
 static CHOICES varRates[] =
@@ -176,7 +178,7 @@ static CHOICES varRates[] =
    {wxT(""), QUALITY_6},
    {wxT(""), QUALITY_7},
    {wxT(""), QUALITY_8},
-   {wxT(""), QUALITY_9},
+   {wxT(""), QUALITY_9}
 };
 
 static CHOICES varModes[] =
@@ -190,7 +192,7 @@ static CHOICES setRates[] =
    {wxT(""), PRESET_INSANE  },
    {wxT(""), PRESET_EXTREME },
    {wxT(""), PRESET_STANDARD},
-   {wxT(""), PRESET_MEDIUM  },
+   {wxT(""), PRESET_MEDIUM  }
 };
 
 static CHOICES sampRates[] =
@@ -203,7 +205,7 @@ static CHOICES sampRates[] =
    {wxT(""), 24000    },
    {wxT(""), 32000    },
    {wxT(""), 44100    },
-   {wxT(""), 48000    },
+   {wxT(""), 48000    }
 };
 
 #define ID_SET 7000
@@ -211,6 +213,7 @@ static CHOICES sampRates[] =
 #define ID_ABR 7002
 #define ID_CBR 7003
 #define ID_QUALITY 7004
+#define ID_MONO 7005
 
 static void InitMP3_Statics()
 {
@@ -275,6 +278,7 @@ public:
    void OnABR(wxCommandEvent& evt);
    void OnCBR(wxCommandEvent& evt);
    void OnQuality(wxCommandEvent& evt);
+   void OnMono(wxCommandEvent& evt);
 
    void LoadNames(CHOICES *choices, int count);
    wxArrayString GetNames(CHOICES *choices, int count);
@@ -285,6 +289,7 @@ private:
 
    wxRadioButton *mStereo;
    wxRadioButton *mJoint;
+   wxCheckBox    *mMono;
    wxRadioButton *mSET;
    wxRadioButton *mVBR;
    wxRadioButton *mABR;
@@ -306,6 +311,7 @@ BEGIN_EVENT_TABLE(ExportMP3Options, wxPanel)
    EVT_RADIOBUTTON(ID_ABR,    ExportMP3Options::OnABR)
    EVT_RADIOBUTTON(ID_CBR,    ExportMP3Options::OnCBR)
    EVT_CHOICE(wxID_ANY,       ExportMP3Options::OnQuality)
+   EVT_CHECKBOX(ID_MONO,      ExportMP3Options::OnMono)
 END_EVENT_TABLE()
 
 ///
@@ -403,14 +409,21 @@ void ExportMP3Options::PopulateOrExchange(ShuttleGui & S)
                mMode->Enable(enable);
    
                S.AddPrompt(_("Channel Mode:"));
-               S.StartTwoColumn();
+               S.StartMultiColumn(3, wxEXPAND);
                {
+                  bool mono = false;
+                  gPrefs->Read(wxT("/FileFormats/MP3ForceMono"), &mono, 0);
+
                   S.StartRadioButtonGroup(wxT("/FileFormats/MP3ChannelMode"), CHANNEL_JOINT);
                   {
                      mJoint = S.TieRadioButton(_("Joint Stereo"), CHANNEL_JOINT);
                      mStereo = S.TieRadioButton(_("Stereo"), CHANNEL_STEREO);
+                     mJoint->Enable(!mono);
+                     mStereo->Enable(!mono);
                   }
                   S.EndRadioButtonGroup();
+
+                  mMono = S.Id(ID_MONO).AddCheckBox(_("Force export to mono"), mono? wxT("true") : wxT("false"));
                }
                S.EndTwoColumn();
             }
@@ -504,6 +517,17 @@ void ExportMP3Options::OnQuality(wxCommandEvent& WXUNUSED(event))
    else {
       mCbrRate = fixRates[sel].label;
    }
+}
+
+void ExportMP3Options::OnMono(wxCommandEvent& evt)
+{
+   bool mono = false;
+   mono = mMono->GetValue();
+   mJoint->Enable(!mono);
+   mStereo->Enable(!mono);
+
+   gPrefs->Write(wxT("/FileFormats/MP3ForceMono"), mono);
+   gPrefs->Flush();
 }
 
 void ExportMP3Options::LoadNames(CHOICES *choices, int count)
@@ -1265,7 +1289,8 @@ int MP3Exporter::InitializeStream(int channels, int sampleRate)
 
    // Set the channel mode
    MPEG_mode mode;
-   if (channels == 1) {
+
+   if (channels == 1 || mChannel == CHANNEL_MONO) {
       mode = MONO;
    }
    else if (mChannel == CHANNEL_JOINT) {
@@ -1556,7 +1581,6 @@ class ExportMP3 final : public ExportPlugin
 public:
 
    ExportMP3();
-   void Destroy();
    bool CheckFileName(wxFileName & filename, int format);
 
    // Required
@@ -1593,11 +1617,6 @@ ExportMP3::ExportMP3()
    SetMaxChannels(2,0);
    SetCanMetaData(true,0);
    SetDescription(_("MP3 Files"),0);
-}
-
-void ExportMP3::Destroy()
-{
-   delete this;
 }
 
 bool ExportMP3::CheckFileName(wxFileName & WXUNUSED(filename), int WXUNUSED(format))
@@ -1668,11 +1687,13 @@ int ExportMP3::Export(AudacityProject *project,
    int rmode;
    int vmode;
    int cmode;
+   bool forceMono;
 
    gPrefs->Read(wxT("/FileFormats/MP3Bitrate"), &brate, 128);
    gPrefs->Read(wxT("/FileFormats/MP3RateMode"), &rmode, MODE_CBR);
    gPrefs->Read(wxT("/FileFormats/MP3VarMode"), &vmode, ROUTINE_FAST);
    gPrefs->Read(wxT("/FileFormats/MP3ChannelMode"), &cmode, CHANNEL_STEREO);
+   gPrefs->Read(wxT("/FileFormats/MP3ForceMono"), &forceMono, 0);
 
    // Set the bitrate/quality and mode
    if (rmode == MODE_SET) {
@@ -1722,7 +1743,10 @@ int ExportMP3::Export(AudacityProject *project,
    }
 
    // Set the channel mode
-   if (cmode == CHANNEL_JOINT) {
+   if (forceMono) {
+      exporter.SetChannel(CHANNEL_MONO);
+   }
+   else if (cmode == CHANNEL_JOINT) {
       exporter.SetChannel(CHANNEL_JOINT);
    }
    else {
@@ -1764,33 +1788,33 @@ int ExportMP3::Export(AudacityProject *project,
 
    const WaveTrackConstArray waveTracks =
       tracks->GetWaveTrackConstArray(selectionOnly, false);
-   Mixer *mixer = CreateMixer(waveTracks,
-                            tracks->GetTimeTrack(),
-                            t0, t1,
-                            channels, inSamples, true,
-                            rate, int16Sample, true, mixerSpec);
-
-   wxString title;
-   if (rmode == MODE_SET) {
-      title.Printf(selectionOnly ?
-                   _("Exporting selected audio with %s preset") :
-                   _("Exporting entire file with %s preset"),
-                   FindName(setRates, WXSIZEOF(setRates), brate).c_str());
-   }
-   else if (rmode == MODE_VBR) {
-      title.Printf(selectionOnly ?
-                   _("Exporting selected audio with VBR quality %s") :
-                   _("Exporting entire file with VBR quality %s"),
-                   FindName(varRates, WXSIZEOF(varRates), brate).c_str());
-   }
-   else {
-      title.Printf(selectionOnly ?
-                   _("Exporting selected audio at %d Kbps") :
-                   _("Exporting entire file at %d Kbps"),
-                   brate);
-   }
-
    {
+      auto mixer = CreateMixer(waveTracks,
+         tracks->GetTimeTrack(),
+         t0, t1,
+         channels, inSamples, true,
+         rate, int16Sample, true, mixerSpec);
+
+      wxString title;
+      if (rmode == MODE_SET) {
+         title.Printf(selectionOnly ?
+            _("Exporting selected audio with %s preset") :
+            _("Exporting entire file with %s preset"),
+            FindName(setRates, WXSIZEOF(setRates), brate).c_str());
+      }
+      else if (rmode == MODE_VBR) {
+         title.Printf(selectionOnly ?
+            _("Exporting selected audio with VBR quality %s") :
+            _("Exporting entire file with VBR quality %s"),
+            FindName(varRates, WXSIZEOF(varRates), brate).c_str());
+      }
+      else {
+         title.Printf(selectionOnly ?
+            _("Exporting selected audio at %d Kbps") :
+            _("Exporting entire file at %d Kbps"),
+            brate);
+      }
+
       ProgressDialog progress(wxFileName(fName).GetName(), title);
 
       while (updateResult == eProgressSuccess) {
@@ -1831,8 +1855,6 @@ int ExportMP3::Export(AudacityProject *project,
          updateResult = progress.Update(mixer->MixGetCurrentTime() - t0, t1 - t0);
       }
    }
-
-   delete mixer;
 
    bytes = exporter.FinishStream(buffer);
 
@@ -2073,9 +2095,9 @@ void ExportMP3::AddFrame(struct id3_tag *tp, const wxString & n, const wxString 
 }
 #endif
 
-ExportPlugin *New_ExportMP3()
+movable_ptr<ExportPlugin> New_ExportMP3()
 {
-   return new ExportMP3();
+   return make_movable<ExportMP3>();
 }
 
 //----------------------------------------------------------------------------

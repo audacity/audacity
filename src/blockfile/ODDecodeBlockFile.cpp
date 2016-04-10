@@ -16,8 +16,10 @@ The summary is eventually computed and written to a file in a background thread.
 
 *//*******************************************************************/
 
-#include <float.h>
+#include "../Audacity.h"
 #include "ODDecodeBlockFile.h"
+
+#include <float.h>
 
 #include <wx/utils.h>
 #include <wx/wxchar.h>
@@ -337,13 +339,11 @@ int ODDecodeBlockFile::WriteODDecodeBlockFile()
          sampleData.ptr(),
          mLen,
          mFormat,
-         NULL);//summaryData);
+         NULL);
    wxASSERT(bSuccess); // TODO: Handle failure here by alert to user and undo partial op.
    wxUnusedVar(bSuccess);
 
    mFileNameMutex.Unlock();
-
-//   delete [] (char *) summaryData;
 
 
    mDataAvailableMutex.Lock();
@@ -394,9 +394,10 @@ wxFileName ODDecodeBlockFile::GetFileName()
 /// @param len    The length of the sample data
 /// @param format The format of the sample data.
 void *ODDecodeBlockFile::CalcSummary(samplePtr buffer, sampleCount len,
-                             sampleFormat format)
+                             sampleFormat format, ArrayOf<char> &cleanup)
 {
-   char* localFullSummary = new char[mSummaryInfo.totalSummaryBytes];
+   cleanup.reinit(mSummaryInfo.totalSummaryBytes);
+   char* localFullSummary = cleanup.get();
 
    memcpy(localFullSummary, bheaderTag, bheaderTagLen);
 

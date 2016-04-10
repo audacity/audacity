@@ -204,7 +204,7 @@ case "${host_os}" in
 
         AC_DEFINE(PA_USE_COREAUDIO,1)
 
-        CFLAGS="$CFLAGS -I\$(top_srcdir)/src/os/unix -Werror"
+        CFLAGS="$CFLAGS -I\$(top_srcdir)/src/os/unix -Wno-deprecated -Werror"
         LIBS="-framework CoreAudio -framework AudioToolbox -framework AudioUnit -framework Carbon"
 
         if test "x$enable_mac_universal" = "xyes" ; then
@@ -243,8 +243,23 @@ case "${host_os}" in
               elif xcodebuild -version -sdk macosx10.7 Path >/dev/null 2>&1 ; then
                  mac_version_min="-mmacosx-version-min=10.4"
                  mac_sysroot="-isysroot `xcodebuild -version -sdk macosx10.7 Path`"
+              elif xcodebuild -version -sdk macosx10.8 Path >/dev/null 2>&1 ; then
+                 mac_version_min="-mmacosx-version-min=10.4"
+                 mac_sysroot="-isysroot `xcodebuild -version -sdk macosx10.8 Path`"
+              elif xcodebuild -version -sdk macosx10.9 Path >/dev/null 2>&1 ; then
+                 mac_version_min="-mmacosx-version-min=10.4"
+                 mac_sysroot="-isysroot `xcodebuild -version -sdk macosx10.9 Path`"
+              elif xcodebuild -version -sdk macosx10.10 Path >/dev/null 2>&1 ; then
+                 mac_version_min="-mmacosx-version-min=10.4"
+                 mac_sysroot="-isysroot `xcodebuild -version -sdk macosx10.10 Path`"
+              elif xcodebuild -version -sdk macosx10.11 Path >/dev/null 2>&1 ; then
+                 mac_version_min="-mmacosx-version-min=10.4"
+                 mac_sysroot="-isysroot `xcodebuild -version -sdk macosx10.11 Path`"
+              elif xcodebuild -version -sdk macosx10.12 Path >/dev/null 2>&1 ; then
+                 mac_version_min="-mmacosx-version-min=10.4"
+                 mac_sysroot="-isysroot `xcodebuild -version -sdk macosx10.12 Path`"
               else
-                 AC_MSG_ERROR([Couldn't find 10.5, 10.6, or 10.7 SDK])
+                 AC_MSG_ERROR([Could not find 10.5 to 10.12 SDK.])
               fi
            esac
 
@@ -312,7 +327,7 @@ case "${host_os}" in
 
         if [[ "x$with_wdmks" = "xyes" ]]; then
             DXDIR="$with_dxdir"
-            add_objects src/hostapi/wdmks/pa_win_wdmks.o src/common/pa_ringbuffer.o src/os/win/pa_win_hostapis.o src/os/win/pa_win_util.o src/os/win/pa_win_wdmks_util.o src/os/win/pa_win_waveformat.o
+            add_objects src/hostapi/wdmks/pa_win_wdmks.o src/common/pa_ringbuffer.o src/os/win/pa_win_hostapis.o src/os/win/pa_win_util.o src/os/win/pa_win_wdmks_utils.o src/os/win/pa_win_waveformat.o
             LIBS="${LIBS} -lwinmm -lm -luuid -lsetupapi -lole32"
             DLL_LIBS="${DLL_LIBS} -lwinmm -lm -L$DXDIR/lib -luuid -lsetupapi -lole32"
             #VC98="\"/c/Program Files/Microsoft Visual Studio/VC98/Include\""

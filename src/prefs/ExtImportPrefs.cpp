@@ -14,12 +14,14 @@
 *//*******************************************************************/
 
 
+#include "../Audacity.h"
+#include "ExtImportPrefs.h"
+
 #include <wx/defs.h>
 #include <wx/listctrl.h>
 #include <wx/msgdlg.h>
 #include <wx/dnd.h>
 
-#include "ExtImportPrefs.h"
 #include "../Audacity.h"
 #include "../AudacityApp.h"
 #include "../Prefs.h"
@@ -133,6 +135,7 @@ void ExtImportPrefs::PopulateOrExchange(ShuttleGui & S)
             PluginList->SetSingleStyle (wxLC_SINGLE_SEL, true);
             PluginList->InsertColumn (0, _("Importer order"));
             PluginList->SetDropTarget (dragtarget2);
+            PluginList->SetColumnWidth (0, wxLIST_AUTOSIZE_USEHEADER);
 
             ExtImportItems *items = Importer::Get().GetImportItems();
             for (unsigned int i = 0; i < items->Count(); i++)

@@ -209,12 +209,10 @@ static int64_t ufile_seek(void *opaque, int64_t pos, int whence)
 
 int ufile_close(AVIOContext *pb)
 {
-   wxFile *f = (wxFile *) pb->opaque;
+   std::unique_ptr<wxFile> f{ (wxFile *)pb->opaque };
 
-   if (f) {
+   if (f)
       f->Close();
-      delete f;
-   }
 
    return 0;
 }
@@ -222,16 +220,14 @@ int ufile_close(AVIOContext *pb)
 // Open a file with a (possibly) Unicode filename
 int ufile_fopen(AVIOContext **s, const wxString & name, int flags)
 {
-   wxFile *f;
    wxFile::OpenMode mode;
 
-   f = new wxFile;
+   auto f = std::make_unique<wxFile>();
    if (!f) {
       return -ENOMEM;
    }
 
    if (flags == (AVIO_FLAG_READ | AVIO_FLAG_WRITE)) {
-      delete f;
       return -EINVAL;
    } else if (flags == AVIO_FLAG_WRITE) {
       mode = wxFile::write;
@@ -240,20 +236,20 @@ int ufile_fopen(AVIOContext **s, const wxString & name, int flags)
    }
 
    if (!f->Open(name, mode)) {
-      delete f;
       return -ENOENT;
    }
 
    *s = avio_alloc_context((unsigned char*)av_malloc(32768), 32768,
                            flags & AVIO_FLAG_WRITE,
-                           /*opaque*/f,
+                           /*opaque*/f.get(),
                            ufile_read,
                            ufile_write,
                            ufile_seek);
    if (!*s) {
-      delete f;
       return -ENOMEM;
    }
+
+   f.release(); // s owns the file object now
 
    return 0;
 }
@@ -261,42 +257,55 @@ int ufile_fopen(AVIOContext **s, const wxString & name, int flags)
 
 // Detect type of input file and open it if recognized. Routine
 // based on the av_open_input_file() libavformat function.
-int ufile_fopen_input(AVFormatContext **ic_ptr, wxString & name)
+int ufile_fopen_input(std::unique_ptr<FFmpegContext> &context_ptr, wxString & name)
 {
+   context_ptr.reset();
+   auto context = std::make_unique<FFmpegContext>();
+
    wxFileName f(name);
    wxCharBuffer fname;
    const char *filename;
-   AVIOContext *pb = NULL;
    int err;
 
    fname = f.GetFullName().mb_str();
    filename = (const char *) fname;
 
    // Open the file to prepare for probing
-   if ((err = ufile_fopen(&pb, name, AVIO_FLAG_READ)) < 0) {
+   if ((err = ufile_fopen(&context->pb, name, AVIO_FLAG_READ)) < 0) {
       goto fail;
    }
 
-   *ic_ptr = avformat_alloc_context();
-   (*ic_ptr)->pb = pb;
+   context->ic_ptr = avformat_alloc_context();
+   context->ic_ptr->pb = context->pb;
 
    // And finally, attempt to associate an input stream with the file
-   err = avformat_open_input(ic_ptr, filename, NULL, NULL);
+   err = avformat_open_input(&context->ic_ptr, filename, NULL, NULL);
    if (err) {
       goto fail;
    }
 
+   // success
+   context_ptr = std::move(context);
    return 0;
 
 fail:
 
-   if (pb) {
-      ufile_close(pb);
+   return err;
+}
+
+FFmpegContext::~FFmpegContext()
+{
+   if (FFmpegLibsInst->ValidLibsLoaded())
+   {
+      if (ic_ptr)
+         avformat_close_input(&ic_ptr);
+      av_log_set_callback(av_log_default_callback);
    }
 
-   *ic_ptr = NULL;
-
-   return err;
+   if (pb) {
+      ufile_close(pb);
+      av_free(pb);
+   }
 }
 
 streamContext *import_ffmpeg_read_next_frame(AVFormatContext* formatContext,

@@ -24,13 +24,13 @@ wxString ExecMenuCommandType::BuildName()
 
 void ExecMenuCommandType::BuildSignature(CommandSignature &signature)
 {
-   Validator *menuCommandValidator(new Validator());
+   Validator *menuCommandValidator(new DefaultValidator());
    signature.AddParameter(wxT("CommandName"), wxT(""), menuCommandValidator);
 }
 
-Command *ExecMenuCommandType::Create(CommandOutputTarget *target)
+CommandHolder ExecMenuCommandType::Create(std::unique_ptr<CommandOutputTarget> &&target)
 {
-   return new ExecMenuCommand(*this, target);
+   return std::make_shared<ExecMenuCommand>(*this, std::move(target));
 }
 
 bool ExecMenuCommand::Apply(CommandExecutionContext context)

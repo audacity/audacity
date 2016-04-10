@@ -23,6 +23,9 @@
 #ifdef USE_FFMPEG
 #ifdef EXPERIMENTAL_OD_FFMPEG
 
+#include <algorithm>
+#include <functional>
+
 #include "../FFmpeg.h"      // which brings in avcodec.h, avformat.h
 #include "../import/ImportFFmpeg.h"
 
@@ -54,11 +57,13 @@ typedef struct _FFmpegDecodeCache
 ///class to decode a particular file (one per file).  Saves info such as filename and length (after the header is read.)
 class ODFFmpegDecoder final : public ODFileDecoder
 {
-
-
 public:
    ///This should handle unicode converted to UTF-8 on mac/linux, but OD TODO:check on windows
-   ODFFmpegDecoder(const wxString & fileName, streamContext** scs, int numStreams,WaveTrack*** channels, AVFormatContext* formatContext, int streamIndex);
+   ODFFmpegDecoder(const wxString & fileName,
+      const ScsPtr &scs,
+      ODDecodeFFmpegTask::Streams &&channels,
+      const std::shared_ptr<FFmpegContext> &formatContext,
+      int streamIndex);
    virtual ~ODFFmpegDecoder();
 
    ///Decodes the samples for this blockfile from the real file into a float buffer.
@@ -92,10 +97,9 @@ private:
    ///\return 0 on success, -1 if it can't decode any further
    int DecodeFrame(streamContext *sc, bool flushing);
 
-   int                  mNumStreams;
-   streamContext       **mScs;           //!< Array of pointers to stream contexts. Length is mNumStreams.
-   WaveTrack***        mChannels;
-   AVFormatContext      *mFormatContext; //!< Format description, also contains metadata and some useful info
+   ScsPtr mScs;           //!< Pointer to array of pointers to stream contexts.
+   ODDecodeFFmpegTask::Streams mChannels;
+   std::shared_ptr<FFmpegContext> mContext; //!< Format description, also contains metadata and some useful info
    std::vector<FFMpegDecodeCache*> mDecodeCache;
    int                  mNumSamplesInCache;
    sampleCount                  mCurrentPos;     //the index of the next sample to be decoded
@@ -105,33 +109,44 @@ private:
    int                  mStreamIndex;
 };
 
+auto ODDecodeFFmpegTask::FromList(const std::list<TrackHolders> &channels) -> Streams
+{
+   Streams streams;
+   streams.reserve(channels.size());
+   using namespace std;
+   transform(channels.begin(), channels.end(), back_inserter(streams),
+      [](const TrackHolders &holders) {
+         Channels channels;
+         channels.reserve(holders.size());
+         transform(holders.begin(), holders.end(), back_inserter(channels),
+            mem_fun_ref(&TrackHolders::value_type::get)
+         );
+         return channels;
+      }
+   );
+   return streams;
+}
 
 //------ ODDecodeFFmpegTask definitions
-ODDecodeFFmpegTask::ODDecodeFFmpegTask(void* scs,int numStreams, WaveTrack*** channels, void* formatContext, int streamIndex)
+ODDecodeFFmpegTask::ODDecodeFFmpegTask(const ScsPtr &scs, Streams &&channels, const std::shared_ptr<FFmpegContext> &context, int streamIndex)
+   : mChannels(std::move(channels))
 {
    mScs=scs;
-   mNumStreams=numStreams;
-   mChannels=channels;
-   mFormatContext = formatContext;
+   mContext = context;
    mStreamIndex = streamIndex;
-   //TODO we probably need to create a NEW WaveTrack*** pointer and copy.
-   //same for streamContext, but we should also use a ref counting system - this should be added to streamContext
- //  mScs = (streamContext**)malloc(sizeof(streamContext**)*mFormatContext->nb_streams);
 }
 ODDecodeFFmpegTask::~ODDecodeFFmpegTask()
 {
 }
 
 
-ODTask* ODDecodeFFmpegTask::Clone()
+std::unique_ptr<ODTask> ODDecodeFFmpegTask::Clone() const
 {
-   //we need to create copies of mScs.  It would be better to use a reference counter system.
-
-   ODDecodeFFmpegTask* clone = new ODDecodeFFmpegTask((void*)mScs,mNumStreams,mChannels,mFormatContext,mStreamIndex);
+   auto clone = std::make_unique<ODDecodeFFmpegTask>(mScs, Streams{ mChannels }, mContext, mStreamIndex);
    clone->mDemandSample=GetDemandSample();
 
    //the decoders and blockfiles should not be copied.  They are created as the task runs.
-   return clone;
+   return std::move(clone);
 }
 
 ///Creates an ODFileDecoder that decodes a file of filetype the subclass handles.
@@ -140,10 +155,12 @@ ODTask* ODDecodeFFmpegTask::Clone()
 ODFileDecoder* ODDecodeFFmpegTask::CreateFileDecoder(const wxString & fileName)
 {
    // Open the file for import
-   ODFFmpegDecoder *decoder = new ODFFmpegDecoder(fileName, (streamContext**) mScs,mNumStreams,mChannels,(AVFormatContext*)mFormatContext, mStreamIndex);
+   auto decoder =
+      make_movable<ODFFmpegDecoder>(fileName, mScs, ODDecodeFFmpegTask::Streams{ mChannels },
+      mContext, mStreamIndex);
 
-   mDecoders.push_back(decoder);
-   return decoder;
+   mDecoders.push_back(std::move(decoder));
+   return mDecoders.back().get();
 
 }
 
@@ -189,13 +206,15 @@ bool ODFFmpegDecoder::SeekingAllowed()
 //   url_fseek(mFormatContext->pb,0,SEEK_SET);
 
 
+   std::unique_ptr<FFmpegContext> tempMpegContext;
    AVFormatContext* tempContext;
    int err;
-   err = ufile_fopen_input(&tempContext, mFName);
+   err = ufile_fopen_input(tempMpegContext, mFName);
    if (err < 0)
    {
       goto test_failed;
    }
+   tempContext = tempMpegContext->ic_ptr;
 
    err = avformat_find_stream_info(tempContext, NULL);
    if (err < 0)
@@ -205,11 +224,8 @@ bool ODFFmpegDecoder::SeekingAllowed()
 
    if(av_seek_frame(tempContext, st->index, 0, 0) >= 0) {
       mSeekingAllowedStatus = ODFFMPEG_SEEKING_TEST_SUCCESS;
-      if (tempContext) avformat_close_input(&tempContext);
       return SeekingAllowed();
    }
-
-   if (tempContext) avformat_close_input(&tempContext);
 
 test_failed:
    mSeekingAllowedStatus = ODFFMPEG_SEEKING_TEST_FAILED;
@@ -219,12 +235,15 @@ test_failed:
 
 
 //------ ODDecodeFFmpegFileDecoder
-ODFFmpegDecoder::ODFFmpegDecoder(const wxString & fileName, streamContext** scs,int numStreams,WaveTrack*** channels, AVFormatContext* formatContext, int streamIndex)
+ODFFmpegDecoder::ODFFmpegDecoder(const wxString & fileName,
+   const ScsPtr &scs,
+   ODDecodeFFmpegTask::Streams &&channels,
+   const std::shared_ptr<FFmpegContext> &context,
+int streamIndex)
 :ODFileDecoder(fileName),
 //mSamplesDone(0),
-mNumStreams(numStreams),
 mScs(scs),
-mFormatContext(formatContext),
+mContext(context),
 mNumSamplesInCache(0),
 mCurrentLen(0),
 mSeekingAllowedStatus(ODFFMPEG_SEEKING_TEST_UNKNOWN),
@@ -233,22 +252,14 @@ mStreamIndex(streamIndex)
    PickFFmpegLibs();
 
    //do a shallow copy of the 2d array.
-   mChannels = new WaveTrack **[mNumStreams];
+   mChannels = std::move(channels);
 
-   for (int s = 0; s < mNumStreams; s++)
-   {
-      mChannels[s] = new WaveTrack *[mScs[s]->m_stream->codec->channels];
-      int c;
-      for (c = 0; c < mScs[s]->m_stream->codec->channels; c++)
-      {
-         mChannels[s][c] = channels[s][c];
-      }
-   }
    // get the current stream start time.
    int64_t stream_delay = 0;
-   if (mScs[streamIndex]->m_stream->start_time != int64_t(AV_NOPTS_VALUE) &&
-       mScs[streamIndex]->m_stream->start_time > 0) {
-      stream_delay = mScs[streamIndex]->m_stream->start_time;
+   const auto sc = mScs->get()[streamIndex].get();
+   if (sc->m_stream->start_time != int64_t(AV_NOPTS_VALUE) &&
+       sc->m_stream->start_time > 0) {
+      stream_delay = sc->m_stream->start_time;
    }
    mCurrentPos = double(stream_delay) / AV_TIME_BASE;
 
@@ -259,20 +270,8 @@ mStreamIndex(streamIndex)
 //we have taken ownership, so DELETE the ffmpeg stuff allocated in ImportFFmpeg that was given to us.
 ODFFmpegDecoder::~ODFFmpegDecoder()
 {
-   if (FFmpegLibsInst->ValidLibsLoaded())
-   {
-      if (mFormatContext) avformat_close_input(&mFormatContext);
-      av_log_set_callback(av_log_default_callback);
-   }
-
-   for (int i = 0; i < mNumStreams; i++)
-   {
-      if (mScs[i]->m_decodedAudioSamples != NULL)
-         av_free(mScs[i]->m_decodedAudioSamples);
-
-      delete mScs[i];
-   }
-   free(mScs);
+   // Do this before unloading libraries
+   mContext.reset();
 
    //DELETE our caches.
    while(mDecodeCache.size())
@@ -282,12 +281,6 @@ ODFFmpegDecoder::~ODFFmpegDecoder()
       mDecodeCache.erase(mDecodeCache.begin());
    }
 
-   //free the channel pointer arrays
-   for (int s = 0; s < mNumStreams; s++)
-   {
-      delete[] mChannels[s];
-   }
-   delete[] mChannels;
    DropFFmpegLibs();
 }
 
@@ -298,7 +291,11 @@ ODFFmpegDecoder::~ODFFmpegDecoder()
 #define kMaxSeekRewindAttempts 8
 int ODFFmpegDecoder::Decode(SampleBuffer & data, sampleFormat & format, sampleCount start, sampleCount len, unsigned int channel)
 {
-   format = mScs[mStreamIndex]->m_osamplefmt;
+   auto mFormatContext = mContext->ic_ptr;
+
+   auto scs = mScs->get();
+   auto sci = scs[mStreamIndex].get();
+   format = sci->m_osamplefmt;
 
    data.Allocate(len, format);
    samplePtr bufStart = data.ptr();
@@ -315,7 +312,7 @@ int ODFFmpegDecoder::Decode(SampleBuffer & data, sampleFormat & format, sampleCo
    bool seeking = false;
    //look at the decoding timestamp and see if the next sample that will be decoded is not the next sample we need.
    if(len && (mCurrentPos > start + len  || mCurrentPos + kDecodeSampleAllowance < start ) && SeekingAllowed()) {
-      sc = mScs[mStreamIndex];
+      sc = sci;
       AVStream* st = sc->m_stream;
       int stindex = -1;
       uint64_t targetts;
@@ -404,9 +401,9 @@ int ODFFmpegDecoder::Decode(SampleBuffer & data, sampleFormat & format, sampleCo
             // 16 bit int out.
             // 32 bit int, float, double mean float out.
             if (format == int16Sample)
-               cache->samplefmt = SAMPLE_FMT_S16;
+               cache->samplefmt = AV_SAMPLE_FMT_S16;
             else
-               cache->samplefmt = SAMPLE_FMT_FLT;
+               cache->samplefmt = AV_SAMPLE_FMT_FLT;
 
             cache->samplePtr = (uint8_t*) malloc(amt * cache->numChannels * SAMPLE_SIZE(format));
 
@@ -435,14 +432,15 @@ int ODFFmpegDecoder::Decode(SampleBuffer & data, sampleFormat & format, sampleCo
    // Flush the decoders if we're done.
    if((!sc || sc == (streamContext*) 1)&& len>0)
    {
-      for (int i = 0; i < mNumStreams; i++)
+      for (int i = 0; i < mChannels.size(); i++)
       {
-         if (DecodeFrame(mScs[i], true) == 0)
+         sc = scs[i].get();
+         if (DecodeFrame(sc, true) == 0)
          {
-            if (mScs[i]->m_pktValid)
+            if (sc->m_pktValid)
             {
-               av_free_packet(&mScs[i]->m_pkt);
-               mScs[i]->m_pktValid = 0;
+               av_free_packet(&sc->m_pkt);
+               sc->m_pktValid = 0;
             }
          }
       }
@@ -530,27 +528,27 @@ int ODFFmpegDecoder::FillDataFromCache(samplePtr & data, sampleFormat outFormat,
             inIndex = (hitStartInCache + j) * nChannels + channel;
             switch (mDecodeCache[i]->samplefmt)
             {
-               case SAMPLE_FMT_U8:
+               case AV_SAMPLE_FMT_U8:
                   //printf("u8 in %llu out %llu cachelen %llu outLen %llu\n", inIndex, outIndex, mDecodeCache[i]->len, len);
                   ((int16_t *)outBuf)[outIndex] = (int16_t) (((uint8_t*)mDecodeCache[i]->samplePtr)[inIndex] - 0x80) << 8;
                break;
 
-               case SAMPLE_FMT_S16:
+               case AV_SAMPLE_FMT_S16:
                   //printf("u16 in %llu out %llu cachelen %llu outLen %llu\n", inIndex, outIndex, mDecodeCache[i]->len, len);
                   ((int16_t *)outBuf)[outIndex] = ((int16_t*)mDecodeCache[i]->samplePtr)[inIndex];
                break;
 
-               case SAMPLE_FMT_S32:
+               case AV_SAMPLE_FMT_S32:
                   //printf("s32 in %llu out %llu cachelen %llu outLen %llu\n", inIndex, outIndex, mDecodeCache[i]->len, len);
                   ((float *)outBuf)[outIndex] = (float) ((int32_t*)mDecodeCache[i]->samplePtr)[inIndex] * (1.0 / (1 << 31));
                break;
 
-               case SAMPLE_FMT_FLT:
+               case AV_SAMPLE_FMT_FLT:
                   //printf("f in %llu out %llu cachelen %llu outLen %llu\n", inIndex, outIndex, mDecodeCache[i]->len, len);
                   ((float *)outBuf)[outIndex] = (float) ((float*)mDecodeCache[i]->samplePtr)[inIndex];
                break;
 
-               case SAMPLE_FMT_DBL:
+               case AV_SAMPLE_FMT_DBL:
                   //printf("dbl in %llu out %llu cachelen %llu outLen %llu\n", inIndex, outIndex, mDecodeCache[i]->len, len);
                   ((float *)outBuf)[outIndex] = (float) ((double*)mDecodeCache[i]->samplePtr)[inIndex];
                break;
@@ -588,7 +586,11 @@ int ODFFmpegDecoder::FillDataFromCache(samplePtr & data, sampleFormat outFormat,
 //get the right stream pointer.
 streamContext* ODFFmpegDecoder::ReadNextFrame()
 {
-   return import_ffmpeg_read_next_frame(mFormatContext, mScs, mNumStreams);
+   // Get pointer to array of contiguous unique_ptrs
+   auto scs = mScs->get();
+   // This reinterpret_cast to array of plain pointers is innocent
+   return import_ffmpeg_read_next_frame
+      (mContext->ic_ptr, reinterpret_cast<streamContext**>(scs), mChannels.size());
 }
 
 

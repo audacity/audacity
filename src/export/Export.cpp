@@ -75,7 +75,6 @@
 //----------------------------------------------------------------------------
 #include <wx/arrimpl.cpp>
 
-WX_DEFINE_USER_EXPORTED_OBJARRAY(ExportPluginArray);
 WX_DEFINE_USER_EXPORTED_OBJARRAY(FormatInfoArray);
 
 ExportPlugin::ExportPlugin()
@@ -110,11 +109,6 @@ int ExportPlugin::AddFormat()
 int ExportPlugin::GetFormatCount()
 {
    return mFormatInfos.Count();
-}
-
-void ExportPlugin::Destroy()
-{
-   delete this;
 }
 
 /**
@@ -243,7 +237,7 @@ wxWindow *ExportPlugin::OptionsCreate(wxWindow *parent, int WXUNUSED(format))
 }
 
 //Create a mixer by computing the time warp factor
-Mixer* ExportPlugin::CreateMixer(const WaveTrackConstArray &inputTracks,
+std::unique_ptr<Mixer> ExportPlugin::CreateMixer(const WaveTrackConstArray &inputTracks,
          const TimeTrack *timeTrack,
          double startTime, double stopTime,
          int numOutChannels, int outBufferSize, bool outInterleaved,
@@ -251,7 +245,7 @@ Mixer* ExportPlugin::CreateMixer(const WaveTrackConstArray &inputTracks,
          bool highQuality, MixerSpec *mixerSpec)
 {
    // MB: the stop time should not be warped, this was a bug.
-   return new Mixer(inputTracks,
+   return std::make_unique<Mixer>(inputTracks,
                   Mixer::WarpOptions(timeTrack),
                   startTime, stopTime,
                   numOutChannels, outBufferSize, outInterleaved,
@@ -299,11 +293,6 @@ Exporter::Exporter()
 
 Exporter::~Exporter()
 {
-   for (size_t i = 0; i < mPlugins.GetCount(); i++) {
-      mPlugins[i]->Destroy();
-   }
-   mPlugins.Clear();
-
    if (mMixerSpec) {
       delete mMixerSpec;
    }
@@ -318,9 +307,9 @@ void Exporter::SetFileDialogTitle( const wxString & DialogTitle )
 int Exporter::FindFormatIndex(int exportindex)
 {
    int c = 0;
-   for (size_t i = 0; i < mPlugins.GetCount(); i++)
+   for (const auto &pPlugin : mPlugins)
    {
-      for (int j = 0; j < mPlugins[i]->GetFormatCount(); j++)
+      for (int j = 0; j < pPlugin->GetFormatCount(); j++)
       {
          if (exportindex == c) return j;
          c++;
@@ -329,12 +318,12 @@ int Exporter::FindFormatIndex(int exportindex)
    return 0;
 }
 
-void Exporter::RegisterPlugin(ExportPlugin *ExportPlugin)
+void Exporter::RegisterPlugin(movable_ptr<ExportPlugin> &&ExportPlugin)
 {
-   mPlugins.Add(ExportPlugin);
+   mPlugins.push_back(std::move(ExportPlugin));
 }
 
-const ExportPluginArray Exporter::GetPlugins()
+const ExportPluginArray &Exporter::GetPlugins()
 {
    return mPlugins;
 }
@@ -399,10 +388,12 @@ bool Exporter::Process(AudacityProject *project, int numChannels,
    mT1 = t1;
    mActualName = mFilename;
 
-   for (size_t i = 0; i < mPlugins.GetCount(); i++) {
-      for (int j = 0; j < mPlugins[i]->GetFormatCount(); j++)
+   int i = -1;
+   for (const auto &pPlugin : mPlugins) {
+      ++i;
+      for (int j = 0; j < pPlugin->GetFormatCount(); j++)
       {
-         if (mPlugins[i]->GetFormat(j).IsSameAs(type, false))
+         if (pPlugin->GetFormat(j).IsSameAs(type, false))
          {
             mFormat = i;
             mSubFormat = j;
@@ -508,15 +499,19 @@ bool Exporter::GetFilename()
 
    mFilterIndex = 0;
 
-   for (size_t i = 0; i < mPlugins.GetCount(); i++) {
-      for (int j = 0; j < mPlugins[i]->GetFormatCount(); j++)
-      {
-         maskString += mPlugins[i]->GetMask(j) + wxT("|");
-         if (mPlugins[i]->GetFormat(j) == defaultFormat) {
-            mFormat = i;
-            mSubFormat = j;
+   {
+      int i = -1;
+      for (const auto &pPlugin : mPlugins) {
+         ++i;
+         for (int j = 0; j < pPlugin->GetFormatCount(); j++)
+         {
+            maskString += pPlugin->GetMask(j) + wxT("|");
+            if (mPlugins[i]->GetFormat(j) == defaultFormat) {
+               mFormat = i;
+               mSubFormat = j;
+            }
+            if (mFormat == -1) mFilterIndex++;
          }
-         if (mFormat == -1) mFilterIndex++;
       }
    }
    if (mFormat == -1)
@@ -561,9 +556,11 @@ bool Exporter::GetFilename()
       mFilterIndex = fd.GetFilterIndex();
 
       int c = 0;
-      for (size_t i = 0; i < mPlugins.GetCount(); i++)
+      int i = -1;
+      for (const auto &pPlugin : mPlugins)
       {
-         for (int j = 0; j < mPlugins[i]->GetFormatCount(); j++)
+         ++i;
+         for (int j = 0; j < pPlugin->GetFormatCount(); j++)
          {
             if (mFilterIndex == c)
             {
@@ -640,9 +637,9 @@ bool Exporter::GetFilename()
                 !mFilename.FileExists()) {
                // Warn and return to the dialog
                wxMessageBox(_("You are attempting to overwrite an aliased file that is missing.\n\
-The file cannot be written because the path is needed to restore the original audio to the project.\n\
-Choose File > Check Dependencies to view the locations of all missing files.\n\
-If you still wish to export, please choose a different filename or folder."));
+               The file cannot be written because the path is needed to restore the original audio to the project.\n\
+               Choose File > Check Dependencies to view the locations of all missing files.\n\
+               If you still wish to export, please choose a different filename or folder."));
                overwritingMissingAlias = true;
             }
          }
@@ -713,9 +710,11 @@ void Exporter::DisplayOptions(int index)
 {
    int c = 0;
    int mf = -1, msf = -1;
-   for (size_t i = 0; i < mPlugins.GetCount(); i++)
+   int i = -1;
+   for (const auto &pPlugin : mPlugins)
    {
-      for (int j = 0; j < mPlugins[i]->GetFormatCount(); j++)
+      ++i;
+      for (int j = 0; j < pPlugin->GetFormatCount(); j++)
       {
          if (index == c)
          {
@@ -856,11 +855,11 @@ void Exporter::CreateUserPane(wxWindow *parent)
             mBook = safenew wxSimplebook(S.GetParent());
             S.AddWindow(mBook, wxEXPAND);
                                   
-            for (size_t i = 0; i < mPlugins.GetCount(); i++)
+            for (const auto &pPlugin : mPlugins)
             {
-               for (int j = 0; j < mPlugins[i]->GetFormatCount(); j++)
+               for (int j = 0; j < pPlugin->GetFormatCount(); j++)
                {
-                  mBook->AddPage(mPlugins[i]->OptionsCreate(mBook, j), wxEmptyString);
+                  mBook->AddPage(pPlugin->OptionsCreate(mBook, j), wxEmptyString);
                }
             }
          }
@@ -884,6 +883,88 @@ void Exporter::OnFilterChanged(wxFileCtrlEvent & evt)
    }
 
    mBook->ChangeSelection(index);
+}
+
+bool Exporter::ProcessFromTimerRecording(AudacityProject *project,
+                                         bool selectedOnly,
+                                         double t0,
+                                         double t1,
+                                         wxFileName fnFile,
+                                         int iFormat,
+                                         int iSubFormat,
+                                         int iFilterIndex)
+{
+   // Save parms
+   mProject = project;
+   mSelectedOnly = selectedOnly;
+   mT0 = t0;
+   mT1 = t1;
+
+   // Auto Export Parameters
+   mFilename = fnFile;
+   mFormat = iFormat;
+   mSubFormat = iSubFormat;
+   mFilterIndex = iFilterIndex;
+
+   // Gather track information
+   if (!ExamineTracks()) {
+      return false;
+   }
+
+   // Check for down mixing
+   if (!CheckMix()) {
+      return false;
+   }
+
+   // Ensure filename doesn't interfere with project files.
+   if (!CheckFilename()) {
+      return false;
+   }
+
+   // Export the tracks
+   bool success = ExportTracks();
+
+   // Get rid of mixerspec
+   if (mMixerSpec) {
+      delete mMixerSpec;
+      mMixerSpec = NULL;
+   }
+
+   return success;
+}
+
+int Exporter::GetAutoExportFormat() {
+   return mFormat;
+}
+
+int Exporter::GetAutoExportSubFormat() {
+   return mSubFormat;
+}
+
+int Exporter::GetAutoExportFilterIndex() {
+   return mFormat;
+}
+
+wxFileName Exporter::GetAutoExportFileName() {
+   return mFilename;
+}
+
+bool Exporter::SetAutoExportOptions(AudacityProject *project) {
+   mFormat = -1;
+   mProject = project;
+
+   if( GetFilename()==false )
+        return false;
+
+   // Let user edit MetaData
+   if (mPlugins[mFormat]->GetCanMetaData(mSubFormat)) {
+      if (!(project->DoEditMetadata(_("Edit Metadata Tags for Export"),
+                                    _("Exported Tags"), mProject->GetShowId3Dialog()))) {
+         return false;
+      }
+   }
+
+   return true;
 }
 
 //----------------------------------------------------------------------------

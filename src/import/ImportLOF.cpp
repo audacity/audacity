@@ -113,7 +113,7 @@ public:
 
    wxString GetPluginStringID() { return wxT("lof"); }
    wxString GetPluginFormatDescription();
-   ImportFileHandle *Open(const wxString &Filename) override;
+   std::unique_ptr<ImportFileHandle> Open(const wxString &Filename) override;
 };
 
 
@@ -125,12 +125,16 @@ public:
 
    wxString GetFileDescription();
    int GetFileUncompressedBytes();
-   int Import(TrackFactory *trackFactory, Track ***outTracks,
-              int *outNumTracks, Tags *tags);
+   int Import(TrackFactory *trackFactory, TrackHolders &outTracks,
+              Tags *tags) override;
 
    wxInt32 GetStreamCount(){ return 1; }
 
-   wxArrayString *GetStreamInfo(){ return NULL; }
+   const wxArrayString &GetStreamInfo() override
+   {
+      static wxArrayString empty;
+      return empty;
+   }
 
    void SetStreamUsage(wxInt32 WXUNUSED(StreamID), bool WXUNUSED(Use)){}
 
@@ -181,7 +185,7 @@ wxString LOFImportPlugin::GetPluginFormatDescription()
     return DESC;
 }
 
-ImportFileHandle *LOFImportPlugin::Open(const wxString &filename)
+std::unique_ptr<ImportFileHandle> LOFImportPlugin::Open(const wxString &filename)
 {
    // Check if it is a binary file
    wxFile binaryFile;
@@ -216,7 +220,7 @@ ImportFileHandle *LOFImportPlugin::Open(const wxString &filename)
       return NULL;
    }
 
-   return new LOFImportFileHandle(filename, file);
+   return std::make_unique<LOFImportFileHandle>(filename, file);
 }
 
 wxString LOFImportFileHandle::GetFileDescription()
@@ -229,9 +233,11 @@ int LOFImportFileHandle::GetFileUncompressedBytes()
    return 0;
 }
 
-int LOFImportFileHandle::Import(TrackFactory * WXUNUSED(trackFactory), Track *** WXUNUSED(outTracks),
-                                int * WXUNUSED(outNumTracks), Tags * WXUNUSED(tags))
+int LOFImportFileHandle::Import(TrackFactory * WXUNUSED(trackFactory), TrackHolders &outTracks,
+                                Tags * WXUNUSED(tags))
 {
+   outTracks.clear();
+
    wxASSERT(mTextFile->IsOpened());
 
    if(mTextFile->Eof())
@@ -379,12 +385,7 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
       if (targetfile.AfterLast(wxT('.')).IsSameAs(wxT("mid"), false)
           ||  targetfile.AfterLast(wxT('.')).IsSameAs(wxT("midi"), false))
       {
-         NoteTrack *nTrack = new NoteTrack(mProject->GetDirManager());
-
-         if (::ImportMIDI(targetfile, nTrack))
-            mProject->GetTracks()->Add(nTrack);
-         else
-            delete nTrack;
+         mProject->DoImportMIDI(targetfile);
       }
 
       // If not a midi, open audio file

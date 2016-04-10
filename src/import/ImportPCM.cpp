@@ -82,7 +82,7 @@ public:
 
    wxString GetPluginStringID() { return wxT("libsndfile"); }
    wxString GetPluginFormatDescription();
-   ImportFileHandle *Open(const wxString &Filename) override;
+   std::unique_ptr<ImportFileHandle> Open(const wxString &Filename) override;
 };
 
 
@@ -94,12 +94,16 @@ public:
 
    wxString GetFileDescription();
    int GetFileUncompressedBytes();
-   int Import(TrackFactory *trackFactory, Track ***outTracks,
-              int *outNumTracks, Tags *tags);
+   int Import(TrackFactory *trackFactory, TrackHolders &outTracks,
+              Tags *tags) override;
 
    wxInt32 GetStreamCount(){ return 1; }
 
-   wxArrayString *GetStreamInfo(){ return NULL; }
+   const wxArrayString &GetStreamInfo() override
+   {
+      static wxArrayString empty;
+      return empty;
+   }
 
    void SetStreamUsage(wxInt32 WXUNUSED(StreamID), bool WXUNUSED(Use)){}
 
@@ -120,7 +124,7 @@ wxString PCMImportPlugin::GetPluginFormatDescription()
     return DESC;
 }
 
-ImportFileHandle *PCMImportPlugin::Open(const wxString &filename)
+std::unique_ptr<ImportFileHandle> PCMImportPlugin::Open(const wxString &filename)
 {
    SF_INFO info;
    SNDFILE *file = NULL;
@@ -180,7 +184,7 @@ ImportFileHandle *PCMImportPlugin::Open(const wxString &filename)
       return NULL;
    }
 
-   return new PCMImportFileHandle(filename, file, info);
+   return std::make_unique<PCMImportFileHandle>(filename, file, info);
 }
 
 PCMImportFileHandle::PCMImportFileHandle(wxString name,
@@ -318,10 +322,11 @@ How do you want to import the current file(s)?"), oldCopyPref == wxT("copy") ? _
 }
 
 int PCMImportFileHandle::Import(TrackFactory *trackFactory,
-                                Track ***outTracks,
-                                int *outNumTracks,
+                                TrackHolders &outTracks,
                                 Tags *tags)
 {
+   outTracks.clear();
+
    wxASSERT(mFile);
 
    // Get the preference / warn the user about aliased files.
@@ -338,31 +343,31 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
 
    CreateProgress();
 
-   WaveTrack **channels = new WaveTrack *[mInfo.channels];
+   TrackHolders channels(mInfo.channels);
 
-   int c;
-   for (c = 0; c < mInfo.channels; c++) {
-      channels[c] = trackFactory->NewWaveTrack(mFormat, mInfo.samplerate);
+   auto iter = channels.begin();
+   for (int c = 0; c < mInfo.channels; ++iter, ++c) {
+      *iter = trackFactory->NewWaveTrack(mFormat, mInfo.samplerate);
 
       if (mInfo.channels > 1)
          switch (c) {
          case 0:
-            channels[c]->SetChannel(Track::LeftChannel);
+            iter->get()->SetChannel(Track::LeftChannel);
             break;
          case 1:
-            channels[c]->SetChannel(Track::RightChannel);
+            iter->get()->SetChannel(Track::RightChannel);
             break;
          default:
-            channels[c]->SetChannel(Track::MonoChannel);
+            iter->get()->SetChannel(Track::MonoChannel);
          }
    }
 
    if (mInfo.channels == 2) {
-      channels[0]->SetLinked(true);
+      channels.begin()->get()->SetLinked(true);
    }
 
    sampleCount fileTotalFrames = (sampleCount)mInfo.frames;
-   sampleCount maxBlockSize = channels[0]->GetMaxBlockSize();
+   sampleCount maxBlockSize = channels.begin()->get()->GetMaxBlockSize();
    int updateResult = false;
 
    // If the format is not seekable, we must use 'copy' mode,
@@ -387,8 +392,9 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
          if (i + blockLen > fileTotalFrames)
             blockLen = fileTotalFrames - i;
 
-         for (c = 0; c < mInfo.channels; c++)
-            channels[c]->AppendAlias(mFilename, i, blockLen, c,useOD);
+         auto iter = channels.begin();
+         for (int c = 0; c < mInfo.channels; ++iter, ++c)
+            iter->get()->AppendAlias(mFilename, i, blockLen, c,useOD);
 
          if (++updateCounter == 50) {
             updateResult = mProgress->Update(i, fileTotalFrames);
@@ -403,9 +409,9 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
       {
          ODComputeSummaryTask* computeTask=new ODComputeSummaryTask;
          bool moreThanStereo = mInfo.channels>2;
-         for (c = 0; c < mInfo.channels; c++)
+         for (const auto &channel : channels)
          {
-            computeTask->AddWaveTrack(channels[c]);
+            computeTask->AddWaveTrack(channel.get());
             if(moreThanStereo)
             {
                //if we have 3 more channels, they get imported on seperate tracks, so we add individual tasks for each.
@@ -454,7 +460,8 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
             block = sf_readf_float(mFile, (float *)srcbuffer.ptr(), block);
 
          if (block) {
-            for(c=0; c<mInfo.channels; c++) {
+            auto iter = channels.begin();
+            for(int c=0; c<mInfo.channels; ++iter, ++c) {
                if (mFormat==int16Sample) {
                   for(int j=0; j<block; j++)
                      ((short *)buffer.ptr())[j] =
@@ -466,7 +473,7 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
                         ((float *)srcbuffer.ptr())[mInfo.channels*j+c];
                }
 
-               channels[c]->Append(buffer.ptr(), (mFormat == int16Sample)?int16Sample:floatSample, block);
+               iter->get()->Append(buffer.ptr(), (mFormat == int16Sample)?int16Sample:floatSample, block);
             }
             framescompleted += block;
          }
@@ -480,20 +487,13 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
    }
 
    if (updateResult == eProgressFailed || updateResult == eProgressCancelled) {
-      for (c = 0; c < mInfo.channels; c++)
-         delete channels[c];
-      delete[] channels;
-
       return updateResult;
    }
 
-   *outNumTracks = mInfo.channels;
-   *outTracks = new Track *[mInfo.channels];
-   for(c = 0; c < mInfo.channels; c++) {
-         channels[c]->Flush();
-         (*outTracks)[c] = channels[c];
-      }
-      delete[] channels;
+   for(const auto &channel : channels) {
+      channel->Flush();
+   }
+   outTracks.swap(channels);
 
    const char *str;
 

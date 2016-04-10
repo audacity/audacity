@@ -517,6 +517,14 @@ bool EffectEqualization::Init()
    }
 
    mHiFreq = rate / 2.0;
+   // Unlikely, but better than crashing.
+   if (mHiFreq <= loFreqI) {
+      wxMessageBox( _("Track sample rate is too low for this effect."),
+                    _("Effect Unavailable"),
+                    wxOK | wxCENTRE);
+      return(false);
+   }
+
    mLoFreq = loFreqI;
 
    mBandsInUse = 0;
@@ -885,7 +893,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
    S.EndMultiColumn();
 
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
-   if (m_pEffect->mEffectEqualization48x)
+   if (mEffectEqualization48x)
    {
       // -------------------------------------------------------------------
       // ROW 6: Processing routine selection
@@ -1068,7 +1076,7 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
 {
    // create a NEW WaveTrack to hold all of the output, including 'tails' each end
    AudacityProject *p = GetActiveProject();
-   WaveTrack *output = p->GetTrackFactory()->NewWaveTrack(floatSample, t->GetRate());
+   auto output = p->GetTrackFactory()->NewWaveTrack(floatSample, t->GetRate());
 
    int L = windowSize - (mM - 1);   //Process L samples at a go
    sampleCount s = start;
@@ -1200,14 +1208,13 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
       //now go thru and replace the old clips with NEW
       for(unsigned int i=0;i<clipStartEndTimes.size();i++)
       {
-         Track *toClipOutput;
          //remove the old audio and get the NEW
          t->Clear(clipStartEndTimes[i].first,clipStartEndTimes[i].second);
-         output->Copy(clipStartEndTimes[i].first-startT+offsetT0,clipStartEndTimes[i].second-startT+offsetT0, &toClipOutput);
+         auto toClipOutput = output->Copy(clipStartEndTimes[i].first-startT+offsetT0,clipStartEndTimes[i].second-startT+offsetT0);
          if(toClipOutput)
          {
             //put the processed audio in
-            bool bResult = t->Paste(clipStartEndTimes[i].first, toClipOutput);
+            bool bResult = t->Paste(clipStartEndTimes[i].first, toClipOutput.get());
             wxASSERT(bResult); // TO DO: Actually handle this.
             wxUnusedVar(bResult);
             //if the clip was only partially selected, the Paste will have created a split line.  Join is needed to take care of this
@@ -1217,7 +1224,6 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
                !(clipRealStartEndTimes[i].first <= startT &&
                clipRealStartEndTimes[i].second >= startT+lenT) )
                t->Join(clipRealStartEndTimes[i].first,clipRealStartEndTimes[i].second);
-            delete toClipOutput;
          }
       }
    }
@@ -1225,7 +1231,6 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
    delete[] buffer;
    delete[] window1;
    delete[] window2;
-   delete output;
 
    return bLoopSuccess;
 }
@@ -1471,12 +1476,18 @@ void EffectEqualization::UpdateDefaultCurves(bool updateAll /* false */)
 
    EQCurveArray userCurves = mCurves;
    mCurves.Clear();
-   wxFileName fn;
+   // We only wamt to look for the shipped EQDefaultCurves.xml
+   wxFileName fn = wxFileName(wxStandardPaths::Get().GetResourcesDir(),
+                              wxT("EQDefaultCurves.xml"));
+   wxLogDebug(wxT("Attempting to load EQDefaultCurves.xml from %s"),wxStandardPaths::Get().GetResourcesDir().c_str());
    XMLFileReader reader;
 
-   if(!GetDefaultFileName(fn) || !reader.Parse(this, fn.GetFullPath())) {
+   if(!reader.Parse(this, fn.GetFullPath())) {
       wxLogError(wxT("EQDefaultCurves.xml could not be read."));
       return;
+   }
+   else {
+      wxLogDebug(wxT("Loading EQDefaultCurves.xml successful."));
    }
 
    EQCurveArray defaultCurves = mCurves;
@@ -1654,84 +1665,146 @@ void EffectEqualization::SaveCurves(const wxString &fileName)
 void EffectEqualization::setCurve(int currentCurve)
 {
    // Set current choice
-   Select( currentCurve );
-
+   Select(currentCurve);
    wxASSERT( currentCurve < (int) mCurves.GetCount() );
-   bool changed = false;
 
-   if( mLin )   // linear freq mode?
-   {
-      Envelope *env = mLinEnvelope;
-      env->Flatten(0.);
-      env->SetTrackLen(1.0);
+   Envelope *env;
+   int numPoints = (int) mCurves[currentCurve].points.GetCount();
 
-      if( mCurves[currentCurve].points.GetCount() )
-      {
-         double when, value;
-         int i;
-         int nCurvePoints = mCurves[currentCurve].points.GetCount();
-         for(i=0;i<nCurvePoints;i++)
-         {
-            when = mCurves[currentCurve].points[i].Freq / mHiFreq;
-            value = mCurves[currentCurve].points[i].dB;
-            if(when <= 1)
-               env->Insert(when, value);
-            else
-               break;
-         }
-         if ( i != nCurvePoints) // there are more points at higher freqs
-         {
-            when = 1.;  // set the RH end to the next highest point
-            value = mCurves[currentCurve].points[nCurvePoints-1].dB;
-            env->Insert(when, value);
-            changed = true;
-         }
-      }
+   if (mLin) {  // linear freq mode
+      env = mLinEnvelope;
    }
-   else
-   {
-      Envelope *env = mLogEnvelope;
-      env->Flatten(0.);
-      env->SetTrackLen(1.0);
+   else { // log freq mode
+      env = mLogEnvelope;
+   }
+   env->Flatten(0.);
+   env->SetTrackLen(1.0);
 
-      if( mCurves[currentCurve].points.GetCount() )
-      {
-         double when, value;
-         double loLog = log10(20.);
+   // Handle special case of no points.
+   if (numPoints == 0) {
+      ForceRecalc();
+      return;
+   }
+
+   double when, value;
+
+   // Handle special case 1 point.
+   if (numPoints == 1) {
+      // only one point, so ensure it is in range then return.
+      when = mCurves[currentCurve].points[0].Freq;
+      if (mLin) {
+         when = when / mHiFreq;
+      }
+      else {   // log scale
+         // We don't go below loFreqI (20 Hz) in log view.
+         double loLog = log10((double)loFreqI);
          double hiLog = log10(mHiFreq);
          double denom = hiLog - loLog;
-         int i;
-         int nCurvePoints = mCurves[currentCurve].points.GetCount();
+         when = (log10(std::max((double) loFreqI, when)) - loLog)/denom;
+      }
+      value = mCurves[currentCurve].points[0].dB;
+      env->Insert(std::min(1.0, std::max(0.0, when)), value);
+      ForceRecalc();
+      return;
+   }
 
-         for(i=0;i<nCurvePoints;i++)
-         {
-            double flog = log10(mCurves[currentCurve].points[i].Freq);
-            if( flog >= loLog )
-            {
-               when = (flog - loLog)/denom;
-               value = mCurves[currentCurve].points[i].dB;
-               if(when <= 1.)
-                  env->Insert(when, value);
-               else
-               {  // we have a point beyond fs/2.  Insert it so that env code can use it.
-                  // but just this one, we have no use for the rest
-                  env->SetTrackLen(when); // can't Insert if the envelope isn't long enough
-                  env->Insert(when, value);
-                  break;
-               }
-            }
-            else
-            {  //get the first point as close as we can to the last point requested
-               changed = true;
-               //double f = mCurves[currentCurve].points[i].Freq;
-               //double v = mCurves[currentCurve].points[i].dB;
-               mLogEnvelope->Insert(0., mCurves[currentCurve].points[i].dB);
-            }
+   // We have at least two points, so ensure they are in frequency order.
+   mCurves[currentCurve].points.Sort(SortCurvePoints);
+
+   if (mCurves[currentCurve].points[0].Freq < 0) {
+      // Corrupt or invalid curve, so bail.
+      ForceRecalc();
+      return;
+   }
+
+   if(mLin) {   // linear Hz scale
+      for(int pointCount = 0; pointCount < numPoints; pointCount++) {
+         when = mCurves[currentCurve].points[pointCount].Freq / mHiFreq;
+         value = mCurves[currentCurve].points[pointCount].dB;
+         if(when <= 1) {
+            env->Insert(when, value);
+         }
+         else {
+            // There are more points at higher freqs, so interpolate next one then stop.
+            when = 1.0;
+            double lastF = mCurves[currentCurve].points[pointCount-1].Freq;
+            double nextF = mCurves[currentCurve].points[pointCount].Freq;
+            double lastDB = mCurves[currentCurve].points[pointCount-1].dB;
+            double nextDB = mCurves[currentCurve].points[pointCount].dB;
+            value = lastDB + ((nextDB - lastDB) * ((mHiFreq - lastF) / (nextF - lastF)));
+            env->Insert(when, value);
+            break;
          }
       }
    }
-   if(changed) // not all points were loaded so switch to unnamed
-      EnvelopeUpdated();
+   else {   // log Hz scale
+      double loLog = log10((double) loFreqI);
+      double hiLog = log10(mHiFreq);
+      double denom = hiLog - loLog;
+      int firstAbove20Hz;
+
+      // log scale EQ starts at 20 Hz (threshold of hearing).
+      // so find the first point (if any) above 20 Hz.
+      for (firstAbove20Hz = 0; firstAbove20Hz < numPoints; firstAbove20Hz++) {
+         if (mCurves[currentCurve].points[firstAbove20Hz].Freq > loFreqI)
+            break;
+      }
+
+      if (firstAbove20Hz == numPoints) {
+         // All points below 20 Hz, so just use final point.
+         when = 0.0;
+         value = mCurves[currentCurve].points[numPoints-1].dB;
+         env->Insert(when, value);
+         ForceRecalc();
+         return;
+      }
+
+      if (firstAbove20Hz > 0) {
+         // At least one point is before 20 Hz and there are more
+         // beyond 20 Hz, so interpolate the first
+         double prevF = mCurves[currentCurve].points[firstAbove20Hz-1].Freq;
+         prevF = log10(std::max(1.0, prevF)); // log zero is bad.
+         double prevDB = mCurves[currentCurve].points[firstAbove20Hz-1].dB;
+         double nextF = log10(mCurves[currentCurve].points[firstAbove20Hz].Freq);
+         double nextDB = mCurves[currentCurve].points[firstAbove20Hz].dB;
+         when = 0.0;
+         value = nextDB - ((nextDB - prevDB) * ((nextF - loLog) / (nextF - prevF)));
+         env->Insert(when, value);
+      }
+
+      // Now get the rest.
+      for(int pointCount = firstAbove20Hz; pointCount < numPoints; pointCount++)
+      {
+         double flog = log10(mCurves[currentCurve].points[pointCount].Freq);
+         wxASSERT(mCurves[currentCurve].points[pointCount].Freq >= loFreqI);
+
+         when = (flog - loLog)/denom;
+         value = mCurves[currentCurve].points[pointCount].dB;
+         if(when <= 1.0) {
+            env->Insert(when, value);
+         }
+         else {
+            // This looks weird when adjusting curve in Draw mode if
+            // there is a point off-screen.
+
+            /*
+            // we have a point beyond fs/2.  Insert it so that env code can use it.
+            // but just this one, we have no use for the rest
+            env->SetTrackLen(when); // can't Insert if the envelope isn't long enough
+            env->Insert(when, value);
+            break;
+            */
+
+            // interpolate the final point instead
+            when = 1.0;
+            double logLastF = log10(mCurves[currentCurve].points[pointCount-1].Freq);
+            double lastDB = mCurves[currentCurve].points[pointCount-1].dB;
+            value = lastDB + ((value - lastDB) * ((log10(mHiFreq) - logLastF) / (flog - logLastF)));
+            env->Insert(when, value);
+            break;
+         }
+      }
+   }
    ForceRecalc();
 }
 
@@ -2272,7 +2345,10 @@ void EffectEqualization::EnvLinToLog(void)
    {
       if( when[i]*mHiFreq >= 20 )
       {
-         mLogEnvelope->Insert((log10(when[i]*mHiFreq)-loLog)/denom , value[i]);
+         // Caution: on Linux, when when == 20, the log calulation rounds
+         // to just under zero, which causes an assert error.
+         double flog = (log10(when[i]*mHiFreq)-loLog)/denom;
+         mLogEnvelope->Insert(std::max(0.0, flog) , value[i]);
       }
       else
       {  //get the first point as close as we can to the last point requested
@@ -2784,15 +2860,15 @@ void EffectEqualization::OnProcessingRadio(wxCommandEvent & event)
    int testEvent=event.GetId();
    switch(testEvent)
    {
-   case defaultMathRadioID: EffectEqualization48x::SetMathPath(MATH_FUNCTION_ORIGINAL);
+   case ID_DefaultMath: EffectEqualization48x::SetMathPath(MATH_FUNCTION_ORIGINAL);
       break;
-   case sSERadioID: EffectEqualization48x::SetMathPath(MATH_FUNCTION_SSE);
+   case ID_SSE: EffectEqualization48x::SetMathPath(MATH_FUNCTION_SSE);
       break;
-   case sSEThreadedRadioID: EffectEqualization48x::SetMathPath(MATH_FUNCTION_THREADED | MATH_FUNCTION_SSE);
+   case ID_SSEThreaded: EffectEqualization48x::SetMathPath(MATH_FUNCTION_THREADED | MATH_FUNCTION_SSE);
       break;
-   case aVXRadioID: testEvent=2;
+   case ID_AVX: testEvent = 2;
       break;
-   case aVXThreadedRadioID: testEvent=2;
+   case ID_AVXThreaded: testEvent = 2;
       break;
    }
 
@@ -2800,8 +2876,8 @@ void EffectEqualization::OnProcessingRadio(wxCommandEvent & event)
 
 void EffectEqualization::OnBench( wxCommandEvent & event)
 {
-   m_pEffect->mBench=true;
-   OnOk(event);
+   mBench=true;
+   // OnOk(event);
 }
 
 #endif
@@ -3535,35 +3611,6 @@ void EditCurvesDialog::OnDefaults( wxCommandEvent & WXUNUSED(event))
    mEffect->mCurves = temp;
    PopulateList(0);  // update the EditCurvesDialog dialog
 }
-
-#ifdef EXPERIMENTAL_EQ_SSE_THREADED
-
-void EqualizationDialog::OnProcessingRadio(wxCommandEvent & event)
-{
-   int testEvent=event.GetId();
-   switch(testEvent)
-   {
-   case defaultMathRadioID: EffectEqualization48x::SetMathPath(MATH_FUNCTION_ORIGINAL);
-      break;
-   case sSERadioID: EffectEqualization48x::SetMathPath(MATH_FUNCTION_SSE);
-      break;
-   case sSEThreadedRadioID: EffectEqualization48x::SetMathPath(MATH_FUNCTION_THREADED | MATH_FUNCTION_SSE);
-      break;
-   case aVXRadioID: testEvent=2;
-      break;
-   case aVXThreadedRadioID: testEvent=2;
-      break;
-   }
-
-};
-
-void EqualizationDialog::OnBench( wxCommandEvent & event)
-{
-   m_pEffect->mBench=true;
-   OnOk(event);
-}
-
-#endif
 
 void EditCurvesDialog::OnOK(wxCommandEvent & WXUNUSED(event))
 {

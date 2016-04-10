@@ -125,9 +125,10 @@ bool TimeEditor::IsAcceptedKey(wxKeyEvent &event)
    return false;
 }
 
+// Clone is required by wxwidgets; implemented via copy constructor
 wxGridCellEditor *TimeEditor::Clone() const
 {
-   return new TimeEditor(mFormat, mRate);
+   return safenew TimeEditor(mFormat, mRate);
 }
 
 wxString TimeEditor::GetValue() const
@@ -246,9 +247,10 @@ wxSize TimeRenderer::GetBestSize(wxGrid &grid,
    return sz;
 }
 
+// Clone is required by wxwidgets; implemented via copy constructor
 wxGridCellRenderer *TimeRenderer::Clone() const
 {
-   return new TimeRenderer();
+   return safenew TimeRenderer();
 }
 
 ChoiceEditor::ChoiceEditor(size_t count, const wxString choices[])
@@ -272,9 +274,10 @@ ChoiceEditor::~ChoiceEditor()
       mHandler.DisconnectEvent(m_control);
 }
 
+// Clone is required by wxwidgets; implemented via copy constructor
 wxGridCellEditor *ChoiceEditor::Clone() const
 {
-   return new ChoiceEditor(mChoices);
+   return safenew ChoiceEditor(mChoices);
 }
 
 void ChoiceEditor::Create(wxWindow* parent, wxWindowID id, wxEvtHandler* evtHandler)

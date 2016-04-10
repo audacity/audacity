@@ -22,6 +22,9 @@
 // For compilers that support precompilation, includes "wx.h".
 #include <wx/wxprec.h>
 
+#include "../Audacity.h"
+#include "valnum.h"
+
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
@@ -36,7 +39,6 @@
 #include <wx/clipbrd.h>
 #include <wx/dataobj.h>
 
-#include "valnum.h"
 #include "numformatter.h"
 
 // ============================================================================
@@ -251,7 +253,8 @@ void NumValidatorBase::OnPaste(wxClipboardTextEvent& event)
    wxTextCtrl * const text = wxDynamicCast(m_validatorWindow, wxTextCtrl);
    const bool wasModified = text ? text->IsModified() : false;
 
-   control->ChangeValue(NormalizeString(val));
+   // Use SetValue because effect still needs EVT_TEXT (bug 1357)
+   control->SetValue(NormalizeString(val));
 
    if ( wasModified )
    {

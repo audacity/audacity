@@ -29,9 +29,9 @@
 #define TIMETRACK_MIN 0.01
 #define TIMETRACK_MAX 10.0
 
-TimeTrack *TrackFactory::NewTimeTrack()
+std::unique_ptr<TimeTrack> TrackFactory::NewTimeTrack()
 {
-   return new TimeTrack(mDirManager, mZoomInfo);
+   return std::make_unique<TimeTrack>(mDirManager, mZoomInfo);
 }
 
 TimeTrack::TimeTrack(DirManager *projDirManager, const ZoomInfo *zoomInfo):
@@ -109,9 +109,9 @@ TimeTrack::~TimeTrack()
    delete mRuler;
 }
 
-Track *TimeTrack::Duplicate() const
+Track::Holder TimeTrack::Duplicate() const
 {
-   return new TimeTrack(*this);
+   return std::make_unique<TimeTrack>(*this);
 }
 
 bool TimeTrack::GetInterpolateLog() const

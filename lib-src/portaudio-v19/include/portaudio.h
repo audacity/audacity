@@ -1,7 +1,7 @@
 #ifndef PORTAUDIO_H
 #define PORTAUDIO_H
 /*
- * $Id: portaudio.h 1859 2012-09-01 00:10:13Z philburk $
+ * $Id: portaudio.h 1953 2015-04-10 04:00:09Z philburk $
  * PortAudio Portable Real-Time Audio Library
  * PortAudio API Header File
  * Latest version available at: http://www.portaudio.com/
@@ -50,18 +50,52 @@ extern "C"
 {
 #endif /* __cplusplus */
 
- 
-/** Retrieve the release number of the currently running PortAudio build,
- eg 1900.
-*/
+/** Retrieve the release number of the currently running PortAudio build.
+ * For example, for version "19.5.1" this will return 0x00130501.
+ */
 int Pa_GetVersion( void );
 
-
 /** Retrieve a textual description of the current PortAudio build,
- eg "PortAudio V19-devel 13 October 2002".
-*/
+ * eg "PortAudio V19.5.0-devel, revision 1952M".
+ * The format of the text may change so do not try to parse the returned string.
+ * @deprecated use PaVersionInfo() instead
+ */
 const char* Pa_GetVersionText( void );
 
+/**
+ * Generate a packed integer version number in the same format used
+ * by Pa_GetVersion(). Use this to compare a specified version number with 
+ * the currently running version. For example:
+ *
+ * if (Pa_GetVersion() < paMakeVersionNumber(19,5,1)) {}
+ */
+#define paMakeVersionNumber(major, minor, subminor) \
+    (((major)&0xFF)<<16 | ((minor)&0xFF)<<8 | ((subminor)&0xFF))
+
+
+/**
+ * A structure containing the components of the version numbers.
+ */
+typedef struct PaVersionInfo {
+    int versionMajor;
+    int versionMinor;
+    int versionSubMinor;
+    /**
+     * This is currently the SVN revision but may change in the future.
+     * The versionControlRevision is updated by running a script before compiling code.
+     * If the update does not occur then this value may be less 
+     * than the actual SVN revision number.
+     */
+    const char *versionControlRevision;
+    /** Version as a string, for example "PortAudio V19.5.0-devel, revision 1952M" */
+    const char *versionText;
+} PaVersionInfo;
+    
+/**
+ * The structure that this points to is statically allocated.
+ * Do not attempt to free it or modify it.
+ */
+const PaVersionInfo* Pa_GetVersionInfo();
 
 /** Error codes returned by PortAudio functions.
  Note that with the exception of paNoError, all PaErrorCodes are negative.

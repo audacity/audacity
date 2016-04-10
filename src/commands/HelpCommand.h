@@ -27,14 +27,14 @@ class HelpCommandType final : public CommandType
 public:
    wxString BuildName() override;
    void BuildSignature(CommandSignature &signature) override;
-   Command *Create(CommandOutputTarget *target) override;
+   CommandHolder Create(std::unique_ptr<CommandOutputTarget> &&target) override;
 };
 
 class HelpCommand final : public CommandImplementation
 {
 public:
-   HelpCommand(HelpCommandType &type, CommandOutputTarget *target)
-      : CommandImplementation(type, target) { }
+   HelpCommand(HelpCommandType &type, std::unique_ptr<CommandOutputTarget> &&target)
+      : CommandImplementation(type, std::move(target)) { }
    bool Apply(CommandExecutionContext context) override;
 };
 

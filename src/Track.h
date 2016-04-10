@@ -13,7 +13,9 @@
 
 #include "Audacity.h"
 
+#include "MemoryX.h"
 #include <vector>
+#include <list>
 #include <wx/dynarray.h>
 #include <wx/event.h>
 #include <wx/gdicmn.h>
@@ -34,6 +36,7 @@ class Track;
 class LabelTrack;
 class TimeTrack;
 class WaveTrack;
+class NoteTrack;
 class AudacityProject;
 class ZoomInfo;
 
@@ -44,25 +47,42 @@ class WaveTrackConstArray : public std::vector < const WaveTrack* > {
 public:
    WaveTrackConstArray() {}
    // I'd like to use an inherited constructor, but that's not here yet in MSVC compiler...
+#ifdef __AUDACITY_OLD_STD__
+   WaveTrackConstArray
+      (std::initializer_list<value_type> tracks) 
+   {
+      reserve(tracks.size());
+      for (const auto &track : tracks)
+         push_back(track);
+   }
+#else
    WaveTrackConstArray
       (std::initializer_list<value_type> tracks) : std::vector<value_type>(tracks) {}
+#endif
 };
+
+using NoteTrackArray  = std::vector < NoteTrack* >;
 
 #if defined(USE_MIDI)
 class NoteTrack;
-WX_DEFINE_USER_EXPORTED_ARRAY(NoteTrack*, NoteTrackArray, class AUDACITY_DLL_API);
 #endif
 
 class TrackList;
-struct TrackListNode;
+
+using ListOfTracks = std::list<movable_ptr<Track>>;
+
+using TrackNodePointer = ListOfTracks::iterator;
 
 class AUDACITY_DLL_API Track /* not final */ : public XMLTagHandler
 {
+   friend class TrackList;
+   friend class TrackListIterator;
+   friend class SyncLockedTracksIterator;
 
  // To be TrackDisplay
  protected:
    TrackList     *mList;
-   TrackListNode *mNode;
+   TrackNodePointer mNode{};
    int            mIndex;
    int            mY;
    int            mHeight;
@@ -111,8 +131,9 @@ class AUDACITY_DLL_API Track /* not final */ : public XMLTagHandler
 #endif
    Track *GetLink() const;
 
-   const TrackListNode *GetNode() const;
-   void SetOwner(TrackList *list, TrackListNode *node);
+ private:
+   TrackNodePointer GetNode() const;
+   void SetOwner(TrackList *list, TrackNodePointer node);
 
  // Keep in Track
 
@@ -154,7 +175,9 @@ class AUDACITY_DLL_API Track /* not final */ : public XMLTagHandler
    virtual ~ Track();
 
    void Init(const Track &orig);
-   virtual Track *Duplicate() const = 0;
+
+   using Holder = std::unique_ptr<Track>;
+   virtual Holder Duplicate() const = 0;
 
    // Called when this track is merged to stereo with another, and should
    // take on some paramaters of its partner.
@@ -189,9 +212,16 @@ class AUDACITY_DLL_API Track /* not final */ : public XMLTagHandler
    // separate from the Track.
    DirManager* GetDirManager() const { return mDirManager; }
 
-   virtual bool Cut  (double WXUNUSED(t0), double WXUNUSED(t1), Track ** WXUNUSED(dest)) {return false;}
-   virtual bool Copy (double WXUNUSED(t0), double WXUNUSED(t1), Track ** WXUNUSED(dest)) const {return false;}
+   // Create a new track and modify this track (or return null for failure)
+   virtual Holder Cut(double WXUNUSED(t0), double WXUNUSED(t1)) { return{}; }
+
+   // Create a new track and don't modify this track (or return null for failure)
+   virtual Holder Copy(double WXUNUSED(t0), double WXUNUSED(t1)) const { return{}; }
+
+   // Return true for success
    virtual bool Clear(double WXUNUSED(t0), double WXUNUSED(t1)) {return false;}
+
+   // Return true for success
    virtual bool Paste(double WXUNUSED(t), const Track * WXUNUSED(src)) {return false;}
 
    // This can be used to adjust a sync-lock selected track when the selection
@@ -217,13 +247,6 @@ class AUDACITY_DLL_API Track /* not final */ : public XMLTagHandler
    bool IsSyncLockSelected() const;
 };
 
-struct TrackListNode
-{
-   Track *t;
-   TrackListNode *next;
-   TrackListNode *prev;
-};
-
 class AUDACITY_DLL_API TrackListIterator /* not final */
 {
  public:
@@ -237,12 +260,13 @@ class AUDACITY_DLL_API TrackListIterator /* not final */
    virtual Track *Prev(bool skiplinked = false);
    virtual Track *Last(bool skiplinked = false);
 
-   Track *ReplaceCurrent(Track *t);                // returns original
-   Track *RemoveCurrent(bool deletetrack = false); // returns next
+   Track *RemoveCurrent(); // deletes track, returns next
 
  protected:
+   friend TrackList;
+
    TrackList *l;
-   TrackListNode *cur;
+   TrackNodePointer cur{};
 };
 
 class AUDACITY_DLL_API TrackListConstIterator
@@ -377,30 +401,54 @@ DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_TRACKLIST_RESIZED, -1);
 // track that was added.
 DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_TRACKLIST_UPDATED, -1);
 
-class AUDACITY_DLL_API TrackList final : public wxEvtHandler
+class TrackList final : public wxEvtHandler, public ListOfTracks
 {
  public:
    // Create an empty TrackList
-   TrackList(bool destructorDeletesTracks = false);
+   TrackList();
+
+   // Allow copy -- a deep copy that duplicates all tracks
+   TrackList(const TrackList &that);
+   TrackList &operator= (const TrackList &that);
+
+   // Allow move
+   TrackList(TrackList &&that);
+   TrackList& operator= (TrackList&&);
+
+   // Move is defined in terms of Swap
+   void Swap(TrackList &that);
+
 
    // Destructor
    virtual ~TrackList();
 
    friend class Track;
    friend class TrackListIterator;
+   friend class SyncLockedTracksIterator;
+
+   /// For use in sorting:  assume each iterator points into this list, no duplications
+   void Permute(const std::vector<TrackNodePointer> &permutation);
 
    /// Add this Track or all children of this TrackList.
-   void Add(Track * t);
-   void AddToHead(Track * t);
+   template<typename TrackKind>
+   Track *Add(std::unique_ptr<TrackKind> &&t);
+   template<typename TrackKind>
+   Track *AddToHead(std::unique_ptr<TrackKind> &&t);
 
-   /// Replace first track with second track
-   void Replace(Track * t, Track * with, bool deletetrack = false);
+#ifdef __AUDACITY_OLD_STD__
+   template<typename TrackKind>
+   Track *Add(std::shared_ptr<TrackKind> &&t);
+#endif
+
+   /// Replace first track with second track, give back a holder
+   value_type Replace(Track * t, value_type &&with);
 
    /// Remove this Track or all children of this TrackList.
-   void Remove(Track * t, bool deletetrack = false);
+   /// Return an iterator to what followed the removed track.
+   TrackNodePointer Remove(Track *t);
 
    /// Make the list empty
-   void Clear(bool deleteTracks = false);
+   void Clear();
 
    /** Select a track, and if it is linked to another track, select it, too. */
    void Select(Track * t, bool selected = true);
@@ -461,17 +509,21 @@ class AUDACITY_DLL_API TrackList final : public wxEvtHandler
    bool Save(wxTextFile * out, bool overwrite) override;
 #endif
 
- private:
-   void RecalcPositions(const TrackListNode *node);
-   void UpdatedEvent(const TrackListNode *node);
-   void ResizedEvent(const TrackListNode *node);
+private:
+   bool isNull(TrackNodePointer p) const
+   { return p == end(); }
+   void setNull(TrackNodePointer &p)
+   { p = end(); }
+   bool hasPrev(TrackNodePointer p) const
+   { return p != begin(); }
 
-   void Swap(TrackListNode * s1, TrackListNode * s2);
+   void DoAssign(const TrackList &that);
+       
+   void RecalcPositions(TrackNodePointer node);
+   void UpdatedEvent(TrackNodePointer node);
+   void ResizedEvent(TrackNodePointer node);
 
-   TrackListNode *head;
-   TrackListNode *tail;
-
-   bool mDestructorDeletesTracks;
+   void SwapNodes(TrackNodePointer s1, TrackNodePointer s2);
 };
 
 class AUDACITY_DLL_API TrackFactory
@@ -491,13 +543,13 @@ class AUDACITY_DLL_API TrackFactory
  public:
    // These methods are defined in WaveTrack.cpp, NoteTrack.cpp,
    // LabelTrack.cpp, and TimeTrack.cpp respectively
-   WaveTrack* DuplicateWaveTrack(WaveTrack &orig);
-   WaveTrack *NewWaveTrack(sampleFormat format = (sampleFormat)0,
+   std::unique_ptr<WaveTrack> DuplicateWaveTrack(WaveTrack &orig);
+   std::unique_ptr<WaveTrack> NewWaveTrack(sampleFormat format = (sampleFormat)0,
                            double rate = 0);
-   LabelTrack *NewLabelTrack();
-   TimeTrack *NewTimeTrack();
+   std::unique_ptr<LabelTrack> NewLabelTrack();
+   std::unique_ptr<TimeTrack> NewTimeTrack();
 #if defined(USE_MIDI)
-   NoteTrack *NewNoteTrack();
+   std::unique_ptr<NoteTrack> NewNoteTrack();
 #endif
 };
 

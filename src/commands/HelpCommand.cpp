@@ -13,6 +13,7 @@
 
 *//*******************************************************************/
 
+#include "../Audacity.h"
 #include "HelpCommand.h"
 #include "CommandDirectory.h"
 #include <wx/string.h>
@@ -24,13 +25,13 @@ wxString HelpCommandType::BuildName()
 
 void HelpCommandType::BuildSignature(CommandSignature &signature)
 {
-   Validator *commandNameValidator = new Validator();
+   Validator *commandNameValidator = new DefaultValidator();
    signature.AddParameter(wxT("CommandName"), wxT(""), commandNameValidator);
 }
 
-Command *HelpCommandType::Create(CommandOutputTarget *target)
+CommandHolder HelpCommandType::Create(std::unique_ptr<CommandOutputTarget> &&target)
 {
-   return new HelpCommand(*this, target);
+   return std::make_shared<HelpCommand>(*this, std::move(target));
 }
 
 bool HelpCommand::Apply(CommandExecutionContext WXUNUSED(context))

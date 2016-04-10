@@ -1054,12 +1054,16 @@ PluginDescriptor::PluginDescriptor()
 
 PluginDescriptor::~PluginDescriptor()
 {
+   DeleteInstance();
+}
+
+void PluginDescriptor::DeleteInstance()
+{
    if (mInstance)
    {
       ModuleManager::Get().DeleteInstance(GetProviderID(), mInstance);
+      mInstance = nullptr;
    }
-
-   return;
 }
 
 bool PluginDescriptor::IsInstantiated() const
@@ -1086,6 +1090,12 @@ IdentInterface *PluginDescriptor::GetInstance()
 
 void PluginDescriptor::SetInstance(IdentInterface *instance)
 {
+   if (mInstance && mInstance != instance)
+   {
+      // Be sure not to leak resources!!
+      DeleteInstance();
+   }
+
    mInstance = instance;
 
    return;
@@ -1345,6 +1355,7 @@ void PluginDescriptor::SetImporterExtensions(const wxArrayString & extensions)
 #define KEY_EFFECTTYPE_ANALYZE         wxT("Analyze")
 #define KEY_EFFECTTYPE_GENERATE        wxT("Generate")
 #define KEY_EFFECTTYPE_PROCESS         wxT("Process")
+#define KEY_EFFECTTYPE_HIDDEN          wxT("Hidden")
 #define KEY_IMPORTERIDENT              wxT("ImporterIdent")
 #define KEY_IMPORTERFILTER             wxT("ImporterFilter")
 #define KEY_IMPORTEREXTENSIONS         wxT("ImporterExtensions")
@@ -1655,7 +1666,7 @@ bool PluginManager::RemovePrivateConfig(const PluginID & ID, const wxString & gr
 // ============================================================================
 
 // The one and only PluginManager
-PluginManager *PluginManager::mInstance = NULL;
+std::unique_ptr<PluginManager> PluginManager::mInstance{};
 
 // ----------------------------------------------------------------------------
 // Creation/Destruction
@@ -1668,6 +1679,9 @@ PluginManager::PluginManager()
 
 PluginManager::~PluginManager()
 {
+   // Ensure termination (harmless if already done)
+   Terminate();
+
    if (mSettings)
    {
       delete mSettings;
@@ -1689,18 +1703,10 @@ PluginManager & PluginManager::Get()
 {
    if (!mInstance)
    {
-      mInstance = new PluginManager();
+      mInstance.reset(safenew PluginManager);
    }
 
    return *mInstance;
-}
-
-void PluginManager::Destroy()
-{
-   if (mInstance)
-   {
-      delete mInstance;
-   }
 }
 
 void PluginManager::Initialize()
@@ -1909,6 +1915,10 @@ void PluginManager::LoadGroup(PluginType type)
             {
                plug.SetEffectType(EffectTypeProcess);
             }
+            else if (strVal.IsSameAs(KEY_EFFECTTYPE_HIDDEN))
+            {
+               plug.SetEffectType(EffectTypeHidden);
+            }
             else
             {
                continue;
@@ -2086,6 +2096,10 @@ void PluginManager::SaveGroup(PluginType type)
             else if (etype == EffectTypeProcess)
             {
                stype = KEY_EFFECTTYPE_PROCESS;
+            }
+            else if (etype == EffectTypeHidden)
+            {
+               stype = KEY_EFFECTTYPE_HIDDEN;
             }
             mRegistry->Write(KEY_EFFECTTYPE, stype);
             mRegistry->Write(KEY_EFFECTFAMILY, plug.GetEffectFamily(false));

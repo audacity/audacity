@@ -220,11 +220,11 @@ private:
    double            mProgressTot;
    double            mScale;
 
-   samplePtr         mCurBuffer[2];
+   SampleBuffer      mCurBuffer[2];
    sampleCount       mCurBufferStart[2];
    sampleCount       mCurBufferLen[2];
 
-   WaveTrack         *mOutputTrack[2];
+   std::unique_ptr<WaveTrack> mOutputTrack[2];
 
    wxArrayString     mCategories;
 

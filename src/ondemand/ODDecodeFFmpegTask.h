@@ -10,6 +10,7 @@
 ******************************************************************/
 
 #include "../Experimental.h"
+#include "../MemoryX.h"
 
 #ifdef EXPERIMENTAL_OD_FFMPEG
 
@@ -20,18 +21,23 @@
 #include "ODDecodeTask.h"
 #include "ODTaskThread.h"
 
+struct FFmpegContext;
 class ODFileDecoder;
 class WaveTrack;
 /// A class representing a modular task to be used with the On-Demand structures.
 class ODDecodeFFmpegTask final : public ODDecodeTask
 {
- public:
+public:
+   using Channels = std::vector < WaveTrack* >;
+   using Streams = std::vector < Channels >;
+
+   static Streams FromList(const std::list<TrackHolders> &channels);
 
    /// Constructs an ODTask
-   ODDecodeFFmpegTask(void* scs,int numStreams, WaveTrack*** channels, void* formatContext, int streamIndex);
+   ODDecodeFFmpegTask(const ScsPtr &scs, Streams &&channels, const std::shared_ptr<FFmpegContext> &context, int streamIndex);
    virtual ~ODDecodeFFmpegTask();
 
-   ODTask* Clone() override;
+   std::unique_ptr<ODTask> Clone() const override;
    ///Creates an ODFileDecoder that decodes a file of filetype the subclass handles.
    ODFileDecoder* CreateFileDecoder(const wxString & fileName) override;
 
@@ -39,11 +45,12 @@ class ODDecodeFFmpegTask final : public ODDecodeTask
    ///Subclasses should override to return respective type.
    unsigned int GetODType() override {return eODFFMPEG;}
 
- protected:
-   WaveTrack*** mChannels;
-   int   mNumStreams;
-   void* mScs;
-   void* mFormatContext;
+protected:
+   // non-owning pointers to WaveTracks:
+   Streams mChannels;
+
+   ScsPtr mScs;
+   std::shared_ptr<FFmpegContext> mContext;
    int   mStreamIndex;
 };
 #endif //__ODDECODEFFMPEGTASK__

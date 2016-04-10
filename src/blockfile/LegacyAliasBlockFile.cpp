@@ -8,12 +8,14 @@
 
 **********************************************************************/
 
+#include "../Audacity.h"
+#include "LegacyAliasBlockFile.h"
+
 #include <wx/utils.h>
 #include <wx/wxchar.h>
 
 #include <sndfile.h>
 
-#include "LegacyAliasBlockFile.h"
 #include "LegacyBlockFile.h"
 #include "../FileFormats.h"
 #include "../Internat.h"

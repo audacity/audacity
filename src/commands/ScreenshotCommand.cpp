@@ -295,7 +295,7 @@ void ScreenshotCommandType::BuildSignature(CommandSignature &signature)
    backgroundValidator->AddOption(wxT("White"));
    backgroundValidator->AddOption(wxT("None"));
 
-   Validator *filePathValidator = new Validator();
+   Validator *filePathValidator = new DefaultValidator();
 
    signature.AddParameter(wxT("CaptureMode"),
                           wxT("fullscreen"),
@@ -306,9 +306,9 @@ void ScreenshotCommandType::BuildSignature(CommandSignature &signature)
    signature.AddParameter(wxT("FilePath"), wxT(""), filePathValidator);
 }
 
-Command *ScreenshotCommandType::Create(CommandOutputTarget *target)
+CommandHolder ScreenshotCommandType::Create(std::unique_ptr<CommandOutputTarget> &&target)
 {
-   return new ScreenshotCommand(*this, target);
+   return std::make_shared<ScreenshotCommand>(*this, std::move(target));
 }
 
 wxString ScreenshotCommand::MakeFileName(const wxString &path, const wxString &basename)

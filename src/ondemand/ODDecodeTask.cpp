@@ -16,6 +16,7 @@ updating the ODPCMAliasBlockFile and the GUI of the newly available data.
 
 *//*******************************************************************/
 
+#include "../Audacity.h"
 #include "ODDecodeTask.h"
 #include "../blockfile/ODDecodeBlockFile.h"
 #include "../Sequence.h"
@@ -268,7 +269,7 @@ ODFileDecoder* ODDecodeTask::GetOrCreateMatchingFileDecoder(ODDecodeBlockFile* b
       if(mDecoders[i]->GetFileName()==blockFile->GetAudioFileName().GetFullPath() &&
          GetODType() == blockFile->GetDecodeType() )
       {
-         ret = mDecoders[i];
+         ret = mDecoders[i].get();
          break;
       }
    }

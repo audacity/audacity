@@ -138,7 +138,7 @@ class ODPCMAliasBlockFile final : public PCMAliasBlockFile
 protected:
    void WriteSummary() override;
    void *CalcSummary(samplePtr buffer, sampleCount len,
-      sampleFormat format) override;
+      sampleFormat format, ArrayOf<char> &cleanup) override;
 
   private:
    //Thread-safe versions

@@ -18,6 +18,9 @@
 *//******************************************************************/
 
 
+#include "../Audacity.h"
+#include "LegacyBlockFile.h"
+
 #include <float.h>
 #include <math.h>
 
@@ -27,7 +30,6 @@
 #include <wx/utils.h>
 #include <wx/log.h>
 
-#include "LegacyBlockFile.h"
 #include "../MemoryX.h"
 #include "../FileFormats.h"
 #include "../Internat.h"

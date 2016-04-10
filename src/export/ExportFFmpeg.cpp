@@ -95,7 +95,7 @@ class ExportFFmpeg final : public ExportPlugin
 public:
 
    ExportFFmpeg();
-   void Destroy();
+   ~ExportFFmpeg() override;
 
    /// Callback, called from GetFilename
    bool CheckFileName(wxFileName &filename, int format = 0);
@@ -182,7 +182,7 @@ ExportFFmpeg::ExportFFmpeg()
    mSampleRate = 0;
    mSupportsUTF8 = true;
 
-   PickFFmpegLibs(); // DropFFmpegLibs() call is in ExportFFmpeg::Destroy()
+   PickFFmpegLibs(); // DropFFmpegLibs() call is in ExportFFmpeg destructor
    int avfver = FFmpegLibsInst->ValidLibsLoaded() ? avformat_version() : 0;
    int newfmt;
    // Adds export types from the export type list
@@ -235,10 +235,9 @@ ExportFFmpeg::ExportFFmpeg()
    }
 }
 
-void ExportFFmpeg::Destroy()
+ExportFFmpeg::~ExportFFmpeg()
 {
    DropFFmpegLibs();
-   delete this;
 }
 
 bool ExportFFmpeg::CheckFileName(wxFileName & WXUNUSED(filename), int WXUNUSED(format))
@@ -832,7 +831,7 @@ int ExportFFmpeg::Export(AudacityProject *project,
    int pcmBufferSize = 1024;
    const WaveTrackConstArray waveTracks =
       tracks->GetWaveTrackConstArray(selectionOnly, false);
-   Mixer *mixer = CreateMixer(waveTracks,
+   auto mixer = CreateMixer(waveTracks,
       tracks->GetTimeTrack(),
       t0, t1,
       channels, pcmBufferSize, true,
@@ -858,8 +857,6 @@ int ExportFFmpeg::Export(AudacityProject *project,
          updateResult = progress.Update(mixer->MixGetCurrentTime() - t0, t1 - t0);
       }
    }
-
-   delete mixer;
 
    Finalize();
 
@@ -1014,9 +1011,9 @@ wxWindow *ExportFFmpeg::OptionsCreate(wxWindow *parent, int format)
    return ExportPlugin::OptionsCreate(parent, format);
 }
 
-ExportPlugin *New_ExportFFmpeg()
+movable_ptr<ExportPlugin> New_ExportFFmpeg()
 {
-   return new ExportFFmpeg();
+   return make_movable<ExportFFmpeg>();
 }
 
 #endif

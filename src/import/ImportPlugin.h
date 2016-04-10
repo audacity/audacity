@@ -64,6 +64,8 @@ but little else.
 
 #include "../widgets/ProgressDialog.h"
 
+#include "ImportRaw.h" // defines TrackHolders
+
 class TrackFactory;
 class Track;
 class Tags;
@@ -101,7 +103,7 @@ public:
    // Open the given file, returning true if it is in a recognized
    // format, false otherwise.  This puts the importer into the open
    // state.
-   virtual ImportFileHandle *Open(const wxString &Filename) = 0;
+   virtual std::unique_ptr<ImportFileHandle> Open(const wxString &Filename) = 0;
 
    virtual ~ImportPlugin() { }
 
@@ -152,14 +154,14 @@ public:
    // do the actual import, creating whatever tracks are necessary with
    // the TrackFactory and calling the progress callback every iteration
    // through the importing loop
-   virtual int Import(TrackFactory *trackFactory, Track ***outTracks,
-                      int *outNumTracks, Tags *tags) = 0;
+   virtual int Import(TrackFactory *trackFactory, TrackHolders &outTracks,
+                      Tags *tags) = 0;
 
    // Return number of elements in stream list
    virtual wxInt32 GetStreamCount() = 0;
 
    // Return stream descriptions list
-   virtual wxArrayString *GetStreamInfo() = 0;
+   virtual const wxArrayString &GetStreamInfo() = 0;
 
    // Set stream "import/don't import" flag
    virtual void SetStreamUsage(wxInt32 StreamID, bool Use) = 0;

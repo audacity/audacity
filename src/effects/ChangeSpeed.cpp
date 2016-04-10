@@ -475,7 +475,7 @@ bool EffectChangeSpeed::ProcessOne(WaveTrack * track,
    // initialization, per examples of Mixer::Mixer and
    // EffectSoundTouch::ProcessOne
 
-   WaveTrack * outputTrack = mFactory->NewWaveTrack(track->GetSampleFormat(),
+   auto outputTrack = mFactory->NewWaveTrack(track->GetSampleFormat(),
                                                     track->GetRate());
 
    //Get the length of the selection (as double). len is
@@ -552,14 +552,11 @@ bool EffectChangeSpeed::ProcessOne(WaveTrack * track,
    if (bResult)
    {
       SetTimeWarper(new LinearTimeWarper(mCurT0, mCurT0, mCurT1, mCurT0 + newLength));
-      bResult = track->ClearAndPaste(mCurT0, mCurT1, outputTrack, true, false, GetTimeWarper());
+      bResult = track->ClearAndPaste(mCurT0, mCurT1, outputTrack.get(), true, false, GetTimeWarper());
    }
 
    if (newLength > mMaxNewLength)
       mMaxNewLength = newLength;
-
-   // Delete the outputTrack now that its data is inserted in place
-   delete outputTrack;
 
    return bResult;
 }

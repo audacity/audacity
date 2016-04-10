@@ -24,14 +24,14 @@ class GetTrackInfoCommandType final : public CommandType
 public:
    wxString BuildName() override;
    void BuildSignature(CommandSignature &signature) override;
-   Command *Create(CommandOutputTarget *target) override;
+   CommandHolder Create(std::unique_ptr<CommandOutputTarget> &&target) override;
 };
 
 class GetTrackInfoCommand final : public CommandImplementation
 {
 public:
-   GetTrackInfoCommand(CommandType &type, CommandOutputTarget *target)
-      : CommandImplementation(type, target)
+   GetTrackInfoCommand(CommandType &type, std::unique_ptr<CommandOutputTarget> &&target)
+      : CommandImplementation(type, std::move(target))
    { }
    virtual ~GetTrackInfoCommand()
    { }

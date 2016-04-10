@@ -1,5 +1,3 @@
-#ifdef EXPERIMENTAL_EQ_SSE_THREADED
-
 /**********************************************************************
 
 Audacity: A Digital Audio Editor
@@ -12,6 +10,9 @@ Intrinsics (SSE/AVX) and Threaded Equalization
 
 #ifndef __AUDACITY_EFFECT_EQUALIZATION48X__
 #define __AUDACITY_EFFECT_EQUALIZATION48X__
+
+#include "../Experimental.h"
+#ifdef EXPERIMENTAL_EQ_SSE_THREADED
 
 #ifdef __AVX_ENABLED
 #define __MAXBUFFERCOUNT 8

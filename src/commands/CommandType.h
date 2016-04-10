@@ -17,8 +17,10 @@
 #define __COMMANDTYPE__
 
 #include "CommandMisc.h"
+#include "../MemoryX.h"
 
 class Command;
+using CommandHolder = std::shared_ptr<Command>;
 class CommandOutputTarget;
 class CommandSignature;
 class wxString;
@@ -47,7 +49,7 @@ public:
    virtual void BuildSignature(CommandSignature &signature) = 0;
 
    // Create a command instance with the specified output target
-   virtual Command *Create(CommandOutputTarget *target) = 0;
+   virtual CommandHolder Create(std::unique_ptr<CommandOutputTarget> &&target) = 0;
 };
 
 #endif /* End of include guard: __COMMANDTYPE__ */

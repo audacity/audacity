@@ -75,7 +75,9 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
    WaveTrack(const WaveTrack &orig);
 
    void Init(const WaveTrack &orig);
-   virtual Track *Duplicate() const override;
+
+   Track::Holder Duplicate() const override;
+
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
    void VirtualStereoInit();
 #endif
@@ -87,6 +89,7 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
 #endif
 
    typedef WaveTrackLocation Location;
+   using Holder = std::unique_ptr<WaveTrack>;
 
    virtual ~WaveTrack();
    double GetOffset() const override;
@@ -153,9 +156,9 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
    // High-level editing
    //
 
-   bool Cut(double t0, double t1, Track **dest) override;
-   bool Copy(double t0, double t1, Track **dest) const override;
-   bool CopyNonconst(double t0, double t1, Track **dest) /* not override */;
+   Track::Holder Cut(double t0, double t1) override;
+   Track::Holder Copy(double t0, double t1) const override;
+   Track::Holder CopyNonconst(double t0, double t1) /* not override */;
    bool Clear(double t0, double t1) override;
    bool Paste(double t0, const Track *src) override;
    bool ClearAndPaste(double t0, double t1,
@@ -169,10 +172,10 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
 
    bool SplitAt(double t) /* not override */;
    bool Split(double t0, double t1) /* not override */;
-   // bool CutAndAddCutLine(double t0, double t1, Track **dest) /* not override */;
+   // Track::Holder CutAndAddCutLine(double t0, double t1) /* not override */;
    bool ClearAndAddCutLine(double t0, double t1) /* not override */;
 
-   bool SplitCut(double t0, double t1, Track **dest) /* not override */;
+   Track::Holder SplitCut(double t0, double t1) /* not override */;
    bool SplitDelete(double t0, double t1) /* not override */;
    bool Join(double t0, double t1) /* not override */;
    bool Disjoin(double t0, double t1) /* not override */;

@@ -1291,9 +1291,9 @@ bool EffectNoiseReduction::Worker::ProcessOne
 
    StartNewTrack();
 
-   std::unique_ptr<WaveTrack> outputTrack(
-      mDoProfile ? NULL
-      : factory.NewWaveTrack(track->GetSampleFormat(), track->GetRate()));
+   WaveTrack::Holder outputTrack;
+   if(!mDoProfile)
+      outputTrack = factory.NewWaveTrack(track->GetSampleFormat(), track->GetRate());
 
    sampleCount bufferSize = track->GetMaxBlockSize();
    FloatVector buffer(bufferSize);

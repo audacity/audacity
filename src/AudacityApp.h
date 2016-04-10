@@ -16,6 +16,7 @@
 
 #include "Audacity.h"
 
+#include "MemoryX.h"
 #include <wx/app.h>
 #include <wx/cmdline.h>
 #include <wx/dir.h>
@@ -90,6 +91,7 @@ enum
    IsSyncLockedFlag       = 0x08000000,  //awd
    IsRealtimeNotActiveFlag= 0x10000000,  //lll
    CaptureNotBusyFlag     = 0x20000000,
+   CanStopAudioStreamFlag = 0x40000000,
 
    NoFlagsSpecifed        = 0xffffffff
 };
@@ -99,6 +101,7 @@ class BlockFile;
 class AudacityApp final : public wxApp {
  public:
    AudacityApp();
+   ~AudacityApp();
    bool OnInit(void) override;
    int OnExit(void) override;
    void OnFatalException() override;
@@ -216,7 +219,7 @@ class AudacityApp final : public wxApp {
    bool InitTempDir();
    bool CreateSingleInstanceChecker(const wxString &dir);
 
-   wxCmdLineParser *ParseCommandLine();
+   std::unique_ptr<wxCmdLineParser> ParseCommandLine();
 
    bool mWindowRectAlreadySaved;
 

@@ -45,8 +45,8 @@ namespace portaudio
 		HostApiIterator &operator--();
 		HostApiIterator operator--(int);
 
-		bool operator==(const HostApiIterator &rhs);
-		bool operator!=(const HostApiIterator &rhs);
+		bool operator==(const HostApiIterator &rhs) const;
+		bool operator!=(const HostApiIterator &rhs) const;
 
 	private:
 		friend class System;

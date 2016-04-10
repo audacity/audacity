@@ -64,6 +64,9 @@ class ControlToolBar final : public ToolBar {
 
    bool IsRecordDown();
 
+   // A project is only allowed to stop an audio stream that it owns.
+   bool CanStopAudioStream ();
+
    // Play currently selected region, or if nothing selected,
    // play from current cursor.
    void PlayCurrentRegion(bool looped = false, bool cutpreview = false);
