@@ -110,6 +110,10 @@ public:
    LWSlider * GainSlider(WaveTrack *t, bool captured = false) const;
    LWSlider * PanSlider(WaveTrack *t, bool captured = false) const;
 
+#ifdef EXPERIMENTAL_MIDI_OUT
+   LWSlider *GainSlider(int index) const;
+#endif
+
 private:
    TrackPanel * pParent;
    wxFont mFont;

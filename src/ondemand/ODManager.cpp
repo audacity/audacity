@@ -14,6 +14,7 @@ ODTask requests and internals.
 
 *//*******************************************************************/
 
+#include "../Audacity.h"
 #include "ODManager.h"
 #include "ODTask.h"
 #include "ODTaskThread.h"

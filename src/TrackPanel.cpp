@@ -5429,7 +5429,7 @@ void TrackPanel::HandleSliders(wxMouseEvent &event, bool pan)
                           UndoPush::CONSOLIDATE);
 #ifdef EXPERIMENTAL_MIDI_OUT
     } else {
-      MakeParentPushState(_("Moved velocity slider"), _("Velocity"), true);
+      MakeParentPushState(_("Moved velocity slider"), _("Velocity"), UndoPush::CONSOLIDATE);
     }
 #endif
       SetCapturedTrack( NULL );
@@ -10000,13 +10000,18 @@ void TrackInfo::DrawVelocitySlider(wxDC *dc, NoteTrack *t, wxRect rect) const
 {
     wxRect gainRect;
     int index = t->GetIndex();
-    EnsureSufficientSliders(index);
+
+    //EnsureSufficientSliders(index);
+
     GetGainRect(rect, gainRect);
     if (gainRect.y + gainRect.height < rect.y + rect.height - 19) {
-       mGains[index]->SetStyle(VEL_SLIDER);
+       auto &gain = mGain; // mGains[index];
+       gain->SetStyle(VEL_SLIDER);
        GainSlider(index)->Move(wxPoint(gainRect.x, gainRect.y));
        GainSlider(index)->Set(t->GetGain());
-       GainSlider(index)->OnPaint(*dc, t->GetSelected());
+       GainSlider(index)->OnPaint(*dc
+          // , t->GetSelected()
+       );
     }
 }
 #endif

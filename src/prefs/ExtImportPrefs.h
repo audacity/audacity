@@ -22,6 +22,7 @@
 #include "../import/ImportPlugin.h"
 
 class wxButton;
+class wxListCtrl;
 class wxListEvent;
 class ExtImportPrefs;
 class ShuttleGui;

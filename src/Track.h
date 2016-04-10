@@ -36,6 +36,7 @@ class Track;
 class LabelTrack;
 class TimeTrack;
 class WaveTrack;
+class NoteTrack;
 class AudacityProject;
 class ZoomInfo;
 
@@ -60,9 +61,10 @@ public:
 #endif
 };
 
+using NoteTrackArray  = std::vector < NoteTrack* >;
+
 #if defined(USE_MIDI)
 class NoteTrack;
-WX_DEFINE_USER_EXPORTED_ARRAY(NoteTrack*, NoteTrackArray, class AUDACITY_DLL_API);
 #endif
 
 class TrackList;

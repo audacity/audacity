@@ -246,7 +246,7 @@ public:
 
    ///! Called by Import.cpp
    ///\return array of strings - descriptions of the streams
-   wxArrayString *GetStreamInfo()
+   const wxArrayString &GetStreamInfo() override
    {
       return mStreamInfo;
    }
@@ -262,10 +262,11 @@ public:
 
 private:
 
+   std::shared_ptr<FFmpegContext> mContext; // An object that does proper IO shutdown in its destructor; may be shared with decoder task.
    AVFormatContext      *mFormatContext; //!< Format description, also contains metadata and some useful info
    int                   mNumStreams;    //!< mNumstreams is less or equal to mFormatContext->nb_streams
    ScsPtr                mScs;           //!< Points to array of pointers to stream contexts, which may be shared with a decoder task.
-   wxArrayString        *mStreamInfo;    //!< Array of stream descriptions. Length is mNumStreams
+   wxArrayString         mStreamInfo;    //!< Array of stream descriptions. Length is mNumStreams
 
    wxInt64               mProgressPos;   //!< Current timestamp, file position or whatever is used as first argument for Update()
    wxInt64               mProgressLen;   //!< Duration, total length or whatever is used as second argument for Update()
@@ -340,7 +341,6 @@ FFmpegImportFileHandle::FFmpegImportFileHandle(const wxString & name)
 {
    PickFFmpegLibs();
 
-   mStreamInfo = new wxArrayString();
    mFormatContext = NULL;
    mNumStreams = 0;
    mCancelled = false;
@@ -358,12 +358,20 @@ bool FFmpegImportFileHandle::Init()
 
    av_log_set_callback(av_log_wx_callback);
 
-   int err = ufile_fopen_input(&mFormatContext, mName);
-   if (err < 0)
+   int err;
    {
-      wxLogError(wxT("FFmpeg : av_open_input_file() failed for file %s"),mName.c_str());
-      return false;
+      std::unique_ptr<FFmpegContext> tempContext;
+      err = ufile_fopen_input(tempContext, mName);
+      if (err < 0)
+      {
+         wxLogError(wxT("FFmpeg : av_open_input_file() failed for file %s"), mName.c_str());
+         return false;
+      }
+      wxASSERT(tempContext.get());
+      // Move from unique to shared pointer
+      mContext.reset(tempContext.release());
    }
+   mFormatContext = mContext->ic_ptr;
 
    err = avformat_find_stream_info(mFormatContext, NULL);
    if (err < 0)
@@ -433,7 +441,7 @@ bool FFmpegImportFileHandle::InitCodecs()
             lang.FromUTF8(tag->value);
          }
          strinfo.Printf(_("Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"),sc->m_stream->id,codec->name,lang.c_str(),bitrate.c_str(),sc->m_stream->codec->channels, duration);
-         mStreamInfo->Add(strinfo);
+         mStreamInfo.Add(strinfo);
          mScs->get()[mNumStreams++] = std::move(sc);
       }
       //for video and unknown streams do nothing
@@ -573,7 +581,7 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
       for (const auto &stream : mChannels) {
          ++s;
          ODDecodeFFmpegTask* odTask =
-            new ODDecodeFFmpegTask(mScs, ODDecodeFFmpegTask::FromList(mChannels), mFormatContext, s);
+            new ODDecodeFFmpegTask(mScs, ODDecodeFFmpegTask::FromList(mChannels), mContext, s);
          odTask->CreateFileDecoder(mFilename);
 
          //each stream has different duration.  We need to know it if seeking is to be allowed.
@@ -852,23 +860,8 @@ void FFmpegImportFileHandle::GetMetadata(Tags *tags, const wxChar *tag, const ch
 
 FFmpegImportFileHandle::~FFmpegImportFileHandle()
 {
-#ifdef EXPERIMENTAL_OD_FFMPEG
-   //ODDecodeFFmpegTask takes ownership and deltes it there.
-   if(!mUsingOD)
-   {
-#endif
-   if (FFmpegLibsInst->ValidLibsLoaded())
-   {
-      if (mFormatContext) avformat_close_input(&mFormatContext);
-      av_log_set_callback(av_log_default_callback);
-   }
-
-#ifdef EXPERIMENTAL_OD_FFMPEG
-   }//mUsingOD
-#endif
-
-
-   delete mStreamInfo;
+   // Do this before unloading the libraries
+   mContext.reset();
 
    DropFFmpegLibs();
 }

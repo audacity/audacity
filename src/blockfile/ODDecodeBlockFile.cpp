@@ -16,8 +16,10 @@ The summary is eventually computed and written to a file in a background thread.
 
 *//*******************************************************************/
 
-#include <float.h>
+#include "../Audacity.h"
 #include "ODDecodeBlockFile.h"
+
+#include <float.h>
 
 #include <wx/utils.h>
 #include <wx/wxchar.h>

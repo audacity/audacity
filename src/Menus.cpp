@@ -5998,7 +5998,7 @@ class ASAProgress final : public SAProgress {
    long mTotalCells; // how many matrix cells?
    long mCellCount; // how many cells so far?
    long mPrevCellCount; // cell_count last reported with Update()
-   ProgressDialog *mProgress;
+   Maybe<ProgressDialog> mProgress;
    #ifdef COLLECT_TIMING_DATA
       FILE *mTimeFile;
       wxDateTime mStartTime;
@@ -6008,13 +6008,11 @@ class ASAProgress final : public SAProgress {
  public:
    ASAProgress() {
       smoothing = false;
-      mProgress = NULL;
       #ifdef COLLECT_TIMING_DATA
          mTimeFile = fopen("timing-data.txt", "w");
       #endif
    }
    ~ASAProgress() {
-      delete mProgress;
       #ifdef COLLECT_TIMING_DATA
          fclose(mTimeFile);
       #endif
@@ -6061,7 +6059,7 @@ class ASAProgress final : public SAProgress {
                     work[1], mFrames[1], is_audio[1]);
             fprintf(mTimeFile, "work2 = %g, work3 = %g\n", work2, work3);
          #endif
-         mProgress = new ProgressDialog(_("Synchronize MIDI with Audio"),
+         mProgress.create(_("Synchronize MIDI with Audio"),
                                _("Synchronizing MIDI and Audio Tracks"));
       } else if (i < 3) {
          fprintf(mTimeFile,
@@ -6122,7 +6120,7 @@ long mixer_process(void *mixer, float **buffer, long n)
 
 void AudacityProject::OnScoreAlign()
 {
-   TrackListIterator iter(mTracks);
+   TrackListIterator iter(GetTracks());
    Track *t = iter.First();
    int numWaveTracksSelected = 0;
    int numNoteTracksSelected = 0;
@@ -6318,8 +6316,7 @@ void AudacityProject::OnTimerRecord()
    // it is now safer to disable Timer Recording when there is more than
    // one open project.
    if (GetOpenProjectCount() > 1) {
-      wxMessageBox(_("Timer Recording cannot be used with more than one open project.\n\n\
-                     Please close any additional projects and try again."),
+      wxMessageBox(_("Timer Recording cannot be used with more than one open project.\n\nPlease close any additional projects and try again."),
                    _("Timer Recording"),
                    wxICON_INFORMATION | wxOK);
       return;

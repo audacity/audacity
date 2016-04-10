@@ -1303,7 +1303,7 @@ NoteTrackArray TrackList::GetNoteTrackArray(bool selectionOnly)
    for(const auto &track : *this) {
       if (track->GetKind() == Track::Note &&
          (track->GetSelected() || !selectionOnly)) {
-         noteTrackArray.Add(static_cast<NoteTrack*>(track.get()));
+         noteTrackArray.push_back(static_cast<NoteTrack*>(track.get()));
       }
    }
 

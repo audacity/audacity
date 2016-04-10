@@ -21,8 +21,9 @@ system by constructing BatchCommandEval objects.
 
 *//*******************************************************************/
 
-#include "CommandDirectory.h"
+#include "../Audacity.h"
 #include "CommandBuilder.h"
+#include "CommandDirectory.h"
 #include "../Shuttle.h"
 #include "BatchEvalCommand.h"
 #include "Command.h"

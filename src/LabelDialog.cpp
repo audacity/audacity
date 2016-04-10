@@ -121,7 +121,7 @@ LabelDialog::LabelDialog(wxWindow *parent,
          5);
 
       // Create the main sizer
-      mGrid = new Grid(this, wxID_ANY);
+      mGrid = safenew Grid(this, wxID_ANY);
       vs->Add(mGrid, 1, wxEXPAND | wxALL, 5);
 
       // Create the action buttons
@@ -156,22 +156,24 @@ LabelDialog::LabelDialog(wxWindow *parent,
    mGrid->SetColLabelValue(3,_("End Time"));
 
    // Create and remember editors.  No need to DELETE these as the wxGrid will
-   // do it for us.
+   // do it for us.  (The DecRef() that is needed after GetDefaultEditorForType
+   // becomes the duty of the wxGridCellAttr objects after we set them in the grid.)
    mChoiceEditor = (ChoiceEditor *) mGrid->GetDefaultEditorForType(GRID_VALUE_CHOICE);
    mTimeEditor = (TimeEditor *) mGrid->GetDefaultEditorForType(GRID_VALUE_TIME);
 
    // Initialize and set the track name column attributes
-   wxGridCellAttr *attr = new wxGridCellAttr();
+   wxGridCellAttr *attr;
+   mGrid->SetColAttr(Col_Track, (attr = safenew wxGridCellAttr));
    attr->SetEditor(mChoiceEditor);
-   mGrid->SetColAttr(Col_Track, attr);
    mTrackNames.Add(_("New..."));
 
    // Initialize and set the time column attributes
-   attr = new wxGridCellAttr();
+   mGrid->SetColAttr(Col_Stime, (attr = safenew wxGridCellAttr));
+   // Don't need DecRef() after this GetDefaultRendererForType.
    attr->SetRenderer(mGrid->GetDefaultRendererForType(GRID_VALUE_TIME));
    attr->SetEditor(mTimeEditor);
    attr->SetAlignment(wxALIGN_CENTER, wxALIGN_CENTER);
-   mGrid->SetColAttr(Col_Stime, attr);
+
    mGrid->SetColAttr(Col_Etime, attr->Clone());
 
    // Seems there's a bug in wxGrid.  Adding only 1 row does not
@@ -800,9 +802,11 @@ void LabelDialog::OnOK(wxCommandEvent & WXUNUSED(event))
 void LabelDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
 {
    if (mGrid->IsCellEditControlShown()) {
-      mGrid->GetCellEditor(mGrid->GetGridCursorRow(),
-                           mGrid->GetGridCursorCol())
-                           ->Reset();
+      auto editor = mGrid->GetCellEditor(mGrid->GetGridCursorRow(),
+         mGrid->GetGridCursorCol());
+      editor->Reset();
+      // To avoid memory leak, don't forget DecRef()!
+      editor->DecRef();
       mGrid->HideCellEditControl();
       return;
    }

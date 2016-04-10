@@ -30,6 +30,12 @@ class NumericTextCtrl;
 class ShuttleGui;
 class TimerRecordPathCtrl;
 
+enum TimerRecordCompletedActions {
+   TR_ACTION_NOTHING = 0x00000000,
+   TR_ACTION_SAVED = 0x00000001,
+   TR_ACTION_EXPORTED = 0x00000002
+};
+
 class TimerRecordPathCtrl final : public wxTextCtrl
 {
    // MY: Class that inherits from the wxTextCtrl class.
@@ -68,6 +74,7 @@ private:
    void OnTimeText_Duration(wxCommandEvent & event);
 
    void OnOK(wxCommandEvent& event);
+   void OnHelpButtonClick(wxCommandEvent& event);
 
    wxString GetDisplayDate(wxDateTime & dt);
    void PopulateOrExchange(ShuttleGui& S);
@@ -92,8 +99,9 @@ private:
    TimerRecordPathCtrl *NewPathControl(wxWindow *wParent, const int iID, const wxString &sCaption, const wxString &sValue);
 
    int ExecutePostRecordActions(bool bWasStopped);
+   int PreActionDelay(int iActionIndex, TimerRecordCompletedActions eCompletedActions);
 
-   int PreActionDelay(int iActionIndex, bool bSaved, bool bExported);
+   wxString GetHoursMinsString(int iMinutes);
 
 private:
    wxDateTime m_DateTime_Start;

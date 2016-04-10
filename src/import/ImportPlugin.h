@@ -161,7 +161,7 @@ public:
    virtual wxInt32 GetStreamCount() = 0;
 
    // Return stream descriptions list
-   virtual wxArrayString *GetStreamInfo() = 0;
+   virtual const wxArrayString &GetStreamInfo() = 0;
 
    // Set stream "import/don't import" flag
    virtual void SetStreamUsage(wxInt32 StreamID, bool Use) = 0;

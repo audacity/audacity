@@ -614,4 +614,29 @@ make_movable_with_deleter(const Deleter &d, Args&&... args)
    return movable_ptr_with_deleter<T, Deleter>(safenew T(std::forward<Args>(args)...), d);
 }
 
+/*
+ * "finally" as in The C++ Programming Language, 4th ed., p. 358
+ * Useful for defining ad-hoc RAII actions.
+ * typical usage:
+ * auto cleanup = finally([&]{ ... code; ... });
+ */
+
+// Construct this from any copyable function object, such as a lambda
+template <typename F>
+struct Final_action {
+   Final_action(F f) : clean{ f } {}
+   ~Final_action() { clean(); }
+   F clean;
+   Final_action(const Final_action&) PROHIBITED;
+   Final_action& operator= (const Final_action&) PROHIBITED;
+};
+
+// Function template with type deduction lets you construct Final_action
+// without typing any angle brackets
+template <typename F>
+Final_action<F> finally (F f)
+{
+   return Final_action<F>(f);
+}
+
 #endif // __AUDACITY_MEMORY_X_H__

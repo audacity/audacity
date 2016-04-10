@@ -7,6 +7,7 @@
  *
  */
 
+#include "../Audacity.h"
 #include "ODDecodeFlacTask.h"
 
 #include "../Prefs.h"

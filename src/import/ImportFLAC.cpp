@@ -158,7 +158,11 @@ public:
 
    wxInt32 GetStreamCount(){ return 1; }
 
-   wxArrayString *GetStreamInfo(){ return NULL; }
+   const wxArrayString &GetStreamInfo() override
+   {
+      static wxArrayString empty;
+      return empty;
+   }
 
    void SetStreamUsage(wxInt32 WXUNUSED(StreamID), bool WXUNUSED(Use)){}
 

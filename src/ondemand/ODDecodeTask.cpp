@@ -16,6 +16,7 @@ updating the ODPCMAliasBlockFile and the GUI of the newly available data.
 
 *//*******************************************************************/
 
+#include "../Audacity.h"
 #include "ODDecodeTask.h"
 #include "../blockfile/ODDecodeBlockFile.h"
 #include "../Sequence.h"

@@ -1244,7 +1244,7 @@ wxBitmap* MixerBoard::GetMusicalInstrumentBitmap(const WaveTrack* pLeftTrack)
    // random choice:    return mMusicalInstruments[(int)pLeftTrack % mMusicalInstruments.GetCount()].mBitmap;
 
 #ifdef EXPERIMENTAL_MIDI_OUT
-   const wxString strTrackName(name.MakeLower());
+   const wxString strTrackName(wxString{ name }.MakeLower());
 #else
    const wxString strTrackName(pLeftTrack->GetName().MakeLower());
 #endif

@@ -24,6 +24,7 @@ channel.  This collection of functions fills that gap.
 
 #include <wx/image.h>
 
+#include "Audacity.h"
 #include "ImageManipulation.h"
 
 /// This looks at the first pixel in the image, and shifts

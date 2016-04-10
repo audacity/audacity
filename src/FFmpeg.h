@@ -393,8 +393,18 @@ FFmpegLibs *PickFFmpegLibs();
 ///! anymore, or just decrements it's reference count
 void        DropFFmpegLibs();
 
+// This object allows access to the AVFormatContext,
+// and its destructor cleans up memory and file handles
+struct FFmpegContext {
+   FFmpegContext() {}
+   ~FFmpegContext();
+
+   AVIOContext *pb{};
+   AVFormatContext *ic_ptr{};
+};
+
 int ufile_fopen(AVIOContext **s, const wxString & name, int flags);
-int ufile_fopen_input(AVFormatContext **ic_ptr, wxString & name);
+int ufile_fopen_input(std::unique_ptr<FFmpegContext> &context_ptr, wxString & name);
 int ufile_close(AVIOContext *pb);
 
 struct streamContext;
