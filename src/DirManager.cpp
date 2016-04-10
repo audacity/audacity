@@ -931,7 +931,7 @@ BlockFile *DirManager::NewODDecodeBlockFile(
    return newBlockFile;
 }
 
-bool DirManager::ContainsBlockFile(BlockFile *b) const
+bool DirManager::ContainsBlockFile(const BlockFile *b) const
 {
    if (!b)
       return false;

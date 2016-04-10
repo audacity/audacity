@@ -52,7 +52,7 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
 
    /// Retrieves audio data from this BlockFile
    virtual int ReadData(samplePtr data, sampleFormat format,
-                        sampleCount start, sampleCount len) = 0;
+                        sampleCount start, sampleCount len) const = 0;
 
    // Other Properties
 
@@ -70,10 +70,10 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
    /// Gets the filename of the disk file associated with this BlockFile
    /// (can be empty -- some BlockFiles, like SilentBlockFile, correspond to
    ///  no file on disk)
-   virtual wxFileName GetFileName();
+   virtual wxFileName GetFileName() const;
    virtual void SetFileName(wxFileName &name);
 
-   virtual sampleCount GetLength() { return mLen; }
+   virtual sampleCount GetLength() const { return mLen; }
    virtual void SetLength(const sampleCount newLen) { mLen = newLen; }
 
    /// Locks this BlockFile, to prevent it from being moved
@@ -85,22 +85,22 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
 
    /// Gets extreme values for the specified region
    virtual void GetMinMax(sampleCount start, sampleCount len,
-                          float *outMin, float *outMax, float *outRMS);
+                          float *outMin, float *outMax, float *outRMS) const;
    /// Gets extreme values for the entire block
-   virtual void GetMinMax(float *outMin, float *outMax, float *outRMS);
+   virtual void GetMinMax(float *outMin, float *outMax, float *outRMS) const;
    /// Returns the 256 byte summary data block
    virtual bool Read256(float *buffer, sampleCount start, sampleCount len);
    /// Returns the 64K summary data block
    virtual bool Read64K(float *buffer, sampleCount start, sampleCount len);
 
    /// Returns TRUE if this block references another disk file
-   virtual bool IsAlias() { return false; }
+   virtual bool IsAlias() const { return false; }
 
    /// Returns TRUE if this block's complete summary has been computed and is ready (for OD)
-   virtual bool IsSummaryAvailable(){return true;}
+   virtual bool IsSummaryAvailable() const {return true;}
 
    /// Returns TRUE if this block's complete data is ready to be accessed by Read()
-   virtual bool IsDataAvailable(){return true;}
+   virtual bool IsDataAvailable() const {return true;}
 
    /// Returns TRUE if the summary has not yet been written, but is actively being computed and written to disk
    virtual bool IsSummaryBeingComputed(){return false;}
@@ -108,7 +108,7 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
    /// Create a NEW BlockFile identical to this, using the given filename
    virtual BlockFile *Copy(wxFileName newFileName) = 0;
 
-   virtual wxLongLong GetSpaceUsage() = 0;
+   virtual wxLongLong GetSpaceUsage() const = 0;
 
    /// if the on-disk state disappeared, either recover it (if it was
    //summary only), write out a placeholder of silence data (missing
@@ -119,16 +119,16 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
    //continue and the error persists, don't keep reporting it.  The
    //Object implements this functionality internally, but we want to
    //be able to tell the logging to shut up from outside too.
-   void SilenceLog() { mSilentLog = TRUE; }
+   void SilenceLog() const { mSilentLog = TRUE; }
 
    ///when the project closes, it locks the blockfiles.
    ///Override this in case it needs special treatment
    virtual void CloseLock(){Lock();}
 
    /// Prevents a read on other threads.  The basic blockfile runs on only one thread, so does nothing.
-   virtual void LockRead(){}
+   virtual void LockRead() const {}
    /// Allows reading on other threads.
-   virtual void UnlockRead(){}
+   virtual void UnlockRead() const {}
 
  private:
 
@@ -139,8 +139,8 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
    friend class ODDecodeTask;
    friend class ODPCMAliasBlockFile;
 
-   virtual void Ref();
-   virtual bool Deref();
+   virtual void Ref() const;
+   virtual bool Deref() const;
    virtual int RefCount(){return mRefCount;}
 
  protected:
@@ -158,7 +158,7 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
 
  private:
    int mLockCount;
-   int mRefCount;
+   mutable int mRefCount;
 
    static ArrayOf<char> fullSummary;
 
@@ -167,7 +167,7 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
    sampleCount mLen;
    SummaryInfo mSummaryInfo;
    float mMin, mMax, mRMS;
-   bool mSilentLog;
+   mutable bool mSilentLog;
 };
 
 /// A BlockFile that refers to data in an existing file
@@ -197,18 +197,18 @@ class AliasBlockFile /* not final */ : public BlockFile
 
    // Reading
 
-   wxLongLong GetSpaceUsage() override;
+   wxLongLong GetSpaceUsage() const override;
 
    /// as SilentLog (which would affect Summary data access), but
    // applying to Alias file access
-   void SilenceAliasLog() { mSilentAliasLog = TRUE; }
+   void SilenceAliasLog() const { mSilentAliasLog = TRUE; }
 
    //
    // These methods are for advanced use only!
    //
    wxFileName GetAliasedFileName() { return mAliasedFileName; }
    void ChangeAliasedFileName(wxFileName newAliasedFile);
-   bool IsAlias() override { return true; }
+   bool IsAlias() const override { return true; }
 
  protected:
    // Introduce a NEW virtual.
@@ -220,7 +220,7 @@ class AliasBlockFile /* not final */ : public BlockFile
    wxFileName  mAliasedFileName;
    sampleCount mAliasStart;
    int         mAliasChannel;
-   bool        mSilentAliasLog;
+   mutable bool        mSilentAliasLog;
 };
 
 #endif

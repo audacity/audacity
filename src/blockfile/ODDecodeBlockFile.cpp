@@ -75,7 +75,7 @@ ODDecodeBlockFile::~ODDecodeBlockFile()
 
 
 //Check to see if we have the file for these calls.
-wxLongLong ODDecodeBlockFile::GetSpaceUsage()
+wxLongLong ODDecodeBlockFile::GetSpaceUsage() const
 {
    if(IsSummaryAvailable())
    {
@@ -91,7 +91,7 @@ wxLongLong ODDecodeBlockFile::GetSpaceUsage()
 
 /// Gets extreme values for the specified region
 void ODDecodeBlockFile::GetMinMax(sampleCount start, sampleCount len,
-                          float *outMin, float *outMax, float *outRMS)
+                          float *outMin, float *outMax, float *outRMS) const
 {
    if(IsSummaryAvailable())
    {
@@ -108,7 +108,7 @@ void ODDecodeBlockFile::GetMinMax(sampleCount start, sampleCount len,
 }
 
 /// Gets extreme values for the entire block
-void ODDecodeBlockFile::GetMinMax(float *outMin, float *outMax, float *outRMS)
+void ODDecodeBlockFile::GetMinMax(float *outMin, float *outMax, float *outRMS) const
 {
   if(IsSummaryAvailable())
    {
@@ -289,12 +289,12 @@ void ODDecodeBlockFile::Recover(void)
    }
 }
 
-bool ODDecodeBlockFile::IsSummaryAvailable()
+bool ODDecodeBlockFile::IsSummaryAvailable() const
 {
    return IsDataAvailable();
 }
 
-bool ODDecodeBlockFile::IsDataAvailable()
+bool ODDecodeBlockFile::IsDataAvailable() const
 {
    bool retval;
    mDataAvailableMutex.Lock();
@@ -302,6 +302,7 @@ bool ODDecodeBlockFile::IsDataAvailable()
    mDataAvailableMutex.Unlock();
    return retval;
 }
+
 /// Write the summary to disk, using the derived ReadData() to get the data
 /// Here, the decoder ODTask associated with this file must fetch the samples with
 /// the ODDecodeTask::Decode() method.
@@ -367,7 +368,7 @@ void ODDecodeBlockFile::SetFileName(wxFileName &name)
 }
 
 ///sets the file name the summary info will be saved in.  threadsafe.
-wxFileName ODDecodeBlockFile::GetFileName()
+wxFileName ODDecodeBlockFile::GetFileName() const
 {
    wxFileName name;
    mFileNameMutex.Lock();
@@ -526,7 +527,7 @@ void *ODDecodeBlockFile::CalcSummary(samplePtr buffer, sampleCount len,
 /// @param start  The offset within the block to begin reading
 /// @param len    The number of samples to read
 int ODDecodeBlockFile::ReadData(samplePtr data, sampleFormat format,
-                                sampleCount start, sampleCount len)
+                                sampleCount start, sampleCount len) const
 {
    int ret;
    LockRead();
@@ -571,12 +572,12 @@ void ODDecodeBlockFile::SetODFileDecoder(ODFileDecoder* decoder)
 
 
 /// Prevents a read on other threads.
-void ODDecodeBlockFile::LockRead()
+void ODDecodeBlockFile::LockRead() const
 {
    mReadDataMutex.Lock();
 }
 /// Allows reading of encoded file on other threads.
-void ODDecodeBlockFile::UnlockRead()
+void ODDecodeBlockFile::UnlockRead() const
 {
    mReadDataMutex.Unlock();
 }

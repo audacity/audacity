@@ -933,7 +933,7 @@ locations of the missing files."), missingFileName.c_str());
    }
 }
 
-void AudacityApp::MarkAliasedFilesMissingWarning(BlockFile *b)
+void AudacityApp::MarkAliasedFilesMissingWarning(const BlockFile *b)
 {
    // the reference counting provides thread safety.
    if (b)

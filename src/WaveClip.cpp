@@ -1165,7 +1165,7 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
 }
 
 bool WaveClip::GetMinMax(float *min, float *max,
-                          double t0, double t1)
+                          double t0, double t1) const
 {
    *min = float(0.0);   // harmless, but unused since Sequence::GetMinMax does not use these values
    *max = float(0.0);   // harmless, but unused since Sequence::GetMinMax does not use these values

@@ -142,7 +142,7 @@ class AudacityApp final : public wxApp {
      * ShouldShowMissingAliasedFileWarning can be called to determine
      * if the user should be notified
      */
-   void MarkAliasedFilesMissingWarning(BlockFile *b);
+   void MarkAliasedFilesMissingWarning(const BlockFile *b);
 
    /** \brief Changes the behavior of missing aliased blockfiles warnings
      */
@@ -209,7 +209,7 @@ class AudacityApp final : public wxApp {
    wxTimer mTimer;
 
    bool                 m_aliasMissingWarningShouldShow;
-   BlockFile           *m_LastMissingBlockFile;
+   const BlockFile     *m_LastMissingBlockFile;
 
    ODLock               m_LastMissingBlockFileLock;
 

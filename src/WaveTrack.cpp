@@ -1926,7 +1926,7 @@ double WaveTrack::GetEndTime() const
 //
 
 bool WaveTrack::GetMinMax(float *min, float *max,
-                          double t0, double t1)
+                          double t0, double t1) const
 {
    bool clipFound = false;
 
@@ -1941,9 +1941,9 @@ bool WaveTrack::GetMinMax(float *min, float *max,
 
    bool result = true;
 
-   for (WaveClipList::compatibility_iterator it=GetClipIterator(); it; it=it->GetNext())
+   for (WaveClipList::compatibility_iterator it=const_cast<WaveTrack*>(this)->GetClipIterator(); it; it=it->GetNext())
    {
-      WaveClip* clip = it->GetData();
+      const WaveClip* clip = it->GetData();
 
       if (t1 >= clip->GetStartTime() && t0 <= clip->GetEndTime())
       {

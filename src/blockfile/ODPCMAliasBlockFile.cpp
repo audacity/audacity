@@ -78,7 +78,7 @@ ODPCMAliasBlockFile::~ODPCMAliasBlockFile()
 /// DirManager should call this method.
 /// This method has been overidden to be threadsafe.  It is important especially
 /// if two blockfiles deref at the same time resulting in a double deletion of the file
-void ODPCMAliasBlockFile::Ref()
+void ODPCMAliasBlockFile::Ref() const
 {
    mRefMutex.Lock();
    BlockFile::Ref();
@@ -88,7 +88,7 @@ void ODPCMAliasBlockFile::Ref()
 /// Decreases the reference count of this block by one.  If this
 /// causes the count to become zero, deletes the associated disk
 /// file and deletes this object
-bool ODPCMAliasBlockFile::Deref()
+bool ODPCMAliasBlockFile::Deref() const
 {
    bool ret;
    mDerefMutex.Lock();
@@ -104,7 +104,7 @@ bool ODPCMAliasBlockFile::Deref()
 
 
 //Check to see if we have the file for these calls.
-wxLongLong ODPCMAliasBlockFile::GetSpaceUsage()
+wxLongLong ODPCMAliasBlockFile::GetSpaceUsage() const
 {
    if(IsSummaryAvailable())
    {
@@ -148,7 +148,7 @@ void ODPCMAliasBlockFile::Unlock()
 
 /// Gets extreme values for the specified region
 void ODPCMAliasBlockFile::GetMinMax(sampleCount start, sampleCount len,
-                          float *outMin, float *outMax, float *outRMS)
+                          float *outMin, float *outMax, float *outRMS) const
 {
    if(IsSummaryAvailable())
    {
@@ -165,7 +165,7 @@ void ODPCMAliasBlockFile::GetMinMax(sampleCount start, sampleCount len,
 }
 
 /// Gets extreme values for the entire block
-void ODPCMAliasBlockFile::GetMinMax(float *outMin, float *outMax, float *outRMS)
+void ODPCMAliasBlockFile::GetMinMax(float *outMin, float *outMax, float *outRMS) const
 {
   if(IsSummaryAvailable())
    {
@@ -353,7 +353,7 @@ void ODPCMAliasBlockFile::Recover(void)
    }
 }
 
-bool ODPCMAliasBlockFile::IsSummaryAvailable()
+bool ODPCMAliasBlockFile::IsSummaryAvailable() const
 {
    bool retval;
    mSummaryAvailableMutex.Lock();
@@ -380,7 +380,7 @@ void ODPCMAliasBlockFile::SetFileName(wxFileName &name)
 }
 
 ///sets the file name the summary info will be saved in.  threadsafe.
-wxFileName ODPCMAliasBlockFile::GetFileName()
+wxFileName ODPCMAliasBlockFile::GetFileName() const
 {
    wxFileName name;
    mFileNameMutex.Lock();
@@ -595,7 +595,7 @@ void *ODPCMAliasBlockFile::CalcSummary(samplePtr buffer, sampleCount len,
 /// @param start  The offset within the block to begin reading
 /// @param len    The number of samples to read
 int ODPCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
-                                sampleCount start, sampleCount len)
+                                sampleCount start, sampleCount len) const
 {
 
    LockRead();
@@ -723,12 +723,12 @@ bool ODPCMAliasBlockFile::ReadSummary(void *data)
 }
 
 /// Prevents a read on other threads.
-void ODPCMAliasBlockFile::LockRead()
+void ODPCMAliasBlockFile::LockRead() const
 {
    mReadDataMutex.Lock();
 }
 /// Allows reading on other threads.
-void ODPCMAliasBlockFile::UnlockRead()
+void ODPCMAliasBlockFile::UnlockRead() const
 {
    mReadDataMutex.Unlock();
 }

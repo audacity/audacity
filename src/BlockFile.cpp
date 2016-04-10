@@ -120,7 +120,7 @@ BlockFile::~BlockFile()
 /// but most BlockFiles have at least their summary data here.
 /// (some, i.e. SilentBlockFiles, do not correspond to a file on
 ///  disk and have empty file names)
-wxFileName BlockFile::GetFileName()
+wxFileName BlockFile::GetFileName() const
 {
    return mFileName;
 }
@@ -162,7 +162,7 @@ bool BlockFile::IsLocked()
 
 /// Increases the reference count of this block by one.  Only
 /// DirManager should call this method.
-void BlockFile::Ref()
+void BlockFile::Ref() const
 {
    mRefCount++;
    BLOCKFILE_DEBUG_OUTPUT("Ref", mRefCount);
@@ -171,7 +171,7 @@ void BlockFile::Ref()
 /// Decreases the reference count of this block by one.  If this
 /// causes the count to become zero, deletes the associated disk
 /// file and deletes this object
-bool BlockFile::Deref()
+bool BlockFile::Deref() const
 {
    mRefCount--;
    BLOCKFILE_DEBUG_OUTPUT("Deref", mRefCount);
@@ -382,7 +382,7 @@ void BlockFile::FixSummary(void *data)
 /// @param *outRMS A pointer to where the maximum RMS value for this
 ///                region should be stored.
 void BlockFile::GetMinMax(sampleCount start, sampleCount len,
-                  float *outMin, float *outMax, float *outRMS)
+                  float *outMin, float *outMax, float *outRMS) const
 {
    // TODO: actually use summaries
    SampleBuffer blockData(len, floatSample);
@@ -418,7 +418,7 @@ void BlockFile::GetMinMax(sampleCount start, sampleCount len,
 ///                should be stored
 /// @param *outRMS A pointer to where the maximum RMS value for this
 ///                block should be stored.
-void BlockFile::GetMinMax(float *outMin, float *outMax, float *outRMS)
+void BlockFile::GetMinMax(float *outMin, float *outMax, float *outRMS) const
 {
    *outMin = mMin;
    *outMax = mMax;
@@ -634,7 +634,7 @@ void AliasBlockFile::ChangeAliasedFileName(wxFileName newAliasedFile)
    mAliasedFileName = newAliasedFile;
 }
 
-wxLongLong AliasBlockFile::GetSpaceUsage()
+wxLongLong AliasBlockFile::GetSpaceUsage() const
 {
    wxFFile summaryFile(mFileName.GetFullPath());
    return summaryFile.Length();

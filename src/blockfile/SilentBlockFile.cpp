@@ -31,7 +31,7 @@ bool SilentBlockFile::ReadSummary(void *data)
 }
 
 int SilentBlockFile::ReadData(samplePtr data, sampleFormat format,
-                              sampleCount WXUNUSED(start), sampleCount len)
+                              sampleCount WXUNUSED(start), sampleCount len) const
 {
    ClearSamples(data, format, 0, len);
 
@@ -82,7 +82,7 @@ BlockFile *SilentBlockFile::Copy(wxFileName newFileName)
    return newBlockFile;
 }
 
-wxLongLong SilentBlockFile::GetSpaceUsage()
+wxLongLong SilentBlockFile::GetSpaceUsage() const
 {
    return 0;
 }

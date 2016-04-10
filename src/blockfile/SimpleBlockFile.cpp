@@ -388,7 +388,7 @@ bool SimpleBlockFile::ReadSummary(void *data)
 /// @param start  The offset in this block file
 /// @param len    The number of samples to read
 int SimpleBlockFile::ReadData(samplePtr data, sampleFormat format,
-                        sampleCount start, sampleCount len)
+                        sampleCount start, sampleCount len) const
 {
    if (mCache.active)
    {
@@ -544,7 +544,7 @@ BlockFile *SimpleBlockFile::Copy(wxFileName newFileName)
    return newBlockFile;
 }
 
-wxLongLong SimpleBlockFile::GetSpaceUsage()
+wxLongLong SimpleBlockFile::GetSpaceUsage() const
 {
    if (mCache.active && mCache.needWrite)
    {

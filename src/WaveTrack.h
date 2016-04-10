@@ -242,7 +242,7 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
    void GetEnvelopeValues(double *buffer, int bufferLen,
                          double t0, double tstep) const;
    bool GetMinMax(float *min, float *max,
-                  double t0, double t1);
+                  double t0, double t1) const;
    bool GetRMS(float *rms, double t0, double t1);
 
    //

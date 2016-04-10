@@ -186,7 +186,7 @@ bool LegacyBlockFile::ReadSummary(void *data)
 /// @param start  The offset in this block file
 /// @param len    The number of samples to read
 int LegacyBlockFile::ReadData(samplePtr data, sampleFormat format,
-                              sampleCount start, sampleCount len)
+                              sampleCount start, sampleCount len) const
 {
    SF_INFO info;
 
@@ -342,7 +342,7 @@ BlockFile *LegacyBlockFile::Copy(wxFileName newFileName)
    return newBlockFile;
 }
 
-wxLongLong LegacyBlockFile::GetSpaceUsage()
+wxLongLong LegacyBlockFile::GetSpaceUsage() const
 {
    wxFFile dataFile(mFileName.GetFullPath());
    return dataFile.Length();

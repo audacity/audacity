@@ -74,7 +74,7 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
                                  sampleCount aliasLen, int aliasChannel, int decodeType);
 
    /// Returns true if the blockfile pointed to by b is contained by the DirManager
-   bool ContainsBlockFile(BlockFile *b) const;
+   bool ContainsBlockFile(const BlockFile *b) const;
    /// Check for existing using filename using complete filename
    bool ContainsBlockFile(const wxString &filepath) const;
 

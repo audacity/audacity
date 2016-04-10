@@ -74,7 +74,7 @@ PCMAliasBlockFile::~PCMAliasBlockFile()
 /// @param start  The offset within the block to begin reading
 /// @param len    The number of samples to read
 int PCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
-                                sampleCount start, sampleCount len)
+                                sampleCount start, sampleCount len) const
 {
    SF_INFO info;
 

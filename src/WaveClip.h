@@ -278,7 +278,7 @@ public:
                        const float *& spectrogram, const sampleCount *& where,
                        int numPixels,
                        double t0, double pixelsPerSecond) const;
-   bool GetMinMax(float *min, float *max, double t0, double t1);
+   bool GetMinMax(float *min, float *max, double t0, double t1) const;
    bool GetRMS(float *rms, double t0, double t1);
 
    // Set/clear/get rectangle that this WaveClip fills on screen. This is

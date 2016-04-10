@@ -36,13 +36,13 @@ class SilentBlockFile final : public BlockFile {
    bool ReadSummary(void *data) override;
    /// Read the data section of the disk file
    int ReadData(samplePtr data, sampleFormat format,
-                        sampleCount start, sampleCount len) override;
+                        sampleCount start, sampleCount len) const override;
 
    /// Create a NEW block file identical to this one
    BlockFile *Copy(wxFileName newFileName) override;
    /// Write an XML representation of this file
    void SaveXML(XMLWriter &xmlFile) override;
-   wxLongLong GetSpaceUsage() override;
+   wxLongLong GetSpaceUsage() const override;
    void Recover() override { };
 
    static BlockFile *BuildFromXML(DirManager &dm, const wxChar **attrs);
