@@ -640,7 +640,7 @@ public:
          return NULL;
       }
 
-      // Trust wxWidgets framework to delete it
+      // Trust wxWidgets framework to DELETE it
       return safenew IPCConn();
    };
 };
@@ -1143,6 +1143,10 @@ AudacityApp::AudacityApp()
 #endif
 }
 
+AudacityApp::~AudacityApp()
+{
+}
+
 // The `main program' equivalent, creating the windows and returning the
 // main frame
 bool AudacityApp::OnInit()
@@ -1323,19 +1327,15 @@ bool AudacityApp::OnInit()
    // Parse command line and handle options that might require
    // immediate exit...no need to initialize all of the audio
    // stuff to display the version string.
-   wxCmdLineParser *parser = ParseCommandLine();
+   auto parser = ParseCommandLine();
    if (!parser)
    {
-      delete parser;
-
       // Either user requested help or a parsing error occured
       exit(1);
    }
 
    if (parser->Found(wxT("v")))
    {
-      delete parser;
-
       wxFprintf(stderr, wxT("Audacity v%s\n"), AUDACITY_VERSION_STRING);
       exit(0);
    }
@@ -1345,8 +1345,6 @@ bool AudacityApp::OnInit()
    {
       if (lval < 256 || lval > 100000000)
       {
-         delete parser;
-
          wxPrintf(_("Block size must be within 256 to 100000000\n"));
          exit(1);
       }
@@ -1463,7 +1461,6 @@ bool AudacityApp::OnInit()
    {
       // Important: Prevent deleting any temporary files!
       DirManager::SetDontDeleteTempFiles();
-      delete parser;
       QuitAudacity(true);
       return false;
    }
@@ -1475,8 +1472,6 @@ bool AudacityApp::OnInit()
    {
       if (parser->Found(wxT("t")))
       {
-         delete parser;
-   
          RunBenchmark(NULL);
          return false;
       }
@@ -1490,8 +1485,6 @@ bool AudacityApp::OnInit()
       }
 #endif
    }
-
-   delete parser;
 
    gInited = true;
 
@@ -1664,7 +1657,7 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
    else if ( mChecker->IsAnotherRunning() ) {
       // Parse the command line to ensure correct syntax, but
       // ignore options and only use the filenames, if any.
-      wxCmdLineParser *parser = ParseCommandLine();
+      auto parser = ParseCommandLine();
       if (!parser)
       {
          // Complaints have already been made
@@ -1703,10 +1696,7 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
             delete conn;
 
             if (ok)
-            {
-               delete parser;
                return false;
-            }
          }
 
          wxMilliSleep(10);
@@ -1738,7 +1728,6 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
             }
 
             sock->Destroy();
-            delete parser;
             return false;
          }
 
@@ -1755,7 +1744,6 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
          _("Use the New or Open commands in the currently running Audacity\nprocess to open multiple projects simultaneously.\n");
       wxMessageBox(prompt, _("Audacity is already running"),
             wxOK | wxICON_ERROR);
-      delete parser;
       delete mChecker;
       return false;
    }
@@ -1826,9 +1814,9 @@ void AudacityApp::OnSocketEvent(wxSocketEvent & evt)
 
 #endif
 
-wxCmdLineParser *AudacityApp::ParseCommandLine()
+std::unique_ptr<wxCmdLineParser> AudacityApp::ParseCommandLine()
 {
-   wxCmdLineParser *parser = new wxCmdLineParser(argc, argv);
+   auto parser = std::make_unique<wxCmdLineParser>(argc, argv);
    if (!parser)
    {
       return NULL;
@@ -1861,13 +1849,9 @@ wxCmdLineParser *AudacityApp::ParseCommandLine()
 
    // Run the parser
    if (parser->Parse() == 0)
-   {
-      return parser;
-   }
+      return std::move(parser);
 
-   delete parser;
-
-   return NULL;
+   return{};
 }
 
 // static

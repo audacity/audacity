@@ -16,6 +16,7 @@
 
 #include "Audacity.h"
 
+#include "MemoryX.h"
 #include <wx/app.h>
 #include <wx/cmdline.h>
 #include <wx/dir.h>
@@ -100,6 +101,7 @@ class BlockFile;
 class AudacityApp final : public wxApp {
  public:
    AudacityApp();
+   ~AudacityApp();
    bool OnInit(void) override;
    int OnExit(void) override;
    void OnFatalException() override;
@@ -217,7 +219,7 @@ class AudacityApp final : public wxApp {
    bool InitTempDir();
    bool CreateSingleInstanceChecker(const wxString &dir);
 
-   wxCmdLineParser *ParseCommandLine();
+   std::unique_ptr<wxCmdLineParser> ParseCommandLine();
 
    bool mWindowRectAlreadySaved;
 
