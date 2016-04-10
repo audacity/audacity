@@ -440,7 +440,7 @@ void ModuleManager::InitializeBuiltins()
 
 ModuleInterface *ModuleManager::LoadModule(const wxString & path)
 {
-   auto lib = std::make_unique<wxDynamicLibrary>();
+   auto lib = make_movable<wxDynamicLibrary>();
 
    if (lib->Load(path, wxDL_NOW))
    {
