@@ -14,12 +14,14 @@
 *//*******************************************************************/
 
 
+#include "../Audacity.h"
+#include "ExtImportPrefs.h"
+
 #include <wx/defs.h>
 #include <wx/listctrl.h>
 #include <wx/msgdlg.h>
 #include <wx/dnd.h>
 
-#include "ExtImportPrefs.h"
 #include "../Audacity.h"
 #include "../AudacityApp.h"
 #include "../Prefs.h"

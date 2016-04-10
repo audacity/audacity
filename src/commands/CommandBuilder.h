@@ -16,6 +16,9 @@
 #ifndef __COMMANDBUILDER__
 #define __COMMANDBUILDER__
 
+#include "../MemoryX.h"
+#include <wx/string.h>
+
 class Command;
 using CommandHolder = std::shared_ptr<Command>;
 class wxString;

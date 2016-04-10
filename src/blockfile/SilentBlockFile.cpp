@@ -8,6 +8,7 @@
 
 **********************************************************************/
 
+#include "../Audacity.h"
 #include "SilentBlockFile.h"
 #include "../FileFormats.h"
 

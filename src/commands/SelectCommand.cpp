@@ -16,6 +16,7 @@
 
 *//*******************************************************************/
 
+#include "../Audacity.h"
 #include "SelectCommand.h"
 #include <wx/string.h>
 #include "../Project.h"

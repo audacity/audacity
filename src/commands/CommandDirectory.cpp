@@ -13,6 +13,7 @@
 
 *//*******************************************************************/
 
+#include "../Audacity.h"
 #include "CommandDirectory.h"
 #include "CommandMisc.h"
 

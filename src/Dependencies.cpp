@@ -21,6 +21,7 @@
 
 **********************************************************************/
 
+#include "Audacity.h"
 #include "Dependencies.h"
 
 #include <wx/button.h>

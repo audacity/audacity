@@ -13,6 +13,7 @@
 
 *//*******************************************************************/
 
+#include "../Audacity.h"
 #include "HelpCommand.h"
 #include "CommandDirectory.h"
 #include <wx/string.h>

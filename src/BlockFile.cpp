@@ -42,6 +42,7 @@ out.
 
 *//*******************************************************************/
 
+#include "Audacity.h"
 #include "BlockFile.h"
 
 #include <float.h>
