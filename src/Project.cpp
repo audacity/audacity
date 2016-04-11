@@ -852,7 +852,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    //
    // Create the ToolDock
    //
-   mToolManager = new ToolManager( this );
+   mToolManager = std::make_unique<ToolManager>( this );
    GetSelectionBar()->SetListener(this);
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    GetSpectralSelectionBar()->SetListener(this);
@@ -2272,8 +2272,7 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
 
    // Delete the tool manager before the children since it needs
    // to save the state of the toolbars.
-   delete mToolManager;
-   mToolManager = NULL;
+   mToolManager.reset();
 
    DestroyChildren();
 
@@ -2693,7 +2692,7 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
 
       bool err = false;
       Track *t;
-      TrackListIterator iter(mTracks);
+      TrackListIterator iter(GetTracks());
       mLastSavedTracks = new TrackList();
 
       t = iter.First();

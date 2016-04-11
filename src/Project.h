@@ -612,8 +612,10 @@ public:
    Meter *mPlaybackMeter{};
    Meter *mCaptureMeter{};
 
+   std::unique_ptr<ToolManager> mToolManager{};
+
  public:
-    ToolManager *mToolManager{};
+   ToolManager *GetToolManager() { return mToolManager.get(); }
    bool mShowSplashScreen;
    wxString mHelpPref;
    wxString mSoloPref;
@@ -675,9 +677,6 @@ public:
    // Last effect applied to this project
    PluginID mLastEffect{};
    
-   // The screenshot class needs to access internals
-   friend class ScreenshotCommand;
-
    wxRect mNormalizedWindowState;
 
    //flag for cancellation of timer record.
