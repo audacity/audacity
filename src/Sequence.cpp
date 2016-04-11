@@ -29,6 +29,7 @@
 
 
 #include "Audacity.h"
+#include "Sequence.h"
 
 #include <algorithm>
 #include <float.h>
@@ -39,8 +40,6 @@
 #include <wx/filefn.h>
 #include <wx/ffile.h>
 #include <wx/log.h>
-
-#include "Sequence.h"
 
 #include "BlockFile.h"
 #include "blockfile/ODDecodeBlockFile.h"
@@ -406,9 +405,9 @@ bool Sequence::GetRMS(sampleCount start, sampleCount len,
    return true;
 }
 
-bool Sequence::Copy(sampleCount s0, sampleCount s1, Sequence **dest)
+bool Sequence::Copy(sampleCount s0, sampleCount s1, std::unique_ptr<Sequence> &dest) const
 {
-   *dest = 0;
+   dest.reset();
 
    if (s0 >= s1 || s0 >= mNumSamples || s1 < 0)
       return false;
@@ -423,8 +422,8 @@ bool Sequence::Copy(sampleCount s0, sampleCount s1, Sequence **dest)
    wxUnusedVar(numBlocks);
    wxASSERT(b0 <= b1);
 
-   *dest = new Sequence(mDirManager, mSampleFormat);
-   (*dest)->mBlock.reserve(b1 - b0 + 1);
+   dest = std::make_unique<Sequence>(mDirManager, mSampleFormat);
+   dest->mBlock.reserve(b1 - b0 + 1);
 
    SampleBuffer buffer(mMaxSamples, mSampleFormat);
 
@@ -439,14 +438,14 @@ bool Sequence::Copy(sampleCount s0, sampleCount s1, Sequence **dest)
       wxASSERT(file->IsAlias() || (blocklen <= mMaxSamples)); // Vaughan, 2012-02-29
       Get(b0, buffer.ptr(), mSampleFormat, s0, blocklen);
 
-      (*dest)->Append(buffer.ptr(), mSampleFormat, blocklen);
+      dest->Append(buffer.ptr(), mSampleFormat, blocklen);
    }
    else
       --b0;
 
    // If there are blocks in the middle, copy the blockfiles directly
    for (int bb = b0 + 1; bb < b1; ++bb)
-      (*dest)->AppendBlock(mBlock[bb]); // Increase ref count or duplicate file
+      dest->AppendBlock(mBlock[bb]); // Increase ref count or duplicate file
 
    // Do the last block
    if (b1 > b0) {
@@ -456,11 +455,11 @@ bool Sequence::Copy(sampleCount s0, sampleCount s1, Sequence **dest)
       wxASSERT(file->IsAlias() || (blocklen <= mMaxSamples)); // Vaughan, 2012-02-29
       if (blocklen < file->GetLength()) {
          Get(b1, buffer.ptr(), mSampleFormat, block.start, blocklen);
-         (*dest)->Append(buffer.ptr(), mSampleFormat, blocklen);
+         dest->Append(buffer.ptr(), mSampleFormat, blocklen);
       }
       else
          // Special case, copy exactly
-         (*dest)->AppendBlock(block); // Increase ref count or duplicate file
+         dest->AppendBlock(block); // Increase ref count or duplicate file
    }
 
    return ConsistencyCheck(wxT("Sequence::Copy()"));

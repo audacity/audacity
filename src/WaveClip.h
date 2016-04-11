@@ -13,6 +13,7 @@
 #define __AUDACITY_WAVECLIP__
 
 #include "Audacity.h"
+#include "MemoryX.h"
 #include "SampleFormat.h"
 #include "widgets/ProgressDialog.h"
 #include "ondemand/ODTaskThread.h"
@@ -205,20 +206,8 @@ class AUDACITY_DLL_API WaveClip final : public XMLTagHandler
 {
 private:
    // It is an error to copy a WaveClip without specifying the DirManager.
-   // We define these break-inducing single-arg methods so that
-   // if some developer makes the mistake of calling a single-arg copy
-   // constructor rather than the one below (that requires a DirManager*),
-   // rather than it going to C++-generated default copy constructor,
-   // it goes here and the error is made clear to that developer.
-   WaveClip(const WaveClip&)
-   {
-      wxFAIL_MSG(wxT("It is an error to copy a WaveClip without specifying the DirManager."));
-   }
-   WaveClip& operator=(const WaveClip& orig)
-   {
-      WaveClip bogus(orig);
-      return *this;
-   }
+   WaveClip(const WaveClip&) PROHIBITED;
+   WaveClip& operator= (const WaveClip&) PROHIBITED;
 
 public:
    // typical constructor
@@ -271,7 +260,7 @@ public:
    // Get low-level access to the sequence. Whenever possible, don't use this,
    // but use more high-level functions inside WaveClip (or add them if you
    // think they are useful for general use)
-   Sequence* GetSequence() { return mSequence; }
+   Sequence* GetSequence() { return mSequence.get(); }
 
    /** WaveTrack calls this whenever data in the wave clip changes. It is
     * called automatically when WaveClip has a chance to know that something
@@ -387,7 +376,7 @@ protected:
    int mRate;
    int mDirty;
    bool mIsCutLine;
-   Sequence *mSequence;
+   std::unique_ptr<Sequence> mSequence;
    Envelope *mEnvelope;
 
    mutable WaveCache    *mWaveCache;
