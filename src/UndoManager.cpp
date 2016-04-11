@@ -35,7 +35,8 @@ UndoManager
 
 #include "UndoManager.h"
 
-WX_DECLARE_HASH_SET(const BlockFile *, wxPointerHash, wxPointerEqual, Set );
+using ConstBlockFilePtr = const BlockFile*;
+WX_DECLARE_HASH_SET(ConstBlockFilePtr, wxPointerHash, wxPointerEqual, Set );
 
 struct UndoStackElem {
 
