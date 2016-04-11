@@ -951,6 +951,8 @@ bool DirManager::ContainsBlockFile(const wxString &filepath) const
 // the BlockFile.
 BlockFile *DirManager::CopyBlockFile(BlockFile *b)
 {
+   const auto &fn = b->GetFileName();
+
    if (!b->IsLocked()) {
       b->Ref();
       //mchinen:July 13 2009 - not sure about this, but it needs to be added to the hash to be able to save if not locked.
@@ -958,14 +960,14 @@ BlockFile *DirManager::CopyBlockFile(BlockFile *b)
       //but it's something to watch out for.
       //
       // LLL: Except for silent block files which have uninitialized filename.
-      if (b->GetFileName().IsOk())
-         mBlockFileHash[b->GetFileName().GetName()]=b;
+      if (fn.IsOk())
+         mBlockFileHash[fn.GetName()]=b;
       return b;
    }
 
    // Copy the blockfile
    BlockFile *b2;
-   if (!b->GetFileName().IsOk())
+   if (!fn.IsOk())
       // Block files with uninitialized filename (i.e. SilentBlockFile)
       // just need an in-memory copy.
       b2 = b->Copy(wxFileName());
@@ -975,13 +977,13 @@ BlockFile *DirManager::CopyBlockFile(BlockFile *b)
 
       // We assume that the NEW file should have the same extension
       // as the existing file
-      newFile.SetExt(b->GetFileName().GetExt());
+      newFile.SetExt(fn.GetExt());
 
       //some block files such as ODPCMAliasBlockFIle don't always have
       //a summary file, so we should check before we copy.
       if(b->IsSummaryAvailable())
       {
-         if( !wxCopyFile(b->GetFileName().GetFullPath(),
+         if( !wxCopyFile(fn.GetFullPath(),
                   newFile.GetFullPath()) )
             return NULL;
       }
@@ -1104,26 +1106,30 @@ bool DirManager::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 
 bool DirManager::MoveOrCopyToNewProjectDirectory(BlockFile *f, bool copy)
 {
+   const auto oldFileName = f->GetFileName();
+
    // Check that this BlockFile corresponds to a file on disk
    //ANSWER-ME: Is this checking only for SilentBlockFiles, in which case
-   //    (!f->GetFileName().IsOk()) is a more correct check?
-   if (f->GetFileName().GetName().IsEmpty()) {
+   //    (!oldFileName.IsOk()) is a more correct check?
+   if (oldFileName.GetName().IsEmpty()) {
       return true;
    }
 
    wxFileName newFileName;
-   wxFileName oldFileName=f->GetFileName();
-   if (!this->AssignFile(newFileName, f->GetFileName().GetFullName(), false))
+   if (!this->AssignFile(newFileName, oldFileName.GetFullName(), false))
       return false;
 
-   if (newFileName != f->GetFileName()) {
+   if (newFileName != oldFileName) {
       //check to see that summary exists before we copy.
       bool summaryExisted = f->IsSummaryAvailable();
       if (summaryExisted) {
-         if(!copy && !wxRenameFile(f->GetFileName().GetFullPath(), newFileName.GetFullPath()))
+         auto oldPath = oldFileName.GetFullPath();
+         auto newPath = newFileName.GetFullPath();
+         auto success = copy
+         ? wxCopyFile(oldPath, newPath)
+         : wxRenameFile(oldPath, newPath);
+         if (!success)
             return false;
-         if(copy && !wxCopyFile(f->GetFileName().GetFullPath(), newFileName.GetFullPath()))
-               return false;
       }
       f->SetFileName(newFileName);
 
@@ -1142,6 +1148,8 @@ bool DirManager::MoveOrCopyToNewProjectDirectory(BlockFile *f, bool copy)
             bool ok = wxCopyFile(oldFileName.GetFullPath(),
                             newFileName.GetFullPath());
             if(ok && !copy)
+               // PRL:  Is this a bug?  Shouldn't it be the old path that
+               // is removed?
                wxRemoveFile(f->GetFileName().GetFullPath());
             else if (!ok)
                return false;
