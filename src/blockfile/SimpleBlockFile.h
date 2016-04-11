@@ -48,13 +48,13 @@ class PROFILE_DLL_API SimpleBlockFile /* not final */ : public BlockFile {
    // Constructor / Destructor
 
    /// Create a disk file and write summary and sample data to it
-   SimpleBlockFile(wxFileName baseFileName,
+   SimpleBlockFile(wxFileNameWrapper &&baseFileName,
                    samplePtr sampleData, sampleCount sampleLen,
                    sampleFormat format,
                    bool allowDeferredWrite = false,
                    bool bypassCache = false );
    /// Create the memory structure to refer to the given block file
-   SimpleBlockFile(wxFileName existingFile, sampleCount len,
+   SimpleBlockFile(wxFileNameWrapper &&existingFile, sampleCount len,
                    float min, float max, float rms);
 
    virtual ~SimpleBlockFile();
@@ -68,7 +68,7 @@ class PROFILE_DLL_API SimpleBlockFile /* not final */ : public BlockFile {
                         sampleCount start, sampleCount len) const override;
 
    /// Create a NEW block file identical to this one
-   BlockFile *Copy(wxFileName newFileName) override;
+   BlockFile *Copy(wxFileNameWrapper &&newFileName) override;
    /// Write an XML representation of this file
    void SaveXML(XMLWriter &xmlFile) override;
 

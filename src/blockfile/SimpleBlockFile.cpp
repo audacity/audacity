@@ -95,12 +95,15 @@ static wxUint32 SwapUintEndianess(wxUint32 in)
 /// @param sampleLen    The number of samples to be written to this block.
 /// @param format       The format of the given samples.
 /// @param allowDeferredWrite    Allow deferred write-caching
-SimpleBlockFile::SimpleBlockFile(wxFileName baseFileName,
+SimpleBlockFile::SimpleBlockFile(wxFileNameWrapper &&baseFileName,
                                  samplePtr sampleData, sampleCount sampleLen,
                                  sampleFormat format,
                                  bool allowDeferredWrite /* = false */,
                                  bool bypassCache /* = false */):
-   BlockFile(wxFileName(baseFileName.GetFullPath() + wxT(".au")), sampleLen)
+   BlockFile {
+      (baseFileName.SetExt(wxT("au")), std::move(baseFileName)),
+      sampleLen
+   }
 {
    mFormat = format;
 
@@ -136,9 +139,9 @@ SimpleBlockFile::SimpleBlockFile(wxFileName baseFileName,
 /// existing block file.  This file must exist and be a valid block file.
 ///
 /// @param existingFile The disk file this SimpleBlockFile should use.
-SimpleBlockFile::SimpleBlockFile(wxFileName existingFile, sampleCount len,
+SimpleBlockFile::SimpleBlockFile(wxFileNameWrapper &&existingFile, sampleCount len,
                                  float min, float max, float rms):
-   BlockFile(existingFile, len)
+   BlockFile(std::move(existingFile), len)
 {
    // Set an invalid format to force GetSpaceUsage() to read it from the file.
    mFormat = (sampleFormat) 0;
@@ -490,7 +493,7 @@ void SimpleBlockFile::SaveXML(XMLWriter &xmlFile)
 /// static
 BlockFile *SimpleBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
 {
-   wxFileName fileName;
+   wxFileNameWrapper fileName;
    float min = 0.0f, max = 0.0f, rms = 0.0f;
    sampleCount len = 0;
    double dblValue;
@@ -528,15 +531,15 @@ BlockFile *SimpleBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
       }
    }
 
-   return new SimpleBlockFile(fileName, len, min, max, rms);
+   return new SimpleBlockFile(std::move(fileName), len, min, max, rms);
 }
 
 /// Create a copy of this BlockFile, but using a different disk file.
 ///
 /// @param newFileName The name of the NEW file to use.
-BlockFile *SimpleBlockFile::Copy(wxFileName newFileName)
+BlockFile *SimpleBlockFile::Copy(wxFileNameWrapper &&newFileName)
 {
-   BlockFile *newBlockFile = new SimpleBlockFile(newFileName, mLen,
+   BlockFile *newBlockFile = new SimpleBlockFile(std::move(newFileName), mLen,
                                                  mMin, mMax, mRMS);
 
    return newBlockFile;

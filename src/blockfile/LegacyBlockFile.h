@@ -16,7 +16,7 @@
 
 #include "../BlockFile.h"
 
-void ComputeLegacySummaryInfo(wxFileName fileName,
+void ComputeLegacySummaryInfo(const wxFileName &fileName,
                               int summaryLen,
                               sampleFormat format,
                               SummaryInfo *info,
@@ -38,7 +38,7 @@ class LegacyBlockFile final : public BlockFile {
    // Constructor / Destructor
 
    /// Create the memory structure to refer to the given block file
-   LegacyBlockFile(wxFileName existingFile,
+   LegacyBlockFile(wxFileNameWrapper &&existingFile,
                    sampleFormat format,
                    sampleCount summaryLen,
                    sampleCount len,
@@ -54,7 +54,7 @@ class LegacyBlockFile final : public BlockFile {
                         sampleCount start, sampleCount len) const override;
 
    /// Create a NEW block file identical to this one
-   BlockFile *Copy(wxFileName newFileName) override;
+   BlockFile *Copy(wxFileNameWrapper &&newFileName) override;
    /// Write an XML representation of this file
    void SaveXML(XMLWriter &xmlFile) override;
    wxLongLong GetSpaceUsage() const override;

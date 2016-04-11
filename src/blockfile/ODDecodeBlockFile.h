@@ -42,10 +42,10 @@ class ODDecodeBlockFile final : public SimpleBlockFile
    // Constructor / Destructor
 
    /// Create a disk file and write summary and sample data to it
-   ODDecodeBlockFile(wxFileName baseFileName,wxFileName audioFileName, sampleCount aliasStart,
+   ODDecodeBlockFile(wxFileNameWrapper &&baseFileName, wxFileNameWrapper &&audioFileName, sampleCount aliasStart,
                      sampleCount aliasLen, int aliasChannel, unsigned int decodeType);
    /// Create the memory structure to refer to the given block file
-   ODDecodeBlockFile(wxFileName existingFile, wxFileName audioFileName, sampleCount aliasStart,
+   ODDecodeBlockFile(wxFileNameWrapper &&existingFile, wxFileNameWrapper &&audioFileName, sampleCount aliasStart,
                      sampleCount aliasLen, int aliasChannel, unsigned int decodeType,
                    float min, float max, float rms, bool dataAvailable);
 
@@ -77,7 +77,7 @@ class ODDecodeBlockFile final : public SimpleBlockFile
 
 
    ///Makes NEW ODPCMAliasBlockFile or PCMAliasBlockFile depending on summary availability
-   BlockFile *Copy(wxFileName fileName) override;
+   BlockFile *Copy(wxFileNameWrapper &&fileName) override;
 
    ///Saves as xml ODPCMAliasBlockFile or PCMAliasBlockFile depending on summary availability
    void SaveXML(XMLWriter &xmlFile) override;
@@ -129,10 +129,10 @@ class ODDecodeBlockFile final : public SimpleBlockFile
    ///set the decoder,
    void SetODFileDecoder(ODFileDecoder* decoder);
 
-   wxFileName GetAudioFileName(){return mAudioFileName;}
+   const wxFileName &GetAudioFileName(){return mAudioFileName;}
 
    ///sets the file name the summary info will be saved in.  threadsafe.
-   void SetFileName(wxFileName &name) override;
+   void SetFileName(wxFileNameWrapper &&name) override;
    wxFileName GetFileName() const override;
 
    /// Prevents a read on other threads of the encoded audio file.
@@ -142,7 +142,7 @@ class ODDecodeBlockFile final : public SimpleBlockFile
 
    ///// Get the name of the file where the audio data for this block is
    /// stored.
-   wxFileName GetEncodedAudioFilename()
+   const wxFileName &GetEncodedAudioFilename()
    {
       return mAudioFileName;
    }
@@ -150,7 +150,7 @@ class ODDecodeBlockFile final : public SimpleBlockFile
    /// Modify this block to point at a different file.  This is generally
    /// looked down on, but it is necessary in one case: see
    /// DirManager::EnsureSafeFilename().
-   void ChangeAudioFile(wxFileName newAudioFile);
+   void ChangeAudioFile(wxFileNameWrapper &&newAudioFile);
 
   protected:
 
@@ -165,7 +165,7 @@ class ODDecodeBlockFile final : public SimpleBlockFile
    mutable ODLock mFileNameMutex;
 
    ///The original file the audio came from.
-   wxFileName mAudioFileName;
+   wxFileNameWrapper mAudioFileName;
 
    mutable ODLock    mDataAvailableMutex;
    bool mDataAvailable;

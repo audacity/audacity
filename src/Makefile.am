@@ -248,6 +248,7 @@ audacity_SOURCES = \
 	WaveTrackLocation.h \
 	WrappedType.cpp \
 	WrappedType.h \
+	wxFileNameWrapper.h \
 	commands/AppCommandEvent.cpp \
 	commands/AppCommandEvent.h \
 	commands/BatchEvalCommand.cpp \
