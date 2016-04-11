@@ -356,5 +356,5 @@ std::unique_ptr<Effect> BuiltinEffectsModule::Instantiate(const wxString & path)
       EXCLUDE_LIST;
    }
 
-   return NULL;
+   return nullptr;
 }

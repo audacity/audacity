@@ -323,13 +323,13 @@ std::unique_ptr<ImportFileHandle> FFmpegImportPlugin::Open(const wxString &filen
    }
    if (!FFmpegLibsInst->ValidLibsLoaded())
    {
-      return NULL;
+      return nullptr;
    }
 
    // Open the file for import
    bool success = handle->Init();
    if (!success) {
-      return NULL;
+      return nullptr;
    }
 
    return std::move(handle);

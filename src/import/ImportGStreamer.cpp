@@ -103,40 +103,25 @@ struct g_mutex_locker
    GMutex &mutex;
 };
 
-struct GstString
-{
-   explicit GstString(gchar *string_ = nullptr)
-      : string(string_)
-   {}
-   ~GstString()
+template<typename T, void(*Fn)(T*)> struct Deleter {
+   inline void operator() (void *p) const
    {
-      reset();
+      if (p)
+         Fn(static_cast<T*>(p));
    }
-   void reset(gchar *string_ = nullptr)
-   {
-      if (string && string != string_)
-         g_free(string);
-      string = string_;
-   }
-   gchar *get() const { return string; }
-   explicit operator bool() const { return nullptr != get(); }
-
-   gchar *string;
 };
+using GstString = std::unique_ptr < gchar, Deleter<void, g_free> > ;
+using GErrorHandle = std::unique_ptr < GError, Deleter<GError, g_error_free> > ;
 
-struct GErrorHandle
+using ParseFn = void (*)(GstMessage *message, GError **gerror, gchar **debug);
+inline void GstMessageParse(ParseFn fn, GstMessage *msg, GErrorHandle &err, GstString &debug)
 {
-   explicit GErrorHandle(GError *error_ = nullptr)
-      : error(error_)
-   {}
-   ~GErrorHandle()
-   {
-      g_error_free(error);
-   }
-   GError *get() const { return error; }
-   explicit operator bool() const { return nullptr != get(); }
    GError *error;
-};
+   gchar *string;
+   fn(msg, &error, &string);
+   err.reset(error);
+   debug.reset(string);
+}
 
 // Context used for private stream data
 struct GStreamContext
@@ -171,56 +156,7 @@ struct GStreamContext
 };
 
 // For RAII on gst objects
-template<typename T>
-struct GstObjHandle
-{
-   explicit GstObjHandle(T* obj_ = nullptr)
-      : obj(obj_)
-   {}
-   ~GstObjHandle()
-   {
-      unref();
-   }
-
-   void unref()
-   {
-      if (obj) {
-         gst_object_unref(obj);
-         obj = nullptr;
-      }
-   }
-
-   GstObjHandle(const GstObjHandle&) PROHIBITED;
-   GstObjHandle &operator= (const GstObjHandle&) PROHIBITED;
-
-   GstObjHandle(GstObjHandle&& that)
-      : obj(that.obj)
-   {
-      that.obj = nullptr;
-   }
-   GstObjHandle &operator= (GstObjHandle&& that)
-   {
-      if (this != &that) {
-         unref();
-         obj = that.obj;
-         that.obj = nullptr;
-      }
-      return *this;
-   }
-
-   T* get() const { return obj; }
-   explicit operator bool() const
-   { return nullptr != get(); }
-   void reset(T* obj_ = nullptr)
-   {
-      if (obj != obj_) {
-         unref();
-         obj = obj_;
-      }
-   }
-
-   T *obj;
-};
+template<typename T> using GstObjHandle = std::unique_ptr < T, Deleter<void, gst_object_unref > > ;
 
 ///! Does actual import, returned by GStreamerImportPlugin::Open
 class GStreamerImportFileHandle final : public ImportFileHandle
@@ -338,13 +274,15 @@ GetGStreamerImportPlugin(ImportPluginList *importPluginList,
    GErrorHandle error;
    int argc = 0;
    char **argv = NULL;
-   if (!gst_init_check(&argc, &argv, &error.error))
+   GError *ee;
+   if (!gst_init_check(&argc, &argv, &ee))
    {
       wxLogMessage(wxT("Failed to initialize GStreamer. Error %d: %s"),
                    error.get()->code,
                    wxString::FromUTF8(error.get()->message).c_str());
       return;
    }
+   error.reset(ee);
 
    guint major, minor, micro, nano;
    gst_version(&major, &minor, &micro, &nano);
@@ -413,10 +351,10 @@ GStreamerImportPlugin::GetSupportedExtensions()
 
    // Gather extensions from all factories that support audio
    {
-      GList *factories = gst_type_find_factory_get_list();
-      auto cleanup = finally([&]{ gst_plugin_feature_list_free(factories); });
+      std::unique_ptr < GList, Deleter<GList, gst_plugin_feature_list_free> >
+         factories{ gst_type_find_factory_get_list() };
 
-      for (GList *list = factories; list != NULL; list = g_list_next(list))
+      for (GList *list = factories.get(); list != NULL; list = g_list_next(list))
       {
          GstTypeFindFactory *factory = GST_TYPE_FIND_FACTORY(list->data);
 
@@ -548,6 +486,8 @@ GStreamerPadRemovedCallback(GstElement * WXUNUSED(element),
 
 // ----------------------------------------------------------------------------
 // Handle the "NEW-sample" signal from uridecodebin
+inline void GstSampleUnref(GstSample *p) { gst_sample_unref(p); } // I can't use the static function name directly...
+
 static GstFlowReturn
 GStreamerNewSample(GstAppSink *appsink, gpointer data)
 {
@@ -555,17 +495,14 @@ GStreamerNewSample(GstAppSink *appsink, gpointer data)
    static GMutex mutex;
 
    // Get the sample
-   GstSample *sample = gst_app_sink_pull_sample(appsink);
-   auto cleanup = finally([&]{
-      // Release the sample
-      if(sample) gst_sample_unref(sample);
-   });
+   std::unique_ptr < GstSample, Deleter< GstSample, GstSampleUnref> >
+      sample{ gst_app_sink_pull_sample(appsink) };
 
    // We must single thread here to prevent concurrent use of the
    // Audacity track functions.
    g_mutex_locker locker{ mutex };
 
-   handle->OnNewSample(GETCTX(appsink), sample);
+   handle->OnNewSample(GETCTX(appsink), sample.get());
 
    return GST_FLOW_OK;
 }
@@ -586,19 +523,8 @@ static GstAppSinkCallbacks AppSinkBitBucket =
    NULL                    // new_sample
 };
 
-struct GstCapsHandle
-{
-   explicit GstCapsHandle(GstCaps *caps_)
-      : caps(caps_)
-   {}
-   ~GstCapsHandle()
-   {
-      if (caps)
-         gst_caps_unref(caps);
-   }
-
-   GstCaps *caps;
-};
+inline void GstCapsUnref(GstCaps *p) { gst_caps_unref(p); } // I can't use the static function name directly...
+using GstCapsHandle = std::unique_ptr < GstCaps, Deleter<GstCaps, GstCapsUnref> >;
 
 // ----------------------------------------------------------------------------
 // Handle the "pad-added" message
@@ -1246,6 +1172,8 @@ GStreamerImportFileHandle::Import(TrackFactory *trackFactory,
 // Message handlers
 // ----------------------------------------------------------------------------
 
+inline void GstMessageUnref(GstMessage *p) { gst_message_unref(p); }
+
 // ----------------------------------------------------------------------------
 // Retrieve and process a bus message
 bool
@@ -1257,11 +1185,8 @@ GStreamerImportFileHandle::ProcessBusMessage(bool & success)
    success = true;
 
    // Get the next message
-   GstMessage *msg = gst_bus_timed_pop(mBus.get(), 100 * GST_MSECOND);
-   auto cleanp = finally([&]{
-      // Release the message
-      if (msg) gst_message_unref(msg);
-   });
+   std::unique_ptr < GstMessage, Deleter < GstMessage, GstMessageUnref > >
+      msg{ gst_bus_timed_pop(mBus.get(), 100 * GST_MSECOND) };
 
    if (!msg)
    {
@@ -1278,14 +1203,14 @@ GStreamerImportFileHandle::ProcessBusMessage(bool & success)
       }
 
       wxLogMessage(wxT("GStreamer: Got %s%s%s"),
-         wxString::FromUTF8(GST_MESSAGE_TYPE_NAME(msg)).c_str(),
+         wxString::FromUTF8(GST_MESSAGE_TYPE_NAME(msg.get())).c_str(),
          objname ? wxT(" from ") : wxT(""),
          objname ? wxString::FromUTF8(objname.get()).c_str() : wxT(""));
    }
 #endif
 
    // Handle based on message type
-   switch (GST_MESSAGE_TYPE(msg))
+   switch (GST_MESSAGE_TYPE(msg.get()))
    {
       // Handle error message from gstreamer
       case GST_MESSAGE_ERROR:
@@ -1293,7 +1218,7 @@ GStreamerImportFileHandle::ProcessBusMessage(bool & success)
          GErrorHandle err;
          GstString debug;
 
-         gst_message_parse_error(msg, &err.error, &debug.string);
+         GstMessageParse(gst_message_parse_error, msg.get(), err, debug);
          if (err)
          {
             wxString m;
@@ -1319,8 +1244,7 @@ GStreamerImportFileHandle::ProcessBusMessage(bool & success)
       {
          GErrorHandle err;
          GstString debug;
-
-         gst_message_parse_warning(msg, &err.error, &debug.string);
+         GstMessageParse(gst_message_parse_warning, msg.get(), err, debug);
 
          if (err)
          {
@@ -1338,7 +1262,7 @@ GStreamerImportFileHandle::ProcessBusMessage(bool & success)
          GErrorHandle err;
          GstString debug;
 
-         gst_message_parse_info(msg, &err.error, &debug.string);
+         GstMessageParse(gst_message_parse_info, msg.get(), err, debug);
          if (err)
          {
             wxLogMessage(wxT("GStreamer Info: %s%s%s"),
@@ -1359,11 +1283,11 @@ GStreamerImportFileHandle::ProcessBusMessage(bool & success)
          });
 
          // Retrieve tag list from message...just ignore failure
-         gst_message_parse_tag(msg, &tags);
+         gst_message_parse_tag(msg.get(), &tags);
          if (tags)
          {
             // Go process the list
-            OnTag(GST_APP_SINK(GST_MESSAGE_SRC(msg)), tags);
+            OnTag(GST_APP_SINK(GST_MESSAGE_SRC(msg.get())), tags);
          }
       }
       break;

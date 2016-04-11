@@ -1819,7 +1819,7 @@ std::unique_ptr<wxCmdLineParser> AudacityApp::ParseCommandLine()
    auto parser = std::make_unique<wxCmdLineParser>(argc, argv);
    if (!parser)
    {
-      return NULL;
+      return nullptr;
    }
 
    /*i18n-hint: This controls the number of bytes that Audacity will

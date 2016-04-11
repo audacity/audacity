@@ -185,7 +185,7 @@ std::unique_ptr<ImportFileHandle> OggImportPlugin::Open(const wxString &filename
       // No need for a message box, it's done automatically (but how?)
       delete vorbisFile;
       delete file;
-      return NULL;
+      return nullptr;
    }
 
    int err = ov_open(file->fp(), vorbisFile, NULL, 0);
@@ -215,7 +215,7 @@ std::unique_ptr<ImportFileHandle> OggImportPlugin::Open(const wxString &filename
       file->Close();
       delete vorbisFile;
       delete file;
-      return NULL;
+      return nullptr;
    }
 
    return std::make_unique<OggImportFileHandle>(filename, file, vorbisFile);

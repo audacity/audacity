@@ -186,7 +186,7 @@ std::unique_ptr<ImportFileHandle> MP3ImportPlugin::Open(const wxString &Filename
 
    if (!file->IsOpened()) {
       delete file;
-      return NULL;
+      return nullptr;
    }
 
    /* There's no way to tell if this is a valid mp3 file before actually

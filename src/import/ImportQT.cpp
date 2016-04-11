@@ -191,12 +191,12 @@ std::unique_ptr<ImportFileHandle> QTImportPlugin::Open(const wxString & Filename
 #endif
 
    if (err != noErr) {
-      return NULL;
+      return nullptr;
    }
 
    err = QTNewDataReferenceFromFSRef(&inRef, 0, &dataRef, &dataRefType);
    if (err != noErr) {
-      return NULL;
+      return nullptr;
    }
 
    // instantiate the movie
@@ -207,7 +207,7 @@ std::unique_ptr<ImportFileHandle> QTImportPlugin::Open(const wxString & Filename
                              dataRefType);
    DisposeHandle(dataRef);
    if (err != noErr) {
-      return NULL;
+      return nullptr;
    }
 
    return std::make_unique<QTImportFileHandle>(Filename, theMovie);

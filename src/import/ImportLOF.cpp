@@ -190,7 +190,7 @@ std::unique_ptr<ImportFileHandle> LOFImportPlugin::Open(const wxString &filename
    // Check if it is a binary file
    wxFile binaryFile;
    if (!binaryFile.Open(filename))
-      return NULL; // File not found
+      return nullptr; // File not found
 
    char buf[BINARY_FILE_CHECK_BUFFER_SIZE];
    int count = binaryFile.Read(buf, BINARY_FILE_CHECK_BUFFER_SIZE);
@@ -203,7 +203,7 @@ std::unique_ptr<ImportFileHandle> LOFImportPlugin::Open(const wxString &filename
       {
          // Assume it is a binary file
          binaryFile.Close();
-         return NULL;
+         return nullptr;
       }
    }
 
@@ -217,7 +217,7 @@ std::unique_ptr<ImportFileHandle> LOFImportPlugin::Open(const wxString &filename
    if (!file->IsOpened())
    {
       delete file;
-      return NULL;
+      return nullptr;
    }
 
    return std::make_unique<LOFImportFileHandle>(filename, file);

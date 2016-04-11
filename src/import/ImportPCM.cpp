@@ -167,7 +167,7 @@ std::unique_ptr<ImportFileHandle> PCMImportPlugin::Open(const wxString &filename
       //char str[1000];
       //sf_error_str((SNDFILE *)NULL, str, 1000);
 
-      return NULL;
+      return nullptr;
    } else if (file &&
               (info.format & SF_FORMAT_TYPEMASK) == SF_FORMAT_OGG) {
       // mchinen 15.1.2012 - disallowing libsndfile to handle
@@ -181,7 +181,7 @@ std::unique_ptr<ImportFileHandle> PCMImportPlugin::Open(const wxString &filename
       // When the bug is fixed, we can check version to avoid only
       // the broken builds.
 
-      return NULL;
+      return nullptr;
    }
 
    return std::make_unique<PCMImportFileHandle>(filename, file, info);
