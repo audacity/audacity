@@ -268,11 +268,19 @@ std::unique_ptr<ScreenshotCommand> ScreenFrame::CreateCommand()
 ScreenFrame::ScreenFrame(wxWindow * parent, wxWindowID id)
 :  wxFrame(parent, id, _("Screen Capture Frame"),
            wxDefaultPosition, wxDefaultSize,
+
 #if !defined(__WXMSW__)
-           wxFRAME_TOOL_WINDOW|
+
+   #if !defined(__WXMAC__) // bug1358
+           wxFRAME_TOOL_WINDOW |
+   #endif
+
 #else
+
            wxSTAY_ON_TOP|
+
 #endif
+
            wxSYSTEM_MENU|wxCAPTION|wxCLOSE_BOX),
    mContext(&wxGetApp(), GetActiveProject())
 {
