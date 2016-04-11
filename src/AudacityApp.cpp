@@ -832,7 +832,7 @@ void AudacityApp::OnMRUClear(wxCommandEvent& WXUNUSED(event))
 // Better, for example, to check the file type early on.
 void AudacityApp::OnMRUFile(wxCommandEvent& event) {
    int n = event.GetId() - ID_RECENT_FIRST;
-   wxString fullPathStr = mRecentFiles->GetHistoryFile(n);
+   const wxString &fullPathStr = mRecentFiles->GetHistoryFile(n);
 
    // Try to open only if not already open.
    // Test IsAlreadyOpen() here even though AudacityProject::MRUOpen() also now checks,
@@ -852,7 +852,8 @@ void AudacityApp::OnTimer(wxTimerEvent& WXUNUSED(event))
       if (ofqueue.GetCount()) {
          // Load each file on the queue
          while (ofqueue.GetCount()) {
-            wxString name(ofqueue[0]);
+            wxString name;
+            name.swap(ofqueue[0]);
             ofqueue.RemoveAt(0);
 
             // Get the user's attention if no file name was specified
@@ -1860,14 +1861,14 @@ void AudacityApp::AddUniquePathToPathList(const wxString &pathArg,
 {
    wxFileName pathNorm = pathArg;
    pathNorm.Normalize();
-   wxString path = pathNorm.GetFullPath();
+   const wxString newpath{ pathNorm.GetFullPath() };
 
    for(unsigned int i=0; i<pathList.GetCount(); i++) {
-      if (wxFileName(path) == wxFileName(pathList[i]))
+      if (wxFileName(newpath) == wxFileName(pathList[i]))
          return;
    }
 
-   pathList.Add(path);
+   pathList.Add(newpath);
 }
 
 // static
@@ -1894,11 +1895,11 @@ void AudacityApp::FindFilesInPathList(const wxString & pattern,
       return;
    }
 
-   wxFileName f;
+   wxFileName ff;
 
    for(size_t i = 0; i < pathList.GetCount(); i++) {
-      f = pathList[i] + wxFILE_SEP_PATH + pattern;
-      wxDir::GetAllFiles(f.GetPath(), &results, f.GetFullName(), flags);
+      ff = pathList[i] + wxFILE_SEP_PATH + pattern;
+      wxDir::GetAllFiles(ff.GetPath(), &results, ff.GetFullName(), flags);
    }
 }
 

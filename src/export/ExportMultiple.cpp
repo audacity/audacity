@@ -920,24 +920,28 @@ int ExportMultiple::ExportMultipleByTrack(bool byName,
 }
 
 int ExportMultiple::DoExport(int channels,
-                              wxFileName name,
+                              const wxFileName &inName,
                               bool selectedOnly,
                               double t0,
                               double t1,
                               const Tags &tags)
 {
-   wxLogDebug(wxT("Doing multiple Export: File name \"%s\""), (name.GetFullName()).c_str());
+   wxFileName name;
+
+   wxLogDebug(wxT("Doing multiple Export: File name \"%s\""), (inName.GetFullName()).c_str());
    wxLogDebug(wxT("Channels: %i, Start: %lf, End: %lf "), channels, t0, t1);
    if (selectedOnly) wxLogDebug(wxT("Selected Region Only"));
    else wxLogDebug(wxT("Whole Project"));
 
    if (mOverwrite->GetValue()) {
       // Make sure we don't overwrite (corrupt) alias files
-      if (!mProject->GetDirManager()->EnsureSafeFilename(name)) {
+      if (!mProject->GetDirManager()->EnsureSafeFilename(inName)) {
          return false;
       }
+      name = inName;
    }
    else {
+      name = inName;
       int i = 2;
       wxString base(name.GetName());
       while (name.FileExists()) {
@@ -946,9 +950,10 @@ int ExportMultiple::DoExport(int channels,
    }
 
    // Call the format export routine
+   const wxString fullPath{name.GetFullPath()};
    int success = mPlugins[mPluginIndex]->Export(mProject,
                                                 channels,
-                                                name.GetFullPath(),
+                                                fullPath,
                                                 selectedOnly,
                                                 t0,
                                                 t1,
@@ -957,7 +962,7 @@ int ExportMultiple::DoExport(int channels,
                                                 mSubFormatIndex);
 
    if (success == eProgressSuccess || success == eProgressStopped) {
-      mExported.Add(name.GetFullPath());
+      mExported.Add(fullPath);
    }
 
    Refresh();

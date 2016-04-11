@@ -135,11 +135,11 @@ public:
    // identify the filename being imported.
    void CreateProgress()
    {
-      wxFileName f(mFilename);
+      wxFileName ff(mFilename);
       wxString title;
 
       title.Printf(_("Importing %s"), GetFileDescription().c_str());
-      mProgress.create(title, f.GetFullName());
+      mProgress.create(title, ff.GetFullName());
    }
 
    // This is similar to GetImporterDescription, but if possible the
