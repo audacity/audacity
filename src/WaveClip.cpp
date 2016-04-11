@@ -294,7 +294,7 @@ WaveClip::WaveClip(DirManager *projDirManager, sampleFormat format, int rate)
 {
    mOffset = 0;
    mRate = rate;
-   mSequence = new Sequence(projDirManager, format);
+   mSequence = std::make_unique<Sequence>(projDirManager, format);
    mEnvelope = new Envelope();
    mWaveCache = new WaveCache();
    mSpecCache = new SpecCache();
@@ -312,7 +312,7 @@ WaveClip::WaveClip(const WaveClip& orig, DirManager *projDirManager)
 
    mOffset = orig.mOffset;
    mRate = orig.mRate;
-   mSequence = new Sequence(*orig.mSequence, projDirManager);
+   mSequence = std::make_unique<Sequence>(*orig.mSequence, projDirManager);
    mEnvelope = new Envelope();
    mEnvelope->Paste(0.0, orig.mEnvelope);
    mEnvelope->SetOffset(orig.GetOffset());
@@ -331,8 +331,6 @@ WaveClip::WaveClip(const WaveClip& orig, DirManager *projDirManager)
 
 WaveClip::~WaveClip()
 {
-   delete mSequence;
-
    delete mEnvelope;
    mEnvelope = NULL;
 
@@ -547,7 +545,7 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
       if (match &&
          mWaveCache->start == t0 &&
          mWaveCache->len >= numPixels) {
-         mWaveCache->LoadInvalidRegions(mSequence, true);
+         mWaveCache->LoadInvalidRegions(mSequence.get(), true);
          mWaveCache->ClearInvalidRegions();
 
          // Satisfy the request completely from the cache
@@ -604,7 +602,7 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
          //TODO: only load inval regions if
          //necessary.  (usually is the case, so no rush.)
          //also, we should be updating the NEW cache, but here we are patching the old one up.
-         oldCache->LoadInvalidRegions(mSequence, false);
+         oldCache->LoadInvalidRegions(mSequence.get(), false);
          oldCache->ClearInvalidRegions();
 
          // Copy what we can from the old cache.
@@ -1379,7 +1377,7 @@ void WaveClip::HandleXMLEndTag(const wxChar *tag)
 XMLTagHandler *WaveClip::HandleXMLChild(const wxChar *tag)
 {
    if (!wxStrcmp(tag, wxT("sequence")))
-      return mSequence;
+      return mSequence.get();
    else if (!wxStrcmp(tag, wxT("envelope")))
       return mEnvelope;
    else if (!wxStrcmp(tag, wxT("waveclip")))
@@ -1414,15 +1412,14 @@ bool WaveClip::CreateFromCopy(double t0, double t1, const WaveClip* other)
    other->TimeToSamplesClip(t0, &s0);
    other->TimeToSamplesClip(t1, &s1);
 
-   Sequence* oldSequence = mSequence;
+   std::unique_ptr<Sequence> oldSequence = std::move(mSequence);
    mSequence = NULL;
-   if (!other->mSequence->Copy(s0, s1, &mSequence))
+   if (!other->mSequence->Copy(s0, s1, mSequence))
    {
-      mSequence = oldSequence;
+      mSequence = std::move(oldSequence);
       return false;
    }
 
-   delete oldSequence;
    delete mEnvelope;
    mEnvelope = new Envelope();
    mEnvelope->CopyFrom(other->mEnvelope, (double)s0/mRate, (double)s1/mRate);
@@ -1461,7 +1458,7 @@ bool WaveClip::Paste(double t0, const WaveClip* other)
    TimeToSamplesClip(t0, &s0);
 
    bool result = false;
-   if (mSequence->Paste(s0, pastedClip->mSequence))
+   if (mSequence->Paste(s0, pastedClip->mSequence.get()))
    {
       MarkChanged();
       mEnvelope->Paste((double)s0/mRate + mOffset, pastedClip->mEnvelope);
@@ -1741,8 +1738,8 @@ bool WaveClip::Resample(int rate, ProgressDialog *progress)
    int outGenerated = 0;
    sampleCount numSamples = mSequence->GetNumSamples();
 
-   Sequence* newSequence =
-      new Sequence(mSequence->GetDirManager(), mSequence->GetSampleFormat());
+   auto newSequence =
+      std::make_unique<Sequence>(mSequence->GetDirManager(), mSequence->GetSampleFormat());
 
    /**
     * We want to keep going as long as we have something to feed the resampler
@@ -1796,13 +1793,9 @@ bool WaveClip::Resample(int rate, ProgressDialog *progress)
    delete[] inBuffer;
    delete[] outBuffer;
 
-   if (error)
+   if (!error)
    {
-      delete newSequence;
-   } else
-   {
-      delete mSequence;
-      mSequence = newSequence;
+      mSequence = std::move(newSequence);
       mRate = rate;
 
       // Invalidate wave display cache
