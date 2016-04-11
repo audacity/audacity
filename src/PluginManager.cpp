@@ -1448,9 +1448,9 @@ void PluginManager::FindFilesInPathList(const wxString & pattern,
    // Add the "Audacity" plug-ins directory
    wxFileName ff = PlatformCompatibility::GetExecutablePath();
 #if defined(__WXMAC__)
-   f.RemoveLastDir();
-   f.RemoveLastDir();
-   f.RemoveLastDir();
+   ff.RemoveLastDir();
+   ff.RemoveLastDir();
+   ff.RemoveLastDir();
 #endif
    ff.AppendDir(wxT("plug-ins"));
    paths.Add(ff.GetPath());
