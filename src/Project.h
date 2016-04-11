@@ -612,7 +612,7 @@ public:
    Meter *mPlaybackMeter{};
    Meter *mCaptureMeter{};
 
-   std::unique_ptr<ToolManager> mToolManager{};
+   std::unique_ptr<ToolManager> mToolManager;
 
  public:
    ToolManager *GetToolManager() { return mToolManager.get(); }
