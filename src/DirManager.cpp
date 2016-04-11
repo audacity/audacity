@@ -1145,12 +1145,11 @@ bool DirManager::MoveOrCopyToNewProjectDirectory(BlockFile *f, bool copy)
          //if it doesn't, we can assume it was written to the NEW name, which is fine.
          if (oldFileName.FileExists())
          {
-            bool ok = wxCopyFile(oldFileName.GetFullPath(),
+            auto oldPath = oldFileName.GetFullPath();
+            bool ok = wxCopyFile(oldPath,
                             newFileName.GetFullPath());
             if(ok && !copy)
-               // PRL:  Is this a bug?  Shouldn't it be the old path that
-               // is removed?
-               wxRemoveFile(f->GetFileName().GetFullPath());
+               wxRemoveFile(oldPath);
             else if (!ok)
                return false;
          }
