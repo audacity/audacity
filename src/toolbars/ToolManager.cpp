@@ -90,7 +90,9 @@ class ToolFrame final : public wxFrame
               wxDefaultSize,
               wxNO_BORDER |
               wxFRAME_NO_TASKBAR |
+#if !defined(__WXMAC__) // bug1358
               wxFRAME_TOOL_WINDOW |
+#endif
               wxFRAME_FLOAT_ON_PARENT )
    {
       int width = bar->GetSize().x;
