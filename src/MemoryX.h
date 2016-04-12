@@ -45,7 +45,8 @@ namespace std {
       {
          // Break compilation if Y* does not convert to X*
          // I should figure out the right use of enable_if instead
-         static_assert((static_cast<X*>((Y*){}), true));
+         static_assert((static_cast<X*>((Y*){}), true),
+                       "Pointer types not convertible");
       }
       
       inline void operator() (void *p) const
@@ -92,6 +93,10 @@ namespace std {
    inline nullptr_t __get_nullptr_t() {return nullptr_t(0);}
 
    #define nullptr std::__get_nullptr_t()
+
+   // "Cast" anything as an rvalue reference.
+   template<typename T> inline typename remove_reference<T>::type&& move(T&& t)
+   { return static_cast<typename std::remove_reference<T>::type&&>(t); }
 
    template<typename T, typename D = default_delete<T>> class unique_ptr
       : private D // use empty base optimization
@@ -289,10 +294,6 @@ namespace std {
    { return static_cast<T&&>(t); }
    template<typename T> inline T&& forward(typename remove_reference<T>::type&& t)
    { return static_cast<T&&>(t); }
-
-   // "Cast" anything as an rvalue reference.
-   template<typename T> inline typename remove_reference<T>::type&& move(T&& t)
-   { return static_cast<typename std::remove_reference<T>::type&&>(t); }
 
    // We need make_shared for ourselves, because the library doesn't use variadics
    template<typename X, typename... Args> inline shared_ptr<X> make_shared(Args&&... args)
