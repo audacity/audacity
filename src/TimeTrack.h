@@ -62,8 +62,8 @@ class TimeTrack final : public Track {
    // Lock and unlock the track: you must lock the track before
    // doing a copy and paste between projects.
 
-   bool Lock();
-   bool Unlock();
+   // bool Lock();
+   // bool Unlock();
 
    // Access the track's speed envelope
 
