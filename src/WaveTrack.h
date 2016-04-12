@@ -286,8 +286,10 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
    //
 
    bool Lock();
-   bool CloseLock(); //similar to Lock but should be called when the project closes.
    bool Unlock();
+
+   bool CloseLock(); //similar to Lock but should be called when the project closes.
+   // not balanced by unlocking calls.
 
    /** @brief Convert correctly between an (absolute) time in seconds and a number of samples.
     *

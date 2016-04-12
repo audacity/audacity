@@ -129,7 +129,8 @@ void ODPCMAliasBlockFile::Lock()
       PCMAliasBlockFile::Lock();
 }
 
-//when the file closes, it locks the blockfiles, but it calls this so we can check if it has been saved before.
+//when the file closes, it locks the blockfiles, but only conditionally.
+// It calls this so we can check if it has been saved before.
 void ODPCMAliasBlockFile::CloseLock()
 {
    if(mHasBeenSaved)

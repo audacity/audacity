@@ -343,9 +343,11 @@ public:
 
    /// Lock all blockfiles
    void Lock();
-   void CloseLock(); //similar to Lock but should be called when the project closes.
    /// Unlock all blockfiles
    void Unlock();
+
+   void CloseLock(); //similar to Lock but should be called when the project closes.
+   // not balanced by unlocking calls.
 
    ///Delete the wave cache - force redraw.  Thread-safe
    void DeleteWaveCache();
