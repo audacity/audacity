@@ -412,7 +412,7 @@ public:
       //sort by OD non OD.  load Non OD first so user can start editing asap.
       wxArrayString sortednames(filenames);
 
-      ODManager::Pause();
+      ODManager::Pauser pauser;
 
       sortednames.Sort(CompareNoCaseFileName);
       for (unsigned int i = 0; i < sortednames.GetCount(); i++) {
@@ -420,8 +420,6 @@ public:
          mProject->Import(sortednames[i]);
       }
       mProject->HandleResize(); // Adjust scrollers for NEW track sizes.
-
-      ODManager::Resume();
 
       return true;
    }
@@ -2500,7 +2498,7 @@ void AudacityProject::OpenFiles(AudacityProject *proj)
    //For the open menu we load OD first so user can edit asap.
    //first sort selectedFiles.
    selectedFiles.Sort(CompareNoCaseFileName);
-   ODManager::Pause();
+   ODManager::Pauser pauser;
 
    for (size_t ff = 0; ff < selectedFiles.GetCount(); ff++) {
       const wxString &fileName = selectedFiles[ff];
@@ -2534,9 +2532,6 @@ void AudacityProject::OpenFiles(AudacityProject *proj)
 
    gPrefs->Write(wxT("/LastOpenType"),wxT(""));
    gPrefs->Flush();
-
-   ODManager::Resume();
-
 }
 
 // Most of this string was duplicated 3 places. Made the warning consistent in this global.

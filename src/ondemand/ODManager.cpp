@@ -330,7 +330,7 @@ void ODManager::Start()
 //static function that prevents ODTasks from being scheduled
 //does not stop currently running tasks from completing their immediate subtask,
 //but presumably they will finish within a second
-void ODManager::Pause(bool pause)
+void ODManager::Pauser::Pause(bool pause)
 {
    if(IsInstanceCreated())
    {
@@ -349,7 +349,7 @@ void ODManager::Pause(bool pause)
    }
 }
 
-void ODManager::Resume()
+void ODManager::Pauser::Resume()
 {
    Pause(false);
 }
