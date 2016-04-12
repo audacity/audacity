@@ -239,8 +239,6 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    void AddImportedTracks(const wxString &fileName,
                           TrackHolders &&newTracks);
 
-   void LockAllBlocks();
-   void UnlockAllBlocks();
    bool Save(bool overwrite = true, bool fromSaveAs = false, bool bWantSaveCompressed = false);
    bool SaveAs(bool bWantSaveCompressed = false);
    bool SaveAs(const wxString & newFileName, bool bWantSaveCompressed = false, bool addToHistory = true);

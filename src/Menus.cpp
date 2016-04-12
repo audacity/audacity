@@ -4086,8 +4086,9 @@ void AudacityProject::OnPaste()
          if (!ff)
             ff = n;
 
+         Maybe<WaveTrack::Locker> locker;
          if (msClipProject != this && c->GetKind() == Track::Wave)
-            ((WaveTrack *) c)->Lock();
+            locker.create(static_cast<const WaveTrack*>(c));
 
          if (c->GetKind() == Track::Wave && n && n->GetKind() == Track::Wave)
          {
@@ -4126,9 +4127,6 @@ void AudacityProject::OnPaste()
                bPastedSomething |= n->Paste(t0, c);
             }
          }
-
-         if (msClipProject != this && c->GetKind() == Track::Wave)
-            ((WaveTrack *) c)->Unlock();
 
          if (bAdvanceClipboard){
             prev = c;
@@ -4264,8 +4262,9 @@ bool AudacityProject::HandlePasteNothingSelected()
       Track::Holder pNewTrack;
       Track* pFirstNewTrack = NULL;
       while (pClip) {
+         Maybe<WaveTrack::Locker> locker;
          if ((msClipProject != this) && (pClip->GetKind() == Track::Wave))
-            ((WaveTrack*)pClip)->Lock();
+            locker.create(static_cast<const WaveTrack*>(pClip));
 
          switch (pClip->GetKind()) {
          case Track::Wave:
@@ -4304,10 +4303,6 @@ bool AudacityProject::HandlePasteNothingSelected()
 
          pNewTrack->SetSelected(true);
          mTracks->Add(std::move(pNewTrack));
-
-         if (msClipProject != this && pClip->GetKind() == Track::Wave)
-            ((WaveTrack *) pClip)->Unlock();
-
 
          pClip = iterClip.Next();
       }

@@ -3292,30 +3292,6 @@ void AudacityProject::WriteXML(XMLWriter &xmlFile)
 
 }
 
-// Lock all blocks in all tracks of the last saved version
-void AudacityProject::LockAllBlocks()
-{
-   TrackListIterator iter(mLastSavedTracks);
-   Track *t = iter.First();
-   while (t) {
-      if (t->GetKind() == Track::Wave)
-         ((WaveTrack *) t)->Lock();
-      t = iter.Next();
-   }
-}
-
-// Unlock all blocks in all tracks of the last saved version
-void AudacityProject::UnlockAllBlocks()
-{
-   TrackListIterator iter(mLastSavedTracks);
-   Track *t = iter.First();
-   while (t) {
-      if (t->GetKind() == Track::Wave)
-         ((WaveTrack *) t)->Unlock();
-      t = iter.Next();
-   }
-}
-
 #if 0
 // I added this to "fix" bug #334.  At that time, we were on wxWidgets 2.8.12 and
 // there was a window between the closing of the "Save" progress dialog and the
@@ -3446,15 +3422,23 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
          // (Otherwise the NEW project would be fine, but the old one would
          // be empty of all of its files.)
 
-         if (mLastSavedTracks && !overwrite)
-            LockAllBlocks();
+         std::vector<movable_ptr<WaveTrack::Locker>> lockers;
+         if (mLastSavedTracks && !overwrite) {
+            lockers.reserve(mLastSavedTracks->size());
+            TrackListIterator iter(mLastSavedTracks);
+            Track *t = iter.First();
+            while (t) {
+               if (t->GetKind() == Track::Wave)
+                  lockers.push_back(
+                     make_movable<WaveTrack::Locker>(
+                        static_cast<const WaveTrack*>(t)));
+               t = iter.Next();
+            }
+         }
 
          // This renames the project directory, and moves or copies
          // all of our block files over.
          success = mDirManager->SetProject(projPath, projName, !overwrite);
-
-         if (mLastSavedTracks && !overwrite)
-            UnlockAllBlocks();
       }
 
       if (!success) {
