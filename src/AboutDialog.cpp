@@ -95,7 +95,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxString(wxT("Mitch Golden, ")) + _("developer"), roleContributor);
    AddCredit(wxString(wxT("Brian Gunlogson, ")) + _("developer"), roleContributor);
    AddCredit(wxString(wxT("Andrew Hallendorff, ")) + _("developer"), roleContributor);
-   AddCredit(wxString(wxT("Robert H\x00e4nggi, ")) + _("developer"), roleContributor);
+   AddCredit(wxString(wxT("Robert H\u00E4nggi, ")) + _("developer"), roleContributor);
    AddCredit(wxString(wxT("Daniel Horgan, ")) + _("developer"), roleContributor);
    AddCredit(wxString(wxT("David Hostetler, ")) + _("developer"), roleContributor);
    AddCredit(wxString(wxT("Steve Jolly, ")) + _("developer"), roleContributor);
@@ -108,7 +108,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxString(wxT("Paul Nasca, ")) + _("developer"), roleContributor);
    AddCredit(wxString(wxT("Clayton Otey, ")) + _("developer"), roleContributor);
    AddCredit(wxString(wxT("Mark Phillips, ")) + _("developer"), roleContributor);
-   AddCredit(wxString(wxT("Andr\x00e9 Pinto, ")) + _("developer"), roleContributor);
+   AddCredit(wxString(wxT("Andr\u00E9 Pinto, ")) + _("developer"), roleContributor);
    AddCredit(wxString(wxT("Jean Claude Risset, ")) + _("composer"), roleContributor);
    AddCredit(wxString(wxT("Augustus Saunders, ")) + _("developer"), roleContributor);
    AddCredit(wxString(wxT("Benjamin Schwartz, ")) + _("developer"), roleContributor);
@@ -128,7 +128,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Mikhail Balabanov (bg)"), roleTranslators);
    AddCredit(wxT("Francesc Busquets (ca)"), roleTranslators);
    AddCredit(wxT("Pau Crespo (ca)"), roleTranslators);
-   AddCredit(wxT("Ale\x0161 To\x0161ovsk\x00FD (cs)"), roleTranslators);
+   AddCredit(wxT("Ale\u0161 To\u0161ovsk\u00FD (cs)"), roleTranslators);
    AddCredit(wxT("Henrik Clausen (da)"), roleTranslators);
    AddCredit(wxT("Christoph Kobe (de)"), roleTranslators);
    AddCredit(wxT("Daniel Winzen (de)"), roleTranslators);
@@ -143,12 +143,12 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Christian Brochec (fr)"), roleTranslators);
    AddCredit(wxT("Fabrice Silva (fr)"), roleTranslators);
    AddCredit(wxT("Micil Sheain Mhicil (ga)"), roleTranslators);
-   AddCredit(wxT("Xos\x00E9 Ant\x00F3n Vicente Rodríguez (gl)"), roleTranslators);
-   AddCredit(wxT("M\x00E1rton Bal\x00E1zs (hu)"), roleTranslators);
+   AddCredit(wxT("Xos\u00E9 Ant\u00F3n Vicente Rodr\u00EDguez (gl)"), roleTranslators);
+   AddCredit(wxT("M\u00E1rton Bal\u00E1zs (hu)"), roleTranslators);
    AddCredit(wxT("Jozsef Herczeg (hu)"), roleTranslators);
    AddCredit(wxT("Aldo Boccacci (it)"), roleTranslators);
    AddCredit(wxT("Ohkubo Kohei (ja)"), roleTranslators);
-   AddCredit(wxT("Šarῡnas Gliebus (lt)"), roleTranslators);
+   AddCredit(wxT("\u015Car\u016Bnas Gliebus (lt)"), roleTranslators);
    AddCredit(wxT("Ilija Iliev (mk)"), roleTranslators);
    AddCredit(wxT("Kevin Brubeck Unhammer (nb)"), roleTranslators);
    AddCredit(wxT("Tino Meinen (nl)"), roleTranslators);
