@@ -302,11 +302,6 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
       Locker (const WaveTrack *pTrack)
          : LockerBase{ pTrack }
       { pTrack->Lock(); }
-      Locker(Locker &&that) : LockerBase{std::move(that)} {}
-      Locker &operator= (Locker &&that) {
-         (LockerBase&)(*this) = std::move(that);
-         return *this;
-      }
    };
 
    bool CloseLock(); //similar to Lock but should be called when the project closes.
