@@ -51,17 +51,6 @@ int CompareNoCaseFileName(const wxString& first, const wxString& second)
    return first.CmpNoCase(second);
 }
 
-void ODManager::LockLibSndFileMutex()
-{
-   sLibSndFileMutex.Lock();
-}
-
-void ODManager::UnlockLibSndFileMutex()
-{
-   sLibSndFileMutex.Unlock();
-}
-
-
 //private constructor - Singleton.
 ODManager::ODManager()
 {

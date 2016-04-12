@@ -84,7 +84,7 @@ int PCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
    }
 
    wxFile f;   // will be closed when it goes out of scope
-   SNDFILE *sf = NULL;
+   SFFile sf;
    {
       Maybe<wxLogNull> silence{};
       if (mSilentAliasLog)
@@ -97,13 +97,11 @@ int PCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
             // Even though there is an sf_open() that takes a filename, use the one that
             // takes a file descriptor since wxWidgets can open a file with a Unicode name and
             // libsndfile can't (under Windows).
-            ODManager::LockLibSndFileMutex();
-            sf = sf_open_fd(f.fd(), SFM_READ, &info, FALSE);
-            ODManager::UnlockLibSndFileMutex();
+            sf.reset(SFCall<SNDFILE*>(sf_open_fd, f.fd(), SFM_READ, &info, FALSE));
          }
       }
 
-      if (!sf){
+      if (!sf) {
          memset(data, 0, SAMPLE_SIZE(format)*len);
          silence.reset();
          mSilentAliasLog = TRUE;
@@ -116,9 +114,7 @@ int PCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
    }
    mSilentAliasLog=FALSE;
 
-   ODManager::LockLibSndFileMutex();
-   sf_seek(sf, mAliasStart + start, SEEK_SET);
-   ODManager::UnlockLibSndFileMutex();
+   SFCall<sf_count_t>(sf_seek, sf.get(), mAliasStart + start, SEEK_SET);
    SampleBuffer buffer(len * info.channels, floatSample);
 
    int framesRead = 0;
@@ -129,9 +125,7 @@ int PCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
       // and the calling method wants 16-bit data, go ahead and
       // read 16-bit data directly.  This is a pretty common
       // case, as most audio files are 16-bit.
-      ODManager::LockLibSndFileMutex();
-      framesRead = sf_readf_short(sf, (short *)buffer.ptr(), len);
-      ODManager::UnlockLibSndFileMutex();
+      framesRead = SFCall<sf_count_t>(sf_readf_short, sf.get(), (short *)buffer.ptr(), len);
       for (int i = 0; i < framesRead; i++)
          ((short *)data)[i] =
             ((short *)buffer.ptr())[(info.channels * i) + mAliasChannel];
@@ -140,18 +134,13 @@ int PCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
       // Otherwise, let libsndfile handle the conversion and
       // scaling, and pass us normalized data as floats.  We can
       // then convert to whatever format we want.
-      ODManager::LockLibSndFileMutex();
-      framesRead = sf_readf_float(sf, (float *)buffer.ptr(), len);
-      ODManager::UnlockLibSndFileMutex();
+      framesRead = SFCall<sf_count_t>(sf_readf_float, sf.get(), (float *)buffer.ptr(), len);
       float *bufferPtr = &((float *)buffer.ptr())[mAliasChannel];
       CopySamples((samplePtr)bufferPtr, floatSample,
                   (samplePtr)data, format,
                   framesRead, true, info.channels);
    }
 
-   ODManager::LockLibSndFileMutex();
-   sf_close(sf);
-   ODManager::UnlockLibSndFileMutex();
    return framesRead;
 }
 

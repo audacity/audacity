@@ -119,9 +119,6 @@ class ODManager final
       Pauser &operator= (const Pauser&) PROHIBITED;
    };
 
-   static void LockLibSndFileMutex();
-   static void UnlockLibSndFileMutex();
-
 
 
   protected:
