@@ -56,7 +56,7 @@ ODManager::ODManager()
 {
    mTerminate = false;
    mTerminated = false;
-   mPause= gPause;
+   mPause = gPause;
 
    //must set up the queue condition
    mQueueNotEmptyCond = new ODCondition(&mQueueNotEmptyCondLock);
@@ -86,11 +86,9 @@ void ODManager::AddTask(ODTask* task)
    paused=mPause;
    mPauseLock.Unlock();
 
-   mQueueNotEmptyCondLock.Lock();
    //don't signal if we are paused since if we wake up the loop it will start processing other tasks while paused
    if(!paused)
       mQueueNotEmptyCond->Signal();
-   mQueueNotEmptyCondLock.Unlock();
 }
 
 void ODManager::SignalTaskQueueLoop()
@@ -100,11 +98,9 @@ void ODManager::SignalTaskQueueLoop()
    mPauseLock.Lock();
    paused=mPause;
    mPauseLock.Unlock();
-   mQueueNotEmptyCondLock.Lock();
    //don't signal if we are paused
    if(!paused)
       mQueueNotEmptyCond->Signal();
-   mQueueNotEmptyCondLock.Unlock();
 }
 
 ///removes a task from the active task queue
@@ -280,10 +276,11 @@ void ODManager::Start()
 
       // JKC: If there are no tasks ready to run, or we're paused then
       // we wait for there to be tasks in the queue.
-      mQueueNotEmptyCondLock.Lock();
-      if( (!tasksInArray) || paused)
-         mQueueNotEmptyCond->Wait();
-      mQueueNotEmptyCondLock.Unlock();
+      {
+         ODLocker locker{ mQueueNotEmptyCondLock };
+         if( (!tasksInArray) || paused)
+            mQueueNotEmptyCond->Wait();
+      }
 
       //if there is some ODTask running, then there will be something in the queue.  If so then redraw to show progress
       mQueuesMutex.Lock();
@@ -327,10 +324,9 @@ void ODManager::Pauser::Pause(bool pause)
       pMan->mPause = pause;
       pMan->mPauseLock.Unlock();
 
-      //we should check the queue again.
-      pMan->mQueueNotEmptyCondLock.Lock();
-      pMan->mQueueNotEmptyCond->Signal();
-      pMan->mQueueNotEmptyCondLock.Unlock();
+      if(!pause)
+         //we should check the queue again.
+         pMan->mQueueNotEmptyCond->Signal();
    }
    else
    {
@@ -360,9 +356,7 @@ void ODManager::Quit()
          wxThread::Sleep(200);
 
          //signal the queue not empty condition since the ODMan thread will wait on the queue condition
-         pMan->mQueueNotEmptyCondLock.Lock();
          pMan->mQueueNotEmptyCond->Signal();
-         pMan->mQueueNotEmptyCondLock.Unlock();
 
          pMan->mTerminatedMutex.Lock();
       }
