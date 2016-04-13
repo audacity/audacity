@@ -148,7 +148,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Jozsef Herczeg (hu)"), roleTranslators);
    AddCredit(wxT("Aldo Boccacci (it)"), roleTranslators);
    AddCredit(wxT("Ohkubo Kohei (ja)"), roleTranslators);
-   AddCredit(wxT("\u015Car\u016Bnas Gliebus (lt)"), roleTranslators);
+   AddCredit(wxT("\u0160ar\u016Bnas Gliebus (lt)"), roleTranslators);
    AddCredit(wxT("Ilija Iliev (mk)"), roleTranslators);
    AddCredit(wxT("Kevin Brubeck Unhammer (nb)"), roleTranslators);
    AddCredit(wxT("Tino Meinen (nl)"), roleTranslators);
