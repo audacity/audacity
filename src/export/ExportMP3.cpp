@@ -1605,6 +1605,7 @@ private:
 #ifdef USE_LIBID3TAG
    void AddFrame(struct id3_tag *tp, const wxString & n, const wxString & v, const char *name);
 #endif
+   int SetNumExportChannels() override;
 };
 
 ExportMP3::ExportMP3()
@@ -1635,6 +1636,15 @@ bool ExportMP3::CheckFileName(wxFileName & WXUNUSED(filename), int WXUNUSED(form
 
    return true;
 }
+
+int ExportMP3::SetNumExportChannels()
+{
+   bool mono;
+   gPrefs->Read(wxT("/FileFormats/MP3ForceMono"), &mono, 0);
+
+   return (mono)? 1 : -1;
+}
+
 
 int ExportMP3::Export(AudacityProject *project,
                        int channels,
