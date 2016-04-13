@@ -372,7 +372,7 @@ int ODFFmpegDecoder::Decode(SampleBuffer & data, sampleFormat & format, sampleCo
          // for some formats
          // The only other case for inserting silence is for initial offset and ImportFFmpeg.cpp does this for us
          if (seeking) {
-            actualDecodeStart = 0.52 + (sc->m_stream->codec->sample_rate * sc->m_pkt.dts
+            actualDecodeStart = 0.52 + (sc->m_stream->codec->sample_rate * sc->m_pkt->dts
                                         * ((double)sc->m_stream->time_base.num / sc->m_stream->time_base.den));
             //this is mostly safe because den is usually 1 or low number but check for high values.
 
@@ -421,11 +421,7 @@ int ODFFmpegDecoder::Decode(SampleBuffer & data, sampleFormat & format, sampleCo
                   break;
 
          // Cleanup after frame decoding
-         if (sc->m_pktValid)
-         {
-            av_free_packet(&sc->m_pkt);
-            sc->m_pktValid = 0;
-         }
+         sc->m_pkt.reset();
       }
    }
 
@@ -434,14 +430,11 @@ int ODFFmpegDecoder::Decode(SampleBuffer & data, sampleFormat & format, sampleCo
    {
       for (int i = 0; i < mChannels.size(); i++)
       {
+         sc->m_pkt.create();
          sc = scs[i].get();
          if (DecodeFrame(sc, true) == 0)
          {
-            if (sc->m_pktValid)
-            {
-               av_free_packet(&sc->m_pkt);
-               sc->m_pktValid = 0;
-            }
+            sc->m_pkt.reset();
          }
       }
    }

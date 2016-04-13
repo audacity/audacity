@@ -304,8 +304,11 @@ FFmpegContext::~FFmpegContext()
 
    if (pb) {
       ufile_close(pb);
-      av_free(pb->buffer);
-      av_free(pb);
+      if (FFmpegLibsInst->ValidLibsLoaded())
+      {
+         av_free(pb->buffer);
+         av_free(pb);
+      }
    }
 }
 
@@ -314,14 +317,14 @@ streamContext *import_ffmpeg_read_next_frame(AVFormatContext* formatContext,
                                              unsigned int numStreams)
 {
    streamContext *sc = NULL;
-   AVPacket pkt;
+   AVPacketEx pkt;
 
-   if (av_read_frame(formatContext,&pkt) < 0)
+   if (av_read_frame(formatContext, &pkt) < 0)
    {
       return NULL;
    }
 
-   // Find a stream to which this frame belongs to
+   // Find a stream to which this frame belongs
    for (unsigned int i = 0; i < numStreams; i++)
    {
       if (streams[i]->m_stream->index == pkt.stream_index)
@@ -332,16 +335,14 @@ streamContext *import_ffmpeg_read_next_frame(AVFormatContext* formatContext,
    // When not all streams are selected for import this will happen very often.
    if (sc == NULL)
    {
-      av_free_packet(&pkt);
       return (streamContext*)1;
    }
 
    // Copy the frame to the stream context
-   memcpy(&sc->m_pkt, &pkt, sizeof(AVPacket));
+   sc->m_pkt.create(std::move(pkt));
 
-   sc->m_pktValid = 1;
-   sc->m_pktDataPtr = pkt.data;
-   sc->m_pktRemainingSiz = pkt.size;
+   sc->m_pktDataPtr = sc->m_pkt->data;
+   sc->m_pktRemainingSiz = sc->m_pkt->size;
 
    return sc;
 }
@@ -362,24 +363,23 @@ int import_ffmpeg_decode_frame(streamContext *sc, bool flushing)
    }
    else
    {
-      if (!sc->m_pktValid || (sc->m_pktRemainingSiz <= 0))
+      if (!sc->m_pkt || (sc->m_pktRemainingSiz <= 0))
       {
          //No more data
          return -1;
       }
    }
 
-   AVPacket avpkt;
-   av_init_packet(&avpkt);
+   AVPacketEx avpkt;
    avpkt.data = pDecode;
    avpkt.size = nDecodeSiz;
 
-   AVFrame *frame = av_frame_alloc();
+   AVFrameHolder frame{ av_frame_alloc() };
    int got_output = 0;
 
    nBytesDecoded =
       avcodec_decode_audio4(sc->m_codecCtx,
-                            frame,                                   // out
+                            frame.get(),                                   // out
                             &got_output,                             // out
                             &avpkt);                                 // in
 
@@ -398,15 +398,11 @@ int import_ffmpeg_decode_frame(streamContext *sc, bool flushing)
    // Reallocate the audio sample buffer if it's smaller than the frame size.
    if (newsize > sc->m_decodedAudioSamplesSiz )
    {
-      if (sc->m_decodedAudioSamples)
-      {
-         av_free(sc->m_decodedAudioSamples);
-      }
-
-      sc->m_decodedAudioSamples = (uint8_t *) av_malloc(newsize);
+      // Reallocate a bigger buffer.  But av_realloc is NOT compatible with the returns of av_malloc!
+      // So do this:
+      sc->m_decodedAudioSamples.reset(static_cast<uint8_t *>(av_malloc(newsize)));
       sc->m_decodedAudioSamplesSiz = newsize;
-
-      if (sc->m_decodedAudioSamples == NULL)
+      if (!sc->m_decodedAudioSamples)
       {
          //Can't allocate bytes
          return -1;
@@ -415,16 +411,14 @@ int import_ffmpeg_decode_frame(streamContext *sc, bool flushing)
    if (frame->data[1]) {
       for (int i = 0; i<frame->nb_samples; i++) {
          for (int ch = 0; ch<channels; ch++) {
-            memcpy(sc->m_decodedAudioSamples + sc->m_samplesize * (ch + channels*i),
+            memcpy(sc->m_decodedAudioSamples.get() + sc->m_samplesize * (ch + channels*i),
                   frame->extended_data[ch] + sc->m_samplesize*i,
                   sc->m_samplesize);
          }
       }
    } else {
-      memcpy(sc->m_decodedAudioSamples, frame->data[0], newsize);
+      memcpy(sc->m_decodedAudioSamples.get(), frame->data[0], newsize);
    }
-
-   av_frame_free(&frame);
 
    // We may not have read all of the data from this packet. If so, the user can call again.
    // Whether or not they do depends on if m_pktRemainingSiz == 0 (they can check).
@@ -889,6 +883,7 @@ bool FFmpegLibs::InitLibs(const wxString &libpath_format, bool WXUNUSED(showerr)
    FFMPEG_INITDYN(avformat, avio_size);
    FFMPEG_INITDYN(avformat, avio_alloc_context);
    FFMPEG_INITALT(avformat, av_guess_format, avformat, guess_format);
+   FFMPEG_INITDYN(avformat, avformat_free_context);
 
    FFMPEG_INITDYN(avcodec, av_init_packet);
    FFMPEG_INITDYN(avcodec, av_free_packet);
@@ -906,6 +901,7 @@ bool FFmpegLibs::InitLibs(const wxString &libpath_format, bool WXUNUSED(showerr)
    FFMPEG_INITDYN(avcodec, avcodec_fill_audio_frame);
 
    FFMPEG_INITDYN(avutil, av_free);
+   FFMPEG_INITDYN(avutil, av_dict_free);
    FFMPEG_INITDYN(avutil, av_dict_get);
    FFMPEG_INITDYN(avutil, av_dict_set);
    FFMPEG_INITDYN(avutil, av_get_bytes_per_sample);
@@ -918,7 +914,7 @@ bool FFmpegLibs::InitLibs(const wxString &libpath_format, bool WXUNUSED(showerr)
    FFMPEG_INITDYN(avutil, av_fifo_size);
    FFMPEG_INITDYN(avutil, av_malloc);
    FFMPEG_INITDYN(avutil, av_fifo_generic_write);
-   FFMPEG_INITDYN(avutil, av_freep);
+   // FFMPEG_INITDYN(avutil, av_freep);
    FFMPEG_INITDYN(avutil, av_rescale_q);
    FFMPEG_INITDYN(avutil, avutil_version);
    FFMPEG_INITALT(avutil, av_frame_alloc, avcodec, avcodec_alloc_frame);

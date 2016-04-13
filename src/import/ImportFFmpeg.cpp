@@ -359,19 +359,15 @@ bool FFmpegImportFileHandle::Init()
    av_log_set_callback(av_log_wx_callback);
 
    int err;
+   std::unique_ptr<FFmpegContext> tempContext;
+   err = ufile_fopen_input(tempContext, mName);
+   if (err < 0)
    {
-      std::unique_ptr<FFmpegContext> tempContext;
-      err = ufile_fopen_input(tempContext, mName);
-      if (err < 0)
-      {
-         wxLogError(wxT("FFmpeg : av_open_input_file() failed for file %s"), mName.c_str());
-         return false;
-      }
-      wxASSERT(tempContext.get());
-      // Move from unique to shared pointer
-      mContext.reset(tempContext.release());
+      wxLogError(wxT("FFmpeg : av_open_input_file() failed for file %s"), mName.c_str());
+      return false;
    }
-   mFormatContext = mContext->ic_ptr;
+   wxASSERT(tempContext.get());
+   mFormatContext = tempContext->ic_ptr;
 
    err = avformat_find_stream_info(mFormatContext, NULL);
    if (err < 0)
@@ -380,7 +376,13 @@ bool FFmpegImportFileHandle::Init()
       return false;
    }
 
-   InitCodecs();
+   if (!InitCodecs())
+      return false;
+
+   // Only now do we postpone destroying the FFmpegContext.
+   // Move from unique to shared pointer
+   mContext.reset(tempContext.release());
+
    return true;
 }
 
@@ -648,11 +650,7 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
          }
 
          // Cleanup after frame decoding
-         if (sc->m_pktValid)
-         {
-            av_free_packet(&sc->m_pkt);
-            sc->m_pktValid = 0;
-         }
+         sc->m_pkt.reset();
       }
    }
 
@@ -662,15 +660,12 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
       for (int i = 0; i < mNumStreams; i++)
       {
          auto sc = scs[i].get();
+         sc->m_pkt.create();
          if (DecodeFrame(sc, true) == 0)
          {
             WriteData(sc);
 
-            if (sc->m_pktValid)
-            {
-               av_free_packet(&sc->m_pkt);
-               sc->m_pktValid = 0;
-            }
+            sc->m_pkt.reset();
          }
       }
    }
@@ -743,7 +738,7 @@ int FFmpegImportFileHandle::WriteData(streamContext *sc)
    }
 
    // Separate the channels and convert input sample format to 16-bit
-   uint8_t *in = sc->m_decodedAudioSamples;
+   uint8_t *in = sc->m_decodedAudioSamples.get();
    int index = 0;
    int pos = 0;
    while (pos < insamples)
@@ -810,9 +805,9 @@ int FFmpegImportFileHandle::WriteData(streamContext *sc)
    int updateResult = eProgressSuccess;
    int64_t filesize = avio_size(mFormatContext->pb);
    // PTS (presentation time) is the proper way of getting current position
-   if (sc->m_pkt.pts != int64_t(AV_NOPTS_VALUE) && mFormatContext->duration != int64_t(AV_NOPTS_VALUE))
+   if (sc->m_pkt->pts != int64_t(AV_NOPTS_VALUE) && mFormatContext->duration != int64_t(AV_NOPTS_VALUE))
    {
-      mProgressPos = sc->m_pkt.pts * sc->m_stream->time_base.num / sc->m_stream->time_base.den;
+      mProgressPos = sc->m_pkt->pts * sc->m_stream->time_base.num / sc->m_stream->time_base.den;
       mProgressLen = (mFormatContext->duration > 0 ? mFormatContext->duration / AV_TIME_BASE: 1);
    }
    // When PTS is not set, use number of frames and number of current frame
@@ -822,9 +817,9 @@ int FFmpegImportFileHandle::WriteData(streamContext *sc)
       mProgressLen = sc->m_stream->nb_frames;
    }
    // When number of frames is unknown, use position in file
-   else if (filesize > 0 && sc->m_pkt.pos > 0 && sc->m_pkt.pos <= filesize)
+   else if (filesize > 0 && sc->m_pkt->pos > 0 && sc->m_pkt->pos <= filesize)
    {
-      mProgressPos = sc->m_pkt.pos;
+      mProgressPos = sc->m_pkt->pos;
       mProgressLen = filesize;
    }
    updateResult = mProgress->Update(mProgressPos, mProgressLen != 0 ? mProgressLen : 1);
