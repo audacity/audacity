@@ -304,6 +304,7 @@ FFmpegContext::~FFmpegContext()
 
    if (pb) {
       ufile_close(pb);
+      av_free(pb->buffer);
       av_free(pb);
    }
 }
