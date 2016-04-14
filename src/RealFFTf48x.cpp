@@ -94,9 +94,9 @@ void TableUsage(int iMask)
 SinCosTable::SinCosTable() :
 mSinCosTablePow(13)
 {
-   int tableSize=1<<mSinCosTablePow;
-   mSinCosTable=new SinCosStruct[tableSize];
-   for(int i=0;i<tableSize;i++) {
+   size_t tableSize=1<<mSinCosTablePow;
+   mSinCosTable.reinit(tableSize);
+   for(size_t i=0;i<tableSize;i++) {
       mSinCosTable[i].mSin=(float)-sin(((float)i)*M_PI/tableSize);
       mSinCosTable[i].mCos=(float)-cos(((float)i)*M_PI/tableSize);
    }

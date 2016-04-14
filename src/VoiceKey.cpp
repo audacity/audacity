@@ -149,8 +149,9 @@ sampleCount VoiceKey::OnForward (
 
          //To speed things up, create a local buffer to store things in, to avoid the costly t.Get();
          //Only go through the first SignalWindowSizeInt samples, and choose the first that trips the key.
-         float *buffer = new float[remaining];
-         t.Get((samplePtr)buffer, floatSample, lastsubthresholdsample, remaining);
+         Floats buffer{ remaining };
+         t.Get((samplePtr)buffer.get(), floatSample,
+               lastsubthresholdsample, remaining);
 
 
 
@@ -226,7 +227,6 @@ sampleCount VoiceKey::OnForward (
          }
 
          //When we get here, i+lastsubthresholdsample is the best guess for where the word starts
-         delete [] buffer;
          return i + lastsubthresholdsample;
       }
       else {
@@ -299,8 +299,9 @@ sampleCount VoiceKey::OnBackward (
 
          //To speed things up, create a local buffer to store things in, to avoid the costly t.Get();
          //Only go through the first mSilentWindowSizeInt samples, and choose the first that trips the key.
-         float *buffer = new float[remaining];
-         t.Get((samplePtr)buffer, floatSample, lastsubthresholdsample-remaining, remaining);
+         Floats buffer{ remaining };
+         t.Get((samplePtr)buffer.get(), floatSample,
+               lastsubthresholdsample - remaining, remaining);
 
          //Initialize these trend markers atrend and ztrend.  They keep track of the
          //up/down trends at the start and end of the evaluation window.
@@ -364,7 +365,6 @@ sampleCount VoiceKey::OnBackward (
          }
 
          //When we get here, i+lastsubthresholdsample is the best guess for where the word starts
-         delete [] buffer;
          return lastsubthresholdsample - remaining + i;
       }
       else {
@@ -435,8 +435,9 @@ sampleCount VoiceKey::OffForward (
 
          //To speed things up, create a local buffer to store things in, to avoid the costly t.Get();
          //Only go through the first SilentWindowSizeInt samples, and choose the first that trips the key.
-         float *buffer = new float[remaining];
-         t.Get((samplePtr)buffer, floatSample, lastsubthresholdsample, remaining);
+         Floats buffer{ remaining };
+         t.Get((samplePtr)buffer.get(), floatSample,
+               lastsubthresholdsample, remaining);
 
          //Initialize these trend markers atrend and ztrend.  They keep track of the
          //up/down trends at the start and end of the evaluation window.
@@ -500,7 +501,6 @@ sampleCount VoiceKey::OffForward (
          }
 
          //When we get here, i+lastsubthresholdsample is the best guess for where the word starts
-         delete [] buffer;
          return i + lastsubthresholdsample;
       }
       else {
@@ -572,8 +572,8 @@ sampleCount VoiceKey::OffBackward (
 
          //To speed things up, create a local buffer to store things in, to avoid the costly t.Get();
          //Only go through the first SilentWindowSizeInt samples, and choose the first that trips the key.
-         float *buffer = new float[remaining];
-         t.Get((samplePtr)buffer, floatSample,
+         Floats buffer{ remaining };
+         t.Get((samplePtr)buffer.get(), floatSample,
                lastsubthresholdsample - remaining, remaining);
 
          //Initialize these trend markers atrend and ztrend.  They keep track of the
@@ -641,7 +641,6 @@ sampleCount VoiceKey::OffBackward (
          }
 
          //When we get here, i+lastsubthresholdsample is the best guess for where the word starts
-         delete [] buffer;
          return lastsubthresholdsample - remaining + i;
       }
       else {
@@ -849,14 +848,14 @@ double VoiceKey::TestEnergy (
    auto originalLen = len;                        //Keep track of the length of block to process (its not the length of t)
    const auto blockSize = limitSampleBufferSize(
       t.GetMaxBlockSize(), len);               //Determine size of sampling buffer
-   float *buffer = new float[blockSize];       //Get a sampling buffer
+   Floats buffer{ blockSize };       //Get a sampling buffer
 
    while(len > 0)
       {
          //Figure out how much to grab
          auto block = limitSampleBufferSize ( t.GetBestBlockSize(s), len );
 
-         t.Get((samplePtr)buffer,floatSample, s,block);                      //grab the block;
+         t.Get((samplePtr)buffer.get(), floatSample, s,block);                      //grab the block;
 
          //Now, go through the block and calculate energy
          for(decltype(block) i = 0; i< block; i++)
@@ -868,7 +867,6 @@ double VoiceKey::TestEnergy (
          s += block;
       }
 
-   delete [] buffer;
    return sum / originalLen.as_double();
 }
 
@@ -894,13 +892,13 @@ double VoiceKey::TestSignChanges(
    unsigned long signchanges = 1;
    int currentsign=0;
 
-   float *buffer = new float[blockSize];       //Get a sampling buffer
+   Floats buffer{ blockSize };       //Get a sampling buffer
 
    while(len > 0) {
       //Figure out how much to grab
       auto block = limitSampleBufferSize ( t.GetBestBlockSize(s), len );
 
-      t.Get((samplePtr)buffer,floatSample, s,block);                      //grab the block;
+      t.Get((samplePtr)buffer.get(), floatSample, s, block);                      //grab the block;
 
       if  (len == originalLen)
          {
@@ -922,7 +920,6 @@ double VoiceKey::TestSignChanges(
       len -= block;
       s += block;
    }
-   delete [] buffer;
    return (double)signchanges / originalLen.as_double();
 }
 
@@ -952,13 +949,13 @@ double VoiceKey::TestDirectionChanges(
    float lastval=float(0);
    int lastdirection=1;
 
-   float *buffer = new float[blockSize];       //Get a sampling buffer
+   Floats buffer{ blockSize };       //Get a sampling buffer
 
    while(len > 0) {
       //Figure out how much to grab
       auto block = limitSampleBufferSize ( t.GetBestBlockSize(s), len );
 
-      t.Get((samplePtr)buffer,floatSample, s,block);                      //grab the block;
+      t.Get((samplePtr)buffer.get(), floatSample, s, block);                      //grab the block;
 
       if  (len == originalLen) {
          //The first time through, set stuff up special.
@@ -980,7 +977,6 @@ double VoiceKey::TestDirectionChanges(
       len -= block;
       s += block;
    }
-   delete [] buffer;
    return (double)directionchanges/originalLen.as_double();
 }
 

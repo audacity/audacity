@@ -4553,20 +4553,18 @@ void TrackPanel::HandleSampleEditingClick( wxMouseEvent & event )
       //  SMOOTHING_PROPORTION_MAX and at the far bounds is SMOOTHING_PROPORTION_MIN
 
       //Get the region of samples around the selected point
-      int sampleRegionSize = 1 + 2 * (SMOOTHING_KERNEL_RADIUS + SMOOTHING_BRUSH_RADIUS);
-      float *sampleRegion = new float[sampleRegionSize];
-      float * newSampleRegion = new float[1 + 2 * SMOOTHING_BRUSH_RADIUS];
+      size_t sampleRegionSize = 1 + 2 * (SMOOTHING_KERNEL_RADIUS + SMOOTHING_BRUSH_RADIUS);
+      Floats sampleRegion{ sampleRegionSize };
+      Floats newSampleRegion{ 1 + 2 * (size_t)SMOOTHING_BRUSH_RADIUS };
 
       //Get a sample  from the track to do some tricks on.
-      mDrawingTrack->Get((samplePtr)sampleRegion, floatSample,
+      mDrawingTrack->Get((samplePtr)sampleRegion.get(), floatSample,
                                        mDrawingStartSample - SMOOTHING_KERNEL_RADIUS - SMOOTHING_BRUSH_RADIUS,
                                        sampleRegionSize);
-      int i, j;
-
       //Go through each point of the smoothing brush and apply a smoothing operation.
-      for(j = -SMOOTHING_BRUSH_RADIUS; j <= SMOOTHING_BRUSH_RADIUS; j++){
+      for(auto j = -SMOOTHING_BRUSH_RADIUS; j <= SMOOTHING_BRUSH_RADIUS; j++){
          float sumOfSamples = 0;
-         for (i= -SMOOTHING_KERNEL_RADIUS; i <= SMOOTHING_KERNEL_RADIUS; i++){
+         for (auto i = -SMOOTHING_KERNEL_RADIUS; i <= SMOOTHING_KERNEL_RADIUS; i++){
             //Go through each point of the smoothing kernel and find the average
 
             //The average is a weighted average, scaled by a weighting kernel that is simply triangular
@@ -4591,7 +4589,7 @@ void TrackPanel::HandleSampleEditingClick( wxMouseEvent & event )
 
       float prob;
 
-      for(j=-SMOOTHING_BRUSH_RADIUS; j <= SMOOTHING_BRUSH_RADIUS; j++){
+      for(auto j = -SMOOTHING_BRUSH_RADIUS; j <= SMOOTHING_BRUSH_RADIUS; j++){
 
          prob = SMOOTHING_PROPORTION_MAX - (float)abs(j)/SMOOTHING_BRUSH_RADIUS * (SMOOTHING_PROPORTION_MAX - SMOOTHING_PROPORTION_MIN);
 
@@ -4600,11 +4598,7 @@ void TrackPanel::HandleSampleEditingClick( wxMouseEvent & event )
             sampleRegion[SMOOTHING_BRUSH_RADIUS + SMOOTHING_KERNEL_RADIUS + j] * (1 - prob);
       }
       //Set the sample to the point of the mouse event
-      mDrawingTrack->Set((samplePtr)newSampleRegion, floatSample, mDrawingStartSample - SMOOTHING_BRUSH_RADIUS, 1 + 2 * SMOOTHING_BRUSH_RADIUS);
-
-      //Clean this up right away to avoid a memory leak
-      delete[] sampleRegion;
-      delete[] newSampleRegion;
+      mDrawingTrack->Set((samplePtr)newSampleRegion.get(), floatSample, mDrawingStartSample - SMOOTHING_BRUSH_RADIUS, 1 + 2 * SMOOTHING_BRUSH_RADIUS);
 
       mDrawingLastDragSampleValue = 0;
    }

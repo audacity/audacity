@@ -1,6 +1,8 @@
 #ifndef __realfftf48x_h
 #define __realfftf48x_h
 
+#include "MemoryX.h"
+
 #define fft_type float
 
 int SmallRB(int bits, int numberBits);
@@ -87,9 +89,8 @@ typedef struct  {
 class SinCosTable {
 public:
    int mSinCosTablePow;
-   SinCosStruct *mSinCosTable;
+   ArrayOf<SinCosStruct> mSinCosTable;
    SinCosTable();
-   ~SinCosTable(){ delete [] mSinCosTable; };
 };
 
 int SmallRB(int bits, int numberBits);

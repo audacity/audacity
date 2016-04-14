@@ -79,9 +79,9 @@ class Profiler
 
       double ComputeAverageRunTime();
 
-      char* mFileName;
+      ArrayOf<char> mFileName;
       int mLine;
-      char* mDescription;
+      ArrayOf<char> mDescription;
       int mNumHits;
       clock_t mCumTime;
       clock_t mLastTime;

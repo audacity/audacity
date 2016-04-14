@@ -1308,7 +1308,7 @@ bool Sequence::GetWaveDisplay(float *min, float *max, float *rms, int* bl,
    // ... unless the mNumSamples ceiling applies, and then there are other defenses
    const auto s1 =
       std::min(mNumSamples, std::max(1 + where[len - 1], where[len]));
-   float *temp = new float[mMaxSamples];
+   Floats temp{ mMaxSamples };
 
    decltype(len) pixel = 0;
 
@@ -1400,13 +1400,13 @@ bool Sequence::GetWaveDisplay(float *min, float *max, float *rms, int* bl,
       default:
       case 1:
          // Read samples
-         Read((samplePtr)temp, floatSample, seqBlock, startPosition, num);
+         Read((samplePtr)temp.get(), floatSample, seqBlock, startPosition, num);
          break;
       case 256:
          // Read triples
          //check to see if summary data has been computed
          if (seqBlock.f->IsSummaryAvailable())
-            seqBlock.f->Read256(temp, startPosition, num);
+            seqBlock.f->Read256(temp.get(), startPosition, num);
          else
             //otherwise, mark the display as not yet computed
             blockStatus = -1 - b;
@@ -1415,7 +1415,7 @@ bool Sequence::GetWaveDisplay(float *min, float *max, float *rms, int* bl,
          // Read triples
          //check to see if summary data has been computed
          if (seqBlock.f->IsSummaryAvailable())
-            seqBlock.f->Read64K(temp, startPosition, num);
+            seqBlock.f->Read64K(temp.get(), startPosition, num);
          else
             //otherwise, mark the display as not yet computed
             blockStatus = -1 - b;
@@ -1431,7 +1431,7 @@ bool Sequence::GetWaveDisplay(float *min, float *max, float *rms, int* bl,
          auto midPosition = ((whereNow - start) / divisor).as_size_t();
          int diff(midPosition - filePosition);
          if (diff > 0) {
-            MinMaxSumsq values(temp, diff, divisor);
+            MinMaxSumsq values(temp.get(), diff, divisor);
             const int lastPixel = pixel - 1;
             float &lastMin = min[lastPixel];
             lastMin = std::min(lastMin, values.min);
@@ -1471,7 +1471,7 @@ bool Sequence::GetWaveDisplay(float *min, float *max, float *rms, int* bl,
          rmsDenom = (positionX - filePosition);
          wxASSERT(rmsDenom > 0);
          const float *const pv =
-            temp + (filePosition - startPosition) * (divisor == 1 ? 1 : 3);
+            temp.get() + (filePosition - startPosition) * (divisor == 1 ? 1 : 3);
          MinMaxSumsq values(pv, rmsDenom, divisor);
 
          // Assign results
@@ -1492,8 +1492,6 @@ bool Sequence::GetWaveDisplay(float *min, float *max, float *rms, int* bl,
    } // for each block file
 
    wxASSERT(pixel == len);
-
-   delete[] temp;
 
    return true;
 }

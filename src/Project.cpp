@@ -383,18 +383,16 @@ public:
             Size dataSize = 0;
             GetFlavorDataSize((DragReference)m_currentDrag, theItem, theType, &dataSize);
 
-            Ptr theData = new char[dataSize];
-            GetFlavorData((DragReference)m_currentDrag, theItem, theType, (void*) theData, &dataSize, 0L);
+            ArrayOf<char> theData{ dataSize };
+            GetFlavorData((DragReference)m_currentDrag, theItem, theType, (void*) theData.get(), &dataSize, 0L);
 
             wxString name;
             if (theType == kDragPromisedFlavorFindFile) {
-               name = wxMacFSSpec2MacFilename((FSSpec *)theData);
+               name = wxMacFSSpec2MacFilename((FSSpec *)theData.get());
             }
             else if (theType == kDragFlavorTypeHFS) {
-               name = wxMacFSSpec2MacFilename(&((HFSFlavor *)theData)->fileSpec);
+               name = wxMacFSSpec2MacFilename(&((HFSFlavor *)theData.get())->fileSpec);
             }
-
-            delete[] theData;
 
             if (!firstFileAdded) {
                // reset file list
