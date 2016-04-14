@@ -139,7 +139,7 @@ bool ExportFLACOptions::TransferDataFromWindow()
 // ExportFLAC Class
 //----------------------------------------------------------------------------
 
-#define SAMPLES_PER_RUN 8192
+#define SAMPLES_PER_RUN 8192u
 
 /* FLACPP_API_VERSION_CURRENT is 6 for libFLAC++ from flac-1.1.3 (see <FLAC++/export.h>) */
 #if !defined FLACPP_API_VERSION_CURRENT || FLACPP_API_VERSION_CURRENT < 6
@@ -311,11 +311,7 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
                             numChannels, SAMPLES_PER_RUN, false,
                             rate, format, true, mixerSpec);
 
-   int i;
-   FLAC__int32 **tmpsmplbuf = new FLAC__int32*[numChannels];
-   for (i = 0; i < numChannels; i++) {
-      tmpsmplbuf[i] = (FLAC__int32 *) calloc(SAMPLES_PER_RUN, sizeof(FLAC__int32));
-   }
+   ArraysOf<FLAC__int32> tmpsmplbuf{ numChannels, SAMPLES_PER_RUN, true };
 
    {
       ProgressDialog progress(wxFileName(fName).GetName(),
@@ -329,7 +325,7 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
             break;
          }
          else {
-            for (i = 0; i < numChannels; i++) {
+            for (size_t i = 0; i < numChannels; i++) {
                samplePtr mixed = mixer->GetBuffer(i);
                if (format == int24Sample) {
                   for (decltype(samplesThisRun) j = 0; j < samplesThisRun; j++) {
@@ -342,19 +338,13 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
                   }
                }
             }
-            encoder.process(tmpsmplbuf, samplesThisRun);
+            encoder.process(reinterpret_cast<const FLAC__int32**>(tmpsmplbuf.get()), samplesThisRun);
          }
          updateResult = progress.Update(mixer->MixGetCurrentTime() - t0, t1 - t0);
       }
       f.Detach(); // libflac closes the file
       encoder.finish();
    }
-
-   for (i = 0; i < numChannels; i++) {
-      free(tmpsmplbuf[i]);
-   }
-
-   delete[] tmpsmplbuf;
 
    return updateResult;
 }

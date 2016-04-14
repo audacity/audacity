@@ -251,12 +251,12 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
 
    // Values taken from the twolame simple encoder sample
    const int pcmBufferSize = 9216 / 2; // number of samples
-   const int mp2BufferSize = 16384; // bytes
+   const size_t mp2BufferSize = 16384u; // bytes
 
    // We allocate a buffer which is twice as big as the
    // input buffer, which should always be enough.
    // We have to multiply by 4 because one sample is 2 bytes wide!
-   unsigned char* mp2Buffer = new unsigned char[mp2BufferSize];
+   ArrayOf<unsigned char> mp2Buffer{ mp2BufferSize };
 
    const WaveTrackConstArray waveTracks =
       tracks->GetWaveTrackConstArray(selectionOnly, false);
@@ -285,10 +285,10 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
             encodeOptions,
             pcmBuffer,
             pcmNumSamples,
-            mp2Buffer,
+            mp2Buffer.get(),
             mp2BufferSize);
 
-         outFile.Write(mp2Buffer, mp2BufferNumBytes);
+         outFile.Write(mp2Buffer.get(), mp2BufferNumBytes);
 
          updateResult = progress.Update(mixer->MixGetCurrentTime() - t0, t1 - t0);
       }
@@ -296,15 +296,13 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
 
    int mp2BufferNumBytes = twolame_encode_flush(
       encodeOptions,
-      mp2Buffer,
+      mp2Buffer.get(),
       mp2BufferSize);
 
    if (mp2BufferNumBytes > 0)
-      outFile.Write(mp2Buffer, mp2BufferNumBytes);
+      outFile.Write(mp2Buffer.get(), mp2BufferNumBytes);
 
    twolame_close(&encodeOptions);
-
-   delete[] mp2Buffer;
 
    /* Write ID3 tag if it was supposed to be at the end of the file */
 

@@ -234,8 +234,8 @@ private:
    int mWidth;
    int mHeight;
    MixerSpec *mMixerSpec;
-   wxRect *mChannelRects;
-   wxRect *mTrackRects;
+   ArrayOf<wxRect> mChannelRects;
+   ArrayOf<wxRect> mTrackRects;
    int mSelectedTrack, mSelectedChannel;
    wxArrayString mTrackNames;
    int mBoxWidth, mChannelHeight, mTrackHeight;
