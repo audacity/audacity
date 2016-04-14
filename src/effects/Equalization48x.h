@@ -14,6 +14,8 @@ Intrinsics (SSE/AVX) and Threaded Equalization
 #include "../Experimental.h"
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
 
+#include "../MemoryX.h"
+
 #ifdef __AVX_ENABLED
 #define __MAXBUFFERCOUNT 8
 #else
@@ -155,9 +157,9 @@ private:
    size_t mScratchBufferSize;
    size_t mSubBufferSize;
    float *mBigBuffer;
-   BufferInfo* mBufferInfo;
+   ArrayOf<BufferInfo> mBufferInfo;
    wxMutex mDataMutex;
-   EQWorker* mEQWorkers;
+   ArrayOf<EQWorker> mEQWorkers;
    bool mThreaded;
    bool mBenching;
    friend EQWorker;

@@ -84,9 +84,6 @@ EffectCompressor::EffectCompressor()
    mThreshold = 0.25;
    mNoiseFloor = 0.01;
    mCompression = 0.5;
-   mCircle = NULL;
-   mFollow1 = NULL;
-   mFollow2 = NULL;
    mFollowLen = 0;
 
    SetLinearEffectFlag(false);
@@ -94,18 +91,6 @@ EffectCompressor::EffectCompressor()
 
 EffectCompressor::~EffectCompressor()
 {
-   if (mCircle) {
-      delete[] mCircle;
-      mCircle = NULL;
-   }
-   if(mFollow1!=NULL) {
-      delete[] mFollow1;
-      mFollow1 = NULL;
-   }
-   if(mFollow2!=NULL) {
-      delete[] mFollow2;
-      mFollow2 = NULL;
-   }
 }
 
 // IdentInterface implementation
@@ -346,13 +331,8 @@ bool EffectCompressor::NewTrackPass1()
 
    mLastLevel = mThreshold;
 
-   if (mCircle)
-      delete[] mCircle;
    mCircleSize = 100;
-   mCircle = new double[mCircleSize];
-   for(int j=0; j<mCircleSize; j++) {
-      mCircle[j] = 0.0;
-   }
+   mCircle.reinit( mCircleSize, true );
    mCirclePos = 0;
    mRMSSum = 0.0;
 
@@ -374,18 +354,12 @@ bool EffectCompressor::InitPass1()
       //Iterate to the next track
       track = (WaveTrack *) iter.Next();
    }
-   if(mFollow1!=NULL) {
-      delete[] mFollow1;
-      mFollow1 = NULL;
-   }
-   if(mFollow2!=NULL) {
-      delete[] mFollow2;
-      mFollow2 = NULL;
-   }
+   mFollow1.reset();
+   mFollow2.reset();
    // Allocate buffers for the envelope
    if(maxlen > 0) {
-      mFollow1 = new float[maxlen];
-      mFollow2 = new float[maxlen];
+      mFollow1.reinit(maxlen);
+      mFollow2.reinit(maxlen);
    }
    mFollowLen = maxlen;
 
@@ -426,7 +400,7 @@ bool EffectCompressor::TwoBufferProcessPass1
 
    // buffer2 is NULL on the last and only the last call
    if(buffer2 != NULL) {
-      Follow(buffer2, mFollow2, len2, mFollow1, len1);
+      Follow(buffer2, mFollow2.get(), len2, mFollow1.get(), len1);
    }
 
    if(buffer1 != NULL) {
@@ -442,9 +416,7 @@ bool EffectCompressor::TwoBufferProcessPass1
 #endif
 
    // Rotate the buffer pointers
-   float *tmpfloat = mFollow1;
-   mFollow1 = mFollow2;
-   mFollow2 = tmpfloat;
+   mFollow1.swap(mFollow2);
 
    return true;
 }
@@ -465,7 +437,7 @@ void EffectCompressor::FreshenCircle()
    // Recompute the RMS sum periodically to prevent accumulation of rounding errors
    // during long waveforms
    mRMSSum = 0;
-   for(int i=0; i<mCircleSize; i++)
+   for(size_t i=0; i<mCircleSize; i++)
       mRMSSum += mCircle[i];
 }
 

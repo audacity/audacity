@@ -100,14 +100,13 @@ EffectNoiseRemoval::EffectNoiseRemoval()
    mHasProfile = false;
    mDoProfile = true;
 
-   mNoiseThreshold = new float[mSpectrumSize];
+   mNoiseThreshold.reinit(mSpectrumSize);
 
    Init();
 }
 
 EffectNoiseRemoval::~EffectNoiseRemoval()
 {
-   delete [] mNoiseThreshold;
 }
 
 // IdentInterface implementation
@@ -247,10 +246,10 @@ bool EffectNoiseRemoval::Process()
 
 void EffectNoiseRemoval::ApplyFreqSmoothing(float *spec)
 {
-   float *tmp = new float[mSpectrumSize];
-   int i, j, j0, j1;
+   Floats tmp{ mSpectrumSize };
+   int j, j0, j1;
 
-   for(i = 0; i < mSpectrumSize; i++) {
+   for(int i = 0; i < mSpectrumSize; i++) {
       j0 = wxMax(0, i - mFreqSmoothingBins);
       j1 = wxMin(mSpectrumSize-1, i + mFreqSmoothingBins);
       tmp[i] = 0.0;
@@ -260,16 +259,12 @@ void EffectNoiseRemoval::ApplyFreqSmoothing(float *spec)
       tmp[i] /= (j1 - j0 + 1);
    }
 
-   for(i = 0; i < mSpectrumSize; i++)
+   for(size_t i = 0; i < mSpectrumSize; i++)
       spec[i] = tmp[i];
-
-   delete[] tmp;
 }
 
 void EffectNoiseRemoval::Initialize()
 {
-   int i;
-
    mSampleRate = mProjectRate;
    mFreqSmoothingBins = (int)(mFreqSmoothingHz * mWindowSize / mSampleRate);
    mAttackDecayBlocks = 1 +
@@ -287,68 +282,52 @@ void EffectNoiseRemoval::Initialize()
    if (mHistoryLen < mMinSignalBlocks)
       mHistoryLen = mMinSignalBlocks;
 
-   mSpectrums = new float*[mHistoryLen];
-   mGains = new float*[mHistoryLen];
-   mRealFFTs = new float*[mHistoryLen];
-   mImagFFTs = new float*[mHistoryLen];
-   for(i = 0; i < mHistoryLen; i++) {
-      mSpectrums[i] = new float[mSpectrumSize];
-      mGains[i] = new float[mSpectrumSize];
-      mRealFFTs[i] = new float[mSpectrumSize];
-      mImagFFTs[i] = new float[mSpectrumSize];
-   }
+   mSpectrums.reinit(mHistoryLen, mSpectrumSize);
+   mGains.reinit(mHistoryLen, mSpectrumSize);
+   mRealFFTs.reinit(mHistoryLen, mSpectrumSize);
+   mImagFFTs.reinit(mHistoryLen, mSpectrumSize);
 
    // Initialize the FFT
    hFFT = InitializeFFT(mWindowSize);
 
-   mFFTBuffer = new float[mWindowSize];
-   mInWaveBuffer = new float[mWindowSize];
-   mWindow = new float[mWindowSize];
-   mOutOverlapBuffer = new float[mWindowSize];
+   mFFTBuffer.reinit(mWindowSize);
+   mInWaveBuffer.reinit(mWindowSize);
+   mWindow.reinit(mWindowSize);
+   mOutOverlapBuffer.reinit(mWindowSize);
 
    // Create a Hanning window function
-   for(i=0; i<mWindowSize; i++)
+   for(size_t i=0; i<mWindowSize; i++)
       mWindow[i] = 0.5 - 0.5 * cos((2.0*M_PI*i) / mWindowSize);
 
    if (mDoProfile) {
-      for (i = 0; i < mSpectrumSize; i++)
+      for (size_t i = 0; i < mSpectrumSize; i++)
          mNoiseThreshold[i] = float(0);
    }
 }
 
 void EffectNoiseRemoval::Cleanup()
 {
-   int i;
-
    EndFFT(hFFT);
 
    if (mDoProfile) {
-      ApplyFreqSmoothing(mNoiseThreshold);
+      ApplyFreqSmoothing(mNoiseThreshold.get());
    }
 
-   for(i = 0; i < mHistoryLen; i++) {
-      delete[] mSpectrums[i];
-      delete[] mGains[i];
-      delete[] mRealFFTs[i];
-      delete[] mImagFFTs[i];
-   }
-   delete[] mSpectrums;
-   delete[] mGains;
-   delete[] mRealFFTs;
-   delete[] mImagFFTs;
+   mSpectrums.reset();
+   mGains.reset();
+   mRealFFTs.reset();
+   mImagFFTs.reset();
 
-   delete[] mFFTBuffer;
-   delete[] mInWaveBuffer;
-   delete[] mWindow;
-   delete[] mOutOverlapBuffer;
+   mFFTBuffer.reset();
+   mInWaveBuffer.reset();
+   mWindow.reset();
+   mOutOverlapBuffer.reset();
 }
 
 void EffectNoiseRemoval::StartNewTrack()
 {
-   int i, j;
-
-   for(i = 0; i < mHistoryLen; i++) {
-      for(j = 0; j < mSpectrumSize; j++) {
+   for(size_t i = 0; i < mHistoryLen; i++) {
+      for(size_t j = 0; j < mSpectrumSize; j++) {
          mSpectrums[i][j] = 0;
          mGains[i][j] = mNoiseAttenFactor;
          mRealFFTs[i][j] = 0.0;
@@ -356,7 +335,7 @@ void EffectNoiseRemoval::StartNewTrack()
       }
    }
 
-   for(j = 0; j < mWindowSize; j++)
+   for(size_t j = 0; j < mWindowSize; j++)
       mOutOverlapBuffer[j] = 0.0;
 
    mInputPos = 0;
@@ -366,17 +345,15 @@ void EffectNoiseRemoval::StartNewTrack()
 
 void EffectNoiseRemoval::ProcessSamples(size_t len, float *buffer)
 {
-   int i;
-
    while(len && mOutSampleCount < mInSampleCount) {
-      int avail = wxMin(len, mWindowSize - mInputPos);
-      for(i = 0; i < avail; i++)
+      size_t avail = wxMin(len, mWindowSize - mInputPos);
+      for(size_t i = 0; i < avail; i++)
          mInWaveBuffer[mInputPos + i] = buffer[i];
       buffer += avail;
       len -= avail;
       mInputPos += avail;
 
-      if (mInputPos == mWindowSize) {
+      if (mInputPos == int(mWindowSize)) {
          FillFirstHistoryWindow();
          if (mDoProfile)
             GetProfile();
@@ -385,7 +362,7 @@ void EffectNoiseRemoval::ProcessSamples(size_t len, float *buffer)
          RotateHistoryWindows();
 
          // Rotate halfway for overlap-add
-         for(i = 0; i < mWindowSize / 2; i++) {
+         for(size_t i = 0; i < mWindowSize / 2; i++) {
             mInWaveBuffer[i] = mInWaveBuffer[i + mWindowSize / 2];
          }
          mInputPos = mWindowSize / 2;
@@ -395,12 +372,10 @@ void EffectNoiseRemoval::ProcessSamples(size_t len, float *buffer)
 
 void EffectNoiseRemoval::FillFirstHistoryWindow()
 {
-   int i;
-
-   for(i=0; i < mWindowSize; i++)
+   for(size_t i = 0; i < mWindowSize; i++)
       mFFTBuffer[i] = mInWaveBuffer[i];
-   RealFFTf(mFFTBuffer, hFFT);
-   for(i = 1; i < (mSpectrumSize-1); i++) {
+   RealFFTf(mFFTBuffer.get(), hFFT);
+   for(size_t i = 1; i < (mSpectrumSize-1); i++) {
       mRealFFTs[0][i] = mFFTBuffer[hFFT->BitReversed[i]  ];
       mImagFFTs[0][i] = mFFTBuffer[hFFT->BitReversed[i]+1];
       mSpectrums[0][i] = mRealFFTs[0][i]*mRealFFTs[0][i] + mImagFFTs[0][i]*mImagFFTs[0][i];
@@ -413,30 +388,24 @@ void EffectNoiseRemoval::FillFirstHistoryWindow()
    mGains[0][mSpectrumSize-1] = mNoiseAttenFactor;
 }
 
+namespace {
+   inline void Rotate(ArraysOf<float> &arrays, size_t historyLen)
+   {
+      Floats temp = std::move( arrays[ historyLen - 1 ] );
+
+      for ( size_t nn = historyLen - 1; nn--; )
+         arrays[ nn + 1 ] = std::move( arrays[ nn ] );
+      arrays[0] = std::move( temp );
+   }
+}
+
 void EffectNoiseRemoval::RotateHistoryWindows()
 {
-   int last = mHistoryLen - 1;
-   int i;
-
    // Remember the last window so we can reuse it
-   float *lastSpectrum = mSpectrums[last];
-   float *lastGain = mGains[last];
-   float *lastRealFFT = mRealFFTs[last];
-   float *lastImagFFT = mImagFFTs[last];
-
-   // Rotate each window forward
-   for(i = last; i >= 1; i--) {
-      mSpectrums[i] = mSpectrums[i-1];
-      mGains[i] = mGains[i-1];
-      mRealFFTs[i] = mRealFFTs[i-1];
-      mImagFFTs[i] = mImagFFTs[i-1];
-   }
-
-   // Reuse the last buffers as the NEW first window
-   mSpectrums[0] = lastSpectrum;
-   mGains[0] = lastGain;
-   mRealFFTs[0] = lastRealFFT;
-   mImagFFTs[0] = lastImagFFT;
+   Rotate(mSpectrums, mHistoryLen);
+   Rotate(mGains, mHistoryLen);
+   Rotate(mRealFFTs, mHistoryLen);
+   Rotate(mImagFFTs, mHistoryLen);
 }
 
 void EffectNoiseRemoval::FinishTrack()
@@ -447,16 +416,13 @@ void EffectNoiseRemoval::FinishTrack()
    // Well, not exactly, but not more than mWindowSize/2 extra samples at the end.
    // We'll DELETE them later in ProcessOne.
 
-   float *empty = new float[mWindowSize / 2];
-   int i;
-   for(i = 0; i < mWindowSize / 2; i++)
+   Floats empty{ mWindowSize / 2 };
+   for(size_t i = 0; i < mWindowSize / 2; i++)
       empty[i] = 0.0;
 
    while (mOutSampleCount < mInSampleCount) {
-      ProcessSamples(mWindowSize / 2, empty);
+      ProcessSamples(mWindowSize / 2, empty.get());
    }
-
-   delete [] empty;
 }
 
 void EffectNoiseRemoval::GetProfile()
@@ -467,9 +433,9 @@ void EffectNoiseRemoval::GetProfile()
 
    int start = mHistoryLen - mMinSignalBlocks;
    int finish = mHistoryLen;
-   int i, j;
+   int i;
 
-   for (j = 0; j < mSpectrumSize; j++) {
+   for (size_t j = 0; j < mSpectrumSize; j++) {
       float min = mSpectrums[start][j];
       for (i = start+1; i < finish; i++) {
          if (mSpectrums[i][j] < min)
@@ -484,15 +450,14 @@ void EffectNoiseRemoval::GetProfile()
 
 void EffectNoiseRemoval::RemoveNoise()
 {
-   int center = mHistoryLen / 2;
-   int start = center - mMinSignalBlocks/2;
-   int finish = start + mMinSignalBlocks;
-   int i, j;
+   size_t center = mHistoryLen / 2;
+   size_t start = center - mMinSignalBlocks/2;
+   size_t finish = start + mMinSignalBlocks;
 
    // Raise the gain for elements in the center of the sliding history
-   for (j = 0; j < mSpectrumSize; j++) {
+   for (size_t j = 0; j < mSpectrumSize; j++) {
       float min = mSpectrums[start][j];
-      for (i = start+1; i < finish; i++) {
+      for (size_t i = start+1; i < finish; i++) {
          if (mSpectrums[i][j] < min)
             min = mSpectrums[i][j];
       }
@@ -507,14 +472,14 @@ void EffectNoiseRemoval::RemoveNoise()
    // Decay the gain in both directions;
    // note that mOneBlockAttackDecay is less than 1.0
    // of linear attenuation per block
-   for (j = 0; j < mSpectrumSize; j++) {
-      for (i = center + 1; i < mHistoryLen; i++) {
+   for (size_t j = 0; j < mSpectrumSize; j++) {
+      for (size_t i = center + 1; i < mHistoryLen; i++) {
          if (mGains[i][j] < mGains[i - 1][j] * mOneBlockAttackDecay)
             mGains[i][j] = mGains[i - 1][j] * mOneBlockAttackDecay;
          if (mGains[i][j] < mNoiseAttenFactor)
             mGains[i][j] = mNoiseAttenFactor;
       }
-      for (i = center - 1; i >= 0; i--) {
+      for (size_t i = center; i--;) {
          if (mGains[i][j] < mGains[i + 1][j] * mOneBlockAttackDecay)
             mGains[i][j] = mGains[i + 1][j] * mOneBlockAttackDecay;
          if (mGains[i][j] < mNoiseAttenFactor)
@@ -526,10 +491,10 @@ void EffectNoiseRemoval::RemoveNoise()
    // Apply frequency smoothing to output gain
    int out = mHistoryLen - 1;  // end of the queue
 
-   ApplyFreqSmoothing(mGains[out]);
+   ApplyFreqSmoothing(mGains[out].get());
 
    // Apply gain to FFT
-   for (j = 0; j < (mSpectrumSize-1); j++) {
+   for (size_t j = 0; j < (mSpectrumSize-1); j++) {
       mFFTBuffer[j*2  ] = mRealFFTs[out][j] * mGains[out][j];
       mFFTBuffer[j*2+1] = mImagFFTs[out][j] * mGains[out][j];
    }
@@ -537,10 +502,10 @@ void EffectNoiseRemoval::RemoveNoise()
    mFFTBuffer[1] = mRealFFTs[out][mSpectrumSize-1] * mGains[out][mSpectrumSize-1];
 
    // Invert the FFT into the output buffer
-   InverseRealFFTf(mFFTBuffer, hFFT);
+   InverseRealFFTf(mFFTBuffer.get(), hFFT);
 
    // Overlap-add
-   for(j = 0; j < (mSpectrumSize-1); j++) {
+   for(size_t j = 0; j < (mSpectrumSize-1); j++) {
       mOutOverlapBuffer[j*2  ] += mFFTBuffer[hFFT->BitReversed[j]  ] * mWindow[j*2  ];
       mOutOverlapBuffer[j*2+1] += mFFTBuffer[hFFT->BitReversed[j]+1] * mWindow[j*2+1];
    }
@@ -548,11 +513,11 @@ void EffectNoiseRemoval::RemoveNoise()
    // Output the first half of the overlap buffer, they're done -
    // and then shift the next half over.
    if (mOutSampleCount >= 0) {   // ...but not if it's the first half-window
-      mOutputTrack->Append((samplePtr)mOutOverlapBuffer, floatSample,
+      mOutputTrack->Append((samplePtr)mOutOverlapBuffer.get(), floatSample,
                            mWindowSize / 2);
    }
    mOutSampleCount += mWindowSize / 2;
-   for(j = 0; j < mWindowSize / 2; j++) {
+   for(size_t j = 0; j < mWindowSize / 2; j++) {
       mOutOverlapBuffer[j] = mOutOverlapBuffer[j + (mWindowSize / 2)];
       mOutOverlapBuffer[j + (mWindowSize / 2)] = 0.0;
    }
@@ -571,7 +536,7 @@ bool EffectNoiseRemoval::ProcessOne(int count, WaveTrack * track,
                                             track->GetRate());
 
    auto bufferSize = track->GetMaxBlockSize();
-   float *buffer = new float[bufferSize];
+   Floats buffer{ bufferSize };
 
    bool bLoopSuccess = true;
    auto samplePos = start;
@@ -584,10 +549,10 @@ bool EffectNoiseRemoval::ProcessOne(int count, WaveTrack * track,
       );
 
       //Get the samples from the track and put them in the buffer
-      track->Get((samplePtr)buffer, floatSample, samplePos, blockSize);
+      track->Get((samplePtr)buffer.get(), floatSample, samplePos, blockSize);
 
       mInSampleCount += blockSize;
-      ProcessSamples(blockSize, buffer);
+      ProcessSamples(blockSize, buffer.get());
 
       samplePos += blockSize;
 
@@ -599,7 +564,6 @@ bool EffectNoiseRemoval::ProcessOne(int count, WaveTrack * track,
    }
 
    FinishTrack();
-   delete [] buffer;
 
    if (!mDoProfile) {
       // Flush the output WaveTrack (since it's buffered)

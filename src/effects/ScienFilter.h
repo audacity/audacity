@@ -100,7 +100,7 @@ private:
    int mFilterSubtype;	// lowpass, highpass
    int mOrder;
    int mOrderIndex;
-   BiquadStruct *mpBiquad;
+   ArrayOf<BiquadStruct> mpBiquad;
 
    double mdBMax;
    double mdBMin;

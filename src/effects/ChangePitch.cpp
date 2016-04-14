@@ -420,22 +420,15 @@ void EffectChangePitch::DeduceFrequencies()
       auto start = track->TimeToLongSamples(t0);
 
       auto analyzeSize = windowSize * numWindows;
-      float * buffer;
-      buffer = new float[analyzeSize];
+      Floats buffer{ analyzeSize };
 
-      float * freq;
-      freq = new float[windowSize / 2];
+      Floats freq{ windowSize / 2 };
+      Floats freqa{ windowSize / 2, true };
 
-      float * freqa;
-      freqa = new float[windowSize / 2];
-
-      for(size_t j = 0; j < windowSize / 2; j++)
-         freqa[j] = 0;
-
-      track->Get((samplePtr) buffer, floatSample, start, analyzeSize);
+      track->Get((samplePtr) buffer.get(), floatSample, start, analyzeSize);
       for(unsigned i = 0; i < numWindows; i++) {
-         ComputeSpectrum(buffer + i * windowSize, windowSize,
-                         windowSize, rate, freq, true);
+         ComputeSpectrum(buffer.get() + i * windowSize, windowSize,
+                         windowSize, rate, freq.get(), true);
          for(size_t j = 0; j < windowSize / 2; j++)
             freqa[j] += freq[j];
       }
@@ -443,10 +436,6 @@ void EffectChangePitch::DeduceFrequencies()
       for(size_t j = 1; j < windowSize / 2; j++)
          if (freqa[j] > freqa[argmax])
             argmax = j;
-
-      delete [] freq;
-      delete [] freqa;
-      delete [] buffer;
 
       auto lag = (windowSize / 2 - 1) - argmax;
       m_dStartFrequency = rate / lag;
