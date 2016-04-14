@@ -622,7 +622,15 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
 // one block file).
 class WaveTrackCache {
 public:
-   explicit WaveTrackCache(const WaveTrack *pTrack = 0)
+   WaveTrackCache()
+      : mPTrack(0)
+      , mBufferSize(0)
+      , mOverlapBuffer()
+      , mNValidBuffers(0)
+   {
+   }
+
+   explicit WaveTrackCache(const WaveTrack *pTrack)
       : mPTrack(0)
       , mBufferSize(0)
       , mOverlapBuffer()
