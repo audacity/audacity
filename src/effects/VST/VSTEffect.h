@@ -16,6 +16,7 @@
 #include "audacity/ModuleInterface.h"
 #include "audacity/PluginInterface.h"
 
+#include "../../SampleFormat.h"
 #include "../../widgets/NumericTextCtrl.h"
 
 #include "VSTControl.h"
@@ -61,7 +62,7 @@ struct __CFBundle;
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-WX_DEFINE_ARRAY_PTR(VSTEffect *, VSTEffectArray);
+using VSTEffectArray = std::vector < movable_ptr<VSTEffect> > ;
 
 DECLARE_LOCAL_EVENT_TYPE(EVT_SIZEWINDOW, -1);
 DECLARE_LOCAL_EVENT_TYPE(EVT_UPDATEDISPLAY, -1);
@@ -268,7 +269,7 @@ private:
    int mMidiOuts;
    bool mAutomatable;
    float mSampleRate;
-   int mUserBlockSize;
+   size_t mUserBlockSize;
    wxString mName;
    wxString mVendor;
    wxString mDescription;
@@ -313,7 +314,7 @@ private:
    bool mUseLatency;
    int mBufferDelay;
 
-   int mBlockSize;
+   unsigned mBlockSize;
 
    int mProcessLevel;
    bool mHasPower;
@@ -329,8 +330,7 @@ private:
    VSTEffect *mMaster;     // non-NULL if a slave
    VSTEffectArray mSlaves;
    unsigned mNumChannels;
-   float **mMasterIn;
-   float **mMasterOut;
+   FloatBuffers mMasterIn, mMasterOut;
    size_t mNumSamples;
 
    // UI
@@ -343,10 +343,10 @@ private:
    VSTControl *mControl;
 
    NumericTextCtrl *mDuration;
-   wxStaticText **mNames;
-   wxSlider **mSliders;
-   wxStaticText **mDisplays;
-   wxStaticText **mLabels;
+   ArrayOf<wxStaticText *> mNames;
+   ArrayOf<wxSlider *> mSliders;
+   ArrayOf<wxStaticText *> mDisplays;
+   ArrayOf<wxStaticText *> mLabels;
 
    bool mInSet;
    bool mInChunk;

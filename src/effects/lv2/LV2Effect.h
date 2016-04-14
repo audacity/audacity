@@ -13,6 +13,9 @@
 
 #if USE_LV2
 
+#include "../../MemoryX.h"
+#include <vector>
+
 #include <wx/checkbox.h>
 #include <wx/dialog.h>
 #include <wx/dynarray.h>
@@ -32,6 +35,7 @@
 #include <lilv/lilv.h>
 #include <suil/suil.h>
 
+#include "../../SampleFormat.h"
 #include "../../widgets/NumericTextCtrl.h"
 
 #include "LoadLV2.h"
@@ -254,7 +258,7 @@ private:
 
    EffectHostInterface *mHost;
 
-   int mBlockSize;
+   size_t mBlockSize;
    double mSampleRate;
 
    wxLongToLongHashMap mControlsMap;
@@ -274,8 +278,7 @@ private:
    LilvInstance *mProcess;
    LV2SlaveArray mSlaves;
 
-   float **mMasterIn;
-   float **mMasterOut;
+   FloatBuffers mMasterIn, mMasterOut;
    size_t mNumSamples;
 
    double mLength;
@@ -302,8 +305,8 @@ private:
    LV2_Options_Option *mOptions;
    int mNumOptions;
 
-   LV2_Feature **mFeatures;
-   int mNumFeatures;
+   std::vector<movable_ptr<LV2_Feature>> mFeatures;
+   std::vector<LV2_Feature*> mFeaturePtrs;
 
    LV2_Feature *mInstanceAccessFeature;
    LV2_Feature *mParentFeature;
@@ -314,8 +317,8 @@ private:
    SuilInstance *mSuilInstance;
 
    NumericTextCtrl *mDuration;
-   wxSlider **mSliders;
-   wxTextCtrl **mFields;
+   ArrayOf<wxSlider*> mSliders;
+   ArrayOf<wxTextCtrl*> mFields;
 
    bool mFactoryPresetsLoaded;
    wxArrayString mFactoryPresetNames;
