@@ -1425,8 +1425,8 @@ bool WaveTrack::InsertSilence(double t, double len)
 bool WaveTrack::Disjoin(double t0, double t1)
 {
    auto minSamples = TimeToLongSamples( WAVETRACK_MERGE_POINT_TOLERANCE );
-   size_t maxAtOnce = 1048576;
-   float *buffer = new float[ maxAtOnce ];
+   const size_t maxAtOnce = 1048576;
+   Floats buffer{ maxAtOnce };
    Regions regions;
 
    wxBusyCursor busy;
@@ -1457,7 +1457,7 @@ bool WaveTrack::Disjoin(double t0, double t1)
       {
          auto numSamples = limitSampleBufferSize( maxAtOnce, len - done );
 
-         clip->GetSamples( ( samplePtr )buffer, floatSample, start + done,
+         clip->GetSamples( ( samplePtr )buffer.get(), floatSample, start + done,
                numSamples );
          for( decltype(numSamples) i = 0; i < numSamples; i++ )
          {
@@ -1498,7 +1498,6 @@ bool WaveTrack::Disjoin(double t0, double t1)
       SplitDelete(region.start, region.end );
    }
 
-   delete[] buffer;
    return true;
 }
 
@@ -2609,7 +2608,6 @@ void WaveTrack::SetAutoSaveIdent(int ident)
 
 WaveTrackCache::~WaveTrackCache()
 {
-   Free();
 }
 
 void WaveTrackCache::SetTrack(const WaveTrack *pTrack)
@@ -2620,8 +2618,8 @@ void WaveTrackCache::SetTrack(const WaveTrack *pTrack)
          if (!mPTrack ||
              mPTrack->GetMaxBlockSize() != mBufferSize) {
             Free();
-            mBuffers[0].data = new float[mBufferSize];
-            mBuffers[1].data = new float[mBufferSize];
+            mBuffers[0].data = Floats{ mBufferSize };
+            mBuffers[1].data = Floats{ mBufferSize };
          }
       }
       else
@@ -2682,7 +2680,7 @@ constSamplePtr WaveTrackCache::Get(sampleFormat format,
          if (start0 >= 0) {
             const auto len0 = mPTrack->GetBestBlockSize(start0);
             wxASSERT(len0 <= mBufferSize);
-            if (!mPTrack->Get(samplePtr(mBuffers[0].data), floatSample, start0, len0))
+            if (!mPTrack->Get(samplePtr(mBuffers[0].data.get()), floatSample, start0, len0))
                return 0;
             mBuffers[0].start = start0;
             mBuffers[0].len = len0;
@@ -2708,7 +2706,7 @@ constSamplePtr WaveTrackCache::Get(sampleFormat format,
             if (start1 == end0) {
                const auto len1 = mPTrack->GetBestBlockSize(start1);
                wxASSERT(len1 <= mBufferSize);
-               if (!mPTrack->Get(samplePtr(mBuffers[1].data), floatSample, start1, len1))
+               if (!mPTrack->Get(samplePtr(mBuffers[1].data.get()), floatSample, start1, len1))
                   return 0;
                mBuffers[1].start = start1;
                mBuffers[1].len = len1;
@@ -2755,7 +2753,7 @@ constSamplePtr WaveTrackCache::Get(sampleFormat format,
             // All is contiguous already.  We can completely avoid copying
             // leni is nonnegative, therefore start falls within mBuffers[ii],
             // so starti is bounded between 0 and buffer length
-            return samplePtr(mBuffers[ii].data + starti.as_size_t() );
+            return samplePtr(mBuffers[ii].data.get() + starti.as_size_t() );
          }
          else if (leni > 0) {
             // leni is nonnegative, therefore start falls within mBuffers[ii]
@@ -2767,7 +2765,7 @@ constSamplePtr WaveTrackCache::Get(sampleFormat format,
             // leni is positive and not more than remaining
             const size_t size = sizeof(float) * leni.as_size_t();
             // starti is less than mBuffers[ii].len and nonnegative
-            memcpy(buffer, mBuffers[ii].data + starti.as_size_t(), size);
+            memcpy(buffer, mBuffers[ii].data.get() + starti.as_size_t(), size);
             wxASSERT( leni <= remaining );
             remaining -= leni.as_size_t();
             start += leni;

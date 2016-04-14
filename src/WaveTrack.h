@@ -653,17 +653,17 @@ private:
    void Free();
 
    struct Buffer {
-      float *data;
+      Floats data;
       sampleCount start;
       sampleCount len;
 
-      Buffer() : data(0), start(0), len(0) {}
-      void Free() { delete[] data; data = 0; start = 0; len = 0; }
+      Buffer() : start(0), len(0) {}
+      void Free() { data.reset(); start = 0; len = 0; }
       sampleCount end() const { return start + len; }
 
       void swap ( Buffer &other )
       {
-         std::swap( data, other.data );
+         data .swap ( other.data );
          std::swap( start, other.start );
          std::swap( len, other.len );
       }

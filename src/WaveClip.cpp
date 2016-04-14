@@ -691,29 +691,31 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
             //wxCriticalSectionLocker locker(mAppendCriticalSection);
 
             if (right > left) {
-               float *b;
+               Floats b;
+               float *pb{};
                // left is nonnegative and at most mAppendBufferLen:
                auto sLeft = left.as_size_t();
                // The difference is at most mAppendBufferLen:
                size_t len = ( right - left ).as_size_t();
 
                if (seqFormat == floatSample)
-                  b = &((float *)mAppendBuffer.ptr())[sLeft];
+                  pb = &((float *)mAppendBuffer.ptr())[sLeft];
                else {
-                  b = new float[len];
+                  b.reinit(len);
+                  pb = b.get();
                   CopySamples(mAppendBuffer.ptr() + sLeft * SAMPLE_SIZE(seqFormat),
                               seqFormat,
-                              (samplePtr)b, floatSample, len);
+                              (samplePtr)pb, floatSample, len);
                }
 
                float theMax, theMin, sumsq;
                {
-                  const float val = b[0];
+                  const float val = pb[0];
                   theMax = theMin = val;
                   sumsq = val * val;
                }
                for(decltype(len) j = 1; j < len; j++) {
-                  const float val = b[j];
+                  const float val = pb[j];
                   theMax = std::max(theMax, val);
                   theMin = std::min(theMin, val);
                   sumsq += val * val;
@@ -723,9 +725,6 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
                max[i] = theMax;
                rms[i] = (float)sqrt(sumsq / len);
                bl[i] = 1; //for now just fake it.
-
-               if (seqFormat != floatSample)
-                  delete[] b;
 
                didUpdate=true;
             }
@@ -934,21 +933,21 @@ bool SpecCache::CalculateOneSpectrum
          std::copy(scratch, scratch2, scratch3);
 
          {
-            const float *const window = settings.window;
+            const float *const window = settings.window.get();
             for (size_t ii = 0; ii < fftLen; ++ii)
                scratch[ii] *= window[ii];
             RealFFTf(scratch, hFFT);
          }
 
          {
-            const float *const dWindow = settings.dWindow;
+            const float *const dWindow = settings.dWindow.get();
             for (size_t ii = 0; ii < fftLen; ++ii)
                scratch2[ii] *= dWindow[ii];
             RealFFTf(scratch2, hFFT);
          }
 
          {
-            const float *const tWindow = settings.tWindow;
+            const float *const tWindow = settings.tWindow.get();
             for (size_t ii = 0; ii < fftLen; ++ii)
                scratch3[ii] *= tWindow[ii];
             RealFFTf(scratch3, hFFT);
@@ -1025,7 +1024,7 @@ bool SpecCache::CalculateOneSpectrum
 
          // This function mutates useBuffer
          ComputeSpectrumUsingRealFFTf
-            (useBuffer, settings.hFFT, settings.window, fftLen, results);
+            (useBuffer, settings.hFFT, settings.window.get(), fftLen, results);
          if (!gainFactors.empty()) {
             // Apply a frequency-dependant gain factor
             for (size_t ii = 0; ii < nBins; ++ii)
@@ -1825,9 +1824,9 @@ bool WaveClip::Resample(int rate, ProgressDialog *progress)
    double factor = (double)rate / (double)mRate;
    ::Resample resample(true, factor, factor); // constant rate resampling
 
-   size_t bufsize = 65536;
-   float* inBuffer = new float[bufsize];
-   float* outBuffer = new float[bufsize];
+   const size_t bufsize = 65536;
+   Floats inBuffer{ bufsize };
+   Floats outBuffer{ bufsize };
    sampleCount pos = 0;
    bool error = false;
    int outGenerated = 0;
@@ -1847,14 +1846,14 @@ bool WaveClip::Resample(int rate, ProgressDialog *progress)
 
       bool isLast = ((pos + inLen) == numSamples);
 
-      if (!mSequence->Get((samplePtr)inBuffer, floatSample, pos, inLen))
+      if (!mSequence->Get((samplePtr)inBuffer.get(), floatSample, pos, inLen))
       {
          error = true;
          break;
       }
 
-      const auto results = resample.Process(factor, inBuffer, inLen, isLast,
-                                            outBuffer, bufsize);
+      const auto results = resample.Process(factor, inBuffer.get(), inLen, isLast,
+                                            outBuffer.get(), bufsize);
       outGenerated = results.second;
 
       pos += results.first;
@@ -1865,7 +1864,7 @@ bool WaveClip::Resample(int rate, ProgressDialog *progress)
          break;
       }
 
-      if (!newSequence->Append((samplePtr)outBuffer, floatSample,
+      if (!newSequence->Append((samplePtr)outBuffer.get(), floatSample,
                                outGenerated))
       {
          error = true;
@@ -1885,9 +1884,6 @@ bool WaveClip::Resample(int rate, ProgressDialog *progress)
          }
       }
    }
-
-   delete[] inBuffer;
-   delete[] outBuffer;
 
    if (!error)
    {

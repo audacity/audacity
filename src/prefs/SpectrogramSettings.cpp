@@ -352,18 +352,9 @@ void SpectrogramSettings::DestroyWindows()
       EndFFT(hFFT);
       hFFT = NULL;
    }
-   if (window != NULL) {
-      delete[] window;
-      window = NULL;
-   }
-   if (dWindow != NULL) {
-      delete[] dWindow;
-      dWindow = NULL;
-   }
-   if (tWindow != NULL) {
-      delete[] tWindow;
-      tWindow = NULL;
-   }
+   window.reset();
+   dWindow.reset();
+   tWindow.reset();
 }
 
 
@@ -371,13 +362,11 @@ namespace
 {
    enum { WINDOW, TWINDOW, DWINDOW };
    void RecreateWindow(
-      float *&window, int which, size_t fftLen,
+      Floats &window, int which, size_t fftLen,
       size_t padding, int windowType, size_t windowSize, double &scale)
    {
-      if (window != NULL)
-         delete[] window;
       // Create the requested window function
-      window = new float[fftLen];
+      window = Floats{ fftLen };
       int ii;
 
       const bool extra = padding > 0;
@@ -397,16 +386,15 @@ namespace
       // Overwrite middle as needed
       switch (which) {
       case WINDOW:
-         NewWindowFunc(windowType, windowSize, extra, window + padding);
+         NewWindowFunc(windowType, windowSize, extra, window.get() + padding);
          break;
-         // Future, reassignment
       case TWINDOW:
-         NewWindowFunc(windowType, windowSize, extra, window + padding);
+         NewWindowFunc(windowType, windowSize, extra, window.get() + padding);
          for (int ii = padding, multiplier = -(int)windowSize / 2; ii < endOfWindow; ++ii, ++multiplier)
             window[ii] *= multiplier;
          break;
       case DWINDOW:
-         DerivativeOfWindowFunc(windowType, windowSize, extra, window + padding);
+         DerivativeOfWindowFunc(windowType, windowSize, extra, window.get() + padding);
          break;
       default:
          wxASSERT(false);
