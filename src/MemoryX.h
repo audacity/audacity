@@ -513,7 +513,17 @@ public:
       return *this;
    }
 
-   using ArrayOf<ArrayOf<X>>::reinit;
+   template< typename Integral >
+   void reinit(Integral count)
+   {
+      ArrayOf<ArrayOf<X>>::reinit( count );
+   }
+
+   template< typename Integral >
+   void reinit(Integral count, bool initialize)
+   {
+      ArrayOf<ArrayOf<X>>::reinit( count, initialize );
+   }
 
    template<typename Integral1, typename Integral2 >
    void reinit(Integral1 countN, Integral2 countM, bool initialize = false)
