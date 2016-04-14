@@ -22,8 +22,9 @@ struct SimpleBlockFileCache {
    bool active;
    bool needWrite;
    sampleFormat format;
-   samplePtr sampleData;
-   void* summaryData;
+   ArrayOf<char> sampleData, summaryData;
+
+   SimpleBlockFileCache() {}
 };
 
 // The AU formats we care about

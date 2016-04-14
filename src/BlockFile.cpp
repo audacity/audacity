@@ -193,13 +193,11 @@ void *BlockFile::CalcSummary(samplePtr buffer, size_t len,
    float *summary64K = (float *)(fullSummary.get() + mSummaryInfo.offset64K);
    float *summary256 = (float *)(fullSummary.get() + mSummaryInfo.offset256);
 
-   float *fbuffer = new float[len];
+   Floats fbuffer{ len };
    CopySamples(buffer, format,
-               (samplePtr)fbuffer, floatSample, len);
+               (samplePtr)fbuffer.get(), floatSample, len);
 
-   CalcSummaryFromBuffer(fbuffer, len, summary256, summary64K);
-
-   delete[] fbuffer;
+   CalcSummaryFromBuffer(fbuffer.get(), len, summary256, summary64K);
 
    return fullSummary.get();
 }
@@ -436,14 +434,14 @@ bool BlockFile::Read256(float *buffer,
 {
    wxASSERT(start >= 0);
 
-   char *summary = new char[mSummaryInfo.totalSummaryBytes];
+   ArrayOf<char> summary{ mSummaryInfo.totalSummaryBytes };
    // FIXME: TRAP_ERR ReadSummary() could return fail.
-   this->ReadSummary(summary);
+   this->ReadSummary(summary.get());
 
    start = std::min( start, mSummaryInfo.frames256 );
    len = std::min( len, mSummaryInfo.frames256 - start );
 
-   CopySamples(summary + mSummaryInfo.offset256 + (start * mSummaryInfo.bytesPerFrame),
+   CopySamples(summary.get() + mSummaryInfo.offset256 + (start * mSummaryInfo.bytesPerFrame),
                mSummaryInfo.format,
                (samplePtr)buffer, floatSample, len * mSummaryInfo.fields);
 
@@ -455,8 +453,6 @@ bool BlockFile::Read256(float *buffer,
          buffer[3*i] = buffer[2*i];
       }
    }
-
-   delete[] summary;
 
    return true;
 }
@@ -475,14 +471,14 @@ bool BlockFile::Read64K(float *buffer,
 {
    wxASSERT(start >= 0);
 
-   char *summary = new char[mSummaryInfo.totalSummaryBytes];
+   ArrayOf<char> summary{ mSummaryInfo.totalSummaryBytes };
    // FIXME: TRAP_ERR ReadSummary() could return fail.
-   this->ReadSummary(summary);
+   this->ReadSummary(summary.get());
 
    start = std::min( start, mSummaryInfo.frames64K );
    len = std::min( len, mSummaryInfo.frames64K - start );
 
-   CopySamples(summary + mSummaryInfo.offset64K +
+   CopySamples(summary.get() + mSummaryInfo.offset64K +
                (start * mSummaryInfo.bytesPerFrame),
                mSummaryInfo.format,
                (samplePtr)buffer, floatSample, len*mSummaryInfo.fields);
@@ -495,8 +491,6 @@ bool BlockFile::Read64K(float *buffer,
          buffer[3*i] = buffer[2*i];
       }
    }
-
-   delete[] summary;
 
    return true;
 }
