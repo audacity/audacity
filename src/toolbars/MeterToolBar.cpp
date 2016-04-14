@@ -83,8 +83,7 @@ void MeterToolBar::Create(wxWindow * parent)
 
 void MeterToolBar::ReCreateButtons()
 {
-   void *playState = NULL;
-   void *recordState = NULL;
+   Meter::State playState{ false }, recordState{ false };
 
    if (mPlayMeter && mProject->GetPlaybackMeter() == mPlayMeter)
    {
@@ -100,15 +99,8 @@ void MeterToolBar::ReCreateButtons()
 
    ToolBar::ReCreateButtons();
 
-   if (playState)
-   {
-      mPlayMeter->RestoreState(playState);
-   }
-
-   if (recordState)
-   {
-      mRecordMeter->RestoreState(recordState);
-   }
+   mPlayMeter->RestoreState(playState);
+   mRecordMeter->RestoreState(recordState);
 }
 
 void MeterToolBar::Populate()

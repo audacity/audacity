@@ -113,17 +113,15 @@ wxString MeterUpdateMsg::toStringIfClipped()
 // without needing mutexes.
 //
 
-MeterUpdateQueue::MeterUpdateQueue(int maxLen):
+MeterUpdateQueue::MeterUpdateQueue(size_t maxLen):
    mBufferSize(maxLen)
 {
-   mBuffer = new MeterUpdateMsg[mBufferSize];
    Clear();
 }
 
 // destructor
 MeterUpdateQueue::~MeterUpdateQueue()
 {
-   delete[] mBuffer;
 }
 
 void MeterUpdateQueue::Clear()
@@ -1857,27 +1855,23 @@ void Meter::OnAudioIOStatus(wxCommandEvent &evt)
 // SaveState() and RestoreState() exist solely for purpose of recreating toolbars
 // They should really be quering the project for current audio I/O state, but there
 // isn't a clear way of doing that just yet.  (It should NOT query AudioIO.)
-void *Meter::SaveState()
+auto Meter::SaveState() -> State
 {
-   bool *state = new bool[2];
-   state[0] = mMonitoring;
-   state[1] = mActive;
-
-   return state;
+   return { true, mMonitoring, mActive };
 }
 
-void Meter::RestoreState(void *state)
+void Meter::RestoreState(const State &state)
 {
-   bool *s = (bool *)state;
-   mMonitoring = s[0];
-   mActive = s[1];
+   if (!state.mSaved)
+      return;
+
+   mMonitoring = state.mMonitoring;
+   mActive = state.mActive;
 
    if (mActive)
    {
       mTimer.Start(1000 / mMeterRefreshRate);
    }
-
-   delete [] s;
 }
 
 //
