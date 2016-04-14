@@ -32,6 +32,7 @@ class wxWindow;
 #include "audacity/EffectInterface.h"
 
 #include "../Experimental.h"
+#include "../SampleFormat.h"
 #include "../SelectedRegion.h"
 #include "../Shuttle.h"
 #include "../Internat.h"
@@ -504,10 +505,10 @@ private:
    size_t mNumAudioIn;
    size_t mNumAudioOut;
 
-   float **mInBuffer;
-   float **mOutBuffer;
-   float **mInBufPos;
-   float **mOutBufPos;
+   FloatBuffers mInBuffer, mOutBuffer;
+   
+   using Positions = ArrayOf < float* > ; // Array of non-owning pointers into the above
+   Positions mInBufPos, mOutBufPos;
 
    size_t mBufferSize;
    size_t mBlockSize;
