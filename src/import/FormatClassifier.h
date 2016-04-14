@@ -82,12 +82,12 @@ private:
    std::unique_ptr<DebugWriter> mpWriter;
 #endif
 
-   float*               mSigBuffer;
-   float*               mAuxBuffer;
-   uint8_t*             mRawBuffer;
+   Floats               mSigBuffer{ cSiglen };
+   Floats               mAuxBuffer{ cSiglen };
+   ArrayOf<uint8_t> mRawBuffer{ cSiglen * 8 };
 
-   float*               mMonoFeat;
-   float*               mStereoFeat;
+   Floats               mMonoFeat;
+   Floats               mStereoFeat;
    
    FormatClassT         mResultFormat;
    unsigned             mResultChannels { 0 };

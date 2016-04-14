@@ -252,7 +252,7 @@ void MyFLACFile::error_callback(FLAC__StreamDecoderErrorStatus WXUNUSED(status))
 FLAC__StreamDecoderWriteStatus MyFLACFile::write_callback(const FLAC__Frame *frame,
                                                           const FLAC__int32 * const buffer[])
 {
-   short *tmp=new short[frame->header.blocksize];
+   ArrayOf<short> tmp{ frame->header.blocksize };
 
    auto iter = mFile->mChannels.begin();
    for (unsigned int chn=0; chn<mFile->mNumChannels; ++iter, ++chn) {
@@ -261,7 +261,7 @@ FLAC__StreamDecoderWriteStatus MyFLACFile::write_callback(const FLAC__Frame *fra
             tmp[s]=buffer[chn][s];
          }
 
-         iter->get()->Append((samplePtr)tmp,
+         iter->get()->Append((samplePtr)tmp.get(),
                   int16Sample,
                   frame->header.blocksize);
       }
@@ -271,8 +271,6 @@ FLAC__StreamDecoderWriteStatus MyFLACFile::write_callback(const FLAC__Frame *fra
                   frame->header.blocksize);
       }
    }
-
-   delete [] tmp;
 
    mFile->mSamplesDone += frame->header.blocksize;
 
@@ -452,7 +450,7 @@ ProgressResult FLACImportFileHandle::Import(TrackFactory *trackFactory,
    mChannels.resize(mNumChannels);
 
    auto iter = mChannels.begin();
-   for (int c = 0; c < mNumChannels; ++iter, ++c) {
+   for (size_t c = 0; c < mNumChannels; ++iter, ++c) {
       *iter = trackFactory->NewWaveTrack(mFormat, mSampleRate);
 
       if (mNumChannels == 2) {
@@ -500,7 +498,7 @@ ProgressResult FLACImportFileHandle::Import(TrackFactory *trackFactory,
             limitSampleBufferSize( maxBlockSize, fileTotalFrames - i );
 
          auto iter = mChannels.begin();
-         for (int c = 0; c < mNumChannels; ++c, ++iter)
+         for (size_t c = 0; c < mNumChannels; ++c, ++iter)
             iter->get()->AppendCoded(mFilename, i, blockLen, c, ODTask::eODFLAC);
 
          mUpdateResult = mProgress->Update(
@@ -540,7 +538,7 @@ ProgressResult FLACImportFileHandle::Import(TrackFactory *trackFactory,
 
    tags->Clear();
    size_t cnt = mFile->mComments.GetCount();
-   for (int c = 0; c < cnt; c++) {
+   for (size_t c = 0; c < cnt; c++) {
       wxString name = mFile->mComments[c].BeforeFirst(wxT('='));
       wxString value = mFile->mComments[c].AfterFirst(wxT('='));
       if (name.Upper() == wxT("DATE") && !tags->HasTag(TAG_YEAR)) {
