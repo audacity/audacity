@@ -1705,10 +1705,11 @@ int AudioIO::StartStream(const ConstWaveTrackArray &playbackTracks,
    mPlayMode = options.playLooped ? PLAY_LOOPED : PLAY_STRAIGHT;
    mCutPreviewGapStart = options.cutPreviewGapStart;
    mCutPreviewGapLen = options.cutPreviewGapLen;
-   mPlaybackBuffers = NULL;
-   mPlaybackMixers = NULL;
-   mCaptureBuffers = NULL;
-   mResample = NULL;
+
+   mPlaybackBuffers.reset();
+   mPlaybackMixers.reset();
+   mCaptureBuffers.reset();
+   mResample.reset();
 
    double playbackTime = 4.0;
 
@@ -1859,12 +1860,8 @@ int AudioIO::StartStream(const ConstWaveTrackArray &playbackTracks,
             auto playbackMixBufferSize =
                mPlaybackSamplesToCopy;
 
-            mPlaybackBuffers = new RingBuffer* [mPlaybackTracks.size()];
-            mPlaybackMixers  = new Mixer*      [mPlaybackTracks.size()];
-
-            // Set everything to zero in case we have to DELETE these due to a memory exception.
-            memset(mPlaybackBuffers, 0, sizeof(RingBuffer*)*mPlaybackTracks.size());
-            memset(mPlaybackMixers, 0, sizeof(Mixer*)*mPlaybackTracks.size());
+            mPlaybackBuffers.reinit(mPlaybackTracks.size());
+            mPlaybackMixers.reinit(mPlaybackTracks.size());
 
             const Mixer::WarpOptions &warpOptions =
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
@@ -1878,10 +1875,11 @@ int AudioIO::StartStream(const ConstWaveTrackArray &playbackTracks,
 
             for (unsigned int i = 0; i < mPlaybackTracks.size(); i++)
             {
-               mPlaybackBuffers[i] = new RingBuffer(floatSample, playbackBufferSize);
+               mPlaybackBuffers[i] = std::make_unique<RingBuffer>(floatSample, playbackBufferSize);
 
                // MB: use normal time for the end time, not warped time!
-               mPlaybackMixers[i] = new Mixer(WaveTrackConstArray{ mPlaybackTracks[i] },
+               mPlaybackMixers[i] = std::make_unique<Mixer>
+                  (WaveTrackConstArray{ mPlaybackTracks[i] },
                                                warpOptions,
                                                mT0, mT1, 1,
                                                playbackMixBufferSize, false,
@@ -1904,19 +1902,16 @@ int AudioIO::StartStream(const ConstWaveTrackArray &playbackTracks,
                return 0;
             }
 
-            mCaptureBuffers = new RingBuffer* [mCaptureTracks.size()];
-            mResample = new Resample* [mCaptureTracks.size()];
+            mCaptureBuffers.reinit(mCaptureTracks.size());
+            mResample.reinit(mCaptureTracks.size());
             mFactor = sampleRate / mRate;
-
-            // Set everything to zero in case we have to DELETE these due to a memory exception.
-            memset(mCaptureBuffers, 0, sizeof(RingBuffer*)*mCaptureTracks.size());
-            memset(mResample, 0, sizeof(Resample*)*mCaptureTracks.size());
 
             for( unsigned int i = 0; i < mCaptureTracks.size(); i++ )
             {
-               mCaptureBuffers[i] = new RingBuffer( mCaptureTracks[i]->GetSampleFormat(),
+               mCaptureBuffers[i] = std::make_unique<RingBuffer>
+                  ( mCaptureTracks[i]->GetSampleFormat(),
                                                     captureBufferSize );
-               mResample[i] = new Resample(true, mFactor, mFactor); // constant rate resampling
+               mResample[i] = std::make_unique<Resample>(true, mFactor, mFactor); // constant rate resampling
             }
          }
       }
@@ -2087,37 +2082,10 @@ void AudioIO::StartStreamCleanup(bool bOnlyBuffers)
       EffectManager::Get().RealtimeFinalize();
    }
 
-   if(mPlaybackBuffers)
-   {
-      for (unsigned int i = 0; i < mPlaybackTracks.size(); i++)
-         delete mPlaybackBuffers[i];
-      delete [] mPlaybackBuffers;
-      mPlaybackBuffers = NULL;
-   }
-
-   if(mPlaybackMixers)
-   {
-      for (unsigned int i = 0; i < mPlaybackTracks.size(); i++)
-         delete mPlaybackMixers[i];
-      delete [] mPlaybackMixers;
-      mPlaybackMixers = NULL;
-   }
-
-   if(mCaptureBuffers)
-   {
-      for (unsigned int i = 0; i < mCaptureTracks.size(); i++)
-         delete mCaptureBuffers[i];
-      delete [] mCaptureBuffers;
-      mCaptureBuffers = NULL;
-   }
-
-   if(mResample)
-   {
-      for (unsigned int i = 0; i < mCaptureTracks.size(); i++)
-         delete mResample[i];
-      delete [] mResample;
-      mResample = NULL;
-   }
+   mPlaybackBuffers.reset();
+   mPlaybackMixers.reset();
+   mCaptureBuffers.reset();
+   mResample.reset();
 
    if(!bOnlyBuffers)
    {
@@ -2443,14 +2411,8 @@ void AudioIO::StopStream()
 
       if (mPlaybackTracks.size() > 0)
       {
-         for (unsigned int i = 0; i < mPlaybackTracks.size(); i++)
-         {
-            delete mPlaybackBuffers[i];
-            delete mPlaybackMixers[i];
-         }
-
-         delete[] mPlaybackBuffers;
-         delete[] mPlaybackMixers;
+         mPlaybackBuffers.reset();
+         mPlaybackMixers.reset();
       }
 
       //
@@ -2458,6 +2420,9 @@ void AudioIO::StopStream()
       //
       if (mCaptureTracks.size() > 0)
       {
+         mCaptureBuffers.reset();
+         mResample.reset();
+
          //
          // We only apply latency correction when we actually played back
          // tracks during the recording. If we did not play back tracks,
@@ -2473,9 +2438,6 @@ void AudioIO::StopStream()
 
          for (unsigned int i = 0; i < mCaptureTracks.size(); i++)
             {
-               delete mCaptureBuffers[i];
-               delete mResample[i];
-
                WaveTrack* track = mCaptureTracks[i];
                track->Flush();
 
@@ -2521,9 +2483,6 @@ void AudioIO::StopStream()
                   }
                }
             }
-
-         delete[] mCaptureBuffers;
-         delete[] mResample;
       }
    }
 
@@ -4378,7 +4337,7 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
          bool selected = false;
          int group = 0;
          int chanCnt = 0;
-         int maxLen = 0;
+         decltype(framesPerBuffer) maxLen = 0;
          for (unsigned t = 0; t < numPlaybackTracks; t++)
          {
             const WaveTrack *vt = gAudioIO->mPlaybackTracks[t];
@@ -4410,7 +4369,7 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
 
 #define ORIGINAL_DO_NOT_PLAY_ALL_MUTED_TRACKS_TO_END
 #ifdef ORIGINAL_DO_NOT_PLAY_ALL_MUTED_TRACKS_TO_END
-            int len = 0;
+            decltype(framesPerBuffer) len = 0;
             // this is original code prior to r10680 -RBD
             if (cut)
             {
