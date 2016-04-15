@@ -519,7 +519,7 @@ void ExportMP3Options::OnQuality(wxCommandEvent& WXUNUSED(event))
    }
 }
 
-void ExportMP3Options::OnMono(wxCommandEvent& evt)
+void ExportMP3Options::OnMono(wxCommandEvent& /*evt*/)
 {
    bool mono = false;
    mono = mMono->GetValue();

@@ -478,10 +478,10 @@ typedef void (*_gnome_interaction_key_return_fn)(gint, gboolean);
 static _gnome_client_request_interaction_fn gnome_client_request_interaction;
 static _gnome_interaction_key_return_fn gnome_interaction_key_return;
 
-static void interact_cb(GnomeClient *client,
+static void interact_cb(GnomeClient * /* client */,
                         gint key,
-                        GnomeDialogType type,
-                        gpointer data)
+                        GnomeDialogType /* type */,
+                        gpointer /* data */)
 {
    wxCloseEvent e(wxEVT_QUERY_END_SESSION, wxID_ANY);
    e.SetEventObject(&wxGetApp());
@@ -493,12 +493,12 @@ static void interact_cb(GnomeClient *client,
 }
 
 static gboolean save_yourself_cb(GnomeClient *client,
-                                 gint phase,
-                                 GnomeSaveStyle style,
+                                 gint /* phase */,
+                                 GnomeSaveStyle /* style */,
                                  gboolean shutdown,
                                  GnomeInteractStyle interact,
-                                 gboolean fast,
-                                 gpointer user_data)
+                                 gboolean /* fast */,
+                                 gpointer /* user_data */)
 {
    if (!shutdown || interact != GNOME_INTERACT_ANY) {
       return TRUE;
@@ -1774,7 +1774,7 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
 }
 
 #if defined(__UNIX__)
-void AudacityApp::OnServerEvent(wxSocketEvent & evt)
+void AudacityApp::OnServerEvent(wxSocketEvent & /* evt */)
 {
    wxSocketBase *sock;
 

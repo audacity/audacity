@@ -94,7 +94,7 @@ class NullMessageTarget final : public CommandMessageTarget
 {
 public:
    virtual ~NullMessageTarget() {}
-   void Update(const wxString &message) override {}
+   void Update(const wxString & /* message */) override {}
 };
 
 /// Displays messages from a command in a wxMessageBox

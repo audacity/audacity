@@ -204,7 +204,7 @@ class PluginFunctor final : public CommandFunctor
 public:
    explicit PluginFunctor(AudacityProject *project, const PluginID &id, audCommandPluginFunction pfn)
       : mPluginID{ id }, mProject{ project }, mCommandPluginFunction{ pfn } {}
-   void operator () (int, const wxEvent *) override
+   void operator () (int /* index */, const wxEvent *) override
    { (mProject->*mCommandPluginFunction) (mPluginID, AudacityProject::OnEffectFlags::kNone); }
 private:
    const PluginID mPluginID;

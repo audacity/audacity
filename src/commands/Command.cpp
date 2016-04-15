@@ -105,6 +105,7 @@ void CommandImplementation::TypeCheck(const wxString &typeName,
                                       const wxString &paramName,
                                       const wxVariant &param)
 {
+   // this macro is empty if wxWidgets is not compiled in debug mode
    wxASSERT_MSG(param.IsType(typeName),
                 GetName()
                 + wxT("command tried to get '")
@@ -116,6 +117,7 @@ void CommandImplementation::TypeCheck(const wxString &typeName,
 
 void CommandImplementation::CheckParam(const wxString &paramName)
 {
+   // this macro is empty if wxWidgets is not compiled in debug mode
    wxASSERT_MSG(mParams.find(paramName) != mParams.end(),
                 GetName()
                 + wxT("command tried to get '")
