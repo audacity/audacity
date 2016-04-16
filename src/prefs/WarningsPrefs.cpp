@@ -69,7 +69,7 @@ void WarningsPrefs::PopulateOrExchange(ShuttleGui & S)
       S.TieCheckBox(_("Mixing down to &stereo during export"),
                     wxT("/Warnings/MixStereo"),
                     true);
-      S.TieCheckBox(_("Mixing down on export (Custom FFmpeg or external program)"),
+      S.TieCheckBox(_("Mixing down on export (&Custom FFmpeg or external program)"),
                     wxT("/Warnings/MixUnknownChannels"),
                     true);
       S.TieCheckBox(_("&Importing uncompressed audio files"),
