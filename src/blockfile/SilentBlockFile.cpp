@@ -13,7 +13,7 @@
 #include "../FileFormats.h"
 
 SilentBlockFile::SilentBlockFile(sampleCount sampleLen):
-   BlockFile(wxFileName(), sampleLen)
+BlockFile(wxFileNameWrapper{}, sampleLen)
 {
    mMin = 0.;
    mMax = 0.;
@@ -75,7 +75,7 @@ BlockFile *SilentBlockFile::BuildFromXML(DirManager & WXUNUSED(dm), const wxChar
 }
 
 /// Create a copy of this BlockFile
-BlockFile *SilentBlockFile::Copy(wxFileName newFileName)
+BlockFile *SilentBlockFile::Copy(wxFileNameWrapper &&)
 {
    BlockFile *newBlockFile = new SilentBlockFile(mLen);
 

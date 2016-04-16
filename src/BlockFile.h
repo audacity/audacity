@@ -22,6 +22,8 @@
 
 #include "SampleFormat.h"
 
+#include "wxFileNameWrapper.h"
+
 
 class SummaryInfo {
  public:
@@ -45,7 +47,7 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
    // Constructor / Destructor
 
    /// Construct a BlockFile.
-   BlockFile(wxFileName fileName, sampleCount samples);
+   BlockFile(wxFileNameWrapper &&fileName, sampleCount samples);
    virtual ~BlockFile();
 
    // Reading
@@ -71,7 +73,7 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
    /// (can be empty -- some BlockFiles, like SilentBlockFile, correspond to
    ///  no file on disk)
    virtual wxFileName GetFileName() const;
-   virtual void SetFileName(wxFileName &name);
+   virtual void SetFileName(wxFileNameWrapper &&name);
 
    virtual sampleCount GetLength() const { return mLen; }
    virtual void SetLength(const sampleCount newLen) { mLen = newLen; }
@@ -106,7 +108,7 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
    virtual bool IsSummaryBeingComputed(){return false;}
 
    /// Create a NEW BlockFile identical to this, using the given filename
-   virtual BlockFile *Copy(wxFileName newFileName) = 0;
+   virtual BlockFile * Copy(wxFileNameWrapper &&newFileName) = 0;
 
    virtual wxLongLong GetSpaceUsage() const = 0;
 
@@ -164,7 +166,7 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
    static ArrayOf<char> fullSummary;
 
  protected:
-   wxFileName mFileName;
+   wxFileNameWrapper mFileName;
    sampleCount mLen;
    SummaryInfo mSummaryInfo;
    float mMin, mMax, mRMS;
@@ -187,11 +189,11 @@ class AliasBlockFile /* not final */ : public BlockFile
    // Constructor / Destructor
 
    /// Constructs an AliasBlockFile
-   AliasBlockFile(wxFileName baseFileName,
-                  wxFileName aliasedFileName, sampleCount aliasStart,
+   AliasBlockFile(wxFileNameWrapper &&baseFileName,
+                  wxFileNameWrapper &&aliasedFileName, sampleCount aliasStart,
                   sampleCount aliasLen, int aliasChannel);
-   AliasBlockFile(wxFileName existingSummaryFileName,
-                  wxFileName aliasedFileName, sampleCount aliasStart,
+   AliasBlockFile(wxFileNameWrapper &&existingSummaryFileName,
+                  wxFileNameWrapper &&aliasedFileName, sampleCount aliasStart,
                   sampleCount aliasLen, int aliasChannel,
                   float min, float max, float RMS);
    virtual ~AliasBlockFile();
@@ -207,8 +209,8 @@ class AliasBlockFile /* not final */ : public BlockFile
    //
    // These methods are for advanced use only!
    //
-   wxFileName GetAliasedFileName() { return mAliasedFileName; }
-   void ChangeAliasedFileName(wxFileName newAliasedFile);
+   const wxFileName &GetAliasedFileName() { return mAliasedFileName; }
+   void ChangeAliasedFileName(wxFileNameWrapper &&newAliasedFile);
    bool IsAlias() const override { return true; }
 
  protected:
@@ -218,7 +220,7 @@ class AliasBlockFile /* not final */ : public BlockFile
    /// Read the summary into a buffer
    bool ReadSummary(void *data) override;
 
-   wxFileName  mAliasedFileName;
+   wxFileNameWrapper mAliasedFileName;
    sampleCount mAliasStart;
    int         mAliasChannel;
    mutable bool        mSilentAliasLog;

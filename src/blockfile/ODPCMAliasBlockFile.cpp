@@ -45,11 +45,11 @@ char aheaderTag[aheaderTagLen + 1] = "AudacityBlockFile112";
 
 
 ODPCMAliasBlockFile::ODPCMAliasBlockFile(
-      wxFileName fileName,
-      wxFileName aliasedFileName,
+      wxFileNameWrapper &&fileName,
+      wxFileNameWrapper &&aliasedFileName,
       sampleCount aliasStart,
       sampleCount aliasLen, int aliasChannel)
-: PCMAliasBlockFile(fileName, aliasedFileName,
+: PCMAliasBlockFile(std::move(fileName), std::move(aliasedFileName),
                     aliasStart, aliasLen, aliasChannel,false)
 {
    mSummaryAvailable = mSummaryBeingComputed = mHasBeenSaved = false;
@@ -57,12 +57,12 @@ ODPCMAliasBlockFile::ODPCMAliasBlockFile(
 
 ///summaryAvailable should be true if the file has been written already.
 ODPCMAliasBlockFile::ODPCMAliasBlockFile(
-      wxFileName existingSummaryFileName,
-      wxFileName aliasedFileName,
+      wxFileNameWrapper &&existingSummaryFileName,
+      wxFileNameWrapper &&aliasedFileName,
       sampleCount aliasStart,
       sampleCount aliasLen, int aliasChannel,
       float min, float max, float rms, bool summaryAvailable)
-: PCMAliasBlockFile(existingSummaryFileName, aliasedFileName,
+: PCMAliasBlockFile(std::move(existingSummaryFileName), std::move(aliasedFileName),
                     aliasStart, aliasLen,
                     aliasChannel, min, max, rms)
 {
@@ -216,7 +216,7 @@ bool ODPCMAliasBlockFile::Read64K(float *buffer, sampleCount start, sampleCount 
 /// Construct a NEW PCMAliasBlockFile based on this one.
 /// otherwise construct an ODPCMAliasBlockFile that still needs to be computed.
 /// @param newFileName The filename to copy the summary data to.
-BlockFile *ODPCMAliasBlockFile::Copy(wxFileName newFileName)
+BlockFile *ODPCMAliasBlockFile::Copy(wxFileNameWrapper &&newFileName)
 {
    BlockFile *newBlockFile;
 
@@ -228,8 +228,8 @@ BlockFile *ODPCMAliasBlockFile::Copy(wxFileName newFileName)
    //PCMAliasBlockFile is to lock on exit, and this will cause orphaned blockfiles..
    if(IsSummaryAvailable() && mHasBeenSaved)
    {
-      newBlockFile  = new PCMAliasBlockFile(newFileName,
-                                                   mAliasedFileName, mAliasStart,
+      newBlockFile  = new PCMAliasBlockFile(std::move(newFileName),
+                                                   wxFileNameWrapper{mAliasedFileName}, mAliasStart,
                                                    mLen, mAliasChannel,
                                                    mMin, mMax, mRMS);
 
@@ -237,8 +237,8 @@ BlockFile *ODPCMAliasBlockFile::Copy(wxFileName newFileName)
    else
    {
       //Summary File might exist in this case, but it might not.
-      newBlockFile  = new ODPCMAliasBlockFile(newFileName,
-                                                   mAliasedFileName, mAliasStart,
+      newBlockFile  = new ODPCMAliasBlockFile(std::move(newFileName),
+                                                   wxFileNameWrapper{mAliasedFileName}, mAliasStart,
                                                    mLen, mAliasChannel,
                                                    mMin, mMax, mRMS,IsSummaryAvailable());
       //The client code will need to schedule this blockfile for OD summarizing if it is going to a NEW track.
@@ -292,8 +292,8 @@ void ODPCMAliasBlockFile::SaveXML(XMLWriter &xmlFile)
 // as testing will be done in DirManager::ProjectFSCK().
 BlockFile *ODPCMAliasBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
 {
-   wxFileName summaryFileName;
-   wxFileName aliasFileName;
+   wxFileNameWrapper summaryFileName;
+   wxFileNameWrapper aliasFileName;
    sampleCount aliasStart=0, aliasLen=0;
    int aliasChannel=0;
    long nValue;
@@ -339,7 +339,7 @@ BlockFile *ODPCMAliasBlockFile::BuildFromXML(DirManager &dm, const wxChar **attr
       }
    }
 
-   return new ODPCMAliasBlockFile(summaryFileName, aliasFileName,
+   return new ODPCMAliasBlockFile(std::move(summaryFileName), std::move(aliasFileName),
                                     aliasStart, aliasLen, aliasChannel,
                                     0,0,0, false);
 }
@@ -373,10 +373,10 @@ void ODPCMAliasBlockFile::DoWriteSummary()
 }
 
 ///sets the file name the summary info will be saved in.  threadsafe.
-void ODPCMAliasBlockFile::SetFileName(wxFileName &name)
+void ODPCMAliasBlockFile::SetFileName(wxFileNameWrapper &&name)
 {
    mFileNameMutex.Lock();
-   mFileName=name;
+   mFileName = std::move(name);
    mFileNameMutex.Unlock();
 }
 

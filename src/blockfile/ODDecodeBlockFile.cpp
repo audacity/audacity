@@ -36,9 +36,10 @@ char bheaderTag[bheaderTagLen + 1] = "AudacityBlockFile112";
 
 
    /// Create a disk file and write summary and sample data to it
-ODDecodeBlockFile::ODDecodeBlockFile(wxFileName baseFileName,wxFileName audioFileName, sampleCount aliasStart,
+ODDecodeBlockFile::ODDecodeBlockFile(wxFileNameWrapper &&baseFileName, wxFileNameWrapper &&audioFileName, sampleCount aliasStart,
                      sampleCount aliasLen, int aliasChannel,unsigned int decodeType):
-   SimpleBlockFile(baseFileName,NULL,aliasLen,floatSample,true,true), //floatSample has no effect.  last two bools - bypass writing of blockfile and cache
+   SimpleBlockFile(std::move(baseFileName),
+      NULL,aliasLen,floatSample,true,true), //floatSample has no effect.  last two bools - bypass writing of blockfile and cache
 
    mType(decodeType),
    mAliasStart(aliasStart),
@@ -46,15 +47,15 @@ ODDecodeBlockFile::ODDecodeBlockFile(wxFileName baseFileName,wxFileName audioFil
 {
    mDecoder = NULL;
    mDataAvailable=false;
-   mAudioFileName = audioFileName;
+   mAudioFileName = std::move(audioFileName);
    mFormat = int16Sample;
 }
 
 /// Create the memory structure to refer to the given block file
-ODDecodeBlockFile::ODDecodeBlockFile(wxFileName existingFile, wxFileName audioFileName, sampleCount aliasStart,
+ODDecodeBlockFile::ODDecodeBlockFile(wxFileNameWrapper &&existingFile, wxFileNameWrapper &&audioFileName, sampleCount aliasStart,
                      sampleCount aliasLen, int aliasChannel, unsigned int decodeType,
                    float min, float max, float rms, bool dataAvailable):
-   SimpleBlockFile(existingFile,aliasLen,min,max,rms),
+   SimpleBlockFile(std::move(existingFile),aliasLen,min,max,rms),
 
    mType(decodeType),
    mAliasStart(aliasStart),
@@ -62,7 +63,7 @@ ODDecodeBlockFile::ODDecodeBlockFile(wxFileName existingFile, wxFileName audioFi
 {
    mDecoder = NULL;
    mDataAvailable=dataAvailable;
-   mAudioFileName = audioFileName;
+   mAudioFileName = std::move(audioFileName);
    mFormat = int16Sample;
 }
 
@@ -157,7 +158,7 @@ bool ODDecodeBlockFile::Read64K(float *buffer, sampleCount start, sampleCount le
 /// Construct a NEW PCMAliasBlockFile based on this one.
 /// otherwise construct an ODPCMAliasBlockFile that still needs to be computed.
 /// @param newFileName The filename to copy the summary data to.
-BlockFile *ODDecodeBlockFile::Copy(wxFileName newFileName)
+BlockFile *ODDecodeBlockFile::Copy(wxFileNameWrapper &&newFileName)
 {
    BlockFile *newBlockFile;
 
@@ -166,13 +167,13 @@ BlockFile *ODDecodeBlockFile::Copy(wxFileName newFileName)
    if(IsSummaryAvailable())
    {
       //create a simpleblockfile, because once it has the summary it is a simpleblockfile for all intents an purposes
-      newBlockFile  = SimpleBlockFile::Copy(newFileName) ;
+      newBlockFile  = SimpleBlockFile::Copy(std::move(newFileName)) ;
    }
    else
    {
       //Summary File might exist in this case, but it probably (99.999% of the time) won't.
-      newBlockFile  = new ODDecodeBlockFile(newFileName,
-                                                   mAudioFileName, mAliasStart,
+      newBlockFile  = new ODDecodeBlockFile(std::move(newFileName),
+                                                   wxFileNameWrapper{mAudioFileName}, mAliasStart,
                                                    mLen, mAliasChannel, mType,
                                                    mMin, mMax, mRMS,IsSummaryAvailable());
       //The client code will need to schedule this blockfile for OD decoding if it is going to a NEW track.
@@ -223,8 +224,8 @@ void ODDecodeBlockFile::SaveXML(XMLWriter &xmlFile)
 // as testing will be done in DirManager::ProjectFSCK().
 BlockFile *ODDecodeBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
 {
-   wxFileName summaryFileName;
-   wxFileName audioFileName;
+   wxFileNameWrapper summaryFileName;
+   wxFileNameWrapper audioFileName;
    sampleCount aliasStart=0, aliasLen=0;
    int aliasChannel=0;
    long nValue;
@@ -273,7 +274,7 @@ BlockFile *ODDecodeBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
       }
    }
 
-   return new ODDecodeBlockFile(summaryFileName, audioFileName,
+   return new ODDecodeBlockFile(std::move(summaryFileName), std::move(audioFileName),
                                 aliasStart, aliasLen, aliasChannel,decodeType,
                                 0,0,0, false);
 
@@ -355,10 +356,10 @@ int ODDecodeBlockFile::WriteODDecodeBlockFile()
 }
 
 ///sets the file name the summary info will be saved in.  threadsafe.
-void ODDecodeBlockFile::SetFileName(wxFileName &name)
+void ODDecodeBlockFile::SetFileName(wxFileNameWrapper &&name)
 {
    mFileNameMutex.Lock();
-   mFileName=name;
+   mFileName=std::move(name);
 /* mchinen oct 9 2009 don't think we need the char* but leaving it in for now just as a reminder that we might
    if wxFileName isn't threadsafe.
    delete [] mFileNameChar;
@@ -585,9 +586,9 @@ void ODDecodeBlockFile::UnlockRead() const
 /// Modify this block to point at a different file.  This is generally
 /// looked down on, but it is necessary in one case: see
 /// DirManager::EnsureSafeFilename().
-void ODDecodeBlockFile::ChangeAudioFile(wxFileName newAudioFile)
+void ODDecodeBlockFile::ChangeAudioFile(wxFileNameWrapper &&newAudioFile)
 {
-   mAudioFileName = newAudioFile;
+   mAudioFileName = std::move(newAudioFile);
 }
 
 

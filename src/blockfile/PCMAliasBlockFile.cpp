@@ -28,22 +28,22 @@
 extern AudioIO *gAudioIO;
 
 PCMAliasBlockFile::PCMAliasBlockFile(
-      wxFileName fileName,
-      wxFileName aliasedFileName,
+      wxFileNameWrapper &&fileName,
+      wxFileNameWrapper &&aliasedFileName,
       sampleCount aliasStart,
       sampleCount aliasLen, int aliasChannel)
-: AliasBlockFile(fileName, aliasedFileName,
+: AliasBlockFile(std::move(fileName), std::move(aliasedFileName),
                  aliasStart, aliasLen, aliasChannel)
 {
    AliasBlockFile::WriteSummary();
 }
 
 PCMAliasBlockFile::PCMAliasBlockFile(
-      wxFileName fileName,
-      wxFileName aliasedFileName,
+      wxFileNameWrapper&& fileName,
+      wxFileNameWrapper&& aliasedFileName,
       sampleCount aliasStart,
       sampleCount aliasLen, int aliasChannel,bool writeSummary)
-: AliasBlockFile(fileName, aliasedFileName,
+: AliasBlockFile(std::move(fileName), std::move(aliasedFileName),
                  aliasStart, aliasLen, aliasChannel)
 {
    if(writeSummary)
@@ -51,12 +51,12 @@ PCMAliasBlockFile::PCMAliasBlockFile(
 }
 
 PCMAliasBlockFile::PCMAliasBlockFile(
-      wxFileName existingSummaryFileName,
-      wxFileName aliasedFileName,
+      wxFileNameWrapper &&existingSummaryFileName,
+      wxFileNameWrapper &&aliasedFileName,
       sampleCount aliasStart,
       sampleCount aliasLen, int aliasChannel,
       float min, float max, float rms)
-: AliasBlockFile(existingSummaryFileName, aliasedFileName,
+: AliasBlockFile(std::move(existingSummaryFileName), std::move(aliasedFileName),
                  aliasStart, aliasLen,
                  aliasChannel, min, max, rms)
 {
@@ -148,10 +148,10 @@ int PCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
 /// the summary data to a NEW file.
 ///
 /// @param newFileName The filename to copy the summary data to.
-BlockFile *PCMAliasBlockFile::Copy(wxFileName newFileName)
+BlockFile *PCMAliasBlockFile::Copy(wxFileNameWrapper &&newFileName)
 {
-   BlockFile *newBlockFile = new PCMAliasBlockFile(newFileName,
-                                                   mAliasedFileName, mAliasStart,
+   BlockFile *newBlockFile = new PCMAliasBlockFile(std::move(newFileName),
+                                                   wxFileNameWrapper{mAliasedFileName}, mAliasStart,
                                                    mLen, mAliasChannel,
                                                    mMin, mMax, mRMS);
 
@@ -179,8 +179,8 @@ void PCMAliasBlockFile::SaveXML(XMLWriter &xmlFile)
 // as testing will be done in DirManager::ProjectFSCK().
 BlockFile *PCMAliasBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
 {
-   wxFileName summaryFileName;
-   wxFileName aliasFileName;
+   wxFileNameWrapper summaryFileName;
+   wxFileNameWrapper aliasFileName;
    int aliasStart=0, aliasLen=0, aliasChannel=0;
    float min = 0.0f, max = 0.0f, rms = 0.0f;
    double dblValue;
@@ -247,7 +247,7 @@ BlockFile *PCMAliasBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
       }
    }
 
-   return new PCMAliasBlockFile(summaryFileName, aliasFileName,
+   return new PCMAliasBlockFile(std::move(summaryFileName), std::move(aliasFileName),
                                 aliasStart, aliasLen, aliasChannel,
                                 min, max, rms);
 }

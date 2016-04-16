@@ -36,7 +36,7 @@
 
 #include "sndfile.h"
 
-void ComputeLegacySummaryInfo(wxFileName fileName,
+void ComputeLegacySummaryInfo(const wxFileName &fileName,
                               int summaryLen,
                               sampleFormat format,
                               SummaryInfo *info,
@@ -75,13 +75,14 @@ void ComputeLegacySummaryInfo(wxFileName fileName,
    int read;
    {
       Maybe<wxLogNull> silence{};
-      wxFFile summaryFile(fileName.GetFullPath(), wxT("rb"));
+      const wxString fullPath{ fileName.GetFullPath() };
+      wxFFile summaryFile(fullPath, wxT("rb"));
       if (Silent)
          silence.create();
 
       if (!summaryFile.IsOpened()) {
          wxLogWarning(wxT("Unable to access summary file %s; substituting silence for remainder of session"),
-            fileName.GetFullPath().c_str());
+            fullPath.c_str());
 
          read = info->frames64K * info->bytesPerFrame;
          memset(data.ptr(), 0, read);
@@ -123,12 +124,12 @@ void ComputeLegacySummaryInfo(wxFileName fileName,
 /// existing block file.  This file must exist and be a valid block file.
 ///
 /// @param existingFile The disk file this LegacyBlockFile should use.
-LegacyBlockFile::LegacyBlockFile(wxFileName existingFile,
+LegacyBlockFile::LegacyBlockFile(wxFileNameWrapper &&existingFile,
                                  sampleFormat format,
                                  sampleCount summaryLen,
                                  sampleCount len,
                                  bool noRMS):
-   BlockFile(existingFile, len),
+   BlockFile(std::move(existingFile), len),
    mFormat(format)
 {
 
@@ -139,7 +140,7 @@ LegacyBlockFile::LegacyBlockFile(wxFileName existingFile,
    else
       summaryFormat = floatSample;
 
-   ComputeLegacySummaryInfo(existingFile,
+   ComputeLegacySummaryInfo(mFileName,
                             summaryLen, summaryFormat,
                             &mSummaryInfo, noRMS, FALSE,
                             &mMin, &mMax, &mRMS);
@@ -293,7 +294,7 @@ void LegacyBlockFile::SaveXML(XMLWriter &xmlFile)
 BlockFile *LegacyBlockFile::BuildFromXML(const wxString &projDir, const wxChar **attrs,
                                          sampleCount len, sampleFormat format)
 {
-   wxFileName fileName;
+   wxFileNameWrapper fileName;
    sampleCount summaryLen = 0;
    bool noRMS = false;
    long nValue;
@@ -324,21 +325,19 @@ BlockFile *LegacyBlockFile::BuildFromXML(const wxString &projDir, const wxChar *
       }
    }
 
-   return new LegacyBlockFile(fileName, format, summaryLen, len, noRMS);
+   return new LegacyBlockFile(std::move(fileName), format, summaryLen, len, noRMS);
 }
 
 /// Create a copy of this BlockFile, but using a different disk file.
 ///
 /// @param newFileName The name of the NEW file to use.
-BlockFile *LegacyBlockFile::Copy(wxFileName newFileName)
+BlockFile *LegacyBlockFile::Copy(wxFileNameWrapper &&newFileName)
 {
-   BlockFile *newBlockFile = new LegacyBlockFile(newFileName,
+   return new LegacyBlockFile(std::move(newFileName),
                                                  mFormat,
                                                  mSummaryInfo.totalSummaryBytes,
                                                  mLen,
                                                  mSummaryInfo.fields < 3);
-
-   return newBlockFile;
 }
 
 wxLongLong LegacyBlockFile::GetSpaceUsage() const

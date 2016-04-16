@@ -47,11 +47,11 @@ class ODPCMAliasBlockFile final : public PCMAliasBlockFile
 {
  public:
    /// Constructs a PCMAliasBlockFile, writing the summary to disk
-   ODPCMAliasBlockFile(wxFileName baseFileName,
-                        wxFileName aliasedFileName, sampleCount aliasStart,
+   ODPCMAliasBlockFile(wxFileNameWrapper &&baseFileName,
+                        wxFileNameWrapper &&aliasedFileName, sampleCount aliasStart,
                         sampleCount aliasLen, int aliasChannel);
-   ODPCMAliasBlockFile(wxFileName existingSummaryFileName,
-                        wxFileName aliasedFileName, sampleCount aliasStart,
+   ODPCMAliasBlockFile(wxFileNameWrapper &&existingSummaryFileName,
+                        wxFileNameWrapper &&aliasedFileName, sampleCount aliasStart,
                         sampleCount aliasLen, int aliasChannel,
                         float min, float max, float rms, bool summaryAvailable);
    virtual ~ODPCMAliasBlockFile();
@@ -75,7 +75,7 @@ class ODPCMAliasBlockFile final : public PCMAliasBlockFile
    bool Read64K(float *buffer, sampleCount start, sampleCount len) override;
 
    ///Makes NEW ODPCMAliasBlockFile or PCMAliasBlockFile depending on summary availability
-   BlockFile *Copy(wxFileName fileName) override;
+   BlockFile *Copy(wxFileNameWrapper &&fileName) override;
 
    ///Saves as xml ODPCMAliasBlockFile or PCMAliasBlockFile depending on summary availability
    void SaveXML(XMLWriter &xmlFile) override;
@@ -124,7 +124,7 @@ class ODPCMAliasBlockFile final : public PCMAliasBlockFile
    bool ReadSummary(void *data) override;
 
    ///sets the file name the summary info will be saved in.  threadsafe.
-   void SetFileName(wxFileName &name) override;
+   void SetFileName(wxFileNameWrapper &&name) override;
    wxFileName GetFileName() const override;
 
    //when the file closes, it locks the blockfiles, but only conditionally.

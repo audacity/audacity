@@ -99,10 +99,10 @@ ArrayOf<char> BlockFile::fullSummary;
 ///                 will store at least the summary data here.
 ///
 /// @param samples  The number of samples this BlockFile contains.
-BlockFile::BlockFile(wxFileName fileName, sampleCount samples):
+BlockFile::BlockFile(wxFileNameWrapper &&fileName, sampleCount samples):
    mLockCount(0),
    mRefCount(1),
-   mFileName(fileName),
+   mFileName(std::move(fileName)),
    mLen(samples),
    mSummaryInfo(samples)
 {
@@ -126,9 +126,9 @@ wxFileName BlockFile::GetFileName() const
 }
 
 ///sets the file name the summary info will be saved in.  threadsafe.
-void BlockFile::SetFileName(wxFileName &name)
+void BlockFile::SetFileName(wxFileNameWrapper &&name)
 {
-   mFileName=name;
+   mFileName=std::move(name);
 }
 
 
@@ -523,26 +523,29 @@ bool BlockFile::Read64K(float *buffer,
 ///                     file.
 /// @param aliasChannel The channel where this block's data is located in
 ///                     the aliased file
-AliasBlockFile::AliasBlockFile(wxFileName baseFileName,
-                               wxFileName aliasedFileName,
+AliasBlockFile::AliasBlockFile(wxFileNameWrapper &&baseFileName,
+                               wxFileNameWrapper &&aliasedFileName,
                                sampleCount aliasStart,
                                sampleCount aliasLen, int aliasChannel):
-   BlockFile(wxFileName(baseFileName.GetFullPath() + wxT(".auf")), aliasLen),
-   mAliasedFileName(aliasedFileName),
+   BlockFile {
+      (baseFileName.SetExt(wxT("auf")), std::move(baseFileName)),
+      aliasLen
+   },
+   mAliasedFileName(std::move(aliasedFileName)),
    mAliasStart(aliasStart),
    mAliasChannel(aliasChannel)
 {
    mSilentAliasLog=FALSE;
 }
 
-AliasBlockFile::AliasBlockFile(wxFileName existingSummaryFileName,
-                               wxFileName aliasedFileName,
+AliasBlockFile::AliasBlockFile(wxFileNameWrapper &&existingSummaryFileName,
+                               wxFileNameWrapper &&aliasedFileName,
                                sampleCount aliasStart,
                                sampleCount aliasLen,
                                int aliasChannel,
                                float min, float max, float rms):
-   BlockFile(existingSummaryFileName, aliasLen),
-   mAliasedFileName(aliasedFileName),
+   BlockFile(std::move(existingSummaryFileName), aliasLen),
+   mAliasedFileName(std::move(aliasedFileName)),
    mAliasStart(aliasStart),
    mAliasChannel(aliasChannel)
 {
@@ -629,9 +632,9 @@ bool AliasBlockFile::ReadSummary(void *data)
 /// Modify this block to point at a different file.  This is generally
 /// looked down on, but it is necessary in one case: see
 /// DirManager::EnsureSafeFilename().
-void AliasBlockFile::ChangeAliasedFileName(wxFileName newAliasedFile)
+void AliasBlockFile::ChangeAliasedFileName(wxFileNameWrapper &&newAliasedFile)
 {
-   mAliasedFileName = newAliasedFile;
+   mAliasedFileName = std::move(newAliasedFile);
 }
 
 wxLongLong AliasBlockFile::GetSpaceUsage() const
