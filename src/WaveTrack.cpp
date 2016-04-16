@@ -1845,9 +1845,10 @@ bool WaveTrack::GetErrorOpening()
    return false;
 }
 
-bool WaveTrack::Lock()
+bool WaveTrack::Lock() const
 {
-   for (WaveClipList::compatibility_iterator it=GetClipIterator(); it; it=it->GetNext())
+   for (WaveClipList::compatibility_iterator it = const_cast<WaveTrack*>(this)->GetClipIterator(); it; it=it->GetNext())
+      // Wave clip lock
       it->GetData()->Lock();
 
    return true;
@@ -1862,9 +1863,10 @@ bool WaveTrack::CloseLock()
 }
 
 
-bool WaveTrack::Unlock()
+bool WaveTrack::Unlock() const
 {
-   for (WaveClipList::compatibility_iterator it=GetClipIterator(); it; it=it->GetNext())
+   for (WaveClipList::compatibility_iterator it = const_cast<WaveTrack*>(this)->GetClipIterator(); it; it=it->GetNext())
+      // Wave clip unlock
       it->GetData()->Unlock();
 
    return true;

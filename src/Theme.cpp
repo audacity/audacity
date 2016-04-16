@@ -226,7 +226,7 @@ void Theme::ApplyUpdatedImages()
    AudacityProject *p = GetActiveProject();
    for( int ii = 0; ii < ToolBarCount; ++ii )
    {
-      ToolBar *pToolBar = p->mToolManager->GetToolBar(ii);
+      ToolBar *pToolBar = p->GetToolManager()->GetToolBar(ii);
       if( pToolBar )
          pToolBar->ReCreateButtons();
    }

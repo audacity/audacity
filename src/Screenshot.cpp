@@ -296,7 +296,7 @@ ScreenFrame::ScreenFrame(wxWindow * parent, wxWindowID id)
    // Note that the audio could be playing.
    // The monitoring will switch off temporarily
    // because we've switched monitor mid play.
-   mContext.GetProject()->mToolManager->Reset();
+   mContext.GetProject()->GetToolManager()->Reset();
 }
 
 ScreenFrame::~ScreenFrame()
@@ -555,7 +555,7 @@ void ScreenFrame::SizeMainWindow(int w, int h)
 
    mContext.GetProject()->Maximize(false);
    mContext.GetProject()->SetSize(16, 16 + top, w, h);
-   mContext.GetProject()->mToolManager->Reset();
+   mContext.GetProject()->GetToolManager()->Reset();
 }
 
 void ScreenFrame::OnMainWindowSmall(wxCommandEvent & WXUNUSED(event))

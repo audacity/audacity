@@ -748,6 +748,7 @@ bool Exporter::CheckMix()
    // and if mixing will occur.
 
    int downMix = gPrefs->Read(wxT("/FileFormats/ExportDownMix"), true);
+   int exportedChannels = mPlugins[mFormat]->SetNumExportChannels();
 
    if (downMix) {
       if (mNumRight > 0 || mNumLeft > 0) {
@@ -763,7 +764,18 @@ bool Exporter::CheckMix()
       int numRight = mNumRight + mNumMono;
 
       if (numLeft > 1 || numRight > 1 || mNumLeft + mNumRight + mNumMono > mChannels) {
-         if (mChannels == 2) {
+         wxString exportFormat = mPlugins[mFormat]->GetFormat(mSubFormat);
+         if (exportFormat != wxT("CL") && exportFormat != wxT("FFMPEG") && exportedChannels == -1)
+            exportedChannels = mChannels;
+
+         if (exportedChannels == 1) {
+            if (ShowWarningDialog(mProject,
+                                  wxT("MixMono"),
+                                  _("Your tracks will be mixed down to a single mono channel in the exported file."),
+                                  true) == wxID_CANCEL)
+               return false;
+         }
+         else if (exportedChannels == 2) {
             if (ShowWarningDialog(mProject,
                                   wxT("MixStereo"),
                                   _("Your tracks will be mixed down to two stereo channels in the exported file."),
@@ -772,8 +784,8 @@ bool Exporter::CheckMix()
          }
          else {
             if (ShowWarningDialog(mProject,
-                                  wxT("MixMono"),
-                                  _("Your tracks will be mixed down to a single mono channel in the exported file."),
+                                  wxT("MixUnknownChannels"),
+                                  _("Your tracks will be mixed down to one exported file according to the encoder settings."),
                                   true) == wxID_CANCEL)
                return false;
          }
@@ -781,9 +793,12 @@ bool Exporter::CheckMix()
    }
    else
    {
+      if (exportedChannels == -1)
+         exportedChannels = mPlugins[mFormat]->GetMaxChannels(mSubFormat);
+
       ExportMixerDialog md(mProject->GetTracks(),
                            mSelectedOnly,
-                           mPlugins[mFormat]->GetMaxChannels(mSubFormat),
+                           exportedChannels,
                            NULL,
                            1,
                            _("Advanced Mixing Options"));
@@ -1259,8 +1274,11 @@ ExportMixerDialog::ExportMixerDialog( const TrackList *tracks, bool selectedOnly
    // state the number of channels - so we assume there are always at least two.
    // The downside is that if someone is exporting to a mono device, the dialog
    // will allow them to output to two channels. Hmm.  We may need to revisit this.
+
    if (maxNumChannels < 2 )
-      maxNumChannels = 2;
+      // STF (April 2016): AMR (narrowband) and MP3 may export 1 channel.
+      // maxNumChannels = 2;
+      maxNumChannels = 1;
    if (maxNumChannels > 32)
       maxNumChannels = 32;
 

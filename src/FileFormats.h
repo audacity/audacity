@@ -8,6 +8,9 @@
 
 **********************************************************************/
 
+#ifndef __AUDACITY_FILE_FORMATS__
+#define __AUDACITY_FILE_FORMATS__
+
 #include <wx/list.h>
 #include <wx/arrstr.h>
 #include <wx/string.h>
@@ -108,6 +111,25 @@ wxString sf_normalize_name(const char *name);
 # else
 #  include <Types.h>
 # endif
+#endif
 
 OSType sf_header_mactype(int format);
+
+// This function wrapper uses a mutex to serialize calls to the SndFile library.
+#include "../MemoryX.h"
+#include "../ondemand/ODTaskThread.h"
+class ODLock;
+class ODLocker;
+extern ODLock libSndFileMutex;
+template<typename R, typename F, typename... Args>
+inline R SFCall(F fun, Args&&... args)
+{
+   ODLocker locker{ libSndFileMutex };
+   return fun(std::forward<Args>(args)...);
+}
+
+//RAII for SNDFILE*
+struct SFFileCloser { void operator () (SNDFILE*) const; };
+using SFFile = std::unique_ptr<SNDFILE, SFFileCloser>;
+
 #endif

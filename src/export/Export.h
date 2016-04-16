@@ -90,6 +90,9 @@ public:
    virtual wxWindow *OptionsCreate(wxWindow *parent, int format) = 0;
 
    virtual bool CheckFileName(wxFileName &filename, int format = 0);
+   /** @brief Exporter plug-ins may override this to specify the number
+    * of channels in exported file. -1 for unspecified */
+   virtual int SetNumExportChannels() { return -1; }
 
    /** \brief called to export audio into a file.
     *

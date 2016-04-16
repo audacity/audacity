@@ -89,7 +89,7 @@ public:
 class PCMImportFileHandle final : public ImportFileHandle
 {
 public:
-   PCMImportFileHandle(wxString name, SNDFILE *file, SF_INFO info);
+   PCMImportFileHandle(wxString name, SFFile &&file, SF_INFO info);
    ~PCMImportFileHandle();
 
    wxString GetFileDescription();
@@ -108,7 +108,7 @@ public:
    void SetStreamUsage(wxInt32 WXUNUSED(StreamID), bool WXUNUSED(Use)){}
 
 private:
-   SNDFILE              *mFile;
+   SFFile                mFile;
    SF_INFO               mInfo;
    sampleFormat          mFormat;
 };
@@ -127,11 +127,11 @@ wxString PCMImportPlugin::GetPluginFormatDescription()
 std::unique_ptr<ImportFileHandle> PCMImportPlugin::Open(const wxString &filename)
 {
    SF_INFO info;
-   SNDFILE *file = NULL;
+   wxFile f;   // will be closed when it goes out of scope
+   SFFile file;
 
    memset(&info, 0, sizeof(info));
 
-   wxFile f;   // will be closed when it goes out of scope
 
 #ifdef __WXGTK__
    if (filename.Lower().EndsWith(wxT("mp3"))) {
@@ -154,11 +154,11 @@ std::unique_ptr<ImportFileHandle> PCMImportPlugin::Open(const wxString &filename
       // Even though there is an sf_open() that takes a filename, use the one that
       // takes a file descriptor since wxWidgets can open a file with a Unicode name and
       // libsndfile can't (under Windows).
-      file = sf_open_fd(f.fd(), SFM_READ, &info, TRUE);
+      file.reset(SFCall<SNDFILE*>(sf_open_fd, f.fd(), SFM_READ, &info, TRUE));
    }
 
    // The file descriptor is now owned by "file", so we must tell "f" to leave
-   // it alone.  The file descriptor is closed by sf_open_fd() even if an error
+   // it alone.  The file descriptor is closed by the destructor of file even if an error
    // occurs.
    f.Detach();
 
@@ -184,13 +184,14 @@ std::unique_ptr<ImportFileHandle> PCMImportPlugin::Open(const wxString &filename
       return nullptr;
    }
 
-   return std::make_unique<PCMImportFileHandle>(filename, file, info);
+   // Success, so now transfer the duty to close the file from "file".
+   return std::make_unique<PCMImportFileHandle>(filename, std::move(file), info);
 }
 
 PCMImportFileHandle::PCMImportFileHandle(wxString name,
-                                         SNDFILE *file, SF_INFO info)
+                                         SFFile &&file, SF_INFO info)
 :  ImportFileHandle(name),
-   mFile(file),
+   mFile(std::move(file)),
    mInfo(info)
 {
    //
@@ -211,7 +212,7 @@ PCMImportFileHandle::PCMImportFileHandle(wxString name,
 
 wxString PCMImportFileHandle::GetFileDescription()
 {
-   return sf_header_name(mInfo.format);
+   return SFCall<wxString>(sf_header_name, mInfo.format);
 }
 
 int PCMImportFileHandle::GetFileUncompressedBytes()
@@ -327,7 +328,7 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
 {
    outTracks.clear();
 
-   wxASSERT(mFile);
+   wxASSERT(mFile.get());
 
    // Get the preference / warn the user about aliased files.
    wxString copyEdit = AskCopyOrEdit();
@@ -454,10 +455,10 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
          block = maxBlock;
 
          if (mFormat == int16Sample)
-            block = sf_readf_short(mFile, (short *)srcbuffer.ptr(), block);
+            block = SFCall<sf_count_t>(sf_readf_short, mFile.get(), (short *)srcbuffer.ptr(), block);
          //import 24 bit int as float and have the append function convert it.  This is how PCMAliasBlockFile works too.
          else
-            block = sf_readf_float(mFile, (float *)srcbuffer.ptr(), block);
+            block = SFCall<sf_count_t>(sf_readf_float, mFile.get(), (float *)srcbuffer.ptr(), block);
 
          if (block) {
             auto iter = channels.begin();
@@ -497,47 +498,47 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
 
    const char *str;
 
-   str = sf_get_string(mFile, SF_STR_TITLE);
+   str = sf_get_string(mFile.get(), SF_STR_TITLE);
    if (str) {
       tags->SetTag(TAG_TITLE, UTF8CTOWX(str));
    }
 
-   str = sf_get_string(mFile, SF_STR_ALBUM);
+   str = sf_get_string(mFile.get(), SF_STR_ALBUM);
    if (str) {
       tags->SetTag(TAG_ALBUM, UTF8CTOWX(str));
    }
 
-   str = sf_get_string(mFile, SF_STR_ARTIST);
+   str = sf_get_string(mFile.get(), SF_STR_ARTIST);
    if (str) {
       tags->SetTag(TAG_ARTIST, UTF8CTOWX(str));
    }
 
-   str = sf_get_string(mFile, SF_STR_COMMENT);
+   str = sf_get_string(mFile.get(), SF_STR_COMMENT);
    if (str) {
       tags->SetTag(TAG_COMMENTS, UTF8CTOWX(str));
    }
 
-   str = sf_get_string(mFile, SF_STR_DATE);
+   str = sf_get_string(mFile.get(), SF_STR_DATE);
    if (str) {
       tags->SetTag(TAG_YEAR, UTF8CTOWX(str));
    }
 
-   str = sf_get_string(mFile, SF_STR_COPYRIGHT);
+   str = sf_get_string(mFile.get(), SF_STR_COPYRIGHT);
    if (str) {
       tags->SetTag(TAG_COPYRIGHT, UTF8CTOWX(str));
    }
 
-   str = sf_get_string(mFile, SF_STR_SOFTWARE);
+   str = sf_get_string(mFile.get(), SF_STR_SOFTWARE);
    if (str) {
       tags->SetTag(TAG_SOFTWARE, UTF8CTOWX(str));
    }
 
-   str = sf_get_string(mFile, SF_STR_TRACKNUMBER);
+   str = sf_get_string(mFile.get(), SF_STR_TRACKNUMBER);
    if (str) {
       tags->SetTag(TAG_TRACK, UTF8CTOWX(str));
    }
 
-   str = sf_get_string(mFile, SF_STR_GENRE);
+   str = sf_get_string(mFile.get(), SF_STR_GENRE);
    if (str) {
       tags->SetTag(TAG_GENRE, UTF8CTOWX(str));
    }
@@ -690,5 +691,4 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
 
 PCMImportFileHandle::~PCMImportFileHandle()
 {
-   sf_close(mFile);
 }

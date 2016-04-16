@@ -412,7 +412,7 @@ public:
       //sort by OD non OD.  load Non OD first so user can start editing asap.
       wxArrayString sortednames(filenames);
 
-      ODManager::Pause();
+      ODManager::Pauser pauser;
 
       sortednames.Sort(CompareNoCaseFileName);
       for (unsigned int i = 0; i < sortednames.GetCount(); i++) {
@@ -420,8 +420,6 @@ public:
          mProject->Import(sortednames[i]);
       }
       mProject->HandleResize(); // Adjust scrollers for NEW track sizes.
-
-      ODManager::Resume();
 
       return true;
    }
@@ -852,7 +850,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    //
    // Create the ToolDock
    //
-   mToolManager = new ToolManager( this );
+   mToolManager = std::make_unique<ToolManager>( this );
    GetSelectionBar()->SetListener(this);
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    GetSpectralSelectionBar()->SetListener(this);
@@ -2272,8 +2270,7 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
 
    // Delete the tool manager before the children since it needs
    // to save the state of the toolbars.
-   delete mToolManager;
-   mToolManager = NULL;
+   mToolManager.reset();
 
    DestroyChildren();
 
@@ -2501,7 +2498,7 @@ void AudacityProject::OpenFiles(AudacityProject *proj)
    //For the open menu we load OD first so user can edit asap.
    //first sort selectedFiles.
    selectedFiles.Sort(CompareNoCaseFileName);
-   ODManager::Pause();
+   ODManager::Pauser pauser;
 
    for (size_t ff = 0; ff < selectedFiles.GetCount(); ff++) {
       const wxString &fileName = selectedFiles[ff];
@@ -2535,9 +2532,6 @@ void AudacityProject::OpenFiles(AudacityProject *proj)
 
    gPrefs->Write(wxT("/LastOpenType"),wxT(""));
    gPrefs->Flush();
-
-   ODManager::Resume();
-
 }
 
 // Most of this string was duplicated 3 places. Made the warning consistent in this global.
@@ -2693,7 +2687,7 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
 
       bool err = false;
       Track *t;
-      TrackListIterator iter(mTracks);
+      TrackListIterator iter(GetTracks());
       mLastSavedTracks = new TrackList();
 
       t = iter.First();
@@ -3293,30 +3287,6 @@ void AudacityProject::WriteXML(XMLWriter &xmlFile)
 
 }
 
-// Lock all blocks in all tracks of the last saved version
-void AudacityProject::LockAllBlocks()
-{
-   TrackListIterator iter(mLastSavedTracks);
-   Track *t = iter.First();
-   while (t) {
-      if (t->GetKind() == Track::Wave)
-         ((WaveTrack *) t)->Lock();
-      t = iter.Next();
-   }
-}
-
-// Unlock all blocks in all tracks of the last saved version
-void AudacityProject::UnlockAllBlocks()
-{
-   TrackListIterator iter(mLastSavedTracks);
-   Track *t = iter.First();
-   while (t) {
-      if (t->GetKind() == Track::Wave)
-         ((WaveTrack *) t)->Unlock();
-      t = iter.Next();
-   }
-}
-
 #if 0
 // I added this to "fix" bug #334.  At that time, we were on wxWidgets 2.8.12 and
 // there was a window between the closing of the "Save" progress dialog and the
@@ -3447,15 +3417,23 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
          // (Otherwise the NEW project would be fine, but the old one would
          // be empty of all of its files.)
 
-         if (mLastSavedTracks && !overwrite)
-            LockAllBlocks();
+         std::vector<movable_ptr<WaveTrack::Locker>> lockers;
+         if (mLastSavedTracks && !overwrite) {
+            lockers.reserve(mLastSavedTracks->size());
+            TrackListIterator iter(mLastSavedTracks);
+            Track *t = iter.First();
+            while (t) {
+               if (t->GetKind() == Track::Wave)
+                  lockers.push_back(
+                     make_movable<WaveTrack::Locker>(
+                        static_cast<const WaveTrack*>(t)));
+               t = iter.Next();
+            }
+         }
 
          // This renames the project directory, and moves or copies
          // all of our block files over.
          success = mDirManager->SetProject(projPath, projName, !overwrite);
-
-         if (mLastSavedTracks && !overwrite)
-            UnlockAllBlocks();
       }
 
       if (!success) {

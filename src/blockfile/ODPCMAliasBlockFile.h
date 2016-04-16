@@ -127,7 +127,9 @@ class ODPCMAliasBlockFile final : public PCMAliasBlockFile
    void SetFileName(wxFileName &name) override;
    wxFileName GetFileName() const override;
 
-   //when the file closes, it locks the blockfiles, but it calls this so we can check if it has been saved before.
+   //when the file closes, it locks the blockfiles, but only conditionally.
+   // It calls this so we can check if it has been saved before.
+   // not balanced by unlocking calls.
    void CloseLock() override;
 
    /// Prevents a read on other threads.

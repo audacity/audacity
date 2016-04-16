@@ -212,13 +212,13 @@ int LegacyBlockFile::ReadData(samplePtr data, sampleFormat format,
                          SAMPLE_SIZE(mFormat));
 
    wxFile f;   // will be closed when it goes out of scope
-   SNDFILE *sf = NULL;
+   SFFile sf;
 
    if (f.Open(mFileName.GetFullPath())) {
       // Even though there is an sf_open() that takes a filename, use the one that
       // takes a file descriptor since wxWidgets can open a file with a Unicode name and
       // libsndfile can't (under Windows).
-      sf = sf_open_fd(f.fd(), SFM_READ, &info, FALSE);
+      sf.reset(SFCall<SNDFILE*>(sf_open_fd, f.fd(), SFM_READ, &info, FALSE));
    }
 
    {
@@ -239,7 +239,7 @@ int LegacyBlockFile::ReadData(samplePtr data, sampleFormat format,
 
    sf_count_t seekstart = start +
          (mSummaryInfo.totalSummaryBytes / SAMPLE_SIZE(mFormat));
-   sf_seek(sf, seekstart , SEEK_SET);
+   SFCall<sf_count_t>(sf_seek, sf.get(), seekstart , SEEK_SET);
 
    SampleBuffer buffer(len, floatSample);
    int framesRead = 0;
@@ -249,10 +249,11 @@ int LegacyBlockFile::ReadData(samplePtr data, sampleFormat format,
    // converting to float and back, which is unneccesary)
    if (format == int16Sample &&
        sf_subtype_is_integer(info.format)) {
-      framesRead = sf_readf_short(sf, (short *)data, len);
-   }else if (format == int24Sample &&
+      framesRead = SFCall<sf_count_t>(sf_readf_short, sf.get(), (short *)data, len);
+   }
+   else if (format == int24Sample &&
              sf_subtype_is_integer(info.format)) {
-      framesRead = sf_readf_int(sf, (int *)data, len);
+      framesRead = SFCall<sf_count_t>(sf_readf_int, sf.get(), (int *)data, len);
 
          // libsndfile gave us the 3 byte sample in the 3 most
       // significant bytes -- we want it in the 3 least
@@ -264,12 +265,10 @@ int LegacyBlockFile::ReadData(samplePtr data, sampleFormat format,
       // Otherwise, let libsndfile handle the conversion and
       // scaling, and pass us normalized data as floats.  We can
       // then convert to whatever format we want.
-      framesRead = sf_readf_float(sf, (float *)buffer.ptr(), len);
+      framesRead = SFCall<sf_count_t>(sf_readf_float, sf.get(), (float *)buffer.ptr(), len);
       CopySamples(buffer.ptr(), floatSample,
                   (samplePtr)data, format, framesRead);
    }
-
-   sf_close(sf);
 
    return framesRead;
 }

@@ -122,7 +122,8 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
    void SilenceLog() const { mSilentLog = TRUE; }
 
    ///when the project closes, it locks the blockfiles.
-   ///Override this in case it needs special treatment
+   ///Override this in case it needs special treatment.
+   // not balanced by unlocking calls.
    virtual void CloseLock(){Lock();}
 
    /// Prevents a read on other threads.  The basic blockfile runs on only one thread, so does nothing.
