@@ -285,6 +285,8 @@ OSType sf_header_mactype(int format)
       return '\?\?\?\?';
 }
 
+#endif // __WXMAC__
+
 #include <wx/msgdlg.h>
 ODLock libSndFileMutex;
 
@@ -295,10 +297,8 @@ void SFFileCloser::operator() (SNDFILE *sf) const
       char buffer[1000];
       sf_error_str(sf, buffer, 1000);
       wxMessageBox(wxString::Format
-                   /* i18n-hint: %s will be the error message from libsndfile */
-                   (_("Error (file may not have been written): %s"),
-                    buffer));
+         /* i18n-hint: %s will be the error message from libsndfile */
+         (_("Error (file may not have been written): %s"),
+         buffer));
    }
 }
-
-#endif // __WXMAC__
