@@ -472,7 +472,7 @@ bool ODDecodeBlockFile::ReadSummary(void *data)
    if(IsSummaryAvailable())
       return SimpleBlockFile::ReadSummary(data);
 
-   memset(data, 0, (size_t)mSummaryInfo.totalSummaryBytes);
+   memset(data, 0, mSummaryInfo.totalSummaryBytes);
    return true;
 }
 

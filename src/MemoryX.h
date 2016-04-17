@@ -36,6 +36,7 @@ namespace std {
    using std::tr1::weak_ptr;
    using std::tr1::static_pointer_cast;
    using std::tr1::remove_reference;
+   using std::tr1::is_unsigned;
 
    template<typename X> struct default_delete
    {
@@ -160,7 +161,7 @@ namespace std {
          // Skip the self-assignment test -- self-assignment should go to the non-template overload
          get_deleter()(p);
          p = that.release();
-         ((D&)*this) = move(that.get_deleter());
+         get_deleter() = move(that.get_deleter());
          return *this;
       }
       
@@ -439,11 +440,15 @@ class ArrayOf : public std::unique_ptr<X[]>
 {
 public:
    ArrayOf() {}
-   explicit ArrayOf(size_t count, bool initialize = false)
+
+   template<typename Integral>
+   explicit ArrayOf(Integral count, bool initialize = false)
    {
+      static_assert(std::is_unsigned<Integral>::value, "Unsigned arguments only");
       reinit(count, initialize);
    }
-   ArrayOf(const ArrayOf&) = delete;
+
+   ArrayOf(const ArrayOf&) PROHIBITED;
    ArrayOf(ArrayOf&& that)
       : std::unique_ptr < X[] >
          (std::move((std::unique_ptr < X[] >&)(that)))
@@ -460,11 +465,16 @@ public:
       return *this;
    }
 
-   void reinit(size_t count, bool initialize = false)
+   template< typename Integral >
+   void reinit(Integral count,
+               bool initialize = false)
    {
+      static_assert(std::is_unsigned<Integral>::value, "Unsigned arguments only");
       if (initialize)
+         // Initialize elements (usually, to zero for a numerical type)
          std::unique_ptr<X[]>::reset(safenew X[count]{});
       else
+         // Avoid the slight initialization overhead
          std::unique_ptr<X[]>::reset(safenew X[count]);
    }
 };
@@ -480,16 +490,23 @@ class ArraysOf : public ArrayOf<ArrayOf<X>>
 {
 public:
    ArraysOf() {}
-   explicit ArraysOf(size_t N)
+
+   template<typename Integral>
+   explicit ArraysOf(Integral N)
       : ArrayOf<ArrayOf<X>>( N )
    {}
-   ArraysOf(size_t N, size_t M, bool initialize = false)
-      : ArrayOf<ArrayOf<X>>( N )
+
+   template<typename Integral1, typename Integral2 >
+   ArraysOf(Integral1 N, Integral2 M, bool initialize = false)
+   : ArrayOf<ArrayOf<X>>( N )
    {
+      static_assert(std::is_unsigned<Integral1>::value, "Unsigned arguments only");
+      static_assert(std::is_unsigned<Integral2>::value, "Unsigned arguments only");
       for (size_t ii = 0; ii < N; ++ii)
          (*this)[ii] = ArrayOf<X>{ M, initialize };
    }
-   ArraysOf(const ArraysOf&) = delete;
+
+   ArraysOf(const ArraysOf&) PROHIBITED;
    ArraysOf& operator= (ArraysOf&& that)
    {
       ArrayOf<ArrayOf<X>>::operator=(std::move(that));
@@ -497,8 +514,12 @@ public:
    }
 
    using ArrayOf<ArrayOf<X>>::reinit;
-   void reinit(size_t countN, size_t countM, bool initialize = false)
+
+   template<typename Integral1, typename Integral2 >
+   void reinit(Integral1 countN, Integral2 countM, bool initialize = false)
    {
+      static_assert(std::is_unsigned<Integral1>::value, "Unsigned arguments only");
+      static_assert(std::is_unsigned<Integral2>::value, "Unsigned arguments only");
       reinit(countN, false);
       for (size_t ii = 0; ii < countN; ++ii)
          (*this)[ii].reinit(countM, initialize);

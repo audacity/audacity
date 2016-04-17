@@ -1555,7 +1555,7 @@ bool Effect::ProcessTrack(int count,
    decltype(mBufferSize) outputBufferCnt = 0;
    bool cleared = false;
 
-   auto chans = std::min(mNumAudioOut, mNumChannels);
+   auto chans = std::min<unsigned>(mNumAudioOut, mNumChannels);
 
    std::unique_ptr<WaveTrack> genLeft, genRight;
    decltype(len) genLength = 0;

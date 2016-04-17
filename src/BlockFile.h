@@ -38,7 +38,7 @@ class SummaryInfo {
    int            offset64K;
    size_t         frames256;
    int            offset256;
-   int            totalSummaryBytes;
+   size_t         totalSummaryBytes;
 };
 
 

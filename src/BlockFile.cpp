@@ -349,7 +349,7 @@ void BlockFile::FixSummary(void *data)
 
    if (min != summary64K[0] || max != summary64K[1] || bad > 0) {
       unsigned int *buffer = (unsigned int *)data;
-      int len = mSummaryInfo.totalSummaryBytes / 4;
+      auto len = mSummaryInfo.totalSummaryBytes / 4;
 
       for(i=0; i<len; i++)
          buffer[i] = wxUINT32_SWAP_ALWAYS(buffer[i]);
@@ -735,7 +735,7 @@ bool AliasBlockFile::ReadSummary(void *data)
       if (!summaryFile.IsOpened()){
 
          // NEW model; we need to return valid data
-         memset(data, 0, (size_t)mSummaryInfo.totalSummaryBytes);
+         memset(data, 0, mSummaryInfo.totalSummaryBytes);
 
          // we silence the logging for this operation in this object
          // after first occurrence of error; it's already reported and
@@ -748,7 +748,7 @@ bool AliasBlockFile::ReadSummary(void *data)
       else mSilentLog = FALSE; // worked properly, any future error is NEW
    }
 
-   int read = summaryFile.Read(data, (size_t)mSummaryInfo.totalSummaryBytes);
+   auto read = summaryFile.Read(data, mSummaryInfo.totalSummaryBytes);
 
    FixSummary(data);
 
