@@ -630,10 +630,9 @@ bool Exporter::GetFilename()
       overwritingMissingAlias = false;
       for (size_t i = 0; i < gAudacityProjects.GetCount(); i++) {
          AliasedFileArray aliasedFiles;
-         FindDependencies(gAudacityProjects[i], &aliasedFiles);
-         size_t j;
-         for (j = 0; j< aliasedFiles.GetCount(); j++) {
-            if (mFilename.GetFullPath() == aliasedFiles[j].mFileName.GetFullPath() &&
+         FindDependencies(gAudacityProjects[i], aliasedFiles);
+         for (const auto &aliasedFile : aliasedFiles) {
+            if (mFilename.GetFullPath() == aliasedFile.mFileName.GetFullPath() &&
                 !mFilename.FileExists()) {
                // Warn and return to the dialog
                wxMessageBox(_("You are attempting to overwrite an aliased file that is missing.\n\
