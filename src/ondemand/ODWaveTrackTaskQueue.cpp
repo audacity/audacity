@@ -163,17 +163,16 @@ void ODWaveTrackTaskQueue::MakeWaveTrackIndependent(WaveTrack* track)
 
          //clone the items in order and add them to the ODManager.
          mTasksMutex.Lock();
-         ODTask* task;
          for(unsigned int j=0;j<mTasks.size();j++)
          {
-            task=mTasks[j]->Clone();
+            auto task = mTasks[j]->Clone();
             task->AddWaveTrack(track);
             //AddNewTask requires us to relinquish this lock. However, it is safe because ODManager::MakeWaveTrackIndependent
             //has already locked the m_queuesMutex.
             mTasksMutex.Unlock();
             //AddNewTask locks the m_queuesMutex which is already locked by ODManager::MakeWaveTrackIndependent,
             //so we pass a boolean flag telling it not to lock again.
-            ODManager::Instance()->AddNewTask(task,false);
+            ODManager::Instance()->AddNewTask(task.release(), false);
             mTasksMutex.Lock();
          }
          mTasksMutex.Unlock();

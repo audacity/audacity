@@ -35,6 +35,36 @@ namespace std {
    using std::tr1::shared_ptr;
    using std::tr1::remove_reference;
 
+   template<typename X> struct default_delete
+   {
+      default_delete() {}
+      
+      // Allow copy from other deleter classes
+      template<typename Y>
+      default_delete(const default_delete<Y>& that)
+      {
+         // Break compilation if Y* does not convert to X*
+         // I should figure out the right use of enable_if instead
+         static_assert((static_cast<X*>((Y*){}), true),
+                       "Pointer types not convertible");
+      }
+      
+      inline void operator() (void *p) const
+      {
+         delete static_cast<X*>(p);
+      }
+   };
+   
+   // Specialization for arrays
+   template<typename X> struct default_delete<X[]>
+   {
+      // Do not allow copy from other deleter classes
+      inline void operator() (void *p) const
+      {
+         delete[] static_cast<X*>(p);
+      }
+   };
+
    struct nullptr_t
    {
       void* __lx;
@@ -64,27 +94,45 @@ namespace std {
 
    #define nullptr std::__get_nullptr_t()
 
-   template<typename T> class unique_ptr {
+   // "Cast" anything as an rvalue reference.
+   template<typename T> inline typename remove_reference<T>::type&& move(T&& t)
+   { return static_cast<typename std::remove_reference<T>::type&&>(t); }
+
+   template<typename T, typename D = default_delete<T>> class unique_ptr
+      : private D // use empty base optimization
+   {
    public:
       // Default constructor
       unique_ptr() {}
+      
+      // Implicit constrution from nullptr
+      unique_ptr(nullptr_t) {}
 
-      // Explicit constructor from pointer
-      explicit unique_ptr(T *p_) : p{ p_ } {}
-      // Template constructor for upcasting
+      // Explicit constructor from pointer and optional deleter
+      explicit unique_ptr(T *p_)
+         : p{ p_ } {}
+      explicit unique_ptr(T *p_, const D &d)
+         : D(d), p{ p_ } {}
+      // Template constructors for upcasting
       template<typename U>
-      explicit unique_ptr(U* p_) : p{ p_ } {}
+      explicit unique_ptr(U* p_)
+         : p{ p_ } {}
+      template<typename U>
+      explicit unique_ptr(U* p_, const D& d)
+         : D(d), p{ p_ } {}
 
       // Copy is disallowed
       unique_ptr(const unique_ptr &) PROHIBITED;
       unique_ptr& operator= (const unique_ptr &) PROHIBITED;
 
       // But move is allowed!
-      unique_ptr(unique_ptr &&that) : p{ that.release() } { }
+      unique_ptr(unique_ptr &&that)
+         : D(move(that.get_deleter())), p{ that.release() } { }
       unique_ptr& operator= (unique_ptr &&that)
       {
          if (this != &that) {
-            delete p;
+            get_deleter()(p);
+            ((D&)*this) = move(that.get_deleter());
             p = that.release();
          }
          return *this;
@@ -93,24 +141,29 @@ namespace std {
       // Assign null
       unique_ptr& operator= (nullptr_t)
       {
-         delete p;
+         get_deleter()(p);
          p = nullptr;
          return *this;
       }
 
       // Template versions of move for upcasting
-      template<typename U>
-      unique_ptr(unique_ptr<U> &&that) : p{ that.release() } { }
-      template<typename U>
-      unique_ptr& operator= (unique_ptr<U> &&that)
+      template<typename U, typename E>
+      unique_ptr(unique_ptr<U, E> &&that)
+         : D(move(that.get_deleter())), p{ that.release() } { }
+      template<typename U, typename E>
+      unique_ptr& operator= (unique_ptr<U, E> &&that)
       {
          // Skip the self-assignment test -- self-assignment should go to the non-template overload
-         delete p;
+         get_deleter()(p);
          p = that.release();
+         ((D&)*this) = move(that.get_deleter());
          return *this;
       }
+      
+      D& get_deleter() { return *this; }
+      const D& get_deleter() const { return *this; }
 
-      ~unique_ptr() { delete p; }
+      ~unique_ptr() { get_deleter()(p); }
 
       T* operator -> () const { return p; }
       T& operator * () const { return *p; }
@@ -128,28 +181,30 @@ namespace std {
          p = __p;
          if (old__p != nullptr)
          {
-            delete old__p;
+            get_deleter()(old__p);
          }
       }
-
-
-      // Equality tests
-      bool operator== (nullptr_t) const { return p != nullptr; }
-      template<typename U> friend bool operator== (nullptr_t, const unique_ptr<U>&);
-      template<typename U, typename V> friend bool operator== (const unique_ptr<U>&, const unique_ptr<V>&);
 
    private:
       T *p{};
    };
 
    // Now specialize the class for array types
-   template<typename T> class unique_ptr<T[]> {
+   template<typename T, typename D> class unique_ptr<T[], D>
+      : private D // use empty base optimization
+   {
    public:
       // Default constructor
       unique_ptr() {}
 
+      // Implicit constrution from nullptr
+      unique_ptr(nullptr_t) {}
+      
       // Explicit constructor from pointer
-      explicit unique_ptr(T *p_) : p{ p_ } {}
+      explicit unique_ptr(T *p_)
+         : p{ p_ } {}
+      explicit unique_ptr(T *p_, const D &d)
+         : D( d ), p{ p_ } {}
       // NO template constructor for upcasting!
 
       // Copy is disallowed
@@ -157,12 +212,14 @@ namespace std {
       unique_ptr& operator= (const unique_ptr &)PROHIBITED;
 
       // But move is allowed!
-      unique_ptr(unique_ptr &&that) : p{ that.release() } { }
+      unique_ptr(unique_ptr &&that)
+         : D( move(that.get_deleter()) ), p{ that.release() } { }
       unique_ptr& operator= (unique_ptr &&that)
       {
          if (this != &that) {
-            delete[] p;
+            get_deleter()(p);
             p = that.release();
+            ((D&)*this) = move(that.get_deleter());
          }
          return *this;
       }
@@ -170,18 +227,20 @@ namespace std {
       // Assign null
       unique_ptr& operator= (nullptr_t)
       {
-         delete[] p;
+         get_deleter()(p);
          p = nullptr;
          return *this;
       }
+      
+      D& get_deleter() { return *this; }
+      const D& get_deleter() const { return *this; }
 
       // NO template versions of move for upcasting!
 
-      // delete[] not delete!
-      ~unique_ptr() { delete[] p; }
+      ~unique_ptr() { get_deleter()(p); }
 
       // No operator ->, but [] instead
-      T& operator [] (ptrdiff_t n) const { return p[n]; }
+      T& operator [] (size_t n) const { return p[n]; }
 
       T& operator * () const { return *p; }
       T* get() const { return p; }
@@ -198,29 +257,35 @@ namespace std {
          p = __p;
          if (old__p != nullptr)
          {
-            delete[] old__p;
+            get_deleter()(old__p);
          }
       }
-
-      // Equality tests
-      bool operator== (nullptr_t) const { return p != nullptr; }
-      template<typename U> friend bool operator== (nullptr_t, const unique_ptr<U>&);
-      template<typename U, typename V> friend bool operator== (const unique_ptr<U>&, const unique_ptr<V>&);
 
    private:
       T *p{};
    };
 
    // Equality operators for unique_ptr, don't need the specializations for array case
-   template<typename U>
-   inline bool operator== (nullptr_t, const unique_ptr<U>& ptr)
+   template<typename U, typename E>
+   inline bool operator== (nullptr_t, const unique_ptr<U, E>& ptr)
    {
-      return ptr == nullptr;
+      return ptr.get() == nullptr;
+   }
+   template<typename U, typename E>
+   inline bool operator== (const unique_ptr<U, E>& ptr, nullptr_t)
+   {
+      return ptr.get() == nullptr;
+   }
+   template<typename U, typename E, typename V, typename F>
+   inline bool operator == (const unique_ptr<U, E> &ptr1,
+                            const unique_ptr<V, F> &ptr2)
+   {
+      return ptr1.get() == ptr2.get();
    }
 
-   template<typename U> inline bool operator != (nullptr_t, const unique_ptr<U> &ptr) { return !(ptr == nullptr); }
-   template<typename U> inline bool operator != (const unique_ptr<U> &ptr, nullptr_t) { return !(ptr == nullptr); }
-   template<typename U, typename V> inline bool operator != (const unique_ptr<U>& ptr1, const unique_ptr<V> &ptr2)
+   template<typename U, typename E> inline bool operator != (nullptr_t, const unique_ptr<U, E> &ptr) { return !(ptr == nullptr); }
+   template<typename U, typename E> inline bool operator != (const unique_ptr<U, E> &ptr, nullptr_t) { return !(ptr == nullptr); }
+   template<typename U, typename E, typename V, typename F> inline bool operator != (const unique_ptr<U, E>& ptr1, const unique_ptr<V, F> &ptr2)
    { return !(ptr1 == ptr2); }
 
    // Forward -- pass along rvalue references as rvalue references, anything else as it is
@@ -229,10 +294,6 @@ namespace std {
    { return static_cast<T&&>(t); }
    template<typename T> inline T&& forward(typename remove_reference<T>::type&& t)
    { return static_cast<T&&>(t); }
-
-   // "Cast" anything as an rvalue reference.
-   template<typename T> inline typename remove_reference<T>::type&& move(T&& t)
-   { return static_cast<typename std::remove_reference<T>::type&&>(t); }
 
    // We need make_shared for ourselves, because the library doesn't use variadics
    template<typename X, typename... Args> inline shared_ptr<X> make_shared(Args&&... args)
@@ -491,7 +552,7 @@ public:
    // NULL state -- giving exception safety but only weakly
    // (previous value was lost if present)
    template<typename... Args>
-   void create(Args... args)
+   void create(Args&&... args)
    {
       // Lose any old value
       reset();
@@ -597,6 +658,7 @@ public:
    movable_ptr_with_deleter() {};
    movable_ptr_with_deleter(T* p, const Deleter &d)
       : movable_ptr_with_deleter_base<T, Deleter>( p, d ) {}
+   movable_ptr_with_deleter(const movable_ptr_with_deleter &that) = default;
    movable_ptr_with_deleter &operator= (movable_ptr_with_deleter&& that)
    {
       if (this != &that) {
@@ -612,6 +674,31 @@ inline movable_ptr_with_deleter<T, Deleter>
 make_movable_with_deleter(const Deleter &d, Args&&... args)
 {
    return movable_ptr_with_deleter<T, Deleter>(safenew T(std::forward<Args>(args)...), d);
+}
+
+/*
+ * "finally" as in The C++ Programming Language, 4th ed., p. 358
+ * Useful for defining ad-hoc RAII actions.
+ * typical usage:
+ * auto cleanup = finally([&]{ ... code; ... });
+ */
+
+// Construct this from any copyable function object, such as a lambda
+template <typename F>
+struct Final_action {
+   Final_action(F f) : clean{ f } {}
+   ~Final_action() { clean(); }
+   F clean;
+   Final_action(const Final_action&) PROHIBITED;
+   Final_action& operator= (const Final_action&) PROHIBITED;
+};
+
+// Function template with type deduction lets you construct Final_action
+// without typing any angle brackets
+template <typename F>
+Final_action<F> finally (F f)
+{
+   return Final_action<F>(f);
 }
 
 #endif // __AUDACITY_MEMORY_X_H__

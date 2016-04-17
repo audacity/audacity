@@ -22,8 +22,8 @@ class LegacyAliasBlockFile final : public PCMAliasBlockFile
    // Constructor / Destructor
 
    /// Constructs a LegacyAliasBlockFile, writing the summary to disk
-   LegacyAliasBlockFile(wxFileName fileName,
-                        wxFileName aliasedFileName,
+   LegacyAliasBlockFile(wxFileNameWrapper &&fileName,
+                        wxFileNameWrapper &&aliasedFileName,
                         sampleCount aliasStart,
                         sampleCount aliasLen,
                         int aliasChannel,
@@ -32,7 +32,7 @@ class LegacyAliasBlockFile final : public PCMAliasBlockFile
    virtual ~LegacyAliasBlockFile();
 
    void SaveXML(XMLWriter &xmlFile) override;
-   BlockFile *Copy(wxFileName fileName) override;
+   BlockFile *Copy(wxFileNameWrapper &&fileName) override;
    void Recover() override;
 
    static BlockFile *BuildFromXML(const wxString &projDir, const wxChar **attrs);

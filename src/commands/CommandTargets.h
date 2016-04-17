@@ -22,6 +22,7 @@ should be reference-counted.
 #ifndef __COMMANDTARGETS__
 #define __COMMANDTARGETS__
 
+#include "../MemoryX.h"
 #include <wx/string.h>
 #include <wx/msgdlg.h>
 #include <wx/statusbr.h>
@@ -170,28 +171,15 @@ public:
 class TargetFactory
 {
 public:
-   static CommandProgressTarget *ProgressDefault()
+   static std::unique_ptr<CommandProgressTarget> ProgressDefault()
    {
-      return CreateProgressTarget<NullProgressTarget>();
+      return std::make_unique<NullProgressTarget>();
    }
 
-   static CommandMessageTarget *MessageDefault()
+   static std::shared_ptr<CommandMessageTarget> MessageDefault()
    {
-      return CreateMessageTarget<MessageBoxTarget>();
+      return std::make_shared<MessageBoxTarget>();
    }
-
-   template<typename T>
-   static CommandProgressTarget *CreateProgressTarget()
-   {
-      return (new T);
-   }
-
-   template<typename T>
-   static CommandMessageTarget *CreateMessageTarget()
-   {
-      return (new T);
-   }
-
 };
 
 /// Used to aggregate the various output targets a command may have.
@@ -199,21 +187,17 @@ public:
 class CommandOutputTarget
 {
 private:
-   CommandProgressTarget *mProgressTarget;
-   CommandMessageTarget *mStatusTarget;
-   CommandMessageTarget *mErrorTarget;
+   std::unique_ptr<CommandProgressTarget> mProgressTarget;
+   std::shared_ptr<CommandMessageTarget> mStatusTarget;
+   std::shared_ptr<CommandMessageTarget> mErrorTarget;
 public:
-   CommandOutputTarget(CommandProgressTarget *pt = TargetFactory::ProgressDefault(),
-                       CommandMessageTarget  *st = TargetFactory::MessageDefault(),
-                       CommandMessageTarget  *et = TargetFactory::MessageDefault())
-      : mProgressTarget(pt), mStatusTarget(st), mErrorTarget(et)
+   CommandOutputTarget(std::unique_ptr<CommandProgressTarget> &&pt = TargetFactory::ProgressDefault(),
+                       std::shared_ptr<CommandMessageTarget>  &&st = TargetFactory::MessageDefault(),
+                       std::shared_ptr<CommandMessageTarget> &&et = TargetFactory::MessageDefault())
+      : mProgressTarget(std::move(pt)), mStatusTarget(st), mErrorTarget(et)
    { }
    ~CommandOutputTarget()
    {
-      delete mProgressTarget;
-      if (mErrorTarget != mStatusTarget)
-         delete mStatusTarget;
-      delete mErrorTarget;
    }
    void Progress(double completed)
    {

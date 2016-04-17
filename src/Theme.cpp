@@ -226,7 +226,7 @@ void Theme::ApplyUpdatedImages()
    AudacityProject *p = GetActiveProject();
    for( int ii = 0; ii < ToolBarCount; ++ii )
    {
-      ToolBar *pToolBar = p->mToolManager->GetToolBar(ii);
+      ToolBar *pToolBar = p->GetToolManager()->GetToolBar(ii);
       if( pToolBar )
          pToolBar->ReCreateButtons();
    }
@@ -619,7 +619,7 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
    // IF nBinarySave, THEN saving to a normal PNG file.
    if( bBinarySave )
    {
-      wxString FileName = FileNames::ThemeCachePng();
+      const wxString &FileName = FileNames::ThemeCachePng();
 
       // Perhaps we should prompt the user if they are overwriting
       // an existing theme cache?
@@ -650,7 +650,7 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
    else
    {
       SourceOutputStream OutStream;
-      wxString FileName = FileNames::ThemeCacheAsCee( );
+      const wxString &FileName = FileNames::ThemeCacheAsCee( );
       if( !OutStream.OpenFile( FileName ))
       {
          wxMessageBox(
@@ -791,7 +791,7 @@ bool ThemeBase::ReadImageCache( bool bBinaryRead, bool bOkIfNotFound)
    // IF bBinary read THEN a normal read from a PNG file
    if(  bBinaryRead )
    {
-      wxString FileName = FileNames::ThemeCachePng();
+      const wxString &FileName = FileNames::ThemeCachePng();
       if( !wxFileExists( FileName ))
       {
          if( bOkIfNotFound )

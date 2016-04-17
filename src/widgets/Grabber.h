@@ -68,9 +68,10 @@ class GrabberEvent final : public wxCommandEvent
       mPos = pos;
    }
 
+   // Clone is required by wxwidgets; implemented via copy constructor
    wxEvent *Clone() const override
    {
-      return new GrabberEvent(*this);
+      return safenew GrabberEvent(*this);
    }
 
  protected:

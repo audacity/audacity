@@ -33,13 +33,13 @@ void SetTrackInfoCommandType::BuildSignature(CommandSignature &signature)
    OptionValidator *infoTypeValidator = new OptionValidator();
    infoTypeValidator->AddOption(wxT("Name"));
    signature.AddParameter(wxT("Type"), wxT("Name"), infoTypeValidator);
-   Validator *nameValidator = new Validator();
+   Validator *nameValidator = new DefaultValidator();
    signature.AddParameter(wxT("Name"), wxT("Unnamed"), nameValidator);
 }
 
-Command *SetTrackInfoCommandType::Create(CommandOutputTarget *target)
+CommandHolder SetTrackInfoCommandType::Create(std::unique_ptr<CommandOutputTarget> &&target)
 {
-   return new SetTrackInfoCommand(*this, target);
+   return std::make_shared<SetTrackInfoCommand>(*this, std::move(target));
 }
 
 bool SetTrackInfoCommand::Apply(CommandExecutionContext context)

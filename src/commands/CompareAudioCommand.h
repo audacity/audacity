@@ -27,7 +27,7 @@ class CompareAudioCommandType final : public CommandType
 public:
    wxString BuildName() override;
    void BuildSignature(CommandSignature &signature) override;
-   Command *Create(CommandOutputTarget *target) override;
+   CommandHolder Create(std::unique_ptr<CommandOutputTarget> &&target) override;
 };
 
 class CompareAudioCommand final : public CommandImplementation
@@ -44,8 +44,8 @@ protected:
    double CompareSample(double value1, double value2) /* not override */;
 
 public:
-   CompareAudioCommand(CommandType &type, CommandOutputTarget *target)
-      : CommandImplementation(type, target)
+   CompareAudioCommand(CommandType &type, std::unique_ptr<CommandOutputTarget> &&target)
+      : CommandImplementation(type, std::move(target))
    { }
    bool Apply(CommandExecutionContext context) override;
 };

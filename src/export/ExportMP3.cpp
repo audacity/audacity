@@ -147,24 +147,24 @@ typedef struct
 static CHOICES fixRates[] =
 {
    /* i18n-hint: kbps is the bitrate of the MP3 file, kilobits per second*/
-   {wxT(""),   8},
-   {wxT(""),  16},
-   {wxT(""),  24},
-   {wxT(""),  32},
-   {wxT(""),  40},
-   {wxT(""),  48},
-   {wxT(""),  56},
-   {wxT(""),  64},
-   {wxT(""),  80},
-   {wxT(""),  96},
-   {wxT(""), 112},
-   {wxT(""), 128},
-   {wxT(""), 144},
-   {wxT(""), 160},
-   {wxT(""), 192},
-   {wxT(""), 224},
+   {wxT(""), 320},
    {wxT(""), 256},
-   {wxT(""), 320}
+   {wxT(""), 224},
+   {wxT(""), 192},
+   {wxT(""), 160},
+   {wxT(""), 144},
+   {wxT(""), 128},
+   {wxT(""), 112},
+   {wxT(""),  96},
+   {wxT(""),  80},
+   {wxT(""),  64},
+   {wxT(""),  56},
+   {wxT(""),  48},
+   {wxT(""),  40},
+   {wxT(""),  32},
+   {wxT(""),  24},
+   {wxT(""),  16},
+   {wxT(""),   8}
 };
 
 static CHOICES varRates[] =
@@ -178,7 +178,7 @@ static CHOICES varRates[] =
    {wxT(""), QUALITY_6},
    {wxT(""), QUALITY_7},
    {wxT(""), QUALITY_8},
-   {wxT(""), QUALITY_9},
+   {wxT(""), QUALITY_9}
 };
 
 static CHOICES varModes[] =
@@ -192,7 +192,7 @@ static CHOICES setRates[] =
    {wxT(""), PRESET_INSANE  },
    {wxT(""), PRESET_EXTREME },
    {wxT(""), PRESET_STANDARD},
-   {wxT(""), PRESET_MEDIUM  },
+   {wxT(""), PRESET_MEDIUM  }
 };
 
 static CHOICES sampRates[] =
@@ -205,7 +205,7 @@ static CHOICES sampRates[] =
    {wxT(""), 24000    },
    {wxT(""), 32000    },
    {wxT(""), 44100    },
-   {wxT(""), 48000    },
+   {wxT(""), 48000    }
 };
 
 #define ID_SET 7000
@@ -1581,7 +1581,6 @@ class ExportMP3 final : public ExportPlugin
 public:
 
    ExportMP3();
-   void Destroy();
    bool CheckFileName(wxFileName & filename, int format);
 
    // Required
@@ -1606,6 +1605,7 @@ private:
 #ifdef USE_LIBID3TAG
    void AddFrame(struct id3_tag *tp, const wxString & n, const wxString & v, const char *name);
 #endif
+   int SetNumExportChannels() override;
 };
 
 ExportMP3::ExportMP3()
@@ -1618,11 +1618,6 @@ ExportMP3::ExportMP3()
    SetMaxChannels(2,0);
    SetCanMetaData(true,0);
    SetDescription(_("MP3 Files"),0);
-}
-
-void ExportMP3::Destroy()
-{
-   delete this;
 }
 
 bool ExportMP3::CheckFileName(wxFileName & WXUNUSED(filename), int WXUNUSED(format))
@@ -1641,6 +1636,15 @@ bool ExportMP3::CheckFileName(wxFileName & WXUNUSED(filename), int WXUNUSED(form
 
    return true;
 }
+
+int ExportMP3::SetNumExportChannels()
+{
+   bool mono;
+   gPrefs->Read(wxT("/FileFormats/MP3ForceMono"), &mono, 0);
+
+   return (mono)? 1 : -1;
+}
+
 
 int ExportMP3::Export(AudacityProject *project,
                        int channels,
@@ -1794,33 +1798,33 @@ int ExportMP3::Export(AudacityProject *project,
 
    const WaveTrackConstArray waveTracks =
       tracks->GetWaveTrackConstArray(selectionOnly, false);
-   Mixer *mixer = CreateMixer(waveTracks,
-                            tracks->GetTimeTrack(),
-                            t0, t1,
-                            channels, inSamples, true,
-                            rate, int16Sample, true, mixerSpec);
-
-   wxString title;
-   if (rmode == MODE_SET) {
-      title.Printf(selectionOnly ?
-                   _("Exporting selected audio with %s preset") :
-                   _("Exporting entire file with %s preset"),
-                   FindName(setRates, WXSIZEOF(setRates), brate).c_str());
-   }
-   else if (rmode == MODE_VBR) {
-      title.Printf(selectionOnly ?
-                   _("Exporting selected audio with VBR quality %s") :
-                   _("Exporting entire file with VBR quality %s"),
-                   FindName(varRates, WXSIZEOF(varRates), brate).c_str());
-   }
-   else {
-      title.Printf(selectionOnly ?
-                   _("Exporting selected audio at %d Kbps") :
-                   _("Exporting entire file at %d Kbps"),
-                   brate);
-   }
-
    {
+      auto mixer = CreateMixer(waveTracks,
+         tracks->GetTimeTrack(),
+         t0, t1,
+         channels, inSamples, true,
+         rate, int16Sample, true, mixerSpec);
+
+      wxString title;
+      if (rmode == MODE_SET) {
+         title.Printf(selectionOnly ?
+            _("Exporting selected audio with %s preset") :
+            _("Exporting entire file with %s preset"),
+            FindName(setRates, WXSIZEOF(setRates), brate).c_str());
+      }
+      else if (rmode == MODE_VBR) {
+         title.Printf(selectionOnly ?
+            _("Exporting selected audio with VBR quality %s") :
+            _("Exporting entire file with VBR quality %s"),
+            FindName(varRates, WXSIZEOF(varRates), brate).c_str());
+      }
+      else {
+         title.Printf(selectionOnly ?
+            _("Exporting selected audio at %d Kbps") :
+            _("Exporting entire file at %d Kbps"),
+            brate);
+      }
+
       ProgressDialog progress(wxFileName(fName).GetName(), title);
 
       while (updateResult == eProgressSuccess) {
@@ -1861,8 +1865,6 @@ int ExportMP3::Export(AudacityProject *project,
          updateResult = progress.Update(mixer->MixGetCurrentTime() - t0, t1 - t0);
       }
    }
-
-   delete mixer;
 
    bytes = exporter.FinishStream(buffer);
 
@@ -2103,9 +2105,9 @@ void ExportMP3::AddFrame(struct id3_tag *tp, const wxString & n, const wxString 
 }
 #endif
 
-ExportPlugin *New_ExportMP3()
+movable_ptr<ExportPlugin> New_ExportMP3()
 {
-   return new ExportMP3();
+   return make_movable<ExportMP3>();
 }
 
 //----------------------------------------------------------------------------

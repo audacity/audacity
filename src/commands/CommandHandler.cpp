@@ -41,7 +41,7 @@ void CommandHandler::SetProject(AudacityProject *)
 void CommandHandler::OnReceiveCommand(AppCommandEvent &event)
 {
    // First retrieve the actual command from the event 'envelope'.
-   Command *cmd = event.GetCommand();
+   CommandHolder cmd = event.GetCommand();
 
    // JKC: In case the user changed the project, let us track that.
    // This saves us the embarrassment (crash) of a NEW project
@@ -52,9 +52,6 @@ void CommandHandler::OnReceiveCommand(AppCommandEvent &event)
    // command may change the context - for example, switching to a
    // different project.
    cmd->Apply(*mCurrentContext);
-
-   // Done with the command so DELETE it.
-   delete cmd;
 
    // Redraw the project
    mCurrentContext->GetProject()->RedrawProject();

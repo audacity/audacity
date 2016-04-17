@@ -110,7 +110,9 @@ ExportMultiple::ExportMultiple(AudacityProject *project)
 
    mProject = project;
    mTracks = project->GetTracks();
-   mPlugins = mExporter.GetPlugins();
+   // Construct an array of non-owning pointers
+   for (const auto &plugin : mExporter.GetPlugins())
+      mPlugins.push_back(plugin.get());
 
    this->CountTracksAndLabels();
 
@@ -223,17 +225,23 @@ void ExportMultiple::PopulateOrExchange(ShuttleGui& S)
    mPluginIndex = -1;
    mFilterIndex = 0;
 
-   for (size_t i = 0; i < mPlugins.GetCount(); i++) {
-      for (int j = 0; j < mPlugins[i]->GetFormatCount(); j++)
+   {
+      int i = -1;
+      for (const auto &pPlugin : mPlugins)
       {
-         formats.Add(mPlugins[i]->GetDescription(j));
-         if (mPlugins[i]->GetFormat(j) == defaultFormat) {
-            mPluginIndex = i;
-            mSubFormatIndex = j;
+         ++i;
+         for (int j = 0; j < pPlugin->GetFormatCount(); j++)
+         {
+            formats.Add(mPlugins[i]->GetDescription(j));
+            if (mPlugins[i]->GetFormat(j) == defaultFormat) {
+               mPluginIndex = i;
+               mSubFormatIndex = j;
+            }
+            if (mPluginIndex == -1) mFilterIndex++;
          }
-         if (mPluginIndex == -1) mFilterIndex++;
       }
    }
+
    if (mPluginIndex == -1)
    {
       mPluginIndex = 0;
@@ -270,11 +278,11 @@ void ExportMultiple::PopulateOrExchange(ShuttleGui& S)
             if (!mBook)
             {
                mBook = safenew wxSimplebook(S.GetParent(), OptionsID, wxDefaultPosition, wxDefaultSize, wxBORDER_STATIC);
-               for (size_t i = 0; i < mPlugins.GetCount(); i++)
+               for (const auto &pPlugin : mPlugins)
                {
-                  for (int j = 0; j < mPlugins[i]->GetFormatCount(); j++)
+                  for (int j = 0; j < pPlugin->GetFormatCount(); j++)
                   {
-                     mBook->AddPage(mPlugins[i]->OptionsCreate(mBook, j), wxEmptyString);
+                     mBook->AddPage(pPlugin->OptionsCreate(mBook, j), wxEmptyString);
                   }
                }
                mBook->ChangeSelection(mFormat->GetSelection());
@@ -431,9 +439,11 @@ void ExportMultiple::OnOptions(wxCommandEvent& WXUNUSED(event))
    if (sel != wxNOT_FOUND)
    {
      size_t c = 0;
-     for (size_t i = 0; i < mPlugins.GetCount(); i++)
+     int i = -1;
+     for (const auto &pPlugin : mPlugins)
      {
-       for (int j = 0; j < mPlugins[i]->GetFormatCount(); j++)
+       ++i;
+       for (int j = 0; j < pPlugin->GetFormatCount(); j++)
        {
          if ((size_t)sel == c)
          {
@@ -531,9 +541,12 @@ void ExportMultiple::OnExport(wxCommandEvent& WXUNUSED(event))
    mFilterIndex = mFormat->GetSelection();
    if (mFilterIndex != wxNOT_FOUND)
    {
-      for (size_t c = 0, i = 0; i < mPlugins.GetCount(); i++)
+      size_t c = 0;
+      int i = -1;
+      for (const auto &pPlugin : mPlugins)
       {
-         for (int j = 0; j < mPlugins[i]->GetFormatCount(); j++, c++)
+         ++i;
+         for (int j = 0; j < pPlugin->GetFormatCount(); j++, c++)
          {
             if ((size_t)mFilterIndex == c)
             {  // this is the selected format. Store the plug-in and sub-format
@@ -907,24 +920,28 @@ int ExportMultiple::ExportMultipleByTrack(bool byName,
 }
 
 int ExportMultiple::DoExport(int channels,
-                              wxFileName name,
+                              const wxFileName &inName,
                               bool selectedOnly,
                               double t0,
                               double t1,
                               const Tags &tags)
 {
-   wxLogDebug(wxT("Doing multiple Export: File name \"%s\""), (name.GetFullName()).c_str());
+   wxFileName name;
+
+   wxLogDebug(wxT("Doing multiple Export: File name \"%s\""), (inName.GetFullName()).c_str());
    wxLogDebug(wxT("Channels: %i, Start: %lf, End: %lf "), channels, t0, t1);
    if (selectedOnly) wxLogDebug(wxT("Selected Region Only"));
    else wxLogDebug(wxT("Whole Project"));
 
    if (mOverwrite->GetValue()) {
       // Make sure we don't overwrite (corrupt) alias files
-      if (!mProject->GetDirManager()->EnsureSafeFilename(name)) {
+      if (!mProject->GetDirManager()->EnsureSafeFilename(inName)) {
          return false;
       }
+      name = inName;
    }
    else {
+      name = inName;
       int i = 2;
       wxString base(name.GetName());
       while (name.FileExists()) {
@@ -933,9 +950,10 @@ int ExportMultiple::DoExport(int channels,
    }
 
    // Call the format export routine
+   const wxString fullPath{name.GetFullPath()};
    int success = mPlugins[mPluginIndex]->Export(mProject,
                                                 channels,
-                                                name.GetFullPath(),
+                                                fullPath,
                                                 selectedOnly,
                                                 t0,
                                                 t1,
@@ -944,7 +962,7 @@ int ExportMultiple::DoExport(int channels,
                                                 mSubFormatIndex);
 
    if (success == eProgressSuccess || success == eProgressStopped) {
-      mExported.Add(name.GetFullPath());
+      mExported.Add(fullPath);
    }
 
    Refresh();

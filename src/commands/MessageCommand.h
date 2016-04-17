@@ -29,15 +29,15 @@ class MessageCommandType final : public CommandType
 public:
    wxString BuildName() override;
    void BuildSignature(CommandSignature &signature) override;
-   Command *Create(CommandOutputTarget *target) override;
+   CommandHolder Create(std::unique_ptr<CommandOutputTarget> &&target) override;
 };
 
 class MessageCommand final : public CommandImplementation
 {
 public:
    MessageCommand(CommandType &type,
-                  CommandOutputTarget *target)
-      : CommandImplementation(type, target) {}
+                  std::unique_ptr<CommandOutputTarget> &&target)
+      : CommandImplementation(type, std::move(target)) {}
    bool Apply(CommandExecutionContext context) override;
 };
 

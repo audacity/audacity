@@ -110,6 +110,10 @@ public:
    LWSlider * GainSlider(WaveTrack *t, bool captured = false) const;
    LWSlider * PanSlider(WaveTrack *t, bool captured = false) const;
 
+#ifdef EXPERIMENTAL_MIDI_OUT
+   LWSlider *GainSlider(int index) const;
+#endif
+
 private:
    TrackPanel * pParent;
    wxFont mFont;
@@ -815,31 +819,20 @@ protected:
    int mLogMaxScrubSpeed;
 #endif
 
-   wxCursor *mArrowCursor;
-   wxCursor *mPencilCursor;
-   wxCursor *mSelectCursor;
-   wxCursor *mResizeCursor;
-   wxCursor *mSlideCursor;
-   wxCursor *mEnvelopeCursor; // doubles as the center frequency cursor
+   std::unique_ptr<wxCursor>
+      mArrowCursor, mPencilCursor, mSelectCursor,
+      mResizeCursor, mSlideCursor, mEnvelopeCursor, // doubles as the center frequency cursor
                               // for spectral selection
-   wxCursor *mSmoothCursor;
-   wxCursor *mZoomInCursor;
-   wxCursor *mZoomOutCursor;
-   wxCursor *mLabelCursorLeft;
-   wxCursor *mLabelCursorRight;
-   wxCursor *mRearrangeCursor;
-   wxCursor *mDisabledCursor;
-   wxCursor *mAdjustLeftSelectionCursor;
-   wxCursor *mAdjustRightSelectionCursor;
+      mSmoothCursor, mZoomInCursor, mZoomOutCursor,
+      mLabelCursorLeft, mLabelCursorRight, mRearrangeCursor,
+      mDisabledCursor, mAdjustLeftSelectionCursor, mAdjustRightSelectionCursor;
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   wxCursor *mBottomFrequencyCursor;
-   wxCursor *mTopFrequencyCursor;
-   wxCursor *mBandWidthCursor;
+   std::unique_ptr<wxCursor>
+      mBottomFrequencyCursor, mTopFrequencyCursor, mBandWidthCursor;
 #endif
 #if USE_MIDI
-   wxCursor *mStretchCursor;
-   wxCursor *mStretchLeftCursor;
-   wxCursor *mStretchRightCursor;
+   std::unique_ptr<wxCursor>
+      mStretchCursor, mStretchLeftCursor, mStretchRightCursor;
 #endif
 
    wxMenu *mWaveTrackMenu;

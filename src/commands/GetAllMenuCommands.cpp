@@ -28,9 +28,9 @@ void GetAllMenuCommandsType::BuildSignature(CommandSignature &signature)
    signature.AddParameter(wxT("ShowStatus"), 0, showStatusValidator);
 }
 
-Command *GetAllMenuCommandsType::Create(CommandOutputTarget *target)
+CommandHolder GetAllMenuCommandsType::Create(std::unique_ptr<CommandOutputTarget> &&target)
 {
-   return new GetAllMenuCommands(*this, target);
+   return std::make_shared<GetAllMenuCommands>(*this, std::move(target));
 }
 
 bool GetAllMenuCommands::Apply(CommandExecutionContext context)

@@ -42,6 +42,7 @@ out.
 
 *//*******************************************************************/
 
+#include "Audacity.h"
 #include "BlockFile.h"
 
 #include <float.h>
@@ -98,10 +99,10 @@ ArrayOf<char> BlockFile::fullSummary;
 ///                 will store at least the summary data here.
 ///
 /// @param samples  The number of samples this BlockFile contains.
-BlockFile::BlockFile(wxFileName fileName, sampleCount samples):
+BlockFile::BlockFile(wxFileNameWrapper &&fileName, sampleCount samples):
    mLockCount(0),
    mRefCount(1),
-   mFileName(fileName),
+   mFileName(std::move(fileName)),
    mLen(samples),
    mSummaryInfo(samples)
 {
@@ -119,15 +120,15 @@ BlockFile::~BlockFile()
 /// but most BlockFiles have at least their summary data here.
 /// (some, i.e. SilentBlockFiles, do not correspond to a file on
 ///  disk and have empty file names)
-wxFileName BlockFile::GetFileName()
+auto BlockFile::GetFileName() const -> GetFileNameResult
 {
-   return mFileName;
+   return { mFileName };
 }
 
 ///sets the file name the summary info will be saved in.  threadsafe.
-void BlockFile::SetFileName(wxFileName &name)
+void BlockFile::SetFileName(wxFileNameWrapper &&name)
 {
-   mFileName=name;
+   mFileName=std::move(name);
 }
 
 
@@ -161,7 +162,7 @@ bool BlockFile::IsLocked()
 
 /// Increases the reference count of this block by one.  Only
 /// DirManager should call this method.
-void BlockFile::Ref()
+void BlockFile::Ref() const
 {
    mRefCount++;
    BLOCKFILE_DEBUG_OUTPUT("Ref", mRefCount);
@@ -170,7 +171,7 @@ void BlockFile::Ref()
 /// Decreases the reference count of this block by one.  If this
 /// causes the count to become zero, deletes the associated disk
 /// file and deletes this object
-bool BlockFile::Deref()
+bool BlockFile::Deref() const
 {
    mRefCount--;
    BLOCKFILE_DEBUG_OUTPUT("Deref", mRefCount);
@@ -381,7 +382,7 @@ void BlockFile::FixSummary(void *data)
 /// @param *outRMS A pointer to where the maximum RMS value for this
 ///                region should be stored.
 void BlockFile::GetMinMax(sampleCount start, sampleCount len,
-                  float *outMin, float *outMax, float *outRMS)
+                  float *outMin, float *outMax, float *outRMS) const
 {
    // TODO: actually use summaries
    SampleBuffer blockData(len, floatSample);
@@ -417,7 +418,7 @@ void BlockFile::GetMinMax(sampleCount start, sampleCount len,
 ///                should be stored
 /// @param *outRMS A pointer to where the maximum RMS value for this
 ///                block should be stored.
-void BlockFile::GetMinMax(float *outMin, float *outMax, float *outRMS)
+void BlockFile::GetMinMax(float *outMin, float *outMax, float *outRMS) const
 {
    *outMin = mMin;
    *outMax = mMax;
@@ -522,26 +523,29 @@ bool BlockFile::Read64K(float *buffer,
 ///                     file.
 /// @param aliasChannel The channel where this block's data is located in
 ///                     the aliased file
-AliasBlockFile::AliasBlockFile(wxFileName baseFileName,
-                               wxFileName aliasedFileName,
+AliasBlockFile::AliasBlockFile(wxFileNameWrapper &&baseFileName,
+                               wxFileNameWrapper &&aliasedFileName,
                                sampleCount aliasStart,
                                sampleCount aliasLen, int aliasChannel):
-   BlockFile(wxFileName(baseFileName.GetFullPath() + wxT(".auf")), aliasLen),
-   mAliasedFileName(aliasedFileName),
+   BlockFile {
+      (baseFileName.SetExt(wxT("auf")), std::move(baseFileName)),
+      aliasLen
+   },
+   mAliasedFileName(std::move(aliasedFileName)),
    mAliasStart(aliasStart),
    mAliasChannel(aliasChannel)
 {
    mSilentAliasLog=FALSE;
 }
 
-AliasBlockFile::AliasBlockFile(wxFileName existingSummaryFileName,
-                               wxFileName aliasedFileName,
+AliasBlockFile::AliasBlockFile(wxFileNameWrapper &&existingSummaryFileName,
+                               wxFileNameWrapper &&aliasedFileName,
                                sampleCount aliasStart,
                                sampleCount aliasLen,
                                int aliasChannel,
                                float min, float max, float rms):
-   BlockFile(existingSummaryFileName, aliasLen),
-   mAliasedFileName(aliasedFileName),
+   BlockFile(std::move(existingSummaryFileName), aliasLen),
+   mAliasedFileName(std::move(aliasedFileName)),
    mAliasStart(aliasStart),
    mAliasChannel(aliasChannel)
 {
@@ -628,12 +632,12 @@ bool AliasBlockFile::ReadSummary(void *data)
 /// Modify this block to point at a different file.  This is generally
 /// looked down on, but it is necessary in one case: see
 /// DirManager::EnsureSafeFilename().
-void AliasBlockFile::ChangeAliasedFileName(wxFileName newAliasedFile)
+void AliasBlockFile::ChangeAliasedFileName(wxFileNameWrapper &&newAliasedFile)
 {
-   mAliasedFileName = newAliasedFile;
+   mAliasedFileName = std::move(newAliasedFile);
 }
 
-wxLongLong AliasBlockFile::GetSpaceUsage()
+wxLongLong AliasBlockFile::GetSpaceUsage() const
 {
    wxFFile summaryFile(mFileName.GetFullPath());
    return summaryFile.Length();

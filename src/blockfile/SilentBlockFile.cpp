@@ -8,11 +8,12 @@
 
 **********************************************************************/
 
+#include "../Audacity.h"
 #include "SilentBlockFile.h"
 #include "../FileFormats.h"
 
 SilentBlockFile::SilentBlockFile(sampleCount sampleLen):
-   BlockFile(wxFileName(), sampleLen)
+BlockFile(wxFileNameWrapper{}, sampleLen)
 {
    mMin = 0.;
    mMax = 0.;
@@ -30,7 +31,7 @@ bool SilentBlockFile::ReadSummary(void *data)
 }
 
 int SilentBlockFile::ReadData(samplePtr data, sampleFormat format,
-                              sampleCount WXUNUSED(start), sampleCount len)
+                              sampleCount WXUNUSED(start), sampleCount len) const
 {
    ClearSamples(data, format, 0, len);
 
@@ -74,14 +75,14 @@ BlockFile *SilentBlockFile::BuildFromXML(DirManager & WXUNUSED(dm), const wxChar
 }
 
 /// Create a copy of this BlockFile
-BlockFile *SilentBlockFile::Copy(wxFileName newFileName)
+BlockFile *SilentBlockFile::Copy(wxFileNameWrapper &&)
 {
    BlockFile *newBlockFile = new SilentBlockFile(mLen);
 
    return newBlockFile;
 }
 
-wxLongLong SilentBlockFile::GetSpaceUsage()
+wxLongLong SilentBlockFile::GetSpaceUsage() const
 {
    return 0;
 }

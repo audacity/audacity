@@ -16,6 +16,7 @@
 #include <wx/fileconf.h>
 #include <wx/string.h>
 
+#include "MemoryX.h"
 #include <map>
 
 #include "audacity/EffectInterface.h"
@@ -117,8 +118,13 @@ public:
 
 private:
 
+   void DeleteInstance();
+
    // Common
 
+   // Among other purposes, PluginDescriptor acts as the resouce handle,
+   // or smart pointer, to a resource created in a plugin library, and is responsible
+   // for a cleanup of this pointer.
    IdentInterface *mInstance;
 
    PluginType mPluginType;
@@ -167,8 +173,6 @@ class PluginRegistrationDialog;
 class PluginManager final : public PluginManagerInterface
 {
 public:
-   PluginManager();
-   virtual ~PluginManager();
 
    // PluginManagerInterface implementation
 
@@ -229,7 +233,6 @@ public:
    void Terminate();
 
    static PluginManager & Get();
-   static void Destroy();
 
    static PluginID GetID(ModuleInterface *module);
    static PluginID GetID(EffectIdentInterface *effect);
@@ -265,6 +268,10 @@ public:
    void UnregisterPlugin(const PluginID & ID);
 
 private:
+   // private! Use Get()
+   PluginManager();
+   ~PluginManager();
+
    void Load();
    void LoadGroup(PluginType type);
    void Save();
@@ -304,7 +311,8 @@ private:
    int b64decode(const wxString &in, void *out);
 
 private:
-   static PluginManager *mInstance;
+   friend std::default_delete<PluginManager>;
+   static std::unique_ptr<PluginManager> mInstance;
 
    bool IsDirty();
    void SetDirty(bool dirty = true);

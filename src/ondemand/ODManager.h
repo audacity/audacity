@@ -106,12 +106,18 @@ class ODManager final
    ///Get Total Number of Tasks.
    int GetTotalNumTasks();
 
-   //Pause/unpause all OD Tasks.  Does not occur immediately.
-   static void Pause(bool pause = true);
-   static void Resume();
-
-   static void LockLibSndFileMutex();
-   static void UnlockLibSndFileMutex();
+   // RAII object for pausing and resuming..
+   class Pauser
+   {
+      //Pause/unpause all OD Tasks.  Does not occur immediately.
+      static void Pause(bool pause = true);
+      static void Resume();
+   public:
+      Pauser() { Pause(); }
+      ~Pauser() { Resume(); }
+      Pauser(const Pauser&) PROHIBITED;
+      Pauser &operator= (const Pauser&) PROHIBITED;
+   };
 
 
 

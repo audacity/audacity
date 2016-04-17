@@ -18,6 +18,9 @@
 *//******************************************************************/
 
 
+#include "../Audacity.h"
+#include "LegacyBlockFile.h"
+
 #include <float.h>
 #include <math.h>
 
@@ -27,14 +30,13 @@
 #include <wx/utils.h>
 #include <wx/log.h>
 
-#include "LegacyBlockFile.h"
 #include "../MemoryX.h"
 #include "../FileFormats.h"
 #include "../Internat.h"
 
 #include "sndfile.h"
 
-void ComputeLegacySummaryInfo(wxFileName fileName,
+void ComputeLegacySummaryInfo(const wxFileName &fileName,
                               int summaryLen,
                               sampleFormat format,
                               SummaryInfo *info,
@@ -73,13 +75,14 @@ void ComputeLegacySummaryInfo(wxFileName fileName,
    int read;
    {
       Maybe<wxLogNull> silence{};
-      wxFFile summaryFile(fileName.GetFullPath(), wxT("rb"));
+      const wxString fullPath{ fileName.GetFullPath() };
+      wxFFile summaryFile(fullPath, wxT("rb"));
       if (Silent)
          silence.create();
 
       if (!summaryFile.IsOpened()) {
          wxLogWarning(wxT("Unable to access summary file %s; substituting silence for remainder of session"),
-            fileName.GetFullPath().c_str());
+            fullPath.c_str());
 
          read = info->frames64K * info->bytesPerFrame;
          memset(data.ptr(), 0, read);
@@ -121,12 +124,12 @@ void ComputeLegacySummaryInfo(wxFileName fileName,
 /// existing block file.  This file must exist and be a valid block file.
 ///
 /// @param existingFile The disk file this LegacyBlockFile should use.
-LegacyBlockFile::LegacyBlockFile(wxFileName existingFile,
+LegacyBlockFile::LegacyBlockFile(wxFileNameWrapper &&existingFile,
                                  sampleFormat format,
                                  sampleCount summaryLen,
                                  sampleCount len,
                                  bool noRMS):
-   BlockFile(existingFile, len),
+   BlockFile(std::move(existingFile), len),
    mFormat(format)
 {
 
@@ -137,7 +140,7 @@ LegacyBlockFile::LegacyBlockFile(wxFileName existingFile,
    else
       summaryFormat = floatSample;
 
-   ComputeLegacySummaryInfo(existingFile,
+   ComputeLegacySummaryInfo(mFileName,
                             summaryLen, summaryFormat,
                             &mSummaryInfo, noRMS, FALSE,
                             &mMin, &mMax, &mRMS);
@@ -184,7 +187,7 @@ bool LegacyBlockFile::ReadSummary(void *data)
 /// @param start  The offset in this block file
 /// @param len    The number of samples to read
 int LegacyBlockFile::ReadData(samplePtr data, sampleFormat format,
-                              sampleCount start, sampleCount len)
+                              sampleCount start, sampleCount len) const
 {
    SF_INFO info;
 
@@ -210,13 +213,13 @@ int LegacyBlockFile::ReadData(samplePtr data, sampleFormat format,
                          SAMPLE_SIZE(mFormat));
 
    wxFile f;   // will be closed when it goes out of scope
-   SNDFILE *sf = NULL;
+   SFFile sf;
 
    if (f.Open(mFileName.GetFullPath())) {
       // Even though there is an sf_open() that takes a filename, use the one that
       // takes a file descriptor since wxWidgets can open a file with a Unicode name and
       // libsndfile can't (under Windows).
-      sf = sf_open_fd(f.fd(), SFM_READ, &info, FALSE);
+      sf.reset(SFCall<SNDFILE*>(sf_open_fd, f.fd(), SFM_READ, &info, FALSE));
    }
 
    {
@@ -237,7 +240,7 @@ int LegacyBlockFile::ReadData(samplePtr data, sampleFormat format,
 
    sf_count_t seekstart = start +
          (mSummaryInfo.totalSummaryBytes / SAMPLE_SIZE(mFormat));
-   sf_seek(sf, seekstart , SEEK_SET);
+   SFCall<sf_count_t>(sf_seek, sf.get(), seekstart , SEEK_SET);
 
    SampleBuffer buffer(len, floatSample);
    int framesRead = 0;
@@ -247,10 +250,11 @@ int LegacyBlockFile::ReadData(samplePtr data, sampleFormat format,
    // converting to float and back, which is unneccesary)
    if (format == int16Sample &&
        sf_subtype_is_integer(info.format)) {
-      framesRead = sf_readf_short(sf, (short *)data, len);
-   }else if (format == int24Sample &&
+      framesRead = SFCall<sf_count_t>(sf_readf_short, sf.get(), (short *)data, len);
+   }
+   else if (format == int24Sample &&
              sf_subtype_is_integer(info.format)) {
-      framesRead = sf_readf_int(sf, (int *)data, len);
+      framesRead = SFCall<sf_count_t>(sf_readf_int, sf.get(), (int *)data, len);
 
          // libsndfile gave us the 3 byte sample in the 3 most
       // significant bytes -- we want it in the 3 least
@@ -262,12 +266,10 @@ int LegacyBlockFile::ReadData(samplePtr data, sampleFormat format,
       // Otherwise, let libsndfile handle the conversion and
       // scaling, and pass us normalized data as floats.  We can
       // then convert to whatever format we want.
-      framesRead = sf_readf_float(sf, (float *)buffer.ptr(), len);
+      framesRead = SFCall<sf_count_t>(sf_readf_float, sf.get(), (float *)buffer.ptr(), len);
       CopySamples(buffer.ptr(), floatSample,
                   (samplePtr)data, format, framesRead);
    }
-
-   sf_close(sf);
 
    return framesRead;
 }
@@ -292,7 +294,7 @@ void LegacyBlockFile::SaveXML(XMLWriter &xmlFile)
 BlockFile *LegacyBlockFile::BuildFromXML(const wxString &projDir, const wxChar **attrs,
                                          sampleCount len, sampleFormat format)
 {
-   wxFileName fileName;
+   wxFileNameWrapper fileName;
    sampleCount summaryLen = 0;
    bool noRMS = false;
    long nValue;
@@ -323,24 +325,22 @@ BlockFile *LegacyBlockFile::BuildFromXML(const wxString &projDir, const wxChar *
       }
    }
 
-   return new LegacyBlockFile(fileName, format, summaryLen, len, noRMS);
+   return new LegacyBlockFile(std::move(fileName), format, summaryLen, len, noRMS);
 }
 
 /// Create a copy of this BlockFile, but using a different disk file.
 ///
 /// @param newFileName The name of the NEW file to use.
-BlockFile *LegacyBlockFile::Copy(wxFileName newFileName)
+BlockFile *LegacyBlockFile::Copy(wxFileNameWrapper &&newFileName)
 {
-   BlockFile *newBlockFile = new LegacyBlockFile(newFileName,
+   return new LegacyBlockFile(std::move(newFileName),
                                                  mFormat,
                                                  mSummaryInfo.totalSummaryBytes,
                                                  mLen,
                                                  mSummaryInfo.fields < 3);
-
-   return newBlockFile;
 }
 
-wxLongLong LegacyBlockFile::GetSpaceUsage()
+wxLongLong LegacyBlockFile::GetSpaceUsage() const
 {
    wxFFile dataFile(mFileName.GetFullPath());
    return dataFile.Length();

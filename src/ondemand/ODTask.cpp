@@ -227,7 +227,7 @@ bool ODTask::IsRunning()
    return ret;
 }
 
-sampleCount ODTask::GetDemandSample()
+sampleCount ODTask::GetDemandSample() const
 {
    sampleCount retval;
    mDemandSampleMutex.Lock();

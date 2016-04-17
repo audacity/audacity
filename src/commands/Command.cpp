@@ -51,7 +51,6 @@ void DecoratedCommand::Error(const wxString &message)
 
 DecoratedCommand::~DecoratedCommand()
 {
-   delete mCommand;
 }
 
 wxString DecoratedCommand::GetName()
@@ -80,7 +79,8 @@ bool ApplyAndSendResponse::Apply(CommandExecutionContext context)
    if (result)
    {
       response += wxT("OK");
-   } else
+   }
+   else
    {
       response += wxT("Failed!");
    }
@@ -89,17 +89,16 @@ bool ApplyAndSendResponse::Apply(CommandExecutionContext context)
 }
 
 CommandImplementation::CommandImplementation(CommandType &type,
-      CommandOutputTarget *output)
+      std::unique_ptr<CommandOutputTarget> &&output)
 : mType(type),
    mParams(type.GetSignature().GetDefaults()),
-   mOutput(output)
+   mOutput(std::move(output))
 {
-   wxASSERT(output != NULL);
+   wxASSERT(mOutput);
 }
 
 CommandImplementation::~CommandImplementation()
 {
-   delete mOutput;
 }
 
 void CommandImplementation::TypeCheck(const wxString &typeName,

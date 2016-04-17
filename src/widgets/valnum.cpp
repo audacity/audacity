@@ -22,6 +22,9 @@
 // For compilers that support precompilation, includes "wx.h".
 #include <wx/wxprec.h>
 
+#include "../Audacity.h"
+#include "valnum.h"
+
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
@@ -36,7 +39,6 @@
 #include <wx/clipbrd.h>
 #include <wx/dataobj.h>
 
-#include "valnum.h"
 #include "numformatter.h"
 
 // ============================================================================

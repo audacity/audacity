@@ -48,13 +48,13 @@ class PROFILE_DLL_API SimpleBlockFile /* not final */ : public BlockFile {
    // Constructor / Destructor
 
    /// Create a disk file and write summary and sample data to it
-   SimpleBlockFile(wxFileName baseFileName,
+   SimpleBlockFile(wxFileNameWrapper &&baseFileName,
                    samplePtr sampleData, sampleCount sampleLen,
                    sampleFormat format,
                    bool allowDeferredWrite = false,
                    bool bypassCache = false );
    /// Create the memory structure to refer to the given block file
-   SimpleBlockFile(wxFileName existingFile, sampleCount len,
+   SimpleBlockFile(wxFileNameWrapper &&existingFile, sampleCount len,
                    float min, float max, float rms);
 
    virtual ~SimpleBlockFile();
@@ -65,14 +65,14 @@ class PROFILE_DLL_API SimpleBlockFile /* not final */ : public BlockFile {
    bool ReadSummary(void *data) override;
    /// Read the data section of the disk file
    int ReadData(samplePtr data, sampleFormat format,
-                        sampleCount start, sampleCount len) override;
+                        sampleCount start, sampleCount len) const override;
 
    /// Create a NEW block file identical to this one
-   BlockFile *Copy(wxFileName newFileName) override;
+   BlockFile *Copy(wxFileNameWrapper &&newFileName) override;
    /// Write an XML representation of this file
    void SaveXML(XMLWriter &xmlFile) override;
 
-   wxLongLong GetSpaceUsage() override;
+   wxLongLong GetSpaceUsage() const override;
    void Recover() override;
 
    static BlockFile *BuildFromXML(DirManager &dm, const wxChar **attrs);
@@ -92,7 +92,8 @@ class PROFILE_DLL_API SimpleBlockFile /* not final */ : public BlockFile {
 
    SimpleBlockFileCache mCache;
 
-   sampleFormat mFormat;
+ private:
+   mutable sampleFormat mFormat; // may be found lazily
 };
 
 #endif

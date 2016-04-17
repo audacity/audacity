@@ -1391,16 +1391,15 @@ void EffectEqualization::LoadCurves(const wxString &fileName, bool append)
       gPrefs->Read(wxT("/Effects/Equalization/PresetVersion"), &eqCurvesInstalledVersion, wxT(""));
 
       bool needUpdate = (eqCurvesCurrentVersion != eqCurvesInstalledVersion);
-      
+
       // UpdateDefaultCurves allows us to import new factory presets only,
       // or update all factory preset curves.
       if (needUpdate)
          UpdateDefaultCurves( UPDATE_ALL != 0 );
       fn = wxFileName( FileNames::DataDir(), wxT("EQCurves.xml") );
    }
-   else {
-      fn = wxFileName(fileName); // user is loading a specific set of curves
-   }
+   else
+      fn = fileName; // user is loading a specific set of curves
 
    // If requested file doesn't exist...
    if( !fn.FileExists() && !GetDefaultFileName(fn) ) {
@@ -1420,11 +1419,12 @@ void EffectEqualization::LoadCurves(const wxString &fileName, bool append)
 
    // Load the curves
    XMLFileReader reader;
-   if( !reader.Parse( this, fn.GetFullPath() ) )
+   const wxString fullPath{ fn.GetFullPath() };
+   if( !reader.Parse( this, fullPath ) )
    {
       wxString msg;
       /* i18n-hint: EQ stands for 'Equalization'.*/
-      msg.Printf(_("Error Loading EQ Curves from file:\n%s\nError message says:\n%s"), fn.GetFullPath().c_str(), reader.GetErrorStr().c_str());
+      msg.Printf(_("Error Loading EQ Curves from file:\n%s\nError message says:\n%s"), fullPath.c_str(), reader.GetErrorStr().c_str());
       // Inform user of load failure
       wxMessageBox( msg,
          _("Error Loading EQ Curves"),
@@ -1635,14 +1635,15 @@ void EffectEqualization::SaveCurves(const wxString &fileName)
       }
    }
    else
-      fn = wxFileName(fileName);
+      fn = fileName;
 
    // Create/Open the file
    XMLFileWriter eqFile;
+   const wxString fullPath{ fn.GetFullPath() };
 
    try
    {
-      eqFile.Open( fn.GetFullPath(), wxT("wb") );
+      eqFile.Open( fullPath, wxT("wb") );
 
       // Write the curves
       WriteXML( eqFile );
@@ -1654,7 +1655,7 @@ void EffectEqualization::SaveCurves(const wxString &fileName)
    {
       wxMessageBox(wxString::Format(
          _("Couldn't write to file \"%s\": %s"),
-         fn.GetFullPath().c_str(), exception.GetMessage().c_str()),
+         fullPath.c_str(), exception.GetMessage().c_str()),
          _("Error Saving Equalization Curves"), wxICON_ERROR, mUIParent);
    }
 }

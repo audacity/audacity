@@ -16,6 +16,7 @@ updating the ODPCMAliasBlockFile and the GUI of the newly available data.
 
 *//*******************************************************************/
 
+#include "../Audacity.h"
 #include "ODDecodeTask.h"
 #include "../blockfile/ODDecodeBlockFile.h"
 #include "../Sequence.h"
@@ -289,8 +290,8 @@ int ODDecodeTask::GetNumFileDecoders()
 
 ///This should handle unicode converted to UTF-8 on mac/linux, but OD TODO:check on windows
 ODFileDecoder::ODFileDecoder(const wxString & fName)
+   : mFName{ fName }
 {
-   mFName = fName;
    mInited = false;
 }
 

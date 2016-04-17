@@ -26,6 +26,7 @@
 #include <wx/gauge.h>
 #include <wx/stattext.h>
 #include <wx/utils.h>
+#include <wx/msgdlg.h>
 
 enum
 {
@@ -40,6 +41,8 @@ enum ProgressDialogFlags
    pdlgEmptyFlags = 0x00000000,
    pdlgHideStopButton = 0x00000001,
    pdlgHideCancelButton = 0x00000002,
+   pdlgHideElapsedTime = 0x00000004,
+   pdlgConfirmStopCancel = 0x00000008,
 
    pdlgDefaultFlags = pdlgEmptyFlags
 };
@@ -52,11 +55,17 @@ class AUDACITY_DLL_API ProgressDialog /* not final */ : public wxDialog
 {
 public:
    ProgressDialog();
-   ProgressDialog(const wxString & title, const wxString & message = wxEmptyString, int flags = pdlgDefaultFlags);
+   ProgressDialog(const wxString & title,
+                  const wxString & message = wxEmptyString,
+                  int flags = pdlgDefaultFlags,
+                  const wxString & sRemainingLabelText = wxEmptyString);
    virtual ~ProgressDialog();
 
    // NEW virtual?  It doesn't override wxDialog
-   virtual bool Create(const wxString & title, const wxString & message = wxEmptyString, int flags = pdlgDefaultFlags);
+   virtual bool Create(const wxString & title,
+                       const wxString & message = wxEmptyString,
+                       int flags = pdlgDefaultFlags,
+                       const wxString & sRemainingLabelText = wxEmptyString);
 
    int Update(int value, const wxString & message = wxEmptyString);
    int Update(double current, const wxString & message = wxEmptyString);
@@ -83,6 +92,10 @@ protected:
 
    bool mIsTransparent;
 
+   // MY: Booleans to hold the flag values
+   bool m_bShowElapsedTime = true;
+   bool m_bConfirmAction = false;
+
 private:
    void Init();
    bool SearchForWindow(const wxWindowList & list, const wxWindow *searchfor) const;
@@ -90,6 +103,10 @@ private:
    void OnStop(wxCommandEvent & e);
    void OnCloseWindow(wxCloseEvent & e);
    void Beep() const;
+   
+   bool ConfirmAction(const wxString & sPrompt,
+                      const wxString & sTitle,
+                      int iButtonID = -1);
 
 private:
    // This guarantees we have an active event loop...possible during OnInit()
@@ -110,7 +127,8 @@ public:
    TimerProgressDialog(const wxLongLong_t duration,
                        const wxString & title,
                        const wxString & message = wxEmptyString,
-                       int flags = pdlgDefaultFlags);
+                       int flags = pdlgDefaultFlags,
+                       const wxString & sRemainingLabelText = wxEmptyString);
    int Update(const wxString & message = wxEmptyString);
 
 protected:

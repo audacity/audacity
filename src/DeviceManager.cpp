@@ -47,12 +47,6 @@ DeviceManager* DeviceManager::Instance()
    return &dm;
 }
 
-/// Releases memory assosiated with the singleton
-void DeviceManager::Destroy()
-{
-
-}
-
 const std::vector<DeviceSourceMap> &DeviceManager::GetInputDeviceMaps()
 {
    if (!m_inited)

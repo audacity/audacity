@@ -2174,7 +2174,7 @@ std::unique_ptr<wxSizer> CreateStdButtonSizer(wxWindow *parent, long buttons, wx
 
    if (buttons & ePreviewButton)
    {
-      bs->Add(safenew wxButton(parent, ePreviewID, _("Pre&view")), 0, wxALIGN_CENTER | wxLEFT | wxRIGHT, margin);
+      bs->Add(safenew wxButton(parent, ePreviewID, _("&Preview")), 0, wxALIGN_CENTER | wxLEFT | wxRIGHT, margin);
    }
    if (buttons & ePreviewDryButton)
    {

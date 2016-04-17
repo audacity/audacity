@@ -73,7 +73,8 @@ const static wxChar *kShippedEffects[] =
 DECLARE_MODULE_ENTRY(AudacityModule)
 {
    // Create and register the importer
-   return new LadspaEffectsModule(moduleManager, path);
+   // Trust the module manager not to leak this
+   return safenew LadspaEffectsModule(moduleManager, path);
 }
 
 // ============================================================================
@@ -205,8 +206,8 @@ bool LadspaEffectsModule::RegisterPlugin(PluginManagerInterface & pm, const wxSt
 {
    // Since we now have builtin VST support, ignore the VST bridge as it
    // causes duplicate menu entries to appear.
-   wxFileName f(path);
-   if (f.GetName().CmpNoCase(wxT("vst-bridge")) == 0) {
+   wxFileName ff(path);
+   if (ff.GetName().CmpNoCase(wxT("vst-bridge")) == 0) {
       return false;
    }
 
@@ -215,9 +216,9 @@ bool LadspaEffectsModule::RegisterPlugin(PluginManagerInterface & pm, const wxSt
    // directory to be the plug-in's directory.
    wxString envpath;
    bool hadpath = wxGetEnv(wxT("PATH"), &envpath);
-   wxSetEnv(wxT("PATH"), f.GetPath() + wxFILE_SEP_PATH + envpath);
-   wxString saveOldCWD = f.GetCwd();
-   f.SetCwd();
+   wxSetEnv(wxT("PATH"), ff.GetPath() + wxFILE_SEP_PATH + envpath);
+   wxString saveOldCWD = ff.GetCwd();
+   ff.SetCwd();
    
    int index = 0;
    LADSPA_Descriptor_Function mainFn = NULL;
@@ -261,6 +262,7 @@ bool LadspaEffectsModule::IsPluginValid(const wxString & path)
 
 IdentInterface *LadspaEffectsModule::CreateInstance(const wxString & path)
 {
+   // Acquires a resource for the application.
    // For us, the path is two words.
    // 1)  The library's path
    // 2)  The LADSPA descriptor index
@@ -268,16 +270,15 @@ IdentInterface *LadspaEffectsModule::CreateInstance(const wxString & path)
    wxString realPath = path.BeforeFirst(wxT(';'));
    path.AfterFirst(wxT(';')).ToLong(&index);
 
-   return new LadspaEffect(realPath, (int) index);
+   // Safety of this depends on complementary calls to DeleteInstance on the module manager side.
+   return safenew LadspaEffect(realPath, (int)index);
 }
 
 void LadspaEffectsModule::DeleteInstance(IdentInterface *instance)
 {
-   LadspaEffect *effect = dynamic_cast<LadspaEffect *>(instance);
-   if (effect)
-   {
-      delete effect;
-   }
+   std::unique_ptr < LadspaEffect > {
+      dynamic_cast<LadspaEffect *>(instance)
+   };
 }
 
 wxArrayString LadspaEffectsModule::GetSearchPaths()
@@ -1571,12 +1572,12 @@ bool LadspaEffect::Load()
       return true;
    }
 
-   wxFileName f = mPath;
+   wxFileName ff = mPath;
    wxString envpath;
    bool hadpath = wxGetEnv(wxT("PATH"), &envpath);
-   wxSetEnv(wxT("PATH"), f.GetPath() + wxFILE_SEP_PATH + envpath);
-   wxString saveOldCWD = f.GetCwd();
-   f.SetCwd();
+   wxSetEnv(wxT("PATH"), ff.GetPath() + wxFILE_SEP_PATH + envpath);
+   wxString saveOldCWD = ff.GetCwd();
+   ff.SetCwd();
 
    LADSPA_Descriptor_Function mainFn = NULL;
 

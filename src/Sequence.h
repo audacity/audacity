@@ -11,6 +11,7 @@
 #ifndef __AUDACITY_SEQUENCE__
 #define __AUDACITY_SEQUENCE__
 
+#include "MemoryX.h"
 #include <vector>
 #include <wx/string.h>
 #include <wx/dynarray.h>
@@ -75,9 +76,6 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    // DirManager as a parameter, because you might be copying
    // from one project to another...
    Sequence(const Sequence &orig, DirManager *projDirManager);
-   Sequence *Duplicate(DirManager *projDirManager) const {
-      return new Sequence(*this, projDirManager);
-   }
 
    ~Sequence();
 
@@ -102,7 +100,7 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    bool GetWaveDisplay(float *min, float *max, float *rms, int* bl,
                        int len, const sampleCount *where);
 
-   bool Copy(sampleCount s0, sampleCount s1, Sequence **dest);
+   bool Copy(sampleCount s0, sampleCount s1, std::unique_ptr<Sequence> &dest) const;
    bool Paste(sampleCount s0, const Sequence *src);
 
    sampleCount GetIdealAppendLen();
@@ -151,8 +149,10 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    //
 
    bool Lock();
-   bool CloseLock();//similar to Lock but should be called upon project close.
    bool Unlock();
+
+   bool CloseLock();//similar to Lock but should be called upon project close.
+   // not balanced by unlocking calls.
 
    //
    // Manipulating Sample Format

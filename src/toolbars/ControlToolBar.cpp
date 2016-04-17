@@ -843,7 +843,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
       if(duplex){
          playbackTracks = trackList->GetWaveTrackArray(false);
 #ifdef EXPERIMENTAL_MIDI_OUT
-         midiTracks = t->GetNoteTrackArray(false);
+         midiTracks = trackList->GetNoteTrackArray(false);
 #endif
      }
       else {

@@ -28,15 +28,15 @@ class SetProjectInfoCommandType final : public CommandType
 public:
    wxString BuildName() override;
    void BuildSignature(CommandSignature &signature) override;
-   Command *Create(CommandOutputTarget *target) override;
+   CommandHolder Create(std::unique_ptr<CommandOutputTarget> &&target) override;
 };
 
 
 class SetProjectInfoCommand final : public CommandImplementation
 {
 public:
-   SetProjectInfoCommand(CommandType &type, CommandOutputTarget *target)
-      : CommandImplementation(type, target)
+   SetProjectInfoCommand(CommandType &type, std::unique_ptr<CommandOutputTarget> &&target)
+      : CommandImplementation(type, std::move(target))
    { }
    virtual ~SetProjectInfoCommand()
    { }

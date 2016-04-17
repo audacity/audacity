@@ -7,6 +7,7 @@
  *
  */
 
+#include "../Audacity.h"
 #include "ODDecodeFlacTask.h"
 
 #include "../Prefs.h"
@@ -32,13 +33,13 @@ ODDecodeFlacTask::~ODDecodeFlacTask()
 }
 
 
-ODTask* ODDecodeFlacTask::Clone()
+std::unique_ptr<ODTask> ODDecodeFlacTask::Clone() const
 {
-   ODDecodeFlacTask* clone = new ODDecodeFlacTask;
-   clone->mDemandSample=GetDemandSample();
+   auto clone = std::make_unique<ODDecodeFlacTask>();
+   clone->mDemandSample = GetDemandSample();
 
    //the decoders and blockfiles should not be copied.  They are created as the task runs.
-   return clone;
+   return std::move(clone);
 }
 
 

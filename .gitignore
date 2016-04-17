@@ -1,3 +1,18 @@
+# Mac build outputs
+mac/Audacity.xcodeproj/project.xcworkspace/contents.xcworkspacedata
+mac/Audacity.xcodeproj/project.xcworkspace/xcshareddata/Audacity.xccheckout
+mac/Makefile
+mac/confdefs.h
+mac/config.status
+mac/conftest.c
+mac/help/
+mac/images/
+mac/lib-src/
+mac/libtool
+mac/po/
+mac/src/
+mac/tests/
+
 # Compiled Object files
 *.slo
 *.lo

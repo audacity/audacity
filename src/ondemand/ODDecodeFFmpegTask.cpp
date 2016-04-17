@@ -62,7 +62,7 @@ public:
    ODFFmpegDecoder(const wxString & fileName,
       const ScsPtr &scs,
       ODDecodeFFmpegTask::Streams &&channels,
-      AVFormatContext* formatContext,
+      const std::shared_ptr<FFmpegContext> &formatContext,
       int streamIndex);
    virtual ~ODFFmpegDecoder();
 
@@ -99,7 +99,7 @@ private:
 
    ScsPtr mScs;           //!< Pointer to array of pointers to stream contexts.
    ODDecodeFFmpegTask::Streams mChannels;
-   AVFormatContext      *mFormatContext; //!< Format description, also contains metadata and some useful info
+   std::shared_ptr<FFmpegContext> mContext; //!< Format description, also contains metadata and some useful info
    std::vector<FFMpegDecodeCache*> mDecodeCache;
    int                  mNumSamplesInCache;
    sampleCount                  mCurrentPos;     //the index of the next sample to be decoded
@@ -128,11 +128,11 @@ auto ODDecodeFFmpegTask::FromList(const std::list<TrackHolders> &channels) -> St
 }
 
 //------ ODDecodeFFmpegTask definitions
-ODDecodeFFmpegTask::ODDecodeFFmpegTask(const ScsPtr &scs, Streams &&channels, void* formatContext, int streamIndex)
+ODDecodeFFmpegTask::ODDecodeFFmpegTask(const ScsPtr &scs, Streams &&channels, const std::shared_ptr<FFmpegContext> &context, int streamIndex)
    : mChannels(std::move(channels))
 {
    mScs=scs;
-   mFormatContext = formatContext;
+   mContext = context;
    mStreamIndex = streamIndex;
 }
 ODDecodeFFmpegTask::~ODDecodeFFmpegTask()
@@ -140,13 +140,13 @@ ODDecodeFFmpegTask::~ODDecodeFFmpegTask()
 }
 
 
-ODTask *ODDecodeFFmpegTask::Clone()
+std::unique_ptr<ODTask> ODDecodeFFmpegTask::Clone() const
 {
-   auto clone = std::make_unique<ODDecodeFFmpegTask>(mScs, Streams{ mChannels }, mFormatContext, mStreamIndex);
+   auto clone = std::make_unique<ODDecodeFFmpegTask>(mScs, Streams{ mChannels }, mContext, mStreamIndex);
    clone->mDemandSample=GetDemandSample();
 
    //the decoders and blockfiles should not be copied.  They are created as the task runs.
-   return clone.release();
+   return std::move(clone);
 }
 
 ///Creates an ODFileDecoder that decodes a file of filetype the subclass handles.
@@ -157,7 +157,7 @@ ODFileDecoder* ODDecodeFFmpegTask::CreateFileDecoder(const wxString & fileName)
    // Open the file for import
    auto decoder =
       make_movable<ODFFmpegDecoder>(fileName, mScs, ODDecodeFFmpegTask::Streams{ mChannels },
-      (AVFormatContext*)mFormatContext, mStreamIndex);
+      mContext, mStreamIndex);
 
    mDecoders.push_back(std::move(decoder));
    return mDecoders.back().get();
@@ -206,13 +206,15 @@ bool ODFFmpegDecoder::SeekingAllowed()
 //   url_fseek(mFormatContext->pb,0,SEEK_SET);
 
 
+   std::unique_ptr<FFmpegContext> tempMpegContext;
    AVFormatContext* tempContext;
    int err;
-   err = ufile_fopen_input(&tempContext, mFName);
+   err = ufile_fopen_input(tempMpegContext, mFName);
    if (err < 0)
    {
       goto test_failed;
    }
+   tempContext = tempMpegContext->ic_ptr;
 
    err = avformat_find_stream_info(tempContext, NULL);
    if (err < 0)
@@ -222,11 +224,8 @@ bool ODFFmpegDecoder::SeekingAllowed()
 
    if(av_seek_frame(tempContext, st->index, 0, 0) >= 0) {
       mSeekingAllowedStatus = ODFFMPEG_SEEKING_TEST_SUCCESS;
-      if (tempContext) avformat_close_input(&tempContext);
       return SeekingAllowed();
    }
-
-   if (tempContext) avformat_close_input(&tempContext);
 
 test_failed:
    mSeekingAllowedStatus = ODFFMPEG_SEEKING_TEST_FAILED;
@@ -239,12 +238,12 @@ test_failed:
 ODFFmpegDecoder::ODFFmpegDecoder(const wxString & fileName,
    const ScsPtr &scs,
    ODDecodeFFmpegTask::Streams &&channels,
-   AVFormatContext* formatContext,
-   int streamIndex)
+   const std::shared_ptr<FFmpegContext> &context,
+int streamIndex)
 :ODFileDecoder(fileName),
 //mSamplesDone(0),
 mScs(scs),
-mFormatContext(formatContext),
+mContext(context),
 mNumSamplesInCache(0),
 mCurrentLen(0),
 mSeekingAllowedStatus(ODFFMPEG_SEEKING_TEST_UNKNOWN),
@@ -271,11 +270,8 @@ mStreamIndex(streamIndex)
 //we have taken ownership, so DELETE the ffmpeg stuff allocated in ImportFFmpeg that was given to us.
 ODFFmpegDecoder::~ODFFmpegDecoder()
 {
-   if (FFmpegLibsInst->ValidLibsLoaded())
-   {
-      if (mFormatContext) avformat_close_input(&mFormatContext);
-      av_log_set_callback(av_log_default_callback);
-   }
+   // Do this before unloading libraries
+   mContext.reset();
 
    //DELETE our caches.
    while(mDecodeCache.size())
@@ -295,6 +291,8 @@ ODFFmpegDecoder::~ODFFmpegDecoder()
 #define kMaxSeekRewindAttempts 8
 int ODFFmpegDecoder::Decode(SampleBuffer & data, sampleFormat & format, sampleCount start, sampleCount len, unsigned int channel)
 {
+   auto mFormatContext = mContext->ic_ptr;
+
    auto scs = mScs->get();
    auto sci = scs[mStreamIndex].get();
    format = sci->m_osamplefmt;
@@ -374,7 +372,7 @@ int ODFFmpegDecoder::Decode(SampleBuffer & data, sampleFormat & format, sampleCo
          // for some formats
          // The only other case for inserting silence is for initial offset and ImportFFmpeg.cpp does this for us
          if (seeking) {
-            actualDecodeStart = 0.52 + (sc->m_stream->codec->sample_rate * sc->m_pkt.dts
+            actualDecodeStart = 0.52 + (sc->m_stream->codec->sample_rate * sc->m_pkt->dts
                                         * ((double)sc->m_stream->time_base.num / sc->m_stream->time_base.den));
             //this is mostly safe because den is usually 1 or low number but check for high values.
 
@@ -423,11 +421,7 @@ int ODFFmpegDecoder::Decode(SampleBuffer & data, sampleFormat & format, sampleCo
                   break;
 
          // Cleanup after frame decoding
-         if (sc->m_pktValid)
-         {
-            av_free_packet(&sc->m_pkt);
-            sc->m_pktValid = 0;
-         }
+         sc->m_pkt.reset();
       }
    }
 
@@ -436,14 +430,11 @@ int ODFFmpegDecoder::Decode(SampleBuffer & data, sampleFormat & format, sampleCo
    {
       for (int i = 0; i < mChannels.size(); i++)
       {
+         sc->m_pkt.create();
          sc = scs[i].get();
          if (DecodeFrame(sc, true) == 0)
          {
-            if (sc->m_pktValid)
-            {
-               av_free_packet(&sc->m_pkt);
-               sc->m_pktValid = 0;
-            }
+            sc->m_pkt.reset();
          }
       }
    }
@@ -592,7 +583,7 @@ streamContext* ODFFmpegDecoder::ReadNextFrame()
    auto scs = mScs->get();
    // This reinterpret_cast to array of plain pointers is innocent
    return import_ffmpeg_read_next_frame
-      (mFormatContext, reinterpret_cast<streamContext**>(scs), mChannels.size());
+      (mContext->ic_ptr, reinterpret_cast<streamContext**>(scs), mChannels.size());
 }
 
 

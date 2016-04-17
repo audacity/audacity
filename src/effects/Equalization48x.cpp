@@ -1146,7 +1146,7 @@ bool EffectEqualization48x::ProcessOne8x(int count, WaveTrack * t,
    sampleCount trackBlockSize = t->GetMaxBlockSize();
 
    AudacityProject *p = GetActiveProject();
-   WaveTrack *output=p->GetTrackFactory()->NewWaveTrack(floatSample, t->GetRate());
+   auto output = p->GetTrackFactory()->NewWaveTrack(floatSample, t->GetRate());
 
    mEffectEqualization->TrackProgress(count, 0.0);
    int bigRuns=len/(mSubBufferSize-mBlockSize);
@@ -1183,8 +1183,7 @@ bool EffectEqualization48x::ProcessOne8x(int count, WaveTrack * t,
    }
    output->Flush();
    if(!bBreakLoop)
-      ProcessTail(t, output, start, len);
-   delete output;
+      ProcessTail(t, output.get(), start, len);
    return bBreakLoop;
 }
 
@@ -1199,7 +1198,7 @@ bool EffectEqualization48x::ProcessOne8xThreaded(int count, WaveTrack * t,
       return ProcessOne4x(count, t, start, len);
 
    AudacityProject *p = GetActiveProject();
-   WaveTrack *output=p->GetTrackFactory()->NewWaveTrack(floatSample, t->GetRate());
+   auto output = p->GetTrackFactory()->NewWaveTrack(floatSample, t->GetRate());
 
    sampleCount trackBlockSize = t->GetMaxBlockSize();
    mEffectEqualization->TrackProgress(count, 0.0);
@@ -1263,8 +1262,7 @@ bool EffectEqualization48x::ProcessOne8xThreaded(int count, WaveTrack * t,
    }
    output->Flush();
    if(!bBreakLoop)
-      ProcessTail(t, output, start, len);
-   delete output;
+      ProcessTail(t, output.get(), start, len);
    return bBreakLoop;
 }
 

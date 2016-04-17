@@ -770,7 +770,7 @@ class AudioThread {
 
 // The normal wxThread-derived AudioThread class for all other
 // platforms:
-class AudioThread final : public wxThread {
+class AudioThread /* not final */ : public wxThread {
  public:
    AudioThread():wxThread(wxTHREAD_JOINABLE) {}
    ExitCode Entry() override;
@@ -781,7 +781,7 @@ class AudioThread final : public wxThread {
 #ifdef EXPERIMENTAL_MIDI_OUT
 class MidiThread final : public AudioThread {
  public:
-   virtual ExitCode Entry();
+   ExitCode Entry() override;
 };
 #endif
 
@@ -922,7 +922,7 @@ AudioIO::AudioIO()
               _("There was an error initializing the midi i/o layer.\n");
       errStr += _("You will not be able to play midi.\n\n");
       wxString pmErrStr = LAT1CTOWX(Pm_GetErrorText(pmErr));
-      if (pmErrStr)
+      if (!pmErrStr.empty())
          errStr += _("Error: ") + pmErrStr;
       // XXX: we are in libaudacity, popping up dialogs not allowed!  A
       // long-term solution will probably involve exceptions
@@ -1487,10 +1487,10 @@ void AudioIO::StartMonitoring(double sampleRate)
    mLastPaError = Pa_StartStream( mPortStreamV19 );
 }
 
-int AudioIO::StartStream(WaveTrackArray playbackTracks,
-                         WaveTrackArray captureTracks,
+int AudioIO::StartStream(const WaveTrackArray &playbackTracks,
+                         const WaveTrackArray &captureTracks,
 #ifdef EXPERIMENTAL_MIDI_OUT
-                         NoteTrackArray midiPlaybackTracks,
+                         const NoteTrackArray &midiPlaybackTracks,
 #endif
                          double sampleRate, double t0, double t1,
                          const AudioIOStartStreamOptions &options)
@@ -1668,7 +1668,7 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
 
    bool successMidi = true;
 
-   if(!mMidiPlaybackTracks.IsEmpty()){
+   if(!mMidiPlaybackTracks.empty()){
       successMidi = StartPortMidiStream();
    }
 
@@ -1979,7 +1979,7 @@ PmTimestamp MidiTime(void *info)
 void AudioIO::PrepareMidiIterator(bool send, double offset)
 {
    int i;
-   int nTracks = mMidiPlaybackTracks.GetCount();
+   int nTracks = mMidiPlaybackTracks.size();
    // instead of initializing with an Alg_seq, we use begin_seq()
    // below to add ALL Alg_seq's.
    mIterator = new Alg_iterator(NULL, false);
@@ -2008,7 +2008,7 @@ void AudioIO::PrepareMidiIterator(bool send, double offset)
 bool AudioIO::StartPortMidiStream()
 {
    int i;
-   int nTracks = mMidiPlaybackTracks.GetCount();
+   int nTracks = mMidiPlaybackTracks.size();
    // Only start MIDI stream if there is an open track
    if (nTracks == 0)
       return false;
@@ -2232,7 +2232,7 @@ void AudioIO::StopStream()
       mIterator->end();
 
       // set in_use flags to false
-      int nTracks = mMidiPlaybackTracks.GetCount();
+      int nTracks = mMidiPlaybackTracks.size();
       for (int i = 0; i < nTracks; i++) {
          NoteTrack *t = mMidiPlaybackTracks[i];
          Alg_seq_ptr seq = t->GetSequence();
@@ -2857,7 +2857,8 @@ MidiThread::ExitCode MidiThread::Entry()
                                  gAudioIO->mMidiPlaySpeed + gAudioIO->mT0;
 
             gAudioIO->mMidiOutputComplete =
-               (!gAudioIO->mPlayLooped && timeAtSpeed >= gAudioIO->mT1 + 0.220);
+               (gAudioIO->mPlayMode == gAudioIO->PLAY_STRAIGHT && // PRL:  what if scrubbing?
+                timeAtSpeed >= gAudioIO->mT1 + 0.220);
             // !gAudioIO->mNextEvent);
          }
       }
@@ -3527,7 +3528,7 @@ void AudioIO::OutputEvent()
    // all notes off on all channels"
    if (mNextEvent == &gAllNotesOff) {
       AllNotesOff();
-      if (mPlayLooped) {
+      if (mPlayMode == gAudioIO->PLAY_LOOPED) {
          // jump back to beginning of loop
          mMidiLoopOffset += (mT1 - mT0);
          PrepareMidiIterator(false, mMidiLoopOffset);
@@ -3667,14 +3668,14 @@ bool AudioIO::SetHasSolo(bool hasSolo)
 void AudioIO::FillMidiBuffers()
 {
    bool hasSolo = false;
-   int numPlaybackTracks = gAudioIO->mPlaybackTracks->GetCount();
+   int numPlaybackTracks = gAudioIO->mPlaybackTracks->size();
    int t;
    for(t = 0; t < numPlaybackTracks; t++ )
-      if( gAudioIO->mPlaybackTracks[t]->GetSolo() ) {
+      if( (*gAudioIO->mPlaybackTracks)[t]->GetSolo() ) {
          hasSolo = true;
          break;
       }
-   int numMidiPlaybackTracks = gAudioIO->mMidiPlaybackTracks.GetCount();
+   int numMidiPlaybackTracks = gAudioIO->mMidiPlaybackTracks.size();
    for(t = 0; t < numMidiPlaybackTracks; t++ )
       if( gAudioIO->mMidiPlaybackTracks[t]->GetSolo() ) {
          hasSolo = true;
@@ -3698,7 +3699,7 @@ void AudioIO::FillMidiBuffers()
          // buffer, the cursor tends to jump back to mT0 early.
          // Therefore, if we are in loop mode, and if mTime < mT0,
          // we must not be at the end of the loop yet.
-         if (mPlayLooped && trackTime < mT0) {
+         if (mPlayMode == gAudioIO->PLAY_LOOPED && trackTime < mT0) {
             trackTime += (mT1 - mT0);
          }
          // mTime is shared with another thread so we stored
@@ -4142,7 +4143,7 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
             if( (*gAudioIO->mPlaybackTracks)[t]->GetSolo() )
                numSolo++;
 #ifdef EXPERIMENTAL_MIDI_OUT
-         int numMidiPlaybackTracks = gAudioIO->mMidiPlaybackTracks.GetCount();
+         int numMidiPlaybackTracks = gAudioIO->mMidiPlaybackTracks.size();
          for( t = 0; t < numMidiPlaybackTracks; t++ )
             if( gAudioIO->mMidiPlaybackTracks[t]->GetSolo() )
                numSolo++;

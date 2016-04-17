@@ -239,8 +239,6 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    void AddImportedTracks(const wxString &fileName,
                           TrackHolders &&newTracks);
 
-   void LockAllBlocks();
-   void UnlockAllBlocks();
    bool Save(bool overwrite = true, bool fromSaveAs = false, bool bWantSaveCompressed = false);
    bool SaveAs(bool bWantSaveCompressed = false);
    bool SaveAs(const wxString & newFileName, bool bWantSaveCompressed = false, bool addToHistory = true);
@@ -249,7 +247,7 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    #endif
    void Clear();
 
-   wxString GetFileName() { return mFileName; }
+   const wxString &GetFileName() { return mFileName; }
    bool GetDirty() { return mDirty; }
    void SetProjectTitle();
 
@@ -282,6 +280,9 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    bool IsProjectSaved();
 
    bool ProjectHasTracks();
+
+   // Routine to estimate how many minutes of recording time are left on disk
+   int GetEstimatedRecordingMinsLeftOnDisk();
 
 #include "Menus.h"
 
@@ -609,8 +610,10 @@ public:
    Meter *mPlaybackMeter{};
    Meter *mCaptureMeter{};
 
+   std::unique_ptr<ToolManager> mToolManager;
+
  public:
-    ToolManager *mToolManager{};
+   ToolManager *GetToolManager() { return mToolManager.get(); }
    bool mShowSplashScreen;
    wxString mHelpPref;
    wxString mSoloPref;
@@ -672,9 +675,6 @@ public:
    // Last effect applied to this project
    PluginID mLastEffect{};
    
-   // The screenshot class needs to access internals
-   friend class ScreenshotCommand;
-
    wxRect mNormalizedWindowState;
 
    //flag for cancellation of timer record.

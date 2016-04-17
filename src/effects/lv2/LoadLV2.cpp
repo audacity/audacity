@@ -56,7 +56,8 @@ Functions that find and load all LV2 plugins on the system.
 DECLARE_MODULE_ENTRY(AudacityModule)
 {
    // Create and register the importer
-   return new LV2EffectsModule(moduleManager, path);
+   // Trust the module manager not to leak this
+   return safenew LV2EffectsModule(moduleManager, path);
 }
 
 // ============================================================================
@@ -266,22 +267,22 @@ bool LV2EffectsModule::IsPluginValid(const wxString & path)
 
 IdentInterface *LV2EffectsModule::CreateInstance(const wxString & path)
 {
+   // Acquires a resource for the application.
    const LilvPlugin *plug = GetPlugin(path);
    if (!plug)
    {
       return NULL;
    }
 
-   return new LV2Effect(plug);
+   // Safety of this depends on complementary calls to DeleteInstance on the module manager side.
+   return safenew LV2Effect(plug);
 }
 
 void LV2EffectsModule::DeleteInstance(IdentInterface *instance)
 {
-   LV2Effect *effect = dynamic_cast<LV2Effect *>(instance);
-   if (effect)
-   {
-      delete effect;
-   }
+   std::unique_ptr < LV2Effect > {
+      dynamic_cast<LV2Effect *>(instance)
+   };
 }
 
 // ============================================================================

@@ -35,7 +35,8 @@ UndoManager
 
 #include "UndoManager.h"
 
-WX_DECLARE_HASH_SET(BlockFile *, wxPointerHash, wxPointerEqual, Set );
+using ConstBlockFilePtr = const BlockFile*;
+WX_DECLARE_HASH_SET(ConstBlockFilePtr, wxPointerHash, wxPointerEqual, Set );
 
 struct UndoStackElem {
 
@@ -98,9 +99,9 @@ void UndoManager::CalculateSpaceUsage()
          {
             // Scan all blockfiles within current clip
             BlockArray *blocks = it->GetData()->GetSequenceBlockArray();
-            for (size_t b = 0, cnt = blocks->size(); b < cnt; b++)
+            for (const auto &block : *blocks)
             {
-               BlockFile *file = (*blocks)[b].f;
+               BlockFile *file = block.f;
 
                // Accumulate space used by the file if the file didn't exist
                // in the previous level

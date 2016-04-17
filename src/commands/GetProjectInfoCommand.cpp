@@ -39,9 +39,9 @@ void GetProjectInfoCommandType::BuildSignature(CommandSignature &signature)
    signature.AddParameter(wxT("Type"), wxT("Name"), infoTypeValidator);
 }
 
-Command *GetProjectInfoCommandType::Create(CommandOutputTarget *target)
+CommandHolder GetProjectInfoCommandType::Create(std::unique_ptr<CommandOutputTarget> &&target)
 {
-   return new GetProjectInfoCommand(*this, target);
+   return std::make_shared<GetProjectInfoCommand>(*this, std::move(target));
 }
 
 

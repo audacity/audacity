@@ -16,6 +16,7 @@
 
 #include "Audacity.h"
 
+#include "MemoryX.h"
 #include <wx/app.h>
 #include <wx/cmdline.h>
 #include <wx/dir.h>
@@ -100,6 +101,7 @@ class BlockFile;
 class AudacityApp final : public wxApp {
  public:
    AudacityApp();
+   ~AudacityApp();
    bool OnInit(void) override;
    int OnExit(void) override;
    void OnFatalException() override;
@@ -140,7 +142,7 @@ class AudacityApp final : public wxApp {
      * ShouldShowMissingAliasedFileWarning can be called to determine
      * if the user should be notified
      */
-   void MarkAliasedFilesMissingWarning(BlockFile *b);
+   void MarkAliasedFilesMissingWarning(const BlockFile *b);
 
    /** \brief Changes the behavior of missing aliased blockfiles warnings
      */
@@ -207,7 +209,7 @@ class AudacityApp final : public wxApp {
    wxTimer mTimer;
 
    bool                 m_aliasMissingWarningShouldShow;
-   BlockFile           *m_LastMissingBlockFile;
+   const BlockFile     *m_LastMissingBlockFile;
 
    ODLock               m_LastMissingBlockFileLock;
 
@@ -217,7 +219,7 @@ class AudacityApp final : public wxApp {
    bool InitTempDir();
    bool CreateSingleInstanceChecker(const wxString &dir);
 
-   wxCmdLineParser *ParseCommandLine();
+   std::unique_ptr<wxCmdLineParser> ParseCommandLine();
 
    bool mWindowRectAlreadySaved;
 

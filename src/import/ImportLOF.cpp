@@ -113,7 +113,7 @@ public:
 
    wxString GetPluginStringID() { return wxT("lof"); }
    wxString GetPluginFormatDescription();
-   ImportFileHandle *Open(const wxString &Filename) override;
+   std::unique_ptr<ImportFileHandle> Open(const wxString &Filename) override;
 };
 
 
@@ -130,7 +130,11 @@ public:
 
    wxInt32 GetStreamCount(){ return 1; }
 
-   wxArrayString *GetStreamInfo(){ return NULL; }
+   const wxArrayString &GetStreamInfo() override
+   {
+      static wxArrayString empty;
+      return empty;
+   }
 
    void SetStreamUsage(wxInt32 WXUNUSED(StreamID), bool WXUNUSED(Use)){}
 
@@ -141,7 +145,7 @@ private:
    void doScrollOffset();
 
    wxTextFile *mTextFile;
-   wxFileName *mLOFFileName;  /**< The name of the LOF file, which is used to
+   wxFileName mLOFFileName;  /**< The name of the LOF file, which is used to
                                 interpret relative paths in it */
    AudacityProject *mProject;
 
@@ -160,9 +164,9 @@ private:
 LOFImportFileHandle::LOFImportFileHandle(const wxString & name, wxTextFile *file)
 :  ImportFileHandle(name),
    mTextFile(file)
+   , mLOFFileName{name}
 {
    mProject = GetActiveProject();
-   mLOFFileName = new wxFileName(name);
    windowCalledOnce = false;
    callDurationFactor = false;
    durationFactor = 1;
@@ -181,12 +185,12 @@ wxString LOFImportPlugin::GetPluginFormatDescription()
     return DESC;
 }
 
-ImportFileHandle *LOFImportPlugin::Open(const wxString &filename)
+std::unique_ptr<ImportFileHandle> LOFImportPlugin::Open(const wxString &filename)
 {
    // Check if it is a binary file
    wxFile binaryFile;
    if (!binaryFile.Open(filename))
-      return NULL; // File not found
+      return nullptr; // File not found
 
    char buf[BINARY_FILE_CHECK_BUFFER_SIZE];
    int count = binaryFile.Read(buf, BINARY_FILE_CHECK_BUFFER_SIZE);
@@ -199,7 +203,7 @@ ImportFileHandle *LOFImportPlugin::Open(const wxString &filename)
       {
          // Assume it is a binary file
          binaryFile.Close();
-         return NULL;
+         return nullptr;
       }
    }
 
@@ -213,10 +217,10 @@ ImportFileHandle *LOFImportPlugin::Open(const wxString &filename)
    if (!file->IsOpened())
    {
       delete file;
-      return NULL;
+      return nullptr;
    }
 
-   return new LOFImportFileHandle(filename, file);
+   return std::make_unique<LOFImportFileHandle>(filename, file);
 }
 
 wxString LOFImportFileHandle::GetFileDescription()
@@ -370,7 +374,7 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
       // If path is relative, make absolute path from LOF path
       if(!wxIsAbsolutePath(targetfile)) {
          wxFileName fName(targetfile);
-         fName.Normalize(wxPATH_NORM_ALL, mLOFFileName->GetPath(wxPATH_GET_VOLUME | wxPATH_GET_SEPARATOR));
+         fName.Normalize(wxPATH_NORM_ALL, mLOFFileName.GetPath(wxPATH_GET_VOLUME | wxPATH_GET_SEPARATOR));
          if(fName.FileExists()) {
             targetfile = fName.GetFullPath();
          }
@@ -502,8 +506,5 @@ LOFImportFileHandle::~LOFImportFileHandle()
       if (mTextFile->IsOpened())
          mTextFile->Close();
       delete mTextFile;
-   }
-   if(mLOFFileName) {
-      delete mLOFFileName;
    }
 }

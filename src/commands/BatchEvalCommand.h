@@ -31,15 +31,15 @@ class BatchEvalCommandType final : public CommandType
 public:
    wxString BuildName() override;
    void BuildSignature(CommandSignature &signature) override;
-   Command *Create(CommandOutputTarget *target) override;
+   CommandHolder Create(std::unique_ptr<CommandOutputTarget> &&target) override;
 };
 
 class BatchEvalCommand final : public CommandImplementation
 {
 public:
    BatchEvalCommand(CommandType &type,
-                    CommandOutputTarget *target)
-      : CommandImplementation(type, target)
+                    std::unique_ptr<CommandOutputTarget> &&target)
+      : CommandImplementation(type, std::move(target))
    { }
 
    virtual ~BatchEvalCommand();

@@ -123,7 +123,7 @@ void AutoRecoveryDialog::PopulateList()
    int i = 0;
    for (bool c = dir.GetFirst(&filename, wxT("*.autosave"), wxDIR_FILES);
         c; c = dir.GetNext(&filename))
-      mFileList->InsertItem(i++, wxFileName(filename).GetName());
+        mFileList->InsertItem(i++, wxFileName{ filename }.GetName());
 
    mFileList->SetColumnWidth(0, wxLIST_AUTOSIZE);
 }
@@ -685,10 +685,11 @@ bool AutoSaveFile::Decode(const wxString & fileName)
    char ident[sizeof(AutoSaveIdent)];
    size_t len = strlen(AutoSaveIdent);
 
-   wxFileName fn(fileName);
+   const wxFileName fn(fileName);
+   const wxString fnPath{fn.GetFullPath()};
    wxFFile file;
 
-   if (!file.Open(fn.GetFullPath(), wxT("rb")))
+   if (!file.Open(fnPath, wxT("rb")))
    {
       return false;
    }
@@ -703,7 +704,7 @@ bool AutoSaveFile::Decode(const wxString & fileName)
       file.Close();
 
       // Add </project> tag, if necessary
-      if (!file.Open(fn.GetFullPath(), wxT("r+b")))
+      if (!file.Open(fnPath, wxT("r+b")))
       {
          // Really shouldn't happen, but let the caller deal with it
          return false;
@@ -749,7 +750,7 @@ bool AutoSaveFile::Decode(const wxString & fileName)
    file.Close();
 
    // Decode to a temporary file to preserve the orignal.
-   wxString tempName = fn.CreateTempFileName(fn.GetFullPath());
+   wxString tempName = fn.CreateTempFileName(fnPath);
    bool opened = false;
 
    XMLFileWriter out;

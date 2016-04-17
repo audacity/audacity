@@ -103,7 +103,7 @@ public:
    // Open the given file, returning true if it is in a recognized
    // format, false otherwise.  This puts the importer into the open
    // state.
-   virtual ImportFileHandle *Open(const wxString &Filename) = 0;
+   virtual std::unique_ptr<ImportFileHandle> Open(const wxString &Filename) = 0;
 
    virtual ~ImportPlugin() { }
 
@@ -135,11 +135,11 @@ public:
    // identify the filename being imported.
    void CreateProgress()
    {
-      wxFileName f(mFilename);
+      wxFileName ff(mFilename);
       wxString title;
 
       title.Printf(_("Importing %s"), GetFileDescription().c_str());
-      mProgress.create(title, f.GetFullName());
+      mProgress.create(title, ff.GetFullName());
    }
 
    // This is similar to GetImporterDescription, but if possible the
@@ -161,7 +161,7 @@ public:
    virtual wxInt32 GetStreamCount() = 0;
 
    // Return stream descriptions list
-   virtual wxArrayString *GetStreamInfo() = 0;
+   virtual const wxArrayString &GetStreamInfo() = 0;
 
    // Set stream "import/don't import" flag
    virtual void SetStreamUsage(wxInt32 StreamID, bool Use) = 0;

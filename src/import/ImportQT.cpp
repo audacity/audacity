@@ -111,7 +111,7 @@ class QTImportPlugin final : public ImportPlugin
    wxString GetPluginStringID() { return wxT("quicktime"); }
 
    wxString GetPluginFormatDescription();
-   ImportFileHandle *Open(const wxString & Filename);
+   std::unique_ptr<ImportFileHandle> Open(const wxString & Filename) override;
 
  private:
    bool mInitialized;
@@ -142,9 +142,10 @@ class QTImportFileHandle final : public ImportFileHandle
       return 1;
    }
 
-   wxArrayString *GetStreamInfo()
+   const wxArrayString &GetStreamInfo() override
    {
-      return NULL;
+      static wxArrayString empty;
+      return empty;
    }
 
    void SetStreamUsage(wxInt32 StreamID, bool Use)
@@ -172,7 +173,7 @@ wxString QTImportPlugin::GetPluginFormatDescription()
    return DESC;
 }
 
-ImportFileHandle *QTImportPlugin::Open(const wxString & Filename)
+std::unique_ptr<ImportFileHandle> QTImportPlugin::Open(const wxString & Filename)
 {
    OSErr err;
    FSRef inRef;
@@ -190,12 +191,12 @@ ImportFileHandle *QTImportPlugin::Open(const wxString & Filename)
 #endif
 
    if (err != noErr) {
-      return NULL;
+      return nullptr;
    }
 
    err = QTNewDataReferenceFromFSRef(&inRef, 0, &dataRef, &dataRefType);
    if (err != noErr) {
-      return NULL;
+      return nullptr;
    }
 
    // instantiate the movie
@@ -206,10 +207,10 @@ ImportFileHandle *QTImportPlugin::Open(const wxString & Filename)
                              dataRefType);
    DisposeHandle(dataRef);
    if (err != noErr) {
-      return NULL;
+      return nullptr;
    }
 
-   return new QTImportFileHandle(Filename, theMovie);
+   return std::make_unique<QTImportFileHandle>(Filename, theMovie);
 }
 
 

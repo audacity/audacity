@@ -70,17 +70,19 @@ public:
    virtual bool Apply(CommandExecutionContext context) = 0;
 };
 
+using CommandHolder = std::shared_ptr<Command>;
+
 // Command which wraps another command
 class DecoratedCommand /* not final */ : public Command
 {
 protected:
-   Command *mCommand;
+   CommandHolder mCommand;
 public:
    void Progress(double completed) override;
    void Status(const wxString &message) override;
    void Error(const wxString &message) override;
 
-   DecoratedCommand(Command *cmd)
+   DecoratedCommand(const CommandHolder &cmd)
       : mCommand(cmd)
    {
       wxASSERT(cmd != NULL);
@@ -96,7 +98,7 @@ public:
 class ApplyAndSendResponse final : public DecoratedCommand
 {
 public:
-   ApplyAndSendResponse(Command *cmd)
+   ApplyAndSendResponse(const CommandHolder &cmd)
       : DecoratedCommand(cmd)
    { }
 
@@ -114,7 +116,7 @@ private:
    bool Valid(const wxString &paramName, const wxVariant &paramValue);
 
 protected:
-   CommandOutputTarget *mOutput;
+   std::unique_ptr<CommandOutputTarget> mOutput;
 
    // Convenience methods for allowing subclasses to access parameters
    void TypeCheck(const wxString &typeName,
@@ -135,7 +137,7 @@ public:
    /// Constructor should not be called directly; only by a factory which
    /// ensures name and params are set appropriately for the command.
    CommandImplementation(CommandType &type,
-                         CommandOutputTarget *output);
+                         std::unique_ptr<CommandOutputTarget> &&output);
 
    virtual ~CommandImplementation();
 

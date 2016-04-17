@@ -242,7 +242,7 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
    void GetEnvelopeValues(double *buffer, int bufferLen,
                          double t0, double tstep) const;
    bool GetMinMax(float *min, float *max,
-                  double t0, double t1);
+                  double t0, double t1) const;
    bool GetRMS(float *rms, double t0, double t1);
 
    //
@@ -285,9 +285,32 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
    // doing a copy and paste between projects.
    //
 
-   bool Lock();
+   bool Lock() const;
+   bool Unlock() const;
+
+   struct WaveTrackLockDeleter {
+      inline void operator () (const WaveTrack *pTrack) { pTrack->Unlock(); }
+   };
+   using LockerBase = std::unique_ptr<
+      const WaveTrack, WaveTrackLockDeleter
+   >;
+
+   // RAII object for locking.
+   struct Locker : private LockerBase
+   {
+      friend LockerBase;
+      Locker (const WaveTrack *pTrack)
+         : LockerBase{ pTrack }
+      { pTrack->Lock(); }
+      Locker(Locker &&that) : LockerBase{std::move(that)} {}
+      Locker &operator= (Locker &&that) {
+         (LockerBase&)(*this) = std::move(that);
+         return *this;
+      }
+   };
+
    bool CloseLock(); //similar to Lock but should be called when the project closes.
-   bool Unlock();
+   // not balanced by unlocking calls.
 
    /** @brief Convert correctly between an (absolute) time in seconds and a number of samples.
     *

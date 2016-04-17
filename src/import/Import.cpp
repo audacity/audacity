@@ -363,8 +363,6 @@ bool Importer::Import(const wxString &fName,
    AudacityProject *pProj = GetActiveProject();
    pProj->mbBusyImporting = true;
 
-   ImportFileHandle *inFile = NULL;
-
    wxString extension = fName.AfterLast(wxT('.'));
 
    // This list is used to call plugins in correct order
@@ -533,18 +531,17 @@ bool Importer::Import(const wxString &fName,
       ImportPlugin *plugin = importPluginNode->GetData();
       // Try to open the file with this plugin (probe it)
       wxLogMessage(wxT("Opening with %s"),plugin->GetPluginStringID().c_str());
-      inFile = plugin->Open(fName);
+      auto inFile = plugin->Open(fName);
       if ( (inFile != NULL) && (inFile->GetStreamCount() > 0) )
       {
          wxLogMessage(wxT("Open(%s) succeeded"),(const char *) fName.c_str());
          // File has more than one stream - display stream selector
          if (inFile->GetStreamCount() > 1)
          {
-            ImportStreamDialog ImportDlg(inFile, NULL, -1, _("Select stream(s) to import"));
+            ImportStreamDialog ImportDlg(inFile.get(), NULL, -1, _("Select stream(s) to import"));
 
             if (ImportDlg.ShowModal() == wxID_CANCEL)
             {
-               delete inFile;
                pProj->mbBusyImporting = false;
                return false;
             }
@@ -556,8 +553,6 @@ bool Importer::Import(const wxString &fName,
          int res;
 
          res = inFile->Import(trackFactory, tracks, tags);
-
-         delete inFile;
 
          if (res == eProgressSuccess || res == eProgressStopped)
          {
@@ -762,8 +757,8 @@ wxDialog( parent, id, title, position, size, style | wxRESIZE_BORDER )
       auto uVertSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
       vertSizer = uVertSizer.get();
 
-      wxArrayString *choices = mFile->GetStreamInfo();
-      StreamList = safenew wxListBox(this, -1, wxDefaultPosition, wxDefaultSize, *choices, wxLB_EXTENDED | wxLB_ALWAYS_SB);
+      auto choices = mFile->GetStreamInfo();
+      StreamList = safenew wxListBox(this, -1, wxDefaultPosition, wxDefaultSize, choices, wxLB_EXTENDED | wxLB_ALWAYS_SB);
 
       vertSizer->Add(StreamList, 1, wxEXPAND | wxALIGN_LEFT | wxALL, 5);
 

@@ -284,7 +284,7 @@ static bool ConvertLegacyTrack(wxTextFile *f, XMLFileWriter &xmlFile)
       return false;
 }
 
-bool ConvertLegacyProjectFile(wxFileName filename)
+bool ConvertLegacyProjectFile(const wxFileName &filename)
 {
    wxTextFile f;
    XMLFileWriter xmlFile;

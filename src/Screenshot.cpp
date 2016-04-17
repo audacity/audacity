@@ -9,6 +9,7 @@
 *******************************************************************/
 
 #include "Screenshot.h"
+#include "MemoryX.h"
 #include "commands/ScreenshotCommand.h"
 #include "commands/CommandTargets.h"
 #include "commands/CommandDirectory.h"
@@ -96,7 +97,7 @@ class ScreenFrame final : public wxFrame
    void OnCaptureFirstTrack(wxCommandEvent & event);
    void OnCaptureSecondTrack(wxCommandEvent & event);
 
-   ScreenshotCommand *CreateCommand();
+   std::unique_ptr<ScreenshotCommand> CreateCommand();
 
    wxCheckBox *mDelayCheckBox;
    wxTextCtrl *mDirectoryTextBox;
@@ -104,7 +105,7 @@ class ScreenFrame final : public wxFrame
    wxToggleButton *mWhite;
    wxStatusBar *mStatus;
 
-   ScreenshotCommand *mCommand;
+   std::unique_ptr<ScreenshotCommand> mCommand;
    CommandExecutionContext mContext;
 
    DECLARE_EVENT_TABLE()
@@ -140,20 +141,20 @@ class ScreenFrameTimer final : public wxTimer
                     wxEvent & event)
    {
       screenFrame = frame;
-      evt = event.Clone();
+      evt.reset(event.Clone());
    }
 
    void Notify() override
    {
+      // Process timer notification just once, then destroy self
       evt->SetEventObject(NULL);
       screenFrame->ProcessEvent(*evt);
-      delete evt;
       delete this;
    }
 
  private:
    ScreenFrame *screenFrame;
-   wxEvent *evt;
+   std::unique_ptr<wxEvent> evt;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -252,26 +253,34 @@ BEGIN_EVENT_TABLE(ScreenFrame, wxFrame)
 END_EVENT_TABLE();
 
 // Must not be called before CreateStatusBar!
-ScreenshotCommand *ScreenFrame::CreateCommand()
+std::unique_ptr<ScreenshotCommand> ScreenFrame::CreateCommand()
 {
    wxASSERT(mStatus != NULL);
-   CommandOutputTarget *output =
-      new CommandOutputTarget(new NullProgressTarget(),
-                              new StatusBarTarget(*mStatus),
-                              new MessageBoxTarget());
+   auto output =
+      std::make_unique<CommandOutputTarget>(std::make_unique<NullProgressTarget>(),
+                              std::make_shared<StatusBarTarget>(*mStatus),
+                              std::make_shared<MessageBoxTarget>());
    CommandType *type = CommandDirectory::Get()->LookUp(wxT("Screenshot"));
    wxASSERT_MSG(type != NULL, wxT("Screenshot command doesn't exist!"));
-   return new ScreenshotCommand(*type, output, this);
+   return std::make_unique<ScreenshotCommand>(*type, std::move(output), this);
 }
 
 ScreenFrame::ScreenFrame(wxWindow * parent, wxWindowID id)
 :  wxFrame(parent, id, _("Screen Capture Frame"),
            wxDefaultPosition, wxDefaultSize,
+
 #if !defined(__WXMSW__)
-           wxFRAME_TOOL_WINDOW|
+
+   #if !defined(__WXMAC__) // bug1358
+           wxFRAME_TOOL_WINDOW |
+   #endif
+
 #else
+
            wxSTAY_ON_TOP|
+
 #endif
+
            wxSYSTEM_MENU|wxCAPTION|wxCLOSE_BOX),
    mContext(&wxGetApp(), GetActiveProject())
 {
@@ -287,12 +296,11 @@ ScreenFrame::ScreenFrame(wxWindow * parent, wxWindowID id)
    // Note that the audio could be playing.
    // The monitoring will switch off temporarily
    // because we've switched monitor mid play.
-   mContext.GetProject()->mToolManager->Reset();
+   mContext.GetProject()->GetToolManager()->Reset();
 }
 
 ScreenFrame::~ScreenFrame()
 {
-   delete mCommand;
 }
 
 void ScreenFrame::Populate()
@@ -463,7 +471,8 @@ bool ScreenFrame::ProcessEvent(wxEvent & e)
        e.GetEventType() == wxEVT_COMMAND_BUTTON_CLICKED &&
        id >= IdAllDelayedEvents && id <= IdLastDelayedEvent &&
        e.GetEventObject() != NULL) {
-      ScreenFrameTimer *timer = new ScreenFrameTimer(this, e);
+      // safenew because it's a one-shot that deletes itself
+      ScreenFrameTimer *timer = safenew ScreenFrameTimer(this, e);
       timer->Start(5000, true);
       return true;
    }
@@ -546,7 +555,7 @@ void ScreenFrame::SizeMainWindow(int w, int h)
 
    mContext.GetProject()->Maximize(false);
    mContext.GetProject()->SetSize(16, 16 + top, w, h);
-   mContext.GetProject()->mToolManager->Reset();
+   mContext.GetProject()->GetToolManager()->Reset();
 }
 
 void ScreenFrame::OnMainWindowSmall(wxCommandEvent & WXUNUSED(event))

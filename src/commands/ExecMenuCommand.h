@@ -28,15 +28,15 @@ class ExecMenuCommandType final : public CommandType
 public:
    wxString BuildName() override;
    void BuildSignature(CommandSignature &signature) override;
-   Command *Create(CommandOutputTarget *target) override;
+   CommandHolder Create(std::unique_ptr<CommandOutputTarget> &&target) override;
 };
 
 class ExecMenuCommand final : public CommandImplementation
 {
 public:
    ExecMenuCommand(CommandType &type,
-                   CommandOutputTarget *target)
-      : CommandImplementation(type, target)
+                   std::unique_ptr<CommandOutputTarget> &&target)
+      : CommandImplementation(type, std::move(target))
    { }
    virtual ~ExecMenuCommand() { }
    bool Apply(CommandExecutionContext context) override;

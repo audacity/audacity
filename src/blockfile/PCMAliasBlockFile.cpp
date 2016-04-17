@@ -8,6 +8,9 @@
 
 **********************************************************************/
 
+#include "../Audacity.h"
+#include "PCMAliasBlockFile.h"
+
 #include <wx/file.h>
 #include <wx/utils.h>
 #include <wx/wxchar.h>
@@ -15,7 +18,6 @@
 
 #include <sndfile.h>
 
-#include "PCMAliasBlockFile.h"
 #include "../FileFormats.h"
 #include "../Internat.h"
 #include "../MemoryX.h"
@@ -26,22 +28,22 @@
 extern AudioIO *gAudioIO;
 
 PCMAliasBlockFile::PCMAliasBlockFile(
-      wxFileName fileName,
-      wxFileName aliasedFileName,
+      wxFileNameWrapper &&fileName,
+      wxFileNameWrapper &&aliasedFileName,
       sampleCount aliasStart,
       sampleCount aliasLen, int aliasChannel)
-: AliasBlockFile(fileName, aliasedFileName,
+: AliasBlockFile(std::move(fileName), std::move(aliasedFileName),
                  aliasStart, aliasLen, aliasChannel)
 {
    AliasBlockFile::WriteSummary();
 }
 
 PCMAliasBlockFile::PCMAliasBlockFile(
-      wxFileName fileName,
-      wxFileName aliasedFileName,
+      wxFileNameWrapper&& fileName,
+      wxFileNameWrapper&& aliasedFileName,
       sampleCount aliasStart,
       sampleCount aliasLen, int aliasChannel,bool writeSummary)
-: AliasBlockFile(fileName, aliasedFileName,
+: AliasBlockFile(std::move(fileName), std::move(aliasedFileName),
                  aliasStart, aliasLen, aliasChannel)
 {
    if(writeSummary)
@@ -49,12 +51,12 @@ PCMAliasBlockFile::PCMAliasBlockFile(
 }
 
 PCMAliasBlockFile::PCMAliasBlockFile(
-      wxFileName existingSummaryFileName,
-      wxFileName aliasedFileName,
+      wxFileNameWrapper &&existingSummaryFileName,
+      wxFileNameWrapper &&aliasedFileName,
       sampleCount aliasStart,
       sampleCount aliasLen, int aliasChannel,
       float min, float max, float rms)
-: AliasBlockFile(existingSummaryFileName, aliasedFileName,
+: AliasBlockFile(std::move(existingSummaryFileName), std::move(aliasedFileName),
                  aliasStart, aliasLen,
                  aliasChannel, min, max, rms)
 {
@@ -72,7 +74,7 @@ PCMAliasBlockFile::~PCMAliasBlockFile()
 /// @param start  The offset within the block to begin reading
 /// @param len    The number of samples to read
 int PCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
-                                sampleCount start, sampleCount len)
+                                sampleCount start, sampleCount len) const
 {
    SF_INFO info;
 
@@ -82,7 +84,7 @@ int PCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
    }
 
    wxFile f;   // will be closed when it goes out of scope
-   SNDFILE *sf = NULL;
+   SFFile sf;
    {
       Maybe<wxLogNull> silence{};
       if (mSilentAliasLog)
@@ -95,13 +97,11 @@ int PCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
             // Even though there is an sf_open() that takes a filename, use the one that
             // takes a file descriptor since wxWidgets can open a file with a Unicode name and
             // libsndfile can't (under Windows).
-            ODManager::LockLibSndFileMutex();
-            sf = sf_open_fd(f.fd(), SFM_READ, &info, FALSE);
-            ODManager::UnlockLibSndFileMutex();
+            sf.reset(SFCall<SNDFILE*>(sf_open_fd, f.fd(), SFM_READ, &info, FALSE));
          }
       }
 
-      if (!sf){
+      if (!sf) {
          memset(data, 0, SAMPLE_SIZE(format)*len);
          silence.reset();
          mSilentAliasLog = TRUE;
@@ -114,9 +114,7 @@ int PCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
    }
    mSilentAliasLog=FALSE;
 
-   ODManager::LockLibSndFileMutex();
-   sf_seek(sf, mAliasStart + start, SEEK_SET);
-   ODManager::UnlockLibSndFileMutex();
+   SFCall<sf_count_t>(sf_seek, sf.get(), mAliasStart + start, SEEK_SET);
    SampleBuffer buffer(len * info.channels, floatSample);
 
    int framesRead = 0;
@@ -127,9 +125,7 @@ int PCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
       // and the calling method wants 16-bit data, go ahead and
       // read 16-bit data directly.  This is a pretty common
       // case, as most audio files are 16-bit.
-      ODManager::LockLibSndFileMutex();
-      framesRead = sf_readf_short(sf, (short *)buffer.ptr(), len);
-      ODManager::UnlockLibSndFileMutex();
+      framesRead = SFCall<sf_count_t>(sf_readf_short, sf.get(), (short *)buffer.ptr(), len);
       for (int i = 0; i < framesRead; i++)
          ((short *)data)[i] =
             ((short *)buffer.ptr())[(info.channels * i) + mAliasChannel];
@@ -138,18 +134,13 @@ int PCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
       // Otherwise, let libsndfile handle the conversion and
       // scaling, and pass us normalized data as floats.  We can
       // then convert to whatever format we want.
-      ODManager::LockLibSndFileMutex();
-      framesRead = sf_readf_float(sf, (float *)buffer.ptr(), len);
-      ODManager::UnlockLibSndFileMutex();
+      framesRead = SFCall<sf_count_t>(sf_readf_float, sf.get(), (float *)buffer.ptr(), len);
       float *bufferPtr = &((float *)buffer.ptr())[mAliasChannel];
       CopySamples((samplePtr)bufferPtr, floatSample,
                   (samplePtr)data, format,
                   framesRead, true, info.channels);
    }
 
-   ODManager::LockLibSndFileMutex();
-   sf_close(sf);
-   ODManager::UnlockLibSndFileMutex();
    return framesRead;
 }
 
@@ -157,10 +148,10 @@ int PCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
 /// the summary data to a NEW file.
 ///
 /// @param newFileName The filename to copy the summary data to.
-BlockFile *PCMAliasBlockFile::Copy(wxFileName newFileName)
+BlockFile *PCMAliasBlockFile::Copy(wxFileNameWrapper &&newFileName)
 {
-   BlockFile *newBlockFile = new PCMAliasBlockFile(newFileName,
-                                                   mAliasedFileName, mAliasStart,
+   BlockFile *newBlockFile = new PCMAliasBlockFile(std::move(newFileName),
+                                                   wxFileNameWrapper{mAliasedFileName}, mAliasStart,
                                                    mLen, mAliasChannel,
                                                    mMin, mMax, mRMS);
 
@@ -188,8 +179,8 @@ void PCMAliasBlockFile::SaveXML(XMLWriter &xmlFile)
 // as testing will be done in DirManager::ProjectFSCK().
 BlockFile *PCMAliasBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
 {
-   wxFileName summaryFileName;
-   wxFileName aliasFileName;
+   wxFileNameWrapper summaryFileName;
+   wxFileNameWrapper aliasFileName;
    int aliasStart=0, aliasLen=0, aliasChannel=0;
    float min = 0.0f, max = 0.0f, rms = 0.0f;
    double dblValue;
@@ -256,7 +247,7 @@ BlockFile *PCMAliasBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
       }
    }
 
-   return new PCMAliasBlockFile(summaryFileName, aliasFileName,
+   return new PCMAliasBlockFile(std::move(summaryFileName), std::move(aliasFileName),
                                 aliasStart, aliasLen, aliasChannel,
                                 min, max, rms);
 }

@@ -43,6 +43,8 @@ a certain criterion. This is a base validator which allows anything.
 #ifndef __VALIDATORS__
 #define __VALIDATORS__
 
+#include "../MemoryX.h"
+
 class Validator /* not final */
 {
 private:
@@ -75,9 +77,16 @@ public:
    }
 
    /// This MUST be overridden, to avoid slicing!
-   virtual Validator *GetClone() const
+   using Holder = std::unique_ptr<Validator>;
+   virtual Holder GetClone() const = 0;
+};
+
+class DefaultValidator final : public Validator
+{
+public:
+   virtual Holder GetClone() const
    {
-      return new Validator();
+      return std::make_unique<DefaultValidator>(*this);
    }
 };
 
@@ -112,11 +121,11 @@ public:
       desc += mOptions[optionCount-1];
       return desc;
    }
-   Validator *GetClone() const override
+   Holder GetClone() const override
    {
-      OptionValidator *v = new OptionValidator();
+      auto v = std::make_unique<OptionValidator>();
       v->mOptions = mOptions;
-      return v;
+      return std::move(v);
    }
 };
 
@@ -134,9 +143,9 @@ public:
    {
       return wxT("true/false or 1/0 or yes/no");
    }
-   Validator *GetClone() const override
+   Holder GetClone() const override
    {
-      return new BoolValidator();
+      return std::make_unique<BoolValidator>();
    }
 };
 
@@ -158,9 +167,9 @@ public:
    {
       return wxT("0X101XX101...etc.  where 0=false, 1=true, and X=don't care.  Numbering starts at leftmost = track 0");
    }
-   Validator *GetClone() const override
+   Holder GetClone() const override
    {
-      return new BoolArrayValidator();
+      return std::make_unique<BoolArrayValidator>();
    }
 };
 
@@ -178,9 +187,9 @@ public:
    {
       return wxT("a floating-point number");
    }
-   Validator *GetClone() const override
+   Holder GetClone() const override
    {
-      return new DoubleValidator();
+      return std::make_unique<DoubleValidator>();
    }
 };
 
@@ -203,9 +212,9 @@ public:
    {
       return wxString::Format(wxT("between %f and %f"), mLower, mUpper);
    }
-   Validator *GetClone() const override
+   Holder GetClone() const override
    {
-      return new RangeValidator(mLower, mUpper);
+      return std::make_unique<RangeValidator>(mLower, mUpper);
    }
 };
 
@@ -224,9 +233,9 @@ public:
    {
       return wxT("an integer");
    }
-   Validator *GetClone() const override
+   Holder GetClone() const override
    {
-      return new IntValidator();
+      return std::make_unique<IntValidator>();
    }
 };
 
@@ -234,23 +243,22 @@ public:
 class AndValidator final : public Validator
 {
 private:
-   Validator &v1, &v2;
+   Validator::Holder v1, v2;
 public:
-   AndValidator(Validator *u1, Validator *u2)
-      : v1(*u1), v2(*u2)
+   AndValidator(Validator::Holder &&u1, Validator::Holder &&u2)
+      : v1(std::move(u1)), v2(std::move(u2))
    { }
    bool Validate(const wxVariant &v) override
    {
-      if (!v1.Validate(v)) return false;
-      return v2.Validate(v);
+      return v1->Validate(v) && v2->Validate(v);
    }
    wxString GetDescription() const override
    {
-      return v1.GetDescription() + wxT(" and ") + v2.GetDescription();
+      return v1->GetDescription() + wxT(" and ") + v2->GetDescription();
    }
    Validator *GetClone() const override
    {
-      return new AndValidator(v1.GetClone(), v2.GetClone());
+      return std::make_unique<AndValidator>(v1->GetClone(), v2->GetClone());
    }
 };*/
 

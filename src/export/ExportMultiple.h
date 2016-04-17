@@ -74,7 +74,7 @@ private:
     * @param tags Metadata to include in the file (if possible).
     */
    int DoExport(int channels,
-                 wxFileName name,
+                 const wxFileName &name,
                  bool selectedOnly,
                  double t0,
                  double t1,
@@ -103,7 +103,7 @@ private:
 
 private:
    Exporter mExporter;
-   ExportPluginArray mPlugins;   /**< Array of references to available exporter
+   std::vector<ExportPlugin*> mPlugins;   /**< Array of references to available exporter
                                    plug-ins */
    AudacityProject *mProject;
    TrackList *mTracks;           /**< The list of tracks in the project that is

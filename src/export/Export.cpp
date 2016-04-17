@@ -75,7 +75,6 @@
 //----------------------------------------------------------------------------
 #include <wx/arrimpl.cpp>
 
-WX_DEFINE_USER_EXPORTED_OBJARRAY(ExportPluginArray);
 WX_DEFINE_USER_EXPORTED_OBJARRAY(FormatInfoArray);
 
 ExportPlugin::ExportPlugin()
@@ -110,11 +109,6 @@ int ExportPlugin::AddFormat()
 int ExportPlugin::GetFormatCount()
 {
    return mFormatInfos.Count();
-}
-
-void ExportPlugin::Destroy()
-{
-   delete this;
 }
 
 /**
@@ -243,7 +237,7 @@ wxWindow *ExportPlugin::OptionsCreate(wxWindow *parent, int WXUNUSED(format))
 }
 
 //Create a mixer by computing the time warp factor
-Mixer* ExportPlugin::CreateMixer(const WaveTrackConstArray &inputTracks,
+std::unique_ptr<Mixer> ExportPlugin::CreateMixer(const WaveTrackConstArray &inputTracks,
          const TimeTrack *timeTrack,
          double startTime, double stopTime,
          int numOutChannels, int outBufferSize, bool outInterleaved,
@@ -251,7 +245,7 @@ Mixer* ExportPlugin::CreateMixer(const WaveTrackConstArray &inputTracks,
          bool highQuality, MixerSpec *mixerSpec)
 {
    // MB: the stop time should not be warped, this was a bug.
-   return new Mixer(inputTracks,
+   return std::make_unique<Mixer>(inputTracks,
                   Mixer::WarpOptions(timeTrack),
                   startTime, stopTime,
                   numOutChannels, outBufferSize, outInterleaved,
@@ -299,11 +293,6 @@ Exporter::Exporter()
 
 Exporter::~Exporter()
 {
-   for (size_t i = 0; i < mPlugins.GetCount(); i++) {
-      mPlugins[i]->Destroy();
-   }
-   mPlugins.Clear();
-
    if (mMixerSpec) {
       delete mMixerSpec;
    }
@@ -318,9 +307,9 @@ void Exporter::SetFileDialogTitle( const wxString & DialogTitle )
 int Exporter::FindFormatIndex(int exportindex)
 {
    int c = 0;
-   for (size_t i = 0; i < mPlugins.GetCount(); i++)
+   for (const auto &pPlugin : mPlugins)
    {
-      for (int j = 0; j < mPlugins[i]->GetFormatCount(); j++)
+      for (int j = 0; j < pPlugin->GetFormatCount(); j++)
       {
          if (exportindex == c) return j;
          c++;
@@ -329,12 +318,12 @@ int Exporter::FindFormatIndex(int exportindex)
    return 0;
 }
 
-void Exporter::RegisterPlugin(ExportPlugin *ExportPlugin)
+void Exporter::RegisterPlugin(movable_ptr<ExportPlugin> &&ExportPlugin)
 {
-   mPlugins.Add(ExportPlugin);
+   mPlugins.push_back(std::move(ExportPlugin));
 }
 
-const ExportPluginArray Exporter::GetPlugins()
+const ExportPluginArray &Exporter::GetPlugins()
 {
    return mPlugins;
 }
@@ -399,10 +388,12 @@ bool Exporter::Process(AudacityProject *project, int numChannels,
    mT1 = t1;
    mActualName = mFilename;
 
-   for (size_t i = 0; i < mPlugins.GetCount(); i++) {
-      for (int j = 0; j < mPlugins[i]->GetFormatCount(); j++)
+   int i = -1;
+   for (const auto &pPlugin : mPlugins) {
+      ++i;
+      for (int j = 0; j < pPlugin->GetFormatCount(); j++)
       {
-         if (mPlugins[i]->GetFormat(j).IsSameAs(type, false))
+         if (pPlugin->GetFormat(j).IsSameAs(type, false))
          {
             mFormat = i;
             mSubFormat = j;
@@ -508,15 +499,19 @@ bool Exporter::GetFilename()
 
    mFilterIndex = 0;
 
-   for (size_t i = 0; i < mPlugins.GetCount(); i++) {
-      for (int j = 0; j < mPlugins[i]->GetFormatCount(); j++)
-      {
-         maskString += mPlugins[i]->GetMask(j) + wxT("|");
-         if (mPlugins[i]->GetFormat(j) == defaultFormat) {
-            mFormat = i;
-            mSubFormat = j;
+   {
+      int i = -1;
+      for (const auto &pPlugin : mPlugins) {
+         ++i;
+         for (int j = 0; j < pPlugin->GetFormatCount(); j++)
+         {
+            maskString += pPlugin->GetMask(j) + wxT("|");
+            if (mPlugins[i]->GetFormat(j) == defaultFormat) {
+               mFormat = i;
+               mSubFormat = j;
+            }
+            if (mFormat == -1) mFilterIndex++;
          }
-         if (mFormat == -1) mFilterIndex++;
       }
    }
    if (mFormat == -1)
@@ -561,9 +556,11 @@ bool Exporter::GetFilename()
       mFilterIndex = fd.GetFilterIndex();
 
       int c = 0;
-      for (size_t i = 0; i < mPlugins.GetCount(); i++)
+      int i = -1;
+      for (const auto &pPlugin : mPlugins)
       {
-         for (int j = 0; j < mPlugins[i]->GetFormatCount(); j++)
+         ++i;
+         for (int j = 0; j < pPlugin->GetFormatCount(); j++)
          {
             if (mFilterIndex == c)
             {
@@ -633,10 +630,9 @@ bool Exporter::GetFilename()
       overwritingMissingAlias = false;
       for (size_t i = 0; i < gAudacityProjects.GetCount(); i++) {
          AliasedFileArray aliasedFiles;
-         FindDependencies(gAudacityProjects[i], &aliasedFiles);
-         size_t j;
-         for (j = 0; j< aliasedFiles.GetCount(); j++) {
-            if (mFilename.GetFullPath() == aliasedFiles[j].mFileName.GetFullPath() &&
+         FindDependencies(gAudacityProjects[i], aliasedFiles);
+         for (const auto &aliasedFile : aliasedFiles) {
+            if (mFilename.GetFullPath() == aliasedFile.mFileName.GetFullPath() &&
                 !mFilename.FileExists()) {
                // Warn and return to the dialog
                wxMessageBox(_("You are attempting to overwrite an aliased file that is missing.\n\
@@ -713,9 +709,11 @@ void Exporter::DisplayOptions(int index)
 {
    int c = 0;
    int mf = -1, msf = -1;
-   for (size_t i = 0; i < mPlugins.GetCount(); i++)
+   int i = -1;
+   for (const auto &pPlugin : mPlugins)
    {
-      for (int j = 0; j < mPlugins[i]->GetFormatCount(); j++)
+      ++i;
+      for (int j = 0; j < pPlugin->GetFormatCount(); j++)
       {
          if (index == c)
          {
@@ -749,6 +747,7 @@ bool Exporter::CheckMix()
    // and if mixing will occur.
 
    int downMix = gPrefs->Read(wxT("/FileFormats/ExportDownMix"), true);
+   int exportedChannels = mPlugins[mFormat]->SetNumExportChannels();
 
    if (downMix) {
       if (mNumRight > 0 || mNumLeft > 0) {
@@ -764,7 +763,18 @@ bool Exporter::CheckMix()
       int numRight = mNumRight + mNumMono;
 
       if (numLeft > 1 || numRight > 1 || mNumLeft + mNumRight + mNumMono > mChannels) {
-         if (mChannels == 2) {
+         wxString exportFormat = mPlugins[mFormat]->GetFormat(mSubFormat);
+         if (exportFormat != wxT("CL") && exportFormat != wxT("FFMPEG") && exportedChannels == -1)
+            exportedChannels = mChannels;
+
+         if (exportedChannels == 1) {
+            if (ShowWarningDialog(mProject,
+                                  wxT("MixMono"),
+                                  _("Your tracks will be mixed down to a single mono channel in the exported file."),
+                                  true) == wxID_CANCEL)
+               return false;
+         }
+         else if (exportedChannels == 2) {
             if (ShowWarningDialog(mProject,
                                   wxT("MixStereo"),
                                   _("Your tracks will be mixed down to two stereo channels in the exported file."),
@@ -773,8 +783,8 @@ bool Exporter::CheckMix()
          }
          else {
             if (ShowWarningDialog(mProject,
-                                  wxT("MixMono"),
-                                  _("Your tracks will be mixed down to a single mono channel in the exported file."),
+                                  wxT("MixUnknownChannels"),
+                                  _("Your tracks will be mixed down to one exported file according to the encoder settings."),
                                   true) == wxID_CANCEL)
                return false;
          }
@@ -782,9 +792,12 @@ bool Exporter::CheckMix()
    }
    else
    {
+      if (exportedChannels == -1)
+         exportedChannels = mPlugins[mFormat]->GetMaxChannels(mSubFormat);
+
       ExportMixerDialog md(mProject->GetTracks(),
                            mSelectedOnly,
-                           mPlugins[mFormat]->GetMaxChannels(mSubFormat),
+                           exportedChannels,
                            NULL,
                            1,
                            _("Advanced Mixing Options"));
@@ -856,11 +869,11 @@ void Exporter::CreateUserPane(wxWindow *parent)
             mBook = safenew wxSimplebook(S.GetParent());
             S.AddWindow(mBook, wxEXPAND);
                                   
-            for (size_t i = 0; i < mPlugins.GetCount(); i++)
+            for (const auto &pPlugin : mPlugins)
             {
-               for (int j = 0; j < mPlugins[i]->GetFormatCount(); j++)
+               for (int j = 0; j < pPlugin->GetFormatCount(); j++)
                {
-                  mBook->AddPage(mPlugins[i]->OptionsCreate(mBook, j), wxEmptyString);
+                  mBook->AddPage(pPlugin->OptionsCreate(mBook, j), wxEmptyString);
                }
             }
          }
@@ -1260,8 +1273,11 @@ ExportMixerDialog::ExportMixerDialog( const TrackList *tracks, bool selectedOnly
    // state the number of channels - so we assume there are always at least two.
    // The downside is that if someone is exporting to a mono device, the dialog
    // will allow them to output to two channels. Hmm.  We may need to revisit this.
+
    if (maxNumChannels < 2 )
-      maxNumChannels = 2;
+      // STF (April 2016): AMR (narrowband) and MP3 may export 1 channel.
+      // maxNumChannels = 2;
+      maxNumChannels = 1;
    if (maxNumChannels > 32)
       maxNumChannels = 32;
 

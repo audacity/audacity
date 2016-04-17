@@ -14,26 +14,43 @@
 #ifndef __AUDACITY_DEPENDENCIES__
 #define __AUDACITY_DEPENDENCIES__
 
-#include <wx/dynarray.h>
+#include <list>
 #include <wx/filename.h>
+#include "MemoryX.h"
+#include "wxFileNameWrapper.h"
 
 class AudacityProject;
 
 class AliasedFile
 {
 public:
-   AliasedFile(wxFileName fileName, wxLongLong byteCount, bool bOriginalExists)
+   AliasedFile() {}
+   AliasedFile(wxFileNameWrapper &&fileName,
+               wxLongLong byteCount, bool bOriginalExists)
+      : mFileName(std::move(fileName))
+      , mByteCount(byteCount)
+      , mbOriginalExists(bOriginalExists)
    {
-      mFileName = fileName;
-      mByteCount = byteCount;
-      mbOriginalExists = bOriginalExists;
-   };
-   wxFileName  mFileName;
-   wxLongLong  mByteCount; // if stored as current default sample format
-   bool        mbOriginalExists;
+   }
+   AliasedFile(const AliasedFile &that) = default;
+   AliasedFile &operator= (AliasedFile&& that)
+   {
+      if(this != &that) {
+         mFileName = std::move(that.mFileName);
+         mByteCount = that.mByteCount;
+         mbOriginalExists = that.mbOriginalExists;
+      }
+      return *this;
+   }
+
+   wxFileNameWrapper mFileName;
+   wxLongLong  mByteCount{}; // if stored as current default sample format
+   bool        mbOriginalExists{};
 };
 
-WX_DECLARE_OBJARRAY(AliasedFile, AliasedFileArray);
+// use list, not vector, because we need to take addresses of items in the container
+// before it has grown to full size.
+using AliasedFileArray = std::list<AliasedFile>;
 
 
 // Checks for alias block files, modifies the project if the
@@ -45,6 +62,6 @@ bool ShowDependencyDialogIfNeeded(AudacityProject *project,
 
 // Returns a list of aliased files associated with a project.
 void FindDependencies(AudacityProject *project,
-                      AliasedFileArray *outAliasedFiles);
+                      AliasedFileArray &outAliasedFiles);
 
 #endif

@@ -183,7 +183,7 @@ public:
    wxString GetPluginFormatDescription();
 
    ///! Probes the file and opens it if appropriate
-   ImportFileHandle *Open(const wxString &Filename) override;
+   std::unique_ptr<ImportFileHandle> Open(const wxString &Filename) override;
 };
 
 ///! Does acual import, returned by FFmpegImportPlugin::Open
@@ -246,7 +246,7 @@ public:
 
    ///! Called by Import.cpp
    ///\return array of strings - descriptions of the streams
-   wxArrayString *GetStreamInfo()
+   const wxArrayString &GetStreamInfo() override
    {
       return mStreamInfo;
    }
@@ -262,10 +262,11 @@ public:
 
 private:
 
+   std::shared_ptr<FFmpegContext> mContext; // An object that does proper IO shutdown in its destructor; may be shared with decoder task.
    AVFormatContext      *mFormatContext; //!< Format description, also contains metadata and some useful info
    int                   mNumStreams;    //!< mNumstreams is less or equal to mFormatContext->nb_streams
    ScsPtr                mScs;           //!< Points to array of pointers to stream contexts, which may be shared with a decoder task.
-   wxArrayString        *mStreamInfo;    //!< Array of stream descriptions. Length is mNumStreams
+   wxArrayString         mStreamInfo;    //!< Array of stream descriptions. Length is mNumStreams
 
    wxInt64               mProgressPos;   //!< Current timestamp, file position or whatever is used as first argument for Update()
    wxInt64               mProgressLen;   //!< Duration, total length or whatever is used as second argument for Update()
@@ -293,9 +294,9 @@ wxString FFmpegImportPlugin::GetPluginFormatDescription()
    return DESC;
 }
 
-ImportFileHandle *FFmpegImportPlugin::Open(const wxString &filename)
+std::unique_ptr<ImportFileHandle> FFmpegImportPlugin::Open(const wxString &filename)
 {
-   FFmpegImportFileHandle *handle = new FFmpegImportFileHandle(filename);
+   auto handle = std::make_unique<FFmpegImportFileHandle>(filename);
 
    //Check if we're loading explicitly supported format
    wxString extension = filename.AfterLast(wxT('.'));
@@ -322,18 +323,16 @@ ImportFileHandle *FFmpegImportPlugin::Open(const wxString &filename)
    }
    if (!FFmpegLibsInst->ValidLibsLoaded())
    {
-      delete handle;
-      return NULL;
+      return nullptr;
    }
 
    // Open the file for import
    bool success = handle->Init();
    if (!success) {
-      delete handle;
-      return NULL;
+      return nullptr;
    }
 
-   return handle;
+   return std::move(handle);
 }
 
 
@@ -342,7 +341,6 @@ FFmpegImportFileHandle::FFmpegImportFileHandle(const wxString & name)
 {
    PickFFmpegLibs();
 
-   mStreamInfo = new wxArrayString();
    mFormatContext = NULL;
    mNumStreams = 0;
    mCancelled = false;
@@ -360,12 +358,16 @@ bool FFmpegImportFileHandle::Init()
 
    av_log_set_callback(av_log_wx_callback);
 
-   int err = ufile_fopen_input(&mFormatContext, mName);
+   int err;
+   std::unique_ptr<FFmpegContext> tempContext;
+   err = ufile_fopen_input(tempContext, mName);
    if (err < 0)
    {
-      wxLogError(wxT("FFmpeg : av_open_input_file() failed for file %s"),mName.c_str());
+      wxLogError(wxT("FFmpeg : av_open_input_file() failed for file %s"), mName.c_str());
       return false;
    }
+   wxASSERT(tempContext.get());
+   mFormatContext = tempContext->ic_ptr;
 
    err = avformat_find_stream_info(mFormatContext, NULL);
    if (err < 0)
@@ -374,7 +376,13 @@ bool FFmpegImportFileHandle::Init()
       return false;
    }
 
-   InitCodecs();
+   if (!InitCodecs())
+      return false;
+
+   // Only now do we postpone destroying the FFmpegContext.
+   // Move from unique to shared pointer
+   mContext.reset(tempContext.release());
+
    return true;
 }
 
@@ -435,7 +443,7 @@ bool FFmpegImportFileHandle::InitCodecs()
             lang.FromUTF8(tag->value);
          }
          strinfo.Printf(_("Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"),sc->m_stream->id,codec->name,lang.c_str(),bitrate.c_str(),sc->m_stream->codec->channels, duration);
-         mStreamInfo->Add(strinfo);
+         mStreamInfo.Add(strinfo);
          mScs->get()[mNumStreams++] = std::move(sc);
       }
       //for video and unknown streams do nothing
@@ -575,7 +583,7 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
       for (const auto &stream : mChannels) {
          ++s;
          ODDecodeFFmpegTask* odTask =
-            new ODDecodeFFmpegTask(mScs, ODDecodeFFmpegTask::FromList(mChannels), mFormatContext, s);
+            new ODDecodeFFmpegTask(mScs, ODDecodeFFmpegTask::FromList(mChannels), mContext, s);
          odTask->CreateFileDecoder(mFilename);
 
          //each stream has different duration.  We need to know it if seeking is to be allowed.
@@ -642,11 +650,7 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
          }
 
          // Cleanup after frame decoding
-         if (sc->m_pktValid)
-         {
-            av_free_packet(&sc->m_pkt);
-            sc->m_pktValid = 0;
-         }
+         sc->m_pkt.reset();
       }
    }
 
@@ -656,15 +660,12 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
       for (int i = 0; i < mNumStreams; i++)
       {
          auto sc = scs[i].get();
+         sc->m_pkt.create();
          if (DecodeFrame(sc, true) == 0)
          {
             WriteData(sc);
 
-            if (sc->m_pktValid)
-            {
-               av_free_packet(&sc->m_pkt);
-               sc->m_pktValid = 0;
-            }
+            sc->m_pkt.reset();
          }
       }
    }
@@ -737,7 +738,7 @@ int FFmpegImportFileHandle::WriteData(streamContext *sc)
    }
 
    // Separate the channels and convert input sample format to 16-bit
-   uint8_t *in = sc->m_decodedAudioSamples;
+   uint8_t *in = sc->m_decodedAudioSamples.get();
    int index = 0;
    int pos = 0;
    while (pos < insamples)
@@ -804,9 +805,9 @@ int FFmpegImportFileHandle::WriteData(streamContext *sc)
    int updateResult = eProgressSuccess;
    int64_t filesize = avio_size(mFormatContext->pb);
    // PTS (presentation time) is the proper way of getting current position
-   if (sc->m_pkt.pts != int64_t(AV_NOPTS_VALUE) && mFormatContext->duration != int64_t(AV_NOPTS_VALUE))
+   if (sc->m_pkt->pts != int64_t(AV_NOPTS_VALUE) && mFormatContext->duration != int64_t(AV_NOPTS_VALUE))
    {
-      mProgressPos = sc->m_pkt.pts * sc->m_stream->time_base.num / sc->m_stream->time_base.den;
+      mProgressPos = sc->m_pkt->pts * sc->m_stream->time_base.num / sc->m_stream->time_base.den;
       mProgressLen = (mFormatContext->duration > 0 ? mFormatContext->duration / AV_TIME_BASE: 1);
    }
    // When PTS is not set, use number of frames and number of current frame
@@ -816,9 +817,9 @@ int FFmpegImportFileHandle::WriteData(streamContext *sc)
       mProgressLen = sc->m_stream->nb_frames;
    }
    // When number of frames is unknown, use position in file
-   else if (filesize > 0 && sc->m_pkt.pos > 0 && sc->m_pkt.pos <= filesize)
+   else if (filesize > 0 && sc->m_pkt->pos > 0 && sc->m_pkt->pos <= filesize)
    {
-      mProgressPos = sc->m_pkt.pos;
+      mProgressPos = sc->m_pkt->pos;
       mProgressLen = filesize;
    }
    updateResult = mProgress->Update(mProgressPos, mProgressLen != 0 ? mProgressLen : 1);
@@ -854,23 +855,8 @@ void FFmpegImportFileHandle::GetMetadata(Tags *tags, const wxChar *tag, const ch
 
 FFmpegImportFileHandle::~FFmpegImportFileHandle()
 {
-#ifdef EXPERIMENTAL_OD_FFMPEG
-   //ODDecodeFFmpegTask takes ownership and deltes it there.
-   if(!mUsingOD)
-   {
-#endif
-   if (FFmpegLibsInst->ValidLibsLoaded())
-   {
-      if (mFormatContext) avformat_close_input(&mFormatContext);
-      av_log_set_callback(av_log_default_callback);
-   }
-
-#ifdef EXPERIMENTAL_OD_FFMPEG
-   }//mUsingOD
-#endif
-
-
-   delete mStreamInfo;
+   // Do this before unloading the libraries
+   mContext.reset();
 
    DropFFmpegLibs();
 }

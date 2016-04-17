@@ -51,9 +51,6 @@ class DeviceManager final
    /// Gets the singleton instance
    static DeviceManager* Instance();
 
-   /// Releases memory assosiated with the singleton
-   static void Destroy();
-
    /// Gets a NEW list of devices by terminating and restarting portaudio
    /// Assumes that DeviceManager is only used on the main thread.
    void Rescan();
@@ -74,7 +71,7 @@ class DeviceManager final
  protected:
    //private constructor - Singleton.
    DeviceManager();
-   virtual ~DeviceManager();
+   ~DeviceManager();
    /// Does an initial scan.
    /// Called by GetInputDeviceMaps and GetOutputDeviceMaps when needed.
    void Init();

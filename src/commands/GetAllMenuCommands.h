@@ -28,15 +28,15 @@ class GetAllMenuCommandsType final : public CommandType
 public:
    wxString BuildName() override;
    void BuildSignature(CommandSignature &signature) override;
-   Command *Create(CommandOutputTarget *target) override;
+   CommandHolder Create(std::unique_ptr<CommandOutputTarget> &&target) override;
 };
 
 class GetAllMenuCommands final : public CommandImplementation
 {
 public:
    GetAllMenuCommands(CommandType &type,
-                      CommandOutputTarget *target)
-      : CommandImplementation(type, target)
+                      std::unique_ptr<CommandOutputTarget> &&target)
+      : CommandImplementation(type, std::move(target))
    { }
 
    virtual ~GetAllMenuCommands()

@@ -46,9 +46,9 @@ void GetTrackInfoCommandType::BuildSignature(CommandSignature &signature)
    signature.AddParameter(wxT("Type"), wxT("Name"), infoTypeValidator);
 }
 
-Command *GetTrackInfoCommandType::Create(CommandOutputTarget *target)
+CommandHolder GetTrackInfoCommandType::Create(std::unique_ptr<CommandOutputTarget> &&target)
 {
-   return new GetTrackInfoCommand(*this, target);
+   return std::make_shared<GetTrackInfoCommand>(*this, std::move(target));
 }
 
 

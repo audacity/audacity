@@ -114,7 +114,7 @@ public:
 
    wxString GetPluginStringID() { return wxT("libmad"); }
    wxString GetPluginFormatDescription();
-   ImportFileHandle *Open(const wxString &Filename) override;
+   std::unique_ptr<ImportFileHandle> Open(const wxString &Filename) override;
 };
 
 class MP3ImportFileHandle final : public ImportFileHandle
@@ -135,7 +135,11 @@ public:
 
    wxInt32 GetStreamCount(){ return 1; }
 
-   wxArrayString *GetStreamInfo(){ return NULL; }
+   const wxArrayString &GetStreamInfo() override
+   {
+      static wxArrayString empty;
+      return empty;
+   }
 
    void SetStreamUsage(wxInt32 WXUNUSED(StreamID), bool WXUNUSED(Use)){}
 
@@ -176,19 +180,19 @@ wxString MP3ImportPlugin::GetPluginFormatDescription()
    return DESC;
 }
 
-ImportFileHandle *MP3ImportPlugin::Open(const wxString &Filename)
+std::unique_ptr<ImportFileHandle> MP3ImportPlugin::Open(const wxString &Filename)
 {
    wxFile *file = new wxFile(Filename);
 
    if (!file->IsOpened()) {
       delete file;
-      return NULL;
+      return nullptr;
    }
 
    /* There's no way to tell if this is a valid mp3 file before actually
     * decoding, so we return a valid FileHandle. */
 
-   return new MP3ImportFileHandle(file, Filename);
+   return std::make_unique<MP3ImportFileHandle>(file, Filename);
 }
 
 wxString MP3ImportFileHandle::GetFileDescription()

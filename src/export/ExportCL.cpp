@@ -279,7 +279,6 @@ class ExportCL final : public ExportPlugin
 public:
 
    ExportCL();
-   void Destroy();
 
    // Required
    wxWindow *OptionsCreate(wxWindow *parent, int format);
@@ -304,11 +303,6 @@ ExportCL::ExportCL()
    SetMaxChannels(255,0);
    SetCanMetaData(false,0);
    SetDescription(_("(external program)"),0);
-}
-
-void ExportCL::Destroy()
-{
-   delete this;
 }
 
 int ExportCL::Export(AudacityProject *project,
@@ -422,7 +416,7 @@ int ExportCL::Export(AudacityProject *project,
    const TrackList *tracks = project->GetTracks();
    const WaveTrackConstArray waveTracks =
       tracks->GetWaveTrackConstArray(selectionOnly, false);
-   Mixer *mixer = CreateMixer(
+   auto mixer = CreateMixer(
                             waveTracks,
                             tracks->GetTimeTrack(),
                             t0,
@@ -526,9 +520,6 @@ int ExportCL::Export(AudacityProject *project,
       dlg.ShowModal();
    }
 
-   // Clean up
-   delete mixer;
-
    return updateResult;
 }
 
@@ -538,8 +529,8 @@ wxWindow *ExportCL::OptionsCreate(wxWindow *parent, int format)
    return safenew ExportCLOptions(parent, format);
 }
 
-ExportPlugin *New_ExportCL()
+movable_ptr<ExportPlugin> New_ExportCL()
 {
-   return new ExportCL();
+   return make_movable<ExportCL>();
 }
 

@@ -44,8 +44,6 @@ class ODDecodeTask /* not final */ : public ODTask
    ODDecodeTask();
    virtual ~ODDecodeTask(){};
 
-   virtual ODTask* Clone()=0;
-
    // NEW virtual:
    virtual bool SeekingAllowed();
 
@@ -122,7 +120,7 @@ public:
    ///returns negative value for failure, 0 or positive value for success.
    virtual int Decode(SampleBuffer & data, sampleFormat & format, sampleCount start, sampleCount len, unsigned int channel)=0;
 
-   wxString GetFileName(){return mFName;}
+   const wxString &GetFileName(){return mFName;}
 
    bool IsInitialized();
 
@@ -133,7 +131,7 @@ protected:
    bool     mInited;
    ODLock   mInitedLock;
 
-   wxString  mFName;
+   const wxString  mFName;
 
    unsigned int mSampleRate;
    unsigned int mNumSamples;//this may depend on the channel - so TODO: we should probably let the decoder create/modify the track info directly.

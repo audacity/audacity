@@ -31,7 +31,7 @@ wxString PlatformCompatibility::GetLongFileName(const wxString& shortFileName)
    return fn.GetLongPath();
 }
 
-wxString PlatformCompatibility::GetExecutablePath()
+const wxString &PlatformCompatibility::GetExecutablePath()
 {
    static bool found = false;
    static wxString path;

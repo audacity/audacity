@@ -92,7 +92,7 @@ public:
 
    wxString GetPluginStringID() { return wxT("liboggvorbis"); }
    wxString GetPluginFormatDescription();
-   ImportFileHandle *Open(const wxString &Filename) override;
+   std::unique_ptr<ImportFileHandle> Open(const wxString &Filename) override;
 };
 
 
@@ -109,13 +109,12 @@ public:
       mFormat = (sampleFormat)
          gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleFormat"), floatSample);
 
-      mStreamInfo = new wxArrayString();
       mStreamUsage = new int[vorbisFile->links];
       for (int i = 0; i < vorbisFile->links; i++)
       {
          wxString strinfo;
          strinfo.Printf(wxT("Index[%02x] Version[%d], Channels[%d], Rate[%ld]"), (unsigned int) i,vorbisFile->vi[i].version,vorbisFile->vi[i].channels,vorbisFile->vi[i].rate);
-         mStreamInfo->Add(strinfo);
+         mStreamInfo.Add(strinfo);
          mStreamUsage[i] = 0;
       }
 
@@ -135,7 +134,7 @@ public:
          return 0;
    }
 
-   wxArrayString *GetStreamInfo()
+   const wxArrayString &GetStreamInfo() override
    {
       return mStreamInfo;
    }
@@ -154,7 +153,7 @@ private:
    OggVorbis_File *mVorbisFile;
 
    int            *mStreamUsage;
-   wxArrayString  *mStreamInfo;
+   wxArrayString   mStreamInfo;
    std::list<TrackHolders> mChannels;
 
    sampleFormat   mFormat;
@@ -171,7 +170,7 @@ wxString OggImportPlugin::GetPluginFormatDescription()
     return DESC;
 }
 
-ImportFileHandle *OggImportPlugin::Open(const wxString &filename)
+std::unique_ptr<ImportFileHandle> OggImportPlugin::Open(const wxString &filename)
 {
    // Suppress some compiler warnings about unused global variables in the library header
    wxUnusedVar(OV_CALLBACKS_DEFAULT);
@@ -186,7 +185,7 @@ ImportFileHandle *OggImportPlugin::Open(const wxString &filename)
       // No need for a message box, it's done automatically (but how?)
       delete vorbisFile;
       delete file;
-      return NULL;
+      return nullptr;
    }
 
    int err = ov_open(file->fp(), vorbisFile, NULL, 0);
@@ -216,10 +215,10 @@ ImportFileHandle *OggImportPlugin::Open(const wxString &filename)
       file->Close();
       delete vorbisFile;
       delete file;
-      return NULL;
+      return nullptr;
    }
 
-   return new OggImportFileHandle(filename, file, vorbisFile);
+   return std::make_unique<OggImportFileHandle>(filename, file, vorbisFile);
 }
 
 wxString OggImportFileHandle::GetFileDescription()
@@ -327,9 +326,9 @@ int OggImportFileHandle::Import(TrackFactory *trackFactory, TrackHolders &outTra
                           &bitstream);
 
       if (bytesRead == OV_HOLE) {
-         wxFileName f(mFilename);
+         wxFileName ff(mFilename);
          wxLogError(wxT("Ogg Vorbis importer: file %s is malformed, ov_read() reported a hole"),
-                    f.GetFullName().c_str());
+                    ff.GetFullName().c_str());
          /* http://lists.xiph.org/pipermail/vorbis-dev/2001-February/003223.html
           * is the justification for doing this - best effort for malformed file,
           * hence the message.
@@ -410,7 +409,6 @@ OggImportFileHandle::~OggImportFileHandle()
    ov_clear(mVorbisFile);
    mFile->Detach();    // so that it doesn't try to close the file (ov_clear()
                        // did that already)
-   delete mStreamInfo;
    delete[] mStreamUsage;
    delete mVorbisFile;
    delete mFile;

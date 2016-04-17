@@ -413,7 +413,7 @@ bool BatchCommands::IsMono()
 
 wxString BatchCommands::BuildCleanFileName(const wxString &fileName, const wxString &extension)
 {
-   wxFileName newFileName(fileName);
+   const wxFileName newFileName{ fileName };
    wxString justName = newFileName.GetName();
    wxString pathName = newFileName.GetPath(wxPATH_GET_VOLUME | wxPATH_GET_SEPARATOR);
 
@@ -776,9 +776,10 @@ wxArrayString BatchCommands::GetNames()
    wxDir::GetAllFiles(FileNames::ChainDir(), &files, wxT("*.txt"), wxDIR_FILES);
    size_t i;
 
+   wxFileName ff;
    for (i = 0; i < files.GetCount(); i++) {
-      wxFileName f(files[i]);
-      names.Add(f.GetName());
+      ff = (files[i]);
+      names.Add(ff.GetName());
    }
 
    return names;

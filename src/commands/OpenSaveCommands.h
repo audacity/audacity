@@ -27,15 +27,15 @@ class OpenProjectCommandType final : public CommandType
 public:
    wxString BuildName() override;
    void BuildSignature(CommandSignature &signature) override;
-   Command *Create(CommandOutputTarget *target) override;
+   CommandHolder Create(std::unique_ptr<CommandOutputTarget> &&target) override;
 };
 
 class OpenProjectCommand final : public CommandImplementation
 {
 public:
    OpenProjectCommand(CommandType &type,
-                    CommandOutputTarget *target)
-      : CommandImplementation(type, target)
+                    std::unique_ptr<CommandOutputTarget> &&target)
+      : CommandImplementation(type, std::move(target))
    { }
 
    virtual ~OpenProjectCommand();
@@ -49,15 +49,15 @@ class SaveProjectCommandType final : public CommandType
 public:
    wxString BuildName() override;
    void BuildSignature(CommandSignature &signature) override;
-   Command *Create(CommandOutputTarget *target) override;
+   CommandHolder Create(std::unique_ptr<CommandOutputTarget> &&target) override;
 };
 
 class SaveProjectCommand final : public CommandImplementation
 {
 public:
    SaveProjectCommand(CommandType &type,
-                    CommandOutputTarget *target)
-      : CommandImplementation(type, target)
+                    std::unique_ptr<CommandOutputTarget> &&target)
+      : CommandImplementation(type, std::move(target))
    { }
 
    virtual ~SaveProjectCommand();

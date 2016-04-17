@@ -620,7 +620,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
          continue;
       }
 
-      wxString path = plug.GetPath();
+      const  wxString &path = plug.GetPath();
       ItemData & item = mItems[path];  // will create NEW entry
       item.plugs.Add(&plug);
       item.path = path;
@@ -1054,12 +1054,16 @@ PluginDescriptor::PluginDescriptor()
 
 PluginDescriptor::~PluginDescriptor()
 {
+   DeleteInstance();
+}
+
+void PluginDescriptor::DeleteInstance()
+{
    if (mInstance)
    {
       ModuleManager::Get().DeleteInstance(GetProviderID(), mInstance);
+      mInstance = nullptr;
    }
-
-   return;
 }
 
 bool PluginDescriptor::IsInstantiated() const
@@ -1086,6 +1090,12 @@ IdentInterface *PluginDescriptor::GetInstance()
 
 void PluginDescriptor::SetInstance(IdentInterface *instance)
 {
+   if (mInstance && mInstance != instance)
+   {
+      // Be sure not to leak resources!!
+      DeleteInstance();
+   }
+
    mInstance = instance;
 
    return;
@@ -1427,28 +1437,29 @@ void PluginManager::FindFilesInPathList(const wxString & pattern,
 
    // TODO:  We REALLY need to figure out the "Audacity" plug-in path(s)
 
-   wxFileName f;
    wxArrayString paths;
 
    // Add the "per-user" plug-ins directory
-   f = FileNames::PlugInDir();
-   paths.Add(f.GetFullPath());
+   {
+      const wxFileName &ff = FileNames::PlugInDir();
+      paths.Add(ff.GetFullPath());
+   }
  
    // Add the "Audacity" plug-ins directory
-   f = PlatformCompatibility::GetExecutablePath();
+   wxFileName ff = PlatformCompatibility::GetExecutablePath();
 #if defined(__WXMAC__)
-   f.RemoveLastDir();
-   f.RemoveLastDir();
-   f.RemoveLastDir();
+   ff.RemoveLastDir();
+   ff.RemoveLastDir();
+   ff.RemoveLastDir();
 #endif
-   f.AppendDir(wxT("plug-ins"));
-   paths.Add(f.GetPath());
+   ff.AppendDir(wxT("plug-ins"));
+   paths.Add(ff.GetPath());
 
    // Weed out duplicates
    for (size_t i = 0, cnt = pathList.size(); i < cnt; i++)
    {
-      f = pathList[i];
-      wxString path = f.GetFullPath();
+      ff = pathList[i];
+      const wxString path{ ff.GetFullPath() };
       if (paths.Index(path, wxFileName::IsCaseSensitive()) == wxNOT_FOUND)
       {
          paths.Add(path);
@@ -1458,8 +1469,8 @@ void PluginManager::FindFilesInPathList(const wxString & pattern,
    // Find all matching files in each path
    for (size_t i = 0, cnt = paths.GetCount(); i < cnt; i++)
    {
-      f = paths[i] + wxFILE_SEP_PATH + pattern;
-      wxDir::GetAllFiles(f.GetPath(), &files, f.GetFullName(), directories ? wxDIR_DEFAULT : wxDIR_FILES);
+      ff = paths[i] + wxFILE_SEP_PATH + pattern;
+      wxDir::GetAllFiles(ff.GetPath(), &files, ff.GetFullName(), directories ? wxDIR_DEFAULT : wxDIR_FILES);
    }
 
    return;
@@ -1656,7 +1667,7 @@ bool PluginManager::RemovePrivateConfig(const PluginID & ID, const wxString & gr
 // ============================================================================
 
 // The one and only PluginManager
-PluginManager *PluginManager::mInstance = NULL;
+std::unique_ptr<PluginManager> PluginManager::mInstance{};
 
 // ----------------------------------------------------------------------------
 // Creation/Destruction
@@ -1669,6 +1680,9 @@ PluginManager::PluginManager()
 
 PluginManager::~PluginManager()
 {
+   // Ensure termination (harmless if already done)
+   Terminate();
+
    if (mSettings)
    {
       delete mSettings;
@@ -1690,18 +1704,10 @@ PluginManager & PluginManager::Get()
 {
    if (!mInstance)
    {
-      mInstance = new PluginManager();
+      mInstance.reset(safenew PluginManager);
    }
 
    return *mInstance;
-}
-
-void PluginManager::Destroy()
-{
-   if (mInstance)
-   {
-      delete mInstance;
-   }
 }
 
 void PluginManager::Initialize()
@@ -2791,10 +2797,10 @@ wxString PluginManager::SharedGroup(const PluginID & ID, const wxString & group)
 {
    wxString path = SettingsPath(ID, true);
 
-   wxFileName f(group);
-   if (!f.GetName().IsEmpty())
+   wxFileName ff(group);
+   if (!ff.GetName().IsEmpty())
    {
-      path += f.GetFullPath(wxPATH_UNIX) + wxCONFIG_PATH_SEPARATOR;
+      path += ff.GetFullPath(wxPATH_UNIX) + wxCONFIG_PATH_SEPARATOR;
    }
 
    return path;
@@ -2815,10 +2821,10 @@ wxString PluginManager::PrivateGroup(const PluginID & ID, const wxString & group
 {
    wxString path = SettingsPath(ID, false);
 
-   wxFileName f(group);
-   if (!f.GetName().IsEmpty())
+   wxFileName ff(group);
+   if (!ff.GetName().IsEmpty())
    {
-      path += f.GetFullPath(wxPATH_UNIX) + wxCONFIG_PATH_SEPARATOR;
+      path += ff.GetFullPath(wxPATH_UNIX) + wxCONFIG_PATH_SEPARATOR;
    }
 
    return path;

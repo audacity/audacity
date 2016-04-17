@@ -634,13 +634,14 @@ public:
    {
    };
 
-   wxConnectionBase *OnAcceptConnection(const wxString & topic)
+   wxConnectionBase *OnAcceptConnection(const wxString & topic) override
    {
       if (topic != IPC_TOPIC) {
          return NULL;
       }
 
-      return new IPCConn();
+      // Trust wxWidgets framework to DELETE it
+      return safenew IPCConn();
    };
 };
 
@@ -831,7 +832,7 @@ void AudacityApp::OnMRUClear(wxCommandEvent& WXUNUSED(event))
 // Better, for example, to check the file type early on.
 void AudacityApp::OnMRUFile(wxCommandEvent& event) {
    int n = event.GetId() - ID_RECENT_FIRST;
-   wxString fullPathStr = mRecentFiles->GetHistoryFile(n);
+   const wxString &fullPathStr = mRecentFiles->GetHistoryFile(n);
 
    // Try to open only if not already open.
    // Test IsAlreadyOpen() here even though AudacityProject::MRUOpen() also now checks,
@@ -851,7 +852,8 @@ void AudacityApp::OnTimer(wxTimerEvent& WXUNUSED(event))
       if (ofqueue.GetCount()) {
          // Load each file on the queue
          while (ofqueue.GetCount()) {
-            wxString name(ofqueue[0]);
+            wxString name;
+            name.swap(ofqueue[0]);
             ofqueue.RemoveAt(0);
 
             // Get the user's attention if no file name was specified
@@ -932,7 +934,7 @@ locations of the missing files."), missingFileName.c_str());
    }
 }
 
-void AudacityApp::MarkAliasedFilesMissingWarning(BlockFile *b)
+void AudacityApp::MarkAliasedFilesMissingWarning(const BlockFile *b)
 {
    // the reference counting provides thread safety.
    if (b)
@@ -1142,6 +1144,10 @@ AudacityApp::AudacityApp()
 #endif
 }
 
+AudacityApp::~AudacityApp()
+{
+}
+
 // The `main program' equivalent, creating the windows and returning the
 // main frame
 bool AudacityApp::OnInit()
@@ -1322,19 +1328,15 @@ bool AudacityApp::OnInit()
    // Parse command line and handle options that might require
    // immediate exit...no need to initialize all of the audio
    // stuff to display the version string.
-   wxCmdLineParser *parser = ParseCommandLine();
+   auto parser = ParseCommandLine();
    if (!parser)
    {
-      delete parser;
-
       // Either user requested help or a parsing error occured
       exit(1);
    }
 
    if (parser->Found(wxT("v")))
    {
-      delete parser;
-
       wxFprintf(stderr, wxT("Audacity v%s\n"), AUDACITY_VERSION_STRING);
       exit(0);
    }
@@ -1344,8 +1346,6 @@ bool AudacityApp::OnInit()
    {
       if (lval < 256 || lval > 100000000)
       {
-         delete parser;
-
          wxPrintf(_("Block size must be within 256 to 100000000\n"));
          exit(1);
       }
@@ -1462,7 +1462,6 @@ bool AudacityApp::OnInit()
    {
       // Important: Prevent deleting any temporary files!
       DirManager::SetDontDeleteTempFiles();
-      delete parser;
       QuitAudacity(true);
       return false;
    }
@@ -1474,8 +1473,6 @@ bool AudacityApp::OnInit()
    {
       if (parser->Found(wxT("t")))
       {
-         delete parser;
-   
          RunBenchmark(NULL);
          return false;
       }
@@ -1489,8 +1486,6 @@ bool AudacityApp::OnInit()
       }
 #endif
    }
-
-   delete parser;
 
    gInited = true;
 
@@ -1663,7 +1658,7 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
    else if ( mChecker->IsAnotherRunning() ) {
       // Parse the command line to ensure correct syntax, but
       // ignore options and only use the filenames, if any.
-      wxCmdLineParser *parser = ParseCommandLine();
+      auto parser = ParseCommandLine();
       if (!parser)
       {
          // Complaints have already been made
@@ -1702,10 +1697,7 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
             delete conn;
 
             if (ok)
-            {
-               delete parser;
                return false;
-            }
          }
 
          wxMilliSleep(10);
@@ -1737,7 +1729,6 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
             }
 
             sock->Destroy();
-            delete parser;
             return false;
          }
 
@@ -1754,7 +1745,6 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
          _("Use the New or Open commands in the currently running Audacity\nprocess to open multiple projects simultaneously.\n");
       wxMessageBox(prompt, _("Audacity is already running"),
             wxOK | wxICON_ERROR);
-      delete parser;
       delete mChecker;
       return false;
    }
@@ -1825,12 +1815,12 @@ void AudacityApp::OnSocketEvent(wxSocketEvent & evt)
 
 #endif
 
-wxCmdLineParser *AudacityApp::ParseCommandLine()
+std::unique_ptr<wxCmdLineParser> AudacityApp::ParseCommandLine()
 {
-   wxCmdLineParser *parser = new wxCmdLineParser(argc, argv);
+   auto parser = std::make_unique<wxCmdLineParser>(argc, argv);
    if (!parser)
    {
-      return NULL;
+      return nullptr;
    }
 
    /*i18n-hint: This controls the number of bytes that Audacity will
@@ -1860,13 +1850,9 @@ wxCmdLineParser *AudacityApp::ParseCommandLine()
 
    // Run the parser
    if (parser->Parse() == 0)
-   {
-      return parser;
-   }
+      return std::move(parser);
 
-   delete parser;
-
-   return NULL;
+   return{};
 }
 
 // static
@@ -1875,14 +1861,14 @@ void AudacityApp::AddUniquePathToPathList(const wxString &pathArg,
 {
    wxFileName pathNorm = pathArg;
    pathNorm.Normalize();
-   wxString path = pathNorm.GetFullPath();
+   const wxString newpath{ pathNorm.GetFullPath() };
 
    for(unsigned int i=0; i<pathList.GetCount(); i++) {
-      if (wxFileName(path) == wxFileName(pathList[i]))
+      if (wxFileName(newpath) == wxFileName(pathList[i]))
          return;
    }
 
-   pathList.Add(path);
+   pathList.Add(newpath);
 }
 
 // static
@@ -1909,11 +1895,11 @@ void AudacityApp::FindFilesInPathList(const wxString & pattern,
       return;
    }
 
-   wxFileName f;
+   wxFileName ff;
 
    for(size_t i = 0; i < pathList.GetCount(); i++) {
-      f = pathList[i] + wxFILE_SEP_PATH + pattern;
-      wxDir::GetAllFiles(f.GetPath(), &results, f.GetFullName(), flags);
+      ff = pathList[i] + wxFILE_SEP_PATH + pattern;
+      wxDir::GetAllFiles(ff.GetPath(), &results, ff.GetFullName(), flags);
    }
 }
 
@@ -1982,10 +1968,6 @@ int AudacityApp::OnExit()
 
    // Terminate the PluginManager (must be done before deleting the locale)
    PluginManager::Get().Terminate();
-
-   // Done with plugins and modules
-   PluginManager::Destroy();
-   ModuleManager::Destroy();
 
    if (mLocale)
       delete mLocale;

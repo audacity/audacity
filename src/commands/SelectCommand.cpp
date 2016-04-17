@@ -16,6 +16,7 @@
 
 *//*******************************************************************/
 
+#include "../Audacity.h"
 #include "SelectCommand.h"
 #include <wx/string.h>
 #include "../Project.h"
@@ -45,13 +46,13 @@ void SelectCommandType::BuildSignature(CommandSignature &signature)
    IntValidator *lastTrackValidator = new IntValidator();
    signature.AddParameter(wxT("LastTrack"), 0, lastTrackValidator);
 
-   Validator *trackNameValidator = new Validator();
+   Validator *trackNameValidator = new DefaultValidator();
    signature.AddParameter(wxT("TrackName"), 0, trackNameValidator);
 }
 
-Command *SelectCommandType::Create(CommandOutputTarget *target)
+CommandHolder SelectCommandType::Create(std::unique_ptr<CommandOutputTarget> &&target)
 {
-   return new SelectCommand(*this, target);
+   return std::make_shared<SelectCommand>(*this, std::move(target));
 }
 
 bool SelectCommand::Apply(CommandExecutionContext context)

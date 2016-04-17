@@ -12,6 +12,7 @@
 #include "../Prefs.h"
 
 #include "LoadEffects.h"
+#include "../MemoryX.h"
 
 #include "EffectManager.h"
 
@@ -64,8 +65,8 @@
 //
 #if defined(USE_SOUNDTOUCH)
 #define SOUNDTOUCH_EFFECTS \
-   EFFECT( CHANGEPITCH, EffectChangePitch() ) \
-   EFFECT( CHANGETEMPO, EffectChangeTempo() )
+   EFFECT( CHANGEPITCH, EffectChangePitch, () ) \
+   EFFECT( CHANGETEMPO, EffectChangeTempo, () )
 #else
 #define SOUNDTOUCH_EFFECTS
 #endif
@@ -75,7 +76,7 @@
 //
 #if defined(EXPERIMENTAL_NOISE_REDUCTION)
 #define NOISEREDUCTION_EFFECT \
-   EFFECT( NOISEREDUCTION, EffectNoiseReduction() )
+   EFFECT( NOISEREDUCTION, EffectNoiseReduction, () )
 #else
 #define NOISEREDUCTION_EFFECT \
    EFFECT( NOISEREMOVAL, EffectNoiseRemoval() )
@@ -86,7 +87,7 @@
 //
 #if defined(EXPERIMENTAL_SCIENCE_FILTERS)
 #define CLASSICFILTER_EFFECT \
-   EFFECT( CLASSICFILTERS, EffectScienFilter() )
+   EFFECT( CLASSICFILTERS, EffectScienFilter, () )
 #else
 #define CLASSICFILTER_EFFECT
 #endif
@@ -96,7 +97,7 @@
 //
 #if defined(USE_SBSMS)
 #define SBSMS_EFFECTS \
-   EFFECT( TIMESCALE, EffectTimeScale() )
+   EFFECT( TIMESCALE, EffectTimeScale, () )
 #else
 #define SBSMS_EFFECTS
 #endif
@@ -105,36 +106,36 @@
 // Define the list of effects that will be autoregistered and how to instantiate each
 //
 #define EFFECT_LIST \
-   EFFECT( CHIRP,             EffectToneGen(true) )      \
-   EFFECT( DTMFTONES,         EffectDtmf() )             \
-   EFFECT( NOISE,             EffectNoise() )            \
-   EFFECT( SILENCE,           EffectSilence() )          \
-   EFFECT( TONE,              EffectToneGen(false) )     \
-   EFFECT( AMPLIFY,           EffectAmplify() )          \
-   EFFECT( BASSTREBLE,        EffectBassTreble() )       \
-   EFFECT( CHANGESPEED,       EffectChangeSpeed() )      \
-   EFFECT( CLICKREMOVAL,      EffectClickRemoval() )     \
-   EFFECT( COMPRESSOR,        EffectCompressor() )       \
-   EFFECT( ECHO,              EffectEcho() )             \
-   EFFECT( EQUALIZATION,      EffectEqualization() )     \
-   EFFECT( FADEIN,            EffectFade(true) )         \
-   EFFECT( FADEOUT,           EffectFade(false) )        \
-   EFFECT( INVERT,            EffectInvert() )           \
-   EFFECT( NORMALIZE,         EffectNormalize() )        \
-   EFFECT( PHASER,            EffectPhaser() )           \
-   EFFECT( REPAIR,            EffectRepair() )           \
-   EFFECT( REPEAT,            EffectRepeat() )           \
-   EFFECT( REVERB,            EffectReverb() )           \
-   EFFECT( REVERSE,           EffectReverse() )          \
-   EFFECT( STEREOTOMONO,      EffectStereoToMono() )     \
-   EFFECT( TRUNCATESILENCE,   EffectTruncSilence() )     \
-   EFFECT( WAHWAH,            EffectWahwah() )           \
-   EFFECT( FINDCLIPPING,      EffectFindClipping() )     \
+   EFFECT( CHIRP,             EffectToneGen, (true) )      \
+   EFFECT( DTMFTONES,         EffectDtmf, () )             \
+   EFFECT( NOISE,             EffectNoise, () )            \
+   EFFECT( SILENCE,           EffectSilence, () )          \
+   EFFECT( TONE,              EffectToneGen, (false) )     \
+   EFFECT( AMPLIFY,           EffectAmplify, () )          \
+   EFFECT( BASSTREBLE,        EffectBassTreble, () )       \
+   EFFECT( CHANGESPEED,       EffectChangeSpeed, () )      \
+   EFFECT( CLICKREMOVAL,      EffectClickRemoval, () )     \
+   EFFECT( COMPRESSOR,        EffectCompressor, () )       \
+   EFFECT( ECHO,              EffectEcho, () )             \
+   EFFECT( EQUALIZATION,      EffectEqualization, () )     \
+   EFFECT( FADEIN,            EffectFade, (true) )         \
+   EFFECT( FADEOUT,           EffectFade, (false) )        \
+   EFFECT( INVERT,            EffectInvert, () )           \
+   EFFECT( NORMALIZE,         EffectNormalize, () )        \
+   EFFECT( PHASER,            EffectPhaser, () )           \
+   EFFECT( REPAIR,            EffectRepair, () )           \
+   EFFECT( REPEAT,            EffectRepeat, () )           \
+   EFFECT( REVERB,            EffectReverb, () )           \
+   EFFECT( REVERSE,           EffectReverse, () )          \
+   EFFECT( STEREOTOMONO,      EffectStereoToMono, () )     \
+   EFFECT( TRUNCATESILENCE,   EffectTruncSilence, () )     \
+   EFFECT( WAHWAH,            EffectWahwah, () )           \
+   EFFECT( FINDCLIPPING,      EffectFindClipping, () )     \
    NOISEREDUCTION_EFFECT                                 \
    SOUNDTOUCH_EFFECTS                                    \
-   EFFECT( AUTODUCK,          EffectAutoDuck() )         \
-   EFFECT( LEVELLER,          EffectLeveller() )         \
-   EFFECT( PAULSTRETCH,       EffectPaulstretch() )      \
+   EFFECT( AUTODUCK,          EffectAutoDuck, () )         \
+   EFFECT( LEVELLER,          EffectLeveller, () )         \
+   EFFECT( PAULSTRETCH,       EffectPaulstretch, () )      \
    SBSMS_EFFECTS
 
 //
@@ -146,7 +147,7 @@
 //
 // Define the EFFECT() macro to generate enum names
 //
-#define EFFECT(n, i) ENUM_ ## n,
+#define EFFECT(n, i, args) ENUM_ ## n,
 
 //
 // Create the enum for the list of effects (will be used in a switch statement)
@@ -161,7 +162,7 @@ enum
 // Redefine EFFECT() to add the effect's name to an array
 //
 #undef EFFECT
-#define EFFECT(n, i) n ## _PLUGIN_SYMBOL,
+#define EFFECT(n, i, args) n ## _PLUGIN_SYMBOL,
 
 //
 // Create the effect name array
@@ -183,7 +184,7 @@ static const wxChar *kExcludedNames[] =
 // Redefine EFFECT() to generate a case statement for the lookup switch
 //
 #undef EFFECT
-#define EFFECT(n, i) case ENUM_ ## n: return new i;
+#define EFFECT(n, i, args) case ENUM_ ## n: return std::make_unique<i> args;
 
 // ============================================================================
 // Module registration entry point
@@ -197,7 +198,8 @@ static const wxChar *kExcludedNames[] =
 DECLARE_MODULE_ENTRY(AudacityModule)
 {
    // Create and register the importer
-   return new BuiltinEffectsModule(moduleManager, path);
+   // Trust the module manager not to leak this
+   return safenew BuiltinEffectsModule(moduleManager, path);
 }
 
 // ============================================================================
@@ -309,11 +311,10 @@ wxArrayString BuiltinEffectsModule::FindPlugins(PluginManagerInterface & WXUNUSE
 
 bool BuiltinEffectsModule::RegisterPlugin(PluginManagerInterface & pm, const wxString & path)
 {
-   Effect *effect = Instantiate(path);
+   auto effect = Instantiate(path);
    if (effect)
    {
-      pm.RegisterPlugin(this, effect);
-      delete effect;
+      pm.RegisterPlugin(this, effect.get());
       return true;
    }
 
@@ -327,23 +328,24 @@ bool BuiltinEffectsModule::IsPluginValid(const wxString & path)
 
 IdentInterface *BuiltinEffectsModule::CreateInstance(const wxString & path)
 {
-   return Instantiate(path);
+   // Acquires a resource for the application.
+   // Safety of this depends on complementary calls to DeleteInstance on the module manager side.
+   return Instantiate(path).release();
 }
 
 void BuiltinEffectsModule::DeleteInstance(IdentInterface *instance)
 {
-   Effect *effect = dynamic_cast<Effect *>(instance);
-   if (effect)
-   {
-      delete effect;
-   }
+   // Releases the resource.
+   std::unique_ptr < Effect > {
+      dynamic_cast<Effect *>(instance)
+   };
 }
 
 // ============================================================================
 // BuiltinEffectsModule implementation
 // ============================================================================
 
-Effect *BuiltinEffectsModule::Instantiate(const wxString & path)
+std::unique_ptr<Effect> BuiltinEffectsModule::Instantiate(const wxString & path)
 {
    wxASSERT(path.StartsWith(BUILTIN_EFFECT_PREFIX));
    wxASSERT(mNames.Index(path) != wxNOT_FOUND);
@@ -354,5 +356,5 @@ Effect *BuiltinEffectsModule::Instantiate(const wxString & path)
       EXCLUDE_LIST;
    }
 
-   return NULL;
+   return nullptr;
 }
