@@ -1336,13 +1336,13 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
 
             if (b->IsAlias() && ab->GetAliasedFileName() == fName)
             {
-               ab->ChangeAliasedFileName(std::move(renamedFileName));
+               ab->ChangeAliasedFileName(wxFileNameWrapper{ renamedFileName });
                ab->UnlockRead();
                wxPrintf(_("Changed block %s to new alias name\n"), b->GetFileName().GetFullName().c_str());
 
             }
             else if (!b->IsDataAvailable() && db->GetEncodedAudioFilename() == fName) {
-               db->ChangeAudioFile(std::move(renamedFileName));
+               db->ChangeAudioFile(wxFileNameWrapper{ renamedFileName });
                db->UnlockRead();
             }
             ++iter;

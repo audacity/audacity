@@ -405,7 +405,7 @@ void DependencyDialog::PopulateList()
 
    mHasMissingFiles = false;
    mHasNonMissingFiles = false;
-   unsigned int i;
+   long i = 0;
    for (const auto &aliasedFile : mAliasedFiles) {
       const wxFileName &fileName = aliasedFile.mFileName;
       wxLongLong byteCount = (aliasedFile.mByteCount * 124) / 100;
@@ -426,6 +426,8 @@ void DependencyDialog::PopulateList()
       }
       mFileListCtrl->SetItem(i, 1, Internat::FormatSize(byteCount));
       mFileListCtrl->SetItemData(i, long(bOriginalExists));
+
+      ++i;
    }
 
    wxString msg = kStdMsg;
