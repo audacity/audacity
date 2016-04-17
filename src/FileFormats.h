@@ -111,9 +111,9 @@ wxString sf_normalize_name(const char *name);
 # else
 #  include <Types.h>
 # endif
-#endif
 
 OSType sf_header_mactype(int format);
+#endif
 
 // This function wrapper uses a mutex to serialize calls to the SndFile library.
 #include "MemoryX.h"
