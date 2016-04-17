@@ -116,8 +116,8 @@ wxString sf_normalize_name(const char *name);
 OSType sf_header_mactype(int format);
 
 // This function wrapper uses a mutex to serialize calls to the SndFile library.
-#include "../MemoryX.h"
-#include "../ondemand/ODTaskThread.h"
+#include "MemoryX.h"
+#include "ondemand/ODTaskThread.h"
 class ODLock;
 class ODLocker;
 extern ODLock libSndFileMutex;
