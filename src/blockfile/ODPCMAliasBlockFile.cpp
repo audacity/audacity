@@ -381,13 +381,9 @@ void ODPCMAliasBlockFile::SetFileName(wxFileNameWrapper &&name)
 }
 
 ///sets the file name the summary info will be saved in.  threadsafe.
-wxFileName ODPCMAliasBlockFile::GetFileName() const
+auto ODPCMAliasBlockFile::GetFileName() const -> GetFileNameResult
 {
-   wxFileName name;
-   mFileNameMutex.Lock();
-   name = mFileName;
-   mFileNameMutex.Unlock();
-   return name;
+   return { mFileName, ODLocker{ &mFileNameMutex } };
 }
 
 /// Write the summary to disk, using the derived ReadData() to get the data

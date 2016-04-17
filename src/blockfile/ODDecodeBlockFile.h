@@ -133,7 +133,7 @@ class ODDecodeBlockFile final : public SimpleBlockFile
 
    ///sets the file name the summary info will be saved in.  threadsafe.
    void SetFileName(wxFileNameWrapper &&name) override;
-   wxFileName GetFileName() const override;
+   GetFileNameResult GetFileName() const override;
 
    /// Prevents a read on other threads of the encoded audio file.
    void LockRead() const override;

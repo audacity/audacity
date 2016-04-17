@@ -987,7 +987,7 @@ void Sequence::HandleXMLEndTag(const wxChar *tag)
    for (unsigned b = 0, nn = mBlock.size(); b < nn;  b++) {
       SeqBlock &block = mBlock[b];
       if (block.start != numSamples) {
-         wxString sFileAndExtension = block.f->GetFileName().GetFullName();
+         wxString sFileAndExtension = block.f->GetFileName().name.GetFullName();
          if (sFileAndExtension.IsEmpty())
             sFileAndExtension = wxT("(replaced with silence)");
          else
@@ -1829,7 +1829,7 @@ void Sequence::DebugPrintf(wxString *dest) const
           seqBlock.f ? mDirManager->GetRefCount(seqBlock.f) : 0);
 
       if (seqBlock.f)
-         *dest += seqBlock.f->GetFileName().GetFullName();
+         *dest += seqBlock.f->GetFileName().name.GetFullName();
       else
          *dest += wxT("<missing block file>");
 

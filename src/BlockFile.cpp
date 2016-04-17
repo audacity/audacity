@@ -120,9 +120,9 @@ BlockFile::~BlockFile()
 /// but most BlockFiles have at least their summary data here.
 /// (some, i.e. SilentBlockFiles, do not correspond to a file on
 ///  disk and have empty file names)
-wxFileName BlockFile::GetFileName() const
+auto BlockFile::GetFileName() const -> GetFileNameResult
 {
-   return mFileName;
+   return { mFileName };
 }
 
 ///sets the file name the summary info will be saved in.  threadsafe.

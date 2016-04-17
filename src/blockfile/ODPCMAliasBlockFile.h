@@ -125,7 +125,7 @@ class ODPCMAliasBlockFile final : public PCMAliasBlockFile
 
    ///sets the file name the summary info will be saved in.  threadsafe.
    void SetFileName(wxFileNameWrapper &&name) override;
-   wxFileName GetFileName() const override;
+   GetFileNameResult GetFileName() const override;
 
    //when the file closes, it locks the blockfiles, but only conditionally.
    // It calls this so we can check if it has been saved before.

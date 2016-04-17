@@ -24,6 +24,8 @@
 
 #include "wxFileNameWrapper.h"
 
+#include "ondemand/ODTaskThread.h"
+
 
 class SummaryInfo {
  public:
@@ -72,7 +74,24 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
    /// Gets the filename of the disk file associated with this BlockFile
    /// (can be empty -- some BlockFiles, like SilentBlockFile, correspond to
    ///  no file on disk)
-   virtual wxFileName GetFileName() const;
+   /// Avoids copying wxFileName by returning a reference, but for some subclasses
+   /// of BlockFile, you must exclude other threads from changing the name so long
+   /// as you have only a reference.  Thus, this wrapper object that guarantees release
+   /// of any lock when it goes out of scope.  Call mLocker.reset() to unlock it sooner.
+   struct GetFileNameResult {
+      const wxFileName &name;
+      ODLocker mLocker;
+
+      GetFileNameResult(const wxFileName &name_, ODLocker &&locker = ODLocker{})
+      : name{ name_ }, mLocker{ std::move(locker) } {}
+
+      GetFileNameResult(const GetFileNameResult&) PROHIBITED;
+      GetFileNameResult &operator= (const GetFileNameResult&) PROHIBITED;
+
+      GetFileNameResult(GetFileNameResult &&that)
+      : name{ that.name }, mLocker{ std::move(that.mLocker) } {}
+   };
+   virtual GetFileNameResult GetFileName() const;
    virtual void SetFileName(wxFileNameWrapper &&name);
 
    virtual sampleCount GetLength() const { return mLen; }
