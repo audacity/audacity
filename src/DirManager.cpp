@@ -941,7 +941,8 @@ bool DirManager::ContainsBlockFile(const BlockFile *b) const
 {
    if (!b)
       return false;
-   BlockHash::const_iterator it = mBlockFileHash.find(b->GetFileName().GetName());
+   auto result = b->GetFileName();
+   BlockHash::const_iterator it = mBlockFileHash.find(result.name.GetName());
    return it != mBlockFileHash.end() && it->second == b;
 }
 
@@ -957,7 +958,8 @@ bool DirManager::ContainsBlockFile(const wxString &filepath) const
 // the BlockFile.
 BlockFile *DirManager::CopyBlockFile(BlockFile *b)
 {
-   const auto &fn = b->GetFileName();
+   auto result = b->GetFileName();
+   const auto &fn = result.name;
 
    if (!b->IsLocked()) {
       b->Ref();
@@ -995,6 +997,9 @@ BlockFile *DirManager::CopyBlockFile(BlockFile *b)
                   newFile.GetFullPath()) )
             return NULL;
       }
+
+      // Done with fn
+      result.mLocker.reset();
 
       b2 = b->Copy(std::move(newFile));
 
@@ -1090,7 +1095,7 @@ bool DirManager::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    // return a reference to the existing object instead.
    //
 
-   wxString name = target->GetFileName().GetName();
+   wxString name = target->GetFileName().name.GetName();
    BlockFile *retrieved = mBlockFileHash[name];
    if (retrieved) {
       // Lock it in order to DELETE it safely, i.e. without having
@@ -1114,23 +1119,24 @@ bool DirManager::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 
 bool DirManager::MoveOrCopyToNewProjectDirectory(BlockFile *f, bool copy)
 {
-   const auto oldFileName = f->GetFileName();
+   auto result = f->GetFileName();
+   const auto &oldFileNameRef = result.name;
 
    // Check that this BlockFile corresponds to a file on disk
    //ANSWER-ME: Is this checking only for SilentBlockFiles, in which case
    //    (!oldFileName.IsOk()) is a more correct check?
-   if (oldFileName.GetName().IsEmpty()) {
+   if (oldFileNameRef.GetName().IsEmpty()) {
       return true;
    }
 
    wxFileNameWrapper newFileName;
-   if (!this->AssignFile(newFileName, oldFileName.GetFullName(), false))
+   if (!this->AssignFile(newFileName, oldFileNameRef.GetFullName(), false))
       return false;
 
-   if (newFileName != oldFileName) {
+   if (newFileName != oldFileNameRef) {
       //check to see that summary exists before we copy.
       bool summaryExisted = f->IsSummaryAvailable();
-      auto oldPath = oldFileName.GetFullPath();
+      auto oldPath = oldFileNameRef.GetFullPath();
       auto newPath = newFileName.GetFullPath();
       if (summaryExisted) {
          auto success = copy
@@ -1139,11 +1145,21 @@ bool DirManager::MoveOrCopyToNewProjectDirectory(BlockFile *f, bool copy)
          if (!success)
             return false;
       }
-      f->SetFileName(std::move(newFileName));
 
-      //there is a small chance that the summary has begun to be computed on a different thread with the
-      //original filename.  we need to catch this case by waiting for it to finish and then copy.
       if (!summaryExisted && (f->IsSummaryAvailable() || f->IsSummaryBeingComputed())) {
+
+         // We will need to remember the old file name, so copy it
+         wxFileName oldFileName{ oldFileNameRef };
+
+         // Now we can free any lock (and should, if as the comment below says, we need
+         // the other threads to progress)
+         result.mLocker.reset();
+
+         f->SetFileName(std::move(newFileName));
+
+         //there is a small chance that the summary has begun to be computed on a different thread with the
+         //original filename.  we need to catch this case by waiting for it to finish and then copy.
+
          //block to make sure OD files don't get written while we are changing file names.
          //(It is important that OD files set this lock while computing their summary files.)
          while(f->IsSummaryBeingComputed() && !f->IsSummaryAvailable())
@@ -1159,6 +1175,11 @@ bool DirManager::MoveOrCopyToNewProjectDirectory(BlockFile *f, bool copy)
             else if (!ok)
                return false;
          }
+      }
+      else {
+         // Can free this now, and must, because of nonrecursive mutexes
+         result.mLocker.reset();
+         f->SetFileName(std::move(newFileName));
       }
    }
 
@@ -1190,7 +1211,7 @@ int DirManager::GetRefCount(BlockFile * f)
 
 void DirManager::Deref(BlockFile * f)
 {
-   wxString theFileName = f->GetFileName().GetName();
+   const wxString theFileName = f->GetFileName().name.GetName();
 
    //printf("Deref(%d): %s\n",
    //       f->mRefCount-1,
@@ -1336,13 +1357,14 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
 
             if (b->IsAlias() && ab->GetAliasedFileName() == fName)
             {
-               ab->ChangeAliasedFileName(std::move(renamedFileName));
+               ab->ChangeAliasedFileName(wxFileNameWrapper{ renamedFileName });
                ab->UnlockRead();
-               wxPrintf(_("Changed block %s to new alias name\n"), b->GetFileName().GetFullName().c_str());
+               wxPrintf(_("Changed block %s to new alias name\n"),
+                        b->GetFileName().name.GetFullName().c_str());
 
             }
             else if (!b->IsDataAvailable() && db->GetEncodedAudioFilename() == fName) {
-               db->ChangeAudioFile(std::move(renamedFileName));
+               db->ChangeAudioFile(wxFileNameWrapper{ renamedFileName });
                db->UnlockRead();
             }
             ++iter;

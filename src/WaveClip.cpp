@@ -135,7 +135,7 @@ public:
          invalEnd = len;
 
 
-      ODLocker locker(mRegionsMutex);
+      ODLocker locker(&mRegionsMutex);
 
       //look thru the region array for a place to insert.  We could make this more spiffy than a linear search
       //but right now it is not needed since there will usually only be one region (which grows) for OD loading.
@@ -420,7 +420,7 @@ bool WaveClip::AfterClip(double t) const
 ///Delete the wave cache - force redraw.  Thread-safe
 void WaveClip::DeleteWaveCache()
 {
-   ODLocker locker(mWaveCacheMutex);
+   ODLocker locker(&mWaveCacheMutex);
    if(mWaveCache!=NULL)
       delete mWaveCache;
    mWaveCache = new WaveCache();
@@ -429,7 +429,7 @@ void WaveClip::DeleteWaveCache()
 ///Adds an invalid region to the wavecache so it redraws that portion only.
 void WaveClip::AddInvalidRegion(long startSample, long endSample)
 {
-   ODLocker locker(mWaveCacheMutex);
+   ODLocker locker(&mWaveCacheMutex);
    if(mWaveCache!=NULL)
       mWaveCache->AddInvalidRegion(startSample,endSample);
 }
@@ -525,7 +525,7 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
    }
    else {
       // Lock the list of invalid regions
-      ODLocker locker(mWaveCacheMutex);
+      ODLocker locker(&mWaveCacheMutex);
 
       const double tstep = 1.0 / pixelsPerSecond;
       const double samplesPerPixel = mRate * tstep;

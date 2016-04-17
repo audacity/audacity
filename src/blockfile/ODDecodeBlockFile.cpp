@@ -369,13 +369,9 @@ void ODDecodeBlockFile::SetFileName(wxFileNameWrapper &&name)
 }
 
 ///sets the file name the summary info will be saved in.  threadsafe.
-wxFileName ODDecodeBlockFile::GetFileName() const
+auto ODDecodeBlockFile::GetFileName() const -> GetFileNameResult
 {
-   wxFileName name;
-   mFileNameMutex.Lock();
-   name = mFileName;
-   mFileNameMutex.Unlock();
-   return name;
+   return { mFileName, ODLocker{ &mFileNameMutex } };
 }
 
 /// A thread-safe version of CalcSummary.  BlockFile::CalcSummary
