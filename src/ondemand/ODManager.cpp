@@ -277,7 +277,7 @@ void ODManager::Start()
       // JKC: If there are no tasks ready to run, or we're paused then
       // we wait for there to be tasks in the queue.
       {
-         ODLocker locker{ mQueueNotEmptyCondLock };
+         ODLocker locker{ &mQueueNotEmptyCondLock };
          if( (!tasksInArray) || paused)
             mQueueNotEmptyCond->Wait();
       }

@@ -118,13 +118,11 @@ OSType sf_header_mactype(int format);
 // This function wrapper uses a mutex to serialize calls to the SndFile library.
 #include "MemoryX.h"
 #include "ondemand/ODTaskThread.h"
-class ODLock;
-class ODLocker;
 extern ODLock libSndFileMutex;
 template<typename R, typename F, typename... Args>
 inline R SFCall(F fun, Args&&... args)
 {
-   ODLocker locker{ libSndFileMutex };
+   ODLocker locker{ &libSndFileMutex };
    return fun(std::forward<Args>(args)...);
 }
 
