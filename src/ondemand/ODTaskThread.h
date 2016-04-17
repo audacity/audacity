@@ -83,29 +83,33 @@ class ODTaskThread {
 class ODLock {
  public:
    ODLock(){
-      mutex = (pthread_mutex_t *) malloc (sizeof (pthread_mutex_t));
-      pthread_mutex_init (mutex, NULL);
+      pthread_mutex_init (&mutex, NULL);
    }
 
    void Lock()
    {
-      pthread_mutex_lock (mutex);
+      pthread_mutex_lock (&mutex);
+   }
+
+   // Returns 0 iff the lock was acquired.
+   bool TryLock()
+   {
+      return pthread_mutex_trylock (&mutex);
    }
 
    void Unlock()
    {
-      pthread_mutex_unlock (mutex);
+      pthread_mutex_unlock (&mutex);
    }
 
    virtual ~ODLock()
    {
-      pthread_mutex_destroy (mutex);
-      free(mutex);
+      pthread_mutex_destroy (&mutex);
    }
 
 private:
    friend class ODCondition; //needs friendship for wait()
-   pthread_mutex_t *mutex ;
+   pthread_mutex_t mutex ;
 };
 
 class ODCondition
@@ -118,7 +122,7 @@ public:
    void Wait();
 
 protected:
-   pthread_cond_t *condition;
+   pthread_cond_t condition;
    ODLock* m_lock;
 };
 
