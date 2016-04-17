@@ -247,7 +247,7 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    #endif
    void Clear();
 
-   wxString GetFileName() { return mFileName; }
+   const wxString &GetFileName() { return mFileName; }
    bool GetDirty() { return mDirty; }
    void SetProjectTitle();
 

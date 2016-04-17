@@ -48,9 +48,9 @@ bool OpenProjectCommand::Apply(CommandExecutionContext context)
    }
    else
    {
-      context.GetProject()->OpenFile(fileName,addToHistory);
+      context.GetProject()->OpenFile(fileName, addToHistory);
    }
-   wxString newFileName = context.GetProject()->GetFileName();
+   const wxString &newFileName = context.GetProject()->GetFileName();
 
    // Because Open does not return a success or failure, we have to guess
    // at this point, based on whether the project file name has
