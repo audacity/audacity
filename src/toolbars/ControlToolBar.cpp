@@ -475,6 +475,7 @@ bool ControlToolBar::IsRecordDown()
 
 int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
                                    const AudioIOStartStreamOptions &options,
+                                   PlayMode mode,
                                    bool cutpreview, /* = false */
                                    bool backwards, /* = false */
                                    bool playWhiteSpace /* = false */)
@@ -517,6 +518,8 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
       mPlay->PopUp();
       return -1;  // Should never happen, but...
    }
+
+   p->mLastPlayMode = mode;
 
    bool hasaudio = false;
    TrackListIterator iter(t);
@@ -673,10 +676,6 @@ void ControlToolBar::PlayCurrentRegion(bool looped /* = false */,
 
    if (p)
    {
-      if (looped)
-         p->mLastPlayMode = loopedPlay;
-      else
-         p->mLastPlayMode = normalPlay;
 
       double playRegionStart, playRegionEnd;
       p->GetPlayRegion(&playRegionStart, &playRegionEnd);
@@ -686,7 +685,9 @@ void ControlToolBar::PlayCurrentRegion(bool looped /* = false */,
       if (cutpreview)
          options.timeTrack = NULL;
       PlayPlayRegion(SelectedRegion(playRegionStart, playRegionEnd),
-                     options, cutpreview);
+                     options,
+                     (looped ? PlayMode::loopedPlay : PlayMode::normalPlay),
+                     cutpreview);
    }
 }
 

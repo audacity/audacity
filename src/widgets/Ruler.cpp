@@ -2288,7 +2288,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
             options.timeTrack = NULL;
 
          ctb->PlayPlayRegion((SelectedRegion(start, end)),
-                             options,
+                             options, PlayMode::normalPlay,
                              evt.ControlDown(),
                              false,
                              true);

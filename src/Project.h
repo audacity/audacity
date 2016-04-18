@@ -117,10 +117,10 @@ extern AProjectArray gAudacityProjects;
 
 WX_DEFINE_ARRAY(wxMenu *, MenuArray);
 
-enum PlayMode {
+enum class PlayMode : int {
    normalPlay,
-   oneSecondPlay,
-   loopedPlay
+   oneSecondPlay, // Disables auto-scrolling
+   loopedPlay // Disables auto-scrolling
 };
 
 enum StatusBarField {
@@ -494,7 +494,7 @@ public:
 
    void WriteXMLHeader(XMLWriter &xmlFile);
 
-   PlayMode mLastPlayMode{ normalPlay };
+   PlayMode mLastPlayMode{ PlayMode::normalPlay };
    ViewInfo mViewInfo;
 
    // Audio IO callback methods

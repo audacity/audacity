@@ -132,8 +132,8 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
       // BG: Scroll screen if option is set
       // msmeyer: But only if not playing looped or in one-second mode
       if (viewInfo.bUpdateTrackIndicator &&
-         mProject->mLastPlayMode != loopedPlay &&
-         mProject->mLastPlayMode != oneSecondPlay &&
+          mProject->mLastPlayMode != PlayMode::loopedPlay &&
+          mProject->mLastPlayMode != PlayMode::oneSecondPlay &&
          playPos >= 0 &&
          !onScreen &&
          !gAudioIO->IsPaused())

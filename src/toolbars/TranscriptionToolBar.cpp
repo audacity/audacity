@@ -462,6 +462,7 @@ void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
       p->GetControlToolBar()->PlayPlayRegion
          (SelectedRegion(playRegionStart, playRegionEnd),
           options,
+          PlayMode::normalPlay,
           cutPreview);
    }
 }
