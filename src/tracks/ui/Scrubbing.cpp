@@ -218,6 +218,7 @@ bool Scrubber::MaybeStartScrubbing(const wxMouseEvent &event)
             mScrubToken =
                ctb->PlayPlayRegion(SelectedRegion(time0, time1), options,
                                    PlayMode::normalPlay, cutPreview, backwards);
+            ctb->UpdateStatusBar(mProject);
          }
       }
       else
