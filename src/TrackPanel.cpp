@@ -1150,7 +1150,10 @@ void TrackPanel::HandleEscapeKey(bool down)
    if (!down)
       return;
 
-   switch (mMouseCapture)
+   auto &scrubber = GetProject()->GetScrubber();
+   if(scrubber.IsScrubbing())
+      scrubber.StopScrubbing();
+   else switch (mMouseCapture)
    {
    case IsSelecting:
    {
