@@ -97,7 +97,7 @@ class ControlToolBar final : public ToolBar {
    void RegenerateToolsTooltips();
 
    int WidthForStatusBar(wxStatusBar* const);
-   wxString StateForStatusBar();
+   void UpdateStatusBar(AudacityProject *pProject);
 
  private:
 
@@ -116,7 +116,7 @@ class ControlToolBar final : public ToolBar {
    void SetupCutPreviewTracks(double playStart, double cutStart,
                              double cutEnd, double playEnd);
    void ClearCutPreviewTracks();
-   void UpdateStatusBar();
+   wxString StateForStatusBar();
 
    enum
    {
@@ -152,6 +152,7 @@ class ControlToolBar final : public ToolBar {
 
    // strings for status bar
    wxString mStatePlay;
+   wxString mStateScrub;
    wxString mStateStop;
    wxString mStateRecord;
    wxString mStatePause;

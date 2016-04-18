@@ -1052,7 +1052,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    wxString msg = wxString::Format(_("Welcome to Audacity version %s"),
                                    AUDACITY_VERSION_STRING);
    mStatusBar->SetStatusText(msg, mainStatusBarField);
-   mStatusBar->SetStatusText(GetControlToolBar()->StateForStatusBar(), stateStatusBarField);
+   GetControlToolBar()->UpdateStatusBar(this);
    mLastStatusUpdateTime = ::wxGetUTCTime();
 
    mTimer = new wxTimer(this, AudacityProjectTimerID);

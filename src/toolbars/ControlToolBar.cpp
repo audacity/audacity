@@ -105,6 +105,7 @@ ControlToolBar::ControlToolBar()
    /* i18n-hint: These are strings for the status bar, and indicate whether Audacity
    is playing or recording or stopped, and whether it is paused. */
    mStatePlay = XO("Playing");
+   mStateScrub = XO("Scrubbing");
    mStateStop = XO("Stopped");
    mStateRecord = XO("Recording");
    mStatePause = XO("Paused");
@@ -438,7 +439,7 @@ void ControlToolBar::SetPlay(bool down, bool looped, bool cutPreview)
       mPlay->SetAlternateIdx(0);
    }
    EnableDisableButtons();
-   UpdateStatusBar();
+   UpdateStatusBar(GetActiveProject());
 }
 
 void ControlToolBar::SetStop(bool down)
@@ -727,14 +728,14 @@ void ControlToolBar::OnPlay(wxCommandEvent & WXUNUSED(evt))
    if (p) p->TP_DisplaySelection();
 
    PlayDefault();
-   UpdateStatusBar();
+   UpdateStatusBar(GetActiveProject());
 }
 
 void ControlToolBar::OnStop(wxCommandEvent & WXUNUSED(evt))
 {
    if (CanStopAudioStream()) {
       StopPlaying();
-      UpdateStatusBar();
+      UpdateStatusBar(GetActiveProject());
    }
 }
 
@@ -1045,7 +1046,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
          SetRecord(false);
       }
    }
-   UpdateStatusBar();
+   UpdateStatusBar(GetActiveProject());
 }
 
 
@@ -1074,7 +1075,7 @@ void ControlToolBar::OnPause(wxCommandEvent & WXUNUSED(evt))
    }
 
    gAudioIO->SetPaused(mPaused);
-   UpdateStatusBar();
+   UpdateStatusBar(GetActiveProject());
 }
 
 void ControlToolBar::OnRewind(wxCommandEvent & WXUNUSED(evt))
@@ -1170,6 +1171,12 @@ int ControlToolBar::WidthForStatusBar(wxStatusBar* const sb)
    if (x > xMax)
       xMax = x;
 
+   // Note that Scrubbing + Paused is not allowed.
+   sb->GetTextExtent(wxString(wxGetTranslation(mStateScrub)) +
+                     wxT("."), &x, &y);
+   if (x > xMax)
+      xMax = x;
+
    return xMax + 30;    // added constant needed because xMax isn't large enough for some reason, plus some space.
 }
 
@@ -1177,7 +1184,9 @@ wxString ControlToolBar::StateForStatusBar()
 {
    wxString state;
 
-   if (mPlay->IsDown())
+   if (gAudioIO->IsScrubbing())
+      state = wxGetTranslation(mStateScrub);
+   else if (mPlay->IsDown())
       state = wxGetTranslation(mStatePlay);
    else if (mRecord->IsDown())
       state = wxGetTranslation(mStateRecord);
@@ -1195,8 +1204,8 @@ wxString ControlToolBar::StateForStatusBar()
    return state;
 }
 
-void ControlToolBar::UpdateStatusBar()
+void ControlToolBar::UpdateStatusBar(AudacityProject *pProject)
 {
-   GetActiveProject()->GetStatusBar()->SetStatusText(StateForStatusBar(), stateStatusBarField);
+   pProject->GetStatusBar()->SetStatusText(StateForStatusBar(), stateStatusBarField);
 }
 

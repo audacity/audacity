@@ -1703,11 +1703,18 @@ void TrackPanel::HandleCursor(wxMouseEvent & event)
 
       tip = ttb->GetMessageForTool(tool);
 
-      // We don't include the select tool in
-      // SetCursorAndTipByTool() because it's more complex than
-      // the other tool cases.
-      if( tool != selectTool )
+      const auto &scrubber = GetProject()->GetScrubber();
+      if (scrubber.IsScrubbing()) {
+         if (scrubber.IsScrollScrubbing())
+            tip = _("Move to adjust speed, click to skip, ESC to stop.");
+         else
+            tip = _("Move to scrub, click to seek, ESC to stop.");
+      }
+      else if( tool != selectTool )
       {
+         // We don't include the select tool in
+         // SetCursorAndTipByTool() because it's more complex than
+         // the other tool cases.
          SetCursorAndTipByTool( tool, event, tip);
       }
       else
