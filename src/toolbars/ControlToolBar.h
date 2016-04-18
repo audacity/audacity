@@ -34,6 +34,9 @@ class TimeTrack;
 struct AudioIOStartStreamOptions;
 class SelectedRegion;
 
+// Defined in Project.h
+enum class PlayMode : int;
+
 // In the GUI, ControlToolBar appears as the "Transport Toolbar". "Control Toolbar" is historic.
 class ControlToolBar final : public ToolBar {
 
@@ -74,6 +77,7 @@ class ControlToolBar final : public ToolBar {
    // Return the Audio IO token or -1 for failure
    int PlayPlayRegion(const SelectedRegion &selectedRegion,
                       const AudioIOStartStreamOptions &options,
+                      PlayMode playMode,
                       bool cutpreview = false, bool backwards = false,
                       // Allow t0 and t1 to be beyond end of tracks
                       bool playWhiteSpace = false);
