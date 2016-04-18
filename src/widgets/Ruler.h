@@ -11,6 +11,7 @@
 #ifndef __AUDACITY_RULER__
 #define __AUDACITY_RULER__
 
+#include "../MemoryX.h"
 #include <wx/bitmap.h>
 #include <wx/dc.h>
 #include <wx/dcmemory.h>
@@ -269,6 +270,8 @@ private:
     DECLARE_EVENT_TABLE()
 };
 
+class QuickPlayIndicatorOverlay;
+
 // This is an Audacity Specific ruler panel which additionally
 // has border, selection markers, play marker.
 // Once TrackPanel uses wxSizers, we will derive it from some
@@ -320,6 +323,7 @@ private:
    void DoDrawCursor(wxDC * dc);
    void DoDrawSelection(wxDC * dc);
    void DoDrawIndicator(wxDC * dc);
+   QuickPlayIndicatorOverlay *GetOverlay();
    void DrawQuickPlayIndicator(wxDC * dc /*NULL to DELETE old only*/);
    void DoDrawPlayRegion(wxDC * dc);
 
@@ -397,6 +401,8 @@ private:
    double mLeftDownClick;  // click position in seconds
    int mLastMouseX;  // Pixel position
    bool mIsDragging;
+
+   std::unique_ptr<QuickPlayIndicatorOverlay> mOverlay;
 
    DECLARE_EVENT_TABLE()
 };

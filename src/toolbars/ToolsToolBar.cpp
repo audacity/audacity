@@ -52,13 +52,15 @@
 #include "../AllThemeResources.h"
 #include "../ImageManipulation.h"
 #include "../Project.h"
-#ifdef EXPERIMENTAL_SCRUBBING_BASIC
-#include "../TrackPanel.h"
-#endif
 #include "../Theme.h"
-#include "../widgets/AButton.h"
 
 #include "../Experimental.h"
+#ifdef EXPERIMENTAL_SCRUBBING_BASIC
+#include "../tracks/ui/Scrubbing.h"
+#endif
+
+#include "../widgets/AButton.h"
+
 
 IMPLEMENT_CLASS(ToolsToolBar, ToolBar);
 
@@ -219,13 +221,9 @@ void ToolsToolBar::SetCurrentTool(int tool, bool show)
 
 #ifdef EXPERIMENTAL_SCRUBBING_BASIC
    if (tool != selectTool) {
-      AudacityProject *p = GetActiveProject();
-      if (p) {
-         TrackPanel *tp = p->GetTrackPanel();
-         if (tp) {
-            tp->StopScrubbing();
-         }
-      }
+      AudacityProject *const p = GetActiveProject();
+      if (p)
+         p->GetScrubber().StopScrubbing();
    }
 #endif
 
@@ -294,13 +292,9 @@ void ToolsToolBar::OnTool(wxCommandEvent & evt)
 
 #ifdef EXPERIMENTAL_SCRUBBING_BASIC
    if (0 != mCurrentTool) {
-      AudacityProject *p = GetActiveProject();
-      if (p) {
-         TrackPanel *tp = p->GetTrackPanel();
-         if (tp) {
-            tp->StopScrubbing();
-         }
-      }
+      AudacityProject *const p = GetActiveProject();
+      if (p)
+         p->GetScrubber().StopScrubbing();
    }
 #endif
 

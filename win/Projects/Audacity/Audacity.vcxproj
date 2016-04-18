@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -213,6 +213,10 @@
     <ClCompile Include="..\..\..\src\TrackArtist.cpp" />
     <ClCompile Include="..\..\..\src\TrackPanel.cpp" />
     <ClCompile Include="..\..\..\src\TrackPanelAx.cpp" />
+    <ClCompile Include="..\..\..\src\TrackPanelOverlay.cpp" />
+    <ClCompile Include="..\..\..\src\tracks\ui\EditCursorOverlay.cpp" />
+    <ClCompile Include="..\..\..\src\tracks\ui\PlayIndicatorOverlay.cpp" />
+    <ClCompile Include="..\..\..\src\tracks\ui\Scrubbing.cpp" />
     <ClCompile Include="..\..\..\src\UndoManager.cpp" />
     <ClCompile Include="..\..\..\src\ViewInfo.cpp" />
     <ClCompile Include="..\..\..\src\VoiceKey.cpp" />
@@ -435,7 +439,13 @@
     <ClInclude Include="..\..\..\src\SseMathFuncs.h" />
     <ClInclude Include="..\..\..\src\toolbars\SpectralSelectionBar.h" />
     <ClInclude Include="..\..\..\src\toolbars\SpectralSelectionBarListener.h" />
+    <ClInclude Include="..\..\..\src\TrackPanelCell.h" />
+    <ClInclude Include="..\..\..\src\TrackPanelCellIterator.h" />
     <ClInclude Include="..\..\..\src\TrackPanelListener.h" />
+    <ClInclude Include="..\..\..\src\TrackPanelOverlay.h" />
+    <ClInclude Include="..\..\..\src\tracks\ui\EditCursorOverlay.h" />
+    <ClInclude Include="..\..\..\src\tracks\ui\PlayIndicatorOverlay.h" />
+    <ClInclude Include="..\..\..\src\tracks\ui\Scrubbing.h" />
     <ClInclude Include="..\..\..\src\TranslatableStringArray.h" />
     <ClInclude Include="..\..\..\src\WaveTrackLocation.h" />
     <ClInclude Include="..\..\..\src\widgets\HelpSystem.h" />
