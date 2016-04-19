@@ -459,11 +459,15 @@ void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
       AudioIOStartStreamOptions options(p->GetDefaultPlayOptions());
       options.playLooped = looped;
       options.timeTrack = mTimeTrack.get();
+      ControlToolBar::PlayAppearance appearance =
+         cutPreview ? ControlToolBar::PlayAppearance::CutPreview
+         : looped ? ControlToolBar::PlayAppearance::Looped
+         : ControlToolBar::PlayAppearance::Straight;
       p->GetControlToolBar()->PlayPlayRegion
          (SelectedRegion(playRegionStart, playRegionEnd),
           options,
           PlayMode::normalPlay,
-          cutPreview);
+          appearance);
    }
 }
 

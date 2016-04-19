@@ -2071,7 +2071,11 @@ bool AudacityProject::MakeReadyToPlay(bool loop, bool cutpreview)
    if (gAudioIO->IsBusy())
       return false;
 
-   toolbar->SetPlay(true, loop, cutpreview);
+   ControlToolBar::PlayAppearance appearance =
+      cutpreview ? ControlToolBar::PlayAppearance::CutPreview
+      : loop ? ControlToolBar::PlayAppearance::Looped
+      : ControlToolBar::PlayAppearance::Straight;
+   toolbar->SetPlay(true, appearance);
    toolbar->SetStop(false);
 
    return true;

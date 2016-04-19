@@ -211,6 +211,8 @@ bool Scrubber::MaybeStartScrubbing(const wxMouseEvent &event)
             mMaxScrubSpeed = options.maxScrubSpeed = 1.0;
 #endif
             options.maxScrubTime = mProject->GetTracks()->GetEndTime();
+            ControlToolBar::PlayAppearance appearance =
+               ControlToolBar::PlayAppearance::Scrub;
             const bool cutPreview = false;
             const bool backwards = time1 < time0;
 #ifdef EXPERIMENTAL_SCRUBBING_SCROLL_WHEEL
@@ -223,7 +225,7 @@ bool Scrubber::MaybeStartScrubbing(const wxMouseEvent &event)
             mScrubSpeedDisplayCountdown = 0;
             mScrubToken =
                ctb->PlayPlayRegion(SelectedRegion(time0, time1), options,
-                                   PlayMode::normalPlay, cutPreview, backwards);
+                                   PlayMode::normalPlay, appearance, backwards);
          }
       }
       else
