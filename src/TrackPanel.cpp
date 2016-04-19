@@ -1151,7 +1151,7 @@ void TrackPanel::HandleEscapeKey(bool down)
       return;
 
    auto &scrubber = GetProject()->GetScrubber();
-   if(scrubber.IsScrubbing())
+   if(scrubber.HasStartedScrubbing())
       scrubber.StopScrubbing();
    else switch (mMouseCapture)
    {

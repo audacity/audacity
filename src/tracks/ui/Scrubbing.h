@@ -35,10 +35,17 @@ public:
    // Returns true iff the event should be considered consumed by this:
    bool MaybeStartScrubbing(const wxMouseEvent &event);
    void ContinueScrubbing();
-   bool StopScrubbing();
+   void StopScrubbing();
 
+   wxCoord GetScrubStartPosition() const
+   { return mScrubStartPosition; }
+
+   // True iff the user has clicked to start scrub and not yet stopped,
+   // but IsScrubbing() may yet be false
+   bool HasStartedScrubbing() const
+   { return GetScrubStartPosition() >= 0; }
    bool IsScrubbing() const;
-   bool IsScrollScrubbing() const // If true, implies IsScrubbing()
+   bool IsScrollScrubbing() const // If true, implies HasStartedScrubbing()
    { return mSmoothScrollingScrub; }
 
    bool ShouldDrawScrubSpeed();
