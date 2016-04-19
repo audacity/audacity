@@ -133,6 +133,8 @@ simplifies construction of menu items.
 #include "scorealign-glue.h"
 #endif /* EXPERIMENTAL_SCOREALIGN */
 
+#include "tracks/ui/Scrubbing.h"
+
 enum {
    kAlignStartZero = 0,
    kAlignStartSelStart,
@@ -816,7 +818,9 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("PlayLooped"), _("&Loop Play"), FN(OnPlayLooped), wxT("Shift+Space"),
          WaveTracksExistFlag | AudioIONotBusyFlag | CanStopAudioStreamFlag,
          WaveTracksExistFlag | AudioIONotBusyFlag | CanStopAudioStreamFlag);
-      c->AddItem(wxT("Pause"), _("&Pause"), FN(OnPause), wxT("P"));
+      c->AddItem(wxT("Pause"), _("&Pause"), FN(OnPause), wxT("P"),
+                 c->GetDefaultFlags() | AudioStreamNotScrubbingFlag,
+                 c->GetDefaultMask()  | AudioStreamNotScrubbingFlag);
       c->AddItem(wxT("SkipStart"), _("S&kip to Start"), FN(OnSkipStart), wxT("Home"),
                  AudioIONotBusyFlag, AudioIONotBusyFlag);
       c->AddItem(wxT("SkipEnd"), _("Skip to E&nd"), FN(OnSkipEnd), wxT("End"),
@@ -1819,6 +1823,9 @@ wxUint32 AudacityProject::GetUpdateFlags()
    ControlToolBar *bar = GetControlToolBar();
    if (bar->ControlToolBar::CanStopAudioStream())
       flags |= CanStopAudioStreamFlag;
+
+   if(!GetScrubber().HasStartedScrubbing())
+      flags |= AudioStreamNotScrubbingFlag;
 
    return flags;
 }

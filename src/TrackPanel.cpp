@@ -1297,7 +1297,7 @@ bool TrackPanel::SetCursorByActivity( )
    return false;
 }
 
-bool TrackPanel::SetCursorForCutline(WaveTrack * track, wxRect &rect, wxMouseEvent &event)
+bool TrackPanel::SetCursorForCutline(WaveTrack * track, wxRect &rect, const wxMouseEvent &event)
 {
    if (IsOverCutline(track, rect, event)) {
       bool unsafe = IsUnsafe();
@@ -1311,7 +1311,7 @@ bool TrackPanel::SetCursorForCutline(WaveTrack * track, wxRect &rect, wxMouseEve
 /// When in the "label" (TrackInfo or vertical ruler), we can either vertical zoom or re-order tracks.
 /// Dont't change cursor/tip to zoom if display is not waveform (either linear of dB) or Spectrum
 void TrackPanel::SetCursorAndTipWhenInLabel( Track * t,
-         wxMouseEvent &event, wxString &tip )
+         const wxMouseEvent &event, wxString &tip )
 {
    if (event.m_x >= GetVRulerOffset() && (t->GetKind() == Track::Wave) )
    {
@@ -1351,7 +1351,7 @@ void TrackPanel::SetCursorAndTipWhenInVResizeArea( bool bLinked, wxString &tip )
 /// When in a label track, find out if we've hit anything that
 /// would cause a cursor change.
 void TrackPanel::SetCursorAndTipWhenInLabelTrack( LabelTrack * pLT,
-       wxMouseEvent & event, wxString &tip )
+       const wxMouseEvent & event, wxString &tip )
 {
    int edge=pLT->OverGlyph(event.m_x, event.m_y);
    if(edge !=0)
@@ -1462,7 +1462,7 @@ void TrackPanel::HandleCenterFrequencyClick
 // we hover over, most notably when hovering over the selction boundaries.
 // Determine and set the cursor and tip accordingly.
 void TrackPanel::SetCursorAndTipWhenSelectTool( Track * t,
-        wxMouseEvent & event, wxRect &rect, bool bMultiToolMode,
+        const wxMouseEvent & event, wxRect &rect, bool bMultiToolMode,
         wxString &tip, const wxCursor ** ppCursor )
 {
    // Do not set the default cursor here and re-set later, that causes
@@ -1596,7 +1596,7 @@ void TrackPanel::SetCursorAndTipWhenSelectTool( Track * t,
 /// In this method we know what tool we are using,
 /// so set the cursor accordingly.
 void TrackPanel::SetCursorAndTipByTool( int tool,
-         wxMouseEvent & event, wxString& )
+         const wxMouseEvent & event, wxString& )
 {
    bool unsafe = IsUnsafe();
 
@@ -1628,7 +1628,7 @@ void TrackPanel::SetCursorAndTipByTool( int tool,
 ///  TrackPanel::HandleCursor( ) sets the cursor drawn at the mouse location.
 ///  As this procedure checks which region the mouse is over, it is
 ///  appropriate to establish the message in the status bar.
-void TrackPanel::HandleCursor(wxMouseEvent & event)
+void TrackPanel::HandleCursor(const wxMouseEvent & event)
 {
    mLastMouseEvent = event;
 
@@ -1704,7 +1704,7 @@ void TrackPanel::HandleCursor(wxMouseEvent & event)
       tip = ttb->GetMessageForTool(tool);
 
       const auto &scrubber = GetProject()->GetScrubber();
-      if (scrubber.IsScrubbing()) {
+      if (scrubber.HasStartedScrubbing()) {
          if (scrubber.IsScrollScrubbing())
             tip = _("Move to adjust speed, click to skip, ESC to stop.");
          else
@@ -1954,8 +1954,9 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
          event.LeftDClick() ||
 #endif
          event.LeftDown()) {
+         SetCapturedTrack(nullptr, IsUncaptured);
          GetProject()->GetScrubber().MarkScrubStart(
-            event.m_x
+            event
 #ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
             , event.LeftDClick()
 #endif
@@ -2890,7 +2891,7 @@ TrackPanel::SelectionBoundary TrackPanel::ChooseTimeBoundary
 
 
 TrackPanel::SelectionBoundary TrackPanel::ChooseBoundary
-(wxMouseEvent & event, const Track *pTrack, const wxRect &rect,
+(const wxMouseEvent & event, const Track *pTrack, const wxRect &rect,
 bool mayDragWidth, bool onlyWithinSnapDistance,
  double *pPinValue) const
 {
@@ -6128,7 +6129,7 @@ bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &rect, 
    return false;
 }
 
-bool TrackPanel::IsOverCutline(WaveTrack * track, wxRect &rect, wxMouseEvent &event)
+bool TrackPanel::IsOverCutline(WaveTrack * track, wxRect &rect, const wxMouseEvent &event)
 {
    for (auto loc: track->GetCachedLocations())
    {
@@ -6420,7 +6421,7 @@ void TrackPanel::HandleTrackSpecificMouseEvent(wxMouseEvent & event)
 /// determine what object we are hovering over and hence what tool to use.
 /// @param pTtb - A pointer to the tools tool bar
 /// @param event - Mouse event, with info about position and what mouse buttons are down.
-int TrackPanel::DetermineToolToUse( ToolsToolBar * pTtb, wxMouseEvent & event)
+int TrackPanel::DetermineToolToUse( ToolsToolBar * pTtb, const wxMouseEvent & event)
 {
    int currentTool = pTtb->GetCurrentTool();
 
@@ -6483,7 +6484,7 @@ int TrackPanel::DetermineToolToUse( ToolsToolBar * pTtb, wxMouseEvent & event)
 
 
 #ifdef USE_MIDI
-bool TrackPanel::HitTestStretch(Track *track, wxRect &rect, wxMouseEvent & event)
+bool TrackPanel::HitTestStretch(Track *track, wxRect &rect, const wxMouseEvent & event)
 {
    // later, we may want a different policy, but for now, stretch is
    // selected when the cursor is near the center of the track and
@@ -6507,7 +6508,7 @@ bool TrackPanel::HitTestStretch(Track *track, wxRect &rect, wxMouseEvent & event
 
 /// method that tells us if the mouse event landed on an
 /// envelope boundary.
-bool TrackPanel::HitTestEnvelope(Track *track, wxRect &rect, wxMouseEvent & event)
+bool TrackPanel::HitTestEnvelope(Track *track, wxRect &rect, const wxMouseEvent & event)
 {
    wxASSERT(track);
    if( track->GetKind() != Track::Wave )
@@ -6575,7 +6576,7 @@ bool TrackPanel::HitTestEnvelope(Track *track, wxRect &rect, wxMouseEvent & even
 
 /// method that tells us if the mouse event landed on an
 /// editable sample
-bool TrackPanel::HitTestSamples(Track *track, wxRect &rect, wxMouseEvent & event)
+bool TrackPanel::HitTestSamples(Track *track, wxRect &rect, const wxMouseEvent & event)
 {
    wxASSERT(track);
    if( track->GetKind() != Track::Wave )
@@ -6626,7 +6627,7 @@ bool TrackPanel::HitTestSamples(Track *track, wxRect &rect, wxMouseEvent & event
 
 /// method that tells us if the mouse event landed on a
 /// time-slider that allows us to time shift the sequence.
-bool TrackPanel::HitTestSlide(Track * WXUNUSED(track), wxRect &rect, wxMouseEvent & event)
+bool TrackPanel::HitTestSlide(Track * WXUNUSED(track), wxRect &rect, const wxMouseEvent & event)
 {
    // Perhaps we should delegate this to TrackArtist as only TrackArtist
    // knows what the real sizes are??
