@@ -27,7 +27,7 @@ public:
    ~Scrubber();
 
    void MarkScrubStart(
-      wxCoord xx
+      const wxMouseEvent &event
 #ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
       , bool smoothScrolling
 #endif

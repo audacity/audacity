@@ -67,6 +67,8 @@
 #include "../widgets/AButton.h"
 #include "../widgets/Meter.h"
 
+#include "../tracks/ui/Scrubbing.h"
+
 IMPLEMENT_CLASS(ControlToolBar, ToolBar);
 
 //static
@@ -423,7 +425,11 @@ void ControlToolBar::EnableDisableButtons()
    mStop->SetEnabled(CanStopAudioStream() && (playing || recording));
    mRewind->SetEnabled(!playing && !recording);
    mFF->SetEnabled(tracks && !playing && !recording);
-   mPause->SetEnabled(CanStopAudioStream());
+
+   auto pProject = GetActiveProject();
+   mPause->SetEnabled(CanStopAudioStream() &&
+                      !(pProject &&
+                        pProject->GetScrubber().HasStartedScrubbing()));
 }
 
 void ControlToolBar::SetPlay(bool down, bool looped, bool cutPreview)
@@ -1184,7 +1190,8 @@ wxString ControlToolBar::StateForStatusBar()
 {
    wxString state;
 
-   if (gAudioIO->IsScrubbing())
+   auto pProject = GetActiveProject();
+   if (pProject && pProject->GetScrubber().HasStartedScrubbing())
       state = wxGetTranslation(mStateScrub);
    else if (mPlay->IsDown())
       state = wxGetTranslation(mStatePlay);

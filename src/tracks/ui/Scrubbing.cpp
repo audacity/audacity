@@ -140,12 +140,14 @@ Scrubber::~Scrubber()
 }
 
 void Scrubber::MarkScrubStart(
-   wxCoord xx
+   const wxMouseEvent &event
 #ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
    , bool smoothScrolling
 #endif
 )
 {
+   const wxCoord xx = event.m_x;
+
    // Don't actually start scrubbing, but collect some information
    // needed for the decision to start scrubbing later when handling
    // drag events.
@@ -154,6 +156,10 @@ void Scrubber::MarkScrubStart(
 #endif
    mScrubStartPosition = xx;
    mScrubStartClockTimeMillis = ::wxGetLocalTimeMillis();
+
+   ControlToolBar * const ctb = mProject->GetControlToolBar();
+   ctb->UpdateStatusBar(mProject);
+   mProject->GetTrackPanel()->HandleCursor(event);
 }
 
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
@@ -218,7 +224,6 @@ bool Scrubber::MaybeStartScrubbing(const wxMouseEvent &event)
             mScrubToken =
                ctb->PlayPlayRegion(SelectedRegion(time0, time1), options,
                                    PlayMode::normalPlay, cutPreview, backwards);
-            ctb->UpdateStatusBar(mProject);
          }
       }
       else
