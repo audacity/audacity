@@ -82,6 +82,7 @@ array of Ruler::Label.
 #include "../NumberScale.h"
 #include "../Prefs.h"
 #include "../Snap.h"
+#include "../tracks/ui/Scrubbing.h"
 
 using std::min;
 using std::max;
@@ -2598,19 +2599,39 @@ void AdornedRulerPanel::DrawIndicator( double time, bool rec )
 // Draws the play/recording position indicator.
 void AdornedRulerPanel::DoDrawIndicator(wxDC * dc)
 {
-   int indsize = 6;
+   enum {
+      indsize = 6,
+      height = ( indsize * 3 ) / 2 + 1,
+      offset = 1,
+   };
+
    const int x = Time2Pos(mIndTime);
+   AColor::IndicatorColor( dc, ( mIndType ? true : false ) );
 
    wxPoint tri[ 3 ];
-   tri[ 0 ].x = x - indsize;
-   tri[ 0 ].y = 1;
-   tri[ 1 ].x = x + indsize;
-   tri[ 1 ].y = 1;
-   tri[ 2 ].x = x;
-   tri[ 2 ].y = ( indsize * 3 ) / 2 + 1;
-
-   AColor::IndicatorColor( dc, ( mIndType ? true : false ) );
-   dc->DrawPolygon( 3, tri );
+   if (mProject->GetScrubber().HasStartedScrubbing()) {
+      // Double headed, left-right
+      tri[ 0 ].x = x - offset;
+      tri[ 0 ].y = 1;
+      tri[ 1 ].x = x - offset;
+      tri[ 1 ].y = height;
+      tri[ 2 ].x = x - indsize;
+      tri[ 2 ].y = height / 2;
+      dc->DrawPolygon( 3, tri );
+      tri[ 0 ].x = tri[ 1 ].x = x + offset;
+      tri[ 2 ].x = x + indsize;
+      dc->DrawPolygon( 3, tri );
+   }
+   else {
+      // Down pointing triangle
+      tri[ 0 ].x = x - indsize;
+      tri[ 0 ].y = 1;
+      tri[ 1 ].x = x + indsize;
+      tri[ 1 ].y = 1;
+      tri[ 2 ].x = x;
+      tri[ 2 ].y = height;
+      dc->DrawPolygon( 3, tri );
+   }
 }
 
 QuickPlayIndicatorOverlay *AdornedRulerPanel::GetOverlay()
