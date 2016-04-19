@@ -318,10 +318,10 @@ void Scrubber::StopScrubbing()
          ControlToolBar *const ctb = mProject->GetControlToolBar();
          ctb->StopPlaying();
       }
-      return true;
+      return;
    }
    else
-      return false;
+      return;
 }
 
 bool Scrubber::IsScrubbing() const
