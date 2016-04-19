@@ -2288,9 +2288,13 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
          else
             options.timeTrack = NULL;
 
+         ControlToolBar::PlayAppearance appearance =
+            evt.ControlDown() ? ControlToolBar::PlayAppearance::CutPreview
+               : loopEnabled ? ControlToolBar::PlayAppearance::Looped
+               : ControlToolBar::PlayAppearance::Straight;
          ctb->PlayPlayRegion((SelectedRegion(start, end)),
                              options, PlayMode::normalPlay,
-                             evt.ControlDown(),
+                             appearance,
                              false,
                              true);
 

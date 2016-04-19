@@ -166,6 +166,8 @@ void ControlToolBar::Populate()
    MakeAlternateImages(*mPlay, 1, bmpLoop, bmpLoop, bmpLoopDisabled);
    MakeAlternateImages(*mPlay, 2,
       bmpCutPreview, bmpCutPreview, bmpCutPreviewDisabled);
+   MakeAlternateImages(*mPlay, 3,
+                       bmpScrub, bmpScrub, bmpScrubDisabled);
    mPlay->FollowModifierKeys();
 
    mStop = MakeButton( bmpStop, bmpStop, bmpStopDisabled ,
@@ -361,7 +363,10 @@ void ControlToolBar::ReCreateButtons()
 
    if (playDown)
    {
-      SetPlay(playDown, playShift, false);
+      ControlToolBar::PlayAppearance appearance =
+         playShift ? ControlToolBar::PlayAppearance::Looped
+         : ControlToolBar::PlayAppearance::Straight;
+      SetPlay(playDown, appearance);
    }
 
    if (pauseDown)
@@ -432,12 +437,12 @@ void ControlToolBar::EnableDisableButtons()
                         pProject->GetScrubber().HasStartedScrubbing()));
 }
 
-void ControlToolBar::SetPlay(bool down, bool looped, bool cutPreview)
+void ControlToolBar::SetPlay(bool down, PlayAppearance appearance)
 {
    if (down) {
-      mPlay->SetShift(looped);
-      mPlay->SetControl(cutPreview);
-      mPlay->SetAlternateIdx(cutPreview ? 2 : looped ? 1 : 0);
+      mPlay->SetShift(appearance == PlayAppearance::Looped);
+      mPlay->SetControl(appearance == PlayAppearance::CutPreview);
+      mPlay->SetAlternateIdx(static_cast<int>(appearance));
       mPlay->PushDown();
    }
    else {
@@ -483,7 +488,7 @@ bool ControlToolBar::IsRecordDown()
 int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
                                    const AudioIOStartStreamOptions &options,
                                    PlayMode mode,
-                                   bool cutpreview, /* = false */
+                                   PlayAppearance appearance, /* = PlayOption::Straight */
                                    bool backwards, /* = false */
                                    bool playWhiteSpace /* = false */)
 {
@@ -502,13 +507,14 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
    if (backwards)
       std::swap(t0, t1);
 
-   SetPlay(true, looped, cutpreview);
+   SetPlay(true, appearance);
 
    if (gAudioIO->IsBusy()) {
       SetPlay(false);
       return -1;
    }
 
+   const bool cutpreview = appearance == PlayAppearance::CutPreview;
    if (cutpreview && t0==t1) {
       SetPlay(false);
       return -1; /* msmeyer: makes no sense */
@@ -691,10 +697,14 @@ void ControlToolBar::PlayCurrentRegion(bool looped /* = false */,
       options.playLooped = looped;
       if (cutpreview)
          options.timeTrack = NULL;
+      ControlToolBar::PlayAppearance appearance =
+        cutpreview ? ControlToolBar::PlayAppearance::CutPreview
+           : looped ? ControlToolBar::PlayAppearance::Looped
+           : ControlToolBar::PlayAppearance::Straight;
       PlayPlayRegion(SelectedRegion(playRegionStart, playRegionEnd),
                      options,
                      (looped ? PlayMode::loopedPlay : PlayMode::normalPlay),
-                     cutpreview);
+                     appearance);
    }
 }
 

@@ -60,8 +60,13 @@ class ControlToolBar final : public ToolBar {
    void OnFF(wxCommandEvent & evt);
    void OnPause(wxCommandEvent & evt);
 
+   // Choice among the appearances of the play button:
+   enum class PlayAppearance {
+      Straight, Looped, CutPreview, Scrub
+   };
+
    //These allow buttons to be controlled externally:
-   void SetPlay(bool down, bool looped=false, bool cutPreview = false);
+   void SetPlay(bool down, PlayAppearance appearance = PlayAppearance::Straight);
    void SetStop(bool down);
    void SetRecord(bool down, bool append=false);
 
@@ -78,7 +83,8 @@ class ControlToolBar final : public ToolBar {
    int PlayPlayRegion(const SelectedRegion &selectedRegion,
                       const AudioIOStartStreamOptions &options,
                       PlayMode playMode,
-                      bool cutpreview = false, bool backwards = false,
+                      PlayAppearance appearance = PlayAppearance::Straight,
+                      bool backwards = false,
                       // Allow t0 and t1 to be beyond end of tracks
                       bool playWhiteSpace = false);
    void PlayDefault();
