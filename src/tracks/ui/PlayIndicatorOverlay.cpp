@@ -17,6 +17,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../TrackPanelCell.h"
 #include "../../TrackPanelCellIterator.h"
 #include "../../widgets/Ruler.h"
+#include "Scrubbing.h"
 
 #include <wx/dc.h>
 
@@ -113,8 +114,13 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
    // Let other listeners get the notification
    event.Skip();
 
-   if (!mProject->IsAudioActive())
-      mNewIndicatorX = -1;
+   if (!mProject->IsAudioActive()) {
+      const auto &scrubber = mProject->GetScrubber();
+      if (scrubber.HasStartedScrubbing())
+         mNewIndicatorX = scrubber.GetScrubStartPosition();
+      else
+         mNewIndicatorX = -1;
+   }
    else {
       ViewInfo &viewInfo = mProject->GetViewInfo();
 

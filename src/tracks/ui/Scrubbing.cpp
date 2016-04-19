@@ -302,8 +302,11 @@ void Scrubber::ContinueScrubbing()
 #endif
 }
 
-bool Scrubber::StopScrubbing()
+void Scrubber::StopScrubbing()
 {
+   mScrubStartPosition = -1;
+   mSmoothScrollingScrub = false;
+
    if (IsScrubbing())
    {
       if (gAudioIO->IsBusy()) {
