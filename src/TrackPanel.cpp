@@ -1147,13 +1147,15 @@ void TrackPanel::MakeParentRedrawScrollbars()
 
 void TrackPanel::HandleEscapeKey(bool down)
 {
+   // Note that this dispatches some keystrokes even when track panel is not focused.
+   // So it works as a place for escaping from playing and scrub as well as other
+   // drag actions specific to track panel.  If there is a drag and a play at the
+   // same time, the first ESC applies to the drag action only.
+
    if (!down)
       return;
 
-   auto &scrubber = GetProject()->GetScrubber();
-   if(scrubber.HasStartedScrubbing())
-      scrubber.StopScrubbing();
-   else switch (mMouseCapture)
+   switch (mMouseCapture)
    {
    case IsSelecting:
    {
@@ -1195,10 +1197,28 @@ void TrackPanel::HandleEscapeKey(bool down)
    }
       break;
    default:
+   {
+      // Stop play, but not record, and only if ESC does
+      // nothing else.  See comments at top of function.
+
+      auto project = GetProject();
+      auto token = project->GetAudioIOToken();
+      auto &scrubber = project->GetScrubber();
+      if(scrubber.HasStartedScrubbing())
+         // ESC out of scrubbing
+         scrubber.StopScrubbing();
+      else if(token > 0 &&
+              gAudioIO->IsAudioTokenActive(token) &&
+              gAudioIO->GetNumCaptureChannels() == 0)
+         // ESC out of other play (but not record)
+         GetProject()->OnStop();
+
+      // Not escaping from a mouse drag
       return;
    }
+   }
 
-   // Common part in all cases that do anything
+   // Common part in all cases that escape from a drag
    SetCapturedTrack(NULL, IsUncaptured);
    if (HasCapture())
       ReleaseMouse();
