@@ -1145,15 +1145,17 @@ void TrackPanel::MakeParentRedrawScrollbars()
    mListener->TP_RedrawScrollbars();
 }
 
-void TrackPanel::HandleEscapeKey(bool down)
+bool TrackPanel::HandleEscapeKey(bool down)
 {
-   if (!down)
-      return;
+   // Note that this dispatches some keystrokes even when track panel is not focused.
+   // So it works as a place for escaping from playing and scrub as well as other
+   // drag actions specific to track panel.  If there is a drag and a play at the
+   // same time, the first ESC applies to the drag action only.
 
-   auto &scrubber = GetProject()->GetScrubber();
-   if(scrubber.HasStartedScrubbing())
-      scrubber.StopScrubbing();
-   else switch (mMouseCapture)
+   if (!down)
+      return false;
+
+   switch (mMouseCapture)
    {
    case IsSelecting:
    {
@@ -1195,16 +1197,21 @@ void TrackPanel::HandleEscapeKey(bool down)
    }
       break;
    default:
-      return;
+   {
+      // Not escaping from a mouse drag
+      return false;
+   }
    }
 
-   // Common part in all cases that do anything
+   // Common part in all cases that escape from a drag
    SetCapturedTrack(NULL, IsUncaptured);
    if (HasCapture())
       ReleaseMouse();
    wxMouseEvent dummy;
    HandleCursor(dummy);
    Refresh(false);
+
+   return true;
 }
 
 void TrackPanel::HandleAltKey(bool down)
@@ -5758,8 +5765,12 @@ void TrackPanel::OnKeyDown(wxKeyEvent & event)
    switch (event.GetKeyCode())
    {
    case WXK_ESCAPE:
-      HandleEscapeKey(true);
-      break;
+      if(HandleEscapeKey(true))
+         // Don't skip the event, eat it so that
+         // AudacityApp does not also stop any playback.
+         return;
+      else
+         break;
 
    case WXK_ALT:
       HandleAltKey(true);
@@ -5858,10 +5869,11 @@ void TrackPanel::OnChar(wxKeyEvent & event)
 
 void TrackPanel::OnKeyUp(wxKeyEvent & event)
 {
+   bool didSomething = false;
    switch (event.GetKeyCode())
    {
    case WXK_ESCAPE:
-      HandleEscapeKey(false);
+      didSomething = HandleEscapeKey(false);
       break;
    case WXK_ALT:
       HandleAltKey(false);
@@ -5876,7 +5888,8 @@ void TrackPanel::OnKeyUp(wxKeyEvent & event)
       break;
    }
 
-   event.Skip();
+   if(!didSomething)
+      event.Skip();
 }
 
 /// Should handle the case when the mouse capture is lost.

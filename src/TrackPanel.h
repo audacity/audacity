@@ -195,7 +195,7 @@ class AUDACITY_DLL_API TrackPanel final : public wxPanel {
    //virtual void SetSelectionFormat(int iformat)
    //virtual void SetSnapTo(int snapto)
 
-   virtual void HandleEscapeKey(bool down);
+   virtual bool HandleEscapeKey(bool down);
    virtual void HandleAltKey(bool down);
    virtual void HandleShiftKey(bool down);
    virtual void HandleControlKey(bool down);

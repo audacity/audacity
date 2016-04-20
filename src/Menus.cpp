@@ -5597,9 +5597,11 @@ bool AudacityProject::DoEditMetadata
    auto newTags = mTags->Duplicate();
 
    if (newTags->ShowEditDialog(this, title, force)) {
-      // Commit the change to project state only now.
-      mTags = newTags;
-      PushState(title, shortUndoDescription);
+      if (*mTags != *newTags) {
+         // Commit the change to project state only now.
+         mTags = newTags;
+         PushState(title, shortUndoDescription);
+      }
 
       return true;
    }

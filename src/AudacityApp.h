@@ -132,6 +132,8 @@ class AudacityApp final : public wxApp {
 
    void OnReceiveCommand(AppCommandEvent &event);
 
+   void OnKeyDown(wxKeyEvent &event);
+
    void OnTimer(wxTimerEvent & event);
 
    // IPC communication

@@ -2011,6 +2011,16 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
    if (mIsRecording)
       return;
 
+   // Handle status bar messages
+   if(evt.Leaving()) {
+      mProject->TP_DisplayStatusMessage(wxT(""));
+   }
+   else if(evt.Entering()) {
+      // Insert timeline status bar messages here
+      mProject->TP_DisplayStatusMessage
+      (wxT(""));
+   }
+
    // Store the initial play region state
    if(mMouseEventState == mesNone) {
       mOldPlayRegionStart = mPlayRegionStart;
