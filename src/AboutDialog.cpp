@@ -239,12 +239,7 @@ AboutDialog::AboutDialog(wxWindow * parent)
       PopulateLicensePage( S );
    }
    S.EndNotebook();
-   /* i18n-hint: "OK... Audacious" appears on a button at the
-    * foot of the 'About Audacity' dialog box, after some text to read.
-    * In English it is slightly humorous alternative to an 'OK' button.
-    * If the humour doesn't work in your language, then just use whatever
-    * you would use for a translation for 'OK' on a button. */
-   wxButton *ok = safenew wxButton(S.GetParent(), wxID_OK, _("OK... Audacious!"));
+   wxButton *ok = safenew wxButton(S.GetParent(), wxID_OK, _("OK"));
    ok->SetDefault();
    S.Prop(0).AddWindow( ok );
 
