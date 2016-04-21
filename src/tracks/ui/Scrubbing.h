@@ -31,6 +31,8 @@ public:
 #ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
       , bool smoothScrolling
 #endif
+      , bool alwaysSeeking // if false, can switch seeking or scrubbing
+                           // by mouse button state
    );
    // Returns true iff the event should be considered consumed by this:
    bool MaybeStartScrubbing(const wxMouseEvent &event);
@@ -55,6 +57,10 @@ public:
    void HandleScrollWheel(int steps);
 
    void SetSeeking() { mScrubSeekPress = true; }
+   bool PollIsSeeking();
+
+private:
+   void OnActivateOrDeactivateApp(wxActivateEvent & event);
 
 private:
    int mScrubToken;
@@ -65,13 +71,11 @@ private:
    double mMaxScrubSpeed;
    bool mScrubSeekPress;
    bool mSmoothScrollingScrub;
+   bool mAlwaysSeeking{};
 
 #ifdef EXPERIMENTAL_SCRUBBING_SCROLL_WHEEL
    int mLogMaxScrubSpeed;
 #endif
-
-private:
-   void OnActivateOrDeactivateApp(wxActivateEvent & event);
 
    AudacityProject *mProject;
 };

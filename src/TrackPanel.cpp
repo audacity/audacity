@@ -1962,6 +1962,7 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
 #ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
             , event.LeftDClick()
 #endif
+            , false
          );
          return;
       }
