@@ -1147,11 +1147,6 @@ void TrackPanel::MakeParentRedrawScrollbars()
 
 bool TrackPanel::HandleEscapeKey(bool down)
 {
-   // Note that this dispatches some keystrokes even when track panel is not focused.
-   // So it works as a place for escaping from playing and scrub as well as other
-   // drag actions specific to track panel.  If there is a drag and a play at the
-   // same time, the first ESC applies to the drag action only.
-
    if (!down)
       return false;
 
