@@ -155,6 +155,7 @@ void Scrubber::MarkScrubStart(
    mScrubStartClockTimeMillis = ::wxGetLocalTimeMillis();
 
    ControlToolBar * const ctb = mProject->GetControlToolBar();
+   ctb->SetPlay(true, ControlToolBar::PlayAppearance::Scrub);
    ctb->UpdateStatusBar(mProject);
    mProject->GetTrackPanel()->HandleCursor(event);
 }
@@ -312,17 +313,18 @@ void Scrubber::StopScrubbing()
 {
    mScrubStartPosition = -1;
    mSmoothScrollingScrub = false;
+   const auto ctb = mProject->GetControlToolBar();
 
    if (IsScrubbing())
    {
       if (gAudioIO->IsBusy()) {
-         ControlToolBar *const ctb = mProject->GetControlToolBar();
          ctb->StopPlaying();
       }
-      return;
    }
-   else
-      return;
+   else {
+      // Didn't really play, but did change button apperance
+      ctb->SetPlay(false, ControlToolBar::PlayAppearance::Straight);
+   }
 }
 
 bool Scrubber::IsScrubbing() const
