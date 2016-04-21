@@ -75,23 +75,23 @@ static PmDeviceID pm_get_default_device_id(int is_input, char *key) {
         }
     }
     /* Look in registry for a default device name pattern. */
-    if (RegOpenKeyEx(HKEY_CURRENT_USER, "Software", 0, KEY_READ, &hkey) != 
+    if (RegOpenKeyExA(HKEY_CURRENT_USER, "Software", 0, KEY_READ, &hkey) != 
         ERROR_SUCCESS) {
         return id;
     }
-    if (RegOpenKeyEx(hkey, "JavaSoft", 0, KEY_READ, &hkey) !=
+    if (RegOpenKeyExA(hkey, "JavaSoft", 0, KEY_READ, &hkey) !=
         ERROR_SUCCESS) {
         return id;
     }
-    if (RegOpenKeyEx(hkey, "Prefs", 0, KEY_READ, &hkey) !=
+    if (RegOpenKeyExA(hkey, "Prefs", 0, KEY_READ, &hkey) !=
         ERROR_SUCCESS) {
         return id;
     }
-    if (RegOpenKeyEx(hkey, "/Port/Midi", 0, KEY_READ, &hkey) !=
+    if (RegOpenKeyExA(hkey, "/Port/Midi", 0, KEY_READ, &hkey) !=
         ERROR_SUCCESS) {
         return id;
     }
-    if (RegQueryValueEx(hkey, key, NULL, &dwType, (BYTE *) pattern, 
+    if (RegQueryValueExA(hkey, key, NULL, &dwType, (BYTE *) pattern, 
                         (DWORD *) &pattern_max) != 
 	ERROR_SUCCESS) {
         return id;

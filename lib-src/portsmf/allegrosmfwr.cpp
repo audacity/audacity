@@ -263,7 +263,7 @@ static char hex_to_char(const char *s)
 
 void Alg_smf_write::write_binary(int type_byte, const char *msg)
 {
-    int len = strlen(msg) / 2;
+    size_t len = strlen(msg) / 2;
     out_file->put(type_byte);
     write_varinum(len);
     for (int i = 0; i < len; i++) {
@@ -350,7 +350,7 @@ void Alg_smf_write::write_update(Alg_update_ptr update)
         // the following simple parser does not reject all badly
         // formatted strings, but it should parse good strings ok
         const char *s = update->parameter.s;
-        int len = strlen(s);
+        size_t len = strlen(s);
         char smpteoffset[5];
         if (len < 24) return; // not long enough, must be bad format
         int fps;
@@ -533,9 +533,9 @@ void Alg_smf_write::write_time_signature(int i)
 
 void Alg_smf_write::write(ostream &file)
 {
-    int track_len_offset;
-    int track_end_offset;
-    int track_len;
+    streampos track_len_offset;
+    streampos track_end_offset;
+    streampos track_len;
 
     out_file = &file;
 

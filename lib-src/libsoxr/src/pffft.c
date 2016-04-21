@@ -149,7 +149,7 @@ typedef __m128 v4sf;
 #  define UNINTERLEAVE2(in1, in2, out1, out2) { v4sf tmp__ = _mm_shuffle_ps(in1, in2, _MM_SHUFFLE(2,0,2,0)); out2 = _mm_shuffle_ps(in1, in2, _MM_SHUFFLE(3,1,3,1)); out1 = tmp__; }
 #  define VTRANSPOSE4(x0,x1,x2,x3) _MM_TRANSPOSE4_PS(x0,x1,x2,x3)
 #  define VSWAPHL(a,b) _mm_shuffle_ps(b, a, _MM_SHUFFLE(3,2,1,0))
-#  define VALIGNED(ptr) ((((long)(ptr)) & 0xF) == 0)
+#  define VALIGNED(ptr) ((((intptr_t)(ptr)) & 0xF) == 0)
 
 /*
   ARM NEON support macros

@@ -109,6 +109,7 @@ extern LVAL xlc_snd_tone(void);
 extern LVAL xlc_snd_tonev(void);
 extern LVAL xlc_snd_up(void);
 extern LVAL xlc_snd_white(void);
+extern LVAL xlc_snd_whiteg(void);
 extern LVAL xlc_snd_stkrev(void);
 extern LVAL xlc_snd_stkpitshift(void);
 extern LVAL xlc_snd_stkchorus(void);

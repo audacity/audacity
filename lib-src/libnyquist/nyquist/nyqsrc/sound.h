@@ -458,7 +458,9 @@ double step_to_hz(double);
     /* LISP: (STEP-TO-HZ ANYNUM) */
 
 #ifdef WIN32
+#if _MSC_VER < 1800
 double log2(double x);
+#endif
 #endif /* WIN32 */
 
 /* macros for access to samples within a suspension */

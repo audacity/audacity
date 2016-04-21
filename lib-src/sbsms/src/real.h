@@ -80,8 +80,10 @@
 
 	#undef		HAVE_LRINT_REPLACEMENT
 	#define		HAVE_LRINT_REPLACEMENT	1
+
 	#include	<math.h>
 
+#if defined (_M_IX86)
 	/*
 	**	Win32 doesn't seem to have these functions.
 	**	Therefore implement inline versions of these functions here.
@@ -110,6 +112,12 @@
 
 		return intgr ;
 	}
+#else
+
+	#undef		HAVE_LRINTF_REPLACEMENT
+	#define		HAVE_LRINTF_REPLACEMENT	1
+
+#endif
 
 #elif (defined (__MWERKS__) && defined (macintosh))
 

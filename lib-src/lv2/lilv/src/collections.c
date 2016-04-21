@@ -19,7 +19,9 @@
 int
 lilv_ptr_cmp(const void* a, const void* b, void* user_data)
 {
-	return (intptr_t)a - (intptr_t)b;
+	ptrdiff_t cmp = (intptr_t)a - (intptr_t)b;
+
+	return 0 == cmp ? 0 : cmp > 0 ? 1 : -1;
 }
 
 int
@@ -27,7 +29,10 @@ lilv_resource_node_cmp(const void* a, const void* b, void* user_data)
 {
 	const SordNode* an = ((const LilvNode*)a)->node;
 	const SordNode* bn = ((const LilvNode*)b)->node;
-	return (intptr_t)an - (intptr_t)bn;
+
+	ptrdiff_t cmp = (intptr_t)an - (intptr_t)bn;
+
+	return 0 == cmp ? 0 : cmp > 0 ? 1 : -1;
 }
 
 /* Generic collection functions */

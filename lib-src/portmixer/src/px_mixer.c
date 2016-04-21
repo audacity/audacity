@@ -43,9 +43,6 @@
 #include <windows.h>
 #endif
 
-#if defined(__LINUX__) || defined(__APPLE__)
-#include <stdlib.h>
-#endif
 #include <stdlib.h>
 
 #if defined(PX_USE_WIN_MME)
@@ -89,7 +86,7 @@ static void dprintf(const char *format, ...)
 
    if (cnt > 0) {
       buf[cnt] = '\0';
-      OutputDebugString(buf);
+      OutputDebugStringA(buf);
    }
 }
 #endif

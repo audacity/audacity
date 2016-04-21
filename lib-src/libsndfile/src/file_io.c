@@ -792,7 +792,7 @@ psf_open_handle (PSF_FILE * pfile)
 					NULL						/* handle to file with attributes to copy */
 					) ;
 	else
-		handle = CreateFile (
+		handle = CreateFileA (
 					pfile->path.c,				/* pointer to name of the file */
 					dwDesiredAccess,			/* access (read-write) mode */
 					dwShareMode,				/* share mode */

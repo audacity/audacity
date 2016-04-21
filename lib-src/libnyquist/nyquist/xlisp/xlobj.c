@@ -325,7 +325,7 @@ LOCAL LVAL entermsg(LVAL cls, LVAL msg)
 /* xsendmsg - send a message to an object */
 LOCAL LVAL xsendmsg(LVAL obj, LVAL cls, LVAL sym)
 {
-    LVAL msg=NULL,msgcls,method,val,p;
+    LVAL msg=NULL,msgcls,method,val=NULL,p;
 
     /* look for the message in the class or superclasses */
     for (msgcls = cls; msgcls; ) {

@@ -3,6 +3,7 @@
  * data for Nyquist memory allocation.
  */
 
+#include <stddef.h>
 #include <stdio.h>
 #include <assert.h>
 #include "xlisp.h"
@@ -73,7 +74,7 @@ void new_pool(void)
     poolend = poolp + MAXPOOLSIZE;
     npools++;
     /* stick to double word boundaries */
-    poolp = (char *) round_size(((long) poolp));
+    poolp = (char *) round_size(((intptr_t) poolp));
 }
 
 /* new_spool -- allocate a new spool from which sample blocks are allocated */
@@ -99,7 +100,7 @@ void new_spool(void)
     spoolend = spoolp + MAXSPOOLSIZE;
     npools++;
     /* stick to double word boundaries */
-    spoolp = (char *) round_size(((long) spoolp));
+    spoolp = (char *) round_size(((intptr_t) spoolp));
 }
 
 
@@ -183,7 +184,7 @@ void falloc_gc()
    for (cp = pools; cp; lp = cp, cp = np) {
       char *str = ((char *)cp) + POOL_HEAD_SIZE;
       char *end = str + MAXSPOOLSIZE;
-      long tsiz = end - str;
+      ptrdiff_t tsiz = end - str;
       long csiz = 0;
       CQUE *tsave = NULL;
       CQUE *ln = NULL;

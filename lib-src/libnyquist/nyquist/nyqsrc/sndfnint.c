@@ -1917,6 +1917,23 @@ LVAL xlc_snd_white(void)
 }
 
 
+#include "whiteg.h"
+
+/* xlc_snd_whiteg -- interface to C routine snd_white */
+/**/
+LVAL xlc_snd_whiteg(void)
+{
+    double arg1 = testarg2(xlgaanynum());
+    double arg2 = testarg2(xlgaanynum());
+    double arg3 = testarg2(xlgaanynum());
+    sound_type result;
+
+    xllastarg();
+    result = snd_whiteg(arg1, arg2, arg3);
+    return cvsound(result);
+}
+
+
 #include "stkrev.h"
 
 /* xlc_snd_stkrev -- interface to C routine snd_stkrev */

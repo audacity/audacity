@@ -63,7 +63,7 @@ static void dprintf(const char *format, ...)
 
    if (cnt > 0) {
       buf[cnt] = '\0';
-      OutputDebugString(buf);
+      OutputDebugStringA(buf);
    }
 }
 #endif
@@ -96,7 +96,7 @@ static BOOL is_vista_or_later()
       dwlConditionMask);
 }
 
-int open_mixers(px_mixer *Px, UINT deviceIn, UINT deviceOut)
+int open_mixers(px_mixer *Px, ULONG deviceIn, ULONG deviceOut)
 {
    PxInfo*info;
    MMRESULT res;
@@ -192,18 +192,18 @@ int open_mixers(px_mixer *Px, UINT deviceIn, UINT deviceOut)
 static UINT get_ctrls(HMIXEROBJ mixer, DWORD lineID, PxCtrl **pctrls)
 {
    MMRESULT res;
-   MIXERLINE line;
-   MIXERLINECONTROLS controls;
-   MIXERCONTROL control;
+   MIXERLINEA line;
+   MIXERLINECONTROLSA controls;
+   MIXERCONTROLA control;
    PxCtrl *ctrls = NULL;
    UINT num;
    UINT s;
 
    do {
-      line.cbStruct = sizeof(MIXERLINE);
+      line.cbStruct = sizeof(MIXERLINEA);
       line.dwComponentType = lineID;
 
-      res = mixerGetLineInfo(mixer,
+      res = mixerGetLineInfoA(mixer,
                              &line,
                              MIXER_GETLINEINFOF_COMPONENTTYPE);
 
@@ -222,7 +222,7 @@ static UINT get_ctrls(HMIXEROBJ mixer, DWORD lineID, PxCtrl **pctrls)
       {
          line.dwSource      = s;
 
-         res = mixerGetLineInfo(mixer,
+         res = mixerGetLineInfoA(mixer,
                                 &line,
                                 MIXER_GETLINEINFOF_SOURCE);
 
@@ -236,15 +236,15 @@ static UINT get_ctrls(HMIXEROBJ mixer, DWORD lineID, PxCtrl **pctrls)
             break;
          }
 
-         controls.cbStruct = sizeof(MIXERLINECONTROLS);
+         controls.cbStruct = sizeof(MIXERLINECONTROLSA);
          controls.dwLineID = line.dwLineID;
          controls.dwControlType = MIXERCONTROL_CONTROLTYPE_VOLUME;
-         controls.cbmxctrl = sizeof(MIXERCONTROL);
+         controls.cbmxctrl = sizeof(MIXERCONTROLA);
          controls.pamxctrl = &control;
 
-         control.cbStruct = sizeof(MIXERCONTROL);
+         control.cbStruct = sizeof(MIXERCONTROLA);
 
-         res = mixerGetLineControls(mixer,
+         res = mixerGetLineControlsA(mixer,
                                     &controls,
                                     MIXER_GETLINECONTROLSF_ONEBYTYPE);
 
@@ -417,7 +417,7 @@ static int get_num_mixers(px_mixer *Px)
 static const char *get_mixer_name(px_mixer *Px, int i)
 {
    PxInfo *info = (PxInfo *)Px->info;
-   MIXERCAPS caps;
+   MIXERCAPSA caps;
    MMRESULT res;
 
    if (i > 1) {
@@ -426,7 +426,7 @@ static const char *get_mixer_name(px_mixer *Px, int i)
 
    if (i == 0) {
       if (!info->inName) {
-         res = mixerGetDevCaps((UINT) info->hInputMixer, &caps, sizeof(caps));
+         res = mixerGetDevCapsA((UINT_PTR) info->hInputMixer, &caps, sizeof(caps));
          if (res == MMSYSERR_NOERROR) {
             info->inName = strdup(caps.szPname);
          }
@@ -435,7 +435,7 @@ static const char *get_mixer_name(px_mixer *Px, int i)
    }
 
    if (!info->outName) {
-      res = mixerGetDevCaps((UINT) info->hOutputMixer, &caps, sizeof(caps));
+      res = mixerGetDevCapsA((UINT_PTR) info->hOutputMixer, &caps, sizeof(caps));
       if (res == MMSYSERR_NOERROR) {
          info->outName = strdup(caps.szPname);
       }
@@ -464,7 +464,7 @@ static PxVolume VolumeFunction(HMIXEROBJ hMixer, DWORD controlID, PxVolume volum
    details.paDetails = &value;
 
    if (volume < 0.0) {
-      result = mixerGetControlDetails(hMixer,
+      result = mixerGetControlDetailsA(hMixer,
                                       &details,
                                       MIXER_GETCONTROLDETAILSF_VALUE);
       if (result != MMSYSERR_NOERROR)

@@ -22,6 +22,7 @@
 *****************************************************************************/
 
 #include "switches.h"
+#include <ctype.h>
 
 #ifdef UNIX
 #include <sys/resource.h>

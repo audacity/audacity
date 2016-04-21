@@ -60,15 +60,15 @@ static void dprintf(const char *format, ...)
 
    if (cnt > 0) {
       buf[cnt] = '\0';
-      OutputDebugString(buf);
+      OutputDebugStringA(buf);
    }
 }
 #endif
 
 int OpenMixer_Win_WASAPI(px_mixer *Px, int index)
 {
-   wchar_t *deviceIn = PaWasapi_GetInputDeviceID(Px->pa_stream);
-   wchar_t *deviceOut = PaWasapi_GetOutputDeviceID(Px->pa_stream);
+   const wchar_t *deviceIn = PaWasapi_GetInputDeviceID(Px->pa_stream);
+   const wchar_t *deviceOut = PaWasapi_GetOutputDeviceID(Px->pa_stream);
    int ret = FALSE;
 
    if (open_ep_mixers_byid(Px, deviceIn, deviceOut))

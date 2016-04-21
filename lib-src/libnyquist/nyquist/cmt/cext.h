@@ -50,6 +50,10 @@ EXIT(n)  -- calls exit(n) after shutting down/deallocating resources
 #include <stdlib.h>
 #endif
 
+#if HAVE_STDINT_H
+#include <stdint.h>
+#endif
+
 #if HAS_SYS_TYPES_H
 #include <sys/types.h>
 #endif

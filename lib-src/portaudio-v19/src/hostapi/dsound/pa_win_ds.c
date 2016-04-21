@@ -1881,7 +1881,7 @@ static PaError OpenStream( struct PaUtilHostApiRepresentation *hostApi,
     PaWinDsStream *stream = 0;
     int bufferProcessorIsInitialized = 0;
     int streamRepresentationIsInitialized = 0;
-    PaWinDsDeviceInfo *inputWinDsDeviceInfo, *outputWinDsDeviceInfo;
+    PaWinDsDeviceInfo *inputWinDsDeviceInfo = NULL, *outputWinDsDeviceInfo = NULL;
     PaDeviceInfo *inputDeviceInfo, *outputDeviceInfo;
     int inputChannelCount, outputChannelCount;
     PaSampleFormat inputSampleFormat = 0, outputSampleFormat = 0;

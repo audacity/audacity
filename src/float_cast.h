@@ -70,6 +70,7 @@
    
    #include <math.h>
 
+#if _MSC_VER < 1700 && defined(_M_IX86)
    /*	Win32 doesn't seem to have these functions.
 	**	Therefore implement inline versions of these functions here.
 	*/
@@ -120,6 +121,7 @@
 
 		return intgr ;
 	}
+#endif
 
 #else
 

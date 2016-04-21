@@ -85,7 +85,7 @@ extern pm_fns_node pm_none_dictionary;
 typedef struct {
     PmDeviceInfo pub; /* some portmidi state also saved in here (for autmatic
                          device closing (see PmDeviceInfo struct) */
-    void *descriptor; /* ID number passed to win32 multimedia API open */
+    unsigned long descriptor; /* ID number passed to win32 multimedia API open */
     void *internalDescriptor; /* points to PmInternal device, allows automatic 
                                  device closing */
     pm_fns_type dictionary;
@@ -155,7 +155,7 @@ PmTimestamp none_synchronize(PmInternal *midi);
 PmError pm_fail_fn(PmInternal *midi);
 PmError pm_fail_timestamp_fn(PmInternal *midi, PmTimestamp timestamp);
 PmError pm_success_fn(PmInternal *midi);
-PmError pm_add_device(char *interf, char *name, int input, void *descriptor,
+PmError pm_add_device(char *interf, char *name, int input, unsigned long descriptor,
                       pm_fns_type dictionary);
 uint32_t pm_read_bytes(PmInternal *midi, const unsigned char *data, int len,
                            PmTimestamp timestamp);
