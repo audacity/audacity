@@ -302,6 +302,42 @@ void Tags::Clear()
    mMap.clear();
 }
 
+namespace {
+   bool EqualMaps(const TagMap &map1, const TagMap &map2)
+   {
+      for (auto it1 = map1.begin(), end1 = map1.end(),
+           it2 = map2.begin(), end2 = map2.end();
+           it1 != end1 || it2 != end2;) {
+         if (it1 == end1 || it2 == end2)
+            return false;
+         else if (it1->first != it2->first)
+            return false;
+         else if (it1->second != it2->second)
+            return false;
+         else
+            ++it1, ++it2;
+      }
+      return true;
+   }
+}
+
+bool operator== (const Tags &lhs, const Tags &rhs)
+{
+   if (!EqualMaps(lhs.mXref, rhs.mXref))
+      return false;
+
+   if (!EqualMaps(lhs.mMap, rhs.mMap))
+      return false;
+
+   return
+      lhs.mGenres == rhs.mGenres
+      &&
+      lhs.mEditTitle == rhs.mEditTitle
+      &&
+      lhs.mEditTrackNumber == rhs.mEditTrackNumber
+   ;
+}
+
 void Tags::AllowEditTitle(bool editTitle)
 {
    mEditTitle = editTitle;

@@ -35,6 +35,7 @@ class wxRect;
 class LabelTrack;
 class SpectrumAnalyst;
 class TrackPanel;
+class TrackPanelOverlay;
 class TrackArtist;
 class Ruler;
 class SnapManager;
@@ -72,6 +73,11 @@ enum class UndoPush : unsigned char;
 #endif
 
 DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_TRACK_PANEL_TIMER, -1);
+
+enum {
+   kTimerInterval = 50, // milliseconds
+   kOneSecondCountdown = 1000 / kTimerInterval,
+};
 
 class AUDACITY_DLL_API TrackInfo
 {
@@ -160,7 +166,6 @@ class AUDACITY_DLL_API TrackPanel final : public wxPanel {
 
    virtual void OnSetFocus(wxFocusEvent & event);
    virtual void OnKillFocus(wxFocusEvent & event);
-   virtual void OnActivateOrDeactivateApp(wxActivateEvent & event);
 
    virtual void OnContextMenu(wxContextMenuEvent & event);
 
@@ -190,7 +195,7 @@ class AUDACITY_DLL_API TrackPanel final : public wxPanel {
    //virtual void SetSelectionFormat(int iformat)
    //virtual void SetSnapTo(int snapto)
 
-   virtual void HandleEscapeKey(bool down);
+   virtual bool HandleEscapeKey(bool down);
    virtual void HandleAltKey(bool down);
    virtual void HandleShiftKey(bool down);
    virtual void HandleControlKey(bool down);
@@ -224,8 +229,6 @@ class AUDACITY_DLL_API TrackPanel final : public wxPanel {
    virtual void UpdateTrackVRuler(Track *t);
    virtual void UpdateVRulerSize();
 
-   virtual void DrawQuickPlayIndicator(int x, bool snapped = false);
-
    // Returns the time corresponding to the pixel column one past the track area
    // (ignoring any fisheye)
    virtual double GetScreenEndTime() const;
@@ -247,37 +250,16 @@ class AUDACITY_DLL_API TrackPanel final : public wxPanel {
    virtual void HandleGlyphDragRelease(LabelTrack * lTrack, wxMouseEvent & event);
    virtual void HandleTextDragRelease(LabelTrack * lTrack, wxMouseEvent & event);
    virtual bool HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &rect, wxMouseEvent &event);
-   virtual bool IsOverCutline(WaveTrack * track, wxRect &rect, wxMouseEvent &event);
+   virtual bool IsOverCutline(WaveTrack * track, wxRect &rect, const wxMouseEvent &event);
    virtual void HandleTrackSpecificMouseEvent(wxMouseEvent & event);
-
-   virtual void TimerUpdateIndicator(double playPos);
-   // Second member of pair indicates whether the indicator is out of date:
-   virtual std::pair<wxRect, bool> GetIndicatorRectangle();
-   virtual void UndrawIndicator(wxDC & dc);
-   /// draws the green line on the tracks to show playback position
-   virtual void DoDrawIndicator(wxDC & dc);
-
-   // Second member of pair indicates whether the cursor is out of date:
-   virtual std::pair<wxRect, bool> GetCursorRectangle();
-   virtual void UndrawCursor(wxDC & dc);
-   virtual void DoDrawCursor(wxDC & dc);
-
-#ifdef EXPERIMENTAL_SCRUBBING_BASIC
-   bool ShouldDrawScrubSpeed();
-   virtual void TimerUpdateScrubbing(double playPos);
-   // Second member of pair indicates whether the cursor is out of date:
-   virtual std::pair<wxRect, bool> GetScrubSpeedRectangle();
-   virtual void UndrawScrubSpeed(wxDC & dc);
-   virtual void DoDrawScrubSpeed(wxDC & dc);
-#endif
 
    virtual void ScrollDuringDrag();
 
    // Working out where to dispatch the event to.
-   virtual int DetermineToolToUse( ToolsToolBar * pTtb, wxMouseEvent & event);
-   virtual bool HitTestEnvelope(Track *track, wxRect &rect, wxMouseEvent & event);
-   virtual bool HitTestSamples(Track *track, wxRect &rect, wxMouseEvent & event);
-   virtual bool HitTestSlide(Track *track, wxRect &rect, wxMouseEvent & event);
+   virtual int DetermineToolToUse( ToolsToolBar * pTtb, const wxMouseEvent & event);
+   virtual bool HitTestEnvelope(Track *track, wxRect &rect, const wxMouseEvent & event);
+   virtual bool HitTestSamples(Track *track, wxRect &rect, const wxMouseEvent & event);
+   virtual bool HitTestSlide(Track *track, wxRect &rect, const wxMouseEvent & event);
 #ifdef USE_MIDI
    // data for NoteTrack interactive stretch operations:
    // Stretching applies to a selected region after quantizing the
@@ -302,7 +284,7 @@ class AUDACITY_DLL_API TrackPanel final : public wxPanel {
    double mStretchSel1;  // initial sel1 (left) quantized to nearest beat
    double mStretchLeftBeats; // how many beats from left to cursor
    double mStretchRightBeats; // how many beats from cursor to right
-   virtual bool HitTestStretch(Track *track, wxRect &rect, wxMouseEvent & event);
+   virtual bool HitTestStretch(Track *track, wxRect &rect, const wxMouseEvent & event);
    virtual void Stretch(int mouseXCoordinate, int trackLeftEdge, Track *pTrack);
 #endif
 
@@ -310,31 +292,7 @@ class AUDACITY_DLL_API TrackPanel final : public wxPanel {
    virtual void HandleSelect(wxMouseEvent & event);
    virtual void SelectionHandleDrag(wxMouseEvent &event, Track *pTrack);
 
-   // Made obsolete by scrubbing:
-#ifndef EXPERIMENTAL_SCRUBBING_BASIC
-   void StartOrJumpPlayback(wxMouseEvent &event);
-#endif
-
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
-   double FindScrubSpeed(double timeAtMouse) const;
-   double FindSeekSpeed(double timeAtMouse) const;
-#endif
-
-#ifdef EXPERIMENTAL_SCRUBBING_BASIC
-   static bool PollIsSeeking();
-   bool IsScrubbing();
-   void MarkScrubStart(
-      wxCoord xx
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
-      , bool smoothScrolling
-#endif
-   );
-   bool MaybeStartScrubbing(wxMouseEvent &event);
-   bool ContinueScrubbing(wxCoord position, bool hasFocus, bool seek);
-public:
-   bool StopScrubbing();
 protected:
-#endif
 
    virtual void SelectionHandleClick(wxMouseEvent &event,
                                      Track* pTrack, wxRect rect);
@@ -367,14 +325,18 @@ protected:
 
    // AS: Cursor handling
    virtual bool SetCursorByActivity( );
-   virtual bool SetCursorForCutline(WaveTrack * track, wxRect &rect, wxMouseEvent &event);
-   virtual void SetCursorAndTipWhenInLabel( Track * t, wxMouseEvent &event, wxString &tip );
+   virtual bool SetCursorForCutline(WaveTrack * track, wxRect &rect, const wxMouseEvent &event);
+   virtual void SetCursorAndTipWhenInLabel( Track * t, const wxMouseEvent &event, wxString &tip );
    virtual void SetCursorAndTipWhenInVResizeArea( bool blinked, wxString &tip );
-   virtual void SetCursorAndTipWhenInLabelTrack( LabelTrack * pLT, wxMouseEvent & event, wxString &tip );
+   virtual void SetCursorAndTipWhenInLabelTrack( LabelTrack * pLT, const wxMouseEvent & event, wxString &tip );
    virtual void SetCursorAndTipWhenSelectTool
-      ( Track * t, wxMouseEvent & event, wxRect &rect, bool bMultiToolMode, wxString &tip, const wxCursor ** ppCursor );
-   virtual void SetCursorAndTipByTool( int tool, wxMouseEvent & event, wxString &tip );
-   virtual void HandleCursor(wxMouseEvent & event);
+      ( Track * t, const wxMouseEvent & event, wxRect &rect, bool bMultiToolMode, wxString &tip, const wxCursor ** ppCursor );
+   virtual void SetCursorAndTipByTool( int tool, const wxMouseEvent & event, wxString &tip );
+
+public:
+   virtual void HandleCursor(const wxMouseEvent & event);
+
+protected:
    virtual void MaySetOnDemandTip( Track * t, wxString &tip );
 
    // AS: Envelope editing handlers
@@ -547,6 +509,15 @@ protected:
    virtual void DrawOutsideOfTrack    (Track *t, wxDC* dc, const wxRect & rect);
 
 public:
+   // Register and unregister overlay objects.
+   // The sequence in which they were registered is the sequence in
+   // which they are painted.
+   // TrackPanel is not responsible for their memory management.
+   virtual void AddOverlay(TrackPanelOverlay *pOverlay);
+   // Returns true if the overlay was found
+   virtual bool RemoveOverlay(TrackPanelOverlay *pOverlay);
+   virtual void ClearOverlays();
+
    // Erase and redraw things like the cursor, cheaply and directly to the
    // client area, without full refresh.
    virtual void DrawOverlays(bool repaint);
@@ -596,17 +567,6 @@ protected:
      }
      TrackPanel *parent;
    } mTimer;
-
-   // This stores the parts of the screen that get overwritten by the indicator
-   // and cursor
-   int mLastIndicatorX;
-   int mNewIndicatorX;
-   int mLastCursorX;
-   double mCursorTime;
-   int mNewCursorX;
-
-   // Quick-Play indicator postion
-   int mOldQPIndicatorPos;
 
    int mTimeCount;
 
@@ -743,7 +703,7 @@ protected:
       (double selend, bool onlyWithinSnapDistance,
        wxInt64 *pPixelDist = NULL, double *pPinValue = NULL) const;
    SelectionBoundary ChooseBoundary
-      (wxMouseEvent & event, const Track *pTrack,
+      (const wxMouseEvent & event, const Track *pTrack,
        const wxRect &rect,
        bool mayDragWidth,
        bool onlyWithinSnapDistance,
@@ -798,27 +758,6 @@ protected:
    int mMoveDownThreshold;
    int mRearrangeCount;
 
-#ifdef EXPERIMENTAL_SCRUBBING_BASIC
-   int mScrubToken;
-   wxLongLong mScrubStartClockTimeMillis;
-   wxCoord mScrubStartPosition;
-   double mMaxScrubSpeed;
-   int mScrubSpeedDisplayCountdown;
-   bool mScrubHasFocus;
-   bool mScrubSeekPress;
-
-   wxRect mLastScrubRect, mNextScrubRect;
-   wxString mLastScrubSpeedText, mNextScrubSpeedText;
-#endif
-
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
-   bool mSmoothScrollingScrub;
-#endif
-
-#ifdef EXPERIMENTAL_SCRUBBING_SCROLL_WHEEL
-   int mLogMaxScrubSpeed;
-#endif
-
    std::unique_ptr<wxCursor>
       mArrowCursor, mPencilCursor, mSelectCursor,
       mResizeCursor, mSlideCursor, mEnvelopeCursor, // doubles as the center frequency cursor
@@ -854,6 +793,11 @@ protected:
 
    TrackPanelAx *mAx;
 
+public:
+   TrackPanelAx &GetAx() { return *mAx; }
+
+protected:
+
    wxString mSoloPref;
 
    // Keeps track of extra fractional vertical scroll steps
@@ -867,6 +811,10 @@ protected:
  public:
    wxSize vrulerSize;
 
+ protected:
+   std::vector<TrackPanelOverlay*> mOverlays;
+
+ public:
    DECLARE_EVENT_TABLE()
 };
 

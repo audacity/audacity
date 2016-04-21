@@ -92,6 +92,8 @@ enum
    IsRealtimeNotActiveFlag= 0x10000000,  //lll
    CaptureNotBusyFlag     = 0x20000000,
    CanStopAudioStreamFlag = 0x40000000,
+   AudioStreamNotScrubbingFlag
+                          = 0x80000000,
 
    NoFlagsSpecifed        = 0xffffffff
 };
@@ -129,6 +131,8 @@ class AudacityApp final : public wxApp {
    bool MRUOpen(const wxString &fileName);
 
    void OnReceiveCommand(AppCommandEvent &event);
+
+   void OnKeyDown(wxKeyEvent &event);
 
    void OnTimer(wxTimerEvent & event);
 

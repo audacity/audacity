@@ -12,6 +12,7 @@
 #define __AUDACITY_VIEWINFO__
 
 #include <vector>
+#include <wx/event.h>
 #include "SelectedRegion.h"
 
 
@@ -131,10 +132,10 @@ public:
    // Exclusive:
    wxInt64 GetFisheyeRightBoundary(wxInt64 WXUNUSED(origin = 0)) const
    {return 0;} // stub
-
 };
 
-class AUDACITY_DLL_API ViewInfo final : public ZoomInfo
+class AUDACITY_DLL_API ViewInfo final
+   : public wxEvtHandler, public ZoomInfo
 {
 public:
    ViewInfo(double start, double screenDuration, double pixelsPerSecond);
@@ -180,8 +181,15 @@ public:
 
    bool bScrollBeyondZero;
 
+   // During timer update, grab the volatile stream time just once, so that
+   // various other drawing code can use the exact same value.
+   double mRecentStreamTime;
+
    void WriteXMLAttributes(XMLWriter &xmlFile);
    bool ReadXMLAttribute(const wxChar *attr, const wxChar *value);
+
+   // Receive track panel timer notifications
+   void OnTimer(wxCommandEvent &event);
 };
 
 #endif

@@ -233,7 +233,11 @@ audacity_SOURCES = \
 	TrackPanel.h \
 	TrackPanelAx.cpp \
 	TrackPanelAx.h \
+	TrackPanelCell.h \
+	TrackPanelCellIterator.h \
 	TrackPanelListener.h \
+	TrackPanelOverlay.cpp \
+	TrackPanelOverlay.h \
 	TranslatableStringArray.h \
 	UndoManager.cpp \
 	UndoManager.h \
@@ -523,6 +527,12 @@ audacity_SOURCES = \
 	toolbars/ToolsToolBar.h \
 	toolbars/TranscriptionToolBar.cpp \
 	toolbars/TranscriptionToolBar.h \
+	tracks/ui/EditCursorOverlay.cpp \
+	tracks/ui/EditCursorOverlay.h \
+	tracks/ui/PlayIndicatorOverlay.cpp \
+	tracks/ui/PlayIndicatorOverlay.h \
+	tracks/ui/Scrubbing.cpp \
+	tracks/ui/Scrubbing.h \
 	widgets/AButton.cpp \
 	widgets/AButton.h \
 	widgets/ASlider.cpp \

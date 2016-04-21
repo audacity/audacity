@@ -67,6 +67,8 @@
 #include "../widgets/AButton.h"
 #include "../widgets/Meter.h"
 
+#include "../tracks/ui/Scrubbing.h"
+
 IMPLEMENT_CLASS(ControlToolBar, ToolBar);
 
 //static
@@ -105,6 +107,7 @@ ControlToolBar::ControlToolBar()
    /* i18n-hint: These are strings for the status bar, and indicate whether Audacity
    is playing or recording or stopped, and whether it is paused. */
    mStatePlay = XO("Playing");
+   mStateScrub = XO("Scrubbing");
    mStateStop = XO("Stopped");
    mStateRecord = XO("Recording");
    mStatePause = XO("Paused");
@@ -163,6 +166,8 @@ void ControlToolBar::Populate()
    MakeAlternateImages(*mPlay, 1, bmpLoop, bmpLoop, bmpLoopDisabled);
    MakeAlternateImages(*mPlay, 2,
       bmpCutPreview, bmpCutPreview, bmpCutPreviewDisabled);
+   MakeAlternateImages(*mPlay, 3,
+                       bmpScrub, bmpScrub, bmpScrubDisabled);
    mPlay->FollowModifierKeys();
 
    mStop = MakeButton( bmpStop, bmpStop, bmpStopDisabled ,
@@ -358,7 +363,10 @@ void ControlToolBar::ReCreateButtons()
 
    if (playDown)
    {
-      SetPlay(playDown, playShift, false);
+      ControlToolBar::PlayAppearance appearance =
+         playShift ? ControlToolBar::PlayAppearance::Looped
+         : ControlToolBar::PlayAppearance::Straight;
+      SetPlay(playDown, appearance);
    }
 
    if (pauseDown)
@@ -422,15 +430,19 @@ void ControlToolBar::EnableDisableButtons()
    mStop->SetEnabled(CanStopAudioStream() && (playing || recording));
    mRewind->SetEnabled(!playing && !recording);
    mFF->SetEnabled(tracks && !playing && !recording);
-   mPause->SetEnabled(CanStopAudioStream());
+
+   auto pProject = GetActiveProject();
+   mPause->SetEnabled(CanStopAudioStream() &&
+                      !(pProject &&
+                        pProject->GetScrubber().HasStartedScrubbing()));
 }
 
-void ControlToolBar::SetPlay(bool down, bool looped, bool cutPreview)
+void ControlToolBar::SetPlay(bool down, PlayAppearance appearance)
 {
    if (down) {
-      mPlay->SetShift(looped);
-      mPlay->SetControl(cutPreview);
-      mPlay->SetAlternateIdx(cutPreview ? 2 : looped ? 1 : 0);
+      mPlay->SetShift(appearance == PlayAppearance::Looped);
+      mPlay->SetControl(appearance == PlayAppearance::CutPreview);
+      mPlay->SetAlternateIdx(static_cast<int>(appearance));
       mPlay->PushDown();
    }
    else {
@@ -438,7 +450,7 @@ void ControlToolBar::SetPlay(bool down, bool looped, bool cutPreview)
       mPlay->SetAlternateIdx(0);
    }
    EnableDisableButtons();
-   UpdateStatusBar();
+   UpdateStatusBar(GetActiveProject());
 }
 
 void ControlToolBar::SetStop(bool down)
@@ -475,7 +487,8 @@ bool ControlToolBar::IsRecordDown()
 
 int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
                                    const AudioIOStartStreamOptions &options,
-                                   bool cutpreview, /* = false */
+                                   PlayMode mode,
+                                   PlayAppearance appearance, /* = PlayOption::Straight */
                                    bool backwards, /* = false */
                                    bool playWhiteSpace /* = false */)
 {
@@ -494,13 +507,14 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
    if (backwards)
       std::swap(t0, t1);
 
-   SetPlay(true, looped, cutpreview);
+   SetPlay(true, appearance);
 
    if (gAudioIO->IsBusy()) {
       SetPlay(false);
       return -1;
    }
 
+   const bool cutpreview = appearance == PlayAppearance::CutPreview;
    if (cutpreview && t0==t1) {
       SetPlay(false);
       return -1; /* msmeyer: makes no sense */
@@ -517,6 +531,8 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
       mPlay->PopUp();
       return -1;  // Should never happen, but...
    }
+
+   p->mLastPlayMode = mode;
 
    bool hasaudio = false;
    TrackListIterator iter(t);
@@ -673,10 +689,6 @@ void ControlToolBar::PlayCurrentRegion(bool looped /* = false */,
 
    if (p)
    {
-      if (looped)
-         p->mLastPlayMode = loopedPlay;
-      else
-         p->mLastPlayMode = normalPlay;
 
       double playRegionStart, playRegionEnd;
       p->GetPlayRegion(&playRegionStart, &playRegionEnd);
@@ -685,8 +697,14 @@ void ControlToolBar::PlayCurrentRegion(bool looped /* = false */,
       options.playLooped = looped;
       if (cutpreview)
          options.timeTrack = NULL;
+      ControlToolBar::PlayAppearance appearance =
+        cutpreview ? ControlToolBar::PlayAppearance::CutPreview
+           : looped ? ControlToolBar::PlayAppearance::Looped
+           : ControlToolBar::PlayAppearance::Straight;
       PlayPlayRegion(SelectedRegion(playRegionStart, playRegionEnd),
-                     options, cutpreview);
+                     options,
+                     (looped ? PlayMode::loopedPlay : PlayMode::normalPlay),
+                     appearance);
    }
 }
 
@@ -726,14 +744,14 @@ void ControlToolBar::OnPlay(wxCommandEvent & WXUNUSED(evt))
    if (p) p->TP_DisplaySelection();
 
    PlayDefault();
-   UpdateStatusBar();
+   UpdateStatusBar(GetActiveProject());
 }
 
 void ControlToolBar::OnStop(wxCommandEvent & WXUNUSED(evt))
 {
    if (CanStopAudioStream()) {
       StopPlaying();
-      UpdateStatusBar();
+      UpdateStatusBar(GetActiveProject());
    }
 }
 
@@ -1044,7 +1062,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
          SetRecord(false);
       }
    }
-   UpdateStatusBar();
+   UpdateStatusBar(GetActiveProject());
 }
 
 
@@ -1073,7 +1091,7 @@ void ControlToolBar::OnPause(wxCommandEvent & WXUNUSED(evt))
    }
 
    gAudioIO->SetPaused(mPaused);
-   UpdateStatusBar();
+   UpdateStatusBar(GetActiveProject());
 }
 
 void ControlToolBar::OnRewind(wxCommandEvent & WXUNUSED(evt))
@@ -1169,6 +1187,12 @@ int ControlToolBar::WidthForStatusBar(wxStatusBar* const sb)
    if (x > xMax)
       xMax = x;
 
+   // Note that Scrubbing + Paused is not allowed.
+   sb->GetTextExtent(wxString(wxGetTranslation(mStateScrub)) +
+                     wxT("."), &x, &y);
+   if (x > xMax)
+      xMax = x;
+
    return xMax + 30;    // added constant needed because xMax isn't large enough for some reason, plus some space.
 }
 
@@ -1176,7 +1200,10 @@ wxString ControlToolBar::StateForStatusBar()
 {
    wxString state;
 
-   if (mPlay->IsDown())
+   auto pProject = GetActiveProject();
+   if (pProject && pProject->GetScrubber().HasStartedScrubbing())
+      state = wxGetTranslation(mStateScrub);
+   else if (mPlay->IsDown())
       state = wxGetTranslation(mStatePlay);
    else if (mRecord->IsDown())
       state = wxGetTranslation(mStateRecord);
@@ -1194,8 +1221,8 @@ wxString ControlToolBar::StateForStatusBar()
    return state;
 }
 
-void ControlToolBar::UpdateStatusBar()
+void ControlToolBar::UpdateStatusBar(AudacityProject *pProject)
 {
-   GetActiveProject()->GetStatusBar()->SetStatusText(StateForStatusBar(), stateStatusBarField);
+   pProject->GetStatusBar()->SetStatusText(StateForStatusBar(), stateStatusBarField);
 }
 

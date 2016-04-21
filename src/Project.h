@@ -62,6 +62,7 @@ class Tags;
 class EffectPlugs;
 
 class TrackPanel;
+class TrackPanelOverlay;
 class FreqWindow;
 class ContrastDialog;
 class Meter;
@@ -72,6 +73,7 @@ class DeviceToolBar;
 class EditToolBar;
 class MeterToolBar;
 class MixerToolBar;
+class Scrubber;
 class SelectionBar;
 class SpectralSelectionBar;
 class Toolbar;
@@ -115,10 +117,10 @@ extern AProjectArray gAudacityProjects;
 
 WX_DEFINE_ARRAY(wxMenu *, MenuArray);
 
-enum PlayMode {
+enum class PlayMode : int {
    normalPlay,
-   oneSecondPlay,
-   loopedPlay
+   oneSecondPlay, // Disables auto-scrolling
+   loopedPlay // Disables auto-scrolling
 };
 
 enum StatusBarField {
@@ -171,9 +173,13 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    double GetRate() const { return mRate; }
    bool ZoomInAvailable() const { return mViewInfo.ZoomInAvailable(); }
    bool ZoomOutAvailable() const { return mViewInfo.ZoomOutAvailable(); }
-   double GetSel0() { return mViewInfo.selectedRegion.t0(); }
-   double GetSel1() { return mViewInfo.selectedRegion.t1(); }
+   const SelectedRegion &GetSelection() const { return mViewInfo.selectedRegion; }
+   SelectedRegion &GetSelection() { return mViewInfo.selectedRegion; }
+   double GetSel0() const { return mViewInfo.selectedRegion.t0(); }
+   double GetSel1() const { return mViewInfo.selectedRegion.t1(); }
    const ZoomInfo &GetZoomInfo() const { return mViewInfo; }
+   const ViewInfo &GetViewInfo() const { return mViewInfo; }
+   ViewInfo &GetViewInfo() { return mViewInfo; }
 
    Track *GetFirstVisible();
    void UpdateFirstVisible();
@@ -488,7 +494,7 @@ public:
 
    void WriteXMLHeader(XMLWriter &xmlFile);
 
-   PlayMode mLastPlayMode{ normalPlay };
+   PlayMode mLastPlayMode{ PlayMode::normalPlay };
    ViewInfo mViewInfo;
 
    // Audio IO callback methods
@@ -701,6 +707,18 @@ public:
 
    // CommandManager needs to use private methods
    friend class CommandManager;
+
+   // TrackPanelOverlay objects
+   std::unique_ptr<TrackPanelOverlay> 
+      mIndicatorOverlay, mCursorOverlay;
+
+#ifdef EXPERIMENTAL_SCRUBBING_BASIC
+   std::unique_ptr<TrackPanelOverlay> mScrubOverlay;
+   std::unique_ptr<Scrubber> mScrubber;
+public:
+   Scrubber &GetScrubber() { return *mScrubber; }
+   const Scrubber &GetScrubber() const { return *mScrubber; }
+#endif
 
    DECLARE_EVENT_TABLE()
 };

@@ -52,6 +52,10 @@ VersionInfoDescription={#AppName + " " + AppVersion + " Setup"}
 VersionInfoVersion={#GetFileVersion(AppExe)}
 VersionInfoCopyright={#GetFileCopyright(AppExe)}
 
+; Don't disable the "Select Destination Location" wizard, even if 
+; Audacity is already installed.
+DisableDirPage=no
+
 ; Always warn if dir exists, because we'll overwrite previous Audacity.
 DirExistsWarning=yes
 DisableProgramGroupPage=yes

@@ -1042,15 +1042,14 @@ void Sequence::WriteXML(XMLWriter &xmlFile)
       // See http://bugzilla.audacityteam.org/show_bug.cgi?id=451.
       // Also, don't check against mMaxSamples for AliasBlockFiles, because if you convert sample format,
       // mMaxSample gets changed to match the format, but the number of samples in the aliased file
-      // has not changed (because sample format conversion was not actually done in the aliased file.
+      // has not changed (because sample format conversion was not actually done in the aliased file).
       if (!bb.f->IsAlias() && (bb.f->GetLength() > mMaxSamples))
       {
          wxString sMsg =
             wxString::Format(
-               _("Sequence has block file with length %s > mMaxSamples %s.\nTruncating to mMaxSamples."),
-               Internat::ToString(((wxLongLong)bb.f->GetLength()).ToDouble(), 0).c_str(),
+               _("Sequence has block file exceeding maximum %s samples per block.\nTruncating to this maximum length."),
                Internat::ToString(((wxLongLong)mMaxSamples).ToDouble(), 0).c_str());
-         wxMessageBox(sMsg, _("Warning - Length in Writing Sequence"), wxICON_EXCLAMATION | wxOK);
+         wxMessageBox(sMsg, _("Warning - Truncating Overlong Block File"), wxICON_EXCLAMATION | wxOK);
          wxLogWarning(sMsg);
          bb.f->SetLength(mMaxSamples);
       }
