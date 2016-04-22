@@ -19,6 +19,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../TrackPanelCellIterator.h"
 #include "../../commands/CommandFunctors.h"
 #include "../../toolbars/ControlToolBar.h"
+#include "../../widgets/Ruler.h"
 
 #include <algorithm>
 
@@ -126,10 +127,12 @@ Scrubber::Scrubber(AudacityProject *project)
       wxTheApp->Connect
       (wxEVT_ACTIVATE_APP,
       wxActivateEventHandler(Scrubber::OnActivateOrDeactivateApp), NULL, this);
+   mProject->PushEventHandler(this);
 }
 
 Scrubber::~Scrubber()
 {
+   mProject->PopEventHandler();
    if (wxTheApp)
       wxTheApp->Disconnect
       (wxEVT_ACTIVATE_APP,
@@ -180,6 +183,7 @@ namespace {
 }
 
 void Scrubber::MarkScrubStart(
+   // Assume xx is relative to the left edge of TrackPanel!
    wxCoord xx
 #ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
    , bool smoothScrolling
@@ -207,7 +211,8 @@ void Scrubber::MarkScrubStart(
 }
 
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-bool Scrubber::MaybeStartScrubbing(const wxMouseEvent &event)
+// Assume xx is relative to the left edge of TrackPanel!
+bool Scrubber::MaybeStartScrubbing(wxCoord xx)
 {
    if (mScrubStartPosition < 0)
       return false;
@@ -222,7 +227,7 @@ bool Scrubber::MaybeStartScrubbing(const wxMouseEvent &event)
          return false;
       }
 
-      wxCoord position = event.m_x;
+      wxCoord position = xx;
       if (abs(mScrubStartPosition - position) >= SCRUBBING_PIXEL_TOLERANCE) {
          const ViewInfo &viewInfo = mProject->GetViewInfo();
          TrackPanel *const trackPanel = mProject->GetTrackPanel();
@@ -450,6 +455,40 @@ void Scrubber::OnActivateOrDeactivateApp(wxActivateEvent &event)
    event.Skip();
 }
 
+void Scrubber::OnMouse(wxMouseEvent &event)
+{
+   auto isScrubbing = IsScrubbing();
+   if (!isScrubbing && HasStartedScrubbing()) {
+      if (!event.HasAnyModifiers() &&
+          event.GetEventType() == wxEVT_MOTION) {
+
+         // Really start scrub if motion is far enough
+         auto ruler = mProject->GetRulerPanel();
+         auto xx = ruler->ScreenToClient(::wxGetMousePosition()).x;
+         MaybeStartScrubbing(xx
+                             );
+      }
+   }
+   else if (isScrubbing && !event.HasAnyModifiers()) {
+      if(event.LeftDown() ||
+         (event.LeftIsDown() && event.Dragging())) {
+         mScrubSeekPress = true;
+         auto ruler = mProject->GetRulerPanel();
+         auto xx = ruler->ScreenToClient(::wxGetMousePosition()).x;
+         ruler->UpdateQuickPlayPos(xx);
+      }
+      else if (event.m_wheelRotation) {
+         double steps = event.m_wheelRotation /
+         (event.m_wheelDelta > 0 ? (double)event.m_wheelDelta : 120.0);
+         HandleScrollWheel(steps);
+      }
+      else
+         event.Skip();
+   }
+   else
+      event.Skip();
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 // class ScrubbingOverlay is responsible for drawing the speed numbers
 
@@ -661,6 +700,9 @@ BEGIN_EVENT_TABLE(Scrubber, wxEvtHandler)
    EVT_MENU(CMD_ID + 1, Scrubber::OnScrollScrub)
    EVT_MENU(CMD_ID + 2, Scrubber::OnSeek)
    EVT_MENU(CMD_ID + 3, Scrubber::OnScrollSeek)
+
+   EVT_MOUSE_EVENTS(Scrubber::OnMouse)
+
 END_EVENT_TABLE()
 
 static_assert(nMenuItems == 4, "wrong number of items");

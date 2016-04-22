@@ -452,6 +452,8 @@ void AButton::OnMouseEvent(wxMouseEvent & event)
          GetActiveProject()->TP_DisplayStatusMessage(wxT(""));
       }
    }
+   else
+      event.Skip();
 }
 
 void AButton::OnCaptureLost(wxMouseCaptureLostEvent & WXUNUSED(event))

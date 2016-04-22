@@ -2080,20 +2080,15 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
          : StatusChoice::NoChange
    );
 
-   // Keep Quick-Play within usable track area.
-   TrackPanel *tp = mProject->GetTrackPanel();
-   int mousePosX, width;
-   tp->GetTracksUsableArea(&width, NULL);
-   mousePosX = std::max(evt.GetX(), tp->GetLeftOffset());
-   mousePosX = std::min(mousePosX, tp->GetLeftOffset() + width - 1);
 
    double t0 = mTracks->GetStartTime();
    double t1 = mTracks->GetEndTime();
    double sel0 = mProject->GetSel0();
    double sel1 = mProject->GetSel1();
 
-   mLastMouseX = mousePosX;
-   mQuickPlayPos = Pos2Time(mousePosX);
+   wxCoord mousePosX = evt.GetX();
+   UpdateQuickPlayPos(mousePosX);
+
    // If not looping, restrict selection to end of project
    if (!inScrubZone && !evt.ShiftDown()) {
       mQuickPlayPos = std::min(t1, mQuickPlayPos);
@@ -2103,18 +2098,16 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
       // If already clicked for scrub, preempt the usual event handling,
       // no matter what the y coordinate.
 
-      if (scrubber.IsScrubbing()) {
-         if(evt.LeftDown() || evt.Dragging())
-            // Cause scrub in progress to jump
-            scrubber.SetSeeking();
-      }
+      // Do this hack so scrubber can detect mouse drags anywhere
+      evt.ResumePropagation(wxEVENT_PROPAGATE_MAX);
+
+      if (scrubber.IsScrubbing())
+         evt.Skip();
       else if (evt.LeftDClick())
          // On the second button down, switch the pending scrub to scrolling
          scrubber.MarkScrubStart(evt.m_x, true, false);
-      else if (!evt.Button(wxMOUSE_BTN_ANY)) {
-         // Really start scrub if motion is far enough
-         scrubber.MaybeStartScrubbing(evt);
-      }
+      else
+         evt.Skip();
 
       mQuickPlayInd = true;
       wxClientDC dc(this);
@@ -2476,6 +2469,19 @@ void AdornedRulerPanel::OnCaptureLost(wxMouseCaptureLostEvent & WXUNUSED(evt))
    wxMouseEvent e(wxEVT_LEFT_UP);
    e.m_x = mLastMouseX;
    OnMouseEvents(e);
+}
+
+void AdornedRulerPanel::UpdateQuickPlayPos(wxCoord &mousePosX)
+{
+   // Keep Quick-Play within usable track area.
+   TrackPanel *tp = mProject->GetTrackPanel();
+   int width;
+   tp->GetTracksUsableArea(&width, NULL);
+   mousePosX = std::max(mousePosX, tp->GetLeftOffset());
+   mousePosX = std::min(mousePosX, tp->GetLeftOffset() + width - 1);
+
+   mLastMouseX = mousePosX;
+   mQuickPlayPos = Pos2Time(mousePosX);
 }
 
 // Pop-up menus

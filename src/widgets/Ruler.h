@@ -312,6 +312,8 @@ public:
    void RegenerateTooltips();
    void HideQuickPlayIndicator();
 
+   void UpdateQuickPlayPos(wxCoord &mousPosX);
+
 private:
    void OnCapture(wxCommandEvent & evt);
    void OnPaint(wxPaintEvent &evt);

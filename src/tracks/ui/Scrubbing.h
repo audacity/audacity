@@ -27,6 +27,7 @@ public:
    Scrubber(AudacityProject *project);
    ~Scrubber();
 
+   // Assume xx is relative to the left edge of TrackPanel!
    void MarkScrubStart(
       wxCoord xx
 #ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
@@ -35,8 +36,11 @@ public:
       , bool alwaysSeeking // if false, can switch seeking or scrubbing
                            // by mouse button state
    );
+
    // Returns true iff the event should be considered consumed by this:
-   bool MaybeStartScrubbing(const wxMouseEvent &event);
+   // Assume xx is relative to the left edge of TrackPanel!
+   bool MaybeStartScrubbing(wxCoord xx);
+
    void ContinueScrubbing();
 
    // This is meant to be called only from ControlToolBar
@@ -61,7 +65,6 @@ public:
 
    void HandleScrollWheel(int steps);
 
-   void SetSeeking() { mScrubSeekPress = true; }
    bool PollIsSeeking();
 
    // This returns the same as the enabled state of the menu items:
@@ -88,6 +91,7 @@ private:
    void OnActivateOrDeactivateApp(wxActivateEvent & event);
    void UncheckAllMenuItems();
    void CheckMenuItem();
+   void OnMouse(wxMouseEvent &event);
 
 private:
    int mScrubToken;

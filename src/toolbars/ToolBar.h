@@ -188,6 +188,7 @@ class ToolBar /* not final */ : public wxPanel
 
    void OnErase(wxEraseEvent & event);
    void OnPaint(wxPaintEvent & event);
+   void OnMouseEvents(wxMouseEvent &event);
 
  protected:
    wxString mLabel;

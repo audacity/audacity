@@ -64,6 +64,7 @@ BEGIN_EVENT_TABLE( ToolDock, wxPanel )
    EVT_ERASE_BACKGROUND( ToolDock::OnErase )
    EVT_PAINT( ToolDock::OnPaint )
    EVT_SIZE( ToolDock::OnSize )
+   EVT_MOUSE_EVENTS( ToolDock::OnMouseEvents )
 END_EVENT_TABLE()
 
 //
@@ -555,4 +556,11 @@ void ToolDock::OnPaint( wxPaintEvent & WXUNUSED(event) )
          }
       }
    }
+}
+
+void ToolDock::OnMouseEvents(wxMouseEvent &event)
+{
+   // Do this hack so scrubber can detect mouse drags anywhere
+   event.ResumePropagation(wxEVENT_PROPAGATE_MAX);
+   event.Skip();
 }

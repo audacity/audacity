@@ -5473,6 +5473,13 @@ void TrackPanel::HandleResize(wxMouseEvent & event)
 /// Handle mouse wheel rotation (for zoom in/out, vertical and horizontal scrolling)
 void TrackPanel::HandleWheelRotation(wxMouseEvent & event)
 {
+   if(!event.HasAnyModifiers()) {
+      // We will later un-skip if we do anything, but if we don't,
+      // propagate the event up for the sake of the scrubber
+      event.Skip();
+      event.ResumePropagation(wxEVENT_PROPAGATE_MAX);
+   }
+
    if (GetTracks()->IsEmpty())
       // Scrolling and Zoom in and out commands are disabled when there are no tracks.
       // This should be disabled too for consistency.  Otherwise
@@ -5485,6 +5492,9 @@ void TrackPanel::HandleWheelRotation(wxMouseEvent & event)
       Track *const pTrack = FindTrack(event.m_x, event.m_y, true, false, &rect);
       if (pTrack && event.m_x >= GetVRulerOffset()) {
          HandleWheelRotationInVRuler(event, pTrack, rect);
+         // Always stop propagation even if the ruler didn't change.  The ruler
+         // is a narrow enough target.
+         event.Skip(false);
          return;
       }
    }
@@ -5574,7 +5584,8 @@ void TrackPanel::HandleWheelRotation(wxMouseEvent & event)
          double lines = steps * 4 + mVertScrollRemainder;
          mVertScrollRemainder = lines - floor(lines);
          lines = floor(lines);
-         mListener->TP_ScrollUpDown((int)-lines);
+         const bool didSomething = mListener->TP_ScrollUpDown((int)-lines);
+         event.Skip(!didSomething);
       }
    }
 }
@@ -5861,6 +5872,13 @@ void TrackPanel::OnMouseEvent(wxMouseEvent & event)
 {
    if (event.m_wheelRotation != 0)
       HandleWheelRotation(event);
+
+   if (event.LeftDown() || event.LeftIsDown() || event.Moving()) {
+      // Skip, even if we do something, so that the left click or drag
+      // may have an additional effect in the scrubber.
+      event.Skip();
+      event.ResumePropagation(wxEVENT_PROPAGATE_MAX);
+   }
 
    if (!mAutoScrolling) {
       mMouseMostRecentX = event.m_x;
