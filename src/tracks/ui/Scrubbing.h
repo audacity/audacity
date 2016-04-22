@@ -59,8 +59,18 @@ public:
    void SetSeeking() { mScrubSeekPress = true; }
    bool PollIsSeeking();
 
+   void AddMenuItems();
+
+   void OnScrub();
+   void OnScrollScrub();
+   void OnSeek();
+   void OnScrollSeek();
+
 private:
+   void DoScrub(bool scroll, bool seek);
    void OnActivateOrDeactivateApp(wxActivateEvent & event);
+   void UncheckAllMenuItems();
+   void CheckMenuItem();
 
 private:
    int mScrubToken;

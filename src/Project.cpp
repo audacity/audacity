@@ -839,8 +839,6 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    mIsSyncLocked = false;
    gPrefs->Read(wxT("/GUI/SyncLockTracks"), &mIsSyncLocked, false);
 
-   CreateMenusAndCommands();
-
    // LLL:  Read this!!!
    //
    // Until the time (and cpu) required to refresh the track panel is
@@ -954,6 +952,8 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
 #ifdef EXPERIMENTAL_SCRUBBING_BASIC
    mTrackPanel->AddOverlay(mScrubOverlay.get());
 #endif
+
+   CreateMenusAndCommands();
 
    // LLL: When Audacity starts or becomes active after returning from
    //      another application, the first window that can accept focus
