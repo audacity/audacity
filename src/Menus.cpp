@@ -158,76 +158,7 @@ enum {
    POST_TIMER_RECORD_SHUTDOWN
 };
 
-// Define functor subclasses that dispatch to the correct call sequence on
-// member functions of AudacityProject
-
-using audCommandFunction = void (AudacityProject::*)();
-class VoidFunctor final : public CommandFunctor
-{
-public:
-   explicit VoidFunctor(AudacityProject *project, audCommandFunction pfn)
-      : mProject{ project }, mCommandFunction{ pfn } {}
-   void operator () (int, const wxEvent *) override
-   { (mProject->*mCommandFunction) (); }
-private:
-   AudacityProject *const mProject;
-   const audCommandFunction mCommandFunction;
-};
-
-using audCommandKeyFunction = void (AudacityProject::*)(const wxEvent *);
-class KeyFunctor final : public CommandFunctor
-{
-public:
-   explicit KeyFunctor(AudacityProject *project, audCommandKeyFunction pfn)
-      : mProject{ project }, mCommandKeyFunction{ pfn } {}
-   void operator () (int, const wxEvent *evt) override
-   { (mProject->*mCommandKeyFunction) (evt); }
-private:
-   AudacityProject *const mProject;
-   const audCommandKeyFunction mCommandKeyFunction;
-};
-
-using audCommandListFunction = void (AudacityProject::*)(int);
-class ListFunctor final : public CommandFunctor
-{
-public:
-   explicit ListFunctor(AudacityProject *project, audCommandListFunction pfn)
-      : mProject{ project }, mCommandListFunction{ pfn } {}
-   void operator () (int index, const wxEvent *) override
-   { (mProject->*mCommandListFunction)(index); }
-private:
-   AudacityProject *const mProject;
-   const audCommandListFunction mCommandListFunction;
-};
-
-using audCommandPluginFunction = bool (AudacityProject::*)(const PluginID &, int);
-class PluginFunctor final : public CommandFunctor
-{
-public:
-   explicit PluginFunctor(AudacityProject *project, const PluginID &id, audCommandPluginFunction pfn)
-      : mPluginID{ id }, mProject{ project }, mCommandPluginFunction{ pfn } {}
-   void operator () (int, const wxEvent *) override
-   { (mProject->*mCommandPluginFunction) (mPluginID, AudacityProject::OnEffectFlags::kNone); }
-private:
-   const PluginID mPluginID;
-   AudacityProject *const mProject;
-   const audCommandPluginFunction mCommandPluginFunction;
-};
-
-// Now define an overloaded factory function
-inline CommandFunctorPointer MakeFunctor(AudacityProject *project, audCommandFunction pfn)
-{ return CommandFunctorPointer{ safenew VoidFunctor{ project, pfn } }; }
-inline CommandFunctorPointer MakeFunctor(AudacityProject *project, audCommandKeyFunction pfn)
-{ return CommandFunctorPointer{ safenew KeyFunctor{ project, pfn } }; }
-inline CommandFunctorPointer MakeFunctor(AudacityProject *project, audCommandListFunction pfn)
-{ return CommandFunctorPointer{ safenew ListFunctor{ project, pfn } }; }
-inline CommandFunctorPointer MakeFunctor(AudacityProject *project, const PluginID &id, audCommandPluginFunction pfn)
-{ return CommandFunctorPointer{ safenew PluginFunctor{ project, id, pfn } }; }
-
-// Now define the macro abbreviations that call the factory
-#define FN(X) (MakeFunctor(this, &AudacityProject:: X ))
-#define FNS(X, S) (MakeFunctor(this, (S), &AudacityProject:: X ))
-
+#include "commands/CommandFunctors.h"
 //
 // Effects menu arrays
 //

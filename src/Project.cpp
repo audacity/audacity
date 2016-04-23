@@ -285,7 +285,7 @@ public:
    {
    }
 
-   bool IsSupportedFormat(const wxDataFormat & format, Direction WXUNUSED(dir = Get)) const
+   bool IsSupportedFormat(const wxDataFormat & format, Direction WXUNUSED(dir = Get)) const override
    {
       if (format.GetType() == wxDF_FILENAME) {
          return true;
@@ -318,10 +318,10 @@ public:
    }
 
 #if defined(__WXMAC__)
-   bool GetData()
+#if !wxCHECK_VERSION(3, 0, 0)
+   bool GetData() override
    {
       bool foundSupported = false;
-#if !wxCHECK_VERSION(3, 0, 0)
       bool firstFileAdded = false;
       OSErr result;
 
@@ -373,11 +373,11 @@ public:
             break;
          }
       }
-#endif
       return foundSupported;
    }
+#endif
 
-   bool OnDrop(wxCoord x, wxCoord y)
+   bool OnDrop(wxCoord x, wxCoord y) override
    {
       bool foundSupported = false;
 #if !wxCHECK_VERSION(3, 0, 0)
@@ -411,7 +411,7 @@ public:
 
 #endif
 
-   bool OnDropFiles(wxCoord WXUNUSED(x), wxCoord WXUNUSED(y), const wxArrayString& filenames)
+   bool OnDropFiles(wxCoord WXUNUSED(x), wxCoord WXUNUSED(y), const wxArrayString& filenames) override
    {
       //sort by OD non OD.  load Non OD first so user can start editing asap.
       wxArrayString sortednames(filenames);
