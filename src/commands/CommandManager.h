@@ -14,6 +14,8 @@
 
 #include "../Experimental.h"
 
+#include "CommandFunctors.h"
+
 #include "../MemoryX.h"
 #include <vector>
 #include <wx/string.h>
@@ -25,14 +27,6 @@
 #include "../xml/XMLTagHandler.h"
 
 #include "audacity/Types.h"
-
-class AUDACITY_DLL_API CommandFunctor /* not final */
-{
-public:
-   CommandFunctor(){};
-   virtual ~CommandFunctor(){};
-   virtual void operator()(int index, const wxEvent *e) = 0;
-};
 
 struct MenuBarListEntry
 {
@@ -53,8 +47,6 @@ struct SubMenuListEntry
    wxString name;
    wxMenu *menu;
 };
-
-using CommandFunctorPointer = std::shared_ptr <CommandFunctor>;
 
 struct CommandListEntry
 {
