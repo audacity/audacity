@@ -751,14 +751,7 @@ void AudacityProject::CreateMenusAndCommands()
          WaveTracksExistFlag | AudioIONotBusyFlag | CanStopAudioStreamFlag);
 
       // Scrubbing sub-menu
-      {
-         c->BeginSubMenu(_("Scru&bbing"));
-         c->AddItem(wxT("Scrub"), _("&Scrub"), FN(OnScrub));
-         c->AddItem(wxT("ScrollScrub"), _("Sc&rolling Scrub"), FN(OnScrollScrub));
-         c->AddItem(wxT("Seek"), _("See&k"), FN(OnSeek));
-         c->AddItem(wxT("ScrollSeek"), _("Scrollin&g Seek"), FN(OnScrollSeek));
-         c->EndSubMenu();
-      }
+      GetScrubber().AddMenuItems();
 
       c->AddItem(wxT("Pause"), _("&Pause"), FN(OnPause), wxT("P"),
                  c->GetDefaultFlags() | AudioStreamNotScrubbingFlag,
@@ -2193,36 +2186,6 @@ void AudacityProject::OnPlayCutPreview()
 
    // Play with cut preview
    GetControlToolBar()->PlayCurrentRegion(false, true);
-}
-
-namespace {
-   inline void DoScrub(AudacityProject *project, bool scroll, bool seek)
-   {
-      auto tp = project->GetTrackPanel();
-      wxCoord xx = tp->ScreenToClient(::wxGetMouseState().GetPosition()).x;
-      wxMouseEvent evt;
-      project->GetScrubber().MarkScrubStart(evt, scroll, seek);
-   }
-}
-
-void AudacityProject::OnScrub()
-{
-   DoScrub(this, false, false);
-}
-
-void AudacityProject::OnScrollScrub()
-{
-   DoScrub(this, true, false);
-}
-
-void AudacityProject::OnSeek()
-{
-   DoScrub(this, false, true);
-}
-
-void AudacityProject::OnScrollSeek()
-{
-   DoScrub(this, true, true);
 }
 
 void AudacityProject::OnPlayStop()

@@ -88,11 +88,6 @@ void OnPlayBeforeAndAfterSelectionEnd();
 void OnPlayLooped();
 void OnPlayCutPreview();
 
-void OnScrub();
-void OnScrollScrub();
-void OnSeek();
-void OnScrollSeek();
-
         // Wave track control
 
 void OnTrackPan();
