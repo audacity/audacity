@@ -342,16 +342,12 @@ void Scrubber::StopScrubbing()
 
    mScrubStartPosition = -1;
    mSmoothScrollingScrub = false;
-   const auto ctb = mProject->GetControlToolBar();
 
-   if (IsScrubbing())
+   if (!IsScrubbing())
    {
-      if (gAudioIO->IsBusy()) {
-         ctb->StopPlaying();
-      }
-   }
-   else {
-      // Didn't really play, but did change button apperance
+      // Marked scrub start, but
+      // didn't really play, but did change button apperance
+      const auto ctb = mProject->GetControlToolBar();
       ctb->SetPlay(false, ControlToolBar::PlayAppearance::Straight);
    }
 }
@@ -596,9 +592,11 @@ void Scrubber::DoScrub(bool scroll, bool seek)
       UncheckAllMenuItems();
       CheckMenuItem();
    }
-   else
-      // unchecks items
-      StopScrubbing();
+   else {
+      // This will call back to Scrubber::StopScrubbing
+      const auto ctb = mProject->GetControlToolBar();
+      ctb->StopPlaying();
+   }
 }
 
 void Scrubber::OnScrub()
