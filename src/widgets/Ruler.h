@@ -310,6 +310,7 @@ public:
 
    void UpdatePrefs();
    void RegenerateTooltips();
+   void HideQuickPlayIndicator();
 
 private:
    void OnCapture(wxCommandEvent & evt);

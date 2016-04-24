@@ -1897,6 +1897,13 @@ void AdornedRulerPanel::RegenerateTooltips()
 #endif
 }
 
+void AdornedRulerPanel::HideQuickPlayIndicator()
+{
+   mQuickPlayInd = false;
+   DrawQuickPlayIndicator(NULL);
+   Refresh(false);
+}
+
 void AdornedRulerPanel::OnCapture(wxCommandEvent & evt)
 {
    evt.Skip();
@@ -2668,8 +2675,8 @@ void AdornedRulerPanel::DrawQuickPlayIndicator(wxDC * dc)
 
    double latestEnd = std::max(mTracks->GetEndTime(), mProject->GetSel1());
    if (dc == NULL || (mQuickPlayPos >= latestEnd)) {
-      GetOverlay()->Update(-1);
       mLastQuickPlayX = -1;
+      GetOverlay()->Update(-1);
       return;
    }
 
