@@ -773,6 +773,12 @@ void ControlToolBar::PlayDefault()
 
 void ControlToolBar::StopPlaying(bool stopStream /* = true*/)
 {
+   AudacityProject *project = GetActiveProject();
+
+   if(project)
+      // Let scrubbing code do some appearance change
+      project->GetScrubber().StopScrubbing();
+
    if (!CanStopAudioStream())
       return;
 
@@ -798,7 +804,6 @@ void ControlToolBar::StopPlaying(bool stopStream /* = true*/)
    mBusyProject = NULL;
    // So that we continue monitoring after playing or recording.
    // also clean the MeterQueues
-   AudacityProject *project = GetActiveProject();
    if( project ) {
       project->MayStartMonitoring();
 

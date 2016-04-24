@@ -113,8 +113,6 @@ It handles initialization and termination by subclassing wxApp.
 #include "effects/ScoreAlignDialog.h"
 #endif
 
-#include "tracks/ui/Scrubbing.h"
-
 #if 0
 #ifdef _DEBUG
     #ifdef _MSC_VER
@@ -1530,11 +1528,7 @@ void AudacityApp::OnKeyDown(wxKeyEvent &event)
       // Stop play, including scrub, but not record
       auto project = ::GetActiveProject();
       auto token = project->GetAudioIOToken();
-      auto &scrubber = project->GetScrubber();
-      if(scrubber.HasStartedScrubbing())
-         // ESC out of scrubbing
-         scrubber.StopScrubbing();
-      else if(token > 0 &&
+      if(token > 0 &&
               gAudioIO->IsAudioTokenActive(token) &&
               gAudioIO->GetNumCaptureChannels() == 0)
          // ESC out of other play (but not record)
