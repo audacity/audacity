@@ -285,7 +285,8 @@ public:
    {
    }
 
-   bool IsSupportedFormat(const wxDataFormat & format, Direction WXUNUSED(dir = Get)) const override
+   bool IsSupportedFormat(const wxDataFormat & format, Direction WXUNUSED(dir = Get)) const
+      // PRL:  This function does NOT override any inherited virtual!  What does it do?
    {
       if (format.GetType() == wxDF_FILENAME) {
          return true;
