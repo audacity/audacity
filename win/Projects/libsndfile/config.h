@@ -11,15 +11,6 @@
 #pragma warning (disable : 4244)
 #pragma warning (disable : 4761)
 
-typedef __int8            int8_t;
-typedef __int16           int16_t;
-typedef __int32           int32_t;
-typedef __int64           int64_t;
-typedef unsigned __int8   uint8_t;
-typedef unsigned __int16  uint16_t;
-typedef unsigned __int32  uint32_t;
-typedef unsigned __int64  uint64_t;
-
 #define ssize_t           SSIZE_T
 #define __func__          __FUNCTION__
 
@@ -223,7 +214,7 @@ llrintf (float flt)
 /* #undef HAVE_SSIZE_T */
 
 /* Define to 1 if you have the <stdint.h> header file. */
-/* #undef HAVE_STDINT_H */
+#define HAVE_STDINT_H 1
 
 /* Define to 1 if you have the <stdlib.h> header file. */
 #define HAVE_STDLIB_H 1

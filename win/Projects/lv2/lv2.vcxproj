@@ -130,8 +130,6 @@
     <ClInclude Include="..\..\..\lib-src\lv2\sord\src\zix\hash.h" />
     <ClInclude Include="..\..\..\lib-src\lv2\sord\src\zix\tree.h" />
     <ClInclude Include="..\..\..\lib-src\lv2\sratom\sratom\sratom.h" />
-    <ClInclude Include="..\..\..\lib-src\lv2\msinttypes\inttypes.h" />
-    <ClInclude Include="..\..\..\lib-src\lv2\msinttypes\stdint.h" />
     <ClInclude Include="..\..\..\lib-src\lv2\suil\suil\suil.h" />
     <ClInclude Include="..\..\..\lib-src\lv2\windows\lilv_config.h" />
     <ClInclude Include="..\..\..\lib-src\lv2\windows\serd_config.h" />
