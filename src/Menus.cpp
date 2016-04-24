@@ -158,76 +158,7 @@ enum {
    POST_TIMER_RECORD_SHUTDOWN
 };
 
-// Define functor subclasses that dispatch to the correct call sequence on
-// member functions of AudacityProject
-
-using audCommandFunction = void (AudacityProject::*)();
-class VoidFunctor final : public CommandFunctor
-{
-public:
-   explicit VoidFunctor(AudacityProject *project, audCommandFunction pfn)
-      : mProject{ project }, mCommandFunction{ pfn } {}
-   void operator () (int, const wxEvent *) override
-   { (mProject->*mCommandFunction) (); }
-private:
-   AudacityProject *const mProject;
-   const audCommandFunction mCommandFunction;
-};
-
-using audCommandKeyFunction = void (AudacityProject::*)(const wxEvent *);
-class KeyFunctor final : public CommandFunctor
-{
-public:
-   explicit KeyFunctor(AudacityProject *project, audCommandKeyFunction pfn)
-      : mProject{ project }, mCommandKeyFunction{ pfn } {}
-   void operator () (int, const wxEvent *evt) override
-   { (mProject->*mCommandKeyFunction) (evt); }
-private:
-   AudacityProject *const mProject;
-   const audCommandKeyFunction mCommandKeyFunction;
-};
-
-using audCommandListFunction = void (AudacityProject::*)(int);
-class ListFunctor final : public CommandFunctor
-{
-public:
-   explicit ListFunctor(AudacityProject *project, audCommandListFunction pfn)
-      : mProject{ project }, mCommandListFunction{ pfn } {}
-   void operator () (int index, const wxEvent *) override
-   { (mProject->*mCommandListFunction)(index); }
-private:
-   AudacityProject *const mProject;
-   const audCommandListFunction mCommandListFunction;
-};
-
-using audCommandPluginFunction = bool (AudacityProject::*)(const PluginID &, int);
-class PluginFunctor final : public CommandFunctor
-{
-public:
-   explicit PluginFunctor(AudacityProject *project, const PluginID &id, audCommandPluginFunction pfn)
-      : mPluginID{ id }, mProject{ project }, mCommandPluginFunction{ pfn } {}
-   void operator () (int, const wxEvent *) override
-   { (mProject->*mCommandPluginFunction) (mPluginID, AudacityProject::OnEffectFlags::kNone); }
-private:
-   const PluginID mPluginID;
-   AudacityProject *const mProject;
-   const audCommandPluginFunction mCommandPluginFunction;
-};
-
-// Now define an overloaded factory function
-inline CommandFunctorPointer MakeFunctor(AudacityProject *project, audCommandFunction pfn)
-{ return CommandFunctorPointer{ safenew VoidFunctor{ project, pfn } }; }
-inline CommandFunctorPointer MakeFunctor(AudacityProject *project, audCommandKeyFunction pfn)
-{ return CommandFunctorPointer{ safenew KeyFunctor{ project, pfn } }; }
-inline CommandFunctorPointer MakeFunctor(AudacityProject *project, audCommandListFunction pfn)
-{ return CommandFunctorPointer{ safenew ListFunctor{ project, pfn } }; }
-inline CommandFunctorPointer MakeFunctor(AudacityProject *project, const PluginID &id, audCommandPluginFunction pfn)
-{ return CommandFunctorPointer{ safenew PluginFunctor{ project, id, pfn } }; }
-
-// Now define the macro abbreviations that call the factory
-#define FN(X) (MakeFunctor(this, &AudacityProject:: X ))
-#define FNS(X, S) (MakeFunctor(this, (S), &AudacityProject:: X ))
-
+#include "commands/CommandFunctors.h"
 //
 // Effects menu arrays
 //
@@ -820,14 +751,7 @@ void AudacityProject::CreateMenusAndCommands()
          WaveTracksExistFlag | AudioIONotBusyFlag | CanStopAudioStreamFlag);
 
       // Scrubbing sub-menu
-      {
-         c->BeginSubMenu(_("Scru&bbing"));
-         c->AddItem(wxT("Scrub"), _("&Scrub"), FN(OnScrub));
-         c->AddItem(wxT("ScrollScrub"), _("Sc&rolling Scrub"), FN(OnScrollScrub));
-         c->AddItem(wxT("Seek"), _("See&k"), FN(OnSeek));
-         c->AddItem(wxT("ScrollSeek"), _("Scrollin&g Seek"), FN(OnScrollSeek));
-         c->EndSubMenu();
-      }
+      GetScrubber().AddMenuItems();
 
       c->AddItem(wxT("Pause"), _("&Pause"), FN(OnPause), wxT("P"),
                  c->GetDefaultFlags() | AudioStreamNotScrubbingFlag,
@@ -2262,36 +2186,6 @@ void AudacityProject::OnPlayCutPreview()
 
    // Play with cut preview
    GetControlToolBar()->PlayCurrentRegion(false, true);
-}
-
-namespace {
-   inline void DoScrub(AudacityProject *project, bool scroll, bool seek)
-   {
-      auto tp = project->GetTrackPanel();
-      wxCoord xx = tp->ScreenToClient(::wxGetMouseState().GetPosition()).x;
-      wxMouseEvent evt;
-      project->GetScrubber().MarkScrubStart(evt, scroll, seek);
-   }
-}
-
-void AudacityProject::OnScrub()
-{
-   DoScrub(this, false, false);
-}
-
-void AudacityProject::OnScrollScrub()
-{
-   DoScrub(this, true, false);
-}
-
-void AudacityProject::OnSeek()
-{
-   DoScrub(this, false, true);
-}
-
-void AudacityProject::OnScrollSeek()
-{
-   DoScrub(this, true, true);
 }
 
 void AudacityProject::OnPlayStop()
