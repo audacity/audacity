@@ -158,7 +158,6 @@ class ControlToolBar final : public ToolBar {
 
    // strings for status bar
    wxString mStatePlay;
-   wxString mStateScrub;
    wxString mStateStop;
    wxString mStateRecord;
    wxString mStatePause;

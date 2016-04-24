@@ -11,6 +11,7 @@ Paul Licameli split from TrackPanel.cpp
 #ifndef __AUDACITY_SCRUBBING__
 #define __AUDACITY_SCRUBBING__
 
+#include <vector>
 #include <wx/event.h>
 #include <wx/longlong.h>
 
@@ -67,6 +68,12 @@ public:
    void OnScrollScrub();
    void OnSeek();
    void OnScrollSeek();
+
+   // A string to put in the leftmost part of the status bar.
+   const wxString &GetUntranslatedStateString() const;
+
+   // All possible status strings.
+   static std::vector<wxString> GetAllUntranslatedStatusStrings();
 
 private:
    void DoScrub(bool scroll, bool seek);
