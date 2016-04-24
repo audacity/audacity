@@ -67,7 +67,8 @@ public:
    virtual ~ToolBarResizer();
 
    // We don't need or want to accept focus.
-   bool AcceptsFocus() const;
+   // PRL: except for ESC key now.
+   // bool AcceptsFocus() const;
 
 private:
    void OnErase(wxEraseEvent & event);
@@ -77,11 +78,14 @@ private:
    void OnEnter(wxMouseEvent & event);
    void OnLeave(wxMouseEvent & event);
    void OnMotion(wxMouseEvent & event);
+   void ResizeBar(const wxSize &size);
    void OnCaptureLost(wxMouseCaptureLostEvent & event);
+   void OnKeyDown(wxKeyEvent &event);
 
 private:
    ToolBar *mBar;
    wxPoint mResizeStart;
+   wxSize mOrigSize;
 
    DECLARE_EVENT_TABLE();
 };
@@ -96,6 +100,7 @@ BEGIN_EVENT_TABLE( ToolBarResizer, wxWindow )
    EVT_LEFT_UP( ToolBarResizer::OnLeftUp )
    EVT_MOTION( ToolBarResizer::OnMotion )
    EVT_MOUSE_CAPTURE_LOST( ToolBarResizer::OnCaptureLost )
+   EVT_KEY_DOWN( ToolBarResizer::OnKeyDown )
 END_EVENT_TABLE();
 
 ToolBarResizer::ToolBarResizer(ToolBar *bar)
@@ -109,10 +114,12 @@ ToolBarResizer::~ToolBarResizer()
 {
 }
 
+/*
 bool ToolBarResizer::AcceptsFocus() const
 {
    return false;
 }
+ */
 
 //
 // Handle background erasure
@@ -157,6 +164,8 @@ void ToolBarResizer::OnLeftDown( wxMouseEvent & event )
    // Retrieve the mouse position
    mResizeStart = ClientToScreen( event.GetPosition() );
 
+   mOrigSize = mBar->GetSize();
+
    // We want all of the mouse events
    CaptureMouse();
 }
@@ -181,7 +190,7 @@ void ToolBarResizer::OnMotion( wxMouseEvent & event )
    wxPoint raw_pos = event.GetPosition();
    wxPoint pos = ClientToScreen( raw_pos );
 
-   if( event.Dragging() )
+   if( HasCapture() && event.Dragging() )
    {
       wxRect r = mBar->GetRect();
       wxSize msz = mBar->GetMinSize();
@@ -212,22 +221,35 @@ void ToolBarResizer::OnMotion( wxMouseEvent & event )
          mResizeStart = pos;
       }
 
-      // Resize the bar
-      mBar->SetSize( r.GetSize() );
-
-      // Tell everyone we've changed sizes
-      mBar->Updated();
-
-      // Refresh our world
-      mBar->GetParent()->Refresh();
-      mBar->GetParent()->Update();
+      ResizeBar( r.GetSize() );
    }
+}
+
+void ToolBarResizer::ResizeBar(const wxSize &size)
+{
+   mBar->SetSize( size );
+
+   // Tell everyone we've changed sizes
+   mBar->Updated();
+
+   // Refresh our world
+   mBar->GetParent()->Refresh();
+   mBar->GetParent()->Update();
 }
 
 void ToolBarResizer::OnCaptureLost( wxMouseCaptureLostEvent & WXUNUSED(event) )
 {
    if( HasCapture() )
    {
+      ReleaseMouse();
+   }
+}
+
+void ToolBarResizer::OnKeyDown(wxKeyEvent &event)
+{
+   event.Skip();
+   if (HasCapture() && WXK_ESCAPE == event.GetKeyCode()) {
+      ResizeBar( mOrigSize );
       ReleaseMouse();
    }
 }

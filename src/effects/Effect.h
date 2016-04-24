@@ -659,7 +659,7 @@ private:
    SelectedRegion mRegion;
    double mPlayPos;
 
-   bool mCancelled{};
+   bool mDismissed{};
 
    DECLARE_EVENT_TABLE();
 };
