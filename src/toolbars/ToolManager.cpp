@@ -234,10 +234,7 @@ class ToolFrame final : public wxFrame
             rect.height = mMinSize.y;
          }
 
-         SetMinSize( rect.GetSize() );
-         SetSize( rect.GetSize() );
-         Layout();
-         Refresh( false );
+         Resize( rect.GetSize() );
       }
       else if( HasCapture() && event.LeftUp() )
       {
@@ -256,6 +253,8 @@ class ToolFrame final : public wxFrame
          // Is left click within resize grabber?
          if( r.Contains( pos ) && !event.Leaving() )
          {
+            mOrigSize = GetSize();
+
             SetCursor( wxCURSOR_SIZENWSE );
             if( event.LeftDown() )
             {
@@ -286,12 +285,30 @@ class ToolFrame final : public wxFrame
       event.Veto();
    }
 
- private:
+   void OnKeyDown( wxKeyEvent &event )
+   {
+      event.Skip();
+      if( HasCapture() && event.GetKeyCode() == WXK_ESCAPE ) {
+         Resize( mOrigSize );
+         ReleaseMouse();
+      }
+   }
+
+   void Resize( const wxSize &size )
+   {
+      SetMinSize( size );
+      SetSize( size );
+      Layout();
+      Refresh( false );
+   }
+
+private:
 
    wxWindow *mParent;
    ToolManager *mManager;
    ToolBar *mBar;
    wxSize mMinSize;
+   wxSize mOrigSize;
 
  public:
 
@@ -308,6 +325,7 @@ BEGIN_EVENT_TABLE( ToolFrame, wxFrame )
    EVT_MOUSE_CAPTURE_LOST( ToolFrame::OnCaptureLost )
    EVT_CLOSE( ToolFrame::OnClose )
    EVT_COMMAND( wxID_ANY, EVT_TOOLBAR_UPDATED, ToolFrame::OnToolBarUpdate )
+   EVT_KEY_DOWN( ToolFrame::OnKeyDown )
 END_EVENT_TABLE()
 
 IMPLEMENT_CLASS( ToolManager, wxEvtHandler );

@@ -231,8 +231,12 @@ void Grabber::OnPaint(wxPaintEvent & WXUNUSED(event))
 
 void Grabber::OnKeyDown(wxKeyEvent &event)
 {
-   if(event.GetKeyCode() == WXK_ESCAPE)
+   event.Skip();
+
+   if(event.GetKeyCode() == WXK_ESCAPE) {
+      // We must not only skip this key event, but propagate it up the window
+      // hierarchy, so that ToolFrame detects it too.
+      event.ResumePropagation(wxEVENT_PROPAGATE_MAX);
       SendEvent(EVT_GRABBER_CLICKED, wxPoint{ -1, -1 }, true);
-   else
-      event.Skip();
+   }
 }
