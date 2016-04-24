@@ -1717,8 +1717,6 @@ void QuickPlayIndicatorOverlay::Draw
    if (mOldQPIndicatorPos >= 0) {
       mOldPreviewingScrub
       ? AColor::IndicatorColor(&dc, true) // Draw green line for preview.
-         // Drawing during actual scrub not by this class,
-         // but by PlayIndicatorOverlay
       : mOldQPIndicatorSnapped
         ? AColor::SnapGuidePen(&dc)
         : AColor::Light(&dc, false)
@@ -2061,22 +2059,26 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
    if (mIsRecording)
       return;
 
-   // Handle status bar messages
-   if(evt.Leaving()) {
-      mProject->TP_DisplayStatusMessage(wxT(""));
-   }
-   else if(evt.Entering()) {
-      // Insert timeline status bar messages here
-      mProject->TP_DisplayStatusMessage
-      (wxT(""));
-   }
+   const bool inScrubZone =
+      // only if scrubbing is allowed now
+      mProject->GetScrubber().CanScrub() &&
+      evt.m_y < IndicatorBigHeight();
 
-   // Store the initial play region state
-   if(mMouseEventState == mesNone) {
-      mOldPlayRegionStart = mPlayRegionStart;
-      mOldPlayRegionEnd = mPlayRegionEnd;
-      mPlayRegionLock = mProject->IsPlayRegionLocked();
-   }
+   const bool changeInScrubZone = (inScrubZone != mPrevInScrubZone);
+   mPrevInScrubZone = inScrubZone;
+
+   auto &scrubber = mProject->GetScrubber();
+
+   // Handle status bar messages
+   UpdateStatusBar (
+      evt.Leaving()
+      ? StatusChoice::Leaving
+      : evt.Entering() || changeInScrubZone
+         ? inScrubZone
+            ? StatusChoice::EnteringScrubZone
+            : StatusChoice::EnteringQP
+         : StatusChoice::NoChange
+   );
 
    // Keep Quick-Play within usable track area.
    TrackPanel *tp = mProject->GetTrackPanel();
@@ -2084,11 +2086,6 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
    tp->GetTracksUsableArea(&width, NULL);
    mousePosX = std::max(evt.GetX(), tp->GetLeftOffset());
    mousePosX = std::min(mousePosX, tp->GetLeftOffset() + width - 1);
-
-   bool isWithinStart = IsWithinMarker(mousePosX, mOldPlayRegionStart);
-   bool isWithinEnd = IsWithinMarker(mousePosX, mOldPlayRegionEnd);
-   bool isWithinClick = (mLeftDownClick >= 0) && IsWithinMarker(mousePosX, mLeftDownClick);
-   bool canDragSel = !mPlayRegionLock && mPlayRegionDragsSelection;
 
    double t0 = mTracks->GetStartTime();
    double t1 = mTracks->GetEndTime();
@@ -2098,13 +2095,55 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
    mLastMouseX = mousePosX;
    mQuickPlayPos = Pos2Time(mousePosX);
    // If not looping, restrict selection to end of project
-   if (!evt.ShiftDown()) {
+   if (!inScrubZone && !evt.ShiftDown()) {
       mQuickPlayPos = std::min(t1, mQuickPlayPos);
    }
 
-   if (evt.Leaving()) {
-      mQuickPlayInd = false;
-      DrawQuickPlayIndicator(NULL);
+   if (scrubber.HasStartedScrubbing()) {
+      // If already clicked for scrub, preempt the usual event handling,
+      // no matter what the y coordinate.
+
+      if (scrubber.IsScrubbing()) {
+         if(evt.LeftDown() || evt.Dragging())
+            // Cause scrub in progress to jump
+            scrubber.SetSeeking();
+      }
+      else if (evt.LeftDClick())
+         // On the second button down, switch the pending scrub to scrolling
+         scrubber.MarkScrubStart(evt.m_x, true, false);
+      else if (!evt.Button(wxMOUSE_BTN_ANY)) {
+         // Really start scrub if motion is far enough
+         scrubber.MaybeStartScrubbing(evt);
+      }
+
+      mQuickPlayInd = true;
+      wxClientDC dc(this);
+      DrawQuickPlayIndicator(&dc);
+
+      return;
+   }
+
+   // Store the initial play region state
+   if(mMouseEventState == mesNone) {
+      mOldPlayRegionStart = mPlayRegionStart;
+      mOldPlayRegionEnd = mPlayRegionEnd;
+      mPlayRegionLock = mProject->IsPlayRegionLocked();
+   }
+
+   bool isWithinStart = IsWithinMarker(mousePosX, mOldPlayRegionStart);
+   bool isWithinEnd = IsWithinMarker(mousePosX, mOldPlayRegionEnd);
+   bool isWithinClick = (mLeftDownClick >= 0) && IsWithinMarker(mousePosX, mLeftDownClick);
+   bool canDragSel = !mPlayRegionLock && mPlayRegionDragsSelection;
+
+   // Handle entering and leaving of the bar, or movement from
+   // one portion (quick play or scrub) to the other
+   if (evt.Leaving() || (changeInScrubZone && inScrubZone)) {
+      if (evt.Leaving()) {
+         // Erase the line
+         mQuickPlayInd = false;
+         DrawQuickPlayIndicator(NULL);
+      }
+
       Refresh();
 
       SetCursor(mCursorDefault);
@@ -2114,9 +2153,12 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
          delete mSnapManager;
          mSnapManager = NULL;
       }
-      return;
+
+      if(evt.Leaving())
+         return;
+      // else, may detect a scrub click below
    }
-   else if (evt.Entering()) {
+   else if (evt.Entering() || (changeInScrubZone && !inScrubZone)) {
       SetCursor(mCursorHand);
       mQuickPlayInd = false;
       DrawQuickPlayIndicator(NULL);
@@ -2127,6 +2169,15 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
       ShowMenu(evt.GetPosition());
       if (HasCapture())
          ReleaseMouse();
+      return;
+   }
+   else if (inScrubZone) {
+      if (evt.LeftDown())
+         scrubber.MarkScrubStart(evt.m_x, false, false);
+      UpdateStatusBar(StatusChoice::EnteringScrubZone);
+      wxClientDC dc(this);
+      DrawQuickPlayIndicator(&dc);
+      return;
    }
 
    if (!mQuickPlayEnabled)
@@ -2375,6 +2426,45 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
          mPlayRegionLock = false;
       }
    }
+}
+
+void AdornedRulerPanel::UpdateStatusBar(StatusChoice choice)
+{
+   if (choice == StatusChoice::NoChange)
+      return;
+
+   const auto &scrubber = mProject->GetScrubber();
+   const bool scrubbing = scrubber.HasStartedScrubbing();
+   if (scrubbing && choice != StatusChoice::Leaving)
+      // Don't distinguish zones
+      choice = StatusChoice::EnteringScrubZone;
+   wxString message{};
+
+   switch (choice) {
+      case StatusChoice::EnteringQP:
+      {
+         // message = Insert timeline status bar message here
+      }
+         break;
+
+      case StatusChoice::EnteringScrubZone:
+      {
+         if (scrubbing) {
+            if(!scrubber.IsAlwaysSeeking())
+               message = _("Click or drag to seek");
+         }
+         else
+            message = _("Click to scrub, Double-Click to scroll, Drag to seek");
+      }
+         break;
+
+      case StatusChoice::Leaving:
+      default:
+         break;
+   }
+
+   // Display a message, or empty message
+   mProject->TP_DisplayStatusMessage(message);
 }
 
 void AdornedRulerPanel::OnCaptureLost(wxMouseCaptureLostEvent & WXUNUSED(evt))
@@ -2745,7 +2835,10 @@ void AdornedRulerPanel::DrawQuickPlayIndicator(wxDC * dc)
    }
 
    const int x = Time2Pos(mQuickPlayPos);
-   GetOverlay()->Update(x, mIsSnapped, mPrevInScrubZone);
+   bool previewScrub =
+      mPrevInScrubZone &&
+      !mProject->GetScrubber().IsScrubbing();
+   GetOverlay()->Update(x, mIsSnapped, previewScrub);
 
    DoEraseIndicator(dc, mLastQuickPlayX);
    mLastQuickPlayX = x;

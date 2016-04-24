@@ -28,7 +28,7 @@ public:
    ~Scrubber();
 
    void MarkScrubStart(
-      const wxMouseEvent &event
+      wxCoord xx
 #ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
       , bool smoothScrolling
 #endif
@@ -52,6 +52,8 @@ public:
    bool IsScrubbing() const;
    bool IsScrollScrubbing() const // If true, implies HasStartedScrubbing()
    { return mSmoothScrollingScrub; }
+   bool IsAlwaysSeeking() const
+   { return mAlwaysSeeking; }
 
    bool ShouldDrawScrubSpeed();
    double FindScrubSpeed(bool seeking, double time) const;
@@ -62,6 +64,8 @@ public:
    void SetSeeking() { mScrubSeekPress = true; }
    bool PollIsSeeking();
 
+   // This returns the same as the enabled state of the menu items:
+   bool CanScrub() const;
    void AddMenuItems();
 
    void OnScrub();

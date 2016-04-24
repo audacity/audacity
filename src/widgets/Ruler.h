@@ -317,6 +317,15 @@ private:
    void OnPaint(wxPaintEvent &evt);
    void OnSize(wxSizeEvent &evt);
    void OnMouseEvents(wxMouseEvent &evt);
+
+   enum class StatusChoice {
+      EnteringQP,
+      EnteringScrubZone,
+      Leaving,
+      NoChange
+   };
+   void UpdateStatusBar(StatusChoice choice);
+
    void OnCaptureLost(wxMouseCaptureLostEvent &evt);
 
    void DoDrawBorder(wxDC * dc);

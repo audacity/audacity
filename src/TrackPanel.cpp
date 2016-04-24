@@ -1525,13 +1525,7 @@ void TrackPanel::SetCursorAndTipWhenSelectTool( Track * t,
    // If not shift-down and not snapping center, then
    // choose boundaries only in snapping tolerance,
    // and may choose center.
-   // But don't change the cursor when scrubbing.
    SelectionBoundary boundary =
-#ifdef EXPERIMENTAL_SCRUBBING_BASIC
-      GetProject()->GetScrubber().IsScrubbing()
-      ? SBNone
-      :
-#endif
         ChooseBoundary(event, t, rect, !bShiftDown, !bShiftDown);
 
 #ifdef USE_MIDI
@@ -1705,14 +1699,7 @@ void TrackPanel::HandleCursor(const wxMouseEvent & event)
 
       tip = ttb->GetMessageForTool(tool);
 
-      const auto &scrubber = GetProject()->GetScrubber();
-      if (scrubber.HasStartedScrubbing()) {
-         if (scrubber.IsScrollScrubbing())
-            tip = _("Move to adjust speed, click to skip, ESC to stop.");
-         else
-            tip = _("Move to scrub, click to seek, ESC to stop.");
-      }
-      else if( tool != selectTool )
+      if( tool != selectTool )
       {
          // We don't include the select tool in
          // SetCursorAndTipByTool() because it's more complex than
@@ -1773,11 +1760,7 @@ void TrackPanel::HandleSelect(wxMouseEvent & event)
       mFreqSelMode = FREQ_SEL_INVALID;
 #endif
 
-   } else if (event.LeftDClick() && !event.ShiftDown()
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
-      && !event.CmdDown()
-#endif
-      ) {
+   } else if (event.LeftDClick() && !event.ShiftDown()) {
       if (!mCapturedTrack) {
          wxRect rect;
          mCapturedTrack =
@@ -1950,28 +1933,8 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
 #endif
    ) {
 
-#ifdef EXPERIMENTAL_SCRUBBING_BASIC
-      if (
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
-         event.LeftDClick() ||
-#endif
-         event.LeftDown()) {
-         SetCapturedTrack(nullptr, IsUncaptured);
-         GetProject()->GetScrubber().MarkScrubStart(
-            event
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
-            , event.LeftDClick()
-#endif
-            , false
-         );
-         return;
-      }
-
-#else
-
+      // Used to jump the play head, but it is redundant with timeline quick play
       // StartOrJumpPlayback(event);
-
-#endif
 
       // Not starting a drag
       SetCapturedTrack(NULL, IsUncaptured);
@@ -2693,14 +2656,6 @@ void TrackPanel::Stretch(int mouseXCoordinate, int trackLeftEdge,
 ///  handle it here.
 void TrackPanel::SelectionHandleDrag(wxMouseEvent & event, Track *clickedTrack)
 {
-#ifdef EXPERIMENTAL_SCRUBBING_BASIC
-   Scrubber &scrubber = GetProject()->GetScrubber();
-   if (scrubber.IsScrubbing() ||
-       GetProject()->GetScrubber().MaybeStartScrubbing(event))
-      // Do nothing more, don't change selection
-      return;
-#endif
-
    // AS: If we're not in the process of selecting (set in
    //  the SelectionHandleClick above), fuhggeddaboudit.
    if (mMouseCapture!=IsSelecting)
@@ -6365,20 +6320,6 @@ void TrackPanel::HandleTrackSpecificMouseEvent(wxMouseEvent & event)
       if (HandleLabelTrackClick((LabelTrack *)pTrack, rTrack, event))
          return;
    }
-
-#ifdef EXPERIMENTAL_SCRUBBING_BASIC
-   if (GetProject()->GetScrubber().IsScrubbing() &&
-       GetRect().Contains(event.GetPosition()) &&
-       (!pTrack ||
-        pTrack->GetKind() == Track::Wave)) {
-      if (event.LeftDown()) {
-         GetProject()->GetScrubber().SetSeeking();
-         return;
-      }
-      else if (event.LeftIsDown())
-         return;
-   }
-#endif
 
    bool handled = false;
 
