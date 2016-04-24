@@ -642,11 +642,14 @@ void Scrubber::OnScrollSeek()
 
 const wxString &Scrubber::GetUntranslatedStateString() const
 {
+   static wxString empty;
+
    if (HasStartedScrubbing()) {
-      auto item = FindMenuItem(mSmoothScrollingScrub, mAlwaysSeeking);
+      auto &item = FindMenuItem(mSmoothScrollingScrub, mAlwaysSeeking);
       return item.status;
    }
-   else return {};
+   else
+      return empty;
 }
 
 std::vector<wxString> Scrubber::GetAllUntranslatedStatusStrings()
