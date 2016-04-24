@@ -37,6 +37,8 @@ public:
    // Returns true iff the event should be considered consumed by this:
    bool MaybeStartScrubbing(const wxMouseEvent &event);
    void ContinueScrubbing();
+
+   // This is meant to be called only from ControlToolBar
    void StopScrubbing();
 
    wxCoord GetScrubStartPosition() const

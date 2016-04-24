@@ -57,6 +57,7 @@ class ToolDock final : public wxPanel
 
    void LayoutToolBars();
    void Expose( int type, bool show );
+   int Find(ToolBar *bar) const;
    int GetOrder( ToolBar *bar );
    int GetBarCount();
    void Dock( ToolBar *bar, int ndx = -1 );

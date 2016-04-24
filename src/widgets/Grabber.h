@@ -45,17 +45,15 @@ class GrabberEvent final : public wxCommandEvent
 
    GrabberEvent(wxEventType type = wxEVT_NULL,
                 wxWindowID winid = 0,
-                const wxPoint& pt = wxDefaultPosition)
+                const wxPoint& pt = wxDefaultPosition,
+                bool escaping = false)
    : wxCommandEvent(type, winid)
    {
       mPos = pt;
+      mEscaping = escaping;
    }
 
-   GrabberEvent(const GrabberEvent & event)
-   : wxCommandEvent(event)
-   {
-      mPos = event.mPos;
-   }
+   GrabberEvent(const GrabberEvent & event) = default;
 
    // Position of event (in screen coordinates)
    const wxPoint & GetPosition() const
@@ -68,6 +66,8 @@ class GrabberEvent final : public wxCommandEvent
       mPos = pos;
    }
 
+   bool IsEscaping() const { return mEscaping; }
+
    // Clone is required by wxwidgets; implemented via copy constructor
    wxEvent *Clone() const override
    {
@@ -77,6 +77,7 @@ class GrabberEvent final : public wxCommandEvent
  protected:
 
    wxPoint mPos;
+   bool mEscaping {};
 };
 
 typedef void (wxEvtHandler::*GrabberEventFunction)(GrabberEvent &);
@@ -105,7 +106,8 @@ class Grabber final : public wxWindow
    // not a need to dock/float a toolbar from the keyboard.  If this
    // changes, remove this and add the necessary keyboard movement
    // handling.
-   bool AcceptsFocus() const {return false;}
+   // PRL:  Commented out so the ESC key can stop dragging.
+   // bool AcceptsFocus() const {return false;}
 
    void PushButton(bool state);
 
@@ -115,11 +117,12 @@ class Grabber final : public wxWindow
    void OnEnter(wxMouseEvent & event);
    void OnLeave(wxMouseEvent & event);
    void OnPaint(wxPaintEvent & event);
+   void OnKeyDown(wxKeyEvent & event);
 
  private:
 
    void DrawGrabber(wxDC & dc);
-   void SendEvent(wxEventType type, const wxPoint & pos);
+   void SendEvent(wxEventType type, const wxPoint & pos, bool escaping);
 
    bool mOver;
    bool mPressed;

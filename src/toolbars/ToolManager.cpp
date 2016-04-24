@@ -234,10 +234,7 @@ class ToolFrame final : public wxFrame
             rect.height = mMinSize.y;
          }
 
-         SetMinSize( rect.GetSize() );
-         SetSize( rect.GetSize() );
-         Layout();
-         Refresh( false );
+         Resize( rect.GetSize() );
       }
       else if( HasCapture() && event.LeftUp() )
       {
@@ -256,6 +253,8 @@ class ToolFrame final : public wxFrame
          // Is left click within resize grabber?
          if( r.Contains( pos ) && !event.Leaving() )
          {
+            mOrigSize = GetSize();
+
             SetCursor( wxCURSOR_SIZENWSE );
             if( event.LeftDown() )
             {
@@ -286,12 +285,30 @@ class ToolFrame final : public wxFrame
       event.Veto();
    }
 
- private:
+   void OnKeyDown( wxKeyEvent &event )
+   {
+      event.Skip();
+      if( HasCapture() && event.GetKeyCode() == WXK_ESCAPE ) {
+         Resize( mOrigSize );
+         ReleaseMouse();
+      }
+   }
+
+   void Resize( const wxSize &size )
+   {
+      SetMinSize( size );
+      SetSize( size );
+      Layout();
+      Refresh( false );
+   }
+
+private:
 
    wxWindow *mParent;
    ToolManager *mManager;
    ToolBar *mBar;
    wxSize mMinSize;
+   wxSize mOrigSize;
 
  public:
 
@@ -308,6 +325,7 @@ BEGIN_EVENT_TABLE( ToolFrame, wxFrame )
    EVT_MOUSE_CAPTURE_LOST( ToolFrame::OnCaptureLost )
    EVT_CLOSE( ToolFrame::OnClose )
    EVT_COMMAND( wxID_ANY, EVT_TOOLBAR_UPDATED, ToolFrame::OnToolBarUpdate )
+   EVT_KEY_DOWN( ToolFrame::OnKeyDown )
 END_EVENT_TABLE()
 
 IMPLEMENT_CLASS( ToolManager, wxEvtHandler );
@@ -988,15 +1006,6 @@ void ToolManager::OnMouse( wxMouseEvent & event )
    // Button was released...finish the drag
    if( !event.LeftIsDown() )
    {
-      // Release capture
-      if( mParent->HasCapture() )
-      {
-         mParent->ReleaseMouse();
-      }
-
-      // Hide the indicator
-      mIndicator->Hide();
-
       // Transition the bar to a dock
       if( mDragDock && !event.ShiftDown() )
       {
@@ -1013,13 +1022,7 @@ void ToolManager::OnMouse( wxMouseEvent & event )
          mDragBar->SetDocked( NULL, false );
       }
 
-      // Done dragging
-      mDragWindow = NULL;
-      mDragDock = NULL;
-      mDragBar = NULL;
-      mLastPos.x = mBarPos.x = -1;
-      mLastPos.y = mBarPos.y = -1;
-      mTimer.Stop();
+      DoneDragging();
    }
    else if( event.Dragging() && pos != mLastPos )
    {
@@ -1221,17 +1224,29 @@ void ToolManager::OnGrabber( GrabberEvent & event )
    // No need to propagate any further
    event.Skip( false );
 
+   if(event.IsEscaping())
+      return HandleEscapeKey();
+
    // Remember which bar we're dragging
    mDragBar = mBars[ event.GetId() ];
+
+   // Remember state, in case of ESCape key later
+   if (mDragBar->IsDocked()) {
+      mPrevDock = dynamic_cast<ToolDock*>(mDragBar->GetParent());
+      wxASSERT(mPrevDock);
+      mPrevSlot = mPrevDock->Find(mDragBar);
+   }
+   else
+      mPrevPosition = mDragBar->GetParent()->GetPosition();
 
    // Calculate the drag offset
    wxPoint mp = event.GetPosition();
    mDragOffset = mp -
                  mDragBar->GetParent()->ClientToScreen( mDragBar->GetPosition() ) +
-                 wxPoint( 1, 1 );
+      wxPoint( 1, 1 );
 
    // Must set the bar afloat if it's currently docked
-   if( mDragBar->IsDocked() )
+   if( mPrevDock )
    {
 #if defined(__WXMAC__)
       // Disable window animation
@@ -1270,4 +1285,52 @@ void ToolManager::OnGrabber( GrabberEvent & event )
    // Start monitoring shift key changes
    mLastState = wxGetKeyState( WXK_SHIFT );
    mTimer.Start( 100 );
+}
+
+
+void ToolManager::HandleEscapeKey()
+{
+   if (mDragBar) {
+      if(mPrevDock) {
+         // Sheriff John Stone,
+         // Why don't you leave me alone?
+         // Well, I feel so break up
+         // I want to go home.
+         mPrevDock->Dock( mDragBar, mPrevSlot );
+
+         // Done with the floater
+         mDragWindow->Destroy();
+         mDragBar->Refresh(false);
+      }
+      else {
+         // Floater remains, and returns to where it begain
+         auto parent = mDragBar->GetParent();
+         parent->SetPosition(mPrevPosition);
+         mDragBar->SetDocked(NULL, false);
+      }
+
+      DoneDragging();
+   }
+}
+
+void ToolManager::DoneDragging()
+{
+   // Done dragging
+   // Release capture
+   if( mParent->HasCapture() )
+   {
+      mParent->ReleaseMouse();
+   }
+
+   // Hide the indicator
+   mIndicator->Hide();
+
+   mDragWindow = NULL;
+   mDragDock = NULL;
+   mDragBar = NULL;
+   mPrevDock = NULL;
+   mPrevSlot = -1;
+   mLastPos.x = mBarPos.x = -1;
+   mLastPos.y = mBarPos.y = -1;
+   mTimer.Stop();
 }
