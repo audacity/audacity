@@ -3245,6 +3245,8 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
 
    if (IsModal())
    {
+      mDismissed = true;
+
       EndModal(true);
 
       Close();
@@ -3265,7 +3267,7 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
 
 void EffectUIHost::DoCancel()
 {
-   if (!mCancelled) {
+   if (!mDismissed) {
       mEffect->mUIResultID = wxID_CANCEL;
 
       if (IsModal())
@@ -3273,7 +3275,7 @@ void EffectUIHost::DoCancel()
       else
          Hide();
 
-      mCancelled = true;
+      mDismissed = true;
    }
 }
 
