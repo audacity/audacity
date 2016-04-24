@@ -139,22 +139,43 @@ namespace {
    const struct MenuItem {
       wxString name;
       wxString label;
+      wxString status;
       void (Scrubber::*memFn)();
       bool scroll;
       bool seek;
+
+      const wxString &GetStatus() const { return status; }
    } menuItems[] = {
       /* i18n-hint: These commands assist the user in finding a sound by ear. ...
          "Scrubbing" is variable-speed playback, ...
          "Seeking" is normal speed playback but with skips, ...
          "Scrolling" keeps the playback position at a fixed place on screen while the waveform moves
        */
-      { wxT("Scrub"),       XO("&Scrub"),           &Scrubber::OnScrub,       false, false },
-      { wxT("ScrollScrub"), XO("Sc&rolling Scrub"), &Scrubber::OnScrollScrub, true,  false },
-      { wxT("Seek"),        XO("See&k"),            &Scrubber::OnSeek,        false, true  },
-      { wxT("ScrollSeek"),  XO("Scrollin&g Seek"),  &Scrubber::OnScrollSeek,  true,  true  },
+      { wxT("Scrub"),       XO("&Scrub"),           XO("Scrubbing"),
+         &Scrubber::OnScrub,       false,        false },
+
+      { wxT("ScrollScrub"), XO("Sc&rolling Scrub"), XO("Scrolling Scrub"),
+         &Scrubber::OnScrollScrub, true,         false },
+
+      { wxT("Seek"),        XO("See&k"),            XO("Seeking"),
+         &Scrubber::OnSeek,        false,        true  },
+
+      { wxT("ScrollSeek"),  XO("Scrollin&g Seek"),  XO("Scrolling Seek"),
+         &Scrubber::OnScrollSeek,  true,         true  }
    };
 
    enum { nMenuItems = sizeof(menuItems) / sizeof(*menuItems) };
+
+   inline const MenuItem &FindMenuItem(bool scroll, bool seek)
+   {
+      return *std::find_if(menuItems, menuItems + nMenuItems,
+         [=](const MenuItem &item) {
+            return scroll == item.scroll &&
+               seek == item.seek;
+         }
+      );
+   }
+
 }
 
 void Scrubber::MarkScrubStart(
@@ -619,6 +640,24 @@ void Scrubber::OnScrollSeek()
    DoScrub(true, true);
 }
 
+const wxString &Scrubber::GetUntranslatedStateString() const
+{
+   if (HasStartedScrubbing()) {
+      auto item = FindMenuItem(mSmoothScrollingScrub, mAlwaysSeeking);
+      return item.status;
+   }
+   else return {};
+}
+
+std::vector<wxString> Scrubber::GetAllUntranslatedStatusStrings()
+{
+   using namespace std;
+   vector<wxString> results;
+   transform(menuItems, menuItems + nMenuItems, back_inserter(results),
+             mem_fun_ref(&MenuItem::GetStatus));
+   return move(results);
+}
+
 void Scrubber::AddMenuItems()
 {
    auto cm = mProject->GetCommandManager();
@@ -644,13 +683,8 @@ void Scrubber::UncheckAllMenuItems()
 void Scrubber::CheckMenuItem()
 {
    if(HasStartedScrubbing()) {
-      auto &item = *std::find_if(menuItems, menuItems + nMenuItems,
-         [=](const MenuItem &item) {
-            return mSmoothScrollingScrub == item.scroll &&
-               mAlwaysSeeking == item.seek;
-         }
-      );
       auto cm = mProject->GetCommandManager();
+      auto item = FindMenuItem(mSmoothScrollingScrub, mAlwaysSeeking);
       cm->Check(item.name, true);
    }
 }
