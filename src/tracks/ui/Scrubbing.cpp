@@ -613,6 +613,10 @@ void Scrubber::DoScrub(bool scroll, bool seek)
       mAlwaysSeeking = seek;
       UncheckAllMenuItems();
       CheckMenuItem();
+
+      // Show the correct status.
+      const auto ctb = mProject->GetControlToolBar();
+      ctb->UpdateStatusBar(mProject);
    }
    else {
       // This will call back to Scrubber::StopScrubbing
