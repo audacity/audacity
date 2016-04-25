@@ -2922,6 +2922,9 @@ EqualizationPanel::~EqualizationPanel()
       delete [] mOuti;
    if (mOutr)
       delete [] mOutr;
+
+   if(HasCapture())
+      ReleaseMouse();
 }
 
 void EqualizationPanel::ForceRecalc()
