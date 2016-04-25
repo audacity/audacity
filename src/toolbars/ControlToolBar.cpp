@@ -675,6 +675,10 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
       return -1;
    }
 
+   // Let other UI update appearance
+   if (p)
+      p->GetRulerPanel()->HideQuickPlayIndicator();
+
    return token;
 }
 

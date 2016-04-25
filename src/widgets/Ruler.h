@@ -310,6 +310,7 @@ public:
 
    void UpdatePrefs();
    void RegenerateTooltips();
+   void HideQuickPlayIndicator();
 
 private:
    void OnCapture(wxCommandEvent & evt);
@@ -322,7 +323,8 @@ private:
    void DoDrawMarks(wxDC * dc, bool /*text */ );
    void DoDrawCursor(wxDC * dc);
    void DoDrawSelection(wxDC * dc);
-   void DoDrawIndicator(wxDC * dc);
+   void DoDrawIndicator(wxDC * dc, double time, bool recording, int width);
+   void DoEraseIndicator(wxDC *dc, int x);
    QuickPlayIndicatorOverlay *GetOverlay();
    void DrawQuickPlayIndicator(wxDC * dc /*NULL to DELETE old only*/);
    void DoDrawPlayRegion(wxDC * dc);
@@ -331,6 +333,9 @@ private:
    int Time2Pos(double t, bool ignoreFisheye = false);
 
    bool IsWithinMarker(int mousePosX, double markerTime);
+
+   int IndicatorBigWidth();
+   int IndicatorBigHeight();
 
 private:
 
@@ -355,7 +360,7 @@ private:
    double mCurTime;
 
 
-   int mIndType;     // -1 = No indicator, 0 = Play, 1 = Record
+   int mIndType;     // -1 = No indicator, 0 = Record, 1 = Play
    double mIndTime;
    bool   mQuickPlayInd;
    double mQuickPlayPos;
@@ -403,6 +408,8 @@ private:
    bool mIsDragging;
 
    std::unique_ptr<QuickPlayIndicatorOverlay> mOverlay;
+
+   bool mPrevInScrubZone{};
 
    DECLARE_EVENT_TABLE()
 };
