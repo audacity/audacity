@@ -161,7 +161,7 @@ namespace {
       { wxT("Seek"),        XO("See&k"),            XO("Seeking"),
          &Scrubber::OnSeek,        false,        true  },
 
-      { wxT("ScrollSeek"),  XO("Scrollin&g Seek"),  XO("Scrolling Seek"),
+      { wxT("ScrollSeek"),  XO("Scro&lling Seek"),  XO("Scrolling Seek"),
          &Scrubber::OnScrollSeek,  true,         true  }
    };
 
