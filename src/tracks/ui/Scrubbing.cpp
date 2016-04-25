@@ -291,6 +291,7 @@ bool Scrubber::MaybeStartScrubbing(const wxMouseEvent &event)
 
 void Scrubber::ContinueScrubbing()
 {
+
    // Thus scrubbing relies mostly on periodic polling of mouse and keys,
    // not event notifications.  But there are a few event handlers that
    // leave messages for this routine, in mScrubSeekPress and in mScrubHasFocus.
@@ -301,6 +302,16 @@ void Scrubber::ContinueScrubbing()
    const wxPoint position = trackPanel->ScreenToClient(state.GetPosition());
    const bool inPanel = trackPanel->GetRect().Contains(position);
    const bool seek = inPanel && (mScrubSeekPress || PollIsSeeking());
+
+   {
+      // Show the correct status for seeking.
+      bool backup = mAlwaysSeeking;
+      mAlwaysSeeking = seek;
+      const auto ctb = mProject->GetControlToolBar();
+      ctb->UpdateStatusBar(mProject);
+      mAlwaysSeeking = backup;
+   }
+
    // When we don't have focus, enqueue silent scrubs until we regain focus.
    bool result = false;
    if (!mScrubHasFocus)
