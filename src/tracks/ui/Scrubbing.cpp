@@ -20,6 +20,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../toolbars/ControlToolBar.h"
 
 #include <algorithm>
+#include <functional>
 
 #include <wx/dc.h>
 
