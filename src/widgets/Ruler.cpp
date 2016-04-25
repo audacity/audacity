@@ -1838,6 +1838,9 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* parent,
 
 AdornedRulerPanel::~AdornedRulerPanel()
 {
+   if(HasCapture())
+      ReleaseMouse();
+
    // Done with the snap manager
    if (mSnapManager) {
       delete mSnapManager;
