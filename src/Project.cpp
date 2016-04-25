@@ -1078,6 +1078,10 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
 
 AudacityProject::~AudacityProject()
 {
+   // Tool manager gives us capture sometimes
+   if(HasCapture())
+      ReleaseMouse();
+
    if (wxGetApp().GetRecentFiles())
    {
       wxGetApp().GetRecentFiles()->RemoveMenu(mRecentFilesMenu);

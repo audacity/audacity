@@ -155,6 +155,12 @@ class ToolFrame final : public wxFrame
       }
    }
 
+   ~ToolFrame()
+   {
+      if(HasCapture())
+         ReleaseMouse();
+   }
+
    //
    // Transition a toolbar from float to dragging
    //

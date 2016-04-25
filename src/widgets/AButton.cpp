@@ -187,6 +187,8 @@ AButton::AButton(wxWindow * parent,
 
 AButton::~AButton()
 {
+   if(HasCapture())
+      ReleaseMouse();
 }
 
 void AButton::Init(wxWindow * parent,
