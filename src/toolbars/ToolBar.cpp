@@ -112,6 +112,8 @@ ToolBarResizer::ToolBarResizer(ToolBar *bar)
 
 ToolBarResizer::~ToolBarResizer()
 {
+   if(HasCapture())
+      ReleaseMouse();
 }
 
 /*

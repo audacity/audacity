@@ -1618,6 +1618,8 @@ ASlider::ASlider( wxWindow * parent,
 
 ASlider::~ASlider()
 {
+   if(HasCapture())
+      ReleaseMouse();
    delete mLWSlider;
 }
 
