@@ -10,6 +10,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "Scrubbing.h"
 #include "../../Experimental.h"
+#include <functional>
 
 #include "../../AudioIO.h"
 #include "../../Project.h"
