@@ -2140,11 +2140,8 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
    if (evt.Leaving() || (changeInScrubZone && inScrubZone)) {
       if (evt.Leaving()) {
          // Erase the line
-         mQuickPlayInd = false;
-         DrawQuickPlayIndicator(NULL);
+         HideQuickPlayIndicator();
       }
-
-      Refresh();
 
       SetCursor(mCursorDefault);
       mIsWE = false;
@@ -2160,8 +2157,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
    }
    else if (evt.Entering() || (changeInScrubZone && !inScrubZone)) {
       SetCursor(mCursorHand);
-      mQuickPlayInd = false;
-      DrawQuickPlayIndicator(NULL);
+      HideQuickPlayIndicator();
       return;
    }
 
@@ -2328,8 +2324,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
 
    if (evt.LeftUp())
    {
-      mQuickPlayInd = false;
-      DrawQuickPlayIndicator(NULL);
+      HideQuickPlayIndicator();
 
       if (HasCapture())
          ReleaseMouse();
