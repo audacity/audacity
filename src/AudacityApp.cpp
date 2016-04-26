@@ -93,6 +93,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "commands/Keyboard.h"
 #include "widgets/ErrorDialog.h"
 #include "prefs/DirectoriesPrefs.h"
+#include "tracks/ui/Scrubbing.h"
 
 //temporarilly commented out till it is added to all projects
 //#include "Profiler.h"
@@ -1528,9 +1529,10 @@ void AudacityApp::OnKeyDown(wxKeyEvent &event)
       // Stop play, including scrub, but not record
       auto project = ::GetActiveProject();
       auto token = project->GetAudioIOToken();
-      if(token > 0 &&
-              gAudioIO->IsAudioTokenActive(token) &&
-              gAudioIO->GetNumCaptureChannels() == 0)
+      if((token > 0 &&
+               gAudioIO->IsAudioTokenActive(token) &&
+               gAudioIO->GetNumCaptureChannels() == 0) ||
+         project->GetScrubber().HasStartedScrubbing())
          // ESC out of other play (but not record)
          project->OnStop();
       else
