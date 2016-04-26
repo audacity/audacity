@@ -2244,8 +2244,7 @@ void AudacityProject::OnStop()
 {
    wxCommandEvent evt;
 
-   if (gAudioIO->IsStreamActive())
-      GetControlToolBar()->OnStop(evt);
+   GetControlToolBar()->OnStop(evt);
 }
 
 void AudacityProject::OnPause()

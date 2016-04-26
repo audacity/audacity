@@ -680,13 +680,14 @@ std::vector<wxString> Scrubber::GetAllUntranslatedStatusStrings()
 void Scrubber::AddMenuItems()
 {
    auto cm = mProject->GetCommandManager();
+   auto flags = cm->GetDefaultFlags() | WaveTracksExistFlag;
+   auto mask = cm->GetDefaultMask() | WaveTracksExistFlag;
 
    cm->BeginSubMenu(_("Scru&bbing"));
    for (const auto &item : menuItems) {
       cm->AddCheck(item.name, wxGetTranslation(item.label),
                   FNT(Scrubber, this, item.memFn),
-                  false,
-                  WaveTracksExistFlag, WaveTracksExistFlag);
+                  false, flags, mask);
    }
    cm->EndSubMenu();
    CheckMenuItem();
