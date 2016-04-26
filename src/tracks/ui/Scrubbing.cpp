@@ -127,7 +127,7 @@ Scrubber::Scrubber(AudacityProject *project)
       wxTheApp->Connect
       (wxEVT_ACTIVATE_APP,
       wxActivateEventHandler(Scrubber::OnActivateOrDeactivateApp), NULL, this);
-   mProject->PushEventHandler(this);
+   mProject->PushEventHandler(&mForwarder);
 }
 
 Scrubber::~Scrubber()
@@ -455,32 +455,31 @@ void Scrubber::OnActivateOrDeactivateApp(wxActivateEvent &event)
    event.Skip();
 }
 
-void Scrubber::OnMouse(wxMouseEvent &event)
+void Scrubber::Forwarder::OnMouse(wxMouseEvent &event)
 {
-   auto isScrubbing = IsScrubbing();
-   if (!isScrubbing && HasStartedScrubbing()) {
+   auto isScrubbing = scrubber.IsScrubbing();
+   if (!isScrubbing && scrubber.HasStartedScrubbing()) {
       if (!event.HasAnyModifiers() &&
           event.GetEventType() == wxEVT_MOTION) {
 
          // Really start scrub if motion is far enough
-         auto ruler = mProject->GetRulerPanel();
+         auto ruler = scrubber.mProject->GetRulerPanel();
          auto xx = ruler->ScreenToClient(::wxGetMousePosition()).x;
-         MaybeStartScrubbing(xx
-                             );
+         scrubber.MaybeStartScrubbing(xx);
       }
    }
    else if (isScrubbing && !event.HasAnyModifiers()) {
       if(event.LeftDown() ||
          (event.LeftIsDown() && event.Dragging())) {
-         mScrubSeekPress = true;
-         auto ruler = mProject->GetRulerPanel();
+         scrubber.mScrubSeekPress = true;
+         auto ruler = scrubber.mProject->GetRulerPanel();
          auto xx = ruler->ScreenToClient(::wxGetMousePosition()).x;
          ruler->UpdateQuickPlayPos(xx);
       }
       else if (event.m_wheelRotation) {
          double steps = event.m_wheelRotation /
          (event.m_wheelDelta > 0 ? (double)event.m_wheelDelta : 120.0);
-         HandleScrollWheel(steps);
+         scrubber.HandleScrollWheel(steps);
       }
       else
          event.Skip();
@@ -700,9 +699,10 @@ BEGIN_EVENT_TABLE(Scrubber, wxEvtHandler)
    EVT_MENU(CMD_ID + 1, Scrubber::OnScrollScrub)
    EVT_MENU(CMD_ID + 2, Scrubber::OnSeek)
    EVT_MENU(CMD_ID + 3, Scrubber::OnScrollSeek)
+END_EVENT_TABLE()
 
-   EVT_MOUSE_EVENTS(Scrubber::OnMouse)
-
+BEGIN_EVENT_TABLE(Scrubber::Forwarder, wxEvtHandler)
+   EVT_MOUSE_EVENTS(Scrubber::Forwarder::OnMouse)
 END_EVENT_TABLE()
 
 static_assert(nMenuItems == 4, "wrong number of items");

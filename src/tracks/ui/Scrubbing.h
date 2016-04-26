@@ -91,7 +91,18 @@ private:
    void OnActivateOrDeactivateApp(wxActivateEvent & event);
    void UncheckAllMenuItems();
    void CheckMenuItem();
-   void OnMouse(wxMouseEvent &event);
+
+   // I need this because I can't push the scrubber as an event handler
+   // in two places at once.
+   struct Forwarder : public wxEvtHandler {
+      Forwarder(Scrubber &scrubber_) : scrubber{ scrubber_ } {}
+
+      Scrubber &scrubber;
+
+      void OnMouse(wxMouseEvent &event);
+      DECLARE_EVENT_TABLE()
+   };
+   Forwarder mForwarder{ *this };
 
 private:
    int mScrubToken;
