@@ -1,16 +1,15 @@
 [Desktop Entry]
 Name=Audacity
-Name[de]=Audacity
-Name[ru]=Audacity
-Name[uk]=Audacity
 GenericName=Sound Editor
 GenericName[de]=Audio-Editor
 GenericName[ru]=Редактор звуковых файлов
 GenericName[uk]=Редактор звукових файлів
+GenericName[fr]=Éditeur audio
 Comment=Record and edit audio files
 Comment[de]=Audio-Dateien aufnehmen und bearbeiten
 Comment[ru]=Запись и редактирование звуковых файлов
 Comment[uk]=Запис і редагування звукових файлів
+Comment[fr]=Enregistrer et éditer des fichiers audio
 
 Icon=@AUDACITY_NAME@
 
