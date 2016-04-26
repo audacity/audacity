@@ -70,6 +70,7 @@ class ToolDock final : public wxPanel
    void OnSize( wxSizeEvent & event );
    void OnPaint( wxPaintEvent & event );
    void OnGrabber( GrabberEvent & event );
+   void OnMouseEvents(wxMouseEvent &event);
 
  private:
 

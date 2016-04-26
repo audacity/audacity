@@ -430,7 +430,7 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    void TP_ScrollLeft() override;
    void TP_ScrollRight() override;
    void TP_ScrollWindow(double scrollto) override;
-   void TP_ScrollUpDown(int delta) override;
+   bool TP_ScrollUpDown(int delta) override;
    void TP_HandleResize() override;
 
    // ToolBar

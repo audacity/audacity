@@ -1717,8 +1717,6 @@ void QuickPlayIndicatorOverlay::Draw
    if (mOldQPIndicatorPos >= 0) {
       mOldPreviewingScrub
       ? AColor::IndicatorColor(&dc, true) // Draw green line for preview.
-         // Drawing during actual scrub not by this class,
-         // but by PlayIndicatorOverlay
       : mOldQPIndicatorSnapped
         ? AColor::SnapGuidePen(&dc)
         : AColor::Light(&dc, false)
@@ -2061,14 +2059,61 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
    if (mIsRecording)
       return;
 
+   const bool inScrubZone =
+      // only if scrubbing is allowed now
+      mProject->GetScrubber().CanScrub() &&
+      evt.m_y < IndicatorBigHeight();
+
+   const bool changeInScrubZone = (inScrubZone != mPrevInScrubZone);
+   mPrevInScrubZone = inScrubZone;
+
+   auto &scrubber = mProject->GetScrubber();
+
    // Handle status bar messages
-   if(evt.Leaving()) {
-      mProject->TP_DisplayStatusMessage(wxT(""));
+   UpdateStatusBar (
+      evt.Leaving()
+      ? StatusChoice::Leaving
+      : evt.Entering() || changeInScrubZone
+         ? inScrubZone
+            ? StatusChoice::EnteringScrubZone
+            : StatusChoice::EnteringQP
+         : StatusChoice::NoChange
+   );
+
+
+   double t0 = mTracks->GetStartTime();
+   double t1 = mTracks->GetEndTime();
+   double sel0 = mProject->GetSel0();
+   double sel1 = mProject->GetSel1();
+
+   wxCoord mousePosX = evt.GetX();
+   UpdateQuickPlayPos(mousePosX);
+
+   // If not looping, restrict selection to end of project
+   if (!inScrubZone && !evt.ShiftDown()) {
+      mQuickPlayPos = std::min(t1, mQuickPlayPos);
    }
-   else if(evt.Entering()) {
-      // Insert timeline status bar messages here
-      mProject->TP_DisplayStatusMessage
-      (wxT(""));
+
+   if (scrubber.HasStartedScrubbing()) {
+      // If already clicked for scrub, preempt the usual event handling,
+      // no matter what the y coordinate.
+
+      // Do this hack so scrubber can detect mouse drags anywhere
+      evt.ResumePropagation(wxEVENT_PROPAGATE_MAX);
+
+      if (scrubber.IsScrubbing())
+         evt.Skip();
+      else if (evt.LeftDClick())
+         // On the second button down, switch the pending scrub to scrolling
+         scrubber.MarkScrubStart(evt.m_x, true, false);
+      else
+         evt.Skip();
+
+      mQuickPlayInd = true;
+      wxClientDC dc(this);
+      DrawQuickPlayIndicator(&dc);
+
+      return;
    }
 
    // Store the initial play region state
@@ -2078,34 +2123,18 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
       mPlayRegionLock = mProject->IsPlayRegionLocked();
    }
 
-   // Keep Quick-Play within usable track area.
-   TrackPanel *tp = mProject->GetTrackPanel();
-   int mousePosX, width;
-   tp->GetTracksUsableArea(&width, NULL);
-   mousePosX = std::max(evt.GetX(), tp->GetLeftOffset());
-   mousePosX = std::min(mousePosX, tp->GetLeftOffset() + width - 1);
-
    bool isWithinStart = IsWithinMarker(mousePosX, mOldPlayRegionStart);
    bool isWithinEnd = IsWithinMarker(mousePosX, mOldPlayRegionEnd);
    bool isWithinClick = (mLeftDownClick >= 0) && IsWithinMarker(mousePosX, mLeftDownClick);
    bool canDragSel = !mPlayRegionLock && mPlayRegionDragsSelection;
 
-   double t0 = mTracks->GetStartTime();
-   double t1 = mTracks->GetEndTime();
-   double sel0 = mProject->GetSel0();
-   double sel1 = mProject->GetSel1();
-
-   mLastMouseX = mousePosX;
-   mQuickPlayPos = Pos2Time(mousePosX);
-   // If not looping, restrict selection to end of project
-   if (!evt.ShiftDown()) {
-      mQuickPlayPos = std::min(t1, mQuickPlayPos);
-   }
-
-   if (evt.Leaving()) {
-      mQuickPlayInd = false;
-      DrawQuickPlayIndicator(NULL);
-      Refresh();
+   // Handle entering and leaving of the bar, or movement from
+   // one portion (quick play or scrub) to the other
+   if (evt.Leaving() || (changeInScrubZone && inScrubZone)) {
+      if (evt.Leaving()) {
+         // Erase the line
+         HideQuickPlayIndicator();
+      }
 
       SetCursor(mCursorDefault);
       mIsWE = false;
@@ -2114,19 +2143,37 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
          delete mSnapManager;
          mSnapManager = NULL;
       }
-      return;
+
+      if(evt.Leaving())
+         return;
+      // else, may detect a scrub click below
    }
-   else if (evt.Entering()) {
+   else if (evt.Entering() || (changeInScrubZone && !inScrubZone)) {
       SetCursor(mCursorHand);
-      mQuickPlayInd = false;
-      DrawQuickPlayIndicator(NULL);
+      HideQuickPlayIndicator();
       return;
    }
 
    if (evt.RightDown() && !(evt.LeftIsDown())) {
-      ShowMenu(evt.GetPosition());
+      if(inScrubZone)
+         ShowScrubMenu(evt.GetPosition());
+      else
+         ShowMenu(evt.GetPosition());
+
+      // dismiss and clear Quick-Play indicator
+      HideQuickPlayIndicator();
+
       if (HasCapture())
          ReleaseMouse();
+      return;
+   }
+   else if (inScrubZone) {
+      if (evt.LeftDown())
+         scrubber.MarkScrubStart(evt.m_x, false, false);
+      UpdateStatusBar(StatusChoice::EnteringScrubZone);
+      wxClientDC dc(this);
+      DrawQuickPlayIndicator(&dc);
+      return;
    }
 
    if (!mQuickPlayEnabled)
@@ -2277,8 +2324,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
 
    if (evt.LeftUp())
    {
-      mQuickPlayInd = false;
-      DrawQuickPlayIndicator(NULL);
+      HideQuickPlayIndicator();
 
       if (HasCapture())
          ReleaseMouse();
@@ -2377,6 +2423,45 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
    }
 }
 
+void AdornedRulerPanel::UpdateStatusBar(StatusChoice choice)
+{
+   if (choice == StatusChoice::NoChange)
+      return;
+
+   const auto &scrubber = mProject->GetScrubber();
+   const bool scrubbing = scrubber.HasStartedScrubbing();
+   if (scrubbing && choice != StatusChoice::Leaving)
+      // Don't distinguish zones
+      choice = StatusChoice::EnteringScrubZone;
+   wxString message{};
+
+   switch (choice) {
+      case StatusChoice::EnteringQP:
+      {
+         // message = Insert timeline status bar message here
+      }
+         break;
+
+      case StatusChoice::EnteringScrubZone:
+      {
+         if (scrubbing) {
+            if(!scrubber.IsAlwaysSeeking())
+               message = _("Click or drag to seek");
+         }
+         else
+            message = _("Click to scrub, Double-Click to scroll, Drag to seek");
+      }
+         break;
+
+      case StatusChoice::Leaving:
+      default:
+         break;
+   }
+
+   // Display a message, or empty message
+   mProject->TP_DisplayStatusMessage(message);
+}
+
 void AdornedRulerPanel::OnCaptureLost(wxMouseCaptureLostEvent & WXUNUSED(evt))
 {
    DrawQuickPlayIndicator(NULL);
@@ -2386,52 +2471,68 @@ void AdornedRulerPanel::OnCaptureLost(wxMouseCaptureLostEvent & WXUNUSED(evt))
    OnMouseEvents(e);
 }
 
-// Pop-up menu
+void AdornedRulerPanel::UpdateQuickPlayPos(wxCoord &mousePosX)
+{
+   // Keep Quick-Play within usable track area.
+   TrackPanel *tp = mProject->GetTrackPanel();
+   int width;
+   tp->GetTracksUsableArea(&width, NULL);
+   mousePosX = std::max(mousePosX, tp->GetLeftOffset());
+   mousePosX = std::min(mousePosX, tp->GetLeftOffset() + width - 1);
+
+   mLastMouseX = mousePosX;
+   mQuickPlayPos = Pos2Time(mousePosX);
+}
+
+// Pop-up menus
 
 void AdornedRulerPanel::ShowMenu(const wxPoint & pos)
 {
-   {
-      wxMenu rulerMenu;
+   wxMenu rulerMenu;
 
-      if (mQuickPlayEnabled)
-         rulerMenu.Append(OnToggleQuickPlayID, _("Disable Quick-Play"));
-      else
-         rulerMenu.Append(OnToggleQuickPlayID, _("Enable Quick-Play"));
+   if (mQuickPlayEnabled)
+      rulerMenu.Append(OnToggleQuickPlayID, _("Disable Quick-Play"));
+   else
+      rulerMenu.Append(OnToggleQuickPlayID, _("Enable Quick-Play"));
 
-      wxMenuItem *dragitem;
-      if (mPlayRegionDragsSelection && !mProject->IsPlayRegionLocked())
-         dragitem = rulerMenu.Append(OnSyncQuickPlaySelID, _("Disable dragging selection"));
-      else
-         dragitem = rulerMenu.Append(OnSyncQuickPlaySelID, _("Enable dragging selection"));
-      dragitem->Enable(mQuickPlayEnabled && !mProject->IsPlayRegionLocked());
+   wxMenuItem *dragitem;
+   if (mPlayRegionDragsSelection && !mProject->IsPlayRegionLocked())
+      dragitem = rulerMenu.Append(OnSyncQuickPlaySelID, _("Disable dragging selection"));
+   else
+      dragitem = rulerMenu.Append(OnSyncQuickPlaySelID, _("Enable dragging selection"));
+   dragitem->Enable(mQuickPlayEnabled && !mProject->IsPlayRegionLocked());
 
 #if wxUSE_TOOLTIPS
-      if (mTimelineToolTip)
-         rulerMenu.Append(OnTimelineToolTipID, _("Disable Timeline Tooltips"));
-      else
-         rulerMenu.Append(OnTimelineToolTipID, _("Enable Timeline Tooltips"));
+   if (mTimelineToolTip)
+      rulerMenu.Append(OnTimelineToolTipID, _("Disable Timeline Tooltips"));
+   else
+      rulerMenu.Append(OnTimelineToolTipID, _("Enable Timeline Tooltips"));
 #endif
 
-      if (mViewInfo->bUpdateTrackIndicator)
-         rulerMenu.Append(OnAutoScrollID, _("Do not scroll while playing"));
-      else
-         rulerMenu.Append(OnAutoScrollID, _("Update display while playing"));
+   if (mViewInfo->bUpdateTrackIndicator)
+      rulerMenu.Append(OnAutoScrollID, _("Do not scroll while playing"));
+   else
+      rulerMenu.Append(OnAutoScrollID, _("Update display while playing"));
 
-      wxMenuItem *prlitem;
-      if (!mProject->IsPlayRegionLocked())
-         prlitem = rulerMenu.Append(OnLockPlayRegionID, _("Lock Play Region"));
-      else
-         prlitem = rulerMenu.Append(OnLockPlayRegionID, _("Unlock Play Region"));
-      prlitem->Enable(mProject->IsPlayRegionLocked() || (mPlayRegionStart != mPlayRegionEnd));
+   wxMenuItem *prlitem;
+   if (!mProject->IsPlayRegionLocked())
+      prlitem = rulerMenu.Append(OnLockPlayRegionID, _("Lock Play Region"));
+   else
+      prlitem = rulerMenu.Append(OnLockPlayRegionID, _("Unlock Play Region"));
+   prlitem->Enable(mProject->IsPlayRegionLocked() || (mPlayRegionStart != mPlayRegionEnd));
 
-      PopupMenu(&rulerMenu, pos);
-   }
+   PopupMenu(&rulerMenu, pos);
+}
 
-   // dismiss and clear Quick-Play indicator
-   mQuickPlayInd = false;
-   DrawQuickPlayIndicator(NULL);
+void AdornedRulerPanel::ShowScrubMenu(const wxPoint & pos)
+{
+   auto &scrubber = mProject->GetScrubber();
+   PushEventHandler(&scrubber);
+   auto cleanup = finally([this]{ PopEventHandler(); });
 
-   Refresh();
+   wxMenu rulerMenu;
+   mProject->GetScrubber().PopulateMenu(rulerMenu);
+   PopupMenu(&rulerMenu, pos);
 }
 
 void AdornedRulerPanel::OnToggleQuickPlay(wxCommandEvent&)
@@ -2745,7 +2846,10 @@ void AdornedRulerPanel::DrawQuickPlayIndicator(wxDC * dc)
    }
 
    const int x = Time2Pos(mQuickPlayPos);
-   GetOverlay()->Update(x, mIsSnapped, mPrevInScrubZone);
+   bool previewScrub =
+      mPrevInScrubZone &&
+      !mProject->GetScrubber().IsScrubbing();
+   GetOverlay()->Update(x, mIsSnapped, previewScrub);
 
    DoEraseIndicator(dc, mLastQuickPlayX);
    mLastQuickPlayX = x;

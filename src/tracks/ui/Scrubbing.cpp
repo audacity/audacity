@@ -19,6 +19,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../TrackPanelCellIterator.h"
 #include "../../commands/CommandFunctors.h"
 #include "../../toolbars/ControlToolBar.h"
+#include "../../widgets/Ruler.h"
 
 #include <algorithm>
 
@@ -126,10 +127,12 @@ Scrubber::Scrubber(AudacityProject *project)
       wxTheApp->Connect
       (wxEVT_ACTIVATE_APP,
       wxActivateEventHandler(Scrubber::OnActivateOrDeactivateApp), NULL, this);
+   mProject->PushEventHandler(this);
 }
 
 Scrubber::~Scrubber()
 {
+   mProject->PopEventHandler();
    if (wxTheApp)
       wxTheApp->Disconnect
       (wxEVT_ACTIVATE_APP,
@@ -141,7 +144,7 @@ namespace {
       wxString name;
       wxString label;
       wxString status;
-      void (Scrubber::*memFn)();
+      void (Scrubber::*memFn)(wxCommandEvent&);
       bool scroll;
       bool seek;
 
@@ -180,7 +183,8 @@ namespace {
 }
 
 void Scrubber::MarkScrubStart(
-   const wxMouseEvent &event
+   // Assume xx is relative to the left edge of TrackPanel!
+   wxCoord xx
 #ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
    , bool smoothScrolling
 #endif
@@ -188,8 +192,6 @@ void Scrubber::MarkScrubStart(
 )
 {
    UncheckAllMenuItems();
-
-   const wxCoord xx = event.m_x;
 
    // Don't actually start scrubbing, but collect some information
    // needed for the decision to start scrubbing later when handling
@@ -204,13 +206,13 @@ void Scrubber::MarkScrubStart(
    ControlToolBar * const ctb = mProject->GetControlToolBar();
    ctb->SetPlay(true, ControlToolBar::PlayAppearance::Scrub);
    ctb->UpdateStatusBar(mProject);
-   mProject->GetTrackPanel()->HandleCursor(event);
 
    CheckMenuItem();
 }
 
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-bool Scrubber::MaybeStartScrubbing(const wxMouseEvent &event)
+// Assume xx is relative to the left edge of TrackPanel!
+bool Scrubber::MaybeStartScrubbing(wxCoord xx)
 {
    if (mScrubStartPosition < 0)
       return false;
@@ -225,7 +227,7 @@ bool Scrubber::MaybeStartScrubbing(const wxMouseEvent &event)
          return false;
       }
 
-      wxCoord position = event.m_x;
+      wxCoord position = xx;
       if (abs(mScrubStartPosition - position) >= SCRUBBING_PIXEL_TOLERANCE) {
          const ViewInfo &viewInfo = mProject->GetViewInfo();
          TrackPanel *const trackPanel = mProject->GetTrackPanel();
@@ -299,9 +301,11 @@ void Scrubber::ContinueScrubbing()
    // Seek only when the pointer is in the panel.  Else, scrub.
    const wxMouseState state(::wxGetMouseState());
    TrackPanel *const trackPanel = mProject->GetTrackPanel();
-   const wxPoint position = trackPanel->ScreenToClient(state.GetPosition());
-   const bool inPanel = trackPanel->GetRect().Contains(position);
-   const bool seek = inPanel && (mScrubSeekPress || PollIsSeeking());
+
+   // Decide whether to skip play, because either mouse is down now,
+   // or there was a left click event.  (This is then a delayed reaction, in a
+   // timer callback, to a left click event detected elsewhere.)
+   const bool seek = PollIsSeeking() || mScrubSeekPress;
 
    {
       // Show the correct status for seeking.
@@ -312,6 +316,7 @@ void Scrubber::ContinueScrubbing()
       mAlwaysSeeking = backup;
    }
 
+   const wxPoint position = trackPanel->ScreenToClient(state.GetPosition());
    // When we don't have focus, enqueue silent scrubs until we regain focus.
    bool result = false;
    if (!mScrubHasFocus)
@@ -448,6 +453,40 @@ void Scrubber::OnActivateOrDeactivateApp(wxActivateEvent &event)
       mScrubHasFocus = false;
 
    event.Skip();
+}
+
+void Scrubber::OnMouse(wxMouseEvent &event)
+{
+   auto isScrubbing = IsScrubbing();
+   if (!isScrubbing && HasStartedScrubbing()) {
+      if (!event.HasAnyModifiers() &&
+          event.GetEventType() == wxEVT_MOTION) {
+
+         // Really start scrub if motion is far enough
+         auto ruler = mProject->GetRulerPanel();
+         auto xx = ruler->ScreenToClient(::wxGetMousePosition()).x;
+         MaybeStartScrubbing(xx
+                             );
+      }
+   }
+   else if (isScrubbing && !event.HasAnyModifiers()) {
+      if(event.LeftDown() ||
+         (event.LeftIsDown() && event.Dragging())) {
+         mScrubSeekPress = true;
+         auto ruler = mProject->GetRulerPanel();
+         auto xx = ruler->ScreenToClient(::wxGetMousePosition()).x;
+         ruler->UpdateQuickPlayPos(xx);
+      }
+      else if (event.m_wheelRotation) {
+         double steps = event.m_wheelRotation /
+         (event.m_wheelDelta > 0 ? (double)event.m_wheelDelta : 120.0);
+         HandleScrollWheel(steps);
+      }
+      else
+         event.Skip();
+   }
+   else
+      event.Skip();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -615,9 +654,7 @@ void Scrubber::DoScrub(bool scroll, bool seek)
    if (!wasScrubbing) {
       auto tp = mProject->GetTrackPanel();
       wxCoord xx = tp->ScreenToClient(::wxGetMouseState().GetPosition()).x;
-      wxMouseEvent evt;
-      evt.SetX(xx);
-      MarkScrubStart(evt, scroll, seek);
+      MarkScrubStart(xx, scroll, seek);
    }
    else if(!match) {
       mSmoothScrollingScrub = scroll;
@@ -636,25 +673,39 @@ void Scrubber::DoScrub(bool scroll, bool seek)
    }
 }
 
-void Scrubber::OnScrub()
+void Scrubber::OnScrub(wxCommandEvent&)
 {
    DoScrub(false, false);
 }
 
-void Scrubber::OnScrollScrub()
+void Scrubber::OnScrollScrub(wxCommandEvent&)
 {
    DoScrub(true, false);
 }
 
-void Scrubber::OnSeek()
+void Scrubber::OnSeek(wxCommandEvent&)
 {
    DoScrub(false, true);
 }
 
-void Scrubber::OnScrollSeek()
+void Scrubber::OnScrollSeek(wxCommandEvent&)
 {
    DoScrub(true, true);
 }
+
+enum { CMD_ID = 8000 };
+
+BEGIN_EVENT_TABLE(Scrubber, wxEvtHandler)
+   EVT_MENU(CMD_ID,     Scrubber::OnScrub)
+   EVT_MENU(CMD_ID + 1, Scrubber::OnScrollScrub)
+   EVT_MENU(CMD_ID + 2, Scrubber::OnSeek)
+   EVT_MENU(CMD_ID + 3, Scrubber::OnScrollSeek)
+
+   EVT_MOUSE_EVENTS(Scrubber::OnMouse)
+
+END_EVENT_TABLE()
+
+static_assert(nMenuItems == 4, "wrong number of items");
 
 const wxString &Scrubber::GetUntranslatedStateString() const
 {
@@ -677,6 +728,12 @@ std::vector<wxString> Scrubber::GetAllUntranslatedStatusStrings()
    return move(results);
 }
 
+bool Scrubber::CanScrub() const
+{
+   auto cm = mProject->GetCommandManager();
+   return cm->GetEnabled(menuItems[0].name);
+}
+
 void Scrubber::AddMenuItems()
 {
    auto cm = mProject->GetCommandManager();
@@ -691,6 +748,17 @@ void Scrubber::AddMenuItems()
    }
    cm->EndSubMenu();
    CheckMenuItem();
+}
+
+void Scrubber::PopulateMenu(wxMenu &menu)
+{
+   int id = CMD_ID;
+   auto cm = mProject->GetCommandManager();
+   for (const auto &item : menuItems) {
+      if (cm->GetEnabled(item.name))
+         menu.Append(id, item.label);
+      ++id;
+   }
 }
 
 void Scrubber::UncheckAllMenuItems()
