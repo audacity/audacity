@@ -2162,7 +2162,14 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
    }
 
    if (evt.RightDown() && !(evt.LeftIsDown())) {
-      ShowMenu(evt.GetPosition());
+      if(inScrubZone)
+         ShowScrubMenu(evt.GetPosition());
+      else
+         ShowMenu(evt.GetPosition());
+
+      // dismiss and clear Quick-Play indicator
+      HideQuickPlayIndicator();
+
       if (HasCapture())
          ReleaseMouse();
       return;
@@ -2471,52 +2478,55 @@ void AdornedRulerPanel::OnCaptureLost(wxMouseCaptureLostEvent & WXUNUSED(evt))
    OnMouseEvents(e);
 }
 
-// Pop-up menu
+// Pop-up menus
 
 void AdornedRulerPanel::ShowMenu(const wxPoint & pos)
 {
-   {
-      wxMenu rulerMenu;
+   wxMenu rulerMenu;
 
-      if (mQuickPlayEnabled)
-         rulerMenu.Append(OnToggleQuickPlayID, _("Disable Quick-Play"));
-      else
-         rulerMenu.Append(OnToggleQuickPlayID, _("Enable Quick-Play"));
+   if (mQuickPlayEnabled)
+      rulerMenu.Append(OnToggleQuickPlayID, _("Disable Quick-Play"));
+   else
+      rulerMenu.Append(OnToggleQuickPlayID, _("Enable Quick-Play"));
 
-      wxMenuItem *dragitem;
-      if (mPlayRegionDragsSelection && !mProject->IsPlayRegionLocked())
-         dragitem = rulerMenu.Append(OnSyncQuickPlaySelID, _("Disable dragging selection"));
-      else
-         dragitem = rulerMenu.Append(OnSyncQuickPlaySelID, _("Enable dragging selection"));
-      dragitem->Enable(mQuickPlayEnabled && !mProject->IsPlayRegionLocked());
+   wxMenuItem *dragitem;
+   if (mPlayRegionDragsSelection && !mProject->IsPlayRegionLocked())
+      dragitem = rulerMenu.Append(OnSyncQuickPlaySelID, _("Disable dragging selection"));
+   else
+      dragitem = rulerMenu.Append(OnSyncQuickPlaySelID, _("Enable dragging selection"));
+   dragitem->Enable(mQuickPlayEnabled && !mProject->IsPlayRegionLocked());
 
 #if wxUSE_TOOLTIPS
-      if (mTimelineToolTip)
-         rulerMenu.Append(OnTimelineToolTipID, _("Disable Timeline Tooltips"));
-      else
-         rulerMenu.Append(OnTimelineToolTipID, _("Enable Timeline Tooltips"));
+   if (mTimelineToolTip)
+      rulerMenu.Append(OnTimelineToolTipID, _("Disable Timeline Tooltips"));
+   else
+      rulerMenu.Append(OnTimelineToolTipID, _("Enable Timeline Tooltips"));
 #endif
 
-      if (mViewInfo->bUpdateTrackIndicator)
-         rulerMenu.Append(OnAutoScrollID, _("Do not scroll while playing"));
-      else
-         rulerMenu.Append(OnAutoScrollID, _("Update display while playing"));
+   if (mViewInfo->bUpdateTrackIndicator)
+      rulerMenu.Append(OnAutoScrollID, _("Do not scroll while playing"));
+   else
+      rulerMenu.Append(OnAutoScrollID, _("Update display while playing"));
 
-      wxMenuItem *prlitem;
-      if (!mProject->IsPlayRegionLocked())
-         prlitem = rulerMenu.Append(OnLockPlayRegionID, _("Lock Play Region"));
-      else
-         prlitem = rulerMenu.Append(OnLockPlayRegionID, _("Unlock Play Region"));
-      prlitem->Enable(mProject->IsPlayRegionLocked() || (mPlayRegionStart != mPlayRegionEnd));
+   wxMenuItem *prlitem;
+   if (!mProject->IsPlayRegionLocked())
+      prlitem = rulerMenu.Append(OnLockPlayRegionID, _("Lock Play Region"));
+   else
+      prlitem = rulerMenu.Append(OnLockPlayRegionID, _("Unlock Play Region"));
+   prlitem->Enable(mProject->IsPlayRegionLocked() || (mPlayRegionStart != mPlayRegionEnd));
 
-      PopupMenu(&rulerMenu, pos);
-   }
+   PopupMenu(&rulerMenu, pos);
+}
 
-   // dismiss and clear Quick-Play indicator
-   mQuickPlayInd = false;
-   DrawQuickPlayIndicator(NULL);
+void AdornedRulerPanel::ShowScrubMenu(const wxPoint & pos)
+{
+   auto &scrubber = mProject->GetScrubber();
+   PushEventHandler(&scrubber);
+   auto cleanup = finally([this]{ PopEventHandler(); });
 
-   Refresh();
+   wxMenu rulerMenu;
+   mProject->GetScrubber().PopulateMenu(rulerMenu);
+   PopupMenu(&rulerMenu, pos);
 }
 
 void AdornedRulerPanel::OnToggleQuickPlay(wxCommandEvent&)

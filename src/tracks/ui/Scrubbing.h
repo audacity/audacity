@@ -66,12 +66,16 @@ public:
 
    // This returns the same as the enabled state of the menu items:
    bool CanScrub() const;
-   void AddMenuItems();
 
-   void OnScrub();
-   void OnScrollScrub();
-   void OnSeek();
-   void OnScrollSeek();
+   // For the toolbar
+   void AddMenuItems();
+   // For popup
+   void PopulateMenu(wxMenu &menu);
+
+   void OnScrub(wxCommandEvent&);
+   void OnScrollScrub(wxCommandEvent&);
+   void OnSeek(wxCommandEvent&);
+   void OnScrollSeek(wxCommandEvent&);
 
    // A string to put in the leftmost part of the status bar.
    const wxString &GetUntranslatedStateString() const;
@@ -101,6 +105,8 @@ private:
 #endif
 
    AudacityProject *mProject;
+
+   DECLARE_EVENT_TABLE()
 };
 
 // Specialist in drawing the scrub speed, and listening for certain events

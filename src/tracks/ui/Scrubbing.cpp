@@ -141,7 +141,7 @@ namespace {
       wxString name;
       wxString label;
       wxString status;
-      void (Scrubber::*memFn)();
+      void (Scrubber::*memFn)(wxCommandEvent&);
       bool scroll;
       bool seek;
 
@@ -634,25 +634,36 @@ void Scrubber::DoScrub(bool scroll, bool seek)
    }
 }
 
-void Scrubber::OnScrub()
+void Scrubber::OnScrub(wxCommandEvent&)
 {
    DoScrub(false, false);
 }
 
-void Scrubber::OnScrollScrub()
+void Scrubber::OnScrollScrub(wxCommandEvent&)
 {
    DoScrub(true, false);
 }
 
-void Scrubber::OnSeek()
+void Scrubber::OnSeek(wxCommandEvent&)
 {
    DoScrub(false, true);
 }
 
-void Scrubber::OnScrollSeek()
+void Scrubber::OnScrollSeek(wxCommandEvent&)
 {
    DoScrub(true, true);
 }
+
+enum { CMD_ID = 8000 };
+
+BEGIN_EVENT_TABLE(Scrubber, wxEvtHandler)
+   EVT_MENU(CMD_ID,     Scrubber::OnScrub)
+   EVT_MENU(CMD_ID + 1, Scrubber::OnScrollScrub)
+   EVT_MENU(CMD_ID + 2, Scrubber::OnSeek)
+   EVT_MENU(CMD_ID + 3, Scrubber::OnScrollSeek)
+END_EVENT_TABLE()
+
+static_assert(nMenuItems == 4, "wrong number of items");
 
 const wxString &Scrubber::GetUntranslatedStateString() const
 {
@@ -695,6 +706,17 @@ void Scrubber::AddMenuItems()
    }
    cm->EndSubMenu();
    CheckMenuItem();
+}
+
+void Scrubber::PopulateMenu(wxMenu &menu)
+{
+   int id = CMD_ID;
+   auto cm = mProject->GetCommandManager();
+   for (const auto &item : menuItems) {
+      if (cm->GetEnabled(item.name))
+         menu.Append(id, item.label);
+      ++id;
+   }
 }
 
 void Scrubber::UncheckAllMenuItems()

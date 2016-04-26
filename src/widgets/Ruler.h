@@ -390,6 +390,7 @@ private:
    // Pop-up menu
    //
    void ShowMenu(const wxPoint & pos);
+   void ShowScrubMenu(const wxPoint & pos);
    void DragSelection();
    void HandleSnapping();
    void OnToggleQuickPlay(wxCommandEvent &evt);
