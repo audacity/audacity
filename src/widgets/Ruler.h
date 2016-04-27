@@ -168,7 +168,7 @@ public:
    wxRect mRect;
 
 private:
-   wxColour mTickColour;
+   static wxColour mTickColour;
    wxPen mPen;
 
    int          mMaxWidth, mMaxHeight;

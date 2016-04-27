@@ -96,6 +96,8 @@ using std::max;
 
 #define kTopInset 4
 
+wxColour Ruler::mTickColour{ 153, 153, 153 };
+
 //
 // Ruler
 //
@@ -120,7 +122,6 @@ Ruler::Ruler()
    mBottom = -1;
    mbTicksOnly = true;
    mbTicksAtExtremes = false;
-   mTickColour = wxColour(153,153,153);
    mPen.SetColour(mTickColour);
 
    // Note: the font size is now adjusted automatically whenever
@@ -1572,7 +1573,7 @@ void Ruler::Label::Draw(wxDC&dc, bool twoTone) const
 
 #ifdef EXPERIMENTAL_THEMING
       // TODO:  handle color distinction
-      mDC->SetTextForeground(mTickColour);
+      dc.SetTextForeground(mTickColour);
 #else
       dc.SetTextForeground(altColor ? *wxBLUE : *wxBLACK);
 #endif
