@@ -276,6 +276,7 @@ DEFINE_EVENT_TYPE(EVT_TOOLBAR_UPDATED)
 BEGIN_EVENT_TABLE( ToolBar, wxPanel )
    EVT_PAINT( ToolBar::OnPaint )
    EVT_ERASE_BACKGROUND( ToolBar::OnErase )
+   EVT_MOUSE_EVENTS( ToolBar::OnMouseEvents )
 END_EVENT_TABLE()
 
 //
@@ -839,6 +840,13 @@ void ToolBar::OnPaint( wxPaintEvent & event )
    }
 #endif
 #endif
+}
+
+void ToolBar::OnMouseEvents(wxMouseEvent &event)
+{
+   // Do this hack so scrubber can detect mouse drags anywhere
+   event.ResumePropagation(wxEVENT_PROPAGATE_MAX);
+   event.Skip();
 }
 
 int ToolBar::GetResizeGrabberWidth()

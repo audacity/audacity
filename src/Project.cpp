@@ -1613,7 +1613,7 @@ void AudacityProject::TP_ScrollWindow(double scrollto)
 // handler in Track Panel. A positive argument makes the window
 // scroll down, while a negative argument scrolls up.
 //
-void AudacityProject::TP_ScrollUpDown(int delta)
+bool AudacityProject::TP_ScrollUpDown(int delta)
 {
    int oldPos = mVsbar->GetThumbPosition();
    int pos = oldPos + delta;
@@ -1634,7 +1634,10 @@ void AudacityProject::TP_ScrollUpDown(int delta)
 
       wxScrollEvent dummy;
       OnScroll(dummy);
+      return true;
    }
+   else
+      return false;
 }
 
 void AudacityProject::FixScrollbars()
