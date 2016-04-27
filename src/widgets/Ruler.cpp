@@ -1934,6 +1934,7 @@ void AdornedRulerPanel::OnCapture(wxCommandEvent & evt)
 
 enum : int {
    IndicatorSmallWidth = 9,
+   IndicatorMediumWidth = 13,
    IndicatorOffset = 1,
 };
 
@@ -1986,8 +1987,9 @@ void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
 
    if (mIndType >= 0)
    {
-      DoDrawIndicator(&mBackDC, mIndTime, mIndType != 0,
-                      IndicatorBigWidth());
+      const bool scrub = mProject->GetScrubber().HasStartedScrubbing();
+      auto width = scrub ? IndicatorBigWidth() : IndicatorMediumWidth;
+      DoDrawIndicator(&mBackDC, mIndTime, mIndType != 0, width, scrub);
    }
 
    if (mViewInfo->selectedRegion.isPoint())
@@ -2763,18 +2765,15 @@ void AdornedRulerPanel::DrawIndicator( double time, bool rec )
 }
 
 // Draws the play/recording position indicator.
-void AdornedRulerPanel::DoDrawIndicator(wxDC * dc, double time, bool playing, int width)
+void AdornedRulerPanel::DoDrawIndicator
+   (wxDC * dc, double time, bool playing, int width, bool scrub)
 {
 
    const int x = Time2Pos(time);
    AColor::IndicatorColor( dc, playing );
 
    wxPoint tri[ 3 ];
-   if (playing && // Don't ever draw the double-head if recording!
-       (mPrevInScrubZone ||
-        mProject->GetScrubber().HasStartedScrubbing())) {
-      // Always draw big
-      width = IndicatorBigWidth();
+   if (scrub) {
       auto height = IndicatorHeightForWidth(width);
       const int IndicatorHalfWidth = width / 2;
 
@@ -2855,7 +2854,9 @@ void AdornedRulerPanel::DrawQuickPlayIndicator(wxDC * dc)
    DoEraseIndicator(dc, mLastQuickPlayX);
    mLastQuickPlayX = x;
 
-   DoDrawIndicator(dc, mQuickPlayPos, true, IndicatorSmallWidth);
+   auto scrub = mPrevInScrubZone || mProject->GetScrubber().HasStartedScrubbing();
+   auto width = scrub ? IndicatorBigWidth() : IndicatorSmallWidth;
+   DoDrawIndicator(dc, mQuickPlayPos, true, width, scrub);
 }
 
 void AdornedRulerPanel::SetPlayRegion(double playRegionStart,
