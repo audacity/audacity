@@ -818,6 +818,24 @@ protected:
    DECLARE_EVENT_TABLE()
 };
 
+// See big pictorial comment in TrackPanel for explanation of these numbers
+enum : int {
+   kLeftInset = 4,
+   kRightInset = kLeftInset,
+   kTopInset = 4,
+   kShadowThickness = 1,
+   kBorderThickness = 1,
+   kTopMargin = kTopInset + kBorderThickness,
+   kBottomMargin = kShadowThickness + kBorderThickness,
+   kLeftMargin = kLeftInset + kBorderThickness,
+   kRightMargin = kRightInset + kShadowThickness + kBorderThickness,
+};
+
+enum : int {
+   kTrackInfoWidth = 100,
+   kTrackInfoBtnSize = 16 // widely used dimension, usually height
+};
+
 #ifdef _MSC_VER
 #pragma warning( pop )
 #endif
