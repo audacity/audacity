@@ -294,7 +294,6 @@ public:
    static int GetRulerHeight() { return 28; }
    void SetLeftOffset(int offset);
 
-   void DrawCursor(double time);
    void DrawIndicator(double time, bool rec);
    void DrawSelection();
    void ClearIndicator();
@@ -367,8 +366,6 @@ private:
    wxRect mInner;
 
    int mLeftOffset;  // Number of pixels before we hit the 'zero position'.
-
-   double mCurTime;
 
 
    int mIndType;     // -1 = No indicator, 0 = Record, 1 = Play

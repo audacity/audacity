@@ -1793,7 +1793,6 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* parent,
    mCursorSizeWE = wxCursor(wxCURSOR_SIZEWE);
 
    mLeftOffset = 0;
-   mCurTime = -1;
    mIndTime = -1;
    mIndType = -1;
    mQuickPlayInd = false;
@@ -2723,16 +2722,9 @@ void AdornedRulerPanel::SetLeftOffset(int offset)
    mRuler.SetUseZoomInfo(offset, mViewInfo);
 }
 
-void AdornedRulerPanel::DrawCursor(double time)
-{
-   mCurTime = time;
-
-   Refresh();
-}
-
 void AdornedRulerPanel::DoDrawCursor(wxDC * dc)
 {
-   const int x = Time2Pos(mCurTime);
+   const int x = Time2Pos(mViewInfo->selectedRegion.t0());
 
    // Draw cursor in ruler
    dc->DrawLine( x, 1, x, mInner.height );
