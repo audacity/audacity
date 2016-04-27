@@ -334,7 +334,7 @@ private:
    void DoDrawMarks(wxDC * dc, bool /*text */ );
    void DoDrawCursor(wxDC * dc);
    void DoDrawSelection(wxDC * dc);
-   void DoDrawIndicator(wxDC * dc, double time, bool recording, int width);
+   void DoDrawIndicator(wxDC * dc, double time, bool playing, int width, bool scrub);
    void DoEraseIndicator(wxDC *dc, int x);
    QuickPlayIndicatorOverlay *GetOverlay();
    void DrawQuickPlayIndicator(wxDC * dc /*NULL to DELETE old only*/);
