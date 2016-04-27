@@ -168,7 +168,7 @@ public:
    wxRect mRect;
 
 private:
-   wxColour mTickColour;
+   static wxColour mTickColour;
    wxPen mPen;
 
    int          mMaxWidth, mMaxHeight;
@@ -294,7 +294,6 @@ public:
    static int GetRulerHeight() { return 28; }
    void SetLeftOffset(int offset);
 
-   void DrawCursor(double time);
    void DrawIndicator(double time, bool rec);
    void DrawSelection();
    void ClearIndicator();
@@ -334,7 +333,7 @@ private:
    void DoDrawMarks(wxDC * dc, bool /*text */ );
    void DoDrawCursor(wxDC * dc);
    void DoDrawSelection(wxDC * dc);
-   void DoDrawIndicator(wxDC * dc, double time, bool recording, int width);
+   void DoDrawIndicator(wxDC * dc, double time, bool playing, int width, bool scrub);
    void DoEraseIndicator(wxDC *dc, int x);
    QuickPlayIndicatorOverlay *GetOverlay();
    void DrawQuickPlayIndicator(wxDC * dc /*NULL to DELETE old only*/);
@@ -367,8 +366,6 @@ private:
    wxRect mInner;
 
    int mLeftOffset;  // Number of pixels before we hit the 'zero position'.
-
-   double mCurTime;
 
 
    int mIndType;     // -1 = No indicator, 0 = Record, 1 = Play

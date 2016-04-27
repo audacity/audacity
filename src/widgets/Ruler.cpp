@@ -96,6 +96,8 @@ using std::max;
 
 #define kTopInset 4
 
+wxColour Ruler::mTickColour{ 153, 153, 153 };
+
 //
 // Ruler
 //
@@ -120,7 +122,6 @@ Ruler::Ruler()
    mBottom = -1;
    mbTicksOnly = true;
    mbTicksAtExtremes = false;
-   mTickColour = wxColour(153,153,153);
    mPen.SetColour(mTickColour);
 
    // Note: the font size is now adjusted automatically whenever
@@ -1572,7 +1573,7 @@ void Ruler::Label::Draw(wxDC&dc, bool twoTone) const
 
 #ifdef EXPERIMENTAL_THEMING
       // TODO:  handle color distinction
-      mDC->SetTextForeground(mTickColour);
+      dc.SetTextForeground(mTickColour);
 #else
       dc.SetTextForeground(altColor ? *wxBLUE : *wxBLACK);
 #endif
@@ -1792,7 +1793,6 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* parent,
    mCursorSizeWE = wxCursor(wxCURSOR_SIZEWE);
 
    mLeftOffset = 0;
-   mCurTime = -1;
    mIndTime = -1;
    mIndType = -1;
    mQuickPlayInd = false;
@@ -1933,6 +1933,7 @@ void AdornedRulerPanel::OnCapture(wxCommandEvent & evt)
 
 enum : int {
    IndicatorSmallWidth = 9,
+   IndicatorMediumWidth = 13,
    IndicatorOffset = 1,
 };
 
@@ -1985,8 +1986,9 @@ void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
 
    if (mIndType >= 0)
    {
-      DoDrawIndicator(&mBackDC, mIndTime, mIndType != 0,
-                      IndicatorBigWidth());
+      const bool scrub = mProject->GetScrubber().HasStartedScrubbing();
+      auto width = scrub ? IndicatorBigWidth() : IndicatorMediumWidth;
+      DoDrawIndicator(&mBackDC, mIndTime, mIndType != 0, width, scrub);
    }
 
    if (mViewInfo->selectedRegion.isPoint())
@@ -2720,16 +2722,9 @@ void AdornedRulerPanel::SetLeftOffset(int offset)
    mRuler.SetUseZoomInfo(offset, mViewInfo);
 }
 
-void AdornedRulerPanel::DrawCursor(double time)
-{
-   mCurTime = time;
-
-   Refresh();
-}
-
 void AdornedRulerPanel::DoDrawCursor(wxDC * dc)
 {
-   const int x = Time2Pos(mCurTime);
+   const int x = Time2Pos(mViewInfo->selectedRegion.t0());
 
    // Draw cursor in ruler
    dc->DrawLine( x, 1, x, mInner.height );
@@ -2762,18 +2757,15 @@ void AdornedRulerPanel::DrawIndicator( double time, bool rec )
 }
 
 // Draws the play/recording position indicator.
-void AdornedRulerPanel::DoDrawIndicator(wxDC * dc, double time, bool playing, int width)
+void AdornedRulerPanel::DoDrawIndicator
+   (wxDC * dc, double time, bool playing, int width, bool scrub)
 {
 
    const int x = Time2Pos(time);
    AColor::IndicatorColor( dc, playing );
 
    wxPoint tri[ 3 ];
-   if (playing && // Don't ever draw the double-head if recording!
-       (mPrevInScrubZone ||
-        mProject->GetScrubber().HasStartedScrubbing())) {
-      // Always draw big
-      width = IndicatorBigWidth();
+   if (scrub) {
       auto height = IndicatorHeightForWidth(width);
       const int IndicatorHalfWidth = width / 2;
 
@@ -2854,7 +2846,9 @@ void AdornedRulerPanel::DrawQuickPlayIndicator(wxDC * dc)
    DoEraseIndicator(dc, mLastQuickPlayX);
    mLastQuickPlayX = x;
 
-   DoDrawIndicator(dc, mQuickPlayPos, true, IndicatorSmallWidth);
+   auto scrub = mPrevInScrubZone || mProject->GetScrubber().HasStartedScrubbing();
+   auto width = scrub ? IndicatorBigWidth() : IndicatorSmallWidth;
+   DoDrawIndicator(dc, mQuickPlayPos, true, width, scrub);
 }
 
 void AdornedRulerPanel::SetPlayRegion(double playRegionStart,
