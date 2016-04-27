@@ -2115,7 +2115,8 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
    const bool inScrubZone =
       // only if scrubbing is allowed now
       mProject->GetScrubber().CanScrub() &&
-      evt.m_y < IndicatorBigHeight();
+      mShowScrubbing &&
+      mScrubZone.Contains(evt.GetPosition());
 
    const bool changeInScrubZone = (inScrubZone != mPrevInScrubZone);
    mPrevInScrubZone = inScrubZone;
