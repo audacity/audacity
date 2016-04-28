@@ -2461,7 +2461,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
 
          ControlToolBar::PlayAppearance appearance =
             evt.ControlDown() ? ControlToolBar::PlayAppearance::CutPreview
-               : loopEnabled ? ControlToolBar::PlayAppearance::Looped
+               : options.playLooped ? ControlToolBar::PlayAppearance::Looped
                : ControlToolBar::PlayAppearance::Straight;
          ctb->PlayPlayRegion((SelectedRegion(start, end)),
                              options, PlayMode::normalPlay,
