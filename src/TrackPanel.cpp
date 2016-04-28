@@ -261,17 +261,6 @@ right and top insets
 |  |+-Border---- ... -----  ... --------------------- ...       ... -Border-+||  |
 |  |  Shadow---- ... -----  ... --------------------- ...       ... --Shadow-+|  |
 */
-enum {
-   kLeftInset = 4,
-   kRightInset = kLeftInset,
-   kTopInset = 4,
-   kShadowThickness = 1,
-   kBorderThickness = 1,
-   kTopMargin = kTopInset + kBorderThickness,
-   kBottomMargin = kShadowThickness + kBorderThickness,
-   kLeftMargin = kLeftInset + kBorderThickness,
-   kRightMargin = kRightInset + kShadowThickness + kBorderThickness,
-};
 
 // Is the distance between A and B less than D?
 template < class A, class B, class DIST > bool within(A a, B b, DIST d)
@@ -8810,9 +8799,6 @@ TrackInfo::~TrackInfo()
    delete mPanCaptured;
    delete mPan;
 }
-
-static const int kTrackInfoWidth = 100;
-static const int kTrackInfoBtnSize = 16; // widely used dimension, usually height
 
 int TrackInfo::GetTrackInfoWidth() const
 {

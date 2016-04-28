@@ -94,8 +94,6 @@ using std::max;
 #define PLAY_REGION_RECT_HEIGHT 3
 #define PLAY_REGION_GLOBAL_OFFSET_Y 7
 
-#define kTopInset 4
-
 wxColour Ruler::mTickColour{ 153, 153, 153 };
 
 //
@@ -1758,7 +1756,9 @@ enum {
    OnSyncQuickPlaySelID,
    OnTimelineToolTipID,
    OnAutoScrollID,
-   OnLockPlayRegionID
+   OnLockPlayRegionID,
+
+   OnShowHideScrubbingID,
 };
 
 BEGIN_EVENT_TABLE(AdornedRulerPanel, wxPanel)
@@ -1766,11 +1766,17 @@ BEGIN_EVENT_TABLE(AdornedRulerPanel, wxPanel)
    EVT_SIZE(AdornedRulerPanel::OnSize)
    EVT_MOUSE_EVENTS(AdornedRulerPanel::OnMouseEvents)
    EVT_MOUSE_CAPTURE_LOST(AdornedRulerPanel::OnCaptureLost)
+
+   // Context menu commands
    EVT_MENU(OnToggleQuickPlayID, AdornedRulerPanel::OnToggleQuickPlay)
    EVT_MENU(OnSyncQuickPlaySelID, AdornedRulerPanel::OnSyncSelToQuickPlay)
    EVT_MENU(OnTimelineToolTipID, AdornedRulerPanel::OnTimelineToolTips)
    EVT_MENU(OnAutoScrollID, AdornedRulerPanel::OnAutoScroll)
    EVT_MENU(OnLockPlayRegionID, AdornedRulerPanel::OnLockPlayRegion)
+
+   // Main menu commands
+   EVT_MENU(OnShowHideScrubbingID, AdornedRulerPanel::OnShowHideScrubbing)
+
 END_EVENT_TABLE()
 
 AdornedRulerPanel::AdornedRulerPanel(AudacityProject* parent,
@@ -1793,7 +1799,6 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* parent,
    mCursorSizeWE = wxCursor(wxCURSOR_SIZEWE);
 
    mLeftOffset = 0;
-   mCurTime = -1;
    mIndTime = -1;
    mIndType = -1;
    mQuickPlayInd = false;
@@ -1809,17 +1814,7 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* parent,
 
    mOuter = GetClientRect();
 
-   mInner = mOuter;
-   mInner.x += 1;          // +1 for left bevel
-   mInner.y += 1;          // +1 for top bevel
-   mInner.width -= 2;      // -2 for left and right bevels
-   mInner.height -= 3;     // -3 for top and bottom bevels and bottom line
-
    mRuler.SetUseZoomInfo(mLeftOffset, mViewInfo);
-   mRuler.SetBounds(mInner.GetLeft(),
-                    mInner.GetTop(),
-                    mInner.GetRight(),
-                    mInner.GetBottom());
    mRuler.SetLabelEdges( false );
    mRuler.SetFormat( Ruler::TimeFormat );
 
@@ -1868,6 +1863,22 @@ AdornedRulerPanel::~AdornedRulerPanel()
    }
 }
 
+namespace {
+   static const wxChar *scrubEnabledPrefName = wxT("/QuickPlay/ScrubbingEnabled");
+
+   bool ReadScrubEnabledPref()
+   {
+      bool result {};
+      gPrefs->Read(scrubEnabledPrefName, &result, true);
+      return result;
+   }
+
+   void WriteScrubEnabledPref(bool value)
+   {
+      gPrefs->Write(scrubEnabledPrefName, value);
+   }
+}
+
 void AdornedRulerPanel::UpdatePrefs()
 {
 #ifdef EXPERIMENTAL_SCROLLING_LIMITS
@@ -1879,6 +1890,11 @@ void AdornedRulerPanel::UpdatePrefs()
    }
 #endif
 #endif
+
+   mShowScrubbing = ReadScrubEnabledPref();
+   // Affected by the last
+   UpdateRects();
+
    RegenerateTooltips();
 }
 
@@ -1936,18 +1952,23 @@ enum : int {
    IndicatorSmallWidth = 9,
    IndicatorMediumWidth = 13,
    IndicatorOffset = 1,
+
+   TopMargin = 1,
+   BottomMargin = 2, // for bottom bevel and bottom line
+   LeftMargin = 1,
+   RightMargin = 1,
 };
 
 inline int IndicatorHeightForWidth(int width)
 {
-   return ((width / 2) * 3) / 2 + 1;
+   return ((width / 2) * 3) / 2;
 }
 
 inline int IndicatorWidthForHeight(int height)
 {
    // Not an exact inverse of the above, with rounding, but good enough
    return std::max(static_cast<int>(IndicatorSmallWidth),
-      (((height + 1) * 2) / 3) * 2
+      (((height) * 2) / 3) * 2
    );
 }
 
@@ -1956,9 +1977,15 @@ int AdornedRulerPanel::IndicatorBigWidth()
    return IndicatorWidthForHeight(IndicatorBigHeight());
 }
 
+enum {
+   ScrubHeight = 14,
+   RulerHeight = 28
+};
+
 int AdornedRulerPanel::IndicatorBigHeight()
 {
-   return this->GetSize().GetHeight() / 2;
+   return std::max(int(ScrubHeight - TopMargin),
+                   int(IndicatorMediumWidth));
 }
 
 void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
@@ -2015,18 +2042,41 @@ void AdornedRulerPanel::OnSize(wxSizeEvent & WXUNUSED(evt))
       return;
    }
 
+   UpdateRects();
+
+   Refresh();
+}
+
+void AdornedRulerPanel::UpdateRects()
+{
    mInner = mOuter;
-   mInner.x += 1;          // +1 for left bevel
-   mInner.y += 1;          // +1 for top bevel
-   mInner.width -= 2;      // -2 for left and right bevels
-   mInner.height -= 3;     // -3 for top and bottom bevels and bottom line
+   mInner.x += LeftMargin;
+   mInner.width -= (LeftMargin + RightMargin);
+
+   wxRect *top = &mInner;
+
+   if (mShowScrubbing) {
+      mScrubZone = mInner;
+      auto scrubHeight = std::min(mScrubZone.height, int(ScrubHeight));
+      mScrubZone.height = scrubHeight;
+      mInner.height -= scrubHeight;
+      mInner.y += scrubHeight;
+      top = &mScrubZone;
+   }
+
+   top->y += TopMargin;
+   top->height -= TopMargin;
+
+   mInner.height -= BottomMargin;
+
+   if (!mShowScrubbing)
+      mScrubZone = mInner;
 
    mRuler.SetBounds(mInner.GetLeft(),
                     mInner.GetTop(),
                     mInner.GetRight(),
                     mInner.GetBottom());
 
-   Refresh();
 }
 
 double AdornedRulerPanel::Pos2Time(int p, bool ignoreFisheye)
@@ -2065,16 +2115,34 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
    const bool inScrubZone =
       // only if scrubbing is allowed now
       mProject->GetScrubber().CanScrub() &&
-      evt.m_y < IndicatorBigHeight();
+      mShowScrubbing &&
+      mScrubZone.Contains(evt.GetPosition());
 
    const bool changeInScrubZone = (inScrubZone != mPrevInScrubZone);
    mPrevInScrubZone = inScrubZone;
+
+   double t0 = mTracks->GetStartTime();
+   double t1 = mTracks->GetEndTime();
+   double sel0 = mProject->GetSel0();
+   double sel1 = mProject->GetSel1();
+
+   wxCoord xx = evt.GetX();
+   wxCoord mousePosX = xx;
+   UpdateQuickPlayPos(mousePosX);
+
+   // If not looping, restrict selection to end of project
+   if (!inScrubZone && !evt.ShiftDown()) {
+      mQuickPlayPos = std::min(t1, mQuickPlayPos);
+   }
+
+   // If position was adjusted right, we are over menu
+   const bool overMenu = (xx < mousePosX);
 
    auto &scrubber = mProject->GetScrubber();
 
    // Handle status bar messages
    UpdateStatusBar (
-      evt.Leaving()
+      overMenu || evt.Leaving()
       ? StatusChoice::Leaving
       : evt.Entering() || changeInScrubZone
          ? inScrubZone
@@ -2083,18 +2151,25 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
          : StatusChoice::NoChange
    );
 
+   if (overMenu && evt.Button(wxMOUSE_BTN_ANY)) {
+      if(evt.ButtonDown())
+         DoMainMenu();
+      return;
+   }
 
-   double t0 = mTracks->GetStartTime();
-   double t1 = mTracks->GetEndTime();
-   double sel0 = mProject->GetSel0();
-   double sel1 = mProject->GetSel1();
+   // Handle popup menus
+   if (evt.RightDown() && !(evt.LeftIsDown())) {
+      if(inScrubZone)
+         ShowScrubMenu(evt.GetPosition());
+      else
+         ShowMenu(evt.GetPosition());
 
-   wxCoord mousePosX = evt.GetX();
-   UpdateQuickPlayPos(mousePosX);
+      // dismiss and clear Quick-Play indicator
+      HideQuickPlayIndicator();
 
-   // If not looping, restrict selection to end of project
-   if (!inScrubZone && !evt.ShiftDown()) {
-      mQuickPlayPos = std::min(t1, mQuickPlayPos);
+      if (HasCapture())
+         ReleaseMouse();
+      return;
    }
 
    if (scrubber.HasStartedScrubbing()) {
@@ -2157,20 +2232,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
       return;
    }
 
-   if (evt.RightDown() && !(evt.LeftIsDown())) {
-      if(inScrubZone)
-         ShowScrubMenu(evt.GetPosition());
-      else
-         ShowMenu(evt.GetPosition());
-
-      // dismiss and clear Quick-Play indicator
-      HideQuickPlayIndicator();
-
-      if (HasCapture())
-         ReleaseMouse();
-      return;
-   }
-   else if (inScrubZone) {
+   if (inScrubZone) {
       if (evt.LeftDown())
          scrubber.MarkScrubStart(evt.m_x, false, false);
       UpdateStatusBar(StatusChoice::EnteringScrubZone);
@@ -2465,6 +2527,32 @@ void AdornedRulerPanel::UpdateStatusBar(StatusChoice choice)
    mProject->TP_DisplayStatusMessage(message);
 }
 
+void AdornedRulerPanel::DoMainMenu()
+{
+   wxMenu menu;
+
+   menu.AppendCheckItem(OnShowHideScrubbingID, _("Scrub Bar"));
+   menu.Check(OnShowHideScrubbingID, mShowScrubbing);
+
+   // Position the popup similarly to the track control panel menus
+   wxPoint pos {
+      kLeftInset + kTrackInfoBtnSize + 1,
+      GetSize().GetHeight() + 1
+   };
+   PopupMenu(&menu, pos);
+}
+
+void AdornedRulerPanel::OnShowHideScrubbing(wxCommandEvent&)
+{
+   mShowScrubbing = !mShowScrubbing;
+   WriteScrubEnabledPref(mShowScrubbing);
+   gPrefs->Flush();
+   wxSize size { GetSize().GetWidth(), GetRulerHeight(mShowScrubbing) };
+   SetSize(size);
+   SetMinSize(size);
+   PostSizeEventToParent();
+}
+
 void AdornedRulerPanel::OnCaptureLost(wxMouseCaptureLostEvent & WXUNUSED(evt))
 {
    DrawQuickPlayIndicator(NULL);
@@ -2618,7 +2706,7 @@ void AdornedRulerPanel::DoDrawPlayRegion(wxDC * dc)
    {
       int x1 = Time2Pos(start) + 1;
       int x2 = Time2Pos(end);
-      int y = mInner.height/2;
+      int y = mInner.y - TopMargin + mInner.height/2;
 
       bool isLocked = mProject->IsPlayRegionLocked();
       AColor::PlayRegionColor(dc, isLocked);
@@ -2671,9 +2759,16 @@ void AdornedRulerPanel::DoDrawBorder(wxDC * dc)
    AColor::MediumTrackInfo( dc, false );
    dc->DrawRectangle( mInner );
 
+   if (mShowScrubbing) {
+      // Let's distinguish the scrubbing area by using the same gray as for
+      // selected track control panel.
+      AColor::Medium(&mBackDC, true);
+      mBackDC.DrawRectangle(mScrubZone);
+   }
+
    wxRect r = mOuter;
-   r.width -= 1;                 // -1 for bevel
-   r.height -= 2;                // -2 for bevel and for bottom line
+   r.width -= RightMargin;
+   r.height -= BottomMargin;
    AColor::BevelTrackInfo( *dc, true, r );
 
    dc->SetPen( *wxBLACK_PEN );
@@ -2711,10 +2806,20 @@ void AdornedRulerPanel::DoDrawSelection(wxDC * dc)
 
    wxRect r;
    r.x = p0;
-   r.y = 1;
+   r.y = mInner.y;
    r.width = p1 - p0 - 1;
    r.height = mInner.height;
    dc->DrawRectangle( r );
+}
+
+int AdornedRulerPanel::GetRulerHeight()
+{
+   return GetRulerHeight(ReadScrubEnabledPref());
+}
+
+int AdornedRulerPanel::GetRulerHeight(bool showScrubBar)
+{
+   return RulerHeight + (showScrubBar ? ScrubHeight : 0);
 }
 
 void AdornedRulerPanel::SetLeftOffset(int offset)
@@ -2723,19 +2828,12 @@ void AdornedRulerPanel::SetLeftOffset(int offset)
    mRuler.SetUseZoomInfo(offset, mViewInfo);
 }
 
-void AdornedRulerPanel::DrawCursor(double time)
-{
-   mCurTime = time;
-
-   Refresh();
-}
-
 void AdornedRulerPanel::DoDrawCursor(wxDC * dc)
 {
-   const int x = Time2Pos(mCurTime);
+   const int x = Time2Pos(mViewInfo->selectedRegion.t0());
 
    // Draw cursor in ruler
-   dc->DrawLine( x, 1, x, mInner.height );
+   dc->DrawLine( x, mInner.y, x, mInner.y + mInner.height );
 }
 
 //
@@ -2779,11 +2877,11 @@ void AdornedRulerPanel::DoDrawIndicator
 
       // Double headed, left-right
       tri[ 0 ].x = x - IndicatorOffset;
-      tri[ 0 ].y = 1;
+      tri[ 0 ].y = mScrubZone.y;
       tri[ 1 ].x = x - IndicatorOffset;
-      tri[ 1 ].y = height;
+      tri[ 1 ].y = mScrubZone.y + height;
       tri[ 2 ].x = x - IndicatorHalfWidth;
-      tri[ 2 ].y = height / 2;
+      tri[ 2 ].y = mScrubZone.y + height / 2;
       dc->DrawPolygon( 3, tri );
       tri[ 0 ].x = tri[ 1 ].x = x + IndicatorOffset;
       tri[ 2 ].x = x + IndicatorHalfWidth;
@@ -2794,11 +2892,11 @@ void AdornedRulerPanel::DoDrawIndicator
       auto height = IndicatorHeightForWidth(width);
       const int IndicatorHalfWidth = width / 2;
       tri[ 0 ].x = x - IndicatorHalfWidth;
-      tri[ 0 ].y = 1;
+      tri[ 0 ].y = mScrubZone.y;
       tri[ 1 ].x = x + IndicatorHalfWidth;
-      tri[ 1 ].y = 1;
+      tri[ 1 ].y = mScrubZone.y;
       tri[ 2 ].x = x;
-      tri[ 2 ].y = height;
+      tri[ 2 ].y = mScrubZone.y + height;
       dc->DrawPolygon( 3, tri );
    }
 }
@@ -2816,9 +2914,9 @@ void AdornedRulerPanel::DoEraseIndicator(wxDC *dc, int x)
       // Restore the background, but make it a little oversized to make
       // it happy OSX.
       dc->Blit(x - indsize - 1,
-               0,
+               mScrubZone.y - 1,
                indsize * 2 + 1 + 2,
-               height + 2,
+               mScrubZone.y + height + 2,
                &mBackDC,
                x - indsize - 1,
                0);

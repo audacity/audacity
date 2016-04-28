@@ -95,7 +95,7 @@ private:
    // I need this because I can't push the scrubber as an event handler
    // in two places at once.
    struct Forwarder : public wxEvtHandler {
-      Forwarder(Scrubber &scrubber_) : scrubber{ scrubber_ } {}
+      Forwarder(Scrubber &scrubber_) : scrubber( scrubber_ ) {}
 
       Scrubber &scrubber;
 

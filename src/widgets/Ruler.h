@@ -251,7 +251,7 @@ class AUDACITY_DLL_API RulerPanel final : public wxPanel {
 
    void DoSetSize(int x, int y,
                   int width, int height,
-                  int sizeFlags = wxSIZE_AUTO);
+                  int sizeFlags = wxSIZE_AUTO) override;
 
    void OnErase(wxEraseEvent &evt);
    void OnPaint(wxPaintEvent &evt);
@@ -291,10 +291,11 @@ public:
    bool AcceptsFocus() const override { return false; };
 
 public:
-   static int GetRulerHeight() { return 28; }
+   static int GetRulerHeight();
+   static int GetRulerHeight(bool showScrubBar);
+
    void SetLeftOffset(int offset);
 
-   void DrawCursor(double time);
    void DrawIndicator(double time, bool rec);
    void DrawSelection();
    void ClearIndicator();
@@ -318,6 +319,7 @@ private:
    void OnCapture(wxCommandEvent & evt);
    void OnPaint(wxPaintEvent &evt);
    void OnSize(wxSizeEvent &evt);
+   void UpdateRects();
    void OnMouseEvents(wxMouseEvent &evt);
 
    enum class StatusChoice {
@@ -327,6 +329,8 @@ private:
       NoChange
    };
    void UpdateStatusBar(StatusChoice choice);
+
+   void DoMainMenu();
 
    void OnCaptureLost(wxMouseCaptureLostEvent &evt);
 
@@ -364,11 +368,10 @@ private:
    wxMemoryDC mBackDC;
 
    wxRect mOuter;
+   wxRect mScrubZone;
    wxRect mInner;
 
    int mLeftOffset;  // Number of pixels before we hit the 'zero position'.
-
-   double mCurTime;
 
 
    int mIndType;     // -1 = No indicator, 0 = Record, 1 = Play
@@ -401,6 +404,11 @@ private:
    void OnAutoScroll(wxCommandEvent &evt);
    void OnLockPlayRegion(wxCommandEvent &evt);
 
+   //
+   // Main menu
+   //
+   void OnShowHideScrubbing(wxCommandEvent &evt);
+
    bool mPlayRegionDragsSelection;
    bool mTimelineToolTip;
    bool mQuickPlayEnabled;
@@ -422,6 +430,7 @@ private:
    std::unique_ptr<QuickPlayIndicatorOverlay> mOverlay;
 
    bool mPrevInScrubZone{};
+   bool mShowScrubbing { true };
 
    DECLARE_EVENT_TABLE()
 };
