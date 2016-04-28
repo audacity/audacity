@@ -763,9 +763,20 @@ void Scrubber::PopulateMenu(wxMenu &menu)
 {
    int id = CMD_ID;
    auto cm = mProject->GetCommandManager();
+   const MenuItem *checkedItem =
+      HasStartedScrubbing()
+         ? &FindMenuItem(mSmoothScrollingScrub, mAlwaysSeeking)
+         : nullptr;
    for (const auto &item : menuItems) {
-      if (cm->GetEnabled(item.name))
+      if (cm->GetEnabled(item.name)) {
+#ifdef CHECKABLE_SCRUB_MENU_ITEMS
+         menu.AppendCheckItem(id, item.label);
+         if(&item == checkedItem)
+            menu.FindItem(id)->Check();
+#else
          menu.Append(id, item.label);
+#endif
+      }
       ++id;
    }
 }

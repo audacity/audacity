@@ -2157,6 +2157,21 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
       return;
    }
 
+   // Handle popup menus
+   if (evt.RightDown() && !(evt.LeftIsDown())) {
+      if(inScrubZone)
+         ShowScrubMenu(evt.GetPosition());
+      else
+         ShowMenu(evt.GetPosition());
+
+      // dismiss and clear Quick-Play indicator
+      HideQuickPlayIndicator();
+
+      if (HasCapture())
+         ReleaseMouse();
+      return;
+   }
+
    if (scrubber.HasStartedScrubbing()) {
       // If already clicked for scrub, preempt the usual event handling,
       // no matter what the y coordinate.
@@ -2217,20 +2232,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
       return;
    }
 
-   if (evt.RightDown() && !(evt.LeftIsDown())) {
-      if(inScrubZone)
-         ShowScrubMenu(evt.GetPosition());
-      else
-         ShowMenu(evt.GetPosition());
-
-      // dismiss and clear Quick-Play indicator
-      HideQuickPlayIndicator();
-
-      if (HasCapture())
-         ReleaseMouse();
-      return;
-   }
-   else if (inScrubZone) {
+   if (inScrubZone) {
       if (evt.LeftDown())
          scrubber.MarkScrubStart(evt.m_x, false, false);
       UpdateStatusBar(StatusChoice::EnteringScrubZone);
