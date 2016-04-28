@@ -25,6 +25,9 @@ Paul Licameli split from TrackPanel.cpp
 
 #include <wx/dc.h>
 
+// Conditional compilation switch for making scrub menu items checkable
+#define CHECKABLE_SCRUB_MENU_ITEMS
+
 enum {
    // PRL:
    // Mouse must move at least this far to distinguish ctrl-drag to scrub
@@ -742,9 +745,15 @@ void Scrubber::AddMenuItems()
 
    cm->BeginSubMenu(_("Scru&bbing"));
    for (const auto &item : menuItems) {
+#ifdef CHECKABLE_SCRUB_MENU_ITEMS
       cm->AddCheck(item.name, wxGetTranslation(item.label),
                   FNT(Scrubber, this, item.memFn),
                   false, flags, mask);
+#else
+      cm->AddItem(item.name, wxGetTranslation(item.label),
+                   FNT(Scrubber, this, item.memFn),
+                   flags, mask);
+#endif
    }
    cm->EndSubMenu();
    CheckMenuItem();
@@ -763,18 +772,22 @@ void Scrubber::PopulateMenu(wxMenu &menu)
 
 void Scrubber::UncheckAllMenuItems()
 {
+#ifdef CHECKABLE_SCRUB_MENU_ITEMS
    auto cm = mProject->GetCommandManager();
    for (const auto &item : menuItems)
       cm->Check(item.name, false);
+#endif
 }
 
 void Scrubber::CheckMenuItem()
 {
+#ifdef CHECKABLE_SCRUB_MENU_ITEMS
    if(HasStartedScrubbing()) {
       auto cm = mProject->GetCommandManager();
       auto item = FindMenuItem(mSmoothScrollingScrub, mAlwaysSeeking);
       cm->Check(item.name, true);
    }
+#endif
 }
 
 #endif
