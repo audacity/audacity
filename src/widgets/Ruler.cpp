@@ -2115,7 +2115,8 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
    const bool inScrubZone =
       // only if scrubbing is allowed now
       mProject->GetScrubber().CanScrub() &&
-      evt.m_y < IndicatorBigHeight();
+      mShowScrubbing &&
+      mScrubZone.Contains(evt.GetPosition());
 
    const bool changeInScrubZone = (inScrubZone != mPrevInScrubZone);
    mPrevInScrubZone = inScrubZone;
@@ -2153,6 +2154,21 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
    if (overMenu && evt.Button(wxMOUSE_BTN_ANY)) {
       if(evt.ButtonDown())
          DoMainMenu();
+      return;
+   }
+
+   // Handle popup menus
+   if (evt.RightDown() && !(evt.LeftIsDown())) {
+      if(inScrubZone)
+         ShowScrubMenu(evt.GetPosition());
+      else
+         ShowMenu(evt.GetPosition());
+
+      // dismiss and clear Quick-Play indicator
+      HideQuickPlayIndicator();
+
+      if (HasCapture())
+         ReleaseMouse();
       return;
    }
 
@@ -2216,20 +2232,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
       return;
    }
 
-   if (evt.RightDown() && !(evt.LeftIsDown())) {
-      if(inScrubZone)
-         ShowScrubMenu(evt.GetPosition());
-      else
-         ShowMenu(evt.GetPosition());
-
-      // dismiss and clear Quick-Play indicator
-      HideQuickPlayIndicator();
-
-      if (HasCapture())
-         ReleaseMouse();
-      return;
-   }
-   else if (inScrubZone) {
+   if (inScrubZone) {
       if (evt.LeftDown())
          scrubber.MarkScrubStart(evt.m_x, false, false);
       UpdateStatusBar(StatusChoice::EnteringScrubZone);
