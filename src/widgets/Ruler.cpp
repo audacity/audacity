@@ -2704,8 +2704,8 @@ void AdornedRulerPanel::DoDrawPlayRegion(wxDC * dc)
 
    if (start >= 0)
    {
-      int x1 = Time2Pos(start) + 1;
-      int x2 = Time2Pos(end);
+      const int x1 = Time2Pos(start) + 1;
+      const int x2 = Time2Pos(end);
       int y = mInner.y - TopMargin + mInner.height/2;
 
       bool isLocked = mProject->IsPlayRegionLocked();
@@ -2746,7 +2746,7 @@ void AdornedRulerPanel::DoDrawPlayRegion(wxDC * dc)
 
          r.x = x1 + PLAY_REGION_TRIANGLE_SIZE;
          r.y = y - PLAY_REGION_RECT_HEIGHT/2 + PLAY_REGION_GLOBAL_OFFSET_Y;
-         r.width = x2-x1 - PLAY_REGION_TRIANGLE_SIZE*2;
+         r.width = std::max(0, x2-x1 - PLAY_REGION_TRIANGLE_SIZE*2);
          r.height = PLAY_REGION_RECT_HEIGHT;
          dc->DrawRectangle(r);
       }
