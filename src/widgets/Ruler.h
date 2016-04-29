@@ -304,7 +304,6 @@ public:
    void ClearPlayRegion();
    void GetPlayRegion(double* playRegionStart, double* playRegionEnd);
 
-   void SetProject(AudacityProject* project) {mProject = project;}
    void GetMaxSize(wxCoord *width, wxCoord *height);
 
    void InvalidateRuler();
@@ -364,7 +363,7 @@ private:
 
    Ruler mRuler;
    ViewInfo *const mViewInfo;
-   AudacityProject *mProject;
+   AudacityProject *const mProject;
    TrackList *mTracks;
 
    wxBitmap *mBack;

@@ -460,7 +460,6 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    mLabelTrackStartXPos=-1;
    mCircularTrackNavigation = false;
 
-   UpdatePrefs();
 
    mRedrawAfterStop = false;
 

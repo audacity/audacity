@@ -1785,6 +1785,7 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* parent,
                                      const wxSize& size,
                                      ViewInfo *viewinfo)
 :  wxPanel(parent, id, pos, size)
+, mProject(parent)
 , mViewInfo(viewinfo)
 {
    SetLabel( _("Timeline") );
