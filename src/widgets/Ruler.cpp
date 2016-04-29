@@ -2227,8 +2227,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
       // else, may detect a scrub click below
    }
    else if (evt.Entering() || (changeInScrubZone && !inScrubZone)) {
-      if(mQuickPlayEnabled)
-         SetCursor(mCursorHand);
+      SetCursor(mCursorHand);
       HideQuickPlayIndicator();
       return;
    }
