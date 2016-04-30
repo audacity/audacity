@@ -2121,14 +2121,20 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
       return;
    }
 
-   const bool inScrubZone =
+   const bool overButtons = GetButtonAreaRect().Contains(evt.GetPosition());
+   const bool inScrubZone = !overButtons &&
       // only if scrubbing is allowed now
       mProject->GetScrubber().CanScrub() &&
       mShowScrubbing &&
       mScrubZone.Contains(evt.GetPosition());
-
-   const bool changeInScrubZone = (inScrubZone != mPrevInScrubZone);
-   mPrevInScrubZone = inScrubZone;
+   const StatusChoice zone =
+      overButtons
+      ? StatusChoice::EnteringPushbuttons
+      : inScrubZone
+        ? StatusChoice::EnteringScrubZone
+        : StatusChoice::EnteringQP;
+   const bool changeInZone = (zone != mPrevZone);
+   mPrevZone = zone;
 
    wxCoord xx = evt.GetX();
    wxCoord mousePosX = xx;
@@ -2136,28 +2142,21 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
    HandleSnapping();
 
    // If not looping, restrict selection to end of project
-   if (!inScrubZone && !evt.ShiftDown()) {
+   if (zone == StatusChoice::EnteringQP && !evt.ShiftDown()) {
       const double t1 = mTracks->GetEndTime();
       mQuickPlayPos = std::min(t1, mQuickPlayPos);
    }
 
-   // If position was adjusted right, we are over menu
-   const bool overMenu = (xx < mousePosX);
-
-   auto &scrubber = mProject->GetScrubber();
-
    // Handle status bar messages
    UpdateStatusBar (
-      overMenu || evt.Leaving()
+      evt.Leaving()
       ? StatusChoice::Leaving
-      : evt.Entering() || changeInScrubZone
-         ? inScrubZone
-            ? StatusChoice::EnteringScrubZone
-            : StatusChoice::EnteringQP
+      : evt.Entering() || changeInZone
+         ? zone
          : StatusChoice::NoChange
    );
 
-   if (overMenu && evt.Button(wxMOUSE_BTN_ANY)) {
+   if (overButtons && evt.Button(wxMOUSE_BTN_ANY)) {
       if(evt.ButtonDown())
          DoMainMenu();
 
@@ -2181,6 +2180,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
       return;
    }
 
+   auto &scrubber = mProject->GetScrubber();
    if (scrubber.HasStartedScrubbing()) {
       // If already clicked for scrub, preempt the usual event handling,
       // no matter what the y coordinate.
@@ -2215,7 +2215,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
 
    // Handle entering and leaving of the bar, or movement from
    // one portion (quick play or scrub) to the other
-   if (evt.Leaving() || (changeInScrubZone && inScrubZone)) {
+   if (evt.Leaving() || (changeInZone && zone != StatusChoice::EnteringQP)) {
       if (evt.Leaving()) {
          // Erase the line
          HideQuickPlayIndicator();
@@ -2233,7 +2233,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
          return;
       // else, may detect a scrub click below
    }
-   else if (evt.Entering() || (changeInScrubZone && !inScrubZone)) {
+   else if (evt.Entering() || (changeInZone && zone == StatusChoice::EnteringQP)) {
       SetCursor(mCursorHand);
       HideQuickPlayIndicator();
       return;
@@ -2522,34 +2522,38 @@ void AdornedRulerPanel::UpdateStatusBar(StatusChoice choice)
    if (choice == StatusChoice::NoChange)
       return;
 
-   const auto &scrubber = mProject->GetScrubber();
-   const bool scrubbing = scrubber.HasStartedScrubbing();
-   if (scrubbing && choice != StatusChoice::Leaving)
-      // Don't distinguish zones
-      choice = StatusChoice::EnteringScrubZone;
-   wxString message{};
+   wxString message {};
 
-   switch (choice) {
-      case StatusChoice::EnteringQP:
-      {
-         // message = Insert timeline status bar message here
-      }
-         break;
+   if (choice == StatusChoice::EnteringPushbuttons)
+      ;
+   else {
+      const auto &scrubber = mProject->GetScrubber();
+      const bool scrubbing = scrubber.HasStartedScrubbing();
+      if (scrubbing && choice != StatusChoice::Leaving)
+         // Don't distinguish zones
+         choice = StatusChoice::EnteringScrubZone;
 
-      case StatusChoice::EnteringScrubZone:
-      {
-         if (scrubbing) {
-            if(!scrubber.IsAlwaysSeeking())
-               message = _("Click or drag to seek");
+      switch (choice) {
+         case StatusChoice::EnteringQP:
+         {
+            // message = Insert timeline status bar message here
          }
-         else
-            message = _("Click to scrub, Double-Click to scroll, Drag to seek");
-      }
-         break;
+            break;
 
-      case StatusChoice::Leaving:
-      default:
-         break;
+         case StatusChoice::EnteringScrubZone:
+         {
+            if (scrubbing) {
+               if(!scrubber.IsAlwaysSeeking())
+                  message = _("Click or drag to seek");
+            }
+            else
+               message = _("Click to scrub, Double-Click to scroll, Drag to seek");
+         }
+            break;
+
+         default:
+            break;
+      }
    }
 
    // Display a message, or empty message
@@ -3063,14 +3067,15 @@ void AdornedRulerPanel::DrawQuickPlayIndicator(wxDC * dc)
 
    const int x = Time2Pos(mQuickPlayPos);
    bool previewScrub =
-      mPrevInScrubZone &&
+      mPrevZone == StatusChoice::EnteringScrubZone &&
       !mProject->GetScrubber().IsScrubbing();
    GetOverlay()->Update(x, mIsSnapped, previewScrub);
 
    DoEraseIndicator(dc, mLastQuickPlayX);
    mLastQuickPlayX = x;
 
-   auto scrub = mPrevInScrubZone || mProject->GetScrubber().HasStartedScrubbing();
+   auto scrub = mPrevZone == StatusChoice::EnteringScrubZone ||
+      mProject->GetScrubber().HasStartedScrubbing();
    auto width = scrub ? IndicatorBigWidth() : IndicatorSmallWidth;
    DoDrawIndicator(dc, mQuickPlayPos, true, width, scrub);
 }

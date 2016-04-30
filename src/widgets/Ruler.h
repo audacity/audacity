@@ -328,6 +328,7 @@ private:
    void HandleQPRelease(wxMouseEvent &event);
 
    enum class StatusChoice {
+      EnteringPushbuttons,
       EnteringQP,
       EnteringScrubZone,
       Leaving,
@@ -447,7 +448,7 @@ private:
 
    std::unique_ptr<QuickPlayIndicatorOverlay> mOverlay;
 
-   bool mPrevInScrubZone{};
+   StatusChoice mPrevZone { StatusChoice::NoChange };
    bool mShowScrubbing { true };
 
    wxFont mButtonFont;
