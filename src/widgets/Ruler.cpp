@@ -2129,6 +2129,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
    wxCoord xx = evt.GetX();
    wxCoord mousePosX = xx;
    UpdateQuickPlayPos(mousePosX);
+   HandleSnapping();
 
    // If not looping, restrict selection to end of project
    if (!inScrubZone && !evt.ShiftDown()) {
@@ -2256,12 +2257,6 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
          mIsWE = false;
       }
    }
-
-   HandleSnapping();
-
-   mQuickPlayInd = true;
-   wxClientDC dc(this);
-   DrawQuickPlayIndicator(&dc);
 
    if (evt.LeftDown())
    {
@@ -2486,6 +2481,10 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
          mPlayRegionLock = false;
       }
    }
+
+   mQuickPlayInd = true;
+   wxClientDC dc(this);
+   DrawQuickPlayIndicator(&dc);
 }
 
 void AdornedRulerPanel::UpdateStatusBar(StatusChoice choice)
@@ -2762,8 +2761,8 @@ void AdornedRulerPanel::DoDrawBorder(wxDC * dc)
    if (mShowScrubbing) {
       // Let's distinguish the scrubbing area by using the same gray as for
       // selected track control panel.
-      AColor::Medium(&mBackDC, true);
-      mBackDC.DrawRectangle(mScrubZone);
+      AColor::Medium(dc, true);
+      dc->DrawRectangle(mScrubZone);
    }
 
    wxRect r = mOuter;
