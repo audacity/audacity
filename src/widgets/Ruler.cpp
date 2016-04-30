@@ -2109,8 +2109,11 @@ bool AdornedRulerPanel::IsWithinMarker(int mousePosX, double markerTime)
 void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
 {
    // Disable mouse actions on Timeline while recording.
-   if (mIsRecording)
+   if (mIsRecording) {
+      if (HasCapture())
+         ReleaseMouse();
       return;
+   }
 
    const bool inScrubZone =
       // only if scrubbing is allowed now
