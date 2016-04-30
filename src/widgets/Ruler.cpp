@@ -2155,6 +2155,9 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
    if (overMenu && evt.Button(wxMOUSE_BTN_ANY)) {
       if(evt.ButtonDown())
          DoMainMenu();
+
+      if (HasCapture())
+         ReleaseMouse();
       return;
    }
 
@@ -2191,6 +2194,9 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
       mQuickPlayInd = true;
       wxClientDC dc(this);
       DrawQuickPlayIndicator(&dc);
+
+      if (HasCapture())
+         ReleaseMouse();
 
       return;
    }
