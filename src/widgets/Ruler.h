@@ -102,6 +102,9 @@ class AUDACITY_DLL_API Ruler {
 
    // Good defaults are provided, but you can override here
    void SetFonts(const wxFont &minorFont, const wxFont &majorFont, const wxFont &minorMinorFont);
+   struct Fonts { wxFont *major, *minor, *minorMinor; };
+   Fonts GetFonts() const
+   { return { mMajorFont, mMinorFont, mMinorMinorFont }; }
 
    // Copies *pScale if it is not NULL
    void SetNumberScale(const NumberScale *pScale);
@@ -346,6 +349,19 @@ private:
    void DrawQuickPlayIndicator(wxDC * dc /*NULL to DELETE old only*/);
    void DoDrawPlayRegion(wxDC * dc);
 
+   wxRect GetButtonAreaRect() const;
+   enum class Button {
+      QuickPlay = 0,
+      ScrubBar,
+
+      NumButtons,
+      NoButton = -1
+   };
+   wxRect GetButtonRect( Button button ) const;
+   bool GetButtonState( Button button ) const;
+   void DoDrawPushbutton(wxDC *dc, Button button, bool down) const;
+   void DoDrawPushbuttons(wxDC *dc) const;
+
    double Pos2Time(int p, bool ignoreFisheye = false);
    int Time2Pos(double t, bool ignoreFisheye = false);
 
@@ -433,6 +449,8 @@ private:
 
    bool mPrevInScrubZone{};
    bool mShowScrubbing { true };
+
+   wxFont mButtonFont;
 
    DECLARE_EVENT_TABLE()
 };

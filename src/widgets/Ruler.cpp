@@ -1830,6 +1830,9 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* parent,
    mPlayRegionDragsSelection = (gPrefs->Read(wxT("/QuickPlay/DragSelection"), 0L) == 1)? true : false; 
    mQuickPlayEnabled = !!gPrefs->Read(wxT("/QuickPlay/QuickPlayEnabled"), 1L);
 
+   int fontSize = 10;
+   mButtonFont.Create(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+
    UpdatePrefs();
 
 #if wxUSE_TOOLTIPS
@@ -1980,7 +1983,7 @@ int AdornedRulerPanel::IndicatorBigWidth()
 
 enum {
    ScrubHeight = 14,
-   RulerHeight = 28
+   ProperRulerHeight = 28
 };
 
 int AdornedRulerPanel::IndicatorBigHeight()
@@ -2026,6 +2029,8 @@ void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
    }
 
    DoDrawPlayRegion(&mBackDC);
+
+   DoDrawPushbuttons(&mBackDC);
 
    dc.Blit(0, 0, mBack->GetWidth(), mBack->GetHeight(), &mBackDC, 0, 0);
 
@@ -2777,6 +2782,95 @@ void AdornedRulerPanel::DoDrawPlayRegion(wxDC * dc)
    }
 }
 
+wxRect AdornedRulerPanel::GetButtonAreaRect() const
+{
+   auto x = LeftMargin, y = TopMargin;
+   wxRect rect {
+      x, y,
+      mProject->GetTrackPanel()->GetLeftOffset() - x,
+      GetRulerHeight() - y - BottomMargin
+   };
+
+   // Leave room for one digit on the ruler, so "0.0" is not obscured if you go to start.
+   // But the digit string at the left end may be longer if you are not at the start.
+   // Perhaps there should be room for more than one digit.
+   wxScreenDC dc;
+   dc.SetFont(*mRuler.GetFonts().major);
+   rect.width -= dc.GetTextExtent(wxT("0")).GetWidth();
+
+   return rect;
+}
+
+wxRect AdornedRulerPanel::GetButtonRect( Button button ) const
+{
+   wxRect rect { GetButtonAreaRect() };
+
+   // Reduce the height
+   rect.height -= (GetRulerHeight() - ProperRulerHeight);
+
+   auto num = static_cast<unsigned>(button);
+   auto denom = static_cast<unsigned>(Button::NumButtons);
+   rect.x += (num * rect.width) / denom;
+   rect.width = (((1 + num) * rect.width) / denom) - rect.x;
+
+   return rect;
+}
+
+bool AdornedRulerPanel::GetButtonState( Button button ) const
+{
+   switch(button) {
+      case Button::QuickPlay:
+         return mQuickPlayEnabled;
+      case Button::ScrubBar:
+         return mShowScrubbing;
+      default:
+         wxASSERT(false);
+         return false;
+   }
+}
+
+void AdornedRulerPanel::DoDrawPushbutton(wxDC *dc, Button button, bool down) const
+{
+   // Adapted from TrackInfo::DrawMuteSolo()
+
+   static const wxString labels[static_cast<size_t>(Button::NumButtons)] {
+      XO("Quick Play"),
+      /* i18n-hint: A long screen area (bar) controlling variable speed play (scrubbing) */
+      XO("Scrub Bar"),
+   };
+
+   const auto bev = GetButtonRect( button ).Inflate(-1, -1);
+   if (down)
+      AColor::Solo(dc, true, false);
+   else
+      AColor::MediumTrackInfo(dc, false);
+   dc->SetPen( *wxTRANSPARENT_PEN );//No border!
+   dc->DrawRectangle(bev);
+
+   dc->SetTextForeground(theTheme.Colour(clrTrackPanelText));
+
+   wxCoord textWidth, textHeight;
+   wxString str = wxGetTranslation(labels[static_cast<unsigned>(button)]);
+   dc->SetFont(mButtonFont);
+   dc->GetTextExtent(str, &textWidth, &textHeight);
+   dc->DrawText(str, bev.x + (bev.width - textWidth) / 2,
+                bev.y + (bev.height - textHeight) / 2);
+   AColor::BevelTrackInfo(*dc, !down, bev);
+}
+
+void AdornedRulerPanel::DoDrawPushbuttons(wxDC *dc) const
+{
+   // Paint the area behind the buttons
+   wxRect background = GetButtonAreaRect();
+   AColor::MediumTrackInfo(dc, false);
+   dc->DrawRectangle(background);
+
+   for (unsigned ii = 0; ii < static_cast<unsigned>(Button::NumButtons); ++ii) {
+      auto button = static_cast<Button>(ii);
+      DoDrawPushbutton(dc, button, GetButtonState(button));
+   }
+}
+
 void AdornedRulerPanel::DoDrawBorder(wxDC * dc)
 {
    // Draw AdornedRulerPanel border
@@ -2786,7 +2880,7 @@ void AdornedRulerPanel::DoDrawBorder(wxDC * dc)
    if (mShowScrubbing) {
       // Let's distinguish the scrubbing area by using the same gray as for
       // selected track control panel.
-      AColor::Medium(dc, true);
+      AColor::MediumTrackInfo(dc, true);
       dc->DrawRectangle(mScrubZone);
    }
 
@@ -2843,7 +2937,7 @@ int AdornedRulerPanel::GetRulerHeight()
 
 int AdornedRulerPanel::GetRulerHeight(bool showScrubBar)
 {
-   return RulerHeight + (showScrubBar ? ScrubHeight : 0);
+   return ProperRulerHeight + (showScrubBar ? ScrubHeight : 0);
 }
 
 void AdornedRulerPanel::SetLeftOffset(int offset)
