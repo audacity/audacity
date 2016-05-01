@@ -356,6 +356,8 @@ private:
       NumButtons,
       NoButton = -1
    };
+   static const wxString PushbuttonLabels[];
+
    wxRect GetButtonRect( Button button ) const;
    bool InButtonRect( Button button ) const;
    bool GetButtonState( Button button ) const;
@@ -363,6 +365,8 @@ private:
    void DoDrawPushbutton(wxDC *dc, Button button, bool down) const;
    void DoDrawPushbuttons(wxDC *dc) const;
    void HandlePushbuttonEvent(wxMouseEvent &evt);
+
+   wxFont &GetButtonFont() const;
 
    double Pos2Time(int p, bool ignoreFisheye = false);
    int Time2Pos(double t, bool ignoreFisheye = false);
@@ -451,7 +455,8 @@ private:
    StatusChoice mPrevZone { StatusChoice::NoChange };
    bool mShowScrubbing { true };
 
-   wxFont mButtonFont;
+   mutable int mButtonFontSize { -1 };
+   mutable wxFont mButtonFont;
 
    DECLARE_EVENT_TABLE()
 };
