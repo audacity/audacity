@@ -334,7 +334,7 @@ private:
       Leaving,
       NoChange
    };
-   void UpdateStatusBar(StatusChoice choice);
+   void UpdateStatusBarAndTooltips(StatusChoice choice);
 
    void OnCaptureLost(wxMouseCaptureLostEvent &evt);
 
