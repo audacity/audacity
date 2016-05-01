@@ -321,6 +321,9 @@ private:
    void OnSize(wxSizeEvent &evt);
    void UpdateRects();
    void OnMouseEvents(wxMouseEvent &evt);
+   void HandleQPClick(wxMouseEvent &event, wxCoord mousePosX);
+   void HandleQPDrag(wxMouseEvent &event, wxCoord mousePosX);
+   void HandleQPRelease(wxMouseEvent &event);
 
    enum class StatusChoice {
       EnteringQP,
