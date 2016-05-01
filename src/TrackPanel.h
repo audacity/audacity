@@ -121,6 +121,8 @@ public:
 #endif
 
 private:
+   void UpdatePrefs();
+
    TrackPanel * pParent;
    wxFont mFont;
    LWSlider *mGainCaptured;
