@@ -1915,7 +1915,7 @@ wxFont &AdornedRulerPanel::GetButtonFont() const
             auto button = static_cast<Button>(ii);
             auto allowableWidth = GetButtonRect(button).GetWidth() - 2;
             // 2 corresponds with the Inflate(-1, -1)
-            GetParent()->GetTextExtent(PushbuttonLabels[ii],
+            GetParent()->GetTextExtent(wxGetTranslation(PushbuttonLabels[ii]),
                                        &width,
                                        &height,
                                        NULL,
