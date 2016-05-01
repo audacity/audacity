@@ -926,6 +926,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
                                              &mViewInfo,
                                              this,
                                              mRuler);
+   mTrackPanel->UpdatePrefs();
 
    mIndicatorOverlay = std::make_unique<PlayIndicatorOverlay>(this);
 
@@ -1024,7 +1025,6 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    InitialState();
    FixScrollbars();
    mRuler->SetLeftOffset(mTrackPanel->GetLeftOffset());  // bevel on AdornedRuler
-   mRuler->SetProject(this);
 
    //
    // Set the Icon
