@@ -1827,8 +1827,7 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* parent,
    mPlayRegionDragsSelection = (gPrefs->Read(wxT("/QuickPlay/DragSelection"), 0L) == 1)? true : false; 
    mQuickPlayEnabled = !!gPrefs->Read(wxT("/QuickPlay/QuickPlayEnabled"), 1L);
 
-   int fontSize = 10;
-   mButtonFont.Create(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+   mButtonFont.Create(10, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
 
    UpdatePrefs();
 
@@ -1897,6 +1896,38 @@ void AdornedRulerPanel::UpdatePrefs()
    UpdateRects();
 
    RegenerateTooltips();
+
+   mButtonFontSize = -1;
+}
+
+wxFont &AdornedRulerPanel::GetButtonFont() const
+{
+   if (mButtonFontSize < 0) {
+      mButtonFontSize = 10;
+
+      bool done;
+      do {
+         done = true;
+         mButtonFont.SetPointSize(mButtonFontSize);
+         wxCoord width, height;
+         for (unsigned ii = 0;
+              done && ii < static_cast<unsigned>(Button::NumButtons); ++ii) {
+            auto button = static_cast<Button>(ii);
+            auto allowableWidth = GetButtonRect(button).GetWidth() - 2;
+            // 2 corresponds with the Inflate(-1, -1)
+            GetParent()->GetTextExtent(PushbuttonLabels[ii],
+                                       &width,
+                                       &height,
+                                       NULL,
+                                       NULL,
+                                       &mButtonFont);
+            done = width < allowableWidth;
+         }
+         mButtonFontSize--;
+      } while (mButtonFontSize > 0 && !done);
+   }
+
+   return mButtonFont;
 }
 
 void AdornedRulerPanel::InvalidateRuler()
@@ -2857,15 +2888,16 @@ void AdornedRulerPanel::ToggleButtonState( Button button )
    }
 }
 
+const wxString AdornedRulerPanel::PushbuttonLabels
+   [static_cast<size_t>(AdornedRulerPanel::Button::NumButtons)] {
+   XO("Quick-Play"),
+   /* i18n-hint: A long screen area (bar) controlling variable speed play (scrubbing) */
+   XO("Scrub Bar"),
+};
+
 void AdornedRulerPanel::DoDrawPushbutton(wxDC *dc, Button button, bool down) const
 {
    // Adapted from TrackInfo::DrawMuteSolo()
-
-   static const wxString labels[static_cast<size_t>(Button::NumButtons)] {
-      XO("Quick-Play"),
-      /* i18n-hint: A long screen area (bar) controlling variable speed play (scrubbing) */
-      XO("Scrub Bar"),
-   };
 
    auto bev = GetButtonRect( button );
 
@@ -2884,8 +2916,8 @@ void AdornedRulerPanel::DoDrawPushbutton(wxDC *dc, Button button, bool down) con
    dc->SetTextForeground(theTheme.Colour(clrTrackPanelText));
 
    wxCoord textWidth, textHeight;
-   wxString str = wxGetTranslation(labels[static_cast<unsigned>(button)]);
-   dc->SetFont(mButtonFont);
+   wxString str = wxGetTranslation(PushbuttonLabels[static_cast<unsigned>(button)]);
+   dc->SetFont(GetButtonFont());
    dc->GetTextExtent(str, &textWidth, &textHeight);
    dc->DrawText(str, bev.x + (bev.width - textWidth) / 2,
                 bev.y + (bev.height - textHeight) / 2);
