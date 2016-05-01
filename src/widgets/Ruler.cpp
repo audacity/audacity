@@ -1774,9 +1774,6 @@ BEGIN_EVENT_TABLE(AdornedRulerPanel, wxPanel)
    EVT_MENU(OnAutoScrollID, AdornedRulerPanel::OnAutoScroll)
    EVT_MENU(OnLockPlayRegionID, AdornedRulerPanel::OnLockPlayRegion)
 
-   // Main menu commands
-   EVT_MENU(OnShowHideScrubbingID, AdornedRulerPanel::OnShowHideScrubbing)
-
 END_EVENT_TABLE()
 
 AdornedRulerPanel::AdornedRulerPanel(AudacityProject* parent,
@@ -2156,15 +2153,6 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
          : StatusChoice::NoChange
    );
 
-   if (overButtons && evt.Button(wxMOUSE_BTN_ANY)) {
-      if(evt.ButtonDown())
-         DoMainMenu();
-
-      if (HasCapture())
-         ReleaseMouse();
-      return;
-   }
-
    // Handle popup menus
    if (evt.RightDown() && !(evt.LeftIsDown())) {
       if(inScrubZone)
@@ -2239,46 +2227,61 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
       return;
    }
 
-   if (inScrubZone) {
-      if (evt.LeftDown())
+   if (HasCapture() && mCaptureState != Button::NoButton)
+      HandlePushbuttonEvent(evt);
+   else if (!HasCapture() && overButtons) {
+      if (evt.LeftDown()) {
+         auto position = evt.GetPosition();
+         for (unsigned ii = 0; ii < static_cast<unsigned>(Button::NumButtons); ++ii) {
+            auto button = static_cast<Button>(ii);
+            if(GetButtonRect(button).Contains(position)) {
+               CaptureMouse();
+               mCaptureState = button;
+               Refresh();
+               break;
+            }
+         }
+      }
+   }
+   else if (!HasCapture() && inScrubZone) {
+      if (evt.LeftDown()) {
          scrubber.MarkScrubStart(evt.m_x, false, false);
-      UpdateStatusBar(StatusChoice::EnteringScrubZone);
+         UpdateStatusBar(StatusChoice::EnteringScrubZone);
+      }
       wxClientDC dc(this);
       DrawQuickPlayIndicator(&dc);
       return;
    }
+   else if ( mQuickPlayEnabled) {
+      bool isWithinStart = IsWithinMarker(mousePosX, mOldPlayRegionStart);
+      bool isWithinEnd = IsWithinMarker(mousePosX, mOldPlayRegionEnd);
 
-   if (!mQuickPlayEnabled)
-      return;
-
-   bool isWithinStart = IsWithinMarker(mousePosX, mOldPlayRegionStart);
-   bool isWithinEnd = IsWithinMarker(mousePosX, mOldPlayRegionEnd);
-
-   if (isWithinStart || isWithinEnd) {
-      if (!mIsWE) {
-         SetCursor(mCursorSizeWE);
-         mIsWE = true;
+      if (isWithinStart || isWithinEnd) {
+         if (!mIsWE) {
+            SetCursor(mCursorSizeWE);
+            mIsWE = true;
+         }
       }
-   }
-   else {
-      if (mIsWE) {
-         SetCursor(mCursorHand);
-         mIsWE = false;
+      else {
+         if (mIsWE) {
+            SetCursor(mCursorHand);
+            mIsWE = false;
+         }
       }
-   }
 
-   if (evt.LeftDown()) {
-      HandleQPClick(evt, mousePosX);
-      HandleQPDrag(evt, mousePosX);
-   }
-   else if (evt.LeftIsDown())
-      HandleQPDrag(evt, mousePosX);
-   else if (evt.LeftUp())
-      HandleQPRelease(evt);
+      if (evt.LeftDown()) {
+         HandleQPClick(evt, mousePosX);
+         HandleQPDrag(evt, mousePosX);
+      }
+      else if (evt.LeftIsDown())
+         HandleQPDrag(evt, mousePosX);
+      else if (evt.LeftUp())
+         HandleQPRelease(evt);
 
-   mQuickPlayInd = true;
-   wxClientDC dc(this);
-   DrawQuickPlayIndicator(&dc);
+      mQuickPlayInd = true;
+      wxClientDC dc(this);
+      DrawQuickPlayIndicator(&dc);
+   }
 }
 
 void AdornedRulerPanel::HandleQPClick(wxMouseEvent &evt, wxCoord mousePosX)
@@ -2418,6 +2421,8 @@ void AdornedRulerPanel::HandleQPRelease(wxMouseEvent &evt)
 
    if (HasCapture())
       ReleaseMouse();
+
+   mCaptureState = Button::NoButton;
 
    if (mPlayRegionEnd < mPlayRegionStart) {
       // Swap values to ensure mPlayRegionStart < mPlayRegionEnd
@@ -2560,22 +2565,7 @@ void AdornedRulerPanel::UpdateStatusBar(StatusChoice choice)
    mProject->TP_DisplayStatusMessage(message);
 }
 
-void AdornedRulerPanel::DoMainMenu()
-{
-   wxMenu menu;
-
-   menu.AppendCheckItem(OnShowHideScrubbingID, _("Scrub Bar"));
-   menu.Check(OnShowHideScrubbingID, mShowScrubbing);
-
-   // Position the popup similarly to the track control panel menus
-   wxPoint pos {
-      kLeftInset + kTrackInfoBtnSize + 1,
-      GetSize().GetHeight() + 1
-   };
-   PopupMenu(&menu, pos);
-}
-
-void AdornedRulerPanel::OnShowHideScrubbing(wxCommandEvent&)
+void AdornedRulerPanel::OnToggleScrubbing()
 {
    mShowScrubbing = !mShowScrubbing;
    WriteScrubEnabledPref(mShowScrubbing);
@@ -2820,6 +2810,11 @@ wxRect AdornedRulerPanel::GetButtonRect( Button button ) const
    return rect;
 }
 
+bool AdornedRulerPanel::InButtonRect( Button button ) const
+{
+   return GetButtonRect(button).Contains(ScreenToClient(::wxGetMousePosition()));
+}
+
 bool AdornedRulerPanel::GetButtonState( Button button ) const
 {
    switch(button) {
@@ -2830,6 +2825,22 @@ bool AdornedRulerPanel::GetButtonState( Button button ) const
       default:
          wxASSERT(false);
          return false;
+   }
+}
+
+void AdornedRulerPanel::ToggleButtonState( Button button )
+{
+   switch(button) {
+      case Button::QuickPlay: {
+         wxCommandEvent dummy;
+         OnToggleQuickPlay(dummy);
+      }
+         break;
+      case Button::ScrubBar:
+         OnToggleScrubbing();
+         break;
+      default:
+         wxASSERT(false);
    }
 }
 
@@ -2862,6 +2873,19 @@ void AdornedRulerPanel::DoDrawPushbutton(wxDC *dc, Button button, bool down) con
    AColor::BevelTrackInfo(*dc, !down, bev);
 }
 
+void AdornedRulerPanel::HandlePushbuttonEvent(wxMouseEvent &evt)
+{
+   if(evt.LeftUp()) {
+      if(HasCapture())
+         ReleaseMouse();
+      if(InButtonRect(mCaptureState))
+         ToggleButtonState(mCaptureState);
+      mCaptureState = Button::NoButton;
+   }
+
+   Refresh();
+}
+
 void AdornedRulerPanel::DoDrawPushbuttons(wxDC *dc) const
 {
    // Paint the area behind the buttons
@@ -2871,7 +2895,10 @@ void AdornedRulerPanel::DoDrawPushbuttons(wxDC *dc) const
 
    for (unsigned ii = 0; ii < static_cast<unsigned>(Button::NumButtons); ++ii) {
       auto button = static_cast<Button>(ii);
-      DoDrawPushbutton(dc, button, GetButtonState(button));
+      auto state = GetButtonState(button);
+      auto toggle = (button == mCaptureState && InButtonRect(button));
+      auto down = (state != toggle);
+      DoDrawPushbutton(dc, button, down);
    }
 }
 

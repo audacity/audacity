@@ -336,8 +336,6 @@ private:
    };
    void UpdateStatusBar(StatusChoice choice);
 
-   void DoMainMenu();
-
    void OnCaptureLost(wxMouseCaptureLostEvent &evt);
 
    void DoDrawBorder(wxDC * dc);
@@ -359,9 +357,12 @@ private:
       NoButton = -1
    };
    wxRect GetButtonRect( Button button ) const;
+   bool InButtonRect( Button button ) const;
    bool GetButtonState( Button button ) const;
+   void ToggleButtonState( Button button );
    void DoDrawPushbutton(wxDC *dc, Button button, bool down) const;
    void DoDrawPushbuttons(wxDC *dc) const;
+   void HandlePushbuttonEvent(wxMouseEvent &evt);
 
    double Pos2Time(int p, bool ignoreFisheye = false);
    int Time2Pos(double t, bool ignoreFisheye = false);
@@ -423,15 +424,14 @@ private:
    void OnAutoScroll(wxCommandEvent &evt);
    void OnLockPlayRegion(wxCommandEvent &evt);
 
-   //
-   // Main menu
-   //
-   void OnShowHideScrubbing(wxCommandEvent &evt);
+   void OnToggleScrubbing();
 
    bool mPlayRegionDragsSelection;
    bool mTimelineToolTip;
    bool mQuickPlayEnabled;
 
+
+   Button mCaptureState { Button::NoButton };
 
    enum MouseEventState {
       mesNone,
