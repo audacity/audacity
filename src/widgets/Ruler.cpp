@@ -2255,8 +2255,10 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
       }
    }
 
-   if (evt.LeftDown())
+   if (evt.LeftDown()) {
       HandleQPClick(evt, mousePosX);
+      HandleQPDrag(evt, mousePosX);
+   }
    else if (evt.LeftIsDown())
       HandleQPDrag(evt, mousePosX);
    else if (evt.LeftUp())
