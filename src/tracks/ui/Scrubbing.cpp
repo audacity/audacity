@@ -656,6 +656,13 @@ void Scrubber::DoScrub(bool scroll, bool seek)
    if (!wasScrubbing) {
       auto tp = mProject->GetTrackPanel();
       wxCoord xx = tp->ScreenToClient(::wxGetMouseState().GetPosition()).x;
+
+      // Limit x
+      int width;
+      tp->GetTracksUsableArea(&width, nullptr);
+      const auto offset = tp->GetLeftOffset();
+      xx = (std::max(offset, std::min(offset + width - 1, xx)));
+
       MarkScrubStart(xx, scroll, seek);
    }
    else if(!match) {
