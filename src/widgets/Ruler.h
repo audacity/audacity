@@ -312,20 +312,6 @@ public:
    void InvalidateRuler();
 
    void UpdatePrefs();
-   void RegenerateTooltips();
-   void HideQuickPlayIndicator();
-
-   void UpdateQuickPlayPos(wxCoord &mousPosX);
-
-private:
-   void OnCapture(wxCommandEvent & evt);
-   void OnPaint(wxPaintEvent &evt);
-   void OnSize(wxSizeEvent &evt);
-   void UpdateRects();
-   void OnMouseEvents(wxMouseEvent &evt);
-   void HandleQPClick(wxMouseEvent &event, wxCoord mousePosX);
-   void HandleQPDrag(wxMouseEvent &event, wxCoord mousePosX);
-   void HandleQPRelease(wxMouseEvent &event);
 
    enum class StatusChoice {
       FirstButton = 0,
@@ -344,6 +330,22 @@ private:
       choice = static_cast<StatusChoice>(1 + static_cast<int>(choice));
       return choice;
    }
+
+   void RegenerateTooltips(StatusChoice choice);
+   void HideQuickPlayIndicator();
+
+   void UpdateQuickPlayPos(wxCoord &mousPosX);
+
+private:
+   void OnCapture(wxCommandEvent & evt);
+   void OnPaint(wxPaintEvent &evt);
+   void OnSize(wxSizeEvent &evt);
+   void UpdateRects();
+   void OnMouseEvents(wxMouseEvent &evt);
+   void HandleQPClick(wxMouseEvent &event, wxCoord mousePosX);
+   void HandleQPDrag(wxMouseEvent &event, wxCoord mousePosX);
+   void HandleQPRelease(wxMouseEvent &event);
+
    static inline bool IsButton(StatusChoice choice)
    {
       auto integer = static_cast<int>(choice);
