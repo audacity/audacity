@@ -2173,11 +2173,13 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
       mShowScrubbing &&
       mScrubZone.Contains(evt.GetPosition());
    const StatusChoice zone =
-      overButtons
-      ? button
-      : inScrubZone
-        ? StatusChoice::EnteringScrubZone
-        : StatusChoice::EnteringQP;
+      evt.Leaving()
+      ? StatusChoice::Leaving
+      : overButtons
+        ? button
+        : inScrubZone
+          ? StatusChoice::EnteringScrubZone
+          : StatusChoice::EnteringQP;
    const bool changeInZone = (zone != mPrevZone);
    mPrevZone = zone;
 
@@ -2194,11 +2196,9 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
 
    // Handle status bar messages
    UpdateStatusBarAndTooltips (
-      evt.Leaving()
-      ? StatusChoice::Leaving
-      : evt.Entering() || changeInZone
-         ? zone
-         : StatusChoice::NoChange
+      evt.Leaving() || evt.Entering() || changeInZone
+      ? zone
+      : StatusChoice::NoChange
    );
 
    auto &scrubber = mProject->GetScrubber();
