@@ -1903,6 +1903,30 @@ void AdornedRulerPanel::UpdatePrefs()
    mButtonFontSize = -1;
 }
 
+namespace {
+   enum { ArrowWidth = 8, ArrowSpacing = 1, ArrowHeight = ArrowWidth / 2 };
+
+   // Find the part of the button rectangle in which you can click the arrow.
+   // It includes the lower right corner.
+   wxRect GetArrowRect(const wxRect &buttonRect)
+   {
+      // Change the following lines to change the size of the hot zone.
+      // Make the hot zone as wide as the button
+      auto width = buttonRect.GetWidth();
+      // Make the hot zone taller than the little arrow
+      auto height = std::min(
+         std::max(1, buttonRect.GetHeight()) - 1,
+         2 * ArrowHeight + ArrowSpacing + 1 // 1 for the bevel
+      );
+
+      return wxRect {
+         buttonRect.GetRight() + 1 - width,
+         buttonRect.GetBottom() + 1 - height,
+         width, height
+      };
+   }
+}
+
 wxFont &AdornedRulerPanel::GetButtonFont() const
 {
    if (mButtonFontSize < 0) {
@@ -1916,7 +1940,11 @@ wxFont &AdornedRulerPanel::GetButtonFont() const
          for (auto button = StatusChoice::FirstButton; done && IsButton(button); ++button) {
             auto rect = GetButtonRect(button);
             auto availableWidth = rect.GetWidth() - 2; // Corresponds to Inflate(-1, -1)
-            auto availableHeight = rect.GetHeight() - 2; // Corresponds to Inflate(-1, -1)
+            auto availableHeight = rect.GetHeight() - 2 // Corresponds to Inflate(-1, -1)
+               // Also leave enough room not to impinge on the menu arrow,
+               // (and what explains the 2 * ), centering the text vertically
+               - 2 * (ArrowHeight + ArrowSpacing);
+
             GetParent()->GetTextExtent(
                wxGetTranslation(GetPushButtonStrings(button)->label),
                &width, &height, NULL, NULL, &mButtonFont);
@@ -2884,6 +2912,8 @@ auto AdornedRulerPanel::InButtonRect( StatusChoice button ) const -> PointerStat
    auto point = ScreenToClient(::wxGetMousePosition());
    if(!rect.Contains(point))
       return PointerState::Out;
+   else if(GetArrowRect(rect).Contains(point))
+      return PointerState::InArrow;
    else
       return PointerState::In;
 }
@@ -2916,12 +2946,15 @@ void AdornedRulerPanel::ToggleButtonState( StatusChoice button )
    wxCommandEvent dummy;
    switch(button) {
       case StatusChoice::QuickPlayButton:
-         return OnToggleQuickPlay(dummy);
+         OnToggleQuickPlay(dummy);
+         break;
       case StatusChoice::ScrubBarButton:
-         return OnToggleScrubbing(dummy);
+         OnToggleScrubbing(dummy);
+         break;
       default:
          wxASSERT(false);
    }
+   UpdateStatusBarAndTooltips(mCaptureState);
 }
 
 void AdornedRulerPanel::ShowButtonMenu( StatusChoice button, wxPoint position)
@@ -2970,6 +3003,30 @@ void AdornedRulerPanel::DoDrawPushbutton
       dc->DrawRectangle(bev);
    }
 
+   if (pointerState == PointerState::InArrow)
+      // if (pointerState != PointerState::Out) // Alternative for hollow triangle when in
+      // the pushbutton but not in the menu hot zone
+   {
+      // Pop-up triangle
+
+      auto x = bev.GetRight() - ArrowWidth - ArrowSpacing;
+      auto y = bev.GetBottom() - ArrowWidth / 2 - ArrowSpacing;
+
+      // Color it as in TrackInfo::DrawTitleBar
+#ifdef EXPERIMENTAL_THEMING
+      wxColour c = theTheme.Colour( clrTrackPanelText );
+#else
+      wxColour c = *wxBLACK;
+#endif
+      wxDCBrushChanger brushChanger{ *dc,
+         pointerState == PointerState::InArrow ? wxBrush{ c } : *wxTRANSPARENT_BRUSH
+      };
+      wxDCPenChanger penChanger{ *dc, wxPen{ c } };
+
+      // This function draws an arrow half as tall as wide:
+      AColor::Arrow(*dc, x, y, ArrowWidth);
+   }
+
    dc->SetTextForeground(theTheme.Colour(clrTrackPanelText));
 
    wxCoord textWidth, textHeight;
@@ -2985,14 +3042,10 @@ void AdornedRulerPanel::HandlePushbuttonClick(wxMouseEvent &evt)
 {
    auto button = FindButton(evt.GetPosition());
    if (IsButton(button)) {
-      if (evt.LeftDown()) {
+      if (evt.ButtonDown()) {
          CaptureMouse();
          mCaptureState = button;
          Refresh();
-      }
-      else if (evt.RightDown()) {
-         auto rect = GetButtonRect(button);
-         ShowButtonMenu( button, wxPoint{ rect.GetX() + 1, rect.GetBottom() + 1 } );
       }
    }
 }
@@ -3002,10 +3055,17 @@ void AdornedRulerPanel::HandlePushbuttonEvent(wxMouseEvent &evt)
    if(evt.ButtonUp()) {
       if(HasCapture())
          ReleaseMouse();
-      if(InButtonRect(mCaptureState)) {
+
+      auto in = InButtonRect(mCaptureState);
+      if (in == PointerState::In) {
          ToggleButtonState(mCaptureState);
-         UpdateStatusBarAndTooltips(mCaptureState);
       }
+      else if (in == PointerState::InArrow) {
+         auto rect = GetArrowRect(GetButtonRect(mCaptureState));
+         wxPoint point { rect.GetLeft() + 1, rect.GetBottom() + 1 };
+         ShowButtonMenu(mCaptureState, point);
+      }
+
       mCaptureState = StatusChoice::NoButton;
    }
 

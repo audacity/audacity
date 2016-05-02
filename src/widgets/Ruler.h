@@ -383,7 +383,7 @@ private:
    }
 
    wxRect GetButtonRect( StatusChoice button ) const;
-   enum PointerState { Out = 0, In };
+   enum PointerState { Out = 0, In, InArrow };
    PointerState InButtonRect( StatusChoice button ) const;
    StatusChoice FindButton( wxPoint position ) const;
    bool GetButtonState( StatusChoice button ) const;
