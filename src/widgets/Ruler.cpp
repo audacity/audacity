@@ -1774,6 +1774,9 @@ BEGIN_EVENT_TABLE(AdornedRulerPanel, wxPanel)
    EVT_MENU(OnAutoScrollID, AdornedRulerPanel::OnAutoScroll)
    EVT_MENU(OnLockPlayRegionID, AdornedRulerPanel::OnLockPlayRegion)
 
+   // Scrub bar menu commands
+   EVT_MENU(OnShowHideScrubbingID, AdornedRulerPanel::OnToggleScrubbing)
+
 END_EVENT_TABLE()
 
 AdornedRulerPanel::AdornedRulerPanel(AudacityProject* parent,
@@ -2606,7 +2609,7 @@ void AdornedRulerPanel::UpdateStatusBarAndTooltips(StatusChoice choice)
    RegenerateTooltips();
 }
 
-void AdornedRulerPanel::OnToggleScrubbing()
+void AdornedRulerPanel::OnToggleScrubbing(wxCommandEvent&)
 {
    mShowScrubbing = !mShowScrubbing;
    WriteScrubEnabledPref(mShowScrubbing);
@@ -2686,6 +2689,15 @@ void AdornedRulerPanel::ShowScrubMenu(const wxPoint & pos)
    auto cleanup = finally([this]{ PopEventHandler(); });
 
    wxMenu rulerMenu;
+   auto label = wxGetTranslation(
+      AdornedRulerPanel::PushbuttonLabels
+         [static_cast<int>(StatusChoice::ScrubBarButton)].label);
+   rulerMenu.AppendCheckItem(OnShowHideScrubbingID, _("Scrub Bar"));
+   if(GetButtonState(StatusChoice::ScrubBarButton))
+      rulerMenu.FindItem(OnShowHideScrubbingID)->Check();
+
+   rulerMenu.AppendSeparator();
+
    mProject->GetScrubber().PopulateMenu(rulerMenu);
    PopupMenu(&rulerMenu, pos);
 }
@@ -2890,15 +2902,12 @@ bool AdornedRulerPanel::GetButtonState( StatusChoice button ) const
 
 void AdornedRulerPanel::ToggleButtonState( StatusChoice button )
 {
+   wxCommandEvent dummy;
    switch(button) {
-      case StatusChoice::QuickPlayButton: {
-         wxCommandEvent dummy;
-         OnToggleQuickPlay(dummy);
-      }
-         break;
+      case StatusChoice::QuickPlayButton:
+         return OnToggleQuickPlay(dummy);
       case StatusChoice::ScrubBarButton:
-         OnToggleScrubbing();
-         break;
+         return OnToggleScrubbing(dummy);
       default:
          wxASSERT(false);
    }

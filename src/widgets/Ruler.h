@@ -453,7 +453,7 @@ private:
    void OnAutoScroll(wxCommandEvent &evt);
    void OnLockPlayRegion(wxCommandEvent &evt);
 
-   void OnToggleScrubbing();
+   void OnToggleScrubbing(wxCommandEvent&);
 
    bool mPlayRegionDragsSelection;
    bool mTimelineToolTip;
