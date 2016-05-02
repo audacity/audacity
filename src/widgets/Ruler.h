@@ -383,12 +383,14 @@ private:
    }
 
    wxRect GetButtonRect( StatusChoice button ) const;
-   bool InButtonRect( StatusChoice button ) const;
+   enum PointerState { Out = 0, In };
+   PointerState InButtonRect( StatusChoice button ) const;
    StatusChoice FindButton( wxPoint position ) const;
    bool GetButtonState( StatusChoice button ) const;
    void ToggleButtonState( StatusChoice button );
    void ShowButtonMenu( StatusChoice button, wxPoint position);
-   void DoDrawPushbutton(wxDC *dc, StatusChoice button, bool down) const;
+   void DoDrawPushbutton(wxDC *dc, StatusChoice button, bool down,
+      PointerState pointerState) const;
    void DoDrawPushbuttons(wxDC *dc) const;
    void HandlePushbuttonClick(wxMouseEvent &evt);
    void HandlePushbuttonEvent(wxMouseEvent &evt);

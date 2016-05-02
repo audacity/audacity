@@ -2203,6 +2203,11 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
    // Handle status bar messages
    UpdateStatusBarAndTooltips (changing ? zone : StatusChoice::NoChange);
 
+   if ((IsButton(zone) || IsButton(mPrevZone)) &&
+       (changing || evt.Moving() || evt.Dragging()))
+      // So that the highlights in pushbuttons can update
+      Refresh(false);
+
    mPrevZone = zone;
 
    auto &scrubber = mProject->GetScrubber();
@@ -2873,9 +2878,14 @@ wxRect AdornedRulerPanel::GetButtonRect( StatusChoice button ) const
    return rect;
 }
 
-bool AdornedRulerPanel::InButtonRect( StatusChoice button ) const
+auto AdornedRulerPanel::InButtonRect( StatusChoice button ) const -> PointerState
 {
-   return GetButtonRect(button).Contains(ScreenToClient(::wxGetMousePosition()));
+   auto rect = GetButtonRect(button);
+   auto point = ScreenToClient(::wxGetMousePosition());
+   if(!rect.Contains(point))
+      return PointerState::Out;
+   else
+      return PointerState::In;
 }
 
 auto AdornedRulerPanel::FindButton( wxPoint position ) const -> StatusChoice
@@ -2934,23 +2944,31 @@ const AdornedRulerPanel::ButtonStrings AdornedRulerPanel::PushbuttonLabels
    { XO("Scrub Bar"),  XO("Show Scrub Bar"),    XO("Hide Scrub Bar") },
 };
 
-void AdornedRulerPanel::DoDrawPushbutton(wxDC *dc, StatusChoice button, bool down) const
+void AdornedRulerPanel::DoDrawPushbutton
+   (wxDC *dc, StatusChoice button, bool down, PointerState pointerState) const
 {
    // Adapted from TrackInfo::DrawMuteSolo()
 
-   auto bev = GetButtonRect( button );
+   const auto rect = GetButtonRect( button );
 
-   // This part corresponds to part of TrackInfo::DrawBordersWithin() :
-   AColor::Dark(dc, false);
-   dc->DrawRectangle(bev);
+   if (pointerState == PointerState::Out)
+      // This part corresponds to part of TrackInfo::DrawBordersWithin() :
+      AColor::Dark(dc, false);
+   else
+      // Make a mouse-over highlight
+      AColor::Light(dc, false);
+   dc->DrawRectangle(rect);
 
-   bev.Inflate(-1, -1);
+   auto bev = rect.Inflate(-1, -1);
    if (down)
       AColor::Solo(dc, true, false);
    else
       AColor::MediumTrackInfo(dc, false);
-   dc->SetPen( *wxTRANSPARENT_PEN );//No border!
-   dc->DrawRectangle(bev);
+
+   {
+      wxDCPenChanger changer(*dc, *wxTRANSPARENT_PEN); // No border!
+      dc->DrawRectangle(bev);
+   }
 
    dc->SetTextForeground(theTheme.Colour(clrTrackPanelText));
 
@@ -3003,9 +3021,10 @@ void AdornedRulerPanel::DoDrawPushbuttons(wxDC *dc) const
 
    for (auto button = StatusChoice::FirstButton; IsButton(button); ++button) {
       auto state = GetButtonState(button);
-      auto toggle = (button == mCaptureState && InButtonRect(button));
+      auto in = InButtonRect(button);
+      auto toggle = (button == mCaptureState && in == PointerState::In);
       auto down = (state != toggle);
-      DoDrawPushbutton(dc, button, down);
+      DoDrawPushbutton(dc, button, down, in);
    }
 }
 
