@@ -1914,12 +1914,15 @@ wxFont &AdornedRulerPanel::GetButtonFont() const
          mButtonFont.SetPointSize(mButtonFontSize);
          wxCoord width, height;
          for (auto button = StatusChoice::FirstButton; done && IsButton(button); ++button) {
-            auto allowableWidth = GetButtonRect(button).GetWidth() - 2;
-            // 2 corresponds with the Inflate(-1, -1)
+            auto rect = GetButtonRect(button);
+            auto availableWidth = rect.GetWidth() - 2; // Corresponds to Inflate(-1, -1)
+            auto availableHeight = rect.GetHeight() - 2; // Corresponds to Inflate(-1, -1)
             GetParent()->GetTextExtent(
                wxGetTranslation(GetPushButtonStrings(button)->label),
                &width, &height, NULL, NULL, &mButtonFont);
-            done = width < allowableWidth;
+
+            // Yes, < not <= !  Leave at least some room.
+            done = width < availableWidth && height < availableHeight;
          }
          mButtonFontSize--;
       } while (mButtonFontSize > 0 && !done);
