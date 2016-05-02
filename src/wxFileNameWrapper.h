@@ -28,7 +28,7 @@ public:
    void swap(wxFileNameWrapper &that)
    {
       if (this != &that) {
-#if 1
+#if 0
          // Awful hack number 1 makes gcc 5 choke
          enum : size_t { Size = sizeof(*this) };
          // Do it bitwise.
@@ -39,6 +39,7 @@ public:
          memcpy(&that, &buffer, Size);
 #else
          // Awful hack number 2 relies on knowing the class layout
+         // This is the less evil one but watch out for redefinition of the base class
          struct Contents
          {
             void swap(Contents &that) {

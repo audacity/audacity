@@ -4,7 +4,10 @@ to extract the 10.6 SDK from an earlier version of Xcode.
 
 In the instructions below, Xcode 4.3.3 (for the 10.6 SDK) and
 Xcode 5.1.1 will be used.  Xcode 6.1.1, 6.3, 6.4.1, and 7.1
-have been verified to work as well.
+have also been verified to work. Xcode 7.2 and later require a 
+custom build setting to accept the 10.6 SDK, or to edit 
+src\MemoryX.h in the Audacity code. See this topic:
+http://forum.audacityteam.org/viewtopic.php?p=303835#p303835 .
 
 1) Download Xcode 5.1.1 or greater and install it to /Applications.
 2) Download Xcode 4.3.3 (it includes the 10.6 and 10.7 SDK's despite 

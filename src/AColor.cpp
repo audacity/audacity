@@ -183,7 +183,7 @@ void AColor::DrawFocus(wxDC & dc, wxRect & rect)
    dc.SetLogicalFunction(wxCOPY);
 }
 
-void AColor::Bevel(wxDC & dc, bool up, wxRect & r)
+void AColor::Bevel(wxDC & dc, bool up, const wxRect & r)
 {
    if (up)
       AColor::Light(&dc, false);
@@ -211,7 +211,7 @@ wxColour AColor::Blend( const wxColour & c1, const wxColour & c2 )
    return c3;
 }
 
-void AColor::BevelTrackInfo(wxDC & dc, bool up, wxRect & r)
+void AColor::BevelTrackInfo(wxDC & dc, bool up, const wxRect & r)
 {
 #ifndef EXPERIMENTAL_THEMING
    Bevel( dc, up, r );

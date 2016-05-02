@@ -102,6 +102,9 @@ class AUDACITY_DLL_API Ruler {
 
    // Good defaults are provided, but you can override here
    void SetFonts(const wxFont &minorFont, const wxFont &majorFont, const wxFont &minorMinorFont);
+   struct Fonts { wxFont *major, *minor, *minorMinor; };
+   Fonts GetFonts() const
+   { return { mMajorFont, mMinorFont, mMinorMinorFont }; }
 
    // Copies *pScale if it is not NULL
    void SetNumberScale(const NumberScale *pScale);
@@ -304,7 +307,6 @@ public:
    void ClearPlayRegion();
    void GetPlayRegion(double* playRegionStart, double* playRegionEnd);
 
-   void SetProject(AudacityProject* project) {mProject = project;}
    void GetMaxSize(wxCoord *width, wxCoord *height);
 
    void InvalidateRuler();
@@ -321,16 +323,37 @@ private:
    void OnSize(wxSizeEvent &evt);
    void UpdateRects();
    void OnMouseEvents(wxMouseEvent &evt);
+   void HandleQPClick(wxMouseEvent &event, wxCoord mousePosX);
+   void HandleQPDrag(wxMouseEvent &event, wxCoord mousePosX);
+   void HandleQPRelease(wxMouseEvent &event);
 
    enum class StatusChoice {
-      EnteringQP,
+      FirstButton = 0,
+      QuickPlayButton = FirstButton,
+      ScrubBarButton,
+
+      NumButtons,
+      NoButton = -1,
+
+      EnteringQP = NumButtons,
       EnteringScrubZone,
       Leaving,
       NoChange
    };
-   void UpdateStatusBar(StatusChoice choice);
+   friend inline StatusChoice &operator++ (StatusChoice &choice) {
+      choice = static_cast<StatusChoice>(1 + static_cast<int>(choice));
+      return choice;
+   }
+   static inline bool IsButton(StatusChoice choice)
+   {
+      auto integer = static_cast<int>(choice);
+      return integer >= 0 &&
+         integer < static_cast<int>(StatusChoice::NumButtons);
+   }
+   static inline bool IsButton(int choice)
+   { return IsButton(static_cast<StatusChoice>(choice)); }
 
-   void DoMainMenu();
+   void UpdateStatusBarAndTooltips(StatusChoice choice);
 
    void OnCaptureLost(wxMouseCaptureLostEvent &evt);
 
@@ -343,6 +366,32 @@ private:
    QuickPlayIndicatorOverlay *GetOverlay();
    void DrawQuickPlayIndicator(wxDC * dc /*NULL to DELETE old only*/);
    void DoDrawPlayRegion(wxDC * dc);
+
+   wxRect GetButtonAreaRect(bool includeBorder = false) const;
+
+   struct ButtonStrings {
+      wxString label, enable, disable;
+   };
+   static const ButtonStrings PushbuttonLabels[];
+   static const ButtonStrings *GetPushButtonStrings(StatusChoice choice)
+   {
+      if(IsButton(choice))
+         return &PushbuttonLabels[static_cast<size_t>(choice)];
+      return nullptr;
+   }
+
+   wxRect GetButtonRect( StatusChoice button ) const;
+   bool InButtonRect( StatusChoice button ) const;
+   StatusChoice FindButton( wxPoint position ) const;
+   bool GetButtonState( StatusChoice button ) const;
+   void ToggleButtonState( StatusChoice button );
+   void ShowButtonMenu( StatusChoice button, wxPoint position);
+   void DoDrawPushbutton(wxDC *dc, StatusChoice button, bool down) const;
+   void DoDrawPushbuttons(wxDC *dc) const;
+   void HandlePushbuttonClick(wxMouseEvent &evt);
+   void HandlePushbuttonEvent(wxMouseEvent &evt);
+
+   wxFont &GetButtonFont() const;
 
    double Pos2Time(int p, bool ignoreFisheye = false);
    int Time2Pos(double t, bool ignoreFisheye = false);
@@ -361,7 +410,7 @@ private:
 
    Ruler mRuler;
    ViewInfo *const mViewInfo;
-   AudacityProject *mProject;
+   AudacityProject *const mProject;
    TrackList *mTracks;
 
    wxBitmap *mBack;
@@ -404,15 +453,14 @@ private:
    void OnAutoScroll(wxCommandEvent &evt);
    void OnLockPlayRegion(wxCommandEvent &evt);
 
-   //
-   // Main menu
-   //
-   void OnShowHideScrubbing(wxCommandEvent &evt);
+   void OnToggleScrubbing();
 
    bool mPlayRegionDragsSelection;
    bool mTimelineToolTip;
    bool mQuickPlayEnabled;
 
+
+   StatusChoice mCaptureState { StatusChoice::NoButton };
 
    enum MouseEventState {
       mesNone,
@@ -429,8 +477,11 @@ private:
 
    std::unique_ptr<QuickPlayIndicatorOverlay> mOverlay;
 
-   bool mPrevInScrubZone{};
+   StatusChoice mPrevZone { StatusChoice::NoChange };
    bool mShowScrubbing { true };
+
+   mutable int mButtonFontSize { -1 };
+   mutable wxFont mButtonFont;
 
    DECLARE_EVENT_TABLE()
 };
