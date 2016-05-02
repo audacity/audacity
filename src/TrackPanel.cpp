@@ -796,6 +796,9 @@ void TrackPanel::UpdatePrefs()
    // All vertical rulers must be recalculated since the minimum and maximum
    // frequences may have been changed.
    UpdateVRulers();
+
+   mTrackInfo.UpdatePrefs();
+
    Refresh();
 }
 
@@ -8774,21 +8777,7 @@ TrackInfo::TrackInfo(TrackPanel * pParentIn)
                                PAN_SLIDER);
    mPanCaptured->SetDefaultValue(0.0);
 
-   int fontSize = 10;
-   mFont.Create(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-
-   int allowableWidth = GetTrackInfoWidth() - 2; // 2 to allow for left/right borders
-   int textWidth, textHeight;
-   do {
-      mFont.SetPointSize(fontSize);
-      pParent->GetTextExtent(_("Stereo, 999999Hz"),
-                             &textWidth,
-                             &textHeight,
-                             NULL,
-                             NULL,
-                             &mFont);
-      fontSize--;
-   } while (textWidth >= allowableWidth);
+   UpdatePrefs();
 }
 
 TrackInfo::~TrackInfo()
@@ -9167,6 +9156,28 @@ LWSlider * TrackInfo::PanSlider(WaveTrack *t, bool captured) const
    mPanCaptured->Set(pan);
 
    return captured ? mPanCaptured : mPan;
+}
+
+void TrackInfo::UpdatePrefs()
+{
+   // Calculation of best font size depends on language, so it should be redone in case
+   // the language preference changed.
+
+   int fontSize = 10;
+   mFont.Create(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+
+   int allowableWidth = GetTrackInfoWidth() - 2; // 2 to allow for left/right borders
+   int textWidth, textHeight;
+   do {
+      mFont.SetPointSize(fontSize);
+      pParent->GetTextExtent(_("Stereo, 999999Hz"),
+                             &textWidth,
+                             &textHeight,
+                             NULL,
+                             NULL,
+                             &mFont);
+      fontSize--;
+   } while (textWidth >= allowableWidth);
 }
 
 TrackPanelCellIterator::TrackPanelCellIterator(TrackPanel *trackPanel, bool begin)
