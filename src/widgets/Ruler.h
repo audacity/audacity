@@ -367,7 +367,7 @@ private:
    void DrawQuickPlayIndicator(wxDC * dc /*NULL to DELETE old only*/);
    void DoDrawPlayRegion(wxDC * dc);
 
-   wxRect GetButtonAreaRect() const;
+   wxRect GetButtonAreaRect(bool includeBorder = false) const;
 
    struct ButtonStrings {
       wxString label, enable, disable;

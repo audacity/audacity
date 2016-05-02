@@ -2165,7 +2165,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
       return;
    }
 
-   const bool overButtons = GetButtonAreaRect().Contains(evt.GetPosition());
+   const bool overButtons = GetButtonAreaRect(true).Contains(evt.GetPosition());
    const StatusChoice button = FindButton(evt.GetPosition());
    const bool inScrubZone = !overButtons &&
       // only if scrubbing is allowed now
@@ -2822,13 +2822,19 @@ void AdornedRulerPanel::DoDrawPlayRegion(wxDC * dc)
    }
 }
 
-wxRect AdornedRulerPanel::GetButtonAreaRect() const
+wxRect AdornedRulerPanel::GetButtonAreaRect(bool includeBorder) const
 {
-   auto x = LeftMargin, y = TopMargin;
+   int x, y, bottomMargin;
+
+   if(includeBorder)
+      x = 0, y = 0, bottomMargin = 0;
+   else
+      x = LeftMargin, y = TopMargin, bottomMargin = BottomMargin;
+
    wxRect rect {
       x, y,
       mProject->GetTrackPanel()->GetLeftOffset() - x,
-      GetRulerHeight() - y - BottomMargin
+      GetRulerHeight() - y - bottomMargin
    };
 
    // Leave room for one digit on the ruler, so "0.0" is not obscured if you go to start.
