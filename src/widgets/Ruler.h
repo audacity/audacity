@@ -312,20 +312,6 @@ public:
    void InvalidateRuler();
 
    void UpdatePrefs();
-   void RegenerateTooltips();
-   void HideQuickPlayIndicator();
-
-   void UpdateQuickPlayPos(wxCoord &mousPosX);
-
-private:
-   void OnCapture(wxCommandEvent & evt);
-   void OnPaint(wxPaintEvent &evt);
-   void OnSize(wxSizeEvent &evt);
-   void UpdateRects();
-   void OnMouseEvents(wxMouseEvent &evt);
-   void HandleQPClick(wxMouseEvent &event, wxCoord mousePosX);
-   void HandleQPDrag(wxMouseEvent &event, wxCoord mousePosX);
-   void HandleQPRelease(wxMouseEvent &event);
 
    enum class StatusChoice {
       FirstButton = 0,
@@ -344,6 +330,22 @@ private:
       choice = static_cast<StatusChoice>(1 + static_cast<int>(choice));
       return choice;
    }
+
+   void RegenerateTooltips(StatusChoice choice);
+   void HideQuickPlayIndicator();
+
+   void UpdateQuickPlayPos(wxCoord &mousPosX);
+
+private:
+   void OnCapture(wxCommandEvent & evt);
+   void OnPaint(wxPaintEvent &evt);
+   void OnSize(wxSizeEvent &evt);
+   void UpdateRects();
+   void OnMouseEvents(wxMouseEvent &evt);
+   void HandleQPClick(wxMouseEvent &event, wxCoord mousePosX);
+   void HandleQPDrag(wxMouseEvent &event, wxCoord mousePosX);
+   void HandleQPRelease(wxMouseEvent &event);
+
    static inline bool IsButton(StatusChoice choice)
    {
       auto integer = static_cast<int>(choice);
@@ -381,12 +383,14 @@ private:
    }
 
    wxRect GetButtonRect( StatusChoice button ) const;
-   bool InButtonRect( StatusChoice button ) const;
+   enum PointerState { Out = 0, In, InArrow };
+   PointerState InButtonRect( StatusChoice button ) const;
    StatusChoice FindButton( wxPoint position ) const;
    bool GetButtonState( StatusChoice button ) const;
    void ToggleButtonState( StatusChoice button );
    void ShowButtonMenu( StatusChoice button, wxPoint position);
-   void DoDrawPushbutton(wxDC *dc, StatusChoice button, bool down) const;
+   void DoDrawPushbutton(wxDC *dc, StatusChoice button, bool down,
+      PointerState pointerState) const;
    void DoDrawPushbuttons(wxDC *dc) const;
    void HandlePushbuttonClick(wxMouseEvent &evt);
    void HandlePushbuttonEvent(wxMouseEvent &evt);
@@ -453,7 +457,7 @@ private:
    void OnAutoScroll(wxCommandEvent &evt);
    void OnLockPlayRegion(wxCommandEvent &evt);
 
-   void OnToggleScrubbing();
+   void OnToggleScrubbing(wxCommandEvent&);
 
    bool mPlayRegionDragsSelection;
    bool mTimelineToolTip;
