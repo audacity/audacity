@@ -1872,7 +1872,7 @@ namespace {
    bool ReadScrubEnabledPref()
    {
       bool result {};
-      gPrefs->Read(scrubEnabledPrefName, &result, true);
+      gPrefs->Read(scrubEnabledPrefName, &result, false);
       return result;
    }
 
