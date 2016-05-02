@@ -385,8 +385,10 @@ private:
    StatusChoice FindButton( wxPoint position ) const;
    bool GetButtonState( StatusChoice button ) const;
    void ToggleButtonState( StatusChoice button );
+   void ShowButtonMenu( StatusChoice button, wxPoint position);
    void DoDrawPushbutton(wxDC *dc, StatusChoice button, bool down) const;
    void DoDrawPushbuttons(wxDC *dc) const;
+   void HandlePushbuttonClick(wxMouseEvent &evt);
    void HandlePushbuttonEvent(wxMouseEvent &evt);
 
    wxFont &GetButtonFont() const;

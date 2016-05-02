@@ -2262,13 +2262,8 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
 
    if (HasCapture() && mCaptureState != StatusChoice::NoButton)
       HandlePushbuttonEvent(evt);
-   else if (!HasCapture() && overButtons) {
-      if (evt.ButtonDown() && button != StatusChoice::NoButton) {
-         CaptureMouse();
-         mCaptureState = button;
-         Refresh();
-      }
-   }
+   else if (!HasCapture() && overButtons)
+      HandlePushbuttonClick(evt);
    // Handle popup menus
    else if (!HasCapture() && evt.RightDown() && !(evt.LeftIsDown())) {
       if(inScrubZone)
@@ -2909,6 +2904,18 @@ void AdornedRulerPanel::ToggleButtonState( StatusChoice button )
    }
 }
 
+void AdornedRulerPanel::ShowButtonMenu( StatusChoice button, wxPoint position)
+{
+   switch (button) {
+      case StatusChoice::QuickPlayButton:
+         return ShowMenu(position);
+      case StatusChoice::ScrubBarButton:
+         return ShowScrubMenu(position);
+      default:
+         return;
+   }
+}
+
 const AdornedRulerPanel::ButtonStrings AdornedRulerPanel::PushbuttonLabels
    [static_cast<size_t>(StatusChoice::NumButtons)]
 {
@@ -2944,6 +2951,22 @@ void AdornedRulerPanel::DoDrawPushbutton(wxDC *dc, StatusChoice button, bool dow
    dc->DrawText(str, bev.x + (bev.width - textWidth) / 2,
                 bev.y + (bev.height - textHeight) / 2);
    AColor::BevelTrackInfo(*dc, !down, bev);
+}
+
+void AdornedRulerPanel::HandlePushbuttonClick(wxMouseEvent &evt)
+{
+   auto button = FindButton(evt.GetPosition());
+   if (IsButton(button)) {
+      if (evt.LeftDown()) {
+         CaptureMouse();
+         mCaptureState = button;
+         Refresh();
+      }
+      else if (evt.RightDown()) {
+         auto rect = GetButtonRect(button);
+         ShowButtonMenu( button, wxPoint{ rect.GetX() + 1, rect.GetBottom() + 1 } );
+      }
+   }
 }
 
 void AdornedRulerPanel::HandlePushbuttonEvent(wxMouseEvent &evt)
