@@ -11,8 +11,8 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
     <copy>
-      <CommandLineTemplate>copy /Y [inputs] ..\..\$(IntDir)Plug-ins\%(Filename)%(Extension)</CommandLineTemplate>
-      <Outputs>..\..\$(IntDir)Plug-ins\%(Filename)%(Extension)</Outputs>
+      <CommandLineTemplate>copy /Y [inputs] $(OutDir)Plug-ins\%(Filename)%(Extension)</CommandLineTemplate>
+      <Outputs>$(OutDir)Plug-ins\%(Filename)%(Extension)</Outputs>
       <ExecutionDescription>Copying %(Filename)%(Extension)</ExecutionDescription>
     </copy>
   </ItemDefinitionGroup>

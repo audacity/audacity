@@ -176,6 +176,7 @@ win/Debug
 win/Release
 win/Projects/*/Debug
 win/Projects/*/Release
+win/build
 
 # All those help files
 help/manual*
