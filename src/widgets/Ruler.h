@@ -359,7 +359,8 @@ private:
 
    void OnCaptureLost(wxMouseCaptureLostEvent &evt);
 
-   void DoDrawBorder(wxDC * dc);
+   void DoDrawBackground(wxDC * dc);
+   void DoDrawEdge(wxDC *dc);
    void DoDrawMarks(wxDC * dc, bool /*text */ );
    void DoDrawCursor(wxDC * dc);
    void DoDrawSelection(wxDC * dc);
