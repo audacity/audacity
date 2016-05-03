@@ -367,7 +367,7 @@ private:
    void DoDrawIndicator(wxDC * dc, double time, bool playing, int width, bool scrub);
    void DoEraseIndicator(wxDC *dc, int x);
    QuickPlayIndicatorOverlay *GetOverlay();
-   void DrawQuickPlayIndicator(wxDC * dc /*NULL to DELETE old only*/);
+   void DrawQuickPlayIndicator(wxDC * dc /*NULL to DELETE old only*/, bool repainting = false);
    void DoDrawPlayRegion(wxDC * dc);
 
    wxRect GetButtonAreaRect(bool includeBorder = false) const;

@@ -2100,7 +2100,7 @@ void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
    {
       const bool scrub = mProject->GetScrubber().HasStartedScrubbing();
       auto width = scrub ? IndicatorBigWidth() : IndicatorMediumWidth;
-      DoDrawIndicator(&mBackDC, mIndTime, mIndType != 0, width, scrub);
+      DoDrawIndicator(&mBackDC, mIndTime, mIndType != 0, width, false);
    }
 
    if (mViewInfo->selectedRegion.isPoint())
@@ -2118,7 +2118,7 @@ void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
 
    if (mQuickPlayInd)
    {
-      DrawQuickPlayIndicator(&dc);
+      DrawQuickPlayIndicator(&dc, true);
    }
 }
 
@@ -3261,11 +3261,11 @@ void AdornedRulerPanel::DoDrawIndicator
       auto height = IndicatorHeightForWidth(width);
       const int IndicatorHalfWidth = width / 2;
       tri[ 0 ].x = x - IndicatorHalfWidth;
-      tri[ 0 ].y = mScrubZone.y;
+      tri[ 0 ].y = mInner.y;
       tri[ 1 ].x = x + IndicatorHalfWidth;
-      tri[ 1 ].y = mScrubZone.y;
+      tri[ 1 ].y = mInner.y;
       tri[ 2 ].x = x;
-      tri[ 2 ].y = mScrubZone.y + height;
+      tri[ 2 ].y = mInner.y + height;
       dc->DrawPolygon( 3, tri );
    }
 }
@@ -3283,10 +3283,10 @@ void AdornedRulerPanel::DoEraseIndicator(wxDC *dc, int x)
       // Restore the background, but make it a little oversized to make
       // it happy OSX.
       auto xx = x - indsize - 1;
-      auto yy = mScrubZone.y - 1;
+      auto yy = 0;
       dc->Blit(xx, yy,
                indsize * 2 + 1 + 2,
-               mScrubZone.y + height + 2,
+               GetSize().GetHeight(),
                &mBackDC,
                xx, yy);
    }
@@ -3303,7 +3303,7 @@ QuickPlayIndicatorOverlay *AdornedRulerPanel::GetOverlay()
 }
 
 // Draws the vertical line and green triangle indicating the Quick Play cursor position.
-void AdornedRulerPanel::DrawQuickPlayIndicator(wxDC * dc)
+void AdornedRulerPanel::DrawQuickPlayIndicator(wxDC * dc, bool repainting)
 {
    double latestEnd = std::max(mTracks->GetEndTime(), mProject->GetSel1());
    if (dc == NULL || (mQuickPlayPos >= latestEnd)) {
@@ -3318,7 +3318,9 @@ void AdornedRulerPanel::DrawQuickPlayIndicator(wxDC * dc)
       !mProject->GetScrubber().IsScrubbing();
    GetOverlay()->Update(x, mIsSnapped, previewScrub);
 
-   DoEraseIndicator(dc, mLastQuickPlayX);
+   if (!repainting)
+      DoEraseIndicator(dc, mLastQuickPlayX);
+
    mLastQuickPlayX = x;
 
    auto scrub = mPrevZone == StatusChoice::EnteringScrubZone ||
