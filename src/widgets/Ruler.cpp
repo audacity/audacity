@@ -2024,6 +2024,9 @@ void AdornedRulerPanel::OnCapture(wxCommandEvent & evt)
       // if recording is initiated by a modal window (Timer Record).
       SetCursor(mCursorDefault);
       mIsRecording = true;
+
+      // The quick play indicator is useless during recording
+      HideQuickPlayIndicator();
    }
    else {
       SetCursor(mCursorHand);
