@@ -2618,7 +2618,6 @@ void AdornedRulerPanel::UpdateStatusBarAndTooltips(StatusChoice choice)
       bool state = GetButtonState(choice);
       const auto &strings = *GetPushButtonStrings(choice);
       message += wxGetTranslation(state ? strings.disable : strings.enable);
-      message += wxT(" ") + _("(Right-Click for options)");
    }
    else {
       const auto &scrubber = mProject->GetScrubber();
