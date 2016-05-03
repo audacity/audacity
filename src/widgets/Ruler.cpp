@@ -3234,6 +3234,7 @@ void AdornedRulerPanel::DrawIndicator( double time, bool rec )
 void AdornedRulerPanel::DoDrawIndicator
    (wxDC * dc, double time, bool playing, int width, bool scrub)
 {
+   ADCChanger changer(dc); // Undo pen and brush changes at function exit
 
    const int x = Time2Pos(time);
    AColor::IndicatorColor( dc, playing );
