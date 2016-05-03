@@ -8,6 +8,7 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
+#include "../../Audacity.h"
 #include "PlayIndicatorOverlay.h"
 
 #include "../../AColor.h"
