@@ -5903,20 +5903,23 @@ void TrackPanel::OnMouseEvent(wxMouseEvent & event)
 
    if (event.Leaving() && !event.ButtonIsDown(wxMOUSE_BTN_ANY))
    {
-      // PRL:  was this test really needed?  It interfered with my refactoring
-      // that tried to eliminate those enum values.
-      // I think it was never true, that mouse capture was pan or gain sliding,
-      // but no mouse button was down.
-      // if (mMouseCapture != IsPanSliding && mMouseCapture != IsGainSliding)
-      {
-         SetCapturedTrack(NULL);
 #if defined(__WXMAC__)
-         // We must install the cursor ourselves since the window under
-         // the mouse is no longer this one and wx2.8.12 makes that check.
-         // Should re-evaluate with wx3.
-         wxSTANDARD_CURSOR->MacInstall();
+
+      // We must install the cursor ourselves since the window under
+      // the mouse is no longer this one and wx2.8.12 makes that check.
+      // Should re-evaluate with wx3.
+      wxSTANDARD_CURSOR->MacInstall();
+
+      // Bug 1325:  It appears wxWidgets 3 always says no buttons are down
+      // in Leaving events, incorrectly.  So don't do this:
+
+      // SetCapturedTrack(NULL);
+
+#else
+
+      SetCapturedTrack(NULL);
+
 #endif
-      }
    }
 
    switch( mMouseCapture )
