@@ -2253,28 +2253,38 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
 
    auto &scrubber = mProject->GetScrubber();
    if (scrubber.HasStartedScrubbing()) {
-      // If already clicked for scrub, preempt the usual event handling,
-      // no matter what the y coordinate.
+      if (zone == StatusChoice::EnteringQP &&
+          evt.LeftDown()) {
+         // Stop scrubbing
+         if (HasCapture())
+            ReleaseMouse();
+         mProject->OnStop();
+         // Continue to quick play event handling
+      }
+      else {
+         // If already clicked for scrub, preempt the usual event handling,
+         // no matter what the y coordinate.
 
-      // Do this hack so scrubber can detect mouse drags anywhere
-      evt.ResumePropagation(wxEVENT_PROPAGATE_MAX);
+         // Do this hack so scrubber can detect mouse drags anywhere
+         evt.ResumePropagation(wxEVENT_PROPAGATE_MAX);
 
-      if (scrubber.IsScrubbing())
-         evt.Skip();
-      else if (evt.LeftDClick())
-         // On the second button down, switch the pending scrub to scrolling
-         scrubber.MarkScrubStart(evt.m_x, true, false);
-      else
-         evt.Skip();
+         if (scrubber.IsScrubbing())
+            evt.Skip();
+         else if (evt.LeftDClick())
+            // On the second button down, switch the pending scrub to scrolling
+            scrubber.MarkScrubStart(evt.m_x, true, false);
+         else
+            evt.Skip();
 
-      mQuickPlayInd = true;
-      wxClientDC dc(this);
-      DrawQuickPlayIndicator(&dc);
+         mQuickPlayInd = true;
+         wxClientDC dc(this);
+         DrawQuickPlayIndicator(&dc);
 
-      if (HasCapture())
-         ReleaseMouse();
+         if (HasCapture())
+            ReleaseMouse();
 
-      return;
+         return;
+      }
    }
 
    // Store the initial play region state
