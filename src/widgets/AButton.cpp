@@ -407,6 +407,8 @@ void AButton::OnMouseEvent(wxMouseEvent & event)
    if (mEnabled && event.IsButton()) {
       if (event.ButtonIsDown(wxMOUSE_BTN_ANY)) {
          mIsClicking = true;
+         if (event.ButtonDClick())
+            mIsDoubleClicked = true;
          if( !HasCapture() )
             CaptureMouse();
       }

@@ -200,7 +200,7 @@ void Scrubber::MarkScrubStart(
    // needed for the decision to start scrubbing later when handling
    // drag events.
 #ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
-   mSmoothScrollingScrub = smoothScrolling;
+   SetScrollScrubbing (smoothScrolling);
 #endif
    mAlwaysSeeking = alwaysSeeking;
    mScrubStartPosition = xx;
@@ -356,25 +356,6 @@ void Scrubber::ContinueScrubbing()
       if (mScrubSpeedDisplayCountdown > 0)
          --mScrubSpeedDisplayCountdown;
    }
-
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
-   if (mSmoothScrollingScrub) {
-      // Pan the view, so that we center the play indicator.
-
-      ViewInfo &viewInfo = mProject->GetViewInfo();
-      TrackPanel *const trackPanel = mProject->GetTrackPanel();
-      const int posX = viewInfo.TimeToPosition(viewInfo.mRecentStreamTime);
-      int width;
-      trackPanel->GetTracksUsableArea(&width, NULL);
-      const int deltaX = posX - width / 2;
-      viewInfo.h =
-         viewInfo.OffsetTimeByPixels(viewInfo.h, deltaX, true);
-      if (!viewInfo.bScrollBeyondZero)
-         // Can't scroll too far left
-         viewInfo.h = std::max(0.0, viewInfo.h);
-      trackPanel->Refresh(false);
-   }
-#endif
 }
 
 void Scrubber::StopScrubbing()
@@ -382,7 +363,7 @@ void Scrubber::StopScrubbing()
    UncheckAllMenuItems();
 
    mScrubStartPosition = -1;
-   mSmoothScrollingScrub = false;
+   SetScrollScrubbing (false);
 
    if (!IsScrubbing())
    {
@@ -391,6 +372,12 @@ void Scrubber::StopScrubbing()
       const auto ctb = mProject->GetControlToolBar();
       ctb->SetPlay(false, ControlToolBar::PlayAppearance::Straight);
    }
+}
+
+void Scrubber::SetScrollScrubbing(bool scrollScrubbing)
+{
+   mSmoothScrollingScrub = scrollScrubbing;
+   mProject->GetPlaybackScroller().Activate(scrollScrubbing);
 }
 
 bool Scrubber::IsScrubbing() const
@@ -403,6 +390,7 @@ bool Scrubber::IsScrubbing() const
       const_cast<Scrubber&>(*this).mScrubToken = -1;
       const_cast<Scrubber&>(*this).mScrubStartPosition = -1;
 #ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
+      // Don't call SetScrollScrubbing
       const_cast<Scrubber&>(*this).mSmoothScrollingScrub = false;
 #endif
       return false;
@@ -557,7 +545,6 @@ void ScrubbingOverlay::Draw
    dc.DrawText(mLastScrubSpeedText, mLastScrubRect.GetX(), mLastScrubRect.GetY());
 }
 
-
 void ScrubbingOverlay::OnTimer(wxCommandEvent &event)
 {
    // Let other listeners get the notification
@@ -666,7 +653,7 @@ void Scrubber::DoScrub(bool scroll, bool seek)
       MarkScrubStart(xx, scroll, seek);
    }
    else if(!match) {
-      mSmoothScrollingScrub = scroll;
+      SetScrollScrubbing(scroll);
       mAlwaysSeeking = seek;
       UncheckAllMenuItems();
       CheckMenuItem();

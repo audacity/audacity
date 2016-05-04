@@ -342,9 +342,11 @@ private:
    void OnSize(wxSizeEvent &evt);
    void UpdateRects();
    void OnMouseEvents(wxMouseEvent &evt);
+   void HandleQPDoubleClick(wxMouseEvent &event, wxCoord mousePosX);
    void HandleQPClick(wxMouseEvent &event, wxCoord mousePosX);
    void HandleQPDrag(wxMouseEvent &event, wxCoord mousePosX);
    void HandleQPRelease(wxMouseEvent &event);
+   void StartQPPlay(bool looped, bool cutPreview);
 
    static inline bool IsButton(StatusChoice choice)
    {
@@ -487,6 +489,8 @@ private:
 
    mutable int mButtonFontSize { -1 };
    mutable wxFont mButtonFont;
+
+   bool mDoubleClick {};
 
    DECLARE_EVENT_TABLE()
 };

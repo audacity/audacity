@@ -54,8 +54,11 @@ public:
    bool HasStartedScrubbing() const
    { return GetScrubStartPosition() >= 0; }
    bool IsScrubbing() const;
+
    bool IsScrollScrubbing() const // If true, implies HasStartedScrubbing()
    { return mSmoothScrollingScrub; }
+   void SetScrollScrubbing(bool scrollScrubbing);
+
    bool IsAlwaysSeeking() const
    { return mAlwaysSeeking; }
 
