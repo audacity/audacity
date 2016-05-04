@@ -85,7 +85,7 @@ array of Ruler::Label.
 #include "../tracks/ui/Scrubbing.h"
 
 //#define SCRUB_ABOVE
-//#define RULER_DOUBLE_CLICK
+#define RULER_DOUBLE_CLICK
 
 using std::min;
 using std::max;
@@ -2393,6 +2393,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
 
 void AdornedRulerPanel::HandleQPDoubleClick(wxMouseEvent &evt, wxCoord mousePosX)
 {
+   mProject->GetPlaybackScroller().Activate(true);
 }
 
 void AdornedRulerPanel::HandleQPClick(wxMouseEvent &evt, wxCoord mousePosX)
