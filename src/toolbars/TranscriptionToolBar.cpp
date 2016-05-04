@@ -479,13 +479,17 @@ void TranscriptionToolBar::OnPlaySpeed(wxCommandEvent & WXUNUSED(event))
    auto doubleClicked = button->IsDoubleClicked();
    button->ClearDoubleClicked();
 
-   if (doubleClicked)
+   if (doubleClicked) {
       GetActiveProject()->GetPlaybackScroller().Activate(true);
+
+      // Pop up the button
+      SetButton(false, button);
+   }
    else {
       // Let control have precedence over shift
       const bool cutPreview = mButtons[TTB_PlaySpeed]->WasControlDown();
       const bool looped = !cutPreview &&
-      button->WasShiftDown();
+         button->WasShiftDown();
       PlayAtSpeed(looped, cutPreview);
    }
 }

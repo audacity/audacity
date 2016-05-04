@@ -243,9 +243,30 @@ public:
       }
    }
 
+   void SetScrollbar(int position, int thumbSize,
+                     int range, int pageSize,
+                     bool refresh = true) override;
+
 private:
    DECLARE_EVENT_TABLE()
 };
+
+void ScrollBar::SetScrollbar(int position, int thumbSize,
+                             int range, int pageSize,
+                             bool refresh)
+{
+   // Mitigate flashing of scrollbars by refreshing only when something really changes.
+
+   auto changed =
+      position != GetThumbPosition() ||
+      thumbSize != GetThumbSize() ||
+      range != GetRange() ||
+      pageSize != GetPageSize();
+   if (!changed)
+      return;
+
+   wxScrollBar::SetScrollbar(position, thumbSize, range, pageSize, refresh);
+}
 
 BEGIN_EVENT_TABLE(ScrollBar, wxScrollBar)
    EVT_SET_FOCUS(ScrollBar::OnSetFocus)
@@ -1775,7 +1796,6 @@ void AudacityProject::FixScrollbars()
 
       mHsbar->SetScrollbar(scaledSbarH + offset, scaledSbarScreen, scaledSbarTotal,
          scaledSbarScreen, TRUE);
-      mHsbar->Refresh();
    }
 
    // Vertical scrollbar
@@ -1783,7 +1803,6 @@ void AudacityProject::FixScrollbars()
                         panelHeight / mViewInfo.scrollStep,
                         totalHeight / mViewInfo.scrollStep,
                         panelHeight / mViewInfo.scrollStep, TRUE);
-   mVsbar->Refresh();
 
    if (refresh || (rescroll &&
        (GetScreenEndTime() - mViewInfo.h) < mViewInfo.total)) {
