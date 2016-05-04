@@ -2103,8 +2103,7 @@ void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
    if (mIndType >= 0)
    {
       const bool scrub = mProject->GetScrubber().HasStartedScrubbing();
-      auto width = scrub ? IndicatorBigWidth() : IndicatorMediumWidth;
-      DoDrawIndicator(&mBackDC, mIndTime, mIndType != 0, width, false);
+      DoDrawIndicator(&mBackDC, mIndTime, mIndType != 0, IndicatorMediumWidth, false);
    }
 
    if (mViewInfo->selectedRegion.isPoint())
@@ -3275,12 +3274,15 @@ void AdornedRulerPanel::DoDrawIndicator
       const int IndicatorHalfWidth = width / 2;
 
       // Double headed, left-right
+      auto yy = mShowScrubbing
+         ? mScrubZone.y
+         : (mInner.GetBottom() + 1) - 1 /* bevel */ - height;
       tri[ 0 ].x = x - IndicatorOffset;
-      tri[ 0 ].y = mScrubZone.y;
+      tri[ 0 ].y = yy;
       tri[ 1 ].x = x - IndicatorOffset;
-      tri[ 1 ].y = mScrubZone.y + height;
+      tri[ 1 ].y = yy + height;
       tri[ 2 ].x = x - IndicatorHalfWidth;
-      tri[ 2 ].y = mScrubZone.y + height / 2;
+      tri[ 2 ].y = yy + height / 2;
       dc->DrawPolygon( 3, tri );
       tri[ 0 ].x = tri[ 1 ].x = x + IndicatorOffset;
       tri[ 2 ].x = x + IndicatorHalfWidth;
