@@ -474,10 +474,15 @@ void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
 // Come here from button clicks only
 void TranscriptionToolBar::OnPlaySpeed(wxCommandEvent & WXUNUSED(event))
 {
+   auto button = mButtons[TTB_PlaySpeed];
+
+   auto doubleClicked = button->IsDoubleClicked();
+   button->ClearDoubleClicked();
+
    // Let control have precedence over shift
    const bool cutPreview = mButtons[TTB_PlaySpeed]->WasControlDown();
    const bool looped = !cutPreview &&
-      mButtons[TTB_PlaySpeed]->WasShiftDown();
+      button->WasShiftDown();
    PlayAtSpeed(looped, cutPreview);
 }
 

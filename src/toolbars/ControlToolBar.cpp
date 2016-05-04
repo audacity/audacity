@@ -738,6 +738,9 @@ void ControlToolBar::OnKeyEvent(wxKeyEvent & event)
 
 void ControlToolBar::OnPlay(wxCommandEvent & WXUNUSED(evt))
 {
+   auto doubleClicked = mPlay->IsDoubleClicked();
+   mPlay->ClearDoubleClicked();
+
    if (!CanStopAudioStream())
       return;
 
