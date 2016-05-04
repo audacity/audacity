@@ -738,16 +738,24 @@ void ControlToolBar::OnKeyEvent(wxKeyEvent & event)
 
 void ControlToolBar::OnPlay(wxCommandEvent & WXUNUSED(evt))
 {
-   if (!CanStopAudioStream())
-      return;
+   auto doubleClicked = mPlay->IsDoubleClicked();
+   mPlay->ClearDoubleClicked();
 
-   StopPlaying();
+   auto p = GetActiveProject();
 
-   AudacityProject *p = GetActiveProject();
-   if (p) p->TP_DisplaySelection();
+   if (doubleClicked)
+      p->GetPlaybackScroller().Activate(true);
+   else {
+      if (!CanStopAudioStream())
+         return;
 
-   PlayDefault();
-   UpdateStatusBar(GetActiveProject());
+      StopPlaying();
+
+      if (p) p->TP_DisplaySelection();
+
+      PlayDefault();
+      UpdateStatusBar(p);
+   }
 }
 
 void ControlToolBar::OnStop(wxCommandEvent & WXUNUSED(evt))
@@ -778,9 +786,11 @@ void ControlToolBar::StopPlaying(bool stopStream /* = true*/)
 {
    AudacityProject *project = GetActiveProject();
 
-   if(project)
+   if(project) {
+      project->GetPlaybackScroller().Activate(false);
       // Let scrubbing code do some appearance change
       project->GetScrubber().StopScrubbing();
+   }
 
    if (!CanStopAudioStream())
       return;

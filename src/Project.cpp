@@ -243,9 +243,30 @@ public:
       }
    }
 
+   void SetScrollbar(int position, int thumbSize,
+                     int range, int pageSize,
+                     bool refresh = true) override;
+
 private:
    DECLARE_EVENT_TABLE()
 };
+
+void ScrollBar::SetScrollbar(int position, int thumbSize,
+                             int range, int pageSize,
+                             bool refresh)
+{
+   // Mitigate flashing of scrollbars by refreshing only when something really changes.
+
+   auto changed =
+      position != GetThumbPosition() ||
+      thumbSize != GetThumbSize() ||
+      range != GetRange() ||
+      pageSize != GetPageSize();
+   if (!changed)
+      return;
+
+   wxScrollBar::SetScrollbar(position, thumbSize, range, pageSize, refresh);
+}
 
 BEGIN_EVENT_TABLE(ScrollBar, wxScrollBar)
    EVT_SET_FOCUS(ScrollBar::OnSetFocus)
@@ -933,14 +954,18 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    mCursorOverlay = std::make_unique<EditCursorOverlay>(this);
 
 #ifdef EXPERIMENTAL_SCRUBBING_BASIC
-   // This must follow construction of *mIndicatorOverlay, because it must
-   // attach its timer event handler later (so that its handler is invoked
-   // earlier)
    mScrubOverlay = std::make_unique<ScrubbingOverlay>(this);
    mScrubber = std::make_unique<Scrubber>(this);
 #endif
 
-   // This must follow construction of *mScrubOverlay, because it must
+   // More order dependencies here...
+   // This must follow construction of *mIndicatorOverlay, because it must
+   // attach its timer event handler later (so that its handler is invoked
+   // earlier)
+   mPlaybackScroller = std::make_unique<PlaybackScroller>(this);
+
+   // This must follow construction of *mPlaybackScroller,
+   // because it must
    // attach its timer event handler later (so that its handler is invoked
    // earlier)
    this->Connect(EVT_TRACK_PANEL_TIMER,
@@ -1771,7 +1796,6 @@ void AudacityProject::FixScrollbars()
 
       mHsbar->SetScrollbar(scaledSbarH + offset, scaledSbarScreen, scaledSbarTotal,
          scaledSbarScreen, TRUE);
-      mHsbar->Refresh();
    }
 
    // Vertical scrollbar
@@ -1779,7 +1803,6 @@ void AudacityProject::FixScrollbars()
                         panelHeight / mViewInfo.scrollStep,
                         totalHeight / mViewInfo.scrollStep,
                         panelHeight / mViewInfo.scrollStep, TRUE);
-   mVsbar->Refresh();
 
    if (refresh || (rescroll &&
        (GetScreenEndTime() - mViewInfo.h) < mViewInfo.total)) {
@@ -5314,4 +5337,47 @@ int AudacityProject::GetEstimatedRecordingMinsLeftOnDisk() {
    // Convert to minutes before returning
    int iRecMins = (int)(dRecTime / 60.0);
    return iRecMins;
+}
+
+AudacityProject::PlaybackScroller::PlaybackScroller(AudacityProject *project)
+: mProject(project)
+{
+   mProject->Connect(EVT_TRACK_PANEL_TIMER,
+                     wxCommandEventHandler(PlaybackScroller::OnTimer),
+                     NULL,
+                     this);
+}
+
+AudacityProject::PlaybackScroller::~PlaybackScroller()
+{
+   mProject->Disconnect(EVT_TRACK_PANEL_TIMER,
+                        wxCommandEventHandler(PlaybackScroller::OnTimer),
+                        NULL,
+                        this);
+}
+
+void AudacityProject::PlaybackScroller::OnTimer(wxCommandEvent &event)
+{
+   // Let other listeners get the notification
+   event.Skip();
+
+#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
+   if (mActive && mProject->IsAudioActive())
+   {
+      // Pan the view, so that we center the play indicator.
+
+      ViewInfo &viewInfo = mProject->GetViewInfo();
+      TrackPanel *const trackPanel = mProject->GetTrackPanel();
+      const int posX = viewInfo.TimeToPosition(viewInfo.mRecentStreamTime);
+      int width;
+      trackPanel->GetTracksUsableArea(&width, NULL);
+      const int deltaX = posX - width / 2;
+      viewInfo.h =
+      viewInfo.OffsetTimeByPixels(viewInfo.h, deltaX, true);
+      if (!viewInfo.bScrollBeyondZero)
+         // Can't scroll too far left
+         viewInfo.h = std::max(0.0, viewInfo.h);
+      trackPanel->Refresh(false);
+   }
+#endif
 }

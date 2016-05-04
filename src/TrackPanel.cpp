@@ -5901,16 +5901,26 @@ void TrackPanel::OnMouseEvent(wxMouseEvent & event)
          ReleaseMouse();
    }
 
-   if (event.Leaving() && !event.ButtonIsDown(wxMOUSE_BTN_ANY))
+   if (event.Leaving())
    {
+
       // PRL:  was this test really needed?  It interfered with my refactoring
       // that tried to eliminate those enum values.
       // I think it was never true, that mouse capture was pan or gain sliding,
       // but no mouse button was down.
       // if (mMouseCapture != IsPanSliding && mMouseCapture != IsGainSliding)
-      {
+
+      auto buttons =
+         // Bug 1325: button state in Leaving events is unreliable on Mac.
+         // Poll the global state instead.
+         // event.ButtonIsDown(wxMOUSE_BTN_ANY);
+         ::wxGetMouseState().ButtonIsDown(wxMOUSE_BTN_ANY);
+
+      if(!buttons) {
          SetCapturedTrack(NULL);
+
 #if defined(__WXMAC__)
+
          // We must install the cursor ourselves since the window under
          // the mouse is no longer this one and wx2.8.12 makes that check.
          // Should re-evaluate with wx3.

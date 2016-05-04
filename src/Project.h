@@ -720,6 +720,28 @@ public:
    const Scrubber &GetScrubber() const { return *mScrubber; }
 #endif
 
+   class PlaybackScroller final : public wxEvtHandler
+   {
+   public:
+      explicit PlaybackScroller(AudacityProject *project);
+      ~PlaybackScroller();
+
+      void Activate(bool active)
+      {
+         mActive = active;
+      }
+
+   private:
+      void OnTimer(wxCommandEvent &event);
+
+      AudacityProject *mProject;
+      bool mActive { false };
+   };
+   std::unique_ptr<PlaybackScroller> mPlaybackScroller;
+
+public:
+   PlaybackScroller &GetPlaybackScroller() { return *mPlaybackScroller; }
+
    DECLARE_EVENT_TABLE()
 };
 

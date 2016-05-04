@@ -85,6 +85,7 @@ array of Ruler::Label.
 #include "../tracks/ui/Scrubbing.h"
 
 //#define SCRUB_ABOVE
+#define RULER_DOUBLE_CLICK
 
 using std::min;
 using std::max;
@@ -2024,6 +2025,9 @@ void AdornedRulerPanel::OnCapture(wxCommandEvent & evt)
       // if recording is initiated by a modal window (Timer Record).
       SetCursor(mCursorDefault);
       mIsRecording = true;
+
+      // The quick play indicator is useless during recording
+      HideQuickPlayIndicator();
    }
    else {
       SetCursor(mCursorHand);
@@ -2364,7 +2368,15 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
          }
       }
 
+#ifdef RULER_DOUBLE_CLICK
+      if (evt.LeftDClick()) {
+         mDoubleClick = true;
+         HandleQPDoubleClick(evt, mousePosX);
+      }
+      else
+#endif
       if (evt.LeftDown()) {
+         mDoubleClick = false;
          HandleQPClick(evt, mousePosX);
          HandleQPDrag(evt, mousePosX);
       }
@@ -2377,6 +2389,11 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
       wxClientDC dc(this);
       DrawQuickPlayIndicator(&dc);
    }
+}
+
+void AdornedRulerPanel::HandleQPDoubleClick(wxMouseEvent &evt, wxCoord mousePosX)
+{
+   mProject->GetPlaybackScroller().Activate(true);
 }
 
 void AdornedRulerPanel::HandleQPClick(wxMouseEvent &evt, wxCoord mousePosX)
@@ -2512,6 +2529,9 @@ void AdornedRulerPanel::HandleQPDrag(wxMouseEvent &event, wxCoord mousePosX)
 
 void AdornedRulerPanel::HandleQPRelease(wxMouseEvent &evt)
 {
+   if (mDoubleClick)
+      return;
+
    HideQuickPlayIndicator();
 
    if (HasCapture())
@@ -2552,6 +2572,28 @@ void AdornedRulerPanel::HandleQPRelease(wxMouseEvent &evt)
       ClearPlayRegion();
    }
 
+   StartQPPlay(evt.ShiftDown(), evt.ControlDown());
+
+   mMouseEventState = mesNone;
+   mIsDragging = false;
+   mLeftDownClick = -1;
+
+   if (mPlayRegionLock) {
+      // Restore Locked Play region
+      SetPlayRegion(mOldPlayRegionStart, mOldPlayRegionEnd);
+      mProject->OnLockPlayRegion();
+      // and release local lock
+      mPlayRegionLock = false;
+   }
+}
+
+void AdornedRulerPanel::StartQPPlay(bool looped, bool cutPreview)
+{
+   const double t0 = mTracks->GetStartTime();
+   const double t1 = mTracks->GetEndTime();
+   const double sel0 = mProject->GetSel0();
+   const double sel1 = mProject->GetSel1();
+
    // Start / Restart playback on left click.
    bool startPlaying = (mPlayRegionStart >= 0);
 
@@ -2562,7 +2604,7 @@ void AdornedRulerPanel::HandleQPRelease(wxMouseEvent &evt)
       bool loopEnabled = true;
       double start, end;
 
-      if ((mPlayRegionEnd - mPlayRegionStart == 0.0) && evt.ShiftDown()) {
+      if ((mPlayRegionEnd - mPlayRegionStart == 0.0) && looped) {
          // Loop play a point will loop either a selection or the project.
          if ((mPlayRegionStart > sel0) && (mPlayRegionStart < sel1)) {
             // we are in a selection, so use the selection
@@ -2582,15 +2624,15 @@ void AdornedRulerPanel::HandleQPRelease(wxMouseEvent &evt)
       loopEnabled = ((end - start) > 0.001)? true : false;
 
       AudioIOStartStreamOptions options(mProject->GetDefaultPlayOptions());
-      options.playLooped = (loopEnabled && evt.ShiftDown());
+      options.playLooped = (loopEnabled && looped);
 
-      if (!evt.ControlDown())
+      if (!cutPreview)
          options.pStartTime = &mPlayRegionStart;
       else
          options.timeTrack = NULL;
 
       ControlToolBar::PlayAppearance appearance =
-      evt.ControlDown() ? ControlToolBar::PlayAppearance::CutPreview
+      cutPreview ? ControlToolBar::PlayAppearance::CutPreview
       : options.playLooped ? ControlToolBar::PlayAppearance::Looped
       : ControlToolBar::PlayAppearance::Straight;
       ctb->PlayPlayRegion((SelectedRegion(start, end)),
@@ -2602,18 +2644,6 @@ void AdornedRulerPanel::HandleQPRelease(wxMouseEvent &evt)
       mPlayRegionStart = start;
       mPlayRegionEnd = end;
       Refresh();
-   }
-
-   mMouseEventState = mesNone;
-   mIsDragging = false;
-   mLeftDownClick = -1;
-
-   if (mPlayRegionLock) {
-      // Restore Locked Play region
-      SetPlayRegion(mOldPlayRegionStart, mOldPlayRegionEnd);
-      mProject->OnLockPlayRegion();
-      // and release local lock
-      mPlayRegionLock = false;
    }
 }
 
