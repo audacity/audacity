@@ -1015,6 +1015,25 @@ void TrackPanel::ScrollDuringDrag()
       mAutoScrolling = true;
       mListener->TP_ScrollLeft();
    }
+   else {
+      // Bug1387:  enable autoscroll during drag, if the pointer is at either extreme x
+      // coordinate of the screen, even if that is still within the track area.
+
+      int xx = mMouseMostRecentX, yy = 0;
+      this->ClientToScreen(&xx, &yy);
+      if (xx == 0) {
+         mAutoScrolling = true;
+         mListener->TP_ScrollLeft();
+      }
+      else {
+         int width, height;
+         ::wxDisplaySize(&width, &height);
+         if (xx == width - 1) {
+            mAutoScrolling = true;
+            mListener->TP_ScrollRight();
+         }
+      }
+   }
 
    if (mAutoScrolling) {
       // AS: To keep the selection working properly as we scroll,
