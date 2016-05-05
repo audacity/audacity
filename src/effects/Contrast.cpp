@@ -25,7 +25,7 @@
 #include "../widgets/NumericTextCtrl.h"
 #include "FileDialog.h"
 
-#include <math.h>
+#include <cmath>
 #include <limits>
 
 #if defined(__WXMSW__) && !defined(__CYGWIN__)
@@ -57,6 +57,8 @@
 #define DB_MIN_LIMIT -600.0 // Minimum dB level that we measure.
 #define DB_MAX_LIMIT 0.0   // TODO: We should probably fail WCAG2 if audio is massively distorted.
 #define WCAG2_PASS 20.0    // dB difference required to pass WCAG2 test.
+
+using std::isinf;
 
 bool ContrastDialog::GetDB(float &dB)
 {
