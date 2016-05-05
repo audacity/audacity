@@ -326,6 +326,16 @@ public:
       Leaving,
       NoChange
    };
+   enum class PointerState {
+      Out = 0, In, InArrow
+   };
+   struct CaptureState {
+      CaptureState() {}
+      CaptureState(StatusChoice s, PointerState p) : button(s), state(p) {}
+      StatusChoice button { StatusChoice::NoButton };
+      PointerState state { PointerState::Out };
+   };
+
    friend inline StatusChoice &operator++ (StatusChoice &choice) {
       choice = static_cast<StatusChoice>(1 + static_cast<int>(choice));
       return choice;
@@ -386,13 +396,12 @@ private:
    }
 
    wxRect GetButtonRect( StatusChoice button ) const;
-   enum PointerState { Out = 0, In, InArrow };
-   PointerState InButtonRect( StatusChoice button ) const;
-   StatusChoice FindButton( wxPoint position ) const;
+   PointerState InButtonRect( StatusChoice button, wxMouseEvent *pEvent ) const;
+   CaptureState FindButton( wxMouseEvent &mouseEvent ) const;
    bool GetButtonState( StatusChoice button ) const;
    void ToggleButtonState( StatusChoice button );
    void ShowButtonMenu( StatusChoice button, wxPoint position);
-   void DoDrawPushbutton(wxDC *dc, StatusChoice button, bool down,
+   void DoDrawPushbutton(wxDC *dc, StatusChoice button, PointerState down,
       PointerState pointerState) const;
    void DoDrawPushbuttons(wxDC *dc) const;
    void HandlePushbuttonClick(wxMouseEvent &evt);
@@ -466,8 +475,7 @@ private:
    bool mTimelineToolTip;
    bool mQuickPlayEnabled;
 
-
-   StatusChoice mCaptureState { StatusChoice::NoButton };
+   CaptureState mCaptureState {};
 
    enum MouseEventState {
       mesNone,
