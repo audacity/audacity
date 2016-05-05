@@ -186,6 +186,7 @@ class Meter final : public wxPanel
    void OnErase(wxEraseEvent &evt);
    void OnPaint(wxPaintEvent &evt);
    void OnSize(wxSizeEvent &evt);
+   bool InIcon(wxMouseEvent *pEvent = nullptr) const;
    void OnMouse(wxMouseEvent &evt);
    void OnKeyDown(wxKeyEvent &evt);
    void OnKeyUp(wxKeyEvent &evt);
@@ -279,6 +280,8 @@ class Meter final : public wxPanel
    bool mAccSilent;
 
    friend class MeterAx;
+
+   bool mHighlighted {};
 
    DECLARE_EVENT_TABLE()
 };

@@ -467,6 +467,15 @@ void Meter::OnPaint(wxPaintEvent & WXUNUSED(event))
       // MixerTrackCluster style has no icon or L/R labels
       if (mStyle != MixerTrackCluster)
       {
+         bool highlight = InIcon();
+         if (highlight) {
+            auto rect = mIconRect;
+            rect.Inflate(gap, gap);
+            wxColour colour(247, 247, 247);
+            dc.SetBrush(colour);
+            dc.SetPen(colour	);
+            dc.DrawRectangle(rect);
+         }
          dc.DrawBitmap(*mIcon, mIconRect.GetPosition(), true);
          dc.SetFont(GetFont());
          dc.DrawText(mLeftText, mLeftTextPos.x, mLeftTextPos.y);
@@ -668,8 +677,22 @@ void Meter::OnSize(wxSizeEvent & WXUNUSED(event))
    mLayoutValid = false;
 }
 
+bool Meter::InIcon(wxMouseEvent *pEvent) const
+{
+   auto point = pEvent ? pEvent->GetPosition() : ScreenToClient(::wxGetMousePosition());
+   return mIconRect.Contains(point);
+}
+
 void Meter::OnMouse(wxMouseEvent &evt)
 {
+   bool shouldHighlight = InIcon(&evt);
+   if ((evt.GetEventType() == wxEVT_MOTION || evt.Entering() || evt.Leaving()) &&
+       (mHighlighted != shouldHighlight)) {
+      mHighlighted = shouldHighlight;
+      mLayoutValid = false;
+      Refresh();
+   }
+
    if (mStyle == MixerTrackCluster) // MixerTrackCluster style has no menu.
       return;
 
@@ -688,7 +711,7 @@ void Meter::OnMouse(wxMouseEvent &evt)
   #endif
 
    if (evt.RightDown() ||
-       (evt.ButtonDown() && mIconRect.Contains(evt.m_x, evt.m_y)))
+       (evt.ButtonDown() && InIcon(&evt)))
    {
       wxMenu menu;
       // Note: these should be kept in the same order as the enum
