@@ -2229,7 +2229,9 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
         ? button
         : inScrubZone
           ? StatusChoice::EnteringScrubZone
-          : StatusChoice::EnteringQP;
+          : mInner.Contains(evt.GetPosition())
+            ? StatusChoice::EnteringQP
+            : StatusChoice::NoChange;
    const bool changeInZone = (zone != mPrevZone);
    const bool changing = evt.Leaving() || evt.Entering() || changeInZone;
 
