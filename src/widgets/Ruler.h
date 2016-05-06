@@ -291,8 +291,6 @@ public:
 
    ~AdornedRulerPanel();
 
-   bool AcceptsFocus() const override { return false; };
-
 public:
    static int GetRulerHeight();
    static int GetRulerHeight(bool showScrubBar);
@@ -470,6 +468,10 @@ private:
    void OnLockPlayRegion(wxCommandEvent &evt);
 
    void OnToggleScrubbing(wxCommandEvent&);
+
+   void OnKeyDown(wxKeyEvent &event);
+   void OnSetFocus(wxFocusEvent &);
+   void OnKillFocus(wxFocusEvent &);
 
    bool mPlayRegionDragsSelection;
    bool mTimelineToolTip;

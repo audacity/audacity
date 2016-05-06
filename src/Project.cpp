@@ -2161,9 +2161,11 @@ void AudacityProject::OnActivate(wxActivateEvent & event)
          mLastFocusedWindow->SetFocus();
       }
       else {
-         if (mTrackPanel) {
+         if (mTrackPanel->GetFocusedTrack()) {
             mTrackPanel->SetFocus();
          }
+         else
+            mRuler->SetFocus();
       }
       // No longer need to remember the last focused window
       mLastFocusedWindow = NULL;

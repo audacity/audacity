@@ -46,12 +46,7 @@ TrackPanelAx::~TrackPanelAx()
 // Returns currently focused track or first one if none focused
 Track *TrackPanelAx::GetFocus()
 {
-   if( !mFocusedTrack )
-   {
-      SetFocus( NULL );
-   }
-
-   if( !TrackNum( mFocusedTrack ) )
+   if( mFocusedTrack && !TrackNum( mFocusedTrack ) )
    {
       mFocusedTrack = NULL;
    }
@@ -71,12 +66,6 @@ void TrackPanelAx::SetFocus( Track *track )
                    TrackNum( mFocusedTrack ) );
    }
 #endif
-
-   if( track == NULL )
-   {
-      TrackListIterator iter( mTrackPanel->mTracks );
-      track = iter.First();
-   }
 
    mFocusedTrack = track;
 
@@ -106,13 +95,8 @@ void TrackPanelAx::SetFocus( Track *track )
 // Returns TRUE if passed track has the focus
 bool TrackPanelAx::IsFocused( Track *track )
 {
-   if( !mFocusedTrack )
-   {
-      SetFocus( NULL );
-   }
-
    if( ( track == mFocusedTrack ) ||
-       ( track == mFocusedTrack->GetLink() ) )
+       ( mFocusedTrack && track == mFocusedTrack->GetLink() ) )
    {
       return true;
    }

@@ -1780,6 +1780,12 @@ BEGIN_EVENT_TABLE(AdornedRulerPanel, wxPanel)
    // Scrub bar menu commands
    EVT_MENU(OnShowHideScrubbingID, AdornedRulerPanel::OnToggleScrubbing)
 
+   // Key events, to navigate buttons
+   EVT_KEY_DOWN(AdornedRulerPanel::OnKeyDown)
+
+   EVT_SET_FOCUS(AdornedRulerPanel::OnSetFocus)
+   EVT_KILL_FOCUS(AdornedRulerPanel::OnKillFocus)
+
 END_EVENT_TABLE()
 
 AdornedRulerPanel::AdornedRulerPanel(AudacityProject* parent,
@@ -2075,6 +2081,12 @@ enum : int {
    TopMargin = 1,
    BottomMargin = 2, // for bottom bevel and bottom line
    LeftMargin = 1,
+
+   FocusBorder = 2,
+   FocusBorderLeft = FocusBorder,
+   FocusBorderTop = FocusBorder,
+   FocusBorderBottom = FocusBorder + 1, // count 1 for the black stroke
+
    RightMargin = 1,
 };
 
@@ -2742,6 +2754,37 @@ void AdornedRulerPanel::OnToggleScrubbing(wxCommandEvent&)
    PostSizeEventToParent();
 }
 
+void AdornedRulerPanel::OnKeyDown(wxKeyEvent &event)
+{
+   switch (event.GetKeyCode())
+   {
+      case WXK_DOWN:
+      case WXK_NUMPAD_DOWN:
+         // Always takes our focus away, so redraw.
+         mProject->GetTrackPanel()->OnNextTrack();
+         break;
+
+      case WXK_UP:
+      case WXK_NUMPAD_UP:
+         mProject->GetTrackPanel()->OnPrevTrack();
+         break;
+
+      default:
+         break;
+   }
+}
+
+void AdornedRulerPanel::OnSetFocus(wxFocusEvent & WXUNUSED(event))
+{
+   mProject->GetTrackPanel()->SetFocusedTrack(nullptr);
+   Refresh( false );
+}
+
+void AdornedRulerPanel::OnKillFocus(wxFocusEvent & WXUNUSED(event))
+{
+   Refresh( false );
+}
+
 void AdornedRulerPanel::OnCaptureLost(wxMouseCaptureLostEvent & WXUNUSED(evt))
 {
    DrawQuickPlayIndicator(NULL);
@@ -2957,8 +3000,11 @@ wxRect AdornedRulerPanel::GetButtonAreaRect(bool includeBorder) const
 
    if(includeBorder)
       x = 0, y = 0, bottomMargin = 0;
-   else
-      x = LeftMargin, y = TopMargin, bottomMargin = BottomMargin;
+   else {
+      x = std::max(LeftMargin, FocusBorderLeft);
+      y = std::max(TopMargin, FocusBorderTop);
+      bottomMargin = std::max(BottomMargin, FocusBorderBottom);
+   }
 
    wxRect rect {
       x, y,
@@ -3262,16 +3308,35 @@ void AdornedRulerPanel::DoDrawBackground(wxDC * dc)
 
 void AdornedRulerPanel::DoDrawEdge(wxDC *dc)
 {
-   wxRect r = mOuter;
-   r.width -= RightMargin;
-   r.height -= BottomMargin;
-   AColor::BevelTrackInfo( *dc, true, r );
+   if (HasFocus()) {
+      dc->SetBrush(*wxTRANSPARENT_BRUSH);
+      wxRect rect{ mOuter };
+      --rect.height;  // Leave room for the black stroke
 
+      AColor::TrackFocusPen(dc, 1);
+      dc->DrawRectangle(rect);
+
+      AColor::TrackFocusPen(dc, 0);
+      rect.Deflate(1, 1);
+      dc->DrawRectangle(rect);
+
+      static_assert(FocusBorder == 2, "Draws the wrong number of rectangles");
+   }
+   else {
+      wxRect r = mOuter;
+      r.width -= RightMargin;
+      r.height -= BottomMargin;
+      AColor::BevelTrackInfo( *dc, true, r );
+   }
+
+   // Black stroke at bottom
    dc->SetPen( *wxBLACK_PEN );
    dc->DrawLine( mOuter.x,
-                 mOuter.y + mOuter.height - 1,
-                 mOuter.x + mOuter.width,
-                 mOuter.y + mOuter.height - 1 );
+                mOuter.y + mOuter.height - 1,
+                mOuter.x + mOuter.width,
+                mOuter.y + mOuter.height - 1 );
+
+   static_assert(FocusBorderBottom == 1 + FocusBorder, "Button area might be wrong");
 }
 
 void AdornedRulerPanel::DoDrawMarks(wxDC * dc, bool /*text */ )
