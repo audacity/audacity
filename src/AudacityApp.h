@@ -95,6 +95,9 @@ enum CommandFlag : unsigned long long
    AudioStreamNotScrubbingFlag
                           = 0x80000000ULL, // prl
 
+   // 33 bits!  Boo-yah!
+   AudioIONotPausedFlag  = 0x100000000ULL, // prl
+
    NoFlagsSpecifed        = ~0ULL
 };
 
