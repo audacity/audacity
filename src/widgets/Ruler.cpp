@@ -2281,8 +2281,12 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
 
    auto &scrubber = mProject->GetScrubber();
    if (scrubber.HasStartedScrubbing()) {
-      if (zone == StatusChoice::EnteringQP &&
-          evt.LeftDown()) {
+      if (IsButton(zone))
+         // Fall through to pushbutton handling
+         ;
+      else if (zone == StatusChoice::EnteringQP &&
+               mQuickPlayEnabled &&
+               evt.LeftDown()) {
          // Stop scrubbing
          if (HasCapture())
             ReleaseMouse();
