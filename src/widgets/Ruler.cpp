@@ -2769,6 +2769,37 @@ void AdornedRulerPanel::OnKeyDown(wxKeyEvent &event)
          mProject->GetTrackPanel()->OnPrevTrack();
          break;
 
+      case WXK_TAB:
+      case WXK_NUMPAD_TAB:
+         if (event.ShiftDown())
+            goto prev;
+         else
+            goto next;
+
+      case WXK_RIGHT:
+      case WXK_NUMPAD_RIGHT:
+         next:
+         ++mTabState;
+         Refresh();
+         break;
+
+      case WXK_LEFT:
+      case WXK_NUMPAD_LEFT:
+         prev:
+         --mTabState;
+         Refresh();
+         break;
+
+      case WXK_RETURN:
+      case WXK_NUMPAD_ENTER:
+         if(mTabState.mMenu)
+            ShowButtonMenu(mTabState.mButton, nullptr);
+         else {
+            ToggleButtonState(mTabState.mButton);
+            Refresh();
+         }
+         break;
+
       default:
          break;
    }
@@ -2777,6 +2808,7 @@ void AdornedRulerPanel::OnKeyDown(wxKeyEvent &event)
 void AdornedRulerPanel::OnSetFocus(wxFocusEvent & WXUNUSED(event))
 {
    mProject->GetTrackPanel()->SetFocusedTrack(nullptr);
+   mTabState = TabState{};
    Refresh( false );
 }
 
@@ -3105,8 +3137,17 @@ void AdornedRulerPanel::ToggleButtonState( StatusChoice button )
    UpdateStatusBarAndTooltips(mCaptureState.button);
 }
 
-void AdornedRulerPanel::ShowButtonMenu( StatusChoice button, wxPoint position)
+void AdornedRulerPanel::ShowButtonMenu( StatusChoice button, wxPoint *pPosition)
 {
+   wxPoint position;
+   if(pPosition)
+      position = *pPosition;
+   else
+   {
+      auto rect = GetArrowRect(GetButtonRect(button));
+      position = { rect.GetLeft() + 1, rect.GetBottom() + 1 };
+   }
+
    switch (button) {
       case StatusChoice::QuickPlayButton:
          ShowMenu(position); break;
@@ -3156,7 +3197,8 @@ namespace {
 }
 
 void AdornedRulerPanel::DoDrawPushbutton
-   (wxDC *dc, StatusChoice button, PointerState down, PointerState pointerState) const
+   (wxDC *dc, StatusChoice button, PointerState down, PointerState pointerState,
+    bool inSomeButton) const
 {
    // Adapted from TrackInfo::DrawMuteSolo()
    ADCChanger changer(dc);
@@ -3169,7 +3211,12 @@ void AdornedRulerPanel::DoDrawPushbutton
 
    // Draw borders, bevels, and backgrounds of the split sections
 
-   if (pointerState == PointerState::InArrow) {
+   const bool tabHighlight =
+      !inSomeButton &&
+      mTabState.mButton == button &&
+      HasFocus();
+
+   if (pointerState == PointerState::InArrow || (tabHighlight && mTabState.mMenu)) {
       // Draw highlighted arrow after
       DrawButtonBackground(dc, textRect, (down == PointerState::In), false);
       DrawButtonBackground(dc, arrowRect, (down == PointerState::InArrow), true);
@@ -3178,7 +3225,8 @@ void AdornedRulerPanel::DoDrawPushbutton
       // Draw maybe highlighted text after
       DrawButtonBackground(dc, arrowRect, (down == PointerState::InArrow), false);
       DrawButtonBackground(
-         dc, textRect, (down == PointerState::In), (pointerState == PointerState::In));
+         dc, textRect, (down == PointerState::In),
+         (pointerState == PointerState::In || (tabHighlight && !mTabState.mMenu)));
    }
 
    // Draw the menu triangle
@@ -3245,11 +3293,8 @@ void AdornedRulerPanel::HandlePushbuttonEvent(wxMouseEvent &evt)
          ;
       else if (in == PointerState::In)
          ToggleButtonState(button);
-      else {
-         auto rect = GetArrowRect(GetButtonRect(button));
-         wxPoint point { rect.GetLeft() + 1, rect.GetBottom() + 1 };
-         ShowButtonMenu(button, point);
-      }
+      else
+         ShowButtonMenu(button, nullptr);
 
       mCaptureState = CaptureState{};
    }
@@ -3271,6 +3316,11 @@ void AdornedRulerPanel::DoDrawPushbuttons(wxDC *dc) const
    AColor::MediumTrackInfo(dc, false);
    dc->DrawRectangle(background);
 
+   bool inSomeButton = false;
+   for (auto button = StatusChoice::FirstButton; !inSomeButton && IsButton(button); ++button) {
+      inSomeButton = InButtonRect(button, nullptr) != PointerState::Out;
+   }
+
    for (auto button = StatusChoice::FirstButton; IsButton(button); ++button) {
       bool state = GetButtonState(button);
       auto in = InButtonRect(button, nullptr);
@@ -3287,7 +3337,7 @@ void AdornedRulerPanel::DoDrawPushbuttons(wxDC *dc) const
       }
       else if (state)
          down = PointerState::In;
-      DoDrawPushbutton(dc, button, down, in);
+      DoDrawPushbutton(dc, button, down, in, inSomeButton);
    }
 }
 
