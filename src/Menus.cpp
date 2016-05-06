@@ -1763,9 +1763,6 @@ CommandFlag AudacityProject::GetUpdateFlags()
    if(!GetScrubber().HasStartedScrubbing())
       flags |= AudioStreamNotScrubbingFlag;
 
-   if (!gAudioIO->IsPaused())
-      flags |= AudioIONotPausedFlag;
-
    return flags;
 }
 

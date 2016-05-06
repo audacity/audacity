@@ -733,10 +733,9 @@ bool Scrubber::CanScrub() const
 
 void Scrubber::AddMenuItems()
 {
-   auto extraFlags = WaveTracksExistFlag | AudioIONotPausedFlag;
    auto cm = mProject->GetCommandManager();
-   auto flags = cm->GetDefaultFlags() | extraFlags;
-   auto mask = cm->GetDefaultMask() | extraFlags;
+   auto flags = cm->GetDefaultFlags() | WaveTracksExistFlag;
+   auto mask = cm->GetDefaultMask() | WaveTracksExistFlag;
 
    cm->BeginSubMenu(_("Scru&bbing"));
    for (const auto &item : menuItems) {
