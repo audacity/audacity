@@ -3134,10 +3134,12 @@ void AdornedRulerPanel::DoDrawPushbutton
 #else
       wxColour c = *wxBLACK;
 #endif
-      if (pointerState == PointerState::InArrow)
+
+      //if (pointerState == PointerState::InArrow)
          dc->SetBrush( wxBrush{ c } );
-      else
-         dc->SetBrush( wxBrush{ *wxTRANSPARENT_BRUSH } ); // Make outlined arrow only
+      //else
+         //dc->SetBrush( wxBrush{ *wxTRANSPARENT_BRUSH } ); // Make outlined arrow only
+
       dc->SetPen( wxPen{ c } );
 
       // This function draws an arrow half as tall as wide:
