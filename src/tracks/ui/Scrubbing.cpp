@@ -203,18 +203,25 @@ void Scrubber::MarkScrubStart(
    SetScrollScrubbing (smoothScrolling);
 #endif
    mAlwaysSeeking = alwaysSeeking;
-   mScrubStartPosition = xx;
-   mScrubStartClockTimeMillis = ::wxGetLocalTimeMillis();
 
    ControlToolBar * const ctb = mProject->GetControlToolBar();
+
+   // Stop any play in progress
+   ctb->StopPlaying();
+   // Usually the timer handler of TrackPanel does this, but we do this now,
+   // so that same timer does not StopPlaying() again after this function and destroy
+   // scrubber state
+   mProject->SetAudioIOToken(0);
+
    ctb->SetPlay(true, ControlToolBar::PlayAppearance::Scrub);
-   if(gAudioIO->IsPaused())
-      ctb->Pause(); // un-pause
 
    // This disables the pause button.
    ctb->EnableDisableButtons();
 
    ctb->UpdateStatusBar(mProject);
+
+   mScrubStartPosition = xx;
+   mScrubStartClockTimeMillis = ::wxGetLocalTimeMillis();
 
    CheckMenuItem();
 }
