@@ -1053,10 +1053,6 @@ void CommandManager::TellUserWhyDisallowed( CommandFlag flagsGot, CommandMask fl
       reason = _("You must first select some audio for this to use.");
    else if( missingFlags & WaveTracksSelectedFlag)
       reason = _("You must first select some audio for this\n to use. (Selecting other kinds of track won't work.)");
-   else if( missingFlags & AudioStreamNotScrubbingFlag )
-      reason = _("Scrubbing may not be active.");
-   else if( missingFlags & AudioIONotBusyFlag )
-      reason = _("Playback may not be paused.");
    // If the only thing wrong was no tracks, we do nothing and don't report a problem
    else if( missingFlags == TracksExistFlag )
       return;
