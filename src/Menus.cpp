@@ -907,7 +907,8 @@ void AudacityProject::CreateMenusAndCommands()
 #else
          wxT("Ctrl+M"),
 #endif
-         0, AudioIONotBusyFlag);
+         AlwaysEnabledFlag, // is this correct??
+         AudioIONotBusyFlag);
       c->AddItem(wxT("EditLabels"), _("&Edit Labels..."), FN(OnEditLabels));
 
       c->AddSeparator();
@@ -1214,7 +1215,7 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddCommand(wxT("PlaySpeedInc"), _("Increase playback speed"), FN(OnPlaySpeedInc));
    c->AddCommand(wxT("PlaySpeedDec"), _("Decrease playback speed"), FN(OnPlaySpeedDec));
 
-   mLastFlags = 0;
+   mLastFlags = AlwaysEnabledFlag;
 
 #if defined(__WXDEBUG__)
 //   c->CheckDups();
@@ -1223,8 +1224,8 @@ void AudacityProject::CreateMenusAndCommands()
 
 void AudacityProject::PopulateEffectsMenu(CommandManager* c,
                                           EffectType type,
-                                          int batchflags,
-                                          int realflags)
+                                          CommandFlag batchflags,
+                                          CommandFlag realflags)
 {
    PluginManager & pm = PluginManager::Get();
 
@@ -1295,8 +1296,8 @@ void AudacityProject::PopulateEffectsMenu(CommandManager* c,
 
 void AudacityProject::AddEffectMenuItems(CommandManager *c,
                                          EffectPlugs & plugs,
-                                         int batchflags,
-                                         int realflags,
+                                         CommandFlag batchflags,
+                                         CommandFlag realflags,
                                          bool isDefault)
 {
    size_t pluginCnt = plugs.GetCount();
@@ -1311,7 +1312,7 @@ void AudacityProject::AddEffectMenuItems(CommandManager *c,
 
    wxArrayString groupNames;
    PluginIDList groupPlugs;
-   wxArrayInt groupFlags;
+   std::vector<CommandFlag> groupFlags;
    if (grouped)
    {
       wxString last;
@@ -1361,13 +1362,13 @@ void AudacityProject::AddEffectMenuItems(CommandManager *c,
 
             groupNames.Clear();
             groupPlugs.Clear();
-            groupFlags.Clear();
+            groupFlags.clear();
             last = current;
          }
 
          groupNames.Add(name);
          groupPlugs.Add(plug->GetID());
-         groupFlags.Add(plug->IsEffectRealtime() ? realflags : batchflags);
+         groupFlags.push_back(plug->IsEffectRealtime() ? realflags : batchflags);
       }
 
       if (groupNames.GetCount() > 0)
@@ -1414,7 +1415,7 @@ void AudacityProject::AddEffectMenuItems(CommandManager *c,
 
          groupNames.Add(group + name);
          groupPlugs.Add(plug->GetID());
-         groupFlags.Add(plug->IsEffectRealtime() ? realflags : batchflags);
+         groupFlags.push_back(plug->IsEffectRealtime() ? realflags : batchflags);
       }
 
       if (groupNames.GetCount() > 0)
@@ -1430,7 +1431,7 @@ void AudacityProject::AddEffectMenuItems(CommandManager *c,
 void AudacityProject::AddEffectMenuItemGroup(CommandManager *c,
                                              const wxArrayString & names,
                                              const PluginIDList & plugs,
-                                             const wxArrayInt & flags,
+                                             const std::vector<CommandFlag> & flags,
                                              bool isDefault)
 {
    int namesCnt = (int) names.GetCount();
@@ -1609,7 +1610,7 @@ void AudacityProject::RebuildOtherMenus()
    }
 }
 
-int AudacityProject::GetFocusedFrame()
+CommandFlag AudacityProject::GetFocusedFrame()
 {
    wxWindow *w = FindFocus();
 
@@ -1629,16 +1630,16 @@ int AudacityProject::GetFocusedFrame()
       w = w->GetParent();
    }
 
-   return 0;
+   return AlwaysEnabledFlag;
 }
 
-wxUint32 AudacityProject::GetUpdateFlags()
+CommandFlag AudacityProject::GetUpdateFlags()
 {
    // This method determines all of the flags that determine whether
    // certain menu items and commands should be enabled or disabled,
    // and returns them in a bitfield.  Note that if none of the flags
    // have changed, it's not necessary to even check for updates.
-   wxUint32 flags = 0;
+   auto flags = AlwaysEnabledFlag;
 
    if (!gAudioIO->IsAudioTokenActive(GetAudioIOToken()))
       flags |= AudioIONotBusyFlag;
@@ -1767,8 +1768,8 @@ wxUint32 AudacityProject::GetUpdateFlags()
 
 void AudacityProject::SelectAllIfNone()
 {
-   wxUint32 flags = GetUpdateFlags();
-   if(((flags & TracksSelectedFlag) ==0) ||
+   auto flags = GetUpdateFlags();
+   if(!(flags & TracksSelectedFlag) ||
       (mViewInfo.selectedRegion.isPoint()))
       OnSelectAll();
 }
@@ -1850,17 +1851,17 @@ void AudacityProject::UpdateMenus(bool checkActive)
    if (checkActive && !IsActive())
       return;
 
-   wxUint32 flags = GetUpdateFlags();
-   wxUint32 flags2 = flags;
+   auto flags = GetUpdateFlags();
+   auto flags2 = flags;
 
    // We can enable some extra items if we have select-all-on-none.
    //EXPLAIN-ME: Why is this here rather than in GetUpdateFlags()?
    if (mSelectAllOnNone)
    {
-      if ((flags & TracksExistFlag) != 0)
+      if ((flags & TracksExistFlag))
       {
          flags2 |= TracksSelectedFlag;
-         if ((flags & WaveTracksExistFlag) != 0 )
+         if ((flags & WaveTracksExistFlag))
          {
             flags2 |= TimeSelectedFlag
                    |  WaveTracksSelectedFlag
@@ -1875,21 +1876,21 @@ void AudacityProject::UpdateMenus(bool checkActive)
       return;
    mLastFlags = flags;
 
-   mCommandManager.EnableUsingFlags(flags2 , 0xFFFFFFFF);
+   mCommandManager.EnableUsingFlags(flags2 , NoFlagsSpecifed);
 
    // With select-all-on-none, some items that we don't want enabled may have
    // been enabled, since we changed the flags.  Here we manually disable them.
    if (mSelectAllOnNone)
    {
-      if ((flags & TracksSelectedFlag) == 0)
+      if (!(flags & TracksSelectedFlag))
       {
          mCommandManager.Enable(wxT("SplitCut"), false);
 
-         if ((flags & WaveTracksSelectedFlag) == 0)
+         if (!(flags & WaveTracksSelectedFlag))
          {
             mCommandManager.Enable(wxT("Split"), false);
          }
-         if ((flags & TimeSelectedFlag) == 0)
+         if (!(flags & TimeSelectedFlag))
          {
             mCommandManager.Enable(wxT("ExportSel"), false);
             mCommandManager.Enable(wxT("SplitNew"), false);
@@ -2690,6 +2691,9 @@ void AudacityProject::NextFrame()
       case BotDockHasFocus:
          mToolManager->GetTopDock()->SetFocus();
       break;
+
+      default:
+      break;
    }
 }
 
@@ -2707,6 +2711,9 @@ void AudacityProject::PrevFrame()
 
       case BotDockHasFocus:
          mTrackPanel->SetFocus();
+      break;
+
+      default:
       break;
    }
 }
