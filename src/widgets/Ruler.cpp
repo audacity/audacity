@@ -1947,7 +1947,7 @@ namespace {
          ++mRect.width;
          ++mRect.height;
       }
-      wxRect mRect;
+      wxRect &mRect;
    };
 }
 
@@ -1968,8 +1968,16 @@ wxFont &AdornedRulerPanel::GetButtonFont() const
 
             // Deduct for outlines, and room to move text
             // I might deduct 2 more for bevel, but that made the text too small.
+
+#ifdef __WXMSW__
+            // Deduct less for MSW, because GetTextExtent appears to overstate width, and
+            // I don't know why.  Not really happy with this arbitrary fix.
+            availableWidth -= 1;
+            availableHeight -= 1;
+#else
             availableWidth -= 2 + 1;
             availableHeight -= 2 + 1;
+#endif
 
             GetParent()->GetTextExtent(
                wxGetTranslation(GetPushButtonStrings(button)->label),
@@ -2281,8 +2289,12 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
 
    auto &scrubber = mProject->GetScrubber();
    if (scrubber.HasStartedScrubbing()) {
-      if (zone == StatusChoice::EnteringQP &&
-          evt.LeftDown()) {
+      if (IsButton(zone))
+         // Fall through to pushbutton handling
+         ;
+      else if (zone == StatusChoice::EnteringQP &&
+               mQuickPlayEnabled &&
+               evt.LeftDown()) {
          // Stop scrubbing
          if (HasCapture())
             ReleaseMouse();
@@ -3134,10 +3146,12 @@ void AdornedRulerPanel::DoDrawPushbutton
 #else
       wxColour c = *wxBLACK;
 #endif
-      if (pointerState == PointerState::InArrow)
+
+      //if (pointerState == PointerState::InArrow)
          dc->SetBrush( wxBrush{ c } );
-      else
-         dc->SetBrush( wxBrush{ *wxTRANSPARENT_BRUSH } ); // Make outlined arrow only
+      //else
+         //dc->SetBrush( wxBrush{ *wxTRANSPARENT_BRUSH } ); // Make outlined arrow only
+
       dc->SetPen( wxPen{ c } );
 
       // This function draws an arrow half as tall as wide:
