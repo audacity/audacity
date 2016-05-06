@@ -1784,8 +1784,12 @@ BEGIN_EVENT_TABLE(AdornedRulerPanel, wxPanel)
    EVT_COMMAND(wxID_ANY, EVT_CAPTURE_KEY, AdornedRulerPanel::OnCaptureKey)
    EVT_KEY_DOWN(AdornedRulerPanel::OnKeyDown)
 
+   // Correct management of track focus
    EVT_SET_FOCUS(AdornedRulerPanel::OnSetFocus)
    EVT_KILL_FOCUS(AdornedRulerPanel::OnKillFocus)
+
+   // Pop up menus on Windows
+   EVT_CONTEXT_MENU(AdornedRulerPanel::OnContextMenu)
 
 END_EVENT_TABLE()
 
@@ -2831,6 +2835,7 @@ void AdornedRulerPanel::OnKeyDown(wxKeyEvent &event)
          break;
 
       default:
+         event.Skip();
          break;
    }
 }
@@ -2847,6 +2852,13 @@ void AdornedRulerPanel::OnKillFocus(wxFocusEvent & WXUNUSED(event))
 {
    AudacityProject::ReleaseKeyboard(this);
    Refresh(false);
+}
+
+void AdornedRulerPanel::OnContextMenu(wxContextMenuEvent & WXUNUSED(event))
+{
+   auto rect = GetRect();
+   wxPoint position(rect.GetLeft() + 1, rect.GetBottom() + 1);
+   ShowMenu(position);
 }
 
 void AdornedRulerPanel::OnCaptureLost(wxMouseCaptureLostEvent & WXUNUSED(evt))
