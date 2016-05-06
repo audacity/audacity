@@ -208,6 +208,12 @@ void Scrubber::MarkScrubStart(
 
    ControlToolBar * const ctb = mProject->GetControlToolBar();
    ctb->SetPlay(true, ControlToolBar::PlayAppearance::Scrub);
+   if(gAudioIO->IsPaused())
+      ctb->Pause(); // un-pause
+
+   // This disables the pause button.
+   ctb->EnableDisableButtons();
+
    ctb->UpdateStatusBar(mProject);
 
    CheckMenuItem();
@@ -245,8 +251,11 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
          );
          if (time1 != time0)
          {
-            if (busy)
+            if (busy) {
+               auto position = mScrubStartPosition;
                ctb->StopPlaying();
+               mScrubStartPosition = position;
+            }
 
             AudioIOStartStreamOptions options(mProject->GetDefaultPlayOptions());
             options.timeTrack = NULL;
