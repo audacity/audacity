@@ -504,7 +504,8 @@ public:
    void OnAudioIONewBlockFiles(const AutoSaveFile & blockFileLog) override;
 
    // Command Handling
-   bool TryToMakeActionAllowed( wxUint32 & flags, wxUint32 flagsRqd, wxUint32 mask );
+   bool TryToMakeActionAllowed
+      ( CommandFlag & flags, CommandFlag flagsRqd, CommandFlag mask );
 
    ///Prevents DELETE from external thread - for e.g. use of GetActiveProject
    static void AllProjectsDeleteLock();
@@ -580,7 +581,7 @@ public:
 
    CommandManager mCommandManager;
 
-   wxUint32 mLastFlags;
+   CommandFlag mLastFlags;
 
    // Window elements
 

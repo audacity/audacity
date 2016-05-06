@@ -38,7 +38,7 @@ bool ExecMenuCommand::Apply(CommandExecutionContext context)
    CommandManager *cmdManager = context.GetProject()->GetCommandManager();
 
    wxString cmdName = GetString(wxT("CommandName"));
-   wxUint32 cmdFlags = 0; // TODO ?
-   wxUint32 cmdMask = 0;
+   auto cmdFlags = AlwaysEnabledFlag; // TODO ?
+   auto cmdMask = AlwaysEnabledFlag;
    return cmdManager->HandleTextualCommand(cmdName, cmdFlags, cmdMask);
 }

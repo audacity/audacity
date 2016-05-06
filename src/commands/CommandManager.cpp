@@ -395,8 +395,8 @@ CommandManager::CommandManager():
    mCurrentID(17000),
    mCurrentMenuName(COMMAND),
    mCurrentMenu(NULL),
-   mDefaultFlags(0),
-   mDefaultMask(0)
+   mDefaultFlags(AlwaysEnabledFlag),
+   mDefaultMask(AlwaysEnabledFlag)
 {
    mbSeparatorAllowed = false;
 }
@@ -647,15 +647,15 @@ void CommandManager::AddCheck(const wxChar *name,
                               const CommandFunctorPointer &callback,
                               int checkmark)
 {
-   AddItem(name, label, callback, wxT(""), (unsigned int)NoFlagsSpecifed, (unsigned int)NoFlagsSpecifed, checkmark);
+   AddItem(name, label, callback, wxT(""), NoFlagsSpecifed, NoFlagsSpecifed, checkmark);
 }
 
 void CommandManager::AddCheck(const wxChar *name,
                               const wxChar *label,
                               const CommandFunctorPointer &callback,
                               int checkmark,
-                              unsigned int flags,
-                              unsigned int mask)
+                              CommandFlag flags,
+                              CommandMask mask)
 {
    AddItem(name, label, callback, wxT(""), flags, mask, checkmark);
 }
@@ -663,8 +663,8 @@ void CommandManager::AddCheck(const wxChar *name,
 void CommandManager::AddItem(const wxChar *name,
                              const wxChar *label,
                              const CommandFunctorPointer &callback,
-                             unsigned int flags,
-                             unsigned int mask)
+                             CommandFlag flags,
+                             CommandMask mask)
 {
    AddItem(name, label, callback, wxT(""), flags, mask);
 }
@@ -673,8 +673,8 @@ void CommandManager::AddItem(const wxChar *name,
                              const wxChar *label_in,
                              const CommandFunctorPointer &callback,
                              const wxChar *accel,
-                             unsigned int flags,
-                             unsigned int mask,
+                             CommandFlag flags,
+                             CommandMask mask,
                              int checkmark)
 {
    CommandListEntry *entry = NewIdentifier(name, label_in, accel, CurrentMenu(), callback, false, 0, 0);
@@ -726,8 +726,8 @@ void CommandManager::AddItemList(const wxString & name,
 void CommandManager::AddCommand(const wxChar *name,
                                 const wxChar *label,
                                 const CommandFunctorPointer &callback,
-                                unsigned int flags,
-                                unsigned int mask)
+                                CommandFlag flags,
+                                CommandMask mask)
 {
    AddCommand(name, label, callback, wxT(""), flags, mask);
 }
@@ -736,8 +736,8 @@ void CommandManager::AddCommand(const wxChar *name,
                                 const wxChar *label_in,
                                 const CommandFunctorPointer &callback,
                                 const wxChar *accel,
-                                unsigned int flags,
-                                unsigned int mask)
+                                CommandFlag flags,
+                                CommandMask mask)
 {
    NewIdentifier(name, label_in, accel, NULL, callback, false, 0, 0);
 
@@ -755,8 +755,8 @@ void CommandManager::AddGlobalCommand(const wxChar *name,
 
    entry->enabled = false;
    entry->isGlobal = true;
-   entry->flags = 0;
-   entry->mask = 0;
+   entry->flags = AlwaysEnabledFlag;
+   entry->mask = AlwaysEnabledFlag;
 }
 
 void CommandManager::AddSeparator()
@@ -978,13 +978,13 @@ void CommandManager::Enable(const wxString &name, bool enabled)
    Enable(entry, enabled);
 }
 
-void CommandManager::EnableUsingFlags(wxUint32 flags, wxUint32 mask)
+void CommandManager::EnableUsingFlags(CommandFlag flags, CommandMask mask)
 {
    for(const auto &entry : mCommandList) {
       if (entry->multi && entry->index != 0)
          continue;
 
-      wxUint32 combinedMask = (mask & entry->mask);
+      auto combinedMask = (mask & entry->mask);
       if (combinedMask) {
          bool enable = ((flags & combinedMask) ==
                         (entry->flags & combinedMask));
@@ -1038,15 +1038,15 @@ void CommandManager::SetKeyFromIndex(int i, const wxString &key)
    entry->key = KeyStringNormalize(key);
 }
 
-void CommandManager::TellUserWhyDisallowed( wxUint32 flagsGot, wxUint32 flagsRequired )
+void CommandManager::TellUserWhyDisallowed( CommandFlag flagsGot, CommandMask flagsRequired )
 {
    // The default string for 'reason' is a catch all.  I hope it won't ever be seen
    // and that we will get something more specific.
    wxString reason = _("There was a problem with your last action. If you think\nthis is a bug, please tell us exactly where it occurred.");
 
-   wxUint32 missingFlags = flagsRequired & (~flagsGot );
+   auto missingFlags = flagsRequired & (~flagsGot );
    if( missingFlags & AudioIONotBusyFlag )
-      reason= _("You can only do this when playing and recording are\n stopped. (Pausing is not sufficient.)");
+      reason = _("You can only do this when playing and recording are\n stopped. (Pausing is not sufficient.)");
    else if( missingFlags & StereoRequiredFlag )
       reason = _("You must first select some stereo audio for this\n to use. (You cannot use this with mono.)");
    else if( missingFlags & TimeSelectedFlag )
@@ -1081,7 +1081,7 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
       // enable them temporarily and then disable them again after handling.
       // LL:  Why do they need to be disabled???
       entry->enabled = true;
-      bool ret = HandleCommandEntry(entry, 0xffffffff, 0xffffffff, &evt);
+      bool ret = HandleCommandEntry(entry, NoFlagsSpecifed, NoFlagsSpecifed, &evt);
       entry->enabled = false;
       return ret;
    }
@@ -1094,7 +1094,7 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
       return false;
    }
 
-   wxUint32 flags = project->GetUpdateFlags();
+   auto flags = project->GetUpdateFlags();
 
    wxKeyEvent temp = evt;
 
@@ -1105,12 +1105,12 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
          return true;
       }
 
-      return HandleCommandEntry(entry, flags, 0xffffffff, &temp);
+      return HandleCommandEntry(entry, flags, NoFlagsSpecifed, &temp);
    }
 
    if (type == wxEVT_KEY_UP && entry->wantKeyup)
    {
-      return HandleCommandEntry(entry, flags, 0xffffffff, &temp);
+      return HandleCommandEntry(entry, flags, NoFlagsSpecifed, &temp);
    }
 
    return false;
@@ -1120,12 +1120,13 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
 /// returning true iff successful.  If you pass any flags,
 ///the command won't be executed unless the flags are compatible
 ///with the command's flags.
-bool CommandManager::HandleCommandEntry(const CommandListEntry * entry, wxUint32 flags, wxUint32 mask, const wxEvent * evt)
+bool CommandManager::HandleCommandEntry(const CommandListEntry * entry,
+                                        CommandFlag flags, CommandMask mask, const wxEvent * evt)
 {
    if (!entry || !entry->enabled)
       return false;
 
-   wxUint32 combinedMask = (mask & entry->mask);
+   auto combinedMask = (mask & entry->mask);
    if (combinedMask) {
 
       AudacityProject * proj;
@@ -1154,7 +1155,7 @@ bool CommandManager::HandleCommandEntry(const CommandListEntry * entry, wxUint32
 ///CommandManagerListener function.  If you pass any flags,
 ///the command won't be executed unless the flags are compatible
 ///with the command's flags.
-bool CommandManager::HandleMenuID(int id, wxUint32 flags, wxUint32 mask)
+bool CommandManager::HandleMenuID(int id, CommandFlag flags, CommandMask mask)
 {
    CommandListEntry *entry = mCommandIDHash[id];
    return HandleCommandEntry( entry, flags, mask );
@@ -1163,7 +1164,7 @@ bool CommandManager::HandleMenuID(int id, wxUint32 flags, wxUint32 mask)
 /// HandleTextualCommand() allows us a limitted version of script/batch
 /// behavior, since we can get from a string command name to the actual
 /// code to run.
-bool CommandManager::HandleTextualCommand(wxString & Str, wxUint32 flags, wxUint32 mask)
+bool CommandManager::HandleTextualCommand(wxString & Str, CommandFlag flags, CommandMask mask)
 {
    // Linear search for now...
    for (const auto &entry : mCommandList)
@@ -1410,14 +1411,14 @@ void CommandManager::WriteXML(XMLWriter &xmlFile)
    xmlFile.EndTag(wxT("audacitykeyboard"));
 }
 
-void CommandManager::SetDefaultFlags(wxUint32 flags, wxUint32 mask)
+void CommandManager::SetDefaultFlags(CommandFlag flags, CommandMask mask)
 {
    mDefaultFlags = flags;
    mDefaultMask = mask;
 }
 
 void CommandManager::SetCommandFlags(const wxString &name,
-                                     wxUint32 flags, wxUint32 mask)
+                                     CommandFlag flags, CommandMask mask)
 {
    CommandListEntry *entry = mCommandNameHash[name];
    if (entry) {
@@ -1427,7 +1428,7 @@ void CommandManager::SetCommandFlags(const wxString &name,
 }
 
 void CommandManager::SetCommandFlags(const wxChar **names,
-                                     wxUint32 flags, wxUint32 mask)
+                                     CommandFlag flags, CommandMask mask)
 {
    const wxChar **nptr = names;
    while(*nptr) {
@@ -1436,7 +1437,7 @@ void CommandManager::SetCommandFlags(const wxChar **names,
    }
 }
 
-void CommandManager::SetCommandFlags(wxUint32 flags, wxUint32 mask, ...)
+void CommandManager::SetCommandFlags(CommandFlag flags, CommandMask mask, ...)
 {
    va_list list;
    va_start(list, mask);
