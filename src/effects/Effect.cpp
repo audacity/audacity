@@ -3219,7 +3219,7 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
    // Honor the "select all if none" preference...a little hackish, but whatcha gonna do...
    if (!mIsBatch && mEffect->GetType() != EffectTypeGenerate && mProject->mViewInfo.selectedRegion.isPoint())
    {
-      wxUint32 flags = 0;
+      auto flags = AlwaysEnabledFlag;
       bool allowed = mProject->TryToMakeActionAllowed(flags,
                                                       WaveTracksSelectedFlag | TimeSelectedFlag,
                                                       WaveTracksSelectedFlag | TimeSelectedFlag);

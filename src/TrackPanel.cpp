@@ -1015,6 +1015,25 @@ void TrackPanel::ScrollDuringDrag()
       mAutoScrolling = true;
       mListener->TP_ScrollLeft();
    }
+   else {
+      // Bug1387:  enable autoscroll during drag, if the pointer is at either extreme x
+      // coordinate of the screen, even if that is still within the track area.
+
+      int xx = mMouseMostRecentX, yy = 0;
+      this->ClientToScreen(&xx, &yy);
+      if (xx == 0) {
+         mAutoScrolling = true;
+         mListener->TP_ScrollLeft();
+      }
+      else {
+         int width, height;
+         ::wxDisplaySize(&width, &height);
+         if (xx == width - 1) {
+            mAutoScrolling = true;
+            mListener->TP_ScrollRight();
+         }
+      }
+   }
 
    if (mAutoScrolling) {
       // AS: To keep the selection working properly as we scroll,
@@ -5901,16 +5920,26 @@ void TrackPanel::OnMouseEvent(wxMouseEvent & event)
          ReleaseMouse();
    }
 
-   if (event.Leaving() && !event.ButtonIsDown(wxMOUSE_BTN_ANY))
+   if (event.Leaving())
    {
+
       // PRL:  was this test really needed?  It interfered with my refactoring
       // that tried to eliminate those enum values.
       // I think it was never true, that mouse capture was pan or gain sliding,
       // but no mouse button was down.
       // if (mMouseCapture != IsPanSliding && mMouseCapture != IsGainSliding)
-      {
+
+      auto buttons =
+         // Bug 1325: button state in Leaving events is unreliable on Mac.
+         // Poll the global state instead.
+         // event.ButtonIsDown(wxMOUSE_BTN_ANY);
+         ::wxGetMouseState().ButtonIsDown(wxMOUSE_BTN_ANY);
+
+      if(!buttons) {
          SetCapturedTrack(NULL);
+
 #if defined(__WXMAC__)
+
          // We must install the cursor ourselves since the window under
          // the mouse is no longer this one and wx2.8.12 makes that check.
          // Should re-evaluate with wx3.

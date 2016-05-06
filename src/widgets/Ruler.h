@@ -312,20 +312,6 @@ public:
    void InvalidateRuler();
 
    void UpdatePrefs();
-   void RegenerateTooltips();
-   void HideQuickPlayIndicator();
-
-   void UpdateQuickPlayPos(wxCoord &mousPosX);
-
-private:
-   void OnCapture(wxCommandEvent & evt);
-   void OnPaint(wxPaintEvent &evt);
-   void OnSize(wxSizeEvent &evt);
-   void UpdateRects();
-   void OnMouseEvents(wxMouseEvent &evt);
-   void HandleQPClick(wxMouseEvent &event, wxCoord mousePosX);
-   void HandleQPDrag(wxMouseEvent &event, wxCoord mousePosX);
-   void HandleQPRelease(wxMouseEvent &event);
 
    enum class StatusChoice {
       FirstButton = 0,
@@ -340,10 +326,38 @@ private:
       Leaving,
       NoChange
    };
+   enum class PointerState {
+      Out = 0, In, InArrow
+   };
+   struct CaptureState {
+      CaptureState() {}
+      CaptureState(StatusChoice s, PointerState p) : button(s), state(p) {}
+      StatusChoice button { StatusChoice::NoButton };
+      PointerState state { PointerState::Out };
+   };
+
    friend inline StatusChoice &operator++ (StatusChoice &choice) {
       choice = static_cast<StatusChoice>(1 + static_cast<int>(choice));
       return choice;
    }
+
+   void RegenerateTooltips(StatusChoice choice);
+   void HideQuickPlayIndicator();
+
+   void UpdateQuickPlayPos(wxCoord &mousPosX);
+
+private:
+   void OnCapture(wxCommandEvent & evt);
+   void OnPaint(wxPaintEvent &evt);
+   void OnSize(wxSizeEvent &evt);
+   void UpdateRects();
+   void OnMouseEvents(wxMouseEvent &evt);
+   void HandleQPDoubleClick(wxMouseEvent &event, wxCoord mousePosX);
+   void HandleQPClick(wxMouseEvent &event, wxCoord mousePosX);
+   void HandleQPDrag(wxMouseEvent &event, wxCoord mousePosX);
+   void HandleQPRelease(wxMouseEvent &event);
+   void StartQPPlay(bool looped, bool cutPreview);
+
    static inline bool IsButton(StatusChoice choice)
    {
       auto integer = static_cast<int>(choice);
@@ -357,14 +371,15 @@ private:
 
    void OnCaptureLost(wxMouseCaptureLostEvent &evt);
 
-   void DoDrawBorder(wxDC * dc);
+   void DoDrawBackground(wxDC * dc);
+   void DoDrawEdge(wxDC *dc);
    void DoDrawMarks(wxDC * dc, bool /*text */ );
    void DoDrawCursor(wxDC * dc);
    void DoDrawSelection(wxDC * dc);
    void DoDrawIndicator(wxDC * dc, double time, bool playing, int width, bool scrub);
    void DoEraseIndicator(wxDC *dc, int x);
    QuickPlayIndicatorOverlay *GetOverlay();
-   void DrawQuickPlayIndicator(wxDC * dc /*NULL to DELETE old only*/);
+   void DrawQuickPlayIndicator(wxDC * dc /*NULL to DELETE old only*/, bool repainting = false);
    void DoDrawPlayRegion(wxDC * dc);
 
    wxRect GetButtonAreaRect(bool includeBorder = false) const;
@@ -381,12 +396,13 @@ private:
    }
 
    wxRect GetButtonRect( StatusChoice button ) const;
-   bool InButtonRect( StatusChoice button ) const;
-   StatusChoice FindButton( wxPoint position ) const;
+   PointerState InButtonRect( StatusChoice button, wxMouseEvent *pEvent ) const;
+   CaptureState FindButton( wxMouseEvent &mouseEvent ) const;
    bool GetButtonState( StatusChoice button ) const;
    void ToggleButtonState( StatusChoice button );
    void ShowButtonMenu( StatusChoice button, wxPoint position);
-   void DoDrawPushbutton(wxDC *dc, StatusChoice button, bool down) const;
+   void DoDrawPushbutton(wxDC *dc, StatusChoice button, PointerState down,
+      PointerState pointerState) const;
    void DoDrawPushbuttons(wxDC *dc) const;
    void HandlePushbuttonClick(wxMouseEvent &evt);
    void HandlePushbuttonEvent(wxMouseEvent &evt);
@@ -453,14 +469,13 @@ private:
    void OnAutoScroll(wxCommandEvent &evt);
    void OnLockPlayRegion(wxCommandEvent &evt);
 
-   void OnToggleScrubbing();
+   void OnToggleScrubbing(wxCommandEvent&);
 
    bool mPlayRegionDragsSelection;
    bool mTimelineToolTip;
    bool mQuickPlayEnabled;
 
-
-   StatusChoice mCaptureState { StatusChoice::NoButton };
+   CaptureState mCaptureState {};
 
    enum MouseEventState {
       mesNone,
@@ -482,6 +497,8 @@ private:
 
    mutable int mButtonFontSize { -1 };
    mutable wxFont mButtonFont;
+
+   bool mDoubleClick {};
 
    DECLARE_EVENT_TABLE()
 };

@@ -109,6 +109,11 @@ class AButton final : public wxWindow {
    bool WasControlDown(); // returns true if control was held down
                                   // the last time the button was clicked
    bool IsDown(){ return mButtonIsDown;}
+
+   // Double click is detected, but not automatically cleared.
+   bool IsDoubleClicked() const { return mIsDoubleClicked; }
+   void ClearDoubleClicked() { mIsDoubleClicked = false; }
+
    void SetButtonToggles( bool toggler ){ mToggle = toggler;}
    void Toggle(){ mButtonIsDown ? PopUp() : PushDown();}
    void Click();
@@ -157,6 +162,7 @@ class AButton final : public wxWindow {
    bool mIsClicking;
    bool mEnabled;
    bool mUseDisabledAsDownHiliteImage;
+   bool mIsDoubleClicked {};
 
    struct ImageArr { ImageRoll mArr[4]; };
    std::vector<ImageArr> mImages;
