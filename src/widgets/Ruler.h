@@ -317,6 +317,7 @@ public:
       ScrubBarButton,
 
       NumButtons,
+      LastButton = NumButtons - 1,
       NoButton = -1,
 
       EnteringQP = NumButtons,
@@ -336,6 +337,10 @@ public:
 
    friend inline StatusChoice &operator++ (StatusChoice &choice) {
       choice = static_cast<StatusChoice>(1 + static_cast<int>(choice));
+      return choice;
+   }
+   friend inline StatusChoice &operator-- (StatusChoice &choice) {
+      choice = static_cast<StatusChoice>(-1 + static_cast<int>(choice));
       return choice;
    }
 
@@ -398,9 +403,9 @@ private:
    CaptureState FindButton( wxMouseEvent &mouseEvent ) const;
    bool GetButtonState( StatusChoice button ) const;
    void ToggleButtonState( StatusChoice button );
-   void ShowButtonMenu( StatusChoice button, wxPoint position);
+   void ShowButtonMenu( StatusChoice button, wxPoint *pPosition);
    void DoDrawPushbutton(wxDC *dc, StatusChoice button, PointerState down,
-      PointerState pointerState) const;
+      PointerState pointerState, bool inSomeButton) const;
    void DoDrawPushbuttons(wxDC *dc) const;
    void HandlePushbuttonClick(wxMouseEvent &evt);
    void HandlePushbuttonEvent(wxMouseEvent &evt);
@@ -495,6 +500,35 @@ private:
    std::unique_ptr<QuickPlayIndicatorOverlay> mOverlay;
 
    StatusChoice mPrevZone { StatusChoice::NoChange };
+
+   struct TabState {
+      StatusChoice mButton { StatusChoice::FirstButton };
+      bool mMenu { false };
+
+      TabState &operator ++ () {
+         if (!mMenu)
+            mMenu = true;
+         else {
+            mMenu = false;
+            if (!IsButton (++mButton))
+               mButton = StatusChoice::FirstButton;
+         }
+         return *this;
+      }
+
+      TabState &operator -- () {
+         if (mMenu)
+            mMenu = false;
+         else {
+            mMenu = true;
+            if (!IsButton (--mButton))
+               mButton = StatusChoice::LastButton;
+         }
+         return *this;
+      }
+   };
+   TabState mTabState;
+
    bool mShowScrubbing { true };
 
    mutable int mButtonFontSize { -1 };
