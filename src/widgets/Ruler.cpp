@@ -1968,8 +1968,16 @@ wxFont &AdornedRulerPanel::GetButtonFont() const
 
             // Deduct for outlines, and room to move text
             // I might deduct 2 more for bevel, but that made the text too small.
+
+#ifdef __WXMSW__
+            // Deduct less for MSW, because GetTextExtent appears to overstate width, and
+            // I don't know why.  Not really happy with this arbitrary fix.
+            availableWidth -= 1;
+            availableHeight -= 1;
+#else
             availableWidth -= 2 + 1;
             availableHeight -= 2 + 1;
+#endif
 
             GetParent()->GetTextExtent(
                wxGetTranslation(GetPushButtonStrings(button)->label),
