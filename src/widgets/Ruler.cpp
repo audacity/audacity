@@ -1781,6 +1781,7 @@ BEGIN_EVENT_TABLE(AdornedRulerPanel, wxPanel)
    EVT_MENU(OnShowHideScrubbingID, AdornedRulerPanel::OnToggleScrubbing)
 
    // Key events, to navigate buttons
+   EVT_COMMAND(wxID_ANY, EVT_CAPTURE_KEY, AdornedRulerPanel::OnCaptureKey)
    EVT_KEY_DOWN(AdornedRulerPanel::OnKeyDown)
 
    EVT_SET_FOCUS(AdornedRulerPanel::OnSetFocus)
@@ -2251,6 +2252,10 @@ bool AdornedRulerPanel::IsWithinMarker(int mousePosX, double markerTime)
 
 void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
 {
+   // PRL:  why do I need these two lines on Windows but not on Mac?
+   if (evt.ButtonDown(wxMOUSE_BTN_ANY))
+      SetFocus();
+
    // Disable mouse actions on Timeline while recording.
    if (mIsRecording) {
       if (HasCapture())
@@ -2754,6 +2759,31 @@ void AdornedRulerPanel::OnToggleScrubbing(wxCommandEvent&)
    PostSizeEventToParent();
 }
 
+void AdornedRulerPanel::OnCaptureKey(wxCommandEvent &event)
+{
+   wxKeyEvent *kevent = (wxKeyEvent *)event.GetEventObject();
+   int keyCode = kevent->GetKeyCode();
+
+   switch (keyCode)
+   {
+   case WXK_DOWN:
+   case WXK_NUMPAD_DOWN:
+   case WXK_UP:
+   case WXK_NUMPAD_UP:
+   case WXK_TAB:
+   case WXK_NUMPAD_TAB:
+   case WXK_RIGHT:
+   case WXK_NUMPAD_RIGHT:
+   case WXK_LEFT:
+   case WXK_NUMPAD_LEFT:
+   case WXK_RETURN:
+   case WXK_NUMPAD_ENTER:
+      return;
+   }
+
+   event.Skip();
+}
+
 void AdornedRulerPanel::OnKeyDown(wxKeyEvent &event)
 {
    switch (event.GetKeyCode())
@@ -2807,6 +2837,7 @@ void AdornedRulerPanel::OnKeyDown(wxKeyEvent &event)
 
 void AdornedRulerPanel::OnSetFocus(wxFocusEvent & WXUNUSED(event))
 {
+   AudacityProject::CaptureKeyboard(this);
    mProject->GetTrackPanel()->SetFocusedTrack(nullptr);
    mTabState = TabState{};
    Refresh( false );
@@ -2814,7 +2845,8 @@ void AdornedRulerPanel::OnSetFocus(wxFocusEvent & WXUNUSED(event))
 
 void AdornedRulerPanel::OnKillFocus(wxFocusEvent & WXUNUSED(event))
 {
-   Refresh( false );
+   AudacityProject::ReleaseKeyboard(this);
+   Refresh(false);
 }
 
 void AdornedRulerPanel::OnCaptureLost(wxMouseCaptureLostEvent & WXUNUSED(evt))
