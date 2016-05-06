@@ -1947,7 +1947,7 @@ namespace {
          ++mRect.width;
          ++mRect.height;
       }
-      wxRect mRect;
+      wxRect &mRect;
    };
 }
 
