@@ -11,11 +11,11 @@ Paul Licameli split from TrackPanel.cpp
 #ifndef __AUDACITY_EDIT_CURSOR_OVERLAY__
 #define __AUDACITY_EDIT_CURSOR_OVERLAY__
 
-#include "../../TrackPanelOverlay.h"
+#include "../../widgets/Overlay.h"
 
 class AudacityProject;
 
-class EditCursorOverlay final : public TrackPanelOverlay
+class EditCursorOverlay final : public Overlay
 {
 public:
    EditCursorOverlay(AudacityProject *project);
@@ -23,8 +23,7 @@ public:
 
 private:
    std::pair<wxRect, bool> DoGetRectangle(wxSize size) override;
-   void Draw
-      (wxDC &dc, TrackPanelCellIterator begin, TrackPanelCellIterator end) override;
+   void Draw(OverlayPanel &panel, wxDC &dc) override;
 
    AudacityProject *mProject;
 

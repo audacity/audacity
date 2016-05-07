@@ -65,9 +65,12 @@ std::pair<wxRect, bool> EditCursorOverlay::DoGetRectangle(wxSize size)
 }
 
 
-void EditCursorOverlay::Draw
-   (wxDC &dc, TrackPanelCellIterator begin, TrackPanelCellIterator end)
+void EditCursorOverlay::Draw(OverlayPanel &panel, wxDC &dc)
 {
+   TrackPanel &tp = static_cast<TrackPanel&>(panel);
+   TrackPanelCellIterator begin(&tp, true);
+   TrackPanelCellIterator end(&tp, false);
+
    mLastCursorX = mNewCursorX;
    if (mLastCursorX == -1)
       return;

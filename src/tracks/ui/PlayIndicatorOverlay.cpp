@@ -61,9 +61,12 @@ std::pair<wxRect, bool> PlayIndicatorOverlay::DoGetRectangle(wxSize size)
 }
 
 
-void PlayIndicatorOverlay::Draw
-   (wxDC &dc, TrackPanelCellIterator begin, TrackPanelCellIterator end)
+void PlayIndicatorOverlay::Draw(OverlayPanel &panel, wxDC &dc)
 {
+   TrackPanel &tp = static_cast<TrackPanel&>(panel);
+   TrackPanelCellIterator begin(&tp, true);
+   TrackPanelCellIterator end(&tp, false);
+
    mLastIndicatorX = mNewIndicatorX;
    if (!between_incexc(0, mLastIndicatorX, dc.GetSize().GetWidth()))
       return;
@@ -106,7 +109,7 @@ void PlayIndicatorOverlay::Draw
 
 void PlayIndicatorOverlay::Erase(wxDC &dc, wxDC &src)
 {
-   TrackPanelOverlay::Erase(dc, src);
+   Overlay::Erase(dc, src);
    mProject->GetRulerPanel()->ClearIndicator();
 }
 

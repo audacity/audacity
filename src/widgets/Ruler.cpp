@@ -77,7 +77,6 @@ array of Ruler::Label.
 #include "../TimeTrack.h"
 #include "../TrackPanel.h"
 #include "../TrackPanelCellIterator.h"
-#include "../TrackPanelOverlay.h"
 #include "../Menus.h"
 #include "../NumberScale.h"
 #include "../Prefs.h"
@@ -1656,7 +1655,7 @@ Graphical helper for AdornedRulerPanel.
 
 **********************************************************************/
 
-class QuickPlayIndicatorOverlay final : public TrackPanelOverlay
+class QuickPlayIndicatorOverlay final : public Overlay
 {
 public:
    QuickPlayIndicatorOverlay(AudacityProject *project)
@@ -1687,8 +1686,7 @@ public:
 
 private:
    std::pair<wxRect, bool> DoGetRectangle(wxSize size) override;
-   void Draw
-      (wxDC &dc, TrackPanelCellIterator begin, TrackPanelCellIterator end) override;
+   void Draw(OverlayPanel &panel, wxDC &dc) override;
 
    AudacityProject *mProject;
    int mOldQPIndicatorPos;
@@ -1709,9 +1707,12 @@ std::pair<wxRect, bool> QuickPlayIndicatorOverlay::DoGetRectangle(wxSize size)
    );
 }
 
-void QuickPlayIndicatorOverlay::Draw
-(wxDC &dc, TrackPanelCellIterator begin, TrackPanelCellIterator end)
+void QuickPlayIndicatorOverlay::Draw(OverlayPanel &panel, wxDC &dc)
 {
+   TrackPanel &tp = static_cast<TrackPanel&>(panel);
+   TrackPanelCellIterator begin(&tp, true);
+   TrackPanelCellIterator end(&tp, false);
+
    mOldQPIndicatorPos = mNewQPIndicatorPos;
    mOldQPIndicatorSnapped = mNewQPIndicatorSnapped;
    mOldPreviewingScrub = mNewPreviewingScrub;
