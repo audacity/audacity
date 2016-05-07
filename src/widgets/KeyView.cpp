@@ -59,8 +59,7 @@ KeyView::KeyView(wxWindow *parent,
 {
 #if wxUSE_ACCESSIBILITY
    // Create and set accessibility object
-   mAx = new KeyViewAx(this);
-   SetAccessible(mAx);
+   SetAccessible(mAx = safenew KeyViewAx(this));
 #endif
 
    // The default view

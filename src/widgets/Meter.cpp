@@ -251,7 +251,7 @@ Meter::Meter(AudacityProject *project,
    mIsFocused = false;
 
 #if wxUSE_ACCESSIBILITY
-   SetAccessible(new MeterAx(this));
+   SetAccessible(safenew MeterAx(this));
 #endif
 
    // Do this BEFORE UpdatePrefs()!

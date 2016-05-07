@@ -389,8 +389,7 @@ Grid::Grid(wxWindow *parent,
 : wxGrid(parent, id, pos, size, style | wxWANTS_CHARS, name)
 {
 #if wxUSE_ACCESSIBILITY
-   mAx = new GridAx(this);
-   GetGridWindow()->SetAccessible(mAx);
+   GetGridWindow()->SetAccessible(mAx = safenew GridAx(this));
 #endif
 
    RegisterDataType(GRID_VALUE_TIME,
