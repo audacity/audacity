@@ -11,13 +11,14 @@
 #ifndef __AUDACITY_RULER__
 #define __AUDACITY_RULER__
 
+#include "OverlayPanel.h"
+
 #include "../MemoryX.h"
 #include <wx/bitmap.h>
 #include <wx/dc.h>
 #include <wx/dcmemory.h>
 #include <wx/event.h>
 #include <wx/font.h>
-#include <wx/panel.h>
 #include <wx/window.h>
 #include "../Experimental.h"
 
@@ -280,7 +281,7 @@ class QuickPlayIndicatorOverlay;
 // Once TrackPanel uses wxSizers, we will derive it from some
 // wxWindow and the GetSize and SetSize functions
 // will then be wxWidgets functions instead.
-class AUDACITY_DLL_API AdornedRulerPanel final : public wxPanel
+class AUDACITY_DLL_API AdornedRulerPanel final : public OverlayPanel
 {
 public:
    AdornedRulerPanel(AudacityProject* parent,
@@ -431,9 +432,6 @@ private:
    ViewInfo *const mViewInfo;
    AudacityProject *const mProject;
    TrackList *mTracks;
-
-   wxBitmap *mBack;
-   wxMemoryDC mBackDC;
 
    wxRect mOuter;
    wxRect mScrubZone;

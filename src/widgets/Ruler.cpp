@@ -1765,7 +1765,7 @@ enum {
    OnShowHideScrubbingID,
 };
 
-BEGIN_EVENT_TABLE(AdornedRulerPanel, wxPanel)
+BEGIN_EVENT_TABLE(AdornedRulerPanel, OverlayPanel)
    EVT_PAINT(AdornedRulerPanel::OnPaint)
    EVT_SIZE(AdornedRulerPanel::OnSize)
    EVT_MOUSE_EVENTS(AdornedRulerPanel::OnMouseEvents)
@@ -1799,16 +1799,13 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* parent,
                                      const wxPoint& pos,
                                      const wxSize& size,
                                      ViewInfo *viewinfo)
-:  wxPanel(parent, id, pos, size)
+:  OverlayPanel(parent, id, pos, size)
 , mProject(parent)
 , mViewInfo(viewinfo)
 {
    SetLabel( _("Timeline") );
    SetName(GetLabel());
    SetBackgroundStyle(wxBG_STYLE_PAINT);
-
-   mBack = new wxBitmap(1, 1);
-   mBackDC.SelectObject(*mBack);
 
    mCursorDefault = wxCursor(wxCURSOR_DEFAULT);
    mCursorHand = wxCursor(wxCURSOR_HAND);
@@ -1873,12 +1870,6 @@ AdornedRulerPanel::~AdornedRulerPanel()
                         wxCommandEventHandler(AdornedRulerPanel::OnCapture),
                         NULL,
                         this);
-
-   if (mBack)
-   {
-      mBackDC.SelectObject(wxNullBitmap);
-      delete mBack;
-   }
 }
 
 namespace {
@@ -2129,52 +2120,44 @@ void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
 {
    wxPaintDC dc(this);
 
-   if (mBack)
-   {
-      mBackDC.SelectObject(wxNullBitmap);
-      delete mBack;
-   }
-      
-   wxSize sz = GetClientSize();
-   mBack = new wxBitmap();
-   mBack->Create(sz.x, sz.y, dc);
-   mBackDC.SelectObject(*mBack);
+   auto &backDC = GetBackingDCForRepaint();
 
-   DoDrawBackground(&mBackDC);
+   DoDrawBackground(&backDC);
 
    if (!mViewInfo->selectedRegion.isPoint())
    {
-      DoDrawSelection(&mBackDC);
+      DoDrawSelection(&backDC);
    }
 
-   DoDrawMarks(&mBackDC, true);
+   DoDrawMarks(&backDC, true);
 
    if (mIndType >= 0)
    {
       const bool scrub = mProject->GetScrubber().HasStartedScrubbing();
-      DoDrawIndicator(&mBackDC, mIndTime, mIndType != 0, IndicatorMediumWidth, false);
+      DoDrawIndicator(&backDC, mIndTime, mIndType != 0, IndicatorMediumWidth, false);
    }
 
    if (mViewInfo->selectedRegion.isPoint())
    {
-      DoDrawCursor(&mBackDC);
+      DoDrawCursor(&backDC);
    }
 
-   DoDrawPlayRegion(&mBackDC);
+   DoDrawPlayRegion(&backDC);
 
-   DoDrawPushbuttons(&mBackDC);
+   DoDrawPushbuttons(&backDC);
 
-   DoDrawEdge(&mBackDC);
+   DoDrawEdge(&backDC);
 
-   dc.Blit(0, 0, mBack->GetWidth(), mBack->GetHeight(), &mBackDC, 0, 0);
+   DisplayBitmap(dc);
 
+   // Stroke the quick play direct to the client area
    if (mQuickPlayInd)
    {
       DrawQuickPlayIndicator(&dc, true);
    }
 }
 
-void AdornedRulerPanel::OnSize(wxSizeEvent & WXUNUSED(evt))
+void AdornedRulerPanel::OnSize(wxSizeEvent &evt)
 {
    mOuter = GetClientRect();
    if (mOuter.GetWidth() == 0 || mOuter.GetHeight() == 0)
@@ -2184,7 +2167,7 @@ void AdornedRulerPanel::OnSize(wxSizeEvent & WXUNUSED(evt))
 
    UpdateRects();
 
-   Refresh();
+   OverlayPanel::OnSize(evt);
 }
 
 void AdornedRulerPanel::UpdateRects()
@@ -3576,7 +3559,7 @@ void AdornedRulerPanel::DoEraseIndicator(wxDC *dc, int x)
       dc->Blit(xx, yy,
                indsize * 2 + 1 + 2,
                GetSize().GetHeight(),
-               &mBackDC,
+               &GetBackingDC(),
                xx, yy);
    }
 }
