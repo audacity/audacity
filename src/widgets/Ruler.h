@@ -474,9 +474,11 @@ private:
 
    void OnToggleScrubbing(wxCommandEvent&);
 
+   void OnCaptureKey(wxCommandEvent &event);
    void OnKeyDown(wxKeyEvent &event);
    void OnSetFocus(wxFocusEvent &);
    void OnKillFocus(wxFocusEvent &);
+   void OnContextMenu(wxContextMenuEvent & WXUNUSED(event));
 
    bool mPlayRegionDragsSelection;
    bool mTimelineToolTip;

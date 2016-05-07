@@ -8710,7 +8710,7 @@ void TrackPanel::SetFocusedTrack( Track *t )
    if (t && !t->GetLinked() && t->GetLink())
       t = (WaveTrack*)t->GetLink();
 
-   if (AudacityProject::GetKeyboardCaptureHandler()) {
+   if (t && AudacityProject::GetKeyboardCaptureHandler()) {
       AudacityProject::ReleaseKeyboard(this);
    }
 
