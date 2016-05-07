@@ -7338,7 +7338,7 @@ void TrackPanel::OnNextTrack( bool shift )
    }
 
    Track *t;
-   Track *n;
+   Track *n = nullptr;
    bool tSelected, nSelected;
 
    t = GetFocusedTrack();   // Get currently focused track
