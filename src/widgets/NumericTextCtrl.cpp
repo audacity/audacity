@@ -1205,7 +1205,7 @@ NumericTextCtrl::NumericTextCtrl(NumericConverter::Type type,
 #if wxUSE_ACCESSIBILITY
    SetLabel(wxT(""));
    SetName(wxT(""));
-   SetAccessible(new NumericTextCtrlAx(this));
+   SetAccessible(safenew NumericTextCtrlAx(this));
 #endif
 }
 
