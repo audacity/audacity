@@ -2856,9 +2856,7 @@ void AdornedRulerPanel::OnKillFocus(wxFocusEvent & WXUNUSED(event))
 
 void AdornedRulerPanel::OnContextMenu(wxContextMenuEvent & WXUNUSED(event))
 {
-   auto rect = GetRect();
-   wxPoint position(rect.GetLeft() + 1, rect.GetBottom() + 1);
-   ShowMenu(position);
+   ShowButtonMenu(mTabState.mButton, nullptr);
 }
 
 void AdornedRulerPanel::OnCaptureLost(wxMouseCaptureLostEvent & WXUNUSED(evt))
