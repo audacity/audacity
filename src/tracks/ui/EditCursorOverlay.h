@@ -11,6 +11,7 @@ Paul Licameli split from TrackPanel.cpp
 #ifndef __AUDACITY_EDIT_CURSOR_OVERLAY__
 #define __AUDACITY_EDIT_CURSOR_OVERLAY__
 
+#include "../../MemoryX.h"
 #include "../../widgets/Overlay.h"
 
 class AudacityProject;
@@ -18,7 +19,7 @@ class AudacityProject;
 class EditCursorOverlay final : public Overlay
 {
 public:
-   EditCursorOverlay(AudacityProject *project);
+   EditCursorOverlay(AudacityProject *project, bool isMaster = true);
    virtual ~EditCursorOverlay();
 
 private:
@@ -26,6 +27,8 @@ private:
    void Draw(OverlayPanel &panel, wxDC &dc) override;
 
    AudacityProject *mProject;
+   bool mIsMaster;
+   std::unique_ptr<EditCursorOverlay> mPartner;
 
    int mLastCursorX;
    double mCursorTime;

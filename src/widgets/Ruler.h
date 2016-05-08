@@ -295,6 +295,7 @@ public:
 public:
    static int GetRulerHeight();
    static int GetRulerHeight(bool showScrubBar);
+   wxRect GetInnerRect() const { return mInner; }
 
    void SetLeftOffset(int offset);
 
@@ -378,7 +379,6 @@ private:
    void DoDrawBackground(wxDC * dc);
    void DoDrawEdge(wxDC *dc);
    void DoDrawMarks(wxDC * dc, bool /*text */ );
-   void DoDrawCursor(wxDC * dc);
    void DoDrawSelection(wxDC * dc);
    void DoDrawIndicator(wxDC * dc, double time, bool playing, int width, bool scrub);
    void DoEraseIndicator(wxDC *dc, int x);

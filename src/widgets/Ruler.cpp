@@ -2137,11 +2137,6 @@ void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
       DoDrawIndicator(&backDC, mIndTime, mIndType != 0, IndicatorMediumWidth, false);
    }
 
-   if (mViewInfo->selectedRegion.isPoint())
-   {
-      DoDrawCursor(&backDC);
-   }
-
    DoDrawPlayRegion(&backDC);
 
    DoDrawPushbuttons(&backDC);
@@ -3469,14 +3464,6 @@ void AdornedRulerPanel::SetLeftOffset(int offset)
 {
    mLeftOffset = offset;
    mRuler.SetUseZoomInfo(offset, mViewInfo);
-}
-
-void AdornedRulerPanel::DoDrawCursor(wxDC * dc)
-{
-   const int x = Time2Pos(mViewInfo->selectedRegion.t0());
-
-   // Draw cursor in ruler
-   dc->DrawLine( x, mInner.y, x, mInner.y + mInner.height );
 }
 
 //
