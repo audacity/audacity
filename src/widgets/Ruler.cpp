@@ -2155,6 +2155,12 @@ void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
    {
       DrawQuickPlayIndicator(&dc, true);
    }
+
+   // Stroke extras direct to the client area,
+   // maybe outside of the damaged area
+   // As with TrackPanel, do not make a new wxClientDC or else Mac flashes badly!
+   dc.DestroyClippingRegion();
+   DrawOverlays(true, &dc);
 }
 
 void AdornedRulerPanel::OnSize(wxSizeEvent &evt)

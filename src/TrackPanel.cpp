@@ -952,6 +952,7 @@ void TrackPanel::OnTimer(wxTimerEvent& )
    }
 
    DrawOverlays(false);
+   mRuler->DrawOverlays(false);
 
    if(IsAudioActive() && gAudioIO->GetNumCaptureChannels()) {
 

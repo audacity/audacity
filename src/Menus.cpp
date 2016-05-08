@@ -7019,6 +7019,7 @@ void AudacityProject::SeekLeftOrRight
 
          // Move the visual cursor, avoiding an unnecessary complete redraw
          GetTrackPanel()->DrawOverlays(false);
+         GetRulerPanel()->DrawOverlays(false);
       }
       else
       {
