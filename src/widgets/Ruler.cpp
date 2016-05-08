@@ -1813,9 +1813,10 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* parent,
 
    mLeftOffset = 0;
    mIndTime = -1;
-   mIndType = -1;
+
    mQuickPlayInd = false;
    mLastQuickPlayX = -1;
+
    mPlayRegionStart = -1;
    mPlayRegionLock = false;
    mPlayRegionEnd = -1;
@@ -2130,12 +2131,6 @@ void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
    }
 
    DoDrawMarks(&backDC, true);
-
-   if (mIndType >= 0)
-   {
-      const bool scrub = mProject->GetScrubber().HasStartedScrubbing();
-      DoDrawIndicator(&backDC, mIndTime, mIndType != 0, IndicatorMediumWidth, false);
-   }
 
    DoDrawPlayRegion(&backDC);
 
@@ -3466,39 +3461,12 @@ void AdornedRulerPanel::SetLeftOffset(int offset)
    mRuler.SetUseZoomInfo(offset, mViewInfo);
 }
 
-//
-//This draws the little triangular indicator on the
-//AdornedRulerPanel.
-//
-void AdornedRulerPanel::ClearIndicator()
-{
-   mIndType = -1;
-
-   Refresh();
-}
-
-void AdornedRulerPanel::DrawIndicator( double time, bool rec )
-{
-   mIndTime = time;
-
-   if (mIndTime < 0)
-   {
-      ClearIndicator();
-      return;
-   }
-
-   mIndType = ( rec ? 0 : 1 );
-
-   Refresh();
-}
-
 // Draws the play/recording position indicator.
 void AdornedRulerPanel::DoDrawIndicator
-   (wxDC * dc, double time, bool playing, int width, bool scrub)
+   (wxDC * dc, wxCoord xx, bool playing, int width, bool scrub)
 {
    ADCChanger changer(dc); // Undo pen and brush changes at function exit
 
-   const int x = Time2Pos(time);
    AColor::IndicatorColor( dc, playing );
 
    wxPoint tri[ 3 ];
@@ -3510,26 +3478,26 @@ void AdornedRulerPanel::DoDrawIndicator
       auto yy = mShowScrubbing
          ? mScrubZone.y
          : (mInner.GetBottom() + 1) - 1 /* bevel */ - height;
-      tri[ 0 ].x = x - IndicatorOffset;
+      tri[ 0 ].x = xx - IndicatorOffset;
       tri[ 0 ].y = yy;
-      tri[ 1 ].x = x - IndicatorOffset;
+      tri[ 1 ].x = xx - IndicatorOffset;
       tri[ 1 ].y = yy + height;
-      tri[ 2 ].x = x - IndicatorHalfWidth;
+      tri[ 2 ].x = xx - IndicatorHalfWidth;
       tri[ 2 ].y = yy + height / 2;
       dc->DrawPolygon( 3, tri );
-      tri[ 0 ].x = tri[ 1 ].x = x + IndicatorOffset;
-      tri[ 2 ].x = x + IndicatorHalfWidth;
+      tri[ 0 ].x = tri[ 1 ].x = xx + IndicatorOffset;
+      tri[ 2 ].x = xx + IndicatorHalfWidth;
       dc->DrawPolygon( 3, tri );
    }
    else {
       // Down pointing triangle
       auto height = IndicatorHeightForWidth(width);
       const int IndicatorHalfWidth = width / 2;
-      tri[ 0 ].x = x - IndicatorHalfWidth;
+      tri[ 0 ].x = xx - IndicatorHalfWidth;
       tri[ 0 ].y = mInner.y;
-      tri[ 1 ].x = x + IndicatorHalfWidth;
+      tri[ 1 ].x = xx + IndicatorHalfWidth;
       tri[ 1 ].y = mInner.y;
-      tri[ 2 ].x = x;
+      tri[ 2 ].x = xx;
       tri[ 2 ].y = mInner.y + height;
       dc->DrawPolygon( 3, tri );
    }
@@ -3591,7 +3559,7 @@ void AdornedRulerPanel::DrawQuickPlayIndicator(wxDC * dc, bool repainting)
    auto scrub = mPrevZone == StatusChoice::EnteringScrubZone ||
       mProject->GetScrubber().HasStartedScrubbing();
    auto width = scrub ? IndicatorBigWidth() : IndicatorSmallWidth;
-   DoDrawIndicator(dc, mQuickPlayPos, true, width, scrub);
+   DoDrawIndicator(dc, Time2Pos(mQuickPlayPos), true, width, scrub);
 }
 
 void AdornedRulerPanel::SetPlayRegion(double playRegionStart,

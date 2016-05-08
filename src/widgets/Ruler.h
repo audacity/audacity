@@ -299,9 +299,7 @@ public:
 
    void SetLeftOffset(int offset);
 
-   void DrawIndicator(double time, bool rec);
    void DrawSelection();
-   void ClearIndicator();
 
    void SetPlayRegion(double playRegionStart, double playRegionEnd);
    void ClearPlayRegion();
@@ -380,7 +378,10 @@ private:
    void DoDrawEdge(wxDC *dc);
    void DoDrawMarks(wxDC * dc, bool /*text */ );
    void DoDrawSelection(wxDC * dc);
-   void DoDrawIndicator(wxDC * dc, double time, bool playing, int width, bool scrub);
+public:
+   void DoDrawIndicator(wxDC * dc, wxCoord xx, bool playing, int width, bool scrub);
+
+private:
    void DoEraseIndicator(wxDC *dc, int x);
    QuickPlayIndicatorOverlay *GetOverlay();
    void DrawQuickPlayIndicator(wxDC * dc /*NULL to DELETE old only*/, bool repainting = false);
@@ -440,7 +441,6 @@ private:
    int mLeftOffset;  // Number of pixels before we hit the 'zero position'.
 
 
-   int mIndType;     // -1 = No indicator, 0 = Record, 1 = Play
    double mIndTime;
    bool   mQuickPlayInd;
    double mQuickPlayPos;
