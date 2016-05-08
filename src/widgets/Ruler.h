@@ -275,6 +275,7 @@ private:
 };
 
 class QuickPlayIndicatorOverlay;
+class QuickPlayRulerOverlay;
 
 // This is an Audacity Specific ruler panel which additionally
 // has border, selection markers, play marker.
@@ -345,8 +346,9 @@ public:
    }
 
    void RegenerateTooltips(StatusChoice choice);
-   void HideQuickPlayIndicator();
 
+   void ShowQuickPlayIndicator();
+   void HideQuickPlayIndicator();
    void UpdateQuickPlayPos(wxCoord &mousPosX);
 
 private:
@@ -382,9 +384,8 @@ public:
    void DoDrawIndicator(wxDC * dc, wxCoord xx, bool playing, int width, bool scrub);
 
 private:
-   void DoEraseIndicator(wxDC *dc, int x);
    QuickPlayIndicatorOverlay *GetOverlay();
-   void DrawQuickPlayIndicator(wxDC * dc /*NULL to DELETE old only*/, bool repainting = false);
+   void ShowOrHideQuickPlayIndicator(bool show);
    void DoDrawPlayRegion(wxDC * dc);
 
    wxRect GetButtonAreaRect(bool includeBorder = false) const;
@@ -419,9 +420,6 @@ private:
 
    bool IsWithinMarker(int mousePosX, double markerTime);
 
-   int IndicatorBigWidth();
-   int IndicatorBigHeight();
-
 private:
 
    wxCursor mCursorDefault;
@@ -442,9 +440,7 @@ private:
 
 
    double mIndTime;
-   bool   mQuickPlayInd;
    double mQuickPlayPos;
-   double mLastQuickPlayX;
 
    SnapManager *mSnapManager;
    bool mIsSnapped;
@@ -537,6 +533,8 @@ private:
    bool mDoubleClick {};
 
    DECLARE_EVENT_TABLE()
+
+   friend QuickPlayRulerOverlay;
 };
 
 #endif //define __AUDACITY_RULER__
