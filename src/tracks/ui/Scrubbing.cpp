@@ -389,6 +389,8 @@ void Scrubber::StopScrubbing()
       const auto ctb = mProject->GetControlToolBar();
       ctb->SetPlay(false, ControlToolBar::PlayAppearance::Straight);
    }
+
+   mProject->GetRulerPanel()->HideQuickPlayIndicator();
 }
 
 void Scrubber::SetScrollScrubbing(bool scrollScrubbing)
@@ -465,24 +467,15 @@ void Scrubber::OnActivateOrDeactivateApp(wxActivateEvent &event)
 
 void Scrubber::Forwarder::OnMouse(wxMouseEvent &event)
 {
+   auto ruler = scrubber.mProject->GetRulerPanel();
    auto isScrubbing = scrubber.IsScrubbing();
-   if (!isScrubbing && scrubber.HasStartedScrubbing()) {
-      if (!event.HasAnyModifiers() &&
-          event.GetEventType() == wxEVT_MOTION) {
-
-         // Really start scrub if motion is far enough
-         auto ruler = scrubber.mProject->GetRulerPanel();
-         auto xx = ruler->ScreenToClient(::wxGetMousePosition()).x;
-         scrubber.MaybeStartScrubbing(xx);
-      }
-   }
-   else if (isScrubbing && !event.HasAnyModifiers()) {
+   if (isScrubbing && !event.HasAnyModifiers()) {
       if(event.LeftDown() ||
          (event.LeftIsDown() && event.Dragging())) {
          scrubber.mScrubSeekPress = true;
-         auto ruler = scrubber.mProject->GetRulerPanel();
          auto xx = ruler->ScreenToClient(::wxGetMousePosition()).x;
          ruler->UpdateQuickPlayPos(xx);
+         ruler->ShowQuickPlayIndicator();
       }
       else if (event.m_wheelRotation) {
          double steps = event.m_wheelRotation /
@@ -567,9 +560,25 @@ void ScrubbingOverlay::OnTimer(wxCommandEvent &event)
    event.Skip();
 
    Scrubber &scrubber = GetScrubber();
-   if (!GetScrubber().IsScrubbing()) {
-      mNextScrubRect = wxRect();
-      return;
+   const auto isScrubbing = scrubber.IsScrubbing();
+   const auto ruler = mProject->GetRulerPanel();
+   auto position = ::wxGetMousePosition();
+
+   {
+      auto xx = ruler->ScreenToClient(position).x;
+      ruler->UpdateQuickPlayPos(xx);
+
+      if(!isScrubbing && scrubber.HasStartedScrubbing()) {
+         // Really start scrub if motion is far enough
+         scrubber.MaybeStartScrubbing(xx);
+      }
+
+      if (!isScrubbing) {
+         mNextScrubRect = wxRect();
+         return;
+      }
+      else
+         ruler->ShowQuickPlayIndicator();
    }
 
    // Call ContinueScrubbing() here in the timer handler
@@ -587,9 +596,7 @@ void ScrubbingOverlay::OnTimer(wxCommandEvent &event)
       trackPanel->GetSize(&panelWidth, &panelHeight);
 
       // Where's the mouse?
-      int xx, yy;
-      ::wxGetMousePosition(&xx, &yy);
-      trackPanel->ScreenToClient(&xx, &yy);
+      position = trackPanel->ScreenToClient(position);
 
       const bool seeking = scrubber.PollIsSeeking();
 
@@ -599,7 +606,7 @@ void ScrubbingOverlay::OnTimer(wxCommandEvent &event)
 #ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
          scrubber.IsScrollScrubbing()
          ? scrubber.FindScrubSpeed
-            (seeking, mProject->GetViewInfo().PositionToTime(xx, trackPanel->GetLeftOffset()))
+            (seeking, mProject->GetViewInfo().PositionToTime(position.x, trackPanel->GetLeftOffset()))
          :
 #endif
             maxScrubSpeed;
@@ -624,11 +631,12 @@ void ScrubbingOverlay::OnTimer(wxCommandEvent &event)
          dc.SetFont(labelFont);
          dc.GetTextExtent(mNextScrubSpeedText, &width, &height);
       }
-      xx = std::max(0, std::min(panelWidth - width, xx - width / 2));
+      const auto xx =
+         std::max(0, std::min(panelWidth - width, position.x - width / 2));
 
       // Put the text above the cursor, if it fits.
       enum { offset = 20 };
-      yy -= height + offset;
+      auto yy = position.y - height + offset;
       if (yy < 0)
          yy += height + 2 * offset;
       yy = std::max(0, std::min(panelHeight - height, yy));
