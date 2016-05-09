@@ -25,6 +25,11 @@ public:
    wxFileNameWrapper(const wxFileNameWrapper &that) = default;
    wxFileNameWrapper &operator= (const wxFileNameWrapper &that) = default;
 
+#if 0
+   /* This code is disabled because swapping C++ objects with memcpy()
+      is illegal.  It crashes with some standard library
+      implementations (e.g. GCC 5). */
+
    void swap(wxFileNameWrapper &that)
    {
       if (this != &that) {
@@ -80,6 +85,7 @@ public:
       }
       return *this;
    }
+#endif
 };
 
 #endif
