@@ -55,13 +55,13 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxString(wxT("Arturo \"Buanzo\" Busleiman, ")) + _("system administration"), roleTeamMember);
    AddCredit(wxString(wxT("James Crook, ")) + _("developer"), roleTeamMember);
    AddCredit(wxString(wxT("Roger Dannenberg, ")) + _("co-founder and developer"), roleTeamMember);
-   AddCredit(wxString(wxT("Steve Daulton, ")) + _("developer, documentation and support"), roleTeamMember);
+   AddCredit(wxString(wxT("Steve Daulton")), roleTeamMember);
    AddCredit(wxString(wxT("Benjamin Drung, ")) + _("developer"), roleTeamMember);
    AddCredit(wxString(wxT("Vaughan Johnson, ")) + _("developer"), roleTeamMember);
    AddCredit(wxString(wxT("Greg Kozikowski, ")) + _("documentation and support"), roleTeamMember);
    AddCredit(wxString(wxT("Paul Licameli, ")) + _("developer"), roleTeamMember);
    AddCredit(wxString(wxT("Leland Lucius, ")) + _("developer"), roleTeamMember);
-   AddCredit(wxString(wxT("Peter Sampson, ")) + _("documentation and support"), roleTeamMember);
+   AddCredit(wxString(wxT("Peter Sampson")), roleTeamMember);
    AddCredit(wxString(wxT("Martyn Shaw, ")) + _("developer"), roleTeamMember);
    AddCredit(wxString(wxT("Bill Wharrie, ")) + _("documentation and support"), roleTeamMember);
 
@@ -239,12 +239,7 @@ AboutDialog::AboutDialog(wxWindow * parent)
       PopulateLicensePage( S );
    }
    S.EndNotebook();
-   /* i18n-hint: "OK... Audacious" appears on a button at the
-    * foot of the 'About Audacity' dialog box, after some text to read.
-    * In English it is slightly humorous alternative to an 'OK' button.
-    * If the humour doesn't work in your language, then just use whatever
-    * you would use for a translation for 'OK' on a button. */
-   wxButton *ok = safenew wxButton(S.GetParent(), wxID_OK, _("OK... Audacious!"));
+   wxButton *ok = safenew wxButton(S.GetParent(), wxID_OK, _("OK"));
    ok->SetDefault();
    S.Prop(0).AddWindow( ok );
 

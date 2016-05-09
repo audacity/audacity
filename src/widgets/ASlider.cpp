@@ -1611,13 +1611,15 @@ ASlider::ASlider( wxWindow * parent,
    mTimer.SetOwner(this);
 
 #if wxUSE_ACCESSIBILITY
-   SetAccessible( new ASliderAx( this ) );
+   SetAccessible( safenew ASliderAx( this ) );
 #endif
 }
 
 
 ASlider::~ASlider()
 {
+   if(HasCapture())
+      ReleaseMouse();
    delete mLWSlider;
 }
 

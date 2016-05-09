@@ -34,6 +34,9 @@ class TimeTrack;
 struct AudioIOStartStreamOptions;
 class SelectedRegion;
 
+// Defined in Project.h
+enum class PlayMode : int;
+
 // In the GUI, ControlToolBar appears as the "Transport Toolbar". "Control Toolbar" is historic.
 class ControlToolBar final : public ToolBar {
 
@@ -57,8 +60,13 @@ class ControlToolBar final : public ToolBar {
    void OnFF(wxCommandEvent & evt);
    void OnPause(wxCommandEvent & evt);
 
+   // Choice among the appearances of the play button:
+   enum class PlayAppearance {
+      Straight, Looped, CutPreview, Scrub
+   };
+
    //These allow buttons to be controlled externally:
-   void SetPlay(bool down, bool looped=false, bool cutPreview = false);
+   void SetPlay(bool down, PlayAppearance appearance = PlayAppearance::Straight);
    void SetStop(bool down);
    void SetRecord(bool down, bool append=false);
 
@@ -74,7 +82,9 @@ class ControlToolBar final : public ToolBar {
    // Return the Audio IO token or -1 for failure
    int PlayPlayRegion(const SelectedRegion &selectedRegion,
                       const AudioIOStartStreamOptions &options,
-                      bool cutpreview = false, bool backwards = false,
+                      PlayMode playMode,
+                      PlayAppearance appearance = PlayAppearance::Straight,
+                      bool backwards = false,
                       // Allow t0 and t1 to be beyond end of tracks
                       bool playWhiteSpace = false);
    void PlayDefault();
@@ -93,7 +103,7 @@ class ControlToolBar final : public ToolBar {
    void RegenerateToolsTooltips();
 
    int WidthForStatusBar(wxStatusBar* const);
-   wxString StateForStatusBar();
+   void UpdateStatusBar(AudacityProject *pProject);
 
  private:
 
@@ -112,7 +122,7 @@ class ControlToolBar final : public ToolBar {
    void SetupCutPreviewTracks(double playStart, double cutStart,
                              double cutEnd, double playEnd);
    void ClearCutPreviewTracks();
-   void UpdateStatusBar();
+   wxString StateForStatusBar();
 
    enum
    {

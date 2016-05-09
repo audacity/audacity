@@ -243,9 +243,30 @@ public:
       }
    }
 
+   void SetScrollbar(int position, int thumbSize,
+                     int range, int pageSize,
+                     bool refresh = true) override;
+
 private:
    DECLARE_EVENT_TABLE()
 };
+
+void ScrollBar::SetScrollbar(int position, int thumbSize,
+                             int range, int pageSize,
+                             bool refresh)
+{
+   // Mitigate flashing of scrollbars by refreshing only when something really changes.
+
+   auto changed =
+      position != GetThumbPosition() ||
+      thumbSize != GetThumbSize() ||
+      range != GetRange() ||
+      pageSize != GetPageSize();
+   if (!changed)
+      return;
+
+   wxScrollBar::SetScrollbar(position, thumbSize, range, pageSize, refresh);
+}
 
 BEGIN_EVENT_TABLE(ScrollBar, wxScrollBar)
    EVT_SET_FOCUS(ScrollBar::OnSetFocus)
@@ -286,6 +307,7 @@ public:
    }
 
    bool IsSupportedFormat(const wxDataFormat & format, Direction WXUNUSED(dir = Get)) const
+      // PRL:  This function does NOT override any inherited virtual!  What does it do?
    {
       if (format.GetType() == wxDF_FILENAME) {
          return true;
@@ -318,10 +340,10 @@ public:
    }
 
 #if defined(__WXMAC__)
-   bool GetData()
+#if !wxCHECK_VERSION(3, 0, 0)
+   bool GetData() override
    {
       bool foundSupported = false;
-#if !wxCHECK_VERSION(3, 0, 0)
       bool firstFileAdded = false;
       OSErr result;
 
@@ -373,11 +395,11 @@ public:
             break;
          }
       }
-#endif
       return foundSupported;
    }
+#endif
 
-   bool OnDrop(wxCoord x, wxCoord y)
+   bool OnDrop(wxCoord x, wxCoord y) override
    {
       bool foundSupported = false;
 #if !wxCHECK_VERSION(3, 0, 0)
@@ -411,7 +433,7 @@ public:
 
 #endif
 
-   bool OnDropFiles(wxCoord WXUNUSED(x), wxCoord WXUNUSED(y), const wxArrayString& filenames)
+   bool OnDropFiles(wxCoord WXUNUSED(x), wxCoord WXUNUSED(y), const wxArrayString& filenames) override
    {
       //sort by OD non OD.  load Non OD first so user can start editing asap.
       wxArrayString sortednames(filenames);
@@ -839,8 +861,6 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    mIsSyncLocked = false;
    gPrefs->Read(wxT("/GUI/SyncLockTracks"), &mIsSyncLocked, false);
 
-   CreateMenusAndCommands();
-
    // LLL:  Read this!!!
    //
    // Until the time (and cpu) required to refresh the track panel is
@@ -927,20 +947,25 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
                                              &mViewInfo,
                                              this,
                                              mRuler);
+   mTrackPanel->UpdatePrefs();
 
    mIndicatorOverlay = std::make_unique<PlayIndicatorOverlay>(this);
 
    mCursorOverlay = std::make_unique<EditCursorOverlay>(this);
 
 #ifdef EXPERIMENTAL_SCRUBBING_BASIC
-   // This must follow construction of *mIndicatorOverlay, because it must
-   // attach its timer event handler later (so that its handler is invoked
-   // earlier)
    mScrubOverlay = std::make_unique<ScrubbingOverlay>(this);
    mScrubber = std::make_unique<Scrubber>(this);
 #endif
 
-   // This must follow construction of *mScrubOverlay, because it must
+   // More order dependencies here...
+   // This must follow construction of *mIndicatorOverlay, because it must
+   // attach its timer event handler later (so that its handler is invoked
+   // earlier)
+   mPlaybackScroller = std::make_unique<PlaybackScroller>(this);
+
+   // This must follow construction of *mPlaybackScroller,
+   // because it must
    // attach its timer event handler later (so that its handler is invoked
    // earlier)
    this->Connect(EVT_TRACK_PANEL_TIMER,
@@ -954,6 +979,8 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
 #ifdef EXPERIMENTAL_SCRUBBING_BASIC
    mTrackPanel->AddOverlay(mScrubOverlay.get());
 #endif
+
+   CreateMenusAndCommands();
 
    // LLL: When Audacity starts or becomes active after returning from
    //      another application, the first window that can accept focus
@@ -1023,7 +1050,6 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    InitialState();
    FixScrollbars();
    mRuler->SetLeftOffset(mTrackPanel->GetLeftOffset());  // bevel on AdornedRuler
-   mRuler->SetProject(this);
 
    //
    // Set the Icon
@@ -1052,7 +1078,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    wxString msg = wxString::Format(_("Welcome to Audacity version %s"),
                                    AUDACITY_VERSION_STRING);
    mStatusBar->SetStatusText(msg, mainStatusBarField);
-   mStatusBar->SetStatusText(GetControlToolBar()->StateForStatusBar(), stateStatusBarField);
+   GetControlToolBar()->UpdateStatusBar(this);
    mLastStatusUpdateTime = ::wxGetUTCTime();
 
    mTimer = new wxTimer(this, AudacityProjectTimerID);
@@ -1077,6 +1103,10 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
 
 AudacityProject::~AudacityProject()
 {
+   // Tool manager gives us capture sometimes
+   if(HasCapture())
+      ReleaseMouse();
+
    if (wxGetApp().GetRecentFiles())
    {
       wxGetApp().GetRecentFiles()->RemoveMenu(mRecentFilesMenu);
@@ -1608,7 +1638,7 @@ void AudacityProject::TP_ScrollWindow(double scrollto)
 // handler in Track Panel. A positive argument makes the window
 // scroll down, while a negative argument scrolls up.
 //
-void AudacityProject::TP_ScrollUpDown(int delta)
+bool AudacityProject::TP_ScrollUpDown(int delta)
 {
    int oldPos = mVsbar->GetThumbPosition();
    int pos = oldPos + delta;
@@ -1629,7 +1659,10 @@ void AudacityProject::TP_ScrollUpDown(int delta)
 
       wxScrollEvent dummy;
       OnScroll(dummy);
+      return true;
    }
+   else
+      return false;
 }
 
 void AudacityProject::FixScrollbars()
@@ -1763,7 +1796,6 @@ void AudacityProject::FixScrollbars()
 
       mHsbar->SetScrollbar(scaledSbarH + offset, scaledSbarScreen, scaledSbarTotal,
          scaledSbarScreen, TRUE);
-      mHsbar->Refresh();
    }
 
    // Vertical scrollbar
@@ -1771,7 +1803,6 @@ void AudacityProject::FixScrollbars()
                         panelHeight / mViewInfo.scrollStep,
                         totalHeight / mViewInfo.scrollStep,
                         panelHeight / mViewInfo.scrollStep, TRUE);
-   mVsbar->Refresh();
 
    if (refresh || (rescroll &&
        (GetScreenEndTime() - mViewInfo.h) < mViewInfo.total)) {
@@ -2041,11 +2072,12 @@ void AudacityProject::OnScroll(wxScrollEvent & WXUNUSED(event))
 /// Determines if flags for command are compatible with current state.
 /// If not, then try some recovery action to make it so.
 /// @return whether compatible or not after any actions taken.
-bool AudacityProject::TryToMakeActionAllowed( wxUint32 & flags, wxUint32 flagsRqd, wxUint32 mask )
+bool AudacityProject::TryToMakeActionAllowed
+   ( CommandFlag & flags, CommandFlag flagsRqd, CommandFlag mask )
 {
    bool bAllowed;
 
-   if( flags == 0 )
+   if( !flags )
       flags = GetUpdateFlags();
 
    bAllowed = ((flags & mask) == (flagsRqd & mask));
@@ -2057,12 +2089,12 @@ bool AudacityProject::TryToMakeActionAllowed( wxUint32 & flags, wxUint32 flagsRq
    if( !mSelectAllOnNone )
       return false;
 
-   wxUint32 MissingFlags = (flags & ~flagsRqd) & mask;
+   auto MissingFlags = (flags & ~flagsRqd) & mask;
 
    // IF selecting all audio won't do any good, THEN return with failure.
-   if( (flags & WaveTracksExistFlag) == 0 )
+   if( !(flags & WaveTracksExistFlag) )
       return false;
-   if( (MissingFlags & ~( TimeSelectedFlag | WaveTracksSelectedFlag))!=0)
+   if( (MissingFlags & ~( TimeSelectedFlag | WaveTracksSelectedFlag)) )
       return false;
 
    OnSelectAll();
@@ -2076,7 +2108,7 @@ void AudacityProject::OnMenu(wxCommandEvent & event)
 
    bool handled = mCommandManager.HandleMenuID(event.GetId(),
                                                GetUpdateFlags(),
-                                               0xFFFFFFFF);
+                                               NoFlagsSpecifed);
 
    if (handled)
       event.Skip(false);
@@ -2129,9 +2161,11 @@ void AudacityProject::OnActivate(wxActivateEvent & event)
          mLastFocusedWindow->SetFocus();
       }
       else {
-         if (mTrackPanel) {
+         if (mTrackPanel->GetFocusedTrack()) {
             mTrackPanel->SetFocus();
          }
+         else
+            mRuler->SetFocus();
       }
       // No longer need to remember the last focused window
       mLastFocusedWindow = NULL;
@@ -5306,4 +5340,47 @@ int AudacityProject::GetEstimatedRecordingMinsLeftOnDisk() {
    // Convert to minutes before returning
    int iRecMins = (int)(dRecTime / 60.0);
    return iRecMins;
+}
+
+AudacityProject::PlaybackScroller::PlaybackScroller(AudacityProject *project)
+: mProject(project)
+{
+   mProject->Connect(EVT_TRACK_PANEL_TIMER,
+                     wxCommandEventHandler(PlaybackScroller::OnTimer),
+                     NULL,
+                     this);
+}
+
+AudacityProject::PlaybackScroller::~PlaybackScroller()
+{
+   mProject->Disconnect(EVT_TRACK_PANEL_TIMER,
+                        wxCommandEventHandler(PlaybackScroller::OnTimer),
+                        NULL,
+                        this);
+}
+
+void AudacityProject::PlaybackScroller::OnTimer(wxCommandEvent &event)
+{
+   // Let other listeners get the notification
+   event.Skip();
+
+#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
+   if (mActive && mProject->IsAudioActive())
+   {
+      // Pan the view, so that we center the play indicator.
+
+      ViewInfo &viewInfo = mProject->GetViewInfo();
+      TrackPanel *const trackPanel = mProject->GetTrackPanel();
+      const int posX = viewInfo.TimeToPosition(viewInfo.mRecentStreamTime);
+      int width;
+      trackPanel->GetTracksUsableArea(&width, NULL);
+      const int deltaX = posX - width / 2;
+      viewInfo.h =
+      viewInfo.OffsetTimeByPixels(viewInfo.h, deltaX, true);
+      if (!viewInfo.bScrollBeyondZero)
+         // Can't scroll too far left
+         viewInfo.h = std::max(0.0, viewInfo.h);
+      trackPanel->Refresh(false);
+   }
+#endif
 }

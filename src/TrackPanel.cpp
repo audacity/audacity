@@ -261,17 +261,6 @@ right and top insets
 |  |+-Border---- ... -----  ... --------------------- ...       ... -Border-+||  |
 |  |  Shadow---- ... -----  ... --------------------- ...       ... --Shadow-+|  |
 */
-enum {
-   kLeftInset = 4,
-   kRightInset = kLeftInset,
-   kTopInset = 4,
-   kShadowThickness = 1,
-   kBorderThickness = 1,
-   kTopMargin = kTopInset + kBorderThickness,
-   kBottomMargin = kShadowThickness + kBorderThickness,
-   kLeftMargin = kLeftInset + kBorderThickness,
-   kRightMargin = kRightInset + kShadowThickness + kBorderThickness,
-};
 
 // Is the distance between A and B less than D?
 template < class A, class B, class DIST > bool within(A a, B b, DIST d)
@@ -471,7 +460,6 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    mLabelTrackStartXPos=-1;
    mCircularTrackNavigation = false;
 
-   UpdatePrefs();
 
    mRedrawAfterStop = false;
 
@@ -808,6 +796,9 @@ void TrackPanel::UpdatePrefs()
    // All vertical rulers must be recalculated since the minimum and maximum
    // frequences may have been changed.
    UpdateVRulers();
+
+   mTrackInfo.UpdatePrefs();
+
    Refresh();
 }
 
@@ -1024,6 +1015,25 @@ void TrackPanel::ScrollDuringDrag()
       mAutoScrolling = true;
       mListener->TP_ScrollLeft();
    }
+   else {
+      // Bug1387:  enable autoscroll during drag, if the pointer is at either extreme x
+      // coordinate of the screen, even if that is still within the track area.
+
+      int xx = mMouseMostRecentX, yy = 0;
+      this->ClientToScreen(&xx, &yy);
+      if (xx == 0) {
+         mAutoScrolling = true;
+         mListener->TP_ScrollLeft();
+      }
+      else {
+         int width, height;
+         ::wxDisplaySize(&width, &height);
+         if (xx == width - 1) {
+            mAutoScrolling = true;
+            mListener->TP_ScrollRight();
+         }
+      }
+   }
 
    if (mAutoScrolling) {
       // AS: To keep the selection working properly as we scroll,
@@ -1145,10 +1155,10 @@ void TrackPanel::MakeParentRedrawScrollbars()
    mListener->TP_RedrawScrollbars();
 }
 
-void TrackPanel::HandleEscapeKey(bool down)
+bool TrackPanel::HandleEscapeKey(bool down)
 {
    if (!down)
-      return;
+      return false;
 
    switch (mMouseCapture)
    {
@@ -1192,16 +1202,21 @@ void TrackPanel::HandleEscapeKey(bool down)
    }
       break;
    default:
-      return;
+   {
+      // Not escaping from a mouse drag
+      return false;
+   }
    }
 
-   // Common part in all cases that do anything
+   // Common part in all cases that escape from a drag
    SetCapturedTrack(NULL, IsUncaptured);
    if (HasCapture())
       ReleaseMouse();
    wxMouseEvent dummy;
    HandleCursor(dummy);
    Refresh(false);
+
+   return true;
 }
 
 void TrackPanel::HandleAltKey(bool down)
@@ -1224,12 +1239,12 @@ void TrackPanel::HandleControlKey(bool down)
 
 void TrackPanel::HandlePageUpKey()
 {
-   mListener->TP_ScrollWindow(GetScreenEndTime());
+   mListener->TP_ScrollWindow(2 * mViewInfo->h - GetScreenEndTime());
 }
 
 void TrackPanel::HandlePageDownKey()
 {
-   mListener->TP_ScrollWindow(2 * mViewInfo->h - GetScreenEndTime());
+   mListener->TP_ScrollWindow(GetScreenEndTime());
 }
 
 void TrackPanel::HandleCursorForLastMouseEvent()
@@ -1294,7 +1309,7 @@ bool TrackPanel::SetCursorByActivity( )
    return false;
 }
 
-bool TrackPanel::SetCursorForCutline(WaveTrack * track, wxRect &rect, wxMouseEvent &event)
+bool TrackPanel::SetCursorForCutline(WaveTrack * track, wxRect &rect, const wxMouseEvent &event)
 {
    if (IsOverCutline(track, rect, event)) {
       bool unsafe = IsUnsafe();
@@ -1308,7 +1323,7 @@ bool TrackPanel::SetCursorForCutline(WaveTrack * track, wxRect &rect, wxMouseEve
 /// When in the "label" (TrackInfo or vertical ruler), we can either vertical zoom or re-order tracks.
 /// Dont't change cursor/tip to zoom if display is not waveform (either linear of dB) or Spectrum
 void TrackPanel::SetCursorAndTipWhenInLabel( Track * t,
-         wxMouseEvent &event, wxString &tip )
+         const wxMouseEvent &event, wxString &tip )
 {
    if (event.m_x >= GetVRulerOffset() && (t->GetKind() == Track::Wave) )
    {
@@ -1348,7 +1363,7 @@ void TrackPanel::SetCursorAndTipWhenInVResizeArea( bool bLinked, wxString &tip )
 /// When in a label track, find out if we've hit anything that
 /// would cause a cursor change.
 void TrackPanel::SetCursorAndTipWhenInLabelTrack( LabelTrack * pLT,
-       wxMouseEvent & event, wxString &tip )
+       const wxMouseEvent & event, wxString &tip )
 {
    int edge=pLT->OverGlyph(event.m_x, event.m_y);
    if(edge !=0)
@@ -1459,7 +1474,7 @@ void TrackPanel::HandleCenterFrequencyClick
 // we hover over, most notably when hovering over the selction boundaries.
 // Determine and set the cursor and tip accordingly.
 void TrackPanel::SetCursorAndTipWhenSelectTool( Track * t,
-        wxMouseEvent & event, wxRect &rect, bool bMultiToolMode,
+        const wxMouseEvent & event, wxRect &rect, bool bMultiToolMode,
         wxString &tip, const wxCursor ** ppCursor )
 {
    // Do not set the default cursor here and re-set later, that causes
@@ -1520,13 +1535,7 @@ void TrackPanel::SetCursorAndTipWhenSelectTool( Track * t,
    // If not shift-down and not snapping center, then
    // choose boundaries only in snapping tolerance,
    // and may choose center.
-   // But don't change the cursor when scrubbing.
    SelectionBoundary boundary =
-#ifdef EXPERIMENTAL_SCRUBBING_BASIC
-      GetProject()->GetScrubber().IsScrubbing()
-      ? SBNone
-      :
-#endif
         ChooseBoundary(event, t, rect, !bShiftDown, !bShiftDown);
 
 #ifdef USE_MIDI
@@ -1593,7 +1602,7 @@ void TrackPanel::SetCursorAndTipWhenSelectTool( Track * t,
 /// In this method we know what tool we are using,
 /// so set the cursor accordingly.
 void TrackPanel::SetCursorAndTipByTool( int tool,
-         wxMouseEvent & event, wxString& )
+         const wxMouseEvent & event, wxString& )
 {
    bool unsafe = IsUnsafe();
 
@@ -1625,7 +1634,7 @@ void TrackPanel::SetCursorAndTipByTool( int tool,
 ///  TrackPanel::HandleCursor( ) sets the cursor drawn at the mouse location.
 ///  As this procedure checks which region the mouse is over, it is
 ///  appropriate to establish the message in the status bar.
-void TrackPanel::HandleCursor(wxMouseEvent & event)
+void TrackPanel::HandleCursor(const wxMouseEvent & event)
 {
    mLastMouseEvent = event;
 
@@ -1700,11 +1709,11 @@ void TrackPanel::HandleCursor(wxMouseEvent & event)
 
       tip = ttb->GetMessageForTool(tool);
 
-      // We don't include the select tool in
-      // SetCursorAndTipByTool() because it's more complex than
-      // the other tool cases.
       if( tool != selectTool )
       {
+         // We don't include the select tool in
+         // SetCursorAndTipByTool() because it's more complex than
+         // the other tool cases.
          SetCursorAndTipByTool( tool, event, tip);
       }
       else
@@ -1761,11 +1770,7 @@ void TrackPanel::HandleSelect(wxMouseEvent & event)
       mFreqSelMode = FREQ_SEL_INVALID;
 #endif
 
-   } else if (event.LeftDClick() && !event.ShiftDown()
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
-      && !event.CmdDown()
-#endif
-      ) {
+   } else if (event.LeftDClick() && !event.ShiftDown()) {
       if (!mCapturedTrack) {
          wxRect rect;
          mCapturedTrack =
@@ -1938,26 +1943,8 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
 #endif
    ) {
 
-#ifdef EXPERIMENTAL_SCRUBBING_BASIC
-      if (
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
-         event.LeftDClick() ||
-#endif
-         event.LeftDown()) {
-         GetProject()->GetScrubber().MarkScrubStart(
-            event.m_x
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
-            , event.LeftDClick()
-#endif
-         );
-         return;
-      }
-
-#else
-
+      // Used to jump the play head, but it is redundant with timeline quick play
       // StartOrJumpPlayback(event);
-
-#endif
 
       // Not starting a drag
       SetCapturedTrack(NULL, IsUncaptured);
@@ -2679,14 +2666,6 @@ void TrackPanel::Stretch(int mouseXCoordinate, int trackLeftEdge,
 ///  handle it here.
 void TrackPanel::SelectionHandleDrag(wxMouseEvent & event, Track *clickedTrack)
 {
-#ifdef EXPERIMENTAL_SCRUBBING_BASIC
-   Scrubber &scrubber = GetProject()->GetScrubber();
-   if (scrubber.IsScrubbing() ||
-       GetProject()->GetScrubber().MaybeStartScrubbing(event))
-      // Do nothing more, don't change selection
-      return;
-#endif
-
    // AS: If we're not in the process of selecting (set in
    //  the SelectionHandleClick above), fuhggeddaboudit.
    if (mMouseCapture!=IsSelecting)
@@ -2880,7 +2859,7 @@ TrackPanel::SelectionBoundary TrackPanel::ChooseTimeBoundary
 
 
 TrackPanel::SelectionBoundary TrackPanel::ChooseBoundary
-(wxMouseEvent & event, const Track *pTrack, const wxRect &rect,
+(const wxMouseEvent & event, const Track *pTrack, const wxRect &rect,
 bool mayDragWidth, bool onlyWithinSnapDistance,
  double *pPinValue) const
 {
@@ -5504,6 +5483,13 @@ void TrackPanel::HandleResize(wxMouseEvent & event)
 /// Handle mouse wheel rotation (for zoom in/out, vertical and horizontal scrolling)
 void TrackPanel::HandleWheelRotation(wxMouseEvent & event)
 {
+   if(!event.HasAnyModifiers()) {
+      // We will later un-skip if we do anything, but if we don't,
+      // propagate the event up for the sake of the scrubber
+      event.Skip();
+      event.ResumePropagation(wxEVENT_PROPAGATE_MAX);
+   }
+
    if (GetTracks()->IsEmpty())
       // Scrolling and Zoom in and out commands are disabled when there are no tracks.
       // This should be disabled too for consistency.  Otherwise
@@ -5516,6 +5502,9 @@ void TrackPanel::HandleWheelRotation(wxMouseEvent & event)
       Track *const pTrack = FindTrack(event.m_x, event.m_y, true, false, &rect);
       if (pTrack && event.m_x >= GetVRulerOffset()) {
          HandleWheelRotationInVRuler(event, pTrack, rect);
+         // Always stop propagation even if the ruler didn't change.  The ruler
+         // is a narrow enough target.
+         event.Skip(false);
          return;
       }
    }
@@ -5605,7 +5594,8 @@ void TrackPanel::HandleWheelRotation(wxMouseEvent & event)
          double lines = steps * 4 + mVertScrollRemainder;
          mVertScrollRemainder = lines - floor(lines);
          lines = floor(lines);
-         mListener->TP_ScrollUpDown((int)-lines);
+         const bool didSomething = mListener->TP_ScrollUpDown((int)-lines);
+         event.Skip(!didSomething);
       }
    }
 }
@@ -5747,8 +5737,12 @@ void TrackPanel::OnKeyDown(wxKeyEvent & event)
    switch (event.GetKeyCode())
    {
    case WXK_ESCAPE:
-      HandleEscapeKey(true);
-      break;
+      if(HandleEscapeKey(true))
+         // Don't skip the event, eat it so that
+         // AudacityApp does not also stop any playback.
+         return;
+      else
+         break;
 
    case WXK_ALT:
       HandleAltKey(true);
@@ -5847,10 +5841,11 @@ void TrackPanel::OnChar(wxKeyEvent & event)
 
 void TrackPanel::OnKeyUp(wxKeyEvent & event)
 {
+   bool didSomething = false;
    switch (event.GetKeyCode())
    {
    case WXK_ESCAPE:
-      HandleEscapeKey(false);
+      didSomething = HandleEscapeKey(false);
       break;
    case WXK_ALT:
       HandleAltKey(false);
@@ -5865,7 +5860,8 @@ void TrackPanel::OnKeyUp(wxKeyEvent & event)
       break;
    }
 
-   event.Skip();
+   if(!didSomething)
+      event.Skip();
 }
 
 /// Should handle the case when the mouse capture is lost.
@@ -5886,6 +5882,13 @@ void TrackPanel::OnMouseEvent(wxMouseEvent & event)
 {
    if (event.m_wheelRotation != 0)
       HandleWheelRotation(event);
+
+   if (event.LeftDown() || event.LeftIsDown() || event.Moving()) {
+      // Skip, even if we do something, so that the left click or drag
+      // may have an additional effect in the scrubber.
+      event.Skip();
+      event.ResumePropagation(wxEVENT_PROPAGATE_MAX);
+   }
 
    if (!mAutoScrolling) {
       mMouseMostRecentX = event.m_x;
@@ -5917,16 +5920,26 @@ void TrackPanel::OnMouseEvent(wxMouseEvent & event)
          ReleaseMouse();
    }
 
-   if (event.Leaving() && !event.ButtonIsDown(wxMOUSE_BTN_ANY))
+   if (event.Leaving())
    {
+
       // PRL:  was this test really needed?  It interfered with my refactoring
       // that tried to eliminate those enum values.
       // I think it was never true, that mouse capture was pan or gain sliding,
       // but no mouse button was down.
       // if (mMouseCapture != IsPanSliding && mMouseCapture != IsGainSliding)
-      {
+
+      auto buttons =
+         // Bug 1325: button state in Leaving events is unreliable on Mac.
+         // Poll the global state instead.
+         // event.ButtonIsDown(wxMOUSE_BTN_ANY);
+         ::wxGetMouseState().ButtonIsDown(wxMOUSE_BTN_ANY);
+
+      if(!buttons) {
          SetCapturedTrack(NULL);
+
 #if defined(__WXMAC__)
+
          // We must install the cursor ourselves since the window under
          // the mouse is no longer this one and wx2.8.12 makes that check.
          // Should re-evaluate with wx3.
@@ -6118,7 +6131,7 @@ bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &rect, 
    return false;
 }
 
-bool TrackPanel::IsOverCutline(WaveTrack * track, wxRect &rect, wxMouseEvent &event)
+bool TrackPanel::IsOverCutline(WaveTrack * track, wxRect &rect, const wxMouseEvent &event)
 {
    for (auto loc: track->GetCachedLocations())
    {
@@ -6346,20 +6359,6 @@ void TrackPanel::HandleTrackSpecificMouseEvent(wxMouseEvent & event)
          return;
    }
 
-#ifdef EXPERIMENTAL_SCRUBBING_BASIC
-   if (GetProject()->GetScrubber().IsScrubbing() &&
-       GetRect().Contains(event.GetPosition()) &&
-       (!pTrack ||
-        pTrack->GetKind() == Track::Wave)) {
-      if (event.LeftDown()) {
-         GetProject()->GetScrubber().SetSeeking();
-         return;
-      }
-      else if (event.LeftIsDown())
-         return;
-   }
-#endif
-
    bool handled = false;
 
    if (pTrack && (pTrack->GetKind() == Track::Wave) &&
@@ -6410,7 +6409,7 @@ void TrackPanel::HandleTrackSpecificMouseEvent(wxMouseEvent & event)
 /// determine what object we are hovering over and hence what tool to use.
 /// @param pTtb - A pointer to the tools tool bar
 /// @param event - Mouse event, with info about position and what mouse buttons are down.
-int TrackPanel::DetermineToolToUse( ToolsToolBar * pTtb, wxMouseEvent & event)
+int TrackPanel::DetermineToolToUse( ToolsToolBar * pTtb, const wxMouseEvent & event)
 {
    int currentTool = pTtb->GetCurrentTool();
 
@@ -6473,7 +6472,7 @@ int TrackPanel::DetermineToolToUse( ToolsToolBar * pTtb, wxMouseEvent & event)
 
 
 #ifdef USE_MIDI
-bool TrackPanel::HitTestStretch(Track *track, wxRect &rect, wxMouseEvent & event)
+bool TrackPanel::HitTestStretch(Track *track, wxRect &rect, const wxMouseEvent & event)
 {
    // later, we may want a different policy, but for now, stretch is
    // selected when the cursor is near the center of the track and
@@ -6497,7 +6496,7 @@ bool TrackPanel::HitTestStretch(Track *track, wxRect &rect, wxMouseEvent & event
 
 /// method that tells us if the mouse event landed on an
 /// envelope boundary.
-bool TrackPanel::HitTestEnvelope(Track *track, wxRect &rect, wxMouseEvent & event)
+bool TrackPanel::HitTestEnvelope(Track *track, wxRect &rect, const wxMouseEvent & event)
 {
    wxASSERT(track);
    if( track->GetKind() != Track::Wave )
@@ -6565,7 +6564,7 @@ bool TrackPanel::HitTestEnvelope(Track *track, wxRect &rect, wxMouseEvent & even
 
 /// method that tells us if the mouse event landed on an
 /// editable sample
-bool TrackPanel::HitTestSamples(Track *track, wxRect &rect, wxMouseEvent & event)
+bool TrackPanel::HitTestSamples(Track *track, wxRect &rect, const wxMouseEvent & event)
 {
    wxASSERT(track);
    if( track->GetKind() != Track::Wave )
@@ -6616,7 +6615,7 @@ bool TrackPanel::HitTestSamples(Track *track, wxRect &rect, wxMouseEvent & event
 
 /// method that tells us if the mouse event landed on a
 /// time-slider that allows us to time shift the sequence.
-bool TrackPanel::HitTestSlide(Track * WXUNUSED(track), wxRect &rect, wxMouseEvent & event)
+bool TrackPanel::HitTestSlide(Track * WXUNUSED(track), wxRect &rect, const wxMouseEvent & event)
 {
    // Perhaps we should delegate this to TrackArtist as only TrackArtist
    // knows what the real sizes are??
@@ -7238,46 +7237,49 @@ void TrackPanel::UpdateVRulerSize()
 /// TrackPanel::OnNextTrack.
 void TrackPanel::OnPrevTrack( bool shift )
 {
-   TrackListIterator iter( mTracks );
-   Track* t = GetFocusedTrack();
-   if( t == NULL )   // if there isn't one, focus on last
+   bool rulerFocus = mRuler->HasFocus();
+   bool stealFocus = (mCircularTrackNavigation && rulerFocus);
+   if(stealFocus) // if there isn't one, focus on last
    {
-      t = iter.Last();
+      if(rulerFocus) {
+         this->SetFocus();
+         mRuler->Refresh();
+      }
+      TrackListIterator iter( mTracks );
+      auto t = iter.Last();
       SetFocusedTrack( t );
       EnsureVisible( t );
       MakeParentModifyState(false);
       return;
    }
+   else if (rulerFocus) {
+      // JKC: wxBell() is probably for accessibility, so a blind
+      // user knows they were at the top track.
+      wxBell();
+      return;
+   }
 
-   Track* p = NULL;
+   Track* t = GetFocusedTrack();
+   Track* p = mTracks->GetPrev( t, true ); // Get previous track
+   if (!p) {
+      SetFocusedTrack(nullptr);
+      mRuler->SetFocus();
+      Refresh(false);
+      mRuler->Refresh();
+      return;
+   }
+
    bool tSelected = false;
    bool pSelected = false;
    if( shift )
    {
-      p = mTracks->GetPrev( t, true ); // Get previous track
-      if( p == NULL )   // On first track
-      {
-         // JKC: wxBell() is probably for accessibility, so a blind
-         // user knows they were at the top track.
-         wxBell();
-         if( mCircularTrackNavigation )
-         {
-            TrackListIterator iter( mTracks );
-            p = iter.Last();
-         }
-         else
-         {
-            EnsureVisible( t );
-            return;
-         }
-      }
       tSelected = t->GetSelected();
       if (p)
          pSelected = p->GetSelected();
       if( tSelected && pSelected )
       {
          mTracks->Select( t, false );
-         SetFocusedTrack( p );   // move focus to next track down
+         SetFocusedTrack( p );   // move focus to next track up
          EnsureVisible( p );
          MakeParentModifyState(false);
          return;
@@ -7285,7 +7287,7 @@ void TrackPanel::OnPrevTrack( bool shift )
       if( tSelected && !pSelected )
       {
          mTracks->Select( p, true );
-         SetFocusedTrack( p );   // move focus to next track down
+         SetFocusedTrack( p );   // move focus to next track up
          EnsureVisible( p );
          MakeParentModifyState(false);
          return;
@@ -7293,7 +7295,7 @@ void TrackPanel::OnPrevTrack( bool shift )
       if( !tSelected && pSelected )
       {
          mTracks->Select( p, false );
-         SetFocusedTrack( p );   // move focus to next track down
+         SetFocusedTrack( p );   // move focus to next track up
          EnsureVisible( p );
          MakeParentModifyState(false);
          return;
@@ -7301,7 +7303,7 @@ void TrackPanel::OnPrevTrack( bool shift )
       if( !tSelected && !pSelected )
       {
          mTracks->Select( t, true );
-         SetFocusedTrack( p );   // move focus to next track down
+         SetFocusedTrack( p );   // move focus to next track up
          EnsureVisible( p );
          MakeParentModifyState(false);
          return;
@@ -7309,35 +7311,10 @@ void TrackPanel::OnPrevTrack( bool shift )
    }
    else
    {
-      p = mTracks->GetPrev( t, true ); // Get next track
-      if( p == NULL )   // On last track so stay there?
-      {
-         wxBell();
-         if( mCircularTrackNavigation )
-         {
-            TrackListIterator iter( mTracks );
-            for( Track *d = iter.First(); d; d = iter.Next( true ) )
-            {
-               p = d;
-            }
-            SetFocusedTrack( p );   // Wrap to the first track
-            EnsureVisible( p );
-            MakeParentModifyState(false);
-            return;
-         }
-         else
-         {
-            EnsureVisible( t );
-            return;
-         }
-      }
-      else
-      {
-         SetFocusedTrack( p );   // move focus to next track down
-         EnsureVisible( p );
-         MakeParentModifyState(false);
-         return;
-      }
+      SetFocusedTrack( p );   // move focus to next track up
+      EnsureVisible( p );
+      MakeParentModifyState(false);
+      return;
    }
 }
 
@@ -7346,37 +7323,46 @@ void TrackPanel::OnPrevTrack( bool shift )
 /// block or not.
 void TrackPanel::OnNextTrack( bool shift )
 {
+   if(mRuler->HasFocus()) {
+      TrackListIterator iter(mTracks);
+      auto first = iter.First();
+      if(first != nullptr) {
+         // Steal focus
+         this->SetFocus();
+         SetFocusedTrack(first);
+         EnsureVisible(first);
+         MakeParentModifyState(false);
+         mRuler->Refresh();
+      }
+      return;
+   }
+
    Track *t;
-   Track *n;
-   TrackListIterator iter( mTracks );
-   bool tSelected,nSelected;
+   Track *n = nullptr;
+   bool tSelected, nSelected;
 
    t = GetFocusedTrack();   // Get currently focused track
-   if( t == NULL )   // if there isn't one, focus on first
+   bool surrenderFocus =
+      t == nullptr ||
+      ((n = mTracks->GetNext( t, true )) == nullptr &&
+        mCircularTrackNavigation);
+
+   if( surrenderFocus )   // if there is no next, give focus to the ruler
    {
-      t = iter.First();
-      SetFocusedTrack( t );
-      EnsureVisible( t );
-      MakeParentModifyState(false);
+      SetFocusedTrack(nullptr);
+      mRuler->SetFocus();
+      mRuler->Refresh();
+      Refresh(false);
       return;
    }
 
    if( shift )
    {
-      n = mTracks->GetNext( t, true ); // Get next track
       if( n == NULL )   // On last track so stay there
       {
          wxBell();
-         if( mCircularTrackNavigation )
-         {
-            TrackListIterator iter( mTracks );
-            n = iter.First();
-         }
-         else
-         {
-            EnsureVisible( t );
-            return;
-         }
+         EnsureVisible( t );
+         return;
       }
       tSelected = t->GetSelected();
       nSelected = n->GetSelected();
@@ -7415,24 +7401,11 @@ void TrackPanel::OnNextTrack( bool shift )
    }
    else
    {
-      n = mTracks->GetNext( t, true ); // Get next track
       if( n == NULL )   // On last track so stay there
       {
          wxBell();
-         if( mCircularTrackNavigation )
-         {
-            TrackListIterator iter( mTracks );
-            n = iter.First();
-            SetFocusedTrack( n );   // Wrap to the first track
-            EnsureVisible( n );
-            MakeParentModifyState(false);
-            return;
-         }
-         else
-         {
-            EnsureVisible( t );
-            return;
-         }
+         EnsureVisible( t );
+         return;
       }
       else
       {
@@ -7446,26 +7419,25 @@ void TrackPanel::OnNextTrack( bool shift )
 
 void TrackPanel::OnFirstTrack()
 {
-   Track *t = GetFocusedTrack();
-   if (!t)
-      return;
-
-   TrackListIterator iter(mTracks);
-   Track *f = iter.First();
-   if (t != f)
-   {
-      SetFocusedTrack(f);
-      MakeParentModifyState(false);
+   SetFocusedTrack(nullptr);
+   if (!mRuler->HasFocus()) {
+      mRuler->SetFocus();
+      mRuler->Refresh();
    }
-   EnsureVisible(f);
 }
 
 void TrackPanel::OnLastTrack()
 {
-   Track *t = GetFocusedTrack();
-   if (!t)
+   if (mTracks->empty()) {
+      OnFirstTrack();
       return;
+   }
+   else if(mRuler->HasFocus()) {
+      this->SetFocus();
+      mRuler->Refresh();
+   }
 
+   Track *t = GetFocusedTrack();
    TrackListIterator iter(mTracks);
    Track *l = iter.Last();
    if (t != l)
@@ -8738,7 +8710,7 @@ void TrackPanel::SetFocusedTrack( Track *t )
    if (t && !t->GetLinked() && t->GetLink())
       t = (WaveTrack*)t->GetLink();
 
-   if (AudacityProject::GetKeyboardCaptureHandler()) {
+   if (t && AudacityProject::GetKeyboardCaptureHandler()) {
       AudacityProject::ReleaseKeyboard(this);
    }
 
@@ -8807,21 +8779,7 @@ TrackInfo::TrackInfo(TrackPanel * pParentIn)
                                PAN_SLIDER);
    mPanCaptured->SetDefaultValue(0.0);
 
-   int fontSize = 10;
-   mFont.Create(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-
-   int allowableWidth = GetTrackInfoWidth() - 2; // 2 to allow for left/right borders
-   int textWidth, textHeight;
-   do {
-      mFont.SetPointSize(fontSize);
-      pParent->GetTextExtent(_("Stereo, 999999Hz"),
-                             &textWidth,
-                             &textHeight,
-                             NULL,
-                             NULL,
-                             &mFont);
-      fontSize--;
-   } while (textWidth >= allowableWidth);
+   UpdatePrefs();
 }
 
 TrackInfo::~TrackInfo()
@@ -8831,9 +8789,6 @@ TrackInfo::~TrackInfo()
    delete mPanCaptured;
    delete mPan;
 }
-
-static const int kTrackInfoWidth = 100;
-static const int kTrackInfoBtnSize = 16; // widely used dimension, usually height
 
 int TrackInfo::GetTrackInfoWidth() const
 {
@@ -9203,6 +9158,28 @@ LWSlider * TrackInfo::PanSlider(WaveTrack *t, bool captured) const
    mPanCaptured->Set(pan);
 
    return captured ? mPanCaptured : mPan;
+}
+
+void TrackInfo::UpdatePrefs()
+{
+   // Calculation of best font size depends on language, so it should be redone in case
+   // the language preference changed.
+
+   int fontSize = 10;
+   mFont.Create(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+
+   int allowableWidth = GetTrackInfoWidth() - 2; // 2 to allow for left/right borders
+   int textWidth, textHeight;
+   do {
+      mFont.SetPointSize(fontSize);
+      pParent->GetTextExtent(_("Stereo, 999999Hz"),
+                             &textWidth,
+                             &textHeight,
+                             NULL,
+                             NULL,
+                             &mFont);
+      fontSize--;
+   } while (textWidth >= allowableWidth);
 }
 
 TrackPanelCellIterator::TrackPanelCellIterator(TrackPanel *trackPanel, bool begin)

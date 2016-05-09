@@ -8,6 +8,7 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
+#include "../../Audacity.h"
 #include "PlayIndicatorOverlay.h"
 
 #include "../../AColor.h"
@@ -17,6 +18,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../TrackPanelCell.h"
 #include "../../TrackPanelCellIterator.h"
 #include "../../widgets/Ruler.h"
+#include "Scrubbing.h"
 
 #include <wx/dc.h>
 
@@ -113,8 +115,13 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
    // Let other listeners get the notification
    event.Skip();
 
-   if (!mProject->IsAudioActive())
-      mNewIndicatorX = -1;
+   if (!mProject->IsAudioActive()) {
+      const auto &scrubber = mProject->GetScrubber();
+      if (scrubber.HasStartedScrubbing())
+         mNewIndicatorX = scrubber.GetScrubStartPosition();
+      else
+         mNewIndicatorX = -1;
+   }
    else {
       ViewInfo &viewInfo = mProject->GetViewInfo();
 
@@ -132,8 +139,8 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
       // BG: Scroll screen if option is set
       // msmeyer: But only if not playing looped or in one-second mode
       if (viewInfo.bUpdateTrackIndicator &&
-         mProject->mLastPlayMode != loopedPlay &&
-         mProject->mLastPlayMode != oneSecondPlay &&
+          mProject->mLastPlayMode != PlayMode::loopedPlay &&
+          mProject->mLastPlayMode != PlayMode::oneSecondPlay &&
          playPos >= 0 &&
          !onScreen &&
          !gAudioIO->IsPaused())

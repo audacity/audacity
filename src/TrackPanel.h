@@ -121,6 +121,8 @@ public:
 #endif
 
 private:
+   void UpdatePrefs();
+
    TrackPanel * pParent;
    wxFont mFont;
    LWSlider *mGainCaptured;
@@ -195,7 +197,7 @@ class AUDACITY_DLL_API TrackPanel final : public wxPanel {
    //virtual void SetSelectionFormat(int iformat)
    //virtual void SetSnapTo(int snapto)
 
-   virtual void HandleEscapeKey(bool down);
+   virtual bool HandleEscapeKey(bool down);
    virtual void HandleAltKey(bool down);
    virtual void HandleShiftKey(bool down);
    virtual void HandleControlKey(bool down);
@@ -250,16 +252,16 @@ class AUDACITY_DLL_API TrackPanel final : public wxPanel {
    virtual void HandleGlyphDragRelease(LabelTrack * lTrack, wxMouseEvent & event);
    virtual void HandleTextDragRelease(LabelTrack * lTrack, wxMouseEvent & event);
    virtual bool HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &rect, wxMouseEvent &event);
-   virtual bool IsOverCutline(WaveTrack * track, wxRect &rect, wxMouseEvent &event);
+   virtual bool IsOverCutline(WaveTrack * track, wxRect &rect, const wxMouseEvent &event);
    virtual void HandleTrackSpecificMouseEvent(wxMouseEvent & event);
 
    virtual void ScrollDuringDrag();
 
    // Working out where to dispatch the event to.
-   virtual int DetermineToolToUse( ToolsToolBar * pTtb, wxMouseEvent & event);
-   virtual bool HitTestEnvelope(Track *track, wxRect &rect, wxMouseEvent & event);
-   virtual bool HitTestSamples(Track *track, wxRect &rect, wxMouseEvent & event);
-   virtual bool HitTestSlide(Track *track, wxRect &rect, wxMouseEvent & event);
+   virtual int DetermineToolToUse( ToolsToolBar * pTtb, const wxMouseEvent & event);
+   virtual bool HitTestEnvelope(Track *track, wxRect &rect, const wxMouseEvent & event);
+   virtual bool HitTestSamples(Track *track, wxRect &rect, const wxMouseEvent & event);
+   virtual bool HitTestSlide(Track *track, wxRect &rect, const wxMouseEvent & event);
 #ifdef USE_MIDI
    // data for NoteTrack interactive stretch operations:
    // Stretching applies to a selected region after quantizing the
@@ -284,7 +286,7 @@ class AUDACITY_DLL_API TrackPanel final : public wxPanel {
    double mStretchSel1;  // initial sel1 (left) quantized to nearest beat
    double mStretchLeftBeats; // how many beats from left to cursor
    double mStretchRightBeats; // how many beats from cursor to right
-   virtual bool HitTestStretch(Track *track, wxRect &rect, wxMouseEvent & event);
+   virtual bool HitTestStretch(Track *track, wxRect &rect, const wxMouseEvent & event);
    virtual void Stretch(int mouseXCoordinate, int trackLeftEdge, Track *pTrack);
 #endif
 
@@ -325,14 +327,18 @@ protected:
 
    // AS: Cursor handling
    virtual bool SetCursorByActivity( );
-   virtual bool SetCursorForCutline(WaveTrack * track, wxRect &rect, wxMouseEvent &event);
-   virtual void SetCursorAndTipWhenInLabel( Track * t, wxMouseEvent &event, wxString &tip );
+   virtual bool SetCursorForCutline(WaveTrack * track, wxRect &rect, const wxMouseEvent &event);
+   virtual void SetCursorAndTipWhenInLabel( Track * t, const wxMouseEvent &event, wxString &tip );
    virtual void SetCursorAndTipWhenInVResizeArea( bool blinked, wxString &tip );
-   virtual void SetCursorAndTipWhenInLabelTrack( LabelTrack * pLT, wxMouseEvent & event, wxString &tip );
+   virtual void SetCursorAndTipWhenInLabelTrack( LabelTrack * pLT, const wxMouseEvent & event, wxString &tip );
    virtual void SetCursorAndTipWhenSelectTool
-      ( Track * t, wxMouseEvent & event, wxRect &rect, bool bMultiToolMode, wxString &tip, const wxCursor ** ppCursor );
-   virtual void SetCursorAndTipByTool( int tool, wxMouseEvent & event, wxString &tip );
-   virtual void HandleCursor(wxMouseEvent & event);
+      ( Track * t, const wxMouseEvent & event, wxRect &rect, bool bMultiToolMode, wxString &tip, const wxCursor ** ppCursor );
+   virtual void SetCursorAndTipByTool( int tool, const wxMouseEvent & event, wxString &tip );
+
+public:
+   virtual void HandleCursor(const wxMouseEvent & event);
+
+protected:
    virtual void MaySetOnDemandTip( Track * t, wxString &tip );
 
    // AS: Envelope editing handlers
@@ -699,7 +705,7 @@ protected:
       (double selend, bool onlyWithinSnapDistance,
        wxInt64 *pPixelDist = NULL, double *pPinValue = NULL) const;
    SelectionBoundary ChooseBoundary
-      (wxMouseEvent & event, const Track *pTrack,
+      (const wxMouseEvent & event, const Track *pTrack,
        const wxRect &rect,
        bool mayDragWidth,
        bool onlyWithinSnapDistance,
@@ -812,6 +818,24 @@ protected:
 
  public:
    DECLARE_EVENT_TABLE()
+};
+
+// See big pictorial comment in TrackPanel for explanation of these numbers
+enum : int {
+   kLeftInset = 4,
+   kRightInset = kLeftInset,
+   kTopInset = 4,
+   kShadowThickness = 1,
+   kBorderThickness = 1,
+   kTopMargin = kTopInset + kBorderThickness,
+   kBottomMargin = kShadowThickness + kBorderThickness,
+   kLeftMargin = kLeftInset + kBorderThickness,
+   kRightMargin = kRightInset + kShadowThickness + kBorderThickness,
+};
+
+enum : int {
+   kTrackInfoWidth = 100,
+   kTrackInfoBtnSize = 16 // widely used dimension, usually height
 };
 
 #ifdef _MSC_VER

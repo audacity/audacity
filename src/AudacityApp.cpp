@@ -93,6 +93,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "commands/Keyboard.h"
 #include "widgets/ErrorDialog.h"
 #include "prefs/DirectoriesPrefs.h"
+#include "tracks/ui/Scrubbing.h"
 
 //temporarilly commented out till it is added to all projects
 //#include "Profiler.h"
@@ -766,6 +767,9 @@ BEGIN_EVENT_TABLE(AudacityApp, wxApp)
 
    // Handle AppCommandEvents (usually from a script)
    EVT_APP_COMMAND(wxID_ANY, AudacityApp::OnReceiveCommand)
+
+   // Global ESC key handling
+   EVT_KEY_DOWN(AudacityApp::OnKeyDown)
 END_EVENT_TABLE()
 
 // backend for OnMRUFile
@@ -1519,7 +1523,26 @@ void AudacityApp::OnReceiveCommand(AppCommandEvent &event)
    mCmdHandler->OnReceiveCommand(event);
 }
 
-// We now disallow temp directory name that puts it where cleaner apps will 
+void AudacityApp::OnKeyDown(wxKeyEvent &event)
+{
+   if(event.GetKeyCode() == WXK_ESCAPE) {
+      // Stop play, including scrub, but not record
+      auto project = ::GetActiveProject();
+      auto token = project->GetAudioIOToken();
+      if((token > 0 &&
+               gAudioIO->IsAudioTokenActive(token) &&
+               gAudioIO->GetNumCaptureChannels() == 0) ||
+         project->GetScrubber().HasStartedScrubbing())
+         // ESC out of other play (but not record)
+         project->OnStop();
+      else
+         event.Skip();
+   }
+   else
+      event.Skip();
+}
+
+// We now disallow temp directory name that puts it where cleaner apps will
 // try to clean out the files.  
 bool AudacityApp::IsTempDirectoryNameOK( const wxString & Name ){
 #ifndef  __WXMSW__ 

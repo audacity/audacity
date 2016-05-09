@@ -64,6 +64,7 @@ BEGIN_EVENT_TABLE( ToolDock, wxPanel )
    EVT_ERASE_BACKGROUND( ToolDock::OnErase )
    EVT_PAINT( ToolDock::OnPaint )
    EVT_SIZE( ToolDock::OnSize )
+   EVT_MOUSE_EVENTS( ToolDock::OnMouseEvents )
 END_EVENT_TABLE()
 
 //
@@ -452,6 +453,11 @@ void ToolDock::Expose( int type, bool show )
    Updated();
 }
 
+int ToolDock::Find(ToolBar *bar) const
+{
+   return mDockedBars.Index(bar);
+}
+
 //
 // Queues an EVT_TOOLBAR_UPDATED command event to notify any
 // interested parties of an updated toolbar or dock layout
@@ -468,13 +474,16 @@ void ToolDock::Updated()
 //
 void ToolDock::OnGrabber( GrabberEvent & event )
 {
-   ToolBar *t = mBars[ event.GetId() ];
+   auto pos = event.GetPosition();
+   if (!event.IsEscaping()) {
+      ToolBar *t = mBars[ event.GetId() ];
 
-   // Pass it on to the manager since it isn't in the handling hierarchy
-   mManager->ProcessEvent( event );
+      // Pass it on to the manager since it isn't in the handling hierarchy
+      mManager->ProcessEvent( event );
 
-   // We no longer have control
-   mDockedBars.Remove( t );
+      // We no longer have control
+      mDockedBars.Remove( t );
+   }
 }
 
 //
@@ -547,4 +556,11 @@ void ToolDock::OnPaint( wxPaintEvent & WXUNUSED(event) )
          }
       }
    }
+}
+
+void ToolDock::OnMouseEvents(wxMouseEvent &event)
+{
+   // Do this hack so scrubber can detect mouse drags anywhere
+   event.ResumePropagation(wxEVENT_PROPAGATE_MAX);
+   event.Skip();
 }

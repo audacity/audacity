@@ -117,10 +117,10 @@ extern AProjectArray gAudacityProjects;
 
 WX_DEFINE_ARRAY(wxMenu *, MenuArray);
 
-enum PlayMode {
+enum class PlayMode : int {
    normalPlay,
-   oneSecondPlay,
-   loopedPlay
+   oneSecondPlay, // Disables auto-scrolling
+   loopedPlay // Disables auto-scrolling
 };
 
 enum StatusBarField {
@@ -430,7 +430,7 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    void TP_ScrollLeft() override;
    void TP_ScrollRight() override;
    void TP_ScrollWindow(double scrollto) override;
-   void TP_ScrollUpDown(int delta) override;
+   bool TP_ScrollUpDown(int delta) override;
    void TP_HandleResize() override;
 
    // ToolBar
@@ -494,7 +494,7 @@ public:
 
    void WriteXMLHeader(XMLWriter &xmlFile);
 
-   PlayMode mLastPlayMode{ normalPlay };
+   PlayMode mLastPlayMode{ PlayMode::normalPlay };
    ViewInfo mViewInfo;
 
    // Audio IO callback methods
@@ -504,7 +504,8 @@ public:
    void OnAudioIONewBlockFiles(const AutoSaveFile & blockFileLog) override;
 
    // Command Handling
-   bool TryToMakeActionAllowed( wxUint32 & flags, wxUint32 flagsRqd, wxUint32 mask );
+   bool TryToMakeActionAllowed
+      ( CommandFlag & flags, CommandFlag flagsRqd, CommandFlag mask );
 
    ///Prevents DELETE from external thread - for e.g. use of GetActiveProject
    static void AllProjectsDeleteLock();
@@ -580,7 +581,7 @@ public:
 
    CommandManager mCommandManager;
 
-   wxUint32 mLastFlags;
+   CommandFlag mLastFlags;
 
    // Window elements
 
@@ -719,6 +720,28 @@ public:
    Scrubber &GetScrubber() { return *mScrubber; }
    const Scrubber &GetScrubber() const { return *mScrubber; }
 #endif
+
+   class PlaybackScroller final : public wxEvtHandler
+   {
+   public:
+      explicit PlaybackScroller(AudacityProject *project);
+      ~PlaybackScroller();
+
+      void Activate(bool active)
+      {
+         mActive = active;
+      }
+
+   private:
+      void OnTimer(wxCommandEvent &event);
+
+      AudacityProject *mProject;
+      bool mActive { false };
+   };
+   std::unique_ptr<PlaybackScroller> mPlaybackScroller;
+
+public:
+   PlaybackScroller &GetPlaybackScroller() { return *mPlaybackScroller; }
 
    DECLARE_EVENT_TABLE()
 };

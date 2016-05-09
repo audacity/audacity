@@ -1675,5 +1675,15 @@ int TimerProgressDialog::Update(const wxString & message /*= wxEmptyString*/)
    //      what you have to do.
    wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI | wxEVT_CATEGORY_USER_INPUT | wxEVT_CATEGORY_TIMER);
 
-   return eProgressSuccess;
+   // MY: Added this after the YieldFor to check we haven't changed the outcome based on buttons pressed...
+   int iReturn = eProgressSuccess;
+   if (mCancel)
+   {
+      iReturn = eProgressCancelled;
+   }
+   else if (mStop)
+   {
+      iReturn = eProgressStopped;
+   }
+   return iReturn;
 }

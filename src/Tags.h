@@ -118,6 +118,8 @@ class AUDACITY_DLL_API Tags final : public XMLTagHandler {
    bool IsEmpty();
    void Clear();
 
+   friend bool operator == (const Tags &lhs, const Tags &rhs);
+
  private:
    void LoadDefaults();
 
@@ -129,6 +131,9 @@ class AUDACITY_DLL_API Tags final : public XMLTagHandler {
    bool mEditTitle;
    bool mEditTrackNumber;
 };
+
+inline bool operator != (const Tags &lhs, const Tags &rhs)
+{ return !(lhs == rhs); }
 
 class TagsEditor final : public wxDialog
 {

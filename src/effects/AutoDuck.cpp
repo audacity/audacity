@@ -631,6 +631,8 @@ EffectAutoDuckPanel::~EffectAutoDuckPanel()
 {
    if (mBackgroundBitmap)
       delete mBackgroundBitmap;
+   if(HasCapture())
+      ReleaseMouse();
 }
 
 void EffectAutoDuckPanel::ResetControlPoints()

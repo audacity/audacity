@@ -596,6 +596,7 @@ private:
    void OnPaint(wxPaintEvent & evt);
    void OnClose(wxCloseEvent & evt);
    void OnApply(wxCommandEvent & evt);
+   void DoCancel();
    void OnCancel(wxCommandEvent & evt);
    void OnDebug(wxCommandEvent & evt);
    void OnMenu(wxCommandEvent & evt);
@@ -657,6 +658,8 @@ private:
 
    SelectedRegion mRegion;
    double mPlayPos;
+
+   bool mDismissed{};
 
    DECLARE_EVENT_TABLE();
 };

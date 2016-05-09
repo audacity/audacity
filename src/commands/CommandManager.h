@@ -14,6 +14,8 @@
 
 #include "../Experimental.h"
 
+#include "CommandFunctors.h"
+
 #include "../MemoryX.h"
 #include <vector>
 #include <wx/string.h>
@@ -25,14 +27,6 @@
 #include "../xml/XMLTagHandler.h"
 
 #include "audacity/Types.h"
-
-class AUDACITY_DLL_API CommandFunctor /* not final */
-{
-public:
-   CommandFunctor(){};
-   virtual ~CommandFunctor(){};
-   virtual void operator()(int index, const wxEvent *e) = 0;
-};
 
 struct MenuBarListEntry
 {
@@ -54,8 +48,6 @@ struct SubMenuListEntry
    wxMenu *menu;
 };
 
-using CommandFunctorPointer = std::shared_ptr <CommandFunctor>;
-
 struct CommandListEntry
 {
    int id;
@@ -74,8 +66,8 @@ struct CommandListEntry
    bool skipKeydown;
    bool wantKeyup;
    bool isGlobal;
-   wxUint32 flags;
-   wxUint32 mask;
+   CommandFlag flags;
+   CommandMask mask;
 };
 
 using MenuBarList = std::vector < MenuBarListEntry >;
@@ -140,21 +132,21 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
                  const wxChar *label,
                  const CommandFunctorPointer &callback,
                  int checkmark,
-                 unsigned int flags,
-                 unsigned int mask);
+                 CommandFlag flags,
+                 CommandMask mask);
 
    void AddItem(const wxChar *name,
                 const wxChar *label,
                 const CommandFunctorPointer &callback,
-                unsigned int flags = NoFlagsSpecifed,
-                unsigned int mask = NoFlagsSpecifed);
+                CommandFlag flags = NoFlagsSpecifed,
+                CommandMask mask   = NoFlagsSpecifed);
 
    void AddItem(const wxChar *name,
                 const wxChar *label_in,
                 const CommandFunctorPointer &callback,
                 const wxChar *accel,
-                unsigned int flags = NoFlagsSpecifed,
-                unsigned int mask = NoFlagsSpecifed,
+                CommandFlag flags = NoFlagsSpecifed,
+                CommandMask mask   = NoFlagsSpecifed,
                 int checkmark = -1);
 
    void AddSeparator();
@@ -164,15 +156,15 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
    void AddCommand(const wxChar *name,
                    const wxChar *label,
                    const CommandFunctorPointer &callback,
-                   unsigned int flags = NoFlagsSpecifed,
-                   unsigned int mask = NoFlagsSpecifed);
+                   CommandFlag flags = NoFlagsSpecifed,
+                   CommandMask mask   = NoFlagsSpecifed);
 
    void AddCommand(const wxChar *name,
                    const wxChar *label,
                    const CommandFunctorPointer &callback,
                    const wxChar *accel,
-                   unsigned int flags = NoFlagsSpecifed,
-                   unsigned int mask = NoFlagsSpecifed);
+                   CommandFlag flags = NoFlagsSpecifed,
+                   CommandMask mask   = NoFlagsSpecifed);
 
    void AddGlobalCommand(const wxChar *name,
                          const wxChar *label,
@@ -183,19 +175,21 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
    //
 
    // For NEW items/commands
-   void SetDefaultFlags(wxUint32 flags, wxUint32 mask);
+   void SetDefaultFlags(CommandFlag flags, CommandMask mask);
+   CommandFlag GetDefaultFlags() const { return mDefaultFlags; }
+   CommandMask GetDefaultMask() const { return mDefaultMask; }
 
-   void SetCommandFlags(const wxString &name, wxUint32 flags, wxUint32 mask);
+   void SetCommandFlags(const wxString &name, CommandFlag flags, CommandMask mask);
    void SetCommandFlags(const wxChar **names,
-                        wxUint32 flags, wxUint32 mask);
+                        CommandFlag flags, CommandMask mask);
    // Pass multiple command names as const wxChar *, terminated by NULL
-   void SetCommandFlags(wxUint32 flags, wxUint32 mask, ...);
+   void SetCommandFlags(CommandFlag flags, CommandMask mask, ...);
 
    //
    // Modifying menus
    //
 
-   void EnableUsingFlags(wxUint32 flags, wxUint32 mask);
+   void EnableUsingFlags(CommandFlag flags, CommandMask mask);
    void Enable(const wxString &name, bool enabled);
    void Check(const wxString &name, bool checked);
    void Modify(const wxString &name, const wxString &newLabel);
@@ -214,8 +208,8 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
    // "permit" allows filtering even if the active window isn't a child of the project.
    // Lyrics and MixerTrackCluster classes use it.
    bool FilterKeyEvent(AudacityProject *project, const wxKeyEvent & evt, bool permit = false);
-   bool HandleMenuID(int id, wxUint32 flags, wxUint32 mask);
-   bool HandleTextualCommand(wxString & Str, wxUint32 flags, wxUint32 mask);
+   bool HandleMenuID(int id, CommandFlag flags, CommandMask mask);
+   bool HandleTextualCommand(wxString & Str, CommandFlag flags, CommandMask mask);
 
    //
    // Accessing
@@ -277,8 +271,8 @@ protected:
    // Executing commands
    //
 
-   bool HandleCommandEntry(const CommandListEntry * entry, wxUint32 flags, wxUint32 mask, const wxEvent * evt = NULL);
-   void TellUserWhyDisallowed(wxUint32 flagsGot, wxUint32 flagsRequired);
+   bool HandleCommandEntry(const CommandListEntry * entry, CommandFlag flags, CommandMask mask, const wxEvent * evt = NULL);
+   void TellUserWhyDisallowed(CommandFlag flagsGot, CommandFlag flagsRequired);
 
    //
    // Modifying
@@ -319,8 +313,8 @@ private:
    wxString mCurrentMenuName;
    wxMenu * mCurrentMenu;
 
-   wxUint32 mDefaultFlags;
-   wxUint32 mDefaultMask;
+   CommandFlag mDefaultFlags;
+   CommandMask mDefaultMask;
 };
 
 #endif

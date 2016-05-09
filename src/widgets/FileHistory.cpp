@@ -89,7 +89,8 @@ const wxString &FileHistory::GetHistoryFile(size_t i) const
       return mHistory[i];
    }
 
-   return wxEmptyString;
+   static const wxString empty;
+   return empty;
 }
 
 size_t FileHistory::GetCount()

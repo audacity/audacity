@@ -459,21 +459,39 @@ void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
       AudioIOStartStreamOptions options(p->GetDefaultPlayOptions());
       options.playLooped = looped;
       options.timeTrack = mTimeTrack.get();
+      ControlToolBar::PlayAppearance appearance =
+         cutPreview ? ControlToolBar::PlayAppearance::CutPreview
+         : looped ? ControlToolBar::PlayAppearance::Looped
+         : ControlToolBar::PlayAppearance::Straight;
       p->GetControlToolBar()->PlayPlayRegion
          (SelectedRegion(playRegionStart, playRegionEnd),
           options,
-          cutPreview);
+          PlayMode::normalPlay,
+          appearance);
    }
 }
 
 // Come here from button clicks only
 void TranscriptionToolBar::OnPlaySpeed(wxCommandEvent & WXUNUSED(event))
 {
-   // Let control have precedence over shift
-   const bool cutPreview = mButtons[TTB_PlaySpeed]->WasControlDown();
-   const bool looped = !cutPreview &&
-      mButtons[TTB_PlaySpeed]->WasShiftDown();
-   PlayAtSpeed(looped, cutPreview);
+   auto button = mButtons[TTB_PlaySpeed];
+
+   auto doubleClicked = button->IsDoubleClicked();
+   button->ClearDoubleClicked();
+
+   if (doubleClicked) {
+      GetActiveProject()->GetPlaybackScroller().Activate(true);
+
+      // Pop up the button
+      SetButton(false, button);
+   }
+   else {
+      // Let control have precedence over shift
+      const bool cutPreview = mButtons[TTB_PlaySpeed]->WasControlDown();
+      const bool looped = !cutPreview &&
+         button->WasShiftDown();
+      PlayAtSpeed(looped, cutPreview);
+   }
 }
 
 void TranscriptionToolBar::OnSpeedSlider(wxCommandEvent& WXUNUSED(event))

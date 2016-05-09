@@ -187,6 +187,8 @@ AButton::AButton(wxWindow * parent,
 
 AButton::~AButton()
 {
+   if(HasCapture())
+      ReleaseMouse();
 }
 
 void AButton::Init(wxWindow * parent,
@@ -231,7 +233,7 @@ void AButton::Init(wxWindow * parent,
 
 #if wxUSE_ACCESSIBILITY
    SetName( wxT("") );
-   SetAccessible(new AButtonAx(this));
+   SetAccessible(safenew AButtonAx(this));
 #endif
 }
 
@@ -405,6 +407,8 @@ void AButton::OnMouseEvent(wxMouseEvent & event)
    if (mEnabled && event.IsButton()) {
       if (event.ButtonIsDown(wxMOUSE_BTN_ANY)) {
          mIsClicking = true;
+         if (event.ButtonDClick())
+            mIsDoubleClicked = true;
          if( !HasCapture() )
             CaptureMouse();
       }
@@ -450,6 +454,8 @@ void AButton::OnMouseEvent(wxMouseEvent & event)
          GetActiveProject()->TP_DisplayStatusMessage(wxT(""));
       }
    }
+   else
+      event.Skip();
 }
 
 void AButton::OnCaptureLost(wxMouseCaptureLostEvent & WXUNUSED(event))

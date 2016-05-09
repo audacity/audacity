@@ -283,7 +283,7 @@ bool EffectTruncSilence::ProcessIndependently()
                if (track2->GetKind() == Track::Wave &&
                   !(track2 == track || track2 == link) &&
                   track2->GetSelected()) {
-                  ::wxMessageBox(_("When truncating independently, there may only be one selected audio track in each sync-lock group."));
+                  ::wxMessageBox(_("When truncating independently, there may only be one selected audio track in each Sync-Locked Track Group."));
                   return false;
                }
             }

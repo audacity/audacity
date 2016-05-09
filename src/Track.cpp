@@ -878,7 +878,9 @@ Track *TrackList::Add(std::unique_ptr<TrackKind> &&t)
 
 // Make instantiations for the linker to find
 template Track *TrackList::Add<TimeTrack>(std::unique_ptr<TimeTrack> &&);
+#if defined(USE_MIDI)
 template Track *TrackList::Add<NoteTrack>(std::unique_ptr<NoteTrack> &&);
+#endif
 template Track *TrackList::Add<WaveTrack>(std::unique_ptr<WaveTrack> &&);
 template Track *TrackList::Add<LabelTrack>(std::unique_ptr<LabelTrack> &&);
 

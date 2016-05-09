@@ -1723,7 +1723,7 @@ void MixerBoard::OnTimer(wxCommandEvent &event)
    if (mProject->IsAudioActive())
    {
       UpdateMeters(gAudioIO->GetStreamTime(),
-         (mProject->mLastPlayMode == loopedPlay));
+                   (mProject->mLastPlayMode == PlayMode::loopedPlay));
    }
 
    // Let other listeners get the notification

@@ -3192,6 +3192,8 @@ void EffectUIHost::OnPaint(wxPaintEvent & WXUNUSED(evt))
 
 void EffectUIHost::OnClose(wxCloseEvent & WXUNUSED(evt))
 {
+   DoCancel();
+
    CleanupRealtime();
 
    Hide();
@@ -3217,7 +3219,7 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
    // Honor the "select all if none" preference...a little hackish, but whatcha gonna do...
    if (!mIsBatch && mEffect->GetType() != EffectTypeGenerate && mProject->mViewInfo.selectedRegion.isPoint())
    {
-      wxUint32 flags = 0;
+      auto flags = AlwaysEnabledFlag;
       bool allowed = mProject->TryToMakeActionAllowed(flags,
                                                       WaveTracksSelectedFlag | TimeSelectedFlag,
                                                       WaveTracksSelectedFlag | TimeSelectedFlag);
@@ -3243,6 +3245,8 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
 
    if (IsModal())
    {
+      mDismissed = true;
+
       EndModal(true);
 
       Close();
@@ -3261,20 +3265,23 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
    return;
 }
 
+void EffectUIHost::DoCancel()
+{
+   if (!mDismissed) {
+      mEffect->mUIResultID = wxID_CANCEL;
+
+      if (IsModal())
+         EndModal(false);
+      else
+         Hide();
+
+      mDismissed = true;
+   }
+}
+
 void EffectUIHost::OnCancel(wxCommandEvent & evt)
 {
-   mEffect->mUIResultID = evt.GetId();
-
-   if (IsModal())
-   {
-      EndModal(false);
-
-      Close();
-
-      return;
-   }
-
-   Hide();
+   DoCancel();
 
    Close();
 
@@ -3429,7 +3436,7 @@ void EffectUIHost::OnPlay(wxCommandEvent & WXUNUSED(evt))
 
       mProject->GetControlToolBar()->PlayPlayRegion
          (SelectedRegion(mPlayPos, mRegion.t1()),
-          mProject->GetDefaultPlayOptions());
+          mProject->GetDefaultPlayOptions(), PlayMode::normalPlay);
    }
 }
 

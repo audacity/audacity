@@ -44,6 +44,7 @@ BEGIN_EVENT_TABLE(Grabber, wxWindow)
    EVT_LEAVE_WINDOW(Grabber::OnLeave)
    EVT_LEFT_DOWN(Grabber::OnLeftDown)
    EVT_PAINT(Grabber::OnPaint)
+   EVT_KEY_DOWN(Grabber::OnKeyDown)
 END_EVENT_TABLE()
 
 //
@@ -78,12 +79,12 @@ Grabber::~Grabber()
 //
 // Queue a drag event
 //
-void Grabber::SendEvent(wxEventType type, const wxPoint & pos)
+void Grabber::SendEvent(wxEventType type, const wxPoint & pos, bool escaping)
 {
    wxWindow *parent = GetParent();
 
    // Initialize event and convert mouse coordinates to screen space
-   GrabberEvent e(type, GetId(), parent->ClientToScreen(pos));
+   GrabberEvent e(type, GetId(), parent->ClientToScreen(pos), escaping);
 
    // Set the object of our desire
    e.SetEventObject(parent);
@@ -190,7 +191,7 @@ void Grabber::OnLeftDown(wxMouseEvent & event)
    PushButton(true);
 
    // Notify parent
-   SendEvent(EVT_GRABBER_CLICKED, event.GetPosition());
+   SendEvent(EVT_GRABBER_CLICKED, event.GetPosition(), false);
 
    event.Skip();
 }
@@ -226,4 +227,16 @@ void Grabber::OnPaint(wxPaintEvent & WXUNUSED(event))
 
    // Redraw the grabber
    DrawGrabber(dc);
+}
+
+void Grabber::OnKeyDown(wxKeyEvent &event)
+{
+   event.Skip();
+
+   if(event.GetKeyCode() == WXK_ESCAPE) {
+      // We must not only skip this key event, but propagate it up the window
+      // hierarchy, so that ToolFrame detects it too.
+      event.ResumePropagation(wxEVENT_PROPAGATE_MAX);
+      SendEvent(EVT_GRABBER_CLICKED, wxPoint{ -1, -1 }, true);
+   }
 }

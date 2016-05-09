@@ -111,7 +111,7 @@ void EditCursorOverlay::Draw
    }
 
    // AS: Ah, no, this is where we draw the blinky thing in the ruler.
-   mProject->GetRulerPanel()->DrawCursor(mCursorTime);
+   mProject->GetRulerPanel()->Refresh();
 
    // This updates related displays such as numbers on the status bar
    mProject->TP_DisplaySelection();

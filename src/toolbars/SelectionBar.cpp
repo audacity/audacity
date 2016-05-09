@@ -110,6 +110,8 @@ void SelectionBar::Create(wxWindow * parent)
 
 void SelectionBar::Populate()
 {
+   mLeftTime = mRightTime = mAudioTime = nullptr;
+
    // This will be inherited by all children:
    SetFont(wxFont(9, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
 

@@ -17,15 +17,31 @@ It is also a place to document colour usage policy in Audacity
 
 *//********************************************************************/
 
+#include "Audacity.h"
+#include "AColor.h"
+
 #include <wx/colour.h>
 #include <wx/dc.h>
 #include <wx/settings.h>
 #include <wx/utils.h>
 
-#include "AColor.h"
 #include "Theme.h"
 #include "Experimental.h"
 #include "AllThemeResources.h"
+
+void DCUnchanger::operator () (wxDC *pDC) const
+{
+   if (pDC) {
+      pDC->SetPen(pen);
+      pDC->SetBrush(brush);
+      pDC->SetLogicalFunction(wxRasterOperationMode(logicalOperation));
+   }
+}
+
+ADCChanger::ADCChanger(wxDC *pDC)
+   : Base{ pDC, ::DCUnchanger{ pDC->GetBrush(), pDC->GetPen(),
+      long(pDC->GetLogicalFunction()) } }
+{}
 
 bool AColor::inited = false;
 wxBrush AColor::lightBrush[2];
@@ -183,7 +199,7 @@ void AColor::DrawFocus(wxDC & dc, wxRect & rect)
    dc.SetLogicalFunction(wxCOPY);
 }
 
-void AColor::Bevel(wxDC & dc, bool up, wxRect & r)
+void AColor::Bevel(wxDC & dc, bool up, const wxRect & r)
 {
    if (up)
       AColor::Light(&dc, false);
@@ -211,7 +227,7 @@ wxColour AColor::Blend( const wxColour & c1, const wxColour & c2 )
    return c3;
 }
 
-void AColor::BevelTrackInfo(wxDC & dc, bool up, wxRect & r)
+void AColor::BevelTrackInfo(wxDC & dc, bool up, const wxRect & r)
 {
 #ifndef EXPERIMENTAL_THEMING
    Bevel( dc, up, r );
