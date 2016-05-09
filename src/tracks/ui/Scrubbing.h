@@ -16,7 +16,7 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/longlong.h>
 
 #include "../../Experimental.h"
-#include "../../TrackPanelOverlay.h"
+#include "../../widgets/Overlay.h"
 
 class AudacityProject;
 
@@ -128,7 +128,7 @@ private:
 };
 
 // Specialist in drawing the scrub speed, and listening for certain events
-class ScrubbingOverlay final : public wxEvtHandler, public TrackPanelOverlay
+class ScrubbingOverlay final : public wxEvtHandler, public Overlay
 {
 public:
    ScrubbingOverlay(AudacityProject *project);
@@ -136,8 +136,7 @@ public:
 
 private:
    std::pair<wxRect, bool> DoGetRectangle(wxSize size) override;
-   void Draw
-      (wxDC &dc, TrackPanelCellIterator begin, TrackPanelCellIterator end) override;
+   void Draw(OverlayPanel &panel, wxDC &dc) override;
 
    void OnTimer(wxCommandEvent &event);
 

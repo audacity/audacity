@@ -157,7 +157,6 @@ is time to refresh some aspect of the screen.
 #include "TrackPanel.h"
 #include "TrackPanelCell.h"
 #include "TrackPanelCellIterator.h"
-#include "TrackPanelOverlay.h"
 
 //#define DEBUG_DRAW_TIMING 1
 // #define SPECTRAL_EDITING_ESC_KEY
@@ -346,14 +345,13 @@ enum {
    OnZoomFitVerticalID,
 };
 
-BEGIN_EVENT_TABLE(TrackPanel, wxWindow)
+BEGIN_EVENT_TABLE(TrackPanel, OverlayPanel)
     EVT_MOUSE_EVENTS(TrackPanel::OnMouseEvent)
     EVT_MOUSE_CAPTURE_LOST(TrackPanel::OnCaptureLost)
     EVT_COMMAND(wxID_ANY, EVT_CAPTURE_KEY, TrackPanel::OnCaptureKey)
     EVT_KEY_DOWN(TrackPanel::OnKeyDown)
     EVT_KEY_UP(TrackPanel::OnKeyUp)
     EVT_CHAR(TrackPanel::OnChar)
-    EVT_SIZE(TrackPanel::OnSize)
     EVT_PAINT(TrackPanel::OnPaint)
     EVT_SET_FOCUS(TrackPanel::OnSetFocus)
     EVT_KILL_FOCUS(TrackPanel::OnKillFocus)
@@ -423,15 +421,13 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
                        ViewInfo * viewInfo,
                        TrackPanelListener * listener,
                        AdornedRulerPanel * ruler)
-   : wxPanel(parent, id, pos, size, wxWANTS_CHARS | wxNO_BORDER),
+   : OverlayPanel(parent, id, pos, size, wxWANTS_CHARS | wxNO_BORDER),
      mTrackInfo(this),
      mListener(listener),
      mTracks(tracks),
      mViewInfo(viewInfo),
      mRuler(ruler),
      mTrackArtist(NULL),
-     mBacking(NULL),
-     mResizeBacking(false),
      mRefreshBacking(false),
      mConverter(NumericConverter::TIME),
      mAutoScrolling(false),
@@ -449,11 +445,6 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
 #if wxUSE_ACCESSIBILITY
    SetAccessible( mAx );
 #endif
-
-   // Preinit the backing DC and bitmap so routines that require it will
-   // not cause a crash if they run before the panel is fully initialized.
-   mBacking = new wxBitmap(1, 1);
-   mBackingDC.SelectObject(*mBacking);
 
    mMouseCapture = IsUncaptured;
    mSlideUpDownOnly = false;
@@ -581,11 +572,6 @@ TrackPanel::~TrackPanel()
    if (HasCapture())
       ReleaseMouse();
 
-   if (mBacking)
-   {
-      mBackingDC.SelectObject( wxNullBitmap );
-      delete mBacking;
-   }
    delete mTrackArtist;
 
 
@@ -966,6 +952,7 @@ void TrackPanel::OnTimer(wxTimerEvent& )
    }
 
    DrawOverlays(false);
+   mRuler->DrawOverlays(false);
 
    if(IsAudioActive() && gAudioIO->GetNumCaptureChannels()) {
 
@@ -1054,17 +1041,6 @@ double TrackPanel::GetScreenEndTime() const
    return mViewInfo->PositionToTime(width, true);
 }
 
-/// OnSize() is called when the panel is resized
-void TrackPanel::OnSize(wxSizeEvent & /* event */)
-{
-   // Tell OnPaint() to recreate the backing bitmap
-   mResizeBacking = true;
-
-   // Refresh the entire area.  Really only need to refresh when
-   // expanding...is it worth the trouble?
-   Refresh();
-}
-
 /// AS: OnPaint( ) is called during the normal course of
 ///  completing a repaint operation.
 void TrackPanel::OnPaint(wxPaintEvent & /* event */)
@@ -1086,44 +1062,27 @@ void TrackPanel::OnPaint(wxPaintEvent & /* event */)
          // Reset (should a mutex be used???)
          mRefreshBacking = false;
 
-         if (mResizeBacking)
-         {
-            // Reset
-            mResizeBacking = false;
-
-            // Delete the backing bitmap
-            if (mBacking)
-            {
-               mBackingDC.SelectObject(wxNullBitmap);
-               delete mBacking;
-               mBacking = NULL;
-            }
-
-            wxSize sz = GetClientSize();
-            mBacking = new wxBitmap();
-            mBacking->Create(sz.x, sz.y); //, *dc);
-            mBackingDC.SelectObject(*mBacking);
-         }
-
          // Redraw the backing bitmap
-         DrawTracks(&mBackingDC);
+         DrawTracks(&GetBackingDCForRepaint());
 
          // Copy it to the display
-         dc.Blit(0, 0, mBacking->GetWidth(), mBacking->GetHeight(), &mBackingDC, 0, 0);
+         DisplayBitmap(dc);
       }
       else
       {
          // Copy full, possibly clipped, damage rectangle
-         dc.Blit(box.x, box.y, box.width, box.height, &mBackingDC, box.x, box.y);
+         RepairBitmap(dc, box.x, box.y, box.width, box.height);
       }
 
       // Done with the clipped DC
-   }
 
-   // Drawing now goes directly to the client area.  It can't use the paint DC
-   // becuase the paint DC might be clipped and DrawOverlays() may need to draw
-   // outside the clipped region.
-   DrawOverlays(true);
+      // Drawing now goes directly to the client area.
+      // DrawOverlays() may need to draw outside the clipped region.
+      // (Used to make a new, separate wxClientDC, but that risks flashing
+      // problems on Mac.)
+      dc.DestroyClippingRegion();
+      DrawOverlays(true, &dc);
+   }
 
 #if DEBUG_DRAW_TIMING
    sw.Pause();
@@ -7067,83 +7026,6 @@ void TrackPanel::DrawOutsideOfTrack(Track * t, wxDC * dc, const wxRect & rect)
       dc->DrawRectangle(side);
    }
 #endif
-}
-
-void TrackPanel::AddOverlay(TrackPanelOverlay *pOverlay)
-{
-   mOverlays.push_back(pOverlay);
-}
-
-bool TrackPanel::RemoveOverlay(TrackPanelOverlay *pOverlay)
-{
-   const size_t oldSize = mOverlays.size();
-   std::remove(mOverlays.begin(), mOverlays.end(), pOverlay);
-   return oldSize != mOverlays.size();
-}
-
-void TrackPanel::ClearOverlays()
-{
-   mOverlays.clear();
-}
-
-void TrackPanel::DrawOverlays(bool repaint)
-{
-   size_t n_pairs = mOverlays.size();
-
-   std::vector< std::pair<wxRect, bool> > pairs;
-   pairs.reserve(n_pairs);
-
-   // Find out the rectangles and outdatedness for each overlay
-   wxSize size(mBackingDC.GetSize());
-   for (const auto pOverlay : mOverlays)
-      pairs.push_back(pOverlay->GetRectangle(size));
-
-   // See what requires redrawing.  If repainting, all.
-   // If not, then whatever is outdated, and whatever will be damaged by
-   // undrawing.
-   // By redrawing only what needs it, we avoid flashing things like
-   // the cursor that are drawn with invert.
-   if (!repaint) {
-      bool done;
-      do {
-         done = true;
-         for (size_t ii = 0; ii < n_pairs; ++ii) {
-            for (size_t jj = ii + 1; jj < n_pairs; ++jj) {
-               if (pairs[ii].second != pairs[jj].second &&
-                  pairs[ii].first.Intersects(pairs[jj].first)) {
-                  done = false;
-                  pairs[ii].second = pairs[jj].second = true;
-               }
-            }
-         }
-      } while (!done);
-   }
-
-   // Erase
-   bool done = true;
-   auto it2 = pairs.begin();
-   for (auto pOverlay : mOverlays) {
-      if (repaint || it2->second) {
-         done = false;
-         wxClientDC dc(this);
-         pOverlay->Erase(dc, mBackingDC);
-      }
-      ++it2;
-   }
-
-   // Draw
-   if (!done) {
-      it2 = pairs.begin();
-      for (auto pOverlay : mOverlays) {
-         if (repaint || it2->second) {
-            wxClientDC dc(this);
-            TrackPanelCellIterator begin(this, true);
-            TrackPanelCellIterator end(this, false);
-            pOverlay->Draw(dc, begin, end);
-         }
-         ++it2;
-      }
-   }
 }
 
 /// Draw a three-level highlight gradient around the focused track.
