@@ -1208,10 +1208,12 @@
 		28FC1AFB0A47762C00A188AE /* WrappedType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28FC1AF90A47762C00A188AE /* WrappedType.cpp */; };
 		28FE4A080ABF4E960056F5C4 /* mmx_optimized.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28FE4A060ABF4E960056F5C4 /* mmx_optimized.cpp */; };
 		28FE4A090ABF4E960056F5C4 /* sse_optimized.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28FE4A070ABF4E960056F5C4 /* sse_optimized.cpp */; };
-		5E74D2D81CC4425D00D88B0B /* TrackPanelOverlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E74D2D61CC4425D00D88B0B /* TrackPanelOverlay.cpp */; };
 		5E74D2E31CC4429700D88B0B /* EditCursorOverlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E74D2DD1CC4429700D88B0B /* EditCursorOverlay.cpp */; };
 		5E74D2E41CC4429700D88B0B /* PlayIndicatorOverlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E74D2DF1CC4429700D88B0B /* PlayIndicatorOverlay.cpp */; };
 		5E74D2E51CC4429700D88B0B /* Scrubbing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E74D2E11CC4429700D88B0B /* Scrubbing.cpp */; };
+		5ED1D0AD1CDE55BD00471E3C /* Overlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5ED1D0A91CDE55BD00471E3C /* Overlay.cpp */; };
+		5ED1D0AE1CDE55BD00471E3C /* OverlayPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5ED1D0AB1CDE55BD00471E3C /* OverlayPanel.cpp */; };
+		5ED1D0B11CDE560C00471E3C /* BackedPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5ED1D0AF1CDE560C00471E3C /* BackedPanel.cpp */; };
 		8406A93812D0F2510011EA01 /* EQDefaultCurves.xml in Resources */ = {isa = PBXBuildFile; fileRef = 8406A93712D0F2510011EA01 /* EQDefaultCurves.xml */; };
 		8484F31413086237002DF7F0 /* DeviceManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8484F31213086237002DF7F0 /* DeviceManager.cpp */; };
 		ED15214D163C22F000451B5F /* lsr.c in Sources */ = {isa = PBXBuildFile; fileRef = ED152123163C220300451B5F /* lsr.c */; };
@@ -2973,8 +2975,6 @@
 		28FEC1B21A12B6FB00FACE48 /* EffectAutomationParameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EffectAutomationParameters.h; path = ../include/audacity/EffectAutomationParameters.h; sourceTree = SOURCE_ROOT; };
 		5E4685F81CCA9D84008741F2 /* CommandFunctors.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CommandFunctors.h; sourceTree = "<group>"; };
 		5E61EE0C1CBAA6BB0009FCF1 /* MemoryX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemoryX.h; sourceTree = "<group>"; };
-		5E74D2D61CC4425D00D88B0B /* TrackPanelOverlay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TrackPanelOverlay.cpp; sourceTree = "<group>"; };
-		5E74D2D71CC4425D00D88B0B /* TrackPanelOverlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackPanelOverlay.h; sourceTree = "<group>"; };
 		5E74D2D91CC4427B00D88B0B /* TrackPanelCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackPanelCell.h; sourceTree = "<group>"; };
 		5E74D2DA1CC4427B00D88B0B /* TrackPanelCellIterator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackPanelCellIterator.h; sourceTree = "<group>"; };
 		5E74D2DD1CC4429700D88B0B /* EditCursorOverlay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditCursorOverlay.cpp; sourceTree = "<group>"; };
@@ -2985,6 +2985,12 @@
 		5E74D2E21CC4429700D88B0B /* Scrubbing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Scrubbing.h; sourceTree = "<group>"; };
 		5ED18DB61CC16B1E00FAFE95 /* Reverb_libSoX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reverb_libSoX.h; sourceTree = "<group>"; };
 		5ED18DB71CC290AB00FAFE95 /* wxFileNameWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = wxFileNameWrapper.h; sourceTree = "<group>"; };
+		5ED1D0A91CDE55BD00471E3C /* Overlay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Overlay.cpp; sourceTree = "<group>"; };
+		5ED1D0AA1CDE55BD00471E3C /* Overlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Overlay.h; sourceTree = "<group>"; };
+		5ED1D0AB1CDE55BD00471E3C /* OverlayPanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OverlayPanel.cpp; sourceTree = "<group>"; };
+		5ED1D0AC1CDE55BD00471E3C /* OverlayPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OverlayPanel.h; sourceTree = "<group>"; };
+		5ED1D0AF1CDE560C00471E3C /* BackedPanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BackedPanel.cpp; sourceTree = "<group>"; };
+		5ED1D0B01CDE560C00471E3C /* BackedPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackedPanel.h; sourceTree = "<group>"; };
 		82FF184D13CF01A600C1B664 /* dBTable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dBTable.cpp; path = sbsms/src/dBTable.cpp; sourceTree = "<group>"; };
 		82FF184E13CF01A600C1B664 /* dBTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dBTable.h; path = sbsms/src/dBTable.h; sourceTree = "<group>"; };
 		82FF184F13CF01A600C1B664 /* slide.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = slide.cpp; path = sbsms/src/slide.cpp; sourceTree = "<group>"; };
@@ -3885,7 +3891,6 @@
 				1790B0EA09883BFD008A330A /* TrackArtist.cpp */,
 				1790B0EC09883BFD008A330A /* TrackPanel.cpp */,
 				1790B0EE09883BFD008A330A /* TrackPanelAx.cpp */,
-				5E74D2D61CC4425D00D88B0B /* TrackPanelOverlay.cpp */,
 				1790B0F209883BFD008A330A /* UndoManager.cpp */,
 				28C8211C1B5C661E00B53328 /* ViewInfo.cpp */,
 				1790B0F709883BFD008A330A /* VoiceKey.cpp */,
@@ -3983,7 +3988,6 @@
 				5E74D2D91CC4427B00D88B0B /* TrackPanelCell.h */,
 				5E74D2DA1CC4427B00D88B0B /* TrackPanelCellIterator.h */,
 				2803C8B619F35AA000278526 /* TrackPanelListener.h */,
-				5E74D2D71CC4425D00D88B0B /* TrackPanelOverlay.h */,
 				284416391B82D6BC0000574D /* TranslatableStringArray.h */,
 				1790B0F309883BFD008A330A /* UndoManager.h */,
 				1790B0F609883BFD008A330A /* ViewInfo.h */,
@@ -4290,46 +4294,52 @@
 			isa = PBXGroup;
 			children = (
 				1790B0FE09883BFD008A330A /* AButton.cpp */,
-				1790B0FF09883BFD008A330A /* AButton.h */,
 				1790B10009883BFD008A330A /* ASlider.cpp */,
-				1790B10109883BFD008A330A /* ASlider.h */,
 				28F1D8170A2D0018005506A7 /* AttachableScrollBar.cpp */,
-				28F1D8180A2D0018005506A7 /* AttachableScrollBar.h */,
+				5ED1D0AF1CDE560C00471E3C /* BackedPanel.cpp */,
 				283AA0E90C56ED08002CBD34 /* ErrorDialog.cpp */,
-				283AA0EA0C56ED08002CBD34 /* ErrorDialog.h */,
 				28F1D8190A2D0018005506A7 /* ExpandingToolBar.cpp */,
-				28F1D81A0A2D0018005506A7 /* ExpandingToolBar.h */,
 				28CCDCFF0F939FD70081F2FC /* FileHistory.cpp */,
-				28CCDD040F93A0B20081F2FC /* FileHistory.h */,
 				2897F6FC0AB3DCD0003C20C5 /* Grabber.cpp */,
-				2897F6FD0AB3DCD0003C20C5 /* Grabber.h */,
 				280828580A75E0EA000002EF /* Grid.cpp */,
-				280828590A75E0EA000002EF /* Grid.h */,
 				280112791943EE0E00D98A16 /* HelpSystem.cpp */,
-				2801127A1943EE0E00D98A16 /* HelpSystem.h */,
 				28530C480DF2105200555C94 /* HtmlWindow.cpp */,
-				28530C490DF2105200555C94 /* HtmlWindow.h */,
 				28F1D81B0A2D0019005506A7 /* ImageRoll.cpp */,
-				28F1D81C0A2D0019005506A7 /* ImageRoll.h */,
 				2849A41E17F8BEC2005C653F /* KeyView.cpp */,
-				2849A41F17F8BEC2005C653F /* KeyView.h */,
 				2816372C0BAE3B6C0079C746 /* LinkingHtmlWindow.cpp */,
-				2816372D0BAE3B6C0079C746 /* LinkingHtmlWindow.h */,
 				1790B10309883BFD008A330A /* Meter.cpp */,
-				1790B10409883BFD008A330A /* Meter.h */,
 				1790B10509883BFD008A330A /* MultiDialog.cpp */,
-				1790B10609883BFD008A330A /* MultiDialog.h */,
 				28001B3C1A0F0E5D007DD161 /* NumericTextCtrl.cpp */,
-				28001B3D1A0F0E5D007DD161 /* NumericTextCtrl.h */,
 				28F2CED0181867BB00573D61 /* numformatter.cpp */,
-				28F2CED1181867BB00573D61 /* numformatter.h */,
+				5ED1D0A91CDE55BD00471E3C /* Overlay.cpp */,
+				5ED1D0AB1CDE55BD00471E3C /* OverlayPanel.cpp */,
 				28530C4A0DF2105200555C94 /* ProgressDialog.cpp */,
-				28530C4B0DF2105200555C94 /* ProgressDialog.h */,
 				1790B10709883BFD008A330A /* Ruler.cpp */,
-				1790B10809883BFD008A330A /* Ruler.h */,
 				28F2CED2181867BB00573D61 /* valnum.cpp */,
-				28F2CED3181867BB00573D61 /* valnum.h */,
 				1790B10B09883BFD008A330A /* Warning.cpp */,
+				1790B0FF09883BFD008A330A /* AButton.h */,
+				1790B10109883BFD008A330A /* ASlider.h */,
+				28F1D8180A2D0018005506A7 /* AttachableScrollBar.h */,
+				5ED1D0B01CDE560C00471E3C /* BackedPanel.h */,
+				283AA0EA0C56ED08002CBD34 /* ErrorDialog.h */,
+				28F1D81A0A2D0018005506A7 /* ExpandingToolBar.h */,
+				28CCDD040F93A0B20081F2FC /* FileHistory.h */,
+				2897F6FD0AB3DCD0003C20C5 /* Grabber.h */,
+				280828590A75E0EA000002EF /* Grid.h */,
+				2801127A1943EE0E00D98A16 /* HelpSystem.h */,
+				28530C490DF2105200555C94 /* HtmlWindow.h */,
+				28F1D81C0A2D0019005506A7 /* ImageRoll.h */,
+				2849A41F17F8BEC2005C653F /* KeyView.h */,
+				2816372D0BAE3B6C0079C746 /* LinkingHtmlWindow.h */,
+				1790B10409883BFD008A330A /* Meter.h */,
+				1790B10609883BFD008A330A /* MultiDialog.h */,
+				28001B3D1A0F0E5D007DD161 /* NumericTextCtrl.h */,
+				28F2CED1181867BB00573D61 /* numformatter.h */,
+				5ED1D0AA1CDE55BD00471E3C /* Overlay.h */,
+				5ED1D0AC1CDE55BD00471E3C /* OverlayPanel.h */,
+				28530C4B0DF2105200555C94 /* ProgressDialog.h */,
+				1790B10809883BFD008A330A /* Ruler.h */,
+				28F2CED3181867BB00573D61 /* valnum.h */,
 				1790B10C09883BFD008A330A /* Warning.h */,
 			);
 			path = widgets;
@@ -7293,6 +7303,7 @@
 				1790B11C09883BFD008A330A /* AudioIO.cpp in Sources */,
 				1790B11D09883BFD008A330A /* BatchCommandDialog.cpp in Sources */,
 				1790B11E09883BFD008A330A /* BatchCommands.cpp in Sources */,
+				5ED1D0B11CDE560C00471E3C /* BackedPanel.cpp in Sources */,
 				1790B11F09883BFD008A330A /* BatchProcessDialog.cpp in Sources */,
 				1790B12009883BFD008A330A /* Benchmark.cpp in Sources */,
 				1790B12109883BFD008A330A /* LegacyAliasBlockFile.cpp in Sources */,
@@ -7415,6 +7426,7 @@
 				28F1D81F0A2D0019005506A7 /* ImageRoll.cpp in Sources */,
 				2882177B0A35D8730029AF41 /* ShuttlePrefs.cpp in Sources */,
 				28F00A930A3E2FF100A3E5F5 /* FileNames.cpp in Sources */,
+				5ED1D0AE1CDE55BD00471E3C /* OverlayPanel.cpp in Sources */,
 				28FC1AFB0A47762C00A188AE /* WrappedType.cpp in Sources */,
 				287F9F3D0A69748F00F025FA /* TimeDialog.cpp in Sources */,
 				28FBCA6B1B42E01100BB3405 /* AudioUnitEffect.cpp in Sources */,
@@ -7453,6 +7465,7 @@
 				28501EA10CEECEF80029ABAA /* HelpText.cpp in Sources */,
 				28501EA20CEECEF80029ABAA /* SplashDialog.cpp in Sources */,
 				28501EAA0CEED0670029ABAA /* LoadVamp.cpp in Sources */,
+				5ED1D0AD1CDE55BD00471E3C /* Overlay.cpp in Sources */,
 				28501EAB0CEED0680029ABAA /* VampEffect.cpp in Sources */,
 				288052C20DEA73F500671EA4 /* NonGuiThread.cpp in Sources */,
 				28530C4C0DF2105200555C94 /* HtmlWindow.cpp in Sources */,
@@ -7584,7 +7597,6 @@
 				ED920CAF15B19F61008CA12C /* ModulePrefs.cpp in Sources */,
 				EDD2431416934A6100D9DEC2 /* BassTreble.cpp in Sources */,
 				ED19449A1733F92800F4F5CA /* Reverb.cpp in Sources */,
-				5E74D2D81CC4425D00D88B0B /* TrackPanelOverlay.cpp in Sources */,
 				2849A42017F8BEC2005C653F /* KeyView.cpp in Sources */,
 				284FD04217FC72A50009A025 /* ScienFilter.cpp in Sources */,
 				284FD04517FC72EE0009A025 /* Biquad.cpp in Sources */,

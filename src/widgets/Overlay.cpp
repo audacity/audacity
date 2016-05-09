@@ -1,22 +1,20 @@
-/**********************************************************************
+//
+//  Overlay.cpp
+//  Audacity
+//
+//  Created by Paul Licameli on 5/7/16.
+//
+//
 
-Audacity: A Digital Audio Editor
-
-TrackPanelOverlay.cpp
-
-Paul Licameli split from TrackPanel.cpp
-
-**********************************************************************/
-
-#include "TrackPanelOverlay.h"
+#include "Overlay.h"
 
 #include <wx/dc.h>
 
-TrackPanelOverlay::~TrackPanelOverlay()
+Overlay::~Overlay()
 {
 }
 
-std::pair<wxRect, bool> TrackPanelOverlay::GetRectangle(wxSize size)
+std::pair<wxRect, bool> Overlay::GetRectangle(wxSize size)
 {
    auto result = DoGetRectangle(size);
 #ifdef __WXMAC__
@@ -28,7 +26,7 @@ std::pair<wxRect, bool> TrackPanelOverlay::GetRectangle(wxSize size)
    return result;
 }
 
-void TrackPanelOverlay::Erase(wxDC &dc, wxDC &src)
+void Overlay::Erase(wxDC &dc, wxDC &src)
 {
    wxRect rect(dc.GetSize());
    rect.Intersect(src.GetSize());

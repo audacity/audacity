@@ -8,6 +8,7 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
+#include "../../Audacity.h"
 #include "Scrubbing.h"
 #include "../../Experimental.h"
 #include <functional>
@@ -532,8 +533,7 @@ std::pair<wxRect, bool> ScrubbingOverlay::DoGetRectangle(wxSize)
    );
 }
 
-void ScrubbingOverlay::Draw
-   (wxDC &dc, TrackPanelCellIterator, TrackPanelCellIterator)
+void ScrubbingOverlay::Draw(OverlayPanel &, wxDC &dc)
 {
    mLastScrubRect = mNextScrubRect;
    mLastScrubSpeedText = mNextScrubSpeedText;

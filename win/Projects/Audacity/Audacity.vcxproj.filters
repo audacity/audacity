@@ -860,9 +860,6 @@
     <ClCompile Include="..\..\..\src\RealFFTf48x.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\TrackPanelOverlay.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\tracks\ui\EditCursorOverlay.cpp">
       <Filter>src\tracks\ui</Filter>
     </ClCompile>
@@ -874,6 +871,15 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\TrackPanel.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\widgets\BackedPanel.cpp">
+      <Filter>src\widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\widgets\Overlay.cpp">
+      <Filter>src\widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\widgets\OverlayPanel.cpp">
+      <Filter>src\widgets</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1732,9 +1738,6 @@
     <ClInclude Include="..\..\..\src\effects\VST\VSTControlMSW.h">
       <Filter>src\effects\VST</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\TrackPanelOverlay.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\TranslatableStringArray.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -1770,6 +1773,15 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\commands\CommandFunctors.h">
       <Filter>src\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\widgets\BackedPanel.h">
+      <Filter>src\widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\widgets\Overlay.h">
+      <Filter>src\widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\widgets\OverlayPanel.h">
+      <Filter>src\widgets</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
