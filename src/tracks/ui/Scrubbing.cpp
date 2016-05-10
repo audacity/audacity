@@ -188,11 +188,7 @@ namespace {
 
 void Scrubber::MarkScrubStart(
    // Assume xx is relative to the left edge of TrackPanel!
-   wxCoord xx
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
-   , bool smoothScrolling
-#endif
-   , bool alwaysSeeking
+   wxCoord xx, bool smoothScrolling, bool alwaysSeeking
 )
 {
    UncheckAllMenuItems();
@@ -200,9 +196,7 @@ void Scrubber::MarkScrubStart(
    // Don't actually start scrubbing, but collect some information
    // needed for the decision to start scrubbing later when handling
    // drag events.
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
    mSmoothScrollingScrub  = smoothScrolling;
-#endif
    mAlwaysSeeking = alwaysSeeking;
 
    ControlToolBar * const ctb = mProject->GetControlToolBar();
@@ -350,15 +344,13 @@ void Scrubber::ContinueScrubbing()
          // Cause OnTimer() to suppress the speed display
          mScrubSpeedDisplayCountdown = 1;
 
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
       if (mSmoothScrollingScrub) {
          const double speed = FindScrubSpeed(seek, time);
          result = gAudioIO->EnqueueScrubBySignedSpeed(speed, mMaxScrubSpeed, seek);
       }
       else
-#endif
          result = gAudioIO->EnqueueScrubByPosition
-         (time, seek ? 1.0 : mMaxScrubSpeed, seek);
+            (time, seek ? 1.0 : mMaxScrubSpeed, seek);
    }
 
    if (result)
@@ -366,12 +358,9 @@ void Scrubber::ContinueScrubbing()
    // else, if seek requested, try again at a later time when we might
    // enqueue a long enough stutter
 
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
    if (mSmoothScrollingScrub)
       ;
-   else
-#endif
-   {
+   else {
       if (mScrubSpeedDisplayCountdown > 0)
          --mScrubSpeedDisplayCountdown;
    }
@@ -404,9 +393,7 @@ bool Scrubber::IsScrubbing() const
    else {
       const_cast<Scrubber&>(*this).mScrubToken = -1;
       const_cast<Scrubber&>(*this).mScrubStartPosition = -1;
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
       const_cast<Scrubber&>(*this).mSmoothScrollingScrub = false;
-#endif
       return false;
    }
 }
@@ -417,10 +404,8 @@ bool Scrubber::ShouldDrawScrubSpeed()
       mScrubHasFocus && (
       // Draw for (non-scroll) scrub, sometimes, but never for seek
       (!PollIsSeeking() && mScrubSpeedDisplayCountdown > 0)
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
       // Draw always for scroll-scrub and for scroll-seek
        || mSmoothScrollingScrub
-#endif
       );
 }
 
@@ -442,9 +427,7 @@ void Scrubber::HandleScrollWheel(int steps)
       newSpeed <= AudioIO::GetMaxScrubSpeed()) {
       mLogMaxScrubSpeed = newLogMaxScrubSpeed;
       mMaxScrubSpeed = newSpeed;
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
       if (!mSmoothScrollingScrub)
-#endif
          // Show the speed for one second
          mScrubSpeedDisplayCountdown = kOneSecondCountdown + 1;
    }
@@ -539,11 +522,9 @@ void ScrubbingOverlay::Draw(OverlayPanel &, wxDC &dc)
    //  (b) Error alerts
    // So they were changed to 'orange' and 'lime'.
    static const wxColour clrNoScroll(215, 162, 0), clrScroll(0, 204, 153);
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
    if (scrubber.IsScrollScrubbing())
       dc.SetTextForeground(clrScroll);
    else
-#endif
       dc.SetTextForeground(clrNoScroll);
 
    dc.DrawText(mLastScrubSpeedText, mLastScrubRect.GetX(), mLastScrubRect.GetY());
@@ -598,23 +579,17 @@ void ScrubbingOverlay::OnTimer(wxCommandEvent &event)
       // Find the text
       const double maxScrubSpeed = GetScrubber().GetMaxScrubSpeed();
       const double speed =
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
          scrubber.IsScrollScrubbing()
          ? scrubber.FindScrubSpeed
             (seeking, mProject->GetViewInfo().PositionToTime(position.x, trackPanel->GetLeftOffset()))
-         :
-#endif
-            maxScrubSpeed;
+         : maxScrubSpeed;
 
       const wxChar *format =
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
          scrubber.IsScrollScrubbing()
          ? seeking
             ? wxT("%+.2fX")
             : wxT("%+.2f")
-         :
-#endif
-            wxT("%.2f");
+         : wxT("%.2f");
 
       mNextScrubSpeedText = wxString::Format(format, speed);
 

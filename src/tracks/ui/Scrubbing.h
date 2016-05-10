@@ -29,11 +29,8 @@ public:
 
    // Assume xx is relative to the left edge of TrackPanel!
    void MarkScrubStart(
-      wxCoord xx
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
-      , bool smoothScrolling
-#endif
-      , bool alwaysSeeking // if false, can switch seeking or scrubbing
+      wxCoord xx, bool smoothScrolling,
+      bool alwaysSeeking // if false, can switch seeking or scrubbing
                            // by mouse button state
    );
 

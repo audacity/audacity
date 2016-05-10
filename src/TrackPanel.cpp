@@ -5472,12 +5472,9 @@ void TrackPanel::HandleWheelRotation(wxMouseEvent & event)
       (event.m_wheelDelta > 0 ? (double)event.m_wheelDelta : 120.0);
 
    if (event.ShiftDown()
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
        // Don't pan during smooth scrolling.  That would conflict with keeping
        // the play indicator centered.
-       && !GetProject()->GetScrubber().IsScrollScrubbing()
-#endif
-      )
+       && !GetProject()->GetScrubber().IsScrollScrubbing())
    {
       // MM: Scroll left/right when used with Shift key down
       mListener->TP_ScrollWindow(
@@ -5506,15 +5503,12 @@ void TrackPanel::HandleWheelRotation(wxMouseEvent & event)
       // Time corresponding to mouse position
       wxCoord xx;
       double center_h;
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
       if (GetProject()->GetScrubber().IsScrollScrubbing()) {
          // Expand or contract about the center, ignoring mouse position
          center_h = mViewInfo->h + (GetScreenEndTime() - mViewInfo->h) / 2.0;
          xx = mViewInfo->TimeToPosition(center_h, trackLeftEdge);
       }
-      else
-#endif
-      {
+      else {
          xx = event.m_x;
          center_h = mViewInfo->PositionToTime(xx, trackLeftEdge);
       }
