@@ -293,6 +293,10 @@ public:
 
    ~AdornedRulerPanel();
 
+#ifndef EXPERIMENTAL_TIME_RULER_NAVIGATION
+   bool AcceptsFocus() const override { return false; }
+#endif
+
 public:
    static int GetRulerHeight();
    static int GetRulerHeight(bool showScrubBar);

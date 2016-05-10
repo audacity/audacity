@@ -45,6 +45,12 @@ TracksPrefs::~TracksPrefs()
 {
 }
 
+const wxChar *TracksPrefs::ScrollingPreferenceKey()
+{
+   static auto string = wxT("/GUI/ScrollBeyondZero");
+   return string;
+}
+
 void TracksPrefs::Populate()
 {
    mSoloCodes.Add(wxT("Simple"));
@@ -134,8 +140,8 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
                     true);
 #ifdef EXPERIMENTAL_SCROLLING_LIMITS
       S.TieCheckBox(_("Enable scrolling left of &zero"),
-                    wxT("/GUI/ScrollBeyondZero"),
-                    false);
+                    ScrollingPreferenceKey(),
+                    ScrollingPreferenceDefault());
 #endif
 
       S.AddSpace(10);

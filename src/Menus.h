@@ -179,6 +179,8 @@ double GetTime(const Track *t);
 void OnSortTime();
 void OnSortName();
 
+void OnToggleScrollLeftOfZero();
+
 void OnSnapToOff();
 void OnSnapToNearest();
 void OnSnapToPrior();
