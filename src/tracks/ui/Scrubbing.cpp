@@ -201,7 +201,7 @@ void Scrubber::MarkScrubStart(
    // needed for the decision to start scrubbing later when handling
    // drag events.
 #ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
-   SetScrollScrubbing (smoothScrolling);
+   mSmoothScrollingScrub  = smoothScrolling;
 #endif
    mAlwaysSeeking = alwaysSeeking;
 
@@ -303,8 +303,10 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
          // Wait to test again
          mScrubStartClockTimeMillis = ::wxGetLocalTimeMillis();
 
-      if (IsScrubbing())
+      if (IsScrubbing()) {
+         mProject->GetPlaybackScroller().Activate(mSmoothScrollingScrub);
          mScrubHasFocus = true;
+      }
 
       // Return true whether we started scrub, or are still waiting to decide.
       return true;
@@ -380,7 +382,7 @@ void Scrubber::StopScrubbing()
    UncheckAllMenuItems();
 
    mScrubStartPosition = -1;
-   SetScrollScrubbing (false);
+   mProject->GetPlaybackScroller().Activate(false);
 
    if (!IsScrubbing())
    {
@@ -393,12 +395,6 @@ void Scrubber::StopScrubbing()
    mProject->GetRulerPanel()->HideQuickPlayIndicator();
 }
 
-void Scrubber::SetScrollScrubbing(bool scrollScrubbing)
-{
-   mSmoothScrollingScrub = scrollScrubbing;
-   mProject->GetPlaybackScroller().Activate(scrollScrubbing);
-}
-
 bool Scrubber::IsScrubbing() const
 {
    if (mScrubToken <= 0)
@@ -409,7 +405,6 @@ bool Scrubber::IsScrubbing() const
       const_cast<Scrubber&>(*this).mScrubToken = -1;
       const_cast<Scrubber&>(*this).mScrubStartPosition = -1;
 #ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
-      // Don't call SetScrollScrubbing
       const_cast<Scrubber&>(*this).mSmoothScrollingScrub = false;
 #endif
       return false;
@@ -677,7 +672,8 @@ void Scrubber::DoScrub(bool scroll, bool seek)
       MarkScrubStart(xx, scroll, seek);
    }
    else if(!match) {
-      SetScrollScrubbing(scroll);
+      mSmoothScrollingScrub = scroll;
+      mProject->GetPlaybackScroller().Activate(scroll);
       mAlwaysSeeking = seek;
       UncheckAllMenuItems();
       CheckMenuItem();
