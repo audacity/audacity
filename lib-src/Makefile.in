@@ -134,9 +134,8 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/ac_c99_func_lrint.m4 \
 	$(top_srcdir)/m4/libtool.m4 $(top_srcdir)/m4/ltoptions.m4 \
 	$(top_srcdir)/m4/ltsugar.m4 $(top_srcdir)/m4/ltversion.m4 \
 	$(top_srcdir)/m4/lt~obsolete.m4 $(top_srcdir)/m4/nls.m4 \
-	$(top_srcdir)/m4/pkg.m4 $(top_srcdir)/m4/po.m4 \
-	$(top_srcdir)/m4/progtest.m4 $(top_srcdir)/m4/visibility.m4 \
-	$(top_srcdir)/configure.ac
+	$(top_srcdir)/m4/po.m4 $(top_srcdir)/m4/progtest.m4 \
+	$(top_srcdir)/m4/visibility.m4 $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
@@ -232,12 +231,6 @@ AUDACITY_NAME = @AUDACITY_NAME@
 AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
-AVCODEC_CFLAGS = @AVCODEC_CFLAGS@
-AVCODEC_LIBS = @AVCODEC_LIBS@
-AVFORMAT_CFLAGS = @AVFORMAT_CFLAGS@
-AVFORMAT_LIBS = @AVFORMAT_LIBS@
-AVUTIL_CFLAGS = @AVUTIL_CFLAGS@
-AVUTIL_LIBS = @AVUTIL_LIBS@
 AWK = @AWK@
 BUILD_LDFLAGS = @BUILD_LDFLAGS@
 CC = @CC@
@@ -278,8 +271,6 @@ GMSGFMT_015 = @GMSGFMT_015@
 GREP = @GREP@
 GSTREAMER_CFLAGS = @GSTREAMER_CFLAGS@
 GSTREAMER_LIBS = @GSTREAMER_LIBS@
-GTK_CFLAGS = @GTK_CFLAGS@
-GTK_LIBS = @GTK_LIBS@
 HAVE_GTK = @HAVE_GTK@
 HAVE_PKG_CONFIG = @HAVE_PKG_CONFIG@
 HAVE_VISIBILITY = @HAVE_VISIBILITY@
@@ -293,8 +284,6 @@ INSTALL_SCRIPT = @INSTALL_SCRIPT@
 INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
 INTLLIBS = @INTLLIBS@
 INTL_MACOSX_LIBS = @INTL_MACOSX_LIBS@
-JACK_CFLAGS = @JACK_CFLAGS@
-JACK_LIBS = @JACK_LIBS@
 LAME_CFLAGS = @LAME_CFLAGS@
 LAME_LIBS = @LAME_LIBS@
 LD = @LD@
@@ -341,7 +330,6 @@ PACKAGE_TARNAME = @PACKAGE_TARNAME@
 PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
-PKG_CONFIG = @PKG_CONFIG@
 PORTAUDIO_CFLAGS = @PORTAUDIO_CFLAGS@
 PORTAUDIO_LIBS = @PORTAUDIO_LIBS@
 PORTMIXER_LIBS = @PORTMIXER_LIBS@
