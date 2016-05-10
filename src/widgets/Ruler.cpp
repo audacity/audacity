@@ -2923,7 +2923,6 @@ void AdornedRulerPanel::OnKeyDown(wxKeyEvent &event)
 void AdornedRulerPanel::OnSetFocus(wxFocusEvent & WXUNUSED(event))
 {
    AudacityProject::CaptureKeyboard(this);
-   mProject->GetTrackPanel()->SetFocusedTrack(nullptr);
    mTabState = TabState{};
    Refresh( false );
 }

@@ -1139,8 +1139,8 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddCommand(wxT("SeekLeftLong"), _("Long seek left during playback"), FN(OnSeekLeftLong), wxT("Shift+Left\tallowDup"));
    c->AddCommand(wxT("SeekRightLong"), _("Long Seek right during playback"), FN(OnSeekRightLong), wxT("Shift+Right\tallowDup"));
 
-   c->SetDefaultFlags(TrackPanelOrRulerHasFocus,
-                      TrackPanelOrRulerHasFocus);
+   c->SetDefaultFlags(TracksExistFlag | TrackPanelHasFocus,
+                      TracksExistFlag | TrackPanelHasFocus);
 
    c->AddCommand(wxT("PrevTrack"), _("Move Focus to Previous Track"), FN(OnCursorUp), wxT("Up"));
    c->AddCommand(wxT("NextTrack"), _("Move Focus to Next Track"), FN(OnCursorDown), wxT("Down"));
@@ -1151,9 +1151,6 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddCommand(wxT("ShiftUp"), _("Move Focus to Previous and Select"), FN(OnShiftUp), wxT("Shift+Up"));
    c->AddCommand(wxT("ShiftDown"), _("Move Focus to Next and Select"), FN(OnShiftDown), wxT("Shift+Down"));
 
-
-   c->SetDefaultFlags(TracksExistFlag | TrackPanelHasFocus,
-                      TracksExistFlag | TrackPanelHasFocus);
 
    c->AddCommand(wxT("Toggle"), _("Toggle Focused Track"), FN(OnToggle), wxT("Return"));
    c->AddCommand(wxT("ToggleAlt"), _("Toggle Focused Track"), FN(OnToggle), wxT("NUMPAD_ENTER"));
@@ -1745,8 +1742,6 @@ CommandFlag AudacityProject::GetUpdateFlags()
       flags |= TextClipFlag;
 
    flags |= GetFocusedFrame();
-   if (flags & (TrackPanelHasFocus | RulerHasFocus))
-      flags |= TrackPanelOrRulerHasFocus;
 
    double start, end;
    GetPlayRegion(&start, &end);
@@ -2745,13 +2740,17 @@ void AudacityProject::NextFrame()
    switch( GetFocusedFrame() )
    {
       case TopDockHasFocus:
-         if(mTrackPanel->GetFocusedTrack())
-            mTrackPanel->SetFocus();
-         else
-            mRuler->SetFocus();
+
+#ifdef EXPERIMENTAL_TIME_RULER_NAVIGATION
+         mRuler->SetFocus();
       break;
 
       case RulerHasFocus:
+#endif
+
+         mTrackPanel->SetFocus();
+      break;
+
       case TrackPanelHasFocus:
          mToolManager->GetBotDock()->SetFocus();
       break;
@@ -2769,20 +2768,24 @@ void AudacityProject::PrevFrame()
 {
    switch( GetFocusedFrame() )
    {
-      case TopDockHasFocus:
-         mToolManager->GetBotDock()->SetFocus();
+      case BotDockHasFocus:
+         mTrackPanel->SetFocus();
+      break;
+         
+      case TrackPanelHasFocus:
+
+#ifdef EXPERIMENTAL_TIME_RULER_NAVIGATION
+         mRuler->SetFocus();
       break;
 
-      case TrackPanelHasFocus:
       case RulerHasFocus:
+#endif
+
          mToolManager->GetTopDock()->SetFocus();
       break;
-
-      case BotDockHasFocus:
-         if(mTrackPanel->GetFocusedTrack())
-            mTrackPanel->SetFocus();
-         else
-            mRuler->SetFocus();
+         
+      case TopDockHasFocus:
+         mToolManager->GetBotDock()->SetFocus();
       break;
 
       default:

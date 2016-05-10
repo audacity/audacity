@@ -96,8 +96,6 @@ enum CommandFlag : unsigned long long
                           = 0x80000000ULL, // prl
    RulerHasFocus
                          = 0x100000000ULL, // prl
-   TrackPanelOrRulerHasFocus
-                         = 0x200000000ULL, // prl
 
    NoFlagsSpecifed        = ~0ULL
 };
