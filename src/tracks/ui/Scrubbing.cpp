@@ -188,11 +188,7 @@ namespace {
 
 void Scrubber::MarkScrubStart(
    // Assume xx is relative to the left edge of TrackPanel!
-   wxCoord xx
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
-   , bool smoothScrolling
-#endif
-   , bool alwaysSeeking
+   wxCoord xx, bool smoothScrolling, bool alwaysSeeking
 )
 {
    UncheckAllMenuItems();
@@ -200,9 +196,7 @@ void Scrubber::MarkScrubStart(
    // Don't actually start scrubbing, but collect some information
    // needed for the decision to start scrubbing later when handling
    // drag events.
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
-   SetScrollScrubbing (smoothScrolling);
-#endif
+   mSmoothScrollingScrub  = smoothScrolling;
    mAlwaysSeeking = alwaysSeeking;
 
    ControlToolBar * const ctb = mProject->GetControlToolBar();
@@ -236,6 +230,9 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
    if (IsScrubbing())
       return false;
    else {
+      const auto state = ::wxGetMouseState();
+      mDragging = state.LeftIsDown();
+
       const bool busy = gAudioIO->IsBusy();
       if (busy && gAudioIO->GetNumCaptureChannels() > 0) {
          // Do not stop recording, and don't try to start scrubbing after
@@ -265,6 +262,14 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
                mScrubStartPosition = position;
             }
 
+            if (mDragging && mSmoothScrollingScrub) {
+               auto delta = time0 - time1;
+               time0 = std::max(0.0, std::min(maxTime,
+                  (viewInfo.h + mProject->GetScreenEndTime()) / 2
+               ));
+               time1 = time0 + delta;
+            }
+
             AudioIOStartStreamOptions options(mProject->GetDefaultPlayOptions());
             options.timeTrack = NULL;
             options.scrubDelay = (kTimerInterval / 1000.0);
@@ -278,8 +283,10 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
                p->GetTranscriptionToolBar()->GetPlaySpeed();
             }
 #else
-            // That idea seems unpopular... just make it one
-            mMaxScrubSpeed = options.maxScrubSpeed = 1.0;
+            // That idea seems unpopular... just make it one for move-scrub,
+            // but big for drag-scrub
+            mMaxScrubSpeed = options.maxScrubSpeed =
+               mDragging ? AudioIO::GetMaxScrubSpeed() : 1.0;
 #endif
             options.maxScrubTime = mProject->GetTracks()->GetEndTime();
             ControlToolBar::PlayAppearance appearance =
@@ -303,8 +310,11 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
          // Wait to test again
          mScrubStartClockTimeMillis = ::wxGetLocalTimeMillis();
 
-      if (IsScrubbing())
+      if (IsScrubbing()) {
+         mProject->GetPlaybackScroller().Activate(mSmoothScrollingScrub);
          mScrubHasFocus = true;
+         mLastScrubPosition = xx;
+      }
 
       // Return true whether we started scrub, or are still waiting to decide.
       return true;
@@ -313,13 +323,19 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
 
 void Scrubber::ContinueScrubbing()
 {
+   const wxMouseState state(::wxGetMouseState());
+
+   if (mDragging && !state.LeftIsDown()) {
+      // Stop and set cursor
+      mProject->DoPlayStopSelect(true, state.ShiftDown());
+      return;
+   }
 
    // Thus scrubbing relies mostly on periodic polling of mouse and keys,
    // not event notifications.  But there are a few event handlers that
    // leave messages for this routine, in mScrubSeekPress and in mScrubHasFocus.
 
    // Seek only when the pointer is in the panel.  Else, scrub.
-   const wxMouseState state(::wxGetMouseState());
    TrackPanel *const trackPanel = mProject->GetTrackPanel();
 
    // Decide whether to skip play, because either mouse is down now,
@@ -337,26 +353,32 @@ void Scrubber::ContinueScrubbing()
    }
 
    const wxPoint position = trackPanel->ScreenToClient(state.GetPosition());
-   // When we don't have focus, enqueue silent scrubs until we regain focus.
+   const auto &viewInfo = mProject->GetViewInfo();
+
    bool result = false;
    if (!mScrubHasFocus)
+      // When we don't have focus, enqueue silent scrubs until we regain focus.
       result = gAudioIO->EnqueueScrubBySignedSpeed(0, mMaxScrubSpeed, false);
+   else if (mDragging && mSmoothScrollingScrub) {
+      const auto lastTime = gAudioIO->GetLastTimeInScrubQueue();
+      const auto delta = mLastScrubPosition - position.x;
+      const double time = viewInfo.OffsetTimeByPixels(lastTime, delta);
+      result = gAudioIO->EnqueueScrubByPosition(time, mMaxScrubSpeed, false);
+      mLastScrubPosition = position.x;
+   }
    else {
-      const double time = mProject->GetViewInfo().PositionToTime(position.x, trackPanel->GetLeftOffset());
-
+      const double time = viewInfo.PositionToTime(position.x, trackPanel->GetLeftOffset());
       if (seek)
          // Cause OnTimer() to suppress the speed display
          mScrubSpeedDisplayCountdown = 1;
 
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
       if (mSmoothScrollingScrub) {
          const double speed = FindScrubSpeed(seek, time);
          result = gAudioIO->EnqueueScrubBySignedSpeed(speed, mMaxScrubSpeed, seek);
       }
       else
-#endif
          result = gAudioIO->EnqueueScrubByPosition
-         (time, seek ? 1.0 : mMaxScrubSpeed, seek);
+            (time, seek ? 1.0 : mMaxScrubSpeed, seek);
    }
 
    if (result)
@@ -364,12 +386,9 @@ void Scrubber::ContinueScrubbing()
    // else, if seek requested, try again at a later time when we might
    // enqueue a long enough stutter
 
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
    if (mSmoothScrollingScrub)
       ;
-   else
-#endif
-   {
+   else {
       if (mScrubSpeedDisplayCountdown > 0)
          --mScrubSpeedDisplayCountdown;
    }
@@ -380,7 +399,8 @@ void Scrubber::StopScrubbing()
    UncheckAllMenuItems();
 
    mScrubStartPosition = -1;
-   SetScrollScrubbing (false);
+   mProject->GetPlaybackScroller().Activate(false);
+   mDragging = false;
 
    if (!IsScrubbing())
    {
@@ -391,12 +411,11 @@ void Scrubber::StopScrubbing()
    }
 
    mProject->GetRulerPanel()->HideQuickPlayIndicator();
-}
 
-void Scrubber::SetScrollScrubbing(bool scrollScrubbing)
-{
-   mSmoothScrollingScrub = scrollScrubbing;
-   mProject->GetPlaybackScroller().Activate(scrollScrubbing);
+   // Need this in case ruler gets the mouse-up event after escaping scrubbing:
+   // prevent reappearance of the
+   // quick play guideline
+   mProject->GetRulerPanel()->IgnoreMouseUp();
 }
 
 bool Scrubber::IsScrubbing() const
@@ -408,24 +427,22 @@ bool Scrubber::IsScrubbing() const
    else {
       const_cast<Scrubber&>(*this).mScrubToken = -1;
       const_cast<Scrubber&>(*this).mScrubStartPosition = -1;
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
-      // Don't call SetScrollScrubbing
       const_cast<Scrubber&>(*this).mSmoothScrollingScrub = false;
-#endif
       return false;
    }
 }
 
 bool Scrubber::ShouldDrawScrubSpeed()
 {
+   if (mDragging)
+      return false;
+
    return IsScrubbing() &&
       mScrubHasFocus && (
       // Draw for (non-scroll) scrub, sometimes, but never for seek
       (!PollIsSeeking() && mScrubSpeedDisplayCountdown > 0)
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
       // Draw always for scroll-scrub and for scroll-seek
        || mSmoothScrollingScrub
-#endif
       );
 }
 
@@ -439,6 +456,10 @@ double Scrubber::FindScrubSpeed(bool seeking, double time) const
 
 void Scrubber::HandleScrollWheel(int steps)
 {
+   if (mDragging)
+      // Not likely you would spin it with the left button down, but...
+      return;
+
    const int newLogMaxScrubSpeed = mLogMaxScrubSpeed + steps;
    static const double maxScrubSpeedBase =
       pow(2.0, 1.0 / ScrubSpeedStepsPerOctave);
@@ -447,9 +468,7 @@ void Scrubber::HandleScrollWheel(int steps)
       newSpeed <= AudioIO::GetMaxScrubSpeed()) {
       mLogMaxScrubSpeed = newLogMaxScrubSpeed;
       mMaxScrubSpeed = newSpeed;
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
       if (!mSmoothScrollingScrub)
-#endif
          // Show the speed for one second
          mScrubSpeedDisplayCountdown = kOneSecondCountdown + 1;
    }
@@ -472,7 +491,8 @@ void Scrubber::Forwarder::OnMouse(wxMouseEvent &event)
    if (isScrubbing && !event.HasAnyModifiers()) {
       if(event.LeftDown() ||
          (event.LeftIsDown() && event.Dragging())) {
-         scrubber.mScrubSeekPress = true;
+         if (!scrubber.mDragging)
+            scrubber.mScrubSeekPress = true;
          auto xx = ruler->ScreenToClient(::wxGetMousePosition()).x;
          ruler->UpdateQuickPlayPos(xx);
          ruler->ShowQuickPlayIndicator();
@@ -544,11 +564,9 @@ void ScrubbingOverlay::Draw(OverlayPanel &, wxDC &dc)
    //  (b) Error alerts
    // So they were changed to 'orange' and 'lime'.
    static const wxColour clrNoScroll(215, 162, 0), clrScroll(0, 204, 153);
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
    if (scrubber.IsScrollScrubbing())
       dc.SetTextForeground(clrScroll);
    else
-#endif
       dc.SetTextForeground(clrNoScroll);
 
    dc.DrawText(mLastScrubSpeedText, mLastScrubRect.GetX(), mLastScrubRect.GetY());
@@ -565,12 +583,13 @@ void ScrubbingOverlay::OnTimer(wxCommandEvent &event)
    auto position = ::wxGetMousePosition();
 
    {
-      auto xx = ruler->ScreenToClient(position).x;
-      ruler->UpdateQuickPlayPos(xx);
+      if(scrubber.HasStartedScrubbing()) {
+         auto xx = ruler->ScreenToClient(position).x;
+         ruler->UpdateQuickPlayPos(xx);
 
-      if(!isScrubbing && scrubber.HasStartedScrubbing()) {
-         // Really start scrub if motion is far enough
-         scrubber.MaybeStartScrubbing(xx);
+         if (!isScrubbing)
+            // Really start scrub if motion is far enough
+            scrubber.MaybeStartScrubbing(xx);
       }
 
       if (!isScrubbing) {
@@ -603,23 +622,17 @@ void ScrubbingOverlay::OnTimer(wxCommandEvent &event)
       // Find the text
       const double maxScrubSpeed = GetScrubber().GetMaxScrubSpeed();
       const double speed =
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
          scrubber.IsScrollScrubbing()
          ? scrubber.FindScrubSpeed
             (seeking, mProject->GetViewInfo().PositionToTime(position.x, trackPanel->GetLeftOffset()))
-         :
-#endif
-            maxScrubSpeed;
+         : maxScrubSpeed;
 
       const wxChar *format =
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
          scrubber.IsScrollScrubbing()
          ? seeking
             ? wxT("%+.2fX")
             : wxT("%+.2f")
-         :
-#endif
-            wxT("%.2f");
+         : wxT("%.2f");
 
       mNextScrubSpeedText = wxString::Format(format, speed);
 
@@ -657,7 +670,7 @@ Scrubber &ScrubbingOverlay::GetScrubber()
 
 bool Scrubber::PollIsSeeking()
 {
-   return mAlwaysSeeking || ::wxGetMouseState().LeftIsDown();
+   return !mDragging && (mAlwaysSeeking || ::wxGetMouseState().LeftIsDown());
 }
 
 void Scrubber::DoScrub(bool scroll, bool seek)
@@ -677,7 +690,8 @@ void Scrubber::DoScrub(bool scroll, bool seek)
       MarkScrubStart(xx, scroll, seek);
    }
    else if(!match) {
-      SetScrollScrubbing(scroll);
+      mSmoothScrollingScrub = scroll;
+      mProject->GetPlaybackScroller().Activate(scroll);
       mAlwaysSeeking = seek;
       UncheckAllMenuItems();
       CheckMenuItem();

@@ -208,6 +208,10 @@ class AUDACITY_DLL_API AudioIO final {
    * Return true if some work was really enqueued.
    */
    bool EnqueueScrubBySignedSpeed(double speed, double maxSpeed, bool maySkip);
+
+   /** \brief return the ending time of the last enqueued scrub interval.
+   */
+   double GetLastTimeInScrubQueue() const;
 #endif
 
    /** \brief  Returns true if audio i/o is busy starting, stopping, playing,

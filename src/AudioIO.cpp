@@ -402,6 +402,14 @@ struct AudioIO::ScrubQueue
    }
    ~ScrubQueue() {}
 
+   double LastTimeInQueue() const
+   {
+      // Needed by the main thread sometimes
+      wxCriticalSectionLocker locker(mUpdating);
+      const Entry &previous = mEntries[(mLeadingIdx + Size - 1) % Size];
+      return previous.mS1 / mRate;
+   }
+
    bool Producer(double end, double maxSpeed, bool bySpeed, bool maySkip)
    {
       // Main thread indicates a scrubbing interval
@@ -670,7 +678,7 @@ private:
    const double mRate;
    const long mMinStutter;
    wxLongLong mLastScrubTimeMillis;
-   wxCriticalSection mUpdating;
+   mutable wxCriticalSection mUpdating;
 };
 #endif
 
@@ -2426,6 +2434,15 @@ bool AudioIO::EnqueueScrubBySignedSpeed(double speed, double maxSpeed, bool mayS
    else
       return false;
 }
+
+double AudioIO::GetLastTimeInScrubQueue() const
+{
+   if (mScrubQueue)
+      return mScrubQueue->LastTimeInQueue();
+   else
+      return -1.0;
+}
+
 #endif
 
 bool AudioIO::IsBusy()

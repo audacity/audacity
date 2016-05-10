@@ -173,7 +173,6 @@
    // The following enable parts of the scrubbing user interface.
    #define EXPERIMENTAL_SCRUBBING_BASIC
    #ifdef EXPERIMENTAL_SCRUBBING_BASIC
-      #define EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
       #define EXPERIMENTAL_SCRUBBING_SCROLL_WHEEL
    #endif
 #endif

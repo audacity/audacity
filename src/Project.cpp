@@ -5364,7 +5364,6 @@ void AudacityProject::PlaybackScroller::OnTimer(wxCommandEvent &event)
    // Let other listeners get the notification
    event.Skip();
 
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
    if (mActive && mProject->IsAudioActive())
    {
       // Pan the view, so that we center the play indicator.
@@ -5382,5 +5381,4 @@ void AudacityProject::PlaybackScroller::OnTimer(wxCommandEvent &event)
          viewInfo.h = std::max(0.0, viewInfo.h);
       trackPanel->Refresh(false);
    }
-#endif
 }
