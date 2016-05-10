@@ -134,6 +134,7 @@ simplifies construction of menu items.
 #endif /* EXPERIMENTAL_SCOREALIGN */
 
 #include "tracks/ui/Scrubbing.h"
+#include "prefs/TracksPrefs.h"
 
 enum {
    kAlignStartZero = 0,
@@ -925,6 +926,16 @@ void AudacityProject::CreateMenusAndCommands()
          TracksExistFlag);
 
       c->EndSubMenu();
+
+      //////////////////////////////////////////////////////////////////////////
+
+      c->AddSeparator();
+      c->AddCheck(wxT("ScrollLeftOfZero"), _("Scroll left of zero"),
+                  FN(OnToggleScrollLeftOfZero),
+                  gPrefs->ReadBool(
+                     TracksPrefs::ScrollingPreferenceKey(),
+                     TracksPrefs::ScrollingPreferenceDefault()),
+                  AudioIONotBusyFlag, AudioIONotBusyFlag);
 
       //////////////////////////////////////////////////////////////////////////
 
@@ -2509,6 +2520,15 @@ void AudacityProject::OnSortName()
    PushState(_("Tracks sorted by name"), _("Sort by Name"));
 
    mTrackPanel->Refresh(false);
+}
+
+void AudacityProject::OnToggleScrollLeftOfZero()
+{
+   auto key = TracksPrefs::ScrollingPreferenceKey();
+   auto value = gPrefs->ReadBool(key, TracksPrefs::ScrollingPreferenceDefault());
+   gPrefs->Write(key, !value);
+   gPrefs->Flush();
+   UpdatePrefs();
 }
 
 void AudacityProject::OnSkipStart()

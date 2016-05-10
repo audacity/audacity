@@ -82,6 +82,7 @@ array of Ruler::Label.
 #include "../Prefs.h"
 #include "../Snap.h"
 #include "../tracks/ui/Scrubbing.h"
+#include "../prefs/TracksPrefs.h"
 
 //#define SCRUB_ABOVE
 #define RULER_DOUBLE_CLICK
@@ -2044,7 +2045,8 @@ void AdornedRulerPanel::UpdatePrefs()
 #ifdef EXPERIMENTAL_TWO_TONE_TIME_RULER
    {
       bool scrollBeyondZero = false;
-      gPrefs->Read(wxT("/GUI/ScrollBeyondZero"), &scrollBeyondZero, false);
+      gPrefs->Read(TracksPrefs::ScrollingPreferenceKey(), &scrollBeyondZero,
+                   TracksPrefs::ScrollingPreferenceDefault());
       mRuler.SetTwoTone(scrollBeyondZero);
    }
 #endif
