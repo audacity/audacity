@@ -411,11 +411,6 @@ void Scrubber::StopScrubbing()
    }
 
    mProject->GetRulerPanel()->HideQuickPlayIndicator();
-
-   // Need this in case ruler gets the mouse-up event after escaping scrubbing:
-   // prevent reappearance of the
-   // quick play guideline
-   mProject->GetRulerPanel()->IgnoreMouseUp();
 }
 
 bool Scrubber::IsScrubbing() const
