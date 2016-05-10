@@ -350,6 +350,7 @@ public:
    void ShowQuickPlayIndicator();
    void HideQuickPlayIndicator();
    void UpdateQuickPlayPos(wxCoord &mousPosX);
+   void IgnoreMouseUp() { mIgnoreMouseUp = true; }
 
 private:
    void OnCapture(wxCommandEvent & evt);
@@ -531,6 +532,7 @@ private:
    mutable wxFont mButtonFont;
 
    bool mDoubleClick {};
+   bool mIgnoreMouseUp {};
 
    DECLARE_EVENT_TABLE()
 

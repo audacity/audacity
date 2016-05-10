@@ -2281,8 +2281,13 @@ void AudacityProject::OnRecordAppend()
    GetControlToolBar()->OnRecord(evt);
 }
 
-// The code for "OnPlayStopSelect" is simply the code of "OnPlayStop" and "OnStopSelect" merged.
 void AudacityProject::OnPlayStopSelect()
+{
+   DoPlayStopSelect(false, false);
+}
+
+// The code for "OnPlayStopSelect" is simply the code of "OnPlayStop" and "OnStopSelect" merged.
+void AudacityProject::DoPlayStopSelect(bool click, bool shift)
 {
    wxCommandEvent evt;
    ControlToolBar *toolbar = GetControlToolBar();
@@ -2291,7 +2296,36 @@ void AudacityProject::OnPlayStopSelect()
    if (gAudioIO->IsStreamActive(GetAudioIOToken())) {
       toolbar->SetPlay(false);        //Pops
       toolbar->SetStop(true);         //Pushes stop down
-      mViewInfo.selectedRegion.setT0(gAudioIO->GetStreamTime(), false);
+
+      // change the selection
+      auto time = gAudioIO->GetStreamTime();
+      auto &selection = mViewInfo.selectedRegion;
+      if (shift && click) {
+         // Change the region selection, as if by shift-click at the play head
+         auto t0 = selection.t0(), t1 = selection.t1();
+         if (time < t0)
+            // Grow selection
+            t0 = time;
+         else if (time > t1)
+            // Grow selection
+            t1 = time;
+         else {
+            // Shrink selection, changing the nearer boundary
+            if (fabs(t0 - time) < fabs(t1 - time))
+               t0 = time;
+            else
+               t1 = time;
+         }
+         selection.setTimes(t0, t1);
+      }
+      else if (click)
+         // Set a point selection, as if by a click at the play head
+         selection.setTimes(time, time);
+      else
+         // How stop and set cursor always worked
+         // -- change t0, collapsing to point only if t1 was greater
+         selection.setT0(time, false);
+
       ModifyState(false);           // without bWantsAutoSave
       toolbar->OnStop(evt);
    }

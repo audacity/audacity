@@ -2582,6 +2582,17 @@ bool AdornedRulerPanel::IsWithinMarker(int mousePosX, double markerTime)
 
 void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
 {
+   if (mIgnoreMouseUp) {
+      if (evt.Dragging())
+         return;
+      else if (evt.ButtonUp()) {
+         mIgnoreMouseUp = false;
+         return;
+      }
+      else
+         mIgnoreMouseUp = false;
+   }
+
    // PRL:  why do I need these two lines on Windows but not on Mac?
    if (evt.ButtonDown(wxMOUSE_BTN_ANY))
       SetFocus();
@@ -2910,10 +2921,12 @@ void AdornedRulerPanel::HandleQPRelease(wxMouseEvent &evt)
    if (mDoubleClick)
       return;
 
-   HideQuickPlayIndicator();
-
    if (HasCapture())
       ReleaseMouse();
+   else
+      return;
+
+   HideQuickPlayIndicator();
 
    mCaptureState = CaptureState{};
 

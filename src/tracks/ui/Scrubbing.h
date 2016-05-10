@@ -109,10 +109,12 @@ private:
    bool mScrubHasFocus;
    int mScrubSpeedDisplayCountdown;
    wxCoord mScrubStartPosition;
+   wxCoord mLastScrubPosition {};
    double mMaxScrubSpeed;
    bool mScrubSeekPress;
    bool mSmoothScrollingScrub;
-   bool mAlwaysSeeking{};
+   bool mAlwaysSeeking {};
+   bool mDragging {};
 
 #ifdef EXPERIMENTAL_SCRUBBING_SCROLL_WHEEL
    int mLogMaxScrubSpeed;
