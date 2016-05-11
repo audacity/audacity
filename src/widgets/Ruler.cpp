@@ -2382,7 +2382,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
 
    auto &scrubber = mProject->GetScrubber();
    if (scrubber.HasStartedScrubbing()) {
-      if (IsButton(zone))
+      if (IsButton(zone) || evt.RightDown())
          // Fall through to pushbutton handling
          ;
       else if (zone == StatusChoice::EnteringQP &&
