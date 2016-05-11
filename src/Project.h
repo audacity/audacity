@@ -312,7 +312,6 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    void OnUpdateUI(wxUpdateUIEvent & event);
 
    void OnActivate(wxActivateEvent & event);
-   void UpdateLastFocus();
    void OnMouseEvent(wxMouseEvent & event);
    void OnIconize(wxIconizeEvent &event);
    void OnSize(wxSizeEvent & event);

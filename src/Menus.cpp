@@ -2762,10 +2762,6 @@ void AudacityProject::NextFrame()
       default:
       break;
    }
-
-   // This is not strictly needed, except when trying to debug focus changes themselves,
-   // and therefore the main window misses the deactivation event
-   UpdateLastFocus();
 }
 
 void AudacityProject::PrevFrame()
@@ -2795,10 +2791,6 @@ void AudacityProject::PrevFrame()
       default:
       break;
    }
-
-   // This is not strictly needed, except when trying to debug focus changes themselves,
-   // and therefore the main window misses the deactivation event
-   UpdateLastFocus();
 }
 
 void AudacityProject::NextWindow()
