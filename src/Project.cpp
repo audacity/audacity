@@ -4708,7 +4708,8 @@ void AudacityProject::TP_DisplaySelection()
    if (gAudioIO->IsBusy())
       audioTime = gAudioIO->GetStreamTime();
    else {
-      audioTime = 0;
+      double playEnd;
+      GetPlayRegion(&audioTime, &playEnd);
    }
 
    GetSelectionBar()->SetTimes(mViewInfo.selectedRegion.t0(),
