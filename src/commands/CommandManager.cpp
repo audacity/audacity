@@ -178,7 +178,7 @@ public:
 #endif
    }
 
-   int FilterEvent(wxEvent& event)
+   int FilterEvent(wxEvent& event) override
    {
       // Quickly bail if this isn't something we want.
       wxEventType type = event.GetEventType();

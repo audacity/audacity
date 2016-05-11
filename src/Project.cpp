@@ -2147,14 +2147,8 @@ void AudacityProject::OnActivate(wxActivateEvent & event)
    // remember which child had the focus.  Then, when we receive the
    // activate event, we restore that focus to the child or the track
    // panel if no child had the focus (which probably should never happen).
-   if (!mActive) {
-      // We only want to remember the last focused window if FindFocus() returns
-      // a window within the current project frame.
-      wxWindow *w = FindFocus();
-      if (wxGetTopLevelParent(w) ==this) {
-         mLastFocusedWindow = w;
-      }
-   }
+   if (!mActive)
+      UpdateLastFocus();
    else {
       SetActiveProject(this);
       if (mLastFocusedWindow) {
@@ -2171,6 +2165,16 @@ void AudacityProject::OnActivate(wxActivateEvent & event)
       mLastFocusedWindow = NULL;
    }
    event.Skip();
+}
+
+void AudacityProject::UpdateLastFocus()
+{
+   // We only want to remember the last focused window if FindFocus() returns
+   // a window within the current project frame.
+   wxWindow *w = FindFocus();
+   if (wxGetTopLevelParent(w) ==this) {
+      mLastFocusedWindow = w;
+   }
 }
 
 bool AudacityProject::IsActive()
