@@ -431,9 +431,7 @@ void ControlToolBar::EnableDisableButtons()
    mFF->SetEnabled(tracks && !playing && !recording);
 
    auto pProject = GetActiveProject();
-   mPause->SetEnabled(CanStopAudioStream() &&
-                      !(pProject &&
-                        pProject->GetScrubber().HasStartedScrubbing()));
+   mPause->SetEnabled(CanStopAudioStream());
 }
 
 void ControlToolBar::SetPlay(bool down, PlayAppearance appearance)
@@ -479,7 +477,12 @@ void ControlToolBar::SetRecord(bool down, bool append)
    EnableDisableButtons();
 }
 
-bool ControlToolBar::IsRecordDown()
+bool ControlToolBar::IsPauseDown() const
+{
+   return mPause->IsDown();
+}
+
+bool ControlToolBar::IsRecordDown() const
 {
    return mRecord->IsDown();
 }
@@ -1090,12 +1093,6 @@ void ControlToolBar::OnPause(wxCommandEvent & WXUNUSED(evt))
       return;
    }
 
-#ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-   if (gAudioIO->IsScrubbing())
-      // Pausing does not make sense.  Force the button
-      // to pop up below.
-      mPaused = true;
-#endif
 
    if(mPaused)
    {
@@ -1108,7 +1105,15 @@ void ControlToolBar::OnPause(wxCommandEvent & WXUNUSED(evt))
       mPaused=true;
    }
 
-   gAudioIO->SetPaused(mPaused);
+#ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
+   if (gAudioIO->IsScrubbing())
+      GetActiveProject()->GetScrubber().Pause(mPaused);
+   else
+#endif
+   {
+      gAudioIO->SetPaused(mPaused);
+   }
+
    UpdateStatusBar(GetActiveProject());
 }
 
@@ -1190,22 +1195,22 @@ int ControlToolBar::WidthForStatusBar(wxStatusBar* const sb)
    int xMax = 0;
    const auto pauseString = wxT(" ") + wxGetTranslation(mStatePause);
 
-   auto update = [&] (const wxString &state, bool pauseToo) {
+   auto update = [&] (const wxString &state) {
       int x, y;
       sb->GetTextExtent(
-         wxGetTranslation(state) + ( pauseToo ? pauseString : wxString{} ) + wxT("."),
+         wxGetTranslation(state) + pauseString + wxT("."),
          &x, &y
       );
       xMax = std::max(x, xMax);
    };
 
-   update(mStatePlay, true);
-   update(mStateStop, true);
-   update(mStateRecord, true);
+   update(mStatePlay);
+   update(mStateStop);
+   update(mStateRecord);
 
    // Note that Scrubbing + Paused is not allowed.
    for(const auto &state : Scrubber::GetAllUntranslatedStatusStrings())
-      update(state, false);
+      update(state);
 
    return xMax + 30;    // added constant needed because xMax isn't large enough for some reason, plus some space.
 }

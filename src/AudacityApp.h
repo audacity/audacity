@@ -92,10 +92,10 @@ enum CommandFlag : unsigned long long
    IsRealtimeNotActiveFlag= 0x10000000,  //lll
    CaptureNotBusyFlag     = 0x20000000,
    CanStopAudioStreamFlag = 0x40000000,
-   AudioStreamNotScrubbingFlag
-                          = 0x80000000ULL, // prl
    RulerHasFocus
-                         = 0x100000000ULL, // prl
+                          = 0x80000000ULL, // prl
+//   nextOneHas33BitsWow
+//                        = 0x100000000ULL, // prl
 
    NoFlagsSpecifed        = ~0ULL
 };

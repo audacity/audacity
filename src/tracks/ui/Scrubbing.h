@@ -85,6 +85,8 @@ public:
    // All possible status strings.
    static std::vector<wxString> GetAllUntranslatedStatusStrings();
 
+   void Pause(bool paused);
+
 private:
    void DoScrub(bool scroll, bool seek);
    void OnActivateOrDeactivateApp(wxActivateEvent & event);
