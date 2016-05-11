@@ -236,8 +236,6 @@ audacity_SOURCES = \
 	TrackPanelCell.h \
 	TrackPanelCellIterator.h \
 	TrackPanelListener.h \
-	TrackPanelOverlay.cpp \
-	TrackPanelOverlay.h \
 	TranslatableStringArray.h \
 	UndoManager.cpp \
 	UndoManager.h \
@@ -540,6 +538,8 @@ audacity_SOURCES = \
 	widgets/ASlider.h \
 	widgets/AttachableScrollBar.cpp \
 	widgets/AttachableScrollBar.h \
+	widgets/BackedPanel.cpp \
+	widgets/BackedPanel.h \
 	widgets/ErrorDialog.cpp \
 	widgets/ErrorDialog.h \
 	widgets/ExpandingToolBar.cpp \
@@ -568,6 +568,10 @@ audacity_SOURCES = \
 	widgets/NumericTextCtrl.h \
 	widgets/numformatter.cpp \
 	widgets/numformatter.h \
+	widgets/Overlay.cpp \
+	widgets/Overlay.h \
+	widgets/OverlayPanel.cpp \
+	widgets/OverlayPanel.h \
 	widgets/ProgressDialog.cpp \
 	widgets/ProgressDialog.h \
 	widgets/Ruler.cpp \

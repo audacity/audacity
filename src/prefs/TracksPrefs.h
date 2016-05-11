@@ -29,6 +29,9 @@ class TracksPrefs final : public PrefsPanel
    ~TracksPrefs();
    bool Apply() override;
 
+   static const wxChar *ScrollingPreferenceKey();
+   static inline bool ScrollingPreferenceDefault() { return false; }
+
  private:
    void Populate();
    void PopulateOrExchange(ShuttleGui & S);

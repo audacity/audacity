@@ -134,6 +134,7 @@ simplifies construction of menu items.
 #endif /* EXPERIMENTAL_SCOREALIGN */
 
 #include "tracks/ui/Scrubbing.h"
+#include "prefs/TracksPrefs.h"
 
 enum {
    kAlignStartZero = 0,
@@ -928,6 +929,16 @@ void AudacityProject::CreateMenusAndCommands()
 
       //////////////////////////////////////////////////////////////////////////
 
+      c->AddSeparator();
+      c->AddCheck(wxT("ScrollLeftOfZero"), _("Scroll left of zero"),
+                  FN(OnToggleScrollLeftOfZero),
+                  gPrefs->ReadBool(
+                     TracksPrefs::ScrollingPreferenceKey(),
+                     TracksPrefs::ScrollingPreferenceDefault()),
+                  AudioIONotBusyFlag, AudioIONotBusyFlag);
+
+      //////////////////////////////////////////////////////////////////////////
+
       c->EndMenu();
 
       // All of this is a bit hacky until we can get more things connected into
@@ -1139,6 +1150,8 @@ void AudacityProject::CreateMenusAndCommands()
 
    c->AddCommand(wxT("ShiftUp"), _("Move Focus to Previous and Select"), FN(OnShiftUp), wxT("Shift+Up"));
    c->AddCommand(wxT("ShiftDown"), _("Move Focus to Next and Select"), FN(OnShiftDown), wxT("Shift+Down"));
+
+
    c->AddCommand(wxT("Toggle"), _("Toggle Focused Track"), FN(OnToggle), wxT("Return"));
    c->AddCommand(wxT("ToggleAlt"), _("Toggle Focused Track"), FN(OnToggle), wxT("NUMPAD_ENTER"));
 
@@ -1618,6 +1631,9 @@ CommandFlag AudacityProject::GetFocusedFrame()
       if (w == mToolManager->GetTopDock()) {
          return TopDockHasFocus;
       }
+
+      if (w == mRuler)
+         return RulerHasFocus;
 
       if (w == mTrackPanel) {
          return TrackPanelHasFocus;
@@ -2271,8 +2287,13 @@ void AudacityProject::OnRecordAppend()
    GetControlToolBar()->OnRecord(evt);
 }
 
-// The code for "OnPlayStopSelect" is simply the code of "OnPlayStop" and "OnStopSelect" merged.
 void AudacityProject::OnPlayStopSelect()
+{
+   DoPlayStopSelect(false, false);
+}
+
+// The code for "OnPlayStopSelect" is simply the code of "OnPlayStop" and "OnStopSelect" merged.
+void AudacityProject::DoPlayStopSelect(bool click, bool shift)
 {
    wxCommandEvent evt;
    ControlToolBar *toolbar = GetControlToolBar();
@@ -2281,7 +2302,36 @@ void AudacityProject::OnPlayStopSelect()
    if (gAudioIO->IsStreamActive(GetAudioIOToken())) {
       toolbar->SetPlay(false);        //Pops
       toolbar->SetStop(true);         //Pushes stop down
-      mViewInfo.selectedRegion.setT0(gAudioIO->GetStreamTime(), false);
+
+      // change the selection
+      auto time = gAudioIO->GetStreamTime();
+      auto &selection = mViewInfo.selectedRegion;
+      if (shift && click) {
+         // Change the region selection, as if by shift-click at the play head
+         auto t0 = selection.t0(), t1 = selection.t1();
+         if (time < t0)
+            // Grow selection
+            t0 = time;
+         else if (time > t1)
+            // Grow selection
+            t1 = time;
+         else {
+            // Shrink selection, changing the nearer boundary
+            if (fabs(t0 - time) < fabs(t1 - time))
+               t0 = time;
+            else
+               t1 = time;
+         }
+         selection.setTimes(t0, t1);
+      }
+      else if (click)
+         // Set a point selection, as if by a click at the play head
+         selection.setTimes(time, time);
+      else
+         // How stop and set cursor always worked
+         // -- change t0, collapsing to point only if t1 was greater
+         selection.setT0(time, false);
+
       ModifyState(false);           // without bWantsAutoSave
       toolbar->OnStop(evt);
    }
@@ -2465,6 +2515,15 @@ void AudacityProject::OnSortName()
    PushState(_("Tracks sorted by name"), _("Sort by Name"));
 
    mTrackPanel->Refresh(false);
+}
+
+void AudacityProject::OnToggleScrollLeftOfZero()
+{
+   auto key = TracksPrefs::ScrollingPreferenceKey();
+   auto value = gPrefs->ReadBool(key, TracksPrefs::ScrollingPreferenceDefault());
+   gPrefs->Write(key, !value);
+   gPrefs->Flush();
+   UpdatePrefs();
 }
 
 void AudacityProject::OnSkipStart()
@@ -2681,6 +2740,14 @@ void AudacityProject::NextFrame()
    switch( GetFocusedFrame() )
    {
       case TopDockHasFocus:
+
+#ifdef EXPERIMENTAL_TIME_RULER_NAVIGATION
+         mRuler->SetFocus();
+      break;
+
+      case RulerHasFocus:
+#endif
+
          mTrackPanel->SetFocus();
       break;
 
@@ -2701,16 +2768,24 @@ void AudacityProject::PrevFrame()
 {
    switch( GetFocusedFrame() )
    {
-      case TopDockHasFocus:
-         mToolManager->GetBotDock()->SetFocus();
-      break;
-
-      case TrackPanelHasFocus:
-         mToolManager->GetTopDock()->SetFocus();
-      break;
-
       case BotDockHasFocus:
          mTrackPanel->SetFocus();
+      break;
+         
+      case TrackPanelHasFocus:
+
+#ifdef EXPERIMENTAL_TIME_RULER_NAVIGATION
+         mRuler->SetFocus();
+      break;
+
+      case RulerHasFocus:
+#endif
+
+         mToolManager->GetTopDock()->SetFocus();
+      break;
+         
+      case TopDockHasFocus:
+         mToolManager->GetBotDock()->SetFocus();
       break;
 
       default:
@@ -7001,6 +7076,7 @@ void AudacityProject::SeekLeftOrRight
 
          // Move the visual cursor, avoiding an unnecessary complete redraw
          GetTrackPanel()->DrawOverlays(false);
+         GetRulerPanel()->DrawOverlays(false);
       }
       else
       {

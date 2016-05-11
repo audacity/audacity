@@ -233,7 +233,7 @@ void AButton::Init(wxWindow * parent,
 
 #if wxUSE_ACCESSIBILITY
    SetName( wxT("") );
-   SetAccessible(new AButtonAx(this));
+   SetAccessible(safenew AButtonAx(this));
 #endif
 }
 

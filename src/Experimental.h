@@ -173,7 +173,6 @@
    // The following enable parts of the scrubbing user interface.
    #define EXPERIMENTAL_SCRUBBING_BASIC
    #ifdef EXPERIMENTAL_SCRUBBING_BASIC
-      #define EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
       #define EXPERIMENTAL_SCRUBBING_SCROLL_WHEEL
    #endif
 #endif
@@ -200,6 +199,10 @@
 // Zero-padding factor for spectrograms can smooth the display of spectrograms by
 // interpolating in frequency domain.
 #define EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
+
+// Paul Licameli (PRL) 10 May 2016
+// Time ruler accepts focus, buttons can be reached with TAB
+#define EXPERIMENTAL_TIME_RULER_NAVIGATION
 
 
 #endif

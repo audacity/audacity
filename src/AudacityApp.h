@@ -94,6 +94,8 @@ enum CommandFlag : unsigned long long
    CanStopAudioStreamFlag = 0x40000000,
    AudioStreamNotScrubbingFlag
                           = 0x80000000ULL, // prl
+   RulerHasFocus
+                         = 0x100000000ULL, // prl
 
    NoFlagsSpecifed        = ~0ULL
 };

@@ -30,30 +30,26 @@ namespace {
    {
       return (m >= l && m < h);
    }
+
+   enum { IndicatorMediumWidth = 13 };
 }
 
-PlayIndicatorOverlay::PlayIndicatorOverlay(AudacityProject *project)
-   : mProject(project)
-   , mLastIndicatorX(-1)
-   , mNewIndicatorX(-1)
+PlayIndicatorOverlayBase::PlayIndicatorOverlayBase(AudacityProject *project, bool isMaster)
+: mProject(project)
+, mIsMaster(isMaster)
 {
-   mProject->Connect(EVT_TRACK_PANEL_TIMER,
-      wxCommandEventHandler(PlayIndicatorOverlay::OnTimer),
-      NULL,
-      this);
 }
 
-PlayIndicatorOverlay::~PlayIndicatorOverlay()
+PlayIndicatorOverlayBase::~PlayIndicatorOverlayBase()
 {
-   mProject->Disconnect(EVT_TRACK_PANEL_TIMER,
-      wxCommandEventHandler(PlayIndicatorOverlay::OnTimer),
-      NULL,
-      this);
 }
 
-std::pair<wxRect, bool> PlayIndicatorOverlay::DoGetRectangle(wxSize size)
+std::pair<wxRect, bool> PlayIndicatorOverlayBase::DoGetRectangle(wxSize size)
 {
-   wxRect rect(mLastIndicatorX, 0, 1, size.GetHeight());
+   auto width = mIsMaster ? 1 : IndicatorMediumWidth;
+
+   // May be excessive height, but little matter
+   wxRect rect(mLastIndicatorX - width / 2, 0, width, size.GetHeight());
    return std::make_pair(
       rect,
       mLastIndicatorX != mNewIndicatorX
@@ -61,59 +57,90 @@ std::pair<wxRect, bool> PlayIndicatorOverlay::DoGetRectangle(wxSize size)
 }
 
 
-void PlayIndicatorOverlay::Draw
-   (wxDC &dc, TrackPanelCellIterator begin, TrackPanelCellIterator end)
+void PlayIndicatorOverlayBase::Draw(OverlayPanel &panel, wxDC &dc)
 {
+   // Set play/record color
+   bool rec = (gAudioIO->GetNumCaptureChannels() > 0);
+   AColor::IndicatorColor(&dc, !rec);
    mLastIndicatorX = mNewIndicatorX;
    if (!between_incexc(0, mLastIndicatorX, dc.GetSize().GetWidth()))
       return;
 
-   const ZoomInfo &viewInfo = mProject->GetZoomInfo();
-   TrackPanel *const trackPanel = mProject->GetTrackPanel();
+   if(auto tp = dynamic_cast<TrackPanel*>(&panel)) {
+      wxASSERT(mIsMaster);
 
-   double pos = viewInfo.PositionToTime(mLastIndicatorX, trackPanel->GetLeftOffset());
+      TrackPanelCellIterator begin(tp, true);
+      TrackPanelCellIterator end(tp, false);
 
-   // Set play/record color
-   bool rec = (gAudioIO->GetNumCaptureChannels() > 0);
-   AColor::IndicatorColor(&dc, !rec);
-
-   mProject->GetRulerPanel()->DrawIndicator(pos, rec);
-
-   // Draw indicator in all visible tracks
-   for (; begin != end; ++begin)
-   {
-      TrackPanelCellIterator::value_type data(*begin);
-      Track *const pTrack = data.first;
-      if (!pTrack)
-         continue;
-
-      // Don't draw the indicator in label tracks
-      if (pTrack->GetKind() == Track::Label)
+      // Draw indicator in all visible tracks
+      for (; begin != end; ++begin)
       {
-         continue;
-      }
+         TrackPanelCellIterator::value_type data(*begin);
+         Track *const pTrack = data.first;
+         if (!pTrack)
+            continue;
 
-      // Draw the NEW indicator in its NEW location
-      // AColor::Line includes both endpoints so use GetBottom()
-      const wxRect &rect = data.second;
-      AColor::Line(dc,
-         mLastIndicatorX,
-         rect.GetTop(),
-         mLastIndicatorX,
-         rect.GetBottom());
+         // Don't draw the indicator in label tracks
+         if (pTrack->GetKind() == Track::Label)
+         {
+            continue;
+         }
+
+         // Draw the NEW indicator in its NEW location
+         // AColor::Line includes both endpoints so use GetBottom()
+         const wxRect &rect = data.second;
+         AColor::Line(dc,
+                      mLastIndicatorX,
+                      rect.GetTop(),
+                      mLastIndicatorX,
+                      rect.GetBottom());
+      }
    }
+   else if(auto ruler = dynamic_cast<AdornedRulerPanel*>(&panel)) {
+      wxASSERT(!mIsMaster);
+
+      ruler->DoDrawIndicator(&dc, mLastIndicatorX, !rec, IndicatorMediumWidth, false);
+   }
+   else
+      wxASSERT(false);
 }
 
-void PlayIndicatorOverlay::Erase(wxDC &dc, wxDC &src)
+PlayIndicatorOverlay::PlayIndicatorOverlay(AudacityProject *project)
+: PlayIndicatorOverlayBase(project, true)
 {
-   TrackPanelOverlay::Erase(dc, src);
-   mProject->GetRulerPanel()->ClearIndicator();
+   mProject->Connect(EVT_TRACK_PANEL_TIMER,
+                     wxCommandEventHandler(PlayIndicatorOverlay::OnTimer),
+                     NULL,
+                     this);
+}
+
+PlayIndicatorOverlay::~PlayIndicatorOverlay()
+{
+   if (mPartner) {
+      auto ruler = mProject->GetRulerPanel();
+      if(ruler)
+         ruler->RemoveOverlay(mPartner.get());
+   }
+
+   mProject->Disconnect(EVT_TRACK_PANEL_TIMER,
+                        wxCommandEventHandler(PlayIndicatorOverlay::OnTimer),
+                        NULL,
+                        this);
 }
 
 void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
 {
    // Let other listeners get the notification
    event.Skip();
+
+   // Ensure that there is an overlay attached to the ruler
+   if (!mPartner) {
+      auto ruler = mProject->GetRulerPanel();
+      if (ruler) {
+         mPartner = std::make_unique<PlayIndicatorOverlayBase>(mProject, false);
+         ruler->AddOverlay(mPartner.get());
+      }
+   }
 
    if (!mProject->IsAudioActive()) {
       const auto &scrubber = mProject->GetScrubber();
@@ -155,4 +182,7 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
 
       mNewIndicatorX = viewInfo.TimeToPosition(playPos, mProject->GetTrackPanel()->GetLeftOffset());
    }
+
+   if(mPartner)
+      mPartner->Update(mNewIndicatorX);
 }

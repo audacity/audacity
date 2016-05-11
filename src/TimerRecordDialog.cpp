@@ -811,7 +811,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
             m_pDatePickerCtrl_Start->SetName(_("Start Date"));
             m_pDatePickerCtrl_Start->SetRange(wxDateTime::Today(), wxInvalidDateTime); // No backdating.
 #if wxUSE_ACCESSIBILITY
-            m_pDatePickerCtrl_Start->SetAccessible( new DatePickerCtrlAx(m_pDatePickerCtrl_Start));
+            m_pDatePickerCtrl_Start->SetAccessible( safenew DatePickerCtrlAx(m_pDatePickerCtrl_Start));
 #endif
             S.AddWindow(m_pDatePickerCtrl_Start);
 
@@ -836,7 +836,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
             m_pDatePickerCtrl_End->SetRange(m_DateTime_Start, wxInvalidDateTime); // No backdating.
             m_pDatePickerCtrl_End->SetName(_("End Date"));
 #if wxUSE_ACCESSIBILITY
-            m_pDatePickerCtrl_End->SetAccessible( new DatePickerCtrlAx(m_pDatePickerCtrl_End));
+            m_pDatePickerCtrl_End->SetAccessible( safenew DatePickerCtrlAx(m_pDatePickerCtrl_End));
 #endif
             S.AddWindow(m_pDatePickerCtrl_End);
 
