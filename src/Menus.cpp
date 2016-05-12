@@ -754,9 +754,7 @@ void AudacityProject::CreateMenusAndCommands()
       // Scrubbing sub-menu
       GetScrubber().AddMenuItems();
 
-      c->AddItem(wxT("Pause"), _("&Pause"), FN(OnPause), wxT("P"),
-                 c->GetDefaultFlags() | AudioStreamNotScrubbingFlag,
-                 c->GetDefaultMask()  | AudioStreamNotScrubbingFlag);
+      c->AddItem(wxT("Pause"), _("&Pause"), FN(OnPause), wxT("P"));
       c->AddItem(wxT("SkipStart"), _("S&kip to Start"), FN(OnSkipStart), wxT("Home"),
                  AudioIONotBusyFlag, AudioIONotBusyFlag);
       c->AddItem(wxT("SkipEnd"), _("Skip to E&nd"), FN(OnSkipEnd), wxT("End"),
@@ -1775,9 +1773,6 @@ CommandFlag AudacityProject::GetUpdateFlags()
    ControlToolBar *bar = GetControlToolBar();
    if (bar->ControlToolBar::CanStopAudioStream())
       flags |= CanStopAudioStreamFlag;
-
-   if(!GetScrubber().HasStartedScrubbing())
-      flags |= AudioStreamNotScrubbingFlag;
 
    return flags;
 }
