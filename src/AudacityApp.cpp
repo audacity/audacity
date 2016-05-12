@@ -198,7 +198,7 @@ It handles initialization and termination by subclassing wxApp.
 #     pragma comment(lib, "libvamp")
 #  endif
 
-#  if defined(__WXDEBUG__)
+#  if defined(_DEBUG)
 #     define D "d"
 #  else
 #     define D ""
