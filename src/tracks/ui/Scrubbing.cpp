@@ -210,9 +210,6 @@ void Scrubber::MarkScrubStart(
 
    ctb->SetPlay(true, ControlToolBar::PlayAppearance::Scrub);
 
-   // This disables the pause button.
-   ctb->EnableDisableButtons();
-
    ctb->UpdateStatusBar(mProject);
 
    mScrubStartPosition = xx;
@@ -469,12 +466,17 @@ void Scrubber::HandleScrollWheel(int steps)
    }
 }
 
+void Scrubber::Pause( bool paused )
+{
+   mScrubHasFocus = !paused;
+}
+
 void Scrubber::OnActivateOrDeactivateApp(wxActivateEvent &event)
 {
    if (event.GetActive())
-      mScrubHasFocus = IsScrubbing();
+      Pause(!IsScrubbing() || mProject->GetControlToolBar()->IsPauseDown());
    else
-      mScrubHasFocus = false;
+      Pause(true);
 
    event.Skip();
 }
