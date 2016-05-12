@@ -2416,8 +2416,10 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
       &mViewInfo);
 
    Destroy();
+   mRuler = nullptr;
 
    mIsBeingDeleted = true;
+
 }
 
 void AudacityProject::OnOpenAudioFile(wxCommandEvent & event)
