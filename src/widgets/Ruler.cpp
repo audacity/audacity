@@ -2339,13 +2339,30 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
       return;
    }
 
-   const bool overButtons = GetButtonAreaRect(true).Contains(evt.GetPosition());
-   auto button = FindButton(evt).button;
+   const auto position = evt.GetPosition();
+   const bool overButtons = GetButtonAreaRect(true).Contains(position);
+   StatusChoice button;
+   {
+      auto mouseState = FindButton(evt);
+      button = mouseState.button;
+      if (IsButton(button)) {
+         TabState newState{ button, mouseState.state == PointerState::InArrow };
+         if (mTabState != newState) {
+            // Change the button highlight
+            mTabState = newState;
+            Refresh(false);
+         }
+      }
+      else if(evt.Leaving() && !HasFocus())
+         // erase the button highlight
+         Refresh(false);
+   }
+
    const bool inScrubZone = !overButtons &&
       // only if scrubbing is allowed now
       mProject->GetScrubber().CanScrub() &&
       mShowScrubbing &&
-      mScrubZone.Contains(evt.GetPosition());
+      mScrubZone.Contains(position);
    const StatusChoice zone =
       evt.Leaving()
       ? StatusChoice::Leaving
@@ -2353,7 +2370,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
         ? button
         : inScrubZone
           ? StatusChoice::EnteringScrubZone
-          : mInner.Contains(evt.GetPosition())
+          : mInner.Contains(position)
             ? StatusChoice::EnteringQP
             : StatusChoice::NoChange;
    const bool changeInZone = (zone != mPrevZone);
@@ -2457,16 +2474,9 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
       HandlePushbuttonClick(evt);
    // Handle popup menus
    else if (!HasCapture() && evt.RightDown() && !(evt.LeftIsDown())) {
-      if(inScrubZone)
-         ShowScrubMenu(evt.GetPosition());
-      else
-         ShowMenu(evt.GetPosition());
-
-      // dismiss and clear Quick-Play indicator
-      HideQuickPlayIndicator();
-
-      if (HasCapture())
-         ReleaseMouse();
+      ShowButtonMenu
+         (inScrubZone ? StatusChoice::ScrubBarButton : StatusChoice::QuickPlayButton,
+          &position);
       return;
    }
    else if (!HasCapture() && inScrubZone) {
@@ -3250,8 +3260,11 @@ void AdornedRulerPanel::ToggleButtonState( StatusChoice button )
    UpdateStatusBarAndTooltips(mCaptureState.button);
 }
 
-void AdornedRulerPanel::ShowButtonMenu( StatusChoice button, wxPoint *pPosition)
+void AdornedRulerPanel::ShowButtonMenu( StatusChoice button, const wxPoint *pPosition)
 {
+   if (!IsButton(button))
+      return;
+
    wxPoint position;
    if(pPosition)
       position = *pPosition;
@@ -3261,17 +3274,31 @@ void AdornedRulerPanel::ShowButtonMenu( StatusChoice button, wxPoint *pPosition)
       position = { rect.GetLeft() + 1, rect.GetBottom() + 1 };
    }
 
-   switch (button) {
-      case StatusChoice::QuickPlayButton:
-         ShowMenu(position); break;
-      case StatusChoice::ScrubBarButton:
-         ShowScrubMenu(position); break;
-      default:
-         return;
-   }
+   // Be sure the arrow button appears pressed
+   mTabState = { button, true };
+   mShowingMenu = true;
+   Refresh();
 
-   // dismiss and clear Quick-Play indicator
-   HideQuickPlayIndicator();
+   // Do the rest after Refresh() takes effect
+   CallAfter([=]{
+      switch (button) {
+         case StatusChoice::QuickPlayButton:
+            ShowMenu(position); break;
+         case StatusChoice::ScrubBarButton:
+            ShowScrubMenu(position); break;
+         default:
+            return;
+      }
+
+      // dismiss and clear Quick-Play indicator
+      HideQuickPlayIndicator();
+
+      if (HasCapture())
+         ReleaseMouse();
+
+      mShowingMenu = false;
+      Refresh();
+   });
 }
 
 const AdornedRulerPanel::ButtonStrings AdornedRulerPanel::PushbuttonLabels
@@ -3310,8 +3337,7 @@ namespace {
 }
 
 void AdornedRulerPanel::DoDrawPushbutton
-   (wxDC *dc, StatusChoice button, PointerState down, PointerState pointerState,
-    bool inSomeButton) const
+   (wxDC *dc, StatusChoice button, bool buttonState, bool arrowState) const
 {
    // Adapted from TrackInfo::DrawMuteSolo()
    ADCChanger changer(dc);
@@ -3325,21 +3351,20 @@ void AdornedRulerPanel::DoDrawPushbutton
    // Draw borders, bevels, and backgrounds of the split sections
 
    const bool tabHighlight =
-      !inSomeButton &&
       mTabState.mButton == button &&
-      HasFocus();
+      (HasFocus() || rect.Contains( ScreenToClient(::wxGetMousePosition()) ));
+   if (tabHighlight)
+      arrowState = arrowState || mShowingMenu;
 
-   if (pointerState == PointerState::InArrow || (tabHighlight && mTabState.mMenu)) {
+   if (tabHighlight && mTabState.mMenu) {
       // Draw highlighted arrow after
-      DrawButtonBackground(dc, textRect, (down == PointerState::In), false);
-      DrawButtonBackground(dc, arrowRect, (down == PointerState::InArrow), true);
+      DrawButtonBackground(dc, textRect, buttonState, false);
+      DrawButtonBackground(dc, arrowRect, arrowState, true);
    }
    else {
       // Draw maybe highlighted text after
-      DrawButtonBackground(dc, arrowRect, (down == PointerState::InArrow), false);
-      DrawButtonBackground(
-         dc, textRect, (down == PointerState::In),
-         (pointerState == PointerState::In || (tabHighlight && !mTabState.mMenu)));
+      DrawButtonBackground(dc, arrowRect, arrowState, false);
+      DrawButtonBackground(dc, textRect, buttonState, (tabHighlight && !mTabState.mMenu));
    }
 
    // Draw the menu triangle
@@ -3375,7 +3400,7 @@ void AdornedRulerPanel::DoDrawPushbutton
       dc->GetTextExtent(str, &textWidth, &textHeight);
       auto xx = textBev.x + (textBev.width - textWidth) / 2;
       auto yy = textBev.y + (textBev.height - textHeight) / 2;
-      if (down == PointerState::In)
+      if (buttonState)
          // Shift the text a bit for "down" appearance
          ++xx, ++yy;
       dc->DrawText(str, xx, yy);
@@ -3429,28 +3454,23 @@ void AdornedRulerPanel::DoDrawPushbuttons(wxDC *dc) const
    AColor::MediumTrackInfo(dc, false);
    dc->DrawRectangle(background);
 
-   bool inSomeButton = false;
-   for (auto button = StatusChoice::FirstButton; !inSomeButton && IsButton(button); ++button) {
-      inSomeButton = InButtonRect(button, nullptr) != PointerState::Out;
-   }
-
    for (auto button = StatusChoice::FirstButton; IsButton(button); ++button) {
-      bool state = GetButtonState(button);
-      auto in = InButtonRect(button, nullptr);
-      auto down = PointerState::Out;
-      if (button == mCaptureState.button && in == mCaptureState.state) {
-         if (in == PointerState::In) {
-            // Toggle button's apparent state for mouseover
-            down = state ? PointerState::Out : in;
-         }
-         else if (in == PointerState::InArrow) {
-            // Menu arrow is not sticky
-            down = in;
+      bool buttonState = GetButtonState(button);
+      bool arrowState = false;
+      if (button == mCaptureState.button) {
+         auto in = InButtonRect(button, nullptr);
+         if (in == mCaptureState.state) {
+            if (in == PointerState::In) {
+               // Toggle button's apparent state for mouseover
+               buttonState = !buttonState;
+            }
+            else if (in == PointerState::InArrow) {
+               // Menu arrow is not sticky
+               arrowState = true;
+            }
          }
       }
-      else if (state)
-         down = PointerState::In;
-      DoDrawPushbutton(dc, button, down, in, inSomeButton);
+      DoDrawPushbutton(dc, button, buttonState, arrowState);
    }
 }
 
