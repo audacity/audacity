@@ -360,7 +360,7 @@ void Scrubber::ContinueScrubbing()
       const auto lastTime = gAudioIO->GetLastTimeInScrubQueue();
       const auto delta = mLastScrubPosition - position.x;
       const double time = viewInfo.OffsetTimeByPixels(lastTime, delta);
-      result = gAudioIO->EnqueueScrubByPosition(time, mMaxScrubSpeed, false);
+      result = gAudioIO->EnqueueScrubByPosition(time, mMaxScrubSpeed, true);
       mLastScrubPosition = position.x;
    }
    else {
@@ -667,7 +667,7 @@ Scrubber &ScrubbingOverlay::GetScrubber()
 
 bool Scrubber::PollIsSeeking()
 {
-   return !mDragging && (mAlwaysSeeking || ::wxGetMouseState().LeftIsDown());
+   return mDragging || (mAlwaysSeeking || ::wxGetMouseState().LeftIsDown());
 }
 
 void Scrubber::DoScrub(bool scroll, bool seek)
