@@ -134,6 +134,7 @@ simplifies construction of menu items.
 #endif /* EXPERIMENTAL_SCOREALIGN */
 
 #include "tracks/ui/Scrubbing.h"
+#include "prefs/TracksPrefs.h"
 
 enum {
    kAlignStartZero = 0,
@@ -753,9 +754,7 @@ void AudacityProject::CreateMenusAndCommands()
       // Scrubbing sub-menu
       GetScrubber().AddMenuItems();
 
-      c->AddItem(wxT("Pause"), _("&Pause"), FN(OnPause), wxT("P"),
-                 c->GetDefaultFlags() | AudioStreamNotScrubbingFlag,
-                 c->GetDefaultMask()  | AudioStreamNotScrubbingFlag);
+      c->AddItem(wxT("Pause"), _("&Pause"), FN(OnPause), wxT("P"));
       c->AddItem(wxT("SkipStart"), _("S&kip to Start"), FN(OnSkipStart), wxT("Home"),
                  AudioIONotBusyFlag, AudioIONotBusyFlag);
       c->AddItem(wxT("SkipEnd"), _("Skip to E&nd"), FN(OnSkipEnd), wxT("End"),
@@ -925,6 +924,16 @@ void AudacityProject::CreateMenusAndCommands()
          TracksExistFlag);
 
       c->EndSubMenu();
+
+      //////////////////////////////////////////////////////////////////////////
+
+      c->AddSeparator();
+      c->AddCheck(wxT("ScrollLeftOfZero"), _("Scroll left of zero"),
+                  FN(OnToggleScrollLeftOfZero),
+                  gPrefs->ReadBool(
+                     TracksPrefs::ScrollingPreferenceKey(),
+                     TracksPrefs::ScrollingPreferenceDefault()),
+                  AudioIONotBusyFlag, AudioIONotBusyFlag);
 
       //////////////////////////////////////////////////////////////////////////
 
@@ -1128,8 +1137,8 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddCommand(wxT("SeekLeftLong"), _("Long seek left during playback"), FN(OnSeekLeftLong), wxT("Shift+Left\tallowDup"));
    c->AddCommand(wxT("SeekRightLong"), _("Long Seek right during playback"), FN(OnSeekRightLong), wxT("Shift+Right\tallowDup"));
 
-   c->SetDefaultFlags(TrackPanelOrRulerHasFocus,
-                      TrackPanelOrRulerHasFocus);
+   c->SetDefaultFlags(TracksExistFlag | TrackPanelHasFocus,
+                      TracksExistFlag | TrackPanelHasFocus);
 
    c->AddCommand(wxT("PrevTrack"), _("Move Focus to Previous Track"), FN(OnCursorUp), wxT("Up"));
    c->AddCommand(wxT("NextTrack"), _("Move Focus to Next Track"), FN(OnCursorDown), wxT("Down"));
@@ -1140,9 +1149,6 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddCommand(wxT("ShiftUp"), _("Move Focus to Previous and Select"), FN(OnShiftUp), wxT("Shift+Up"));
    c->AddCommand(wxT("ShiftDown"), _("Move Focus to Next and Select"), FN(OnShiftDown), wxT("Shift+Down"));
 
-
-   c->SetDefaultFlags(TracksExistFlag | TrackPanelHasFocus,
-                      TracksExistFlag | TrackPanelHasFocus);
 
    c->AddCommand(wxT("Toggle"), _("Toggle Focused Track"), FN(OnToggle), wxT("Return"));
    c->AddCommand(wxT("ToggleAlt"), _("Toggle Focused Track"), FN(OnToggle), wxT("NUMPAD_ENTER"));
@@ -1734,8 +1740,6 @@ CommandFlag AudacityProject::GetUpdateFlags()
       flags |= TextClipFlag;
 
    flags |= GetFocusedFrame();
-   if (flags & (TrackPanelHasFocus | RulerHasFocus))
-      flags |= TrackPanelOrRulerHasFocus;
 
    double start, end;
    GetPlayRegion(&start, &end);
@@ -1769,9 +1773,6 @@ CommandFlag AudacityProject::GetUpdateFlags()
    ControlToolBar *bar = GetControlToolBar();
    if (bar->ControlToolBar::CanStopAudioStream())
       flags |= CanStopAudioStreamFlag;
-
-   if(!GetScrubber().HasStartedScrubbing())
-      flags |= AudioStreamNotScrubbingFlag;
 
    return flags;
 }
@@ -2281,8 +2282,13 @@ void AudacityProject::OnRecordAppend()
    GetControlToolBar()->OnRecord(evt);
 }
 
-// The code for "OnPlayStopSelect" is simply the code of "OnPlayStop" and "OnStopSelect" merged.
 void AudacityProject::OnPlayStopSelect()
+{
+   DoPlayStopSelect(false, false);
+}
+
+// The code for "OnPlayStopSelect" is simply the code of "OnPlayStop" and "OnStopSelect" merged.
+void AudacityProject::DoPlayStopSelect(bool click, bool shift)
 {
    wxCommandEvent evt;
    ControlToolBar *toolbar = GetControlToolBar();
@@ -2291,7 +2297,36 @@ void AudacityProject::OnPlayStopSelect()
    if (gAudioIO->IsStreamActive(GetAudioIOToken())) {
       toolbar->SetPlay(false);        //Pops
       toolbar->SetStop(true);         //Pushes stop down
-      mViewInfo.selectedRegion.setT0(gAudioIO->GetStreamTime(), false);
+
+      // change the selection
+      auto time = gAudioIO->GetStreamTime();
+      auto &selection = mViewInfo.selectedRegion;
+      if (shift && click) {
+         // Change the region selection, as if by shift-click at the play head
+         auto t0 = selection.t0(), t1 = selection.t1();
+         if (time < t0)
+            // Grow selection
+            t0 = time;
+         else if (time > t1)
+            // Grow selection
+            t1 = time;
+         else {
+            // Shrink selection, changing the nearer boundary
+            if (fabs(t0 - time) < fabs(t1 - time))
+               t0 = time;
+            else
+               t1 = time;
+         }
+         selection.setTimes(t0, t1);
+      }
+      else if (click)
+         // Set a point selection, as if by a click at the play head
+         selection.setTimes(time, time);
+      else
+         // How stop and set cursor always worked
+         // -- change t0, collapsing to point only if t1 was greater
+         selection.setT0(time, false);
+
       ModifyState(false);           // without bWantsAutoSave
       toolbar->OnStop(evt);
    }
@@ -2475,6 +2510,15 @@ void AudacityProject::OnSortName()
    PushState(_("Tracks sorted by name"), _("Sort by Name"));
 
    mTrackPanel->Refresh(false);
+}
+
+void AudacityProject::OnToggleScrollLeftOfZero()
+{
+   auto key = TracksPrefs::ScrollingPreferenceKey();
+   auto value = gPrefs->ReadBool(key, TracksPrefs::ScrollingPreferenceDefault());
+   gPrefs->Write(key, !value);
+   gPrefs->Flush();
+   UpdatePrefs();
 }
 
 void AudacityProject::OnSkipStart()
@@ -2691,13 +2735,17 @@ void AudacityProject::NextFrame()
    switch( GetFocusedFrame() )
    {
       case TopDockHasFocus:
-         if(mTrackPanel->GetFocusedTrack())
-            mTrackPanel->SetFocus();
-         else
-            mRuler->SetFocus();
+
+#ifdef EXPERIMENTAL_TIME_RULER_NAVIGATION
+         mRuler->SetFocus();
       break;
 
       case RulerHasFocus:
+#endif
+
+         mTrackPanel->SetFocus();
+      break;
+
       case TrackPanelHasFocus:
          mToolManager->GetBotDock()->SetFocus();
       break;
@@ -2715,20 +2763,24 @@ void AudacityProject::PrevFrame()
 {
    switch( GetFocusedFrame() )
    {
-      case TopDockHasFocus:
-         mToolManager->GetBotDock()->SetFocus();
+      case BotDockHasFocus:
+         mTrackPanel->SetFocus();
+      break;
+         
+      case TrackPanelHasFocus:
+
+#ifdef EXPERIMENTAL_TIME_RULER_NAVIGATION
+         mRuler->SetFocus();
       break;
 
-      case TrackPanelHasFocus:
       case RulerHasFocus:
+#endif
+
          mToolManager->GetTopDock()->SetFocus();
       break;
-
-      case BotDockHasFocus:
-         if(mTrackPanel->GetFocusedTrack())
-            mTrackPanel->SetFocus();
-         else
-            mRuler->SetFocus();
+         
+      case TopDockHasFocus:
+         mToolManager->GetBotDock()->SetFocus();
       break;
 
       default:

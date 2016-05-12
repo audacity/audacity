@@ -80,6 +80,7 @@ void OnSeekRightLong();
 
 bool MakeReadyToPlay(bool loop = false, bool cutpreview = false); // Helper function that sets button states etc.
 void OnPlayStop();
+void DoPlayStopSelect(bool click, bool shift);
 void OnPlayStopSelect();
 void OnPlayOneSecond();
 void OnPlayToSelection();
@@ -177,6 +178,8 @@ void OnUnlockPlayRegion();
 double GetTime(const Track *t);
 void OnSortTime();
 void OnSortName();
+
+void OnToggleScrollLeftOfZero();
 
 void OnSnapToOff();
 void OnSnapToNearest();

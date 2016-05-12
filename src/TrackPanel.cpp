@@ -5472,12 +5472,9 @@ void TrackPanel::HandleWheelRotation(wxMouseEvent & event)
       (event.m_wheelDelta > 0 ? (double)event.m_wheelDelta : 120.0);
 
    if (event.ShiftDown()
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
        // Don't pan during smooth scrolling.  That would conflict with keeping
        // the play indicator centered.
-       && !GetProject()->GetScrubber().IsScrollScrubbing()
-#endif
-      )
+       && !GetProject()->GetScrubber().IsScrollScrubbing())
    {
       // MM: Scroll left/right when used with Shift key down
       mListener->TP_ScrollWindow(
@@ -5506,15 +5503,12 @@ void TrackPanel::HandleWheelRotation(wxMouseEvent & event)
       // Time corresponding to mouse position
       wxCoord xx;
       double center_h;
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
       if (GetProject()->GetScrubber().IsScrollScrubbing()) {
          // Expand or contract about the center, ignoring mouse position
          center_h = mViewInfo->h + (GetScreenEndTime() - mViewInfo->h) / 2.0;
          xx = mViewInfo->TimeToPosition(center_h, trackLeftEdge);
       }
-      else
-#endif
-      {
+      else {
          xx = event.m_x;
          center_h = mViewInfo->PositionToTime(xx, trackLeftEdge);
       }
@@ -7119,49 +7113,46 @@ void TrackPanel::UpdateVRulerSize()
 /// TrackPanel::OnNextTrack.
 void TrackPanel::OnPrevTrack( bool shift )
 {
-   bool rulerFocus = mRuler->HasFocus();
-   bool stealFocus = (mCircularTrackNavigation && rulerFocus);
-   if(stealFocus) // if there isn't one, focus on last
+   TrackListIterator iter( mTracks );
+   Track* t = GetFocusedTrack();
+   if( t == NULL )   // if there isn't one, focus on last
    {
-      if(rulerFocus) {
-         this->SetFocus();
-         mRuler->Refresh();
-      }
-      TrackListIterator iter( mTracks );
-      auto t = iter.Last();
+      t = iter.Last();
       SetFocusedTrack( t );
       EnsureVisible( t );
       MakeParentModifyState(false);
       return;
    }
-   else if (rulerFocus) {
-      // JKC: wxBell() is probably for accessibility, so a blind
-      // user knows they were at the top track.
-      wxBell();
-      return;
-   }
 
-   Track* t = GetFocusedTrack();
-   Track* p = mTracks->GetPrev( t, true ); // Get previous track
-   if (!p) {
-      SetFocusedTrack(nullptr);
-      mRuler->SetFocus();
-      Refresh(false);
-      mRuler->Refresh();
-      return;
-   }
-
+   Track* p = NULL;
    bool tSelected = false;
    bool pSelected = false;
    if( shift )
    {
+      p = mTracks->GetPrev( t, true ); // Get previous track
+      if( p == NULL )   // On first track
+      {
+         // JKC: wxBell() is probably for accessibility, so a blind
+         // user knows they were at the top track.
+         wxBell();
+         if( mCircularTrackNavigation )
+         {
+            TrackListIterator iter( mTracks );
+            p = iter.Last();
+         }
+         else
+         {
+            EnsureVisible( t );
+            return;
+         }
+      }
       tSelected = t->GetSelected();
       if (p)
          pSelected = p->GetSelected();
       if( tSelected && pSelected )
       {
          mTracks->Select( t, false );
-         SetFocusedTrack( p );   // move focus to next track up
+         SetFocusedTrack( p );   // move focus to next track down
          EnsureVisible( p );
          MakeParentModifyState(false);
          return;
@@ -7169,7 +7160,7 @@ void TrackPanel::OnPrevTrack( bool shift )
       if( tSelected && !pSelected )
       {
          mTracks->Select( p, true );
-         SetFocusedTrack( p );   // move focus to next track up
+         SetFocusedTrack( p );   // move focus to next track down
          EnsureVisible( p );
          MakeParentModifyState(false);
          return;
@@ -7177,7 +7168,7 @@ void TrackPanel::OnPrevTrack( bool shift )
       if( !tSelected && pSelected )
       {
          mTracks->Select( p, false );
-         SetFocusedTrack( p );   // move focus to next track up
+         SetFocusedTrack( p );   // move focus to next track down
          EnsureVisible( p );
          MakeParentModifyState(false);
          return;
@@ -7185,7 +7176,7 @@ void TrackPanel::OnPrevTrack( bool shift )
       if( !tSelected && !pSelected )
       {
          mTracks->Select( t, true );
-         SetFocusedTrack( p );   // move focus to next track up
+         SetFocusedTrack( p );   // move focus to next track down
          EnsureVisible( p );
          MakeParentModifyState(false);
          return;
@@ -7193,10 +7184,35 @@ void TrackPanel::OnPrevTrack( bool shift )
    }
    else
    {
-      SetFocusedTrack( p );   // move focus to next track up
-      EnsureVisible( p );
-      MakeParentModifyState(false);
-      return;
+      p = mTracks->GetPrev( t, true ); // Get next track
+      if( p == NULL )   // On last track so stay there?
+      {
+         wxBell();
+         if( mCircularTrackNavigation )
+         {
+            TrackListIterator iter( mTracks );
+            for( Track *d = iter.First(); d; d = iter.Next( true ) )
+            {
+               p = d;
+            }
+            SetFocusedTrack( p );   // Wrap to the first track
+            EnsureVisible( p );
+            MakeParentModifyState(false);
+            return;
+         }
+         else
+         {
+            EnsureVisible( t );
+            return;
+         }
+      }
+      else
+      {
+         SetFocusedTrack( p );   // move focus to next track down
+         EnsureVisible( p );
+         MakeParentModifyState(false);
+         return;
+      }
    }
 }
 
@@ -7205,46 +7221,37 @@ void TrackPanel::OnPrevTrack( bool shift )
 /// block or not.
 void TrackPanel::OnNextTrack( bool shift )
 {
-   if(mRuler->HasFocus()) {
-      TrackListIterator iter(mTracks);
-      auto first = iter.First();
-      if(first != nullptr) {
-         // Steal focus
-         this->SetFocus();
-         SetFocusedTrack(first);
-         EnsureVisible(first);
-         MakeParentModifyState(false);
-         mRuler->Refresh();
-      }
-      return;
-   }
-
    Track *t;
-   Track *n = nullptr;
-   bool tSelected, nSelected;
+   Track *n;
+   TrackListIterator iter( mTracks );
+   bool tSelected,nSelected;
 
    t = GetFocusedTrack();   // Get currently focused track
-   bool surrenderFocus =
-      t == nullptr ||
-      ((n = mTracks->GetNext( t, true )) == nullptr &&
-        mCircularTrackNavigation);
-
-   if( surrenderFocus )   // if there is no next, give focus to the ruler
+   if( t == NULL )   // if there isn't one, focus on first
    {
-      SetFocusedTrack(nullptr);
-      mRuler->SetFocus();
-      mRuler->Refresh();
-      Refresh(false);
+      t = iter.First();
+      SetFocusedTrack( t );
+      EnsureVisible( t );
+      MakeParentModifyState(false);
       return;
    }
 
    if( shift )
    {
+      n = mTracks->GetNext( t, true ); // Get next track
       if( n == NULL )   // On last track so stay there
       {
          wxBell();
-         EnsureVisible( t );
-         return;
+         if( mCircularTrackNavigation )
+         {
+            TrackListIterator iter( mTracks );
+            n = iter.First();
+         }
+         else
+         {
+            EnsureVisible( t );
+            return;
+         }
       }
       tSelected = t->GetSelected();
       nSelected = n->GetSelected();
@@ -7283,11 +7290,24 @@ void TrackPanel::OnNextTrack( bool shift )
    }
    else
    {
+      n = mTracks->GetNext( t, true ); // Get next track
       if( n == NULL )   // On last track so stay there
       {
          wxBell();
-         EnsureVisible( t );
-         return;
+         if( mCircularTrackNavigation )
+         {
+            TrackListIterator iter( mTracks );
+            n = iter.First();
+            SetFocusedTrack( n );   // Wrap to the first track
+            EnsureVisible( n );
+            MakeParentModifyState(false);
+            return;
+         }
+         else
+         {
+            EnsureVisible( t );
+            return;
+         }
       }
       else
       {
@@ -7301,25 +7321,26 @@ void TrackPanel::OnNextTrack( bool shift )
 
 void TrackPanel::OnFirstTrack()
 {
-   SetFocusedTrack(nullptr);
-   if (!mRuler->HasFocus()) {
-      mRuler->SetFocus();
-      mRuler->Refresh();
+   Track *t = GetFocusedTrack();
+   if (!t)
+      return;
+
+   TrackListIterator iter(mTracks);
+   Track *f = iter.First();
+   if (t != f)
+   {
+      SetFocusedTrack(f);
+      MakeParentModifyState(false);
    }
+   EnsureVisible(f);
 }
 
 void TrackPanel::OnLastTrack()
 {
-   if (mTracks->empty()) {
-      OnFirstTrack();
-      return;
-   }
-   else if(mRuler->HasFocus()) {
-      this->SetFocus();
-      mRuler->Refresh();
-   }
-
    Track *t = GetFocusedTrack();
+   if (!t)
+      return;
+
    TrackListIterator iter(mTracks);
    Track *l = iter.Last();
    if (t != l)

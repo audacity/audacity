@@ -82,6 +82,7 @@ array of Ruler::Label.
 #include "../Prefs.h"
 #include "../Snap.h"
 #include "../tracks/ui/Scrubbing.h"
+#include "../prefs/TracksPrefs.h"
 
 //#define SCRUB_ABOVE
 #define RULER_DOUBLE_CLICK
@@ -2044,7 +2045,8 @@ void AdornedRulerPanel::UpdatePrefs()
 #ifdef EXPERIMENTAL_TWO_TONE_TIME_RULER
    {
       bool scrollBeyondZero = false;
-      gPrefs->Read(wxT("/GUI/ScrollBeyondZero"), &scrollBeyondZero, false);
+      gPrefs->Read(TracksPrefs::ScrollingPreferenceKey(), &scrollBeyondZero,
+                   TracksPrefs::ScrollingPreferenceDefault());
       mRuler.SetTwoTone(scrollBeyondZero);
    }
 #endif
@@ -2380,7 +2382,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
 
    auto &scrubber = mProject->GetScrubber();
    if (scrubber.HasStartedScrubbing()) {
-      if (IsButton(zone))
+      if (IsButton(zone) || evt.RightDown())
          // Fall through to pushbutton handling
          ;
       else if (zone == StatusChoice::EnteringQP &&
@@ -2503,13 +2505,16 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
          mDoubleClick = false;
          HandleQPClick(evt, mousePosX);
          HandleQPDrag(evt, mousePosX);
+         ShowQuickPlayIndicator();
       }
-      else if (evt.LeftIsDown())
+      else if (evt.LeftIsDown() && HasCapture()) {
          HandleQPDrag(evt, mousePosX);
-      else if (evt.LeftUp())
+         ShowQuickPlayIndicator();
+      }
+      else if (evt.LeftUp() && HasCapture()) {
          HandleQPRelease(evt);
-
-      ShowQuickPlayIndicator();
+         ShowQuickPlayIndicator();
+      }
    }
 }
 
@@ -2654,10 +2659,12 @@ void AdornedRulerPanel::HandleQPRelease(wxMouseEvent &evt)
    if (mDoubleClick)
       return;
 
-   HideQuickPlayIndicator();
-
    if (HasCapture())
       ReleaseMouse();
+   else
+      return;
+
+   HideQuickPlayIndicator();
 
    mCaptureState = CaptureState{};
 
@@ -2908,7 +2915,6 @@ void AdornedRulerPanel::OnKeyDown(wxKeyEvent &event)
 void AdornedRulerPanel::OnSetFocus(wxFocusEvent & WXUNUSED(event))
 {
    AudacityProject::CaptureKeyboard(this);
-   mProject->GetTrackPanel()->SetFocusedTrack(nullptr);
    mTabState = TabState{};
    Refresh( false );
 }

@@ -29,11 +29,8 @@ public:
 
    // Assume xx is relative to the left edge of TrackPanel!
    void MarkScrubStart(
-      wxCoord xx
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
-      , bool smoothScrolling
-#endif
-      , bool alwaysSeeking // if false, can switch seeking or scrubbing
+      wxCoord xx, bool smoothScrolling,
+      bool alwaysSeeking // if false, can switch seeking or scrubbing
                            // by mouse button state
    );
 
@@ -57,7 +54,6 @@ public:
 
    bool IsScrollScrubbing() const // If true, implies HasStartedScrubbing()
    { return mSmoothScrollingScrub; }
-   void SetScrollScrubbing(bool scrollScrubbing);
 
    bool IsAlwaysSeeking() const
    { return mAlwaysSeeking; }
@@ -89,6 +85,8 @@ public:
    // All possible status strings.
    static std::vector<wxString> GetAllUntranslatedStatusStrings();
 
+   void Pause(bool paused);
+
 private:
    void DoScrub(bool scroll, bool seek);
    void OnActivateOrDeactivateApp(wxActivateEvent & event);
@@ -113,10 +111,12 @@ private:
    bool mScrubHasFocus;
    int mScrubSpeedDisplayCountdown;
    wxCoord mScrubStartPosition;
+   wxCoord mLastScrubPosition {};
    double mMaxScrubSpeed;
    bool mScrubSeekPress;
    bool mSmoothScrollingScrub;
-   bool mAlwaysSeeking{};
+   bool mAlwaysSeeking {};
+   bool mDragging {};
 
 #ifdef EXPERIMENTAL_SCRUBBING_SCROLL_WHEEL
    int mLogMaxScrubSpeed;
