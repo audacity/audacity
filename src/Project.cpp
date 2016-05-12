@@ -1124,10 +1124,6 @@ AudacityProject::~AudacityProject()
                      wxCommandEventHandler(AudacityProject::OnCapture),
                      NULL,
                      this);
-
-   // Do this before destroying the overlays
-   delete mRuler;
-   mRuler = nullptr;
 }
 
 AudioIOStartStreamOptions AudacityProject::GetDefaultPlayOptions()
@@ -2420,8 +2416,10 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
       &mViewInfo);
 
    Destroy();
+   mRuler = nullptr;
 
    mIsBeingDeleted = true;
+
 }
 
 void AudacityProject::OnOpenAudioFile(wxCommandEvent & event)
