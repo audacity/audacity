@@ -405,18 +405,28 @@ struct AudioIO::ScrubQueue
    double LastTimeInQueue() const
    {
       // Needed by the main thread sometimes
-      wxCriticalSectionLocker locker(mUpdating);
+      wxMutexLocker locker(mUpdating);
       const Entry &previous = mEntries[(mLeadingIdx + Size - 1) % Size];
       return previous.mS1 / mRate;
    }
 
+   void PoisonPill()
+   {
+      // Main thread is shutting down the scrubbing
+      wxMutexLocker locker(mUpdating);
+      mPoisoned = true;
+      mAvailable.Signal();
+   }
+
    bool Producer(double end, double maxSpeed, bool bySpeed, bool maySkip)
    {
+      wxASSERT(!mPoisoned);
+
       // Main thread indicates a scrubbing interval
 
       // MAY ADVANCE mLeadingIdx, BUT IT NEVER CATCHES UP TO mTrailingIdx.
 
-      wxCriticalSectionLocker locker(mUpdating);
+      wxMutexLocker locker(mUpdating);
       const unsigned next = (mLeadingIdx + 1) % Size;
       if (next != mTrailingIdx)
       {
@@ -429,8 +439,10 @@ struct AudioIO::ScrubQueue
          const bool success =
             (InitEntry(mEntries[mLeadingIdx], startTime, end, maxSpeed,
                        bySpeed, &previous, maySkip));
-         if (success)
+         if (success) {
             mLeadingIdx = next;
+            mAvailable.Signal();
+         }
          return success;
       }
       else
@@ -450,7 +462,10 @@ struct AudioIO::ScrubQueue
 
       // MAY ADVANCE mMiddleIdx, WHICH MAY EQUAL mLeadingIdx, BUT DOES NOT PASS IT.
 
-      wxCriticalSectionLocker locker(mUpdating);
+      wxMutexLocker locker(mUpdating);
+      while(!mPoisoned && mMiddleIdx == mLeadingIdx)
+         mAvailable.Wait();
+
       if (mMiddleIdx != mLeadingIdx)
       {
          // There is work in the queue
@@ -463,7 +478,8 @@ struct AudioIO::ScrubQueue
       }
       else
       {
-         // next entry is not yet ready
+         wxASSERT(mPoisoned);
+         // We got the shut-down signal
          startSample = endSample = duration = -1L;
       }
    }
@@ -475,7 +491,7 @@ struct AudioIO::ScrubQueue
 
       // MAY ADVANCE mTrailingIdx, BUT IT NEVER CATCHES UP TO mMiddleIdx.
 
-      wxCriticalSectionLocker locker(mUpdating);
+      wxMutexLocker locker(mUpdating);
 
       // Mark entries as partly or fully "consumed" for
       // purposes of mTime update.  It should not happen that
@@ -678,7 +694,9 @@ private:
    const double mRate;
    const long mMinStutter;
    wxLongLong mLastScrubTimeMillis;
-   mutable wxCriticalSection mUpdating;
+   mutable wxMutex mUpdating;
+   mutable wxCondition mAvailable { mUpdating };
+   bool mPoisoned { false };
 };
 #endif
 
@@ -2166,6 +2184,8 @@ void AudioIO::StopStream()
    //
 
    mAudioThreadFillBuffersLoopRunning = false;
+   if (mScrubQueue)
+      mScrubQueue->PoisonPill();
 
    // Audacity can deadlock if it tries to update meters while
    // we're stopping PortAudio (because the meter updating code
@@ -2821,7 +2841,16 @@ AudioThread::ExitCode AudioThread::Entry()
       }
       gAudioIO->mAudioThreadFillBuffersLoopActive = false;
 
-      Sleep(10);
+      if (gAudioIO->mPlayMode == AudioIO::PLAY_SCRUB) {
+         // Rely on the Wait() in ScrubQueue::Transformer()
+         // This allows the scrubbing update interval to be made very short without
+         // playback becoming intermittent.
+      }
+      else {
+         // Perhaps this too could use a condition variable, for available space in the
+         // ring buffer, instead of a polling loop?  But no harm in doing it this way.
+         Sleep(10);
+      }
    }
 
    return 0;
