@@ -928,7 +928,7 @@ void AudacityProject::CreateMenusAndCommands()
       //////////////////////////////////////////////////////////////////////////
 
       c->AddSeparator();
-      c->AddCheck(wxT("ScrollLeftOfZero"), _("Scroll left of zero"),
+      c->AddCheck(wxT("ScrollLeftOfZero"), _("Scroll le&ft of zero"),
                   FN(OnToggleScrollLeftOfZero),
                   gPrefs->ReadBool(
                      TracksPrefs::ScrollingPreferenceKey(),
