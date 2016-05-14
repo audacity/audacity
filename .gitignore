@@ -1,3 +1,20 @@
+# Autotools generated files
+locale/Makefile.in
+Makefile
+config.status
+.deps
+libtool
+stamp-h1
+
+# Generated files by build system
+lib-src/lib-widget-extra/libwidgetextra.pc
+lib-src/sbsms/libsbsms.spec
+lib-src/sbsms/sbsms.pc
+lib-src/sbsms/src/config.h
+locale/POTFILES
+src/audacity.desktop
+src/configunix.h
+
 # Mac build outputs
 mac/Audacity.xcodeproj/project.xcworkspace/contents.xcworkspacedata
 mac/Audacity.xcodeproj/project.xcworkspace/xcshareddata/Audacity.xccheckout
