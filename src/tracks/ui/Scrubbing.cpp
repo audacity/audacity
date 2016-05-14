@@ -292,7 +292,7 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
 
             AudioIOStartStreamOptions options(mProject->GetDefaultPlayOptions());
             options.timeTrack = NULL;
-            options.scrubDelay = (kTimerInterval / 1000.0);
+            options.scrubDelay = (ScrubPollInterval_ms / 1000.0);
             options.scrubStartClockTimeMillis = mScrubStartClockTimeMillis;
             options.minScrubStutter = 0.2;
 #if 0
