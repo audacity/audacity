@@ -7072,6 +7072,9 @@ void AudacityProject::SeekLeftOrRight
          // Move the visual cursor, avoiding an unnecessary complete redraw
          GetTrackPanel()->DrawOverlays(false);
          GetRulerPanel()->DrawOverlays(false);
+
+         // This updates the selection shown on the selection bar, and the play region
+         TP_DisplaySelection();
       }
       else
       {
