@@ -11,6 +11,7 @@ Paul Licameli split from TrackPanel.cpp
 #ifndef __AUDACITY_SCRUBBING__
 #define __AUDACITY_SCRUBBING__
 
+#include "../../MemoryX.h"
 #include <vector>
 #include <wx/event.h>
 #include <wx/longlong.h>
@@ -125,6 +126,9 @@ private:
    AudacityProject *mProject;
 
    DECLARE_EVENT_TABLE()
+
+   class ScrubPoller;
+   std::unique_ptr<ScrubPoller> mPoller;
 };
 
 // Specialist in drawing the scrub speed, and listening for certain events
