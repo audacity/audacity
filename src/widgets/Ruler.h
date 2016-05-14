@@ -410,9 +410,9 @@ private:
    CaptureState FindButton( wxMouseEvent &mouseEvent ) const;
    bool GetButtonState( StatusChoice button ) const;
    void ToggleButtonState( StatusChoice button );
-   void ShowButtonMenu( StatusChoice button, wxPoint *pPosition);
-   void DoDrawPushbutton(wxDC *dc, StatusChoice button, PointerState down,
-      PointerState pointerState, bool inSomeButton) const;
+   void ShowButtonMenu( StatusChoice button, const wxPoint *pPosition);
+   void DoDrawPushbutton
+      (wxDC *dc, StatusChoice button, bool buttonState, bool arrowState) const;
    void DoDrawPushbuttons(wxDC *dc) const;
    void HandlePushbuttonClick(wxMouseEvent &evt);
    void HandlePushbuttonEvent(wxMouseEvent &evt);
@@ -505,6 +505,14 @@ private:
       StatusChoice mButton { StatusChoice::FirstButton };
       bool mMenu { false };
 
+      TabState() {}
+      TabState(StatusChoice button, bool menu)
+         : mButton{ button }, mMenu{ menu } {}
+
+      bool operator == (const TabState &rhs) const
+         { return mButton == rhs.mButton && mMenu == rhs.mMenu; }
+      bool operator != (const TabState &rhs) const { return !(*this == rhs); }
+
       TabState &operator ++ () {
          if (!mMenu)
             mMenu = true;
@@ -535,6 +543,7 @@ private:
    mutable wxFont mButtonFont;
 
    bool mDoubleClick {};
+   bool mShowingMenu {};
 
    DECLARE_EVENT_TABLE()
 

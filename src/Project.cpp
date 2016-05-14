@@ -2161,11 +2161,9 @@ void AudacityProject::OnActivate(wxActivateEvent & event)
          mLastFocusedWindow->SetFocus();
       }
       else {
-         if (mTrackPanel->GetFocusedTrack()) {
+         if (mTrackPanel) {
             mTrackPanel->SetFocus();
          }
-         else
-            mRuler->SetFocus();
       }
       // No longer need to remember the last focused window
       mLastFocusedWindow = NULL;
@@ -2418,8 +2416,10 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
       &mViewInfo);
 
    Destroy();
+   mRuler = nullptr;
 
    mIsBeingDeleted = true;
+
 }
 
 void AudacityProject::OnOpenAudioFile(wxCommandEvent & event)
