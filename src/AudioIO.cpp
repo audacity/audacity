@@ -1728,14 +1728,6 @@ int AudioIO::StartStream(const WaveTrackArray &playbackTracks,
             sampleCount playbackMixBufferSize =
                (sampleCount)mPlaybackSamplesToCopy;
 
-            // In the extraordinarily rare case that we can't even afford 100 samples, just give up.
-            if(playbackBufferSize < 100 || playbackMixBufferSize < 100)
-            {
-               StartStreamCleanup();
-               wxMessageBox(_("Out of memory!"));
-               return 0;
-            }
-
             mPlaybackBuffers = new RingBuffer* [mPlaybackTracks->size()];
             mPlaybackMixers  = new Mixer*      [mPlaybackTracks->size()];
 
@@ -1804,7 +1796,19 @@ int AudioIO::StartStream(const WaveTrackArray &playbackTracks,
          mCaptureRingBufferSecs *= 0.5;
          mMinCaptureSecsToCopy *= 0.5;
          bDone = false;
-       }
+
+         // In the extraordinarily rare case that we can't even afford 100 samples, just give up.
+         sampleCount playbackBufferSize =
+            (sampleCount)lrint(mRate * mPlaybackRingBufferSecs);
+         sampleCount playbackMixBufferSize =
+            (sampleCount)mPlaybackSamplesToCopy;
+         if(playbackBufferSize < 100 || playbackMixBufferSize < 100)
+         {
+            StartStreamCleanup();
+            wxMessageBox(_("Out of memory!"));
+            return 0;
+         }
+      }
    } while(!bDone);
 
    if (mNumPlaybackChannels > 0)
