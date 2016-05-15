@@ -14,16 +14,16 @@
 
 #include "MemoryX.h"
 #include <wx/string.h>
-
 #include "SampleFormat.h"
-#include "Resample.h"
 
+class Resample;
 class DirManager;
 class TimeTrack;
 class TrackFactory;
 class TrackList;
 class WaveTrack;
 class WaveTrackConstArray;
+class WaveTrackCache;
 
 /** @brief Mixes together all input tracks, applying any envelopes, amplitude
  * gain, panning, and real-time effects in the process.
@@ -141,10 +141,10 @@ class AUDACITY_DLL_API Mixer {
  private:
 
    void Clear();
-   sampleCount MixSameRate(int *channelFlags, const WaveTrack *src,
+   sampleCount MixSameRate(int *channelFlags, WaveTrackCache &cache,
                            sampleCount *pos);
 
-   sampleCount MixVariableRates(int *channelFlags, const WaveTrack *track,
+   sampleCount MixVariableRates(int *channelFlags, WaveTrackCache &cache,
                                 sampleCount *pos, float *queue,
                                 int *queueStart, int *queueLen,
                                 Resample * pResample);
@@ -152,7 +152,8 @@ class AUDACITY_DLL_API Mixer {
  private:
    // Input
    int              mNumInputTracks;
-   const WaveTrack **mInputTrack;
+   WaveTrackCache  *mInputTrack;
+
    bool             mbVariableRates;
    const TimeTrack *mTimeTrack;
    sampleCount     *mSamplePos;
