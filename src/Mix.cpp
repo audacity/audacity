@@ -22,7 +22,6 @@
 
 
 #include "Audacity.h"
-
 #include "Mix.h"
 
 #include <math.h>
@@ -251,13 +250,13 @@ Mixer::Mixer(const WaveTrackConstArray &inputTracks,
    const auto numInputTracks = inputTracks.size();
    mHighQuality = highQuality;
    mNumInputTracks = numInputTracks;
-   mInputTrack = new const WaveTrack*[mNumInputTracks];
+   mInputTrack = new WaveTrackCache[mNumInputTracks];
 
    // mSamplePos holds for each track the next sample position not
    // yet processed.
    mSamplePos = new sampleCount[mNumInputTracks];
    for(i=0; i<mNumInputTracks; i++) {
-      mInputTrack[i] = inputTracks[i];
+      mInputTrack[i].SetTrack(inputTracks[i]);
       mSamplePos[i] = inputTracks[i]->TimeToLongSamples(startTime);
    }
    mTimeTrack = warpOptions.timeTrack;
@@ -313,7 +312,7 @@ Mixer::Mixer(const WaveTrackConstArray &inputTracks,
    mSampleQueue = new float *[mNumInputTracks];
    mResample = new Resample*[mNumInputTracks];
    for(i=0; i<mNumInputTracks; i++) {
-      double factor = (mRate / mInputTrack[i]->GetRate());
+      double factor = (mRate / mInputTrack[i].GetTrack()->GetRate());
       double minFactor, maxFactor;
       if (mTimeTrack) {
          // variable rate resampling
@@ -408,11 +407,12 @@ void MixBuffers(int numChannels, int *channelFlags, float *gains,
    }
 }
 
-sampleCount Mixer::MixVariableRates(int *channelFlags, const WaveTrack *track,
+sampleCount Mixer::MixVariableRates(int *channelFlags, WaveTrackCache &cache,
                                     sampleCount *pos, float *queue,
                                     int *queueStart, int *queueLen,
                                     Resample * pResample)
 {
+   const WaveTrack *const track = cache.GetTrack();
    const double trackRate = track->GetRate();
    const double initialWarp = mRate / mSpeed / trackRate;
    const double tstep = 1.0 / trackRate;
@@ -455,10 +455,8 @@ sampleCount Mixer::MixVariableRates(int *channelFlags, const WaveTrack *track,
          // Nothing to do if past end of play interval
          if (getLen > 0) {
             if (backwards) {
-               track->Get((samplePtr)&queue[*queueLen],
-                          floatSample,
-                          *pos - (getLen - 1),
-                          getLen);
+               auto results = cache.Get(floatSample, *pos - (getLen - 1), getLen);
+               memcpy(&queue[*queueLen], results, sizeof(float) * getLen);
 
                track->GetEnvelopeValues(mEnvValues,
                                         getLen,
@@ -468,10 +466,8 @@ sampleCount Mixer::MixVariableRates(int *channelFlags, const WaveTrack *track,
                *pos -= getLen;
             }
             else {
-               track->Get((samplePtr)&queue[*queueLen],
-                          floatSample,
-                          *pos,
-                          getLen);
+               auto results = cache.Get(floatSample, *pos, getLen);
+               memcpy(&queue[*queueLen], results, sizeof(float) * getLen);
 
                track->GetEnvelopeValues(mEnvValues,
                                         getLen,
@@ -558,9 +554,10 @@ sampleCount Mixer::MixVariableRates(int *channelFlags, const WaveTrack *track,
    return out;
 }
 
-sampleCount Mixer::MixSameRate(int *channelFlags, const WaveTrack *track,
+sampleCount Mixer::MixSameRate(int *channelFlags, WaveTrackCache &cache,
                                sampleCount *pos)
 {
+   const WaveTrack *const track = cache.GetTrack();
    int slen = mMaxOut;
    int c;
    const double t = *pos / track->GetRate();
@@ -588,7 +585,8 @@ sampleCount Mixer::MixSameRate(int *channelFlags, const WaveTrack *track,
       slen = mMaxOut;
 
    if (backwards) {
-      track->Get((samplePtr)mFloatBuffer, floatSample, *pos - (slen - 1), slen);
+      auto results = cache.Get(floatSample, *pos - (slen - 1), slen);
+      memcpy(mFloatBuffer, results, sizeof(float) * slen);
       track->GetEnvelopeValues(mEnvValues, slen, t - (slen - 1) / mRate, 1.0 / mRate);
       for(int i=0; i<slen; i++)
          mFloatBuffer[i] *= mEnvValues[i]; // Track gain control will go here?
@@ -597,7 +595,8 @@ sampleCount Mixer::MixSameRate(int *channelFlags, const WaveTrack *track,
       *pos -= slen;
    }
    else {
-      track->Get((samplePtr)mFloatBuffer, floatSample, *pos, slen);
+      auto results = cache.Get(floatSample, *pos, slen);
+      memcpy(mFloatBuffer, results, sizeof(float) * slen);
       track->GetEnvelopeValues(mEnvValues, slen, t, 1.0 / mRate);
       for(int i=0; i<slen; i++)
          mFloatBuffer[i] *= mEnvValues[i]; // Track gain control will go here?
@@ -632,7 +631,7 @@ sampleCount Mixer::Process(sampleCount maxToProcess)
 
    Clear();
    for(i=0; i<mNumInputTracks; i++) {
-      const WaveTrack *track = mInputTrack[i];
+      const WaveTrack *const track = mInputTrack[i].GetTrack();
       for(j=0; j<mNumChannels; j++)
          channelFlags[j] = 0;
 
@@ -661,12 +660,12 @@ sampleCount Mixer::Process(sampleCount maxToProcess)
       }
       if (mbVariableRates || track->GetRate() != mRate)
          maxOut = std::max(maxOut,
-         MixVariableRates(channelFlags, track,
-         &mSamplePos[i], mSampleQueue[i],
-         &mQueueStart[i], &mQueueLen[i], mResample[i]));
+            MixVariableRates(channelFlags, mInputTrack[i],
+               &mSamplePos[i], mSampleQueue[i],
+               &mQueueStart[i], &mQueueLen[i], mResample[i]));
       else
          maxOut = std::max(maxOut,
-         MixSameRate(channelFlags, track, &mSamplePos[i]));
+            MixSameRate(channelFlags, mInputTrack[i], &mSamplePos[i]));
 
       double t = (double)mSamplePos[i] / (double)track->GetRate();
       if (mT0 > mT1)
@@ -728,7 +727,7 @@ void Mixer::Restart()
    mTime = mT0;
 
    for(i=0; i<mNumInputTracks; i++)
-      mSamplePos[i] = mInputTrack[i]->TimeToLongSamples(mT0);
+      mSamplePos[i] = mInputTrack[i].GetTrack()->TimeToLongSamples(mT0);
 
    for(i=0; i<mNumInputTracks; i++) {
       mQueueStart[i] = 0;
@@ -748,7 +747,7 @@ void Mixer::Reposition(double t)
       mTime = std::max(mT0, (std::min(mT1, mTime)));
 
    for(i=0; i<mNumInputTracks; i++) {
-      mSamplePos[i] = mInputTrack[i]->TimeToLongSamples(mTime);
+      mSamplePos[i] = mInputTrack[i].GetTrack()->TimeToLongSamples(mTime);
       mQueueStart[i] = 0;
       mQueueLen[i] = 0;
    }

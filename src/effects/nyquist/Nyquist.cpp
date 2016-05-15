@@ -27,8 +27,8 @@ effects from this one class.
 #include "../../Audacity.h"
 
 #include <algorithm>
+#include <cmath>
 
-#include <math.h>
 #include <locale.h>
 
 #include <wx/checkbox.h>
@@ -683,7 +683,7 @@ bool NyquistEffect::Process()
                // with very small values, bandwidth calculation may be inf.
                // (Observed on Linux)
                double bw = log(mF1 / mF0) / log(2.0);
-               if (!isinf(bw)) {
+               if (!std::isinf(bw)) {
                   bandwidth.Printf(wxT("(float %s)"), Internat::ToString(bw).c_str());
                }
             }

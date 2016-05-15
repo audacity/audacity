@@ -650,7 +650,7 @@ private:
    bool                mInputMixerWorks;
    float               mMixerOutputVol;
 
-   enum {
+   volatile enum {
       PLAY_STRAIGHT,
       PLAY_LOOPED,
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT

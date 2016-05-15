@@ -928,7 +928,7 @@ void AudacityProject::CreateMenusAndCommands()
       //////////////////////////////////////////////////////////////////////////
 
       c->AddSeparator();
-      c->AddCheck(wxT("ScrollLeftOfZero"), _("Scroll left of zero"),
+      c->AddCheck(wxT("ScrollLeftOfZero"), _("Scroll le&ft of zero"),
                   FN(OnToggleScrollLeftOfZero),
                   gPrefs->ReadBool(
                      TracksPrefs::ScrollingPreferenceKey(),
@@ -7072,6 +7072,9 @@ void AudacityProject::SeekLeftOrRight
          // Move the visual cursor, avoiding an unnecessary complete redraw
          GetTrackPanel()->DrawOverlays(false);
          GetRulerPanel()->DrawOverlays(false);
+
+         // This updates the selection shown on the selection bar, and the play region
+         TP_DisplaySelection();
       }
       else
       {

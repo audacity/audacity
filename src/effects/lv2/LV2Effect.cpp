@@ -13,17 +13,12 @@
 
 #if defined(USE_LV2)
 
-#if defined(__WXMSW__)
-#include <float.h>
-#define isfinite _finite
-#define isnan _isnan
-#endif
-
 #include <wx/button.h>
 #include <wx/choice.h>
 #include <wx/dcbuffer.h>
 #include <wx/dialog.h>
 #include <wx/dynarray.h>
+#include <wx/math.h>
 #include <wx/msgdlg.h>
 #include <wx/sizer.h>
 #include <wx/statbox.h>
@@ -562,13 +557,13 @@ bool LV2Effect::SetHost(EffectHostInterface *host)
       lilv_scale_points_free(points);
 
       // Collect the value and range info
-      ctrl.mHasLo = !isnan(minimumVals[i]);
-      ctrl.mHasHi = !isnan(maximumVals[i]);
+      ctrl.mHasLo = !wxIsNaN(minimumVals[i]);
+      ctrl.mHasHi = !wxIsNaN(maximumVals[i]);
       ctrl.mMin = ctrl.mHasLo ? minimumVals[i] : 0.0;
       ctrl.mMax = ctrl.mHasHi ? maximumVals[i] : 1.0;
       ctrl.mLo = ctrl.mMin;
       ctrl.mHi = ctrl.mMax;
-      ctrl.mDef = !isnan(defaultValues[i]) ?
+      ctrl.mDef = !wxIsNaN(defaultValues[i]) ?
                   defaultValues[i] :
                      ctrl.mHasLo ?
                      ctrl.mLo :
