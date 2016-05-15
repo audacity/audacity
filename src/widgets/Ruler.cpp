@@ -2426,7 +2426,10 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
          else
             evt.Skip();
 
-         ShowQuickPlayIndicator();
+         // Don't do this, it slows down drag-scrub on Mac.
+         // Timer updates of display elsewhere make it unnecessary.
+         // Done here, it's too frequent.
+         // ShowQuickPlayIndicator();
 
          if (HasCapture())
             ReleaseMouse();

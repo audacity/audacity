@@ -517,9 +517,6 @@ void Scrubber::Forwarder::OnMouse(wxMouseEvent &event)
          (event.LeftIsDown() && event.Dragging())) {
          if (!scrubber.mDragging)
             scrubber.mScrubSeekPress = true;
-         auto xx = ruler->ScreenToClient(::wxGetMousePosition()).x;
-         ruler->UpdateQuickPlayPos(xx);
-         ruler->ShowQuickPlayIndicator();
       }
       else if (event.m_wheelRotation) {
          double steps = event.m_wheelRotation /
