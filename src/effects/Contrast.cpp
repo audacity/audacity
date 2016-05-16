@@ -58,8 +58,6 @@
 #define DB_MAX_LIMIT 0.0   // TODO: We should probably fail WCAG2 if audio is massively distorted.
 #define WCAG2_PASS 20.0    // dB difference required to pass WCAG2 test.
 
-using std::isinf;
-
 bool ContrastDialog::GetDB(float &dB)
 {
    float rms = float(0.0);
@@ -423,7 +421,7 @@ void ContrastDialog::results()
    // TODO: We check for absolute silence here, so should not need to check again later in ::results()
    if (mForegroundIsDefined) {
       mForegroundRMSText->SetName(_("Measured foreground level"));   // Read by screen-readers
-      if(isinf(- foregrounddB))
+      if(std::isinf(- foregrounddB))
          mForegroundRMSText->ChangeValue(wxString::Format(_("zero")));
       else
          mForegroundRMSText->ChangeValue(wxString::Format(_("%.1f dB"), foregrounddB));   // i18n-hint: short form of 'decibels'        
@@ -435,7 +433,7 @@ void ContrastDialog::results()
 
    if (mBackgroundIsDefined) {
       mBackgroundRMSText->SetName(_("Measured background level"));
-      if(isinf(- backgrounddB))
+      if(std::isinf(- backgrounddB))
          mBackgroundRMSText->ChangeValue(wxString::Format(_("zero")));
       else
          mBackgroundRMSText->ChangeValue(wxString::Format(_("%.1f dB"), backgrounddB));
