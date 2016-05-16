@@ -130,7 +130,6 @@ mac/tests/
 
 # Executables
 *.exe
-*.out
 *.app
 
 # Executable without extension
