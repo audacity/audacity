@@ -303,7 +303,7 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
             AudioIOStartStreamOptions options(mProject->GetDefaultPlayOptions());
             options.pScrubbingOptions = &mOptions;
             options.timeTrack = NULL;
-            mOptions.delay = (ScrubPollInterval_ms / 1000.0);
+            mOptions.delay = (ScrubPollInterval_ms * 0.9 / 1000.0);
 #ifdef USE_TRANSCRIPTION_TOOLBAR
             if (!mAlwaysSeeking) {
                // Take the starting speed limit from the transcription toolbar,

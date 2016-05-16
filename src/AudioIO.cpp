@@ -372,7 +372,7 @@ So a small, fixed queue size should be adequate.
 struct AudioIO::ScrubQueue
 {
    ScrubQueue(double t0, double t1, wxLongLong startClockMillis,
-              double rate, double maxSpeed,
+              double rate, double maxSpeed, long maxDebt,
               const ScrubbingOptions &options)
       : mTrailingIdx(0)
       , mMiddleIdx(1)
@@ -380,6 +380,7 @@ struct AudioIO::ScrubQueue
       , mRate(rate)
       , mLastScrubTimeMillis(startClockMillis)
       , mUpdating()
+      , mMaxDebt { maxDebt }
    {
       // Ignore options.adjustStart, pass false.
 
@@ -463,28 +464,78 @@ struct AudioIO::ScrubQueue
 
       // MAY ADVANCE mMiddleIdx, WHICH MAY EQUAL mLeadingIdx, BUT DOES NOT PASS IT.
 
-      if (!cleanup)
+      bool checkDebt = false;
+      if (!cleanup) {
          cleanup.create(mUpdating);
+
+         // Check for cancellation of work only when re-enetering the cricial section
+         checkDebt = true;
+      }
       while(!mNudged && mMiddleIdx == mLeadingIdx)
          mAvailable.Wait();
 
       mNudged = false;
 
-      if (mMiddleIdx != mLeadingIdx)
-      {
-         // There is work in the queue
+      auto now = ::wxGetLocalTimeMillis();
+
+      if (checkDebt &&
+          mLastTransformerTimeMillis >= 0 && // Not the first time for this scrub
+          mMiddleIdx != mLeadingIdx) {
+         // There is work in the queue, but if Producer is outrunning us, discard some,
+         // which may make a skip yet keep playback better synchronized with user gestures.
+         const auto interval = (now - mLastTransformerTimeMillis).ToDouble() / 1000.0;
+         const Entry &previous = mEntries[(mMiddleIdx + Size - 1) % Size];
+         const auto deficit =
+            static_cast<long>(interval * mRate) - // Samples needed in the last time interval
+            mCredit;                              // Samples done in the last time interval
+         mCredit = 0;
+         mDebt += deficit;
+         auto toDiscard = mDebt - mMaxDebt;
+         while (toDiscard > 0 && mMiddleIdx != mLeadingIdx) {
+            // Cancel some debt (discard some new work)
+            auto &entry = mEntries[mMiddleIdx];
+            auto &dur = entry.mDuration;
+            if (toDiscard >= dur) {
+               // Discard entire queue entry
+               mDebt -= dur;
+               toDiscard -= dur;
+               dur = 0; // So Consumer() will handle abandoned entry correctly
+               mMiddleIdx = (mMiddleIdx + 1) % Size;
+            }
+            else {
+               // Adjust the start time
+               auto &start = entry.mS0;
+               const auto end = entry.mS1;
+               const auto ratio = static_cast<double>(toDiscard) / static_cast<double>(dur);
+               const auto adjustment = static_cast<long>(std::abs(end - start) * ratio);
+               if (start <= end)
+                  start += adjustment;
+               else
+                  start -= adjustment;
+
+               mDebt -= toDiscard;
+               dur -= toDiscard;
+               toDiscard = 0;
+            }
+         }
+      }
+
+      if (mMiddleIdx != mLeadingIdx) {
+         // There is still work in the queue, after cancelling debt
          Entry &entry = mEntries[mMiddleIdx];
          startSample = entry.mS0;
          endSample = entry.mS1;
          duration = entry.mDuration;
-         const unsigned next = (mMiddleIdx + 1) % Size;
-         mMiddleIdx = next;
+         mMiddleIdx = (mMiddleIdx + 1) % Size;
+         mCredit += duration;
       }
-      else
-      {
-         // We got the shut-down signal, or we got nudged
+      else {
+         // We got the shut-down signal, or we got nudged, or we discarded all the work.
          startSample = endSample = duration = -1L;
       }
+
+      if (checkDebt)
+         mLastTransformerTimeMillis = now;
    }
 
    double Consumer(unsigned long frames)
@@ -635,7 +686,10 @@ private:
 
       double GetTime(double rate) const
       {
-         return (mS0 + ((mS1 - mS0) * mPlayed) / double(mDuration)) / rate;
+         return
+            (mS0 +
+             (mS1 - mS0) * static_cast<double>(mPlayed) / static_cast<double>(mDuration))
+            / rate;
       }
 
       // These sample counts are initialized in the UI, producer, thread:
@@ -680,6 +734,12 @@ private:
    unsigned mLeadingIdx;
    const double mRate;
    wxLongLong mLastScrubTimeMillis;
+
+   wxLongLong mLastTransformerTimeMillis { -1LL };
+   long mCredit { 0L };
+   long mDebt { 0L };
+   const long mMaxDebt;
+
    mutable wxMutex mUpdating;
    mutable wxCondition mAvailable { mUpdating };
    bool mNudged { false };
@@ -1850,7 +1910,7 @@ int AudioIO::StartStream(const WaveTrackArray &playbackTracks,
       const auto &scrubOptions = *options.pScrubbingOptions;
       mScrubQueue =
          new ScrubQueue(mT0, mT1, scrubOptions.startClockTimeMillis,
-            sampleRate, scrubOptions.maxSpeed,
+            sampleRate, scrubOptions.maxSpeed, 2 * scrubOptions.minStutter,
             *options.pScrubbingOptions);
       mScrubDuration = 0;
       mSilentScrub = false;
@@ -3446,7 +3506,7 @@ void AudioIO::FillBuffers()
                         double startTime, endTime, speed;
                         startTime = startSample / mRate;
                         endTime = endSample / mRate;
-                        speed = double(abs(endSample - startSample)) / mScrubDuration;
+                        speed = double(std::abs(endSample - startSample)) / mScrubDuration;
                         for (i = 0; i < mPlaybackTracks->size(); i++)
                            mPlaybackMixers[i]->SetTimesAndSpeed(startTime, endTime, speed);
                      }
@@ -4167,7 +4227,7 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
                      (gAudioIO->mT0, gAudioIO->mTime);
             else
                gAudioIO->mWarpedTime = gAudioIO->mTime - gAudioIO->mT0;
-            gAudioIO->mWarpedTime = abs(gAudioIO->mWarpedTime);
+            gAudioIO->mWarpedTime = std::abs(gAudioIO->mWarpedTime);
 
             // Reset mixer positions and flush buffers for all tracks
             for (i = 0; i < (unsigned int)numPlaybackTracks; i++)
