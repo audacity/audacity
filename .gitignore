@@ -119,9 +119,6 @@ mac/tests/
 # Compiled translation files (GNU Machine Object)
 *.gmo
 
-# Fortran module files
-*.mod
-
 # Compiled Static libraries
 *.lai
 *.la
