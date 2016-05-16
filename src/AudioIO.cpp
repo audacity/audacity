@@ -410,6 +410,14 @@ struct AudioIO::ScrubQueue
       return previous.mS1 / mRate;
    }
 
+   // This is for avoiding deadlocks while starting a scrub:
+   // Audio stream needs to be unblocked
+   void Nudge()
+   {
+      wxMutexLocker locker(mUpdating);
+      mAvailable.Signal();
+   }
+
    void PoisonPill()
    {
       // Main thread is shutting down the scrubbing
@@ -478,8 +486,7 @@ struct AudioIO::ScrubQueue
       }
       else
       {
-         wxASSERT(mPoisoned);
-         // We got the shut-down signal
+         // We got the shut-down signal, or we got nudged
          startSample = endSample = duration = -1L;
       }
    }
@@ -1874,8 +1881,11 @@ int AudioIO::StartStream(const WaveTrackArray &playbackTracks,
    // FillBuffers will ALWAYS get called from the Audio thread.
    mAudioThreadShouldCallFillBuffersOnce = true;
 
-   while( mAudioThreadShouldCallFillBuffersOnce == true )
+   while( mAudioThreadShouldCallFillBuffersOnce == true ) {
+      if (mScrubQueue)
+         mScrubQueue->Nudge();
       wxMilliSleep( 50 );
+   }
 
 #ifdef EXPERIMENTAL_MIDI_OUT
    // if no playback, reset the midi time to zero to roughly sync
