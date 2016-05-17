@@ -412,7 +412,7 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
          mdBMaxSlider = S.Id(ID_dBMax).AddSlider(wxT(""), 10, 20, 0);
 #if wxUSE_ACCESSIBILITY
          mdBMaxSlider->SetName(_("Max dB"));
-         mdBMaxSlider->SetAccessible(new SliderAx(mdBMaxSlider, wxString(wxT("%d ")) + _("dB")));
+         mdBMaxSlider->SetAccessible(safenew SliderAx(mdBMaxSlider, wxString(wxT("%d ")) + _("dB")));
 #endif
 
          S.SetStyle(wxSL_VERTICAL | wxSL_INVERSE);
@@ -420,7 +420,7 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
          S.AddVariableText(_("- dB"), false, wxCENTER);
 #if wxUSE_ACCESSIBILITY
          mdBMinSlider->SetName(_("Min dB"));
-         mdBMinSlider->SetAccessible(new SliderAx(mdBMinSlider, wxString(wxT("%d ")) + _("dB")));
+         mdBMinSlider->SetAccessible(safenew SliderAx(mdBMinSlider, wxString(wxT("%d ")) + _("dB")));
 #endif
       }
       S.EndVerticalLay();

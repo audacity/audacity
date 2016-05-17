@@ -61,7 +61,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxString(wxT("Greg Kozikowski, ")) + _("documentation and support"), roleTeamMember);
    AddCredit(wxString(wxT("Paul Licameli, ")) + _("developer"), roleTeamMember);
    AddCredit(wxString(wxT("Leland Lucius, ")) + _("developer"), roleTeamMember);
-   AddCredit(wxString(wxT("Peter Sampson, ")) + _("documentation and support"), roleTeamMember);
+   AddCredit(wxString(wxT("Peter Sampson")), roleTeamMember);
    AddCredit(wxString(wxT("Martyn Shaw, ")) + _("developer"), roleTeamMember);
    AddCredit(wxString(wxT("Bill Wharrie, ")) + _("documentation and support"), roleTeamMember);
 

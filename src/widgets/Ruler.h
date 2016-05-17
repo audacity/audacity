@@ -11,13 +11,14 @@
 #ifndef __AUDACITY_RULER__
 #define __AUDACITY_RULER__
 
+#include "OverlayPanel.h"
+
 #include "../MemoryX.h"
 #include <wx/bitmap.h>
 #include <wx/dc.h>
 #include <wx/dcmemory.h>
 #include <wx/event.h>
 #include <wx/font.h>
-#include <wx/panel.h>
 #include <wx/window.h>
 #include "../Experimental.h"
 
@@ -274,13 +275,14 @@ private:
 };
 
 class QuickPlayIndicatorOverlay;
+class QuickPlayRulerOverlay;
 
 // This is an Audacity Specific ruler panel which additionally
 // has border, selection markers, play marker.
 // Once TrackPanel uses wxSizers, we will derive it from some
 // wxWindow and the GetSize and SetSize functions
 // will then be wxWidgets functions instead.
-class AUDACITY_DLL_API AdornedRulerPanel final : public wxPanel
+class AUDACITY_DLL_API AdornedRulerPanel final : public OverlayPanel
 {
 public:
    AdornedRulerPanel(AudacityProject* parent,
@@ -291,17 +293,18 @@ public:
 
    ~AdornedRulerPanel();
 
-   bool AcceptsFocus() const override { return false; };
+#ifndef EXPERIMENTAL_TIME_RULER_NAVIGATION
+   bool AcceptsFocus() const override { return false; }
+#endif
 
 public:
    static int GetRulerHeight();
    static int GetRulerHeight(bool showScrubBar);
+   wxRect GetInnerRect() const { return mInner; }
 
    void SetLeftOffset(int offset);
 
-   void DrawIndicator(double time, bool rec);
    void DrawSelection();
-   void ClearIndicator();
 
    void SetPlayRegion(double playRegionStart, double playRegionEnd);
    void ClearPlayRegion();
@@ -319,6 +322,7 @@ public:
       ScrubBarButton,
 
       NumButtons,
+      LastButton = NumButtons - 1,
       NoButton = -1,
 
       EnteringQP = NumButtons,
@@ -326,14 +330,29 @@ public:
       Leaving,
       NoChange
    };
+   enum class PointerState {
+      Out = 0, In, InArrow
+   };
+   struct CaptureState {
+      CaptureState() {}
+      CaptureState(StatusChoice s, PointerState p) : button(s), state(p) {}
+      StatusChoice button { StatusChoice::NoButton };
+      PointerState state { PointerState::Out };
+   };
+
    friend inline StatusChoice &operator++ (StatusChoice &choice) {
       choice = static_cast<StatusChoice>(1 + static_cast<int>(choice));
       return choice;
    }
+   friend inline StatusChoice &operator-- (StatusChoice &choice) {
+      choice = static_cast<StatusChoice>(-1 + static_cast<int>(choice));
+      return choice;
+   }
 
    void RegenerateTooltips(StatusChoice choice);
-   void HideQuickPlayIndicator();
 
+   void ShowQuickPlayIndicator();
+   void HideQuickPlayIndicator();
    void UpdateQuickPlayPos(wxCoord &mousPosX);
 
 private:
@@ -364,12 +383,13 @@ private:
    void DoDrawBackground(wxDC * dc);
    void DoDrawEdge(wxDC *dc);
    void DoDrawMarks(wxDC * dc, bool /*text */ );
-   void DoDrawCursor(wxDC * dc);
    void DoDrawSelection(wxDC * dc);
-   void DoDrawIndicator(wxDC * dc, double time, bool playing, int width, bool scrub);
-   void DoEraseIndicator(wxDC *dc, int x);
+public:
+   void DoDrawIndicator(wxDC * dc, wxCoord xx, bool playing, int width, bool scrub);
+
+private:
    QuickPlayIndicatorOverlay *GetOverlay();
-   void DrawQuickPlayIndicator(wxDC * dc /*NULL to DELETE old only*/, bool repainting = false);
+   void ShowOrHideQuickPlayIndicator(bool show);
    void DoDrawPlayRegion(wxDC * dc);
 
    wxRect GetButtonAreaRect(bool includeBorder = false) const;
@@ -386,14 +406,13 @@ private:
    }
 
    wxRect GetButtonRect( StatusChoice button ) const;
-   enum PointerState { Out = 0, In, InArrow };
-   PointerState InButtonRect( StatusChoice button ) const;
-   StatusChoice FindButton( wxPoint position ) const;
+   PointerState InButtonRect( StatusChoice button, wxMouseEvent *pEvent ) const;
+   CaptureState FindButton( wxMouseEvent &mouseEvent ) const;
    bool GetButtonState( StatusChoice button ) const;
    void ToggleButtonState( StatusChoice button );
-   void ShowButtonMenu( StatusChoice button, wxPoint position);
-   void DoDrawPushbutton(wxDC *dc, StatusChoice button, bool down,
-      PointerState pointerState) const;
+   void ShowButtonMenu( StatusChoice button, const wxPoint *pPosition);
+   void DoDrawPushbutton
+      (wxDC *dc, StatusChoice button, bool buttonState, bool arrowState) const;
    void DoDrawPushbuttons(wxDC *dc) const;
    void HandlePushbuttonClick(wxMouseEvent &evt);
    void HandlePushbuttonEvent(wxMouseEvent &evt);
@@ -404,9 +423,6 @@ private:
    int Time2Pos(double t, bool ignoreFisheye = false);
 
    bool IsWithinMarker(int mousePosX, double markerTime);
-
-   int IndicatorBigWidth();
-   int IndicatorBigHeight();
 
 private:
 
@@ -420,9 +436,6 @@ private:
    AudacityProject *const mProject;
    TrackList *mTracks;
 
-   wxBitmap *mBack;
-   wxMemoryDC mBackDC;
-
    wxRect mOuter;
    wxRect mScrubZone;
    wxRect mInner;
@@ -430,11 +443,8 @@ private:
    int mLeftOffset;  // Number of pixels before we hit the 'zero position'.
 
 
-   int mIndType;     // -1 = No indicator, 0 = Record, 1 = Play
    double mIndTime;
-   bool   mQuickPlayInd;
    double mQuickPlayPos;
-   double mLastQuickPlayX;
 
    SnapManager *mSnapManager;
    bool mIsSnapped;
@@ -462,12 +472,17 @@ private:
 
    void OnToggleScrubbing(wxCommandEvent&);
 
+   void OnCaptureKey(wxCommandEvent &event);
+   void OnKeyDown(wxKeyEvent &event);
+   void OnSetFocus(wxFocusEvent &);
+   void OnKillFocus(wxFocusEvent &);
+   void OnContextMenu(wxContextMenuEvent & WXUNUSED(event));
+
    bool mPlayRegionDragsSelection;
    bool mTimelineToolTip;
    bool mQuickPlayEnabled;
 
-
-   StatusChoice mCaptureState { StatusChoice::NoButton };
+   CaptureState mCaptureState {};
 
    enum MouseEventState {
       mesNone,
@@ -485,14 +500,54 @@ private:
    std::unique_ptr<QuickPlayIndicatorOverlay> mOverlay;
 
    StatusChoice mPrevZone { StatusChoice::NoChange };
+
+   struct TabState {
+      StatusChoice mButton { StatusChoice::FirstButton };
+      bool mMenu { false };
+
+      TabState() {}
+      TabState(StatusChoice button, bool menu)
+         : mButton{ button }, mMenu{ menu } {}
+
+      bool operator == (const TabState &rhs) const
+         { return mButton == rhs.mButton && mMenu == rhs.mMenu; }
+      bool operator != (const TabState &rhs) const { return !(*this == rhs); }
+
+      TabState &operator ++ () {
+         if (!mMenu)
+            mMenu = true;
+         else {
+            mMenu = false;
+            if (!IsButton (++mButton))
+               mButton = StatusChoice::FirstButton;
+         }
+         return *this;
+      }
+
+      TabState &operator -- () {
+         if (mMenu)
+            mMenu = false;
+         else {
+            mMenu = true;
+            if (!IsButton (--mButton))
+               mButton = StatusChoice::LastButton;
+         }
+         return *this;
+      }
+   };
+   TabState mTabState;
+
    bool mShowScrubbing { true };
 
    mutable int mButtonFontSize { -1 };
    mutable wxFont mButtonFont;
 
    bool mDoubleClick {};
+   bool mShowingMenu {};
 
    DECLARE_EVENT_TABLE()
+
+   friend QuickPlayRulerOverlay;
 };
 
 #endif //define __AUDACITY_RULER__

@@ -56,7 +56,7 @@ DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_OPEN_AUDIO_FILE, -1);
 
 // These flags represent the majority of the states that affect
 // whether or not items in menus are enabled or disabled.
-enum
+enum CommandFlag : unsigned long long
 {
    AlwaysEnabledFlag      = 0x00000000,
 
@@ -92,11 +92,91 @@ enum
    IsRealtimeNotActiveFlag= 0x10000000,  //lll
    CaptureNotBusyFlag     = 0x20000000,
    CanStopAudioStreamFlag = 0x40000000,
-   AudioStreamNotScrubbingFlag
-                          = 0x80000000,
+   RulerHasFocus
+                          = 0x80000000ULL, // prl
+//   nextOneHas33BitsWow
+//                        = 0x100000000ULL, // prl
 
-   NoFlagsSpecifed        = 0xffffffff
+   NoFlagsSpecifed        = ~0ULL
 };
+
+// Prevent accidental misuse with narrower types
+
+bool operator == (CommandFlag, unsigned long) PROHIBITED;
+bool operator == (CommandFlag, long) PROHIBITED;
+bool operator == (unsigned long, CommandFlag) PROHIBITED;
+bool operator == (long, CommandFlag) PROHIBITED;
+
+bool operator != (CommandFlag, unsigned long) PROHIBITED;
+bool operator != (CommandFlag, long) PROHIBITED;
+bool operator != (unsigned long, CommandFlag) PROHIBITED;
+bool operator != (long, CommandFlag) PROHIBITED;
+
+CommandFlag operator & (CommandFlag, unsigned long) PROHIBITED;
+CommandFlag operator & (CommandFlag, long) PROHIBITED;
+CommandFlag operator & (unsigned long, CommandFlag) PROHIBITED;
+CommandFlag operator & (long, CommandFlag) PROHIBITED;
+
+CommandFlag operator | (CommandFlag, unsigned long) PROHIBITED;
+CommandFlag operator | (CommandFlag, long) PROHIBITED;
+CommandFlag operator | (unsigned long, CommandFlag) PROHIBITED;
+CommandFlag operator | (long, CommandFlag) PROHIBITED;
+
+CommandFlag operator ^ (CommandFlag, unsigned long) PROHIBITED;
+CommandFlag operator ^ (CommandFlag, long) PROHIBITED;
+CommandFlag operator ^ (unsigned long, CommandFlag) PROHIBITED;
+CommandFlag operator ^ (long, CommandFlag) PROHIBITED;
+
+bool operator == (CommandFlag, unsigned int) PROHIBITED;
+bool operator == (CommandFlag, int) PROHIBITED;
+bool operator == (unsigned int, CommandFlag) PROHIBITED;
+bool operator == (int, CommandFlag) PROHIBITED;
+
+bool operator != (CommandFlag, unsigned int) PROHIBITED;
+bool operator != (CommandFlag, int) PROHIBITED;
+bool operator != (unsigned int, CommandFlag) PROHIBITED;
+bool operator != (int, CommandFlag) PROHIBITED;
+
+CommandFlag operator & (CommandFlag, unsigned int) PROHIBITED;
+CommandFlag operator & (CommandFlag, int) PROHIBITED;
+CommandFlag operator & (unsigned int, CommandFlag) PROHIBITED;
+CommandFlag operator & (int, CommandFlag) PROHIBITED;
+
+CommandFlag operator | (CommandFlag, unsigned int) PROHIBITED;
+CommandFlag operator | (CommandFlag, int) PROHIBITED;
+CommandFlag operator | (unsigned int, CommandFlag) PROHIBITED;
+CommandFlag operator | (int, CommandFlag) PROHIBITED;
+
+CommandFlag operator ^ (CommandFlag, unsigned int) PROHIBITED;
+CommandFlag operator ^ (CommandFlag, int) PROHIBITED;
+CommandFlag operator ^ (unsigned int, CommandFlag) PROHIBITED;
+CommandFlag operator ^ (int, CommandFlag) PROHIBITED;
+
+// Supply the bitwise operations
+
+inline CommandFlag operator ~ (CommandFlag flag)
+{
+   return static_cast<CommandFlag>( ~ static_cast<unsigned long long> (flag) );
+}
+inline CommandFlag operator & (CommandFlag lhs, CommandFlag rhs)
+{
+   return static_cast<CommandFlag> (
+      static_cast<unsigned long long>(lhs) & static_cast<unsigned long long>(rhs)
+   );
+}
+inline CommandFlag operator | (CommandFlag lhs, CommandFlag rhs)
+{
+   return static_cast<CommandFlag> (
+      static_cast<unsigned long long>(lhs) | static_cast<unsigned long long>(rhs)
+   );
+}
+inline CommandFlag & operator |= (CommandFlag &lhs, CommandFlag rhs)
+{
+   lhs = lhs | rhs;
+   return lhs;
+}
+
+using CommandMask = CommandFlag;
 
 class BlockFile;
 

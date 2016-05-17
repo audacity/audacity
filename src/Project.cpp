@@ -937,7 +937,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    }
    bs->Layout();
 
-   // The right hand side translates to NEW TrackPanel(... in normal
+   // The right hand side translates to NEW TrackPanel(...) in normal
    // Audacity without additional DLLs.
    mTrackPanel = TrackPanel::FactoryFunction(pPage,
                                              TrackPanelID,
@@ -2072,11 +2072,12 @@ void AudacityProject::OnScroll(wxScrollEvent & WXUNUSED(event))
 /// Determines if flags for command are compatible with current state.
 /// If not, then try some recovery action to make it so.
 /// @return whether compatible or not after any actions taken.
-bool AudacityProject::TryToMakeActionAllowed( wxUint32 & flags, wxUint32 flagsRqd, wxUint32 mask )
+bool AudacityProject::TryToMakeActionAllowed
+   ( CommandFlag & flags, CommandFlag flagsRqd, CommandFlag mask )
 {
    bool bAllowed;
 
-   if( flags == 0 )
+   if( !flags )
       flags = GetUpdateFlags();
 
    bAllowed = ((flags & mask) == (flagsRqd & mask));
@@ -2088,12 +2089,12 @@ bool AudacityProject::TryToMakeActionAllowed( wxUint32 & flags, wxUint32 flagsRq
    if( !mSelectAllOnNone )
       return false;
 
-   wxUint32 MissingFlags = (flags & ~flagsRqd) & mask;
+   auto MissingFlags = (flags & ~flagsRqd) & mask;
 
    // IF selecting all audio won't do any good, THEN return with failure.
-   if( (flags & WaveTracksExistFlag) == 0 )
+   if( !(flags & WaveTracksExistFlag) )
       return false;
-   if( (MissingFlags & ~( TimeSelectedFlag | WaveTracksSelectedFlag))!=0)
+   if( (MissingFlags & ~( TimeSelectedFlag | WaveTracksSelectedFlag)) )
       return false;
 
    OnSelectAll();
@@ -2107,7 +2108,7 @@ void AudacityProject::OnMenu(wxCommandEvent & event)
 
    bool handled = mCommandManager.HandleMenuID(event.GetId(),
                                                GetUpdateFlags(),
-                                               0xFFFFFFFF);
+                                               NoFlagsSpecifed);
 
    if (handled)
       event.Skip(false);
@@ -2415,8 +2416,10 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
       &mViewInfo);
 
    Destroy();
+   mRuler = nullptr;
 
    mIsBeingDeleted = true;
+
 }
 
 void AudacityProject::OnOpenAudioFile(wxCommandEvent & event)
@@ -4702,10 +4705,20 @@ void AudacityProject::TP_DisplaySelection()
 {
    double audioTime;
 
+   if (mRuler) {
+      if (!gAudioIO->IsBusy() && !mLockPlayRegion)
+         mRuler->SetPlayRegion(mViewInfo.selectedRegion.t0(),
+         mViewInfo.selectedRegion.t1());
+      else
+         // Cause ruler redraw anyway, because we may be zooming or scrolling
+         mRuler->Refresh();
+   }
+
    if (gAudioIO->IsBusy())
       audioTime = gAudioIO->GetStreamTime();
    else {
-      audioTime = 0;
+      double playEnd;
+      GetPlayRegion(&audioTime, &playEnd);
    }
 
    GetSelectionBar()->SetTimes(mViewInfo.selectedRegion.t0(),
@@ -4715,14 +4728,6 @@ void AudacityProject::TP_DisplaySelection()
       (mViewInfo.selectedRegion.f0(), mViewInfo.selectedRegion.f1());
 #endif
 
-   if (mRuler) {
-      if (!gAudioIO->IsBusy() && !mLockPlayRegion)
-         mRuler->SetPlayRegion(mViewInfo.selectedRegion.t0(),
-         mViewInfo.selectedRegion.t1());
-      else
-         // Cause ruler redraw anyway, because we may be zooming or scrolling
-         mRuler->Refresh();
-   }
 }
 
 
@@ -5361,7 +5366,6 @@ void AudacityProject::PlaybackScroller::OnTimer(wxCommandEvent &event)
    // Let other listeners get the notification
    event.Skip();
 
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
    if (mActive && mProject->IsAudioActive())
    {
       // Pan the view, so that we center the play indicator.
@@ -5379,5 +5383,4 @@ void AudacityProject::PlaybackScroller::OnTimer(wxCommandEvent &event)
          viewInfo.h = std::max(0.0, viewInfo.h);
       trackPanel->Refresh(false);
    }
-#endif
 }

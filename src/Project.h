@@ -21,6 +21,8 @@
 #include "Audacity.h"
 #include "Experimental.h"
 
+#include "widgets/OverlayPanel.h"
+
 #include "DirManager.h"
 #include "ViewInfo.h"
 #include "TrackPanelListener.h"
@@ -62,7 +64,6 @@ class Tags;
 class EffectPlugs;
 
 class TrackPanel;
-class TrackPanelOverlay;
 class FreqWindow;
 class ContrastDialog;
 class Meter;
@@ -504,7 +505,8 @@ public:
    void OnAudioIONewBlockFiles(const AutoSaveFile & blockFileLog) override;
 
    // Command Handling
-   bool TryToMakeActionAllowed( wxUint32 & flags, wxUint32 flagsRqd, wxUint32 mask );
+   bool TryToMakeActionAllowed
+      ( CommandFlag & flags, CommandFlag flagsRqd, CommandFlag mask );
 
    ///Prevents DELETE from external thread - for e.g. use of GetActiveProject
    static void AllProjectsDeleteLock();
@@ -580,7 +582,7 @@ public:
 
    CommandManager mCommandManager;
 
-   wxUint32 mLastFlags;
+   CommandFlag mLastFlags;
 
    // Window elements
 
@@ -709,11 +711,11 @@ public:
    friend class CommandManager;
 
    // TrackPanelOverlay objects
-   std::unique_ptr<TrackPanelOverlay> 
+   std::unique_ptr<Overlay>
       mIndicatorOverlay, mCursorOverlay;
 
 #ifdef EXPERIMENTAL_SCRUBBING_BASIC
-   std::unique_ptr<TrackPanelOverlay> mScrubOverlay;
+   std::unique_ptr<Overlay> mScrubOverlay;
    std::unique_ptr<Scrubber> mScrubber;
 public:
    Scrubber &GetScrubber() { return *mScrubber; }

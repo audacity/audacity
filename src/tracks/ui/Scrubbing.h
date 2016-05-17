@@ -11,12 +11,13 @@ Paul Licameli split from TrackPanel.cpp
 #ifndef __AUDACITY_SCRUBBING__
 #define __AUDACITY_SCRUBBING__
 
+#include "../../MemoryX.h"
 #include <vector>
 #include <wx/event.h>
 #include <wx/longlong.h>
 
 #include "../../Experimental.h"
-#include "../../TrackPanelOverlay.h"
+#include "../../widgets/Overlay.h"
 
 class AudacityProject;
 
@@ -29,11 +30,8 @@ public:
 
    // Assume xx is relative to the left edge of TrackPanel!
    void MarkScrubStart(
-      wxCoord xx
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
-      , bool smoothScrolling
-#endif
-      , bool alwaysSeeking // if false, can switch seeking or scrubbing
+      wxCoord xx, bool smoothScrolling,
+      bool alwaysSeeking // if false, can switch seeking or scrubbing
                            // by mouse button state
    );
 
@@ -57,7 +55,6 @@ public:
 
    bool IsScrollScrubbing() const // If true, implies HasStartedScrubbing()
    { return mSmoothScrollingScrub; }
-   void SetScrollScrubbing(bool scrollScrubbing);
 
    bool IsAlwaysSeeking() const
    { return mAlwaysSeeking; }
@@ -89,6 +86,8 @@ public:
    // All possible status strings.
    static std::vector<wxString> GetAllUntranslatedStatusStrings();
 
+   void Pause(bool paused);
+
 private:
    void DoScrub(bool scroll, bool seek);
    void OnActivateOrDeactivateApp(wxActivateEvent & event);
@@ -113,10 +112,12 @@ private:
    bool mScrubHasFocus;
    int mScrubSpeedDisplayCountdown;
    wxCoord mScrubStartPosition;
+   wxCoord mLastScrubPosition {};
    double mMaxScrubSpeed;
    bool mScrubSeekPress;
    bool mSmoothScrollingScrub;
-   bool mAlwaysSeeking{};
+   bool mAlwaysSeeking {};
+   bool mDragging {};
 
 #ifdef EXPERIMENTAL_SCRUBBING_SCROLL_WHEEL
    int mLogMaxScrubSpeed;
@@ -125,10 +126,13 @@ private:
    AudacityProject *mProject;
 
    DECLARE_EVENT_TABLE()
+
+   class ScrubPoller;
+   std::unique_ptr<ScrubPoller> mPoller;
 };
 
 // Specialist in drawing the scrub speed, and listening for certain events
-class ScrubbingOverlay final : public wxEvtHandler, public TrackPanelOverlay
+class ScrubbingOverlay final : public wxEvtHandler, public Overlay
 {
 public:
    ScrubbingOverlay(AudacityProject *project);
@@ -136,8 +140,7 @@ public:
 
 private:
    std::pair<wxRect, bool> DoGetRectangle(wxSize size) override;
-   void Draw
-      (wxDC &dc, TrackPanelCellIterator begin, TrackPanelCellIterator end) override;
+   void Draw(OverlayPanel &panel, wxDC &dc) override;
 
    void OnTimer(wxCommandEvent &event);
 

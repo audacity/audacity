@@ -24,17 +24,21 @@
 private:
 void CreateMenusAndCommands();
 
-void PopulateEffectsMenu(CommandManager *c, EffectType type, int batchflags, int realflags);
-void AddEffectMenuItems(CommandManager *c, EffectPlugs & plugs, int batchflags, int realflags, bool isDefault);
-void AddEffectMenuItemGroup(CommandManager *c, const wxArrayString & names, const PluginIDList & plugs, const wxArrayInt & flags, bool isDefault);
+void PopulateEffectsMenu(CommandManager *c, EffectType type,
+                         CommandFlag batchflags, CommandFlag realflags);
+void AddEffectMenuItems(CommandManager *c, EffectPlugs & plugs,
+                        CommandFlag batchflags, CommandFlag realflags, bool isDefault);
+void AddEffectMenuItemGroup(CommandManager *c, const wxArrayString & names,
+                            const PluginIDList & plugs,
+                            const std::vector<CommandFlag> & flags, bool isDefault);
 void CreateRecentFilesMenu(CommandManager *c);
 void ModifyUndoMenuItems();
 void ModifyToolbarMenus();
 // Calls ModifyToolbarMenus() on all projects
 void ModifyAllProjectToolbarMenus();
 
-int GetFocusedFrame();
-wxUint32 GetUpdateFlags();
+CommandFlag GetFocusedFrame();
+CommandFlag GetUpdateFlags();
 
 double NearestZeroCrossing(double t0);
 
@@ -76,6 +80,7 @@ void OnSeekRightLong();
 
 bool MakeReadyToPlay(bool loop = false, bool cutpreview = false); // Helper function that sets button states etc.
 void OnPlayStop();
+void DoPlayStopSelect(bool click, bool shift);
 void OnPlayStopSelect();
 void OnPlayOneSecond();
 void OnPlayToSelection();
@@ -173,6 +178,8 @@ void OnUnlockPlayRegion();
 double GetTime(const Track *t);
 void OnSortTime();
 void OnSortName();
+
+void OnToggleScrollLeftOfZero();
 
 void OnSnapToOff();
 void OnSnapToNearest();

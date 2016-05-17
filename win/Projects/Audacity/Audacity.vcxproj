@@ -213,7 +213,6 @@
     <ClCompile Include="..\..\..\src\TrackArtist.cpp" />
     <ClCompile Include="..\..\..\src\TrackPanel.cpp" />
     <ClCompile Include="..\..\..\src\TrackPanelAx.cpp" />
-    <ClCompile Include="..\..\..\src\TrackPanelOverlay.cpp" />
     <ClCompile Include="..\..\..\src\tracks\ui\EditCursorOverlay.cpp" />
     <ClCompile Include="..\..\..\src\tracks\ui\PlayIndicatorOverlay.cpp" />
     <ClCompile Include="..\..\..\src\tracks\ui\Scrubbing.cpp" />
@@ -222,8 +221,11 @@
     <ClCompile Include="..\..\..\src\VoiceKey.cpp" />
     <ClCompile Include="..\..\..\src\WaveClip.cpp" />
     <ClCompile Include="..\..\..\src\WaveTrack.cpp" />
+    <ClCompile Include="..\..\..\src\widgets\BackedPanel.cpp" />
     <ClCompile Include="..\..\..\src\widgets\HelpSystem.cpp" />
     <ClCompile Include="..\..\..\src\widgets\NumericTextCtrl.cpp" />
+    <ClCompile Include="..\..\..\src\widgets\Overlay.cpp" />
+    <ClCompile Include="..\..\..\src\widgets\OverlayPanel.cpp" />
     <ClCompile Include="..\..\..\src\WrappedType.cpp" />
     <ClCompile Include="..\..\..\src\effects\Amplify.cpp" />
     <ClCompile Include="..\..\..\src\effects\AutoDuck.cpp" />
@@ -443,14 +445,16 @@
     <ClInclude Include="..\..\..\src\TrackPanelCell.h" />
     <ClInclude Include="..\..\..\src\TrackPanelCellIterator.h" />
     <ClInclude Include="..\..\..\src\TrackPanelListener.h" />
-    <ClInclude Include="..\..\..\src\TrackPanelOverlay.h" />
     <ClInclude Include="..\..\..\src\tracks\ui\EditCursorOverlay.h" />
     <ClInclude Include="..\..\..\src\tracks\ui\PlayIndicatorOverlay.h" />
     <ClInclude Include="..\..\..\src\tracks\ui\Scrubbing.h" />
     <ClInclude Include="..\..\..\src\TranslatableStringArray.h" />
     <ClInclude Include="..\..\..\src\WaveTrackLocation.h" />
+    <ClInclude Include="..\..\..\src\widgets\BackedPanel.h" />
     <ClInclude Include="..\..\..\src\widgets\HelpSystem.h" />
     <ClInclude Include="..\..\..\src\widgets\NumericTextCtrl.h" />
+    <ClInclude Include="..\..\..\src\widgets\Overlay.h" />
+    <ClInclude Include="..\..\..\src\widgets\OverlayPanel.h" />
     <ClInclude Include="..\..\..\src\wxFileNameWrapper.h" />
     <ClInclude Include="..\..\configwin.h" />
     <ClInclude Include="..\..\..\src\Dependencies.h" />

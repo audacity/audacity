@@ -14,10 +14,7 @@
 #include "MemoryX.h"
 #include <vector>
 
-#include <wx/dcmemory.h>
-#include <wx/panel.h>
 #include <wx/timer.h>
-#include <wx/window.h>
 
 #include "Experimental.h"
 #include "audacity/Types.h"
@@ -28,6 +25,7 @@
 
 #include "Snap.h"
 #include "Track.h"
+#include "widgets/OverlayPanel.h"
 
 class wxMenu;
 class wxRect;
@@ -35,7 +33,6 @@ class wxRect;
 class LabelTrack;
 class SpectrumAnalyst;
 class TrackPanel;
-class TrackPanelOverlay;
 class TrackArtist;
 class Ruler;
 class SnapManager;
@@ -137,7 +134,7 @@ private:
 const int DragThreshold = 3;// Anything over 3 pixels is a drag, else a click.
 
 
-class AUDACITY_DLL_API TrackPanel final : public wxPanel {
+class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
  public:
 
    TrackPanel(wxWindow * parent,
@@ -157,7 +154,6 @@ class AUDACITY_DLL_API TrackPanel final : public wxPanel {
 
    virtual void UpdatePrefs();
 
-   virtual void OnSize(wxSizeEvent & event);
    virtual void OnPaint(wxPaintEvent & event);
    virtual void OnMouseEvent(wxMouseEvent & event);
    virtual void OnCaptureLost(wxMouseCaptureLostEvent & event);
@@ -510,20 +506,6 @@ protected:
    virtual void DrawBordersAroundTrack(Track *t, wxDC* dc, const wxRect & rect, const int labelw, const int vrul);
    virtual void DrawOutsideOfTrack    (Track *t, wxDC* dc, const wxRect & rect);
 
-public:
-   // Register and unregister overlay objects.
-   // The sequence in which they were registered is the sequence in
-   // which they are painted.
-   // TrackPanel is not responsible for their memory management.
-   virtual void AddOverlay(TrackPanelOverlay *pOverlay);
-   // Returns true if the overlay was found
-   virtual bool RemoveOverlay(TrackPanelOverlay *pOverlay);
-   virtual void ClearOverlays();
-
-   // Erase and redraw things like the cursor, cheaply and directly to the
-   // client area, without full refresh.
-   virtual void DrawOverlays(bool repaint);
-
 protected:
    virtual int IdOfRate( int rate );
    virtual int IdOfFormat( int format );
@@ -572,9 +554,6 @@ protected:
 
    int mTimeCount;
 
-   wxMemoryDC mBackingDC;
-   wxBitmap *mBacking;
-   bool mResizeBacking;
    bool mRefreshBacking;
    int mPrevWidth;
    int mPrevHeight;
@@ -812,9 +791,6 @@ protected:
 
  public:
    wxSize vrulerSize;
-
- protected:
-   std::vector<TrackPanelOverlay*> mOverlays;
 
  public:
    DECLARE_EVENT_TABLE()

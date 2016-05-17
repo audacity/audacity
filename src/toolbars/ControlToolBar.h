@@ -70,7 +70,8 @@ class ControlToolBar final : public ToolBar {
    void SetStop(bool down);
    void SetRecord(bool down, bool append=false);
 
-   bool IsRecordDown();
+   bool IsPauseDown() const;
+   bool IsRecordDown() const;
 
    // A project is only allowed to stop an audio stream that it owns.
    bool CanStopAudioStream ();

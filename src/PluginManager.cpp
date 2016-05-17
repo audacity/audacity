@@ -566,8 +566,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
                            NULL,
                            this);
 #if wxUSE_ACCESSIBILITY
-         mAx = new CheckListAx(mEffects);
-         mEffects->SetAccessible(mAx);
+         mEffects->SetAccessible(mAx = safenew CheckListAx(mEffects));
 #endif
          mEffects->InsertColumn(COL_Name, _("Name"));
          mEffects->InsertColumn(COL_State, _("State"));
