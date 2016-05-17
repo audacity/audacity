@@ -401,7 +401,7 @@ void ControlToolBar::EnableDisableButtons()
 
    bool playing = mPlay->IsDown();
    bool recording = mRecord->IsDown();
-   bool notBusy = !gAudioIO->IsBusy();
+   bool busy = gAudioIO->IsBusy();
 
    // Only interested in audio type tracks
    if (p) {
@@ -425,7 +425,11 @@ void ControlToolBar::EnableDisableButtons()
    }
 
    mPlay->SetEnabled(CanStopAudioStream() && tracks && !recording);
-   mRecord->SetEnabled(CanStopAudioStream() && notBusy && !playing);
+   mRecord->SetEnabled(
+      CanStopAudioStream() &&
+      !(busy && !recording) &&
+      !playing
+   );
    mStop->SetEnabled(CanStopAudioStream() && (playing || recording));
    mRewind->SetEnabled(!playing && !recording);
    mFF->SetEnabled(tracks && !playing && !recording);
@@ -847,6 +851,14 @@ void ControlToolBar::Pause()
 
 void ControlToolBar::OnRecord(wxCommandEvent &evt)
 {
+   auto doubleClicked = mRecord->IsDoubleClicked();
+   mRecord->ClearDoubleClicked();
+
+   if (doubleClicked) {
+      GetActiveProject()->GetPlaybackScroller().Activate(true);
+      return;
+   }
+
    if (gAudioIO->IsBusy()) {
       mRecord->PopUp();
       return;
