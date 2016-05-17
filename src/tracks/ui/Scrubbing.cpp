@@ -117,7 +117,7 @@ namespace {
 class Scrubber::ScrubPoller : public wxTimer
 {
 public:
-   ScrubPoller(Scrubber &scrubber) : mScrubber{ scrubber } {}
+   ScrubPoller(Scrubber &scrubber) : mScrubber( scrubber ) {}
 
 private:
    void Notify() override;
