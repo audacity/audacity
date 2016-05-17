@@ -165,9 +165,12 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
 
       // BG: Scroll screen if option is set
       // msmeyer: But only if not playing looped or in one-second mode
+      // PRL: and not scrolling with play/record head fixed right
       if (viewInfo.bUpdateTrackIndicator &&
           mProject->mLastPlayMode != PlayMode::loopedPlay &&
           mProject->mLastPlayMode != PlayMode::oneSecondPlay &&
+          mProject->GetPlaybackScroller().GetMode() !=
+             AudacityProject::PlaybackScroller::Mode::Right &&
          playPos >= 0 &&
          !onScreen &&
          !gAudioIO->IsPaused())

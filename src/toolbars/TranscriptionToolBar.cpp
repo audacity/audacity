@@ -480,7 +480,8 @@ void TranscriptionToolBar::OnPlaySpeed(wxCommandEvent & WXUNUSED(event))
    button->ClearDoubleClicked();
 
    if (doubleClicked) {
-      GetActiveProject()->GetPlaybackScroller().Activate(true);
+      GetActiveProject()->GetPlaybackScroller().Activate
+         (AudacityProject::PlaybackScroller::Mode::Centered);
 
       // Pop up the button
       SetButton(false, button);

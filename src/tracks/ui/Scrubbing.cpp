@@ -331,7 +331,9 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
          mScrubStartClockTimeMillis = ::wxGetLocalTimeMillis();
 
       if (IsScrubbing()) {
-         mProject->GetPlaybackScroller().Activate(mSmoothScrollingScrub);
+         using Mode = AudacityProject::PlaybackScroller::Mode;
+         mProject->GetPlaybackScroller().Activate
+            (mSmoothScrollingScrub ? Mode::Centered : Mode::Off);
          mScrubHasFocus = true;
          mLastScrubPosition = xx;
 
@@ -423,7 +425,8 @@ void Scrubber::StopScrubbing()
    UncheckAllMenuItems();
 
    mScrubStartPosition = -1;
-   mProject->GetPlaybackScroller().Activate(false);
+   mProject->GetPlaybackScroller().Activate
+      (AudacityProject::PlaybackScroller::Mode::Off);
    mDragging = false;
 
    if (!IsScrubbing())
@@ -706,7 +709,9 @@ void Scrubber::DoScrub(bool scroll, bool seek)
    }
    else if(!match) {
       mSmoothScrollingScrub = scroll;
-      mProject->GetPlaybackScroller().Activate(scroll);
+      using Mode = AudacityProject::PlaybackScroller::Mode;
+      mProject->GetPlaybackScroller().Activate
+         (scroll ? Mode::Centered : Mode::Off);
       mAlwaysSeeking = seek;
       UncheckAllMenuItems();
       CheckMenuItem();
