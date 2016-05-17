@@ -257,6 +257,9 @@ void ScrollBar::SetScrollbar(int position, int thumbSize,
 {
    // Mitigate flashing of scrollbars by refreshing only when something really changes.
 
+   // PRL:  This may have been made unnecessary by other fixes for flashing, see
+   // commit ac05b190bee7dd0000bce56edb0e5e26185c972f
+
    auto changed =
       position != GetThumbPosition() ||
       thumbSize != GetThumbSize() ||
