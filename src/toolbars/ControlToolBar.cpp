@@ -751,7 +751,8 @@ void ControlToolBar::OnPlay(wxCommandEvent & WXUNUSED(evt))
    auto p = GetActiveProject();
 
    if (doubleClicked)
-      p->GetPlaybackScroller().Activate(true);
+      p->GetPlaybackScroller().Activate
+         (AudacityProject::PlaybackScroller::Mode::Centered);
    else {
       if (!CanStopAudioStream())
          return;
@@ -794,7 +795,8 @@ void ControlToolBar::StopPlaying(bool stopStream /* = true*/)
    AudacityProject *project = GetActiveProject();
 
    if(project) {
-      project->GetPlaybackScroller().Activate(false);
+      project->GetPlaybackScroller().Activate
+         (AudacityProject::PlaybackScroller::Mode::Off);
       // Let scrubbing code do some appearance change
       project->GetScrubber().StopScrubbing();
    }
@@ -855,7 +857,8 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
    mRecord->ClearDoubleClicked();
 
    if (doubleClicked) {
-      GetActiveProject()->GetPlaybackScroller().Activate(true);
+      GetActiveProject()->GetPlaybackScroller().Activate
+         (AudacityProject::PlaybackScroller::Mode::Right);
       return;
    }
 
