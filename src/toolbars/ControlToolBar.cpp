@@ -857,8 +857,22 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
    mRecord->ClearDoubleClicked();
 
    if (doubleClicked) {
-      GetActiveProject()->GetPlaybackScroller().Activate
-         (AudacityProject::PlaybackScroller::Mode::Right);
+      // Display a fixed recording head while scrolling the waves continuously.
+      // If you overdub, you may want to anticipate some context in existing tracks,
+      // so center the head.  If not, put it rightmost to display as much wave as we can.
+      const auto project = GetActiveProject();
+      bool duplex;
+      gPrefs->Read(wxT("/AudioIO/Duplex"), &duplex, true);
+
+      if (duplex) {
+         // See if there is really anything being overdubbed
+         if (gAudioIO->GetNumPlaybackChannels() == 0)
+            // No.
+            duplex = false;
+      }
+
+      using Mode = AudacityProject::PlaybackScroller::Mode;
+      project->GetPlaybackScroller().Activate(duplex ? Mode::Centered : Mode::Right);
       return;
    }
 
