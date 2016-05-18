@@ -13,6 +13,12 @@ stamp-h*
 stamp-po
 *.stamp
 
+# Handcrafted makefiles
+!lib-src/expat/amiga/Makefile
+!lib-src/libnyquist/nyquist/sys/unix/*/Makefile
+!lib-src/lv2/Makefile
+!lib-src/mod-script-pipe/Makefile
+
 # Generated files by build system
 lib-src/expat/expat_config.h
 lib-src/libflac/doc/Doxyfile
@@ -102,8 +108,6 @@ mac/tests/
 *.tlog
 *.ipch
 *.opensdf
-# unsure about the .sal files.  Disable for now.
-*.sal
 *.vcxproj.user
 
 # Precompiled Headers
@@ -119,9 +123,6 @@ mac/tests/
 # Compiled translation files (GNU Machine Object)
 *.gmo
 
-# Fortran module files
-*.mod
-
 # Compiled Static libraries
 *.lai
 *.la
@@ -130,7 +131,6 @@ mac/tests/
 
 # Executables
 *.exe
-*.out
 *.app
 
 # Executable without extension

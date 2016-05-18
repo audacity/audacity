@@ -410,18 +410,17 @@ struct AudioIO::ScrubQueue
       return previous.mS1 / mRate;
    }
 
-   void PoisonPill()
+   // This is for avoiding deadlocks while starting a scrub:
+   // Audio stream needs to be unblocked
+   void Nudge()
    {
-      // Main thread is shutting down the scrubbing
       wxMutexLocker locker(mUpdating);
-      mPoisoned = true;
+      mNudged = true;
       mAvailable.Signal();
    }
 
    bool Producer(double end, double maxSpeed, bool bySpeed, bool maySkip)
    {
-      wxASSERT(!mPoisoned);
-
       // Main thread indicates a scrubbing interval
 
       // MAY ADVANCE mLeadingIdx, BUT IT NEVER CATCHES UP TO mTrailingIdx.
@@ -463,8 +462,10 @@ struct AudioIO::ScrubQueue
       // MAY ADVANCE mMiddleIdx, WHICH MAY EQUAL mLeadingIdx, BUT DOES NOT PASS IT.
 
       wxMutexLocker locker(mUpdating);
-      while(!mPoisoned && mMiddleIdx == mLeadingIdx)
+      while(!mNudged && mMiddleIdx == mLeadingIdx)
          mAvailable.Wait();
+
+      mNudged = false;
 
       if (mMiddleIdx != mLeadingIdx)
       {
@@ -478,8 +479,7 @@ struct AudioIO::ScrubQueue
       }
       else
       {
-         wxASSERT(mPoisoned);
-         // We got the shut-down signal
+         // We got the shut-down signal, or we got nudged
          startSample = endSample = duration = -1L;
       }
    }
@@ -696,7 +696,7 @@ private:
    wxLongLong mLastScrubTimeMillis;
    mutable wxMutex mUpdating;
    mutable wxCondition mAvailable { mUpdating };
-   bool mPoisoned { false };
+   bool mNudged { false };
 };
 #endif
 
@@ -1874,8 +1874,11 @@ int AudioIO::StartStream(const WaveTrackArray &playbackTracks,
    // FillBuffers will ALWAYS get called from the Audio thread.
    mAudioThreadShouldCallFillBuffersOnce = true;
 
-   while( mAudioThreadShouldCallFillBuffersOnce == true )
+   while( mAudioThreadShouldCallFillBuffersOnce == true ) {
+      if (mScrubQueue)
+         mScrubQueue->Nudge();
       wxMilliSleep( 50 );
+   }
 
 #ifdef EXPERIMENTAL_MIDI_OUT
    // if no playback, reset the midi time to zero to roughly sync
@@ -2189,7 +2192,7 @@ void AudioIO::StopStream()
 
    mAudioThreadFillBuffersLoopRunning = false;
    if (mScrubQueue)
-      mScrubQueue->PoisonPill();
+      mScrubQueue->Nudge();
 
    // Audacity can deadlock if it tries to update meters while
    // we're stopping PortAudio (because the meter updating code
@@ -2293,6 +2296,8 @@ void AudioIO::StopStream()
          // PRL:  Made it safe yield to avoid a certain recursive event processing in the
          // time ruler when switching from scrub to quick play.
          wxGetApp().SafeYield(nullptr, true); // Pass true for onlyIfNeeded to avoid recursive call error.
+         if (mScrubQueue)
+            mScrubQueue->Nudge();
          wxMilliSleep( 50 );
       }
 

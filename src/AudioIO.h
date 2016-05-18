@@ -382,7 +382,8 @@ class AUDACITY_DLL_API AudioIO final {
    double GetStreamTime();
 
    sampleFormat GetCaptureFormat() { return mCaptureFormat; }
-   int GetNumCaptureChannels() { return mNumCaptureChannels; }
+   int GetNumPlaybackChannels() const { return mNumPlaybackChannels; }
+   int GetNumCaptureChannels() const { return mNumCaptureChannels; }
 
    /** \brief Array of common audio sample rates
     *

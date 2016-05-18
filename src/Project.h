@@ -728,16 +728,23 @@ public:
       explicit PlaybackScroller(AudacityProject *project);
       ~PlaybackScroller();
 
-      void Activate(bool active)
+      enum class Mode {
+         Off,
+         Centered,
+         Right,
+      };
+
+      Mode GetMode() const { return mMode; }
+      void Activate(Mode mode)
       {
-         mActive = active;
+         mMode = mode;
       }
 
    private:
       void OnTimer(wxCommandEvent &event);
 
       AudacityProject *mProject;
-      bool mActive { false };
+      Mode mMode { Mode::Off };
    };
    std::unique_ptr<PlaybackScroller> mPlaybackScroller;
 

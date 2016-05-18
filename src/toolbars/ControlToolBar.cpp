@@ -401,7 +401,7 @@ void ControlToolBar::EnableDisableButtons()
 
    bool playing = mPlay->IsDown();
    bool recording = mRecord->IsDown();
-   bool notBusy = !gAudioIO->IsBusy();
+   bool busy = gAudioIO->IsBusy();
 
    // Only interested in audio type tracks
    if (p) {
@@ -425,7 +425,11 @@ void ControlToolBar::EnableDisableButtons()
    }
 
    mPlay->SetEnabled(CanStopAudioStream() && tracks && !recording);
-   mRecord->SetEnabled(CanStopAudioStream() && notBusy && !playing);
+   mRecord->SetEnabled(
+      CanStopAudioStream() &&
+      !(busy && !recording) &&
+      !playing
+   );
    mStop->SetEnabled(CanStopAudioStream() && (playing || recording));
    mRewind->SetEnabled(!playing && !recording);
    mFF->SetEnabled(tracks && !playing && !recording);
@@ -747,7 +751,8 @@ void ControlToolBar::OnPlay(wxCommandEvent & WXUNUSED(evt))
    auto p = GetActiveProject();
 
    if (doubleClicked)
-      p->GetPlaybackScroller().Activate(true);
+      p->GetPlaybackScroller().Activate
+         (AudacityProject::PlaybackScroller::Mode::Centered);
    else {
       if (!CanStopAudioStream())
          return;
@@ -790,7 +795,8 @@ void ControlToolBar::StopPlaying(bool stopStream /* = true*/)
    AudacityProject *project = GetActiveProject();
 
    if(project) {
-      project->GetPlaybackScroller().Activate(false);
+      project->GetPlaybackScroller().Activate
+         (AudacityProject::PlaybackScroller::Mode::Off);
       // Let scrubbing code do some appearance change
       project->GetScrubber().StopScrubbing();
    }
@@ -847,6 +853,29 @@ void ControlToolBar::Pause()
 
 void ControlToolBar::OnRecord(wxCommandEvent &evt)
 {
+   auto doubleClicked = mRecord->IsDoubleClicked();
+   mRecord->ClearDoubleClicked();
+
+   if (doubleClicked) {
+      // Display a fixed recording head while scrolling the waves continuously.
+      // If you overdub, you may want to anticipate some context in existing tracks,
+      // so center the head.  If not, put it rightmost to display as much wave as we can.
+      const auto project = GetActiveProject();
+      bool duplex;
+      gPrefs->Read(wxT("/AudioIO/Duplex"), &duplex, true);
+
+      if (duplex) {
+         // See if there is really anything being overdubbed
+         if (gAudioIO->GetNumPlaybackChannels() == 0)
+            // No.
+            duplex = false;
+      }
+
+      using Mode = AudacityProject::PlaybackScroller::Mode;
+      project->GetPlaybackScroller().Activate(duplex ? Mode::Centered : Mode::Right);
+      return;
+   }
+
    if (gAudioIO->IsBusy()) {
       mRecord->PopUp();
       return;
