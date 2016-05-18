@@ -456,13 +456,15 @@ struct AudioIO::ScrubQueue
       }
    }
 
-   void Transformer(long &startSample, long &endSample, long &duration)
+   void Transformer(long &startSample, long &endSample, long &duration,
+                    Maybe<wxMutexLocker> &cleanup)
    {
       // Audio thread is ready for the next interval.
 
       // MAY ADVANCE mMiddleIdx, WHICH MAY EQUAL mLeadingIdx, BUT DOES NOT PASS IT.
 
-      wxMutexLocker locker(mUpdating);
+      if (!cleanup)
+         cleanup.create(mUpdating);
       while(!mNudged && mMiddleIdx == mLeadingIdx)
          mAvailable.Wait();
 
@@ -3352,6 +3354,7 @@ void AudioIO::FillBuffers()
          // PRL: or, when scrubbing, we may get work repeatedly from the
          // scrub queue.
          bool done = false;
+         Maybe<wxMutexLocker> cleanup;
          do {
             // How many samples to produce for each channel.
             long frames = available;
@@ -3427,7 +3430,7 @@ void AudioIO::FillBuffers()
                if (!done && mScrubDuration <= 0)
                {
                   long startSample, endSample;
-                  mScrubQueue->Transformer(startSample, endSample, mScrubDuration);
+                  mScrubQueue->Transformer(startSample, endSample, mScrubDuration, cleanup);
                   if (mScrubDuration < 0)
                   {
                      // Can't play anything
