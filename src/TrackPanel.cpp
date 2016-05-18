@@ -1038,7 +1038,7 @@ double TrackPanel::GetScreenEndTime() const
 {
    int width;
    GetTracksUsableArea(&width, NULL);
-   return mViewInfo->PositionToTime(width, true);
+   return mViewInfo->PositionToTime(width, 0, true);
 }
 
 /// AS: OnPaint( ) is called during the normal course of
