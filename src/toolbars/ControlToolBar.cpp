@@ -877,7 +877,10 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
    }
 
    if (gAudioIO->IsBusy()) {
-      mRecord->PopUp();
+      if (!CanStopAudioStream() || 0 == gAudioIO->GetNumCaptureChannels())
+         mRecord->PopUp();
+      else
+         mRecord->PushDown();
       return;
    }
    AudacityProject *p = GetActiveProject();
@@ -1275,4 +1278,3 @@ void ControlToolBar::UpdateStatusBar(AudacityProject *pProject)
 {
    pProject->GetStatusBar()->SetStatusText(StateForStatusBar(), stateStatusBarField);
 }
-
