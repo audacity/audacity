@@ -142,12 +142,20 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
       }
    }
 
+   auto trackPanel = mProject->GetTrackPanel();
+
    if (!mProject->IsAudioActive()) {
+      mNewIndicatorX = -1;
       const auto &scrubber = mProject->GetScrubber();
-      if (scrubber.HasStartedScrubbing())
-         mNewIndicatorX = scrubber.GetScrubStartPosition();
-      else
-         mNewIndicatorX = -1;
+      if (scrubber.HasStartedScrubbing()) {
+         auto position = scrubber.GetScrubStartPosition();
+         int width;
+         trackPanel->GetTracksUsableArea(&width, nullptr);
+         const auto offset = trackPanel->GetLeftOffset();
+         if(position >= trackPanel->GetLeftOffset() &&
+            position < offset + width)
+            mNewIndicatorX = position;
+      }
    }
    else {
       ViewInfo &viewInfo = mProject->GetViewInfo();
@@ -155,7 +163,7 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
       // Calculate the horizontal position of the indicator
       const double playPos = viewInfo.mRecentStreamTime;
 
-      const bool onScreen = playPos >= 0.0 &&
+      bool onScreen = playPos >= 0.0 &&
          between_incexc(viewInfo.h,
          playPos,
          mProject->GetScreenEndTime());
@@ -176,6 +184,11 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
          !gAudioIO->IsPaused())
       {
          mProject->TP_ScrollWindow(playPos);
+         // Might yet be off screen, check it
+         onScreen = playPos >= 0.0 &&
+            between_incexc(viewInfo.h,
+                           playPos,
+                           mProject->GetScreenEndTime());
       }
 
       // Always update scrollbars even if not scrolling the window. This is
@@ -183,7 +196,10 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
       // length of the project and therefore the appearance of the scrollbar.
       mProject->TP_RedrawScrollbars();
 
-      mNewIndicatorX = viewInfo.TimeToPosition(playPos, mProject->GetTrackPanel()->GetLeftOffset());
+      if (onScreen)
+         mNewIndicatorX = viewInfo.TimeToPosition(playPos, trackPanel->GetLeftOffset());
+      else
+         mNewIndicatorX = -1;
    }
 
    if(mPartner)
