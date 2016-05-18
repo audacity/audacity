@@ -1278,4 +1278,3 @@ void ControlToolBar::UpdateStatusBar(AudacityProject *pProject)
 {
    pProject->GetStatusBar()->SetStatusText(StateForStatusBar(), stateStatusBarField);
 }
-
