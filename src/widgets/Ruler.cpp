@@ -2426,7 +2426,10 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
          else
             evt.Skip();
 
-         ShowQuickPlayIndicator();
+         // Don't do this, it slows down drag-scrub on Mac.
+         // Timer updates of display elsewhere make it unnecessary.
+         // Done here, it's too frequent.
+         // ShowQuickPlayIndicator();
 
          if (HasCapture())
             ReleaseMouse();
@@ -2530,7 +2533,8 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
 
 void AdornedRulerPanel::HandleQPDoubleClick(wxMouseEvent &evt, wxCoord mousePosX)
 {
-   mProject->GetPlaybackScroller().Activate(true);
+   mProject->GetPlaybackScroller().Activate
+      (AudacityProject::PlaybackScroller::Mode::Centered);
 }
 
 void AdornedRulerPanel::HandleQPClick(wxMouseEvent &evt, wxCoord mousePosX)

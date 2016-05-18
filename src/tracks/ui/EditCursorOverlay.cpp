@@ -127,9 +127,6 @@ void EditCursorOverlay::Draw(OverlayPanel &panel, wxDC &dc)
 
          }
       }
-
-      // This updates related displays such as numbers on the status bar
-      mProject->TP_DisplaySelection();
    }
    else if (auto ruler = dynamic_cast<AdornedRulerPanel*>(&panel)) {
       wxASSERT(!mIsMaster);

@@ -405,9 +405,18 @@ struct AudioIO::ScrubQueue
    double LastTimeInQueue() const
    {
       // Needed by the main thread sometimes
-      wxCriticalSectionLocker locker(mUpdating);
+      wxMutexLocker locker(mUpdating);
       const Entry &previous = mEntries[(mLeadingIdx + Size - 1) % Size];
       return previous.mS1 / mRate;
+   }
+
+   // This is for avoiding deadlocks while starting a scrub:
+   // Audio stream needs to be unblocked
+   void Nudge()
+   {
+      wxMutexLocker locker(mUpdating);
+      mNudged = true;
+      mAvailable.Signal();
    }
 
    bool Producer(double end, double maxSpeed, bool bySpeed, bool maySkip)
@@ -416,7 +425,7 @@ struct AudioIO::ScrubQueue
 
       // MAY ADVANCE mLeadingIdx, BUT IT NEVER CATCHES UP TO mTrailingIdx.
 
-      wxCriticalSectionLocker locker(mUpdating);
+      wxMutexLocker locker(mUpdating);
       const unsigned next = (mLeadingIdx + 1) % Size;
       if (next != mTrailingIdx)
       {
@@ -429,8 +438,10 @@ struct AudioIO::ScrubQueue
          const bool success =
             (InitEntry(mEntries[mLeadingIdx], startTime, end, maxSpeed,
                        bySpeed, &previous, maySkip));
-         if (success)
+         if (success) {
             mLeadingIdx = next;
+            mAvailable.Signal();
+         }
          return success;
       }
       else
@@ -450,7 +461,12 @@ struct AudioIO::ScrubQueue
 
       // MAY ADVANCE mMiddleIdx, WHICH MAY EQUAL mLeadingIdx, BUT DOES NOT PASS IT.
 
-      wxCriticalSectionLocker locker(mUpdating);
+      wxMutexLocker locker(mUpdating);
+      while(!mNudged && mMiddleIdx == mLeadingIdx)
+         mAvailable.Wait();
+
+      mNudged = false;
+
       if (mMiddleIdx != mLeadingIdx)
       {
          // There is work in the queue
@@ -463,7 +479,7 @@ struct AudioIO::ScrubQueue
       }
       else
       {
-         // next entry is not yet ready
+         // We got the shut-down signal, or we got nudged
          startSample = endSample = duration = -1L;
       }
    }
@@ -475,7 +491,7 @@ struct AudioIO::ScrubQueue
 
       // MAY ADVANCE mTrailingIdx, BUT IT NEVER CATCHES UP TO mMiddleIdx.
 
-      wxCriticalSectionLocker locker(mUpdating);
+      wxMutexLocker locker(mUpdating);
 
       // Mark entries as partly or fully "consumed" for
       // purposes of mTime update.  It should not happen that
@@ -678,7 +694,9 @@ private:
    const double mRate;
    const long mMinStutter;
    wxLongLong mLastScrubTimeMillis;
-   mutable wxCriticalSection mUpdating;
+   mutable wxMutex mUpdating;
+   mutable wxCondition mAvailable { mUpdating };
+   bool mNudged { false };
 };
 #endif
 
@@ -1710,14 +1728,6 @@ int AudioIO::StartStream(const WaveTrackArray &playbackTracks,
             sampleCount playbackMixBufferSize =
                (sampleCount)mPlaybackSamplesToCopy;
 
-            // In the extraordinarily rare case that we can't even afford 100 samples, just give up.
-            if(playbackBufferSize < 100 || playbackMixBufferSize < 100)
-            {
-               StartStreamCleanup();
-               wxMessageBox(_("Out of memory!"));
-               return 0;
-            }
-
             mPlaybackBuffers = new RingBuffer* [mPlaybackTracks->size()];
             mPlaybackMixers  = new Mixer*      [mPlaybackTracks->size()];
 
@@ -1786,7 +1796,19 @@ int AudioIO::StartStream(const WaveTrackArray &playbackTracks,
          mCaptureRingBufferSecs *= 0.5;
          mMinCaptureSecsToCopy *= 0.5;
          bDone = false;
-       }
+
+         // In the extraordinarily rare case that we can't even afford 100 samples, just give up.
+         sampleCount playbackBufferSize =
+            (sampleCount)lrint(mRate * mPlaybackRingBufferSecs);
+         sampleCount playbackMixBufferSize =
+            (sampleCount)mPlaybackSamplesToCopy;
+         if(playbackBufferSize < 100 || playbackMixBufferSize < 100)
+         {
+            StartStreamCleanup();
+            wxMessageBox(_("Out of memory!"));
+            return 0;
+         }
+      }
    } while(!bDone);
 
    if (mNumPlaybackChannels > 0)
@@ -1852,8 +1874,11 @@ int AudioIO::StartStream(const WaveTrackArray &playbackTracks,
    // FillBuffers will ALWAYS get called from the Audio thread.
    mAudioThreadShouldCallFillBuffersOnce = true;
 
-   while( mAudioThreadShouldCallFillBuffersOnce == true )
+   while( mAudioThreadShouldCallFillBuffersOnce == true ) {
+      if (mScrubQueue)
+         mScrubQueue->Nudge();
       wxMilliSleep( 50 );
+   }
 
 #ifdef EXPERIMENTAL_MIDI_OUT
    // if no playback, reset the midi time to zero to roughly sync
@@ -2166,6 +2191,8 @@ void AudioIO::StopStream()
    //
 
    mAudioThreadFillBuffersLoopRunning = false;
+   if (mScrubQueue)
+      mScrubQueue->Nudge();
 
    // Audacity can deadlock if it tries to update meters while
    // we're stopping PortAudio (because the meter updating code
@@ -2269,6 +2296,8 @@ void AudioIO::StopStream()
          // PRL:  Made it safe yield to avoid a certain recursive event processing in the
          // time ruler when switching from scrub to quick play.
          wxGetApp().SafeYield(nullptr, true); // Pass true for onlyIfNeeded to avoid recursive call error.
+         if (mScrubQueue)
+            mScrubQueue->Nudge();
          wxMilliSleep( 50 );
       }
 
@@ -2821,7 +2850,16 @@ AudioThread::ExitCode AudioThread::Entry()
       }
       gAudioIO->mAudioThreadFillBuffersLoopActive = false;
 
-      Sleep(10);
+      if (gAudioIO->mPlayMode == AudioIO::PLAY_SCRUB) {
+         // Rely on the Wait() in ScrubQueue::Transformer()
+         // This allows the scrubbing update interval to be made very short without
+         // playback becoming intermittent.
+      }
+      else {
+         // Perhaps this too could use a condition variable, for available space in the
+         // ring buffer, instead of a polling loop?  But no harm in doing it this way.
+         Sleep(10);
+      }
    }
 
    return 0;

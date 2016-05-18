@@ -257,6 +257,9 @@ void ScrollBar::SetScrollbar(int position, int thumbSize,
 {
    // Mitigate flashing of scrollbars by refreshing only when something really changes.
 
+   // PRL:  This may have been made unnecessary by other fixes for flashing, see
+   // commit ac05b190bee7dd0000bce56edb0e5e26185c972f
+
    auto changed =
       position != GetThumbPosition() ||
       thumbSize != GetThumbSize() ||
@@ -4705,6 +4708,15 @@ void AudacityProject::TP_DisplaySelection()
 {
    double audioTime;
 
+   if (mRuler) {
+      if (!gAudioIO->IsBusy() && !mLockPlayRegion)
+         mRuler->SetPlayRegion(mViewInfo.selectedRegion.t0(),
+         mViewInfo.selectedRegion.t1());
+      else
+         // Cause ruler redraw anyway, because we may be zooming or scrolling
+         mRuler->Refresh();
+   }
+
    if (gAudioIO->IsBusy())
       audioTime = gAudioIO->GetStreamTime();
    else {
@@ -4719,14 +4731,6 @@ void AudacityProject::TP_DisplaySelection()
       (mViewInfo.selectedRegion.f0(), mViewInfo.selectedRegion.f1());
 #endif
 
-   if (mRuler) {
-      if (!gAudioIO->IsBusy() && !mLockPlayRegion)
-         mRuler->SetPlayRegion(mViewInfo.selectedRegion.t0(),
-         mViewInfo.selectedRegion.t1());
-      else
-         // Cause ruler redraw anyway, because we may be zooming or scrolling
-         mRuler->Refresh();
-   }
 }
 
 
@@ -5365,7 +5369,7 @@ void AudacityProject::PlaybackScroller::OnTimer(wxCommandEvent &event)
    // Let other listeners get the notification
    event.Skip();
 
-   if (mActive && mProject->IsAudioActive())
+   if (mMode != Mode::Off && mProject->IsAudioActive())
    {
       // Pan the view, so that we center the play indicator.
 
@@ -5374,9 +5378,19 @@ void AudacityProject::PlaybackScroller::OnTimer(wxCommandEvent &event)
       const int posX = viewInfo.TimeToPosition(viewInfo.mRecentStreamTime);
       int width;
       trackPanel->GetTracksUsableArea(&width, NULL);
-      const int deltaX = posX - width / 2;
+      int deltaX;
+      switch (mMode)
+      {
+         default:
+            wxASSERT(false);
+            /* fallthru */
+         case Mode::Centered:
+            deltaX = posX - width / 2;    break;
+         case Mode::Right:
+            deltaX = posX - width;        break;
+      }
       viewInfo.h =
-      viewInfo.OffsetTimeByPixels(viewInfo.h, deltaX, true);
+         viewInfo.OffsetTimeByPixels(viewInfo.h, deltaX, true);
       if (!viewInfo.bScrollBeyondZero)
          // Can't scroll too far left
          viewInfo.h = std::max(0.0, viewInfo.h);

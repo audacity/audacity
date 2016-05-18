@@ -38,6 +38,8 @@ enum {
 #ifdef EXPERIMENTAL_SCRUBBING_SCROLL_WHEEL
    ScrubSpeedStepsPerOctave = 4,
 #endif
+
+   ScrubPollInterval_ms = 50,
 };
 
 namespace {
@@ -112,6 +114,26 @@ namespace {
    }
 }
 
+class Scrubber::ScrubPoller : public wxTimer
+{
+public:
+   ScrubPoller(Scrubber &scrubber) : mScrubber( scrubber ) {}
+
+private:
+   void Notify() override;
+
+   Scrubber &mScrubber;
+};
+
+void Scrubber::ScrubPoller::Notify()
+{
+   // Call ContinueScrubbing() here in a timer handler
+   // rather than in SelectionHandleDrag()
+   // so that even without drag events, we can instruct the play head to
+   // keep approaching the mouse cursor, when its maximum speed is limited.
+   mScrubber.ContinueScrubbing();
+}
+
 Scrubber::Scrubber(AudacityProject *project)
    : mScrubToken(-1)
    , mScrubStartClockTimeMillis(-1)
@@ -126,6 +148,7 @@ Scrubber::Scrubber(AudacityProject *project)
 #endif
 
    , mProject(project)
+   , mPoller { std::make_unique<ScrubPoller>(*this) }
 {
    if (wxTheApp)
       wxTheApp->Connect
@@ -269,7 +292,7 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
 
             AudioIOStartStreamOptions options(mProject->GetDefaultPlayOptions());
             options.timeTrack = NULL;
-            options.scrubDelay = (kTimerInterval / 1000.0);
+            options.scrubDelay = (ScrubPollInterval_ms / 1000.0);
             options.scrubStartClockTimeMillis = mScrubStartClockTimeMillis;
             options.minScrubStutter = 0.2;
 #if 0
@@ -308,9 +331,13 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
          mScrubStartClockTimeMillis = ::wxGetLocalTimeMillis();
 
       if (IsScrubbing()) {
-         mProject->GetPlaybackScroller().Activate(mSmoothScrollingScrub);
+         using Mode = AudacityProject::PlaybackScroller::Mode;
+         mProject->GetPlaybackScroller().Activate
+            (mSmoothScrollingScrub ? Mode::Centered : Mode::Off);
          mScrubHasFocus = true;
          mLastScrubPosition = xx;
+
+         mPoller->Start(ScrubPollInterval_ms);
       }
 
       // Return true whether we started scrub, or are still waiting to decide.
@@ -393,10 +420,13 @@ void Scrubber::ContinueScrubbing()
 
 void Scrubber::StopScrubbing()
 {
+   mPoller->Stop();
+
    UncheckAllMenuItems();
 
    mScrubStartPosition = -1;
-   mProject->GetPlaybackScroller().Activate(false);
+   mProject->GetPlaybackScroller().Activate
+      (AudacityProject::PlaybackScroller::Mode::Off);
    mDragging = false;
 
    if (!IsScrubbing())
@@ -490,9 +520,6 @@ void Scrubber::Forwarder::OnMouse(wxMouseEvent &event)
          (event.LeftIsDown() && event.Dragging())) {
          if (!scrubber.mDragging)
             scrubber.mScrubSeekPress = true;
-         auto xx = ruler->ScreenToClient(::wxGetMousePosition()).x;
-         ruler->UpdateQuickPlayPos(xx);
-         ruler->ShowQuickPlayIndicator();
       }
       else if (event.m_wheelRotation) {
          double steps = event.m_wheelRotation /
@@ -597,12 +624,6 @@ void ScrubbingOverlay::OnTimer(wxCommandEvent &event)
          ruler->ShowQuickPlayIndicator();
    }
 
-   // Call ContinueScrubbing() here in the timer handler
-   // rather than in SelectionHandleDrag()
-   // so that even without drag events, we can instruct the play head to
-   // keep approaching the mouse cursor, when its maximum speed is limited.
-   scrubber.ContinueScrubbing();
-
    if (!scrubber.ShouldDrawScrubSpeed()) {
       mNextScrubRect = wxRect();
    }
@@ -688,7 +709,9 @@ void Scrubber::DoScrub(bool scroll, bool seek)
    }
    else if(!match) {
       mSmoothScrollingScrub = scroll;
-      mProject->GetPlaybackScroller().Activate(scroll);
+      using Mode = AudacityProject::PlaybackScroller::Mode;
+      mProject->GetPlaybackScroller().Activate
+         (scroll ? Mode::Centered : Mode::Off);
       mAlwaysSeeking = seek;
       UncheckAllMenuItems();
       CheckMenuItem();
