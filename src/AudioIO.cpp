@@ -2293,9 +2293,7 @@ void AudioIO::StopStream()
       while( mAudioThreadShouldCallFillBuffersOnce == true )
       {
          // LLL:  Experienced recursive yield here...once.
-         // PRL:  Made it safe yield to avoid a certain recursive event processing in the
-         // time ruler when switching from scrub to quick play.
-         wxGetApp().SafeYield(nullptr, true); // Pass true for onlyIfNeeded to avoid recursive call error.
+         wxGetApp().Yield(true); // Pass true for onlyIfNeeded to avoid recursive call error.
          if (mScrubQueue)
             mScrubQueue->Nudge();
          wxMilliSleep( 50 );
