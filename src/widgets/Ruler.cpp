@@ -2404,12 +2404,19 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
          ;
       else if (zone == StatusChoice::EnteringQP &&
                mQuickPlayEnabled &&
-               evt.LeftDown()) {
+               evt.LeftUp()) {
          // Stop scrubbing
          if (HasCapture())
             ReleaseMouse();
          mProject->OnStop();
-         // Continue to quick play event handling
+
+         // Simulate a new click in the same place
+         evt.SetEventType(wxEVT_LEFT_DOWN);
+         this->AddPendingEvent(evt);
+         evt.SetEventType(wxEVT_LEFT_UP);
+         this->AddPendingEvent(evt);
+
+         return;
       }
       else {
          // If already clicked for scrub, preempt the usual event handling,
