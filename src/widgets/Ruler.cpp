@@ -1814,8 +1814,9 @@ void QuickPlayRulerOverlay::Draw(OverlayPanel &panel, wxDC &dc)
    if (mOldQPIndicatorPos >= 0) {
       auto ruler = GetRuler();
       auto scrub =
-         ruler->mPrevZone == AdornedRulerPanel::StatusChoice::EnteringScrubZone ||
-         mPartner.mProject->GetScrubber().HasStartedScrubbing();
+         ruler->mMouseEventState == AdornedRulerPanel::mesNone &&
+         (ruler->mPrevZone == AdornedRulerPanel::StatusChoice::EnteringScrubZone ||
+          (mPartner.mProject->GetScrubber().HasStartedScrubbing()));
       auto width = scrub ? IndicatorBigWidth() : IndicatorSmallWidth;
       ruler->DoDrawIndicator(&dc, mOldQPIndicatorPos, true, width, scrub);
    }
@@ -2402,46 +2403,41 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
       if (IsButton(zone) || evt.RightDown())
          // Fall through to pushbutton handling
          ;
-      else if (zone == StatusChoice::EnteringQP &&
-               mQuickPlayEnabled &&
-               evt.LeftUp()) {
-         // Stop scrubbing
-         if (HasCapture())
-            ReleaseMouse();
-         mProject->OnStop();
-
-         // Simulate a new click in the same place
-         evt.SetEventType(wxEVT_LEFT_DOWN);
-         this->AddPendingEvent(evt);
-         evt.SetEventType(wxEVT_LEFT_UP);
-         this->AddPendingEvent(evt);
-
-         return;
-      }
       else {
-         // If already clicked for scrub, preempt the usual event handling,
-         // no matter what the y coordinate.
+         bool switchToQP = (zone == StatusChoice::EnteringQP && mQuickPlayEnabled);
+         if (switchToQP && evt.LeftDown()) {
+            // We can't stop scrubbing yet (see comments in Bug 1391), but we can pause it.
+            mProject->OnPause();
+            // Don't return, fall through
+         }
+         else if (scrubber.IsPaused())
+            // Just fall through
+            ;
+         else {
+            // If already clicked for scrub, preempt the usual event handling,
+            // no matter what the y coordinate.
 
-         // Do this hack so scrubber can detect mouse drags anywhere
-         evt.ResumePropagation(wxEVENT_PROPAGATE_MAX);
+            // Do this hack so scrubber can detect mouse drags anywhere
+            evt.ResumePropagation(wxEVENT_PROPAGATE_MAX);
 
-         if (scrubber.IsScrubbing())
-            evt.Skip();
-         else if (evt.LeftDClick())
-            // On the second button down, switch the pending scrub to scrolling
-            scrubber.MarkScrubStart(evt.m_x, true, false);
-         else
-            evt.Skip();
+            if (scrubber.IsScrubbing())
+               evt.Skip();
+            else if (evt.LeftDClick())
+               // On the second button down, switch the pending scrub to scrolling
+               scrubber.MarkScrubStart(evt.m_x, true, false);
+            else
+               evt.Skip();
 
-         // Don't do this, it slows down drag-scrub on Mac.
-         // Timer updates of display elsewhere make it unnecessary.
-         // Done here, it's too frequent.
-         // ShowQuickPlayIndicator();
+            // Don't do this, it slows down drag-scrub on Mac.
+            // Timer updates of display elsewhere make it unnecessary.
+            // Done here, it's too frequent.
+            // ShowQuickPlayIndicator();
 
-         if (HasCapture())
-            ReleaseMouse();
-
-         return;
+            if (HasCapture())
+               ReleaseMouse();
+            
+            return;
+         }
       }
    }
 
