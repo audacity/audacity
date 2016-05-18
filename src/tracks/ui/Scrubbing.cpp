@@ -501,6 +501,11 @@ void Scrubber::Pause( bool paused )
    mScrubHasFocus = !paused;
 }
 
+bool Scrubber::IsPaused() const
+{
+   return !mScrubHasFocus;
+}
+
 void Scrubber::OnActivateOrDeactivateApp(wxActivateEvent &event)
 {
    if (event.GetActive())
