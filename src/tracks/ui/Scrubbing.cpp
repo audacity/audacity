@@ -137,7 +137,7 @@ void Scrubber::ScrubPoller::Notify()
 Scrubber::Scrubber(AudacityProject *project)
    : mScrubToken(-1)
    , mScrubStartClockTimeMillis(-1)
-   , mScrubHasFocus(false)
+   , mPaused(true)
    , mScrubSpeedDisplayCountdown(0)
    , mScrubStartPosition(-1)
    , mMaxScrubSpeed(-1.0)
@@ -334,7 +334,7 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
          using Mode = AudacityProject::PlaybackScroller::Mode;
          mProject->GetPlaybackScroller().Activate
             (mSmoothScrollingScrub ? Mode::Centered : Mode::Off);
-         mScrubHasFocus = true;
+         mPaused = false;
          mLastScrubPosition = xx;
 
          mPoller->Start(ScrubPollInterval_ms);
@@ -357,7 +357,7 @@ void Scrubber::ContinueScrubbing()
 
    // Thus scrubbing relies mostly on periodic polling of mouse and keys,
    // not event notifications.  But there are a few event handlers that
-   // leave messages for this routine, in mScrubSeekPress and in mScrubHasFocus.
+   // leave messages for this routine, in mScrubSeekPress and in mPaused.
 
    // Seek only when the pointer is in the panel.  Else, scrub.
    TrackPanel *const trackPanel = mProject->GetTrackPanel();
@@ -380,8 +380,8 @@ void Scrubber::ContinueScrubbing()
    const auto &viewInfo = mProject->GetViewInfo();
 
    bool result = false;
-   if (!mScrubHasFocus)
-      // When we don't have focus, enqueue silent scrubs until we regain focus.
+   if (mPaused)
+      // When paused, enqueue silent scrubs.
       result = gAudioIO->EnqueueScrubBySignedSpeed(0, mMaxScrubSpeed, false);
    else if (mDragging && mSmoothScrollingScrub) {
       const auto lastTime = gAudioIO->GetLastTimeInScrubQueue();
@@ -460,11 +460,11 @@ bool Scrubber::ShouldDrawScrubSpeed()
       return false;
 
    return IsScrubbing() &&
-      mScrubHasFocus && (
-      // Draw for (non-scroll) scrub, sometimes, but never for seek
-      (!PollIsSeeking() && mScrubSpeedDisplayCountdown > 0)
-      // Draw always for scroll-scrub and for scroll-seek
-       || mSmoothScrollingScrub
+      !mPaused && (
+         // Draw for (non-scroll) scrub, sometimes, but never for seek
+         (!PollIsSeeking() && mScrubSpeedDisplayCountdown > 0)
+         // Draw always for scroll-scrub and for scroll-seek
+         || mSmoothScrollingScrub
       );
 }
 
@@ -498,12 +498,12 @@ void Scrubber::HandleScrollWheel(int steps)
 
 void Scrubber::Pause( bool paused )
 {
-   mScrubHasFocus = !paused;
+   mPaused = paused;
 }
 
 bool Scrubber::IsPaused() const
 {
-   return !mScrubHasFocus;
+   return mPaused;
 }
 
 void Scrubber::OnActivateOrDeactivateApp(wxActivateEvent &event)

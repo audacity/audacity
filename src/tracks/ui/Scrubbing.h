@@ -110,7 +110,7 @@ private:
 private:
    int mScrubToken;
    wxLongLong mScrubStartClockTimeMillis;
-   bool mScrubHasFocus;
+   bool mPaused;
    int mScrubSpeedDisplayCountdown;
    wxCoord mScrubStartPosition;
    wxCoord mLastScrubPosition {};
