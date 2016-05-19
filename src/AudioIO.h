@@ -88,9 +88,11 @@ DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_AUDIOIO_MONITOR, -1);
 // To avoid growing the argument list of StartStream, add fields here
 struct AudioIOStartStreamOptions
 {
-   AudioIOStartStreamOptions()
+   explicit
+   AudioIOStartStreamOptions(double rate_)
       : timeTrack(NULL)
       , listener(NULL)
+      , rate(rate_)
       , playLooped(false)
       , cutPreviewGapStart(0.0)
       , cutPreviewGapLen(0.0)
@@ -106,6 +108,7 @@ struct AudioIOStartStreamOptions
 
    TimeTrack *timeTrack;
    AudioIOListener* listener;
+   double rate;
    bool playLooped;
    double cutPreviewGapStart;
    double cutPreviewGapLen;
@@ -163,9 +166,8 @@ class AUDACITY_DLL_API AudioIO final {
 #ifdef EXPERIMENTAL_MIDI_OUT
                    const NoteTrackArray &midiTracks,
 #endif
-                   double sampleRate, double t0, double t1,
-                   const AudioIOStartStreamOptions &options =
-                      AudioIOStartStreamOptions());
+                   double t0, double t1,
+                   const AudioIOStartStreamOptions &options);
 
    /** \brief Stop recording, playback or input monitoring.
     *

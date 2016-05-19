@@ -1520,11 +1520,13 @@ int AudioIO::StartStream(const WaveTrackArray &playbackTracks,
 #ifdef EXPERIMENTAL_MIDI_OUT
                          const NoteTrackArray &midiPlaybackTracks,
 #endif
-                         double sampleRate, double t0, double t1,
+                         double t0, double t1,
                          const AudioIOStartStreamOptions &options)
 {
    if( IsBusy() )
       return 0;
+
+   const auto &sampleRate = options.rate;
 
    // We just want to set mStreamToken to -1 - this way avoids
    // an extremely rare but possible race condition, if two functions
