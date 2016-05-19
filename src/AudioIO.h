@@ -85,6 +85,8 @@ DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_AUDIOIO_PLAYBACK, -1);
 DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_AUDIOIO_CAPTURE, -1);
 DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_AUDIOIO_MONITOR, -1);
 
+struct ScrubbingOptions;
+
 // To avoid growing the argument list of StartStream, add fields here
 struct AudioIOStartStreamOptions
 {
@@ -115,9 +117,6 @@ struct AudioIOStartStreamOptions
    double * pStartTime;
 
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-   // Positive value indicates that scrubbing will happen
-   // (do not specify a time track, looping, or recording, which
-   //  are all incompatible with scrubbing):
    double scrubDelay;
 
    // We need a limiting value for the speed of the first scrub
@@ -134,6 +133,11 @@ struct AudioIOStartStreamOptions
 
    // usually from TrackList::GetEndTime()
    double maxScrubTime;
+
+   // Non-null value indicates that scrubbing will happen
+   // (do not specify a time track, looping, or recording, which
+   //  are all incompatible with scrubbing):
+   ScrubbingOptions *pScrubbingOptions {};
 #endif
 };
 
@@ -195,7 +199,8 @@ class AUDACITY_DLL_API AudioIO final {
    * on the work queue.
    * Return true if some work was really enqueued.
    */
-   bool EnqueueScrubByPosition(double endTime, double maxSpeed, bool maySkip);
+   bool EnqueueScrubByPosition(double endTime, double maxSpeed, bool maySkip,
+                               const ScrubbingOptions &options);
 
    /** \brief enqueue a NEW positive or negative scrubbing speed,
    * using the last end as the NEW start,
@@ -209,7 +214,8 @@ class AUDACITY_DLL_API AudioIO final {
    * on the work queue.
    * Return true if some work was really enqueued.
    */
-   bool EnqueueScrubBySignedSpeed(double speed, double maxSpeed, bool maySkip);
+   bool EnqueueScrubBySignedSpeed(double speed, double maxSpeed, bool maySkip,
+                                  const ScrubbingOptions &options);
 
    /** \brief return the ending time of the last enqueued scrub interval.
    */

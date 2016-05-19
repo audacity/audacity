@@ -21,6 +21,10 @@ Paul Licameli split from TrackPanel.cpp
 
 class AudacityProject;
 
+// For putting an increment of work in the scrubbing queue
+struct ScrubbingOptions {
+};
+
 // Scrub state object
 class Scrubber : public wxEvtHandler
 {
@@ -130,6 +134,7 @@ private:
 
    class ScrubPoller;
    std::unique_ptr<ScrubPoller> mPoller;
+   ScrubbingOptions mOptions;
 };
 
 // Specialist in drawing the scrub speed, and listening for certain events

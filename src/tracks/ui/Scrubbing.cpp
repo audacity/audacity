@@ -149,6 +149,7 @@ Scrubber::Scrubber(AudacityProject *project)
 
    , mProject(project)
    , mPoller { std::make_unique<ScrubPoller>(*this) }
+   , mOptions {}
 {
    if (wxTheApp)
       wxTheApp->Connect
@@ -291,6 +292,7 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
             }
 
             AudioIOStartStreamOptions options(mProject->GetDefaultPlayOptions());
+            options.pScrubbingOptions = &mOptions;
             options.timeTrack = NULL;
             options.scrubDelay = (ScrubPollInterval_ms / 1000.0);
             options.scrubStartClockTimeMillis = mScrubStartClockTimeMillis;
@@ -382,12 +384,12 @@ void Scrubber::ContinueScrubbing()
    bool result = false;
    if (mPaused)
       // When paused, enqueue silent scrubs.
-      result = gAudioIO->EnqueueScrubBySignedSpeed(0, mMaxScrubSpeed, false);
+      result = gAudioIO->EnqueueScrubBySignedSpeed(0, mMaxScrubSpeed, false, mOptions);
    else if (mDragging && mSmoothScrollingScrub) {
       const auto lastTime = gAudioIO->GetLastTimeInScrubQueue();
       const auto delta = mLastScrubPosition - position.x;
       const double time = viewInfo.OffsetTimeByPixels(lastTime, delta);
-      result = gAudioIO->EnqueueScrubByPosition(time, mMaxScrubSpeed, true);
+      result = gAudioIO->EnqueueScrubByPosition(time, mMaxScrubSpeed, true, mOptions);
       mLastScrubPosition = position.x;
    }
    else {
@@ -398,11 +400,11 @@ void Scrubber::ContinueScrubbing()
 
       if (mSmoothScrollingScrub) {
          const double speed = FindScrubSpeed(seek, time);
-         result = gAudioIO->EnqueueScrubBySignedSpeed(speed, mMaxScrubSpeed, seek);
+         result = gAudioIO->EnqueueScrubBySignedSpeed(speed, mMaxScrubSpeed, seek, mOptions);
       }
       else
          result = gAudioIO->EnqueueScrubByPosition
-            (time, seek ? 1.0 : mMaxScrubSpeed, seek);
+            (time, seek ? 1.0 : mMaxScrubSpeed, seek, mOptions);
    }
 
    if (result)
