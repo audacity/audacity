@@ -382,29 +382,37 @@ void Scrubber::ContinueScrubbing()
    const auto &viewInfo = mProject->GetViewInfo();
 
    bool result = false;
-   if (mPaused)
+   if (mPaused) {
       // When paused, enqueue silent scrubs.
-      result = gAudioIO->EnqueueScrubBySignedSpeed(0, mMaxScrubSpeed, false, mOptions);
+      mOptions.adjustStart = false;
+      mOptions.enqueueBySpeed = true;
+      result = gAudioIO->EnqueueScrub(0, mMaxScrubSpeed, mOptions);
+   }
    else if (mDragging && mSmoothScrollingScrub) {
       const auto lastTime = gAudioIO->GetLastTimeInScrubQueue();
       const auto delta = mLastScrubPosition - position.x;
       const double time = viewInfo.OffsetTimeByPixels(lastTime, delta);
-      result = gAudioIO->EnqueueScrubByPosition(time, mMaxScrubSpeed, true, mOptions);
+      mOptions.adjustStart = true;
+      mOptions.enqueueBySpeed = false;
+      result = gAudioIO->EnqueueScrub(time, mMaxScrubSpeed, mOptions);
       mLastScrubPosition = position.x;
    }
    else {
       const double time = viewInfo.PositionToTime(position.x, trackPanel->GetLeftOffset());
+      mOptions.adjustStart = seek;
       if (seek)
          // Cause OnTimer() to suppress the speed display
          mScrubSpeedDisplayCountdown = 1;
 
       if (mSmoothScrollingScrub) {
          const double speed = FindScrubSpeed(seek, time);
-         result = gAudioIO->EnqueueScrubBySignedSpeed(speed, mMaxScrubSpeed, seek, mOptions);
+         mOptions.enqueueBySpeed = true;
+         result = gAudioIO->EnqueueScrub(speed, mMaxScrubSpeed, mOptions);
       }
-      else
-         result = gAudioIO->EnqueueScrubByPosition
-            (time, seek ? 1.0 : mMaxScrubSpeed, seek, mOptions);
+      else {
+         mOptions.enqueueBySpeed = false;
+         result = gAudioIO->EnqueueScrub(time, seek ? 1.0 : mMaxScrubSpeed, mOptions);
+      }
    }
 
    if (result)

@@ -188,34 +188,18 @@ class AUDACITY_DLL_API AudioIO final {
 
    static double GetMaxScrubSpeed() { return 32.0; } // Is five octaves enough for your amusement?
    static double GetMinScrubSpeed() { return 0.01; }
-   /** \brief enqueue a NEW end time, using the last end as the new start,
+   /** \brief enqueue a NEW scrub play interval, using the last end as the new start,
    * to be played over the same duration, as between this and the last
    * enqueuing (or the starting of the stream).  Except, we do not exceed maximum
    * scrub speed, so may need to adjust either the start or the end.
-   * If maySkip is true, then when mouse movement exceeds maximum scrub speed,
+   * If options.adjustStart is true, then when mouse movement exceeds maximum scrub speed,
    * adjust the beginning of the scrub interval rather than the end, so that
    * the scrub skips or "stutters" to stay near the cursor.
    * But if the "stutter" is too short for the minimum, then there is no effect
    * on the work queue.
    * Return true if some work was really enqueued.
    */
-   bool EnqueueScrubByPosition(double endTime, double maxSpeed, bool maySkip,
-                               const ScrubbingOptions &options);
-
-   /** \brief enqueue a NEW positive or negative scrubbing speed,
-   * using the last end as the NEW start,
-   * to be played over the same duration, as between this and the last
-   * enqueueing (or the starting of the stream).  Except, we do not exceed maximum
-   * scrub speed, so may need to adjust either the start or the end.
-   * If maySkip is true, then when mouse movement exceeds maximum scrub speed,
-   * adjust the beginning of the scrub interval rather than the end, so that
-   * the scrub skips or "stutters" to stay near the cursor.
-   * But if the "stutter" is too short for the minimum, then there is no effect
-   * on the work queue.
-   * Return true if some work was really enqueued.
-   */
-   bool EnqueueScrubBySignedSpeed(double speed, double maxSpeed, bool maySkip,
-                                  const ScrubbingOptions &options);
+   bool EnqueueScrub(double endTimeOrSpeed, double maxSpeed, const ScrubbingOptions &options);
 
    /** \brief return the ending time of the last enqueued scrub interval.
    */

@@ -385,14 +385,16 @@ struct AudioIO::ScrubQueue
       , mLastScrubTimeMillis(startClockMillis)
       , mUpdating()
    {
-      bool success = InitEntry(mEntries[mMiddleIdx],
-         t0, t1, maxSpeed, false, NULL, false, options);
+      // Ignore options.adjustStart, pass false.
+
+      bool success = InitEntry(mEntries[mMiddleIdx], nullptr,
+         t0, t1, maxSpeed, false, false, options);
       if (!success)
       {
          // StartClock equals now?  Really?
          --mLastScrubTimeMillis;
-         success = InitEntry(mEntries[mMiddleIdx],
-            t0, t1, maxSpeed, false, NULL, false, options);
+         success = InitEntry(mEntries[mMiddleIdx], nullptr,
+            t0, t1, maxSpeed, false, false, options);
       }
       wxASSERT(success);
 
@@ -422,8 +424,7 @@ struct AudioIO::ScrubQueue
       mAvailable.Signal();
    }
 
-   bool Producer(double end, double maxSpeed, bool bySpeed, bool maySkip,
-                 const ScrubbingOptions &options)
+   bool Producer(double end, double maxSpeed, const ScrubbingOptions &options)
    {
       // Main thread indicates a scrubbing interval
 
@@ -440,8 +441,8 @@ struct AudioIO::ScrubQueue
          // Might reject the request because of zero duration,
          // or a too-short "stutter"
          const bool success =
-            (InitEntry(mEntries[mLeadingIdx], startTime, end, maxSpeed,
-                       bySpeed, &previous, maySkip, options));
+            (InitEntry(mEntries[mLeadingIdx], &previous, startTime, end, maxSpeed,
+                       options.enqueueBySpeed, options.adjustStart, options));
          if (success) {
             mLeadingIdx = next;
             mAvailable.Signal();
@@ -534,7 +535,7 @@ private:
          , mPlayed(0)
       {}
 
-      bool Init(long s0, long s1, long duration, Entry *previous,
+      bool Init(Entry *previous, long s0, long s1, long duration,
          double maxSpeed, long minStutter, long minSample, long maxSample,
          bool adjustStart, const ScrubbingOptions &options)
       {
@@ -671,8 +672,8 @@ private:
       long mPlayed;
    };
 
-   bool InitEntry(Entry &entry, double t0, double end, double maxSpeed,
-      bool bySpeed, Entry *previous, bool maySkip,
+   bool InitEntry(Entry &entry, Entry *previous, double t0, double end, double maxSpeed,
+      bool bySpeed, bool adjustStart,
       const ScrubbingOptions &options)
    {
       const wxLongLong clockTime(::wxGetLocalTimeMillis());
@@ -683,8 +684,8 @@ private:
          ? s0 + lrint(duration * end) // end is a speed
          : lrint(end * mRate);        // end is a time
       const bool success =
-        entry.Init(s0, s1, duration, previous, maxSpeed, mMinStutter,
-                   mMinSample, mMaxSample, maySkip, options);
+        entry.Init(previous, s0, s1, duration, maxSpeed, mMinStutter,
+                   mMinSample, mMaxSample, adjustStart, options);
       if (success)
          mLastScrubTimeMillis = clockTime;
       return success;
@@ -2470,18 +2471,11 @@ bool AudioIO::IsPaused()
 }
 
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-bool AudioIO::EnqueueScrubByPosition(double endTime, double maxSpeed, bool maySkip, const ScrubbingOptions &options)
+bool AudioIO::EnqueueScrub
+   (double endTimeOrSpeed, double maxSpeed, const ScrubbingOptions &options)
 {
    if (mScrubQueue)
-      return mScrubQueue->Producer(endTime, maxSpeed, false, maySkip, options);
-   else
-      return false;
-}
-
-bool AudioIO::EnqueueScrubBySignedSpeed(double speed, double maxSpeed, bool maySkip, const ScrubbingOptions &options)
-{
-   if (mScrubQueue)
-      return mScrubQueue->Producer(speed, maxSpeed, true, maySkip, options);
+      return mScrubQueue->Producer(endTimeOrSpeed, maxSpeed, options);
    else
       return false;
 }

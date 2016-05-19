@@ -23,6 +23,11 @@ class AudacityProject;
 
 // For putting an increment of work in the scrubbing queue
 struct ScrubbingOptions {
+   ScrubbingOptions() {}
+
+   bool adjustStart {};
+
+   bool enqueueBySpeed {};
 };
 
 // Scrub state object
