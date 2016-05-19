@@ -20,6 +20,12 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../TrackPanelCellIterator.h"
 #include "../../commands/CommandFunctors.h"
 #include "../../toolbars/ControlToolBar.h"
+
+#undef USE_TRANSCRIPTION_TOOLBAR
+#ifdef USE_TRANSCRIPTION_TOOLBAR
+#include "../../toolbars/TranscriptionToolBar.h"
+#endif
+
 #include "../../widgets/Ruler.h"
 
 #include <algorithm>
@@ -297,12 +303,12 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
             options.scrubDelay = (ScrubPollInterval_ms / 1000.0);
             options.scrubStartClockTimeMillis = mScrubStartClockTimeMillis;
             options.minScrubStutter = 0.2;
-#if 0
+#ifdef USE_TRANSCRIPTION_TOOLBAR
             if (!mAlwaysSeeking) {
                // Take the starting speed limit from the transcription toolbar,
                // but it may be varied during the scrub.
                mMaxScrubSpeed = options.maxScrubSpeed =
-               p->GetTranscriptionToolBar()->GetPlaySpeed();
+                  mProject->GetTranscriptionToolBar()->GetPlaySpeed();
             }
 #else
             // That idea seems unpopular... just make it one for move-scrub,
