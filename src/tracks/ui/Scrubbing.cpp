@@ -314,7 +314,7 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
             // That idea seems unpopular... just make it one for move-scrub,
             // but big for drag-scrub
             mMaxScrubSpeed = options.maxScrubSpeed =
-               mDragging ? AudioIO::GetMaxScrubSpeed() : 1.0;
+               mDragging ? ScrubbingOptions::MaxAllowedScrubSpeed() : 1.0;
 #endif
             options.maxScrubTime = mProject->GetTracks()->GetEndTime();
             ControlToolBar::PlayAppearance appearance =
@@ -502,8 +502,8 @@ void Scrubber::HandleScrollWheel(int steps)
    static const double maxScrubSpeedBase =
       pow(2.0, 1.0 / ScrubSpeedStepsPerOctave);
    double newSpeed = pow(maxScrubSpeedBase, newLogMaxScrubSpeed);
-   if (newSpeed >= AudioIO::GetMinScrubSpeed() &&
-      newSpeed <= AudioIO::GetMaxScrubSpeed()) {
+   if (newSpeed >= ScrubbingOptions::MinAllowedScrubSpeed() &&
+       newSpeed <= ScrubbingOptions::MaxAllowedScrubSpeed()) {
       mLogMaxScrubSpeed = newLogMaxScrubSpeed;
       mMaxScrubSpeed = newSpeed;
       if (!mSmoothScrollingScrub)

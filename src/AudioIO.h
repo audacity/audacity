@@ -186,8 +186,6 @@ class AUDACITY_DLL_API AudioIO final {
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
    bool IsScrubbing() { return IsBusy() && mScrubQueue != 0; }
 
-   static double GetMaxScrubSpeed() { return 32.0; } // Is five octaves enough for your amusement?
-   static double GetMinScrubSpeed() { return 0.01; }
    /** \brief enqueue a NEW scrub play interval, using the last end as the new start,
    * to be played over the same duration, as between this and the last
    * enqueuing (or the starting of the stream).  Except, we do not exceed maximum

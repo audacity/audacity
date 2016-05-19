@@ -28,6 +28,11 @@ struct ScrubbingOptions {
    bool adjustStart {};
 
    bool enqueueBySpeed {};
+
+   static double MaxAllowedScrubSpeed()
+   { return 32.0; } // Is five octaves enough for your amusement?
+   static double MinAllowedScrubSpeed()
+   { return 0.01; } // Mixer needs a lower bound speed.  Scrub no slower than this.
 };
 
 // Scrub state object

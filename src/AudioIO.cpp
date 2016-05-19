@@ -571,7 +571,7 @@ private:
             maxed = true;
          }
 
-        if (speed < GetMinScrubSpeed())
+        if (speed < ScrubbingOptions::MinAllowedScrubSpeed())
             // Mixers were set up to go only so slowly, not slower.
             // This will put a request for some silence in the work queue.
             speed = 0.0;
@@ -1604,7 +1604,8 @@ int AudioIO::StartStream(const WaveTrackArray &playbackTracks,
       if (mCaptureTracks->size() > 0 ||
           mPlayMode == PLAY_LOOPED ||
           mTimeTrack != NULL ||
-          options.maxScrubSpeed < GetMinScrubSpeed())
+          options.maxScrubSpeed <
+             ScrubbingOptions::MinAllowedScrubSpeed())
       {
          wxASSERT(false);
          scrubbing = false;
@@ -1750,9 +1751,13 @@ int AudioIO::StartStream(const WaveTrackArray &playbackTracks,
 
             const Mixer::WarpOptions &warpOptions =
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-               scrubbing ? Mixer::WarpOptions(GetMinScrubSpeed(), GetMaxScrubSpeed()) :
+               scrubbing
+                  ? Mixer::WarpOptions
+                     (ScrubbingOptions::MinAllowedScrubSpeed(),
+                      ScrubbingOptions::MaxAllowedScrubSpeed())
+                  :
 #endif
-               Mixer::WarpOptions(mTimeTrack);
+                    Mixer::WarpOptions(mTimeTrack);
 
             for (unsigned int i = 0; i < mPlaybackTracks->size(); i++)
             {
