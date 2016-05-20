@@ -48,6 +48,8 @@ enum {
    ScrubPollInterval_ms = 50,
 };
 
+static const double MinStutter = 0.2;
+
 namespace {
    double FindScrubbingSpeed(const ViewInfo &viewInfo, double maxScrubSpeed, double screen, double timeAtMouse)
    {
@@ -299,7 +301,6 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
             options.pScrubbingOptions = &mOptions;
             options.timeTrack = NULL;
             mOptions.delay = (ScrubPollInterval_ms / 1000.0);
-            mOptions.minStutter = 0.2;
 #ifdef USE_TRANSCRIPTION_TOOLBAR
             if (!mAlwaysSeeking) {
                // Take the starting speed limit from the transcription toolbar,
@@ -313,7 +314,12 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
             mOptions.maxSpeed =
                mDragging ? ScrubbingOptions::MaxAllowedScrubSpeed() : 1.0;
 #endif
-            mOptions.maxTime = mProject->GetTracks()->GetEndTime();
+            mOptions.minSample = 0;
+            mOptions.maxSample =
+               lrint(std::max(0.0, mProject->GetTracks()->GetEndTime()) * options.rate);
+            mOptions.minStutter =
+               lrint(std::max(0.0, MinStutter) * options.rate);
+
             ControlToolBar::PlayAppearance appearance =
                ControlToolBar::PlayAppearance::Scrub;
             const bool cutPreview = false;

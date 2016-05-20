@@ -372,16 +372,12 @@ So a small, fixed queue size should be adequate.
 struct AudioIO::ScrubQueue
 {
    ScrubQueue(double t0, double t1, wxLongLong startClockMillis,
-              double minTime, double maxTime,
-              double rate, double maxSpeed, double minStutter,
+              double rate, double maxSpeed,
               const ScrubbingOptions &options)
       : mTrailingIdx(0)
       , mMiddleIdx(1)
       , mLeadingIdx(2)
-      , mMinSample(minTime * rate)
-      , mMaxSample(maxTime * rate)
       , mRate(rate)
-      , mMinStutter(lrint(std::max(0.0, minStutter) * mRate))
       , mLastScrubTimeMillis(startClockMillis)
       , mUpdating()
    {
@@ -536,8 +532,8 @@ private:
       {}
 
       bool Init(Entry *previous, long s0, long s1, long duration,
-         double maxSpeed, long minStutter, long minSample, long maxSample,
-         bool adjustStart, const ScrubbingOptions &options)
+         double maxSpeed, bool adjustStart,
+         const ScrubbingOptions &options)
       {
          if (duration <= 0)
             return false;
@@ -588,7 +584,7 @@ private:
             // (Assume s0 is in bounds, because it is the last scrub's s1 which was checked.)
             if (s1 != s0)
             {
-               const long newS1 = std::max(minSample, std::min(maxSample, s1));
+               const long newS1 = std::max(options.minSample, std::min(options.maxSample, s1));
                if (s1 != newS1)
                {
                   long newDuration = long(duration * double(newS1 - s0) / (s1 - s0));
@@ -606,7 +602,7 @@ private:
             {
                // When playback follows a fast mouse movement by "stuttering"
                // at maximum playback, don't make stutters too short to be useful.
-               if (duration < minStutter)
+               if (duration < options.minStutter)
                   return false;
                // Limit diff because this is seeking.
                const long diff = lrint(std::min(1.0, speed) * duration);
@@ -628,7 +624,7 @@ private:
             // Adjust s1 again, and duration, if s1 is out of bounds.  (Assume s0 is in bounds.)
             if (s1 != s0)
             {
-               const long newS1 = std::max(minSample, std::min(maxSample, s1));
+               const long newS1 = std::max(options.minSample, std::min(options.maxSample, s1));
                if (s1 != newS1)
                {
                   long newDuration = long(duration * double(newS1 - s0) / (s1 - s0));
@@ -684,8 +680,7 @@ private:
          ? s0 + lrint(duration * end) // end is a speed
          : lrint(end * mRate);        // end is a time
       const bool success =
-        entry.Init(previous, s0, s1, duration, maxSpeed, mMinStutter,
-                   mMinSample, mMaxSample, adjustStart, options);
+         entry.Init(previous, s0, s1, duration, maxSpeed, adjustStart, options);
       if (success)
          mLastScrubTimeMillis = clockTime;
       return success;
@@ -696,9 +691,7 @@ private:
    unsigned mTrailingIdx;
    unsigned mMiddleIdx;
    unsigned mLeadingIdx;
-   const long mMinSample, mMaxSample;
    const double mRate;
-   const long mMinStutter;
    wxLongLong mLastScrubTimeMillis;
    mutable wxMutex mUpdating;
    mutable wxCondition mAvailable { mUpdating };
@@ -1870,8 +1863,7 @@ int AudioIO::StartStream(const WaveTrackArray &playbackTracks,
       const auto &scrubOptions = *options.pScrubbingOptions;
       mScrubQueue =
          new ScrubQueue(mT0, mT1, scrubOptions.startClockTimeMillis,
-            0.0, scrubOptions.maxTime,
-            sampleRate, scrubOptions.maxSpeed, scrubOptions.minStutter,
+            sampleRate, scrubOptions.maxSpeed,
             *options.pScrubbingOptions);
       mScrubDuration = 0;
       mSilentScrub = false;

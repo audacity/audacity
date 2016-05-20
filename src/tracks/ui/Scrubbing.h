@@ -27,6 +27,10 @@ struct ScrubbingOptions {
 
    bool adjustStart {};
 
+   // usually from TrackList::GetEndTime()
+   long maxSample {};
+   long minSample {};
+
    bool enqueueBySpeed {};
 
    double delay {};
@@ -34,16 +38,14 @@ struct ScrubbingOptions {
    // A limiting value for the speed of a scrub interval:
    double maxSpeed { 1.0 };
 
+
    // When maximum speed scrubbing skips to follow the mouse,
    // this is the minimum amount of playback allowed at the maximum speed:
-   double minStutter {};
+   long minStutter {};
 
    // Scrubbing needs the time of start of the mouse movement that began
    // the scrub:
    wxLongLong startClockTimeMillis { -1 };
-
-   // usually from TrackList::GetEndTime()
-   double maxTime {};
 
    static double MaxAllowedScrubSpeed()
    { return 32.0; } // Is five octaves enough for your amusement?
