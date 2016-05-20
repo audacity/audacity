@@ -57,6 +57,9 @@ void WarningsPrefs::PopulateOrExchange(ShuttleGui & S)
       S.TieCheckBox(_("Saving &projects"),
                     wxT("/Warnings/FirstProjectSave"),
                     true);
+      S.TieCheckBox(_("Saving projects on e&xit"),
+                    wxT("/Warnings/ProjectSaveExit"),
+                    true);
       S.TieCheckBox(_("Saving &empty project"),
                     wxT("/GUI/EmptyCanBeDirty"),
                     true);
