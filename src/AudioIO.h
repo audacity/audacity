@@ -99,13 +99,6 @@ struct AudioIOStartStreamOptions
       , cutPreviewGapStart(0.0)
       , cutPreviewGapLen(0.0)
       , pStartTime(NULL)
-#ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-      , scrubDelay(0.0)
-      , maxScrubSpeed(1.0)
-      , minScrubStutter(0.0)
-      , scrubStartClockTimeMillis(-1)
-      , maxScrubTime(0.0)
-#endif
    {}
 
    TimeTrack *timeTrack;
@@ -117,23 +110,6 @@ struct AudioIOStartStreamOptions
    double * pStartTime;
 
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-   double scrubDelay;
-
-   // We need a limiting value for the speed of the first scrub
-   // interval:
-   double maxScrubSpeed;
-
-   // When maximum speed scrubbing skips to follow the mouse,
-   // this is the minimum amount of playback at the maximum speed:
-   double minScrubStutter;
-
-   // Scrubbing needs the time of start of the mouse movement that began
-   // the scrub:
-   wxLongLong scrubStartClockTimeMillis;
-
-   // usually from TrackList::GetEndTime()
-   double maxScrubTime;
-
    // Non-null value indicates that scrubbing will happen
    // (do not specify a time track, looping, or recording, which
    //  are all incompatible with scrubbing):

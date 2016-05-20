@@ -142,11 +142,9 @@ void Scrubber::ScrubPoller::Notify()
 
 Scrubber::Scrubber(AudacityProject *project)
    : mScrubToken(-1)
-   , mScrubStartClockTimeMillis(-1)
    , mPaused(true)
    , mScrubSpeedDisplayCountdown(0)
    , mScrubStartPosition(-1)
-   , mMaxScrubSpeed(-1.0)
    , mScrubSeekPress(false)
 #ifdef EXPERIMENTAL_SCRUBBING_SCROLL_WHEEL
    , mSmoothScrollingScrub(false)
@@ -243,7 +241,7 @@ void Scrubber::MarkScrubStart(
    ctb->UpdateStatusBar(mProject);
 
    mScrubStartPosition = xx;
-   mScrubStartClockTimeMillis = ::wxGetLocalTimeMillis();
+   mOptions.startClockTimeMillis = ::wxGetLocalTimeMillis();
 
    CheckMenuItem();
 }
@@ -300,23 +298,22 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
             AudioIOStartStreamOptions options(mProject->GetDefaultPlayOptions());
             options.pScrubbingOptions = &mOptions;
             options.timeTrack = NULL;
-            options.scrubDelay = (ScrubPollInterval_ms / 1000.0);
-            options.scrubStartClockTimeMillis = mScrubStartClockTimeMillis;
-            options.minScrubStutter = 0.2;
+            mOptions.delay = (ScrubPollInterval_ms / 1000.0);
+            mOptions.minStutter = 0.2;
 #ifdef USE_TRANSCRIPTION_TOOLBAR
             if (!mAlwaysSeeking) {
                // Take the starting speed limit from the transcription toolbar,
                // but it may be varied during the scrub.
-               mMaxScrubSpeed = options.maxScrubSpeed =
+               mOptions.maxSpeed =
                   mProject->GetTranscriptionToolBar()->GetPlaySpeed();
             }
 #else
             // That idea seems unpopular... just make it one for move-scrub,
             // but big for drag-scrub
-            mMaxScrubSpeed = options.maxScrubSpeed =
+            mOptions.maxSpeed =
                mDragging ? ScrubbingOptions::MaxAllowedScrubSpeed() : 1.0;
 #endif
-            options.maxScrubTime = mProject->GetTracks()->GetEndTime();
+            mOptions.maxTime = mProject->GetTracks()->GetEndTime();
             ControlToolBar::PlayAppearance appearance =
                ControlToolBar::PlayAppearance::Scrub;
             const bool cutPreview = false;
@@ -325,7 +322,7 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
             static const double maxScrubSpeedBase =
                pow(2.0, 1.0 / ScrubSpeedStepsPerOctave);
             mLogMaxScrubSpeed = floor(0.5 +
-               log(mMaxScrubSpeed) / log(maxScrubSpeedBase)
+               log(mOptions.maxSpeed) / log(maxScrubSpeedBase)
             );
 #endif
             mScrubSpeedDisplayCountdown = 0;
@@ -336,7 +333,7 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
       }
       else
          // Wait to test again
-         mScrubStartClockTimeMillis = ::wxGetLocalTimeMillis();
+         mOptions.startClockTimeMillis = ::wxGetLocalTimeMillis();
 
       if (IsScrubbing()) {
          using Mode = AudacityProject::PlaybackScroller::Mode;
@@ -392,7 +389,7 @@ void Scrubber::ContinueScrubbing()
       // When paused, enqueue silent scrubs.
       mOptions.adjustStart = false;
       mOptions.enqueueBySpeed = true;
-      result = gAudioIO->EnqueueScrub(0, mMaxScrubSpeed, mOptions);
+      result = gAudioIO->EnqueueScrub(0, mOptions.maxSpeed, mOptions);
    }
    else if (mDragging && mSmoothScrollingScrub) {
       const auto lastTime = gAudioIO->GetLastTimeInScrubQueue();
@@ -400,7 +397,7 @@ void Scrubber::ContinueScrubbing()
       const double time = viewInfo.OffsetTimeByPixels(lastTime, delta);
       mOptions.adjustStart = true;
       mOptions.enqueueBySpeed = false;
-      result = gAudioIO->EnqueueScrub(time, mMaxScrubSpeed, mOptions);
+      result = gAudioIO->EnqueueScrub(time, mOptions.maxSpeed, mOptions);
       mLastScrubPosition = position.x;
    }
    else {
@@ -413,11 +410,11 @@ void Scrubber::ContinueScrubbing()
       if (mSmoothScrollingScrub) {
          const double speed = FindScrubSpeed(seek, time);
          mOptions.enqueueBySpeed = true;
-         result = gAudioIO->EnqueueScrub(speed, mMaxScrubSpeed, mOptions);
+         result = gAudioIO->EnqueueScrub(speed, mOptions.maxSpeed, mOptions);
       }
       else {
          mOptions.enqueueBySpeed = false;
-         result = gAudioIO->EnqueueScrub(time, seek ? 1.0 : mMaxScrubSpeed, mOptions);
+         result = gAudioIO->EnqueueScrub(time, seek ? 1.0 : mOptions.maxSpeed, mOptions);
       }
    }
 
@@ -489,7 +486,7 @@ double Scrubber::FindScrubSpeed(bool seeking, double time) const
    ViewInfo &viewInfo = mProject->GetViewInfo();
    const double screen = mProject->GetScreenEndTime() - viewInfo.h;
    return (seeking ? FindSeekSpeed : FindScrubbingSpeed)
-      (viewInfo, mMaxScrubSpeed, screen, time);
+      (viewInfo, mOptions.maxSpeed, screen, time);
 }
 
 void Scrubber::HandleScrollWheel(int steps)
@@ -505,7 +502,7 @@ void Scrubber::HandleScrollWheel(int steps)
    if (newSpeed >= ScrubbingOptions::MinAllowedScrubSpeed() &&
        newSpeed <= ScrubbingOptions::MaxAllowedScrubSpeed()) {
       mLogMaxScrubSpeed = newLogMaxScrubSpeed;
-      mMaxScrubSpeed = newSpeed;
+      mOptions.maxSpeed = newSpeed;
       if (!mSmoothScrollingScrub)
          // Show the speed for one second
          mScrubSpeedDisplayCountdown = kOneSecondCountdown + 1;

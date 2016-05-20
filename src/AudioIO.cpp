@@ -1590,30 +1590,27 @@ int AudioIO::StartStream(const WaveTrackArray &playbackTracks,
    mCaptureBuffers = NULL;
    mResample = NULL;
 
+   double playbackTime = 4.0;
+
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
    bool scrubbing = (options.pScrubbingOptions != nullptr);
 
    // Scrubbing is not compatible with looping or recording or a time track!
-   double maxScrubSpeed = options.maxScrubSpeed;
-   double minScrubStutter = options.minScrubStutter;
-   const double scrubDelay = scrubbing
-      ? lrint(options.scrubDelay * sampleRate) / sampleRate
-      : -1;
    if (scrubbing)
    {
+      const auto &scrubOptions = *options.pScrubbingOptions;
+
       if (mCaptureTracks->size() > 0 ||
           mPlayMode == PLAY_LOOPED ||
           mTimeTrack != NULL ||
-          options.maxScrubSpeed <
-             ScrubbingOptions::MinAllowedScrubSpeed())
-      {
+          scrubOptions.maxSpeed < ScrubbingOptions::MinAllowedScrubSpeed()) {
          wxASSERT(false);
          scrubbing = false;
       }
-   }
-   if (scrubbing)
-   {
-      mPlayMode = PLAY_SCRUB;
+      else {
+         playbackTime = lrint(scrubOptions.delay * sampleRate) / sampleRate;
+         mPlayMode = PLAY_SCRUB;
+      }
    }
 #endif
 
@@ -1654,11 +1651,6 @@ int AudioIO::StartStream(const WaveTrackArray &playbackTracks,
    // mouse input, so make fillings more and shorter.
    // What Audio thread produces for playback is then consumed by the PortAudio
    // thread, in many smaller pieces.
-   double playbackTime = 4.0;
-#ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-   if (scrubbing)
-      playbackTime = scrubDelay;
-#endif
    mPlaybackSamplesToCopy = playbackTime * mRate;
 
    // Capacity of the playback buffer.
@@ -1875,10 +1867,11 @@ int AudioIO::StartStream(const WaveTrackArray &playbackTracks,
    delete mScrubQueue;
    if (scrubbing)
    {
+      const auto &scrubOptions = *options.pScrubbingOptions;
       mScrubQueue =
-         new ScrubQueue(mT0, mT1, options.scrubStartClockTimeMillis,
-            0.0, options.maxScrubTime,
-            sampleRate, maxScrubSpeed, minScrubStutter,
+         new ScrubQueue(mT0, mT1, scrubOptions.startClockTimeMillis,
+            0.0, scrubOptions.maxTime,
+            sampleRate, scrubOptions.maxSpeed, scrubOptions.minStutter,
             *options.pScrubbingOptions);
       mScrubDuration = 0;
       mSilentScrub = false;

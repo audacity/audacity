@@ -29,6 +29,22 @@ struct ScrubbingOptions {
 
    bool enqueueBySpeed {};
 
+   double delay {};
+
+   // A limiting value for the speed of a scrub interval:
+   double maxSpeed { 1.0 };
+
+   // When maximum speed scrubbing skips to follow the mouse,
+   // this is the minimum amount of playback allowed at the maximum speed:
+   double minStutter {};
+
+   // Scrubbing needs the time of start of the mouse movement that began
+   // the scrub:
+   wxLongLong startClockTimeMillis { -1 };
+
+   // usually from TrackList::GetEndTime()
+   double maxTime {};
+
    static double MaxAllowedScrubSpeed()
    { return 32.0; } // Is five octaves enough for your amusement?
    static double MinAllowedScrubSpeed()
@@ -75,7 +91,7 @@ public:
 
    bool ShouldDrawScrubSpeed();
    double FindScrubSpeed(bool seeking, double time) const;
-   double GetMaxScrubSpeed() const { return mMaxScrubSpeed; }
+   double GetMaxScrubSpeed() const { return mOptions.maxSpeed; }
 
    void HandleScrollWheel(int steps);
 
@@ -123,12 +139,10 @@ private:
 
 private:
    int mScrubToken;
-   wxLongLong mScrubStartClockTimeMillis;
    bool mPaused;
    int mScrubSpeedDisplayCountdown;
    wxCoord mScrubStartPosition;
    wxCoord mLastScrubPosition {};
-   double mMaxScrubSpeed;
    bool mScrubSeekPress;
    bool mSmoothScrollingScrub;
    bool mAlwaysSeeking {};
