@@ -2662,7 +2662,7 @@ bool PluginManager::GetConfig(const wxString & key, sampleCount & value, sampleC
       wxString wxval = wxEmptyString;
       wxString wxdef;
       wchar_t *endptr;
-      wxdef.Printf(wxT("%Ld"), defval);
+      wxdef.Printf(wxT("%lld"), defval);
 
       result = GetSettings()->Read(key, &wxval, wxdef);
       value = wxStrtoll(wxval.c_str(), &endptr, 10);
