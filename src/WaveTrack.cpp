@@ -1155,14 +1155,15 @@ bool WaveTrack::SyncLockAdjust(double oldT1, double newT1)
       // If track is empty at oldT1 insert whitespace; otherwise, silence
       if (IsEmpty(oldT1, oldT1))
       {
-         bool ret = false;
+         bool ret = true;
 
          // Check if clips can move
          bool clipsCanMove = true;
          gPrefs->Read(wxT("/GUI/EditClipCanMove"), &clipsCanMove);
          if (clipsCanMove) {
             auto tmp = Cut (oldT1, GetEndTime() + 1.0/GetRate());
-            if (!ret) return false;
+            if (!tmp)
+               return false;
 
             ret = Paste(newT1, tmp.get());
             wxASSERT(ret);
