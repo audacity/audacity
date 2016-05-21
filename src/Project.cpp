@@ -4788,7 +4788,10 @@ void AudacityProject::TP_HandleResize()
 void AudacityProject::GetPlayRegion(double* playRegionStart,
                                     double *playRegionEnd)
 {
-   mRuler->GetPlayRegion(playRegionStart, playRegionEnd);
+   if (mRuler)
+      mRuler->GetPlayRegion(playRegionStart, playRegionEnd);
+   else
+      *playRegionEnd = *playRegionStart = 0;
 }
 
 void AudacityProject::AutoSave()
