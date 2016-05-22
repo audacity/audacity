@@ -4889,7 +4889,13 @@ void AudacityProject::MayStartMonitoring()
 void AudacityProject::OnAudioIORate(int rate)
 {
    wxString display;
-   display = wxString::Format(_("Actual Rate: %d"), rate);
+   if (rate > 0) {
+      display = wxString::Format(_("Actual Rate: %d"), rate);
+   }
+   else
+      // clear the status field
+      ;
+
    int x, y;
    mStatusBar->GetTextExtent(display, &x, &y);
    int widths[] = {0, GetControlToolBar()->WidthForStatusBar(mStatusBar), -1, x+50};
