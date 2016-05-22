@@ -1038,7 +1038,7 @@ double TrackPanel::GetScreenEndTime() const
 {
    int width;
    GetTracksUsableArea(&width, NULL);
-   return mViewInfo->PositionToTime(width, true);
+   return mViewInfo->PositionToTime(width, 0, true);
 }
 
 /// AS: OnPaint( ) is called during the normal course of
@@ -1112,6 +1112,52 @@ void TrackPanel::MakeParentModifyState(bool bWantsAutoSave)
 void TrackPanel::MakeParentRedrawScrollbars()
 {
    mListener->TP_RedrawScrollbars();
+}
+
+void TrackPanel::HandleInterruptedDrag()
+{
+
+   // Certain drags need to complete their effects before handling keystroke shortcut
+   // commands:  those that have undoable editing effects.  For others, keystrokes are
+   // harmless and we do nothing.
+   switch (mMouseCapture)
+   {
+      case IsUncaptured:
+      case IsVZooming:
+      case IsSelecting:
+      case IsSelectingLabelText:
+      case IsResizing:
+      case IsResizingBetweenLinkedTracks:
+      case IsResizingBelowLinkedTracks:
+      case IsMuting:
+      case IsSoloing:
+      case IsMinimizing:
+      case IsPopping:
+      case IsZooming:
+         return;
+
+      default:
+         ;
+   }
+
+   /*
+    So this includes the cases:
+
+    IsClosing,
+    IsAdjustingLabel,
+    IsAdjustingSample,
+    IsRearranging,
+    IsSliding,
+    IsEnveloping,
+    IsGainSliding,
+    IsPanSliding,
+    WasOverCutLine,
+    IsStretching
+    */
+
+   wxMouseEvent evt { wxEVT_LEFT_UP };
+   evt.SetPosition(this->ScreenToClient(::wxGetMousePosition()));
+   this->ProcessEvent(evt);
 }
 
 bool TrackPanel::HandleEscapeKey(bool down)
@@ -4756,6 +4802,24 @@ void TrackPanel::OnTrackListUpdated(wxCommandEvent & e)
       SetFocusedTrack(NULL);
    }
 
+   if (!mTracks->Contains(mCapturedTrack)) {
+      SetCapturedTrack(nullptr);
+      if (HasCapture())
+         ReleaseMouse();
+   }
+
+   if (!mTracks->Contains(mFreqSelTrack)) {
+      mFreqSelTrack = nullptr;
+      if (HasCapture())
+         ReleaseMouse();
+   }
+
+   if (!mTracks->Contains(mPopupMenuTarget)) {
+      mPopupMenuTarget = nullptr;
+      if (HasCapture())
+         ReleaseMouse();
+   }
+
    if (e.GetClientData()) {
       OnTrackListResized(e);
       return;
@@ -5674,6 +5738,8 @@ void TrackPanel::HandleWheelRotationInVRuler
 /// Filter captured keys typed into LabelTracks.
 void TrackPanel::OnCaptureKey(wxCommandEvent & event)
 {
+   HandleInterruptedDrag();
+
    // Only deal with LabelTracks
    Track *t = GetFocusedTrack();
    if (!t || t->GetKind() != Track::Label) {
@@ -8617,7 +8683,7 @@ void TrackPanel::SetFocusedTrack( Track *t )
       AudacityProject::ReleaseKeyboard(this);
    }
 
-   if (t && t->GetKind() == Track::Label) {
+   if (t) {
       AudacityProject::CaptureKeyboard(this);
    }
 

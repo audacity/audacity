@@ -87,6 +87,7 @@ public:
    static std::vector<wxString> GetAllUntranslatedStatusStrings();
 
    void Pause(bool paused);
+   bool IsPaused() const;
 
 private:
    void DoScrub(bool scroll, bool seek);

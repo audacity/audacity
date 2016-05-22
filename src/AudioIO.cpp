@@ -1354,10 +1354,6 @@ bool AudioIO::StartPortAudioStream(double sampleRate,
    // pick a rate to do the audio I/O at, from those available. The project
    // rate is suggested, but we may get something else if it isn't supported
    mRate = GetBestRate(numCaptureChannels > 0, numPlaybackChannels > 0, sampleRate);
-   if (mListener) {
-      // advertise the chosen I/O sample rate to the UI
-      mListener->OnAudioIORate((int)mRate);
-   }
 
    // Special case: Our 24-bit sample format is different from PortAudio's
    // 3-byte packed format. So just make PortAudio return float samples,
@@ -1511,6 +1507,12 @@ void AudioIO::StartMonitoring(double sampleRate)
 
    // Now start the PortAudio stream!
    mLastPaError = Pa_StartStream( mPortStreamV19 );
+
+   // Update UI display only now, after all possibilities for error are past.
+   if ((mLastPaError == paNoError) && mListener) {
+      // advertise the chosen I/O sample rate to the UI
+      mListener->OnAudioIORate((int)mRate);
+   }
 }
 
 int AudioIO::StartStream(const WaveTrackArray &playbackTracks,
@@ -1904,6 +1906,12 @@ int AudioIO::StartStream(const WaveTrackArray &playbackTracks,
       }
    }
 
+   // Update UI display only now, after all possibilities for error are past.
+   if (mListener) {
+      // advertise the chosen I/O sample rate to the UI
+      mListener->OnAudioIORate((int)mRate);
+   }
+
    if (mNumPlaybackChannels > 0)
    {
       wxCommandEvent e(EVT_AUDIOIO_PLAYBACK);
@@ -2293,9 +2301,7 @@ void AudioIO::StopStream()
       while( mAudioThreadShouldCallFillBuffersOnce == true )
       {
          // LLL:  Experienced recursive yield here...once.
-         // PRL:  Made it safe yield to avoid a certain recursive event processing in the
-         // time ruler when switching from scrub to quick play.
-         wxGetApp().SafeYield(nullptr, true); // Pass true for onlyIfNeeded to avoid recursive call error.
+         wxGetApp().Yield(true); // Pass true for onlyIfNeeded to avoid recursive call error.
          if (mScrubQueue)
             mScrubQueue->Nudge();
          wxMilliSleep( 50 );
@@ -2423,6 +2429,11 @@ void AudioIO::StopStream()
       mScrubQueue = 0;
    }
 #endif
+
+   if (mListener) {
+      // Tell UI to hide sample rate
+      mListener->OnAudioIORate(0);
+   }
 }
 
 void AudioIO::SetPaused(bool state)
