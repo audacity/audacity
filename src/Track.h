@@ -492,7 +492,7 @@ class TrackList final : public wxEvtHandler, public ListOfTracks
 #endif
 
    /// Mainly a test function. Uses a linear search, so could be slow.
-   bool Contains(Track * t) const;
+   bool Contains(const Track * t) const;
 
    bool IsEmpty() const;
    int GetCount() const;
