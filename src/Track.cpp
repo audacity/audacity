@@ -1167,7 +1167,7 @@ bool TrackList::MoveDown(Track * t)
    return false;
 }
 
-bool TrackList::Contains(Track * t) const
+bool TrackList::Contains(const Track * t) const
 {
    return std::find_if(begin(), end(),
       [=](const value_type &track) { return t == track.get(); }
