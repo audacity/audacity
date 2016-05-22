@@ -1131,7 +1131,7 @@ AudacityProject::~AudacityProject()
 
 AudioIOStartStreamOptions AudacityProject::GetDefaultPlayOptions()
 {
-   AudioIOStartStreamOptions options;
+   AudioIOStartStreamOptions options { GetRate() };
    options.timeTrack = GetTracks()->GetTimeTrack();
    options.listener = this;
    return options;

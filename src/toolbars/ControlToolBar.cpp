@@ -634,7 +634,7 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
 #ifdef EXPERIMENTAL_MIDI_OUT
                NoteTrackArray(),
 #endif
-               p->GetRate(), tcp0, tcp1, myOptions);
+               tcp0, tcp1, myOptions);
          } else
          {
             // Cannot create cut preview tracks, clean up and exit
@@ -655,7 +655,7 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
 #ifdef EXPERIMENTAL_MIDI_OUT
                                        t->GetNoteTrackArray(false),
 #endif
-                                       p->GetRate(), t0, t1, options);
+                                       t0, t1, options);
       }
       if (token != 0) {
          success = true;
@@ -1085,7 +1085,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
 #ifdef EXPERIMENTAL_MIDI_OUT
                                         midiTracks,
 #endif
-                                        p->GetRate(), t0, t1, options);
+                                        t0, t1, options);
 
       bool success = (token != 0);
 
