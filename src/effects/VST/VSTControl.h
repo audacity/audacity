@@ -41,7 +41,7 @@ public:
       mParent = parent;
       mLink = link;
 
-      if (!wxControl::Create(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxNO_BORDER, wxDefaultValidator, wxEmptyString))
+      if (!wxControl::Create(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxNO_BORDER | wxTAB_TRAVERSAL, wxDefaultValidator, wxEmptyString))
       {
          return false;
       }
