@@ -344,6 +344,8 @@ double AudioIO::mCachedBestRateOut;
 
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
 
+#include "tracks/ui/Scrubbing.h"
+
 /*
 This work queue class, with the aid of the playback ring
 buffers, coordinates three threads during scrub play:
@@ -370,26 +372,25 @@ So a small, fixed queue size should be adequate.
 struct AudioIO::ScrubQueue
 {
    ScrubQueue(double t0, double t1, wxLongLong startClockMillis,
-              double minTime, double maxTime,
-              double rate, double maxSpeed, double minStutter)
+              double rate, double maxSpeed,
+              const ScrubbingOptions &options)
       : mTrailingIdx(0)
       , mMiddleIdx(1)
       , mLeadingIdx(2)
-      , mMinSample(minTime * rate)
-      , mMaxSample(maxTime * rate)
       , mRate(rate)
-      , mMinStutter(lrint(std::max(0.0, minStutter) * mRate))
       , mLastScrubTimeMillis(startClockMillis)
       , mUpdating()
    {
-      bool success = InitEntry(mEntries[mMiddleIdx],
-         t0, t1, maxSpeed, false, NULL, false);
+      // Ignore options.adjustStart, pass false.
+
+      bool success = InitEntry(mEntries[mMiddleIdx], nullptr,
+         t0, t1, maxSpeed, false, false, options);
       if (!success)
       {
          // StartClock equals now?  Really?
          --mLastScrubTimeMillis;
-         success = InitEntry(mEntries[mMiddleIdx],
-            t0, t1, maxSpeed, false, NULL, false);
+         success = InitEntry(mEntries[mMiddleIdx], nullptr,
+            t0, t1, maxSpeed, false, false, options);
       }
       wxASSERT(success);
 
@@ -419,7 +420,7 @@ struct AudioIO::ScrubQueue
       mAvailable.Signal();
    }
 
-   bool Producer(double end, double maxSpeed, bool bySpeed, bool maySkip)
+   bool Producer(double end, double maxSpeed, const ScrubbingOptions &options)
    {
       // Main thread indicates a scrubbing interval
 
@@ -436,8 +437,8 @@ struct AudioIO::ScrubQueue
          // Might reject the request because of zero duration,
          // or a too-short "stutter"
          const bool success =
-            (InitEntry(mEntries[mLeadingIdx], startTime, end, maxSpeed,
-                       bySpeed, &previous, maySkip));
+            (InitEntry(mEntries[mLeadingIdx], &previous, startTime, end, maxSpeed,
+                       options.enqueueBySpeed, options.adjustStart, options));
          if (success) {
             mLeadingIdx = next;
             mAvailable.Signal();
@@ -530,9 +531,9 @@ private:
          , mPlayed(0)
       {}
 
-      bool Init(long s0, long s1, long duration, Entry *previous,
-         double maxSpeed, long minStutter, long minSample, long maxSample,
-         bool adjustStart)
+      bool Init(Entry *previous, long s0, long s1, long duration,
+         double maxSpeed, bool adjustStart,
+         const ScrubbingOptions &options)
       {
          if (duration <= 0)
             return false;
@@ -566,7 +567,7 @@ private:
             maxed = true;
          }
 
-        if (speed < GetMinScrubSpeed())
+        if (speed < ScrubbingOptions::MinAllowedScrubSpeed())
             // Mixers were set up to go only so slowly, not slower.
             // This will put a request for some silence in the work queue.
             speed = 0.0;
@@ -583,7 +584,7 @@ private:
             // (Assume s0 is in bounds, because it is the last scrub's s1 which was checked.)
             if (s1 != s0)
             {
-               const long newS1 = std::max(minSample, std::min(maxSample, s1));
+               const long newS1 = std::max(options.minSample, std::min(options.maxSample, s1));
                if (s1 != newS1)
                {
                   long newDuration = long(duration * double(newS1 - s0) / (s1 - s0));
@@ -601,7 +602,7 @@ private:
             {
                // When playback follows a fast mouse movement by "stuttering"
                // at maximum playback, don't make stutters too short to be useful.
-               if (duration < minStutter)
+               if (duration < options.minStutter)
                   return false;
                // Limit diff because this is seeking.
                const long diff = lrint(std::min(1.0, speed) * duration);
@@ -623,7 +624,7 @@ private:
             // Adjust s1 again, and duration, if s1 is out of bounds.  (Assume s0 is in bounds.)
             if (s1 != s0)
             {
-               const long newS1 = std::max(minSample, std::min(maxSample, s1));
+               const long newS1 = std::max(options.minSample, std::min(options.maxSample, s1));
                if (s1 != newS1)
                {
                   long newDuration = long(duration * double(newS1 - s0) / (s1 - s0));
@@ -667,8 +668,9 @@ private:
       long mPlayed;
    };
 
-   bool InitEntry(Entry &entry, double t0, double end, double maxSpeed,
-      bool bySpeed, Entry *previous, bool maySkip)
+   bool InitEntry(Entry &entry, Entry *previous, double t0, double end, double maxSpeed,
+      bool bySpeed, bool adjustStart,
+      const ScrubbingOptions &options)
    {
       const wxLongLong clockTime(::wxGetLocalTimeMillis());
       const long duration =
@@ -678,8 +680,7 @@ private:
          ? s0 + lrint(duration * end) // end is a speed
          : lrint(end * mRate);        // end is a time
       const bool success =
-         entry.Init(s0, s1, duration, previous, maxSpeed, mMinStutter,
-                    mMinSample, mMaxSample, maySkip);
+         entry.Init(previous, s0, s1, duration, maxSpeed, adjustStart, options);
       if (success)
          mLastScrubTimeMillis = clockTime;
       return success;
@@ -690,9 +691,7 @@ private:
    unsigned mTrailingIdx;
    unsigned mMiddleIdx;
    unsigned mLeadingIdx;
-   const long mMinSample, mMaxSample;
    const double mRate;
-   const long mMinStutter;
    wxLongLong mLastScrubTimeMillis;
    mutable wxMutex mUpdating;
    mutable wxCondition mAvailable { mUpdating };
@@ -1354,10 +1353,6 @@ bool AudioIO::StartPortAudioStream(double sampleRate,
    // pick a rate to do the audio I/O at, from those available. The project
    // rate is suggested, but we may get something else if it isn't supported
    mRate = GetBestRate(numCaptureChannels > 0, numPlaybackChannels > 0, sampleRate);
-   if (mListener) {
-      // advertise the chosen I/O sample rate to the UI
-      mListener->OnAudioIORate((int)mRate);
-   }
 
    // Special case: Our 24-bit sample format is different from PortAudio's
    // 3-byte packed format. So just make PortAudio return float samples,
@@ -1511,6 +1506,12 @@ void AudioIO::StartMonitoring(double sampleRate)
 
    // Now start the PortAudio stream!
    mLastPaError = Pa_StartStream( mPortStreamV19 );
+
+   // Update UI display only now, after all possibilities for error are past.
+   if ((mLastPaError == paNoError) && mListener) {
+      // advertise the chosen I/O sample rate to the UI
+      mListener->OnAudioIORate((int)mRate);
+   }
 }
 
 int AudioIO::StartStream(const WaveTrackArray &playbackTracks,
@@ -1518,11 +1519,13 @@ int AudioIO::StartStream(const WaveTrackArray &playbackTracks,
 #ifdef EXPERIMENTAL_MIDI_OUT
                          const NoteTrackArray &midiPlaybackTracks,
 #endif
-                         double sampleRate, double t0, double t1,
+                         double t0, double t1,
                          const AudioIOStartStreamOptions &options)
 {
    if( IsBusy() )
       return 0;
+
+   const auto &sampleRate = options.rate;
 
    // We just want to set mStreamToken to -1 - this way avoids
    // an extremely rare but possible race condition, if two functions
@@ -1580,26 +1583,27 @@ int AudioIO::StartStream(const WaveTrackArray &playbackTracks,
    mCaptureBuffers = NULL;
    mResample = NULL;
 
+   double playbackTime = 4.0;
+
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
+   bool scrubbing = (options.pScrubbingOptions != nullptr);
+
    // Scrubbing is not compatible with looping or recording or a time track!
-   const double scrubDelay = lrint(options.scrubDelay * sampleRate) / sampleRate;
-   bool scrubbing = (scrubDelay > 0);
-   double maxScrubSpeed = options.maxScrubSpeed;
-   double minScrubStutter = options.minScrubStutter;
    if (scrubbing)
    {
+      const auto &scrubOptions = *options.pScrubbingOptions;
+
       if (mCaptureTracks->size() > 0 ||
           mPlayMode == PLAY_LOOPED ||
           mTimeTrack != NULL ||
-          options.maxScrubSpeed < GetMinScrubSpeed())
-      {
+          scrubOptions.maxSpeed < ScrubbingOptions::MinAllowedScrubSpeed()) {
          wxASSERT(false);
          scrubbing = false;
       }
-   }
-   if (scrubbing)
-   {
-      mPlayMode = PLAY_SCRUB;
+      else {
+         playbackTime = lrint(scrubOptions.delay * sampleRate) / sampleRate;
+         mPlayMode = PLAY_SCRUB;
+      }
    }
 #endif
 
@@ -1640,11 +1644,6 @@ int AudioIO::StartStream(const WaveTrackArray &playbackTracks,
    // mouse input, so make fillings more and shorter.
    // What Audio thread produces for playback is then consumed by the PortAudio
    // thread, in many smaller pieces.
-   double playbackTime = 4.0;
-#ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-   if (scrubbing)
-      playbackTime = scrubDelay;
-#endif
    mPlaybackSamplesToCopy = playbackTime * mRate;
 
    // Capacity of the playback buffer.
@@ -1737,9 +1736,13 @@ int AudioIO::StartStream(const WaveTrackArray &playbackTracks,
 
             const Mixer::WarpOptions &warpOptions =
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-               scrubbing ? Mixer::WarpOptions(GetMinScrubSpeed(), GetMaxScrubSpeed()) :
+               scrubbing
+                  ? Mixer::WarpOptions
+                     (ScrubbingOptions::MinAllowedScrubSpeed(),
+                      ScrubbingOptions::MaxAllowedScrubSpeed())
+                  :
 #endif
-               Mixer::WarpOptions(mTimeTrack);
+                    Mixer::WarpOptions(mTimeTrack);
 
             for (unsigned int i = 0; i < mPlaybackTracks->size(); i++)
             {
@@ -1857,10 +1860,11 @@ int AudioIO::StartStream(const WaveTrackArray &playbackTracks,
    delete mScrubQueue;
    if (scrubbing)
    {
+      const auto &scrubOptions = *options.pScrubbingOptions;
       mScrubQueue =
-         new ScrubQueue(mT0, mT1, options.scrubStartClockTimeMillis,
-            0.0, options.maxScrubTime,
-            sampleRate, maxScrubSpeed, minScrubStutter);
+         new ScrubQueue(mT0, mT1, scrubOptions.startClockTimeMillis,
+            sampleRate, scrubOptions.maxSpeed,
+            *options.pScrubbingOptions);
       mScrubDuration = 0;
       mSilentScrub = false;
    }
@@ -1902,6 +1906,12 @@ int AudioIO::StartStream(const WaveTrackArray &playbackTracks,
          wxMessageBox(LAT1CTOWX(Pa_GetErrorText(err)));
          return 0;
       }
+   }
+
+   // Update UI display only now, after all possibilities for error are past.
+   if (mListener) {
+      // advertise the chosen I/O sample rate to the UI
+      mListener->OnAudioIORate((int)mRate);
    }
 
    if (mNumPlaybackChannels > 0)
@@ -2421,6 +2431,11 @@ void AudioIO::StopStream()
       mScrubQueue = 0;
    }
 #endif
+
+   if (mListener) {
+      // Tell UI to hide sample rate
+      mListener->OnAudioIORate(0);
+   }
 }
 
 void AudioIO::SetPaused(bool state)
@@ -2446,18 +2461,11 @@ bool AudioIO::IsPaused()
 }
 
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-bool AudioIO::EnqueueScrubByPosition(double endTime, double maxSpeed, bool maySkip)
+bool AudioIO::EnqueueScrub
+   (double endTimeOrSpeed, double maxSpeed, const ScrubbingOptions &options)
 {
    if (mScrubQueue)
-      return mScrubQueue->Producer(endTime, maxSpeed, false, maySkip);
-   else
-      return false;
-}
-
-bool AudioIO::EnqueueScrubBySignedSpeed(double speed, double maxSpeed, bool maySkip)
-{
-   if (mScrubQueue)
-      return mScrubQueue->Producer(speed, maxSpeed, true, maySkip);
+      return mScrubQueue->Producer(endTimeOrSpeed, maxSpeed, options);
    else
       return false;
 }

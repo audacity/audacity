@@ -2534,7 +2534,7 @@ void Effect::Preview(bool dryOnly)
    double previewLen;
    gPrefs->Read(wxT("/AudioIO/EffectsPreviewLen"), &previewLen, 6.0);
 
-   double rate = mProjectRate;
+   const double rate = mProjectRate;
 
    if (isNyquist && isGenerator) {
       previewDuration = CalcPreviewInputLength(previewLen);
@@ -2637,12 +2637,13 @@ void Effect::Preview(bool dryOnly)
       NoteTrackArray empty;
 #endif
       // Start audio playing
+      AudioIOStartStreamOptions options { rate };
       int token =
          gAudioIO->StartStream(playbackTracks, recordingTracks,
 #ifdef EXPERIMENTAL_MIDI_OUT
                                empty,
 #endif
-                               rate, mT0, t1);
+                               mT0, t1, options);
 
       if (token) {
          int previewing = eProgressSuccess;

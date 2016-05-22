@@ -1131,7 +1131,7 @@ AudacityProject::~AudacityProject()
 
 AudioIOStartStreamOptions AudacityProject::GetDefaultPlayOptions()
 {
-   AudioIOStartStreamOptions options;
+   AudioIOStartStreamOptions options { GetRate() };
    options.timeTrack = GetTracks()->GetTimeTrack();
    options.listener = this;
    return options;
@@ -4788,7 +4788,10 @@ void AudacityProject::TP_HandleResize()
 void AudacityProject::GetPlayRegion(double* playRegionStart,
                                     double *playRegionEnd)
 {
-   mRuler->GetPlayRegion(playRegionStart, playRegionEnd);
+   if (mRuler)
+      mRuler->GetPlayRegion(playRegionStart, playRegionEnd);
+   else
+      *playRegionEnd = *playRegionStart = 0;
 }
 
 void AudacityProject::AutoSave()
@@ -4886,7 +4889,13 @@ void AudacityProject::MayStartMonitoring()
 void AudacityProject::OnAudioIORate(int rate)
 {
    wxString display;
-   display = wxString::Format(_("Actual Rate: %d"), rate);
+   if (rate > 0) {
+      display = wxString::Format(_("Actual Rate: %d"), rate);
+   }
+   else
+      // clear the status field
+      ;
+
    int x, y;
    mStatusBar->GetTextExtent(display, &x, &y);
    int widths[] = {0, GetControlToolBar()->WidthForStatusBar(mStatusBar), -1, x+50};
