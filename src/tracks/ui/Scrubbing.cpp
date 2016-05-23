@@ -49,6 +49,7 @@ enum {
 };
 
 static const double MinStutter = 0.2;
+static const double MaxDragSpeed = 1.0;
 
 namespace {
    double FindScrubbingSpeed(const ViewInfo &viewInfo, double maxScrubSpeed, double screen, double timeAtMouse)
@@ -311,8 +312,7 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
 #else
             // That idea seems unpopular... just make it one for move-scrub,
             // but big for drag-scrub
-            mOptions.maxSpeed =
-               mDragging ? ScrubbingOptions::MaxAllowedScrubSpeed() : 1.0;
+            mOptions.maxSpeed = mDragging ? MaxDragSpeed : 1.0;
 #endif
             mOptions.minSample = 0;
             mOptions.maxSample =
@@ -420,7 +420,9 @@ void Scrubber::ContinueScrubbing()
       }
       else {
          mOptions.enqueueBySpeed = false;
-         result = gAudioIO->EnqueueScrub(time, seek ? 1.0 : mOptions.maxSpeed, mOptions);
+         auto maxSpeed =
+            (mDragging || !seek) ? mOptions.maxSpeed : 1.0;
+         result = gAudioIO->EnqueueScrub(time, maxSpeed, mOptions);
       }
    }
 
