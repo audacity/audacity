@@ -944,6 +944,9 @@ void TrackPanel::OnTimer(wxTimerEvent& )
       //ANSWER-ME: Was DisplaySelection added to solve a repaint problem?
       DisplaySelection();
    }
+   if (mLastDrawnSelectedRegion != mViewInfo->selectedRegion) {
+      UpdateSelectionDisplay();
+   }
 
    // Notify listeners for timer ticks
    {
@@ -1045,6 +1048,8 @@ double TrackPanel::GetScreenEndTime() const
 ///  completing a repaint operation.
 void TrackPanel::OnPaint(wxPaintEvent & /* event */)
 {
+   mLastDrawnSelectedRegion = mViewInfo->selectedRegion;
+
 #if DEBUG_DRAW_TIMING
    wxStopWatch sw;
 #endif
@@ -2764,7 +2769,9 @@ void TrackPanel::SelectionHandleDrag(wxMouseEvent & event, Track *clickedTrack)
 #endif
 
    ExtendSelection(x, rect.x, clickedTrack);
-   UpdateSelectionDisplay();
+   // Don't do this at every mouse event, because it slows down seek-scrub.
+   // Instead, let OnTimer do it, which is often enough.
+   // UpdateSelectionDisplay();
 }
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING

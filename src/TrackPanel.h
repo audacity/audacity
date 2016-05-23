@@ -790,6 +790,8 @@ protected:
    // The screenshot class needs to access internals
    friend class ScreenshotCommand;
 
+   SelectedRegion mLastDrawnSelectedRegion {};
+
  public:
    wxSize vrulerSize;
 
