@@ -42,6 +42,7 @@ EffectManager::EffectManager()
    mRealtimeSuspended = true;
    mRealtimeLatency = 0;
    mRealtimeLock.Leave();
+   mSkipStateFlag = false;
 
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
    mRack = NULL;
@@ -52,7 +53,7 @@ EffectManager::~EffectManager()
 {
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
    // wxWidgets has already destroyed the rack since it was derived from wxFrame. So
-   // no need to delete it here.
+   // no need to DELETE it here.
 #endif
 
    EffectMap::iterator iter = mHostEffects.begin();
@@ -92,6 +93,7 @@ bool EffectManager::DoEffect(const PluginID & ID,
                              bool shouldPrompt /* = true */)
 
 {
+   this->SetSkipStateFlag(false);
    Effect *effect = GetEffect(ID);
    
    if (!effect)
@@ -169,6 +171,16 @@ bool EffectManager::IsHidden(const PluginID & ID)
    }
 
    return false;
+}
+
+void EffectManager::SetSkipStateFlag(bool flag)
+{
+   mSkipStateFlag = flag;
+}
+
+bool EffectManager::GetSkipStateFlag()
+{
+   return mSkipStateFlag;
 }
 
 bool EffectManager::SupportsAutomation(const PluginID & ID)
@@ -330,7 +342,10 @@ EffectRack *EffectManager::GetRack()
 {
    if (!mRack)
    {
-      mRack = new EffectRack();
+      // EffectRack is constructed with the current project as owner, so safenew is OK
+      mRack = safenew EffectRack();
+      // Make sure what I just commented remains true:
+      wxASSERT(mRack->GetParent());
       mRack->CenterOnParent();
    }
 
@@ -344,51 +359,41 @@ void EffectManager::ShowRack()
 
 void EffectManager::RealtimeSetEffects(const EffectArray & effects)
 {
-   int newCount = (int) effects.GetCount();
-   Effect **newEffects = new Effect *[newCount];
-   for (int i = 0; i < newCount; i++)
-   {
-      newEffects[i] = effects[i];
-   }
-
    // Block RealtimeProcess()
    RealtimeSuspend();
 
    // Tell any effects no longer in the chain to clean up
-   for (int i = 0; i < mRealtimeCount; i++)
+   for (auto e: mRealtimeEffects)
    {
-      Effect *e = mRealtimeEffects[i];
-
-      // Scan the new chain for the effect
-      for (int j = 0; j < newCount; j++)
+      // Scan the NEW chain for the effect
+      for (auto e1: effects)
       {
          // Found it so we're done
-         if (e == newEffects[j])
+         if (e == e1)
          {
             e = NULL;
             break;
          }
       }
 
-      // Must not have been in the new chain, so tell it to cleanup
+      // Must not have been in the NEW chain, so tell it to cleanup
       if (e && mRealtimeActive)
       {
          e->RealtimeFinalize();
       }
    }
       
-   // Tell any new effects to get ready
-   for (int i = 0; i < newCount; i++)
+   // Tell any NEW effects to get ready
+   for (auto e : effects)
    {
-      Effect *e = newEffects[i];
-
       // Scan the old chain for the effect
-      for (int j = 0; j < mRealtimeCount; j++)
+      for (auto e1 : mRealtimeEffects)
       {
          // Found it so tell effect to get ready
-         if (e == mRealtimeEffects[j])
+         if (e == e1)
          {
             e = NULL;
+            break;
          }
       }
 
@@ -399,15 +404,8 @@ void EffectManager::RealtimeSetEffects(const EffectArray & effects)
       }
    }
 
-   // Get rid of the old chain
-   if (mRealtimeEffects)
-   {
-      delete [] mRealtimeEffects;
-   }
-
-   // And install the new one
-   mRealtimeEffects = newEffects;
-   mRealtimeCount = newCount;
+   // And install the NEW one
+   mRealtimeEffects = effects;
 
    // Allow RealtimeProcess() to, well, process 
    RealtimeResume();
@@ -618,7 +616,7 @@ sampleCount EffectManager::RealtimeProcess(int group, int chans, float **buffers
    float **obuf = (float **) alloca(chans * sizeof(float *));
 
    // And populate the input with the buffers we've been given while allocating
-   // new output buffers
+   // NEW output buffers
    for (int i = 0; i < chans; i++)
    {
       ibuf[i] = buffers[i];

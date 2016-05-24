@@ -24,23 +24,27 @@
 private:
 void CreateMenusAndCommands();
 
-void PopulateEffectsMenu(CommandManager *c, EffectType type, int batchflags, int realflags);
-void AddEffectMenuItems(CommandManager *c, EffectPlugs & plugs, int batchflags, int realflags, bool isDefault);
-void AddEffectMenuItemGroup(CommandManager *c, const wxArrayString & names, const PluginIDList & plugs, const wxArrayInt & flags, bool isDefault);
+void PopulateEffectsMenu(CommandManager *c, EffectType type,
+                         CommandFlag batchflags, CommandFlag realflags);
+void AddEffectMenuItems(CommandManager *c, EffectPlugs & plugs,
+                        CommandFlag batchflags, CommandFlag realflags, bool isDefault);
+void AddEffectMenuItemGroup(CommandManager *c, const wxArrayString & names,
+                            const PluginIDList & plugs,
+                            const std::vector<CommandFlag> & flags, bool isDefault);
 void CreateRecentFilesMenu(CommandManager *c);
 void ModifyUndoMenuItems();
 void ModifyToolbarMenus();
 // Calls ModifyToolbarMenus() on all projects
 void ModifyAllProjectToolbarMenus();
 
-int GetFocusedFrame();
-wxUint32 GetUpdateFlags();
+CommandFlag GetFocusedFrame();
+CommandFlag GetUpdateFlags();
 
 double NearestZeroCrossing(double t0);
 
 public:
 //Adds label and returns index of label in labeltrack.
-int DoAddLabel(const SelectedRegion& region);
+int DoAddLabel(const SelectedRegion& region, bool preserveFocus = false);
 
 private:
 
@@ -76,6 +80,7 @@ void OnSeekRightLong();
 
 bool MakeReadyToPlay(bool loop = false, bool cutpreview = false); // Helper function that sets button states etc.
 void OnPlayStop();
+void DoPlayStopSelect(bool click, bool shift);
 void OnPlayStopSelect();
 void OnPlayOneSecond();
 void OnPlayToSelection();
@@ -170,9 +175,11 @@ void OnZeroCrossing();
 void OnLockPlayRegion();
 void OnUnlockPlayRegion();
 
-double GetTime(Track *t);
+double GetTime(const Track *t);
 void OnSortTime();
 void OnSortName();
+
+void OnToggleScrollLeftOfZero();
 
 void OnSnapToOff();
 void OnSnapToNearest();
@@ -317,16 +324,18 @@ void OnRescanDevices();
 void OnImport();
 void OnImportLabels();
 void OnImportMIDI();
+void DoImportMIDI(const wxString &fileName);
 void OnImportRaw();
 
 void OnEditMetadata();
+bool DoEditMetadata(const wxString &title, const wxString &shortUndoDescription, bool force);
 
 void OnMixAndRender();
 void OnMixAndRenderToNewTrack();
 void HandleMixAndRender(bool toNewTrack);
 
 private:
-SelectedRegion mRegionSave;
+   SelectedRegion mRegionSave{};
 public:
 void OnSelectionSave();
 void OnSelectionRestore();
@@ -369,6 +378,8 @@ public:
    static const int kConfigured = 0x01;
    // Flag used to disable saving the state after processing.
    static const int kSkipState  = 0x02;
+   // Flag used to disable "Repeat Last Effect"
+   static const int kDontRepeatLast = 0x04;
 };
 
 bool OnEffect(const PluginID & ID, int flags = OnEffectFlags::kNone);

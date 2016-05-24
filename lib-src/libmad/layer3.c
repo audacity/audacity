@@ -2632,9 +2632,14 @@ int mad_layer_III(struct mad_stream *stream, struct mad_frame *frame)
 	assert(stream->md_len + md_len -
 	       si.main_data_begin <= MAD_BUFFER_MDLEN);
 
+   int nCopy = md_len - si.main_data_begin;
+   if (nCopy > MAD_BUFFER_MDLEN - stream->md_len)
+      // PRL defend against an observed violation of the assertion above
+      nCopy = MAD_BUFFER_MDLEN - stream->md_len;
+
 	memcpy(*stream->main_data + stream->md_len,
 	       mad_bit_nextbyte(&stream->ptr),
-	       frame_used = md_len - si.main_data_begin);
+	       frame_used = nCopy);
 	stream->md_len += frame_used;
       }
     }

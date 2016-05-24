@@ -22,6 +22,7 @@ in a background thread.
 #include "ODManager.h"
 #include "../WaveTrack.h"
 #include "../Project.h"
+#include "../UndoManager.h"
 //temporarilly commented out till it is added to all projects
 //#include "../Profiler.h"
 
@@ -226,7 +227,7 @@ bool ODTask::IsRunning()
    return ret;
 }
 
-sampleCount ODTask::GetDemandSample()
+sampleCount ODTask::GetDemandSample() const
 {
    sampleCount retval;
    mDemandSampleMutex.Lock();
@@ -356,7 +357,7 @@ void ODTask::StopUsingWaveTrack(WaveTrack* track)
    mWaveTrackMutex.Unlock();
 }
 
-///Replaces all instances to a wavetrack with a new one, effectively transferring the task.
+///Replaces all instances to a wavetrack with a NEW one, effectively transferring the task.
 void ODTask::ReplaceWaveTrack(WaveTrack* oldTrack,WaveTrack* newTrack)
 {
    mWaveTrackMutex.Lock();

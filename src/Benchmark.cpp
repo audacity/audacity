@@ -42,7 +42,7 @@ of the BlockFile system.
 
 #include "FileDialog.h"
 
-class BenchmarkDialog: public wxDialog
+class BenchmarkDialog final : public wxDialog
 {
 public:
    // constructors and destructors
@@ -342,10 +342,9 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
 
    HoldPrint(true);
 
+   ZoomInfo zoomInfo(0.0, ZoomInfo::GetDefaultZoom());
    DirManager *d = new DirManager();
-   TrackFactory *fact = new TrackFactory(d);
-   WaveTrack *t = fact->NewWaveTrack(int16Sample);
-   Track *tmp = NULL;
+   const auto t = TrackFactory{ d, &zoomInfo }.NewWaveTrack(int16Sample);
 
    t->SetRate(1);
 
@@ -418,7 +417,7 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
       if (mEditDetail)
          Printf(wxT("Cut: %d - %d \n"), x0 * chunkSize, (x0 + xlen) * chunkSize);
 
-      t->Cut(double (x0 * chunkSize), double ((x0 + xlen) * chunkSize), &tmp);
+      auto tmp = t->Cut(double (x0 * chunkSize), double ((x0 + xlen) * chunkSize));
       if (!tmp) {
          Printf(wxT("Trial %d\n"), z);
          Printf(wxT("Cut (%d, %d) failed.\n"), (x0 * chunkSize),
@@ -432,7 +431,7 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
       if (mEditDetail)
          Printf(wxT("Paste: %d\n"), y0 * chunkSize);
 
-      if (!t->Paste((double)(y0 * chunkSize), tmp))
+      if (!t->Paste((double)(y0 * chunkSize), tmp.get()))
       {
          Printf(wxT("Trial %d\nFailed on Paste.\n"), z);
          goto fail;
@@ -530,16 +529,10 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
    Printf(wxT("TEST FAILED!!!\n"));
 
  success:
-   if (tmp)
-      delete tmp;
-
-   delete t;
-
    delete[]small1;
    delete[]small2;
    delete[]block;
 
-   delete fact;
    d->Deref();
 
    Sequence::SetMaxDiskBlockSize(oldBlockSize);

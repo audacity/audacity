@@ -32,6 +32,7 @@
 
 #include "../LabelTrack.h"
 #include "../WaveTrack.h"
+#include "../MemoryX.h"
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
@@ -58,7 +59,7 @@ wxString EffectFindClipping::GetSymbol()
 
 wxString EffectFindClipping::GetDescription()
 {
-   return XO("This displays runs of clipped samples in a Label Track");
+   return XO("Creates labels where clipping is detected");
 }
 
 // EffectIdentInterface implementation
@@ -93,26 +94,24 @@ bool EffectFindClipping::SetAutomationParameters(EffectAutomationParameters & pa
 
 bool EffectFindClipping::Process()
 {
-   LabelTrack *l = NULL;
+   std::shared_ptr<AddedAnalysisTrack> addedTrack;
+   Maybe<ModifiedAnalysisTrack> modifiedTrack;
    Track *original = NULL;
+   const wxString name{ _("Clipping") };
 
+   LabelTrack *lt = NULL;
    TrackListOfKindIterator iter(Track::Label, mTracks);
    for (Track *t = iter.First(); t; t = iter.Next()) {
-      if (t->GetName() == wxT("Clipping")) {
-         l = (LabelTrack *) t;
-         // copy LabelTrack here, so it can be undone on cancel
-         l->Copy(l->GetStartTime(), l->GetEndTime(), &original);
-         original->SetOffset(l->GetStartTime());
-         original->SetName(wxT("Clipping"));
+      if (t->GetName() == name) {
+         lt = (LabelTrack *)t;
          break;
       }
    }
 
-   if (!l) {
-      l = mFactory->NewLabelTrack();
-      l->SetName(_("Clipping"));
-      mTracks->Add((Track *) l);
-   }
+   if (!lt)
+      addedTrack = (AddAnalysisTrack(name)), lt = addedTrack->get();
+   else
+      modifiedTrack.create(ModifyAnalysisTrack(lt, name)), lt = modifiedTrack->get();
 
    int count = 0;
 
@@ -130,12 +129,7 @@ bool EffectFindClipping::Process()
          sampleCount end = t->TimeToLongSamples(t1);
          sampleCount len = (sampleCount)(end - start);
 
-         if (!ProcessOne(l, count, t, start, len)) {
-            //put it back how it was
-            mTracks->Remove((Track *) l);
-            if(original) {
-               mTracks->Add((Track *) original);
-            }
+         if (!ProcessOne(lt, count, t, start, len)) {
             return false;
          }
       }
@@ -144,12 +138,17 @@ bool EffectFindClipping::Process()
       t = (WaveTrack *) waves.Next();
    }
 
+   // No cancellation, so commit the addition of the track.
+   if (addedTrack)
+      addedTrack->Commit();
+   if (modifiedTrack)
+      modifiedTrack->Commit();
    return true;
 }
 
-bool EffectFindClipping::ProcessOne(LabelTrack * l,
+bool EffectFindClipping::ProcessOne(LabelTrack * lt,
                                     int count,
-                                    WaveTrack * t,
+                                    const WaveTrack * wt,
                                     sampleCount start,
                                     sampleCount len)
 {
@@ -180,14 +179,14 @@ bool EffectFindClipping::ProcessOne(LabelTrack * l,
 
          block = s + blockSize > len ? len - s : blockSize;
 
-         t->Get((samplePtr)buffer, floatSample, start + s, block);
+         wt->Get((samplePtr)buffer, floatSample, start + s, block);
          ptr = buffer;
       }
 
       float v = fabs(*ptr++);
       if (v >= MAX_AUDIO) {
          if (startrun == 0) {
-            startTime = t->LongSamplesToTime(start + s);
+            startTime = wt->LongSamplesToTime(start + s);
             samps = 0;
          }
          else {
@@ -202,8 +201,8 @@ bool EffectFindClipping::ProcessOne(LabelTrack * l,
             samps++;
 
             if (stoprun >= mStop) {
-               l->AddLabel(SelectedRegion(startTime,
-                                          t->LongSamplesToTime(start + s - mStop)),
+               lt->AddLabel(SelectedRegion(startTime,
+                                          wt->LongSamplesToTime(start + s - mStop)),
                            wxString::Format(wxT("%lld of %lld"), (long long) startrun, (long long) (samps - mStop)));
                startrun = 0;
                stoprun = 0;

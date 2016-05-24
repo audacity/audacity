@@ -19,7 +19,7 @@
             Robert Bielik
 */
 /*
- * $Id: paex_ocean_shore.c 1816 2012-02-22 12:20:26Z robiwan $
+ * $Id: paex_ocean_shore.c 1946 2015-01-21 06:30:53Z rbencina $
  *
  * This program uses the PortAudio Portable Audio Library.
  * For more information see: http://www.portaudio.com
@@ -381,7 +381,7 @@ OceanWave* InitializeWave(double SR, float attackInSeconds, float maxLevel, floa
         wave->wave_attack_incr = wave->wave_envelope_max_level / (attackInSeconds * (float)SR);
         wave->wave_decay_incr = - wave->wave_envelope_max_level / (attackInSeconds * 4 * (float)SR);
 
-        wave->wave_pan_left = sqrtf(1.0 - positionLeftRight);
+        wave->wave_pan_left = sqrtf(1.0f - positionLeftRight);
         wave->wave_pan_right = sqrtf(positionLeftRight);
     }
     return wave;

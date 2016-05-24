@@ -16,7 +16,11 @@
 #ifndef __COMMANDBUILDER__
 #define __COMMANDBUILDER__
 
+#include "../MemoryX.h"
+#include <wx/string.h>
+
 class Command;
+using CommandHolder = std::shared_ptr<Command>;
 class wxString;
 
 // CommandBuilder has the task of validating and interpreting a command string.
@@ -26,21 +30,20 @@ class CommandBuilder
 {
    private:
       bool mValid;
-      Command *mCommand;
+      CommandHolder mCommand;
       wxString mError;
 
       void Failure(const wxString &msg = wxEmptyString);
-      void Success(Command *cmd);
-      void BuildCommand(const wxString &cmdName, wxString cmdParams);
-      void BuildCommand(wxString cmdString);
+      void Success(const CommandHolder &cmd);
+      void BuildCommand(const wxString &cmdName, const wxString &cmdParams);
+      void BuildCommand(const wxString &cmdString);
    public:
       CommandBuilder(const wxString &cmdString);
       CommandBuilder(const wxString &cmdName,
                      const wxString &cmdParams);
       ~CommandBuilder();
       bool WasValid();
-      Command *GetCommand();
-      void Cleanup();
+      CommandHolder GetCommand();
       const wxString &GetErrorMessage();
 };
 #endif /* End of include guard: __COMMANDBUILDER__ */

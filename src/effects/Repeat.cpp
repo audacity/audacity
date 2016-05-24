@@ -136,11 +136,10 @@ bool EffectRepeat::Process()
             continue;
          }
 
-         Track *dest;
-         track->Copy(mT0, mT1, &dest);
+         auto dest = track->Copy(mT0, mT1);
          for(int j=0; j<repeatCount; j++)
          {
-            if (!track->Paste(tc, dest) ||
+            if (!track->Paste(tc, dest.get()) ||
                   TrackProgress(nTrack, j / repeatCount)) // TrackProgress returns true on Cancel.
             {
                bGoodResult = false;
@@ -150,7 +149,6 @@ bool EffectRepeat::Process()
          }
          if (tc > maxDestLen)
             maxDestLen = tc;
-         delete dest;
          nTrack++;
       }
       else if (t->IsSyncLockSelected())
@@ -161,7 +159,7 @@ bool EffectRepeat::Process()
 
    if (bGoodResult)
    {
-      // Select the new bits + original bit
+      // Select the NEW bits + original bit
       mT1 = maxDestLen;
    }
 

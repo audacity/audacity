@@ -12,7 +12,7 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBSBSMS], [
 
    dnl see if sbsms is installed on the system
 
-   PKG_CHECK_MODULES(SBSMS, sbsms >= 1.6.0,
+   PKG_CHECK_MODULES(SBSMS, sbsms >= 2.2.0,
                      LIBSBSMS_SYSTEM_AVAILABLE="yes",
                      LIBSBSMS_SYSTEM_AVAILABLE="no")
 

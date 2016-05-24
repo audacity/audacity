@@ -16,7 +16,7 @@
 
 \class Grabber
 \brief The widget to the left of a ToolBar that allows it to be dragged
-around to new positions.
+around to NEW positions.
 
 *//**********************************************************************/
 
@@ -39,23 +39,21 @@ around to new positions.
 
 DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_GRABBER_CLICKED, -1)
 
-class GrabberEvent:public wxCommandEvent
+class GrabberEvent final : public wxCommandEvent
 {
  public:
 
    GrabberEvent(wxEventType type = wxEVT_NULL,
                 wxWindowID winid = 0,
-                const wxPoint& pt = wxDefaultPosition)
+                const wxPoint& pt = wxDefaultPosition,
+                bool escaping = false)
    : wxCommandEvent(type, winid)
    {
       mPos = pt;
+      mEscaping = escaping;
    }
 
-   GrabberEvent(const GrabberEvent & event)
-   : wxCommandEvent(event)
-   {
-      mPos = event.mPos;
-   }
+   GrabberEvent(const GrabberEvent & event) = default;
 
    // Position of event (in screen coordinates)
    const wxPoint & GetPosition() const
@@ -68,14 +66,18 @@ class GrabberEvent:public wxCommandEvent
       mPos = pos;
    }
 
-   virtual wxEvent *Clone() const
+   bool IsEscaping() const { return mEscaping; }
+
+   // Clone is required by wxwidgets; implemented via copy constructor
+   wxEvent *Clone() const override
    {
-      return new GrabberEvent(*this);
+      return safenew GrabberEvent(*this);
    }
 
  protected:
 
    wxPoint mPos;
+   bool mEscaping {};
 };
 
 typedef void (wxEvtHandler::*GrabberEventFunction)(GrabberEvent &);
@@ -92,7 +94,7 @@ typedef void (wxEvtHandler::*GrabberEventFunction)(GrabberEvent &);
 
 #define grabberWidth 10
 
-class Grabber:public wxWindow
+class Grabber final : public wxWindow
 {
 
  public:
@@ -104,7 +106,8 @@ class Grabber:public wxWindow
    // not a need to dock/float a toolbar from the keyboard.  If this
    // changes, remove this and add the necessary keyboard movement
    // handling.
-   bool AcceptsFocus() const {return false;}
+   // PRL:  Commented out so the ESC key can stop dragging.
+   // bool AcceptsFocus() const {return false;}
 
    void PushButton(bool state);
 
@@ -114,11 +117,12 @@ class Grabber:public wxWindow
    void OnEnter(wxMouseEvent & event);
    void OnLeave(wxMouseEvent & event);
    void OnPaint(wxPaintEvent & event);
+   void OnKeyDown(wxKeyEvent & event);
 
  private:
 
    void DrawGrabber(wxDC & dc);
-   void SendEvent(wxEventType type, const wxPoint & pos);
+   void SendEvent(wxEventType type, const wxPoint & pos, bool escaping);
 
    bool mOver;
    bool mPressed;

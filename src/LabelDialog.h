@@ -11,6 +11,7 @@
 #ifndef __AUDACITY_LABELDIALOG__
 #define __AUDACITY_LABELDIALOG__
 
+#include <vector>
 #include <wx/defs.h>
 #include <wx/dialog.h>
 #include <wx/event.h>
@@ -20,28 +21,28 @@
 #include "Internat.h"
 #include "widgets/Grid.h"
 
-class DirManager;
+class TrackFactory;
 class TrackList;
 class RowData;
 class EmptyLabelRenderer;
 class LabelTrack;
 class ViewInfo;
 
-WX_DEFINE_ARRAY(RowData *, RowDataArray);
+typedef std::vector<RowData> RowDataArray;
 
-class LabelDialog:public wxDialog
+class LabelDialog final : public wxDialog
 {
  public:
 
    LabelDialog(wxWindow *parent,
-               DirManager *dirmanager,
+               TrackFactory &factory,
                TrackList *tracks,
                ViewInfo &viewinfo,
                double rate,
                const wxString & format);
    ~LabelDialog();
 
-    virtual bool Show(bool show = true);
+    bool Show(bool show = true) override;
 
  private:
 
@@ -51,7 +52,7 @@ class LabelDialog:public wxDialog
    void FindAllLabels();
    void AddLabels(LabelTrack *t);
    void FindInitialRow();
-   wxString TrackName(int & index, wxString dflt = _("Label Track"));
+   wxString TrackName(int & index, const wxString &dflt = _("Label Track"));
 
    void OnUpdate(wxCommandEvent &event);
    void OnInsert(wxCommandEvent &event);
@@ -75,7 +76,7 @@ class LabelDialog:public wxDialog
 
    RowDataArray mData;
 
-   DirManager *mDirManager;
+   TrackFactory &mFactory;
    TrackList *mTracks;
    ViewInfo *mViewInfo;
    wxArrayString mTrackNames;

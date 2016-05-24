@@ -23,13 +23,13 @@
 
 class ShuttleGui;
 
-class QualityPrefs :public PrefsPanel
+class QualityPrefs final : public PrefsPanel
 {
  public:
    QualityPrefs(wxWindow * parent);
    virtual ~QualityPrefs();
 
-   virtual bool Apply();
+   bool Apply() override;
 
  private:
    void Populate();
@@ -53,9 +53,9 @@ class QualityPrefs :public PrefsPanel
    DECLARE_EVENT_TABLE();
 };
 
-class QualityPrefsFactory : public PrefsPanelFactory
+class QualityPrefsFactory final : public PrefsPanelFactory
 {
 public:
-   virtual PrefsPanel *Create(wxWindow *parent);
+   PrefsPanel *Create(wxWindow *parent) override;
 };
 #endif

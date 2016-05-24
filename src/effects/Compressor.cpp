@@ -205,7 +205,7 @@ void EffectCompressor::PopulateOrExchange(ShuttleGui & S)
    S.StartHorizontalLay(wxEXPAND, true);
    {
       S.SetBorder(10);
-      mPanel = new EffectCompressorPanel(S.GetParent(),
+      mPanel = safenew EffectCompressorPanel(S.GetParent(),
                                          mThresholdDB,
                                          mNoiseFloorDB,
                                          mRatio);
@@ -509,9 +509,9 @@ void EffectCompressor::Follow(float *buffer, float *env, int len, float *previou
     rise_factor, then we compute a rising envelope that meets
     the input value by working bacwards in time, changing the
     previous values to input / rise_factor, input / rise_factor^2,
-    input / rise_factor^3, etc. until this new envelope intersects
+    input / rise_factor^3, etc. until this NEW envelope intersects
     the previously computed values. There is only a limited buffer
-    in which we can work backwards, so if the new envelope does not
+    in which we can work backwards, so if the NEW envelope does not
     intersect the old one, then make yet another pass, this time
     from the oldest buffered value forward, increasing on each
     sample by rise_factor to produce a maximal envelope. This will

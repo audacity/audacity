@@ -22,12 +22,15 @@
 
 class ShuttleGui;
 
-class TracksPrefs :public PrefsPanel
+class TracksPrefs final : public PrefsPanel
 {
  public:
    TracksPrefs(wxWindow * parent);
    ~TracksPrefs();
-   virtual bool Apply();
+   bool Apply() override;
+
+   static const wxChar *ScrollingPreferenceKey();
+   static inline bool ScrollingPreferenceDefault() { return false; }
 
  private:
    void Populate();
@@ -39,9 +42,9 @@ class TracksPrefs :public PrefsPanel
    wxArrayString mViewChoices;
 };
 
-class TracksPrefsFactory : public PrefsPanelFactory
+class TracksPrefsFactory final : public PrefsPanelFactory
 {
 public:
-   virtual PrefsPanel *Create(wxWindow *parent);
+   PrefsPanel *Create(wxWindow *parent) override;
 };
 #endif

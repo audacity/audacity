@@ -79,7 +79,7 @@ enum
    ToolBarCount
 };
 
-class ToolBar:public wxPanel
+class ToolBar /* not final */ : public wxPanel
 {
 
  public:
@@ -87,6 +87,9 @@ class ToolBar:public wxPanel
    ToolBar(int type, const wxString & label, const wxString & section, bool resizable = false);
    virtual ~ToolBar();
 
+   bool AcceptsFocus() const override { return false; };
+
+   //NEW virtuals:
    virtual void Create(wxWindow *parent);
    virtual void EnableDisableButtons() = 0;
    virtual void ReCreateButtons();
@@ -103,6 +106,7 @@ class ToolBar:public wxPanel
 
    void SetDocked(ToolDock *dock, bool pushed);
 
+   // NEW virtual:
    virtual bool Expose(bool show = true);
 
    bool IsResizable();
@@ -113,9 +117,10 @@ class ToolBar:public wxPanel
    void SetPositioned(){ mPositioned = true;};
 
    /// Resizable toolbars should implement this.
-   virtual int GetInitialWidth() {return -1;}
-   virtual int GetMinToolbarWidth() {return GetInitialWidth();}
-   virtual wxSize GetDockedSize(){ return GetMinSize();}
+   // NEW virtuals:
+   virtual int GetInitialWidth() { return -1; }
+   virtual int GetMinToolbarWidth() { return GetInitialWidth(); }
+   virtual wxSize GetDockedSize() { return GetMinSize(); }
  protected:
 
    AButton *MakeButton(teBmps eUp,
@@ -183,6 +188,7 @@ class ToolBar:public wxPanel
 
    void OnErase(wxEraseEvent & event);
    void OnPaint(wxPaintEvent & event);
+   void OnMouseEvents(wxMouseEvent &event);
 
  protected:
    wxString mLabel;

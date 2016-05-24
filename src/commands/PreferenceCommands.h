@@ -25,46 +25,46 @@
 
 // GetPreference
 
-class GetPreferenceCommandType : public CommandType
+class GetPreferenceCommandType final : public CommandType
 {
 public:
-   virtual wxString BuildName();
-   virtual void BuildSignature(CommandSignature &signature);
-   virtual Command *Create(CommandOutputTarget *target);
+   wxString BuildName() override;
+   void BuildSignature(CommandSignature &signature) override;
+   CommandHolder Create(std::unique_ptr<CommandOutputTarget> &&target) override;
 };
 
-class GetPreferenceCommand : public CommandImplementation
+class GetPreferenceCommand final : public CommandImplementation
 {
 public:
    GetPreferenceCommand(CommandType &type,
-                    CommandOutputTarget *target)
-      : CommandImplementation(type, target)
+                    std::unique_ptr<CommandOutputTarget> &&target)
+      : CommandImplementation(type, std::move(target))
    { }
 
    virtual ~GetPreferenceCommand();
-   virtual bool Apply(CommandExecutionContext context);
+   bool Apply(CommandExecutionContext context) override;
 };
 
 // SetPreference
 
-class SetPreferenceCommandType : public CommandType
+class SetPreferenceCommandType final : public CommandType
 {
 public:
-   virtual wxString BuildName();
-   virtual void BuildSignature(CommandSignature &signature);
-   virtual Command *Create(CommandOutputTarget *target);
+   wxString BuildName() override;
+   void BuildSignature(CommandSignature &signature) override;
+   CommandHolder Create(std::unique_ptr<CommandOutputTarget> &&target) override;
 };
 
-class SetPreferenceCommand : public CommandImplementation
+class SetPreferenceCommand final : public CommandImplementation
 {
 public:
    SetPreferenceCommand(CommandType &type,
-                    CommandOutputTarget *target)
-      : CommandImplementation(type, target)
+                    std::unique_ptr<CommandOutputTarget> &&target)
+      : CommandImplementation(type, std::move(target))
    { }
 
    virtual ~SetPreferenceCommand();
-   virtual bool Apply(CommandExecutionContext context);
+   bool Apply(CommandExecutionContext context) override;
 };
 
 #endif /* End of include guard: __PREFERENCECOMMANDS__ */

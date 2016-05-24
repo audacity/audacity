@@ -29,10 +29,10 @@
 // to 1.
 #define IS_ALPHA 1
 
-// Increment as appropriate every time we release a new version.
+// Increment as appropriate every time we release a NEW version.
 #define AUDACITY_VERSION   2
 #define AUDACITY_RELEASE   1
-#define AUDACITY_REVISION  2
+#define AUDACITY_REVISION  3
 #define AUDACITY_MODLEVEL  0
 
 #if IS_ALPHA
@@ -120,6 +120,15 @@ void QuitAudacity();
    #endif
 #endif //_MSC_VER
 
+// Put extra symbol information in the release build, for the purpose of gathering
+// profiling information (as from Windows Process Monitor), when there otherwise
+// isn't a need for AUDACITY_DLL_API.
+#if IS_ALPHA
+   #define PROFILE_DLL_API AUDACITY_DLL_API
+#else
+   #define PROFILE_DLL_API
+#endif
+
 /* The GCC-elf implementation */
 #ifdef HAVE_VISIBILITY // this is provided by the configure script, is only
 // enabled for suitable GCC versions
@@ -160,5 +169,14 @@ void QuitAudacity();
 
 // Marks strings for extraction only...must use wxGetTranslation() to translate.
 #define XO(s) wxT(s)
+
+// This renames a good use of this C++ keyword that we don't need to review when hunting for leaks.
+#define PROHIBITED = delete
+
+// Reviewed, certified, non-leaky uses of NEW that immediately entrust their results to RAII objects.
+// You may use it in NEW code when constructing a wxWindow subclass with non-NULL parent window.
+// You may use it in NEW code when the NEW expression is the constructor argument for a standard smart
+// pointer like std::unique_ptr or std::shared_ptr.
+#define safenew new
 
 #endif // __AUDACITY_H__

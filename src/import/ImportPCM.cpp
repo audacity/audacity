@@ -53,6 +53,8 @@
 #include "../WaveTrack.h"
 #include "ImportPlugin.h"
 
+#include <algorithm>
+
 #ifdef USE_LIBID3TAG
    #include <id3tag.h>
    // DM: the following functions were supposed to have been
@@ -67,7 +69,7 @@
 
 #define DESC _("WAV, AIFF, and other uncompressed types")
 
-class PCMImportPlugin : public ImportPlugin
+class PCMImportPlugin final : public ImportPlugin
 {
 public:
    PCMImportPlugin()
@@ -80,29 +82,33 @@ public:
 
    wxString GetPluginStringID() { return wxT("libsndfile"); }
    wxString GetPluginFormatDescription();
-   ImportFileHandle *Open(wxString Filename);
+   std::unique_ptr<ImportFileHandle> Open(const wxString &Filename) override;
 };
 
 
-class PCMImportFileHandle : public ImportFileHandle
+class PCMImportFileHandle final : public ImportFileHandle
 {
 public:
-   PCMImportFileHandle(wxString name, SNDFILE *file, SF_INFO info);
+   PCMImportFileHandle(wxString name, SFFile &&file, SF_INFO info);
    ~PCMImportFileHandle();
 
    wxString GetFileDescription();
    int GetFileUncompressedBytes();
-   int Import(TrackFactory *trackFactory, Track ***outTracks,
-              int *outNumTracks, Tags *tags);
+   int Import(TrackFactory *trackFactory, TrackHolders &outTracks,
+              Tags *tags) override;
 
    wxInt32 GetStreamCount(){ return 1; }
 
-   wxArrayString *GetStreamInfo(){ return NULL; }
+   const wxArrayString &GetStreamInfo() override
+   {
+      static wxArrayString empty;
+      return empty;
+   }
 
    void SetStreamUsage(wxInt32 WXUNUSED(StreamID), bool WXUNUSED(Use)){}
 
 private:
-   SNDFILE              *mFile;
+   SFFile                mFile;
    SF_INFO               mInfo;
    sampleFormat          mFormat;
 };
@@ -118,14 +124,14 @@ wxString PCMImportPlugin::GetPluginFormatDescription()
     return DESC;
 }
 
-ImportFileHandle *PCMImportPlugin::Open(wxString filename)
+std::unique_ptr<ImportFileHandle> PCMImportPlugin::Open(const wxString &filename)
 {
    SF_INFO info;
-   SNDFILE *file = NULL;
+   wxFile f;   // will be closed when it goes out of scope
+   SFFile file;
 
    memset(&info, 0, sizeof(info));
 
-   wxFile f;   // will be closed when it goes out of scope
 
 #ifdef __WXGTK__
    if (filename.Lower().EndsWith(wxT("mp3"))) {
@@ -148,11 +154,11 @@ ImportFileHandle *PCMImportPlugin::Open(wxString filename)
       // Even though there is an sf_open() that takes a filename, use the one that
       // takes a file descriptor since wxWidgets can open a file with a Unicode name and
       // libsndfile can't (under Windows).
-      file = sf_open_fd(f.fd(), SFM_READ, &info, TRUE);
+      file.reset(SFCall<SNDFILE*>(sf_open_fd, f.fd(), SFM_READ, &info, TRUE));
    }
 
    // The file descriptor is now owned by "file", so we must tell "f" to leave
-   // it alone.  The file descriptor is closed by sf_open_fd() even if an error
+   // it alone.  The file descriptor is closed by the destructor of file even if an error
    // occurs.
    f.Detach();
 
@@ -161,7 +167,7 @@ ImportFileHandle *PCMImportPlugin::Open(wxString filename)
       //char str[1000];
       //sf_error_str((SNDFILE *)NULL, str, 1000);
 
-      return NULL;
+      return nullptr;
    } else if (file &&
               (info.format & SF_FORMAT_TYPEMASK) == SF_FORMAT_OGG) {
       // mchinen 15.1.2012 - disallowing libsndfile to handle
@@ -175,16 +181,17 @@ ImportFileHandle *PCMImportPlugin::Open(wxString filename)
       // When the bug is fixed, we can check version to avoid only
       // the broken builds.
 
-      return NULL;
+      return nullptr;
    }
 
-   return new PCMImportFileHandle(filename, file, info);
+   // Success, so now transfer the duty to close the file from "file".
+   return std::make_unique<PCMImportFileHandle>(filename, std::move(file), info);
 }
 
 PCMImportFileHandle::PCMImportFileHandle(wxString name,
-                                         SNDFILE *file, SF_INFO info)
+                                         SFFile &&file, SF_INFO info)
 :  ImportFileHandle(name),
-   mFile(file),
+   mFile(std::move(file)),
    mInfo(info)
 {
    //
@@ -205,7 +212,7 @@ PCMImportFileHandle::PCMImportFileHandle(wxString name,
 
 wxString PCMImportFileHandle::GetFileDescription()
 {
-   return sf_header_name(mInfo.format);
+   return SFCall<wxString>(sf_header_name, mInfo.format);
 }
 
 int PCMImportFileHandle::GetFileUncompressedBytes()
@@ -238,10 +245,10 @@ static wxString AskCopyOrEdit()
       wxDialog dialog(NULL, -1, wxString(_("Warning")));
       dialog.SetName(dialog.GetTitle());
 
-      wxBoxSizer *vbox = new wxBoxSizer(wxVERTICAL);
-      dialog.SetSizer(vbox);
+      wxBoxSizer *vbox;
+      dialog.SetSizer(vbox = safenew wxBoxSizer(wxVERTICAL));
 
-      wxStaticText *message = new wxStaticText(&dialog, -1, wxString::Format(_("\
+      wxStaticText *message = safenew wxStaticText(&dialog, -1, wxString::Format(_("\
 When importing uncompressed audio files you can either copy them \
 into the project, or read them directly from their current location (without copying).\n\n\
 Your current preference is set to %s.\n\n\
@@ -257,21 +264,29 @@ How do you want to import the current file(s)?"), oldCopyPref == wxT("copy") ? _
 
       vbox->Add(message, 1, wxALL | wxEXPAND, 10);
 
-      wxStaticBox *box = new wxStaticBox(&dialog, -1, _("Choose an import method"));
+      wxStaticBox *box = safenew wxStaticBox(&dialog, -1, _("Choose an import method"));
       box->SetName(box->GetLabel());
-      wxStaticBoxSizer *boxsizer = new wxStaticBoxSizer(box, wxVERTICAL);
 
-      wxRadioButton *copyRadio  = new wxRadioButton(&dialog, -1, _("Make a &copy of the files before editing (safer)"), wxDefaultPosition, wxDefaultSize, wxRB_GROUP);
-      boxsizer->Add(copyRadio, 0, wxALL);
-      copyRadio->SetName(wxStripMenuCodes(copyRadio->GetLabel()));
+      wxRadioButton *aliasRadio;
+      wxRadioButton *copyRadio;
+      wxCheckBox *dontAskNextTimeBox;
 
-      wxRadioButton *aliasRadio = new wxRadioButton(&dialog, -1, _("Read the files &directly from the original (faster)"));
-      boxsizer->Add(aliasRadio, 0, wxALL);
-      aliasRadio->SetName(wxStripMenuCodes(aliasRadio->GetLabel()));
+      {
+         auto boxsizer = std::make_unique<wxStaticBoxSizer>(box, wxVERTICAL);
 
-      wxCheckBox *dontAskNextTimeBox = new wxCheckBox(&dialog, -1, _("Don't &warn again and always use my choice above"));
-      boxsizer->Add(dontAskNextTimeBox, 0, wxALL);
-      vbox->Add(boxsizer, 0, wxALL, 10);
+         copyRadio = safenew wxRadioButton(&dialog, -1, _("Make a &copy of the files before editing (safer)"), wxDefaultPosition, wxDefaultSize, wxRB_GROUP);
+         boxsizer->Add(copyRadio, 0, wxALL);
+         copyRadio->SetName(wxStripMenuCodes(copyRadio->GetLabel()));
+
+         aliasRadio = safenew wxRadioButton(&dialog, -1, _("Read the files &directly from the original (faster)"));
+         boxsizer->Add(aliasRadio, 0, wxALL);
+         aliasRadio->SetName(wxStripMenuCodes(aliasRadio->GetLabel()));
+
+         dontAskNextTimeBox = safenew wxCheckBox(&dialog, -1, _("Don't &warn again and always use my choice above"));
+         boxsizer->Add(dontAskNextTimeBox, 0, wxALL);
+         vbox->Add(boxsizer.release(), 0, wxALL, 10);
+      }
+
       dontAskNextTimeBox->SetName(wxStripMenuCodes(dontAskNextTimeBox->GetLabel()));
 
 
@@ -308,11 +323,12 @@ How do you want to import the current file(s)?"), oldCopyPref == wxT("copy") ? _
 }
 
 int PCMImportFileHandle::Import(TrackFactory *trackFactory,
-                                Track ***outTracks,
-                                int *outNumTracks,
+                                TrackHolders &outTracks,
                                 Tags *tags)
 {
-   wxASSERT(mFile);
+   outTracks.clear();
+
+   wxASSERT(mFile.get());
 
    // Get the preference / warn the user about aliased files.
    wxString copyEdit = AskCopyOrEdit();
@@ -328,31 +344,31 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
 
    CreateProgress();
 
-   WaveTrack **channels = new WaveTrack *[mInfo.channels];
+   TrackHolders channels(mInfo.channels);
 
-   int c;
-   for (c = 0; c < mInfo.channels; c++) {
-      channels[c] = trackFactory->NewWaveTrack(mFormat, mInfo.samplerate);
+   auto iter = channels.begin();
+   for (int c = 0; c < mInfo.channels; ++iter, ++c) {
+      *iter = trackFactory->NewWaveTrack(mFormat, mInfo.samplerate);
 
       if (mInfo.channels > 1)
          switch (c) {
          case 0:
-            channels[c]->SetChannel(Track::LeftChannel);
+            iter->get()->SetChannel(Track::LeftChannel);
             break;
          case 1:
-            channels[c]->SetChannel(Track::RightChannel);
+            iter->get()->SetChannel(Track::RightChannel);
             break;
          default:
-            channels[c]->SetChannel(Track::MonoChannel);
+            iter->get()->SetChannel(Track::MonoChannel);
          }
    }
 
    if (mInfo.channels == 2) {
-      channels[0]->SetLinked(true);
+      channels.begin()->get()->SetLinked(true);
    }
 
    sampleCount fileTotalFrames = (sampleCount)mInfo.frames;
-   sampleCount maxBlockSize = channels[0]->GetMaxBlockSize();
+   sampleCount maxBlockSize = channels.begin()->get()->GetMaxBlockSize();
    int updateResult = false;
 
    // If the format is not seekable, we must use 'copy' mode,
@@ -377,8 +393,9 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
          if (i + blockLen > fileTotalFrames)
             blockLen = fileTotalFrames - i;
 
-         for (c = 0; c < mInfo.channels; c++)
-            channels[c]->AppendAlias(mFilename, i, blockLen, c,useOD);
+         auto iter = channels.begin();
+         for (int c = 0; c < mInfo.channels; ++iter, ++c)
+            iter->get()->AppendAlias(mFilename, i, blockLen, c,useOD);
 
          if (++updateCounter == 50) {
             updateResult = mProgress->Update(i, fileTotalFrames);
@@ -393,9 +410,9 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
       {
          ODComputeSummaryTask* computeTask=new ODComputeSummaryTask;
          bool moreThanStereo = mInfo.channels>2;
-         for (c = 0; c < mInfo.channels; c++)
+         for (const auto &channel : channels)
          {
-            computeTask->AddWaveTrack(channels[c]);
+            computeTask->AddWaveTrack(channel.get());
             if(moreThanStereo)
             {
                //if we have 3 more channels, they get imported on seperate tracks, so we add individual tasks for each.
@@ -413,36 +430,51 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
       // samples from the file and store our own local copy of the
       // samples in the tracks.
 
-      samplePtr srcbuffer = NewSamples(maxBlockSize * mInfo.channels,
-                                       mFormat);
-      samplePtr buffer = NewSamples(maxBlockSize, mFormat);
+      // PRL:  guard against excessive memory buffer allocation in case of many channels
+      sampleCount maxBlock = std::min(maxBlockSize,
+         sampleCount(std::numeric_limits<int>::max() /
+                 (mInfo.channels * SAMPLE_SIZE(mFormat)))
+      );
+      if (maxBlock < 1)
+         return eProgressFailed;
+
+      SampleBuffer srcbuffer;
+      while (NULL == srcbuffer.Allocate(maxBlock * mInfo.channels, mFormat).ptr())
+      {
+         maxBlock >>= 1;
+         if (maxBlock < 1)
+            return eProgressFailed;
+      }
+
+      SampleBuffer buffer(maxBlock, mFormat);
 
       unsigned long framescompleted = 0;
 
       long block;
       do {
-         block = maxBlockSize;
+         block = maxBlock;
 
          if (mFormat == int16Sample)
-            block = sf_readf_short(mFile, (short *)srcbuffer, block);
+            block = SFCall<sf_count_t>(sf_readf_short, mFile.get(), (short *)srcbuffer.ptr(), block);
          //import 24 bit int as float and have the append function convert it.  This is how PCMAliasBlockFile works too.
          else
-            block = sf_readf_float(mFile, (float *)srcbuffer, block);
+            block = SFCall<sf_count_t>(sf_readf_float, mFile.get(), (float *)srcbuffer.ptr(), block);
 
          if (block) {
-            for(c=0; c<mInfo.channels; c++) {
+            auto iter = channels.begin();
+            for(int c=0; c<mInfo.channels; ++iter, ++c) {
                if (mFormat==int16Sample) {
                   for(int j=0; j<block; j++)
-                     ((short *)buffer)[j] =
-                        ((short *)srcbuffer)[mInfo.channels*j+c];
+                     ((short *)buffer.ptr())[j] =
+                        ((short *)srcbuffer.ptr())[mInfo.channels*j+c];
                }
                else {
                   for(int j=0; j<block; j++)
-                     ((float *)buffer)[j] =
-                        ((float *)srcbuffer)[mInfo.channels*j+c];
+                     ((float *)buffer.ptr())[j] =
+                        ((float *)srcbuffer.ptr())[mInfo.channels*j+c];
                }
 
-               channels[c]->Append(buffer, (mFormat == int16Sample)?int16Sample:floatSample, block);
+               iter->get()->Append(buffer.ptr(), (mFormat == int16Sample)?int16Sample:floatSample, block);
             }
             framescompleted += block;
          }
@@ -453,70 +485,60 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
             break;
 
       } while (block > 0);
-
-      DeleteSamples(buffer);
-      DeleteSamples(srcbuffer);
    }
 
    if (updateResult == eProgressFailed || updateResult == eProgressCancelled) {
-      for (c = 0; c < mInfo.channels; c++)
-         delete channels[c];
-      delete[] channels;
-
       return updateResult;
    }
 
-   *outNumTracks = mInfo.channels;
-   *outTracks = new Track *[mInfo.channels];
-   for(c = 0; c < mInfo.channels; c++) {
-         channels[c]->Flush();
-         (*outTracks)[c] = channels[c];
-      }
-      delete[] channels;
+   for(const auto &channel : channels) {
+      channel->Flush();
+   }
+   outTracks.swap(channels);
 
    const char *str;
 
-   str = sf_get_string(mFile, SF_STR_TITLE);
+   str = sf_get_string(mFile.get(), SF_STR_TITLE);
    if (str) {
       tags->SetTag(TAG_TITLE, UTF8CTOWX(str));
    }
 
-   str = sf_get_string(mFile, SF_STR_ALBUM);
+   str = sf_get_string(mFile.get(), SF_STR_ALBUM);
    if (str) {
       tags->SetTag(TAG_ALBUM, UTF8CTOWX(str));
    }
 
-   str = sf_get_string(mFile, SF_STR_ARTIST);
+   str = sf_get_string(mFile.get(), SF_STR_ARTIST);
    if (str) {
       tags->SetTag(TAG_ARTIST, UTF8CTOWX(str));
    }
 
-   str = sf_get_string(mFile, SF_STR_COMMENT);
+   str = sf_get_string(mFile.get(), SF_STR_COMMENT);
    if (str) {
       tags->SetTag(TAG_COMMENTS, UTF8CTOWX(str));
    }
 
-   str = sf_get_string(mFile, SF_STR_DATE);
+   str = sf_get_string(mFile.get(), SF_STR_DATE);
    if (str) {
       tags->SetTag(TAG_YEAR, UTF8CTOWX(str));
    }
 
-   str = sf_get_string(mFile, SF_STR_COPYRIGHT);
+   str = sf_get_string(mFile.get(), SF_STR_COPYRIGHT);
    if (str) {
       tags->SetTag(TAG_COPYRIGHT, UTF8CTOWX(str));
    }
 
-   str = sf_get_string(mFile, SF_STR_SOFTWARE);
+   str = sf_get_string(mFile.get(), SF_STR_SOFTWARE);
    if (str) {
       tags->SetTag(TAG_SOFTWARE, UTF8CTOWX(str));
    }
 
-   str = sf_get_string(mFile, SF_STR_TRACKNUMBER);
+   str = sf_get_string(mFile.get(), SF_STR_TRACKNUMBER);
    if (str) {
       tags->SetTag(TAG_TRACK, UTF8CTOWX(str));
    }
 
-   str = sf_get_string(mFile, SF_STR_GENRE);
+   str = sf_get_string(mFile.get(), SF_STR_GENRE);
    if (str) {
       tags->SetTag(TAG_GENRE, UTF8CTOWX(str));
    }
@@ -669,5 +691,4 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
 
 PCMImportFileHandle::~PCMImportFileHandle()
 {
-   sf_close(mFile);
 }

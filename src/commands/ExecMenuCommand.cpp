@@ -24,13 +24,13 @@ wxString ExecMenuCommandType::BuildName()
 
 void ExecMenuCommandType::BuildSignature(CommandSignature &signature)
 {
-   Validator *menuCommandValidator(new Validator());
+   Validator *menuCommandValidator(new DefaultValidator());
    signature.AddParameter(wxT("CommandName"), wxT(""), menuCommandValidator);
 }
 
-Command *ExecMenuCommandType::Create(CommandOutputTarget *target)
+CommandHolder ExecMenuCommandType::Create(std::unique_ptr<CommandOutputTarget> &&target)
 {
-   return new ExecMenuCommand(*this, target);
+   return std::make_shared<ExecMenuCommand>(*this, std::move(target));
 }
 
 bool ExecMenuCommand::Apply(CommandExecutionContext context)
@@ -38,7 +38,7 @@ bool ExecMenuCommand::Apply(CommandExecutionContext context)
    CommandManager *cmdManager = context.GetProject()->GetCommandManager();
 
    wxString cmdName = GetString(wxT("CommandName"));
-   wxUint32 cmdFlags = 0; // TODO ?
-   wxUint32 cmdMask = 0;
+   auto cmdFlags = AlwaysEnabledFlag; // TODO ?
+   auto cmdMask = AlwaysEnabledFlag;
    return cmdManager->HandleTextualCommand(cmdName, cmdFlags, cmdMask);
 }

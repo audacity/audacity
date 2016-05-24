@@ -22,12 +22,12 @@
 
 class ShuttleGui;
 
-class GUIPrefs :public PrefsPanel
+class GUIPrefs final : public PrefsPanel
 {
  public:
    GUIPrefs(wxWindow * parent);
    ~GUIPrefs();
-   virtual bool Apply();
+   bool Apply() override;
 
    static void GetRangeChoices(wxArrayString *pChoices, wxArrayString *pCodes);
 
@@ -45,9 +45,9 @@ class GUIPrefs :public PrefsPanel
    wxArrayString mRangeChoices;
 };
 
-class GUIPrefsFactory : public PrefsPanelFactory
+class GUIPrefsFactory final : public PrefsPanelFactory
 {
 public:
-   virtual PrefsPanel *Create(wxWindow *parent);
+   PrefsPanel *Create(wxWindow *parent) override;
 };
 #endif

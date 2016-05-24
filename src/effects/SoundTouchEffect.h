@@ -34,13 +34,13 @@ using namespace soundtouch;
 
 class WaveTrack;
 
-class EffectSoundTouch : public Effect
+class EffectSoundTouch /* not final */ : public Effect
 {
 public:
 
    // Effect implementation
 
-   virtual bool Process();
+   bool Process() override;
 
    // EffectSoundTouch implementation
 

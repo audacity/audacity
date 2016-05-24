@@ -10,7 +10,7 @@
 *******************************************************************//**
 
 \file Project.cpp
-\brief Implements AudacityProject, DropTarget, and FileObject.
+\brief Implements AudacityProject, DropTarget, and FileObject.F
 Includes Menus.cpp.
 
 *//****************************************************************//**
@@ -143,6 +143,8 @@ scroll information.  It also has some status flags.
 
 #include "FileDialog.h"
 
+#include "UndoManager.h"
+
 #include "toolbars/ToolManager.h"
 #include "toolbars/ControlToolBar.h"
 #include "toolbars/DeviceToolBar.h"
@@ -154,6 +156,10 @@ scroll information.  It also has some status flags.
 #include "toolbars/ToolsToolBar.h"
 #include "toolbars/TranscriptionToolBar.h"
 
+#include "tracks/ui/EditCursorOverlay.h"
+#include "tracks/ui/PlayIndicatorOverlay.h"
+#include "tracks/ui/Scrubbing.h"
+
 #include "commands/ScriptCommandRelay.h"
 #include "commands/CommandDirectory.h"
 #include "commands/CommandTargets.h"
@@ -162,7 +168,7 @@ scroll information.  It also has some status flags.
 
 #include "../images/AudacityLogoAlpha.xpm"
 
-TrackList *AudacityProject::msClipboard = new TrackList();
+std::unique_ptr<TrackList> AudacityProject::msClipboard{ safenew TrackList() };
 double AudacityProject::msClipT0 = 0.0;
 double AudacityProject::msClipT1 = 0.0;
 AudacityProject *AudacityProject::msClipProject = NULL;
@@ -221,7 +227,7 @@ private:
 // This wrapper prevents the scrollbars from retaining focus after being
 // used.  Otherwise, the only way back to the track panel is to click it
 // and that causes your original location to be lost.
-class ScrollBar:public wxScrollBar
+class ScrollBar final : public wxScrollBar
 {
 public:
    ScrollBar(wxWindow* parent, wxWindowID id, long style)
@@ -237,9 +243,33 @@ public:
       }
    }
 
+   void SetScrollbar(int position, int thumbSize,
+                     int range, int pageSize,
+                     bool refresh = true) override;
+
 private:
    DECLARE_EVENT_TABLE()
 };
+
+void ScrollBar::SetScrollbar(int position, int thumbSize,
+                             int range, int pageSize,
+                             bool refresh)
+{
+   // Mitigate flashing of scrollbars by refreshing only when something really changes.
+
+   // PRL:  This may have been made unnecessary by other fixes for flashing, see
+   // commit ac05b190bee7dd0000bce56edb0e5e26185c972f
+
+   auto changed =
+      position != GetThumbPosition() ||
+      thumbSize != GetThumbSize() ||
+      range != GetRange() ||
+      pageSize != GetPageSize();
+   if (!changed)
+      return;
+
+   wxScrollBar::SetScrollbar(position, thumbSize, range, pageSize, refresh);
+}
 
 BEGIN_EVENT_TABLE(ScrollBar, wxScrollBar)
    EVT_SET_FOCUS(ScrollBar::OnSetFocus)
@@ -272,7 +302,7 @@ void SetActiveProject(AudacityProject * project)
 }
 
 #if wxUSE_DRAG_AND_DROP
-class FileObject: public wxFileDataObject
+class FileObject final : public wxFileDataObject
 {
 public:
    FileObject()
@@ -280,6 +310,7 @@ public:
    }
 
    bool IsSupportedFormat(const wxDataFormat & format, Direction WXUNUSED(dir = Get)) const
+      // PRL:  This function does NOT override any inherited virtual!  What does it do?
    {
       if (format.GetType() == wxDF_FILENAME) {
          return true;
@@ -297,7 +328,7 @@ public:
    }
 };
 
-class DropTarget: public wxFileDropTarget
+class DropTarget final : public wxFileDropTarget
 {
 public:
    DropTarget(AudacityProject *proj)
@@ -312,10 +343,10 @@ public:
    }
 
 #if defined(__WXMAC__)
-   bool GetData()
+#if !wxCHECK_VERSION(3, 0, 0)
+   bool GetData() override
    {
       bool foundSupported = false;
-#if !wxCHECK_VERSION(3, 0, 0)
       bool firstFileAdded = false;
       OSErr result;
 
@@ -367,11 +398,11 @@ public:
             break;
          }
       }
-#endif
       return foundSupported;
    }
+#endif
 
-   bool OnDrop(wxCoord x, wxCoord y)
+   bool OnDrop(wxCoord x, wxCoord y) override
    {
       bool foundSupported = false;
 #if !wxCHECK_VERSION(3, 0, 0)
@@ -405,21 +436,19 @@ public:
 
 #endif
 
-   bool OnDropFiles(wxCoord WXUNUSED(x), wxCoord WXUNUSED(y), const wxArrayString& filenames)
+   bool OnDropFiles(wxCoord WXUNUSED(x), wxCoord WXUNUSED(y), const wxArrayString& filenames) override
    {
       //sort by OD non OD.  load Non OD first so user can start editing asap.
       wxArrayString sortednames(filenames);
 
-      ODManager::Pause();
+      ODManager::Pauser pauser;
 
       sortednames.Sort(CompareNoCaseFileName);
       for (unsigned int i = 0; i < sortednames.GetCount(); i++) {
 
          mProject->Import(sortednames[i]);
       }
-      mProject->HandleResize(); // Adjust scrollers for new track sizes.
-
-      ODManager::Resume();
+      mProject->HandleResize(); // Adjust scrollers for NEW track sizes.
 
       return true;
    }
@@ -451,7 +480,7 @@ bool ImportXMLTagHandler::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 
    WaveTrackArray trackArray;
    mProject->Import(strAttr, &trackArray);
-   if (trackArray.IsEmpty())
+   if (trackArray.empty())
       return false;
 
    // Handle other attributes, now that we have the tracks.
@@ -459,7 +488,7 @@ bool ImportXMLTagHandler::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    const wxChar** pAttr;
    bool bSuccess = true;
 
-   for (size_t i = 0; i < trackArray.GetCount(); i++)
+   for (size_t i = 0; i < trackArray.size(); i++)
    {
       // Most of the "import" tag attributes are the same as for "wavetrack" tags,
       // so apply them via WaveTrack::HandleXMLTag().
@@ -490,7 +519,7 @@ AudacityProject *CreateNewAudacityProject()
    bool bIconized;
    GetNextWindowPlacement(&wndRect, &bMaximized, &bIconized);
 
-   //Create and show a new project
+   //Create and show a NEW project
    AudacityProject *p = new AudacityProject(NULL, -1,
                                             wxDefaultPosition,
                                             wxSize(wndRect.width, wndRect.height));
@@ -511,7 +540,7 @@ AudacityProject *CreateNewAudacityProject()
    //Initialise the Listener
    gAudioIO->SetListener(p);
 
-   //Set the new project as active:
+   //Set the NEW project as active:
    SetActiveProject(p);
 
    // Okay, GetActiveProject() is ready. Now we can get its CommandManager,
@@ -555,21 +584,43 @@ void GetDefaultWindowRect(wxRect *defRect)
 {
    *defRect = wxGetClientDisplayRect();
 
-   defRect->width = 940;
-   defRect->height = 674;
+   int width = 940;
+   int height = 674;
 
    //These conditional values assist in improving placement and size
-   //of new windows on different platforms.
+   //of NEW windows on different platforms.
 #ifdef __WXGTK__
-   defRect->height += 20;
+   height += 20;
 #endif
 
 #ifdef __WXMSW__
-   defRect->height += 40;
+   height += 40;
 #endif
+
 #ifdef __WXMAC__
-   defRect->height += 55;
+   height += 55;
 #endif
+
+   // Use screen size where it is smaller than the values we would like.
+   // Otherwise use the values we would like, and centred.
+   if (width < defRect->width)
+   {
+      defRect->x = (defRect->width - width)/2;
+      defRect->width = width;
+   }
+
+   if (height < defRect->height)
+   {
+      defRect->y = (defRect->height - height)/2;
+      // Bug 1119 workaround
+      // Small adjustment for very small Mac screens.
+      // If there is only a tiny space at the top
+      // then instead of vertical centre, align to bottom.
+      const int pixelsFormenu = 60;
+      if( defRect->y < pixelsFormenu )
+         defRect->y *=2;
+      defRect->height = height;
+   }
 }
 
 bool IsWindowAccessible(wxRect *requestedRect)
@@ -628,16 +679,31 @@ void GetNextWindowPlacement(wxRect *nextRect, bool *pMaximized, bool *pIconized)
       windowRect = defaultRect;
    }
 
+   wxRect screenRect = wxGetClientDisplayRect();
+
 #if defined(__WXMAC__)
    // On OSX, the top of the window should never be less than the menu height,
    // so something is amiss if it is
-   if (normalRect.y < defaultRect.y) {
+   if (normalRect.y < screenRect.y) {
       normalRect = defaultRect;
    }
-   if (windowRect.y < defaultRect.y) {
+   if (windowRect.y < screenRect.y) {
       windowRect = defaultRect;
    }
 #endif
+
+
+   // Make sure initial sizes fit within the display bounds
+   // We used to trim the sizes which could result in ridiculously small windows.
+   // contributing to bug 1243.
+   // Now instead if the window doesn't fit the screen, we use the default 
+   // window instead, which we know does.
+   if (!screenRect.Contains( normalRect )) {
+      normalRect = defaultRect;
+   }
+   if (!screenRect.Contains( windowRect )) {
+      windowRect = defaultRect;
+   }
 
    if (gAudacityProjects.IsEmpty()) {
       if (*pMaximized || *pIconized) {
@@ -675,7 +741,6 @@ void GetNextWindowPlacement(wxRect *nextRect, bool *pMaximized, bool *pIconized)
       nextRect->y += inc;
    }
 
-   wxRect screenRect = wxGetClientDisplayRect();
 
    //Have we hit the right side of the screen?
    wxPoint bottomRight = nextRect->GetBottomRight();
@@ -751,8 +816,6 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
                                  const wxPoint & pos,
                                  const wxSize & size)
    : wxFrame(parent, id, wxT("Audacity"), pos, size),
-     mRegionSave(),
-     mLastPlayMode(normalPlay),
      mRate((double) gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"), AudioIO::GetOptimalSupportedSampleRate())),
      mDefaultFormat((sampleFormat) gPrefs->
            Read(wxT("/SamplingRate/DefaultProjectSampleFormat"), floatSample)),
@@ -760,43 +823,8 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
      mSelectionFormat(gPrefs->Read(wxT("/SelectionFormat"), wxT(""))),
      mFrequencySelectionFormatName(gPrefs->Read(wxT("/FrequencySelectionFormatName"), wxT(""))),
      mBandwidthSelectionFormatName(gPrefs->Read(wxT("/BandwidthSelectionFormatName"), wxT(""))),
-     mDirty(false),
-     mRuler(NULL),
-     mTrackPanel(NULL),
-     mTrackFactory(NULL),
-     mAutoScrolling(false),
-     mActive(true),
-     mHistoryWindow(NULL),
-     mLyricsWindow(NULL),
-     mMixerBoard(NULL),
-     mMixerBoardFrame(NULL),
-     mFreqWindow(NULL),
-     mContrastDialog(NULL),
-     mAliasMissingWarningDialog(NULL),
-     mPlaybackMeter(NULL),
-     mCaptureMeter(NULL),
-     mToolManager(NULL),
-     mbBusyImporting(false),
-     mAudioIOToken(-1),
-     mIsDeleting(false),
-     mTracksFitVerticallyZoomed(false),  //lda
-     mShowId3Dialog(true),               //lda
-     mLastFocusedWindow(NULL),
-     mKeyboardCaptureHandler(NULL),
-     mImportXMLTagHandler(NULL),
-     mAutoSaving(false),
-     mIsRecovered(false),
-     mIsCapturing(false),
-     mRecordingRecoveryHandler(NULL),
-     mImportedDependencies(false),
-     mWantSaveCompressed(false),
-     mLastEffect(wxEmptyString),
-     mTimerRecordCanceled(false),
-     mMenuClose(false),
-     mShownOnce(false),
-     mbInitializingScrollbar(false),
-     mViewInfo(0.0, 1.0, ZoomInfo::GetDefaultZoom()),
-     mIsBeingDeleted(false)
+     mUndoManager(safenew UndoManager),
+     mViewInfo(0.0, 1.0, ZoomInfo::GetDefaultZoom())
 {
    // Note that the first field of the status bar is a dummy, and it's width is set
    // to zero latter in the code. This field is needed for wxWidgets 2.8.12 because
@@ -836,8 +864,6 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    mIsSyncLocked = false;
    gPrefs->Read(wxT("/GUI/SyncLockTracks"), &mIsSyncLocked, false);
 
-   CreateMenusAndCommands();
-
    // LLL:  Read this!!!
    //
    // Until the time (and cpu) required to refresh the track panel is
@@ -851,7 +877,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    //
    // Create the ToolDock
    //
-   mToolManager = new ToolManager( this );
+   mToolManager = std::make_unique<ToolManager>( this );
    GetSelectionBar()->SetListener(this);
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    GetSpectralSelectionBar()->SetListener(this);
@@ -861,7 +887,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    //
    // Create the horizontal ruler
    //
-   mRuler = new AdornedRulerPanel( this,
+   mRuler = safenew AdornedRulerPanel( this,
                                    wxID_ANY,
                                    wxDefaultPosition,
                                    wxSize( -1, AdornedRulerPanel::GetRulerHeight() ),
@@ -887,11 +913,11 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    // Not using a notebook, so we place the track panel inside another panel,
    // this keeps the notebook code and normal code consistant and also
    // paves the way for adding additional windows inside the track panel.
-   mMainPanel = new wxPanel(this, -1,
+   mMainPanel = safenew wxPanel(this, -1,
       wxDefaultPosition,
       wxDefaultSize,
       wxNO_BORDER);
-   mMainPanel->SetSizer( new wxBoxSizer(wxVERTICAL) );
+   mMainPanel->SetSizer( safenew wxBoxSizer(wxVERTICAL) );
    pPage = mMainPanel;
    // Set the colour here to the track panel background to avoid
    // flicker when Audacity starts up.
@@ -901,16 +927,20 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    //pPage->SetBackgroundColour( theTheme.Colour( clrDark ));
 #endif
 
-   wxBoxSizer *bs = new wxBoxSizer( wxVERTICAL );
-   bs->Add( mToolManager->GetTopDock(), 0, wxEXPAND | wxALIGN_TOP );
-   bs->Add( mRuler, 0, wxEXPAND );
-   bs->Add( pPage, 1, wxEXPAND );
-   bs->Add( mToolManager->GetBotDock(), 0, wxEXPAND );
-   SetAutoLayout( true );
-   SetSizer( bs );
+   wxBoxSizer *bs;
+   {
+      auto ubs = std::make_unique<wxBoxSizer>(wxVERTICAL);
+      bs = ubs.get();
+      bs->Add(mToolManager->GetTopDock(), 0, wxEXPAND | wxALIGN_TOP);
+      bs->Add(mRuler, 0, wxEXPAND);
+      bs->Add(pPage, 1, wxEXPAND);
+      bs->Add(mToolManager->GetBotDock(), 0, wxEXPAND);
+      SetAutoLayout(true);
+      SetSizer(ubs.release());
+   }
    bs->Layout();
 
-   // The right hand side translates to new TrackPanel(... in normal
+   // The right hand side translates to NEW TrackPanel(...) in normal
    // Audacity without additional DLLs.
    mTrackPanel = TrackPanel::FactoryFunction(pPage,
                                              TrackPanelID,
@@ -920,14 +950,48 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
                                              &mViewInfo,
                                              this,
                                              mRuler);
+   mTrackPanel->UpdatePrefs();
+
+   mIndicatorOverlay = std::make_unique<PlayIndicatorOverlay>(this);
+
+   mCursorOverlay = std::make_unique<EditCursorOverlay>(this);
+
+#ifdef EXPERIMENTAL_SCRUBBING_BASIC
+   mScrubOverlay = std::make_unique<ScrubbingOverlay>(this);
+   mScrubber = std::make_unique<Scrubber>(this);
+#endif
+
+   // More order dependencies here...
+   // This must follow construction of *mIndicatorOverlay, because it must
+   // attach its timer event handler later (so that its handler is invoked
+   // earlier)
+   mPlaybackScroller = std::make_unique<PlaybackScroller>(this);
+
+   // This must follow construction of *mPlaybackScroller,
+   // because it must
+   // attach its timer event handler later (so that its handler is invoked
+   // earlier)
+   this->Connect(EVT_TRACK_PANEL_TIMER,
+      wxCommandEventHandler(ViewInfo::OnTimer),
+      NULL,
+      &mViewInfo);
+
+   // Add the overlays, in the sequence in which they will be painted
+   mTrackPanel->AddOverlay(mIndicatorOverlay.get());
+   mTrackPanel->AddOverlay(mCursorOverlay.get());
+#ifdef EXPERIMENTAL_SCRUBBING_BASIC
+   mTrackPanel->AddOverlay(mScrubOverlay.get());
+#endif
+
+   CreateMenusAndCommands();
 
    // LLL: When Audacity starts or becomes active after returning from
    //      another application, the first window that can accept focus
    //      will be given the focus even if we try to SetFocus().  By
    //      creating the scrollbars after the TrackPanel, we resolve
    //      several focus problems.
-   mHsbar = new ScrollBar(pPage, HSBarID, wxSB_HORIZONTAL);
-   mVsbar = new ScrollBar(pPage, VSBarID, wxSB_VERTICAL);
+   mHsbar = safenew ScrollBar(pPage, HSBarID, wxSB_HORIZONTAL);
+   mVsbar = safenew ScrollBar(pPage, VSBarID, wxSB_VERTICAL);
 
    // LLL: When Audacity starts or becomes active after returning from
    //      another application, the first window that can accept focus
@@ -936,33 +1000,37 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    //      keyboard focus problems.
    pPage->MoveBeforeInTabOrder(mToolManager->GetTopDock());
 
-   bs = (wxBoxSizer *) pPage->GetSizer();
+   bs = (wxBoxSizer *)pPage->GetSizer();
 
-   wxBoxSizer *hs;
-   wxBoxSizer *vs;
+   {
+      // Top horizontal grouping
+      auto hs = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
 
-   // Top horizontal grouping
-   hs = new wxBoxSizer( wxHORIZONTAL );
+      // Track panel
+      hs->Add(mTrackPanel, 1, wxEXPAND | wxALIGN_LEFT | wxALIGN_TOP);
 
-   // Track panel
-   hs->Add( mTrackPanel, 1, wxEXPAND | wxALIGN_LEFT | wxALIGN_TOP );
+      {
+         // Vertical grouping
+         auto vs = std::make_unique<wxBoxSizer>(wxVERTICAL);
 
-   // Vertical grouping
-   vs = new wxBoxSizer( wxVERTICAL );
+         // Vertical scroll bar
+         vs->Add(mVsbar, 1, wxEXPAND | wxALIGN_TOP);
+         hs->Add(vs.release(), 0, wxEXPAND | wxALIGN_TOP);
+      }
 
-   // Vertical scroll bar
-   vs->Add( mVsbar, 1, wxEXPAND | wxALIGN_TOP );
-   hs->Add( vs, 0, wxEXPAND | wxALIGN_TOP );
-   bs->Add( hs, 1, wxEXPAND | wxALIGN_LEFT | wxALIGN_TOP );
+      bs->Add(hs.release(), 1, wxEXPAND | wxALIGN_LEFT | wxALIGN_TOP);
+   }
 
-   // Bottom horizontal grouping
-   hs = new wxBoxSizer( wxHORIZONTAL );
+   {
+      // Bottom horizontal grouping
+      auto hs = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
 
-   // Bottom scrollbar
-   hs->Add( mTrackPanel->GetLeftOffset() - 1, 0 );
-   hs->Add( mHsbar, 1, wxALIGN_BOTTOM );
-   hs->Add( mVsbar->GetSize().GetWidth(), 0 );
-   bs->Add( hs, 0, wxEXPAND | wxALIGN_LEFT );
+      // Bottom scrollbar
+      hs->Add(mTrackPanel->GetLeftOffset() - 1, 0);
+      hs->Add(mHsbar, 1, wxALIGN_BOTTOM);
+      hs->Add(mVsbar->GetSize().GetWidth(), 0);
+      bs->Add(hs.release(), 0, wxEXPAND | wxALIGN_LEFT);
+   }
 
    // Lay it out
    pPage->SetAutoLayout(true);
@@ -979,10 +1047,12 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    // MM: Give track panel the focus to ensure keyboard commands work
    mTrackPanel->SetFocus();
 
+   // Create tags object
+   mTags = std::make_shared<Tags>();
+
    InitialState();
    FixScrollbars();
    mRuler->SetLeftOffset(mTrackPanel->GetLeftOffset());  // bevel on AdornedRuler
-   mRuler->SetProject(this);
 
    //
    // Set the Icon
@@ -990,31 +1060,28 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
 
    // loads either the XPM or the windows resource, depending on the platform
 #if !defined(__WXMAC__) && !defined(__WXX11__)
-   wxIcon *ic;
-   #if defined(__WXMSW__)
-      ic = new wxIcon(wxICON(AudacityLogo));
-   #elif defined(__WXGTK__)
-      ic = new wxIcon(wxICON(AudacityLogoAlpha));
-   #else
-      ic = new wxIcon();
+   {
+#if defined(__WXMSW__)
+      wxIcon ic{ wxICON(AudacityLogo) };
+#elif defined(__WXGTK__)
+      wxIcon ic{wxICON(AudacityLogoAlpha)};
+#else
+      wxIcon ic{};
       ic.CopyFromBitmap(theTheme.Bitmap(bmpAudacityLogo48x48));
-   #endif
-   SetIcon(*ic);
-   delete ic;
+#endif
+      SetIcon(ic);
+   }
 #endif
    mIconized = false;
 
-   // Create tags object
-   mTags = new Tags();
-
-   mTrackFactory = new TrackFactory(mDirManager);
+   mTrackFactory = new TrackFactory(mDirManager, &mViewInfo);
 
    int widths[] = {0, GetControlToolBar()->WidthForStatusBar(mStatusBar), -1, 150};
    mStatusBar->SetStatusWidths(4, widths);
    wxString msg = wxString::Format(_("Welcome to Audacity version %s"),
                                    AUDACITY_VERSION_STRING);
    mStatusBar->SetStatusText(msg, mainStatusBarField);
-   mStatusBar->SetStatusText(GetControlToolBar()->StateForStatusBar(), stateStatusBarField);
+   GetControlToolBar()->UpdateStatusBar(this);
    mLastStatusUpdateTime = ::wxGetUTCTime();
 
    mTimer = new wxTimer(this, AudacityProjectTimerID);
@@ -1039,9 +1106,21 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
 
 AudacityProject::~AudacityProject()
 {
+   // Tool manager gives us capture sometimes
+   if(HasCapture())
+      ReleaseMouse();
+
    if (wxGetApp().GetRecentFiles())
    {
       wxGetApp().GetRecentFiles()->RemoveMenu(mRecentFilesMenu);
+   }
+
+   if(mTrackPanel) {
+#ifdef EXPERIMENTAL_SCRUBBING_BASIC
+      mTrackPanel->RemoveOverlay(mScrubOverlay.get());
+#endif
+      mTrackPanel->RemoveOverlay(mCursorOverlay.get());
+      mTrackPanel->RemoveOverlay(mIndicatorOverlay.get());
    }
 
    wxTheApp->Disconnect(EVT_AUDIOIO_CAPTURE,
@@ -1052,7 +1131,7 @@ AudacityProject::~AudacityProject()
 
 AudioIOStartStreamOptions AudacityProject::GetDefaultPlayOptions()
 {
-   AudioIOStartStreamOptions options;
+   AudioIOStartStreamOptions options { GetRate() };
    options.timeTrack = GetTracks()->GetTimeTrack();
    options.listener = this;
    return options;
@@ -1067,7 +1146,10 @@ void AudacityProject::UpdatePrefsVariables()
    gPrefs->Read(wxT("/GUI/Help"), &mHelpPref, wxT("InBrowser") );
    gPrefs->Read(wxT("/GUI/SelectAllOnNone"), &mSelectAllOnNone, true);
    gPrefs->Read(wxT("/GUI/ShowSplashScreen"), &mShowSplashScreen, true);
-   gPrefs->Read(wxT("/GUI/Solo"), &mSoloPref, wxT("Standard") );
+   gPrefs->Read(wxT("/GUI/Solo"), &mSoloPref, wxT("Simple"));
+   // Update the old default to the NEW default.
+   if (mSoloPref == wxT("Standard"))
+      mSoloPref = wxT("Simple");
    gPrefs->Read(wxT("/GUI/TracksFitVerticallyZoomed"), &mTracksFitVerticallyZoomed, false);
    //   gPrefs->Read(wxT("/GUI/UpdateSpectrogram"), &mViewInfo.bUpdateSpectrogram, true);
 
@@ -1088,7 +1170,7 @@ void AudacityProject::UpdatePrefs()
       mTrackPanel->UpdatePrefs();
    }
    if (mMixerBoard)
-      mMixerBoard->ResizeTrackClusters(); // in case prefs "/GUI/Solo" changed
+      mMixerBoard->UpdatePrefs();
 
    if (mToolManager) {
       mToolManager->UpdatePrefs();
@@ -1200,9 +1282,9 @@ bool AudacityProject::IsAudioActive() const
       gAudioIO->IsStreamActive(GetAudioIOToken());
 }
 
-Tags *AudacityProject::GetTags()
+const Tags *AudacityProject::GetTags()
 {
-   return mTags;
+   return mTags.get();
 }
 
 wxString AudacityProject::GetName()
@@ -1241,6 +1323,34 @@ bool AudacityProject::GetIsEmpty()
    return mTracks->IsEmpty();
 }
 
+bool AudacityProject::SnapSelection()
+{
+   if (mSnapTo != SNAP_OFF) {
+      SelectedRegion &selectedRegion = mViewInfo.selectedRegion;
+      NumericConverter nc(NumericConverter::TIME, GetSelectionFormat(), 0, GetRate());
+      const bool nearest = (mSnapTo == SNAP_NEAREST);
+
+      const double oldt0 = selectedRegion.t0();
+      const double oldt1 = selectedRegion.t1();
+
+      nc.ValueToControls(oldt0, nearest);
+      nc.ControlsToValue();
+      const double t0 = nc.GetValue();
+
+      nc.ValueToControls(oldt1, nearest);
+      nc.ControlsToValue();
+      const double t1 = nc.GetValue();
+
+      if (t0 != oldt0 || t1 != oldt1) {
+         selectedRegion.setTimes(t0, t1);
+         TP_DisplaySelection();
+         return true;
+      }
+   }
+
+   return false;
+}
+
 double AudacityProject::AS_GetRate()
 {
    return mRate;
@@ -1265,6 +1375,8 @@ void AudacityProject::AS_SetSnapTo(int snap)
    gPrefs->Write(wxT("/SnapTo"), mSnapTo);
    gPrefs->Flush();
 
+   SnapSelection();
+
    RedrawProject();
 }
 
@@ -1279,6 +1391,9 @@ void AudacityProject::AS_SetSelectionFormat(const wxString & format)
 
    gPrefs->Write(wxT("/SelectionFormat"), mSelectionFormat);
    gPrefs->Flush();
+
+   if (SnapSelection() && GetTrackPanel())
+      GetTrackPanel()->Refresh(false);
 }
 
 double AudacityProject::SSBL_GetRate() const
@@ -1401,9 +1516,8 @@ void AudacityProject::FinishAutoScroll()
 
    // Call our Scroll method which updates our ViewInfo variables
    // to reflect the positions of the scrollbars
-   wxScrollEvent *dummy = new wxScrollEvent();
-   OnScroll(*dummy);
-   delete dummy;
+   wxScrollEvent dummy;
+   OnScroll(dummy);
 
    mAutoScrolling = false;
 }
@@ -1488,22 +1602,23 @@ double AudacityProject::ScrollingLowerBoundTime() const
    return std::min(mTracks->GetStartTime(), -screen / 2.0);
 }
 
-wxInt64 AudacityProject::PixelWidthBeforeTime(double scrollto) const
+// PRL: Bug1197: we seem to need to compute all in double, to avoid differing results on Mac
+// That's why ViewInfo::TimeRangeToPixelWidth was defined, with some regret.
+double AudacityProject::PixelWidthBeforeTime(double scrollto) const
 {
    const double lowerBound = ScrollingLowerBoundTime();
    return
-      mViewInfo.TimeToPosition(scrollto, 0
-      , true
-      ) -
-      mViewInfo.TimeToPosition(lowerBound, 0
-      , true
-      );
+      // Ignoring fisheye is correct here
+      mViewInfo.TimeRangeToPixelWidth(scrollto - lowerBound);
 }
 
 void AudacityProject::SetHorizontalThumb(double scrollto)
 {
-   wxInt64 max = mHsbar->GetRange() - mHsbar->GetThumbSize();
-   int pos = std::min(max, std::max(wxInt64(0), PixelWidthBeforeTime(scrollto)));
+   const int max = mHsbar->GetRange() - mHsbar->GetThumbSize();
+   const int pos =
+      std::min(max,
+         std::max(0,
+            int(floor(0.5 + PixelWidthBeforeTime(scrollto) * mViewInfo.sbarScale))));
    mHsbar->SetThumbPosition(pos);
 }
 
@@ -1517,9 +1632,8 @@ void AudacityProject::TP_ScrollWindow(double scrollto)
 
    // Call our Scroll method which updates our ViewInfo variables
    // to reflect the positions of the scrollbars
-   wxScrollEvent *dummy = new wxScrollEvent();
-   OnScroll(*dummy);
-   delete dummy;
+   wxScrollEvent dummy;
+   OnScroll(dummy);
 }
 
 //
@@ -1527,7 +1641,7 @@ void AudacityProject::TP_ScrollWindow(double scrollto)
 // handler in Track Panel. A positive argument makes the window
 // scroll down, while a negative argument scrolls up.
 //
-void AudacityProject::TP_ScrollUpDown(int delta)
+bool AudacityProject::TP_ScrollUpDown(int delta)
 {
    int oldPos = mVsbar->GetThumbPosition();
    int pos = oldPos + delta;
@@ -1548,7 +1662,10 @@ void AudacityProject::TP_ScrollUpDown(int delta)
 
       wxScrollEvent dummy;
       OnScroll(dummy);
+      return true;
    }
+   else
+      return false;
 }
 
 void AudacityProject::FixScrollbars()
@@ -1677,11 +1794,11 @@ void AudacityProject::FixScrollbars()
       int scaledSbarH = (int)(mViewInfo.sbarH * mViewInfo.sbarScale);
       int scaledSbarScreen = (int)(mViewInfo.sbarScreen * mViewInfo.sbarScale);
       int scaledSbarTotal = (int)(mViewInfo.sbarTotal * mViewInfo.sbarScale);
-      const int offset = mViewInfo.sbarScale * PixelWidthBeforeTime(0.0);
+      const int offset =
+         int(floor(0.5 + mViewInfo.sbarScale * PixelWidthBeforeTime(0.0)));
 
       mHsbar->SetScrollbar(scaledSbarH + offset, scaledSbarScreen, scaledSbarTotal,
          scaledSbarScreen, TRUE);
-      mHsbar->Refresh();
    }
 
    // Vertical scrollbar
@@ -1689,7 +1806,6 @@ void AudacityProject::FixScrollbars()
                         panelHeight / mViewInfo.scrollStep,
                         totalHeight / mViewInfo.scrollStep,
                         panelHeight / mViewInfo.scrollStep, TRUE);
-   mVsbar->Refresh();
 
    if (refresh || (rescroll &&
        (GetScreenEndTime() - mViewInfo.h) < mViewInfo.total)) {
@@ -1846,7 +1962,7 @@ void AudacityProject::OnShow(wxShowEvent & event)
    //  applicable with wxWidgets 3.0 because it's based on changing the
    //  gdk event handler, a change that would be overridden by wxWidgets's
    //  own gdk event handler change.
-   //  Instead, as a new workaround, specifically protect those processings
+   //  Instead, as a NEW workaround, specifically protect those processings
    //  of wxShowEvent and wxTimerEvent that try to do clipboard operations
    //  from being executed within Yield(). This is done by delaying their
    //  execution by posting pure wxWidgets events - which are never executed
@@ -1959,11 +2075,12 @@ void AudacityProject::OnScroll(wxScrollEvent & WXUNUSED(event))
 /// Determines if flags for command are compatible with current state.
 /// If not, then try some recovery action to make it so.
 /// @return whether compatible or not after any actions taken.
-bool AudacityProject::TryToMakeActionAllowed( wxUint32 & flags, wxUint32 flagsRqd, wxUint32 mask )
+bool AudacityProject::TryToMakeActionAllowed
+   ( CommandFlag & flags, CommandFlag flagsRqd, CommandFlag mask )
 {
    bool bAllowed;
 
-   if( flags == 0 )
+   if( !flags )
       flags = GetUpdateFlags();
 
    bAllowed = ((flags & mask) == (flagsRqd & mask));
@@ -1975,12 +2092,12 @@ bool AudacityProject::TryToMakeActionAllowed( wxUint32 & flags, wxUint32 flagsRq
    if( !mSelectAllOnNone )
       return false;
 
-   wxUint32 MissingFlags = (flags & ~flagsRqd) & mask;
+   auto MissingFlags = (flags & ~flagsRqd) & mask;
 
    // IF selecting all audio won't do any good, THEN return with failure.
-   if( (flags & WaveTracksExistFlag) == 0 )
+   if( !(flags & WaveTracksExistFlag) )
       return false;
-   if( (MissingFlags & ~( TimeSelectedFlag | WaveTracksSelectedFlag))!=0)
+   if( (MissingFlags & ~( TimeSelectedFlag | WaveTracksSelectedFlag)) )
       return false;
 
    OnSelectAll();
@@ -1994,7 +2111,7 @@ void AudacityProject::OnMenu(wxCommandEvent & event)
 
    bool handled = mCommandManager.HandleMenuID(event.GetId(),
                                                GetUpdateFlags(),
-                                               0xFFFFFFFF);
+                                               NoFlagsSpecifed);
 
    if (handled)
       event.Skip(false);
@@ -2071,7 +2188,7 @@ void AudacityProject::OnMouseEvent(wxMouseEvent & event)
 // LL: All objects that have a reference to the DirManager should
 //     be deleted before the final mDirManager->Deref() in this
 //     routine.  Failing to do so can cause unwanted recursion
-//     and/or attempts to delete objects twice.
+//     and/or attempts to DELETE objects twice.
 void AudacityProject::OnCloseWindow(wxCloseEvent & event)
 {
    // We are called for the wxEVT_CLOSE_WINDOW, wxEVT_END_SESSION, and
@@ -2105,7 +2222,7 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
    // audio, and if so, make sure Audio I/O is completely finished.
    // The main point of this is to properly push the state
    // and flush the tracks once we've completely finished
-   // recording new state.
+   // recording NEW state.
    // This code is derived from similar code in
    // AudacityProject::~AudacityProject() and TrackPanel::OnTimer().
    if (GetAudioIOToken()>0 &&
@@ -2123,15 +2240,13 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
       gAudioIO->StopStream();
    }
 
-   // These two lines test for an 'empty' project.
-   // of course it could still have a history at this stage.
-   TrackListIterator iter2(mTracks);
-   bool bHasTracks = (iter2.First() != NULL);
+   // MY: Use routine here so other processes can make same check
+   bool bHasTracks = ProjectHasTracks();
 
    // We may not bother to prompt the user to save, if the
    // project is now empty.
    if (event.CanVeto() && (mEmptyCanBeDirty || bHasTracks)) {
-      if (mUndoManager.UnsavedChanges()) {
+      if (GetUndoManager()->UnsavedChanges()) {
 
          wxString Message = _("Save changes before closing?");
          if( !bHasTracks )
@@ -2179,7 +2294,7 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
    quitOnClose = !mMenuClose;
 #endif
 
-   // DanH: If we're definitely about to quit, delete the clipboard.
+   // DanH: If we're definitely about to quit, DELETE the clipboard.
    //       Doing this after Deref'ing the DirManager causes problems.
    if ((gAudacityProjects.GetCount() == 1) && (quitOnClose || gIsQuitting))
       DeleteClipboard();
@@ -2190,8 +2305,8 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
    // SetMenuBar(NULL);
 
    // Lock all blocks in all tracks of the last saved version, so that
-   // the blockfiles aren't deleted on disk when we delete the blockfiles
-   // in memory.  After it's locked, delete the data structure so that
+   // the blockfiles aren't deleted on disk when we DELETE the blockfiles
+   // in memory.  After it's locked, DELETE the data structure so that
    // there's no memory leak.
    if (mLastSavedTracks) {
       TrackListIterator iter(mLastSavedTracks);
@@ -2202,7 +2317,7 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
          t = iter.Next();
       }
 
-      mLastSavedTracks->Clear(true);
+      mLastSavedTracks->Clear();
       delete mLastSavedTracks;
       mLastSavedTracks = NULL;
    }
@@ -2229,16 +2344,14 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
 
    // Delete the tool manager before the children since it needs
    // to save the state of the toolbars.
-   delete mToolManager;
-   mToolManager = NULL;
+   mToolManager.reset();
 
    DestroyChildren();
 
    delete mTrackFactory;
    mTrackFactory = NULL;
 
-   delete mTags;
-   mTags = NULL;
+   mTags.reset();
 
    delete mImportXMLTagHandler;
    mImportXMLTagHandler = NULL;
@@ -2250,15 +2363,15 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
                        this);
 
    // Delete all the tracks to free up memory and DirManager references.
-   mTracks->Clear(true);
+   mTracks->Clear();
    delete mTracks;
    mTracks = NULL;
 
    // This must be done before the following Deref() since it holds
    // references to the DirManager.
-   mUndoManager.ClearStates();
+   GetUndoManager()->ClearStates();
 
-   // MM: Tell the DirManager it can now delete itself
+   // MM: Tell the DirManager it can now DELETE itself
    // if it finds it is no longer needed. If it is still
    // used (f.e. by the clipboard), it will recognize this
    // and will destroy itself later.
@@ -2272,7 +2385,7 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
    AllProjectsDeleteUnlock();
 
    if (gActiveProject == this) {
-      // Find a new active project
+      // Find a NEW active project
       if (gAudacityProjects.Count() > 0) {
          SetActiveProject(gAudacityProjects[0]);
       }
@@ -2300,14 +2413,21 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
 #endif
    }
 
+   this->Disconnect(EVT_TRACK_PANEL_TIMER,
+      wxCommandEventHandler(ViewInfo::OnTimer),
+      NULL,
+      &mViewInfo);
+
    Destroy();
+   mRuler = nullptr;
 
    mIsBeingDeleted = true;
+
 }
 
 void AudacityProject::OnOpenAudioFile(wxCommandEvent & event)
 {
-   wxString cmd = event.GetString();
+   const wxString &cmd = event.GetString();
 
    if (!cmd.IsEmpty()) {
       OpenFile(cmd);
@@ -2317,7 +2437,7 @@ void AudacityProject::OnOpenAudioFile(wxCommandEvent & event)
 }
 
 // static method, can be called outside of a project
-wxArrayString AudacityProject::ShowOpenDialog(wxString extraformat, wxString extrafilter)
+wxArrayString AudacityProject::ShowOpenDialog(const wxString &extraformat, const wxString &extrafilter)
 {
    FormatList l;
    wxString filter;  ///< List of file format names and extensions, separated
@@ -2333,12 +2453,11 @@ wxArrayString AudacityProject::ShowOpenDialog(wxString extraformat, wxString ext
    }
 
    // Construct the filter
-   l.DeleteContents(true);
    Importer::Get().GetSupportedImportFormats(&l);
 
-   for (FormatList::compatibility_iterator n = l.GetFirst(); n; n = n->GetNext()) {
+   for (const auto &format : l) {
       /* this loop runs once per supported _format_ */
-      Format *f = n->GetData();
+      const Format *f = &format;
 
       wxString newfilter = f->formatName + wxT("|");
       // bung format name into string plus | separator
@@ -2425,7 +2544,7 @@ wxArrayString AudacityProject::ShowOpenDialog(wxString extraformat, wxString ext
 // static method, can be called outside of a project
 bool AudacityProject::IsAlreadyOpen(const wxString & projPathName)
 {
-   wxFileName newProjPathName(projPathName);
+   const wxFileName newProjPathName(projPathName);
    size_t numProjects = gAudacityProjects.Count();
    for (size_t i = 0; i < numProjects; i++)
    {
@@ -2460,10 +2579,10 @@ void AudacityProject::OpenFiles(AudacityProject *proj)
    //For the open menu we load OD first so user can edit asap.
    //first sort selectedFiles.
    selectedFiles.Sort(CompareNoCaseFileName);
-   ODManager::Pause();
+   ODManager::Pauser pauser;
 
    for (size_t ff = 0; ff < selectedFiles.GetCount(); ff++) {
-      wxString fileName = selectedFiles[ff];
+      const wxString &fileName = selectedFiles[ff];
 
       // Make sure it isn't already open.
       if (AudacityProject::IsAlreadyOpen(fileName))
@@ -2473,30 +2592,27 @@ void AudacityProject::OpenFiles(AudacityProject *proj)
       gPrefs->Flush();
 
       // DMM: If the project is dirty, that means it's been touched at
-      // all, and it's not safe to open a new project directly in its
-      // place.  Only if the project is brand-new clean and the user
+      // all, and it's not safe to open a NEW project directly in its
+      // place.  Only if the project is brand-NEW clean and the user
       // hasn't done any action at all is it safe for Open to take place
       // inside the current project.
       //
-      // If you try to Open a new project inside the current window when
+      // If you try to Open a NEW project inside the current window when
       // there are no tracks, but there's an Undo history, etc, then
-      // bad things can happen, including data files moving to the new
+      // bad things can happen, including data files moving to the NEW
       // project directory, etc.
       if (!proj || proj->mDirty || !proj->mTracks->IsEmpty()) {
-         // Open in a new window
+         // Open in a NEW window
          proj = CreateNewAudacityProject();
       }
       // This project is clean; it's never been touched.  Therefore
       // all relevant member variables are in their initial state,
-      // and it's okay to open a new project inside this window.
+      // and it's okay to open a NEW project inside this window.
       proj->OpenFile(fileName);
    }
 
    gPrefs->Write(wxT("/LastOpenType"),wxT(""));
    gPrefs->Flush();
-
-   ODManager::Resume();
-
 }
 
 // Most of this string was duplicated 3 places. Made the warning consistent in this global.
@@ -2526,19 +2642,19 @@ bool AudacityProject::WarnOfLegacyFile( )
 
 // FIXME? This should return a result that is checked.
 //    See comment in AudacityApp::MRUOpen().
-void AudacityProject::OpenFile(wxString fileName, bool addtohistory)
+void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
 {
    // On Win32, we may be given a short (DOS-compatible) file name on rare
    // occassions (e.g. stuff like "C:\PROGRA~1\AUDACI~1\PROJEC~1.AUP"). We
    // convert these to long file name first.
-   fileName = PlatformCompatibility::ConvertSlashInFileName(
-      PlatformCompatibility::GetLongFileName(fileName));
+   wxString fileName = PlatformCompatibility::ConvertSlashInFileName(
+      PlatformCompatibility::GetLongFileName(fileNameArg));
 
    // Make sure it isn't already open.
    // Vaughan, 2011-03-25: This was done previously in AudacityProject::OpenFiles()
    //    and AudacityApp::MRUOpen(), but if you open an aup file by double-clicking it
    //    from, e.g., Win Explorer, it would bypass those, get to here with no check,
-   //    then open a new project from the same data with no warning.
+   //    then open a NEW project from the same data with no warning.
    //    This was reported in http://bugzilla.audacityteam.org/show_bug.cgi?id=137#c17,
    //    but is not really part of that bug. Anyway, prevent it!
    if (AudacityProject::IsAlreadyOpen(fileName))
@@ -2569,25 +2685,24 @@ void AudacityProject::OpenFile(wxString fileName, bool addtohistory)
    // for a long time searching for line breaks.  So, we look for our
    // signature at the beginning of the file first:
 
-   wxFFile *ff = new wxFFile(fileName, wxT("rb"));
-   if (!ff->IsOpened()) {
-      wxMessageBox(_("Could not open file: ") + fileName,
-                   _("Error opening file"),
-                   wxOK | wxCENTRE, this);
-   }
    char buf[16];
-   int numRead = ff->Read(buf, 15);
-   if (numRead != 15) {
-      wxMessageBox(wxString::Format(_("File may be invalid or corrupted: \n%s"),
-                   (const wxChar*)fileName), _("Error Opening File or Project"),
-                   wxOK | wxCENTRE, this);
-      ff->Close();
-      delete ff;
-      return;
+   {
+      wxFFile ff(fileName, wxT("rb"));
+      if (!ff.IsOpened()) {
+         wxMessageBox(_("Could not open file: ") + fileName,
+            _("Error opening file"),
+            wxOK | wxCENTRE, this);
+      }
+      int numRead = ff.Read(buf, 15);
+      if (numRead != 15) {
+         wxMessageBox(wxString::Format(_("File may be invalid or corrupted: \n%s"),
+            (const wxChar*)fileName), _("Error Opening File or Project"),
+            wxOK | wxCENTRE, this);
+         ff.Close();
+         return;
+      }
+      buf[15] = 0;
    }
-   buf[15] = 0;
-   ff->Close();
-   delete ff;
 
    wxString temp = LAT1CTOWX(buf);
 
@@ -2596,8 +2711,8 @@ void AudacityProject::OpenFile(wxString fileName, bool addtohistory)
       // If they bail out, return and do no more.
       if( !WarnOfLegacyFile() )
          return;
-      // Convert to the new format.
-      bool success = ConvertLegacyProjectFile(wxFileName(fileName));
+      // Convert to the NEW format.
+      bool success = ConvertLegacyProjectFile(wxFileName{ fileName });
       if (!success) {
          wxMessageBox(_("Audacity was unable to convert an Audacity 1.0 project to the new project format."),
                       _("Error Opening Project"),
@@ -2653,7 +2768,7 @@ void AudacityProject::OpenFile(wxString fileName, bool addtohistory)
 
       bool err = false;
       Track *t;
-      TrackListIterator iter(mTracks);
+      TrackListIterator iter(GetTracks());
       mLastSavedTracks = new TrackList();
 
       t = iter.First();
@@ -2725,8 +2840,8 @@ void AudacityProject::OpenFile(wxString fileName, bool addtohistory)
 
       if (mIsRecovered)
       {
-         // This project has been recovered, so write a new auto-save file
-         // now and then delete the old one in the auto-save folder. Note that
+         // This project has been recovered, so write a NEW auto-save file
+         // now and then DELETE the old one in the auto-save folder. Note that
          // at this point mFileName != fileName, because when opening a
          // recovered file mFileName is faked to point to the original file
          // which has been recovered, not the one in the auto-save folder.
@@ -2839,7 +2954,7 @@ void AudacityProject::OpenFile(wxString fileName, bool addtohistory)
                   newTasks[i]->AddWaveTrack((WaveTrack*)tr);
             }
 
-            //create whatever new tasks we need to.
+            //create whatever NEW tasks we need to.
             //we want at most one instance of each class for the project
             while((odFlags|createdODTasks) != createdODTasks)
             {
@@ -3083,7 +3198,7 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 
    if (wxStrcmp(tag, wxT("audacityproject")) &&
        wxStrcmp(tag, wxT("project"))) {
-      // If the tag name is not one of these two (the new name is
+      // If the tag name is not one of these two (the NEW name is
       // "project" with an Audacity namespace, but we don't detect
       // the namespace yet), then we don't know what the error is
       return false;
@@ -3099,33 +3214,25 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 XMLTagHandler *AudacityProject::HandleXMLChild(const wxChar *tag)
 {
    if (!wxStrcmp(tag, wxT("tags"))) {
-      return mTags;
+      return mTags.get();
    }
 
    if (!wxStrcmp(tag, wxT("wavetrack"))) {
-      WaveTrack *newTrack = mTrackFactory->NewWaveTrack();
-      mTracks->Add(newTrack);
-      return newTrack;
+      return mTracks->Add(mTrackFactory->NewWaveTrack());
    }
 
    #ifdef USE_MIDI
    if (!wxStrcmp(tag, wxT("notetrack"))) {
-      NoteTrack *newTrack = mTrackFactory->NewNoteTrack();
-      mTracks->Add(newTrack);
-      return newTrack;
+      return mTracks->Add(mTrackFactory->NewNoteTrack());
    }
    #endif // USE_MIDI
 
    if (!wxStrcmp(tag, wxT("labeltrack"))) {
-      LabelTrack *newTrack = mTrackFactory->NewLabelTrack();
-      mTracks->Add(newTrack);
-      return newTrack;
+      return mTracks->Add(mTrackFactory->NewLabelTrack());
    }
 
    if (!wxStrcmp(tag, wxT("timetrack"))) {
-      TimeTrack *newTrack = mTrackFactory->NewTimeTrack();
-      mTracks->Add(newTrack);
-      return newTrack;
+      return mTracks->Add(mTrackFactory->NewTimeTrack());
    }
 
    if (!wxStrcmp(tag, wxT("recordingrecovery"))) {
@@ -3261,30 +3368,6 @@ void AudacityProject::WriteXML(XMLWriter &xmlFile)
 
 }
 
-// Lock all blocks in all tracks of the last saved version
-void AudacityProject::LockAllBlocks()
-{
-   TrackListIterator iter(mLastSavedTracks);
-   Track *t = iter.First();
-   while (t) {
-      if (t->GetKind() == Track::Wave)
-         ((WaveTrack *) t)->Lock();
-      t = iter.Next();
-   }
-}
-
-// Unlock all blocks in all tracks of the last saved version
-void AudacityProject::UnlockAllBlocks()
-{
-   TrackListIterator iter(mLastSavedTracks);
-   Track *t = iter.First();
-   while (t) {
-      if (t->GetKind() == Track::Wave)
-         ((WaveTrack *) t)->Unlock();
-      t = iter.Next();
-   }
-}
-
 #if 0
 // I added this to "fix" bug #334.  At that time, we were on wxWidgets 2.8.12 and
 // there was a window between the closing of the "Save" progress dialog and the
@@ -3331,7 +3414,7 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
       bool bHasTracks = (iter.First() != NULL);
       if (!bHasTracks)
       {
-         if (mUndoManager.UnsavedChanges() && mEmptyCanBeDirty) {
+         if (GetUndoManager()->UnsavedChanges() && mEmptyCanBeDirty) {
             int result = wxMessageBox(_("Your project is now empty.\nIf saved, the project will have no tracks.\n\nTo save any previously open tracks:\nClick 'No', Edit > Undo until all tracks\nare open, then File > Save Project.\n\nSave anyway?"),
                                       _("Warning - Empty Project"),
                                       wxYES_NO | wxICON_QUESTION, this);
@@ -3409,21 +3492,29 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
       else
       {
          // We are about to move files from the current directory to
-         // the new directory.  We need to make sure files that belonged
+         // the NEW directory.  We need to make sure files that belonged
          // to the last saved project don't get erased, so we "lock" them, so that
          // SetProject() copies instead of moves the files.
-         // (Otherwise the new project would be fine, but the old one would
+         // (Otherwise the NEW project would be fine, but the old one would
          // be empty of all of its files.)
 
-         if (mLastSavedTracks && !overwrite)
-            LockAllBlocks();
+         std::vector<movable_ptr<WaveTrack::Locker>> lockers;
+         if (mLastSavedTracks && !overwrite) {
+            lockers.reserve(mLastSavedTracks->size());
+            TrackListIterator iter(mLastSavedTracks);
+            Track *t = iter.First();
+            while (t) {
+               if (t->GetKind() == Track::Wave)
+                  lockers.push_back(
+                     make_movable<WaveTrack::Locker>(
+                        static_cast<const WaveTrack*>(t)));
+               t = iter.Next();
+            }
+         }
 
          // This renames the project directory, and moves or copies
          // all of our block files over.
          success = mDirManager->SetProject(projPath, projName, !overwrite);
-
-         if (mLastSavedTracks && !overwrite)
-            UnlockAllBlocks();
       }
 
       if (!success) {
@@ -3449,17 +3540,15 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
 
       saveFile.Close();
    }
-   catch (XMLFileWriterException* pException)
+   catch (const XMLFileWriterException &exception)
    {
       wxMessageBox(wxString::Format(
          _("Couldn't write to file \"%s\": %s"),
-         mFileName.c_str(), pException->GetMessage().c_str()),
+         mFileName.c_str(), exception.GetMessage().c_str()),
          _("Error Saving Project"), wxICON_ERROR);
 
-      delete pException;
-
       // When XMLWriter throws an exception, it tries to close it before,
-      // so we can at least try to delete the incomplete file and move the
+      // so we can at least try to DELETE the incomplete file and move the
       // backup file over.
       if (safetyFileName != wxT(""))
       {
@@ -3474,14 +3563,14 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
       mWantSaveCompressed = false; // Don't want this mode for AudacityProject::WriteXML() any more.
    else
    {
-      // Now that we have saved the file, we can delete the auto-saved version
+      // Now that we have saved the file, we can DELETE the auto-saved version
       DeleteCurrentAutoSaveFile();
 
       if (mIsRecovered)
       {
          // This was a recovered file, that is, we have just overwritten the
          // old, crashed .aup file. There may still be orphaned blockfiles in
-         // this directory left over from the crash, so we delete them now
+         // this directory left over from the crash, so we DELETE them now
          mDirManager->RemoveOrphanBlockfiles();
 
          // Before we saved this, this was a recovered project, but now it is
@@ -3497,7 +3586,7 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
       }
 
       if (mLastSavedTracks) {
-         mLastSavedTracks->Clear(true);
+         mLastSavedTracks->Clear();
          delete mLastSavedTracks;
       }
 
@@ -3505,10 +3594,8 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
 
       TrackListIterator iter(mTracks);
       Track *t = iter.First();
-      Track *dupT;
       while (t) {
-         dupT = t->Duplicate();
-         mLastSavedTracks->Add(dupT);
+         mLastSavedTracks->Add(t->Duplicate());
 
          //only after the xml has been saved we can mark it saved.
          //thus is because the OD blockfiles change on  background thread while this is going on.
@@ -3518,10 +3605,10 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
          t = iter.Next();
       }
 
-      mUndoManager.StateSaved();
+      GetUndoManager()->StateSaved();
    }
 
-   // If we get here, saving the project was successful, so we can delete
+   // If we get here, saving the project was successful, so we can DELETE
    // the .bak file (because it now does not fit our block files anymore
    // anyway).
    if (safetyFileName != wxT(""))
@@ -3540,26 +3627,22 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
       // but that code is really tied into the dialogs.
 
       // Copy the tracks because we're going to do some state changes before exporting.
-      Track* pSavedTrack;
       Track* pTrack;
       WaveTrack* pWaveTrack;
       TrackListOfKindIterator iter(Track::Wave, mTracks);
       unsigned int numWaveTracks = 0;
-      TrackList* pSavedTrackList = new TrackList();
+
+      TrackList pSavedTrackList;
       for (pTrack = iter.First(); pTrack != NULL; pTrack = iter.Next())
       {
          numWaveTracks++;
          pWaveTrack = (WaveTrack*)pTrack;
-         pSavedTrack = mTrackFactory->DuplicateWaveTrack(*pWaveTrack);
-         pSavedTrackList->Add(pSavedTrack);
+         pSavedTrackList.Add(mTrackFactory->DuplicateWaveTrack(*pWaveTrack));
       }
 
       if (numWaveTracks == 0)
-      {
          // Nothing to save compressed => success. Delete the copies and go.
-         delete pSavedTrackList;
          return true;
-      }
 
       // Okay, now some bold state-faking to default values.
       for (pTrack = iter.First(); pTrack != NULL; pTrack = iter.Next())
@@ -3611,7 +3694,8 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
       }
 
       // Restore the saved track states and clean up.
-      TrackListIterator savedTrackIter(pSavedTrackList);
+      TrackListIterator savedTrackIter(&pSavedTrackList);
+      Track *pSavedTrack;
       for (pTrack = iter.First(), pSavedTrack = savedTrackIter.First();
             ((pTrack != NULL) && (pSavedTrack != NULL));
             pTrack = iter.Next(), pSavedTrack = savedTrackIter.Next())
@@ -3625,56 +3709,56 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
          pWaveTrack->SetPan(((WaveTrack*)pSavedTrack)->GetPan());
       }
 
-      pSavedTrackList->Clear(true);
-      delete pSavedTrackList;
-
       return bSuccess;
    }
 #endif
 
 
-void AudacityProject::AddImportedTracks(wxString fileName,
-                                        Track **newTracks, int numTracks)
+void AudacityProject::AddImportedTracks(const wxString &fileName,
+                                        TrackHolders &&newTracks)
 {
+   const auto numTracks = newTracks.size();
    SelectNone();
 
    bool initiallyEmpty = mTracks->IsEmpty();
    double newRate = 0;
    wxString trackNameBase = fileName.AfterLast(wxFILE_SEP_PATH).BeforeLast('.');
    bool isLinked = false;
-   for (int i = 0; i < numTracks; i++) {
-      if (newRate == 0 && newTracks[i]->GetKind() == Track::Wave) {
-         newRate = ((WaveTrack *)newTracks[i])->GetRate();
+   int i = -1;
+   for (auto &uNewTrack : newTracks) {
+      ++i;
+
+      auto newTrack = mTracks->Add(std::move(uNewTrack));
+      if (newRate == 0 && newTrack->GetKind() == Track::Wave) {
+         newRate = ((WaveTrack *)newTrack)->GetRate();
       }
-      mTracks->Add(newTracks[i]);
-      newTracks[i]->SetSelected(true);
+      newTrack->SetSelected(true);
       //we need to check link status based on the first channel only.
       if(0==i)
-         isLinked = newTracks[i]->GetLinked();
+         isLinked = newTrack->GetLinked();
       if (numTracks > 2 || (numTracks > 1 && !isLinked) ) {
-         newTracks[i]->SetName(trackNameBase + wxString::Format(wxT(" %d" ), i + 1));
+         newTrack->SetName(trackNameBase + wxString::Format(wxT(" %d" ), i + 1));
       }
       else {
-         newTracks[i]->SetName(trackNameBase);
+         newTrack->SetName(trackNameBase);
       }
 
-      // Check if new track contains aliased blockfiles and if yes,
+      // Check if NEW track contains aliased blockfiles and if yes,
       // remember this to show a warning later
-      if (newTracks[i]->GetKind() == WaveTrack::Wave)
+      if (newTrack->GetKind() == WaveTrack::Wave)
       {
-         WaveClip* clip = ((WaveTrack*)newTracks[i])->GetClipByIndex(0);
-         if (clip && clip->GetSequence()->GetBlockArray()->GetCount())
+         WaveClip* clip = ((WaveTrack*)newTrack)->GetClipByIndex(0);
+         BlockArray &blocks = clip->GetSequence()->GetBlockArray();
+         if (clip && blocks.size())
          {
-            SeqBlock* block = clip->GetSequence()->GetBlockArray()->Item(0);
-            if (block->f->IsAlias())
+            SeqBlock& block = blocks[0];
+            if (block.f->IsAlias())
             {
                mImportedDependencies = true;
             }
          }
       }
    }
-
-   delete[]newTracks;
 
    // Automatically assign rate of imported file to whole project,
    // if this is the first file that is imported
@@ -3685,6 +3769,15 @@ void AudacityProject::AddImportedTracks(wxString fileName,
 
    PushState(wxString::Format(_("Imported '%s'"), fileName.c_str()),
              _("Import"));
+
+#if defined(__WXGTK__)
+   // See bug #1224
+   // The track panel hasn't we been fully created, so the OnZoomFit() will not give
+   // expected results due to a window width of zero.  Should be safe to yield here to
+   // allow the creattion to complete.  If this becomes a problem, it "might" be possible
+   // to queue a dummy event to trigger the OnZoomFit().
+   wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI | wxEVT_CATEGORY_USER_INPUT);
+#endif
 
    OnZoomFit();
 
@@ -3700,19 +3793,48 @@ void AudacityProject::AddImportedTracks(wxString fileName,
 
    // Moved this call to higher levels to prevent flicker redrawing everything on each file.
    //   HandleResize();
+
+   newTracks.clear();
 }
 
-// If pNewTrackList is passed in non-NULL, it gets filled with the pointers to new tracks.
-bool AudacityProject::Import(wxString fileName, WaveTrackArray* pTrackArray /*= NULL*/)
+// If pNewTrackList is passed in non-NULL, it gets filled with the pointers to NEW tracks.
+bool AudacityProject::Import(const wxString &fileName, WaveTrackArray* pTrackArray /*= NULL*/)
 {
-   Track **newTracks;
-   int numTracks;
-   wxString errorMessage=wxT("");
+   TrackHolders newTracks;
+   wxString errorMessage = wxEmptyString;
 
-   numTracks = Importer::Get().Import(fileName,
+   // Backup Tags, before the import.  Be prepared to roll back changes.
+   struct TempTags {
+      TempTags(std::shared_ptr<Tags> & pTags_)
+         : pTags(pTags_)
+      {
+         oldTags = pTags;
+         if (oldTags)
+            pTags = oldTags->Duplicate();
+      }
+
+      ~TempTags()
+      {
+         if (oldTags) {
+            // roll back
+            pTags = oldTags;
+         }
+      }
+
+      void Commit()
+      {
+         oldTags.reset();
+      }
+
+      std::shared_ptr<Tags> & pTags;
+      std::shared_ptr<Tags> oldTags;
+   };
+   TempTags tempTags(mTags);
+
+   bool success = Importer::Get().Import(fileName,
                                             mTrackFactory,
-                                            &newTracks,
-                                            mTags,
+                                            newTracks,
+                                            mTags.get(),
                                             errorMessage);
 
    if (!errorMessage.IsEmpty()) {
@@ -3723,28 +3845,37 @@ bool AudacityProject::Import(wxString fileName, WaveTrackArray* pTrackArray /*= 
       ShowErrorDialog(this, _("Error Importing"),
                  errorMessage, wxT("innerlink:wma-proprietary"));
    }
-   if (numTracks <= 0)
+   if (!success)
       return false;
 
    wxGetApp().AddFileToHistory(fileName);
 
+   // no more errors
+   tempTags.Commit();
+
    // for LOF ("list of files") files, do not import the file as if it
    // were an audio file itself
    if (fileName.AfterLast('.').IsSameAs(wxT("lof"), false)) {
+      // PRL: don't redundantly do the steps below, because we already
+      // did it in case of LOF, because of some weird recursion back to this
+      // same function.  I think this should be untangled.
+
+      // So Undo history push is not bypassed, despite appearances.
       return false;
    }
 
    // Have to set up newTrackList before calling AddImportedTracks,
    // because AddImportedTracks deletes newTracks.
    if (pTrackArray) {
-      for (int i = 0; i < numTracks; i++) {
-         if (newTracks[i]->GetKind() == Track::Wave) {
-            pTrackArray->Add((WaveTrack *)newTracks[i]);
+      for (const auto &newTrack : newTracks) {
+         if (newTrack->GetKind() == Track::Wave) {
+            pTrackArray->push_back(static_cast<WaveTrack *>(newTrack.get()));
          }
       }
    }
 
-   AddImportedTracks(fileName, newTracks, numTracks);
+   // PRL: Undo history is incremented inside this:
+   AddImportedTracks(fileName, std::move(newTracks));
 
    int mode = gPrefs->Read(wxT("/AudioFiles/NormalizeOnLoad"), 0L);
    if (mode == 1) {
@@ -3763,7 +3894,7 @@ bool AudacityProject::SaveAs(const wxString & newFileName, bool bWantSaveCompres
 {
    wxString oldFileName = mFileName;
 
-   //check to see if the new project file already exists.
+   //check to see if the NEW project file already exists.
    //We should only overwrite it if this project already has the same name, where the user
    //simply chose to use the save as command although the save command would have the effect.
    if(mFileName!=newFileName && wxFileExists(newFileName)) {
@@ -3832,7 +3963,7 @@ For an audio file that will open in other apps, use 'Export'.\n"),
 
    // JKC: I removed 'wxFD_OVERWRITE_PROMPT' because we are checking
    // for overwrite ourselves later, and we disallow it.
-   // We disallow overwrite because we would have to delete the many
+   // We disallow overwrite because we would have to DELETE the many
    // smaller files too, or prompt to move them.
    wxString fName = FileSelector(sDialogTitle,
                                  filename.GetPath(),
@@ -3849,7 +3980,7 @@ For an audio file that will open in other apps, use 'Export'.\n"),
    filename.SetExt(wxT("aup"));
    fName = filename.GetFullPath();
 
-   //check to see if the new project file already exists.
+   //check to see if the NEW project file already exists.
    //We should only overwrite it if this project already has the same name, where the user
    //simply chose to use the save as command although the save command would have the effect.
    if (mFileName != fName && filename.FileExists()) {
@@ -3896,12 +4027,12 @@ void AudacityProject::InitialState()
       mImportXMLTagHandler = NULL;
    }
 
-   mUndoManager.ClearStates();
+   GetUndoManager()->ClearStates();
 
-   mUndoManager.PushState(mTracks, mViewInfo.selectedRegion,
+   GetUndoManager()->PushState(mTracks, mViewInfo.selectedRegion, mTags,
                           _("Created new project"), wxT(""));
 
-   mUndoManager.StateSaved();
+   GetUndoManager()->StateSaved();
 
    if (mHistoryWindow)
       mHistoryWindow->UpdateDisplay();
@@ -3913,11 +4044,16 @@ void AudacityProject::InitialState()
    this->UpdateMixerBoard();
 }
 
-void AudacityProject::PushState(wxString desc,
-                                wxString shortDesc,
-                                int flags )
+void AudacityProject::PushState(const wxString &desc, const wxString &shortDesc)
 {
-   mUndoManager.PushState(mTracks, mViewInfo.selectedRegion,
+   PushState(desc, shortDesc, UndoPush::AUTOSAVE);
+}
+
+void AudacityProject::PushState(const wxString &desc,
+                                const wxString &shortDesc,
+                                UndoPush flags )
+{
+   GetUndoManager()->PushState(mTracks, mViewInfo.selectedRegion, mTags,
                           desc, shortDesc, flags);
 
    mDirty = true;
@@ -3942,7 +4078,7 @@ void AudacityProject::PushState(wxString desc,
 
    if (GetTracksFitVerticallyZoomed())
       this->DoZoomFitV();
-   if( (flags & PUSH_AUTOSAVE)!= 0)
+   if((flags & UndoPush::AUTOSAVE) != UndoPush::MINIMAL)
       AutoSave();
 }
 
@@ -3953,7 +4089,7 @@ void AudacityProject::RollbackState()
 
 void AudacityProject::ModifyState(bool bWantsAutoSave)
 {
-   mUndoManager.ModifyState(mTracks, mViewInfo.selectedRegion);
+   GetUndoManager()->ModifyState(mTracks, mViewInfo.selectedRegion, mTags);
    if (bWantsAutoSave)
       AutoSave();
 }
@@ -3961,19 +4097,22 @@ void AudacityProject::ModifyState(bool bWantsAutoSave)
 // LL:  Is there a memory leak here as "l" and "t" are not deleted???
 // Vaughan, 2010-08-29: No, as "l" is a TrackList* of an Undo stack state.
 //    Need to keep it and its tracks "t" available for Undo/Redo/SetStateTo.
-void AudacityProject::PopState(TrackList * l)
+void AudacityProject::PopState(const UndoState &state)
 {
-   mTracks->Clear(true);
-   TrackListIterator iter(l);
+   // Restore tags
+   mTags = state.tags;
+
+   TrackList *const tracks = state.tracks.get();
+
+   mTracks->Clear();
+   TrackListIterator iter(tracks);
    Track *t = iter.First();
    bool odUsed = false;
    ODComputeSummaryTask* computeTask = NULL;
-   Track* copyTrack;
 
    while (t)
    {
-      copyTrack=t->Duplicate();
-      mTracks->Add(copyTrack);
+      auto copyTrack = mTracks->Add(t->Duplicate());
 
       //add the track to OD if the manager exists.  later we might do a more rigorous check...
       if (copyTrack->GetKind() == Track::Wave)
@@ -4013,9 +4152,9 @@ void AudacityProject::PopState(TrackList * l)
 
 void AudacityProject::SetStateTo(unsigned int n)
 {
-   TrackList *l =
-       mUndoManager.SetStateTo(n, &mViewInfo.selectedRegion);
-   PopState(l);
+   const UndoState &state =
+       GetUndoManager()->SetStateTo(n, &mViewInfo.selectedRegion);
+   PopState(state);
 
    HandleResize();
    mTrackPanel->SetFocusedTrack(NULL);
@@ -4046,9 +4185,7 @@ void AudacityProject::UpdateLyrics()
 
    Lyrics* pLyricsPanel = mLyricsWindow->GetLyricsPanel();
    pLyricsPanel->Clear();
-   for (int i = 0; i < pLabelTrack->GetNumLabels(); i++)
-      pLyricsPanel->Add(pLabelTrack->GetLabel(i)->getT0(),
-                        pLabelTrack->GetLabel(i)->title);
+   pLyricsPanel->AddLabels(pLabelTrack);
    pLyricsPanel->Finish(pLabelTrack->GetEndTime());
    pLyricsPanel->Update(this->GetSel0());
 }
@@ -4071,17 +4208,13 @@ void AudacityProject::UpdateMixerBoard()
 //static
 TrackList *AudacityProject::GetClipboardTracks()
 {
-   return msClipboard;
+   return msClipboard.get();
 }
 
 //static
 void AudacityProject::DeleteClipboard()
 {
-   if (msClipboard) {
-      msClipboard->Clear( true );
-      delete msClipboard;
-      msClipboard = NULL;
-   }
+   msClipboard.reset();
 }
 
 //static
@@ -4100,7 +4233,7 @@ void AudacityProject::ClearClipboard()
    msClipT1 = 0.0;
    msClipProject = NULL;
    if (msClipboard) {
-      msClipboard->Clear(true);
+      msClipboard->Clear();
    }
 }
 
@@ -4395,32 +4528,26 @@ void AudacityProject::GetRegionsByLabel( Regions &regions )
             const LabelStruct *ls = lt->GetLabel( i );
             if( ls->selectedRegion.t0() >= mViewInfo.selectedRegion.t0() &&
                 ls->selectedRegion.t1() <= mViewInfo.selectedRegion.t1() )
-            {
-               Region *region = new Region;
-               region->start = ls->getT0();
-               region->end = ls->getT1();
-               regions.Add( region );
-            }
+               regions.push_back(Region(ls->getT0(), ls->getT1()));
          }
       }
 
    //anything to do ?
-   if( regions.GetCount() == 0 )
+   if( regions.size() == 0 )
       return;
 
    //sort and remove unnecessary regions
-   regions.Sort( Region::cmp );
+   std::sort(regions.begin(), regions.end());
    unsigned int selected = 1;
-   while( selected < regions.GetCount() )
+   while( selected < regions.size() )
    {
-      Region *cur = regions.Item( selected );
-      Region *last = regions.Item( selected - 1 );
-      if( cur->start < last->end )
+      const Region &cur = regions.at( selected );
+      Region &last = regions.at( selected - 1 );
+      if( cur.start < last.end )
       {
-         if( cur->end > last->end )
-            last->end = cur->end;
-         delete cur;
-         regions.RemoveAt( selected );
+         if( cur.end > last.end )
+            last.end = cur.end;
+         regions.erase( regions.begin() + selected );
       }
       else
          selected++;
@@ -4439,7 +4566,7 @@ void AudacityProject::EditByLabel( EditFunction action,
    Regions regions;
 
    GetRegionsByLabel( regions );
-   if( regions.GetCount() == 0 )
+   if( regions.size() == 0 )
       return;
 
    TrackListIterator iter( mTracks );
@@ -4465,15 +4592,13 @@ void AudacityProject::EditByLabel( EditFunction action,
             (allTracks || n->GetSelected() || (bSyncLockedTracks && n->IsSyncLockSelected())))
       {
          WaveTrack *wt = ( WaveTrack* )n;
-         for( int i = ( int )regions.GetCount() - 1; i >= 0; i-- )
-            ( wt->*action )( regions.Item( i )->start, regions.Item( i )->end );
+         for (int i = (int)regions.size() - 1; i >= 0; i--) {
+            const Region &region = regions.at(i);
+            (wt->*action)(region.start, region.end);
+         }
       }
       n = iter.Next();
    }
-
-   //delete label regions
-   for( unsigned int i = 0; i < regions.GetCount(); i++ )
-      delete regions.Item( i );
 }
 
 //Executes the edit function on all selected wave tracks with
@@ -4487,7 +4612,7 @@ void AudacityProject::EditClipboardByLabel( EditDestFunction action )
    Regions regions;
 
    GetRegionsByLabel( regions );
-   if( regions.GetCount() == 0 )
+   if( regions.size() == 0 )
       return;
 
    TrackListIterator iter( mTracks );
@@ -4512,54 +4637,49 @@ void AudacityProject::EditClipboardByLabel( EditDestFunction action )
       if( n->GetKind() == Track::Wave && ( allTracks || n->GetSelected() ) )
       {
          WaveTrack *wt = ( WaveTrack* )n;
-         WaveTrack *merged = NULL;
-         for( int i = ( int )regions.GetCount() - 1; i >= 0; i-- )
+         Track::Holder merged;
+         for( int i = ( int )regions.size() - 1; i >= 0; i-- )
          {
-            Track *dest = NULL;
-            ( wt->*action )( regions.Item( i )->start, regions.Item( i )->end,
-                             &dest );
+            const Region &region = regions.at(i);
+            auto dest = ( wt->*action )( region.start, region.end );
             if( dest )
             {
                dest->SetChannel( wt->GetChannel() );
                dest->SetLinked( wt->GetLinked() );
                dest->SetName( wt->GetName() );
                if( !merged )
-                  merged = ( WaveTrack* )dest;
+                  merged = std::move(dest);
                else
                {
                   // Paste to the beginning; unless this is the first region,
                   // offset the track to account for time between the regions
-                  if (i < (int)regions.GetCount() - 1) {
+                  if (i < (int)regions.size() - 1)
                      merged->Offset(
-                           regions.Item(i+1)->start - regions.Item(i)->end);
-                  }
+                        regions.at(i + 1).start - region.end);
 
-                  bool bResult = merged->Paste( 0.0 , dest );
+                  bool bResult = merged->Paste( 0.0 , dest.get() );
                   wxASSERT(bResult); // TO DO: Actually handle this.
-                  delete dest;
+                  wxUnusedVar(bResult);
                }
             }
             else  // nothing copied but there is a 'region', so the 'region' must be a 'point label' so offset
-               if (i < (int)regions.GetCount() - 1)
-                  if( merged )
-                     merged->Offset(regions.Item(i+1)->start - regions.Item(i)->end);
+               if (i < (int)regions.size() - 1)
+                  if (merged)
+                     merged->Offset(
+                        regions.at(i + 1).start - region.end);
          }
          if( merged )
-            msClipboard->Add( merged );
+            msClipboard->Add( std::move(merged) );
       }
    }
 
-   msClipT0 = regions.Item(0)->start;
-   msClipT1 = regions.Item(regions.GetCount() - 1)->end;
-
-   //delete label regions
-   for( unsigned int i = 0; i < regions.GetCount(); i++ )
-      delete regions.Item( i );
+   msClipT0 = regions.front().start;
+   msClipT1 = regions.back().end;
 }
 
 
 // TrackPanel callback method
-void AudacityProject::TP_DisplayStatusMessage(wxString msg)
+void AudacityProject::TP_DisplayStatusMessage(const wxString &msg)
 {
    mStatusBar->SetStatusText(msg, mainStatusBarField);
    mLastStatusUpdateTime = ::wxGetUTCTime();
@@ -4569,13 +4689,13 @@ void AudacityProject::TP_DisplayStatusMessage(wxString msg)
 // (more overhead, but can be used from a non-GUI thread)
 void AudacityProject::SafeDisplayStatusMessage(const wxChar *msg)
 {
-   CommandOutputTarget *target
-      = new CommandOutputTarget(TargetFactory::ProgressDefault(),
-                                new StatusBarTarget(*mStatusBar),
+   auto target
+      = std::make_unique<CommandOutputTarget>(TargetFactory::ProgressDefault(),
+                                std::make_shared<StatusBarTarget>(*mStatusBar),
                                 TargetFactory::MessageDefault());
    CommandType *type = CommandDirectory::Get()->LookUp(wxT("Message"));
    wxASSERT_MSG(type != NULL, wxT("Message command not found!"));
-   Command *statusCmd = type->Create(target);
+   CommandHolder statusCmd = type->Create(std::move(target));
    statusCmd->SetParameter(wxT("MessageString"), msg);
    ScriptCommandRelay::PostCommand(this, statusCmd);
 
@@ -4588,10 +4708,20 @@ void AudacityProject::TP_DisplaySelection()
 {
    double audioTime;
 
+   if (mRuler) {
+      if (!gAudioIO->IsBusy() && !mLockPlayRegion)
+         mRuler->SetPlayRegion(mViewInfo.selectedRegion.t0(),
+         mViewInfo.selectedRegion.t1());
+      else
+         // Cause ruler redraw anyway, because we may be zooming or scrolling
+         mRuler->Refresh();
+   }
+
    if (gAudioIO->IsBusy())
       audioTime = gAudioIO->GetStreamTime();
    else {
-      audioTime = 0;
+      double playEnd;
+      GetPlayRegion(&audioTime, &playEnd);
    }
 
    GetSelectionBar()->SetTimes(mViewInfo.selectedRegion.t0(),
@@ -4601,12 +4731,6 @@ void AudacityProject::TP_DisplaySelection()
       (mViewInfo.selectedRegion.f0(), mViewInfo.selectedRegion.f1());
 #endif
 
-   if (!gAudioIO->IsBusy() && !mLockPlayRegion)
-      mRuler->SetPlayRegion(mViewInfo.selectedRegion.t0(),
-                            mViewInfo.selectedRegion.t1());
-   else
-      // Cause ruler redraw anyway, because we may be zooming or scrolling
-      mRuler->Refresh();
 }
 
 
@@ -4626,8 +4750,8 @@ void AudacityProject::RefreshTPTrack(Track* pTrk, bool refreshbacking /*= true*/
 
 
 // TrackPanel callback method
-void AudacityProject::TP_PushState(wxString desc, wxString shortDesc,
-                                   int flags)
+void AudacityProject::TP_PushState(const wxString &desc, const wxString &shortDesc,
+                                   UndoPush flags)
 {
    PushState(desc, shortDesc, flags);
 }
@@ -4664,7 +4788,10 @@ void AudacityProject::TP_HandleResize()
 void AudacityProject::GetPlayRegion(double* playRegionStart,
                                     double *playRegionEnd)
 {
-   mRuler->GetPlayRegion(playRegionStart, playRegionEnd);
+   if (mRuler)
+      mRuler->GetPlayRegion(playRegionStart, playRegionEnd);
+   else
+      *playRegionEnd = *playRegionStart = 0;
 }
 
 void AudacityProject::AutoSave()
@@ -4696,19 +4823,17 @@ void AudacityProject::AutoSave()
       buffer.Write(saveFile);
       saveFile.Close();
    }
-   catch (XMLFileWriterException* pException)
+   catch (const XMLFileWriterException &exception)
    {
       wxMessageBox(wxString::Format(
          _("Couldn't write to file \"%s\": %s"),
-         (fn + wxT(".tmp")).c_str(), pException->GetMessage().c_str()),
+         (fn + wxT(".tmp")).c_str(), exception.GetMessage().c_str()),
          _("Error Writing Autosave File"), wxICON_ERROR, this);
-
-      delete pException;
 
       return;
    }
 
-   // Now that we have a new auto-save file, delete the old one
+   // Now that we have a NEW auto-save file, DELETE the old one
    DeleteCurrentAutoSaveFile();
 
    if (!mAutoSaveFileName.IsEmpty())
@@ -4764,7 +4889,13 @@ void AudacityProject::MayStartMonitoring()
 void AudacityProject::OnAudioIORate(int rate)
 {
    wxString display;
-   display = wxString::Format(_("Actual Rate: %d"), rate);
+   if (rate > 0) {
+      display = wxString::Format(_("Actual Rate: %d"), rate);
+   }
+   else
+      // clear the status field
+      ;
+
    int x, y;
    mStatusBar->GetTextExtent(display, &x, &y);
    int widths[] = {0, GetControlToolBar()->WidthForStatusBar(mStatusBar), -1, x+50};
@@ -4895,7 +5026,7 @@ void AudacityProject::SetTrackGain(Track * track, LWSlider * slider)
    if (link)
       link->SetGain(newValue);
 
-   PushState(_("Adjusted gain"), _("Gain"), PUSH_CONSOLIDATE);
+   PushState(_("Adjusted gain"), _("Gain"), UndoPush::CONSOLIDATE);
 
    GetTrackPanel()->RefreshTrack(track);
 }
@@ -4912,7 +5043,7 @@ void AudacityProject::SetTrackPan(Track * track, LWSlider * slider)
    if (link)
       link->SetPan(newValue);
 
-   PushState(_("Adjusted Pan"), _("Pan"), PUSH_CONSOLIDATE);
+   PushState(_("Adjusted Pan"), _("Pan"), UndoPush::CONSOLIDATE);
 
    GetTrackPanel()->RefreshTrack(track);
 }
@@ -4941,9 +5072,9 @@ void AudacityProject::RemoveTrack(Track * toRemove)
          pMixerBoard->RemoveTrackCluster((WaveTrack*)toRemove); // Will remove partner shown in same cluster.
    }
 
-   mTracks->Remove(toRemove, true);
+   mTracks->Remove(toRemove);
    if (partner) {
-      mTracks->Remove(partner, true);
+      mTracks->Remove(partner);
    }
 
    if (mTracks->IsEmpty()) {
@@ -5117,7 +5248,7 @@ void AudacityProject::CaptureKeyboard(wxWindow *handler)
 }
 
 // static
-void AudacityProject::ReleaseKeyboard(wxWindow *handler)
+void AudacityProject::ReleaseKeyboard(wxWindow * /* handler */)
 {
    AudacityProject *project = GetActiveProject();
    if (project)
@@ -5127,4 +5258,151 @@ void AudacityProject::ReleaseKeyboard(wxWindow *handler)
    }
 
    return;
+}
+
+bool AudacityProject::ExportFromTimerRecording(wxFileName fnFile, int iFormat, int iSubFormat, int iFilterIndex)
+{
+   Exporter e;
+
+   wxGetApp().SetMissingAliasedFileWarningShouldShow(true);
+   return e.ProcessFromTimerRecording(this, false, 0.0, mTracks->GetEndTime(), fnFile, iFormat, iSubFormat, iFilterIndex);
+}
+
+int AudacityProject::GetOpenProjectCount() {
+   return gAudacityProjects.Count();
+}
+
+bool AudacityProject::IsProjectSaved() {
+   wxString sProjectName = mDirManager->GetProjectName();
+   return (sProjectName != wxT(""));
+}
+
+bool AudacityProject::SaveFromTimerRecording(wxFileName fnFile) {
+   // MY: Will save the project to a new location a-la Save As
+   // and then tidy up after itself.
+
+   wxString sNewFileName = fnFile.GetFullPath();
+
+   // MY: To allow SaveAs from Timer Recording we need to check what
+   // the value of mFileName is befoer we change it.
+   wxString sOldFilename = "";
+   if (IsProjectSaved()) {
+      sOldFilename = mFileName;
+   }
+
+   // MY: If the project file already exists then bail out
+   // and send populate the message string (pointer) so
+   // we can tell the user what went wrong.
+   if (wxFileExists(sNewFileName)) {
+      return false;
+   }
+
+   mFileName = sNewFileName;
+   SetProjectTitle();
+
+   bool bSuccess = Save(false, true, false);
+
+   if (bSuccess) {
+      wxGetApp().AddFileToHistory(mFileName);
+   } else
+   {
+      // Reset file name on error
+      mFileName = sOldFilename;
+      SetProjectTitle();
+   }
+
+   return bSuccess;
+}
+
+// MY: Does the project have any tracks?
+bool AudacityProject::ProjectHasTracks() {
+   // These two lines test for an 'empty' project.
+   // of course it could still have a history at this stage.
+   TrackListIterator iter2(mTracks);
+   bool bHasTracks = (iter2.First() != NULL);
+   return bHasTracks;
+}
+
+// MY: This routine will give an estimate of how many
+// minutes of recording time we have available.
+// This is called from TimerRecordDialog::OnOK() to allow
+// the user to resolve a potential disk space issue before
+// Timer Recording starts.
+// The calculations made are based on the user's current
+// preferences.
+int AudacityProject::GetEstimatedRecordingMinsLeftOnDisk() {
+
+   // Obtain the current settings
+   sampleFormat oCaptureFormat = (sampleFormat)
+      gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleFormat"), floatSample);
+   long lCaptureChannels;
+   gPrefs->Read(wxT("/AudioIO/RecordChannels"), &lCaptureChannels, 2L);
+
+   // Find out how much free space we have on disk
+   wxLongLong lFreeSpace = mDirManager->GetFreeDiskSpace();
+   if (lFreeSpace < 0) {
+      return 0;
+   }
+
+   // Calculate the remaining time
+   double dRecTime = 0.0;
+   dRecTime = lFreeSpace.GetHi() * 4294967296.0 + lFreeSpace.GetLo();
+   dRecTime /= SAMPLE_SIZE_DISK(oCaptureFormat);   
+   dRecTime /= lCaptureChannels;
+   dRecTime /= GetRate();
+
+   // Convert to minutes before returning
+   int iRecMins = (int)(dRecTime / 60.0);
+   return iRecMins;
+}
+
+AudacityProject::PlaybackScroller::PlaybackScroller(AudacityProject *project)
+: mProject(project)
+{
+   mProject->Connect(EVT_TRACK_PANEL_TIMER,
+                     wxCommandEventHandler(PlaybackScroller::OnTimer),
+                     NULL,
+                     this);
+}
+
+AudacityProject::PlaybackScroller::~PlaybackScroller()
+{
+   mProject->Disconnect(EVT_TRACK_PANEL_TIMER,
+                        wxCommandEventHandler(PlaybackScroller::OnTimer),
+                        NULL,
+                        this);
+}
+
+void AudacityProject::PlaybackScroller::OnTimer(wxCommandEvent &event)
+{
+   // Let other listeners get the notification
+   event.Skip();
+
+   if (mMode != Mode::Off && mProject->IsAudioActive())
+   {
+      // Pan the view, so that we center the play indicator.
+
+      ViewInfo &viewInfo = mProject->GetViewInfo();
+      TrackPanel *const trackPanel = mProject->GetTrackPanel();
+      const int posX = viewInfo.TimeToPosition(viewInfo.mRecentStreamTime);
+      int width;
+      trackPanel->GetTracksUsableArea(&width, NULL);
+      int deltaX;
+      switch (mMode)
+      {
+         default:
+            wxASSERT(false);
+            /* fallthru */
+         case Mode::Centered:
+            deltaX = posX - width / 2;    break;
+         case Mode::Right:
+            deltaX = posX - width;        break;
+      }
+      viewInfo.h =
+         viewInfo.OffsetTimeByPixels(viewInfo.h, deltaX, true);
+      if (!viewInfo.bScrollBeyondZero)
+         // Can't scroll too far left
+         viewInfo.h = std::max(0.0, viewInfo.h);
+      trackPanel->Refresh(false);
+   }
 }

@@ -131,12 +131,12 @@ namespace portaudio
 
 		// -------------------------------------------------------------------------------
 
-		bool Device::operator==(const Device &rhs)
+		bool Device::operator==(const Device &rhs) const
 		{
 			return (index_ == rhs.index_);
 		}
 
-		bool Device::operator!=(const Device &rhs)
+		bool Device::operator!=(const Device &rhs) const
 		{
 			return !(*this == rhs);
 		}

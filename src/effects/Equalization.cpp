@@ -140,6 +140,11 @@ enum kInterpolations
    kNumInterpolations
 };
 
+// Increment whenever EQCurves.xml is updated
+#define EQCURVES_VERSION   1
+#define EQCURVES_REVISION  0
+#define UPDATE_ALL 0 // 0 = merge new presets only, 1 = Update all factory presets.
+
 static const wxString kInterpStrings[kNumInterpolations] =
 {
    /* i18n-hint: Technical term for a kind of curve.*/
@@ -512,6 +517,14 @@ bool EffectEqualization::Init()
    }
 
    mHiFreq = rate / 2.0;
+   // Unlikely, but better than crashing.
+   if (mHiFreq <= loFreqI) {
+      wxMessageBox( _("Track sample rate is too low for this effect."),
+                    _("Effect Unavailable"),
+                    wxOK | wxCENTRE);
+      return(false);
+   }
+
    mLoFreq = loFreqI;
 
    mBandsInUse = 0;
@@ -599,7 +612,7 @@ bool EffectEqualization::CloseUI()
 
 void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
 {
-   wxWindow *parent = S.GetParent();
+   wxWindow *const parent = S.GetParent();
 
    LoadCurves();
 
@@ -634,7 +647,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
          // -------------------------------------------------------------------
          S.StartVerticalLay();
          {
-            mdBRuler = new RulerPanel(parent, wxID_ANY);
+            mdBRuler = safenew RulerPanel(parent, wxID_ANY);
             mdBRuler->ruler.SetBounds(0, 0, 100, 100); // Ruler can't handle small sizes
             mdBRuler->ruler.SetOrientation(wxVERTICAL);
             mdBRuler->ruler.SetRange(60.0, -120.0);
@@ -653,7 +666,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
          }
          S.EndVerticalLay();
 
-         mPanel = new EqualizationPanel(this, parent);
+         mPanel = safenew EqualizationPanel(this, parent);
          S.Prop(1);
          S.AddWindow(mPanel, wxEXPAND | wxALIGN_LEFT | wxALIGN_TOP);
          S.SetSizeHints(wxDefaultCoord, wxDefaultCoord);
@@ -666,7 +679,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             mdBMaxSlider = S.Id(ID_dBMax).AddSlider(wxT(""), 30, 60, 0);
 #if wxUSE_ACCESSIBILITY
             mdBMaxSlider->SetName(_("Max dB"));
-            mdBMaxSlider->SetAccessible(new SliderAx(mdBMaxSlider, wxString(wxT("%d ")) + _("dB")));
+            mdBMaxSlider->SetAccessible(safenew SliderAx(mdBMaxSlider, wxString(wxT("%d ")) + _("dB")));
 #endif
 
             S.SetStyle(wxSL_VERTICAL | wxSL_INVERSE);
@@ -674,7 +687,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             S.AddVariableText(_("- dB"), false, wxCENTER);
 #if wxUSE_ACCESSIBILITY
             mdBMinSlider->SetName(_("Min dB"));
-            mdBMinSlider->SetAccessible(new SliderAx(mdBMinSlider, wxString(wxT("%d ")) + _("dB")));
+            mdBMinSlider->SetAccessible(safenew SliderAx(mdBMinSlider, wxString(wxT("%d ")) + _("dB")));
 #endif
          }
          S.EndVerticalLay();
@@ -687,7 +700,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
          // Column 1 is empty
          S.AddSpace(1, 1);
 
-         mFreqRuler  = new RulerPanel(parent, wxID_ANY);
+         mFreqRuler  = safenew RulerPanel(parent, wxID_ANY);
          mFreqRuler->ruler.SetBounds(0, 0, 100, 100); // Ruler can't handle small sizes
          mFreqRuler->ruler.SetOrientation(wxHORIZONTAL);
          mFreqRuler->ruler.SetLog(true);
@@ -719,12 +732,12 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
          szrG = S.GetSizer();
 
          // Panel used to host the sliders since they will be positioned manually.
-         mGraphicPanel = new wxPanel(parent, wxID_ANY, wxDefaultPosition, wxSize(-1, 150));
+         mGraphicPanel = safenew wxPanel(parent, wxID_ANY, wxDefaultPosition, wxSize(-1, 150));
          S.Prop(1).AddWindow(mGraphicPanel, wxEXPAND);
 
          for (int i = 0; (i < NUMBER_OF_BANDS) && (kThirdOct[i] <= mHiFreq); ++i)
          {
-            mSliders[i] = new wxSlider(mGraphicPanel, ID_Slider + i, 0, -20, +20,
+            mSliders[i] = safenew wxSlider(mGraphicPanel, ID_Slider + i, 0, -20, +20,
                wxDefaultPosition, wxDefaultSize, wxSL_VERTICAL | wxSL_INVERSE);
 
             mSliders[i]->Connect(wxEVT_ERASE_BACKGROUND, wxEraseEventHandler(EffectEqualization::OnErase));
@@ -735,7 +748,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             else
                name.Printf(wxString(wxT("%g ")) + _("kHz"), kThirdOct[i]/1000.);
             mSliders[i]->SetName(name);
-            mSliders[i]->SetAccessible(new SliderAx(mSliders[i], wxString(wxT("%d ")) + _("dB")));
+            mSliders[i]->SetAccessible(safenew SliderAx(mSliders[i], wxString(wxT("%d ")) + _("dB")));
 #endif
             mSlidersOld[i] = 0;
             mEQVals[i] = 0.;
@@ -880,7 +893,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
    S.EndMultiColumn();
 
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
-   if (m_pEffect->mEffectEqualization48x)
+   if (mEffectEqualization48x)
    {
       // -------------------------------------------------------------------
       // ROW 6: Processing routine selection
@@ -1061,9 +1074,9 @@ bool EffectEqualization::TransferDataFromWindow()
 bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
                                     sampleCount start, sampleCount len)
 {
-   // create a new WaveTrack to hold all of the output, including 'tails' each end
+   // create a NEW WaveTrack to hold all of the output, including 'tails' each end
    AudacityProject *p = GetActiveProject();
-   WaveTrack *output = p->GetTrackFactory()->NewWaveTrack(floatSample, t->GetRate());
+   auto output = p->GetTrackFactory()->NewWaveTrack(floatSample, t->GetRate());
 
    int L = windowSize - (mM - 1);   //Process L samples at a go
    sampleCount s = start;
@@ -1162,7 +1175,7 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
       //output has one waveclip for the total length, even though
       //t might have whitespace seperating multiple clips
       //we want to maintain the original clip structure, so
-      //only paste the intersections of the new clip.
+      //only paste the intersections of the NEW clip.
 
       //Find the bits of clips that need replacing
       std::vector<std::pair<double, double> > clipStartEndTimes;
@@ -1185,25 +1198,25 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
          clipRealStartEndTimes.push_back(std::pair<double,double>(clipStartT,clipEndT));
 
          if( clipStartT < startT )  // does selection cover the whole clip?
-            clipStartT = startT; // don't copy all the new clip
+            clipStartT = startT; // don't copy all the NEW clip
          if( clipEndT > startT + lenT )  // does selection cover the whole clip?
-            clipEndT = startT + lenT; // don't copy all the new clip
+            clipEndT = startT + lenT; // don't copy all the NEW clip
 
          //save them
          clipStartEndTimes.push_back(std::pair<double,double>(clipStartT,clipEndT));
       }
-      //now go thru and replace the old clips with new
+      //now go thru and replace the old clips with NEW
       for(unsigned int i=0;i<clipStartEndTimes.size();i++)
       {
-         Track *toClipOutput;
-         //remove the old audio and get the new
+         //remove the old audio and get the NEW
          t->Clear(clipStartEndTimes[i].first,clipStartEndTimes[i].second);
-         output->Copy(clipStartEndTimes[i].first-startT+offsetT0,clipStartEndTimes[i].second-startT+offsetT0, &toClipOutput);
+         auto toClipOutput = output->Copy(clipStartEndTimes[i].first-startT+offsetT0,clipStartEndTimes[i].second-startT+offsetT0);
          if(toClipOutput)
          {
             //put the processed audio in
-            bool bResult = t->Paste(clipStartEndTimes[i].first, toClipOutput);
+            bool bResult = t->Paste(clipStartEndTimes[i].first, toClipOutput.get());
             wxASSERT(bResult); // TO DO: Actually handle this.
+            wxUnusedVar(bResult);
             //if the clip was only partially selected, the Paste will have created a split line.  Join is needed to take care of this
             //This is not true when the selection is fully contained within one clip (second half of conditional)
             if( (clipRealStartEndTimes[i].first  != clipStartEndTimes[i].first ||
@@ -1211,7 +1224,6 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
                !(clipRealStartEndTimes[i].first <= startT &&
                clipRealStartEndTimes[i].second >= startT+lenT) )
                t->Join(clipRealStartEndTimes[i].first,clipRealStartEndTimes[i].second);
-            delete toClipOutput;
          }
       }
    }
@@ -1219,7 +1231,6 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
    delete[] buffer;
    delete[] window1;
    delete[] window2;
-   delete output;
 
    return bLoopSuccess;
 }
@@ -1362,7 +1373,7 @@ void EffectEqualization::Filter(sampleCount len, float *buffer)
 //
 // Load external curves with fallback to default, then message
 //
-void EffectEqualization::LoadCurves(wxString fileName, bool append)
+void EffectEqualization::LoadCurves(const wxString &fileName, bool append)
 {
    // Construct normal curve filename
    //
@@ -1372,41 +1383,33 @@ void EffectEqualization::LoadCurves(wxString fileName, bool append)
    //       expects the ".audacity" portion to be a directory.
    // MJS:  I don't know what the above means, or if I have broken it.
    wxFileName fn;
-   if(fileName == wxT(""))
+
+   if(fileName == wxT("")) {
+      // Check if presets are up to date.
+      wxString eqCurvesCurrentVersion = wxString::Format(wxT("%d.%d"), EQCURVES_VERSION, EQCURVES_REVISION);
+      wxString eqCurvesInstalledVersion = wxT("");
+      gPrefs->Read(wxT("/Effects/Equalization/PresetVersion"), &eqCurvesInstalledVersion, wxT(""));
+
+      bool needUpdate = (eqCurvesCurrentVersion != eqCurvesInstalledVersion);
+
+      // UpdateDefaultCurves allows us to import new factory presets only,
+      // or update all factory preset curves.
+      if (needUpdate)
+         UpdateDefaultCurves( UPDATE_ALL != 0 );
       fn = wxFileName( FileNames::DataDir(), wxT("EQCurves.xml") );
+   }
    else
-      fn = wxFileName(fileName); // user is loading a specific set of curves
+      fn = fileName; // user is loading a specific set of curves
 
    // If requested file doesn't exist...
-   if( !fn.FileExists() )
-   {
-      // look in data dir first, in case the user has their own defaults (maybe downloaded ones)
-      fn = wxFileName( FileNames::DataDir(), wxT("EQDefaultCurves.xml") );
-      if( !fn.FileExists() )
-      {  // Default file not found in the data dir.  Fall back to Resources dir.
-         // See http://docs.wxwidgets.org/trunk/classwx_standard_paths.html#5514bf6288ee9f5a0acaf065762ad95d
-         static wxString resourcesDir;
-         resourcesDir = wxStandardPaths::Get().GetResourcesDir();
-         fn = wxFileName( resourcesDir, wxT("EQDefaultCurves.xml") );
-      }
-      if( !fn.FileExists() )
-      {
-         wxString errorMessage;
-         errorMessage.Printf(_("EQCurves.xml and EQDefaultCurves.xml were not found on your system.\nPlease press 'help' to visit the download page.\n\nSave the curves at %s"), FileNames::DataDir().c_str());
-         ShowErrorDialog(mUIParent, _("EQCurves.xml and EQDefaultCurves.xml missing"),
-            errorMessage, wxT("http://wiki.audacityteam.org/wiki/EQCurvesDownload"), false);
-         // Have another go at finding EQCurves.xml in the data dir, in case 'help' helped
-         fn = wxFileName( FileNames::DataDir(), wxT("EQDefaultCurves.xml") );
-         if( !fn.FileExists() )
-         {
-            mCurves.Add( _("unnamed") );   // we still need a default curve to use
-            return;
-         }
-      }
+   if( !fn.FileExists() && !GetDefaultFileName(fn) ) {
+      mCurves.Clear();
+      mCurves.Add( _("unnamed") );   // we still need a default curve to use
+      return;
    }
 
    EQCurve tempCustom(wxT("temp"));
-   if( append == false) // Start from scratch
+   if( append == false ) // Start from scratch
       mCurves.Clear();
    else  // appending so copy and remove 'unnamed', to replace later
    {
@@ -1416,11 +1419,12 @@ void EffectEqualization::LoadCurves(wxString fileName, bool append)
 
    // Load the curves
    XMLFileReader reader;
-   if( !reader.Parse( this, fn.GetFullPath() ) )
+   const wxString fullPath{ fn.GetFullPath() };
+   if( !reader.Parse( this, fullPath ) )
    {
       wxString msg;
       /* i18n-hint: EQ stands for 'Equalization'.*/
-      msg.Printf(_("Error Loading EQ Curves from file:\n%s\nError message says:\n%s"), fn.GetFullPath().c_str(), reader.GetErrorStr().c_str());
+      msg.Printf(_("Error Loading EQ Curves from file:\n%s\nError message says:\n%s"), fullPath.c_str(), reader.GetErrorStr().c_str());
       // Inform user of load failure
       wxMessageBox( msg,
          _("Error Loading EQ Curves"),
@@ -1455,9 +1459,158 @@ void EffectEqualization::LoadCurves(wxString fileName, bool append)
 }
 
 //
+// Update presets to match Audacity version.
+//
+void EffectEqualization::UpdateDefaultCurves(bool updateAll /* false */)
+{
+   if (mCurves.GetCount() == 0)
+      return;
+
+   /* i18n-hint: name of the 'unnamed' custom curve */
+   wxString unnamed = _("unnamed");
+
+   // Save the "unnamed" curve and remove it so we can add it back as the final curve.
+   EQCurve userUnnamed(wxT("temp"));
+   userUnnamed = mCurves.Last();
+   mCurves.RemoveAt(mCurves.Count()-1);
+
+   EQCurveArray userCurves = mCurves;
+   mCurves.Clear();
+   // We only wamt to look for the shipped EQDefaultCurves.xml
+   wxFileName fn = wxFileName(wxStandardPaths::Get().GetResourcesDir(),
+                              wxT("EQDefaultCurves.xml"));
+   wxLogDebug(wxT("Attempting to load EQDefaultCurves.xml from %s"),wxStandardPaths::Get().GetResourcesDir().c_str());
+   XMLFileReader reader;
+
+   if(!reader.Parse(this, fn.GetFullPath())) {
+      wxLogError(wxT("EQDefaultCurves.xml could not be read."));
+      return;
+   }
+   else {
+      wxLogDebug(wxT("Loading EQDefaultCurves.xml successful."));
+   }
+
+   EQCurveArray defaultCurves = mCurves;
+   mCurves.Clear(); // clear now so that we can sort then add back.
+
+   // Remove "unnamed" if it exists.
+   if (defaultCurves.Last().Name == unnamed) {
+      defaultCurves.RemoveAt(defaultCurves.Count()-1);
+   }
+   else {
+      wxLogError(wxT("Error in EQDefaultCurves.xml"));
+   }
+
+   int numUserCurves = userCurves.GetCount();
+   int numDefaultCurves = defaultCurves.GetCount();
+   EQCurve tempCurve(wxT("test"));
+
+   if (updateAll) {
+      // Update all factory preset curves.
+      // Sort and add factory defaults first;
+      mCurves = defaultCurves;
+      mCurves.Sort(SortCurvesByName);
+      // then add remaining user curves:
+      for (int curveCount = 0; curveCount < numUserCurves; curveCount++) {
+         bool isCustom = true;
+         tempCurve = userCurves[curveCount];
+         // is the name in the dfault set?
+         for (int defCurveCount = 0; defCurveCount < numDefaultCurves; defCurveCount++) {
+            if (tempCurve.Name == mCurves[defCurveCount].Name) {
+               isCustom = false;
+               break;
+            }
+         }
+         // if tempCurve is not in the default set, add it to mCurves.
+         if (isCustom) {
+            mCurves.Add(tempCurve);
+         }
+      }
+   }
+   else {
+      // Import new factory defaults but retain all user modified curves.
+      for (int defCurveCount = 0; defCurveCount < numDefaultCurves; defCurveCount++) {
+         bool isUserCurve = false;
+         // Add if the curve is in the user's set (preserve user's copy)
+         for (int userCurveCount = 0; userCurveCount < numUserCurves; userCurveCount++) {
+            if (userCurves[userCurveCount].Name == defaultCurves[defCurveCount].Name) {
+               isUserCurve = true;
+               mCurves.Add(userCurves[userCurveCount]);
+               break;
+            }
+         }
+         if (!isUserCurve) {
+            mCurves.Add(defaultCurves[defCurveCount]);
+         }
+      }
+      mCurves.Sort(SortCurvesByName);
+      // now add the rest of the user's curves.
+      for (int userCurveCount = 0; userCurveCount < numUserCurves; userCurveCount++) {
+         bool isDefaultCurve = false;
+         tempCurve = userCurves[userCurveCount];
+         for (int defCurveCount = 0; defCurveCount < numDefaultCurves; defCurveCount++) {
+            if (tempCurve.Name == defaultCurves[defCurveCount].Name) {
+               isDefaultCurve = true;
+               break;
+            }
+         }
+         if (!isDefaultCurve) {
+            mCurves.Add(tempCurve);
+         }
+      }
+   }
+   defaultCurves.Clear();
+   userCurves.Clear();
+
+   // Add back old "unnamed"
+   if(userUnnamed.Name == unnamed) {
+      mCurves.Add( userUnnamed );   // we always need a default curve to use
+   }
+
+   SaveCurves();
+
+   // Write current EqCurve version number
+   // TODO: Probably better if we used pluginregistry.cfg
+   wxString eqCurvesCurrentVersion = wxString::Format(wxT("%d.%d"), EQCURVES_VERSION, EQCURVES_REVISION);
+   gPrefs->Write(wxT("/Effects/Equalization/PresetVersion"), eqCurvesCurrentVersion);
+   gPrefs->Flush();
+
+   return;
+}
+
+//
+// Get fully qualified filename of EQDefaultCurves.xml
+//
+bool EffectEqualization::GetDefaultFileName(wxFileName &fileName)
+{
+   // look in data dir first, in case the user has their own defaults (maybe downloaded ones)
+   fileName = wxFileName( FileNames::DataDir(), wxT("EQDefaultCurves.xml") );
+   if( !fileName.FileExists() )
+   {  // Default file not found in the data dir.  Fall back to Resources dir.
+      // See http://docs.wxwidgets.org/trunk/classwx_standard_paths.html#5514bf6288ee9f5a0acaf065762ad95d
+      static wxString resourcesDir;
+      resourcesDir = wxStandardPaths::Get().GetResourcesDir();
+      fileName = wxFileName( resourcesDir, wxT("EQDefaultCurves.xml") );
+   }
+   if( !fileName.FileExists() )
+   {
+      // LLL:  Is there really a need for an error message at all???
+      //wxString errorMessage;
+      //errorMessage.Printf(_("EQCurves.xml and EQDefaultCurves.xml were not found on your system.\nPlease press 'help' to visit the download page.\n\nSave the curves at %s"), FileNames::DataDir().c_str());
+      //ShowErrorDialog(mUIParent, _("EQCurves.xml and EQDefaultCurves.xml missing"),
+      //   errorMessage, wxT("http://wiki.audacityteam.org/wiki/EQCurvesDownload"), false);
+
+      // Have another go at finding EQCurves.xml in the data dir, in case 'help' helped
+      fileName = wxFileName( FileNames::DataDir(), wxT("EQDefaultCurves.xml") );
+   }
+   return (fileName.FileExists());
+}
+
+
+//
 // Save curves to external file
 //
-void EffectEqualization::SaveCurves(wxString fileName)
+void EffectEqualization::SaveCurves(const wxString &fileName)
 {
    wxFileName fn;
    if( fileName == wxT(""))
@@ -1482,14 +1635,15 @@ void EffectEqualization::SaveCurves(wxString fileName)
       }
    }
    else
-      fn = wxFileName(fileName);
+      fn = fileName;
 
    // Create/Open the file
    XMLFileWriter eqFile;
+   const wxString fullPath{ fn.GetFullPath() };
 
    try
    {
-      eqFile.Open( fn.GetFullPath(), wxT("wb") );
+      eqFile.Open( fullPath, wxT("wb") );
 
       // Write the curves
       WriteXML( eqFile );
@@ -1497,14 +1651,12 @@ void EffectEqualization::SaveCurves(wxString fileName)
       // Close the file
       eqFile.Close();
    }
-   catch (XMLFileWriterException* pException)
+   catch (const XMLFileWriterException &exception)
    {
       wxMessageBox(wxString::Format(
          _("Couldn't write to file \"%s\": %s"),
-         fn.GetFullPath().c_str(), pException->GetMessage().c_str()),
+         fullPath.c_str(), exception.GetMessage().c_str()),
          _("Error Saving Equalization Curves"), wxICON_ERROR, mUIParent);
-
-      delete pException;
    }
 }
 
@@ -1514,84 +1666,146 @@ void EffectEqualization::SaveCurves(wxString fileName)
 void EffectEqualization::setCurve(int currentCurve)
 {
    // Set current choice
-   Select( currentCurve );
-
+   Select(currentCurve);
    wxASSERT( currentCurve < (int) mCurves.GetCount() );
-   bool changed = false;
 
-   if( mLin )   // linear freq mode?
-   {
-      Envelope *env = mLinEnvelope;
-      env->Flatten(0.);
-      env->SetTrackLen(1.0);
+   Envelope *env;
+   int numPoints = (int) mCurves[currentCurve].points.GetCount();
 
-      if( mCurves[currentCurve].points.GetCount() )
-      {
-         double when, value;
-         int i;
-         int nCurvePoints = mCurves[currentCurve].points.GetCount();
-         for(i=0;i<nCurvePoints;i++)
-         {
-            when = mCurves[currentCurve].points[i].Freq / mHiFreq;
-            value = mCurves[currentCurve].points[i].dB;
-            if(when <= 1)
-               env->Insert(when, value);
-            else
-               break;
-         }
-         if ( i != nCurvePoints) // there are more points at higher freqs
-         {
-            when = 1.;  // set the RH end to the next highest point
-            value = mCurves[currentCurve].points[nCurvePoints-1].dB;
-            env->Insert(when, value);
-            changed = true;
-         }
-      }
+   if (mLin) {  // linear freq mode
+      env = mLinEnvelope;
    }
-   else
-   {
-      Envelope *env = mLogEnvelope;
-      env->Flatten(0.);
-      env->SetTrackLen(1.0);
+   else { // log freq mode
+      env = mLogEnvelope;
+   }
+   env->Flatten(0.);
+   env->SetTrackLen(1.0);
 
-      if( mCurves[currentCurve].points.GetCount() )
-      {
-         double when, value;
-         double loLog = log10(20.);
+   // Handle special case of no points.
+   if (numPoints == 0) {
+      ForceRecalc();
+      return;
+   }
+
+   double when, value;
+
+   // Handle special case 1 point.
+   if (numPoints == 1) {
+      // only one point, so ensure it is in range then return.
+      when = mCurves[currentCurve].points[0].Freq;
+      if (mLin) {
+         when = when / mHiFreq;
+      }
+      else {   // log scale
+         // We don't go below loFreqI (20 Hz) in log view.
+         double loLog = log10((double)loFreqI);
          double hiLog = log10(mHiFreq);
          double denom = hiLog - loLog;
-         int i;
-         int nCurvePoints = mCurves[currentCurve].points.GetCount();
+         when = (log10(std::max((double) loFreqI, when)) - loLog)/denom;
+      }
+      value = mCurves[currentCurve].points[0].dB;
+      env->Insert(std::min(1.0, std::max(0.0, when)), value);
+      ForceRecalc();
+      return;
+   }
 
-         for(i=0;i<nCurvePoints;i++)
-         {
-            double flog = log10(mCurves[currentCurve].points[i].Freq);
-            if( flog >= loLog )
-            {
-               when = (flog - loLog)/denom;
-               value = mCurves[currentCurve].points[i].dB;
-               if(when <= 1.)
-                  env->Insert(when, value);
-               else
-               {  // we have a point beyond fs/2.  Insert it so that env code can use it.
-                  // but just this one, we have no use for the rest
-                  env->SetTrackLen(when); // can't Insert if the envelope isn't long enough
-                  env->Insert(when, value);
-                  break;
-               }
-            }
-            else
-            {  //get the first point as close as we can to the last point requested
-               changed = true;
-               //double f = mCurves[currentCurve].points[i].Freq;
-               //double v = mCurves[currentCurve].points[i].dB;
-               mLogEnvelope->Insert(0., mCurves[currentCurve].points[i].dB);
-            }
+   // We have at least two points, so ensure they are in frequency order.
+   mCurves[currentCurve].points.Sort(SortCurvePoints);
+
+   if (mCurves[currentCurve].points[0].Freq < 0) {
+      // Corrupt or invalid curve, so bail.
+      ForceRecalc();
+      return;
+   }
+
+   if(mLin) {   // linear Hz scale
+      for(int pointCount = 0; pointCount < numPoints; pointCount++) {
+         when = mCurves[currentCurve].points[pointCount].Freq / mHiFreq;
+         value = mCurves[currentCurve].points[pointCount].dB;
+         if(when <= 1) {
+            env->Insert(when, value);
+         }
+         else {
+            // There are more points at higher freqs, so interpolate next one then stop.
+            when = 1.0;
+            double lastF = mCurves[currentCurve].points[pointCount-1].Freq;
+            double nextF = mCurves[currentCurve].points[pointCount].Freq;
+            double lastDB = mCurves[currentCurve].points[pointCount-1].dB;
+            double nextDB = mCurves[currentCurve].points[pointCount].dB;
+            value = lastDB + ((nextDB - lastDB) * ((mHiFreq - lastF) / (nextF - lastF)));
+            env->Insert(when, value);
+            break;
          }
       }
    }
-   if(changed) // not all points were loaded so switch to unnamed
-      EnvelopeUpdated();
+   else {   // log Hz scale
+      double loLog = log10((double) loFreqI);
+      double hiLog = log10(mHiFreq);
+      double denom = hiLog - loLog;
+      int firstAbove20Hz;
+
+      // log scale EQ starts at 20 Hz (threshold of hearing).
+      // so find the first point (if any) above 20 Hz.
+      for (firstAbove20Hz = 0; firstAbove20Hz < numPoints; firstAbove20Hz++) {
+         if (mCurves[currentCurve].points[firstAbove20Hz].Freq > loFreqI)
+            break;
+      }
+
+      if (firstAbove20Hz == numPoints) {
+         // All points below 20 Hz, so just use final point.
+         when = 0.0;
+         value = mCurves[currentCurve].points[numPoints-1].dB;
+         env->Insert(when, value);
+         ForceRecalc();
+         return;
+      }
+
+      if (firstAbove20Hz > 0) {
+         // At least one point is before 20 Hz and there are more
+         // beyond 20 Hz, so interpolate the first
+         double prevF = mCurves[currentCurve].points[firstAbove20Hz-1].Freq;
+         prevF = log10(std::max(1.0, prevF)); // log zero is bad.
+         double prevDB = mCurves[currentCurve].points[firstAbove20Hz-1].dB;
+         double nextF = log10(mCurves[currentCurve].points[firstAbove20Hz].Freq);
+         double nextDB = mCurves[currentCurve].points[firstAbove20Hz].dB;
+         when = 0.0;
+         value = nextDB - ((nextDB - prevDB) * ((nextF - loLog) / (nextF - prevF)));
+         env->Insert(when, value);
+      }
+
+      // Now get the rest.
+      for(int pointCount = firstAbove20Hz; pointCount < numPoints; pointCount++)
+      {
+         double flog = log10(mCurves[currentCurve].points[pointCount].Freq);
+         wxASSERT(mCurves[currentCurve].points[pointCount].Freq >= loFreqI);
+
+         when = (flog - loLog)/denom;
+         value = mCurves[currentCurve].points[pointCount].dB;
+         if(when <= 1.0) {
+            env->Insert(when, value);
+         }
+         else {
+            // This looks weird when adjusting curve in Draw mode if
+            // there is a point off-screen.
+
+            /*
+            // we have a point beyond fs/2.  Insert it so that env code can use it.
+            // but just this one, we have no use for the rest
+            env->SetTrackLen(when); // can't Insert if the envelope isn't long enough
+            env->Insert(when, value);
+            break;
+            */
+
+            // interpolate the final point instead
+            when = 1.0;
+            double logLastF = log10(mCurves[currentCurve].points[pointCount-1].Freq);
+            double lastDB = mCurves[currentCurve].points[pointCount-1].dB;
+            value = lastDB + ((value - lastDB) * ((log10(mHiFreq) - logLastF) / (flog - logLastF)));
+            env->Insert(when, value);
+            break;
+         }
+      }
+   }
    ForceRecalc();
 }
 
@@ -1600,7 +1814,7 @@ void EffectEqualization::setCurve()
    setCurve((int) mCurves.GetCount()-1);
 }
 
-void EffectEqualization::setCurve(wxString curveName)
+void EffectEqualization::setCurve(const wxString &curveName)
 {
    unsigned i = 0;
    for( i = 0; i < mCurves.GetCount(); i++ )
@@ -1616,7 +1830,7 @@ void EffectEqualization::setCurve(wxString curveName)
 }
 
 //
-// Set new curve selection (safe to call outside of the UI)
+// Set NEW curve selection (safe to call outside of the UI)
 //
 void EffectEqualization::Select( int curve )
 {
@@ -1755,7 +1969,7 @@ bool EffectEqualization::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       return true;
    }
 
-   // Located a new curve
+   // Located a NEW curve
    if( !wxStrcmp(tag, wxT("curve") ) )
    {
       // Process the attributes
@@ -1765,7 +1979,7 @@ bool EffectEqualization::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          const wxChar *attr = *attrs++;
          const wxChar *value = *attrs++;
 
-         // Create a new curve and name it
+         // Create a NEW curve and name it
          if( !wxStrcmp( attr, wxT("name") ) )
          {
             const wxString strValue = value;
@@ -1800,7 +2014,7 @@ bool EffectEqualization::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       return true;
    }
 
-   // Located a new point
+   // Located a NEW point
    if( !wxStrcmp( tag, wxT("point") ) )
    {
       // Set defaults in case attributes are missing
@@ -1834,7 +2048,7 @@ bool EffectEqualization::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          }
       }
 
-      // Create a new point
+      // Create a NEW point
       mCurves[ mCurves.GetCount() - 1 ].points.Add( EQPoint( f, d ) );
 
       // Tell caller it was processed
@@ -1881,7 +2095,7 @@ void EffectEqualization::WriteXML(XMLWriter &xmlFile)
    int curve;
    for( curve = 0; curve < numCurves; curve++ )
    {
-      // Start a new curve
+      // Start a NEW curve
       xmlFile.StartTag( wxT( "curve" ) );
       xmlFile.WriteAttr( wxT( "name" ), mCurves[ curve ].Name );
 
@@ -1890,7 +2104,7 @@ void EffectEqualization::WriteXML(XMLWriter &xmlFile)
       int point;
       for( point = 0; point < numPoints; point++ )
       {
-         // Write new point
+         // Write NEW point
          xmlFile.StartTag( wxT( "point" ) );
          xmlFile.WriteAttr( wxT( "f" ), mCurves[ curve ].points[ point ].Freq, 12 );
          xmlFile.WriteAttr( wxT( "d" ), mCurves[ curve ].points[ point ].dB, 12 );
@@ -2132,7 +2346,10 @@ void EffectEqualization::EnvLinToLog(void)
    {
       if( when[i]*mHiFreq >= 20 )
       {
-         mLogEnvelope->Insert((log10(when[i]*mHiFreq)-loLog)/denom , value[i]);
+         // Caution: on Linux, when when == 20, the log calulation rounds
+         // to just under zero, which causes an assert error.
+         double flog = (log10(when[i]*mHiFreq)-loLog)/denom;
+         mLogEnvelope->Insert(std::max(0.0, flog) , value[i]);
       }
       else
       {  //get the first point as close as we can to the last point requested
@@ -2160,24 +2377,23 @@ void EffectEqualization::ErrMin(void)
    double correction = 1.6;
    bool flag;
    int j=0;
-   Envelope *testEnvelope;
-   testEnvelope = new Envelope();
-   testEnvelope->SetInterpolateDB(false);
-   testEnvelope->Mirror(false);
-   testEnvelope->SetRange(-120.0, 60.0);
-   testEnvelope->Flatten(0.);
-   testEnvelope->SetTrackLen(1.0);
-   testEnvelope->CopyFrom(mLogEnvelope, 0.0, 1.0);
+   Envelope testEnvelope;
+   testEnvelope.SetInterpolateDB(false);
+   testEnvelope.Mirror(false);
+   testEnvelope.SetRange(-120.0, 60.0);
+   testEnvelope.Flatten(0.);
+   testEnvelope.SetTrackLen(1.0);
+   testEnvelope.CopyFrom(mLogEnvelope, 0.0, 1.0);
 
    for(i=0; i < NUM_PTS; i++)
-      vals[i] = testEnvelope->GetValue(mWhens[i]);
+      vals[i] = testEnvelope.GetValue(mWhens[i]);
 
    //   Do error minimisation
    error = 0.;
-   GraphicEQ(testEnvelope);
+   GraphicEQ(&testEnvelope);
    for(i=0; i < NUM_PTS; i++)   //calc initial error
    {
-      double err = vals[i] - testEnvelope->GetValue(mWhens[i]);
+      double err = vals[i] - testEnvelope.GetValue(mWhens[i]);
       error += err*err;
    }
    oldError = error;
@@ -2207,11 +2423,11 @@ void EffectEqualization::ErrMin(void)
             mEQVals[i] = -20.;
             flag = false;
          }
-         GraphicEQ(testEnvelope);         //calculate envelope
+         GraphicEQ(&testEnvelope);         //calculate envelope
          error = 0.;
          for(int k=0; k < NUM_PTS; k++)  //calculate error
          {
-            double err = vals[k] - testEnvelope->GetValue(mWhens[k]);
+            double err = vals[k] - testEnvelope.GetValue(mWhens[k]);
             error += err*err;
          }
       }
@@ -2230,9 +2446,8 @@ void EffectEqualization::ErrMin(void)
    if( error > .0025 * mBandsInUse ) // not within 0.05dB on each slider, on average
    {
       Select( (int) mCurves.GetCount()-1 );
-      EnvelopeUpdated(testEnvelope, false);
+      EnvelopeUpdated(&testEnvelope, false);
    }
-   delete testEnvelope;
 }
 
 void EffectEqualization::GraphicEQ(Envelope *env)
@@ -2513,7 +2728,7 @@ void EffectEqualization::OnSliderDBMAX(wxCommandEvent & WXUNUSED(event))
 //
 void EffectEqualization::OnCurve(wxCommandEvent & WXUNUSED(event))
 {
-   // Select new curve
+   // Select NEW curve
    setCurve( mCurve->GetCurrentSelection() );
    if( !mDrawMode )
       UpdateGraphic();
@@ -2646,15 +2861,15 @@ void EffectEqualization::OnProcessingRadio(wxCommandEvent & event)
    int testEvent=event.GetId();
    switch(testEvent)
    {
-   case defaultMathRadioID: EffectEqualization48x::SetMathPath(MATH_FUNCTION_ORIGINAL);
+   case ID_DefaultMath: EffectEqualization48x::SetMathPath(MATH_FUNCTION_ORIGINAL);
       break;
-   case sSERadioID: EffectEqualization48x::SetMathPath(MATH_FUNCTION_SSE);
+   case ID_SSE: EffectEqualization48x::SetMathPath(MATH_FUNCTION_SSE);
       break;
-   case sSEThreadedRadioID: EffectEqualization48x::SetMathPath(MATH_FUNCTION_THREADED | MATH_FUNCTION_SSE);
+   case ID_SSEThreaded: EffectEqualization48x::SetMathPath(MATH_FUNCTION_THREADED | MATH_FUNCTION_SSE);
       break;
-   case aVXRadioID: testEvent=2;
+   case ID_AVX: testEvent = 2;
       break;
-   case aVXThreadedRadioID: testEvent=2;
+   case ID_AVXThreaded: testEvent = 2;
       break;
    }
 
@@ -2662,8 +2877,8 @@ void EffectEqualization::OnProcessingRadio(wxCommandEvent & event)
 
 void EffectEqualization::OnBench( wxCommandEvent & event)
 {
-   m_pEffect->mBench=true;
-   OnOk(event);
+   mBench=true;
+   // OnOk(event);
 }
 
 #endif
@@ -2707,6 +2922,9 @@ EqualizationPanel::~EqualizationPanel()
       delete [] mOuti;
    if (mOutr)
       delete [] mOutr;
+
+   if(HasCapture())
+      ReleaseMouse();
 }
 
 void EqualizationPanel::ForceRecalc()
@@ -3219,11 +3437,11 @@ void EditCurvesDialog::OnRename(wxCommandEvent & WXUNUSED(event))
          }
       }
       else if( item == (numCurves-1) ) // renaming 'unnamed'
-      {  // Create a new entry
+      {  // Create a NEW entry
          mEditCurves.Add( EQCurve( wxT("unnamed") ) );
          // Copy over the points
          mEditCurves[ numCurves ].points = mEditCurves[ numCurves - 1 ].points;
-         // Give the original unnamed entry the new name
+         // Give the original unnamed entry the NEW name
          mEditCurves[ numCurves - 1 ].Name = name;
          numCurves++;
       }
@@ -3284,7 +3502,7 @@ void EditCurvesDialog::OnDelete(wxCommandEvent & WXUNUSED(event))
       PopulateList(mEditCurves.GetCount()-1);   // set 'unnamed' as the selected curve
    else
       PopulateList(highlight);   // user said 'No' to deletion
-#else // 'delete all N' code
+#else // 'DELETE all N' code
    int count = mList->GetSelectedItemCount();
    long item = mList->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
    // Create the prompt
@@ -3398,35 +3616,6 @@ void EditCurvesDialog::OnDefaults( wxCommandEvent & WXUNUSED(event))
    PopulateList(0);  // update the EditCurvesDialog dialog
 }
 
-#ifdef EXPERIMENTAL_EQ_SSE_THREADED
-
-void EqualizationDialog::OnProcessingRadio(wxCommandEvent & event)
-{
-   int testEvent=event.GetId();
-   switch(testEvent)
-   {
-   case defaultMathRadioID: EffectEqualization48x::SetMathPath(MATH_FUNCTION_ORIGINAL);
-      break;
-   case sSERadioID: EffectEqualization48x::SetMathPath(MATH_FUNCTION_SSE);
-      break;
-   case sSEThreadedRadioID: EffectEqualization48x::SetMathPath(MATH_FUNCTION_THREADED | MATH_FUNCTION_SSE);
-      break;
-   case aVXRadioID: testEvent=2;
-      break;
-   case aVXThreadedRadioID: testEvent=2;
-      break;
-   }
-
-};
-
-void EqualizationDialog::OnBench( wxCommandEvent & event)
-{
-   m_pEffect->mBench=true;
-   OnOk(event);
-}
-
-#endif
-
 void EditCurvesDialog::OnOK(wxCommandEvent & WXUNUSED(event))
 {
    // Make a backup of the current curves
@@ -3457,7 +3646,7 @@ void EditCurvesDialog::OnOK(wxCommandEvent & WXUNUSED(event))
 
 #if wxUSE_ACCESSIBILITY
 
-SliderAx::SliderAx( wxWindow * window, wxString fmt ):
+SliderAx::SliderAx(wxWindow * window, const wxString &fmt) :
 wxWindowAccessible( window )
 {
    mParent = window;

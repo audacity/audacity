@@ -125,10 +125,18 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui & S)
 
 void DirectoriesPrefs::OnChooseTempDir(wxCommandEvent & e)
 {
+   wxString oldTempDir = gPrefs->Read(wxT("/Directories/TempDir"), wxGetApp().defaultTempDir);
+
+   // Because we went through InitTempDir() during initialisation,
+   // the old temp directory name in prefs should already be OK.  Just in case there is 
+   // some way we hadn't thought of for it to be not OK, 
+   // we avoid prompting with it in that case and use the suggested default instead.
+   if( !AudacityApp::IsTempDirectoryNameOK( oldTempDir ) )
+      oldTempDir = wxGetApp().defaultTempDir;
+
    wxDirDialog dlog(this,
                     _("Choose a location to place the temporary directory"),
-                    gPrefs->Read(wxT("/Directories/TempDir"),
-                                 wxGetApp().defaultTempDir));
+                    oldTempDir );
    int retval = dlog.ShowModal();
    if (retval != wxID_CANCEL && dlog.GetPath() != wxT("")) {
       wxFileName tmpDirPath;
@@ -139,8 +147,13 @@ void DirectoriesPrefs::OnChooseTempDir(wxCommandEvent & e)
       // ending in a directory with the same name as what we'd add should be OK
       // already)
       wxString newDirName;
-#if defined(__WXMSW__) || defined(__WXMAC__)
+#if defined(__WXMAC__)
       newDirName = wxT("audacity_temp");
+#elif defined(__WXMSW__) 
+      // Clearing Bug 1271 residual issue.  Let's NOT have temp in the name.
+      // [Arguably we should do this for all platforms, not just Windows
+      // which has cleaners that clean up temp data.  For another day].
+      newDirName = wxT("SessionData");
 #else
       newDirName = wxT(".audacity_temp");
 #endif
@@ -191,10 +204,19 @@ bool DirectoriesPrefs::Validate()
    wxFileName tempDir;
    tempDir.SetPath(mTempDir->GetValue());
 
+   wxString path{tempDir.GetPath()};
+   if( !AudacityApp::IsTempDirectoryNameOK( path ) ) {
+      wxMessageBox(
+         wxString::Format(_("Directory %s is not suitable (at risk of being cleaned out)"),
+                           path.c_str()),
+         _("Error"),
+         wxOK | wxICON_ERROR);
+      return false;
+   }
    if (!tempDir.DirExists()) {
       int ans = wxMessageBox(
          wxString::Format(_("Directory %s does not exist. Create it?"),
-                          tempDir.GetPath().c_str()),
+                          path.c_str()),
          _("New Temporary Directory"),
          wxYES_NO | wxCENTRE | wxICON_EXCLAMATION);
 
@@ -211,10 +233,11 @@ bool DirectoriesPrefs::Validate()
       /* If the directory already exists, make sure it is writable */
       wxLogNull logNo;
       tempDir.AppendDir(wxT("canicreate"));
+      path =  tempDir.GetPath();
       if (!tempDir.Mkdir(0755)) {
          wxMessageBox(
             wxString::Format(_("Directory %s is not writable"),
-                             tempDir.GetPath().c_str()),
+                             path.c_str()),
             _("Error"),
             wxOK | wxICON_ERROR);
          return false;
@@ -245,5 +268,6 @@ bool DirectoriesPrefs::Apply()
 
 PrefsPanel *DirectoriesPrefsFactory::Create(wxWindow *parent)
 {
-   return new DirectoriesPrefs(parent);
+   wxASSERT(parent); // to justify safenew
+   return safenew DirectoriesPrefs(parent);
 }

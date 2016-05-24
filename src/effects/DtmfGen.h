@@ -27,7 +27,7 @@ class ShuttleGui;
 
 #define DTMFTONES_PLUGIN_SYMBOL XO("DTMF Tones")
 
-class EffectDtmf : public Effect
+class EffectDtmf final : public Effect
 {
 public:
    EffectDtmf();
@@ -35,28 +35,28 @@ public:
 
    // IdentInterface implementation
 
-   virtual wxString GetSymbol();
-   virtual wxString GetDescription();
+   wxString GetSymbol() override;
+   wxString GetDescription() override;
 
    // EffectIdentInterface implementation
 
-   virtual EffectType GetType();
+   EffectType GetType() override;
 
    // EffectClientInterface implementation
 
-   virtual int GetAudioOutCount();
-   virtual bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL);
-   virtual sampleCount ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen);
-   virtual bool GetAutomationParameters(EffectAutomationParameters & parms);
-   virtual bool SetAutomationParameters(EffectAutomationParameters & parms);
+   int GetAudioOutCount() override;
+   bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) override;
+   sampleCount ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen) override;
+   bool GetAutomationParameters(EffectAutomationParameters & parms) override;
+   bool SetAutomationParameters(EffectAutomationParameters & parms) override;
 
    // Effect implementation
 
-   virtual bool Startup();
-   virtual bool Init();
-   virtual void PopulateOrExchange(ShuttleGui & S);
-   virtual bool TransferDataFromWindow();
-   virtual bool TransferDataToWindow();
+   bool Startup() override;
+   bool Init() override;
+   void PopulateOrExchange(ShuttleGui & S) override;
+   bool TransferDataFromWindow() override;
+   bool TransferDataToWindow() override;
 
 private:
    // EffectDtmf implementation

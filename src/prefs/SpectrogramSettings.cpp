@@ -57,10 +57,6 @@ SpectrogramSettings::Globals
 }
 
 SpectrogramSettings::SpectrogramSettings()
-   : hFFT(0)
-   , window(0)
-   , dWindow(0)
-   , tWindow(0)
 {
    LoadPrefs();
 }
@@ -93,10 +89,10 @@ SpectrogramSettings::SpectrogramSettings(const SpectrogramSettings &other)
 #endif
 
    // Do not copy these!
-   , hFFT(0)
-   , window(0)
-   , tWindow(0)
-   , dWindow(0)
+   , hFFT{}
+   , window{}
+   , tWindow{}
+   , dWindow{}
 {
 }
 
@@ -144,9 +140,9 @@ SpectrogramSettings& SpectrogramSettings::defaults()
 //static
 const wxArrayString &SpectrogramSettings::GetScaleNames()
 {
-   class ScaleNamesArray : public TranslatableStringArray
+   class ScaleNamesArray final : public TranslatableStringArray
    {
-      virtual void Populate()
+      void Populate() override
       {
          // Keep in correspondence with enum SpectrogramSettings::ScaleType:
          mContents.Add(_("Linear"));
@@ -169,9 +165,9 @@ const wxArrayString &SpectrogramSettings::GetScaleNames()
 //static
 const wxArrayString &SpectrogramSettings::GetAlgorithmNames()
 {
-   class AlgorithmNamesArray : public TranslatableStringArray
+   class AlgorithmNamesArray final : public TranslatableStringArray
    {
-      virtual void Populate()
+      void Populate() override
       {
          // Keep in correspondence with enum SpectrogramSettings::Algorithm:
          mContents.Add(_("Frequencies"));

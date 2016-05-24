@@ -13,7 +13,7 @@
 
 class SelectedRegion;
 
-class AUDACITY_DLL_API SelectionBarListener {
+class AUDACITY_DLL_API SelectionBarListener /* not final */ {
 
  public:
 

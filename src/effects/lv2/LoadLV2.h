@@ -68,7 +68,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-class LV2EffectsModule : public ModuleInterface
+class LV2EffectsModule final : public ModuleInterface
 {
 public:
    LV2EffectsModule(ModuleManagerInterface *moduleManager, const wxString *path);
@@ -76,26 +76,26 @@ public:
 
    // IdentInterface implementatino
 
-   virtual wxString GetPath();
-   virtual wxString GetSymbol();
-   virtual wxString GetName();
-   virtual wxString GetVendor();
-   virtual wxString GetVersion();
-   virtual wxString GetDescription();
+   wxString GetPath() override;
+   wxString GetSymbol() override;
+   wxString GetName() override;
+   wxString GetVendor() override;
+   wxString GetVersion() override;
+   wxString GetDescription() override;
 
    // ModuleInterface implementation
 
-   virtual bool Initialize();
-   virtual void Terminate();
+   bool Initialize() override;
+   void Terminate() override;
 
-   virtual bool AutoRegisterPlugins(PluginManagerInterface & pm);
-   virtual wxArrayString FindPlugins(PluginManagerInterface & pm);
-   virtual bool RegisterPlugin(PluginManagerInterface & pm, const wxString & path);
+   bool AutoRegisterPlugins(PluginManagerInterface & pm) override;
+   wxArrayString FindPlugins(PluginManagerInterface & pm) override;
+   bool RegisterPlugin(PluginManagerInterface & pm, const wxString & path) override;
 
-   virtual bool IsPluginValid(const wxString & path);
+   bool IsPluginValid(const wxString & path) override;
 
-   virtual IdentInterface *CreateInstance(const wxString & path);
-   virtual void DeleteInstance(IdentInterface *instance);
+   IdentInterface *CreateInstance(const wxString & path) override;
+   void DeleteInstance(IdentInterface *instance) override;
 
    // LV2EffectModule implementation
 

@@ -13,6 +13,7 @@
 
 #include <stdlib.h>
 #include <algorithm>
+#include <vector>
 
 #include <wx/dynarray.h>
 #include <wx/brush.h>
@@ -28,25 +29,19 @@ class wxTextFile;
 
 class DirManager;
 class Envelope;
+class EnvPoint;
 
 class ZoomInfo;
 
-class EnvPoint : public XMLTagHandler {
+class EnvPoint final : public XMLTagHandler {
 
 public:
-   EnvPoint(Envelope *envelope, double t, double val)
-   {
-      mEnvelope = envelope;
-      mT = t;
-      mVal = ClampValue(val);
-   }
+   inline EnvPoint(Envelope *envelope, double t, double val);
 
-   double ClampValue(double val); // this calls mEnvelope->ClampValue(), implementation is below the Envelope class
-
-   double GetT() { return mT; }
+   double GetT() const { return mT; }
    void SetT(double t) { mT = t; }
-   double GetVal() { return mVal; }
-   void SetVal(double val) { mVal = ClampValue(val); }
+   double GetVal() const { return mVal; }
+   inline void SetVal(double val);
 
    bool HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    {
@@ -77,14 +72,9 @@ private:
 
 };
 
-// TODO: Become an array of EnvPoint rather than of pointers to.
-//    Really? wxWidgets help says:
-//    "wxArray is suitable for storing integer types and pointers which it does not
-//       treat as objects in any way..."
-//    And why is this a TODO in any case, if it works correctly?
-WX_DEFINE_ARRAY(EnvPoint *, EnvArray);
+typedef std::vector<EnvPoint> EnvArray;
 
-class Envelope : public XMLTagHandler {
+class Envelope final : public XMLTagHandler {
  public:
    Envelope();
    void Initialize(int numPoints);
@@ -108,17 +98,17 @@ class Envelope : public XMLTagHandler {
 #if LEGACY_PROJECT_FILE_SUPPORT
    // File I/O
 
-   virtual bool Load(wxTextFile * in, DirManager * dirManager);
-   virtual bool Save(wxTextFile * out, bool overwrite);
+   bool Load(wxTextFile * in, DirManager * dirManager) override;
+   bool Save(wxTextFile * out, bool overwrite) override;
 #endif
    // Newfangled XML file I/O
-   virtual bool HandleXMLTag(const wxChar *tag, const wxChar **attrs);
-   virtual XMLTagHandler *HandleXMLChild(const wxChar *tag);
-   virtual void WriteXML(XMLWriter &xmlFile);
+   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
+   XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
+   void WriteXML(XMLWriter &xmlFile) const /* not override */;
 
    void DrawPoints(wxDC & dc, const wxRect & r, const ZoomInfo &zoomInfo,
              bool dB, double dBRange,
-             float zoomMin, float zoomMax);
+             float zoomMin, float zoomMax) const;
 
    // Event Handlers
    // Each ofthese returns true if parents needs to be redrawn
@@ -159,16 +149,16 @@ class Envelope : public XMLTagHandler {
    void GetValues
       (double *buffer, int bufferLen, int leftOffset, const ZoomInfo &zoomInfo) const;
 
-   int NumberOfPointsAfter(double t);
-   double NextPointAfter(double t);
+   int NumberOfPointsAfter(double t) const;
+   double NextPointAfter(double t) const;
 
-   double Average( double t0, double t1 );
-   double AverageOfInverse( double t0, double t1 );
-   double Integral( double t0, double t1 );
-   double IntegralOfInverse( double t0, double t1 );
-   double SolveIntegralOfInverse( double t0, double area);
+   double Average( double t0, double t1 ) const;
+   double AverageOfInverse( double t0, double t1 ) const;
+   double Integral( double t0, double t1 ) const;
+   double IntegralOfInverse( double t0, double t1 ) const;
+   double SolveIntegralOfInverse( double t0, double area) const;
 
-   void print();
+   void print() const;
    void testMe();
 
    bool IsDirty() const;
@@ -181,11 +171,20 @@ class Envelope : public XMLTagHandler {
     * Returns 0 if point moved, -1 if not found.*/
    int Move(double when, double value);
 
-   /** \brief delete a point by it's position in array */
+   /** \brief DELETE a point by its position in array */
    void Delete(int point);
+
+   /** \brief insert a point */
+   void Insert(int point, const EnvPoint &p);
 
    /** \brief Return number of points */
    int GetNumberOfPoints() const;
+
+   /** \brief Accessor for points */
+   const EnvPoint &operator[] (int index) const
+   {
+      return mEnv[index];
+   }
 
    /** \brief Returns the sets of when and value pairs */
    void GetPoints(double *bufferWhen,
@@ -227,6 +226,7 @@ private:
 
    /** \brief Number of pixels contour is from the true envelope. */
    int mContourOffset;
+
    double mInitialVal;
 
    // These are used in dragging.
@@ -249,9 +249,16 @@ private:
 
 };
 
-inline double EnvPoint::ClampValue(double val)
+inline EnvPoint::EnvPoint(Envelope *envelope, double t, double val)
 {
-   return mEnvelope->ClampValue(val);
+   mEnvelope = envelope;
+   mT = t;
+   mVal = mEnvelope->ClampValue(val);
+}
+
+inline void EnvPoint::SetVal(double val)
+{
+   mVal = mEnvelope->ClampValue(val);
 }
 
 #endif

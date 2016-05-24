@@ -2,7 +2,7 @@ SUBDIRS = help images lib-src po src tests
 
 ACLOCAL_AMFLAGS = -I m4
 
-bin_SCRIPTS = audacity$(EXEEXT)
+bin_PROGRAMS = audacity$(EXEEXT)
 
 dist_doc_DATA = LICENSE.txt README.txt
 dist_pkgdata_DATA = presets/EQDefaultCurves.xml

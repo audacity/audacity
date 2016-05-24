@@ -24,6 +24,7 @@
 #include <wx/thread.h>
 
 #include "../Audacity.h"	// contains the set-up of AUDACITY_DLL_API
+#include "../MemoryX.h"
 
 class ODTask;
 
@@ -83,29 +84,33 @@ class ODTaskThread {
 class ODLock {
  public:
    ODLock(){
-      mutex = (pthread_mutex_t *) malloc (sizeof (pthread_mutex_t));
-      pthread_mutex_init (mutex, NULL);
+      pthread_mutex_init (&mutex, NULL);
    }
 
    void Lock()
    {
-      pthread_mutex_lock (mutex);
+      pthread_mutex_lock (&mutex);
+   }
+
+   // Returns 0 iff the lock was acquired.
+   bool TryLock()
+   {
+      return pthread_mutex_trylock (&mutex);
    }
 
    void Unlock()
    {
-      pthread_mutex_unlock (mutex);
+      pthread_mutex_unlock (&mutex);
    }
 
    virtual ~ODLock()
    {
-      pthread_mutex_destroy (mutex);
-      free(mutex);
+      pthread_mutex_destroy (&mutex);
    }
 
 private:
    friend class ODCondition; //needs friendship for wait()
-   pthread_mutex_t *mutex ;
+   pthread_mutex_t mutex ;
 };
 
 class ODCondition
@@ -118,14 +123,14 @@ public:
    void Wait();
 
 protected:
-   pthread_cond_t *condition;
+   pthread_cond_t condition;
    ODLock* m_lock;
 };
 
 #else
 
 
-class ODTaskThread : public wxThread
+class ODTaskThread final : public wxThread
 {
 public:
    ///Constructs a ODTaskThread
@@ -135,14 +140,14 @@ public:
 
 protected:
    ///Executes a part of the task
-   virtual void* Entry();
+   void* Entry() override;
    ODTask* mTask;
 
 };
 
 
 //a wrapper for wxMutex.
-class AUDACITY_DLL_API ODLock : public wxMutex
+class AUDACITY_DLL_API ODLock final : public wxMutex
 {
 public:
    ///Constructs a ODTaskThread
@@ -151,7 +156,7 @@ public:
   virtual ~ODLock(){}
 };
 
-class ODCondition : public wxCondition
+class ODCondition final : public wxCondition
 {
 public:
    ODCondition(ODLock *lock):wxCondition(*lock){}
@@ -166,25 +171,44 @@ protected:
 
 #endif // __WXMAC__
 
-// Like wxMutexLocker
+// class ODLocker
 // So you can use the RAII idiom with ODLock, on whatever platform
-class ODLocker
-{
+// Construct with pointer to the lock, or default-construct and later
+// reset()
+// If constructed with only a try-lock, and the lock was not acquired,
+// then it returns false when cast to bool
+struct ODUnlocker { void operator () (ODLock *p) const { if(p) p->Unlock(); } };
+using ODLockerBase = std::unique_ptr<ODLock, ODUnlocker>;
+class ODLocker : public ODLockerBase {
 public:
-   ODLocker(ODLock &lock)
-      : mLock(lock)
+   // Lock any bare pointer to ODLock at construction time or when resetting.
+   explicit ODLocker(ODLock *p = nullptr, bool tryOnly = false)
    {
-      mLock.Lock();
+      reset(p, tryOnly);
    }
 
-   ~ODLocker()
+   void reset(ODLock *p = nullptr, bool tryOnly = false)
    {
-      mLock.Unlock();
+      ODLockerBase::reset(p);
+      if(p) {
+         if (tryOnly) {
+            if (p->TryLock() != 0)
+               ODLockerBase::reset(nullptr);
+         }
+         else
+            p->Lock();
+      }
    }
 
-private:
+   // Assume already locked when moving ODLocker.  Don't lock again.
+   ODLocker(ODLocker&& that) : ODLockerBase { std::move(that) } {}
+   ODLocker &operator= (ODLocker && that) {
+      ODLockerBase::operator= ( std::move(that) );
+      return *this;
+   }
 
-   ODLock &mLock;
+   ODLocker(const ODLocker &that) PROHIBITED;
+   ODLocker &operator= (const ODLocker &that) PROHIBITED;
 };
 
 #endif //__AUDACITY_ODTASKTHREAD__

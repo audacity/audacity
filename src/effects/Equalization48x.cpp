@@ -14,11 +14,12 @@
 *//****************************************************************/
 
 #include "../Audacity.h"
-#include "../Project.h"
+#include "../Experimental.h"
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
+#include "../Project.h"
 #include "Equalization.h"
 #include "../WaveTrack.h"
-#include "float_cast.h"
+#include "../float_cast.h"
 #include <vector>
 
 #include <wx/dcmemory.h>
@@ -332,8 +333,8 @@ bool EffectEqualization48x::TrackCompare()
    wxArrayPtrVoid SecondOMap;
    SecondIMap.Clear();
    SecondOMap.Clear();
-
-   TrackList      *SecondOutputTracks = new TrackList();
+   
+   TrackList      SecondOutputTracks;
 
    //iterate over tracks of type trackType (All types if Track::All)
    TrackListOfKindIterator aIt(mEffectEqualization->mOutputTracksType, mEffectEqualization->mTracks);
@@ -344,15 +345,15 @@ bool EffectEqualization48x::TrackCompare()
       if (aTrack->GetSelected() ||
          (mEffectEqualization->mOutputTracksType == Track::All && aTrack->IsSyncLockSelected()))
       {
-         Track *o = aTrack->Duplicate();
-         SecondOutputTracks->Add(o);
+         auto o = aTrack->Duplicate();
          SecondIMap.Add(aTrack);
-         SecondIMap.Add(o);
+         SecondIMap.Add(o.get());
+         SecondOutputTracks.Add(std::move(o));
       }
    }
 
    for(int i=0;i<2;i++) {
-      SelectedTrackListOfKindIterator iter(Track::Wave, i?mEffectEqualization->mOutputTracks:SecondOutputTracks);
+      SelectedTrackListOfKindIterator iter(Track::Wave, i ? mEffectEqualization->mOutputTracks : &SecondOutputTracks);
       i?sMathPath=sMathPath:sMathPath=0;
       WaveTrack *track = (WaveTrack *) iter.First();
       int count = 0;
@@ -375,7 +376,7 @@ bool EffectEqualization48x::TrackCompare()
       }
    }
    SelectedTrackListOfKindIterator iter(Track::Wave, mEffectEqualization->mOutputTracks);
-   SelectedTrackListOfKindIterator iter2(Track::Wave, SecondOutputTracks);
+   SelectedTrackListOfKindIterator iter2(Track::Wave, &SecondOutputTracks);
    WaveTrack *track =  (WaveTrack *) iter.First();
    WaveTrack *track2 = (WaveTrack *) iter2.First();
    while (track) {
@@ -393,7 +394,6 @@ bool EffectEqualization48x::TrackCompare()
       track = (WaveTrack *) iter.Next();
       track2 = (WaveTrack *) iter2.Next();
    }
-   delete SecondOutputTracks;
    FreeBuffersWorkers();
    mEffectEqualization->ReplaceProcessedTracks(!bBreakLoop); 
    return bBreakLoop;
@@ -408,7 +408,7 @@ bool EffectEqualization48x::DeltaTrack(WaveTrack * t, WaveTrack * t2, sampleCoun
    float *buffer2 = new float[trackBlockSize];
 
    AudacityProject *p = GetActiveProject();
-   WaveTrack *output=p->GetTrackFactory()->NewWaveTrack(floatSample, t->GetRate());
+   auto output=p->GetTrackFactory()->NewWaveTrack(floatSample, t->GetRate());
    sampleCount originalLen = len;
    sampleCount currentSample = start;
 
@@ -426,8 +426,7 @@ bool EffectEqualization48x::DeltaTrack(WaveTrack * t, WaveTrack * t2, sampleCoun
    delete[] buffer2;
    output->Flush();
    len=originalLen;
-   ProcessTail(t, output, start, len);
-   delete output;
+   ProcessTail(t, output.get(), start, len);
    return true;
 }
 
@@ -516,7 +515,7 @@ bool EffectEqualization48x::ProcessTail(WaveTrack * t, WaveTrack * output, sampl
    //output has one waveclip for the total length, even though 
    //t might have whitespace seperating multiple clips
    //we want to maintain the original clip structure, so
-   //only paste the intersections of the new clip.
+   //only paste the intersections of the NEW clip.
 
    //Find the bits of clips that need replacing
    std::vector<std::pair<double, double> > clipStartEndTimes;
@@ -539,25 +538,24 @@ bool EffectEqualization48x::ProcessTail(WaveTrack * t, WaveTrack * output, sampl
       clipRealStartEndTimes.push_back(std::pair<double,double>(clipStartT,clipEndT));            
 
       if( clipStartT < startT )  // does selection cover the whole clip?
-         clipStartT = startT; // don't copy all the new clip
+         clipStartT = startT; // don't copy all the NEW clip
       if( clipEndT > startT + lenT )  // does selection cover the whole clip?
-         clipEndT = startT + lenT; // don't copy all the new clip
+         clipEndT = startT + lenT; // don't copy all the NEW clip
 
       //save them
       clipStartEndTimes.push_back(std::pair<double,double>(clipStartT,clipEndT));
    }
-   //now go thru and replace the old clips with new
+   //now go thru and replace the old clips with NEW
    for(unsigned int i=0;i<clipStartEndTimes.size();i++)
    {
-      Track *toClipOutput;
-      //remove the old audio and get the new
+      //remove the old audio and get the NEW
       t->Clear(clipStartEndTimes[i].first,clipStartEndTimes[i].second);
-      //         output->Copy(clipStartEndTimes[i].first-startT+offsetT0,clipStartEndTimes[i].second-startT+offsetT0, &toClipOutput);   
-      output->Copy(clipStartEndTimes[i].first-startT,clipStartEndTimes[i].second-startT, &toClipOutput);   
+      //         output->Copy(clipStartEndTimes[i].first-startT+offsetT0,clipStartEndTimes[i].second-startT+offsetT0, &toClipOutput);
+      auto toClipOutput = output->Copy(clipStartEndTimes[i].first-startT, clipStartEndTimes[i].second-startT);
       if(toClipOutput)
       {
          //put the processed audio in
-         bool bResult = t->Paste(clipStartEndTimes[i].first, toClipOutput);
+         bool bResult = t->Paste(clipStartEndTimes[i].first, toClipOutput.get());
          wxASSERT(bResult); // TO DO: Actually handle this.
          //if the clip was only partially selected, the Paste will have created a split line.  Join is needed to take care of this
          //This is not true when the selection is fully contained within one clip (second half of conditional)
@@ -566,7 +564,6 @@ bool EffectEqualization48x::ProcessTail(WaveTrack * t, WaveTrack * output, sampl
             !(clipRealStartEndTimes[i].first <= startT &&  
             clipRealStartEndTimes[i].second >= startT+lenT) )
             t->Join(clipRealStartEndTimes[i].first,clipRealStartEndTimes[i].second);
-         delete toClipOutput;
       }
    }
    return true;
@@ -635,7 +632,7 @@ bool EffectEqualization48x::ProcessOne1x(int count, WaveTrack * t,
    sampleCount trackBlockSize = t->GetMaxBlockSize();
 
    AudacityProject *p = GetActiveProject();
-   WaveTrack *output=p->GetTrackFactory()->NewWaveTrack(floatSample, t->GetRate());
+   auto output = p->GetTrackFactory()->NewWaveTrack(floatSample, t->GetRate());
 
    mEffectEqualization->TrackProgress(count, 0.0);
    int subBufferSize=mBufferCount==8?(mSubBufferSize>>1):mSubBufferSize; // half the buffers if avx is active
@@ -675,8 +672,7 @@ bool EffectEqualization48x::ProcessOne1x(int count, WaveTrack * t,
    }
    output->Flush();
    if(!bBreakLoop)
-      ProcessTail(t, output, start, len);
-   delete output;
+      ProcessTail(t, output.get(), start, len);
    return bBreakLoop;
 }
 
@@ -821,7 +817,7 @@ bool EffectEqualization48x::ProcessOne4x(int count, WaveTrack * t,
    sampleCount trackBlockSize = t->GetMaxBlockSize();
 
    AudacityProject *p = GetActiveProject();
-   WaveTrack *output=p->GetTrackFactory()->NewWaveTrack(floatSample, t->GetRate());
+   auto output = p->GetTrackFactory()->NewWaveTrack(floatSample, t->GetRate());
 
    mEffectEqualization->TrackProgress(count, 0.0);
    int bigRuns=len/(subBufferSize-mBlockSize);
@@ -858,8 +854,7 @@ bool EffectEqualization48x::ProcessOne4x(int count, WaveTrack * t,
    }
    output->Flush();
    if(!bBreakLoop)
-      ProcessTail(t, output, start, len);
-   delete output;
+      ProcessTail(t, output.get(), start, len);
    return bBreakLoop;
 }
 void *EQWorker::Entry()
@@ -906,7 +901,7 @@ bool EffectEqualization48x::ProcessOne1x4xThreaded(int count, WaveTrack * t,
       mEQWorkers[i].mProcessingType=processingType;
 
    AudacityProject *p = GetActiveProject();
-   WaveTrack *output=p->GetTrackFactory()->NewWaveTrack(floatSample, t->GetRate());
+   auto output = p->GetTrackFactory()->NewWaveTrack(floatSample, t->GetRate());
 
    sampleCount trackBlockSize = t->GetMaxBlockSize();
    mEffectEqualization->TrackProgress(count, 0.0);
@@ -970,8 +965,7 @@ bool EffectEqualization48x::ProcessOne1x4xThreaded(int count, WaveTrack * t,
    }
    output->Flush();
    if(!bBreakLoop) 
-      ProcessTail(t, output, start, len);
-   delete output;
+      ProcessTail(t, output.get(), start, len);
    return bBreakLoop;
 }
 
@@ -1152,7 +1146,7 @@ bool EffectEqualization48x::ProcessOne8x(int count, WaveTrack * t,
    sampleCount trackBlockSize = t->GetMaxBlockSize();
 
    AudacityProject *p = GetActiveProject();
-   WaveTrack *output=p->GetTrackFactory()->NewWaveTrack(floatSample, t->GetRate());
+   auto output = p->GetTrackFactory()->NewWaveTrack(floatSample, t->GetRate());
 
    mEffectEqualization->TrackProgress(count, 0.0);
    int bigRuns=len/(mSubBufferSize-mBlockSize);
@@ -1189,8 +1183,7 @@ bool EffectEqualization48x::ProcessOne8x(int count, WaveTrack * t,
    }
    output->Flush();
    if(!bBreakLoop)
-      ProcessTail(t, output, start, len);
-   delete output;
+      ProcessTail(t, output.get(), start, len);
    return bBreakLoop;
 }
 
@@ -1205,7 +1198,7 @@ bool EffectEqualization48x::ProcessOne8xThreaded(int count, WaveTrack * t,
       return ProcessOne4x(count, t, start, len);
 
    AudacityProject *p = GetActiveProject();
-   WaveTrack *output=p->GetTrackFactory()->NewWaveTrack(floatSample, t->GetRate());
+   auto output = p->GetTrackFactory()->NewWaveTrack(floatSample, t->GetRate());
 
    sampleCount trackBlockSize = t->GetMaxBlockSize();
    mEffectEqualization->TrackProgress(count, 0.0);
@@ -1269,8 +1262,7 @@ bool EffectEqualization48x::ProcessOne8xThreaded(int count, WaveTrack * t,
    }
    output->Flush();
    if(!bBreakLoop)
-      ProcessTail(t, output, start, len);
-   delete output;
+      ProcessTail(t, output.get(), start, len);
    return bBreakLoop;
 }
 

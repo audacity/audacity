@@ -11,6 +11,7 @@
 #ifndef _WIDGETS_VALNUM_H_
 #define _WIDGETS_VALNUM_H_
 
+#include "../MemoryX.h"
 #include <wx/defs.h>
 
 #if wxUSE_VALIDATORS
@@ -38,7 +39,7 @@ enum NumValidatorStyle
 // Base class for all numeric validators.
 // ----------------------------------------------------------------------------
 
-class NumValidatorBase : public wxValidator
+class NumValidatorBase /* not final */ : public wxValidator
 {
 public:
     // Change the validator style. Usually it's specified during construction.
@@ -46,7 +47,7 @@ public:
 
     // Called when the value in the window must be validated.
     // This function can pop up an error message.
-    virtual bool Validate(wxWindow * parent);
+    bool Validate(wxWindow * parent) override;
 
 protected:
     NumValidatorBase(int style)
@@ -84,8 +85,9 @@ protected:
 
     // Return the string which would result from inserting the given character
     // at the specified position.
-    wxString GetValueAfterInsertingChar(wxString val, int pos, wxChar ch) const
+    wxString GetValueAfterInsertingChar(const wxString &valArg, int pos, wxChar ch) const
     {
+        wxString val(valArg);
         val.insert(pos, ch);
         return val;
     }
@@ -143,7 +145,7 @@ namespace Private
 // The template argument T is just the type handled by the validator that will
 // inherit from this one.
 template <class B, typename T>
-class NumValidator : public B
+class NumValidator /* final */ : public B
 {
 public:
     typedef B BaseValidator;
@@ -181,7 +183,7 @@ public:
         SetMax(max);
     }
 
-    virtual bool TransferToWindow()
+    bool TransferToWindow() override
     {
         if ( m_value )
         {
@@ -195,7 +197,7 @@ public:
         return true;
     }
 
-    virtual bool TransferFromWindow()
+    bool TransferFromWindow() override
     {
         if ( m_value )
         {
@@ -232,7 +234,7 @@ protected:
 
     // Implement NumValidatorBase virtual method which is the same for
     // both integer and floating point numbers.
-    virtual wxString NormalizeString(const wxString& s) const
+    wxString NormalizeString(const wxString& s) const override
     {
         LongestValueType value;
         return BaseValidator::FromString(s, &value) ? NormalizeValue(value)
@@ -268,7 +270,7 @@ private:
 // type-dependent code of wxIntegerValidator<> and always works with values of
 // type LongestValueType. It is not meant to be used directly, please use
 // IntegerValidator<> only instead.
-class IntegerValidatorBase : public NumValidatorBase
+class IntegerValidatorBase /* not final */ : public NumValidatorBase
 {
 protected:
     // Define the type we use here, it should be the maximal-sized integer type
@@ -313,8 +315,8 @@ protected:
     }
 
     // Implement NumValidatorBase pure virtual method.
-    virtual bool IsCharOk(const wxString& val, int pos, wxChar ch) const;
-    virtual bool DoValidateNumber(wxString * errMsg) const;
+    bool IsCharOk(const wxString& val, int pos, wxChar ch) const override;
+    bool DoValidateNumber(wxString * errMsg) const override;
 
 private:
     // Minimal and maximal values accepted (inclusive).
@@ -327,7 +329,7 @@ private:
 // (short, int or long and long long if supported) and their unsigned versions
 // as well.
 template <typename T>
-class IntegerValidator
+class IntegerValidator final
     : public Private::NumValidator<IntegerValidatorBase, T>
 {
 public:
@@ -347,7 +349,8 @@ public:
         this->DoSetMax(std::numeric_limits<ValueType>::max());
     }
 
-    virtual wxObject *Clone() const { return new IntegerValidator(*this); }
+    // Clone is required by wxwidgets; implemented via copy constructor
+    wxObject *Clone() const override { return safenew IntegerValidator(*this); }
 
 private:
     DECLARE_NO_ASSIGN_CLASS(IntegerValidator);
@@ -368,7 +371,7 @@ MakeIntegerValidator(T *value, int style = NUM_VAL_DEFAULT)
 
 // Similar to IntegerValidatorBase, this class is not meant to be used
 // directly, only FloatingPointValidator<> should be used in the user code.
-class FloatingPointValidatorBase : public NumValidatorBase
+class FloatingPointValidatorBase /* not final */ : public NumValidatorBase
 {
 public:
     // Set precision i.e. the number of digits shown (and accepted on input)
@@ -409,8 +412,8 @@ protected:
     }
 
     // Implement NumValidatorBase pure virtual method.
-    virtual bool IsCharOk(const wxString& val, int pos, wxChar ch) const;
-    virtual bool DoValidateNumber(wxString * errMsg) const;
+    bool IsCharOk(const wxString& val, int pos, wxChar ch) const override;
+    bool DoValidateNumber(wxString * errMsg) const override;
 
     //Checks that it doesn't have too many decimal digits.
     bool ValidatePrecision(const wxString& s) const;
@@ -428,7 +431,7 @@ private:
 // Validator for floating point numbers. It can be used with float, double or
 // long double values.
 template <typename T>
-class FloatingPointValidator
+class FloatingPointValidator final
     : public Private::NumValidator<FloatingPointValidatorBase, T>
 {
 public:
@@ -456,9 +459,10 @@ public:
         this->SetPrecision(precision);
     }
 
-    virtual wxObject *Clone() const
+    // Clone is required by wxwidgets; implemented via copy constructor
+    wxObject *Clone() const override
     {
-        return new FloatingPointValidator(*this);
+        return safenew FloatingPointValidator(*this);
     }
 
 private:

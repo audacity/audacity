@@ -19,24 +19,24 @@
 #include "Command.h"
 #include "CommandType.h"
 
-class GetTrackInfoCommandType : public CommandType
+class GetTrackInfoCommandType final : public CommandType
 {
 public:
-   virtual wxString BuildName();
-   virtual void BuildSignature(CommandSignature &signature);
-   virtual Command *Create(CommandOutputTarget *target);
+   wxString BuildName() override;
+   void BuildSignature(CommandSignature &signature) override;
+   CommandHolder Create(std::unique_ptr<CommandOutputTarget> &&target) override;
 };
 
-class GetTrackInfoCommand : public CommandImplementation
+class GetTrackInfoCommand final : public CommandImplementation
 {
 public:
-   GetTrackInfoCommand(CommandType &type, CommandOutputTarget *target)
-      : CommandImplementation(type, target)
+   GetTrackInfoCommand(CommandType &type, std::unique_ptr<CommandOutputTarget> &&target)
+      : CommandImplementation(type, std::move(target))
    { }
    virtual ~GetTrackInfoCommand()
    { }
 
-   virtual bool Apply(CommandExecutionContext context);
+   bool Apply(CommandExecutionContext context) override;
 
 private:
    void SendBooleanStatus(bool BooleanValue);

@@ -111,7 +111,7 @@ typedef int LADSPA_Properties;
    satisfy all of the following:
 
    (1) The plugin must not use malloc(), free() or other heap memory
-   management within its run() or run_adding() functions. All new
+   management within its run() or run_adding() functions. All NEW
    memory used in run() must be managed via the stack. These
    restrictions only apply to the run() function.
 
@@ -381,7 +381,7 @@ typedef struct _LADSPA_Descriptor {
   /* This identifier can be used as a unique, case-sensitive
      identifier for the plugin type within the plugin file. Plugin
      types should be identified by file and label rather than by index
-     or plugin name, which may be changed in new plugin
+     or plugin name, which may be changed in NEW plugin
      versions. Labels must not contain white-space characters. */
   const char * Label;
 
@@ -426,7 +426,7 @@ typedef struct _LADSPA_Descriptor {
   void * ImplementationData;
 
   /* This member is a function pointer that instantiates a plugin. A
-     handle is returned indicating the new plugin instance. The
+     handle is returned indicating the NEW plugin instance. The
      instantiation function accepts a sample rate as a parameter. The
      plugin descriptor from which this instantiate function was found
      must also be passed. This function must return NULL if

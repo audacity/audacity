@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity.eu\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2015-09-07 12:40+0100\n"
-"PO-Revision-Date: 2015-06-25 17:35+0100\n"
+"POT-Creation-Date: 2015-09-16 22:10+0200\n"
+"PO-Revision-Date: 2015-09-16 22:10+0200\n"
 "Last-Translator: Xabier Aramendi <azpidatziak@gmail.com>\n"
 "Language-Team: (EUS_Xabier Aramendi) <azpidatziak@gmail.com>\n"
 "Language: eu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.6.11\n"
+"X-Generator: Poedit 1.8.4\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp:75
@@ -48,153 +48,137 @@ msgid "Error"
 msgstr "Akatsa"
 
 #: lib-src/FileDialog/mac/FileDialogPrivate.mm:483
-#, fuzzy
 msgid "File type:"
-msgstr "Iragazki &Mota:"
+msgstr "Iragazki mota:"
 
 #: lib-src/FileDialog/win/FileDialogPrivate.cpp:860
 #, c-format
 msgid "File dialog failed with error code %0lx."
-msgstr ""
+msgstr "Agiri elkarrizketa hutsegitea %0lx akats kodearekin."
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:195
-#, fuzzy
 msgid "&Nyquist Workbench..."
-msgstr "Nyquist Iradokizuna..."
+msgstr "&Nyquist Lan-azterketa..."
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:752
 msgid "&Undo\tCtrl+Z"
-msgstr ""
+msgstr "&Desegin\tKtrl+Z"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:753
 msgid "&Redo\tCtrl+Y"
-msgstr ""
+msgstr "&Berregin\tKtrl+Y"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:755
 msgid "Cu&t\tCtrl+X"
-msgstr ""
+msgstr "&Ebakit\tKtrl+X"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:756
 msgid "&Copy\tCtrl+C"
-msgstr ""
+msgstr "&Kopiatu\tKtrl+C"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:757
-#, fuzzy
 msgid "&Paste\tCtrl+V"
-msgstr "&Itsatsi"
+msgstr "&Itsatsi\tKtrl+V"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:758
 msgid "Cle&ar\tCtrl+L"
-msgstr ""
+msgstr "&Garbitu\tKtrl+L"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:760
-#, fuzzy
 msgid "Select A&ll\tCtrl+A"
-msgstr "Hautatu &Denak"
+msgstr "Hautatu &Denak\tKtrl+A"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:762
 msgid "&Find...\tCtrl+F"
-msgstr ""
+msgstr "&Bilatu...\tKtrl+F"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:765
 msgid "&Matching Paren\tF8"
-msgstr ""
+msgstr "&Bat datorrena\tF8"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:766
 msgid "&Top S-expr\tF9"
-msgstr ""
+msgstr "&Top S-expr\tF9"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:767
 msgid "&Higher S-expr\tF10"
-msgstr ""
+msgstr "&Handiagoa S-expr\tF10"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:768
 msgid "&Previous S-expr\tF11"
-msgstr ""
+msgstr "A&urrekoa S-expr\tF11"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:769
 msgid "&Next S-expr\tF12"
-msgstr ""
+msgstr "&Hurrengoa S-expr\tF12"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:770
 msgid "&Go to"
-msgstr ""
+msgstr "&Joan hona"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:776
-#, fuzzy
 msgid "Select &Font..."
-msgstr "&Hizkia..."
+msgstr "Hautatu &Hizkia..."
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:778
-#, fuzzy
 msgid "Split &Vertically"
-msgstr "Finkatu &Zutika"
+msgstr "Banandu &Zutika"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:779
-#, fuzzy
 msgid "Split &Horizontally"
-msgstr "Etzana"
+msgstr "Ba&nandu Etzanean"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:781
-#, fuzzy
 msgid "Show S&cript"
-msgstr "Erakutsi irteera"
+msgstr "Erakutsi Eskri&pta"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:782
-#, fuzzy
 msgid "Show &Output"
-msgstr "Erakutsi irteera"
+msgstr "Erakutsi &Irteera"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:785
-#, fuzzy
 msgid "&Large Icons"
-msgstr "Gela Handia"
+msgstr "&Ikur Handiak"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:786
 msgid "&Small Icons"
-msgstr ""
+msgstr "Ikur T&xikiak"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:787
-#, fuzzy
 msgid "Toolbar"
-msgstr "&Tresnabarrak"
+msgstr "Tresnabarra"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:791
 msgid "&Go\tF5"
-msgstr ""
+msgstr "&Joan\tF5"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:792
-#, fuzzy
 msgid "&Stop\tF6"
-msgstr "&Gelditu"
+msgstr "&Gelditu\tF6"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:796
 #: lib-src/mod-nyq-bench/NyqBench.cpp:799
-#, fuzzy
 msgid "&About"
-msgstr "Honi buruz"
+msgstr "&Honi buruz"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:922
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1607
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1622
 msgid "Script"
-msgstr ""
+msgstr "Eskripta"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:950
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1610
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1619
-#, fuzzy
 msgid "Output"
-msgstr "Irteera Neurgailua"
+msgstr "Irteera"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp:1058
-#: src/effects/nyquist/Nyquist.cpp:2065
+#: lib-src/mod-nyq-bench/NyqBench.cpp:1058 src/effects/nyquist/Nyquist.cpp:2065
 msgid "Load Nyquist script"
 msgstr "Gertatu Nyquist Eskripta"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1061
-#: lib-src/mod-nyq-bench/NyqBench.cpp:1107
-#: src/effects/nyquist/Nyquist.cpp:2090
+#: lib-src/mod-nyq-bench/NyqBench.cpp:1107 src/effects/nyquist/Nyquist.cpp:2090
 msgid "Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|All files|*"
 msgstr ""
 "Nyquist eskriptak (*.ny)|*.ny|Lisp eskriptak (*.lsp)|*.lsp|Agiri guztiak|*"
@@ -202,7 +186,7 @@ msgstr ""
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1089
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1119
 msgid "Script was not saved."
-msgstr ""
+msgstr "Eskripta ez da gorde."
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1090
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1120
@@ -213,62 +197,56 @@ msgstr ""
 msgid "Warning"
 msgstr "Kontuz"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp:1104
-#: src/effects/nyquist/Nyquist.cpp:2087
+#: lib-src/mod-nyq-bench/NyqBench.cpp:1104 src/effects/nyquist/Nyquist.cpp:2087
 msgid "Save Nyquist script"
 msgstr "Gorde Nyquist Eskripta"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1203
 msgid "Find dialog"
-msgstr ""
+msgstr "Bilatu elkarrizketa"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1422
 msgid "Harvey Lubin (logo)"
-msgstr ""
+msgstr "Harvey Lubin (logoa)"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1423
 msgid "Tango Icon Gallery (toolbar icons)"
-msgstr ""
+msgstr "Tango Icon Galeria (tresnabarra ikurrak)"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1424
-#, fuzzy
 msgid "Leland Lucius"
-msgstr "Leland Luciusek egina"
+msgstr "Leland Lucius"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1425
-#, fuzzy
 msgid "(C) 2009 by Leland Lucius"
-msgstr "Leland Luciusek egina"
+msgstr "(C) 2009 Leland Lucius-ek egina"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1426
 msgid ""
 "External Audacity module which provides a simple IDE for writing effects."
 msgstr ""
+"Kanpoko Audacity moduloa IDE arrunt bat eskaintzen duena eraginak idazteko."
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1427
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1495
-#, fuzzy
 msgid "Nyquist Effect Workbench"
-msgstr "Nyquist Eraginak"
+msgstr "Nyquist Eragin Lan-azterketa"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1494
-#, fuzzy
 msgid "No matches found"
-msgstr "Ez da gailurik aurkitu"
+msgstr "Ez da bat datorrenik aurkitu"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1631
 msgid "Code has been modified.  Are you sure?"
-msgstr ""
+msgstr "Kodea aldatu egin da. Zihur zaude?"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1645
-#, fuzzy
 msgid "Untitled"
-msgstr "izenburugabea"
+msgstr "Izenburugabea"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1651
-#, fuzzy
 msgid "Nyquist Effect Workbench - "
-msgstr "Nyquist Eraginak"
+msgstr "Nyquist Eragin Lan-azterketa - "
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1715 src/PluginManager.cpp:492
 #: src/prefs/ModulePrefs.cpp:102
@@ -277,46 +255,39 @@ msgstr "Berria"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1715
 msgid "New script"
-msgstr ""
+msgstr "Eskript berria"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1716
-#, fuzzy
 msgid "Open"
-msgstr "&Ireki..."
+msgstr "Ireki"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1716
-#, fuzzy
 msgid "Open script"
-msgstr "Ireki Berrikia"
+msgstr "Ireki eskripta"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1717
-#, fuzzy
 msgid "Save"
-msgstr "&Gorde"
+msgstr "Gorde"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1717
-#, fuzzy
 msgid "Save script"
-msgstr "Gorde Nyquist Eskripta"
+msgstr "Gorde eskripta"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1718
-#, fuzzy
 msgid "Save As"
-msgstr "Gorde Honela..."
+msgstr "Gorde Honela"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1718
-#, fuzzy
 msgid "Save script as..."
-msgstr "Gorde Egitasmoa &Honela..."
+msgstr "Gorde eskripta honela..."
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1720 src/toolbars/EditToolBar.cpp:204
 msgid "Copy"
 msgstr "Kopiatu"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1720
-#, fuzzy
 msgid "Copy to clipboard"
-msgstr "Ebaki gakora"
+msgstr "Kopiatu gakora"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1721 src/Menus.cpp:3862
 #: src/toolbars/EditToolBar.cpp:203
@@ -324,9 +295,8 @@ msgid "Cut"
 msgstr "Ebaki"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1721
-#, fuzzy
 msgid "Cut to clipboard"
-msgstr "Ebaki gakora"
+msgstr "Kopiatu gakora"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1722 src/Menus.cpp:4158
 #: src/Menus.cpp:4182 src/Menus.cpp:4287 src/toolbars/EditToolBar.cpp:137
@@ -335,29 +305,24 @@ msgid "Paste"
 msgstr "Itsatsi"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1722
-#, fuzzy
 msgid "Paste from clipboard"
-msgstr "Gakotik itsatsita"
+msgstr "Itsatsi gakotik"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1723
-#, fuzzy
 msgid "Clear"
-msgstr "&Garbitu"
+msgstr "Garbitu"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1723
-#, fuzzy
 msgid "Clear selection"
-msgstr "&Neurketa hautapena"
+msgstr "Garbitu hautapena"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1724
-#, fuzzy
 msgid "Select All"
-msgstr "Hautatu &Denak"
+msgstr "Hautatu Denak"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1724
-#, fuzzy
 msgid "Select all text"
-msgstr "Hautatu &Denak"
+msgstr "Hautatu idazki denak"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1726 src/prefs/KeyConfigPrefs.cpp:885
 #: src/toolbars/EditToolBar.cpp:146 src/toolbars/EditToolBar.cpp:208
@@ -366,9 +331,8 @@ msgid "Undo"
 msgstr "Desegin"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1726
-#, fuzzy
 msgid "Undo last change"
-msgstr "Heuskarri Aldaketa"
+msgstr "Desegin azken aldaketa"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1727 src/prefs/KeyConfigPrefs.cpp:888
 #: src/toolbars/EditToolBar.cpp:148 src/toolbars/EditToolBar.cpp:209
@@ -378,34 +342,31 @@ msgstr "Berregin"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1727
 msgid "Redo previous change"
-msgstr ""
+msgstr "Berregin aurreko aldaketa"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1729
 msgid "Find"
-msgstr ""
+msgstr "Bilatu"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1729
-#, fuzzy
 msgid "Find text"
-msgstr "&Bilatu Oharrak"
+msgstr "Bilatu idazkia"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1731
-#, fuzzy
 msgid "Match"
-msgstr "Multzoa"
+msgstr "Bat"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1731
 msgid "Go to matching paren"
-msgstr ""
+msgstr "Joan bat datorrenera"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1732
-#, fuzzy
 msgid "Top"
-msgstr "Hona:"
+msgstr "Goia"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1732
 msgid "Go to top S-expr"
-msgstr ""
+msgstr "Joan top S-expr-ra"
 
 #. i18n-hint: a direction.
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1733 src/Menus.cpp:3045
@@ -414,25 +375,23 @@ msgstr "Gora"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1733
 msgid "Go to higher S-expr"
-msgstr ""
+msgstr "Joan higher S-expr-ra"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1734
-#, fuzzy
 msgid "Previous"
-msgstr "Aurreko Tresna"
+msgstr "Aurrekoa"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1734
 msgid "Go to previous S-expr"
-msgstr ""
+msgstr "Joan aurreko S-expr-ra"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1735
-#, fuzzy
 msgid "Next"
-msgstr "Hurrengo Tresna"
+msgstr "Hurrengoa"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1735
 msgid "Go to next S-expr"
-msgstr ""
+msgstr "Joan hurrengo S-expr-ra"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1737 src/Menus.cpp:5781
 #: src/Menus.cpp:5786 src/Menus.cpp:5791 src/effects/Contrast.cpp:220
@@ -441,9 +400,8 @@ msgid "Start"
 msgstr "Hasiera"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1737
-#, fuzzy
 msgid "Start script"
-msgstr "Gorde Nyquist Eskripta"
+msgstr "Gorde eskripta"
 
 #. i18n-hint: (verb) Stop playing audio
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1738 src/Menus.cpp:1119
@@ -453,18 +411,16 @@ msgid "Stop"
 msgstr "Gelditu"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1738
-#, fuzzy
 msgid "Stop script"
-msgstr "Gorde Nyquist Eskripta"
+msgstr "Gorde eskripta"
 
 #: lib-src/mod-track-panel/TrackPanel2.cpp:54
 msgid "Panel 1"
-msgstr ""
+msgstr "1 Panela"
 
 #: lib-src/mod-track-panel/TrackPanel2.cpp:68
-#, fuzzy
 msgid "Diagnostics"
-msgstr "ekin bere igarpenak"
+msgstr "Igarpenak"
 
 #. i18n-hint: "OK... Audacious" appears on a button at the
 #. * foot of the 'About Audacity' dialog box, after some text to read.
@@ -639,7 +595,7 @@ msgstr "Audio irakurketa eta grabaketa"
 
 #: src/AboutDialog.cpp:437
 msgid "Cross-platform GUI library"
-msgstr ""
+msgstr "Plataforma-arteko EIG liburutegia"
 
 #: src/AboutDialog.cpp:441
 msgid "Features"
@@ -901,8 +857,8 @@ msgstr "Audacity-ren Oharra"
 msgid "&Save..."
 msgstr "G&orde..."
 
-#: src/AudacityLogger.cpp:203 src/Tags.cpp:792
-#: src/prefs/KeyConfigPrefs.cpp:273 src/prefs/KeyConfigPrefs.cpp:792
+#: src/AudacityLogger.cpp:203 src/Tags.cpp:792 src/prefs/KeyConfigPrefs.cpp:273
+#: src/prefs/KeyConfigPrefs.cpp:792
 msgid "Cl&ear"
 msgstr "G&arbitu"
 
@@ -1577,7 +1533,7 @@ msgstr "Kontuz - Agiri Izenordetua(k) Galduta"
 #: src/DirManager.cpp:1482
 msgid "   Project check replaced missing aliased file(s) with silence."
 msgstr ""
-"   Egitasmo egiaztepenak galdutako izenorde laburpen agiria(k) "
+"   Egitasmo egiaztapenak galdutako izenorde laburpen agiria(k) "
 "isiltasunarekin ordeztu ditu."
 
 #: src/DirManager.cpp:1502
@@ -1612,7 +1568,7 @@ msgstr "Kontuz - Izenorde Lapurpen Agiria(k) Galduta"
 #: src/DirManager.cpp:1536
 msgid "   Project check regenerated missing alias summary file(s)."
 msgstr ""
-"   Egitasmo egiaztepenak galdutako izenorde laburpen agiria(k) birsortu ditu."
+"   Egitasmo egiaztapenak galdutako izenorde laburpen agiria(k) birsortu ditu."
 
 #: src/DirManager.cpp:1554
 #, c-format
@@ -1640,7 +1596,7 @@ msgstr ""
 "saiatu zaitezke ez dauden agiriak bilatzen eta beren \n"
 "aurreko kokalekura leheneratzen. \n"
 "\n"
-"Ohartu bigarren aukeran, uhinerak badaitekela \n"
+"Ohartu bigarren aukeran, uhinerak badaitekeela \n"
 "isiltasuna ez erakustea."
 
 #: src/DirManager.cpp:1569
@@ -3038,7 +2994,7 @@ msgstr "&Sortu"
 
 #: src/Menus.cpp:978 src/Menus.cpp:1005 src/Menus.cpp:1029
 msgid "Add / Remove Plug-ins..."
-msgstr ""
+msgstr "Gehitu / Kendu Plug-inak..."
 
 #: src/Menus.cpp:994
 msgid "Effe&ct"
@@ -4830,7 +4786,7 @@ msgstr "Bigarren Bidea"
 
 #: src/Screenshot.cpp:406 src/prefs/SpectrumPrefs.cpp:166
 msgid "Scale"
-msgstr "Neurria"
+msgstr "E&skala"
 
 #: src/Screenshot.cpp:410
 msgid "One Sec"
@@ -5222,9 +5178,8 @@ msgid "Ma&ke Stereo Track"
 msgstr "&Egin Bidea Estereoa"
 
 #: src/TrackPanel.cpp:698
-#, fuzzy
 msgid "R&ight Channel"
-msgstr "Eskuin Bidea"
+msgstr "E&skuin Bidea"
 
 #: src/TrackPanel.cpp:699
 msgid "&Left Channel"
@@ -5235,9 +5190,8 @@ msgid "&Mono"
 msgstr "&Monoa"
 
 #: src/TrackPanel.cpp:714
-#, fuzzy
 msgid "Split Stereo to &Mono"
-msgstr "Banandu Bidea &Monora"
+msgstr "Banandu  &Monora"
 
 #: src/TrackPanel.cpp:715
 msgid "Spl&it Stereo Track"
@@ -5264,19 +5218,16 @@ msgid "&Spectrogram"
 msgstr "&Argilitza"
 
 #: src/TrackPanel.cpp:761
-#, fuzzy
 msgid "S&pectrogram Settings..."
-msgstr "Argilitzak"
+msgstr "&Argilitza Ezarpenak..."
 
 #: src/TrackPanel.cpp:769
-#, fuzzy
 msgid "&Format"
-msgstr "Heuskarria:"
+msgstr "&Heuskarria:"
 
 #: src/TrackPanel.cpp:773
-#, fuzzy
 msgid "&Rate"
-msgstr "Ezarri Maila"
+msgstr "&Maila"
 
 #: src/TrackPanel.cpp:778
 msgid "Up &Octave"
@@ -5299,16 +5250,14 @@ msgid "L&ogarithmic"
 msgstr "L&ogaritmikoa"
 
 #: src/TrackPanel.cpp:792
-#, fuzzy
 msgid "&Range..."
-msgstr "&Kudeatu..."
+msgstr "&Maila..."
 
 #: src/TrackPanel.cpp:793
 msgid "Logarithmic &Interpolation"
 msgstr "Interpolazio &Logaritmikoa"
 
 #: src/TrackPanel.cpp:808
-#, fuzzy
 msgid "&Name..."
 msgstr "&Izena..."
 
@@ -5330,16 +5279,15 @@ msgstr "Mugitu Bidea &Beheren"
 
 #: src/TrackPanel.cpp:826
 msgid "Zoom In\tLeft-Click/Left-Drag"
-msgstr ""
+msgstr "Zooma Gehitu\tEzker-Klika/Ezker-Arrastatzea"
 
 #: src/TrackPanel.cpp:827
-#, fuzzy
 msgid "Zoom Out\tShift-Left-Click"
-msgstr "Aldatu-Ezker-Klikatu"
+msgstr "Zooma Gutxitu\tAldatu-Ezker-Klika"
 
 #: src/TrackPanel.cpp:828
 msgid "Zoom to Fit\tShift-Right-Click"
-msgstr ""
+msgstr "Zooma Finkatzeo\tAldatu-Eskuin-Klika"
 
 #: src/TrackPanel.cpp:1706
 msgid ""
@@ -6155,11 +6103,11 @@ msgstr "Binilo rpm Estandarra:"
 
 #: src/effects/ChangeSpeed.cpp:348
 msgid "From rpm"
-msgstr "rpm-tik"
+msgstr "im-kotik"
 
 #: src/effects/ChangeSpeed.cpp:353
 msgid "To rpm"
-msgstr "rpm-ra"
+msgstr "im-kora"
 
 #: src/effects/ChangeSpeed.cpp:359 src/toolbars/SelectionBar.cpp:347
 msgid "Selection Length"
@@ -7105,31 +7053,28 @@ msgid "kHz"
 msgstr "kHz"
 
 #: src/effects/Equalization.cpp:758
-#, fuzzy
 msgid "&EQ Type:"
-msgstr "Mota:"
+msgstr "E&K Mota:"
 
 #: src/effects/Equalization.cpp:766
 msgid "&Draw"
-msgstr ""
+msgstr "&Marraztu"
 
 #: src/effects/Equalization.cpp:767
 msgid "Draw Curves"
 msgstr "Marraztu Bihurguneak"
 
 #: src/effects/Equalization.cpp:769
-#, fuzzy
 msgid "&Graphic"
-msgstr "&EK Grafikoa"
+msgstr "&Grafikoa"
 
 #: src/effects/Equalization.cpp:770
 msgid "Graphic EQ"
 msgstr "EK Grafikoa"
 
 #: src/effects/Equalization.cpp:785
-#, fuzzy
 msgid "Interpolation type"
-msgstr "Interpolazioa"
+msgstr "Interpolazio mota"
 
 #: src/effects/Equalization.cpp:794
 msgid "Li&near Frequency Scale"
@@ -7168,14 +7113,12 @@ msgid "&Invert"
 msgstr "&Alderantzizkatu"
 
 #: src/effects/Equalization.cpp:871
-#, fuzzy
 msgid "Show g&rid lines"
-msgstr "Erakutsi ezkutuko agiriak"
+msgstr "Erakutsi &saretxo marrak"
 
 #: src/effects/Equalization.cpp:872
-#, fuzzy
 msgid "Show grid lines"
-msgstr "Erakutsi ezkutuko agiriak"
+msgstr "Erakutsi saretxo marrak"
 
 #: src/effects/Equalization.cpp:894
 msgid "&Processing: "
@@ -8057,14 +8000,12 @@ msgid "Feedback in percent"
 msgstr "Erantzuna ehunekotan"
 
 #: src/effects/Phaser.cpp:310 src/effects/Wahwah.cpp:282
-#, fuzzy
 msgid "Output gain (dB):"
-msgstr "&Heze Irabazia (dB):"
+msgstr "Irteera irabazia (dB):"
 
 #: src/effects/Phaser.cpp:315 src/effects/Wahwah.cpp:287
-#, fuzzy
 msgid "Output gain (dB)"
-msgstr "&Heze Irabazia (dB):"
+msgstr "Irteera irabazia (dB):"
 
 #: src/effects/Phaser.h:30
 msgid "Phaser"
@@ -8110,23 +8051,20 @@ msgid "Repeats the selection the specified number of times"
 msgstr "Hautapena adierazitako aldi zenbatekoan berregiten du"
 
 #: src/effects/Repeat.cpp:178
-#, fuzzy
 msgid "Number of repeats to add:"
-msgstr "Berregite aldi zenbatekoa:"
+msgstr "Gehitzeko berregite zenbatekoa:"
 
 #: src/effects/Repeat.cpp:185
-#, fuzzy
 msgid "Current selection length: dd:hh:mm:ss"
-msgstr "Hautapen berriaren luzera: hh:mm:ss"
+msgstr "Oraingo hautapenaren luzera: dd:hh:mm:ss"
 
 #: src/effects/Repeat.cpp:186
 msgid "New selection length: dd:hh:mm:ss"
 msgstr "Hautapen berriaren luzera: hh:mm:ss"
 
 #: src/effects/Repeat.cpp:227
-#, fuzzy
 msgid "Current selection length: "
-msgstr "Hautapen luzera berria: "
+msgstr "Oraingo hautapenaren luzera: "
 
 #: src/effects/Repeat.cpp:237
 msgid "New selection length: "
@@ -8134,7 +8072,7 @@ msgstr "Hautapen luzera berria: "
 
 #: src/effects/Repeat.cpp:240
 msgid "Warning: No repeats."
-msgstr ""
+msgstr "Kontuz: Berregiterik ez."
 
 #: src/effects/Repeat.h:23
 msgid "Repeat"
@@ -8915,18 +8853,17 @@ msgstr "Audio Unitate Eragin Aukerak"
 #: src/effects/audiounits/AudioUnitEffect.cpp:319
 #: src/effects/audiounits/AudioUnitEffect.cpp:401
 msgid "Full"
-msgstr ""
+msgstr "Osoa"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:320
 #: src/effects/audiounits/AudioUnitEffect.cpp:405
-#, fuzzy
 msgid "Generic"
-msgstr "&Sortu"
+msgstr "Generikoa"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:321
 #: src/effects/audiounits/AudioUnitEffect.cpp:409
 msgid "Basic"
-msgstr ""
+msgstr "Ohinarrizkoa"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:347
 msgid ""
@@ -8940,27 +8877,29 @@ msgid "not work for all Audio Unit effects."
 msgstr "ez du lan egiten Audio Unitate eragin guztiekin."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:362
-#, fuzzy
 msgid "User Interface"
-msgstr "Interfazea"
+msgstr "Erabiltzaile Interfazea"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:365
 msgid ""
 "Select \"Full\" to use the graphical interface if supplied by the Audio Unit."
 msgstr ""
+"Hautatu \"Osoa\" interfaze grafikoa erabiltzeko Audio Unitateak hornitzen "
+"badu."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:366
 msgid " Select \"Generic\" to use the system supplied generic interface."
 msgstr ""
+" Hautatu  \"Generikoa\" sistemak hornitutako interfaze generikoa erabiltzeko."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:367
 msgid " Select \"Basic\" for A basic text-only interface. "
 msgstr ""
+" Hautatu \"Ohinarrizkoa\" idazkia-bakarrik ohinarrizko interfaze baterako."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:372
-#, fuzzy
 msgid "Select &interface"
-msgstr "Hautapena Estutu Ezkerrera"
+msgstr "Hautatu &interfazea"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:453
 msgid "Export Audio Unit Presets"
@@ -9048,9 +8987,8 @@ msgid "&Duration:"
 msgstr "&Iraupena:"
 
 #: src/effects/lv2/LoadLV2.cpp:101
-#, fuzzy
 msgid "LV2 Effects"
-msgstr "VST Eraginak"
+msgstr "LV2 Eraginak"
 
 #: src/effects/lv2/LoadLV2.cpp:122
 msgid "Provides LV2 Effects support to Audacity"
@@ -9087,11 +9025,13 @@ msgid ""
 "Maximum allowed selection is 2147483647 samples\n"
 "(about 13.5 hours at 44100 Hz sample rate)."
 msgstr ""
+"Hautapena luzeegia da Nyquist koderako.\n"
+"Ahalbidetutako gehinezko hautapena 2147483647 lagin da\n"
+"(13.5 ordu inguru 44100 Hz-ko lagin neurrian)."
 
 #: src/effects/nyquist/Nyquist.cpp:591
-#, fuzzy
 msgid "Nyquist Error"
-msgstr "Nyquist Eskaerak"
+msgstr "Nyquist Akatsa"
 
 #: src/effects/nyquist/Nyquist.cpp:682
 msgid "Nyquist"
@@ -9102,9 +9042,8 @@ msgid "Nyquist Output: "
 msgstr "Nyquist Irteera:"
 
 #: src/effects/nyquist/Nyquist.cpp:1002 src/effects/nyquist/Nyquist.cpp:1005
-#, fuzzy
 msgid "Processing complete."
-msgstr "Garapena:"
+msgstr "Prozesatzea osatuta."
 
 #: src/effects/nyquist/Nyquist.cpp:1028 src/effects/nyquist/Nyquist.cpp:1037
 msgid "Nyquist returned the value:"
@@ -9242,7 +9181,7 @@ msgstr "Programa"
 
 #: src/export/Export.cpp:235
 msgid "No format specific options"
-msgstr ""
+msgstr "Ez dago heuskarri aukerarik"
 
 #: src/export/Export.cpp:303
 msgid "Export Audio"
@@ -9327,9 +9266,8 @@ msgid "Advanced Mixing Options"
 msgstr "Nahasketa Aukera Aurreratuak"
 
 #: src/export/Export.cpp:880
-#, fuzzy
 msgid "Format Options"
-msgstr "Aukera Orokorrak"
+msgstr "Heuskarri Aukerak"
 
 #: src/export/Export.cpp:1076
 #, c-format
@@ -9571,9 +9509,8 @@ msgid "%.2f kbps"
 msgstr "%.2f kbs-ko"
 
 #: src/export/ExportFFmpegDialogs.cpp:431
-#, fuzzy
 msgid "Open custom FFmpeg format options"
-msgstr "Norbere FFmpeg Esportazioa"
+msgstr "Ireki norbere FFmpeg heuskarri aukerak"
 
 #: src/export/ExportFFmpegDialogs.cpp:566
 #, c-format
@@ -9599,9 +9536,9 @@ msgid "Preset '%s' does not exist."
 msgstr "'%s' aurrezarpena ez dago."
 
 #: src/export/ExportFFmpegDialogs.cpp:761
-#, fuzzy, c-format
+#, c-format
 msgid "Replace preset '%s'?"
-msgstr "Ezabatu '%s' aurrezarpena?"
+msgstr "Ordeztu '%s' aurrezarpena?"
 
 #: src/export/ExportFFmpegDialogs.cpp:1190
 msgid "LC"
@@ -9660,9 +9597,8 @@ msgid "Log search"
 msgstr "Ohar bilaketa"
 
 #: src/export/ExportFFmpegDialogs.cpp:1307
-#, fuzzy
 msgid "Configure custom FFmpeg options"
-msgstr "Norbere FFmpeg Esportazioa"
+msgstr "Itxuratu norbere FFmpeg aukerak"
 
 #: src/export/ExportFFmpegDialogs.cpp:1400
 msgid "Preset:"
@@ -10361,22 +10297,20 @@ msgstr ""
 "dituzu, hortaz ezin duzu audio agiri bananduetan esportatu."
 
 #: src/export/ExportMultiple.cpp:249
-#, fuzzy
 msgid "Export files to:"
-msgstr "Esportazio kokalekua:"
+msgstr "Esportatu agiriak hona:"
 
 #: src/export/ExportMultiple.cpp:254
 msgid "Folder:"
-msgstr ""
+msgstr "Agirtegia:"
 
 #: src/export/ExportMultiple.cpp:259
 msgid "Create"
 msgstr "Sortu"
 
 #: src/export/ExportMultiple.cpp:270
-#, fuzzy
 msgid "Options:"
-msgstr "Aukerak..."
+msgstr "Aukerak:"
 
 #: src/export/ExportMultiple.cpp:296
 msgid "Split files based on:"
@@ -11370,9 +11304,8 @@ msgstr ""
 "&Erakutsi 'Nola Lortu Laguntza' elkarrizketa kutxa programa abiatzerakoan"
 
 #: src/prefs/GUIPrefs.cpp:119
-#, fuzzy
 msgid "Meter dB &range:"
-msgstr "Neurgailu/Uhinera dB &maila:"
+msgstr "Neurgailu dB &maila:"
 
 #: src/prefs/GUIPrefs.cpp:126
 msgid "&Language:"
@@ -11745,7 +11678,7 @@ msgstr "Ez da modulorik aurkitu"
 
 #: src/prefs/MousePrefs.cpp:59
 msgid "Ctrl"
-msgstr ""
+msgstr "Ktrl"
 
 #: src/prefs/MousePrefs.cpp:64
 msgid "Mouse"
@@ -11810,9 +11743,8 @@ msgid "Select Clip or Entire Track"
 msgstr "Hautatu Ebakina edo Bide Osoa"
 
 #: src/prefs/MousePrefs.cpp:114
-#, fuzzy
 msgid "-Left-Click"
-msgstr "Ezker-Klikatu"
+msgstr "-Ezker-Klikatu"
 
 #: src/prefs/MousePrefs.cpp:114
 msgid "Scrub"
@@ -11820,18 +11752,16 @@ msgstr "Arrast-irakurri"
 
 #: src/prefs/MousePrefs.cpp:115 src/prefs/MousePrefs.cpp:140
 #: src/prefs/MousePrefs.cpp:150
-#, fuzzy
 msgid "-Left-Drag"
-msgstr "Ezker-Arrastatu"
+msgstr "-Ezker-Arrastatu"
 
 #: src/prefs/MousePrefs.cpp:115
 msgid "Seek"
 msgstr "Bilatu"
 
 #: src/prefs/MousePrefs.cpp:118
-#, fuzzy
 msgid "-Left-Double-Click"
-msgstr "Ezker-Klik-Bikoitza"
+msgstr "-Ezker-Klik-Bikoitza"
 
 #: src/prefs/MousePrefs.cpp:118
 msgid "Scroll-scrub"
@@ -11966,9 +11896,8 @@ msgid "Scroll left or right"
 msgstr "Irristatu ezker edo eskuin"
 
 #: src/prefs/MousePrefs.cpp:166
-#, fuzzy
 msgid "-Wheel-Rotate"
-msgstr "Gurpila-Itzulikatu"
+msgstr "-Gurpila-Itzulikatu"
 
 #: src/prefs/MousePrefs.cpp:166
 msgid "Zoom in or out on Mouse Pointer"
@@ -12180,33 +12109,31 @@ msgstr "0 amaieragabe esanahi du"
 #. i18n-hint: The name of a frequency scale in psychoacoustics
 #: src/prefs/SpectrogramSettings.cpp:155
 msgid "Mel"
-msgstr ""
+msgstr "Mel"
 
 #. i18n-hint: The name of a frequency scale in psychoacoustics, named for Heinrich Barkhausen
 #: src/prefs/SpectrogramSettings.cpp:157
 msgid "Bark"
-msgstr ""
+msgstr "Bark"
 
 #. i18n-hint: The name of a frequency scale in psychoacoustics, abbreviates Equivalent Rectangular Bandwidth
 #: src/prefs/SpectrogramSettings.cpp:159
 msgid "ERB"
-msgstr ""
+msgstr "ERB"
 
 #. i18n-hint: Time units, that is Period = 1 / Frequency
 #: src/prefs/SpectrogramSettings.cpp:161
-#, fuzzy
 msgid "Period"
-msgstr "Frame Aldia"
+msgstr "Aldia"
 
 #: src/prefs/SpectrogramSettings.cpp:177
-#, fuzzy
 msgid "Frequencies"
-msgstr "Maiztasuna"
+msgstr "Maiztasunak"
 
 #. i18n-hint: the Reassignment algorithm for spectrograms
 #: src/prefs/SpectrogramSettings.cpp:179
 msgid "Reassignment"
-msgstr ""
+msgstr "Berresleipena"
 
 #. i18n-hint: EAC abbreviates "Enhanced Autocorrelation"
 #: src/prefs/SpectrogramSettings.cpp:181
@@ -12239,9 +12166,8 @@ msgid "The frequency gain must be no more than 60 dB/dec"
 msgstr "Maiztasun irabazia 60 dB/dec baino gehiago izan behar da"
 
 #: src/prefs/SpectrumPrefs.cpp:36
-#, fuzzy
 msgid "Spectrogram Settings"
-msgstr "Argilitzak"
+msgstr "Argilitza Ezarpenak"
 
 #: src/prefs/SpectrumPrefs.cpp:36
 msgid "Spectrograms"
@@ -12261,14 +12187,12 @@ msgstr "32768 - banda estuagoa"
 
 #. i18n-hint: use is a verb
 #: src/prefs/SpectrumPrefs.cpp:163 src/prefs/WaveformPrefs.cpp:83
-#, fuzzy
 msgid "Use Preferences"
-msgstr "Hobespenak:"
+msgstr "Erabilpen Hobespenak"
 
 #: src/prefs/SpectrumPrefs.cpp:170 src/prefs/WaveformPrefs.cpp:91
-#, fuzzy
 msgid "S&cale"
-msgstr "Neurria"
+msgstr "Eskala"
 
 #: src/prefs/SpectrumPrefs.cpp:175
 msgid "Mi&nimum Frequency (Hz):"
@@ -12280,7 +12204,7 @@ msgstr "&Gehienezko Maiztasuna (Hz):"
 
 #: src/prefs/SpectrumPrefs.cpp:188
 msgid "Colors"
-msgstr ""
+msgstr "Margoak"
 
 #: src/prefs/SpectrumPrefs.cpp:193
 msgid "&Gain (dB):"
@@ -12299,12 +12223,10 @@ msgid "S&how the spectrum using grayscale colors"
 msgstr "E&rakutsi argilitza urdinabar-neurri margoak erabiliz"
 
 #: src/prefs/SpectrumPrefs.cpp:215
-#, fuzzy
 msgid "Algorithm"
-msgstr "&Algoritmoa"
+msgstr "Algoritmoa"
 
 #: src/prefs/SpectrumPrefs.cpp:220
-#, fuzzy
 msgid "A&lgorithm"
 msgstr "&Algoritmoa"
 
@@ -12321,9 +12243,8 @@ msgid "&Zero padding factor"
 msgstr "&Betegarri huts ezaugarria"
 
 #: src/prefs/SpectrumPrefs.cpp:247
-#, fuzzy
 msgid "Ena&ble Spectral Selection"
-msgstr "Argilitza Hautapena"
+msgstr "&Gaitu Argilitza Hautapena"
 
 #: src/prefs/SpectrumPrefs.cpp:252
 msgid "Show a grid along the &Y-axis"
@@ -12351,14 +12272,12 @@ msgid "&Quantize Notes"
 msgstr "&Kuantizazio Oharrak"
 
 #: src/prefs/SpectrumPrefs.cpp:285
-#, fuzzy
 msgid "Global settings"
-msgstr "Gertatu ezarpenak:"
+msgstr "Ezarpenak orokorrak"
 
 #: src/prefs/SpectrumPrefs.cpp:287
-#, fuzzy
 msgid "Ena&ble spectral selection"
-msgstr "Al&datu argilitza hautapena"
+msgstr "&Gaitu argilitza hautapena"
 
 #: src/prefs/SpectrumPrefs.cpp:306
 msgid "The maximum frequency must be an integer"
@@ -12568,14 +12487,12 @@ msgid "&Importing uncompressed audio files"
 msgstr "&Konprimitu gabeko audio agiriak inportatzerakoan"
 
 #: src/prefs/WaveformPrefs.cpp:29
-#, fuzzy
 msgid "Waveforms"
-msgstr "Uhinera"
+msgstr "Uhinerak"
 
 #: src/prefs/WaveformPrefs.cpp:96
-#, fuzzy
 msgid "Waveform dB &range"
-msgstr "Neurgailu/Uhinera dB &maila:"
+msgstr "Uhinera dB &maila"
 
 #. i18n-hint: These are strings for the status bar, and indicate whether Audacity
 #. is playing or recording or stopped, and whether it is paused.
@@ -12791,9 +12708,9 @@ msgid "Recording Volume (Unavailable; use system mixer.)"
 msgstr "Grabaketa Bolumena (Eskuraezina; erabili sistemaren nahasgailua)."
 
 #: src/toolbars/MixerToolBar.cpp:298
-#, fuzzy, c-format
+#, c-format
 msgid "Playback Volume: %%.2f%s"
-msgstr "Irakurketa Bolumena: %.2f%s"
+msgstr "Irakurketa Bolumena: %%.2f%s"
 
 #: src/toolbars/MixerToolBar.cpp:298
 msgid " (emulated)"

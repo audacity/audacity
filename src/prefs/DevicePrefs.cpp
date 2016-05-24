@@ -347,7 +347,6 @@ bool DevicePrefs::Apply()
    }
    if (map) {
       gPrefs->Write(wxT("/AudioIO/PlaybackDevice"), map->deviceString);
-      gPrefs->Flush();
    }
 
    map = NULL;
@@ -368,7 +367,6 @@ bool DevicePrefs::Apply()
       }
       gPrefs->Write(wxT("/AudioIO/RecordChannels"),
                     mChannels->GetSelection() + 1);
-      return gPrefs->Flush();
    }
 
    return true;
@@ -376,5 +374,6 @@ bool DevicePrefs::Apply()
 
 PrefsPanel *DevicePrefsFactory::Create(wxWindow *parent)
 {
-   return new DevicePrefs(parent);
+   wxASSERT(parent); // to justify safenew
+   return safenew DevicePrefs(parent);
 }

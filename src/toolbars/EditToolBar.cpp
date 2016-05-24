@@ -82,8 +82,6 @@ EditToolBar::EditToolBar()
 
 EditToolBar::~EditToolBar()
 {
-   for (int i=0; i<ETBNumButtons; i++)
-      delete mButtons[i];
 }
 
 void EditToolBar::Create(wxWindow * parent)

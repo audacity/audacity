@@ -69,6 +69,12 @@
     <Filter Include="src\effects\VST">
       <UniqueIdentifier>{99325e00-3930-4e03-a599-999f275db78e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\tracks">
+      <UniqueIdentifier>{7b403d1f-de11-43d5-becc-d9d118d06f18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\tracks\ui">
+      <UniqueIdentifier>{aa9627ea-e614-4704-bf68-4a347023569f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\AboutDialog.cpp">
@@ -273,9 +279,6 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\TrackArtist.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\TrackPanel.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\TrackPanelAx.cpp">
@@ -850,6 +853,33 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\effects\VST\VSTControlMSW.cpp">
       <Filter>src\effects\VST</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\Equalization48x.cpp">
+      <Filter>src\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\RealFFTf48x.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\ui\EditCursorOverlay.cpp">
+      <Filter>src\tracks\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\ui\PlayIndicatorOverlay.cpp">
+      <Filter>src\tracks\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\ui\Scrubbing.cpp">
+      <Filter>src\tracks\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\TrackPanel.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\widgets\BackedPanel.cpp">
+      <Filter>src\widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\widgets\Overlay.cpp">
+      <Filter>src\widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\widgets\OverlayPanel.cpp">
+      <Filter>src\widgets</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1713,6 +1743,45 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\TrackPanelListener.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MemoryX.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\wxFileNameWrapper.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\Equalization48x.h">
+      <Filter>src\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\RealFFTf48x.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\TrackPanelCell.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\ui\EditCursorOverlay.h">
+      <Filter>src\tracks\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\ui\PlayIndicatorOverlay.h">
+      <Filter>src\tracks\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\ui\Scrubbing.h">
+      <Filter>src\tracks\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\TrackPanelCellIterator.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\CommandFunctors.h">
+      <Filter>src\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\widgets\BackedPanel.h">
+      <Filter>src\widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\widgets\Overlay.h">
+      <Filter>src\widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\widgets\OverlayPanel.h">
+      <Filter>src\widgets</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

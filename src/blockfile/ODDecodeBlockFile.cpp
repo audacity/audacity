@@ -16,8 +16,10 @@ The summary is eventually computed and written to a file in a background thread.
 
 *//*******************************************************************/
 
-#include <float.h>
+#include "../Audacity.h"
 #include "ODDecodeBlockFile.h"
+
+#include <float.h>
 
 #include <wx/utils.h>
 #include <wx/wxchar.h>
@@ -34,9 +36,10 @@ char bheaderTag[bheaderTagLen + 1] = "AudacityBlockFile112";
 
 
    /// Create a disk file and write summary and sample data to it
-ODDecodeBlockFile::ODDecodeBlockFile(wxFileName baseFileName,wxFileName audioFileName, sampleCount aliasStart,
+ODDecodeBlockFile::ODDecodeBlockFile(wxFileNameWrapper &&baseFileName, wxFileNameWrapper &&audioFileName, sampleCount aliasStart,
                      sampleCount aliasLen, int aliasChannel,unsigned int decodeType):
-   SimpleBlockFile(baseFileName,NULL,aliasLen,floatSample,true,true), //floatSample has no effect.  last two bools - bypass writing of blockfile and cache
+   SimpleBlockFile(std::move(baseFileName),
+      NULL,aliasLen,floatSample,true,true), //floatSample has no effect.  last two bools - bypass writing of blockfile and cache
 
    mType(decodeType),
    mAliasStart(aliasStart),
@@ -44,15 +47,15 @@ ODDecodeBlockFile::ODDecodeBlockFile(wxFileName baseFileName,wxFileName audioFil
 {
    mDecoder = NULL;
    mDataAvailable=false;
-   mAudioFileName = audioFileName;
+   mAudioFileName = std::move(audioFileName);
    mFormat = int16Sample;
 }
 
 /// Create the memory structure to refer to the given block file
-ODDecodeBlockFile::ODDecodeBlockFile(wxFileName existingFile, wxFileName audioFileName, sampleCount aliasStart,
+ODDecodeBlockFile::ODDecodeBlockFile(wxFileNameWrapper &&existingFile, wxFileNameWrapper &&audioFileName, sampleCount aliasStart,
                      sampleCount aliasLen, int aliasChannel, unsigned int decodeType,
                    float min, float max, float rms, bool dataAvailable):
-   SimpleBlockFile(existingFile,aliasLen,min,max,rms),
+   SimpleBlockFile(std::move(existingFile),aliasLen,min,max,rms),
 
    mType(decodeType),
    mAliasStart(aliasStart),
@@ -60,7 +63,7 @@ ODDecodeBlockFile::ODDecodeBlockFile(wxFileName existingFile, wxFileName audioFi
 {
    mDecoder = NULL;
    mDataAvailable=dataAvailable;
-   mAudioFileName = audioFileName;
+   mAudioFileName = std::move(audioFileName);
    mFormat = int16Sample;
 }
 
@@ -73,7 +76,7 @@ ODDecodeBlockFile::~ODDecodeBlockFile()
 
 
 //Check to see if we have the file for these calls.
-wxLongLong ODDecodeBlockFile::GetSpaceUsage()
+wxLongLong ODDecodeBlockFile::GetSpaceUsage() const
 {
    if(IsSummaryAvailable())
    {
@@ -89,7 +92,7 @@ wxLongLong ODDecodeBlockFile::GetSpaceUsage()
 
 /// Gets extreme values for the specified region
 void ODDecodeBlockFile::GetMinMax(sampleCount start, sampleCount len,
-                          float *outMin, float *outMax, float *outRMS)
+                          float *outMin, float *outMax, float *outRMS) const
 {
    if(IsSummaryAvailable())
    {
@@ -106,7 +109,7 @@ void ODDecodeBlockFile::GetMinMax(sampleCount start, sampleCount len,
 }
 
 /// Gets extreme values for the entire block
-void ODDecodeBlockFile::GetMinMax(float *outMin, float *outMax, float *outRMS)
+void ODDecodeBlockFile::GetMinMax(float *outMin, float *outMax, float *outRMS) const
 {
   if(IsSummaryAvailable())
    {
@@ -152,10 +155,10 @@ bool ODDecodeBlockFile::Read64K(float *buffer, sampleCount start, sampleCount le
 }
 
 /// If the summary has been computed,
-/// Construct a new PCMAliasBlockFile based on this one.
+/// Construct a NEW PCMAliasBlockFile based on this one.
 /// otherwise construct an ODPCMAliasBlockFile that still needs to be computed.
 /// @param newFileName The filename to copy the summary data to.
-BlockFile *ODDecodeBlockFile::Copy(wxFileName newFileName)
+BlockFile *ODDecodeBlockFile::Copy(wxFileNameWrapper &&newFileName)
 {
    BlockFile *newBlockFile;
 
@@ -164,16 +167,16 @@ BlockFile *ODDecodeBlockFile::Copy(wxFileName newFileName)
    if(IsSummaryAvailable())
    {
       //create a simpleblockfile, because once it has the summary it is a simpleblockfile for all intents an purposes
-      newBlockFile  = SimpleBlockFile::Copy(newFileName) ;
+      newBlockFile  = SimpleBlockFile::Copy(std::move(newFileName)) ;
    }
    else
    {
       //Summary File might exist in this case, but it probably (99.999% of the time) won't.
-      newBlockFile  = new ODDecodeBlockFile(newFileName,
-                                                   mAudioFileName, mAliasStart,
+      newBlockFile  = new ODDecodeBlockFile(std::move(newFileName),
+                                                   wxFileNameWrapper{mAudioFileName}, mAliasStart,
                                                    mLen, mAliasChannel, mType,
                                                    mMin, mMax, mRMS,IsSummaryAvailable());
-      //The client code will need to schedule this blockfile for OD decoding if it is going to a new track.
+      //The client code will need to schedule this blockfile for OD decoding if it is going to a NEW track.
       //It can do this by checking for IsDataAvailable()==false.
    }
 
@@ -221,8 +224,8 @@ void ODDecodeBlockFile::SaveXML(XMLWriter &xmlFile)
 // as testing will be done in DirManager::ProjectFSCK().
 BlockFile *ODDecodeBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
 {
-   wxFileName summaryFileName;
-   wxFileName audioFileName;
+   wxFileNameWrapper summaryFileName;
+   wxFileNameWrapper audioFileName;
    sampleCount aliasStart=0, aliasLen=0;
    int aliasChannel=0;
    long nValue;
@@ -271,7 +274,7 @@ BlockFile *ODDecodeBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
       }
    }
 
-   return new ODDecodeBlockFile(summaryFileName, audioFileName,
+   return new ODDecodeBlockFile(std::move(summaryFileName), std::move(audioFileName),
                                 aliasStart, aliasLen, aliasChannel,decodeType,
                                 0,0,0, false);
 
@@ -287,12 +290,12 @@ void ODDecodeBlockFile::Recover(void)
    }
 }
 
-bool ODDecodeBlockFile::IsSummaryAvailable()
+bool ODDecodeBlockFile::IsSummaryAvailable() const
 {
    return IsDataAvailable();
 }
 
-bool ODDecodeBlockFile::IsDataAvailable()
+bool ODDecodeBlockFile::IsDataAvailable() const
 {
    bool retval;
    mDataAvailableMutex.Lock();
@@ -300,6 +303,7 @@ bool ODDecodeBlockFile::IsDataAvailable()
    mDataAvailableMutex.Unlock();
    return retval;
 }
+
 /// Write the summary to disk, using the derived ReadData() to get the data
 /// Here, the decoder ODTask associated with this file must fetch the samples with
 /// the ODDecodeTask::Decode() method.
@@ -308,7 +312,7 @@ int ODDecodeBlockFile::WriteODDecodeBlockFile()
 
    // To build the summary data, call ReadData (implemented by the
    // derived classes) to get the sample data
-   samplePtr sampleData;// = NewSamples(mLen, floatSample);
+   SampleBuffer sampleData;// = NewSamples(mLen, floatSample);
    int ret;
    //use the decoder here.
    mDecoderMutex.Lock();
@@ -334,16 +338,14 @@ int ODDecodeBlockFile::WriteODDecodeBlockFile()
    //TODO: we may need to write a version of WriteSimpleBlockFile that uses threadsafe FILE vs wxFile
    bool bSuccess =
       WriteSimpleBlockFile(
-         sampleData,
+         sampleData.ptr(),
          mLen,
          mFormat,
-         NULL);//summaryData);
+         NULL);
    wxASSERT(bSuccess); // TODO: Handle failure here by alert to user and undo partial op.
+   wxUnusedVar(bSuccess);
 
    mFileNameMutex.Unlock();
-
-   DeleteSamples(sampleData);
-//   delete [] (char *) summaryData;
 
 
    mDataAvailableMutex.Lock();
@@ -354,10 +356,10 @@ int ODDecodeBlockFile::WriteODDecodeBlockFile()
 }
 
 ///sets the file name the summary info will be saved in.  threadsafe.
-void ODDecodeBlockFile::SetFileName(wxFileName &name)
+void ODDecodeBlockFile::SetFileName(wxFileNameWrapper &&name)
 {
    mFileNameMutex.Lock();
-   mFileName=name;
+   mFileName=std::move(name);
 /* mchinen oct 9 2009 don't think we need the char* but leaving it in for now just as a reminder that we might
    if wxFileName isn't threadsafe.
    delete [] mFileNameChar;
@@ -367,13 +369,9 @@ void ODDecodeBlockFile::SetFileName(wxFileName &name)
 }
 
 ///sets the file name the summary info will be saved in.  threadsafe.
-wxFileName ODDecodeBlockFile::GetFileName()
+auto ODDecodeBlockFile::GetFileName() const -> GetFileNameResult
 {
-   wxFileName name;
-   mFileNameMutex.Lock();
-   name = mFileName;
-   mFileNameMutex.Unlock();
-   return name;
+   return { mFileName, ODLocker{ &mFileNameMutex } };
 }
 
 /// A thread-safe version of CalcSummary.  BlockFile::CalcSummary
@@ -386,7 +384,7 @@ wxFileName ODDecodeBlockFile::GetFileName()
 /// This method also has the side effect of setting the mMin, mMax,
 /// and mRMS members of this class.
 ///
-/// Unlike BlockFile's implementation You SHOULD delete the returned buffer.
+/// Unlike BlockFile's implementation You SHOULD DELETE the returned buffer.
 /// this is protected so it shouldn't be hard to deal with - just override
 /// all BlockFile methods that use this method.
 ///
@@ -394,9 +392,10 @@ wxFileName ODDecodeBlockFile::GetFileName()
 /// @param len    The length of the sample data
 /// @param format The format of the sample data.
 void *ODDecodeBlockFile::CalcSummary(samplePtr buffer, sampleCount len,
-                             sampleFormat format)
+                             sampleFormat format, ArrayOf<char> &cleanup)
 {
-   char* localFullSummary = new char[mSummaryInfo.totalSummaryBytes];
+   cleanup.reinit(mSummaryInfo.totalSummaryBytes);
+   char* localFullSummary = cleanup.get();
 
    memcpy(localFullSummary, bheaderTag, bheaderTagLen);
 
@@ -525,7 +524,7 @@ void *ODDecodeBlockFile::CalcSummary(samplePtr buffer, sampleCount len,
 /// @param start  The offset within the block to begin reading
 /// @param len    The number of samples to read
 int ODDecodeBlockFile::ReadData(samplePtr data, sampleFormat format,
-                                sampleCount start, sampleCount len)
+                                sampleCount start, sampleCount len) const
 {
    int ret;
    LockRead();
@@ -570,12 +569,12 @@ void ODDecodeBlockFile::SetODFileDecoder(ODFileDecoder* decoder)
 
 
 /// Prevents a read on other threads.
-void ODDecodeBlockFile::LockRead()
+void ODDecodeBlockFile::LockRead() const
 {
    mReadDataMutex.Lock();
 }
 /// Allows reading of encoded file on other threads.
-void ODDecodeBlockFile::UnlockRead()
+void ODDecodeBlockFile::UnlockRead() const
 {
    mReadDataMutex.Unlock();
 }
@@ -583,9 +582,9 @@ void ODDecodeBlockFile::UnlockRead()
 /// Modify this block to point at a different file.  This is generally
 /// looked down on, but it is necessary in one case: see
 /// DirManager::EnsureSafeFilename().
-void ODDecodeBlockFile::ChangeAudioFile(wxFileName newAudioFile)
+void ODDecodeBlockFile::ChangeAudioFile(wxFileNameWrapper &&newAudioFile)
 {
-   mAudioFileName = newAudioFile;
+   mAudioFileName = std::move(newAudioFile);
 }
 
 

@@ -43,7 +43,9 @@ a certain criterion. This is a base validator which allows anything.
 #ifndef __VALIDATORS__
 #define __VALIDATORS__
 
-class Validator
+#include "../MemoryX.h"
+
+class Validator /* not final */
 {
 private:
    wxVariant mConverted;
@@ -75,13 +77,20 @@ public:
    }
 
    /// This MUST be overridden, to avoid slicing!
-   virtual Validator *GetClone() const
+   using Holder = std::unique_ptr<Validator>;
+   virtual Holder GetClone() const = 0;
+};
+
+class DefaultValidator final : public Validator
+{
+public:
+   virtual Holder GetClone() const
    {
-      return new Validator();
+      return std::make_unique<DefaultValidator>(*this);
    }
 };
 
-class OptionValidator : public Validator
+class OptionValidator final : public Validator
 {
 private:
    wxArrayString mOptions;
@@ -95,12 +104,12 @@ public:
    {
       mOptions.insert(mOptions.begin(), options.begin(), options.end());
    }
-   virtual bool Validate(const wxVariant &v)
+   bool Validate(const wxVariant &v) override
    {
       SetConverted(v);
       return (mOptions.Index(v.GetString()) != wxNOT_FOUND);
    }
-   virtual wxString GetDescription() const
+   wxString GetDescription() const override
    {
       wxString desc = wxT("one of: ");
       int optionCount = mOptions.GetCount();
@@ -112,35 +121,35 @@ public:
       desc += mOptions[optionCount-1];
       return desc;
    }
-   virtual Validator *GetClone() const
+   Holder GetClone() const override
    {
-      OptionValidator *v = new OptionValidator();
+      auto v = std::make_unique<OptionValidator>();
       v->mOptions = mOptions;
-      return v;
+      return std::move(v);
    }
 };
 
-class BoolValidator : public Validator
+class BoolValidator final : public Validator
 {
 public:
-   virtual bool Validate(const wxVariant &v)
+   bool Validate(const wxVariant &v) override
    {
       bool val;
       if (!v.Convert(&val)) return false;
       SetConverted(val);
       return GetConverted().IsType(wxT("bool"));
    }
-   virtual wxString GetDescription() const
+   wxString GetDescription() const override
    {
       return wxT("true/false or 1/0 or yes/no");
    }
-   virtual Validator *GetClone() const
+   Holder GetClone() const override
    {
-      return new BoolValidator();
+      return std::make_unique<BoolValidator>();
    }
 };
 
-class BoolArrayValidator : public Validator
+class BoolArrayValidator final : public Validator
 {
 public:
    virtual bool Validate(const wxVariant &v)
@@ -154,37 +163,37 @@ public:
             return false;
       return true;
    }
-   virtual wxString GetDescription() const
+   wxString GetDescription() const override
    {
       return wxT("0X101XX101...etc.  where 0=false, 1=true, and X=don't care.  Numbering starts at leftmost = track 0");
    }
-   virtual Validator *GetClone() const
+   Holder GetClone() const override
    {
-      return new BoolArrayValidator();
+      return std::make_unique<BoolArrayValidator>();
    }
 };
 
-class DoubleValidator : public Validator
+class DoubleValidator final : public Validator
 {
 public:
-   virtual bool Validate(const wxVariant &v)
+   bool Validate(const wxVariant &v) override
    {
       double val;
       if (!v.Convert(&val)) return false;
       SetConverted(val);
       return GetConverted().IsType(wxT("double"));
    }
-   virtual wxString GetDescription() const
+   wxString GetDescription() const override
    {
       return wxT("a floating-point number");
    }
-   virtual Validator *GetClone() const
+   Holder GetClone() const override
    {
-      return new DoubleValidator();
+      return std::make_unique<DoubleValidator>();
    }
 };
 
-class RangeValidator : public Validator
+class RangeValidator final : public Validator
 {
 private:
    double mLower, mUpper;
@@ -192,27 +201,27 @@ public:
    RangeValidator(double l, double u)
       : mLower(l), mUpper(u)
    { }
-   virtual bool Validate(const wxVariant &v)
+   bool Validate(const wxVariant &v) override
    {
       double val;
       if (!v.Convert(&val)) return false;
       SetConverted(val);
       return ((mLower < val) && (val < mUpper));
    }
-   virtual wxString GetDescription() const
+   wxString GetDescription() const override
    {
       return wxString::Format(wxT("between %f and %f"), mLower, mUpper);
    }
-   virtual Validator *GetClone() const
+   Holder GetClone() const override
    {
-      return new RangeValidator(mLower, mUpper);
+      return std::make_unique<RangeValidator>(mLower, mUpper);
    }
 };
 
-class IntValidator : public Validator
+class IntValidator final : public Validator
 {
 public:
-   virtual bool Validate(const wxVariant &v)
+   bool Validate(const wxVariant &v) override
    {
       double val;
       if (!v.Convert(&val)) return false;
@@ -220,37 +229,36 @@ public:
       if (!GetConverted().IsType(wxT("double"))) return false;
       return ((long)val == val);
    }
-   virtual wxString GetDescription() const
+   wxString GetDescription() const override
    {
       return wxT("an integer");
    }
-   virtual Validator *GetClone() const
+   Holder GetClone() const override
    {
-      return new IntValidator();
+      return std::make_unique<IntValidator>();
    }
 };
 
 /*
-class AndValidator : public Validator
+class AndValidator final : public Validator
 {
 private:
-   Validator &v1, &v2;
+   Validator::Holder v1, v2;
 public:
-   AndValidator(Validator *u1, Validator *u2)
-      : v1(*u1), v2(*u2)
+   AndValidator(Validator::Holder &&u1, Validator::Holder &&u2)
+      : v1(std::move(u1)), v2(std::move(u2))
    { }
-   virtual bool Validate(const wxVariant &v)
+   bool Validate(const wxVariant &v) override
    {
-      if (!v1.Validate(v)) return false;
-      return v2.Validate(v);
+      return v1->Validate(v) && v2->Validate(v);
    }
-   virtual wxString GetDescription() const
+   wxString GetDescription() const override
    {
-      return v1.GetDescription() + wxT(" and ") + v2.GetDescription();
+      return v1->GetDescription() + wxT(" and ") + v2->GetDescription();
    }
-   virtual Validator *GetClone() const
+   Validator *GetClone() const override
    {
-      return new AndValidator(v1.GetClone(), v2.GetClone());
+      return std::make_unique<AndValidator>(v1->GetClone(), v2->GetClone());
    }
 };*/
 

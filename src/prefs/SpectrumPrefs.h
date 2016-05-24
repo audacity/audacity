@@ -38,14 +38,14 @@ class ShuttleGui;
 class SpectrogramSettings;
 class WaveTrack;
 
-class SpectrumPrefs:public PrefsPanel
+class SpectrumPrefs final : public PrefsPanel
 {
  public:
    SpectrumPrefs(wxWindow * parent, WaveTrack *wt);
    virtual ~SpectrumPrefs();
-   virtual bool Apply();
-   virtual bool ShowsApplyButton();
-   virtual bool Validate();
+   bool Apply() override;
+   bool ShowsApplyButton() override;
+   bool Validate() override;
 
  private:
    void Populate(int windowSize);
@@ -96,11 +96,11 @@ class SpectrumPrefs:public PrefsPanel
    bool mPopulating;
 };
 
-class SpectrumPrefsFactory : public PrefsPanelFactory
+class SpectrumPrefsFactory final : public PrefsPanelFactory
 {
 public:
    explicit SpectrumPrefsFactory(WaveTrack *wt = 0);
-   virtual PrefsPanel *Create(wxWindow *parent);
+   PrefsPanel *Create(wxWindow *parent) override;
 
 private:
    WaveTrack *const mWt;

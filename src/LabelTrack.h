@@ -56,7 +56,7 @@ public:
    void DrawText( wxDC & dc, const wxRect & r);
    void DrawTextBox( wxDC & dc, const wxRect & r);
    void DrawHighlight( wxDC & dc, int xPos1, int xPos2, int charHeight);
-   void getXPos( wxDC & dc, int * xPos1, int cursorPos);
+   void getXPos( wxDC & dc, int * xPos1, int cursorPos) const;
    const SelectedRegion &getSelectedRegion() const { return selectedRegion; }
    double getDuration() const { return selectedRegion.duration(); }
    double getT0() const { return selectedRegion.t0(); }
@@ -79,9 +79,9 @@ public:
    /// Returns relationship between a region described and this label; if
    /// parent is set, it will consider point labels at the very beginning
    /// and end of parent to be within a region that borders them (this makes
-   /// it possible to delete capture all labels with a Select All).
+   /// it possible to DELETE capture all labels with a Select All).
    TimeRelations RegionRelation(double reg_t0, double reg_t1,
-                                LabelTrack *parent = NULL);
+                                const LabelTrack *parent = NULL);
 
 public:
    SelectedRegion selectedRegion;
@@ -108,7 +108,7 @@ const int NUM_GLYPH_HIGHLIGHTS = 4;
 const int MAX_NUM_ROWS =80;
 
 
-class AUDACITY_DLL_API LabelTrack : public Track
+class AUDACITY_DLL_API LabelTrack final : public Track
 {
    friend class LabelStruct;
 
@@ -122,48 +122,49 @@ class AUDACITY_DLL_API LabelTrack : public Track
    LabelTrack(const LabelTrack &orig);
 
    virtual ~ LabelTrack();
-   virtual void SetOffset(double dOffset);
+   void SetOffset(double dOffset) override;
 
    static void ResetFont();
 
    void Draw(wxDC & dc, const wxRect & r,
              const SelectedRegion &selectedRegion,
-             const ZoomInfo &zoomInfo);
+             const ZoomInfo &zoomInfo) const;
 
    int getSelectedIndex() const { return mSelIndex; }
    bool IsAdjustingLabel() const { return mIsAdjustingLabel; }
 
-   virtual int GetKind() const { return Label; }
+   int GetKind() const override { return Label; }
 
-   virtual double GetOffset() const;
-   virtual double GetStartTime() const;
-   virtual double GetEndTime() const;
+   double GetOffset() const override;
+   double GetStartTime() const override;
+   double GetEndTime() const override;
 
-   virtual Track *Duplicate();
+   using Holder = std::unique_ptr<LabelTrack>;
+   Track::Holder Duplicate() const override;
 
-   virtual void SetSelected(bool s);
+   void SetSelected(bool s) override;
 
-   virtual bool HandleXMLTag(const wxChar *tag, const wxChar **attrs);
-   virtual XMLTagHandler *HandleXMLChild(const wxChar *tag);
-   virtual void WriteXML(XMLWriter &xmlFile);
+   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
+   XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
+   void WriteXML(XMLWriter &xmlFile) override;
 
 #if LEGACY_PROJECT_FILE_SUPPORT
-   virtual bool Load(wxTextFile * in, DirManager * dirManager);
-   virtual bool Save(wxTextFile * out, bool overwrite);
+   bool Load(wxTextFile * in, DirManager * dirManager) override;
+   bool Save(wxTextFile * out, bool overwrite) override;
 #endif
 
-   virtual bool Cut  (double t0, double t1, Track ** dest);
+   Track::Holder Cut  (double t0, double t1) override;
    // JKC Do not add the const modifier to Copy(), Clear()
    // or Paste() because then it
    // is no longer recognised as a virtual function matching the
    // one in Track.
-   virtual bool Copy (double t0, double t1, Track ** dest);// const;
-   virtual bool Clear(double t0, double t1);
-   virtual bool Paste(double t, Track * src);
+   Track::Holder Copy (double t0, double t1) const override;
+   bool Clear(double t0, double t1) override;
+   bool Paste(double t, const Track * src) override;
    bool Repeat(double t0, double t1, int n);
 
-   virtual bool Silence(double t0, double t1);
-   virtual bool InsertSilence(double t, double len);
+   bool Silence(double t0, double t1) override;
+   bool InsertSilence(double t, double len) override;
    int OverGlyph(int x, int y);
    static wxBitmap & GetGlyph( int i);
 
@@ -204,7 +205,8 @@ class AUDACITY_DLL_API LabelTrack : public Track
    const LabelStruct *GetLabel(int index) const;
 
    //This returns the index of the label we just added.
-   int AddLabel(const SelectedRegion &region, const wxString &title = wxT(""));
+   int AddLabel(const SelectedRegion &region, const wxString &title = wxT(""),
+      int restoreFocus = -1);
    //And this tells us the index, if there is a label already there.
    int GetLabelIndex(double t, double t1);
 
@@ -219,9 +221,12 @@ class AUDACITY_DLL_API LabelTrack : public Track
    void MayMoveLabel( int iLabel, int iEdge, double fNewTime);
 
    // This pastes labels without shifting existing ones
-   bool PasteOver(double t, Track *src);
-   bool SplitCut(double b, double e, Track **dest);
-   bool SplitDelete(double b, double e);
+   bool PasteOver(double t, const Track *src);
+
+   // PRL:  These functions were not used because they were not overrides!  Was that right?
+   //Track::Holder SplitCut(double b, double e) /* not override */;
+   //bool SplitDelete(double b, double e) /* not override */;
+
    void ShiftLabelsOnInsert(double length, double pt);
    void ChangeLabelsOnReverse(double b, double e);
    void ScaleLabels(double b, double e, double change);
@@ -254,28 +259,29 @@ class AUDACITY_DLL_API LabelTrack : public Track
    static bool mbGlyphsReady;
    static wxBitmap mBoundaryGlyphs[NUM_GLYPH_CONFIGS * NUM_GLYPH_HIGHLIGHTS];
 
-   int xUsed[MAX_NUM_ROWS];
+   mutable int xUsed[MAX_NUM_ROWS];
 
    static int mFontHeight;
-   int mXPos1;                         /// left X pos of highlighted area
-   int mXPos2;                         /// right X pos of highlighted area
-   int mCurrentCursorPos;              /// current cursor position
-   int mInitialCursorPos;              /// initial cursor position
-   double mMouseXPos;                  /// mouse X pos
+   mutable int mXPos1;                         /// left X pos of highlighted area
+   mutable int mXPos2;                         /// right X pos of highlighted area
+   mutable int mCurrentCursorPos;              /// current cursor position
+   mutable int mInitialCursorPos;              /// initial cursor position
+   mutable double mMouseXPos;                  /// mouse X pos
    int mDragXPos;                      /// end X pos of dragging
    bool mInBox;                        /// flag to tell if the mouse is in text box
-   bool mResetCursorPos;               /// flag to reset cursor position(used in the dragging the glygh)
+   mutable bool mResetCursorPos;               /// flag to reset cursor position(used in the dragging the glygh)
    bool mRightDragging;                /// flag to tell if it's a valid dragging
-   bool mDrawCursor;                   /// flag to tell if drawing the cursor or not
+   mutable bool mDrawCursor;                   /// flag to tell if drawing the cursor or not
+   int mRestoreFocus;              /// Restore focus to this track when done editing
 
    // Set in copied label tracks
    double mClipLen;
 
-   void ComputeLayout(const wxRect & r, const ZoomInfo &zoomInfo);
-   void ComputeTextPosition(const wxRect & r, int index);
-   void SetCurrentCursorPosition(wxDC & dc, int xPos);
+   void ComputeLayout(const wxRect & r, const ZoomInfo &zoomInfo) const;
+   void ComputeTextPosition(const wxRect & r, int index) const;
+   void SetCurrentCursorPosition(wxDC & dc, int xPos) const;
 
-   void calculateFontHeight(wxDC & dc);
+   void calculateFontHeight(wxDC & dc) const;
    void RemoveSelectedText();
 
    bool mIsAdjustingLabel;

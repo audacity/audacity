@@ -23,12 +23,12 @@
 
 class ShuttleGui;
 
-class DevicePrefs :public PrefsPanel
+class DevicePrefs final : public PrefsPanel
 {
  public:
    DevicePrefs(wxWindow * parent);
    virtual ~DevicePrefs();
-   virtual bool Apply();
+   bool Apply() override;
 
  private:
    void Populate();
@@ -54,10 +54,10 @@ class DevicePrefs :public PrefsPanel
    DECLARE_EVENT_TABLE();
 };
 
-class DevicePrefsFactory : public PrefsPanelFactory
+class DevicePrefsFactory final : public PrefsPanelFactory
 {
 public:
-   virtual PrefsPanel *Create(wxWindow *parent);
+   PrefsPanel *Create(wxWindow *parent) override;
 };
 
 #endif

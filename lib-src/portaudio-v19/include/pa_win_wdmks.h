@@ -1,7 +1,7 @@
 #ifndef PA_WIN_WDMKS_H
 #define PA_WIN_WDMKS_H
 /*
- * $Id: pa_win_wdmks.h 1812 2012-02-14 09:32:57Z robiwan $
+ * $Id: pa_win_wdmks.h 1924 2014-04-09 14:27:21Z robiwan $
  * PortAudio Portable Real-Time Audio Library
  * WDM/KS specific extensions
  *
@@ -52,13 +52,29 @@
 extern "C"
 {
 #endif /* __cplusplus */
+
+    /* Setup flags */
+    typedef enum PaWinWDMKSFlags
+    {
+        /* Makes WDMKS use the supplied latency figures instead of relying on the frame size reported
+           by the WaveCyclic device. Use at own risk! */
+        paWinWDMKSOverrideFramesize   = (1 << 0),
+
+        /* Makes WDMKS (output stream) use the given channelMask instead of the default */
+        paWinWDMKSUseGivenChannelMask = (1 << 1),
+
+    } PaWinWDMKSFlags;
+
     typedef struct PaWinWDMKSInfo{
         unsigned long size;             /**< sizeof(PaWinWDMKSInfo) */
         PaHostApiTypeId hostApiType;    /**< paWDMKS */
         unsigned long version;          /**< 1 */
+        unsigned long flags;
 
         /* The number of packets to use for WaveCyclic devices, range is [2, 8]. Set to zero for default value of 2. */
         unsigned noOfPackets;
+        /* If paWinWDMKSUseGivenChannelMask bit is set in flags, use this as channelMask instead of default */
+        unsigned channelMask;
     } PaWinWDMKSInfo;
 
     typedef enum PaWDMKSType

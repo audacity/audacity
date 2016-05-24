@@ -170,19 +170,19 @@ void AudacityLogger::Show(bool show)
    frame->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE));
 
    // loads either the XPM or the windows resource, depending on the platform
+   {
 #if !defined(__WXMAC__) && !defined(__WXX11__)
-   wxIcon *ic;
-   #if defined(__WXMSW__)
-      ic = new wxIcon(wxICON(AudacityLogo));
-   #elif defined(__WXGTK__)
-      ic = new wxIcon(wxICON(AudacityLogoAlpha));
-   #else
-      ic = new wxIcon();
+#if defined(__WXMSW__)
+      wxIcon ic{wxICON(AudacityLogo)};
+#elif defined(__WXGTK__)
+      wxIcon ic{wxICON(AudacityLogoAlpha)};
+#else
+      wxIcon ic{};
       ic.CopyFromBitmap(theTheme.Bitmap(bmpAudacityLogo48x48));
-   #endif
-   frame->SetIcon(*ic);
-   delete ic;
 #endif
+      frame->SetIcon(ic);
+#endif
+   }
 
    // Log text
    ShuttleGui S(frame, eIsCreating);

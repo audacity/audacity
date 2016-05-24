@@ -22,7 +22,7 @@
 #include "WaveClip.h"
 
 #include <math.h>
-#include <memory>
+#include "MemoryX.h"
 #include <functional>
 #include <vector>
 #include <wx/log.h>
@@ -105,7 +105,7 @@ public:
    };
 
 
-   //Thread safe call to add a new region to invalidate.  If it overlaps with other regions, it unions the them.
+   //Thread safe call to add a NEW region to invalidate.  If it overlaps with other regions, it unions the them.
    void AddInvalidRegion(sampleCount sampleStart, sampleCount sampleEnd)
    {
       //use pps to figure out where we are.  (pixels per second)
@@ -135,7 +135,7 @@ public:
          invalEnd = len;
 
 
-      ODLocker locker(mRegionsMutex);
+      ODLocker locker(&mRegionsMutex);
 
       //look thru the region array for a place to insert.  We could make this more spiffy than a linear search
       //but right now it is not needed since there will usually only be one region (which grows) for OD loading.
@@ -145,21 +145,22 @@ public:
          for(size_t i=0;i<mRegions.size();i++)
          {
             //if the regions intersect OR are pixel adjacent
-            if(mRegions[i]->start <= invalEnd+1
-               && mRegions[i]->end >= invalStart-1)
+            InvalidRegion &region = mRegions[i];
+            if(region.start <= invalEnd+1
+               && region.end >= invalStart-1)
             {
                //take the union region
-               if(mRegions[i]->start > invalStart)
-                  mRegions[i]->start = invalStart;
-               if(mRegions[i]->end < invalEnd)
-                  mRegions[i]->end = invalEnd;
+               if(region.start > invalStart)
+                  region.start = invalStart;
+               if(region.end < invalEnd)
+                  region.end = invalEnd;
                added=true;
                break;
             }
 
             //this bit doesn't make sense because it assumes we add in order - now we go backwards after the initial OD finishes
 //            //this array is sorted by start/end points and has no overlaps.   If we've passed all possible intersections, insert.  The array will remain sorted.
-//            if(mRegions[i]->end < invalStart)
+//            if(region.end < invalStart)
 //            {
 //               InvalidRegion* newRegion = new InvalidRegion(invalStart,invalEnd);
 //               mRegions.insert(mRegions.begin()+i,newRegion);
@@ -170,7 +171,7 @@ public:
 
       if(!added)
       {
-         InvalidRegion* newRegion = new InvalidRegion(invalStart,invalEnd);
+         InvalidRegion newRegion(invalStart,invalEnd);
          mRegions.insert(mRegions.begin(),newRegion);
       }
 
@@ -179,24 +180,24 @@ public:
       for(size_t i=1;i<mRegions.size();i++)
       {
          //if the regions intersect OR are pixel adjacent
-         if(mRegions[i]->start <= mRegions[i-1]->end+1
-            && mRegions[i]->end >= mRegions[i-1]->start-1)
+         InvalidRegion &region = mRegions[i];
+         InvalidRegion &prevRegion = mRegions[i - 1];
+         if(region.start <= prevRegion.end+1
+            && region.end >= prevRegion.start-1)
          {
             //take the union region
-            if(mRegions[i]->start > mRegions[i-1]->start)
-               mRegions[i]->start = mRegions[i-1]->start;
-            if(mRegions[i]->end < mRegions[i-1]->end)
-               mRegions[i]->end = mRegions[i-1]->end;
+            if(region.start > prevRegion.start)
+               region.start = prevRegion.start;
+            if(region.end < prevRegion.end)
+               region.end = prevRegion.end;
 
-            //now we must delete the previous region
-            delete mRegions[i-1];
             mRegions.erase(mRegions.begin()+i-1);
                //musn't forget to reset cursor
                i--;
          }
 
          //if we are past the end of the region we added, we are past the area of regions that might be oversecting.
-         if(mRegions[i]->start > invalEnd)
+         if(region.start > invalEnd)
          {
             break;
          }
@@ -205,15 +206,11 @@ public:
 
    //lock before calling these in a section.  unlock after finished.
    int GetNumInvalidRegions() const {return mRegions.size();}
-   int GetInvalidRegionStart(int i) const {return mRegions[i]->start;}
-   int GetInvalidRegionEnd(int i) const {return mRegions[i]->end;}
+   int GetInvalidRegionStart(int i) const {return mRegions[i].start;}
+   int GetInvalidRegionEnd(int i) const {return mRegions[i].end;}
 
    void ClearInvalidRegions()
    {
-      for(size_t i =0;i<mRegions.size();i++)
-      {
-         delete mRegions[i];
-      }
       mRegions.clear();
    }
 
@@ -257,7 +254,7 @@ public:
    }
 
 protected:
-   std::vector<InvalidRegion*> mRegions;
+   std::vector<InvalidRegion> mRegions;
    ODLock mRegionsMutex;
 
 };
@@ -297,12 +294,11 @@ WaveClip::WaveClip(DirManager *projDirManager, sampleFormat format, int rate)
 {
    mOffset = 0;
    mRate = rate;
-   mSequence = new Sequence(projDirManager, format);
+   mSequence = std::make_unique<Sequence>(projDirManager, format);
    mEnvelope = new Envelope();
    mWaveCache = new WaveCache();
    mSpecCache = new SpecCache();
    mSpecPxCache = new SpecPxCache(1);
-   mAppendBuffer = NULL;
    mAppendBufferLen = 0;
    mDirty = 0;
    mIsPlaceholder = false;
@@ -316,7 +312,7 @@ WaveClip::WaveClip(const WaveClip& orig, DirManager *projDirManager)
 
    mOffset = orig.mOffset;
    mRate = orig.mRate;
-   mSequence = new Sequence(*orig.mSequence, projDirManager);
+   mSequence = std::make_unique<Sequence>(*orig.mSequence, projDirManager);
    mEnvelope = new Envelope();
    mEnvelope->Paste(0.0, orig.mEnvelope);
    mEnvelope->SetOffset(orig.GetOffset());
@@ -328,7 +324,6 @@ WaveClip::WaveClip(const WaveClip& orig, DirManager *projDirManager)
    for (WaveClipList::compatibility_iterator it=orig.mCutLines.GetFirst(); it; it=it->GetNext())
       mCutLines.Append(new WaveClip(*it->GetData(), projDirManager));
 
-   mAppendBuffer = NULL;
    mAppendBufferLen = 0;
    mDirty = 0;
    mIsPlaceholder = orig.GetIsPlaceholder();
@@ -336,17 +331,12 @@ WaveClip::WaveClip(const WaveClip& orig, DirManager *projDirManager)
 
 WaveClip::~WaveClip()
 {
-   delete mSequence;
-
    delete mEnvelope;
    mEnvelope = NULL;
 
    delete mWaveCache;
    delete mSpecCache;
    delete mSpecPxCache;
-
-   if (mAppendBuffer)
-      DeleteSamples(mAppendBuffer);
 
    mCutLines.DeleteContents(true);
    mCutLines.Clear();
@@ -374,7 +364,7 @@ bool WaveClip::SetSamples(samplePtr buffer, sampleFormat format,
 
 BlockArray* WaveClip::GetSequenceBlockArray()
 {
-   return mSequence->GetBlockArray();
+   return &mSequence->GetBlockArray();
 }
 
 double WaveClip::GetStartTime() const
@@ -430,7 +420,7 @@ bool WaveClip::AfterClip(double t) const
 ///Delete the wave cache - force redraw.  Thread-safe
 void WaveClip::DeleteWaveCache()
 {
-   ODLocker locker(mWaveCacheMutex);
+   ODLocker locker(&mWaveCacheMutex);
    if(mWaveCache!=NULL)
       delete mWaveCache;
    mWaveCache = new WaveCache();
@@ -439,7 +429,7 @@ void WaveClip::DeleteWaveCache()
 ///Adds an invalid region to the wavecache so it redraws that portion only.
 void WaveClip::AddInvalidRegion(long startSample, long endSample)
 {
-   ODLocker locker(mWaveCacheMutex);
+   ODLocker locker(&mWaveCacheMutex);
    if(mWaveCache!=NULL)
       mWaveCache->AddInvalidRegion(startSample,endSample);
 }
@@ -464,7 +454,7 @@ void findCorrection(const std::vector<sampleCount> &oldWhere, int oldLen, int ne
    // What sample would go in where[0] with no correction?
    const double guessWhere0 = t0 * rate;
 
-   if ( // Skip if old and new are disjoint:
+   if ( // Skip if old and NEW are disjoint:
       oldWhereLast <= guessWhere0 ||
       guessWhere0 + newLen * samplesPerPixel <= oldWhere0 ||
       // Skip unless denom rounds off to at least 1.
@@ -482,7 +472,7 @@ void findCorrection(const std::vector<sampleCount> &oldWhere, int oldLen, int ne
       oldX0 = floor(0.5 + oldLen * (guessWhere0 - oldWhere0) / denom);
       // What sample count would the old cache have put there?
       const double where0 = oldWhere0 + double(oldX0) * samplesPerPixel;
-      // What correction is needed to align the new cache with the old?
+      // What correction is needed to align the NEW cache with the old?
       const double correction0 = where0 - guessWhere0;
       correction = std::max(-samplesPerPixel, std::min(samplesPerPixel, correction0));
       wxASSERT(correction == correction0);
@@ -510,7 +500,7 @@ fillWhere(std::vector<sampleCount> &where, int len, double bias, double correcti
 //
 
 bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
-                               double pixelsPerSecond, bool &isLoadingOD)
+                               double pixelsPerSecond, bool &isLoadingOD) const
 {
    const bool allocated = (display.where != 0);
 
@@ -535,7 +525,7 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
    }
    else {
       // Lock the list of invalid regions
-      ODLocker locker(mWaveCacheMutex);
+      ODLocker locker(&mWaveCacheMutex);
 
       const double tstep = 1.0 / pixelsPerSecond;
       const double samplesPerPixel = mRate * tstep;
@@ -555,7 +545,7 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
       if (match &&
          mWaveCache->start == t0 &&
          mWaveCache->len >= numPixels) {
-         mWaveCache->LoadInvalidRegions(mSequence, true);
+         mWaveCache->LoadInvalidRegions(mSequence.get(), true);
          mWaveCache->ClearInvalidRegions();
 
          // Satisfy the request completely from the cache
@@ -568,7 +558,7 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
          return true;
       }
 
-      std::auto_ptr<WaveCache> oldCache(mWaveCache);
+      std::unique_ptr<WaveCache> oldCache(mWaveCache);
       mWaveCache = 0;
 
       int oldX0 = 0;
@@ -607,12 +597,12 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
       // with the current one, re-use as much of the cache as
       // possible
 
-      if (oldCache.get()) {
+      if (oldCache) {
 
          //TODO: only load inval regions if
          //necessary.  (usually is the case, so no rush.)
          //also, we should be updating the NEW cache, but here we are patching the old one up.
-         oldCache->LoadInvalidRegions(mSequence, false);
+         oldCache->LoadInvalidRegions(mSequence.get(), false);
          oldCache->ClearInvalidRegions();
 
          // Copy what we can from the old cache.
@@ -668,10 +658,10 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
                sampleCount j;
 
                if (seqFormat == floatSample)
-                  b = &((float *)mAppendBuffer)[left];
+                  b = &((float *)mAppendBuffer.ptr())[left];
                else {
                   b = new float[len];
-                  CopySamples(mAppendBuffer + left*SAMPLE_SIZE(seqFormat),
+                  CopySamples(mAppendBuffer.ptr() + left*SAMPLE_SIZE(seqFormat),
                               seqFormat,
                               (samplePtr)b, floatSample, len);
                }
@@ -1080,7 +1070,7 @@ void SpecCache::Populate
 bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
                               const float *& spectrogram, const sampleCount *& where,
                               int numPixels,
-                              double t0, double pixelsPerSecond)
+                              double t0, double pixelsPerSecond) const
 {
    const WaveTrack *const track = waveTrackCache.GetTrack();
    const SpectrogramSettings &settings = track->GetSpectrogramSettings();
@@ -1119,7 +1109,7 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
       // a complete hit, because of the complications of time reassignment
       match = false;
 
-   std::auto_ptr<SpecCache> oldCache(mSpecCache);
+   std::unique_ptr<SpecCache> oldCache(mSpecCache);
    mSpecCache = 0;
 
    const double tstep = 1.0 / pixelsPerSecond;
@@ -1157,7 +1147,7 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
    // Optimization: if the old cache is good and overlaps
    // with the current one, re-use as much of the cache as
    // possible
-   if (oldCache.get()) {
+   if (oldCache) {
       memcpy(&mSpecCache->freq[half * copyBegin],
          &oldCache->freq[half * (copyBegin + oldX0)],
          half * (copyEnd - copyBegin) * sizeof(float));
@@ -1175,7 +1165,7 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
 }
 
 bool WaveClip::GetMinMax(float *min, float *max,
-                          double t0, double t1)
+                          double t0, double t1) const
 {
    *min = float(0.0);   // harmless, but unused since Sequence::GetMinMax does not use these values
    *max = float(0.0);   // harmless, but unused since Sequence::GetMinMax does not use these values
@@ -1243,7 +1233,7 @@ void WaveClip::ClearDisplayRect()
    mDisplayRect.width = mDisplayRect.height = -1;
 }
 
-void WaveClip::SetDisplayRect(const wxRect& r)
+void WaveClip::SetDisplayRect(const wxRect& r) const
 {
    mDisplayRect = r;
 }
@@ -1263,18 +1253,18 @@ bool WaveClip::Append(samplePtr buffer, sampleFormat format,
    sampleCount blockSize = mSequence->GetIdealAppendLen();
    sampleFormat seqFormat = mSequence->GetSampleFormat();
 
-   if (!mAppendBuffer)
-      mAppendBuffer = NewSamples(maxBlockSize, seqFormat);
+   if (!mAppendBuffer.ptr())
+      mAppendBuffer.Allocate(maxBlockSize, seqFormat);
 
    for(;;) {
       if (mAppendBufferLen >= blockSize) {
          bool success =
-            mSequence->Append(mAppendBuffer, seqFormat, blockSize,
+            mSequence->Append(mAppendBuffer.ptr(), seqFormat, blockSize,
                               blockFileLog);
          if (!success)
             return false;
-         memmove(mAppendBuffer,
-                 mAppendBuffer + blockSize * SAMPLE_SIZE(seqFormat),
+         memmove(mAppendBuffer.ptr(),
+                 mAppendBuffer.ptr() + blockSize * SAMPLE_SIZE(seqFormat),
                  (mAppendBufferLen - blockSize) * SAMPLE_SIZE(seqFormat));
          mAppendBufferLen -= blockSize;
          blockSize = mSequence->GetIdealAppendLen();
@@ -1288,7 +1278,7 @@ bool WaveClip::Append(samplePtr buffer, sampleFormat format,
          toCopy = len;
 
       CopySamples(buffer, format,
-                  mAppendBuffer + mAppendBufferLen * SAMPLE_SIZE(seqFormat),
+                  mAppendBuffer.ptr() + mAppendBufferLen * SAMPLE_SIZE(seqFormat),
                   seqFormat,
                   toCopy,
                   true, // high quality
@@ -1305,7 +1295,7 @@ bool WaveClip::Append(samplePtr buffer, sampleFormat format,
    return true;
 }
 
-bool WaveClip::AppendAlias(wxString fName, sampleCount start,
+bool WaveClip::AppendAlias(const wxString &fName, sampleCount start,
                             sampleCount len, int channel,bool useOD)
 {
    bool result = mSequence->AppendAlias(fName, start, len, channel,useOD);
@@ -1317,7 +1307,7 @@ bool WaveClip::AppendAlias(wxString fName, sampleCount start,
    return result;
 }
 
-bool WaveClip::AppendCoded(wxString fName, sampleCount start,
+bool WaveClip::AppendCoded(const wxString &fName, sampleCount start,
                             sampleCount len, int channel, int decodeType)
 {
    bool result = mSequence->AppendCoded(fName, start, len, channel, decodeType);
@@ -1337,7 +1327,7 @@ bool WaveClip::Flush()
 
    bool success = true;
    if (mAppendBufferLen > 0) {
-      success = mSequence->Append(mAppendBuffer, mSequence->GetSampleFormat(), mAppendBufferLen);
+      success = mSequence->Append(mAppendBuffer.ptr(), mSequence->GetSampleFormat(), mAppendBufferLen);
       if (success) {
          mAppendBufferLen = 0;
          UpdateEnvelopeTrackLen();
@@ -1387,7 +1377,7 @@ void WaveClip::HandleXMLEndTag(const wxChar *tag)
 XMLTagHandler *WaveClip::HandleXMLChild(const wxChar *tag)
 {
    if (!wxStrcmp(tag, wxT("sequence")))
-      return mSequence;
+      return mSequence.get();
    else if (!wxStrcmp(tag, wxT("envelope")))
       return mEnvelope;
    else if (!wxStrcmp(tag, wxT("waveclip")))
@@ -1415,22 +1405,21 @@ void WaveClip::WriteXML(XMLWriter &xmlFile)
    xmlFile.EndTag(wxT("waveclip"));
 }
 
-bool WaveClip::CreateFromCopy(double t0, double t1, WaveClip* other)
+bool WaveClip::CreateFromCopy(double t0, double t1, const WaveClip* other)
 {
    sampleCount s0, s1;
 
    other->TimeToSamplesClip(t0, &s0);
    other->TimeToSamplesClip(t1, &s1);
 
-   Sequence* oldSequence = mSequence;
+   std::unique_ptr<Sequence> oldSequence = std::move(mSequence);
    mSequence = NULL;
-   if (!other->mSequence->Copy(s0, s1, &mSequence))
+   if (!other->mSequence->Copy(s0, s1, mSequence))
    {
-      mSequence = oldSequence;
+      mSequence = std::move(oldSequence);
       return false;
    }
 
-   delete oldSequence;
    delete mEnvelope;
    mEnvelope = new Envelope();
    mEnvelope->CopyFrom(other->mEnvelope, (double)s0/mRate, (double)s1/mRate);
@@ -1445,7 +1434,7 @@ bool WaveClip::Paste(double t0, const WaveClip* other)
    const bool clipNeedsResampling = other->mRate != mRate;
    const bool clipNeedsNewFormat =
       other->mSequence->GetSampleFormat() != mSequence->GetSampleFormat();
-   std::auto_ptr<WaveClip> newClip;
+   std::unique_ptr<WaveClip> newClip;
    const WaveClip* pastedClip;
 
    if (clipNeedsResampling || clipNeedsNewFormat)
@@ -1469,7 +1458,7 @@ bool WaveClip::Paste(double t0, const WaveClip* other)
    TimeToSamplesClip(t0, &s0);
 
    bool result = false;
-   if (mSequence->Paste(s0, pastedClip->mSequence))
+   if (mSequence->Paste(s0, pastedClip->mSequence.get()))
    {
       MarkChanged();
       mEnvelope->Paste((double)s0/mRate + mOffset, pastedClip->mEnvelope);
@@ -1547,7 +1536,7 @@ bool WaveClip::Clear(double t0, double t1)
          double cutlinePosition = mOffset + clip->GetOffset();
          if (cutlinePosition >= t0 && cutlinePosition <= t1)
          {
-            // This cutline is within the area, delete it
+            // This cutline is within the area, DELETE it
             delete clip;
             mCutLines.DeleteNode(it);
          } else
@@ -1588,7 +1577,7 @@ bool WaveClip::ClearAndAddCutLine(double t0, double t1)
       return false;
    newClip->SetOffset(clip_t0-mOffset);
 
-   // Sort out cutlines that belong to the new cutline
+   // Sort out cutlines that belong to the NEW cutline
    WaveClipList::compatibility_iterator nextIt;
 
    for (WaveClipList::compatibility_iterator it = mCutLines.GetFirst(); it; it=nextIt)
@@ -1716,7 +1705,7 @@ void WaveClip::CloseLock()
 {
    GetSequence()->CloseLock();
    for (WaveClipList::compatibility_iterator it = mCutLines.GetFirst(); it; it=it->GetNext())
-      it->GetData()->Lock();
+      it->GetData()->CloseLock();
 }
 
 void WaveClip::Unlock()
@@ -1739,7 +1728,7 @@ bool WaveClip::Resample(int rate, ProgressDialog *progress)
       return true; // Nothing to do
 
    double factor = (double)rate / (double)mRate;
-   ::Resample* resample = new ::Resample(true, factor, factor); // constant rate resampling
+   ::Resample resample(true, factor, factor); // constant rate resampling
 
    int bufsize = 65536;
    float* inBuffer = new float[bufsize];
@@ -1749,8 +1738,8 @@ bool WaveClip::Resample(int rate, ProgressDialog *progress)
    int outGenerated = 0;
    sampleCount numSamples = mSequence->GetNumSamples();
 
-   Sequence* newSequence =
-      new Sequence(mSequence->GetDirManager(), mSequence->GetSampleFormat());
+   auto newSequence =
+      std::make_unique<Sequence>(mSequence->GetDirManager(), mSequence->GetSampleFormat());
 
    /**
     * We want to keep going as long as we have something to feed the resampler
@@ -1772,7 +1761,7 @@ bool WaveClip::Resample(int rate, ProgressDialog *progress)
       }
 
       int inBufferUsed = 0;
-      outGenerated = resample->Process(factor, inBuffer, inLen, isLast,
+      outGenerated = resample.Process(factor, inBuffer, inLen, isLast,
                                            &inBufferUsed, outBuffer, bufsize);
 
       pos += inBufferUsed;
@@ -1803,15 +1792,10 @@ bool WaveClip::Resample(int rate, ProgressDialog *progress)
 
    delete[] inBuffer;
    delete[] outBuffer;
-   delete resample;
 
-   if (error)
+   if (!error)
    {
-      delete newSequence;
-   } else
-   {
-      delete mSequence;
-      mSequence = newSequence;
+      mSequence = std::move(newSequence);
       mRate = rate;
 
       // Invalidate wave display cache

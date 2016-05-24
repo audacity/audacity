@@ -19,7 +19,7 @@
 
 #define INVERT_PLUGIN_SYMBOL XO("Invert")
 
-class EffectInvert : public Effect
+class EffectInvert final : public Effect
 {
 public:
    EffectInvert();
@@ -27,19 +27,19 @@ public:
 
    // IdentInterface implementation
 
-   virtual wxString GetSymbol();
-   virtual wxString GetDescription();
+   wxString GetSymbol() override;
+   wxString GetDescription() override;
 
    // EffectIdentInterface implementation
 
-   virtual EffectType GetType();
-   virtual bool IsInteractive();
+   EffectType GetType() override;
+   bool IsInteractive() override;
 
    // EffectClientInterface implementation
 
-   virtual int GetAudioInCount();
-   virtual int GetAudioOutCount();
-   virtual sampleCount ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen);
+   int GetAudioInCount() override;
+   int GetAudioOutCount() override;
+   sampleCount ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen) override;
 };
 
 #endif

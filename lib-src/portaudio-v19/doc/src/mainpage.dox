@@ -49,7 +49,9 @@ Documentation for the Java JNI interface to PortAudio
 
 - <a href="http://www.assembla.com/spaces/portaudio/wiki">Our wiki and issue tracking system</a>
 
-- <a href="http://www.portaudio.com/docs/proposals/014-StyleGuide.html">Coding guidelines</a>
+- <a href="https://www.assembla.com/spaces/portaudio/wiki/DeveloperGuidelines">Developer guidelines</a>
+
+- <a href="https://www.assembla.com/spaces/portaudio/wiki/ImplementationStyleGuidelines">Implementation style guidelines</a>
 
 If you're interested in helping out with PortAudio development we're more than happy for you to be involved. Just drop by the PortAudio mailing list and ask how you can help. Or <a href="http://www.assembla.com/spaces/portaudio/tickets">check out the starter tickets</a>.
 

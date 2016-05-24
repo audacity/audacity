@@ -1,5 +1,5 @@
 /*
- * $Id: pa_process.c 1706 2011-07-21 18:44:58Z philburk $
+ * $Id: pa_process.c 1954 2015-04-19 18:48:38Z gineera $
  * Portable Audio I/O Library
  * streamCallback <-> host buffer processing adapter
  *
@@ -743,8 +743,10 @@ static unsigned long NonAdaptingProcess( PaUtilBufferProcessor *bp,
                     destSampleStrideSamples = bp->inputChannelCount;
                     destChannelStrideBytes = bp->bytesPerUserInputSample;
 
-                    /* process host buffer directly, or use temp buffer if formats differ or host buffer non-interleaved */
-                    if( bp->userInputSampleFormatIsEqualToHost && bp->hostInputIsInterleaved && bp->hostInputChannels[0][0].data)
+                    /* process host buffer directly, or use temp buffer if formats differ or host buffer non-interleaved,
+                     * or if num channels differs between the host (set in stride) and the user (eg with some Alsa hw:) */
+                    if( bp->userInputSampleFormatIsEqualToHost && bp->hostInputIsInterleaved
+                        && bp->hostInputChannels[0][0].data && bp->inputChannelCount == hostInputChannels[0].stride )
                     {
                         userInput = hostInputChannels[0].data;
                         destBytePtr = (unsigned char *)hostInputChannels[0].data;
@@ -832,8 +834,10 @@ static unsigned long NonAdaptingProcess( PaUtilBufferProcessor *bp,
             {
                 if( bp->userOutputIsInterleaved )
                 {
-                    /* process host buffer directly, or use temp buffer if formats differ or host buffer non-interleaved */
-                    if( bp->userOutputSampleFormatIsEqualToHost && bp->hostOutputIsInterleaved )
+                    /* process host buffer directly, or use temp buffer if formats differ or host buffer non-interleaved,
+                     * or if num channels differs between the host (set in stride) and the user (eg with some Alsa hw:) */
+                    if( bp->userOutputSampleFormatIsEqualToHost && bp->hostOutputIsInterleaved
+                          && bp->outputChannelCount == hostOutputChannels[0].stride )
                     {
                         userOutput = hostOutputChannels[0].data;
                         skipOutputConvert = 1;
@@ -1683,9 +1687,9 @@ unsigned long PaUtil_CopyInput( PaUtilBufferProcessor* bp,
                                 hostInputChannels[i].stride,
                                 framesToCopy, &bp->ditherGenerator );
 
-            destBytePtr += destChannelStrideBytes;  /* skip to next source channel */
+            destBytePtr += destChannelStrideBytes;  /* skip to next dest channel */
 
-            /* advance dest ptr for next iteration */
+            /* advance source ptr for next iteration */
             hostInputChannels[i].data = ((unsigned char*)hostInputChannels[i].data) +
                     framesToCopy * hostInputChannels[i].stride * bp->bytesPerHostInputSample;
         }
@@ -1715,7 +1719,7 @@ unsigned long PaUtil_CopyInput( PaUtilBufferProcessor* bp,
             destBytePtr += bp->bytesPerUserInputSample * framesToCopy;
             nonInterleavedDestPtrs[i] = destBytePtr;
             
-            /* advance dest ptr for next iteration */
+            /* advance source ptr for next iteration */
             hostInputChannels[i].data = ((unsigned char*)hostInputChannels[i].data) +
                     framesToCopy * hostInputChannels[i].stride * bp->bytesPerHostInputSample;
         }

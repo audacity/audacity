@@ -26,7 +26,7 @@ class ShuttleGui;
 
 #define TIMESCALE_PLUGIN_SYMBOL XO("Time Scale")
 
-class EffectTimeScale : public EffectSBSMS
+class EffectTimeScale final : public EffectSBSMS
 {
 public:
    EffectTimeScale();
@@ -34,26 +34,28 @@ public:
 
    // IdentInterface implementation
 
-   virtual wxString GetSymbol();
-   virtual wxString GetName();
-   virtual wxString GetDescription();
+   wxString GetSymbol() override;
+   wxString GetName() override;
+   wxString GetDescription() override;
 
    // EffectIdentInterface implementation
 
-   virtual EffectType GetType();
+   EffectType GetType() override;
 
    // EffectClientInterface implementation
 
-   virtual bool GetAutomationParameters(EffectAutomationParameters & parms);
-   virtual bool SetAutomationParameters(EffectAutomationParameters & parms);
+   bool GetAutomationParameters(EffectAutomationParameters & parms) override;
+   bool SetAutomationParameters(EffectAutomationParameters & parms) override;
 
    // Effect implementation
 
-   virtual bool Init();
-   virtual bool Process();
-   virtual void PopulateOrExchange(ShuttleGui & S);
-   virtual bool TransferDataToWindow();
-   virtual bool TransferDataFromWindow();
+   bool Init() override;
+   void Preview(bool dryOnly) override;
+   bool Process() override;
+   void PopulateOrExchange(ShuttleGui & S) override;
+   bool TransferDataToWindow() override;
+   bool TransferDataFromWindow() override;
+   double CalcPreviewInputLength(double previewLength) override;
 
 private:
    // EffectTimeScale implementation
@@ -82,6 +84,10 @@ private:
    void Update_Slider_RatePercentChangeEnd();
 
 private:
+   bool bPreview;
+   double previewSelectedDuration;
+   SlideType slideTypeRate;
+   SlideType slideTypePitch;
    double m_RatePercentChangeStart;
    double m_RatePercentChangeEnd;
    double m_PitchHalfStepsStart;

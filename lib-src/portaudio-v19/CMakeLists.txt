@@ -7,6 +7,8 @@ PROJECT( portaudio )
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
+SET_PROPERTY(GLOBAL PROPERTY USE_FOLDERS ON)
+
 OPTION(PA_CONFIG_LIB_OUTPUT_PATH "Make sure that output paths are kept neat" OFF)
 IF(CMAKE_CL_64)
 SET(TARGET_POSTFIX x64)
@@ -351,8 +353,10 @@ IF(PA_USE_WDMKS)
 TARGET_LINK_LIBRARIES(portaudio setupapi)
 ENDIF(PA_USE_WDMKS)
 
-SET_TARGET_PROPERTIES(portaudio PROPERTIES OUTPUT_NAME portaudio_${TARGET_POSTFIX})
-SET_TARGET_PROPERTIES(portaudio_static PROPERTIES OUTPUT_NAME portaudio_static_${TARGET_POSTFIX})
+SET_TARGET_PROPERTIES(portaudio PROPERTIES OUTPUT_NAME portaudio_${TARGET_POSTFIX}
+                                FOLDER "Portaudio")
+SET_TARGET_PROPERTIES(portaudio_static PROPERTIES OUTPUT_NAME portaudio_static_${TARGET_POSTFIX}
+                                FOLDER "Portaudio")
 ENDIF(WIN32)
 
 OPTION(PA_BUILD_TESTS "Include test projects" OFF)

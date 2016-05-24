@@ -21,8 +21,8 @@
 /// preferences.  The internalDialogName is never seen by
 /// the user; it should be unique to each message.
 int ShowWarningDialog(wxWindow *parent,
-                      wxString internalDialogName,
-                      wxString message,
+                      const wxString &internalDialogName,
+                      const wxString &message,
                       bool showCancelButton = false);
 
 #endif // __AUDACITY_WARNING__

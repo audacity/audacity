@@ -15,7 +15,7 @@
 
 class wxString;
 
-class AUDACITY_DLL_API SpectralSelectionBarListener {
+class AUDACITY_DLL_API SpectralSelectionBarListener /* not final */ {
 
  public:
 

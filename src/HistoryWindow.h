@@ -23,7 +23,7 @@ class AudacityProject;
 class ShuttleGui;
 class UndoManager;
 
-class HistoryWindow :public wxDialog {
+class HistoryWindow final : public wxDialog {
 
  public:
    HistoryWindow(AudacityProject * parent, UndoManager *manager);

@@ -125,47 +125,47 @@ static bool ensureChannelNameSize( int size )
  */
 const char *PaMacCore_GetChannelName( int device, int channelIndex, bool input )
 {
-   struct PaUtilHostApiRepresentation *hostApi;
-   PaError err;
-   OSStatus error;
-   err = PaUtil_GetHostApiRepresentation( &hostApi, paCoreAudio );
-   assert(err == paNoError);
-   if( err != paNoError )
-      return NULL;
-   PaMacAUHAL *macCoreHostApi = (PaMacAUHAL*)hostApi;
-   AudioDeviceID hostApiDevice = macCoreHostApi->devIds[device];
+	struct PaUtilHostApiRepresentation *hostApi;
+	PaError err;
+	OSStatus error;
+	err = PaUtil_GetHostApiRepresentation( &hostApi, paCoreAudio );
+	assert(err == paNoError);
+	if( err != paNoError )
+		return NULL;
+	PaMacAUHAL *macCoreHostApi = (PaMacAUHAL*)hostApi;
+	AudioDeviceID hostApiDevice = macCoreHostApi->devIds[device];
 	CFStringRef nameRef;
-
+	
 	/* First try with CFString */
 	UInt32 size = sizeof(nameRef);
-      error = AudioDeviceGetProperty( hostApiDevice,
-                                      channelIndex + 1,
-                                      input,
-                                      kAudioDevicePropertyChannelNameCFString,
-                                      &size,
+	error = AudioDeviceGetProperty( hostApiDevice,
+								   channelIndex + 1,
+								   input,
+								   kAudioDevicePropertyChannelNameCFString,
+								   &size,
 								   &nameRef );
 	if( error )
 	{
 		/* try the C String */
 		size = 0;
 		error = AudioDeviceGetPropertyInfo( hostApiDevice,
-                                      channelIndex + 1,
-                                      input,
+										   channelIndex + 1,
+										   input,
 										   kAudioDevicePropertyChannelName,
-                                      &size,
+										   &size,
 										   NULL);
 		if( !error )
 		{
-   if( !ensureChannelNameSize( size ) )
-      return NULL;
-
-   error = AudioDeviceGetProperty( hostApiDevice,
-                                   channelIndex + 1,
-                                   input,
-                                   kAudioDevicePropertyChannelName,
-                                   &size,
-                                   channelName );
-
+			if( !ensureChannelNameSize( size ) )
+				return NULL;
+			
+			error = AudioDeviceGetProperty( hostApiDevice,
+										   channelIndex + 1,
+										   input,
+										   kAudioDevicePropertyChannelName,
+										   &size,
+										   channelName );
+			
 			
 			if( !error )
 				return channelName;
@@ -190,13 +190,13 @@ const char *PaMacCore_GetChannelName( int device, int channelIndex, bool input )
 		if( !ensureChannelNameSize( size ) )
 		{
 			CFRelease( nameRef );
-      return NULL;
-   }
+			return NULL;
+		}
 		CFStringGetCString( nameRef, channelName, size+1, kCFStringEncodingUTF8 );
 		CFRelease( nameRef );
 	}
 	
-   return channelName;
+	return channelName;
 }
 
     
@@ -661,23 +661,23 @@ static PaError InitializeDeviceInfo( PaMacAUHAL *auhalHostApi,
 
     deviceInfo->structVersion = 2;
     deviceInfo->hostApi = hostApiIndex;
-
+  
     /* Get the device name using CFString */
 	propSize = sizeof(nameRef);
     err = ERR(AudioDeviceGetProperty(macCoreDeviceId, 0, 0, kAudioDevicePropertyDeviceNameCFString, &propSize, &nameRef));
     if (err)
     {
 		/* Get the device name using c string.  Fail if we can't get it. */
-    err = ERR(AudioDeviceGetPropertyInfo(macCoreDeviceId, 0, 0, kAudioDevicePropertyDeviceName, &propSize, NULL));
-    if (err)
-        return err;
+		err = ERR(AudioDeviceGetPropertyInfo(macCoreDeviceId, 0, 0, kAudioDevicePropertyDeviceName, &propSize, NULL));
+		if (err)
+			return err;
 
 		name = PaUtil_GroupAllocateMemory(auhalHostApi->allocations,propSize+1);
-    if ( !name )
-        return paInsufficientMemory;
-    err = ERR(AudioDeviceGetProperty(macCoreDeviceId, 0, 0, kAudioDevicePropertyDeviceName, &propSize, name));
-    if (err)
-        return err;
+		if ( !name )
+			return paInsufficientMemory;
+		err = ERR(AudioDeviceGetProperty(macCoreDeviceId, 0, 0, kAudioDevicePropertyDeviceName, &propSize, name));
+		if (err)
+			return err;
 	}
 	else
 	{

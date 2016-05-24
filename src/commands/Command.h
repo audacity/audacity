@@ -57,12 +57,12 @@ public:
 };
 
 // Interface
-class Command
+class Command /* not final */
 {
 public:
    virtual void Progress(double completed) = 0;
-   virtual void Status(wxString message) = 0;
-   virtual void Error(wxString message) = 0;
+   virtual void Status(const wxString &message) = 0;
+   virtual void Error(const wxString &message) = 0;
    virtual ~Command() { }
    virtual wxString GetName() = 0;
    virtual CommandSignature &GetSignature() = 0;
@@ -70,41 +70,42 @@ public:
    virtual bool Apply(CommandExecutionContext context) = 0;
 };
 
+using CommandHolder = std::shared_ptr<Command>;
+
 // Command which wraps another command
-class DecoratedCommand : public Command
+class DecoratedCommand /* not final */ : public Command
 {
 protected:
-   Command *mCommand;
+   CommandHolder mCommand;
 public:
-   virtual void Progress(double completed);
-   virtual void Status(wxString message);
-   virtual void Error(wxString message);
+   void Progress(double completed) override;
+   void Status(const wxString &message) override;
+   void Error(const wxString &message) override;
 
-   DecoratedCommand(Command *cmd)
+   DecoratedCommand(const CommandHolder &cmd)
       : mCommand(cmd)
    {
       wxASSERT(cmd != NULL);
    }
    virtual ~DecoratedCommand();
-   virtual wxString GetName();
-   virtual CommandSignature &GetSignature();
-   virtual bool SetParameter(const wxString &paramName, const wxVariant &paramValue);
-   virtual bool Apply(CommandExecutionContext context) = 0;
+   wxString GetName() override;
+   CommandSignature &GetSignature() override;
+   bool SetParameter(const wxString &paramName, const wxVariant &paramValue) override;
 };
 
 // Decorator command that performs the given command and then outputs a status
 // message according to the result
-class ApplyAndSendResponse : public DecoratedCommand
+class ApplyAndSendResponse final : public DecoratedCommand
 {
 public:
-   ApplyAndSendResponse(Command *cmd)
+   ApplyAndSendResponse(const CommandHolder &cmd)
       : DecoratedCommand(cmd)
    { }
 
-   virtual bool Apply(CommandExecutionContext context);
+   bool Apply(CommandExecutionContext context) override;
 };
 
-class CommandImplementation : public Command
+class CommandImplementation /* not final */ : public Command
 {
 private:
    CommandType &mType;
@@ -115,7 +116,7 @@ private:
    bool Valid(const wxString &paramName, const wxVariant &paramValue);
 
 protected:
-   CommandOutputTarget *mOutput;
+   std::unique_ptr<CommandOutputTarget> mOutput;
 
    // Convenience methods for allowing subclasses to access parameters
    void TypeCheck(const wxString &typeName,
@@ -130,13 +131,13 @@ protected:
 public:
    // Convenience methods for passing messages to the output target
    void Progress(double completed);
-   void Status(wxString status);
-   void Error(wxString message);
+   void Status(const wxString &status) override;
+   void Error(const wxString &message) override;
 
    /// Constructor should not be called directly; only by a factory which
    /// ensures name and params are set appropriately for the command.
    CommandImplementation(CommandType &type,
-                         CommandOutputTarget *output);
+                         std::unique_ptr<CommandOutputTarget> &&output);
 
    virtual ~CommandImplementation();
 
@@ -155,7 +156,7 @@ public:
 
    /// Actually carry out the command. Return true if successful and false
    /// otherwise.
-   virtual bool Apply(CommandExecutionContext context);
+   bool Apply(CommandExecutionContext context) override;
 };
 
 #endif /* End of include guard: __COMMAND__ */

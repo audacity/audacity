@@ -50,6 +50,7 @@
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../FileNames.h"
+#include "../ShuttleGui.h"
 
 #include <math.h>
 
@@ -153,9 +154,9 @@ bool EffectNoiseRemoval::CheckWhetherSkipEffect()
    return (mLevel == 0);
 }
 
-bool EffectNoiseRemoval::PromptUser()
+bool EffectNoiseRemoval::PromptUser(wxWindow *parent)
 {
-   NoiseRemovalDialog dlog(this, mParent);
+   NoiseRemovalDialog dlog(this, parent);
    dlog.mSensitivity = mSensitivity;
    dlog.mGain = -mNoiseGain;
    dlog.mFreq = mFreqSmoothingHz;
@@ -433,7 +434,7 @@ void EffectNoiseRemoval::RotateHistoryWindows()
       mImagFFTs[i] = mImagFFTs[i-1];
    }
 
-   // Reuse the last buffers as the new first window
+   // Reuse the last buffers as the NEW first window
    mSpectrums[0] = lastSpectrum;
    mGains[0] = lastGain;
    mRealFFTs[0] = lastRealFFT;
@@ -446,7 +447,7 @@ void EffectNoiseRemoval::FinishTrack()
    // windows until we've output exactly as many samples as
    // were input.
    // Well, not exactly, but not more than mWindowSize/2 extra samples at the end.
-   // We'll delete them later in ProcessOne.
+   // We'll DELETE them later in ProcessOne.
 
    float *empty = new float[mWindowSize / 2];
    int i;
@@ -614,13 +615,12 @@ bool EffectNoiseRemoval::ProcessOne(int count, WaveTrack * track,
          double tLen = mOutputTrack->LongSamplesToTime(len);
          // Filtering effects always end up with more data than they started with.  Delete this 'tail'.
          mOutputTrack->HandleClear(tLen, mOutputTrack->GetEndTime(), false, false);
-         bool bResult = track->ClearAndPaste(t0, t0 + tLen, mOutputTrack, true, false);
+         bool bResult = track->ClearAndPaste(t0, t0 + tLen, mOutputTrack.get(), true, false);
          wxASSERT(bResult); // TO DO: Actually handle this.
       }
 
       // Delete the outputTrack now that its data is inserted in place
-      delete mOutputTrack;
-      mOutputTrack = NULL;
+      mOutputTrack.reset();
    }
 
    return bLoopSuccess;
@@ -680,8 +680,8 @@ BEGIN_EVENT_TABLE(NoiseRemovalDialog,wxDialog)
 END_EVENT_TABLE()
 
 NoiseRemovalDialog::NoiseRemovalDialog(EffectNoiseRemoval * effect,
-                                       wxWindow *parent) :
-   EffectDialog( parent, _("Noise Removal"), PROCESS_EFFECT)
+                                       wxWindow *parent)
+   : EffectDialog( parent, _("Noise Removal"), EffectTypeProcess)
 {
    m_pEffect = effect;
 

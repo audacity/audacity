@@ -92,7 +92,6 @@ TranscriptionToolBar::TranscriptionToolBar()
 : ToolBar(TranscriptionBarID, _("Transcription"), wxT("Transcription"))
 {
    mPlaySpeed = 1.0 * 100.0;
-   mTimeTrack = NULL;
 #ifdef EXPERIMENTAL_VOICE_DETECTION
    mVk = new VoiceKey();
 #endif
@@ -103,10 +102,6 @@ TranscriptionToolBar::~TranscriptionToolBar()
 #ifdef EXPERIMENTAL_VOICE_DETECTION
    delete mVk;
 #endif
-   if (mTimeTrack) {
-      delete mTimeTrack;
-      mTimeTrack = NULL;
-   }
 }
 
 void TranscriptionToolBar::Create(wxWindow * parent)
@@ -193,7 +188,7 @@ void TranscriptionToolBar::Populate()
 
    //Add a slider that controls the speed of playback.
    const int SliderWidth=100;
-   mPlaySpeedSlider = new ASlider(this,
+   mPlaySpeedSlider = safenew ASlider(this,
                                   TTB_PlaySpeedSlider,
                                   _("Playback Speed"),
                                   wxDefaultPosition,
@@ -236,7 +231,7 @@ void TranscriptionToolBar::Populate()
    AddButton(bmpTnCalibrate, bmpTnCalibrateDisabled, TTB_Calibrate,
       TRANSLATABLE("Calibrate voicekey"));
 
-   mSensitivitySlider = new ASlider(this,
+   mSensitivitySlider = safenew ASlider(this,
                                     TTB_SensitivitySlider,
                                     TRANSLATABLE("Adjust Sensitivity"),
                                     wxDefaultPosition,
@@ -255,7 +250,7 @@ void TranscriptionToolBar::Populate()
       TRANSLATABLE("Direction Changes (High Threshold)")
    };
 
-   mKeyTypeChoice = new wxChoice(this, TTB_KeyType,
+   mKeyTypeChoice = safenew wxChoice(this, TTB_KeyType,
                                  wxDefaultPosition,
                                  wxDefaultSize,
                                  5,
@@ -432,7 +427,7 @@ void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
 
    // Create a TimeTrack if we haven't done so already
    if (!mTimeTrack) {
-      mTimeTrack = new TimeTrack(p->GetDirManager());
+      mTimeTrack = p->GetTrackFactory()->NewTimeTrack();
       if (!mTimeTrack) {
          return;
       }
@@ -463,22 +458,41 @@ void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
 #endif
       AudioIOStartStreamOptions options(p->GetDefaultPlayOptions());
       options.playLooped = looped;
-      options.timeTrack = mTimeTrack;
+      options.timeTrack = mTimeTrack.get();
+      ControlToolBar::PlayAppearance appearance =
+         cutPreview ? ControlToolBar::PlayAppearance::CutPreview
+         : looped ? ControlToolBar::PlayAppearance::Looped
+         : ControlToolBar::PlayAppearance::Straight;
       p->GetControlToolBar()->PlayPlayRegion
          (SelectedRegion(playRegionStart, playRegionEnd),
           options,
-          cutPreview);
+          PlayMode::normalPlay,
+          appearance);
    }
 }
 
 // Come here from button clicks only
 void TranscriptionToolBar::OnPlaySpeed(wxCommandEvent & WXUNUSED(event))
 {
-   // Let control have precedence over shift
-   const bool cutPreview = mButtons[TTB_PlaySpeed]->WasControlDown();
-   const bool looped = !cutPreview &&
-      mButtons[TTB_PlaySpeed]->WasShiftDown();
-   PlayAtSpeed(looped, cutPreview);
+   auto button = mButtons[TTB_PlaySpeed];
+
+   auto doubleClicked = button->IsDoubleClicked();
+   button->ClearDoubleClicked();
+
+   if (doubleClicked) {
+      GetActiveProject()->GetPlaybackScroller().Activate
+         (AudacityProject::PlaybackScroller::Mode::Centered);
+
+      // Pop up the button
+      SetButton(false, button);
+   }
+   else {
+      // Let control have precedence over shift
+      const bool cutPreview = mButtons[TTB_PlaySpeed]->WasControlDown();
+      const bool looped = !cutPreview &&
+         button->WasShiftDown();
+      PlayAtSpeed(looped, cutPreview);
+   }
 }
 
 void TranscriptionToolBar::OnSpeedSlider(wxCommandEvent& WXUNUSED(event))
@@ -816,7 +830,7 @@ void TranscriptionToolBar::OnAutomateSelection(wxCommandEvent & WXUNUSED(event))
                if( newStart==start)
                   break;
 
-               //Adjust len by the new start position
+               //Adjust len by the NEW start position
                len -= (newStart - start);
 
                //Adjust len by the minimum word size
@@ -824,7 +838,7 @@ void TranscriptionToolBar::OnAutomateSelection(wxCommandEvent & WXUNUSED(event))
 
 
 
-               //OK, now we have found a new starting point.  A 'word' should be at least
+               //OK, now we have found a NEW starting point.  A 'word' should be at least
                //50 ms long, so jump ahead minWordSize
 
                newEnd   = mVk->OffForward(*(WaveTrack*)t,newStart+minWordSize, len);
@@ -835,7 +849,7 @@ void TranscriptionToolBar::OnAutomateSelection(wxCommandEvent & WXUNUSED(event))
                   break;
 
 
-               //Adjust len by the new word end
+               //Adjust len by the NEW word end
                len -= (newEnd - newStart);
 
                //Calculate the start and end of the words, in seconds

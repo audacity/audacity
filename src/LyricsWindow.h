@@ -19,7 +19,7 @@
 class AudacityProject;
 class Lyrics;
 
-class LyricsWindow : public wxFrame {
+class LyricsWindow final : public wxFrame {
 
  public:
    LyricsWindow(AudacityProject* parent);

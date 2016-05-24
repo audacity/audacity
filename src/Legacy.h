@@ -11,4 +11,4 @@
 #include <wx/defs.h>
 #include <wx/filename.h>
 
-bool ConvertLegacyProjectFile(wxFileName filename);
+bool ConvertLegacyProjectFile(const wxFileName &filename);

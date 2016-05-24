@@ -43,7 +43,7 @@ WX_DECLARE_OBJARRAY(wxRect, wxArrayRect);
 // Can be docked into a ToolBarArea or floated in an ToolBarFrame;
 //
 
-class ExpandingToolBar : public wxPanel
+class ExpandingToolBar final : public wxPanel
 {
  public:
    DECLARE_DYNAMIC_CLASS(ExpandingToolBar)
@@ -73,8 +73,8 @@ class ExpandingToolBar : public wxPanel
    void UpdateMoving();
    void FinishMoving();
 
-   virtual bool Layout();
-   virtual void Fit();
+   bool Layout() override;
+   void Fit() override;
 
  protected:
    void RecursivelyPushEventHandlers(wxWindow *win);
@@ -121,7 +121,7 @@ class ExpandingToolBar : public wxPanel
    friend class ExpandingToolBarEvtHandler;
 };
 
-class ToolBarGrabber : public wxPanel
+class ToolBarGrabber final : public wxPanel
 {
  public:
    DECLARE_DYNAMIC_CLASS(ToolBarGrabber);
@@ -144,7 +144,7 @@ class ToolBarGrabber : public wxPanel
    DECLARE_EVENT_TABLE();
 };
 
-class ToolBarDialog : public wxDialog
+class ToolBarDialog final : public wxDialog
 {
  public:
    DECLARE_DYNAMIC_CLASS(ToolBarDialog)
@@ -156,7 +156,7 @@ class ToolBarDialog : public wxDialog
 
    ~ToolBarDialog();
 
-   virtual void Fit();
+   void Fit() override;
 
    void SetChild(ExpandingToolBar *child);
 
@@ -166,7 +166,7 @@ class ToolBarDialog : public wxDialog
    DECLARE_EVENT_TABLE()
 };
 
-class ToolBarFrame : public wxMiniFrame
+class ToolBarFrame final : public wxMiniFrame
 {
  public:
    DECLARE_DYNAMIC_CLASS(ToolBarFrame)
@@ -178,7 +178,7 @@ class ToolBarFrame : public wxMiniFrame
 
    ~ToolBarFrame();
 
-   virtual void Fit();
+   void Fit() override;
 
    void SetChild(ExpandingToolBar *child);
 
@@ -193,7 +193,7 @@ class ToolBarFrame : public wxMiniFrame
 // ToolBarArea sets the height dynamically based on the number of
 // toolbars it contains.
 //
-class ToolBarArea : public wxPanel
+class ToolBarArea final : public wxPanel
 {
  public:
    DECLARE_DYNAMIC_CLASS(ToolBarArea)
@@ -204,15 +204,15 @@ class ToolBarArea : public wxPanel
                const wxSize& size = wxDefaultSize);
    ~ToolBarArea();
 
-   virtual bool Layout();
-   virtual void Fit();
+   bool Layout() override;
+   void Fit() override;
 
-   virtual void OnSize(wxSizeEvent &evt);
-   virtual void OnMouse(wxMouseEvent &evt);
+   void OnSize(wxSizeEvent &evt);
+   void OnMouse(wxMouseEvent &evt);
 
    void CollapseAll(bool now = false);
 
-   // Does not add or delete the window, just relates to layout...
+   // Does not add or DELETE the window, just relates to layout...
    void AddChild(ExpandingToolBar *child);
    void RemoveChild(ExpandingToolBar *child);
 

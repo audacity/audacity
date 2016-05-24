@@ -17,12 +17,14 @@
 
 class AutoSaveFile;
 
-class AUDACITY_DLL_API AudioIOListener {
+class AUDACITY_DLL_API AudioIOListener /* not final */ {
 public:
    AudioIOListener() {}
    virtual ~AudioIOListener() {}
 
+   // Pass 0 when audio stops, positive when it starts:
    virtual void OnAudioIORate(int rate) = 0;
+
    virtual void OnAudioIOStartRecording() = 0;
    virtual void OnAudioIOStopRecording() = 0;
    virtual void OnAudioIONewBlockFiles(const AutoSaveFile & blockFileLog) = 0;

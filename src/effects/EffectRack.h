@@ -30,7 +30,7 @@
 
 #include "EffectManager.h"
 
-class EffectRack : public wxFrame
+class EffectRack final : public wxFrame
 {
 public:
    EffectRack();

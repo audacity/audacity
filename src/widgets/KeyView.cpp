@@ -59,8 +59,7 @@ KeyView::KeyView(wxWindow *parent,
 {
 #if wxUSE_ACCESSIBILITY
    // Create and set accessibility object
-   mAx = new KeyViewAx(this);
-   SetAccessible(mAx);
+   SetAccessible(mAx = safenew KeyViewAx(this));
 #endif
 
    // The default view
@@ -266,7 +265,7 @@ KeyView::SetKey(int index, const wxString & key)
       return false;
    }
 
-   // Set the new key
+   // Set the NEW key
    node.key = key;
 
    // Check to see if the key column needs to be expanded
@@ -339,7 +338,7 @@ KeyView::SetView(ViewByType type)
    // Unselect any currently selected line...do even if none selected
    SelectNode(-1);
 
-   // Save new type
+   // Save NEW type
    mViewType = type;
 
    // Refresh the view lines
@@ -512,7 +511,7 @@ KeyView::UpdateHScroll()
 }
 
 //
-// Process a new set of bindings
+// Process a NEW set of bindings
 //
 void
 KeyView::RefreshBindings(const wxArrayString & names,
@@ -556,10 +555,10 @@ KeyView::RefreshBindings(const wxArrayString & names,
          cat += _("Menu");
       }
 
-      // Process a new category
+      // Process a NEW category
       if (cat != lastcat)
       {
-         // A new category always finishes any current subtree
+         // A NEW category always finishes any current subtree
          if (inpfx)
          {
             // Back to category level
@@ -578,7 +577,7 @@ KeyView::RefreshBindings(const wxArrayString & names,
          // Remember for next iteration
          lastcat = cat;
 
-         // Add a new category node
+         // Add a NEW category node
          if (cat != wxEmptyString)
          {
             KeyNode node;
@@ -604,7 +603,7 @@ KeyView::RefreshBindings(const wxArrayString & names,
          }
       }
 
-      // Process a new prefix
+      // Process a NEW prefix
       if (pfx != lastpfx)
       {
          // Done with prefix branch
@@ -617,7 +616,7 @@ KeyView::RefreshBindings(const wxArrayString & names,
          // Remember for next iteration
          lastpfx = pfx;
 
-         // Add a new prefix node
+         // Add a NEW prefix node
          if (pfx != wxEmptyString)
          {
             KeyNode node;
@@ -949,7 +948,7 @@ KeyView::RefreshLines()
    }
 #endif
 
-   // Tell listbox the new count and refresh the entire view
+   // Tell listbox the NEW count and refresh the entire view
    SetItemCount(mLines.GetCount());
    RefreshAll();
 
@@ -1199,7 +1198,7 @@ KeyView::OnSetFocus(wxFocusEvent & event)
    event.Skip();
 
    // Refresh the selected line to pull in any changes while
-   // focus was away...like when setting a new key value.  This
+   // focus was away...like when setting a NEW key value.  This
    // will also refresh the visual (highlighted) state.
    if (GetSelection() != wxNOT_FOUND)
    {
@@ -1252,7 +1251,7 @@ KeyView::OnScroll(wxScrollWinEvent & event)
       return;
    }
 
-   // Get new scroll position and scroll the view
+   // Get NEW scroll position and scroll the view
    mScrollX = event.GetPosition();
    SetScrollPos(wxHORIZONTAL, mScrollX);
 
@@ -1811,7 +1810,7 @@ KeyViewAx::ListUpdated()
 }
 
 //
-// Inform accessibility a new line has been selected and/or a previously
+// Inform accessibility a NEW line has been selected and/or a previously
 // selected line is being unselected
 //
 void

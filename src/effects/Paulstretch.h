@@ -18,7 +18,7 @@ class ShuttleGui;
 
 #define PAULSTRETCH_PLUGIN_SYMBOL XO("Paulstretch")
 
-class EffectPaulstretch : public Effect
+class EffectPaulstretch final : public Effect
 {
 public:
    EffectPaulstretch();
@@ -26,35 +26,37 @@ public:
 
    // IdentInterface implementation
 
-   virtual wxString GetSymbol();
-   virtual wxString GetDescription();
+   wxString GetSymbol() override;
+   wxString GetDescription() override;
 
    // EffectIdentInterface implementation
 
-   virtual EffectType GetType();
+   EffectType GetType() override;
 
    // EffectClientInterface implementation
 
-   virtual bool GetAutomationParameters(EffectAutomationParameters & parms);
-   virtual bool SetAutomationParameters(EffectAutomationParameters & parms);
+   bool GetAutomationParameters(EffectAutomationParameters & parms) override;
+   bool SetAutomationParameters(EffectAutomationParameters & parms) override;
 
    // Effect implementation
 
-   virtual bool Process();
-   virtual void PopulateOrExchange(ShuttleGui & S);
-   virtual bool TransferDataToWindow();
-   virtual bool TransferDataFromWindow();
+   double CalcPreviewInputLength(double previewLength) override;
+   bool Process() override;
+   void PopulateOrExchange(ShuttleGui & S) override;
+   bool TransferDataToWindow() override;
+   bool TransferDataFromWindow() override;
 
 private:
    // EffectPaulstretch implementation
    
    void OnText(wxCommandEvent & evt);
+   int GetBufferSize(double rate);
 
    bool ProcessOne(WaveTrack *track, double t0, double t1, int count);
 
 private:
-   float amount;
-   float time_resolution;  //seconds
+   float mAmount;
+   float mTime_resolution;  //seconds
    double m_t1;
 
    DECLARE_EVENT_TABLE();

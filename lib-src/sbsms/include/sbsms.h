@@ -46,11 +46,12 @@ struct SBSMSFrame {
 
 typedef long (*SBSMSResampleCB)(void *cbData, SBSMSFrame *frame);
 
-class SBSMSInterface {
+class SBSMSInterface /* not final */ {
  public:
   virtual ~SBSMSInterface() {}
   virtual long samples(audio *buf, long n) { return 0; }
   virtual float getStretch(float t)=0;
+  virtual float getMeanStretch(float t0, float t1)=0;
   virtual float getPitch(float t)=0;
   virtual long getPresamples()=0;
   virtual SampleCountType getSamplesToInput()=0;
@@ -127,8 +128,10 @@ class Slide {
   ~Slide();
   float getTotalStretch();
   float getStretchedTime(float t);
+  float getInverseStretchedTime(float t);
   float getRate(float t);
   float getStretch(float t);
+  float getMeanStretch(float t0, float t1);
   float getRate();
   float getStretch();
   void step();
@@ -138,7 +141,7 @@ class Slide {
  
 class SBSMSInterfaceSlidingImp;
 
-class SBSMSInterfaceSliding : public SBSMSInterface {
+class SBSMSInterfaceSliding /* not final */ : public SBSMSInterface {
 public:
   SBSMSInterfaceSliding(Slide *rateSlide, 
                         Slide *pitchSlide, 
@@ -148,6 +151,7 @@ public:
                         SBSMSQuality *quality);
   virtual ~SBSMSInterfaceSliding();
   virtual float getStretch(float t);
+  virtual float getMeanStretch(float t0, float t1);
   virtual float getPitch(float t);
   virtual long getPresamples();
   virtual SampleCountType getSamplesToInput();

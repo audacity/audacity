@@ -23,23 +23,23 @@ name.
 #include "Command.h"
 #include "CommandType.h"
 
-class ExecMenuCommandType : public CommandType
+class ExecMenuCommandType final : public CommandType
 {
 public:
-   virtual wxString BuildName();
-   virtual void BuildSignature(CommandSignature &signature);
-   virtual Command *Create(CommandOutputTarget *target);
+   wxString BuildName() override;
+   void BuildSignature(CommandSignature &signature) override;
+   CommandHolder Create(std::unique_ptr<CommandOutputTarget> &&target) override;
 };
 
-class ExecMenuCommand : public CommandImplementation
+class ExecMenuCommand final : public CommandImplementation
 {
 public:
    ExecMenuCommand(CommandType &type,
-                   CommandOutputTarget *target)
-      : CommandImplementation(type, target)
+                   std::unique_ptr<CommandOutputTarget> &&target)
+      : CommandImplementation(type, std::move(target))
    { }
    virtual ~ExecMenuCommand() { }
-   virtual bool Apply(CommandExecutionContext context);
+   bool Apply(CommandExecutionContext context) override;
 };
 
 #endif /* End of include guard: __EXECMENUCOMMAND__ */

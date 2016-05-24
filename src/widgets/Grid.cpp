@@ -44,7 +44,8 @@ TimeEditor::~TimeEditor()
 
 void TimeEditor::Create(wxWindow *parent, wxWindowID id, wxEvtHandler *handler)
 {
-   m_control = new NumericTextCtrl(NumericConverter::TIME, parent,
+   wxASSERT(parent); // to justify safenew
+   m_control = safenew NumericTextCtrl(NumericConverter::TIME, parent,
                                 wxID_ANY,
                                 mFormat,
                                 mOld,
@@ -124,9 +125,10 @@ bool TimeEditor::IsAcceptedKey(wxKeyEvent &event)
    return false;
 }
 
+// Clone is required by wxwidgets; implemented via copy constructor
 wxGridCellEditor *TimeEditor::Clone() const
 {
-   return new TimeEditor(mFormat, mRate);
+   return safenew TimeEditor(mFormat, mRate);
 }
 
 wxString TimeEditor::GetValue() const
@@ -245,9 +247,10 @@ wxSize TimeRenderer::GetBestSize(wxGrid &grid,
    return sz;
 }
 
+// Clone is required by wxwidgets; implemented via copy constructor
 wxGridCellRenderer *TimeRenderer::Clone() const
 {
-   return new TimeRenderer();
+   return safenew TimeRenderer();
 }
 
 ChoiceEditor::ChoiceEditor(size_t count, const wxString choices[])
@@ -271,14 +274,15 @@ ChoiceEditor::~ChoiceEditor()
       mHandler.DisconnectEvent(m_control);
 }
 
+// Clone is required by wxwidgets; implemented via copy constructor
 wxGridCellEditor *ChoiceEditor::Clone() const
 {
-   return new ChoiceEditor(mChoices);
+   return safenew ChoiceEditor(mChoices);
 }
 
 void ChoiceEditor::Create(wxWindow* parent, wxWindowID id, wxEvtHandler* evtHandler)
 {
-   m_control = new wxChoice(parent,
+   m_control = safenew wxChoice(parent,
                             id,
                             wxDefaultPosition,
                             wxDefaultSize,
@@ -385,8 +389,7 @@ Grid::Grid(wxWindow *parent,
 : wxGrid(parent, id, pos, size, style | wxWANTS_CHARS, name)
 {
 #if wxUSE_ACCESSIBILITY
-   mAx = new GridAx(this);
-   GetGridWindow()->SetAccessible(mAx);
+   GetGridWindow()->SetAccessible(mAx = safenew GridAx(this));
 #endif
 
    RegisterDataType(GRID_VALUE_TIME,
@@ -464,7 +467,7 @@ void Grid::OnKeyDown(wxKeyEvent &event)
          }
 
 #if wxUSE_ACCESSIBILITY
-         // Make sure the new cell is made available to the screen reader
+         // Make sure the NEW cell is made available to the screen reader
          mAx->SetCurrentCell(GetGridCursorRow(), GetGridCursorCol());
 #endif
       }
@@ -512,7 +515,7 @@ void Grid::OnKeyDown(wxKeyEvent &event)
          MakeCellVisible(GetGridCursorRow(), GetGridCursorCol());
 
 #if wxUSE_ACCESSIBILITY
-         // Make sure the new cell is made available to the screen reader
+         // Make sure the NEW cell is made available to the screen reader
          mAx->SetCurrentCell(GetGridCursorRow(), GetGridCursorCol());
 #endif
       }
@@ -535,7 +538,7 @@ void Grid::OnKeyDown(wxKeyEvent &event)
 
             // This looks strange, but what it does is selects the cell when
             // enter is pressed after editing.  Without it, Jaws and Window-Eyes
-            // do not speak the new cell contents (the one below the edited one).
+            // do not speak the NEW cell contents (the one below the edited one).
             SetGridCursor(GetGridCursorRow(), GetGridCursorCol());
          }
          break;

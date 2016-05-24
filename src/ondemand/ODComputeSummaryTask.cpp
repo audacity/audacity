@@ -27,7 +27,7 @@ updating the ODPCMAliasBlockFile and the GUI of the newly available data.
 //36 blockfiles > 3 minutes stereo 44.1kHz per ODTask::DoSome
 #define kNumBlockFilesPerDoSome 36
 
-///Creates a new task that computes summaries for a wavetrack that needs to be specified through SetWaveTrack()
+///Creates a NEW task that computes summaries for a wavetrack that needs to be specified through SetWaveTrack()
 ODComputeSummaryTask::ODComputeSummaryTask()
 {
    mMaxBlockFiles = 0;
@@ -35,11 +35,11 @@ ODComputeSummaryTask::ODComputeSummaryTask()
    mHasUpdateRan=false;
 }
 
-ODTask* ODComputeSummaryTask::Clone()
+std::unique_ptr<ODTask> ODComputeSummaryTask::Clone() const
 {
-   ODComputeSummaryTask* clone = new ODComputeSummaryTask;
-   clone->mDemandSample=GetDemandSample();
-   return clone;
+   auto clone = std::make_unique<ODComputeSummaryTask>();
+   clone->mDemandSample = GetDemandSample();
+   return std::move(clone);
 }
 
 
@@ -190,7 +190,7 @@ void ODComputeSummaryTask::Update()
             seq = clip->GetSequence();
             //This lock may be way too big since the whole file is one sequence.
             //TODO: test for large files and find a way to break it down.
-            seq->LockDeleteUpdateMutex();
+            Sequence::DeleteUpdateMutexLocker locker(*seq);
 
             //See Sequence::Delete() for why need this for now..
             //We don't need the mBlockFilesMutex here because it is only for the vector list.
@@ -202,32 +202,34 @@ void ODComputeSummaryTask::Update()
 
             insertCursor =0;//OD TODO:see if this works, removed from inner loop (bfore was n*n)
 
-            for(i=0; i<(int)blocks->GetCount(); i++)
+            for(i=0; i<(int)blocks->size(); i++)
             {
                //if there is data but no summary, this blockfile needs summarizing.
-               if(blocks->Item(i)->f->IsDataAvailable() && !blocks->Item(i)->f->IsSummaryAvailable())
+               SeqBlock &block = (*blocks)[i];
+               BlockFile *const file = block.f;
+               if(file->IsDataAvailable() && !file->IsSummaryAvailable())
                {
-                  blocks->Item(i)->f->Ref();
-                  ((ODPCMAliasBlockFile*)blocks->Item(i)->f)->SetStart(blocks->Item(i)->start);
-                  ((ODPCMAliasBlockFile*)blocks->Item(i)->f)->SetClipOffset((sampleCount)(clip->GetStartTime()*clip->GetRate()));
+                  file->Ref();
+                  ODPCMAliasBlockFile *const odpcmaFile = static_cast<ODPCMAliasBlockFile*>(file);
+                  odpcmaFile->SetStart(block.start);
+                  odpcmaFile->SetClipOffset((sampleCount)(clip->GetStartTime()*clip->GetRate()));
 
                   //these will always be linear within a sequence-lets take advantage of this by keeping a cursor.
                   while(insertCursor<(int)tempBlocks.size()&&
                      (sampleCount)(tempBlocks[insertCursor]->GetStart()+tempBlocks[insertCursor]->GetClipOffset()) <
-                        (sampleCount)(((ODPCMAliasBlockFile*)blocks->Item(i)->f)->GetStart()+((ODPCMAliasBlockFile*)blocks->Item(i)->f)->GetClipOffset()))
+                        (sampleCount)(odpcmaFile->GetStart()+odpcmaFile->GetClipOffset()))
                      insertCursor++;
 
-                  tempBlocks.insert(tempBlocks.begin()+insertCursor++,(ODPCMAliasBlockFile*)blocks->Item(i)->f);
+                  tempBlocks.insert(tempBlocks.begin() + insertCursor++, odpcmaFile);
                }
             }
-            seq->UnlockDeleteUpdateMutex();
             node = node->GetNext();
          }
       }
    }
    mWaveTrackMutex.Unlock();
 
-   //get the new order.
+   //get the NEW order.
    mBlockFilesMutex.Lock();
    OrderBlockFiles(tempBlocks);
    mBlockFilesMutex.Unlock();

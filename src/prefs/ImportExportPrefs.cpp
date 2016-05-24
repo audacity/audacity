@@ -78,7 +78,7 @@ void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
       }
       S.EndRadioButtonGroup();
 
-      S.TieCheckBox(_("S&how Metadata Editor prior to export step"),
+      S.TieCheckBox(_("S&how Metadata Tags editor prior to export step"),
                     wxT("/AudioFiles/ShowId3Dialog"),
                     true);
       // This documentation is unlikely to help somebody who cannot figure it out by discovering the Options button in the dialog.
@@ -112,5 +112,6 @@ bool ImportExportPrefs::Apply()
 
 PrefsPanel *ImportExportPrefsFactory::Create(wxWindow *parent)
 {
-   return new ImportExportPrefs(parent);
+   wxASSERT(parent); // to justify safenew
+   return safenew ImportExportPrefs(parent);
 }

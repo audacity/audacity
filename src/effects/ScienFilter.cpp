@@ -363,7 +363,7 @@ bool EffectScienFilter::Init()
 
 void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
 {
-   wxWindow *parent = S.GetParent();
+   wxWindow *const parent = S.GetParent();
 
    S.AddSpace(5);
    S.SetSizerProportion(1);
@@ -378,7 +378,7 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
 
       S.StartVerticalLay();
       {
-         mdBRuler = new RulerPanel(parent, wxID_ANY);
+         mdBRuler = safenew RulerPanel(parent, wxID_ANY);
          mdBRuler->ruler.SetBounds(0, 0, 100, 100); // Ruler can't handle small sizes
          mdBRuler->ruler.SetOrientation(wxVERTICAL);
          mdBRuler->ruler.SetRange(30.0, -120.0);
@@ -397,7 +397,7 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
       }
       S.EndVerticalLay();
 
-      mPanel = new EffectScienFilterPanel(this, parent);
+      mPanel = safenew EffectScienFilterPanel(this, parent);
       mPanel->SetFreqRange(mLoFreq, mNyquist);
 
       S.SetBorder(5);
@@ -412,7 +412,7 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
          mdBMaxSlider = S.Id(ID_dBMax).AddSlider(wxT(""), 10, 20, 0);
 #if wxUSE_ACCESSIBILITY
          mdBMaxSlider->SetName(_("Max dB"));
-         mdBMaxSlider->SetAccessible(new SliderAx(mdBMaxSlider, wxString(wxT("%d ")) + _("dB")));
+         mdBMaxSlider->SetAccessible(safenew SliderAx(mdBMaxSlider, wxString(wxT("%d ")) + _("dB")));
 #endif
 
          S.SetStyle(wxSL_VERTICAL | wxSL_INVERSE);
@@ -420,7 +420,7 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
          S.AddVariableText(_("- dB"), false, wxCENTER);
 #if wxUSE_ACCESSIBILITY
          mdBMinSlider->SetName(_("Min dB"));
-         mdBMinSlider->SetAccessible(new SliderAx(mdBMinSlider, wxString(wxT("%d ")) + _("dB")));
+         mdBMinSlider->SetAccessible(safenew SliderAx(mdBMinSlider, wxString(wxT("%d ")) + _("dB")));
 #endif
       }
       S.EndVerticalLay();
@@ -431,7 +431,7 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
 
       S.AddSpace(1, 1);
 
-      mfreqRuler  = new RulerPanel(parent, wxID_ANY);
+      mfreqRuler  = safenew RulerPanel(parent, wxID_ANY);
       mfreqRuler->ruler.SetBounds(0, 0, 100, 100); // Ruler can't handle small sizes
       mfreqRuler->ruler.SetOrientation(wxHORIZONTAL);
       mfreqRuler->ruler.SetLog(true);
@@ -1051,6 +1051,11 @@ void EffectScienFilterPanel::SetDbRange(double min, double max)
 }
 
 bool EffectScienFilterPanel::AcceptsFocus() const
+{
+   return false;
+}
+
+bool EffectScienFilterPanel::AcceptsFocusFromKeyboard() const
 {
    return false;
 }

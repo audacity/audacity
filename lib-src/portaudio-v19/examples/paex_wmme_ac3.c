@@ -113,7 +113,6 @@ int main(int argc, char* argv[])
     PaStream *stream;
     PaError err;
     paTestData data;
-    int i;
     int deviceIndex;
     FILE *fp;
     const char *fileName = "c:\\test_48k.ac3.spdif";

@@ -19,7 +19,7 @@ Load On-Demand implementation of the AliasBlockFile for PCM files.
 to load large files more quickly, we take skip computing the summary data and put
 ODPCMAliasBlockFiles in the sequence as place holders.  A background thread loads and
 computes the summary data into these classes.
-ODPCMAliasBlockFiles are unlike all other BlockFiles are not immutable (for the most part,) because when new
+ODPCMAliasBlockFiles are unlike all other BlockFiles are not immutable (for the most part,) because when NEW
 summary data is computed for an existing ODPCMAliasBlockFile we save the buffer then and write the Summary File.
 
 All BlockFile methods that treat the summary data as a buffer that exists in its BlockFile
@@ -43,48 +43,48 @@ Some of these methods have been overridden only because they used the unsafe wxL
 #include <wx/thread.h>
 
 /// An AliasBlockFile that references uncompressed data in an existing file
-class ODPCMAliasBlockFile : public PCMAliasBlockFile
+class ODPCMAliasBlockFile final : public PCMAliasBlockFile
 {
  public:
    /// Constructs a PCMAliasBlockFile, writing the summary to disk
-   ODPCMAliasBlockFile(wxFileName baseFileName,
-                        wxFileName aliasedFileName, sampleCount aliasStart,
+   ODPCMAliasBlockFile(wxFileNameWrapper &&baseFileName,
+                        wxFileNameWrapper &&aliasedFileName, sampleCount aliasStart,
                         sampleCount aliasLen, int aliasChannel);
-   ODPCMAliasBlockFile(wxFileName existingSummaryFileName,
-                        wxFileName aliasedFileName, sampleCount aliasStart,
+   ODPCMAliasBlockFile(wxFileNameWrapper &&existingSummaryFileName,
+                        wxFileNameWrapper &&aliasedFileName, sampleCount aliasStart,
                         sampleCount aliasLen, int aliasChannel,
                         float min, float max, float rms, bool summaryAvailable);
    virtual ~ODPCMAliasBlockFile();
 
    //checks to see if summary data has been computed and written to disk yet.  Thread safe.  Blocks if we are writing summary data.
-   virtual bool IsSummaryAvailable();
+   bool IsSummaryAvailable() const override;
 
    /// Returns TRUE if the summary has not yet been written, but is actively being computed and written to disk
-   virtual bool IsSummaryBeingComputed(){return mSummaryBeingComputed;}
+   bool IsSummaryBeingComputed() override { return mSummaryBeingComputed; }
 
    //Calls that rely on summary files need to be overidden
-   virtual wxLongLong GetSpaceUsage();
+   wxLongLong GetSpaceUsage() const override;
    /// Gets extreme values for the specified region
-   virtual void GetMinMax(sampleCount start, sampleCount len,
-                          float *outMin, float *outMax, float *outRMS);
+   void GetMinMax(sampleCount start, sampleCount len,
+                          float *outMin, float *outMax, float *outRMS) const override;
    /// Gets extreme values for the entire block
-   virtual void GetMinMax(float *outMin, float *outMax, float *outRMS);
+   void GetMinMax(float *outMin, float *outMax, float *outRMS) const override;
    /// Returns the 256 byte summary data block
-   virtual bool Read256(float *buffer, sampleCount start, sampleCount len);
+   bool Read256(float *buffer, sampleCount start, sampleCount len) override;
    /// Returns the 64K summary data block
-   virtual bool Read64K(float *buffer, sampleCount start, sampleCount len);
+   bool Read64K(float *buffer, sampleCount start, sampleCount len) override;
 
-   ///Makes new ODPCMAliasBlockFile or PCMAliasBlockFile depending on summary availability
-   virtual BlockFile *Copy(wxFileName fileName);
+   ///Makes NEW ODPCMAliasBlockFile or PCMAliasBlockFile depending on summary availability
+   BlockFile *Copy(wxFileNameWrapper &&fileName) override;
 
    ///Saves as xml ODPCMAliasBlockFile or PCMAliasBlockFile depending on summary availability
-   virtual void SaveXML(XMLWriter &xmlFile);
+   void SaveXML(XMLWriter &xmlFile) override;
 
    ///Reconstructs from XML a ODPCMAliasBlockFile and reschedules it for OD loading
    static BlockFile *BuildFromXML(DirManager &dm, const wxChar **attrs);
 
    ///Writes the summary file if summary data is available
-   virtual void Recover(void);
+   void Recover(void) override;
 
    ///A public interface to WriteSummary
    void DoWriteSummary();
@@ -93,7 +93,7 @@ class ODPCMAliasBlockFile : public PCMAliasBlockFile
    void SetStart(sampleCount startSample){mStart = startSample;}
 
    ///Gets the value that indicates where the first sample in this block corresponds to the global sequence/clip.  Only for display use.
-   sampleCount GetStart(){return mStart;}
+   sampleCount GetStart() const {return mStart;}
 
    /// Locks the blockfile only if it has a file that exists.
    void Lock();
@@ -105,45 +105,47 @@ class ODPCMAliasBlockFile : public PCMAliasBlockFile
    void SetClipOffset(sampleCount numSamples){mClipOffset= numSamples;}
 
    ///Gets the number of samples the clip associated with this blockfile is offset by.
-   sampleCount GetClipOffset(){return mClipOffset;}
+   sampleCount GetClipOffset() const {return mClipOffset;}
 
    //returns the number of samples from the beginning of the track that this blockfile starts at
-   sampleCount GetGlobalStart(){return mClipOffset+mStart;}
+   sampleCount GetGlobalStart() const {return mClipOffset+mStart;}
 
    //returns the number of samples from the beginning of the track that this blockfile ends at
-   sampleCount GetGlobalEnd(){return mClipOffset+mStart+GetLength();}
+   sampleCount GetGlobalEnd() const {return mClipOffset+mStart+GetLength();}
 
 
    //Below calls are overrided just so we can take wxlog calls out, which are not threadsafe.
 
    /// Reads the specified data from the aliased file using libsndfile
-   virtual int ReadData(samplePtr data, sampleFormat format,
-                        sampleCount start, sampleCount len);
+   int ReadData(samplePtr data, sampleFormat format,
+                        sampleCount start, sampleCount len) const override;
 
    /// Read the summary into a buffer
-   virtual bool ReadSummary(void *data);
+   bool ReadSummary(void *data) override;
 
    ///sets the file name the summary info will be saved in.  threadsafe.
-   virtual void SetFileName(wxFileName &name);
-   virtual wxFileName GetFileName();
+   void SetFileName(wxFileNameWrapper &&name) override;
+   GetFileNameResult GetFileName() const override;
 
-   //when the file closes, it locks the blockfiles, but it calls this so we can check if it has been saved before.
-   virtual void CloseLock();
+   //when the file closes, it locks the blockfiles, but only conditionally.
+   // It calls this so we can check if it has been saved before.
+   // not balanced by unlocking calls.
+   void CloseLock() override;
 
    /// Prevents a read on other threads.
-   virtual void LockRead();
+   void LockRead() const override;
    /// Allows reading on other threads.
-   virtual void UnlockRead();
+   void UnlockRead() const override;
 
-  protected:
-   virtual void WriteSummary();
-   virtual void *CalcSummary(samplePtr buffer, sampleCount len,
-                             sampleFormat format);
+protected:
+   void WriteSummary() override;
+   void *CalcSummary(samplePtr buffer, sampleCount len,
+      sampleFormat format, ArrayOf<char> &cleanup) override;
 
   private:
    //Thread-safe versions
-   virtual void Ref();
-   virtual bool Deref();
+   void Ref() const override;
+   bool Deref() const override;
    //needed for Ref/Deref access.
    friend class DirManager;
    friend class ODComputeSummaryTask;
@@ -152,20 +154,20 @@ class ODPCMAliasBlockFile : public PCMAliasBlockFile
    ODLock mWriteSummaryMutex;
 
    //need to protect this since it is changed from the main thread upon save.
-   ODLock mFileNameMutex;
+   mutable ODLock mFileNameMutex;
 
    ///Also need to protect the aliased file name.
    ODLock mAliasedFileNameMutex;
 
    //lock the read data - libsndfile can't handle two reads at once?
-   ODLock mReadDataMutex;
+   mutable ODLock mReadDataMutex;
 
 
    //lock the Ref counting
-   ODLock mDerefMutex;
-   ODLock mRefMutex;
+   mutable ODLock mDerefMutex;
+   mutable ODLock mRefMutex;
 
-   ODLock    mSummaryAvailableMutex;
+   mutable ODLock    mSummaryAvailableMutex;
    bool mSummaryAvailable;
    bool mSummaryBeingComputed;
    bool mHasBeenSaved;

@@ -28,7 +28,7 @@ tasks associated with a WaveTrack.
 class WaveTrack;
 class ODTask;
 /// A class representing a modular task to be used with the On-Demand structures.
-class ODWaveTrackTaskQueue
+class ODWaveTrackTaskQueue final
 {
  public:
 
@@ -57,7 +57,7 @@ class ODWaveTrackTaskQueue
    void MakeWaveTrackIndependent(WaveTrack* track);
 
    ///returns whether or not this queue's task list and another's can merge together, as when we make two mono tracks stereo.
-   virtual bool CanMergeWith(ODWaveTrackTaskQueue* otherQueue);
+   bool CanMergeWith(ODWaveTrackTaskQueue* otherQueue);
    void MergeWaveTrack(WaveTrack* track);
 
 

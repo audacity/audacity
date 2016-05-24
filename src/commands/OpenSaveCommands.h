@@ -22,44 +22,44 @@
 
 // Open
 
-class OpenProjectCommandType : public CommandType
+class OpenProjectCommandType final : public CommandType
 {
 public:
-   virtual wxString BuildName();
-   virtual void BuildSignature(CommandSignature &signature);
-   virtual Command *Create(CommandOutputTarget *target);
+   wxString BuildName() override;
+   void BuildSignature(CommandSignature &signature) override;
+   CommandHolder Create(std::unique_ptr<CommandOutputTarget> &&target) override;
 };
 
-class OpenProjectCommand : public CommandImplementation
+class OpenProjectCommand final : public CommandImplementation
 {
 public:
    OpenProjectCommand(CommandType &type,
-                    CommandOutputTarget *target)
-      : CommandImplementation(type, target)
+                    std::unique_ptr<CommandOutputTarget> &&target)
+      : CommandImplementation(type, std::move(target))
    { }
 
    virtual ~OpenProjectCommand();
-   virtual bool Apply(CommandExecutionContext context);
+   bool Apply(CommandExecutionContext context) override;
 };
 
 // Save
 
-class SaveProjectCommandType : public CommandType
+class SaveProjectCommandType final : public CommandType
 {
 public:
-   virtual wxString BuildName();
-   virtual void BuildSignature(CommandSignature &signature);
-   virtual Command *Create(CommandOutputTarget *target);
+   wxString BuildName() override;
+   void BuildSignature(CommandSignature &signature) override;
+   CommandHolder Create(std::unique_ptr<CommandOutputTarget> &&target) override;
 };
 
-class SaveProjectCommand : public CommandImplementation
+class SaveProjectCommand final : public CommandImplementation
 {
 public:
    SaveProjectCommand(CommandType &type,
-                    CommandOutputTarget *target)
-      : CommandImplementation(type, target)
+                    std::unique_ptr<CommandOutputTarget> &&target)
+      : CommandImplementation(type, std::move(target))
    { }
 
    virtual ~SaveProjectCommand();
-   virtual bool Apply(CommandExecutionContext context);
+   bool Apply(CommandExecutionContext context) override;
 };

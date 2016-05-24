@@ -7,7 +7,7 @@ bug reports and patches at:
   feedback@audacityteam.org .
 
 Personal support with Audacity is not provided by e-mail, but on our Forum:
-  http://audacityteam.org/forum/ .
+  http://forum.audacityteam.org/ .
 
 Audacity is copyright (c) 1999-2015 by Audacity Team. This copyright notice
 applies to all documents in the Audacity source code archive, except as
@@ -20,12 +20,12 @@ http://creativecommons.org/licenses/by/3.0/legalcode .
 
 "Audacity" is a registered trademark of Dominic Mazzoni.
 
-Version 2.1.1 
+Version 2.1.2 
 
 Contents of this README:
 
 1.  Licensing
-2.  Changes since version 2.1.0 
+2.  Changes since version 2.1.1 
 3.  Known Issues at Release
 4.  Source Code, Libraries and Additional Copyright Information
 5.  Compilation Instructions
@@ -57,74 +57,47 @@ to http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or write to
 
 -------------------------------------------------------------------------------
 
-2. Changes since version 2.1.0: 
+2. Changes since version 2.1.1: 
 
 Changes and Improvements:
-
- * Effects:
-   * Built in effects now support presets.
-   * New Limiter effect replaces Hard Limiter effect.
-   * New Crossfade Clips effect to apply a simple crossfade to a selected 
-     pair of clips in a single audio track.   
-   * Can now add/remove effects from Generate and Effects menus.
-   * New version of Vocal Removal Effect.
-   * Classic Filters' now included as an opt-in effect.
-
+   
  * Interface:  
-   * Much faster editing with larger projects, thanks to a faster method 
-     for storing the autosave recovery file.
-   * Performance improvements for Draw Tool and zooming of Spectrogram views.
-   * Zero-padding Spectrograms Preference smooths the image for short 
-     window sizes.
-   * Scrubbing and Seeking, including backwards play. 
-   * Quick-Play from Timeline enhancements, particularly for looping.
-   * (Windows) Language of Audacity user interface is now set in installer.
-   * More VI usability enhancements for track focus & navigation.
+   * Spectrogram settings are now available per track.
+   * Clearer (sharper) display of pitch (EAC).
+   * New 'Spectral Reassignment' option in spectrogram.  Good for vocal work.
    
  * Other Changes:   
-   * Upgraded to Nyquist 3.0.9 and libflac 1.3.1.
-   * Upgraded LV2 libs, LV2 GUIs on Linux, LV2 factory Presets.
-   * Crash report integration.
-   * Modules can be enabled in Preferences. Mod-nyq-bench available as an 
-     experimental module (but not in the default download).
-
+   * Upgraded the wxWidgets library from wx 2.8.12 to wx 3.0.2.  This is 
+     the main change in this release.
+   
 Bug fixes:
 
  * Crashes
-   * Crash using Undo while dragging sample points
-   * Crash using File > Close on project window when Screenshot Tools was 
-     open.
-   * FFmpeg Custom Export: Crashes importing presets.
-   * (OS X) Crash closing Track Gain or Pan adjustment box.
-   * (OS X) Crash closing project window between save project dialogues
-   * (Linux) TAL VST (but not other VST's) crashed if previewing built-in 
-     effect
-   * (Linux) SPACE could not be used/could crash in context menus that have 
-     a checkbox.
+   * Crash using 'space' in Selection toolbar context menu fixed.
+   * Crash setting equalization effect parameters in chains fixed.
+   * Crash when pressing both mouse buttons over toolbar buttons fixed.
+   * (Rare) crash or freeze in sound activated recording fixed.
+   * (Rare) crash on using plot spectrum for first time fixed.
 
  * Interface
-   * LV2 effects did not use parameters when using Chains.
-   * Built in Generators were not usable in Chains.
-   * Plot Spectrum could not change values without losing focus.
-   * Track dropdown menu settings could affect other tracks.
-   * Slight mismatch of vertical scale with linear spectrogram view.
-   * RTP effect Play/Stop button remained deactivated after built-in preview 
-     ended.
-   * Contrast: "Move forward or backward through active windows" did not 
-     refocus Contrast.
-   * LADSPA and LV2 generate plug-ins failed when white space selected.
-
+   * Equalization effect settings are now saved.
+   * Oversized Export Options window (FFmpeg) now OK on smaller screens
+   * FLAC import/export fast again.
+   * Can now set undefined frequency in Spectral Selection bar.
+   * Imported presets on custom FFmpeg export fixed.
+   * Text input boxes working with VAMP
+   * Keyboard playback commands now work again.
+   * Import Raw Data now works when in Polish language.
+   
  * Mac OS X
-   * Confusing behaviour importing / exporting AU presets. In particular, 
-     Apple Audio Units silently applied an imported preset.
- 
+   * Mouse preference bindings now show 'command', not 'ctrl'
    
 -------------------------------------------------------------------------------
 
-3. Known Issues in 2.1.1:
+3. Known Issues in 2.1.2:
 
-For known issues at release of 2.1.1 please see:
-  http://wiki.audacityteam.org/wiki/Release_Notes_2.1.1#known
+For known issues at release of 2.1.2 please see:
+  http://wiki.audacityteam.org/wiki/Release_Notes_2.1.2#known
 
 Please also check:
   http://wiki.audacityteam.org/index.php?title=Known_Issues
@@ -283,16 +256,16 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 5. Compilation instructions
 
-First you must download wxWidgets. Audacity 2.1.1 requires wxWidgets 2.8.12
-from:
+First you must download wxWidgets. Audacity 2.1.2 requires wxWidgets 3.0.x, 
+preferably 3.0.2, which can be obtained from:
 
    http://www.wxWidgets.org/ .
 
 The libsndfile library is also required and is included in Audacity obtained 
-from SVN. 
+from GitHub. 
  
 CMake ( http://www.cmake.org/ ) is required to build the local copy of 
-libsoxr (Audacity's default resampling library) unless you install 
+the libsoxr resampling library used by Audacity, unless you install 
 libsoxr-dev and use that system library.
 
 Installation of other libraries is optional, see:
@@ -334,6 +307,67 @@ or ask at:
 
 6.  Previous Changes going back to version 1.1.0
 
+Changes in version 2.1.1: 
+
+Bug fixes:
+
+ * Crashes
+   * Crash using Undo while dragging sample points
+   * Crash using File > Close on project window when Screenshot Tools was 
+     open.
+   * FFmpeg Custom Export: Crashes importing presets.
+   * (OS X) Crash closing Track Gain or Pan adjustment box.
+   * (OS X) Crash closing project window between save project dialogues
+   * (Linux) TAL VST (but not other VST's) crashed if previewing built-in 
+     effect
+   * (Linux) SPACE could not be used/could crash in context menus that have 
+     a checkbox.
+
+ * Interface
+   * LV2 effects did not use parameters when using Chains.
+   * Built in Generators were not usable in Chains.
+   * Plot Spectrum could not change values without losing focus.
+   * Track dropdown menu settings could affect other tracks.
+   * Slight mismatch of vertical scale with linear spectrogram view.
+   * RTP effect Play/Stop button remained deactivated after built-in preview 
+     ended.
+   * Contrast: "Move forward or backward through active windows" did not 
+     refocus Contrast.
+   * LADSPA and LV2 generate plug-ins failed when white space selected.
+
+ * Mac OS X
+   * Confusing behaviour importing / exporting AU presets. In particular, 
+     Apple Audio Units silently applied an imported preset.
+     
+Changes and Improvements:
+
+ * Effects:
+   * Built in effects now support presets.
+   * New Limiter effect replaces Hard Limiter effect.
+   * New Crossfade Clips effect to apply a simple crossfade to a selected 
+     pair of clips in a single audio track.   
+   * Can now add/remove effects from Generate and Effects menus.
+   * New version of Vocal Removal Effect.
+   * Classic Filters' now included as an opt-in effect.
+
+ * Interface:  
+   * Much faster editing with larger projects, thanks to a faster method 
+     for storing the autosave recovery file.
+   * Performance improvements for Draw Tool and zooming of Spectrogram views.
+   * Zero-padding Spectrograms Preference smooths the image for short 
+     window sizes.
+   * Scrubbing and Seeking, including backwards play. 
+   * Quick-Play from Timeline enhancements, particularly for looping.
+   * (Windows) Language of Audacity user interface is now set in installer.
+   * More VI usability enhancements for track focus & navigation.
+   
+ * Other Changes:   
+   * Upgraded to Nyquist 3.0.9 and libflac 1.3.1.
+   * Upgraded LV2 libs, LV2 GUIs on Linux, LV2 factory Presets.
+   * Crash report integration.
+   * Modules can be enabled in Preferences. Mod-nyq-bench available as an 
+     experimental module (but not in the default download).
+ 
 Changes in version 2.1.0: 
 
 Bug fixes:

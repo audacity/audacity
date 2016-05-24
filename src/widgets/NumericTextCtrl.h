@@ -48,7 +48,7 @@ WX_DECLARE_OBJARRAY(NumericField, NumericFieldArray);
 class DigitInfo;
 WX_DECLARE_OBJARRAY(DigitInfo, DigitInfoArray);
 
-class NumericConverter
+class NumericConverter /* not final */
 {
 public:
 
@@ -62,6 +62,8 @@ public:
                     const wxString & formatName = wxEmptyString,
                     double value = 0.0f,
                     double sampleRate = 1.0f /* to prevent div by 0 */);
+
+   virtual ~NumericConverter();
 
    virtual void ValueToControls();
    virtual void ValueToControls(double rawValue, bool nearest = true);
@@ -126,7 +128,7 @@ protected:
    int mDefaultNdx;
 };
 
-class NumericTextCtrl: public wxControl, public NumericConverter
+class NumericTextCtrl final : public wxControl, public NumericConverter
 {
    friend class NumericTextCtrlAx;
 
@@ -136,7 +138,7 @@ class NumericTextCtrl: public wxControl, public NumericConverter
    NumericTextCtrl(NumericConverter::Type type,
                    wxWindow *parent,
                    wxWindowID id,
-                   wxString formatName = wxEmptyString,
+                   const wxString &formatName = wxEmptyString,
                    double value = 0.0,
                    double sampleRate = 44100,
                    const wxPoint &pos = wxDefaultPosition,
@@ -145,8 +147,8 @@ class NumericTextCtrl: public wxControl, public NumericConverter
 
    virtual ~NumericTextCtrl();
 
-   virtual bool Layout();
-   virtual void Fit();
+   bool Layout() override;
+   void Fit() override;
 
    void SetSampleRate(double sampleRate);
    void SetValue(double newValue);
@@ -178,8 +180,8 @@ private:
    void OnFocus(wxFocusEvent &event);
    void OnContext(wxContextMenuEvent &event);
 
-   void ValueToControls();
-   void ControlsToValue();
+   void ValueToControls() override;
+   void ControlsToValue() override;
 
    // If autoPos was enabled, focus the first non-zero digit
    void UpdateAutoFocus();
@@ -224,7 +226,7 @@ private:
 
 #if wxUSE_ACCESSIBILITY
 
-class NumericTextCtrlAx: public wxWindowAccessible
+class NumericTextCtrlAx final : public wxWindowAccessible
 {
 public:
    NumericTextCtrlAx(NumericTextCtrl * ctrl);
@@ -235,14 +237,14 @@ public:
    // or > 0 (the action for a child).
    // Return wxACC_NOT_SUPPORTED if there is no default action for this
    // window (e.g. an edit control).
-   virtual wxAccStatus DoDefaultAction(int childId);
+   wxAccStatus DoDefaultAction(int childId) override;
 
    // Retrieves the address of an IDispatch interface for the specified child.
    // All objects must support this property.
-   virtual wxAccStatus GetChild(int childId, wxAccessible **child);
+   wxAccStatus GetChild(int childId, wxAccessible **child) override;
 
    // Gets the number of children.
-   virtual wxAccStatus GetChildCount(int *childCount);
+   wxAccStatus GetChildCount(int *childCount) override;
 
    // Gets the default action for this object (0) or > 0 (the action for a child).
    // Return wxACC_OK even if there is no action. actionName is the action, or the empty
@@ -250,33 +252,33 @@ public:
    // The retrieved string describes the action that is performed on an object,
    // not what the object does as a result. For example, a toolbar button that prints
    // a document has a default action of "Press" rather than "Prints the current document."
-   virtual wxAccStatus GetDefaultAction(int childId, wxString *actionName);
+   wxAccStatus GetDefaultAction(int childId, wxString *actionName) override;
 
    // Returns the description for this object or a child.
-   virtual wxAccStatus GetDescription(int childId, wxString *description);
+   wxAccStatus GetDescription(int childId, wxString *description) override;
 
    // Gets the window with the keyboard focus.
    // If childId is 0 and child is NULL, no object in
    // this subhierarchy has the focus.
    // If this object has the focus, child should be 'this'.
-   virtual wxAccStatus GetFocus(int *childId, wxAccessible **child);
+   wxAccStatus GetFocus(int *childId, wxAccessible **child) override;
 
    // Returns help text for this object or a child, similar to tooltip text.
-   virtual wxAccStatus GetHelpText(int childId, wxString *helpText);
+   wxAccStatus GetHelpText(int childId, wxString *helpText) override;
 
    // Returns the keyboard shortcut for this object or child.
    // Return e.g. ALT+K
-   virtual wxAccStatus GetKeyboardShortcut(int childId, wxString *shortcut);
+   wxAccStatus GetKeyboardShortcut(int childId, wxString *shortcut) override;
 
    // Returns the rectangle for this object (id = 0) or a child element (id > 0).
    // rect is in screen coordinates.
-   virtual wxAccStatus GetLocation(wxRect & rect, int elementId);
+   wxAccStatus GetLocation(wxRect & rect, int elementId) override;
 
    // Gets the name of the specified object.
-   virtual wxAccStatus GetName(int childId, wxString *name);
+   wxAccStatus GetName(int childId, wxString *name) override;
 
    // Returns a role constant.
-   virtual wxAccStatus GetRole(int childId, wxAccRole *role);
+   wxAccStatus GetRole(int childId, wxAccRole *role) override;
 
    // Gets a variant representing the selected children
    // of this object.
@@ -286,14 +288,14 @@ public:
    // - an integer representing the selected child element,
    //   or 0 if this object is selected (GetType() == wxT("long"))
    // - a "void*" pointer to a wxAccessible child object
-   virtual wxAccStatus GetSelections(wxVariant *selections);
+   wxAccStatus GetSelections(wxVariant *selections) override;
 
    // Returns a state constant.
-   virtual wxAccStatus GetState(int childId, long *state);
+   wxAccStatus GetState(int childId, long *state) override;
 
    // Returns a localized string representing the value for the object
    // or child.
-   virtual wxAccStatus GetValue(int childId, wxString *strValue);
+   wxAccStatus GetValue(int childId, wxString *strValue) override;
 
 private:
    NumericTextCtrl *mCtrl;

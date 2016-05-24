@@ -21,21 +21,21 @@
 
 class ShuttleGui;
 
-class WarningsPrefs :public PrefsPanel
+class WarningsPrefs final : public PrefsPanel
 {
  public:
    WarningsPrefs(wxWindow * parent);
    ~WarningsPrefs();
-   virtual bool Apply();
+   bool Apply() override;
 
  private:
    void Populate();
    void PopulateOrExchange(ShuttleGui & S);
 };
 
-class WarningsPrefsFactory : public PrefsPanelFactory
+class WarningsPrefsFactory final : public PrefsPanelFactory
 {
 public:
-   virtual PrefsPanel *Create(wxWindow *parent);
+   PrefsPanel *Create(wxWindow *parent) override;
 };
 #endif

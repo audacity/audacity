@@ -27,7 +27,7 @@ class ShuttleGui;
 
 #define CHANGETEMPO_PLUGIN_SYMBOL XO("Change Tempo")
 
-class EffectChangeTempo : public EffectSoundTouch
+class EffectChangeTempo final : public EffectSoundTouch
 {
 public:
    EffectChangeTempo();
@@ -35,28 +35,28 @@ public:
 
    // IdentInterface implementation
 
-   virtual wxString GetSymbol();
-   virtual wxString GetDescription();
+   wxString GetSymbol() override;
+   wxString GetDescription() override;
 
    // EffectIdentInterface implementation
 
-   virtual EffectType GetType();
-   virtual bool SupportsAutomation();
+   EffectType GetType() override;
+   bool SupportsAutomation() override;
 
    // EffectClientInterface implementation
 
-   virtual bool GetAutomationParameters(EffectAutomationParameters & parms);
-   virtual bool SetAutomationParameters(EffectAutomationParameters & parms);
+   bool GetAutomationParameters(EffectAutomationParameters & parms) override;
+   bool SetAutomationParameters(EffectAutomationParameters & parms) override;
 
    // Effect implementation
 
-   virtual bool Init();
-   virtual bool CheckWhetherSkipEffect();
-   virtual bool Process();
-   virtual double CalcPreviewInputLength(double previewLength);
-   virtual void PopulateOrExchange(ShuttleGui & S);
-   virtual bool TransferDataToWindow();
-   virtual bool TransferDataFromWindow();
+   bool Init() override;
+   bool CheckWhetherSkipEffect() override;
+   bool Process() override;
+   double CalcPreviewInputLength(double previewLength) override;
+   void PopulateOrExchange(ShuttleGui & S) override;
+   bool TransferDataToWindow() override;
+   bool TransferDataFromWindow() override;
 
 private:
    // EffectChangeTempo implementation
@@ -71,8 +71,8 @@ private:
    // helper fns
    void Update_Text_PercentChange(); // Update control per current m_PercentChange.
    void Update_Slider_PercentChange(); // Update control per current m_PercentChange.
-   void Update_Text_ToBPM(); // Use m_FromBPM & m_PercentChange to set new m_ToBPM & control.
-   void Update_Text_ToLength(); // Use m_FromLength & m_PercentChange to set new m_ToLength & control.
+   void Update_Text_ToBPM(); // Use m_FromBPM & m_PercentChange to set NEW m_ToBPM & control.
+   void Update_Text_ToLength(); // Use m_FromLength & m_PercentChange to set NEW m_ToLength & control.
 
 private:
    double         m_PercentChange;  // percent change to apply to tempo

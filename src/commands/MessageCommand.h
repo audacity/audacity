@@ -24,21 +24,21 @@
 #include "Command.h"
 #include "CommandType.h"
 
-class MessageCommandType : public CommandType
+class MessageCommandType final : public CommandType
 {
 public:
-   virtual wxString BuildName();
-   virtual void BuildSignature(CommandSignature &signature);
-   virtual Command *Create(CommandOutputTarget *target);
+   wxString BuildName() override;
+   void BuildSignature(CommandSignature &signature) override;
+   CommandHolder Create(std::unique_ptr<CommandOutputTarget> &&target) override;
 };
 
-class MessageCommand : public CommandImplementation
+class MessageCommand final : public CommandImplementation
 {
 public:
    MessageCommand(CommandType &type,
-                  CommandOutputTarget *target)
-      : CommandImplementation(type, target) {}
-   virtual bool Apply(CommandExecutionContext context);
+                  std::unique_ptr<CommandOutputTarget> &&target)
+      : CommandImplementation(type, std::move(target)) {}
+   bool Apply(CommandExecutionContext context) override;
 };
 
 #endif /* End of include guard: __MESSAGECOMMAND__ */

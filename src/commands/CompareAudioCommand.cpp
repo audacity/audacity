@@ -33,9 +33,9 @@ void CompareAudioCommandType::BuildSignature(CommandSignature &signature)
    signature.AddParameter(wxT("Threshold"), 0.0, thresholdValidator);
 }
 
-Command *CompareAudioCommandType::Create(CommandOutputTarget *target)
+CommandHolder CompareAudioCommandType::Create(std::unique_ptr<CommandOutputTarget> &&target)
 {
-   return new CompareAudioCommand(*this, target);
+   return std::make_shared<CompareAudioCommand>(*this, std::move(target));
 }
 
 // Update member variables with project selection data (and validate)

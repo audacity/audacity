@@ -64,6 +64,7 @@ BEGIN_EVENT_TABLE( ToolDock, wxPanel )
    EVT_ERASE_BACKGROUND( ToolDock::OnErase )
    EVT_PAINT( ToolDock::OnPaint )
    EVT_SIZE( ToolDock::OnSize )
+   EVT_MOUSE_EVENTS( ToolDock::OnMouseEvents )
 END_EVENT_TABLE()
 
 //
@@ -137,7 +138,7 @@ void ToolDock::Dock( ToolBar *bar, int before )
    // Reset height
    bar->SetSize( bar->GetSize().x, bar->GetDockedSize().y );
 
-   // Park the new bar in the correct berth
+   // Park the NEW bar in the correct berth
    if( before >= 0 && before < (int)mDockedBars.GetCount() )
    {
       mDockedBars.Insert( bar, before );
@@ -231,7 +232,7 @@ void ToolDock::LayoutToolBars()
       // Calc the next possible horizontal location.
       int x = cpos.x + tw;
 
-      // Add a new stack entry
+      // Add a NEW stack entry
       stkcnt++;
       stack[ stkcnt ].SetX( x );
       stack[ stkcnt ].SetY( cpos.y );
@@ -267,7 +268,7 @@ void ToolDock::LayoutToolBars()
 }
 
 //
-// Determine the location and bar before which a new bar would be placed
+// Determine the location and bar before which a NEW bar would be placed
 //
 // 'rect' will be the rectangle for the dock marker.
 int ToolDock::PositionBar( ToolBar *t, wxPoint & pos, wxRect & rect )
@@ -307,10 +308,10 @@ int ToolDock::PositionBar( ToolBar *t, wxPoint & pos, wxRect & rect )
       // If last entry, then it is the 
       if (ndx == cnt)
       {
-         // ...so check to see if the new bar has been placed yet
+         // ...so check to see if the NEW bar has been placed yet
          if (tindx == -1)
          {
-            // Add the new bars' dimensions to the mix
+            // Add the NEW bars' dimensions to the mix
             tinfo[ct].rect = t->GetRect();
             tinfo[ct].min = t->GetDockedSize();
             tindx = ct;
@@ -325,7 +326,7 @@ int ToolDock::PositionBar( ToolBar *t, wxPoint & pos, wxRect & rect )
          tinfo[ct].rect = b->GetRect();
          tinfo[ct].min = b->GetSize();
 
-         // Maybe insert the new bar if it hasn't already been done
+         // Maybe insert the NEW bar if it hasn't already been done
          // and is in the right place.
          if (tindx == -1)
          {
@@ -340,7 +341,7 @@ int ToolDock::PositionBar( ToolBar *t, wxPoint & pos, wxRect & rect )
             // Does the location fall within this bar?
             if (r.Contains(pos) || pos.y <= r.y)
             {
-               // Add the new bars' dimensions to the mix
+               // Add the NEW bars' dimensions to the mix
                tinfo[ct].rect = t->GetRect();
                tinfo[ct].min = t->GetDockedSize();
                tindx = ct;
@@ -387,7 +388,7 @@ int ToolDock::PositionBar( ToolBar *t, wxPoint & pos, wxRect & rect )
       // Calc the next possible horizontal location.
       int x = cpos.x + tw;
 
-      // Add a new stack entry
+      // Add a NEW stack entry
       stkcnt++;
       stack[stkcnt].SetX(x);
       stack[stkcnt].SetY(cpos.y);
@@ -452,6 +453,11 @@ void ToolDock::Expose( int type, bool show )
    Updated();
 }
 
+int ToolDock::Find(ToolBar *bar) const
+{
+   return mDockedBars.Index(bar);
+}
+
 //
 // Queues an EVT_TOOLBAR_UPDATED command event to notify any
 // interested parties of an updated toolbar or dock layout
@@ -468,13 +474,16 @@ void ToolDock::Updated()
 //
 void ToolDock::OnGrabber( GrabberEvent & event )
 {
-   ToolBar *t = mBars[ event.GetId() ];
+   auto pos = event.GetPosition();
+   if (!event.IsEscaping()) {
+      ToolBar *t = mBars[ event.GetId() ];
 
-   // Pass it on to the manager since it isn't in the handling hierarchy
-   mManager->ProcessEvent( event );
+      // Pass it on to the manager since it isn't in the handling hierarchy
+      mManager->ProcessEvent( event );
 
-   // We no longer have control
-   mDockedBars.Remove( t );
+      // We no longer have control
+      mDockedBars.Remove( t );
+   }
 }
 
 //
@@ -547,4 +556,11 @@ void ToolDock::OnPaint( wxPaintEvent & WXUNUSED(event) )
          }
       }
    }
+}
+
+void ToolDock::OnMouseEvents(wxMouseEvent &event)
+{
+   // Do this hack so scrubber can detect mouse drags anywhere
+   event.ResumePropagation(wxEVENT_PROPAGATE_MAX);
+   event.Skip();
 }

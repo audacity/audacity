@@ -21,8 +21,9 @@ system by constructing BatchCommandEval objects.
 
 *//*******************************************************************/
 
-#include "CommandDirectory.h"
+#include "../Audacity.h"
 #include "CommandBuilder.h"
+#include "CommandDirectory.h"
 #include "../Shuttle.h"
 #include "BatchEvalCommand.h"
 #include "Command.h"
@@ -30,20 +31,19 @@ system by constructing BatchCommandEval objects.
 #include "ScriptCommandRelay.h"
 
 CommandBuilder::CommandBuilder(const wxString &cmdString)
-   : mValid(false), mCommand(NULL)
+   : mValid(false)
 {
    BuildCommand(cmdString);
 }
 
 CommandBuilder::CommandBuilder(const wxString &cmdName, const wxString &params)
-   : mValid(false), mCommand(NULL)
+   : mValid(false)
 {
    BuildCommand(cmdName, params);
 }
 
 CommandBuilder::~CommandBuilder()
 {
-   Cleanup();
 }
 
 bool CommandBuilder::WasValid()
@@ -56,22 +56,13 @@ const wxString &CommandBuilder::GetErrorMessage()
    return mError;
 }
 
-Command *CommandBuilder::GetCommand()
+CommandHolder CommandBuilder::GetCommand()
 {
    wxASSERT(mValid);
-   wxASSERT(NULL != mCommand);
-   Command *tmp = mCommand;
-   mCommand = NULL;
-   return tmp;
-}
-
-void CommandBuilder::Cleanup()
-{
-   if (mCommand != NULL)
-   {
-      delete mCommand;
-      mCommand = NULL;
-   }
+   wxASSERT(mCommand);
+   auto result = mCommand;
+   mCommand.reset();
+   return result;
 }
 
 void CommandBuilder::Failure(const wxString &msg)
@@ -80,20 +71,20 @@ void CommandBuilder::Failure(const wxString &msg)
    mValid = false;
 }
 
-void CommandBuilder::Success(Command *cmd)
+void CommandBuilder::Success(const CommandHolder &cmd)
 {
    mCommand = cmd;
    mValid = true;
 }
 
 void CommandBuilder::BuildCommand(const wxString &cmdName,
-                                  wxString cmdParams)
+                                  const wxString &cmdParamsArg)
 {
    // Stage 1: create a Command object of the right type
 
-   CommandMessageTarget *scriptOutput = ScriptCommandRelay::GetResponseTarget();
-   CommandOutputTarget *output
-      = new CommandOutputTarget(new NullProgressTarget(),
+   auto scriptOutput = ScriptCommandRelay::GetResponseTarget();
+   auto output
+      = std::make_unique<CommandOutputTarget>(std::make_unique<NullProgressTarget>(),
                                 scriptOutput,
                                 scriptOutput);
 
@@ -104,20 +95,20 @@ void CommandBuilder::BuildCommand(const wxString &cmdName,
       // Fall back to hoping the Batch Command system can handle it
       CommandType *type = CommandDirectory::Get()->LookUp(wxT("BatchCommand"));
       wxASSERT(type != NULL);
-      mCommand = type->Create(output);
+      mCommand = type->Create(std::move(output));
       mCommand->SetParameter(wxT("CommandName"), cmdName);
-      mCommand->SetParameter(wxT("ParamString"), cmdParams);
-      Success(new ApplyAndSendResponse(mCommand));
+      mCommand->SetParameter(wxT("ParamString"), cmdParamsArg);
+      Success(std::make_shared<ApplyAndSendResponse>(mCommand));
       return;
    }
 
    CommandSignature &signature = factory->GetSignature();
-   mCommand = factory->Create(output);
+   mCommand = factory->Create(std::move(output));
 
    // Stage 2: set the parameters
 
    ShuttleCli shuttle;
-   shuttle.mParams = cmdParams;
+   shuttle.mParams = cmdParamsArg;
    shuttle.mbStoreInClient = true;
 
    ParamValueMap::const_iterator iter;
@@ -137,6 +128,8 @@ void CommandBuilder::BuildCommand(const wxString &cmdName,
    }
 
    // Check for unrecognised parameters
+
+   wxString cmdParams(cmdParamsArg);
 
    while (cmdParams != wxEmptyString)
    {
@@ -163,11 +156,13 @@ void CommandBuilder::BuildCommand(const wxString &cmdName,
       cmdParams = cmdParams.Mid(splitAt);
    }
 
-   Success(new ApplyAndSendResponse(mCommand));
+   Success(std::make_shared<ApplyAndSendResponse>(mCommand));
 }
 
-void CommandBuilder::BuildCommand(wxString cmdString)
+void CommandBuilder::BuildCommand(const wxString &cmdStringArg)
 {
+   wxString cmdString(cmdStringArg);
+
    // Find the command name terminator...  If there is more than one word and
    // no terminator, the command is badly formed
    cmdString.Trim(true); cmdString.Trim(false);

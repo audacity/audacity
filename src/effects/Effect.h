@@ -12,8 +12,11 @@
 #ifndef __AUDACITY_EFFECT__
 #define __AUDACITY_EFFECT__
 
+#include "../Audacity.h"
+#include "../MemoryX.h"
 #include <set>
 
+#include "../MemoryX.h"
 #include <wx/bmpbuttn.h>
 #include <wx/dynarray.h>
 #include <wx/intl.h>
@@ -35,11 +38,14 @@ class wxWindow;
 #include "../Internat.h"
 #include "../widgets/ProgressDialog.h"
 
+#include "../Track.h"
+
 class ShuttleGui;
 
 #define BUILTIN_EFFECT_PREFIX wxT("Built-in Effect: ")
 
 class AudacityProject;
+class LabelTrack;
 class SelectedRegion;
 class TimeWarper;
 class EffectUIHost;
@@ -50,9 +56,9 @@ class WaveTrack;
 
 // TODO:  Apr-06-2015
 // TODO:  Much more cleanup of old methods and variables is needed, but
-// TODO:  can't be done until after all effects are using the new API.
+// TODO:  can't be done until after all effects are using the NEW API.
 
-class AUDACITY_DLL_API Effect : public wxEvtHandler,
+class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
                                 public EffectClientInterface,
                                 public EffectUIClientInterface,
                                 public EffectHostInterface
@@ -71,146 +77,147 @@ class AUDACITY_DLL_API Effect : public wxEvtHandler,
 
    // IdentInterface implementation
 
-   virtual wxString GetPath();
-   virtual wxString GetSymbol();
-   virtual wxString GetName();
-   virtual wxString GetVendor();
-   virtual wxString GetVersion();
-   virtual wxString GetDescription();
+   wxString GetPath() override;
+   wxString GetSymbol() override;
+   wxString GetName() override;
+   wxString GetVendor() override;
+   wxString GetVersion() override;
+   wxString GetDescription() override;
 
    // EffectIdentInterface implementation
 
-   virtual EffectType GetType();
-   virtual wxString GetFamily();
-   virtual bool IsInteractive();
-   virtual bool IsDefault();
-   virtual bool IsLegacy();
-   virtual bool SupportsRealtime();
-   virtual bool SupportsAutomation();
+   EffectType GetType() override;
+   wxString GetFamily() override;
+   bool IsInteractive() override;
+   bool IsDefault() override;
+   bool IsLegacy() override;
+   bool SupportsRealtime() override;
+   bool SupportsAutomation() override;
 
    // EffectClientInterface implementation
 
-   virtual bool SetHost(EffectHostInterface *host);
+   bool SetHost(EffectHostInterface *host) override;
    
-   virtual int GetAudioInCount();
-   virtual int GetAudioOutCount();
+   int GetAudioInCount() override;
+   int GetAudioOutCount() override;
 
-   virtual int GetMidiInCount();
-   virtual int GetMidiOutCount();
+   int GetMidiInCount() override;
+   int GetMidiOutCount() override;
 
-   virtual sampleCount GetLatency();
-   virtual sampleCount GetTailSize();
+   sampleCount GetLatency() override;
+   sampleCount GetTailSize() override;
 
-   virtual void SetSampleRate(sampleCount rate);
-   virtual sampleCount SetBlockSize(sampleCount maxBlockSize);
+   void SetSampleRate(sampleCount rate) override;
+   sampleCount SetBlockSize(sampleCount maxBlockSize) override;
 
-   virtual bool IsReady();
-   virtual bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL);
-   virtual bool ProcessFinalize();
-   virtual sampleCount ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen);
+   bool IsReady() override;
+   bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) override;
+   bool ProcessFinalize() override;
+   sampleCount ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen) override;
 
-   virtual bool RealtimeInitialize();
-   virtual bool RealtimeAddProcessor(int numChannels, float sampleRate);
-   virtual bool RealtimeFinalize();
-   virtual bool RealtimeSuspend();
-   virtual bool RealtimeResume();
-   virtual bool RealtimeProcessStart();
-   virtual sampleCount RealtimeProcess(int group,
+   bool RealtimeInitialize() override;
+   bool RealtimeAddProcessor(int numChannels, float sampleRate) override;
+   bool RealtimeFinalize() override;
+   bool RealtimeSuspend() override;
+   bool RealtimeResume() override;
+   bool RealtimeProcessStart() override;
+   sampleCount RealtimeProcess(int group,
                                        float **inbuf,
                                        float **outbuf,
-                                       sampleCount numSamples);
-   virtual bool RealtimeProcessEnd();
+                                       sampleCount numSamples) override;
+   bool RealtimeProcessEnd() override;
 
-   virtual bool ShowInterface(wxWindow *parent, bool forceModal = false);
+   bool ShowInterface(wxWindow *parent, bool forceModal = false) override;
 
-   virtual bool GetAutomationParameters(EffectAutomationParameters & parms);
-   virtual bool SetAutomationParameters(EffectAutomationParameters & parms);
+   bool GetAutomationParameters(EffectAutomationParameters & parms) override;
+   bool SetAutomationParameters(EffectAutomationParameters & parms) override;
 
-   virtual bool LoadUserPreset(const wxString & name);
-   virtual bool SaveUserPreset(const wxString & name);
+   bool LoadUserPreset(const wxString & name) override;
+   bool SaveUserPreset(const wxString & name) override;
 
-   virtual wxArrayString GetFactoryPresets();
-   virtual bool LoadFactoryPreset(int id);
-   virtual bool LoadFactoryDefaults();
+   wxArrayString GetFactoryPresets() override;
+   bool LoadFactoryPreset(int id) override;
+   bool LoadFactoryDefaults() override;
 
    // EffectUIClientInterface implementation
 
-   virtual void SetHostUI(EffectUIHostInterface *host);
-   virtual bool PopulateUI(wxWindow *parent);
-   virtual bool IsGraphicalUI();
-   virtual bool ValidateUI();
-   virtual bool HideUI();
-   virtual bool CloseUI();
+   void SetHostUI(EffectUIHostInterface *host) override;
+   bool PopulateUI(wxWindow *parent) override;
+   bool IsGraphicalUI() override;
+   bool ValidateUI() override;
+   bool HideUI() override;
+   bool CloseUI() override;
 
-   virtual bool CanExportPresets();
-   virtual void ExportPresets();
-   virtual void ImportPresets();
+   bool CanExportPresets() override;
+   void ExportPresets() override;
+   void ImportPresets() override;
 
-   virtual bool HasOptions();
-   virtual void ShowOptions();
+   bool HasOptions() override;
+   void ShowOptions() override;
 
    // EffectHostInterface implementation
 
-   virtual double GetDefaultDuration();
-   virtual double GetDuration();
-   virtual wxString GetDurationFormat();
-   virtual wxString GetSelectionFormat(); // time format in Selection toolbar
-   virtual void SetDuration(double duration);
+   double GetDefaultDuration() override;
+   double GetDuration() override;
+   wxString GetDurationFormat() override;
+   virtual wxString GetSelectionFormat() /* not override? */; // time format in Selection toolbar
+   void SetDuration(double duration) override;
 
-   virtual bool Apply();
-   virtual void Preview();
+   bool Apply() override;
+   void Preview() override;
 
-   virtual wxDialog *CreateUI(wxWindow *parent, EffectUIClientInterface *client);
+   wxDialog *CreateUI(wxWindow *parent, EffectUIClientInterface *client) override;
 
-   virtual wxString GetUserPresetsGroup(const wxString & name);
-   virtual wxString GetCurrentSettingsGroup();
-   virtual wxString GetFactoryDefaultsGroup();
-   virtual wxString GetSavedStateGroup();
+   wxString GetUserPresetsGroup(const wxString & name) override;
+   wxString GetCurrentSettingsGroup() override;
+   wxString GetFactoryDefaultsGroup() override;
+   virtual wxString GetSavedStateGroup() /* not override? */;
 
    // ConfigClientInterface implementation
 
-   virtual bool HasSharedConfigGroup(const wxString & group);
-   virtual bool GetSharedConfigSubgroups(const wxString & group, wxArrayString & subgroups);
+   bool HasSharedConfigGroup(const wxString & group) override;
+   bool GetSharedConfigSubgroups(const wxString & group, wxArrayString & subgroups) override;
 
-   virtual bool GetSharedConfig(const wxString & group, const wxString & key, wxString & value, const wxString & defval = wxEmptyString);
-   virtual bool GetSharedConfig(const wxString & group, const wxString & key, int & value, int defval = 0);
-   virtual bool GetSharedConfig(const wxString & group, const wxString & key, bool & value, bool defval = false);
-   virtual bool GetSharedConfig(const wxString & group, const wxString & key, float & value, float defval = 0.0);
-   virtual bool GetSharedConfig(const wxString & group, const wxString & key, double & value, double defval = 0.0);
-   virtual bool GetSharedConfig(const wxString & group, const wxString & key, sampleCount & value, sampleCount defval = 0);
+   bool GetSharedConfig(const wxString & group, const wxString & key, wxString & value, const wxString & defval = wxEmptyString) override;
+   bool GetSharedConfig(const wxString & group, const wxString & key, int & value, int defval = 0) override;
+   bool GetSharedConfig(const wxString & group, const wxString & key, bool & value, bool defval = false) override;
+   bool GetSharedConfig(const wxString & group, const wxString & key, float & value, float defval = 0.0) override;
+   bool GetSharedConfig(const wxString & group, const wxString & key, double & value, double defval = 0.0) override;
+   bool GetSharedConfig(const wxString & group, const wxString & key, sampleCount & value, sampleCount defval = 0) override;
 
-   virtual bool SetSharedConfig(const wxString & group, const wxString & key, const wxString & value);
-   virtual bool SetSharedConfig(const wxString & group, const wxString & key, const int & value);
-   virtual bool SetSharedConfig(const wxString & group, const wxString & key, const bool & value);
-   virtual bool SetSharedConfig(const wxString & group, const wxString & key, const float & value);
-   virtual bool SetSharedConfig(const wxString & group, const wxString & key, const double & value);
-   virtual bool SetSharedConfig(const wxString & group, const wxString & key, const sampleCount & value);
+   bool SetSharedConfig(const wxString & group, const wxString & key, const wxString & value) override;
+   bool SetSharedConfig(const wxString & group, const wxString & key, const int & value) override;
+   bool SetSharedConfig(const wxString & group, const wxString & key, const bool & value) override;
+   bool SetSharedConfig(const wxString & group, const wxString & key, const float & value) override;
+   bool SetSharedConfig(const wxString & group, const wxString & key, const double & value) override;
+   bool SetSharedConfig(const wxString & group, const wxString & key, const sampleCount & value) override;
 
-   virtual bool RemoveSharedConfigSubgroup(const wxString & group);
-   virtual bool RemoveSharedConfig(const wxString & group, const wxString & key);
+   bool RemoveSharedConfigSubgroup(const wxString & group) override;
+   bool RemoveSharedConfig(const wxString & group, const wxString & key) override;
 
-   virtual bool HasPrivateConfigGroup(const wxString & group);
-   virtual bool GetPrivateConfigSubgroups(const wxString & group, wxArrayString & subgroups);
+   bool HasPrivateConfigGroup(const wxString & group) override;
+   bool GetPrivateConfigSubgroups(const wxString & group, wxArrayString & subgroups) override;
 
-   virtual bool GetPrivateConfig(const wxString & group, const wxString & key, wxString & value, const wxString & defval = wxEmptyString);
-   virtual bool GetPrivateConfig(const wxString & group, const wxString & key, int & value, int defval = 0);
-   virtual bool GetPrivateConfig(const wxString & group, const wxString & key, bool & value, bool defval = false);
-   virtual bool GetPrivateConfig(const wxString & group, const wxString & key, float & value, float defval = 0.0);
-   virtual bool GetPrivateConfig(const wxString & group, const wxString & key, double & value, double defval = 0.0);
-   virtual bool GetPrivateConfig(const wxString & group, const wxString & key, sampleCount & value, sampleCount defval = 0);
+   bool GetPrivateConfig(const wxString & group, const wxString & key, wxString & value, const wxString & defval = wxEmptyString) override;
+   bool GetPrivateConfig(const wxString & group, const wxString & key, int & value, int defval = 0) override;
+   bool GetPrivateConfig(const wxString & group, const wxString & key, bool & value, bool defval = false) override;
+   bool GetPrivateConfig(const wxString & group, const wxString & key, float & value, float defval = 0.0) override;
+   bool GetPrivateConfig(const wxString & group, const wxString & key, double & value, double defval = 0.0) override;
+   bool GetPrivateConfig(const wxString & group, const wxString & key, sampleCount & value, sampleCount defval = 0) override;
 
-   virtual bool SetPrivateConfig(const wxString & group, const wxString & key, const wxString & value);
-   virtual bool SetPrivateConfig(const wxString & group, const wxString & key, const int & value);
-   virtual bool SetPrivateConfig(const wxString & group, const wxString & key, const bool & value);
-   virtual bool SetPrivateConfig(const wxString & group, const wxString & key, const float & value);
-   virtual bool SetPrivateConfig(const wxString & group, const wxString & key, const double & value);
-   virtual bool SetPrivateConfig(const wxString & group, const wxString & key, const sampleCount & value);
+   bool SetPrivateConfig(const wxString & group, const wxString & key, const wxString & value) override;
+   bool SetPrivateConfig(const wxString & group, const wxString & key, const int & value) override;
+   bool SetPrivateConfig(const wxString & group, const wxString & key, const bool & value) override;
+   bool SetPrivateConfig(const wxString & group, const wxString & key, const float & value) override;
+   bool SetPrivateConfig(const wxString & group, const wxString & key, const double & value) override;
+   bool SetPrivateConfig(const wxString & group, const wxString & key, const sampleCount & value) override;
 
-   virtual bool RemovePrivateConfigSubgroup(const wxString & group);
-   virtual bool RemovePrivateConfig(const wxString & group, const wxString & key);
+   bool RemovePrivateConfigSubgroup(const wxString & group) override;
+   bool RemovePrivateConfig(const wxString & group, const wxString & key) override;
 
    // Effect implementation
 
+   // NEW virtuals
    virtual PluginID GetID();
 
    virtual bool Startup(EffectClientInterface *client);
@@ -227,7 +234,7 @@ class AUDACITY_DLL_API Effect : public wxEvtHandler,
    virtual bool IsBatchProcessing();
    virtual void SetBatchProcessing(bool start);
 
-   void SetPresetParameters( const wxArrayString * Names, const wxArrayString * Values ){
+   /* not virtual */ void SetPresetParameters( const wxArrayString * Names, const wxArrayString * Values ) {
       if( Names ) mPresetNames = *Names;
       if( Values ) mPresetValues = *Values;
    }
@@ -235,18 +242,18 @@ class AUDACITY_DLL_API Effect : public wxEvtHandler,
    // Returns true on success.  Will only operate on tracks that
    // have the "selected" flag set to true, which is consistent with
    // Audacity's standard UI.
-   bool DoEffect(wxWindow *parent, double projectRate, TrackList *list,
+   /* not virtual */ bool DoEffect(wxWindow *parent, double projectRate, TrackList *list,
                  TrackFactory *factory, SelectedRegion *selectedRegion,
                  bool shouldPrompt = true);
 
    // Realtime Effect Processing
-   bool RealtimeAddProcessor(int group, int chans, float rate);
-   sampleCount RealtimeProcess(int group,
+   /* not virtual */ bool RealtimeAddProcessor(int group, int chans, float rate);
+   /* not virtual */ sampleCount RealtimeProcess(int group,
                                int chans,
                                float **inbuf,
                                float **outbuf,
                                sampleCount numSamples);
-   bool IsRealtimeActive();
+   /* not virtual */ bool IsRealtimeActive();
 
    virtual bool IsHidden();
 
@@ -300,6 +307,8 @@ protected:
    virtual bool EnablePreview(bool enable = true);
    virtual void EnableDebug(bool enable = true);
 
+   // No more virtuals!
+
    // The Progress methods all return true if the user has cancelled;
    // you should exit immediately if this happens (cleaning up memory
    // is okay, but don't try to undo).
@@ -309,11 +318,11 @@ protected:
 
    // Pass a fraction between 0.0 and 1.0, for the current track
    // (when doing one track at a time)
-   bool TrackProgress(int whichTrack, double frac, wxString = wxT(""));
+   bool TrackProgress(int whichTrack, double frac, const wxString & = wxEmptyString);
 
    // Pass a fraction between 0.0 and 1.0, for the current track group
    // (when doing stereo groups at a time)
-   bool TrackGroupProgress(int whichGroup, double frac, wxString = wxT(""));
+   bool TrackGroupProgress(int whichGroup, double frac, const wxString & = wxEmptyString);
 
    int GetNumWaveTracks() { return mNumTracks; }
 
@@ -334,6 +343,9 @@ protected:
    // (such as fade effects) need to know the full selection length.
    void SetPreviewFullSelectionFlag(bool previewDurationFlag);
 
+   // Use this if the effect needs to know if it is previewing
+   bool IsPreviewing() { return mIsPreview; }
+
    // Most effects only require selected tracks to be copied for Preview.
    // If IncludeNotSelectedPreviewTracks(true), then non-linear effects have
    // preview copies of all wave tracks.
@@ -344,13 +356,76 @@ protected:
    void CopyInputTracks(); // trackType = Track::Wave
    void CopyInputTracks(int trackType);
 
+   // For the use of analyzers, which don't need to make output wave tracks,
+   // but may need to add label tracks.
+   class AddedAnalysisTrack {
+      friend Effect;
+      AddedAnalysisTrack(Effect *pEffect, const wxString &name);
+      AddedAnalysisTrack(const AddedAnalysisTrack&) PROHIBITED;
+
+   public:
+
+      AddedAnalysisTrack() {}
+
+      // So you can have a vector of them
+      AddedAnalysisTrack(AddedAnalysisTrack &&that);
+
+      LabelTrack *get() const { return mpTrack; }
+
+      // Call this to indicate successful completion of the analyzer.
+      void Commit();
+
+      // Destructor undoes the addition of the analysis track if not committed.
+      ~AddedAnalysisTrack();
+
+   private:
+      Effect *mpEffect{};
+      LabelTrack *mpTrack{};
+   };
+
+   // Set name to given value if that is not empty, else use default name
+   std::shared_ptr<AddedAnalysisTrack> AddAnalysisTrack(const wxString &name = wxString());
+
+   // For the use of analyzers, which don't need to make output wave tracks,
+   // but may need to modify label tracks.
+   class ModifiedAnalysisTrack {
+      friend Effect;
+      ModifiedAnalysisTrack
+         (Effect *pEffect, const LabelTrack *pOrigTrack, const wxString &name);
+      ModifiedAnalysisTrack(const ModifiedAnalysisTrack&) PROHIBITED;
+
+   public:
+
+      ModifiedAnalysisTrack();
+
+      // So you can have a vector of them
+      ModifiedAnalysisTrack(ModifiedAnalysisTrack &&that);
+
+      LabelTrack *get() const { return mpTrack; }
+
+      // Call this to indicate successful completion of the analyzer.
+      void Commit();
+
+      // Destructor undoes the modification of the analysis track if not committed.
+      ~ModifiedAnalysisTrack();
+
+   private:
+      Effect *mpEffect{};
+      LabelTrack *mpTrack{};
+      movable_ptr<Track> mpOrigTrack{};
+   };
+
+   // Set name to given value if that is not empty, else use default name
+   ModifiedAnalysisTrack ModifyAnalysisTrack
+      (const LabelTrack *pOrigTrack, const wxString &name = wxString());
+
    // If bGoodResult, replace mWaveTracks tracks in mTracks with successfully processed
    // mOutputTracks copies, get rid of old mWaveTracks, and set mWaveTracks to mOutputTracks.
-   // Else clear and delete mOutputTracks copies.
+   // Else clear and DELETE mOutputTracks copies.
    void ReplaceProcessedTracks(const bool bGoodResult);
 
-   // Use this to append a new output track.
-   void AddToOutputTracks(Track *t);
+   // Use this to append a NEW output track.
+   Track *AddToOutputTracks(std::unique_ptr<Track> &&t);
 
 //
 // protected data
@@ -359,8 +434,8 @@ protected:
 // may be needed by any particular subclass of Effect.
 //
 protected:
-   ProgressDialog *mProgress;
-   double         mProjectRate; // Sample rate of the project - new tracks should
+   ProgressDialog *mProgress; // Temporary pointer, NOT deleted in destructor.
+   double         mProjectRate; // Sample rate of the project - NEW tracks should
                                // be created with this rate...
    double         mSampleRate;
    TrackFactory   *mFactory;
@@ -463,13 +538,13 @@ private:
 
 
 // FIXME:
-// FIXME:  Remove this once all effects are using the new dialog
+// FIXME:  Remove this once all effects are using the NEW dialog
 // FIXME:
 
 #define ID_EFFECT_PREVIEW ePreviewID
 
 // Base dialog for regular effect
-class AUDACITY_DLL_API EffectDialog:public wxDialog
+class AUDACITY_DLL_API EffectDialog /* not final */ : public wxDialog
 {
 public:
    // constructors and destructors
@@ -481,10 +556,12 @@ public:
 
    void Init();
 
+   bool TransferDataToWindow() override;
+   bool TransferDataFromWindow() override;
+   bool Validate() override;
+
+   // NEW virtuals:
    virtual void PopulateOrExchange(ShuttleGui & S);
-   virtual bool TransferDataToWindow();
-   virtual bool TransferDataFromWindow();
-   virtual bool Validate();
    virtual void OnPreview(wxCommandEvent & evt);
    virtual void OnOk(wxCommandEvent & evt);
 
@@ -496,7 +573,7 @@ private:
 };
 
 //
-class EffectUIHost : public wxDialog,
+class EffectUIHost final : public wxDialog,
                      public EffectUIHostInterface
 {
 public:
@@ -506,10 +583,10 @@ public:
                 EffectUIClientInterface *client);
    virtual ~EffectUIHost();
 
-   virtual bool TransferDataToWindow();
-   virtual bool TransferDataFromWindow();
+   bool TransferDataToWindow() override;
+   bool TransferDataFromWindow() override;
 
-   virtual int ShowModal();
+   int ShowModal() override;
 
    bool Initialize();
 
@@ -519,6 +596,7 @@ private:
    void OnPaint(wxPaintEvent & evt);
    void OnClose(wxCloseEvent & evt);
    void OnApply(wxCommandEvent & evt);
+   void DoCancel();
    void OnCancel(wxCommandEvent & evt);
    void OnDebug(wxCommandEvent & evt);
    void OnMenu(wxCommandEvent & evt);
@@ -581,10 +659,12 @@ private:
    SelectedRegion mRegion;
    double mPlayPos;
 
+   bool mDismissed{};
+
    DECLARE_EVENT_TABLE();
 };
 
-class EffectPresetsDialog : public wxDialog
+class EffectPresetsDialog final : public wxDialog
 {
 public:
    EffectPresetsDialog(wxWindow *parent, Effect *effect);
@@ -676,6 +756,9 @@ inline long TrapLong(long x, long min, long max)
 
 #define ReadBasic(type, name) \
    type name; \
+   wxUnusedVar(MIN_ ##name); \
+   wxUnusedVar(MAX_ ##name); \
+   wxUnusedVar(SCL_ ##name); \
    if (!parms.ReadAndVerify(KEY_ ## name, &name, DEF_ ## name)) \
       return false;
 

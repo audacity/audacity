@@ -18,15 +18,17 @@
 
 #include <wx/event.h>
 #include "../Audacity.h"
+#include "../MemoryX.h"
 
 DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, wxEVT_APP_COMMAND_RECEIVED, -1);
 
 class Command;
+using CommandHolder = std::shared_ptr<Command>;
 
-class AppCommandEvent : public wxCommandEvent
+class AppCommandEvent final : public wxCommandEvent
 {
 private:
-   Command *mCommand;
+   CommandHolder mCommand;
 
 public:
    AppCommandEvent(wxEventType commandType = wxEVT_APP_COMMAND_RECEIVED, int id = 0);
@@ -34,9 +36,9 @@ public:
    AppCommandEvent(const AppCommandEvent &event);
    ~AppCommandEvent();
 
-   virtual wxEvent *Clone() const;
-   void SetCommand(Command *cmd);
-   Command *GetCommand();
+   wxEvent *Clone() const override;
+   void SetCommand(const CommandHolder &cmd);
+   CommandHolder GetCommand();
 
 private:
    DECLARE_DYNAMIC_CLASS(AppCommandEvent)

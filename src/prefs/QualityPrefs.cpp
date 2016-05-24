@@ -230,5 +230,6 @@ bool QualityPrefs::Apply()
 
 PrefsPanel *QualityPrefsFactory::Create(wxWindow *parent)
 {
-   return new QualityPrefs(parent);
+   wxASSERT(parent); // to justify safenew
+   return safenew QualityPrefs(parent);
 }

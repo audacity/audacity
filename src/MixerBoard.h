@@ -31,12 +31,12 @@
 
 // MixerTrackSlider is a subclass just to override OnMouseEvent,
 // so we can know when adjustment ends, so we can PushState only then.
-class MixerTrackSlider : public ASlider
+class MixerTrackSlider final : public ASlider
 {
 public:
    MixerTrackSlider(wxWindow * parent,
                      wxWindowID id,
-                     wxString name,
+                     const wxString &name,
                      const wxPoint & pos,
                      const wxSize & size,
                      int style = FRAC_SLIDER,
@@ -68,7 +68,7 @@ class NoteTrack;
 #endif
 class WaveTrack;
 
-class MixerTrackCluster : public wxPanel
+class MixerTrackCluster final : public wxPanel
 {
 public:
    MixerTrackCluster(wxWindow* parent,
@@ -77,6 +77,8 @@ public:
                      const wxPoint& pos = wxDefaultPosition,
                      const wxSize& size = wxDefaultSize);
    virtual ~MixerTrackCluster() {}
+
+   void UpdatePrefs();
 
    void HandleResize(); // For wxSizeEvents, update gain slider and meter.
 
@@ -167,7 +169,7 @@ WX_DECLARE_OBJARRAY(MusicalInstrument, MusicalInstrumentArray);
 // wxScrolledWindow ignores mouse clicks in client area,
 // but they don't get passed to Mixerboard.
 // We need to catch them to deselect all track clusters.
-class MixerBoardScrolledWindow : public wxScrolledWindow
+class MixerBoardScrolledWindow final : public wxScrolledWindow
 {
 public:
    MixerBoardScrolledWindow(AudacityProject* project,
@@ -192,7 +194,7 @@ public:
 class MixerBoardFrame;
 class TrackList;
 
-class MixerBoard : public wxWindow
+class MixerBoard final : public wxWindow
 {
    friend class MixerBoardFrame;
 
@@ -202,6 +204,8 @@ public:
                const wxPoint& pos = wxDefaultPosition,
                const wxSize& size = wxDefaultSize);
    virtual ~MixerBoard();
+
+   void UpdatePrefs();
 
    // Add clusters for any tracks we're not yet showing.
    // Update pointers for tracks we're aleady showing.
@@ -297,7 +301,7 @@ public:
 };
 
 
-class MixerBoardFrame : public wxFrame
+class MixerBoardFrame final : public wxFrame
 {
 public:
    MixerBoardFrame(AudacityProject* parent);

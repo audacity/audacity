@@ -56,20 +56,20 @@ of the warped region.
 #ifndef __TIMEWARPER__
 #define __TIMEWARPER__
 
-class TimeWarper
+class TimeWarper /* not final */
 {
 public:
    virtual ~TimeWarper() { }
    virtual double Warp(double originalTime) const = 0;
 };
 
-class IdentityTimeWarper : public TimeWarper
+class IdentityTimeWarper final : public TimeWarper
 {
 public:
-   virtual double Warp(double originalTime) const;
+   double Warp(double originalTime) const override;
 };
 
-class ShiftTimeWarper : public TimeWarper
+class ShiftTimeWarper final : public TimeWarper
 {
 private:
    TimeWarper *mWarper;
@@ -79,10 +79,10 @@ public:
       : mWarper(warper), mShift(shiftAmount) { }
    virtual ~ShiftTimeWarper()
    { delete mWarper; }
-   virtual double Warp(double originalTime) const;
+   double Warp(double originalTime) const override;
 };
 
-class LinearTimeWarper : public TimeWarper
+class LinearTimeWarper final : public TimeWarper
 {
 private:
    double mScale;
@@ -93,10 +93,10 @@ public:
       : mScale((tAfter1 - tAfter0)/(tBefore1 - tBefore0)),
         mShift(tAfter0 - mScale*tBefore0)
    { }
-   virtual double Warp(double originalTime) const;
+   double Warp(double originalTime) const override;
 };
 
-class LinearInputRateTimeWarper : public TimeWarper
+class LinearInputRateTimeWarper final : public TimeWarper
 {
 private:
    LinearTimeWarper mRateWarper;
@@ -106,10 +106,10 @@ private:
 public:
    LinearInputRateTimeWarper(double tStart, double tEnd,
                              double rStart, double rEnd);
-   virtual double Warp(double originalTime) const;
+   double Warp(double originalTime) const override;
 };
 
-class LinearOutputRateTimeWarper : public TimeWarper
+class LinearOutputRateTimeWarper final : public TimeWarper
 {
 private:
    LinearTimeWarper mTimeWarper;
@@ -121,10 +121,10 @@ private:
 public:
    LinearOutputRateTimeWarper(double tStart, double tEnd,
                               double rStart, double rEnd);
-   virtual double Warp(double originalTime) const;
+   double Warp(double originalTime) const override;
 };
 
-class LinearInputStretchTimeWarper : public TimeWarper
+class LinearInputStretchTimeWarper final : public TimeWarper
 {
 private:
    LinearTimeWarper mTimeWarper;
@@ -134,10 +134,10 @@ private:
 public:
    LinearInputStretchTimeWarper(double tStart, double tEnd,
                                 double rStart, double rEnd);
-   virtual double Warp(double originalTime) const;
+   double Warp(double originalTime) const override;
 };
 
-class LinearOutputStretchTimeWarper : public TimeWarper
+class LinearOutputStretchTimeWarper final : public TimeWarper
 {
 private:
    LinearTimeWarper mTimeWarper;
@@ -147,10 +147,10 @@ private:
 public:
    LinearOutputStretchTimeWarper(double tStart, double tEnd,
                                  double rStart, double rEnd);
-   virtual double Warp(double originalTime) const;
+   double Warp(double originalTime) const override;
 };
 
-class GeometricInputTimeWarper : public TimeWarper
+class GeometricInputTimeWarper final : public TimeWarper
 {
 private:
    LinearTimeWarper mTimeWarper;
@@ -160,10 +160,10 @@ private:
 public:
    GeometricInputTimeWarper(double tStart, double tEnd,
                             double rStart, double rEnd);
-   virtual double Warp(double originalTime) const;
+   double Warp(double originalTime) const override;
 };
 
-class GeometricOutputTimeWarper : public TimeWarper
+class GeometricOutputTimeWarper final : public TimeWarper
 {
 private:
    LinearTimeWarper mTimeWarper;
@@ -173,22 +173,22 @@ private:
 public:
    GeometricOutputTimeWarper(double tStart, double tEnd,
                              double rStart, double rEnd);
-   virtual double Warp(double originalTime) const;
+   double Warp(double originalTime) const override;
 };
 
-class StepTimeWarper : public TimeWarper
+class StepTimeWarper final : public TimeWarper
 {
 private:
    double mTStep;
    double mOffset;
 public:
    StepTimeWarper(double tStep, double offset);
-   virtual double Warp(double originalTime) const;
+   double Warp(double originalTime) const override;
 };
 
 
 // Note: this assumes that tStart is a fixed point of warper->warp()
-class RegionTimeWarper : public TimeWarper
+class RegionTimeWarper final : public TimeWarper
 {
 private:
    TimeWarper *mWarper;
@@ -202,7 +202,7 @@ public:
    { }
    virtual ~RegionTimeWarper()
    { delete mWarper; }
-   virtual double Warp(double originalTime) const
+   double Warp(double originalTime) const override
    {
       if (originalTime < mTStart)
       {

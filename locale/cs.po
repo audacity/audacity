@@ -1,12 +1,12 @@
 # Header entry was created by Lokalize.
 #
-# Pavel Fric <pavelfric@seznam.cz>, 2013, 2014, 2015.
+# Pavel Fric <pavelfric@seznam.cz>, 2013, 2014, 2015, 2016.
 msgid ""
 msgstr ""
 "Project-Id-Version: Audacity 2.0.x\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2015-09-07 12:40+0100\n"
-"PO-Revision-Date: 2015-08-23 11:11+0200\n"
+"PO-Revision-Date: 2016-01-26 16:51+0100\n"
 "Last-Translator: Pavel Fric <pavelfric@seznam.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
 "Language: cs\n"
@@ -47,57 +47,53 @@ msgid "Error"
 msgstr "Chyba"
 
 #: lib-src/FileDialog/mac/FileDialogPrivate.mm:483
-#, fuzzy
 msgid "File type:"
-msgstr "&Typ filtru:"
+msgstr "Typ souboru:"
 
 #: lib-src/FileDialog/win/FileDialogPrivate.cpp:860
 #, c-format
 msgid "File dialog failed with error code %0lx."
-msgstr ""
+msgstr "Souborový dialog selhal s chybou %0lx."
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:195
-#, fuzzy
 msgid "&Nyquist Workbench..."
-msgstr "Výzva k zadání Nyquist..."
+msgstr "Pracovní stůl &Nyquist..."
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:752
 msgid "&Undo\tCtrl+Z"
-msgstr ""
+msgstr "&Zpět\tCtrl+Z"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:753
 msgid "&Redo\tCtrl+Y"
-msgstr ""
+msgstr "&Znovu\tCtrl+Y"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:755
 msgid "Cu&t\tCtrl+X"
-msgstr ""
+msgstr "&Vyjmout\tCtrl+X"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:756
 msgid "&Copy\tCtrl+C"
-msgstr ""
+msgstr "&Kopírovat\tCtrl+C"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:757
-#, fuzzy
 msgid "&Paste\tCtrl+V"
-msgstr "&Vložit"
+msgstr "&Vložit\tCtrl+V"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:758
 msgid "Cle&ar\tCtrl+L"
-msgstr ""
+msgstr "Vy&mazat\tCtrl+L"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:760
-#, fuzzy
 msgid "Select A&ll\tCtrl+A"
-msgstr "&Vybrat vše"
+msgstr "Vybrat vš&e\tCtrl+A"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:762
 msgid "&Find...\tCtrl+F"
-msgstr ""
+msgstr "&Najít...\tCtrl+F"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:765
 msgid "&Matching Paren\tF8"
-msgstr ""
+msgstr "&Odpovídající závorky\tF8"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:766
 msgid "&Top S-expr\tF9"
@@ -117,74 +113,64 @@ msgstr ""
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:770
 msgid "&Go to"
-msgstr ""
+msgstr "Přejít &na"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:776
-#, fuzzy
 msgid "Select &Font..."
-msgstr "&Písmo..."
+msgstr "Vybrat &písmo..."
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:778
-#, fuzzy
 msgid "Split &Vertically"
-msgstr "Přizpůsobit &svisle"
+msgstr "Rozdělit &svisle"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:779
-#, fuzzy
 msgid "Split &Horizontally"
-msgstr "Vodorovné"
+msgstr "Rozdělit &vodorovně"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:781
-#, fuzzy
 msgid "Show S&cript"
-msgstr "Ukázat výstup"
+msgstr "Ukázat &skript"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:782
-#, fuzzy
 msgid "Show &Output"
-msgstr "Ukázat výstup"
+msgstr "Ukázat &výstup"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:785
-#, fuzzy
 msgid "&Large Icons"
-msgstr "Velký prostor"
+msgstr "&Velké ikony"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:786
 msgid "&Small Icons"
-msgstr ""
+msgstr "&Malé ikony"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:787
-#, fuzzy
 msgid "Toolbar"
-msgstr "&Nástrojové panely"
+msgstr "Nástrojový pruh"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:791
 msgid "&Go\tF5"
-msgstr ""
+msgstr "&Přejít\tF5"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:792
-#, fuzzy
 msgid "&Stop\tF6"
-msgstr "&Zastavit"
+msgstr "&Zastavit\tF6"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:796
 #: lib-src/mod-nyq-bench/NyqBench.cpp:799
-#, fuzzy
 msgid "&About"
-msgstr "O programu"
+msgstr "&O programu"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:922
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1607
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1622
 msgid "Script"
-msgstr ""
+msgstr "Skript"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:950
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1610
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1619
-#, fuzzy
 msgid "Output"
-msgstr "Měřič výstupu"
+msgstr "Výstup"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1058
 #: src/effects/nyquist/Nyquist.cpp:2065
@@ -201,7 +187,7 @@ msgstr ""
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1089
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1119
 msgid "Script was not saved."
-msgstr ""
+msgstr "Skript nebyl uložen."
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1090
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1120
@@ -219,55 +205,50 @@ msgstr "Uložit skript Nyquist"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1203
 msgid "Find dialog"
-msgstr ""
+msgstr "Dialog hledání"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1422
 msgid "Harvey Lubin (logo)"
-msgstr ""
+msgstr "Harvey Lubin (logo)"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1423
 msgid "Tango Icon Gallery (toolbar icons)"
-msgstr ""
+msgstr "Galerie ikon Tango (ikony v nástrojovém pruhu)"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1424
-#, fuzzy
 msgid "Leland Lucius"
-msgstr "od Lelanda Lucia"
+msgstr "Leland Lucius"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1425
-#, fuzzy
 msgid "(C) 2009 by Leland Lucius"
-msgstr "od Lelanda Lucia"
+msgstr "(C) 2009 od Lelanda Lucia"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1426
 msgid ""
 "External Audacity module which provides a simple IDE for writing effects."
 msgstr ""
+"Vnější modul Audacity, který poskytuje jednoduché IDE pro zápis efektů."
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1427
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1495
-#, fuzzy
 msgid "Nyquist Effect Workbench"
-msgstr "Efekty Nyquist"
+msgstr "Pracovní stůl efektů Nyquist"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1494
-#, fuzzy
 msgid "No matches found"
-msgstr "Nenalezena žádná zařízení"
+msgstr "Nenalezeny žádné shody"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1631
 msgid "Code has been modified.  Are you sure?"
-msgstr ""
+msgstr "Kód byl upraven. Jste si jistý?"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1645
-#, fuzzy
 msgid "Untitled"
 msgstr "Bez názvu"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1651
-#, fuzzy
 msgid "Nyquist Effect Workbench - "
-msgstr "Efekty Nyquist"
+msgstr "Pracovní stůl efektů Nyquist - "
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1715 src/PluginManager.cpp:492
 #: src/prefs/ModulePrefs.cpp:102
@@ -276,46 +257,39 @@ msgstr "Nový"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1715
 msgid "New script"
-msgstr ""
+msgstr "Nový skript"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1716
-#, fuzzy
 msgid "Open"
-msgstr "&Otevřít..."
+msgstr "Otevřít"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1716
-#, fuzzy
 msgid "Open script"
-msgstr "Otevřít poslední"
+msgstr "Otevřít skript"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1717
-#, fuzzy
 msgid "Save"
-msgstr "&Uložit"
+msgstr "Uložit"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1717
-#, fuzzy
 msgid "Save script"
-msgstr "Uložit skript Nyquist"
+msgstr "Uložit skript"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1718
-#, fuzzy
 msgid "Save As"
-msgstr "Uložit jako..."
+msgstr "Uložit jako"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1718
-#, fuzzy
 msgid "Save script as..."
-msgstr "Uložit projekt jako..."
+msgstr "Uložit skript jako..."
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1720 src/toolbars/EditToolBar.cpp:204
 msgid "Copy"
 msgstr "Kopírovat"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1720
-#, fuzzy
 msgid "Copy to clipboard"
-msgstr "Vyjmout a vložit do schránky"
+msgstr "Kopírovat do schránky"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1721 src/Menus.cpp:3862
 #: src/toolbars/EditToolBar.cpp:203
@@ -323,7 +297,6 @@ msgid "Cut"
 msgstr "Vyjmout"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1721
-#, fuzzy
 msgid "Cut to clipboard"
 msgstr "Vyjmout a vložit do schránky"
 
@@ -334,29 +307,24 @@ msgid "Paste"
 msgstr "Vložit"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1722
-#, fuzzy
 msgid "Paste from clipboard"
 msgstr "Vložit ze schránky"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1723
-#, fuzzy
 msgid "Clear"
-msgstr "&Vymazat"
+msgstr "Vyprázdnit"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1723
-#, fuzzy
 msgid "Clear selection"
-msgstr "&Spočítat výběr"
+msgstr "Vyčistit výběr"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1724
-#, fuzzy
 msgid "Select All"
-msgstr "&Vybrat vše"
+msgstr "Vybrat vše"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1724
-#, fuzzy
 msgid "Select all text"
-msgstr "&Vybrat vše"
+msgstr "Vybrat všechen text"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1726 src/prefs/KeyConfigPrefs.cpp:885
 #: src/toolbars/EditToolBar.cpp:146 src/toolbars/EditToolBar.cpp:208
@@ -365,9 +333,8 @@ msgid "Undo"
 msgstr "Zpět"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1726
-#, fuzzy
 msgid "Undo last change"
-msgstr "Změnit formát"
+msgstr "Zpět poslední změnu"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1727 src/prefs/KeyConfigPrefs.cpp:888
 #: src/toolbars/EditToolBar.cpp:148 src/toolbars/EditToolBar.cpp:209
@@ -377,30 +344,27 @@ msgstr "Znovu"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1727
 msgid "Redo previous change"
-msgstr ""
+msgstr "Znovu předchozí změnu"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1729
 msgid "Find"
-msgstr ""
+msgstr "Najít"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1729
-#, fuzzy
 msgid "Find text"
-msgstr "&Hledat noty"
+msgstr "Hledat text"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1731
-#, fuzzy
 msgid "Match"
-msgstr "Dávkové zpracování"
+msgstr "Porovnání"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1731
 msgid "Go to matching paren"
-msgstr ""
+msgstr "Jít na odpovídající závorky\tF8"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1732
-#, fuzzy
 msgid "Top"
-msgstr "Na:"
+msgstr "Nahoře"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1732
 msgid "Go to top S-expr"
@@ -416,18 +380,16 @@ msgid "Go to higher S-expr"
 msgstr ""
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1734
-#, fuzzy
 msgid "Previous"
-msgstr "Předešlý nástroj"
+msgstr "Předchozí"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1734
 msgid "Go to previous S-expr"
 msgstr ""
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1735
-#, fuzzy
 msgid "Next"
-msgstr "Další nástroj"
+msgstr "Další"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1735
 msgid "Go to next S-expr"
@@ -440,9 +402,8 @@ msgid "Start"
 msgstr "Začátek"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1737
-#, fuzzy
 msgid "Start script"
-msgstr "Uložit skript Nyquist"
+msgstr "Spustit skript"
 
 #. i18n-hint: (verb) Stop playing audio
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1738 src/Menus.cpp:1119
@@ -452,18 +413,16 @@ msgid "Stop"
 msgstr "Zastavit"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1738
-#, fuzzy
 msgid "Stop script"
-msgstr "Uložit skript Nyquist"
+msgstr "Zastavit skript"
 
 #: lib-src/mod-track-panel/TrackPanel2.cpp:54
 msgid "Panel 1"
-msgstr ""
+msgstr "Panel 1"
 
 #: lib-src/mod-track-panel/TrackPanel2.cpp:68
-#, fuzzy
 msgid "Diagnostics"
-msgstr "Spustit vlastní diagnostiku"
+msgstr "Diagnostika"
 
 #. i18n-hint: "OK... Audacious" appears on a button at the
 #. * foot of the 'About Audacity' dialog box, after some text to read.
@@ -641,7 +600,7 @@ msgstr "Přehrávání a nahrávání zvuku"
 
 #: src/AboutDialog.cpp:437
 msgid "Cross-platform GUI library"
-msgstr ""
+msgstr "Knihovna rozhraní pro více systémů"
 
 #: src/AboutDialog.cpp:441
 msgid "Features"
@@ -3026,7 +2985,7 @@ msgstr "&Vytvoření"
 
 #: src/Menus.cpp:978 src/Menus.cpp:1005 src/Menus.cpp:1029
 msgid "Add / Remove Plug-ins..."
-msgstr ""
+msgstr "Přidat/Odstranit přídavné moduly..."
 
 #: src/Menus.cpp:994
 msgid "Effe&ct"
@@ -5207,9 +5166,8 @@ msgid "Ma&ke Stereo Track"
 msgstr "&Vytvořit stereo stopu"
 
 #: src/TrackPanel.cpp:698
-#, fuzzy
 msgid "R&ight Channel"
-msgstr "Pravý kanál"
+msgstr "&Pravý kanál"
 
 #: src/TrackPanel.cpp:699
 msgid "&Left Channel"
@@ -5220,7 +5178,6 @@ msgid "&Mono"
 msgstr "&Mono"
 
 #: src/TrackPanel.cpp:714
-#, fuzzy
 msgid "Split Stereo to &Mono"
 msgstr "Rozdělit stereo na &monofonní stopy"
 
@@ -5249,19 +5206,16 @@ msgid "&Spectrogram"
 msgstr "&Spektrogram"
 
 #: src/TrackPanel.cpp:761
-#, fuzzy
 msgid "S&pectrogram Settings..."
-msgstr "Spektrogramy"
+msgstr "Nastavení &spektrogramu..."
 
 #: src/TrackPanel.cpp:769
-#, fuzzy
 msgid "&Format"
-msgstr "Formát:"
+msgstr "&Formát"
 
 #: src/TrackPanel.cpp:773
-#, fuzzy
 msgid "&Rate"
-msgstr "Nastavit vzorkovací kmitočet"
+msgstr "&Výše"
 
 #: src/TrackPanel.cpp:778
 msgid "Up &Octave"
@@ -5284,16 +5238,14 @@ msgid "L&ogarithmic"
 msgstr "Lo&garitmický"
 
 #: src/TrackPanel.cpp:792
-#, fuzzy
 msgid "&Range..."
-msgstr "&Spravovat..."
+msgstr "&Rozsah..."
 
 #: src/TrackPanel.cpp:793
 msgid "Logarithmic &Interpolation"
 msgstr "Logaritmická &interpolace"
 
 #: src/TrackPanel.cpp:808
-#, fuzzy
 msgid "&Name..."
 msgstr "&Název..."
 
@@ -5315,16 +5267,15 @@ msgstr "Přesunout stopu úplně d&olů"
 
 #: src/TrackPanel.cpp:826
 msgid "Zoom In\tLeft-Click/Left-Drag"
-msgstr ""
+msgstr "Přiblížit\tKlepnutí levým tlačítkem myši/tažení"
 
 #: src/TrackPanel.cpp:827
-#, fuzzy
 msgid "Zoom Out\tShift-Left-Click"
-msgstr "Shift+levé tlačítko myši"
+msgstr "Oddálit\tShift-klepnutí levým tlačítkem myši"
 
 #: src/TrackPanel.cpp:828
 msgid "Zoom to Fit\tShift-Right-Click"
-msgstr ""
+msgstr "Přizpůsobit oknu\tShift-klepnutí pravým tlačítkem myši"
 
 #: src/TrackPanel.cpp:1706
 msgid ""
@@ -6253,6 +6204,7 @@ msgid "ReleaseTime"
 msgstr "Čas uvolnění"
 
 #: src/effects/Compressor.cpp:64
+#, fuzzy
 msgid "UsePeak"
 msgstr ""
 
@@ -7091,31 +7043,28 @@ msgid "kHz"
 msgstr "kHz"
 
 #: src/effects/Equalization.cpp:758
-#, fuzzy
 msgid "&EQ Type:"
-msgstr "Typ:"
+msgstr "Typ &ekvalizéru:"
 
 #: src/effects/Equalization.cpp:766
 msgid "&Draw"
-msgstr ""
+msgstr "&Kreslit"
 
 #: src/effects/Equalization.cpp:767
 msgid "Draw Curves"
-msgstr "Křivky"
+msgstr "Kreslit křivky"
 
 #: src/effects/Equalization.cpp:769
-#, fuzzy
 msgid "&Graphic"
-msgstr "&Grafický ekvalizér"
+msgstr "&Grafický"
 
 #: src/effects/Equalization.cpp:770
 msgid "Graphic EQ"
 msgstr "Grafický ekvalizér"
 
 #: src/effects/Equalization.cpp:785
-#, fuzzy
 msgid "Interpolation type"
-msgstr "Interpolace"
+msgstr "Typ interpolace"
 
 #: src/effects/Equalization.cpp:794
 msgid "Li&near Frequency Scale"
@@ -7154,14 +7103,12 @@ msgid "&Invert"
 msgstr "&Obrátit"
 
 #: src/effects/Equalization.cpp:871
-#, fuzzy
 msgid "Show g&rid lines"
-msgstr "Ukázat skryté soubory"
+msgstr "Ukázat čáry &mřížky"
 
 #: src/effects/Equalization.cpp:872
-#, fuzzy
 msgid "Show grid lines"
-msgstr "Ukázat skryté soubory"
+msgstr "Ukázat čáry mřížky"
 
 #: src/effects/Equalization.cpp:894
 msgid "&Processing: "
@@ -8036,14 +7983,12 @@ msgid "Feedback in percent"
 msgstr "Zpětná vazba v procentech"
 
 #: src/effects/Phaser.cpp:310 src/effects/Wahwah.cpp:282
-#, fuzzy
 msgid "Output gain (dB):"
-msgstr "O&stré zesílení (dB):"
+msgstr "Výstupní úroveň zesílení (dB):"
 
 #: src/effects/Phaser.cpp:315 src/effects/Wahwah.cpp:287
-#, fuzzy
 msgid "Output gain (dB)"
-msgstr "O&stré zesílení (dB):"
+msgstr "Výstupní úroveň zesílení (dB)"
 
 #: src/effects/Phaser.h:30
 msgid "Phaser"
@@ -8088,23 +8033,20 @@ msgid "Repeats the selection the specified number of times"
 msgstr "Opakuje výběr po stanovený počet opakování"
 
 #: src/effects/Repeat.cpp:178
-#, fuzzy
 msgid "Number of repeats to add:"
-msgstr "Počet opakování:"
+msgstr "Počet opakování k přidání:"
 
 #: src/effects/Repeat.cpp:185
-#, fuzzy
 msgid "Current selection length: dd:hh:mm:ss"
-msgstr "Nová délka výběru: dd:hh:mm:ss"
+msgstr "Nynější délka výběru: dd:hh:mm:ss"
 
 #: src/effects/Repeat.cpp:186
 msgid "New selection length: dd:hh:mm:ss"
 msgstr "Nová délka výběru: dd:hh:mm:ss"
 
 #: src/effects/Repeat.cpp:227
-#, fuzzy
 msgid "Current selection length: "
-msgstr "Nová délka výběru:"
+msgstr "Nynější délka výběru: "
 
 #: src/effects/Repeat.cpp:237
 msgid "New selection length: "
@@ -8112,7 +8054,7 @@ msgstr "Nová délka výběru:"
 
 #: src/effects/Repeat.cpp:240
 msgid "Warning: No repeats."
-msgstr ""
+msgstr "Varování: Žádná opakování."
 
 #: src/effects/Repeat.h:23
 msgid "Repeat"
@@ -8395,9 +8337,8 @@ msgstr "Čas předvyhlazení"
 #. manual we don't have a clear description of what this parameter does.
 #. It is OK to leave it in English.
 #: src/effects/ScoreAlignDialog.cpp:156
-#, fuzzy
 msgid "Line Time:"
-msgstr "Čas doběhu:"
+msgstr ""
 
 #: src/effects/ScoreAlignDialog.cpp:161
 msgid "Line Time"
@@ -8441,32 +8382,28 @@ msgid "Stereo To Mono"
 msgstr "Přeměnit stereo na mono"
 
 #: src/effects/TimeScale.cpp:44
-#, fuzzy
 msgid "RatePercentChangeStart"
-msgstr "Změna vyjádřená v procentech"
+msgstr "Začátek změny procenta rychlosti"
 
 #: src/effects/TimeScale.cpp:45
-#, fuzzy
 msgid "RatePercentChangeEnd"
-msgstr "Změna vyjádřená v procentech"
+msgstr "Konec změny procenta rychlosti"
 
 #: src/effects/TimeScale.cpp:46
 msgid "PitchHalfStepsStart"
-msgstr ""
+msgstr "Začátek kroků poloviny výšky tónu"
 
 #: src/effects/TimeScale.cpp:47
 msgid "PitchHalfStepsEnd"
-msgstr ""
+msgstr "Konec kroků poloviny výšky tónu"
 
 #: src/effects/TimeScale.cpp:48
-#, fuzzy
 msgid "PitchPercentChangeStart"
-msgstr "Změna vyjádřená v procentech"
+msgstr "Začátek změny procenta výšky tónu"
 
 #: src/effects/TimeScale.cpp:49
-#, fuzzy
 msgid "PitchPercentChangeEnd"
-msgstr "Změna vyjádřená v procentech"
+msgstr "Konec změny procenta výšky tónu"
 
 #: src/effects/TimeScale.cpp:91
 msgid "Sliding Time Scale/Pitch Shift"
@@ -8474,7 +8411,7 @@ msgstr "Změnit klouzavě tempo/výšku tónu"
 
 #: src/effects/TimeScale.cpp:96
 msgid "Allows continuous changes to the tempo and/or pitch"
-msgstr ""
+msgstr "Umožňuje plynulé změny rychlosti (tempa) a/nebo výšky tónů"
 
 #: src/effects/TimeScale.cpp:164
 msgid "Initial Tempo Change (%)"
@@ -8895,18 +8832,17 @@ msgstr "Volby pro efekty Audio Unit"
 #: src/effects/audiounits/AudioUnitEffect.cpp:319
 #: src/effects/audiounits/AudioUnitEffect.cpp:401
 msgid "Full"
-msgstr ""
+msgstr "Vlastní"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:320
 #: src/effects/audiounits/AudioUnitEffect.cpp:405
-#, fuzzy
 msgid "Generic"
-msgstr "&Vytvoření"
+msgstr "Obecné"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:321
 #: src/effects/audiounits/AudioUnitEffect.cpp:409
 msgid "Basic"
-msgstr ""
+msgstr "Základní"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:347
 msgid ""
@@ -8918,27 +8854,26 @@ msgid "not work for all Audio Unit effects."
 msgstr "osvědčit pro všechny efekty Audio Unit."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:362
-#, fuzzy
 msgid "User Interface"
-msgstr "Rozhraní"
+msgstr "Uživatelské rozhraní"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:365
 msgid ""
 "Select \"Full\" to use the graphical interface if supplied by the Audio Unit."
 msgstr ""
+"Vyberte Vlastní, aby se použilo grafické rozhraní poskytované Audio Unit."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:366
 msgid " Select \"Generic\" to use the system supplied generic interface."
-msgstr ""
+msgstr "Vyberte Obecné, aby se použilo grafické rozhraní poskytované systémem."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:367
 msgid " Select \"Basic\" for A basic text-only interface. "
-msgstr ""
+msgstr "Vyberte Základní, aby se použilo základní pouze textové rozhraní."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:372
-#, fuzzy
 msgid "Select &interface"
-msgstr "Vybrat výstupní zařízení"
+msgstr "Vybrat rozhraní"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:453
 msgid "Export Audio Unit Presets"
@@ -9021,9 +8956,8 @@ msgid "&Duration:"
 msgstr "&Doba trvání:"
 
 #: src/effects/lv2/LoadLV2.cpp:101
-#, fuzzy
 msgid "LV2 Effects"
-msgstr "Efekty VST"
+msgstr "Efekty LV2"
 
 #: src/effects/lv2/LoadLV2.cpp:122
 msgid "Provides LV2 Effects support to Audacity"
@@ -9062,11 +8996,13 @@ msgid ""
 "Maximum allowed selection is 2147483647 samples\n"
 "(about 13.5 hours at 44100 Hz sample rate)."
 msgstr ""
+"Výběr pro kód Nyquist je příliš dlouhý.\n"
+"Největší povolený výběr obnáší 2147483647 vzorků\n"
+"(okolo 13,5 hodin při vzorkovacím kmitočtu 44100 Hz)."
 
 #: src/effects/nyquist/Nyquist.cpp:591
-#, fuzzy
 msgid "Nyquist Error"
-msgstr "Výzva k zadání Nyquist"
+msgstr "Chyba v Nyquist"
 
 #: src/effects/nyquist/Nyquist.cpp:682
 msgid "Nyquist"
@@ -9077,9 +9013,8 @@ msgid "Nyquist Output: "
 msgstr "Diagnostický protokol Nyquistu: "
 
 #: src/effects/nyquist/Nyquist.cpp:1002 src/effects/nyquist/Nyquist.cpp:1005
-#, fuzzy
 msgid "Processing complete."
-msgstr "Zpracování: "
+msgstr "Zpracování dokončeno."
 
 #: src/effects/nyquist/Nyquist.cpp:1028 src/effects/nyquist/Nyquist.cpp:1037
 msgid "Nyquist returned the value:"
@@ -9217,7 +9152,7 @@ msgstr "Program"
 
 #: src/export/Export.cpp:235
 msgid "No format specific options"
-msgstr ""
+msgstr "Žádné volby podle typu souboru"
 
 #: src/export/Export.cpp:303
 msgid "Export Audio"
@@ -9297,9 +9232,8 @@ msgid "Advanced Mixing Options"
 msgstr "Pokročilé možnosti míchání"
 
 #: src/export/Export.cpp:880
-#, fuzzy
 msgid "Format Options"
-msgstr "Obecné volby"
+msgstr "Volby pro formát"
 
 #: src/export/Export.cpp:1076
 #, c-format
@@ -9543,9 +9477,8 @@ msgid "%.2f kbps"
 msgstr "%.2f kb/s"
 
 #: src/export/ExportFFmpegDialogs.cpp:431
-#, fuzzy
 msgid "Open custom FFmpeg format options"
-msgstr "Vlastní uložení FFmpeg"
+msgstr "Otevřít vlastní volby pro formát FFmpeg"
 
 #: src/export/ExportFFmpegDialogs.cpp:566
 #, c-format
@@ -9571,9 +9504,9 @@ msgid "Preset '%s' does not exist."
 msgstr "Přednastavení '%s' neexistuje."
 
 #: src/export/ExportFFmpegDialogs.cpp:761
-#, fuzzy, c-format
+#, c-format
 msgid "Replace preset '%s'?"
-msgstr "Smazat přednastavení '%s'?"
+msgstr "Nahradit přednastavení '%s'?"
 
 #: src/export/ExportFFmpegDialogs.cpp:1190
 msgid "LC"
@@ -9632,9 +9565,8 @@ msgid "Log search"
 msgstr "Hledání zápisu"
 
 #: src/export/ExportFFmpegDialogs.cpp:1307
-#, fuzzy
 msgid "Configure custom FFmpeg options"
-msgstr "Vlastní uložení FFmpeg"
+msgstr "Nastavit vlastní volby pro FFmpeg"
 
 #: src/export/ExportFFmpegDialogs.cpp:1400
 msgid "Preset:"
@@ -10332,22 +10264,20 @@ msgstr ""
 "zvukových souborů."
 
 #: src/export/ExportMultiple.cpp:249
-#, fuzzy
 msgid "Export files to:"
-msgstr "Umístění uložených souborů:"
+msgstr "Uložit soubory do:"
 
 #: src/export/ExportMultiple.cpp:254
 msgid "Folder:"
-msgstr ""
+msgstr "Složka:"
 
 #: src/export/ExportMultiple.cpp:259
 msgid "Create"
 msgstr "Vytvořit"
 
 #: src/export/ExportMultiple.cpp:270
-#, fuzzy
 msgid "Options:"
-msgstr "Volby"
+msgstr "Volby:"
 
 #: src/export/ExportMultiple.cpp:296
 msgid "Split files based on:"
@@ -11340,9 +11270,8 @@ msgid "S&how 'How to Get Help' dialog box at program start up"
 msgstr "&Ukázat při spuštění programu uvítací dialog"
 
 #: src/prefs/GUIPrefs.cpp:119
-#, fuzzy
 msgid "Meter dB &range:"
-msgstr "&Rozsah dB (regulace/křivka):"
+msgstr "&Rozsah regulace v dB:"
 
 #: src/prefs/GUIPrefs.cpp:126
 msgid "&Language:"
@@ -11718,7 +11647,7 @@ msgstr "Nebyly nalezeny žádné moduly"
 
 #: src/prefs/MousePrefs.cpp:59
 msgid "Ctrl"
-msgstr ""
+msgstr "Ctrl"
 
 #: src/prefs/MousePrefs.cpp:64
 msgid "Mouse"
@@ -11783,9 +11712,8 @@ msgid "Select Clip or Entire Track"
 msgstr "Vybrat ústřižek nebo celou stopu"
 
 #: src/prefs/MousePrefs.cpp:114
-#, fuzzy
 msgid "-Left-Click"
-msgstr "Klepnutí levým tlačítkem myši"
+msgstr "-Klepnutí levým tlačítkem myši"
 
 #: src/prefs/MousePrefs.cpp:114
 msgid "Scrub"
@@ -11793,18 +11721,16 @@ msgstr "Smykovat"
 
 #: src/prefs/MousePrefs.cpp:115 src/prefs/MousePrefs.cpp:140
 #: src/prefs/MousePrefs.cpp:150
-#, fuzzy
 msgid "-Left-Drag"
-msgstr "Klepnutí levým tlačítkem myši+tažení"
+msgstr "-Klepnutí levým tlačítkem myši+tažení"
 
 #: src/prefs/MousePrefs.cpp:115
 msgid "Seek"
 msgstr "Hledat"
 
 #: src/prefs/MousePrefs.cpp:118
-#, fuzzy
 msgid "-Left-Double-Click"
-msgstr "Dvojité klepnutí levým tlačítkem myši"
+msgstr "-Dvojité klepnutí levým tlačítkem myši"
 
 #: src/prefs/MousePrefs.cpp:118
 msgid "Scroll-scrub"
@@ -11939,9 +11865,8 @@ msgid "Scroll left or right"
 msgstr "Projíždět vlevo nebo vpravo"
 
 #: src/prefs/MousePrefs.cpp:166
-#, fuzzy
 msgid "-Wheel-Rotate"
-msgstr "Otáčení kolečkem"
+msgstr "-Otáčení kolečkem"
 
 #: src/prefs/MousePrefs.cpp:166
 msgid "Zoom in or out on Mouse Pointer"
@@ -12159,23 +12084,21 @@ msgstr ""
 #. i18n-hint: The name of a frequency scale in psychoacoustics, abbreviates Equivalent Rectangular Bandwidth
 #: src/prefs/SpectrogramSettings.cpp:159
 msgid "ERB"
-msgstr ""
+msgstr "ERB"
 
 #. i18n-hint: Time units, that is Period = 1 / Frequency
 #: src/prefs/SpectrogramSettings.cpp:161
-#, fuzzy
 msgid "Period"
-msgstr "Perioda snímku"
+msgstr "Perioda"
 
 #: src/prefs/SpectrogramSettings.cpp:177
-#, fuzzy
 msgid "Frequencies"
-msgstr "Kmitočet"
+msgstr "Kmitočty"
 
 #. i18n-hint: the Reassignment algorithm for spectrograms
 #: src/prefs/SpectrogramSettings.cpp:179
 msgid "Reassignment"
-msgstr ""
+msgstr "Opětovné přiřazení"
 
 #. i18n-hint: EAC abbreviates "Enhanced Autocorrelation"
 #: src/prefs/SpectrogramSettings.cpp:181
@@ -12207,9 +12130,8 @@ msgid "The frequency gain must be no more than 60 dB/dec"
 msgstr "Hodnota zvýšení kmitočtu nesmí ležet nad 60 dB/dec"
 
 #: src/prefs/SpectrumPrefs.cpp:36
-#, fuzzy
 msgid "Spectrogram Settings"
-msgstr "Spektrogramy"
+msgstr "Nastavení spektrogramu"
 
 #: src/prefs/SpectrumPrefs.cpp:36
 msgid "Spectrograms"
@@ -12229,14 +12151,12 @@ msgstr "32768 - nejužší pásmo"
 
 #. i18n-hint: use is a verb
 #: src/prefs/SpectrumPrefs.cpp:163 src/prefs/WaveformPrefs.cpp:83
-#, fuzzy
 msgid "Use Preferences"
-msgstr "Nastavení: "
+msgstr "Použít nastavení"
 
 #: src/prefs/SpectrumPrefs.cpp:170 src/prefs/WaveformPrefs.cpp:91
-#, fuzzy
 msgid "S&cale"
-msgstr "Měřítko"
+msgstr "&Měřítko"
 
 #: src/prefs/SpectrumPrefs.cpp:175
 msgid "Mi&nimum Frequency (Hz):"
@@ -12248,7 +12168,7 @@ msgstr "&Horní hranice kmitočtu (Hz):"
 
 #: src/prefs/SpectrumPrefs.cpp:188
 msgid "Colors"
-msgstr ""
+msgstr "Barvy"
 
 #: src/prefs/SpectrumPrefs.cpp:193
 msgid "&Gain (dB):"
@@ -12267,14 +12187,12 @@ msgid "S&how the spectrum using grayscale colors"
 msgstr "Ukázat &spektrum v odstínech šedi"
 
 #: src/prefs/SpectrumPrefs.cpp:215
-#, fuzzy
 msgid "Algorithm"
-msgstr "&Algoritmus:"
+msgstr "Algoritmus"
 
 #: src/prefs/SpectrumPrefs.cpp:220
-#, fuzzy
 msgid "A&lgorithm"
-msgstr "&Algoritmus:"
+msgstr "&Algoritmus"
 
 #: src/prefs/SpectrumPrefs.cpp:224
 msgid "Window &size:"
@@ -12289,9 +12207,8 @@ msgid "&Zero padding factor"
 msgstr "&Nulový vycpávací faktor"
 
 #: src/prefs/SpectrumPrefs.cpp:247
-#, fuzzy
 msgid "Ena&ble Spectral Selection"
-msgstr "Výběr spektra"
+msgstr "&Povolit výběr spektra"
 
 #: src/prefs/SpectrumPrefs.cpp:252
 msgid "Show a grid along the &Y-axis"
@@ -12319,14 +12236,12 @@ msgid "&Quantize Notes"
 msgstr "&Počítat noty"
 
 #: src/prefs/SpectrumPrefs.cpp:285
-#, fuzzy
 msgid "Global settings"
-msgstr "Nahrát nastavení:"
+msgstr "Celková nastavení"
 
 #: src/prefs/SpectrumPrefs.cpp:287
-#, fuzzy
 msgid "Ena&ble spectral selection"
-msgstr "&Přepnout výběr spektra"
+msgstr "Po&volit výběr spektra"
 
 #: src/prefs/SpectrumPrefs.cpp:306
 msgid "The maximum frequency must be an integer"
@@ -12535,14 +12450,12 @@ msgid "&Importing uncompressed audio files"
 msgstr "&Nahrát nekomprimované zvukové soubory"
 
 #: src/prefs/WaveformPrefs.cpp:29
-#, fuzzy
 msgid "Waveforms"
-msgstr "Křivka"
+msgstr "Tvary vln"
 
 #: src/prefs/WaveformPrefs.cpp:96
-#, fuzzy
 msgid "Waveform dB &range"
-msgstr "&Rozsah dB (regulace/křivka):"
+msgstr "&Rozsah křivky v dB"
 
 #. i18n-hint: These are strings for the status bar, and indicate whether Audacity
 #. is playing or recording or stopped, and whether it is paused.
@@ -12758,9 +12671,9 @@ msgid "Recording Volume (Unavailable; use system mixer.)"
 msgstr "Nahrávací hlasitost (není dostupná; použijte systémový směšovač)"
 
 #: src/toolbars/MixerToolBar.cpp:298
-#, fuzzy, c-format
+#, c-format
 msgid "Playback Volume: %%.2f%s"
-msgstr "Hlasitost přehrávání: %.2f%s"
+msgstr "Hlasitost přehrávání: %%.2f%s"
 
 #: src/toolbars/MixerToolBar.cpp:298
 msgid " (emulated)"

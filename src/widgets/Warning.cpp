@@ -31,7 +31,7 @@ the ability to not see similar warnings again for this session.
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 
-class WarningDialog : public wxDialog
+class WarningDialog final : public wxDialog
 {
  public:
    // constructors and destructors
@@ -81,8 +81,8 @@ void WarningDialog::OnOK(wxCommandEvent& WXUNUSED(event))
 }
 
 int ShowWarningDialog(wxWindow *parent,
-                      wxString internalDialogName,
-                      wxString message,
+                      const wxString &internalDialogName,
+                      const wxString &message,
                       bool showCancelButton)
 {
    wxString key(wxT("/Warnings/") + internalDialogName);

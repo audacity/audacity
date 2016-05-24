@@ -40,7 +40,7 @@ typedef struct DeviceSourceMap {
 
 wxString MakeDeviceSourceString(const DeviceSourceMap *map);
 
-class DeviceManager
+class DeviceManager final
 #if defined(EXPERIMENTAL_DEVICE_CHANGE_HANDLER)
 #if defined(HAVE_DEVICE_CHANGE)
 :  public DeviceChangeHandler
@@ -51,10 +51,7 @@ class DeviceManager
    /// Gets the singleton instance
    static DeviceManager* Instance();
 
-   /// Releases memory assosiated with the singleton
-   static void Destroy();
-
-   /// Gets a new list of devices by terminating and restarting portaudio
+   /// Gets a NEW list of devices by terminating and restarting portaudio
    /// Assumes that DeviceManager is only used on the main thread.
    void Rescan();
 
@@ -74,7 +71,7 @@ class DeviceManager
  protected:
    //private constructor - Singleton.
    DeviceManager();
-   virtual ~DeviceManager();
+   ~DeviceManager();
    /// Does an initial scan.
    /// Called by GetInputDeviceMaps and GetOutputDeviceMaps when needed.
    void Init();

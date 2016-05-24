@@ -38,16 +38,16 @@
   file "C:\sample2.wav" offset 5   # sample2 is displayed with a 5s offset
   File "C:\sample3.wav"            # sample3 is displayed with no offset
   File "foo.aiff" # foo is loaded from the same directory as the LOF file
-  window offset 5 duration 10      # open a new window, zoom to display
+  window offset 5 duration 10      # open a NEW window, zoom to display
   # 10 seconds total starting at 5 (ending at 15) seconds
   file "C:\sample3.wav" offset 2.5
 \endverbatim
 
   SEMANTICS:
 
-  There are two commands: "window" creates a new window, and "file"
+  There are two commands: "window" creates a NEW window, and "file"
   appends a track to the current window and displays the file there. The
-  first file is always placed in a new window, whether or not an initial
+  first file is always placed in a NEW window, whether or not an initial
   "window" command is given.
 
   Commands have optional keyword parameters that may be listed in any
@@ -101,7 +101,7 @@ static const wxChar *exts[] =
    wxT("lof")
 };
 
-class LOFImportPlugin : public ImportPlugin
+class LOFImportPlugin final : public ImportPlugin
 {
 public:
    LOFImportPlugin()
@@ -113,11 +113,11 @@ public:
 
    wxString GetPluginStringID() { return wxT("lof"); }
    wxString GetPluginFormatDescription();
-   ImportFileHandle *Open(wxString Filename);
+   std::unique_ptr<ImportFileHandle> Open(const wxString &Filename) override;
 };
 
 
-class LOFImportFileHandle : public ImportFileHandle
+class LOFImportFileHandle final : public ImportFileHandle
 {
 public:
    LOFImportFileHandle(const wxString & name, wxTextFile *file);
@@ -125,12 +125,16 @@ public:
 
    wxString GetFileDescription();
    int GetFileUncompressedBytes();
-   int Import(TrackFactory *trackFactory, Track ***outTracks,
-              int *outNumTracks, Tags *tags);
+   int Import(TrackFactory *trackFactory, TrackHolders &outTracks,
+              Tags *tags) override;
 
    wxInt32 GetStreamCount(){ return 1; }
 
-   wxArrayString *GetStreamInfo(){ return NULL; }
+   const wxArrayString &GetStreamInfo() override
+   {
+      static wxArrayString empty;
+      return empty;
+   }
 
    void SetStreamUsage(wxInt32 WXUNUSED(StreamID), bool WXUNUSED(Use)){}
 
@@ -141,11 +145,11 @@ private:
    void doScrollOffset();
 
    wxTextFile *mTextFile;
-   wxFileName *mLOFFileName;  /**< The name of the LOF file, which is used to
+   wxFileName mLOFFileName;  /**< The name of the LOF file, which is used to
                                 interpret relative paths in it */
    AudacityProject *mProject;
 
-   // In order to know whether or not to create a new window
+   // In order to know whether or not to create a NEW window
    bool              windowCalledOnce;
 
    // In order to zoom in, it must be done after files are opened
@@ -160,9 +164,9 @@ private:
 LOFImportFileHandle::LOFImportFileHandle(const wxString & name, wxTextFile *file)
 :  ImportFileHandle(name),
    mTextFile(file)
+   , mLOFFileName{name}
 {
    mProject = GetActiveProject();
-   mLOFFileName = new wxFileName(name);
    windowCalledOnce = false;
    callDurationFactor = false;
    durationFactor = 1;
@@ -181,12 +185,12 @@ wxString LOFImportPlugin::GetPluginFormatDescription()
     return DESC;
 }
 
-ImportFileHandle *LOFImportPlugin::Open(wxString filename)
+std::unique_ptr<ImportFileHandle> LOFImportPlugin::Open(const wxString &filename)
 {
    // Check if it is a binary file
    wxFile binaryFile;
    if (!binaryFile.Open(filename))
-      return NULL; // File not found
+      return nullptr; // File not found
 
    char buf[BINARY_FILE_CHECK_BUFFER_SIZE];
    int count = binaryFile.Read(buf, BINARY_FILE_CHECK_BUFFER_SIZE);
@@ -199,7 +203,7 @@ ImportFileHandle *LOFImportPlugin::Open(wxString filename)
       {
          // Assume it is a binary file
          binaryFile.Close();
-         return NULL;
+         return nullptr;
       }
    }
 
@@ -213,10 +217,10 @@ ImportFileHandle *LOFImportPlugin::Open(wxString filename)
    if (!file->IsOpened())
    {
       delete file;
-      return NULL;
+      return nullptr;
    }
 
-   return new LOFImportFileHandle(filename, file);
+   return std::make_unique<LOFImportFileHandle>(filename, file);
 }
 
 wxString LOFImportFileHandle::GetFileDescription()
@@ -229,9 +233,11 @@ int LOFImportFileHandle::GetFileUncompressedBytes()
    return 0;
 }
 
-int LOFImportFileHandle::Import(TrackFactory * WXUNUSED(trackFactory), Track *** WXUNUSED(outTracks),
-                                int * WXUNUSED(outNumTracks), Tags * WXUNUSED(tags))
+int LOFImportFileHandle::Import(TrackFactory * WXUNUSED(trackFactory), TrackHolders &outTracks,
+                                Tags * WXUNUSED(tags))
 {
+   outTracks.clear();
+
    wxASSERT(mTextFile->IsOpened());
 
    if(mTextFile->Eof())
@@ -368,7 +374,7 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
       // If path is relative, make absolute path from LOF path
       if(!wxIsAbsolutePath(targetfile)) {
          wxFileName fName(targetfile);
-         fName.Normalize(wxPATH_NORM_ALL, mLOFFileName->GetPath(wxPATH_GET_VOLUME | wxPATH_GET_SEPARATOR));
+         fName.Normalize(wxPATH_NORM_ALL, mLOFFileName.GetPath(wxPATH_GET_VOLUME | wxPATH_GET_SEPARATOR));
          if(fName.FileExists()) {
             targetfile = fName.GetFullPath();
          }
@@ -379,12 +385,7 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
       if (targetfile.AfterLast(wxT('.')).IsSameAs(wxT("mid"), false)
           ||  targetfile.AfterLast(wxT('.')).IsSameAs(wxT("midi"), false))
       {
-         NoteTrack *nTrack = new NoteTrack(mProject->GetDirManager());
-
-         if (::ImportMIDI(targetfile, nTrack))
-            mProject->GetTracks()->Add(nTrack);
-         else
-            delete nTrack;
+         mProject->DoImportMIDI(targetfile);
       }
 
       // If not a midi, open audio file
@@ -505,8 +506,5 @@ LOFImportFileHandle::~LOFImportFileHandle()
       if (mTextFile->IsOpened())
          mTextFile->Close();
       delete mTextFile;
-   }
-   if(mLOFFileName) {
-      delete mLOFFileName;
    }
 }

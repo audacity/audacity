@@ -24,7 +24,7 @@ public:
 
 class WrappedType;
 
-class Shuttle {
+class Shuttle /* not final */ {
  public:
    // constructors and destructors
    Shuttle();
@@ -50,13 +50,13 @@ class Shuttle {
    virtual bool ExchangeWithMaster(const wxString & Name);
 };
 
-class ShuttleCli : public Shuttle
+class ShuttleCli final : public Shuttle
 {
 public:
    wxString mParams;
    ShuttleCli(){ mParams = wxT("") ;}
    virtual ~ShuttleCli() {}
-   virtual bool ExchangeWithMaster(const wxString & Name);
+   bool ExchangeWithMaster(const wxString & Name) override;
 };
 
 #endif

@@ -120,7 +120,7 @@ void MidiIOPrefs::PopulateOrExchange( ShuttleGui & S ) {
       {
          S.Id(HostID);
          /* i18n-hint: (noun) */
-         mHost = S.TieChoice(_("Host":),
+         mHost = S.TieChoice(_("Host:"),
                              wxT("/MidiIO/Host"),
                              wxT(""),
                              mHostNames,
@@ -286,7 +286,8 @@ bool MidiIOPrefs::Validate()
 
 PrefsPanel *MidiIOPrefsFactory::Create(wxWindow *parent)
 {
-   return new MidiIOPrefs(parent);
+   wxASSERT(parent); // to justify safenew
+   return safenew MidiIOPrefs(parent);
 }
 
 #endif

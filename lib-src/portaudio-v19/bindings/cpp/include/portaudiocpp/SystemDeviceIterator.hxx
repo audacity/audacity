@@ -48,8 +48,8 @@ namespace portaudio
 		DeviceIterator &operator--();
 		DeviceIterator operator--(int);
 
-		bool operator==(const DeviceIterator &rhs);
-		bool operator!=(const DeviceIterator &rhs);
+		bool operator==(const DeviceIterator &rhs) const;
+		bool operator!=(const DeviceIterator &rhs) const;
 
 	private:
 		friend class System;

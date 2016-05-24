@@ -16,6 +16,7 @@
 
 #include "Audacity.h"
 
+#include "MemoryX.h"
 #include <wx/grid.h>
 #include <wx/sizer.h>
 #include <wx/string.h>
@@ -69,8 +70,7 @@ class Shuttle;
 
 class WrappedType;
 
-
-class AUDACITY_DLL_API ShuttleGuiBase
+class AUDACITY_DLL_API ShuttleGuiBase /* not final */
 {
 public:
    ShuttleGuiBase(wxWindow * pParent,teShuttleMode ShuttleMode);
@@ -256,12 +256,18 @@ public:
    void SetStretchyRow( int i );
 
 //--Some Additions since June 2007 that don't fit in elsewhere...
-   wxWindow * GetParent() {return mpParent;};
+   wxWindow * GetParent()
+   {
+      // This assertion justifies the use of safenew in many places where GetParent()
+      // is used to construct a window
+      wxASSERT(mpParent != NULL);
+      return mpParent;
+   }
    ShuttleGuiBase & Prop( int iProp );
    int GetId() {return miIdNext;};
    void UseUpId();
 
-   wxSizer * GetSizer() {return mpSizer;};
+   wxSizer * GetSizer() {return mpSizer;}
 
 protected:
    void SetProportions( int Default );
@@ -307,7 +313,7 @@ protected:
    // Proportion set by user rather than default.
    int miPropSetByUser;
 
-   wxSizer * mpSubSizer;
+   std::unique_ptr<wxSizer> mpSubSizer;
    wxSizer * mpSizer;
    wxWindow * mpParent;
    wxWindow * mpWind;
@@ -352,12 +358,12 @@ enum
    eCloseID       = wxID_CANCEL
 };
 
-AUDACITY_DLL_API wxSizer *CreateStdButtonSizer( wxWindow *parent,
+AUDACITY_DLL_API std::unique_ptr<wxSizer> CreateStdButtonSizer( wxWindow *parent,
                                long buttons = eOkButton | eCancelButton,
                                wxWindow *extra = NULL );
 
 // ShuttleGui extends ShuttleGuiBase with Audacity specific extensions.
-class AUDACITY_DLL_API ShuttleGui : public ShuttleGuiBase
+class AUDACITY_DLL_API ShuttleGui /* not final */ : public ShuttleGuiBase
 {
 public:
    ShuttleGui(wxWindow * pParent,teShuttleMode ShuttleMode);

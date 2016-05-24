@@ -42,19 +42,19 @@ typedef struct {
    wxUint32 channels;   // number of interleaved channels
 } auHeader;
 
-class SimpleBlockFile : public BlockFile {
+class PROFILE_DLL_API SimpleBlockFile /* not final */ : public BlockFile {
  public:
 
    // Constructor / Destructor
 
    /// Create a disk file and write summary and sample data to it
-   SimpleBlockFile(wxFileName baseFileName,
+   SimpleBlockFile(wxFileNameWrapper &&baseFileName,
                    samplePtr sampleData, sampleCount sampleLen,
                    sampleFormat format,
                    bool allowDeferredWrite = false,
                    bool bypassCache = false );
    /// Create the memory structure to refer to the given block file
-   SimpleBlockFile(wxFileName existingFile, sampleCount len,
+   SimpleBlockFile(wxFileNameWrapper &&existingFile, sampleCount len,
                    float min, float max, float rms);
 
    virtual ~SimpleBlockFile();
@@ -62,26 +62,26 @@ class SimpleBlockFile : public BlockFile {
    // Reading
 
    /// Read the summary section of the disk file
-   virtual bool ReadSummary(void *data);
+   bool ReadSummary(void *data) override;
    /// Read the data section of the disk file
-   virtual int ReadData(samplePtr data, sampleFormat format,
-                        sampleCount start, sampleCount len);
+   int ReadData(samplePtr data, sampleFormat format,
+                        sampleCount start, sampleCount len) const override;
 
-   /// Create a new block file identical to this one
-   virtual BlockFile *Copy(wxFileName newFileName);
+   /// Create a NEW block file identical to this one
+   BlockFile *Copy(wxFileNameWrapper &&newFileName) override;
    /// Write an XML representation of this file
-   virtual void SaveXML(XMLWriter &xmlFile);
+   void SaveXML(XMLWriter &xmlFile) override;
 
-   virtual wxLongLong GetSpaceUsage();
-   virtual void Recover();
+   wxLongLong GetSpaceUsage() const override;
+   void Recover() override;
 
    static BlockFile *BuildFromXML(DirManager &dm, const wxChar **attrs);
 
-   virtual bool GetNeedWriteCacheToDisk();
-   virtual void WriteCacheToDisk();
+   bool GetNeedWriteCacheToDisk() override;
+   void WriteCacheToDisk() override;
 
-   virtual bool GetNeedFillCache() { return !mCache.active; }
-   virtual void FillCache();
+   bool GetNeedFillCache() override { return !mCache.active; }
+   void FillCache() override;
 
  protected:
 
@@ -92,7 +92,8 @@ class SimpleBlockFile : public BlockFile {
 
    SimpleBlockFileCache mCache;
 
-   sampleFormat mFormat;
+ private:
+   mutable sampleFormat mFormat; // may be found lazily
 };
 
 #endif

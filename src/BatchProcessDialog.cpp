@@ -42,6 +42,7 @@
 #include "../images/Arrow.xpm"
 #include "../images/Empty9x16.xpm"
 #include "BatchCommands.h"
+#include "Track.h"
 #include "UndoManager.h"
 
 #include "Theme.h"
@@ -152,9 +153,9 @@ void BatchProcessDialog::OnApplyToProject(wxCommandEvent & WXUNUSED(event))
    }
    wxString name = mChains->GetItemText(item);
 
-   wxDialog d(this, wxID_ANY, GetTitle());
-   d.SetName(d.GetTitle());
-   ShuttleGui S(&d, eIsCreating);
+   wxDialog * pD = safenew wxDialog(this, wxID_ANY, GetTitle());
+   pD->SetName(pD->GetTitle());
+   ShuttleGui S(pD, eIsCreating);
 
    S.StartHorizontalLay(wxCENTER, false);
    {
@@ -168,11 +169,17 @@ void BatchProcessDialog::OnApplyToProject(wxCommandEvent & WXUNUSED(event))
    }
    S.EndHorizontalLay();
 
-   d.Layout();
-   d.Fit();
-   d.CenterOnScreen();
-   d.Move(-1, 0);
-   d.Show();
+   pD->Layout();
+   pD->Fit();
+   pD->CenterOnScreen();
+   pD->Move(-1, 0);
+   pD->Show();
+
+   // The Hide() on the next line seems to tickle a bug in wx3,
+   // giving rise to our Bug #1221.  The problem is that on Linux 
+   // the 'Hide' converts us from a Modal into a regular dialog,
+   // as far as closing is concerned.  On Linux we can't close with
+   // EndModal() anymore after this.
    Hide();
 
    gPrefs->Write(wxT("/Batch/ActiveChain"), name);
@@ -182,16 +189,30 @@ void BatchProcessDialog::OnApplyToProject(wxCommandEvent & WXUNUSED(event))
 
    // The disabler must get deleted before the EndModal() call.  Otherwise,
    // the menus on OSX will remain disabled.
-   wxWindowDisabler *wd = new wxWindowDisabler(&d);
-   bool success = mBatchCommands.ApplyChain();
-   delete wd;
+   bool success;
+   {
+      wxWindowDisabler wd(pD);
+      success = mBatchCommands.ApplyChain();
+   }
 
    if (!success) {
       Show();
       return;
    }
 
+#if !defined(__WXMAC__)
+   // Under Linux an EndModal() here crashes (Bug #1221).
+   // But sending a close message instead is OK.
+   wxCloseEvent Evt;
+   Evt.SetId( wxID_OK );
+   Evt.SetEventObject( this);
+   ProcessWindowEvent( Evt );
+#else
    EndModal(wxID_OK);
+#endif
+
+   // Raise myself again, and the parent window with me
+   Show();
 }
 
 void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
@@ -221,10 +242,9 @@ void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
    wxString filter;
    wxString all;
 
-   l.DeleteContents(true);
    Importer::Get().GetSupportedImportFormats(&l);
-   for (FormatList::compatibility_iterator n = l.GetFirst(); n; n = n->GetNext()) {
-      Format *f = n->GetData();
+   for (const auto &format : l) {
+      const Format *f = &format;
 
       wxString newfilter = f->formatName + wxT("|");
       for (size_t i = 0; i < f->formatExtensions.size(); i++) {
@@ -274,9 +294,9 @@ void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
 
    files.Sort();
 
-   wxDialog d(this, wxID_ANY, GetTitle());
-   d.SetName(d.GetTitle());
-   ShuttleGui S(&d, eIsCreating);
+   wxDialog * pD = safenew wxDialog(this, wxID_ANY, GetTitle());
+   pD->SetName(pD->GetTitle());
+   ShuttleGui S(pD, eIsCreating);
 
    S.StartVerticalLay(false);
    {
@@ -317,17 +337,17 @@ void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
       mList->SetInitialSize(sz);
    }
 
-   d.Layout();
-   d.Fit();
-   d.SetSizeHints(d.GetSize());
-   d.CenterOnScreen();
-   d.Move(-1, 0);
-   d.Show();
+   pD->Layout();
+   pD->Fit();
+   pD->SetSizeHints(pD->GetSize());
+   pD->CenterOnScreen();
+   pD->Move(-1, 0);
+   pD->Show();
    Hide();
 
    mBatchCommands.ReadChain(name);
    for (i = 0; i < (int)files.GetCount(); i++) {
-      wxWindowDisabler wd(&d);
+      wxWindowDisabler wd(pD);
       if (i > 0) {
          //Clear the arrow in previous item.
          mList->SetItemImage(i - 1, 0, 0);
@@ -341,7 +361,7 @@ void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
          break;
       }
 
-      if (!d.IsShown() || mAbort) {
+      if (!pD->IsShown() || mAbort) {
          break;
       }
       UndoManager *um = project->GetUndoManager();
@@ -351,12 +371,37 @@ void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
    }
    project->OnRemoveTracks();
 
+   // Under Linux an EndModal() here crashes (Bug #1221).
+   // But sending a close message instead is OK.
+#if !defined(__WXMAC__)
+   wxCloseEvent Evt;
+   Evt.SetId( wxID_OK );
+   Evt.SetEventObject( this);
+   ProcessWindowEvent( Evt );
+#else
    EndModal(wxID_OK);
+#endif 
+
+   // Raise myself again, and the parent window with me
+   Show();
 }
 
 void BatchProcessDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
 {
+#if !defined(__WXMAC__)
+   // It is possible that we could just do EndModal()
+   // here even on Linux.  However, we know the alternative way of
+   // closing works, if we are hidden, so we hide and then do that.
+   Hide();
+   // Under Linux an EndModal() here potentially crashes (Bug #1221).
+   // But sending a close message instead is OK.
+   wxCloseEvent Evt;
+   Evt.SetId( wxID_CANCEL );
+   Evt.SetEventObject( this);
+   ProcessWindowEvent( Evt );
+#else
    EndModal(wxID_CANCEL);
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////

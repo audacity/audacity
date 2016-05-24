@@ -82,7 +82,7 @@ static int iBitrates[] = {
    192, 224, 256, 320, 384
 };
 
-class ExportMP2Options : public wxPanel
+class ExportMP2Options final : public wxPanel
 {
 public:
    ExportMP2Options(wxWindow *parent, int format);
@@ -164,29 +164,28 @@ bool ExportMP2Options::TransferDataFromWindow()
 // ExportMP2
 //----------------------------------------------------------------------------
 
-class ExportMP2 : public ExportPlugin
+class ExportMP2 final : public ExportPlugin
 {
 public:
 
    ExportMP2();
-   void Destroy();
 
    // Required
 
    wxWindow *OptionsCreate(wxWindow *parent, int format);
    int Export(AudacityProject *project,
                int channels,
-               wxString fName,
+               const wxString &fName,
                bool selectedOnly,
                double t0,
                double t1,
                MixerSpec *mixerSpec = NULL,
-               Tags *metadata = NULL,
-               int subformat = 0);
+               const Tags *metadata = NULL,
+               int subformat = 0) override;
 
 private:
 
-   int AddTags(AudacityProject *project, char **buffer, bool *endOfFile, Tags *tags);
+   int AddTags(AudacityProject *project, char **buffer, bool *endOfFile, const Tags *tags);
 #ifdef USE_LIBID3TAG
    void AddFrame(struct id3_tag *tp, const wxString & n, const wxString & v, const char *name);
 #endif
@@ -204,20 +203,15 @@ ExportMP2::ExportMP2()
    SetDescription(_("MP2 Files"),0);
 }
 
-void ExportMP2::Destroy()
-{
-   delete this;
-}
-
 int ExportMP2::Export(AudacityProject *project,
-               int channels, wxString fName,
-               bool selectionOnly, double t0, double t1, MixerSpec *mixerSpec, Tags *metadata,
-               int WXUNUSED(subformat))
+   int channels, const wxString &fName,
+   bool selectionOnly, double t0, double t1, MixerSpec *mixerSpec, const Tags *metadata,
+   int WXUNUSED(subformat))
 {
    bool stereo = (channels == 2);
    long bitrate = gPrefs->Read(wxT("/FileFormats/MP2Bitrate"), 160);
    double rate = project->GetRate();
-   TrackList *tracks = project->GetTracks();
+   const TrackList *tracks = project->GetTracks();
 
    wxLogNull logNo;             /* temporarily disable wxWidgets error messages */
 
@@ -227,7 +221,7 @@ int ExportMP2::Export(AudacityProject *project,
    twolame_set_in_samplerate(encodeOptions, (int)(rate + 0.5));
    twolame_set_out_samplerate(encodeOptions, (int)(rate + 0.5));
    twolame_set_bitrate(encodeOptions, bitrate);
-   twolame_set_num_channels(encodeOptions, stereo ? 2:1);
+   twolame_set_num_channels(encodeOptions, stereo ? 2 : 1);
 
    if (twolame_init_params(encodeOptions) != 0)
    {
@@ -253,56 +247,52 @@ int ExportMP2::Export(AudacityProject *project,
    bool endOfFile;
    id3len = AddTags(project, &id3buffer, &endOfFile, metadata);
    if (id3len && !endOfFile)
-     outFile.Write(id3buffer, id3len);
+      outFile.Write(id3buffer, id3len);
 
    // Values taken from the twolame simple encoder sample
    const int pcmBufferSize = 9216 / 2; // number of samples
-   const int mp2BufferSize = 16384 ; // bytes
+   const int mp2BufferSize = 16384; // bytes
 
    // We allocate a buffer which is twice as big as the
    // input buffer, which should always be enough.
    // We have to multiply by 4 because one sample is 2 bytes wide!
    unsigned char* mp2Buffer = new unsigned char[mp2BufferSize];
 
-   int numWaveTracks;
-   WaveTrack **waveTracks;
-   tracks->GetWaveTracks(selectionOnly, &numWaveTracks, &waveTracks);
-   Mixer *mixer = CreateMixer(numWaveTracks, waveTracks,
-                            tracks->GetTimeTrack(),
-                            t0, t1,
-                            stereo? 2: 1, pcmBufferSize, true,
-                            rate, int16Sample, true, mixerSpec);
-   delete [] waveTracks;
-
-   ProgressDialog *progress = new ProgressDialog(wxFileName(fName).GetName(),
-      selectionOnly ?
-      wxString::Format(_("Exporting selected audio at %ld kbps"), bitrate) :
-      wxString::Format(_("Exporting entire file at %ld kbps"), bitrate));
-
+   const WaveTrackConstArray waveTracks =
+      tracks->GetWaveTrackConstArray(selectionOnly, false);
    int updateResult = eProgressSuccess;
-   while(updateResult == eProgressSuccess) {
-      sampleCount pcmNumSamples = mixer->Process(pcmBufferSize);
+   {
+      auto mixer = CreateMixer(waveTracks,
+         tracks->GetTimeTrack(),
+         t0, t1,
+         stereo ? 2 : 1, pcmBufferSize, true,
+         rate, int16Sample, true, mixerSpec);
 
-      if (pcmNumSamples == 0)
-         break;
+      ProgressDialog progress(wxFileName(fName).GetName(),
+         selectionOnly ?
+         wxString::Format(_("Exporting selected audio at %ld kbps"), bitrate) :
+         wxString::Format(_("Exporting entire file at %ld kbps"), bitrate));
 
-      short *pcmBuffer = (short *)mixer->GetBuffer();
+      while (updateResult == eProgressSuccess) {
+         sampleCount pcmNumSamples = mixer->Process(pcmBufferSize);
 
-      int mp2BufferNumBytes = twolame_encode_buffer_interleaved(
+         if (pcmNumSamples == 0)
+            break;
+
+         short *pcmBuffer = (short *)mixer->GetBuffer();
+
+         int mp2BufferNumBytes = twolame_encode_buffer_interleaved(
             encodeOptions,
             pcmBuffer,
             pcmNumSamples,
             mp2Buffer,
             mp2BufferSize);
 
-      outFile.Write(mp2Buffer, mp2BufferNumBytes);
+         outFile.Write(mp2Buffer, mp2BufferNumBytes);
 
-      updateResult = progress->Update(mixer->MixGetCurrentTime()-t0, t1-t0);
+         updateResult = progress.Update(mixer->MixGetCurrentTime() - t0, t1 - t0);
+      }
    }
-
-   delete progress;
-
-   delete mixer;
 
    int mp2BufferNumBytes = twolame_encode_flush(
       encodeOptions,
@@ -334,17 +324,19 @@ int ExportMP2::Export(AudacityProject *project,
 
 wxWindow *ExportMP2::OptionsCreate(wxWindow *parent, int format)
 {
-   return new ExportMP2Options(parent, format);
+   wxASSERT(parent); // to justify safenew
+   return safenew ExportMP2Options(parent, format);
 }
 
 // returns buffer len; caller frees
-int ExportMP2::AddTags(AudacityProject * WXUNUSED(project), char **buffer, bool *endOfFile, Tags *tags)
+int ExportMP2::AddTags(AudacityProject * WXUNUSED(project), char **buffer, bool *endOfFile, const Tags *tags)
 {
 #ifdef USE_LIBID3TAG
    struct id3_tag *tp = id3_tag_new();
 
-   wxString n, v;
-   for (bool cont = tags->GetFirst(n, v); cont; cont = tags->GetNext(n, v)) {
+   for (const auto &pair : tags->GetRange()) {
+      const auto &n = pair.first;
+      const auto &v = pair.second;
       const char *name = "TXXX";
 
       if (n.CmpNoCase(TAG_TITLE) == 0) {
@@ -443,9 +435,9 @@ void ExportMP2::AddFrame(struct id3_tag *tp, const wxString & n, const wxString 
 }
 #endif
 
-ExportPlugin *New_ExportMP2()
+movable_ptr<ExportPlugin> New_ExportMP2()
 {
-   return new ExportMP2();
+   return make_movable<ExportMP2>();
 }
 
 #endif // #ifdef USE_LIBTWOLAME

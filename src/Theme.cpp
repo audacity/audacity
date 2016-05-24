@@ -226,7 +226,7 @@ void Theme::ApplyUpdatedImages()
    AudacityProject *p = GetActiveProject();
    for( int ii = 0; ii < ToolBarCount; ++ii )
    {
-      ToolBar *pToolBar = p->mToolManager->GetToolBar(ii);
+      ToolBar *pToolBar = p->GetToolManager()->GetToolBar(ii);
       if( pToolBar )
          pToolBar->ReCreateButtons();
    }
@@ -301,7 +301,7 @@ void ThemeBase::LoadThemeAtStartUp( bool bLookForExternalFiles )
       // code that follows...
       //
       // However, I think it is better to get the user to
-      // build a new image cache, which they can do easily
+      // build a NEW image cache, which they can do easily
       // from the Theme preferences tab.
 #if 0
       // and now add any available component images.
@@ -383,7 +383,7 @@ void ThemeBase::RegisterImage( int &iIndex, const wxImage &Image, const wxString
    wxASSERT( iIndex == -1 ); // Don't initialise same bitmap twice!
    mImages.Add( Image );
 
-#ifdef __WXMAC__
+#ifdef __APPLE__
    // On Mac, bitmaps with alpha don't work.
    // So we convert to a mask and use that.
    // It isn't quite as good, as alpha gives smoother edges.
@@ -434,7 +434,7 @@ void FlowPacker::SetNewGroup( int iGroupSize )
 
 void FlowPacker::GetNextPosition( int xSize, int ySize )
 {
-   // if the height has increased, then we are on a new group.
+   // if the height has increased, then we are on a NEW group.
    if(( ySize > myHeight )||(mFlags != mOldFlags ))
    {
       SetNewGroup( ((mFlags & resFlagPaired)!=0) ? 2 : 1 );
@@ -477,7 +477,7 @@ void FlowPacker::RectMid( int &x, int &y )
 /// The trick used here is that wxWidgets can write a PNG image to a stream.
 /// By writing to a custom stream, we get to see each byte of data in turn, convert
 /// it to text, put in commas, and then write that out to our own text stream.
-class SourceOutputStream : public wxOutputStream
+class SourceOutputStream final : public wxOutputStream
 {
 public:
    SourceOutputStream(){;};
@@ -485,7 +485,7 @@ public:
    virtual ~SourceOutputStream();
 
 protected:
-   virtual size_t OnSysWrite(const void *buffer, size_t bufsize);
+   size_t OnSysWrite(const void *buffer, size_t bufsize) override;
    wxFile File;
    int nBytes;
 };
@@ -619,7 +619,7 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
    // IF nBinarySave, THEN saving to a normal PNG file.
    if( bBinarySave )
    {
-      wxString FileName = FileNames::ThemeCachePng();
+      const wxString &FileName = FileNames::ThemeCachePng();
 
       // Perhaps we should prompt the user if they are overwriting
       // an existing theme cache?
@@ -650,7 +650,7 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
    else
    {
       SourceOutputStream OutStream;
-      wxString FileName = FileNames::ThemeCacheAsCee( );
+      const wxString &FileName = FileNames::ThemeCacheAsCee( );
       if( !OutStream.OpenFile( FileName ))
       {
          wxMessageBox(
@@ -684,7 +684,7 @@ void ThemeBase::WriteImageMap( )
    int i;
    mFlow.Init( ImageCacheWidth );
 
-   wxFFile File( FileNames::ThemeCacheHtm(), wxT("wb") );// I'll put in new lines explicitly.
+   wxFFile File( FileNames::ThemeCacheHtm(), wxT("wb") );// I'll put in NEW lines explicitly.
    if( !File.IsOpened() )
       return;
 
@@ -791,7 +791,7 @@ bool ThemeBase::ReadImageCache( bool bBinaryRead, bool bOkIfNotFound)
    // IF bBinary read THEN a normal read from a PNG file
    if(  bBinaryRead )
    {
-      wxString FileName = FileNames::ThemeCachePng();
+      const wxString &FileName = FileNames::ThemeCachePng();
       if( !wxFileExists( FileName ))
       {
          if( bOkIfNotFound )
@@ -822,7 +822,7 @@ bool ThemeBase::ReadImageCache( bool bBinaryRead, bool bOkIfNotFound)
          // If we get this message, it means that the data in file
          // was not a valid png image.
          // Most likely someone edited it by mistake,
-         // Or some experiment is being tried with new formats for it.
+         // Or some experiment is being tried with NEW formats for it.
          wxMessageBox(_("Audacity could not read its default theme.\nPlease report the problem."));
          return false;
       }
@@ -856,16 +856,16 @@ bool ThemeBase::ReadImageCache( bool bBinaryRead, bool bOkIfNotFound)
       mFlow.GetNextPosition( iColSize, iColSize );
       mFlow.RectMid( x, y );
       // Only change the colour if the alpha is opaque.
-      // This allows us to add new colours more easily.
+      // This allows us to add NEW colours more easily.
       if( ImageCache.GetAlpha(x,y ) > 128 )
       {
          TempColour = wxColour(
             ImageCache.GetRed( x,y),
             ImageCache.GetGreen( x,y),
             ImageCache.GetBlue(x,y));
-         /// \todo revisit this hack which makes adding new colours easier
+         /// \todo revisit this hack which makes adding NEW colours easier
          /// but which prevents a colour of (1,1,1) from being added.
-         /// find an alternative way to make adding new colours easier.
+         /// find an alternative way to make adding NEW colours easier.
          /// e.g. initialise the background to translucent, perhaps.
          if( TempColour != wxColour(1,1,1) )
             mColours[i] = TempColour;

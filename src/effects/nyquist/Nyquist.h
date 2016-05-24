@@ -61,52 +61,52 @@ public:
 
 WX_DECLARE_USER_EXPORTED_OBJARRAY(NyqControl,  NyqControlArray, AUDACITY_DLL_API);
 
-class AUDACITY_DLL_API NyquistEffect : public Effect
+class AUDACITY_DLL_API NyquistEffect final : public Effect
 {
 public:
 
    /** @param fName File name of the Nyquist script defining this effect. If
     * an empty string, then prompt the user for the Nyquist code to interpret.
     */
-   NyquistEffect(wxString fName);
+   NyquistEffect(const wxString &fName);
    virtual ~NyquistEffect();
 
    // IdentInterface implementation
 
-   virtual wxString GetPath();
-   virtual wxString GetSymbol();
-   virtual wxString GetName();
-   virtual wxString GetVendor();
-   virtual wxString GetVersion();
-   virtual wxString GetDescription();
+   wxString GetPath() override;
+   wxString GetSymbol() override;
+   wxString GetName() override;
+   wxString GetVendor() override;
+   wxString GetVersion() override;
+   wxString GetDescription() override;
 
    // EffectIdentInterface implementation
 
-   virtual EffectType GetType();
-   virtual wxString GetFamily();
-   virtual bool IsInteractive();
-   virtual bool IsDefault();
+   EffectType GetType() override;
+   wxString GetFamily() override;
+   bool IsInteractive() override;
+   bool IsDefault() override;
 
    // EffectClientInterface implementation
 
-   virtual bool GetAutomationParameters(EffectAutomationParameters & parms);
-   virtual bool SetAutomationParameters(EffectAutomationParameters & parms);
+   bool GetAutomationParameters(EffectAutomationParameters & parms) override;
+   bool SetAutomationParameters(EffectAutomationParameters & parms) override;
 
    // Effect implementation
    
-   virtual bool Init();
-   virtual bool CheckWhetherSkipEffect();
-   virtual bool Process();
-   virtual bool ShowInterface(wxWindow *parent, bool forceModal = false);
-   virtual void PopulateOrExchange(ShuttleGui & S);
-   virtual bool TransferDataToWindow();
-   virtual bool TransferDataFromWindow();
+   bool Init() override;
+   bool CheckWhetherSkipEffect() override;
+   bool Process() override;
+   bool ShowInterface(wxWindow *parent, bool forceModal = false) override;
+   void PopulateOrExchange(ShuttleGui & S) override;
+   bool TransferDataToWindow() override;
+   bool TransferDataFromWindow() override;
 
    // NyquistEffect implementation
 
    // For Nyquist Workbench support
    void RedirectOutput();
-   void SetCommand(wxString cmd);
+   void SetCommand(const wxString &cmd);
    void Continue();
    void Break();
    void Stop();
@@ -152,10 +152,10 @@ private:
    void ParseFile();
    bool ParseCommand(const wxString & cmd);
    bool ParseProgram(wxInputStream & stream);
-   void Parse(wxString line);
+   void Parse(const wxString &line);
 
-   wxString UnQuote(wxString s);
-   double GetCtrlValue(wxString s);
+   wxString UnQuote(const wxString &s);
+   double GetCtrlValue(const wxString &s);
 
    void OnLoad(wxCommandEvent & evt);
    void OnSave(wxCommandEvent & evt);
@@ -180,6 +180,7 @@ private:
    bool              mCompiler;
    bool              mIsSal;
    bool              mExternal;
+   bool              mIsSpectral;
    /** True if the code to execute is obtained interactively from the user via
     * the "Nyquist Prompt", false for all other effects (lisp code read from
     * files)
@@ -198,6 +199,7 @@ private:
    bool              mEnablePreview;
    bool              mDebug;
    bool              mRedirectOutput;
+   bool              mProjectChanged;
    wxString          mDebugOutput;
 
    int               mVersion;
@@ -218,11 +220,11 @@ private:
    double            mProgressTot;
    double            mScale;
 
-   samplePtr         mCurBuffer[2];
+   SampleBuffer      mCurBuffer[2];
    sampleCount       mCurBufferStart[2];
    sampleCount       mCurBufferLen[2];
 
-   WaveTrack         *mOutputTrack[2];
+   std::unique_ptr<WaveTrack> mOutputTrack[2];
 
    wxArrayString     mCategories;
 
@@ -240,13 +242,13 @@ private:
    friend class NyquistEffectsModule;
 };
 
-class NyquistOutputDialog : public wxDialog
+class NyquistOutputDialog final : public wxDialog
 {
 public:
    NyquistOutputDialog(wxWindow * parent, wxWindowID id,
                        const wxString & title,
                        const wxString & prompt,
-                       wxString message);
+                       const wxString &message);
 
 private:
    void OnOk(wxCommandEvent & event);

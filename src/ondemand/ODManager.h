@@ -40,7 +40,7 @@ int CompareNoCaseFileName(const wxString& first, const wxString& second);
 /// number of threads.
 class WaveTrack;
 class ODWaveTrackTaskQueue;
-class ODManager
+class ODManager final
 {
  public:
    ///Gets the singleton instance - this is a function pointer that points to one of the below two instance calls.
@@ -70,7 +70,7 @@ class ODManager
    ///removes a wavetrack and notifies its associated tasks to stop using its reference.
    void RemoveWaveTrack(WaveTrack* track);
 
-   ///if it shares a queue/task, creates a new queue/task for the track, and removes it from any previously existing tasks.
+   ///if it shares a queue/task, creates a NEW queue/task for the track, and removes it from any previously existing tasks.
    void MakeWaveTrackIndependent(WaveTrack* track);
 
    ///attach the track in question to another, already existing track's queues and tasks.  Remove the task/tracks.
@@ -106,19 +106,25 @@ class ODManager
    ///Get Total Number of Tasks.
    int GetTotalNumTasks();
 
-   //Pause/unpause all OD Tasks.  Does not occur immediately.
-   static void Pause(bool pause = true);
-   static void Resume();
-
-   static void LockLibSndFileMutex();
-   static void UnlockLibSndFileMutex();
+   // RAII object for pausing and resuming..
+   class Pauser
+   {
+      //Pause/unpause all OD Tasks.  Does not occur immediately.
+      static void Pause(bool pause = true);
+      static void Resume();
+   public:
+      Pauser() { Pause(); }
+      ~Pauser() { Resume(); }
+      Pauser(const Pauser&) PROHIBITED;
+      Pauser &operator= (const Pauser&) PROHIBITED;
+   };
 
 
 
   protected:
    //private constructor - Singleton.
    ODManager();
-   //private constructor - delete with static method Quit()
+   //private constructor - DELETE with static method Quit()
    virtual ~ODManager();
    ///Launches a thread for the manager and starts accepting Tasks.
    void Init();
@@ -126,7 +132,7 @@ class ODManager
    ///Start the main loop for the manager.
    void Start();
 
-   ///Remove references in our array to Tasks that have been completed/Schedule new ones
+   ///Remove references in our array to Tasks that have been completed/Schedule NEW ones
    void UpdateQueues();
 
    //instance
@@ -212,7 +218,7 @@ class ODManagerHelperThread {
    int mPriority;
 };
 #else
-   class ODManagerHelperThread : public wxThread
+   class ODManagerHelperThread final : public wxThread
    {
       public:
       ///Constructs a ODTaskThread

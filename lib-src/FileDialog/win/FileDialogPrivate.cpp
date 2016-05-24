@@ -1175,7 +1175,7 @@ void FileDialog::Disabler::Exit(wxDialog *dialog)
          if (mModalCount == 0)
          {
             ::EnableWindow(mHwnd, TRUE);
-            ::SetWindowPos(mHwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+            ::SetWindowPos(mHwnd, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
          }
       }
    }

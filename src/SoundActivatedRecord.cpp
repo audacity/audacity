@@ -67,6 +67,9 @@ void SoundActivatedRecord::OnOK(wxCommandEvent & WXUNUSED(event))
 {
    ShuttleGui S( this, eIsSavingToPrefs );
    PopulateOrExchange( S );
+
+   gPrefs->Flush();
+
    EndModal(0);
 }
 

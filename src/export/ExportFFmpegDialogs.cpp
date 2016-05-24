@@ -1621,7 +1621,7 @@ int ExportFFmpegOptions::FetchCompatibleCodecList(const wxChar *fmt, AVCodecID i
          // If it exists, is audio and has encoder
          if (codec != NULL && (codec->type == AVMEDIA_TYPE_AUDIO) && av_codec_is_encoder(codec))
          {
-            // If it was selected - remember it's new index
+            // If it was selected - remember it's NEW index
             if ((id >= 0) && codec->id == id) index = mShownCodecNames.GetCount();
             mShownCodecNames.Add(wxString::FromUTF8(codec->name));
             mShownCodecLongNames.Add(wxString::Format(wxT("%s - %s"),mShownCodecNames.Last().c_str(),wxString::FromUTF8(codec->long_name).c_str()));
@@ -1646,7 +1646,7 @@ int ExportFFmpegOptions::FetchCompatibleCodecList(const wxChar *fmt, AVCodecID i
       }
    }
    // Format is not found - find format in libavformat and add it's default audio codec
-   // This allows us to provide limited support for new formats without modifying the compatibility list
+   // This allows us to provide limited support for NEW formats without modifying the compatibility list
    else if (found == 0)
    {
       wxCharBuffer buf = str.ToUTF8();
@@ -1662,7 +1662,7 @@ int ExportFFmpegOptions::FetchCompatibleCodecList(const wxChar *fmt, AVCodecID i
          }
       }
    }
-   // Show new codec list
+   // Show NEW codec list
    mCodecList->Append(mShownCodecNames);
 
    return index;
@@ -1990,8 +1990,11 @@ void ExportFFmpegOptions::OnOK(wxCommandEvent& WXUNUSED(event))
    if (selcdc > -1) gPrefs->Write(wxT("/FileFormats/FFmpegCodec"),mCodecList->GetString(selcdc));
    if (selfmt > -1) gPrefs->Write(wxT("/FileFormats/FFmpegFormat"),mFormatList->GetString(selfmt));
    gPrefs->Flush();
+
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
+
+   gPrefs->Flush();
 
    EndModal(wxID_OK);
 

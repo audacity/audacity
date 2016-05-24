@@ -44,7 +44,7 @@ enum {
    lastTool = multiTool
 };
 
-class ToolsToolBar:public ToolBar {
+class ToolsToolBar final : public ToolBar {
 
  public:
 
@@ -65,8 +65,8 @@ class ToolsToolBar:public ToolBar {
    const wxChar * GetMessageForTool( int ToolNumber );
 
    void Populate();
-   virtual void Repaint(wxDC * WXUNUSED(dc)) {};
-   virtual void EnableDisableButtons() {};
+   void Repaint(wxDC * WXUNUSED(dc)) override {};
+   void EnableDisableButtons() override {};
 
  private:
 

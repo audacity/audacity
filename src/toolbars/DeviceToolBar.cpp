@@ -93,11 +93,10 @@ void DeviceToolBar::Populate()
 {
    DeinitChildren();
    // Hosts
-   mHost = new wxChoice(this,
+   mHost = safenew wxChoice(this,
                         wxID_ANY,
                         wxDefaultPosition,
                         wxDefaultSize);
-   mHost->SetName(_("Audio Host"));
 
    Add(mHost, 0, wxALIGN_CENTER);
 
@@ -105,38 +104,33 @@ void DeviceToolBar::Populate()
    if( mRecordBitmap == NULL )
       mRecordBitmap = new wxBitmap(theTheme.Bitmap(bmpMic));
 
-   Add(new wxStaticBitmap(this,
+   Add(safenew wxStaticBitmap(this,
                           wxID_ANY,
                           *mRecordBitmap), 0, wxALIGN_CENTER);
 
-   mInput = new wxChoice(this,
+   mInput = safenew wxChoice(this,
                          wxID_ANY,
                          wxDefaultPosition,
                          wxDefaultSize);
-   /* i18n-hint: (noun) It's the device used for recording.*/
-   mInput->SetName(_("Recording Device"));
    Add(mInput, 0, wxALIGN_CENTER);
 
-   mInputChannels = new wxChoice(this,
+   mInputChannels = safenew wxChoice(this,
                          wxID_ANY,
                          wxDefaultPosition,
                          wxDefaultSize);
-   mInputChannels->SetName(_("Recording Channels"));
    Add(mInputChannels, 0, wxALIGN_CENTER);
 
    // Output device
    if( mPlayBitmap == NULL )
       mPlayBitmap = new wxBitmap(theTheme.Bitmap(bmpSpeaker));
-   Add(new wxStaticBitmap(this,
+   Add(safenew wxStaticBitmap(this,
                           wxID_ANY,
                           *mPlayBitmap), 0, wxALIGN_CENTER);
 
-   mOutput = new wxChoice(this,
+   mOutput = safenew wxChoice(this,
                                wxID_ANY,
                                wxDefaultPosition,
                                wxDefaultSize);
-   /* i18n-hint: (noun) It's the device used for playback.*/
-   mOutput->SetName(_("Playback Device"));
    Add(mOutput, 0, wxALIGN_CENTER);
 
 
@@ -174,6 +168,8 @@ void DeviceToolBar::Populate()
                  wxFocusEventHandler(DeviceToolBar::OnFocus),
                  NULL,
                  this);
+
+   SetNames();
 
    RefillCombos();
 }
@@ -347,9 +343,20 @@ void DeviceToolBar::EnableDisableButtons()
    }
 }
 
+void DeviceToolBar::SetNames()
+{
+   /* i18n-hint: (noun) It's the device used for playback.*/
+   mOutput->SetName(_("Playback Device"));
+   /* i18n-hint: (noun) It's the device used for recording.*/
+   mInput->SetName(_("Recording Device"));
+   mHost->SetName(_("Audio Host"));
+   mInputChannels->SetName(_("Recording Channels"));
+}
+
 void DeviceToolBar::RegenerateTooltips()
 {
 #if wxUSE_TOOLTIPS
+   SetNames();
    mOutput->SetToolTip(mOutput->GetName() + wxT(" - ") + mOutput->GetStringSelection());
    mInput->SetToolTip(mInput->GetName() + wxT(" - ") + mInput->GetStringSelection());
    mHost->SetToolTip(mHost->GetName() + wxT(" - ") + mHost->GetStringSelection());

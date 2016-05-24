@@ -11,7 +11,7 @@
 \class ModulePrefs
 \brief A PrefsPanel to enable/disable certain modules.  'Modules' are 
 dynamically linked libraries that modify Audacity.  They are plug-ins 
-with names like mnod-script-pipe that add new features.
+with names like mnod-script-pipe that add NEW features.
 
 *//*******************************************************************/
 
@@ -27,7 +27,7 @@ with names like mnod-script-pipe that add new features.
 
 ////////////////////////////////////////////////////////////////////////////////
 
-/* i18n-hint: Modules are optional extensions to Audacity that add new features.*/
+/* i18n-hint: Modules are optional extensions to Audacity that add NEW features.*/
 ModulePrefs::ModulePrefs(wxWindow * parent)
 :  PrefsPanel(parent, _("Modules"))
 {
@@ -138,8 +138,8 @@ bool ModulePrefs::Apply()
 
 
 // static function that tells us about a module.
-int ModulePrefs::GetModuleStatus( wxString fname ){
-   // Default status is new module, and we will ask once.
+int ModulePrefs::GetModuleStatus(const wxString &fname){
+   // Default status is NEW module, and we will ask once.
    int iStatus = kModuleNew;
 
    wxString ShortName = wxFileName( fname ).GetName();
@@ -152,7 +152,7 @@ int ModulePrefs::GetModuleStatus( wxString fname ){
    return iStatus;
 }
 
-void ModulePrefs::SetModuleStatus( wxString fname, int iStatus ){
+void ModulePrefs::SetModuleStatus(const wxString &fname, int iStatus){
    wxString ShortName = wxFileName( fname ).GetName();
    wxString PrefName = wxString( wxT("/Module/") ) + ShortName.Lower();
    gPrefs->Write( PrefName, iStatus );
@@ -163,7 +163,6 @@ void ModulePrefs::SetModuleStatus( wxString fname, int iStatus ){
 
 PrefsPanel *ModulePrefsFactory::Create(wxWindow *parent)
 {
-   return new ModulePrefs(parent);
+   wxASSERT(parent); // to justify safenew
+   return safenew ModulePrefs(parent);
 }
-
-

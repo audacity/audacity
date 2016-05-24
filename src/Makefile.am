@@ -47,6 +47,7 @@ libaudacity_la_SOURCES = \
 	$(NULL)
 
 audacity_CPPFLAGS = \
+	-std=c++11 \
 	-Wno-deprecated-declarations \
 	-D__STDC_CONSTANT_MACROS \
 	-DLIBDIR=\"$(libdir)\" \
@@ -162,6 +163,7 @@ audacity_SOURCES = \
 	MacroMagic.h \
 	Matrix.cpp \
 	Matrix.h \
+	MemoryX.h \
 	Menus.cpp \
 	Menus.h \
 	Mix.cpp \
@@ -231,6 +233,8 @@ audacity_SOURCES = \
 	TrackPanel.h \
 	TrackPanelAx.cpp \
 	TrackPanelAx.h \
+	TrackPanelCell.h \
+	TrackPanelCellIterator.h \
 	TrackPanelListener.h \
 	TranslatableStringArray.h \
 	UndoManager.cpp \
@@ -246,6 +250,7 @@ audacity_SOURCES = \
 	WaveTrackLocation.h \
 	WrappedType.cpp \
 	WrappedType.h \
+	wxFileNameWrapper.h \
 	commands/AppCommandEvent.cpp \
 	commands/AppCommandEvent.h \
 	commands/BatchEvalCommand.cpp \
@@ -256,6 +261,7 @@ audacity_SOURCES = \
 	commands/CommandBuilder.h \
 	commands/CommandDirectory.cpp \
 	commands/CommandDirectory.h \
+	commands/CommandFunctors.h \
 	commands/CommandHandler.cpp \
 	commands/CommandHandler.h \
 	commands/CommandManager.cpp \
@@ -520,12 +526,20 @@ audacity_SOURCES = \
 	toolbars/ToolsToolBar.h \
 	toolbars/TranscriptionToolBar.cpp \
 	toolbars/TranscriptionToolBar.h \
+	tracks/ui/EditCursorOverlay.cpp \
+	tracks/ui/EditCursorOverlay.h \
+	tracks/ui/PlayIndicatorOverlay.cpp \
+	tracks/ui/PlayIndicatorOverlay.h \
+	tracks/ui/Scrubbing.cpp \
+	tracks/ui/Scrubbing.h \
 	widgets/AButton.cpp \
 	widgets/AButton.h \
 	widgets/ASlider.cpp \
 	widgets/ASlider.h \
 	widgets/AttachableScrollBar.cpp \
 	widgets/AttachableScrollBar.h \
+	widgets/BackedPanel.cpp \
+	widgets/BackedPanel.h \
 	widgets/ErrorDialog.cpp \
 	widgets/ErrorDialog.h \
 	widgets/ExpandingToolBar.cpp \
@@ -554,6 +568,10 @@ audacity_SOURCES = \
 	widgets/NumericTextCtrl.h \
 	widgets/numformatter.cpp \
 	widgets/numformatter.h \
+	widgets/Overlay.cpp \
+	widgets/Overlay.h \
+	widgets/OverlayPanel.cpp \
+	widgets/OverlayPanel.h \
 	widgets/ProgressDialog.cpp \
 	widgets/ProgressDialog.h \
 	widgets/Ruler.cpp \

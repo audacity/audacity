@@ -76,7 +76,7 @@ BEGIN_EVENT_TABLE(PrefsDialog, wxDialog)
 END_EVENT_TABLE()
 
 
-class wxTreebookExt : public wxTreebook
+class wxTreebookExt final : public wxTreebook
 {
 public:
    wxTreebookExt( wxWindow *parent,
@@ -85,8 +85,8 @@ public:
       , mTitlePrefix(titlePrefix)
    {;};
    ~wxTreebookExt(){;};
-   virtual int ChangeSelection(size_t n);
-   virtual int SetSelection(size_t n);
+   int ChangeSelection(size_t n) override;
+   int SetSelection(size_t n) override;
    const wxString mTitlePrefix;
 };
 
@@ -204,8 +204,6 @@ PrefsDialog::PrefsDialog
             wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 , mFactories(factories)
-, mCategories(NULL)
-, mUniquePage(NULL)
 , mTitlePrefix(titlePrefix)
 {
    wxASSERT(factories.size() > 0);
@@ -217,7 +215,7 @@ PrefsDialog::PrefsDialog
    {
       wxASSERT(factories.size() > 0);
       if (!uniquePage) {
-         mCategories = new wxTreebookExt(this, wxID_ANY, mTitlePrefix);
+         mCategories = safenew wxTreebookExt(this, wxID_ANY, mTitlePrefix);
          S.StartHorizontalLay(wxALIGN_LEFT | wxEXPAND, true);
          {
             S.Prop(1);
@@ -407,6 +405,8 @@ void PrefsDialog::OnOK(wxCommandEvent & WXUNUSED(event))
    else
       mUniquePage->Apply();
 
+   gPrefs->Flush();
+
    SavePreferredPage();
 
 #if USE_PORTMIXER
@@ -443,11 +443,10 @@ void PrefsDialog::OnOK(wxCommandEvent & WXUNUSED(event))
 
    WaveformSettings::defaults().LoadPrefs();
 
-   gPrefs->Flush();
    EndModal(true);
 }
 
-void PrefsDialog::SelectPageByName(wxString pageName)
+void PrefsDialog::SelectPageByName(const wxString &pageName)
 {
    if (mCategories) {
       size_t n = mCategories->GetPageCount();

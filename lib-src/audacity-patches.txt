@@ -87,7 +87,7 @@ Patches: maintainer-mode.patch: AM_MAINTAINER_MODE added to configure.ac
                     0001-Add-support-for-Album-and-Track-tags-in-RIFF-files-for-libsndfile-1.0.25.patch for libsndfile 1.0.25,
                     submitted to libsndfile list on August 19 2012.
          autotools.patch: Fix all autotools warnings.
-Upstream Version: 1.0.25
+Upstream Version: 1.0.26
 
 libsoxr
 -------
@@ -159,24 +159,24 @@ portaudio-v19
 -------------
 http://portaudio.com/
 cross-platform audio I/O library version 19, used for 1.3.2 onwards releases
-Version in Audacity SVN: 23rd September 2013 SVN snapshot (revision 1910)
-Patches:
-../portmixer/portaudio.patch	add features needed to make portmixer work
-		Integration by upstream in progress. Will need updating as upstream
-		portaudio moves
-portaudio-srcdir.patch  Adds srcdir handling
-portaudio-v19/wasapi-fix.patch  Patch to WASAPI hostapi that corrects incorrect
-reporting of stream open/running/closed state.
+Version in Audacity Git:  January 04 2016 SVN snapshot (revision 1966).
+Patches applied:
+* ../portmixer/portaudio.patch	add features needed to make portmixer work
+  (Integration by upstream in progress. Will need updating as upstream
+  portaudio moves)
+* portaudio-srcdir.patch  Adds srcdir handling
+* portaudio-v19/wasapi-fix.patch  Patch to WASAPI hostapi that corrects incorrect
+  reporting of stream open/running/closed state.
+* portaudio-v19/wasapi-loopback.patch  Patch to add loopback devices to the WASAPI
+  hostapi.
+* portaudio-v19/jack.patch  Patch to add JACK support to Windows.
 
-portaudio-v19/wasapi-loopback.patch  Patch to add loopback devices to the WASAPI
-hostapi.
+* "Remove aclocal.m4 files" as per https://github.com/audacity/audacity/commit/20c438d.
 
-portaudio-v19/jack.patch  Patch to add JACK support to Windows.
-
-?portaudio/libtool22.patch	Patch from Gentoo to ensure that static libraries
+? portaudio/libtool22.patch	Patch from Gentoo to ensure that static libraries
 are always built, not shared ones, otherwise the assumptions elsewhere in the
 build system break. Not suitable for upstream, what is needed is more
-powerfull autoconf features to pass the right options to portaudio's configure
+powerful autoconf features to pass the right options to portaudio's configure
 script, which suffers from the broken-ness of autoconf's subdirectory support
 
 portmidi

@@ -27,7 +27,7 @@ class wxSizeEvent;
 class SelectionBarListener;
 class NumericTextCtrl;
 
-class SelectionBar:public ToolBar {
+class SelectionBar final : public ToolBar {
 
  public:
 
@@ -36,10 +36,10 @@ class SelectionBar:public ToolBar {
 
    void Create(wxWindow *parent);
 
-   virtual void Populate();
-   virtual void Repaint(wxDC * WXUNUSED(dc)) {};
-   virtual void EnableDisableButtons() {};
-   virtual void UpdatePrefs();
+   void Populate() override;
+   void Repaint(wxDC * WXUNUSED(dc)) override {};
+   void EnableDisableButtons() override {};
+   void UpdatePrefs() override;
 
    void SetTimes(double start, double end, double audio);
    double GetLeftTime();

@@ -27,6 +27,7 @@ in a background thread.
 #include "../BlockFile.h"
 #include "../Project.h"
 
+#include "../MemoryX.h"
 #include <vector>
 #include <wx/wx.h>
 class WaveTrack;
@@ -35,7 +36,7 @@ class WaveTrack;
 DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_ODTASK_COMPLETE, -1)
 
 /// A class representing a modular task to be used with the On-Demand structures.
-class ODTask
+class ODTask /* not final */
 {
  public:
    enum {
@@ -54,7 +55,7 @@ class ODTask
    virtual ~ODTask(){};
 
    //clones everything except information about the tracks.
-   virtual ODTask* Clone()=0;
+   virtual std::unique_ptr<ODTask> Clone() const = 0;
 
    ///Subclasses should override to return respective type.
    virtual unsigned int GetODType(){return eODNone;}
@@ -81,7 +82,7 @@ class ODTask
 
    virtual void StopUsingWaveTrack(WaveTrack* track);
 
-   ///Replaces all instances to a wavetrack with a new one, effectively transferring the task.
+   ///Replaces all instances to a wavetrack with a NEW one, effectively transferring the task.
    ///ODTask has no wavetrack, so it does nothing.  But subclasses that do should override this.
    virtual void ReplaceWaveTrack(WaveTrack* oldTrack,WaveTrack* newTrack);
 
@@ -101,7 +102,7 @@ class ODTask
 
    virtual const char* GetTaskName(){return "ODTask";}
 
-   virtual sampleCount GetDemandSample();
+   virtual sampleCount GetDemandSample() const;
 
    virtual void SetDemandSample(sampleCount sample);
 
@@ -159,7 +160,7 @@ class ODTask
    ODLock     mWaveTrackMutex;
 
    volatile sampleCount mDemandSample;
-   ODLock      mDemandSampleMutex;
+   mutable ODLock      mDemandSampleMutex;
 
    volatile bool mIsRunning;
    ODLock mIsRunningMutex;

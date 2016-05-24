@@ -92,7 +92,7 @@ static void WriteExportFormatPref(int format)
 #define ID_HEADER_CHOICE           7102
 #define ID_ENCODING_CHOICE         7103
 
-class ExportPCMOptions : public wxPanel
+class ExportPCMOptions final : public wxPanel
 {
 public:
 
@@ -168,6 +168,7 @@ ExportPCMOptions::ExportPCMOptions(wxWindow *parent, int selformat)
    PopulateOrExchange(S);
 
    TransferDataToWindow();
+   TransferDataFromWindow();
 }
 
 ExportPCMOptions::~ExportPCMOptions()
@@ -216,6 +217,8 @@ bool ExportPCMOptions::TransferDataFromWindow()
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
 
+   gPrefs->Flush();
+
    WriteExportFormatPref(GetFormat());
 
    return true;
@@ -247,8 +250,9 @@ void ExportPCMOptions::OnHeaderChoice(wxCommandEvent & WXUNUSED(evt))
       bool valid  = ValidatePair(fmt);
       if (valid)
       {
-         mEncodingNames.Add(sf_encoding_index_name(i));
-         mEncodingChoice->Append(sf_encoding_index_name(i));
+         const auto name = sf_encoding_index_name(i);
+         mEncodingNames.Add(name);
+         mEncodingChoice->Append(name);
          mEncodingFormats.Add(enc);
          for (j = 0; j < sfnum; j++)
          {
@@ -266,6 +270,8 @@ void ExportPCMOptions::OnHeaderChoice(wxCommandEvent & WXUNUSED(evt))
    mEncodingFromChoice = sel;
    mEncodingChoice->SetSelection(sel);
    ValidatePair(GetFormat());
+
+   TransferDataFromWindow();
 }
 
 int ExportPCMOptions::GetFormat()
@@ -298,33 +304,33 @@ bool ExportPCMOptions::ValidatePair(int format)
 // ExportPCM Class
 //----------------------------------------------------------------------------
 
-class ExportPCM : public ExportPlugin
+class ExportPCM final : public ExportPlugin
 {
 public:
 
    ExportPCM();
-   void Destroy();
 
    // Required
 
    wxWindow *OptionsCreate(wxWindow *parent, int format);
    int Export(AudacityProject *project,
                int channels,
-               wxString fName,
+               const wxString &fName,
                bool selectedOnly,
                double t0,
                double t1,
                MixerSpec *mixerSpec = NULL,
-               Tags *metadata = NULL,
-               int subformat = 0);
+               const Tags *metadata = NULL,
+               int subformat = 0) override;
    // optional
-   wxString GetExtension(int index = WXSIZEOF(kFormats));
+   wxString GetExtension(int index);
+   bool CheckFileName(wxFileName &filename, int format) override;
 
 private:
 
    char *AdjustString(const wxString & wxStr, int sf_format);
-   bool AddStrings(AudacityProject *project, SNDFILE *sf, Tags *tags, int sf_format);
-   void AddID3Chunk(wxString fName, Tags *tags, int sf_format);
+   bool AddStrings(AudacityProject *project, SNDFILE *sf, const Tags *tags, int sf_format);
+   void AddID3Chunk(wxString fName, const Tags *tags, int sf_format);
 
 };
 
@@ -372,11 +378,6 @@ ExportPCM::ExportPCM()
    SetMaxChannels(255, format);
 }
 
-void ExportPCM::Destroy()
-{
-   delete this;
-}
-
 /**
  *
  * @param subformat Control whether we are doing a "preset" export to a popular
@@ -384,16 +385,16 @@ void ExportPCM::Destroy()
  */
 int ExportPCM::Export(AudacityProject *project,
                        int numChannels,
-                       wxString fName,
+                       const wxString &fName,
                        bool selectionOnly,
                        double t0,
                        double t1,
                        MixerSpec *mixerSpec,
-                       Tags *metadata,
+                       const Tags *metadata,
                        int subformat)
 {
    double       rate = project->GetRate();
-   TrackList   *tracks = project->GetTracks();
+   const TrackList   *tracks = project->GetTracks();
    int sf_format;
 
    if (subformat < 0 || subformat >= WXSIZEOF(kFormats))
@@ -405,153 +406,127 @@ int ExportPCM::Export(AudacityProject *project,
       sf_format = kFormats[subformat].format;
    }
 
-   wxString     formatStr;
-   SF_INFO      info;
-   SNDFILE     *sf = NULL;
-   int          err;
-
-   //This whole operation should not occur while a file is being loaded on OD,
-   //(we are worried about reading from a file being written to,) so we block.
-   //Furthermore, we need to do this because libsndfile is not threadsafe.
-   ODManager::LockLibSndFileMutex();
-   formatStr = sf_header_name(sf_format & SF_FORMAT_TYPEMASK);
-
-   ODManager::UnlockLibSndFileMutex();
-
-   // Use libsndfile to export file
-
-   info.samplerate = (unsigned int)(rate + 0.5);
-   info.frames = (unsigned int)((t1 - t0)*rate + 0.5);
-   info.channels = numChannels;
-   info.format = sf_format;
-   info.sections = 1;
-   info.seekable = 0;
-
-   // If we can't export exactly the format they requested,
-   // try the default format for that header type...
-   if (!sf_format_check(&info))
-      info.format = (info.format & SF_FORMAT_TYPEMASK);
-   if (!sf_format_check(&info)) {
-      wxMessageBox(_("Cannot export audio in this format."));
-      return false;
-   }
-
-   wxFile f;   // will be closed when it goes out of scope
-
-   if (f.Open(fName, wxFile::write)) {
-      // Even though there is an sf_open() that takes a filename, use the one that
-      // takes a file descriptor since wxWidgets can open a file with a Unicode name and
-      // libsndfile can't (under Windows).
-      ODManager::LockLibSndFileMutex();
-      sf = sf_open_fd(f.fd(), SFM_WRITE, &info, FALSE);
-      //add clipping for integer formats.  We allow floats to clip.
-      sf_command(sf, SFC_SET_CLIPPING, NULL,sf_subtype_is_integer(sf_format)?SF_TRUE:SF_FALSE) ;
-      ODManager::UnlockLibSndFileMutex();
-   }
-
-   if (!sf) {
-      wxMessageBox(wxString::Format(_("Cannot export audio to %s"),
-                                    fName.c_str()));
-      return false;
-   }
-   // Retrieve tags if not given a set
-   if (metadata == NULL)
-      metadata = project->GetTags();
-
-    // Install the metata at the beginning of the file (except for
-    // WAV and WAVEX formats)
-    if ((sf_format & SF_FORMAT_TYPEMASK) != SF_FORMAT_WAV &&
-        (sf_format & SF_FORMAT_TYPEMASK) != SF_FORMAT_WAVEX) {
-       if (!AddStrings(project, sf, metadata, sf_format)) {
-          sf_close(sf);
-          return false;
-       }
-   }
-
-   sampleFormat format;
-   if (sf_subtype_more_than_16_bits(info.format))
-      format = floatSample;
-   else
-      format = int16Sample;
-
-   int maxBlockLen = 44100 * 5;
-
    int updateResult = eProgressSuccess;
+   {
+      wxFile f;   // will be closed when it goes out of scope
+      SFFile       sf; // wraps f
 
-   int numWaveTracks;
-   WaveTrack **waveTracks;
-   tracks->GetWaveTracks(selectionOnly, &numWaveTracks, &waveTracks);
-   Mixer *mixer = CreateMixer(numWaveTracks, waveTracks,
-                            tracks->GetTimeTrack(),
-                            t0, t1,
-                            info.channels, maxBlockLen, true,
-                            rate, format, true, mixerSpec);
+      wxString     formatStr;
+      SF_INFO      info;
+      int          err;
 
-   ProgressDialog *progress = new ProgressDialog(wxFileName(fName).GetName(),
-      selectionOnly ?
-      wxString::Format(_("Exporting the selected audio as %s"),
-                       formatStr.c_str()) :
-      wxString::Format(_("Exporting the entire project as %s"),
-                       formatStr.c_str()));
+      //This whole operation should not occur while a file is being loaded on OD,
+      //(we are worried about reading from a file being written to,) so we block.
+      //Furthermore, we need to do this because libsndfile is not threadsafe.
+      formatStr = SFCall<wxString>(sf_header_name, sf_format & SF_FORMAT_TYPEMASK);
 
-   while(updateResult == eProgressSuccess) {
-      sampleCount samplesWritten;
-      sampleCount numSamples = mixer->Process(maxBlockLen);
+      // Use libsndfile to export file
 
-      if (numSamples == 0)
-         break;
+      info.samplerate = (unsigned int)(rate + 0.5);
+      info.frames = (unsigned int)((t1 - t0)*rate + 0.5);
+      info.channels = numChannels;
+      info.format = sf_format;
+      info.sections = 1;
+      info.seekable = 0;
 
-      samplePtr mixed = mixer->GetBuffer();
-
-      ODManager::LockLibSndFileMutex();
-      if (format == int16Sample)
-         samplesWritten = sf_writef_short(sf, (short *)mixed, numSamples);
-      else
-         samplesWritten = sf_writef_float(sf, (float *)mixed, numSamples);
-      ODManager::UnlockLibSndFileMutex();
-
-      if (samplesWritten != numSamples) {
-        char buffer2[1000];
-        sf_error_str(sf, buffer2, 1000);
-        wxMessageBox(wxString::Format(
-           /* i18n-hint: %s will be the error message from libsndfile, which
-            * is usually something unhelpful (and untranslated) like "system
-            * error" */
-           _("Error while writing %s file (disk full?).\nLibsndfile says \"%s\""),
-           formatStr.c_str(),
-           wxString::FromAscii(buffer2).c_str()));
-        break;
-      }
-
-      updateResult = progress->Update(mixer->MixGetCurrentTime()-t0, t1-t0);
-   }
-
-   delete progress;
-
-   delete mixer;
-
-   delete[] waveTracks;
-
-   // Install the WAV metata in a "LIST" chunk at the end of the file
-   if ((sf_format & SF_FORMAT_TYPEMASK) == SF_FORMAT_WAV ||
-       (sf_format & SF_FORMAT_TYPEMASK) == SF_FORMAT_WAVEX) {
-      if (!AddStrings(project, sf, metadata, sf_format)) {
-         sf_close(sf);
+      // If we can't export exactly the format they requested,
+      // try the default format for that header type...
+      if (!sf_format_check(&info))
+         info.format = (info.format & SF_FORMAT_TYPEMASK);
+      if (!sf_format_check(&info)) {
+         wxMessageBox(_("Cannot export audio in this format."));
          return false;
       }
-   }
 
-   ODManager::LockLibSndFileMutex();
-   err = sf_close(sf);
-   ODManager::UnlockLibSndFileMutex();
+      if (f.Open(fName, wxFile::write)) {
+         // Even though there is an sf_open() that takes a filename, use the one that
+         // takes a file descriptor since wxWidgets can open a file with a Unicode name and
+         // libsndfile can't (under Windows).
+         sf.reset(SFCall<SNDFILE*>(sf_open_fd, f.fd(), SFM_WRITE, &info, FALSE));
+         //add clipping for integer formats.  We allow floats to clip.
+         sf_command(sf.get(), SFC_SET_CLIPPING, NULL, sf_subtype_is_integer(sf_format)?SF_TRUE:SF_FALSE) ;
+      }
 
-   if (err) {
-      char buffer[1000];
-      sf_error_str(sf, buffer, 1000);
-      wxMessageBox(wxString::Format
-            /* i18n-hint: %s will be the error message from libsndfile */
-                   (_("Error (file may not have been written): %s"),
-                    buffer));
+      if (!sf) {
+         wxMessageBox(wxString::Format(_("Cannot export audio to %s"),
+                                       fName.c_str()));
+         return false;
+      }
+      // Retrieve tags if not given a set
+      if (metadata == NULL)
+         metadata = project->GetTags();
+
+      // Install the metata at the beginning of the file (except for
+      // WAV and WAVEX formats)
+      if ((sf_format & SF_FORMAT_TYPEMASK) != SF_FORMAT_WAV &&
+          (sf_format & SF_FORMAT_TYPEMASK) != SF_FORMAT_WAVEX) {
+         if (!AddStrings(project, sf.get(), metadata, sf_format)) {
+            return false;
+         }
+      }
+
+      sampleFormat format;
+      if (sf_subtype_more_than_16_bits(info.format))
+         format = floatSample;
+      else
+         format = int16Sample;
+
+      int maxBlockLen = 44100 * 5;
+
+      const WaveTrackConstArray waveTracks =
+      tracks->GetWaveTrackConstArray(selectionOnly, false);
+      {
+         auto mixer = CreateMixer(waveTracks,
+                                  tracks->GetTimeTrack(),
+                                  t0, t1,
+                                  info.channels, maxBlockLen, true,
+                                  rate, format, true, mixerSpec);
+
+         ProgressDialog progress(wxFileName(fName).GetName(),
+                                 selectionOnly ?
+                                 wxString::Format(_("Exporting the selected audio as %s"),
+                                                  formatStr.c_str()) :
+                                 wxString::Format(_("Exporting the entire project as %s"),
+                                                  formatStr.c_str()));
+
+         while (updateResult == eProgressSuccess) {
+            sampleCount samplesWritten;
+            sampleCount numSamples = mixer->Process(maxBlockLen);
+
+            if (numSamples == 0)
+               break;
+
+            samplePtr mixed = mixer->GetBuffer();
+
+            if (format == int16Sample)
+               samplesWritten = SFCall<sf_count_t>(sf_writef_short, sf.get(), (short *)mixed, numSamples);
+            else
+               samplesWritten = SFCall<sf_count_t>(sf_writef_float, sf.get(), (float *)mixed, numSamples);
+
+            if (samplesWritten != numSamples) {
+               char buffer2[1000];
+               sf_error_str(sf.get(), buffer2, 1000);
+               wxMessageBox(wxString::Format(
+                                             /* i18n-hint: %s will be the error message from libsndfile, which
+                                              * is usually something unhelpful (and untranslated) like "system
+                                              * error" */
+                                             _("Error while writing %s file (disk full?).\nLibsndfile says \"%s\""),
+                                             formatStr.c_str(),
+                                             wxString::FromAscii(buffer2).c_str()));
+               break;
+            }
+            
+            updateResult = progress.Update(mixer->MixGetCurrentTime() - t0, t1 - t0);
+         }
+      }
+      
+      // Install the WAV metata in a "LIST" chunk at the end of the file
+      if ((sf_format & SF_FORMAT_TYPEMASK) == SF_FORMAT_WAV ||
+          (sf_format & SF_FORMAT_TYPEMASK) == SF_FORMAT_WAVEX) {
+         if (!AddStrings(project, sf.get(), metadata, sf_format)) {
+            return false;
+         }
+      }
    }
 
    if (((sf_format & SF_FORMAT_TYPEMASK) == SF_FORMAT_AIFF) ||
@@ -658,7 +633,7 @@ char *ExportPCM::AdjustString(const wxString & wxStr, int sf_format)
    return pDest;
 }
 
-bool ExportPCM::AddStrings(AudacityProject * WXUNUSED(project), SNDFILE *sf, Tags *tags, int sf_format)
+bool ExportPCM::AddStrings(AudacityProject * WXUNUSED(project), SNDFILE *sf, const Tags *tags, int sf_format)
 {
    if (tags->HasTag(TAG_TITLE)) {
       char * ascii7Str = AdjustString(tags->GetTag(TAG_TITLE), sf_format);
@@ -735,13 +710,14 @@ bool ExportPCM::AddStrings(AudacityProject * WXUNUSED(project), SNDFILE *sf, Tag
    return true;
 }
 
-void ExportPCM::AddID3Chunk(wxString fName, Tags *tags, int sf_format)
+void ExportPCM::AddID3Chunk(wxString fName, const Tags *tags, int sf_format)
 {
 #ifdef USE_LIBID3TAG
    struct id3_tag *tp = id3_tag_new();
 
-   wxString n, v;
-   for (bool cont = tags->GetFirst(n, v); cont; cont = tags->GetNext(n, v)) {
+   for (const auto &pair : tags->GetRange()) {
+      const auto &n = pair.first;
+      const auto &v = pair.second;
       const char *name = "TXXX";
 
       if (n.CmpNoCase(TAG_TITLE) == 0) {
@@ -871,10 +847,11 @@ void ExportPCM::AddID3Chunk(wxString fName, Tags *tags, int sf_format)
 
 wxWindow *ExportPCM::OptionsCreate(wxWindow *parent, int format)
 {
+   wxASSERT(parent); // to justify safenew
    // default, full user control
    if (format < 0 || format >= WXSIZEOF(kFormats))
    {
-      return new ExportPCMOptions(parent, format);
+      return safenew ExportPCMOptions(parent, format);
    }
 
    return ExportPlugin::OptionsCreate(parent, format);
@@ -892,7 +869,25 @@ wxString ExportPCM::GetExtension(int index)
    }
 }
 
-ExportPlugin *New_ExportPCM()
+bool ExportPCM::CheckFileName(wxFileName &filename, int format)
 {
-   return new ExportPCM();
+   if (format == WXSIZEOF(kFormats) &&
+       IsExtension(filename.GetExt(), format)) {
+      // PRL:  Bug1217
+      // If the user left the extension blank, then the
+      // file dialog will have defaulted the extension, beyond our control,
+      // to the first in the wildcard list or (Linux) the last-saved extension,
+      // ignoring what we try to do with the additional drop-down mHeaderChoice.
+      // Here we can intercept file name processing and impose the correct default.
+      // However this has the consequence that in case an explicit extension was typed,
+      // we override it without asking.
+      filename.SetExt(GetExtension(format));
+   }
+
+   return ExportPlugin::CheckFileName(filename, format);
+}
+
+movable_ptr<ExportPlugin> New_ExportPCM()
+{
+   return make_movable<ExportPCM>();
 }

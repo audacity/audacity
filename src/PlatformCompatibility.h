@@ -36,8 +36,9 @@ public:
    //
    // Get filename and path of executable (e.g. "/usr/bin/audacity" on
    // Linux or "C:\Program Files\Audacity\Audacity.exe" on Windows)
+   // This string is unchanging
    //
-   static wxString GetExecutablePath();
+   static const wxString &GetExecutablePath();
 
    //
    // Audacity treats the / as a file seperator always for Mac OS,

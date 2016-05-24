@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_FREQ_WINDOW__
 #define __AUDACITY_FREQ_WINDOW__
 
-#include <memory>
+#include "MemoryX.h"
 #include <vector>
 #include <wx/brush.h>
 #include <wx/dcmemory.h>
@@ -84,7 +84,7 @@ private:
    std::vector<float> mProcessed;
 };
 
-class FreqGauge : public wxStatusBar
+class FreqGauge final : public wxStatusBar
 {
 public:
    FreqGauge(wxWindow * parent);
@@ -104,7 +104,7 @@ private:
    int mMargin;
 };
 
-class FreqPlot : public wxWindow
+class FreqPlot final : public wxWindow
 {
 public:
    FreqPlot(wxWindow *parent);
@@ -123,14 +123,14 @@ private:
     DECLARE_EVENT_TABLE();
 };
 
-class FreqWindow : public wxDialog
+class FreqWindow final : public wxDialog
 {
 public:
    FreqWindow(wxWindow *parent, wxWindowID id,
               const wxString & title, const wxPoint & pos);
    virtual ~ FreqWindow();
 
-   virtual bool Show( bool show = true );
+   bool Show( bool show = true ) override;
 
 private:
    void GetAudio();
@@ -213,7 +213,7 @@ private:
    int mMouseX;
    int mMouseY;
 
-   std::auto_ptr<SpectrumAnalyst> mAnalyst;
+   std::unique_ptr<SpectrumAnalyst> mAnalyst;
 
    DECLARE_EVENT_TABLE();
 

@@ -12,7 +12,7 @@
 \brief The SplashDialog shows help information for Audacity when
 Audacity starts up.
 
-It was written for the benefit of new users who do not want to
+It was written for the benefit of NEW users who do not want to
 read the manual.  The text of the dialog is kept short to increase the
 chance of it being read.  The content is designed to reduce the
 most commonly asked questions about Audacity.
@@ -65,7 +65,6 @@ SplashDialog::SplashDialog(wxWindow * parent)
 {
    SetName(GetTitle());
    this->SetBackgroundColour(theTheme.Colour( clrAboutBoxBackground ));
-   m_pIcon = NULL;
    m_pLogo = NULL; //v
    ShuttleGui S( this, eIsCreating );
    Populate( S );
@@ -94,16 +93,16 @@ void SplashDialog::Populate( ShuttleGui & S )
    // wxIMAGE_QUALITY_HIGH not supported by wxWidgets 2.6.1, or we would use it here.
    RescaledImage.Rescale( int(LOGOWITHNAME_WIDTH * fScale), int(LOGOWITHNAME_HEIGHT *fScale) );
    wxBitmap RescaledBitmap( RescaledImage );
-   m_pIcon =
-       new wxStaticBitmap(S.GetParent(), -1,
+   wxStaticBitmap *const icon =
+       safenew wxStaticBitmap(S.GetParent(), -1,
                           //*m_pLogo, //v theTheme.Bitmap(bmpAudacityLogoWithName),
                           RescaledBitmap,
                           wxDefaultPosition,
                           wxSize(int(LOGOWITHNAME_WIDTH*fScale), int(LOGOWITHNAME_HEIGHT*fScale)));
 
-   S.Prop(0).AddWindow( m_pIcon );
+   S.Prop(0).AddWindow( icon );
 
-   mpHtml = new LinkingHtmlWindow(S.GetParent(), -1,
+   mpHtml = safenew LinkingHtmlWindow(S.GetParent(), -1,
                                          wxDefaultPosition,
                                          wxSize(506, 280),
                                          wxHW_SCROLLBAR_AUTO | wxSUNKEN_BORDER );
@@ -114,7 +113,7 @@ void SplashDialog::Populate( ShuttleGui & S )
    {
       S.SetBorder( 5 );
       S.Id( DontShowID).AddCheckBox( _("Don't show this again at start up"), bShow ? wxT("false") : wxT("true") );
-      wxButton *ok = new wxButton(S.GetParent(), wxID_OK);
+      wxButton *ok = safenew wxButton(S.GetParent(), wxID_OK);
       ok->SetDefault();
       S.SetBorder( 5 );
       S.Prop(0).AddWindow( ok, wxALIGN_RIGHT| wxALL );
@@ -124,7 +123,6 @@ void SplashDialog::Populate( ShuttleGui & S )
 
 SplashDialog::~SplashDialog()
 {
-   delete m_pIcon;
    delete m_pLogo;
 }
 

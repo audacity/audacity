@@ -135,9 +135,9 @@ ExpandingToolBar::ExpandingToolBar(wxWindow* parent,
    mDragImage(NULL),
    mTopLevelParent(NULL)
 {
-   mMainPanel = new wxPanel(this, -1,
+   mMainPanel = safenew wxPanel(this, -1,
                             wxDefaultPosition, wxSize(1, 1));
-   mExtraPanel = new wxPanel(this, -1,
+   mExtraPanel = safenew wxPanel(this, -1,
                              wxDefaultPosition, wxSize(1, 1));
 
    mGrabber = NULL;
@@ -145,7 +145,7 @@ ExpandingToolBar::ExpandingToolBar(wxWindow* parent,
    ToolBarArea *toolBarParent =
       dynamic_cast<ToolBarArea *>(GetParent());
    if (toolBarParent)
-      mGrabber = new ToolBarGrabber(this, -1, this);
+      mGrabber = safenew ToolBarGrabber(this, -1, this);
 
    /// \todo check whether this is a memory leak (and check similar code)
    wxImage hbar = theTheme.Image(bmpToolBarToggle);
@@ -276,7 +276,7 @@ void ExpandingToolBar::TryAutoCollapse()
 #endif
 }
 
-class ExpandingToolBarEvtHandler : public wxEvtHandler
+class ExpandingToolBarEvtHandler final : public wxEvtHandler
 {
  public:
    ExpandingToolBarEvtHandler(ExpandingToolBar *toolbar,
@@ -286,7 +286,7 @@ class ExpandingToolBarEvtHandler : public wxEvtHandler
       mInheritedEvtHandler = inheritedEvtHandler;
    }
 
-   virtual bool ProcessEvent(wxEvent& evt)
+   bool ProcessEvent(wxEvent& evt) override
    {
       if (mToolBar->IsCursorInWindow())
          mToolBar->TryAutoExpand();
@@ -542,7 +542,7 @@ void ExpandingToolBar::StartMoving()
    ImageRoll tgtImageRoll = ImageRoll(ImageRoll::VerticalRoll,
                                       tgtImage,
                                       magicColor);
-   mTargetPanel = new ImageRollPanel(mAreaParent, -1, tgtImageRoll,
+   mTargetPanel = safenew ImageRollPanel(mAreaParent, -1, tgtImageRoll,
                                      wxDefaultPosition,
                                      wxDefaultSize,
                                      wxTRANSPARENT_WINDOW);
@@ -622,7 +622,7 @@ void ExpandingToolBar::FinishMoving()
    if (!mAreaParent || !mSavedArrangement)
       return;
 
-   delete mTargetPanel;
+   // DELETE mTargetPanel; // I think this is not needed, but unreachable anyway -- PRL
 
    mAreaParent->SetCapturedChild(NULL);
 

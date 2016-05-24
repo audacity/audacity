@@ -129,8 +129,8 @@ wxString EffectToneGen::GetSymbol()
 wxString EffectToneGen::GetDescription()
 {
    return mChirp
-      ? XO("Generates four different types of tone waveform while allowing starting and ending amplitude and frequency")
-      : XO("Generates four different types of tone waveform");
+      ? XO("Generates an ascending or descending tone of one of four types")
+      : XO("Generates a constant frequency tone of one of four types");
 }
 
 // EffectIdentInterface implementation
@@ -395,7 +395,7 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
       }
 
       S.AddPrompt(_("Duration:"));
-      mToneDurationT = new
+      mToneDurationT = safenew
          NumericTextCtrl(NumericConverter::TIME,
                          S.GetParent(),
                          wxID_ANY,

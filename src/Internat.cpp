@@ -50,8 +50,7 @@ void Internat::Init()
 //   wxLogDebug(wxT("Decimal separator set to '%c'"), mDecimalSeparator);
 
    // Setup list of characters that aren't allowed in file names
-   wxFileName tmpFile;
-   forbid = tmpFile.GetForbiddenChars();
+   forbid = wxFileName::GetForbiddenChars();
    for(unsigned int i=0; i < forbid.Length(); i++)
       exclude.Add( forbid.Mid(i, 1) );
 }
@@ -170,7 +169,7 @@ wxString Internat::FormatSize(double size)
 //
 // On Windows, wxString::mb_str() can return a NULL pointer if the
 // conversion to multi-byte fails.  So, based on direction intent,
-// returns a pointer to an empty string or prompts for a new name.
+// returns a pointer to an empty string or prompts for a NEW name.
 //
 char *Internat::VerifyFilename(const wxString &s, bool input)
 {
@@ -183,15 +182,17 @@ char *Internat::VerifyFilename(const wxString &s, bool input)
       }
    }
    else {
-      wxFileName f(name);
+      wxFileName ff(name);
+      wxString ext;
       while ((char *) (const char *)name.mb_str() == NULL) {
          wxMessageBox(_("The specified filename could not be converted due to Unicode character use."));
 
+         ext = ff.GetExt();
          name = FileSelector(_("Specify New Filename:"),
                              wxEmptyString,
                              name,
-                             f.GetExt(),
-                             wxT("*.") + f.GetExt(),
+                             ext,
+                             wxT("*.") + ext,
                              wxFD_SAVE | wxRESIZE_BORDER,
                              wxGetTopLevelParent(NULL));
       }

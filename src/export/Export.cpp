@@ -75,7 +75,6 @@
 //----------------------------------------------------------------------------
 #include <wx/arrimpl.cpp>
 
-WX_DEFINE_USER_EXPORTED_OBJARRAY(ExportPluginArray);
 WX_DEFINE_USER_EXPORTED_OBJARRAY(FormatInfoArray);
 
 ExportPlugin::ExportPlugin()
@@ -93,7 +92,7 @@ bool ExportPlugin::CheckFileName(wxFileName & WXUNUSED(filename), int WXUNUSED(f
   return true;
 }
 
-/** \brief Add a new entry to the list of formats this plug-in can export
+/** \brief Add a NEW entry to the list of formats this plug-in can export
  *
  * To configure the format use SetFormat, SetCanMetaData etc with the index of
  * the format.
@@ -110,11 +109,6 @@ int ExportPlugin::AddFormat()
 int ExportPlugin::GetFormatCount()
 {
    return mFormatInfos.Count();
-}
-
-void ExportPlugin::Destroy()
-{
-   delete this;
 }
 
 /**
@@ -185,7 +179,7 @@ wxString ExportPlugin::GetMask(int index)
    wxString mask = GetDescription(index) + wxT("|");
 
    // Build the mask
-   wxString ext = GetExtension(index);
+   // wxString ext = GetExtension(index);
    wxArrayString exts = GetExtensions(index);
    for (size_t i = 0; i < exts.GetCount(); i++) {
       mask += wxT("*.") + exts[i] + wxT(";");
@@ -204,7 +198,7 @@ bool ExportPlugin::GetCanMetaData(int index)
    return mFormatInfos[index].mCanMetaData;
 }
 
-bool ExportPlugin::IsExtension(wxString & ext, int index)
+bool ExportPlugin::IsExtension(const wxString & ext, int index)
 {
    bool isext = false;
    for (int i = index; i < GetFormatCount(); i = GetFormatCount())
@@ -225,7 +219,8 @@ bool ExportPlugin::DisplayOptions(wxWindow * WXUNUSED(parent), int WXUNUSED(form
 
 wxWindow *ExportPlugin::OptionsCreate(wxWindow *parent, int WXUNUSED(format))
 {
-   wxPanel *p = new wxPanel(parent, wxID_ANY);
+   wxASSERT(parent); // To justify safenew
+   wxPanel *p = safenew wxPanel(parent, wxID_ANY);
    ShuttleGui S(p, eIsCreatingFromPrefs);
 
    S.StartHorizontalLay(wxCENTER);
@@ -241,45 +236,16 @@ wxWindow *ExportPlugin::OptionsCreate(wxWindow *parent, int WXUNUSED(format))
    return p;
 }
 
-int ExportPlugin::Export(AudacityProject *project,
-                          int channels,
-                          wxString fName,
-                          bool selectedOnly,
-                          double t0,
-                          double t1,
-                          MixerSpec *mixerSpec,
-                          Tags * WXUNUSED(metadata),
-                          int subformat)
-{
-   if (project == NULL) {
-      project = GetActiveProject();
-   }
-
-  return DoExport(project, channels, fName, selectedOnly, t0, t1, mixerSpec, subformat);
-}
-
-int ExportPlugin::DoExport(AudacityProject * WXUNUSED(project),
-                            int WXUNUSED(channels),
-                            wxString WXUNUSED(fName),
-                            bool WXUNUSED(selectedOnly),
-                            double WXUNUSED(t0),
-                            double WXUNUSED(t1),
-                            MixerSpec * WXUNUSED(mixerSpec),
-                            int WXUNUSED(subformat))
-{
-   return false;
-}
-
 //Create a mixer by computing the time warp factor
-Mixer* ExportPlugin::CreateMixer(int numInputTracks, WaveTrack **inputTracks,
-         TimeTrack *timeTrack,
+std::unique_ptr<Mixer> ExportPlugin::CreateMixer(const WaveTrackConstArray &inputTracks,
+         const TimeTrack *timeTrack,
          double startTime, double stopTime,
          int numOutChannels, int outBufferSize, bool outInterleaved,
          double outRate, sampleFormat outFormat,
          bool highQuality, MixerSpec *mixerSpec)
 {
    // MB: the stop time should not be warped, this was a bug.
-   return new Mixer(numInputTracks, inputTracks,
+   return std::make_unique<Mixer>(inputTracks,
                   Mixer::WarpOptions(timeTrack),
                   startTime, stopTime,
                   numOutChannels, outBufferSize, outInterleaved,
@@ -327,11 +293,6 @@ Exporter::Exporter()
 
 Exporter::~Exporter()
 {
-   for (size_t i = 0; i < mPlugins.GetCount(); i++) {
-      mPlugins[i]->Destroy();
-   }
-   mPlugins.Clear();
-
    if (mMixerSpec) {
       delete mMixerSpec;
    }
@@ -346,9 +307,9 @@ void Exporter::SetFileDialogTitle( const wxString & DialogTitle )
 int Exporter::FindFormatIndex(int exportindex)
 {
    int c = 0;
-   for (size_t i = 0; i < mPlugins.GetCount(); i++)
+   for (const auto &pPlugin : mPlugins)
    {
-      for (int j = 0; j < mPlugins[i]->GetFormatCount(); j++)
+      for (int j = 0; j < pPlugin->GetFormatCount(); j++)
       {
          if (exportindex == c) return j;
          c++;
@@ -357,12 +318,12 @@ int Exporter::FindFormatIndex(int exportindex)
    return 0;
 }
 
-void Exporter::RegisterPlugin(ExportPlugin *ExportPlugin)
+void Exporter::RegisterPlugin(movable_ptr<ExportPlugin> &&ExportPlugin)
 {
-   mPlugins.Add(ExportPlugin);
+   mPlugins.push_back(std::move(ExportPlugin));
 }
 
-const ExportPluginArray Exporter::GetPlugins()
+const ExportPluginArray &Exporter::GetPlugins()
 {
    return mPlugins;
 }
@@ -392,7 +353,7 @@ bool Exporter::Process(AudacityProject *project, bool selectedOnly, double t0, d
 
    // Let user edit MetaData
    if (mPlugins[mFormat]->GetCanMetaData(mSubFormat)) {
-      if (!(project->GetTags()->ShowEditDialog(project, _("Edit Metadata"), mProject->GetShowId3Dialog()))) {
+      if (!(project->DoEditMetadata(_("Edit Metadata Tags for Export"), _("Exported Tags"), mProject->GetShowId3Dialog()))) {
          return false;
       }
    }
@@ -427,10 +388,12 @@ bool Exporter::Process(AudacityProject *project, int numChannels,
    mT1 = t1;
    mActualName = mFilename;
 
-   for (size_t i = 0; i < mPlugins.GetCount(); i++) {
-      for (int j = 0; j < mPlugins[i]->GetFormatCount(); j++)
+   int i = -1;
+   for (const auto &pPlugin : mPlugins) {
+      ++i;
+      for (int j = 0; j < pPlugin->GetFormatCount(); j++)
       {
-         if (mPlugins[i]->GetFormat(j).IsSameAs(type, false))
+         if (pPlugin->GetFormat(j).IsSameAs(type, false))
          {
             mFormat = i;
             mSubFormat = j;
@@ -459,9 +422,9 @@ bool Exporter::ExamineTracks()
    double earliestBegin = mT1;
    double latestEnd = mT0;
 
-   TrackList *tracks = mProject->GetTracks();
-   TrackListIterator iter1(tracks);
-   Track *tr = iter1.First();
+   const TrackList *tracks = mProject->GetTracks();
+   TrackListConstIterator iter1(tracks);
+   const Track *tr = iter1.First();
 
    while (tr) {
       if (tr->GetKind() == Track::Wave) {
@@ -536,15 +499,19 @@ bool Exporter::GetFilename()
 
    mFilterIndex = 0;
 
-   for (size_t i = 0; i < mPlugins.GetCount(); i++) {
-      for (int j = 0; j < mPlugins[i]->GetFormatCount(); j++)
-      {
-         maskString += mPlugins[i]->GetMask(j) + wxT("|");
-         if (mPlugins[i]->GetFormat(j) == defaultFormat) {
-            mFormat = i;
-            mSubFormat = j;
+   {
+      int i = -1;
+      for (const auto &pPlugin : mPlugins) {
+         ++i;
+         for (int j = 0; j < pPlugin->GetFormatCount(); j++)
+         {
+            maskString += pPlugin->GetMask(j) + wxT("|");
+            if (mPlugins[i]->GetFormat(j) == defaultFormat) {
+               mFormat = i;
+               mSubFormat = j;
+            }
+            if (mFormat == -1) mFilterIndex++;
          }
-         if (mFormat == -1) mFilterIndex++;
       }
    }
    if (mFormat == -1)
@@ -557,6 +524,8 @@ bool Exporter::GetFilename()
    mFilename.SetPath(gPrefs->Read(wxT("/Export/Path"), ::wxGetCwd()));
    mFilename.SetName(mProject->GetName());
    while (true) {
+      // Must reset each iteration
+      mBook = NULL;
 
       FileDialog fd(mProject,
                     mFileDialogTitle,
@@ -587,9 +556,11 @@ bool Exporter::GetFilename()
       mFilterIndex = fd.GetFilterIndex();
 
       int c = 0;
-      for (size_t i = 0; i < mPlugins.GetCount(); i++)
+      int i = -1;
+      for (const auto &pPlugin : mPlugins)
       {
-         for (int j = 0; j < mPlugins[i]->GetFormatCount(); j++)
+         ++i;
+         for (int j = 0; j < pPlugin->GetFormatCount(); j++)
          {
             if (mFilterIndex == c)
             {
@@ -659,16 +630,15 @@ bool Exporter::GetFilename()
       overwritingMissingAlias = false;
       for (size_t i = 0; i < gAudacityProjects.GetCount(); i++) {
          AliasedFileArray aliasedFiles;
-         FindDependencies(gAudacityProjects[i], &aliasedFiles);
-         size_t j;
-         for (j = 0; j< aliasedFiles.GetCount(); j++) {
-            if (mFilename.GetFullPath() == aliasedFiles[j].mFileName.GetFullPath() &&
+         FindDependencies(gAudacityProjects[i], aliasedFiles);
+         for (const auto &aliasedFile : aliasedFiles) {
+            if (mFilename.GetFullPath() == aliasedFile.mFileName.GetFullPath() &&
                 !mFilename.FileExists()) {
                // Warn and return to the dialog
                wxMessageBox(_("You are attempting to overwrite an aliased file that is missing.\n\
-The file cannot be written because the path is needed to restore the original audio to the project.\n\
-Choose File > Check Dependencies to view the locations of all missing files.\n\
-If you still wish to export, please choose a different filename or folder."));
+               The file cannot be written because the path is needed to restore the original audio to the project.\n\
+               Choose File > Check Dependencies to view the locations of all missing files.\n\
+               If you still wish to export, please choose a different filename or folder."));
                overwritingMissingAlias = true;
             }
          }
@@ -739,9 +709,11 @@ void Exporter::DisplayOptions(int index)
 {
    int c = 0;
    int mf = -1, msf = -1;
-   for (size_t i = 0; i < mPlugins.GetCount(); i++)
+   int i = -1;
+   for (const auto &pPlugin : mPlugins)
    {
-      for (int j = 0; j < mPlugins[i]->GetFormatCount(); j++)
+      ++i;
+      for (int j = 0; j < pPlugin->GetFormatCount(); j++)
       {
          if (index == c)
          {
@@ -775,6 +747,7 @@ bool Exporter::CheckMix()
    // and if mixing will occur.
 
    int downMix = gPrefs->Read(wxT("/FileFormats/ExportDownMix"), true);
+   int exportedChannels = mPlugins[mFormat]->SetNumExportChannels();
 
    if (downMix) {
       if (mNumRight > 0 || mNumLeft > 0) {
@@ -790,7 +763,18 @@ bool Exporter::CheckMix()
       int numRight = mNumRight + mNumMono;
 
       if (numLeft > 1 || numRight > 1 || mNumLeft + mNumRight + mNumMono > mChannels) {
-         if (mChannels == 2) {
+         wxString exportFormat = mPlugins[mFormat]->GetFormat(mSubFormat);
+         if (exportFormat != wxT("CL") && exportFormat != wxT("FFMPEG") && exportedChannels == -1)
+            exportedChannels = mChannels;
+
+         if (exportedChannels == 1) {
+            if (ShowWarningDialog(mProject,
+                                  wxT("MixMono"),
+                                  _("Your tracks will be mixed down to a single mono channel in the exported file."),
+                                  true) == wxID_CANCEL)
+               return false;
+         }
+         else if (exportedChannels == 2) {
             if (ShowWarningDialog(mProject,
                                   wxT("MixStereo"),
                                   _("Your tracks will be mixed down to two stereo channels in the exported file."),
@@ -799,8 +783,8 @@ bool Exporter::CheckMix()
          }
          else {
             if (ShowWarningDialog(mProject,
-                                  wxT("MixMono"),
-                                  _("Your tracks will be mixed down to a single mono channel in the exported file."),
+                                  wxT("MixUnknownChannels"),
+                                  _("Your tracks will be mixed down to one exported file according to the encoder settings."),
                                   true) == wxID_CANCEL)
                return false;
          }
@@ -808,9 +792,12 @@ bool Exporter::CheckMix()
    }
    else
    {
+      if (exportedChannels == -1)
+         exportedChannels = mPlugins[mFormat]->GetMaxChannels(mSubFormat);
+
       ExportMixerDialog md(mProject->GetTracks(),
                            mSelectedOnly,
-                           mPlugins[mFormat]->GetMaxChannels(mSubFormat),
+                           exportedChannels,
                            NULL,
                            1,
                            _("Advanced Mixing Options"));
@@ -879,14 +866,14 @@ void Exporter::CreateUserPane(wxWindow *parent)
       {
          S.StartStatic(_("Format Options"), 1);
          {
-            mBook = new wxSimplebook(parent);
+            mBook = safenew wxSimplebook(S.GetParent());
             S.AddWindow(mBook, wxEXPAND);
                                   
-            for (size_t i = 0; i < mPlugins.GetCount(); i++)
+            for (const auto &pPlugin : mPlugins)
             {
-               for (int j = 0; j < mPlugins[i]->GetFormatCount(); j++)
+               for (int j = 0; j < pPlugin->GetFormatCount(); j++)
                {
-                  mBook->AddPage(mPlugins[i]->OptionsCreate(mBook, j), wxEmptyString);
+                  mBook->AddPage(pPlugin->OptionsCreate(mBook, j), wxEmptyString);
                }
             }
          }
@@ -910,6 +897,88 @@ void Exporter::OnFilterChanged(wxFileCtrlEvent & evt)
    }
 
    mBook->ChangeSelection(index);
+}
+
+bool Exporter::ProcessFromTimerRecording(AudacityProject *project,
+                                         bool selectedOnly,
+                                         double t0,
+                                         double t1,
+                                         wxFileName fnFile,
+                                         int iFormat,
+                                         int iSubFormat,
+                                         int iFilterIndex)
+{
+   // Save parms
+   mProject = project;
+   mSelectedOnly = selectedOnly;
+   mT0 = t0;
+   mT1 = t1;
+
+   // Auto Export Parameters
+   mFilename = fnFile;
+   mFormat = iFormat;
+   mSubFormat = iSubFormat;
+   mFilterIndex = iFilterIndex;
+
+   // Gather track information
+   if (!ExamineTracks()) {
+      return false;
+   }
+
+   // Check for down mixing
+   if (!CheckMix()) {
+      return false;
+   }
+
+   // Ensure filename doesn't interfere with project files.
+   if (!CheckFilename()) {
+      return false;
+   }
+
+   // Export the tracks
+   bool success = ExportTracks();
+
+   // Get rid of mixerspec
+   if (mMixerSpec) {
+      delete mMixerSpec;
+      mMixerSpec = NULL;
+   }
+
+   return success;
+}
+
+int Exporter::GetAutoExportFormat() {
+   return mFormat;
+}
+
+int Exporter::GetAutoExportSubFormat() {
+   return mSubFormat;
+}
+
+int Exporter::GetAutoExportFilterIndex() {
+   return mFormat;
+}
+
+wxFileName Exporter::GetAutoExportFileName() {
+   return mFilename;
+}
+
+bool Exporter::SetAutoExportOptions(AudacityProject *project) {
+   mFormat = -1;
+   mProject = project;
+
+   if( GetFilename()==false )
+        return false;
+
+   // Let user edit MetaData
+   if (mPlugins[mFormat]->GetCanMetaData(mSubFormat)) {
+      if (!(project->DoEditMetadata(_("Edit Metadata Tags for Export"),
+                                    _("Exported Tags"), mProject->GetShowId3Dialog()))) {
+         return false;
+      }
+   }
+
+   return true;
 }
 
 //----------------------------------------------------------------------------
@@ -949,7 +1018,7 @@ ExportMixerPanel::~ExportMixerPanel()
 }
 
 //set the font on memDC such that text can fit in specified width and height
-void ExportMixerPanel::SetFont( wxMemoryDC &memDC, wxString text, int width,
+void ExportMixerPanel::SetFont(wxMemoryDC &memDC, const wxString &text, int width,
       int height )
 {
    int l = 0, u = 13, m, w, h;
@@ -1174,7 +1243,7 @@ BEGIN_EVENT_TABLE( ExportMixerDialog,wxDialog )
    EVT_SLIDER( ID_SLIDER_CHANNEL, ExportMixerDialog::OnSlider )
 END_EVENT_TABLE()
 
-ExportMixerDialog::ExportMixerDialog( TrackList *tracks, bool selectedOnly,
+ExportMixerDialog::ExportMixerDialog( const TrackList *tracks, bool selectedOnly,
       int maxNumChannels, wxWindow *parent, wxWindowID id, const wxString &title,
       const wxPoint &position, const wxSize& size, long style ) :
    wxDialog( parent, id, title, position, size, style | wxRESIZE_BORDER )
@@ -1182,9 +1251,9 @@ ExportMixerDialog::ExportMixerDialog( TrackList *tracks, bool selectedOnly,
    SetName(GetTitle());
 
    int numTracks = 0;
-   TrackListIterator iter( tracks );
+   TrackListConstIterator iter( tracks );
 
-   for( Track *t = iter.First(); t; t = iter.Next() )
+   for( const Track *t = iter.First(); t; t = iter.Next() )
    {
       if( t->GetKind() == Track::Wave && ( t->GetSelected() || !selectedOnly ) && !t->GetMute() )
       {
@@ -1204,39 +1273,49 @@ ExportMixerDialog::ExportMixerDialog( TrackList *tracks, bool selectedOnly,
    // state the number of channels - so we assume there are always at least two.
    // The downside is that if someone is exporting to a mono device, the dialog
    // will allow them to output to two channels. Hmm.  We may need to revisit this.
+
    if (maxNumChannels < 2 )
-      maxNumChannels = 2;
+      // STF (April 2016): AMR (narrowband) and MP3 may export 1 channel.
+      // maxNumChannels = 2;
+      maxNumChannels = 1;
    if (maxNumChannels > 32)
       maxNumChannels = 32;
 
-   mMixerSpec = new MixerSpec( numTracks, maxNumChannels );
+   mMixerSpec = new MixerSpec(numTracks, maxNumChannels);
+   
+   wxBoxSizer *vertSizer;
+   {
+      auto uVertSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
+      vertSizer = uVertSizer.get();
 
-   wxBoxSizer *vertSizer = new wxBoxSizer( wxVERTICAL );
+      wxWindow *mixerPanel = safenew ExportMixerPanel(mMixerSpec, mTrackNames, this,
+         ID_MIXERPANEL, wxDefaultPosition, wxSize(400, -1));
+      mixerPanel->SetName(_("Mixer Panel"));
+      vertSizer->Add(mixerPanel, 1, wxEXPAND | wxALIGN_CENTRE | wxALL, 5);
 
-   wxWindow *mixerPanel = new ExportMixerPanel( mMixerSpec, mTrackNames, this,
-         ID_MIXERPANEL, wxDefaultPosition, wxSize( 400, -1 ) );
-   mixerPanel->SetName(_("Mixer Panel"));
-   vertSizer->Add( mixerPanel, 1, wxEXPAND | wxALIGN_CENTRE | wxALL, 5 );
+      {
+         auto horSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
 
-   wxBoxSizer *horSizer = new wxBoxSizer( wxHORIZONTAL );
+         wxString label;
+         label.Printf(_("Output Channels: %2d"), mMixerSpec->GetNumChannels());
+         mChannelsText = safenew wxStaticText(this, -1, label);
+         horSizer->Add(mChannelsText, 0, wxALIGN_LEFT | wxALL, 5);
 
-   wxString label;
-   label.Printf( _( "Output Channels: %2d" ), mMixerSpec->GetNumChannels() );
-   mChannelsText = new wxStaticText( this, -1, label);
-   horSizer->Add( mChannelsText, 0, wxALIGN_LEFT | wxALL, 5 );
+         wxSlider *channels = safenew wxSlider(this, ID_SLIDER_CHANNEL,
+            mMixerSpec->GetNumChannels(), 1, mMixerSpec->GetMaxNumChannels(),
+            wxDefaultPosition, wxSize(300, -1));
+         channels->SetName(label);
+         horSizer->Add(channels, 0, wxEXPAND | wxALL, 5);
 
-   wxSlider *channels = new wxSlider( this, ID_SLIDER_CHANNEL,
-         mMixerSpec->GetNumChannels(), 1, mMixerSpec->GetMaxNumChannels(),
-         wxDefaultPosition, wxSize( 300, -1 ) );
-   channels->SetName(label);
-   horSizer->Add( channels, 0, wxEXPAND | wxALL, 5 );
+         vertSizer->Add(horSizer.release(), 0, wxALIGN_CENTRE | wxALL, 5);
+      }
 
-   vertSizer->Add( horSizer, 0, wxALIGN_CENTRE | wxALL, 5 );
+      vertSizer->Add(CreateStdButtonSizer(this, eCancelButton | eOkButton).release(), 0, wxEXPAND);
 
-   vertSizer->Add( CreateStdButtonSizer(this, eCancelButton|eOkButton), 0, wxEXPAND );
+      SetAutoLayout(true);
+      SetSizer(uVertSizer.release());
+   }
 
-   SetAutoLayout( true );
-   SetSizer( vertSizer );
    vertSizer->Fit( this );
    vertSizer->SetSizeHints( this );
 

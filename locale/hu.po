@@ -9,12 +9,12 @@
 # Balázs Úr <urbalazs@gmail.com>, 2014, 2015.
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 2.0.6\n"
+"Project-Id-Version: audacity 2.1.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2015-09-07 12:40+0100\n"
-"PO-Revision-Date: 2015-06-21 12:03+0200\n"
+"PO-Revision-Date: 2015-09-16 19:09+0200\n"
 "Last-Translator: Balázs Úr <urbalazs@gmail.com>\n"
-"Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
+"Language-Team: Hungarian <openscope at googlegroups dot com>\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,143 +53,130 @@ msgid "Error"
 msgstr "Hiba"
 
 #: lib-src/FileDialog/mac/FileDialogPrivate.mm:483
-#, fuzzy
 msgid "File type:"
-msgstr "&Szűrőtípus:"
+msgstr "Fájltípus:"
 
 #: lib-src/FileDialog/win/FileDialogPrivate.cpp:860
 #, c-format
 msgid "File dialog failed with error code %0lx."
-msgstr ""
+msgstr "A fájl párbeszédablak meghiúsult a következő hibakóddal: %0lx."
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:195
 msgid "&Nyquist Workbench..."
-msgstr ""
+msgstr "&Nyquist munkapad…"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:752
 msgid "&Undo\tCtrl+Z"
-msgstr ""
+msgstr "&Visszavonás\tCtrl+Z"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:753
 msgid "&Redo\tCtrl+Y"
-msgstr ""
+msgstr "Új&ra\tCtrl+Y"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:755
 msgid "Cu&t\tCtrl+X"
-msgstr ""
+msgstr "&Kivágás\tCtrl+X"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:756
 msgid "&Copy\tCtrl+C"
-msgstr ""
+msgstr "&Másolás\tCtrl+C"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:757
-#, fuzzy
 msgid "&Paste\tCtrl+V"
-msgstr "&Beillesztés"
+msgstr "&Beillesztés\tCtrl+V"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:758
 msgid "Cle&ar\tCtrl+L"
-msgstr ""
+msgstr "Tör&lés\tCtrl+L"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:760
-#, fuzzy
 msgid "Select A&ll\tCtrl+A"
-msgstr "Ö&sszes kijelölése"
+msgstr "Ö&sszes kijelölése\tCtrl+A"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:762
 msgid "&Find...\tCtrl+F"
-msgstr ""
+msgstr "&Keresés…\tCtrl+F"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:765
 msgid "&Matching Paren\tF8"
-msgstr ""
+msgstr "&Egyező párok\tF8"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:766
 msgid "&Top S-expr\tF9"
-msgstr ""
+msgstr "&Legfelső S-kif\tF9"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:767
 msgid "&Higher S-expr\tF10"
-msgstr ""
+msgstr "&Magasabb S-kif\tF10"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:768
 msgid "&Previous S-expr\tF11"
-msgstr ""
+msgstr "&Előző S-kif\tF11"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:769
 msgid "&Next S-expr\tF12"
-msgstr ""
+msgstr "&Következő S-kif\tF12"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:770
 msgid "&Go to"
-msgstr ""
+msgstr "&Ugrás"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:776
-#, fuzzy
 msgid "Select &Font..."
-msgstr "&Betűkészlet…"
+msgstr "&Betűkészlet kiválasztása…"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:778
-#, fuzzy
 msgid "Split &Vertically"
-msgstr "Igazítás &függőlegesen"
+msgstr "Felosztás &függőlegesen"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:779
-#, fuzzy
 msgid "Split &Horizontally"
-msgstr "Vízszintes"
+msgstr "Felosztás &vízszintesen"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:781
-#, fuzzy
 msgid "Show S&cript"
-msgstr "Kimenet megjelenítése"
+msgstr "&Parancsfájl megjelenítése"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:782
-#, fuzzy
 msgid "Show &Output"
-msgstr "Kimenet megjelenítése"
+msgstr "&Kimenet megjelenítése"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:785
-#, fuzzy
 msgid "&Large Icons"
-msgstr "Nagy helyiség"
+msgstr "&Nagy ikonok"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:786
 msgid "&Small Icons"
-msgstr ""
+msgstr "&Kis ikonok"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:787
-#, fuzzy
 msgid "Toolbar"
-msgstr "E&szköztárak"
+msgstr "Eszköztár"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:791
 msgid "&Go\tF5"
-msgstr ""
+msgstr "&Ugrás\tF5"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:792
-#, fuzzy
 msgid "&Stop\tF6"
-msgstr "Leállítás"
+msgstr "&Leállítás\tF6"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:796
 #: lib-src/mod-nyq-bench/NyqBench.cpp:799
-#, fuzzy
 msgid "&About"
-msgstr "Névjegy"
+msgstr "&Névjegy"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:922
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1607
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1622
 msgid "Script"
-msgstr ""
+msgstr "Parancsfájl"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:950
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1610
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1619
-#, fuzzy
 msgid "Output"
-msgstr "Hatáskimenet"
+msgstr "Kimenet"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1058
 #: src/effects/nyquist/Nyquist.cpp:2065
@@ -207,7 +194,7 @@ msgstr ""
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1089
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1119
 msgid "Script was not saved."
-msgstr ""
+msgstr "A parancsfájl nem lett elmentve."
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1090
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1120
@@ -225,53 +212,51 @@ msgstr "Nyquist-parancsfájl mentése"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1203
 msgid "Find dialog"
-msgstr ""
+msgstr "Keresés párbeszédablak"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1422
 msgid "Harvey Lubin (logo)"
-msgstr ""
+msgstr "Harvey Lubin (logó)"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1423
 msgid "Tango Icon Gallery (toolbar icons)"
-msgstr ""
+msgstr "Tango ikongaléria (eszköztár ikonok)"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1424
 msgid "Leland Lucius"
-msgstr ""
+msgstr "Leland Lucius"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1425
 msgid "(C) 2009 by Leland Lucius"
-msgstr ""
+msgstr "© Leland Lucius, 2009."
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1426
 msgid ""
 "External Audacity module which provides a simple IDE for writing effects."
 msgstr ""
+"Külső Audacity modul, amely egy egyszerű integrált fejlesztői környezetet "
+"biztosít a hatások írásához."
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1427
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1495
-#, fuzzy
 msgid "Nyquist Effect Workbench"
-msgstr "Nyquist-hatások"
+msgstr "Nyquist-hatás munkapad"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1494
-#, fuzzy
 msgid "No matches found"
-msgstr "Nem találhatók eszközök"
+msgstr "Nincs találat"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1631
 msgid "Code has been modified.  Are you sure?"
-msgstr ""
+msgstr "A kód megváltozott. Biztos benne?"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1645
-#, fuzzy
 msgid "Untitled"
-msgstr "névtelen"
+msgstr "Névtelen"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1651
-#, fuzzy
 msgid "Nyquist Effect Workbench - "
-msgstr "Nyquist-hatások"
+msgstr "Nyquist-hatás munkapad - "
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1715 src/PluginManager.cpp:492
 #: src/prefs/ModulePrefs.cpp:102
@@ -280,46 +265,39 @@ msgstr "Új"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1715
 msgid "New script"
-msgstr ""
+msgstr "Új parancsfájl"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1716
-#, fuzzy
 msgid "Open"
-msgstr "&Megnyitás…"
+msgstr "Megnyitás"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1716
-#, fuzzy
 msgid "Open script"
-msgstr "Legutóbbi megnyitása"
+msgstr "Parancsfájl megnyitása"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1717
-#, fuzzy
 msgid "Save"
-msgstr "&Mentés"
+msgstr "Mentés"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1717
-#, fuzzy
 msgid "Save script"
-msgstr "Nyquist-parancsfájl mentése"
+msgstr "Parancsfájl mentése"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1718
-#, fuzzy
 msgid "Save As"
-msgstr "Mentés másként…"
+msgstr "Mentés másként"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1718
-#, fuzzy
 msgid "Save script as..."
-msgstr "P&rojekt mentése másként…"
+msgstr "Parancsfájl mentése másként…"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1720 src/toolbars/EditToolBar.cpp:204
 msgid "Copy"
 msgstr "Másolás"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1720
-#, fuzzy
 msgid "Copy to clipboard"
-msgstr "Kivágás a vágólapra"
+msgstr "Másolás a vágólapra"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1721 src/Menus.cpp:3862
 #: src/toolbars/EditToolBar.cpp:203
@@ -327,7 +305,6 @@ msgid "Cut"
 msgstr "Kivágás"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1721
-#, fuzzy
 msgid "Cut to clipboard"
 msgstr "Kivágás a vágólapra"
 
@@ -338,29 +315,24 @@ msgid "Paste"
 msgstr "Beillesztés"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1722
-#, fuzzy
 msgid "Paste from clipboard"
-msgstr "Beillesztve a vágólapról"
+msgstr "Beillesztés a vágólapról"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1723
-#, fuzzy
 msgid "Clear"
-msgstr "&Törlés"
+msgstr "Törlés"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1723
-#, fuzzy
 msgid "Clear selection"
-msgstr "Kijelölés &mérése"
+msgstr "Kijelölés törlése"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1724
-#, fuzzy
 msgid "Select All"
-msgstr "Ö&sszes kijelölése"
+msgstr "Összes kijelölése"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1724
-#, fuzzy
 msgid "Select all text"
-msgstr "Ö&sszes kijelölése"
+msgstr "Összes szöveg kijelölése"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1726 src/prefs/KeyConfigPrefs.cpp:885
 #: src/toolbars/EditToolBar.cpp:146 src/toolbars/EditToolBar.cpp:208
@@ -369,9 +341,8 @@ msgid "Undo"
 msgstr "Visszavonás"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1726
-#, fuzzy
 msgid "Undo last change"
-msgstr "Formátum változtatása"
+msgstr "Legutóbbi változtatás visszavonása"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1727 src/prefs/KeyConfigPrefs.cpp:888
 #: src/toolbars/EditToolBar.cpp:148 src/toolbars/EditToolBar.cpp:209
@@ -381,34 +352,31 @@ msgstr "Ismétlés"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1727
 msgid "Redo previous change"
-msgstr ""
+msgstr "Előző változtatás ismétlése"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1729
 msgid "Find"
-msgstr ""
+msgstr "Keresés"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1729
-#, fuzzy
 msgid "Find text"
-msgstr "Hangjegyek &keresése"
+msgstr "Szöveg keresése"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1731
-#, fuzzy
 msgid "Match"
-msgstr "Köteg"
+msgstr "Egyezés"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1731
 msgid "Go to matching paren"
-msgstr ""
+msgstr "Ugrás az egyező párhoz"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1732
-#, fuzzy
 msgid "Top"
-msgstr "tetejére"
+msgstr "Tetejére"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1732
 msgid "Go to top S-expr"
-msgstr ""
+msgstr "Ugrás a legfelső S-kifejezéshez"
 
 #. i18n-hint: a direction.
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1733 src/Menus.cpp:3045
@@ -417,25 +385,23 @@ msgstr "Fel"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1733
 msgid "Go to higher S-expr"
-msgstr ""
+msgstr "Ugrás a magasabb S-kifejezéshez"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1734
-#, fuzzy
 msgid "Previous"
-msgstr "Előző eszköz"
+msgstr "Előző"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1734
 msgid "Go to previous S-expr"
-msgstr ""
+msgstr "Ugrás az előző S-kifejezésre"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1735
-#, fuzzy
 msgid "Next"
-msgstr "Következő eszköz"
+msgstr "Következő"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1735
 msgid "Go to next S-expr"
-msgstr ""
+msgstr "Ugrás a következő S-kifejezésre"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1737 src/Menus.cpp:5781
 #: src/Menus.cpp:5786 src/Menus.cpp:5791 src/effects/Contrast.cpp:220
@@ -444,9 +410,8 @@ msgid "Start"
 msgstr "Kezdés"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1737
-#, fuzzy
 msgid "Start script"
-msgstr "Nyquist-parancsfájl mentése"
+msgstr "Parancsfájl indítása"
 
 #. i18n-hint: (verb) Stop playing audio
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1738 src/Menus.cpp:1119
@@ -456,18 +421,16 @@ msgid "Stop"
 msgstr "Leállítás"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1738
-#, fuzzy
 msgid "Stop script"
-msgstr "Nyquist-parancsfájl mentése"
+msgstr "Parancsfájl leállítása"
 
 #: lib-src/mod-track-panel/TrackPanel2.cpp:54
 msgid "Panel 1"
-msgstr ""
+msgstr "1. panel"
 
 #: lib-src/mod-track-panel/TrackPanel2.cpp:68
-#, fuzzy
 msgid "Diagnostics"
-msgstr "öndiagnosztika futtatása"
+msgstr "Diagnosztikák"
 
 #. i18n-hint: "OK... Audacious" appears on a button at the
 #. * foot of the 'About Audacity' dialog box, after some text to read.
@@ -647,7 +610,7 @@ msgstr "Hanglejátszás és felvétel"
 
 #: src/AboutDialog.cpp:437
 msgid "Cross-platform GUI library"
-msgstr ""
+msgstr "Keresztplatformos GUI könyvtár"
 
 #: src/AboutDialog.cpp:441
 msgid "Features"
@@ -3051,7 +3014,7 @@ msgstr "&Előállítás"
 
 #: src/Menus.cpp:978 src/Menus.cpp:1005 src/Menus.cpp:1029
 msgid "Add / Remove Plug-ins..."
-msgstr ""
+msgstr "Bővítmények hozzáadása / eltávolítása…"
 
 #: src/Menus.cpp:994
 msgid "Effe&ct"
@@ -5234,9 +5197,8 @@ msgid "Ma&ke Stereo Track"
 msgstr "&Sztereósáv készítése"
 
 #: src/TrackPanel.cpp:698
-#, fuzzy
 msgid "R&ight Channel"
-msgstr "Jobb csatorna"
+msgstr "&Jobb csatorna"
 
 #: src/TrackPanel.cpp:699
 msgid "&Left Channel"
@@ -5247,9 +5209,8 @@ msgid "&Mono"
 msgstr "&Monó"
 
 #: src/TrackPanel.cpp:714
-#, fuzzy
 msgid "Split Stereo to &Mono"
-msgstr "Sztereó felosztása mon&óra"
+msgstr "Sztereó felosztása mo&nóra"
 
 #: src/TrackPanel.cpp:715
 msgid "Spl&it Stereo Track"
@@ -5276,19 +5237,16 @@ msgid "&Spectrogram"
 msgstr "&Spektrogram"
 
 #: src/TrackPanel.cpp:761
-#, fuzzy
 msgid "S&pectrogram Settings..."
-msgstr "Spektrogramok"
+msgstr "Sp&ektrogram beállítások…"
 
 #: src/TrackPanel.cpp:769
-#, fuzzy
 msgid "&Format"
-msgstr "Formátum:"
+msgstr "&Formátum"
 
 #: src/TrackPanel.cpp:773
-#, fuzzy
 msgid "&Rate"
-msgstr "Frekvencia beállítása"
+msgstr "&Sebesség"
 
 #: src/TrackPanel.cpp:778
 msgid "Up &Octave"
@@ -5311,16 +5269,14 @@ msgid "L&ogarithmic"
 msgstr "L&ogaritmikus"
 
 #: src/TrackPanel.cpp:792
-#, fuzzy
 msgid "&Range..."
-msgstr "Kezelés…"
+msgstr "&Tartomány…"
 
 #: src/TrackPanel.cpp:793
 msgid "Logarithmic &Interpolation"
 msgstr "Logaritmikus &interpoláció"
 
 #: src/TrackPanel.cpp:808
-#, fuzzy
 msgid "&Name..."
 msgstr "&Név…"
 
@@ -5342,16 +5298,15 @@ msgstr "Sáv mozgatása az &aljára"
 
 #: src/TrackPanel.cpp:826
 msgid "Zoom In\tLeft-Click/Left-Drag"
-msgstr ""
+msgstr "Nagyítás\tBal kattintás/Bal húzás"
 
 #: src/TrackPanel.cpp:827
-#, fuzzy
 msgid "Zoom Out\tShift-Left-Click"
-msgstr "Shift + bal kattintás"
+msgstr "Kicsinyítés\tShift + bal kattintás"
 
 #: src/TrackPanel.cpp:828
 msgid "Zoom to Fit\tShift-Right-Click"
-msgstr ""
+msgstr "Nagyítás kitöltéshez\tShift + jobb kattintás"
 
 #: src/TrackPanel.cpp:1706
 msgid ""
@@ -7121,31 +7076,28 @@ msgid "kHz"
 msgstr "kHz"
 
 #: src/effects/Equalization.cpp:758
-#, fuzzy
 msgid "&EQ Type:"
-msgstr "Típus:"
+msgstr "&EQ típus:"
 
 #: src/effects/Equalization.cpp:766
 msgid "&Draw"
-msgstr ""
+msgstr "&Rajzolás"
 
 #: src/effects/Equalization.cpp:767
 msgid "Draw Curves"
 msgstr "Görbék rajzolása"
 
 #: src/effects/Equalization.cpp:769
-#, fuzzy
 msgid "&Graphic"
-msgstr "&Grafikus EQ"
+msgstr "&Grafika"
 
 #: src/effects/Equalization.cpp:770
 msgid "Graphic EQ"
 msgstr "Grafikus EQ"
 
 #: src/effects/Equalization.cpp:785
-#, fuzzy
 msgid "Interpolation type"
-msgstr "Interpoláció"
+msgstr "Interpoláció típus"
 
 #: src/effects/Equalization.cpp:794
 msgid "Li&near Frequency Scale"
@@ -7168,9 +7120,8 @@ msgid "&Select Curve:"
 msgstr "Görbe &kiválasztása:"
 
 #: src/effects/Equalization.cpp:859
-#, fuzzy
 msgid "Select Curve"
-msgstr "Görbe &kiválasztása:"
+msgstr "Görbe kiválasztása"
 
 #: src/effects/Equalization.cpp:864
 msgid "S&ave/Manage Curves..."
@@ -7185,14 +7136,12 @@ msgid "&Invert"
 msgstr "&Megfordítás"
 
 #: src/effects/Equalization.cpp:871
-#, fuzzy
 msgid "Show g&rid lines"
-msgstr "Rejtett fájlok megjelenítése"
+msgstr "&Rácsvonalak megjelenítése"
 
 #: src/effects/Equalization.cpp:872
-#, fuzzy
 msgid "Show grid lines"
-msgstr "Rejtett fájlok megjelenítése"
+msgstr "Rácsvonalak megjelenítése"
 
 #: src/effects/Equalization.cpp:894
 msgid "&Processing: "
@@ -8077,14 +8026,12 @@ msgid "Feedback in percent"
 msgstr "Visszacsatolás százalékban"
 
 #: src/effects/Phaser.cpp:310 src/effects/Wahwah.cpp:282
-#, fuzzy
 msgid "Output gain (dB):"
-msgstr "&Nedves növekedés (dB):"
+msgstr "Kimeneti növekedés (dB):"
 
 #: src/effects/Phaser.cpp:315 src/effects/Wahwah.cpp:287
-#, fuzzy
 msgid "Output gain (dB)"
-msgstr "&Nedves növekedés (dB):"
+msgstr "Kimeneti növekedés (dB)"
 
 #: src/effects/Phaser.h:30
 msgid "Phaser"
@@ -8130,23 +8077,20 @@ msgid "Repeats the selection the specified number of times"
 msgstr "A megadott alkalommal ismétli a kijelölést"
 
 #: src/effects/Repeat.cpp:178
-#, fuzzy
 msgid "Number of repeats to add:"
-msgstr "Ismétlési gyakoriság száma:"
+msgstr "Hozzáadandó ismétlések száma:"
 
 #: src/effects/Repeat.cpp:185
-#, fuzzy
 msgid "Current selection length: dd:hh:mm:ss"
-msgstr "Új kijelöléshossz: nn:óó:pp:mm"
+msgstr "Jelenlegi kijelöléshossz: nn:óó:pp:mm"
 
 #: src/effects/Repeat.cpp:186
 msgid "New selection length: dd:hh:mm:ss"
 msgstr "Új kijelöléshossz: nn:óó:pp:mm"
 
 #: src/effects/Repeat.cpp:227
-#, fuzzy
 msgid "Current selection length: "
-msgstr "Új kijelölés hossza: "
+msgstr "Jelenlegi kijelöléshossz: "
 
 #: src/effects/Repeat.cpp:237
 msgid "New selection length: "
@@ -8154,7 +8098,7 @@ msgstr "Új kijelölés hossza: "
 
 #: src/effects/Repeat.cpp:240
 msgid "Warning: No repeats."
-msgstr ""
+msgstr "Figyelmeztetés: nincsenek ismétlések."
 
 #: src/effects/Repeat.h:23
 msgid "Repeat"
@@ -8935,18 +8879,17 @@ msgstr "Hangegység hatás beállításai"
 #: src/effects/audiounits/AudioUnitEffect.cpp:319
 #: src/effects/audiounits/AudioUnitEffect.cpp:401
 msgid "Full"
-msgstr ""
+msgstr "Teljes"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:320
 #: src/effects/audiounits/AudioUnitEffect.cpp:405
-#, fuzzy
 msgid "Generic"
-msgstr "&Előállítás"
+msgstr "Általános"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:321
 #: src/effects/audiounits/AudioUnitEffect.cpp:409
 msgid "Basic"
-msgstr ""
+msgstr "Alap"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:347
 msgid ""
@@ -8959,27 +8902,29 @@ msgid "not work for all Audio Unit effects."
 msgstr "működni minden hangegység hatásnál."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:362
-#, fuzzy
 msgid "User Interface"
-msgstr "Felület"
+msgstr "Felhasználói felület"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:365
 msgid ""
 "Select \"Full\" to use the graphical interface if supplied by the Audio Unit."
 msgstr ""
+"Válassza a „Teljes” lehetőséget a grafikus felület használatához, ha a "
+"hangegység biztosítja."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:366
 msgid " Select \"Generic\" to use the system supplied generic interface."
 msgstr ""
+" Válassza az „Általános” lehetőséget a rendszer által biztosított általános "
+"felület használatához."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:367
 msgid " Select \"Basic\" for A basic text-only interface. "
-msgstr ""
+msgstr " Válassza az „Alap” lehetőséget egy alap, csak szöveges felülethez. "
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:372
-#, fuzzy
 msgid "Select &interface"
-msgstr "Kijelölés összehúzása balra"
+msgstr "&Felület kiválasztása"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:453
 msgid "Export Audio Unit Presets"
@@ -9065,9 +9010,8 @@ msgid "&Duration:"
 msgstr "I&dőtartam:"
 
 #: src/effects/lv2/LoadLV2.cpp:101
-#, fuzzy
 msgid "LV2 Effects"
-msgstr "VST-hatások"
+msgstr "LV2-hatások"
 
 #: src/effects/lv2/LoadLV2.cpp:122
 msgid "Provides LV2 Effects support to Audacity"
@@ -9106,11 +9050,13 @@ msgid ""
 "Maximum allowed selection is 2147483647 samples\n"
 "(about 13.5 hours at 44100 Hz sample rate)."
 msgstr ""
+"A kijelölés túl hosszú a Nyquist-kódhoz.\n"
+"A megengedett legnagyobb kijelölés 2147483647 minta\n"
+"(körülbelül 13,5 óra 44100 Hz mintavételezési gyakorisággal)."
 
 #: src/effects/nyquist/Nyquist.cpp:591
-#, fuzzy
 msgid "Nyquist Error"
-msgstr "Nyquist parancssor"
+msgstr "Nyquist hiba"
 
 #: src/effects/nyquist/Nyquist.cpp:682
 msgid "Nyquist"
@@ -9121,9 +9067,8 @@ msgid "Nyquist Output: "
 msgstr "Nyquist-kimenet: "
 
 #: src/effects/nyquist/Nyquist.cpp:1002 src/effects/nyquist/Nyquist.cpp:1005
-#, fuzzy
 msgid "Processing complete."
-msgstr "Feldolgozás: "
+msgstr "Feldolgozás kész."
 
 #: src/effects/nyquist/Nyquist.cpp:1028 src/effects/nyquist/Nyquist.cpp:1037
 msgid "Nyquist returned the value:"
@@ -9262,7 +9207,7 @@ msgstr "Program"
 
 #: src/export/Export.cpp:235
 msgid "No format specific options"
-msgstr ""
+msgstr "Nincsenek formátumspecifikus beállítások"
 
 #: src/export/Export.cpp:303
 msgid "Export Audio"
@@ -9343,9 +9288,8 @@ msgid "Advanced Mixing Options"
 msgstr "Speciális keverési beállítások"
 
 #: src/export/Export.cpp:880
-#, fuzzy
 msgid "Format Options"
-msgstr "Általános beállítások"
+msgstr "Formátumbeállítások"
 
 #: src/export/Export.cpp:1076
 #, c-format
@@ -9589,9 +9533,8 @@ msgid "%.2f kbps"
 msgstr "%.2f kbps"
 
 #: src/export/ExportFFmpegDialogs.cpp:431
-#, fuzzy
 msgid "Open custom FFmpeg format options"
-msgstr "Egyéni FFmpeg exportálás"
+msgstr "Egyéni FFmpeg formátumbeállítások megnyitása"
 
 #: src/export/ExportFFmpegDialogs.cpp:566
 #, c-format
@@ -9617,9 +9560,9 @@ msgid "Preset '%s' does not exist."
 msgstr "A(z) „%s” előbeállítás nem létezik."
 
 #: src/export/ExportFFmpegDialogs.cpp:761
-#, fuzzy, c-format
+#, c-format
 msgid "Replace preset '%s'?"
-msgstr "Törli a(z) „%s” előbeállítást?"
+msgstr "Lecseréli a(z) „%s” előbeállítást?"
 
 #: src/export/ExportFFmpegDialogs.cpp:1190
 msgid "LC"
@@ -9678,9 +9621,8 @@ msgid "Log search"
 msgstr "Logaritmikus keresés"
 
 #: src/export/ExportFFmpegDialogs.cpp:1307
-#, fuzzy
 msgid "Configure custom FFmpeg options"
-msgstr "Egyéni FFmpeg exportálás"
+msgstr "Egyéni FFmpeg beállítások konfigurálása"
 
 #: src/export/ExportFFmpegDialogs.cpp:1400
 msgid "Preset:"
@@ -10382,22 +10324,20 @@ msgstr ""
 "címkéi, így nem tud különálló hangfájlokba exportálni."
 
 #: src/export/ExportMultiple.cpp:249
-#, fuzzy
 msgid "Export files to:"
-msgstr "Exportálási hely:"
+msgstr "Fájlok exportálása ide:"
 
 #: src/export/ExportMultiple.cpp:254
 msgid "Folder:"
-msgstr ""
+msgstr "Mappa:"
 
 #: src/export/ExportMultiple.cpp:259
 msgid "Create"
 msgstr "Létrehozás"
 
 #: src/export/ExportMultiple.cpp:270
-#, fuzzy
 msgid "Options:"
-msgstr "Beállítások…"
+msgstr "Beállítások:"
 
 #: src/export/ExportMultiple.cpp:296
 msgid "Split files based on:"
@@ -11386,9 +11326,8 @@ msgstr ""
 "A „&Hogyan kérhet segítséget” párbeszéddoboz megjelenítése programindításkor"
 
 #: src/prefs/GUIPrefs.cpp:119
-#, fuzzy
 msgid "Meter dB &range:"
-msgstr "&Mérő / hullámforma dB tartomány:"
+msgstr "Mérő dB &tartománya:"
 
 #: src/prefs/GUIPrefs.cpp:126
 msgid "&Language:"
@@ -11765,7 +11704,7 @@ msgstr "Nem találhatók modulok"
 
 #: src/prefs/MousePrefs.cpp:59
 msgid "Ctrl"
-msgstr ""
+msgstr "Ctrl"
 
 #: src/prefs/MousePrefs.cpp:64
 msgid "Mouse"
@@ -11830,9 +11769,8 @@ msgid "Select Clip or Entire Track"
 msgstr "Klip vagy az egész sáv kijelölése"
 
 #: src/prefs/MousePrefs.cpp:114
-#, fuzzy
 msgid "-Left-Click"
-msgstr "Bal kattintás"
+msgstr " + bal kattintás"
 
 #: src/prefs/MousePrefs.cpp:114
 msgid "Scrub"
@@ -11840,18 +11778,16 @@ msgstr "Tisztítás"
 
 #: src/prefs/MousePrefs.cpp:115 src/prefs/MousePrefs.cpp:140
 #: src/prefs/MousePrefs.cpp:150
-#, fuzzy
 msgid "-Left-Drag"
-msgstr "Bal húzás"
+msgstr " + bal húzás"
 
 #: src/prefs/MousePrefs.cpp:115
 msgid "Seek"
 msgstr "Tekerés"
 
 #: src/prefs/MousePrefs.cpp:118
-#, fuzzy
 msgid "-Left-Double-Click"
-msgstr "Dupla bal kattintás"
+msgstr " + dupla bal kattintás"
 
 #: src/prefs/MousePrefs.cpp:118
 msgid "Scroll-scrub"
@@ -11986,9 +11922,8 @@ msgid "Scroll left or right"
 msgstr "Görgetés jobbra vagy balra"
 
 #: src/prefs/MousePrefs.cpp:166
-#, fuzzy
 msgid "-Wheel-Rotate"
-msgstr "Egérgörgő"
+msgstr " + egérgörgő"
 
 #: src/prefs/MousePrefs.cpp:166
 msgid "Zoom in or out on Mouse Pointer"
@@ -12198,33 +12133,31 @@ msgstr "0 jelentése végtelen"
 #. i18n-hint: The name of a frequency scale in psychoacoustics
 #: src/prefs/SpectrogramSettings.cpp:155
 msgid "Mel"
-msgstr ""
+msgstr "Mel"
 
 #. i18n-hint: The name of a frequency scale in psychoacoustics, named for Heinrich Barkhausen
 #: src/prefs/SpectrogramSettings.cpp:157
 msgid "Bark"
-msgstr ""
+msgstr "Bark"
 
 #. i18n-hint: The name of a frequency scale in psychoacoustics, abbreviates Equivalent Rectangular Bandwidth
 #: src/prefs/SpectrogramSettings.cpp:159
 msgid "ERB"
-msgstr ""
+msgstr "ERB"
 
 #. i18n-hint: Time units, that is Period = 1 / Frequency
 #: src/prefs/SpectrogramSettings.cpp:161
-#, fuzzy
 msgid "Period"
-msgstr "Keretperiódus"
+msgstr "Időszak"
 
 #: src/prefs/SpectrogramSettings.cpp:177
-#, fuzzy
 msgid "Frequencies"
-msgstr "Frekvencia"
+msgstr "Frekvenciák"
 
 #. i18n-hint: the Reassignment algorithm for spectrograms
 #: src/prefs/SpectrogramSettings.cpp:179
 msgid "Reassignment"
-msgstr ""
+msgstr "Áthelyezés"
 
 #. i18n-hint: EAC abbreviates "Enhanced Autocorrelation"
 #: src/prefs/SpectrogramSettings.cpp:181
@@ -12257,9 +12190,8 @@ msgid "The frequency gain must be no more than 60 dB/dec"
 msgstr "A frekvencianövelés nem lehet több 60 dB/dec értéknél"
 
 #: src/prefs/SpectrumPrefs.cpp:36
-#, fuzzy
 msgid "Spectrogram Settings"
-msgstr "Spektrogramok"
+msgstr "Spektrogram beállítások"
 
 #: src/prefs/SpectrumPrefs.cpp:36
 msgid "Spectrograms"
@@ -12279,14 +12211,12 @@ msgstr "32768 - leginkább keskeny sávú"
 
 #. i18n-hint: use is a verb
 #: src/prefs/SpectrumPrefs.cpp:163 src/prefs/WaveformPrefs.cpp:83
-#, fuzzy
 msgid "Use Preferences"
-msgstr "Beállítások: "
+msgstr "Beállítások használata"
 
 #: src/prefs/SpectrumPrefs.cpp:170 src/prefs/WaveformPrefs.cpp:91
-#, fuzzy
 msgid "S&cale"
-msgstr "Méretezés"
+msgstr "&Méretezés"
 
 #: src/prefs/SpectrumPrefs.cpp:175
 msgid "Mi&nimum Frequency (Hz):"
@@ -12298,7 +12228,7 @@ msgstr "Leg&nagyobb frekvencia (Hz):"
 
 #: src/prefs/SpectrumPrefs.cpp:188
 msgid "Colors"
-msgstr ""
+msgstr "Színek"
 
 #: src/prefs/SpectrumPrefs.cpp:193
 msgid "&Gain (dB):"
@@ -12317,14 +12247,12 @@ msgid "S&how the spectrum using grayscale colors"
 msgstr "&Spektrum megjelenítése szürkeárnyalatos színek használatával"
 
 #: src/prefs/SpectrumPrefs.cpp:215
-#, fuzzy
 msgid "Algorithm"
-msgstr "&Algoritmus:"
+msgstr "Algoritmus"
 
 #: src/prefs/SpectrumPrefs.cpp:220
-#, fuzzy
 msgid "A&lgorithm"
-msgstr "&Algoritmus:"
+msgstr "&Algoritmus"
 
 #: src/prefs/SpectrumPrefs.cpp:224
 msgid "Window &size:"
@@ -12339,9 +12267,8 @@ msgid "&Zero padding factor"
 msgstr "&Nulla kitöltés tényező"
 
 #: src/prefs/SpectrumPrefs.cpp:247
-#, fuzzy
 msgid "Ena&ble Spectral Selection"
-msgstr "Spektrális kijelölés"
+msgstr "Spektrális kijelölés &engedélyezése"
 
 #: src/prefs/SpectrumPrefs.cpp:252
 msgid "Show a grid along the &Y-axis"
@@ -12369,14 +12296,12 @@ msgid "&Quantize Notes"
 msgstr "Hangjegyek k&vantálása"
 
 #: src/prefs/SpectrumPrefs.cpp:285
-#, fuzzy
 msgid "Global settings"
-msgstr "Bővítmény-beállítások"
+msgstr "Globális beállítások"
 
 #: src/prefs/SpectrumPrefs.cpp:287
-#, fuzzy
 msgid "Ena&ble spectral selection"
-msgstr "Spektrális &kijelölés átváltása"
+msgstr "Spektrális kijelölés &engedélyezése"
 
 #: src/prefs/SpectrumPrefs.cpp:306
 msgid "The maximum frequency must be an integer"
@@ -12586,14 +12511,12 @@ msgid "&Importing uncompressed audio files"
 msgstr "&Tömörítetlen hangfájlok importálása"
 
 #: src/prefs/WaveformPrefs.cpp:29
-#, fuzzy
 msgid "Waveforms"
-msgstr "Hullámforma"
+msgstr "Hullámformák"
 
 #: src/prefs/WaveformPrefs.cpp:96
-#, fuzzy
 msgid "Waveform dB &range"
-msgstr "&Mérő / hullámforma dB tartomány:"
+msgstr "Hullámforma dB &tartománya"
 
 #. i18n-hint: These are strings for the status bar, and indicate whether Audacity
 #. is playing or recording or stopped, and whether it is paused.
@@ -12809,9 +12732,9 @@ msgid "Recording Volume (Unavailable; use system mixer.)"
 msgstr "Felvételi hangerő (nem érhető el; rendszerkeverő használata.)"
 
 #: src/toolbars/MixerToolBar.cpp:298
-#, fuzzy, c-format
+#, c-format
 msgid "Playback Volume: %%.2f%s"
-msgstr "Lejátszási hangerő: %.2f%s"
+msgstr "Lejátszási hangerő: %%.2f%s"
 
 #: src/toolbars/MixerToolBar.cpp:298
 msgid " (emulated)"

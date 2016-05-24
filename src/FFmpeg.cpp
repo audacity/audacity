@@ -209,12 +209,10 @@ static int64_t ufile_seek(void *opaque, int64_t pos, int whence)
 
 int ufile_close(AVIOContext *pb)
 {
-   wxFile *f = (wxFile *) pb->opaque;
+   std::unique_ptr<wxFile> f{ (wxFile *)pb->opaque };
 
-   if (f) {
+   if (f)
       f->Close();
-      delete f;
-   }
 
    return 0;
 }
@@ -222,16 +220,14 @@ int ufile_close(AVIOContext *pb)
 // Open a file with a (possibly) Unicode filename
 int ufile_fopen(AVIOContext **s, const wxString & name, int flags)
 {
-   wxFile *f;
    wxFile::OpenMode mode;
 
-   f = new wxFile;
+   auto f = std::make_unique<wxFile>();
    if (!f) {
       return -ENOMEM;
    }
 
    if (flags == (AVIO_FLAG_READ | AVIO_FLAG_WRITE)) {
-      delete f;
       return -EINVAL;
    } else if (flags == AVIO_FLAG_WRITE) {
       mode = wxFile::write;
@@ -240,20 +236,20 @@ int ufile_fopen(AVIOContext **s, const wxString & name, int flags)
    }
 
    if (!f->Open(name, mode)) {
-      delete f;
       return -ENOENT;
    }
 
    *s = avio_alloc_context((unsigned char*)av_malloc(32768), 32768,
                            flags & AVIO_FLAG_WRITE,
-                           /*opaque*/f,
+                           /*opaque*/f.get(),
                            ufile_read,
                            ufile_write,
                            ufile_seek);
    if (!*s) {
-      delete f;
       return -ENOMEM;
    }
+
+   f.release(); // s owns the file object now
 
    return 0;
 }
@@ -261,42 +257,59 @@ int ufile_fopen(AVIOContext **s, const wxString & name, int flags)
 
 // Detect type of input file and open it if recognized. Routine
 // based on the av_open_input_file() libavformat function.
-int ufile_fopen_input(AVFormatContext **ic_ptr, wxString & name)
+int ufile_fopen_input(std::unique_ptr<FFmpegContext> &context_ptr, wxString & name)
 {
-   wxFileName f(name);
+   context_ptr.reset();
+   auto context = std::make_unique<FFmpegContext>();
+
+   wxFileName ff{ name };
    wxCharBuffer fname;
    const char *filename;
-   AVIOContext *pb = NULL;
    int err;
 
-   fname = f.GetFullName().mb_str();
+   fname = ff.GetFullName().mb_str();
    filename = (const char *) fname;
 
    // Open the file to prepare for probing
-   if ((err = ufile_fopen(&pb, name, AVIO_FLAG_READ)) < 0) {
+   if ((err = ufile_fopen(&context->pb, name, AVIO_FLAG_READ)) < 0) {
       goto fail;
    }
 
-   *ic_ptr = avformat_alloc_context();
-   (*ic_ptr)->pb = pb;
+   context->ic_ptr = avformat_alloc_context();
+   context->ic_ptr->pb = context->pb;
 
    // And finally, attempt to associate an input stream with the file
-   err = avformat_open_input(ic_ptr, filename, NULL, NULL);
+   err = avformat_open_input(&context->ic_ptr, filename, NULL, NULL);
    if (err) {
       goto fail;
    }
 
+   // success
+   context_ptr = std::move(context);
    return 0;
 
 fail:
 
-   if (pb) {
-      ufile_close(pb);
+   return err;
+}
+
+FFmpegContext::~FFmpegContext()
+{
+   if (FFmpegLibsInst->ValidLibsLoaded())
+   {
+      if (ic_ptr)
+         avformat_close_input(&ic_ptr);
+      av_log_set_callback(av_log_default_callback);
    }
 
-   *ic_ptr = NULL;
-
-   return err;
+   if (pb) {
+      ufile_close(pb);
+      if (FFmpegLibsInst->ValidLibsLoaded())
+      {
+         av_free(pb->buffer);
+         av_free(pb);
+      }
+   }
 }
 
 streamContext *import_ffmpeg_read_next_frame(AVFormatContext* formatContext,
@@ -304,14 +317,14 @@ streamContext *import_ffmpeg_read_next_frame(AVFormatContext* formatContext,
                                              unsigned int numStreams)
 {
    streamContext *sc = NULL;
-   AVPacket pkt;
+   AVPacketEx pkt;
 
-   if (av_read_frame(formatContext,&pkt) < 0)
+   if (av_read_frame(formatContext, &pkt) < 0)
    {
       return NULL;
    }
 
-   // Find a stream to which this frame belongs to
+   // Find a stream to which this frame belongs
    for (unsigned int i = 0; i < numStreams; i++)
    {
       if (streams[i]->m_stream->index == pkt.stream_index)
@@ -322,16 +335,14 @@ streamContext *import_ffmpeg_read_next_frame(AVFormatContext* formatContext,
    // When not all streams are selected for import this will happen very often.
    if (sc == NULL)
    {
-      av_free_packet(&pkt);
       return (streamContext*)1;
    }
 
    // Copy the frame to the stream context
-   memcpy(&sc->m_pkt, &pkt, sizeof(AVPacket));
+   sc->m_pkt.create(std::move(pkt));
 
-   sc->m_pktValid = 1;
-   sc->m_pktDataPtr = pkt.data;
-   sc->m_pktRemainingSiz = pkt.size;
+   sc->m_pktDataPtr = sc->m_pkt->data;
+   sc->m_pktRemainingSiz = sc->m_pkt->size;
 
    return sc;
 }
@@ -346,30 +357,29 @@ int import_ffmpeg_decode_frame(streamContext *sc, bool flushing)
 
    if (flushing)
    {
-      // If we're flushing the decoders we don't actually have any new data to decode.
+      // If we're flushing the decoders we don't actually have any NEW data to decode.
       pDecode = NULL;
       nDecodeSiz = 0;
    }
    else
    {
-      if (!sc->m_pktValid || (sc->m_pktRemainingSiz <= 0))
+      if (!sc->m_pkt || (sc->m_pktRemainingSiz <= 0))
       {
          //No more data
          return -1;
       }
    }
 
-   AVPacket avpkt;
-   av_init_packet(&avpkt);
+   AVPacketEx avpkt;
    avpkt.data = pDecode;
    avpkt.size = nDecodeSiz;
 
-   AVFrame *frame = av_frame_alloc();
+   AVFrameHolder frame{ av_frame_alloc() };
    int got_output = 0;
 
    nBytesDecoded =
       avcodec_decode_audio4(sc->m_codecCtx,
-                            frame,                                   // out
+                            frame.get(),                                   // out
                             &got_output,                             // out
                             &avpkt);                                 // in
 
@@ -388,15 +398,11 @@ int import_ffmpeg_decode_frame(streamContext *sc, bool flushing)
    // Reallocate the audio sample buffer if it's smaller than the frame size.
    if (newsize > sc->m_decodedAudioSamplesSiz )
    {
-      if (sc->m_decodedAudioSamples)
-      {
-         av_free(sc->m_decodedAudioSamples);
-      }
-
-      sc->m_decodedAudioSamples = (uint8_t *) av_malloc(newsize);
+      // Reallocate a bigger buffer.  But av_realloc is NOT compatible with the returns of av_malloc!
+      // So do this:
+      sc->m_decodedAudioSamples.reset(static_cast<uint8_t *>(av_malloc(newsize)));
       sc->m_decodedAudioSamplesSiz = newsize;
-
-      if (sc->m_decodedAudioSamples == NULL)
+      if (!sc->m_decodedAudioSamples)
       {
          //Can't allocate bytes
          return -1;
@@ -405,16 +411,14 @@ int import_ffmpeg_decode_frame(streamContext *sc, bool flushing)
    if (frame->data[1]) {
       for (int i = 0; i<frame->nb_samples; i++) {
          for (int ch = 0; ch<channels; ch++) {
-            memcpy(sc->m_decodedAudioSamples + sc->m_samplesize * (ch + channels*i),
+            memcpy(sc->m_decodedAudioSamples.get() + sc->m_samplesize * (ch + channels*i),
                   frame->extended_data[ch] + sc->m_samplesize*i,
                   sc->m_samplesize);
          }
       }
    } else {
-      memcpy(sc->m_decodedAudioSamples, frame->data[0], newsize);
+      memcpy(sc->m_decodedAudioSamples.get(), frame->data[0], newsize);
    }
-
-   av_frame_free(&frame);
 
    // We may not have read all of the data from this packet. If so, the user can call again.
    // Whether or not they do depends on if m_pktRemainingSiz == 0 (they can check).
@@ -445,11 +449,11 @@ class FFmpegNotFoundDialog;
 #define ID_FFMPEG_DLOAD  5001
 
 /// Allows user to locate libav* libraries
-class FindFFmpegDialog : public wxDialog
+class FindFFmpegDialog final : public wxDialog
 {
 public:
 
-   FindFFmpegDialog(wxWindow *parent, wxString path, wxString name, wxString type)
+   FindFFmpegDialog(wxWindow *parent, const wxString &path, const wxString &name, const wxString &type)
       :  wxDialog(parent, wxID_ANY, wxString(_("Locate FFmpeg")))
    {
       SetName(GetTitle());
@@ -597,7 +601,7 @@ bool FFmpegLibs::FindLibs(wxWindow *parent)
    wxLogMessage(wxT("Looking for FFmpeg libraries..."));
    if (!mLibAVFormatPath.IsEmpty()) {
       wxLogMessage(wxT("mLibAVFormatPath ('%s') is not empty."), mLibAVFormatPath.c_str());
-      wxFileName fn = mLibAVFormatPath;
+      const wxFileName fn{ mLibAVFormatPath };
       path = fn.GetPath();
       name = fn.GetFullName();
    }
@@ -654,7 +658,7 @@ bool FFmpegLibs::LoadLibs(wxWindow * WXUNUSED(parent), bool showerr)
 
    // If not successful, try loading it from default path
    if (!mLibsLoaded && !GetLibAVFormatPath().IsEmpty()) {
-      wxFileName fn(GetLibAVFormatPath(), GetLibAVFormatName());
+      const wxFileName fn{ GetLibAVFormatPath(), GetLibAVFormatName() };
       wxString path = fn.GetFullPath();
       wxLogMessage(wxT("Trying to load FFmpeg libraries from default path, '%s'."), path.c_str());
       mLibsLoaded = InitLibs(path,showerr);
@@ -666,7 +670,7 @@ bool FFmpegLibs::LoadLibs(wxWindow * WXUNUSED(parent), bool showerr)
 #if defined(__WXMAC__)
    // If not successful, try loading it from legacy path
    if (!mLibsLoaded && !GetLibAVFormatPath().IsEmpty()) {
-      wxFileName fn(wxT("/usr/local/lib/audacity"), GetLibAVFormatName());
+      const wxFileName fn{wxT("/usr/local/lib/audacity"), GetLibAVFormatName()};
       wxString path = fn.GetFullPath();
       wxLogMessage(wxT("Trying to load FFmpeg libraries from legacy path, '%s'."), path.c_str());
       mLibsLoaded = InitLibs(path,showerr);
@@ -692,14 +696,9 @@ bool FFmpegLibs::LoadLibs(wxWindow * WXUNUSED(parent), bool showerr)
    {
       wxLogError(wxT("Failed to load libraries altogether."));
       int dontShowDlg;
-      FFmpegNotFoundDialog *dlg;
       gPrefs->Read(wxT("/FFmpeg/NotFoundDontShow"),&dontShowDlg,0);
       if ((dontShowDlg == 0) && (showerr))
-      {
-         dlg = new FFmpegNotFoundDialog(NULL);
-         dlg->ShowModal();
-         delete dlg;
-      }
+         FFmpegNotFoundDialog{nullptr}.ShowModal();
    }
    */
    // Oh well, just give up
@@ -720,7 +719,7 @@ bool FFmpegLibs::ValidLibsLoaded()
    return mLibsLoaded;
 }
 
-bool FFmpegLibs::InitLibs(wxString libpath_format, bool WXUNUSED(showerr))
+bool FFmpegLibs::InitLibs(const wxString &libpath_format, bool WXUNUSED(showerr))
 {
 #if !defined(DISABLE_DYNAMIC_LOADING_FFMPEG)
    FreeLibs();
@@ -734,9 +733,9 @@ bool FFmpegLibs::InitLibs(wxString libpath_format, bool WXUNUSED(showerr))
    if (wxGetEnv(wxT("PATH"),&syspath))
    {
       wxLogMessage(wxT("PATH = '%s'"), syspath.c_str());
-      wxString fmtdirsc = wxPathOnly(libpath_format) + wxT(";");
-      wxString scfmtdir = wxT(";") + wxPathOnly(libpath_format);
-      wxString fmtdir = wxPathOnly(libpath_format);
+      const wxString &fmtdir{ wxPathOnly(libpath_format) };
+      wxString fmtdirsc = fmtdir + wxT(";");
+      wxString scfmtdir = wxT(";") + fmtdir;
       wxLogMessage(wxT("Checking that '%s' is in PATH..."), fmtdir.c_str());
       // If the directory, where libavformat is, is not in PATH - add it
       if (!syspath.Contains(fmtdirsc) && !syspath.Contains(scfmtdir) && !syspath.Contains(fmtdir))
@@ -776,20 +775,21 @@ bool FFmpegLibs::InitLibs(wxString libpath_format, bool WXUNUSED(showerr))
    wxDynamicLibrary *util = NULL;
    wxFileName avcodec_filename;
    wxFileName avutil_filename;
-   wxFileName name(libpath_format);
+   wxFileName name{ libpath_format };
+   wxString nameFull{name.GetFullPath()};
    bool gotError = false;
 
    // Check for a monolithic avformat
    avformat = new wxDynamicLibrary();
-   wxLogMessage(wxT("Checking for monolithic avformat from '%s'."), name.GetFullPath().c_str());
-   gotError = !avformat->Load(name.GetFullPath(), wxDL_LAZY);
+   wxLogMessage(wxT("Checking for monolithic avformat from '%s'."), nameFull.c_str());
+   gotError = !avformat->Load(nameFull, wxDL_LAZY);
 
    // Verify it really is monolithic
    if (!gotError) {
       avutil_filename = FileNames::PathFromAddr(avformat->GetSymbol(wxT("avutil_version")));
       avcodec_filename = FileNames::PathFromAddr(avformat->GetSymbol(wxT("avcodec_version")));
-      if (avutil_filename.GetFullPath().IsSameAs(name.GetFullPath())) {
-         if (avcodec_filename.GetFullPath().IsSameAs(name.GetFullPath())) {
+      if (avutil_filename.GetFullPath().IsSameAs(nameFull)) {
+         if (avcodec_filename.GetFullPath().IsSameAs(nameFull)) {
             util = avformat;
             codec = avformat;
          }
@@ -812,22 +812,27 @@ bool FFmpegLibs::InitLibs(wxString libpath_format, bool WXUNUSED(showerr))
       }
    }
 
+   // The two wxFileNames don't change after this
+   const wxString avcodec_filename_full{ avcodec_filename.GetFullPath() };
+   const wxString avutil_filename_full{ avutil_filename.GetFullPath() };
+
    if (!util) {
       avutil = util = new wxDynamicLibrary();
-      wxLogMessage(wxT("Loading avutil from '%s'."), avutil_filename.GetFullPath().c_str());
-      util->Load(avutil_filename.GetFullPath(), wxDL_LAZY);
+      wxLogMessage(wxT("Loading avutil from '%s'."), avutil_filename_full.c_str());
+      util->Load(avutil_filename_full, wxDL_LAZY);
    }
 
    if (!codec) {
       avcodec = codec = new wxDynamicLibrary();
-      wxLogMessage(wxT("Loading avcodec from '%s'."), avcodec_filename.GetFullPath().c_str());
-      codec->Load(avcodec_filename.GetFullPath(), wxDL_LAZY);
+      wxLogMessage(wxT("Loading avcodec from '%s'."), avcodec_filename_full.c_str());
+      codec->Load(avcodec_filename_full, wxDL_LAZY);
    }
 
    if (!avformat->IsLoaded()) {
       name.SetFullName(libpath_format);
-      wxLogMessage(wxT("Loading avformat from '%s'."), name.GetFullPath().c_str());
-      gotError = !avformat->Load(name.GetFullPath(), wxDL_LAZY);
+      nameFull = name.GetFullPath();
+      wxLogMessage(wxT("Loading avformat from '%s'."), nameFull.c_str());
+      gotError = !avformat->Load(nameFull, wxDL_LAZY);
    }
 
 #if defined(__WXMSW__)
@@ -878,6 +883,7 @@ bool FFmpegLibs::InitLibs(wxString libpath_format, bool WXUNUSED(showerr))
    FFMPEG_INITDYN(avformat, avio_size);
    FFMPEG_INITDYN(avformat, avio_alloc_context);
    FFMPEG_INITALT(avformat, av_guess_format, avformat, guess_format);
+   FFMPEG_INITDYN(avformat, avformat_free_context);
 
    FFMPEG_INITDYN(avcodec, av_init_packet);
    FFMPEG_INITDYN(avcodec, av_free_packet);
@@ -895,6 +901,7 @@ bool FFmpegLibs::InitLibs(wxString libpath_format, bool WXUNUSED(showerr))
    FFMPEG_INITDYN(avcodec, avcodec_fill_audio_frame);
 
    FFMPEG_INITDYN(avutil, av_free);
+   FFMPEG_INITDYN(avutil, av_dict_free);
    FFMPEG_INITDYN(avutil, av_dict_get);
    FFMPEG_INITDYN(avutil, av_dict_set);
    FFMPEG_INITDYN(avutil, av_get_bytes_per_sample);
@@ -907,7 +914,7 @@ bool FFmpegLibs::InitLibs(wxString libpath_format, bool WXUNUSED(showerr))
    FFMPEG_INITDYN(avutil, av_fifo_size);
    FFMPEG_INITDYN(avutil, av_malloc);
    FFMPEG_INITDYN(avutil, av_fifo_generic_write);
-   FFMPEG_INITDYN(avutil, av_freep);
+   // FFMPEG_INITDYN(avutil, av_freep);
    FFMPEG_INITDYN(avutil, av_rescale_q);
    FFMPEG_INITDYN(avutil, avutil_version);
    FFMPEG_INITALT(avutil, av_frame_alloc, avcodec, avcodec_alloc_frame);

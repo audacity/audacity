@@ -1,8 +1,7 @@
 ;nyquist plug-in
-;version 3
+;version 4
 ;type process
 ;preview linear
-;categories "http://lv2plug.in/ns/lv2core#UtilityPlugin"
 ;name "Vocal Remover..."
 ;action "Removing center-panned audio..."
 ;info "For reducing center-panned vocals"
@@ -22,15 +21,12 @@
 
 ;control action "Remove vocals or view Help" choice "Remove vocals,View Help" 0
 ;control band-choice "Removal choice" choice "Simple (entire spectrum),Remove frequency band,Retain frequency band" 0
-;control low-range "Lower frequency band limit (Hz)" string " " "500"
-;control high-range "Upper frequency band limit (Hz)" string " " "2000"
+;control low-range "Frequency band from (Hz)" float-text "" 500 0 nil
+;control high-range "Frequency band to (Hz)" float-text "" 2000 0 nil
 
-
-; Initialize globals
-(setf message "")     ; empty output message
 
 (defun help ()
-  (format nil
+  (let ((msg (format nil
 "Vocal Remover requires a stereo track. It works best with
 lossless files like WAV or AIFF, rather than MP3 or
 other compressed formats. It only removes vocals or other
@@ -55,103 +51,79 @@ sounds like the most significant frequency range of the
 original vocals. If the other choices remove too much
 audio in a particular frequency range (such as low drums
 or bass), try 'Retain frequency band'. This only removes
-frequencies outside the limits, retaining the others."))
+frequencies outside the limits, retaining the others.")))
+    (format t "~a" msg) ;print to debug (coppying supported on all platforms)
+    msg)) ;return message
 
-(defun string-to-list (str)
-  (read (make-string-input-stream (format nil "(~a)" str))))
 
-
-;;; ERROR CHECKING:
-
-;; Check that selected audio is stereo
 (defun check-stereo ()
-  (if (soundp s)
-      (setf message (format nil
-                      "~%Vocal Remover requires an unsplit, stereo track.~%~
-                      If you have a stereo track split into left and right~%~
-                      channels, use 'Make Stereo Track' on the Track~%~
-                      Drop-Down Menu, then run Vocal Remover again.~%"))))
+  (when (soundp *track*)
+    (throw 'err (format nil
+"~%Vocal Remover requires an unsplit, stereo track.~%~
+If you have a stereo track split into left and right~%~
+channels, use 'Make Stereo Track' on the Track~%~
+Drop-Down Menu, then run Vocal Remover again.~%"))))
 
-;;; Check that frequency range is valid
+(defmacro validate (Hz)
+;; Filters become unstable when very close to 0 Hz or
+;; to Nyquist frequency, so return NIL to disable.
+  `(if (or (< ,Hz 1)(> ,hz (- (/ *sound-srate* 2) 1)))
+       (setf ,Hz nil)))
+
+;;; Ensure frequency range is valid
 (defun check-range ()
-  (setq low-range (first (string-to-list low-range)))
-  (setq high-range (first (string-to-list high-range)))
-  (if (or (not (numberp low-range))
-          (not (numberp high-range))
-          (< low-range 0)
-          (> low-range 20000)
-          (< high-range 0)
-          (> high-range 20000))
-      (progn
-        (if (= band-choice 1)
-            (setf band-type "remove")
-            (setf band-type "retain"))
-        (setf message (format nil
-                        "~a~%~
-                        Enter both a lower and an upper limit for the~%~
-                        frequency band you want to ~a.~%~
-                        You entered: \"~a\"   \"~a\"~%~%~
-                        Both values must be between 0 and 20000."
-                        message
-                        band-type
-                        low-range
-                        high-range)))
-      ;; Else ensure that high-range > low-range.
-      (let ((temp low-range))
-        (when (> low-range high-range)
-          (setq low-range high-range)
-          (setq high-range temp))))
-  ;; Range values must cannot be higher than Nyquist frequency.
-  (setq low-range (min low-range (/ *sound-srate* 2)))
-  (setq high-range (min high-range (/ *sound-srate* 2))))
-      
-
-(defun show-message ()
-  ;; output to both message box and to debug window
-  ;; Copying from debug window is supported on all platforms.
-  (when (= action 0)      ; error
-    (setf message (format nil "Error.~%~a" message)))
-  (format t message)
-  (format nil message))
-
-
-;;; DSP FUNCTIONS:
+  ;; Ensure min < max
+  (when (< high-range low-range)
+    (let ((temp low-range))
+      (setf low-range high-range)
+      (setf high-range temp)))
+  (validate low-range)
+  (validate high-range))
 
 (defun bandpass (sig low high)
-  (lowpass8
-    (highpass8 sig low)
-    high))
+  (cond
+    ((and low high) ;bandpass
+      (lowpass8
+        (highpass8 sig low)
+        high))
+    (low (highpass8 sig low))
+    (high (lowpass8 sig high))
+    (t sig)))
 
 (defun bandstop (sig low high)
-  (sum (lowpass8 sig low)
-       (highpass8 sig high)))
+  (if (and low high (< (/ (- high low) low) 0.1))
+      (format t "Warning:~%~
+              Selected band-stop filter is~%~
+              ~a Hz to ~a Hz.~%~
+              A very narrow stop-band filter may have~%~
+              unexpected results.~%~%"
+              low high))
+  (let ((low-sig (if low (lowpass8 sig low)(s-rest 1))))
+    (sum
+      low-sig
+      (if high (highpass8 (diff sig low-sig) high)(s-rest 1)))))
 
 (defun CentrePanRemove ()
+  (check-stereo)
+  (check-range)
   (cond
-    ((= band-choice 1)            ; remove frequencies inside range
-      (sum (aref s 0)
-           (mult -1 (aref s 1))
-           (bandstop (aref s 1) low-range high-range)))
-    ((= band-choice 2)            ; remove frequencies outside range
-      (sum (aref s 0)
-           (mult -1 (aref s 1))
-           (bandpass (aref s 1) low-range high-range)))
-    (t                            ; invert and add right to left channel
-      (sum (aref s 0)
-           (mult -1 (aref s 1))))))
+    ((= band-choice 1) ; remove frequencies inside range
+      (sum (aref *track* 0)
+           (mult -1 (aref *track* 1))
+           (bandstop (aref *track* 1) low-range high-range)))
+    ; Nothing to remove - skip effect.
+    ((and (= band-choice 2)(not low-range)(not high-range))
+      (format t "Current settings returned the original audio.")
+      nil)
+    ((= band-choice 2) ; remove frequencies inside range
+          (sum (aref *track* 0)
+               (mult -1 (aref *track* 1))
+               (bandpass (aref *track* 1) low-range high-range)))
+    (t ; invert and add right to left channel
+      (sum (aref *track* 0)
+           (mult -1 (aref *track* 1))))))
 
 
-;;; MAIN PROGRAM:
-
-(cond
-  ((= action 1)       ; Show help
-    (setf message (help)))
-  ((= band-choice 0)  ; Remove full spectrum
-    (check-stereo))
-  (t                  ; Remove band limited
-    (check-stereo)
-    (check-range)))
-
-(if (= (length message) 0)
-    (CentrePanRemove)
-    (show-message))
+(if (= action 1)
+    (help)
+    (catch 'err (CentrePanRemove)))

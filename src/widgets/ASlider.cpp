@@ -82,7 +82,7 @@ const int sliderFontSize = 12;
 // TipPanel
 //
 
-class TipPanel : public wxPopupWindow
+class TipPanel final : public wxPopupWindow
 {
  public:
    TipPanel(wxWindow *parent, const wxString & label);
@@ -202,7 +202,7 @@ SliderDialog::SliderDialog(wxWindow * parent, wxWindowID id,
                                15);
       mTextCtrl->SetValidator(wxTextValidator(wxFILTER_NUMERIC));
 
-      mSlider = new ASlider(this,
+      mSlider = safenew ASlider(this,
                             wxID_ANY,
                             title,
                             wxDefaultPosition,
@@ -342,7 +342,7 @@ static const wxPoint2DDouble disabledRightEnd[] =
 
 // Construct customizable slider
 LWSlider::LWSlider(wxWindow * parent,
-                     wxString name,
+                     const wxString &name,
                      const wxPoint &pos,
                      const wxSize &size,
                      float minValue,
@@ -412,7 +412,7 @@ void LWSlider::SetStyle(int style)
 
 // Construct predefined slider
 LWSlider::LWSlider(wxWindow *parent,
-                   wxString name,
+                   const wxString &name,
                    const wxPoint &pos,
                    const wxSize &size,
                    int style,
@@ -475,7 +475,7 @@ LWSlider::LWSlider(wxWindow *parent,
 }
 
 void LWSlider::Init(wxWindow * parent,
-                    wxString name,
+                    const wxString &name,
                     const wxPoint &pos,
                     const wxSize &size,
                     float minValue,
@@ -493,8 +493,6 @@ void LWSlider::Init(wxWindow * parent,
    mStyle = style;
    mOrientation = orientation;
    mIsDragging = false;
-   mWidth = size.x;
-   mHeight = size.y;
    mParent = parent;
    mHW = heavyweight;
    mPopup = popup;
@@ -512,6 +510,8 @@ void LWSlider::Init(wxWindow * parent,
    mScrollLine = 1.0f;
    mScrollPage = 5.0f;
    mTipPanel = NULL;
+
+   AdjustSize(size);
 
    mpRuler = NULL; // Do this and Move() before Draw().
    Move(pos);
@@ -577,6 +577,39 @@ void LWSlider::Move(const wxPoint &newpos)
    mTop = newpos.y;
 }
 
+void LWSlider::AdjustSize(const wxSize & sz)
+{
+   mWidth = sz.GetWidth();
+   mHeight = sz.GetHeight();
+
+   mThumbWidth = 14;
+   mThumbHeight = 14;
+
+   if (mOrientation == wxHORIZONTAL)
+   {
+      mCenterY = mHeight - 9;
+   }
+   else
+   {
+      mCenterX = mWidth - 9;
+   }
+
+   if (mOrientation == wxHORIZONTAL)
+   {
+      mLeftX = mThumbWidth/2;
+      mRightX = mWidth - mThumbWidth/2 - 1;
+      mWidthX = mRightX - mLeftX;
+   }
+   else
+   {
+      mTopY = mThumbWidth/2;
+      mBottomY = mHeight - mThumbWidth/2 - 1;
+      mHeightY = mBottomY - mTopY;
+   }
+
+   Refresh();
+}
+
 void LWSlider::OnPaint(wxDC &dc)
 {
    if (!mBitmap || !mThumbBitmap)
@@ -617,8 +650,7 @@ void LWSlider::OnPaint(wxDC &dc)
 
 void LWSlider::OnSize( wxSizeEvent & event )
 {
-   mWidth = event.GetSize().GetX();
-   mHeight = event.GetSize().GetY();
+   AdjustSize(event.GetSize());
 
    Refresh();
 }
@@ -644,8 +676,6 @@ void LWSlider::Draw(wxDC & paintDC)
    wxMemoryDC dc;
 
    // Create the bitmap
-   mThumbWidth = 14;
-   mThumbHeight = 14;
    mThumbBitmap = new wxBitmap();
    mThumbBitmap->Create(mThumbWidth, mThumbHeight, paintDC);
    dc.SelectObject(*mThumbBitmap);
@@ -710,28 +740,6 @@ void LWSlider::Draw(wxDC & paintDC)
    //
    // Now the background bitmap
    //
-
-   if (mOrientation == wxHORIZONTAL)
-   {
-      mCenterY = mHeight - 9;
-   }
-   else
-   {
-      mCenterX = mWidth - 9;
-   }
-
-   if (mOrientation == wxHORIZONTAL)
-   {
-      mLeftX = mThumbWidth/2;
-      mRightX = mWidth - mThumbWidth/2 - 1;
-      mWidthX = mRightX - mLeftX;
-   }
-   else
-   {
-      mTopY = mThumbWidth/2;
-      mBottomY = mHeight - mThumbWidth/2 - 1;
-      mHeightY = mBottomY - mTopY;
-   }
 
    mBitmap = new wxBitmap();
    mBitmap->Create(mWidth, mHeight, paintDC);
@@ -1384,8 +1392,8 @@ void LWSlider::SetSpeed(float speed)
    mSpeed = speed;
 }
 
-// Given the mouse slider coordinate in fromPos, compute the new value
-// of the slider when clicking to set a new position.
+// Given the mouse slider coordinate in fromPos, compute the NEW value
+// of the slider when clicking to set a NEW position.
 float LWSlider::ClickPositionToValue(int fromPos, bool shiftDown)
 {
    int nSpan;
@@ -1428,7 +1436,7 @@ float LWSlider::ClickPositionToValue(int fromPos, bool shiftDown)
    return val;
 }
 
-// Given the mouse slider coordinate in fromPos, compute the new value
+// Given the mouse slider coordinate in fromPos, compute the NEW value
 // of the slider during a drag.
 float LWSlider::DragPositionToValue(int fromPos, bool shiftDown)
 {
@@ -1574,7 +1582,7 @@ END_EVENT_TABLE()
 
 ASlider::ASlider( wxWindow * parent,
                   wxWindowID id,
-                  wxString name,
+                  const wxString &name,
                   const wxPoint & pos,
                   const wxSize & size,
                   int style,
@@ -1603,13 +1611,15 @@ ASlider::ASlider( wxWindow * parent,
    mTimer.SetOwner(this);
 
 #if wxUSE_ACCESSIBILITY
-   SetAccessible( new ASliderAx( this ) );
+   SetAccessible( safenew ASliderAx( this ) );
 #endif
 }
 
 
 ASlider::~ASlider()
 {
+   if(HasCapture())
+      ReleaseMouse();
    delete mLWSlider;
 }
 

@@ -1,3 +1,94 @@
+# Autotools generated files
+locale/Makefile.in
+Makefile
+aclocal.m4
+autom4te.cache
+config.status
+bin-stamp
+.deps
+.dirstamp
+lib-stamp
+libtool
+stamp-h*
+stamp-po
+*.stamp
+
+# Handcrafted makefiles
+!lib-src/expat/amiga/Makefile
+!lib-src/libnyquist/nyquist/sys/unix/*/Makefile
+!lib-src/lv2/Makefile
+!lib-src/mod-script-pipe/Makefile
+
+# Generated files by build system
+lib-src/expat/expat_config.h
+lib-src/libflac/doc/Doxyfile
+lib-src/libflac/config.h
+lib-src/libflac/test/common.sh
+lib-src/libid3tag/config.h
+lib-src/libid3tag/libid3tag.list
+lib-src/libmad/config.h
+lib-src/libmad/libmad.list
+lib-src/libmad/mad.h
+lib-src/libogg/config.h
+lib-src/libogg/include/ogg/config_types.h
+lib-src/libogg/libogg.spec
+lib-src/libsndfile/build-test-tarball.mk
+lib-src/libsndfile/doc/libsndfile.css
+lib-src/libsndfile/libsndfile.spec
+lib-src/libsndfile/man/sndfile-deinterleave.1
+lib-src/libsndfile/man/sndfile-metadata-set.1
+lib-src/libsndfile/src/config.h
+lib-src/libsndfile/src/sndfile.h
+lib-src/libsndfile/src/version-metadata.rc
+lib-src/libsndfile/tests/pedantic-header-test.sh
+lib-src/libsndfile/tests/test_wrapper.sh
+lib-src/libsoxr/soxr-config.h
+lib-src/libsoxr/src/libsoxr-dev.src
+lib-src/libsoxr/src/libsoxr.src
+lib-src/libsoxr/tests/ref-*.s32
+lib-src/libvorbis/config.h
+lib-src/libvorbis/doc/Doxyfile
+lib-src/libvorbis/libvorbis.spec
+lib-src/sbsms/libsbsms.spec
+lib-src/sbsms/src/config.h
+lib-src/soundtouch/include/soundtouch_config.h
+lib-src/twolame/doc/html/Doxyfile
+lib-src/twolame/libtwolame/config.h
+locale/POTFILES
+src/audacity.desktop
+src/configunix.h
+src/configwin.h
+*.pc
+
+# CMake build output
+lib-src/libsoxr/CMakeCache.txt
+lib-src/libsoxr/*.cmake
+CMakeFiles/
+CTestTestfile.cmake
+cmake_install.cmake
+
+# Waf build output
+lib-src/lv2/.buildvars
+lib-src/lv2/include/
+lib-src/lv2/*/build/
+lib-src/lv2/srcdir.mk
+.lock-waf_linux2_build
+
+# Mac build outputs
+mac/Audacity.xcodeproj/project.xcworkspace/contents.xcworkspacedata
+mac/Audacity.xcodeproj/project.xcworkspace/xcshareddata/Audacity.xccheckout
+mac/Makefile
+mac/confdefs.h
+mac/config.status
+mac/conftest.c
+mac/help/
+mac/images/
+mac/lib-src/
+mac/libtool
+mac/po/
+mac/src/
+mac/tests/
+
 # Compiled Object files
 *.slo
 *.lo
@@ -17,8 +108,7 @@
 *.tlog
 *.ipch
 *.opensdf
-# unsure about the .sal files.  Disable for now.
-*.sal
+*.vcxproj.user
 
 # Precompiled Headers
 *.gch
@@ -30,8 +120,8 @@
 *.dylib
 *.dll
 
-# Fortran module files
-*.mod
+# Compiled translation files (GNU Machine Object)
+*.gmo
 
 # Compiled Static libraries
 *.lai
@@ -41,8 +131,39 @@
 
 # Executables
 *.exe
-*.out
 *.app
+
+# Executable without extension
+/audacity
+src/audacity
+lib-src/expat/examples/elements
+lib-src/expat/examples/outline
+lib-src/expat/xmlwf/xmlwf
+lib-src/libflac/examples/c/decode/file/example_c_decode_file
+lib-src/libflac/examples/c/encode/file/example_c_encode_file
+lib-src/libflac/examples/cpp/decode/file/example_cpp_decode_file
+lib-src/libflac/examples/cpp/encode/file/example_cpp_encode_file
+lib-src/libflac/src/flac/flac
+lib-src/libflac/src/metaflac/metaflac
+lib-src/libflac/src/test_grabbag/cuesheet/test_cuesheet
+lib-src/libflac/src/test_grabbag/picture/test_picture
+lib-src/libflac/src/test_libFLAC++/test_libFLAC++
+lib-src/libflac/src/test_libFLAC/test_libFLAC
+lib-src/libflac/src/test_seeking/test_seeking
+lib-src/libflac/src/test_streams/test_streams
+lib-src/libogg/src/test_bitwise
+lib-src/libogg/src/test_framing
+lib-src/libsndfile/src/G72x/g72x_test
+lib-src/libsndfile/src/test_main
+lib-src/libsoxr/examples/1a-lsr
+lib-src/libsoxr/examples/3-options-input-fn
+lib-src/libsoxr/tests/vector-cmp
+lib-src/libsoxr/tests/vector-gen
+lib-src/libvorbis/lib/test_sharedbook
+lib-src/portaudio-v19/bin/
+lib-src/soundtouch/source/SoundStretch/soundstretch
+lib-src/twolame/frontend/twolame
+lib-src/twolame/simplefrontend/stwolame
 
 # Mac Specific
 .DS_Store
@@ -55,6 +176,9 @@ win/Debug
 win/Release
 win/Projects/*/Debug
 win/Projects/*/Release
+
+# All those help files
+help/manual*
 
 # Misc
 src/RevisionIdent.h

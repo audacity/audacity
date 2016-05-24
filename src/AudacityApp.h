@@ -16,6 +16,7 @@
 
 #include "Audacity.h"
 
+#include "MemoryX.h"
 #include <wx/app.h>
 #include <wx/cmdline.h>
 #include <wx/dir.h>
@@ -55,7 +56,7 @@ DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_OPEN_AUDIO_FILE, -1);
 
 // These flags represent the majority of the states that affect
 // whether or not items in menus are enabled or disabled.
-enum
+enum CommandFlag : unsigned long long
 {
    AlwaysEnabledFlag      = 0x00000000,
 
@@ -90,22 +91,107 @@ enum
    IsSyncLockedFlag       = 0x08000000,  //awd
    IsRealtimeNotActiveFlag= 0x10000000,  //lll
    CaptureNotBusyFlag     = 0x20000000,
+   CanStopAudioStreamFlag = 0x40000000,
+   RulerHasFocus
+                          = 0x80000000ULL, // prl
+//   nextOneHas33BitsWow
+//                        = 0x100000000ULL, // prl
 
-   NoFlagsSpecifed        = 0xffffffff
+   NoFlagsSpecifed        = ~0ULL
 };
+
+// Prevent accidental misuse with narrower types
+
+bool operator == (CommandFlag, unsigned long) PROHIBITED;
+bool operator == (CommandFlag, long) PROHIBITED;
+bool operator == (unsigned long, CommandFlag) PROHIBITED;
+bool operator == (long, CommandFlag) PROHIBITED;
+
+bool operator != (CommandFlag, unsigned long) PROHIBITED;
+bool operator != (CommandFlag, long) PROHIBITED;
+bool operator != (unsigned long, CommandFlag) PROHIBITED;
+bool operator != (long, CommandFlag) PROHIBITED;
+
+CommandFlag operator & (CommandFlag, unsigned long) PROHIBITED;
+CommandFlag operator & (CommandFlag, long) PROHIBITED;
+CommandFlag operator & (unsigned long, CommandFlag) PROHIBITED;
+CommandFlag operator & (long, CommandFlag) PROHIBITED;
+
+CommandFlag operator | (CommandFlag, unsigned long) PROHIBITED;
+CommandFlag operator | (CommandFlag, long) PROHIBITED;
+CommandFlag operator | (unsigned long, CommandFlag) PROHIBITED;
+CommandFlag operator | (long, CommandFlag) PROHIBITED;
+
+CommandFlag operator ^ (CommandFlag, unsigned long) PROHIBITED;
+CommandFlag operator ^ (CommandFlag, long) PROHIBITED;
+CommandFlag operator ^ (unsigned long, CommandFlag) PROHIBITED;
+CommandFlag operator ^ (long, CommandFlag) PROHIBITED;
+
+bool operator == (CommandFlag, unsigned int) PROHIBITED;
+bool operator == (CommandFlag, int) PROHIBITED;
+bool operator == (unsigned int, CommandFlag) PROHIBITED;
+bool operator == (int, CommandFlag) PROHIBITED;
+
+bool operator != (CommandFlag, unsigned int) PROHIBITED;
+bool operator != (CommandFlag, int) PROHIBITED;
+bool operator != (unsigned int, CommandFlag) PROHIBITED;
+bool operator != (int, CommandFlag) PROHIBITED;
+
+CommandFlag operator & (CommandFlag, unsigned int) PROHIBITED;
+CommandFlag operator & (CommandFlag, int) PROHIBITED;
+CommandFlag operator & (unsigned int, CommandFlag) PROHIBITED;
+CommandFlag operator & (int, CommandFlag) PROHIBITED;
+
+CommandFlag operator | (CommandFlag, unsigned int) PROHIBITED;
+CommandFlag operator | (CommandFlag, int) PROHIBITED;
+CommandFlag operator | (unsigned int, CommandFlag) PROHIBITED;
+CommandFlag operator | (int, CommandFlag) PROHIBITED;
+
+CommandFlag operator ^ (CommandFlag, unsigned int) PROHIBITED;
+CommandFlag operator ^ (CommandFlag, int) PROHIBITED;
+CommandFlag operator ^ (unsigned int, CommandFlag) PROHIBITED;
+CommandFlag operator ^ (int, CommandFlag) PROHIBITED;
+
+// Supply the bitwise operations
+
+inline CommandFlag operator ~ (CommandFlag flag)
+{
+   return static_cast<CommandFlag>( ~ static_cast<unsigned long long> (flag) );
+}
+inline CommandFlag operator & (CommandFlag lhs, CommandFlag rhs)
+{
+   return static_cast<CommandFlag> (
+      static_cast<unsigned long long>(lhs) & static_cast<unsigned long long>(rhs)
+   );
+}
+inline CommandFlag operator | (CommandFlag lhs, CommandFlag rhs)
+{
+   return static_cast<CommandFlag> (
+      static_cast<unsigned long long>(lhs) | static_cast<unsigned long long>(rhs)
+   );
+}
+inline CommandFlag & operator |= (CommandFlag &lhs, CommandFlag rhs)
+{
+   lhs = lhs | rhs;
+   return lhs;
+}
+
+using CommandMask = CommandFlag;
 
 class BlockFile;
 
-class AudacityApp:public wxApp {
+class AudacityApp final : public wxApp {
  public:
    AudacityApp();
-   virtual bool OnInit(void);
-   virtual int OnExit(void);
-   virtual void OnFatalException();
+   ~AudacityApp();
+   bool OnInit(void) override;
+   int OnExit(void) override;
+   void OnFatalException() override;
 
    int FilterEvent(wxEvent & event);
 
-   void InitLang( const wxString & lang );
+   // Returns the language actually used which is not lang if lang cannot be found.
+   wxString InitLang( const wxString & lang );
 
    // These are currently only used on Mac OS, where it's
    // possible to have a menu bar but no windows open.  It doesn't
@@ -122,9 +208,11 @@ class AudacityApp:public wxApp {
    void OnMRUClear(wxCommandEvent &event);
    void OnMRUFile(wxCommandEvent &event);
    // Backend for above - returns true for success, false for failure
-   bool MRUOpen(wxString fileName);
+   bool MRUOpen(const wxString &fileName);
 
    void OnReceiveCommand(AppCommandEvent &event);
+
+   void OnKeyDown(wxKeyEvent &event);
 
    void OnTimer(wxTimerEvent & event);
 
@@ -138,7 +226,7 @@ class AudacityApp:public wxApp {
      * ShouldShowMissingAliasedFileWarning can be called to determine
      * if the user should be notified
      */
-   void MarkAliasedFilesMissingWarning(BlockFile *b);
+   void MarkAliasedFilesMissingWarning(const BlockFile *b);
 
    /** \brief Changes the behavior of missing aliased blockfiles warnings
      */
@@ -150,9 +238,9 @@ class AudacityApp:public wxApp {
 
    #ifdef __WXMAC__
     // In response to Apple Events
-    virtual void MacOpenFile(const wxString &fileName) ;
-    virtual void MacPrintFile(const wxString &fileName) ;
-    virtual void MacNewFile() ;
+    void MacOpenFile(const wxString &fileName)  override;
+    void MacPrintFile(const wxString &fileName)  override;
+    void MacNewFile()  override;
    #endif
 
    #if defined(__WXMSW__) && !defined(__WXUNIVERSAL__) && !defined(__CYGWIN__)
@@ -173,14 +261,15 @@ class AudacityApp:public wxApp {
    wxString defaultTempDir;
 
    // Useful functions for working with search paths
-   static void AddUniquePathToPathList(wxString path,
+   static void AddUniquePathToPathList(const wxString &path,
                                        wxArrayString &pathList);
-   static void AddMultiPathsToPathList(wxString multiPathString,
+   static void AddMultiPathsToPathList(const wxString &multiPathString,
                                        wxArrayString &pathList);
    static void FindFilesInPathList(const wxString & pattern,
                                    const wxArrayString & pathList,
                                    wxArrayString &results,
                                    int flags = wxDIR_FILES);
+   static bool IsTempDirectoryNameOK( const wxString & Name );
 
    FileHistory *GetRecentFiles() {return mRecentFiles;}
    void AddFileToHistory(const wxString & name);
@@ -204,7 +293,7 @@ class AudacityApp:public wxApp {
    wxTimer mTimer;
 
    bool                 m_aliasMissingWarningShouldShow;
-   BlockFile           *m_LastMissingBlockFile;
+   const BlockFile     *m_LastMissingBlockFile;
 
    ODLock               m_LastMissingBlockFileLock;
 
@@ -212,9 +301,9 @@ class AudacityApp:public wxApp {
    void DeInitCommandHandler();
 
    bool InitTempDir();
-   bool CreateSingleInstanceChecker(wxString dir);
+   bool CreateSingleInstanceChecker(const wxString &dir);
 
-   wxCmdLineParser *ParseCommandLine();
+   std::unique_ptr<wxCmdLineParser> ParseCommandLine();
 
    bool mWindowRectAlreadySaved;
 

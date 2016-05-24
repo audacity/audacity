@@ -38,7 +38,7 @@ public:
    // Add a parameter to the signature.
    //    name:  the parameter name (case-sensitive)
    //    dft:   a default value
-   //    valid: a suitable validator (caller doesn't need to delete it)
+   //    valid: a suitable validator (caller doesn't need to DELETE it)
    void AddParameter(const wxString &name,
                      const wxVariant &dft,
                      Validator *valid);

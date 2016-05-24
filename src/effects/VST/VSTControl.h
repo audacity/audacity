@@ -16,14 +16,14 @@
 
 #include "aeffectx.h"
 
-class VSTEffectLink
+class VSTEffectLink /* not final */
 {
 public:
    virtual ~VSTEffectLink() {};
    virtual intptr_t callDispatcher(int opcode, int index, intptr_t value, void *ptr, float opt) = 0;
 };
 
-class VSTControlBase : public wxControl
+class VSTControlBase /* not final */ : public wxControl
 {
 public:
    VSTControlBase()
@@ -41,7 +41,7 @@ public:
       mParent = parent;
       mLink = link;
 
-      if (!wxControl::Create(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxNO_BORDER, wxDefaultValidator, wxEmptyString))
+      if (!wxControl::Create(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxNO_BORDER | wxTAB_TRAVERSAL, wxDefaultValidator, wxEmptyString))
       {
          return false;
       }

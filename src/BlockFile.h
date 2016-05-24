@@ -12,6 +12,7 @@
 #ifndef __AUDACITY_BLOCKFILE__
 #define __AUDACITY_BLOCKFILE__
 
+#include "MemoryX.h"
 #include <wx/string.h>
 #include <wx/ffile.h>
 #include <wx/filename.h>
@@ -20,6 +21,10 @@
 #include "xml/XMLWriter.h"
 
 #include "SampleFormat.h"
+
+#include "wxFileNameWrapper.h"
+
+#include "ondemand/ODTaskThread.h"
 
 
 class SummaryInfo {
@@ -38,22 +43,20 @@ class SummaryInfo {
 
 
 
-class BlockFile {
+class PROFILE_DLL_API BlockFile /* not final, abstract */ {
  public:
 
    // Constructor / Destructor
 
    /// Construct a BlockFile.
-   BlockFile(wxFileName fileName, sampleCount samples);
+   BlockFile(wxFileNameWrapper &&fileName, sampleCount samples);
    virtual ~BlockFile();
-
-   static void Deinit();
 
    // Reading
 
    /// Retrieves audio data from this BlockFile
    virtual int ReadData(samplePtr data, sampleFormat format,
-                        sampleCount start, sampleCount len) = 0;
+                        sampleCount start, sampleCount len) const = 0;
 
    // Other Properties
 
@@ -71,10 +74,27 @@ class BlockFile {
    /// Gets the filename of the disk file associated with this BlockFile
    /// (can be empty -- some BlockFiles, like SilentBlockFile, correspond to
    ///  no file on disk)
-   virtual wxFileName GetFileName();
-   virtual void SetFileName(wxFileName &name);
+   /// Avoids copying wxFileName by returning a reference, but for some subclasses
+   /// of BlockFile, you must exclude other threads from changing the name so long
+   /// as you have only a reference.  Thus, this wrapper object that guarantees release
+   /// of any lock when it goes out of scope.  Call mLocker.reset() to unlock it sooner.
+   struct GetFileNameResult {
+      const wxFileName &name;
+      ODLocker mLocker;
 
-   virtual sampleCount GetLength() { return mLen; }
+      GetFileNameResult(const wxFileName &name_, ODLocker &&locker = ODLocker{})
+      : name{ name_ }, mLocker{ std::move(locker) } {}
+
+      GetFileNameResult(const GetFileNameResult&) PROHIBITED;
+      GetFileNameResult &operator= (const GetFileNameResult&) PROHIBITED;
+
+      GetFileNameResult(GetFileNameResult &&that)
+      : name{ that.name }, mLocker{ std::move(that.mLocker) } {}
+   };
+   virtual GetFileNameResult GetFileName() const;
+   virtual void SetFileName(wxFileNameWrapper &&name);
+
+   virtual sampleCount GetLength() const { return mLen; }
    virtual void SetLength(const sampleCount newLen) { mLen = newLen; }
 
    /// Locks this BlockFile, to prevent it from being moved
@@ -86,30 +106,30 @@ class BlockFile {
 
    /// Gets extreme values for the specified region
    virtual void GetMinMax(sampleCount start, sampleCount len,
-                          float *outMin, float *outMax, float *outRMS);
+                          float *outMin, float *outMax, float *outRMS) const;
    /// Gets extreme values for the entire block
-   virtual void GetMinMax(float *outMin, float *outMax, float *outRMS);
+   virtual void GetMinMax(float *outMin, float *outMax, float *outRMS) const;
    /// Returns the 256 byte summary data block
    virtual bool Read256(float *buffer, sampleCount start, sampleCount len);
    /// Returns the 64K summary data block
    virtual bool Read64K(float *buffer, sampleCount start, sampleCount len);
 
    /// Returns TRUE if this block references another disk file
-   virtual bool IsAlias() { return false; }
+   virtual bool IsAlias() const { return false; }
 
    /// Returns TRUE if this block's complete summary has been computed and is ready (for OD)
-   virtual bool IsSummaryAvailable(){return true;}
+   virtual bool IsSummaryAvailable() const {return true;}
 
    /// Returns TRUE if this block's complete data is ready to be accessed by Read()
-   virtual bool IsDataAvailable(){return true;}
+   virtual bool IsDataAvailable() const {return true;}
 
    /// Returns TRUE if the summary has not yet been written, but is actively being computed and written to disk
    virtual bool IsSummaryBeingComputed(){return false;}
 
-   /// Create a new BlockFile identical to this, using the given filename
-   virtual BlockFile *Copy(wxFileName newFileName) = 0;
+   /// Create a NEW BlockFile identical to this, using the given filename
+   virtual BlockFile * Copy(wxFileNameWrapper &&newFileName) = 0;
 
-   virtual wxLongLong GetSpaceUsage() = 0;
+   virtual wxLongLong GetSpaceUsage() const = 0;
 
    /// if the on-disk state disappeared, either recover it (if it was
    //summary only), write out a placeholder of silence data (missing
@@ -120,16 +140,17 @@ class BlockFile {
    //continue and the error persists, don't keep reporting it.  The
    //Object implements this functionality internally, but we want to
    //be able to tell the logging to shut up from outside too.
-   void SilenceLog() { mSilentLog = TRUE; }
+   void SilenceLog() const { mSilentLog = TRUE; }
 
    ///when the project closes, it locks the blockfiles.
-   ///Override this in case it needs special treatment
+   ///Override this in case it needs special treatment.
+   // not balanced by unlocking calls.
    virtual void CloseLock(){Lock();}
 
    /// Prevents a read on other threads.  The basic blockfile runs on only one thread, so does nothing.
-   virtual void LockRead(){}
+   virtual void LockRead() const {}
    /// Allows reading on other threads.
-   virtual void UnlockRead(){}
+   virtual void UnlockRead() const {}
 
  private:
 
@@ -140,14 +161,16 @@ class BlockFile {
    friend class ODDecodeTask;
    friend class ODPCMAliasBlockFile;
 
-   virtual void Ref();
-   virtual bool Deref();
+   virtual void Ref() const;
+   virtual bool Deref() const;
    virtual int RefCount(){return mRefCount;}
 
  protected:
    /// Calculate summary data for the given sample data
    virtual void *CalcSummary(samplePtr buffer, sampleCount len,
-                             sampleFormat format);
+                             sampleFormat format,
+                             // This gets filled, if the caller needs to deallocate.  Else it is null.
+                             ArrayOf<char> &cleanup);
    /// Read the summary section of the file.  Derived classes implement.
    virtual bool ReadSummary(void *data) = 0;
 
@@ -157,16 +180,16 @@ class BlockFile {
 
  private:
    int mLockCount;
-   int mRefCount;
+   mutable int mRefCount;
 
-   static char *fullSummary;
+   static ArrayOf<char> fullSummary;
 
  protected:
-   wxFileName mFileName;
+   wxFileNameWrapper mFileName;
    sampleCount mLen;
    SummaryInfo mSummaryInfo;
    float mMin, mMax, mRMS;
-   bool mSilentLog;
+   mutable bool mSilentLog;
 };
 
 /// A BlockFile that refers to data in an existing file
@@ -178,51 +201,48 @@ class BlockFile {
 /// This is a common base class for all alias block files.  It handles
 /// reading and writing summary data, leaving very little for derived
 /// classes to need to implement.
-class AliasBlockFile : public BlockFile
+class AliasBlockFile /* not final */ : public BlockFile
 {
  public:
 
    // Constructor / Destructor
 
    /// Constructs an AliasBlockFile
-   AliasBlockFile(wxFileName baseFileName,
-                  wxFileName aliasedFileName, sampleCount aliasStart,
+   AliasBlockFile(wxFileNameWrapper &&baseFileName,
+                  wxFileNameWrapper &&aliasedFileName, sampleCount aliasStart,
                   sampleCount aliasLen, int aliasChannel);
-   AliasBlockFile(wxFileName existingSummaryFileName,
-                  wxFileName aliasedFileName, sampleCount aliasStart,
+   AliasBlockFile(wxFileNameWrapper &&existingSummaryFileName,
+                  wxFileNameWrapper &&aliasedFileName, sampleCount aliasStart,
                   sampleCount aliasLen, int aliasChannel,
                   float min, float max, float RMS);
    virtual ~AliasBlockFile();
 
    // Reading
 
-   /// Retrieves audio data from the aliased file.
-   virtual int ReadData(samplePtr data, sampleFormat format,
-                        sampleCount start, sampleCount len) = 0;
-
-   virtual wxLongLong GetSpaceUsage();
+   wxLongLong GetSpaceUsage() const override;
 
    /// as SilentLog (which would affect Summary data access), but
    // applying to Alias file access
-   void SilenceAliasLog() { mSilentAliasLog = TRUE; }
+   void SilenceAliasLog() const { mSilentAliasLog = TRUE; }
 
    //
    // These methods are for advanced use only!
    //
-   wxFileName GetAliasedFileName() { return mAliasedFileName; }
-   void ChangeAliasedFileName(wxFileName newAliasedFile);
-   virtual bool IsAlias() { return true; }
+   const wxFileName &GetAliasedFileName() { return mAliasedFileName; }
+   void ChangeAliasedFileName(wxFileNameWrapper &&newAliasedFile);
+   bool IsAlias() const override { return true; }
 
  protected:
+   // Introduce a NEW virtual.
    /// Write the summary to disk, using the derived ReadData() to get the data
    virtual void WriteSummary();
    /// Read the summary into a buffer
-   virtual bool ReadSummary(void *data);
+   bool ReadSummary(void *data) override;
 
-   wxFileName  mAliasedFileName;
+   wxFileNameWrapper mAliasedFileName;
    sampleCount mAliasStart;
    int         mAliasChannel;
-   bool        mSilentAliasLog;
+   mutable bool        mSilentAliasLog;
 };
 
 #endif

@@ -663,7 +663,8 @@ long SBSMSImp :: write(SBSMSInterface *iface)
   long nWrite = 0;
 
   float t = getInputTime(iface);
-  float stretch = iface->getStretch(t);
+  float t1 = (float)(nSamplesInputed + quality->getFrameSize()) / (float)iface->getSamplesToInput();
+  float stretch = iface->getMeanStretch(t,t1);
   float pitch = iface->getPitch(t);
 
   long nPresamples = iface->getPresamples();

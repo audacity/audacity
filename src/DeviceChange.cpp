@@ -35,7 +35,7 @@ DEFINE_EVENT_TYPE(EVT_DEVICE_CHANGE);
 #include <mmdeviceapi.h>
 #include <audioclient.h>
 
-class DeviceChangeListener : public IMMNotificationClient,
+class DeviceChangeListener final : public IMMNotificationClient,
                              public DeviceChangeInterface
 {
 public:
@@ -174,7 +174,7 @@ private:
 #include <locale.h>
 #include <unistd.h>
 
-class DeviceChangeListener : public DeviceChangeInterface
+class DeviceChangeListener final : public DeviceChangeInterface
 {
 public:
    DeviceChangeListener()
@@ -279,7 +279,7 @@ private:
 
 #include <CoreAudio/CoreAudio.h>
 
-class DeviceChangeListener : public DeviceChangeInterface
+class DeviceChangeListener final : public DeviceChangeInterface
 {
 public:
    DeviceChangeListener()

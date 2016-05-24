@@ -81,7 +81,7 @@ void FileHistory::Clear()
    AddFilesToMenu();
 }
 
-wxString FileHistory::GetHistoryFile(size_t i) const
+const wxString &FileHistory::GetHistoryFile(size_t i) const
 {
    wxASSERT(i < mHistory.GetCount());
 
@@ -89,7 +89,8 @@ wxString FileHistory::GetHistoryFile(size_t i) const
       return mHistory[i];
    }
 
-   return wxEmptyString;
+   static const wxString empty;
+   return empty;
 }
 
 size_t FileHistory::GetCount()

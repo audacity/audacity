@@ -65,7 +65,7 @@ wxString EffectNormalize::GetSymbol()
 
 wxString EffectNormalize::GetDescription()
 {
-   return XO("Sets the peak amplitude of a one or more tracks");
+   return XO("Sets the peak amplitude of one or more tracks");
 }
 
 // EffectIdentInterface implementation
@@ -333,7 +333,7 @@ bool EffectNormalize::TransferDataFromWindow()
 
 // EffectNormalize implementation
 
-void EffectNormalize::AnalyseTrack(WaveTrack * track, wxString msg)
+void EffectNormalize::AnalyseTrack(WaveTrack * track, const wxString &msg)
 {
    if(mGain) {
       // Since we need complete summary data, we need to block until the OD tasks are done for this track
@@ -361,7 +361,7 @@ void EffectNormalize::AnalyseTrack(WaveTrack * track, wxString msg)
 //AnalyseDC() takes a track, transforms it to bunch of buffer-blocks,
 //and executes AnalyzeData on it...
 // sets mOffset
-bool EffectNormalize::AnalyseDC(WaveTrack * track, wxString msg)
+bool EffectNormalize::AnalyseDC(WaveTrack * track, const wxString &msg)
 {
    bool rc = true;
    sampleCount s;
@@ -427,7 +427,7 @@ bool EffectNormalize::AnalyseDC(WaveTrack * track, wxString msg)
 //ProcessOne() takes a track, transforms it to bunch of buffer-blocks,
 //and executes ProcessData, on it...
 // uses mMult and mOffset to normalize a track.  Needs to have them set before being called
-bool EffectNormalize::ProcessOne(WaveTrack * track, wxString msg)
+bool EffectNormalize::ProcessOne(WaveTrack * track, const wxString &msg)
 {
    bool rc = true;
    sampleCount s;

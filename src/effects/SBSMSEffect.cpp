@@ -52,8 +52,6 @@ public:
       if(leftBuffer)          free(leftBuffer);
       if(rightBuffer)         free(rightBuffer);
       if(SBSMSBuf)            free(SBSMSBuf);
-      if(outputLeftTrack)     delete outputLeftTrack;
-      if(outputRightTrack)    delete outputRightTrack;
       if(quality)             delete quality;
       if(sbsms)               delete sbsms;
       if(iface)           delete iface;
@@ -79,11 +77,11 @@ public:
    // Not required by callbacks, but makes for easier cleanup
    Resampler *resampler;
    SBSMSQuality *quality;
-   WaveTrack *outputLeftTrack;
-   WaveTrack *outputRightTrack;
+   std::unique_ptr<WaveTrack> outputLeftTrack;
+   std::unique_ptr<WaveTrack> outputRightTrack;
 };
 
-class SBSMSEffectInterface : public SBSMSInterfaceSliding {
+class SBSMSEffectInterface final : public SBSMSInterfaceSliding {
 public:
    SBSMSEffectInterface(Resampler *resampler,
                         Slide *rateSlide, Slide *pitchSlide,
@@ -200,6 +198,18 @@ bool EffectSBSMS::ProcessLabelTrack(Track *t)
    return true;
 }
 
+double EffectSBSMS::getInvertedStretchedTime(double rateStart, double rateEnd, SlideType slideType, double outputTime)
+{
+   Slide slide(slideType,rateStart,rateEnd,0);
+   return slide.getInverseStretchedTime(outputTime);
+}
+
+double EffectSBSMS::getRate(double rateStart, double rateEnd, SlideType slideType, double t)
+{
+   Slide slide(slideType,rateStart,rateEnd,0);
+   return slide.getRate(t);
+}
+
 bool EffectSBSMS::Process()
 {
    bool bGoodResult = true;
@@ -307,6 +317,8 @@ bool EffectSBSMS::Process()
                                                        bPitchReferenceInput,
                                                        samplesToProcess,0,
                                                        NULL);
+               
+             
             } else {
               rb.bPitch = false;
               outSlideType = (srProcess==srTrack?SlideIdentity:SlideConstant);
@@ -330,7 +342,7 @@ bool EffectSBSMS::Process()
                                                       samplesToProcess,processPresamples,
                                                       rb.quality);
             }
-
+            
             Resampler resampler(outResampleCB,&rb,outSlideType);
 
             audio outBuf[SBSMSOutBlockSize];
@@ -399,14 +411,15 @@ bool EffectSBSMS::Process()
                rb.outputRightTrack->Flush();
 
             bool bResult =
-               leftTrack->ClearAndPaste(mCurT0, mCurT1, rb.outputLeftTrack,
+               leftTrack->ClearAndPaste(mCurT0, mCurT1, rb.outputLeftTrack.get(),
                                           true, false, GetTimeWarper());
             wxASSERT(bResult); // TO DO: Actually handle this.
+            wxUnusedVar(bResult);
 
             if(rightTrack)
             {
                bResult =
-                  rightTrack->ClearAndPaste(mCurT0, mCurT1, rb.outputRightTrack,
+                  rightTrack->ClearAndPaste(mCurT0, mCurT1, rb.outputRightTrack.get(),
                                              true, false, GetTimeWarper());
                wxASSERT(bResult); // TO DO: Actually handle this.
             }

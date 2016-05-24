@@ -40,7 +40,7 @@ Gives an Error message with an option for help.
 #include "ErrorDialog.h"
 
 // special case for alias missing dialog because we keep track of if it exists.
-class AliasedFileMissingDialog : public ErrorDialog
+class AliasedFileMissingDialog final : public ErrorDialog
 {
    public:
    AliasedFileMissingDialog(AudacityProject *parent,
@@ -109,28 +109,33 @@ ErrorDialog::ErrorDialog(
 #if 0
    // Original non ShuttleGui based code.
    // Layout did not look good on Windows.
-   wxBoxSizer *mainSizer = new wxBoxSizer(wxVERTICAL);
-   wxBoxSizer *vSizer = new wxBoxSizer(wxVERTICAL);
+   wxBoxSizer mainSizer;
+   {
+      auto uMainSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
+      mainSizer = uMainSizer.get();
+      auto vSizer = make_unique<xBoxSizer>(wxVERTICAL);
 
-   wxBoxSizer *hSizer = new wxBoxSizer(wxHORIZONTAL);
+      auto hSizer = make_unique<wxBoxSizer>(wxHORIZONTAL);
 
-   wxStaticText *statText = new wxStaticText(this, -1, message);
-   mainSizer->Add(statText, 0, wxALIGN_LEFT|wxALL, 5);
+      wxStaticText *statText = safenew wxStaticText(this, -1, message);
+      mainSizer->Add(statText, 0, wxALIGN_LEFT|wxALL, 5);
 
-   wxButton *help = new wxButton(this, wxID_HELP, _("Help"));
-   hSizer->Add(help, 0, wxALIGN_LEFT|wxALL, 5);
+      wxButton *help = safenew wxButton(this, wxID_HELP, _("Help"));
+      hSizer->Add(help, 0, wxALIGN_LEFT|wxALL, 5);
 
-   wxButton *ok = new wxButton(this, wxID_OK, _("OK"));
-   ok->SetDefault();
-   ok->SetFocus();
-   hSizer->Add(ok, 0, wxALIGN_RIGHT|wxALL, 5);
+      wxButton *ok = safenew wxButton(this, wxID_OK, _("OK"));
+      ok->SetDefault();
+      ok->SetFocus();
+      hSizer->Add(ok, 0, wxALIGN_RIGHT|wxALL, 5);
 
-   vSizer->Add(hSizer, 0, wxALIGN_CENTER|wxALL, 5);
+      vSizer->Add(hSizer.release(), 0, wxALIGN_CENTER|wxALL, 5);
 
-   mainSizer->Add(vSizer, 0, wxALL, 15 );
+      mainSizer->Add(vSizer.release(), 0, wxALL, 15 );
 
-   SetAutoLayout(true);
-   SetSizer(mainSizer);
+      SetAutoLayout(true);
+      SetSizer(uMainSizer.release());
+   }
+
    mainSizer->Fit(this);
    mainSizer->SetSizeHints(this);
 #endif

@@ -11,10 +11,10 @@
 #ifndef _IMPORT_
 #define _IMPORT_
 
+#include "ImportRaw.h" // defines TrackHolders
+#include <vector>
 #include <wx/arrstr.h>
 #include <wx/string.h>
-#include <wx/list.h>
-#include <wx/listimpl.cpp>
 #include <wx/dialog.h>
 #include <wx/listbox.h>
 #include <wx/tokenzr.h>
@@ -32,7 +32,7 @@ public:
    wxString formatName;
    wxArrayString formatExtensions;
 
-   Format(wxString _formatName, wxArrayString _formatExtensions):
+   Format(const wxString &_formatName, const wxArrayString &_formatExtensions):
       formatName(_formatName),
       formatExtensions(_formatExtensions)
    {
@@ -41,7 +41,7 @@ public:
 
 class ExtImportItem;
 
-WX_DECLARE_LIST(Format, FormatList);
+using FormatList = std::vector<Format> ;
 WX_DEFINE_ARRAY_PTR(ImportPlugin *, ImportPluginPtrArray);
 WX_DECLARE_OBJARRAY(ExtImportItem, ExtImportItems);
 
@@ -133,16 +133,15 @@ public:
    ExtImportItems *GetImportItems() { return mExtImportItems; };
 
    /**
-    * Allocates new ExtImportItem, fills it with default data
+    * Allocates NEW ExtImportItem, fills it with default data
     * and returns a pointer to it.
     */
     ExtImportItem *CreateDefaultImportItem();
 
-   // returns number of tracks imported
-   // if zero, the import failed and errorMessage will be set.
-   int Import(wxString fName,
+   // if false, the import failed and errorMessage will be set.
+   bool Import(const wxString &fName,
               TrackFactory *trackFactory,
-              Track *** tracks,
+              TrackHolders &tracks,
               Tags *tags,
               wxString &errorMessage);
 
@@ -158,7 +157,7 @@ private:
 // ImportStreamDialog
 //----------------------------------------------------------------------------
 
-class ImportStreamDialog: public wxDialog
+class ImportStreamDialog final : public wxDialog
 {
 public:
    // constructors and destructors

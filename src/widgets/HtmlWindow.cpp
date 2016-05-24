@@ -16,7 +16,7 @@
 
 \class HtmlWindow
 \brief The widget to the left of a ToolBar that allows it to be dragged
-around to new positions.
+around to NEW positions.
 
 *//**********************************************************************/
 
@@ -42,7 +42,7 @@ HtmlWindow::HtmlWindow(wxWindow *parent,
 : wxHtmlWindow(parent, id, pos, size, style, name)
 {
 #if wxUSE_ACCESSIBILITY
-   SetAccessible( new HtmlWindowAx( this ) );
+   SetAccessible( safenew HtmlWindowAx( this ) );
 #endif
 }
 

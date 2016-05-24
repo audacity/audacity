@@ -23,15 +23,15 @@ class wxRect;
 class ToolManager;
 class CommandOutputTarget;
 
-class ScreenshotCommandType : public CommandType
+class ScreenshotCommandType final : public CommandType
 {
 public:
-   virtual wxString BuildName();
-   virtual void BuildSignature(CommandSignature &signature);
-   virtual Command *Create(CommandOutputTarget *target);
+   wxString BuildName() override;
+   void BuildSignature(CommandSignature &signature) override;
+   CommandHolder Create(std::unique_ptr<CommandOutputTarget> &&target) override;
 };
 
-class ScreenshotCommand : public CommandImplementation
+class ScreenshotCommand final : public CommandImplementation
 {
 private:
    // May need to ignore the screenshot dialog
@@ -40,22 +40,22 @@ private:
    bool mBackground;
    wxColour mBackColor;
 
-   wxString MakeFileName(wxString path, wxString basename);
+   wxString MakeFileName(const wxString &path, const wxString &basename);
 
    wxRect GetBackgroundRect();
-   void Capture(wxString basename,
+   void Capture(const wxString &basename,
          wxWindow *window,
          int x, int y, int width, int height,
          bool bg = false);
-   void CaptureToolbar(ToolManager *man, int type, wxString name);
-   void CaptureDock(wxWindow *win, wxString fileName);
+   void CaptureToolbar(ToolManager *man, int type, const wxString &name);
+   void CaptureDock(wxWindow *win, const wxString &fileName);
 
 public:
    wxTopLevelWindow *GetFrontWindow(AudacityProject *project);
    ScreenshotCommand(CommandType &type,
-                     CommandOutputTarget *output,
+                     std::unique_ptr<CommandOutputTarget> &&output,
                      wxWindow *ignore = NULL)
-      : CommandImplementation(type, output),
+      : CommandImplementation(type, std::move(output)),
         mIgnore(ignore),
         mBackground(false)
    { }

@@ -29,7 +29,7 @@ class PrefsPanelFactory;
 #define CONST const
 #endif
 
-class PrefsDialog:public wxDialog
+class PrefsDialog /* not final */ : public wxDialog
 {
  public:
     // An array of PrefsNode specifies the tree of pages in pre-order traversal.
@@ -53,7 +53,7 @@ class PrefsDialog:public wxDialog
    virtual ~PrefsDialog();
 
    // Defined this so a protected virtual can be invoked after the constructor
-   virtual int ShowModal();
+   int ShowModal() override;
 
    void OnCategoryChange(wxCommandEvent & e);
    void OnOK(wxCommandEvent & e);
@@ -61,7 +61,7 @@ class PrefsDialog:public wxDialog
    void OnApply(wxCommandEvent & e);
    void OnTreeKeyDown(wxTreeEvent & e); // Used to dismiss the dialog when enter is pressed with focus on tree
 
-   void SelectPageByName(wxString pageName);
+   void SelectPageByName(const wxString &pageName);
 
    // Accessor to help implementations of SavePreferredPage(),
    // such as by saving a preference after DoModal() returns
@@ -76,8 +76,8 @@ class PrefsDialog:public wxDialog
 
 private:
    void RecordExpansionState();
-   wxTreebook *mCategories;
-   PrefsPanel *mUniquePage;
+   wxTreebook *mCategories{};
+   PrefsPanel *mUniquePage{};
    Factories &mFactories;
    const wxString mTitlePrefix;
 
@@ -86,13 +86,13 @@ private:
 
 // This adds code appropriate only to the original use of PrefsDialog for
 // global settings -- not its reuses elsewhere as in View Settings
-class GlobalPrefsDialog : public PrefsDialog
+class GlobalPrefsDialog final : public PrefsDialog
 {
 public:
    GlobalPrefsDialog(wxWindow * parent, Factories &factories = DefaultFactories());
    virtual ~GlobalPrefsDialog();
-   virtual long GetPreferredPage();
-   virtual void SavePreferredPage();
+   long GetPreferredPage() override;
+   void SavePreferredPage() override;
 };
 
 #endif

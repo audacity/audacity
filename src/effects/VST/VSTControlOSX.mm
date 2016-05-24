@@ -143,7 +143,7 @@ void VSTControl::CreateCocoa()
    // Get the final bounds of the effect GUI
    mLink->callDispatcher(effEditGetRect, 0, 0, &rect, 0.0);
 
-   NSRect frame = { 0, 0, rect->right - rect->left, rect->bottom - rect->top };
+   NSRect frame = { 0, 0, (CGFloat) rect->right - rect->left, (CGFloat) rect->bottom - rect->top };
 
    [mView setFrame:frame];
 
@@ -245,7 +245,7 @@ void VSTControl::CreateCarbon()
    mLink->callDispatcher(effEditGetRect, 0, 0, &rect, 0.0);
 
    // Set the size of the scrollview to match
-   HIRect r = { 0, 0, rect->right - rect->left, rect->bottom - rect->top };
+   HIRect r = { 0, 0, (CGFloat) rect->right - rect->left, (CGFloat) rect->bottom - rect->top };
 
    // One effect, mutagene lipredemuco, doesn't return a valid rect so
    // try to detect it and use the created view dimensions instead.

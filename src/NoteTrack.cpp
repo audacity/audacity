@@ -98,9 +98,9 @@ SONFNS(AutoSave)
 
 
 
-NoteTrack *TrackFactory::NewNoteTrack()
+NoteTrack::Holder TrackFactory::NewNoteTrack()
 {
-   return new NoteTrack(mDirManager);
+   return std::make_unique<NoteTrack>(mDirManager);
 }
 
 NoteTrack::NoteTrack(DirManager * projDirManager):
@@ -135,9 +135,9 @@ NoteTrack::~NoteTrack()
    }
 }
 
-Track *NoteTrack::Duplicate()
+Track::Holder NoteTrack::Duplicate() const
 {
-   NoteTrack *duplicate = new NoteTrack(mDirManager);
+   auto duplicate = std::make_unique<NoteTrack>(mDirManager);
    duplicate->Init(*this);
    // Duplicate on NoteTrack moves data from mSeq to mSerializationBuffer
    // and from mSerializationBuffer to mSeq on alternate calls. Duplicate
@@ -169,7 +169,7 @@ Track *NoteTrack::Duplicate()
 #ifdef EXPERIMENTAL_MIDI_OUT
    duplicate->SetGain(GetGain());
 #endif
-   return duplicate;
+   return std::move(duplicate);
 }
 
 
@@ -196,10 +196,10 @@ void NoteTrack::WarpAndTransposeNotes(double t0, double t1,
    // Since this is a duplicate and duplicates convert mSeq to
    // a text string for saving as XML, we probably have to
    // duplicate again to get back an mSeq
-   NoteTrack *nt = this;
-   double offset = nt->GetOffset(); // track is shifted this amount
+   double offset = this->GetOffset(); // track is shifted this amount
    if (!mSeq) { // replace saveme with an (unserialized) duplicate
-      nt = (NoteTrack *) this->Duplicate();
+      Track::Holder unt{ Duplicate() };
+      const auto nt = static_cast<NoteTrack*>(unt.get());
       wxASSERT(!mSeq && nt->mSeq && !nt->mSerializationBuffer);
       // swap mSeq and Buffer between this and nt
       nt->mSerializationBuffer = mSerializationBuffer;
@@ -208,7 +208,6 @@ void NoteTrack::WarpAndTransposeNotes(double t0, double t1,
       mSerializationLength = 0;
       mSeq = nt->mSeq;
       nt->mSeq = NULL;
-      delete nt; // delete the duplicate
    }
    mSeq->convert_to_seconds(); // make sure time units are right
    t1 -= offset; // adjust time range to compensate for track offset
@@ -444,15 +443,13 @@ int NoteTrack::GetVisibleChannels()
    return mVisibleChannels;
 }
 
-bool NoteTrack::Cut(double t0, double t1, Track **dest){
-
-   //dest goes onto clipboard
-   *dest = NULL; // This is redundant
+Track::Holder NoteTrack::Cut(double t0, double t1)
+{
    if (t1 <= t0)
-      return false;
+      return{};
    double len = t1-t0;
 
-   NoteTrack *newTrack = new NoteTrack(mDirManager);
+   auto newTrack = std::make_unique<NoteTrack>(mDirManager);
 
    newTrack->Init(*this);
 
@@ -464,20 +461,16 @@ bool NoteTrack::Cut(double t0, double t1, Track **dest){
    //(mBottomNote, mDirManager, mLastMidiPosition,
    // mSerializationBuffer, mSerializationLength, mVisibleChannels)
 
-   *dest = newTrack;
-
-   return true;
+   return std::move(newTrack);
 }
 
-bool NoteTrack::Copy(double t0, double t1, Track **dest){
-
-   //dest goes onto clipboard
-   *dest = NULL; // This is redundant and matches WaveTrack::Copy
+Track::Holder NoteTrack::Copy(double t0, double t1) const
+{
    if (t1 <= t0)
-      return false;
+      return{};
    double len = t1-t0;
 
-   NoteTrack *newTrack = new NoteTrack(mDirManager);
+   auto newTrack = std::make_unique<NoteTrack>(mDirManager);
 
    newTrack->Init(*this);
 
@@ -489,9 +482,7 @@ bool NoteTrack::Copy(double t0, double t1, Track **dest){
    //(mBottomNote, mDirManager, mLastMidiPosition,
    // mSerializationBuffer, mSerializationLength, mVisibleChannels)
 
-   *dest = newTrack;
-
-   return true;
+   return std::move(newTrack);
 }
 
 bool NoteTrack::Trim(double t0, double t1)
@@ -499,7 +490,7 @@ bool NoteTrack::Trim(double t0, double t1)
    if (t1 <= t0)
       return false;
    mSeq->convert_to_seconds();
-   // delete way beyond duration just in case something is out there:
+   // DELETE way beyond duration just in case something is out there:
    mSeq->clear(t1 - GetOffset(), mSeq->get_dur() + 10000.0, false);
    // Now that stuff beyond selection is cleared, clear before selection:
    mSeq->clear(0.0, t0 - GetOffset(), false);
@@ -520,7 +511,7 @@ bool NoteTrack::Clear(double t0, double t1)
    return true;
 }
 
-bool NoteTrack::Paste(double t, Track *src)
+bool NoteTrack::Paste(double t, const Track *src)
 {
    // Paste inserts src at time t. If src has a positive offset,
    // the offset is treated as silence which is also inserted. If
@@ -564,7 +555,7 @@ bool NoteTrack::Shift(double t) // t is always seconds
       int m = ROUND(t * tempo / beats_per_measure);
       // need at least 1 measure, so if we rounded down to zero, fix it
       if (m == 0) m = 1;
-      // compute new tempo so that m measures at new tempo take t seconds
+      // compute NEW tempo so that m measures at new tempo take t seconds
       tempo = beats_per_measure * m / t; // in beats per second
       mSeq->insert_silence(0.0, beats_per_measure * m);
       mSeq->set_tempo(tempo * 60.0 /* bpm */, 0.0, beats_per_measure * m);
@@ -617,7 +608,7 @@ Alg_seq_ptr NoteTrack::MakeExportableSeq()
    // extend past "start" (because "all" parameter is set to false)
    Alg_seq_ptr seq = mSeq->copy(start, mSeq->get_dur() - start, false);
    if (offset > 0) {
-      // swap seq and mSeq so that Shift operates on the new copy
+      // swap seq and mSeq so that Shift operates on the NEW copy
       Alg_seq_ptr old_seq = mSeq;
       mSeq = seq;
       Shift(offset);
@@ -673,7 +664,7 @@ Alg_seq_ptr NoteTrack::MakeExportableSeq()
       double beat = mSeq->get_time_map()->time_to_beat(start);
       // Find the time signature in mSeq in effect at start (beat):
       int i = mSeq->time_sig.find_beat(beat);
-      // i is where you would insert a new time sig at beat,
+      // i is where you would insert a NEW time sig at beat,
       // Case 1: beat coincides with a time sig at i. Time signature
       // at beat means that there is a barline at beat, so when beat
       // is shifted to 0, the relative barline positions are preserved
@@ -711,7 +702,7 @@ Alg_seq_ptr NoteTrack::MakeExportableSeq()
             // beat
             double bar = tsp->beat + beats_per_measure * (int(measures) + 1);
             double bar_offset = bar - beat;
-            // insert new time signature at bar_offset in new sequence
+            // insert NEW time signature at bar_offset in new sequence
             // It will have the same time signature, but the position will
             // force a barline to match the barlines in mSeq
             seq->set_time_sig(bar_offset, tsp->num, tsp->den);
@@ -724,7 +715,7 @@ Alg_seq_ptr NoteTrack::MakeExportableSeq()
 }
 
 
-bool NoteTrack::ExportMIDI(wxString f)
+bool NoteTrack::ExportMIDI(const wxString &f)
 {
    Alg_seq_ptr seq = MakeExportableSeq();
    bool rslt = seq->smf_write(f.mb_str());
@@ -732,7 +723,7 @@ bool NoteTrack::ExportMIDI(wxString f)
    return rslt;
 }
 
-bool NoteTrack::ExportAllegro(wxString f)
+bool NoteTrack::ExportAllegro(const wxString &f)
 {
    double offset = GetOffset();
    bool in_seconds;
@@ -821,9 +812,11 @@ void NoteTrack::WriteXML(XMLWriter &xmlFile)
    // NoteTrack.) In this case, mSeq will be NULL. To avoid a crash
    // and perform WriteXML, we may need to restore NoteTracks from binary
    // blobs to regular data structures (with an Alg_seq member).
+   Track::Holder holder;
    NoteTrack *saveme = this;
    if (!mSeq) { // replace saveme with an (unserialized) duplicate
-      saveme = (NoteTrack *) this->Duplicate();
+      holder = Duplicate();
+      saveme = static_cast<NoteTrack*>(holder.get());
       assert(saveme->mSeq);
    }
    saveme->mSeq->write(data, true);
@@ -841,9 +834,6 @@ void NoteTrack::WriteXML(XMLWriter &xmlFile)
    xmlFile.WriteAttr(wxT("bottomnote"), saveme->mBottomNote);
    xmlFile.WriteAttr(wxT("data"), wxString(data.str().c_str(), wxConvUTF8));
    xmlFile.EndTag(wxT("notetrack"));
-   if (this != saveme) {
-      delete saveme; // delete the duplicate
-   }
 }
 
 void NoteTrack::StartVScroll()

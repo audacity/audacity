@@ -362,7 +362,7 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
          {
             S.AddPrompt(_("Current Length:"));
 
-            mpFromLengthCtrl = new
+            mpFromLengthCtrl = safenew
                   NumericTextCtrl(NumericConverter::TIME,
                                  S.GetParent(),
                                  wxID_ANY,
@@ -378,7 +378,7 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
 
             S.AddPrompt(_("New Length:"));
 
-            mpToLengthCtrl = new
+            mpToLengthCtrl = safenew
                   NumericTextCtrl(NumericConverter::TIME,
                                  S.GetParent(),
                                  ID_ToLength,
@@ -435,10 +435,13 @@ bool EffectChangeSpeed::TransferDataToWindow()
 
 bool EffectChangeSpeed::TransferDataFromWindow()
 {
+   // mUIParent->TransferDataFromWindow() loses some precision, so save and restore it.
+   double exactPercent = m_PercentChange;
    if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
    {
       return false;
    }
+   m_PercentChange = exactPercent;
 
    SetPrivateConfig(GetCurrentSettingsGroup(), wxT("TimeFormat"), mFormat);
    SetPrivateConfig(GetCurrentSettingsGroup(), wxT("VinylChoice"), mFromVinyl);
@@ -472,7 +475,7 @@ bool EffectChangeSpeed::ProcessOne(WaveTrack * track,
    // initialization, per examples of Mixer::Mixer and
    // EffectSoundTouch::ProcessOne
 
-   WaveTrack * outputTrack = mFactory->NewWaveTrack(track->GetSampleFormat(),
+   auto outputTrack = mFactory->NewWaveTrack(track->GetSampleFormat(),
                                                     track->GetRate());
 
    //Get the length of the selection (as double). len is
@@ -549,14 +552,11 @@ bool EffectChangeSpeed::ProcessOne(WaveTrack * track,
    if (bResult)
    {
       SetTimeWarper(new LinearTimeWarper(mCurT0, mCurT0, mCurT1, mCurT0 + newLength));
-      bResult = track->ClearAndPaste(mCurT0, mCurT1, outputTrack, true, false, GetTimeWarper());
+      bResult = track->ClearAndPaste(mCurT0, mCurT1, outputTrack.get(), true, false, GetTimeWarper());
    }
 
    if (newLength > mMaxNewLength)
       mMaxNewLength = newLength;
-
-   // Delete the outputTrack now that its data is inserted in place
-   delete outputTrack;
 
    return bResult;
 }
@@ -626,7 +626,7 @@ void EffectChangeSpeed::OnChoice_Vinyl(wxCommandEvent & WXUNUSED(evt))
       SetPrivateConfig(GetCurrentSettingsGroup(), wxT("VinylChoice"), mFromVinyl);
    }
 
-   // If mFromVinyl & mToVinyl are set, then there's a new percent change.
+   // If mFromVinyl & mToVinyl are set, then there's a NEW percent change.
    if ((mFromVinyl != kVinyl_NA) && (mToVinyl != kVinyl_NA))
    {
       double fromRPM;

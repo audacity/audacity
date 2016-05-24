@@ -27,6 +27,7 @@
 #endif
 #include "Project.h"
 #include "TrackPanel.h" // for EVT_TRACK_PANEL_TIMER
+#include "UndoManager.h"
 #include "WaveTrack.h"
 
 #include "widgets/Meter.h"
@@ -53,7 +54,7 @@ END_EVENT_TABLE()
 
 MixerTrackSlider::MixerTrackSlider(wxWindow * parent,
                                     wxWindowID id,
-                                    wxString name,
+                                    const wxString &name,
                                     const wxPoint & pos,
                                     const wxSize & size,
                                     int style /*= FRAC_SLIDER*/,
@@ -190,10 +191,10 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
    wxSize ctrlSize(size.GetWidth() - kQuadrupleInset, TRACK_NAME_HEIGHT);
    mStaticText_TrackName =
       #ifdef EXPERIMENTAL_MIDI_OUT
-         new wxStaticText(this, -1, mTrack->GetName(), ctrlPos, ctrlSize,
+      safenew wxStaticText(this, -1, mTrack->GetName(), ctrlPos, ctrlSize,
                            wxALIGN_CENTRE | wxST_NO_AUTORESIZE | wxSUNKEN_BORDER);
       #else
-         new wxStaticText(this, -1, mLeftTrack->GetName(), ctrlPos, ctrlSize,
+      safenew wxStaticText(this, -1, mLeftTrack->GetName(), ctrlPos, ctrlSize,
                            wxALIGN_CENTRE | 0x0001 | wxBORDER_SUNKEN);
       #endif
    //v Useful when different tracks are different colors, but not now.
@@ -209,7 +210,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
 #ifdef EXPERIMENTAL_MIDI_OUT
    if (mNoteTrack) {
       mSlider_Gain =
-         new MixerTrackSlider(
+         safenew MixerTrackSlider(
                this, ID_SLIDER_GAIN,
                /* i18n-hint: title of the MIDI Velocity slider */
                _("Velocity"),
@@ -218,7 +219,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
    } else
 #endif
    mSlider_Gain =
-      new MixerTrackSlider(
+      safenew MixerTrackSlider(
             this, ID_SLIDER_GAIN,
             /* i18n-hint: title of the Gain slider, used to adjust the volume */
             _("Gain"),
@@ -241,7 +242,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
 #endif
    wxASSERT(bitmap);
    mBitmapButton_MusicalInstrument =
-      new wxBitmapButton(this, ID_BITMAPBUTTON_MUSICAL_INSTRUMENT, *bitmap,
+      safenew wxBitmapButton(this, ID_BITMAPBUTTON_MUSICAL_INSTRUMENT, *bitmap,
                            ctrlPos, ctrlSize,
                            wxBU_AUTODRAW, wxDefaultValidator,
                            _("Musical Instrument"));
@@ -258,7 +259,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
       ctrlSize.x--;
 
    mSlider_Pan =
-      new MixerTrackSlider(
+      safenew MixerTrackSlider(
             this, ID_SLIDER_PAN,
             /* i18n-hint: Title of the Pan slider, used to move the sound left or right */
             _("Pan"),
@@ -271,7 +272,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
    ctrlPos.y += PAN_HEIGHT + kDoubleInset;
    ctrlSize.Set(mMixerBoard->mMuteSoloWidth, MUTE_SOLO_HEIGHT);
    mToggleButton_Mute =
-      new AButton(this, ID_TOGGLEBUTTON_MUTE,
+      safenew AButton(this, ID_TOGGLEBUTTON_MUTE,
                   ctrlPos, ctrlSize,
                   *(mMixerBoard->mImageMuteUp), *(mMixerBoard->mImageMuteOver),
                   *(mMixerBoard->mImageMuteDown), *(mMixerBoard->mImageMuteDisabled),
@@ -285,7 +286,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
 
    ctrlPos.y += MUTE_SOLO_HEIGHT;
    mToggleButton_Solo =
-      new AButton(this, ID_TOGGLEBUTTON_SOLO,
+      safenew AButton(this, ID_TOGGLEBUTTON_SOLO,
                   ctrlPos, ctrlSize,
                   *(mMixerBoard->mImageSoloUp), *(mMixerBoard->mImageSoloOver),
                   *(mMixerBoard->mImageSoloDown), *(mMixerBoard->mImageSoloDisabled),
@@ -308,7 +309,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
    if (mLeftTrack) {
 #endif
    mMeter =
-      new Meter(GetActiveProject(), // AudacityProject* project,
+      safenew Meter(GetActiveProject(), // AudacityProject* project,
                 this, -1, // wxWindow* parent, wxWindowID id,
                 false, // bool isInput
                 ctrlPos, ctrlSize, // const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize,
@@ -340,6 +341,12 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
       GetEventHandler()->ProcessEvent(event);
       UpdateGain();
    #endif
+}
+
+void MixerTrackCluster::UpdatePrefs()
+{
+   mMeter->UpdatePrefs(); // in case meter range has changed
+   HandleResize(); // in case prefs "/GUI/Solo" changed
 }
 
 void MixerTrackCluster::HandleResize() // For wxSizeEvents, update gain slider and meter.
@@ -399,7 +406,7 @@ void MixerTrackCluster::HandleSliderGain(const bool bWantPushState /*= false*/)
    mProject->RefreshTPTrack(mLeftTrack);
 #endif
    if (bWantPushState)
-      mProject->TP_PushState(_("Moved gain slider"), _("Gain"), PUSH_CONSOLIDATE );
+      mProject->TP_PushState(_("Moved gain slider"), _("Gain"), UndoPush::CONSOLIDATE );
 }
 
 void MixerTrackCluster::HandleSliderPan(const bool bWantPushState /*= false*/)
@@ -418,7 +425,7 @@ void MixerTrackCluster::HandleSliderPan(const bool bWantPushState /*= false*/)
 #endif
 
    if (bWantPushState)
-      mProject->TP_PushState(_("Moved pan slider"), _("Pan"), PUSH_CONSOLIDATE );
+      mProject->TP_PushState(_("Moved pan slider"), _("Pan"), UndoPush::CONSOLIDATE );
 }
 
 void MixerTrackCluster::ResetMeter(const bool bResetClipping)
@@ -978,7 +985,7 @@ MixerBoard::MixerBoard(AudacityProject* pProject,
    mProject = pProject;
 
    mScrolledWindow =
-      new MixerBoardScrolledWindow(
+      safenew MixerBoardScrolledWindow(
          pProject, // AudacityProject* project,
          this, -1, // wxWindow* parent, wxWindowID id = -1,
          this->GetClientAreaOrigin(), // const wxPoint& pos = wxDefaultPosition,
@@ -996,7 +1003,7 @@ MixerBoard::MixerBoard(AudacityProject* pProject,
    mScrolledWindow->SetVirtualSize(size);
 
    /* This doesn't work to make the mScrolledWindow automatically resize, so do it explicitly in OnSize.
-         wxBoxSizer* pBoxSizer = new wxBoxSizer(wxVERTICAL);
+         auto pBoxSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
          pBoxSizer->Add(mScrolledWindow, 0, wxExpand, 0);
          this->SetAutoLayout(true);
          this->SetSizer(pBoxSizer);
@@ -1034,6 +1041,12 @@ MixerBoard::~MixerBoard()
       wxCommandEventHandler(MixerBoard::OnTimer),
       NULL,
       this);
+}
+
+void MixerBoard::UpdatePrefs()
+{
+   for (unsigned int nClusterIndex = 0; nClusterIndex < mMixerTrackClusters.GetCount(); nClusterIndex++)
+      mMixerTrackClusters[nClusterIndex]->UpdatePrefs();
 }
 
 // Reassign mixer input strips (MixerTrackClusters) to Track Clusters
@@ -1088,16 +1101,16 @@ void MixerBoard::UpdateTrackClusters()
          }
          else
          {
-            // Not already showing it. Add a new MixerTrackCluster.
+            // Not already showing it. Add a NEW MixerTrackCluster.
             wxPoint clusterPos(
                (kInset +                                       // extra inset to left for first one, so it's double
                   (nClusterIndex *
                      (kInset + kMixerTrackClusterWidth)) +     // left margin and width for each to its left
-                  kInset),                                     // plus left margin for new cluster
+                  kInset),                                     // plus left margin for NEW cluster
                kInset);
             wxSize clusterSize(kMixerTrackClusterWidth, nClusterHeight);
             pMixerTrackCluster =
-               new MixerTrackCluster(mScrolledWindow, this, mProject,
+               safenew MixerTrackCluster(mScrolledWindow, this, mProject,
                                        (WaveTrack*)pLeftTrack, (WaveTrack*)pRightTrack,
                                        clusterPos, clusterSize);
             if (pMixerTrackCluster)
@@ -1120,7 +1133,7 @@ void MixerBoard::UpdateTrackClusters()
       // This can happen only on things like Undo New Audio Track or Undo Import
       // that don't call RemoveTrackCluster explicitly.
       // We've already updated the track pointers for the clusters to the left, so just remove all the rest.
-      // Keep nClusterIndex constant and successively delete from left to right.
+      // Keep nClusterIndex constant and successively DELETE from left to right.
       for (unsigned int nCounter = nClusterIndex; nCounter < nClusterCount; nCounter++)
 #ifdef EXPERIMENTAL_MIDI_OUT
          this->RemoveTrackCluster(mMixerTrackClusters[nClusterIndex]->mTrack);
@@ -1192,7 +1205,7 @@ void MixerBoard::RemoveTrackCluster(const WaveTrack* pTrack)
       return; // Couldn't find it.
 
    mMixerTrackClusters.RemoveAt(nIndex);
-   pMixerTrackCluster->Destroy(); // delete is unsafe on wxWindow.
+   pMixerTrackCluster->Destroy(); // DELETE is unsafe on wxWindow.
 
    // Close the gap, if any.
    wxPoint pos;
@@ -1231,7 +1244,7 @@ wxBitmap* MixerBoard::GetMusicalInstrumentBitmap(const WaveTrack* pLeftTrack)
    // random choice:    return mMusicalInstruments[(int)pLeftTrack % mMusicalInstruments.GetCount()].mBitmap;
 
 #ifdef EXPERIMENTAL_MIDI_OUT
-   const wxString strTrackName(name.MakeLower());
+   const wxString strTrackName(wxString{ name }.MakeLower());
 #else
    const wxString strTrackName(pLeftTrack->GetName().MakeLower());
 #endif
@@ -1710,7 +1723,7 @@ void MixerBoard::OnTimer(wxCommandEvent &event)
    if (mProject->IsAudioActive())
    {
       UpdateMeters(gAudioIO->GetStreamTime(),
-         (mProject->mLastPlayMode == loopedPlay));
+                   (mProject->mLastPlayMode == PlayMode::loopedPlay));
    }
 
    // Let other listeners get the notification
@@ -1746,22 +1759,22 @@ MixerBoardFrame::MixerBoardFrame(AudacityProject* parent)
             //    wxDEFAULT_FRAME_STYLE | wxFRAME_FLOAT_ON_PARENT)
             wxDEFAULT_FRAME_STYLE)
 {
-   mMixerBoard = new MixerBoard(parent, this, wxDefaultPosition, kDefaultSize);
+   mMixerBoard = safenew MixerBoard(parent, this, wxDefaultPosition, kDefaultSize);
 
    this->SetSizeHints(MIXER_BOARD_MIN_WIDTH, MIXER_BOARD_MIN_HEIGHT);
 
    mMixerBoard->UpdateTrackClusters();
 
    // loads either the XPM or the windows resource, depending on the platform
-   #if !defined(__WXMAC__) && !defined(__WXX11__)
-      wxIcon *ic;
-      #ifdef __WXMSW__
-         ic = new wxIcon(wxICON(AudacityLogo));
-      #else
-         ic = new wxIcon(wxICON(AudacityLogo48x48));
-      #endif
-      SetIcon(*ic);
-      delete ic;
+#if !defined(__WXMAC__) && !defined(__WXX11__)
+   {
+#ifdef __WXMSW__
+      wxIcon ic{ wxICON(AudacityLogo) };
+#else
+      wxIcon ic{wxICON(AudacityLogo48x48)};
+#endif
+      SetIcon(ic);
+   }
    #endif
 }
 

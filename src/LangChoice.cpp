@@ -30,7 +30,7 @@ of languages for Audacity.
 #include "Languages.h"
 #include "ShuttleGui.h"
 
-class LangChoiceDialog:public wxDialog {
+class LangChoiceDialog final : public wxDialog {
 public:
    LangChoiceDialog(wxWindow * parent,
                     wxWindowID id,

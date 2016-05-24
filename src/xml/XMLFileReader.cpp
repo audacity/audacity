@@ -29,15 +29,12 @@ XMLFileReader::XMLFileReader()
    XML_SetElementHandler(mParser, startElement, endElement);
    XML_SetCharacterDataHandler(mParser, charHandler);
    mBaseHandler = NULL;
-   mMaxDepth = 128;
-   mHandler = new XMLTagHandler*[mMaxDepth];
-   mDepth = -1;
    mErrorStr = wxT("");
+   mHandler.reserve(128);
 }
 
 XMLFileReader::~XMLFileReader()
 {
-   delete[] mHandler;
    XML_ParserFree(mParser);
 }
 
@@ -51,7 +48,6 @@ bool XMLFileReader::Parse(XMLTagHandler *baseHandler,
    }
 
    mBaseHandler = baseHandler;
-   mHandler[0] = NULL;
 
    const size_t bufferSize = 16384;
    char buffer[16384];
@@ -73,7 +69,7 @@ bool XMLFileReader::Parse(XMLTagHandler *baseHandler,
    // Even though there were no parse errors, we only succeed if
    // the first-level handler actually got called, and didn't
    // return false.
-   if (mHandler[0])
+   if (mBaseHandler)
       return true;
    else {
       mErrorStr.Printf(_("Could not load file: \"%s\""), fname.c_str());
@@ -91,31 +87,24 @@ void XMLFileReader::startElement(void *userData, const char *name,
                                  const char **atts)
 {
    XMLFileReader *This = (XMLFileReader *)userData;
+   Handlers &handlers = This->mHandler;
 
-   This->mDepth++;
-
-   if (This->mDepth >= This->mMaxDepth) {
-      XMLTagHandler  **newHandler = new XMLTagHandler*[This->mMaxDepth*2];
-      for(int i=0; i<This->mMaxDepth; i++)
-         newHandler[i] = This->mHandler[i];
-      delete[] This->mHandler;
-      This->mHandler = newHandler;
-      This->mMaxDepth *= 2;
+   if (handlers.empty()) {
+      handlers.push_back(This->mBaseHandler);
    }
-
-   if (This->mDepth==0)
-      This->mHandler[This->mDepth] = This->mBaseHandler;
    else {
-      if (This->mHandler[This->mDepth-1])
-         This->mHandler[This->mDepth] =
-            This->mHandler[This->mDepth-1]->ReadXMLChild(name);
+      if (XMLTagHandler *const handler = handlers.back())
+         handlers.push_back(handler->ReadXMLChild(name));
       else
-         This->mHandler[This->mDepth] = NULL;
+         handlers.push_back(NULL);
    }
 
-   if (This->mHandler[This->mDepth]) {
-      if (!This->mHandler[This->mDepth]->ReadXMLTag(name, atts))
-         This->mHandler[This->mDepth] = 0;
+   if (XMLTagHandler *& handler = handlers.back()) {
+      if (!handler->ReadXMLTag(name, atts)) {
+         handler = nullptr;
+         if (handlers.size() == 1)
+            This->mBaseHandler = nullptr;
+      }
    }
 }
 
@@ -123,18 +112,20 @@ void XMLFileReader::startElement(void *userData, const char *name,
 void XMLFileReader::endElement(void *userData, const char *name)
 {
    XMLFileReader *This = (XMLFileReader *)userData;
+   Handlers &handlers = This->mHandler;
 
-   if (This->mHandler[This->mDepth])
-      This->mHandler[This->mDepth]->ReadXMLEndTag(name);
+   if (XMLTagHandler *const handler = handlers.back())
+      handler->ReadXMLEndTag(name);
 
-   This->mDepth--;
+   handlers.pop_back();
 }
 
 // static
 void XMLFileReader::charHandler(void *userData, const char *s, int len)
 {
    XMLFileReader *This = (XMLFileReader *)userData;
+   Handlers &handlers = This->mHandler;
 
-   if (This->mHandler[This->mDepth])
-      This->mHandler[This->mDepth]->ReadXMLContent(s, len);
+   if (XMLTagHandler *const handler = handlers.back())
+      handler->ReadXMLContent(s, len);
 }

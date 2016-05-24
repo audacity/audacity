@@ -21,7 +21,7 @@
 
 #include "aeffectx.h"
 
-class VSTControl : public VSTControlBase
+class VSTControl final : public VSTControlBase
 {
 public:
    VSTControl();

@@ -14,6 +14,7 @@
 
 #include <wx/dynlib.h>
 
+#include "MemoryX.h"
 #include <map>
 #include <vector>
 
@@ -53,7 +54,7 @@ public:
    bool Load();
    void Unload();
    int Dispatch(ModuleDispatchTypes type);
-   void * GetSymbol(wxString name);
+   void * GetSymbol(const wxString &name);
 
 private:
    wxString mName;
@@ -61,28 +62,32 @@ private:
    fnModuleDispatch mDispatch;
 };
 
-typedef std::map<wxString, ModuleMain *> ModuleMainMap;
-typedef std::map<wxString, ModuleInterface *> ModuleMap;
-typedef std::map<ModuleInterface *, wxDynamicLibrary *> LibraryMap;
+struct ModuleInterfaceDeleter {
+   void operator ()(ModuleInterface *pInterface) const;
+};
 
-class ModuleManager : public ModuleManagerInterface
+using ModuleInterfaceHandle = movable_ptr_with_deleter<
+   ModuleInterface, ModuleInterfaceDeleter
+>;
+
+typedef std::map<wxString, ModuleMain *> ModuleMainMap;
+typedef std::map<wxString, ModuleInterfaceHandle> ModuleMap;
+typedef std::map<ModuleInterface *, movable_ptr<wxDynamicLibrary>> LibraryMap;
+
+class ModuleManager final : public ModuleManagerInterface
 {
 public:
-   ModuleManager();
-   virtual ~ModuleManager();
-
    // -------------------------------------------------------------------------
    // ModuleManagerInterface implementation
    // -------------------------------------------------------------------------
 
-   virtual void RegisterModule(ModuleInterface *module);
+   void RegisterModule(ModuleInterface *module) override;
 
    // -------------------------------------------------------------------------
    // ModuleManager implementation
    // -------------------------------------------------------------------------
 
    static ModuleManager & Get();
-   static void Destroy();
 
    void Initialize(CommandHandler & cmdHandler);
    int Dispatch(ModuleDispatchTypes type);
@@ -102,12 +107,17 @@ public:
    bool IsPluginValid(const PluginID & provider, const wxString & path);
 
 private:
+   // I'm a singleton class
+   ModuleManager();
+   ~ModuleManager();
+
    void InitializeBuiltins();
    ModuleInterface *LoadModule(const wxString & path);
-   void UnloadModule(ModuleInterface *module);
 
 private:
-   static ModuleManager *mInstance;
+   friend ModuleInterfaceDeleter;
+   friend std::default_delete<ModuleManager>;
+   static std::unique_ptr<ModuleManager> mInstance;
 
    ModuleMainMap mModuleMains;
    ModuleMap mDynModules;

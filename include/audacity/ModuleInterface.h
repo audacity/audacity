@@ -61,7 +61,7 @@
 //
 // ============================================================================
 
-class ModuleInterface : public IdentInterface
+class ModuleInterface  /* not final */ : public IdentInterface
 {
 public:
    virtual ~ModuleInterface() {};
@@ -106,10 +106,9 @@ public:
 //
 // ============================================================================
 
-class ModuleManagerInterface
+class ModuleManagerInterface /* not final */
 {
 public:
-   virtual ~ModuleManagerInterface() {};
 
    // Modules call this to register their interface
    virtual void RegisterModule(ModuleInterface *module) = 0;

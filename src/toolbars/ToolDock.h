@@ -45,7 +45,7 @@ enum
    DockCount = 2
 };
 
-class ToolDock:public wxPanel
+class ToolDock final : public wxPanel
 {
 
  public:
@@ -53,8 +53,11 @@ class ToolDock:public wxPanel
    ToolDock( ToolManager *manager, wxWindow *parent, int dockid );
    ~ToolDock();
 
+   bool AcceptsFocus() const override { return false; };
+
    void LayoutToolBars();
    void Expose( int type, bool show );
+   int Find(ToolBar *bar) const;
    int GetOrder( ToolBar *bar );
    int GetBarCount();
    void Dock( ToolBar *bar, int ndx = -1 );
@@ -67,6 +70,7 @@ class ToolDock:public wxPanel
    void OnSize( wxSizeEvent & event );
    void OnPaint( wxPaintEvent & event );
    void OnGrabber( GrabberEvent & event );
+   void OnMouseEvents(wxMouseEvent &event);
 
  private:
 

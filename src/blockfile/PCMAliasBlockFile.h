@@ -15,34 +15,34 @@
 #include "../DirManager.h"
 
 /// An AliasBlockFile that references uncompressed data in an existing file
-class PCMAliasBlockFile : public AliasBlockFile
+class PCMAliasBlockFile /* not final */ : public AliasBlockFile
 {
  public:
    /// Constructs a PCMAliasBlockFile, writing the summary to disk
-   PCMAliasBlockFile(wxFileName baseFileName,
-                     wxFileName aliasedFileName,
+   PCMAliasBlockFile(wxFileNameWrapper &&baseFileName,
+                     wxFileNameWrapper &&aliasedFileName,
                      sampleCount aliasStart,
                      sampleCount aliasLen, int aliasChannel);
    ///Constructs a PCMAliasBlockFile with the option of not writing to disk
-   PCMAliasBlockFile(wxFileName fileName,
-                     wxFileName aliasedFileName,
+   PCMAliasBlockFile(wxFileNameWrapper &&fileName,
+                     wxFileNameWrapper &&aliasedFileName,
                      sampleCount aliasStart,
                      sampleCount aliasLen, int aliasChannel,bool writeSummary);
 
-   PCMAliasBlockFile(wxFileName existingSummaryFileName,
-                     wxFileName aliasedFileName,
+   PCMAliasBlockFile(wxFileNameWrapper &&existingSummaryFileName,
+                     wxFileNameWrapper &&aliasedFileName,
                      sampleCount aliasStart,
                      sampleCount aliasLen, int aliasChannel,
                      float min, float max, float rms);
    virtual ~PCMAliasBlockFile();
 
    /// Reads the specified data from the aliased file using libsndfile
-   virtual int ReadData(samplePtr data, sampleFormat format,
-                        sampleCount start, sampleCount len);
+   int ReadData(samplePtr data, sampleFormat format,
+                        sampleCount start, sampleCount len) const override;
 
-   virtual void SaveXML(XMLWriter &xmlFile);
-   virtual BlockFile *Copy(wxFileName fileName);
-   virtual void Recover();
+   void SaveXML(XMLWriter &xmlFile) override;
+   BlockFile *Copy(wxFileNameWrapper &&fileName) override;
+   void Recover() override;
 
    static BlockFile *BuildFromXML(DirManager &dm, const wxChar **attrs);
 };

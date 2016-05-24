@@ -17,7 +17,7 @@
 ///
 /// XMLWriter
 ///
-class AUDACITY_DLL_API XMLWriter {
+class AUDACITY_DLL_API XMLWriter /* not final */ {
 
  public:
 
@@ -60,7 +60,7 @@ class AUDACITY_DLL_API XMLWriter {
 ///
 /// XMLFileWriter
 ///
-class AUDACITY_DLL_API XMLFileWriter:public wxFFile, public XMLWriter {
+class AUDACITY_DLL_API XMLFileWriter final : public wxFFile, public XMLWriter {
 
  public:
 
@@ -78,7 +78,7 @@ class AUDACITY_DLL_API XMLFileWriter:public wxFFile, public XMLWriter {
    void CloseWithoutEndingTags(); // for auto-save files
 
    /// Write to file. Might throw XMLFileWriterException.
-   void Write(const wxString &data);
+   void Write(const wxString &data) override;
 
  private:
 
@@ -100,14 +100,14 @@ protected:
 ///
 /// XMLStringWriter
 ///
-class XMLStringWriter:public wxString, public XMLWriter {
+class XMLStringWriter final : public wxString, public XMLWriter {
 
  public:
 
    XMLStringWriter(size_t initialSize = 0);
    virtual ~XMLStringWriter();
 
-   void Write(const wxString &data);
+   void Write(const wxString &data) override;
 
    wxString Get();
 

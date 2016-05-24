@@ -28,7 +28,7 @@ class ShuttleGui;
 
 #define AUTODUCK_PLUGIN_SYMBOL XO("Auto Duck")
 
-class EffectAutoDuck : public Effect
+class EffectAutoDuck final : public Effect
 {
 public:
    EffectAutoDuck();
@@ -36,27 +36,27 @@ public:
 
    // IdentInterface implementation
 
-   virtual wxString GetSymbol();
-   virtual wxString GetDescription();
+   wxString GetSymbol() override;
+   wxString GetDescription() override;
 
    // EffectIdentInterface implementation
 
-   virtual EffectType GetType();
+   EffectType GetType() override;
 
    // EffectClientInterface implementation
 
-   virtual bool GetAutomationParameters(EffectAutomationParameters & parms);
-   virtual bool SetAutomationParameters(EffectAutomationParameters & parms);
+   bool GetAutomationParameters(EffectAutomationParameters & parms) override;
+   bool SetAutomationParameters(EffectAutomationParameters & parms) override;
 
    // Effect implementation
 
-   virtual bool Startup();
-   virtual bool Init();
-   virtual void End();
-   virtual bool Process();
-   virtual void PopulateOrExchange(ShuttleGui & S);
-   virtual bool TransferDataToWindow();
-   virtual bool TransferDataFromWindow();
+   bool Startup() override;
+   bool Init() override;
+   void End() override;
+   bool Process() override;
+   void PopulateOrExchange(ShuttleGui & S) override;
+   bool TransferDataToWindow() override;
+   bool TransferDataFromWindow() override;
 
 private:
    // EffectAutoDuck implementation
@@ -90,7 +90,7 @@ private:
    friend class EffectAutoDuckPanel;
 };
 
-class EffectAutoDuckPanel : public wxPanel
+class EffectAutoDuckPanel final : public wxPanel
 {
 public:
    EffectAutoDuckPanel(wxWindow *parent, EffectAutoDuck *effect);
@@ -107,7 +107,10 @@ private:
       none = 99,
    };
 
-   virtual bool AcceptsFocus() const {return false;}
+   bool AcceptsFocus() const override { return false; }
+   // So that wxPanel is not included in Tab traversal - see wxWidgets bug 15581
+   bool AcceptsFocusFromKeyboard() const override { return false; }
+
 
    void OnPaint(wxPaintEvent & evt);
    void OnMouseCaptureChanged(wxMouseCaptureChangedEvent & evt);

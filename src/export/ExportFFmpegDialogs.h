@@ -58,7 +58,7 @@ struct CompatibilityEntry
 
 
 /// AC3 export options dialog
-class ExportFFmpegAC3Options : public wxPanel
+class ExportFFmpegAC3Options final : public wxPanel
 {
 public:
 
@@ -84,7 +84,7 @@ private:
    int mBitRateFromChoice;
 };
 
-class ExportFFmpegAACOptions : public wxPanel
+class ExportFFmpegAACOptions final : public wxPanel
 {
 public:
 
@@ -100,7 +100,7 @@ private:
    wxSpinCtrl *mQualitySpin;
 };
 
-class ExportFFmpegAMRNBOptions : public wxPanel
+class ExportFFmpegAMRNBOptions final : public wxPanel
 {
 public:
 
@@ -122,7 +122,7 @@ private:
    int mBitRateFromChoice;
 };
 
-class ExportFFmpegWMAOptions : public wxPanel
+class ExportFFmpegWMAOptions final : public wxPanel
 {
 public:
 
@@ -145,7 +145,7 @@ private:
    int mBitRateFromChoice;
 };
 
-class ExportFFmpegCustomOptions : public wxPanel
+class ExportFFmpegCustomOptions final : public wxPanel
 {
 public:
 
@@ -175,7 +175,7 @@ struct ApplicableFor
 class FFmpegPresets;
 
 /// Custom FFmpeg export dialog
-class ExportFFmpegOptions : public wxDialog
+class ExportFFmpegOptions final : public wxDialog
 {
 public:
 
@@ -277,7 +277,7 @@ private:
    /// Retreives a list of formats compatible to codec
    ///\param id Codec ID
    ///\param selfmt format selected at the moment
-   ///\return index of the selfmt in new format list or -1 if it is not in the list
+   ///\return index of the selfmt in NEW format list or -1 if it is not in the list
    int FetchCompatibleFormatList(AVCodecID id, wxString *selfmt);
 
    /// Retreives codec list from libavcodec
@@ -286,7 +286,7 @@ private:
    /// Retreives a list of codecs compatible to format
    ///\param fmt Format short name
    ///\param id id of the codec selected at the moment
-   ///\return index of the id in new codec list or -1 if it is not in the list
+   ///\return index of the id in NEW codec list or -1 if it is not in the list
    int FetchCompatibleCodecList(const wxChar *fmt, AVCodecID id);
 
    /// Retreives list of presets from configuration file

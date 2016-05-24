@@ -24,7 +24,7 @@ into a NoteTrack.
 
 class NoteTrack;
 
-bool ImportMIDI(wxString fName, NoteTrack * dest);
+bool ImportMIDI(const wxString &fName, NoteTrack * dest);
 
 class MIDIParser {
  public:

@@ -18,13 +18,13 @@
 
 class ShuttleGui;
 
-class DirectoriesPrefs :public PrefsPanel
+class DirectoriesPrefs final : public PrefsPanel
 {
  public:
    DirectoriesPrefs(wxWindow * parent);
    ~DirectoriesPrefs();
-   virtual bool Apply();
-   virtual bool Validate();
+   bool Apply() override;
+   bool Validate() override;
 
  private:
    void Populate();
@@ -38,9 +38,9 @@ class DirectoriesPrefs :public PrefsPanel
    DECLARE_EVENT_TABLE();
 };
 
-class DirectoriesPrefsFactory : public PrefsPanelFactory
+class DirectoriesPrefsFactory final : public PrefsPanelFactory
 {
 public:
-   virtual PrefsPanel *Create(wxWindow *parent);
+   PrefsPanel *Create(wxWindow *parent) override;
 };
 #endif

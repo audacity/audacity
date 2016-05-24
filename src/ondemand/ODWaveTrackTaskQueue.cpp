@@ -26,7 +26,7 @@ ODWaveTrackTaskQueue::ODWaveTrackTaskQueue()
 
 ODWaveTrackTaskQueue::~ODWaveTrackTaskQueue()
 {
-   //we need to delete all ODTasks.  We will have to block or wait until block for the active ones.
+   //we need to DELETE all ODTasks.  We will have to block or wait until block for the active ones.
    for(unsigned int i=0;i<mTasks.size();i++)
    {
       mTasks[i]->TerminateAndBlock();//blocks if active.
@@ -163,17 +163,16 @@ void ODWaveTrackTaskQueue::MakeWaveTrackIndependent(WaveTrack* track)
 
          //clone the items in order and add them to the ODManager.
          mTasksMutex.Lock();
-         ODTask* task;
          for(unsigned int j=0;j<mTasks.size();j++)
          {
-            task=mTasks[j]->Clone();
+            auto task = mTasks[j]->Clone();
             task->AddWaveTrack(track);
             //AddNewTask requires us to relinquish this lock. However, it is safe because ODManager::MakeWaveTrackIndependent
             //has already locked the m_queuesMutex.
             mTasksMutex.Unlock();
             //AddNewTask locks the m_queuesMutex which is already locked by ODManager::MakeWaveTrackIndependent,
             //so we pass a boolean flag telling it not to lock again.
-            ODManager::Instance()->AddNewTask(task,false);
+            ODManager::Instance()->AddNewTask(task.release(), false);
             mTasksMutex.Lock();
          }
          mTasksMutex.Unlock();
@@ -202,7 +201,7 @@ void ODWaveTrackTaskQueue::DemandTrackUpdate(WaveTrack* track, double seconds)
 }
 
 
-//Replaces all instances of a wavetracck with a new one (effectively transferes the task.)
+//Replaces all instances of a wavetracck with a NEW one (effectively transferes the task.)
 void ODWaveTrackTaskQueue::ReplaceWaveTrack(WaveTrack* oldTrack, WaveTrack* newTrack)
 {
    if(oldTrack)
@@ -285,7 +284,7 @@ bool ODWaveTrackTaskQueue::IsFrontTaskComplete()
    mTasksMutex.Lock();
    if(mTasks.size())
    {
-      //there is a chance the task got updated and now has more to do, (like when it is joined with a new track)
+      //there is a chance the task got updated and now has more to do, (like when it is joined with a NEW track)
       //check.
       mTasks[0]->RecalculatePercentComplete();
       bool ret;

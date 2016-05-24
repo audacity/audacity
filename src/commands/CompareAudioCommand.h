@@ -22,15 +22,15 @@ classes
 
 class WaveTrack;
 
-class CompareAudioCommandType : public CommandType
+class CompareAudioCommandType final : public CommandType
 {
 public:
-   virtual wxString BuildName();
-   virtual void BuildSignature(CommandSignature &signature);
-   virtual Command *Create(CommandOutputTarget *target);
+   wxString BuildName() override;
+   void BuildSignature(CommandSignature &signature) override;
+   CommandHolder Create(std::unique_ptr<CommandOutputTarget> &&target) override;
 };
 
-class CompareAudioCommand : public CommandImplementation
+class CompareAudioCommand final : public CommandImplementation
 {
 private:
    double mT0, mT1;
@@ -41,13 +41,13 @@ private:
    bool GetSelection(AudacityProject &proj);
 
 protected:
-   virtual double CompareSample(double value1, double value2);
+   double CompareSample(double value1, double value2) /* not override */;
 
 public:
-   CompareAudioCommand(CommandType &type, CommandOutputTarget *target)
-      : CommandImplementation(type, target)
+   CompareAudioCommand(CommandType &type, std::unique_ptr<CommandOutputTarget> &&target)
+      : CommandImplementation(type, std::move(target))
    { }
-   virtual bool Apply(CommandExecutionContext context);
+   bool Apply(CommandExecutionContext context) override;
 };
 
 #endif /* End of include guard: __COMPAREAUDIOCOMMAND__ */

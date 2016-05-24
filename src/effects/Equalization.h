@@ -82,7 +82,7 @@ WX_DECLARE_OBJARRAY( EQCurve, EQCurveArray );
 class EffectEqualization48x;
 #endif
 
-class EffectEqualization : public Effect,
+class EffectEqualization final : public Effect,
                            public XMLTagHandler
 {
 public:
@@ -91,34 +91,34 @@ public:
 
    // IdentInterface implementation
 
-   virtual wxString GetSymbol();
-   virtual wxString GetDescription();
+   wxString GetSymbol() override;
+   wxString GetDescription() override;
 
    // EffectIdentInterface implementation
 
-   virtual EffectType GetType();
+   EffectType GetType() override;
 
    // EffectClientInterface implementation
 
-   virtual bool GetAutomationParameters(EffectAutomationParameters & parms);
-   virtual bool SetAutomationParameters(EffectAutomationParameters & parms);
-   virtual bool LoadFactoryDefaults();
+   bool GetAutomationParameters(EffectAutomationParameters & parms) override;
+   bool SetAutomationParameters(EffectAutomationParameters & parms) override;
+   bool LoadFactoryDefaults() override;
 
    // EffectUIClientInterface implementation
 
-   virtual bool ValidateUI();
+   bool ValidateUI() override;
 
    // Effect implementation
 
-   virtual bool Startup();
-   virtual bool Init();
-   virtual bool Process();
+   bool Startup() override;
+   bool Init() override;
+   bool Process() override;
 
-   virtual bool PopulateUI(wxWindow *parent);
-   virtual bool CloseUI();
-   virtual void PopulateOrExchange(ShuttleGui & S);
-   virtual bool TransferDataToWindow();
-   virtual bool TransferDataFromWindow();
+   bool PopulateUI(wxWindow *parent) override;
+   bool CloseUI() override;
+   void PopulateOrExchange(ShuttleGui & S) override;
+   bool TransferDataToWindow() override;
+   bool TransferDataFromWindow() override;
 
 private:
    // EffectEqualization implementation
@@ -132,7 +132,7 @@ private:
 
    bool ProcessOne(int count, WaveTrack * t,
                    sampleCount start, sampleCount len);
-   virtual bool CalcFilter();
+   bool CalcFilter();
    void Filter(sampleCount len, float *buffer);
    
    void Flatten();
@@ -141,12 +141,15 @@ private:
    void EnvelopeUpdated(Envelope *env, bool lin);
    bool IsLinear();
 
-   void LoadCurves(wxString fileName = wxT(""), bool append = false);
-   void SaveCurves(wxString fileName = wxT(""));
+   void LoadCurves(const wxString &fileName = wxEmptyString, bool append = false);
+   void SaveCurves(const wxString &fileName = wxEmptyString);
+   // Merge new curves only or update all factory presets.
+   void UpdateDefaultCurves( bool updateAll = false);
    void Select(int sel);
    void setCurve(int currentCurve);
-   void setCurve(wxString curveName);
+   void setCurve(const wxString &curveName);
    void setCurve(void);
+   bool GetDefaultFileName(wxFileName &fileName);
    
    // XMLTagHandler callback methods for loading and saving
    bool HandleXMLTag(const wxChar *tag, const wxChar **attrs);
@@ -232,9 +235,6 @@ private:
    wxSizer *szrH;
    wxSizer *szrI;
    wxSizer *szrL;
-#ifdef EXPERIMENTAL_EQ_SSE_THREADED
-   wxSizer *szrM;
-#endif
    wxSizer *szr1;
    wxSizer *szr2;
    wxSizer *szr3;
@@ -258,6 +258,16 @@ private:
    wxSlider *mdBMaxSlider;
    wxSlider *mSliders[NUMBER_OF_BANDS];
 
+   static int wxCMPFUNC_CONV SortCurvesByName (EQCurve **first, EQCurve **second)
+   {
+      return (*first)->Name.CmpNoCase((*second)->Name);
+   }
+
+   static int wxCMPFUNC_CONV SortCurvePoints (EQPoint **p0, EQPoint **p1)
+   {
+      return (*p0)->Freq > (*p1)->Freq;
+   }
+
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
    wxRadioButton *mMathProcessingType[5]; // default, sse, sse threaded, AVX, AVX threaded (note AVX is not implemented yet
    wxBoxSizer *szrM;
@@ -269,7 +279,7 @@ private:
    friend class EditCurvesDialog;
 };
 
-class EqualizationPanel: public wxPanel
+class EqualizationPanel final : public wxPanel
 {
 public:
    EqualizationPanel(EffectEqualization *effect, wxWindow *parent);
@@ -277,6 +287,8 @@ public:
 
    // We don't need or want to accept focus.
    bool AcceptsFocus() const { return false; }
+   // So that wxPanel is not included in Tab traversal - see wxWidgets bug 15581
+   bool AcceptsFocusFromKeyboard() const { return false; }
 
    void ForceRecalc();
 
@@ -318,7 +330,7 @@ private:
 
 // EditCurvesDialog.  Note that the 'modified' curve used to be called 'custom' but is now called 'unnamed'
 // Some things that deal with 'unnamed' curves still use, for example, 'mCustomBackup' as variable names.
-class EditCurvesDialog : public wxDialog
+class EditCurvesDialog final : public wxDialog
 {
 public:
    EditCurvesDialog(wxWindow * parent, EffectEqualization * effect, int position);
@@ -362,19 +374,19 @@ private:
 
 #if wxUSE_ACCESSIBILITY
 
-class SliderAx: public wxWindowAccessible
+class SliderAx final : public wxWindowAccessible
 {
 public:
-   SliderAx(wxWindow * window, wxString fmt);
+   SliderAx(wxWindow * window, const wxString &fmt);
 
    virtual ~ SliderAx();
 
    // Retrieves the address of an IDispatch interface for the specified child.
    // All objects must support this property.
-   virtual wxAccStatus GetChild( int childId, wxAccessible** child );
+   wxAccStatus GetChild(int childId, wxAccessible** child) override;
 
    // Gets the number of children.
-   virtual wxAccStatus GetChildCount(int* childCount);
+   wxAccStatus GetChildCount(int* childCount) override;
 
    // Gets the default action for this object (0) or > 0 (the action for a child).
    // Return wxACC_OK even if there is no action. actionName is the action, or the empty
@@ -382,33 +394,33 @@ public:
    // The retrieved string describes the action that is performed on an object,
    // not what the object does as a result. For example, a toolbar button that prints
    // a document has a default action of "Press" rather than "Prints the current document."
-   virtual wxAccStatus GetDefaultAction( int childId, wxString *actionName );
+   wxAccStatus GetDefaultAction(int childId, wxString *actionName) override;
 
    // Returns the description for this object or a child.
-   virtual wxAccStatus GetDescription( int childId, wxString *description );
+   wxAccStatus GetDescription(int childId, wxString *description) override;
 
    // Gets the window with the keyboard focus.
    // If childId is 0 and child is NULL, no object in
    // this subhierarchy has the focus.
    // If this object has the focus, child should be 'this'.
-   virtual wxAccStatus GetFocus( int *childId, wxAccessible **child );
+   wxAccStatus GetFocus(int *childId, wxAccessible **child) override;
 
    // Returns help text for this object or a child, similar to tooltip text.
-   virtual wxAccStatus GetHelpText( int childId, wxString *helpText );
+   wxAccStatus GetHelpText(int childId, wxString *helpText) override;
 
    // Returns the keyboard shortcut for this object or child.
    // Return e.g. ALT+K
-   virtual wxAccStatus GetKeyboardShortcut( int childId, wxString *shortcut );
+   wxAccStatus GetKeyboardShortcut(int childId, wxString *shortcut) override;
 
    // Returns the rectangle for this object (id = 0) or a child element (id > 0).
    // rect is in screen coordinates.
-   virtual wxAccStatus GetLocation( wxRect& rect, int elementId );
+   wxAccStatus GetLocation(wxRect& rect, int elementId) override;
 
    // Gets the name of the specified object.
-   virtual wxAccStatus GetName( int childId, wxString *name );
+   wxAccStatus GetName(int childId, wxString *name) override;
 
    // Returns a role constant.
-   virtual wxAccStatus GetRole( int childId, wxAccRole *role );
+   wxAccStatus GetRole(int childId, wxAccRole *role) override;
 
    // Gets a variant representing the selected children
    // of this object.
@@ -418,14 +430,14 @@ public:
    // - an integer representing the selected child element,
    //   or 0 if this object is selected (GetType() == wxT("long"))
    // - a "void*" pointer to a wxAccessible child object
-   virtual wxAccStatus GetSelections( wxVariant *selections );
+   wxAccStatus GetSelections(wxVariant *selections) override;
 
    // Returns a state constant.
-   virtual wxAccStatus GetState(int childId, long* state);
+   wxAccStatus GetState(int childId, long* state) override;
 
    // Returns a localized string representing the value for the object
    // or child.
-   virtual wxAccStatus GetValue(int childId, wxString* strValue);
+   wxAccStatus GetValue(int childId, wxString* strValue) override;
 
 private:
    wxWindow *mParent;

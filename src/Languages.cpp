@@ -24,7 +24,7 @@
   Other languages will only be supported if they're added to
   the database using wxLocale::AddLanguage.
 
-  But for the most part, this means that somebody could add a new
+  But for the most part, this means that somebody could add a NEW
   translation and have it work immediately.
 
 *//*******************************************************************/
@@ -195,7 +195,7 @@ void GetLanguages(wxArrayString &langCodes, wxArrayString &langNames)
       // Note that if the language for a fullCode exists but we only
       // have a name for the short code, we will use the short code's
       // name but associate it with the full code.  This allows someone
-      // to drop in a new language and still get reasonable behavior.
+      // to drop in a NEW language and still get reasonable behavior.
 
       if (fullCode.Length() < 2)
          continue;

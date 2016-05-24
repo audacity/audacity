@@ -11,6 +11,8 @@
 #ifndef __AUDACITY_ABOUT_DLG__
 #define __AUDACITY_ABOUT_DLG__
 
+#include "MemoryX.h"
+#include <vector>
 #include <wx/dialog.h>
 #include <wx/sizer.h>
 #include <wx/statbmp.h>
@@ -21,11 +23,33 @@ class ShuttleGui;
 struct AboutDialogCreditItem {
    wxString description;
    int role;
+
+   AboutDialogCreditItem(wxString &&description_, int role_)
+      : description(description_), role(role_)
+   {}
+
+#ifdef __AUDACITY_OLD_STD__
+   AboutDialogCreditItem(const AboutDialogCreditItem&) = default;
+   AboutDialogCreditItem& operator= (const AboutDialogCreditItem&) = default;
+#else
+   // No copy, use the move
+   AboutDialogCreditItem(const AboutDialogCreditItem&) PROHIBITED;
+   AboutDialogCreditItem& operator= (const AboutDialogCreditItem&) PROHIBITED;
+#endif
+
+   // Move constructor, because wxString lacks one
+   AboutDialogCreditItem(AboutDialogCreditItem &&moveMe)
+      : role(moveMe.role)
+   {
+      description.swap(moveMe.description);
+   }
+
+   ~AboutDialogCreditItem() {}
 };
 
-WX_DECLARE_LIST(AboutDialogCreditItem, AboutDialogCreditItemsList);
+using AboutDialogCreditItemsList = std::vector<AboutDialogCreditItem>;
 
-class AboutDialog:public wxDialog {
+class AboutDialog final : public wxDialog {
    DECLARE_DYNAMIC_CLASS(AboutDialog)
 
  public:
@@ -34,19 +58,16 @@ class AboutDialog:public wxDialog {
 
    void OnOK(wxCommandEvent & event);
 
-   wxBoxSizer *topsizer;
    wxStaticBitmap *icon;
-   wxBitmap *logo; //v
 
     DECLARE_EVENT_TABLE()
 
  private:
    enum Role {
-      roleTeamDeveloper,
-      roleTeamSupport,
-      roleEmeritusDeveloper,
-      roleEmeritusSupport,
+      roleTeamMember,
+      roleEmeritusTeam,
       roleContributor,
+      roleTranslators,
       roleLibrary,
       roleThanks
    };
@@ -57,10 +78,10 @@ class AboutDialog:public wxDialog {
    void PopulateInformationPage (ShuttleGui & S );
 
    void CreateCreditsList();
-   void AddCredit(const wxString& description, Role role);
+   void AddCredit(wxString &&description, Role role);
    wxString GetCreditsByRole(AboutDialog::Role role);
 
-   void AddBuildinfoRow( wxString* htmlstring, const wxChar * libname, const wxChar * libdesc, wxString status);
+   void AddBuildinfoRow( wxString* htmlstring, const wxChar * libname, const wxChar * libdesc, const wxString &status);
    void AddBuildinfoRow( wxString* htmlstring, const wxChar * libname, const wxChar * libdesc);
 };
 

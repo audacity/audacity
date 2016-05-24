@@ -19,7 +19,7 @@ and grids used by Audacity.
 This will be split up into separate include files to reduce the amount
 of recompilation on a change.
 
-Meantime, do NOT delete any of these declarations, even if they're
+Meantime, do NOT DELETE any of these declarations, even if they're
 unused, as they're all offset by prior declarations.
 
 To add an image, you give its size and name like so:
@@ -67,6 +67,8 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_IMAGE( bmpCutPreviewDisabled, wxImage( 16, 16 ), wxT("CutPreviewDisabled"));
    DEFINE_IMAGE( bmpAppendRecord, wxImage( 16, 16 ), wxT("AppendRecord"));
    DEFINE_IMAGE( bmpAppendRecordDisabled, wxImage( 16, 16 ), wxT("AppendRecordDisabled"));
+   DEFINE_IMAGE( bmpScrubDisabled, wxImage( 16, 16 ), wxT("ScrubDisabled"));
+   DEFINE_IMAGE( bmpScrub, wxImage( 16, 16 ), wxT("Scrub"));
 
    SET_THEME_FLAGS(  resFlagNewLine  );
    DEFINE_IMAGE( bmpUpButtonLarge, wxImage( 48, 48 ), wxT("UpButtonLarge"));

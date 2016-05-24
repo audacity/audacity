@@ -14,11 +14,38 @@
 #ifndef __AUDACITY_COLOR__
 #define __AUDACITY_COLOR__
 
+#include "MemoryX.h"
 #include <wx/brush.h>
 #include <wx/pen.h>
 
 class wxDC;
 class wxRect;
+
+struct DCUnchanger {
+public:
+   DCUnchanger() {}
+
+   DCUnchanger(const wxBrush &brush_, const wxPen &pen_, long logicalOperation_)
+   : brush(brush_), pen(pen_), logicalOperation(logicalOperation_)
+   {}
+
+   void operator () (wxDC *pDC) const;
+
+   wxBrush brush {};
+   wxPen pen {};
+   long logicalOperation {};
+};
+
+// Like wxDCPenChanger, etc., but simple and general
+// Make temporary drawing context changes that you back out of, RAII style
+
+class ADCChanger : public std::unique_ptr<wxDC, ::DCUnchanger>
+{
+   using Base = std::unique_ptr<wxDC, ::DCUnchanger>;
+public:
+   ADCChanger() : Base{} {}
+   ADCChanger(wxDC *pDC);
+};
 
 class AColor {
  public:
@@ -38,8 +65,8 @@ class AColor {
    static void Arrow(wxDC & dc, wxCoord x, wxCoord y, int width, bool down = true);
    static void Line(wxDC & dc, wxCoord x1, wxCoord y1, wxCoord x2, wxCoord y2);
    static void DrawFocus(wxDC & dc, wxRect & r);
-   static void Bevel(wxDC & dc, bool up, wxRect & r);
-   static void BevelTrackInfo(wxDC & dc, bool up, wxRect & r);
+   static void Bevel(wxDC & dc, bool up, const wxRect & r);
+   static void BevelTrackInfo(wxDC & dc, bool up, const wxRect & r);
    static wxColour Blend(const wxColour & c1, const wxColour & c2);
 
    static void UseThemeColour( wxDC * dc, int iIndex );

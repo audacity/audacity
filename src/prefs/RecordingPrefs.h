@@ -13,6 +13,7 @@
 #define __AUDACITY_RECORDING_PREFS__
 
 #include <wx/defs.h>
+#include <wx/textctrl.h>
 
 #include <wx/window.h>
 
@@ -20,21 +21,28 @@
 
 class ShuttleGui;
 
-class RecordingPrefs :public PrefsPanel
+class RecordingPrefs final : public PrefsPanel
 {
  public:
    RecordingPrefs(wxWindow * parent);
    virtual ~RecordingPrefs();
-   virtual bool Apply();
+   bool Apply() override;
 
  private:
    void Populate();
    void PopulateOrExchange(ShuttleGui & S);
+   void OnToggleCustomName(wxCommandEvent & Evt);
+
+   wxTextCtrl *mToggleCustomName;
+   bool mUseCustomTrackName;
+   bool mOldNameChoice;
+
+   DECLARE_EVENT_TABLE();
 };
 
-class RecordingPrefsFactory : public PrefsPanelFactory
+class RecordingPrefsFactory final : public PrefsPanelFactory
 {
 public:
-   virtual PrefsPanel *Create(wxWindow *parent);
+   PrefsPanel *Create(wxWindow *parent) override;
 };
 #endif

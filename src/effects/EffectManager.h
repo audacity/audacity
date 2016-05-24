@@ -91,7 +91,11 @@ public:
    wxString GetDefaultPreset(const PluginID & ID);
    void SetBatchProcessing(const PluginID & ID, bool start);
 
-      // Realtime effect processing
+   /** Allow effects to disable saving the state at run time */
+   void SetSkipStateFlag(bool flag);
+   bool GetSkipStateFlag();
+
+   // Realtime effect processing
    bool RealtimeIsActive();
    bool RealtimeIsSuspended();
    void RealtimeAddEffect(Effect *effect);
@@ -134,6 +138,10 @@ private:
    bool mRealtimeActive;
    wxArrayInt mRealtimeChans;
    wxArrayDouble mRealtimeRates;
+
+   // Set true if we want to skip pushing state 
+   // after processing at effect run time.
+   bool mSkipStateFlag;
 
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
    EffectRack *mRack;

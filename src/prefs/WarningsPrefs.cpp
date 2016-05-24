@@ -63,11 +63,14 @@ void WarningsPrefs::PopulateOrExchange(ShuttleGui & S)
       S.TieCheckBox(_("&Low disk space at program start up"),
                     wxT("/Warnings/DiskSpaceWarning"),
                     true);
+      S.TieCheckBox(_("Mixing down to &mono during export"),
+                    wxT("/Warnings/MixMono"),
+                    true);
       S.TieCheckBox(_("Mixing down to &stereo during export"),
                     wxT("/Warnings/MixStereo"),
                     true);
-      S.TieCheckBox(_("Mixing down to &mono during export"),
-                    wxT("/Warnings/MixMono"),
+      S.TieCheckBox(_("Mixing down on export (&Custom FFmpeg or external program)"),
+                    wxT("/Warnings/MixUnknownChannels"),
                     true);
       S.TieCheckBox(_("&Importing uncompressed audio files"),
                     wxT("/Warnings/CopyOrEditUncompressedDataAsk"),
@@ -86,5 +89,6 @@ bool WarningsPrefs::Apply()
 
 PrefsPanel *WarningsPrefsFactory::Create(wxWindow *parent)
 {
-   return new WarningsPrefs(parent);
+   wxASSERT(parent); // to justify safenew
+   return safenew WarningsPrefs(parent);
 }

@@ -21,12 +21,12 @@
 
 class ShuttleGui;
 
-class ThemePrefs :public PrefsPanel
+class ThemePrefs final : public PrefsPanel
 {
  public:
    ThemePrefs(wxWindow * parent);
    ~ThemePrefs(void);
-   virtual bool Apply();
+   bool Apply() override;
 
  private:
    void Populate();
@@ -41,9 +41,9 @@ class ThemePrefs :public PrefsPanel
    DECLARE_EVENT_TABLE();
 };
 
-class ThemePrefsFactory : public PrefsPanelFactory
+class ThemePrefsFactory final : public PrefsPanelFactory
 {
 public:
-   virtual PrefsPanel *Create(wxWindow *parent);
+   PrefsPanel *Create(wxWindow *parent) override;
 };
 #endif

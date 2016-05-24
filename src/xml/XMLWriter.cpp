@@ -266,7 +266,7 @@ XMLFileWriter::~XMLFileWriter()
 void XMLFileWriter::Open(const wxString &name, const wxString &mode)
 {
    if (!wxFFile::Open(name, mode))
-      throw new XMLFileWriterException(_("Error Opening File"));
+      throw XMLFileWriterException(_("Error Opening File"));
 }
 
 void XMLFileWriter::Close()
@@ -287,12 +287,12 @@ void XMLFileWriter::CloseWithoutEndingTags()
       wxFFile::Close();
       /* i18n-hint: 'flushing' means writing any remaining queued up changes
        * to disk that have not yet been written.*/
-      throw new XMLFileWriterException(_("Error Flushing File"));
+      throw XMLFileWriterException(_("Error Flushing File"));
    }
 
    // Note that this should never fail if flushing worked.
    if (!wxFFile::Close())
-      throw new XMLFileWriterException(_("Error Closing File"));
+      throw XMLFileWriterException(_("Error Closing File"));
 }
 
 void XMLFileWriter::Write(const wxString &data)
@@ -302,7 +302,7 @@ void XMLFileWriter::Write(const wxString &data)
       // When writing fails, we try to close the file before throwing the
       // exception, so it can at least be deleted.
       wxFFile::Close();
-      throw new XMLFileWriterException(_("Error Writing to File"));
+      throw XMLFileWriterException(_("Error Writing to File"));
    }
 }
 

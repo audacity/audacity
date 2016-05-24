@@ -827,13 +827,12 @@ void VoiceKey::CalibrateNoise(WaveTrack & t, sampleCount start, sampleCount len)
    /* i18n-hint: %1.4f is replaced by a number.  sd stands for 'Standard Deviations'*/
    text +=           wxString::Format(_("Energy                  -- mean: %1.4f  sd: (%1.4f)\n"),mEnergyMean,mEnergySD);
    text+=            wxString::Format(_("Sign Changes        -- mean: %1.4f  sd: (%1.4f)\n"),mSignChangesMean,mSignChangesSD);
-   text+=            wxString::Format(_("Direction Changes  -- mean: %1.4f  sd: (%1.4f)\n"),mDirectionChangesMean,mDirectionChangesSD);
-   wxMessageDialog  * stats =  new wxMessageDialog(NULL, text,
-                                                  wxT("Calibration Complete"),
-                                                  wxOK | wxICON_INFORMATION,
-                                                  wxPoint(-1,-1));
-   stats->ShowModal();
-   delete stats;
+   text += wxString::Format(_("Direction Changes  -- mean: %1.4f  sd: (%1.4f)\n"), mDirectionChangesMean, mDirectionChangesSD);
+   wxMessageDialog{ NULL, text,
+      wxT("Calibration Complete"),
+      wxOK | wxICON_INFORMATION,
+      wxPoint(-1, -1) }
+   .ShowModal();
 
    AdjustThreshold(mThresholdAdjustment);
 }

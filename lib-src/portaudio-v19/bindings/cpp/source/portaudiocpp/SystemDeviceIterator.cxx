@@ -44,12 +44,12 @@ namespace portaudio
 
 	// -----------------------------------------------------------------------------------
 
-	bool System::DeviceIterator::operator==(const System::DeviceIterator &rhs)
+	bool System::DeviceIterator::operator==(const System::DeviceIterator &rhs) const
 	{
 		return (ptr_ == rhs.ptr_);
 	}
 
-	bool System::DeviceIterator::operator!=(const System::DeviceIterator &rhs)
+	bool System::DeviceIterator::operator!=(const System::DeviceIterator &rhs) const
 	{
 		return !(*this == rhs);
 	}

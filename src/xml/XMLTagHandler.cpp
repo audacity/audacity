@@ -21,9 +21,10 @@
 
 *//*******************************************************************/
 
+#include "../Audacity.h"
 #include "XMLTagHandler.h"
 
-#include "../Audacity.h"
+#include "../MemoryX.h"
 #include "../Internat.h"
 
 #ifdef _WIN32
@@ -62,7 +63,7 @@ bool XMLValueChecker::IsGoodFileName(const wxString & strFileName, const wxStrin
    return (fileName.IsOk() && fileName.FileExists());
 }
 
-bool XMLValueChecker::IsGoodFileString(wxString str)
+bool XMLValueChecker::IsGoodFileString(const wxString &str)
 {
    return (IsGoodString(str) &&
             !str.IsEmpty() &&
@@ -97,7 +98,7 @@ bool XMLValueChecker::IsGoodPathName(const wxString & strPathName)
    return XMLValueChecker::IsGoodFileName(fileName.GetFullName(), fileName.GetPath(wxPATH_GET_VOLUME));
 }
 
-bool XMLValueChecker::IsGoodPathString(wxString str)
+bool XMLValueChecker::IsGoodPathString(const wxString &str)
 {
    return (IsGoodString(str) &&
             !str.IsEmpty() &&
@@ -214,18 +215,17 @@ bool XMLTagHandler::ReadXMLTag(const char *tag, const char **attrs)
    }
 
 // JKC: Previously the next line was:
-// const char **out_attrs = new char (const char *)[tmp_attrs.GetCount()+1];
+// const char **out_attrs = NEW char (const char *)[tmp_attrs.GetCount()+1];
 // however MSVC doesn't like the constness in this position, so this is now
 // added by a cast after creating the array of pointers-to-non-const chars.
-   const wxChar **out_attrs = (const wxChar**)new wxChar *[tmp_attrs.GetCount()+1];
+   auto out_attrs = std::make_unique<const wxChar *[]>(tmp_attrs.GetCount() + 1);
    for (size_t i=0; i<tmp_attrs.GetCount(); i++) {
       out_attrs[i] = tmp_attrs[i].c_str();
    }
    out_attrs[tmp_attrs.GetCount()] = 0;
 
-   bool result = HandleXMLTag(UTF8CTOWX(tag).c_str(), out_attrs);
+   bool result = HandleXMLTag(UTF8CTOWX(tag).c_str(), out_attrs.get());
 
-   delete[] out_attrs;
    return result;
 }
 

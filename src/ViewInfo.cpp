@@ -13,10 +13,12 @@ Paul Licameli
 
 #include <algorithm>
 
+#include "AudioIO.h"
 #include "Internat.h"
 #include "prefs/GUISettings.h"
 #include "Prefs.h"
 #include "xml/XMLWriter.h"
+#include "prefs/TracksPrefs.h"
 
 namespace {
 static const double gMaxZoom = 6000000;
@@ -58,9 +60,20 @@ wxInt64 ZoomInfo::TimeToPosition(double projectTime,
    , bool // ignoreFisheye
 ) const
 {
-   return floor(0.5 +
-      zoom * (projectTime - h) + origin
-   );
+   double t = 0.5 + zoom * (projectTime - h) + origin ;
+   if( t < wxINT64_MIN )
+      return wxINT64_MIN;
+   if( t > wxINT64_MAX )
+      return wxINT64_MAX;
+   t = floor( t );
+   return t;
+}
+
+// This always ignores the fisheye.  Use with caution!
+// You should prefer to call TimeToPosition twice, for endpoints, and take the difference!
+double ZoomInfo::TimeRangeToPixelWidth(double timeRange) const
+{
+   return timeRange * zoom;
 }
 
 bool ZoomInfo::ZoomInAvailable() const
@@ -112,6 +125,7 @@ ViewInfo::ViewInfo(double start, double screenDuration, double pixelsPerSecond)
    , scrollStep(16)
    , bUpdateTrackIndicator(true)
    , bScrollBeyondZero(false)
+   , mRecentStreamTime(-1.0)
 {
    UpdatePrefs();
 }
@@ -120,7 +134,8 @@ void ViewInfo::UpdatePrefs()
 {
    ZoomInfo::UpdatePrefs();
 #ifdef EXPERIMENTAL_SCROLLING_LIMITS
-   gPrefs->Read(wxT("/GUI/ScrollBeyondZero"), &bScrollBeyondZero, false);
+   gPrefs->Read(TracksPrefs::ScrollingPreferenceKey(), &bScrollBeyondZero,
+                TracksPrefs::ScrollingPreferenceDefault());
 #endif
 
 }
@@ -164,4 +179,10 @@ bool ViewInfo::ReadXMLAttribute(const wxChar *attr, const wxChar *value)
    }
 
    return false;
+}
+
+void ViewInfo::OnTimer(wxCommandEvent &event)
+{
+   mRecentStreamTime = gAudioIO->GetStreamTime();
+   event.Skip();
 }

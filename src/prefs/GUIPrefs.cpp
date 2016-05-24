@@ -146,9 +146,6 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
       S.TieCheckBox(_("&Beep on completion of longer activities"),
                     wxT("/GUI/BeepOnCompletion"),
                     false);
-      S.TieCheckBox(_("&Show track name in waveform display"),
-                    wxT("/GUI/ShowTrackNameInWaveform"),
-                    false);
       S.TieCheckBox(_("Re&tain labels if selection snaps to a label edge"),
                     wxT("/GUI/RetainLabels"),
                     false);
@@ -169,14 +166,18 @@ bool GUIPrefs::Apply()
 
    // If language has changed, we want to change it now, not on the next reboot.
    wxString lang = gPrefs->Read(wxT("/Locale/Language"), wxT(""));
-   if (lang == wxT(""))
-      lang = GetSystemLanguageCode();
-   wxGetApp().InitLang(lang);
+   wxString usedLang = wxGetApp().InitLang(lang);
+   if (lang != usedLang) {
+      // lang was not usable.  We got overridden.
+      gPrefs->Write(wxT("/Locale/Language"), usedLang);
+      gPrefs->Flush();
+   }
 
    return true;
 }
 
 PrefsPanel *GUIPrefsFactory::Create(wxWindow *parent)
 {
-   return new GUIPrefs(parent);
+   wxASSERT(parent); // to justify safenew
+   return safenew GUIPrefs(parent);
 }

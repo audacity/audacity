@@ -16,13 +16,14 @@ updating the ODPCMAliasBlockFile and the GUI of the newly available data.
 
 *//*******************************************************************/
 
+#include "../Audacity.h"
 #include "ODDecodeTask.h"
 #include "../blockfile/ODDecodeBlockFile.h"
 #include "../Sequence.h"
 #include "../WaveTrack.h"
 #include <wx/wx.h>
 
-///Creates a new task that computes summaries for a wavetrack that needs to be specified through SetWaveTrack()
+///Creates a NEW task that computes summaries for a wavetrack that needs to be specified through SetWaveTrack()
 ODDecodeTask::ODDecodeTask()
 {
    mMaxBlockFiles = 0;
@@ -154,22 +155,26 @@ void ODDecodeTask::Update()
             int insertCursor;
 
             insertCursor =0;//OD TODO:see if this works, removed from inner loop (bfore was n*n)
-            for(i=0; i<(int)blocks->GetCount(); i++)
+            for (i = 0; i<(int)blocks->size(); i++)
             {
                //since we have more than one ODBlockFile, we will need type flags to cast.
-               if(!blocks->Item(i)->f->IsDataAvailable() && ((ODDecodeBlockFile*)blocks->Item(i)->f)->GetDecodeType()==this->GetODType())
+               SeqBlock &block = (*blocks)[i];
+               BlockFile *const file = block.f;
+               ODDecodeBlockFile *oddbFile;
+               if (!file->IsDataAvailable() &&
+                   (oddbFile = static_cast<ODDecodeBlockFile*>(file))->GetDecodeType() == this->GetODType())
                {
-                  blocks->Item(i)->f->Ref();
-                  ((ODDecodeBlockFile*)blocks->Item(i)->f)->SetStart(blocks->Item(i)->start);
-                  ((ODDecodeBlockFile*)blocks->Item(i)->f)->SetClipOffset((sampleCount)(clip->GetStartTime()*clip->GetRate()));
+                  file->Ref();
+                  oddbFile->SetStart(block.start);
+                  oddbFile->SetClipOffset((sampleCount)(clip->GetStartTime()*clip->GetRate()));
 
                   //these will always be linear within a sequence-lets take advantage of this by keeping a cursor.
                   while(insertCursor<(int)tempBlocks.size()&&
                      (sampleCount)(tempBlocks[insertCursor]->GetStart()+tempBlocks[insertCursor]->GetClipOffset()) <
-                        (sampleCount)(((ODDecodeBlockFile*)blocks->Item(i)->f)->GetStart()+((ODDecodeBlockFile*)blocks->Item(i)->f)->GetClipOffset()))
+                        (sampleCount)((oddbFile->GetStart()+oddbFile->GetClipOffset())))
                      insertCursor++;
 
-                  tempBlocks.insert(tempBlocks.begin()+insertCursor++,(ODDecodeBlockFile*)blocks->Item(i)->f);
+                  tempBlocks.insert(tempBlocks.begin()+insertCursor++, oddbFile);
                }
             }
 
@@ -180,7 +185,7 @@ void ODDecodeTask::Update()
    }
    mWaveTrackMutex.Unlock();
 
-   //get the new order.
+   //get the NEW order.
    OrderBlockFiles(tempBlocks);
 }
 
@@ -264,7 +269,7 @@ ODFileDecoder* ODDecodeTask::GetOrCreateMatchingFileDecoder(ODDecodeBlockFile* b
       if(mDecoders[i]->GetFileName()==blockFile->GetAudioFileName().GetFullPath() &&
          GetODType() == blockFile->GetDecodeType() )
       {
-         ret = mDecoders[i];
+         ret = mDecoders[i].get();
          break;
       }
    }
@@ -285,8 +290,8 @@ int ODDecodeTask::GetNumFileDecoders()
 
 ///This should handle unicode converted to UTF-8 on mac/linux, but OD TODO:check on windows
 ODFileDecoder::ODFileDecoder(const wxString & fName)
+   : mFName{ fName }
 {
-   mFName = fName;
    mInited = false;
 }
 

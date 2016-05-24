@@ -21,7 +21,7 @@
 #include "Effect.h"
 
 // Base class for Generators (effects which fill a given duration)
-class Generator : public Effect
+class Generator /* not final */ : public Effect
 {
 public:
    Generator() { }
@@ -34,28 +34,29 @@ protected:
                               const WaveTrack &track,
                               int ntrack) = 0;
 
-   virtual bool Init() { return true; }
+   bool Init()  override { return true; }
 
    // Actions to perform at the respective points in the generation process
+   // NEW virtuals
    virtual void BeforeGenerate() { };
    virtual void BeforeTrack(const WaveTrack & WXUNUSED(track)) { };
 
    // Actions to perform upon respective outcomes
    // (For example, Success might save the parameters that were used.)
    virtual void Success() { };
-   virtual void Failure() { };
+   virtual void Failure() {};
 
    // Precondition:
    // mDuration is set to the amount of time to generate in seconds
    // Postcondition:
    // If mDuration was valid (>= 0), then the tracks are replaced by the
    // generated results and true is returned. Otherwise, return false.
-   bool Process();
+   bool Process() override;
 };
 
 // Abstract generator which creates the sound in discrete blocks, whilst
 // showing a progress bar
-class BlockGenerator : public Generator {
+class BlockGenerator /* not final */ : public Generator {
 public:
    BlockGenerator() { }
 protected:
@@ -68,7 +69,7 @@ protected:
                               sampleCount block) = 0;
 
    // Generate the track, one block at a time, & adding the results to tmp
-   bool GenerateTrack(WaveTrack *tmp, const WaveTrack &track, int ntrack);
+   bool GenerateTrack(WaveTrack *tmp, const WaveTrack &track, int ntrack) override;
 };
 
 #endif

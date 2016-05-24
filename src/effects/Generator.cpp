@@ -22,7 +22,7 @@
 
 #include "TimeWarper.h"
 
-#include <memory>
+#include "../MemoryX.h"
 
 bool Generator::Process()
 {
@@ -65,7 +65,7 @@ bool Generator::Process()
          {
             AudacityProject *p = GetActiveProject();
             // Create a temporary track
-            std::auto_ptr<WaveTrack> tmp(
+            WaveTrack::Holder tmp(
                mFactory->NewWaveTrack(track->GetSampleFormat(),
                track->GetRate())
             );

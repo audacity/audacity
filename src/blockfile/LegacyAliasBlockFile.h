@@ -15,15 +15,15 @@
 #include "PCMAliasBlockFile.h"
 
 /// An AliasBlockFile that references uncompressed data in an existing file
-class LegacyAliasBlockFile : public PCMAliasBlockFile
+class LegacyAliasBlockFile final : public PCMAliasBlockFile
 {
  public:
 
    // Constructor / Destructor
 
    /// Constructs a LegacyAliasBlockFile, writing the summary to disk
-   LegacyAliasBlockFile(wxFileName fileName,
-                        wxFileName aliasedFileName,
+   LegacyAliasBlockFile(wxFileNameWrapper &&fileName,
+                        wxFileNameWrapper &&aliasedFileName,
                         sampleCount aliasStart,
                         sampleCount aliasLen,
                         int aliasChannel,
@@ -31,11 +31,11 @@ class LegacyAliasBlockFile : public PCMAliasBlockFile
                         bool noRMS);
    virtual ~LegacyAliasBlockFile();
 
-   virtual void SaveXML(XMLWriter &xmlFile);
-   virtual BlockFile *Copy(wxFileName fileName);
-   virtual void Recover();
+   void SaveXML(XMLWriter &xmlFile) override;
+   BlockFile *Copy(wxFileNameWrapper &&fileName) override;
+   void Recover() override;
 
-   static BlockFile *BuildFromXML(wxString projDir, const wxChar **attrs);
+   static BlockFile *BuildFromXML(const wxString &projDir, const wxChar **attrs);
 };
 
 #endif

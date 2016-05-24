@@ -13,6 +13,7 @@
 
 *//*******************************************************************/
 
+#include "../Audacity.h"
 #include "CommandDirectory.h"
 #include "CommandMisc.h"
 
@@ -32,13 +33,10 @@
 #include "ImportExportCommands.h"
 #include "OpenSaveCommands.h"
 
-CommandDirectory *CommandDirectory::mInstance = NULL;
+std::unique_ptr<CommandDirectory> CommandDirectory::mInstance;
 
 CommandDirectory::CommandDirectory()
 {
-   wxASSERT(mInstance == NULL);
-   mInstance = this;
-
    // Create the command map.
    // Adding an entry here is the easiest way to register a Command class.
    AddCommand(new ScreenshotCommandType());
@@ -96,17 +94,7 @@ void CommandDirectory::AddCommand(CommandType *type)
 
 CommandDirectory *CommandDirectory::Get()
 {
-   if (mInstance == NULL)
-   {
-      return new CommandDirectory();
-   }
-   return mInstance;
-}
-
-void CommandDirectory::Destroy()
-{
-   if (mInstance != NULL)
-   {
-      delete mInstance;
-   }
+   if (!mInstance)
+      mInstance.reset(safenew CommandDirectory());
+   return mInstance.get();
 }

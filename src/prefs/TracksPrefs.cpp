@@ -30,8 +30,6 @@
 
 #include "../Experimental.h"
 
-////////////////////////////////////////////////////////////////////////////////
-
 TracksPrefs::TracksPrefs(wxWindow * parent)
 :  PrefsPanel(parent, _("Tracks"))
 {
@@ -47,14 +45,20 @@ TracksPrefs::~TracksPrefs()
 {
 }
 
+const wxChar *TracksPrefs::ScrollingPreferenceKey()
+{
+   static auto string = wxT("/GUI/ScrollBeyondZero");
+   return string;
+}
+
 void TracksPrefs::Populate()
 {
-   mSoloCodes.Add(wxT("Standard"));
    mSoloCodes.Add(wxT("Simple"));
+   mSoloCodes.Add(wxT("Multi"));
    mSoloCodes.Add(wxT("None"));
 
-   mSoloChoices.Add(_("Standard"));
    mSoloChoices.Add(_("Simple"));
+   mSoloChoices.Add(_("Multi-track"));
    mSoloChoices.Add(_("None"));
 
 
@@ -67,7 +71,7 @@ void TracksPrefs::Populate()
    mViewChoices.Add(_("Waveform (dB)"));
    mViewCodes.Add(int(WaveTrack::obsoleteWaveformDBDisplay));
 
-   mViewChoices.Add(_("Spectrum"));
+   mViewChoices.Add(_("Spectrogram"));
    mViewCodes.Add(WaveTrack::Spectrum);
 
    //------------------------- Main section --------------------
@@ -96,15 +100,23 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
 
       S.StartMultiColumn(2);
       {
-
-         S.TieChoice(_("Default &View Mode:"),
+         S.TieChoice(_("Default &view mode:"),
                      wxT("/GUI/DefaultViewModeNew"),
                      0,
                      mViewChoices,
                      mViewCodes);
          S.SetSizeHints(mViewChoices);
+
+         S.TieTextBox(_("Default audio track &name:"),
+                      wxT("/GUI/TrackNames/DefaultTrackName"),
+                      _("Audio Track"),
+                      30);
       }
       S.EndMultiColumn();
+
+      S.TieCheckBox(_("Sho&w audio track name as overlay"),
+                  wxT("/GUI/ShowTrackNameInWaveform"),
+                  false);
    }
    S.EndStatic();
 
@@ -128,8 +140,8 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
                     true);
 #ifdef EXPERIMENTAL_SCROLLING_LIMITS
       S.TieCheckBox(_("Enable scrolling left of &zero"),
-                    wxT("/GUI/ScrollBeyondZero"),
-                    false);
+                    ScrollingPreferenceKey(),
+                    ScrollingPreferenceDefault());
 #endif
 
       S.AddSpace(10);
@@ -158,5 +170,6 @@ bool TracksPrefs::Apply()
 
 PrefsPanel *TracksPrefsFactory::Create(wxWindow *parent)
 {
-   return new TracksPrefs(parent);
+   wxASSERT(parent); // to justify safenew
+   return safenew TracksPrefs(parent);
 }

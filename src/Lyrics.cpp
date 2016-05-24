@@ -18,6 +18,7 @@
 #include "Lyrics.h"
 #include "Internat.h"
 #include "Project.h" // for GetActiveProject
+#include "LabelTrack.h"
 
 #include <wx/arrimpl.cpp>
 WX_DEFINE_OBJARRAY(SyllableArray);
@@ -92,7 +93,7 @@ Lyrics::Lyrics(wxWindow* parent, wxWindowID id,
    this->SetBackgroundColour(*wxWHITE);
 
    mHighlightTextCtrl =
-      new HighlightTextCtrl(this, -1, // wxWindow* parent, wxWindowID id,
+      safenew HighlightTextCtrl(this, -1, // wxWindow* parent, wxWindowID id,
                               wxT(""), // const wxString& value = wxT(""),
                               wxPoint(0, 0), // const wxPoint& pos = wxDefaultPosition,
                               size); // const wxSize& size = wxDefaultSize
@@ -131,43 +132,59 @@ void Lyrics::Clear()
    mHighlightTextCtrl->Clear();
 }
 
-void Lyrics::Add(double t, wxString syllable)
+void Lyrics::AddLabels(const LabelTrack *pLT)
+{
+   const size_t numLabels = pLT->GetNumLabels();
+   wxString highlightText;
+   for (size_t ii = 0; ii < numLabels; ++ii) {
+      const LabelStruct *const pLabel = pLT->GetLabel(ii);
+      Add(pLabel->getT0(), pLabel->title, highlightText);
+   }
+   mHighlightTextCtrl->AppendText(highlightText);
+}
+
+void Lyrics::Add(double t, const wxString &syllable, wxString &highlightText)
 {
    int i = mSyllables.GetCount();
 
-   if (mSyllables[i-1].t == t) {
-      // We can't have two syllables with the same time, so append
-      // this to the end of the previous one if they're at the
-      // same time.
-      mSyllables[i-1].text += syllable;
-      mSyllables[i-1].textWithSpace += syllable;
-      mSyllables[i-1].char1 += syllable.Length();
-      return;
+   {
+      Syllable &prevSyllable = mSyllables[i - 1];
+
+      if (prevSyllable.t == t) {
+         // We can't have two syllables with the same time, so append
+         // this to the end of the previous one if they're at the
+         // same time.
+         prevSyllable.text += syllable;
+         prevSyllable.textWithSpace += syllable;
+         prevSyllable.char1 += syllable.Length();
+         return;
+      }
    }
 
    mSyllables.Add(Syllable());
-   mSyllables[i].t = t;
-   mSyllables[i].text = syllable;
+   Syllable &thisSyllable = mSyllables[i];
+   thisSyllable.t = t;
+   thisSyllable.text = syllable;
 
-   mSyllables[i].char0 = mText.Length();
+   thisSyllable.char0 = mText.Length();
 
    // Put a space between syllables unless the previous one
    // ended in a hyphen
    if (i > 0 &&
          // mSyllables[i-1].text.Length() > 0 &&
-         mSyllables[i-1].text.Right(1) != wxT("-"))
-      mSyllables[i].textWithSpace = wxT(" ") + syllable;
+         mSyllables[i - 1].text.Right(1) != wxT("-"))
+      thisSyllable.textWithSpace = wxT(" ") + syllable;
    else
-      mSyllables[i].textWithSpace = syllable;
+      thisSyllable.textWithSpace = syllable;
 
-   mText += mSyllables[i].textWithSpace;
-   mSyllables[i].char1 = mText.Length();
+   mText += thisSyllable.textWithSpace;
+   thisSyllable.char1 = mText.Length();
 
-   int nTextLen = mSyllables[i].textWithSpace.Length();
-   if ((nTextLen > 0) && (mSyllables[i].textWithSpace.Right(1) == wxT("_")))
-      mHighlightTextCtrl->AppendText(mSyllables[i].textWithSpace.Left(nTextLen - 1) + wxT("\n"));
+   int nTextLen = thisSyllable.textWithSpace.Length();
+   if ((nTextLen > 0) && (thisSyllable.textWithSpace.Right(1) == wxT("_")))
+      highlightText += (thisSyllable.textWithSpace.Left(nTextLen - 1) + wxT("\n"));
    else
-      mHighlightTextCtrl->AppendText(mSyllables[i].textWithSpace);
+      highlightText += thisSyllable.textWithSpace;
 }
 
 void Lyrics::Finish(double finalT)

@@ -18,7 +18,7 @@ from.  For any type there should only be one ODDecodeTask associated with
 a given track.
 There could be the ODBlockFiles of several FLACs in one track (after copy and pasting),
 so things aren't as simple as they seem - the implementation needs to be
-robust enough to allow all the user changes such as copy/paste, delete, and so on.
+robust enough to allow all the user changes such as copy/paste, DELETE, and so on.
 
 *//*******************************************************************/
 
@@ -28,6 +28,7 @@ robust enough to allow all the user changes such as copy/paste, delete, and so o
 #ifndef __AUDACITY_ODDecodeTask__
 #define __AUDACITY_ODDecodeTask__
 
+#include "../MemoryX.h"
 #include <vector>
 #include "ODTask.h"
 #include "ODTaskThread.h"
@@ -37,27 +38,26 @@ class ODFileDecoder;
 
 
 /// A class representing a modular task to be used with the On-Demand structures.
-class ODDecodeTask:public ODTask
+class ODDecodeTask /* not final */ : public ODTask
 {
  public:
    ODDecodeTask();
    virtual ~ODDecodeTask(){};
 
-   virtual ODTask* Clone()=0;
-
+   // NEW virtual:
    virtual bool SeekingAllowed();
 
    ///changes the tasks associated with this Waveform to process the task from a different point in the track
    ///this is overridden from ODTask because certain classes don't allow users to seek sometimes, or not at all.
-   virtual void DemandTrackUpdate(WaveTrack* track, double seconds);
+   void DemandTrackUpdate(WaveTrack* track, double seconds) override;
 
    ///Return the task name
-   virtual const char* GetTaskName(){return "ODDecodeTask";}
+   const char* GetTaskName() override { return "ODDecodeTask"; }
 
-   virtual const wxChar* GetTip(){return _("Decoding Waveform");}
+   const wxChar* GetTip() override { return _("Decoding Waveform"); }
 
    ///Subclasses should override to return respective type.
-   virtual unsigned int GetODType(){return eODNone;}
+   unsigned int GetODType() override { return eODNone; }
 
    ///Creates an ODFileDecoder that decodes a file of filetype the subclass handles.
    virtual ODFileDecoder* CreateFileDecoder(const wxString & fileName)=0;
@@ -67,6 +67,7 @@ class ODDecodeTask:public ODTask
    ///Blocks that have IsDataAvailable()==false are blockfiles to be decoded.  if BlockFile::GetDecodeType()==ODDecodeTask::GetODType() then
    ///this decoder should handle it.  Decoders are accessible with the methods below.  These aren't thread-safe and should only
    ///be called from the decoding thread.
+   // NEW virtuals:
    virtual ODFileDecoder* GetOrCreateMatchingFileDecoder(ODDecodeBlockFile* blockFile);
    virtual int GetNumFileDecoders();
 
@@ -74,21 +75,21 @@ class ODDecodeTask:public ODTask
 protected:
 
    ///recalculates the percentage complete.
-   virtual void CalculatePercentComplete();
+   void CalculatePercentComplete() override;
 
    ///Computes and writes the data for one BlockFile if it still has a refcount.
-   virtual void DoSomeInternal();
+   void DoSomeInternal() override;
 
    ///Readjusts the blockfile order in the default manner.  If we have had an ODRequest
    ///Then it updates in the OD manner.
-   virtual void Update();
+   void Update() override;
 
    ///Orders the input as either On-Demand or default layered order.
    void OrderBlockFiles(std::vector<ODDecodeBlockFile*> &unorderedBlocks);
 
 
    std::vector<ODDecodeBlockFile*> mBlockFiles;
-   std::vector<ODFileDecoder*> mDecoders;
+   std::vector<movable_ptr<ODFileDecoder>> mDecoders;
 
    int mMaxBlockFiles;
    int mComputedBlockFiles;
@@ -96,7 +97,7 @@ protected:
 };
 
 ///class to decode a particular file (one per file).  Saves info such as filename and length (after the header is read.)
-class ODFileDecoder
+class ODFileDecoder /* not final */
 {
 public:
    ///This should handle unicode converted to UTF-8 on mac/linux, but OD TODO:check on windows
@@ -117,9 +118,9 @@ public:
    ///This class should call ReadHeader() first, so it knows the length, and can prepare
    ///the file object if it needs to.
    ///returns negative value for failure, 0 or positive value for success.
-   virtual int Decode(samplePtr & data, sampleFormat & format, sampleCount start, sampleCount len, unsigned int channel)=0;
+   virtual int Decode(SampleBuffer & data, sampleFormat & format, sampleCount start, sampleCount len, unsigned int channel)=0;
 
-   wxString GetFileName(){return mFName;}
+   const wxString &GetFileName(){return mFName;}
 
    bool IsInitialized();
 
@@ -130,7 +131,7 @@ protected:
    bool     mInited;
    ODLock   mInitedLock;
 
-   wxString  mFName;
+   const wxString  mFName;
 
    unsigned int mSampleRate;
    unsigned int mNumSamples;//this may depend on the channel - so TODO: we should probably let the decoder create/modify the track info directly.

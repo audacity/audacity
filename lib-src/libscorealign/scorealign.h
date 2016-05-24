@@ -13,7 +13,7 @@
 #endif
 
 // a class to report (optionally) score alignment progress
-class SAProgress { 
+class SAProgress /* not final */ {
   public:
     SAProgress() { smoothing = false; }
     // we need the frame period to convert seconds to work units

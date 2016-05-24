@@ -29,7 +29,7 @@ Populate() is called only as needed to fill the table on demand the first
 time it is used after application startup or language change.
 */
 
-template<typename ArrayType> class TranslatableArray
+template<typename ArrayType> class TranslatableArray  /* not final */
    : public wxEvtHandler
 {
 public:

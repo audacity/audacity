@@ -35,58 +35,58 @@ Also, see ODPCMAliasBlockFile for a similar file.
 #include <wx/thread.h>
 
 /// An AliasBlockFile that references uncompressed data in an existing file
-class ODDecodeBlockFile : public SimpleBlockFile
+class ODDecodeBlockFile final : public SimpleBlockFile
 {
  public:
 
    // Constructor / Destructor
 
    /// Create a disk file and write summary and sample data to it
-   ODDecodeBlockFile(wxFileName baseFileName,wxFileName audioFileName, sampleCount aliasStart,
+   ODDecodeBlockFile(wxFileNameWrapper &&baseFileName, wxFileNameWrapper &&audioFileName, sampleCount aliasStart,
                      sampleCount aliasLen, int aliasChannel, unsigned int decodeType);
    /// Create the memory structure to refer to the given block file
-   ODDecodeBlockFile(wxFileName existingFile, wxFileName audioFileName, sampleCount aliasStart,
+   ODDecodeBlockFile(wxFileNameWrapper &&existingFile, wxFileNameWrapper &&audioFileName, sampleCount aliasStart,
                      sampleCount aliasLen, int aliasChannel, unsigned int decodeType,
                    float min, float max, float rms, bool dataAvailable);
 
    virtual ~ODDecodeBlockFile();
    //checks to see if summary data has been computed and written to disk yet.  Thread safe.  Blocks if we are writing summary data.
-   virtual bool IsSummaryAvailable();
+   bool IsSummaryAvailable() const override;
 
    /// Returns TRUE if this block's complete data is ready to be accessed by Read()
-   virtual bool IsDataAvailable();
+   bool IsDataAvailable() const override;
 
    /// Returns TRUE if the summary has not yet been written, but is actively being computed and written to disk
-   virtual bool IsSummaryBeingComputed(){return false;}
+   bool IsSummaryBeingComputed() override { return false; }
 
    //Calls that rely on summary files need to be overidden
-   virtual wxLongLong GetSpaceUsage();
+   wxLongLong GetSpaceUsage() const override;
    /// Gets extreme values for the specified region
-   virtual void GetMinMax(sampleCount start, sampleCount len,
-                          float *outMin, float *outMax, float *outRMS);
+   void GetMinMax(sampleCount start, sampleCount len,
+                          float *outMin, float *outMax, float *outRMS) const override;
    /// Gets extreme values for the entire block
-   virtual void GetMinMax(float *outMin, float *outMax, float *outRMS);
+   void GetMinMax(float *outMin, float *outMax, float *outRMS) const override;
    /// Returns the 256 byte summary data block
-   virtual bool Read256(float *buffer, sampleCount start, sampleCount len);
+   bool Read256(float *buffer, sampleCount start, sampleCount len) override;
    /// Returns the 64K summary data block
-   virtual bool Read64K(float *buffer, sampleCount start, sampleCount len);
+   bool Read64K(float *buffer, sampleCount start, sampleCount len) override;
 
    /// returns true before decoding is complete, because it is linked to the encoded file until then.
    /// returns false afterwards.
 
 
 
-   ///Makes new ODPCMAliasBlockFile or PCMAliasBlockFile depending on summary availability
-   virtual BlockFile *Copy(wxFileName fileName);
+   ///Makes NEW ODPCMAliasBlockFile or PCMAliasBlockFile depending on summary availability
+   BlockFile *Copy(wxFileNameWrapper &&fileName) override;
 
    ///Saves as xml ODPCMAliasBlockFile or PCMAliasBlockFile depending on summary availability
-   virtual void SaveXML(XMLWriter &xmlFile);
+   void SaveXML(XMLWriter &xmlFile) override;
 
    ///Reconstructs from XML a ODPCMAliasBlockFile and reschedules it for OD loading
    static BlockFile *BuildFromXML(DirManager &dm, const wxChar **attrs);
 
    ///Writes the summary file if summary data is available
-   virtual void Recover(void);
+   void Recover(void) override;
 
    ///A public interface to WriteSummary
    int DoWriteBlockFile(){return WriteODDecodeBlockFile();}
@@ -97,52 +97,52 @@ class ODDecodeBlockFile : public SimpleBlockFile
    void SetStart(sampleCount startSample){mStart = startSample;}
 
    ///Gets the value that indicates where the first sample in this block corresponds to the global sequence/clip.  Only for display use.
-   sampleCount GetStart(){return mStart;}
+   sampleCount GetStart() const {return mStart;}
 
    //returns the number of samples from the beginning of the track that this blockfile starts at
-   sampleCount GetGlobalStart(){return mClipOffset+mStart;}
+   sampleCount GetGlobalStart() const {return mClipOffset+mStart;}
 
    //returns the number of samples from the beginning of the track that this blockfile ends at
-   sampleCount GetGlobalEnd(){return mClipOffset+mStart+GetLength();}
+   sampleCount GetGlobalEnd() const {return mClipOffset+mStart+GetLength();}
 
    //Below calls are overrided just so we can take wxlog calls out, which are not threadsafe.
 
    /// Reads the specified data from the aliased file using libsndfile
-   virtual int ReadData(samplePtr data, sampleFormat format,
-                        sampleCount start, sampleCount len);
+   int ReadData(samplePtr data, sampleFormat format,
+                        sampleCount start, sampleCount len) const override;
 
    /// Read the summary into a buffer
-   virtual bool ReadSummary(void *data);
+   bool ReadSummary(void *data) override;
 
    ///Returns the type of audiofile this blockfile is loaded from.
-   virtual unsigned int GetDecodeType(){return mType;}
-   virtual void SetDecodeType(unsigned int type){mType=type;}
+   unsigned int GetDecodeType() /* not override */ const { return mType; }
+   // void SetDecodeType(unsigned int type) /* not override */ { mType = type; }
 
    ///sets the amount of samples the clip associated with this blockfile is offset in the wavetrack (non effecting)
    void SetClipOffset(sampleCount numSamples){mClipOffset= numSamples;}
 
    ///Gets the number of samples the clip associated with this blockfile is offset by.
-   sampleCount GetClipOffset(){return mClipOffset;}
+   sampleCount GetClipOffset() const {return mClipOffset;}
 
    //OD TODO:set ISAlias to true while we have no data?
 
    ///set the decoder,
    void SetODFileDecoder(ODFileDecoder* decoder);
 
-   wxFileName GetAudioFileName(){return mAudioFileName;}
+   const wxFileName &GetAudioFileName(){return mAudioFileName;}
 
    ///sets the file name the summary info will be saved in.  threadsafe.
-   virtual void SetFileName(wxFileName &name);
-   virtual wxFileName GetFileName();
+   void SetFileName(wxFileNameWrapper &&name) override;
+   GetFileNameResult GetFileName() const override;
 
    /// Prevents a read on other threads of the encoded audio file.
-   virtual void LockRead();
+   void LockRead() const override;
    /// Allows reading of encoded file on other threads.
-   virtual void UnlockRead();
+   void UnlockRead() const override;
 
    ///// Get the name of the file where the audio data for this block is
    /// stored.
-   wxFileName GetEncodedAudioFilename()
+   const wxFileName &GetEncodedAudioFilename()
    {
       return mAudioFileName;
    }
@@ -150,24 +150,24 @@ class ODDecodeBlockFile : public SimpleBlockFile
    /// Modify this block to point at a different file.  This is generally
    /// looked down on, but it is necessary in one case: see
    /// DirManager::EnsureSafeFilename().
-   void ChangeAudioFile(wxFileName newAudioFile);
+   void ChangeAudioFile(wxFileNameWrapper &&newAudioFile);
 
   protected:
 
-//   virtual void WriteSimpleBlockFile();
-   virtual void *CalcSummary(samplePtr buffer, sampleCount len,
-                             sampleFormat format);
+//   void WriteSimpleBlockFile() override;
+   void *CalcSummary(samplePtr buffer, sampleCount len,
+                             sampleFormat format, ArrayOf<char> &cleanup) override;
    //The on demand type.
    unsigned int mType;
 
    ///This lock is for the filename (string) of the blockfile that contains summary/audio data
    ///after decoding
-   ODLock mFileNameMutex;
+   mutable ODLock mFileNameMutex;
 
    ///The original file the audio came from.
-   wxFileName mAudioFileName;
+   wxFileNameWrapper mAudioFileName;
 
-   ODLock    mDataAvailableMutex;
+   mutable ODLock    mDataAvailableMutex;
    bool mDataAvailable;
    bool mDataBeingComputed;
 
@@ -175,7 +175,7 @@ class ODDecodeBlockFile : public SimpleBlockFile
    ODLock mDecoderMutex;
 
    ///For accessing the audio file that will be decoded.  Used by dir manager;
-   ODLock mReadDataMutex;
+   mutable ODLock mReadDataMutex;
 
    ///for reporting after task is complete.  Only for display use.
    sampleCount mStart;

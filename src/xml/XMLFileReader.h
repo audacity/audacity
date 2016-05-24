@@ -10,14 +10,15 @@
 
 #include "../Audacity.h"
 
+#include <vector>
 #include "expat.h"
 
 #include "XMLTagHandler.h"
 
-class AUDACITY_DLL_API XMLFileReader {
+class AUDACITY_DLL_API XMLFileReader final {
  public:
    XMLFileReader();
-   virtual ~XMLFileReader();
+   ~XMLFileReader();
 
    bool Parse(XMLTagHandler *baseHandler,
               const wxString &fname);
@@ -35,9 +36,8 @@ class AUDACITY_DLL_API XMLFileReader {
 
  private:
    XML_Parser       mParser;
-   int              mMaxDepth;
-   int              mDepth;
-   XMLTagHandler  **mHandler;
    XMLTagHandler   *mBaseHandler;
+   using Handlers = std::vector<XMLTagHandler*>;
+   Handlers mHandler;
    wxString         mErrorStr;
 };

@@ -20,7 +20,7 @@ ThemePrefs.
   global preferences object gPrefs, and instructing the applicable parts
   of the program to re-read the preference options.
 
-  To actually add a the new panel, edit the PrefsDialog constructor
+  To actually add a the NEW panel, edit the PrefsDialog constructor
   to append the panel to its list of panels.
 
 *//*******************************************************************/
@@ -40,10 +40,10 @@ ThemePrefs.
 #define TOP_LEVEL_BORDER       5
 #define GENERIC_CONTROL_BORDER 5
 
-class PrefsPanel:public wxPanel
+class PrefsPanel /* not final */ : public wxPanel
 {
  public:
-   PrefsPanel(wxWindow * parent, wxString title)
+   PrefsPanel(wxWindow * parent, const wxString &title)
    :  wxPanel(parent, wxID_ANY)
    {
       SetLabel(title);     // Provide visual label
@@ -52,6 +52,7 @@ class PrefsPanel:public wxPanel
 
    virtual ~PrefsPanel();
 
+   // NEW virtuals
    virtual bool Apply() = 0;
 
    // If it returns True, the Apply button is added below the panel
@@ -61,9 +62,10 @@ class PrefsPanel:public wxPanel
    virtual void Cancel();
 };
 
-class PrefsPanelFactory
+class PrefsPanelFactory /* not final */
 {
 public:
+   // Precondition: parent != NULL
    virtual PrefsPanel *Create(wxWindow *parent) = 0;
 };
 

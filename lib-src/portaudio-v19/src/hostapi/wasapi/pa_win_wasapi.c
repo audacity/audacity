@@ -174,6 +174,8 @@
 
 // "1CB9AD4C-DBFA-4c32-B178-C2F568A703B2"
 PA_DEFINE_IID(IAudioClient,         1cb9ad4c, dbfa, 4c32, b1, 78, c2, f5, 68, a7, 03, b2);
+// "726778CD-F60A-4EDA-82DE-E47610CD78AA"
+PA_DEFINE_IID(IAudioClient2,        726778cd, f60a, 4eda, 82, de, e4, 76, 10, cd, 78, aa);
 // "1BE09788-6894-4089-8586-9A2A6C265AC5"
 PA_DEFINE_IID(IMMEndpoint,          1be09788, 6894, 4089, 85, 86, 9a, 2a, 6c, 26, 5a, c5);
 // "A95664D2-9614-4F35-A746-DE8DB63617E6"
@@ -194,6 +196,22 @@ PA_DEFINE_IID(IKsJackDescription,   4509F757, 2D46, 4637, 8e, 62, ce, 7d, b9, 44
 __DEFINE_GUID(pa_KSDATAFORMAT_SUBTYPE_PCM,        0x00000001, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71 );
 __DEFINE_GUID(pa_KSDATAFORMAT_SUBTYPE_ADPCM,      0x00000002, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71 );
 __DEFINE_GUID(pa_KSDATAFORMAT_SUBTYPE_IEEE_FLOAT, 0x00000003, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71 );
+
+#ifdef __IAudioClient2_INTERFACE_DEFINED__
+typedef enum _pa_AUDCLNT_STREAMOPTIONS { 
+	pa_AUDCLNT_STREAMOPTIONS_NONE          = 0x00,
+	pa_AUDCLNT_STREAMOPTIONS_RAW           = 0x01,
+	pa_AUDCLNT_STREAMOPTIONS_MATCH_FORMAT  = 0x02
+} pa_AUDCLNT_STREAMOPTIONS;
+typedef struct _pa_AudioClientProperties {
+	UINT32                   cbSize;
+	BOOL                     bIsOffload;
+	AUDIO_STREAM_CATEGORY    eCategory;
+	pa_AUDCLNT_STREAMOPTIONS Options;
+} pa_AudioClientProperties;
+#define PA_AUDIOCLIENTPROPERTIES_SIZE_CATEGORY (sizeof(pa_AudioClientProperties) - sizeof(pa_AUDCLNT_STREAMOPTIONS))
+#define PA_AUDIOCLIENTPROPERTIES_SIZE_OPTIONS   sizeof(pa_AudioClientProperties)
+#endif // __IAudioClient2_INTERFACE_DEFINED__
 
 /* use CreateThread for CYGWIN/Windows Mobile, _beginthreadex for all others */
 #if !defined(__CYGWIN__) && !defined(_WIN32_WCE)
@@ -512,14 +530,22 @@ typedef struct PaWasapiStream
 }
 PaWasapiStream;
 
+// COM marshaling
+static HRESULT MarshalSubStreamComPointers(PaWasapiSubStream *substream);
+static HRESULT MarshalStreamComPointers(PaWasapiStream *stream);
+static HRESULT UnmarshalSubStreamComPointers(PaWasapiSubStream *substream);
+static HRESULT UnmarshalStreamComPointers(PaWasapiStream *stream);
+static void ReleaseUnmarshaledSubComPointers(PaWasapiSubStream *substream);
+static void ReleaseUnmarshaledComPointers(PaWasapiStream *stream);
+
 // Local stream methods
-void _StreamOnStop(PaWasapiStream *stream);
-void _StreamFinish(PaWasapiStream *stream);
-void _StreamCleanup(PaWasapiStream *stream);
-HRESULT _PollGetOutputFramesAvailable(PaWasapiStream *stream, UINT32 *available);
-HRESULT _PollGetInputFramesAvailable(PaWasapiStream *stream, UINT32 *available);
-void *PaWasapi_ReallocateMemory(void *ptr, size_t size);
-void PaWasapi_FreeMemory(void *ptr);
+static void _StreamOnStop(PaWasapiStream *stream);
+static void _StreamFinish(PaWasapiStream *stream);
+static void _StreamCleanup(PaWasapiStream *stream);
+static HRESULT _PollGetOutputFramesAvailable(PaWasapiStream *stream, UINT32 *available);
+static HRESULT _PollGetInputFramesAvailable(PaWasapiStream *stream, UINT32 *available);
+static void *PaWasapi_ReallocateMemory(void *ptr, size_t size);
+static void PaWasapi_FreeMemory(void *ptr);
 
 // Local statics
 
@@ -850,19 +876,49 @@ static BOOL IsWow64()
 // ------------------------------------------------------------------------------------------
 typedef enum EWindowsVersion
 {
-	WINDOWS_UNKNOWN			 = 0,
-	WINDOWS_VISTA_SERVER2008 = (1 << 0),
-	WINDOWS_7_SERVER2008R2	 = (1 << 1),
-	WINDOWS_FUTURE           = (1 << 2)
+	WINDOWS_UNKNOWN = 0,
+	WINDOWS_VISTA_SERVER2008,
+	WINDOWS_7_SERVER2008R2,
+	WINDOWS_8_SERVER2012,
+	WINDOWS_8_1_SERVER2012R2,
+	WINDOWS_10_SERVER2016,
+	WINDOWS_FUTURE
 }
 EWindowsVersion;
-// Defines Windows 7/Windows Server 2008 R2 and up (future versions)
-#define WINDOWS_7_SERVER2008R2_AND_UP (WINDOWS_7_SERVER2008R2|WINDOWS_FUTURE)
-// The function is limited to Vista/7 mostly as we need just to find out Vista/WOW64 combination
-// in order to use WASAPI WOW64 workarounds.
-static UINT32 GetWindowsVersion()
+// Alternative way for checking Windows version (allows to check version on Windows 8.1 and up)
+static BOOL IsWindowsVersionOrGreater(WORD wMajorVersion, WORD wMinorVersion, WORD wServicePackMajor)
 {
-	static UINT32 version = WINDOWS_UNKNOWN;
+	typedef ULONGLONG (NTAPI *LPFN_VERSETCONDITIONMASK)(ULONGLONG ConditionMask, DWORD TypeMask, BYTE Condition);
+	typedef BOOL (WINAPI *LPFN_VERIFYVERSIONINFO)(LPOSVERSIONINFOEXA lpVersionInformation, DWORD dwTypeMask, DWORDLONG dwlConditionMask);
+
+	LPFN_VERSETCONDITIONMASK fnVerSetConditionMask;
+	LPFN_VERIFYVERSIONINFO fnVerifyVersionInfo;
+	OSVERSIONINFOEXA osvi = { sizeof(osvi), 0, 0, 0, 0, {0}, 0, 0 };
+	DWORDLONG dwlConditionMask;
+
+	fnVerSetConditionMask = (LPFN_VERSETCONDITIONMASK)GetProcAddress(GetModuleHandleA("kernel32"), "VerSetConditionMask");
+	fnVerifyVersionInfo = (LPFN_VERIFYVERSIONINFO)GetProcAddress(GetModuleHandleA("kernel32"), "VerifyVersionInfoA");
+
+	if ((fnVerSetConditionMask == NULL) || (fnVerifyVersionInfo == NULL))
+		return FALSE;
+
+	dwlConditionMask = fnVerSetConditionMask(
+		fnVerSetConditionMask(
+			fnVerSetConditionMask(
+				0, VER_MAJORVERSION,     VER_GREATER_EQUAL),
+				   VER_MINORVERSION,     VER_GREATER_EQUAL),
+				   VER_SERVICEPACKMAJOR, VER_GREATER_EQUAL);
+
+	osvi.dwMajorVersion    = wMajorVersion;
+	osvi.dwMinorVersion    = wMinorVersion;
+	osvi.wServicePackMajor = wServicePackMajor;
+
+	return (fnVerifyVersionInfo(&osvi, VER_MAJORVERSION | VER_MINORVERSION | VER_SERVICEPACKMAJOR, dwlConditionMask) != FALSE);
+}
+// Get Windows version
+static EWindowsVersion GetWindowsVersion()
+{
+	static EWindowsVersion version = WINDOWS_UNKNOWN;
 
 	if (version == WINDOWS_UNKNOWN)
 	{
@@ -874,45 +930,75 @@ static UINT32 GetWindowsVersion()
 		typedef DWORD (WINAPI *LPFN_GETVERSION)(VOID);
 		LPFN_GETVERSION fnGetVersion;
 
-		fnGetVersion = (LPFN_GETVERSION) GetProcAddress(GetModuleHandleA("kernel32"), "GetVersion");
-		if (fnGetVersion == NULL)
-			return WINDOWS_UNKNOWN;
-
-		dwVersion = fnGetVersion();
-
-		// Get the Windows version
-		dwMajorVersion = (DWORD)(LOBYTE(LOWORD(dwVersion)));
-		dwMinorVersion = (DWORD)(HIBYTE(LOWORD(dwVersion)));
-
-		// Get the build number
-		if (dwVersion < 0x80000000)
-			dwBuild = (DWORD)(HIWORD(dwVersion));
-
-		switch (dwMajorVersion)
+		fnGetVersion = (LPFN_GETVERSION)GetProcAddress(GetModuleHandleA("kernel32"), "GetVersion");
+		if (fnGetVersion != NULL)
 		{
-		case 0:
-		case 1:
-		case 2:
-		case 3:
-		case 4:
-		case 5:
-			break; // skip lower
-		case 6:
-			switch (dwMinorVersion)
+			PRINT(("WASAPI: getting Windows version with GetVersion()\n"));
+
+			dwVersion = fnGetVersion();
+
+			// Get the Windows version
+			dwMajorVersion = (DWORD)(LOBYTE(LOWORD(dwVersion)));
+			dwMinorVersion = (DWORD)(HIBYTE(LOWORD(dwVersion)));
+
+			// Get the build number
+			if (dwVersion < 0x80000000)
+				dwBuild = (DWORD)(HIWORD(dwVersion));
+
+			switch (dwMajorVersion)
 			{
 			case 0:
-				version |= WINDOWS_VISTA_SERVER2008;
-				break;
 			case 1:
-				version |= WINDOWS_7_SERVER2008R2;
+			case 2:
+			case 3:
+			case 4:
+			case 5:
+				break; // skip lower
+			case 6:
+				switch (dwMinorVersion)
+				{
+				case 0:  version = WINDOWS_VISTA_SERVER2008;	break;
+				case 1:	 version = WINDOWS_7_SERVER2008R2;		break;
+				case 2:	 version = WINDOWS_8_SERVER2012;  		break;
+				case 3:	 version = WINDOWS_8_1_SERVER2012R2;	break;
+				default: version = WINDOWS_FUTURE;				break;
+				}
+				break;
+			case 10:
+				switch (dwMinorVersion)
+				{
+				case 0:	 version = WINDOWS_10_SERVER2016;		break;
+				default: version = WINDOWS_FUTURE;				break;
+				}
 				break;
 			default:
-				version |= WINDOWS_FUTURE;
+				version = WINDOWS_FUTURE;
+				break;
 			}
-			break;
-		default:
-			version |= WINDOWS_FUTURE;
 		}
+		else
+		{
+			PRINT(("WASAPI: getting Windows version with VerifyVersionInfo()\n"));
+
+			if (IsWindowsVersionOrGreater(10, 0, 0))
+				version = WINDOWS_10_SERVER2016;
+			else
+			if (IsWindowsVersionOrGreater(6, 3, 0))
+				version = WINDOWS_8_1_SERVER2012R2;
+			else
+			if (IsWindowsVersionOrGreater(6, 2, 0))
+				version = WINDOWS_8_SERVER2012;
+			else
+			if (IsWindowsVersionOrGreater(6, 1, 0))
+				version = WINDOWS_7_SERVER2008R2;
+			else
+			if (IsWindowsVersionOrGreater(6, 0, 0))
+				version = WINDOWS_VISTA_SERVER2008;
+			else
+				version = WINDOWS_FUTURE;
+		}
+
+		PRINT(("WASAPI: Windows version = %d\n", version));
 	}
 
 	return version;
@@ -924,7 +1010,45 @@ static BOOL UseWOW64Workaround()
 	// note: WOW64 bug is common to Windows Vista x64, thus we fall back to safe Poll-driven
 	//       method. Windows 7 x64 seems has WOW64 bug fixed.
 
-	return (IsWow64() && (GetWindowsVersion() & WINDOWS_VISTA_SERVER2008));
+	return (IsWow64() && (GetWindowsVersion() == WINDOWS_VISTA_SERVER2008));
+}
+
+// ------------------------------------------------------------------------------------------
+static UINT32 GetAudioClientVersion()
+{
+	if (GetWindowsVersion() >= WINDOWS_10_SERVER2016)
+		return 3;
+	else
+	if (GetWindowsVersion() >= WINDOWS_8_SERVER2012)
+		return 2;
+
+	return 1;
+}
+
+// ------------------------------------------------------------------------------------------
+static const IID *GetAudioClientIID()
+{
+	static const IID *cli_iid = NULL;
+	if (cli_iid == NULL)
+	{
+		UINT32 cli_version = GetAudioClientVersion();
+		if (cli_version <= 1)
+		{
+			cli_iid = &pa_IID_IAudioClient;
+		}
+		else
+		{
+			switch (cli_version)
+			{
+			case 3:  cli_iid = &pa_IID_IAudioClient2; cli_version = 2; break; // use IAudioClient2 for Windows 10+ until IAudioClient3 functions are required
+			default: cli_iid = &pa_IID_IAudioClient2; cli_version = 2; break;
+			}
+		}
+
+		PRINT(("WASAPI: IAudioClient version = %d\n", cli_version));
+	}
+
+	return cli_iid;
 }
 
 // ------------------------------------------------------------------------------------------
@@ -1182,6 +1306,11 @@ PaError PaWasapi_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiInd
     paWasapi->deviceCount += renderCount;
 
     paWasapi->devInfo = (PaWasapiDeviceInfo *)PaUtil_AllocateMemory(sizeof(PaWasapiDeviceInfo) * paWasapi->deviceCount);
+    if (paWasapi->devInfo == NULL)
+	{
+        result = paInsufficientMemory;
+        goto error;
+    }
 	for (i = 0; i < paWasapi->deviceCount; ++i)
 		memset(&paWasapi->devInfo[i], 0, sizeof(PaWasapiDeviceInfo));
 
@@ -1336,7 +1465,7 @@ PaError PaWasapi_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiInd
             {
                 IAudioClient *tmpClient = NULL;
 
-                hr = IMMDevice_Activate(paWasapi->devInfo[i].device, &pa_IID_IAudioClient,
+                hr = IMMDevice_Activate(paWasapi->devInfo[i].device, GetAudioClientIID(),
 					CLSCTX_INPROC_SERVER, NULL, (void **)&tmpClient);
 				// We need to set the result to a value otherwise we will return paNoError
 				// [IF_FAILED_JUMP(hResult, error);]
@@ -1345,9 +1474,17 @@ PaError PaWasapi_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiInd
                 hr = IAudioClient_GetDevicePeriod(tmpClient,
                     &paWasapi->devInfo[i].DefaultDevicePeriod,
                     &paWasapi->devInfo[i].MinimumDevicePeriod);
-				// We need to set the result to a value otherwise we will return paNoError
-				// [IF_FAILED_JUMP(hResult, error);]
-				IF_FAILED_INTERNAL_ERROR_JUMP(hr, result, error);
+				if (FAILED(hr))
+				{
+					PA_DEBUG(("WASAPI:%d| failed getting min/default periods by IAudioClient::GetDevicePeriod() with error[%08X], will use 30000/100000 hns\n", i, (UINT32)hr));
+
+					// assign WASAPI common values
+					paWasapi->devInfo[i].DefaultDevicePeriod = 100000;
+					paWasapi->devInfo[i].MinimumDevicePeriod = 30000;
+
+					// ignore error, let continue further without failing with paInternalError
+					hr = S_OK;
+				}
 
                 //hr = tmpClient->GetMixFormat(&paWasapi->devInfo[i].MixFormat);
 
@@ -1391,7 +1528,7 @@ PaError PaWasapi_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiInd
 				// We need to set the result to a value otherwise we will return paNoError
 				result = paInternalError;
                 //continue; // do not skip from list, allow to initialize
-            break;
+				 break;
             }
 
             (*hostApi)->deviceInfos[i] = deviceInfo;
@@ -1585,29 +1722,6 @@ int PaWasapi_GetDeviceRole( PaDeviceIndex nDevice )
 }
 
 // ------------------------------------------------------------------------------------------
-int PaWasapi_IsLoopback( PaDeviceIndex nDevice )
-{
-	PaError ret;
-	PaDeviceIndex index;
-
-	// Get API
-	PaWasapiHostApiRepresentation *paWasapi = _GetHostApi(&ret);
-	if (paWasapi == NULL)
-		return paNotInitialized;
-
-	// Get device index
-	ret = PaUtil_DeviceIndexToHostApiDeviceIndex(&index, nDevice, &paWasapi->inheritedHostApiRep);
-    if (ret != paNoError)
-        return ret;
-
-	// Validate index
-	if ((UINT32)index >= paWasapi->deviceCount)
-		return paInvalidDevice;
-
-	return paWasapi->devInfo[ index ].loopBack;
-}
-
-// ------------------------------------------------------------------------------------------
 const wchar_t *PaWasapi_GetInputDeviceID( PaStream* s )
 {
     PaWasapiStream *stream = (PaWasapiStream *)s;
@@ -1631,6 +1745,29 @@ const wchar_t *PaWasapi_GetOutputDeviceID( PaStream* s )
         return stream->out.params.device_info->szDeviceID;
 
     return NULL;
+}
+
+// ------------------------------------------------------------------------------------------
+int PaWasapi_IsLoopback( PaDeviceIndex nDevice )
+{
+	PaError ret;
+	PaDeviceIndex index;
+
+	// Get API
+	PaWasapiHostApiRepresentation *paWasapi = _GetHostApi(&ret);
+	if (paWasapi == NULL)
+		return paNotInitialized;
+
+	// Get device index
+	ret = PaUtil_DeviceIndexToHostApiDeviceIndex(&index, nDevice, &paWasapi->inheritedHostApiRep);
+    if (ret != paNoError)
+        return ret;
+
+	// Validate index
+	if ((UINT32)index >= paWasapi->deviceCount)
+		return paInvalidDevice;
+
+	return paWasapi->devInfo[ index ].loopBack;
 }
 
 // ------------------------------------------------------------------------------------------
@@ -2127,7 +2264,7 @@ static PaError IsFormatSupported( struct PaUtilHostApiRepresentation *hostApi,
 			shareMode  = AUDCLNT_SHAREMODE_EXCLUSIVE;
 
 		hr = IMMDevice_Activate(paWasapi->devInfo[inputParameters->device].device,
-			&pa_IID_IAudioClient, CLSCTX_INPROC_SERVER, NULL, (void **)&tmpClient);
+			GetAudioClientIID(), CLSCTX_INPROC_SERVER, NULL, (void **)&tmpClient);
 		if (hr != S_OK)
 		{
 			LogHostError(hr);
@@ -2153,7 +2290,7 @@ static PaError IsFormatSupported( struct PaUtilHostApiRepresentation *hostApi,
 			shareMode  = AUDCLNT_SHAREMODE_EXCLUSIVE;
 
 		hr = IMMDevice_Activate(paWasapi->devInfo[outputParameters->device].device,
-			&pa_IID_IAudioClient, CLSCTX_INPROC_SERVER, NULL, (void **)&tmpClient);
+			GetAudioClientIID(), CLSCTX_INPROC_SERVER, NULL, (void **)&tmpClient);
 		if (hr != S_OK)
 		{
 			LogHostError(hr);
@@ -2253,7 +2390,7 @@ static HRESULT CreateAudioClient(PaWasapiStream *pStream, PaWasapiSubStream *pSu
 	}
 
     // Get the audio client
-    hr = IMMDevice_Activate(pInfo->device, &pa_IID_IAudioClient, CLSCTX_ALL, NULL, (void **)&audioClient);
+    hr = IMMDevice_Activate(pInfo->device, GetAudioClientIID(), CLSCTX_ALL, NULL, (void **)&audioClient);
 	if (hr != S_OK)
 	{
 		(*pa_error) = paInsufficientMemory;
@@ -2407,6 +2544,38 @@ static HRESULT CreateAudioClient(PaWasapiStream *pStream, PaWasapiSubStream *pSu
 		}
 	}
 
+	// Set Raw mode (applicable only to IAudioClient2)
+#ifdef __IAudioClient2_INTERFACE_DEFINED__
+	if (GetAudioClientVersion() >= 2)
+	{
+		pa_AudioClientProperties audioProps = { 0 };
+		audioProps.cbSize     = sizeof(pa_AudioClientProperties);
+		audioProps.bIsOffload = FALSE;
+		audioProps.eCategory  = (AUDIO_STREAM_CATEGORY)pSub->params.wasapi_params.streamCategory;
+		switch (pSub->params.wasapi_params.streamOption)
+		{
+		case eStreamOptionRaw:
+			if (GetWindowsVersion() >= WINDOWS_8_1_SERVER2012R2)
+				audioProps.Options = pa_AUDCLNT_STREAMOPTIONS_RAW;
+			break;
+		case eStreamOptionMatchFormat:
+			if (GetWindowsVersion() >= WINDOWS_10_SERVER2016)
+				audioProps.Options = pa_AUDCLNT_STREAMOPTIONS_MATCH_FORMAT;
+			break;
+		}
+
+		hr = IAudioClient2_SetClientProperties((IAudioClient2 *)audioClient, (AudioClientProperties *)&audioProps);
+		if (hr != S_OK)
+		{
+			PRINT(("WASAPI: IAudioClient2_SetClientProperties(Category = %d, Options = %d) failed with error = %08X\n", audioProps.eCategory, audioProps.Options, (UINT32)hr));
+		}
+		else
+		{
+			PRINT(("WASAPI: IAudioClient2 set properties: IsOffload = %d, Category = %d, Options = %d\n", audioProps.bIsOffload, audioProps.eCategory, audioProps.Options));
+		}
+	}
+#endif
+
 	// Open the stream and associate it with an audio session
     hr = IAudioClient_Initialize(audioClient,
         pSub->shareMode,
@@ -2435,7 +2604,7 @@ static HRESULT CreateAudioClient(PaWasapiStream *pStream, PaWasapiSubStream *pSu
         SAFE_RELEASE(audioClient);
 
         // Create a new audio client
-        hr = IMMDevice_Activate(pInfo->device, &pa_IID_IAudioClient, CLSCTX_ALL, NULL, (void**)&audioClient);
+        hr = IMMDevice_Activate(pInfo->device, GetAudioClientIID(), CLSCTX_ALL, NULL, (void**)&audioClient);
     	if (hr != S_OK)
 		{
 			(*pa_error) = paInsufficientMemory;
@@ -2466,7 +2635,7 @@ static HRESULT CreateAudioClient(PaWasapiStream *pStream, PaWasapiSubStream *pSu
         SAFE_RELEASE(audioClient);
 
         // Create a new audio client
-        hr = IMMDevice_Activate(pInfo->device, &pa_IID_IAudioClient, CLSCTX_ALL, NULL, (void**)&audioClient);
+        hr = IMMDevice_Activate(pInfo->device, GetAudioClientIID(), CLSCTX_ALL, NULL, (void**)&audioClient);
     	if (hr != S_OK)
 		{
 			(*pa_error) = paInsufficientMemory;
@@ -2506,7 +2675,7 @@ static HRESULT CreateAudioClient(PaWasapiStream *pStream, PaWasapiSubStream *pSu
         SAFE_RELEASE(audioClient);
 
         // Create a new audio client
-        hr = IMMDevice_Activate(pInfo->device, &pa_IID_IAudioClient, CLSCTX_ALL, NULL, (void**)&audioClient);
+        hr = IMMDevice_Activate(pInfo->device, GetAudioClientIID(), CLSCTX_ALL, NULL, (void**)&audioClient);
     	if (hr != S_OK)
 		{
 			(*pa_error) = paInsufficientMemory;
@@ -2804,26 +2973,38 @@ static PaError OpenStream( struct PaUtilHostApiRepresentation *hostApi,
     {
         inputChannelCount = inputParameters->channelCount;
         inputSampleFormat = inputParameters->sampleFormat;
-		inputStreamInfo   = (PaWasapiStreamInfo *)inputParameters->hostApiSpecificStreamInfo;
         info              = &paWasapi->devInfo[inputParameters->device];
-		stream->in.flags  = (inputStreamInfo ? inputStreamInfo->flags : 0);
 
-		// Select Exclusive/Shared mode
+		// default Shared Mode
 		stream->in.shareMode = AUDCLNT_SHAREMODE_SHARED;
-        if ((inputStreamInfo != NULL) && (inputStreamInfo->flags & paWinWasapiExclusive))
-		{
-			// Boost thread priority
-			stream->nThreadPriority = eThreadPriorityProAudio;
-			// Make Exclusive
-			stream->in.shareMode = AUDCLNT_SHAREMODE_EXCLUSIVE;
-		}
 
-		// If user provided explicit thread priority level, use it
-        if ((inputStreamInfo != NULL) && (inputStreamInfo->flags & paWinWasapiThreadPriority))
+		// PaWasapiStreamInfo
+		if (inputParameters->hostApiSpecificStreamInfo != NULL)
 		{
-			if ((inputStreamInfo->threadPriority > eThreadPriorityNone) &&
-				(inputStreamInfo->threadPriority <= eThreadPriorityWindowManager))
-				stream->nThreadPriority = inputStreamInfo->threadPriority;
+			memcpy(&stream->in.params.wasapi_params, inputParameters->hostApiSpecificStreamInfo, min(sizeof(stream->in.params.wasapi_params), ((PaWasapiStreamInfo *)inputParameters->hostApiSpecificStreamInfo)->size));
+			stream->in.params.wasapi_params.size = sizeof(stream->in.params.wasapi_params);
+
+			stream->in.params.stream_params.hostApiSpecificStreamInfo = &stream->in.params.wasapi_params;
+			inputStreamInfo = &stream->in.params.wasapi_params;
+
+			stream->in.flags = inputStreamInfo->flags;
+
+			// Exclusive Mode
+			if (inputStreamInfo->flags & paWinWasapiExclusive)
+			{
+				// Boost thread priority
+				stream->nThreadPriority = eThreadPriorityProAudio;
+				// Make Exclusive
+				stream->in.shareMode = AUDCLNT_SHAREMODE_EXCLUSIVE;
+			}
+
+			// explicit thread priority level
+			if (inputStreamInfo->flags & paWinWasapiThreadPriority)
+			{
+				if ((inputStreamInfo->threadPriority > eThreadPriorityNone) &&
+					(inputStreamInfo->threadPriority <= eThreadPriorityWindowManager))
+					stream->nThreadPriority = inputStreamInfo->threadPriority;
+			}
 		}
 
 		// Choose processing mode
@@ -2846,11 +3027,6 @@ static PaError OpenStream( struct PaUtilHostApiRepresentation *hostApi,
 		// Fill parameters for Audio Client creation
 		stream->in.params.device_info       = info;
 		stream->in.params.stream_params     = (*inputParameters);
-		if (inputStreamInfo != NULL)
-		{
-			stream->in.params.wasapi_params = (*inputStreamInfo);
-			stream->in.params.stream_params.hostApiSpecificStreamInfo = &stream->in.params.wasapi_params;
-		}
 		stream->in.params.frames_per_buffer = framesPerBuffer;
 		stream->in.params.sample_rate       = sampleRate;
 		stream->in.params.blocking          = (streamCallback == NULL);
@@ -2927,26 +3103,38 @@ static PaError OpenStream( struct PaUtilHostApiRepresentation *hostApi,
     {
         outputChannelCount = outputParameters->channelCount;
         outputSampleFormat = outputParameters->sampleFormat;
-		outputStreamInfo   = (PaWasapiStreamInfo *)outputParameters->hostApiSpecificStreamInfo;
 		info               = &paWasapi->devInfo[outputParameters->device];
-		stream->out.flags  = (outputStreamInfo ? outputStreamInfo->flags : 0);
 
-		// Select Exclusive/Shared mode
+		// default Shared Mode
 		stream->out.shareMode = AUDCLNT_SHAREMODE_SHARED;
-        if ((outputStreamInfo != NULL) && (outputStreamInfo->flags & paWinWasapiExclusive))
-		{
-			// Boost thread priority
-			stream->nThreadPriority = eThreadPriorityProAudio;
-			// Make Exclusive
-			stream->out.shareMode = AUDCLNT_SHAREMODE_EXCLUSIVE;
-		}
 
-		// If user provided explicit thread priority level, use it
-        if ((outputStreamInfo != NULL) && (outputStreamInfo->flags & paWinWasapiThreadPriority))
+		// set PaWasapiStreamInfo
+		if (outputParameters->hostApiSpecificStreamInfo != NULL)
 		{
-			if ((outputStreamInfo->threadPriority > eThreadPriorityNone) &&
-				(outputStreamInfo->threadPriority <= eThreadPriorityWindowManager))
-				stream->nThreadPriority = outputStreamInfo->threadPriority;
+			memcpy(&stream->out.params.wasapi_params, outputParameters->hostApiSpecificStreamInfo, min(sizeof(stream->out.params.wasapi_params), ((PaWasapiStreamInfo *)outputParameters->hostApiSpecificStreamInfo)->size));
+			stream->out.params.wasapi_params.size = sizeof(stream->out.params.wasapi_params);
+
+			stream->out.params.stream_params.hostApiSpecificStreamInfo = &stream->out.params.wasapi_params;
+			outputStreamInfo = &stream->out.params.wasapi_params;
+
+			stream->out.flags = outputStreamInfo->flags;
+
+			// Exclusive Mode
+			if (outputStreamInfo->flags & paWinWasapiExclusive)
+			{
+				// Boost thread priority
+				stream->nThreadPriority = eThreadPriorityProAudio;
+				// Make Exclusive
+				stream->out.shareMode = AUDCLNT_SHAREMODE_EXCLUSIVE;
+			}
+
+			// explicit thread priority level
+			if (outputStreamInfo->flags & paWinWasapiThreadPriority)
+			{
+				if ((outputStreamInfo->threadPriority > eThreadPriorityNone) &&
+					(outputStreamInfo->threadPriority <= eThreadPriorityWindowManager))
+					stream->nThreadPriority = outputStreamInfo->threadPriority;
+			}
 		}
 
 		// Choose processing mode
@@ -2966,11 +3154,6 @@ static PaError OpenStream( struct PaUtilHostApiRepresentation *hostApi,
 		// Fill parameters for Audio Client creation
 		stream->out.params.device_info       = info;
 		stream->out.params.stream_params     = (*outputParameters);
-		if (inputStreamInfo != NULL)
-		{
-			stream->out.params.wasapi_params = (*outputStreamInfo);
-			stream->out.params.stream_params.hostApiSpecificStreamInfo = &stream->out.params.wasapi_params;
-		}
 		stream->out.params.frames_per_buffer = framesPerBuffer;
 		stream->out.params.sample_rate       = sampleRate;
 		stream->out.params.blocking          = (streamCallback == NULL);
@@ -3186,7 +3369,7 @@ HRESULT UnmarshalSubStreamComPointers(PaWasapiSubStream *substream)
 	substream->clientProc = NULL;
 
 	// IAudioClient
-	hResult = CoGetInterfaceAndReleaseStream(substream->clientStream, &pa_IID_IAudioClient, (LPVOID*)&substream->clientProc);
+	hResult = CoGetInterfaceAndReleaseStream(substream->clientStream, GetAudioClientIID(), (LPVOID*)&substream->clientProc);
 	substream->clientStream = NULL;
 	if (hResult != S_OK) 
 	{
@@ -3270,7 +3453,7 @@ HRESULT MarshalSubStreamComPointers(PaWasapiSubStream *substream)
 	substream->clientStream = NULL;
 
 	// IAudioClient
-	hResult = CoMarshalInterThreadInterfaceInStream(&pa_IID_IAudioClient, (LPUNKNOWN)substream->clientParent, &substream->clientStream);
+	hResult = CoMarshalInterThreadInterfaceInStream(GetAudioClientIID(), (LPUNKNOWN)substream->clientParent, &substream->clientStream);
 	if (hResult != S_OK)
 		goto marshal_sub_error;
 

@@ -50,20 +50,21 @@ class wxRect;
 class DirManager;
 class Alg_seq;   // from "allegro.h"
 
-class AUDACITY_DLL_API NoteTrack:public Track {
+class AUDACITY_DLL_API NoteTrack final : public Track {
  public:
    friend class TrackArtist;
 
    NoteTrack(DirManager * projDirManager);
    virtual ~NoteTrack();
 
-   virtual Track *Duplicate();
+   using Holder = std::unique_ptr<NoteTrack>;
+   Track::Holder Duplicate() const override;
 
-   virtual int GetKind() const { return Note; }
+   int GetKind() const override { return Note; }
 
-   virtual double GetOffset() const;
-   virtual double GetStartTime() const;
-   virtual double GetEndTime() const;
+   double GetOffset() const override;
+   double GetStartTime() const override;
+   double GetEndTime() const override;
 
    void WarpAndTransposeNotes(double t0, double t1,
                               const TimeWarper &warper, double semitones);
@@ -78,8 +79,8 @@ class AUDACITY_DLL_API NoteTrack:public Track {
    int GetVisibleChannels();
 
    Alg_seq_ptr MakeExportableSeq();
-   bool ExportMIDI(wxString f);
-   bool ExportAllegro(wxString f);
+   bool ExportMIDI(const wxString &f);
+   bool ExportAllegro(const wxString &f);
 
 /* REQUIRES PORTMIDI */
 //   int GetLastMidiPosition() const { return mLastMidiPosition; }
@@ -89,12 +90,12 @@ class AUDACITY_DLL_API NoteTrack:public Track {
 //   }
 
    // High-level editing
-   virtual bool Cut  (double t0, double t1, Track **dest);
-   virtual bool Copy (double t0, double t1, Track **dest);
-   virtual bool Trim (double t0, double t1);
-   virtual bool Clear(double t0, double t1);
-   virtual bool Paste(double t, Track *src);
-   virtual bool Shift(double t);
+   Track::Holder Cut  (double t0, double t1) override;
+   Track::Holder Copy (double t0, double t1) const override;
+   bool Trim (double t0, double t1) /* not override */;
+   bool Clear(double t0, double t1) override;
+   bool Paste(double t, const Track *src) override;
+   bool Shift(double t) /* not override */;
 
 #ifdef EXPERIMENTAL_MIDI_OUT
    float GetGain() const { return mGain; }
@@ -116,7 +117,7 @@ class AUDACITY_DLL_API NoteTrack:public Track {
    // call this once before a series of calls to IPitchToY(). It
    // sets mBottom to offset of octave 0 so that mBottomNote
    // is located at r.y + r.height - (GetNoteMargin() + 1 + mPitchHeight)
-   void PrepareIPitchToY(const wxRect &r) {
+   void PrepareIPitchToY(const wxRect &r) const {
        mBottom = r.y + r.height - GetNoteMargin() - 1 - mPitchHeight +
           (mBottomNote / 12) * GetOctaveHeight() +
           GetNotePos(mBottomNote % 12);
@@ -169,9 +170,9 @@ class AUDACITY_DLL_API NoteTrack:public Track {
    void SetGainPlacementRect(const wxRect &r) { mGainPlacementRect = r; }
 #endif
 
-   virtual bool HandleXMLTag(const wxChar *tag, const wxChar **attrs);
-   virtual XMLTagHandler *HandleXMLChild(const wxChar *tag);
-   virtual void WriteXML(XMLWriter &xmlFile);
+   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
+   XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
+   void WriteXML(XMLWriter &xmlFile) override;
 
    // channels are numbered as integers 0-15, visible channels
    // (mVisibleChannels) is a bit set. Channels are displayed as
@@ -197,7 +198,7 @@ class AUDACITY_DLL_API NoteTrack:public Track {
    // mSeq variable. (TrackArtist should check to make sure this
    // flip-flop from mSeq to mSerializationBuffer happened an
    // even number of times, otherwise mSeq will be NULL).
-   char *mSerializationBuffer; // NULL means no buffer
+   mutable char *mSerializationBuffer; // NULL means no buffer
    long mSerializationLength;
 
    DirManager *mDirManager;
@@ -207,7 +208,7 @@ class AUDACITY_DLL_API NoteTrack:public Track {
 #endif
 
    // mBottom is the Y offset of pitch 0 (normally off screen)
-   int mBottom;
+   mutable int mBottom;
    int mBottomNote;
    int mStartBottomNote;
    int mPitchHeight;

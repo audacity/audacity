@@ -60,6 +60,7 @@ footer_text = ''
 counter = 0
 errors = 0
 conn = None
+headers = {"User-Agent": "mw2html.py/Audacity"}
 domain = ''
 
 MONOBOOK_SKIN = 'monobook'    # Constant identifier for Monobook.
@@ -517,7 +518,7 @@ def split_section(url):
 
 def url_open(url):
     # download a file and retrieve its content and mimetype
-    global conn, domain, counter, redir_cache, errors
+    global conn, domain, counter, redir_cache, errors, headers
 
     l_redir = []
     redirect = url
@@ -527,6 +528,7 @@ def url_open(url):
         L = urlparse.urlparse(url)
         if L[1] != domain:
             conn.close()
+            if L[1] == '': return(['',''])
             print "connection to", domain, "closed."
             conn = httplib.HTTPConnection(L[1])
             domain = L[1]
@@ -547,7 +549,7 @@ def url_open(url):
             #increment httplib requests counter
             counter += 1
             try:
-                conn.request("GET", rel_url)
+                conn.request("GET", rel_url,headers=headers)
                 r = conn.getresponse()
                 print 'Status', r.status, r.reason, 'accessing', rel_url
                 if r.status == 404:
@@ -898,7 +900,7 @@ def run(out=sys.stdout):
     """
     Code interface.
     """
-    global conn, domain, counter, redir_cache, config
+    global conn, domain, counter, redir_cache, config, headers
 
     if urlparse.urlparse(config.rooturl)[1].lower().endswith('wikipedia.org'):
         out.write('Please do not use robots with the Wikipedia site.\n')

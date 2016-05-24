@@ -34,13 +34,13 @@ class ShuttleGui;
 
 class wxStaticText;
 
-class KeyConfigPrefs :public PrefsPanel
+class KeyConfigPrefs final : public PrefsPanel
 {
 public:
    KeyConfigPrefs(wxWindow * parent);
    ~KeyConfigPrefs();
-   virtual bool Apply();
-   virtual void Cancel();
+   bool Apply() override;
+   void Cancel() override;
 
 private:
    void Populate();
@@ -102,13 +102,13 @@ private:
 
 #include "PrefsPanel.h"
 
-class KeyConfigPrefs:public PrefsPanel
+class KeyConfigPrefs final : public PrefsPanel
 {
  public:
    KeyConfigPrefs(wxWindow * parent);
    ~KeyConfigPrefs();
-   virtual bool Apply();
-   virtual void Cancel();
+   bool Apply() override;
+   void Cancel() override;
 
  private:
    void Populate();
@@ -148,9 +148,9 @@ class KeyConfigPrefs:public PrefsPanel
 
 #endif
 
-class KeyConfigPrefsFactory : public PrefsPanelFactory
+class KeyConfigPrefsFactory final : public PrefsPanelFactory
 {
 public:
-   virtual PrefsPanel *Create(wxWindow *parent);
+   PrefsPanel *Create(wxWindow *parent) override;
 };
 #endif

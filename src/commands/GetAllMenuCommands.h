@@ -23,26 +23,26 @@ channel.
 #include "Command.h"
 #include "CommandType.h"
 
-class GetAllMenuCommandsType : public CommandType
+class GetAllMenuCommandsType final : public CommandType
 {
 public:
-   virtual wxString BuildName();
-   virtual void BuildSignature(CommandSignature &signature);
-   virtual Command *Create(CommandOutputTarget *target);
+   wxString BuildName() override;
+   void BuildSignature(CommandSignature &signature) override;
+   CommandHolder Create(std::unique_ptr<CommandOutputTarget> &&target) override;
 };
 
-class GetAllMenuCommands : public CommandImplementation
+class GetAllMenuCommands final : public CommandImplementation
 {
 public:
    GetAllMenuCommands(CommandType &type,
-                      CommandOutputTarget *target)
-      : CommandImplementation(type, target)
+                      std::unique_ptr<CommandOutputTarget> &&target)
+      : CommandImplementation(type, std::move(target))
    { }
 
    virtual ~GetAllMenuCommands()
    { }
 
-   virtual bool Apply(CommandExecutionContext context);
+   bool Apply(CommandExecutionContext context) override;
 };
 
 #endif /* End of include guard: __GETALLMENUCOMMANDS__ */

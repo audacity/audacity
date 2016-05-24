@@ -12,16 +12,18 @@
 #ifndef __AUDACITY_MIX__
 #define __AUDACITY_MIX__
 
+#include "MemoryX.h"
 #include <wx/string.h>
-
 #include "SampleFormat.h"
-#include "Resample.h"
 
+class Resample;
 class DirManager;
 class TimeTrack;
 class TrackFactory;
 class TrackList;
 class WaveTrack;
+class WaveTrackConstArray;
+class WaveTrackCache;
 
 /** @brief Mixes together all input tracks, applying any envelopes, amplitude
  * gain, panning, and real-time effects in the process.
@@ -35,10 +37,10 @@ class WaveTrack;
  * no explicit time range to process, and the whole occupied length of the
  * input tracks is processed.
  */
-bool MixAndRender(TrackList * tracks, TrackFactory *factory,
+void MixAndRender(TrackList * tracks, TrackFactory *factory,
                   double rate, sampleFormat format,
                   double startTime, double endTime,
-                  WaveTrack **newLeft, WaveTrack **newRight);
+                  std::unique_ptr<WaveTrack> &uLeft, std::unique_ptr<WaveTrack> &uRight);
 
 void MixBuffers(int numChannels, int *channelFlags, float *gains,
                 samplePtr src,
@@ -74,7 +76,7 @@ class AUDACITY_DLL_API Mixer {
     class WarpOptions
     {
     public:
-       explicit WarpOptions(TimeTrack *t)
+       explicit WarpOptions(const TimeTrack *t)
           : timeTrack(t), minSpeed(0.0), maxSpeed(0.0)
        {}
 
@@ -82,7 +84,7 @@ class AUDACITY_DLL_API Mixer {
 
     private:
        friend class Mixer;
-       TimeTrack *timeTrack;
+       const TimeTrack *timeTrack;
        double minSpeed, maxSpeed;
     };
 
@@ -90,7 +92,7 @@ class AUDACITY_DLL_API Mixer {
    // Constructor / Destructor
    //
 
-   Mixer(int numInputTracks, WaveTrack **inputTracks,
+   Mixer(const WaveTrackConstArray &inputTracks,
          const WarpOptions &warpOptions,
          double startTime, double stopTime,
          int numOutChannels, int outBufferSize, bool outInterleaved,
@@ -139,10 +141,10 @@ class AUDACITY_DLL_API Mixer {
  private:
 
    void Clear();
-   sampleCount MixSameRate(int *channelFlags, WaveTrack *src,
+   sampleCount MixSameRate(int *channelFlags, WaveTrackCache &cache,
                            sampleCount *pos);
 
-   sampleCount MixVariableRates(int *channelFlags, WaveTrack *track,
+   sampleCount MixVariableRates(int *channelFlags, WaveTrackCache &cache,
                                 sampleCount *pos, float *queue,
                                 int *queueStart, int *queueLen,
                                 Resample * pResample);
@@ -150,9 +152,10 @@ class AUDACITY_DLL_API Mixer {
  private:
    // Input
    int              mNumInputTracks;
-   WaveTrack      **mInputTrack;
+   WaveTrackCache  *mInputTrack;
+
    bool             mbVariableRates;
-   TimeTrack       *mTimeTrack;
+   const TimeTrack *mTimeTrack;
    sampleCount     *mSamplePos;
    bool             mApplyTrackGains;
    float           *mGains;
@@ -176,8 +179,8 @@ class AUDACITY_DLL_API Mixer {
    int              mInterleavedBufferSize;
    sampleFormat     mFormat;
    bool             mInterleaved;
-   samplePtr       *mBuffer;
-   samplePtr       *mTemp;
+   SampleBuffer    *mBuffer;
+   SampleBuffer    *mTemp;
    float           *mFloatBuffer;
    double           mRate;
    double           mSpeed;

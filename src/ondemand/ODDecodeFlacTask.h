@@ -18,7 +18,7 @@ from.  For any type there should only be one ODDecodeTask associated with
 a given track.
 There could be the ODBlockFiles of several FLACs in one track (after copy and pasting),
 so things aren't as simple as they seem - the implementation needs to be
-robust enough to allow all the user changes such as copy/paste, delete, and so on.
+robust enough to allow all the user changes such as copy/paste, DELETE, and so on.
 
 *//*******************************************************************/
 
@@ -42,7 +42,7 @@ class ODFlacDecoder;
 class ODFLACFile;
 
 /// A class representing a modular task to be used with the On-Demand structures.
-class ODDecodeFlacTask:public ODDecodeTask
+class ODDecodeFlacTask final : public ODDecodeTask
 {
  public:
 
@@ -51,17 +51,17 @@ class ODDecodeFlacTask:public ODDecodeTask
    virtual ~ODDecodeFlacTask();
 
 
-   virtual ODTask* Clone();
+   std::unique_ptr<ODTask> Clone() const override;
    ///Creates an ODFileDecoder that decodes a file of filetype the subclass handles.
-   virtual ODFileDecoder* CreateFileDecoder(const wxString & fileName);
+   ODFileDecoder* CreateFileDecoder(const wxString & fileName) override;
 
    ///Lets other classes know that this class handles flac
    ///Subclasses should override to return respective type.
-   virtual unsigned int GetODType(){return eODFLAC;}
+   unsigned int GetODType() override { return eODFLAC; }
 };
 
 
-class ODFLACFile : public FLAC::Decoder::File
+class ODFLACFile final : public FLAC::Decoder::File
 {
  public:
    ODFLACFile(ODFlacDecoder *decoder) : mDecoder(decoder)
@@ -83,15 +83,15 @@ class ODFLACFile : public FLAC::Decoder::File
    wxArrayString         mComments;
 
  protected:
-   virtual FLAC__StreamDecoderWriteStatus write_callback(const FLAC__Frame *frame,
-                                                         const FLAC__int32 * const buffer[]);
-   virtual void metadata_callback(const FLAC__StreamMetadata *metadata);
-   virtual void error_callback(FLAC__StreamDecoderErrorStatus status);
+   FLAC__StreamDecoderWriteStatus write_callback(const FLAC__Frame *frame,
+                                                         const FLAC__int32 * const buffer[]) override;
+   void metadata_callback(const FLAC__StreamMetadata *metadata) override;
+   void error_callback(FLAC__StreamDecoderErrorStatus status) override;
 };
 
 
 ///class to decode a particular file (one per file).  Saves info such as filename and length (after the header is read.)
-class ODFlacDecoder:public ODFileDecoder
+class ODFlacDecoder final : public ODFileDecoder
 {
    friend class ODFLACFile;
 public:
@@ -106,12 +106,12 @@ public:
    ///this->ReadData(sampleData, floatSample, 0, mLen);
    ///This class should call ReadHeader() first, so it knows the length, and can prepare
    ///the file object if it needs to.
-   virtual int Decode(samplePtr & data, sampleFormat & format, sampleCount start, sampleCount len, unsigned int channel);
+   int Decode(SampleBuffer & data, sampleFormat & format, sampleCount start, sampleCount len, unsigned int channel) override;
 
 
    ///Read header.  Subclasses must override.  Probably should save the info somewhere.
    ///Ideally called once per decoding of a file.  This complicates the task because
-   virtual bool ReadHeader();
+   bool ReadHeader() override;
 
    ///FLAC specific file (inherited from FLAC::Decoder::File)
    ODFLACFile* GetFlacFile();

@@ -42,6 +42,7 @@ out.
 
 *//*******************************************************************/
 
+#include "Audacity.h"
 #include "BlockFile.h"
 
 #include <float.h>
@@ -54,6 +55,7 @@ out.
 #include <wx/math.h>
 
 #include "Internat.h"
+#include "MemoryX.h"
 
 // msmeyer: Define this to add debug output via printf()
 //#define DEBUG_BLOCKFILE
@@ -85,7 +87,7 @@ SummaryInfo::SummaryInfo(sampleCount samples)
    totalSummaryBytes = offset256 + (frames256 * bytesPerFrame);
 }
 
-char *BlockFile::fullSummary = 0;
+ArrayOf<char> BlockFile::fullSummary;
 
 /// Initializes the base BlockFile data.  The block is initially
 /// unlocked and its reference count is 1.
@@ -97,10 +99,10 @@ char *BlockFile::fullSummary = 0;
 ///                 will store at least the summary data here.
 ///
 /// @param samples  The number of samples this BlockFile contains.
-BlockFile::BlockFile(wxFileName fileName, sampleCount samples):
+BlockFile::BlockFile(wxFileNameWrapper &&fileName, sampleCount samples):
    mLockCount(0),
    mRefCount(1),
-   mFileName(fileName),
+   mFileName(std::move(fileName)),
    mLen(samples),
    mSummaryInfo(samples)
 {
@@ -118,15 +120,15 @@ BlockFile::~BlockFile()
 /// but most BlockFiles have at least their summary data here.
 /// (some, i.e. SilentBlockFiles, do not correspond to a file on
 ///  disk and have empty file names)
-wxFileName BlockFile::GetFileName()
+auto BlockFile::GetFileName() const -> GetFileNameResult
 {
-   return mFileName;
+   return { mFileName };
 }
 
 ///sets the file name the summary info will be saved in.  threadsafe.
-void BlockFile::SetFileName(wxFileName &name)
+void BlockFile::SetFileName(wxFileNameWrapper &&name)
 {
-   mFileName=name;
+   mFileName=std::move(name);
 }
 
 
@@ -160,7 +162,7 @@ bool BlockFile::IsLocked()
 
 /// Increases the reference count of this block by one.  Only
 /// DirManager should call this method.
-void BlockFile::Ref()
+void BlockFile::Ref() const
 {
    mRefCount++;
    BLOCKFILE_DEBUG_OUTPUT("Ref", mRefCount);
@@ -169,7 +171,7 @@ void BlockFile::Ref()
 /// Decreases the reference count of this block by one.  If this
 /// causes the count to become zero, deletes the associated disk
 /// file and deletes this object
-bool BlockFile::Deref()
+bool BlockFile::Deref() const
 {
    mRefCount--;
    BLOCKFILE_DEBUG_OUTPUT("Deref", mRefCount);
@@ -180,11 +182,6 @@ bool BlockFile::Deref()
       return false;
 }
 
-void BlockFile::Deinit()
-{
-   if(fullSummary)delete[] fullSummary;
-}
-
 /// Get a buffer containing a summary block describing this sample
 /// data.  This must be called by derived classes when they
 /// are constructed, to allow them to construct their summary data,
@@ -193,22 +190,24 @@ void BlockFile::Deinit()
 /// This method also has the side effect of setting the mMin, mMax,
 /// and mRMS members of this class.
 ///
-/// You must not delete the returned buffer; it is static to this
+/// You must not DELETE the returned buffer; it is static to this
 /// method.
 ///
 /// @param buffer A buffer containing the sample data to be analyzed
 /// @param len    The length of the sample data
 /// @param format The format of the sample data.
 void *BlockFile::CalcSummary(samplePtr buffer, sampleCount len,
-                             sampleFormat format)
+                             sampleFormat format, ArrayOf<char> &cleanup)
 {
-   if(fullSummary)delete[] fullSummary;
-   fullSummary = new char[mSummaryInfo.totalSummaryBytes];
+   // Caller has nothing to deallocate
+   cleanup.reset();
 
-   memcpy(fullSummary, headerTag, headerTagLen);
+   fullSummary.reinit(mSummaryInfo.totalSummaryBytes);
 
-   float *summary64K = (float *)(fullSummary + mSummaryInfo.offset64K);
-   float *summary256 = (float *)(fullSummary + mSummaryInfo.offset256);
+   memcpy(fullSummary.get(), headerTag, headerTagLen);
+
+   float *summary64K = (float *)(fullSummary.get() + mSummaryInfo.offset64K);
+   float *summary256 = (float *)(fullSummary.get() + mSummaryInfo.offset256);
 
    float *fbuffer = new float[len];
    CopySamples(buffer, format,
@@ -302,7 +301,7 @@ void *BlockFile::CalcSummary(samplePtr buffer, sampleCount len,
 
    delete[] fbuffer;
 
-   return fullSummary;
+   return fullSummary.get();
 }
 
 static void ComputeMinMax256(float *summary256,
@@ -383,11 +382,11 @@ void BlockFile::FixSummary(void *data)
 /// @param *outRMS A pointer to where the maximum RMS value for this
 ///                region should be stored.
 void BlockFile::GetMinMax(sampleCount start, sampleCount len,
-                  float *outMin, float *outMax, float *outRMS)
+                  float *outMin, float *outMax, float *outRMS) const
 {
    // TODO: actually use summaries
-   samplePtr blockData = NewSamples(len, floatSample);
-   this->ReadData(blockData, floatSample, start, len);
+   SampleBuffer blockData(len, floatSample);
+   this->ReadData(blockData.ptr(), floatSample, start, len);
 
    float min = FLT_MAX;
    float max = -FLT_MAX;
@@ -395,7 +394,7 @@ void BlockFile::GetMinMax(sampleCount start, sampleCount len,
 
    for( int i = 0; i < len; i++ )
    {
-      float sample = ((float*)blockData)[i];
+      float sample = ((float*)blockData.ptr())[i];
 
       if( sample > max )
          max = sample;
@@ -403,8 +402,6 @@ void BlockFile::GetMinMax(sampleCount start, sampleCount len,
          min = sample;
       sumsq += (sample*sample);
    }
-
-   DeleteSamples(blockData);
 
    *outMin = min;
    *outMax = max;
@@ -421,7 +418,7 @@ void BlockFile::GetMinMax(sampleCount start, sampleCount len,
 ///                should be stored
 /// @param *outRMS A pointer to where the maximum RMS value for this
 ///                block should be stored.
-void BlockFile::GetMinMax(float *outMin, float *outMax, float *outRMS)
+void BlockFile::GetMinMax(float *outMin, float *outMax, float *outRMS) const
 {
    *outMin = mMin;
    *outMax = mMax;
@@ -526,26 +523,29 @@ bool BlockFile::Read64K(float *buffer,
 ///                     file.
 /// @param aliasChannel The channel where this block's data is located in
 ///                     the aliased file
-AliasBlockFile::AliasBlockFile(wxFileName baseFileName,
-                               wxFileName aliasedFileName,
+AliasBlockFile::AliasBlockFile(wxFileNameWrapper &&baseFileName,
+                               wxFileNameWrapper &&aliasedFileName,
                                sampleCount aliasStart,
                                sampleCount aliasLen, int aliasChannel):
-   BlockFile(wxFileName(baseFileName.GetFullPath() + wxT(".auf")), aliasLen),
-   mAliasedFileName(aliasedFileName),
+   BlockFile {
+      (baseFileName.SetExt(wxT("auf")), std::move(baseFileName)),
+      aliasLen
+   },
+   mAliasedFileName(std::move(aliasedFileName)),
    mAliasStart(aliasStart),
    mAliasChannel(aliasChannel)
 {
    mSilentAliasLog=FALSE;
 }
 
-AliasBlockFile::AliasBlockFile(wxFileName existingSummaryFileName,
-                               wxFileName aliasedFileName,
+AliasBlockFile::AliasBlockFile(wxFileNameWrapper &&existingSummaryFileName,
+                               wxFileNameWrapper &&aliasedFileName,
                                sampleCount aliasStart,
                                sampleCount aliasLen,
                                int aliasChannel,
                                float min, float max, float rms):
-   BlockFile(existingSummaryFileName, aliasLen),
-   mAliasedFileName(aliasedFileName),
+   BlockFile(std::move(existingSummaryFileName), aliasLen),
+   mAliasedFileName(std::move(aliasedFileName)),
    mAliasStart(aliasStart),
    mAliasChannel(aliasChannel)
 {
@@ -570,7 +570,7 @@ void AliasBlockFile::WriteSummary()
 
    if( !summaryFile.IsOpened() ){
       // Never silence the Log w.r.t write errors; they always count
-      // as new errors
+      // as NEW errors
       wxLogError(wxT("Unable to write summary data to file %s"),
                    mFileName.GetFullPath().c_str());
       // If we can't write, there's nothing to do.
@@ -579,14 +579,13 @@ void AliasBlockFile::WriteSummary()
 
    // To build the summary data, call ReadData (implemented by the
    // derived classes) to get the sample data
-   samplePtr sampleData = NewSamples(mLen, floatSample);
-   this->ReadData(sampleData, floatSample, 0, mLen);
+   SampleBuffer sampleData(mLen, floatSample);
+   this->ReadData(sampleData.ptr(), floatSample, 0, mLen);
 
-   void *summaryData = BlockFile::CalcSummary(sampleData, mLen,
-                                            floatSample);
+   ArrayOf<char> cleanup;
+   void *summaryData = BlockFile::CalcSummary(sampleData.ptr(), mLen,
+                                            floatSample, cleanup);
    summaryFile.Write(summaryData, mSummaryInfo.totalSummaryBytes);
-
-   DeleteSamples(sampleData);
 }
 
 AliasBlockFile::~AliasBlockFile()
@@ -601,25 +600,27 @@ AliasBlockFile::~AliasBlockFile()
 bool AliasBlockFile::ReadSummary(void *data)
 {
    wxFFile summaryFile(mFileName.GetFullPath(), wxT("rb"));
-   wxLogNull *silence=0;
-   if(mSilentLog)silence= new wxLogNull();
 
-   if( !summaryFile.IsOpened() ){
+   {
+      Maybe<wxLogNull> silence{};
+      if (mSilentLog)
+         silence.create();
 
-      // new model; we need to return valid data
-      memset(data,0,(size_t)mSummaryInfo.totalSummaryBytes);
-      if(silence) delete silence;
+      if (!summaryFile.IsOpened()){
 
-      // we silence the logging for this operation in this object
-      // after first occurrence of error; it's already reported and
-      // spewing at the user will complicate the user's ability to
-      // deal
-      mSilentLog=TRUE;
-      return true;
+         // NEW model; we need to return valid data
+         memset(data, 0, (size_t)mSummaryInfo.totalSummaryBytes);
 
-   }else mSilentLog=FALSE; // worked properly, any future error is new
+         // we silence the logging for this operation in this object
+         // after first occurrence of error; it's already reported and
+         // spewing at the user will complicate the user's ability to
+         // deal
+         mSilentLog = TRUE;
+         return true;
 
-   if(silence) delete silence;
+      }
+      else mSilentLog = FALSE; // worked properly, any future error is NEW
+   }
 
    int read = summaryFile.Read(data, (size_t)mSummaryInfo.totalSummaryBytes);
 
@@ -631,12 +632,12 @@ bool AliasBlockFile::ReadSummary(void *data)
 /// Modify this block to point at a different file.  This is generally
 /// looked down on, but it is necessary in one case: see
 /// DirManager::EnsureSafeFilename().
-void AliasBlockFile::ChangeAliasedFileName(wxFileName newAliasedFile)
+void AliasBlockFile::ChangeAliasedFileName(wxFileNameWrapper &&newAliasedFile)
 {
-   mAliasedFileName = newAliasedFile;
+   mAliasedFileName = std::move(newAliasedFile);
 }
 
-wxLongLong AliasBlockFile::GetSpaceUsage()
+wxLongLong AliasBlockFile::GetSpaceUsage() const
 {
    wxFFile summaryFile(mFileName.GetFullPath());
    return summaryFile.Length();

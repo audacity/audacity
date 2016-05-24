@@ -15,11 +15,11 @@
 
 #include "Effect.h"
 
-#include <memory>
+#include "../MemoryX.h"
 
 #define NOISEREDUCTION_PLUGIN_SYMBOL XO("Noise Reduction")
 
-class EffectNoiseReduction: public Effect {
+class EffectNoiseReduction final : public Effect {
 public:
 
    EffectNoiseReduction();
@@ -29,22 +29,22 @@ public:
 
    // IdentInterface implementation
 
-   virtual wxString GetSymbol();
-   virtual wxString GetDescription();
+   wxString GetSymbol() override;
+   wxString GetDescription() override;
 
    // EffectIdentInterface implementation
 
-   virtual EffectType GetType();
+   EffectType GetType() override;
 
    // Effect implementation
 
 //   using Effect::TrackProgress;
 
-   virtual bool PromptUser(wxWindow *parent);
+   bool PromptUser(wxWindow *parent) override;
 
-   virtual bool Init();
-   virtual bool CheckWhetherSkipEffect();
-   virtual bool Process();
+   bool Init() override;
+   bool CheckWhetherSkipEffect() override;
+   bool Process() override;
 
    class Settings;
    class Statistics;
@@ -54,8 +54,8 @@ private:
    class Worker;
    friend class Dialog;
 
-   std::auto_ptr<Settings> mSettings;
-   std::auto_ptr<Statistics> mStatistics;
+   std::unique_ptr<Settings> mSettings;
+   std::unique_ptr<Statistics> mStatistics;
 };
 
 #endif

@@ -11,23 +11,21 @@
 #ifndef __AUDACITY_TRACK_PANEL__
 #define __AUDACITY_TRACK_PANEL__
 
-#include <memory>
+#include "MemoryX.h"
 #include <vector>
 
-#include <wx/dcmemory.h>
-#include <wx/panel.h>
 #include <wx/timer.h>
-#include <wx/window.h>
 
 #include "Experimental.h"
 #include "audacity/Types.h"
-#include "UndoManager.h" //JKC: Included for PUSH_XXX definitions.
 #include "widgets/NumericTextCtrl.h"
 
+#include "SelectedRegion.h"
 #include "WaveTrackLocation.h"
 
 #include "Snap.h"
 #include "Track.h"
+#include "widgets/OverlayPanel.h"
 
 class wxMenu;
 class wxRect;
@@ -56,6 +54,8 @@ class Envelope;
 // Declared elsewhere, to reduce compilation dependencies
 class TrackPanelListener;
 
+enum class UndoPush : unsigned char;
+
 // JKC Nov 2011: Disabled warning C4251 which is to do with DLL linkage
 // and only a worry when there are DLLs using the structures.
 // Array classes are private in TrackInfo, so we will not
@@ -70,6 +70,11 @@ class TrackPanelListener;
 #endif
 
 DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_TRACK_PANEL_TIMER, -1);
+
+enum {
+   kTimerInterval = 50, // milliseconds
+   kOneSecondCountdown = 1000 / kTimerInterval,
+};
 
 class AUDACITY_DLL_API TrackInfo
 {
@@ -90,7 +95,7 @@ private:
 #ifdef EXPERIMENTAL_MIDI_OUT
    void DrawVelocitySlider(wxDC * dc, NoteTrack *t, wxRect rect) const ;
 #endif
-   void DrawSliders(wxDC * dc, WaveTrack *t, wxRect rect) const;
+   void DrawSliders(wxDC * dc, WaveTrack *t, wxRect rect, bool captured) const;
 
    // Draw the minimize button *and* the sync-lock track icon, if necessary.
    void DrawMinimize(wxDC * dc, const wxRect & rect, Track * t, bool down) const;
@@ -105,12 +110,20 @@ private:
    void GetSyncLockIconRect(const wxRect & rect, wxRect &dest) const;
 
 public:
-   LWSlider * GainSlider(WaveTrack *t) const;
-   LWSlider * PanSlider(WaveTrack *t) const;
+   LWSlider * GainSlider(WaveTrack *t, bool captured = false) const;
+   LWSlider * PanSlider(WaveTrack *t, bool captured = false) const;
+
+#ifdef EXPERIMENTAL_MIDI_OUT
+   LWSlider *GainSlider(int index) const;
+#endif
 
 private:
+   void UpdatePrefs();
+
    TrackPanel * pParent;
    wxFont mFont;
+   LWSlider *mGainCaptured;
+   LWSlider *mPanCaptured;
    LWSlider *mGain;
    LWSlider *mPan;
 
@@ -121,7 +134,7 @@ private:
 const int DragThreshold = 3;// Anything over 3 pixels is a drag, else a click.
 
 
-class AUDACITY_DLL_API TrackPanel:public wxPanel {
+class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
  public:
 
    TrackPanel(wxWindow * parent,
@@ -141,7 +154,6 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
 
    virtual void UpdatePrefs();
 
-   virtual void OnSize(wxSizeEvent & event);
    virtual void OnPaint(wxPaintEvent & event);
    virtual void OnMouseEvent(wxMouseEvent & event);
    virtual void OnCaptureLost(wxMouseCaptureLostEvent & event);
@@ -152,7 +164,6 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
 
    virtual void OnSetFocus(wxFocusEvent & event);
    virtual void OnKillFocus(wxFocusEvent & event);
-   virtual void OnActivateOrDeactivateApp(wxActivateEvent & event);
 
    virtual void OnContextMenu(wxContextMenuEvent & event);
 
@@ -182,7 +193,8 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
    //virtual void SetSelectionFormat(int iformat)
    //virtual void SetSnapTo(int snapto)
 
-   virtual void HandleEscapeKey(bool down);
+   virtual void HandleInterruptedDrag();
+   virtual bool HandleEscapeKey(bool down);
    virtual void HandleAltKey(bool down);
    virtual void HandleShiftKey(bool down);
    virtual void HandleControlKey(bool down);
@@ -216,8 +228,6 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
    virtual void UpdateTrackVRuler(Track *t);
    virtual void UpdateVRulerSize();
 
-   virtual void DrawQuickPlayIndicator(int x, bool snapped = false);
-
    // Returns the time corresponding to the pixel column one past the track area
    // (ignoring any fisheye)
    virtual double GetScreenEndTime() const;
@@ -239,37 +249,16 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
    virtual void HandleGlyphDragRelease(LabelTrack * lTrack, wxMouseEvent & event);
    virtual void HandleTextDragRelease(LabelTrack * lTrack, wxMouseEvent & event);
    virtual bool HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &rect, wxMouseEvent &event);
-   virtual bool IsOverCutline(WaveTrack * track, wxRect &rect, wxMouseEvent &event);
+   virtual bool IsOverCutline(WaveTrack * track, wxRect &rect, const wxMouseEvent &event);
    virtual void HandleTrackSpecificMouseEvent(wxMouseEvent & event);
-
-   virtual void TimerUpdateIndicator(double playPos);
-   // Second member of pair indicates whether the indicator is out of date:
-   virtual std::pair<wxRect, bool> GetIndicatorRectangle();
-   virtual void UndrawIndicator(wxDC & dc);
-   /// draws the green line on the tracks to show playback position
-   virtual void DoDrawIndicator(wxDC & dc);
-
-   // Second member of pair indicates whether the cursor is out of date:
-   virtual std::pair<wxRect, bool> GetCursorRectangle();
-   virtual void UndrawCursor(wxDC & dc);
-   virtual void DoDrawCursor(wxDC & dc);
-
-#ifdef EXPERIMENTAL_SCRUBBING_BASIC
-   bool ShouldDrawScrubSpeed();
-   virtual void TimerUpdateScrubbing(double playPos);
-   // Second member of pair indicates whether the cursor is out of date:
-   virtual std::pair<wxRect, bool> GetScrubSpeedRectangle();
-   virtual void UndrawScrubSpeed(wxDC & dc);
-   virtual void DoDrawScrubSpeed(wxDC & dc);
-#endif
 
    virtual void ScrollDuringDrag();
 
    // Working out where to dispatch the event to.
-   virtual int DetermineToolToUse( ToolsToolBar * pTtb, wxMouseEvent & event);
-   virtual bool HitTestEnvelope(Track *track, wxRect &rect, wxMouseEvent & event);
-   virtual bool HitTestSamples(Track *track, wxRect &rect, wxMouseEvent & event);
-   virtual bool HitTestSlide(Track *track, wxRect &rect, wxMouseEvent & event);
+   virtual int DetermineToolToUse( ToolsToolBar * pTtb, const wxMouseEvent & event);
+   virtual bool HitTestEnvelope(Track *track, wxRect &rect, const wxMouseEvent & event);
+   virtual bool HitTestSamples(Track *track, wxRect &rect, const wxMouseEvent & event);
+   virtual bool HitTestSlide(Track *track, wxRect &rect, const wxMouseEvent & event);
 #ifdef USE_MIDI
    // data for NoteTrack interactive stretch operations:
    // Stretching applies to a selected region after quantizing the
@@ -294,7 +283,7 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
    double mStretchSel1;  // initial sel1 (left) quantized to nearest beat
    double mStretchLeftBeats; // how many beats from left to cursor
    double mStretchRightBeats; // how many beats from cursor to right
-   virtual bool HitTestStretch(Track *track, wxRect &rect, wxMouseEvent & event);
+   virtual bool HitTestStretch(Track *track, wxRect &rect, const wxMouseEvent & event);
    virtual void Stretch(int mouseXCoordinate, int trackLeftEdge, Track *pTrack);
 #endif
 
@@ -302,31 +291,7 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
    virtual void HandleSelect(wxMouseEvent & event);
    virtual void SelectionHandleDrag(wxMouseEvent &event, Track *pTrack);
 
-   // Made obsolete by scrubbing:
-#ifndef EXPERIMENTAL_SCRUBBING_BASIC
-   void StartOrJumpPlayback(wxMouseEvent &event);
-#endif
-
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
-   double FindScrubSpeed(double timeAtMouse) const;
-   double FindSeekSpeed(double timeAtMouse) const;
-#endif
-
-#ifdef EXPERIMENTAL_SCRUBBING_BASIC
-   static bool PollIsSeeking();
-   bool IsScrubbing();
-   void MarkScrubStart(
-      wxCoord xx
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
-      , bool smoothScrolling
-#endif
-   );
-   bool MaybeStartScrubbing(wxMouseEvent &event);
-   bool ContinueScrubbing(wxCoord position, bool hasFocus, bool seek);
-public:
-   bool StopScrubbing();
 protected:
-#endif
 
    virtual void SelectionHandleClick(wxMouseEvent &event,
                                      Track* pTrack, wxRect rect);
@@ -359,14 +324,18 @@ protected:
 
    // AS: Cursor handling
    virtual bool SetCursorByActivity( );
-   virtual bool SetCursorForCutline(WaveTrack * track, wxRect &rect, wxMouseEvent &event);
-   virtual void SetCursorAndTipWhenInLabel( Track * t, wxMouseEvent &event, wxString &tip );
+   virtual bool SetCursorForCutline(WaveTrack * track, wxRect &rect, const wxMouseEvent &event);
+   virtual void SetCursorAndTipWhenInLabel( Track * t, const wxMouseEvent &event, wxString &tip );
    virtual void SetCursorAndTipWhenInVResizeArea( bool blinked, wxString &tip );
-   virtual void SetCursorAndTipWhenInLabelTrack( LabelTrack * pLT, wxMouseEvent & event, wxString &tip );
+   virtual void SetCursorAndTipWhenInLabelTrack( LabelTrack * pLT, const wxMouseEvent & event, wxString &tip );
    virtual void SetCursorAndTipWhenSelectTool
-      ( Track * t, wxMouseEvent & event, wxRect &rect, bool bMultiToolMode, wxString &tip, const wxCursor ** ppCursor );
-   virtual void SetCursorAndTipByTool( int tool, wxMouseEvent & event, wxString &tip );
-   virtual void HandleCursor(wxMouseEvent & event);
+      ( Track * t, const wxMouseEvent & event, wxRect &rect, bool bMultiToolMode, wxString &tip, const wxCursor ** ppCursor );
+   virtual void SetCursorAndTipByTool( int tool, const wxMouseEvent & event, wxString &tip );
+
+public:
+   virtual void HandleCursor(const wxMouseEvent & event);
+
+protected:
    virtual void MaySetOnDemandTip( Track * t, wxString &tip );
 
    // AS: Envelope editing handlers
@@ -455,8 +424,9 @@ protected:
    virtual void MakeParentRedrawScrollbars();
 
    // AS: Pushing the state preserves state for Undo operations.
-   virtual void MakeParentPushState(wxString desc, wxString shortDesc,
-                            int flags = PUSH_AUTOSAVE);
+   virtual void MakeParentPushState(const wxString &desc, const wxString &shortDesc); // use UndoPush::AUTOSAVE
+   virtual void MakeParentPushState(const wxString &desc, const wxString &shortDesc,
+                            UndoPush flags);
    virtual void MakeParentModifyState(bool bWantsAutoSave);    // if true, writes auto-save file. Should set only if you really want the state change restored after
                                                                // a crash, as it can take many seconds for large (eg. 10 track-hours) projects
 
@@ -512,7 +482,8 @@ public:
    ViewInfo * GetViewInfo(){ return mViewInfo;}
    TrackPanelListener * GetListener(){ return mListener;}
    AdornedRulerPanel * GetRuler(){ return mRuler;}
-// JKC and here is a factory function which just does 'new' in standard Audacity.
+// JKC and here is a factory function which just does 'NEW' in standard Audacity.
+   // Precondition: parent != NULL
    static TrackPanel *(*FactoryFunction)(wxWindow * parent,
               wxWindowID id,
               const wxPoint & pos,
@@ -536,11 +507,6 @@ protected:
    virtual void DrawBordersAroundTrack(Track *t, wxDC* dc, const wxRect & rect, const int labelw, const int vrul);
    virtual void DrawOutsideOfTrack    (Track *t, wxDC* dc, const wxRect & rect);
 
-public:
-   // Erase and redraw things like the cursor, cheaply and directly to the
-   // client area, without full refresh.
-   virtual void DrawOverlays(bool repaint);
-
 protected:
    virtual int IdOfRate( int rate );
    virtual int IdOfFormat( int format );
@@ -557,8 +523,6 @@ protected:
 
    virtual wxString TrackSubText(Track *t);
 
-   virtual bool MoveClipToTrack(WaveClip *clip, WaveTrack* dst);
-
    TrackInfo mTrackInfo;
  public:
     TrackInfo *GetTrackInfo() { return &mTrackInfo; }
@@ -573,9 +537,9 @@ protected:
 
    TrackArtist *mTrackArtist;
 
-   class AUDACITY_DLL_API AudacityTimer:public wxTimer {
+   class AUDACITY_DLL_API AudacityTimer final : public wxTimer {
    public:
-     virtual void Notify() {
+     void Notify() override{
        // (From Debian)
        //
        // Don't call parent->OnTimer(..) directly here, but instead post
@@ -589,22 +553,8 @@ protected:
      TrackPanel *parent;
    } mTimer;
 
-   // This stores the parts of the screen that get overwritten by the indicator
-   // and cursor
-   int mLastIndicatorX;
-   int mNewIndicatorX;
-   int mLastCursorX;
-   double mCursorTime;
-   int mNewCursorX;
-
-   // Quick-Play indicator postion
-   int mOldQPIndicatorPos;
-
    int mTimeCount;
 
-   wxMemoryDC mBackingDC;
-   wxBitmap *mBacking;
-   bool mResizeBacking;
    bool mRefreshBacking;
    int mPrevWidth;
    int mPrevHeight;
@@ -636,7 +586,7 @@ protected:
    // and is ignored otherwise.
    double mFreqSelPin;
    const WaveTrack *mFreqSelTrack;
-   std::auto_ptr<SpectrumAnalyst> mFrequencySnapper;
+   std::unique_ptr<SpectrumAnalyst> mFrequencySnapper;
 
    // For toggling of spectral seletion
    double mLastF0;
@@ -735,7 +685,7 @@ protected:
       (double selend, bool onlyWithinSnapDistance,
        wxInt64 *pPixelDist = NULL, double *pPinValue = NULL) const;
    SelectionBoundary ChooseBoundary
-      (wxMouseEvent & event, const Track *pTrack,
+      (const wxMouseEvent & event, const Track *pTrack,
        const wxRect &rect,
        bool mayDragWidth,
        bool onlyWithinSnapDistance,
@@ -790,57 +740,24 @@ protected:
    int mMoveDownThreshold;
    int mRearrangeCount;
 
-#ifdef EXPERIMENTAL_SCRUBBING_BASIC
-   int mScrubToken;
-   wxLongLong mScrubStartClockTimeMillis;
-   wxCoord mScrubStartPosition;
-   double mMaxScrubSpeed;
-   int mScrubSpeedDisplayCountdown;
-   bool mScrubHasFocus;
-   bool mScrubSeekPress;
-
-   wxRect mLastScrubRect, mNextScrubRect;
-   wxString mLastScrubSpeedText, mNextScrubSpeedText;
-#endif
-
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
-   bool mSmoothScrollingScrub;
-#endif
-
-#ifdef EXPERIMENTAL_SCRUBBING_SCROLL_WHEEL
-   int mLogMaxScrubSpeed;
-#endif
-
-   wxCursor *mArrowCursor;
-   wxCursor *mPencilCursor;
-   wxCursor *mSelectCursor;
-   wxCursor *mResizeCursor;
-   wxCursor *mSlideCursor;
-   wxCursor *mEnvelopeCursor; // doubles as the center frequency cursor
+   std::unique_ptr<wxCursor>
+      mArrowCursor, mPencilCursor, mSelectCursor,
+      mResizeCursor, mSlideCursor, mEnvelopeCursor, // doubles as the center frequency cursor
                               // for spectral selection
-   wxCursor *mSmoothCursor;
-   wxCursor *mZoomInCursor;
-   wxCursor *mZoomOutCursor;
-   wxCursor *mLabelCursorLeft;
-   wxCursor *mLabelCursorRight;
-   wxCursor *mRearrangeCursor;
-   wxCursor *mDisabledCursor;
-   wxCursor *mAdjustLeftSelectionCursor;
-   wxCursor *mAdjustRightSelectionCursor;
+      mSmoothCursor, mZoomInCursor, mZoomOutCursor,
+      mLabelCursorLeft, mLabelCursorRight, mRearrangeCursor,
+      mDisabledCursor, mAdjustLeftSelectionCursor, mAdjustRightSelectionCursor;
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   wxCursor *mBottomFrequencyCursor;
-   wxCursor *mTopFrequencyCursor;
-   wxCursor *mBandWidthCursor;
+   std::unique_ptr<wxCursor>
+      mBottomFrequencyCursor, mTopFrequencyCursor, mBandWidthCursor;
 #endif
 #if USE_MIDI
-   wxCursor *mStretchCursor;
-   wxCursor *mStretchLeftCursor;
-   wxCursor *mStretchRightCursor;
+   std::unique_ptr<wxCursor>
+      mStretchCursor, mStretchLeftCursor, mStretchRightCursor;
 #endif
 
    wxMenu *mWaveTrackMenu;
    size_t mChannelItemsInsertionPoint;
-   bool mShowMono;
 
    wxMenu *mNoteTrackMenu;
    wxMenu *mTimeTrackMenu;
@@ -858,6 +775,11 @@ protected:
 
    TrackPanelAx *mAx;
 
+public:
+   TrackPanelAx &GetAx() { return *mAx; }
+
+protected:
+
    wxString mSoloPref;
 
    // Keeps track of extra fractional vertical scroll steps
@@ -868,10 +790,31 @@ protected:
    // The screenshot class needs to access internals
    friend class ScreenshotCommand;
 
+   SelectedRegion mLastDrawnSelectedRegion {};
+
  public:
    wxSize vrulerSize;
 
+ public:
    DECLARE_EVENT_TABLE()
+};
+
+// See big pictorial comment in TrackPanel for explanation of these numbers
+enum : int {
+   kLeftInset = 4,
+   kRightInset = kLeftInset,
+   kTopInset = 4,
+   kShadowThickness = 1,
+   kBorderThickness = 1,
+   kTopMargin = kTopInset + kBorderThickness,
+   kBottomMargin = kShadowThickness + kBorderThickness,
+   kLeftMargin = kLeftInset + kBorderThickness,
+   kRightMargin = kRightInset + kShadowThickness + kBorderThickness,
+};
+
+enum : int {
+   kTrackInfoWidth = 100,
+   kTrackInfoBtnSize = 16 // widely used dimension, usually height
 };
 
 #ifdef _MSC_VER

@@ -139,12 +139,12 @@ public:
 
 #ifdef EXPERIMENTAL_USE_REALFFTF
    // Variables used for computing the spectrum
-   mutable FFTParam      *hFFT;
-   mutable float         *window;
+   mutable FFTParam      *hFFT{};
+   mutable float         *window{};
 
    // Two other windows for computing reassigned spectrogram
-   mutable float         *tWindow; // Window times time parameter
-   mutable float         *dWindow; // Derivative of window
+   mutable float         *tWindow{}; // Window times time parameter
+   mutable float         *dWindow{}; // Derivative of window
 
 #endif
 };

@@ -49,7 +49,8 @@
 DECLARE_MODULE_ENTRY(AudacityModule)
 {
    // Create and register the importer
-   return new AudioUnitEffectsModule(moduleManager, path);
+   // Trust the module manager not to leak this
+   return safenew AudioUnitEffectsModule(moduleManager, path);
 }
 
 // ============================================================================
@@ -176,6 +177,7 @@ bool AudioUnitEffectsModule::IsPluginValid(const wxString & path)
 
 IdentInterface *AudioUnitEffectsModule::CreateInstance(const wxString & path)
 {
+   // Acquires a resource for the application.
    wxString name;
    AudioComponent component = FindAudioUnit(path, name);
    if (component == NULL)
@@ -183,16 +185,15 @@ IdentInterface *AudioUnitEffectsModule::CreateInstance(const wxString & path)
       return NULL;
    }
 
-   return new AudioUnitEffect(path, name, component);
+   // Safety of this depends on complementary calls to DeleteInstance on the module manager side.
+   return safenew AudioUnitEffect(path, name, component);
 }
 
 void AudioUnitEffectsModule::DeleteInstance(IdentInterface *instance)
 {
-   AudioUnitEffect *effect = dynamic_cast<AudioUnitEffect *>(instance);
-   if (effect)
-   {
-      delete effect;
-   }
+   std::unique_ptr < AudioUnitEffect > {
+      dynamic_cast<AudioUnitEffect *>(instance)
+   };
 }
 
 // ============================================================================
@@ -286,7 +287,7 @@ OSType AudioUnitEffectsModule::ToOSType(const wxString & type)
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-class AudioUnitEffectOptionsDialog:public wxDialog
+class AudioUnitEffectOptionsDialog final : public wxDialog
 {
 public:
    AudioUnitEffectOptionsDialog(wxWindow * parent, EffectHostInterface *host);
@@ -426,7 +427,7 @@ void AudioUnitEffectOptionsDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
 #define PRESET_LOCAL_PATH wxT("/Library/Audio/Presets")
 #define PRESET_USER_PATH wxT("~/Library/Audio/Presets")
 
-class AudioUnitEffectExportDialog:public wxDialog
+class AudioUnitEffectExportDialog final : public wxDialog
 {
 public:
    AudioUnitEffectExportDialog(wxWindow * parent, AudioUnitEffect *effect);
@@ -600,7 +601,7 @@ void AudioUnitEffectExportDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-class AudioUnitEffectImportDialog:public wxDialog
+class AudioUnitEffectImportDialog final : public wxDialog
 {
 public:
    AudioUnitEffectImportDialog(wxWindow * parent, AudioUnitEffect *effect);
@@ -1752,12 +1753,16 @@ bool AudioUnitEffect::PopulateUI(wxWindow *parent)
    mDialog = (wxDialog *) wxGetTopLevelParent(parent);
    mParent = parent;
 
-   wxBoxSizer *mainSizer = new wxBoxSizer(wxVERTICAL);
+   wxPanel *container;
+   {
+      auto mainSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
 
-   wxPanel *container = new wxPanel(mParent, wxID_ANY);
-   mainSizer->Add(container, 1, wxEXPAND);
+      wxASSERT(mParent); // To justify safenew
+      container = safenew wxPanel(mParent, wxID_ANY);
+      mainSizer->Add(container, 1, wxEXPAND);
 
-   mParent->SetSizer(mainSizer);
+      mParent->SetSizer(mainSizer.release());
+   }
 
    if (mUIType == wxT("Plain"))
    {
@@ -1779,10 +1784,12 @@ bool AudioUnitEffect::PopulateUI(wxWindow *parent)
          return false;
       }
 
-      wxBoxSizer *innerSizer = new wxBoxSizer(wxVERTICAL);
-   
-      innerSizer->Add(mControl, 1, wxEXPAND);
-      container->SetSizer(innerSizer);
+      {
+         auto innerSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
+
+         innerSizer->Add(mControl, 1, wxEXPAND);
+         container->SetSizer(innerSizer.release());
+      }
 
       mParent->SetMinSize(wxDefaultSize);
    }

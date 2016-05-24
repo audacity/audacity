@@ -35,7 +35,7 @@ public:
                      const wxString &message, 
                      const int xSize, const int ySize);
 
-   /// Displays a new window with wxHTML help.
+   /// Displays a NEW window with wxHTML help.
    /// @param HtmlText Either the literal HTML code to go into the window,
    /// or the name of the file to read said HTML code from (see below).
    /// @param bIsFile If true, treat HtmlText argument as a file name, if false

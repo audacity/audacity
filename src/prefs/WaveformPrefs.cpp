@@ -244,5 +244,6 @@ WaveformPrefsFactory::WaveformPrefsFactory(WaveTrack *wt)
 
 PrefsPanel *WaveformPrefsFactory::Create(wxWindow *parent)
 {
-   return new WaveformPrefs(parent, mWt);
+   wxASSERT(parent); // to justify safenew
+   return safenew WaveformPrefs(parent, mWt);
 }

@@ -60,7 +60,8 @@ const static wxChar *kShippedEffects[] =
 DECLARE_MODULE_ENTRY(AudacityModule)
 {
    // Create and register the importer
-   return new NyquistEffectsModule(moduleManager, path);
+   // Trust the module manager not to leak this
+   return safenew NyquistEffectsModule(moduleManager, path);
 }
 
 // ============================================================================
@@ -196,7 +197,7 @@ wxArrayString NyquistEffectsModule::FindPlugins(PluginManagerInterface & pm)
    
    // Load .ny plug-ins
    pm.FindFilesInPathList(wxT("*.ny"), pathList, files);
-   // LLL:  Works for all platform with new plugin support (dups are removed)
+   // LLL:  Works for all platform with NEW plugin support (dups are removed)
    pm.FindFilesInPathList(wxT("*.NY"), pathList, files); // Ed's fix for bug 179
 
    return files;
@@ -226,24 +227,22 @@ bool NyquistEffectsModule::IsPluginValid(const wxString & path)
 
 IdentInterface *NyquistEffectsModule::CreateInstance(const wxString & path)
 {
-   NyquistEffect *effect = new NyquistEffect(path);
+   // Acquires a resource for the application.
+   auto effect = std::make_unique<NyquistEffect>(path);
    if (effect->IsOk())
    {
-      return effect;
+      // Safety of this depends on complementary calls to DeleteInstance on the module manager side.
+      return effect.release();
    }
-
-   delete effect;
 
    return NULL;
 }
 
 void NyquistEffectsModule::DeleteInstance(IdentInterface *instance)
 {
-   NyquistEffect *effect = dynamic_cast<NyquistEffect *>(instance);
-   if (effect)
-   {
-      delete effect;
-   }
+   std::unique_ptr < NyquistEffect > {
+      dynamic_cast<NyquistEffect *>(instance)
+   };
 }
 
 // ============================================================================
