@@ -169,9 +169,8 @@ class AUDACITY_DLL_API AudioIO final {
    * If options.adjustStart is true, then when mouse movement exceeds maximum scrub speed,
    * adjust the beginning of the scrub interval rather than the end, so that
    * the scrub skips or "stutters" to stay near the cursor.
-   * But if the "stutter" is too short for the minimum, then there is no effect
-   * on the work queue.
-   * Return true if some work was really enqueued.
+   * Return true if some sound was really enqueued.
+   * But if the "stutter" is too short for the minimum, enqueue nothing and return false.
    */
    bool EnqueueScrub(double endTimeOrSpeed, double maxSpeed, const ScrubbingOptions &options);
 

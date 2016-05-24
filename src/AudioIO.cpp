@@ -376,29 +376,31 @@ struct AudioIO::ScrubQueue
               const ScrubbingOptions &options)
       : mTrailingIdx(0)
       , mMiddleIdx(1)
-      , mLeadingIdx(2)
+      , mLeadingIdx(1)
       , mRate(rate)
       , mLastScrubTimeMillis(startClockMillis)
       , mUpdating()
       , mMaxDebt { maxDebt }
    {
-      // Ignore options.adjustStart, pass false.
-
-      bool success = InitEntry(mEntries[mMiddleIdx], nullptr,
-         t0, t1, maxSpeed, false, false, options);
-      if (!success)
-      {
-         // StartClock equals now?  Really?
-         --mLastScrubTimeMillis;
-         success = InitEntry(mEntries[mMiddleIdx], nullptr,
-            t0, t1, maxSpeed, false, false, options);
+      const long s0 = std::max(options.minSample, std::min(options.maxSample,
+         lrint(t0 * mRate)
+      ));
+      const long s1 = lrint(t1 * mRate);
+      Duration dd { *this };
+      long actualDuration = std::max(1L, dd.duration);
+      auto success = mEntries[mMiddleIdx].Init(nullptr,
+         s0, s1, actualDuration, maxSpeed, options);
+      if (success)
+         ++mLeadingIdx;
+      else {
+         // If not, we can wait to enqueue again later
+         dd.Cancel();
       }
-      wxASSERT(success);
 
       // So the play indicator starts out unconfused:
       {
          Entry &entry = mEntries[mTrailingIdx];
-         entry.mS0 = entry.mS1 = mEntries[mMiddleIdx].mS0;
+         entry.mS0 = entry.mS1 = s0;
          entry.mPlayed = entry.mDuration = 1;
       }
    }
@@ -428,23 +430,50 @@ struct AudioIO::ScrubQueue
       // MAY ADVANCE mLeadingIdx, BUT IT NEVER CATCHES UP TO mTrailingIdx.
 
       wxMutexLocker locker(mUpdating);
-      const unsigned next = (mLeadingIdx + 1) % Size;
+      bool result = true;
+      unsigned next = (mLeadingIdx + 1) % Size;
       if (next != mTrailingIdx)
       {
-         Entry &previous = mEntries[(mLeadingIdx + Size - 1) % Size];
+         auto current = &mEntries[mLeadingIdx];
+         auto previous = &mEntries[(mLeadingIdx + Size - 1) % Size];
 
          // Use the previous end as NEW start.
-         const double startTime = previous.mS1 / mRate;
-         // Might reject the request because of zero duration,
-         // or a too-short "stutter"
-         const bool success =
-            (InitEntry(mEntries[mLeadingIdx], &previous, startTime, end, maxSpeed,
-                       options.enqueueBySpeed, options.adjustStart, options));
-         if (success) {
+         const long s0 = previous->mS1;
+         Duration dd { *this };
+         const auto &origDuration = dd.duration;
+         if (origDuration <= 0)
+            return false;
+
+         auto actualDuration = origDuration;
+         const long s1 = options.enqueueBySpeed
+            ? s0 + lrint(origDuration * end) // end is a speed
+            : lrint(end * mRate);            // end is a time
+         auto success =
+            current->Init(previous, s0, s1, actualDuration, maxSpeed, options);
+         if (success)
             mLeadingIdx = next;
-            mAvailable.Signal();
+         else {
+            dd.Cancel();
+            return false;
          }
-         return success;
+
+         // Fill up the queue with some silence if there was trimming
+         wxASSERT(actualDuration <= origDuration);
+         if (actualDuration < origDuration) {
+            next = (mLeadingIdx + 1) % Size;
+            if (next != mTrailingIdx) {
+               previous = &mEntries[(mLeadingIdx + Size - 1) % Size];
+               current = &mEntries[mLeadingIdx];
+               current->InitSilent(*previous, origDuration - actualDuration);
+               mLeadingIdx = next;
+            }
+            else
+               // Oops, can't enqueue the silence -- so do what?
+               ;
+         }
+
+         mAvailable.Signal();
+         return result;
       }
       else
       {
@@ -584,10 +613,12 @@ private:
          , mPlayed(0)
       {}
 
-      bool Init(Entry *previous, long s0, long s1, long duration,
-         double maxSpeed, bool adjustStart,
-         const ScrubbingOptions &options)
+      bool Init(Entry *previous, long s0, long s1,
+         long &duration /* in/out */,
+         double maxSpeed, const ScrubbingOptions &options)
       {
+         const bool &adjustStart = options.adjustStart;
+
          wxASSERT(duration > 0);
          double speed = static_cast<double>(std::abs(s1 - s0)) / duration;
          bool adjustedSpeed = false;
@@ -684,6 +715,14 @@ private:
          return true;
       }
 
+      void InitSilent(const Entry &previous, long duration)
+      {
+         mGoal = previous.mGoal;
+         mS0 = mS1 = previous.mS1;
+         mPlayed = 0;
+         mDuration = duration;
+      }
+
       double GetTime(double rate) const
       {
          return
@@ -709,23 +748,23 @@ private:
       long mPlayed;
    };
 
-   bool InitEntry(Entry &entry, Entry *previous, double t0, double end, double maxSpeed,
-      bool bySpeed, bool adjustStart,
-      const ScrubbingOptions &options)
-   {
-      const wxLongLong clockTime(::wxGetLocalTimeMillis());
-      const long duration =
-         mRate * (clockTime - mLastScrubTimeMillis).ToDouble() / 1000.0;
-      const long s0 = t0 * mRate;
-      const long s1 = bySpeed
-         ? s0 + lrint(duration * end) // end is a speed
-         : lrint(end * mRate);        // end is a time
-      const bool success =
-         entry.Init(previous, s0, s1, duration, maxSpeed, adjustStart, options);
-      if (success)
-         mLastScrubTimeMillis = clockTime;
-      return success;
-   }
+   struct Duration {
+      Duration (ScrubQueue &queue_) : queue(queue_) {}
+      ~Duration ()
+      {
+         if(!cancelled)
+            queue.mLastScrubTimeMillis = clockTime;
+      }
+
+      void Cancel() { cancelled = true; }
+
+      ScrubQueue &queue;
+      const wxLongLong clockTime { ::wxGetLocalTimeMillis() };
+      const long duration { static_cast<long>
+         (queue.mRate * (clockTime - queue.mLastScrubTimeMillis).ToDouble() / 1000.0)
+      };
+      bool cancelled { false };
+   };
 
    enum { Size = 10 };
    Entry mEntries[Size];
