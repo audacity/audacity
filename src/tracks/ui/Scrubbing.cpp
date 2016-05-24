@@ -411,6 +411,8 @@ void Scrubber::ContinueScrubbing()
    else {
       const double time = viewInfo.PositionToTime(position.x, trackPanel->GetLeftOffset());
       mOptions.adjustStart = seek;
+      auto maxSpeed = (mDragging || !seek) ? mOptions.maxSpeed : 1.0;
+
       if (seek)
          // Cause OnTimer() to suppress the speed display
          mScrubSpeedDisplayCountdown = 1;
@@ -418,12 +420,10 @@ void Scrubber::ContinueScrubbing()
       if (mSmoothScrollingScrub) {
          const double speed = FindScrubSpeed(seek, time);
          mOptions.enqueueBySpeed = true;
-         result = gAudioIO->EnqueueScrub(speed, mOptions.maxSpeed, mOptions);
+         result = gAudioIO->EnqueueScrub(speed, maxSpeed, mOptions);
       }
       else {
          mOptions.enqueueBySpeed = false;
-         auto maxSpeed =
-            (mDragging || !seek) ? mOptions.maxSpeed : 1.0;
          result = gAudioIO->EnqueueScrub(time, maxSpeed, mOptions);
       }
    }

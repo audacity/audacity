@@ -535,17 +535,17 @@ private:
          double maxSpeed, bool adjustStart,
          const ScrubbingOptions &options)
       {
-         if (duration <= 0)
-            return false;
-         double speed = double(abs(s1 - s0)) / duration;
-         bool maxed = false;
+         wxASSERT(duration > 0);
+         double speed = static_cast<double>(std::abs(s1 - s0)) / duration;
+         bool adjustedSpeed = false;
 
-         // May change the requested speed (or reject)
+         // May change the requested speed and duration
          if (!adjustStart && speed > maxSpeed)
          {
             // Reduce speed to the maximum selected in the user interface.
             speed = maxSpeed;
-            maxed = true;
+            mGoal = s1;
+            adjustedSpeed = true;
          }
          else if (!adjustStart &&
             previous &&
@@ -557,86 +557,71 @@ private:
             // continue at no less than maximum.  (Without this
             // the final catch-up can make a slow scrub interval
             // that drops the pitch and sounds wrong.)
-            duration = lrint(speed * duration / maxSpeed);
-            if (duration <= 0)
-            {
-               previous->mGoal = -1;
-               return false;
-            }
+            // Trim the duration.
+            duration = std::max(0L, lrint(speed * duration / maxSpeed));
             speed = maxSpeed;
-            maxed = true;
-         }
-
-        if (speed < ScrubbingOptions::MinAllowedScrubSpeed())
-            // Mixers were set up to go only so slowly, not slower.
-            // This will put a request for some silence in the work queue.
-            speed = 0.0;
-
-         // Before we change s1:
-         mGoal = maxed ? s1 : -1;
-
-         // May change s1 or s0 to match speed change:
-         if (adjustStart)
-         {
-            bool silent = false;
-
-            // Adjust s1 first, and duration, if s1 is out of bounds.
-            // (Assume s0 is in bounds, because it is the last scrub's s1 which was checked.)
-            if (s1 != s0)
-            {
-               const long newS1 = std::max(options.minSample, std::min(options.maxSample, s1));
-               if (s1 != newS1)
-               {
-                  long newDuration = long(duration * double(newS1 - s0) / (s1 - s0));
-                  s1 = newS1;
-                  if (newDuration == 0)
-                     // Enqueue a silent scrub with s0 == s1
-                     silent = true;
-                  else
-                     // Shorten
-                     duration = newDuration;
-               }
-            }
-
-            if (!silent)
-            {
-               // When playback follows a fast mouse movement by "stuttering"
-               // at maximum playback, don't make stutters too short to be useful.
-               if (duration < options.minStutter)
-                  return false;
-               // Limit diff because this is seeking.
-               const long diff = lrint(std::min(1.0, speed) * duration);
-               if (s0 < s1)
-                  s0 = s1 - diff;
-               else
-                  s0 = s1 + diff;
-            }
+            mGoal = s1;
+            adjustedSpeed = true;
          }
          else
+            mGoal = -1;
+
+         if (speed < ScrubbingOptions::MinAllowedScrubSpeed()) {
+            // Mixers were set up to go only so slowly, not slower.
+            // This will put a request for some silence in the work queue.
+            adjustedSpeed = true;
+            speed = 0.0;
+         }
+
+         // May change s1 or s0 to match speed change or stay in bounds of the project
+
+         if (adjustedSpeed && !adjustStart)
          {
-            // adjust end
+            // adjust s1
             const long diff = lrint(speed * duration);
             if (s0 < s1)
                s1 = s0 + diff;
             else
                s1 = s0 - diff;
+         }
 
-            // Adjust s1 again, and duration, if s1 is out of bounds.  (Assume s0 is in bounds.)
-            if (s1 != s0)
-            {
-               const long newS1 = std::max(options.minSample, std::min(options.maxSample, s1));
-               if (s1 != newS1)
-               {
-                  long newDuration = long(duration * double(newS1 - s0) / (s1 - s0));
-                  s1 = newS1;
-                  if (newDuration == 0)
-                     // Enqueue a silent scrub with s0 == s1
-                     ;
-                  else
-                     // Shorten
-                     duration = newDuration;
-               }
+         bool silent = false;
+
+         // Adjust s1 (again), and duration, if s1 is out of bounds,
+         // or abandon if a stutter is too short.
+         // (Assume s0 is in bounds, because it equals the last scrub's s1 which was checked.)
+         if (s1 != s0)
+         {
+            long newDuration = duration;
+            const long newS1 = std::max(options.minSample, std::min(options.maxSample, s1));
+            if(s1 != newS1)
+               newDuration = std::max(0L,
+                  static_cast<long>(duration * static_cast<double>(newS1 - s0) / (s1 - s0))
+               );
+            // When playback follows a fast mouse movement by "stuttering"
+            // at maximum playback, don't make stutters too short to be useful.
+            if (options.adjustStart && newDuration < options.minStutter)
+               return false;
+            else if (newDuration == 0) {
+               // Enqueue a silent scrub with s0 == s1
+               silent = true;
+               s1 = s0;
             }
+            else if (s1 != newS1) {
+               // Shorten
+               duration = newDuration;
+               s1 = newS1;
+            }
+         }
+
+         if (adjustStart && !silent)
+         {
+            // Limit diff because this is seeking.
+            const long diff = lrint(std::min(maxSpeed, speed) * duration);
+            if (s0 < s1)
+               s0 = s1 - diff;
+            else
+               s0 = s1 + diff;
          }
 
          mS0 = s0;
