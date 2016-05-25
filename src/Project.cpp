@@ -2257,6 +2257,13 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
          {
           Message += _("\nIf saved, the project will have no tracks.\n\nTo save any previously open tracks:\nCancel, Edit > Undo until all tracks\nare open, then File > Save Project.");
          }
+
+		 Iconize(false); // Fix for bug #322 - Windows Close All from Taskbar
+		                 // leaves any iconified windows down and only displays
+		                 // the message box -- this happens even if you replace
+		                 // the message box with the underlying dialog and
+		                 // explicitly call ShowModal() which on other platforms
+		                 // guarantees that the window is brought to front.
          int result = wxMessageBox( Message,
                                    _("Save changes?"),
                                    wxYES_NO | wxCANCEL | wxICON_QUESTION,
