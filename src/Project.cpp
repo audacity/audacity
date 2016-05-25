@@ -2243,13 +2243,9 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
    // MY: Use routine here so other processes can make same check
    bool bHasTracks = ProjectHasTracks();
 
-   // Check hidden preference to see if the user has opted out of prompts to save on exit
-   bool bPromptToSaveOnExit;
-   gPrefs->Read(wxT("/Warnings/PromptToSaveOnExit"), &bPromptToSaveOnExit, true);
-
    // We may not bother to prompt the user to save, if the
    // project is now empty.
-   if ( bPromptToSaveOnExit && event.CanVeto() && (mEmptyCanBeDirty || bHasTracks)) {
+   if (event.CanVeto() && (mEmptyCanBeDirty || bHasTracks)) {
       if (GetUndoManager()->UnsavedChanges()) {
 
          wxString Message = _("Save changes before closing?");
