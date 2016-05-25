@@ -125,6 +125,32 @@ namespace {
    }
 }
 
+#ifdef USE_SCRUB_THREAD
+
+class Scrubber::ScrubPollerThread final : public wxThread {
+public:
+   ScrubPollerThread(Scrubber &scrubber)
+      : wxThread { }
+      , mScrubber(scrubber)
+   {}
+   ExitCode Entry() override;
+
+private:
+   Scrubber &mScrubber;
+};
+
+auto Scrubber::ScrubPollerThread::Entry() -> ExitCode
+{
+   while( !TestDestroy() )
+   {
+      wxThread::Sleep(ScrubPollInterval_ms);
+      mScrubber.ContinueScrubbingPoll();
+   }
+   return 0;
+}
+
+#endif
+
 class Scrubber::ScrubPoller : public wxTimer
 {
 public:
@@ -142,7 +168,13 @@ void Scrubber::ScrubPoller::Notify()
    // rather than in SelectionHandleDrag()
    // so that even without drag events, we can instruct the play head to
    // keep approaching the mouse cursor, when its maximum speed is limited.
-   mScrubber.ContinueScrubbing();
+
+#ifndef USE_SCRUB_THREAD
+   // If there is no helper thread, this main thread timer is responsible
+   // for playback and for UI
+   mScrubber.ContinueScrubbingPoll();
+#endif
+   mScrubber.ContinueScrubbingUI();
 }
 
 Scrubber::Scrubber(AudacityProject *project)
@@ -169,6 +201,11 @@ Scrubber::Scrubber(AudacityProject *project)
 
 Scrubber::~Scrubber()
 {
+#ifdef USE_SCRUB_THREAD
+   if (mpThread)
+      mpThread->Delete();
+#endif
+
    mProject->PopEventHandler();
    if (wxTheApp)
       wxTheApp->Disconnect
@@ -350,6 +387,13 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
          mPaused = false;
          mLastScrubPosition = xx;
 
+#ifdef USE_SCRUB_THREAD
+         // Detached thread is self-deleting, after it receives the Delete() message
+         mpThread = safenew ScrubPollerThread{ *this };
+         mpThread->Create(4096);
+         mpThread->Run();
+#endif
+
          mPoller->Start(ScrubPollInterval_ms);
       }
 
@@ -358,7 +402,62 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
    }
 }
 
-void Scrubber::ContinueScrubbing()
+void Scrubber::ContinueScrubbingPoll()
+{
+   // Thus scrubbing relies mostly on periodic polling of mouse and keys,
+   // not event notifications.  But there are a few event handlers that
+   // leave messages for this routine, in mScrubSeekPress and in mPaused.
+
+   // Decide whether to skip play, because either mouse is down now,
+   // or there was a left click event.  (This is then a delayed reaction, in a
+   // timer callback, to a left click event detected elsewhere.)
+   const bool seek = PollIsSeeking() || mScrubSeekPress;
+
+   bool result = false;
+   if (mPaused) {
+      // When paused, enqueue silent scrubs.
+      mOptions.adjustStart = false;
+      mOptions.enqueueBySpeed = true;
+      result = gAudioIO->EnqueueScrub(0, mOptions.maxSpeed, mOptions);
+   }
+   else {
+      const wxMouseState state(::wxGetMouseState());
+      const auto trackPanel = mProject->GetTrackPanel();
+      const wxPoint position = trackPanel->ScreenToClient(state.GetPosition());
+      const auto &viewInfo = mProject->GetViewInfo();
+      if (mDragging && mSmoothScrollingScrub) {
+         const auto lastTime = gAudioIO->GetLastTimeInScrubQueue();
+         const auto delta = mLastScrubPosition - position.x;
+         const double time = viewInfo.OffsetTimeByPixels(lastTime, delta);
+         mOptions.adjustStart = true;
+         mOptions.enqueueBySpeed = false;
+         result = gAudioIO->EnqueueScrub(time, mOptions.maxSpeed, mOptions);
+         mLastScrubPosition = position.x;
+      }
+      else {
+         const double time = viewInfo.PositionToTime(position.x, trackPanel->GetLeftOffset());
+         mOptions.adjustStart = seek;
+         auto maxSpeed = (mDragging || !seek) ? mOptions.maxSpeed : 1.0;
+
+         if (mSmoothScrollingScrub) {
+            const double speed = FindScrubSpeed(seek, time);
+            mOptions.enqueueBySpeed = true;
+            result = gAudioIO->EnqueueScrub(speed, maxSpeed, mOptions);
+         }
+         else {
+            mOptions.enqueueBySpeed = false;
+            result = gAudioIO->EnqueueScrub(time, maxSpeed, mOptions);
+         }
+      }
+   }
+
+   if (result)
+      mScrubSeekPress = false;
+   // else, if seek requested, try again at a later time when we might
+   // enqueue a long enough stutter
+}
+
+void Scrubber::ContinueScrubbingUI()
 {
    const wxMouseState state(::wxGetMouseState());
 
@@ -368,70 +467,20 @@ void Scrubber::ContinueScrubbing()
       return;
    }
 
-   // Thus scrubbing relies mostly on periodic polling of mouse and keys,
-   // not event notifications.  But there are a few event handlers that
-   // leave messages for this routine, in mScrubSeekPress and in mPaused.
-
-   // Seek only when the pointer is in the panel.  Else, scrub.
-   TrackPanel *const trackPanel = mProject->GetTrackPanel();
-
-   // Decide whether to skip play, because either mouse is down now,
-   // or there was a left click event.  (This is then a delayed reaction, in a
-   // timer callback, to a left click event detected elsewhere.)
-   const bool seek = PollIsSeeking() || mScrubSeekPress;
+   const bool seek = PollIsSeeking();
 
    {
       // Show the correct status for seeking.
       bool backup = mAlwaysSeeking;
       mAlwaysSeeking = seek;
       const auto ctb = mProject->GetControlToolBar();
-      ctb->UpdateStatusBar(mProject);
+      if (ctb)
+         ctb->UpdateStatusBar(mProject);
       mAlwaysSeeking = backup;
    }
 
-   const wxPoint position = trackPanel->ScreenToClient(state.GetPosition());
-   const auto &viewInfo = mProject->GetViewInfo();
-
-   bool result = false;
-   if (mPaused) {
-      // When paused, enqueue silent scrubs.
-      mOptions.adjustStart = false;
-      mOptions.enqueueBySpeed = true;
-      result = gAudioIO->EnqueueScrub(0, mOptions.maxSpeed, mOptions);
-   }
-   else if (mDragging && mSmoothScrollingScrub) {
-      const auto lastTime = gAudioIO->GetLastTimeInScrubQueue();
-      const auto delta = mLastScrubPosition - position.x;
-      const double time = viewInfo.OffsetTimeByPixels(lastTime, delta);
-      mOptions.adjustStart = true;
-      mOptions.enqueueBySpeed = false;
-      result = gAudioIO->EnqueueScrub(time, mOptions.maxSpeed, mOptions);
-      mLastScrubPosition = position.x;
-   }
-   else {
-      const double time = viewInfo.PositionToTime(position.x, trackPanel->GetLeftOffset());
-      mOptions.adjustStart = seek;
-      auto maxSpeed = (mDragging || !seek) ? mOptions.maxSpeed : 1.0;
-
-      if (seek)
-         // Cause OnTimer() to suppress the speed display
-         mScrubSpeedDisplayCountdown = 1;
-
-      if (mSmoothScrollingScrub) {
-         const double speed = FindScrubSpeed(seek, time);
-         mOptions.enqueueBySpeed = true;
-         result = gAudioIO->EnqueueScrub(speed, maxSpeed, mOptions);
-      }
-      else {
-         mOptions.enqueueBySpeed = false;
-         result = gAudioIO->EnqueueScrub(time, maxSpeed, mOptions);
-      }
-   }
-
-   if (result)
-      mScrubSeekPress = false;
-   // else, if seek requested, try again at a later time when we might
-   // enqueue a long enough stutter
+   if (seek)
+      mScrubSpeedDisplayCountdown = 0;
 
    if (mSmoothScrollingScrub)
       ;
@@ -443,6 +492,13 @@ void Scrubber::ContinueScrubbing()
 
 void Scrubber::StopScrubbing()
 {
+#ifdef USE_SCRUB_THREAD
+   if (mpThread) {
+      mpThread->Delete();
+      mpThread = nullptr;
+   }
+#endif
+
    mPoller->Stop();
 
    UncheckAllMenuItems();
