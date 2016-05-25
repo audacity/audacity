@@ -2245,7 +2245,7 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
 
    // Check hidden preference to see if the user has opted out of prompts to save on exit
    bool bPromptToSaveOnExit;
-   gPrefs->Read(wxT("/Warnings/ProjectPromptToSaveOnExit"), &bPromptToSaveOnExit, true);
+   gPrefs->Read(wxT("/Warnings/PromptToSaveOnExit"), &bPromptToSaveOnExit, true);
 
    // We may not bother to prompt the user to save, if the
    // project is now empty.
@@ -2408,7 +2408,7 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
 
 #if !defined(__WXMAC__)
       if (quitOnClose) {
-         QuitAudacity(!bAskToSaveOnExit);
+         QuitAudacity();
       }
       else {
          wxGetApp().SetWindowRectAlreadySaved(FALSE);
