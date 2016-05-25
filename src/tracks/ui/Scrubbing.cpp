@@ -46,6 +46,8 @@ enum {
 #endif
 
    ScrubPollInterval_ms = 50,
+
+   kOneSecondCountdown = 1000 / ScrubPollInterval_ms,
 };
 
 static const double MinStutter = 0.2;
