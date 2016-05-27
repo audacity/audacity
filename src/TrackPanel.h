@@ -242,7 +242,10 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
     * @param menu the menu to add the commands to.
     */
    virtual void BuildCommonDropMenuItems(wxMenu * menu);
-   static void BuildVRulerMenuItems(wxMenu * menu, int firstId, const wxArrayString &names);
+
+   // left over from PRL's vertical ruler context menu experiment in 2.1.2
+   // static void BuildVRulerMenuItems(wxMenu * menu, int firstId, const wxArrayString &names);
+
    virtual bool IsAudioActive();
    virtual bool IsUnsafe();
    virtual bool HandleLabelTrackClick(LabelTrack * lTrack, wxRect &rect, wxMouseEvent & event);
