@@ -659,6 +659,7 @@ void TrackPanel::BuildMenus(void)
    mTimeTrackMenu->Append(OnSetTimeTrackRangeID, _("&Range..."));
    mTimeTrackMenu->AppendCheckItem(OnTimeTrackLogIntID, _("Logarithmic &Interpolation"));
 
+/*
    mRulerWaveformMenu = new wxMenu();
    BuildVRulerMenuItems
       (mRulerWaveformMenu, OnFirstWaveformScaleID,
@@ -668,6 +669,7 @@ void TrackPanel::BuildMenus(void)
    BuildVRulerMenuItems
       (mRulerSpectrumMenu, OnFirstSpectrumScaleID,
        SpectrogramSettings::GetScaleNames());
+*/
 }
 
 void TrackPanel::BuildCommonDropMenuItems(wxMenu * menu)
@@ -686,6 +688,8 @@ void TrackPanel::BuildCommonDropMenuItems(wxMenu * menu)
 
 }
 
+/*
+// left over from PRL's vertical ruler context menu experiment in 2.1.2
 // static
 void TrackPanel::BuildVRulerMenuItems
 (wxMenu * menu, int firstId, const wxArrayString &names)
@@ -698,6 +702,7 @@ void TrackPanel::BuildVRulerMenuItems
    menu->Append(OnZoomOutVerticalID, _("Zoom Out\tShift-Left-Click"));
    menu->Append(OnZoomFitVerticalID, _("Zoom to Fit\tShift-Right-Click"));
 }
+*/
 
 void TrackPanel::DeleteMenus(void)
 {
@@ -5513,6 +5518,14 @@ void TrackPanel::HandleResize(wxMouseEvent & event)
 /// Handle mouse wheel rotation (for zoom in/out, vertical and horizontal scrolling)
 void TrackPanel::HandleWheelRotation(wxMouseEvent & event)
 {
+   if(event.GetWheelAxis() == wxMOUSE_WHEEL_HORIZONTAL) {
+      // Two-fingered horizontal swipe on mac is treated like shift-mousewheel
+      event.SetShiftDown(true);
+      // This makes the wave move in the same direction as the fingers, and the scrollbar
+      // thumb moves oppositely
+      event.m_wheelRotation *= -1;
+   }
+
    if(!event.HasAnyModifiers()) {
       // We will later un-skip if we do anything, but if we don't,
       // propagate the event up for the sake of the scrubber
