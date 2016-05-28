@@ -372,7 +372,7 @@ So a small, fixed queue size should be adequate.
 struct AudioIO::ScrubQueue
 {
    ScrubQueue(double t0, double t1, wxLongLong startClockMillis,
-              double rate, double maxSpeed, long maxDebt,
+              double rate, long maxDebt,
               const ScrubbingOptions &options)
       : mTrailingIdx(0)
       , mMiddleIdx(1)
@@ -389,7 +389,7 @@ struct AudioIO::ScrubQueue
       Duration dd { *this };
       long actualDuration = std::max(1L, dd.duration);
       auto success = mEntries[mMiddleIdx].Init(nullptr,
-         s0, s1, actualDuration, maxSpeed, options);
+         s0, s1, actualDuration, options);
       if (success)
          ++mLeadingIdx;
       else {
@@ -423,7 +423,7 @@ struct AudioIO::ScrubQueue
       mAvailable.Signal();
    }
 
-   bool Producer(double end, double maxSpeed, const ScrubbingOptions &options)
+   bool Producer(double end, const ScrubbingOptions &options)
    {
       // Main thread indicates a scrubbing interval
 
@@ -449,7 +449,7 @@ struct AudioIO::ScrubQueue
             ? s0 + lrint(origDuration * end) // end is a speed
             : lrint(end * mRate);            // end is a time
          auto success =
-            current->Init(previous, s0, s1, actualDuration, maxSpeed, options);
+            current->Init(previous, s0, s1, actualDuration, options);
          if (success)
             mLeadingIdx = next;
          else {
@@ -615,7 +615,7 @@ private:
 
       bool Init(Entry *previous, long s0, long s1,
          long &duration /* in/out */,
-         double maxSpeed, const ScrubbingOptions &options)
+         const ScrubbingOptions &options)
       {
          const bool &adjustStart = options.adjustStart;
 
@@ -624,10 +624,10 @@ private:
          bool adjustedSpeed = false;
 
          // May change the requested speed and duration
-         if (!adjustStart && speed > maxSpeed)
+         if (!adjustStart && speed > options.maxSpeed)
          {
             // Reduce speed to the maximum selected in the user interface.
-            speed = maxSpeed;
+            speed = options.maxSpeed;
             mGoal = s1;
             adjustedSpeed = true;
          }
@@ -642,8 +642,8 @@ private:
             // the final catch-up can make a slow scrub interval
             // that drops the pitch and sounds wrong.)
             // Trim the duration.
-            duration = std::max(0L, lrint(speed * duration / maxSpeed));
-            speed = maxSpeed;
+            duration = std::max(0L, lrint(speed * duration / options.maxSpeed));
+            speed = options.maxSpeed;
             mGoal = s1;
             adjustedSpeed = true;
          }
@@ -701,7 +701,7 @@ private:
          if (adjustStart && !silent)
          {
             // Limit diff because this is seeking.
-            const long diff = lrint(std::min(maxSpeed, speed) * duration);
+            const long diff = lrint(std::min(options.maxSpeed, speed) * duration);
             if (s0 < s1)
                s0 = s1 - diff;
             else
@@ -1949,8 +1949,8 @@ int AudioIO::StartStream(const WaveTrackArray &playbackTracks,
       const auto &scrubOptions = *options.pScrubbingOptions;
       mScrubQueue =
          new ScrubQueue(mT0, mT1, scrubOptions.startClockTimeMillis,
-            sampleRate, scrubOptions.maxSpeed, 2 * scrubOptions.minStutter,
-            *options.pScrubbingOptions);
+            sampleRate, 2 * scrubOptions.minStutter,
+            scrubOptions);
       mScrubDuration = 0;
       mSilentScrub = false;
    }
@@ -2548,10 +2548,10 @@ bool AudioIO::IsPaused()
 
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
 bool AudioIO::EnqueueScrub
-   (double endTimeOrSpeed, double maxSpeed, const ScrubbingOptions &options)
+   (double endTimeOrSpeed, const ScrubbingOptions &options)
 {
    if (mScrubQueue)
-      return mScrubQueue->Producer(endTimeOrSpeed, maxSpeed, options);
+      return mScrubQueue->Producer(endTimeOrSpeed, options);
    else
       return false;
 }

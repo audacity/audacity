@@ -345,13 +345,13 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
             if (!mAlwaysSeeking) {
                // Take the starting speed limit from the transcription toolbar,
                // but it may be varied during the scrub.
-               mOptions.maxSpeed =
+               mMaxSpeed = mOptions.maxSpeed =
                   mProject->GetTranscriptionToolBar()->GetPlaySpeed();
             }
 #else
             // That idea seems unpopular... just make it one for move-scrub,
             // but big for drag-scrub
-            mOptions.maxSpeed = mDragging ? MaxDragSpeed : 1.0;
+            mMaxSpeed = mOptions.maxSpeed = mDragging ? MaxDragSpeed : 1.0;
 #endif
             mOptions.minSample = 0;
             mOptions.maxSample =
@@ -367,7 +367,7 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
             static const double maxScrubSpeedBase =
                pow(2.0, 1.0 / ScrubSpeedStepsPerOctave);
             mLogMaxScrubSpeed = floor(0.5 +
-               log(mOptions.maxSpeed) / log(maxScrubSpeedBase)
+               log(mMaxSpeed) / log(maxScrubSpeedBase)
             );
 #endif
             mScrubSpeedDisplayCountdown = 0;
@@ -414,9 +414,10 @@ void Scrubber::ContinueScrubbingPoll()
    bool result = false;
    if (mPaused) {
       // When paused, enqueue silent scrubs.
+      mOptions.maxSpeed = mMaxSpeed;
       mOptions.adjustStart = false;
       mOptions.enqueueBySpeed = true;
-      result = gAudioIO->EnqueueScrub(0, mOptions.maxSpeed, mOptions);
+      result = gAudioIO->EnqueueScrub(0, mOptions);
    }
    else {
       const wxMouseState state(::wxGetMouseState());
@@ -427,24 +428,25 @@ void Scrubber::ContinueScrubbingPoll()
          const auto lastTime = gAudioIO->GetLastTimeInScrubQueue();
          const auto delta = mLastScrubPosition - position.x;
          const double time = viewInfo.OffsetTimeByPixels(lastTime, delta);
+         mOptions.maxSpeed = mMaxSpeed;
          mOptions.adjustStart = true;
          mOptions.enqueueBySpeed = false;
-         result = gAudioIO->EnqueueScrub(time, mOptions.maxSpeed, mOptions);
+         result = gAudioIO->EnqueueScrub(time, mOptions);
          mLastScrubPosition = position.x;
       }
       else {
          const double time = viewInfo.PositionToTime(position.x, trackPanel->GetLeftOffset());
          mOptions.adjustStart = seek;
-         auto maxSpeed = (mDragging || !seek) ? mOptions.maxSpeed : 1.0;
+         mOptions.maxSpeed = (mDragging || !seek) ? mMaxSpeed : 1.0;
 
          if (mSmoothScrollingScrub) {
             const double speed = FindScrubSpeed(seek, time);
             mOptions.enqueueBySpeed = true;
-            result = gAudioIO->EnqueueScrub(speed, maxSpeed, mOptions);
+            result = gAudioIO->EnqueueScrub(speed, mOptions);
          }
          else {
             mOptions.enqueueBySpeed = false;
-            result = gAudioIO->EnqueueScrub(time, maxSpeed, mOptions);
+            result = gAudioIO->EnqueueScrub(time, mOptions);
          }
       }
    }
@@ -550,7 +552,7 @@ double Scrubber::FindScrubSpeed(bool seeking, double time) const
    ViewInfo &viewInfo = mProject->GetViewInfo();
    const double screen = mProject->GetScreenEndTime() - viewInfo.h;
    return (seeking ? FindSeekSpeed : FindScrubbingSpeed)
-      (viewInfo, mOptions.maxSpeed, screen, time);
+      (viewInfo, mMaxSpeed, screen, time);
 }
 
 void Scrubber::HandleScrollWheel(int steps)
@@ -569,7 +571,7 @@ void Scrubber::HandleScrollWheel(int steps)
    if (newSpeed >= ScrubbingOptions::MinAllowedScrubSpeed() &&
        newSpeed <= ScrubbingOptions::MaxAllowedScrubSpeed()) {
       mLogMaxScrubSpeed = newLogMaxScrubSpeed;
-      mOptions.maxSpeed = newSpeed;
+      mMaxSpeed = newSpeed;
       if (!mSmoothScrollingScrub)
          // Show the speed for one second
          mScrubSpeedDisplayCountdown = kOneSecondCountdown + 1;

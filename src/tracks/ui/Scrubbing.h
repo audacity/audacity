@@ -178,6 +178,7 @@ private:
    std::unique_ptr<ScrubPoller> mPoller;
 
    ScrubbingOptions mOptions;
+   double mMaxSpeed { 1.0 };
 };
 
 // Specialist in drawing the scrub speed, and listening for certain events

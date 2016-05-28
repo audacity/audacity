@@ -172,7 +172,7 @@ class AUDACITY_DLL_API AudioIO final {
    * Return true if some sound was really enqueued.
    * But if the "stutter" is too short for the minimum, enqueue nothing and return false.
    */
-   bool EnqueueScrub(double endTimeOrSpeed, double maxSpeed, const ScrubbingOptions &options);
+   bool EnqueueScrub(double endTimeOrSpeed, const ScrubbingOptions &options);
 
    /** \brief return the ending time of the last enqueued scrub interval.
    */
