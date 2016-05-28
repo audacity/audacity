@@ -358,7 +358,7 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
             mOptions.maxSample =
                lrint(std::max(0.0, mProject->GetTracks()->GetEndTime()) * options.rate);
             mOptions.minStutter =
-               lrint(std::max(0.0, MinStutter) * options.rate);
+               mDragging ? 0.0 : lrint(std::max(0.0, MinStutter) * options.rate);
 
             ControlToolBar::PlayAppearance appearance =
                ControlToolBar::PlayAppearance::Scrub;
