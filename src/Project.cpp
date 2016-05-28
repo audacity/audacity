@@ -5378,8 +5378,18 @@ void AudacityProject::PlaybackScroller::OnTimer(wxCommandEvent &event)
    // Let other listeners get the notification
    event.Skip();
 
-   if (mMode != Mode::Off && mProject->IsAudioActive())
-   {
+   if(!mProject->IsAudioActive())
+      return;
+   else if (mMode == Mode::Refresh) {
+      // PRL:  see comments in Scrubbing.cpp for why this is sometimes needed.
+      // These unnecessary refreshes cause wheel rotation events to be delivered more uniformly
+      // to the application, so scrub speed control is smoother.
+      // (So I see at least with OS 10.10 and wxWidgets 3.0.2.)
+      // Is there another way to ensure that than by refreshing?
+      const auto trackPanel = mProject->GetTrackPanel();
+      trackPanel->Refresh(false);
+   }
+   else if (mMode != Mode::Off) {
       // Pan the view, so that we center the play indicator.
 
       ViewInfo &viewInfo = mProject->GetViewInfo();

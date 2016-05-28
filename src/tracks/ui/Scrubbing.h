@@ -21,6 +21,11 @@ Paul Licameli split from TrackPanel.cpp
 
 class AudacityProject;
 
+// Conditionally compile either a separate thead, or else use a timer in the main
+// thread, to poll the mouse and update scrubbing speed and direction.  The advantage of
+// a thread may be immunity to choppy scrubbing in case redrawing takes too much time.
+#define USE_SCRUB_THREAD
+
 // For putting an increment of work in the scrubbing queue
 struct ScrubbingOptions {
    ScrubbingOptions() {}
@@ -35,7 +40,8 @@ struct ScrubbingOptions {
 
    double delay {};
 
-   // A limiting value for the speed of a scrub interval:
+   // Limiting values for the speed of a scrub interval:
+   double minSpeed { 0.0 };
    double maxSpeed { 1.0 };
 
 
@@ -71,7 +77,8 @@ public:
    // Assume xx is relative to the left edge of TrackPanel!
    bool MaybeStartScrubbing(wxCoord xx);
 
-   void ContinueScrubbing();
+   void ContinueScrubbingUI();
+   void ContinueScrubbingPoll();
 
    // This is meant to be called only from ControlToolBar
    void StopScrubbing();
@@ -122,6 +129,7 @@ public:
    bool IsPaused() const;
 
 private:
+   void ActivateScroller();
    void DoScrub(bool scroll, bool seek);
    void OnActivateOrDeactivateApp(wxActivateEvent & event);
    void UncheckAllMenuItems();
@@ -158,9 +166,20 @@ private:
 
    DECLARE_EVENT_TABLE()
 
+#ifdef USE_SCRUB_THREAD
+   // Course corrections in playback are done in a helper thread, unhindered by
+   // the complications of the main event dispatch loop
+   class ScrubPollerThread;
+   ScrubPollerThread *mpThread {};
+#endif
+
+   // Other periodic update of the UI must be done in the main thread,
+   // by this object which is driven by timer events.
    class ScrubPoller;
    std::unique_ptr<ScrubPoller> mPoller;
+
    ScrubbingOptions mOptions;
+   double mMaxSpeed { 1.0 };
 };
 
 // Specialist in drawing the scrub speed, and listening for certain events

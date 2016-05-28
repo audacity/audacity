@@ -73,7 +73,6 @@ DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_TRACK_PANEL_TIMER, -1);
 
 enum {
    kTimerInterval = 50, // milliseconds
-   kOneSecondCountdown = 1000 / kTimerInterval,
 };
 
 class AUDACITY_DLL_API TrackInfo
@@ -242,7 +241,10 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
     * @param menu the menu to add the commands to.
     */
    virtual void BuildCommonDropMenuItems(wxMenu * menu);
-   static void BuildVRulerMenuItems(wxMenu * menu, int firstId, const wxArrayString &names);
+
+   // left over from PRL's vertical ruler context menu experiment in 2.1.2
+   // static void BuildVRulerMenuItems(wxMenu * menu, int firstId, const wxArrayString &names);
+
    virtual bool IsAudioActive();
    virtual bool IsUnsafe();
    virtual bool HandleLabelTrackClick(LabelTrack * lTrack, wxRect &rect, wxMouseEvent & event);
@@ -789,6 +791,8 @@ protected:
 
    // The screenshot class needs to access internals
    friend class ScreenshotCommand;
+
+   SelectedRegion mLastDrawnSelectedRegion {};
 
  public:
    wxSize vrulerSize;
