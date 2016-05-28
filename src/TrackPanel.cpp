@@ -2774,8 +2774,11 @@ void TrackPanel::SelectionHandleDrag(wxMouseEvent & event, Track *clickedTrack)
 #endif
 
    ExtendSelection(x, rect.x, clickedTrack);
-   // Don't do this at every mouse event, because it slows down seek-scrub.
+   // If scrubbing does not use the helper poller thread, then
+   // don't do this at every mouse event, because it slows down seek-scrub.
    // Instead, let OnTimer do it, which is often enough.
+   // And even if scrubbing does use the thread, then skipping this does not
+   // bring that advantage, but it is probably still a good idea anyway.
    // UpdateSelectionDisplay();
 }
 
@@ -5623,6 +5626,7 @@ void TrackPanel::HandleWheelRotation(wxMouseEvent & event)
 #ifdef EXPERIMENTAL_SCRUBBING_SCROLL_WHEEL
       if (GetProject()->GetScrubber().IsScrubbing()) {
          GetProject()->GetScrubber().HandleScrollWheel(steps);
+         event.Skip(false);
       }
       else
 #endif

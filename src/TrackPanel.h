@@ -73,7 +73,6 @@ DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_TRACK_PANEL_TIMER, -1);
 
 enum {
    kTimerInterval = 50, // milliseconds
-   kOneSecondCountdown = 1000 / kTimerInterval,
 };
 
 class AUDACITY_DLL_API TrackInfo
