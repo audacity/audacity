@@ -341,6 +341,7 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
             options.pScrubbingOptions = &mOptions;
             options.timeTrack = NULL;
             mOptions.delay = (ScrubPollInterval_ms * 0.9 / 1000.0);
+            mOptions.minSpeed = 0.0;
 #ifdef USE_TRANSCRIPTION_TOOLBAR
             if (!mAlwaysSeeking) {
                // Take the starting speed limit from the transcription toolbar,
@@ -414,6 +415,7 @@ void Scrubber::ContinueScrubbingPoll()
    bool result = false;
    if (mPaused) {
       // When paused, enqueue silent scrubs.
+      mOptions.minSpeed = 0.0;
       mOptions.maxSpeed = mMaxSpeed;
       mOptions.adjustStart = false;
       mOptions.enqueueBySpeed = true;
@@ -428,6 +430,7 @@ void Scrubber::ContinueScrubbingPoll()
          const auto lastTime = gAudioIO->GetLastTimeInScrubQueue();
          const auto delta = mLastScrubPosition - position.x;
          const double time = viewInfo.OffsetTimeByPixels(lastTime, delta);
+         mOptions.minSpeed = 0.0;
          mOptions.maxSpeed = mMaxSpeed;
          mOptions.adjustStart = true;
          mOptions.enqueueBySpeed = false;
@@ -437,6 +440,7 @@ void Scrubber::ContinueScrubbingPoll()
       else {
          const double time = viewInfo.PositionToTime(position.x, trackPanel->GetLeftOffset());
          mOptions.adjustStart = seek;
+         mOptions.minSpeed = (mDragging || !seek) ? 0.0 : 1.0;
          mOptions.maxSpeed = (mDragging || !seek) ? mMaxSpeed : 1.0;
 
          if (mSmoothScrollingScrub) {

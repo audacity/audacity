@@ -623,6 +623,9 @@ private:
          double speed = static_cast<double>(std::abs(s1 - s0)) / duration;
          bool adjustedSpeed = false;
 
+         auto minSpeed = std::min(options.minSpeed, options.maxSpeed);
+         wxASSERT(minSpeed == options.minSpeed);
+
          // May change the requested speed and duration
          if (!adjustStart && speed > options.maxSpeed)
          {
@@ -641,14 +644,19 @@ private:
             // continue at no less than maximum.  (Without this
             // the final catch-up can make a slow scrub interval
             // that drops the pitch and sounds wrong.)
-            // Trim the duration.
-            duration = std::max(0L, lrint(speed * duration / options.maxSpeed));
-            speed = options.maxSpeed;
+            minSpeed = options.maxSpeed;
             mGoal = s1;
             adjustedSpeed = true;
          }
          else
             mGoal = -1;
+
+         if (speed < minSpeed) {
+            // Trim the duration.
+            duration = std::max(0L, lrint(speed * duration / minSpeed));
+            speed = minSpeed;
+            adjustedSpeed = true;
+         }
 
          if (speed < ScrubbingOptions::MinAllowedScrubSpeed()) {
             // Mixers were set up to go only so slowly, not slower.
