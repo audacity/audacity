@@ -381,9 +381,7 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
          mOptions.startClockTimeMillis = ::wxGetLocalTimeMillis();
 
       if (IsScrubbing()) {
-         using Mode = AudacityProject::PlaybackScroller::Mode;
-         mProject->GetPlaybackScroller().Activate
-            (mSmoothScrollingScrub ? Mode::Centered : Mode::Off);
+         ActivateScroller();
          mPaused = false;
          mLastScrubPosition = xx;
 
@@ -559,6 +557,9 @@ void Scrubber::HandleScrollWheel(int steps)
 {
    if (mDragging)
       // Not likely you would spin it with the left button down, but...
+      return;
+
+   if (steps == 0)
       return;
 
    const int newLogMaxScrubSpeed = mLogMaxScrubSpeed + steps;
@@ -775,6 +776,24 @@ bool Scrubber::PollIsSeeking()
    return mDragging || (mAlwaysSeeking || ::wxGetMouseState().LeftIsDown());
 }
 
+void Scrubber::ActivateScroller()
+{
+   using Mode = AudacityProject::PlaybackScroller::Mode;
+   mProject->GetPlaybackScroller().Activate(mSmoothScrollingScrub
+      ? Mode::Centered
+      :
+#ifdef __WXMAC__
+        // PRL:  cause many "unnecessary" refreshes.  For reasons I don't understand,
+        // doing this causes wheel rotation events (mapped from the double finger vertical
+        // swipe) to be delivered more uniformly to the application, so that spped control
+        // works better.
+        Mode::Refresh
+#else
+        Mode::Off
+#endif
+   );
+}
+
 void Scrubber::DoScrub(bool scroll, bool seek)
 {
    const bool wasScrubbing = IsScrubbing();
@@ -793,9 +812,7 @@ void Scrubber::DoScrub(bool scroll, bool seek)
    }
    else if(!match) {
       mSmoothScrollingScrub = scroll;
-      using Mode = AudacityProject::PlaybackScroller::Mode;
-      mProject->GetPlaybackScroller().Activate
-         (scroll ? Mode::Centered : Mode::Off);
+      ActivateScroller();
       mAlwaysSeeking = seek;
       UncheckAllMenuItems();
       CheckMenuItem();

@@ -128,6 +128,7 @@ public:
    bool IsPaused() const;
 
 private:
+   void ActivateScroller();
    void DoScrub(bool scroll, bool seek);
    void OnActivateOrDeactivateApp(wxActivateEvent & event);
    void UncheckAllMenuItems();

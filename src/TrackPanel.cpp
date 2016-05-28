@@ -5626,6 +5626,7 @@ void TrackPanel::HandleWheelRotation(wxMouseEvent & event)
 #ifdef EXPERIMENTAL_SCRUBBING_SCROLL_WHEEL
       if (GetProject()->GetScrubber().IsScrubbing()) {
          GetProject()->GetScrubber().HandleScrollWheel(steps);
+         event.Skip(false);
       }
       else
 #endif
