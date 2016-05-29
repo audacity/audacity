@@ -107,6 +107,7 @@ class ControlToolBar final : public ToolBar {
    void UpdateStatusBar(AudacityProject *pProject);
 
    // Starting and stopping of scrolling display
+   void StartScrollingIfPreferred();
    void StartScrolling();
    void StopScrolling();
 

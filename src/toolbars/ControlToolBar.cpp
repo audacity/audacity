@@ -68,6 +68,7 @@
 #include "../widgets/Meter.h"
 
 #include "../tracks/ui/Scrubbing.h"
+#include "../prefs/PlaybackPrefs.h"
 
 IMPLEMENT_CLASS(ControlToolBar, ToolBar);
 
@@ -635,15 +636,16 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
                NoteTrackArray(),
 #endif
                tcp0, tcp1, myOptions);
-         } else
-         {
+         }
+         else {
             // Cannot create cut preview tracks, clean up and exit
             SetPlay(false);
             SetStop(false);
             SetRecord(false);
             return -1;
          }
-      } else {
+      }
+      else {
          // Lifted the following into AudacityProject::GetDefaultPlayOptions()
          /*
          if (!timetrack) {
@@ -681,6 +683,8 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
       SetRecord(false);
       return -1;
    }
+
+   StartScrollingIfPreferred();
 
    // Let other UI update appearance
    if (p)
@@ -1076,6 +1080,8 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
       if (success) {
          p->SetAudioIOToken(token);
          mBusyProject = p;
+
+         StartScrollingIfPreferred();
       }
       else {
          if (shifted) {
@@ -1261,6 +1267,14 @@ wxString ControlToolBar::StateForStatusBar()
 void ControlToolBar::UpdateStatusBar(AudacityProject *pProject)
 {
    pProject->GetStatusBar()->SetStatusText(StateForStatusBar(), stateStatusBarField);
+}
+
+void ControlToolBar::StartScrollingIfPreferred()
+{
+   if (PlaybackPrefs::GetPinnedHeadPreference())
+      StartScrolling();
+   else
+      StopScrolling();
 }
 
 void ControlToolBar::StartScrolling()

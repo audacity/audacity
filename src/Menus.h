@@ -313,6 +313,7 @@ void OnResetToolBars();
 
 void OnSoundActivated();
 void OnToggleSoundActivated();
+void OnTogglePinnedHead();
 void OnTogglePlayRecording();
 void OnToggleSWPlaythrough();
 #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
