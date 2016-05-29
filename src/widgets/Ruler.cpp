@@ -1957,6 +1957,8 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* parent,
 , mProject(parent)
 , mViewInfo(viewinfo)
 {
+   ReCreateButtons();
+
    SetLabel( _("Timeline") );
    SetName(GetLabel());
    SetBackgroundStyle(wxBG_STYLE_PAINT);
@@ -2060,6 +2062,10 @@ void AdornedRulerPanel::UpdatePrefs()
    RegenerateTooltips(mPrevZone);
 
    mButtonFontSize = -1;
+}
+
+void AdornedRulerPanel::ReCreateButtons()
+{
 }
 
 namespace {

@@ -315,6 +315,7 @@ public:
    void InvalidateRuler();
 
    void UpdatePrefs();
+   void ReCreateButtons();
 
    enum class StatusChoice {
       FirstButton = 0,

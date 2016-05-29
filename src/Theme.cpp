@@ -65,6 +65,7 @@ and use it for toolbar and window layouts too.
 #include "Project.h"
 #include "toolbars/ToolBar.h"
 #include "toolbars/ToolManager.h"
+#include "widgets/Ruler.h"
 #include "ImageManipulation.h"
 #include "Theme.h"
 #include "Experimental.h"
@@ -230,6 +231,7 @@ void Theme::ApplyUpdatedImages()
       if( pToolBar )
          pToolBar->ReCreateButtons();
    }
+   p->GetRulerPanel()->ReCreateButtons();
 }
 
 void Theme::RegisterImages()
