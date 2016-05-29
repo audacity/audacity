@@ -349,8 +349,10 @@ private:
    void DoDrawEdge(wxDC *dc);
    void DoDrawMarks(wxDC * dc, bool /*text */ );
    void DoDrawSelection(wxDC * dc);
+
 public:
    void DoDrawIndicator(wxDC * dc, wxCoord xx, bool playing, int width, bool scrub);
+   void UpdateButtonStates();
 
 private:
    QuickPlayIndicatorOverlay *GetOverlay();
@@ -415,6 +417,8 @@ private:
 
    void OnContextMenu(wxContextMenuEvent & WXUNUSED(event));
 
+   void OnTogglePinnedState(wxCommandEvent & event);
+
    bool mPlayRegionDragsSelection;
    bool mTimelineToolTip;
    bool mQuickPlayEnabled;
@@ -441,6 +445,9 @@ private:
    DECLARE_EVENT_TABLE()
 
    friend QuickPlayRulerOverlay;
+
+   wxWindow *mButtons[1] { {} };
+   bool mNeedButtonUpdate { true };
 };
 
 #endif //define __AUDACITY_RULER__

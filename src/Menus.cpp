@@ -2380,6 +2380,11 @@ void AudacityProject::OnTogglePinnedHead()
    auto ctb = GetActiveProject()->GetControlToolBar();
    if (ctb)
       ctb->StartScrollingIfPreferred();
+
+   auto ruler = GetRulerPanel();
+   if (ruler)
+      // Update button image
+      ruler->UpdateButtonStates();
 }
 
 void AudacityProject::OnTogglePlayRecording()
