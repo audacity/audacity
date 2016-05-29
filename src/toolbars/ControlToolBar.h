@@ -106,6 +106,10 @@ class ControlToolBar final : public ToolBar {
    int WidthForStatusBar(wxStatusBar* const);
    void UpdateStatusBar(AudacityProject *pProject);
 
+   // Starting and stopping of scrolling display
+   void StartScrolling();
+   void StopScrolling();
+
  private:
 
    AButton *MakeButton(teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled,

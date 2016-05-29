@@ -2404,8 +2404,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
 
 void AdornedRulerPanel::HandleQPDoubleClick(wxMouseEvent &evt, wxCoord mousePosX)
 {
-   mProject->GetPlaybackScroller().Activate
-      (AudacityProject::PlaybackScroller::Mode::Centered);
+   mProject->GetControlToolBar()->StartScrolling();
 }
 
 void AdornedRulerPanel::HandleQPClick(wxMouseEvent &evt, wxCoord mousePosX)
