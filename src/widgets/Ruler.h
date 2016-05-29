@@ -318,37 +318,11 @@ public:
    void ReCreateButtons();
 
    enum class StatusChoice {
-      FirstButton = 0,
-      QuickPlayButton = FirstButton,
-      ScrubBarButton,
-
-      NumButtons,
-      LastButton = NumButtons - 1,
-      NoButton = -1,
-
-      EnteringQP = NumButtons,
+      EnteringQP,
       EnteringScrubZone,
       Leaving,
       NoChange
    };
-   enum class PointerState {
-      Out = 0, In, InArrow
-   };
-   struct CaptureState {
-      CaptureState() {}
-      CaptureState(StatusChoice s, PointerState p) : button(s), state(p) {}
-      StatusChoice button { StatusChoice::NoButton };
-      PointerState state { PointerState::Out };
-   };
-
-   friend inline StatusChoice &operator++ (StatusChoice &choice) {
-      choice = static_cast<StatusChoice>(1 + static_cast<int>(choice));
-      return choice;
-   }
-   friend inline StatusChoice &operator-- (StatusChoice &choice) {
-      choice = static_cast<StatusChoice>(-1 + static_cast<int>(choice));
-      return choice;
-   }
 
    void RegenerateTooltips(StatusChoice choice);
 
@@ -368,15 +342,6 @@ private:
    void HandleQPRelease(wxMouseEvent &event);
    void StartQPPlay(bool looped, bool cutPreview);
 
-   static inline bool IsButton(StatusChoice choice)
-   {
-      auto integer = static_cast<int>(choice);
-      return integer >= 0 &&
-         integer < static_cast<int>(StatusChoice::NumButtons);
-   }
-   static inline bool IsButton(int choice)
-   { return IsButton(static_cast<StatusChoice>(choice)); }
-
    void UpdateStatusBarAndTooltips(StatusChoice choice);
 
    void OnCaptureLost(wxMouseCaptureLostEvent &evt);
@@ -393,32 +358,8 @@ private:
    void ShowOrHideQuickPlayIndicator(bool show);
    void DoDrawPlayRegion(wxDC * dc);
 
-   wxRect GetButtonAreaRect(bool includeBorder = false) const;
-
-   struct ButtonStrings {
-      wxString label, enable, disable;
-   };
-   static const ButtonStrings PushbuttonLabels[];
-   static const ButtonStrings *GetPushButtonStrings(StatusChoice choice)
-   {
-      if(IsButton(choice))
-         return &PushbuttonLabels[static_cast<size_t>(choice)];
-      return nullptr;
-   }
-
-   wxRect GetButtonRect( StatusChoice button ) const;
-   PointerState InButtonRect( StatusChoice button, wxMouseEvent *pEvent ) const;
-   CaptureState FindButton( wxMouseEvent &mouseEvent ) const;
-   bool GetButtonState( StatusChoice button ) const;
-   void ToggleButtonState( StatusChoice button );
-   void ShowButtonMenu( StatusChoice button, const wxPoint *pPosition);
-   void DoDrawPushbutton
-      (wxDC *dc, StatusChoice button, bool buttonState, bool arrowState) const;
-   void DoDrawPushbuttons(wxDC *dc) const;
-   void HandlePushbuttonClick(wxMouseEvent &evt);
-   void HandlePushbuttonEvent(wxMouseEvent &evt);
-
-   wxFont &GetButtonFont() const;
+   enum class MenuChoice { QuickPlay, Scrub };
+   void ShowContextMenu( MenuChoice choice, const wxPoint *pPosition);
 
    double Pos2Time(int p, bool ignoreFisheye = false);
    int Time2Pos(double t, bool ignoreFisheye = false);
@@ -473,17 +414,11 @@ private:
 
    void OnToggleScrubbing(wxCommandEvent&);
 
-   void OnCaptureKey(wxCommandEvent &event);
-   void OnKeyDown(wxKeyEvent &event);
-   void OnSetFocus(wxFocusEvent &);
-   void OnKillFocus(wxFocusEvent &);
    void OnContextMenu(wxContextMenuEvent & WXUNUSED(event));
 
    bool mPlayRegionDragsSelection;
    bool mTimelineToolTip;
    bool mQuickPlayEnabled;
-
-   CaptureState mCaptureState {};
 
    enum MouseEventState {
       mesNone,
@@ -502,49 +437,9 @@ private:
 
    StatusChoice mPrevZone { StatusChoice::NoChange };
 
-   struct TabState {
-      StatusChoice mButton { StatusChoice::FirstButton };
-      bool mMenu { false };
-
-      TabState() {}
-      TabState(StatusChoice button, bool menu)
-         : mButton{ button }, mMenu{ menu } {}
-
-      bool operator == (const TabState &rhs) const
-         { return mButton == rhs.mButton && mMenu == rhs.mMenu; }
-      bool operator != (const TabState &rhs) const { return !(*this == rhs); }
-
-      TabState &operator ++ () {
-         if (!mMenu)
-            mMenu = true;
-         else {
-            mMenu = false;
-            if (!IsButton (++mButton))
-               mButton = StatusChoice::FirstButton;
-         }
-         return *this;
-      }
-
-      TabState &operator -- () {
-         if (mMenu)
-            mMenu = false;
-         else {
-            mMenu = true;
-            if (!IsButton (--mButton))
-               mButton = StatusChoice::LastButton;
-         }
-         return *this;
-      }
-   };
-   TabState mTabState;
-
    bool mShowScrubbing { true };
 
-   mutable int mButtonFontSize { -1 };
-   mutable wxFont mButtonFont;
-
    bool mDoubleClick {};
-   bool mShowingMenu {};
 
    DECLARE_EVENT_TABLE()
 
