@@ -700,6 +700,7 @@ void ToolBar::MakeButtonBackgroundsSmall()
 }
 
 /// Makes a button and its four different state bitmaps
+/// @param parent            Parent window for the button.
 /// @param eUp               Background for when button is Up.
 /// @param eDown             Background for when button is Down.
 /// @param eHilite           Background for when button is Hilit.
@@ -710,7 +711,8 @@ void ToolBar::MakeButtonBackgroundsSmall()
 /// @param placement         Placement position
 /// @param processdownevents true iff button handles down events.
 /// @param size              Size of the background.
-AButton * ToolBar::MakeButton(teBmps eUp,
+AButton * ToolBar::MakeButton(wxWindow *parent,
+                              teBmps eUp,
                               teBmps eDown,
                               teBmps eHilite,
                               teBmps eStandardUp,
@@ -731,7 +733,7 @@ AButton * ToolBar::MakeButton(teBmps eUp,
    wxImagePtr disable2   (OverlayImage(eUp,     eDisabled, xoff, yoff));
 
    AButton * button =
-      new AButton(this, id, placement, size, *up2, *hilite2, *down2,
+      new AButton(parent, id, placement, size, *up2, *hilite2, *down2,
             *disable2, processdownevents);
 
    return button;
