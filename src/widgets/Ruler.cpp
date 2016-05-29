@@ -1957,16 +1957,6 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* parent,
 , mProject(parent)
 , mViewInfo(viewinfo)
 {
-   {
-      ToolBar::MakeButton(this,
-                              bmpRecoloredUpSmall, bmpRecoloredDownSmall, bmpRecoloredHiliteSmall,
-
-                          bmpSyncLockTracksUp, bmpSyncLockTracksDown, bmpSyncLockTracksDisabled,                               wxWindowID(id),
-                              wxDefaultPosition,
-                              true,
-                              theTheme.ImageSize( bmpRecoloredUpSmall ));
-   }
-
    SetLabel( _("Timeline") );
    SetName(GetLabel());
    SetBackgroundStyle(wxBG_STYLE_PAINT);

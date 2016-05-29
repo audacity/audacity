@@ -156,7 +156,7 @@ void ToolsToolBar::UpdatePrefs()
 AButton * ToolsToolBar::MakeTool( teBmps eTool,
    int id, const wxChar *label)
 {
-   AButton *button = ToolBar::MakeButton(this,
+   AButton *button = ToolBar::MakeButton(
       bmpRecoloredUpSmall, bmpRecoloredDownSmall, bmpRecoloredHiliteSmall,
       eTool, eTool, eTool,
       wxWindowID(id),

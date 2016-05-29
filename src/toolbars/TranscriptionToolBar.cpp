@@ -147,7 +147,7 @@ AButton *TranscriptionToolBar::AddButton(
 {
    AButton *&r = mButtons[id];
 
-   r = ToolBar::MakeButton(this,
+   r = ToolBar::MakeButton(
       bmpRecoloredUpSmall, bmpRecoloredDownSmall, bmpRecoloredHiliteSmall,
       eFore, eFore, eDisabled,
       wxWindowID(id),
