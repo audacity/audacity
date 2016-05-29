@@ -336,7 +336,6 @@ private:
    void OnSize(wxSizeEvent &evt);
    void UpdateRects();
    void OnMouseEvents(wxMouseEvent &evt);
-   void HandleQPDoubleClick(wxMouseEvent &event, wxCoord mousePosX);
    void HandleQPClick(wxMouseEvent &event, wxCoord mousePosX);
    void HandleQPDrag(wxMouseEvent &event, wxCoord mousePosX);
    void HandleQPRelease(wxMouseEvent &event);
@@ -438,8 +437,6 @@ private:
    StatusChoice mPrevZone { StatusChoice::NoChange };
 
    bool mShowScrubbing { true };
-
-   bool mDoubleClick {};
 
    DECLARE_EVENT_TABLE()
 

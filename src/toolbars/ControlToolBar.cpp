@@ -749,24 +749,17 @@ void ControlToolBar::OnKeyEvent(wxKeyEvent & event)
 
 void ControlToolBar::OnPlay(wxCommandEvent & WXUNUSED(evt))
 {
-   auto doubleClicked = mPlay->IsDoubleClicked();
-   mPlay->ClearDoubleClicked();
-
    auto p = GetActiveProject();
 
-   if (doubleClicked)
-      StartScrolling();
-   else {
-      if (!CanStopAudioStream())
-         return;
+   if (!CanStopAudioStream())
+      return;
 
-      StopPlaying();
+   StopPlaying();
 
-      if (p) p->TP_DisplaySelection();
+   if (p) p->TP_DisplaySelection();
 
-      PlayDefault();
-      UpdateStatusBar(p);
-   }
+   PlayDefault();
+   UpdateStatusBar(p);
 }
 
 void ControlToolBar::OnStop(wxCommandEvent & WXUNUSED(evt))
@@ -856,14 +849,6 @@ void ControlToolBar::Pause()
 
 void ControlToolBar::OnRecord(wxCommandEvent &evt)
 {
-   auto doubleClicked = mRecord->IsDoubleClicked();
-   mRecord->ClearDoubleClicked();
-
-   if (doubleClicked) {
-      StartScrolling();
-      return;
-   }
-
    if (gAudioIO->IsBusy()) {
       if (!CanStopAudioStream() || 0 == gAudioIO->GetNumCaptureChannels())
          mRecord->PopUp();

@@ -85,7 +85,6 @@ array of Ruler::Label.
 #include "../prefs/TracksPrefs.h"
 
 //#define SCRUB_ABOVE
-#define RULER_DOUBLE_CLICK
 
 using std::min;
 using std::max;
@@ -2378,15 +2377,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
          }
       }
 
-#ifdef RULER_DOUBLE_CLICK
-      if (evt.LeftDClick()) {
-         mDoubleClick = true;
-         HandleQPDoubleClick(evt, mousePosX);
-      }
-      else
-#endif
       if (evt.LeftDown()) {
-         mDoubleClick = false;
          HandleQPClick(evt, mousePosX);
          HandleQPDrag(evt, mousePosX);
          ShowQuickPlayIndicator();
@@ -2400,11 +2391,6 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
          ShowQuickPlayIndicator();
       }
    }
-}
-
-void AdornedRulerPanel::HandleQPDoubleClick(wxMouseEvent &evt, wxCoord mousePosX)
-{
-   mProject->GetControlToolBar()->StartScrolling();
 }
 
 void AdornedRulerPanel::HandleQPClick(wxMouseEvent &evt, wxCoord mousePosX)
@@ -2540,9 +2526,6 @@ void AdornedRulerPanel::HandleQPDrag(wxMouseEvent &event, wxCoord mousePosX)
 
 void AdornedRulerPanel::HandleQPRelease(wxMouseEvent &evt)
 {
-   if (mDoubleClick)
-      return;
-
    if (HasCapture())
       ReleaseMouse();
    else
