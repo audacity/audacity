@@ -121,9 +121,11 @@ class ToolBar /* not final */ : public wxPanel
    virtual int GetInitialWidth() { return -1; }
    virtual int GetMinToolbarWidth() { return GetInitialWidth(); }
    virtual wxSize GetDockedSize() { return GetMinSize(); }
- protected:
 
-   AButton *MakeButton(teBmps eUp,
+ public:
+   static
+   AButton *MakeButton(wxWindow *parent,
+                       teBmps eUp,
                        teBmps eDown,
                        teBmps eHilite,
                        teBmps eStandardUp,
@@ -134,6 +136,7 @@ class ToolBar /* not final */ : public wxPanel
                        bool processdownevents,
                        wxSize size);
 
+ protected:
    static
    void MakeAlternateImages(AButton &button, int idx,
                             teBmps eUp,
