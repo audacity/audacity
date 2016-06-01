@@ -24,7 +24,11 @@ class AudacityProject;
 // Conditionally compile either a separate thead, or else use a timer in the main
 // thread, to poll the mouse and update scrubbing speed and direction.  The advantage of
 // a thread may be immunity to choppy scrubbing in case redrawing takes too much time.
+#ifdef __WXGTK__
+// Unfortunately some things the thread needs to do are not thread safe
+#else
 #define USE_SCRUB_THREAD
+#endif
 
 // For putting an increment of work in the scrubbing queue
 struct ScrubbingOptions {
