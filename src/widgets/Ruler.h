@@ -446,7 +446,7 @@ private:
 
    friend QuickPlayRulerOverlay;
 
-   wxWindow *mButtons[1] { {} };
+   wxWindow *mButtons[1];
    bool mNeedButtonUpdate { true };
 };
 

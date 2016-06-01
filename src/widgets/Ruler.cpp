@@ -1956,6 +1956,9 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* parent,
 , mProject(parent)
 , mViewInfo(viewinfo)
 {
+   for (auto &button : mButtons)
+      button = nullptr;
+
    ReCreateButtons();
 
    SetLabel( _("Timeline") );
