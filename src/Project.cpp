@@ -1131,7 +1131,7 @@ AudacityProject::~AudacityProject()
 
 AudioIOStartStreamOptions AudacityProject::GetDefaultPlayOptions()
 {
-   AudioIOStartStreamOptions options;
+   AudioIOStartStreamOptions options { GetRate() };
    options.timeTrack = GetTracks()->GetTimeTrack();
    options.listener = this;
    return options;
@@ -4788,7 +4788,10 @@ void AudacityProject::TP_HandleResize()
 void AudacityProject::GetPlayRegion(double* playRegionStart,
                                     double *playRegionEnd)
 {
-   mRuler->GetPlayRegion(playRegionStart, playRegionEnd);
+   if (mRuler)
+      mRuler->GetPlayRegion(playRegionStart, playRegionEnd);
+   else
+      *playRegionEnd = *playRegionStart = 0;
 }
 
 void AudacityProject::AutoSave()
@@ -4886,7 +4889,13 @@ void AudacityProject::MayStartMonitoring()
 void AudacityProject::OnAudioIORate(int rate)
 {
    wxString display;
-   display = wxString::Format(_("Actual Rate: %d"), rate);
+   if (rate > 0) {
+      display = wxString::Format(_("Actual Rate: %d"), rate);
+   }
+   else
+      // clear the status field
+      ;
+
    int x, y;
    mStatusBar->GetTextExtent(display, &x, &y);
    int widths[] = {0, GetControlToolBar()->WidthForStatusBar(mStatusBar), -1, x+50};
@@ -5369,8 +5378,18 @@ void AudacityProject::PlaybackScroller::OnTimer(wxCommandEvent &event)
    // Let other listeners get the notification
    event.Skip();
 
-   if (mMode != Mode::Off && mProject->IsAudioActive())
-   {
+   if(!mProject->IsAudioActive())
+      return;
+   else if (mMode == Mode::Refresh) {
+      // PRL:  see comments in Scrubbing.cpp for why this is sometimes needed.
+      // These unnecessary refreshes cause wheel rotation events to be delivered more uniformly
+      // to the application, so scrub speed control is smoother.
+      // (So I see at least with OS 10.10 and wxWidgets 3.0.2.)
+      // Is there another way to ensure that than by refreshing?
+      const auto trackPanel = mProject->GetTrackPanel();
+      trackPanel->Refresh(false);
+   }
+   else if (mMode != Mode::Off) {
       // Pan the view, so that we center the play indicator.
 
       ViewInfo &viewInfo = mProject->GetViewInfo();

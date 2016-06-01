@@ -36,13 +36,14 @@
 #include "ErrorDialog.h"
 #include "HelpSystem.h"
 
-const wxString HelpSystem::HelpHostname = wxT("manual.audacityteam.org");
 #if IS_ALPHA
+const wxString HelpSystem::HelpHostname = wxT("alphamanual.audacityteam.org");
 const wxString HelpSystem::HelpServerHomeDir = wxT("/man/");
 const wxString HelpSystem::HelpServerManDir = wxT("/man/");
 #else
-const wxString HelpSystem::HelpServerHomeDir = wxT("/o/");
-const wxString HelpSystem::HelpServerManDir = wxT("/o/man/");
+const wxString HelpSystem::HelpHostname = wxT("manual.audacityteam.org");
+const wxString HelpSystem::HelpServerHomeDir = wxT("/");
+const wxString HelpSystem::HelpServerManDir = wxT("/man/");
 #endif
 const wxString HelpSystem::LocalHelpManDir = wxT("/man/");
 const wxString HelpSystem::ReleaseSuffix = wxT(".html");

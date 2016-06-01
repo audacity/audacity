@@ -659,6 +659,7 @@ void TrackPanel::BuildMenus(void)
    mTimeTrackMenu->Append(OnSetTimeTrackRangeID, _("&Range..."));
    mTimeTrackMenu->AppendCheckItem(OnTimeTrackLogIntID, _("Logarithmic &Interpolation"));
 
+/*
    mRulerWaveformMenu = new wxMenu();
    BuildVRulerMenuItems
       (mRulerWaveformMenu, OnFirstWaveformScaleID,
@@ -668,6 +669,7 @@ void TrackPanel::BuildMenus(void)
    BuildVRulerMenuItems
       (mRulerSpectrumMenu, OnFirstSpectrumScaleID,
        SpectrogramSettings::GetScaleNames());
+*/
 }
 
 void TrackPanel::BuildCommonDropMenuItems(wxMenu * menu)
@@ -686,6 +688,8 @@ void TrackPanel::BuildCommonDropMenuItems(wxMenu * menu)
 
 }
 
+/*
+// left over from PRL's vertical ruler context menu experiment in 2.1.2
 // static
 void TrackPanel::BuildVRulerMenuItems
 (wxMenu * menu, int firstId, const wxArrayString &names)
@@ -698,6 +702,7 @@ void TrackPanel::BuildVRulerMenuItems
    menu->Append(OnZoomOutVerticalID, _("Zoom Out\tShift-Left-Click"));
    menu->Append(OnZoomFitVerticalID, _("Zoom to Fit\tShift-Right-Click"));
 }
+*/
 
 void TrackPanel::DeleteMenus(void)
 {
@@ -944,6 +949,9 @@ void TrackPanel::OnTimer(wxTimerEvent& )
       //ANSWER-ME: Was DisplaySelection added to solve a repaint problem?
       DisplaySelection();
    }
+   if (mLastDrawnSelectedRegion != mViewInfo->selectedRegion) {
+      UpdateSelectionDisplay();
+   }
 
    // Notify listeners for timer ticks
    {
@@ -1038,13 +1046,15 @@ double TrackPanel::GetScreenEndTime() const
 {
    int width;
    GetTracksUsableArea(&width, NULL);
-   return mViewInfo->PositionToTime(width, true);
+   return mViewInfo->PositionToTime(width, 0, true);
 }
 
 /// AS: OnPaint( ) is called during the normal course of
 ///  completing a repaint operation.
 void TrackPanel::OnPaint(wxPaintEvent & /* event */)
 {
+   mLastDrawnSelectedRegion = mViewInfo->selectedRegion;
+
 #if DEBUG_DRAW_TIMING
    wxStopWatch sw;
 #endif
@@ -1112,6 +1122,52 @@ void TrackPanel::MakeParentModifyState(bool bWantsAutoSave)
 void TrackPanel::MakeParentRedrawScrollbars()
 {
    mListener->TP_RedrawScrollbars();
+}
+
+void TrackPanel::HandleInterruptedDrag()
+{
+
+   // Certain drags need to complete their effects before handling keystroke shortcut
+   // commands:  those that have undoable editing effects.  For others, keystrokes are
+   // harmless and we do nothing.
+   switch (mMouseCapture)
+   {
+      case IsUncaptured:
+      case IsVZooming:
+      case IsSelecting:
+      case IsSelectingLabelText:
+      case IsResizing:
+      case IsResizingBetweenLinkedTracks:
+      case IsResizingBelowLinkedTracks:
+      case IsMuting:
+      case IsSoloing:
+      case IsMinimizing:
+      case IsPopping:
+      case IsZooming:
+         return;
+
+      default:
+         ;
+   }
+
+   /*
+    So this includes the cases:
+
+    IsClosing,
+    IsAdjustingLabel,
+    IsAdjustingSample,
+    IsRearranging,
+    IsSliding,
+    IsEnveloping,
+    IsGainSliding,
+    IsPanSliding,
+    WasOverCutLine,
+    IsStretching
+    */
+
+   wxMouseEvent evt { wxEVT_LEFT_UP };
+   evt.SetPosition(this->ScreenToClient(::wxGetMousePosition()));
+   this->ProcessEvent(evt);
 }
 
 bool TrackPanel::HandleEscapeKey(bool down)
@@ -2718,7 +2774,12 @@ void TrackPanel::SelectionHandleDrag(wxMouseEvent & event, Track *clickedTrack)
 #endif
 
    ExtendSelection(x, rect.x, clickedTrack);
-   UpdateSelectionDisplay();
+   // If scrubbing does not use the helper poller thread, then
+   // don't do this at every mouse event, because it slows down seek-scrub.
+   // Instead, let OnTimer do it, which is often enough.
+   // And even if scrubbing does use the thread, then skipping this does not
+   // bring that advantage, but it is probably still a good idea anyway.
+   // UpdateSelectionDisplay();
 }
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
@@ -4756,6 +4817,24 @@ void TrackPanel::OnTrackListUpdated(wxCommandEvent & e)
       SetFocusedTrack(NULL);
    }
 
+   if (!mTracks->Contains(mCapturedTrack)) {
+      SetCapturedTrack(nullptr);
+      if (HasCapture())
+         ReleaseMouse();
+   }
+
+   if (!mTracks->Contains(mFreqSelTrack)) {
+      mFreqSelTrack = nullptr;
+      if (HasCapture())
+         ReleaseMouse();
+   }
+
+   if (!mTracks->Contains(mPopupMenuTarget)) {
+      mPopupMenuTarget = nullptr;
+      if (HasCapture())
+         ReleaseMouse();
+   }
+
    if (e.GetClientData()) {
       OnTrackListResized(e);
       return;
@@ -5442,6 +5521,14 @@ void TrackPanel::HandleResize(wxMouseEvent & event)
 /// Handle mouse wheel rotation (for zoom in/out, vertical and horizontal scrolling)
 void TrackPanel::HandleWheelRotation(wxMouseEvent & event)
 {
+   if(event.GetWheelAxis() == wxMOUSE_WHEEL_HORIZONTAL) {
+      // Two-fingered horizontal swipe on mac is treated like shift-mousewheel
+      event.SetShiftDown(true);
+      // This makes the wave move in the same direction as the fingers, and the scrollbar
+      // thumb moves oppositely
+      event.m_wheelRotation *= -1;
+   }
+
    if(!event.HasAnyModifiers()) {
       // We will later un-skip if we do anything, but if we don't,
       // propagate the event up for the sake of the scrubber
@@ -5539,6 +5626,7 @@ void TrackPanel::HandleWheelRotation(wxMouseEvent & event)
 #ifdef EXPERIMENTAL_SCRUBBING_SCROLL_WHEEL
       if (GetProject()->GetScrubber().IsScrubbing()) {
          GetProject()->GetScrubber().HandleScrollWheel(steps);
+         event.Skip(false);
       }
       else
 #endif
@@ -5674,6 +5762,8 @@ void TrackPanel::HandleWheelRotationInVRuler
 /// Filter captured keys typed into LabelTracks.
 void TrackPanel::OnCaptureKey(wxCommandEvent & event)
 {
+   HandleInterruptedDrag();
+
    // Only deal with LabelTracks
    Track *t = GetFocusedTrack();
    if (!t || t->GetKind() != Track::Label) {
@@ -8617,7 +8707,7 @@ void TrackPanel::SetFocusedTrack( Track *t )
       AudacityProject::ReleaseKeyboard(this);
    }
 
-   if (t && t->GetKind() == Track::Label) {
+   if (t) {
       AudacityProject::CaptureKeyboard(this);
    }
 

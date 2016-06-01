@@ -108,8 +108,6 @@ mac/tests/
 *.tlog
 *.ipch
 *.opensdf
-# unsure about the .sal files.  Disable for now.
-*.sal
 *.vcxproj.user
 
 # Precompiled Headers

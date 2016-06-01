@@ -256,6 +256,19 @@ private:
    }
 #endif
 
+   friend inline bool operator ==
+   (const SelectedRegion &lhs, const SelectedRegion &rhs)
+   {
+      return
+            lhs.mT0 == rhs.mT0
+         && lhs.mT1 == rhs.mT1
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+         && lhs.mF0 == rhs.mF0
+         && lhs.mF1 == rhs.mF1
+#endif
+      ;
+   }
+
    double mT0;
    double mT1;
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
@@ -264,5 +277,10 @@ private:
 #endif
 
 };
+
+inline bool operator != (const SelectedRegion &lhs, const SelectedRegion &rhs)
+{
+   return !(lhs == rhs);
+}
 
 #endif
