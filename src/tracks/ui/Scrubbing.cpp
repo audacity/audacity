@@ -508,8 +508,6 @@ void Scrubber::StopScrubbing()
    UncheckAllMenuItems();
 
    mScrubStartPosition = -1;
-   mProject->GetPlaybackScroller().Activate
-      (AudacityProject::PlaybackScroller::Mode::Off);
    mDragging = false;
 
    if (!IsScrubbing())
@@ -784,20 +782,21 @@ bool Scrubber::PollIsSeeking()
 
 void Scrubber::ActivateScroller()
 {
-   using Mode = AudacityProject::PlaybackScroller::Mode;
-   mProject->GetPlaybackScroller().Activate(mSmoothScrollingScrub
-      ? Mode::Centered
-      :
+   const auto ctb = mProject->GetControlToolBar();
+   if (mSmoothScrollingScrub)
+      ctb->StartScrolling();
+   else {
 #ifdef __WXMAC__
-        // PRL:  cause many "unnecessary" refreshes.  For reasons I don't understand,
-        // doing this causes wheel rotation events (mapped from the double finger vertical
-        // swipe) to be delivered more uniformly to the application, so that spped control
-        // works better.
-        Mode::Refresh
+      // PRL:  cause many "unnecessary" refreshes.  For reasons I don't understand,
+      // doing this causes wheel rotation events (mapped from the double finger vertical
+      // swipe) to be delivered more uniformly to the application, so that speed control
+      // works better.
+      mProject->GetPlaybackScroller().Activate
+         (AudacityProject::PlaybackScroller::Mode::Refresh);
 #else
-        Mode::Off
+      ctb->StopScrolling();
 #endif
-   );
+   }
 }
 
 void Scrubber::DoScrub(bool scroll, bool seek)

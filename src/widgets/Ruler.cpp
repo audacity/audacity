@@ -66,6 +66,7 @@ array of Ruler::Label.
 #include <wx/menuitem.h>
 #include <wx/tooltip.h>
 
+#include "AButton.h"
 #include "../AColor.h"
 #include "../AudioIO.h"
 #include "../Internat.h"
@@ -82,10 +83,10 @@ array of Ruler::Label.
 #include "../Prefs.h"
 #include "../Snap.h"
 #include "../tracks/ui/Scrubbing.h"
+#include "../prefs/PlaybackPrefs.h"
 #include "../prefs/TracksPrefs.h"
 
 //#define SCRUB_ABOVE
-#define RULER_DOUBLE_CLICK
 
 using std::min;
 using std::max;
@@ -1916,6 +1917,8 @@ enum {
    OnAutoScrollID,
    OnLockPlayRegionID,
 
+   OnTogglePinnedStateID,
+
    OnShowHideScrubbingID,
 };
 
@@ -1937,6 +1940,10 @@ BEGIN_EVENT_TABLE(AdornedRulerPanel, OverlayPanel)
 
    // Pop up menus on Windows
    EVT_CONTEXT_MENU(AdornedRulerPanel::OnContextMenu)
+
+   EVT_COMMAND( OnTogglePinnedStateID,
+                wxEVT_COMMAND_BUTTON_CLICKED,
+                AdornedRulerPanel::OnTogglePinnedState )
 
 END_EVENT_TABLE()
 
@@ -2034,6 +2041,9 @@ namespace {
 
 void AdornedRulerPanel::UpdatePrefs()
 {
+   // Update button texts for language change
+   UpdateButtonStates();
+
 #ifdef EXPERIMENTAL_SCROLLING_LIMITS
 #ifdef EXPERIMENTAL_TWO_TONE_TIME_RULER
    {
@@ -2052,8 +2062,56 @@ void AdornedRulerPanel::UpdatePrefs()
    RegenerateTooltips(mPrevZone);
 }
 
+namespace
+{
+   wxString ComposeButtonLabel
+      (AudacityProject &project, const wxString &commandName, const wxString &label)
+   {
+      auto pCmdMgr = project.GetCommandManager();
+      const auto &keyString = pCmdMgr->GetKeyFromName(commandName);
+      return keyString.empty()
+         ? label
+         : label + wxT(" (") + keyString + wxT(")");
+   }
+}
+
 void AdornedRulerPanel::ReCreateButtons()
 {
+   for (auto & button : mButtons) {
+      if (button)
+         button->Destroy();
+      button = nullptr;
+   }
+
+   // Make the short row of time ruler pushbottons.
+   // Don't bother with sizers.  Their sizes and positions are fixed.
+   wxPoint position{ FocusBorderLeft, FocusBorderTop };
+   size_t iButton = 0;
+   const auto size = theTheme.ImageSize( bmpRecoloredUpSmall );
+
+   auto buttonMaker = [&]
+   (wxWindowID id, teBmps bitmap, bool toggle)
+   {
+      const auto button =
+      ToolBar::MakeButton(
+         this,
+         bmpRecoloredUpSmall, bmpRecoloredDownSmall, bmpRecoloredHiliteSmall,
+         bitmap, bitmap, bitmap,
+         id, position, toggle, size
+      );
+
+      position.x += size.GetWidth();
+      mButtons[iButton++] = button;
+      return button;
+   };
+   auto button = buttonMaker(OnTogglePinnedStateID, bmpPinnedPlayRecordHead, false);
+   ToolBar::MakeAlternateImages(
+      *button, 1,
+      bmpRecoloredUpSmall, bmpRecoloredDownSmall, bmpRecoloredHiliteSmall,
+      bmpUnpinnedPlayRecordHead, bmpUnpinnedPlayRecordHead, bmpUnpinnedPlayRecordHead,
+      size);
+
+   UpdateButtonStates();
 }
 
 void AdornedRulerPanel::InvalidateRuler()
@@ -2116,6 +2174,14 @@ void AdornedRulerPanel::OnCapture(wxCommandEvent & evt)
 
 void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
 {
+   if (mNeedButtonUpdate) {
+      // Visit this block once only in the lifetime of this panel
+      mNeedButtonUpdate = false;
+      // Do this first time setting of button status texts
+      // when we are sure the CommandManager is initialized.
+      UpdateButtonStates();
+   }
+
    wxPaintDC dc(this);
 
    auto &backDC = GetBackingDCForRepaint();
@@ -2378,15 +2444,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
          }
       }
 
-#ifdef RULER_DOUBLE_CLICK
-      if (evt.LeftDClick()) {
-         mDoubleClick = true;
-         HandleQPDoubleClick(evt, mousePosX);
-      }
-      else
-#endif
       if (evt.LeftDown()) {
-         mDoubleClick = false;
          HandleQPClick(evt, mousePosX);
          HandleQPDrag(evt, mousePosX);
          ShowQuickPlayIndicator();
@@ -2400,12 +2458,6 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
          ShowQuickPlayIndicator();
       }
    }
-}
-
-void AdornedRulerPanel::HandleQPDoubleClick(wxMouseEvent &evt, wxCoord mousePosX)
-{
-   mProject->GetPlaybackScroller().Activate
-      (AudacityProject::PlaybackScroller::Mode::Centered);
 }
 
 void AdornedRulerPanel::HandleQPClick(wxMouseEvent &evt, wxCoord mousePosX)
@@ -2541,9 +2593,6 @@ void AdornedRulerPanel::HandleQPDrag(wxMouseEvent &event, wxCoord mousePosX)
 
 void AdornedRulerPanel::HandleQPRelease(wxMouseEvent &evt)
 {
-   if (mDoubleClick)
-      return;
-
    if (HasCapture())
       ReleaseMouse();
    else
@@ -2714,6 +2763,28 @@ void AdornedRulerPanel::OnToggleScrubbing(wxCommandEvent&)
 void AdornedRulerPanel::OnContextMenu(wxContextMenuEvent & WXUNUSED(event))
 {
    ShowContextMenu(MenuChoice::QuickPlay, nullptr);
+}
+
+void AdornedRulerPanel::UpdateButtonStates()
+{
+   bool state = PlaybackPrefs::GetPinnedHeadPreference();
+   auto pinButton = static_cast<AButton*>(FindWindow(OnTogglePinnedStateID));
+   pinButton->PopUp();
+   pinButton->SetAlternateIdx(state ? 0 : 1);
+   const auto label = state
+      // Label descibes the present state, not what the click does
+      // (which is, to toggle the state)
+      ? _("Pinned play/record Head")
+      : _("Unpinned play/record Head");
+   const auto &fullLabel = ComposeButtonLabel(*mProject, _("PinnedHead"), label);
+   pinButton->SetLabel(fullLabel);
+   pinButton->SetToolTip(fullLabel);
+}
+
+void AdornedRulerPanel::OnTogglePinnedState(wxCommandEvent & event)
+{
+   mProject->OnTogglePinnedHead();
+   UpdateButtonStates();
 }
 
 void AdornedRulerPanel::OnCaptureLost(wxMouseCaptureLostEvent & WXUNUSED(evt))
