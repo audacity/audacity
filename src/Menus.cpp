@@ -2372,8 +2372,8 @@ void AudacityProject::OnToggleSoundActivated()
 
 void AudacityProject::OnTogglePinnedHead()
 {
-   PlaybackPrefs::SetPinnedHeadPreference(
-      !PlaybackPrefs::GetPinnedHeadPreference(), true);
+   bool value = !PlaybackPrefs::GetPinnedHeadPreference();
+   PlaybackPrefs::SetPinnedHeadPreference(value, true);
    ModifyAllProjectToolbarMenus();
 
    // Change what happens in case transport is in progress right now
@@ -2384,7 +2384,12 @@ void AudacityProject::OnTogglePinnedHead()
    auto ruler = GetRulerPanel();
    if (ruler)
       // Update button image
+
       ruler->UpdateButtonStates();
+
+   auto &scrubber = GetScrubber();
+   if (scrubber.HasStartedScrubbing())
+      scrubber.SetScrollScrubbing(value);
 }
 
 void AudacityProject::OnTogglePlayRecording()

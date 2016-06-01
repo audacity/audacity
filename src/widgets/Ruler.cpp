@@ -2360,9 +2360,6 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
 
             if (scrubber.IsScrubbing())
                evt.Skip();
-            else if (evt.LeftDClick())
-               // On the second button down, switch the pending scrub to scrolling
-               scrubber.MarkScrubStart(evt.m_x, true, false);
             else
                evt.Skip();
 
@@ -2421,7 +2418,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
    }
    else if (!HasCapture() && inScrubZone) {
       if (evt.LeftDown()) {
-         scrubber.MarkScrubStart(evt.m_x, false, false);
+         scrubber.MarkScrubStart(evt.m_x, PlaybackPrefs::GetPinnedHeadPreference(), false);
          UpdateStatusBarAndTooltips(StatusChoice::EnteringScrubZone);
       }
       ShowQuickPlayIndicator();

@@ -98,6 +98,8 @@ public:
 
    bool IsScrollScrubbing() const // If true, implies HasStartedScrubbing()
    { return mSmoothScrollingScrub; }
+   void SetScrollScrubbing(bool value)
+   { mSmoothScrollingScrub = value; }
 
    bool IsAlwaysSeeking() const
    { return mAlwaysSeeking; }
@@ -119,9 +121,7 @@ public:
    void PopulateMenu(wxMenu &menu);
 
    void OnScrub(wxCommandEvent&);
-   void OnScrollScrub(wxCommandEvent&);
    void OnSeek(wxCommandEvent&);
-   void OnScrollSeek(wxCommandEvent&);
 
    // A string to put in the leftmost part of the status bar.
    const wxString &GetUntranslatedStateString() const;
@@ -133,8 +133,7 @@ public:
    bool IsPaused() const;
 
 private:
-   void ActivateScroller();
-   void DoScrub(bool scroll, bool seek);
+   void DoScrub(bool seek);
    void OnActivateOrDeactivateApp(wxActivateEvent & event);
    void UncheckAllMenuItems();
    void CheckMenuItem();
