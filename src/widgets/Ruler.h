@@ -336,7 +336,6 @@ private:
    void OnSize(wxSizeEvent &evt);
    void UpdateRects();
    void OnMouseEvents(wxMouseEvent &evt);
-   void HandleQPDoubleClick(wxMouseEvent &event, wxCoord mousePosX);
    void HandleQPClick(wxMouseEvent &event, wxCoord mousePosX);
    void HandleQPDrag(wxMouseEvent &event, wxCoord mousePosX);
    void HandleQPRelease(wxMouseEvent &event);
@@ -350,8 +349,10 @@ private:
    void DoDrawEdge(wxDC *dc);
    void DoDrawMarks(wxDC * dc, bool /*text */ );
    void DoDrawSelection(wxDC * dc);
+
 public:
    void DoDrawIndicator(wxDC * dc, wxCoord xx, bool playing, int width, bool scrub);
+   void UpdateButtonStates();
 
 private:
    QuickPlayIndicatorOverlay *GetOverlay();
@@ -416,6 +417,8 @@ private:
 
    void OnContextMenu(wxContextMenuEvent & WXUNUSED(event));
 
+   void OnTogglePinnedState(wxCommandEvent & event);
+
    bool mPlayRegionDragsSelection;
    bool mTimelineToolTip;
    bool mQuickPlayEnabled;
@@ -439,11 +442,12 @@ private:
 
    bool mShowScrubbing { true };
 
-   bool mDoubleClick {};
-
    DECLARE_EVENT_TABLE()
 
    friend QuickPlayRulerOverlay;
+
+   wxWindow *mButtons[1] { {} };
+   bool mNeedButtonUpdate { true };
 };
 
 #endif //define __AUDACITY_RULER__

@@ -69,6 +69,7 @@ simplifies construction of menu items.
 #include "export/Export.h"
 #include "export/ExportMultiple.h"
 #include "prefs/PrefsDialog.h"
+#include "prefs/PlaybackPrefs.h"
 #include "ShuttleGui.h"
 #include "HistoryWindow.h"
 #include "LyricsWindow.h"
@@ -771,6 +772,11 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("RecordAppend"), _("Appen&d Record"), FN(OnRecordAppend), wxT("Shift+R"));
 
       c->AddSeparator();
+
+      c->AddCheck(wxT("PinnedHead"), _("Pinned Recording/Playback Head"),
+                  FN(OnTogglePinnedHead), 0,
+                  // Switching of scrolling on and off is permitted even during transport
+                  AlwaysEnabledFlag, AlwaysEnabledFlag);
 
       c->AddCheck(wxT("Duplex"), _("&Overdub (on/off)"), FN(OnTogglePlayRecording), 0);
       c->AddCheck(wxT("SWPlaythrough"), _("So&ftware Playthrough (on/off)"), FN(OnToggleSWPlaythrough), 0);
@@ -1840,6 +1846,10 @@ void AudacityProject::ModifyToolbarMenus()
    gPrefs->Read(wxT("/AudioIO/AutomatedInputLevelAdjustment"),&active, false);
    mCommandManager.Check(wxT("AutomatedInputLevelAdjustmentOnOff"), active);
 #endif
+
+   active = PlaybackPrefs::GetPinnedHeadPreference();
+   mCommandManager.Check(wxT("PinnedHead"), active);
+
    gPrefs->Read(wxT("/AudioIO/Duplex"),&active, true);
    mCommandManager.Check(wxT("Duplex"), active);
    gPrefs->Read(wxT("/AudioIO/SWPlaythrough"),&active, false);
@@ -2358,6 +2368,23 @@ void AudacityProject::OnToggleSoundActivated()
    gPrefs->Write(wxT("/AudioIO/SoundActivatedRecord"), !pause);
    gPrefs->Flush();
    ModifyAllProjectToolbarMenus();
+}
+
+void AudacityProject::OnTogglePinnedHead()
+{
+   PlaybackPrefs::SetPinnedHeadPreference(
+      !PlaybackPrefs::GetPinnedHeadPreference(), true);
+   ModifyAllProjectToolbarMenus();
+
+   // Change what happens in case transport is in progress right now
+   auto ctb = GetActiveProject()->GetControlToolBar();
+   if (ctb)
+      ctb->StartScrollingIfPreferred();
+
+   auto ruler = GetRulerPanel();
+   if (ruler)
+      // Update button image
+      ruler->UpdateButtonStates();
 }
 
 void AudacityProject::OnTogglePlayRecording()
