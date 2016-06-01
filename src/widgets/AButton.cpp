@@ -392,18 +392,6 @@ void AButton::OnMouseEvent(wxMouseEvent & event)
          (event.m_x >= 0 && event.m_y >= 0 &&
           event.m_x < clientSize.x && event.m_y < clientSize.y);
 
-   if (!mButtonIsDown)
-   {
-      // Note that CMD (or CTRL) takes precedence over Shift if both are down
-      // see also AButton::Listener::OnKeyUp()
-      if (event.CmdDown() && HasAlternateImages(2))
-         mAlternateIdx = 2;
-      else if (event.ShiftDown() && HasAlternateImages(1))
-         mAlternateIdx = 1;
-      else
-         mAlternateIdx = 0;
-   }
-
    if (mEnabled && event.IsButton()) {
       if (event.ButtonIsDown(wxMOUSE_BTN_ANY)) {
          mIsClicking = true;

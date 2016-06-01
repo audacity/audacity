@@ -105,7 +105,7 @@ AButton *EditToolBar::AddButton(
 {
    AButton *&r = mButtons[id];
 
-   r = ToolBar::MakeButton(
+   r = ToolBar::MakeButton(this,
       bmpRecoloredUpSmall, bmpRecoloredDownSmall, bmpRecoloredHiliteSmall,
       eEnabledUp, eEnabledDown, eDisabled,
       wxWindowID(id),

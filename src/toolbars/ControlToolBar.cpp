@@ -129,7 +129,7 @@ AButton *ControlToolBar::MakeButton(teBmps eEnabledUp, teBmps eEnabledDown, teBm
                                     bool processdownevents,
                                     const wxChar *label)
 {
-   AButton *r = ToolBar::MakeButton(
+   AButton *r = ToolBar::MakeButton(this,
       bmpRecoloredUpLarge, bmpRecoloredDownLarge, bmpRecoloredHiliteLarge,
       eEnabledUp, eEnabledDown, eDisabled,
       wxWindowID(id),
