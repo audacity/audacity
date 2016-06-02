@@ -1956,6 +1956,9 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* parent,
 , mProject(parent)
 , mViewInfo(viewinfo)
 {
+   for (auto &button : mButtons)
+      button = nullptr;
+
    ReCreateButtons();
 
    SetLabel( _("Timeline") );
@@ -2764,18 +2767,20 @@ void AdornedRulerPanel::OnContextMenu(wxContextMenuEvent & WXUNUSED(event))
 
 void AdornedRulerPanel::UpdateButtonStates()
 {
-   bool state = PlaybackPrefs::GetPinnedHeadPreference();
-   auto pinButton = static_cast<AButton*>(FindWindow(OnTogglePinnedStateID));
-   pinButton->PopUp();
-   pinButton->SetAlternateIdx(state ? 0 : 1);
-   const auto label = state
+   {
+      bool state = PlaybackPrefs::GetPinnedHeadPreference();
+      auto pinButton = static_cast<AButton*>(FindWindow(OnTogglePinnedStateID));
+      pinButton->PopUp();
+      pinButton->SetAlternateIdx(state ? 0 : 1);
+      const auto label = state
       // Label descibes the present state, not what the click does
       // (which is, to toggle the state)
       ? _("Pinned play/record Head")
       : _("Unpinned play/record Head");
-   const auto &fullLabel = ComposeButtonLabel(*mProject, _("PinnedHead"), label);
-   pinButton->SetLabel(fullLabel);
-   pinButton->SetToolTip(fullLabel);
+      const auto &fullLabel = ComposeButtonLabel(*mProject, wxT("PinnedHead"), label);
+      pinButton->SetLabel(fullLabel);
+      pinButton->SetToolTip(fullLabel);
+   }
 }
 
 void AdornedRulerPanel::OnTogglePinnedState(wxCommandEvent & event)
