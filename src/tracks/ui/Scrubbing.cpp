@@ -269,7 +269,9 @@ void Scrubber::MarkScrubStart(
    // scrubber state
    mProject->SetAudioIOToken(0);
 
-   ctb->SetPlay(true, ControlToolBar::PlayAppearance::Scrub);
+   ctb->SetPlay(true, mSeeking
+      ? ControlToolBar::PlayAppearance::Seek
+      : ControlToolBar::PlayAppearance::Scrub);
 
    ctb->UpdateStatusBar(mProject);
 
@@ -349,8 +351,9 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
             mOptions.minStutter =
                mDragging ? 0.0 : lrint(std::max(0.0, MinStutter) * options.rate);
 
-            ControlToolBar::PlayAppearance appearance =
-               ControlToolBar::PlayAppearance::Scrub;
+            ControlToolBar::PlayAppearance appearance = mSeeking
+               ? ControlToolBar::PlayAppearance::Seek
+               : ControlToolBar::PlayAppearance::Scrub;
             const bool cutPreview = false;
             const bool backwards = time1 < time0;
 #ifdef EXPERIMENTAL_SCRUBBING_SCROLL_WHEEL
