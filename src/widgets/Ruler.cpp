@@ -1791,7 +1791,7 @@ std::pair<wxRect, bool> QuickPlayRulerOverlay::DoGetRectangle(wxSize size)
    if (x >= 0) {
       // These dimensions are always sufficient, even if a little
       // excessive for the small triangle:
-      const int width = IndicatorBigWidth();
+      const int width = IndicatorBigWidth() * 3 / 2;
       const auto height = IndicatorHeightForWidth(width);
 
       const int indsize = width / 2;
@@ -1814,12 +1814,14 @@ void QuickPlayRulerOverlay::Draw(OverlayPanel &panel, wxDC &dc)
    mOldQPIndicatorPos = mNewQPIndicatorPos;
    if (mOldQPIndicatorPos >= 0) {
       auto ruler = GetRuler();
+      const auto &scrubber = mPartner.mProject->GetScrubber();
       auto scrub =
          ruler->mMouseEventState == AdornedRulerPanel::mesNone &&
          (ruler->mPrevZone == AdornedRulerPanel::StatusChoice::EnteringScrubZone ||
-          (mPartner.mProject->GetScrubber().HasStartedScrubbing()));
+          (scrubber.HasStartedScrubbing()));
+      auto seek = scrub && scrubber.Seeks();
       auto width = scrub ? IndicatorBigWidth() : IndicatorSmallWidth;
-      ruler->DoDrawIndicator(&dc, mOldQPIndicatorPos, true, width, scrub);
+      ruler->DoDrawIndicator(&dc, mOldQPIndicatorPos, true, width, scrub, seek);
    }
 }
 
@@ -3162,14 +3164,46 @@ void AdornedRulerPanel::SetLeftOffset(int offset)
 
 // Draws the play/recording position indicator.
 void AdornedRulerPanel::DoDrawIndicator
-   (wxDC * dc, wxCoord xx, bool playing, int width, bool scrub)
+   (wxDC * dc, wxCoord xx, bool playing, int width, bool scrub, bool seek)
 {
    ADCChanger changer(dc); // Undo pen and brush changes at function exit
 
    AColor::IndicatorColor( dc, playing );
 
    wxPoint tri[ 3 ];
-   if (scrub) {
+   if (seek) {
+      auto height = IndicatorHeightForWidth(width);
+      // Make four triangles
+      const int TriangleWidth = width * 3 / 8;
+
+      // Double-double headed, left-right
+      auto yy = mShowScrubbing
+      ? mScrubZone.y
+      : (mInner.GetBottom() + 1) - 1 /* bevel */ - height;
+      tri[ 0 ].x = xx - IndicatorOffset;
+      tri[ 0 ].y = yy;
+      tri[ 1 ].x = xx - IndicatorOffset;
+      tri[ 1 ].y = yy + height;
+      tri[ 2 ].x = xx - TriangleWidth;
+      tri[ 2 ].y = yy + height / 2;
+      dc->DrawPolygon( 3, tri );
+
+      tri[ 0 ].x -= TriangleWidth;
+      tri[ 1 ].x -= TriangleWidth;
+      tri[ 2 ].x -= TriangleWidth;
+      dc->DrawPolygon( 3, tri );
+
+      tri[ 0 ].x = tri[ 1 ].x = xx + IndicatorOffset;
+      tri[ 2 ].x = xx + TriangleWidth;
+      dc->DrawPolygon( 3, tri );
+
+
+      tri[ 0 ].x += TriangleWidth;
+      tri[ 1 ].x += TriangleWidth;
+      tri[ 2 ].x += TriangleWidth;
+      dc->DrawPolygon( 3, tri );
+   }
+   else if (scrub) {
       auto height = IndicatorHeightForWidth(width);
       const int IndicatorHalfWidth = width / 2;
 

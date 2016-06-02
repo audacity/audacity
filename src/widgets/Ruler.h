@@ -351,7 +351,7 @@ private:
    void DoDrawSelection(wxDC * dc);
 
 public:
-   void DoDrawIndicator(wxDC * dc, wxCoord xx, bool playing, int width, bool scrub);
+   void DoDrawIndicator(wxDC * dc, wxCoord xx, bool playing, int width, bool scrub, bool seek);
    void UpdateButtonStates();
 
 private:
