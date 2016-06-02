@@ -1918,8 +1918,8 @@ enum {
    OnLockPlayRegionID,
 
    OnTogglePinnedStateID,
-
-   OnShowHideScrubbingID,
+   OnScrubID,
+   OnSeekID,
 };
 
 BEGIN_EVENT_TABLE(AdornedRulerPanel, OverlayPanel)
@@ -1935,15 +1935,18 @@ BEGIN_EVENT_TABLE(AdornedRulerPanel, OverlayPanel)
    EVT_MENU(OnAutoScrollID, AdornedRulerPanel::OnAutoScroll)
    EVT_MENU(OnLockPlayRegionID, AdornedRulerPanel::OnLockPlayRegion)
 
-   // Scrub bar menu commands
-   EVT_MENU(OnShowHideScrubbingID, AdornedRulerPanel::OnToggleScrubbing)
-
    // Pop up menus on Windows
    EVT_CONTEXT_MENU(AdornedRulerPanel::OnContextMenu)
 
    EVT_COMMAND( OnTogglePinnedStateID,
-                wxEVT_COMMAND_BUTTON_CLICKED,
-                AdornedRulerPanel::OnTogglePinnedState )
+               wxEVT_COMMAND_BUTTON_CLICKED,
+               AdornedRulerPanel::OnTogglePinnedState )
+   EVT_COMMAND( OnScrubID,
+               wxEVT_COMMAND_BUTTON_CLICKED,
+               AdornedRulerPanel::OnScrub )
+   EVT_COMMAND( OnSeekID,
+               wxEVT_COMMAND_BUTTON_CLICKED,
+               AdornedRulerPanel::OnSeek )
 
 END_EVENT_TABLE()
 
@@ -2026,6 +2029,7 @@ AdornedRulerPanel::~AdornedRulerPanel()
                         this);
 }
 
+#if 0
 namespace {
    static const wxChar *scrubEnabledPrefName = wxT("/QuickPlay/ScrubbingEnabled");
 
@@ -2041,6 +2045,7 @@ namespace {
       gPrefs->Write(scrubEnabledPrefName, value);
    }
 }
+#endif
 
 void AdornedRulerPanel::UpdatePrefs()
 {
@@ -2058,7 +2063,7 @@ void AdornedRulerPanel::UpdatePrefs()
 #endif
 #endif
 
-   mShowScrubbing = ReadScrubEnabledPref();
+   // mShowScrubbing = ReadScrubEnabledPref();
    // Affected by the last
    UpdateRects();
 
@@ -2088,9 +2093,10 @@ void AdornedRulerPanel::ReCreateButtons()
 
    // Make the short row of time ruler pushbottons.
    // Don't bother with sizers.  Their sizes and positions are fixed.
-   wxPoint position{ FocusBorderLeft, FocusBorderTop };
+   wxPoint position{ FocusBorderLeft, 0 };
    size_t iButton = 0;
-   const auto size = theTheme.ImageSize( bmpRecoloredUpSmall );
+   auto size = theTheme.ImageSize( bmpRecoloredUpSmall );
+   size.y = std::min(size.y, GetRulerHeight(false));
 
    auto buttonMaker = [&]
    (wxWindowID id, teBmps bitmap, bool toggle)
@@ -2113,6 +2119,8 @@ void AdornedRulerPanel::ReCreateButtons()
       bmpRecoloredUpSmall, bmpRecoloredDownSmall, bmpRecoloredHiliteSmall,
       bmpUnpinnedPlayRecordHead, bmpUnpinnedPlayRecordHead, bmpUnpinnedPlayRecordHead,
       size);
+   buttonMaker(OnScrubID, bmpScrub, true);
+   buttonMaker(OnSeekID, bmpSeek, true);
 
    UpdateButtonStates();
 }
@@ -2421,7 +2429,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
    }
    else if (!HasCapture() && inScrubZone) {
       if (evt.LeftDown()) {
-         scrubber.MarkScrubStart(evt.m_x, PlaybackPrefs::GetPinnedHeadPreference(), false);
+         scrubber.MarkScrubStart(evt.m_x, PlaybackPrefs::GetPinnedHeadPreference());
          UpdateStatusBarAndTooltips(StatusChoice::EnteringScrubZone);
       }
       ShowQuickPlayIndicator();
@@ -2730,12 +2738,10 @@ void AdornedRulerPanel::UpdateStatusBarAndTooltips(StatusChoice choice)
 
       case StatusChoice::EnteringScrubZone:
       {
-         if (scrubbing) {
-            if(!scrubber.IsAlwaysSeeking())
-               message = _("Click or drag to seek");
-         }
-         else
-            message = _("Click to scrub, Double-Click to scroll, Drag to seek");
+         if(scrubber.Seeks())
+            message = _("Click or drag to seek");
+         else if(scrubber.Scrubs())
+            message = _("Click or drag to scrub");
       }
          break;
 
@@ -2749,10 +2755,10 @@ void AdornedRulerPanel::UpdateStatusBarAndTooltips(StatusChoice choice)
    RegenerateTooltips(choice);
 }
 
-void AdornedRulerPanel::OnToggleScrubbing(wxCommandEvent&)
+void AdornedRulerPanel::OnToggleScrubbing(/*wxCommandEvent&*/)
 {
    mShowScrubbing = !mShowScrubbing;
-   WriteScrubEnabledPref(mShowScrubbing);
+   //WriteScrubEnabledPref(mShowScrubbing);
    gPrefs->Flush();
    wxSize size { GetSize().GetWidth(), GetRulerHeight(mShowScrubbing) };
    SetSize(size);
@@ -2767,6 +2773,13 @@ void AdornedRulerPanel::OnContextMenu(wxContextMenuEvent & WXUNUSED(event))
 
 void AdornedRulerPanel::UpdateButtonStates()
 {
+   auto common = [this]
+   (wxWindow *button, const wxString &commandName, const wxString &label){
+      const auto &fullLabel = ComposeButtonLabel(*mProject, commandName, label);
+      button->SetLabel(fullLabel);
+      button->SetToolTip(fullLabel);
+   };
+
    {
       bool state = PlaybackPrefs::GetPinnedHeadPreference();
       auto pinButton = static_cast<AButton*>(FindWindow(OnTogglePinnedStateID));
@@ -2777,16 +2790,54 @@ void AdornedRulerPanel::UpdateButtonStates()
       // (which is, to toggle the state)
       ? _("Pinned play/record Head")
       : _("Unpinned play/record Head");
-      const auto &fullLabel = ComposeButtonLabel(*mProject, wxT("PinnedHead"), label);
-      pinButton->SetLabel(fullLabel);
-      pinButton->SetToolTip(fullLabel);
+      common(pinButton, wxT("PinnedHead"), label);
    }
+
+   const auto scrubber = &mProject->GetScrubber();
+
+   {
+      const auto scrubButton = static_cast<AButton*>(FindWindow(OnScrubID));
+      /* i18n-hint: These commands assist the user in finding a sound by ear. ...
+       "Scrubbing" is variable-speed playback
+      */
+      common(scrubButton, wxT("Scrub"), _("Scrub"));
+      if (scrubber && scrubber->Scrubs())
+         scrubButton->PushDown();
+      else
+         scrubButton->PopUp();
+   }
+
+   {
+      const auto seekButton = static_cast<AButton*>(FindWindow(OnSeekID));
+      /* i18n-hint: These commands assist the user in finding a sound by ear. ...
+       "Seeking" is normal speed playback but with skips
+       */
+      common(seekButton, wxT("Seek"), _("Seek"));
+      if (scrubber && scrubber->Seeks())
+         seekButton->PushDown();
+      else
+         seekButton->PopUp();
+   }
+
+   if(scrubber &&
+      mShowScrubbing != (scrubber->Scrubs() || scrubber->Seeks()))
+      OnToggleScrubbing();
 }
 
 void AdornedRulerPanel::OnTogglePinnedState(wxCommandEvent & event)
 {
    mProject->OnTogglePinnedHead();
    UpdateButtonStates();
+}
+
+void AdornedRulerPanel::OnSeek(wxCommandEvent & event)
+{
+   mProject->GetScrubber().OnSeek(event);
+}
+
+void AdornedRulerPanel::OnScrub(wxCommandEvent & event)
+{
+   mProject->GetScrubber().OnScrub(event);
 }
 
 void AdornedRulerPanel::OnCaptureLost(wxMouseCaptureLostEvent & WXUNUSED(evt))
@@ -2858,12 +2909,6 @@ void AdornedRulerPanel::ShowScrubMenu(const wxPoint & pos)
    auto cleanup = finally([this]{ PopEventHandler(); });
 
    wxMenu rulerMenu;
-   rulerMenu.AppendCheckItem(OnShowHideScrubbingID, _("Scrub Bar"));
-   if(mShowScrubbing)
-      rulerMenu.FindItem(OnShowHideScrubbingID)->Check();
-
-   rulerMenu.AppendSeparator();
-
    mProject->GetScrubber().PopulateMenu(rulerMenu);
    PopupMenu(&rulerMenu, pos);
 }
@@ -3102,11 +3147,6 @@ void AdornedRulerPanel::DoDrawSelection(wxDC * dc)
    r.width = p1 - p0 - 1;
    r.height = mInner.height;
    dc->DrawRectangle( r );
-}
-
-int AdornedRulerPanel::GetRulerHeight()
-{
-   return GetRulerHeight(ReadScrubEnabledPref());
 }
 
 int AdornedRulerPanel::GetRulerHeight(bool showScrubBar)

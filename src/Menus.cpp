@@ -2384,7 +2384,6 @@ void AudacityProject::OnTogglePinnedHead()
    auto ruler = GetRulerPanel();
    if (ruler)
       // Update button image
-
       ruler->UpdateButtonStates();
 
    auto &scrubber = GetScrubber();
