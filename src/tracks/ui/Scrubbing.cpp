@@ -827,6 +827,7 @@ enum { CMD_ID = 8000 };
 BEGIN_EVENT_TABLE(Scrubber, wxEvtHandler)
    EVT_MENU(CMD_ID,     Scrubber::OnScrub)
    EVT_MENU(CMD_ID + 1, Scrubber::OnSeek)
+   EVT_MENU(CMD_ID + 2, Scrubber::OnStart)
 END_EVENT_TABLE()
 
 BEGIN_EVENT_TABLE(Scrubber::Forwarder, wxEvtHandler)
@@ -891,10 +892,7 @@ void Scrubber::PopulateMenu(wxMenu &menu)
 {
    int id = CMD_ID;
    auto cm = mProject->GetCommandManager();
-   const MenuItem *checkedItem =
-      HasStartedScrubbing()
-         ? &FindMenuItem(mSeeking)
-         : nullptr;
+   const MenuItem *checkedItem = &FindMenuItem(mSeeking);
    for (const auto &item : menuItems) {
       if (cm->GetEnabled(item.name)) {
          menu.AppendCheckItem(id, item.label);
