@@ -298,7 +298,7 @@ public:
 #endif
 
 public:
-   static int GetRulerHeight();
+   int GetRulerHeight() { return GetRulerHeight(mShowScrubbing); }
    static int GetRulerHeight(bool showScrubBar);
    wxRect GetInnerRect() const { return mInner; }
 
@@ -351,7 +351,7 @@ private:
    void DoDrawSelection(wxDC * dc);
 
 public:
-   void DoDrawIndicator(wxDC * dc, wxCoord xx, bool playing, int width, bool scrub);
+   void DoDrawIndicator(wxDC * dc, wxCoord xx, bool playing, int width, bool scrub, bool seek);
    void UpdateButtonStates();
 
 private:
@@ -413,7 +413,9 @@ private:
    void OnAutoScroll(wxCommandEvent &evt);
    void OnLockPlayRegion(wxCommandEvent &evt);
 
-   void OnToggleScrubbing(wxCommandEvent&);
+   void OnToggleScrubbing(/*wxCommandEvent&*/);
+   void OnScrub(wxCommandEvent&);
+   void OnSeek(wxCommandEvent&);
 
    void OnContextMenu(wxContextMenuEvent & WXUNUSED(event));
 
@@ -446,7 +448,7 @@ private:
 
    friend QuickPlayRulerOverlay;
 
-   wxWindow *mButtons[1];
+   wxWindow *mButtons[3];
    bool mNeedButtonUpdate { true };
 };
 
