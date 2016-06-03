@@ -2128,6 +2128,40 @@ void AdornedRulerPanel::InvalidateRuler()
    mRuler.Invalidate();
 }
 
+namespace {
+   const wxString StartScrubbingMessage(const Scrubber &scrubber)
+   {
+      /* i18n-hint: These commands assist the user in finding a sound by ear. ...
+       "Scrubbing" is variable-speed playback, ...
+       "Seeking" is normal speed playback but with skips
+       */
+      if(scrubber.Seeks())
+         return _("Click or drag to begin seeking");
+      else
+         return _("Click or drag to begin scrubbing");
+   }
+
+   const wxString ContinueScrubbingMessage(const Scrubber &scrubber)
+   {
+      /* i18n-hint: These commands assist the user in finding a sound by ear. ...
+       "Scrubbing" is variable-speed playback, ...
+       "Seeking" is normal speed playback but with skips
+       */
+      if(scrubber.Seeks())
+         return _("Move to seek");
+      else
+         return _("Move to scrub");
+   }
+
+   const wxString ScrubbingMessage(const Scrubber &scrubber)
+   {
+      if (scrubber.HasStartedScrubbing())
+         return ContinueScrubbingMessage(scrubber);
+      else
+         return StartScrubbingMessage(scrubber);
+   }
+}
+
 void AdornedRulerPanel::RegenerateTooltips(StatusChoice choice)
 {
 #if wxUSE_TOOLTIPS
@@ -2146,7 +2180,7 @@ void AdornedRulerPanel::RegenerateTooltips(StatusChoice choice)
             }
             break;
          case StatusChoice::EnteringScrubZone :
-            this->SetToolTip(_("Scrub Bar"));
+            this->SetToolTip(ScrubbingMessage(mProject->GetScrubber()));
             break;
          default:
             this->SetToolTip(NULL);
@@ -2737,10 +2771,7 @@ void AdornedRulerPanel::UpdateStatusBarAndTooltips(StatusChoice choice)
 
       case StatusChoice::EnteringScrubZone:
       {
-         if(scrubber.Seeks())
-            message = _("Click or drag to seek");
-         else if(scrubber.Scrubs())
-            message = _("Click or drag to scrub");
+         message = ScrubbingMessage(scrubber);
       }
          break;
 
