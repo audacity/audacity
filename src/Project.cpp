@@ -890,7 +890,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    mRuler = safenew AdornedRulerPanel( this,
                                    wxID_ANY,
                                    wxDefaultPosition,
-                                   wxSize( -1, AdornedRulerPanel::GetRulerHeight() ),
+                                   wxSize( -1, AdornedRulerPanel::GetRulerHeight(false) ),
                                    &mViewInfo );
 
    //

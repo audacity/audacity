@@ -19,13 +19,25 @@
 *//********************************************************************/
 
 #include "../Audacity.h"
+#include "PlaybackPrefs.h"
 
 #include <wx/defs.h>
 #include <wx/textctrl.h>
 
 #include "../ShuttleGui.h"
+#include "../Prefs.h"
 
-#include "PlaybackPrefs.h"
+namespace {
+   const wxChar *PinnedHeadPreferenceKey()
+   {
+      return wxT("/AudioIO/PinnedHead");
+   }
+
+   bool PinnedHeadPreferenceDefault()
+   {
+      return false;
+   }
+}
 
 PlaybackPrefs::PlaybackPrefs(wxWindow * parent)
 :  PrefsPanel(parent, _("Playback"))
@@ -113,6 +125,11 @@ void PlaybackPrefs::PopulateOrExchange(ShuttleGui & S)
       S.EndThreeColumn();
    }
    S.EndStatic();
+
+   // This affects recording too, though it is in playback preferences.
+   S.TieCheckBox(_("Pinned playback/recording head"),
+                 PinnedHeadPreferenceKey(),
+                 PinnedHeadPreferenceDefault());
 }
 
 bool PlaybackPrefs::Apply()
@@ -123,8 +140,21 @@ bool PlaybackPrefs::Apply()
    return true;
 }
 
+bool PlaybackPrefs::GetPinnedHeadPreference()
+{
+   return gPrefs->ReadBool(PinnedHeadPreferenceKey(), PinnedHeadPreferenceDefault());
+}
+
+void PlaybackPrefs::SetPinnedHeadPreference(bool value, bool flush)
+{
+   gPrefs->Write(PinnedHeadPreferenceKey(), value);
+   if(flush)
+      gPrefs->Flush();
+}
+
 PrefsPanel *PlaybackPrefsFactory::Create(wxWindow *parent)
 {
    wxASSERT(parent); // to justify safenew
    return safenew PlaybackPrefs(parent);
 }
+

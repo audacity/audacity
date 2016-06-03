@@ -24,7 +24,11 @@ class AudacityProject;
 // Conditionally compile either a separate thead, or else use a timer in the main
 // thread, to poll the mouse and update scrubbing speed and direction.  The advantage of
 // a thread may be immunity to choppy scrubbing in case redrawing takes too much time.
+#ifdef __WXGTK__
+// Unfortunately some things the thread needs to do are not thread safe
+#else
 #define USE_SCRUB_THREAD
+#endif
 
 // For putting an increment of work in the scrubbing queue
 struct ScrubbingOptions {
@@ -67,11 +71,7 @@ public:
    ~Scrubber();
 
    // Assume xx is relative to the left edge of TrackPanel!
-   void MarkScrubStart(
-      wxCoord xx, bool smoothScrolling,
-      bool alwaysSeeking // if false, can switch seeking or scrubbing
-                           // by mouse button state
-   );
+   void MarkScrubStart(wxCoord xx, bool smoothScrolling);
 
    // Returns true iff the event should be considered consumed by this:
    // Assume xx is relative to the left edge of TrackPanel!
@@ -94,9 +94,14 @@ public:
 
    bool IsScrollScrubbing() const // If true, implies HasStartedScrubbing()
    { return mSmoothScrollingScrub; }
+   void SetScrollScrubbing(bool value)
+   { mSmoothScrollingScrub = value; }
 
-   bool IsAlwaysSeeking() const
-   { return mAlwaysSeeking; }
+   bool Seeks() const
+   { return mSeeking; }
+
+   bool Scrubs() const
+   { return mScrubbing; }
 
    bool ShouldDrawScrubSpeed();
    double FindScrubSpeed(bool seeking, double time) const;
@@ -114,12 +119,13 @@ public:
    // For popup
    void PopulateMenu(wxMenu &menu);
 
+   void OnScrubOrSeek(bool &toToggle, bool &other);
    void OnScrub(wxCommandEvent&);
-   void OnScrollScrub(wxCommandEvent&);
    void OnSeek(wxCommandEvent&);
-   void OnScrollSeek(wxCommandEvent&);
+   void OnStart(wxCommandEvent&);
 
-   // A string to put in the leftmost part of the status bar.
+   // A string to put in the leftmost part of the status bar
+   // when scrub or seek is in progress, or else empty.
    const wxString &GetUntranslatedStateString() const;
 
    // All possible status strings.
@@ -129,10 +135,8 @@ public:
    bool IsPaused() const;
 
 private:
-   void ActivateScroller();
-   void DoScrub(bool scroll, bool seek);
+   void DoScrub();
    void OnActivateOrDeactivateApp(wxActivateEvent & event);
-   void UncheckAllMenuItems();
    void CheckMenuItem();
 
    // I need this because I can't push the scrubber as an event handler
@@ -155,7 +159,12 @@ private:
    wxCoord mLastScrubPosition {};
    bool mScrubSeekPress;
    bool mSmoothScrollingScrub;
-   bool mAlwaysSeeking {};
+
+   // These hold the three-way choice among click-to-scrub, click-to-seek, or disabled.
+   // Not both true.
+   bool mScrubbing {};
+   bool mSeeking {};
+
    bool mDragging {};
 
 #ifdef EXPERIMENTAL_SCRUBBING_SCROLL_WHEEL

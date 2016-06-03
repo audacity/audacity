@@ -62,7 +62,7 @@ class ControlToolBar final : public ToolBar {
 
    // Choice among the appearances of the play button:
    enum class PlayAppearance {
-      Straight, Looped, CutPreview, Scrub
+      Straight, Looped, CutPreview, Scrub, Seek
    };
 
    //These allow buttons to be controlled externally:
@@ -105,6 +105,11 @@ class ControlToolBar final : public ToolBar {
 
    int WidthForStatusBar(wxStatusBar* const);
    void UpdateStatusBar(AudacityProject *pProject);
+
+   // Starting and stopping of scrolling display
+   void StartScrollingIfPreferred();
+   void StartScrolling();
+   void StopScrolling();
 
  private:
 
