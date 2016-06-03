@@ -1964,8 +1964,6 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* parent,
    for (auto &button : mButtons)
       button = nullptr;
 
-   ReCreateButtons();
-
    SetLabel( _("Timeline") );
    SetName(GetLabel());
    SetBackgroundStyle(wxBG_STYLE_PAINT);
@@ -2002,8 +2000,6 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* parent,
    mTimelineToolTip = !!gPrefs->Read(wxT("/QuickPlay/ToolTips"), 1L);
    mPlayRegionDragsSelection = (gPrefs->Read(wxT("/QuickPlay/DragSelection"), 0L) == 1)? true : false; 
    mQuickPlayEnabled = !!gPrefs->Read(wxT("/QuickPlay/QuickPlayEnabled"), 1L);
-
-   UpdatePrefs();
 
 #if wxUSE_TOOLTIPS
    wxToolTip::Enable(true);
@@ -2192,7 +2188,8 @@ void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
       mNeedButtonUpdate = false;
       // Do this first time setting of button status texts
       // when we are sure the CommandManager is initialized.
-      UpdateButtonStates();
+      ReCreateButtons();
+      UpdatePrefs();
    }
 
    wxPaintDC dc(this);
@@ -2795,7 +2792,7 @@ void AdornedRulerPanel::UpdateButtonStates()
       common(pinButton, wxT("PinnedHead"), label);
    }
 
-   const auto scrubber = &mProject->GetScrubber();
+   auto &scrubber = mProject->GetScrubber();
 
    {
       const auto scrubButton = static_cast<AButton*>(FindWindow(OnScrubID));
@@ -2803,7 +2800,7 @@ void AdornedRulerPanel::UpdateButtonStates()
        "Scrubbing" is variable-speed playback
       */
       common(scrubButton, wxT("Scrub"), _("Scrub"));
-      if (scrubber && scrubber->Scrubs())
+      if (scrubber.Scrubs())
          scrubButton->PushDown();
       else
          scrubButton->PopUp();
@@ -2815,14 +2812,13 @@ void AdornedRulerPanel::UpdateButtonStates()
        "Seeking" is normal speed playback but with skips
        */
       common(seekButton, wxT("Seek"), _("Seek"));
-      if (scrubber && scrubber->Seeks())
+      if (scrubber.Seeks())
          seekButton->PushDown();
       else
          seekButton->PopUp();
    }
 
-   if(scrubber &&
-      mShowScrubbing != (scrubber->Scrubs() || scrubber->Seeks()))
+   if(mShowScrubbing != (scrubber.Scrubs() || scrubber.Seeks()))
       OnToggleScrubbing();
 }
 
