@@ -1798,6 +1798,10 @@ int AudioIO::StartStream(const WaveTrackArray &playbackTracks,
       if (mListener && captureChannels > 0)
          mListener->OnAudioIOStopRecording();
       mStreamToken = 0;
+
+      // Don't cause a busy wait in the audio thread after stopping scrubbing
+      mPlayMode = PLAY_STRAIGHT;
+
       return 0;
    }
 
@@ -2100,6 +2104,10 @@ void AudioIO::StartStreamCleanup(bool bOnlyBuffers)
       mScrubQueue = 0;
    }
 #endif
+
+
+   // Don't cause a busy wait in the audio thread after stopping scrubbing
+   mPlayMode = PLAY_STRAIGHT;
 }
 
 #ifdef EXPERIMENTAL_MIDI_OUT
@@ -2530,6 +2538,9 @@ void AudioIO::StopStream()
       // Tell UI to hide sample rate
       mListener->OnAudioIORate(0);
    }
+
+   // Don't cause a busy wait in the audio thread after stopping scrubbing
+   mPlayMode = PLAY_STRAIGHT;
 }
 
 void AudioIO::SetPaused(bool state)
