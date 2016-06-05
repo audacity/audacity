@@ -726,6 +726,7 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddCheck(wxT("ShowTranscriptionTB"), _("Transcri&ption Toolbar"), FN(OnShowTranscriptionToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
       /* i18n-hint: Clicking this menu item shows the toolbar with the big buttons on it (play record etc)*/
       c->AddCheck(wxT("ShowTransportTB"), _("&Transport Toolbar"), FN(OnShowTransportToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
+      c->AddCheck(wxT("ShowScrubbingTB"), _("Scrubbing Toolbar"), FN(OnShowScrubbingToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
 
       c->AddSeparator();
 
@@ -1807,6 +1808,8 @@ void AudacityProject::ModifyToolbarMenus()
       return;
    }
 
+   mCommandManager.Check(wxT("ShowScrubbingTB"),
+                         mToolManager->IsVisible(ScrubbingBarID));
    mCommandManager.Check(wxT("ShowDeviceTB"),
                          mToolManager->IsVisible(DeviceBarID));
    mCommandManager.Check(wxT("ShowEditTB"),
@@ -5435,6 +5438,12 @@ void AudacityProject::OnShowPlayMeterToolBar()
 void AudacityProject::OnShowMixerToolBar()
 {
    mToolManager->ShowHide( MixerBarID );
+   ModifyToolbarMenus();
+}
+
+void AudacityProject::OnShowScrubbingToolBar()
+{
+   mToolManager->ShowHide( ScrubbingBarID );
    ModifyToolbarMenus();
 }
 

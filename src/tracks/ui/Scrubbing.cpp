@@ -854,18 +854,23 @@ bool Scrubber::CanScrub() const
 void Scrubber::AddMenuItems()
 {
    auto cm = mProject->GetCommandManager();
-   auto flags = cm->GetDefaultFlags() | WaveTracksExistFlag;
-   auto mask = cm->GetDefaultMask() | WaveTracksExistFlag;
+   auto flag = WaveTracksExistFlag;
+   auto flags = cm->GetDefaultFlags() | flag;
+   auto mask = cm->GetDefaultMask() | flag;
 
    cm->BeginSubMenu(_("Scru&bbing"));
    for (const auto &item : menuItems) {
       if (!item.GetStatus().empty())
          cm->AddCheck(item.name, wxGetTranslation(item.label),
                       FNT(Scrubber, this, item.memFn),
-                      false, flags, mask);
+                      false,
+                      // Less restricted:
+                      AlwaysEnabledFlag, AlwaysEnabledFlag);
       else
+         // The start item
          cm->AddItem(item.name, wxGetTranslation(item.label),
                      FNT(Scrubber, this, item.memFn),
+                     // More restricted:
                      flags, mask);
    }
    cm->EndSubMenu();

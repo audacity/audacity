@@ -414,8 +414,6 @@ private:
    void OnLockPlayRegion(wxCommandEvent &evt);
 
    void OnToggleScrubbing(/*wxCommandEvent&*/);
-   void OnScrub(wxCommandEvent&);
-   void OnSeek(wxCommandEvent&);
 
    void OnContextMenu(wxContextMenuEvent & WXUNUSED(event));
 

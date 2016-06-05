@@ -305,6 +305,7 @@ void OnShowSelectionToolBar();
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
 void OnShowSpectralSelectionToolBar();
 #endif
+void OnShowScrubbingToolBar();
 void OnShowToolsToolBar();
 void OnShowTranscriptionToolBar();
 void OnResetToolBars();
