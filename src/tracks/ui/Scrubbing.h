@@ -109,8 +109,6 @@ public:
 
    void HandleScrollWheel(int steps);
 
-   bool PollIsSeeking();
-
    // This returns the same as the enabled state of the menu items:
    bool CanScrub() const;
 
@@ -157,7 +155,6 @@ private:
    int mScrubSpeedDisplayCountdown;
    wxCoord mScrubStartPosition;
    wxCoord mLastScrubPosition {};
-   bool mScrubSeekPress;
    bool mSmoothScrollingScrub;
 
    // These hold the three-way choice among click-to-scrub, click-to-seek, or disabled.
