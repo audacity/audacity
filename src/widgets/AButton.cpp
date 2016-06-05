@@ -426,24 +426,30 @@ void AButton::OnMouseEvent(wxMouseEvent & event)
    if (newState != prevState) {
       Refresh(false);
 
-      if (mCursorIsInWindow) {
-       #if wxUSE_TOOLTIPS // Not available in wxX11
-         // Display the tooltip in the status bar
-         wxToolTip * pTip = this->GetToolTip();
-         if( pTip ) {
-            wxString tipText = pTip->GetTip();
-            if (!mEnabled)
-               tipText += _(" (disabled)");
-            GetActiveProject()->TP_DisplayStatusMessage(tipText);
-         }
-       #endif
-      }
+      if (mCursorIsInWindow)
+         UpdateStatus();
       else {
          GetActiveProject()->TP_DisplayStatusMessage(wxT(""));
       }
    }
    else
       event.Skip();
+}
+
+void AButton::UpdateStatus()
+{
+   if (mCursorIsInWindow) {
+#if wxUSE_TOOLTIPS // Not available in wxX11
+      // Display the tooltip in the status bar
+      wxToolTip * pTip = this->GetToolTip();
+      if( pTip ) {
+         wxString tipText = pTip->GetTip();
+         if (!mEnabled)
+            tipText += _(" (disabled)");
+         GetActiveProject()->TP_DisplayStatusMessage(tipText);
+      }
+#endif
+   }
 }
 
 void AButton::OnCaptureLost(wxMouseCaptureLostEvent & WXUNUSED(event))

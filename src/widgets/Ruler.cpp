@@ -2790,6 +2790,8 @@ void AdornedRulerPanel::UpdateButtonStates()
       commands.push_back(commandName);
       ToolBar::SetButtonToolTip(button, commands);
       button.SetLabel(button.GetToolTipText());
+
+      button.UpdateStatus();
    };
 
    {
