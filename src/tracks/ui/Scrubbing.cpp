@@ -272,9 +272,8 @@ void Scrubber::MarkScrubStart(
       ? ControlToolBar::PlayAppearance::Seek
       : ControlToolBar::PlayAppearance::Scrub);
 
-   ctb->UpdateStatusBar(mProject);
-
    mScrubStartPosition = xx;
+   ctb->UpdateStatusBar(mProject);
    mOptions.startClockTimeMillis = ::wxGetLocalTimeMillis();
 }
 
