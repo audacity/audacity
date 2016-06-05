@@ -200,44 +200,38 @@ void ControlToolBar::Populate()
 void ControlToolBar::RegenerateToolsTooltips()
 {
 #if wxUSE_TOOLTIPS
+   std::vector<wxString> commands;
    for (long iWinID = ID_PLAY_BUTTON; iWinID < BUTTON_COUNT; iWinID++)
    {
-      wxWindow* pCtrl = this->FindWindow(iWinID);
-      wxString strToolTip = pCtrl->GetLabel();
-      AudacityProject* pProj = GetActiveProject();
-      CommandManager* pCmdMgr = (pProj) ? pProj->GetCommandManager() : NULL;
-      if (pCmdMgr)
+      commands.clear();
+      auto pCtrl = static_cast<AButton*>(this->FindWindow(iWinID));
+      commands.push_back(pCtrl->GetLabel());
+      switch (iWinID)
       {
-         wxString strKey(wxT(" ("));
-         switch (iWinID)
-         {
-            case ID_PLAY_BUTTON:
-               strKey += pCmdMgr->GetKeyFromName(wxT("Play"));
-               strKey += _(") / Loop Play (");
-               strKey += pCmdMgr->GetKeyFromName(wxT("PlayLooped"));
-               break;
-            case ID_RECORD_BUTTON:
-               strKey += pCmdMgr->GetKeyFromName(wxT("Record"));
-               strKey += _(") / Append Record (");
-               strKey += pCmdMgr->GetKeyFromName(wxT("RecordAppend"));
-               break;
-            case ID_PAUSE_BUTTON:
-               strKey += pCmdMgr->GetKeyFromName(wxT("Pause"));
-               break;
-            case ID_STOP_BUTTON:
-               strKey += pCmdMgr->GetKeyFromName(wxT("Stop"));
-               break;
-            case ID_FF_BUTTON:
-               strKey += pCmdMgr->GetKeyFromName(wxT("SkipEnd"));
-               break;
-            case ID_REW_BUTTON:
-               strKey += pCmdMgr->GetKeyFromName(wxT("SkipStart"));
-               break;
-         }
-         strKey += wxT(")");
-         strToolTip += strKey;
+         case ID_PLAY_BUTTON:
+            commands.push_back(wxT("Play"));
+            commands.push_back(_("Loop Play"));
+            commands.push_back(wxT("PlayLooped"));
+            break;
+         case ID_RECORD_BUTTON:
+            commands.push_back(wxT("Record"));
+            commands.push_back(_("Append Record"));
+            commands.push_back(wxT("RecordAppend"));
+            break;
+         case ID_PAUSE_BUTTON:
+            commands.push_back(wxT("Pause"));
+            break;
+         case ID_STOP_BUTTON:
+            commands.push_back(wxT("Stop"));
+            break;
+         case ID_FF_BUTTON:
+            commands.push_back(wxT("SkipEnd"));
+            break;
+         case ID_REW_BUTTON:
+            commands.push_back(wxT("SkipStart"));
+            break;
       }
-      pCtrl->SetToolTip(strToolTip);
+      ToolBar::SetButtonToolTip(*pCtrl, commands);
    }
 #endif
 }
