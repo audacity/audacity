@@ -2060,19 +2060,6 @@ void AdornedRulerPanel::UpdatePrefs()
    RegenerateTooltips(mPrevZone);
 }
 
-namespace
-{
-   wxString ComposeButtonLabel
-      (AudacityProject &project, const wxString &commandName, const wxString &label)
-   {
-      auto pCmdMgr = project.GetCommandManager();
-      const auto &keyString = pCmdMgr->GetKeyFromName(commandName);
-      return keyString.empty()
-         ? label
-         : label + wxT(" (") + keyString + wxT(")");
-   }
-}
-
 void AdornedRulerPanel::ReCreateButtons()
 {
    for (auto & button : mButtons) {
@@ -2797,10 +2784,12 @@ void AdornedRulerPanel::OnContextMenu(wxContextMenuEvent & WXUNUSED(event))
 void AdornedRulerPanel::UpdateButtonStates()
 {
    auto common = [this]
-   (wxWindow *button, const wxString &commandName, const wxString &label){
-      const auto &fullLabel = ComposeButtonLabel(*mProject, commandName, label);
-      button->SetLabel(fullLabel);
-      button->SetToolTip(fullLabel);
+   (AButton &button, const wxString &commandName, const wxString &label) {
+      std::vector<wxString> commands;
+      commands.push_back(label);
+      commands.push_back(commandName);
+      ToolBar::SetButtonToolTip(button, commands);
+      button.SetLabel(button.GetToolTipText());
    };
 
    {
@@ -2813,7 +2802,7 @@ void AdornedRulerPanel::UpdateButtonStates()
       // (which is, to toggle the state)
       ? _("Pinned play/record Head")
       : _("Unpinned play/record Head");
-      common(pinButton, wxT("PinnedHead"), label);
+      common(*pinButton, wxT("PinnedHead"), label);
    }
 
    auto &scrubber = mProject->GetScrubber();
