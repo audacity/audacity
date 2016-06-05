@@ -1920,8 +1920,6 @@ enum {
    OnLockPlayRegionID,
 
    OnTogglePinnedStateID,
-   OnScrubID,
-   OnSeekID,
 };
 
 BEGIN_EVENT_TABLE(AdornedRulerPanel, OverlayPanel)
@@ -1943,12 +1941,6 @@ BEGIN_EVENT_TABLE(AdornedRulerPanel, OverlayPanel)
    EVT_COMMAND( OnTogglePinnedStateID,
                wxEVT_COMMAND_BUTTON_CLICKED,
                AdornedRulerPanel::OnTogglePinnedState )
-   EVT_COMMAND( OnScrubID,
-               wxEVT_COMMAND_BUTTON_CLICKED,
-               AdornedRulerPanel::OnScrub )
-   EVT_COMMAND( OnSeekID,
-               wxEVT_COMMAND_BUTTON_CLICKED,
-               AdornedRulerPanel::OnSeek )
 
 END_EVENT_TABLE()
 
@@ -2117,8 +2109,6 @@ void AdornedRulerPanel::ReCreateButtons()
       bmpRecoloredUpSmall, bmpRecoloredDownSmall, bmpRecoloredHiliteSmall,
       bmpUnpinnedPlayRecordHead, bmpUnpinnedPlayRecordHead, bmpUnpinnedPlayRecordHead,
       size);
-   buttonMaker(OnScrubID, bmpScrub, true);
-   buttonMaker(OnSeekID, bmpSeek, true);
 
    UpdateButtonStates();
 }
@@ -2180,7 +2170,10 @@ void AdornedRulerPanel::RegenerateTooltips(StatusChoice choice)
             }
             break;
          case StatusChoice::EnteringScrubZone :
-            this->SetToolTip(ScrubbingMessage(mProject->GetScrubber()));
+         {
+            const auto message = ScrubbingMessage(mProject->GetScrubber());
+            this->SetToolTip(message);
+         }
             break;
          default:
             this->SetToolTip(NULL);
@@ -2825,30 +2818,6 @@ void AdornedRulerPanel::UpdateButtonStates()
 
    auto &scrubber = mProject->GetScrubber();
 
-   {
-      const auto scrubButton = static_cast<AButton*>(FindWindow(OnScrubID));
-      /* i18n-hint: These commands assist the user in finding a sound by ear. ...
-       "Scrubbing" is variable-speed playback
-      */
-      common(scrubButton, wxT("Scrub"), _("Scrub"));
-      if (scrubber.Scrubs())
-         scrubButton->PushDown();
-      else
-         scrubButton->PopUp();
-   }
-
-   {
-      const auto seekButton = static_cast<AButton*>(FindWindow(OnSeekID));
-      /* i18n-hint: These commands assist the user in finding a sound by ear. ...
-       "Seeking" is normal speed playback but with skips
-       */
-      common(seekButton, wxT("Seek"), _("Seek"));
-      if (scrubber.Seeks())
-         seekButton->PushDown();
-      else
-         seekButton->PopUp();
-   }
-
    if(mShowScrubbing != (scrubber.Scrubs() || scrubber.Seeks()))
       OnToggleScrubbing();
 }
@@ -2857,16 +2826,6 @@ void AdornedRulerPanel::OnTogglePinnedState(wxCommandEvent & event)
 {
    mProject->OnTogglePinnedHead();
    UpdateButtonStates();
-}
-
-void AdornedRulerPanel::OnSeek(wxCommandEvent & event)
-{
-   mProject->GetScrubber().OnSeek(event);
-}
-
-void AdornedRulerPanel::OnScrub(wxCommandEvent & event)
-{
-   mProject->GetScrubber().OnScrub(event);
 }
 
 void AdornedRulerPanel::OnCaptureLost(wxMouseCaptureLostEvent & WXUNUSED(evt))

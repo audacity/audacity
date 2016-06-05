@@ -1,4 +1,4 @@
-/**********************************************************************
+	/**********************************************************************
 
   Audacity: A Digital Audio Editor
 
@@ -329,4 +329,189 @@ void EditToolBar::EnableDisableButtons()
    else
       mButtons[ETBSyncLockID]->PopUp();
 #endif
+}
+
+
+// PRL: to do: move the below to its own file
+// Much of this is imitative of EditToolBar.  Should there be a common base
+// class?
+#include "../Audacity.h"
+
+// For compilers that support precompilation, includes "wx/wx.h".
+#include <wx/wxprec.h>
+
+#ifndef WX_PRECOMP
+#include <wx/event.h>
+#include <wx/image.h>
+#include <wx/intl.h>
+#include <wx/sizer.h>
+#include <wx/tooltip.h>
+#endif
+
+#include "../AllThemeResources.h"
+#include "../AudioIO.h"
+#include "../ImageManipulation.h"
+#include "../Internat.h"
+#include "../Prefs.h"
+#include "../Project.h"
+#include "../Theme.h"
+#include "../Track.h"
+#include "../UndoManager.h"
+#include "../widgets/AButton.h"
+#include "../tracks/ui/Scrubbing.h"
+
+#include "../Experimental.h"
+
+IMPLEMENT_CLASS(ScrubbingToolBar, ToolBar);
+
+//const int BUTTON_WIDTH = 27;
+//const int SEPARATOR_WIDTH = 14;
+
+////////////////////////////////////////////////////////////
+/// Methods for ScrubbingToolBar
+////////////////////////////////////////////////////////////
+
+BEGIN_EVENT_TABLE( ScrubbingToolBar, ToolBar )
+EVT_COMMAND_RANGE( STBStartID,
+                  STBStartID + STBNumButtons - 1,
+                  wxEVT_COMMAND_BUTTON_CLICKED,
+                  ScrubbingToolBar::OnButton )
+END_EVENT_TABLE()
+
+//Standard contructor
+ScrubbingToolBar::ScrubbingToolBar()
+: ToolBar(ScrubbingBarID, _("Scrub"), wxT("Scrub"))
+{
+}
+
+ScrubbingToolBar::~ScrubbingToolBar()
+{
+}
+
+void ScrubbingToolBar::Create(wxWindow * parent)
+{
+   ToolBar::Create(parent);
+}
+
+/// This is a convenience function that allows for button creation in
+/// MakeButtons() with fewer arguments
+/// Very similar to code in ControlToolBar...
+AButton *ScrubbingToolBar::AddButton
+   (teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled,
+    int id,
+    const wxChar *label,
+    bool toggle)
+{
+   AButton *&r = mButtons[id];
+
+   r = ToolBar::MakeButton
+      (this,
+       bmpRecoloredUpSmall, bmpRecoloredDownSmall, bmpRecoloredHiliteSmall,
+       eEnabledUp, eEnabledDown, eDisabled,
+       wxWindowID(id),
+       wxDefaultPosition,
+       toggle,
+       theTheme.ImageSize( bmpRecoloredUpSmall ));
+
+   r->SetLabel(label);
+   // JKC: Unlike ControlToolBar, does not have a focus rect.  Shouldn't it?
+   // r->SetFocusRect( r->GetRect().Deflate( 4, 4 ) );
+
+   Add( r, 0, wxALIGN_CENTER );
+
+   return r;
+}
+
+void ScrubbingToolBar::Populate()
+{
+   MakeButtonBackgroundsSmall();
+
+   /* Buttons */
+   AddButton(bmpPlay, bmpPlay, bmpPlayDisabled, STBStartID,
+             _("Start scrubbing"), false);
+   AddButton(bmpScrub, bmpScrub, bmpScrubDisabled, STBScrubID,
+             _("Scrub"), true);
+   AddButton(bmpSeek, bmpSeek, bmpSeekDisabled, STBSeekID,
+             _("Seek"), true);
+
+
+   RegenerateTooltips();
+}
+
+void ScrubbingToolBar::UpdatePrefs()
+{
+   RegenerateTooltips();
+
+   // Set label to pull in language change
+   SetLabel(_("Scrubbing"));
+
+   // Give base class a chance
+   ToolBar::UpdatePrefs();
+}
+
+void ScrubbingToolBar::RegenerateTooltips()
+{
+#if wxUSE_TOOLTIPS
+   /* i18n-hint: These commands assist the user in finding a sound by ear. ...
+    "Scrubbing" is variable-speed playback, ...
+    "Seeking" is normal speed playback but with skips
+    */
+   mButtons[STBStartID]->SetToolTip(_("Start scrubbing or seeking"));
+   mButtons[STBScrubID]->SetToolTip(_("Scrub"));
+   mButtons[STBSeekID]->SetToolTip(_("Seek"));
+#endif
+}
+
+void ScrubbingToolBar::OnButton(wxCommandEvent &event)
+{
+   AudacityProject *p = GetActiveProject();
+   if (!p) return;
+   auto &scrubber = p->GetScrubber();
+
+   int id = event.GetId();
+
+   switch (id) {
+      case STBStartID:
+         mButtons[STBStartID]->PopUp();
+         scrubber.OnStart(event);
+         break;
+      case STBScrubID:
+         scrubber.OnScrub(event);
+         break;
+      case STBSeekID:
+         scrubber.OnSeek(event);
+         break;
+      default:
+         wxASSERT(false);
+   }
+
+   EnableDisableButtons();
+}
+
+void ScrubbingToolBar::EnableDisableButtons()
+{
+   const auto scrubButton = mButtons[STBScrubID];
+   scrubButton->SetEnabled(true);
+   const auto seekButton = mButtons[STBSeekID];
+   seekButton->SetEnabled(true);
+
+   AudacityProject *p = GetActiveProject();
+   if (!p) return;
+
+   auto &scrubber = p->GetScrubber();
+   if (scrubber.Scrubs())
+      scrubButton->PushDown();
+   else
+      scrubButton->PopUp();
+
+   if (scrubber.Seeks())
+      seekButton->PushDown();
+   else
+      seekButton->PopUp();
+
+   const auto startButton = mButtons[STBStartID];
+   if (scrubber.CanScrub())
+      startButton->Enable();
+   else
+      startButton->Disable();
 }
