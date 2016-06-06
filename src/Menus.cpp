@@ -2295,19 +2295,30 @@ void AudacityProject::OnRecordAppend()
    GetControlToolBar()->OnRecord(evt);
 }
 
+// The code for "OnPlayStopSelect" is simply the code of "OnPlayStop" and "OnStopSelect" merged.
 void AudacityProject::OnPlayStopSelect()
 {
-   DoPlayStopSelect(false, false);
+   ControlToolBar *toolbar = GetControlToolBar();
+   wxCommandEvent evt;
+   if (DoPlayStopSelect(false, false))
+      toolbar->OnStop(evt);
+   else if (!gAudioIO->IsBusy()) {
+      //Otherwise, start playing (assuming audio I/O isn't busy)
+      //toolbar->SetPlay(true); // Not needed as set in PlayPlayRegion()
+      toolbar->SetStop(false);
+
+      // Will automatically set mLastPlayMode
+      toolbar->PlayCurrentRegion(false);
+   }
 }
 
-// The code for "OnPlayStopSelect" is simply the code of "OnPlayStop" and "OnStopSelect" merged.
-void AudacityProject::DoPlayStopSelect(bool click, bool shift)
+bool AudacityProject::DoPlayStopSelect(bool click, bool shift)
 {
-   wxCommandEvent evt;
    ControlToolBar *toolbar = GetControlToolBar();
 
    //If busy, stop playing, make sure everything is unpaused.
-   if (gAudioIO->IsStreamActive(GetAudioIOToken())) {
+   if (GetScrubber().HasStartedScrubbing() ||
+       gAudioIO->IsStreamActive(GetAudioIOToken())) {
       toolbar->SetPlay(false);        //Pops
       toolbar->SetStop(true);         //Pushes stop down
 
@@ -2341,16 +2352,9 @@ void AudacityProject::DoPlayStopSelect(bool click, bool shift)
          selection.setT0(time, false);
 
       ModifyState(false);           // without bWantsAutoSave
-      toolbar->OnStop(evt);
+      return true;
    }
-   else if (!gAudioIO->IsBusy()) {
-      //Otherwise, start playing (assuming audio I/O isn't busy)
-      //toolbar->SetPlay(true); // Not needed as set in PlayPlayRegion()
-      toolbar->SetStop(false);
-
-      // Will automatically set mLastPlayMode
-      toolbar->PlayCurrentRegion(false);
-   }
+   return false;
 }
 
 void AudacityProject::OnStopSelect()

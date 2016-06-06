@@ -103,6 +103,9 @@ public:
    bool Scrubs() const
    { return mScrubbing; }
 
+   void Cancel()
+   { mCancelled = true; }
+
    bool ShouldDrawScrubSpeed();
    double FindScrubSpeed(bool seeking, double time) const;
    double GetMaxScrubSpeed() const { return mOptions.maxSpeed; }
@@ -163,6 +166,8 @@ private:
    bool mSeeking {};
 
    bool mDragging {};
+
+   bool mCancelled {};
 
 #ifdef EXPERIMENTAL_SCRUBBING_SCROLL_WHEEL
    int mLogMaxScrubSpeed;
