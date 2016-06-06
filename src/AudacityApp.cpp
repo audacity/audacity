@@ -1529,10 +1529,14 @@ void AudacityApp::OnKeyDown(wxKeyEvent &event)
       // Stop play, including scrub, but not record
       auto project = ::GetActiveProject();
       auto token = project->GetAudioIOToken();
+      auto &scrubber = project->GetScrubber();
+      auto scrubbing = scrubber.HasStartedScrubbing();
+      if (scrubbing)
+         scrubber.Cancel();
       if((token > 0 &&
                gAudioIO->IsAudioTokenActive(token) &&
                gAudioIO->GetNumCaptureChannels() == 0) ||
-         project->GetScrubber().HasStartedScrubbing())
+         scrubbing)
          // ESC out of other play (but not record)
          project->OnStop();
       else

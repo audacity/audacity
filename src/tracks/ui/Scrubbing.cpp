@@ -163,7 +163,7 @@ private:
 
 void Scrubber::ScrubPoller::Notify()
 {
-   // Call ContinueScrubbing() here in a timer handler
+   // Call Continue functions here in a timer handler
    // rather than in SelectionHandleDrag()
    // so that even without drag events, we can instruct the play head to
    // keep approaching the mouse cursor, when its maximum speed is limited.
@@ -276,6 +276,8 @@ void Scrubber::MarkScrubStart(
    mScrubStartPosition = xx;
    ctb->UpdateStatusBar(mProject);
    mOptions.startClockTimeMillis = ::wxGetLocalTimeMillis();
+
+   mCancelled = false;
 }
 
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
@@ -453,6 +455,8 @@ void Scrubber::ContinueScrubbingUI()
    if (mDragging && !state.LeftIsDown()) {
       // Stop and set cursor
       mProject->DoPlayStopSelect(true, state.ShiftDown());
+      wxCommandEvent evt;
+      mProject->GetControlToolBar()->OnStop(evt);
       return;
    }
 
@@ -489,6 +493,12 @@ void Scrubber::StopScrubbing()
 #endif
 
    mPoller->Stop();
+
+   if (!mCancelled) {
+      const wxMouseState state(::wxGetMouseState());
+      // Stop and set cursor
+      mProject->DoPlayStopSelect(true, state.ShiftDown());
+   }
 
    mScrubStartPosition = -1;
    mDragging = false;
