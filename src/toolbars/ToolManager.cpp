@@ -1253,7 +1253,7 @@ void ToolManager::OnGrabber( GrabberEvent & event )
    if (mDragBar->IsDocked()) {
       mPrevDock = dynamic_cast<ToolDock*>(mDragBar->GetParent());
       wxASSERT(mPrevDock);
-      mPrevSlot = mPrevDock->Find(mDragBar);
+      mPrevSlot = mPrevDock->GetConfiguration().Find(mDragBar);
    }
    else
       mPrevPosition = mDragBar->GetParent()->GetPosition();

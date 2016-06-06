@@ -48,6 +48,32 @@
 #include "../widgets/AButton.h"
 #include "../widgets/Grabber.h"
 
+void ToolBarConfiguration::Insert(ToolBar *bar, Position position)
+{
+   if (position >= size() || position == UnspecifiedPosition)
+      push_back(bar);
+   else
+      wxArrayPtrVoid::Insert(bar, position);
+}
+
+void ToolBarConfiguration::Remove(const ToolBar *bar)
+{
+   wxArrayPtrVoid::Remove(const_cast<ToolBar*>(bar));
+}
+
+void ToolBarConfiguration::Show(ToolBar *bar)
+{
+   // Do not assume the bar is absent, though in practice that is always so
+   if (!Contains(bar))
+      Insert(bar);
+}
+
+void ToolBarConfiguration::Hide(ToolBar *bar)
+{
+   // Future:  might hide a bar without eliminating it from the configuration
+   Remove(bar);
+}
+
 IMPLEMENT_CLASS( ToolDock, wxPanel );
 
 ////////////////////////////////////////////////////////////
@@ -95,7 +121,7 @@ ToolDock::~ToolDock()
 //
 int ToolDock::GetOrder( ToolBar *bar )
 {
-   int order = mDockedBars.Index( bar );
+   int order = mConfiguration.Index( bar );
 
    if( order == wxNOT_FOUND )
    {
@@ -115,16 +141,17 @@ int ToolDock::GetOrder( ToolBar *bar )
 //
 void ToolDock::Undock( ToolBar *bar )
 {
-   if( mDockedBars.Index( bar ) != wxNOT_FOUND )
+   if( mConfiguration.Contains( bar ) )
    {
-      mDockedBars.Remove( bar );
+      mConfiguration.Remove( bar );
+      mBars[ bar->GetId() ] = nullptr;
    }
 }
 
 //
 // Handle ToolDock events
 //
-void ToolDock::Dock( ToolBar *bar, bool deflate, int before )
+void ToolDock::Dock( ToolBar *bar, bool deflate, ToolBarConfiguration::Position position )
 {
    // Adopt the toolbar into our family
    bar->Reparent( this );
@@ -139,14 +166,8 @@ void ToolDock::Dock( ToolBar *bar, bool deflate, int before )
    );
 
    // Park the NEW bar in the correct berth
-   if( before >= 0 && before < (int)mDockedBars.GetCount() )
-   {
-      mDockedBars.Insert( bar, before );
-   }
-   else
-   {
-      mDockedBars.Add( bar );
-   }
+   if (!mConfiguration.Contains(bar))
+      mConfiguration.Insert( bar, position );
 
    // Inform toolbar of change
    bar->SetDocked( this, false );
@@ -165,7 +186,7 @@ void ToolDock::LayoutToolBars()
 
    wxRect stack[ ToolBarCount + 1 ];
    int stkcnt = 0;
-   int cnt = mDockedBars.GetCount();
+   int cnt = mConfiguration.GetCount();
    int width, height;
 
    // Get size of our parent since we haven't been sized yet
@@ -184,7 +205,7 @@ void ToolDock::LayoutToolBars()
    for( int ndx = 0; ndx < cnt; ndx++ )
    {
       // Cache toolbar pointer
-      ToolBar *ct = (ToolBar *)mDockedBars[ ndx ];
+      ToolBar *ct = (ToolBar *)mConfiguration[ ndx ];
 
       // Get and cache the toolbar sizes
       wxSize sz = ct->GetSize();
@@ -253,16 +274,17 @@ void ToolDock::LayoutToolBars()
 }
 
 //
-// Determine the location and bar before which a NEW bar would be placed
+// Determine the position where a NEW bar would be placed
 //
 // 'rect' will be the rectangle for the dock marker.
-int ToolDock::PositionBar( ToolBar *t, const wxPoint & pos, wxRect & rect )
+ToolBarConfiguration::Position
+   ToolDock::PositionBar( ToolBar *t, const wxPoint & pos, wxRect & rect )
 {
-   int tindx = -1;
+   auto tindx = ToolBarConfiguration::UnspecifiedPosition;
 
    wxRect stack[ ToolBarCount + 1 ];
    int stkcnt = 0;
-   int cnt = mDockedBars.GetCount();
+   int cnt = mConfiguration.GetCount();
    int width, height;
 
    // Get size of our parent since we haven't been sized yet
@@ -296,14 +318,14 @@ int ToolDock::PositionBar( ToolBar *t, const wxPoint & pos, wxRect & rect )
       else
       {
          // Cache toolbar pointer
-         ToolBar *ct = (ToolBar *)mDockedBars[ndx];
+         ToolBar *ct = (ToolBar *)mConfiguration[ndx];
 
-         // Remember current bars' dimensions
+         // Remember current bars ' dimensions
          sz = ct->GetSize();
 
          // Maybe insert the NEW bar if it hasn't already been done
          // and is in the right place.
-         if (tindx == -1)
+         if (tindx == ToolBarConfiguration::UnspecifiedPosition)
          {
             wxRect r;
 
@@ -351,7 +373,7 @@ int ToolDock::PositionBar( ToolBar *t, const wxPoint & pos, wxRect & rect )
       const auto cpos = stack[stkcnt].GetPosition();
 
       // If we've placed it, we're done.
-      if (tindx != -1)
+      if (tindx != ToolBarConfiguration::UnspecifiedPosition)
       {
          rect.x = cpos.x;
          rect.y = cpos.y;
@@ -389,20 +411,11 @@ void ToolDock::Expose( int type, bool show )
    ToolBar *t = mBars[ type ];
 
    // Maintain the docked array
-   if( show )
-   {
-      if( mDockedBars.Index( t ) == wxNOT_FOUND )
-      {
-         mDockedBars.Add( t );
-      }
-   }
-   else
-   {
-      if( mDockedBars.Index( t ) != wxNOT_FOUND )
-      {
-         mDockedBars.Remove( t );
-      }
-   }
+   const auto shown = mConfiguration.Shows( t );
+   if( show && !shown )
+      mConfiguration.Show( t );
+   else if( !show && shown )
+      mConfiguration.Hide( t );
 
    // Make it (dis)appear
    t->Expose( show );
@@ -410,11 +423,6 @@ void ToolDock::Expose( int type, bool show )
    // Update the layout
    LayoutToolBars();
    Updated();
-}
-
-int ToolDock::Find(ToolBar *bar) const
-{
-   return mDockedBars.Index(bar);
 }
 
 //
@@ -441,7 +449,7 @@ void ToolDock::OnGrabber( GrabberEvent & event )
       mManager->ProcessEvent( event );
 
       // We no longer have control
-      mDockedBars.Remove( t );
+      mConfiguration.Remove( t );
    }
 }
 
@@ -489,10 +497,10 @@ void ToolDock::OnPaint( wxPaintEvent & WXUNUSED(event) )
    AColor::Line(dc, 0, 0, 0, sz.GetHeight() );
 
    // Draw the gap between each bar
-   int ndx, cnt = mDockedBars.GetCount();
+   int ndx, cnt = mConfiguration.GetCount();
    for( ndx = 0; ndx < cnt; ndx++ )
    {
-      wxRect r = ( (ToolBar *)mDockedBars[ ndx ] )->GetRect();
+      wxRect r = ( (ToolBar *)mConfiguration[ ndx ] )->GetRect();
 
       AColor::Line( dc,
                     r.GetLeft(),
@@ -505,7 +513,7 @@ void ToolDock::OnPaint( wxPaintEvent & WXUNUSED(event) )
       {
          // ...and for bars that aren't the last in a row, draw an
          // horizontal gap line
-         if( r.y == ( (ToolBar *)mDockedBars[ ndx + 1 ] )->GetRect().y )
+         if( r.y == ( (ToolBar *)mConfiguration[ ndx + 1 ] )->GetRect().y )
          {
             AColor::Line(dc,
                          r.GetRight() + 1,

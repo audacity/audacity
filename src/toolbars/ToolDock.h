@@ -45,6 +45,37 @@ enum
    DockCount = 2
 };
 
+class ToolBarConfiguration : public wxArrayPtrVoid
+{
+public:
+   using Position = int;
+   static const Position UnspecifiedPosition = -1;
+
+   Position Find(const ToolBar *bar) const
+   {
+      return Index(const_cast<ToolBar*>(bar));
+   }
+
+   bool Contains(const ToolBar *bar) const
+   {
+      return Find(bar) != UnspecifiedPosition;
+   }
+
+   // Default position inserts at the end
+   void Insert(ToolBar *bar,
+               Position position = UnspecifiedPosition);
+   void Remove(const ToolBar *bar);
+
+   // Future: might allow a state that the configuration remembers
+   // a hidden bar, but for now, it's equivalent to Contains():
+   bool Shows(const ToolBar *bar) const { return Contains(bar); }
+
+   void Show(ToolBar *bar);
+   void Hide(ToolBar *bar);
+
+private:
+};
+
 class ToolDock final : public wxPanel
 {
 
@@ -57,11 +88,16 @@ class ToolDock final : public wxPanel
 
    void LayoutToolBars();
    void Expose( int type, bool show );
-   int Find(ToolBar *bar) const;
    int GetOrder( ToolBar *bar );
-   void Dock( ToolBar *bar, bool deflate, int ndx = -1 );
+   void Dock( ToolBar *bar, bool deflate,
+              ToolBarConfiguration::Position ndx
+                 = ToolBarConfiguration::UnspecifiedPosition);
    void Undock( ToolBar *bar );
-   int PositionBar( ToolBar *t, const wxPoint & pos, wxRect & rect );
+   ToolBarConfiguration::Position
+      PositionBar( ToolBar *t, const wxPoint & pos, wxRect & rect );
+
+   ToolBarConfiguration &GetConfiguration()
+   { return mConfiguration; }
 
  protected:
 
@@ -80,7 +116,9 @@ class ToolDock final : public wxPanel
 
    ToolManager *mManager;
 
-   wxArrayPtrVoid mDockedBars;
+   // Stores adjacency relations that we want to realize in the dock layout
+   ToolBarConfiguration mConfiguration;
+
    ToolBar *mBars[ ToolBarCount ];
 
  public:
