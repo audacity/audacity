@@ -1,7 +1,7 @@
 /**********************************************************************
 
    Audacity: A Digital Audio Editor
-   Audacity(R) is copyright (c) 1999-2013 Audacity Team.
+   Audacity(R) is copyright (c) 1999-2016 Audacity Team.
    License: GPL v2.  See License.txt.
 
    BassTreble.h (two shelf filters)
@@ -12,12 +12,12 @@
 #ifndef __AUDACITY_EFFECT_BASS_TREBLE__
 #define __AUDACITY_EFFECT_BASS_TREBLE__
 
-#include <wx/checkbox.h>
 #include <wx/event.h>
 #include <wx/slider.h>
 #include <wx/stattext.h>
 #include <wx/string.h>
 #include <wx/textctrl.h>
+#include <wx/checkbox.h>
 
 #include "Effect.h"
 
@@ -25,7 +25,23 @@ class ShuttleGui;
 
 #define BASSTREBLE_PLUGIN_SYMBOL XO("Bass and Treble")
 
-class EffectBassTreble final : public Effect
+class EffectBassTrebleState
+{
+public:
+   float samplerate;
+   double treble;
+   double bass;
+   double gain;
+   double slope, hzBass, hzTreble;
+   double a0Bass, a1Bass, a2Bass, b0Bass, b1Bass, b2Bass;
+   double a0Treble, a1Treble, a2Treble, b0Treble, b1Treble, b2Treble;
+   double xn1Bass, xn2Bass, yn1Bass, yn2Bass;
+   double xn1Treble, xn2Treble, yn1Treble, yn2Treble;
+};
+
+WX_DECLARE_OBJARRAY(EffectBassTrebleState, EffectBassTrebleStateArray);
+
+class EffectBassTreble : public Effect
 {
 public:
    EffectBassTreble();
@@ -33,12 +49,13 @@ public:
 
    // IdentInterface implementation
 
-   wxString GetSymbol() override;
-   wxString GetDescription() override;
+   virtual wxString GetSymbol();
+   virtual wxString GetDescription();
 
    // EffectIdentInterface implementation
 
    EffectType GetType() override;
+   bool SupportsRealtime() override;
 
    // EffectClientInterface implementation
 
@@ -46,57 +63,64 @@ public:
    int GetAudioOutCount() override;
    bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) override;
    sampleCount ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen) override;
+   bool RealtimeInitialize() override;
+   bool RealtimeAddProcessor(int numChannels, float sampleRate) override;
+   bool RealtimeFinalize() override;
+   sampleCount RealtimeProcess(int group,
+                               float **inbuf,
+                               float **outbuf,
+                               sampleCount numSamples) override;
    bool GetAutomationParameters(EffectAutomationParameters & parms) override;
    bool SetAutomationParameters(EffectAutomationParameters & parms) override;
 
-   // Effect Implementation
 
-   bool Startup() override;
-   bool InitPass1() override;
-   bool InitPass2() override;
+   // Effect Implementation
 
    void PopulateOrExchange(ShuttleGui & S) override;
    bool TransferDataToWindow() override;
    bool TransferDataFromWindow() override;
 
+   bool CheckWhetherSkipEffect() override;
+
 private:
    // EffectBassTreble implementation
 
-   void Coefficents(double hz, float slope, double gain, int type,
-                    float& a0, float& a1, float& a2, float& b0, float& b1, float& b2);
-   float DoFilter(float in);
-   void UpdateUI();
+   void InstanceInit(EffectBassTrebleState & data, float sampleRate);
+   sampleCount InstanceProcess(EffectBassTrebleState & data, float **inBlock, float **outBlock, sampleCount blockLen);
+
+   void Coefficents(double hz, double slope, double gain, double samplerate, int type,
+                    double& a0, double& a1, double& a2, double& b0, double& b1, double& b2);
+   float DoFilter(EffectBassTrebleState & data, float in);
 
    void OnBassText(wxCommandEvent & evt);
    void OnTrebleText(wxCommandEvent & evt);
-   void OnLevelText(wxCommandEvent & evt);
+   void OnGainText(wxCommandEvent & evt);
    void OnBassSlider(wxCommandEvent & evt);
    void OnTrebleSlider(wxCommandEvent & evt);
-   void OnLevelSlider(wxCommandEvent & evt);
-   void OnNormalize(wxCommandEvent & evt);
+   void OnGainSlider(wxCommandEvent & evt);
+   void OnLinkCheckbox(wxCommandEvent & evt);
+
+   // Auto-adjust gain to reduce variation in peak level
+   void UpdateGain(double oldVal, int control );
 
 private:
-   float xn1Bass, xn2Bass, yn1Bass, yn2Bass,
-         wBass, swBass, cwBass, aBass, bBass,
-         a0Bass, a1Bass, a2Bass, b0Bass, b1Bass, b2Bass;
-   // High shelf
-   float xn1Treble, xn2Treble, yn1Treble, yn2Treble,
-         wTreble, swTreble, cwTreble, aTreble, bTreble,
-         b0Treble, b1Treble, b2Treble, a0Treble, a1Treble, a2Treble;
+   EffectBassTrebleState mMaster;
+   EffectBassTrebleStateArray mSlaves;
 
-   double dB_bass, dB_treble, dB_level;
-   double mMax;
-   bool   mbNormalize;
-   double mPreGain;
+   double      mBass;
+   double      mTreble;
+   double      mGain;
+   bool        mLink;
 
-   wxSlider *mBassS;
-   wxSlider *mTrebleS;
-   wxSlider *mLevelS;
-   wxTextCtrl *mBassT;
-   wxTextCtrl *mTrebleT;
-   wxTextCtrl *mLevelT;
-   wxCheckBox *mNormalizeCheckBox;
-   wxStaticText *mWarning;
+   wxSlider    *mBassS;
+   wxSlider    *mTrebleS;
+   wxSlider    *mGainS;
+
+   wxTextCtrl  *mBassT;
+   wxTextCtrl  *mTrebleT;
+   wxTextCtrl  *mGainT;
+
+   wxCheckBox  *mLinkCheckBox;
 
    DECLARE_EVENT_TABLE();
 };

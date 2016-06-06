@@ -1,7 +1,7 @@
 /**********************************************************************
 
    Audacity: A Digital Audio Editor
-   Audacity(R) is copyright (c) 1999-2013 Audacity Team.
+   Audacity(R) is copyright (c) 1999-2016 Audacity Team.
    License: GPL v2.  See License.txt.
 
    BassTreble.cpp
@@ -11,10 +11,6 @@
 
 \class EffectBassTreble
 \brief A high shelf and low shelf filter.
-
-   The first pass applies the equalization and calculates the
-   peak value. The second pass, if enabled, normalizes to the
-   level set by the level control.
 
 *//*******************************************************************/
 
@@ -37,21 +33,20 @@ enum
 {
    ID_Bass = 10000,
    ID_Treble,
-   ID_Level,
-   ID_Normalize,
+   ID_Gain,
+   ID_Link
 };
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
-//     Name       Type     Key               Def      Min      Max      Scale
-Param( Bass,      double,  XO("Bass"),       0.0,     -30.0,   30.0,    1  );
-Param( Treble,    double,  XO("Treble"),     0.0,     -30.0,   30.0,    1  );
-Param( Level,     double,  XO("Level"),      -1.0,    -30.0,   0.0,     1  );
-Param( Normalize, bool,    XO("Normalize"),  true,    false,   true,    1  );
+//     Name       Type     Key                  Def      Min      Max      Scale
+Param( Bass,      double,  XO("Bass"),          0.0,     -30.0,   30.0,    1  );
+Param( Treble,    double,  XO("Treble"),        0.0,     -30.0,   30.0,    1  );
+Param( Gain,      double,  XO("Gain"),          0.0,     -30.0,   30.0,    1  );
+Param( Link,      bool,    XO("Link Sliders"),  false,    false,  true,    1  );
 
-// Sliders are integer, so range is x 10
-// to allow 1 decimal place resolution
-static const int kSliderScale = 10;
+#include <wx/arrimpl.cpp>
+WX_DEFINE_OBJARRAY(EffectBassTrebleStateArray);
 
 // Used to communicate the type of the filter.
 enum kShelfType
@@ -61,23 +56,23 @@ enum kShelfType
 };
 
 BEGIN_EVENT_TABLE(EffectBassTreble, wxEvtHandler)
-   EVT_SLIDER(ID_Bass, EffectBassTreble::OnBassSlider)
-   EVT_SLIDER(ID_Treble, EffectBassTreble::OnTrebleSlider)
-   EVT_SLIDER(ID_Level, EffectBassTreble::OnLevelSlider)
-   EVT_TEXT(ID_Bass, EffectBassTreble::OnBassText)
-   EVT_TEXT(ID_Treble, EffectBassTreble::OnTrebleText)
-   EVT_TEXT(ID_Level, EffectBassTreble::OnLevelText)
-   EVT_CHECKBOX(ID_Normalize, EffectBassTreble::OnNormalize)
+   EVT_SLIDER(ID_Bass,     EffectBassTreble::OnBassSlider)
+   EVT_SLIDER(ID_Treble,   EffectBassTreble::OnTrebleSlider)
+   EVT_SLIDER(ID_Gain,     EffectBassTreble::OnGainSlider)
+   EVT_TEXT(ID_Bass,       EffectBassTreble::OnBassText)
+   EVT_TEXT(ID_Treble,     EffectBassTreble::OnTrebleText)
+   EVT_TEXT(ID_Gain,       EffectBassTreble::OnGainText)
+   EVT_CHECKBOX(ID_Link,   EffectBassTreble::OnLinkCheckbox)
 END_EVENT_TABLE()
 
 EffectBassTreble::EffectBassTreble()
 {
-   dB_bass = DEF_Bass;
-   dB_treble = DEF_Treble;
-   dB_level = DEF_Level;
-   mbNormalize = DEF_Normalize;
+   mBass = DEF_Bass;
+   mTreble = DEF_Treble;
+   mGain = DEF_Gain;
+   mLink = DEF_Link;
 
-   SetLinearEffectFlag(false);
+   SetLinearEffectFlag(true);
 }
 
 EffectBassTreble::~EffectBassTreble()
@@ -93,7 +88,7 @@ wxString EffectBassTreble::GetSymbol()
 
 wxString EffectBassTreble::GetDescription()
 {
-   return XO("Increases or decreases the lower frequencies and higher frequencies of your audio independently");
+   return XO("Simple tone control effect");
 }
 
 // EffectIdentInterface implementation
@@ -102,6 +97,16 @@ EffectType EffectBassTreble::GetType()
 {
    return EffectTypeProcess;
 }
+
+bool EffectBassTreble::SupportsRealtime()
+{
+#if defined(EXPERIMENTAL_REALTIME_AUDACITY_EFFECTS)
+   return true;
+#else
+   return false;
+#endif
+}
+
 
 // EffectClientInterface implementation
 
@@ -117,61 +122,57 @@ int EffectBassTreble::GetAudioOutCount()
 
 bool EffectBassTreble::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames WXUNUSED(chanMap))
 {
-   if (GetPass() == 1)
-   {
-      const float slope = 0.4f;   // same slope for both filters
-      const double hzBass = 250.0f;
-      const double hzTreble = 4000.0f;
-
-      //(re)initialise filter parameters
-      xn1Bass=xn2Bass=yn1Bass=yn2Bass=0;
-      xn1Treble=xn2Treble=yn1Treble=yn2Treble=0;
-
-      // Compute coefficents of the low shelf biquand IIR filter
-      Coefficents(hzBass, slope, dB_bass, kBass,
-                  a0Bass, a1Bass, a2Bass,
-                  b0Bass, b1Bass, b2Bass);
-
-      // Compute coefficents of the high shelf biquand IIR filter
-      Coefficents(hzTreble, slope, dB_treble, kTreble,
-                  a0Treble, a1Treble, a2Treble,
-                  b0Treble, b1Treble, b2Treble);
-   }
+   InstanceInit(mMaster, mSampleRate);
 
    return true;
 }
 
 sampleCount EffectBassTreble::ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen)
 {
-   float *ibuf = inBlock[0];
-   float *obuf = outBlock[0];
+   return InstanceProcess(mMaster, inBlock, outBlock, blockLen);
+}
 
-   if (GetPass() == 1)
-   {
-      for (sampleCount i = 0; i < blockLen; i++)
-      {
-         obuf[i] = DoFilter(ibuf[i]) / mPreGain;
-      }
-   }
-   else
-   {
-      float gain = DB_TO_LINEAR(dB_level) / mMax;
-      for (sampleCount i = 0; i < blockLen; i++)
-      {
-         // Normalize to specified level
-         obuf[i] = ibuf[i] * (mPreGain * gain);
-      }
-   }
+bool EffectBassTreble::RealtimeInitialize()
+{
+   SetBlockSize(512);
 
-   return blockLen;
+   mSlaves.Clear();
+
+   return true;
+}
+
+bool EffectBassTreble::RealtimeAddProcessor(int WXUNUSED(numChannels), float sampleRate)
+{
+   EffectBassTrebleState slave;
+
+   InstanceInit(slave, sampleRate);
+
+   mSlaves.Add(slave);
+
+   return true;
+}
+
+bool EffectBassTreble::RealtimeFinalize()
+{
+   mSlaves.Clear();
+
+   return true;
+}
+
+sampleCount EffectBassTreble::RealtimeProcess(int group,
+                                              float **inbuf,
+                                              float **outbuf,
+                                              sampleCount numSamples)
+{
+   return InstanceProcess(mSlaves[group], inbuf, outbuf, numSamples);
 }
 
 bool EffectBassTreble::GetAutomationParameters(EffectAutomationParameters & parms)
 {
-   parms.Write(KEY_Bass, dB_bass);
-   parms.Write(KEY_Treble, dB_treble);
-   parms.Write(KEY_Level, dB_level);
-   parms.Write(KEY_Normalize, mbNormalize);
+   parms.Write(KEY_Bass, mBass);
+   parms.Write(KEY_Treble, mTreble);
+   parms.Write(KEY_Gain, mGain);
+   parms.Write(KEY_Link, mLink);
 
    return true;
 }
@@ -180,144 +181,88 @@ bool EffectBassTreble::SetAutomationParameters(EffectAutomationParameters & parm
 {
    ReadAndVerifyDouble(Bass);
    ReadAndVerifyDouble(Treble);
-   ReadAndVerifyDouble(Level);
-   ReadAndVerifyBool(Normalize);
+   ReadAndVerifyDouble(Gain);
+   ReadAndVerifyBool(Link);
 
-   dB_bass = Bass;
-   dB_treble = Treble;
-   dB_level = Level;
-   mbNormalize = Normalize;
+   mBass = Bass;
+   mTreble = Treble;
+   mGain = Gain;
+   mLink = Link;
 
    return true;
 }
+
+bool EffectBassTreble::CheckWhetherSkipEffect()
+{
+   return (mBass == 0.0 && mTreble == 0.0 && mGain == 0.0);
+}
+
 
 // Effect implementation
 
-bool EffectBassTreble::Startup()
-{
-   wxString base = wxT("/Effects/BassTreble/");
-
-   // Migrate settings from 2.1.0 or before
-
-   // Already migrated, so bail
-   if (gPrefs->Exists(base + wxT("Migrated")))
-   {
-      return true;
-   }
-
-   // Load the old "current" settings
-   if (gPrefs->Exists(base))
-   {
-      int readBool;
-      gPrefs->Read(base + wxT("Bass"), &dB_bass, 0.0);
-      gPrefs->Read(base + wxT("Treble"), &dB_treble, 0.0);
-      gPrefs->Read(base + wxT("Level"), &dB_level, -1.0);
-      gPrefs->Read(base + wxT("Normalize"), &readBool, 1 );
-      
-      // Validate data
-      dB_level = (dB_level > 0) ? 0 : dB_level;
-      mbNormalize = (readBool != 0);
-
-      SaveUserPreset(GetCurrentSettingsGroup());
-      
-      // Do not migrate again
-      gPrefs->Write(base + wxT("Migrated"), true);
-      gPrefs->Flush();
-   }
-
-   return true;
-}
-
-bool EffectBassTreble::InitPass1()
-{
-   mMax = 0.0;
-
-   // Integer format tracks require headroom to avoid clipping
-   // when saved between passes (bug 619)
-
-   if (mbNormalize)  // don't need to calculate this if only doing one pass.
-   {
-      // Up to (gain + 6dB) headroom required for treble boost (experimental).
-      mPreGain = (dB_treble > 0) ? (dB_treble + 6.0) : 0.0;
-      if (dB_bass >= 0)
-      {
-         mPreGain = (mPreGain > dB_bass) ? mPreGain : dB_bass;
-      }
-      else
-      {
-         // Up to 6 dB headroom reaquired for bass cut (experimental)
-         mPreGain = (mPreGain > 6.0) ? mPreGain : 6.0;
-      }
-      mPreGain = (exp(log(10.0) * mPreGain / 20));   // to linear
-   }
-   else
-   {
-      mPreGain = 1.0;   // Unity gain
-   }
-
-   return true;
-}
-
-bool EffectBassTreble::InitPass2()
-{
-   return mbNormalize && mMax != 0;
-}
-
 void EffectBassTreble::PopulateOrExchange(ShuttleGui & S)
 {
-   S.StartVerticalLay(0);
+   S.SetBorder(5);
+   S.AddSpace(0, 5);
+
+   S.StartStatic(_("Tone controls"));
    {
       S.StartMultiColumn(3, wxEXPAND);
-      S.SetStretchyCol(2);
       {
+         S.SetStretchyCol(2);
+
          // Bass control
-         FloatingPointValidator<double> vldBass(1, &dB_bass);
+         FloatingPointValidator<double> vldBass(1, &mBass);
          vldBass.SetRange(MIN_Bass, MAX_Bass);
          mBassT = S.Id(ID_Bass).AddTextBox(_("&Bass (dB):"), wxT(""), 10);
          mBassT->SetName(_("Bass (dB):"));
          mBassT->SetValidator(vldBass);
 
          S.SetStyle(wxSL_HORIZONTAL);
-         mBassS = S.Id(ID_Bass).AddSlider(wxT(""), 0, MAX_Bass * kSliderScale, MIN_Bass * kSliderScale);
+         mBassS = S.Id(ID_Bass).AddSlider(wxT(""), 0, MAX_Bass * SCL_Bass, MIN_Bass * SCL_Bass);
          mBassS->SetName(_("Bass"));
-         mBassS->SetPageSize(30);
 
          // Treble control
-         FloatingPointValidator<double> vldTreble(1, &dB_treble);
+         FloatingPointValidator<double> vldTreble(1, &mTreble);
          vldTreble.SetRange(MIN_Treble, MAX_Treble);
          mTrebleT = S.Id(ID_Treble).AddTextBox(_("&Treble (dB):"), wxT(""), 10);
          mTrebleT->SetValidator(vldTreble);
 
          S.SetStyle(wxSL_HORIZONTAL);
-         mTrebleS = S.Id(ID_Treble).AddSlider(wxT(""), 0, MAX_Treble * kSliderScale, MIN_Treble * kSliderScale);
+         mTrebleS = S.Id(ID_Treble).AddSlider(wxT(""), 0, MAX_Treble * SCL_Treble, MIN_Treble * SCL_Treble);
          mTrebleS->SetName(_("Treble"));
-         mTrebleS->SetPageSize(30);
+      }
+      S.EndMultiColumn();
+   }
+   S.EndStatic();
 
-         // Level control
-         FloatingPointValidator<double> vldLevel(1, &dB_level);
-         vldLevel.SetRange(MIN_Level, MAX_Level);
-         mLevelT = S.Id(ID_Level).AddTextBox(_("&Level (dB):"), wxT(""), 10);
-         mLevelT->SetValidator(vldLevel);
+   S.StartStatic("Output");
+   {
+      S.StartMultiColumn(3, wxEXPAND);
+      {
+         S.SetStretchyCol(2);
+
+         // Gain control
+         FloatingPointValidator<double> vldGain(1, &mGain);
+         vldGain.SetRange(MIN_Gain, MAX_Gain);
+         mGainT = S.Id(ID_Gain).AddTextBox(_("&Volume (dB):"), wxT(""), 10);
+         mGainT->SetValidator(vldGain);
 
          S.SetStyle(wxSL_HORIZONTAL);
-         mLevelS = S.Id(ID_Level).AddSlider(wxT(""), 0, MAX_Level * kSliderScale, MIN_Level * kSliderScale);
-         mLevelS->SetName(_("Level"));
-         mLevelS->SetPageSize(30);
+         mGainS = S.Id(ID_Gain).AddSlider(wxT(""), 0, MAX_Gain * SCL_Gain, MIN_Gain * SCL_Gain);
+         mGainS->SetName(_("Level"));
       }
       S.EndMultiColumn();
 
-      // Normalize checkbox
-      S.StartHorizontalLay(wxLEFT, true);
+      S.StartMultiColumn(2, wxCENTER);
       {
-         mNormalizeCheckBox = S.Id(ID_Normalize).AddCheckBox(_("&Enable level control"),
-                                       DEF_Normalize ? wxT("true") : wxT("false"));
-         mWarning = S.AddVariableText(wxT(""), false, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
+         // Link checkbox
+         mLinkCheckBox = S.Id(ID_Link).AddCheckBox(_("Link Volume control to Tone controls"),
+                                          DEF_Link ? wxT("true") : wxT("false"));
       }
-      S.EndHorizontalLay();
+      S.EndMultiColumn();
    }
-   S.EndVerticalLay();
-
-   return;
+   S.EndStatic();
 }
 
 bool EffectBassTreble::TransferDataToWindow()
@@ -327,12 +272,10 @@ bool EffectBassTreble::TransferDataToWindow()
       return false;
    }
 
-   mBassS->SetValue((int) dB_bass * kSliderScale + 0.5);
-   mTrebleS->SetValue((int) dB_treble * kSliderScale + 0.5);
-   mLevelS->SetValue((int) dB_level * kSliderScale + 0.5);
-   mNormalizeCheckBox->SetValue(mbNormalize);
-
-   UpdateUI();
+   mBassS->SetValue((int) (mBass * SCL_Bass));
+   mTrebleS->SetValue((int) mTreble *SCL_Treble);
+   mGainS->SetValue((int) mGain * SCL_Gain);
+   mLinkCheckBox->SetValue(mLink);
 
    return true;
 }
@@ -344,18 +287,96 @@ bool EffectBassTreble::TransferDataFromWindow()
       return false;
    }
 
-   mbNormalize = mNormalizeCheckBox->GetValue();
-
    return true;
 }
 
+
 // EffectBassTreble implementation
 
-void EffectBassTreble::Coefficents(double hz, float slope, double gain, int type,
-                                   float& a0, float& a1, float& a2,
-                                   float& b0, float& b1, float& b2)
+void EffectBassTreble::InstanceInit(EffectBassTrebleState & data, float sampleRate)
 {
-   double w = 2 * M_PI * hz / mSampleRate;
+   data.samplerate = sampleRate;
+   data.slope = 0.4f;   // same slope for both filters
+   data.hzBass = 250.0f;   // could be tunable in a more advanced version
+   data.hzTreble = 4000.0f;   // could be tunable in a more advanced version
+
+   data.a0Bass = 1;
+   data.a1Bass = 0;
+   data.a2Bass = 0;
+   data.b0Bass = 0;
+   data.b1Bass = 0;
+   data.b2Bass = 0;
+
+   data.a0Treble = 1;
+   data.a1Treble = 0;
+   data.a2Treble = 0;
+   data.b0Treble = 0;
+   data.b1Treble = 0;
+   data.b2Treble = 0;
+
+   data.xn1Bass = 0;
+   data.xn2Bass = 0;
+   data.yn1Bass = 0;
+   data.yn2Bass = 0;
+
+   data.xn1Treble = 0;
+   data.xn2Treble = 0;
+   data.yn1Treble = 0;
+   data.yn2Treble = 0;
+
+   data.bass = -1;
+   data.treble = -1;
+   data.gain = DB_TO_LINEAR(mGain);
+
+}
+
+
+// EffectClientInterface implementation
+
+
+sampleCount EffectBassTreble::InstanceProcess(EffectBassTrebleState & data,
+                                              float **inBlock,
+                                              float **outBlock,
+                                              sampleCount blockLen)
+{
+   float *ibuf = inBlock[0];
+   float *obuf = outBlock[0];
+
+   // Set value to ensure correct rounding
+   double oldBass = DB_TO_LINEAR(mBass);
+   double oldTreble = DB_TO_LINEAR(mTreble);
+
+   data.gain = DB_TO_LINEAR(mGain);
+
+   // Compute coefficents of the low shelf biquand IIR filter
+   if (data.bass != oldBass)
+      Coefficents(data.hzBass, data.slope, mBass, data.samplerate, kBass,
+                  data.a0Bass, data.a1Bass, data.a2Bass,
+                  data.b0Bass, data.b1Bass, data.b2Bass);
+
+   // Compute coefficents of the high shelf biquand IIR filter
+   if (data.treble != oldTreble)
+      Coefficents(data.hzTreble, data.slope, mTreble, data.samplerate, kTreble,
+                  data.a0Treble, data.a1Treble, data.a2Treble,
+                  data.b0Treble, data.b1Treble, data.b2Treble);
+
+   for (sampleCount i = 0; i < blockLen; i++) {
+      obuf[i] = DoFilter(data, ibuf[i]) * data.gain;
+   }
+
+   return blockLen;
+}
+
+
+
+// Effect implementation
+
+
+void EffectBassTreble::Coefficents(double hz, double slope, double gain, double samplerate, int type,
+                                   double& a0, double& a1, double& a2,
+                                   double& b0, double& b1, double& b2)
+{
+   double w = 2 * M_PI * hz / samplerate;
    double a = exp(log(10.0) * gain / 40);
    double b = sqrt((a * a + 1) / slope - (pow((a - 1), 2)));
 
@@ -379,109 +400,112 @@ void EffectBassTreble::Coefficents(double hz, float slope, double gain, int type
    }
 }
 
-float EffectBassTreble::DoFilter(float in)
+float EffectBassTreble::DoFilter(EffectBassTrebleState & data, float in)
 {
    // Bass filter
-   float out = (b0Bass * in + b1Bass * xn1Bass + b2Bass * xn2Bass -
-         a1Bass * yn1Bass - a2Bass * yn2Bass) / a0Bass;
-   xn2Bass = xn1Bass;
-   xn1Bass = in;
-   yn2Bass = yn1Bass;
-   yn1Bass = out;
+   float out = (data.b0Bass * in + data.b1Bass * data.xn1Bass + data.b2Bass * data.xn2Bass -
+         data.a1Bass * data.yn1Bass - data.a2Bass * data.yn2Bass) / data.a0Bass;
+   data.xn2Bass = data.xn1Bass;
+   data.xn1Bass = in;
+   data.yn2Bass = data.yn1Bass;
+   data.yn1Bass = out;
 
    // Treble filter
    in = out;
-   out = (b0Treble * in + b1Treble * xn1Treble + b2Treble * xn2Treble -
-         a1Treble * yn1Treble - a2Treble * yn2Treble) / a0Treble;
-   xn2Treble = xn1Treble;
-   xn1Treble = in;
-   yn2Treble = yn1Treble;
-   yn1Treble = out;
+   out = (data.b0Treble * in + data.b1Treble * data.xn1Treble + data.b2Treble * data.xn2Treble -
+         data.a1Treble * data.yn1Treble - data.a2Treble * data.yn2Treble) / data.a0Treble;
+   data.xn2Treble = data.xn1Treble;
+   data.xn1Treble = in;
+   data.yn2Treble = data.yn1Treble;
+   data.yn1Treble = out;
 
-   // Retain the maximum value for use in the normalization pass
-   if(mMax < fabs(out))
-      mMax = fabs(out);
    return out;
 }
 
-void EffectBassTreble::UpdateUI()
-{
-   double bass, treble, level;
-   mBassT->GetValue().ToDouble(&bass);
-   mTrebleT->GetValue().ToDouble(&treble);
-   mLevelT->GetValue().ToDouble(&level);
-   bool enable = mNormalizeCheckBox->GetValue();
-
-   // Disallow level control if disabled
-   mLevelT->Enable(enable);
-   mLevelS->Enable(enable);
-
-   if (bass == 0 && treble == 0 && !enable)
-   {
-      // Disallow Apply if nothing to do
-      EnableApply(false);
-      mWarning->SetLabel(_("    No change to apply."));
-   }
-   else
-   {
-      if (level > 0 && enable)
-      {
-         // Disallow Apply if level enabled and > 0
-         EnableApply(false);
-         mWarning->SetLabel(_(":   Maximum 0 dB."));
-      }
-      else
-      {
-         // Apply enabled
-         EnableApply(true);
-         mWarning->SetLabel(wxT(""));
-      }
-   }
-}
 
 void EffectBassTreble::OnBassText(wxCommandEvent & WXUNUSED(evt))
 {
-   mBassT->GetValidator()->TransferFromWindow();
-   mBassS->SetValue((int) floor(dB_bass * kSliderScale + 0.5));
-   UpdateUI();
+   double oldBass = mBass;
+
+   if (!EnableApply(mUIParent->TransferDataFromWindow()))
+   {
+      return;
+   }
+
+   if (mLink) UpdateGain(oldBass, kBass);
+   mBassS->SetValue((int) (mBass * SCL_Bass));
 }
 
 void EffectBassTreble::OnTrebleText(wxCommandEvent & WXUNUSED(evt))
 {
-   mTrebleT->GetValidator()->TransferFromWindow();
-   mTrebleS->SetValue((int) floor(dB_treble * kSliderScale + 0.5));
-   UpdateUI();
+   double oldTreble = mTreble;
+
+   if (!EnableApply(mUIParent->TransferDataFromWindow()))
+   {
+      return;
+   }
+
+   if (mLink) UpdateGain(oldTreble, kTreble);
+   mTrebleS->SetValue((int) (mTreble * SCL_Treble));
 }
 
-void EffectBassTreble::OnLevelText(wxCommandEvent & WXUNUSED(evt))
+void EffectBassTreble::OnGainText(wxCommandEvent & WXUNUSED(evt))
 {
-   mLevelT->GetValidator()->TransferFromWindow();
-   mLevelS->SetValue((int) floor(dB_level * kSliderScale + 0.5));
-   UpdateUI();
+   if (!EnableApply(mUIParent->TransferDataFromWindow()))
+   {
+      return;
+   }
+
+   mGainS->SetValue((int) (mGain * SCL_Gain));
 }
 
 void EffectBassTreble::OnBassSlider(wxCommandEvent & evt)
 {
-   dB_bass = (double) evt.GetInt() / kSliderScale;
+   double oldBass = mBass;
+   mBass = (double) evt.GetInt() / SCL_Bass;
    mBassT->GetValidator()->TransferToWindow();
-   UpdateUI();
+
+   if (mLink) UpdateGain(oldBass, kBass);
+   EnableApply(mUIParent->Validate());
 }
 
 void EffectBassTreble::OnTrebleSlider(wxCommandEvent & evt)
 {
-   dB_treble = (double) evt.GetInt() / kSliderScale;
+   double oldTreble = mTreble;
+   mTreble = (double) evt.GetInt() / SCL_Treble;
    mTrebleT->GetValidator()->TransferToWindow();
-   UpdateUI();
+
+   if (mLink) UpdateGain(oldTreble, kTreble);
+   EnableApply(mUIParent->Validate());
 }
 
-void EffectBassTreble::OnLevelSlider(wxCommandEvent & evt)
+void EffectBassTreble::OnGainSlider(wxCommandEvent & evt)
 {
-   dB_level = (double) evt.GetInt() / kSliderScale;
-   mLevelT->GetValidator()->TransferToWindow();
-   UpdateUI();
+   mGain = (double) evt.GetInt() / SCL_Gain;
+   mGainT->GetValidator()->TransferToWindow();
+
+   EnableApply(mUIParent->Validate());
 }
 
-void EffectBassTreble::OnNormalize(wxCommandEvent& WXUNUSED(evt))
+void EffectBassTreble::OnLinkCheckbox(wxCommandEvent& evt)
 {
-   UpdateUI();
+   mLink = mLinkCheckBox->GetValue();
+}
+
+void EffectBassTreble::UpdateGain(double oldVal, int control)
+{
+   double newVal;
+   oldVal = (oldVal > 0)? oldVal / 2.0 : oldVal / 4.0;
+
+   if (control == kBass)
+      newVal = (mBass > 0)? mBass / 2.0 : mBass / 4.0;
+   else
+      newVal = (mTreble > 0)? mTreble / 2.0 : mTreble / 4.0;
+
+   mGain -= newVal - oldVal;
+   mGain = std::min(MAX_Gain, std::max(MIN_Gain, mGain));
+
+   mGainS->SetValue(mGain);
+   mGainT->GetValidator()->TransferToWindow();
+
 }
