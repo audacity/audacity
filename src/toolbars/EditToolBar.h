@@ -136,14 +136,14 @@ public:
    void EnableDisableButtons();
    void UpdatePrefs();
 
+   void RegenerateTooltips();
+
 private:
 
    AButton *AddButton(teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled,
                       int id, const wxChar *label, bool toggle = false);
 
    void MakeButtons();
-
-   void RegenerateTooltips();
 
    AButton *mButtons[STBNumButtons];
 
