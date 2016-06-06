@@ -494,7 +494,7 @@ void Scrubber::StopScrubbing()
 
    mPoller->Stop();
 
-   if (!mCancelled) {
+   if (HasStartedScrubbing() && !mCancelled) {
       const wxMouseState state(::wxGetMouseState());
       // Stop and set cursor
       mProject->DoPlayStopSelect(true, state.ShiftDown());
