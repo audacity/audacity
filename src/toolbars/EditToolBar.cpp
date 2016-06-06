@@ -427,8 +427,8 @@ void ScrubbingToolBar::Populate()
    MakeButtonBackgroundsSmall();
 
    /* Buttons */
-   AddButton(bmpPlay, bmpPlay, bmpPlayDisabled, STBStartID,
-             _("Start scrubbing"), false);
+   AddButton(bmpPlay, bmpStop, bmpPlayDisabled, STBStartID,
+             _("Start scrubbing"), true);
    AddButton(bmpScrub, bmpScrub, bmpScrubDisabled, STBScrubID,
              _("Scrub"), true);
    AddButton(bmpSeek, bmpSeek, bmpSeekDisabled, STBSeekID,
@@ -456,7 +456,23 @@ void ScrubbingToolBar::RegenerateTooltips()
     "Scrubbing" is variable-speed playback, ...
     "Seeking" is normal speed playback but with skips
     */
-   mButtons[STBStartID]->SetToolTip(_("Start scrubbing or seeking"));
+   auto project = GetActiveProject();
+   if (project) {
+      auto startStop = mButtons[STBStartID];
+      auto &scrubber = project->GetScrubber();
+      if(scrubber.HasStartedScrubbing() || scrubber.IsScrubbing()) {
+         if (scrubber.Seeks())
+            startStop->SetToolTip(_("Stop seeking"));
+         else
+            startStop->SetToolTip(_("Stop scrubbing"));
+      }
+      else {
+         if (scrubber.Seeks())
+            startStop->SetToolTip(_("Start seeking"));
+         else
+            startStop->SetToolTip(_("Start scrubbing"));
+      }
+   }
    mButtons[STBScrubID]->SetToolTip(_("Scrub"));
    mButtons[STBSeekID]->SetToolTip(_("Seek"));
 #endif
@@ -472,8 +488,7 @@ void ScrubbingToolBar::OnButton(wxCommandEvent &event)
 
    switch (id) {
       case STBStartID:
-         mButtons[STBStartID]->PopUp();
-         scrubber.OnStart(event);
+         scrubber.OnStartStop(event);
          break;
       case STBScrubID:
          scrubber.OnScrub(event);

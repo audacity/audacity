@@ -232,8 +232,8 @@ namespace {
       { wxT("Seek"),        XO("See&k"),            XO("Seeking"),
          &Scrubber::OnSeek,        true,       &Scrubber::Seeks },
 
-      { wxT("StartScrubSeek"),        XO("Star&t"), XO(""),
-         &Scrubber::OnStart,        true,       nullptr },
+      { wxT("StartStopScrubSeek"),        XO("Star&t/Stop"), XO(""),
+         &Scrubber::OnStartStop,   true,       nullptr },
    };
 
    enum { nMenuItems = sizeof(menuItems) / sizeof(*menuItems), StartMenuItem = 2 };
@@ -765,7 +765,7 @@ Scrubber &ScrubbingOverlay::GetScrubber()
 
 void Scrubber::DoScrub()
 {
-   const bool wasScrubbing = IsScrubbing();
+   const bool wasScrubbing = HasStartedScrubbing() || IsScrubbing();
    const bool scroll = PlaybackPrefs::GetPinnedHeadPreference();
    if (!wasScrubbing) {
       auto tp = mProject->GetTrackPanel();
@@ -779,6 +779,8 @@ void Scrubber::DoScrub()
 
       MarkScrubStart(xx, scroll);
    }
+   else
+      mProject->GetControlToolBar()->StopPlaying();
 }
 
 void Scrubber::OnScrubOrSeek(bool &toToggle, bool &other)
@@ -800,6 +802,7 @@ void Scrubber::OnScrubOrSeek(bool &toToggle, bool &other)
 
    auto scrubbingToolBar = mProject->GetScrubbingToolBar();
    scrubbingToolBar->EnableDisableButtons();
+   scrubbingToolBar->RegenerateTooltips();
 
    CheckMenuItem();
 }
@@ -814,7 +817,7 @@ void Scrubber::OnSeek(wxCommandEvent&)
    OnScrubOrSeek(mSeeking, mScrubbing);
 }
 
-void Scrubber::OnStart(wxCommandEvent&)
+void Scrubber::OnStartStop(wxCommandEvent&)
 {
    DoScrub();
 }
@@ -824,7 +827,7 @@ enum { CMD_ID = 8000 };
 BEGIN_EVENT_TABLE(Scrubber, wxEvtHandler)
    EVT_MENU(CMD_ID,     Scrubber::OnScrub)
    EVT_MENU(CMD_ID + 1, Scrubber::OnSeek)
-   EVT_MENU(CMD_ID + 2, Scrubber::OnStart)
+   EVT_MENU(CMD_ID + 2, Scrubber::OnStartStop)
 END_EVENT_TABLE()
 
 BEGIN_EVENT_TABLE(Scrubber::Forwarder, wxEvtHandler)
