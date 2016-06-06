@@ -75,6 +75,7 @@ class EditToolBar;
 class MeterToolBar;
 class MixerToolBar;
 class Scrubber;
+class ScrubbingToolBar;
 class SelectionBar;
 class SpectralSelectionBar;
 class Toolbar;
@@ -442,6 +443,7 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    DeviceToolBar *GetDeviceToolBar();
    EditToolBar *GetEditToolBar();
    MixerToolBar *GetMixerToolBar();
+   ScrubbingToolBar *GetScrubbingToolBar();
    SelectionBar *GetSelectionBar();
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    SpectralSelectionBar *GetSpectralSelectionBar();

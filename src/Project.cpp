@@ -4370,6 +4370,14 @@ MixerToolBar *AudacityProject::GetMixerToolBar()
            NULL);
 }
 
+ScrubbingToolBar *AudacityProject::GetScrubbingToolBar()
+{
+   return dynamic_cast<ScrubbingToolBar*>
+   (mToolManager ?
+    mToolManager->GetToolBar(ScrubbingBarID) :
+    nullptr);
+}
+
 SelectionBar *AudacityProject::GetSelectionBar()
 {
    return (SelectionBar *)

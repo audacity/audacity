@@ -21,6 +21,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../commands/CommandFunctors.h"
 #include "../../prefs/PlaybackPrefs.h"
 #include "../../toolbars/ControlToolBar.h"
+#include "../../toolbars/EditToolBar.h"
 
 #undef USE_TRANSCRIPTION_TOOLBAR
 #ifdef USE_TRANSCRIPTION_TOOLBAR
@@ -786,6 +787,9 @@ void Scrubber::OnScrubOrSeek(bool &toToggle, bool &other)
    if (ruler)
       // Update button images
       ruler->UpdateButtonStates();
+
+   auto scrubbingToolBar = mProject->GetScrubbingToolBar();
+   scrubbingToolBar->EnableDisableButtons();
 
    CheckMenuItem();
 }
