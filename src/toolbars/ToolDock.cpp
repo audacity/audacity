@@ -82,6 +82,22 @@ void ToolBarConfiguration::Hide(ToolBar *bar)
    Remove(bar);
 }
 
+bool ToolBarConfiguration::IsRightmost(const ToolBar *bar) const
+{
+   auto iter = FindPlace(bar);
+   auto endit = end();
+   if (iter == endit)
+      // not present
+      return true;
+   if (++iter == endit)
+      // Last of all
+      return true;
+   if (bar->GetRect().y != iter->pBar->GetRect().y)
+      // Last in its row
+      return true;
+   return false;
+}
+
 IMPLEMENT_CLASS( ToolDock, wxPanel );
 
 ////////////////////////////////////////////////////////////
@@ -507,30 +523,29 @@ void ToolDock::OnPaint( wxPaintEvent & WXUNUSED(event) )
    AColor::Line(dc, 0, 0, 0, sz.GetHeight() );
 
    // Draw the gap between each bar
-   int ndx, cnt = mConfiguration.GetCount();
-   for( ndx = 0; ndx < cnt; ndx++ )
+   for (const auto &place : GetConfiguration())
    {
-      wxRect r = ( (ToolBar *)mConfiguration[ ndx ] )->GetRect();
+      auto toolbar = place.pBar;
+      if (!toolbar)
+         continue;
+
+      wxRect r = toolbar->GetRect();
 
       AColor::Line( dc,
-                    r.GetLeft(),
-                    r.GetBottom() + 1,
-                    sz.GetWidth(),
-                    r.GetBottom() + 1 );
+                   r.GetLeft(),
+                   r.GetBottom() + 1,
+                   sz.GetWidth(),
+                   r.GetBottom() + 1 );
 
       // For all bars but the last...
-      if( ndx < cnt - 1 )
-      {
-         // ...and for bars that aren't the last in a row, draw an
-         // horizontal gap line
-         if( r.y == ( (ToolBar *)mConfiguration[ ndx + 1 ] )->GetRect().y )
-         {
-            AColor::Line(dc,
-                         r.GetRight() + 1,
-                         r.GetTop(),
-                         r.GetRight() + 1,
-                         r.GetBottom() + 1 );
-         }
+      // ...and for bars that aren't the last in a row, draw an
+      // horizontal gap line
+      if (!mConfiguration.IsRightmost(toolbar)) {
+         AColor::Line(dc,
+            r.GetRight() + 1,
+            r.GetTop(),
+            r.GetRight() + 1,
+            r.GetBottom() + 1 );
       }
    }
 }

@@ -129,6 +129,7 @@ public:
    void Show(ToolBar *bar);
    void Hide(ToolBar *bar);
 
+   bool IsRightmost(const ToolBar *bar) const;
 private:
    Iterator FindPlace(const ToolBar *bar) const;
 };
