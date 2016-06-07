@@ -613,29 +613,22 @@ void ToolManager::ReadConfig()
 {
    wxString oldpath = gPrefs->GetPath();
    wxArrayInt unordered[ DockCount ];
-   int order[ DockCount ][ ToolBarCount ];
    bool show[ ToolBarCount ];
    int width[ ToolBarCount ];
    int height[ ToolBarCount ];
    int x, y;
-   int dock, ord, ndx;
+   int dock, ndx;
+   bool someFound { false };
 
 #if defined(__WXMAC__)
    // Disable window animation
    wxSystemOptions::SetOption( wxMAC_WINDOW_PLAIN_TRANSITION, 1 );
 #endif
 
-   // Invalidate all order entries
-   for( dock = 0; dock < DockCount; dock++ )
-   {
-      for( ord = 0; ord < ToolBarCount; ord++ )
-      {
-         order[ dock ][ ord ] = NoBarID;
-      }
-   }
-
    // Change to the bar root
    gPrefs->SetPath( wxT("/GUI/ToolBars") );
+
+   ToolBarConfiguration::Legacy topLegacy, botLegacy;
 
    // Load and apply settings for each bar
    for( ndx = 0; ndx < ToolBarCount; ndx++ )
@@ -665,9 +658,28 @@ void ToolManager::ReadConfig()
 #endif
 
       // Read in all the settings
-      gPrefs->Read( wxT("Dock"), &dock,  defaultDock );
-      gPrefs->Read( wxT("Order"), &ord, NoBarID );
-      gPrefs->Read( wxT("Show"), &show[ ndx ], bShownByDefault);
+      gPrefs->Read( wxT("Dock"), &dock, -1);
+      const bool found = (dock != -1);
+      if (found)
+         someFound = true;
+      if (!found)
+         dock = defaultDock;
+      
+      ToolDock *d;
+      ToolBarConfiguration::Legacy *pLegacy;
+      switch(dock)
+      {
+         case TopDockID: d = mTopDock; pLegacy = &topLegacy; break;
+         case BotDockID: d = mBotDock; pLegacy = &botLegacy;  break;
+         default:        d = nullptr; pLegacy = nullptr; break;
+      }
+
+      bool ordered = ToolBarConfiguration::Read
+         (d ? &d->GetConfiguration() : nullptr,
+          this,
+          pLegacy,
+          bar, show[ ndx ], bShownByDefault)
+      && found;
 
       gPrefs->Read( wxT("X"), &x, -1 );
       gPrefs->Read( wxT("Y"), &y, -1 );
@@ -727,15 +739,8 @@ void ToolManager::ReadConfig()
             }
          }
 #endif
-         // Is order within range and unoccupied?
-         if( ( ord >= 0 ) &&
-             ( ord < ToolBarCount ) &&
-             ( order[ dock - 1 ][ ord ] == NoBarID ) )
-         {
-            // Insert at ordered location
-            order[ dock - 1 ][ ord ] = ndx;
-         }
-         else
+
+         if (!ordered)
          {
             // These must go at the end
             unordered[ dock - 1 ].Add( ndx );
@@ -776,31 +781,18 @@ void ToolManager::ReadConfig()
       gPrefs->SetPath( wxT("/GUI/ToolBars") );
    }
 
+   mTopDock->GetConfiguration().PostRead(topLegacy);
+   mBotDock->GetConfiguration().PostRead(botLegacy);
+
    // Add all toolbars to their target dock
    for( dock = 0; dock < DockCount; dock++ )
    {
       ToolDock *d = ( dock + 1 == TopDockID ? mTopDock : mBotDock );
 
-      // Add all ordered toolbars
-      for( ord = 0; ord < ToolBarCount; ord++ )
-      {
-         ndx = order[ dock ][ ord ];
-
-         // Bypass empty slots
-         if( ndx != NoBarID )
-         {
-            ToolBar *t = mBars[ ndx ];
-
-            // Dock it
-            d->Dock( t, false );
-            
-            // Show or hide it
-            Expose( t->GetId(), show[ t->GetId() ] );
-         }
-      }
+      d->LoadConfig(mBars);
 
       // Add all unordered toolbars
-      for( ord = 0; ord < (int) unordered[ dock ].GetCount(); ord++ )
+      for( int ord = 0; ord < (int) unordered[ dock ].GetCount(); ord++ )
       {
          ToolBar *t = mBars[ unordered[ dock ][ ord ] ];
 
@@ -819,6 +811,9 @@ void ToolManager::ReadConfig()
    // Reinstate original transition
    wxSystemOptions::SetOption( wxMAC_WINDOW_PLAIN_TRANSITION, mTransition );
 #endif
+
+   if (!someFound)
+      Reset();
 }
 
 //
@@ -846,13 +841,14 @@ void ToolManager::WriteConfig()
       gPrefs->SetPath( bar->GetSection() );
 
       // Search both docks for toolbar order
-      int to = mTopDock->GetOrder( bar );
-      int bo = mBotDock->GetOrder( bar );
+      bool to = mTopDock->GetConfiguration().Contains( bar );
+      bool bo = mBotDock->GetConfiguration().Contains( bar );
 
       // Save
       gPrefs->Write( wxT("Dock"), (int) (to ? TopDockID : bo ? BotDockID : NoDockID ));
-      gPrefs->Write( wxT("Order"), to + bo );
-      gPrefs->Write( wxT("Show"), IsVisible( ndx ) );
+      auto dock = to ? mTopDock : bo ? mBotDock : nullptr;
+      ToolBarConfiguration::Write
+         (dock ? &dock->GetConfiguration() : nullptr, bar);
 
       wxPoint pos( -1, -1 );
       wxSize sz = bar->GetSize();

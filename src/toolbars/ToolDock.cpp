@@ -98,6 +98,54 @@ bool ToolBarConfiguration::IsRightmost(const ToolBar *bar) const
    return false;
 }
 
+bool ToolBarConfiguration::Read
+   (ToolBarConfiguration *pConfiguration,
+    ToolManager *pManager,
+    Legacy *,
+    ToolBar *bar, bool &visible, bool defaultVisible)
+{
+   bool result = true;
+
+   if (pConfiguration) {
+      int ord;
+      gPrefs->Read( wxT("Order"), &ord, -1 );
+      // Index was written 1-based
+      --ord;
+      if (ord >= ToolBarCount)
+         result = false;
+      else if (ord >= 0)
+      {
+         while(pConfiguration->size () <= ord)
+            pConfiguration->push_back(nullptr);
+         (*pConfiguration)[ord] = bar;
+      }
+   }
+   // Future: might remember visibility in the configuration, not forgetting
+   // positions of hidden bars.
+   gPrefs->Read( wxT("Show"), &visible, defaultVisible);
+
+   return result;
+}
+
+void ToolBarConfiguration::PostRead(Legacy &)
+{
+   auto b = wxArrayPtrVoid::begin();
+   auto iter =
+      std::remove(b, wxArrayPtrVoid::end(), nullptr);
+   resize(iter - b);
+}
+
+void ToolBarConfiguration::Write
+   (const ToolBarConfiguration *pConfiguration, const ToolBar *bar)
+{
+   if (pConfiguration) {
+      auto index = pConfiguration->Index(const_cast<ToolBar*>(bar));
+      if (index != wxNOT_FOUND)
+         gPrefs->Write( wxT("Order"), 1 + index );
+   }
+   gPrefs->Write( wxT("Show"), bar->IsVisible() );
+}
+
 IMPLEMENT_CLASS( ToolDock, wxPanel );
 
 ////////////////////////////////////////////////////////////
@@ -141,26 +189,6 @@ ToolDock::~ToolDock()
 }
 
 //
-// Returns the order of the toolbar within the dock
-//
-int ToolDock::GetOrder( ToolBar *bar )
-{
-   int order = mConfiguration.Index( bar );
-
-   if( order == wxNOT_FOUND )
-   {
-      if( bar->GetDock() == this )
-      {
-         return 999;
-      }
-
-      return 0;
-   }
-
-   return order + 1;
-}
-
-//
 // Remove the toolbar from our control
 //
 void ToolDock::Undock( ToolBar *bar )
@@ -199,6 +227,19 @@ void ToolDock::Dock( ToolBar *bar, bool deflate, ToolBarConfiguration::Position 
    // Rearrange our world
    LayoutToolBars();
    Updated();
+}
+
+// Initial docking of bars
+void ToolDock::LoadConfig(ToolBar *bars[])
+{
+   // Add all ordered toolbars
+   for(const auto &place : GetConfiguration()) {
+      auto bar = place.pBar;
+      this->Dock(bar, false);
+      // Show it -- hidden bars are not (yet) ever saved as part of a
+      // configuration
+      Expose( bar->GetId(), true );
+   }
 }
 
 //

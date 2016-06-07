@@ -130,6 +130,20 @@ public:
    void Hide(ToolBar *bar);
 
    bool IsRightmost(const ToolBar *bar) const;
+
+   struct Legacy {
+   };
+
+   static bool Read
+      (ToolBarConfiguration *pConfiguration,
+       ToolManager *pManager,
+       Legacy *pLegacy,
+       ToolBar *bar, bool &visible, bool defaultVisible);
+   void PostRead(Legacy &legacy);
+
+   static void Write
+      (const ToolBarConfiguration *pConfiguration, const ToolBar *bar);
+
 private:
    Iterator FindPlace(const ToolBar *bar) const;
 };
@@ -144,6 +158,7 @@ class ToolDock final : public wxPanel
 
    bool AcceptsFocus() const override { return false; };
 
+   void LoadConfig(ToolBar *bars[]);
    void LayoutToolBars();
    void Expose( int type, bool show );
    int GetOrder( ToolBar *bar );
