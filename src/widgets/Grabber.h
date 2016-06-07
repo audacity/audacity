@@ -106,8 +106,9 @@ class Grabber final : public wxWindow
    // not a need to dock/float a toolbar from the keyboard.  If this
    // changes, remove this and add the necessary keyboard movement
    // handling.
-   // PRL:  Commented out so the ESC key can stop dragging.
-   // bool AcceptsFocus() const {return false;}
+   // Note that AcceptsFocusFromKeyboard() rather than AcceptsFocus()
+   // is overridden so that ESC can cancel toolbar drag.
+   bool AcceptsFocusFromKeyboard() const override {return false;}
 
    void PushButton(bool state);
 
