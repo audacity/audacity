@@ -18,6 +18,7 @@
 #include "BassTreble.h"
 
 #include <math.h>
+#include <algorithm>
 
 #include <wx/button.h>
 #include <wx/intl.h>
