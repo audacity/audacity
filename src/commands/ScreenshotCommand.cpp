@@ -452,6 +452,10 @@ bool ScreenshotCommand::Apply(CommandExecutionContext context)
    {
       CaptureToolbar(context.GetProject()->GetToolManager(), TranscriptionBarID, fileName);
    }
+   else if (captureMode.IsSameAs(wxT("scrubbing")))
+   {
+      CaptureToolbar(context.GetProject()->GetToolManager(), ScrubbingBarID, fileName);
+   }
    else if (captureMode.IsSameAs(wxT("trackpanel")))
    {
       TrackPanel *panel = context.GetProject()->GetTrackPanel();

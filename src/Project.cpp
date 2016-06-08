@@ -890,7 +890,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    mRuler = safenew AdornedRulerPanel( this,
                                    wxID_ANY,
                                    wxDefaultPosition,
-                                   wxSize( -1, AdornedRulerPanel::GetRulerHeight() ),
+                                   wxSize( -1, AdornedRulerPanel::GetRulerHeight(false) ),
                                    &mViewInfo );
 
    //
@@ -4368,6 +4368,14 @@ MixerToolBar *AudacityProject::GetMixerToolBar()
           (mToolManager ?
            mToolManager->GetToolBar(MixerBarID) :
            NULL);
+}
+
+ScrubbingToolBar *AudacityProject::GetScrubbingToolBar()
+{
+   return dynamic_cast<ScrubbingToolBar*>
+   (mToolManager ?
+    mToolManager->GetToolBar(ScrubbingBarID) :
+    nullptr);
 }
 
 SelectionBar *AudacityProject::GetSelectionBar()

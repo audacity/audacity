@@ -448,6 +448,7 @@ ToolManager::ToolManager( AudacityProject *parent )
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    mBars[SpectralSelectionBarID] = new SpectralSelectionBar();
 #endif
+   mBars[ ScrubbingBarID ]     = new ScrubbingToolBar();
 
    // We own the timer
    mTimer.SetOwner( this );

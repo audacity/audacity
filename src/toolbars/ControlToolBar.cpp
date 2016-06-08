@@ -168,6 +168,8 @@ void ControlToolBar::Populate()
       bmpCutPreview, bmpCutPreview, bmpCutPreviewDisabled);
    MakeAlternateImages(*mPlay, 3,
                        bmpScrub, bmpScrub, bmpScrubDisabled);
+   MakeAlternateImages(*mPlay, 4,
+                       bmpSeek, bmpSeek, bmpSeekDisabled);
    mPlay->FollowModifierKeys();
 
    mStop = MakeButton( bmpStop, bmpStop, bmpStopDisabled ,

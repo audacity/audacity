@@ -71,11 +71,7 @@ public:
    ~Scrubber();
 
    // Assume xx is relative to the left edge of TrackPanel!
-   void MarkScrubStart(
-      wxCoord xx, bool smoothScrolling,
-      bool alwaysSeeking // if false, can switch seeking or scrubbing
-                           // by mouse button state
-   );
+   void MarkScrubStart(wxCoord xx, bool smoothScrolling);
 
    // Returns true iff the event should be considered consumed by this:
    // Assume xx is relative to the left edge of TrackPanel!
@@ -101,16 +97,20 @@ public:
    void SetScrollScrubbing(bool value)
    { mSmoothScrollingScrub = value; }
 
-   bool IsAlwaysSeeking() const
-   { return mAlwaysSeeking; }
+   bool Seeks() const
+   { return mSeeking; }
+
+   bool Scrubs() const
+   { return mScrubbing; }
+
+   void Cancel()
+   { mCancelled = true; }
 
    bool ShouldDrawScrubSpeed();
    double FindScrubSpeed(bool seeking, double time) const;
    double GetMaxScrubSpeed() const { return mOptions.maxSpeed; }
 
    void HandleScrollWheel(int steps);
-
-   bool PollIsSeeking();
 
    // This returns the same as the enabled state of the menu items:
    bool CanScrub() const;
@@ -120,10 +120,13 @@ public:
    // For popup
    void PopulateMenu(wxMenu &menu);
 
+   void OnScrubOrSeek(bool &toToggle, bool &other);
    void OnScrub(wxCommandEvent&);
    void OnSeek(wxCommandEvent&);
+   void OnStartStop(wxCommandEvent&);
 
-   // A string to put in the leftmost part of the status bar.
+   // A string to put in the leftmost part of the status bar
+   // when scrub or seek is in progress, or else empty.
    const wxString &GetUntranslatedStateString() const;
 
    // All possible status strings.
@@ -133,9 +136,8 @@ public:
    bool IsPaused() const;
 
 private:
-   void DoScrub(bool seek);
+   void DoScrub();
    void OnActivateOrDeactivateApp(wxActivateEvent & event);
-   void UncheckAllMenuItems();
    void CheckMenuItem();
 
    // I need this because I can't push the scrubber as an event handler
@@ -156,10 +158,16 @@ private:
    int mScrubSpeedDisplayCountdown;
    wxCoord mScrubStartPosition;
    wxCoord mLastScrubPosition {};
-   bool mScrubSeekPress;
    bool mSmoothScrollingScrub;
-   bool mAlwaysSeeking {};
+
+   // These hold the three-way choice among click-to-scrub, click-to-seek, or disabled.
+   // Not both true.
+   bool mScrubbing {};
+   bool mSeeking {};
+
    bool mDragging {};
+
+   bool mCancelled {};
 
 #ifdef EXPERIMENTAL_SCRUBBING_SCROLL_WHEEL
    int mLogMaxScrubSpeed;
