@@ -48,12 +48,46 @@ enum
 class ToolBarConfiguration : public wxArrayPtrVoid
 {
 public:
-   using Position = int;
-   static const Position UnspecifiedPosition = -1;
+   struct Position {
+      ToolBar *rightOf {};
+      // ToolBar *below {};
+      // bool adopt {true};
+      bool valid {true};
+
+      // Default constructor
+      Position() {}
+
+      Position(
+         ToolBar *r /*,
+         ToolBar *b = nullptr,
+         bool shouldAdopt = true */
+      )
+         : rightOf{ r } // , below{ b }, adopt{ shouldAdopt }
+      {}
+
+      // Constructor for the invalid value
+      explicit Position(bool /* dummy */) : valid{ false } {}
+
+      friend inline bool operator ==
+      (const Position &lhs, const Position &rhs)
+      { return lhs.valid == rhs.valid &&
+         (!lhs.valid ||
+          (lhs.rightOf == rhs.rightOf
+           // && lhs.below == rhs.below
+           // && lhs.adopt == rhs.adopt
+         ));
+      }
+
+      friend inline bool operator !=
+      (const Position &lhs, const Position &rhs)
+      { return !(lhs == rhs); }
+   };
+
+   static const Position UnspecifiedPosition;
 
    struct Place {
       ToolBar *pBar {};
-      Position position { UnspecifiedPosition };
+      Position position;
    };
 
    class Iterator
@@ -64,9 +98,13 @@ public:
       const Place *operator -> () const { return &**this; }
       Iterator &operator ++ ()
       {
-         ++mIter;
+         wxASSERT(mIter != mEnd);
+
          // This is a feature:  advance position even at the end
-         ++mPlace.position;
+         mPlace.position.rightOf = mPlace.pBar;
+         // mPlace.position.below = nullptr;
+
+         ++mIter;
          if (mIter != mEnd)
             mPlace.pBar = static_cast<ToolBar*>(*mIter);
          else
@@ -93,7 +131,6 @@ public:
          : mIter(iter)
          , mEnd(end)
       {
-         mPlace.position = 0;
          if (mIter != mEnd)
             mPlace.pBar = static_cast<ToolBar*>(*mIter);
       }
@@ -107,10 +144,7 @@ public:
    Iterator end() const
       { return Iterator { wxArrayPtrVoid::end(), wxArrayPtrVoid::end() }; }
 
-   Position Find(const ToolBar *bar) const
-   {
-      return Index(const_cast<ToolBar*>(bar));
-   }
+   Position Find(const ToolBar *bar) const;
 
    bool Contains(const ToolBar *bar) const
    {

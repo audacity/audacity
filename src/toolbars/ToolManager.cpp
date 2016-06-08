@@ -1344,7 +1344,7 @@ void ToolManager::DoneDragging()
    mDragDock = NULL;
    mDragBar = NULL;
    mPrevDock = NULL;
-   mPrevSlot = -1;
+   mPrevSlot = { ToolBarConfiguration::UnspecifiedPosition };
    mLastPos.x = mBarPos.x = -1;
    mLastPos.y = mBarPos.y = -1;
    mTimer.Stop();

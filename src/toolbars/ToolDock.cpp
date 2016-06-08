@@ -48,6 +48,9 @@
 #include "../widgets/AButton.h"
 #include "../widgets/Grabber.h"
 
+const ToolBarConfiguration::Position
+   ToolBarConfiguration::UnspecifiedPosition { false };
+
 auto ToolBarConfiguration::FindPlace(const ToolBar *bar) const
    -> Iterator
 {
@@ -56,12 +59,26 @@ auto ToolBarConfiguration::FindPlace(const ToolBar *bar) const
    );
 }
 
+auto ToolBarConfiguration::Find(const ToolBar *bar) const -> Position
+{
+   auto iter = FindPlace(bar);
+   if (iter == end())
+      return UnspecifiedPosition;
+   else
+      return iter->position;
+}
+
 void ToolBarConfiguration::Insert(ToolBar *bar, Position position)
 {
-   if (position >= size() || position == UnspecifiedPosition)
+   if (position == UnspecifiedPosition)
       push_back(bar);
-   else
-      wxArrayPtrVoid::Insert(bar, position);
+   else {
+      auto index = wxArrayPtrVoid::Index(position.rightOf);
+      if (index == wxNOT_FOUND)
+         push_back(bar);
+      else
+         wxArrayPtrVoid::Insert(bar, 1 + index);
+   }
 }
 
 void ToolBarConfiguration::Remove(const ToolBar *bar)
