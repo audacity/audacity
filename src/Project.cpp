@@ -1594,9 +1594,27 @@ void AudacityProject::OnScrollRightButton(wxScrollEvent & event)
 }
 
 
+bool AudacityProject::MayScrollBeyondZero() const
+{
+   if (mViewInfo.bScrollBeyondZero)
+      return true;
+
+   if (GetScrubber().HasStartedScrubbing() ||
+       IsAudioActive()) {
+      if (mPlaybackScroller) {
+         auto mode = mPlaybackScroller->GetMode();
+         if (mode == PlaybackScroller::Mode::Centered ||
+             mode == PlaybackScroller::Mode::Right)
+            return true;
+      }
+   }
+
+   return false;
+}
+
 double AudacityProject::ScrollingLowerBoundTime() const
 {
-   if (!mViewInfo.bScrollBeyondZero)
+   if (!MayScrollBeyondZero())
       return 0;
    const double screen = mTrackPanel->GetScreenEndTime() - mViewInfo.h;
    return std::min(mTracks->GetStartTime(), -screen / 2.0);
@@ -1708,7 +1726,7 @@ void AudacityProject::FixScrollbars()
    // may be scrolled to the midline.
    // May add even more to the end, so that you can always scroll the starting time to zero.
    const double lowerBound = ScrollingLowerBoundTime();
-   const double additional = mViewInfo.bScrollBeyondZero
+   const double additional = MayScrollBeyondZero()
       ? -lowerBound + std::max(halfScreen, screen - LastTime)
       : screen / 4.0;
 
@@ -2045,7 +2063,7 @@ void AudacityProject::OnScroll(wxScrollEvent & WXUNUSED(event))
    }
 
 
-   if (mViewInfo.bScrollBeyondZero) {
+   if (MayScrollBeyondZero()) {
       enum { SCROLL_PIXEL_TOLERANCE = 10 };
       if (std::abs(mViewInfo.TimeToPosition(0.0, 0
                                    )) < SCROLL_PIXEL_TOLERANCE) {
@@ -5418,7 +5436,7 @@ void AudacityProject::PlaybackScroller::OnTimer(wxCommandEvent &event)
       }
       viewInfo.h =
          viewInfo.OffsetTimeByPixels(viewInfo.h, deltaX, true);
-      if (!viewInfo.bScrollBeyondZero)
+      if (!mProject->MayScrollBeyondZero())
          // Can't scroll too far left
          viewInfo.h = std::max(0.0, viewInfo.h);
       trackPanel->Refresh(false);

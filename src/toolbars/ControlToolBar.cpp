@@ -1281,6 +1281,9 @@ void ControlToolBar::StartScrolling()
    if (project) {
       auto mode = Mode::Centered;
 
+#if 0
+      // Enable these lines to pin the playhead right instead of center,
+      // when recording but not overdubbing.
       if (gAudioIO->GetNumCaptureChannels() > 0) {
          // recording
 
@@ -1300,6 +1303,7 @@ void ControlToolBar::StartScrolling()
          if (!duplex)
             mode = Mode::Right;
       }
+#endif
 
       project->GetPlaybackScroller().Activate(mode);
    }

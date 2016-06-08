@@ -934,16 +934,6 @@ void AudacityProject::CreateMenusAndCommands()
 
       //////////////////////////////////////////////////////////////////////////
 
-      c->AddSeparator();
-      c->AddCheck(wxT("ScrollLeftOfZero"), _("Scroll le&ft of zero"),
-                  FN(OnToggleScrollLeftOfZero),
-                  gPrefs->ReadBool(
-                     TracksPrefs::ScrollingPreferenceKey(),
-                     TracksPrefs::ScrollingPreferenceDefault()),
-                  AudioIONotBusyFlag, AudioIONotBusyFlag);
-
-      //////////////////////////////////////////////////////////////////////////
-
       c->EndMenu();
 
       // All of this is a bit hacky until we can get more things connected into
@@ -2548,15 +2538,6 @@ void AudacityProject::OnSortName()
    PushState(_("Tracks sorted by name"), _("Sort by Name"));
 
    mTrackPanel->Refresh(false);
-}
-
-void AudacityProject::OnToggleScrollLeftOfZero()
-{
-   auto key = TracksPrefs::ScrollingPreferenceKey();
-   auto value = gPrefs->ReadBool(key, TracksPrefs::ScrollingPreferenceDefault());
-   gPrefs->Write(key, !value);
-   gPrefs->Flush();
-   UpdatePrefs();
 }
 
 void AudacityProject::OnSkipStart()
