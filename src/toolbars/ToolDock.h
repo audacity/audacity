@@ -59,7 +59,6 @@ class ToolDock final : public wxPanel
    void Expose( int type, bool show );
    int Find(ToolBar *bar) const;
    int GetOrder( ToolBar *bar );
-   int GetBarCount();
    void Dock( ToolBar *bar, bool deflate, int ndx = -1 );
    void Undock( ToolBar *bar );
    int PositionBar( ToolBar *t, wxPoint & pos, wxRect & rect );
@@ -73,18 +72,6 @@ class ToolDock final : public wxPanel
    void OnMouseEvents(wxMouseEvent &event);
 
  private:
-
-   void ReadConfig();
-   void WriteConfig();
-
-   int FlowLayout( int cnt,
-                   wxRect boxen[],
-                   wxRect ideal[],
-                   int i,
-                   int x,
-                   int y,
-                   int width,
-                   int height );
 
    void Updated();
 

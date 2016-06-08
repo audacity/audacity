@@ -113,9 +113,9 @@ class ToolBar /* not final */ : public wxPanel
    // NEW virtual:
    virtual bool Expose(bool show = true);
 
-   bool IsResizable();
-   bool IsVisible();
-   bool IsDocked();
+   bool IsResizable() const;
+   bool IsVisible() const;
+   bool IsDocked() const;
    bool IsPositioned(){ return mPositioned; };
    void SetVisible( bool bVisible );
    void SetPositioned(){ mPositioned = true;};
