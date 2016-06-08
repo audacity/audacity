@@ -48,6 +48,14 @@
 #include "../widgets/AButton.h"
 #include "../widgets/Grabber.h"
 
+auto ToolBarConfiguration::FindPlace(const ToolBar *bar) const
+   -> Iterator
+{
+   return std::find_if(begin(), end(),
+      [=](const Place &place){ return place.pBar == bar; }
+   );
+}
+
 void ToolBarConfiguration::Insert(ToolBar *bar, Position position)
 {
    if (position >= size() || position == UnspecifiedPosition)
@@ -182,11 +190,10 @@ void ToolDock::Dock( ToolBar *bar, bool deflate, ToolBarConfiguration::Position 
 //
 void ToolDock::LayoutToolBars()
 {
-   ToolBar *lt = NULL;
+   ToolBar *lt = nullptr;
 
    wxRect stack[ ToolBarCount + 1 ];
    int stkcnt = 0;
-   int cnt = mConfiguration.GetCount();
    int width, height;
 
    // Get size of our parent since we haven't been sized yet
@@ -202,10 +209,10 @@ void ToolDock::LayoutToolBars()
    stack[ 0 ].SetHeight( height );
 
    // Process all docked and visible toolbars
-   for( int ndx = 0; ndx < cnt; ndx++ )
+   for (const auto &place : GetConfiguration())
    {
       // Cache toolbar pointer
-      ToolBar *ct = (ToolBar *)mConfiguration[ ndx ];
+      ToolBar *ct = place.pBar;
 
       // Get and cache the toolbar sizes
       wxSize sz = ct->GetSize();
@@ -235,7 +242,7 @@ void ToolDock::LayoutToolBars()
       const auto cpos = stack[ stkcnt ].GetPosition();
 
       // Position the previous toolbar
-      if( ndx > 0 )
+      if( lt )
       {
          // Keep the tab order in order
          ct->MoveAfterInTabOrder( lt );
@@ -284,7 +291,6 @@ ToolBarConfiguration::Position
 
    wxRect stack[ ToolBarCount + 1 ];
    int stkcnt = 0;
-   int cnt = mConfiguration.GetCount();
    int width, height;
 
    // Get size of our parent since we haven't been sized yet
@@ -302,23 +308,27 @@ ToolBarConfiguration::Position
    // Process all docked and visible toolbars
    //
    // Careful...slightly different from above in that we expect to
-   // process one more bar than is currently docked (<= in for)
-   for ( int ndx = 0; ndx <= cnt; ndx++)
+   // process one more bar than is currently docked
+   for ( auto iter = GetConfiguration().begin(),
+         end = GetConfiguration().end();
+         ; // iterate once more at end
+         ++iter )
    {
       wxRect sz;
 
       // If last entry, then it is the
-      if (ndx == cnt)
+      if (iter == end)
       {
          // Add the NEW bars' dimensions to the mix
          rect = t->GetRect();
          sz = t->GetDockedSize();
-         tindx = ndx;
+         // This will break the loop
+         tindx = iter->position;
       }
       else
       {
          // Cache toolbar pointer
-         ToolBar *ct = (ToolBar *)mConfiguration[ndx];
+         ToolBar *ct = iter->pBar;
 
          // Remember current bars ' dimensions
          sz = ct->GetSize();
@@ -341,7 +351,7 @@ ToolBarConfiguration::Position
                // Add the NEW bars' dimensions to the mix
                rect = t->GetRect();
                sz = t->GetDockedSize();
-               tindx = ndx;
+               tindx = iter->position;
             }
          }
       }

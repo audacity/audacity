@@ -51,6 +51,62 @@ public:
    using Position = int;
    static const Position UnspecifiedPosition = -1;
 
+   struct Place {
+      ToolBar *pBar {};
+      Position position { UnspecifiedPosition };
+   };
+
+   class Iterator
+      : public std::iterator<std::forward_iterator_tag, Place>
+   {
+   public:
+      const Place &operator * () const { return mPlace; }
+      const Place *operator -> () const { return &**this; }
+      Iterator &operator ++ ()
+      {
+         ++mIter;
+         // This is a feature:  advance position even at the end
+         ++mPlace.position;
+         if (mIter != mEnd)
+            mPlace.pBar = static_cast<ToolBar*>(*mIter);
+         else
+            mPlace.pBar = nullptr;
+         return *this;
+      }
+
+      friend inline bool operator ==
+      (const Iterator &lhs, const Iterator &rhs)
+      {
+         return lhs.mIter == rhs.mIter;
+      }
+
+      friend inline bool operator !=
+      (const Iterator &lhs, const Iterator &rhs)
+      {
+         return !(lhs == rhs);
+      }
+
+   private:
+      friend ToolBarConfiguration;
+      using iterator = wxArrayPtrVoid::const_iterator;
+      explicit Iterator(iterator iter, iterator end)
+         : mIter(iter)
+         , mEnd(end)
+      {
+         mPlace.position = 0;
+         if (mIter != mEnd)
+            mPlace.pBar = static_cast<ToolBar*>(*mIter);
+      }
+
+      iterator mIter, mEnd;
+      Place mPlace;
+   };
+
+   Iterator begin() const
+      { return Iterator { wxArrayPtrVoid::begin(), wxArrayPtrVoid::end() }; }
+   Iterator end() const
+      { return Iterator { wxArrayPtrVoid::end(), wxArrayPtrVoid::end() }; }
+
    Position Find(const ToolBar *bar) const
    {
       return Index(const_cast<ToolBar*>(bar));
@@ -74,6 +130,7 @@ public:
    void Hide(ToolBar *bar);
 
 private:
+   Iterator FindPlace(const ToolBar *bar) const;
 };
 
 class ToolDock final : public wxPanel
