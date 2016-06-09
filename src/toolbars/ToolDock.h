@@ -13,6 +13,8 @@
 #ifndef __AUDACITY_TOOLDOCK__
 #define __AUDACITY_TOOLDOCK__
 
+#include <vector>
+#include "../MemoryX.h" // for std::move
 #include <wx/defs.h>
 #include <wx/panel.h>
 
@@ -45,24 +47,32 @@ enum
    DockCount = 2
 };
 
-class ToolBarConfiguration : public wxArrayPtrVoid
+class ToolBarConfiguration
 {
+   struct Tree;
+   using Forest = std::vector<Tree>;
+
 public:
+   void Swap(ToolBarConfiguration &that)
+   {
+      mForest.swap(that.mForest);
+   }
+
    struct Position {
       ToolBar *rightOf {};
-      // ToolBar *below {};
-      // bool adopt {true};
+      ToolBar *below {};
+      bool adopt {true};
       bool valid {true};
 
       // Default constructor
       Position() {}
 
       Position(
-         ToolBar *r /*,
+         ToolBar *r,
          ToolBar *b = nullptr,
-         bool shouldAdopt = true */
+         bool shouldAdopt = true
       )
-         : rightOf{ r } // , below{ b }, adopt{ shouldAdopt }
+         : rightOf{ r }, below{ b }, adopt{ shouldAdopt }
       {}
 
       // Constructor for the invalid value
@@ -73,8 +83,8 @@ public:
       { return lhs.valid == rhs.valid &&
          (!lhs.valid ||
           (lhs.rightOf == rhs.rightOf
-           // && lhs.below == rhs.below
-           // && lhs.adopt == rhs.adopt
+           && lhs.below == rhs.below
+           && lhs.adopt == rhs.adopt
          ));
       }
 
@@ -86,10 +96,12 @@ public:
    static const Position UnspecifiedPosition;
 
    struct Place {
-      ToolBar *pBar {};
+      Tree *pTree {};
       Position position;
    };
 
+   // This iterator visits the nodes of the forest in pre-order, and at each
+   // stop, makes the parent, previous sibling, and children accessible.
    class Iterator
       : public std::iterator<std::forward_iterator_tag, Place>
    {
@@ -98,24 +110,67 @@ public:
       const Place *operator -> () const { return &**this; }
       Iterator &operator ++ ()
       {
-         wxASSERT(mIter != mEnd);
-
          // This is a feature:  advance position even at the end
-         mPlace.position.rightOf = mPlace.pBar;
-         // mPlace.position.below = nullptr;
+         mPlace.position =
+            { mPlace.pTree ? mPlace.pTree->pBar : nullptr };
 
-         ++mIter;
-         if (mIter != mEnd)
-            mPlace.pBar = static_cast<ToolBar*>(*mIter);
-         else
-            mPlace.pBar = nullptr;
+         if (!mIters.empty())
+         {
+            auto triple = &mIters.back();
+            auto &children = triple->current->children;
+            if (children.empty()) {
+               while (++triple->current == triple->end) {
+                  mIters.pop_back();
+                  if (mIters.empty())
+                     break;
+                  triple = &mIters.back();
+               }
+            }
+            else {
+               auto b = children.begin();
+               mIters.push_back( Triple { b, b, children.end() } );
+            }
+         }
+
+         if (mIters.empty()) {
+            mPlace.pTree = nullptr;
+            // Leave mPlace.position as above
+         }
+         else {
+            const auto &triple = mIters.back();
+            mPlace.pTree = &*triple.current;
+
+            if (mIters.size() == 1)
+               mPlace.position.rightOf = nullptr;
+            else
+               mPlace.position.rightOf = (mIters.rbegin() + 1)->current->pBar;
+
+            if (triple.begin == triple.current)
+               mPlace.position.below = nullptr;
+            else
+               mPlace.position.below = (triple.current - 1)->pBar;
+         }
+
          return *this;
+      }
+
+      // This may be called on the end iterator, and then returns empty
+      std::vector<int> GetPath() const
+      {
+         std::vector<int> path;
+         path.reserve(mIters.size());
+         for (const auto &triple : mIters)
+            path.push_back(triple.current - triple.begin);
+         return std::move(path);
       }
 
       friend inline bool operator ==
       (const Iterator &lhs, const Iterator &rhs)
       {
-         return lhs.mIter == rhs.mIter;
+         const auto &li = lhs.mIters;
+         const auto &ri = rhs.mIters;
+         return li.size() == ri.size() &&
+            std::equal(li.begin(), li.end(), ri.begin());
       }
 
       friend inline bool operator !=
@@ -126,23 +181,42 @@ public:
 
    private:
       friend ToolBarConfiguration;
-      using iterator = wxArrayPtrVoid::const_iterator;
-      explicit Iterator(iterator iter, iterator end)
-         : mIter(iter)
-         , mEnd(end)
+      Iterator () {}
+      explicit Iterator(ToolBarConfiguration &conf)
       {
-         if (mIter != mEnd)
-            mPlace.pBar = static_cast<ToolBar*>(*mIter);
+         auto &forest = conf.mForest;
+         if (!forest.empty()) {
+            auto b = forest.begin();
+            mIters.push_back( Triple { b, b, forest.end() } );
+            mPlace.pTree = &*b;
+         }
       }
 
-      iterator mIter, mEnd;
       Place mPlace;
+
+      using FIter = Forest::iterator;
+      struct Triple
+      {
+         Triple (FIter b, FIter c, FIter e)
+            : begin{b}, current{c}, end{e} {}
+         FIter begin, current, end;
+
+         friend inline bool operator ==
+         (const Triple &lhs, const Triple &rhs)
+         {
+            // Really need only to compare current
+            return
+               // lhs.begin == rhs.begin &&
+               lhs.current == rhs.current
+               // lhs.end == rhs.end
+            ;
+         }
+      };
+      std::vector<Triple> mIters;
    };
 
-   Iterator begin() const
-      { return Iterator { wxArrayPtrVoid::begin(), wxArrayPtrVoid::end() }; }
-   Iterator end() const
-      { return Iterator { wxArrayPtrVoid::end(), wxArrayPtrVoid::end() }; }
+   Iterator begin() { return Iterator { *this }; }
+   Iterator end() const { return Iterator {}; }
 
    Position Find(const ToolBar *bar) const;
 
@@ -154,6 +228,7 @@ public:
    // Default position inserts at the end
    void Insert(ToolBar *bar,
                Position position = UnspecifiedPosition);
+   void InsertAtPath(ToolBar *bar, const std::vector<int> &path);
    void Remove(const ToolBar *bar);
 
    // Future: might allow a state that the configuration remembers
@@ -166,6 +241,7 @@ public:
    bool IsRightmost(const ToolBar *bar) const;
 
    struct Legacy {
+      std::vector<ToolBar*> bars;
    };
 
    static bool Read
@@ -179,7 +255,26 @@ public:
       (const ToolBarConfiguration *pConfiguration, const ToolBar *bar);
 
 private:
+
+   void Remove(Forest &forest, Forest::iterator iter);
+   void RemoveNulls(Forest &forest);
+
+   struct Tree
+   {
+      ToolBar *pBar {};
+      Forest children;
+
+      void swap(Tree &that)
+      {
+         std::swap(pBar, that.pBar);
+         children.swap(that.children);
+      }
+   };
+
    Iterator FindPlace(const ToolBar *bar) const;
+   std::pair<Forest*, Forest::iterator> FindParent(const ToolBar *bar);
+
+   Forest mForest;
 };
 
 class ToolDock final : public wxPanel

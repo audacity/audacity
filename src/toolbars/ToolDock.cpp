@@ -33,6 +33,7 @@
 #include <wx/intl.h>
 #include <wx/panel.h>
 #include <wx/settings.h>
+#include <wx/tokenzr.h>
 #include <wx/window.h>
 #endif  /*  */
 
@@ -54,9 +55,36 @@ const ToolBarConfiguration::Position
 auto ToolBarConfiguration::FindPlace(const ToolBar *bar) const
    -> Iterator
 {
-   return std::find_if(begin(), end(),
-      [=](const Place &place){ return place.pBar == bar; }
+   auto This = const_cast<ToolBarConfiguration*>(this);
+   return std::find_if(This->begin(), This->end(),
+      [=](const Place &place){
+         return place.pTree->pBar == bar;
+      });
+}
+
+auto ToolBarConfiguration::FindParent(const ToolBar *bar)
+   -> std::pair<Forest*, Forest::iterator>
+{
+   auto findTree = [=](Forest &forest){
+      return std::find_if(forest.begin(), forest.end(),
+         [=](const Tree &tree){ return tree.pBar == bar; });
+   };
+
+   auto iter1 = findTree(mForest);
+   if (iter1 != mForest.end())
+      return { &mForest, iter1 };
+
+   Forest::iterator result;
+   auto iter = std::find_if(begin(), end(),
+      [&](const Place &place){
+         auto &children = place.pTree->children;
+         return (result = findTree(children)) != children.end();
+      }
    );
+   if (iter != end())
+      return { &iter->pTree->children, result };
+
+   return { nullptr, Forest::iterator{} };
 }
 
 auto ToolBarConfiguration::Find(const ToolBar *bar) const -> Position
@@ -70,20 +98,105 @@ auto ToolBarConfiguration::Find(const ToolBar *bar) const -> Position
 
 void ToolBarConfiguration::Insert(ToolBar *bar, Position position)
 {
-   if (position == UnspecifiedPosition)
-      push_back(bar);
+   if (position == UnspecifiedPosition) {
+      // Add at the "end" of the layout
+      Forest *pForest = &mForest;
+      while (!pForest->empty())
+         pForest = &pForest->back().children;
+      pForest->push_back( Tree {} );
+      pForest->back().pBar = bar;
+   }
    else {
-      auto index = wxArrayPtrVoid::Index(position.rightOf);
-      if (index == wxNOT_FOUND)
-         push_back(bar);
+      auto pForest = &mForest;
+      if (position.rightOf) {
+         const auto parent = FindPlace(position.rightOf);
+         if (parent != end())
+            pForest = &parent->pTree->children;
+      }
+
+      const auto begin = pForest->begin();
+      auto iter = begin;
+      const auto end = pForest->end();
+      bool adopt = false;
+
+      if (position.below) {
+         iter = std::find_if(begin, end,
+            [=](const Tree &tree){ return tree.pBar == position.below; }
+         );
+         if (iter != end) {
+            ++iter;
+            if (iter != end)
+               adopt = true;
+         }
+         else
+            // Not found, default to topmost
+            iter = begin;
+      }
       else
-         wxArrayPtrVoid::Insert(bar, 1 + index);
+         adopt = (iter != end);
+
+      // Adopt the child only if the insertion point specifies that
+      if (adopt && position.adopt) {
+         // Make new node with one child
+         Tree tree;
+         tree.pBar = bar;
+         tree.children.push_back(Tree{});
+
+         // Do adoption
+         auto &child = tree.children.back();
+         child.pBar = iter->pBar;
+         child.children.swap(iter->children);
+
+         // Put the node in the tree
+         (*iter).swap(tree);
+      }
+      else
+         pForest->insert(iter, Tree {})->pBar = bar;
+   }
+}
+
+void ToolBarConfiguration::InsertAtPath
+   (ToolBar *bar, const std::vector<int> &path)
+{
+   auto pForest = &mForest;
+   Tree *pTree {};
+
+   // Guarantee the existence of nodes
+   for (auto ii : path) {
+      Forest::size_type uu = std::max(0, ii);
+      pForest->resize(std::max(uu + 1, pForest->size()));
+      pTree = &(*pForest)[uu];
+      pForest = &pTree->children;
+   }
+
+   if (pTree)
+      pTree->pBar = bar;
+}
+
+void ToolBarConfiguration::Remove(Forest &forest, Forest::iterator iter)
+{
+   Tree tree;
+   tree.swap(*iter);
+   iter = forest.erase(iter);
+   auto &children = tree.children;
+   auto cIter = children.rbegin(), cEnd = children.rend();
+   while (cIter != cEnd) {
+      iter = forest.insert(iter, Tree{});
+      (*iter).swap(*cIter);
+      ++cIter;
    }
 }
 
 void ToolBarConfiguration::Remove(const ToolBar *bar)
 {
-   wxArrayPtrVoid::Remove(const_cast<ToolBar*>(bar));
+   auto results = FindParent(bar);
+   auto pForest = results.first;
+   if (pForest) {
+      // Reparent all of the children of the deleted node
+      auto iter = results.second;
+      wxASSERT(iter->pBar == bar);
+      Remove(*pForest, iter);
+   }
 }
 
 void ToolBarConfiguration::Show(ToolBar *bar)
@@ -109,8 +222,8 @@ bool ToolBarConfiguration::IsRightmost(const ToolBar *bar) const
    if (++iter == endit)
       // Last of all
       return true;
-   if (bar->GetRect().y != iter->pBar->GetRect().y)
-      // Last in its row
+   if (bar->GetRect().y != iter->pTree->pBar->GetRect().y)
+      // 	
       return true;
    return false;
 }
@@ -118,7 +231,7 @@ bool ToolBarConfiguration::IsRightmost(const ToolBar *bar) const
 bool ToolBarConfiguration::Read
    (ToolBarConfiguration *pConfiguration,
     ToolManager *pManager,
-    Legacy *,
+    Legacy *pLegacy,
     ToolBar *bar, bool &visible, bool defaultVisible)
 {
    bool result = true;
@@ -132,11 +245,27 @@ bool ToolBarConfiguration::Read
          result = false;
       else if (ord >= 0)
       {
-         while(pConfiguration->size () <= ord)
-            pConfiguration->push_back(nullptr);
-         (*pConfiguration)[ord] = bar;
+         // Legacy preferences
+         while (pLegacy->bars.size() <= ord)
+            pLegacy->bars.push_back(nullptr);
+         pLegacy->bars[ord] = bar;
+      }
+      else {
+         wxString strPath;
+         gPrefs->Read( wxT("Path"), &strPath );
+         if (!strPath.empty()) {
+            wxStringTokenizer toker { strPath, wxT(",") };
+            std::vector<int> path;
+            while(toker.HasMoreTokens()) {
+               auto token = toker.GetNextToken();
+               auto ii = wxAtoi(token);
+               path.push_back(ii);
+            }
+            pConfiguration->InsertAtPath(bar, path);
+         }
       }
    }
+
    // Future: might remember visibility in the configuration, not forgetting
    // positions of hidden bars.
    gPrefs->Read( wxT("Show"), &visible, defaultVisible);
@@ -144,21 +273,53 @@ bool ToolBarConfiguration::Read
    return result;
 }
 
-void ToolBarConfiguration::PostRead(Legacy &)
+void ToolBarConfiguration::RemoveNulls(Forest &forest)
 {
-   auto b = wxArrayPtrVoid::begin();
-   auto iter =
-      std::remove(b, wxArrayPtrVoid::end(), nullptr);
-   resize(iter - b);
+   for (int ii = 0; ii < forest.size(); ++ii) {
+      if(forest[ii].pBar == nullptr)
+         Remove(forest, forest.begin() + ii--);
+   }
+
+   // Now do the same recursively
+   for (auto &tree : forest)
+      RemoveNulls(tree.children);
+}
+
+void ToolBarConfiguration::PostRead(Legacy &legacy)
+{
+   // Be sure no nodes contain NULL,
+   // against the case of obsolete preferences, perhaps
+   RemoveNulls(mForest);
+
+   ToolBar *prev {};
+   for (auto pBar : legacy.bars) {
+      if (!pBar)
+         continue;
+
+      Position position{ prev };
+      Insert(pBar, position);
+
+      prev = pBar;
+   }
 }
 
 void ToolBarConfiguration::Write
    (const ToolBarConfiguration *pConfiguration, const ToolBar *bar)
 {
    if (pConfiguration) {
-      auto index = pConfiguration->Index(const_cast<ToolBar*>(bar));
-      if (index != wxNOT_FOUND)
-         gPrefs->Write( wxT("Order"), 1 + index );
+      wxString strPath;
+      const auto cIter = pConfiguration->FindPlace(bar);
+      const auto path = cIter.GetPath();
+      if (!path.empty()) {
+         auto iter = path.begin(), end = path.end();
+         strPath += wxString::Format(wxT("%d"), *iter++);
+         while (iter != end)
+            strPath += wxString::Format(wxT(",%d"), *iter++);
+      }
+      gPrefs->Write(wxT("Path"), strPath);
+
+      // Remove any legacy configuration info.
+      gPrefs->DeleteEntry(wxT("Order"));
    }
    gPrefs->Write( wxT("Show"), bar->IsVisible() );
 }
@@ -251,7 +412,7 @@ void ToolDock::LoadConfig(ToolBar *bars[])
 {
    // Add all ordered toolbars
    for(const auto &place : GetConfiguration()) {
-      auto bar = place.pBar;
+      auto bar = place.pTree->pBar;
       this->Dock(bar, false);
       // Show it -- hidden bars are not (yet) ever saved as part of a
       // configuration
@@ -286,7 +447,7 @@ void ToolDock::LayoutToolBars()
    for (const auto &place : GetConfiguration())
    {
       // Cache toolbar pointer
-      ToolBar *ct = place.pBar;
+      ToolBar *ct = place.pTree->pBar;
 
       // Get and cache the toolbar sizes
       wxSize sz = ct->GetSize();
@@ -402,7 +563,7 @@ ToolBarConfiguration::Position
       else
       {
          // Cache toolbar pointer
-         ToolBar *ct = iter->pBar;
+         ToolBar *ct = iter->pTree->pBar;
 
          // Remember current bars ' dimensions
          sz = ct->GetSize();
@@ -583,7 +744,7 @@ void ToolDock::OnPaint( wxPaintEvent & WXUNUSED(event) )
    // Draw the gap between each bar
    for (const auto &place : GetConfiguration())
    {
-      auto toolbar = place.pBar;
+      auto toolbar = place.pTree->pBar;
       if (!toolbar)
          continue;
 

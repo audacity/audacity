@@ -862,11 +862,15 @@ void ToolManager::WriteConfig()
       gPrefs->Write( wxT("W"), sz.x );
       gPrefs->Write( wxT("H"), sz.y );
 
-      // Kill the bar
-      bar->Destroy();
-
       // Change back to the bar root
       gPrefs->SetPath( wxT("..") );
+   }
+
+   // Kill the bars
+   for( ndx = 0; ndx < ToolBarCount; ndx++ )
+   {
+      ToolBar *bar = mBars[ ndx ];
+      bar->Destroy();
    }
 
    // Restore original config path
