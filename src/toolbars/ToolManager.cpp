@@ -1088,15 +1088,18 @@ void ToolManager::OnMouse( wxMouseEvent & event )
             // Decide which direction the arrow should point
             if( r.GetTop() >= dr.GetHeight() )
             {
-               p.x = dr.GetLeft() + ( dr.GetWidth() / 2 );
-               p.y = dr.GetBottom() - mDown->GetBox().GetHeight();
+               const auto &box = mDown->GetBox();
+               p.x = dr.GetLeft() + ( dr.GetWidth() / 2 )
+                 - (box.GetWidth() / 2);
+               p.y = dr.GetBottom() - box.GetHeight();
                mCurrent = mDown;
             }
             else
             {
+               const auto &box = mLeft->GetBox();
                p.x = dr.GetLeft() + r.GetLeft();
-               p.y = dr.GetTop() + r.GetTop() + mLeft->GetBox().GetHeight() / 2;
-                     //JKC ( ( r.GetHeight() - mLeft->GetBox().GetHeight() ) / 2 );
+               p.y = dr.GetTop() + r.GetTop() +
+                  ( ( r.GetHeight() - mLeft->GetBox().GetHeight() ) / 2 );
                mCurrent = mLeft;
             }
 
