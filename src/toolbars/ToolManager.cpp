@@ -498,16 +498,59 @@ ToolManager::~ToolManager()
    delete mDown;
 }
 
+// This table describes the default configuration of the toolbars as
+// a "tree" and must be kept in pre-order traversal.
+
+// In fact this tree is more of a broom -- nothing properly branches except
+// at the root.
+
+// "Root" corresponds to left edge of the main window, and successive siblings
+// go from top to bottom.  But in practice layout may wrap this abstract
+// configuration if the window size is narrow.
+
+static struct DefaultConfigEntry {
+   int barID;
+   int rightOf; // parent
+   int below;   // preceding sibling
+} DefaultConfigTable [] = {
+   // Top dock row, may wrap
+   { TransportBarID,         NoBarID,                NoBarID                },
+   { ToolsBarID,             TransportBarID,         NoBarID                },
+   { RecordMeterBarID,       ToolsBarID,             NoBarID                },
+   { PlayMeterBarID,         RecordMeterBarID,       NoBarID                },
+   { MixerBarID,             PlayMeterBarID,         NoBarID                },
+   { EditBarID,              MixerBarID,             NoBarID                },
+   { TranscriptionBarID,     EditBarID,              NoBarID                },
+
+   // start another top dock row
+   { ScrubbingBarID,         NoBarID,                TransportBarID         },
+   { DeviceBarID,            ScrubbingBarID,         NoBarID                },
+
+   // Hidden by default in top dock
+   { MeterBarID,             NoBarID,                NoBarID                },
+
+   // Bottom dock
+   { SelectionBarID,         NoBarID,                NoBarID                },
+
+   // Hidden by default in bottom dock
+   { SpectralSelectionBarID, NoBarID,                NoBarID                },
+};
+
 void ToolManager::Reset()
 {
-   int ndx;
-
    // Disconnect all docked bars
-   for( ndx = 0; ndx < ToolBarCount; ndx++ ) 
+   for ( const auto &entry : DefaultConfigTable )
    {
+      int ndx = entry.barID;
+      ToolBar *bar = mBars[ ndx ];
+
+      ToolBarConfiguration::Position position {
+         (entry.rightOf == NoBarID) ? nullptr : mBars[ entry.rightOf ],
+         (entry.below == NoBarID) ? nullptr : mBars[ entry.below ]
+      };
+
       wxWindow *floater;
       ToolDock *dock;
-      ToolBar *bar = mBars[ ndx ];
       bool expose = true;
 
       // Disconnect the bar
@@ -558,7 +601,7 @@ void ToolManager::Reset()
       if( dock != NULL )
       {
          // when we dock, we reparent, so bar is no longer a child of floater.
-         dock->Dock( bar, false );
+         dock->Dock( bar, false, position );
          Expose( ndx, expose );
          //OK (and good) to DELETE floater, as bar is no longer in it.
          if( floater )

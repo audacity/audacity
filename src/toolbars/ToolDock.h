@@ -53,9 +53,15 @@ class ToolBarConfiguration
    using Forest = std::vector<Tree>;
 
 public:
+
    void Swap(ToolBarConfiguration &that)
    {
       mForest.swap(that.mForest);
+   }
+
+   void Clear()
+   {
+      mForest.clear();
    }
 
    struct Position {
