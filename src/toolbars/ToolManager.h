@@ -20,7 +20,6 @@
 #include "ToolDock.h"
 #include "ToolBar.h"
 
-class wxArrayPtrVoid;
 class wxBitmap;
 class wxCommandEvent;
 class wxFrame;
@@ -108,7 +107,6 @@ class ToolManager final : public wxEvtHandler
    bool mTransition;
 #endif
 
-   wxArrayPtrVoid mDockedBars;
    ToolDock *mTopDock;
    ToolDock *mBotDock;
 

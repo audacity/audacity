@@ -136,7 +136,8 @@ class ToolFrame final : public wxFrame
             width += sizerW;
          }
 
-         SetSize(width + 2, bar->GetDockedSize().y + 2);
+         SetSize(width + 2 * ToolBarFloatMargin,
+            bar->GetDockedSize().y + 2 * ToolBarFloatMargin);
 
          // Attach the sizer and resize the window to fit
          SetSizer(s.release());
@@ -557,7 +558,7 @@ void ToolManager::Reset()
       if( dock != NULL )
       {
          // when we dock, we reparent, so bar is no longer a child of floater.
-         dock->Dock( bar );
+         dock->Dock( bar, false );
          Expose( ndx, expose );
          //OK (and good) to DELETE floater, as bar is no longer in it.
          if( floater )
@@ -783,7 +784,7 @@ void ToolManager::ReadConfig()
             ToolBar *t = mBars[ ndx ];
 
             // Dock it
-            d->Dock( t );
+            d->Dock( t, false );
             
             // Show or hide it
             Expose( t->GetId(), show[ t->GetId() ] );
@@ -796,7 +797,7 @@ void ToolManager::ReadConfig()
          ToolBar *t = mBars[ unordered[ dock ][ ord ] ];
 
          // Dock it
-         d->Dock( t );
+         d->Dock( t, false );
 
          // Show or hide the bar
          Expose( t->GetId(), show[ t->GetId() ] );
@@ -1017,7 +1018,7 @@ void ToolManager::OnMouse( wxMouseEvent & event )
       if( mDragDock && !event.ShiftDown() )
       {
          // Trip over...everyone ashore that's going ashore...
-         mDragDock->Dock( mDragBar, mDragBefore );
+         mDragDock->Dock( mDragBar, true, mDragBefore );
 
          // Done with the floater
          mDragWindow->Destroy();
@@ -1087,15 +1088,18 @@ void ToolManager::OnMouse( wxMouseEvent & event )
             // Decide which direction the arrow should point
             if( r.GetTop() >= dr.GetHeight() )
             {
-               p.x = dr.GetLeft() + ( dr.GetWidth() / 2 );
-               p.y = dr.GetBottom() - mDown->GetBox().GetHeight();
+               const auto &box = mDown->GetBox();
+               p.x = dr.GetLeft() + ( dr.GetWidth() / 2 )
+                 - (box.GetWidth() / 2);
+               p.y = dr.GetBottom() - box.GetHeight();
                mCurrent = mDown;
             }
             else
             {
+               const auto &box = mLeft->GetBox();
                p.x = dr.GetLeft() + r.GetLeft();
-               p.y = dr.GetTop() + r.GetTop() + mLeft->GetBox().GetHeight() / 2;
-                     //JKC ( ( r.GetHeight() - mLeft->GetBox().GetHeight() ) / 2 );
+               p.y = dr.GetTop() + r.GetTop() +
+                  ( ( r.GetHeight() - mLeft->GetBox().GetHeight() ) / 2 );
                mCurrent = mLeft;
             }
 
@@ -1303,7 +1307,7 @@ void ToolManager::HandleEscapeKey()
          // Why don't you leave me alone?
          // Well, I feel so break up
          // I want to go home.
-         mPrevDock->Dock( mDragBar, mPrevSlot );
+         mPrevDock->Dock( mDragBar, true, mPrevSlot );
 
          // Done with the floater
          mDragWindow->Destroy();

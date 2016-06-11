@@ -121,22 +121,22 @@ void ToolDock::Undock( ToolBar *bar )
    }
 }
 
-int ToolDock::GetBarCount()
-{
-   return mDockedBars.GetCount();
-}
-
 //
 // Handle ToolDock events
 //
-void ToolDock::Dock( ToolBar *bar, int before )
+void ToolDock::Dock( ToolBar *bar, bool deflate, int before )
 {
    // Adopt the toolbar into our family
    bar->Reparent( this );
    mBars[ bar->GetId() ] = bar;
 
-   // Reset height
-   bar->SetSize( bar->GetSize().x, bar->GetDockedSize().y );
+   // Reset size
+   bar->SetSize(
+      // Undo the expansion that was applied when un-docking
+      bar->GetSize().x - (deflate ? 2 * ToolBarFloatMargin : 0),
+      // Don't need to adjust y the same way.
+      bar->GetDockedSize().y
+   );
 
    // Park the NEW bar in the correct berth
    if( before >= 0 && before < (int)mDockedBars.GetCount() )

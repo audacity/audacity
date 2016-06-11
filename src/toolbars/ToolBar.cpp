@@ -359,7 +359,7 @@ void ToolBar::SetLabel(const wxString & label)
 //
 // Returns whether the toolbar is resizable or not
 //
-bool ToolBar::IsResizable()
+bool ToolBar::IsResizable() const
 {
    return mResizable;
 }
@@ -367,7 +367,7 @@ bool ToolBar::IsResizable()
 //
 // Returns the dock state of the toolbar
 //
-bool ToolBar::IsDocked()
+bool ToolBar::IsDocked() const
 {
    return mDock != NULL;
 }
@@ -375,7 +375,7 @@ bool ToolBar::IsDocked()
 //
 // Returns the visibility of the toolbar
 //
-bool ToolBar::IsVisible()
+bool ToolBar::IsVisible() const
 {
    return mVisible;
 }
