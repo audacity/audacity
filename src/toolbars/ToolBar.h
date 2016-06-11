@@ -80,6 +80,9 @@ enum
    ToolBarCount
 };
 
+// How may pixels padding each side of a floating toolbar
+enum { ToolBarFloatMargin = 1 };
+
 class ToolBar /* not final */ : public wxPanel
 {
 

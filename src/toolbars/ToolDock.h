@@ -60,7 +60,7 @@ class ToolDock final : public wxPanel
    int Find(ToolBar *bar) const;
    int GetOrder( ToolBar *bar );
    int GetBarCount();
-   void Dock( ToolBar *bar, int ndx = -1 );
+   void Dock( ToolBar *bar, bool deflate, int ndx = -1 );
    void Undock( ToolBar *bar );
    int PositionBar( ToolBar *t, wxPoint & pos, wxRect & rect );
 
