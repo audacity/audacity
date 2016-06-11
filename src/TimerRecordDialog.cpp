@@ -441,7 +441,7 @@ void TimerRecordDialog::OnOK(wxCommandEvent& WXUNUSED(event))
 
       // Create the message string
       wxString sMessage = "";
-      sMessage.Printf("You may not have enough free disk space to complete this timer recording, based on your current settings.\n\nDo you wish to continue?\n\nPlanned recording duration:   %s\nRecording time remaining on disc:   %s",
+      sMessage.Printf("You may not have enough free disk space to complete this Timer Recording, based on your current settings.\n\nDo you wish to continue?\n\nPlanned recording duration:   %s\nRecording time remaining on disk:   %s",
          sPlannedTime,
          sRemainingTime);
 
