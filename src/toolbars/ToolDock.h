@@ -285,8 +285,7 @@ private:
 
 class ToolDock final : public wxPanel
 {
-
- public:
+public:
 
    ToolDock( ToolManager *manager, wxWindow *parent, int dockid );
    ~ToolDock();
@@ -316,6 +315,8 @@ class ToolDock final : public wxPanel
    void OnMouseEvents(wxMouseEvent &event);
 
  private:
+   class LayoutVisitor;
+   void VisitLayout(LayoutVisitor &visitor);
 
    void Updated();
 

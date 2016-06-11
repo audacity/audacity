@@ -420,96 +420,234 @@ void ToolDock::LoadConfig(ToolBar *bars[])
    }
 }
 
-//
-// Layout the toolbars
-//
-void ToolDock::LayoutToolBars()
+class ToolDock::LayoutVisitor
 {
-   ToolBar *lt = nullptr;
+public:
+   virtual void ModifySize
+   (ToolBar *ct,
+    const wxRect &rect,
+    ToolBarConfiguration::Position prevPosition,
+    ToolBarConfiguration::Position position,
+    wxSize &sz)
+   {}
 
-   wxRect stack[ ToolBarCount + 1 ];
-   int stkcnt = 0;
-   int width, height;
+   virtual void Visit
+   (ToolBar *ct, wxPoint point) = 0;
 
+   virtual bool ShouldVisitSpaces() = 0;
+
+   virtual void FinalRect
+   (const wxRect &rect, ToolBarConfiguration::Position finalPosition)
+   {}
+};
+
+void ToolDock::VisitLayout(LayoutVisitor &visitor)
+{
    // Get size of our parent since we haven't been sized yet
+   int width, height;
    GetParent()->GetClientSize( &width, &height );
    width -= toolbarGap;
    height -= toolbarGap;
 
-   // Set initial stack entry to maximum size
-   stack[ 0 ].SetX( toolbarGap );
-   stack[ 0 ].SetY( toolbarGap );
-   // The stack width and height are the remaining width and height.
-   stack[ 0 ].SetWidth( width );
-   stack[ 0 ].SetHeight( height );
+   // Rectangle of space to allocate
+   wxRect main{ toolbarGap, toolbarGap,
+      // Allow limited width, but arbitrary height, for the root rectangle
+      width, std::numeric_limits<int>::max() };
+
+   // For recording the nested subdivisions of the rectangle
+   struct Item {
+      int myBarID { NoBarID };
+      int parentBarID { NoBarID };
+      ToolBar *lastSib {};
+      wxRect rect;
+   } layout[ ToolBarCount ];
+
+   ToolBar *lastRoot {};
 
    // Process all docked and visible toolbars
-   for (const auto &place : GetConfiguration())
+   for ( const auto &place : GetConfiguration() )
    {
       // Cache toolbar pointer
-      ToolBar *ct = place.pTree->pBar;
+      const auto ct = place.pTree->pBar;
 
-      // Get and cache the toolbar sizes
+      // set up the chain of ancestors.
+      const auto parent = place.position.rightOf;
+      const auto type = ct->GetType();
+      auto &newItem = layout[ type ];
+      newItem.parentBarID = parent ? parent->GetType() : NoBarID;
+      // Mark the slots that really were visited, for final pass through
+      // the spaces.
+      newItem.myBarID = type;
+
+      const auto parentItem = parent ? &layout[ parent->GetType() ] : nullptr;
+      ToolBar *prevSib;
+      if (!parent) {
+         prevSib = lastRoot;
+         lastRoot = ct;
+      }
+      else {
+         auto &sib = parentItem->lastSib;
+         prevSib = sib;
+         sib = ct;
+      }
+      ToolBarConfiguration::Position prevPosition = { parent, prevSib };
+
+      // Determine the size of the toolbar to fit, with advice from
+      // the visitor object
       wxSize sz = ct->GetSize();
+      {
+         wxRect temp;
+         temp.SetPosition(ct->GetParent()->ClientToScreen(ct->GetPosition()));
+         temp.SetSize(sz);
+         visitor.ModifySize(ct, temp, prevPosition, place.position, sz);
+      }
+
+      // Inflate the size to leave margins
       int tw = sz.GetWidth() + toolbarGap;
       int th = sz.GetHeight() + toolbarGap;
 
-      // This loop reduces stkcnt until it gives a box
-      // that we fit in.
-      while (stkcnt > 0)
+      // Choose the rectangle to subdivide
+      // Find a box that we fit in by going up the tree as needed --
+      // thus when parent space is exhausted, fall back on ancestors --
+      // so if the tree has too much depth for the width of the
+      // window, the toolbars may "wrap."
+      // Can always fall back to the main rectangle even if the bar is too
+      // wide.
+      auto pItem = parentItem;
+      auto pRect = pItem ? &pItem->rect : &main;
+      while (pRect != &main)
       {
          // Get out if it will fit
-         bool bTooWide = tw > stack[stkcnt].GetWidth();
+         bool bTooWide = tw > pRect->GetWidth();
          // We'd like to be able to add a tall toolbar in at the start of a row,
          // even if there isn't enough height for it.
          // If so, we'd have to at least change how we calculate 'bTooHigh'.
-         bool bTooHigh = th > stack[stkcnt].GetHeight();
+         bool bTooHigh = th > pRect->GetHeight();
          //bTooHigh &= stack[stkcnt].GetWidth() < (width - toolbarGap);
          //bTooHigh = false;
 
          if (!bTooWide && !bTooHigh)
             break;
-         stkcnt--;
+
+         if (pItem->parentBarID == NoBarID)
+            pRect = &main;
+         else {
+            pItem = &layout[ pItem->parentBarID ];
+            pRect = &pItem->rect;
+         }
       }
 
-      // The current stack entry position is where the bar
-      // will be placed.
-      const auto cpos = stack[ stkcnt ].GetPosition();
+      // Place the toolbar at the upper left part of the rectangle.
+      const auto cpos = pRect->GetPosition();
+      visitor.Visit(ct, cpos);
 
-      // Position the previous toolbar
-      if( lt )
-      {
-         // Keep the tab order in order
-         ct->MoveAfterInTabOrder( lt );
-      }
+      // Allocate an upper portion of the rectangle to this bar.
+      pRect->y += th;
+      pRect->height -= th;
 
-      // Place the toolbar
-      ct->SetPosition( wxPoint( cpos.x, cpos.y ) );
-
-      // Remember for next iteration
-      lt = ct;
-
-      // We'll be using at least a portion of this stack entry, so
-      // adjust the location and size.  It is possible that these
-      // will become zero if this entry and the toolbar have the
-      // same height.  This is what we want as it will be destacked
-      // in the next iteration.
-      stack[ stkcnt ].SetY(      stack[ stkcnt ].GetY()      + th );
-      stack[ stkcnt ].SetHeight( stack[ stkcnt ].GetHeight() - th );
-
-      // Calc the next possible horizontal location.
+      // A right portion of that upper portion remains available for
+      // descendant bars and is remembered in the layout array.
       int x = cpos.x + tw;
-
-      // Add a NEW stack entry
-      stkcnt++;
-      stack[ stkcnt ].SetX( x );
-      stack[ stkcnt ].SetY( cpos.y );
-      stack[ stkcnt ].SetWidth( width - x );
-      stack[ stkcnt ].SetHeight( th );
+      newItem.rect = wxRect{ x, cpos.y, width - x, th };
    }
 
-   // Set the final size of the dock window
-   SetMinSize( wxSize( stack[ 0 ].width, stack[ 0 ].GetY() ) );
+   if (visitor.ShouldVisitSpaces()) {
+      // Visit the fringe where new leaves of the tree could go
+
+      // Find the items with leftover spaces
+      const auto end = std::remove_if(layout, layout + ToolBarCount,
+         [](const Item &item){
+            return item.myBarID == NoBarID || item.rect.IsEmpty();
+         }
+      );
+      // Sort top to bottom for definiteness, though perhaps not really needed
+      std::sort(layout, end,
+         [](const Item &lhs, const Item &rhs){
+            return lhs.rect.y < rhs.rect.y;
+         }
+      );
+      for (auto iter = layout; iter != end; ++iter) {
+         const auto &item = *iter;
+         const auto &rect = item.rect;
+
+         auto globalRect = rect;
+         globalRect.SetPosition( this->ClientToScreen(rect.GetPosition()) );
+
+         // Let the visitor determine size
+         wxSize sz {};
+         ToolBarConfiguration::Position
+            position { mBars[ item.myBarID ] },
+            prevPosition {};
+         visitor.ModifySize(nullptr, globalRect, prevPosition, position, sz);
+         int tw = sz.GetWidth() + toolbarGap;
+         int th = sz.GetHeight() + toolbarGap;
+
+         // Test fit
+         bool bTooWide = tw > rect.GetWidth();
+         bool bTooHigh = th > rect.GetHeight();
+         if (!bTooWide && !bTooHigh) {
+            // Call visitor again to confirm the placement
+            const auto cpos = rect.GetPosition();
+            visitor.Visit(nullptr, cpos);
+         }
+      }
+   }
+
+   // Report the final bounding box of all the bars, and a position where
+   // you can insert a new bar at bottom left.
+   ToolBarConfiguration::Position finalPosition { nullptr, lastRoot };
+   visitor.FinalRect(
+      wxRect { toolbarGap, toolbarGap, main.width, main.y }, finalPosition
+   );
+}
+
+//
+// Layout the toolbars
+//
+void ToolDock::LayoutToolBars()
+{
+   struct SizeSetter final : public LayoutVisitor
+   {
+      SizeSetter (ToolDock *d) : dock{ d } {}
+
+      void Visit
+         (ToolBar *bar, wxPoint point)
+         override
+      {
+         // Place the toolbar
+         if(bar)
+            bar->SetPosition( point );
+      }
+
+      bool ShouldVisitSpaces() override
+      {
+         return false;
+      }
+
+      virtual void FinalRect
+         (const wxRect &rect, ToolBarConfiguration::Position)
+         override
+      {
+         // Set the final size of the dock window
+         dock->SetMinSize( rect.GetSize() );
+      }
+
+      ToolDock *dock;
+   } sizeSetter {
+      this
+   };
+   VisitLayout(sizeSetter);
+
+   // Set tab order
+   {
+      ToolBar *lt{};
+      for ( const auto &place : GetConfiguration() ) {
+         auto ct = place.pTree->pBar;
+         if( lt )
+            ct->MoveAfterInTabOrder( lt );
+         lt = ct;
+      }
+   }
 
    // Clean things up
    Refresh( false );
@@ -522,130 +660,85 @@ void ToolDock::LayoutToolBars()
 ToolBarConfiguration::Position
    ToolDock::PositionBar( ToolBar *t, const wxPoint & pos, wxRect & rect )
 {
-   auto tindx = ToolBarConfiguration::UnspecifiedPosition;
+   // Set width and size, but we must still find x and y.
+   rect = t->GetRect();
 
-   wxRect stack[ ToolBarCount + 1 ];
-   int stkcnt = 0;
-   int width, height;
-
-   // Get size of our parent since we haven't been sized yet
-   GetParent()->GetClientSize( &width, &height );
-   width -= toolbarGap;
-   height -= toolbarGap;
-
-   // Set initial stack entry to maximum size
-   stack[ 0 ].SetX( toolbarGap );
-   stack[ 0 ].SetY( toolbarGap );
-   // The stack width and height are the remaining width and height.
-   stack[ 0 ].SetWidth( width );
-   stack[ 0 ].SetHeight( height );
-
-   // Process all docked and visible toolbars
-   //
-   // Careful...slightly different from above in that we expect to
-   // process one more bar than is currently docked
-   for ( auto iter = GetConfiguration().begin(),
-         end = GetConfiguration().end();
-         ; // iterate once more at end
-         ++iter )
+   using Position = ToolBarConfiguration::Position;
+   Position result { ToolBarConfiguration::UnspecifiedPosition };
+   struct Inserter : public LayoutVisitor
    {
-      wxRect sz;
+      struct Stop {};
 
-      // If last entry, then it is the
-      if (iter == end)
+      Inserter(Position &p, wxRect &r, const wxPoint &pt, ToolBar *t)
+         : result(p), rect(r), point(pt), tb(t)
+      {}
+
+      void ModifySize
+         (ToolBar *ct,
+          const wxRect &rect,
+          ToolBarConfiguration::Position prevPosition,
+          ToolBarConfiguration::Position position,
+          wxSize &sz)
+         override
       {
-         // Add the NEW bars' dimensions to the mix
-         rect = t->GetRect();
-         sz = t->GetDockedSize();
-         // This will break the loop
-         tindx = iter->position;
-      }
-      else
-      {
-         // Cache toolbar pointer
-         ToolBar *ct = iter->pTree->pBar;
-
-         // Remember current bars ' dimensions
-         sz = ct->GetSize();
-
          // Maybe insert the NEW bar if it hasn't already been done
          // and is in the right place.
-         if (tindx == ToolBarConfiguration::UnspecifiedPosition)
+
+         // Does the location fall within this bar?
+         if (rect.Contains(point))
          {
-            wxRect r;
-
-            // Get bar rect and make gap part of it
-            r.SetPosition(ct->GetParent()->ClientToScreen(ct->GetPosition()));
-            r.SetSize(ct->IsResizable() ? ct->GetSize() : ct->GetSize());
-            r.width += toolbarGap;
-            r.height += toolbarGap;
-
-            // Does the location fall within this bar?
-            if (r.Contains(pos) || pos.y <= r.y)
-            {
-               // Add the NEW bars' dimensions to the mix
-               rect = t->GetRect();
-               sz = t->GetDockedSize();
-               tindx = iter->position;
-            }
+            sz = tb->GetDockedSize();
+            // Choose this position always, if there is a bar to displace.
+            // Else, only if the fit is possible.
+            if (ct || (sz.x < rect.width && sz.y < rect.height))
+               result = position;
+            // Now wait until the other callback below to discover x and y
          }
       }
 
-      // Get and cache the toolbar sizes
-      int tw = sz.GetWidth() + toolbarGap;
-      int th = sz.GetHeight() + toolbarGap;
-
-      // This loop reduces stkcnt until it gives a box
-      // that we fit in.
-      while (stkcnt > 0)
+      void Visit
+         (ToolBar *, wxPoint point)
+         override
       {
-         // Get out if it will fit
-         bool bTooWide = tw > stack[stkcnt].GetWidth();
-         // We'd like to be able to add a tall toolbar in at the start of a row,
-         // even if there isn't enough height for it.
-         // If so, we'd have to at least change how we calculate 'bTooHigh'.
-         bool bTooHigh = th > stack[stkcnt].GetHeight();
-         //bTooHigh &= stack[stkcnt].GetWidth() < (width - toolbarGap);
-         //bTooHigh = false;
+         if (result != ToolBarConfiguration::UnspecifiedPosition) {
+            // If we've placed it, we're done.
+            rect.x = point.x;
+            rect.y = point.y;
 
-         if (!bTooWide && !bTooHigh)
-            break;
-         stkcnt--;
+            throw Stop {};
+         }
       }
 
-      // The current stack entry position is where the bar
-      // will be placed.
-      const auto cpos = stack[stkcnt].GetPosition();
-
-      // If we've placed it, we're done.
-      if (tindx != ToolBarConfiguration::UnspecifiedPosition)
+      bool ShouldVisitSpaces() override
       {
-         rect.x = cpos.x;
-         rect.y = cpos.y;
-         break;
+         return true;
       }
 
-      // We'll be using at least a portion of this stack entry, so
-      // adjust the location and size.  It is possible that these
-      // will become zero if this entry and the toolbar have the
-      // same height.  This is (?) what we want as it will be destacked
-      // in the next iteration.
-      stack[stkcnt].SetY(stack[stkcnt].GetY() + th);
-      stack[stkcnt].SetHeight(stack[stkcnt].GetHeight() - th);
+      void FinalRect
+         (const wxRect &finalRect, ToolBarConfiguration::Position finalPosition)
+         override
+      {
+         if (result == ToolBarConfiguration::UnspecifiedPosition) {
+            // Default of all other placements.
+            result = finalPosition;
+            wxPoint point { finalRect.GetLeft(), finalRect.GetBottom() };
+            rect.SetPosition(point);
+         }
+      }
 
-      // Calc the next possible horizontal location.
-      int x = cpos.x + tw;
 
-      // Add a NEW stack entry
-      stkcnt++;
-      stack[stkcnt].SetX(x);
-      stack[stkcnt].SetY(cpos.y);
-      stack[stkcnt].SetWidth(width - x);
-      stack[stkcnt].SetHeight(th);
-   }
+      Position &result;
+      wxRect &rect;
+      const wxPoint point;
+      ToolBar *const tb;
+   } inserter {
+      result, rect, pos, t
+   };
+
+   try { VisitLayout(inserter); } catch (const Inserter::Stop&) {}
 
    // rect is decided
-   return tindx;
+   return result;
 }
 
 //
