@@ -136,12 +136,28 @@ void ToolsToolBar::RegenerateTooltips()
    //		wxSafeYield(); //Deal with some queued up messages...
 
    #if wxUSE_TOOLTIPS
-   mTool[selectTool]->SetToolTip(_("Selection Tool"));
-   mTool[envelopeTool]->SetToolTip(_("Envelope Tool"));
-   mTool[slideTool]->SetToolTip(_("Time Shift Tool"));
-   mTool[zoomTool]->SetToolTip(_("Zoom Tool"));
-   mTool[drawTool]->SetToolTip(_("Draw Tool"));
-   mTool[multiTool]->SetToolTip(_("Multi-Tool Mode"));
+
+   static const struct Entry {
+      int tool;
+      wxString commandName;
+      wxString untranslatedLabel;
+   } table[] = {
+      { selectTool,   wxT("SelectTool"),    XO("Selection Tool")  },
+      { envelopeTool, wxT("EnvelopeTool"),  XO("Envelope Tool")   },
+      { slideTool,    wxT("TimeShiftTool"), XO("Time Shift Tool") },
+      { zoomTool,     wxT("ZoomTool"),      XO("Zoom Tool")       },
+      { drawTool,     wxT("DrawTool"),      XO("Draw Tool")       },
+      { multiTool,    wxT("MultiTool"),     XO("Multi Tool")      },
+   };
+
+   std::vector<wxString> commands;
+   for (const auto &entry : table) {
+      commands.clear();
+      commands.push_back(wxGetTranslation(entry.untranslatedLabel));
+      commands.push_back(entry.commandName);
+      ToolBar::SetButtonToolTip(*mTool[entry.tool], commands);
+   }
+
    #endif
 
    //		wxSafeYield();
