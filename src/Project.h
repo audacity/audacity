@@ -78,7 +78,6 @@ class Scrubber;
 class ScrubbingToolBar;
 class SelectionBar;
 class SpectralSelectionBar;
-class Toolbar;
 class ToolManager;
 class ToolsToolBar;
 class TranscriptionToolBar;
