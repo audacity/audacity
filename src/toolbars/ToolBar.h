@@ -99,6 +99,7 @@ class ToolBar /* not final */ : public wxPanel
    virtual void EnableDisableButtons() = 0;
    virtual void ReCreateButtons();
    virtual void UpdatePrefs();
+   virtual void RegenerateTooltips() = 0;
 
    int GetType();
    wxString GetTitle();

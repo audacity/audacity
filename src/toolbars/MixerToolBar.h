@@ -49,6 +49,8 @@ class MixerToolBar final : public ToolBar {
    void AdjustOutputGain(int adj);
    void AdjustInputGain(int adj);
 
+   void RegenerateTooltips() override {};
+
  protected:
    float mInputSliderVolume;
    float mOutputSliderVolume;

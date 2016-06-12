@@ -545,7 +545,7 @@ AudacityProject *CreateNewAudacityProject()
 
    // Okay, GetActiveProject() is ready. Now we can get its CommandManager,
    // and add the shortcut keys to the tooltips.
-   p->GetControlToolBar()->RegenerateToolsTooltips();
+   p->GetToolManager()->RegenerateTooltips();
 
    ModuleManager::Get().Dispatch(ProjectInitialized);
 

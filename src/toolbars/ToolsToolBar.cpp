@@ -111,7 +111,7 @@ ToolsToolBar::~ToolsToolBar()
 {
 }
 
-void ToolsToolBar::RegenerateToolsTooltips()
+void ToolsToolBar::RegenerateTooltips()
 {
 
 // JKC:
@@ -150,7 +150,7 @@ void ToolsToolBar::RegenerateToolsTooltips()
 
 void ToolsToolBar::UpdatePrefs()
 {
-   RegenerateToolsTooltips();
+   RegenerateTooltips();
 }
 
 AButton * ToolsToolBar::MakeTool( teBmps eTool,
@@ -183,7 +183,7 @@ void ToolsToolBar::Populate()
 
    mTool[mCurrentTool]->PushDown();
 
-   RegenerateToolsTooltips();
+   RegenerateTooltips();
 }
 
 /// Gets the currently active tool

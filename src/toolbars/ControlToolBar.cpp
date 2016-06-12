@@ -188,7 +188,7 @@ void ControlToolBar::Populate()
    mRecord->FollowModifierKeys();
 
 #if wxUSE_TOOLTIPS
-   RegenerateToolsTooltips();
+   RegenerateTooltips();
    wxToolTip::Enable(true);
    wxToolTip::SetDelay(1000);
 #endif
@@ -197,7 +197,7 @@ void ControlToolBar::Populate()
    ArrangeButtons();
 }
 
-void ControlToolBar::RegenerateToolsTooltips()
+void ControlToolBar::RegenerateTooltips()
 {
 #if wxUSE_TOOLTIPS
    std::vector<wxString> commands;
@@ -256,14 +256,14 @@ void ControlToolBar::UpdatePrefs()
 
    if( updated )
    {
-      ReCreateButtons(); // side effect: calls RegenerateToolsTooltips()
+      ReCreateButtons(); // side effect: calls RegenerateTooltips()
       Updated();
    }
    else
       // The other reason to regenerate tooltips is if keyboard shortcuts for
       // transport buttons changed, but that's too much work to check for, so just
       // always do it. (Much cheaper than calling ReCreateButtons() in all cases.
-      RegenerateToolsTooltips();
+      RegenerateTooltips();
 
 
    // Set label to pull in language change
@@ -377,7 +377,7 @@ void ControlToolBar::ReCreateButtons()
 
    EnableDisableButtons();
 
-   RegenerateToolsTooltips();
+   RegenerateTooltips();
 }
 
 void ControlToolBar::Repaint( wxDC *dc )
