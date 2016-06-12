@@ -688,10 +688,16 @@ ToolBarConfiguration::Position
          if (rect.Contains(point))
          {
             sz = tb->GetDockedSize();
-            // Choose this position always, if there is a bar to displace.
+            // Choose a position always, if there is a bar to displace.
             // Else, only if the fit is possible.
-            if (ct || (sz.x < rect.width && sz.y < rect.height))
-               result = position;
+            if (ct || (sz.x <= rect.width && sz.y <= rect.height)) {
+               // May choose current or previous.
+               if (ct && point.y < (rect.GetTop() + rect.GetBottom()) / 2)
+                  // "Wedge" the bar into a crack alone, not adopting others
+                  usedPrev = true, result = prevPosition, result.adopt = false;
+               else
+                  result = position;
+            }
             // Now wait until the other callback below to discover x and y
          }
       }
@@ -704,6 +710,8 @@ ToolBarConfiguration::Position
             // If we've placed it, we're done.
             rect.x = point.x;
             rect.y = point.y;
+            if (usedPrev)
+               rect.y -= tb->GetDockedSize().GetHeight() / 2;
 
             throw Stop {};
          }
@@ -731,6 +739,7 @@ ToolBarConfiguration::Position
       wxRect &rect;
       const wxPoint point;
       ToolBar *const tb;
+      bool usedPrev { false };
    } inserter {
       result, rect, pos, t
    };
