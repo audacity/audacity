@@ -83,7 +83,7 @@ class EditToolBar final : public ToolBar {
 
    void MakeButtons();
 
-   void RegenerateTooltips();
+   void RegenerateTooltips() override;
 
    AButton *mButtons[ETBNumButtons];
 
@@ -136,7 +136,7 @@ public:
    void EnableDisableButtons();
    void UpdatePrefs();
 
-   void RegenerateTooltips();
+   void RegenerateTooltips() override;
 
 private:
 

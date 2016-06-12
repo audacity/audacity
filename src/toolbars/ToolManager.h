@@ -65,6 +65,7 @@ class ToolManager final : public wxEvtHandler
    ToolDock *GetBotDock();
 
    void Reset();
+   void RegenerateTooltips();
 
  private:
 

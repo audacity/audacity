@@ -46,6 +46,8 @@ public:
    void SetBandwidthSelectionFormatName(const wxString & formatName);
    void SetListener(SpectralSelectionBarListener *l);
 
+   void RegenerateTooltips() override {};
+
 private:
 
    void ValuesToControls();

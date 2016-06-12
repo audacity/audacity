@@ -491,6 +491,9 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    mAdjustLeftSelectionCursor = std::make_unique<wxCursor>(wxCURSOR_POINT_LEFT);
    mAdjustRightSelectionCursor = std::make_unique<wxCursor>(wxCURSOR_POINT_RIGHT);
 
+   // Menu pointers are set to NULL here.  Delay building of menus until after
+   // the command managter is finished, so that we can look up shortcut
+   // key strings that need to appear in some of the popup menus.
    mWaveTrackMenu = NULL;
    mChannelItemsInsertionPoint = 0;
    
@@ -499,8 +502,6 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    mTimeTrackMenu = NULL;
 
    mRulerWaveformMenu = mRulerSpectrumMenu = NULL;
-
-   BuildMenus();
 
    mTrackArtist = new TrackArtist();
    mTrackArtist->SetInset(1, kTopMargin, kRightMargin, kBottomMargin);
@@ -584,6 +585,12 @@ TrackPanel::~TrackPanel()
 #endif
 
    delete mInitialTrackSelection;
+}
+
+void TrackPanel::BuildMenusIfNeeded(void)
+{
+   if (!mRateMenu)
+      BuildMenus();
 }
 
 void TrackPanel::BuildMenus(void)
@@ -676,6 +683,8 @@ void TrackPanel::BuildCommonDropMenuItems(wxMenu * menu)
 {
    menu->Append(OnSetNameID, _("&Name..."));
    menu->AppendSeparator();
+   // It is not correct to use KeyStringDisplay here -- wxWidgets will apply
+   // its equivalent to the key names passed to menu functions.
    menu->Append(OnMoveUpID, _("Move Track &Up") + wxT("\t") + 
                            (GetProject()->GetCommandManager()->GetKeyFromName(wxT("TrackMoveUp"))));
    menu->Append(OnMoveDownID, _("Move Track &Down") + wxT("\t") + 
@@ -708,6 +717,8 @@ void TrackPanel::DeleteMenus(void)
 {
    // Note that the submenus (mRateMenu, ...)
    // are deleted by their parent
+   mRateMenu = mFormatMenu = nullptr;
+
    if (mWaveTrackMenu) {
       delete mWaveTrackMenu;
       mWaveTrackMenu = NULL;
@@ -7480,6 +7491,8 @@ void TrackPanel::ScrollIntoView(int x)
 
 void TrackPanel::OnTrackMenu(Track *t)
 {
+   BuildMenusIfNeeded();
+
    if(!t) {
       t = GetFocusedTrack();
       if(!t) return;
@@ -8083,6 +8096,8 @@ void TrackPanel::SetRate(Track * pTrack, double rate)
 /// track menu.
 void TrackPanel::OnFormatChange(wxCommandEvent & event)
 {
+   BuildMenusIfNeeded();
+
    int id = event.GetId();
    wxASSERT(id >= On16BitID && id <= OnFloatID);
    wxASSERT(mPopupMenuTarget
@@ -8174,6 +8189,8 @@ static int gRates[nRates] = { 8000, 11025, 16000, 22050, 44100, 48000, 88200, 96
 /// submenu of the track menu, except for "Other" (/see OnRateOther).
 void TrackPanel::OnRateChange(wxCommandEvent & event)
 {
+   BuildMenusIfNeeded();
+
    int id = event.GetId();
    wxASSERT(id >= OnRate8ID && id <= OnRate384ID);
    wxASSERT(mPopupMenuTarget
@@ -8199,6 +8216,8 @@ int TrackPanel::IdOfRate( int rate )
 
 void TrackPanel::OnRateOther(wxCommandEvent &event)
 {
+   BuildMenusIfNeeded();
+
    wxASSERT(mPopupMenuTarget
             && mPopupMenuTarget->GetKind() == Track::Wave);
 

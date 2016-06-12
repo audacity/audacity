@@ -131,7 +131,7 @@ class TranscriptionToolBar final : public ToolBar {
       int id, unsigned altIdx);
    void GetSamples(WaveTrack *t, sampleCount *s0, sampleCount *slen);
    void SetButton(bool newstate, AButton *button);
-   void RegenerateTooltips();
+   void RegenerateTooltips() override;
 
    AButton *mButtons[TTBNumButtons];
    wxImage *upImage;

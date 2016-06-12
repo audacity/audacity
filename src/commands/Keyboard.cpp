@@ -43,13 +43,25 @@ wxString KeyStringNormalize(const wxString & key)
 #endif
 }
 
-wxString KeyStringDisplay(const wxString & key)
+wxString KeyStringDisplay(const wxString & key, bool useSspecialChars)
 {
    wxString newkey = KeyStringNormalize(key);
 #if defined(__WXMAC__)
-   newkey.Replace(wxT("XCtrl+"), wxT("Control+"));
-   newkey.Replace(wxT("Alt+"), wxT("Option+"));
-   newkey.Replace(wxT("Ctrl+"), wxT("Command+"));
+
+   if (!useSspecialChars) {
+      // Compose user-visible keystroke names, all ASCII
+      newkey.Replace(wxT("XCtrl+"), wxT("Control+"));
+      newkey.Replace(wxT("Alt+"), wxT("Option+"));
+      newkey.Replace(wxT("Ctrl+"), wxT("Command+"));
+   }
+   else {
+      // Compuse user-visible keystroke names, with special characters
+      newkey.Replace(wxT("Shift+"), wxT("\u21e7"));
+      newkey.Replace(wxT("XCtrl+"), wxT("Control+"));
+      newkey.Replace(wxT("Alt+"), wxT("\u2325"));
+      newkey.Replace(wxT("Ctrl+"), wxT("\u2318"));
+   }
+
 #endif
 
    return newkey;

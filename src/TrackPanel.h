@@ -147,6 +147,7 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
 
    virtual ~ TrackPanel();
 
+   virtual void BuildMenusIfNeeded(void);
    virtual void BuildMenus(void);
 
    virtual void DeleteMenus(void);

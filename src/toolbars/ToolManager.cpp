@@ -598,6 +598,14 @@ void ToolManager::Reset()
    Updated();
 }
 
+void ToolManager::RegenerateTooltips()
+{
+   for (auto bar : mBars) {
+      if (bar)
+         bar->RegenerateTooltips();
+   }
+}
+
 //
 // Read the toolbar states
 //
