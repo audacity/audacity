@@ -40,6 +40,8 @@
 #include "ToolManager.h"
 #include "ToolDock.h"
 
+#include <algorithm>
+
 #include "../AColor.h"
 #include "../AllThemeResources.h"
 #include "../ImageManipulation.h"
