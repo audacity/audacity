@@ -719,7 +719,6 @@ void ToolManager::ReadConfig()
 
       bool ordered = ToolBarConfiguration::Read
          (d ? &d->GetConfiguration() : nullptr,
-          this,
           pLegacy,
           bar, show[ ndx ], bShownByDefault)
       && found;
@@ -832,7 +831,7 @@ void ToolManager::ReadConfig()
    {
       ToolDock *d = ( dock + 1 == TopDockID ? mTopDock : mBotDock );
 
-      d->LoadConfig(mBars);
+      d->LoadConfig();
 
       // Add all unordered toolbars
       for( int ord = 0; ord < (int) unordered[ dock ].GetCount(); ord++ )

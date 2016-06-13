@@ -22,6 +22,7 @@
 *//**********************************************************************/
 
 #include "../Audacity.h"
+#include <wx/tokenzr.h>
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
@@ -33,12 +34,13 @@
 #include <wx/intl.h>
 #include <wx/panel.h>
 #include <wx/settings.h>
-#include <wx/tokenzr.h>
 #include <wx/window.h>
 #endif  /*  */
 
 #include "ToolManager.h"
 #include "ToolDock.h"
+
+#include <algorithm>
 
 #include "../AColor.h"
 #include "../AllThemeResources.h"
@@ -230,7 +232,6 @@ bool ToolBarConfiguration::IsRightmost(const ToolBar *bar) const
 
 bool ToolBarConfiguration::Read
    (ToolBarConfiguration *pConfiguration,
-    ToolManager *pManager,
     Legacy *pLegacy,
     ToolBar *bar, bool &visible, bool defaultVisible)
 {
@@ -246,7 +247,7 @@ bool ToolBarConfiguration::Read
       else if (ord >= 0)
       {
          // Legacy preferences
-         while (pLegacy->bars.size() <= ord)
+         while (pLegacy->bars.size() <= size_t(ord))
             pLegacy->bars.push_back(nullptr);
          pLegacy->bars[ord] = bar;
       }
@@ -275,7 +276,7 @@ bool ToolBarConfiguration::Read
 
 void ToolBarConfiguration::RemoveNulls(Forest &forest)
 {
-   for (int ii = 0; ii < forest.size(); ++ii) {
+   for (size_t ii = 0; ii < forest.size(); ++ii) {
       if(forest[ii].pBar == nullptr)
          Remove(forest, forest.begin() + ii--);
    }
@@ -408,7 +409,7 @@ void ToolDock::Dock( ToolBar *bar, bool deflate, ToolBarConfiguration::Position 
 }
 
 // Initial docking of bars
-void ToolDock::LoadConfig(ToolBar *bars[])
+void ToolDock::LoadConfig()
 {
    // Add all ordered toolbars
    for(const auto &place : GetConfiguration()) {
@@ -429,7 +430,9 @@ public:
     ToolBarConfiguration::Position prevPosition,
     ToolBarConfiguration::Position position,
     wxSize &sz)
-   {}
+   {
+      ct; rect; prevPosition; position; sz;
+   }
 
    virtual void Visit
    (ToolBar *ct, wxPoint point) = 0;
@@ -438,7 +441,9 @@ public:
 
    virtual void FinalRect
    (const wxRect &rect, ToolBarConfiguration::Position finalPosition)
-   {}
+   {
+      rect; finalPosition;
+   }
 };
 
 void ToolDock::VisitLayout(LayoutVisitor &visitor,
@@ -471,7 +476,7 @@ void ToolDock::VisitLayout(LayoutVisitor &visitor,
    ToolBar *lastWrappedRoot {};
 
    // Process all docked and visible toolbars
-   for ( const auto &place : GetConfiguration() )
+   for ( const auto &place : this->GetConfiguration() )
    {
       // Cache toolbar pointer
       const auto ct = place.pTree->pBar;
@@ -548,7 +553,7 @@ void ToolDock::VisitLayout(LayoutVisitor &visitor,
       // Record where the toolbar wrapped
       ToolBar *& sib = pItem ? pItem->lastWrappedChild : lastWrappedRoot;
       ToolBarConfiguration::Position newPosition {
-         pItem ? mBars[ pItem->myBarID ] : nullptr,
+         pItem ? this->mBars[ pItem->myBarID ] : nullptr,
          sib
       };
       sib = ct;
@@ -594,7 +599,7 @@ void ToolDock::VisitLayout(LayoutVisitor &visitor,
          // Let the visitor determine size
          wxSize sz {};
          ToolBarConfiguration::Position
-            position { mBars[ item.myBarID ], item.lastWrappedChild },
+            position { this->mBars[ item.myBarID ], item.lastWrappedChild },
             prevPosition {};
          visitor.ModifySize(nullptr, globalRect, prevPosition, position, sz);
          int tw = sz.GetWidth() + toolbarGap;
@@ -761,7 +766,7 @@ ToolBarConfiguration::Position
       result, rect, pos, t
    };
 
-   try { VisitLayout(inserter); } catch (const Inserter::Stop&) {}
+   try { this->VisitLayout(inserter); } catch (const Inserter::Stop&) {}
 
    // rect is decided
    return result;

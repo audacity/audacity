@@ -446,15 +446,21 @@ void DeviceToolBar::RepositionCombos()
       return;
 
    // set up initial sizes and ratios
+   // Note that the y values of the desired sizes are not changed, so that the height
+   // of the toolbar is not changed
    hostRatio     = kHostWidthRatio;
    inputRatio    = kInputWidthRatio;
    outputRatio   = kOutputWidthRatio;
    channelsRatio = kChannelsWidthRatio;
 
-   desiredHost     = mHost->GetBestSize();
-   desiredInput    = mInput->GetBestSize();
-   desiredOutput   = mOutput->GetBestSize();
-   desiredChannels = mInputChannels->GetBestSize();
+   desiredHost.x     = mHost->GetBestSize().x;
+   desiredHost.y     = mHost->GetSize().y;
+   desiredInput.x    = mInput->GetBestSize().x;
+   desiredInput.y    = mInput->GetSize().y;
+   desiredOutput.x   = mOutput->GetBestSize().x;
+   desiredOutput.y   = mOutput->GetSize().y;
+   desiredChannels.x = mInputChannels->GetBestSize().x;
+   desiredChannels.y = mInputChannels->GetSize().y;
 
    // wxGtk has larger comboboxes than the other platforms.  For DeviceToolBar this will cause
    // the height to be double because of the discrete grid layout.  So we shrink it to prevent this.
