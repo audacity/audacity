@@ -198,24 +198,40 @@ void EditToolBar::UpdatePrefs()
 void EditToolBar::RegenerateTooltips()
 {
 #if wxUSE_TOOLTIPS
-   mButtons[ETBCutID]->SetToolTip(_("Cut"));
-   mButtons[ETBCopyID]->SetToolTip(_("Copy"));
-   mButtons[ETBPasteID]->SetToolTip(_("Paste"));
-   mButtons[ETBTrimID]->SetToolTip(_("Trim Audio"));
-   mButtons[ETBSilenceID]->SetToolTip(_("Silence Audio"));
-   mButtons[ETBUndoID]->SetToolTip(_("Undo"));
-   mButtons[ETBRedoID]->SetToolTip(_("Redo"));
-   #ifdef EXPERIMENTAL_SYNC_LOCK
-      mButtons[ETBSyncLockID]->SetToolTip(_("Sync-Lock Tracks"));
-   #endif
-   mButtons[ETBZoomInID]->SetToolTip(_("Zoom In"));
-   mButtons[ETBZoomOutID]->SetToolTip(_("Zoom Out"));
-   mButtons[ETBZoomSelID]->SetToolTip(_("Fit Selection"));
-   mButtons[ETBZoomFitID]->SetToolTip(_("Fit Project"));
+   static const struct Entry {
+      int tool;
+      wxString commandName;
+      wxString untranslatedLabel;
+   } table[] = {
+      { ETBCutID,      wxT("Cut"),         XO("Cut")  },
+      { ETBCopyID,     wxT("Copy"),        XO("Copy")  },
+      { ETBPasteID,    wxT("Paste"),       XO("Paste")  },
+      { ETBTrimID,     wxT("Trim"),        XO("Trim Audio")  },
+      { ETBSilenceID,  wxT("Silence"),     XO("Silence Audio")  },
+      { ETBUndoID,     wxT("Undo"),        XO("Undo")  },
+      { ETBRedoID,     wxT("Redo"),        XO("Redo")  },
+
+#ifdef EXPERIMENTAL_SYNC_LOCK
+      { ETBSyncLockID, wxT("SyncLock"),    XO("Sync-Lock Tracks")  },
+#endif
+
+      { ETBZoomInID,   wxT("ZoomIn"),      XO("Zoom In")  },
+      { ETBZoomOutID,  wxT("ZoomOut"),     XO("Zoom Out")  },
+      { ETBZoomSelID,  wxT("ZoomSel"),     XO("Fit Selection")  },
+      { ETBZoomFitID,  wxT("FitInWindow"), XO("Fit Project")  },
 
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
-   mButtons[ETBEffectsID]->SetToolTip(_("Open Effects Rack"));
+      { ETBEffectsID,  wxT(""),            XO("Open Effects Rack")  },
 #endif
+   };
+
+   std::vector<wxString> commands;
+   for (const auto &entry : table) {
+      commands.clear();
+      commands.push_back(wxGetTranslation(entry.untranslatedLabel));
+      commands.push_back(entry.commandName);
+      ToolBar::SetButtonToolTip(*mButtons[entry.tool], commands);
+   }
 #endif
 }
 

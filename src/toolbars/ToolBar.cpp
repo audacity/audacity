@@ -48,6 +48,7 @@ in which buttons can be placed.
 #include "../ImageManipulation.h"
 #include "../Project.h"
 #include "../Theme.h"
+#include "../commands/Keyboard.h"
 #include "../widgets/AButton.h"
 #include "../widgets/Grabber.h"
 
@@ -759,6 +760,33 @@ void ToolBar::MakeAlternateImages(AButton &button, int idx,
    wxImagePtr disable   (OverlayImage(eUp,     eDisabled, xoff, yoff));
 
    button.SetAlternateImages(idx, *up, *hilite, *down, *disable);
+}
+
+void ToolBar::SetButtonToolTip
+(AButton &button, const std::vector<wxString> &commands, const wxString &separator)
+{
+   const auto project = GetActiveProject();
+   const auto commandManager = project ? project->GetCommandManager() : nullptr;
+   wxString result;
+   auto iter = commands.begin(), end = commands.end();
+   while (iter != end) {
+      result += *iter++;
+      if (iter != end) {
+         if (!iter->empty()) {
+            if (commandManager) {
+               auto keyStr = commandManager->GetKeyFromName(*iter);
+               if (keyStr.empty())
+                  keyStr = _("no key");
+               result += wxT(" ");
+               result += Internat::Parenthesize(KeyStringDisplay(keyStr, true));
+            }
+         }
+         ++iter;
+      }
+      if (iter != end)
+         result += separator;
+   }
+   button.SetToolTip(result);
 }
 
 //

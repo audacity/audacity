@@ -53,7 +53,7 @@ class MeterToolBar final : public ToolBar {
    wxSize GetDockedSize();
 
  private:
-   void RegenerateTooltips();
+   void RegenerateTooltips() override;
 
    AudacityProject *mProject;
    int mWhichMeters;

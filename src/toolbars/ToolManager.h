@@ -65,6 +65,7 @@ class ToolManager final : public wxEvtHandler
    ToolDock *GetBotDock();
 
    void Reset();
+   void RegenerateTooltips();
 
  private:
 
@@ -90,7 +91,7 @@ class ToolManager final : public wxEvtHandler
    ToolDock *mDragDock;
    ToolBar *mDragBar {};
    wxPoint mDragOffset;
-   int mDragBefore;
+   ToolBarConfiguration::Position mDragBefore {};
 
    wxPoint mLastPos;
    wxRect mBarPos;
@@ -114,7 +115,9 @@ class ToolManager final : public wxEvtHandler
 
    wxPoint mPrevPosition {};
    ToolDock *mPrevDock {};
-   int mPrevSlot {-1};
+   ToolBarConfiguration::Position mPrevSlot
+      { ToolBarConfiguration::UnspecifiedPosition };
+   ToolBarConfiguration mPrevConfiguration;
 
  public:
 

@@ -296,6 +296,8 @@ void SelectionBar::UpdatePrefs()
    // Set label to pull in language change
    SetLabel(_("Selection"));
 
+   RegenerateTooltips();
+
    // Give base class a chance
    ToolBar::UpdatePrefs();
 }

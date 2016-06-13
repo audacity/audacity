@@ -15,6 +15,7 @@
 
 #include "../Experimental.h"
 
+#include <vector>
 #include <wx/defs.h>
 #include <wx/panel.h>
 #include <wx/sizer.h>
@@ -98,6 +99,7 @@ class ToolBar /* not final */ : public wxPanel
    virtual void EnableDisableButtons() = 0;
    virtual void ReCreateButtons();
    virtual void UpdatePrefs();
+   virtual void RegenerateTooltips() = 0;
 
    int GetType();
    wxString GetTitle();
@@ -149,7 +151,18 @@ class ToolBar /* not final */ : public wxPanel
                             teBmps eStandardDown,
                             teBmps eDisabled,
                             wxSize size);
-   
+
+   static
+   void SetButtonToolTip
+      (AButton &button,
+       // An array, alternating user-visible strings, and
+       // non-user-visible command names.  If a shortcut key is defined
+       // for the command, then it is appended, parenthesized, after the
+       // user-visible string.
+       const std::vector<wxString> &commands,
+       // If more than one pair of strings is given, then use this separator.
+       const wxString &separator = wxT(" / "));
+
  protected:
    void SetButton(bool down, AButton *button);
 

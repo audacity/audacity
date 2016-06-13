@@ -14,5 +14,5 @@
 #include <wx/string.h>
 
 wxString KeyStringNormalize(const wxString & key);
-wxString KeyStringDisplay(const wxString & key);
+wxString KeyStringDisplay(const wxString & key, bool useSpecialChars = false);
 wxString KeyEventToKeyString(const wxKeyEvent & keyEvent);

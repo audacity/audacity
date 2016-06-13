@@ -196,6 +196,8 @@ void MixerToolBar::UpdatePrefs()
    // Set label to pull in language change
    SetLabel(_("Mixer"));
 
+   RegenerateTooltips();
+
    // Give base class a chance
    ToolBar::UpdatePrefs();
 }
