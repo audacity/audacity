@@ -252,7 +252,6 @@ public:
 
    static bool Read
       (ToolBarConfiguration *pConfiguration,
-       ToolManager *pManager,
        Legacy *pLegacy,
        ToolBar *bar, bool &visible, bool defaultVisible);
    void PostRead(Legacy &legacy);
@@ -292,7 +291,7 @@ public:
 
    bool AcceptsFocus() const override { return false; };
 
-   void LoadConfig(ToolBar *bars[]);
+   void LoadConfig();
    void LayoutToolBars();
    void Expose( int type, bool show );
    int GetOrder( ToolBar *bar );
