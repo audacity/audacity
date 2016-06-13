@@ -759,20 +759,20 @@ protected:
       mStretchCursor, mStretchLeftCursor, mStretchRightCursor;
 #endif
 
-   wxMenu *mWaveTrackMenu;
-   size_t mChannelItemsInsertionPoint;
+   wxMenu *mWaveTrackMenu {};
+   size_t mChannelItemsInsertionPoint {};
 
-   wxMenu *mNoteTrackMenu;
-   wxMenu *mTimeTrackMenu;
-   wxMenu *mLabelTrackMenu;
-   wxMenu *mRateMenu;
-   wxMenu *mFormatMenu;
-   wxMenu *mLabelTrackInfoMenu;
+   wxMenu *mNoteTrackMenu {};
+   wxMenu *mTimeTrackMenu {};
+   wxMenu *mLabelTrackMenu {};
+   wxMenu *mRateMenu {};
+   wxMenu *mFormatMenu {};
+   wxMenu *mLabelTrackInfoMenu {};
 
-   wxMenu *mRulerWaveformMenu;
-   wxMenu *mRulerSpectrumMenu;
+   wxMenu *mRulerWaveformMenu {};
+   wxMenu *mRulerSpectrumMenu {};
 
-   Track *mPopupMenuTarget;
+   Track *mPopupMenuTarget {};
 
    friend class TrackPanelAx;
 
