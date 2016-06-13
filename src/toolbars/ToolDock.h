@@ -306,6 +306,13 @@ public:
    ToolBarConfiguration &GetConfiguration()
    { return mConfiguration; }
 
+   // backup gets old contents of the configuration;  the configuration is
+   // set to the wrapped configuration.
+   void WrapConfiguration(ToolBarConfiguration &backup);
+
+   // Reverse what was done by WrapConfiguration.
+   void RestoreConfiguration(ToolBarConfiguration &backup);
+
  protected:
 
    void OnErase( wxEraseEvent & event );
@@ -316,7 +323,8 @@ public:
 
  private:
    class LayoutVisitor;
-   void VisitLayout(LayoutVisitor &visitor);
+   void VisitLayout(LayoutVisitor &visitor,
+                    ToolBarConfiguration *pWrappedConfiguration = nullptr);
 
    void Updated();
 
@@ -327,6 +335,9 @@ public:
 
    // Stores adjacency relations that we want to realize in the dock layout
    ToolBarConfiguration mConfiguration;
+
+   // Configuration as modified by the constraint of the main window width
+   ToolBarConfiguration mWrappedConfiguration;
 
    ToolBar *mBars[ ToolBarCount ];
 

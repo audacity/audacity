@@ -1297,6 +1297,7 @@ void ToolManager::OnGrabber( GrabberEvent & event )
       mPrevDock = dynamic_cast<ToolDock*>(mDragBar->GetParent());
       wxASSERT(mPrevDock);
       mPrevSlot = mPrevDock->GetConfiguration().Find(mDragBar);
+      mPrevDock->WrapConfiguration(mPrevConfiguration);
    }
    else
       mPrevPosition = mDragBar->GetParent()->GetPosition();
@@ -1358,6 +1359,7 @@ void ToolManager::HandleEscapeKey()
          // Why don't you leave me alone?
          // Well, I feel so break up
          // I want to go home.
+         mPrevDock->RestoreConfiguration(mPrevConfiguration);
          mPrevDock->Dock( mDragBar, true, mPrevSlot );
 
          // Done with the floater
@@ -1392,6 +1394,7 @@ void ToolManager::DoneDragging()
    mDragBar = NULL;
    mPrevDock = NULL;
    mPrevSlot = { ToolBarConfiguration::UnspecifiedPosition };
+   mPrevConfiguration.Clear();
    mLastPos.x = mBarPos.x = -1;
    mLastPos.y = mBarPos.y = -1;
    mTimer.Stop();

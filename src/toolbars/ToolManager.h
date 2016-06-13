@@ -117,6 +117,7 @@ class ToolManager final : public wxEvtHandler
    ToolDock *mPrevDock {};
    ToolBarConfiguration::Position mPrevSlot
       { ToolBarConfiguration::UnspecifiedPosition };
+   ToolBarConfiguration mPrevConfiguration;
 
  public:
 

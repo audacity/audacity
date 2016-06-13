@@ -441,8 +441,12 @@ public:
    {}
 };
 
-void ToolDock::VisitLayout(LayoutVisitor &visitor)
+void ToolDock::VisitLayout(LayoutVisitor &visitor,
+                           ToolBarConfiguration *pWrappedConfiguration)
 {
+   if (pWrappedConfiguration)
+      pWrappedConfiguration->Clear();
+
    // Get size of our parent since we haven't been sized yet
    int width, height;
    GetParent()->GetClientSize( &width, &height );
@@ -459,10 +463,12 @@ void ToolDock::VisitLayout(LayoutVisitor &visitor)
       int myBarID { NoBarID };
       int parentBarID { NoBarID };
       ToolBar *lastSib {};
+      ToolBar *lastWrappedChild {};
       wxRect rect;
    } layout[ ToolBarCount ];
 
    ToolBar *lastRoot {};
+   ToolBar *lastWrappedRoot {};
 
    // Process all docked and visible toolbars
    for ( const auto &place : GetConfiguration() )
@@ -529,13 +535,25 @@ void ToolDock::VisitLayout(LayoutVisitor &visitor)
          if (!bTooWide && !bTooHigh)
             break;
 
-         if (pItem->parentBarID == NoBarID)
+         if (pItem->parentBarID == NoBarID) {
+            pItem = nullptr;
             pRect = &main;
+         }
          else {
             pItem = &layout[ pItem->parentBarID ];
             pRect = &pItem->rect;
          }
       }
+
+      // Record where the toolbar wrapped
+      ToolBar *& sib = pItem ? pItem->lastWrappedChild : lastWrappedRoot;
+      ToolBarConfiguration::Position newPosition {
+         pItem ? mBars[ pItem->myBarID ] : nullptr,
+         sib
+      };
+      sib = ct;
+      if (pWrappedConfiguration)
+         pWrappedConfiguration->Insert(ct, newPosition);
 
       // Place the toolbar at the upper left part of the rectangle.
       const auto cpos = pRect->GetPosition();
@@ -576,7 +594,7 @@ void ToolDock::VisitLayout(LayoutVisitor &visitor)
          // Let the visitor determine size
          wxSize sz {};
          ToolBarConfiguration::Position
-            position { mBars[ item.myBarID ] },
+            position { mBars[ item.myBarID ], item.lastWrappedChild },
             prevPosition {};
          visitor.ModifySize(nullptr, globalRect, prevPosition, position, sz);
          int tw = sz.GetWidth() + toolbarGap;
@@ -636,7 +654,7 @@ void ToolDock::LayoutToolBars()
    } sizeSetter {
       this
    };
-   VisitLayout(sizeSetter);
+   VisitLayout(sizeSetter, &mWrappedConfiguration);
 
    // Set tab order
    {
@@ -653,7 +671,6 @@ void ToolDock::LayoutToolBars()
    Refresh( false );
 }
 
-//
 // Determine the position where a NEW bar would be placed
 //
 // 'rect' will be the rectangle for the dock marker.
@@ -748,6 +765,20 @@ ToolBarConfiguration::Position
 
    // rect is decided
    return result;
+}
+
+void ToolDock::WrapConfiguration(ToolBarConfiguration &backup)
+{
+   backup.Clear();
+   backup.Swap(mConfiguration);
+   mConfiguration.Swap(mWrappedConfiguration);
+}
+
+void ToolDock::RestoreConfiguration(ToolBarConfiguration &backup)
+{
+   mWrappedConfiguration.Clear();
+   mWrappedConfiguration.Swap(mConfiguration);
+   mConfiguration.Swap(backup);
 }
 
 //
