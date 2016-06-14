@@ -3177,6 +3177,8 @@ void EffectUIHost::OnInitDialog(wxInitDialogEvent & evt)
    {
       focused->SelectAll();
    }
+
+   mApplyBtn->SetFocus();
 }
 
 void EffectUIHost::OnErase(wxEraseEvent & WXUNUSED(evt))
