@@ -1311,6 +1311,7 @@ void Ruler::Draw(wxDC& dc, const TimeTrack* timetrack)
    if (!mValid)
       Update(timetrack);
 
+   mDC->SetTextForeground( mTickColour );
 #ifdef EXPERIMENTAL_THEMING
    mDC->SetPen(mPen);
 #else

@@ -260,7 +260,7 @@ from there.  Audacity will look for a file called "Pause.png".
 
    DEFINE_COLOUR( clrAboutBoxBackground,  wxColour(255, 255, 255),  wxT("AboutBackground"));
 #if defined(EXPERIMENTAL_THEMING)
-   DEFINE_COLOUR( clrTrackPanelText,      wxColour(153, 153, 153),  wxT("TrackPanelText"));
+   DEFINE_COLOUR( clrTrackPanelText,      wxColour(200, 200, 200),  wxT("TrackPanelText"));
 #else
    DEFINE_COLOUR( clrTrackPanelText,      wxColour(  0,   0,   0),  wxT("TrackPanelText"));
 #endif

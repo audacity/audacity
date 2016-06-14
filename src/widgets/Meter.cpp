@@ -258,6 +258,7 @@ Meter::Meter(AudacityProject *project,
    mRuler.SetFonts(GetFont(), GetFont(), GetFont());
    mRuler.SetFlip(mStyle != MixerTrackCluster);
    mRuler.SetLabelEdges(true);
+   mRuler.SetTickColour( wxColour( 0,0,255 ) );
 
    UpdatePrefs();
 
@@ -578,7 +579,8 @@ void Meter::OnPaint(wxPaintEvent & WXUNUSED(event))
 #endif
          }
       }
-   
+      mRuler.SetTickColour( wxColour(0,0,0) );
+      dc.SetTextForeground( wxColour(0,0,0) );
       // Draw the ruler
       mRuler.Draw(dc);   
 
@@ -594,6 +596,8 @@ void Meter::OnPaint(wxPaintEvent & WXUNUSED(event))
    {
       DrawMeterBar(destDC, &mBar[i]);
    }
+
+   destDC.SetTextForeground( wxColour(0,0,0) );
 
    // We can have numbers over the bars, in which case we have to draw them each time.
    if (mStyle == HorizontalStereoCompact || mStyle == VerticalStereoCompact)
