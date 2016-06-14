@@ -68,8 +68,9 @@ public:
    virtual ~ToolBarResizer();
 
    // We don't need or want to accept focus.
-   // PRL: except for ESC key now.
-   // bool AcceptsFocus() const;
+   // Note that AcceptsFocusFromKeyboard() is overriden rather than
+   // AcceptsFocus(), so that resize can be cancelled by ESC
+   bool AcceptsFocusFromKeyboard() const override {return false;}
 
 private:
    void OnErase(wxEraseEvent & event);
@@ -116,13 +117,6 @@ ToolBarResizer::~ToolBarResizer()
    if(HasCapture())
       ReleaseMouse();
 }
-
-/*
-bool ToolBarResizer::AcceptsFocus() const
-{
-   return false;
-}
- */
 
 //
 // Handle background erasure
