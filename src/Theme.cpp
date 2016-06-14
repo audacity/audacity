@@ -713,6 +713,7 @@ void ThemeBase::WriteImageMap( )
    // Now save the colours.
    mFlow.SetNewGroup(1);
    const int iColSize=10;
+   mFlow.myHeight = iColSize+1;
    for(i=0;i<(int)mColours.GetCount();i++)
    {
       mFlow.GetNextPosition( iColSize, iColSize );
