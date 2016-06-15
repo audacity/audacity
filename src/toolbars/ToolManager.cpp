@@ -136,7 +136,8 @@ class ToolFrame final : public wxFrame
             width += sizerW;
          }
 
-         SetSize(width + 2, bar->GetDockedSize().y + 2);
+         SetSize(width + 2 * ToolBarFloatMargin,
+            bar->GetDockedSize().y + 2 * ToolBarFloatMargin);
 
          // Attach the sizer and resize the window to fit
          SetSizer(s.release());
@@ -497,16 +498,59 @@ ToolManager::~ToolManager()
    delete mDown;
 }
 
+// This table describes the default configuration of the toolbars as
+// a "tree" and must be kept in pre-order traversal.
+
+// In fact this tree is more of a broom -- nothing properly branches except
+// at the root.
+
+// "Root" corresponds to left edge of the main window, and successive siblings
+// go from top to bottom.  But in practice layout may wrap this abstract
+// configuration if the window size is narrow.
+
+static struct DefaultConfigEntry {
+   int barID;
+   int rightOf; // parent
+   int below;   // preceding sibling
+} DefaultConfigTable [] = {
+   // Top dock row, may wrap
+   { TransportBarID,         NoBarID,                NoBarID                },
+   { ToolsBarID,             TransportBarID,         NoBarID                },
+   { RecordMeterBarID,       ToolsBarID,             NoBarID                },
+   { PlayMeterBarID,         RecordMeterBarID,       NoBarID                },
+   { MixerBarID,             PlayMeterBarID,         NoBarID                },
+   { EditBarID,              MixerBarID,             NoBarID                },
+   { TranscriptionBarID,     EditBarID,              NoBarID                },
+
+   // start another top dock row
+   { ScrubbingBarID,         NoBarID,                TransportBarID         },
+   { DeviceBarID,            ScrubbingBarID,         NoBarID                },
+
+   // Hidden by default in top dock
+   { MeterBarID,             NoBarID,                NoBarID                },
+
+   // Bottom dock
+   { SelectionBarID,         NoBarID,                NoBarID                },
+
+   // Hidden by default in bottom dock
+   { SpectralSelectionBarID, NoBarID,                NoBarID                },
+};
+
 void ToolManager::Reset()
 {
-   int ndx;
-
    // Disconnect all docked bars
-   for( ndx = 0; ndx < ToolBarCount; ndx++ ) 
+   for ( const auto &entry : DefaultConfigTable )
    {
+      int ndx = entry.barID;
+      ToolBar *bar = mBars[ ndx ];
+
+      ToolBarConfiguration::Position position {
+         (entry.rightOf == NoBarID) ? nullptr : mBars[ entry.rightOf ],
+         (entry.below == NoBarID) ? nullptr : mBars[ entry.below ]
+      };
+
       wxWindow *floater;
       ToolDock *dock;
-      ToolBar *bar = mBars[ ndx ];
       bool expose = true;
 
       // Disconnect the bar
@@ -557,7 +601,7 @@ void ToolManager::Reset()
       if( dock != NULL )
       {
          // when we dock, we reparent, so bar is no longer a child of floater.
-         dock->Dock( bar );
+         dock->Dock( bar, false, position );
          Expose( ndx, expose );
          //OK (and good) to DELETE floater, as bar is no longer in it.
          if( floater )
@@ -597,6 +641,14 @@ void ToolManager::Reset()
    Updated();
 }
 
+void ToolManager::RegenerateTooltips()
+{
+   for (auto bar : mBars) {
+      if (bar)
+         bar->RegenerateTooltips();
+   }
+}
+
 //
 // Read the toolbar states
 //
@@ -604,29 +656,22 @@ void ToolManager::ReadConfig()
 {
    wxString oldpath = gPrefs->GetPath();
    wxArrayInt unordered[ DockCount ];
-   int order[ DockCount ][ ToolBarCount ];
    bool show[ ToolBarCount ];
    int width[ ToolBarCount ];
    int height[ ToolBarCount ];
    int x, y;
-   int dock, ord, ndx;
+   int dock, ndx;
+   bool someFound { false };
 
 #if defined(__WXMAC__)
    // Disable window animation
    wxSystemOptions::SetOption( wxMAC_WINDOW_PLAIN_TRANSITION, 1 );
 #endif
 
-   // Invalidate all order entries
-   for( dock = 0; dock < DockCount; dock++ )
-   {
-      for( ord = 0; ord < ToolBarCount; ord++ )
-      {
-         order[ dock ][ ord ] = NoBarID;
-      }
-   }
-
    // Change to the bar root
    gPrefs->SetPath( wxT("/GUI/ToolBars") );
+
+   ToolBarConfiguration::Legacy topLegacy, botLegacy;
 
    // Load and apply settings for each bar
    for( ndx = 0; ndx < ToolBarCount; ndx++ )
@@ -656,9 +701,27 @@ void ToolManager::ReadConfig()
 #endif
 
       // Read in all the settings
-      gPrefs->Read( wxT("Dock"), &dock,  defaultDock );
-      gPrefs->Read( wxT("Order"), &ord, NoBarID );
-      gPrefs->Read( wxT("Show"), &show[ ndx ], bShownByDefault);
+      gPrefs->Read( wxT("Dock"), &dock, -1);
+      const bool found = (dock != -1);
+      if (found)
+         someFound = true;
+      if (!found)
+         dock = defaultDock;
+      
+      ToolDock *d;
+      ToolBarConfiguration::Legacy *pLegacy;
+      switch(dock)
+      {
+         case TopDockID: d = mTopDock; pLegacy = &topLegacy; break;
+         case BotDockID: d = mBotDock; pLegacy = &botLegacy;  break;
+         default:        d = nullptr; pLegacy = nullptr; break;
+      }
+
+      bool ordered = ToolBarConfiguration::Read
+         (d ? &d->GetConfiguration() : nullptr,
+          pLegacy,
+          bar, show[ ndx ], bShownByDefault)
+      && found;
 
       gPrefs->Read( wxT("X"), &x, -1 );
       gPrefs->Read( wxT("Y"), &y, -1 );
@@ -718,15 +781,8 @@ void ToolManager::ReadConfig()
             }
          }
 #endif
-         // Is order within range and unoccupied?
-         if( ( ord >= 0 ) &&
-             ( ord < ToolBarCount ) &&
-             ( order[ dock - 1 ][ ord ] == NoBarID ) )
-         {
-            // Insert at ordered location
-            order[ dock - 1 ][ ord ] = ndx;
-         }
-         else
+
+         if (!ordered)
          {
             // These must go at the end
             unordered[ dock - 1 ].Add( ndx );
@@ -767,36 +823,23 @@ void ToolManager::ReadConfig()
       gPrefs->SetPath( wxT("/GUI/ToolBars") );
    }
 
+   mTopDock->GetConfiguration().PostRead(topLegacy);
+   mBotDock->GetConfiguration().PostRead(botLegacy);
+
    // Add all toolbars to their target dock
    for( dock = 0; dock < DockCount; dock++ )
    {
       ToolDock *d = ( dock + 1 == TopDockID ? mTopDock : mBotDock );
 
-      // Add all ordered toolbars
-      for( ord = 0; ord < ToolBarCount; ord++ )
-      {
-         ndx = order[ dock ][ ord ];
-
-         // Bypass empty slots
-         if( ndx != NoBarID )
-         {
-            ToolBar *t = mBars[ ndx ];
-
-            // Dock it
-            d->Dock( t );
-            
-            // Show or hide it
-            Expose( t->GetId(), show[ t->GetId() ] );
-         }
-      }
+      d->LoadConfig();
 
       // Add all unordered toolbars
-      for( ord = 0; ord < (int) unordered[ dock ].GetCount(); ord++ )
+      for( int ord = 0; ord < (int) unordered[ dock ].GetCount(); ord++ )
       {
          ToolBar *t = mBars[ unordered[ dock ][ ord ] ];
 
          // Dock it
-         d->Dock( t );
+         d->Dock( t, false );
 
          // Show or hide the bar
          Expose( t->GetId(), show[ t->GetId() ] );
@@ -810,6 +853,9 @@ void ToolManager::ReadConfig()
    // Reinstate original transition
    wxSystemOptions::SetOption( wxMAC_WINDOW_PLAIN_TRANSITION, mTransition );
 #endif
+
+   if (!someFound)
+      Reset();
 }
 
 //
@@ -837,13 +883,14 @@ void ToolManager::WriteConfig()
       gPrefs->SetPath( bar->GetSection() );
 
       // Search both docks for toolbar order
-      int to = mTopDock->GetOrder( bar );
-      int bo = mBotDock->GetOrder( bar );
+      bool to = mTopDock->GetConfiguration().Contains( bar );
+      bool bo = mBotDock->GetConfiguration().Contains( bar );
 
       // Save
       gPrefs->Write( wxT("Dock"), (int) (to ? TopDockID : bo ? BotDockID : NoDockID ));
-      gPrefs->Write( wxT("Order"), to + bo );
-      gPrefs->Write( wxT("Show"), IsVisible( ndx ) );
+      auto dock = to ? mTopDock : bo ? mBotDock : nullptr;
+      ToolBarConfiguration::Write
+         (dock ? &dock->GetConfiguration() : nullptr, bar);
 
       wxPoint pos( -1, -1 );
       wxSize sz = bar->GetSize();
@@ -857,11 +904,15 @@ void ToolManager::WriteConfig()
       gPrefs->Write( wxT("W"), sz.x );
       gPrefs->Write( wxT("H"), sz.y );
 
-      // Kill the bar
-      bar->Destroy();
-
       // Change back to the bar root
       gPrefs->SetPath( wxT("..") );
+   }
+
+   // Kill the bars
+   for( ndx = 0; ndx < ToolBarCount; ndx++ )
+   {
+      ToolBar *bar = mBars[ ndx ];
+      bar->Destroy();
    }
 
    // Restore original config path
@@ -1017,7 +1068,7 @@ void ToolManager::OnMouse( wxMouseEvent & event )
       if( mDragDock && !event.ShiftDown() )
       {
          // Trip over...everyone ashore that's going ashore...
-         mDragDock->Dock( mDragBar, mDragBefore );
+         mDragDock->Dock( mDragBar, true, mDragBefore );
 
          // Done with the floater
          mDragWindow->Destroy();
@@ -1087,15 +1138,18 @@ void ToolManager::OnMouse( wxMouseEvent & event )
             // Decide which direction the arrow should point
             if( r.GetTop() >= dr.GetHeight() )
             {
-               p.x = dr.GetLeft() + ( dr.GetWidth() / 2 );
-               p.y = dr.GetBottom() - mDown->GetBox().GetHeight();
+               const auto &box = mDown->GetBox();
+               p.x = dr.GetLeft() + ( dr.GetWidth() / 2 )
+                 - (box.GetWidth() / 2);
+               p.y = dr.GetBottom() - box.GetHeight();
                mCurrent = mDown;
             }
             else
             {
+               const auto &box = mLeft->GetBox();
                p.x = dr.GetLeft() + r.GetLeft();
-               p.y = dr.GetTop() + r.GetTop() + mLeft->GetBox().GetHeight() / 2;
-                     //JKC ( ( r.GetHeight() - mLeft->GetBox().GetHeight() ) / 2 );
+               p.y = dr.GetTop() + r.GetTop() +
+                  ( ( r.GetHeight() - mLeft->GetBox().GetHeight() ) / 2 );
                mCurrent = mLeft;
             }
 
@@ -1241,7 +1295,8 @@ void ToolManager::OnGrabber( GrabberEvent & event )
    if (mDragBar->IsDocked()) {
       mPrevDock = dynamic_cast<ToolDock*>(mDragBar->GetParent());
       wxASSERT(mPrevDock);
-      mPrevSlot = mPrevDock->Find(mDragBar);
+      mPrevSlot = mPrevDock->GetConfiguration().Find(mDragBar);
+      mPrevDock->WrapConfiguration(mPrevConfiguration);
    }
    else
       mPrevPosition = mDragBar->GetParent()->GetPosition();
@@ -1303,7 +1358,8 @@ void ToolManager::HandleEscapeKey()
          // Why don't you leave me alone?
          // Well, I feel so break up
          // I want to go home.
-         mPrevDock->Dock( mDragBar, mPrevSlot );
+         mPrevDock->RestoreConfiguration(mPrevConfiguration);
+         mPrevDock->Dock( mDragBar, true, mPrevSlot );
 
          // Done with the floater
          mDragWindow->Destroy();
@@ -1336,7 +1392,8 @@ void ToolManager::DoneDragging()
    mDragDock = NULL;
    mDragBar = NULL;
    mPrevDock = NULL;
-   mPrevSlot = -1;
+   mPrevSlot = { ToolBarConfiguration::UnspecifiedPosition };
+   mPrevConfiguration.Clear();
    mLastPos.x = mBarPos.x = -1;
    mLastPos.y = mBarPos.y = -1;
    mTimer.Stop();

@@ -48,6 +48,7 @@ in which buttons can be placed.
 #include "../ImageManipulation.h"
 #include "../Project.h"
 #include "../Theme.h"
+#include "../commands/Keyboard.h"
 #include "../widgets/AButton.h"
 #include "../widgets/Grabber.h"
 
@@ -67,8 +68,9 @@ public:
    virtual ~ToolBarResizer();
 
    // We don't need or want to accept focus.
-   // PRL: except for ESC key now.
-   // bool AcceptsFocus() const;
+   // Note that AcceptsFocusFromKeyboard() is overriden rather than
+   // AcceptsFocus(), so that resize can be cancelled by ESC
+   bool AcceptsFocusFromKeyboard() const override {return false;}
 
 private:
    void OnErase(wxEraseEvent & event);
@@ -115,13 +117,6 @@ ToolBarResizer::~ToolBarResizer()
    if(HasCapture())
       ReleaseMouse();
 }
-
-/*
-bool ToolBarResizer::AcceptsFocus() const
-{
-   return false;
-}
- */
 
 //
 // Handle background erasure
@@ -359,7 +354,7 @@ void ToolBar::SetLabel(const wxString & label)
 //
 // Returns whether the toolbar is resizable or not
 //
-bool ToolBar::IsResizable()
+bool ToolBar::IsResizable() const
 {
    return mResizable;
 }
@@ -367,7 +362,7 @@ bool ToolBar::IsResizable()
 //
 // Returns the dock state of the toolbar
 //
-bool ToolBar::IsDocked()
+bool ToolBar::IsDocked() const
 {
    return mDock != NULL;
 }
@@ -375,7 +370,7 @@ bool ToolBar::IsDocked()
 //
 // Returns the visibility of the toolbar
 //
-bool ToolBar::IsVisible()
+bool ToolBar::IsVisible() const
 {
    return mVisible;
 }
@@ -759,6 +754,33 @@ void ToolBar::MakeAlternateImages(AButton &button, int idx,
    wxImagePtr disable   (OverlayImage(eUp,     eDisabled, xoff, yoff));
 
    button.SetAlternateImages(idx, *up, *hilite, *down, *disable);
+}
+
+void ToolBar::SetButtonToolTip
+(AButton &button, const std::vector<wxString> &commands, const wxString &separator)
+{
+   const auto project = GetActiveProject();
+   const auto commandManager = project ? project->GetCommandManager() : nullptr;
+   wxString result;
+   auto iter = commands.begin(), end = commands.end();
+   while (iter != end) {
+      result += *iter++;
+      if (iter != end) {
+         if (!iter->empty()) {
+            if (commandManager) {
+               auto keyStr = commandManager->GetKeyFromName(*iter);
+               if (keyStr.empty())
+                  keyStr = _("no key");
+               result += wxT(" ");
+               result += Internat::Parenthesize(KeyStringDisplay(keyStr, true));
+            }
+         }
+         ++iter;
+      }
+      if (iter != end)
+         result += separator;
+   }
+   button.SetToolTip(result);
 }
 
 //

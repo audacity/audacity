@@ -101,7 +101,7 @@ class ControlToolBar final : public ToolBar {
    void EnableDisableButtons() override;
 
    void ReCreateButtons() override;
-   void RegenerateToolsTooltips();
+   void RegenerateTooltips() override;
 
    int WidthForStatusBar(wxStatusBar* const);
    void UpdateStatusBar(AudacityProject *pProject);

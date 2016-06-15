@@ -78,7 +78,6 @@ class Scrubber;
 class ScrubbingToolBar;
 class SelectionBar;
 class SpectralSelectionBar;
-class Toolbar;
 class ToolManager;
 class ToolsToolBar;
 class TranscriptionToolBar;
@@ -407,6 +406,7 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
 
    void SafeDisplayStatusMessage(const wxChar *msg);
 
+   bool MayScrollBeyondZero() const;
    double ScrollingLowerBoundTime() const;
    // How many pixels are covered by the period from lowermost scrollable time, to the given time:
    // PRL: Bug1197: we seem to need to compute all in double, to avoid differing results on Mac

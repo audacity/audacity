@@ -63,7 +63,7 @@ class DeviceToolBar final : public ToolBar {
    void SetDevices(const DeviceSourceMap *in, const DeviceSourceMap *out);
    void RepositionCombos();
    void SetNames();
-   void RegenerateTooltips();
+   void RegenerateTooltips() override;
 
    void ShowComboDialog(wxChoice *combo, const wxString &title);
 

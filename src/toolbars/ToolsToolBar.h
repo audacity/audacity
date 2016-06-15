@@ -70,7 +70,7 @@ class ToolsToolBar final : public ToolBar {
 
  private:
 
-   void RegenerateToolsTooltips();
+   void RegenerateTooltips() override;
    wxImage *MakeToolImage(wxImage *tool, wxImage *mask, int style);
    AButton *MakeTool(teBmps eTool, int id, const wxChar *label);
 
