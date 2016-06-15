@@ -374,6 +374,7 @@ void EditToolBar::EnableDisableButtons()
 #include "../Track.h"
 #include "../UndoManager.h"
 #include "../widgets/AButton.h"
+#include "../widgets/Ruler.h"
 #include "../tracks/ui/Scrubbing.h"
 
 #include "../Experimental.h"
@@ -449,6 +450,9 @@ void ScrubbingToolBar::Populate()
              _("Scrub"), true);
    AddButton(bmpSeek, bmpSeek, bmpSeekDisabled, STBSeekID,
              _("Seek"), true);
+   AddButton(bmpToggleScrubBar, bmpToggleScrubBar, bmpToggleScrubBar,
+             STBBarID,
+             _("Scrub bar"), true);
 
 
    RegenerateTooltips();
@@ -491,6 +495,7 @@ void ScrubbingToolBar::RegenerateTooltips()
    }
    mButtons[STBScrubID]->SetToolTip(_("Scrub"));
    mButtons[STBSeekID]->SetToolTip(_("Seek"));
+   mButtons[STBBarID]->SetToolTip(_("Scrub bar"));
 #endif
 }
 
@@ -511,6 +516,9 @@ void ScrubbingToolBar::OnButton(wxCommandEvent &event)
          break;
       case STBSeekID:
          scrubber.OnSeek(event);
+         break;
+      case STBBarID:
+         scrubber.OnToggleScrubBar(event);
          break;
       default:
          wxASSERT(false);
@@ -545,4 +553,10 @@ void ScrubbingToolBar::EnableDisableButtons()
       startButton->Enable();
    else
       startButton->Disable();
+
+   mButtons[STBBarID]->Enable();
+   if (p->GetRulerPanel()->ShowingScrubBar())
+      mButtons[STBBarID]->PushDown();
+   else
+      mButtons[STBBarID]->PopUp();
 }
