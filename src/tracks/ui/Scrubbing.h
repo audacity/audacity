@@ -103,6 +103,8 @@ public:
    bool Scrubs() const
    { return mScrubbing; }
 
+   bool ShowsBar() const;
+
    void Cancel()
    { mCancelled = true; }
 
@@ -118,12 +120,13 @@ public:
    // For the toolbar
    void AddMenuItems();
    // For popup
-   void PopulateMenu(wxMenu &menu);
+   void PopulatePopupMenu(wxMenu &menu);
 
    void OnScrubOrSeek(bool &toToggle, bool &other);
    void OnScrub(wxCommandEvent&);
    void OnSeek(wxCommandEvent&);
    void OnStartStop(wxCommandEvent&);
+   void OnToggleScrubBar(wxCommandEvent&);
 
    // A string to put in the leftmost part of the status bar
    // when scrub or seek is in progress, or else empty.
@@ -138,7 +141,7 @@ public:
 private:
    void DoScrub();
    void OnActivateOrDeactivateApp(wxActivateEvent & event);
-   void CheckMenuItem();
+   void CheckMenuItems();
 
    // I need this because I can't push the scrubber as an event handler
    // in two places at once.

@@ -2765,7 +2765,7 @@ void AdornedRulerPanel::UpdateStatusBarAndTooltips(StatusChoice choice)
    RegenerateTooltips(choice);
 }
 
-void AdornedRulerPanel::OnToggleScrubbing(/*wxCommandEvent&*/)
+void AdornedRulerPanel::OnToggleScrubBar(/*wxCommandEvent&*/)
 {
    mShowScrubbing = !mShowScrubbing;
    //WriteScrubEnabledPref(mShowScrubbing);
@@ -2806,11 +2806,6 @@ void AdornedRulerPanel::UpdateButtonStates()
       : _("Unpinned play/record Head");
       common(*pinButton, wxT("PinnedHead"), label);
    }
-
-   auto &scrubber = mProject->GetScrubber();
-
-   if(mShowScrubbing != (scrubber.Scrubs() || scrubber.Seeks()))
-      OnToggleScrubbing();
 }
 
 void AdornedRulerPanel::OnTogglePinnedState(wxCommandEvent & event)
@@ -2888,7 +2883,7 @@ void AdornedRulerPanel::ShowScrubMenu(const wxPoint & pos)
    auto cleanup = finally([this]{ PopEventHandler(); });
 
    wxMenu rulerMenu;
-   mProject->GetScrubber().PopulateMenu(rulerMenu);
+   mProject->GetScrubber().PopulatePopupMenu(rulerMenu);
    PopupMenu(&rulerMenu, pos);
 }
 

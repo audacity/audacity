@@ -3177,6 +3177,11 @@ void EffectUIHost::OnInitDialog(wxInitDialogEvent & evt)
    {
       focused->SelectAll();
    }
+
+#ifdef __WXMAC__ // PRL:  Bug1329, partial fix, but really it's the fault of
+   // wxWidgets 3.0.2
+   mApplyBtn->SetFocus();
+#endif
 }
 
 void EffectUIHost::OnErase(wxEraseEvent & WXUNUSED(evt))

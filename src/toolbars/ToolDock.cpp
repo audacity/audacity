@@ -719,8 +719,13 @@ ToolBarConfiguration::Position
             // Else, only if the fit is possible.
             if (ct || (sz.x <= rect.width && sz.y <= rect.height)) {
                // May choose current or previous.
-               if (ct && point.y < (rect.GetTop() + rect.GetBottom()) / 2)
-                  // "Wedge" the bar into a crack alone, not adopting others
+               if (ct &&
+                   (sz.y < rect.height ||
+                    point.y < (rect.GetTop() + rect.GetBottom()) / 2))
+                  // "Wedge" the bar into a crack alone, not adopting others,
+                  // if either a short bar displaces a tall one, or else
+                  // the displacing bar is at least at tall, but the pointer is
+                  // in the upper half of the box.
                   usedPrev = true, result = prevPosition, result.adopt = false;
                else
                   result = position;

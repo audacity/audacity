@@ -22,6 +22,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../prefs/PlaybackPrefs.h"
 #include "../../toolbars/ControlToolBar.h"
 #include "../../toolbars/EditToolBar.h"
+#include "../../toolbars/ToolManager.h"
 
 #undef USE_TRANSCRIPTION_TOOLBAR
 #ifdef USE_TRANSCRIPTION_TOOLBAR
@@ -216,6 +217,7 @@ namespace {
       wxString name;
       wxString label;
       wxString status;
+      CommandFlag flags;
       void (Scrubber::*memFn)(wxCommandEvent&);
       bool seek;
       bool (Scrubber::*StatusTest)() const;
@@ -227,18 +229,28 @@ namespace {
          "Seeking" is normal speed playback but with skips, ...
        */
       { wxT("Scrub"),       XO("&Scrub"),           XO("Scrubbing"),
-         &Scrubber::OnScrub,       false,      &Scrubber::Scrubs },
+         AlwaysEnabledFlag,
+         &Scrubber::OnScrub,       false,      &Scrubber::Scrubs,
+      },
 
       { wxT("Seek"),        XO("See&k"),            XO("Seeking"),
-         &Scrubber::OnSeek,        true,       &Scrubber::Seeks },
+         AlwaysEnabledFlag,
+         &Scrubber::OnSeek,        true,       &Scrubber::Seeks,
+      },
 
       { wxT("StartStopScrubSeek"),        XO("Star&t/Stop"), XO(""),
-         &Scrubber::OnStartStop,   true,       nullptr },
+         CanStopAudioStreamFlag,
+         &Scrubber::OnStartStop,   true,       nullptr
+      },
+
+      { wxT("ToggleScrubBar"),            XO("Scrub Bar"),   XO(""),
+         AlwaysEnabledFlag,
+         &Scrubber::OnToggleScrubBar, true,    &Scrubber::ShowsBar,
+      },
    };
 
    enum { nMenuItems = sizeof(menuItems) / sizeof(*menuItems), StartMenuItem = 2 };
 
-   // This never finds the last item:
    inline const MenuItem &FindMenuItem(bool seek)
    {
       return *std::find_if(menuItems, menuItems + nMenuItems,
@@ -512,6 +524,11 @@ void Scrubber::StopScrubbing()
    }
 
    mProject->GetRulerPanel()->HideQuickPlayIndicator();
+}
+
+bool Scrubber::ShowsBar() const
+{
+   return mProject->GetRulerPanel()->ShowingScrubBar();
 }
 
 bool Scrubber::IsScrubbing() const
@@ -804,7 +821,7 @@ void Scrubber::OnScrubOrSeek(bool &toToggle, bool &other)
    scrubbingToolBar->EnableDisableButtons();
    scrubbingToolBar->RegenerateTooltips();
 
-   CheckMenuItem();
+   CheckMenuItems();
 }
 
 void Scrubber::OnScrub(wxCommandEvent&)
@@ -822,19 +839,28 @@ void Scrubber::OnStartStop(wxCommandEvent&)
    DoScrub();
 }
 
+void Scrubber::OnToggleScrubBar(wxCommandEvent&)
+{
+   mProject->GetRulerPanel()->OnToggleScrubBar();
+   const auto toolbar = mProject->GetToolManager()->GetToolBar(ScrubbingBarID);
+   toolbar->EnableDisableButtons();
+   CheckMenuItems();
+}
+
 enum { CMD_ID = 8000 };
 
 BEGIN_EVENT_TABLE(Scrubber, wxEvtHandler)
    EVT_MENU(CMD_ID,     Scrubber::OnScrub)
    EVT_MENU(CMD_ID + 1, Scrubber::OnSeek)
    EVT_MENU(CMD_ID + 2, Scrubber::OnStartStop)
+   EVT_MENU(CMD_ID + 3, Scrubber::OnToggleScrubBar)
 END_EVENT_TABLE()
 
 BEGIN_EVENT_TABLE(Scrubber::Forwarder, wxEvtHandler)
    EVT_MOUSE_EVENTS(Scrubber::Forwarder::OnMouse)
 END_EVENT_TABLE()
 
-static_assert(nMenuItems == 3, "wrong number of items");
+static_assert(nMenuItems == 4, "wrong number of items");
 
 const wxString &Scrubber::GetUntranslatedStateString() const
 {
@@ -870,49 +896,48 @@ bool Scrubber::CanScrub() const
 void Scrubber::AddMenuItems()
 {
    auto cm = mProject->GetCommandManager();
-   auto flag = WaveTracksExistFlag;
-   auto flags = cm->GetDefaultFlags() | flag;
-   auto mask = cm->GetDefaultMask() | flag;
 
    cm->BeginSubMenu(_("Scru&bbing"));
    for (const auto &item : menuItems) {
-      if (!item.GetStatus().empty())
+      if (item.StatusTest)
          cm->AddCheck(item.name, wxGetTranslation(item.label),
                       FNT(Scrubber, this, item.memFn),
                       false,
-                      // Less restricted:
-                      AlwaysEnabledFlag, AlwaysEnabledFlag);
+                      item.flags, item.flags);
       else
          // The start item
          cm->AddItem(item.name, wxGetTranslation(item.label),
                      FNT(Scrubber, this, item.memFn),
-                     // More restricted:
-                     flags, mask);
+                     item.flags, item.flags);
    }
    cm->EndSubMenu();
-   CheckMenuItem();
+   CheckMenuItems();
 }
 
-void Scrubber::PopulateMenu(wxMenu &menu)
+void Scrubber::PopulatePopupMenu(wxMenu &menu)
 {
    int id = CMD_ID;
    auto cm = mProject->GetCommandManager();
-   const MenuItem *checkedItem = &FindMenuItem(mSeeking);
    for (const auto &item : menuItems) {
       if (cm->GetEnabled(item.name)) {
-         menu.AppendCheckItem(id, item.label);
-         if(&item == checkedItem)
+         auto test = item.StatusTest;
+         menu.Append(id, item.label, wxString{},
+                     test ? wxITEM_CHECK : wxITEM_NORMAL);
+         if(test && (this->*test)())
             menu.FindItem(id)->Check();
       }
       ++id;
    }
 }
 
-void Scrubber::CheckMenuItem()
+void Scrubber::CheckMenuItems()
 {
    auto cm = mProject->GetCommandManager();
-   cm->Check(menuItems[0].name, mScrubbing);
-   cm->Check(menuItems[1].name, mSeeking);
+   for (const auto &item : menuItems) {
+      auto test = item.StatusTest;
+      if (test)
+         cm->Check(item.name, (this->*test)());
+   }
 }
 
 #endif
