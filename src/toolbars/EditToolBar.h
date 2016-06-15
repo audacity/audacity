@@ -116,6 +116,7 @@ enum {
    STBStartID,
    STBScrubID,
    STBSeekID,
+   STBBarID,
 
    STBNumButtons
 };
@@ -133,8 +134,8 @@ public:
 
    void Populate();
    void Repaint(wxDC * WXUNUSED(dc)) {};
-   void EnableDisableButtons();
-   void UpdatePrefs();
+   void EnableDisableButtons() override;
+   void UpdatePrefs() override;
 
    void RegenerateTooltips() override;
 
