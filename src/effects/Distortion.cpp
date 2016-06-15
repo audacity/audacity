@@ -486,7 +486,10 @@ void EffectDistortion::InstanceInit(EffectDistortionState & data, float sampleRa
 
    // DC block filter variables
    data.queuetotal = 0.0;
-   std::queue<float>().swap(data.queuesamples);
+
+   //std::queue<float>().swap(data.queuesamples);
+   while (!data.queuesamples.empty())
+      data.queuesamples.pop();
 
    MakeTable();
 
