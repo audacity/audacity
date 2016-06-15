@@ -327,6 +327,8 @@ audacity_SOURCES = \
 	effects/Compressor.h \
 	effects/Contrast.cpp \
 	effects/Contrast.h \
+	effects/Distortion.cpp \
+	effects/Distortion.h \
 	effects/DtmfGen.cpp \
 	effects/DtmfGen.h \
 	effects/Echo.cpp \
