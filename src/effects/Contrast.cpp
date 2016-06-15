@@ -242,6 +242,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
                          true);
             mForegroundStartT->SetName(_("Foreground start time"));
             mForegroundStartT->EnableMenu(false);
+            mForegroundStartT->SetReadOnly(true);
          }
          S.AddWindow(mForegroundStartT);
 
@@ -258,6 +259,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
                          true);
             mForegroundEndT->SetName(_("Foreground end time"));
             mForegroundEndT->EnableMenu(false);
+            mForegroundEndT->SetReadOnly(true);
          }
          S.AddWindow(mForegroundEndT);
 
@@ -280,6 +282,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
                          true);
             mBackgroundStartT->SetName(_("Background start time"));
             mBackgroundStartT->EnableMenu(false);
+            mBackgroundStartT->SetReadOnly(true);
          }
          S.AddWindow(mBackgroundStartT);
 
@@ -296,6 +299,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
                          true);
             mBackgroundEndT->SetName(_("Background end time"));
             mBackgroundEndT->EnableMenu(false);
+            mBackgroundEndT->SetReadOnly(true);
          }
          S.AddWindow(mBackgroundEndT);
 

@@ -351,6 +351,7 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	effects/ChangeTempo.h effects/ClickRemoval.cpp \
 	effects/ClickRemoval.h effects/Compressor.cpp \
 	effects/Compressor.h effects/Contrast.cpp effects/Contrast.h \
+	effects/Distortion.cpp effects/Distortion.h \
 	effects/DtmfGen.cpp effects/DtmfGen.h effects/Echo.cpp \
 	effects/Echo.h effects/Effect.cpp effects/Effect.h \
 	effects/EffectManager.cpp effects/EffectManager.h \
@@ -599,6 +600,7 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	effects/audacity-ClickRemoval.$(OBJEXT) \
 	effects/audacity-Compressor.$(OBJEXT) \
 	effects/audacity-Contrast.$(OBJEXT) \
+	effects/audacity-Distortion.$(OBJEXT) \
 	effects/audacity-DtmfGen.$(OBJEXT) \
 	effects/audacity-Echo.$(OBJEXT) \
 	effects/audacity-Effect.$(OBJEXT) \
@@ -1223,6 +1225,7 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	effects/ChangeTempo.h effects/ClickRemoval.cpp \
 	effects/ClickRemoval.h effects/Compressor.cpp \
 	effects/Compressor.h effects/Contrast.cpp effects/Contrast.h \
+	effects/Distortion.cpp effects/Distortion.h \
 	effects/DtmfGen.cpp effects/DtmfGen.h effects/Echo.cpp \
 	effects/Echo.h effects/Effect.cpp effects/Effect.h \
 	effects/EffectManager.cpp effects/EffectManager.h \
@@ -1602,6 +1605,8 @@ effects/audacity-ClickRemoval.$(OBJEXT): effects/$(am__dirstamp) \
 effects/audacity-Compressor.$(OBJEXT): effects/$(am__dirstamp) \
 	effects/$(DEPDIR)/$(am__dirstamp)
 effects/audacity-Contrast.$(OBJEXT): effects/$(am__dirstamp) \
+	effects/$(DEPDIR)/$(am__dirstamp)
+effects/audacity-Distortion.$(OBJEXT): effects/$(am__dirstamp) \
 	effects/$(DEPDIR)/$(am__dirstamp)
 effects/audacity-DtmfGen.$(OBJEXT): effects/$(am__dirstamp) \
 	effects/$(DEPDIR)/$(am__dirstamp)
@@ -2142,6 +2147,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@effects/$(DEPDIR)/audacity-ClickRemoval.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/$(DEPDIR)/audacity-Compressor.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/$(DEPDIR)/audacity-Contrast.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@effects/$(DEPDIR)/audacity-Distortion.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/$(DEPDIR)/audacity-DtmfGen.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/$(DEPDIR)/audacity-Echo.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/$(DEPDIR)/audacity-Effect.Po@am__quote@
@@ -4145,6 +4151,20 @@ effects/audacity-Contrast.obj: effects/Contrast.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='effects/Contrast.cpp' object='effects/audacity-Contrast.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o effects/audacity-Contrast.obj `if test -f 'effects/Contrast.cpp'; then $(CYGPATH_W) 'effects/Contrast.cpp'; else $(CYGPATH_W) '$(srcdir)/effects/Contrast.cpp'; fi`
+
+effects/audacity-Distortion.o: effects/Distortion.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT effects/audacity-Distortion.o -MD -MP -MF effects/$(DEPDIR)/audacity-Distortion.Tpo -c -o effects/audacity-Distortion.o `test -f 'effects/Distortion.cpp' || echo '$(srcdir)/'`effects/Distortion.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) effects/$(DEPDIR)/audacity-Distortion.Tpo effects/$(DEPDIR)/audacity-Distortion.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='effects/Distortion.cpp' object='effects/audacity-Distortion.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o effects/audacity-Distortion.o `test -f 'effects/Distortion.cpp' || echo '$(srcdir)/'`effects/Distortion.cpp
+
+effects/audacity-Distortion.obj: effects/Distortion.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT effects/audacity-Distortion.obj -MD -MP -MF effects/$(DEPDIR)/audacity-Distortion.Tpo -c -o effects/audacity-Distortion.obj `if test -f 'effects/Distortion.cpp'; then $(CYGPATH_W) 'effects/Distortion.cpp'; else $(CYGPATH_W) '$(srcdir)/effects/Distortion.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) effects/$(DEPDIR)/audacity-Distortion.Tpo effects/$(DEPDIR)/audacity-Distortion.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='effects/Distortion.cpp' object='effects/audacity-Distortion.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o effects/audacity-Distortion.obj `if test -f 'effects/Distortion.cpp'; then $(CYGPATH_W) 'effects/Distortion.cpp'; else $(CYGPATH_W) '$(srcdir)/effects/Distortion.cpp'; fi`
 
 effects/audacity-DtmfGen.o: effects/DtmfGen.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT effects/audacity-DtmfGen.o -MD -MP -MF effects/$(DEPDIR)/audacity-DtmfGen.Tpo -c -o effects/audacity-DtmfGen.o `test -f 'effects/DtmfGen.cpp' || echo '$(srcdir)/'`effects/DtmfGen.cpp
