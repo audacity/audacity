@@ -113,12 +113,12 @@ class wxWindow;
 class AButton;
 
 enum {
-   STBStartID,
    STBScrubID,
    STBSeekID,
    STBBarID,
 
-   STBNumButtons
+   STBNumButtons,
+   STBFirstButton = STBScrubID
 };
 
 class ScrubbingToolBar final : public ToolBar {

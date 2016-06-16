@@ -229,18 +229,13 @@ namespace {
          "Seeking" is normal speed playback but with skips, ...
        */
       { wxT("Scrub"),       XO("&Scrub"),           XO("Scrubbing"),
-         AlwaysEnabledFlag,
+         CanStopAudioStreamFlag,
          &Scrubber::OnScrub,       false,      &Scrubber::Scrubs,
       },
 
       { wxT("Seek"),        XO("See&k"),            XO("Seeking"),
-         AlwaysEnabledFlag,
-         &Scrubber::OnSeek,        true,       &Scrubber::Seeks,
-      },
-
-      { wxT("StartStopScrubSeek"),        XO("Star&t/Stop"), XO(""),
          CanStopAudioStreamFlag,
-         &Scrubber::OnStartStop,   true,       nullptr
+         &Scrubber::OnSeek,        true,       &Scrubber::Seeks,
       },
 
       { wxT("ToggleScrubBar"),            XO("Scrub Bar"),   XO(""),
@@ -249,7 +244,7 @@ namespace {
       },
    };
 
-   enum { nMenuItems = sizeof(menuItems) / sizeof(*menuItems), StartMenuItem = 2 };
+   enum { nMenuItems = sizeof(menuItems) / sizeof(*menuItems) };
 
    inline const MenuItem &FindMenuItem(bool seek)
    {
@@ -535,7 +530,8 @@ bool Scrubber::IsScrubbing() const
 {
    if (mScrubToken <= 0)
       return false;
-   else if (mScrubToken == mProject->GetAudioIOToken())
+   else if (mScrubToken == mProject->GetAudioIOToken() &&
+            mProject->IsAudioActive())
       return true;
    else {
       const_cast<Scrubber&>(*this).mScrubToken = -1;
@@ -543,6 +539,16 @@ bool Scrubber::IsScrubbing() const
       const_cast<Scrubber&>(*this).mSmoothScrollingScrub = false;
       return false;
    }
+}
+
+bool Scrubber::Seeks() const
+{
+   return (HasStartedScrubbing() || IsScrubbing()) && mSeeking;
+}
+
+bool Scrubber::Scrubs() const
+{
+   return (HasStartedScrubbing() || IsScrubbing()) && !mSeeking;
 }
 
 bool Scrubber::ShouldDrawScrubSpeed()
@@ -800,11 +806,9 @@ void Scrubber::DoScrub()
       mProject->GetControlToolBar()->StopPlaying();
 }
 
-void Scrubber::OnScrubOrSeek(bool &toToggle, bool &other)
+void Scrubber::OnScrubOrSeek(bool seek)
 {
-   toToggle = !toToggle;
-   if (toToggle)
-      other = false;
+   mSeeking = seek;
 
    if (HasStartedScrubbing()) {
       // Show the correct status.
@@ -821,22 +825,19 @@ void Scrubber::OnScrubOrSeek(bool &toToggle, bool &other)
    scrubbingToolBar->EnableDisableButtons();
    scrubbingToolBar->RegenerateTooltips();
 
+   DoScrub();
+
    CheckMenuItems();
 }
 
 void Scrubber::OnScrub(wxCommandEvent&)
 {
-   OnScrubOrSeek(mScrubbing, mSeeking);
+   OnScrubOrSeek(false);
 }
 
 void Scrubber::OnSeek(wxCommandEvent&)
 {
-   OnScrubOrSeek(mSeeking, mScrubbing);
-}
-
-void Scrubber::OnStartStop(wxCommandEvent&)
-{
-   DoScrub();
+   OnScrubOrSeek(true);
 }
 
 void Scrubber::OnToggleScrubBar(wxCommandEvent&)
@@ -852,15 +853,14 @@ enum { CMD_ID = 8000 };
 BEGIN_EVENT_TABLE(Scrubber, wxEvtHandler)
    EVT_MENU(CMD_ID,     Scrubber::OnScrub)
    EVT_MENU(CMD_ID + 1, Scrubber::OnSeek)
-   EVT_MENU(CMD_ID + 2, Scrubber::OnStartStop)
-   EVT_MENU(CMD_ID + 3, Scrubber::OnToggleScrubBar)
+   EVT_MENU(CMD_ID + 2, Scrubber::OnToggleScrubBar)
 END_EVENT_TABLE()
 
 BEGIN_EVENT_TABLE(Scrubber::Forwarder, wxEvtHandler)
    EVT_MOUSE_EVENTS(Scrubber::Forwarder::OnMouse)
 END_EVENT_TABLE()
 
-static_assert(nMenuItems == 4, "wrong number of items");
+static_assert(nMenuItems == 3, "wrong number of items");
 
 const wxString &Scrubber::GetUntranslatedStateString() const
 {
@@ -890,7 +890,7 @@ bool Scrubber::CanScrub() const
 {
    // Return the enabled state for the menu item that really launches the scrub or seek.
    auto cm = mProject->GetCommandManager();
-   return cm->GetEnabled(menuItems[StartMenuItem].name);
+   return cm->GetEnabled(menuItems[ 0 ].name);
 }
 
 void Scrubber::AddMenuItems()

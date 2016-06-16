@@ -97,12 +97,8 @@ public:
    void SetScrollScrubbing(bool value)
    { mSmoothScrollingScrub = value; }
 
-   bool Seeks() const
-   { return mSeeking; }
-
-   bool Scrubs() const
-   { return mScrubbing; }
-
+   bool Seeks() const;
+   bool Scrubs() const;
    bool ShowsBar() const;
 
    void Cancel()
@@ -122,10 +118,9 @@ public:
    // For popup
    void PopulatePopupMenu(wxMenu &menu);
 
-   void OnScrubOrSeek(bool &toToggle, bool &other);
+   void OnScrubOrSeek(bool seek);
    void OnScrub(wxCommandEvent&);
    void OnSeek(wxCommandEvent&);
-   void OnStartStop(wxCommandEvent&);
    void OnToggleScrubBar(wxCommandEvent&);
 
    // A string to put in the leftmost part of the status bar
@@ -163,9 +158,6 @@ private:
    wxCoord mLastScrubPosition {};
    bool mSmoothScrollingScrub;
 
-   // These hold the three-way choice among click-to-scrub, click-to-seek, or disabled.
-   // Not both true.
-   bool mScrubbing {};
    bool mSeeking {};
 
    bool mDragging {};
