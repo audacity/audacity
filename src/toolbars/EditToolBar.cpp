@@ -1,4 +1,4 @@
-	/**********************************************************************
+/**********************************************************************
 
   Audacity: A Digital Audio Editor
 
@@ -389,8 +389,8 @@ IMPLEMENT_CLASS(ScrubbingToolBar, ToolBar);
 ////////////////////////////////////////////////////////////
 
 BEGIN_EVENT_TABLE( ScrubbingToolBar, ToolBar )
-EVT_COMMAND_RANGE( STBStartID,
-                  STBStartID + STBNumButtons - 1,
+EVT_COMMAND_RANGE( STBFirstButton,
+                  STBFirstButton + STBNumButtons - 1,
                   wxEVT_COMMAND_BUTTON_CLICKED,
                   ScrubbingToolBar::OnButton )
 END_EVENT_TABLE()
@@ -444,8 +444,6 @@ void ScrubbingToolBar::Populate()
    MakeButtonBackgroundsSmall();
 
    /* Buttons */
-   AddButton(bmpPlay, bmpStop, bmpPlayDisabled, STBStartID,
-             _("Start scrubbing"), true);
    AddButton(bmpScrub, bmpScrub, bmpScrubDisabled, STBScrubID,
              _("Scrub"), true);
    AddButton(bmpSeek, bmpSeek, bmpSeekDisabled, STBSeekID,
@@ -472,29 +470,34 @@ void ScrubbingToolBar::UpdatePrefs()
 void ScrubbingToolBar::RegenerateTooltips()
 {
 #if wxUSE_TOOLTIPS
-   /* i18n-hint: These commands assist the user in finding a sound by ear. ...
-    "Scrubbing" is variable-speed playback, ...
-    "Seeking" is normal speed playback but with skips
-    */
    auto project = GetActiveProject();
    if (project) {
-      auto startStop = mButtons[STBStartID];
       auto &scrubber = project->GetScrubber();
-      if(scrubber.HasStartedScrubbing() || scrubber.IsScrubbing()) {
-         if (scrubber.Seeks())
-            startStop->SetToolTip(_("Stop seeking"));
-         else
-            startStop->SetToolTip(_("Stop scrubbing"));
-      }
-      else {
-         if (scrubber.Seeks())
-            startStop->SetToolTip(_("Start seeking"));
-         else
-            startStop->SetToolTip(_("Start scrubbing"));
-      }
+
+      const auto scrubButton = mButtons[STBScrubID];
+      const auto seekButton = mButtons[STBSeekID];
+
+      scrubButton->SetToolTip(
+         scrubber.Scrubs()
+            /* i18n-hint: These commands assist the user in finding a sound by ear. ...
+             "Scrubbing" is variable-speed playback, ...
+             "Seeking" is normal speed playback but with skips
+             */
+         ? _("Stop Scrubbing")
+         : _("Start Scrubbing")
+      );
+
+      seekButton->SetToolTip(
+         scrubber.Seeks()
+            /* i18n-hint: These commands assist the user in finding a sound by ear. ...
+             "Scrubbing" is variable-speed playback, ...
+             "Seeking" is normal speed playback but with skips
+             */
+         ? _("Stop Seeking")
+         : _("Start Seeking")
+      );
    }
-   mButtons[STBScrubID]->SetToolTip(_("Scrub"));
-   mButtons[STBSeekID]->SetToolTip(_("Seek"));
+
    mButtons[STBBarID]->SetToolTip(_("Scrub bar"));
 #endif
 }
@@ -508,9 +511,6 @@ void ScrubbingToolBar::OnButton(wxCommandEvent &event)
    int id = event.GetId();
 
    switch (id) {
-      case STBStartID:
-         scrubber.OnStartStop(event);
-         break;
       case STBScrubID:
          scrubber.OnScrub(event);
          break;
@@ -538,25 +538,36 @@ void ScrubbingToolBar::EnableDisableButtons()
    if (!p) return;
 
    auto &scrubber = p->GetScrubber();
-   if (scrubber.Scrubs())
+   const auto canScrub = scrubber.CanScrub();
+
+   if (scrubber.Scrubs()) {
       scrubButton->PushDown();
-   else
+      scrubButton->Enable();
+   }
+   else {
       scrubButton->PopUp();
+      if (canScrub)
+         scrubButton->Enable();
+      else
+         scrubButton->Disable();
+   }
 
-   if (scrubber.Seeks())
+   if (scrubber.Seeks()) {
       seekButton->PushDown();
-   else
+      seekButton->Enable();
+   }
+   else {
       seekButton->PopUp();
+      if (canScrub)
+         seekButton->Enable();
+      else
+         seekButton->Disable();
+   }
 
-   const auto startButton = mButtons[STBStartID];
-   if (scrubber.CanScrub())
-      startButton->Enable();
-   else
-      startButton->Disable();
-
-   mButtons[STBBarID]->Enable();
+   const auto barButton = mButtons[STBBarID];
+   barButton->Enable();
    if (p->GetRulerPanel()->ShowingScrubBar())
-      mButtons[STBBarID]->PushDown();
+      barButton->PushDown();
    else
-      mButtons[STBBarID]->PopUp();
+      barButton->PopUp();
 }
