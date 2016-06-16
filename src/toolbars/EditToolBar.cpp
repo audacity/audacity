@@ -470,6 +470,16 @@ void ScrubbingToolBar::UpdatePrefs()
 void ScrubbingToolBar::RegenerateTooltips()
 {
 #if wxUSE_TOOLTIPS
+   std::vector<wxString> commands;
+   auto fn = [&]
+   (AButton &button, const wxString &label, const wxString &command)
+   {
+      commands.clear();
+      commands.push_back(label);
+      commands.push_back(command);
+      ToolBar::SetButtonToolTip(button, commands);
+   };
+
    auto project = GetActiveProject();
    if (project) {
       auto &scrubber = project->GetScrubber();
@@ -477,7 +487,8 @@ void ScrubbingToolBar::RegenerateTooltips()
       const auto scrubButton = mButtons[STBScrubID];
       const auto seekButton = mButtons[STBSeekID];
 
-      scrubButton->SetToolTip(
+      wxString label;
+      label = (
          scrubber.Scrubs()
             /* i18n-hint: These commands assist the user in finding a sound by ear. ...
              "Scrubbing" is variable-speed playback, ...
@@ -486,8 +497,9 @@ void ScrubbingToolBar::RegenerateTooltips()
          ? _("Stop Scrubbing")
          : _("Start Scrubbing")
       );
+      fn(*scrubButton, label, wxT("Scrub"));
 
-      seekButton->SetToolTip(
+      label = (
          scrubber.Seeks()
             /* i18n-hint: These commands assist the user in finding a sound by ear. ...
              "Scrubbing" is variable-speed playback, ...
@@ -496,9 +508,15 @@ void ScrubbingToolBar::RegenerateTooltips()
          ? _("Stop Seeking")
          : _("Start Seeking")
       );
-   }
+      fn(*seekButton, label, wxT("Seek"));
 
-   mButtons[STBBarID]->SetToolTip(_("Scrub bar"));
+      label = (
+         project->GetRulerPanel()->ShowingScrubBar()
+         ? _("Hide Scrub Bar")
+         : _("Show Scrub Bar")
+      );
+      fn(*mButtons[STBBarID], label, wxT("ToggleScrubBar"));
+   }
 #endif
 }
 
