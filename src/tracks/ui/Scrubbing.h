@@ -97,6 +97,7 @@ public:
    void SetScrollScrubbing(bool value)
    { mSmoothScrollingScrub = value; }
 
+   bool ChoseSeeking() const;
    bool Seeks() const;
    bool Scrubs() const;
    bool ShowsBar() const;

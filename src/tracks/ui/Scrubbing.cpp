@@ -35,6 +35,10 @@ Paul Licameli split from TrackPanel.cpp
 
 #include <wx/dc.h>
 
+// Yet another experimental scrub would drag the track under a
+// stationary play head
+#undef DRAG_SCRUB
+
 enum {
    // PRL:
    // Mouse must move at least this far to distinguish ctrl-drag to scrub
@@ -328,6 +332,7 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
                mScrubStartPosition = position;
             }
 
+#ifdef DRAG_SCRUB
             if (mDragging && mSmoothScrollingScrub) {
                auto delta = time0 - time1;
                time0 = std::max(0.0, std::min(maxTime,
@@ -335,6 +340,7 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
                ));
                time1 = time0 + delta;
             }
+#endif
 
             AudioIOStartStreamOptions options(mProject->GetDefaultPlayOptions());
             options.pScrubbingOptions = &mOptions;
@@ -351,13 +357,21 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
 #else
             // That idea seems unpopular... just make it one for move-scrub,
             // but big for drag-scrub
+#ifdef DRAG_SCRUB
             mMaxSpeed = mOptions.maxSpeed = mDragging ? MaxDragSpeed : 1.0;
+#else
+            mMaxSpeed = mOptions.maxSpeed = 1.0;
+#endif
+
 #endif
             mOptions.minSample = 0;
             mOptions.maxSample =
                lrint(std::max(0.0, mProject->GetTracks()->GetEndTime()) * options.rate);
             mOptions.minStutter =
-               mDragging ? 0.0 : lrint(std::max(0.0, MinStutter) * options.rate);
+#ifdef DRAG_SCRUB
+               mDragging ? 0.0 :
+#endif
+               lrint(std::max(0.0, MinStutter) * options.rate);
 
             ControlToolBar::PlayAppearance appearance = mSeeking
                ? ControlToolBar::PlayAppearance::Seek
@@ -425,6 +439,7 @@ void Scrubber::ContinueScrubbingPoll()
       const auto trackPanel = mProject->GetTrackPanel();
       const wxPoint position = trackPanel->ScreenToClient(state.GetPosition());
       const auto &viewInfo = mProject->GetViewInfo();
+#ifdef DRAG_SCRUB
       if (mDragging && mSmoothScrollingScrub) {
          const auto lastTime = gAudioIO->GetLastTimeInScrubQueue();
          const auto delta = mLastScrubPosition - position.x;
@@ -436,11 +451,13 @@ void Scrubber::ContinueScrubbingPoll()
          result = gAudioIO->EnqueueScrub(time, mOptions);
          mLastScrubPosition = position.x;
       }
-      else {
+      else
+#endif
+      {
          const double time = viewInfo.PositionToTime(position.x, trackPanel->GetLeftOffset());
          mOptions.adjustStart = seek;
-         mOptions.minSpeed = (mDragging || !seek) ? 0.0 : 1.0;
-         mOptions.maxSpeed = (mDragging || !seek) ? mMaxSpeed : 1.0;
+         mOptions.minSpeed = seek ? 1.0 : 0.0;
+         mOptions.maxSpeed = seek ? 1.0 : mMaxSpeed;
 
          if (mSmoothScrollingScrub) {
             const double speed = FindScrubSpeed(seek, time);
@@ -460,6 +477,7 @@ void Scrubber::ContinueScrubbingUI()
    const wxMouseState state(::wxGetMouseState());
 
    if (mDragging && !state.LeftIsDown()) {
+      // Dragging scrub can stop with mouse up
       // Stop and set cursor
       mProject->DoPlayStopSelect(true, state.ShiftDown());
       wxCommandEvent evt;
@@ -541,21 +559,28 @@ bool Scrubber::IsScrubbing() const
    }
 }
 
+bool Scrubber::ChoseSeeking() const
+{
+   return
+#if !defined(DRAG_SCRUB)
+      // Drag always seeks
+      mDragging ||
+#endif
+      mSeeking;
+}
+
 bool Scrubber::Seeks() const
 {
-   return (HasStartedScrubbing() || IsScrubbing()) && mSeeking;
+   return (HasStartedScrubbing() || IsScrubbing()) && ChoseSeeking();
 }
 
 bool Scrubber::Scrubs() const
 {
-   return (HasStartedScrubbing() || IsScrubbing()) && !mSeeking;
+   return (HasStartedScrubbing() || IsScrubbing()) && !ChoseSeeking();
 }
 
 bool Scrubber::ShouldDrawScrubSpeed()
 {
-   if (mDragging)
-      return false;
-
    return IsScrubbing() &&
       !mPaused && (
          // Draw for (non-scroll) scrub, sometimes, but never for seek
@@ -575,10 +600,6 @@ double Scrubber::FindScrubSpeed(bool seeking, double time) const
 
 void Scrubber::HandleScrollWheel(int steps)
 {
-   if (mDragging)
-      // Not likely you would spin it with the left button down, but...
-      return;
-
    if (steps == 0)
       return;
 

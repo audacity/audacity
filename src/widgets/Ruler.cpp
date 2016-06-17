@@ -2112,10 +2112,14 @@ namespace {
        "Scrubbing" is variable-speed playback, ...
        "Seeking" is normal speed playback but with skips
        */
+#if 0
       if(scrubber.Seeks())
          return _("Click or drag to begin seeking");
       else
          return _("Click or drag to begin scrubbing");
+#else
+      return _("Click to scrub, drag to seek");
+#endif
    }
 
    const wxString ContinueScrubbingMessage(const Scrubber &scrubber)
@@ -2124,10 +2128,14 @@ namespace {
        "Scrubbing" is variable-speed playback, ...
        "Seeking" is normal speed playback but with skips
        */
+#if 0
       if(scrubber.Seeks())
          return _("Move to seek");
       else
          return _("Move to scrub");
+#else
+      return _("Move to scrub, drag to seek");
+#endif
    }
 
    const wxString ScrubbingMessage(const Scrubber &scrubber)
