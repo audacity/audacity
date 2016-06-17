@@ -590,10 +590,12 @@ bool Scrubber::MayDragToSeek() const
        ruler->GetScreenRect().Contains(position))
       return true;
 
+   /*
    auto trackPanel = mProject->GetTrackPanel();
    if (trackPanel &&
        trackPanel->GetScreenRect().Contains(position))
       return true;
+    */
 
    return false;
 }
