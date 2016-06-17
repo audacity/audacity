@@ -493,7 +493,7 @@ void Scrubber::ContinueScrubbingUI()
       return;
    }
 
-   const bool seek = Seeks();
+   const bool seek = Seeks() || TemporarilySeeks();
 
    {
       // Show the correct status for seeking.
@@ -621,7 +621,7 @@ bool Scrubber::ShouldDrawScrubSpeed()
    return IsScrubbing() &&
       !mPaused && (
          // Draw for (non-scroll) scrub, sometimes, but never for seek
-         (!Seeks() && mScrubSpeedDisplayCountdown > 0)
+         (!(Seeks() || TemporarilySeeks()) && mScrubSpeedDisplayCountdown > 0)
          // Draw always for scroll-scrub and for scroll-seek
          || mSmoothScrollingScrub
       );
@@ -798,7 +798,7 @@ void ScrubbingOverlay::OnTimer(wxCommandEvent &event)
       // Where's the mouse?
       position = trackPanel->ScreenToClient(position);
 
-      const bool seeking = scrubber.Seeks();
+      const bool seeking = scrubber.Seeks() || scrubber.TemporarilySeeks();
 
       // Find the text
       const double maxScrubSpeed = GetScrubber().GetMaxScrubSpeed();
