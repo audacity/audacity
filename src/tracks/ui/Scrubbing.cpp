@@ -808,13 +808,16 @@ void Scrubber::DoScrub()
 
 void Scrubber::OnScrubOrSeek(bool seek)
 {
-   mSeeking = seek;
+   bool skip = false;
 
    if (HasStartedScrubbing()) {
+      skip = (mSeeking != seek); // just switching mode
       // Show the correct status.
       const auto ctb = mProject->GetControlToolBar();
       ctb->UpdateStatusBar(mProject);
    }
+
+   mSeeking = seek;
 
    auto ruler = mProject->GetRulerPanel();
    if (ruler)
@@ -825,7 +828,8 @@ void Scrubber::OnScrubOrSeek(bool seek)
    scrubbingToolBar->EnableDisableButtons();
    scrubbingToolBar->RegenerateTooltips();
 
-   DoScrub();
+   if (!skip)
+      DoScrub();
 
    CheckMenuItems();
 }
