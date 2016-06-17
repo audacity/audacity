@@ -263,7 +263,7 @@ namespace {
 
 void Scrubber::MarkScrubStart(
    // Assume xx is relative to the left edge of TrackPanel!
-   wxCoord xx, bool smoothScrolling
+   wxCoord xx, bool smoothScrolling, bool seek
 )
 {
    // Don't actually start scrubbing, but collect some information
@@ -279,6 +279,8 @@ void Scrubber::MarkScrubStart(
    // so that same timer does not StopPlaying() again after this function and destroy
    // scrubber state
    mProject->SetAudioIOToken(0);
+
+   mSeeking = seek;
 
    ctb->SetPlay(true, mSeeking
       ? ControlToolBar::PlayAppearance::Seek
@@ -418,12 +420,12 @@ void Scrubber::ContinueScrubbingPoll()
 {
    // Thus scrubbing relies mostly on periodic polling of mouse and keys,
    // not event notifications.  But there are a few event handlers that
-   // leave messages for this routine, in mPaused.
+   // leave messages for this routine, in mScrubSeekPress and in mPaused.
 
    // Decide whether to skip play, because either mouse is down now,
    // or there was a left click event.  (This is then a delayed reaction, in a
    // timer callback, to a left click event detected elsewhere.)
-   const bool seek = Seeks();
+   const bool seek = TemporarilySeeks() || Seeks();
 
    bool result = false;
    if (mPaused) {
@@ -470,6 +472,12 @@ void Scrubber::ContinueScrubbingPoll()
          }
       }
    }
+
+   if (result)
+      mScrubSeekPress = false;
+
+   // else, if seek requested, try again at a later time when we might
+   // enqueue a long enough stutter
 }
 
 void Scrubber::ContinueScrubbingUI()
@@ -527,6 +535,7 @@ void Scrubber::StopScrubbing()
 
    mScrubStartPosition = -1;
    mDragging = false;
+   mSeeking = false;
 
    if (!IsScrubbing())
    {
@@ -567,6 +576,32 @@ bool Scrubber::ChoseSeeking() const
       mDragging ||
 #endif
       mSeeking;
+}
+
+bool Scrubber::MayDragToSeek() const
+{
+   // Return true only if the pointer is in the
+   // ruler or the track panel
+   const auto &state = ::wxGetMouseState();
+   const auto &position = state.GetPosition();
+
+   auto ruler = mProject->GetRulerPanel();
+   if (ruler &&
+       ruler->GetScreenRect().Contains(position))
+      return true;
+
+   auto trackPanel = mProject->GetTrackPanel();
+   if (trackPanel &&
+       trackPanel->GetScreenRect().Contains(position))
+      return true;
+
+   return false;
+}
+
+bool Scrubber::TemporarilySeeks() const
+{
+   return mScrubSeekPress ||
+      (::wxGetMouseState().LeftIsDown() && MayDragToSeek());
 }
 
 bool Scrubber::Seeks() const
@@ -642,7 +677,12 @@ void Scrubber::Forwarder::OnMouse(wxMouseEvent &event)
    auto ruler = scrubber.mProject->GetRulerPanel();
    auto isScrubbing = scrubber.IsScrubbing();
    if (isScrubbing && !event.HasAnyModifiers()) {
-      if (event.m_wheelRotation) {
+      if(event.LeftDown() && scrubber.MayDragToSeek()) {
+         // This event handler may catch mouse transitions that are missed
+         // by the polling of mouse state by the timer.
+         scrubber.mScrubSeekPress = true;
+      }
+      else if (event.m_wheelRotation) {
          double steps = event.m_wheelRotation /
          (event.m_wheelDelta > 0 ? (double)event.m_wheelDelta : 120.0);
          scrubber.HandleScrollWheel(steps);
@@ -807,7 +847,7 @@ Scrubber &ScrubbingOverlay::GetScrubber()
    return mProject->GetScrubber();
 }
 
-void Scrubber::DoScrub()
+void Scrubber::DoScrub(bool seek)
 {
    const bool wasScrubbing = HasStartedScrubbing() || IsScrubbing();
    const bool scroll = PlaybackPrefs::GetPinnedHeadPreference();
@@ -821,7 +861,10 @@ void Scrubber::DoScrub()
       const auto offset = tp->GetLeftOffset();
       xx = (std::max(offset, std::min(offset + width - 1, xx)));
 
-      MarkScrubStart(xx, scroll);
+      MarkScrubStart(xx, scroll, seek);
+   }
+   else if (mSeeking != seek) {
+      // just switching mode
    }
    else
       mProject->GetControlToolBar()->StopPlaying();
@@ -829,10 +872,9 @@ void Scrubber::DoScrub()
 
 void Scrubber::OnScrubOrSeek(bool seek)
 {
-   bool skip = false;
+   DoScrub(seek);
 
    if (HasStartedScrubbing()) {
-      skip = (mSeeking != seek); // just switching mode
       // Show the correct status.
       const auto ctb = mProject->GetControlToolBar();
       ctb->UpdateStatusBar(mProject);
@@ -848,11 +890,6 @@ void Scrubber::OnScrubOrSeek(bool seek)
    auto scrubbingToolBar = mProject->GetScrubbingToolBar();
    scrubbingToolBar->EnableDisableButtons();
    scrubbingToolBar->RegenerateTooltips();
-
-   if (!skip)
-      DoScrub();
-
-   CheckMenuItems();
 }
 
 void Scrubber::OnScrub(wxCommandEvent&)
@@ -892,7 +929,7 @@ const wxString &Scrubber::GetUntranslatedStateString() const
    static wxString empty;
 
    if (HasStartedScrubbing()) {
-      auto &item = FindMenuItem(mSeeking);
+      auto &item = FindMenuItem(Seeks() || TemporarilySeeks());
       return item.status;
    }
    else

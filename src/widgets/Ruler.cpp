@@ -1819,7 +1819,7 @@ void QuickPlayRulerOverlay::Draw(OverlayPanel &panel, wxDC &dc)
          ruler->mMouseEventState == AdornedRulerPanel::mesNone &&
          (ruler->mPrevZone == AdornedRulerPanel::StatusChoice::EnteringScrubZone ||
           (scrubber.HasStartedScrubbing()));
-      auto seek = scrub && scrubber.Seeks();
+      auto seek = scrub && (scrubber.Seeks() || scrubber.TemporarilySeeks());
       auto width = scrub ? IndicatorBigWidth() : IndicatorSmallWidth;
       ruler->DoDrawIndicator(&dc, mOldQPIndicatorPos, true, width, scrub, seek);
    }
@@ -2450,7 +2450,8 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
    }
    else if (!HasCapture() && inScrubZone) {
       if (evt.LeftDown()) {
-         scrubber.MarkScrubStart(evt.m_x, PlaybackPrefs::GetPinnedHeadPreference());
+         scrubber.MarkScrubStart(evt.m_x,
+            PlaybackPrefs::GetPinnedHeadPreference(), false);
          UpdateStatusBarAndTooltips(StatusChoice::EnteringScrubZone);
       }
       ShowQuickPlayIndicator();

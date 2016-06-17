@@ -71,7 +71,7 @@ public:
    ~Scrubber();
 
    // Assume xx is relative to the left edge of TrackPanel!
-   void MarkScrubStart(wxCoord xx, bool smoothScrolling);
+   void MarkScrubStart(wxCoord xx, bool smoothScrolling, bool seek);
 
    // Returns true iff the event should be considered consumed by this:
    // Assume xx is relative to the left edge of TrackPanel!
@@ -98,6 +98,8 @@ public:
    { mSmoothScrollingScrub = value; }
 
    bool ChoseSeeking() const;
+   bool MayDragToSeek() const;
+   bool TemporarilySeeks() const;
    bool Seeks() const;
    bool Scrubs() const;
    bool ShowsBar() const;
@@ -135,7 +137,7 @@ public:
    bool IsPaused() const;
 
 private:
-   void DoScrub();
+   void DoScrub(bool seek);
    void OnActivateOrDeactivateApp(wxActivateEvent & event);
    void CheckMenuItems();
 
@@ -157,6 +159,7 @@ private:
    int mScrubSpeedDisplayCountdown;
    wxCoord mScrubStartPosition;
    wxCoord mLastScrubPosition {};
+   bool mScrubSeekPress {};
    bool mSmoothScrollingScrub;
 
    bool mSeeking {};
