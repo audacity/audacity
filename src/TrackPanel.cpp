@@ -8014,9 +8014,11 @@ void TrackPanel::OnSpectrogramSettings(wxCommandEvent &)
    wxString title(wt->GetName() + wxT(": "));
    ViewSettingsDialog dialog(this, title, factories, page);
 
-   if (0 != dialog.ShowModal())
+   if (0 != dialog.ShowModal()) {
+      MakeParentModifyState(true);
       // Redraw
       Refresh(false);
+   }
 }
 
 ///  Set the Display mode based on the menu choice in the Track Menu.
