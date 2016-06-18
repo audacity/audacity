@@ -82,6 +82,7 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_IMAGE( bmpVolumeSlider, wxImage( 100, 28 ), wxT("VolumeSlider"));
    DEFINE_IMAGE( bmpVolumeSliderThumb, wxImage( 10, 28 ), wxT("VolumeSliderThumb"));
    DEFINE_IMAGE( bmpSliderThumb, wxImage( 11, 14 ), wxT("SliderThumb"));
+   DEFINE_IMAGE( bmpToggleScrubBar, wxImage( 20, 20 ), wxT("ToggleScrubBar"));
 
    SET_THEME_FLAGS(  resFlagNone  );
    DEFINE_IMAGE( bmpMacUpButton, wxImage( 36, 36 ), wxT("MacUpButton"));

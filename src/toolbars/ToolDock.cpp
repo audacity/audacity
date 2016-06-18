@@ -384,6 +384,11 @@ void ToolDock::Undock( ToolBar *bar )
 //
 void ToolDock::Dock( ToolBar *bar, bool deflate, ToolBarConfiguration::Position position )
 {
+#ifndef __WXMAC__
+   // Apply the deflate fix only on Mac, else you introduce the opposite bug on others
+   deflate = false;
+#endif
+
    // Adopt the toolbar into our family
    bar->Reparent( this );
    mBars[ bar->GetId() ] = bar;

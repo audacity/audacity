@@ -71,7 +71,7 @@ public:
    ~Scrubber();
 
    // Assume xx is relative to the left edge of TrackPanel!
-   void MarkScrubStart(wxCoord xx, bool smoothScrolling);
+   void MarkScrubStart(wxCoord xx, bool smoothScrolling, bool seek);
 
    // Returns true iff the event should be considered consumed by this:
    // Assume xx is relative to the left edge of TrackPanel!
@@ -97,11 +97,12 @@ public:
    void SetScrollScrubbing(bool value)
    { mSmoothScrollingScrub = value; }
 
-   bool Seeks() const
-   { return mSeeking; }
-
-   bool Scrubs() const
-   { return mScrubbing; }
+   bool ChoseSeeking() const;
+   bool MayDragToSeek() const;
+   bool TemporarilySeeks() const;
+   bool Seeks() const;
+   bool Scrubs() const;
+   bool ShowsBar() const;
 
    void Cancel()
    { mCancelled = true; }
@@ -118,12 +119,12 @@ public:
    // For the toolbar
    void AddMenuItems();
    // For popup
-   void PopulateMenu(wxMenu &menu);
+   void PopulatePopupMenu(wxMenu &menu);
 
-   void OnScrubOrSeek(bool &toToggle, bool &other);
+   void OnScrubOrSeek(bool seek);
    void OnScrub(wxCommandEvent&);
    void OnSeek(wxCommandEvent&);
-   void OnStartStop(wxCommandEvent&);
+   void OnToggleScrubBar(wxCommandEvent&);
 
    // A string to put in the leftmost part of the status bar
    // when scrub or seek is in progress, or else empty.
@@ -136,9 +137,9 @@ public:
    bool IsPaused() const;
 
 private:
-   void DoScrub();
+   void DoScrub(bool seek);
    void OnActivateOrDeactivateApp(wxActivateEvent & event);
-   void CheckMenuItem();
+   void CheckMenuItems();
 
    // I need this because I can't push the scrubber as an event handler
    // in two places at once.
@@ -158,11 +159,9 @@ private:
    int mScrubSpeedDisplayCountdown;
    wxCoord mScrubStartPosition;
    wxCoord mLastScrubPosition {};
+   bool mScrubSeekPress {};
    bool mSmoothScrollingScrub;
 
-   // These hold the three-way choice among click-to-scrub, click-to-seek, or disabled.
-   // Not both true.
-   bool mScrubbing {};
    bool mSeeking {};
 
    bool mDragging {};
