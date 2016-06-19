@@ -6373,7 +6373,11 @@ void AudacityProject::OnTimerRecord()
 
    TimerRecordDialog dialog(this, bProjectSaved); /* parent, project saved? */
    int modalResult = dialog.ShowModal();
-   if (modalResult == wxID_CANCEL)
+   if (modalResult == wxID_CONTEXT_HELP)
+   {
+      HelpSystem::ShowHelpDialog(this, wxT("Timer_Record"));
+   }
+   else if (modalResult == wxID_CANCEL)
    {
       // Cancelled before recording - don't need to do anyting.
    }
