@@ -2487,6 +2487,8 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
          HandleQPRelease(evt);
          ShowQuickPlayIndicator();
       }
+      else // if (!inScrubZone)
+         ShowQuickPlayIndicator();
    }
 }
 
