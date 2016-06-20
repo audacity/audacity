@@ -196,6 +196,8 @@ class ToolFrame final : public wxFrame
 
 #if !defined(__WXMAC__)
       dc.SetBackground(wxBrush(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE)));
+      wxBrush clearer( wxColour( 60,60,60 ));
+      dc.SetBackground( clearer ); 
       dc.Clear();
       dc.SetBrush( *wxTRANSPARENT_BRUSH );
       dc.DrawRectangle( 0, 0, sz.GetWidth(), sz.GetHeight() );

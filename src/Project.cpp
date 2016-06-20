@@ -929,6 +929,8 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    //pPage->SetBackgroundColour( theTheme.Colour( clrDark ));
 #endif
 
+   pPage->SetBackgroundColour(*wxRED);
+
    wxBoxSizer *bs;
    {
       auto ubs = std::make_unique<wxBoxSizer>(wxVERTICAL);

@@ -661,6 +661,8 @@ void ToolBar::MakeRecoloredImage( teBmps eBmpOut, teBmps eBmpIn )
 #else
    wxColour newColour = wxSystemSettings::GetColour( wxSYS_COLOUR_3DFACE );
 #endif
+
+   newColour = wxColour( 60,60,60 );
    wxColour baseColour = wxColour( 204, 204, 204 );
 
    auto pPattern = ChangeImageColour( pSrc, baseColour, newColour );
