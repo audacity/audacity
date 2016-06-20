@@ -41,10 +41,11 @@ private:
 };
 
 // Helper class to make browser "simulate" a modal dialog
-class HtmlTextHelpDialog final : public BrowserFrame
+class HtmlTextHelpDialog final : public BrowserDialog
 {
 public:
-   HtmlTextHelpDialog() : BrowserFrame()
+   HtmlTextHelpDialog(wxWindow *pParent, const wxString &title)
+      : BrowserDialog{ pParent, title }
    {
 #if !wxCHECK_VERSION(3, 0, 0)
       MakeModal( true );
