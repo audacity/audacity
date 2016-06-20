@@ -7017,6 +7017,7 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec,
       mTrackInfo.DrawMuteSolo(dc, rect, t, (captured && mMouseCapture == IsSoloing), true, HasSoloButton());
 
       mTrackInfo.DrawSliders(dc, (WaveTrack *)t, rect, captured);
+#if 0
       if (!t->GetMinimized()) {
 
          int offset = 8;
@@ -7030,6 +7031,7 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec,
                          trackRect.x + offset,
                          trackRect.y + 38);
       }
+#endif
    }
 
 #ifdef USE_MIDI

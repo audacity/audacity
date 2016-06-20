@@ -826,6 +826,8 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
      mUndoManager(safenew UndoManager),
      mViewInfo(0.0, 1.0, ZoomInfo::GetDefaultZoom())
 {
+
+   SetBackgroundColour(*wxRED);
    // Note that the first field of the status bar is a dummy, and it's width is set
    // to zero latter in the code. This field is needed for wxWidgets 2.8.12 because
    // if you move to the menu bar, the first field of the menu bar is cleared, which

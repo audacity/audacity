@@ -602,6 +602,7 @@ void Meter::OnPaint(wxPaintEvent & WXUNUSED(event))
    // We can have numbers over the bars, in which case we have to draw them each time.
    if (mStyle == HorizontalStereoCompact || mStyle == VerticalStereoCompact)
    {
+      mRuler.SetTickColour( wxColour(0,0,0) );
       mRuler.Draw(destDC);
    }
 
