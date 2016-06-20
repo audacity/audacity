@@ -2035,8 +2035,13 @@ void AudacityApp::OnMenuAbout(wxCommandEvent & event)
    // this happens, and enable the same code to be present on
    // all platforms.
    if(gAudacityProjects.GetCount() == 0) {
+#ifdef __WXMAC__
+      // Modeless dialog, consistent with other Mac applications
+      (safenew AboutDialog{ nullptr })->Show(true);
+#else
       AboutDialog dlog(NULL);
       dlog.ShowModal();
+#endif
    }
    else
       event.Skip();

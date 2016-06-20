@@ -6606,8 +6606,8 @@ void AudacityProject::OnRemoveTracks()
 
 void AudacityProject::OnAbout()
 {
-   AboutDialog dlog(this);
-   dlog.ShowModal();
+   // Modeless dialog, consistent with other Mac applications
+   (safenew AboutDialog{ nullptr })->Show(true);
 }
 
 void AudacityProject::OnHelpWelcome()
