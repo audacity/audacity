@@ -113,11 +113,12 @@ class wxWindow;
 class AButton;
 
 enum {
-   STBStartID,
    STBScrubID,
    STBSeekID,
+   STBBarID,
 
-   STBNumButtons
+   STBNumButtons,
+   STBFirstButton = STBScrubID
 };
 
 class ScrubbingToolBar final : public ToolBar {
@@ -133,8 +134,8 @@ public:
 
    void Populate();
    void Repaint(wxDC * WXUNUSED(dc)) {};
-   void EnableDisableButtons();
-   void UpdatePrefs();
+   void EnableDisableButtons() override;
+   void UpdatePrefs() override;
 
    void RegenerateTooltips() override;
 

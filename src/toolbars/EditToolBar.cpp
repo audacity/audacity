@@ -1,4 +1,4 @@
-	/**********************************************************************
+/**********************************************************************
 
   Audacity: A Digital Audio Editor
 
@@ -374,6 +374,7 @@ void EditToolBar::EnableDisableButtons()
 #include "../Track.h"
 #include "../UndoManager.h"
 #include "../widgets/AButton.h"
+#include "../widgets/Ruler.h"
 #include "../tracks/ui/Scrubbing.h"
 
 #include "../Experimental.h"
@@ -388,8 +389,8 @@ IMPLEMENT_CLASS(ScrubbingToolBar, ToolBar);
 ////////////////////////////////////////////////////////////
 
 BEGIN_EVENT_TABLE( ScrubbingToolBar, ToolBar )
-EVT_COMMAND_RANGE( STBStartID,
-                  STBStartID + STBNumButtons - 1,
+EVT_COMMAND_RANGE( STBFirstButton,
+                  STBFirstButton + STBNumButtons - 1,
                   wxEVT_COMMAND_BUTTON_CLICKED,
                   ScrubbingToolBar::OnButton )
 END_EVENT_TABLE()
@@ -443,12 +444,13 @@ void ScrubbingToolBar::Populate()
    MakeButtonBackgroundsSmall();
 
    /* Buttons */
-   AddButton(bmpPlay, bmpStop, bmpPlayDisabled, STBStartID,
-             _("Start scrubbing"), true);
    AddButton(bmpScrub, bmpScrub, bmpScrubDisabled, STBScrubID,
              _("Scrub"), true);
    AddButton(bmpSeek, bmpSeek, bmpSeekDisabled, STBSeekID,
              _("Seek"), true);
+   AddButton(bmpToggleScrubBar, bmpToggleScrubBar, bmpToggleScrubBar,
+             STBBarID,
+             _("Scrub bar"), true);
 
 
    RegenerateTooltips();
@@ -468,29 +470,53 @@ void ScrubbingToolBar::UpdatePrefs()
 void ScrubbingToolBar::RegenerateTooltips()
 {
 #if wxUSE_TOOLTIPS
-   /* i18n-hint: These commands assist the user in finding a sound by ear. ...
-    "Scrubbing" is variable-speed playback, ...
-    "Seeking" is normal speed playback but with skips
-    */
+   std::vector<wxString> commands;
+   auto fn = [&]
+   (AButton &button, const wxString &label, const wxString &command)
+   {
+      commands.clear();
+      commands.push_back(label);
+      commands.push_back(command);
+      ToolBar::SetButtonToolTip(button, commands);
+   };
+
    auto project = GetActiveProject();
    if (project) {
-      auto startStop = mButtons[STBStartID];
       auto &scrubber = project->GetScrubber();
-      if(scrubber.HasStartedScrubbing() || scrubber.IsScrubbing()) {
-         if (scrubber.Seeks())
-            startStop->SetToolTip(_("Stop seeking"));
-         else
-            startStop->SetToolTip(_("Stop scrubbing"));
-      }
-      else {
-         if (scrubber.Seeks())
-            startStop->SetToolTip(_("Start seeking"));
-         else
-            startStop->SetToolTip(_("Start scrubbing"));
-      }
+
+      const auto scrubButton = mButtons[STBScrubID];
+      const auto seekButton = mButtons[STBSeekID];
+
+      wxString label;
+      label = (
+         scrubber.Scrubs()
+            /* i18n-hint: These commands assist the user in finding a sound by ear. ...
+             "Scrubbing" is variable-speed playback, ...
+             "Seeking" is normal speed playback but with skips
+             */
+         ? _("Stop Scrubbing")
+         : _("Start Scrubbing")
+      );
+      fn(*scrubButton, label, wxT("Scrub"));
+
+      label = (
+         scrubber.Seeks()
+            /* i18n-hint: These commands assist the user in finding a sound by ear. ...
+             "Scrubbing" is variable-speed playback, ...
+             "Seeking" is normal speed playback but with skips
+             */
+         ? _("Stop Seeking")
+         : _("Start Seeking")
+      );
+      fn(*seekButton, label, wxT("Seek"));
+
+      label = (
+         project->GetRulerPanel()->ShowingScrubBar()
+         ? _("Hide Scrub Bar")
+         : _("Show Scrub Bar")
+      );
+      fn(*mButtons[STBBarID], label, wxT("ToggleScrubBar"));
    }
-   mButtons[STBScrubID]->SetToolTip(_("Scrub"));
-   mButtons[STBSeekID]->SetToolTip(_("Seek"));
 #endif
 }
 
@@ -503,14 +529,14 @@ void ScrubbingToolBar::OnButton(wxCommandEvent &event)
    int id = event.GetId();
 
    switch (id) {
-      case STBStartID:
-         scrubber.OnStartStop(event);
-         break;
       case STBScrubID:
          scrubber.OnScrub(event);
          break;
       case STBSeekID:
          scrubber.OnSeek(event);
+         break;
+      case STBBarID:
+         scrubber.OnToggleScrubBar(event);
          break;
       default:
          wxASSERT(false);
@@ -530,19 +556,36 @@ void ScrubbingToolBar::EnableDisableButtons()
    if (!p) return;
 
    auto &scrubber = p->GetScrubber();
-   if (scrubber.Scrubs())
+   const auto canScrub = scrubber.CanScrub();
+
+   if (scrubber.Scrubs()) {
       scrubButton->PushDown();
-   else
+      scrubButton->Enable();
+   }
+   else {
       scrubButton->PopUp();
+      if (canScrub)
+         scrubButton->Enable();
+      else
+         scrubButton->Disable();
+   }
 
-   if (scrubber.Seeks())
+   if (scrubber.Seeks()) {
       seekButton->PushDown();
-   else
+      seekButton->Enable();
+   }
+   else {
       seekButton->PopUp();
+      if (canScrub)
+         seekButton->Enable();
+      else
+         seekButton->Disable();
+   }
 
-   const auto startButton = mButtons[STBStartID];
-   if (scrubber.CanScrub())
-      startButton->Enable();
+   const auto barButton = mButtons[STBBarID];
+   barButton->Enable();
+   if (p->GetRulerPanel()->ShowingScrubBar())
+      barButton->PushDown();
    else
-      startButton->Disable();
+      barButton->PopUp();
 }
