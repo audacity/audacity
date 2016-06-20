@@ -348,7 +348,7 @@ void TimerRecordDialog::OnAutoExportCheckBox_Change(wxCommandEvent& WXUNUSED(eve
 
 void TimerRecordDialog::OnHelpButtonClick(wxCommandEvent& WXUNUSED(event))
 {
-   EndModal(wxID_CONTEXT_HELP);
+   HelpSystem::ShowHelpDialog(this, wxT("Timer_Record"));
 }
 
 wxString TimerRecordDialog::GetHoursMinsString(int iMinutes) {
