@@ -6604,7 +6604,8 @@ void AudacityProject::OnAbout()
 {
 #ifdef __WXMAC__
    // Modeless dialog, consistent with other Mac applications
-   (safenew AboutDialog{ nullptr })->Show(true);
+   wxCommandEvent dummy;
+   wxGetApp().OnMenuAbout(dummy);
 #else
    // Windows and Linux still modal.
    AboutDialog dlog(this);

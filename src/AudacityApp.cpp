@@ -2030,21 +2030,19 @@ int AudacityApp::OnExit()
 void AudacityApp::OnMenuAbout(wxCommandEvent & event)
 {
    // This function shadows a similar function
-   // in Menus.cpp, but should only be used on the Mac platform
-   // when no project windows are open. This check assures that
-   // this happens, and enable the same code to be present on
-   // all platforms.
-   if(gAudacityProjects.GetCount() == 0) {
+   // in Menus.cpp, but should only be used on the Mac platform.
 #ifdef __WXMAC__
-      // Modeless dialog, consistent with other Mac applications
+   // Modeless dialog, consistent with other Mac applications
+   // Not more than one at once!
+   const auto instance = AboutDialog::ActiveIntance();
+   if (instance)
+      instance->Raise();
+   else
+      // This dialog deletes itself when dismissed
       (safenew AboutDialog{ nullptr })->Show(true);
 #else
-      AboutDialog dlog(NULL);
-      dlog.ShowModal();
+      wxASSERT(false);
 #endif
-   }
-   else
-      event.Skip();
 }
 
 void AudacityApp::OnMenuNew(wxCommandEvent & event)
