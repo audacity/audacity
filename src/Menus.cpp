@@ -6602,8 +6602,14 @@ void AudacityProject::OnRemoveTracks()
 
 void AudacityProject::OnAbout()
 {
+#ifdef __WXMAC__
+   // Modeless dialog, consistent with other Mac applications
+   (safenew AboutDialog{ nullptr })->Show(true);
+#else
+   // Windows and Linux still modal.
    AboutDialog dlog(this);
    dlog.ShowModal();
+#endif
 }
 
 void AudacityProject::OnHelpWelcome()

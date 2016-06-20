@@ -28,32 +28,38 @@
 #include "ErrorDialog.h"
 #include "HelpSystem.h"
 
-BEGIN_EVENT_TABLE(BrowserFrame, wxFrame)
-   EVT_BUTTON(wxID_FORWARD,  BrowserFrame::OnForward)
-   EVT_BUTTON(wxID_BACKWARD, BrowserFrame::OnBackward)
-   EVT_BUTTON(wxID_CANCEL,   BrowserFrame::OnClose)
-   EVT_KEY_DOWN(BrowserFrame::OnKeyDown)
+BEGIN_EVENT_TABLE(BrowserDialog, wxDialog)
+   EVT_BUTTON(wxID_FORWARD,  BrowserDialog::OnForward)
+   EVT_BUTTON(wxID_BACKWARD, BrowserDialog::OnBackward)
+   EVT_BUTTON(wxID_CANCEL,   BrowserDialog::OnClose)
+   EVT_KEY_DOWN(BrowserDialog::OnKeyDown)
 END_EVENT_TABLE()
 
 
-void BrowserFrame::OnForward(wxCommandEvent & WXUNUSED(event))
+BrowserDialog::BrowserDialog(wxWindow *pParent, const wxString &title)
+   : wxDialog{ pParent, ID, title }
+{
+
+}
+
+void BrowserDialog::OnForward(wxCommandEvent & WXUNUSED(event))
 {
    mpHtml->HistoryForward();
    UpdateButtons();
 }
 
-void BrowserFrame::OnBackward(wxCommandEvent & WXUNUSED(event))
+void BrowserDialog::OnBackward(wxCommandEvent & WXUNUSED(event))
 {
    mpHtml->HistoryBack();
    UpdateButtons();
 }
 
-void BrowserFrame::OnClose(wxCommandEvent & WXUNUSED(event))
+void BrowserDialog::OnClose(wxCommandEvent & WXUNUSED(event))
 {
-   Close();
+   EndModal(wxID_CANCEL);
 }
 
-void BrowserFrame::OnKeyDown(wxKeyEvent & event)
+void BrowserDialog::OnKeyDown(wxKeyEvent & event)
 {
    bool bSkip = true;
    if (event.GetKeyCode() == WXK_ESCAPE)
@@ -65,7 +71,7 @@ void BrowserFrame::OnKeyDown(wxKeyEvent & event)
 }
 
 
-void BrowserFrame::UpdateButtons()
+void BrowserDialog::UpdateButtons()
 {
    wxWindow * pWnd;
    if( (pWnd = FindWindowById( wxID_BACKWARD, this )) != NULL )
@@ -124,7 +130,8 @@ void LinkingHtmlWindow::OnLinkClicked(const wxHtmlLinkInfo& link)
       OpenInDefaultBrowser(link);
       return;
    }
-   BrowserFrame * pDlg = wxDynamicCast( GetRelatedFrame(), BrowserFrame );
+   BrowserDialog * pDlg = wxDynamicCast(
+      GetRelatedFrame()->FindWindow(BrowserDialog::ID), BrowserDialog );
    if( pDlg )
    {
       pDlg->UpdateButtons();
