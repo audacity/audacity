@@ -2856,6 +2856,16 @@ void AudacityProject::NextWindow()
    // And make sure it's on top (only for floating windows...project window will not raise)
    // (Really only works on Windows)
    w->Raise();
+
+#ifdef __WXMAC__
+   // bug 868
+   // Simulate a TAB key press before continuing, else the cycle of
+   // navigation among top level windows stops because the keystrokes don't
+   // go to the CommandManager.
+   if (dynamic_cast<wxDialog*>(w)) {
+      w->NavigateIn();
+   }
+#endif
 }
 
 void AudacityProject::PrevWindow()
@@ -2881,7 +2891,7 @@ void AudacityProject::PrevWindow()
    {
       // If it's a toplevel and is visible (we have come hidden windows), then we're done
       w = iter->GetData();
-      if (w->IsTopLevel() && w->IsShown())
+      if (w->IsTopLevel() && w->IsShown() && IsEnabled())
       {
          break;
       }
@@ -2905,6 +2915,16 @@ void AudacityProject::PrevWindow()
    // And make sure it's on top (only for floating windows...project window will not raise)
    // (Really only works on Windows)
    w->Raise();
+
+#ifdef __WXMAC__
+   // bug 868
+   // Simulate a TAB key press before continuing, else the cycle of
+   // navigation among top level windows stops because the keystrokes don't
+   // go to the CommandManager.
+   if (dynamic_cast<wxDialog*>(w)) {
+      w->NavigateIn();
+   }
+#endif
 }
 
 //The following methods operate controls on specified tracks,
