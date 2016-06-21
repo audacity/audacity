@@ -118,11 +118,6 @@ ExportMultiple::ExportMultiple(AudacityProject *project)
 
    mBook = NULL;
 
-   // create array of characters not allowed in file names
-   wxString forbid = wxFileName::GetForbiddenChars();
-   for(unsigned int i=0; i < forbid.Length(); i++)
-      exclude.Add( forbid.Mid(i, 1) );
-
    ShuttleGui S(this, eIsCreatingFromPrefs);
 
    // Creating some of the widgets cause cause events to fire
@@ -973,22 +968,23 @@ int ExportMultiple::DoExport(int channels,
 
 wxString ExportMultiple::MakeFileName(const wxString &input)
 {
-   wxString newname; // name we are generating
+   wxString newname = input; // name we are generating
 
    // strip out anything that isn't allowed in file names on this platform
-   newname = Internat::SanitiseFilename(input, wxT("_"));
+   auto changed = Internat::SanitiseFilename(newname, wxT("_"));
 
-   if(!newname.IsSameAs(input))
+   if(changed)
    {  // need to get user to fix file name
       // build the dialog
       wxString msg;
-      msg.Printf(_("Label or track \"%s\" is not a legal file name. You cannot use any of: %s\nUse..."), input.c_str(), wxFileName::GetForbiddenChars().c_str());
+      msg.Printf(_("Label or track \"%s\" is not a legal file name. You cannot use any of: %s\nUse..."), input.c_str(),
+         ::wxJoin(Internat::GetExcludedCharacters(), wxChar(' ')));
       wxTextEntryDialog dlg( this, msg, _("Save As..."), newname );
 
       // And tell the validator about excluded chars
       dlg.SetTextValidator( wxFILTER_EXCLUDE_CHAR_LIST );
       wxTextValidator *tv = dlg.GetTextValidator();
-      tv->SetExcludes(exclude);
+      tv->SetExcludes(Internat::GetExcludedCharacters());
 
       // Show the dialog and bail if the user cancels
       if( dlg.ShowModal() == wxID_CANCEL )
