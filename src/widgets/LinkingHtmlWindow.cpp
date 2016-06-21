@@ -57,7 +57,9 @@ void BrowserDialog::OnBackward(wxCommandEvent & WXUNUSED(event))
 void BrowserDialog::OnClose(wxCommandEvent & WXUNUSED(event))
 {
    EndModal(wxID_CANCEL);
+#ifndef __WXMAC__
    GetParent()->Destroy();
+#endif
 }
 
 void BrowserDialog::OnKeyDown(wxKeyEvent & event)

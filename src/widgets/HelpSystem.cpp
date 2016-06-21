@@ -179,8 +179,10 @@ void HelpSystem::ShowHtmlText(wxWindow *pParent,
    pFrame->SetName(Title);
    if (bModal)
       pWnd->ShowModal();
-   else
+   else {
       pWnd->Show(true);
+      pFrame->Show(true);
+   }
 
    html->SetRelatedStatusBar( 0 );
    html->SetFocus();
