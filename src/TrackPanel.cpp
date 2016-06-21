@@ -4828,19 +4828,22 @@ void TrackPanel::OnTrackListUpdated(wxCommandEvent & e)
       SetFocusedTrack(NULL);
    }
 
-   if (!mTracks->Contains(mCapturedTrack)) {
+   if (mCapturedTrack &&
+       !mTracks->Contains(mCapturedTrack)) {
       SetCapturedTrack(nullptr);
       if (HasCapture())
          ReleaseMouse();
    }
 
-   if (!mTracks->Contains(mFreqSelTrack)) {
+   if (mFreqSelTrack &&
+       !mTracks->Contains(mFreqSelTrack)) {
       mFreqSelTrack = nullptr;
       if (HasCapture())
          ReleaseMouse();
    }
 
-   if (!mTracks->Contains(mPopupMenuTarget)) {
+   if (mPopupMenuTarget &&
+       !mTracks->Contains(mPopupMenuTarget)) {
       mPopupMenuTarget = nullptr;
       if (HasCapture())
          ReleaseMouse();
