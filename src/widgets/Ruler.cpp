@@ -2400,9 +2400,6 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
             // Done here, it's too frequent.
             // ShowQuickPlayIndicator();
 
-            if (HasCapture())
-               ReleaseMouse();
-            
             return;
          }
       }
