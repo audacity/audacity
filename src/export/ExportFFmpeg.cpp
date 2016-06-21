@@ -261,7 +261,8 @@ bool ExportFFmpeg::Init(const char *shortname, AudacityProject *project, const T
 {
    // This will undo the acquisition of resources along any early exit path:
    auto deleter = [](ExportFFmpeg *This) {
-      This->FreeResources();
+      if (This)
+         This->FreeResources();
    };
    std::unique_ptr<ExportFFmpeg, decltype(deleter)> cleanup{ this, deleter };
 
