@@ -6304,6 +6304,10 @@ void TrackPanel::HandleGlyphDragRelease(LabelTrack * lTrack, wxMouseEvent & even
          UndoPush::CONSOLIDATE);
    }
 
+   // Update cursor on the screen if it is a point.
+   DrawOverlays(false);
+   mRuler->DrawOverlays(false);
+
    //If we are adjusting a label on a labeltrack, do not do anything
    //that follows. Instead, redraw the track.
    RefreshTrack(lTrack);
