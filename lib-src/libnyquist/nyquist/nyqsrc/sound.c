@@ -517,32 +517,40 @@ void snd_list_unref(snd_list_type list)
 {
     void (*freefunc)();
 
-    if (list == NULL || list == zero_snd_list) {
-        if (list == NULL)
-           nyquist_printf("why did snd_list_unref get %p?\n", list);
-        return;
-    }
-    list->refcnt--;
-/*    nyquist_printf("snd_list_unref "); print_snd_list_type(list); stdputstr("\n"); */
-    if (list->refcnt == 0) {
-        if (list->block && list->block != zero_block) {
-            /* there is a next snd_list */
-/*          stdputstr("["); */
-            sample_block_unref(list->block);
-/*          stdputstr("]"); */
-            snd_list_unref(list->u.next);
-        }
-        else if (list->block == NULL) { /* the next thing is the susp */
-            /* free suspension structure */
-            /* nyquist_printf("freeing susp@%p\n", list->u.susp); */
-            freefunc = list->u.susp->free;
-            (*freefunc)(list->u.susp);
-        }
-        /* nyquist_printf("freeing snd_list@%p\n", list); */
-        //DBY
-        if (list == list_watch) printf("freeing watched snd_list %p\n", list);
-        //DBY
-        ffree_snd_list(list, "snd_list_unref");
+   if (list == NULL) {
+      nyquist_printf("why did snd_list_unref get %p?\n", list);
+      return;
+   }
+
+    while (! (list == NULL || list == zero_snd_list) ) {
+       list->refcnt--;
+   /*    nyquist_printf("snd_list_unref "); print_snd_list_type(list); stdputstr("\n"); */
+       if (list->refcnt == 0) {
+           snd_list_type next;
+           if (list->block && list->block != zero_block) {
+               /* there is a next snd_list */
+               next = list->u.next;
+   /*          stdputstr("["); */
+               sample_block_unref(list->block);
+   /*          stdputstr("]"); */
+           }
+           else if (list->block == NULL) { /* the next thing is the susp */
+               /* free suspension structure */
+               /* nyquist_printf("freeing susp@%p\n", list->u.susp); */
+               freefunc = list->u.susp->free;
+               (*freefunc)(list->u.susp);
+               next = NULL;
+           }
+           /* nyquist_printf("freeing snd_list@%p\n", list); */
+           //DBY
+           if (list == list_watch) printf("freeing watched snd_list %p\n", list);
+           //DBY
+           ffree_snd_list(list, "snd_list_unref");
+
+           list = next;
+       }
+       else
+          break;
     }
 }
 
