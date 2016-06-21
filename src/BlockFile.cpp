@@ -218,9 +218,11 @@ void *BlockFile::CalcSummary(samplePtr buffer, sampleCount len,
 
    float min, max;
    float sumsq;
+   double totalSquares = 0.0;
 
    // Recalc 256 summaries
    sumLen = (len + 255) / 256;
+   int summaries = 256;
 
    for (i = 0; i < sumLen; i++) {
       min = fbuffer[i * 256];
@@ -238,18 +240,24 @@ void *BlockFile::CalcSummary(samplePtr buffer, sampleCount len,
             max = f1;
       }
 
+      totalSquares += sumsq;
       float rms = (float)sqrt(sumsq / jcount);
 
       summary256[i * 3] = min;
       summary256[i * 3 + 1] = max;
-      summary256[i * 3 + 2] = rms;
+      summary256[i * 3 + 2] = rms;  // The rms is correct, but this may be for less than 256 samples in last loop.
    }
    for (i = sumLen; i < mSummaryInfo.frames256; i++) {
       // filling in the remaining bits with non-harming/contributing values
+      // rms values are not "non-harming", so keep  count of them:
+      summaries--;
       summary256[i * 3] = FLT_MAX;  // min
       summary256[i * 3 + 1] = -FLT_MAX;   // max
       summary256[i * 3 + 2] = 0.0f; // rms
    }
+
+   // Calculate now while we can do it accurately
+   mRMS = sqrt(totalSquares/len);
 
    // Recalc 64K summaries
    sumLen = (len + 65535) / 65536;
@@ -268,36 +276,32 @@ void *BlockFile::CalcSummary(samplePtr buffer, sampleCount len,
          sumsq += r1*r1;
       }
 
-      float rms = (float)sqrt(sumsq / 256);  // the '256' is not quite right at the edges as not all summary256 entries will be filled with useful values
+      float rms = (float)sqrt(sumsq / (float)((i < sumLen -1)? 256.0 : summaries));
 
       summary64K[i * 3] = min;
       summary64K[i * 3 + 1] = max;
       summary64K[i * 3 + 2] = rms;
    }
    for (i = sumLen; i < mSummaryInfo.frames64K; i++) {
+      wxASSERT_MSG(false, wxT("Out of data for mSummaryInfo"));   // Do we ever get here?
       summary64K[i * 3] = 0.0f;  // probably should be FLT_MAX, need a test case
       summary64K[i * 3 + 1] = 0.0f; // probably should be -FLT_MAX, need a test case
-      summary64K[i * 3 + 2] = 0.0f;
+      summary64K[i * 3 + 2] = 0.0f; // just padding
    }
 
-   // Recalc block-level summary
+   // Recalc block-level summary (mRMS already calculated)
    min = summary64K[0];
    max = summary64K[1];
-   sumsq = (float)summary64K[2];
-   sumsq *= sumsq;
 
    for (i = 1; i < sumLen; i++) {
       if (summary64K[3*i] < min)
          min = summary64K[3*i];
       if (summary64K[3*i+1] > max)
          max = summary64K[3*i+1];
-      float r1 = (float)summary64K[3*i+2];
-      sumsq += (r1*r1);
    }
 
    mMin = min;
    mMax = max;
-   mRMS = sqrt(sumsq / sumLen);
 
    delete[] fbuffer;
 

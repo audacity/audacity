@@ -14,7 +14,6 @@
 
 #include "../AudacityApp.h"
 
-#include "../FFT.h"
 #include "../WaveTrack.h"
 #include "../Prefs.h"
 #include "../Project.h"
@@ -23,7 +22,7 @@
 #include "../widgets/LinkingHtmlWindow.h"
 #include "../widgets/HelpSystem.h"
 #include "../widgets/NumericTextCtrl.h"
-#include "FileDialog.h"
+#include "../lib-src/FileDialog/FileDialog.h"
 
 #include <cmath>
 #include <limits>
@@ -33,29 +32,12 @@
 #define finite(x) _finite(x)
 #endif
 
-// all these headers may not be needed
-#include <wx/file.h>
-#include <wx/ffile.h>
-#include <wx/bitmap.h>
-#include <wx/brush.h>
-#include <wx/button.h>
-#include <wx/datetime.h>
-#include <wx/dcmemory.h>
-#include <wx/file.h>
-#include <wx/image.h>
-#include <wx/intl.h>
-#include <wx/msgdlg.h>
-#include <wx/sizer.h>
-#include <wx/statbox.h>
-#include <wx/stattext.h>
-#include <wx/textctrl.h>
 #include <wx/valtext.h>
 #include <wx/log.h>
 
 #include "../PlatformCompatibility.h"
 
-#define DB_MIN_LIMIT -600.0 // Minimum dB level that we measure.
-#define DB_MAX_LIMIT 0.0   // TODO: We should probably fail WCAG2 if audio is massively distorted.
+#define DB_MAX_LIMIT 0.0   // Audio is massively distorted.
 #define WCAG2_PASS 20.0    // dB difference required to pass WCAG2 test.
 
 bool ContrastDialog::GetDB(float &dB)
@@ -63,45 +45,40 @@ bool ContrastDialog::GetDB(float &dB)
    float rms = float(0.0);
    int numberSelecteTracks = 0;
 
+   // For stereo tracks: sqrt((mean(L)+mean(R))/2)
+   bool isStereo = false;
+   double meanSq = 0.0;
+
    AudacityProject *p = GetActiveProject();
    SelectedTrackListOfKindIterator iter(Track::Wave, p->GetTracks());
    WaveTrack *t = (WaveTrack *) iter.First();
    while (t) {
-      // TODO: Handle stereo tracks
       numberSelecteTracks++;
-
-      if (numberSelecteTracks > 1) {
+      if (numberSelecteTracks > 1 && !isStereo) {
          wxMessageDialog m(NULL, _("You can only measure one track at a time."), _("Error"), wxOK);
          m.ShowModal();
          return false;
       }
+      isStereo = t->GetLinked();
 
-      if(mT0 > mT1)
-      {
-         wxMessageDialog m(NULL, _("Start time after end time!\nPlease enter reasonable times."), _("Error"), wxOK);
-         m.ShowModal();
-         return false;
-      }
+      wxASSERT(mT0 <= mT1);
 
-      // FIXME: See bugs 1361 and 1362
+      // Ignore whitespace beyond ends of track.
       if(mT0 < t->GetStartTime())
          mT0 = t->GetStartTime();
       if(mT1 > t->GetEndTime())
          mT1 = t->GetEndTime();
 
-      wxLogDebug(wxT("mT0 = %.20f   mT1 = %.10f"),mT0 ,mT1);
-
-      // TODO: Let's use the actual selected samples
       sampleCount SelT0 = t->TimeToLongSamples(mT0);
       sampleCount SelT1 = t->TimeToLongSamples(mT1);
 
       if(SelT0 > SelT1)
       {
-         // FIXME: Bad error message. This should never happen.
-         wxMessageDialog m(NULL, _("Times are not reasonable!\nPlease enter reasonable times."), _("Error"), wxOK);
+         wxMessageDialog m(NULL, _("Invalid audio selection.\nPlease ensure that audio is selected."), _("Error"), wxOK);
          m.ShowModal();
          return false;
       }
+
       if(SelT0 == SelT1)
       {
          wxMessageDialog m(NULL, _("Nothing to measure.\nPlease select a section of a track."), _("Error"), wxOK);
@@ -110,8 +87,12 @@ bool ContrastDialog::GetDB(float &dB)
       }
 
       ((WaveTrack *)t)->GetRMS(&rms, mT0, mT1);
+      meanSq += rms * rms;
       t = (WaveTrack *) iter.Next();
    }
+   // TODO: This works for stereo, provided the audio clips are in both channels.
+   // We should really count gaps between clips as silence.
+   rms = (meanSq > 0.0)? sqrt(meanSq/(double)numberSelecteTracks) : 0.0;
 
    if(numberSelecteTracks == 0) {
       wxMessageDialog m(NULL, _("Please select an audio track."), _("Error"), wxOK);
@@ -119,30 +100,17 @@ bool ContrastDialog::GetDB(float &dB)
       return false;
    }
 
-   dB = (rms < 1.0E-30)? DB_MIN_LIMIT : LINEAR_TO_DB(rms);
-   wxLogDebug(wxT("RMS = %g"), rms);
+   dB = (rms == 0.0)? -INFINITY : LINEAR_TO_DB(rms);
    return true;
 }
 
-double ContrastDialog::GetStartTime()
+void ContrastDialog::SetStartAndEndTime()
 {
-   return(mT0);
+   AudacityProject *p = GetActiveProject();
+   mT0 = p->mViewInfo.selectedRegion.t0();
+   mT1 = p->mViewInfo.selectedRegion.t1();
 }
 
-void ContrastDialog::SetStartTime(double t)
-{
-   mT0 = t;
-}
-
-double ContrastDialog::GetEndTime()
-{
-   return(mT1);
-}
-
-void ContrastDialog::SetEndTime(double t)
-{
-   mT1 = t;
-}
 
 // WDR: class implementations
 
@@ -153,9 +121,7 @@ void ContrastDialog::SetEndTime(double t)
 // WDR: event table for ContrastDialog
 
 enum {
-   ID_BUTTON_GETFOREGROUND = 10001,
-   ID_BUTTON_GETBACKGROUND,
-   ID_BUTTON_USECURRENTF,
+   ID_BUTTON_USECURRENTF = 10001,
    ID_BUTTON_USECURRENTB,
    ID_BUTTON_GETURL,
    ID_BUTTON_EXPORT,
@@ -172,10 +138,8 @@ enum {
 };
 
 BEGIN_EVENT_TABLE(ContrastDialog,wxDialog)
-   EVT_BUTTON(ID_BUTTON_GETFOREGROUND, ContrastDialog::OnGetForegroundDB)
-   EVT_BUTTON(ID_BUTTON_GETBACKGROUND, ContrastDialog::OnGetBackgroundDB)
-   EVT_BUTTON(ID_BUTTON_USECURRENTF, ContrastDialog::OnUseSelectionF)
-   EVT_BUTTON(ID_BUTTON_USECURRENTB, ContrastDialog::OnUseSelectionB)
+   EVT_BUTTON(ID_BUTTON_USECURRENTF, ContrastDialog::OnGetForeground)
+   EVT_BUTTON(ID_BUTTON_USECURRENTB, ContrastDialog::OnGetBackground)
    EVT_BUTTON(ID_BUTTON_GETURL, ContrastDialog::OnGetURL)
    EVT_BUTTON(ID_BUTTON_EXPORT, ContrastDialog::OnExport)
    EVT_BUTTON(ID_BUTTON_RESET, ContrastDialog::OnReset)
@@ -191,6 +155,8 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
 {
    SetName(GetTitle());
 
+   mT0 = 0.0;
+   mT1 = 0.0;
    foregrounddB = 0.0;
    backgrounddB = 0.0;
    mForegroundIsDefined = false;
@@ -264,7 +230,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
          S.AddWindow(mForegroundEndT);
 
          m_pButton_UseCurrentF = S.Id(ID_BUTTON_USECURRENTF).AddButton(_("&Measure selection"));
-         mForegroundRMSText=S.Id(ID_FOREGROUNDDB_TEXT).AddTextBox(wxT(""), wxT(""), 12);
+         mForegroundRMSText=S.Id(ID_FOREGROUNDDB_TEXT).AddTextBox(wxT(""), wxT(""), 17);
          mForegroundRMSText->Connect(wxEVT_KEY_DOWN, wxKeyEventHandler(ContrastDialog::OnChar));
 
          //Background
@@ -304,7 +270,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
          S.AddWindow(mBackgroundEndT);
 
          m_pButton_UseCurrentB = S.Id(ID_BUTTON_USECURRENTB).AddButton(_("Mea&sure selection"));
-         mBackgroundRMSText = S.Id(ID_BACKGROUNDDB_TEXT).AddTextBox(wxT(""), wxT(""), 12);
+         mBackgroundRMSText = S.Id(ID_BACKGROUNDDB_TEXT).AddTextBox(wxT(""), wxT(""), 17);
          mBackgroundRMSText->Connect(wxEVT_KEY_DOWN, wxKeyEventHandler(ContrastDialog::OnChar));
       }
       S.EndMultiColumn();
@@ -317,11 +283,11 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
       S.StartMultiColumn(3, wxCENTER);
       {
          S.AddFixedText(_("Co&ntrast Result:"));
-         mPassFailText = S.Id(ID_RESULTS_TEXT).AddTextBox(wxT(""), wxT(""), 40);
+         mPassFailText = S.Id(ID_RESULTS_TEXT).AddTextBox(wxT(""), wxT(""), 50);
          mPassFailText->Connect(wxEVT_KEY_DOWN, wxKeyEventHandler(ContrastDialog::OnChar));
          m_pButton_Reset = S.Id(ID_BUTTON_RESET).AddButton(_("R&eset"));
          S.AddFixedText(_("&Difference:"));
-         mDiffText = S.Id(ID_RESULTSDB_TEXT).AddTextBox(wxT(""), wxT(""), 30);
+         mDiffText = S.Id(ID_RESULTSDB_TEXT).AddTextBox(wxT(""), wxT(""), 50);
          mDiffText->Connect(wxEVT_KEY_DOWN, wxKeyEventHandler(ContrastDialog::OnChar));
          m_pButton_Export = S.Id(ID_BUTTON_EXPORT).AddButton(_("E&xport..."));
       }
@@ -350,24 +316,6 @@ ContrastDialog::~ContrastDialog()
    mDiffText->Disconnect(wxEVT_KEY_DOWN, wxKeyEventHandler(ContrastDialog::OnChar));
 }
 
-void ContrastDialog::OnGetForegroundDB( wxCommandEvent & WXUNUSED(event))
-{
-   SetStartTime(mForegroundStartT->GetValue()); // FIXME: See bug 1362
-   SetEndTime(mForegroundEndT->GetValue());
-   mForegroundIsDefined = GetDB(foregrounddB);
-   m_pButton_UseCurrentF->SetFocus();
-   results();
-}
-
-void ContrastDialog::OnGetBackgroundDB( wxCommandEvent & WXUNUSED(event))
-{
-   SetStartTime(mBackgroundStartT->GetValue()); // FIXME: See bug 1362
-   SetEndTime(mBackgroundEndT->GetValue());
-   mBackgroundIsDefined = GetDB(backgrounddB);
-   m_pButton_UseCurrentB->SetFocus();
-   results();
-}
-
 void ContrastDialog::OnGetURL(wxCommandEvent & WXUNUSED(event))
 {
    // Original help page is back on-line (March 2016), but the manual should be more reliable.
@@ -377,62 +325,95 @@ void ContrastDialog::OnGetURL(wxCommandEvent & WXUNUSED(event))
 
 void ContrastDialog::OnClose(wxCommandEvent & WXUNUSED(event))
 {
+   wxCommandEvent dummyEvent;
+   OnReset(dummyEvent);
+
    Show(false);
 }
 
-void ContrastDialog::OnUseSelectionF(wxCommandEvent & event)
+void ContrastDialog::OnGetForeground(wxCommandEvent & event)
 {
-   // FIXME: Give this function a more appropriate name (if we need it at all).
    AudacityProject *p = GetActiveProject();
-   // FIXME: Why not SelectedTrackListOfKindIterator
-   TrackListIterator iter(p->GetTracks());
-   Track *t = iter.First();
-   while (t) {
-      if (t->GetSelected() && t->GetKind() == Track::Wave) {
-         // FIXME: See bug 1362
-         mForegroundStartT->SetValue(p->mViewInfo.selectedRegion.t0());
-         mForegroundEndT->SetValue(p->mViewInfo.selectedRegion.t1());
-         break;
-      }
-      t = iter.Next();
+   SelectedTrackListOfKindIterator iter(Track::Wave, p->GetTracks());
+
+   for (Track *t = iter.First(); t; t = iter.Next()) {
+      mForegroundStartT->SetValue(p->mViewInfo.selectedRegion.t0());
+      mForegroundEndT->SetValue(p->mViewInfo.selectedRegion.t1());
    }
-   bFGset = true;
-   OnGetForegroundDB(event);
+
+   SetStartAndEndTime();
+   mForegroundIsDefined = GetDB(foregrounddB);
+   m_pButton_UseCurrentF->SetFocus();
+   results();
 }
 
-void ContrastDialog::OnUseSelectionB(wxCommandEvent & event)
+void ContrastDialog::OnGetBackground(wxCommandEvent & event)
 {
-   // FIXME: Give this function a more appropriate name.
    AudacityProject *p = GetActiveProject();
-   // FIXME: Why not SelectedTrackListOfKindIterator
-   TrackListIterator iter(p->GetTracks());
-   Track *t = iter.First();
-   while (t) {
-      if (t->GetSelected() && t->GetKind() == Track::Wave) {
-         // FIXME: See bug 1362
-         mBackgroundStartT->SetValue(p->mViewInfo.selectedRegion.t0());
-         mBackgroundEndT->SetValue(p->mViewInfo.selectedRegion.t1());
-         break;
-      }
-      t = iter.Next();
+   SelectedTrackListOfKindIterator iter(Track::Wave, p->GetTracks());
+
+   for (Track *t = iter.First(); t; t = iter.Next()) {
+      mBackgroundStartT->SetValue(p->mViewInfo.selectedRegion.t0());
+      mBackgroundEndT->SetValue(p->mViewInfo.selectedRegion.t1());
    }
-   bBGset = true;
-   OnGetBackgroundDB(event);
+
+   SetStartAndEndTime();
+   mBackgroundIsDefined = GetDB(backgrounddB);
+   m_pButton_UseCurrentB->SetFocus();
+   results();
 }
 
 void ContrastDialog::results()
 {
-   // TODO: We check for absolute silence here, so should not need to check again later in ::results()
+   mPassFailText->SetName(wxT(""));
+   mPassFailText->ChangeValue(wxT(""));
+   mDiffText->ChangeValue(wxT(""));
+
+   // foreground and background defined.
+   if(mForegroundIsDefined && mBackgroundIsDefined) {
+      float diffdB = std::fabs(foregrounddB - backgrounddB);
+      if(foregrounddB > DB_MAX_LIMIT) {
+         mPassFailText->ChangeValue(_("Foreground level too high"));
+      }
+      else if (backgrounddB > DB_MAX_LIMIT) {
+         mPassFailText->ChangeValue(_("Background level too high"));
+      }
+      else if (backgrounddB > foregrounddB) {
+         mPassFailText->ChangeValue(_("Background higher than foreground"));
+      }
+      else if(diffdB > WCAG2_PASS) {
+         mPassFailText->ChangeValue(_("WCAG2 Pass"));
+      }
+      else {
+         mPassFailText->ChangeValue(_("WCAG2 Fail"));
+      }
+
+      /* i18n-hint: i.e. difference in loudness at the moment. */
+      mDiffText->SetName(_("Current difference"));
+      if( diffdB != diffdB ) {   // test for NaN, reliant on IEEE implementation
+         mDiffText->ChangeValue(wxString::Format(_("indeterminate")));
+      }
+      else {
+         if( diffdB != std::numeric_limits<float>::infinity() ) {
+            mDiffText->ChangeValue(wxString::Format(_("%.2f dB Average RMS"), diffdB));
+         }
+         else {
+            mDiffText->ChangeValue(wxString::Format(_("Infinite dB difference")));
+         }
+      }
+   }
+
    if (mForegroundIsDefined) {
       mForegroundRMSText->SetName(_("Measured foreground level"));   // Read by screen-readers
       if(std::isinf(- foregrounddB))
          mForegroundRMSText->ChangeValue(wxString::Format(_("zero")));
       else
-         mForegroundRMSText->ChangeValue(wxString::Format(_("%.1f dB"), foregrounddB));   // i18n-hint: short form of 'decibels'        
+         mForegroundRMSText->ChangeValue(wxString::Format(_("%.2f dB"), foregrounddB));   // i18n-hint: short form of 'decibels'        
    }
    else {
       mForegroundRMSText->SetName(_("No foreground measured"));   // Read by screen-readers
-      mForegroundRMSText->ChangeValue(wxString::Format(wxT("")));
+      mForegroundRMSText->ChangeValue(wxT(""));
+      mPassFailText->ChangeValue(wxString::Format(_("Foreground not yet measured")));
    }
 
    if (mBackgroundIsDefined) {
@@ -440,42 +421,12 @@ void ContrastDialog::results()
       if(std::isinf(- backgrounddB))
          mBackgroundRMSText->ChangeValue(wxString::Format(_("zero")));
       else
-         mBackgroundRMSText->ChangeValue(wxString::Format(_("%.1f dB"), backgrounddB));
+         mBackgroundRMSText->ChangeValue(wxString::Format(_("%.2f dB"), backgrounddB));
    }
    else {
       mBackgroundRMSText->SetName(_("No background measured"));
-      mBackgroundRMSText->ChangeValue(wxString::Format(wxT("")));
-   }
-
-   if(mForegroundIsDefined && mBackgroundIsDefined) {
-      /* i18n-hint: i.e. difference in loudness at the moment. */
-      mDiffText->SetName(_("Current difference"));
-      float diffdB = foregrounddB - backgrounddB;
-      if(diffdB > WCAG2_PASS) {
-         mPassFailText->ChangeValue(_("WCAG2 Pass"));
-      }
-      else {
-         mPassFailText->ChangeValue(_("WCAG2 Fail"));
-      }
-
-      // TODO: Check earlier for absolute silence.
-      if( diffdB != diffdB ) {   // test for NaN, reliant on IEEE implementation
-         mDiffText->ChangeValue(wxString::Format(_("indeterminate")));
-      }
-      else {
-         if( fabs(diffdB) != std::numeric_limits<float>::infinity() ) {
-            mDiffText->ChangeValue(wxString::Format(_("%.1f dB Average RMS"), diffdB));
-         }
-         else {
-            mDiffText->ChangeValue(wxString::Format(_("infinite dB difference")));
-         }
-      }
-   }
-   else {
-      mPassFailText->SetName(wxT(""));
-      // FIXME: This happens too often. How do we really get here?
-      mPassFailText->ChangeValue(_("Please enter valid times."));
-      mDiffText->ChangeValue(wxT(""));
+      mBackgroundRMSText->ChangeValue(wxT(""));
+      mPassFailText->ChangeValue(wxString::Format(_("Background not yet measured")));
    }
 }
 
@@ -526,7 +477,7 @@ void ContrastDialog::OnExport(wxCommandEvent & WXUNUSED(event))
    f.AddLine(wxString::Format(_("Time ended = %2d hour(s), %2d minute(s), %.2f seconds."), h, m, s ));
    if(mForegroundIsDefined)
       if( fabs(foregrounddB) != std::numeric_limits<float>::infinity() )
-         f.AddLine(wxString::Format(_("Average RMS = %.1f dB."), foregrounddB ));
+         f.AddLine(wxString::Format(_("Average RMS = %.2f dB."), foregrounddB ));
       else
          f.AddLine(wxString::Format(_("Average RMS = zero.") ));
    else
@@ -545,7 +496,7 @@ void ContrastDialog::OnExport(wxCommandEvent & WXUNUSED(event))
    f.AddLine(wxString::Format(_("Time ended = %2d hour(s), %2d minute(s), %.2f seconds."), h, m, s ));
    if(mBackgroundIsDefined)
       if( fabs(backgrounddB) != std::numeric_limits<float>::infinity() )
-         f.AddLine(wxString::Format(_("Average RMS = %.1f dB."), backgrounddB ));
+         f.AddLine(wxString::Format(_("Average RMS = %.2f dB."), backgrounddB ));
       else
          f.AddLine(wxString::Format(_("Average RMS = zero.") ));
    else
@@ -557,7 +508,7 @@ void ContrastDialog::OnExport(wxCommandEvent & WXUNUSED(event))
       f.AddLine(wxString::Format(_("Difference is indeterminate.") ));
    else
       if( fabs(diffdB) != std::numeric_limits<float>::infinity() )
-         f.AddLine(wxString::Format(_("Difference = %.1f Average RMS dB."), diffdB ));
+         f.AddLine(wxString::Format(_("Difference = %.2f Average RMS dB."), diffdB ));
       else
          f.AddLine(wxString::Format(_("Difference = infinite Average RMS dB.")));
    if( diffdB > 20. )
@@ -593,18 +544,15 @@ void ContrastDialog::OnExport(wxCommandEvent & WXUNUSED(event))
 
 void ContrastDialog::OnReset(wxCommandEvent & event)
 {
-   bFGset = false;   // TODO: Is this necessary?
-   bBGset = false;   // TODO: Is this necessary?
-
-   mForegroundStartT->SetValue(0.0);   // FIXME: See bug 1361
-   mForegroundEndT->SetValue(0.0);     // FIXME: See bug 1361
-   mBackgroundStartT->SetValue(0.0);   // FIXME: See bug 1361
-   mBackgroundEndT->SetValue(0.0);     // FIXME: See bug 1361
+   mForegroundStartT->SetValue(0.0);
+   mForegroundEndT->SetValue(0.0);
+   mBackgroundStartT->SetValue(0.0);
+   mBackgroundEndT->SetValue(0.0);
    mForegroundIsDefined = false;
    mBackgroundIsDefined = false;
 
    mForegroundRMSText->SetName(_("No foreground measured"));   // Read by screen-readers
-   mForegroundRMSText->SetName(_("No background measured"));
+   mBackgroundRMSText->SetName(_("No background measured"));
    mForegroundRMSText->ChangeValue(wxT("")); // Displayed value
    mBackgroundRMSText->ChangeValue(wxT(""));
    mPassFailText->ChangeValue(wxT(""));
@@ -613,6 +561,7 @@ void ContrastDialog::OnReset(wxCommandEvent & event)
 
 void ContrastDialog::OnChar(wxKeyEvent & event)
 {
+   // Is this still required?
    if (event.GetKeyCode() == WXK_TAB) {
       event.Skip();
       return;

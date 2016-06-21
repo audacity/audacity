@@ -10,7 +10,6 @@
 #define __AUDACITY_CONTRAST_DIALOG__
 
 #include <wx/dialog.h>
-#include <wx/slider.h>
 
 class wxButton;
 class wxSizer;
@@ -35,9 +34,6 @@ public:
               const wxString & title, const wxPoint & pos);
    ~ContrastDialog();
 
-   void OnGetForegroundDB( wxCommandEvent &event );
-   void OnGetBackgroundDB( wxCommandEvent &event );
-
    wxButton * m_pButton_UseCurrentF;
    wxButton * m_pButton_UseCurrentB;
    wxButton * m_pButton_GetURL;
@@ -50,8 +46,6 @@ public:
    NumericTextCtrl *mBackgroundStartT;
    NumericTextCtrl *mBackgroundEndT;
 
-   bool bFGset;
-   bool bBGset;
    double mT0;
    double mT1;
    double mProjectRate;
@@ -64,10 +58,8 @@ private:
    // handlers
    void OnGetURL(wxCommandEvent &event);
    void OnExport(wxCommandEvent &event);
-   void OnForegroundStartT(wxCommandEvent & event);
-   void OnForegroundEndT(wxCommandEvent & event);
-   void OnUseSelectionF(wxCommandEvent & event);
-   void OnUseSelectionB(wxCommandEvent & event);
+   void OnGetForeground(wxCommandEvent & event);
+   void OnGetBackground(wxCommandEvent & event);
    void results();
    void OnReset(wxCommandEvent & event);
    void OnClose(wxCommandEvent & event);
@@ -87,10 +79,7 @@ private:
 
    bool mDoBackground;
    bool GetDB(float & dB);
-   double GetStartTime();
-   void SetStartTime(double);
-   double GetEndTime();
-   void SetEndTime(double);
+   void SetStartAndEndTime();
 
    double length;
 

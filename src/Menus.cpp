@@ -5364,26 +5364,10 @@ void AudacityProject::OnContrast()
    if(!mContrastDialog)
    {
       wxPoint where;
-
       where.x = 150;
       where.y = 150;
 
       mContrastDialog = new ContrastDialog(this, -1, _("Contrast Analysis (WCAG 2 compliance)"), where);
-
-      mContrastDialog->bFGset = false;
-      mContrastDialog->bBGset = false;
-   }
-
-   // Zero dialog boxes.  Do we need to do this here?
-   if( !mContrastDialog->bFGset )
-   {
-      mContrastDialog->mForegroundStartT->SetValue(0.0);
-      mContrastDialog->mForegroundEndT->SetValue(0.0);
-   }
-   if( !mContrastDialog->bBGset )
-   {
-      mContrastDialog->mBackgroundStartT->SetValue(0.0);
-      mContrastDialog->mBackgroundEndT->SetValue(0.0);
    }
 
    mContrastDialog->CentreOnParent();
