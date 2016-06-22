@@ -229,7 +229,6 @@ class LWSlider
 
    TipPanel *mTipPanel;
    wxString mTipTemplate;
-   wxTimer mTimer;
 
    Ruler* mpRuler;
 
