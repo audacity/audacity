@@ -113,7 +113,14 @@ void SelectionBar::Populate()
    mLeftTime = mRightTime = mAudioTime = nullptr;
 
    // This will be inherited by all children:
-   SetFont(wxFont(9, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
+   SetFont(wxFont(
+#ifdef __WXMAC__
+                  12
+#else
+                  9
+#endif
+                  ,
+                  wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
 
    wxFlexGridSizer *mainSizer;
 
