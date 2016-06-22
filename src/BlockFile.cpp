@@ -219,6 +219,7 @@ void *BlockFile::CalcSummary(samplePtr buffer, sampleCount len,
    float min, max;
    float sumsq;
    double totalSquares = 0.0;
+   double fraction { 0.0 };
 
    // Recalc 256 summaries
    sumLen = (len + 255) / 256;
@@ -229,8 +230,10 @@ void *BlockFile::CalcSummary(samplePtr buffer, sampleCount len,
       max = fbuffer[i * 256];
       sumsq = ((float)min) * ((float)min);
       jcount = 256;
-      if (i * 256 + jcount > len)
+      if (jcount > len - i * 256) {
          jcount = len - i * 256;
+         fraction = 1.0 - (jcount / 256.0);
+      }
       for (j = 1; j < jcount; j++) {
          float f1 = fbuffer[i * 256 + j];
          sumsq += ((float)f1) * ((float)f1);
@@ -276,7 +279,8 @@ void *BlockFile::CalcSummary(samplePtr buffer, sampleCount len,
          sumsq += r1*r1;
       }
 
-      float rms = (float)sqrt(sumsq / (float)((i < sumLen -1)? 256.0 : summaries));
+      double denom = (i < sumLen - 1) ? 256.0 : summaries - fraction;
+      float rms = (float)sqrt(sumsq / denom);
 
       summary64K[i * 3] = min;
       summary64K[i * 3 + 1] = max;
