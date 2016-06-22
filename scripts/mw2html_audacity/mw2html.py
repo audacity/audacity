@@ -799,7 +799,8 @@ def should_follow(url):
     nurl = normalize_url(url)
     droot = get_domain(config.rooturl)
     dn = get_domain(nurl)
-    if droot != dn and not (dn.endswith(droot) or droot.endswith(dn)):
+    #if droot != dn and not (dn.endswith(droot) or droot.endswith(dn)):
+    if droot != dn:
         if config.debug:
             print url, 'not in the same domain'
         return False
