@@ -264,6 +264,8 @@ class ASlider /* not final */ : public wxPanel
             int orientation = wxHORIZONTAL);
    virtual ~ASlider();
 
+   bool AcceptsFocus() const override { return false; }
+
    void GetScroll(float & line, float & page);
    void SetScroll(float line, float page);
 
