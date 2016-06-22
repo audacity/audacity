@@ -213,6 +213,16 @@ void *BlockFile::CalcSummary(samplePtr buffer, sampleCount len,
    CopySamples(buffer, format,
                (samplePtr)fbuffer, floatSample, len);
 
+   CalcSummaryFromBuffer(fbuffer, len, summary256, summary64K);
+
+   delete[] fbuffer;
+
+   return fullSummary.get();
+}
+
+void BlockFile::CalcSummaryFromBuffer(const float *fbuffer, sampleCount len,
+                                      float *summary256, float *summary64K)
+{
    sampleCount sumLen;
    sampleCount i, j, jcount;
 
@@ -306,10 +316,6 @@ void *BlockFile::CalcSummary(samplePtr buffer, sampleCount len,
 
    mMin = min;
    mMax = max;
-
-   delete[] fbuffer;
-
-   return fullSummary.get();
 }
 
 static void ComputeMinMax256(float *summary256,
