@@ -3183,6 +3183,10 @@ BEGIN_EVENT_TABLE(EditCurvesDialog, wxDialog)
    EVT_BUTTON(LibraryButtonID, EditCurvesDialog::OnLibrary)
    EVT_BUTTON(DefaultsButtonID, EditCurvesDialog::OnDefaults)
    EVT_BUTTON(wxID_OK, EditCurvesDialog::OnOK)
+   EVT_LIST_ITEM_SELECTED(CurvesListID,
+                          EditCurvesDialog::OnListSelectionChange)
+   EVT_LIST_ITEM_DESELECTED(CurvesListID,
+                          EditCurvesDialog::OnListSelectionChange)
 END_EVENT_TABLE()
 
 EditCurvesDialog::EditCurvesDialog(wxWindow * parent, EffectEqualization * effect, int position):
@@ -3642,6 +3646,19 @@ void EditCurvesDialog::OnOK(wxCommandEvent & WXUNUSED(event))
       item = mList->GetItemCount()-1;   // nothing selected, default to 'unnamed'
    mEffect->setCurve(item);
    EndModal(true);
+}
+
+void EditCurvesDialog::OnListSelectionChange( wxListEvent & )
+{
+   const bool enable = mList->GetSelectedItemCount() > 0;
+   static const int ids[] = {
+      UpButtonID,
+      DownButtonID,
+      RenameButtonID,
+      DeleteButtonID,
+   };
+   for (auto id : ids)
+      FindWindowById(id, this)->Enable(enable);
 }
 
 #if wxUSE_ACCESSIBILITY
