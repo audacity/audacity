@@ -201,6 +201,12 @@ void Grabber::OnLeftDown(wxMouseEvent & event)
 //
 void Grabber::OnEnter(wxMouseEvent & WXUNUSED(event))
 {
+   // Bug 1201:  On Mac, unsetting and re-setting the tooltip may be needed
+   // to make it pop up when we want it.
+   const auto text = GetToolTipText();
+   UnsetToolTip();
+   SetToolTip(text);
+
    // Redraw highlighted
    mOver = true;
    Refresh(false);

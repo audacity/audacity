@@ -384,6 +384,8 @@ void AButton::OnMouseEvent(wxMouseEvent & event)
    AButtonState prevState = GetState();
 
    if (event.Entering()) {
+      // Bug 1201:  On Mac, unsetting and re-setting the tooltip may be needed
+      // to make it pop up when we want it.
       auto text = GetToolTipText();
       UnsetToolTip();
       SetToolTip(text);
