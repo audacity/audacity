@@ -107,7 +107,7 @@ private:
    DECLARE_EVENT_TABLE()
 };
 
-BEGIN_EVENT_TABLE(TipPanel, wxPopupWindow)
+BEGIN_EVENT_TABLE(TipPanel, wxFrame)
    EVT_PAINT(TipPanel::OnPaint)
 #if defined(__WXGTK__)
    EVT_WINDOW_CREATE(TipPanel::OnCreate)
