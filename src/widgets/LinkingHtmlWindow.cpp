@@ -57,8 +57,18 @@ void BrowserDialog::OnBackward(wxCommandEvent & WXUNUSED(event))
 void BrowserDialog::OnClose(wxCommandEvent & WXUNUSED(event))
 {
    EndModal(wxID_CANCEL);
-#ifndef __WXMAC__
-   GetParent()->Destroy();
+   auto parent = GetParent();
+
+#ifdef __WXMAC__
+   auto grandparent = GetParent()->GetParent();
+#endif
+
+   parent->Destroy();
+
+#ifdef __WXMAC__
+   if(grandparent && grandparent->IsShown()) {
+      grandparent->Raise();
+   }
 #endif
 }
 
