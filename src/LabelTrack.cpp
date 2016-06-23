@@ -276,8 +276,6 @@ void LabelTrack::WarpLabels(const TimeWarper &warper) {
 
 void LabelTrack::ResetFlags()
 {
-   mXPos1 = -1;
-   mXPos2 = -1;
    mDragXPos = -1;
    mInitialCursorPos = 1;
    mCurrentCursorPos = 1;
@@ -744,6 +742,24 @@ bool LabelTrack::CalcCursorX(int * x) const
    return false;
 }
 
+void LabelTrack::CalcHighlightXs(int *x1, int *x2) const
+{
+   wxMemoryDC dc;
+
+   if (msFont.Ok()) {
+      dc.SetFont(msFont);
+   }
+
+   int pos1 = mInitialCursorPos, pos2 = mCurrentCursorPos;
+   if (pos1 > pos2)
+      std::swap(pos1, pos2);
+
+   // find the left X pos of highlighted area
+   mLabels[mSelIndex]->getXPos(dc, x1, pos1);
+   // find the right X pos of highlighted area
+   mLabels[mSelIndex]->getXPos(dc, x2, pos2);
+}
+
 /// Draw calls other functions to draw the LabelTrack.
 ///   @param  dc the device context
 ///   @param  r  the LabelTrack rectangle.
@@ -822,11 +838,9 @@ void LabelTrack::Draw(wxDC & dc, const wxRect & r,
    // Draw highlights
    if ((mDragXPos != -1) && (mSelIndex >= 0 ))
    {
-      // find the left X pos of highlighted area
-      mLabels[mSelIndex]->getXPos(dc, &mXPos1, mInitialCursorPos);
-      // find the right X pos of highlighted area
-      mLabels[mSelIndex]->getXPos(dc, &mXPos2, mCurrentCursorPos);
-      mLabels[mSelIndex]->DrawHighlight(dc, mXPos1, mXPos2, mFontHeight);
+      int xpos1, xpos2;
+      CalcHighlightXs(&xpos1, &xpos2);
+      mLabels[mSelIndex]->DrawHighlight(dc, xpos1, xpos2, mFontHeight);
    }
 
    // Draw the text and the label boxes.
@@ -1563,12 +1577,15 @@ void LabelTrack::HandleClick(const wxMouseEvent & evt,
       // reset the highlight indicator
       wxRect highlightedRect;
       if (mSelIndex != -1) {
+         int xpos1, xpos2;
+         CalcHighlightXs(&xpos1, &xpos2);
+
          wxASSERT(mFontHeight >= 0); // should have been set up while drawing
          // the rectangle of highlighted area
-         if (mXPos1 < mXPos2)
-            highlightedRect = wxRect(mXPos1, mLabels[mSelIndex]->y - mFontHeight / 2, (int)(mXPos2 - mXPos1 + 0.5), mFontHeight);
-         else
-            highlightedRect = wxRect(mXPos2, mLabels[mSelIndex]->y - mFontHeight / 2, (int)(mXPos1 - mXPos2 + 0.5), mFontHeight);
+         highlightedRect = {
+            xpos1, mLabels[mSelIndex]->y - mFontHeight / 2,
+            (int)(xpos2 - xpos1 + 0.5), mFontHeight
+         };
 
          // reset when left button is down
          if (evt.LeftDown())

@@ -218,6 +218,8 @@ class AUDACITY_DLL_API LabelTrack final : public Track
    // relative to the left edge of the track panel
    bool CalcCursorX(int * x) const;
 
+   void CalcHighlightXs(int *x1, int *x2) const;
+
    void MayAdjustLabel( int iLabel, int iEdge, bool bAllowSwapping, double fNewTime);
    void MayMoveLabel( int iLabel, int iEdge, double fNewTime);
 
@@ -261,8 +263,6 @@ class AUDACITY_DLL_API LabelTrack final : public Track
    static wxBitmap mBoundaryGlyphs[NUM_GLYPH_CONFIGS * NUM_GLYPH_HIGHLIGHTS];
 
    static int mFontHeight;
-   mutable int mXPos1;                         /// left X pos of highlighted area
-   mutable int mXPos2;                         /// right X pos of highlighted area
    int mCurrentCursorPos;                      /// current cursor position
    int mInitialCursorPos;                      /// initial cursor position
    int mDragXPos;                              /// end X pos of dragging
