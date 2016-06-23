@@ -664,6 +664,9 @@ void ToolBar::MakeMacRecoloredImage(teBmps eBmpOut, teBmps eBmpIn )
 
 void ToolBar::MakeRecoloredImage( teBmps eBmpOut, teBmps eBmpIn )
 {
+   // Don't recolour the buttons...
+   MakeMacRecoloredImage( eBmpOut, eBmpIn );
+   return;
    wxImage * pSrc = &theTheme.Image( eBmpIn );
 #if defined( __WXGTK__ )
    wxColour newColour = wxSystemSettings::GetColour( wxSYS_COLOUR_BACKGROUND );
