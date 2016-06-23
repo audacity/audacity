@@ -2751,6 +2751,8 @@ void AudacityProject::OnSetRightSelection()
 
 void AudacityProject::NextFrame()
 {
+   auto temp = AButton::TemporarilyAllowFocus();
+
    switch( GetFocusedFrame() )
    {
       case TopDockHasFocus:
@@ -2780,6 +2782,8 @@ void AudacityProject::NextFrame()
 
 void AudacityProject::PrevFrame()
 {
+   auto temp = AButton::TemporarilyAllowFocus();
+
    switch( GetFocusedFrame() )
    {
       case BotDockHasFocus:
