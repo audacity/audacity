@@ -286,20 +286,23 @@ void LabelTrack::ResetFlags()
    mDrawCursor = false;
 }
 
+wxFont LabelTrack::GetFont(const wxString &faceName, int size)
+{
+   wxFontEncoding encoding;
+   if (faceName == wxT(""))
+      encoding = wxFONTENCODING_DEFAULT;
+   else
+      encoding = wxFONTENCODING_SYSTEM;
+   return wxFont(size, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL,
+                 wxFONTWEIGHT_NORMAL, false, faceName, encoding);
+}
+
 void LabelTrack::ResetFont()
 {
    mFontHeight = -1;
    wxString facename = gPrefs->Read(wxT("/GUI/LabelFontFacename"), wxT(""));
-   int size = gPrefs->Read(wxT("/GUI/LabelFontSize"), 12);
-   if (facename != wxT("")) {
-      msFont = wxFont(size, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL,
-                      wxFONTWEIGHT_NORMAL, FALSE, facename,
-                      wxFONTENCODING_SYSTEM);
-   }
-   else {
-      msFont = wxFont(size, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL,
-                      wxFONTWEIGHT_NORMAL);
-   }
+   int size = gPrefs->Read(wxT("/GUI/LabelFontSize"), DefaultFontSize);
+   msFont = GetFont(facename, size);
 }
 
 /// ComputeTextPosition is 'smart' about where to display
