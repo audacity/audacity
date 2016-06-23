@@ -815,7 +815,7 @@ END_EVENT_TABLE()
 AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
                                  const wxPoint & pos,
                                  const wxSize & size)
-   : wxFrame(parent, id, wxT("Audacity"), pos, size),
+   : wxFrame(parent, id, wxT("Dark Audacity"), pos, size),
      mRate((double) gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"), AudioIO::GetOptimalSupportedSampleRate())),
      mDefaultFormat((sampleFormat) gPrefs->
            Read(wxT("/SamplingRate/DefaultProjectSampleFormat"), floatSample)),
@@ -1082,7 +1082,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
 
    int widths[] = {0, GetControlToolBar()->WidthForStatusBar(mStatusBar), -1, 150};
    mStatusBar->SetStatusWidths(4, widths);
-   wxString msg = wxString::Format(_("Welcome to Audacity version %s"),
+   wxString msg = wxString::Format(_("Welcome to Dark Audacity version %s"),
                                    AUDACITY_VERSION_STRING);
    mStatusBar->SetStatusText(msg, mainStatusBarField);
    GetControlToolBar()->UpdateStatusBar(this);
@@ -1308,7 +1308,7 @@ void AudacityProject::SetProjectTitle()
    wxString name = GetName();
    if( name.IsEmpty() )
    {
-      name = wxT("Audacity");
+      name = wxT("Dark Audacity");
    }
 
    if (mIsRecovered)

@@ -233,7 +233,7 @@ AboutDialog *AboutDialog::ActiveIntance()
 }
 
 AboutDialog::AboutDialog(wxWindow * parent)
-   :  wxDialog(parent, -1, _("About Audacity"),
+   :  wxDialog(parent, -1, _("About Dark Audacity"),
                wxDefaultPosition, wxDefaultSize,
                wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {
@@ -266,7 +266,7 @@ void AboutDialog::PopulateAudacityPage( ShuttleGui & S )
    CreateCreditsList();
 
    wxString par1Str = _(
-"Audacity is a free program written by a worldwide team of <a href=\"http://audacityteam.org/about/credits\">volunteers</a>. \
+"Audacity, which this is a customised version of, is a free program written by a worldwide team of <a href=\"http://audacityteam.org/about/credits\">volunteers</a>. \
 Audacity is <a href=\"http://audacityteam.org/download\">available</a> for Windows, Mac, and GNU/Linux (and other Unix-like systems).");
 
    // This trick here means that the English language version won't mention using
@@ -300,34 +300,39 @@ visit our <a href=\"http://forum.audacityteam.org/\">forum</a>.");
          localeStr +
          wxT("\"></head>") +
       wxT("<body bgcolor=\"#ffffff\"><center>") +
-      wxT("<h3>Audacity ") + wxString(AUDACITY_VERSION_STRING) + wxT("</center></h3>") +
-      _("Free, open source, cross-platform software for recording and editing sounds.") +
-      wxT(" <a href=\"http://audacityteam.org/\">http://audacityteam.org/</a>") +
-      wxT("<p><br>") + par1Str +
-      wxT("<p>") + par2Str +
+      wxT("<h3>Dark Audacity ") + wxString(AUDACITY_VERSION_STRING) + wxT("</center></h3>") +
+      _("Customised version of Audacity, the free, open source, cross-platform software " ) +
+      _("for recording and editing sounds.") +
+      //wxT("<p><br>") + par1Str +
+      //wxT("<p>") + par2Str +
       wxT("<h3>") + _("Credits") + wxT("</h3>") + wxT("<p>") +
 
-      wxT("<p><b>") + wxString::Format(_("Team Members")) + wxT("</b><br><br>") +
+      wxT("<p><b>") + wxString::Format(_("Dark Audacity Customisation")) + wxT("</b><br>") +
+      wxT("James Crook, art, coding &amp; design<br>") +
+
+      wxT("<p><b>") + wxString::Format(_("Audacity Team Members")) + wxT("</b><br>") +
       GetCreditsByRole(roleTeamMember) +
 
       wxT("<p><b> ") + _("Emeritus:") + wxT("</b><br>") +
       _("Distinguished Audacity Team members, not currently active") + wxT("<br><br>") +
       GetCreditsByRole(roleEmeritusTeam) +
 
-      wxT("<p><b>") + _("Contributors") + wxT("</b><br><br>") +
+      wxT("<p><b>") + _("Contributors") + wxT("</b><br>") +
       GetCreditsByRole(roleContributor) +
 
       wxT("<p><b>") + _("Translators") + wxT("</b><br>") +
-      translatorCredits + wxT("<br>") +
+      translatorCredits +
       GetCreditsByRole(roleTranslators) +
 
       wxT("<p><b>") +  _("Libraries") + wxT("</b><br>") +
       wxT("Audacity includes code from the following projects:") + wxT("<br><br>") +
       GetCreditsByRole(roleLibrary) +
 
-      wxT("<p><b>") +  _("Special thanks:") + wxT("</b><br><br>") +
+      wxT("<p><b>") +  _("Special thanks:") + wxT("</b><br>") +
       GetCreditsByRole(roleThanks) +
 
+      wxT("<p><br>Audacity website: <a href=\"http://www.audacityteam.org/\">http://www.audacityteam.org/</a>") +
+      wxT("<br>Dark Audacity website: <a href=\"http://www.darkaudacity.com/\">http://www.darkaudacity.com/</a>") +
       wxT("<p><br>") + _("<b>Audacity&reg;</b> software is copyright")+
       wxT("&copy; 1999-2016 Audacity Team.<br>") +
       _("The name <b>Audacity&reg;</b> is a registered trademark of Dominic Mazzoni.") +
@@ -402,6 +407,7 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
    informationStr = wxT("<h2><center>");
    informationStr += _("Build Information");
    informationStr += wxT("</center></h2>\n");
+
    // top level heading
    informationStr += wxT("<h3>");
    informationStr += _("File Format Support");
@@ -494,6 +500,8 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
    informationStr += wxT("<h3>");
    informationStr += _("Features");
    informationStr += wxT("</h3>\n<table>");  // start table of features
+
+   AddBuildinfoRow(&informationStr, wxT("Theme"), _("Dark Theme"), enabled);
 
    # if USE_NYQUIST
    AddBuildinfoRow(&informationStr, wxT("Nyquist"), _("Plug-in support"),

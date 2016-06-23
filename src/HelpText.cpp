@@ -186,7 +186,7 @@ static wxString HelpTextBuiltIn( const wxString & Key )
       /* i18n-hint: Preserve [[file:quick_help.html as it's the name of a file.*/
       return WrapText(
          wxString(wxT("")) + 
-         wxT("<center><h3>Audacity ") + AUDACITY_VERSION_STRING + wxT("</h3><h3>") +
+         wxT("<center><h3>Dark Audacity ") + AUDACITY_VERSION_STRING + wxT("</h3><h3>") +
          _("How to get help") + wxT("</h3></center>") + 
          _("These are our support methods:") + wxT("<p><ul><li>") +
          _(" [[file:quick_help.html|Quick Help]] - if not installed locally, <a href=\"http://manual.audacityteam.org/quick_help.html\">view online</a>") + wxT("</li><li>") +
