@@ -51,10 +51,11 @@ public:
    // Copies region but then overwrites other times
    LabelStruct(const SelectedRegion& region, double t0, double t1,
                const wxString &aTitle);
-   void DrawLines( wxDC & dc, const wxRect & r);
-   void DrawGlyphs( wxDC & dc, const wxRect & r, int GlyphLeft, int GlyphRight);
-   void DrawText( wxDC & dc, const wxRect & r);
-   void DrawTextBox( wxDC & dc, const wxRect & r);
+   void DrawLines( wxDC & dc, const wxRect & r) const;
+   void DrawGlyphs
+      ( wxDC & dc, const wxRect & r, int GlyphLeft, int GlyphRight) const;
+   void DrawText( wxDC & dc, const wxRect & r) const;
+   void DrawTextBox( wxDC & dc, const wxRect & r) const;
    void DrawHighlight( wxDC & dc, int xPos1, int xPos2, int charHeight);
    void getXPos( wxDC & dc, int * xPos1, int cursorPos) const;
    const SelectedRegion &getSelectedRegion() const { return selectedRegion; }
@@ -81,7 +82,7 @@ public:
    /// and end of parent to be within a region that borders them (this makes
    /// it possible to DELETE capture all labels with a Select All).
    TimeRelations RegionRelation(double reg_t0, double reg_t1,
-                                const LabelTrack *parent = NULL);
+                                const LabelTrack *parent = NULL) const;
 
 public:
    SelectedRegion selectedRegion;
@@ -182,10 +183,8 @@ class AUDACITY_DLL_API LabelTrack final : public Track
 
    // methods to set flags
    void SetDragXPos(const int d) { mDragXPos = d; }
-   void SetInBox(bool inTextBox) { mInBox = inTextBox; }
    void SetResetCursorPos(bool resetFlag) { mResetCursorPos = resetFlag; }
    void SetWrongDragging(bool rightFlag) { mRightDragging = rightFlag; }
-   void SetDrawCursor(bool drawCursorFlag) { mDrawCursor = drawCursorFlag; }
 
    void HandleClick(const wxMouseEvent & evt, const wxRect & r, const ZoomInfo &zoomInfo,
       SelectedRegion *newSel);
@@ -198,7 +197,7 @@ class AUDACITY_DLL_API LabelTrack final : public Track
    bool OnChar(SelectedRegion &sel, wxKeyEvent & event);
 
    void Import(wxTextFile & f);
-   void Export(wxTextFile & f);
+   void Export(wxTextFile & f) const;
 
    void Unselect();
 
@@ -218,7 +217,6 @@ class AUDACITY_DLL_API LabelTrack final : public Track
 
    //get current cursor position
    bool CalcCursorX(wxWindow * parent, int * x);
-   int getCurrentCursorPosition() const { return mCurrentCursorPos; }
 
    void MayAdjustLabel( int iLabel, int iEdge, bool bAllowSwapping, double fNewTime);
    void MayMoveLabel( int iLabel, int iEdge, double fNewTime);
@@ -237,7 +235,7 @@ class AUDACITY_DLL_API LabelTrack final : public Track
    void WarpLabels(const TimeWarper &warper);
 
    // Returns tab-separated text of all labels completely within given region
-   wxString GetTextOfLabels(double t0, double t1);
+   wxString GetTextOfLabels(double t0, double t1) const;
 
  public:
    void SortLabels();
@@ -262,20 +260,20 @@ class AUDACITY_DLL_API LabelTrack final : public Track
    static bool mbGlyphsReady;
    static wxBitmap mBoundaryGlyphs[NUM_GLYPH_CONFIGS * NUM_GLYPH_HIGHLIGHTS];
 
-   mutable int xUsed[MAX_NUM_ROWS];
-
    static int mFontHeight;
    mutable int mXPos1;                         /// left X pos of highlighted area
    mutable int mXPos2;                         /// right X pos of highlighted area
    mutable int mCurrentCursorPos;              /// current cursor position
    mutable int mInitialCursorPos;              /// initial cursor position
    mutable double mMouseXPos;                  /// mouse X pos
-   int mDragXPos;                      /// end X pos of dragging
-   bool mInBox;                        /// flag to tell if the mouse is in text box
+   int mDragXPos;                              /// end X pos of dragging
+                                                  /// in text box
    mutable bool mResetCursorPos;               /// flag to reset cursor position(used in the dragging the glygh)
-   bool mRightDragging;                /// flag to tell if it's a valid dragging
+
+   bool mRightDragging;                        /// flag to tell if it's a valid dragging
    mutable bool mDrawCursor;                   /// flag to tell if drawing the cursor or not
-   int mRestoreFocus;              /// Restore focus to this track when done editing
+   int mRestoreFocus;                          /// Restore focus to this track
+                                                  /// when done editing
 
    // Set in copied label tracks
    double mClipLen;

@@ -6317,7 +6317,6 @@ bool TrackPanel::HandleLabelTrackClick(LabelTrack * lTrack, wxRect &rect, wxMous
       if (event.ShiftDown() && event.ButtonDown()) {
          // if the mouse is clicked in text box, set flags
          if (lTrack->OverTextBox(lTrack->GetLabel(lTrack->getSelectedIndex()), event.m_x, event.m_y)) {
-            lTrack->SetInBox(true);
             lTrack->SetDragXPos(event.m_x);
             lTrack->SetResetCursorPos(true);
             RefreshTrack(lTrack);

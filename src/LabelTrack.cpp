@@ -463,6 +463,8 @@ void LabelTrack::ComputeTextPosition(const wxRect & r, int index) const
 /// Function assumes that the labels are sorted.
 void LabelTrack::ComputeLayout(const wxRect & r, const ZoomInfo &zoomInfo) const
 {
+   int xUsed[MAX_NUM_ROWS];
+
    int i;
    int iRow;
    // Rows are the 'same' height as icons or as the text,
@@ -564,7 +566,7 @@ LabelStruct::LabelStruct(const SelectedRegion &region,
 /// of the start or end of a label.
 ///   @param  dc the device context
 ///   @param  r  the LabelTrack rectangle.
-void LabelStruct::DrawLines(wxDC & dc, const wxRect & r)
+void LabelStruct::DrawLines(wxDC & dc, const wxRect & r) const
 {
    // How far out from the centre line should the vertical lines
    // start, i.e. what is the y position of the icon?
@@ -601,7 +603,8 @@ void LabelStruct::DrawLines(wxDC & dc, const wxRect & r)
 /// DrawGlyphs draws the wxIcons at the start and end of a label.
 ///   @param  dc the device context
 ///   @param  r  the LabelTrack rectangle.
-void LabelStruct::DrawGlyphs(wxDC & dc, const wxRect & r, int GlyphLeft, int GlyphRight)
+void LabelStruct::DrawGlyphs
+   (wxDC & dc, const wxRect & r, int GlyphLeft, int GlyphRight) const
 {
    const int xHalfWidth=LabelTrack::mIconWidth/2;
    const int yStart=y-LabelTrack::mIconHeight/2+(LabelTrack::mTextHeight+3)/2;
@@ -624,7 +627,7 @@ void LabelStruct::DrawGlyphs(wxDC & dc, const wxRect & r, int GlyphLeft, int Gly
 /// behind the text itself.
 ///   @param  dc the device context
 ///   @param  r  the LabelTrack rectangle.
-void LabelStruct::DrawText(wxDC & dc, const wxRect & r)
+void LabelStruct::DrawText(wxDC & dc, const wxRect & r) const
 {
    //If y is positive then it is the center line for the
    //text we are about to draw.
@@ -649,7 +652,7 @@ void LabelStruct::DrawText(wxDC & dc, const wxRect & r)
 
 }
 
-void LabelStruct::DrawTextBox(wxDC & dc, const wxRect & r)
+void LabelStruct::DrawTextBox(wxDC & dc, const wxRect & r) const
 {
    //If y is positive then it is the center line for the
    //text we are about to draw.
@@ -994,7 +997,8 @@ bool LabelTrack::CutSelectedText()
 
    // copy data onto clipboard
    if (wxTheClipboard->Open()) {
-      wxTheClipboard->SetData(new wxTextDataObject(data));
+      // Clipboard owns the data you give it
+      wxTheClipboard->SetData(safenew wxTextDataObject(data));
       wxTheClipboard->Close();
    }
 
@@ -1026,7 +1030,8 @@ bool LabelTrack::CopySelectedText()
 
    // copy the data on clipboard
    if (wxTheClipboard->Open()) {
-      wxTheClipboard->SetData(new wxTextDataObject(data));
+      // Clipboard owns the data you give it
+      wxTheClipboard->SetData(safenew wxTextDataObject(data));
       wxTheClipboard->Close();
    }
 
@@ -1200,7 +1205,6 @@ int LabelTrack::OverGlyph(int x, int y)
             }
          }
          result |= 2;
-         mInBox = false;     // to disable the dragging for selecting the text in text box
       }
       // Use else-if here rather than else to avoid detecting left and right
       // of the same label.
@@ -1211,7 +1215,6 @@ int LabelTrack::OverGlyph(int x, int y)
          if(abs(pLabel->x - x) < d2 )
             mbHitCenter = true;
          result |= 1;
-         mInBox = false;     // to disable the dragging for selecting the text in text box
       }
 
       // give text box better priority for selecting
@@ -1273,8 +1276,9 @@ void LabelStruct::MoveLabel( int iEdge, double fNewTime)
    updated = true;
 }
 
-LabelStruct::TimeRelations LabelStruct::RegionRelation(
-      double reg_t0, double reg_t1, const LabelTrack * WXUNUSED(parent))
+auto LabelStruct::RegionRelation(
+      double reg_t0, double reg_t1, const LabelTrack * WXUNUSED(parent)) const
+-> TimeRelations
 {
    bool retainLabels = false;
 
@@ -1515,8 +1519,6 @@ void LabelTrack::HandleClick(const wxMouseEvent & evt,
 
       // reset mouseXPos if the mouse is pressed in the text box
       mMouseXPos = -1;
-      mInBox = false;
-      bool changeCursor = true;
 
       if (mIsAdjustingLabel)
       {
@@ -1567,10 +1569,7 @@ void LabelTrack::HandleClick(const wxMouseEvent & evt,
       if (mSelIndex != -1) {
          *newSel = mLabels[mSelIndex]->selectedRegion;
          // set mouseXPos to set current cursor position
-         if (changeCursor)
-            mMouseXPos = evt.m_x;
-         // set mInBox flag
-         mInBox = true;
+         mMouseXPos = evt.m_x;
       }
 
       // reset the highlight indicator
@@ -1601,19 +1600,9 @@ void LabelTrack::HandleClick(const wxMouseEvent & evt,
       }
 
       // disable displaying if right button is down outside text box
-      if (mSelIndex != -1)
-      {
-         if (evt.RightDown())
-         {
-            if (!highlightedRect.Contains(evt.m_x, evt.m_y))
-            {
-               mDragXPos = -1;
-            }
-            else
-               // if it's in text box, don't need to reset the current cursor position
-               changeCursor = false;
-         }
-      }
+      if (mSelIndex != -1 && evt.RightDown()
+          && !highlightedRect.Contains(evt.m_x, evt.m_y))
+         mDragXPos = -1;
 
       // Middle click on GTK: paste from primary selection
 #if defined(__WXGTK__) && (HAVE_GTK)
@@ -2153,7 +2142,7 @@ bool LabelTrack::IsSelected() const
 }
 
 /// Export labels including label start and end-times.
-void LabelTrack::Export(wxTextFile & f)
+void LabelTrack::Export(wxTextFile & f) const
 {
    // PRL: to do: export other selection fields
    for (int i = 0; i < (int)mLabels.Count(); i++) {
@@ -2532,7 +2521,8 @@ bool LabelTrack::Paste(double t, const Track *src)
 bool LabelTrack::Repeat(double t0, double t1, int n)
 {
    // Sanity-check the arguments
-   if (n < 0 || t1 < t0) return false;
+   if (n < 0 || t1 < t0)
+      return false;
 
    double tLen = t1 - t0;
 
@@ -2921,7 +2911,7 @@ void LabelTrack::SortLabels()
    }
 }
 
-wxString LabelTrack::GetTextOfLabels(double t0, double t1)
+wxString LabelTrack::GetTextOfLabels(double t0, double t1) const
 {
    bool firstLabel = true;
    wxString retVal;
