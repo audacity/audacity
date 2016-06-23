@@ -6318,7 +6318,11 @@ bool TrackPanel::HandleLabelTrackClick(LabelTrack * lTrack, wxRect &rect, wxMous
          // if the mouse is clicked in text box, set flags
          if (lTrack->OverTextBox(lTrack->GetLabel(lTrack->getSelectedIndex()), event.m_x, event.m_y)) {
             lTrack->SetDragXPos(event.m_x);
-            lTrack->SetResetCursorPos(true);
+
+            // for preventing dragging glygh from changing current cursor position
+            // set end dragging position to current cursor position
+            lTrack->SetCurrentCursorPosition(event.m_x);
+
             RefreshTrack(lTrack);
             return true;
          }

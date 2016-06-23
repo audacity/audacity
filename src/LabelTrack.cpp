@@ -276,13 +276,11 @@ void LabelTrack::WarpLabels(const TimeWarper &warper) {
 
 void LabelTrack::ResetFlags()
 {
-   mMouseXPos = -1;
    mXPos1 = -1;
    mXPos2 = -1;
    mDragXPos = -1;
    mInitialCursorPos = 1;
    mCurrentCursorPos = 1;
-   mResetCursorPos = false;
    mRightDragging = false;
    mDrawCursor = false;
 }
@@ -826,12 +824,6 @@ void LabelTrack::Draw(wxDC & dc, const wxRect & r,
    {
       // find the left X pos of highlighted area
       mLabels[mSelIndex]->getXPos(dc, &mXPos1, mInitialCursorPos);
-      // for preventing dragging glygh from changing current cursor position
-      if (mResetCursorPos) {
-         // set end dragging position to current cursor position
-         SetCurrentCursorPosition(mDragXPos);
-         mResetCursorPos = false;
-      }
       // find the right X pos of highlighted area
       mLabels[mSelIndex]->getXPos(dc, &mXPos2, mCurrentCursorPos);
       mLabels[mSelIndex]->DrawHighlight(dc, mXPos1, mXPos2, mFontHeight);
@@ -850,19 +842,6 @@ void LabelTrack::Draw(wxDC & dc, const wxRect & r,
    {
       i = mSelIndex;
       int xPos = mLabels[i]->xText;
-
-      // if mouse is clicked in text box
-      if (mMouseXPos != -1)
-      {
-         // set current cursor position
-         SetCurrentCursorPosition((int) mMouseXPos);
-         // for preventing from resetting by shift+mouse left button
-         // set initialCursorPos equal to currentCursorPos
-         if (mLabels[mSelIndex]->changeInitialMouseXPos)
-            mInitialCursorPos = mCurrentCursorPos;
-         mDrawCursor = true;
-         mMouseXPos = -1;
-      }
 
       if( mCurrentCursorPos > 0)
       {
@@ -888,7 +867,7 @@ void LabelTrack::Draw(wxDC & dc, const wxRect & r,
 /// Set the cursor position according to x position of mouse
 /// uses GetTextExtent to find the character position
 /// corresponding to the x pixel position.
-void LabelTrack::SetCurrentCursorPosition(int xPos) const
+void LabelTrack::SetCurrentCursorPosition(int xPos)
 {
    wxMemoryDC dc;
    if(msFont.Ok())
@@ -1489,7 +1468,10 @@ void LabelTrack::HandleTextDragRelease(const wxMouseEvent & evt)
       // end dragging x position in pixels
       // set flag to update current cursor position
       mDragXPos = evt.m_x;
-      mResetCursorPos = true;
+
+      // for preventing dragging glygh from changing current cursor position
+      // set end dragging position to current cursor position
+      SetCurrentCursorPosition(mDragXPos);
 
       // if it's an invalid dragging, disable displaying
       if (mRightDragging) {
@@ -1520,9 +1502,6 @@ void LabelTrack::HandleClick(const wxMouseEvent & evt,
       int iGlyph = OverGlyph(evt.m_x, evt.m_y);
       mIsAdjustingLabel = evt.Button(wxMOUSE_BTN_LEFT) &&
          iGlyph != 0;
-
-      // reset mouseXPos if the mouse is pressed in the text box
-      mMouseXPos = -1;
 
       if (mIsAdjustingLabel)
       {
@@ -1572,8 +1551,13 @@ void LabelTrack::HandleClick(const wxMouseEvent & evt,
       mSelIndex = OverATextBox(evt.m_x, evt.m_y);
       if (mSelIndex != -1) {
          *newSel = mLabels[mSelIndex]->selectedRegion;
-         // set mouseXPos to set current cursor position
-         mMouseXPos = evt.m_x;
+         SetCurrentCursorPosition(evt.m_x);
+
+         // for preventing from resetting by shift+mouse left button
+         // set initialCursorPos equal to currentCursorPos
+         if (mLabels[mSelIndex]->changeInitialMouseXPos)
+            mInitialCursorPos = mCurrentCursorPos;
+         mDrawCursor = true;
       }
 
       // reset the highlight indicator
@@ -2031,6 +2015,7 @@ void LabelTrack::ShowContextMenu()
       menu.Enable(OnDeleteSelectedLabelID, true);
       menu.Enable(OnEditSelectedLabelID, true);
 
+      wxASSERT(mSelIndex >= 0);
       const LabelStruct *ls = GetLabel(mSelIndex);
 
       wxClientDC dc(parent);
@@ -2040,16 +2025,9 @@ void LabelTrack::ShowContextMenu()
          dc.SetFont(msFont);
       }
 
-      int x;
-      if (mMouseXPos != -1)
-      {
-         x = mMouseXPos;
-      }
-      else
-      {
-         dc.GetTextExtent(ls->title.Left(mCurrentCursorPos), &x, NULL);
-         x += ls->xText;
-      }
+      int x = 0;
+      bool success = CalcCursorX(&x);
+      wxASSERT(success);
 
       parent->PopupMenu(&menu, x, ls->y + (mIconHeight / 2) - 1);
    }

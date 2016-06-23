@@ -183,7 +183,6 @@ class AUDACITY_DLL_API LabelTrack final : public Track
 
    // methods to set flags
    void SetDragXPos(const int d) { mDragXPos = d; }
-   void SetResetCursorPos(bool resetFlag) { mResetCursorPos = resetFlag; }
    void SetWrongDragging(bool rightFlag) { mRightDragging = rightFlag; }
 
    void HandleClick(const wxMouseEvent & evt, const wxRect & r, const ZoomInfo &zoomInfo,
@@ -264,15 +263,14 @@ class AUDACITY_DLL_API LabelTrack final : public Track
    static int mFontHeight;
    mutable int mXPos1;                         /// left X pos of highlighted area
    mutable int mXPos2;                         /// right X pos of highlighted area
-   mutable int mCurrentCursorPos;              /// current cursor position
-   mutable int mInitialCursorPos;              /// initial cursor position
-   mutable double mMouseXPos;                  /// mouse X pos
+   int mCurrentCursorPos;                      /// current cursor position
+   int mInitialCursorPos;                      /// initial cursor position
    int mDragXPos;                              /// end X pos of dragging
                                                   /// in text box
-   mutable bool mResetCursorPos;               /// flag to reset cursor position(used in the dragging the glygh)
 
    bool mRightDragging;                        /// flag to tell if it's a valid dragging
-   mutable bool mDrawCursor;                   /// flag to tell if drawing the cursor or not
+   bool mDrawCursor;                           /// flag to tell if drawing the
+                                                  /// cursor or not
    int mRestoreFocus;                          /// Restore focus to this track
                                                   /// when done editing
 
@@ -281,8 +279,11 @@ class AUDACITY_DLL_API LabelTrack final : public Track
 
    void ComputeLayout(const wxRect & r, const ZoomInfo &zoomInfo) const;
    void ComputeTextPosition(const wxRect & r, int index) const;
-   void SetCurrentCursorPosition(int xPos) const;
 
+public:
+   void SetCurrentCursorPosition(int xPos);
+
+private:
    void calculateFontHeight(wxDC & dc) const;
    void RemoveSelectedText();
 
