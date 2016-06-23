@@ -56,9 +56,6 @@ class AButton final : public wxWindow {
 
    virtual ~ AButton();
 
-   bool AcceptsFocus() const override { return false; }
-   bool AcceptsFocusFromKeyboard() const override { return true; }
-
    // Associate a set of four images (button up, highlight, button down,
    // disabled) with one nondefault state of the button
    void SetAlternateImages(unsigned idx,
