@@ -317,11 +317,13 @@ Meter::Meter(AudacityProject *project,
    {
       if(mIsInput)
       {
-         mIcon = new wxBitmap(MicMenuNarrow_xpm);
+         //mIcon = new wxBitmap(MicMenuNarrow_xpm);
+         mIcon = new wxBitmap(theTheme.Bitmap(bmpMic));
       }
       else
       {
-         mIcon = new wxBitmap(SpeakerMenuNarrow_xpm);
+         //mIcon = new wxBitmap(SpeakerMenuNarrow_xpm);
+         mIcon = new wxBitmap(theTheme.Bitmap(bmpSpeaker));
       }
    }
 
