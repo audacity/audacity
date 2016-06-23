@@ -229,7 +229,6 @@ class LWSlider
 
    TipPanel *mTipPanel;
    wxString mTipTemplate;
-   wxTimer mTimer;
 
    Ruler* mpRuler;
 
@@ -264,6 +263,8 @@ class ASlider /* not final */ : public wxPanel
             float stepValue = STEP_CONTINUOUS,
             int orientation = wxHORIZONTAL);
    virtual ~ASlider();
+
+   bool AcceptsFocus() const override { return false; }
 
    void GetScroll(float & line, float & page);
    void SetScroll(float line, float page);

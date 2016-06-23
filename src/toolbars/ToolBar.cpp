@@ -78,7 +78,6 @@ private:
    void OnLeftDown(wxMouseEvent & event);
    void OnLeftUp(wxMouseEvent & event);
    void OnEnter(wxMouseEvent & event);
-   void OnLeave(wxMouseEvent & event);
    void OnMotion(wxMouseEvent & event);
    void ResizeBar(const wxSize &size);
    void OnCaptureLost(wxMouseCaptureLostEvent & event);
@@ -100,6 +99,7 @@ BEGIN_EVENT_TABLE( ToolBarResizer, wxWindow )
    EVT_PAINT( ToolBarResizer::OnPaint )
    EVT_LEFT_DOWN( ToolBarResizer::OnLeftDown )
    EVT_LEFT_UP( ToolBarResizer::OnLeftUp )
+   EVT_ENTER_WINDOW( ToolBarResizer::OnEnter )
    EVT_MOTION( ToolBarResizer::OnMotion )
    EVT_MOUSE_CAPTURE_LOST( ToolBarResizer::OnCaptureLost )
    EVT_KEY_DOWN( ToolBarResizer::OnKeyDown )
@@ -176,6 +176,15 @@ void ToolBarResizer::OnLeftUp( wxMouseEvent & event )
    {
       ReleaseMouse();
    }
+}
+
+void ToolBarResizer::OnEnter( wxMouseEvent & event )
+{
+   // Bug 1201:  On Mac, unsetting and re-setting the tooltip may be needed
+   // to make it pop up when we want it.
+   const auto text = GetToolTipText();
+   UnsetToolTip();
+   SetToolTip(text);
 }
 
 void ToolBarResizer::OnMotion( wxMouseEvent & event )

@@ -383,8 +383,14 @@ void AButton::OnMouseEvent(wxMouseEvent & event)
    wxSize clientSize = GetClientSize();
    AButtonState prevState = GetState();
 
-   if (event.Entering())
+   if (event.Entering()) {
+      // Bug 1201:  On Mac, unsetting and re-setting the tooltip may be needed
+      // to make it pop up when we want it.
+      auto text = GetToolTipText();
+      UnsetToolTip();
+      SetToolTip(text);
       mCursorIsInWindow = true;
+   }
    else if (event.Leaving())
       mCursorIsInWindow = false;
    else

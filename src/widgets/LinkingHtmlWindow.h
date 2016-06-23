@@ -36,9 +36,11 @@ class AUDACITY_DLL_API LinkingHtmlWindow final : public HtmlWindow
 
 };
 
-class BrowserFrame /* not final */ : public wxFrame
+class BrowserDialog /* not final */ : public wxDialog
 {
 public:
+   enum { ID = 0 };
+   BrowserDialog(wxWindow *pParent, const wxString &title);
 
    void OnForward(wxCommandEvent & event);
    void OnBackward(wxCommandEvent & event);

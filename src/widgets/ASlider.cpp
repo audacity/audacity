@@ -82,7 +82,7 @@ const int sliderFontSize = 12;
 // TipPanel
 //
 
-class TipPanel final : public wxPopupWindow
+class TipPanel final : public wxFrame
 {
  public:
    TipPanel(wxWindow *parent, const wxString & label);
@@ -107,7 +107,7 @@ private:
    DECLARE_EVENT_TABLE()
 };
 
-BEGIN_EVENT_TABLE(TipPanel, wxPopupWindow)
+BEGIN_EVENT_TABLE(TipPanel, wxFrame)
    EVT_PAINT(TipPanel::OnPaint)
 #if defined(__WXGTK__)
    EVT_WINDOW_CREATE(TipPanel::OnCreate)
@@ -115,7 +115,8 @@ BEGIN_EVENT_TABLE(TipPanel, wxPopupWindow)
 END_EVENT_TABLE()
 
 TipPanel::TipPanel(wxWindow *parent, const wxString & maxLabel)
-:  wxPopupWindow(parent, wxFRAME_SHAPED)
+:  wxFrame(parent, wxID_ANY, wxString{}, wxDefaultPosition, wxDefaultSize,
+           wxFRAME_SHAPED | wxFRAME_FLOAT_ON_PARENT)
 {
    SetBackgroundStyle(wxBG_STYLE_PAINT);
 
@@ -940,7 +941,7 @@ void LWSlider::ShowTip(bool show)
       CreatePopWin();
       FormatPopWin();
       SetPopWinPosition();
-      mTipPanel->Show();
+      mTipPanel->ShowWithoutActivating();
    }
    else
    {

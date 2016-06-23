@@ -4828,19 +4828,22 @@ void TrackPanel::OnTrackListUpdated(wxCommandEvent & e)
       SetFocusedTrack(NULL);
    }
 
-   if (!mTracks->Contains(mCapturedTrack)) {
+   if (mCapturedTrack &&
+       !mTracks->Contains(mCapturedTrack)) {
       SetCapturedTrack(nullptr);
       if (HasCapture())
          ReleaseMouse();
    }
 
-   if (!mTracks->Contains(mFreqSelTrack)) {
+   if (mFreqSelTrack &&
+       !mTracks->Contains(mFreqSelTrack)) {
       mFreqSelTrack = nullptr;
       if (HasCapture())
          ReleaseMouse();
    }
 
-   if (!mTracks->Contains(mPopupMenuTarget)) {
+   if (mPopupMenuTarget &&
+       !mTracks->Contains(mPopupMenuTarget)) {
       mPopupMenuTarget = nullptr;
       if (HasCapture())
          ReleaseMouse();
@@ -6303,6 +6306,10 @@ void TrackPanel::HandleGlyphDragRelease(LabelTrack * lTrack, wxMouseEvent & even
          _("Label Edit"),
          UndoPush::CONSOLIDATE);
    }
+
+   // Update cursor on the screen if it is a point.
+   DrawOverlays(false);
+   mRuler->DrawOverlays(false);
 
    //If we are adjusting a label on a labeltrack, do not do anything
    //that follows. Instead, redraw the track.

@@ -56,11 +56,13 @@ class AboutDialog final : public wxDialog {
    AboutDialog(wxWindow * parent);
    virtual ~ AboutDialog();
 
+   static AboutDialog *ActiveIntance();
+
    void OnOK(wxCommandEvent & event);
 
    wxStaticBitmap *icon;
 
-    DECLARE_EVENT_TABLE()
+   DECLARE_EVENT_TABLE()
 
  private:
    enum Role {

@@ -125,9 +125,6 @@ private:
    // List of file actually exported
    wxArrayString mExported;
 
-   /** Array of characters not allowed to be in file names on this platform */
-   wxArrayString exclude;
-
    wxChoice      *mFormat;    /**< Drop-down list of export formats
                                 (combinations of plug-in and subformat) */
    wxButton      *mOptions;

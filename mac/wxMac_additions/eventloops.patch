@@ -1,0 +1,16 @@
+diff --git a/src/osx/core/evtloop_cf.cpp b/src/osx/core/evtloop_cf.cpp
+index 7e70dec..37b22b5 100644
+--- a/src/osx/core/evtloop_cf.cpp
++++ b/src/osx/core/evtloop_cf.cpp
+@@ -243,7 +243,7 @@ int wxCFEventLoop::DoProcessEvents()
+     }
+     else
+ #endif
+-        return DispatchTimeout( m_isInsideYield ? 0 : 1000 );
++        return DispatchTimeout( 0 );
+ }
+ 
+ bool wxCFEventLoop::Dispatch()
+-- 
+2.3.2 (Apple Git-55)
+

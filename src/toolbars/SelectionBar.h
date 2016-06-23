@@ -49,7 +49,7 @@ class SelectionBar final : public ToolBar {
    void SetSelectionFormat(const wxString & format);
    void SetRate(double rate);
    void SetListener(SelectionBarListener *l);
-   void RegenerateTooltips() override {};
+   void RegenerateTooltips() override;
 
  private:
 

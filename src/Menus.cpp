@@ -2878,6 +2878,16 @@ void AudacityProject::NextWindow()
    // And make sure it's on top (only for floating windows...project window will not raise)
    // (Really only works on Windows)
    w->Raise();
+
+#ifdef __WXMAC__
+   // bug 868
+   // Simulate a TAB key press before continuing, else the cycle of
+   // navigation among top level windows stops because the keystrokes don't
+   // go to the CommandManager.
+   if (dynamic_cast<wxDialog*>(w)) {
+      w->NavigateIn();
+   }
+#endif
 }
 
 void AudacityProject::PrevWindow()
@@ -2903,7 +2913,7 @@ void AudacityProject::PrevWindow()
    {
       // If it's a toplevel and is visible (we have come hidden windows), then we're done
       w = iter->GetData();
-      if (w->IsTopLevel() && w->IsShown())
+      if (w->IsTopLevel() && w->IsShown() && IsEnabled())
       {
          break;
       }
@@ -2927,6 +2937,16 @@ void AudacityProject::PrevWindow()
    // And make sure it's on top (only for floating windows...project window will not raise)
    // (Really only works on Windows)
    w->Raise();
+
+#ifdef __WXMAC__
+   // bug 868
+   // Simulate a TAB key press before continuing, else the cycle of
+   // navigation among top level windows stops because the keystrokes don't
+   // go to the CommandManager.
+   if (dynamic_cast<wxDialog*>(w)) {
+      w->NavigateIn();
+   }
+#endif
 }
 
 //The following methods operate controls on specified tracks,
@@ -5366,26 +5386,10 @@ void AudacityProject::OnContrast()
    if(!mContrastDialog)
    {
       wxPoint where;
-
       where.x = 150;
       where.y = 150;
 
       mContrastDialog = new ContrastDialog(this, -1, _("Contrast Analysis (WCAG 2 compliance)"), where);
-
-      mContrastDialog->bFGset = false;
-      mContrastDialog->bBGset = false;
-   }
-
-   // Zero dialog boxes.  Do we need to do this here?
-   if( !mContrastDialog->bFGset )
-   {
-      mContrastDialog->mForegroundStartT->SetValue(0.0);
-      mContrastDialog->mForegroundEndT->SetValue(0.0);
-   }
-   if( !mContrastDialog->bBGset )
-   {
-      mContrastDialog->mBackgroundStartT->SetValue(0.0);
-      mContrastDialog->mBackgroundEndT->SetValue(0.0);
    }
 
    mContrastDialog->CentreOnParent();
@@ -6395,11 +6399,7 @@ void AudacityProject::OnTimerRecord()
 
    TimerRecordDialog dialog(this, bProjectSaved); /* parent, project saved? */
    int modalResult = dialog.ShowModal();
-   if (modalResult == wxID_CONTEXT_HELP)
-   {
-      HelpSystem::ShowHelpDialog(this, wxT("Timer_Record"));
-   }
-   else if (modalResult == wxID_CANCEL)
+   if (modalResult == wxID_CANCEL)
    {
       // Cancelled before recording - don't need to do anyting.
    }
@@ -6628,8 +6628,15 @@ void AudacityProject::OnRemoveTracks()
 
 void AudacityProject::OnAbout()
 {
+#ifdef __WXMAC__
    // Modeless dialog, consistent with other Mac applications
-   (safenew AboutDialog{ nullptr })->Show(true);
+   wxCommandEvent dummy;
+   wxGetApp().OnMenuAbout(dummy);
+#else
+   // Windows and Linux still modal.
+   AboutDialog dlog(this);
+   dlog.ShowModal();
+#endif
 }
 
 void AudacityProject::OnHelpWelcome()

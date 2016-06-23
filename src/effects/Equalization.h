@@ -369,6 +369,8 @@ private:
    void OnLibrary( wxCommandEvent &event );
    void OnDefaults( wxCommandEvent &event );
    void OnOK(wxCommandEvent &event);
+
+   void OnListSelectionChange( wxListEvent &event );
    DECLARE_EVENT_TABLE()
 };
 

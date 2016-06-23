@@ -996,15 +996,24 @@ void Ruler::Update(const TimeTrack* timetrack)// Envelope *speedEnv, long minSpe
       wxString exampleText = wxT("0.9");   //ignored for height calcs on all platforms
       int desiredPixelHeight;
 
+
+      static const int MinPixelHeight = 10; // 8;
+      static const int MaxPixelHeight =
+#ifdef __WXMAC__
+            10
+#else
+            12
+#endif
+      ;
+
       if (mOrientation == wxHORIZONTAL)
          desiredPixelHeight = mBottom - mTop - 5; // height less ticks and 1px gap
       else
-         desiredPixelHeight = 12;   // why 12?  10 -> 12 seems to be max/min
+         desiredPixelHeight = MaxPixelHeight;
 
-      if (desiredPixelHeight < 10)//8)
-         desiredPixelHeight = 10;//8;
-      if (desiredPixelHeight > 12)
-         desiredPixelHeight = 12;
+      desiredPixelHeight =
+         std::max(MinPixelHeight, std::min(MaxPixelHeight,
+            desiredPixelHeight));
 
       // Keep making the font bigger until it's too big, then subtract one.
       mDC->SetFont(wxFont(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD));
@@ -2401,9 +2410,6 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
             // Done here, it's too frequent.
             // ShowQuickPlayIndicator();
 
-            if (HasCapture())
-               ReleaseMouse();
-            
             return;
          }
       }

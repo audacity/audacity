@@ -170,7 +170,11 @@ void ScreenshotCommand::Capture(const wxString &filename,
 
    int screenW, screenH;
    wxDisplaySize(&screenW, &screenH);
-   wxBitmap full(screenW, screenH);
+   // Bug 1378 workaround.
+   // wx 3.0.2 has a bug in Blit from ScreenDC where in default mode 
+   // much is drawn transparent - including for example black text!
+   // Forcing 24 bit here is a workaround.
+   wxBitmap full(screenW, screenH, 24);
 
    wxScreenDC screenDC;
    wxMemoryDC fullDC;
