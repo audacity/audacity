@@ -1572,6 +1572,7 @@ void LabelTrack::HandleClick(const wxMouseEvent & evt,
       // reset the highlight indicator
       wxRect highlightedRect;
       if (mSelIndex != -1) {
+         wxASSERT(mFontHeight >= 0); // should have been set up while drawing
          // the rectangle of highlighted area
          if (mXPos1 < mXPos2)
             highlightedRect = wxRect(mXPos1, mLabels[mSelIndex]->y - mFontHeight / 2, (int)(mXPos2 - mXPos1 + 0.5), mFontHeight);
