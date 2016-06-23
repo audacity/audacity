@@ -202,7 +202,7 @@
 
 // Paul Licameli (PRL) 10 May 2016
 // Time ruler accepts focus, buttons can be reached with TAB
-#define EXPERIMENTAL_TIME_RULER_NAVIGATION
+//#define EXPERIMENTAL_TIME_RULER_NAVIGATION
 
 
 #endif
