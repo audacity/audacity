@@ -5887,7 +5887,7 @@ void TrackPanel::OnKeyDown(wxKeyEvent & event)
 
    // Make sure caret is in view
    int x;
-   if (lt->CalcCursorX(this, &x)) {
+   if (lt->CalcCursorX(&x)) {
       ScrollIntoView(x);
    }
 

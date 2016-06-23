@@ -729,10 +729,10 @@ void LabelStruct::getXPos( wxDC & dc, int * xPos1, int cursorPos) const
    }
 }
 
-bool LabelTrack::CalcCursorX(wxWindow * parent, int * x)
+bool LabelTrack::CalcCursorX(int * x) const
 {
    if (mSelIndex >= 0) {
-      wxClientDC dc(parent);
+      wxMemoryDC dc;
 
       if (msFont.Ok()) {
          dc.SetFont(msFont);
@@ -829,7 +829,7 @@ void LabelTrack::Draw(wxDC & dc, const wxRect & r,
       // for preventing dragging glygh from changing current cursor position
       if (mResetCursorPos) {
          // set end dragging position to current cursor position
-         SetCurrentCursorPosition(dc, mDragXPos);
+         SetCurrentCursorPosition(mDragXPos);
          mResetCursorPos = false;
       }
       // find the right X pos of highlighted area
@@ -855,7 +855,7 @@ void LabelTrack::Draw(wxDC & dc, const wxRect & r,
       if (mMouseXPos != -1)
       {
          // set current cursor position
-         SetCurrentCursorPosition(dc, (int) mMouseXPos);
+         SetCurrentCursorPosition((int) mMouseXPos);
          // for preventing from resetting by shift+mouse left button
          // set initialCursorPos equal to currentCursorPos
          if (mLabels[mSelIndex]->changeInitialMouseXPos)
@@ -888,8 +888,12 @@ void LabelTrack::Draw(wxDC & dc, const wxRect & r,
 /// Set the cursor position according to x position of mouse
 /// uses GetTextExtent to find the character position
 /// corresponding to the x pixel position.
-void LabelTrack::SetCurrentCursorPosition(wxDC & dc, int xPos) const
+void LabelTrack::SetCurrentCursorPosition(int xPos) const
 {
+   wxMemoryDC dc;
+   if(msFont.Ok())
+      dc.SetFont(msFont);
+
    // A bool indicator to see if set the cursor position or not
    bool finished = false;
    int charIndex = 1;

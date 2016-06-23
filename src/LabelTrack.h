@@ -215,8 +215,9 @@ class AUDACITY_DLL_API LabelTrack final : public Track
    //This deletes the label at given index.
    void DeleteLabel(int index);
 
-   //get current cursor position
-   bool CalcCursorX(wxWindow * parent, int * x);
+   //get current cursor position,
+   // relative to the left edge of the track panel
+   bool CalcCursorX(int * x) const;
 
    void MayAdjustLabel( int iLabel, int iEdge, bool bAllowSwapping, double fNewTime);
    void MayMoveLabel( int iLabel, int iEdge, double fNewTime);
@@ -280,7 +281,7 @@ class AUDACITY_DLL_API LabelTrack final : public Track
 
    void ComputeLayout(const wxRect & r, const ZoomInfo &zoomInfo) const;
    void ComputeTextPosition(const wxRect & r, int index) const;
-   void SetCurrentCursorPosition(wxDC & dc, int xPos) const;
+   void SetCurrentCursorPosition(int xPos) const;
 
    void calculateFontHeight(wxDC & dc) const;
    void RemoveSelectedText();

@@ -4322,7 +4322,7 @@ bool AudacityProject::HandlePasteText()
 
             // Make sure caret is in view
             int x;
-            if (pLabelTrack->CalcCursorX(this, &x)) {
+            if (pLabelTrack->CalcCursorX(&x)) {
                mTrackPanel->ScrollIntoView(x);
             }
 
