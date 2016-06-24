@@ -365,6 +365,8 @@ void AButton::OnSize(wxSizeEvent & WXUNUSED(event))
    Refresh(false);
 }
 
+bool AButton::s_AcceptsFocus{ false };
+
 bool AButton::HasAlternateImages(unsigned idx)
 {
    if (mImages.size() <= idx)

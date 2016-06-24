@@ -124,6 +124,9 @@ class AUDACITY_DLL_API LabelTrack final : public Track
    virtual ~ LabelTrack();
    void SetOffset(double dOffset) override;
 
+   static const int DefaultFontSize = 12;
+
+   static wxFont GetFont(const wxString &faceName, int size = DefaultFontSize);
    static void ResetFont();
 
    void Draw(wxDC & dc, const wxRect & r,

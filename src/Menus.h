@@ -413,6 +413,7 @@ void OnSeparator();
 
       // Keyboard navigation
 
+void NextOrPrevFrame(bool next);
 void PrevFrame();
 void NextFrame();
 

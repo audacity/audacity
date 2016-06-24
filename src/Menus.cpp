@@ -2771,62 +2771,72 @@ void AudacityProject::OnSetRightSelection()
    }
 }
 
+void AudacityProject::NextOrPrevFrame(bool forward)
+{
+   // Focus won't take in a dock unless at least one descendant window
+   // accepts focus.  Tell all AButtons to take focus for the duration of this
+   // function, only.  Outside of this, they won't steal the focus when
+   // clicked.
+   auto temp = AButton::TemporarilyAllowFocus();
+
+
+   // Define the set of windows we rotate among.
+   static const unsigned rotationSize = 3u
+#ifdef EXPERIMENTAL_TIME_RULER_NAVIGATION
+      + 1
+#endif
+   ;
+
+   wxWindow *const begin [rotationSize] = {
+      mToolManager->GetTopDock(),
+#ifdef EXPERIMENTAL_TIME_RULER_NAVIGATION
+      GetRulerPanel(),
+#endif
+      GetTrackPanel(),
+      mToolManager->GetBotDock(),
+   };
+   const auto end = begin + rotationSize;
+
+   // helper functions
+   auto IndexOf = [&](wxWindow *pWindow) {
+      return std::find(begin, end, pWindow) - begin;
+   };
+
+   auto FindAncestor = [&]() {
+      wxWindow *pWindow = wxWindow::FindFocus();
+      unsigned index = rotationSize;
+      while ( pWindow &&
+              (rotationSize == (index = IndexOf(pWindow) ) ) )
+         pWindow = pWindow->GetParent();
+      return index;
+   };
+
+   const auto idx = FindAncestor();
+   if (idx == rotationSize)
+      return;
+
+   auto idx2 = idx;
+   auto increment = (forward ? 1 : rotationSize - 1);
+
+   while( idx != (idx2 = (idx2 + increment) % rotationSize) ) {
+      wxWindow *toFocus = begin[idx2];
+      toFocus->SetFocus();
+      if ( FindAncestor() == idx2 )
+         // The focus took!
+         break;
+      // else, one of the tool docks might be empty because all bars were
+      // dragged off it.  Skip it and try another.
+   }
+}
+
 void AudacityProject::NextFrame()
 {
-   switch( GetFocusedFrame() )
-   {
-      case TopDockHasFocus:
-
-#ifdef EXPERIMENTAL_TIME_RULER_NAVIGATION
-         mRuler->SetFocus();
-      break;
-
-      case RulerHasFocus:
-#endif
-
-         mTrackPanel->SetFocus();
-      break;
-
-      case TrackPanelHasFocus:
-         mToolManager->GetBotDock()->SetFocus();
-      break;
-
-      case BotDockHasFocus:
-         mToolManager->GetTopDock()->SetFocus();
-      break;
-
-      default:
-      break;
-   }
+   NextOrPrevFrame(true);
 }
 
 void AudacityProject::PrevFrame()
 {
-   switch( GetFocusedFrame() )
-   {
-      case BotDockHasFocus:
-         mTrackPanel->SetFocus();
-      break;
-         
-      case TrackPanelHasFocus:
-
-#ifdef EXPERIMENTAL_TIME_RULER_NAVIGATION
-         mRuler->SetFocus();
-      break;
-
-      case RulerHasFocus:
-#endif
-
-         mToolManager->GetTopDock()->SetFocus();
-      break;
-         
-      case TopDockHasFocus:
-         mToolManager->GetBotDock()->SetFocus();
-      break;
-
-      default:
-      break;
-   }
+   NextOrPrevFrame(false);
 }
 
 void AudacityProject::NextWindow()
