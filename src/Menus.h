@@ -365,6 +365,7 @@ void OnRemoveTracks();
 void OnSyncLock();
 void OnAddLabel();
 void OnAddLabelPlaying();
+void DoEditLabels(LabelTrack *lt = nullptr, int index = -1);
 void OnEditLabels();
 
         // Effect Menu

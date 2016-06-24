@@ -6551,16 +6551,24 @@ void AudacityProject::OnAddLabelPlaying()
    }
 }
 
-void AudacityProject::OnEditLabels()
+void AudacityProject::DoEditLabels(LabelTrack *lt, int index)
 {
    wxString format = GetSelectionFormat();
 
-   LabelDialog dlg(this, *GetTrackFactory(), mTracks, mViewInfo, mRate, format);
+   LabelDialog dlg(this, *GetTrackFactory(), mTracks,
+                   lt, index,
+                   mViewInfo, mRate,
+                   format);
 
    if (dlg.ShowModal() == wxID_OK) {
       PushState(_("Edited labels"), _("Label"));
       RedrawProject();
    }
+}
+
+void AudacityProject::OnEditLabels()
+{
+   DoEditLabels();
 }
 
 void AudacityProject::OnApplyChain()

@@ -88,6 +88,8 @@ END_EVENT_TABLE()
 LabelDialog::LabelDialog(wxWindow *parent,
                          TrackFactory &factory,
                          TrackList *tracks,
+                         LabelTrack *selectedTrack,
+                         int index,
                          ViewInfo &viewinfo,
                          double rate,
                          const wxString & format)
@@ -98,8 +100,10 @@ LabelDialog::LabelDialog(wxWindow *parent,
            wxSize(800, 600),
            wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER),
   mFactory(factory),
-  mTracks(tracks),
-  mViewInfo(&viewinfo),
+  mTracks(tracks)
+  , mSelectedTrack(selectedTrack)
+  , mIndex(index)
+  , mViewInfo(&viewinfo),
   mRate(rate),
   mFormat(format)
 {
@@ -302,9 +306,10 @@ bool LabelDialog::TransferDataFromWindow()
    Track *t;
    int tndx = 0;
 
-   // Clear all label tracks of labels
+   // Clear label tracks of labels
    for (t = iter.First(); t; t = iter.Next()) {
-      if (t->GetKind() == Track::Label) {
+      if (t->GetKind() == Track::Label &&
+          (!mSelectedTrack || mSelectedTrack == t)) {
          LabelTrack *lt = (LabelTrack *)t;
          tndx++;
 
@@ -343,8 +348,8 @@ bool LabelDialog::TransferDataFromWindow()
          return false;
 
       // Add the label to it
-      ((LabelTrack *) t)->AddLabel(rd.selectedRegion, rd.title);
-      ((LabelTrack *) t)->Unselect();
+      static_cast<LabelTrack *>(t)->AddLabel(rd.selectedRegion, rd.title);
+      static_cast<LabelTrack *>(t)->Unselect();
    }
 
    return true;
@@ -380,9 +385,8 @@ void LabelDialog::FindAllLabels()
 
    // Add labels from all label tracks
    for (t = iter.First(); t; t = iter.Next()) {
-      if (t->GetKind() == Track::Label) {
-         AddLabels((LabelTrack *) t);
-      }
+      if (t->GetKind() == Track::Label)
+         AddLabels(static_cast<LabelTrack *>(t));
    }
 
    FindInitialRow();
@@ -402,11 +406,14 @@ void LabelDialog::AddLabels(LabelTrack *t)
    // Add a NEW track name
    TrackName(tndx, t->GetName());
 
-   // Add each label in the track
-   for (i = 0; i < t->GetNumLabels(); i++) {
-      const LabelStruct *ls = t->GetLabel(i);
+   // If editor was invoked for one label, add that one only, else add all.
+   if (!mSelectedTrack || mSelectedTrack == t) {
+      for (i = 0; i < t->GetNumLabels(); i++) {
+         const LabelStruct *ls = t->GetLabel(i);
 
-      mData.push_back(RowData(tndx, ls->title, ls->selectedRegion));
+         if (mIndex < 0 || mIndex == i)
+            mData.push_back(RowData(tndx, ls->title, ls->selectedRegion));
+      }
    }
 }
 
@@ -569,7 +576,7 @@ void LabelDialog::OnImport(wxCommandEvent & WXUNUSED(event))
          auto lt = mFactory.NewLabelTrack();
          lt->Import(f);
 
-         // Add the labesls to our collection
+         // Add the labels to our collection
          AddLabels(lt.get());
 
          // Done with the temporary track

@@ -37,6 +37,14 @@ class LabelDialog final : public wxDialog
    LabelDialog(wxWindow *parent,
                TrackFactory &factory,
                TrackList *tracks,
+
+               // if NULL edit all tracks, else this one only:
+               LabelTrack *selectedTrack,
+
+               // This is nonnegative only if selectedTrack is not NULL
+               // and is the unique label to edit
+               int index,
+
                ViewInfo &viewinfo,
                double rate,
                const wxString & format);
@@ -78,6 +86,8 @@ class LabelDialog final : public wxDialog
 
    TrackFactory &mFactory;
    TrackList *mTracks;
+   LabelTrack *mSelectedTrack {};
+   int mIndex { -1 };
    ViewInfo *mViewInfo;
    wxArrayString mTrackNames;
    double mRate;
