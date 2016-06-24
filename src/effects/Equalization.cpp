@@ -372,7 +372,7 @@ bool EffectEqualization::SetAutomationParameters(EffectAutomationParameters & pa
       InterpMeth -= kNumInterpolations;
    }
 
-   mEnvelope = (mLin ? mLinEnvelope : mLogEnvelope);
+   setCurve(CurveName);
 
    return true;
 }
