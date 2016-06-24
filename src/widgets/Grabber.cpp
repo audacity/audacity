@@ -106,19 +106,8 @@ void Grabber::DrawGrabber( wxDC & dc )
    dc.DrawRectangle(r);
 #else
    // Paint the background
-   if( mOver )
-   {
    AColor::Medium(&dc, mOver );
    dc.DrawRectangle(r);
-   }
-   else
-   {
-      // Get colour from parent...
-      // when parent colour changes, child colour might not!
-      wxBrush brush( GetParent()->GetBackgroundColour() );
-      dc.SetBrush( brush );
-      dc.DrawRectangle(r);
-   }
 #endif
 
 #ifndef __WXMAC__

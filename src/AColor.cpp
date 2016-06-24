@@ -402,11 +402,17 @@ void AColor::Init()
    if (inited)
       return;
 
-   wxColour light =
-       wxSystemSettings::GetColour(wxSYS_COLOUR_3DHIGHLIGHT);
-   wxColour med = wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE);
-   wxColour dark =
-       wxSystemSettings::GetColour(wxSYS_COLOUR_3DSHADOW);
+   wxColour light = theTheme.Colour( clrLight ); 
+   // wxSystemSettings::GetColour(wxSYS_COLOUR_3DHIGHLIGHT);
+   wxColour med = theTheme.Colour( clrMedium ); 
+   // wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE);
+   wxColour dark = theTheme.Colour( clrDark ); 
+   // wxSystemSettings::GetColour(wxSYS_COLOUR_3DSHADOW);
+
+   wxColour lightSelected = theTheme.Colour( clrLightSelected ); 
+   wxColour medSelected = theTheme.Colour( clrMediumSelected ); 
+   wxColour darkSelected = theTheme.Colour( clrDarkSelected ); 
+
 
    clippingPen.SetColour(0xCC, 0x11, 0x00);
 
@@ -466,12 +472,12 @@ void AColor::Init()
    darkPen[0].SetColour(dark);
 
    // selected
-   lightBrush[1].SetColour(204, 204, 255);
-   mediumBrush[1].SetColour(200, 200, 214);
-   darkBrush[1].SetColour(148, 148, 170);
-   lightPen[1].SetColour(204, 204, 255);
-   mediumPen[1].SetColour(200, 200, 214);
-   darkPen[1].SetColour(0, 0, 0);
+   lightBrush[1].SetColour(lightSelected);
+   mediumBrush[1].SetColour(medSelected);
+   darkBrush[1].SetColour(darkSelected);
+   lightPen[1].SetColour(lightSelected);
+   mediumPen[1].SetColour(medSelected);
+   darkPen[1].SetColour(darkSelected);
 
 #else
 
