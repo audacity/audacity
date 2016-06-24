@@ -460,17 +460,35 @@ void Tags::SetTag(const wxString & name, const wxString & value)
    // Look it up
    TagMap::iterator iter = mXref.find(key);
 
-   // Didn't find the tag
-   if (iter == mXref.end()) {
-
-      // Add a NEW tag
-      mXref[key] = name;
-      mMap[name] = value;
-      return;
+   if (value.IsEmpty()) {
+      // Erase the tag
+      if (iter == mXref.end())
+         // nothing to do
+         ;
+      else {
+         mMap.erase(iter->second);
+         mXref.erase(iter);
+      }
    }
+   else {
+      if (iter == mXref.end()) {
+         // Didn't find the tag
 
-   // Update the value
-   mMap[iter->second] = value;
+         // Add a NEW tag
+         mXref[key] = name;
+         mMap[name] = value;
+      }
+      else if (!iter->second.IsSameAs(name)) {
+         // Watch out for case differences!
+         mMap[name] = value;
+         mMap.erase(iter->second);
+         iter->second = name;
+      }
+      else {
+         // Update the value
+         mMap[iter->second] = value;
+      }
+   }
 }
 
 void Tags::SetTag(const wxString & name, const int & value)
