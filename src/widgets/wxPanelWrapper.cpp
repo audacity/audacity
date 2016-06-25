@@ -18,7 +18,7 @@ wxPanelWrapper::wxPanelWrapper(wxWindow * parent, wxWindowID id,
 : wxPanel(parent, id, pos, size, style)
 {}
 
-void wxPanelWrapper::OnCharHook(wxKeyEvent &event)
+void wxPanelWrapper::DoCharHook(wxKeyEvent &event)
 {
    if (event.GetKeyCode() == WXK_TAB) {
       wxWindow::FindFocus()->Navigate(
@@ -30,6 +30,11 @@ void wxPanelWrapper::OnCharHook(wxKeyEvent &event)
    }
 
    event.Skip();
+}
+
+void wxPanelWrapper::OnCharHook(wxKeyEvent &event)
+{
+   DoCharHook(event);
 }
 
 BEGIN_EVENT_TABLE(wxPanelWrapper, wxPanel)

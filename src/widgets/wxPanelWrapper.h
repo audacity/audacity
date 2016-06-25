@@ -21,6 +21,8 @@ public:
                 // default as for wxPanel:
                 long style = wxTAB_TRAVERSAL | wxNO_BORDER);
 
+   static void DoCharHook(wxKeyEvent &event);
+
 private:
    void OnCharHook(wxKeyEvent &event);
 
