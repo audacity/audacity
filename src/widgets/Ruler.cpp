@@ -1953,13 +1953,14 @@ BEGIN_EVENT_TABLE(AdornedRulerPanel, OverlayPanel)
 
 END_EVENT_TABLE()
 
-AdornedRulerPanel::AdornedRulerPanel(AudacityProject* parent,
+AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
+                                     wxWindow *parent,
                                      wxWindowID id,
                                      const wxPoint& pos,
                                      const wxSize& size,
                                      ViewInfo *viewinfo)
 :  OverlayPanel(parent, id, pos, size)
-, mProject(parent)
+, mProject(project)
 , mViewInfo(viewinfo)
 {
    for (auto &button : mButtons)
@@ -1991,7 +1992,7 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* parent,
    mRuler.SetLabelEdges( false );
    mRuler.SetFormat( Ruler::TimeFormat );
 
-   mTracks = parent->GetTracks();
+   mTracks = project->GetTracks();
 
    mSnapManager = NULL;
    mIsSnapped = false;

@@ -2770,7 +2770,7 @@ void AudacityProject::NextOrPrevFrame(bool forward)
    ;
 
    wxWindow *const begin [rotationSize] = {
-      mToolManager->GetTopDock(),
+      GetTopPanel(),
 #ifdef EXPERIMENTAL_TIME_RULER_NAVIGATION
       GetRulerPanel(),
 #endif
