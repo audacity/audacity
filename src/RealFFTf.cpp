@@ -191,9 +191,9 @@ void CleanupFFT()
 void RealFFTf(fft_type *buffer,HFFT h)
 {
    fft_type *A,*B;
-   fft_type *sptr;
-   fft_type *endptr1,*endptr2;
-   int *br1,*br2;
+   const fft_type *sptr;
+   const fft_type *endptr1,*endptr2;
+   const int *br1,*br2;
    fft_type HRplus,HRminus,HIplus,HIminus;
    fft_type v1,v2,sin,cos;
 
@@ -293,9 +293,9 @@ void RealFFTf(fft_type *buffer,HFFT h)
 void InverseRealFFTf(fft_type *buffer,HFFT h)
 {
    fft_type *A,*B;
-   fft_type *sptr;
-   fft_type *endptr1,*endptr2;
-   int *br1;
+   const fft_type *sptr;
+   const fft_type *endptr1,*endptr2;
+   const int *br1;
    fft_type HRplus,HRminus,HIplus,HIminus;
    fft_type v1,v2,sin,cos;
 
@@ -373,7 +373,8 @@ void InverseRealFFTf(fft_type *buffer,HFFT h)
    }
 }
 
-void ReorderToFreq(HFFT hFFT, fft_type *buffer, fft_type *RealOut, fft_type *ImagOut)
+void ReorderToFreq(HFFT hFFT, const fft_type *buffer,
+		   fft_type *RealOut, fft_type *ImagOut)
 {
    // Copy the data into the real and imaginary outputs
    for(int i=1;i<hFFT->Points;i++) {
@@ -386,7 +387,7 @@ void ReorderToFreq(HFFT hFFT, fft_type *buffer, fft_type *RealOut, fft_type *Ima
    ImagOut[hFFT->Points] = 0;
 }
 
-void ReorderToTime(HFFT hFFT, fft_type *buffer, fft_type *TimeOut)
+void ReorderToTime(HFFT hFFT, const fft_type *buffer, fft_type *TimeOut)
 {
    // Copy the data into the real outputs
    for(int i=0;i<hFFT->Points;i++) {

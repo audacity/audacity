@@ -21,8 +21,9 @@ void ReleaseFFT(HFFT);
 void CleanupFFT();
 void RealFFTf(fft_type *,HFFT);
 void InverseRealFFTf(fft_type *,HFFT);
-void ReorderToTime(HFFT hFFT, fft_type *buffer, fft_type *TimeOut);
-void ReorderToFreq(HFFT hFFT, fft_type *buffer, fft_type *RealOut, fft_type *ImagOut);
+void ReorderToTime(HFFT hFFT, const fft_type *buffer, fft_type *TimeOut);
+void ReorderToFreq(HFFT hFFT, const fft_type *buffer,
+		   fft_type *RealOut, fft_type *ImagOut);
 
 #endif
 

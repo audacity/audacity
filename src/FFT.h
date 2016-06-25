@@ -61,7 +61,7 @@
  * input array, and that NumSamples must be a power of two.
  */
 
-void PowerSpectrum(int NumSamples, float *In, float *Out);
+void PowerSpectrum(int NumSamples, const float *In, float *Out);
 
 /*
  * Computes an FFT when the input data is real but you still
@@ -71,7 +71,7 @@ void PowerSpectrum(int NumSamples, float *In, float *Out);
  */
 
 void RealFFT(int NumSamples,
-             float *RealIn, float *RealOut, float *ImagOut);
+             const float *RealIn, float *RealOut, float *ImagOut);
 
 /*
  * Computes an Inverse FFT when the input data is conjugate symmetric
@@ -79,7 +79,7 @@ void RealFFT(int NumSamples,
  * two.
  */
 void InverseRealFFT(int NumSamples,
-             float *RealIn, float *ImagIn, float *RealOut);
+		    const float *RealIn, const float *ImagIn, float *RealOut);
 
 /*
  * Computes a FFT of complex input and returns complex output.
@@ -89,7 +89,7 @@ void InverseRealFFT(int NumSamples,
 
 void FFT(int NumSamples,
          bool InverseTransform,
-         float *RealIn, float *ImagIn, float *RealOut, float *ImagOut);
+         const float *RealIn, const float *ImagIn, float *RealOut, float *ImagOut);
 
 /*
  * Multiply values in data by values of the chosen function

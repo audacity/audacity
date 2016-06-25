@@ -137,7 +137,8 @@ inline int FastReverseBits(int i, int NumBits)
 
 void FFT(int NumSamples,
          bool InverseTransform,
-         float *RealIn, float *ImagIn, float *RealOut, float *ImagOut)
+         const float *RealIn, const float *ImagIn,
+	 float *RealOut, float *ImagOut)
 {
    int NumBits;                 /* Number of bits needed to store indices */
    int i, j, k, n;
@@ -236,7 +237,7 @@ void FFT(int NumSamples,
  * This is merely a wrapper of RealFFTf() from RealFFTf.h.
  */
 
-void RealFFT(int NumSamples, float *RealIn, float *RealOut, float *ImagOut)
+void RealFFT(int NumSamples, const float *RealIn, float *RealOut, float *ImagOut)
 {
    int i;
    HFFT hFFT = GetFFT(NumSamples);
@@ -277,7 +278,8 @@ void RealFFT(int NumSamples, float *RealIn, float *RealOut, float *ImagOut)
  *
  * This is merely a wrapper of InverseRealFFTf() from RealFFTf.h.
  */
-void InverseRealFFT(int NumSamples, float *RealIn, float *ImagIn, float *RealOut)
+void InverseRealFFT(int NumSamples, const float *RealIn, const float *ImagIn,
+		    float *RealOut)
 {
    int i;
    HFFT hFFT = GetFFT(NumSamples);
@@ -316,7 +318,7 @@ void InverseRealFFT(int NumSamples, float *RealIn, float *ImagIn, float *RealOut
  * of its code.
  */
 
-void PowerSpectrum(int NumSamples, float *In, float *Out)
+void PowerSpectrum(int NumSamples, const float *In, float *Out)
 {
    int i;
    HFFT hFFT = GetFFT(NumSamples);
