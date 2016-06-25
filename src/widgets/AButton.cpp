@@ -242,6 +242,15 @@ void AButton::UseDisabledAsDownHiliteImage(bool flag)
    mUseDisabledAsDownHiliteImage = flag;
 }
 
+// This compensates for a but in wxWidgets 3.0.2 for mac:
+// Couldn't set focus from keyboard when AcceptsFocus returns false;
+// this bypasses that limitation
+void AButton::SetFocusFromKbd()
+{
+   auto temp = AButton::TemporarilyAllowFocus();
+   SetFocus();
+}
+
 void AButton::SetAlternateImages(unsigned idx,
                                  wxImage up,
                                  wxImage over,
