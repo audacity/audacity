@@ -513,6 +513,8 @@ audacity_SOURCES = \
 	toolbars/MeterToolBar.h \
 	toolbars/MixerToolBar.cpp \
 	toolbars/MixerToolBar.h \
+	toolbars/ScrubbingToolBar.cpp \
+	toolbars/ScrubbingToolBar.h \
 	toolbars/SelectionBar.cpp \
 	toolbars/SelectionBar.h \
 	toolbars/SpectralSelectionBar.cpp \

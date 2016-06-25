@@ -151,6 +151,7 @@ scroll information.  It also has some status flags.
 #include "toolbars/EditToolBar.h"
 #include "toolbars/MeterToolBar.h"
 #include "toolbars/MixerToolBar.h"
+#include "toolbars/ScrubbingToolBar.h"
 #include "toolbars/SelectionBar.h"
 #include "toolbars/SpectralSelectionBar.h"
 #include "toolbars/ToolsToolBar.h"

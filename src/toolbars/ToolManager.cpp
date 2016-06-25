@@ -53,6 +53,7 @@
 #include "EditToolBar.h"
 #include "MeterToolBar.h"
 #include "MixerToolBar.h"
+#include "ScrubbingToolBar.h"
 #include "SelectionBar.h"
 #include "SpectralSelectionBar.h"
 #include "ToolsToolBar.h"

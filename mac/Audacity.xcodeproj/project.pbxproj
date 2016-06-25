@@ -1215,6 +1215,7 @@
 		5ED1D0AD1CDE55BD00471E3C /* Overlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5ED1D0A91CDE55BD00471E3C /* Overlay.cpp */; };
 		5ED1D0AE1CDE55BD00471E3C /* OverlayPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5ED1D0AB1CDE55BD00471E3C /* OverlayPanel.cpp */; };
 		5ED1D0B11CDE560C00471E3C /* BackedPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5ED1D0AF1CDE560C00471E3C /* BackedPanel.cpp */; };
+		5EF17C231D1F0A690090A642 /* ScrubbingToolBar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF17C211D1F0A690090A642 /* ScrubbingToolBar.cpp */; };
 		8406A93812D0F2510011EA01 /* EQDefaultCurves.xml in Resources */ = {isa = PBXBuildFile; fileRef = 8406A93712D0F2510011EA01 /* EQDefaultCurves.xml */; };
 		8484F31413086237002DF7F0 /* DeviceManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8484F31213086237002DF7F0 /* DeviceManager.cpp */; };
 		ED15214D163C22F000451B5F /* lsr.c in Sources */ = {isa = PBXBuildFile; fileRef = ED152123163C220300451B5F /* lsr.c */; };
@@ -2994,6 +2995,8 @@
 		5ED1D0AC1CDE55BD00471E3C /* OverlayPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OverlayPanel.h; sourceTree = "<group>"; };
 		5ED1D0AF1CDE560C00471E3C /* BackedPanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BackedPanel.cpp; sourceTree = "<group>"; };
 		5ED1D0B01CDE560C00471E3C /* BackedPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackedPanel.h; sourceTree = "<group>"; };
+		5EF17C211D1F0A690090A642 /* ScrubbingToolBar.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScrubbingToolBar.cpp; sourceTree = "<group>"; };
+		5EF17C221D1F0A690090A642 /* ScrubbingToolBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScrubbingToolBar.h; sourceTree = "<group>"; };
 		82FF184D13CF01A600C1B664 /* dBTable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dBTable.cpp; path = sbsms/src/dBTable.cpp; sourceTree = "<group>"; };
 		82FF184E13CF01A600C1B664 /* dBTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dBTable.h; path = sbsms/src/dBTable.h; sourceTree = "<group>"; };
 		82FF184F13CF01A600C1B664 /* slide.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = slide.cpp; path = sbsms/src/slide.cpp; sourceTree = "<group>"; };
@@ -5224,9 +5227,6 @@
 		2897F6DB0AB3DB5A003C20C5 /* toolbars */ = {
 			isa = PBXGroup;
 			children = (
-				28001B481A0F0EB6007DD161 /* SpectralSelectionBar.cpp */,
-				28001B491A0F0EB6007DD161 /* SpectralSelectionBar.h */,
-				28001B4A1A0F0EB6007DD161 /* SpectralSelectionBarListener.h */,
 				2897F6DC0AB3DB5A003C20C5 /* ControlToolBar.cpp */,
 				2897F6DD0AB3DB5A003C20C5 /* ControlToolBar.h */,
 				289F9C7C0AC671BB00797DC1 /* DeviceToolBar.cpp */,
@@ -5237,9 +5237,14 @@
 				2897F6E10AB3DB5A003C20C5 /* MeterToolBar.h */,
 				2897F6E20AB3DB5A003C20C5 /* MixerToolBar.cpp */,
 				2897F6E30AB3DB5A003C20C5 /* MixerToolBar.h */,
+				5EF17C211D1F0A690090A642 /* ScrubbingToolBar.cpp */,
+				5EF17C221D1F0A690090A642 /* ScrubbingToolBar.h */,
 				2897F6E40AB3DB5A003C20C5 /* SelectionBar.cpp */,
 				2897F6E50AB3DB5A003C20C5 /* SelectionBar.h */,
 				2803C8BB19F35B4900278526 /* SelectionBarListener.h */,
+				28001B481A0F0EB6007DD161 /* SpectralSelectionBar.cpp */,
+				28001B491A0F0EB6007DD161 /* SpectralSelectionBar.h */,
+				28001B4A1A0F0EB6007DD161 /* SpectralSelectionBarListener.h */,
 				2897F6E60AB3DB5A003C20C5 /* ToolBar.cpp */,
 				2897F6E70AB3DB5A003C20C5 /* ToolBar.h */,
 				2897F6E80AB3DB5A003C20C5 /* ToolDock.cpp */,
@@ -7323,6 +7328,7 @@
 				1790B12E09883BFD008A330A /* Amplify.cpp in Sources */,
 				1790B13409883BFD008A330A /* ChangePitch.cpp in Sources */,
 				1790B13509883BFD008A330A /* ChangeSpeed.cpp in Sources */,
+				5EF17C231D1F0A690090A642 /* ScrubbingToolBar.cpp in Sources */,
 				1790B13609883BFD008A330A /* ChangeTempo.cpp in Sources */,
 				1790B13709883BFD008A330A /* ClickRemoval.cpp in Sources */,
 				1790B13809883BFD008A330A /* Compressor.cpp in Sources */,
