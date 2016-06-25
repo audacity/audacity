@@ -34,6 +34,7 @@
 #include "Resample.h"
 #include "Project.h"
 #include "WaveTrack.h"
+#include "FFT.h"
 
 #include "prefs/SpectrogramSettings.h"
 
@@ -259,8 +260,6 @@ protected:
 
 };
 
-#ifdef EXPERIMENTAL_USE_REALFFTF
-#include "FFT.h"
 static void ComputeSpectrumUsingRealFFTf
    (float *buffer, HFFT hFFT, const float *window, int len, float *out)
 {
@@ -288,7 +287,6 @@ static void ComputeSpectrumUsingRealFFTf
          out[i] = 10.0*log10f(power);
    }
 }
-#endif // EXPERIMENTAL_USE_REALFFTF
 
 WaveClip::WaveClip(DirManager *projDirManager, sampleFormat format, int rate)
 {
@@ -852,7 +850,6 @@ bool SpecCache::CalculateOneSpectrum
       if (copy)
          useBuffer = scratch;
 
-#ifdef EXPERIMENTAL_USE_REALFFTF
       if (autocorrelation) {
          float *const results = &freq[half * xx];
          // This function does not mutate useBuffer
@@ -956,12 +953,6 @@ bool SpecCache::CalculateOneSpectrum
                results[ii] += gainFactors[ii];
          }
       }
-#else  // EXPERIMENTAL_USE_REALFFTF
-      // This function does not mutate scratch
-      ComputeSpectrum(scratch, windowSize, windowSize,
-         rate, results,
-         autocorrelation, settings.windowType);
-#endif // EXPERIMENTAL_USE_REALFFTF
    }
    return result;
 }
@@ -972,9 +963,7 @@ void SpecCache::Populate
     sampleCount numSamples,
     double offset, double rate, double pixelsPerSecond)
 {
-#ifdef EXPERIMENTAL_USE_REALFFTF
    settings.CacheWindows();
-#endif
 
    const int &frequencyGain = settings.frequencyGain;
    const int &windowSize = settings.windowSize;

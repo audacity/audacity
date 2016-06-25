@@ -77,13 +77,9 @@ void RealFFT(int NumSamples,
  * Computes an Inverse FFT when the input data is conjugate symmetric
  * so the output is purely real.  NumSamples must be a power of
  * two.
- * Requires: EXPERIMENTAL_USE_REALFFTF
  */
-#include "Experimental.h"
-#ifdef EXPERIMENTAL_USE_REALFFTF
 void InverseRealFFT(int NumSamples,
              float *RealIn, float *ImagIn, float *RealOut);
-#endif
 
 /*
  * Computes a FFT of complex input and returns complex output.
