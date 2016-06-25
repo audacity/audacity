@@ -2083,6 +2083,23 @@ wxString Meter::Key(const wxString & key) const
    return wxT("/Meter/Output/") + key;
 }
 
+bool Meter::s_AcceptsFocus{ false };
+
+auto Meter::TemporarilyAllowFocus() -> TempAllowFocus {
+   s_AcceptsFocus = true;
+   return std::move(TempAllowFocus{ &s_AcceptsFocus });
+}
+
+// This compensates for a but in wxWidgets 3.0.2 for mac:
+// Couldn't set focus from keyboard when AcceptsFocus returns false;
+// this bypasses that limitation
+void Meter::SetFocusFromKbd()
+{
+   auto temp = TemporarilyAllowFocus();
+   SetFocus();
+}
+
+
 #if wxUSE_ACCESSIBILITY
 
 MeterAx::MeterAx(wxWindow *window):

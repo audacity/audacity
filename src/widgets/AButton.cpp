@@ -247,7 +247,7 @@ void AButton::UseDisabledAsDownHiliteImage(bool flag)
 // this bypasses that limitation
 void AButton::SetFocusFromKbd()
 {
-   auto temp = AButton::TemporarilyAllowFocus();
+   auto temp = TemporarilyAllowFocus();
    SetFocus();
 }
 
@@ -572,6 +572,11 @@ void AButton::SetShift(bool shift)
 void AButton::SetControl(bool control)
 {
    mWasControlDown = control;
+}
+
+auto AButton::TemporarilyAllowFocus() -> TempAllowFocus {
+   s_AcceptsFocus = true;
+   return std::move(TempAllowFocus{ &s_AcceptsFocus });
 }
 
 #if wxUSE_ACCESSIBILITY

@@ -144,10 +144,7 @@ class AButton final : public wxWindow {
    using TempAllowFocus = std::unique_ptr<bool, Resetter>;
 
  public:
-   static TempAllowFocus TemporarilyAllowFocus() {
-      s_AcceptsFocus = true;
-      return std::move(TempAllowFocus{ &s_AcceptsFocus });
-   }
+   static TempAllowFocus TemporarilyAllowFocus();
 
  private:
 
