@@ -15,8 +15,8 @@
 #include "Audacity.h"
 
 #include <wx/dynarray.h>
-#include <wx/panel.h>
 #include <wx/textctrl.h>
+#include "widgets/wxPanelWrapper.h"
 
 class LabelTrack;
 
@@ -58,7 +58,7 @@ private:
    DECLARE_EVENT_TABLE()
 };
 
-class Lyrics final : public wxPanel
+class Lyrics final : public wxPanelWrapper
 {
    DECLARE_DYNAMIC_CLASS(Lyrics)
 

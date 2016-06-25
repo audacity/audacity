@@ -243,7 +243,7 @@ private:
    NumberScale *mpNumberScale;
 };
 
-class AUDACITY_DLL_API RulerPanel final : public wxPanel {
+class AUDACITY_DLL_API RulerPanel final : public wxPanelWrapper {
    DECLARE_DYNAMIC_CLASS(RulerPanel)
 
  public:
@@ -285,7 +285,8 @@ class QuickPlayRulerOverlay;
 class AUDACITY_DLL_API AdornedRulerPanel final : public OverlayPanel
 {
 public:
-   AdornedRulerPanel(AudacityProject* parent,
+   AdornedRulerPanel(AudacityProject *project,
+                     wxWindow* parent,
                      wxWindowID id,
                      const wxPoint& pos = wxDefaultPosition,
                      const wxSize& size = wxDefaultSize,

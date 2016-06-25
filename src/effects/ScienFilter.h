@@ -135,7 +135,7 @@ private:
    friend class EffectScienFilterPanel;
 };
 
-class EffectScienFilterPanel final : public wxPanel
+class EffectScienFilterPanel final : public wxPanelWrapper
 {
 public:
    EffectScienFilterPanel(EffectScienFilter *effect, wxWindow *parent);

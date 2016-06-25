@@ -732,7 +732,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
          szrG = S.GetSizer();
 
          // Panel used to host the sliders since they will be positioned manually.
-         mGraphicPanel = safenew wxPanel(parent, wxID_ANY, wxDefaultPosition, wxSize(-1, 150));
+         mGraphicPanel = safenew wxPanelWrapper(parent, wxID_ANY, wxDefaultPosition, wxSize(-1, 150));
          S.Prop(1).AddWindow(mGraphicPanel, wxEXPAND);
 
          for (int i = 0; (i < NUMBER_OF_BANDS) && (kThirdOct[i] <= mHiFreq); ++i)
@@ -2887,7 +2887,7 @@ void EffectEqualization::OnBench( wxCommandEvent & event)
 // EqualizationPanel
 //----------------------------------------------------------------------------
 
-BEGIN_EVENT_TABLE(EqualizationPanel, wxPanel)
+BEGIN_EVENT_TABLE(EqualizationPanel, wxPanelWrapper)
    EVT_PAINT(EqualizationPanel::OnPaint)
    EVT_MOUSE_EVENTS(EqualizationPanel::OnMouseEvent)
    EVT_MOUSE_CAPTURE_LOST(EqualizationPanel::OnCaptureLost)
@@ -2895,7 +2895,7 @@ BEGIN_EVENT_TABLE(EqualizationPanel, wxPanel)
 END_EVENT_TABLE()
 
 EqualizationPanel::EqualizationPanel(EffectEqualization *effect, wxWindow *parent)
-:  wxPanel(parent)
+:  wxPanelWrapper(parent)
 {
    mParent = parent;
    mEffect = effect;

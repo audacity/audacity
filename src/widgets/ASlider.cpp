@@ -1783,6 +1783,22 @@ bool ASlider::IsEnabled() const
    return mLWSlider->GetEnabled();
 }
 
+bool ASlider::s_AcceptsFocus{ false };
+
+auto ASlider::TemporarilyAllowFocus() -> TempAllowFocus {
+   s_AcceptsFocus = true;
+   return std::move(TempAllowFocus{ &s_AcceptsFocus });
+}
+
+// This compensates for a but in wxWidgets 3.0.2 for mac:
+// Couldn't set focus from keyboard when AcceptsFocus returns false;
+// this bypasses that limitation
+void ASlider::SetFocusFromKbd()
+{
+   auto temp = TemporarilyAllowFocus();
+   SetFocus();
+}
+
 #if wxUSE_ACCESSIBILITY
 
 ASliderAx::ASliderAx( wxWindow * window ) :

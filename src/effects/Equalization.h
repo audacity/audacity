@@ -279,7 +279,7 @@ private:
    friend class EditCurvesDialog;
 };
 
-class EqualizationPanel final : public wxPanel
+class EqualizationPanel final : public wxPanelWrapper
 {
 public:
    EqualizationPanel(EffectEqualization *effect, wxWindow *parent);

@@ -1603,18 +1603,18 @@ void Ruler::SetUseZoomInfo(int leftOffset, const ZoomInfo *zoomInfo)
 // RulerPanel
 //
 
-BEGIN_EVENT_TABLE(RulerPanel, wxPanel)
+BEGIN_EVENT_TABLE(RulerPanel, wxPanelWrapper)
    EVT_ERASE_BACKGROUND(RulerPanel::OnErase)
    EVT_PAINT(RulerPanel::OnPaint)
    EVT_SIZE(RulerPanel::OnSize)
 END_EVENT_TABLE()
 
-IMPLEMENT_CLASS(RulerPanel, wxPanel)
+IMPLEMENT_CLASS(RulerPanel, wxPanelWrapper)
 
 RulerPanel::RulerPanel(wxWindow* parent, wxWindowID id,
                        const wxPoint& pos /*= wxDefaultPosition*/,
                        const wxSize& size /*= wxDefaultSize*/):
-   wxPanel(parent, id, pos, size)
+   wxPanelWrapper(parent, id, pos, size)
 {
 }
 
@@ -1651,7 +1651,7 @@ void RulerPanel::DoSetSize(int x, int y,
                            int width, int height,
                            int sizeFlags)
 {
-   wxPanel::DoSetSize(x, y, width, height, sizeFlags);
+   wxPanelWrapper::DoSetSize(x, y, width, height, sizeFlags);
 
    int w, h;
    GetClientSize(&w, &h);
@@ -1953,13 +1953,14 @@ BEGIN_EVENT_TABLE(AdornedRulerPanel, OverlayPanel)
 
 END_EVENT_TABLE()
 
-AdornedRulerPanel::AdornedRulerPanel(AudacityProject* parent,
+AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
+                                     wxWindow *parent,
                                      wxWindowID id,
                                      const wxPoint& pos,
                                      const wxSize& size,
                                      ViewInfo *viewinfo)
 :  OverlayPanel(parent, id, pos, size)
-, mProject(parent)
+, mProject(project)
 , mViewInfo(viewinfo)
 {
    for (auto &button : mButtons)
@@ -1991,7 +1992,7 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* parent,
    mRuler.SetLabelEdges( false );
    mRuler.SetFormat( Ruler::TimeFormat );
 
-   mTracks = parent->GetTracks();
+   mTracks = project->GetTracks();
 
    mSnapManager = NULL;
    mIsSnapped = false;

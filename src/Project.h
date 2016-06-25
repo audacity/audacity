@@ -258,7 +258,8 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    bool GetDirty() { return mDirty; }
    void SetProjectTitle();
 
-   TrackPanel * GetTrackPanel(){return mTrackPanel;}
+   wxPanel *GetTopPanel() { return mTopPanel; }
+   TrackPanel * GetTrackPanel() {return mTrackPanel;}
 
    bool GetIsEmpty();
 
@@ -594,6 +595,7 @@ public:
    wxStatusBar *mStatusBar;
 
    AdornedRulerPanel *mRuler{};
+   wxPanel *mTopPanel{};
    TrackPanel *mTrackPanel{};
    TrackFactory *mTrackFactory{};
    wxPanel * mMainPanel;

@@ -242,6 +242,15 @@ void AButton::UseDisabledAsDownHiliteImage(bool flag)
    mUseDisabledAsDownHiliteImage = flag;
 }
 
+// This compensates for a but in wxWidgets 3.0.2 for mac:
+// Couldn't set focus from keyboard when AcceptsFocus returns false;
+// this bypasses that limitation
+void AButton::SetFocusFromKbd()
+{
+   auto temp = TemporarilyAllowFocus();
+   SetFocus();
+}
+
 void AButton::SetAlternateImages(unsigned idx,
                                  wxImage up,
                                  wxImage over,
@@ -343,12 +352,10 @@ void AButton::OnPaint(wxPaintEvent & WXUNUSED(event))
 
    mImages[mAlternateIdx].mArr[buttonState].Draw(dc, GetClientRect());
 
-#if defined(__WXMSW__) || defined(__WXGTK__)
    if( mButtonIsFocused )
    {
       AColor::DrawFocus( dc, mFocusRect );
    }
-#endif
 }
 
 void AButton::OnErase(wxEraseEvent & WXUNUSED(event))
@@ -565,6 +572,11 @@ void AButton::SetShift(bool shift)
 void AButton::SetControl(bool control)
 {
    mWasControlDown = control;
+}
+
+auto AButton::TemporarilyAllowFocus() -> TempAllowFocus {
+   s_AcceptsFocus = true;
+   return std::move(TempAllowFocus{ &s_AcceptsFocus });
 }
 
 #if wxUSE_ACCESSIBILITY

@@ -137,6 +137,8 @@ simplifies construction of menu items.
 #include "tracks/ui/Scrubbing.h"
 #include "prefs/TracksPrefs.h"
 
+#include "widgets/Meter.h"
+
 enum {
    kAlignStartZero = 0,
    kAlignStartSelStart,
@@ -2752,10 +2754,12 @@ void AudacityProject::OnSetRightSelection()
 void AudacityProject::NextOrPrevFrame(bool forward)
 {
    // Focus won't take in a dock unless at least one descendant window
-   // accepts focus.  Tell all AButtons to take focus for the duration of this
+   // accepts focus.  Tell controls to take focus for the duration of this
    // function, only.  Outside of this, they won't steal the focus when
    // clicked.
-   auto temp = AButton::TemporarilyAllowFocus();
+   auto temp1 = AButton::TemporarilyAllowFocus();
+   auto temp2 = ASlider::TemporarilyAllowFocus();
+   auto temp3 = Meter::TemporarilyAllowFocus();
 
 
    // Define the set of windows we rotate among.
@@ -2766,7 +2770,7 @@ void AudacityProject::NextOrPrevFrame(bool forward)
    ;
 
    wxWindow *const begin [rotationSize] = {
-      mToolManager->GetTopDock(),
+      GetTopPanel(),
 #ifdef EXPERIMENTAL_TIME_RULER_NAVIGATION
       GetRulerPanel(),
 #endif

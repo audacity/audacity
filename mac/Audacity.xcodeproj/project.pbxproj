@@ -1212,6 +1212,7 @@
 		5E74D2E31CC4429700D88B0B /* EditCursorOverlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E74D2DD1CC4429700D88B0B /* EditCursorOverlay.cpp */; };
 		5E74D2E41CC4429700D88B0B /* PlayIndicatorOverlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E74D2DF1CC4429700D88B0B /* PlayIndicatorOverlay.cpp */; };
 		5E74D2E51CC4429700D88B0B /* Scrubbing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E74D2E11CC4429700D88B0B /* Scrubbing.cpp */; };
+		5E94A1BA1D1F1C8400A8713A /* wxPanelWrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E94A1B81D1F1C8400A8713A /* wxPanelWrapper.cpp */; };
 		5ED1D0AD1CDE55BD00471E3C /* Overlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5ED1D0A91CDE55BD00471E3C /* Overlay.cpp */; };
 		5ED1D0AE1CDE55BD00471E3C /* OverlayPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5ED1D0AB1CDE55BD00471E3C /* OverlayPanel.cpp */; };
 		5ED1D0B11CDE560C00471E3C /* BackedPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5ED1D0AF1CDE560C00471E3C /* BackedPanel.cpp */; };
@@ -2987,6 +2988,8 @@
 		5E74D2E01CC4429700D88B0B /* PlayIndicatorOverlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayIndicatorOverlay.h; sourceTree = "<group>"; };
 		5E74D2E11CC4429700D88B0B /* Scrubbing.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Scrubbing.cpp; sourceTree = "<group>"; };
 		5E74D2E21CC4429700D88B0B /* Scrubbing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Scrubbing.h; sourceTree = "<group>"; };
+		5E94A1B81D1F1C8400A8713A /* wxPanelWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = wxPanelWrapper.cpp; sourceTree = "<group>"; };
+		5E94A1B91D1F1C8400A8713A /* wxPanelWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = wxPanelWrapper.h; sourceTree = "<group>"; };
 		5ED18DB61CC16B1E00FAFE95 /* Reverb_libSoX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reverb_libSoX.h; sourceTree = "<group>"; };
 		5ED18DB71CC290AB00FAFE95 /* wxFileNameWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = wxFileNameWrapper.h; sourceTree = "<group>"; };
 		5ED1D0A91CDE55BD00471E3C /* Overlay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Overlay.cpp; sourceTree = "<group>"; };
@@ -4302,53 +4305,55 @@
 			isa = PBXGroup;
 			children = (
 				1790B0FE09883BFD008A330A /* AButton.cpp */,
-				1790B10009883BFD008A330A /* ASlider.cpp */,
-				28F1D8170A2D0018005506A7 /* AttachableScrollBar.cpp */,
-				5ED1D0AF1CDE560C00471E3C /* BackedPanel.cpp */,
-				283AA0E90C56ED08002CBD34 /* ErrorDialog.cpp */,
-				28F1D8190A2D0018005506A7 /* ExpandingToolBar.cpp */,
-				28CCDCFF0F939FD70081F2FC /* FileHistory.cpp */,
-				2897F6FC0AB3DCD0003C20C5 /* Grabber.cpp */,
-				280828580A75E0EA000002EF /* Grid.cpp */,
-				280112791943EE0E00D98A16 /* HelpSystem.cpp */,
-				28530C480DF2105200555C94 /* HtmlWindow.cpp */,
-				28F1D81B0A2D0019005506A7 /* ImageRoll.cpp */,
-				2849A41E17F8BEC2005C653F /* KeyView.cpp */,
-				2816372C0BAE3B6C0079C746 /* LinkingHtmlWindow.cpp */,
-				1790B10309883BFD008A330A /* Meter.cpp */,
-				1790B10509883BFD008A330A /* MultiDialog.cpp */,
-				28001B3C1A0F0E5D007DD161 /* NumericTextCtrl.cpp */,
-				28F2CED0181867BB00573D61 /* numformatter.cpp */,
-				5ED1D0A91CDE55BD00471E3C /* Overlay.cpp */,
-				5ED1D0AB1CDE55BD00471E3C /* OverlayPanel.cpp */,
-				28530C4A0DF2105200555C94 /* ProgressDialog.cpp */,
-				1790B10709883BFD008A330A /* Ruler.cpp */,
-				28F2CED2181867BB00573D61 /* valnum.cpp */,
-				1790B10B09883BFD008A330A /* Warning.cpp */,
 				1790B0FF09883BFD008A330A /* AButton.h */,
+				1790B10009883BFD008A330A /* ASlider.cpp */,
 				1790B10109883BFD008A330A /* ASlider.h */,
+				28F1D8170A2D0018005506A7 /* AttachableScrollBar.cpp */,
 				28F1D8180A2D0018005506A7 /* AttachableScrollBar.h */,
+				5ED1D0AF1CDE560C00471E3C /* BackedPanel.cpp */,
 				5ED1D0B01CDE560C00471E3C /* BackedPanel.h */,
+				283AA0E90C56ED08002CBD34 /* ErrorDialog.cpp */,
 				283AA0EA0C56ED08002CBD34 /* ErrorDialog.h */,
+				28F1D8190A2D0018005506A7 /* ExpandingToolBar.cpp */,
 				28F1D81A0A2D0018005506A7 /* ExpandingToolBar.h */,
+				28CCDCFF0F939FD70081F2FC /* FileHistory.cpp */,
 				28CCDD040F93A0B20081F2FC /* FileHistory.h */,
+				2897F6FC0AB3DCD0003C20C5 /* Grabber.cpp */,
 				2897F6FD0AB3DCD0003C20C5 /* Grabber.h */,
+				280828580A75E0EA000002EF /* Grid.cpp */,
 				280828590A75E0EA000002EF /* Grid.h */,
+				280112791943EE0E00D98A16 /* HelpSystem.cpp */,
 				2801127A1943EE0E00D98A16 /* HelpSystem.h */,
+				28530C480DF2105200555C94 /* HtmlWindow.cpp */,
 				28530C490DF2105200555C94 /* HtmlWindow.h */,
+				28F1D81B0A2D0019005506A7 /* ImageRoll.cpp */,
 				28F1D81C0A2D0019005506A7 /* ImageRoll.h */,
+				2849A41E17F8BEC2005C653F /* KeyView.cpp */,
 				2849A41F17F8BEC2005C653F /* KeyView.h */,
+				2816372C0BAE3B6C0079C746 /* LinkingHtmlWindow.cpp */,
 				2816372D0BAE3B6C0079C746 /* LinkingHtmlWindow.h */,
+				1790B10309883BFD008A330A /* Meter.cpp */,
 				1790B10409883BFD008A330A /* Meter.h */,
+				1790B10509883BFD008A330A /* MultiDialog.cpp */,
 				1790B10609883BFD008A330A /* MultiDialog.h */,
+				28001B3C1A0F0E5D007DD161 /* NumericTextCtrl.cpp */,
 				28001B3D1A0F0E5D007DD161 /* NumericTextCtrl.h */,
+				28F2CED0181867BB00573D61 /* numformatter.cpp */,
 				28F2CED1181867BB00573D61 /* numformatter.h */,
+				5ED1D0A91CDE55BD00471E3C /* Overlay.cpp */,
 				5ED1D0AA1CDE55BD00471E3C /* Overlay.h */,
+				5ED1D0AB1CDE55BD00471E3C /* OverlayPanel.cpp */,
 				5ED1D0AC1CDE55BD00471E3C /* OverlayPanel.h */,
+				28530C4A0DF2105200555C94 /* ProgressDialog.cpp */,
 				28530C4B0DF2105200555C94 /* ProgressDialog.h */,
+				1790B10709883BFD008A330A /* Ruler.cpp */,
 				1790B10809883BFD008A330A /* Ruler.h */,
+				28F2CED2181867BB00573D61 /* valnum.cpp */,
 				28F2CED3181867BB00573D61 /* valnum.h */,
+				1790B10B09883BFD008A330A /* Warning.cpp */,
 				1790B10C09883BFD008A330A /* Warning.h */,
+				5E94A1B81D1F1C8400A8713A /* wxPanelWrapper.cpp */,
+				5E94A1B91D1F1C8400A8713A /* wxPanelWrapper.h */,
 			);
 			path = widgets;
 			sourceTree = "<group>";
@@ -7347,6 +7352,7 @@
 				1790B14709883BFD008A330A /* Nyquist.cpp in Sources */,
 				1790B14809883BFD008A330A /* Phaser.cpp in Sources */,
 				1790B14A09883BFD008A330A /* Repeat.cpp in Sources */,
+				5E94A1BA1D1F1C8400A8713A /* wxPanelWrapper.cpp in Sources */,
 				1790B14B09883BFD008A330A /* Reverse.cpp in Sources */,
 				1790B14C09883BFD008A330A /* Silence.cpp in Sources */,
 				1790B14D09883BFD008A330A /* SimpleMono.cpp in Sources */,

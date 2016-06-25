@@ -20,6 +20,7 @@ LRN
 #include <wx/listimpl.cpp>
 #include "../xml/XMLFileReader.h"
 #include "../FileNames.h"
+#include "../widgets/wxPanelWrapper.h"
 
 
 /// Identifiers for pre-set export types.
@@ -58,7 +59,7 @@ struct CompatibilityEntry
 
 
 /// AC3 export options dialog
-class ExportFFmpegAC3Options final : public wxPanel
+class ExportFFmpegAC3Options final : public wxPanelWrapper
 {
 public:
 
@@ -84,7 +85,7 @@ private:
    int mBitRateFromChoice;
 };
 
-class ExportFFmpegAACOptions final : public wxPanel
+class ExportFFmpegAACOptions final : public wxPanelWrapper
 {
 public:
 
@@ -100,7 +101,7 @@ private:
    wxSpinCtrl *mQualitySpin;
 };
 
-class ExportFFmpegAMRNBOptions final : public wxPanel
+class ExportFFmpegAMRNBOptions final : public wxPanelWrapper
 {
 public:
 
@@ -122,7 +123,7 @@ private:
    int mBitRateFromChoice;
 };
 
-class ExportFFmpegWMAOptions final : public wxPanel
+class ExportFFmpegWMAOptions final : public wxPanelWrapper
 {
 public:
 
@@ -145,7 +146,7 @@ private:
    int mBitRateFromChoice;
 };
 
-class ExportFFmpegCustomOptions final : public wxPanel
+class ExportFFmpegCustomOptions final : public wxPanelWrapper
 {
 public:
 
