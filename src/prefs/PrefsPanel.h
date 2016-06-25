@@ -28,8 +28,8 @@ ThemePrefs.
 #ifndef __AUDACITY_PREFS_PANEL__
 #define __AUDACITY_PREFS_PANEL__
 
-#include <wx/panel.h>
 #include <wx/window.h>
+#include "../widgets/wxPanelWrapper.h"
 
 /* A few constants for an attempt at semi-uniformity */
 #define PREFS_FONT_SIZE     8
@@ -40,11 +40,11 @@ ThemePrefs.
 #define TOP_LEVEL_BORDER       5
 #define GENERIC_CONTROL_BORDER 5
 
-class PrefsPanel /* not final */ : public wxPanel
+class PrefsPanel /* not final */ : public wxPanelWrapper
 {
  public:
    PrefsPanel(wxWindow * parent, const wxString &title)
-   :  wxPanel(parent, wxID_ANY)
+   :  wxPanelWrapper(parent, wxID_ANY)
    {
       SetLabel(title);     // Provide visual label
       SetName(title);      // Provide audible label

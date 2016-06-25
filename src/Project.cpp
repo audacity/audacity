@@ -881,7 +881,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    // Must create it with non-default width equal to the main window width,
    // or else the device toolbar doesn't make initial widths of the choice
    // controls correct.
-   mTopPanel = safenew wxPanel {
+   mTopPanel = safenew wxPanelWrapper {
       this, wxID_ANY, wxDefaultPosition, { this->GetSize().GetWidth(), -1 }
    };
    mTopPanel->SetAutoLayout(true);
@@ -925,7 +925,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    // Not using a notebook, so we place the track panel inside another panel,
    // this keeps the notebook code and normal code consistant and also
    // paves the way for adding additional windows inside the track panel.
-   mMainPanel = safenew wxPanel(this, -1,
+   mMainPanel = safenew wxPanelWrapper(this, -1,
       wxDefaultPosition,
       wxDefaultSize,
       wxNO_BORDER);

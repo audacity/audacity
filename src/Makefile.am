@@ -584,6 +584,8 @@ audacity_SOURCES = \
 	widgets/valnum.h \
 	widgets/Warning.cpp \
 	widgets/Warning.h \
+	widgets/wxPanelWrapper.cpp \
+	widgets/wxPanelWrapper.h \
 	xml/XMLFileReader.cpp \
 	xml/XMLFileReader.h \
 	xml/XMLWriter.cpp \

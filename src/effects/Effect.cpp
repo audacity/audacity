@@ -2793,11 +2793,11 @@ void EffectDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-class EffectPanel final : public wxPanel
+class EffectPanel final : public wxPanelWrapper
 {
 public:
    EffectPanel(wxWindow *parent)
-   :  wxPanel(parent)
+   :  wxPanelWrapper(parent)
    {
       // This fools NVDA into not saying "Panel" when the dialog gets focus
       SetName(wxT("\a"));
@@ -2984,8 +2984,8 @@ bool EffectUIHost::Initialize()
          vs->Add(hs.release(), 1, wxEXPAND);
       }
 
-      wxPanel *buttonPanel = safenew wxPanel(this, wxID_ANY);
-      wxPanel *const bar = safenew wxPanel(buttonPanel, wxID_ANY);
+      wxPanel *buttonPanel = safenew wxPanelWrapper(this, wxID_ANY);
+      wxPanel *const bar = safenew wxPanelWrapper(buttonPanel, wxID_ANY);
 
       // This fools NVDA into not saying "Panel" when the dialog gets focus
       bar->SetName(wxT("\a"));

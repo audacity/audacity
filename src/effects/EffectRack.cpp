@@ -106,7 +106,7 @@ EffectRack::EffectRack()
 
    {
       auto bs = std::make_unique<wxBoxSizer>(wxVERTICAL);
-      mPanel = safenew wxPanel(this, wxID_ANY);
+      mPanel = safenew wxPanelWrapper(this, wxID_ANY);
       bs->Add(mPanel, 1, wxEXPAND);
       SetSizer(bs.release());
    }

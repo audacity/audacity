@@ -17,13 +17,13 @@
 #include <wx/bmpbuttn.h>
 #include <wx/hashmap.h>
 #include <wx/image.h>
-#include <wx/panel.h>
 #include <wx/scrolwin.h>
 #include <wx/statbmp.h>
 #include <wx/stattext.h>
 
 #include "widgets/AButton.h"
 #include "widgets/ASlider.h"
+#include "widgets/wxPanelWrapper.h"
 
 // containment hierarchy:
 //    MixerBoardFrame -> MixerBoard -> MixerBoardScrolledWindow -> MixerTrackCluster(s)
@@ -68,7 +68,7 @@ class NoteTrack;
 #endif
 class WaveTrack;
 
-class MixerTrackCluster final : public wxPanel
+class MixerTrackCluster final : public wxPanelWrapper
 {
 public:
    MixerTrackCluster(wxWindow* parent,

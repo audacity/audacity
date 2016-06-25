@@ -142,7 +142,7 @@ const int ExportFFmpegAC3Options::iAC3BitRates[] = { 32000, 40000, 48000, 56000,
 const int ExportFFmpegAC3Options::iAC3SampleRates[] = { 32000, 44100, 48000, 0 };
 
 ExportFFmpegAC3Options::ExportFFmpegAC3Options(wxWindow *parent, int WXUNUSED(format))
-:  wxPanel(parent, wxID_ANY)
+:  wxPanelWrapper(parent, wxID_ANY)
 {
    for (unsigned int i=0; i < (sizeof(iAC3BitRates)/sizeof(int)); i++)
    {
@@ -205,7 +205,7 @@ bool ExportFFmpegAC3Options::TransferDataFromWindow()
 //----------------------------------------------------------------------------
 
 ExportFFmpegAACOptions::ExportFFmpegAACOptions(wxWindow *parent, int WXUNUSED(format))
-:  wxPanel(parent, wxID_ANY)
+:  wxPanelWrapper(parent, wxID_ANY)
 {
    ShuttleGui S(this, eIsCreatingFromPrefs);
    PopulateOrExchange(S);
@@ -268,7 +268,7 @@ int ExportFFmpegAMRNBOptions::iAMRNBBitRate[] =
 { 4750, 5150, 5900, 6700, 7400, 7950, 10200, 12200 };
 
 ExportFFmpegAMRNBOptions::ExportFFmpegAMRNBOptions(wxWindow *parent, int WXUNUSED(format))
-:  wxPanel(parent, wxID_ANY)
+:  wxPanelWrapper(parent, wxID_ANY)
 {
    for (unsigned int i=0; i < (sizeof(iAMRNBBitRate)/sizeof(int)); i++)
    {
@@ -338,7 +338,7 @@ const int ExportFFmpegWMAOptions::iWMABitRate[] =
 { 24000, 32000, 40000, 48000, 64000, 80000, 96000, 128000, 160000, 192000, 256000, 320000 };
 
 ExportFFmpegWMAOptions::ExportFFmpegWMAOptions(wxWindow *parent, int WXUNUSED(format))
-:  wxPanel(parent, wxID_ANY)
+:  wxPanelWrapper(parent, wxID_ANY)
 {
    for (unsigned int i=0; i < (sizeof(iWMABitRate)/sizeof(int)); i++)
    {
@@ -402,12 +402,12 @@ bool ExportFFmpegWMAOptions::TransferDataFromWindow()
 
 #define OpenID 9000
 
-BEGIN_EVENT_TABLE(ExportFFmpegCustomOptions, wxPanel)
+BEGIN_EVENT_TABLE(ExportFFmpegCustomOptions, wxPanelWrapper)
    EVT_BUTTON(OpenID, ExportFFmpegCustomOptions::OnOpen)
 END_EVENT_TABLE()
 
 ExportFFmpegCustomOptions::ExportFFmpegCustomOptions(wxWindow *parent, int WXUNUSED(format))
-:  wxPanel(parent, wxID_ANY)
+:  wxPanelWrapper(parent, wxID_ANY)
 {
    ShuttleGui S(this, eIsCreatingFromPrefs);
    PopulateOrExchange(S);

@@ -192,7 +192,7 @@ enum {
    OnPreferencesID
 };
 
-BEGIN_EVENT_TABLE(Meter, wxPanel)
+BEGIN_EVENT_TABLE(Meter, wxPanelWrapper)
    EVT_TIMER(OnMeterUpdateID, Meter::OnMeterUpdate)
    EVT_MOUSE_EVENTS(Meter::OnMouse)
    EVT_CONTEXT_MENU(Meter::OnContext)
@@ -207,7 +207,7 @@ BEGIN_EVENT_TABLE(Meter, wxPanel)
    EVT_MENU(OnPreferencesID, Meter::OnPreferences)
 END_EVENT_TABLE()
 
-IMPLEMENT_CLASS(Meter, wxPanel)
+IMPLEMENT_CLASS(Meter, wxPanelWrapper)
 
 Meter::Meter(AudacityProject *project,
              wxWindow* parent, wxWindowID id,
@@ -216,7 +216,7 @@ Meter::Meter(AudacityProject *project,
              const wxSize& size /*= wxDefaultSize*/,
              Style style /*= HorizontalStereo*/,
              float fDecayRate /*= 60.0f*/)
-: wxPanel(parent, id, pos, size, wxTAB_TRAVERSAL | wxNO_BORDER | wxWANTS_CHARS),
+: wxPanelWrapper(parent, id, pos, size, wxTAB_TRAVERSAL | wxNO_BORDER | wxWANTS_CHARS),
    mProject(project),
    mQueue(1024),
    mWidth(size.x),

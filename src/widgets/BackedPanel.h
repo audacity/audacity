@@ -10,10 +10,10 @@
 #define __AUDACITY_BACKED_PANEL__
 
 #include "../MemoryX.h"
-#include <wx/panel.h>
 #include <wx/dcmemory.h>
+#include "wxPanelWrapper.h"
 
-class AUDACITY_DLL_API BackedPanel /* not final */ : public wxPanel {
+class AUDACITY_DLL_API BackedPanel /* not final */ : public wxPanelWrapper {
 public:
    BackedPanel(wxWindow * parent, wxWindowID id,
                const wxPoint & pos,

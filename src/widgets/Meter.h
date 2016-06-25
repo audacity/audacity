@@ -17,7 +17,6 @@
 #define __AUDACITY_METER__
 
 #include <wx/defs.h>
-#include <wx/panel.h>
 #include <wx/timer.h>
 
 #include "../SampleFormat.h"
@@ -86,7 +85,7 @@ class MeterUpdateQueue
 
 class MeterAx;
 
-class Meter final : public wxPanel
+class Meter final : public wxPanelWrapper
 {
    DECLARE_DYNAMIC_CLASS(Meter)
 

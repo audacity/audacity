@@ -243,7 +243,7 @@ private:
    NumberScale *mpNumberScale;
 };
 
-class AUDACITY_DLL_API RulerPanel final : public wxPanel {
+class AUDACITY_DLL_API RulerPanel final : public wxPanelWrapper {
    DECLARE_DYNAMIC_CLASS(RulerPanel)
 
  public:

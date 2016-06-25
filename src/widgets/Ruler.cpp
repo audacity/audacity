@@ -1603,18 +1603,18 @@ void Ruler::SetUseZoomInfo(int leftOffset, const ZoomInfo *zoomInfo)
 // RulerPanel
 //
 
-BEGIN_EVENT_TABLE(RulerPanel, wxPanel)
+BEGIN_EVENT_TABLE(RulerPanel, wxPanelWrapper)
    EVT_ERASE_BACKGROUND(RulerPanel::OnErase)
    EVT_PAINT(RulerPanel::OnPaint)
    EVT_SIZE(RulerPanel::OnSize)
 END_EVENT_TABLE()
 
-IMPLEMENT_CLASS(RulerPanel, wxPanel)
+IMPLEMENT_CLASS(RulerPanel, wxPanelWrapper)
 
 RulerPanel::RulerPanel(wxWindow* parent, wxWindowID id,
                        const wxPoint& pos /*= wxDefaultPosition*/,
                        const wxSize& size /*= wxDefaultSize*/):
-   wxPanel(parent, id, pos, size)
+   wxPanelWrapper(parent, id, pos, size)
 {
 }
 
@@ -1651,7 +1651,7 @@ void RulerPanel::DoSetSize(int x, int y,
                            int width, int height,
                            int sizeFlags)
 {
-   wxPanel::DoSetSize(x, y, width, height, sizeFlags);
+   wxPanelWrapper::DoSetSize(x, y, width, height, sizeFlags);
 
    int w, h;
    GetClientSize(&w, &h);

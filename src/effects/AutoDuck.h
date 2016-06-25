@@ -14,12 +14,12 @@
 #include <wx/bitmap.h>
 #include <wx/event.h>
 #include <wx/gdicmn.h>
-#include <wx/panel.h>
 #include <wx/string.h>
 #include <wx/textctrl.h>
 #include <wx/window.h>
 
 #include "Effect.h"
+#include "../widgets/wxPanelWrapper.h"
 
 class EffectAutoDuckPanel;
 class ShuttleGui;
@@ -90,7 +90,7 @@ private:
    friend class EffectAutoDuckPanel;
 };
 
-class EffectAutoDuckPanel final : public wxPanel
+class EffectAutoDuckPanel final : public wxPanelWrapper
 {
 public:
    EffectAutoDuckPanel(wxWindow *parent, EffectAutoDuck *effect);
