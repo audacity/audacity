@@ -343,12 +343,10 @@ void AButton::OnPaint(wxPaintEvent & WXUNUSED(event))
 
    mImages[mAlternateIdx].mArr[buttonState].Draw(dc, GetClientRect());
 
-#if defined(__WXMSW__) || defined(__WXGTK__)
    if( mButtonIsFocused )
    {
       AColor::DrawFocus( dc, mFocusRect );
    }
-#endif
 }
 
 void AButton::OnErase(wxEraseEvent & WXUNUSED(event))

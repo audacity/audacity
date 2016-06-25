@@ -138,7 +138,14 @@ AButton *ControlToolBar::MakeButton(teBmps eEnabledUp, teBmps eEnabledDown, teBm
       wxDefaultPosition, processdownevents,
       theTheme.ImageSize( bmpRecoloredUpLarge ));
    r->SetLabel(label);
-   r->SetFocusRect( r->GetRect().Deflate( 12, 12 ) );
+   enum { deflation =
+#ifdef __WXMAC__
+      3
+#else
+      12
+#endif
+   };
+   r->SetFocusRect( r->GetClientRect().Deflate( deflation, deflation ) );
 
    return r;
 }

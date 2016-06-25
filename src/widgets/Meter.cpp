@@ -659,13 +659,11 @@ void Meter::OnPaint(wxPaintEvent & WXUNUSED(event))
       }
    }
 
-#if defined(__WXMSW__) || defined(__WXGTK__)
    if (mIsFocused)
    {
       wxRect r = mIconRect;
       AColor::DrawFocus(destDC, r.Inflate(1, 1));
    }
-#endif
 
    delete paintDC;
 }
