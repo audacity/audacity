@@ -3857,6 +3857,10 @@ void AudacityProject::OnUndo()
    if (mHistoryWindow)
       mHistoryWindow->UpdateDisplay();
 
+   if (mMixerBoard)
+      // Mixer board may need to change for selection state and pan/gain
+      mMixerBoard->Refresh();
+
    ModifyUndoMenuItems();
 }
 
@@ -3881,6 +3885,10 @@ void AudacityProject::OnRedo()
 
    if (mHistoryWindow)
       mHistoryWindow->UpdateDisplay();
+
+   if (mMixerBoard)
+      // Mixer board may need to change for selection state and pan/gain
+      mMixerBoard->Refresh();
 
    ModifyUndoMenuItems();
 }

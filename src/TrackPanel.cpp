@@ -4980,34 +4980,35 @@ void TrackPanel::HandleLabelClick(wxMouseEvent & event)
       TrackPanel::CalculateRearrangingThresholds(event);
    }
 
-   HandleListSelection(t, event.ShiftDown(), event.ControlDown());
-
-   if (!unsafe)
-      MakeParentModifyState(true);
+   HandleListSelection(t, event.ShiftDown(), event.ControlDown(), !unsafe);
 }
 
-void TrackPanel::HandleListSelection(Track *t, bool shift, bool ctrl)
+void TrackPanel::HandleListSelection(Track *t, bool shift, bool ctrl,
+                                     bool modifyState)
 {
    // AS: If the shift button is being held down, invert
    //  the selection on this track.
    if (ctrl) {
       SelectTrack(t, !t->GetSelected());
       Refresh(false);
-      return;
+   }
+   else {
+      SelectNone();
+      if (shift && mLastPickedTrack)
+         SelectRangeOfTracks(t, mLastPickedTrack);
+      else
+         SelectTrack(t, true);
+      SetFocusedTrack(t);
+      SelectTrackLength(t);
+
+      this->Refresh(false);
+      MixerBoard* pMixerBoard = this->GetMixerBoard();
+      if (pMixerBoard)
+         pMixerBoard->RefreshTrackClusters();
    }
 
-   SelectNone();
-   if (shift && mLastPickedTrack)
-      SelectRangeOfTracks(t, mLastPickedTrack);
-   else
-      SelectTrack(t, true);
-   SetFocusedTrack(t);
-   SelectTrackLength(t);
-
-   this->Refresh(false);
-   MixerBoard* pMixerBoard = this->GetMixerBoard();
-   if (pMixerBoard)
-      pMixerBoard->RefreshTrackClusters();
+   if (modifyState)
+      MakeParentModifyState(true);
 }
 
 /// The user is dragging one of the tracks: change the track order

@@ -400,7 +400,8 @@ protected:
    virtual void HandleLabelClick(wxMouseEvent & event);
 
 public:
-   virtual void HandleListSelection(Track *t, bool shift, bool ctrl);
+   virtual void HandleListSelection(Track *t, bool shift, bool ctrl,
+                                    bool modifyState = true);
 
 protected:
    virtual void HandleRearrange(wxMouseEvent & event);
