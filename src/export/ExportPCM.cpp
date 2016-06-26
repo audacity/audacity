@@ -92,7 +92,7 @@ static void WriteExportFormatPref(int format)
 #define ID_HEADER_CHOICE           7102
 #define ID_ENCODING_CHOICE         7103
 
-class ExportPCMOptions final : public wxPanel
+class ExportPCMOptions final : public wxPanelWrapper
 {
 public:
 
@@ -123,12 +123,12 @@ private:
    DECLARE_EVENT_TABLE()
 };
 
-BEGIN_EVENT_TABLE(ExportPCMOptions, wxPanel)
+BEGIN_EVENT_TABLE(ExportPCMOptions, wxPanelWrapper)
    EVT_CHOICE(ID_HEADER_CHOICE, ExportPCMOptions::OnHeaderChoice)
 END_EVENT_TABLE()
 
 ExportPCMOptions::ExportPCMOptions(wxWindow *parent, int selformat)
-:  wxPanel(parent, wxID_ANY)
+:  wxPanelWrapper(parent, wxID_ANY)
 {
    int format;
 

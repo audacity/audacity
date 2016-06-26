@@ -17,7 +17,6 @@
 #define __AUDACITY_METER__
 
 #include <wx/defs.h>
-#include <wx/panel.h>
 #include <wx/timer.h>
 
 #include "../SampleFormat.h"
@@ -86,7 +85,7 @@ class MeterUpdateQueue
 
 class MeterAx;
 
-class Meter final : public wxPanel
+class Meter final : public wxPanelWrapper
 {
    DECLARE_DYNAMIC_CLASS(Meter)
 
@@ -113,8 +112,10 @@ class Meter final : public wxPanel
 
    ~Meter();
 
-   bool AcceptsFocus() const override { return false; };
-   bool AcceptsFocusFromKeyboard() const override { return true; };
+   bool AcceptsFocus() const override { return s_AcceptsFocus; }
+   bool AcceptsFocusFromKeyboard() const override { return true; }
+
+   void SetFocusFromKbd() override;
 
    void UpdatePrefs();
    void Clear();
@@ -178,6 +179,14 @@ class Meter final : public wxPanel
    // These exist solely for the purpose of reseting the toolbars
    void *SaveState();
    void RestoreState(void *state);
+
+ private:
+   static bool s_AcceptsFocus;
+   struct Resetter { void operator () (bool *p) const { if(p) *p = false; } };
+   using TempAllowFocus = std::unique_ptr<bool, Resetter>;
+
+ public:
+   static TempAllowFocus TemporarilyAllowFocus();
 
  private:
    //

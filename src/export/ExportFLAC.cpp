@@ -47,7 +47,7 @@ and libvorbis examples, Monty <monty@xiph.org>
 // ExportFLACOptions Class
 //----------------------------------------------------------------------------
 
-class ExportFLACOptions final : public wxPanel
+class ExportFLACOptions final : public wxPanelWrapper
 {
 public:
 
@@ -62,7 +62,7 @@ public:
 ///
 ///
 ExportFLACOptions::ExportFLACOptions(wxWindow *parent, int WXUNUSED(format))
-:  wxPanel(parent, wxID_ANY)
+:  wxPanelWrapper(parent, wxID_ANY)
 {
    ShuttleGui S(this, eIsCreatingFromPrefs);
    PopulateOrExchange(S);

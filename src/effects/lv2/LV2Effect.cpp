@@ -31,6 +31,7 @@
 #include "../../Internat.h"
 #include "../../ShuttleGui.h"
 #include "../../widgets/valnum.h"
+#include "../../widgets/wxPanelWrapper.h"
 
 #include "lilv/lilv.h"
 #include "suil/suil.h"
@@ -1449,7 +1450,7 @@ bool LV2Effect::BuildFancy()
    }
 
    // Use a panel to host the plugins GUI
-   mContainer = safenew wxPanel(mParent, wxID_ANY);
+   mContainer = safenew wxPanelWrapper(mParent, wxID_ANY);
    if (!mContainer)
    {
       lilv_uis_free(uis);

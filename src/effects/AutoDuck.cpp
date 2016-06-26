@@ -607,7 +607,7 @@ static int GetDistance(const wxPoint& first, const wxPoint& second)
       return distanceY;
 }
 
-BEGIN_EVENT_TABLE(EffectAutoDuckPanel, wxPanel)
+BEGIN_EVENT_TABLE(EffectAutoDuckPanel, wxPanelWrapper)
    EVT_PAINT(EffectAutoDuckPanel::OnPaint)
    EVT_MOUSE_CAPTURE_CHANGED(EffectAutoDuckPanel::OnMouseCaptureChanged)
    EVT_MOUSE_CAPTURE_LOST(EffectAutoDuckPanel::OnMouseCaptureLost)
@@ -617,7 +617,7 @@ BEGIN_EVENT_TABLE(EffectAutoDuckPanel, wxPanel)
 END_EVENT_TABLE()
 
 EffectAutoDuckPanel::EffectAutoDuckPanel(wxWindow *parent, EffectAutoDuck *effect)
-:  wxPanel(parent, wxID_ANY, wxDefaultPosition, wxSize(600, 300))
+:  wxPanelWrapper(parent, wxID_ANY, wxDefaultPosition, wxSize(600, 300))
 {
    mParent = parent;
    mEffect = effect;

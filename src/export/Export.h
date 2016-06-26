@@ -16,10 +16,10 @@
 #include <wx/dialog.h>
 #include <wx/dynarray.h>
 #include <wx/filename.h>
-#include <wx/panel.h>
 #include <wx/simplebook.h>
 #include "../Tags.h"
 #include "../SampleFormat.h"
+#include "../widgets/wxPanelWrapper.h"
 
 #include "FileDialog.h"
 
@@ -215,7 +215,7 @@ private:
 //----------------------------------------------------------------------------
 // ExportMixerPanel
 //----------------------------------------------------------------------------
-class ExportMixerPanel final : public wxPanel
+class ExportMixerPanel final : public wxPanelWrapper
 {
 public:
    ExportMixerPanel( MixerSpec *mixerSpec, wxArrayString trackNames,

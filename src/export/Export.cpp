@@ -220,7 +220,7 @@ bool ExportPlugin::DisplayOptions(wxWindow * WXUNUSED(parent), int WXUNUSED(form
 wxWindow *ExportPlugin::OptionsCreate(wxWindow *parent, int WXUNUSED(format))
 {
    wxASSERT(parent); // To justify safenew
-   wxPanel *p = safenew wxPanel(parent, wxID_ANY);
+   wxPanel *p = safenew wxPanelWrapper(parent, wxID_ANY);
    ShuttleGui S(p, eIsCreatingFromPrefs);
 
    S.StartHorizontalLay(wxCENTER);
@@ -985,7 +985,7 @@ bool Exporter::SetAutoExportOptions(AudacityProject *project) {
 // ExportMixerPanel
 //----------------------------------------------------------------------------
 
-BEGIN_EVENT_TABLE(ExportMixerPanel, wxPanel)
+BEGIN_EVENT_TABLE(ExportMixerPanel, wxPanelWrapper)
     EVT_PAINT(ExportMixerPanel::OnPaint)
     EVT_MOUSE_EVENTS(ExportMixerPanel::OnMouseEvent)
 END_EVENT_TABLE()
@@ -993,7 +993,7 @@ END_EVENT_TABLE()
 ExportMixerPanel::ExportMixerPanel( MixerSpec *mixerSpec,
       wxArrayString trackNames,wxWindow *parent, wxWindowID id,
       const wxPoint& pos, const wxSize& size):
-   wxPanel(parent, id, pos, size)
+   wxPanelWrapper(parent, id, pos, size)
 {
    mBitmap = NULL;
    mWidth = 0;

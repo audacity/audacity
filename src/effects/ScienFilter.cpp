@@ -1008,13 +1008,13 @@ void EffectScienFilter::EnableDisableRippleCtl(int FilterType)
 // EffectScienFilterPanel
 //----------------------------------------------------------------------------
 
-BEGIN_EVENT_TABLE(EffectScienFilterPanel, wxPanel)
+BEGIN_EVENT_TABLE(EffectScienFilterPanel, wxPanelWrapper)
     EVT_PAINT(EffectScienFilterPanel::OnPaint)
     EVT_SIZE(EffectScienFilterPanel::OnSize)
 END_EVENT_TABLE()
 
 EffectScienFilterPanel::EffectScienFilterPanel(EffectScienFilter *effect, wxWindow *parent)
-:  wxPanel(parent, wxID_ANY, wxDefaultPosition, wxSize(400, 200))
+:  wxPanelWrapper(parent, wxID_ANY, wxDefaultPosition, wxSize(400, 200))
 {
    mEffect = effect;
    mParent = parent;

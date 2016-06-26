@@ -53,6 +53,7 @@
 #include "EditToolBar.h"
 #include "MeterToolBar.h"
 #include "MixerToolBar.h"
+#include "ScrubbingToolBar.h"
 #include "SelectionBar.h"
 #include "SpectralSelectionBar.h"
 #include "ToolsToolBar.h"
@@ -351,7 +352,7 @@ END_EVENT_TABLE()
 //
 // Constructor
 //
-ToolManager::ToolManager( AudacityProject *parent )
+ToolManager::ToolManager( AudacityProject *parent, wxWindow *topDockParent )
 : wxEvtHandler()
 {
    wxPoint pt[ 3 ];
@@ -434,7 +435,7 @@ ToolManager::ToolManager( AudacityProject *parent )
                      this );
 
    // Create the top and bottom docks
-   mTopDock = safenew ToolDock( this, mParent, TopDockID );
+   mTopDock = safenew ToolDock( this, topDockParent, TopDockID );
    mBotDock = safenew ToolDock( this, mParent, BotDockID );
 
    // Create all of the toolbars
@@ -836,9 +837,50 @@ void ToolManager::ReadConfig()
       d->LoadConfig();
 
       // Add all unordered toolbars
+      bool deviceWasPositioned = false;
       for( int ord = 0; ord < (int) unordered[ dock ].GetCount(); ord++ )
       {
          ToolBar *t = mBars[ unordered[ dock ][ ord ] ];
+
+         if (deviceWasPositioned &&
+             t->GetType() == DeviceBarID)
+            continue;
+
+         if (someFound &&
+             t->GetType() == ScrubbingBarID) {
+            // Special case code to put the NEW scrubbing toolbar where we
+            // want it, when audacity.cfg is present from an older version
+            ToolBar *lastRoot {};
+
+            // Change from the ideal configuration to the constrained one,
+            // just as when dragging and dropping
+            ToolBarConfiguration dummy;
+            mTopDock->WrapConfiguration(dummy);
+
+            // Start a NEW row with just the scrubbing toolbar
+            auto &configuration = mTopDock->GetConfiguration();
+            for (const auto place : configuration)
+               if (place.position.rightOf == nullptr)
+                  lastRoot = place.pTree->pBar;
+            ToolBarConfiguration::Position position {
+               nullptr, lastRoot, false
+            };
+            mTopDock->Dock(t, false, position);
+
+            // Reposition the device toolbar, if it was docked above,
+            // right of scrubbing
+            const auto deviceToolBar = mBars[ DeviceBarID ];
+            if (deviceToolBar->GetDock() == mTopDock) {
+               deviceToolBar->GetDock()->Undock(deviceToolBar);
+               position = { t, nullptr };
+               mTopDock->Dock(deviceToolBar, false, position);
+
+               // Remember not to place the device toolbar again
+               deviceWasPositioned = true;
+            }
+
+            continue;
+         }
 
          // Dock it
          d->Dock( t, false );

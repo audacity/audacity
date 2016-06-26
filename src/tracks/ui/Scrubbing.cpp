@@ -21,7 +21,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../commands/CommandFunctors.h"
 #include "../../prefs/PlaybackPrefs.h"
 #include "../../toolbars/ControlToolBar.h"
-#include "../../toolbars/EditToolBar.h"
+#include "../../toolbars/ScrubbingToolBar.h"
 #include "../../toolbars/ToolManager.h"
 
 #undef USE_TRANSCRIPTION_TOOLBAR

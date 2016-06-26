@@ -262,7 +262,7 @@ static void InitMP3_Statics()
    }
 }
 
-class ExportMP3Options final : public wxPanel
+class ExportMP3Options final : public wxPanelWrapper
 {
 public:
 
@@ -305,7 +305,7 @@ private:
    DECLARE_EVENT_TABLE()
 };
 
-BEGIN_EVENT_TABLE(ExportMP3Options, wxPanel)
+BEGIN_EVENT_TABLE(ExportMP3Options, wxPanelWrapper)
    EVT_RADIOBUTTON(ID_SET,    ExportMP3Options::OnSET)
    EVT_RADIOBUTTON(ID_VBR,    ExportMP3Options::OnVBR)
    EVT_RADIOBUTTON(ID_ABR,    ExportMP3Options::OnABR)
@@ -317,7 +317,7 @@ END_EVENT_TABLE()
 ///
 ///
 ExportMP3Options::ExportMP3Options(wxWindow *parent, int WXUNUSED(format))
-:  wxPanel(parent, wxID_ANY)
+:  wxPanelWrapper(parent, wxID_ANY)
 {
    InitMP3_Statics();
 

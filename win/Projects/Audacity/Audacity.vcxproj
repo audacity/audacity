@@ -212,6 +212,7 @@
     <ClCompile Include="..\..\..\src\TimeDialog.cpp" />
     <ClCompile Include="..\..\..\src\TimerRecordDialog.cpp" />
     <ClCompile Include="..\..\..\src\TimeTrack.cpp" />
+    <ClCompile Include="..\..\..\src\toolbars\ScrubbingToolBar.cpp" />
     <ClCompile Include="..\..\..\src\toolbars\SpectralSelectionBar.cpp" />
     <ClCompile Include="..\..\..\src\Track.cpp" />
     <ClCompile Include="..\..\..\src\TrackArtist.cpp" />
@@ -230,6 +231,7 @@
     <ClCompile Include="..\..\..\src\widgets\NumericTextCtrl.cpp" />
     <ClCompile Include="..\..\..\src\widgets\Overlay.cpp" />
     <ClCompile Include="..\..\..\src\widgets\OverlayPanel.cpp" />
+    <ClCompile Include="..\..\..\src\widgets\wxPanelWrapper.cpp" />
     <ClCompile Include="..\..\..\src\WrappedType.cpp" />
     <ClCompile Include="..\..\..\src\effects\Amplify.cpp" />
     <ClCompile Include="..\..\..\src\effects\AutoDuck.cpp" />
@@ -445,6 +447,7 @@
     <ClInclude Include="..\..\..\src\RevisionIdent.h" />
     <ClInclude Include="..\..\..\src\SelectedRegion.h" />
     <ClInclude Include="..\..\..\src\SseMathFuncs.h" />
+    <ClInclude Include="..\..\..\src\toolbars\ScrubbingToolBar.h" />
     <ClInclude Include="..\..\..\src\toolbars\SpectralSelectionBar.h" />
     <ClInclude Include="..\..\..\src\toolbars\SpectralSelectionBarListener.h" />
     <ClInclude Include="..\..\..\src\TrackPanelCell.h" />
@@ -460,6 +463,7 @@
     <ClInclude Include="..\..\..\src\widgets\NumericTextCtrl.h" />
     <ClInclude Include="..\..\..\src\widgets\Overlay.h" />
     <ClInclude Include="..\..\..\src\widgets\OverlayPanel.h" />
+    <ClInclude Include="..\..\..\src\widgets\wxPanelWrapper.h" />
     <ClInclude Include="..\..\..\src\wxFileNameWrapper.h" />
     <ClInclude Include="..\..\configwin.h" />
     <ClInclude Include="..\..\..\src\Dependencies.h" />

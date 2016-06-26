@@ -29,7 +29,7 @@
 #include "../Menus.h"
 #include "../toolbars/ToolManager.h"
 
-BEGIN_EVENT_TABLE(BatchPrefs, wxPanel)
+BEGIN_EVENT_TABLE(BatchPrefs, PrefsPanel)
 END_EVENT_TABLE()
 
 /// Constructor

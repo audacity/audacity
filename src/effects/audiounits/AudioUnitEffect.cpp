@@ -25,7 +25,6 @@
 #include <wx/filename.h>
 #include <wx/frame.h>
 #include <wx/listctrl.h>
-#include <wx/panel.h>
 #include <wx/sizer.h>
 #include <wx/settings.h>
 #include <wx/stattext.h>
@@ -34,6 +33,7 @@
 
 #include "../../ShuttleGui.h"
 #include "../../widgets/valnum.h"
+#include "../../widgets/wxPanelWrapper.h"
 
 #include "AudioUnitEffect.h"
 
@@ -1758,7 +1758,7 @@ bool AudioUnitEffect::PopulateUI(wxWindow *parent)
       auto mainSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
 
       wxASSERT(mParent); // To justify safenew
-      container = safenew wxPanel(mParent, wxID_ANY);
+      container = safenew wxPanelWrapper(mParent, wxID_ANY);
       mainSizer->Add(container, 1, wxEXPAND);
 
       mParent->SetSizer(mainSizer.release());
