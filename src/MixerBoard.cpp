@@ -776,19 +776,16 @@ void MixerTrackCluster::OnPaint(wxPaintEvent & WXUNUSED(event))
    wxRect bev(0, 0, clusterSize.GetWidth() - 1, clusterSize.GetHeight() - 1);
 
 #ifdef EXPERIMENTAL_MIDI_OUT
-   if (mTrack->GetSelected())
+   auto selected = mTrack->GetSelected();
 #else
-   if (mLeftTrack->GetSelected())
+   auto selected = mLeftTrack->GetSelected();
 #endif
+
+   for (unsigned int i = 0; i < 4; i++) // 4 gives a big bevel, but there were complaints about visibility otherwise.
    {
-      for (unsigned int i = 0; i < 4; i++) // 4 gives a big bevel, but there were complaints about visibility otherwise.
-      {
-         bev.Inflate(-1, -1);
-         AColor::Bevel(dc, false, bev);
-      }
+      bev.Inflate(-1, -1);
+      AColor::Bevel(dc, !selected, bev);
    }
-   else
-      AColor::Bevel(dc, true, bev);
 }
 
 

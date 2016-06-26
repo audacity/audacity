@@ -822,7 +822,7 @@ void TrackPanel::SelectNone()
    TrackListIterator iter(mTracks);
    Track *t = iter.First();
    while (t) {
-      t->SetSelected(false);
+      SelectTrack(t, false, false);
       t = iter.Next();
    }
 }
@@ -1196,6 +1196,10 @@ bool TrackPanel::HandleEscapeKey(bool down)
       }
       mLastPickedTrack = mInitialLastPickedTrack;
       mViewInfo->selectedRegion = mInitialSelection;
+
+      // Refresh mixer board for change of set of selected tracks
+      if (MixerBoard* pMixerBoard = this->GetMixerBoard())
+         pMixerBoard->Refresh();
    }
       break;
    case IsZooming:
@@ -1845,17 +1849,27 @@ void TrackPanel::HandleSelect(wxMouseEvent & event)
    SelectionHandleDrag(event, t);
 }
 
-void TrackPanel::SelectTrack(Track *pTrack, bool selected)
+void TrackPanel::SelectTrack(Track *pTrack, bool selected, bool updateLastPicked)
 {
+   bool wasCorrect = (selected == pTrack->GetSelected());
+
    if (selected) {
       // This handles the case of linked tracks, selecting all channels
       mTracks->Select(pTrack, true);
-      mLastPickedTrack = pTrack;
+      if (updateLastPicked)
+         mLastPickedTrack = pTrack;
    }
    else {
       mTracks->Select(pTrack, false);
-      if (pTrack == mLastPickedTrack)
+      if (updateLastPicked && pTrack == mLastPickedTrack)
          mLastPickedTrack = nullptr;
+   }
+
+   // Update mixer board, but only as needed so it does not flicker.
+   if (!wasCorrect) {
+      MixerBoard* pMixerBoard = this->GetMixerBoard();
+      if (pMixerBoard && (pTrack->GetKind() == Track::Wave))
+         pMixerBoard->RefreshTrackCluster(static_cast<WaveTrack*>(pTrack));
    }
 }
 
@@ -1870,7 +1884,7 @@ void TrackPanel::SelectRangeOfTracks(Track *sTrack, Track *eTrack)
       TrackListIterator iter(mTracks);
       sTrack = iter.StartWith(sTrack);
       do {
-         mTracks->Select(sTrack);
+         SelectTrack(sTrack, true);
          if (sTrack == eTrack) {
             break;
          }
@@ -2405,7 +2419,7 @@ void TrackPanel::MoveSnappingFreqSelection (int mouseYCoordinate,
 
       mFreqSelTrack = wt;
       // SelectNone();
-      // mTracks->Select(pTrack);
+      // SelectTrack(pTrack, true);
       SetFocusedTrack(pTrack);
    }
 }
@@ -4972,9 +4986,6 @@ void TrackPanel::HandleLabelClick(wxMouseEvent & event)
    if (event.ShiftDown()) {
       SelectTrack(t, !t->GetSelected());
       Refresh(false);
-      MixerBoard* pMixerBoard = this->GetMixerBoard();
-      if (pMixerBoard && (t->GetKind() == Track::Wave))
-         pMixerBoard->RefreshTrackCluster((WaveTrack*)t);
       return;
    }
 
@@ -7261,7 +7272,7 @@ void TrackPanel::OnPrevTrack( bool shift )
          pSelected = p->GetSelected();
       if( tSelected && pSelected )
       {
-         mTracks->Select( t, false );
+         SelectTrack(t, false, false);
          SetFocusedTrack( p );   // move focus to next track down
          EnsureVisible( p );
          MakeParentModifyState(false);
@@ -7269,7 +7280,7 @@ void TrackPanel::OnPrevTrack( bool shift )
       }
       if( tSelected && !pSelected )
       {
-         mTracks->Select( p, true );
+         SelectTrack(p, true, false);
          SetFocusedTrack( p );   // move focus to next track down
          EnsureVisible( p );
          MakeParentModifyState(false);
@@ -7277,7 +7288,7 @@ void TrackPanel::OnPrevTrack( bool shift )
       }
       if( !tSelected && pSelected )
       {
-         mTracks->Select( p, false );
+         SelectTrack(p, false, false);
          SetFocusedTrack( p );   // move focus to next track down
          EnsureVisible( p );
          MakeParentModifyState(false);
@@ -7285,7 +7296,7 @@ void TrackPanel::OnPrevTrack( bool shift )
       }
       if( !tSelected && !pSelected )
       {
-         mTracks->Select( t, true );
+         SelectTrack(t, true, false);
          SetFocusedTrack( p );   // move focus to next track down
          EnsureVisible( p );
          MakeParentModifyState(false);
@@ -7367,7 +7378,7 @@ void TrackPanel::OnNextTrack( bool shift )
       nSelected = n->GetSelected();
       if( tSelected && nSelected )
       {
-         mTracks->Select( t, false );
+         SelectTrack(t, false, false);
          SetFocusedTrack( n );   // move focus to next track down
          EnsureVisible( n );
          MakeParentModifyState(false);
@@ -7375,7 +7386,7 @@ void TrackPanel::OnNextTrack( bool shift )
       }
       if( tSelected && !nSelected )
       {
-         mTracks->Select( n, true );
+         SelectTrack(n, true, false);
          SetFocusedTrack( n );   // move focus to next track down
          EnsureVisible( n );
          MakeParentModifyState(false);
@@ -7383,7 +7394,7 @@ void TrackPanel::OnNextTrack( bool shift )
       }
       if( !tSelected && nSelected )
       {
-         mTracks->Select( n, false );
+         SelectTrack(n, false, false);
          SetFocusedTrack( n );   // move focus to next track down
          EnsureVisible( n );
          MakeParentModifyState(false);
@@ -7391,7 +7402,7 @@ void TrackPanel::OnNextTrack( bool shift )
       }
       if( !tSelected && !nSelected )
       {
-         mTracks->Select( t, true );
+         SelectTrack(t, true, false);
          SetFocusedTrack( n );   // move focus to next track down
          EnsureVisible( n );
          MakeParentModifyState(false);
