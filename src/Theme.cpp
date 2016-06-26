@@ -691,7 +691,7 @@ void ThemeBase::WriteImageMap( )
       return;
 
    File.Write( wxT("<html>\r\n"));
-   File.Write( wxT("<body>\r\n"));
+   File.Write( wxT("<body bgcolor=\"303030\">\r\n"));
    File.Write( wxT("<img src=\"ImageCache.png\" usemap=\"#map1\">\r\n" ));
    File.Write( wxT("<map name=\"map1\">\r\n") );
 
