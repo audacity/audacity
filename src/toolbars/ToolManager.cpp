@@ -666,7 +666,7 @@ void ToolManager::ReadConfig()
 
 #if defined(__WXMAC__)
    // Disable window animation
-   wxSystemOptions::SetOption( wxMAC_WINDOW_PLAIN_TRANSITION, 1 );
+   //wxSystemOptions::SetOption( wxMAC_WINDOW_PLAIN_TRANSITION, 1 );
 #endif
 
    // Change to the bar root
@@ -852,7 +852,7 @@ void ToolManager::ReadConfig()
 
 #if defined(__WXMAC__)
    // Reinstate original transition
-   wxSystemOptions::SetOption( wxMAC_WINDOW_PLAIN_TRANSITION, mTransition );
+   //wxSystemOptions::SetOption( wxMAC_WINDOW_PLAIN_TRANSITION, mTransition );
 #endif
 
    if (!someFound)
@@ -1055,7 +1055,7 @@ void ToolManager::OnMouse( wxMouseEvent & event )
 
 #if defined(__WXMAC__)
    // Disable window animation
-   wxSystemOptions::SetOption( wxMAC_WINDOW_PLAIN_TRANSITION, 1 );
+   //wxSystemOptions::SetOption( wxMAC_WINDOW_PLAIN_TRANSITION, 1 );
 #endif
 
    // Retrieve the event position
@@ -1189,7 +1189,7 @@ void ToolManager::OnMouse( wxMouseEvent & event )
 
 #if defined(__WXMAC__)
    // Reinstate original transition
-   wxSystemOptions::SetOption( wxMAC_WINDOW_PLAIN_TRANSITION, mTransition );
+   //wxSystemOptions::SetOption( wxMAC_WINDOW_PLAIN_TRANSITION, mTransition );
 #endif
 }
 
@@ -1236,14 +1236,14 @@ void ToolManager::OnTimer( wxTimerEvent & event )
 
 #if defined(__WXMAC__)
       // Disable window animation
-      wxSystemOptions::SetOption( wxMAC_WINDOW_PLAIN_TRANSITION, 1 );
+      //wxSystemOptions::SetOption( wxMAC_WINDOW_PLAIN_TRANSITION, 1 );
 #endif
 
       mIndicator->Show( !state );
 
 #if defined(__WXMAC__)
       // Disable window animation
-      wxSystemOptions::SetOption( wxMAC_WINDOW_PLAIN_TRANSITION, mTransition );
+      //wxSystemOptions::SetOption( wxMAC_WINDOW_PLAIN_TRANSITION, mTransition );
 #endif
    }
 
@@ -1313,7 +1313,7 @@ void ToolManager::OnGrabber( GrabberEvent & event )
    {
 #if defined(__WXMAC__)
       // Disable window animation
-      wxSystemOptions::SetOption( wxMAC_WINDOW_PLAIN_TRANSITION, 1 );
+      //wxSystemOptions::SetOption( wxMAC_WINDOW_PLAIN_TRANSITION, 1 );
 #endif
 
       // Adjust the starting position
@@ -1334,7 +1334,7 @@ void ToolManager::OnGrabber( GrabberEvent & event )
 
 #if defined(__WXMAC__)
       // Reinstate original transition
-      wxSystemOptions::SetOption( wxMAC_WINDOW_PLAIN_TRANSITION, mTransition );
+      //wxSystemOptions::SetOption( wxMAC_WINDOW_PLAIN_TRANSITION, mTransition );
 #endif
    }
    else
