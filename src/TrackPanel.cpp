@@ -549,8 +549,6 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
 
    mSelStartValid = false;
    mSelStart = 0;
-
-   mInitialTrackSelection = new std::vector<bool>;
 }
 
 
@@ -583,8 +581,6 @@ TrackPanel::~TrackPanel()
 #if !wxUSE_ACCESSIBILITY
    delete mAx;
 #endif
-
-   delete mInitialTrackSelection;
 }
 
 void TrackPanel::BuildMenusIfNeeded(void)
@@ -1192,8 +1188,8 @@ bool TrackPanel::HandleEscapeKey(bool down)
    {
       TrackListIterator iter(mTracks);
       std::vector<bool>::const_iterator
-         it = mInitialTrackSelection->begin(),
-         end = mInitialTrackSelection->end();
+         it = mInitialTrackSelection.begin(),
+         end = mInitialTrackSelection.end();
       for (Track *t = iter.First(); t; t = iter.Next()) {
          wxASSERT(it != end);
          t->SetSelected(*it++);
@@ -1899,12 +1895,12 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
    mInitialLastPickedTrack = mLastPickedTrack;
 
    // Save initial state of track selections
-   mInitialTrackSelection->clear();
+   mInitialTrackSelection.clear();
    {
       TrackListIterator iter(mTracks);
       for (Track *t = iter.First(); t; t = iter.Next()) {
          const bool isSelected = t->GetSelected();
-         mInitialTrackSelection->push_back(isSelected);
+         mInitialTrackSelection.push_back(isSelected);
       }
    }
 

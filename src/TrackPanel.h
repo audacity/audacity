@@ -565,8 +565,7 @@ protected:
    int mPrevHeight;
 
    SelectedRegion mInitialSelection;
-   // Extra indirection to avoid the stupid MSW compiler warnings!  Rrrr!
-   std::vector<bool> *mInitialTrackSelection;
+   std::vector<bool> mInitialTrackSelection;
    Track *mInitialLastPickedTrack {};
 
    bool mSelStartValid;
