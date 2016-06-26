@@ -243,7 +243,7 @@ private:
    NumberScale *mpNumberScale;
 };
 
-class AUDACITY_DLL_API RulerPanel final : public wxPanel {
+class AUDACITY_DLL_API RulerPanel final : public wxPanelWrapper {
    DECLARE_DYNAMIC_CLASS(RulerPanel)
 
  public:
@@ -285,7 +285,8 @@ class QuickPlayRulerOverlay;
 class AUDACITY_DLL_API AdornedRulerPanel final : public OverlayPanel
 {
 public:
-   AdornedRulerPanel(AudacityProject* parent,
+   AdornedRulerPanel(AudacityProject *project,
+                     wxWindow* parent,
                      wxWindowID id,
                      const wxPoint& pos = wxDefaultPosition,
                      const wxSize& size = wxDefaultSize,
@@ -329,6 +330,9 @@ public:
    void ShowQuickPlayIndicator();
    void HideQuickPlayIndicator();
    void UpdateQuickPlayPos(wxCoord &mousPosX);
+
+   bool ShowingScrubBar() const { return mShowScrubbing; }
+   void OnToggleScrubBar(/*wxCommandEvent&*/);
 
 private:
    void OnCapture(wxCommandEvent & evt);
@@ -413,8 +417,6 @@ private:
    void OnAutoScroll(wxCommandEvent &evt);
    void OnLockPlayRegion(wxCommandEvent &evt);
 
-   void OnToggleScrubbing(/*wxCommandEvent&*/);
-
    void OnContextMenu(wxContextMenuEvent & WXUNUSED(event));
 
    void OnTogglePinnedState(wxCommandEvent & event);
@@ -440,7 +442,7 @@ private:
 
    StatusChoice mPrevZone { StatusChoice::NoChange };
 
-   bool mShowScrubbing { true };
+   bool mShowScrubbing { false };
 
    DECLARE_EVENT_TABLE()
 

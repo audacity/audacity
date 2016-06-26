@@ -68,8 +68,9 @@ public:
    virtual ~ToolBarResizer();
 
    // We don't need or want to accept focus.
-   // PRL: except for ESC key now.
-   // bool AcceptsFocus() const;
+   // Note that AcceptsFocusFromKeyboard() is overriden rather than
+   // AcceptsFocus(), so that resize can be cancelled by ESC
+   bool AcceptsFocusFromKeyboard() const override {return false;}
 
 private:
    void OnErase(wxEraseEvent & event);
@@ -77,7 +78,6 @@ private:
    void OnLeftDown(wxMouseEvent & event);
    void OnLeftUp(wxMouseEvent & event);
    void OnEnter(wxMouseEvent & event);
-   void OnLeave(wxMouseEvent & event);
    void OnMotion(wxMouseEvent & event);
    void ResizeBar(const wxSize &size);
    void OnCaptureLost(wxMouseCaptureLostEvent & event);
@@ -99,6 +99,7 @@ BEGIN_EVENT_TABLE( ToolBarResizer, wxWindow )
    EVT_PAINT( ToolBarResizer::OnPaint )
    EVT_LEFT_DOWN( ToolBarResizer::OnLeftDown )
    EVT_LEFT_UP( ToolBarResizer::OnLeftUp )
+   EVT_ENTER_WINDOW( ToolBarResizer::OnEnter )
    EVT_MOTION( ToolBarResizer::OnMotion )
    EVT_MOUSE_CAPTURE_LOST( ToolBarResizer::OnCaptureLost )
    EVT_KEY_DOWN( ToolBarResizer::OnKeyDown )
@@ -116,13 +117,6 @@ ToolBarResizer::~ToolBarResizer()
    if(HasCapture())
       ReleaseMouse();
 }
-
-/*
-bool ToolBarResizer::AcceptsFocus() const
-{
-   return false;
-}
- */
 
 //
 // Handle background erasure
@@ -182,6 +176,15 @@ void ToolBarResizer::OnLeftUp( wxMouseEvent & event )
    {
       ReleaseMouse();
    }
+}
+
+void ToolBarResizer::OnEnter( wxMouseEvent & event )
+{
+   // Bug 1201:  On Mac, unsetting and re-setting the tooltip may be needed
+   // to make it pop up when we want it.
+   const auto text = GetToolTipText();
+   UnsetToolTip();
+   SetToolTip(text);
 }
 
 void ToolBarResizer::OnMotion( wxMouseEvent & event )
@@ -264,7 +267,7 @@ void ToolBarResizer::OnKeyDown(wxKeyEvent &event)
 //
 // Define class to RTTI
 //
-IMPLEMENT_CLASS( ToolBar, wxPanel );
+IMPLEMENT_CLASS( ToolBar, wxPanelWrapper );
 
 //
 // Custom event
@@ -274,7 +277,7 @@ DEFINE_EVENT_TYPE(EVT_TOOLBAR_UPDATED)
 //
 // Event table
 //
-BEGIN_EVENT_TABLE( ToolBar, wxPanel )
+BEGIN_EVENT_TABLE( ToolBar, wxPanelWrapper )
    EVT_PAINT( ToolBar::OnPaint )
    EVT_ERASE_BACKGROUND( ToolBar::OnErase )
    EVT_MOUSE_EVENTS( ToolBar::OnMouseEvents )
@@ -287,7 +290,7 @@ ToolBar::ToolBar( int type,
                   const wxString &label,
                   const wxString &section,
                   bool resizable )
-: wxPanel()
+: wxPanelWrapper()
 {
    // Save parameters
    mType = type;
@@ -422,13 +425,13 @@ void ToolBar::Create( wxWindow *parent )
    mParent = parent;
 
    // Create the window and label it
-   wxPanel::Create( mParent,
+   wxPanelWrapper::Create( mParent,
                     mType,
                     wxDefaultPosition,
                     wxDefaultSize,
                     wxNO_BORDER | wxTAB_TRAVERSAL,
                     GetTitle() );
-   wxPanel::SetLabel( GetLabel() );
+   wxPanelWrapper::SetLabel( GetLabel() );
 
    // Go do the rest of the creation
    ReCreateButtons();

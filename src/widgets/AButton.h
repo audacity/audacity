@@ -56,8 +56,10 @@ class AButton final : public wxWindow {
 
    virtual ~ AButton();
 
-   bool AcceptsFocus() const override { return false; }
+   bool AcceptsFocus() const override { return s_AcceptsFocus; }
    bool AcceptsFocusFromKeyboard() const override { return true; }
+
+   void SetFocusFromKbd() override;
 
    // Associate a set of four images (button up, highlight, button down,
    // disabled) with one nondefault state of the button
@@ -135,6 +137,14 @@ class AButton final : public wxWindow {
    AButtonState GetState();
 
    void UseDisabledAsDownHiliteImage(bool flag);
+
+ private:
+   static bool s_AcceptsFocus;
+   struct Resetter { void operator () (bool *p) const { if(p) *p = false; } };
+   using TempAllowFocus = std::unique_ptr<bool, Resetter>;
+
+ public:
+   static TempAllowFocus TemporarilyAllowFocus();
 
  private:
 

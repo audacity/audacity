@@ -167,10 +167,15 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
 
  protected:
    /// Calculate summary data for the given sample data
+   /// Overrides have differing details of memory management
    virtual void *CalcSummary(samplePtr buffer, sampleCount len,
                              sampleFormat format,
                              // This gets filled, if the caller needs to deallocate.  Else it is null.
                              ArrayOf<char> &cleanup);
+   // Common, nonvirtual calculation routine for the use of the above
+   void CalcSummaryFromBuffer(const float *fbuffer, sampleCount len,
+                              float *summary256, float *summary64K);
+
    /// Read the summary section of the file.  Derived classes implement.
    virtual bool ReadSummary(void *data) = 0;
 

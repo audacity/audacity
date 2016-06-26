@@ -460,17 +460,35 @@ void Tags::SetTag(const wxString & name, const wxString & value)
    // Look it up
    TagMap::iterator iter = mXref.find(key);
 
-   // Didn't find the tag
-   if (iter == mXref.end()) {
-
-      // Add a NEW tag
-      mXref[key] = name;
-      mMap[name] = value;
-      return;
+   if (value.IsEmpty()) {
+      // Erase the tag
+      if (iter == mXref.end())
+         // nothing to do
+         ;
+      else {
+         mMap.erase(iter->second);
+         mXref.erase(iter);
+      }
    }
+   else {
+      if (iter == mXref.end()) {
+         // Didn't find the tag
 
-   // Update the value
-   mMap[iter->second] = value;
+         // Add a NEW tag
+         mXref[key] = name;
+         mMap[name] = value;
+      }
+      else if (!iter->second.IsSameAs(name)) {
+         // Watch out for case differences!
+         mMap[name] = value;
+         mMap.erase(iter->second);
+         iter->second = name;
+      }
+      else {
+         // Update the value
+         mMap[iter->second] = value;
+      }
+   }
 }
 
 void Tags::SetTag(const wxString & name, const int & value)
@@ -663,6 +681,7 @@ BEGIN_EVENT_TABLE(TagsEditor, wxDialog)
    EVT_BUTTON(RemoveID, TagsEditor::OnRemove)
    EVT_BUTTON(wxID_CANCEL, TagsEditor::OnCancel)
    EVT_BUTTON(wxID_OK, TagsEditor::OnOk)
+   EVT_KEY_DOWN(TagsEditor::OnKeyDown)
 END_EVENT_TABLE()
 
 TagsEditor::TagsEditor(wxWindow * parent,
@@ -1261,7 +1280,6 @@ void TagsEditor::OnOk(wxCommandEvent & WXUNUSED(event))
    if (mGrid->IsCellEditControlShown()) {
       mGrid->SaveEditControlValue();
       mGrid->HideCellEditControl();
-      return;
    }
 
    if (!Validate() || !TransferDataFromWindow()) {
@@ -1282,6 +1300,11 @@ void TagsEditor::OnOk(wxCommandEvent & WXUNUSED(event))
 
 void TagsEditor::OnCancel(wxCommandEvent & WXUNUSED(event))
 {
+   DoCancel(false);
+}
+
+void TagsEditor::DoCancel(bool escKey)
+{
    if (mGrid->IsCellEditControlShown()) {
       auto editor = mGrid->GetCellEditor(mGrid->GetGridCursorRow(),
          mGrid->GetGridCursorCol());
@@ -1289,10 +1312,21 @@ void TagsEditor::OnCancel(wxCommandEvent & WXUNUSED(event))
       // To avoid memory leak, don't forget DecRef()!
       editor->DecRef();
       mGrid->HideCellEditControl();
-      return;
    }
 
+   auto focus = wxWindow::FindFocus();
+   if (escKey && focus == mGrid)
+      return;
+
    EndModal(wxID_CANCEL);
+}
+
+void TagsEditor::OnKeyDown(wxKeyEvent &event)
+{
+   if (event.GetKeyCode() == WXK_ESCAPE)
+      DoCancel(true);
+   else
+      event.Skip();
 }
 
 void TagsEditor::SetEditors()

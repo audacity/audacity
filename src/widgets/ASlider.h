@@ -15,6 +15,7 @@
 
 #include "../Experimental.h"
 
+#include "../MemoryX.h"
 #include <wx/defs.h>
 #include <wx/window.h>
 #include <wx/dialog.h>
@@ -229,7 +230,6 @@ class LWSlider
 
    TipPanel *mTipPanel;
    wxString mTipTemplate;
-   wxTimer mTimer;
 
    Ruler* mpRuler;
 
@@ -265,6 +265,11 @@ class ASlider /* not final */ : public wxPanel
             int orientation = wxHORIZONTAL);
    virtual ~ASlider();
 
+   bool AcceptsFocus() const override { return s_AcceptsFocus; }
+   bool AcceptsFocusFromKeyboard() const override { return true; }
+
+   void SetFocusFromKbd() override;
+
    void GetScroll(float & line, float & page);
    void SetScroll(float line, float page);
 
@@ -296,6 +301,14 @@ class ASlider /* not final */ : public wxPanel
    // Overrides of the wxWindow functions with the same semantics
    bool Enable(bool enable = true);
    bool IsEnabled() const;
+
+private:
+   static bool s_AcceptsFocus;
+   struct Resetter { void operator () (bool *p) const { if(p) *p = false; } };
+   using TempAllowFocus = std::unique_ptr<bool, Resetter>;
+
+public:
+   static TempAllowFocus TemporarilyAllowFocus();
 
  private:
    LWSlider *mLWSlider;

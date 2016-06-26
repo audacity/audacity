@@ -174,11 +174,20 @@ void AColor::DrawFocus(wxDC & dc, wxRect & rect)
          x2 = rect.GetRight(),
          y2 = rect.GetBottom();
 
+#ifdef __WXMAC__
+   // Why must this be different?
+   // Otherwise nothing is visible if you do as for the
+   // other platforms.
+   dc.SetPen(wxPen(wxT("MEDIUM GREY"), 1, wxSOLID));
+
+   dc.SetLogicalFunction(wxCOPY);
+#else
    dc.SetPen(wxPen(wxT("MEDIUM GREY"), 0, wxSOLID));
 
    // this seems to be closer than what Windows does than wxINVERT although
    // I'm still not sure if it's correct
    dc.SetLogicalFunction(wxAND_REVERSE);
+#endif
 
    wxCoord z;
    for ( z = x1 + 1; z < x2; z += 2 )

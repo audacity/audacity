@@ -16,7 +16,6 @@
 #include <vector>
 #include "../MemoryX.h" // for std::move
 #include <wx/defs.h>
-#include <wx/panel.h>
 
 #include "ToolBar.h"
 
@@ -282,7 +281,7 @@ private:
    Forest mForest;
 };
 
-class ToolDock final : public wxPanel
+class ToolDock final : public wxPanelWrapper
 {
 public:
 

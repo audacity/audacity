@@ -1976,6 +1976,8 @@ bool WaveTrack::GetMinMax(float *min, float *max,
 
 bool WaveTrack::GetRMS(float *rms, double t0, double t1)
 {
+   *rms = float(0.0);
+
    if (t0 > t1)
       return false;
 
@@ -1990,7 +1992,10 @@ bool WaveTrack::GetRMS(float *rms, double t0, double t1)
    {
       WaveClip* clip = it->GetData();
 
-      if (t1 >= clip->GetStartTime() && t0 <= clip->GetEndTime())
+      // If t1 == clip->GetStartTime() or t0 == clip->GetEndTime(), then the clip
+      // is not inside the selection, so we don't want it.
+      // if (t1 >= clip->GetStartTime() && t0 <= clip->GetEndTime())
+      if (t1 > clip->GetStartTime() && t0 < clip->GetEndTime())
       {
          float cliprms;
          sampleCount clipStart, clipEnd;

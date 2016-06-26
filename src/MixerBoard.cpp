@@ -140,7 +140,7 @@ enum {
    ID_TOGGLEBUTTON_SOLO,
 };
 
-BEGIN_EVENT_TABLE(MixerTrackCluster, wxPanel)
+BEGIN_EVENT_TABLE(MixerTrackCluster, wxPanelWrapper)
    EVT_MOUSE_EVENTS(MixerTrackCluster::OnMouseEvent)
    EVT_PAINT(MixerTrackCluster::OnPaint)
 
@@ -157,7 +157,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
                                        WaveTrack* pLeftTrack, WaveTrack* pRightTrack /*= NULL*/,
                                        const wxPoint& pos /*= wxDefaultPosition*/,
                                        const wxSize& size /*= wxDefaultSize*/)
-: wxPanel(parent, -1, pos, size)
+: wxPanelWrapper(parent, -1, pos, size)
 {
    mMixerBoard = grandParent;
    mProject = project;

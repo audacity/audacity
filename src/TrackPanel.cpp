@@ -4828,19 +4828,22 @@ void TrackPanel::OnTrackListUpdated(wxCommandEvent & e)
       SetFocusedTrack(NULL);
    }
 
-   if (!mTracks->Contains(mCapturedTrack)) {
+   if (mCapturedTrack &&
+       !mTracks->Contains(mCapturedTrack)) {
       SetCapturedTrack(nullptr);
       if (HasCapture())
          ReleaseMouse();
    }
 
-   if (!mTracks->Contains(mFreqSelTrack)) {
+   if (mFreqSelTrack &&
+       !mTracks->Contains(mFreqSelTrack)) {
       mFreqSelTrack = nullptr;
       if (HasCapture())
          ReleaseMouse();
    }
 
-   if (!mTracks->Contains(mPopupMenuTarget)) {
+   if (mPopupMenuTarget &&
+       !mTracks->Contains(mPopupMenuTarget)) {
       mPopupMenuTarget = nullptr;
       if (HasCapture())
          ReleaseMouse();
@@ -6303,6 +6306,10 @@ void TrackPanel::HandleGlyphDragRelease(LabelTrack * lTrack, wxMouseEvent & even
          _("Label Edit"),
          UndoPush::CONSOLIDATE);
    }
+
+   // Update cursor on the screen if it is a point.
+   DrawOverlays(false);
+   mRuler->DrawOverlays(false);
 
    //If we are adjusting a label on a labeltrack, do not do anything
    //that follows. Instead, redraw the track.
@@ -8014,9 +8021,11 @@ void TrackPanel::OnSpectrogramSettings(wxCommandEvent &)
    wxString title(wt->GetName() + wxT(": "));
    ViewSettingsDialog dialog(this, title, factories, page);
 
-   if (0 != dialog.ShowModal())
+   if (0 != dialog.ShowModal()) {
+      MakeParentModifyState(true);
       // Redraw
       Refresh(false);
+   }
 }
 
 ///  Set the Display mode based on the menu choice in the Track Menu.
@@ -8514,7 +8523,14 @@ void TrackPanel::OnSetFont(wxCommandEvent & WXUNUSED(event))
    fontEnumerator.EnumerateFacenames(wxFONTENCODING_SYSTEM, false);
 
    wxString facename = gPrefs->Read(wxT("/GUI/LabelFontFacename"), wxT(""));
-   long fontsize = gPrefs->Read(wxT("/GUI/LabelFontSize"), 12);
+
+   // Correct for empty facename, or bad preference file:
+   // get the name of a really existing font, to highlight by default
+   // in the list box
+   facename = LabelTrack::GetFont(facename).GetFaceName();
+
+   long fontsize = gPrefs->Read(wxT("/GUI/LabelFontSize"),
+                                LabelTrack::DefaultFontSize);
 
    /* i18n-hint: (noun) This is the font for the label track.*/
    wxDialog dlg(this, wxID_ANY, wxString(_("Label Track Font")));

@@ -45,7 +45,7 @@ class ToolManager final : public wxEvtHandler
 
  public:
 
-   ToolManager( AudacityProject *parent );
+   ToolManager( AudacityProject *parent, wxWindow *topDockParent );
    ~ToolManager();
 
    void LayoutToolBars();

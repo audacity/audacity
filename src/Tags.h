@@ -147,6 +147,8 @@ class TagsEditor final : public wxDialog
 
    virtual ~TagsEditor();
 
+   bool IsEscapeKey(const wxKeyEvent& event) override { return false; }
+
    void PopulateOrExchange(ShuttleGui & S);
 
    bool TransferDataToWindow() override;
@@ -171,7 +173,10 @@ class TagsEditor final : public wxDialog
    void OnRemove(wxCommandEvent & event);
 
    void OnOk(wxCommandEvent & event);
+   void DoCancel(bool escKey);
    void OnCancel(wxCommandEvent & event);
+
+   void OnKeyDown(wxKeyEvent &event);
 
    bool IsWindowRectValid(const wxRect *windowRect) const;
 

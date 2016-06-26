@@ -881,6 +881,15 @@
     <ClCompile Include="..\..\..\src\widgets\OverlayPanel.cpp">
       <Filter>src\widgets</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\Distortion.cpp">
+      <Filter>src\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\toolbars\ScrubbingToolBar.cpp">
+      <Filter>src\toolbars</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\widgets\wxPanelWrapper.cpp">
+      <Filter>src\widgets</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\AboutDialog.h">
@@ -1781,6 +1790,15 @@
       <Filter>src\widgets</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\widgets\OverlayPanel.h">
+      <Filter>src\widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\Distortion.h">
+      <Filter>src\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\toolbars\ScrubbingToolBar.h">
+      <Filter>src\toolbars</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\widgets\wxPanelWrapper.h">
       <Filter>src\widgets</Filter>
     </ClInclude>
   </ItemGroup>

@@ -42,7 +42,7 @@
 // ExportOGGOptions
 //----------------------------------------------------------------------------
 
-class ExportOGGOptions final : public wxPanel
+class ExportOGGOptions final : public wxPanelWrapper
 {
 public:
 
@@ -61,7 +61,7 @@ private:
 ///
 ///
 ExportOGGOptions::ExportOGGOptions(wxWindow *parent, int WXUNUSED(format))
-:  wxPanel(parent, wxID_ANY)
+:  wxPanelWrapper(parent, wxID_ANY)
 {
    mOggQualityUnscaled = gPrefs->Read(wxT("/FileFormats/OggExportQuality"),50)/10;
 

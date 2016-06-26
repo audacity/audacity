@@ -327,6 +327,8 @@ audacity_SOURCES = \
 	effects/Compressor.h \
 	effects/Contrast.cpp \
 	effects/Contrast.h \
+	effects/Distortion.cpp \
+	effects/Distortion.h \
 	effects/DtmfGen.cpp \
 	effects/DtmfGen.h \
 	effects/Echo.cpp \
@@ -511,6 +513,8 @@ audacity_SOURCES = \
 	toolbars/MeterToolBar.h \
 	toolbars/MixerToolBar.cpp \
 	toolbars/MixerToolBar.h \
+	toolbars/ScrubbingToolBar.cpp \
+	toolbars/ScrubbingToolBar.h \
 	toolbars/SelectionBar.cpp \
 	toolbars/SelectionBar.h \
 	toolbars/SpectralSelectionBar.cpp \
@@ -580,6 +584,8 @@ audacity_SOURCES = \
 	widgets/valnum.h \
 	widgets/Warning.cpp \
 	widgets/Warning.h \
+	widgets/wxPanelWrapper.cpp \
+	widgets/wxPanelWrapper.h \
 	xml/XMLFileReader.cpp \
 	xml/XMLFileReader.h \
 	xml/XMLWriter.cpp \

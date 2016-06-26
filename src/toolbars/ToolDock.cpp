@@ -325,7 +325,7 @@ void ToolBarConfiguration::Write
    gPrefs->Write( wxT("Show"), bar->IsVisible() );
 }
 
-IMPLEMENT_CLASS( ToolDock, wxPanel );
+IMPLEMENT_CLASS( ToolDock, wxPanelWrapper );
 
 ////////////////////////////////////////////////////////////
 /// Methods for ToolDock
@@ -336,7 +336,7 @@ IMPLEMENT_CLASS( ToolDock, wxPanel );
 //
 DEFINE_EVENT_TYPE( EVT_TOOLBAR_FLOAT );
 
-BEGIN_EVENT_TABLE( ToolDock, wxPanel )
+BEGIN_EVENT_TABLE( ToolDock, wxPanelWrapper )
    EVT_GRABBER( wxID_ANY, ToolDock::OnGrabber )
    EVT_ERASE_BACKGROUND( ToolDock::OnErase )
    EVT_PAINT( ToolDock::OnPaint )
@@ -348,7 +348,7 @@ END_EVENT_TABLE()
 // Constructor
 //
 ToolDock::ToolDock( ToolManager *manager, wxWindow *parent, int dockid ):
-   wxPanel( parent, dockid, wxDefaultPosition, parent->GetSize() )
+   wxPanelWrapper( parent, dockid, wxDefaultPosition, parent->GetSize() )
 {
    SetLabel( _( "ToolDock" ) );
    SetName( _( "ToolDock" ) );
@@ -384,6 +384,11 @@ void ToolDock::Undock( ToolBar *bar )
 //
 void ToolDock::Dock( ToolBar *bar, bool deflate, ToolBarConfiguration::Position position )
 {
+#ifndef __WXMAC__
+   // Apply the deflate fix only on Mac, else you introduce the opposite bug on others
+   deflate = false;
+#endif
+
    // Adopt the toolbar into our family
    bar->Reparent( this );
    mBars[ bar->GetId() ] = bar;

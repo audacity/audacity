@@ -94,6 +94,7 @@
 
 *//*******************************************************************/
 
+#include "../Audacity.h"
 #include "ImageRoll.h"
 
 #include <wx/wx.h>
@@ -414,12 +415,12 @@ void ImageRoll::Draw(wxDC &dc, wxRect rect, wxRasterOperationMode WXUNUSED(logic
    } // switch
 }
 
-BEGIN_EVENT_TABLE(ImageRollPanel, wxPanel)
+BEGIN_EVENT_TABLE(ImageRollPanel, wxPanelWrapper)
    EVT_PAINT(ImageRollPanel::OnPaint)
    EVT_SIZE(ImageRollPanel::OnSize)
 END_EVENT_TABLE()
 
-IMPLEMENT_CLASS(ImageRollPanel, wxPanel)
+IMPLEMENT_CLASS(ImageRollPanel, wxPanelWrapper)
 
 ImageRollPanel::ImageRollPanel(wxWindow *parent,
                                wxWindowID id,
@@ -427,7 +428,7 @@ ImageRollPanel::ImageRollPanel(wxWindow *parent,
                                const wxPoint& pos,
                                const wxSize& size,
                                long style):
-   wxPanel(parent, id, pos, size, style),
+   wxPanelWrapper(parent, id, pos, size, style),
    mImageRoll(imgRoll),
    mLogicalFunction(wxCOPY)
 {

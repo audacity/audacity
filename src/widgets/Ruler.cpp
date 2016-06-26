@@ -996,15 +996,24 @@ void Ruler::Update(const TimeTrack* timetrack)// Envelope *speedEnv, long minSpe
       wxString exampleText = wxT("0.9");   //ignored for height calcs on all platforms
       int desiredPixelHeight;
 
+
+      static const int MinPixelHeight = 10; // 8;
+      static const int MaxPixelHeight =
+#ifdef __WXMAC__
+            10
+#else
+            12
+#endif
+      ;
+
       if (mOrientation == wxHORIZONTAL)
          desiredPixelHeight = mBottom - mTop - 5; // height less ticks and 1px gap
       else
-         desiredPixelHeight = 12;   // why 12?  10 -> 12 seems to be max/min
+         desiredPixelHeight = MaxPixelHeight;
 
-      if (desiredPixelHeight < 10)//8)
-         desiredPixelHeight = 10;//8;
-      if (desiredPixelHeight > 12)
-         desiredPixelHeight = 12;
+      desiredPixelHeight =
+         std::max(MinPixelHeight, std::min(MaxPixelHeight,
+            desiredPixelHeight));
 
       // Keep making the font bigger until it's too big, then subtract one.
       mDC->SetFont(wxFont(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD));
@@ -1594,18 +1603,18 @@ void Ruler::SetUseZoomInfo(int leftOffset, const ZoomInfo *zoomInfo)
 // RulerPanel
 //
 
-BEGIN_EVENT_TABLE(RulerPanel, wxPanel)
+BEGIN_EVENT_TABLE(RulerPanel, wxPanelWrapper)
    EVT_ERASE_BACKGROUND(RulerPanel::OnErase)
    EVT_PAINT(RulerPanel::OnPaint)
    EVT_SIZE(RulerPanel::OnSize)
 END_EVENT_TABLE()
 
-IMPLEMENT_CLASS(RulerPanel, wxPanel)
+IMPLEMENT_CLASS(RulerPanel, wxPanelWrapper)
 
 RulerPanel::RulerPanel(wxWindow* parent, wxWindowID id,
                        const wxPoint& pos /*= wxDefaultPosition*/,
                        const wxSize& size /*= wxDefaultSize*/):
-   wxPanel(parent, id, pos, size)
+   wxPanelWrapper(parent, id, pos, size)
 {
 }
 
@@ -1642,7 +1651,7 @@ void RulerPanel::DoSetSize(int x, int y,
                            int width, int height,
                            int sizeFlags)
 {
-   wxPanel::DoSetSize(x, y, width, height, sizeFlags);
+   wxPanelWrapper::DoSetSize(x, y, width, height, sizeFlags);
 
    int w, h;
    GetClientSize(&w, &h);
@@ -1819,7 +1828,7 @@ void QuickPlayRulerOverlay::Draw(OverlayPanel &panel, wxDC &dc)
          ruler->mMouseEventState == AdornedRulerPanel::mesNone &&
          (ruler->mPrevZone == AdornedRulerPanel::StatusChoice::EnteringScrubZone ||
           (scrubber.HasStartedScrubbing()));
-      auto seek = scrub && scrubber.Seeks();
+      auto seek = scrub && (scrubber.Seeks() || scrubber.TemporarilySeeks());
       auto width = scrub ? IndicatorBigWidth() : IndicatorSmallWidth;
       ruler->DoDrawIndicator(&dc, mOldQPIndicatorPos, true, width, scrub, seek);
    }
@@ -1944,13 +1953,14 @@ BEGIN_EVENT_TABLE(AdornedRulerPanel, OverlayPanel)
 
 END_EVENT_TABLE()
 
-AdornedRulerPanel::AdornedRulerPanel(AudacityProject* parent,
+AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
+                                     wxWindow *parent,
                                      wxWindowID id,
                                      const wxPoint& pos,
                                      const wxSize& size,
                                      ViewInfo *viewinfo)
 :  OverlayPanel(parent, id, pos, size)
-, mProject(parent)
+, mProject(project)
 , mViewInfo(viewinfo)
 {
    for (auto &button : mButtons)
@@ -1982,7 +1992,7 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* parent,
    mRuler.SetLabelEdges( false );
    mRuler.SetFormat( Ruler::TimeFormat );
 
-   mTracks = parent->GetTracks();
+   mTracks = project->GetTracks();
 
    mSnapManager = NULL;
    mIsSnapped = false;
@@ -2112,10 +2122,14 @@ namespace {
        "Scrubbing" is variable-speed playback, ...
        "Seeking" is normal speed playback but with skips
        */
+#if 0
       if(scrubber.Seeks())
          return _("Click or drag to begin seeking");
       else
          return _("Click or drag to begin scrubbing");
+#else
+      return _("Click to scrub, drag to seek");
+#endif
    }
 
    const wxString ContinueScrubbingMessage(const Scrubber &scrubber)
@@ -2124,10 +2138,14 @@ namespace {
        "Scrubbing" is variable-speed playback, ...
        "Seeking" is normal speed playback but with skips
        */
+#if 0
       if(scrubber.Seeks())
          return _("Move to seek");
       else
          return _("Move to scrub");
+#else
+      return _("Move to scrub, drag to seek");
+#endif
    }
 
    const wxString ScrubbingMessage(const Scrubber &scrubber)
@@ -2392,9 +2410,6 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
             // Done here, it's too frequent.
             // ShowQuickPlayIndicator();
 
-            if (HasCapture())
-               ReleaseMouse();
-            
             return;
          }
       }
@@ -2442,7 +2457,8 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
    }
    else if (!HasCapture() && inScrubZone) {
       if (evt.LeftDown()) {
-         scrubber.MarkScrubStart(evt.m_x, PlaybackPrefs::GetPinnedHeadPreference());
+         scrubber.MarkScrubStart(evt.m_x,
+            PlaybackPrefs::GetPinnedHeadPreference(), false);
          UpdateStatusBarAndTooltips(StatusChoice::EnteringScrubZone);
       }
       ShowQuickPlayIndicator();
@@ -2478,6 +2494,8 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
          HandleQPRelease(evt);
          ShowQuickPlayIndicator();
       }
+      else // if (!inScrubZone)
+         ShowQuickPlayIndicator();
    }
 }
 
@@ -2765,7 +2783,7 @@ void AdornedRulerPanel::UpdateStatusBarAndTooltips(StatusChoice choice)
    RegenerateTooltips(choice);
 }
 
-void AdornedRulerPanel::OnToggleScrubbing(/*wxCommandEvent&*/)
+void AdornedRulerPanel::OnToggleScrubBar(/*wxCommandEvent&*/)
 {
    mShowScrubbing = !mShowScrubbing;
    //WriteScrubEnabledPref(mShowScrubbing);
@@ -2806,11 +2824,6 @@ void AdornedRulerPanel::UpdateButtonStates()
       : _("Unpinned play/record Head");
       common(*pinButton, wxT("PinnedHead"), label);
    }
-
-   auto &scrubber = mProject->GetScrubber();
-
-   if(mShowScrubbing != (scrubber.Scrubs() || scrubber.Seeks()))
-      OnToggleScrubbing();
 }
 
 void AdornedRulerPanel::OnTogglePinnedState(wxCommandEvent & event)
@@ -2888,7 +2901,7 @@ void AdornedRulerPanel::ShowScrubMenu(const wxPoint & pos)
    auto cleanup = finally([this]{ PopEventHandler(); });
 
    wxMenu rulerMenu;
-   mProject->GetScrubber().PopulateMenu(rulerMenu);
+   mProject->GetScrubber().PopulatePopupMenu(rulerMenu);
    PopupMenu(&rulerMenu, pos);
 }
 

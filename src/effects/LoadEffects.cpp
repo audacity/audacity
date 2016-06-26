@@ -23,6 +23,7 @@
 #include "ChangeSpeed.h"
 #include "ClickRemoval.h"
 #include "Compressor.h"
+#include "Distortion.h"
 #include "DtmfGen.h"
 #include "Echo.h"
 #include "Paulstretch.h"
@@ -116,6 +117,7 @@
    EFFECT( CHANGESPEED,       EffectChangeSpeed, () )      \
    EFFECT( CLICKREMOVAL,      EffectClickRemoval, () )     \
    EFFECT( COMPRESSOR,        EffectCompressor, () )       \
+   EFFECT( DISTORTION,        EffectDistortion, () )       \
    EFFECT( ECHO,              EffectEcho, () )             \
    EFFECT( EQUALIZATION,      EffectEqualization, () )     \
    EFFECT( FADEIN,            EffectFade, (true) )         \

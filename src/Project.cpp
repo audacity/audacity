@@ -151,6 +151,7 @@ scroll information.  It also has some status flags.
 #include "toolbars/EditToolBar.h"
 #include "toolbars/MeterToolBar.h"
 #include "toolbars/MixerToolBar.h"
+#include "toolbars/ScrubbingToolBar.h"
 #include "toolbars/SelectionBar.h"
 #include "toolbars/SpectralSelectionBar.h"
 #include "toolbars/ToolsToolBar.h"
@@ -874,10 +875,21 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    // Near as I can tell, this is only a problem under Windows.
    //
 
+
+   // PRL:  this panel groups the top tool dock and the ruler into one
+   // tab cycle.
+   // Must create it with non-default width equal to the main window width,
+   // or else the device toolbar doesn't make initial widths of the choice
+   // controls correct.
+   mTopPanel = safenew wxPanelWrapper {
+      this, wxID_ANY, wxDefaultPosition, { this->GetSize().GetWidth(), -1 }
+   };
+   mTopPanel->SetAutoLayout(true);
+
    //
    // Create the ToolDock
    //
-   mToolManager = std::make_unique<ToolManager>( this );
+   mToolManager = std::make_unique<ToolManager>( this, mTopPanel );
    GetSelectionBar()->SetListener(this);
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    GetSpectralSelectionBar()->SetListener(this);
@@ -887,7 +899,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    //
    // Create the horizontal ruler
    //
-   mRuler = safenew AdornedRulerPanel( this,
+   mRuler = safenew AdornedRulerPanel( this, mTopPanel,
                                    wxID_ANY,
                                    wxDefaultPosition,
                                    wxSize( -1, AdornedRulerPanel::GetRulerHeight(false) ),
@@ -913,7 +925,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    // Not using a notebook, so we place the track panel inside another panel,
    // this keeps the notebook code and normal code consistant and also
    // paves the way for adding additional windows inside the track panel.
-   mMainPanel = safenew wxPanel(this, -1,
+   mMainPanel = safenew wxPanelWrapper(this, -1,
       wxDefaultPosition,
       wxDefaultSize,
       wxNO_BORDER);
@@ -927,12 +939,18 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    //pPage->SetBackgroundColour( theTheme.Colour( clrDark ));
 #endif
 
+   {
+      auto ubs = std::make_unique<wxBoxSizer>(wxVERTICAL);
+      ubs->Add(mToolManager->GetTopDock(), 0, wxEXPAND | wxALIGN_TOP);
+      ubs->Add(mRuler, 0, wxEXPAND);
+      mTopPanel->SetSizer(ubs.release());
+   }
+
    wxBoxSizer *bs;
    {
       auto ubs = std::make_unique<wxBoxSizer>(wxVERTICAL);
       bs = ubs.get();
-      bs->Add(mToolManager->GetTopDock(), 0, wxEXPAND | wxALIGN_TOP);
-      bs->Add(mRuler, 0, wxEXPAND);
+      bs->Add(mTopPanel, 0, wxEXPAND | wxALIGN_TOP);
       bs->Add(pPage, 1, wxEXPAND);
       bs->Add(mToolManager->GetBotDock(), 0, wxEXPAND);
       SetAutoLayout(true);
@@ -998,7 +1016,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    //      will be given the focus even if we try to SetFocus().  By
    //      making the TrackPanel that first window, we resolve several
    //      keyboard focus problems.
-   pPage->MoveBeforeInTabOrder(mToolManager->GetTopDock());
+   pPage->MoveBeforeInTabOrder(mTopPanel);
 
    bs = (wxBoxSizer *)pPage->GetSizer();
 

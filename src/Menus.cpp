@@ -137,6 +137,8 @@ simplifies construction of menu items.
 #include "tracks/ui/Scrubbing.h"
 #include "prefs/TracksPrefs.h"
 
+#include "widgets/Meter.h"
+
 enum {
    kAlignStartZero = 0,
    kAlignStartSelStart,
@@ -707,7 +709,7 @@ void AudacityProject::CreateMenusAndCommands()
       /* i18n-hint: Clicking this menu item shows the toolbar for editing*/
       c->AddCheck(wxT("ShowEditTB"), _("&Edit Toolbar"), FN(OnShowEditToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
       /* i18n-hint: Clicking this menu item shows the toolbar which has sound level meters*/
-      c->AddCheck(wxT("ShowMeterTB"), _("&Combined Meter Toolbar"), FN(OnShowMeterToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
+      c->AddCheck(wxT("ShowMeterTB"), _("Co&mbined Meter Toolbar"), FN(OnShowMeterToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
       /* i18n-hint: Clicking this menu item shows the toolbar with the recording level meters*/
       c->AddCheck(wxT("ShowRecordMeterTB"), _("&Recording Meter Toolbar"), FN(OnShowRecordMeterToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
       /* i18n-hint: Clicking this menu item shows the toolbar with the playback level meter*/
@@ -718,15 +720,15 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddCheck(wxT("ShowSelectionTB"), _("&Selection Toolbar"), FN(OnShowSelectionToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
       /* i18n-hint: Clicking this menu item shows the toolbar for selecting a frequency range of audio*/
-      c->AddCheck(wxT("ShowSpectralSelectionTB"), _("&Spectral Selection Toolbar"), FN(OnShowSpectralSelectionToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
+      c->AddCheck(wxT("ShowSpectralSelectionTB"), _("Spe&ctral Selection Toolbar"), FN(OnShowSpectralSelectionToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
 #endif
       /* i18n-hint: Clicking this menu item shows a toolbar that has some tools in it*/
       c->AddCheck(wxT("ShowToolsTB"), _("T&ools Toolbar"), FN(OnShowToolsToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
       /* i18n-hint: Clicking this menu item shows the toolbar for transcription (currently just vary play speed)*/
-      c->AddCheck(wxT("ShowTranscriptionTB"), _("Transcri&ption Toolbar"), FN(OnShowTranscriptionToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
+      c->AddCheck(wxT("ShowTranscriptionTB"), _("Tra&nscription Toolbar"), FN(OnShowTranscriptionToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
       /* i18n-hint: Clicking this menu item shows the toolbar with the big buttons on it (play record etc)*/
       c->AddCheck(wxT("ShowTransportTB"), _("&Transport Toolbar"), FN(OnShowTransportToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
-      c->AddCheck(wxT("ShowScrubbingTB"), _("Scrubbing Toolbar"), FN(OnShowScrubbingToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
+      c->AddCheck(wxT("ShowScrubbingTB"), _("Scru&bbing Toolbar"), FN(OnShowScrubbingToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
 
       c->AddSeparator();
 
@@ -2749,62 +2751,74 @@ void AudacityProject::OnSetRightSelection()
    }
 }
 
+void AudacityProject::NextOrPrevFrame(bool forward)
+{
+   // Focus won't take in a dock unless at least one descendant window
+   // accepts focus.  Tell controls to take focus for the duration of this
+   // function, only.  Outside of this, they won't steal the focus when
+   // clicked.
+   auto temp1 = AButton::TemporarilyAllowFocus();
+   auto temp2 = ASlider::TemporarilyAllowFocus();
+   auto temp3 = Meter::TemporarilyAllowFocus();
+
+
+   // Define the set of windows we rotate among.
+   static const unsigned rotationSize = 3u
+#ifdef EXPERIMENTAL_TIME_RULER_NAVIGATION
+      + 1
+#endif
+   ;
+
+   wxWindow *const begin [rotationSize] = {
+      GetTopPanel(),
+#ifdef EXPERIMENTAL_TIME_RULER_NAVIGATION
+      GetRulerPanel(),
+#endif
+      GetTrackPanel(),
+      mToolManager->GetBotDock(),
+   };
+   const auto end = begin + rotationSize;
+
+   // helper functions
+   auto IndexOf = [&](wxWindow *pWindow) {
+      return std::find(begin, end, pWindow) - begin;
+   };
+
+   auto FindAncestor = [&]() {
+      wxWindow *pWindow = wxWindow::FindFocus();
+      unsigned index = rotationSize;
+      while ( pWindow &&
+              (rotationSize == (index = IndexOf(pWindow) ) ) )
+         pWindow = pWindow->GetParent();
+      return index;
+   };
+
+   const auto idx = FindAncestor();
+   if (idx == rotationSize)
+      return;
+
+   auto idx2 = idx;
+   auto increment = (forward ? 1 : rotationSize - 1);
+
+   while( idx != (idx2 = (idx2 + increment) % rotationSize) ) {
+      wxWindow *toFocus = begin[idx2];
+      toFocus->SetFocus();
+      if ( FindAncestor() == idx2 )
+         // The focus took!
+         break;
+      // else, one of the tool docks might be empty because all bars were
+      // dragged off it.  Skip it and try another.
+   }
+}
+
 void AudacityProject::NextFrame()
 {
-   switch( GetFocusedFrame() )
-   {
-      case TopDockHasFocus:
-
-#ifdef EXPERIMENTAL_TIME_RULER_NAVIGATION
-         mRuler->SetFocus();
-      break;
-
-      case RulerHasFocus:
-#endif
-
-         mTrackPanel->SetFocus();
-      break;
-
-      case TrackPanelHasFocus:
-         mToolManager->GetBotDock()->SetFocus();
-      break;
-
-      case BotDockHasFocus:
-         mToolManager->GetTopDock()->SetFocus();
-      break;
-
-      default:
-      break;
-   }
+   NextOrPrevFrame(true);
 }
 
 void AudacityProject::PrevFrame()
 {
-   switch( GetFocusedFrame() )
-   {
-      case BotDockHasFocus:
-         mTrackPanel->SetFocus();
-      break;
-         
-      case TrackPanelHasFocus:
-
-#ifdef EXPERIMENTAL_TIME_RULER_NAVIGATION
-         mRuler->SetFocus();
-      break;
-
-      case RulerHasFocus:
-#endif
-
-         mToolManager->GetTopDock()->SetFocus();
-      break;
-         
-      case TopDockHasFocus:
-         mToolManager->GetBotDock()->SetFocus();
-      break;
-
-      default:
-      break;
-   }
+   NextOrPrevFrame(false);
 }
 
 void AudacityProject::NextWindow()
@@ -2856,6 +2870,16 @@ void AudacityProject::NextWindow()
    // And make sure it's on top (only for floating windows...project window will not raise)
    // (Really only works on Windows)
    w->Raise();
+
+#ifdef __WXMAC__
+   // bug 868
+   // Simulate a TAB key press before continuing, else the cycle of
+   // navigation among top level windows stops because the keystrokes don't
+   // go to the CommandManager.
+   if (dynamic_cast<wxDialog*>(w)) {
+      w->NavigateIn();
+   }
+#endif
 }
 
 void AudacityProject::PrevWindow()
@@ -2881,7 +2905,7 @@ void AudacityProject::PrevWindow()
    {
       // If it's a toplevel and is visible (we have come hidden windows), then we're done
       w = iter->GetData();
-      if (w->IsTopLevel() && w->IsShown())
+      if (w->IsTopLevel() && w->IsShown() && IsEnabled())
       {
          break;
       }
@@ -2905,6 +2929,16 @@ void AudacityProject::PrevWindow()
    // And make sure it's on top (only for floating windows...project window will not raise)
    // (Really only works on Windows)
    w->Raise();
+
+#ifdef __WXMAC__
+   // bug 868
+   // Simulate a TAB key press before continuing, else the cycle of
+   // navigation among top level windows stops because the keystrokes don't
+   // go to the CommandManager.
+   if (dynamic_cast<wxDialog*>(w)) {
+      w->NavigateIn();
+   }
+#endif
 }
 
 //The following methods operate controls on specified tracks,
@@ -5344,26 +5378,10 @@ void AudacityProject::OnContrast()
    if(!mContrastDialog)
    {
       wxPoint where;
-
       where.x = 150;
       where.y = 150;
 
       mContrastDialog = new ContrastDialog(this, -1, _("Contrast Analysis (WCAG 2 compliance)"), where);
-
-      mContrastDialog->bFGset = false;
-      mContrastDialog->bBGset = false;
-   }
-
-   // Zero dialog boxes.  Do we need to do this here?
-   if( !mContrastDialog->bFGset )
-   {
-      mContrastDialog->mForegroundStartT->SetValue(0.0);
-      mContrastDialog->mForegroundEndT->SetValue(0.0);
-   }
-   if( !mContrastDialog->bBGset )
-   {
-      mContrastDialog->mBackgroundStartT->SetValue(0.0);
-      mContrastDialog->mBackgroundEndT->SetValue(0.0);
    }
 
    mContrastDialog->CentreOnParent();
@@ -6602,8 +6620,15 @@ void AudacityProject::OnRemoveTracks()
 
 void AudacityProject::OnAbout()
 {
+#ifdef __WXMAC__
+   // Modeless dialog, consistent with other Mac applications
+   wxCommandEvent dummy;
+   wxGetApp().OnMenuAbout(dummy);
+#else
+   // Windows and Linux still modal.
    AboutDialog dlog(this);
    dlog.ShowModal();
+#endif
 }
 
 void AudacityProject::OnHelpWelcome()

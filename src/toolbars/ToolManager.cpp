@@ -53,6 +53,7 @@
 #include "EditToolBar.h"
 #include "MeterToolBar.h"
 #include "MixerToolBar.h"
+#include "ScrubbingToolBar.h"
 #include "SelectionBar.h"
 #include "SpectralSelectionBar.h"
 #include "ToolsToolBar.h"
@@ -349,7 +350,7 @@ END_EVENT_TABLE()
 //
 // Constructor
 //
-ToolManager::ToolManager( AudacityProject *parent )
+ToolManager::ToolManager( AudacityProject *parent, wxWindow *topDockParent )
 : wxEvtHandler()
 {
    wxPoint pt[ 3 ];
@@ -432,7 +433,7 @@ ToolManager::ToolManager( AudacityProject *parent )
                      this );
 
    // Create the top and bottom docks
-   mTopDock = safenew ToolDock( this, mParent, TopDockID );
+   mTopDock = safenew ToolDock( this, topDockParent, TopDockID );
    mBotDock = safenew ToolDock( this, mParent, BotDockID );
 
    // Create all of the toolbars

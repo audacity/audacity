@@ -69,7 +69,7 @@ void HighlightTextCtrl::OnMouseEvent(wxMouseEvent& event)
 
 //v static const kHighlightTextCtrlID = 7654;
 
-BEGIN_EVENT_TABLE(Lyrics, wxPanel)
+BEGIN_EVENT_TABLE(Lyrics, wxPanelWrapper)
    EVT_KEY_DOWN(Lyrics::OnKeyEvent)
    EVT_PAINT(Lyrics::OnPaint)
    EVT_SIZE(Lyrics::OnSize)
@@ -78,12 +78,12 @@ BEGIN_EVENT_TABLE(Lyrics, wxPanel)
    //    EVT_COMMAND_LEFT_CLICK(kHighlightTextCtrlID, Lyrics::OnHighlightTextCtrl)
 END_EVENT_TABLE()
 
-IMPLEMENT_CLASS(Lyrics, wxPanel)
+IMPLEMENT_CLASS(Lyrics, wxPanelWrapper)
 
 Lyrics::Lyrics(wxWindow* parent, wxWindowID id,
                const wxPoint& pos /*= wxDefaultPosition*/,
                const wxSize& size /*= wxDefaultSize*/):
-   wxPanel(parent, id, pos, size),
+   wxPanelWrapper(parent, id, pos, size),
    mWidth(size.x), mHeight(size.y)
 {
    mKaraokeHeight = mHeight;

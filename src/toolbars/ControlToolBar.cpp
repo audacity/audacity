@@ -69,6 +69,7 @@
 
 #include "../tracks/ui/Scrubbing.h"
 #include "../prefs/PlaybackPrefs.h"
+#include "../toolbars/ToolManager.h"
 
 IMPLEMENT_CLASS(ControlToolBar, ToolBar);
 
@@ -137,7 +138,14 @@ AButton *ControlToolBar::MakeButton(teBmps eEnabledUp, teBmps eEnabledDown, teBm
       wxDefaultPosition, processdownevents,
       theTheme.ImageSize( bmpRecoloredUpLarge ));
    r->SetLabel(label);
-   r->SetFocusRect( r->GetRect().Deflate( 12, 12 ) );
+   enum { deflation =
+#ifdef __WXMAC__
+      3
+#else
+      12
+#endif
+   };
+   r->SetFocusRect( r->GetClientRect().Deflate( deflation, deflation ) );
 
    return r;
 }
@@ -831,6 +839,9 @@ void ControlToolBar::StopPlaying(bool stopStream /* = true*/)
          meter->Clear();
       }
    }
+
+   const auto toolbar = project->GetToolManager()->GetToolBar(ScrubbingBarID);
+   toolbar->EnableDisableButtons();
 }
 
 void ControlToolBar::Pause()
