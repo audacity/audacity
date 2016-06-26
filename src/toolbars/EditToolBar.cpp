@@ -148,7 +148,7 @@ void EditToolBar::Populate()
    AddSeparator();
 
 #ifdef EXPERIMENTAL_SYNC_LOCK
-   AddButton(bmpSyncLockTracksUp, bmpSyncLockTracksDown, bmpSyncLockTracksDisabled, ETBSyncLockID,
+   AddButton(bmpSyncLockTracksUp, bmpSyncLockTracksDown, bmpSyncLockTracksUp, ETBSyncLockID,
                _("Sync-Lock Tracks"), true);
 
    AddSeparator();

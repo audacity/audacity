@@ -74,7 +74,7 @@ class ImageRollPanel final : public wxPanelWrapper
 
    ImageRollPanel(wxWindow *parent,
                   wxWindowID id,
-                  ImageRoll &imgRoll,
+                  //ImageRoll &imgRoll,
                   const wxPoint& pos = wxDefaultPosition,
                   const wxSize& size = wxDefaultSize,
                   long style = wxTAB_TRAVERSAL);
@@ -85,7 +85,7 @@ class ImageRollPanel final : public wxPanelWrapper
    void OnSize(wxSizeEvent &evt);
 
  protected:
-   ImageRoll mImageRoll;
+   //ImageRoll mImageRoll;
 
    wxRasterOperationMode mLogicalFunction;
 
