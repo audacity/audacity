@@ -20,7 +20,7 @@ wxPanelWrapper::wxPanelWrapper(wxWindow * parent, wxWindowID id,
 
 void wxPanelWrapper::DoCharHook(wxKeyEvent &event)
 {
-#ifdef __WXMAC__
+#ifdef __WXMAC
    // Compensate for the regressions in TAB key navigation
    // due to the switch to wxWidgets 3.0.2
    if (event.GetKeyCode() == WXK_TAB) {

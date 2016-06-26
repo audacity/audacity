@@ -1187,7 +1187,7 @@ bool AudacityApp::OnInit()
 
 #if defined(__WXMAC__)
    // Disable window animation
-   wxSystemOptions::SetOption(wxMAC_WINDOW_PLAIN_TRANSITION, 0);
+   wxSystemOptions::SetOption(wxMAC_WINDOW_PLAIN_TRANSITION, 1);
 #endif
 
 #ifdef AUDACITY_NAME
