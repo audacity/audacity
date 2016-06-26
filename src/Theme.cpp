@@ -434,6 +434,17 @@ void FlowPacker::SetNewGroup( int iGroupSize )
    mComponentWidth=0;
 }
 
+void FlowPacker::SetColourGroup( )
+{
+   myPosBase = 750;
+   mxPos =0;
+   mOldFlags = mFlags;
+   iImageGroupSize = 1;
+   iImageGroupIndex = -1;
+   mComponentWidth=0;
+   myHeight = 11;
+}
+
 void FlowPacker::GetNextPosition( int xSize, int ySize )
 {
    // if the height has increased, then we are on a NEW group.
@@ -504,7 +515,7 @@ int SourceOutputStream::OpenFile(const wxString & Filename)
       File.Write( wxT("//\r\n") );
       File.Write( wxT("//   This file was Auto-Generated.\r\n") );
       File.Write( wxT("//   It is included by Theme.cpp.\r\n") );
-      File.Write( wxT("//   Only check this into SVN if you've read and understood the guidelines!\r\n\r\n   ") );
+      File.Write( wxT("//   Only check this into Git if you've read and understood the guidelines!\r\n\r\n   ") );
    }
    return bOk;
 }
@@ -588,9 +599,8 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
    // Now save the colours.
    int x,y;
 
-   mFlow.SetNewGroup(1);
-   const int iColSize=10;
-   mFlow.myHeight = iColSize+1;
+   mFlow.SetColourGroup();
+   const int iColSize = 10;
    for(i=0;i<(int)mColours.GetCount();i++)
    {
       mFlow.GetNextPosition( iColSize, iColSize );
@@ -711,9 +721,8 @@ void ThemeBase::WriteImageMap( )
       }
    }
    // Now save the colours.
-   mFlow.SetNewGroup(1);
-   const int iColSize=10;
-   mFlow.myHeight = iColSize+1;
+   mFlow.SetColourGroup();
+   const int iColSize = 10;
    for(i=0;i<(int)mColours.GetCount();i++)
    {
       mFlow.GetNextPosition( iColSize, iColSize );
@@ -850,10 +859,9 @@ bool ThemeBase::ReadImageCache( bool bBinaryRead, bool bOkIfNotFound)
 //   return true; //To not load colours..
    // Now load the colours.
    int x,y;
-   mFlow.SetNewGroup(1);
+   mFlow.SetColourGroup();
    wxColour TempColour;
    const int iColSize=10;
-   mFlow.myHeight = iColSize+1;
    for(i=0;i<(int)mColours.GetCount();i++)
    {
       mFlow.GetNextPosition( iColSize, iColSize );

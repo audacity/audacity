@@ -60,6 +60,7 @@ public:
    void Init(int width);
    void GetNextPosition( int xSize, int ySize );
    void SetNewGroup( int iGroupSize );
+   void SetColourGroup( );
    wxRect Rect();
    void RectMid( int &x, int &y );
 

@@ -320,7 +320,7 @@ void AColor::Dark(wxDC * dc, bool selected)
 void AColor::TrackPanelBackground(wxDC * dc, bool selected)
 {
 #ifdef EXPERIMENTAL_THEMING
-   UseThemeColour( dc, selected ? clrDarkSelected : clrDark);
+   UseThemeColour( dc, selected ? clrMediumSelected : clrMedium);
 #else
    Dark( dc, selected );
 #endif
