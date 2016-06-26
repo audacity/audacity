@@ -398,6 +398,11 @@ protected:
    virtual void HandleResize(wxMouseEvent & event);
 
    virtual void HandleLabelClick(wxMouseEvent & event);
+
+public:
+   virtual void HandleListSelection(Track *t, bool shift, bool ctrl);
+
+protected:
    virtual void HandleRearrange(wxMouseEvent & event);
    virtual void CalculateRearrangingThresholds(wxMouseEvent & event);
    virtual void HandleClosing(wxMouseEvent & event);

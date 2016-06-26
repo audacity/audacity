@@ -100,7 +100,7 @@ private:
    wxColour GetTrackColor();
 
    // event handlers
-   void HandleSelect(const bool bShiftDown);
+   void HandleSelect(bool bShiftDown, bool bControlDown);
 
    void OnKeyEvent(wxKeyEvent& event);
    void OnMouseEvent(wxMouseEvent& event);

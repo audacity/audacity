@@ -1879,12 +1879,11 @@ void TrackPanel::SelectRangeOfTracks(Track *sTrack, Track *eTrack)
       // Swap the track pointers if needed
       if (eTrack->GetIndex() < sTrack->GetIndex())
          std::swap(sTrack, eTrack);
-      Track *t = eTrack;
 
       TrackListIterator iter(mTracks);
       sTrack = iter.StartWith(sTrack);
       do {
-         SelectTrack(sTrack, true);
+         SelectTrack(sTrack, true, false);
          if (sTrack == eTrack) {
             break;
          }
@@ -4937,27 +4936,27 @@ void TrackPanel::HandleLabelClick(wxMouseEvent & event)
       {
          wxRect midiRect;
 #ifdef EXPERIMENTAL_MIDI_OUT
-            // this is an awful hack: make a NEW rectangle at an offset because
-            // MuteSoloFunc thinks buttons are located below some text, e.g.
-            // "Mono, 44100Hz 32-bit float", but this is not true for a Note track
-            wxRect muteSoloRect(rect);
-            muteSoloRect.y -= 34; // subtract the height of wave track text
-            if (MuteSoloFunc(t, muteSoloRect, event.m_x, event.m_y, false) ||
-                MuteSoloFunc(t, muteSoloRect, event.m_x, event.m_y, true))
-               return;
+         // this is an awful hack: make a NEW rectangle at an offset because
+         // MuteSoloFunc thinks buttons are located below some text, e.g.
+         // "Mono, 44100Hz 32-bit float", but this is not true for a Note track
+         wxRect muteSoloRect(rect);
+         muteSoloRect.y -= 34; // subtract the height of wave track text
+         if (MuteSoloFunc(t, muteSoloRect, event.m_x, event.m_y, false) ||
+            MuteSoloFunc(t, muteSoloRect, event.m_x, event.m_y, true))
+            return;
 
-            // this is a similar hack: GainFunc expects a Wave track slider, so it's
-            // looking in the wrong place. We pass it a bogus rectangle created when
-            // the slider was placed to "fake" GainFunc into finding the slider in
-            // its actual location.
-            if (GainFunc(t, ((NoteTrack *) t)->GetGainPlacementRect(),
-                         event, event.m_x, event.m_y))
-               return;
+         // this is a similar hack: GainFunc expects a Wave track slider, so it's
+         // looking in the wrong place. We pass it a bogus rectangle created when
+         // the slider was placed to "fake" GainFunc into finding the slider in
+         // its actual location.
+         if (GainFunc(t, ((NoteTrack *) t)->GetGainPlacementRect(),
+            event, event.m_x, event.m_y))
+            return;
 #endif
          mTrackInfo.GetTrackControlsRect(rect, midiRect);
          if (midiRect.Contains(event.m_x, event.m_y) &&
-             ((NoteTrack *) t)->LabelClick(midiRect, event.m_x, event.m_y,
-                                      event.Button(wxMOUSE_BTN_RIGHT))) {
+            ((NoteTrack *)t)->LabelClick(midiRect, event.m_x, event.m_y,
+            event.Button(wxMOUSE_BTN_RIGHT))) {
             Refresh(false);
             return;
          }
@@ -4977,20 +4976,31 @@ void TrackPanel::HandleLabelClick(wxMouseEvent & event)
    //  can drag the track up or down to swap it with others
    if (!unsafe) {
       mRearrangeCount = 0;
-      SetCapturedTrack( t, IsRearranging );
+      SetCapturedTrack(t, IsRearranging);
       TrackPanel::CalculateRearrangingThresholds(event);
    }
 
+   HandleListSelection(t, event.ShiftDown(), event.ControlDown());
+
+   if (!unsafe)
+      MakeParentModifyState(true);
+}
+
+void TrackPanel::HandleListSelection(Track *t, bool shift, bool ctrl)
+{
    // AS: If the shift button is being held down, invert
    //  the selection on this track.
-   if (event.ShiftDown()) {
+   if (ctrl) {
       SelectTrack(t, !t->GetSelected());
       Refresh(false);
       return;
    }
 
    SelectNone();
-   SelectTrack(t, true);
+   if (shift && mLastPickedTrack)
+      SelectRangeOfTracks(t, mLastPickedTrack);
+   else
+      SelectTrack(t, true);
    SetFocusedTrack(t);
    SelectTrackLength(t);
 
@@ -4998,9 +5008,6 @@ void TrackPanel::HandleLabelClick(wxMouseEvent & event)
    MixerBoard* pMixerBoard = this->GetMixerBoard();
    if (pMixerBoard)
       pMixerBoard->RefreshTrackClusters();
-
-   if (!unsafe)
-      MakeParentModifyState(true);
 }
 
 /// The user is dragging one of the tracks: change the track order
