@@ -291,6 +291,8 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
 #endif
 
    // AS: Selection handling
+   void SelectTrack(Track *track, bool selected);
+   void SelectRangeOfTracks(Track *sTrack, Track *eTrack);
    virtual void HandleSelect(wxMouseEvent & event);
    virtual void SelectionHandleDrag(wxMouseEvent &event, Track *pTrack);
 
@@ -565,9 +567,12 @@ protected:
    SelectedRegion mInitialSelection;
    // Extra indirection to avoid the stupid MSW compiler warnings!  Rrrr!
    std::vector<bool> *mInitialTrackSelection;
+   Track *mInitialLastPickedTrack {};
 
    bool mSelStartValid;
    double mSelStart;
+
+   Track *mLastPickedTrack {};
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    enum eFreqSelMode {
