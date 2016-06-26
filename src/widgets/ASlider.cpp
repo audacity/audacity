@@ -676,6 +676,9 @@ void LWSlider::Draw(wxDC & paintDC)
    // Set up the memory DC
    wxMemoryDC dc;
 
+   mThumbBitmap = new wxBitmap( theTheme.Bitmap( bmpSliderThumb ));
+
+#if 0
    // Create the bitmap
    mThumbBitmap = new wxBitmap();
    mThumbBitmap->Create(mThumbWidth, mThumbHeight, paintDC);
@@ -738,6 +741,7 @@ void LWSlider::Draw(wxDC & paintDC)
    mThumbBitmap->SetMask(new wxMask(*mThumbBitmap, transparentColour));
 #endif
 
+#endif
    //
    // Now the background bitmap
    //

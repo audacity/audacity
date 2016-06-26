@@ -639,12 +639,12 @@ void Meter::OnPaint(wxPaintEvent & WXUNUSED(event))
                            Siz.GetHeight(),
                            Siz.GetWidth() );
 
-               destDC.SetBrush( *wxWHITE_BRUSH );
-               destDC.SetPen( *wxGREY_PEN );
+               destDC.SetBrush( *wxGREY_BRUSH );
+               destDC.SetPen( *wxWHITE_PEN );
                destDC.DrawRectangle( r );
                destDC.SetBackgroundMode( wxTRANSPARENT );
                r.SetTop( r.GetBottom() + (gap / 2) );
-               destDC.SetTextForeground( wxColour(0,0,0) );
+               destDC.SetTextForeground( clrText );
                destDC.DrawRotatedText( Text, r.GetPosition(), 90 );
                break;
             }
@@ -658,13 +658,13 @@ void Meter::OnPaint(wxPaintEvent & WXUNUSED(event))
                          Siz.GetWidth(),
                          Siz.GetHeight() );
 
-               destDC.SetBrush( *wxWHITE_BRUSH );
-               destDC.SetPen( *wxGREY_PEN );
+               destDC.SetBrush( *wxGREY_BRUSH );
+               destDC.SetPen( *wxWHITE_PEN );
                destDC.DrawRectangle( r );
                destDC.SetBackgroundMode( wxTRANSPARENT );
                r.SetLeft( r.GetLeft() + (gap / 2) );
                r.SetTop( r.GetTop() + (gap / 2));
-               destDC.SetTextForeground( wxColour(0,0,0) );
+               destDC.SetTextForeground( clrText );
                destDC.DrawText( Text, r.GetPosition() );
                break;
             }
