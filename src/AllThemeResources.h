@@ -170,8 +170,24 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_IMAGE( bmpSyncLockTracksUp, wxImage( 20, 20 ), wxT("SyncLockTracksUp"));
    DEFINE_IMAGE( bmpSyncLockTracksDisabled, wxImage( 20, 20 ), wxT("SyncLockTracksDisabled"));
    DEFINE_IMAGE( bmpToggleScrubBar, wxImage( 20, 20 ), wxT("ToggleScrubBar"));
-   DEFINE_IMAGE( bmpSliderThumb, wxImage( 11, 14 ), wxT("SliderThumb"));
+//   DEFINE_IMAGE( bmpSliderThumb, wxImage( 11, 14 ), wxT("SliderThumb"));
    DEFINE_IMAGE( bmpSyncLockIcon, wxImage(12, 12), wxT("SyncLockIcon"));
+
+   SET_THEME_FLAGS(  resFlagNewLine  );
+   DEFINE_IMAGE( bmpPlayPointer, wxImage( 20, 20 ), wxT("PlayPointer"));
+   DEFINE_IMAGE( bmpPlayPointerPinned, wxImage( 20, 20 ), wxT("PlayPointerPinned"));
+   DEFINE_IMAGE( bmpRecordPointer, wxImage( 20, 20 ), wxT("RecordPointer"));
+   DEFINE_IMAGE( bmpRecordPointerPinned, wxImage( 20, 20 ), wxT("RecordPointerPinned"));
+   DEFINE_IMAGE( bmpGrabberDropLoc, wxImage( 20, 20 ), wxT("GrabberDropLoc"));
+
+   SET_THEME_FLAGS(  resFlagNone  );
+   DEFINE_IMAGE( bmpSliderThumb, wxImage( 11, 20 ), wxT("SliderThumb"));
+   DEFINE_IMAGE( bmpSlider, wxImage( 80, 20 ), wxT("Slider"));
+   DEFINE_IMAGE( bmpHiliteSlider, wxImage( 80, 20 ), wxT("HiliteSlider"));
+   SET_THEME_FLAGS(  resFlagNewLine  );
+   DEFINE_IMAGE( bmpUpButtonExpand, wxImage( 96, 18 ), wxT("UpButtonExpand"));
+   DEFINE_IMAGE( bmpDownButtonExpand, wxImage( 96, 18 ), wxT("DownButtonExpand"));
+   DEFINE_IMAGE( bmpHiliteButtonExpand, wxImage( 96, 18 ), wxT("HiliteButtonExpand"));
 
    SET_THEME_FLAGS(  resFlagNewLine  );
    DEFINE_IMAGE( bmpUpButtonLarge, wxImage( 48, 48 ), wxT("UpButtonLarge"));
