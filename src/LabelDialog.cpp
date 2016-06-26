@@ -163,7 +163,8 @@ LabelDialog::LabelDialog(wxWindow *parent,
    // do it for us.  (The DecRef() that is needed after GetDefaultEditorForType
    // becomes the duty of the wxGridCellAttr objects after we set them in the grid.)
    mChoiceEditor = (ChoiceEditor *) mGrid->GetDefaultEditorForType(GRID_VALUE_CHOICE);
-   mTimeEditor = (TimeEditor *) mGrid->GetDefaultEditorForType(GRID_VALUE_TIME);
+   mTimeEditor = static_cast<NumericEditor*>
+      (mGrid->GetDefaultEditorForType(GRID_VALUE_TIME));
 
    // Initialize and set the track name column attributes
    wxGridCellAttr *attr;

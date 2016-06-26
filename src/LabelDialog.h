@@ -80,7 +80,7 @@ class LabelDialog final : public wxDialog
 
    Grid *mGrid;
    ChoiceEditor *mChoiceEditor;
-   TimeEditor *mTimeEditor;
+   NumericEditor *mTimeEditor;
 
    RowDataArray mData;
 
