@@ -81,16 +81,6 @@ void TimeEditor::BeginEdit(int row, int col, wxGrid *grid)
    GetTimeCtrl()->SetFocus();
 }
 
-bool TimeEditor::EndEdit(int row, int col, wxGrid *grid)
-{
-    wxString newvalue;
-    bool changed = EndEdit(row, col, grid, mOldString, &newvalue);
-    if (changed) {
-        ApplyEdit(row, col, grid);
-    }
-    return changed;
-}
-
 bool TimeEditor::EndEdit(int WXUNUSED(row), int WXUNUSED(col), const wxGrid *WXUNUSED(grid), const wxString &WXUNUSED(oldval), wxString *newval)
 {
    double newtime = GetTimeCtrl()->GetValue();
@@ -154,6 +144,10 @@ void TimeEditor::SetFormat(const wxString &format)
 void TimeEditor::SetRate(double rate)
 {
    mRate = rate;
+}
+
+TimeRenderer::~TimeRenderer()
+{
 }
 
 void TimeRenderer::Draw(wxGrid &grid,
@@ -392,13 +386,15 @@ Grid::Grid(wxWindow *parent,
    GetGridWindow()->SetAccessible(mAx = safenew GridAx(this));
 #endif
 
+   // RegisterDataType takes ownership of renderer and editor
+
    RegisterDataType(GRID_VALUE_TIME,
-                    new TimeRenderer,
-                    new TimeEditor);
+                    safenew TimeRenderer,
+                    safenew TimeEditor);
 
    RegisterDataType(GRID_VALUE_CHOICE,
-                    new wxGridCellStringRenderer,
-                    new ChoiceEditor);
+                    safenew wxGridCellStringRenderer,
+                    safenew ChoiceEditor);
 }
 
 Grid::~Grid()

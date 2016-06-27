@@ -46,21 +46,19 @@ class TimeEditor final : public wxGridCellEditor
    ~TimeEditor();
 
    // Precondition: parent != NULL
-   void Create(wxWindow *parent, wxWindowID id, wxEvtHandler *handler);
+   void Create(wxWindow *parent, wxWindowID id, wxEvtHandler *handler) override;
 
-   bool IsAcceptedKey(wxKeyEvent &event);
+   bool IsAcceptedKey(wxKeyEvent &event) override;
 
-   void SetSize(const wxRect &rect);
+   void SetSize(const wxRect &rect) override;
 
-   void BeginEdit(int row, int col, wxGrid *grid);
+   void BeginEdit(int row, int col, wxGrid *grid) override;
 
-   bool EndEdit(int row, int col, wxGrid *grid);
+   bool EndEdit(int row, int col, const wxGrid *grid, const wxString &oldval, wxString *newval) override;
 
-   bool EndEdit(int row, int col, const wxGrid *grid, const wxString &oldval, wxString *newval);
+   void ApplyEdit(int row, int col, wxGrid *grid) override;
 
-   void ApplyEdit(int row, int col, wxGrid *grid);
-
-   void Reset();
+   void Reset() override;
 
    wxString GetFormat();
    double GetRate();
@@ -68,7 +66,7 @@ class TimeEditor final : public wxGridCellEditor
    void SetRate(double rate);
 
    wxGridCellEditor *Clone() const override;
-   wxString GetValue() const;
+   wxString GetValue() const override;
 
    NumericTextCtrl *GetTimeCtrl() const { return (NumericTextCtrl *)m_control; }
 
@@ -89,20 +87,22 @@ class TimeEditor final : public wxGridCellEditor
 
 class TimeRenderer final : public wxGridCellRenderer
 {
- public:
-    void Draw(wxGrid &grid,
-              wxGridCellAttr &attr,
-              wxDC &dc,
-              const wxRect &rect,
-              int row,
-              int col,
-              bool isSelected);
+public:
+   ~TimeRenderer() override;
+
+   void Draw(wxGrid &grid,
+             wxGridCellAttr &attr,
+             wxDC &dc,
+             const wxRect &rect,
+             int row,
+             int col,
+             bool isSelected) override;
 
    wxSize GetBestSize(wxGrid &grid,
                       wxGridCellAttr &attr,
                       wxDC &dc,
                       int row,
-                      int col);
+                      int col) override;
 
    wxGridCellRenderer *Clone() const override;
 };
