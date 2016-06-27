@@ -1403,7 +1403,7 @@ bool AudacityApp::OnInit()
          wxID_ANY,
          wxDefaultPosition,
          wxDefaultSize,
-         wxSTAY_ON_TOP);
+		 0); // wxSTAY_ON_TOP);
       temporarywindow.SetTitle(_("Audacity is starting up..."));
       SetTopWindow(&temporarywindow);
       wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI);
@@ -1444,29 +1444,10 @@ bool AudacityApp::OnInit()
 
 #endif //__WXMAC__
 
-      project = CreateNewAudacityProject();
-      mCmdHandler->SetProject(project);
-      wxWindow * pWnd = MakeHijackPanel();
-      if (pWnd)
-      {
-         project->Show(false);
-         pWnd->SetParent(project);
-         SetTopWindow(pWnd);
-         pWnd->Show(true);
-      }
+ 
+	  temporarywindow.Show(false);
 
-      temporarywindow.Show(false);
    }
-
-   if( project->mShowSplashScreen )
-      project->OnHelpWelcome();
-
-   // JKC 10-Sep-2007: Enable monitoring from the start.
-   // (recommended by lprod.org).
-   // Monitoring stops again after any
-   // PLAY or RECORD completes.
-   // So we also call StartMonitoring when STOP is called.
-   project->MayStartMonitoring();
 
    #ifdef USE_FFMPEG
    FFmpegStartup();
@@ -1507,7 +1488,32 @@ bool AudacityApp::OnInit()
 #endif
    }
 
+   wxWindow * pWnd = MakeHijackPanel();
+   if (pWnd)
+   {
+	   project->Show(false);
+	   pWnd->SetParent(project);
+	   SetTopWindow(pWnd);
+	   pWnd->Show(true);
+   }
+
+
+
    gInited = true;
+
+   project = CreateNewAudacityProject();
+   mCmdHandler->SetProject(project);
+   if (project->mShowSplashScreen)
+	   project->OnHelpWelcome();
+
+   // JKC 10-Sep-2007: Enable monitoring from the start.
+   // (recommended by lprod.org).
+   // Monitoring stops again after any
+   // PLAY or RECORD completes.
+   // So we also call StartMonitoring when STOP is called.
+   project->MayStartMonitoring();
+
+
 
    ModuleManager::Get().Dispatch(AppInitialized);
 
@@ -1517,8 +1523,7 @@ bool AudacityApp::OnInit()
    mTimer.Start(200);
 
    return TRUE;
-}
-
+} 
 void AudacityApp::InitCommandHandler()
 {
    mCmdHandler = new CommandHandler(*this);
