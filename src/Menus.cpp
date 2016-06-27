@@ -6553,12 +6553,13 @@ void AudacityProject::OnAddLabelPlaying()
 
 void AudacityProject::DoEditLabels(LabelTrack *lt, int index)
 {
-   wxString format = GetSelectionFormat();
+   wxString format = GetSelectionFormat(),
+      freqFormat = GetFrequencySelectionFormatName();
 
    LabelDialog dlg(this, *GetTrackFactory(), mTracks,
                    lt, index,
                    mViewInfo, mRate,
-                   format);
+                   format, freqFormat);
 
    if (dlg.ShowModal() == wxID_OK) {
       PushState(_("Edited labels"), _("Label"));

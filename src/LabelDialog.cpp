@@ -47,6 +47,8 @@ enum Column
    Col_Label,
    Col_Stime,
    Col_Etime,
+   Col_Lfreq,
+   Col_Hfreq,
    Col_Max
 };
 
@@ -83,6 +85,8 @@ BEGIN_EVENT_TABLE(LabelDialog, wxDialog)
    EVT_BUTTON(wxID_OK,      LabelDialog::OnOK)
    EVT_BUTTON(wxID_CANCEL,  LabelDialog::OnCancel)
    EVT_COMMAND(wxID_ANY, EVT_TIMETEXTCTRL_UPDATED, LabelDialog::OnUpdate)
+   EVT_COMMAND(wxID_ANY, EVT_FREQUENCYTEXTCTRL_UPDATED,
+               LabelDialog::OnFreqUpdate)
 END_EVENT_TABLE()
 
 LabelDialog::LabelDialog(wxWindow *parent,
@@ -92,7 +96,7 @@ LabelDialog::LabelDialog(wxWindow *parent,
                          int index,
                          ViewInfo &viewinfo,
                          double rate,
-                         const wxString & format)
+                         const wxString & format, const wxString &freqFormat)
 : wxDialog(parent,
            wxID_ANY,
            _("Edit Labels"),
@@ -106,6 +110,7 @@ LabelDialog::LabelDialog(wxWindow *parent,
   , mViewInfo(&viewinfo),
   mRate(rate),
   mFormat(format)
+  , mFreqFormat(freqFormat)
 {
    SetName(GetTitle());
 
@@ -158,6 +163,10 @@ LabelDialog::LabelDialog(wxWindow *parent,
    mGrid->SetColLabelValue(2,_("Start Time"));
    /* i18n-hint: (noun) of a label*/
    mGrid->SetColLabelValue(3,_("End Time"));
+   /* i18n-hint: (noun) of a label*/
+   mGrid->SetColLabelValue(4,_("Low Frequency"));
+   /* i18n-hint: (noun) of a label*/
+   mGrid->SetColLabelValue(5,_("High Frequency"));
 
    // Create and remember editors.  No need to DELETE these as the wxGrid will
    // do it for us.  (The DecRef() that is needed after GetDefaultEditorForType
@@ -165,6 +174,8 @@ LabelDialog::LabelDialog(wxWindow *parent,
    mChoiceEditor = (ChoiceEditor *) mGrid->GetDefaultEditorForType(GRID_VALUE_CHOICE);
    mTimeEditor = static_cast<NumericEditor*>
       (mGrid->GetDefaultEditorForType(GRID_VALUE_TIME));
+   mFrequencyEditor = static_cast<NumericEditor *>
+      (mGrid->GetDefaultEditorForType(GRID_VALUE_FREQUENCY));
 
    // Initialize and set the track name column attributes
    wxGridCellAttr *attr;
@@ -181,6 +192,15 @@ LabelDialog::LabelDialog(wxWindow *parent,
 
    mGrid->SetColAttr(Col_Etime, attr->Clone());
 
+   // Initialize and set the frequency column attributes
+   mGrid->SetColAttr(Col_Lfreq, (attr = safenew wxGridCellAttr));
+   // Don't need DecRef() after this GetDefaultRendererForType.
+   attr->SetRenderer(mGrid->GetDefaultRendererForType(GRID_VALUE_FREQUENCY));
+   attr->SetEditor(mFrequencyEditor);
+   attr->SetAlignment(wxALIGN_CENTER, wxALIGN_CENTER);
+
+   mGrid->SetColAttr(Col_Hfreq, attr->Clone());
+   
    // Seems there's a bug in wxGrid.  Adding only 1 row does not
    // allow SetCellSize() to work properly and you will not get
    // the expected 1 row by 4 column cell.
@@ -239,6 +259,8 @@ bool LabelDialog::TransferDataToWindow()
    mChoiceEditor->SetChoices(mTrackNames);
    mTimeEditor->SetFormat(mFormat);
    mTimeEditor->SetRate(mRate);
+   mFrequencyEditor->SetFormat(mFreqFormat);
+   mFrequencyEditor->SetRate(mRate);
 
    // Disable redrawing until we're done
    mGrid->BeginBatch();
@@ -262,9 +284,10 @@ bool LabelDialog::TransferDataToWindow()
          wxString::Format(wxT("%g"), rd.selectedRegion.t0()));
       mGrid->SetCellValue(i, Col_Etime,
          wxString::Format(wxT("%g"), rd.selectedRegion.t1()));
-
-      // PRL: to do: -- populate future additional selection fields
-      // and write event code to update them from controls
+      mGrid->SetCellValue(i, Col_Lfreq,
+         wxString::Format(wxT("%g"), rd.selectedRegion.f0()));
+      mGrid->SetCellValue(i, Col_Hfreq,
+         wxString::Format(wxT("%g"), rd.selectedRegion.f1()));
    }
 
    // Autosize all the rows
@@ -279,6 +302,8 @@ bool LabelDialog::TransferDataToWindow()
    // Autosize the time columns and set their minimal widths
    mGrid->AutoSizeColumn(Col_Stime);
    mGrid->AutoSizeColumn(Col_Etime);
+   mGrid->AutoSizeColumn(Col_Lfreq);
+   mGrid->AutoSizeColumn(Col_Hfreq);
 
    // We're done, so allow the grid to redraw
    mGrid->EndBatch();
@@ -462,6 +487,15 @@ void LabelDialog::OnUpdate(wxCommandEvent &event)
 {
    // Remember the NEW format and repopulate grid
    mFormat = event.GetString();
+   TransferDataToWindow();
+
+   event.Skip(false);
+}
+
+void LabelDialog::OnFreqUpdate(wxCommandEvent &event)
+{
+   // Remember the NEW format and repopulate grid
+   mFreqFormat = event.GetString();
    TransferDataToWindow();
 
    event.Skip(false);
@@ -717,6 +751,14 @@ void LabelDialog::OnCellChange(wxGridEvent &event)
       case Col_Etime:
          OnChangeEtime(event, row, rd);
       break;
+
+      case Col_Lfreq:
+         OnChangeLfreq(event, row, rd);
+      break;
+
+      case Col_Hfreq:
+         OnChangeHfreq(event, row, rd);
+      break;
    }
 
    // Done...no need for protection anymore
@@ -788,6 +830,30 @@ void LabelDialog::OnChangeEtime(wxGridEvent & WXUNUSED(event), int row, RowData 
    mGrid->SetCellValue(row, Col_Stime, wxString::Format(wxT("%g"),
                        rd->selectedRegion.t0()));
 
+   return;
+}
+
+void LabelDialog::OnChangeLfreq(wxGridEvent & WXUNUSED(event), int row, RowData *rd)
+{
+   // Remember the value...no need to repopulate
+   double f;
+   mGrid->GetCellValue(row, Col_Lfreq).ToDouble(&f);
+   rd->selectedRegion.setF0(f, false);
+   mGrid->SetCellValue(row, Col_Hfreq, wxString::Format(wxT("%g"),
+                                                        rd->selectedRegion.f1()));
+
+   return;
+}
+
+void LabelDialog::OnChangeHfreq(wxGridEvent & WXUNUSED(event), int row, RowData *rd)
+{
+   // Remember the value...no need to repopulate
+   double f;
+   mGrid->GetCellValue(row, Col_Hfreq).ToDouble(&f);
+   rd->selectedRegion.setF1(f, false);
+   mGrid->SetCellValue(row, Col_Lfreq, wxString::Format(wxT("%g"),
+                                                        rd->selectedRegion.f0()));
+   
    return;
 }
 

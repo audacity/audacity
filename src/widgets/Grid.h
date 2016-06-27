@@ -35,6 +35,7 @@ class NumericTextCtrl;
 // wxGridCellEditor for the NumericTextCtrl.
 // ----------------------------------------------------------------------------
 #define GRID_VALUE_TIME wxT("Time")
+#define GRID_VALUE_FREQUENCY wxT("Frequency")
 
 class NumericEditor /* not final */ : public wxGridCellEditor
 {
