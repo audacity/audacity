@@ -7017,7 +7017,7 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec,
                      true);
    }
 
-   mTrackInfo.DrawBordersWithin( dc, rect, bIsWave );
+   //mTrackInfo.DrawBordersWithin( dc, rect, bIsWave );
 
    if (bIsWave) {
       mTrackInfo.DrawMuteSolo(dc, rect, t, (captured && mMouseCapture == IsMuting), false, HasSoloButton());
@@ -8969,6 +8969,7 @@ void TrackInfo::DrawCloseBox(wxDC * dc, const wxRect & rect, bool down) const
 {
    wxRect bev;
    GetCloseBoxRect(rect, bev);
+   AColor::Bevel2(*dc, !down, bev);
 
 #ifdef EXPERIMENTAL_THEMING
    wxPen pen( theTheme.Colour( clrTrackPanelText ));
@@ -8990,8 +8991,7 @@ void TrackInfo::DrawCloseBox(wxDC * dc, const wxRect & rect, bool down) const
    AColor::Line(*dc, rs,     ts, ls,     bs);
    AColor::Line(*dc, rs + 1, ts, ls + 1, bs);
 
-   bev.Inflate(-1, -1);
-   AColor::BevelTrackInfo(*dc, !down, bev);
+//   bev.Inflate(-1, -1);
 }
 
 void TrackInfo::DrawTitleBar(wxDC * dc, const wxRect & rect, Track * t,
@@ -9000,6 +9000,7 @@ void TrackInfo::DrawTitleBar(wxDC * dc, const wxRect & rect, Track * t,
    wxRect bev;
    GetTitleBarRect(rect, bev);
    bev.Inflate(-1, -1);
+   AColor::Bevel2(*dc, !down, bev);
 
    // Draw title text
    SetTrackInfoFont(dc);
@@ -9013,20 +9014,25 @@ void TrackInfo::DrawTitleBar(wxDC * dc, const wxRect & rect, Track * t,
       dc->GetTextExtent(titleStr, &textWidth, &textHeight);
    }
 
-   // wxGTK leaves little scraps (antialiasing?) of the
-   // characters if they are repeatedly drawn.  This
-   // happens when holding down mouse button and moving
-   // in and out of the title bar.  So clear it first.
-   AColor::MediumTrackInfo(dc, t->GetSelected());
-   dc->DrawRectangle(bev);
-   dc->DrawText(titleStr, bev.x + 2, bev.y + (bev.height - textHeight) / 2);
-
    // Pop-up triangle
 #ifdef EXPERIMENTAL_THEMING
    wxColour c = theTheme.Colour( clrTrackPanelText );
 #else
    wxColour c = *wxBLACK;
 #endif
+
+   // wxGTK leaves little scraps (antialiasing?) of the
+   // characters if they are repeatedly drawn.  This
+   // happens when holding down mouse button and moving
+   // in and out of the title bar.  So clear it first.
+//   AColor::MediumTrackInfo(dc, t->GetSelected());
+//   dc->DrawRectangle(bev);
+
+   dc->SetTextForeground( c );
+   dc->SetTextBackground( wxTRANSPARENT );
+   dc->DrawText(titleStr, bev.x + 2, bev.y + (bev.height - textHeight) / 2);
+
+
 
    dc->SetPen(c);
    dc->SetBrush(c);
@@ -9037,7 +9043,6 @@ void TrackInfo::DrawTitleBar(wxDC * dc, const wxRect & rect, Track * t,
                  bev.y + ((bev.height - (s / 2)) / 2),
                  s);
 
-   AColor::BevelTrackInfo(*dc, !down, bev);
 }
 
 /// Draw the Mute or the Solo button, depending on the value of solo.
@@ -9052,7 +9057,7 @@ void TrackInfo::DrawMuteSolo(wxDC * dc, const wxRect & rect, Track * t,
 
    if (bev.y + bev.height >= rect.y + rect.height - 19)
       return; // don't draw mute and solo buttons, because they don't fit into track label
-
+#if 0
    AColor::MediumTrackInfo( dc, t->GetSelected());
    if( solo )
    {
@@ -9072,6 +9077,7 @@ void TrackInfo::DrawMuteSolo(wxDC * dc, const wxRect & rect, Track * t,
    //    AColor::Mute(dc, t->GetMute(), t->GetSelected(), t->GetSolo());
    dc->SetPen( *wxTRANSPARENT_PEN );//No border!
    dc->DrawRectangle(bev);
+#endif
 
    wxCoord textWidth, textHeight;
    wxString str = (solo) ?
@@ -9079,12 +9085,12 @@ void TrackInfo::DrawMuteSolo(wxDC * dc, const wxRect & rect, Track * t,
       _("Solo") :
       /* i18n-hint: This is on a button that will silence all the other tracks.*/
       _("Mute");
+   AColor::Bevel2(*dc, (solo?t->GetSolo():t->GetMute()) == down, bev);
 
    SetTrackInfoFont(dc);
    dc->GetTextExtent(str, &textWidth, &textHeight);
    dc->DrawText(str, bev.x + (bev.width - textWidth) / 2, bev.y + (bev.height - textHeight) / 2);
 
-   AColor::BevelTrackInfo(*dc, (solo?t->GetSolo():t->GetMute()) == down, bev);
 
    if (solo && !down) {
       // Update the mute button, which may be grayed out depending on
@@ -9103,6 +9109,8 @@ void TrackInfo::DrawMinimize(wxDC * dc, const wxRect & rect, Track * t, bool dow
    AColor::MediumTrackInfo(dc, t->GetSelected());
    dc->DrawRectangle(bev);
 
+   AColor::Bevel2(*dc, !down, bev);
+
 #ifdef EXPERIMENTAL_THEMING
    wxColour c = theTheme.Colour(clrTrackPanelText);
    dc->SetBrush(c);
@@ -9117,7 +9125,6 @@ void TrackInfo::DrawMinimize(wxDC * dc, const wxRect & rect, Track * t, bool dow
                  10,
                  t->GetMinimized());
 
-   AColor::BevelTrackInfo(*dc, !down, bev);
 }
 
 #ifdef EXPERIMENTAL_MIDI_OUT

@@ -817,7 +817,7 @@ enum : int {
 
 enum : int {
    kTrackInfoWidth = 100,
-   kTrackInfoBtnSize = 16 // widely used dimension, usually height
+   kTrackInfoBtnSize = 18 // widely used dimension, usually height
 };
 
 #ifdef _MSC_VER

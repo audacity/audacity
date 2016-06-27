@@ -583,8 +583,8 @@ void LWSlider::AdjustSize(const wxSize & sz)
    mWidth = sz.GetWidth();
    mHeight = sz.GetHeight();
 
-   mThumbWidth = 14;
-   mThumbHeight = 14;
+   mThumbWidth = 11;
+   mThumbHeight = 20;
 
    if (mOrientation == wxHORIZONTAL)
    {
