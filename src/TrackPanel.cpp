@@ -3031,7 +3031,7 @@ void TrackPanel::HandleEnvelope(wxMouseEvent & event)
       ForwardEventToEnvelope(event);
 
    if (event.LeftUp()) {
-      mCapturedTrack = NULL;
+      SetCapturedTrack( NULL );
       MakeParentPushState(
          /* i18n-hint: (verb) Audacity has just adjusted the envelope .*/
          _("Adjusted envelope."),
