@@ -769,7 +769,7 @@ void LabelDialog::OnChangeLabel(wxGridEvent & WXUNUSED(event), int row, RowData 
 void LabelDialog::OnChangeStime(wxGridEvent & WXUNUSED(event), int row, RowData *rd)
 {
    // Remember the value...no need to repopulate
-   double t;
+   double t {};
    mGrid->GetCellValue(row, Col_Stime).ToDouble(&t);
    rd->selectedRegion.setT0(t, false);
    mGrid->SetCellValue(row, Col_Etime, wxString::Format(wxT("%g"),
@@ -781,7 +781,7 @@ void LabelDialog::OnChangeStime(wxGridEvent & WXUNUSED(event), int row, RowData 
 void LabelDialog::OnChangeEtime(wxGridEvent & WXUNUSED(event), int row, RowData *rd)
 {
    // Remember the value...no need to repopulate
-   double t;
+   double t {};
    mGrid->GetCellValue(row, Col_Etime).ToDouble(&t);
    rd->selectedRegion.setT1(t, false);
    mGrid->SetCellValue(row, Col_Stime, wxString::Format(wxT("%g"),

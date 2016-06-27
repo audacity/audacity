@@ -956,7 +956,7 @@ void NumericConverter::SetMinValue(double minValue)
 
 void NumericConverter::ResetMinValue()
 {
-   mMinValue = std::numeric_limits<double>::min();
+   mMinValue = 0.0;
 }
 
 void NumericConverter::SetMaxValue(double maxValue)
