@@ -79,30 +79,27 @@
 //
 // Constructor
 //
-class ToolFrame final : public wxFrame
-{
- public:
-
-   ToolFrame( wxWindow *parent, ToolManager *manager, ToolBar *bar, wxPoint pos )
+ToolFrame::ToolFrame
+   ( wxWindow *parent, ToolManager *manager, ToolBar *bar, wxPoint pos )
    : wxFrame( parent,
-              bar->GetId(),
-              wxEmptyString,
-              pos,
-              wxDefaultSize,
-              wxNO_BORDER |
-              wxFRAME_NO_TASKBAR |
+          bar->GetId(),
+          wxEmptyString,
+          pos,
+          wxDefaultSize,
+          wxNO_BORDER |
+          wxFRAME_NO_TASKBAR |
 #if !defined(__WXMAC__) // bug1358
-              wxFRAME_TOOL_WINDOW |
+          wxFRAME_TOOL_WINDOW |
 #endif
-              wxFRAME_FLOAT_ON_PARENT )
-   {
-      int width = bar->GetSize().x;
-      int border;
+          wxFRAME_FLOAT_ON_PARENT )
+{
+   int width = bar->GetSize().x;
+   int border;
 
-      // OSX doesn't need a border, but Windows and Linux do
-      border = 1;
+   // OSX doesn't need a border, but Windows and Linux do
+   border = 1;
 #if defined(__WXMAC__)
-      border = 0;
+   border = 0;
 
    // WXMAC doesn't support wxFRAME_FLOAT_ON_PARENT, so we do
    //
@@ -112,217 +109,190 @@ class ToolFrame final : public wxFrame
    //
    //      However, I'm leaving it here because I don't remember why I'd included
    //      it in the first place.
-// SetWindowClass((WindowRef)d.MacGetWindowRef(), kFloatingWindowClass);
+   // SetWindowClass((WindowRef)d.MacGetWindowRef(), kFloatingWindowClass);
 #endif
 
-      // Save parameters
-      mParent = parent;
-      mManager = manager;
-      mBar = bar;
+   // Save parameters
+   mParent = parent;
+   mManager = manager;
+   mBar = bar;
 
-      // Transfer the bar to the ferry
-      bar->Reparent(this);
+   // Transfer the bar to the ferry
+   bar->Reparent(this);
 
+   {
+      // We use a sizer to maintain proper spacing
+      auto s = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
+
+      // Add the bar to the sizer
+      s->Add(bar, 1, wxEXPAND | wxALL, border);
+
+      // Add space for the resize grabber
+      if (bar->IsResizable())
       {
-         // We use a sizer to maintain proper spacing
-         auto s = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
-
-         // Add the bar to the sizer
-         s->Add(bar, 1, wxEXPAND | wxALL, border);
-
-         // Add space for the resize grabber
-         if (bar->IsResizable())
-         {
-            s->Add(sizerW, 1);
-            width += sizerW;
-         }
-
-         SetSize(width + 2 * ToolBarFloatMargin,
-            bar->GetDockedSize().y + 2 * ToolBarFloatMargin);
-
-         // Attach the sizer and resize the window to fit
-         SetSizer(s.release());
+         s->Add(sizerW, 1);
+         width += sizerW;
       }
 
-      Layout();
+      SetSize(width + 2 * ToolBarFloatMargin,
+              bar->GetDockedSize().y + 2 * ToolBarFloatMargin);
 
-      // Inform toolbar of change
-      bar->SetDocked( NULL, true );
-
-      // Make sure resizable floaters don't get any smaller than initial size
-      if( bar->IsResizable() )
-      {
-         // Calc the minimum size of the frame
-         mMinSize = bar->GetMinSize() + ( GetSize() - bar->GetSize() );
-      }
+      // Attach the sizer and resize the window to fit
+      SetSizer(s.release());
    }
 
-   ~ToolFrame()
+   Layout();
+
+   // Inform toolbar of change
+   bar->SetDocked( NULL, true );
+
+   // Make sure resizable floaters don't get any smaller than initial size
+   if( bar->IsResizable() )
    {
-      if(HasCapture())
-         ReleaseMouse();
+      // Calc the minimum size of the frame
+      mMinSize = bar->GetMinSize() + ( GetSize() - bar->GetSize() );
    }
+}
 
-   //
-   // Transition a toolbar from float to dragging
-   //
-   void OnGrabber( GrabberEvent & event )
-   {
-      // Pass it on to the manager since it isn't in the handling hierarchy
-      mManager->ProcessEvent( event );
-   }
+ToolFrame::~ToolFrame()
+{
+   if(HasCapture())
+      ReleaseMouse();
+}
 
-   //
-   // Handle toolbar updates
-   //
-   void OnToolBarUpdate( wxCommandEvent & event )
-   {
-      // Resize floater window to exactly contain toolbar
-      mBar->GetParent()->SetClientSize( mBar->GetMinSize() );
+void ToolFrame::OnGrabber( GrabberEvent & event )
+{
+   // Pass it on to the manager since it isn't in the handling hierarchy
+   mManager->ProcessEvent( event );
+}
 
-      // Allow it to propagate to our parent
-      event.Skip();
-   }
+void ToolFrame::OnToolBarUpdate( wxCommandEvent & event )
+{
+   // Resize floater window to exactly contain toolbar
+   mBar->GetParent()->SetClientSize( mBar->GetMinSize() );
 
-   //
-   // Handle frame paint events
-   //
-   void OnPaint( wxPaintEvent & WXUNUSED(event) )
-   {
-      wxPaintDC dc( this );
-      wxSize sz = GetSize();
-      wxRect r;
+   // Allow it to propagate to our parent
+   event.Skip();
+}
 
-      dc.SetPen( wxColour( 90, 90, 90 ) );
+void ToolFrame::OnPaint( wxPaintEvent & WXUNUSED(event) )
+{
+   wxPaintDC dc( this );
+   wxSize sz = GetSize();
+   wxRect r;
+
+   dc.SetPen( wxColour( 90, 90, 90 ) );
 
 #if !defined(__WXMAC__)
-      dc.SetBackground(wxBrush(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE)));
-      dc.Clear();
-      dc.SetBrush( *wxTRANSPARENT_BRUSH );
-      dc.DrawRectangle( 0, 0, sz.GetWidth(), sz.GetHeight() );
+   dc.SetBackground(wxBrush(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE)));
+   dc.Clear();
+   dc.SetBrush( *wxTRANSPARENT_BRUSH );
+   dc.DrawRectangle( 0, 0, sz.GetWidth(), sz.GetHeight() );
 #endif
 
-      if( mBar->IsResizable() )
-      {
-         r.x = sz.x - sizerW - 2,
-         r.y = sz.y - sizerW - 2;
-         r.width = sizerW + 2;
-         r.height = sizerW + 2;
+   if( mBar->IsResizable() )
+   {
+      r.x = sz.x - sizerW - 2,
+      r.y = sz.y - sizerW - 2;
+      r.width = sizerW + 2;
+      r.height = sizerW + 2;
 
-         AColor::Line(dc, r.GetLeft(), r.GetBottom(), r.GetRight(), r.GetTop() );
-         AColor::Line(dc, r.GetLeft() + 3, r.GetBottom(), r.GetRight(), r.GetTop() + 3 );
-         AColor::Line(dc, r.GetLeft() + 6, r.GetBottom(), r.GetRight(), r.GetTop() + 6 );
-         AColor::Line(dc, r.GetLeft() + 9, r.GetBottom(), r.GetRight(), r.GetTop() + 9 );
-      }
-
+      AColor::Line(dc, r.GetLeft(), r.GetBottom(), r.GetRight(), r.GetTop() );
+      AColor::Line(dc, r.GetLeft() + 3, r.GetBottom(), r.GetRight(), r.GetTop() + 3 );
+      AColor::Line(dc, r.GetLeft() + 6, r.GetBottom(), r.GetRight(), r.GetTop() + 6 );
+      AColor::Line(dc, r.GetLeft() + 9, r.GetBottom(), r.GetRight(), r.GetTop() + 9 );
    }
 
-   void OnMotion( wxMouseEvent & event )
+}
+
+void ToolFrame::OnMotion( wxMouseEvent & event )
+{
+   // Don't do anything if we're docked or not resizeable
+   if( mBar->IsDocked() || !mBar->IsResizable() )
    {
-      // Don't do anything if we're docked or not resizeable
-      if( mBar->IsDocked() || !mBar->IsResizable() )
+      return;
+   }
+
+   // Retrieve the mouse position
+   wxPoint pos = ClientToScreen( event.GetPosition() );
+   if( HasCapture() && event.Dragging() )
+   {
+      wxRect rect = GetRect();
+
+      rect.SetBottomRight( pos );
+      if( rect.width < mMinSize.x )
       {
-         return;
+         rect.width = mMinSize.x;
       }
 
-      // Retrieve the mouse position
-      wxPoint pos = ClientToScreen( event.GetPosition() );
-      if( HasCapture() && event.Dragging() )
+      if( rect.height < mMinSize.y )
       {
-         wxRect rect = GetRect();
-
-         rect.SetBottomRight( pos );
-         if( rect.width < mMinSize.x )
-         {
-            rect.width = mMinSize.x;
-         }
-
-         if( rect.height < mMinSize.y )
-         {
-            rect.height = mMinSize.y;
-         }
-
-         Resize( rect.GetSize() );
+         rect.height = mMinSize.y;
       }
-      else if( HasCapture() && event.LeftUp() )
+
+      Resize( rect.GetSize() );
+   }
+   else if( HasCapture() && event.LeftUp() )
+   {
+      ReleaseMouse();
+   }
+   else if( !HasCapture() )
+   {
+      wxRect rect = GetRect();
+      wxRect r;
+
+      r.x = rect.GetRight() - sizerW - 2,
+      r.y = rect.GetBottom() - sizerW - 2;
+      r.width = sizerW + 2;
+      r.height = sizerW + 2;
+
+      // Is left click within resize grabber?
+      if( r.Contains( pos ) && !event.Leaving() )
       {
-         ReleaseMouse();
-      }
-      else if( !HasCapture() )
-      {
-         wxRect rect = GetRect();
-         wxRect r;
+         mOrigSize = GetSize();
 
-         r.x = rect.GetRight() - sizerW - 2,
-         r.y = rect.GetBottom() - sizerW - 2;
-         r.width = sizerW + 2;
-         r.height = sizerW + 2;
-
-         // Is left click within resize grabber?
-         if( r.Contains( pos ) && !event.Leaving() )
+         SetCursor( wxCURSOR_SIZENWSE );
+         if( event.LeftDown() )
          {
-            mOrigSize = GetSize();
-
-            SetCursor( wxCURSOR_SIZENWSE );
-            if( event.LeftDown() )
-            {
-               CaptureMouse();
-            }
-         }
-         else
-         {
-            SetCursor( wxCURSOR_ARROW );
+            CaptureMouse();
          }
       }
-   }
-
-   void OnCaptureLost( wxMouseCaptureLostEvent & WXUNUSED(event) )
-   {
-      if( HasCapture() )
+      else
       {
-         ReleaseMouse();
+         SetCursor( wxCURSOR_ARROW );
       }
    }
+}
 
-   //
-   // Do not allow the window to close through keyboard accelerators
-   // (like ALT+F4 on Windows)
-   //
-   void OnClose( wxCloseEvent & event )
+void ToolFrame::OnCaptureLost( wxMouseCaptureLostEvent & WXUNUSED(event) )
+{
+   if( HasCapture() )
    {
-      event.Veto();
+      ReleaseMouse();
    }
+}
 
-   void OnKeyDown( wxKeyEvent &event )
-   {
-      event.Skip();
-      if( HasCapture() && event.GetKeyCode() == WXK_ESCAPE ) {
-         Resize( mOrigSize );
-         ReleaseMouse();
-      }
+void ToolFrame::OnClose( wxCloseEvent & event )
+{
+   event.Veto();
+}
+
+void ToolFrame::OnKeyDown( wxKeyEvent &event )
+{
+   event.Skip();
+   if( HasCapture() && event.GetKeyCode() == WXK_ESCAPE ) {
+      Resize( mOrigSize );
+      ReleaseMouse();
    }
+}
 
-   void Resize( const wxSize &size )
-   {
-      SetMinSize( size );
-      SetSize( size );
-      Layout();
-      Refresh( false );
-   }
-
-private:
-
-   wxWindow *mParent;
-   ToolManager *mManager;
-   ToolBar *mBar;
-   wxSize mMinSize;
-   wxSize mOrigSize;
-
- public:
-
-   DECLARE_CLASS( ToolFrame );
-   DECLARE_EVENT_TABLE();
-};
+void ToolFrame::Resize( const wxSize &size )
+{
+   SetMinSize( size );
+   SetSize( size );
+   Layout();
+   Refresh( false );
+}
 
 IMPLEMENT_CLASS( ToolFrame, wxFrame );
 
