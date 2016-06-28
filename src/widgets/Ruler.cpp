@@ -3214,6 +3214,15 @@ void AdornedRulerPanel::DoDrawIndicator
       dc->DrawPolygon( 3, tri );
    }
    else {
+      bool pinned = PlaybackPrefs::GetPinnedHeadPreference();
+      wxBitmap & bmp = theTheme.Bitmap( pinned ? 
+         (playing ? bmpPlayPointerPinned : bmpRecordPointerPinned) :
+         (playing ? bmpPlayPointer : bmpRecordPointer) 
+      );
+      const int IndicatorHalfWidth = bmp.GetWidth() / 2;
+      dc->DrawBitmap( bmp, xx - IndicatorHalfWidth -1, mInner.y );
+#if 0
+
       // Down pointing triangle
       auto height = IndicatorHeightForWidth(width);
       const int IndicatorHalfWidth = width / 2;
@@ -3224,6 +3233,7 @@ void AdornedRulerPanel::DoDrawIndicator
       tri[ 2 ].x = xx;
       tri[ 2 ].y = mInner.y + height;
       dc->DrawPolygon( 3, tri );
+#endif
    }
 }
 
