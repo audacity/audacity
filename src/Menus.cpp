@@ -1028,8 +1028,12 @@ void AudacityProject::CreateMenusAndCommands()
 
       {
       c->BeginMenu(_("&Window"));
+      /* i18n-hint: Standard Macintosh Window menu item:  Make (the current
+       * window) shrink to an icon on the dock */
       c->AddItem(wxT("MacMinimize"), _("&Minimize"), FN(OnMacMinimize),
                  wxT("Ctrl+M"), NotMinimizedFlag, NotMinimizedFlag);
+      /* i18n-hint: Standard Macintosh Window menu item:  Make (the current
+       * window) full sized */
       c->AddItem(wxT("MacZoom"), _("&Zoom"), FN(OnMacZoom),
                  wxT(""), NotMinimizedFlag, NotMinimizedFlag);
 #if 0
