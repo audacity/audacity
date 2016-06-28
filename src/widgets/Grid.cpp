@@ -769,30 +769,30 @@ wxAccStatus GridAx::GetName(int childId, wxString *name)
       }
 
       // Hack to provide a more intelligible response
-      TimeEditor *d =
-         (TimeEditor *)mGrid->GetDefaultEditorForType(GRID_VALUE_TIME);
-      TimeEditor *c =
-         (TimeEditor *)mGrid->GetCellEditor(row, col);
+      NumericEditor *dt =
+         static_cast<NumericEditor *>(mGrid->GetDefaultEditorForType(GRID_VALUE_TIME));
+      NumericEditor *df =
+         static_cast<NumericEditor *>(mGrid->GetDefaultEditorForType(GRID_VALUE_FREQUENCY));
+      NumericEditor *c =
+         static_cast<NumericEditor *>(mGrid->GetCellEditor(row, col));
 
-      if (c && d && c == d) {
+      if (c && dt && df && ( c == dt || c == df)) {        
          double value;
          v.ToDouble(&value);
+         NumericConverter converter(c == dt ? NumericConverter::TIME : NumericConverter::FREQUENCY,
+                        c->GetFormat(),
+                        value,
+                        c->GetRate() );
 
-         NumericTextCtrl tt(NumericConverter::TIME, mGrid,
-                         wxID_ANY,
-                         c->GetFormat(),
-                         value,
-                         c->GetRate(),
-                         wxPoint(10000, 10000),  // create offscreen
-                         wxDefaultSize,
-                         true);
-         v = tt.GetString();
+         v = converter.GetString();
       }
 
       if (c)
          c->DecRef();
-      if (d)
-         d->DecRef();
+      if (dt)
+         dt->DecRef();
+      if (df)
+         df->DecRef();
 
       *name = n + wxT(" ") + v;
    }
