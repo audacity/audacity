@@ -4860,13 +4860,13 @@ void TrackPanel::OnTrackListUpdated(wxCommandEvent & e)
          ReleaseMouse();
    }
 
+   if (mLastPickedTrack && !mTracks->Contains(mLastPickedTrack))
+      mLastPickedTrack = nullptr;
+
    if (e.GetClientData()) {
       OnTrackListResized(e);
       return;
    }
-
-   if (mLastPickedTrack && !mTracks->Contains(mLastPickedTrack))
-      mLastPickedTrack = nullptr;
 
    e.Skip();
 }
