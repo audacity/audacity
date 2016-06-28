@@ -184,7 +184,9 @@ void OnSnapToNearest();
 void OnSnapToPrior();
 void OnFullScreen();
 
+static void DoMacMinimize(AudacityProject *project);
 void OnMacMinimize();
+void OnMacMinimizeAll();
 void OnMacZoom();
 void OnMacBringAllToFront();
 

@@ -16,9 +16,9 @@
 #include <wx/osx/private.h>
 #endif
 
-void AudacityProject::OnMacMinimize()
+void AudacityProject::DoMacMinimize(AudacityProject *project)
 {
-   auto window = this;
+   auto window = project;
    if (window) {
 #ifdef USE_COCOA
       // Adapted from mbarman.mm in wxWidgets 3.0.2
@@ -34,7 +34,19 @@ void AudacityProject::OnMacMinimize()
 #endif
 
       // So that the Minimize menu command disables
-      window->UpdateMenus();
+      project->UpdateMenus();
+   }
+}
+
+void AudacityProject::OnMacMinimize()
+{
+   DoMacMinimize(this);
+}
+
+void AudacityProject::OnMacMinimizeAll()
+{
+   for (const auto project : gAudacityProjects) {
+      DoMacMinimize(project);
    }
 }
 
