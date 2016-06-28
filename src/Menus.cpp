@@ -1021,6 +1021,27 @@ void AudacityProject::CreateMenusAndCommands()
 
       c->EndMenu();
 
+#ifdef __WXMAC__
+      /////////////////////////////////////////////////////////////////////////////
+      // poor imitation of the Mac Windows Menu
+      /////////////////////////////////////////////////////////////////////////////
+
+      {
+      c->BeginMenu(_("&Window"));
+      c->AddItem(wxT("MacMinimize"), _("&Minimize"), FN(OnMacMinimize),
+                 wxT("Ctrl+M"), NotMinimizedFlag, NotMinimizedFlag);
+      c->AddItem(wxT("MacZoom"), _("&Zoom"), FN(OnMacZoom),
+                 wxT(""), NotMinimizedFlag, NotMinimizedFlag);
+#if 0
+      c->AddSeparator();
+      c->AddItem(wxT("MacBringAllToFront"),
+                 _("&Bring All to Front"), FN(OnMacBringAllToFront),
+                 wxT(""), AlwaysEnabledFlag, AlwaysEnabledFlag);
+#endif
+      c->EndMenu();
+      }
+#endif
+
       /////////////////////////////////////////////////////////////////////////////
       // Help Menu
       /////////////////////////////////////////////////////////////////////////////
@@ -1773,6 +1794,13 @@ CommandFlag AudacityProject::GetUpdateFlags()
    if (bar->ControlToolBar::CanStopAudioStream())
       flags |= CanStopAudioStreamFlag;
 
+   if (auto focus = wxWindow::FindFocus()) {
+      while (focus && !focus->IsTopLevel())
+         focus = focus->GetParent();
+      if (focus && !static_cast<wxTopLevelWindow*>(focus)->IsIconized())
+         flags |= NotMinimizedFlag;
+   }
+
    return flags;
 }
 
@@ -1864,8 +1892,8 @@ void AudacityProject::UpdateMenus(bool checkActive)
    if (this != GetActiveProject())
       return;
 
-   if (checkActive && !IsActive())
-      return;
+   //if (checkActive && !IsActive())
+     // return;
 
    auto flags = GetUpdateFlags();
    auto flags2 = flags;

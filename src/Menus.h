@@ -184,6 +184,10 @@ void OnSnapToNearest();
 void OnSnapToPrior();
 void OnFullScreen();
 
+void OnMacMinimize();
+void OnMacZoom();
+void OnMacBringAllToFront();
+
         // File Menu
 
 void OnNew();
