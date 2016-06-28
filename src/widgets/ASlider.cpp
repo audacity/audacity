@@ -765,16 +765,20 @@ void LWSlider::Draw(wxDC & paintDC)
 #endif
 
    // Draw the line along which the thumb moves.
-   AColor::Dark(&dc, false);
+   AColor::Light(&dc, false);
+
 
    if (mOrientation == wxHORIZONTAL)
    {
+      AColor::Line(dc, mLeftX, mCenterY, mRightX+2, mCenterY);
       AColor::Line(dc, mLeftX, mCenterY+1, mRightX+2, mCenterY+1);
    }
    else //v if (mStyle != DB_SLIDER) // Let the ruler do it for vertical DB_SLIDER.
    {
+      AColor::Line(dc, mCenterX, mTopY, mCenterX, mBottomY+2);
       AColor::Line(dc, mCenterX+1, mTopY, mCenterX+1, mBottomY+2);
    }
+
 
    // Draw +/- or L/R first.  We need to draw these before the tick marks.
    if (mStyle == PAN_SLIDER)
@@ -881,6 +885,7 @@ void LWSlider::Draw(wxDC & paintDC)
             divs = mMaxValue - mMinValue + 1;
          upp = divs / (double)(mHeightY-1);
       }
+#if 0
       double d = 0.0;
       int int_d = -1;
       const int kMax = (mOrientation == wxHORIZONTAL) ? mWidthX : mHeightY;
@@ -899,7 +904,7 @@ void LWSlider::Draw(wxDC & paintDC)
             {
                AColor::Line(dc, mCenterX-tickLength, mTopY+p, mCenterX-1, mTopY+p); // ticks at left
             }
-
+#if 0
             AColor::Dark(&dc, false);
 
             if (mOrientation == wxHORIZONTAL)
@@ -910,9 +915,11 @@ void LWSlider::Draw(wxDC & paintDC)
             {
                AColor::Line(dc, mCenterX-tickLength+1, mTopY+p+1, mCenterX-1, mTopY+p+1); // ticks at left
             }
+#endif
          }
          d += upp;
       }
+#endif
    }
 
    dc.SelectObject(wxNullBitmap);

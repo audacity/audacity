@@ -8843,44 +8843,38 @@ void TrackInfo::GetTitleBarRect(const wxRect & rect, wxRect & dest) const
 
 void TrackInfo::GetMuteSoloRect(const wxRect & rect, wxRect & dest, bool solo, bool bHasSoloButton) const
 {
-   dest.x = rect.x ;
-   dest.y = rect.y + 50;
-   dest.width = 48;
+   dest.width = 100 - 2 * kTrackInfoBtnSize;
+   dest.x = rect.x + (100 - dest.width)*0.5 ;
+   dest.y = rect.y + kTrackInfoBtnSize + 2;
    dest.height = kTrackInfoBtnSize;
 
-   if( !bHasSoloButton )
+   if( bHasSoloButton && solo )
    {
-      dest.width +=48;
-   }
-   else if (solo)
-   {
-      dest.x += 48;
+      dest.y += kTrackInfoBtnSize;
    }
 }
 
 void TrackInfo::GetGainRect(const wxRect & rect, wxRect & dest) const
 {
    dest.x = rect.x + 7;
-   dest.y = rect.y + 70;
+   dest.y = rect.y + 60;
    dest.width = 84;
    dest.height = 25;
 }
 
 void TrackInfo::GetPanRect(const wxRect & rect, wxRect & dest) const
 {
-   dest.x = rect.x + 7;
-   dest.y = rect.y + 100;
-   dest.width = 84;
-   dest.height = 25;
+   GetGainRect( rect, dest );
+   dest.y += 30;
 }
 
 void TrackInfo::GetMinimizeRect(const wxRect & rect, wxRect &dest) const
 {
    const int kBlankWidth = kTrackInfoBtnSize + 4;
-   dest.x = rect.x + kBlankWidth;
+   dest.x = rect.x + 4;
    dest.y = rect.y + rect.height - 19;
    // Width is kTrackInfoWidth less space on left for track select and on right for sync-lock icon.
-   dest.width = kTrackInfoWidth - (2 * kBlankWidth);
+   dest.width = kTrackInfoWidth - (1.2 * kBlankWidth);
    dest.height = kTrackInfoBtnSize;
 }
 
@@ -9151,14 +9145,16 @@ void TrackInfo::DrawVelocitySlider(wxDC *dc, NoteTrack *t, wxRect rect) const
 void TrackInfo::DrawSliders(wxDC *dc, WaveTrack *t, wxRect rect, bool captured) const
 {
    wxRect sliderRect;
+   // Larger slidermargin means it disappears sooner on collapsing track.
+   const int sliderMargin = 14;
 
    GetGainRect(rect, sliderRect);
-   if (sliderRect.y + sliderRect.height < rect.y + rect.height - 19) {
+   if (sliderRect.y + sliderRect.height < rect.y + rect.height - sliderMargin) {
       GainSlider(t, captured)->OnPaint(*dc);
    }
 
    GetPanRect(rect, sliderRect);
-   if (sliderRect.y + sliderRect.height < rect.y + rect.height - 19) {
+   if (sliderRect.y + sliderRect.height < rect.y + rect.height - sliderMargin) {
       PanSlider(t, captured)->OnPaint(*dc);
    }
 }
