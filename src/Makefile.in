@@ -432,6 +432,7 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	toolbars/EditToolBar.cpp toolbars/EditToolBar.h \
 	toolbars/MeterToolBar.cpp toolbars/MeterToolBar.h \
 	toolbars/MixerToolBar.cpp toolbars/MixerToolBar.h \
+	toolbars/ScrubbingToolBar.cpp toolbars/ScrubbingToolBar.h \
 	toolbars/SelectionBar.cpp toolbars/SelectionBar.h \
 	toolbars/SpectralSelectionBar.cpp \
 	toolbars/SpectralSelectionBar.h \
@@ -464,8 +465,9 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	widgets/OverlayPanel.h widgets/ProgressDialog.cpp \
 	widgets/ProgressDialog.h widgets/Ruler.cpp widgets/Ruler.h \
 	widgets/valnum.cpp widgets/valnum.h widgets/Warning.cpp \
-	widgets/Warning.h xml/XMLFileReader.cpp xml/XMLFileReader.h \
-	xml/XMLWriter.cpp xml/XMLWriter.h \
+	widgets/Warning.h widgets/wxPanelWrapper.cpp \
+	widgets/wxPanelWrapper.h xml/XMLFileReader.cpp \
+	xml/XMLFileReader.h xml/XMLWriter.cpp xml/XMLWriter.h \
 	effects/audiounits/AudioUnitEffect.cpp \
 	effects/audiounits/AudioUnitEffect.h export/ExportFFmpeg.cpp \
 	export/ExportFFmpeg.h export/ExportFFmpegDialogs.cpp \
@@ -691,6 +693,7 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	toolbars/audacity-EditToolBar.$(OBJEXT) \
 	toolbars/audacity-MeterToolBar.$(OBJEXT) \
 	toolbars/audacity-MixerToolBar.$(OBJEXT) \
+	toolbars/audacity-ScrubbingToolBar.$(OBJEXT) \
 	toolbars/audacity-SelectionBar.$(OBJEXT) \
 	toolbars/audacity-SpectralSelectionBar.$(OBJEXT) \
 	toolbars/audacity-ToolBar.$(OBJEXT) \
@@ -725,6 +728,7 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	widgets/audacity-Ruler.$(OBJEXT) \
 	widgets/audacity-valnum.$(OBJEXT) \
 	widgets/audacity-Warning.$(OBJEXT) \
+	widgets/audacity-wxPanelWrapper.$(OBJEXT) \
 	xml/audacity-XMLFileReader.$(OBJEXT) \
 	xml/audacity-XMLWriter.$(OBJEXT) $(am__objects_2) \
 	$(am__objects_3) $(am__objects_4) $(am__objects_5) \
@@ -1306,6 +1310,7 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	toolbars/EditToolBar.cpp toolbars/EditToolBar.h \
 	toolbars/MeterToolBar.cpp toolbars/MeterToolBar.h \
 	toolbars/MixerToolBar.cpp toolbars/MixerToolBar.h \
+	toolbars/ScrubbingToolBar.cpp toolbars/ScrubbingToolBar.h \
 	toolbars/SelectionBar.cpp toolbars/SelectionBar.h \
 	toolbars/SpectralSelectionBar.cpp \
 	toolbars/SpectralSelectionBar.h \
@@ -1338,12 +1343,13 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	widgets/OverlayPanel.h widgets/ProgressDialog.cpp \
 	widgets/ProgressDialog.h widgets/Ruler.cpp widgets/Ruler.h \
 	widgets/valnum.cpp widgets/valnum.h widgets/Warning.cpp \
-	widgets/Warning.h xml/XMLFileReader.cpp xml/XMLFileReader.h \
-	xml/XMLWriter.cpp xml/XMLWriter.h $(NULL) $(am__append_3) \
-	$(am__append_6) $(am__append_9) $(am__append_12) \
-	$(am__append_17) $(am__append_24) $(am__append_33) \
-	$(am__append_36) $(am__append_39) $(am__append_44) \
-	$(am__append_47)
+	widgets/Warning.h widgets/wxPanelWrapper.cpp \
+	widgets/wxPanelWrapper.h xml/XMLFileReader.cpp \
+	xml/XMLFileReader.h xml/XMLWriter.cpp xml/XMLWriter.h $(NULL) \
+	$(am__append_3) $(am__append_6) $(am__append_9) \
+	$(am__append_12) $(am__append_17) $(am__append_24) \
+	$(am__append_33) $(am__append_36) $(am__append_39) \
+	$(am__append_44) $(am__append_47)
 
 # TODO: Check *.cpp and *.h files if they are needed.
 EXTRA_DIST = audacity.desktop.in xml/audacityproject.dtd \
@@ -1818,6 +1824,8 @@ toolbars/audacity-MeterToolBar.$(OBJEXT): toolbars/$(am__dirstamp) \
 	toolbars/$(DEPDIR)/$(am__dirstamp)
 toolbars/audacity-MixerToolBar.$(OBJEXT): toolbars/$(am__dirstamp) \
 	toolbars/$(DEPDIR)/$(am__dirstamp)
+toolbars/audacity-ScrubbingToolBar.$(OBJEXT):  \
+	toolbars/$(am__dirstamp) toolbars/$(DEPDIR)/$(am__dirstamp)
 toolbars/audacity-SelectionBar.$(OBJEXT): toolbars/$(am__dirstamp) \
 	toolbars/$(DEPDIR)/$(am__dirstamp)
 toolbars/audacity-SpectralSelectionBar.$(OBJEXT):  \
@@ -1897,6 +1905,8 @@ widgets/audacity-Ruler.$(OBJEXT): widgets/$(am__dirstamp) \
 widgets/audacity-valnum.$(OBJEXT): widgets/$(am__dirstamp) \
 	widgets/$(DEPDIR)/$(am__dirstamp)
 widgets/audacity-Warning.$(OBJEXT): widgets/$(am__dirstamp) \
+	widgets/$(DEPDIR)/$(am__dirstamp)
+widgets/audacity-wxPanelWrapper.$(OBJEXT): widgets/$(am__dirstamp) \
 	widgets/$(DEPDIR)/$(am__dirstamp)
 xml/audacity-XMLFileReader.$(OBJEXT): xml/$(am__dirstamp) \
 	xml/$(DEPDIR)/$(am__dirstamp)
@@ -2255,6 +2265,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@toolbars/$(DEPDIR)/audacity-EditToolBar.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@toolbars/$(DEPDIR)/audacity-MeterToolBar.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@toolbars/$(DEPDIR)/audacity-MixerToolBar.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@toolbars/$(DEPDIR)/audacity-ScrubbingToolBar.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@toolbars/$(DEPDIR)/audacity-SelectionBar.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@toolbars/$(DEPDIR)/audacity-SpectralSelectionBar.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@toolbars/$(DEPDIR)/audacity-ToolBar.Po@am__quote@
@@ -2289,6 +2300,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@widgets/$(DEPDIR)/audacity-Warning.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@widgets/$(DEPDIR)/audacity-numformatter.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@widgets/$(DEPDIR)/audacity-valnum.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@widgets/$(DEPDIR)/audacity-wxPanelWrapper.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xml/$(DEPDIR)/audacity-XMLFileReader.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xml/$(DEPDIR)/audacity-XMLTagHandler.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xml/$(DEPDIR)/audacity-XMLWriter.Po@am__quote@
@@ -5426,6 +5438,20 @@ toolbars/audacity-MixerToolBar.obj: toolbars/MixerToolBar.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o toolbars/audacity-MixerToolBar.obj `if test -f 'toolbars/MixerToolBar.cpp'; then $(CYGPATH_W) 'toolbars/MixerToolBar.cpp'; else $(CYGPATH_W) '$(srcdir)/toolbars/MixerToolBar.cpp'; fi`
 
+toolbars/audacity-ScrubbingToolBar.o: toolbars/ScrubbingToolBar.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT toolbars/audacity-ScrubbingToolBar.o -MD -MP -MF toolbars/$(DEPDIR)/audacity-ScrubbingToolBar.Tpo -c -o toolbars/audacity-ScrubbingToolBar.o `test -f 'toolbars/ScrubbingToolBar.cpp' || echo '$(srcdir)/'`toolbars/ScrubbingToolBar.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) toolbars/$(DEPDIR)/audacity-ScrubbingToolBar.Tpo toolbars/$(DEPDIR)/audacity-ScrubbingToolBar.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='toolbars/ScrubbingToolBar.cpp' object='toolbars/audacity-ScrubbingToolBar.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o toolbars/audacity-ScrubbingToolBar.o `test -f 'toolbars/ScrubbingToolBar.cpp' || echo '$(srcdir)/'`toolbars/ScrubbingToolBar.cpp
+
+toolbars/audacity-ScrubbingToolBar.obj: toolbars/ScrubbingToolBar.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT toolbars/audacity-ScrubbingToolBar.obj -MD -MP -MF toolbars/$(DEPDIR)/audacity-ScrubbingToolBar.Tpo -c -o toolbars/audacity-ScrubbingToolBar.obj `if test -f 'toolbars/ScrubbingToolBar.cpp'; then $(CYGPATH_W) 'toolbars/ScrubbingToolBar.cpp'; else $(CYGPATH_W) '$(srcdir)/toolbars/ScrubbingToolBar.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) toolbars/$(DEPDIR)/audacity-ScrubbingToolBar.Tpo toolbars/$(DEPDIR)/audacity-ScrubbingToolBar.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='toolbars/ScrubbingToolBar.cpp' object='toolbars/audacity-ScrubbingToolBar.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o toolbars/audacity-ScrubbingToolBar.obj `if test -f 'toolbars/ScrubbingToolBar.cpp'; then $(CYGPATH_W) 'toolbars/ScrubbingToolBar.cpp'; else $(CYGPATH_W) '$(srcdir)/toolbars/ScrubbingToolBar.cpp'; fi`
+
 toolbars/audacity-SelectionBar.o: toolbars/SelectionBar.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT toolbars/audacity-SelectionBar.o -MD -MP -MF toolbars/$(DEPDIR)/audacity-SelectionBar.Tpo -c -o toolbars/audacity-SelectionBar.o `test -f 'toolbars/SelectionBar.cpp' || echo '$(srcdir)/'`toolbars/SelectionBar.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) toolbars/$(DEPDIR)/audacity-SelectionBar.Tpo toolbars/$(DEPDIR)/audacity-SelectionBar.Po
@@ -5901,6 +5927,20 @@ widgets/audacity-Warning.obj: widgets/Warning.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='widgets/Warning.cpp' object='widgets/audacity-Warning.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o widgets/audacity-Warning.obj `if test -f 'widgets/Warning.cpp'; then $(CYGPATH_W) 'widgets/Warning.cpp'; else $(CYGPATH_W) '$(srcdir)/widgets/Warning.cpp'; fi`
+
+widgets/audacity-wxPanelWrapper.o: widgets/wxPanelWrapper.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT widgets/audacity-wxPanelWrapper.o -MD -MP -MF widgets/$(DEPDIR)/audacity-wxPanelWrapper.Tpo -c -o widgets/audacity-wxPanelWrapper.o `test -f 'widgets/wxPanelWrapper.cpp' || echo '$(srcdir)/'`widgets/wxPanelWrapper.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) widgets/$(DEPDIR)/audacity-wxPanelWrapper.Tpo widgets/$(DEPDIR)/audacity-wxPanelWrapper.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='widgets/wxPanelWrapper.cpp' object='widgets/audacity-wxPanelWrapper.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o widgets/audacity-wxPanelWrapper.o `test -f 'widgets/wxPanelWrapper.cpp' || echo '$(srcdir)/'`widgets/wxPanelWrapper.cpp
+
+widgets/audacity-wxPanelWrapper.obj: widgets/wxPanelWrapper.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT widgets/audacity-wxPanelWrapper.obj -MD -MP -MF widgets/$(DEPDIR)/audacity-wxPanelWrapper.Tpo -c -o widgets/audacity-wxPanelWrapper.obj `if test -f 'widgets/wxPanelWrapper.cpp'; then $(CYGPATH_W) 'widgets/wxPanelWrapper.cpp'; else $(CYGPATH_W) '$(srcdir)/widgets/wxPanelWrapper.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) widgets/$(DEPDIR)/audacity-wxPanelWrapper.Tpo widgets/$(DEPDIR)/audacity-wxPanelWrapper.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='widgets/wxPanelWrapper.cpp' object='widgets/audacity-wxPanelWrapper.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o widgets/audacity-wxPanelWrapper.obj `if test -f 'widgets/wxPanelWrapper.cpp'; then $(CYGPATH_W) 'widgets/wxPanelWrapper.cpp'; else $(CYGPATH_W) '$(srcdir)/widgets/wxPanelWrapper.cpp'; fi`
 
 xml/audacity-XMLFileReader.o: xml/XMLFileReader.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT xml/audacity-XMLFileReader.o -MD -MP -MF xml/$(DEPDIR)/audacity-XMLFileReader.Tpo -c -o xml/audacity-XMLFileReader.o `test -f 'xml/XMLFileReader.cpp' || echo '$(srcdir)/'`xml/XMLFileReader.cpp
