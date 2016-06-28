@@ -465,13 +465,17 @@ void Lyrics::OnKeyEvent(wxKeyEvent & event)
 
 void Lyrics::OnPaint(wxPaintEvent & WXUNUSED(event))
 {
+   wxPaintDC dc(this);
+   DoPaint(dc);
+}
+
+void Lyrics::DoPaint(wxDC &dc)
+{
    if (!this->GetParent()->IsShown())
       return;
 
    if (mLyricsStyle == kBouncingBallLyrics)
    {
-      wxPaintDC dc(this);
-
       if (!mMeasurementsDone)
          Measure(&dc);
 
@@ -509,8 +513,8 @@ void Lyrics::OnSize(wxSizeEvent & WXUNUSED(event))
    if (mLyricsStyle == kBouncingBallLyrics)
    {
       mMeasurementsDone = false;
-      wxPaintEvent ignore;
-      this->OnPaint(ignore);
+      wxClientDC dc(this);
+      this->DoPaint(dc);
    }
    else // (mLyricsStyle == kHighlightLyrics)
    {
