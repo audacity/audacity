@@ -1551,6 +1551,10 @@ void AudacityProject::OnScrollLeft()
    // move at least one scroll increment
    pos -= wxMax((wxInt64)(sbarHjump * mViewInfo.sbarScale), 1);
    pos = wxMax(pos, 0);
+   mViewInfo.sbarH -= sbarHjump;
+   mViewInfo.sbarH = std::max(mViewInfo.sbarH,
+      -(wxInt64) PixelWidthBeforeTime(0.0));
+
 
    if (pos != mHsbar->GetThumbPosition()) {
       mHsbar->SetThumbPosition((int)pos);
@@ -1570,6 +1574,10 @@ void AudacityProject::OnScrollRight()
    pos += wxMax((wxInt64)(sbarHjump * mViewInfo.sbarScale), 1);
    wxInt64 max = mHsbar->GetRange() - mHsbar->GetThumbSize();
    pos = wxMin(pos, max);
+   mViewInfo.sbarH += sbarHjump;
+   mViewInfo.sbarH = std::min(mViewInfo.sbarH,
+      mViewInfo.sbarTotal
+         - (wxInt64) PixelWidthBeforeTime(0.0) - mViewInfo.sbarScreen);
 
    if (pos != mHsbar->GetThumbPosition()) {
       mHsbar->SetThumbPosition((int)pos);
@@ -1586,6 +1594,9 @@ void AudacityProject::OnScrollLeftButton(wxScrollEvent & event)
    // move at least one scroll increment
    pos -= wxMax((wxInt64)(sbarHjump * mViewInfo.sbarScale), 1);
    pos = wxMax(pos, 0);
+   mViewInfo.sbarH -= sbarHjump;
+   mViewInfo.sbarH = std::max(mViewInfo.sbarH,
+      - (wxInt64) PixelWidthBeforeTime(0.0));
 
    if (pos != mHsbar->GetThumbPosition()) {
       mHsbar->SetThumbPosition((int)pos);
@@ -1604,6 +1615,10 @@ void AudacityProject::OnScrollRightButton(wxScrollEvent & event)
    pos += wxMax((wxInt64)(sbarHjump * mViewInfo.sbarScale), 1);
    wxInt64 max = mHsbar->GetRange() - mHsbar->GetThumbSize();
    pos = wxMin(pos, max);
+   mViewInfo.sbarH += sbarHjump;
+   mViewInfo.sbarH = std::min(mViewInfo.sbarH,
+      mViewInfo.sbarTotal
+         - (wxInt64) PixelWidthBeforeTime(0.0) - mViewInfo.sbarScreen);
 
    if (pos != mHsbar->GetThumbPosition()) {
       mHsbar->SetThumbPosition((int)pos);
@@ -1650,12 +1665,19 @@ double AudacityProject::PixelWidthBeforeTime(double scrollto) const
 
 void AudacityProject::SetHorizontalThumb(double scrollto)
 {
+   const auto unscaled = PixelWidthBeforeTime(scrollto);
    const int max = mHsbar->GetRange() - mHsbar->GetThumbSize();
    const int pos =
       std::min(max,
          std::max(0,
-            int(floor(0.5 + PixelWidthBeforeTime(scrollto) * mViewInfo.sbarScale))));
+            int(floor(0.5 + unscaled * mViewInfo.sbarScale))));
    mHsbar->SetThumbPosition(pos);
+   mViewInfo.sbarH = floor(0.5 + unscaled - PixelWidthBeforeTime(0.0));
+   mViewInfo.sbarH = std::max(mViewInfo.sbarH,
+      - (wxInt64) PixelWidthBeforeTime(0.0));
+   mViewInfo.sbarH = std::min(mViewInfo.sbarH,
+      mViewInfo.sbarTotal
+         - (wxInt64) PixelWidthBeforeTime(0.0) - mViewInfo.sbarScreen);
 }
 
 //
@@ -2066,19 +2088,11 @@ void AudacityProject::OnODTaskComplete(wxCommandEvent & WXUNUSED(event))
 
 void AudacityProject::OnScroll(wxScrollEvent & WXUNUSED(event))
 {
-   const wxInt64 hlast = mViewInfo.sbarH;
-
    const double lowerBound = ScrollingLowerBoundTime();
-   const wxInt64 offset = PixelWidthBeforeTime(0.0);
 
-   mViewInfo.sbarH =
-      (wxInt64)(mHsbar->GetThumbPosition() / mViewInfo.sbarScale) - offset;
-
-   if (mViewInfo.sbarH != hlast) {
-      int width;
-      mTrackPanel->GetTracksUsableArea(&width, NULL);
-      mViewInfo.SetBeforeScreenWidth(mViewInfo.sbarH, width, lowerBound);
-   }
+   int width;
+   mTrackPanel->GetTracksUsableArea(&width, NULL);
+   mViewInfo.SetBeforeScreenWidth(mViewInfo.sbarH, width, lowerBound);
 
 
    if (MayScrollBeyondZero()) {
