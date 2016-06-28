@@ -1036,12 +1036,12 @@ void AudacityProject::CreateMenusAndCommands()
        * window) full sized */
       c->AddItem(wxT("MacZoom"), _("&Zoom"), FN(OnMacZoom),
                  wxT(""), NotMinimizedFlag, NotMinimizedFlag);
-#if 0
       c->AddSeparator();
+      /* i18n-hint: Standard Macintosh Window menu item:  Make all project
+       * windows un-hidden */
       c->AddItem(wxT("MacBringAllToFront"),
                  _("&Bring All to Front"), FN(OnMacBringAllToFront),
                  wxT(""), AlwaysEnabledFlag, AlwaysEnabledFlag);
-#endif
       c->EndMenu();
       }
 #endif

@@ -72,4 +72,9 @@ void AudacityProject::OnMacZoom()
 
 void AudacityProject::OnMacBringAllToFront()
 {
+   // Reall this de-miniaturizes all, which is not exactly the standard
+   // behavior.
+   for (const auto project : gAudacityProjects) {
+      project->Raise();
+   }
 }
