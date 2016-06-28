@@ -2333,10 +2333,6 @@ bool AdornedRulerPanel::IsWithinMarker(int mousePosX, double markerTime)
 
 void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
 {
-   // PRL:  why do I need these two lines on Windows but not on Mac?
-   if (evt.ButtonDown(wxMOUSE_BTN_ANY))
-      SetFocus();
-
    // Disable mouse actions on Timeline while recording.
    if (mIsRecording) {
       if (HasCapture())
