@@ -7,6 +7,9 @@
   Copyright
      Leland Lucius
      Vaughan Johnson
+   
+  Modifications
+     Mark Young
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -38,13 +41,14 @@ enum
 
 enum ProgressDialogFlags
 {
-   pdlgEmptyFlags = 0x00000000,
-   pdlgHideStopButton = 0x00000001,
-   pdlgHideCancelButton = 0x00000002,
-   pdlgHideElapsedTime = 0x00000004,
-   pdlgConfirmStopCancel = 0x00000008,
+   pdlgEmptyFlags          = 0,
+   pdlgHideStopButton      = (1 << 0), /* 1 */
+   pdlgHideCancelButton    = (1 << 1), /* 2 */
+   pdlgHideElapsedTime     = (1 << 2), /* 4 */
+   pdlgConfirmStopCancel   = (1 << 3), /* 8 */
+   pdlgTwoColumnDialog     = (1 << 4), /* 16 */
 
-   pdlgDefaultFlags = pdlgEmptyFlags
+   pdlgDefaultFlags        = pdlgEmptyFlags
 };
 
 ////////////////////////////////////////////////////////////
@@ -117,6 +121,9 @@ private:
    wxStaticText *mMessage;
    int mLastW;
    int mLastH;
+
+   wxStaticText *mMessageOne;
+   wxStaticText *mMessageTwo;
 
    DECLARE_EVENT_TABLE();
 };

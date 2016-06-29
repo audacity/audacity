@@ -568,7 +568,7 @@ int TimerRecordDialog::RunWaitDialog()
          progress(m_TimeSpan_Duration.GetMilliseconds().GetValue(),
                   _("Audacity Timer Record Progress"),
                   strMsg,
-                  pdlgHideCancelButton | pdlgConfirmStopCancel);
+                  pdlgHideCancelButton | pdlgConfirmStopCancel | pdlgTwoColumnDialog);
 
       // Make sure that start and end time are updated, so we always get the full
       // duration, even if there's some delay getting here.
@@ -1039,7 +1039,7 @@ int TimerRecordDialog::WaitForStart()
    TimerProgressDialog progress(waitDuration.GetMilliseconds().GetValue(),
       _("Audacity Timer Record - Waiting for Start"),
       strMsg,
-      pdlgHideStopButton | pdlgConfirmStopCancel | pdlgHideElapsedTime,
+      pdlgHideStopButton | pdlgConfirmStopCancel | pdlgHideElapsedTime | pdlgTwoColumnDialog,
       _("Recording will commence in:"));
 
    int updateResult = eProgressSuccess;
@@ -1076,7 +1076,7 @@ int TimerRecordDialog::PreActionDelay(int iActionIndex, TimerRecordCompletedActi
    TimerProgressDialog dlgAction(tsWait.GetMilliseconds().GetValue(),
                           _("Audacity Timer Record - Waiting"),
                           sMessage,
-                          pdlgHideStopButton | pdlgHideElapsedTime,
+                          pdlgHideStopButton | pdlgHideElapsedTime | pdlgTwoColumnDialog,
                           sCountdownLabel);
 
    int iUpdateResult = eProgressSuccess;

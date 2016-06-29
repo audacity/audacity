@@ -1081,6 +1081,8 @@ bool ProgressDialog::Create(const wxString & title,
    m_bShowElapsedTime = !(flags & pdlgHideElapsedTime);
    // Set this boolean to indicate if we confirm the Cancel/Stop actions
    m_bConfirmAction = (flags & pdlgConfirmStopCancel);
+   // Should this be a two column dialog?
+   bool bTwoColumns = (flags & pdlgTwoColumnDialog);
 
    bool success = wxDialog::Create(parent,
                                    wxID_ANY,
@@ -1102,18 +1104,103 @@ bool ProgressDialog::Create(const wxString & title,
 
    wxFlexGridSizer *g;
    wxBoxSizer *h;
+   wxBoxSizer *twoCol;
    {
       auto v = std::make_unique<wxBoxSizer>(wxVERTICAL);
 
-      mMessage = safenew wxStaticText(this,
-         wxID_ANY,
-         message,
-         wxDefaultPosition,
-         wxDefaultSize,
-         wxALIGN_LEFT);
-      mMessage->SetName(message); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
-      v->Add(mMessage, 1, wxEXPAND | wxALL, 10);
-      ds.y += mMessage->GetSize().y + 20;
+      // MY: Two Column ProgressDialog message
+      if (bTwoColumns)
+      {
+         // We need to display two column layout
+
+         // Setup the variables
+         wxString sColumnOneText = "";
+         wxString sColumnTwoText = "";
+         wxString sThisChar = "";
+         bool bColTwo = false;
+
+         // Loop through the message string:
+         // \t signifies to put following text to column 2
+         // \n signals to start a new row on column 1
+         for (int iX = 0; iX < message.Len(); iX++) {
+            sThisChar = message.Mid(iX, 1);
+
+            if (bColTwo == false)
+            {
+               // Column One
+               if (sThisChar == "\t") {
+                  // Switch to column two
+                  bColTwo = true;
+                  continue;
+               }
+               if (sThisChar == "\n") {
+                  // Add a new line to column two as well to maintain alignment
+                  sColumnTwoText += sThisChar;
+               }
+               // Add to the coloumn one string
+               sColumnOneText += sThisChar;
+            }
+            else
+            {
+               // Column Two
+               if (sThisChar == "\t") {
+                  // Ignore further tabs in column two
+                  continue;
+               }
+               if (sThisChar == "\n") {
+                  // Time to switch back to column one
+                  sColumnOneText += sThisChar;
+                  bColTwo = false;
+               }
+               // Add this character to column two
+               sColumnTwoText += sThisChar;
+            }
+
+         }
+
+         // Create the BoxSizer
+         auto oTwoColSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
+         twoCol = oTwoColSizer.get();
+
+         // Now create some new controls
+         mMessageOne = safenew wxStaticText(this,
+            wxID_ANY,
+            sColumnOneText,
+            wxDefaultPosition,
+            wxDefaultSize,
+            wxALIGN_LEFT);
+         mMessageOne->SetName(sColumnOneText);
+         twoCol->Add(mMessageOne, 1, wxEXPAND | wxALL, 5);
+
+         mMessageTwo = safenew wxStaticText(this,
+            wxID_ANY,
+            sColumnTwoText,
+            wxDefaultPosition,
+            wxDefaultSize,
+            wxALIGN_LEFT);
+         mMessageTwo->SetName(sColumnTwoText);
+         twoCol->Add(mMessageTwo, 1, wxEXPAND | wxALL, 5);
+
+         // Finally add the two columns to the vertical sizer
+         v->Add(oTwoColSizer.release(), 1, wxEXPAND | wxALL, 10);
+         ds.y += wxMax(mMessageOne->GetSize().y, mMessageTwo->GetSize().y) + 30;
+        
+      }
+      else
+      {
+
+         // Single column mode
+         mMessage = safenew wxStaticText(this,
+            wxID_ANY,
+            message,
+            wxDefaultPosition,
+            wxDefaultSize,
+            wxALIGN_LEFT);
+         mMessage->SetName(message); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+         v->Add(mMessage, 1, wxEXPAND | wxALL, 10);
+         ds.y += mMessage->GetSize().y + 20;
+
+      }
 
       //
       //
