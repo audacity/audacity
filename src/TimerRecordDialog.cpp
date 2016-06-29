@@ -550,25 +550,28 @@ int TimerRecordDialog::RunWaitDialog()
       bool bIsRecording = true;
 
       wxString sPostAction = m_pTimerAfterCompleteChoiceCtrl->GetString(m_pTimerAfterCompleteChoiceCtrl->GetSelection());
-      wxString strMsg;
-      strMsg.Printf(_("Recording start:\t\t\t%s\n") +
-         _("Duration:\t\t\t%s\n") +
-         _("Recording end:\t\t\t%s\n\n") +
-         _("Automatic Save enabled:\t\t%s\n") +
-         _("Automatic Export enabled:\t\t%s\n") +
-         _("Action after Timer Recording:\t%s"),
-         GetDisplayDate(m_DateTime_Start).c_str(),
-         m_TimeSpan_Duration.Format(),
-         GetDisplayDate(m_DateTime_End).c_str(),
-         (m_bAutoSaveEnabled ? _("Yes") : _("No")),
-         (m_bAutoExportEnabled ? _("Yes") : _("No")),
-         sPostAction);
+      wxString strMsgCol1 = _("Recording start:\n") +
+         _("Duration:\n") +
+         _("Recording end:\n") +
+         _("\n") +
+         _("Automatic Save enabled:\n") +
+         _("Automatic Export enabled:\n") +
+         _("Action after Timer Recording:");
+
+      wxString strMsgCol2 = GetDisplayDate(m_DateTime_Start) + wxT("\n") +
+         m_TimeSpan_Duration.Format() + wxT("\n") +
+         GetDisplayDate(m_DateTime_End) + wxT("\n") +
+         wxT("\n") +
+         (m_bAutoSaveEnabled ? _("Yes") : _("No")) + wxT("\n") +
+         (m_bAutoExportEnabled ? _("Yes") : _("No")) + wxT("\n") +
+         sPostAction;
 
       TimerProgressDialog
          progress(m_TimeSpan_Duration.GetMilliseconds().GetValue(),
                   _("Audacity Timer Record Progress"),
-                  strMsg,
-                  pdlgHideCancelButton | pdlgConfirmStopCancel);
+                  strMsgCol1,
+                  pdlgHideCancelButton | pdlgConfirmStopCancel | pdlgTwoColumnDialog,
+                  strMsgCol2);
 
       // Make sure that start and end time are updated, so we always get the full
       // duration, even if there's some delay getting here.
@@ -1020,26 +1023,28 @@ int TimerRecordDialog::WaitForStart()
 
    /* i18n-hint: Time specifications like "Sunday 28th October 2007 15:16:17 GMT"
    * but hopefully translated by wxwidgets will be inserted into this */
-   wxString strMsg;
-   strMsg.Printf(_("Waiting to start recording at:\t%s\n") +
-      _("Recording duration:\t\t%s\n") +
-      _("Scheduled to stop at:\t\t%s\n\n") +
-      _("Automatic Save enabled:\t\t%s\n") +
-      _("Automatic Export enabled:\t\t%s\n") +
-      _("Action after Timer Recording:\t%s"),
-      GetDisplayDate(m_DateTime_Start).c_str(),
-      m_TimeSpan_Duration.Format(),
-      GetDisplayDate(m_DateTime_End).c_str(),
-      (m_bAutoSaveEnabled ? _("Yes") : _("No")),
-      (m_bAutoExportEnabled ? _("Yes") : _("No")),
-      sPostAction);
+   wxString strMsgCol1 = _("Waiting to start recording at:\n") +
+      _("Recording duration:\n") +
+      _("Scheduled to stop at:\n") +
+      _("\n") +
+      _("Automatic Save enabled:\n") +
+      _("Automatic Export enabled:\n") +
+      _("Action after Timer Recording:");
+   wxString strMsgCol2 = GetDisplayDate(m_DateTime_Start) + wxT("\n") +
+      m_TimeSpan_Duration.Format() + wxT("\n") +
+      GetDisplayDate(m_DateTime_End) + wxT("\n") +
+      wxT("\n") +
+      (m_bAutoSaveEnabled ? _("Yes") : _("No")) + wxT("\n") + 
+      (m_bAutoExportEnabled ? _("Yes") : _("No")) + wxT("\n") +
+      sPostAction;
 
    wxDateTime startWait_DateTime = wxDateTime::UNow();
    wxTimeSpan waitDuration = m_DateTime_Start - startWait_DateTime;
    TimerProgressDialog progress(waitDuration.GetMilliseconds().GetValue(),
       _("Audacity Timer Record - Waiting for Start"),
-      strMsg,
-      pdlgHideStopButton | pdlgConfirmStopCancel | pdlgHideElapsedTime,
+      strMsgCol1,
+      pdlgHideStopButton | pdlgConfirmStopCancel | pdlgHideElapsedTime | pdlgTwoColumnDialog,
+      strMsgCol2,
       _("Recording will commence in:"));
 
    int updateResult = eProgressSuccess;
@@ -1060,14 +1065,16 @@ int TimerRecordDialog::PreActionDelay(int iActionIndex, TimerRecordCompletedActi
    sCountdownLabel.Printf("%s in:", sAction);
 
    // Build a clearer message...
-   wxString sMessage;
-   sMessage.Printf(_("Timer Recording completed.\n\n") +
-      _("Recording Saved:\t\t\t%s\n") +
-      _("Recording Exported:\t\t%s\n") +
-      _("Action after Timer Recording:\t%s"),
-      ((eCompletedActions & TR_ACTION_SAVED) ? _("Yes") : _("No")),
-      ((eCompletedActions & TR_ACTION_EXPORTED) ? _("Yes") : _("No")),
-      sAction);
+   wxString sMessageCol1 = _("Timer Recording completed.\n") +
+      wxT("\n") +
+      _("Recording Saved:\n") +
+      _("Recording Exported:\n") +
+      _("Action after Timer Recording:");
+   wxString sMessageCol2 = _("") + wxT("\n") +
+      wxT("\n") +
+      ((eCompletedActions & TR_ACTION_SAVED) ? _("Yes") : _("No")) + wxT("\n") +
+      ((eCompletedActions & TR_ACTION_EXPORTED) ? _("Yes") : _("No")) + wxT("\n") + 
+      sAction;
 
    wxDateTime dtNow = wxDateTime::UNow();
    wxTimeSpan tsWait = wxTimeSpan(0, 1, 0, 0);
@@ -1075,8 +1082,9 @@ int TimerRecordDialog::PreActionDelay(int iActionIndex, TimerRecordCompletedActi
 
    TimerProgressDialog dlgAction(tsWait.GetMilliseconds().GetValue(),
                           _("Audacity Timer Record - Waiting"),
-                          sMessage,
-                          pdlgHideStopButton | pdlgHideElapsedTime,
+                          sMessageCol1,
+                          pdlgHideStopButton | pdlgHideElapsedTime | pdlgTwoColumnDialog,
+                          sMessageCol2,
                           sCountdownLabel);
 
    int iUpdateResult = eProgressSuccess;

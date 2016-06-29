@@ -998,12 +998,13 @@ ProgressDialog::ProgressDialog()
 ProgressDialog::ProgressDialog(const wxString & title,
                                const wxString & message /* = wxEmptyString*/,
                                int flags /* = pdlgDefaultFlags */,
+                               const wxString & sCol2Message /* = wxEmptyString */,
                                const wxString & sRemainingLabelText /* = wxEmptyString */)
 :  wxDialog()
 {
    Init();
 
-   Create(title, message, flags, sRemainingLabelText);
+   Create(title, message, flags, sCol2Message, sRemainingLabelText);
 }
 
 //
@@ -1070,9 +1071,21 @@ void ProgressDialog::Init()
 #endif
 }
 
+wxStaticText* ProgressDialog::NewMessageStaticTextControl(const wxString & sText) {
+   wxStaticText* oReturn = safenew wxStaticText(this,
+      wxID_ANY,
+      sText,
+      wxDefaultPosition,
+      wxDefaultSize,
+      wxALIGN_LEFT);
+   oReturn->SetName(sText); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+   return oReturn;
+}
+
 bool ProgressDialog::Create(const wxString & title,
                             const wxString & message /* = wxEmptyString */,
                             int flags /* = pdlgDefaultFlags */,
+                            const wxString & sCol2Message /* = wxEmptyString*/,
                             const wxString & sRemainingLabelText /* = wxEmptyString */)
 {
    wxWindow *parent = GetParentForModalDialog(NULL, 0);
@@ -1081,6 +1094,8 @@ bool ProgressDialog::Create(const wxString & title,
    m_bShowElapsedTime = !(flags & pdlgHideElapsedTime);
    // Set this boolean to indicate if we confirm the Cancel/Stop actions
    m_bConfirmAction = (flags & pdlgConfirmStopCancel);
+   // Should this be a two column dialog?
+   m_bTwoColumns = (flags & pdlgTwoColumnDialog);
 
    bool success = wxDialog::Create(parent,
                                    wxID_ANY,
@@ -1102,18 +1117,38 @@ bool ProgressDialog::Create(const wxString & title,
 
    wxFlexGridSizer *g;
    wxBoxSizer *h;
+   wxBoxSizer *twoCol;
    {
       auto v = std::make_unique<wxBoxSizer>(wxVERTICAL);
 
-      mMessage = safenew wxStaticText(this,
-         wxID_ANY,
-         message,
-         wxDefaultPosition,
-         wxDefaultSize,
-         wxALIGN_LEFT);
-      mMessage->SetName(message); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
-      v->Add(mMessage, 1, wxEXPAND | wxALL, 10);
-      ds.y += mMessage->GetSize().y + 20;
+      // MY: Two Column ProgressDialog message
+      if (m_bTwoColumns)
+      {
+         // Two Column Message
+         // Create the BoxSizer
+         auto oTwoColSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
+         twoCol = oTwoColSizer.get();
+
+         // Now create some new controls
+         mMessageOne = NewMessageStaticTextControl(message);
+         mMessageTwo = NewMessageStaticTextControl(sCol2Message);
+
+         twoCol->Add(mMessageOne, 1, wxEXPAND | wxALL, 5);
+         twoCol->Add(mMessageTwo, 1, wxEXPAND | wxALL, 5);
+
+         // Finally add the two columns to the vertical sizer
+         v->Add(oTwoColSizer.release(), 1, wxEXPAND | wxALL, 10);
+         ds.y += wxMax(mMessageOne->GetSize().y, mMessageTwo->GetSize().y) + 30;
+        
+      }
+      else
+      {
+         // Single Column Message
+         mMessageOne = NewMessageStaticTextControl(message);
+         v->Add(mMessageOne, 1, wxEXPAND | wxALL, 10);
+         ds.y += mMessageOne->GetSize().y + 20;
+
+      }
 
       //
       //
@@ -1443,10 +1478,10 @@ void ProgressDialog::SetMessage(const wxString & message)
 {
    if (!message.IsEmpty())
    {
-      mMessage->SetLabel(message);
+      mMessageOne->SetLabel(message);
 
       int w, h;
-      wxClientDC dc(mMessage);
+      wxClientDC dc(mMessageOne);
       dc.GetMultiLineTextExtent(message, &w, &h);
 
       bool sizeUpdated = false;
@@ -1589,8 +1624,9 @@ TimerProgressDialog::TimerProgressDialog(const wxLongLong_t duration,
                                          const wxString & title,
                                          const wxString & message /* = wxEmptyString */,
                                          int flags /* = pdlgDefaultFlags */,
+                                         const wxString & sCol2Message /* = wxEmptyString */,
                                          const wxString & sRemainingLabelText /* = wxEmptyString */)
-: ProgressDialog(title, message, flags, sRemainingLabelText)
+: ProgressDialog(title, message, flags, sCol2Message, sRemainingLabelText)
 {
    mDuration = duration;
 }
