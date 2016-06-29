@@ -2795,17 +2795,10 @@ void AudacityProject::NextOrPrevFrame(bool forward)
 
 
    // Define the set of windows we rotate among.
-   static const unsigned rotationSize = 3u
-#ifdef EXPERIMENTAL_TIME_RULER_NAVIGATION
-      + 1
-#endif
-   ;
+   static const unsigned rotationSize = 3u;
 
    wxWindow *const begin [rotationSize] = {
       GetTopPanel(),
-#ifdef EXPERIMENTAL_TIME_RULER_NAVIGATION
-      GetRulerPanel(),
-#endif
       GetTrackPanel(),
       mToolManager->GetBotDock(),
    };
