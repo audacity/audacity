@@ -1806,7 +1806,7 @@ CommandFlag AudacityProject::GetUpdateFlags()
       flags |= CanStopAudioStreamFlag;
 
    if (auto focus = wxWindow::FindFocus()) {
-      while (focus && !focus->IsTopLevel())
+      while (focus && focus->GetParent())
          focus = focus->GetParent();
       if (focus && !static_cast<wxTopLevelWindow*>(focus)->IsIconized())
          flags |= NotMinimizedFlag;
