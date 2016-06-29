@@ -630,10 +630,12 @@ int FileDialog::ShowModal()
                           wxTheClipboard->GetData(data);
                           wxTheClipboard->Close();
                           wxString text = data.GetText();
+                          auto rawText = text.utf8_str();
+                          auto length = text.Length();
                           NSString *myString = [[NSString alloc]
-                             initWithCharacters:
-                                (unsigned short*)text.c_str().AsWChar()
-                             length:text.Length()
+                             initWithBytes:rawText.data()
+                              length: rawText.length()
+                              encoding: NSUTF8StringEncoding
                           ];
                           [sPanel setNameFieldStringValue:myString];
                           [myString release];
