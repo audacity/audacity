@@ -925,6 +925,18 @@ AudacityProject * TrackPanel::GetProject() const
 /// AS: This gets called on our wx timer events.
 void TrackPanel::OnTimer(wxTimerEvent& )
 {
+#ifdef __WXMAC__
+   // Unfortunate part of fix for bug 1431
+   // Without this, the toolbars hide only every other time that you press
+   // the yellow title bar button.  For some reason, not every press sends
+   // us a deactivate event for the application.
+   {
+      auto project = GetProject();
+      if (project->IsIconized())
+         project->MacShowUndockedToolbars(false);
+   }
+#endif
+
    mTimeCount++;
    // AS: If the user is dragging the mouse and there is a track that
    //  has captured the mouse, then scroll the screen, as necessary.
