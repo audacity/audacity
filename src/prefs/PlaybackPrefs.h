@@ -31,6 +31,7 @@ class PlaybackPrefs final : public PrefsPanel
    static void SetPinnedHeadPreference(bool value, bool flush = false);
 
  private:
+   static int iPreferencePinned;
    void Populate();
    void PopulateOrExchange(ShuttleGui & S);
 };
