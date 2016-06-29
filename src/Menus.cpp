@@ -1036,12 +1036,12 @@ void AudacityProject::CreateMenusAndCommands()
        * window) full sized */
       c->AddItem(wxT("MacZoom"), _("&Zoom"), FN(OnMacZoom),
                  wxT(""), NotMinimizedFlag, NotMinimizedFlag);
-#if 0
       c->AddSeparator();
+      /* i18n-hint: Standard Macintosh Window menu item:  Make all project
+       * windows un-hidden */
       c->AddItem(wxT("MacBringAllToFront"),
                  _("&Bring All to Front"), FN(OnMacBringAllToFront),
                  wxT(""), AlwaysEnabledFlag, AlwaysEnabledFlag);
-#endif
       c->EndMenu();
       }
 #endif
@@ -1249,6 +1249,13 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddCommand(wxT("SetPlaySpeed"), _("Adjust playback speed"), FN(OnSetPlaySpeed));
    c->AddCommand(wxT("PlaySpeedInc"), _("Increase playback speed"), FN(OnPlaySpeedInc));
    c->AddCommand(wxT("PlaySpeedDec"), _("Decrease playback speed"), FN(OnPlaySpeedDec));
+
+#ifdef __WXMAC__
+   /* i8n-hint: Shrink all project windows to icons on the Macintosh tooldock */
+   c->AddCommand(wxT("MacMinimizeAll"), _("Minimize all projects"),
+                 FN(OnMacMinimizeAll), wxT("Ctrl+Alt+M"),
+                 AlwaysEnabledFlag, AlwaysEnabledFlag);
+#endif
 
    mLastFlags = AlwaysEnabledFlag;
 
@@ -1799,7 +1806,7 @@ CommandFlag AudacityProject::GetUpdateFlags()
       flags |= CanStopAudioStreamFlag;
 
    if (auto focus = wxWindow::FindFocus()) {
-      while (focus && !focus->IsTopLevel())
+      while (focus && focus->GetParent())
          focus = focus->GetParent();
       if (focus && !static_cast<wxTopLevelWindow*>(focus)->IsIconized())
          flags |= NotMinimizedFlag;

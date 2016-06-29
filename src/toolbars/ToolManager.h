@@ -138,6 +138,8 @@ public:
 
    ~ToolFrame();
 
+   ToolBar *GetToolBar() { return mBar; }
+
    //
    // Transition a toolbar from float to dragging
    //

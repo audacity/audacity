@@ -2174,6 +2174,22 @@ void AudacityProject::OnUpdateUI(wxUpdateUIEvent & WXUNUSED(event))
    UpdateMenus();
 }
 
+void AudacityProject::MacShowUndockedToolbars(bool show)
+{
+#ifdef __WXMAC__
+   // Find all the floating toolbars, and show or hide them
+   const auto &children = GetChildren();
+   for(const auto &child : children) {
+      if (auto frame = dynamic_cast<ToolFrame*>(child)) {
+         if (!show)
+            frame->Hide();
+         else if (frame->GetToolBar()->IsVisible())
+            frame->Show();
+      }
+   }
+#endif
+}
+
 void AudacityProject::OnActivate(wxActivateEvent & event)
 {
    // Activate events can fire during window teardown, so just
@@ -2207,6 +2223,10 @@ void AudacityProject::OnActivate(wxActivateEvent & event)
       if (wxGetTopLevelParent(w) ==this) {
          mLastFocusedWindow = w;
       }
+#ifdef __WXMAC__
+      if (IsIconized())
+         MacShowUndockedToolbars(false);
+#endif
    }
    else {
       SetActiveProject(this);
@@ -2220,6 +2240,10 @@ void AudacityProject::OnActivate(wxActivateEvent & event)
       }
       // No longer need to remember the last focused window
       mLastFocusedWindow = NULL;
+
+#ifdef __WXMAC__
+      MacShowUndockedToolbars(true);
+#endif
    }
    event.Skip();
 }
