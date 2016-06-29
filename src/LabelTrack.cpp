@@ -1535,60 +1535,61 @@ void LabelTrack::HandleClick(const wxMouseEvent & evt,
          if (mLabels[mSelIndex]->changeInitialMouseXPos)
             mInitialCursorPos = mCurrentCursorPos;
          mDrawCursor = true;
-      }
 
-      // reset the highlight indicator
-      wxRect highlightedRect;
-      if (mSelIndex != -1) {
-         int xpos1, xpos2;
-         CalcHighlightXs(&xpos1, &xpos2);
-
-         wxASSERT(mFontHeight >= 0); // should have been set up while drawing
-         // the rectangle of highlighted area
-         highlightedRect = {
-            xpos1, mLabels[mSelIndex]->y - mFontHeight / 2,
-            (int)(xpos2 - xpos1 + 0.5), mFontHeight
-         };
-
-         // reset when left button is down
-         if (evt.LeftDown())
-            mLabels[mSelIndex]->highlighted = false;
-         // reset when right button is down outside text box
-         if (evt.RightDown())
+         // reset the highlight indicator
+         wxRect highlightedRect;
          {
-            if (!highlightedRect.Contains(evt.m_x, evt.m_y))
-            {
-               mCurrentCursorPos = mInitialCursorPos = 0;
+            int xpos1, xpos2;
+            CalcHighlightXs(&xpos1, &xpos2);
+
+            wxASSERT(mFontHeight >= 0); // should have been set up while drawing
+            // the rectangle of highlighted area
+            highlightedRect = {
+               xpos1, mLabels[mSelIndex]->y - mFontHeight / 2,
+               (int)(xpos2 - xpos1 + 0.5), mFontHeight
+            };
+
+            // reset when left button is down
+            if (evt.LeftDown())
                mLabels[mSelIndex]->highlighted = false;
+            // reset when right button is down outside text box
+            if (evt.RightDown())
+            {
+               if (!highlightedRect.Contains(evt.m_x, evt.m_y))
+               {
+                  mCurrentCursorPos = mInitialCursorPos = 0;
+                  mLabels[mSelIndex]->highlighted = false;
+               }
             }
+            // set changeInitialMouseXPos flag
+            mLabels[mSelIndex]->changeInitialMouseXPos = true;
          }
-         // set changeInitialMouseXPos flag
-         mLabels[mSelIndex]->changeInitialMouseXPos = true;
-      }
 
-      // disable displaying if right button is down outside text box
-      if (mSelIndex != -1 && evt.RightDown()
-          && !highlightedRect.Contains(evt.m_x, evt.m_y))
-         mDragXPos = -1;
+         // disable displaying if right button is down outside text box
+         if (evt.RightDown()
+             && !highlightedRect.Contains(evt.m_x, evt.m_y))
+            mDragXPos = -1;
 
-      // Middle click on GTK: paste from primary selection
+         // Middle click on GTK: paste from primary selection
 #if defined(__WXGTK__) && (HAVE_GTK)
-      if (evt.MiddleDown()) {
-         // Check for a click outside of the selected label's text box; in this
-         // case PasteSelectedText() will start a NEW label at the click
-         // location
-         if (mSelIndex != -1) {
+         if (evt.MiddleDown()) {
+            // Check for a click outside of the selected label's text box; in this
+            // case PasteSelectedText() will start a NEW label at the click
+            // location
             if (!OverTextBox(mLabels[mSelIndex], evt.m_x, evt.m_y))
                mSelIndex = -1;
             double t = zoomInfo.PositionToTime(evt.m_x, r.x);
             *newSel = SelectedRegion(t, t);
          }
+#endif
+      }
 
+#if defined(__WXGTK__) && (HAVE_GTK)
+      if (evt.MiddleDown()) {
+         // Paste text, making a NEW label if none is selected.
          wxTheClipboard->UsePrimarySelection(true);
          PasteSelectedText(newSel->t0(), newSel->t1());
          wxTheClipboard->UsePrimarySelection(false);
-
-         return;
       }
 #endif
    }
