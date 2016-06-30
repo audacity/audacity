@@ -148,10 +148,10 @@ void EditToolBar::Populate()
    AddSeparator();
 
 #ifdef EXPERIMENTAL_SYNC_LOCK
-   AddButton(bmpSyncLockTracksUp, bmpSyncLockTracksDown, bmpSyncLockTracksUp, ETBSyncLockID,
-               _("Sync-Lock Tracks"), true);
+//   AddButton(bmpSyncLockTracksUp, bmpSyncLockTracksDown, bmpSyncLockTracksUp, ETBSyncLockID,
+//               _("Time-Lock Tracks"), true);
 
-   AddSeparator();
+//   AddSeparator();
 #endif
 
    AddButton(bmpZoomIn, bmpZoomIn, bmpZoomInDisabled, ETBZoomInID,
@@ -172,7 +172,7 @@ void EditToolBar::Populate()
    mButtons[ETBPasteID]->SetEnabled(false);
 
 #ifdef EXPERIMENTAL_SYNC_LOCK
-   mButtons[ETBSyncLockID]->PushDown();
+//   mButtons[ETBSyncLockID]->PushDown();
 #endif
 
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
@@ -212,7 +212,7 @@ void EditToolBar::RegenerateTooltips()
       { ETBRedoID,     wxT("Redo"),        XO("Redo")  },
 
 #ifdef EXPERIMENTAL_SYNC_LOCK
-      { ETBSyncLockID, wxT("SyncLock"),    XO("Sync-Lock Tracks")  },
+//      { ETBSyncLockID, wxT("SyncLock"),    XO("Sync-Lock Tracks")  },
 #endif
 
       { ETBZoomInID,   wxT("ZoomIn"),      XO("Zoom In")  },
@@ -266,9 +266,9 @@ void EditToolBar::OnButton(wxCommandEvent &event)
          if (!busy) p->OnRedo();
          break;
 #ifdef EXPERIMENTAL_SYNC_LOCK
-      case ETBSyncLockID:
-         p->OnSyncLock();
-         return;//avoiding the call to SetButton()
+//      case ETBSyncLockID:
+//         p->OnSyncLock();
+//         return;//avoiding the call to SetButton()
 #endif
       case ETBZoomInID:
          p->OnZoomIn();
@@ -337,12 +337,12 @@ void EditToolBar::EnableDisableButtons()
    mButtons[ETBPasteID]->SetEnabled(p->Clipboard());
 
 #ifdef EXPERIMENTAL_SYNC_LOCK
-   bool bSyncLockTracks;
-   gPrefs->Read(wxT("/GUI/SyncLockTracks"), &bSyncLockTracks, false);
+//   bool bSyncLockTracks;
+//   gPrefs->Read(wxT("/GUI/SyncLockTracks"), &bSyncLockTracks, false);
 
-   if (bSyncLockTracks)
-      mButtons[ETBSyncLockID]->PushDown();
-   else
-      mButtons[ETBSyncLockID]->PopUp();
+//   if (bSyncLockTracks)
+//      mButtons[ETBSyncLockID]->PushDown();
+//   else
+//      mButtons[ETBSyncLockID]->PopUp();
 #endif
 }

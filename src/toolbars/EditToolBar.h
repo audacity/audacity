@@ -38,7 +38,7 @@ enum {
    ETBRedoID,
 
 #ifdef EXPERIMENTAL_SYNC_LOCK
-   ETBSyncLockID,
+//   ETBSyncLockID,
 #endif
 
    ETBZoomInID,
