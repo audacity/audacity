@@ -6362,7 +6362,7 @@ void TrackPanel::HandleTextDragRelease(LabelTrack * lTrack, wxMouseEvent & event
    /// TrackPanel which suitably modified belong in other classes.
    if (event.Dragging()) {
       ;
-   } else if (event.LeftUp() && mCapturedTrack && (mCapturedTrack->GetKind() == Track::Label)) {
+   } else if (event.ButtonUp() && mCapturedTrack && (mCapturedTrack->GetKind() == Track::Label)) {
       SetCapturedTrack(NULL);
    }
 
