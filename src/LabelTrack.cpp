@@ -852,7 +852,7 @@ void LabelTrack::Draw(wxDC & dc, const wxRect & r,
    }
 
    // Draw the cursor, if there is one.
-   if( mSelIndex >=0 )
+   if( mDrawCursor && mSelIndex >=0 )
    {
       i = mSelIndex;
       int xPos = mLabels[i]->xText;
@@ -865,16 +865,13 @@ void LabelTrack::Draw(wxDC & dc, const wxRect & r,
          xPos += partWidth;
       }
 
-      // Draw the cursor
       wxPen currentPen = dc.GetPen();
       const int CursorWidth=2;
-      if (mDrawCursor) {
-         currentPen.SetWidth(CursorWidth);
-         AColor::Line(dc,
-                      xPos-1, mLabels[i]->y - mFontHeight/2 + 1,
-                      xPos-1, mLabels[i]->y + mFontHeight/2 - 1);
-         currentPen.SetWidth(1);
-      }
+      currentPen.SetWidth(CursorWidth);
+      AColor::Line(dc,
+                   xPos-1, mLabels[i]->y - mFontHeight/2 + 1,
+                   xPos-1, mLabels[i]->y + mFontHeight/2 - 1);
+      currentPen.SetWidth(1);
    }
 }
 
@@ -899,16 +896,10 @@ void LabelTrack::SetCurrentCursorPosition(int xPos)
       subString = (mLabels[mSelIndex]->title).Left(charIndex);
       // Get the width of substring
       dc.GetTextExtent(subString, &partWidth, NULL);
-      if (charIndex > 1)
-      {
-         // Get the width of the last character
-         dc.GetTextExtent(subString.Right(1), &oneWidth, NULL);
-         bound = mLabels[mSelIndex]->xText + partWidth - oneWidth * 0.5;
-      }
-      else
-      {
-         bound = mLabels[mSelIndex]->xText + partWidth * 0.5;
-      }
+
+      // Get the width of the last character
+      dc.GetTextExtent(subString.Right(1), &oneWidth, NULL);
+      bound = mLabels[mSelIndex]->xText + partWidth - oneWidth * 0.5;
 
       if (xPos <= bound)
       {
@@ -1000,8 +991,7 @@ bool LabelTrack::CutSelectedText()
    }
 
    // set cursor positions
-   mCurrentCursorPos = left.Length();
-   mInitialCursorPos = mCurrentCursorPos;
+   mInitialCursorPos = mCurrentCursorPos = left.Length();
    return true;
 }
 
@@ -1076,9 +1066,9 @@ bool LabelTrack::PasteSelectedText(double sel0, double sel1)
       }
 
       // same as cutting
-      if (mInitialCursorPos > 0) {
+      if (mInitialCursorPos > 0)
          left = (mLabels[mSelIndex]->title).Mid(0, mInitialCursorPos);
-      }
+
       if (mCurrentCursorPos < (int)(mLabels[mSelIndex]->title).Length()) {
          right = (mLabels[mSelIndex]->title).Mid(mCurrentCursorPos, (mLabels[mSelIndex]->title).Length()-mCurrentCursorPos);
       }
@@ -1096,7 +1086,7 @@ bool LabelTrack::PasteSelectedText(double sel0, double sel1)
       mLabels[mSelIndex]->title += right;
       mCurrentCursorPos += text.Length();
    }
-   // set mInitialCursorPos equal to currentCursorPos
+
    mInitialCursorPos = mCurrentCursorPos;
    return true;
 }
@@ -1568,7 +1558,6 @@ void LabelTrack::HandleClick(const wxMouseEvent & evt,
          SetCurrentCursorPosition(evt.m_x);
 
          // for preventing from resetting by shift+mouse left button
-         // set initialCursorPos equal to currentCursorPos
          if (mLabels[mSelIndex]->changeInitialMouseXPos)
             mInitialCursorPos = mCurrentCursorPos;
          mDrawCursor = true;
@@ -1595,8 +1584,7 @@ void LabelTrack::HandleClick(const wxMouseEvent & evt,
          {
             if (!highlightedRect.Contains(evt.m_x, evt.m_y))
             {
-               mCurrentCursorPos = 0;
-               mInitialCursorPos = 0;
+               mCurrentCursorPos = mInitialCursorPos = 0;
                mLabels[mSelIndex]->highlighted = false;
             }
          }
@@ -1685,7 +1673,7 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
 
    // Cache the keycode
    int keyCode = event.GetKeyCode();
-   int mods = event.GetModifiers();
+   const int mods = event.GetModifiers();
 
    // Check for modifiers and only allow shift
    if (mods != wxMOD_NONE && mods != wxMOD_SHIFT) {
@@ -1760,83 +1748,52 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
       case WXK_HOME:
       case WXK_NUMPAD_HOME:
          // Move cursor to beginning of label
-         if (mods == wxMOD_SHIFT) {
-            mCurrentCursorPos = 0;
+         mCurrentCursorPos = 0;
+         if (mods == wxMOD_SHIFT)
             mDragXPos = 0;
-         }
-         else if (mods == wxMOD_NONE)
-         {
-            mCurrentCursorPos = 0;
+         else {
             mDragXPos = -1;
             mInitialCursorPos = mCurrentCursorPos;
-         }
-         else {
-            // Not handled
-            event.Skip();
          }
          break;
 
       case WXK_END:
       case WXK_NUMPAD_END:
          // Move cursor to end of label
-         if (mods == wxMOD_SHIFT) {
-            mCurrentCursorPos = (int)mLabels[mSelIndex]->title.length();
+         mCurrentCursorPos = (int)mLabels[mSelIndex]->title.length();
+         if (mods == wxMOD_SHIFT)
             mDragXPos = 0;
-         }
-         else if (mods == wxMOD_NONE)
-         {
-            mCurrentCursorPos = (int)mLabels[mSelIndex]->title.length();
+         else {
             mDragXPos = -1;
             mInitialCursorPos = mCurrentCursorPos;
-         }
-         else {
-            // Not handled
-            event.Skip();
          }
          break;
 
       case WXK_LEFT:
       case WXK_NUMPAD_LEFT:
          // Moving cursor left
-         if (mods == wxMOD_SHIFT) {
-            if (mCurrentCursorPos > 0) {
-               mCurrentCursorPos--;
+         if (mCurrentCursorPos > 0) {
+            mCurrentCursorPos--;
+            if (mods == wxMOD_SHIFT)
                mDragXPos = 0;
-            }
-         }
-         else if (mods == wxMOD_NONE) {
-            if (mCurrentCursorPos > 0) {
-               mCurrentCursorPos--;
+            else {
                mDragXPos = -1;
                mInitialCursorPos = mCurrentCursorPos;
             }
-         }
-         else {
-            // Not handled
-            event.Skip();
          }
          break;
 
       case WXK_RIGHT:
       case WXK_NUMPAD_RIGHT:
          // Moving cursor right
-         if (mods == wxMOD_SHIFT) {
-            if (mCurrentCursorPos < (int)mLabels[mSelIndex]->title.length()) {
-               mCurrentCursorPos++;
+         if (mCurrentCursorPos < (int)mLabels[mSelIndex]->title.length()) {
+            mCurrentCursorPos++;
+            if (mods == wxMOD_SHIFT)
                mDragXPos = 0;
-            }
-         }
-         else if (mods == wxMOD_NONE)
-         {
-            if (mCurrentCursorPos < (int)mLabels[mSelIndex]->title.length()) {
-               mCurrentCursorPos++;
+            else {
                mDragXPos = -1;
                mInitialCursorPos = mCurrentCursorPos;
             }
-         }
-         else {
-            // Not handled
-            event.Skip();
          }
          break;
 
@@ -1946,7 +1903,7 @@ bool LabelTrack::OnChar(SelectedRegion &WXUNUSED(newSel), wxKeyEvent & event)
    //
    // We still need to check this or we will eat the top level menu accelerators
    // on Windows if our capture or key down handlers skipped the event.
-   int mods = event.GetModifiers();
+   const int mods = event.GetModifiers();
    if (mods != wxMOD_NONE && mods != wxMOD_SHIFT) {
       event.Skip();
       return false;
@@ -2002,8 +1959,7 @@ bool LabelTrack::OnChar(SelectedRegion &WXUNUSED(newSel), wxKeyEvent & event)
       mLabels[mSelIndex]->title += charCode;
    }
    //moving cursor position forward
-   mCurrentCursorPos++;
-   mInitialCursorPos = mCurrentCursorPos;
+   mInitialCursorPos = ++mCurrentCursorPos;
    updated = true;
 
    // Make sure the caret is visible
@@ -2124,8 +2080,7 @@ void LabelTrack::RemoveSelectedText()
       right = (mLabels[mSelIndex]->title).Mid(mCurrentCursorPos, (mLabels[mSelIndex]->title).Length()-mCurrentCursorPos);
    }
    mLabels[mSelIndex]->title = left + right;
-   mCurrentCursorPos = left.Length();
-   mInitialCursorPos = mCurrentCursorPos;
+   mInitialCursorPos = mCurrentCursorPos = left.Length();
    mLabels[mSelIndex]->highlighted = false;
    mDragXPos = -1;
 }
@@ -2668,8 +2623,7 @@ int LabelTrack::AddLabel(const SelectedRegion &selectedRegion,
                          const wxString &title, int restoreFocus)
 {
    LabelStruct *l = new LabelStruct(selectedRegion, title);
-   mCurrentCursorPos = title.length();
-   mInitialCursorPos = mCurrentCursorPos;
+   mInitialCursorPos = mCurrentCursorPos = title.length();
 
    int len = mLabels.Count();
    int pos = 0;
