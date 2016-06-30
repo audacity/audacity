@@ -41,10 +41,6 @@ class ZoomInfo;
 
 class LabelStruct
 {
-   // disallow copy
-private:
-   LabelStruct(const LabelStruct&);
-   LabelStruct& operator= (const LabelStruct&);
 public:
    // Copies region
    LabelStruct(const SelectedRegion& region, const wxString &aTitle);
@@ -56,7 +52,7 @@ public:
       ( wxDC & dc, const wxRect & r, int GlyphLeft, int GlyphRight) const;
    void DrawText( wxDC & dc, const wxRect & r) const;
    void DrawTextBox( wxDC & dc, const wxRect & r) const;
-   void DrawHighlight( wxDC & dc, int xPos1, int xPos2, int charHeight);
+   void DrawHighlight( wxDC & dc, int xPos1, int xPos2, int charHeight) const;
    void getXPos( wxDC & dc, int * xPos1, int cursorPos) const;
    const SelectedRegion &getSelectedRegion() const { return selectedRegion; }
    double getDuration() const { return selectedRegion.duration(); }
@@ -87,22 +83,20 @@ public:
 public:
    SelectedRegion selectedRegion;
    wxString title; /// Text of the label.
-   int width; /// width of the text in pixels.
+   mutable int width; /// width of the text in pixels.
 
 // Working storage for on-screen layout.
-   int x;     /// Pixel position of left hand glyph
-   int x1;    /// Pixel position of right hand glyph
-   int xText; /// Pixel position of left hand side of text box
-   int y;     /// Pixel position of label.
+   mutable int x;     /// Pixel position of left hand glyph
+   mutable int x1;    /// Pixel position of right hand glyph
+   mutable int xText; /// Pixel position of left hand side of text box
+   mutable int y;     /// Pixel position of label.
 
-   bool highlighted;              /// if the text is highlighted
-   bool changeInitialMouseXPos;   /// flag to change initial mouse X pos
+   mutable bool highlighted;              /// if the text is highlighted
+   mutable bool changeInitialMouseXPos;   /// flag to change initial mouse X pos
    bool updated;                  /// flag to tell if the label times were updated
 };
 
-//You can't stick AUDACITY_DLL_API in front of the WX_DEFINE_ARRAY() macro, you
-//have to use the below macro instead to avoid a warning
-WX_DEFINE_USER_EXPORTED_ARRAY(LabelStruct *, LabelArray, class AUDACITY_DLL_API);
+using LabelArray = std::vector<LabelStruct>;
 
 const int NUM_GLYPH_CONFIGS = 3;
 const int NUM_GLYPH_HIGHLIGHTS = 4;
