@@ -2805,48 +2805,42 @@ bool LabelTrack::IsGoodLabelEditKey(const wxKeyEvent & evt)
 /// sort (with a linear search) is a reasonable choice.
 void LabelTrack::SortLabels()
 {
-   int i,j;
-   LabelStruct * pTemp;
-   for (i = 1; i < (int)mLabels.Count(); i++)
+   const auto begin = mLabels.begin();
+   const auto nn = (int)mLabels.size();
+   int i = 1;
+   while (true)
    {
-      j=i-1;
-      while( (j>=0) && (mLabels[j]->getT0() >
-                        mLabels[i]->getT0()) )
-      {
-         j--;
-      }
-      j++;
-      if( j<i)
-      {
-         // Remove at i and insert at j.
-         // Don't use DeleteLabel() since just moving it.
-         pTemp = mLabels[i];
-         mLabels.RemoveAt( i );
-         mLabels.Insert(pTemp, j);
+      // Find the next disorder
+      while (i < nn && mLabels[i - 1]->getT0() <= mLabels[i]->getT0())
+         ++i;
+      if (i >= nn)
+         break;
 
-         // Various indecese need to be updated with the moved items...
-         if( mMouseOverLabelLeft <=i )
-         {
-            if( mMouseOverLabelLeft == i )
-               mMouseOverLabelLeft=j;
-            else if( mMouseOverLabelLeft >= j)
-               mMouseOverLabelLeft++;
+      // Where must element i sink to?  At most i - 1, maybe less
+      int j = i - 2;
+      while( (j >= 0) && (mLabels[j]->getT0() > mLabels[i]->getT0()) )
+         --j;
+      ++j;
+
+      // Now fix the disorder
+      std::rotate(
+         begin + j,
+         begin + i,
+         begin + i + 1
+      );
+
+      // Various indices need to be updated with the moved items...
+      auto update = [=](int &index) {
+         if( index <= i ) {
+            if( index == i )
+               index = j;
+            else if( index >= j)
+               ++index;
          }
-         if( mMouseOverLabelRight <=i )
-         {
-            if( mMouseOverLabelRight == i )
-               mMouseOverLabelRight=j;
-            else if( mMouseOverLabelRight >= j)
-               mMouseOverLabelRight++;
-         }
-         if( mSelIndex <=i )
-         {
-            if( mSelIndex == i )
-               mSelIndex=j;
-            else if( mSelIndex >= j)
-               mSelIndex++;
-         }
-      }
+      };
+      update(mMouseOverLabelLeft);
+      update(mMouseOverLabelRight);
+      update(mSelIndex);
    }
 }
 
