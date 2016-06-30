@@ -956,32 +956,28 @@ bool LabelTrack::CutSelectedText()
    if (!IsTextSelected())
       return false;
 
-   wxString left=wxT("");
-   wxString right=wxT("");
-   wxString text = mLabels[mSelIndex]->title;
+   wxString left, right;
+   auto &labelStruct = *mLabels[mSelIndex];
+   auto &text = labelStruct.title;
 
-   // swapping to make sure currentCursorPos > initialCursorPos always
-   if (mInitialCursorPos > mCurrentCursorPos) {
-      int temp = mCurrentCursorPos;
-      mCurrentCursorPos = mInitialCursorPos;
-      mInitialCursorPos = temp;
-   }
+   int init = mInitialCursorPos;
+   int cur = mCurrentCursorPos;
+   if (init > cur)
+      std::swap(init, cur);
 
    // data for cutting
-   wxString data = text.Mid(mInitialCursorPos, mCurrentCursorPos-mInitialCursorPos);
+   wxString data = text.Mid(init, cur - init);
 
    // get left-remaining text
-   if (mInitialCursorPos > 0) {
-      left = text.Mid(0, mInitialCursorPos);
-   }
+   if (init > 0)
+      left = text.Left(init);
 
    // get right-remaining text
-   if (mCurrentCursorPos < (int)text.Length()) {
-      right = text.Mid(mCurrentCursorPos, text.Length()-mCurrentCursorPos);
-   }
+   if (cur < (int)text.Length())
+      right = text.Mid(cur);
 
    // set title to the combination of the two remainders
-   mLabels[mSelIndex]->title = left + right;
+   text = left + right;
 
    // copy data onto clipboard
    if (wxTheClipboard->Open()) {
@@ -1001,19 +997,18 @@ bool LabelTrack::CopySelectedText()
 {
    if (mSelIndex == -1)
       return false;
-   if (!mLabels[mSelIndex]->highlighted)
+
+   const auto &labelStruct = *mLabels[mSelIndex];
+   if (!labelStruct.highlighted)
       return false;
 
-   // swapping to make sure currentCursorPos > mInitialCursorPos always
    int init = mInitialCursorPos;
    int cur = mCurrentCursorPos;
-   if (init > cur) {
-      cur = mInitialCursorPos;
-      init = mCurrentCursorPos;
-   }
+   if (init > cur)
+      std::swap(init, cur);
 
    // data for copying
-   wxString data = mLabels[mSelIndex]->title.Mid(init, cur-init);
+   wxString data = labelStruct.title.Mid(init, cur-init);
 
    // copy the data on clipboard
    if (wxTheClipboard->Open()) {
@@ -1030,13 +1025,10 @@ bool LabelTrack::CopySelectedText()
 ///  @return true if mouse is clicked in text box, false otherwise
 bool LabelTrack::PasteSelectedText(double sel0, double sel1)
 {
-   if (mSelIndex == -1) {
+   if (mSelIndex == -1)
       AddLabel(SelectedRegion(sel0, sel1), wxT(""));
-   }
 
-   wxString text;
-   wxString left=wxT("");
-   wxString right=wxT("");
+   wxString text, left, right;
 
    // if text data is available
    if (IsTextClipSupported()) {
@@ -1056,38 +1048,20 @@ bool LabelTrack::PasteSelectedText(double sel0, double sel1)
       }
    }
 
-   // if there is some highlighted text
-   if (mLabels[mSelIndex]->highlighted) {
-      // swapping to make sure currentCursorPos > mInitialCursorPos always
-      if (mInitialCursorPos > mCurrentCursorPos) {
-         int temp = mCurrentCursorPos;
-         mCurrentCursorPos = mInitialCursorPos;
-         mInitialCursorPos = temp;
-      }
-
-      // same as cutting
-      if (mInitialCursorPos > 0)
-         left = (mLabels[mSelIndex]->title).Mid(0, mInitialCursorPos);
-
-      if (mCurrentCursorPos < (int)(mLabels[mSelIndex]->title).Length()) {
-         right = (mLabels[mSelIndex]->title).Mid(mCurrentCursorPos, (mLabels[mSelIndex]->title).Length()-mCurrentCursorPos);
-      }
-      mLabels[mSelIndex]->title = left + text + right;
-      mCurrentCursorPos = left.Length() + text.Length();
+   auto &labelStruct = *mLabels[mSelIndex];
+   auto &title = labelStruct.title;
+   int cur = mCurrentCursorPos, init = cur;
+   if (labelStruct.highlighted) {
+      init = mInitialCursorPos;
+      if (init > cur)
+         std::swap(init, cur);
    }
-   else
-   {
-      // insert the data on the clipboard from the cursor position
-      if (mCurrentCursorPos < (int)(mLabels[mSelIndex]->title).Length()) {
-         right = (mLabels[mSelIndex]->title).Mid(mCurrentCursorPos);
-      }
-      mLabels[mSelIndex]->title = (mLabels[mSelIndex]->title).Left(mCurrentCursorPos);
-      mLabels[mSelIndex]->title += text;
-      mLabels[mSelIndex]->title += right;
-      mCurrentCursorPos += text.Length();
-   }
+   left = title.Left(init);
+   if (cur < (int)title.Length())
+      right = title.Mid(cur);
 
-   mInitialCursorPos = mCurrentCursorPos;
+   title = left + text + right;
+   mInitialCursorPos =  mCurrentCursorPos = left.Length() + text.Length();
    return true;
 }
 
@@ -2064,24 +2038,25 @@ void LabelTrack::OnContextMenu(wxCommandEvent & evt)
 
 void LabelTrack::RemoveSelectedText()
 {
-   wxString left = wxT("");
-   wxString right = wxT("");
+   wxString left, right;
 
-   if (mInitialCursorPos > mCurrentCursorPos) {
-      int temp = mCurrentCursorPos;
-      mCurrentCursorPos = mInitialCursorPos;
-      mInitialCursorPos = temp;
-   }
+   int init = mInitialCursorPos;
+   int cur = mCurrentCursorPos;
+   if (init > cur)
+      std::swap(init, cur);
 
-   if (mInitialCursorPos > 0) {
-      left = (mLabels[mSelIndex]->title).Mid(0, mInitialCursorPos);
-   }
-   if (mCurrentCursorPos < (int)(mLabels[mSelIndex]->title).Length()) {
-      right = (mLabels[mSelIndex]->title).Mid(mCurrentCursorPos, (mLabels[mSelIndex]->title).Length()-mCurrentCursorPos);
-   }
-   mLabels[mSelIndex]->title = left + right;
+   auto &labelStruct = *mLabels[mSelIndex];
+   auto &title = labelStruct.title;
+
+   if (init > 0)
+      left = title.Left(init);
+
+   if (cur < (int)title.Length())
+      right = title.Mid(cur);
+
+   title = left + right;
    mInitialCursorPos = mCurrentCursorPos = left.Length();
-   mLabels[mSelIndex]->highlighted = false;
+   labelStruct.highlighted = false;
    mDragXPos = -1;
 }
 
