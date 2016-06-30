@@ -1067,7 +1067,7 @@ wxString LWSlider::GetMaxTip() const
       switch(mStyle)
       {
       case FRAC_SLIDER:
-         val.Printf(wxT("%d.99"), (int) mMinValue - mMaxValue);
+         val.Printf(wxT("%d.99"), (int) (mMinValue - mMaxValue));
          break;
 
       case DB_SLIDER:
