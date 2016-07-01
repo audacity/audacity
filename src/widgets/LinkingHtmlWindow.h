@@ -52,6 +52,7 @@ public:
 
 
    HtmlWindow * mpHtml;
+   bool mDismissed{};
    DECLARE_EVENT_TABLE()
 };
 
