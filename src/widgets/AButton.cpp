@@ -35,7 +35,7 @@
 #include "../Project.h"
 #include <wx/tooltip.h>
 
-BEGIN_EVENT_TABLE(AButton, wxWindow)
+BEGIN_EVENT_TABLE(AButton, wxButton)
    EVT_MOUSE_EVENTS(AButton::OnMouseEvent)
    EVT_MOUSE_CAPTURE_LOST(AButton::OnCaptureLost)
    EVT_KEY_DOWN(AButton::OnKeyDown)
@@ -161,7 +161,7 @@ AButton::AButton(wxWindow * parent,
                  wxImage down,
                  wxImage dis,
                  bool toggle):
-   wxWindow()
+   wxButton()
 {
    Init(parent, id, pos, size,
         ImageRoll(up), ImageRoll(over),
@@ -178,7 +178,7 @@ AButton::AButton(wxWindow * parent,
                  ImageRoll down,
                  ImageRoll dis,
                  bool toggle):
-   wxWindow()
+   wxButton()
 {
    Init(parent, id, pos, size,
         up, over, down, dis,
@@ -205,7 +205,7 @@ void AButton::Init(wxWindow * parent,
    // a navigation event - move to next control. As a workaround, the style wxWANTS_CHARS
    // results in all characters being available in the OnKeyDown function below. Note
    // that OnKeyDown now has to handle navigation.
-   Create(parent, id, pos, size, wxWANTS_CHARS);
+   Create(parent, id, wxEmptyString, pos, size, wxWANTS_CHARS | wxBORDER_NONE);
 
    mWasShiftDown = false;
    mWasControlDown = false;
