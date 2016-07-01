@@ -19,13 +19,12 @@
 #include <wx/access.h>
 #endif
 
-#include <wx/button.h>
 #include <wx/image.h>
 #include <wx/window.h>
 
 #include "ImageRoll.h"
 
-class AButton final : public wxButton {
+class AButton final : public wxWindow {
    friend class AButtonAx;
    class Listener;
 
