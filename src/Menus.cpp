@@ -325,10 +325,17 @@ void AudacityProject::CreateMenusAndCommands()
          AudioIONotBusyFlag | UnsavedChangesFlag);
       c->AddItem(wxT("SaveAs"), _("Save Project &As..."), FN(OnSaveAs));
       c->BeginSubMenu( _("Save Other") );
-#ifdef USE_LIBVORBIS
-      c->AddItem(wxT("SaveCompressed"), _("Save Compressed Copy of Project..."), FN(OnSaveCompressed));
-#endif
+#if 1
       // Enable Export audio commands only when there are audio tracks.
+      c->AddItem(wxT("ExportMp3"), _("Export as MP&3"), FN(OnExport), wxT(""),
+         AudioIONotBusyFlag | WaveTracksExistFlag,
+         AudioIONotBusyFlag | WaveTracksExistFlag);
+
+      c->AddItem(wxT("ExportWav"), _("Export as &WAV"), FN(OnExport), wxT(""),
+         AudioIONotBusyFlag | WaveTracksExistFlag,
+         AudioIONotBusyFlag | WaveTracksExistFlag);
+#endif
+
       c->AddItem(wxT("Export"), _("&Export Audio..."), FN(OnExport), wxT("Ctrl+Shift+E"),
          AudioIONotBusyFlag | WaveTracksExistFlag,
          AudioIONotBusyFlag | WaveTracksExistFlag);
@@ -349,6 +356,10 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("ExportMIDI"), _("Export MIDI..."), FN(OnExportMIDI),
          AudioIONotBusyFlag | NoteTracksSelectedFlag,
          AudioIONotBusyFlag | NoteTracksSelectedFlag);
+#endif
+#ifdef USE_LIBVORBIS
+      c->AddSeparator();
+      c->AddItem(wxT("SaveCompressed"), _("Save Compressed Copy of Project..."), FN(OnSaveCompressed));
 #endif
       c->EndSubMenu();
       c->AddSeparator();
