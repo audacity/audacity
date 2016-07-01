@@ -351,8 +351,6 @@ audacity_SOURCES = \
 	effects/Generator.h \
 	effects/Invert.cpp \
 	effects/Invert.h \
-	effects/Leveller.cpp \
-	effects/Leveller.h \
 	effects/LoadEffects.cpp \
 	effects/LoadEffects.h \
 	effects/Noise.cpp \
