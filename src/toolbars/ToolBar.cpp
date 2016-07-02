@@ -78,6 +78,7 @@ private:
    void OnLeftDown(wxMouseEvent & event);
    void OnLeftUp(wxMouseEvent & event);
    void OnEnter(wxMouseEvent & event);
+   void OnLeave(wxMouseEvent & event);
    void OnMotion(wxMouseEvent & event);
    void ResizeBar(const wxSize &size);
    void OnCaptureLost(wxMouseCaptureLostEvent & event);
@@ -101,6 +102,7 @@ BEGIN_EVENT_TABLE( ToolBarResizer, wxWindow )
    EVT_LEFT_DOWN( ToolBarResizer::OnLeftDown )
    EVT_LEFT_UP( ToolBarResizer::OnLeftUp )
    EVT_ENTER_WINDOW( ToolBarResizer::OnEnter )
+   EVT_LEAVE_WINDOW( ToolBarResizer::OnLeave )
    EVT_MOTION( ToolBarResizer::OnMotion )
    EVT_MOUSE_CAPTURE_LOST( ToolBarResizer::OnCaptureLost )
    EVT_KEY_DOWN( ToolBarResizer::OnKeyDown )
@@ -191,6 +193,11 @@ void ToolBarResizer::OnEnter( wxMouseEvent & event )
    SetToolTip(text);
    if (!mOrigFocus)
       mOrigFocus = FindFocus();
+}
+
+void ToolBarResizer::OnLeave( wxMouseEvent & event )
+{
+   mOrigFocus = nullptr;
 }
 
 void ToolBarResizer::OnMotion( wxMouseEvent & event )
