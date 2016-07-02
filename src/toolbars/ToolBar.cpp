@@ -197,7 +197,8 @@ void ToolBarResizer::OnEnter( wxMouseEvent & event )
 
 void ToolBarResizer::OnLeave( wxMouseEvent & event )
 {
-   mOrigFocus = nullptr;
+   if (!GetCapture())
+      mOrigFocus = nullptr;
 }
 
 void ToolBarResizer::OnMotion( wxMouseEvent & event )
