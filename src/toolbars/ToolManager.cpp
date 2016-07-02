@@ -169,7 +169,8 @@ void ToolFrame::OnGrabber( GrabberEvent & event )
 void ToolFrame::OnToolBarUpdate( wxCommandEvent & event )
 {
    // Resize floater window to exactly contain toolbar
-   mBar->GetParent()->SetClientSize( mBar->GetMinSize() );
+   if (mBar)
+      mBar->GetParent()->SetClientSize( mBar->GetMinSize() );
 
    // Allow it to propagate to our parent
    event.Skip();
@@ -190,7 +191,7 @@ void ToolFrame::OnPaint( wxPaintEvent & WXUNUSED(event) )
    dc.DrawRectangle( 0, 0, sz.GetWidth(), sz.GetHeight() );
 #endif
 
-   if( mBar->IsResizable() )
+   if( mBar && mBar->IsResizable() )
    {
       r.x = sz.x - sizerW - 2,
       r.y = sz.y - sizerW - 2;
@@ -208,7 +209,7 @@ void ToolFrame::OnPaint( wxPaintEvent & WXUNUSED(event) )
 void ToolFrame::OnMotion( wxMouseEvent & event )
 {
    // Don't do anything if we're docked or not resizeable
-   if( mBar->IsDocked() || !mBar->IsResizable() )
+   if( !mBar || mBar->IsDocked() || !mBar->IsResizable() )
    {
       return;
    }
@@ -1081,6 +1082,7 @@ void ToolManager::OnMouse( wxMouseEvent & event )
       {
          // Trip over...everyone ashore that's going ashore...
          mDragDock->Dock( mDragBar, true, mDragBefore );
+         mDragWindow->ClearBar();
 
          // Done with the floater
          mDragWindow->Destroy();
@@ -1374,6 +1376,7 @@ void ToolManager::HandleEscapeKey()
          mPrevDock->Dock( mDragBar, true, mPrevSlot );
 
          // Done with the floater
+         mDragWindow->ClearBar();
          mDragWindow->Destroy();
          mDragBar->Refresh(false);
       }

@@ -2183,7 +2183,8 @@ void AudacityProject::MacShowUndockedToolbars(bool show)
       if (auto frame = dynamic_cast<ToolFrame*>(child)) {
          if (!show)
             frame->Hide();
-         else if (frame->GetToolBar()->IsVisible())
+         else if (frame->GetBar() &&
+                  frame->GetBar()->IsVisible())
             frame->Show();
       }
    }
