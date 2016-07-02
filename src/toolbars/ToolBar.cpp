@@ -87,6 +87,7 @@ private:
    ToolBar *mBar;
    wxPoint mResizeStart;
    wxSize mOrigSize;
+   wxWindow *mOrigFocus{};
 
    DECLARE_EVENT_TABLE();
 };
@@ -175,6 +176,9 @@ void ToolBarResizer::OnLeftUp( wxMouseEvent & event )
    if( HasCapture() )
    {
       ReleaseMouse();
+      if (mOrigFocus)
+         mOrigFocus->SetFocus();
+      mOrigFocus = nullptr;
    }
 }
 
@@ -185,6 +189,8 @@ void ToolBarResizer::OnEnter( wxMouseEvent & event )
    const auto text = GetToolTipText();
    UnsetToolTip();
    SetToolTip(text);
+   if (!mOrigFocus)
+      mOrigFocus = FindFocus();
 }
 
 void ToolBarResizer::OnMotion( wxMouseEvent & event )
@@ -248,6 +254,9 @@ void ToolBarResizer::OnCaptureLost( wxMouseCaptureLostEvent & WXUNUSED(event) )
    if( HasCapture() )
    {
       ReleaseMouse();
+      if (mOrigFocus)
+         mOrigFocus->SetFocus();
+      mOrigFocus = nullptr;
    }
 }
 
@@ -257,6 +266,9 @@ void ToolBarResizer::OnKeyDown(wxKeyEvent &event)
    if (HasCapture() && WXK_ESCAPE == event.GetKeyCode()) {
       ResizeBar( mOrigSize );
       ReleaseMouse();
+      if (mOrigFocus)
+         mOrigFocus->SetFocus();
+      mOrigFocus = nullptr;
    }
 }
 
