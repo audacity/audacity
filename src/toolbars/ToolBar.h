@@ -225,8 +225,6 @@ class ToolBar /* not final */ : public wxPanelWrapper
    wxBoxSizer *mHSizer;
    wxSizerItem *mSpacer;
 
-   ToolDock *mDock;
-
    bool mVisible;
    bool mResizable;
    bool mPositioned; // true if position floating determined.

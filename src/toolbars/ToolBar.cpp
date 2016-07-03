@@ -41,6 +41,7 @@ in which buttons can be placed.
 #endif  /*  */
 
 #include "ToolBar.h"
+#include "ToolDock.h"
 #include "../Experimental.h"
 
 #include "../AllThemeResources.h"
@@ -322,7 +323,6 @@ ToolBar::ToolBar( int type,
    mParent = NULL;
    mHSizer = NULL;
    mSpacer = NULL;
-   mDock = NULL;
    mVisible = false;
    mPositioned = false;
 
@@ -393,7 +393,7 @@ bool ToolBar::IsResizable() const
 //
 bool ToolBar::IsDocked() const
 {
-   return mDock != NULL;
+   return const_cast<ToolBar*>(this)->GetDock() != nullptr;
 }
 
 //
@@ -551,7 +551,7 @@ void ToolBar::UpdatePrefs()
 //
 ToolDock *ToolBar::GetDock()
 {
-   return mDock;
+   return dynamic_cast<ToolDock*>(GetParent());
 }
 
 //
@@ -560,7 +560,7 @@ ToolDock *ToolBar::GetDock()
 void ToolBar::SetDocked( ToolDock *dock, bool pushed )
 {
    // Remember it
-   mDock = dock;
+//   mDock = dock;
 
    // Change the tooltip of the grabber
 #if wxUSE_TOOLTIPS
@@ -572,7 +572,7 @@ void ToolBar::SetDocked( ToolDock *dock, bool pushed )
 
    if (mResizer)
    {
-      mResizer->Show(mDock != NULL);
+      mResizer->Show(dock != NULL);
       Layout();
       Fit();
    }
