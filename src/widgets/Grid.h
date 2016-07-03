@@ -18,6 +18,7 @@
 #include <wx/grid.h>
 #include <wx/string.h>
 #include <wx/window.h>
+#include "NumericTextCtrl.h"
 
 #if wxUSE_ACCESSIBILITY
 #include <wx/access.h>
@@ -29,82 +30,88 @@ class GridAx;
 class NumericTextCtrl;
 
 // ----------------------------------------------------------------------------
-// TimeEditor
+// NumericEditor
 //
 // wxGridCellEditor for the NumericTextCtrl.
 // ----------------------------------------------------------------------------
 #define GRID_VALUE_TIME wxT("Time")
+#define GRID_VALUE_FREQUENCY wxT("Frequency")
 
-class TimeEditor final : public wxGridCellEditor
+class NumericEditor /* not final */ : public wxGridCellEditor
 {
- public:
+public:
 
-   TimeEditor();
+   NumericEditor
+      (NumericConverter::Type type, const wxString &format, double rate);
 
-   TimeEditor(const wxString &format, double rate);
-
-   ~TimeEditor();
+   ~NumericEditor();
 
    // Precondition: parent != NULL
-   void Create(wxWindow *parent, wxWindowID id, wxEvtHandler *handler);
+   void Create(wxWindow *parent, wxWindowID id, wxEvtHandler *handler) override;
 
-   bool IsAcceptedKey(wxKeyEvent &event);
+   bool IsAcceptedKey(wxKeyEvent &event) override;
 
-   void SetSize(const wxRect &rect);
+   void SetSize(const wxRect &rect) override;
 
-   void BeginEdit(int row, int col, wxGrid *grid);
+   void BeginEdit(int row, int col, wxGrid *grid) override;
 
-   bool EndEdit(int row, int col, wxGrid *grid);
+   bool EndEdit(int row, int col, const wxGrid *grid, const wxString &oldval, wxString *newval) override;
 
-   bool EndEdit(int row, int col, const wxGrid *grid, const wxString &oldval, wxString *newval);
+   void ApplyEdit(int row, int col, wxGrid *grid) override;
 
-   void ApplyEdit(int row, int col, wxGrid *grid);
+   void Reset() override;
 
-   void Reset();
-
-   wxString GetFormat();
-   double GetRate();
+   wxString GetFormat() const;
+   double GetRate() const;
    void SetFormat(const wxString &format);
    void SetRate(double rate);
 
    wxGridCellEditor *Clone() const override;
-   wxString GetValue() const;
+   wxString GetValue() const override;
 
-   NumericTextCtrl *GetTimeCtrl() const { return (NumericTextCtrl *)m_control; }
+   NumericTextCtrl *GetNumericTextControl() const
+      { return static_cast<NumericTextCtrl *>(m_control); }
 
  private:
 
    wxString mFormat;
    double mRate;
+   NumericConverter::Type mType;
    double mOld;
    wxString mOldString;
    wxString mValueAsString;
 };
 
 // ----------------------------------------------------------------------------
-// TimeRenderer
+// NumericRenderer
 //
 // wxGridCellRenderer for the NumericTextCtrl.
 // ----------------------------------------------------------------------------
 
-class TimeRenderer final : public wxGridCellRenderer
+class NumericRenderer final : public wxGridCellRenderer
 {
  public:
-    void Draw(wxGrid &grid,
+   NumericRenderer(NumericConverter::Type type) : mType{ type } {}
+   ~NumericRenderer() override;
+
+   void Draw(wxGrid &grid,
               wxGridCellAttr &attr,
               wxDC &dc,
               const wxRect &rect,
               int row,
               int col,
-              bool isSelected);
+              bool isSelected) override;
 
    wxSize GetBestSize(wxGrid &grid,
                       wxGridCellAttr &attr,
                       wxDC &dc,
                       int row,
-                      int col);
+                      int col) override;
 
    wxGridCellRenderer *Clone() const override;
+
+private:
+   NumericConverter::Type mType;
 };
 
 // ----------------------------------------------------------------------------

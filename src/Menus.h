@@ -184,6 +184,12 @@ void OnSnapToNearest();
 void OnSnapToPrior();
 void OnFullScreen();
 
+static void DoMacMinimize(AudacityProject *project);
+void OnMacMinimize();
+void OnMacMinimizeAll();
+void OnMacZoom();
+void OnMacBringAllToFront();
+
         // File Menu
 
 void OnNew();
@@ -365,6 +371,7 @@ void OnRemoveTracks();
 void OnSyncLock();
 void OnAddLabel();
 void OnAddLabelPlaying();
+void DoEditLabels(LabelTrack *lt = nullptr, int index = -1);
 void OnEditLabels();
 
         // Effect Menu

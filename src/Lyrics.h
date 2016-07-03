@@ -92,6 +92,7 @@ class Lyrics final : public wxPanelWrapper
    // Event handlers
    //
    void OnKeyEvent(wxKeyEvent & event);
+   void DoPaint(wxDC &dc);
    void OnPaint(wxPaintEvent &evt);
    void OnSize(wxSizeEvent &evt);
 

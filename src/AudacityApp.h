@@ -94,8 +94,8 @@ enum CommandFlag : unsigned long long
    CanStopAudioStreamFlag = 0x40000000,
    RulerHasFocus
                           = 0x80000000ULL, // prl
-//   nextOneHas33BitsWow
-//                        = 0x100000000ULL, // prl
+   NotMinimizedFlag
+                        = 0x100000000ULL, // prl
 
    NoFlagsSpecifed        = ~0ULL
 };

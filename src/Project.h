@@ -312,7 +312,9 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    void OnMenu(wxCommandEvent & event);
    void OnUpdateUI(wxUpdateUIEvent & event);
 
+   void MacShowUndockedToolbars(bool show);
    void OnActivate(wxActivateEvent & event);
+
    void OnMouseEvent(wxMouseEvent & event);
    void OnIconize(wxIconizeEvent &event);
    void OnSize(wxSizeEvent & event);

@@ -37,9 +37,17 @@ class LabelDialog final : public wxDialog
    LabelDialog(wxWindow *parent,
                TrackFactory &factory,
                TrackList *tracks,
+
+               // if NULL edit all tracks, else this one only:
+               LabelTrack *selectedTrack,
+
+               // This is nonnegative only if selectedTrack is not NULL
+               // and is the unique label to edit
+               int index,
+
                ViewInfo &viewinfo,
                double rate,
-               const wxString & format);
+               const wxString & format, const wxString &freqFormat);
    ~LabelDialog();
 
     bool Show(bool show = true) override;
@@ -55,6 +63,7 @@ class LabelDialog final : public wxDialog
    wxString TrackName(int & index, const wxString &dflt = _("Label Track"));
 
    void OnUpdate(wxCommandEvent &event);
+   void OnFreqUpdate(wxCommandEvent &event);
    void OnInsert(wxCommandEvent &event);
    void OnRemove(wxCommandEvent &event);
    void OnImport(wxCommandEvent &event);
@@ -65,6 +74,8 @@ class LabelDialog final : public wxDialog
    void OnChangeLabel(wxGridEvent &event, int row, RowData *rd);
    void OnChangeStime(wxGridEvent &event, int row, RowData *rd);
    void OnChangeEtime(wxGridEvent &event, int row, RowData *rd);
+   void OnChangeLfreq(wxGridEvent &event, int row, RowData *rd);
+   void OnChangeHfreq(wxGridEvent &event, int row, RowData *rd);
    void OnOK(wxCommandEvent &event);
    void OnCancel(wxCommandEvent &event);
 
@@ -72,16 +83,20 @@ class LabelDialog final : public wxDialog
 
    Grid *mGrid;
    ChoiceEditor *mChoiceEditor;
-   TimeEditor *mTimeEditor;
+   NumericEditor *mTimeEditor;
+   NumericEditor *mFrequencyEditor;
 
    RowDataArray mData;
 
    TrackFactory &mFactory;
    TrackList *mTracks;
+   LabelTrack *mSelectedTrack {};
+   int mIndex { -1 };
    ViewInfo *mViewInfo;
    wxArrayString mTrackNames;
    double mRate;
    wxString mFormat;
+   wxString mFreqFormat;
 
    int mInitialRow;
 

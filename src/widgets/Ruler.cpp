@@ -1671,11 +1671,6 @@ enum : int {
    BottomMargin = 2, // for bottom bevel and bottom line
    LeftMargin = 1,
 
-   FocusBorder = 2,
-   FocusBorderLeft = FocusBorder,
-   FocusBorderTop = FocusBorder,
-   FocusBorderBottom = FocusBorder + 1, // count 1 for the black stroke
-
    RightMargin = 1,
 };
 
@@ -2081,7 +2076,7 @@ void AdornedRulerPanel::ReCreateButtons()
 
    // Make the short row of time ruler pushbottons.
    // Don't bother with sizers.  Their sizes and positions are fixed.
-   wxPoint position{ FocusBorderLeft, 0 };
+   wxPoint position{ 1 + LeftMargin, 0 };
    size_t iButton = 0;
    auto size = theTheme.ImageSize( bmpRecoloredUpSmall );
    size.y = std::min(size.y, GetRulerHeight(false));
@@ -2334,10 +2329,6 @@ bool AdornedRulerPanel::IsWithinMarker(int mousePosX, double markerTime)
 
 void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
 {
-   // PRL:  why do I need these two lines on Windows but not on Mac?
-   if (evt.ButtonDown(wxMOUSE_BTN_ANY))
-      SetFocus();
-
    // Disable mouse actions on Timeline while recording.
    if (mIsRecording) {
       if (HasCapture())
@@ -3077,26 +3068,10 @@ void AdornedRulerPanel::DoDrawBackground(wxDC * dc)
 
 void AdornedRulerPanel::DoDrawEdge(wxDC *dc)
 {
-   if (HasFocus()) {
-      dc->SetBrush(*wxTRANSPARENT_BRUSH);
-      wxRect rect{ mOuter };
-      --rect.height;  // Leave room for the black stroke
-
-      AColor::TrackFocusPen(dc, 1);
-      dc->DrawRectangle(rect);
-
-      AColor::TrackFocusPen(dc, 0);
-      rect.Deflate(1, 1);
-      dc->DrawRectangle(rect);
-
-      static_assert(FocusBorder == 2, "Draws the wrong number of rectangles");
-   }
-   else {
-      wxRect r = mOuter;
-      r.width -= RightMargin;
-      r.height -= BottomMargin;
-      AColor::BevelTrackInfo( *dc, true, r );
-   }
+   wxRect r = mOuter;
+   r.width -= RightMargin;
+   r.height -= BottomMargin;
+   AColor::BevelTrackInfo( *dc, true, r );
 
    // Black stroke at bottom
    dc->SetPen( *wxBLACK_PEN );
@@ -3104,8 +3079,6 @@ void AdornedRulerPanel::DoDrawEdge(wxDC *dc)
                 mOuter.y + mOuter.height - 1,
                 mOuter.x + mOuter.width,
                 mOuter.y + mOuter.height - 1 );
-
-   static_assert(FocusBorderBottom == 1 + FocusBorder, "Button area might be wrong");
 }
 
 void AdornedRulerPanel::DoDrawMarks(wxDC * dc, bool /*text */ )

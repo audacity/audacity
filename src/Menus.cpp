@@ -1049,6 +1049,31 @@ void AudacityProject::CreateMenusAndCommands()
 
       c->EndMenu();
 
+#ifdef __WXMAC__
+      /////////////////////////////////////////////////////////////////////////////
+      // poor imitation of the Mac Windows Menu
+      /////////////////////////////////////////////////////////////////////////////
+
+      {
+      c->BeginMenu(_("&Window"));
+      /* i18n-hint: Standard Macintosh Window menu item:  Make (the current
+       * window) shrink to an icon on the dock */
+      c->AddItem(wxT("MacMinimize"), _("&Minimize"), FN(OnMacMinimize),
+                 wxT("Ctrl+M"), NotMinimizedFlag, NotMinimizedFlag);
+      /* i18n-hint: Standard Macintosh Window menu item:  Make (the current
+       * window) full sized */
+      c->AddItem(wxT("MacZoom"), _("&Zoom"), FN(OnMacZoom),
+                 wxT(""), NotMinimizedFlag, NotMinimizedFlag);
+      c->AddSeparator();
+      /* i18n-hint: Standard Macintosh Window menu item:  Make all project
+       * windows un-hidden */
+      c->AddItem(wxT("MacBringAllToFront"),
+                 _("&Bring All to Front"), FN(OnMacBringAllToFront),
+                 wxT(""), AlwaysEnabledFlag, AlwaysEnabledFlag);
+      c->EndMenu();
+      }
+#endif
+
       /////////////////////////////////////////////////////////////////////////////
       // Help Menu
       /////////////////////////////////////////////////////////////////////////////
@@ -1257,6 +1282,13 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddCommand(wxT("SetPlaySpeed"), _("Adjust playback speed"), FN(OnSetPlaySpeed));
    c->AddCommand(wxT("PlaySpeedInc"), _("Increase playback speed"), FN(OnPlaySpeedInc));
    c->AddCommand(wxT("PlaySpeedDec"), _("Decrease playback speed"), FN(OnPlaySpeedDec));
+
+#ifdef __WXMAC__
+   /* i8n-hint: Shrink all project windows to icons on the Macintosh tooldock */
+   c->AddCommand(wxT("MacMinimizeAll"), _("Minimize all projects"),
+                 FN(OnMacMinimizeAll), wxT("Ctrl+Alt+M"),
+                 AlwaysEnabledFlag, AlwaysEnabledFlag);
+#endif
 
    mLastFlags = AlwaysEnabledFlag;
 
@@ -1806,6 +1838,13 @@ CommandFlag AudacityProject::GetUpdateFlags()
    if (bar->ControlToolBar::CanStopAudioStream())
       flags |= CanStopAudioStreamFlag;
 
+   if (auto focus = wxWindow::FindFocus()) {
+      while (focus && focus->GetParent())
+         focus = focus->GetParent();
+      if (focus && !static_cast<wxTopLevelWindow*>(focus)->IsIconized())
+         flags |= NotMinimizedFlag;
+   }
+
    return flags;
 }
 
@@ -1897,8 +1936,8 @@ void AudacityProject::UpdateMenus(bool checkActive)
    if (this != GetActiveProject())
       return;
 
-   if (checkActive && !IsActive())
-      return;
+   //if (checkActive && !IsActive())
+     // return;
 
    auto flags = GetUpdateFlags();
    auto flags2 = flags;
@@ -2796,17 +2835,10 @@ void AudacityProject::NextOrPrevFrame(bool forward)
 
 
    // Define the set of windows we rotate among.
-   static const unsigned rotationSize = 3u
-#ifdef EXPERIMENTAL_TIME_RULER_NAVIGATION
-      + 1
-#endif
-   ;
+   static const unsigned rotationSize = 3u;
 
    wxWindow *const begin [rotationSize] = {
       GetTopPanel(),
-#ifdef EXPERIMENTAL_TIME_RULER_NAVIGATION
-      GetRulerPanel(),
-#endif
       GetTrackPanel(),
       mToolManager->GetBotDock(),
    };
@@ -3890,6 +3922,10 @@ void AudacityProject::OnUndo()
    if (mHistoryWindow)
       mHistoryWindow->UpdateDisplay();
 
+   if (mMixerBoard)
+      // Mixer board may need to change for selection state and pan/gain
+      mMixerBoard->Refresh();
+
    ModifyUndoMenuItems();
 }
 
@@ -3914,6 +3950,10 @@ void AudacityProject::OnRedo()
 
    if (mHistoryWindow)
       mHistoryWindow->UpdateDisplay();
+
+   if (mMixerBoard)
+      // Mixer board may need to change for selection state and pan/gain
+      mMixerBoard->Refresh();
 
    ModifyUndoMenuItems();
 }
@@ -6576,16 +6616,25 @@ void AudacityProject::OnAddLabelPlaying()
    }
 }
 
-void AudacityProject::OnEditLabels()
+void AudacityProject::DoEditLabels(LabelTrack *lt, int index)
 {
-   wxString format = GetSelectionFormat();
+   wxString format = GetSelectionFormat(),
+      freqFormat = GetFrequencySelectionFormatName();
 
-   LabelDialog dlg(this, *GetTrackFactory(), mTracks, mViewInfo, mRate, format);
+   LabelDialog dlg(this, *GetTrackFactory(), mTracks,
+                   lt, index,
+                   mViewInfo, mRate,
+                   format, freqFormat);
 
    if (dlg.ShowModal() == wxID_OK) {
       PushState(_("Edited labels"), _("Label"));
       RedrawProject();
    }
+}
+
+void AudacityProject::OnEditLabels()
+{
+   DoEditLabels();
 }
 
 void AudacityProject::OnApplyChain()

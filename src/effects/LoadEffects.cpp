@@ -30,7 +30,6 @@
 #include "Equalization.h"
 #include "Fade.h"
 #include "Invert.h"
-#include "Leveller.h"
 #include "Noise.h"
 #ifdef EXPERIMENTAL_NOISE_REDUCTION
 #include "NoiseReduction.h"
@@ -136,7 +135,6 @@
    NOISEREDUCTION_EFFECT                                 \
    SOUNDTOUCH_EFFECTS                                    \
    EFFECT( AUTODUCK,          EffectAutoDuck, () )         \
-   EFFECT( LEVELLER,          EffectLeveller, () )         \
    EFFECT( PAULSTRETCH,       EffectPaulstretch, () )      \
    SBSMS_EFFECTS
 

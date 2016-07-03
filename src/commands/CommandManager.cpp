@@ -149,17 +149,19 @@ public:
                   wxKeyEvent wxevent([event type] == NSKeyDown ? wxEVT_KEY_DOWN : wxEVT_KEY_UP);
                   impl->SetupKeyEvent(wxevent, event);
 
+                  NSEvent *result;
                   if ([event type] == NSKeyDown)
                   {
                      wxKeyEvent eventHook(wxEVT_CHAR_HOOK, wxevent);
-                     return FilterEvent(eventHook) == Event_Processed ? nil : event;
+                     result = FilterEvent(eventHook) == Event_Processed ? nil : event;
                   }
                   else
                   {
-                     return FilterEvent(wxevent) == Event_Processed ? nil : event;
+                     result = FilterEvent(wxevent) == Event_Processed ? nil : event;
                   }
 
                   mEvent = nullptr;
+                  return result;
                }
             }
 

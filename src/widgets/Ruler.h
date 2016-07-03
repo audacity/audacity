@@ -294,9 +294,8 @@ public:
 
    ~AdornedRulerPanel();
 
-#ifndef EXPERIMENTAL_TIME_RULER_NAVIGATION
    bool AcceptsFocus() const override { return false; }
-#endif
+   bool AcceptsFocusFromKeyboard() const override { return false; }
 
 public:
    int GetRulerHeight() { return GetRulerHeight(mShowScrubbing); }

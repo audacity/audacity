@@ -69,6 +69,7 @@ enum
    OnCopySelectedTextID,
    OnPasteSelectedTextID,
    OnDeleteSelectedLabelID,
+   OnEditSelectedLabelID,
 };
 
 wxFont LabelTrack::msFont;
@@ -2029,11 +2030,13 @@ void LabelTrack::ShowContextMenu()
       menu.Append(OnCopySelectedTextID, _("&Copy"));
       menu.Append(OnPasteSelectedTextID, _("&Paste"));
       menu.Append(OnDeleteSelectedLabelID, _("&Delete Label"));
+      menu.Append(OnEditSelectedLabelID, _("&Edit..."));
 
       menu.Enable(OnCutSelectedTextID, IsTextSelected());
       menu.Enable(OnCopySelectedTextID, IsTextSelected());
       menu.Enable(OnPasteSelectedTextID, IsTextClipSupported());
       menu.Enable(OnDeleteSelectedLabelID, true);
+      menu.Enable(OnEditSelectedLabelID, true);
 
       const LabelStruct *ls = GetLabel(mSelIndex);
 
@@ -2094,7 +2097,7 @@ void LabelTrack::OnContextMenu(wxCommandEvent & evt)
       break;
 
    /// DELETE selected label
-   case OnDeleteSelectedLabelID:
+   case OnDeleteSelectedLabelID: {
       int ndx = GetLabelIndex(p->GetSel0(), p->GetSel1());
       if (ndx != -1)
       {
@@ -2103,6 +2106,14 @@ void LabelTrack::OnContextMenu(wxCommandEvent & evt)
                       _("Label Edit"),
                       UndoPush::CONSOLIDATE);
       }
+   }
+      break;
+
+   case OnEditSelectedLabelID: {
+      int ndx = GetLabelIndex(p->GetSel0(), p->GetSel1());
+      if (ndx != -1)
+         p->DoEditLabels(this, ndx);
+   }
       break;
    }
 }

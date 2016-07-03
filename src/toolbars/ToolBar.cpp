@@ -41,6 +41,7 @@ in which buttons can be placed.
 #endif  /*  */
 
 #include "ToolBar.h"
+#include "ToolDock.h"
 #include "../Experimental.h"
 
 #include "../AllThemeResources.h"
@@ -78,6 +79,7 @@ private:
    void OnLeftDown(wxMouseEvent & event);
    void OnLeftUp(wxMouseEvent & event);
    void OnEnter(wxMouseEvent & event);
+   void OnLeave(wxMouseEvent & event);
    void OnMotion(wxMouseEvent & event);
    void ResizeBar(const wxSize &size);
    void OnCaptureLost(wxMouseCaptureLostEvent & event);
@@ -87,6 +89,7 @@ private:
    ToolBar *mBar;
    wxPoint mResizeStart;
    wxSize mOrigSize;
+   wxWindow *mOrigFocus{};
 
    DECLARE_EVENT_TABLE();
 };
@@ -100,6 +103,7 @@ BEGIN_EVENT_TABLE( ToolBarResizer, wxWindow )
    EVT_LEFT_DOWN( ToolBarResizer::OnLeftDown )
    EVT_LEFT_UP( ToolBarResizer::OnLeftUp )
    EVT_ENTER_WINDOW( ToolBarResizer::OnEnter )
+   EVT_LEAVE_WINDOW( ToolBarResizer::OnLeave )
    EVT_MOTION( ToolBarResizer::OnMotion )
    EVT_MOUSE_CAPTURE_LOST( ToolBarResizer::OnCaptureLost )
    EVT_KEY_DOWN( ToolBarResizer::OnKeyDown )
@@ -175,6 +179,9 @@ void ToolBarResizer::OnLeftUp( wxMouseEvent & event )
    if( HasCapture() )
    {
       ReleaseMouse();
+      if (mOrigFocus)
+         mOrigFocus->SetFocus();
+      mOrigFocus = nullptr;
    }
 }
 
@@ -185,6 +192,14 @@ void ToolBarResizer::OnEnter( wxMouseEvent & event )
    const auto text = GetToolTipText();
    UnsetToolTip();
    SetToolTip(text);
+   if (!mOrigFocus)
+      mOrigFocus = FindFocus();
+}
+
+void ToolBarResizer::OnLeave( wxMouseEvent & event )
+{
+   if (!GetCapture())
+      mOrigFocus = nullptr;
 }
 
 void ToolBarResizer::OnMotion( wxMouseEvent & event )
@@ -248,6 +263,9 @@ void ToolBarResizer::OnCaptureLost( wxMouseCaptureLostEvent & WXUNUSED(event) )
    if( HasCapture() )
    {
       ReleaseMouse();
+      if (mOrigFocus)
+         mOrigFocus->SetFocus();
+      mOrigFocus = nullptr;
    }
 }
 
@@ -257,6 +275,9 @@ void ToolBarResizer::OnKeyDown(wxKeyEvent &event)
    if (HasCapture() && WXK_ESCAPE == event.GetKeyCode()) {
       ResizeBar( mOrigSize );
       ReleaseMouse();
+      if (mOrigFocus)
+         mOrigFocus->SetFocus();
+      mOrigFocus = nullptr;
    }
 }
 
@@ -302,7 +323,6 @@ ToolBar::ToolBar( int type,
    mParent = NULL;
    mHSizer = NULL;
    mSpacer = NULL;
-   mDock = NULL;
    mVisible = false;
    mPositioned = false;
 
@@ -373,7 +393,7 @@ bool ToolBar::IsResizable() const
 //
 bool ToolBar::IsDocked() const
 {
-   return mDock != NULL;
+   return const_cast<ToolBar*>(this)->GetDock() != nullptr;
 }
 
 //
@@ -531,7 +551,7 @@ void ToolBar::UpdatePrefs()
 //
 ToolDock *ToolBar::GetDock()
 {
-   return mDock;
+   return dynamic_cast<ToolDock*>(GetParent());
 }
 
 //
@@ -540,7 +560,7 @@ ToolDock *ToolBar::GetDock()
 void ToolBar::SetDocked( ToolDock *dock, bool pushed )
 {
    // Remember it
-   mDock = dock;
+//   mDock = dock;
 
    // Change the tooltip of the grabber
 #if wxUSE_TOOLTIPS
@@ -552,7 +572,7 @@ void ToolBar::SetDocked( ToolDock *dock, bool pushed )
 
    if (mResizer)
    {
-      mResizer->Show(mDock != NULL);
+      mResizer->Show(dock != NULL);
       Layout();
       Fit();
    }

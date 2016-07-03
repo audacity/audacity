@@ -32,6 +32,7 @@
     #include "wx/choice.h"
 #endif
 
+#include "wx/clipbrd.h"
 #include "wx/filename.h"
 #include "wx/tokenzr.h"
 #include "wx/evtloop.h"
@@ -607,6 +608,47 @@ int FileDialog::ShowModal()
 
         SetupExtraControls(sPanel);
 
+        // PRL:
+        // Hack for bug 1300:  intercept key down events, implement a
+        // Command+V handler, but it's a bit crude.  It always pastes
+        // the entire text field, ignoring the insertion cursor, and ignoring
+        // which control really has the focus.
+        id handler;
+        if (wxTheClipboard->IsSupported(wxDF_TEXT)) {
+           handler = [
+              NSEvent addLocalMonitorForEventsMatchingMask:NSKeyDownMask
+              handler:^NSEvent *(NSEvent *event)
+              {
+                 if ([event modifierFlags] & NSCommandKeyMask)
+                 {
+                    auto chars = [event charactersIgnoringModifiers];
+                    auto character = [chars characterAtIndex:0];
+                    if (character == 'v')
+                    {
+                       if (wxTheClipboard->Open()) {
+                          wxTextDataObject data;
+                          wxTheClipboard->GetData(data);
+                          wxTheClipboard->Close();
+                          wxString text = data.GetText();
+                          auto rawText = text.utf8_str();
+                          auto length = text.Length();
+                          NSString *myString = [[NSString alloc]
+                             initWithBytes:rawText.data()
+                              length: rawText.length()
+                              encoding: NSUTF8StringEncoding
+                          ];
+                          [sPanel setNameFieldStringValue:myString];
+                          [myString release];
+                          return nil;
+                       }
+                    }
+                 }
+
+                 return event;
+              }
+           ];
+        }
+
         // makes things more convenient:
         [sPanel setCanCreateDirectories:YES];
         [sPanel setMessage:cf.AsNSString()];
@@ -636,6 +678,9 @@ int FileDialog::ShowModal()
 
         returnCode = [sPanel runModalForDirectory: m_dir.IsEmpty() ? nil : dir.AsNSString() file:file.AsNSString() ];
         ModalFinishedCallback(sPanel, returnCode);
+
+        if (wxTheClipboard->IsSupported(wxDF_TEXT))
+           [NSEvent removeMonitor:handler];
     }
     else
     {

@@ -3476,6 +3476,7 @@ void AudioIO::FillBuffers()
          do {
             // How many samples to produce for each channel.
             long frames = available;
+            bool progress = true;
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
             if (mPlayMode == PLAY_SCRUB)
                // scrubbing does not use warped time and length
@@ -3487,6 +3488,11 @@ void AudioIO::FillBuffers()
                if (mWarpedTime + deltat > mWarpedLength)
                {
                   frames = (mWarpedLength - mWarpedTime) * mRate;
+                  // Don't fall into an infinite loop, if loop-playing a selection
+                  // that is so short, it has no samples: detect that case
+                  progress =
+                     !(mPlayMode == PLAY_LOOPED &&
+                       mWarpedTime == 0.0 && frames == 0);
                   mWarpedTime = mWarpedLength;
                   if (frames < 0) // this should never happen
                      frames = 0;
@@ -3494,6 +3500,9 @@ void AudioIO::FillBuffers()
                else
                   mWarpedTime += deltat;
             }
+
+            if (!progress)
+               frames = available;
 
             for (i = 0; i < mPlaybackTracks->size(); i++)
             {
@@ -3511,7 +3520,8 @@ void AudioIO::FillBuffers()
 #else
                const bool silent = false;
 #endif
-               if (!silent && frames > 0)
+
+               if (progress && !silent && frames > 0)
                {
                   processed = mPlaybackMixers[i]->Process(frames);
                   wxASSERT(processed <= frames);
@@ -3575,7 +3585,7 @@ void AudioIO::FillBuffers()
 #endif
             case PLAY_LOOPED:
             {
-               done = (available == 0);
+               done = !progress || (available == 0);
                // msmeyer: If playing looped, check if we are at the end of the buffer
                // and if yes, restart from the beginning.
                if (mWarpedTime >= mWarpedLength)

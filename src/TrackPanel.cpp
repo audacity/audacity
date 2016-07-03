@@ -549,8 +549,6 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
 
    mSelStartValid = false;
    mSelStart = 0;
-
-   mInitialTrackSelection = new std::vector<bool>;
 }
 
 
@@ -583,8 +581,6 @@ TrackPanel::~TrackPanel()
 #if !wxUSE_ACCESSIBILITY
    delete mAx;
 #endif
-
-   delete mInitialTrackSelection;
 }
 
 void TrackPanel::BuildMenusIfNeeded(void)
@@ -826,7 +822,7 @@ void TrackPanel::SelectNone()
    TrackListIterator iter(mTracks);
    Track *t = iter.First();
    while (t) {
-      t->SetSelected(false);
+      SelectTrack(t, false, false);
       t = iter.Next();
    }
 }
@@ -848,7 +844,7 @@ void TrackPanel::SelectTracksByLabel( LabelTrack *lt )
    t = iter.First();
    while( t )
    {
-      t->SetSelected( true );
+      SelectTrack(t, true);
       t = iter.Next();
    }
 }
@@ -929,6 +925,18 @@ AudacityProject * TrackPanel::GetProject() const
 /// AS: This gets called on our wx timer events.
 void TrackPanel::OnTimer(wxTimerEvent& )
 {
+#ifdef __WXMAC__
+   // Unfortunate part of fix for bug 1431
+   // Without this, the toolbars hide only every other time that you press
+   // the yellow title bar button.  For some reason, not every press sends
+   // us a deactivate event for the application.
+   {
+      auto project = GetProject();
+      if (project->IsIconized())
+         project->MacShowUndockedToolbars(false);
+   }
+#endif
+
    mTimeCount++;
    // AS: If the user is dragging the mouse and there is a track that
    //  has captured the mouse, then scroll the screen, as necessary.
@@ -1192,13 +1200,18 @@ bool TrackPanel::HandleEscapeKey(bool down)
    {
       TrackListIterator iter(mTracks);
       std::vector<bool>::const_iterator
-         it = mInitialTrackSelection->begin(),
-         end = mInitialTrackSelection->end();
+         it = mInitialTrackSelection.begin(),
+         end = mInitialTrackSelection.end();
       for (Track *t = iter.First(); t; t = iter.Next()) {
          wxASSERT(it != end);
          t->SetSelected(*it++);
       }
+      mLastPickedTrack = mInitialLastPickedTrack;
       mViewInfo->selectedRegion = mInitialSelection;
+
+      // Refresh mixer board for change of set of selected tracks
+      if (MixerBoard* pMixerBoard = this->GetMixerBoard())
+         pMixerBoard->Refresh();
    }
       break;
    case IsZooming:
@@ -1808,7 +1821,7 @@ void TrackPanel::HandleSelect(wxMouseEvent & event)
       // Deselect all other tracks and select this one.
       SelectNone();
 
-      mTracks->Select(mCapturedTrack);
+      SelectTrack(mCapturedTrack, true);
 
       // Default behavior: select whole track
       SelectTrackLength(mCapturedTrack);
@@ -1848,12 +1861,55 @@ void TrackPanel::HandleSelect(wxMouseEvent & event)
    SelectionHandleDrag(event, t);
 }
 
+void TrackPanel::SelectTrack(Track *pTrack, bool selected, bool updateLastPicked)
+{
+   bool wasCorrect = (selected == pTrack->GetSelected());
+
+   if (selected) {
+      // This handles the case of linked tracks, selecting all channels
+      mTracks->Select(pTrack, true);
+      if (updateLastPicked)
+         mLastPickedTrack = pTrack;
+   }
+   else {
+      mTracks->Select(pTrack, false);
+      if (updateLastPicked && pTrack == mLastPickedTrack)
+         mLastPickedTrack = nullptr;
+   }
+
+   // Update mixer board, but only as needed so it does not flicker.
+   if (!wasCorrect) {
+      MixerBoard* pMixerBoard = this->GetMixerBoard();
+      if (pMixerBoard && (pTrack->GetKind() == Track::Wave))
+         pMixerBoard->RefreshTrackCluster(static_cast<WaveTrack*>(pTrack));
+   }
+}
+
+void TrackPanel::SelectRangeOfTracks(Track *sTrack, Track *eTrack)
+{
+   if (eTrack) {
+      // Swap the track pointers if needed
+      if (eTrack->GetIndex() < sTrack->GetIndex())
+         std::swap(sTrack, eTrack);
+
+      TrackListIterator iter(mTracks);
+      sTrack = iter.StartWith(sTrack);
+      do {
+         SelectTrack(sTrack, true, false);
+         if (sTrack == eTrack) {
+            break;
+         }
+
+         sTrack = iter.Next();
+      } while (sTrack);
+   }
+}
+
 /// This method gets called when we're handling selection
 /// and the mouse was just clicked.
 void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
                                       Track * pTrack, wxRect rect)
 {
-   Track *rightTrack = NULL;
    mCapturedTrack = pTrack;
    rect.y += kTopMargin;
    rect.height -= kTopMargin + kBottomMargin;
@@ -1861,30 +1917,15 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
 
    mMouseCapture=IsSelecting;
    mInitialSelection = mViewInfo->selectedRegion;
+   mInitialLastPickedTrack = mLastPickedTrack;
 
-   // Save initial state of track selections, also,
-   // if the shift button is down and no track is selected yet,
-   // at least select the track we clicked into.
-   bool isAtLeastOneTrackSelected = false;
-   mInitialTrackSelection->clear();
+   // Save initial state of track selections
+   mInitialTrackSelection.clear();
    {
-      bool nextTrackIsLinkFromPTrack = false;
       TrackListIterator iter(mTracks);
       for (Track *t = iter.First(); t; t = iter.Next()) {
          const bool isSelected = t->GetSelected();
-         mInitialTrackSelection->push_back(isSelected);
-         if (isSelected) {
-            isAtLeastOneTrackSelected = true;
-         }
-         if (!isAtLeastOneTrackSelected) {
-            if (t == pTrack && t->GetLinked()) {
-               nextTrackIsLinkFromPTrack = true;
-            }
-            else if (nextTrackIsLinkFromPTrack) {
-               rightTrack = t;
-               nextTrackIsLinkFromPTrack = false;
-            }
-         }
+         mInitialTrackSelection.push_back(isSelected);
       }
    }
 
@@ -1908,13 +1949,11 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
        && !stretch
 #endif
    ) {
-      if (!isAtLeastOneTrackSelected) {
-         pTrack->SetSelected(true);
-         if (rightTrack)
-            rightTrack->SetSelected(true);
-         else if (pTrack->GetLink())
-            pTrack->GetLink()->SetSelected(true);
-      }
+      SelectNone();
+      if (mLastPickedTrack && event.ShiftDown())
+         SelectRangeOfTracks(pTrack, mLastPickedTrack);
+      else
+         SelectTrack(pTrack, true);
 
       double value;
       // Shift-click, choose closest boundary
@@ -2140,7 +2179,7 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
       StartFreqSelection (event.m_y, rect.y, rect.height, pTrack);
 #endif
       StartSelection(event.m_x, rect.x);
-      mTracks->Select(pTrack);
+      SelectTrack(pTrack, true);
       SetFocusedTrack(pTrack);
       //On-Demand: check to see if there is an OD thing associated with this track.
       if (pTrack->GetKind() == Track::Wave) {
@@ -2391,7 +2430,7 @@ void TrackPanel::MoveSnappingFreqSelection (int mouseYCoordinate,
 
       mFreqSelTrack = wt;
       // SelectNone();
-      // mTracks->Select(pTrack);
+      // SelectTrack(pTrack, true);
       SetFocusedTrack(pTrack);
    }
 }
@@ -2743,25 +2782,9 @@ void TrackPanel::SelectionHandleDrag(wxMouseEvent & event, Track *clickedTrack)
 
    // Handle which tracks are selected
    Track *sTrack = pTrack;
-   if (Track *eTrack = FindTrack(x, y, false, false, NULL)) {
-      // Swap the track pointers if needed
-      if (eTrack->GetIndex() < sTrack->GetIndex()) {
-         Track *t = eTrack;
-         eTrack = sTrack;
-         sTrack = t;
-      }
+   Track *eTrack = FindTrack(x, y, false, false, NULL);
+   SelectRangeOfTracks(sTrack, eTrack);
 
-      TrackListIterator iter(mTracks);
-      sTrack = iter.StartWith(sTrack);
-      do {
-         mTracks->Select(sTrack);
-         if (sTrack == eTrack) {
-            break;
-         }
-
-         sTrack = iter.Next();
-      } while (sTrack);
-   }
 #ifdef USE_MIDI
    if (mStretching) {
       // the following is also in ExtendSelection, called below
@@ -3020,7 +3043,7 @@ void TrackPanel::HandleEnvelope(wxMouseEvent & event)
       ForwardEventToEnvelope(event);
 
    if (event.LeftUp()) {
-      mCapturedTrack = NULL;
+      SetCapturedTrack( NULL );
       MakeParentPushState(
          /* i18n-hint: (verb) Audacity has just adjusted the envelope .*/
          _("Adjusted envelope."),
@@ -4849,6 +4872,9 @@ void TrackPanel::OnTrackListUpdated(wxCommandEvent & e)
          ReleaseMouse();
    }
 
+   if (mLastPickedTrack && !mTracks->Contains(mLastPickedTrack))
+      mLastPickedTrack = nullptr;
+
    if (e.GetClientData()) {
       OnTrackListResized(e);
       return;
@@ -4922,27 +4948,27 @@ void TrackPanel::HandleLabelClick(wxMouseEvent & event)
       {
          wxRect midiRect;
 #ifdef EXPERIMENTAL_MIDI_OUT
-            // this is an awful hack: make a NEW rectangle at an offset because
-            // MuteSoloFunc thinks buttons are located below some text, e.g.
-            // "Mono, 44100Hz 32-bit float", but this is not true for a Note track
-            wxRect muteSoloRect(rect);
-            muteSoloRect.y -= 34; // subtract the height of wave track text
-            if (MuteSoloFunc(t, muteSoloRect, event.m_x, event.m_y, false) ||
-                MuteSoloFunc(t, muteSoloRect, event.m_x, event.m_y, true))
-               return;
+         // this is an awful hack: make a NEW rectangle at an offset because
+         // MuteSoloFunc thinks buttons are located below some text, e.g.
+         // "Mono, 44100Hz 32-bit float", but this is not true for a Note track
+         wxRect muteSoloRect(rect);
+         muteSoloRect.y -= 34; // subtract the height of wave track text
+         if (MuteSoloFunc(t, muteSoloRect, event.m_x, event.m_y, false) ||
+            MuteSoloFunc(t, muteSoloRect, event.m_x, event.m_y, true))
+            return;
 
-            // this is a similar hack: GainFunc expects a Wave track slider, so it's
-            // looking in the wrong place. We pass it a bogus rectangle created when
-            // the slider was placed to "fake" GainFunc into finding the slider in
-            // its actual location.
-            if (GainFunc(t, ((NoteTrack *) t)->GetGainPlacementRect(),
-                         event, event.m_x, event.m_y))
-               return;
+         // this is a similar hack: GainFunc expects a Wave track slider, so it's
+         // looking in the wrong place. We pass it a bogus rectangle created when
+         // the slider was placed to "fake" GainFunc into finding the slider in
+         // its actual location.
+         if (GainFunc(t, ((NoteTrack *) t)->GetGainPlacementRect(),
+            event, event.m_x, event.m_y))
+            return;
 #endif
          mTrackInfo.GetTrackControlsRect(rect, midiRect);
          if (midiRect.Contains(event.m_x, event.m_y) &&
-             ((NoteTrack *) t)->LabelClick(midiRect, event.m_x, event.m_y,
-                                      event.Button(wxMOUSE_BTN_RIGHT))) {
+            ((NoteTrack *)t)->LabelClick(midiRect, event.m_x, event.m_y,
+            event.Button(wxMOUSE_BTN_RIGHT))) {
             Refresh(false);
             return;
          }
@@ -4962,32 +4988,38 @@ void TrackPanel::HandleLabelClick(wxMouseEvent & event)
    //  can drag the track up or down to swap it with others
    if (!unsafe) {
       mRearrangeCount = 0;
-      SetCapturedTrack( t, IsRearranging );
+      SetCapturedTrack(t, IsRearranging);
       TrackPanel::CalculateRearrangingThresholds(event);
    }
 
+   HandleListSelection(t, event.ShiftDown(), event.ControlDown(), !unsafe);
+}
+
+void TrackPanel::HandleListSelection(Track *t, bool shift, bool ctrl,
+                                     bool modifyState)
+{
    // AS: If the shift button is being held down, invert
    //  the selection on this track.
-   if (event.ShiftDown()) {
-      mTracks->Select(t, !t->GetSelected());
+   if (ctrl) {
+      SelectTrack(t, !t->GetSelected());
       Refresh(false);
+   }
+   else {
+      SelectNone();
+      if (shift && mLastPickedTrack)
+         SelectRangeOfTracks(t, mLastPickedTrack);
+      else
+         SelectTrack(t, true);
+      SetFocusedTrack(t);
+      SelectTrackLength(t);
+
+      this->Refresh(false);
       MixerBoard* pMixerBoard = this->GetMixerBoard();
-      if (pMixerBoard && (t->GetKind() == Track::Wave))
-         pMixerBoard->RefreshTrackCluster((WaveTrack*)t);
-      return;
+      if (pMixerBoard)
+         pMixerBoard->RefreshTrackClusters();
    }
 
-   SelectNone();
-   mTracks->Select(t);
-   SetFocusedTrack(t);
-   SelectTrackLength(t);
-
-   this->Refresh(false);
-   MixerBoard* pMixerBoard = this->GetMixerBoard();
-   if (pMixerBoard)
-      pMixerBoard->RefreshTrackClusters();
-
-   if (!unsafe)
+   if (modifyState)
       MakeParentModifyState(true);
 }
 
@@ -6252,8 +6284,9 @@ bool TrackPanel::HandleLabelTrackClick(LabelTrack * lTrack, wxRect &rect, wxMous
 
    // IF the user clicked a label, THEN select all other tracks by Label
    if (lTrack->IsSelected()) {
-      mTracks->Select(lTrack);
       SelectTracksByLabel(lTrack);
+      // Do this after, for the effect on mLastPickedTrack:
+      SelectTrack(lTrack, true);
       DisplaySelection();
 
       // Not starting a drag
@@ -6329,7 +6362,7 @@ void TrackPanel::HandleTextDragRelease(LabelTrack * lTrack, wxMouseEvent & event
    /// TrackPanel which suitably modified belong in other classes.
    if (event.Dragging()) {
       ;
-   } else if (event.LeftUp() && mCapturedTrack && (mCapturedTrack->GetKind() == Track::Label)) {
+   } else if (event.ButtonUp() && mCapturedTrack && (mCapturedTrack->GetKind() == Track::Label)) {
       SetCapturedTrack(NULL);
    }
 
@@ -7261,7 +7294,7 @@ void TrackPanel::OnPrevTrack( bool shift )
          pSelected = p->GetSelected();
       if( tSelected && pSelected )
       {
-         mTracks->Select( t, false );
+         SelectTrack(t, false, false);
          SetFocusedTrack( p );   // move focus to next track down
          EnsureVisible( p );
          MakeParentModifyState(false);
@@ -7269,7 +7302,7 @@ void TrackPanel::OnPrevTrack( bool shift )
       }
       if( tSelected && !pSelected )
       {
-         mTracks->Select( p, true );
+         SelectTrack(p, true, false);
          SetFocusedTrack( p );   // move focus to next track down
          EnsureVisible( p );
          MakeParentModifyState(false);
@@ -7277,7 +7310,7 @@ void TrackPanel::OnPrevTrack( bool shift )
       }
       if( !tSelected && pSelected )
       {
-         mTracks->Select( p, false );
+         SelectTrack(p, false, false);
          SetFocusedTrack( p );   // move focus to next track down
          EnsureVisible( p );
          MakeParentModifyState(false);
@@ -7285,7 +7318,7 @@ void TrackPanel::OnPrevTrack( bool shift )
       }
       if( !tSelected && !pSelected )
       {
-         mTracks->Select( t, true );
+         SelectTrack(t, true, false);
          SetFocusedTrack( p );   // move focus to next track down
          EnsureVisible( p );
          MakeParentModifyState(false);
@@ -7367,7 +7400,7 @@ void TrackPanel::OnNextTrack( bool shift )
       nSelected = n->GetSelected();
       if( tSelected && nSelected )
       {
-         mTracks->Select( t, false );
+         SelectTrack(t, false, false);
          SetFocusedTrack( n );   // move focus to next track down
          EnsureVisible( n );
          MakeParentModifyState(false);
@@ -7375,7 +7408,7 @@ void TrackPanel::OnNextTrack( bool shift )
       }
       if( tSelected && !nSelected )
       {
-         mTracks->Select( n, true );
+         SelectTrack(n, true, false);
          SetFocusedTrack( n );   // move focus to next track down
          EnsureVisible( n );
          MakeParentModifyState(false);
@@ -7383,7 +7416,7 @@ void TrackPanel::OnNextTrack( bool shift )
       }
       if( !tSelected && nSelected )
       {
-         mTracks->Select( n, false );
+         SelectTrack(n, false, false);
          SetFocusedTrack( n );   // move focus to next track down
          EnsureVisible( n );
          MakeParentModifyState(false);
@@ -7391,7 +7424,7 @@ void TrackPanel::OnNextTrack( bool shift )
       }
       if( !tSelected && !nSelected )
       {
-         mTracks->Select( t, true );
+         SelectTrack(t, true, false);
          SetFocusedTrack( n );   // move focus to next track down
          EnsureVisible( n );
          MakeParentModifyState(false);
@@ -7469,7 +7502,7 @@ void TrackPanel::OnToggle()
    if (!t)
       return;
 
-   mTracks->Select( t, !t->GetSelected() );
+   SelectTrack( t, !t->GetSelected() );
    EnsureVisible( t );
    MakeParentModifyState(false);
 

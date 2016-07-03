@@ -1209,6 +1209,7 @@
 		28FE4A080ABF4E960056F5C4 /* mmx_optimized.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28FE4A060ABF4E960056F5C4 /* mmx_optimized.cpp */; };
 		28FE4A090ABF4E960056F5C4 /* sse_optimized.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28FE4A070ABF4E960056F5C4 /* sse_optimized.cpp */; };
 		5E02BFF21D1164DF00EB7578 /* Distortion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E02BFF01D1164DF00EB7578 /* Distortion.cpp */; };
+		5E0A0E311D23019A00CD2567 /* MenusMac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E0A0E301D23019A00CD2567 /* MenusMac.cpp */; };
 		5E74D2E31CC4429700D88B0B /* EditCursorOverlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E74D2DD1CC4429700D88B0B /* EditCursorOverlay.cpp */; };
 		5E74D2E41CC4429700D88B0B /* PlayIndicatorOverlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E74D2DF1CC4429700D88B0B /* PlayIndicatorOverlay.cpp */; };
 		5E74D2E51CC4429700D88B0B /* Scrubbing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E74D2E11CC4429700D88B0B /* Scrubbing.cpp */; };
@@ -2978,6 +2979,7 @@
 		28FEC1B21A12B6FB00FACE48 /* EffectAutomationParameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EffectAutomationParameters.h; path = ../include/audacity/EffectAutomationParameters.h; sourceTree = SOURCE_ROOT; };
 		5E02BFF01D1164DF00EB7578 /* Distortion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Distortion.cpp; sourceTree = "<group>"; };
 		5E02BFF11D1164DF00EB7578 /* Distortion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Distortion.h; sourceTree = "<group>"; };
+		5E0A0E301D23019A00CD2567 /* MenusMac.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MenusMac.cpp; sourceTree = "<group>"; };
 		5E4685F81CCA9D84008741F2 /* CommandFunctors.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CommandFunctors.h; sourceTree = "<group>"; };
 		5E61EE0C1CBAA6BB0009FCF1 /* MemoryX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemoryX.h; sourceTree = "<group>"; };
 		5E74D2D91CC4427B00D88B0B /* TrackPanelCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackPanelCell.h; sourceTree = "<group>"; };
@@ -3863,6 +3865,7 @@
 				1865A9B61004490500946EE6 /* LyricsWindow.cpp */,
 				28EBA7FF0A78FAF800C8BB1F /* Matrix.cpp */,
 				1790B0A709883BFD008A330A /* Menus.cpp */,
+				5E0A0E301D23019A00CD2567 /* MenusMac.cpp */,
 				1790B0AB09883BFD008A330A /* Mix.cpp */,
 				289E75081006D0BD00CEF79B /* MixerBoard.cpp */,
 				280A8B4519F4403B0091DE70 /* ModuleManager.cpp */,
@@ -7438,6 +7441,7 @@
 				283A11AA0A2C0E15004372C4 /* ShuttleGui.cpp in Sources */,
 				283A11AB0A2C0E15004372C4 /* Theme.cpp in Sources */,
 				28456AC20A2C180E00C23C1E /* ThemePrefs.cpp in Sources */,
+				5E0A0E311D23019A00CD2567 /* MenusMac.cpp in Sources */,
 				28F1D81D0A2D0019005506A7 /* AttachableScrollBar.cpp in Sources */,
 				28F1D81E0A2D0019005506A7 /* ExpandingToolBar.cpp in Sources */,
 				28F1D81F0A2D0019005506A7 /* ImageRoll.cpp in Sources */,
