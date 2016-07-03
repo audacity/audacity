@@ -5567,12 +5567,28 @@ void TrackPanel::HandleResize(wxMouseEvent & event)
 /// Handle mouse wheel rotation (for zoom in/out, vertical and horizontal scrolling)
 void TrackPanel::HandleWheelRotation(wxMouseEvent & event)
 {
+   double steps {};
+#if defined(__WXMAC__) && defined(EVT_MAGNIFY)
+   // PRL:
+   // Pinch and spread implemented in wxWidgets 3.1.0, or cherry-picked from
+   // the future in custom build of 3.0.2
+   if (event.Magnify()) {
+      event.SetControlDown(true);
+      steps = 2 * event.GetMagnification();
+   }
+   else
+#endif
+   {
+      steps = event.m_wheelRotation /
+         (event.m_wheelDelta > 0 ? (double)event.m_wheelDelta : 120.0);
+   }
+
    if(event.GetWheelAxis() == wxMOUSE_WHEEL_HORIZONTAL) {
       // Two-fingered horizontal swipe on mac is treated like shift-mousewheel
       event.SetShiftDown(true);
       // This makes the wave move in the same direction as the fingers, and the scrollbar
       // thumb moves oppositely
-      event.m_wheelRotation *= -1;
+      steps *= -1;
    }
 
    if(!event.HasAnyModifiers()) {
@@ -5593,16 +5609,13 @@ void TrackPanel::HandleWheelRotation(wxMouseEvent & event)
       wxRect rect;
       Track *const pTrack = FindTrack(event.m_x, event.m_y, true, false, &rect);
       if (pTrack && event.m_x >= GetVRulerOffset()) {
-         HandleWheelRotationInVRuler(event, pTrack, rect);
+         HandleWheelRotationInVRuler(event, steps, pTrack, rect);
          // Always stop propagation even if the ruler didn't change.  The ruler
          // is a narrow enough target.
          event.Skip(false);
          return;
       }
    }
-
-   double steps = event.m_wheelRotation /
-      (event.m_wheelDelta > 0 ? (double)event.m_wheelDelta : 120.0);
 
    if (event.ShiftDown()
        // Don't pan during smooth scrolling.  That would conflict with keeping
@@ -5688,11 +5701,8 @@ void TrackPanel::HandleWheelRotation(wxMouseEvent & event)
 }
 
 void TrackPanel::HandleWheelRotationInVRuler
-   (wxMouseEvent &event, Track *pTrack, const wxRect &rect)
+   (wxMouseEvent &event, double steps, Track *pTrack, const wxRect &rect)
 {
-   double steps = event.m_wheelRotation /
-      (event.m_wheelDelta > 0 ? (double)event.m_wheelDelta : 120.0);
-
    if (pTrack->GetKind() == Track::Wave) {
       WaveTrack *const wt = static_cast<WaveTrack*>(pTrack);
       WaveTrack *const partner = static_cast<WaveTrack*>(wt->GetLink());
@@ -5710,7 +5720,7 @@ void TrackPanel::HandleWheelRotationInVRuler
 
          WaveformSettings &settings = wt->GetIndependentWaveformSettings();
          float olddBRange = settings.dBRange;
-         if (event.m_wheelRotation < 0)
+         if (steps < 0)
             // Zoom out
             settings.NextLowerDBRange();
          else
@@ -5719,7 +5729,7 @@ void TrackPanel::HandleWheelRotationInVRuler
 
          if (partner) {
             WaveformSettings &settings = partner->GetIndependentWaveformSettings();
-            if (event.m_wheelRotation < 0)
+            if (steps < 0)
                // Zoom out
                settings.NextLowerDBRange();
             else
@@ -5743,7 +5753,7 @@ void TrackPanel::HandleWheelRotationInVRuler
       else if (event.CmdDown() && !event.ShiftDown()) {
          HandleWaveTrackVZoom(
             mTracks, rect, event.m_y, event.m_y,
-            wt, false, (event.m_wheelRotation < 0),
+            wt, false, (steps < 0),
             true);
       }
       else if (!(event.CmdDown() || event.ShiftDown())) {
@@ -5969,6 +5979,15 @@ void TrackPanel::OnCaptureLost(wxMouseCaptureLostEvent & WXUNUSED(event))
 /// various interested parties.
 void TrackPanel::OnMouseEvent(wxMouseEvent & event)
 {
+#if defined(__WXMAC__) && defined(EVT_MAGNIFY)
+   // PRL:
+   // Pinch and spread implemented in wxWidgets 3.1.0, or cherry-picked from
+   // the future in custom build of 3.0.2
+   if (event.Magnify()) {
+      HandleWheelRotation(event);
+   }
+#endif
+
    if (event.m_wheelRotation != 0)
       HandleWheelRotation(event);
 
