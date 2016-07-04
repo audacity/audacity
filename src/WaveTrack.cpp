@@ -2798,7 +2798,7 @@ constSamplePtr WaveTrackCache::Get(sampleFormat format,
       for (int ii = 0; ii < mNValidBuffers && remaining > 0; ++ii) {
          const sampleCount starti = start - mBuffers[ii].start;
          const sampleCount leni = std::min(remaining, mBuffers[ii].len - starti);
-         if (leni == len) {
+         if (initLen == 0 && leni == len) {
             // All is contiguous already.  We can completely avoid copying
             return samplePtr(mBuffers[ii].data + starti);
          }
@@ -2818,6 +2818,10 @@ constSamplePtr WaveTrackCache::Get(sampleFormat format,
       if (remaining > 0) {
          // Very big request!
          // Fall back to direct fetch
+         if (buffer == 0) {
+            mOverlapBuffer.Resize(len, format);
+            buffer = mOverlapBuffer.ptr();
+         }
          if (!mPTrack->Get(buffer, format, start, remaining))
             return 0;
       }
