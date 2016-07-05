@@ -4533,9 +4533,19 @@ void AudacityProject::OnTimer(wxTimerEvent& WXUNUSED(event))
          wxString msg;
          double recTime;
          int recMins;
-
+         // JKC: Bug 50: Use preferences to get actual sample format.
+         // However there is a slight performance impact due to Bug 1436
+         // So have left the old code in that gets the size (in RAM) but 
+         // #ifdeffed out.
+#if 1
+         sampleFormat oCaptureFormat = (sampleFormat)
+               gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleFormat"), floatSample);
+#else
+         sampleFormat oCaptureFormat = gAudioIO->GetCaptureFormat();
+#endif
+         double bytesOnDiskPerSample = SAMPLE_SIZE_DISK(oCaptureFormat);
          recTime = freeSpace.GetHi() * 4294967296.0 + freeSpace.GetLo();
-         recTime /= SAMPLE_SIZE_DISK(gAudioIO->GetCaptureFormat());
+         recTime /= bytesOnDiskPerSample;
          // note size on disk (=3 for 24-bit) not in memory (=4 for 24-bit)
          recTime /= gAudioIO->GetNumCaptureChannels();
          recTime /= GetRate();
@@ -5429,8 +5439,9 @@ int AudacityProject::GetEstimatedRecordingMinsLeftOnDisk() {
 
    // Calculate the remaining time
    double dRecTime = 0.0;
+   double bytesOnDiskPerSample = SAMPLE_SIZE_DISK(oCaptureFormat);
    dRecTime = lFreeSpace.GetHi() * 4294967296.0 + lFreeSpace.GetLo();
-   dRecTime /= SAMPLE_SIZE_DISK(oCaptureFormat);   
+   dRecTime /= bytesOnDiskPerSample;   
    dRecTime /= lCaptureChannels;
    dRecTime /= GetRate();
 
