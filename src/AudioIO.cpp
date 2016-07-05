@@ -1448,10 +1448,19 @@ bool AudioIO::StartPortAudioStream(double sampleRate,
    // rate is suggested, but we may get something else if it isn't supported
    mRate = GetBestRate(numCaptureChannels > 0, numPlaybackChannels > 0, sampleRate);
 
+   // July 2016 (Carsten and Uwe)
+   // BUG 193: Tell PortAudio sound card will handle 24 bit (under DirectSound) using 
+   // userData.
+   int captureFormat_saved = captureFormat;
    // Special case: Our 24-bit sample format is different from PortAudio's
    // 3-byte packed format. So just make PortAudio return float samples,
    // since we need float values anyway to apply the gain.
-   // ANSWER-ME: So we *never* actually handle 24-bit?! This causes mCapture to be set to floatSample below.
+   // ANSWER-ME: So we *never* actually handle 24-bit?! This causes mCapture to 
+   // be set to floatSample below.
+   // JKC: YES that's right.  Internally Audacity uses float, and float has space for
+   // 24 bits as well as exponent.  Actual 24 bit would require packing and
+   // unpacking unaligned bytes and would be inefficient.
+   // ANSWER ME: is floatSample 64 bit on 64 bit machines?
    if (captureFormat == int24Sample)
       captureFormat = floatSample;
 
@@ -1538,12 +1547,19 @@ bool AudioIO::StartPortAudioStream(double sampleRate,
    float oldRecordVolume = Px_GetInputVolume(mPortMixer);
 #endif
 #endif
+
+   // July 2016 (Carsten and Uwe)
+   // BUG 193: Possibly tell portAudio to use 24 bit with DirectSound. 
+   int  userData = 24;
+   int* lpUserData = (captureFormat_saved == int24Sample) ? &userData : NULL;
+
    mLastPaError = Pa_OpenStream( &mPortStreamV19,
                                  useCapture ? &captureParameters : NULL,
                                  usePlayback ? &playbackParameters : NULL,
                                  mRate, paFramesPerBufferUnspecified,
                                  paNoFlag,
-                                 audacityAudioCallback, NULL );
+                                 audacityAudioCallback, lpUserData );
+
 
 #if USE_PORTMIXER
 #ifdef __WXMSW__
