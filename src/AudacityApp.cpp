@@ -1302,7 +1302,7 @@ bool AudacityApp::OnInit()
 
    // JKC Bug 1220: Using an actual temp directory for session data on Mac was
    // wrong because it would get cleared out on a reboot.
-   defaultTempDir.Printf(wxT("%s/Library/Application/Support/audacity/SessionData"),
+   defaultTempDir.Printf(wxT("%s/Library/Application\ Support/audacity/SessionData"),
       tmpDirLoc.c_str());
 
    //defaultTempDir.Printf(wxT("%s/audacity-%s"),
@@ -1579,9 +1579,6 @@ void AudacityApp::OnKeyDown(wxKeyEvent &event)
 // We now disallow temp directory name that puts it where cleaner apps will
 // try to clean out the files.  
 bool AudacityApp::IsTempDirectoryNameOK( const wxString & Name ){
-#ifndef  __WXMSW__ 
-   return true;
-#else
    wxFileName tmpFile;
    tmpFile.AssignTempFileName(wxT("nn"));
    // use Long Path to expand out any abbreviated long substrings.
@@ -1591,7 +1588,6 @@ bool AudacityApp::IsTempDirectoryNameOK( const wxString & Name ){
    wxFileName cmpFile( Name );
    wxString NameCanonical = cmpFile.GetLongPath( ) + "\\";
    return !(NameCanonical.StartsWith( BadPath ));
-#endif
 }
 
 bool AudacityApp::InitTempDir()
