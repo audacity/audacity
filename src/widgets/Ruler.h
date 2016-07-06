@@ -294,8 +294,9 @@ public:
 
    ~AdornedRulerPanel();
 
-   bool AcceptsFocus() const override { return false; }
-   bool AcceptsFocusFromKeyboard() const override { return false; }
+   bool AcceptsFocus() const override { return s_AcceptsFocus; }
+   bool AcceptsFocusFromKeyboard() const override { return true; }
+   void SetFocusFromKbd() override;
 
 public:
    int GetRulerHeight() { return GetRulerHeight(mShowScrubbing); }
@@ -356,6 +357,14 @@ private:
 public:
    void DoDrawIndicator(wxDC * dc, wxCoord xx, bool playing, int width, bool scrub, bool seek);
    void UpdateButtonStates();
+
+private:
+   static bool s_AcceptsFocus;
+   struct Resetter { void operator () (bool *p) const { if(p) *p = false; } };
+   using TempAllowFocus = std::unique_ptr<bool, Resetter>;
+
+public:
+   static TempAllowFocus TemporarilyAllowFocus();
 
 private:
    QuickPlayIndicatorOverlay *GetOverlay();

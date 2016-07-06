@@ -3284,3 +3284,16 @@ void AdornedRulerPanel::GetMaxSize(wxCoord *width, wxCoord *height)
 {
    mRuler.GetMaxSize(width, height);
 }
+
+bool AdornedRulerPanel::s_AcceptsFocus{ false };
+
+auto AdornedRulerPanel::TemporarilyAllowFocus() -> TempAllowFocus {
+   s_AcceptsFocus = true;
+   return std::move(TempAllowFocus{ &s_AcceptsFocus });
+}
+
+void AdornedRulerPanel::SetFocusFromKbd()
+{
+   auto temp = TemporarilyAllowFocus();
+   SetFocus();
+}
