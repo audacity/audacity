@@ -1260,10 +1260,19 @@ bool AudacityApp::OnInit()
 
 #endif //__WXGTK__
 
+// JKC Bug 1220: Use path based on home directory on WXMAC
+#ifdef __WXMAC__
+   wxFileName tmpFile;
+   tmpFile.AssignHomeDir();
+   wxString tmpDirLoc = tmpFile.GetPath(wxPATH_GET_VOLUME);
+#else
    wxFileName tmpFile;
    tmpFile.AssignTempFileName(wxT("nn"));
    wxString tmpDirLoc = tmpFile.GetPath(wxPATH_GET_VOLUME);
    ::wxRemoveFile(tmpFile.GetFullPath());
+#endif
+
+
 
    // On Mac and Windows systems, use the directory which contains Audacity.
 #ifdef __WXMSW__
@@ -1291,9 +1300,14 @@ bool AudacityApp::OnInit()
    AddUniquePathToPathList(progPath + wxT("/../"), audacityPathList);
    AddUniquePathToPathList(progPath + wxT("/../Resources"), audacityPathList);
 
-   defaultTempDir.Printf(wxT("%s/audacity-%s"),
-      tmpDirLoc.c_str(),
-      wxGetUserId().c_str());
+   // JKC Bug 1220: Using an actual temp directory for session data on Mac was
+   // wrong because it would get cleared out on a reboot.
+   defaultTempDir.Printf(wxT("%s/Library/Application/Support/audacity/SessionData"),
+      tmpDirLoc.c_str());
+
+   //defaultTempDir.Printf(wxT("%s/audacity-%s"),
+   //   tmpDirLoc.c_str(),
+   //   wxGetUserId().c_str());
 #endif //__WXMAC__
 
    // Define languanges for which we have translations, but that are not yet
