@@ -1584,9 +1584,15 @@ bool AudacityApp::IsTempDirectoryNameOK( const wxString & Name ){
    // use Long Path to expand out any abbreviated long substrings.
    wxString BadPath = tmpFile.GetLongPath();
    ::wxRemoveFile(tmpFile.GetFullPath());
+#ifdef __WXMAC__
+   BadPath = BadPath.BeforeLast( '/' ) + "/";
+   wxFileName cmpFile( Name );
+   wxString NameCanonical = cmpFile.GetLongPath( ) + "/";
+#else
    BadPath = BadPath.BeforeLast( '\\' ) + "\\";
    wxFileName cmpFile( Name );
    wxString NameCanonical = cmpFile.GetLongPath( ) + "\\";
+#endif
    return !(NameCanonical.StartsWith( BadPath ));
 }
 
