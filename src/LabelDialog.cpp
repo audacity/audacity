@@ -334,14 +334,20 @@ bool LabelDialog::TransferDataFromWindow()
 
    // Clear label tracks of labels
    for (t = iter.First(); t; t = iter.Next()) {
-      if (t->GetKind() == Track::Label &&
-          (!mSelectedTrack || mSelectedTrack == t)) {
-         LabelTrack *lt = (LabelTrack *)t;
-         tndx++;
-
-         for (i = lt->GetNumLabels() - 1; i >= 0 ; i--) {
-            lt->DeleteLabel(i);
+      ++tndx;
+      if (t->GetKind() == Track::Label) {
+         LabelTrack *lt = static_cast<LabelTrack*>(t);
+         if (!mSelectedTrack) {
+            for (i = lt->GetNumLabels() - 1; i >= 0 ; i--) {
+               lt->DeleteLabel(i);
+            }
          }
+         else if (mSelectedTrack == lt && mIndex > -1) {
+            lt->DeleteLabel(mIndex);
+         }
+         else
+            // Do nothing to the nonselected tracks
+            ;
       }
    }
 
