@@ -656,8 +656,8 @@ void TrackPanel::BuildMenus(void)
    /* build the pop-down menu used on time warping tracks */
    mTimeTrackMenu = new wxMenu();
    BuildCommonDropMenuItems(mTimeTrackMenu);   // does name, up/down etc
-   mTimeTrackMenu->Append(OnTimeTrackLinID, _("&Linear"));
-   mTimeTrackMenu->Append(OnTimeTrackLogID, _("L&ogarithmic"));
+   mTimeTrackMenu->AppendRadioItem(OnTimeTrackLinID, wxT("&Linear scale"));
+   mTimeTrackMenu->AppendRadioItem(OnTimeTrackLogID, _("L&ogarithmic scale"));
    mTimeTrackMenu->AppendSeparator();
    mTimeTrackMenu->Append(OnSetTimeTrackRangeID, _("&Range..."));
    mTimeTrackMenu->AppendCheckItem(OnTimeTrackLogIntID, _("Logarithmic &Interpolation"));
@@ -7567,8 +7567,6 @@ void TrackPanel::OnTrackMenu(Track *t)
 
       TimeTrack *tt = (TimeTrack*) t;
 
-      theMenu->Enable(OnTimeTrackLinID, tt->GetDisplayLog());
-      theMenu->Enable(OnTimeTrackLogID, !tt->GetDisplayLog());
       theMenu->Check(OnTimeTrackLogIntID, tt->GetInterpolateLog());
    }
 
