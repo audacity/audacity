@@ -334,8 +334,8 @@ bool LabelDialog::TransferDataFromWindow()
 
    // Clear label tracks of labels
    for (t = iter.First(); t; t = iter.Next()) {
-      ++tndx;
       if (t->GetKind() == Track::Label) {
+         ++tndx;
          LabelTrack *lt = static_cast<LabelTrack*>(t);
          if (!mSelectedTrack) {
             for (i = lt->GetNumLabels() - 1; i >= 0 ; i--) {
