@@ -1582,6 +1582,16 @@ void LabelTrack::HandleClick(const wxMouseEvent & evt,
             *newSel = SelectedRegion(t, t);
          }
 #endif
+
+         // handle shift+mouse left button
+         if (evt.ShiftDown()) {
+            // if the mouse is clicked in text box, set flags
+            mDragXPos = evt.m_x;
+
+            // for preventing dragging glygh from changing current cursor position
+            // set end dragging position to current cursor position
+            SetCurrentCursorPosition(evt.m_x);
+         }
       }
 
 #if defined(__WXGTK__) && (HAVE_GTK)

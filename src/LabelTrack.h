@@ -182,7 +182,6 @@ class AUDACITY_DLL_API LabelTrack final : public Track
    static bool IsTextClipSupported();
 
    // methods to set flags
-   void SetDragXPos(const int d) { mDragXPos = d; }
    void SetWrongDragging(bool rightFlag) { mRightDragging = rightFlag; }
 
    void HandleClick(const wxMouseEvent & evt, const wxRect & r, const ZoomInfo &zoomInfo,
