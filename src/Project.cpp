@@ -1534,8 +1534,7 @@ void AudacityProject::FinishAutoScroll()
 
    // Call our Scroll method which updates our ViewInfo variables
    // to reflect the positions of the scrollbars
-   wxScrollEvent dummy;
-   OnScroll(dummy);
+   DoScroll();
 
    mAutoScrolling = false;
 }
@@ -1600,7 +1599,7 @@ void AudacityProject::OnScrollLeftButton(wxScrollEvent & event)
 
    if (pos != mHsbar->GetThumbPosition()) {
       mHsbar->SetThumbPosition((int)pos);
-      OnScroll(event);
+      DoScroll();
    }
 }
 
@@ -1622,7 +1621,7 @@ void AudacityProject::OnScrollRightButton(wxScrollEvent & event)
 
    if (pos != mHsbar->GetThumbPosition()) {
       mHsbar->SetThumbPosition((int)pos);
-      OnScroll(event);
+      DoScroll();
    }
 }
 
@@ -1690,8 +1689,7 @@ void AudacityProject::TP_ScrollWindow(double scrollto)
 
    // Call our Scroll method which updates our ViewInfo variables
    // to reflect the positions of the scrollbars
-   wxScrollEvent dummy;
-   OnScroll(dummy);
+   DoScroll();
 }
 
 //
@@ -1718,8 +1716,7 @@ bool AudacityProject::TP_ScrollUpDown(int delta)
    {
       mVsbar->SetThumbPosition(pos);
 
-      wxScrollEvent dummy;
-      OnScroll(dummy);
+      DoScroll();
       return true;
    }
    else
@@ -2087,6 +2084,14 @@ void AudacityProject::OnODTaskComplete(wxCommandEvent & WXUNUSED(event))
  }
 
 void AudacityProject::OnScroll(wxScrollEvent & WXUNUSED(event))
+{
+   const wxInt64 offset = PixelWidthBeforeTime(0.0);
+   mViewInfo.sbarH =
+      (wxInt64)(mHsbar->GetThumbPosition() / mViewInfo.sbarScale) - offset;
+   DoScroll();
+}
+
+void AudacityProject::DoScroll()
 {
    const double lowerBound = ScrollingLowerBoundTime();
 

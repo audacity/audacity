@@ -318,6 +318,7 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    void OnSize(wxSizeEvent & event);
    void OnShow(wxShowEvent & event);
    void OnMove(wxMoveEvent & event);
+   void DoScroll();
    void OnScroll(wxScrollEvent & event);
    void OnCloseWindow(wxCloseEvent & event);
    void OnTimer(wxTimerEvent & event);
