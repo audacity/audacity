@@ -454,6 +454,7 @@ bool BlockFile::Read256(float *buffer,
    wxASSERT(start >= 0);
 
    char *summary = new char[mSummaryInfo.totalSummaryBytes];
+   // FIXME: TRAP_ERR ReadSummay() could return fail.
    this->ReadSummary(summary);
 
    if (start+len > mSummaryInfo.frames256)
@@ -493,6 +494,7 @@ bool BlockFile::Read64K(float *buffer,
    wxASSERT(start >= 0);
 
    char *summary = new char[mSummaryInfo.totalSummaryBytes];
+   // FIXME: TRAP_ERR ReadSummay() could return fail.
    this->ReadSummary(summary);
 
    if (start+len > mSummaryInfo.frames64K)

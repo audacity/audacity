@@ -1831,6 +1831,7 @@ bool VSTEffect::CanExportPresets()
    return true;
 }
 
+// Throws exceptions rather than reporting errors.
 void VSTEffect::ExportPresets()
 {
    wxString path;
@@ -3653,6 +3654,7 @@ void VSTEffect::SaveFXProgram(wxMemoryBuffer & buf, int index)
    return;
 }
 
+// Throws exceptions rather than giving error return.
 void VSTEffect::SaveXML(const wxFileName & fn)
 {
    XMLFileWriter xmlFile;

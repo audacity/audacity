@@ -1396,6 +1396,7 @@ void MP3Exporter::PutInfoTag(wxFFile & f, wxFileOffset off)
 {
    if (mGF) {
       if (mInfoTagLen > 0) {
+         // FIXME: TRAP_ERR Seek and writ ein MP3 exporter could fail.
          f.Seek(off, wxFromStart);
          f.Write(mInfoTagBuf, mInfoTagLen);
       }

@@ -714,6 +714,10 @@ bool AutoSaveFile::Decode(const wxString & fileName)
       // "</project>" somewhere.
       const int bufsize = 16;
       char buf[bufsize + 1];
+
+      // FIXME: TRAP_ERR AutoSaveFile::Decode reports OK even when wxFFile errors.
+      // Might be incompletely written file, but not clear that is OK to be
+      // silent about.
       if (file.SeekEnd(-bufsize))
       {
          if (file.Read(buf, bufsize) == bufsize)
@@ -755,6 +759,9 @@ bool AutoSaveFile::Decode(const wxString & fileName)
 
    XMLFileWriter out;
 
+   // JKC: ANSWER-ME: Is the try catch actually doing anything?
+   // If it is useful, why are we not using it everywhere?
+   // If it isn't useful, why are we doing it here?
    try
    {
       out.Open(tempName, wxT("wb"));

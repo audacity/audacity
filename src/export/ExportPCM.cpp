@@ -815,6 +815,7 @@ void ExportPCM::AddID3Chunk(wxString fName, const Tags *tags, int sf_format)
    id3_tag_delete(tp);
 
    wxFFile f(fName, wxT("r+b"));
+   // FIXME: TRAP_ERR wxFFILE ops in Export PCM ID3 could fail.
    if (f.IsOpened()) {
       wxUint32 sz;
 

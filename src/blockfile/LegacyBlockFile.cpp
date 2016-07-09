@@ -80,6 +80,7 @@ void ComputeLegacySummaryInfo(const wxFileName &fileName,
       if (Silent)
          silence.create();
 
+      // FIXME: TRAP_ERR no report to user of absent summary files.
       if (!summaryFile.IsOpened()) {
          wxLogWarning(wxT("Unable to access summary file %s; substituting silence for remainder of session"),
             fullPath.c_str());
@@ -88,6 +89,7 @@ void ComputeLegacySummaryInfo(const wxFileName &fileName,
          memset(data.ptr(), 0, read);
       }
       else{
+         // FIXME: TRAP_ERR Seek in summary file could fail.
          summaryFile.Seek(info->offset64K);
          read = summaryFile.Read(data.ptr(),
             info->frames64K *
@@ -221,6 +223,7 @@ int LegacyBlockFile::ReadData(samplePtr data, sampleFormat format,
       // libsndfile can't (under Windows).
       sf.reset(SFCall<SNDFILE*>(sf_open_fd, f.fd(), SFM_READ, &info, FALSE));
    }
+   // FIXME: TRAP_ERR failure of wxFile open incompletely handled in LegacyBlockfile::ReadData.
 
    {
       Maybe<wxLogNull> silence{};
