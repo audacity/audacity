@@ -1172,6 +1172,9 @@ AudacityApp::~AudacityApp()
 // main frame
 bool AudacityApp::OnInit()
 {
+   // JKC: ANSWER-ME: Who actually added the event loop guarantor?
+   // Although 'blame' says Leland, I think it came from a donated patch.
+
    // Ensure we have an event loop during initialization
    wxEventLoopGuarantor eventLoop;
 
@@ -1420,6 +1423,9 @@ bool AudacityApp::OnInit()
          wxSTAY_ON_TOP);
       temporarywindow.SetTitle(_("Audacity is starting up..."));
       SetTopWindow(&temporarywindow);
+
+      // ANSWER-ME: Why is YieldFor needed at all?
+      //wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI|wxEVT_CATEGORY_USER_INPUT|wxEVT_CATEGORY_UNKNOWN);
       wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI);
 
       //JKC: Would like to put module loading here.
@@ -1457,7 +1463,18 @@ bool AudacityApp::OnInit()
       SetExitOnFrameDelete(false);
 
 #endif //__WXMAC__
+      temporarywindow.Show(false);
+   }
 
+   // Workaround Bug 1377 - Crash after Audacity starts and low disk space warning appears
+   // The temporary splash window is closed AND cleaned up, before attempting to create
+   // a project and possibly creating a modal warning dialog by doing so.
+   // Also fixes problem of warning being obscured.
+   // Downside is that we have no splash screen for the (brief) time that we spend
+   // creating the project.
+   // Root cause is problem with wxSplashScreen and other dialogs co-existing, that
+   // seemed to arrive with wx3.
+   {
       project = CreateNewAudacityProject();
       mCmdHandler->SetProject(project);
       wxWindow * pWnd = MakeHijackPanel();
@@ -1468,8 +1485,6 @@ bool AudacityApp::OnInit()
          SetTopWindow(pWnd);
          pWnd->Show(true);
       }
-
-      temporarywindow.Show(false);
    }
 
    if( project->mShowSplashScreen )
