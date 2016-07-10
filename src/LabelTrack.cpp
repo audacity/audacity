@@ -1223,6 +1223,46 @@ void LabelStruct::MoveLabel( int iEdge, double fNewTime)
    updated = true;
 }
 
+LabelStruct LabelStruct::Import(wxTextFile &file, int index)
+{
+   wxString currentLine = file.GetLine(index);
+
+   // Assume tab is an impossible character within the exported text
+   // of the label, so can be only a delimiter.  But other white space may
+   // be part of the label text.
+   wxStringTokenizer toker { currentLine, wxT("\t") };
+
+   //get the timepoint of the left edge of the label.
+   auto token = toker.GetNextToken();
+
+   double t0;
+   if (!Internat::CompatibleToDouble(token, &t0))
+      throw BadFormatException{};
+
+   token = toker.GetNextToken();
+
+   double t1;
+   if (!Internat::CompatibleToDouble(token, &t1))
+      //s1 is not a number.
+      t1 = t0;  //This is a one-sided label; t1 == t0.
+   else
+      token = toker.GetNextToken();
+
+   wxString title = token;
+
+   // PRL: to do: import other selection fields
+   return LabelStruct{ SelectedRegion{ t0, t1 }, title };
+}
+
+void LabelStruct::Export(wxTextFile &file) const
+{
+   file.AddLine(wxString::Format(wxT("%f\t%f\t%s"),
+      getT0(),
+      getT1(),
+      title.c_str()
+   ));
+}
+
 auto LabelStruct::RegionRelation(
       double reg_t0, double reg_t1, const LabelTrack * WXUNUSED(parent)) const
 -> TimeRelations
@@ -2081,12 +2121,8 @@ bool LabelTrack::IsSelected() const
 void LabelTrack::Export(wxTextFile & f) const
 {
    // PRL: to do: export other selection fields
-   for (auto &labelStruct: mLabels) {
-      f.AddLine(wxString::Format(wxT("%f\t%f\t%s"),
-                                 (double)labelStruct.getT0(),
-                                 (double)labelStruct.getT1(),
-                                 labelStruct.title.c_str()));
-   }
+   for (auto &labelStruct: mLabels)
+      labelStruct.Export(f);
 }
 
 /// Import labels, handling files with or without end-times.
@@ -2101,34 +2137,11 @@ void LabelTrack::Import(wxTextFile & in)
    //on each line. If the second token is not a number, we treat
    //it as a single-value label.
    for (int index = 0; index < lines; index++) {
-      wxString currentLine = in.GetLine(index);
-
-      // Assume tab is an impossible character within the exported text
-      // of the label, so can be only a delimiter.  But other white space may
-      // be part of the label text.
-      wxStringTokenizer toker { currentLine, wxT("\t") };
-
-      //get the timepoint of the left edge of the label.
-      auto token = toker.GetNextToken();
-
-      double t0;
-      if (!Internat::CompatibleToDouble(token, &t0))
-         return;
-
-      token = toker.GetNextToken();
-
-      double t1;
-      if (!Internat::CompatibleToDouble(token, &t1))
-         //s1 is not a number.
-         t1 = t0;  //This is a one-sided label; t1 == t0.
-      else
-         token = toker.GetNextToken();
-
-      wxString title = token;
-
-      // PRL: to do: import other selection fields
-      LabelStruct l { SelectedRegion(t0, t1), title };
-      mLabels.push_back(l);
+      try {
+         LabelStruct l { LabelStruct::Import(in, index) };
+         mLabels.push_back(l);
+      }
+      catch(const LabelStruct::BadFormatException&l) {}
    }
    SortLabels();
 }
