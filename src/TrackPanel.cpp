@@ -5887,7 +5887,7 @@ void TrackPanel::OnKeyDown(wxKeyEvent & event)
 
    // Make sure caret is in view
    int x;
-   if (lt->CalcCursorX(this, &x)) {
+   if (lt->CalcCursorX(&x)) {
       ScrollIntoView(x);
    }
 
@@ -6313,17 +6313,8 @@ bool TrackPanel::HandleLabelTrackClick(LabelTrack * lTrack, wxRect &rect, wxMous
 
       if(mCapturedTrack == NULL)
          SetCapturedTrack(lTrack, IsSelectingLabelText);
-      // handle shift+mouse left button
-      if (event.ShiftDown() && event.ButtonDown()) {
-         // if the mouse is clicked in text box, set flags
-         if (lTrack->OverTextBox(lTrack->GetLabel(lTrack->getSelectedIndex()), event.m_x, event.m_y)) {
-            lTrack->SetInBox(true);
-            lTrack->SetDragXPos(event.m_x);
-            lTrack->SetResetCursorPos(true);
-            RefreshTrack(lTrack);
-            return true;
-         }
-      }
+
+      RefreshTrack(lTrack);
       return true;
    }
 
