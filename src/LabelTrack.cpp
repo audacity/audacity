@@ -1803,6 +1803,7 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
             newSel = newLabel.selectedRegion;
          }
          else {
+            newSel = SelectedRegion{};
             mSelIndex = -1;
          }
          break;
