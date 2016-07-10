@@ -85,13 +85,18 @@ void DevicePrefs::Populate()
    OnHost(e);
 }
 
+/*
+ * Get names of device hosts.
+ */
 void DevicePrefs::GetNamesAndLabels()
 {
    // Gather list of hosts.  Only added hosts that have devices attached.
+   // FIXME: TRAP_ERR PaErrorCode not handled in DevicePrefs GetNamesAndLabels()
+   // With an error code won't add hosts, but won't report a problem either.
    int nDevices = Pa_GetDeviceCount();
    for (int i = 0; i < nDevices; i++) {
       const PaDeviceInfo *info = Pa_GetDeviceInfo(i);
-      if (info->maxOutputChannels > 0 || info->maxInputChannels > 0) {
+      if ((info!=NULL)&&(info->maxOutputChannels > 0 || info->maxInputChannels > 0)) {
          wxString name = wxSafeConvertMB2WX(Pa_GetHostApiInfo(info->hostApi)->name);
          if (mHostNames.Index(name) == wxNOT_FOUND) {
             mHostNames.Add(name);
@@ -183,6 +188,7 @@ void DevicePrefs::OnHost(wxCommandEvent & e)
 
    int nDevices = Pa_GetDeviceCount();
 
+   // FIXME: TRAP_ERR PaErrorCode not handled.  nDevices can be negative number.
    if (nDevices == 0) {
       mHost->Clear();
       mHost->Append(_("No audio interfaces"), (void *) NULL);
