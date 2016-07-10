@@ -32,6 +32,7 @@ for drawing different aspects of the label and its text box.
 #include "LabelTrack.h"
 
 #include <stdio.h>
+#include <algorithm>
 
 #include <wx/bitmap.h>
 #include <wx/brush.h>
