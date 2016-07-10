@@ -182,17 +182,8 @@ bool LabelTrack::Clear(double b, double e)
 bool LabelTrack::SplitDelete(double b, double e)
 {
    // May delete labels, so use subscripts to iterate
-<<<<<<< HEAD
    for (size_t i = 0, len = mLabels.size(); i < len; ++i) {
-<<<<<<< HEAD
-      auto &labelStruct = *mLabels[i];
-=======
-   for (size_t i = 0; i < mLabels.size(); ++i) {
       auto &labelStruct = mLabels[i];
->>>>>>> 1352006... fix
-=======
-      auto &labelStruct = mLabels[i];
->>>>>>> d6970df... Put labels directly in a vector, not pointers to them...
       LabelStruct::TimeRelations relation =
                         labelStruct.RegionRelation(b, e, this);
       if (relation == LabelStruct::SURROUNDS_LABEL) {
