@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Audacity 2.1.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2015-09-07 12:40+0100\n"
-"PO-Revision-Date: 2016-04-08 00:00+0100\n"
+"PO-Revision-Date: 2016-06-15 00:00+0100\n"
 "Last-Translator: scootergrisen\n"
 "Language-Team: Danish\n"
 "Language: da\n"
@@ -9377,7 +9377,7 @@ msgstr ""
 #: src/export/ExportFFmpeg.cpp:273
 #, c-format
 msgid "FFmpeg : ERROR - Can't determine format description for file \"%s\"."
-msgstr "FFmpeg : FEJL - kan ikke aflæse formatbeskrivelse for filen \"%s\"."
+msgstr "FFmpeg : FEJL - kan ikke fastslå formatbeskrivelse for filen \"%s\"."
 
 #: src/export/ExportFFmpeg.cpp:274 src/export/ExportFFmpeg.cpp:282
 #: src/export/ExportFFmpeg.cpp:294 src/export/ExportFFmpeg.cpp:306
@@ -9617,7 +9617,7 @@ msgstr "Fuld søgning"
 
 #: src/export/ExportFFmpegDialogs.cpp:1295
 msgid "Log search"
-msgstr "Bevar søgning"
+msgstr "Logsøgning"
 
 #: src/export/ExportFFmpegDialogs.cpp:1307
 msgid "Configure custom FFmpeg options"
@@ -9837,8 +9837,8 @@ msgid ""
 "Full search - default"
 msgstr ""
 "Metode til forudsigelse af rækkefølge\n"
-"Vurdér - hurtigst, lavest komprimering\n"
-"Søg i log - langsomst, bedst komprimering\n"
+"Anslået - hurtigst, lavere komprimering\n"
+"Logsøgning - langsomst, bedste komprimering\n"
 "Fuld søgning - standard"
 
 #: src/export/ExportFFmpegDialogs.cpp:1496
