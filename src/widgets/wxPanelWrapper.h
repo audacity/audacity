@@ -9,26 +9,30 @@
 #ifndef __AUDACITY_WXPANEL_WRAPPER__
 #define __AUDACITY_WXPANEL_WRAPPER__
 
+#include <MemoryX.h>
 #include <wx/panel.h>
 
-class AUDACITY_DLL_API wxPanelWrapper /* not final */ : public wxPanel {
+void wxTabTraversalWrapperCharHook(wxKeyEvent &event);
+
+template <typename Base>
+class wxTabTraversalWrapper : public Base
+{
 public:
-   wxPanelWrapper() : wxPanel {} {}
+   template <typename... Args>
+   wxTabTraversalWrapper(Args&&... args)
+   : Base( std::forward<Args>(args)... )
+   {
+      this->Bind(wxEVT_CHAR_HOOK, wxTabTraversalWrapperCharHook);
+   }
 
-   wxPanelWrapper(wxWindow * parent, wxWindowID id = wxID_ANY,
-                const wxPoint & pos = wxDefaultPosition,
-                const wxSize & size = wxDefaultSize,
-                // default as for wxPanel:
-                long style = wxTAB_TRAVERSAL | wxNO_BORDER);
-
-   static void DoCharHook(wxKeyEvent &event);
-
-private:
-   void OnCharHook(wxKeyEvent &event);
-
-   DECLARE_DYNAMIC_CLASS(wxPanelWrapper);
-
-   DECLARE_EVENT_TABLE()
+   ~wxTabTraversalWrapper()
+   {
+      this->Unbind(wxEVT_CHAR_HOOK, wxTabTraversalWrapperCharHook);
+   }
 };
+
+class wxPanel;
+using wxPanelWrapper = wxTabTraversalWrapper<wxPanel>;
+
 
 #endif

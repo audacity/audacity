@@ -379,7 +379,7 @@ void PrefsDialog::OnTreeKeyDown(wxTreeEvent & event)
 void PrefsDialog::OnCharHook(wxKeyEvent &event)
 {
    // Common behavior, let's define it in just one place
-   wxPanelWrapper::DoCharHook(event);
+   wxTabTraversalWrapperCharHook(event);
 }
 
 void PrefsDialog::OnOK(wxCommandEvent & WXUNUSED(event))

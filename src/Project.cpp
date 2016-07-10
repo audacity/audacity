@@ -882,7 +882,8 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    // or else the device toolbar doesn't make initial widths of the choice
    // controls correct.
    mTopPanel = safenew wxPanelWrapper {
-      this, wxID_ANY, wxDefaultPosition, { this->GetSize().GetWidth(), -1 }
+      this, wxID_ANY, wxDefaultPosition,
+      wxSize{ this->GetSize().GetWidth(), -1 }
    };
    mTopPanel->SetAutoLayout(true);
 
