@@ -1235,31 +1235,54 @@ LabelStruct LabelStruct::Import(wxTextFile &file, int index)
    //get the timepoint of the left edge of the label.
    auto token = toker.GetNextToken();
 
-   double t0;
-   if (!Internat::CompatibleToDouble(token, &t0))
-      throw BadFormatException{};
+   SelectedRegion sr;
 
-   token = toker.GetNextToken();
+   {
+      double t0;
+      if (!Internat::CompatibleToDouble(token, &t0))
+         throw BadFormatException{};
 
-   double t1;
-   if (!Internat::CompatibleToDouble(token, &t1))
-      //s1 is not a number.
-      t1 = t0;  //This is a one-sided label; t1 == t0.
-   else
       token = toker.GetNextToken();
+
+      double t1;
+      if (!Internat::CompatibleToDouble(token, &t1))
+         //s1 is not a number.
+         t1 = t0;  //This is a one-sided label; t1 == t0.
+      else
+         token = toker.GetNextToken();
+
+      sr.setTimes( t0, t1 );
+   }
 
    wxString title = token;
 
-   // PRL: to do: import other selection fields
-   return LabelStruct{ SelectedRegion{ t0, t1 }, title };
+   // Newer selection fields are written after the title, for historical
+   // reasons.
+   if (toker.HasMoreTokens()) {
+      token = toker.GetNextToken();
+      double f0;
+      if (!Internat::CompatibleToDouble(token, &f0))
+         throw BadFormatException{};
+
+      token = toker.GetNextToken();
+      double f1;
+      if (!Internat::CompatibleToDouble(token, &f1))
+         throw BadFormatException{};
+
+      sr.setFrequencies(f0, f1);
+   }
+
+   return LabelStruct{ sr, title };
 }
 
 void LabelStruct::Export(wxTextFile &file) const
 {
-   file.AddLine(wxString::Format(wxT("%f\t%f\t%s"),
+   file.AddLine(wxString::Format(wxT("%f\t%f\t%s\t%f\t%f"),
       getT0(),
-      getT1(),
-      title.c_str()
+      getT1(), 
+      title.c_str(),
+      selectedRegion.f0(),
+      selectedRegion.f1()
    ));
 }
 
