@@ -57,7 +57,7 @@ and sample size to help you importing data of an unknown format.
 
 #include "sndfile.h"
 
-class ImportRawDialog final : public wxDialog {
+class ImportRawDialog final : public wxDialogWrapper {
 
   public:
    ImportRawDialog(wxWindow * parent,
@@ -293,7 +293,7 @@ enum {
    PlayID
 };
 
-BEGIN_EVENT_TABLE(ImportRawDialog, wxDialog)
+BEGIN_EVENT_TABLE(ImportRawDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, ImportRawDialog::OnOK)
    EVT_BUTTON(wxID_CANCEL, ImportRawDialog::OnCancel)
    EVT_BUTTON(PlayID, ImportRawDialog::OnPlay)
@@ -303,7 +303,7 @@ END_EVENT_TABLE()
 ImportRawDialog::ImportRawDialog(wxWindow * parent,
                                  int encoding, int channels,
                                  int offset, double rate)
-:  wxDialog(parent, wxID_ANY, _("Import Raw Data"),
+:  wxDialogWrapper(parent, wxID_ANY, _("Import Raw Data"),
             wxDefaultPosition, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER),
     mEncoding(encoding),

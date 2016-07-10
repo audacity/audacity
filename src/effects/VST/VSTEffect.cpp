@@ -47,7 +47,6 @@
 #include <wx/button.h>
 #include <wx/combobox.h>
 #include <wx/dcclient.h>
-#include <wx/dialog.h>
 #include <wx/file.h>
 #include <wx/filename.h>
 #include <wx/frame.h>
@@ -86,6 +85,7 @@
 #include "../../ShuttleGui.h"
 #include "../../effects/Effect.h"
 #include "../../widgets/NumericTextCtrl.h"
+#include "../../widgets/wxPanelWrapper.h"
 #include "../../widgets/valnum.h"
 #include "../../xml/XMLFileReader.h"
 #include "../../xml/XMLWriter.h"
@@ -695,7 +695,7 @@ void VSTEffectsModule::Check(const wxChar *path)
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-class VSTEffectOptionsDialog final : public wxDialog
+class VSTEffectOptionsDialog final : public wxDialogWrapper
 {
 public:
    VSTEffectOptionsDialog(wxWindow * parent, EffectHostInterface *host);
@@ -714,12 +714,12 @@ private:
    DECLARE_EVENT_TABLE()
 };
 
-BEGIN_EVENT_TABLE(VSTEffectOptionsDialog, wxDialog)
+BEGIN_EVENT_TABLE(VSTEffectOptionsDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, VSTEffectOptionsDialog::OnOk)
 END_EVENT_TABLE()
 
 VSTEffectOptionsDialog::VSTEffectOptionsDialog(wxWindow * parent, EffectHostInterface *host)
-:  wxDialog(parent, wxID_ANY, wxString(_("VST Effect Options")))
+:  wxDialogWrapper(parent, wxID_ANY, wxString(_("VST Effect Options")))
 {
    mHost = host;
 
@@ -1729,7 +1729,7 @@ void VSTEffect::SetHostUI(EffectUIHostInterface *host)
 
 bool VSTEffect::PopulateUI(wxWindow *parent)
 {
-   mDialog = (wxDialog *) wxGetTopLevelParent(parent);
+   mDialog = static_cast<wxDialog *>(wxGetTopLevelParent(parent));
    mParent = parent;
 
    mParent->PushEventHandler(this);

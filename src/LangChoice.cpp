@@ -20,7 +20,6 @@ of languages for Audacity.
 #include <wx/defs.h>
 #include <wx/button.h>
 #include <wx/choice.h>
-#include <wx/dialog.h>
 #include <wx/intl.h>
 #include <wx/msgdlg.h>
 #include <wx/sizer.h>
@@ -29,8 +28,9 @@ of languages for Audacity.
 #include "LangChoice.h"
 #include "Languages.h"
 #include "ShuttleGui.h"
+#include "widgets/wxPanelWrapper.h"
 
-class LangChoiceDialog final : public wxDialog {
+class LangChoiceDialog final : public wxDialogWrapper {
 public:
    LangChoiceDialog(wxWindow * parent,
                     wxWindowID id,
@@ -65,14 +65,14 @@ wxString ChooseLanguage(wxWindow *parent)
    return returnVal;
 }
 
-BEGIN_EVENT_TABLE(LangChoiceDialog, wxDialog)
+BEGIN_EVENT_TABLE(LangChoiceDialog, wxDialogWrapper)
     EVT_BUTTON(wxID_OK, LangChoiceDialog::OnOk)
 END_EVENT_TABLE()
 
 LangChoiceDialog::LangChoiceDialog(wxWindow * parent,
                                    wxWindowID id,
                                    const wxString & title):
-   wxDialog(parent, id, title)
+   wxDialogWrapper(parent, id, title)
 {
    SetName(GetTitle());
    GetLanguages(mLangCodes, mLangNames);

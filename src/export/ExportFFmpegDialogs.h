@@ -176,7 +176,7 @@ struct ApplicableFor
 class FFmpegPresets;
 
 /// Custom FFmpeg export dialog
-class ExportFFmpegOptions final : public wxDialog
+class ExportFFmpegOptions final : public wxDialogWrapper
 {
 public:
 

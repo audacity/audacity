@@ -874,7 +874,7 @@ void FFmpegPresets::WriteXML(XMLWriter &xmlFile)
 // ExportFFmpegOptions Class
 //----------------------------------------------------------------------------
 
-BEGIN_EVENT_TABLE(ExportFFmpegOptions, wxDialog)
+BEGIN_EVENT_TABLE(ExportFFmpegOptions, wxDialogWrapper)
    EVT_BUTTON(wxID_OK,ExportFFmpegOptions::OnOK)
    EVT_LISTBOX(FEFormatID,ExportFFmpegOptions::OnFormatList)
    EVT_LISTBOX(FECodecID,ExportFFmpegOptions::OnCodecList)
@@ -1303,7 +1303,7 @@ ExportFFmpegOptions::~ExportFFmpegOptions()
 }
 
 ExportFFmpegOptions::ExportFFmpegOptions(wxWindow *parent)
-:  wxDialog(parent, wxID_ANY,
+:  wxDialogWrapper(parent, wxID_ANY,
             wxString(_("Configure custom FFmpeg options")))
 {
    SetName(GetTitle());

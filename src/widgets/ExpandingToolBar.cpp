@@ -731,16 +731,16 @@ void ToolBarGrabber::OnSize(wxSizeEvent & WXUNUSED(event))
 // ToolBarDialog
 //
 
-BEGIN_EVENT_TABLE(ToolBarDialog, wxDialog)
+BEGIN_EVENT_TABLE(ToolBarDialog, wxDialogWrapper)
 END_EVENT_TABLE()
 
-IMPLEMENT_CLASS(ToolBarDialog, wxDialog)
+IMPLEMENT_CLASS(ToolBarDialog, wxDialogWrapper)
 
 ToolBarDialog::ToolBarDialog(wxWindow* parent,
                            wxWindowID id,
                            const wxString& name,
                            const wxPoint& pos):
-   wxDialog(parent, id, name, pos, wxSize(1, 1),
+   wxDialogWrapper(parent, id, name, pos, wxSize(1, 1),
 // Workaround for bug in __WXMSW__.  No close box on a wxDialog unless wxSYSTEM_MENU is used.
 #ifdef __WXMSW__
       wxSYSTEM_MENU |

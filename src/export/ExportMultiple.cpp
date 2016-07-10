@@ -77,7 +77,7 @@ enum {
 // ExportMultiple methods
 //
 
-BEGIN_EVENT_TABLE(ExportMultiple, wxDialog)
+BEGIN_EVENT_TABLE(ExportMultiple, wxDialogWrapper)
    EVT_CHOICE(FormatID, ExportMultiple::OnFormat)
 //   EVT_BUTTON(OptionsID, ExportMultiple::OnOptions)
    EVT_BUTTON(CreateID, ExportMultiple::OnCreate)
@@ -94,7 +94,7 @@ BEGIN_EVENT_TABLE(ExportMultiple, wxDialog)
    EVT_TEXT(PrefixID, ExportMultiple::OnPrefix)
 END_EVENT_TABLE()
 
-BEGIN_EVENT_TABLE(SuccessDialog, wxDialog)
+BEGIN_EVENT_TABLE(SuccessDialog, wxDialogWrapper)
    EVT_LIST_KEY_DOWN(wxID_ANY, SuccessDialog::OnKeyDown)
    EVT_LIST_ITEM_ACTIVATED(wxID_ANY, SuccessDialog::OnItemActivated) // happens when <enter> is pressed with list item having focus
 END_EVENT_TABLE()
@@ -104,7 +104,7 @@ BEGIN_EVENT_TABLE(MouseEvtHandler, wxEvtHandler)
 END_EVENT_TABLE()
 
 ExportMultiple::ExportMultiple(AudacityProject *project)
-: wxDialog(project, wxID_ANY, wxString(_("Export Multiple")))
+: wxDialogWrapper(project, wxID_ANY, wxString(_("Export Multiple")))
 {
    SetName(GetTitle());
 
@@ -208,7 +208,7 @@ int ExportMultiple::ShowModal()
 
    EnableControls();
 
-   return wxDialog::ShowModal();
+   return wxDialogWrapper::ShowModal();
 }
 
 void ExportMultiple::PopulateOrExchange(ShuttleGui& S)

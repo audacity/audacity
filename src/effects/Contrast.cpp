@@ -137,7 +137,7 @@ enum {
    ID_RESULTSDB_TEXT
 };
 
-BEGIN_EVENT_TABLE(ContrastDialog,wxDialog)
+BEGIN_EVENT_TABLE(ContrastDialog,wxDialogWrapper)
    EVT_BUTTON(ID_BUTTON_USECURRENTF, ContrastDialog::OnGetForeground)
    EVT_BUTTON(ID_BUTTON_USECURRENTB, ContrastDialog::OnGetBackground)
    EVT_BUTTON(ID_BUTTON_GETURL, ContrastDialog::OnGetURL)
@@ -150,7 +150,7 @@ END_EVENT_TABLE()
 ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
                            const wxString & title,
                            const wxPoint & pos):
-  wxDialog(parent, id, title, pos, wxDefaultSize,
+  wxDialogWrapper(parent, id, title, pos, wxDefaultSize,
      wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX )
 {
    SetName(GetTitle());

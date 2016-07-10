@@ -68,14 +68,11 @@
 #include "MidiIOPrefs.h"
 #endif
 
-BEGIN_EVENT_TABLE(PrefsDialog, wxDialog)
+BEGIN_EVENT_TABLE(PrefsDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, PrefsDialog::OnOK)
    EVT_BUTTON(wxID_CANCEL, PrefsDialog::OnCancel)
    EVT_BUTTON(wxID_APPLY, PrefsDialog::OnApply)
    EVT_TREE_KEY_DOWN(wxID_ANY, PrefsDialog::OnTreeKeyDown) // Handles key events when tree has focus
-
-   EVT_CHAR_HOOK(PrefsDialog::OnCharHook)
-
 END_EVENT_TABLE()
 
 
@@ -97,8 +94,8 @@ public:
 int wxTreebookExt::ChangeSelection(size_t n) {
    int i = wxTreebook::ChangeSelection(n);
    wxString Temp = GetPageText( n );
-   ((wxDialog*)GetParent())->SetTitle( Temp );
-   ((wxDialog*)GetParent())->SetName( Temp );
+   static_cast<wxDialog*>(GetParent())->SetTitle( Temp );
+   static_cast<wxDialog*>(GetParent())->SetName( Temp );
    return i;
 };
 
@@ -106,8 +103,8 @@ int wxTreebookExt::SetSelection(size_t n)
 {
    int i = wxTreebook::SetSelection(n);
    wxString Temp = wxString(mTitlePrefix) + GetPageText( n );
-   ((wxDialog*)GetParent())->SetTitle( Temp );
-   ((wxDialog*)GetParent())->SetName( Temp );
+   static_cast<wxDialog*>(GetParent())->SetTitle( Temp );
+   static_cast<wxDialog*>(GetParent())->SetName( Temp );
 
    PrefsPanel *const panel = static_cast<PrefsPanel *>(GetPage(n));
    const bool showApply = panel->ShowsApplyButton();
@@ -202,7 +199,7 @@ PrefsDialog::Factories
 
 PrefsDialog::PrefsDialog
   (wxWindow * parent, const wxString &titlePrefix, Factories &factories)
-:  wxDialog(parent, wxID_ANY, wxString(_("Audacity Preferences")),
+:  wxDialogWrapper(parent, wxID_ANY, wxString(_("Audacity Preferences")),
             wxDefaultPosition,
             wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
@@ -342,7 +339,7 @@ int PrefsDialog::ShowModal()
       SetName(Temp);
    }
 
-   return wxDialog::ShowModal();
+   return wxDialogWrapper::ShowModal();
 }
 
 void PrefsDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
@@ -374,12 +371,6 @@ void PrefsDialog::OnTreeKeyDown(wxTreeEvent & event)
       OnOK(event);
    else
       event.Skip(); // Ensure standard behavior when enter is not pressed
-}
-
-void PrefsDialog::OnCharHook(wxKeyEvent &event)
-{
-   // Common behavior, let's define it in just one place
-   wxTabTraversalWrapperCharHook(event);
 }
 
 void PrefsDialog::OnOK(wxCommandEvent & WXUNUSED(event))

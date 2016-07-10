@@ -11,6 +11,7 @@
 
 #include <MemoryX.h>
 #include <wx/panel.h>
+#include <wx/dialog.h>
 
 void wxTabTraversalWrapperCharHook(wxKeyEvent &event);
 
@@ -34,5 +35,7 @@ public:
 class wxPanel;
 using wxPanelWrapper = wxTabTraversalWrapper<wxPanel>;
 
+class wxDialog;
+using wxDialogWrapper = wxTabTraversalWrapper<wxDialog>;
 
 #endif

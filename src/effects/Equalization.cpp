@@ -3173,7 +3173,7 @@ void EqualizationPanel::OnCaptureLost(wxMouseCaptureLostEvent & WXUNUSED(event))
 // Some things that deal with 'unnamed' curves still use, for example, 'mCustomBackup' as variable names.
 /// Constructor
 
-BEGIN_EVENT_TABLE(EditCurvesDialog, wxDialog)
+BEGIN_EVENT_TABLE(EditCurvesDialog, wxDialogWrapper)
    EVT_BUTTON(UpButtonID, EditCurvesDialog::OnUp)
    EVT_BUTTON(DownButtonID, EditCurvesDialog::OnDown)
    EVT_BUTTON(RenameButtonID, EditCurvesDialog::OnRename)
@@ -3190,7 +3190,7 @@ BEGIN_EVENT_TABLE(EditCurvesDialog, wxDialog)
 END_EVENT_TABLE()
 
 EditCurvesDialog::EditCurvesDialog(wxWindow * parent, EffectEqualization * effect, int position):
-wxDialog(parent, wxID_ANY, _("Manage Curves List"),
+wxDialogWrapper(parent, wxID_ANY, _("Manage Curves List"),
          wxDefaultPosition, wxDefaultSize,
          wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {

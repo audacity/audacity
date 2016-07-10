@@ -55,10 +55,10 @@ It \TODO: description
 
 static ScoreAlignDialog *gScoreAlignDialog = NULL;
 
-//IMPLEMENT_CLASS(ScoreAlignDialog, wxDialog)
+//IMPLEMENT_CLASS(ScoreAlignDialog, wxDialogWrapper)
 
 ScoreAlignDialog::ScoreAlignDialog(wxWindow *parent, ScoreAlignParams &params)
-   : wxDialog(parent, -1, _("Align MIDI to Audio"),
+   : wxDialogWrapper(parent, -1, _("Align MIDI to Audio"),
               wxDefaultPosition, wxDefaultSize,
               wxDEFAULT_DIALOG_STYLE)
 {
@@ -284,7 +284,7 @@ void CloseScoreAlignDialog()
 }
 
 
-BEGIN_EVENT_TABLE(ScoreAlignDialog, wxDialog)
+BEGIN_EVENT_TABLE(ScoreAlignDialog, wxDialogWrapper)
 //   EVT_BUTTON(wxID_OK, ScoreAlignDialog::OnOK)
 //   EVT_BUTTON(wxID_CANCEL, ScoreAlignDialog::OnCancel)
    EVT_BUTTON(ID_DEFAULT, ScoreAlignDialog::OnDefault)

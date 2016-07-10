@@ -57,7 +57,7 @@ void HelpSystem::ShowInfoDialog( wxWindow *parent,
                      const wxString &message,
                      const int xSize, const int ySize)
 {
-   wxDialog dlog(parent, wxID_ANY,
+   wxDialogWrapper dlog(parent, wxID_ANY,
                 dlogTitle,
                 wxDefaultPosition, wxDefaultSize,
                 wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX /*| wxDEFAULT_FRAME_STYLE */);

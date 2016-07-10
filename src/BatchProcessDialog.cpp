@@ -56,14 +56,14 @@
 #define ApplyToProjectID   7003
 #define ApplyToFilesID     7004
 
-BEGIN_EVENT_TABLE(BatchProcessDialog, wxDialog)
+BEGIN_EVENT_TABLE(BatchProcessDialog, wxDialogWrapper)
    EVT_BUTTON(ApplyToProjectID, BatchProcessDialog::OnApplyToProject)
    EVT_BUTTON(ApplyToFilesID, BatchProcessDialog::OnApplyToFiles)
    EVT_BUTTON(wxID_CANCEL, BatchProcessDialog::OnCancel)
 END_EVENT_TABLE()
 
 BatchProcessDialog::BatchProcessDialog(wxWindow * parent):
-   wxDialog(parent, wxID_ANY, _("Apply Chain"),
+   wxDialogWrapper(parent, wxID_ANY, _("Apply Chain"),
             wxDefaultPosition, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {
@@ -153,7 +153,7 @@ void BatchProcessDialog::OnApplyToProject(wxCommandEvent & WXUNUSED(event))
    }
    wxString name = mChains->GetItemText(item);
 
-   wxDialog * pD = safenew wxDialog(this, wxID_ANY, GetTitle());
+   wxDialog * pD = safenew wxDialogWrapper(this, wxID_ANY, GetTitle());
    pD->SetName(pD->GetTitle());
    ShuttleGui S(pD, eIsCreating);
 
@@ -294,7 +294,7 @@ void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
 
    files.Sort();
 
-   wxDialog * pD = safenew wxDialog(this, wxID_ANY, GetTitle());
+   wxDialog * pD = safenew wxDialogWrapper(this, wxID_ANY, GetTitle());
    pD->SetName(pD->GetTitle());
    ShuttleGui S(pD, eIsCreating);
 
@@ -423,7 +423,7 @@ enum {
    RenameButtonID
 };
 
-BEGIN_EVENT_TABLE(EditChainsDialog, wxDialog)
+BEGIN_EVENT_TABLE(EditChainsDialog, wxDialogWrapper)
    EVT_LIST_ITEM_SELECTED(ChainsListID, EditChainsDialog::OnChainSelected)
    EVT_LIST_ITEM_SELECTED(CommandsListID, EditChainsDialog::OnListSelected)
    EVT_LIST_BEGIN_LABEL_EDIT(ChainsListID, EditChainsDialog::OnChainsBeginEdit)
@@ -455,7 +455,7 @@ enum {
 
 /// Constructor
 EditChainsDialog::EditChainsDialog(wxWindow * parent):
-   wxDialog(parent, wxID_ANY, _("Edit Chains"),
+   wxDialogWrapper(parent, wxID_ANY, _("Edit Chains"),
             wxDefaultPosition, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {

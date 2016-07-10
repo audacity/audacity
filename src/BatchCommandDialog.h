@@ -36,7 +36,7 @@ class wxListEvent;
 class wxButton;
 class ShuttleGui;
 
-class BatchCommandDialog final : public wxDialog {
+class BatchCommandDialog final : public wxDialogWrapper {
  public:
    // constructors and destructors
    BatchCommandDialog(wxWindow *parent, wxWindowID id);

@@ -6738,7 +6738,7 @@ void AudacityProject::OnAudioDeviceInfo()
 {
    wxString info = gAudioIO->GetDeviceInfo();
 
-   wxDialog dlg(this, wxID_ANY, wxString(_("Audio Device Info")));
+   wxDialogWrapper dlg(this, wxID_ANY, wxString(_("Audio Device Info")));
    dlg.SetName(dlg.GetTitle());
    ShuttleGui S(&dlg, eIsCreating);
 
@@ -6873,7 +6873,7 @@ void AudacityProject::OnResample()
 
    while (true)
    {
-      wxDialog dlg(this, wxID_ANY, wxString(_("Resample")));
+      wxDialogWrapper dlg(this, wxID_ANY, wxString(_("Resample")));
       dlg.SetName(dlg.GetTitle());
       ShuttleGui S(&dlg, eIsCreating);
       wxString rate;

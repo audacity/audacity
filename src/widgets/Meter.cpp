@@ -1954,7 +1954,7 @@ void Meter::OnPreferences(wxCommandEvent & WXUNUSED(event))
    // Dialog is a child of the project, rather than of the toolbar.
    // This determines where it pops up.
 
-   wxDialog dlg(GetActiveProject(), wxID_ANY, title);
+   wxDialogWrapper dlg(GetActiveProject(), wxID_ANY, title);
    dlg.SetName(dlg.GetTitle());
    ShuttleGui S(&dlg, eIsCreating);
    S.StartVerticalLay();

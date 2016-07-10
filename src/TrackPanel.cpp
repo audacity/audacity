@@ -8277,7 +8277,7 @@ void TrackPanel::OnRateOther(wxCommandEvent &event)
    /// \todo Make a real dialog box out of this!!
    while (true)
    {
-      wxDialog dlg(this, wxID_ANY, wxString(_("Set Rate")));
+      wxDialogWrapper dlg(this, wxID_ANY, wxString(_("Set Rate")));
       dlg.SetName(dlg.GetTitle());
       ShuttleGui S(&dlg, eIsCreating);
       wxString rate;
@@ -8574,7 +8574,7 @@ void TrackPanel::OnSetFont(wxCommandEvent & WXUNUSED(event))
                                 LabelTrack::DefaultFontSize);
 
    /* i18n-hint: (noun) This is the font for the label track.*/
-   wxDialog dlg(this, wxID_ANY, wxString(_("Label Track Font")));
+   wxDialogWrapper dlg(this, wxID_ANY, wxString(_("Label Track Font")));
    dlg.SetName(dlg.GetTitle());
    ShuttleGui S(&dlg, eIsCreating);
    wxListBox *lb;

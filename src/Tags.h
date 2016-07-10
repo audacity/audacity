@@ -35,10 +35,11 @@
 
 #include "MemoryX.h"
 #include <utility>
-#include <wx/dialog.h>
 #include <wx/hashmap.h>
 #include <wx/notebook.h>
 #include <wx/string.h>
+
+#include "widgets/wxPanelWrapper.h"
 
 class wxButton;
 class wxChoice;
@@ -135,7 +136,7 @@ class AUDACITY_DLL_API Tags final : public XMLTagHandler {
 inline bool operator != (const Tags &lhs, const Tags &rhs)
 { return !(lhs == rhs); }
 
-class TagsEditor final : public wxDialog
+class TagsEditor final : public wxDialogWrapper
 {
  public:
    // constructors and destructors

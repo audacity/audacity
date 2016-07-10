@@ -217,11 +217,11 @@ void AboutDialog::CreateCreditsList()
 
 // ----------------------------------------------------------------------------
 
-BEGIN_EVENT_TABLE(AboutDialog, wxDialog)
+BEGIN_EVENT_TABLE(AboutDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, AboutDialog::OnOK)
 END_EVENT_TABLE()
 
-IMPLEMENT_CLASS(AboutDialog, wxDialog)
+IMPLEMENT_CLASS(AboutDialog, wxDialogWrapper)
 
 namespace {
    AboutDialog *sActiveInstance{};
@@ -233,7 +233,7 @@ AboutDialog *AboutDialog::ActiveIntance()
 }
 
 AboutDialog::AboutDialog(wxWindow * parent)
-   :  wxDialog(parent, -1, _("About Audacity"),
+   :  wxDialogWrapper(parent, -1, _("About Audacity"),
                wxDefaultPosition, wxDefaultSize,
                wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {

@@ -30,7 +30,7 @@ class AudacityProject;
 class LabelTrack;
 class ShuttleGui;
 
-class ExportMultiple final : public wxDialog
+class ExportMultiple final : public wxDialogWrapper
 {
 public:
 
@@ -163,11 +163,11 @@ private:
 
 };
 
-class SuccessDialog final : public wxDialog
+class SuccessDialog final : public wxDialogWrapper
 {
 public:
    SuccessDialog(wxWindow *parent, wxWindowID id, const wxString &title) :
-      wxDialog(parent, id, title, wxDefaultPosition,
+      wxDialogWrapper(parent, id, title, wxDefaultPosition,
          wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER) {};
    void OnKeyDown(wxListEvent& event); // dismisses dialog when <enter> is pressed with list control having focus
    void OnItemActivated(wxListEvent& event); // dismisses dialog when <enter> is pressed with list item having focus

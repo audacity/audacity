@@ -178,7 +178,7 @@ void TipPanel::OnCreate(wxWindowCreateEvent & WXUNUSED(event))
 // SliderDialog
 //
 
-BEGIN_EVENT_TABLE(SliderDialog, wxDialog)
+BEGIN_EVENT_TABLE(SliderDialog, wxDialogWrapper)
    EVT_SLIDER(wxID_ANY,SliderDialog::OnSlider)
 END_EVENT_TABLE();
 
@@ -190,7 +190,7 @@ SliderDialog::SliderDialog(wxWindow * parent, wxWindowID id,
                            float value,
                            float line,
                            float page):
-   wxDialog(parent,id,title,position),
+   wxDialogWrapper(parent,id,title,position),
    mStyle(style)
 {
    SetName(GetTitle());

@@ -37,7 +37,7 @@ enum {
    ID_FILE_LIST
 };
 
-class AutoRecoveryDialog final : public wxDialog
+class AutoRecoveryDialog final : public wxDialogWrapper
 {
 public:
    AutoRecoveryDialog(wxWindow *parent);
@@ -57,7 +57,7 @@ public:
 };
 
 AutoRecoveryDialog::AutoRecoveryDialog(wxWindow *parent) :
-   wxDialog(parent, -1, _("Automatic Crash Recovery"),
+   wxDialogWrapper(parent, -1, _("Automatic Crash Recovery"),
             wxDefaultPosition, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE & (~wxCLOSE_BOX)) // no close box
 {
@@ -66,7 +66,7 @@ AutoRecoveryDialog::AutoRecoveryDialog(wxWindow *parent) :
    PopulateOrExchange(S);
 }
 
-BEGIN_EVENT_TABLE(AutoRecoveryDialog, wxDialog)
+BEGIN_EVENT_TABLE(AutoRecoveryDialog, wxDialogWrapper)
    EVT_BUTTON(ID_RECOVER_ALL, AutoRecoveryDialog::OnRecoverAll)
    EVT_BUTTON(ID_RECOVER_NONE, AutoRecoveryDialog::OnRecoverNone)
    EVT_BUTTON(ID_QUIT_AUDACITY, AutoRecoveryDialog::OnQuitAudacity)

@@ -145,7 +145,7 @@ class ToolBarGrabber final : public wxPanelWrapper
    DECLARE_EVENT_TABLE();
 };
 
-class ToolBarDialog final : public wxDialog
+class ToolBarDialog final : public wxDialogWrapper
 {
  public:
    DECLARE_DYNAMIC_CLASS(ToolBarDialog)
