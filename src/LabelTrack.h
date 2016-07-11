@@ -62,6 +62,11 @@ public:
    bool AdjustEdge( int iEdge, double fNewTime);
    void MoveLabel( int iEdge, double fNewTime);
 
+   struct BadFormatException {};
+   static LabelStruct Import(wxTextFile &file, int index);
+
+   void Export(wxTextFile &file) const;
+
    /// Relationships between selection region and labels
    enum TimeRelations
    {
