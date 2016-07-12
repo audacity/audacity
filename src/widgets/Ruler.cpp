@@ -2782,7 +2782,7 @@ void AdornedRulerPanel::OnToggleScrubBar(/*wxCommandEvent&*/)
    wxSize size { GetSize().GetWidth(), GetRulerHeight(mShowScrubbing) };
    SetSize(size);
    SetMinSize(size);
-   PostSizeEventToParent();
+   GetParent()->PostSizeEventToParent();
 }
 
 void AdornedRulerPanel::OnContextMenu(wxContextMenuEvent & WXUNUSED(event))
