@@ -1565,12 +1565,20 @@ void LabelTrack::HandleClick(const wxMouseEvent & evt,
             // Find the NEW drag end
             auto position = FindCurrentCursorPosition(evt.m_x);
 
+            // Anchor shift-drag at the farther end of the previous highlight
+            // that is farther from the click, on Mac, for consistency with
+            // its text editors, but on the others, re-use the previous
+            // anchor.
             if (evt.ShiftDown()) {
+#ifdef __WXMAC__
                // Set the drag anchor at the end of the previous selection
                // that is farther from the NEW drag end
                if (abs(position - mCurrentCursorPos) >
                    abs(position - mInitialCursorPos))
                   mInitialCursorPos = mCurrentCursorPos;
+#else
+               // mInitialCursorPos remains as before
+#endif
             }
             else
                mInitialCursorPos = position;
