@@ -16,11 +16,11 @@
 #ifndef __AUDACITY_SOUND_ACTIVATED_RECORD__
 #define __AUDACITY_SOUND_ACTIVATED_RECORD__
 
-#include <wx/dialog.h>
+#include "widgets/wxPanelWrapper.h"
 
 class ShuttleGui;
 
-class SoundActivatedRecord final : public wxDialog
+class SoundActivatedRecord final : public wxDialogWrapper
 {
 public:
    SoundActivatedRecord(wxWindow* parent);

@@ -157,7 +157,7 @@ static const char * ZoomOut[] = {
 
 // FreqWindow
 
-BEGIN_EVENT_TABLE(FreqWindow, wxDialog)
+BEGIN_EVENT_TABLE(FreqWindow, wxDialogWrapper)
    EVT_CLOSE(FreqWindow::OnCloseWindow)
    EVT_SIZE(FreqWindow::OnSize)
    EVT_SLIDER(FreqZoomSliderID, FreqWindow::OnZoomSlider)
@@ -187,7 +187,7 @@ SpectrumAnalyst::~SpectrumAnalyst()
 FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
                            const wxString & title,
                            const wxPoint & pos)
-:  wxDialog(parent, id, title, pos, wxDefaultSize,
+:  wxDialogWrapper(parent, id, title, pos, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX),
    mData(NULL),
    mBitmap(NULL),
@@ -544,7 +544,7 @@ bool FreqWindow::Show(bool show)
       Recalc();
    }
 
-   bool res = wxDialog::Show(show);
+   bool res = wxDialogWrapper::Show(show);
 
    return res;
 }

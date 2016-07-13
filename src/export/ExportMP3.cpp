@@ -262,7 +262,7 @@ static void InitMP3_Statics()
    }
 }
 
-class ExportMP3Options final : public wxPanel
+class ExportMP3Options final : public wxPanelWrapper
 {
 public:
 
@@ -305,7 +305,7 @@ private:
    DECLARE_EVENT_TABLE()
 };
 
-BEGIN_EVENT_TABLE(ExportMP3Options, wxPanel)
+BEGIN_EVENT_TABLE(ExportMP3Options, wxPanelWrapper)
    EVT_RADIOBUTTON(ID_SET,    ExportMP3Options::OnSET)
    EVT_RADIOBUTTON(ID_VBR,    ExportMP3Options::OnVBR)
    EVT_RADIOBUTTON(ID_ABR,    ExportMP3Options::OnABR)
@@ -317,7 +317,7 @@ END_EVENT_TABLE()
 ///
 ///
 ExportMP3Options::ExportMP3Options(wxWindow *parent, int WXUNUSED(format))
-:  wxPanel(parent, wxID_ANY)
+:  wxPanelWrapper(parent, wxID_ANY)
 {
    InitMP3_Statics();
 
@@ -580,14 +580,14 @@ int ExportMP3Options::FindIndex(CHOICES *choices, int cnt, int needle, int def)
 #define ID_BROWSE 5000
 #define ID_DLOAD  5001
 
-class FindDialog final : public wxDialog
+class FindDialog final : public wxDialogWrapper
 {
 public:
 
 #ifndef DISABLE_DYNAMIC_LOADING_LAME
 
    FindDialog(wxWindow *parent, wxString path, wxString name, wxString type)
-   :  wxDialog(parent, wxID_ANY,
+   :  wxDialogWrapper(parent, wxID_ANY,
    /* i18n-hint: LAME is the name of an MP3 converter and should not be translated*/
    wxString(_("Locate Lame")))
    {
@@ -702,7 +702,7 @@ private:
 };
 
 #ifndef DISABLE_DYNAMIC_LOADING_LAME
-BEGIN_EVENT_TABLE(FindDialog, wxDialog)
+BEGIN_EVENT_TABLE(FindDialog, wxDialogWrapper)
    EVT_BUTTON(ID_BROWSE, FindDialog::OnBrowse)
    EVT_BUTTON(ID_DLOAD,  FindDialog::OnDownload)
 END_EVENT_TABLE()
@@ -1396,6 +1396,7 @@ void MP3Exporter::PutInfoTag(wxFFile & f, wxFileOffset off)
 {
    if (mGF) {
       if (mInfoTagLen > 0) {
+         // FIXME: TRAP_ERR Seek and writ ein MP3 exporter could fail.
          f.Seek(off, wxFromStart);
          f.Write(mInfoTagBuf, mInfoTagLen);
       }
@@ -1927,7 +1928,7 @@ wxString ExportMP3::FindName(CHOICES *choices, int cnt, int needle)
 
 int ExportMP3::AskResample(int bitrate, int rate, int lowrate, int highrate)
 {
-   wxDialog d(NULL, wxID_ANY, wxString(_("Invalid sample rate")));
+   wxDialogWrapper d(nullptr, wxID_ANY, wxString(_("Invalid sample rate")));
    d.SetName(d.GetTitle());
    wxChoice *choice;
    ShuttleGui S(&d, eIsCreating);

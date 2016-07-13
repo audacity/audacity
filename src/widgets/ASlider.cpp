@@ -178,7 +178,7 @@ void TipPanel::OnCreate(wxWindowCreateEvent & WXUNUSED(event))
 // SliderDialog
 //
 
-BEGIN_EVENT_TABLE(SliderDialog, wxDialog)
+BEGIN_EVENT_TABLE(SliderDialog, wxDialogWrapper)
    EVT_SLIDER(wxID_ANY,SliderDialog::OnSlider)
 END_EVENT_TABLE();
 
@@ -190,7 +190,7 @@ SliderDialog::SliderDialog(wxWindow * parent, wxWindowID id,
                            float value,
                            float line,
                            float page):
-   wxDialog(parent,id,title,position),
+   wxDialogWrapper(parent,id,title,position),
    mStyle(style)
 {
    SetName(GetTitle());
@@ -1067,7 +1067,7 @@ wxString LWSlider::GetMaxTip() const
       switch(mStyle)
       {
       case FRAC_SLIDER:
-         val.Printf(wxT("%d.99"), (int) mMinValue - mMaxValue);
+         val.Printf(wxT("%d.99"), (int) (mMinValue - mMaxValue));
          break;
 
       case DB_SLIDER:
@@ -1781,6 +1781,22 @@ bool ASlider::Enable(bool enable)
 bool ASlider::IsEnabled() const
 {
    return mLWSlider->GetEnabled();
+}
+
+bool ASlider::s_AcceptsFocus{ false };
+
+auto ASlider::TemporarilyAllowFocus() -> TempAllowFocus {
+   s_AcceptsFocus = true;
+   return std::move(TempAllowFocus{ &s_AcceptsFocus });
+}
+
+// This compensates for a but in wxWidgets 3.0.2 for mac:
+// Couldn't set focus from keyboard when AcceptsFocus returns false;
+// this bypasses that limitation
+void ASlider::SetFocusFromKbd()
+{
+   auto temp = TemporarilyAllowFocus();
+   SetFocus();
 }
 
 #if wxUSE_ACCESSIBILITY

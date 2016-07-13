@@ -16,11 +16,11 @@
 #ifndef __AUDACITY_LINKINGHTMLWINDOW__
 #define __AUDACITY_LINKINGHTMLWINDOW__
 
-#include <wx/dialog.h>
 #include <wx/html/htmlwin.h>
 #include <wx/frame.h>
 
 #include "HtmlWindow.h"
+#include "wxPanelWrapper.h"
 
 void OpenInDefaultBrowser(const wxHtmlLinkInfo& link);
 
@@ -36,7 +36,7 @@ class AUDACITY_DLL_API LinkingHtmlWindow final : public HtmlWindow
 
 };
 
-class BrowserDialog /* not final */ : public wxDialog
+class BrowserDialog /* not final */ : public wxDialogWrapper
 {
 public:
    enum { ID = 0 };
@@ -52,6 +52,7 @@ public:
 
 
    HtmlWindow * mpHtml;
+   bool mDismissed{};
    DECLARE_EVENT_TABLE()
 };
 

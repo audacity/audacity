@@ -291,6 +291,8 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
 #endif
 
    // AS: Selection handling
+   void SelectTrack(Track *track, bool selected, bool updateLastPicked = true);
+   void SelectRangeOfTracks(Track *sTrack, Track *eTrack);
    virtual void HandleSelect(wxMouseEvent & event);
    virtual void SelectionHandleDrag(wxMouseEvent &event, Track *pTrack);
 
@@ -387,7 +389,7 @@ protected:
    // MM: Handle mouse wheel rotation
    virtual void HandleWheelRotation(wxMouseEvent & event);
    virtual void HandleWheelRotationInVRuler
-      (wxMouseEvent &event, Track *pTrack, const wxRect &rect);
+      (wxMouseEvent &event, double steps, Track *pTrack, const wxRect &rect);
 
    // Handle resizing.
    virtual void HandleResizeClick(wxMouseEvent & event);
@@ -396,6 +398,12 @@ protected:
    virtual void HandleResize(wxMouseEvent & event);
 
    virtual void HandleLabelClick(wxMouseEvent & event);
+
+public:
+   virtual void HandleListSelection(Track *t, bool shift, bool ctrl,
+                                    bool modifyState = true);
+
+protected:
    virtual void HandleRearrange(wxMouseEvent & event);
    virtual void CalculateRearrangingThresholds(wxMouseEvent & event);
    virtual void HandleClosing(wxMouseEvent & event);
@@ -563,11 +571,13 @@ protected:
    int mPrevHeight;
 
    SelectedRegion mInitialSelection;
-   // Extra indirection to avoid the stupid MSW compiler warnings!  Rrrr!
-   std::vector<bool> *mInitialTrackSelection;
+   std::vector<bool> mInitialTrackSelection;
+   Track *mInitialLastPickedTrack {};
 
    bool mSelStartValid;
    double mSelStart;
+
+   Track *mLastPickedTrack {};
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    enum eFreqSelMode {

@@ -1603,18 +1603,18 @@ void Ruler::SetUseZoomInfo(int leftOffset, const ZoomInfo *zoomInfo)
 // RulerPanel
 //
 
-BEGIN_EVENT_TABLE(RulerPanel, wxPanel)
+BEGIN_EVENT_TABLE(RulerPanel, wxPanelWrapper)
    EVT_ERASE_BACKGROUND(RulerPanel::OnErase)
    EVT_PAINT(RulerPanel::OnPaint)
    EVT_SIZE(RulerPanel::OnSize)
 END_EVENT_TABLE()
 
-IMPLEMENT_CLASS(RulerPanel, wxPanel)
+IMPLEMENT_CLASS(RulerPanel, wxPanelWrapper)
 
 RulerPanel::RulerPanel(wxWindow* parent, wxWindowID id,
                        const wxPoint& pos /*= wxDefaultPosition*/,
                        const wxSize& size /*= wxDefaultSize*/):
-   wxPanel(parent, id, pos, size)
+   wxPanelWrapper(parent, id, pos, size)
 {
 }
 
@@ -1651,7 +1651,7 @@ void RulerPanel::DoSetSize(int x, int y,
                            int width, int height,
                            int sizeFlags)
 {
-   wxPanel::DoSetSize(x, y, width, height, sizeFlags);
+   wxPanelWrapper::DoSetSize(x, y, width, height, sizeFlags);
 
    int w, h;
    GetClientSize(&w, &h);
@@ -1669,11 +1669,6 @@ enum : int {
    TopMargin = 1,
    BottomMargin = 2, // for bottom bevel and bottom line
    LeftMargin = 1,
-
-   FocusBorder = 2,
-   FocusBorderLeft = FocusBorder,
-   FocusBorderTop = FocusBorder,
-   FocusBorderBottom = FocusBorder + 1, // count 1 for the black stroke
 
    RightMargin = 1,
 };
@@ -1953,13 +1948,14 @@ BEGIN_EVENT_TABLE(AdornedRulerPanel, OverlayPanel)
 
 END_EVENT_TABLE()
 
-AdornedRulerPanel::AdornedRulerPanel(AudacityProject* parent,
+AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
+                                     wxWindow *parent,
                                      wxWindowID id,
                                      const wxPoint& pos,
                                      const wxSize& size,
                                      ViewInfo *viewinfo)
 :  OverlayPanel(parent, id, pos, size)
-, mProject(parent)
+, mProject(project)
 , mViewInfo(viewinfo)
 {
    for (auto &button : mButtons)
@@ -1991,7 +1987,7 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* parent,
    mRuler.SetLabelEdges( false );
    mRuler.SetFormat( Ruler::TimeFormat );
 
-   mTracks = parent->GetTracks();
+   mTracks = project->GetTracks();
 
    mSnapManager = NULL;
    mIsSnapped = false;
@@ -2079,7 +2075,7 @@ void AdornedRulerPanel::ReCreateButtons()
 
    // Make the short row of time ruler pushbottons.
    // Don't bother with sizers.  Their sizes and positions are fixed.
-   wxPoint position{ FocusBorderLeft, 0 };
+   wxPoint position{ 1 + LeftMargin, 0 };
    size_t iButton = 0;
    auto size = theTheme.ImageSize( bmpRecoloredUpSmall );
    size.y = std::min(size.y, GetRulerHeight(false));
@@ -2332,10 +2328,6 @@ bool AdornedRulerPanel::IsWithinMarker(int mousePosX, double markerTime)
 
 void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
 {
-   // PRL:  why do I need these two lines on Windows but not on Mac?
-   if (evt.ButtonDown(wxMOUSE_BTN_ANY))
-      SetFocus();
-
    // Disable mouse actions on Timeline while recording.
    if (mIsRecording) {
       if (HasCapture())
@@ -2790,7 +2782,7 @@ void AdornedRulerPanel::OnToggleScrubBar(/*wxCommandEvent&*/)
    wxSize size { GetSize().GetWidth(), GetRulerHeight(mShowScrubbing) };
    SetSize(size);
    SetMinSize(size);
-   PostSizeEventToParent();
+   GetParent()->PostSizeEventToParent();
 }
 
 void AdornedRulerPanel::OnContextMenu(wxContextMenuEvent & WXUNUSED(event))
@@ -2819,8 +2811,8 @@ void AdornedRulerPanel::UpdateButtonStates()
       const auto label = state
       // Label descibes the present state, not what the click does
       // (which is, to toggle the state)
-      ? _("Pinned play/record Head")
-      : _("Unpinned play/record Head");
+      ? _("Pinned Record/Play head")
+      : _("Unpinned Record/Play head");
       common(*pinButton, wxT("PinnedHead"), label);
    }
 }
@@ -3075,26 +3067,10 @@ void AdornedRulerPanel::DoDrawBackground(wxDC * dc)
 
 void AdornedRulerPanel::DoDrawEdge(wxDC *dc)
 {
-   if (HasFocus()) {
-      dc->SetBrush(*wxTRANSPARENT_BRUSH);
-      wxRect rect{ mOuter };
-      --rect.height;  // Leave room for the black stroke
-
-      AColor::TrackFocusPen(dc, 1);
-      dc->DrawRectangle(rect);
-
-      AColor::TrackFocusPen(dc, 0);
-      rect.Deflate(1, 1);
-      dc->DrawRectangle(rect);
-
-      static_assert(FocusBorder == 2, "Draws the wrong number of rectangles");
-   }
-   else {
-      wxRect r = mOuter;
-      r.width -= RightMargin;
-      r.height -= BottomMargin;
-      AColor::BevelTrackInfo( *dc, true, r );
-   }
+   wxRect r = mOuter;
+   r.width -= RightMargin;
+   r.height -= BottomMargin;
+   AColor::BevelTrackInfo( *dc, true, r );
 
    // Black stroke at bottom
    dc->SetPen( *wxBLACK_PEN );
@@ -3102,8 +3078,6 @@ void AdornedRulerPanel::DoDrawEdge(wxDC *dc)
                 mOuter.y + mOuter.height - 1,
                 mOuter.x + mOuter.width,
                 mOuter.y + mOuter.height - 1 );
-
-   static_assert(FocusBorderBottom == 1 + FocusBorder, "Button area might be wrong");
 }
 
 void AdornedRulerPanel::DoDrawMarks(wxDC * dc, bool /*text */ )
@@ -3309,4 +3283,17 @@ void AdornedRulerPanel::GetPlayRegion(double* playRegionStart,
 void AdornedRulerPanel::GetMaxSize(wxCoord *width, wxCoord *height)
 {
    mRuler.GetMaxSize(width, height);
+}
+
+bool AdornedRulerPanel::s_AcceptsFocus{ false };
+
+auto AdornedRulerPanel::TemporarilyAllowFocus() -> TempAllowFocus {
+   s_AcceptsFocus = true;
+   return std::move(TempAllowFocus{ &s_AcceptsFocus });
+}
+
+void AdornedRulerPanel::SetFocusFromKbd()
+{
+   auto temp = TemporarilyAllowFocus();
+   SetFocus();
 }

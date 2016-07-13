@@ -448,7 +448,7 @@ class TrackList final : public wxEvtHandler, public ListOfTracks
    TrackNodePointer Remove(Track *t);
 
    /// Make the list empty
-   void Clear();
+   void Clear(bool sendEvent = true);
 
    /** Select a track, and if it is linked to another track, select it, too. */
    void Select(Track * t, bool selected = true);

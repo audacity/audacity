@@ -407,6 +407,7 @@ void ODPCMAliasBlockFile::WriteSummary()
 
    mFileNameMutex.Unlock();
 
+   // JKC ANSWER-ME: Whay is IsOpened() commented out?
    if( !summaryFile){//.IsOpened() ){
 
       // Never silence the Log w.r.t write errors; they always count
@@ -531,6 +532,8 @@ int ODPCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
       // libsndfile can't (under Windows).
       sf.reset(SFCall<SNDFILE*>(sf_open_fd, f.fd(), SFM_READ, &info, FALSE));
    }
+   // FIXME: TRAP_ERR failure of wxFile open incompletely handled in ODPCMAliasBlockFile::ReadData.
+
 
    if (!sf) {
 

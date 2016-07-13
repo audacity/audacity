@@ -140,7 +140,7 @@ enum {
    ID_TOGGLEBUTTON_SOLO,
 };
 
-BEGIN_EVENT_TABLE(MixerTrackCluster, wxPanel)
+BEGIN_EVENT_TABLE(MixerTrackCluster, wxPanelWrapper)
    EVT_MOUSE_EVENTS(MixerTrackCluster::OnMouseEvent)
    EVT_PAINT(MixerTrackCluster::OnPaint)
 
@@ -157,7 +157,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
                                        WaveTrack* pLeftTrack, WaveTrack* pRightTrack /*= NULL*/,
                                        const wxPoint& pos /*= wxDefaultPosition*/,
                                        const wxSize& size /*= wxDefaultSize*/)
-: wxPanel(parent, -1, pos, size)
+: wxPanelWrapper(parent, -1, pos, size)
 {
    mMixerBoard = grandParent;
    mProject = project;
@@ -699,65 +699,21 @@ wxColour MixerTrackCluster::GetTrackColor()
 
 // event handlers
 
-void MixerTrackCluster::HandleSelect(const bool bShiftDown)
+void MixerTrackCluster::HandleSelect(bool bShiftDown, bool bControlDown)
 {
-   if (bShiftDown)
-   {
-      // ShiftDown => Just toggle selection on this track.
 #ifdef EXPERIMENTAL_MIDI_OUT
-      bool bSelect = !mTrack->GetSelected();
-      mTrack->SetSelected(bSelect);
+   Track *pTrack = mTrack;
 #else
-      bool bSelect = !mLeftTrack->GetSelected();
-      mLeftTrack->SetSelected(bSelect);
+   Track *pTrack = mLeftTrack;
 #endif
-      if (mRightTrack)
-         mRightTrack->SetSelected(bSelect);
 
-      // Refresh only this MixerTrackCluster and WaveTrack in TrackPanel.
-      this->Refresh(true);
-#ifdef EXPERIMENTAL_MIDI_OUT
-      mProject->RefreshTPTrack(mTrack);
-#else
-      mProject->RefreshTPTrack(mLeftTrack);
-#endif
-   }
-   else
-   {
-      // exclusive select
-      mProject->SelectNone();
-#ifdef EXPERIMENTAL_MIDI_OUT
-      mTrack->SetSelected(true);
-#else
-      mLeftTrack->SetSelected(true);
-#endif
-      if (mRightTrack)
-         mRightTrack->SetSelected(true);
-
-      if (mProject->GetSel0() >= mProject->GetSel1())
-      {
-         // No range previously selected, so use the range of this track.
-#ifdef EXPERIMENTAL_MIDI_OUT
-         mProject->mViewInfo.selectedRegion.setTimes(
-            mTrack->GetOffset(), mTrack->GetEndTime());
-#else
-         mProject->mViewInfo.selectedRegion.setTimes(
-            mLeftTrack->GetOffset(), mLeftTrack->GetEndTime());
-#endif
-      }
-
-      // Exclusive select, so refresh all MixerTrackClusters.
-      //    This could just be a call to wxWindow::Refresh, but this is
-      //    more efficient and when ProjectLogo is shown as background,
-      //    it's necessary to prevent blinking.
-      mMixerBoard->RefreshTrackClusters(false);
-   }
+   mProject->GetTrackPanel()->HandleListSelection(pTrack, bShiftDown, bControlDown);
 }
 
 void MixerTrackCluster::OnMouseEvent(wxMouseEvent& event)
 {
    if (event.ButtonUp())
-      this->HandleSelect(event.ShiftDown());
+      this->HandleSelect(event.ShiftDown(), event.ControlDown());
    else
       event.Skip();
 }
@@ -776,26 +732,23 @@ void MixerTrackCluster::OnPaint(wxPaintEvent & WXUNUSED(event))
    wxRect bev(0, 0, clusterSize.GetWidth() - 1, clusterSize.GetHeight() - 1);
 
 #ifdef EXPERIMENTAL_MIDI_OUT
-   if (mTrack->GetSelected())
+   auto selected = mTrack->GetSelected();
 #else
-   if (mLeftTrack->GetSelected())
+   auto selected = mLeftTrack->GetSelected();
 #endif
+
+   for (unsigned int i = 0; i < 4; i++) // 4 gives a big bevel, but there were complaints about visibility otherwise.
    {
-      for (unsigned int i = 0; i < 4; i++) // 4 gives a big bevel, but there were complaints about visibility otherwise.
-      {
-         bev.Inflate(-1, -1);
-         AColor::Bevel(dc, false, bev);
-      }
+      bev.Inflate(-1, -1);
+      AColor::Bevel(dc, !selected, bev);
    }
-   else
-      AColor::Bevel(dc, true, bev);
 }
 
 
 void MixerTrackCluster::OnButton_MusicalInstrument(wxCommandEvent& WXUNUSED(event))
 {
-   bool bShiftDown = ::wxGetMouseState().ShiftDown();
-   this->HandleSelect(bShiftDown);
+   const auto &state = ::wxGetMouseState();
+   this->HandleSelect(state.ShiftDown(), state.ControlDown());
 }
 
 void MixerTrackCluster::OnSlider_Gain(wxCommandEvent& WXUNUSED(event))

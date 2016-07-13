@@ -1209,12 +1209,15 @@
 		28FE4A080ABF4E960056F5C4 /* mmx_optimized.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28FE4A060ABF4E960056F5C4 /* mmx_optimized.cpp */; };
 		28FE4A090ABF4E960056F5C4 /* sse_optimized.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28FE4A070ABF4E960056F5C4 /* sse_optimized.cpp */; };
 		5E02BFF21D1164DF00EB7578 /* Distortion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E02BFF01D1164DF00EB7578 /* Distortion.cpp */; };
+		5E0A0E311D23019A00CD2567 /* MenusMac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E0A0E301D23019A00CD2567 /* MenusMac.cpp */; };
 		5E74D2E31CC4429700D88B0B /* EditCursorOverlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E74D2DD1CC4429700D88B0B /* EditCursorOverlay.cpp */; };
 		5E74D2E41CC4429700D88B0B /* PlayIndicatorOverlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E74D2DF1CC4429700D88B0B /* PlayIndicatorOverlay.cpp */; };
 		5E74D2E51CC4429700D88B0B /* Scrubbing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E74D2E11CC4429700D88B0B /* Scrubbing.cpp */; };
+		5E94A1BA1D1F1C8400A8713A /* wxPanelWrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E94A1B81D1F1C8400A8713A /* wxPanelWrapper.cpp */; };
 		5ED1D0AD1CDE55BD00471E3C /* Overlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5ED1D0A91CDE55BD00471E3C /* Overlay.cpp */; };
 		5ED1D0AE1CDE55BD00471E3C /* OverlayPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5ED1D0AB1CDE55BD00471E3C /* OverlayPanel.cpp */; };
 		5ED1D0B11CDE560C00471E3C /* BackedPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5ED1D0AF1CDE560C00471E3C /* BackedPanel.cpp */; };
+		5EF17C231D1F0A690090A642 /* ScrubbingToolBar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF17C211D1F0A690090A642 /* ScrubbingToolBar.cpp */; };
 		8406A93812D0F2510011EA01 /* EQDefaultCurves.xml in Resources */ = {isa = PBXBuildFile; fileRef = 8406A93712D0F2510011EA01 /* EQDefaultCurves.xml */; };
 		8484F31413086237002DF7F0 /* DeviceManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8484F31213086237002DF7F0 /* DeviceManager.cpp */; };
 		ED15214D163C22F000451B5F /* lsr.c in Sources */ = {isa = PBXBuildFile; fileRef = ED152123163C220300451B5F /* lsr.c */; };
@@ -2976,6 +2979,7 @@
 		28FEC1B21A12B6FB00FACE48 /* EffectAutomationParameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EffectAutomationParameters.h; path = ../include/audacity/EffectAutomationParameters.h; sourceTree = SOURCE_ROOT; };
 		5E02BFF01D1164DF00EB7578 /* Distortion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Distortion.cpp; sourceTree = "<group>"; };
 		5E02BFF11D1164DF00EB7578 /* Distortion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Distortion.h; sourceTree = "<group>"; };
+		5E0A0E301D23019A00CD2567 /* MenusMac.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MenusMac.cpp; sourceTree = "<group>"; };
 		5E4685F81CCA9D84008741F2 /* CommandFunctors.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CommandFunctors.h; sourceTree = "<group>"; };
 		5E61EE0C1CBAA6BB0009FCF1 /* MemoryX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemoryX.h; sourceTree = "<group>"; };
 		5E74D2D91CC4427B00D88B0B /* TrackPanelCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackPanelCell.h; sourceTree = "<group>"; };
@@ -2986,6 +2990,8 @@
 		5E74D2E01CC4429700D88B0B /* PlayIndicatorOverlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayIndicatorOverlay.h; sourceTree = "<group>"; };
 		5E74D2E11CC4429700D88B0B /* Scrubbing.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Scrubbing.cpp; sourceTree = "<group>"; };
 		5E74D2E21CC4429700D88B0B /* Scrubbing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Scrubbing.h; sourceTree = "<group>"; };
+		5E94A1B81D1F1C8400A8713A /* wxPanelWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = wxPanelWrapper.cpp; sourceTree = "<group>"; };
+		5E94A1B91D1F1C8400A8713A /* wxPanelWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = wxPanelWrapper.h; sourceTree = "<group>"; };
 		5ED18DB61CC16B1E00FAFE95 /* Reverb_libSoX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reverb_libSoX.h; sourceTree = "<group>"; };
 		5ED18DB71CC290AB00FAFE95 /* wxFileNameWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = wxFileNameWrapper.h; sourceTree = "<group>"; };
 		5ED1D0A91CDE55BD00471E3C /* Overlay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Overlay.cpp; sourceTree = "<group>"; };
@@ -2994,6 +3000,8 @@
 		5ED1D0AC1CDE55BD00471E3C /* OverlayPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OverlayPanel.h; sourceTree = "<group>"; };
 		5ED1D0AF1CDE560C00471E3C /* BackedPanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BackedPanel.cpp; sourceTree = "<group>"; };
 		5ED1D0B01CDE560C00471E3C /* BackedPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackedPanel.h; sourceTree = "<group>"; };
+		5EF17C211D1F0A690090A642 /* ScrubbingToolBar.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScrubbingToolBar.cpp; sourceTree = "<group>"; };
+		5EF17C221D1F0A690090A642 /* ScrubbingToolBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScrubbingToolBar.h; sourceTree = "<group>"; };
 		82FF184D13CF01A600C1B664 /* dBTable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dBTable.cpp; path = sbsms/src/dBTable.cpp; sourceTree = "<group>"; };
 		82FF184E13CF01A600C1B664 /* dBTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dBTable.h; path = sbsms/src/dBTable.h; sourceTree = "<group>"; };
 		82FF184F13CF01A600C1B664 /* slide.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = slide.cpp; path = sbsms/src/slide.cpp; sourceTree = "<group>"; };
@@ -3857,6 +3865,7 @@
 				1865A9B61004490500946EE6 /* LyricsWindow.cpp */,
 				28EBA7FF0A78FAF800C8BB1F /* Matrix.cpp */,
 				1790B0A709883BFD008A330A /* Menus.cpp */,
+				5E0A0E301D23019A00CD2567 /* MenusMac.cpp */,
 				1790B0AB09883BFD008A330A /* Mix.cpp */,
 				289E75081006D0BD00CEF79B /* MixerBoard.cpp */,
 				280A8B4519F4403B0091DE70 /* ModuleManager.cpp */,
@@ -4299,53 +4308,55 @@
 			isa = PBXGroup;
 			children = (
 				1790B0FE09883BFD008A330A /* AButton.cpp */,
-				1790B10009883BFD008A330A /* ASlider.cpp */,
-				28F1D8170A2D0018005506A7 /* AttachableScrollBar.cpp */,
-				5ED1D0AF1CDE560C00471E3C /* BackedPanel.cpp */,
-				283AA0E90C56ED08002CBD34 /* ErrorDialog.cpp */,
-				28F1D8190A2D0018005506A7 /* ExpandingToolBar.cpp */,
-				28CCDCFF0F939FD70081F2FC /* FileHistory.cpp */,
-				2897F6FC0AB3DCD0003C20C5 /* Grabber.cpp */,
-				280828580A75E0EA000002EF /* Grid.cpp */,
-				280112791943EE0E00D98A16 /* HelpSystem.cpp */,
-				28530C480DF2105200555C94 /* HtmlWindow.cpp */,
-				28F1D81B0A2D0019005506A7 /* ImageRoll.cpp */,
-				2849A41E17F8BEC2005C653F /* KeyView.cpp */,
-				2816372C0BAE3B6C0079C746 /* LinkingHtmlWindow.cpp */,
-				1790B10309883BFD008A330A /* Meter.cpp */,
-				1790B10509883BFD008A330A /* MultiDialog.cpp */,
-				28001B3C1A0F0E5D007DD161 /* NumericTextCtrl.cpp */,
-				28F2CED0181867BB00573D61 /* numformatter.cpp */,
-				5ED1D0A91CDE55BD00471E3C /* Overlay.cpp */,
-				5ED1D0AB1CDE55BD00471E3C /* OverlayPanel.cpp */,
-				28530C4A0DF2105200555C94 /* ProgressDialog.cpp */,
-				1790B10709883BFD008A330A /* Ruler.cpp */,
-				28F2CED2181867BB00573D61 /* valnum.cpp */,
-				1790B10B09883BFD008A330A /* Warning.cpp */,
 				1790B0FF09883BFD008A330A /* AButton.h */,
+				1790B10009883BFD008A330A /* ASlider.cpp */,
 				1790B10109883BFD008A330A /* ASlider.h */,
+				28F1D8170A2D0018005506A7 /* AttachableScrollBar.cpp */,
 				28F1D8180A2D0018005506A7 /* AttachableScrollBar.h */,
+				5ED1D0AF1CDE560C00471E3C /* BackedPanel.cpp */,
 				5ED1D0B01CDE560C00471E3C /* BackedPanel.h */,
+				283AA0E90C56ED08002CBD34 /* ErrorDialog.cpp */,
 				283AA0EA0C56ED08002CBD34 /* ErrorDialog.h */,
+				28F1D8190A2D0018005506A7 /* ExpandingToolBar.cpp */,
 				28F1D81A0A2D0018005506A7 /* ExpandingToolBar.h */,
+				28CCDCFF0F939FD70081F2FC /* FileHistory.cpp */,
 				28CCDD040F93A0B20081F2FC /* FileHistory.h */,
+				2897F6FC0AB3DCD0003C20C5 /* Grabber.cpp */,
 				2897F6FD0AB3DCD0003C20C5 /* Grabber.h */,
+				280828580A75E0EA000002EF /* Grid.cpp */,
 				280828590A75E0EA000002EF /* Grid.h */,
+				280112791943EE0E00D98A16 /* HelpSystem.cpp */,
 				2801127A1943EE0E00D98A16 /* HelpSystem.h */,
+				28530C480DF2105200555C94 /* HtmlWindow.cpp */,
 				28530C490DF2105200555C94 /* HtmlWindow.h */,
+				28F1D81B0A2D0019005506A7 /* ImageRoll.cpp */,
 				28F1D81C0A2D0019005506A7 /* ImageRoll.h */,
+				2849A41E17F8BEC2005C653F /* KeyView.cpp */,
 				2849A41F17F8BEC2005C653F /* KeyView.h */,
+				2816372C0BAE3B6C0079C746 /* LinkingHtmlWindow.cpp */,
 				2816372D0BAE3B6C0079C746 /* LinkingHtmlWindow.h */,
+				1790B10309883BFD008A330A /* Meter.cpp */,
 				1790B10409883BFD008A330A /* Meter.h */,
+				1790B10509883BFD008A330A /* MultiDialog.cpp */,
 				1790B10609883BFD008A330A /* MultiDialog.h */,
+				28001B3C1A0F0E5D007DD161 /* NumericTextCtrl.cpp */,
 				28001B3D1A0F0E5D007DD161 /* NumericTextCtrl.h */,
+				28F2CED0181867BB00573D61 /* numformatter.cpp */,
 				28F2CED1181867BB00573D61 /* numformatter.h */,
+				5ED1D0A91CDE55BD00471E3C /* Overlay.cpp */,
 				5ED1D0AA1CDE55BD00471E3C /* Overlay.h */,
+				5ED1D0AB1CDE55BD00471E3C /* OverlayPanel.cpp */,
 				5ED1D0AC1CDE55BD00471E3C /* OverlayPanel.h */,
+				28530C4A0DF2105200555C94 /* ProgressDialog.cpp */,
 				28530C4B0DF2105200555C94 /* ProgressDialog.h */,
+				1790B10709883BFD008A330A /* Ruler.cpp */,
 				1790B10809883BFD008A330A /* Ruler.h */,
+				28F2CED2181867BB00573D61 /* valnum.cpp */,
 				28F2CED3181867BB00573D61 /* valnum.h */,
+				1790B10B09883BFD008A330A /* Warning.cpp */,
 				1790B10C09883BFD008A330A /* Warning.h */,
+				5E94A1B81D1F1C8400A8713A /* wxPanelWrapper.cpp */,
+				5E94A1B91D1F1C8400A8713A /* wxPanelWrapper.h */,
 			);
 			path = widgets;
 			sourceTree = "<group>";
@@ -5224,9 +5235,6 @@
 		2897F6DB0AB3DB5A003C20C5 /* toolbars */ = {
 			isa = PBXGroup;
 			children = (
-				28001B481A0F0EB6007DD161 /* SpectralSelectionBar.cpp */,
-				28001B491A0F0EB6007DD161 /* SpectralSelectionBar.h */,
-				28001B4A1A0F0EB6007DD161 /* SpectralSelectionBarListener.h */,
 				2897F6DC0AB3DB5A003C20C5 /* ControlToolBar.cpp */,
 				2897F6DD0AB3DB5A003C20C5 /* ControlToolBar.h */,
 				289F9C7C0AC671BB00797DC1 /* DeviceToolBar.cpp */,
@@ -5237,9 +5245,14 @@
 				2897F6E10AB3DB5A003C20C5 /* MeterToolBar.h */,
 				2897F6E20AB3DB5A003C20C5 /* MixerToolBar.cpp */,
 				2897F6E30AB3DB5A003C20C5 /* MixerToolBar.h */,
+				5EF17C211D1F0A690090A642 /* ScrubbingToolBar.cpp */,
+				5EF17C221D1F0A690090A642 /* ScrubbingToolBar.h */,
 				2897F6E40AB3DB5A003C20C5 /* SelectionBar.cpp */,
 				2897F6E50AB3DB5A003C20C5 /* SelectionBar.h */,
 				2803C8BB19F35B4900278526 /* SelectionBarListener.h */,
+				28001B481A0F0EB6007DD161 /* SpectralSelectionBar.cpp */,
+				28001B491A0F0EB6007DD161 /* SpectralSelectionBar.h */,
+				28001B4A1A0F0EB6007DD161 /* SpectralSelectionBarListener.h */,
 				2897F6E60AB3DB5A003C20C5 /* ToolBar.cpp */,
 				2897F6E70AB3DB5A003C20C5 /* ToolBar.h */,
 				2897F6E80AB3DB5A003C20C5 /* ToolDock.cpp */,
@@ -7323,6 +7336,7 @@
 				1790B12E09883BFD008A330A /* Amplify.cpp in Sources */,
 				1790B13409883BFD008A330A /* ChangePitch.cpp in Sources */,
 				1790B13509883BFD008A330A /* ChangeSpeed.cpp in Sources */,
+				5EF17C231D1F0A690090A642 /* ScrubbingToolBar.cpp in Sources */,
 				1790B13609883BFD008A330A /* ChangeTempo.cpp in Sources */,
 				1790B13709883BFD008A330A /* ClickRemoval.cpp in Sources */,
 				1790B13809883BFD008A330A /* Compressor.cpp in Sources */,
@@ -7341,6 +7355,7 @@
 				1790B14709883BFD008A330A /* Nyquist.cpp in Sources */,
 				1790B14809883BFD008A330A /* Phaser.cpp in Sources */,
 				1790B14A09883BFD008A330A /* Repeat.cpp in Sources */,
+				5E94A1BA1D1F1C8400A8713A /* wxPanelWrapper.cpp in Sources */,
 				1790B14B09883BFD008A330A /* Reverse.cpp in Sources */,
 				1790B14C09883BFD008A330A /* Silence.cpp in Sources */,
 				1790B14D09883BFD008A330A /* SimpleMono.cpp in Sources */,
@@ -7426,6 +7441,7 @@
 				283A11AA0A2C0E15004372C4 /* ShuttleGui.cpp in Sources */,
 				283A11AB0A2C0E15004372C4 /* Theme.cpp in Sources */,
 				28456AC20A2C180E00C23C1E /* ThemePrefs.cpp in Sources */,
+				5E0A0E311D23019A00CD2567 /* MenusMac.cpp in Sources */,
 				28F1D81D0A2D0019005506A7 /* AttachableScrollBar.cpp in Sources */,
 				28F1D81E0A2D0019005506A7 /* ExpandingToolBar.cpp in Sources */,
 				28F1D81F0A2D0019005506A7 /* ImageRoll.cpp in Sources */,

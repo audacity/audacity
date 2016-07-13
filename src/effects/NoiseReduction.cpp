@@ -1486,7 +1486,7 @@ return table;
 } // namespace
 
 
-BEGIN_EVENT_TABLE(EffectNoiseReduction::Dialog, wxDialog)
+BEGIN_EVENT_TABLE(EffectNoiseReduction::Dialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, EffectNoiseReduction::Dialog::OnReduceNoise)
    EVT_BUTTON(wxID_CANCEL, EffectNoiseReduction::Dialog::OnCancel)
    EVT_BUTTON(ID_EFFECT_PREVIEW, EffectNoiseReduction::Dialog::OnPreview)

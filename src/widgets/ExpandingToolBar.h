@@ -20,6 +20,7 @@
 #include <wx/minifram.h>
 
 #include "ImageRoll.h"
+#include "wxPanelWrapper.h"
 
 class wxDragImage;
 
@@ -43,7 +44,7 @@ WX_DECLARE_OBJARRAY(wxRect, wxArrayRect);
 // Can be docked into a ToolBarArea or floated in an ToolBarFrame;
 //
 
-class ExpandingToolBar final : public wxPanel
+class ExpandingToolBar final : public wxPanelWrapper
 {
  public:
    DECLARE_DYNAMIC_CLASS(ExpandingToolBar)
@@ -121,7 +122,7 @@ class ExpandingToolBar final : public wxPanel
    friend class ExpandingToolBarEvtHandler;
 };
 
-class ToolBarGrabber final : public wxPanel
+class ToolBarGrabber final : public wxPanelWrapper
 {
  public:
    DECLARE_DYNAMIC_CLASS(ToolBarGrabber);
@@ -144,7 +145,7 @@ class ToolBarGrabber final : public wxPanel
    DECLARE_EVENT_TABLE();
 };
 
-class ToolBarDialog final : public wxDialog
+class ToolBarDialog final : public wxDialogWrapper
 {
  public:
    DECLARE_DYNAMIC_CLASS(ToolBarDialog)
@@ -193,7 +194,7 @@ class ToolBarFrame final : public wxMiniFrame
 // ToolBarArea sets the height dynamically based on the number of
 // toolbars it contains.
 //
-class ToolBarArea final : public wxPanel
+class ToolBarArea final : public wxPanelWrapper
 {
  public:
    DECLARE_DYNAMIC_CLASS(ToolBarArea)

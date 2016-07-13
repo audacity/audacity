@@ -58,7 +58,7 @@ enum kTableType
 
 static const wxString kTableTypeStrings[kNumTableTypes] =
 {
-   XO("Hard Clip"),
+   XO("Hard Clipping"),
    XO("Soft Clipping"),
    XO("Soft Overdrive"),
    XO("Medium Overdrive"),

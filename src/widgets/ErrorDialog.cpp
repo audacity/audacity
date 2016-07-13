@@ -51,7 +51,7 @@ class AliasedFileMissingDialog final : public ErrorDialog
    virtual ~AliasedFileMissingDialog();
 };
 
-BEGIN_EVENT_TABLE(ErrorDialog, wxDialog)
+BEGIN_EVENT_TABLE(ErrorDialog, wxDialogWrapper)
    EVT_BUTTON( wxID_OK, ErrorDialog::OnOk)
    EVT_BUTTON( wxID_HELP, ErrorDialog::OnHelp)
 END_EVENT_TABLE()
@@ -78,7 +78,7 @@ ErrorDialog::ErrorDialog(
    const wxString & message,
    const wxString & helpURL,
    const bool Close, const bool modal):
-   wxDialog(parent, (wxWindowID)-1, dlogTitle)
+   wxDialogWrapper(parent, (wxWindowID)-1, dlogTitle)
 {
    SetName(GetTitle());
 

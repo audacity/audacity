@@ -258,7 +258,8 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    bool GetDirty() { return mDirty; }
    void SetProjectTitle();
 
-   TrackPanel * GetTrackPanel(){return mTrackPanel;}
+   wxPanel *GetTopPanel() { return mTopPanel; }
+   TrackPanel * GetTrackPanel() {return mTrackPanel;}
 
    bool GetIsEmpty();
 
@@ -311,12 +312,15 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    void OnMenu(wxCommandEvent & event);
    void OnUpdateUI(wxUpdateUIEvent & event);
 
+   void MacShowUndockedToolbars(bool show);
    void OnActivate(wxActivateEvent & event);
+
    void OnMouseEvent(wxMouseEvent & event);
    void OnIconize(wxIconizeEvent &event);
    void OnSize(wxSizeEvent & event);
    void OnShow(wxShowEvent & event);
    void OnMove(wxMoveEvent & event);
+   void DoScroll();
    void OnScroll(wxScrollEvent & event);
    void OnCloseWindow(wxCloseEvent & event);
    void OnTimer(wxTimerEvent & event);
@@ -594,6 +598,7 @@ public:
    wxStatusBar *mStatusBar;
 
    AdornedRulerPanel *mRuler{};
+   wxPanel *mTopPanel{};
    TrackPanel *mTrackPanel{};
    TrackFactory *mTrackFactory{};
    wxPanel * mMainPanel;

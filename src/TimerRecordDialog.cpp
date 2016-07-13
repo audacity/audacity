@@ -116,7 +116,7 @@ wxAccStatus DatePickerCtrlAx::GetState(int WXUNUSED(childId), long *state)
 #endif // wxUSE_ACCESSIBILITY
 
 
-BEGIN_EVENT_TABLE(TimerRecordDialog, wxDialog)
+BEGIN_EVENT_TABLE(TimerRecordDialog, wxDialogWrapper)
    EVT_DATE_CHANGED(ID_DATEPICKER_START, TimerRecordDialog::OnDatePicker_Start)
    EVT_TEXT(ID_TIMETEXT_START, TimerRecordDialog::OnTimeText_Start)
 
@@ -139,7 +139,7 @@ BEGIN_EVENT_TABLE(TimerRecordDialog, wxDialog)
 END_EVENT_TABLE()
 
 TimerRecordDialog::TimerRecordDialog(wxWindow* parent, bool bAlreadySaved)
-: wxDialog(parent, -1, _("Audacity Timer Record"), wxDefaultPosition,
+: wxDialogWrapper(parent, -1, _("Audacity Timer Record"), wxDefaultPosition,
            wxDefaultSize, wxCAPTION)
 {
    SetName(GetTitle());

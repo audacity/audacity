@@ -243,7 +243,7 @@ private:
    NumberScale *mpNumberScale;
 };
 
-class AUDACITY_DLL_API RulerPanel final : public wxPanel {
+class AUDACITY_DLL_API RulerPanel final : public wxPanelWrapper {
    DECLARE_DYNAMIC_CLASS(RulerPanel)
 
  public:
@@ -285,7 +285,8 @@ class QuickPlayRulerOverlay;
 class AUDACITY_DLL_API AdornedRulerPanel final : public OverlayPanel
 {
 public:
-   AdornedRulerPanel(AudacityProject* parent,
+   AdornedRulerPanel(AudacityProject *project,
+                     wxWindow* parent,
                      wxWindowID id,
                      const wxPoint& pos = wxDefaultPosition,
                      const wxSize& size = wxDefaultSize,
@@ -293,9 +294,9 @@ public:
 
    ~AdornedRulerPanel();
 
-#ifndef EXPERIMENTAL_TIME_RULER_NAVIGATION
-   bool AcceptsFocus() const override { return false; }
-#endif
+   bool AcceptsFocus() const override { return s_AcceptsFocus; }
+   bool AcceptsFocusFromKeyboard() const override { return true; }
+   void SetFocusFromKbd() override;
 
 public:
    int GetRulerHeight() { return GetRulerHeight(mShowScrubbing); }
@@ -356,6 +357,14 @@ private:
 public:
    void DoDrawIndicator(wxDC * dc, wxCoord xx, bool playing, int width, bool scrub, bool seek);
    void UpdateButtonStates();
+
+private:
+   static bool s_AcceptsFocus;
+   struct Resetter { void operator () (bool *p) const { if(p) *p = false; } };
+   using TempAllowFocus = std::unique_ptr<bool, Resetter>;
+
+public:
+   static TempAllowFocus TemporarilyAllowFocus();
 
 private:
    QuickPlayIndicatorOverlay *GetOverlay();

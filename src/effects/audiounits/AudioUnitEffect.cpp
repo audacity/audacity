@@ -25,7 +25,6 @@
 #include <wx/filename.h>
 #include <wx/frame.h>
 #include <wx/listctrl.h>
-#include <wx/panel.h>
 #include <wx/sizer.h>
 #include <wx/settings.h>
 #include <wx/stattext.h>
@@ -34,6 +33,7 @@
 
 #include "../../ShuttleGui.h"
 #include "../../widgets/valnum.h"
+#include "../../widgets/wxPanelWrapper.h"
 
 #include "AudioUnitEffect.h"
 
@@ -287,7 +287,7 @@ OSType AudioUnitEffectsModule::ToOSType(const wxString & type)
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-class AudioUnitEffectOptionsDialog final : public wxDialog
+class AudioUnitEffectOptionsDialog final : public wxDialogWrapper
 {
 public:
    AudioUnitEffectOptionsDialog(wxWindow * parent, EffectHostInterface *host);
@@ -308,12 +308,12 @@ private:
    DECLARE_EVENT_TABLE()
 };
 
-BEGIN_EVENT_TABLE(AudioUnitEffectOptionsDialog, wxDialog)
+BEGIN_EVENT_TABLE(AudioUnitEffectOptionsDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, AudioUnitEffectOptionsDialog::OnOk)
 END_EVENT_TABLE()
 
 AudioUnitEffectOptionsDialog::AudioUnitEffectOptionsDialog(wxWindow * parent, EffectHostInterface *host)
-:  wxDialog(parent, wxID_ANY, wxString(_("Audio Unit Effect Options")))
+:  wxDialogWrapper(parent, wxID_ANY, wxString(_("Audio Unit Effect Options")))
 {
    mHost = host;
 
@@ -427,7 +427,7 @@ void AudioUnitEffectOptionsDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
 #define PRESET_LOCAL_PATH wxT("/Library/Audio/Presets")
 #define PRESET_USER_PATH wxT("~/Library/Audio/Presets")
 
-class AudioUnitEffectExportDialog final : public wxDialog
+class AudioUnitEffectExportDialog final : public wxDialogWrapper
 {
 public:
    AudioUnitEffectExportDialog(wxWindow * parent, AudioUnitEffect *effect);
@@ -446,12 +446,12 @@ private:
    DECLARE_EVENT_TABLE()
 };
 
-BEGIN_EVENT_TABLE(AudioUnitEffectExportDialog, wxDialog)
+BEGIN_EVENT_TABLE(AudioUnitEffectExportDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, AudioUnitEffectExportDialog::OnOk)
 END_EVENT_TABLE()
 
 AudioUnitEffectExportDialog::AudioUnitEffectExportDialog(wxWindow * parent, AudioUnitEffect *effect)
-:  wxDialog(parent, wxID_ANY, wxString(_("Export Audio Unit Presets")))
+:  wxDialogWrapper(parent, wxID_ANY, wxString(_("Export Audio Unit Presets")))
 {
    mEffect = effect;
 
@@ -601,7 +601,7 @@ void AudioUnitEffectExportDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-class AudioUnitEffectImportDialog final : public wxDialog
+class AudioUnitEffectImportDialog final : public wxDialogWrapper
 {
 public:
    AudioUnitEffectImportDialog(wxWindow * parent, AudioUnitEffect *effect);
@@ -620,12 +620,12 @@ private:
    DECLARE_EVENT_TABLE()
 };
 
-BEGIN_EVENT_TABLE(AudioUnitEffectImportDialog, wxDialog)
+BEGIN_EVENT_TABLE(AudioUnitEffectImportDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, AudioUnitEffectImportDialog::OnOk)
 END_EVENT_TABLE()
 
 AudioUnitEffectImportDialog::AudioUnitEffectImportDialog(wxWindow * parent, AudioUnitEffect *effect)
-:  wxDialog(parent, wxID_ANY, wxString(_("Import Audio Unit Presets")))
+:  wxDialogWrapper(parent, wxID_ANY, wxString(_("Import Audio Unit Presets")))
 {
    mEffect = effect;
 
@@ -1750,7 +1750,7 @@ bool AudioUnitEffect::PopulateUI(wxWindow *parent)
 {
    OSStatus result;
 
-   mDialog = (wxDialog *) wxGetTopLevelParent(parent);
+   mDialog = static_cast<wxDialog *>(wxGetTopLevelParent(parent));
    mParent = parent;
 
    wxPanel *container;
@@ -1758,7 +1758,7 @@ bool AudioUnitEffect::PopulateUI(wxWindow *parent)
       auto mainSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
 
       wxASSERT(mParent); // To justify safenew
-      container = safenew wxPanel(mParent, wxID_ANY);
+      container = safenew wxPanelWrapper(mParent, wxID_ANY);
       mainSizer->Add(container, 1, wxEXPAND);
 
       mParent->SetSizer(mainSizer.release());

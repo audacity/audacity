@@ -1172,6 +1172,9 @@ AudacityApp::~AudacityApp()
 // main frame
 bool AudacityApp::OnInit()
 {
+   // JKC: ANSWER-ME: Who actually added the event loop guarantor?
+   // Although 'blame' says Leland, I think it came from a donated patch.
+
    // Ensure we have an event loop during initialization
    wxEventLoopGuarantor eventLoop;
 
@@ -1260,10 +1263,19 @@ bool AudacityApp::OnInit()
 
 #endif //__WXGTK__
 
+// JKC Bug 1220: Use path based on home directory on WXMAC
+#ifdef __WXMAC__
+   wxFileName tmpFile;
+   tmpFile.AssignHomeDir();
+   wxString tmpDirLoc = tmpFile.GetPath(wxPATH_GET_VOLUME);
+#else
    wxFileName tmpFile;
    tmpFile.AssignTempFileName(wxT("nn"));
    wxString tmpDirLoc = tmpFile.GetPath(wxPATH_GET_VOLUME);
    ::wxRemoveFile(tmpFile.GetFullPath());
+#endif
+
+
 
    // On Mac and Windows systems, use the directory which contains Audacity.
 #ifdef __WXMSW__
@@ -1291,9 +1303,14 @@ bool AudacityApp::OnInit()
    AddUniquePathToPathList(progPath + wxT("/../"), audacityPathList);
    AddUniquePathToPathList(progPath + wxT("/../Resources"), audacityPathList);
 
-   defaultTempDir.Printf(wxT("%s/audacity-%s"),
-      tmpDirLoc.c_str(),
-      wxGetUserId().c_str());
+   // JKC Bug 1220: Using an actual temp directory for session data on Mac was
+   // wrong because it would get cleared out on a reboot.
+   defaultTempDir.Printf(wxT("%s/Library/Application\ Support/audacity/SessionData"),
+      tmpDirLoc.c_str());
+
+   //defaultTempDir.Printf(wxT("%s/audacity-%s"),
+   //   tmpDirLoc.c_str(),
+   //   wxGetUserId().c_str());
 #endif //__WXMAC__
 
    // Define languanges for which we have translations, but that are not yet
@@ -1406,6 +1423,9 @@ bool AudacityApp::OnInit()
          wxSTAY_ON_TOP);
       temporarywindow.SetTitle(_("Audacity is starting up..."));
       SetTopWindow(&temporarywindow);
+
+      // ANSWER-ME: Why is YieldFor needed at all?
+      //wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI|wxEVT_CATEGORY_USER_INPUT|wxEVT_CATEGORY_UNKNOWN);
       wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI);
 
       //JKC: Would like to put module loading here.
@@ -1443,7 +1463,18 @@ bool AudacityApp::OnInit()
       SetExitOnFrameDelete(false);
 
 #endif //__WXMAC__
+      temporarywindow.Show(false);
+   }
 
+   // Workaround Bug 1377 - Crash after Audacity starts and low disk space warning appears
+   // The temporary splash window is closed AND cleaned up, before attempting to create
+   // a project and possibly creating a modal warning dialog by doing so.
+   // Also fixes problem of warning being obscured.
+   // Downside is that we have no splash screen for the (brief) time that we spend
+   // creating the project.
+   // Root cause is problem with wxSplashScreen and other dialogs co-existing, that
+   // seemed to arrive with wx3.
+   {
       project = CreateNewAudacityProject();
       mCmdHandler->SetProject(project);
       wxWindow * pWnd = MakeHijackPanel();
@@ -1454,8 +1485,6 @@ bool AudacityApp::OnInit()
          SetTopWindow(pWnd);
          pWnd->Show(true);
       }
-
-      temporarywindow.Show(false);
    }
 
    if( project->mShowSplashScreen )
@@ -1565,19 +1594,21 @@ void AudacityApp::OnKeyDown(wxKeyEvent &event)
 // We now disallow temp directory name that puts it where cleaner apps will
 // try to clean out the files.  
 bool AudacityApp::IsTempDirectoryNameOK( const wxString & Name ){
-#ifndef  __WXMSW__ 
-   return true;
-#else
    wxFileName tmpFile;
    tmpFile.AssignTempFileName(wxT("nn"));
    // use Long Path to expand out any abbreviated long substrings.
    wxString BadPath = tmpFile.GetLongPath();
    ::wxRemoveFile(tmpFile.GetFullPath());
+#ifdef __WXMAC__
+   BadPath = BadPath.BeforeLast( '/' ) + "/";
+   wxFileName cmpFile( Name );
+   wxString NameCanonical = cmpFile.GetLongPath( ) + "/";
+#else
    BadPath = BadPath.BeforeLast( '\\' ) + "\\";
    wxFileName cmpFile( Name );
    wxString NameCanonical = cmpFile.GetLongPath( ) + "\\";
-   return !(NameCanonical.StartsWith( BadPath ));
 #endif
+   return !(NameCanonical.StartsWith( BadPath ));
 }
 
 bool AudacityApp::InitTempDir()

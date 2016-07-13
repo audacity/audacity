@@ -56,7 +56,7 @@ AttachableScrollBar::~AttachableScrollBar(void)
 // Essentially a float to int conversion.
 void AttachableScrollBar::SetScrollBarFromViewInfo()
 {
-   // fix me
+   // FIXME: PRL Aug 2015: Screen Width in Viewinfo Not needed?
 #if 0
    ViewInfo & mViewInfo = *mpViewInfo;
 
@@ -72,7 +72,7 @@ void AttachableScrollBar::SetScrollBarFromViewInfo()
 // Essentially an int to float conversion.
 void AttachableScrollBar::SetViewInfoFromScrollBar()
 {
-   // fixme
+   // FIXME: PRL Aug 2015: Screen Width in Viewinfo Not needed? 
 #if 0
    ViewInfo & mViewInfo = *mpViewInfo;
 

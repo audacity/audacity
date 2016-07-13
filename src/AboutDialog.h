@@ -13,10 +13,10 @@
 
 #include "MemoryX.h"
 #include <vector>
-#include <wx/dialog.h>
 #include <wx/sizer.h>
 #include <wx/statbmp.h>
 #include <wx/bitmap.h>
+#include "widgets/wxPanelWrapper.h"
 
 class ShuttleGui;
 
@@ -49,7 +49,7 @@ struct AboutDialogCreditItem {
 
 using AboutDialogCreditItemsList = std::vector<AboutDialogCreditItem>;
 
-class AboutDialog final : public wxDialog {
+class AboutDialog final : public wxDialogWrapper {
    DECLARE_DYNAMIC_CLASS(AboutDialog)
 
  public:

@@ -268,10 +268,12 @@ void DeviceManager::Rescan()
       }
 
       // restart portaudio - this updates the device list
+      // FIXME: TRAP_ERR restarting PortAudio
       Pa_Terminate();
       Pa_Initialize();
    }
 
+   // FIXME: TRAP_ERR PaErrorCode not handled in ReScan()
    int nDevices = Pa_GetDeviceCount();
 
    //The heirarchy for devices is Host/device/source.

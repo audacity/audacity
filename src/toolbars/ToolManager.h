@@ -45,7 +45,7 @@ class ToolManager final : public wxEvtHandler
 
  public:
 
-   ToolManager( AudacityProject *parent );
+   ToolManager( AudacityProject *parent, wxWindow *topDockParent );
    ~ToolManager();
 
    void LayoutToolBars();
@@ -124,5 +124,65 @@ class ToolManager final : public wxEvtHandler
    DECLARE_CLASS( ToolManager );
    DECLARE_EVENT_TABLE();
 };
+
+
+////////////////////////////////////////////////////////////
+/// class ToolFrame
+////////////////////////////////////////////////////////////
+
+class ToolFrame final : public wxFrame
+{
+public:
+
+   ToolFrame( wxWindow *parent, ToolManager *manager, ToolBar *bar, wxPoint pos );
+
+   ~ToolFrame();
+
+   ToolBar *GetBar() { return mBar; }
+   void ClearBar() { mBar = nullptr; }
+
+   //
+   // Transition a toolbar from float to dragging
+   //
+   void OnGrabber( GrabberEvent & event );
+
+   //
+   // Handle toolbar updates
+   //
+   void OnToolBarUpdate( wxCommandEvent & event );
+
+   //
+   // Handle frame paint events
+   //
+   void OnPaint( wxPaintEvent & WXUNUSED(event) );
+
+   void OnMotion( wxMouseEvent & event );
+
+   void OnCaptureLost( wxMouseCaptureLostEvent & WXUNUSED(event) );
+
+   //
+   // Do not allow the window to close through keyboard accelerators
+   // (like ALT+F4 on Windows)
+   //
+   void OnClose( wxCloseEvent & event );
+
+   void OnKeyDown( wxKeyEvent &event );
+
+   void Resize( const wxSize &size );
+
+private:
+
+   wxWindow *mParent;
+   ToolManager *mManager;
+   ToolBar *mBar;
+   wxSize mMinSize;
+   wxSize mOrigSize;
+
+public:
+
+   DECLARE_CLASS( ToolFrame );
+   DECLARE_EVENT_TABLE();
+};
+
 
 #endif

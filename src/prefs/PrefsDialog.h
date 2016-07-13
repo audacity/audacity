@@ -19,6 +19,7 @@
 #include <wx/string.h>
 #include <wx/treebook.h>
 #include <wx/window.h>
+#include "../widgets/wxPanelWrapper.h"
 
 class PrefsPanel;
 class PrefsPanelFactory;
@@ -29,7 +30,7 @@ class PrefsPanelFactory;
 #define CONST const
 #endif
 
-class PrefsDialog /* not final */ : public wxDialog
+class PrefsDialog /* not final */ : public wxDialogWrapper
 {
  public:
     // An array of PrefsNode specifies the tree of pages in pre-order traversal.

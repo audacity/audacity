@@ -664,7 +664,7 @@ void EffectCompressor::UpdateUI()
 // EffectCompressorPanel
 //----------------------------------------------------------------------------
 
-BEGIN_EVENT_TABLE(EffectCompressorPanel, wxPanel)
+BEGIN_EVENT_TABLE(EffectCompressorPanel, wxPanelWrapper)
    EVT_PAINT(EffectCompressorPanel::OnPaint)
    EVT_SIZE(EffectCompressorPanel::OnSize)
 END_EVENT_TABLE()
@@ -673,7 +673,7 @@ EffectCompressorPanel::EffectCompressorPanel(wxWindow *parent,
                                              double & threshold,
                                              double & noiseFloor,
                                              double & ratio)
-:  wxPanel(parent),
+:  wxPanelWrapper(parent),
    threshold(threshold),
    noiseFloor(noiseFloor),
    ratio(ratio)

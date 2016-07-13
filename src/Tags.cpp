@@ -669,7 +669,7 @@ enum {
    RemoveID
 };
 
-BEGIN_EVENT_TABLE(TagsEditor, wxDialog)
+BEGIN_EVENT_TABLE(TagsEditor, wxDialogWrapper)
    EVT_GRID_CELL_CHANGED(TagsEditor::OnChange)
    EVT_BUTTON(EditID, TagsEditor::OnEdit)
    EVT_BUTTON(ResetID, TagsEditor::OnReset)
@@ -689,7 +689,7 @@ TagsEditor::TagsEditor(wxWindow * parent,
                        Tags * tags,
                        bool editTitle,
                        bool editTrack)
-:  wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize,
+:  wxDialogWrapper(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER),
    mTags(tags),
    mEditTitle(editTitle),
@@ -1003,7 +1003,7 @@ void TagsEditor::OnEdit(wxCommandEvent & WXUNUSED(event))
       mGrid->HideCellEditControl();
    }
 
-   wxDialog dlg(this, wxID_ANY, _("Edit Genres"),
+   wxDialogWrapper dlg(this, wxID_ANY, _("Edit Genres"),
                 wxDefaultPosition, wxDefaultSize,
                 wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER);
    dlg.SetName(dlg.GetTitle());

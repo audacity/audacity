@@ -39,7 +39,7 @@
 // ExportCLOptions
 //----------------------------------------------------------------------------
 
-class ExportCLOptions final : public wxPanel
+class ExportCLOptions final : public wxPanelWrapper
 {
 public:
    ExportCLOptions(wxWindow *parent, int format);
@@ -60,14 +60,14 @@ private:
 
 #define ID_BROWSE 5000
 
-BEGIN_EVENT_TABLE(ExportCLOptions, wxPanel)
+BEGIN_EVENT_TABLE(ExportCLOptions, wxPanelWrapper)
    EVT_BUTTON(ID_BROWSE, ExportCLOptions::OnBrowse)
 END_EVENT_TABLE()
 
 ///
 ///
 ExportCLOptions::ExportCLOptions(wxWindow *parent, int WXUNUSED(format))
-:  wxPanel(parent, wxID_ANY)
+:  wxPanelWrapper(parent, wxID_ANY)
 {
    mHistory.Load(*gPrefs, wxT("/FileFormats/ExternalProgramHistory"));
 
@@ -498,7 +498,7 @@ int ExportCL::Export(AudacityProject *project,
    // Display output on error or if the user wants to see it
    if (process.GetStatus() != 0 || show) {
       // TODO use ShowInfoDialog() instead.
-      wxDialog dlg(NULL,
+      wxDialogWrapper dlg(nullptr,
                    wxID_ANY,
                    wxString(_("Command Output")),
                    wxDefaultPosition,

@@ -54,7 +54,7 @@ public:
    }
 };
 
-class TimerRecordDialog final : public wxDialog
+class TimerRecordDialog final : public wxDialogWrapper
 {
 public:
    TimerRecordDialog(wxWindow* parent, bool bAlreadySaved);

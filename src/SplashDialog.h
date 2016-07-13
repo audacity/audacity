@@ -12,6 +12,7 @@
 #define __AUDACITY_SPLASH_DLG__
 
 #include <wx/dialog.h>
+#include "widgets/wxPanelWrapper.h"
 
 class wxBoxSizer;
 class wxStaticBitmap;
@@ -21,7 +22,7 @@ class AudacityProject;
 class wxCheckbox;
 class HtmlWindow;
 
-class SplashDialog final : public wxDialog {
+class SplashDialog final : public wxDialogWrapper {
    DECLARE_DYNAMIC_CLASS(SplashDialog)
 public:
    SplashDialog(wxWindow * parent);

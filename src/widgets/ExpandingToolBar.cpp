@@ -107,13 +107,13 @@ public:
 // ExpandingToolBar
 //
 
-BEGIN_EVENT_TABLE(ExpandingToolBar, wxPanel)
+BEGIN_EVENT_TABLE(ExpandingToolBar, wxPanelWrapper)
    EVT_SIZE(ExpandingToolBar::OnSize)
    EVT_TIMER(kTimerID, ExpandingToolBar::OnTimer)
    EVT_BUTTON(kToggleButtonID, ExpandingToolBar::OnToggle)
 END_EVENT_TABLE()
 
-IMPLEMENT_CLASS(ExpandingToolBar, wxPanel)
+IMPLEMENT_CLASS(ExpandingToolBar, wxPanelWrapper)
 
 //static
 int ExpandingToolBar::msNoAutoExpandStack = 0;
@@ -122,7 +122,7 @@ ExpandingToolBar::ExpandingToolBar(wxWindow* parent,
                                    wxWindowID id,
                                    const wxPoint& pos,
                                    const wxSize& size):
-   wxPanel(parent, id, pos, size),
+   wxPanelWrapper(parent, id, pos, size),
    mIsAutoExpanded(false),
    mIsManualExpanded(false),
    mIsExpanded(false),
@@ -135,9 +135,9 @@ ExpandingToolBar::ExpandingToolBar(wxWindow* parent,
    mDragImage(NULL),
    mTopLevelParent(NULL)
 {
-   mMainPanel = safenew wxPanel(this, -1,
+   mMainPanel = safenew wxPanelWrapper(this, -1,
                             wxDefaultPosition, wxSize(1, 1));
-   mExtraPanel = safenew wxPanel(this, -1,
+   mExtraPanel = safenew wxPanelWrapper(this, -1,
                              wxDefaultPosition, wxSize(1, 1));
 
    mGrabber = NULL;
@@ -655,20 +655,20 @@ void ExpandingToolBar::FinishMoving()
 // ToolBarGrabber
 //
 
-BEGIN_EVENT_TABLE(ToolBarGrabber, wxPanel)
+BEGIN_EVENT_TABLE(ToolBarGrabber, wxPanelWrapper)
    EVT_PAINT(ToolBarGrabber::OnPaint)
    EVT_SIZE(ToolBarGrabber::OnSize)
    EVT_MOUSE_EVENTS(ToolBarGrabber::OnMouse)
 END_EVENT_TABLE()
 
-IMPLEMENT_CLASS(ToolBarGrabber, wxPanel)
+IMPLEMENT_CLASS(ToolBarGrabber, wxPanelWrapper)
 
 ToolBarGrabber::ToolBarGrabber(wxWindow *parent,
                                wxWindowID id,
                                ExpandingToolBar *ownerToolbar,
                                const wxPoint& pos,
                                const wxSize& size):
-   wxPanel(parent, id, pos, size),
+   wxPanelWrapper(parent, id, pos, size),
    mOwnerToolBar(ownerToolbar)
 {
    wxImage grabberImages = theTheme.Image(bmpToolBarGrabber);
@@ -731,16 +731,16 @@ void ToolBarGrabber::OnSize(wxSizeEvent & WXUNUSED(event))
 // ToolBarDialog
 //
 
-BEGIN_EVENT_TABLE(ToolBarDialog, wxDialog)
+BEGIN_EVENT_TABLE(ToolBarDialog, wxDialogWrapper)
 END_EVENT_TABLE()
 
-IMPLEMENT_CLASS(ToolBarDialog, wxDialog)
+IMPLEMENT_CLASS(ToolBarDialog, wxDialogWrapper)
 
 ToolBarDialog::ToolBarDialog(wxWindow* parent,
                            wxWindowID id,
                            const wxString& name,
                            const wxPoint& pos):
-   wxDialog(parent, id, name, pos, wxSize(1, 1),
+   wxDialogWrapper(parent, id, name, pos, wxSize(1, 1),
 // Workaround for bug in __WXMSW__.  No close box on a wxDialog unless wxSYSTEM_MENU is used.
 #ifdef __WXMSW__
       wxSYSTEM_MENU |
@@ -835,18 +835,18 @@ void ToolBarFrame::Fit()
 // ToolBarArea
 //
 
-BEGIN_EVENT_TABLE(ToolBarArea, wxPanel)
+BEGIN_EVENT_TABLE(ToolBarArea, wxPanelWrapper)
    EVT_SIZE(ToolBarArea::OnSize)
    EVT_MOUSE_EVENTS(ToolBarArea::OnMouse)
 END_EVENT_TABLE()
 
-IMPLEMENT_CLASS(ToolBarArea, wxPanel)
+IMPLEMENT_CLASS(ToolBarArea, wxPanelWrapper)
 
 ToolBarArea::ToolBarArea(wxWindow* parent,
                          wxWindowID id,
                          const wxPoint& pos,
                          const wxSize& size):
-   wxPanel(parent, id, pos, size),
+   wxPanelWrapper(parent, id, pos, size),
    mInOnSize(false),
    mCapturedChild(NULL)
 {

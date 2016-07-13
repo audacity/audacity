@@ -449,12 +449,12 @@ class FFmpegNotFoundDialog;
 #define ID_FFMPEG_DLOAD  5001
 
 /// Allows user to locate libav* libraries
-class FindFFmpegDialog final : public wxDialog
+class FindFFmpegDialog final : public wxDialogWrapper
 {
 public:
 
    FindFFmpegDialog(wxWindow *parent, const wxString &path, const wxString &name, const wxString &type)
-      :  wxDialog(parent, wxID_ANY, wxString(_("Locate FFmpeg")))
+      :  wxDialogWrapper(parent, wxID_ANY, wxString(_("Locate FFmpeg")))
    {
       SetName(GetTitle());
       ShuttleGui S(this, eIsCreating);
@@ -558,7 +558,7 @@ private:
    DECLARE_EVENT_TABLE()
 };
 
-BEGIN_EVENT_TABLE(FindFFmpegDialog, wxDialog)
+BEGIN_EVENT_TABLE(FindFFmpegDialog, wxDialogWrapper)
    EVT_BUTTON(ID_FFMPEG_BROWSE, FindFFmpegDialog::OnBrowse)
    EVT_BUTTON(ID_FFMPEG_DLOAD,  FindFFmpegDialog::OnDownload)
 END_EVENT_TABLE()
@@ -568,7 +568,7 @@ END_EVENT_TABLE()
 // FFmpegNotFoundDialog
 //----------------------------------------------------------------------------
 
-BEGIN_EVENT_TABLE(FFmpegNotFoundDialog, wxDialog)
+BEGIN_EVENT_TABLE(FFmpegNotFoundDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, FFmpegNotFoundDialog::OnOk)
 END_EVENT_TABLE()
 

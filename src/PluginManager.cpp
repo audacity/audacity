@@ -414,7 +414,7 @@ enum
    COL_COUNT
 };
 
-class PluginRegistrationDialog final : public wxDialog
+class PluginRegistrationDialog final : public wxDialogWrapper
 {
 public:
    // constructors and destructors
@@ -461,7 +461,7 @@ private:
    DECLARE_EVENT_TABLE()
 };
 
-BEGIN_EVENT_TABLE(PluginRegistrationDialog, wxDialog)
+BEGIN_EVENT_TABLE(PluginRegistrationDialog, wxDialogWrapper)
    EVT_LIST_COL_CLICK(ID_List, PluginRegistrationDialog::OnSort)
    EVT_BUTTON(wxID_OK, PluginRegistrationDialog::OnOK)
    EVT_BUTTON(wxID_CANCEL, PluginRegistrationDialog::OnCancel)
@@ -476,7 +476,7 @@ BEGIN_EVENT_TABLE(PluginRegistrationDialog, wxDialog)
 END_EVENT_TABLE()
 
 PluginRegistrationDialog::PluginRegistrationDialog(wxWindow *parent, EffectType type)
-:  wxDialog(parent,
+:  wxDialogWrapper(parent,
             wxID_ANY,
             _("Plug-in Manager: Effects, Generators and Analyzers"),
             wxDefaultPosition, wxDefaultSize,

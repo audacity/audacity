@@ -662,7 +662,7 @@ enum {
 #define TIME_MAX 100    // Corresponds to 1.000 seconds
 
 
-BEGIN_EVENT_TABLE(NoiseRemovalDialog,wxDialog)
+BEGIN_EVENT_TABLE(NoiseRemovalDialog,wxDialogWrapper)
    EVT_BUTTON(wxID_OK, NoiseRemovalDialog::OnRemoveNoise)
    EVT_BUTTON(wxID_CANCEL, NoiseRemovalDialog::OnCancel)
    EVT_BUTTON(ID_EFFECT_PREVIEW, NoiseRemovalDialog::OnPreview)

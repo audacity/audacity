@@ -25,27 +25,25 @@
 
 #include "Grid.h"
 #include "NumericTextCtrl.h"
+#include "../SelectedRegion.h"
 
-TimeEditor::TimeEditor()
+NumericEditor::NumericEditor
+   (NumericConverter::Type type, const wxString &format, double rate)
 {
-   TimeEditor(wxT("seconds"), 44100);
-}
-
-TimeEditor::TimeEditor(const wxString &format, double rate)
-{
+   mType = type;
    mFormat = format;
    mRate = rate;
    mOld = 0.0;
 }
 
-TimeEditor::~TimeEditor()
+NumericEditor::~NumericEditor()
 {
 }
 
-void TimeEditor::Create(wxWindow *parent, wxWindowID id, wxEvtHandler *handler)
+void NumericEditor::Create(wxWindow *parent, wxWindowID id, wxEvtHandler *handler)
 {
    wxASSERT(parent); // to justify safenew
-   m_control = safenew NumericTextCtrl(NumericConverter::TIME, parent,
+   auto control = safenew NumericTextCtrl(mType, parent,
                                 wxID_ANY,
                                 mFormat,
                                 mOld,
@@ -53,11 +51,14 @@ void TimeEditor::Create(wxWindow *parent, wxWindowID id, wxEvtHandler *handler)
                                 wxDefaultPosition,
                                 wxDefaultSize,
                                 true);
+   if (mType == NumericTextCtrl::FREQUENCY)
+      control->SetInvalidValue(SelectedRegion::UndefinedFrequency);
+   m_control = control;
 
    wxGridCellEditor::Create(parent, id, handler);
 }
 
-void TimeEditor::SetSize(const wxRect &rect)
+void NumericEditor::SetSize(const wxRect &rect)
 {
    wxSize size = m_control->GetSize();
 
@@ -68,32 +69,24 @@ void TimeEditor::SetSize(const wxRect &rect)
    m_control->Move(x, y);
 }
 
-void TimeEditor::BeginEdit(int row, int col, wxGrid *grid)
+void NumericEditor::BeginEdit(int row, int col, wxGrid *grid)
 {
    wxGridTableBase *table = grid->GetTable();
 
    mOldString = table->GetValue(row, col);
    mOldString.ToDouble(&mOld);
 
-   GetTimeCtrl()->SetValue(mOld);
-   GetTimeCtrl()->EnableMenu();
+   auto control = GetNumericTextControl();
+   control->SetValue(mOld);
+   control->EnableMenu();
 
-   GetTimeCtrl()->SetFocus();
+   control->SetFocus();
 }
 
-bool TimeEditor::EndEdit(int row, int col, wxGrid *grid)
-{
-    wxString newvalue;
-    bool changed = EndEdit(row, col, grid, mOldString, &newvalue);
-    if (changed) {
-        ApplyEdit(row, col, grid);
-    }
-    return changed;
-}
 
-bool TimeEditor::EndEdit(int WXUNUSED(row), int WXUNUSED(col), const wxGrid *WXUNUSED(grid), const wxString &WXUNUSED(oldval), wxString *newval)
+bool NumericEditor::EndEdit(int WXUNUSED(row), int WXUNUSED(col), const wxGrid *WXUNUSED(grid), const wxString &WXUNUSED(oldval), wxString *newval)
 {
-   double newtime = GetTimeCtrl()->GetValue();
+   double newtime = GetNumericTextControl()->GetValue();
    bool changed = newtime != mOld;
 
    if (changed) {
@@ -104,17 +97,17 @@ bool TimeEditor::EndEdit(int WXUNUSED(row), int WXUNUSED(col), const wxGrid *WXU
    return changed;
 }
 
-void TimeEditor::ApplyEdit(int row, int col, wxGrid *grid)
+void NumericEditor::ApplyEdit(int row, int col, wxGrid *grid)
 {
    grid->GetTable()->SetValue(row, col, mValueAsString);
 }
 
-void TimeEditor::Reset()
+void NumericEditor::Reset()
 {
-   GetTimeCtrl()->SetValue(mOld);
+   GetNumericTextControl()->SetValue(mOld);
 }
 
-bool TimeEditor::IsAcceptedKey(wxKeyEvent &event)
+bool NumericEditor::IsAcceptedKey(wxKeyEvent &event)
 {
    if (wxGridCellEditor::IsAcceptedKey(event)) {
       if (event.GetKeyCode() == WXK_RETURN) {
@@ -126,37 +119,41 @@ bool TimeEditor::IsAcceptedKey(wxKeyEvent &event)
 }
 
 // Clone is required by wxwidgets; implemented via copy constructor
-wxGridCellEditor *TimeEditor::Clone() const
+wxGridCellEditor *NumericEditor::Clone() const
 {
-   return safenew TimeEditor(mFormat, mRate);
+   return safenew NumericEditor{ mType, mFormat, mRate };
 }
 
-wxString TimeEditor::GetValue() const
+wxString NumericEditor::GetValue() const
 {
-   return wxString::Format(wxT("%g"), GetTimeCtrl()->GetValue());
+   return wxString::Format(wxT("%g"), GetNumericTextControl()->GetValue());
 }
 
-wxString TimeEditor::GetFormat()
+wxString NumericEditor::GetFormat() const
 {
    return mFormat;
 }
 
-double TimeEditor::GetRate()
+double NumericEditor::GetRate() const
 {
    return mRate;
 }
 
-void TimeEditor::SetFormat(const wxString &format)
+void NumericEditor::SetFormat(const wxString &format)
 {
    mFormat = format;
 }
 
-void TimeEditor::SetRate(double rate)
+void NumericEditor::SetRate(double rate)
 {
    mRate = rate;
 }
 
-void TimeRenderer::Draw(wxGrid &grid,
+NumericRenderer::~NumericRenderer()
+{
+}
+
+void NumericRenderer::Draw(wxGrid &grid,
                         wxGridCellAttr &attr,
                         wxDC &dc,
                         const wxRect &rect,
@@ -167,25 +164,26 @@ void TimeRenderer::Draw(wxGrid &grid,
    wxGridCellRenderer::Draw(grid, attr, dc, rect, row, col, isSelected);
 
    wxGridTableBase *table = grid.GetTable();
-   TimeEditor *te = (TimeEditor *) grid.GetCellEditor(row, col);
+   NumericEditor *ne =
+      static_cast<NumericEditor *>(grid.GetCellEditor(row, col));
    wxString tstr;
 
-   if (te) {
+   if (ne) {
       double value;
 
       table->GetValue(row, col).ToDouble(&value);
 
-      NumericTextCtrl tt(NumericConverter::TIME, &grid,
+      NumericTextCtrl tt(mType, &grid,
                       wxID_ANY,
-                      te->GetFormat(),
+                      ne->GetFormat(),
                       value,
-                      te->GetRate(),
+                      ne->GetRate(),
                       wxPoint(10000, 10000),  // create offscreen
                       wxDefaultSize,
                       true);
       tstr = tt.GetString();
 
-      te->DecRef();
+      ne->DecRef();
    }
 
    dc.SetBackgroundMode(wxTRANSPARENT);
@@ -218,39 +216,40 @@ void TimeRenderer::Draw(wxGrid &grid,
    grid.DrawTextRectangle(dc, tstr, rect, hAlign, vAlign);
 }
 
-wxSize TimeRenderer::GetBestSize(wxGrid &grid,
+wxSize NumericRenderer::GetBestSize(wxGrid &grid,
                                  wxGridCellAttr & WXUNUSED(attr),
                                  wxDC & WXUNUSED(dc),
                                  int row,
                                  int col)
 {
    wxGridTableBase *table = grid.GetTable();
-   TimeEditor *te = (TimeEditor *) grid.GetCellEditor(row, col);
+   NumericEditor *ne =
+      static_cast<NumericEditor *>(grid.GetCellEditor(row, col));
    wxSize sz;
 
-   if (te) {
+   if (ne) {
       double value;
       table->GetValue(row, col).ToDouble(&value);
-      NumericTextCtrl tt(NumericConverter::TIME, &grid,
+      NumericTextCtrl tt(mType, &grid,
                       wxID_ANY,
-                      te->GetFormat(),
+                      ne->GetFormat(),
                       value,
-                      te->GetRate(),
+                      ne->GetRate(),
                       wxPoint(10000, 10000),  // create offscreen
                       wxDefaultSize,
                       true);
       sz = tt.GetSize();
 
-      te->DecRef();
+      ne->DecRef();
    }
 
    return sz;
 }
 
 // Clone is required by wxwidgets; implemented via copy constructor
-wxGridCellRenderer *TimeRenderer::Clone() const
+wxGridCellRenderer *NumericRenderer::Clone() const
 {
-   return safenew TimeRenderer();
+   return safenew NumericRenderer{ mType };
 }
 
 ChoiceEditor::ChoiceEditor(size_t count, const wxString choices[])
@@ -392,13 +391,21 @@ Grid::Grid(wxWindow *parent,
    GetGridWindow()->SetAccessible(mAx = safenew GridAx(this));
 #endif
 
+   // RegisterDataType takes ownership of renderer and editor
+
    RegisterDataType(GRID_VALUE_TIME,
-                    new TimeRenderer,
-                    new TimeEditor);
+                    safenew NumericRenderer{ NumericConverter::TIME },
+                    safenew NumericEditor
+                      { NumericTextCtrl::TIME, wxT("seconds"), 44100.0 });
+
+   RegisterDataType(GRID_VALUE_FREQUENCY,
+                    safenew NumericRenderer{ NumericConverter::FREQUENCY },
+                    safenew NumericEditor
+                    { NumericTextCtrl::FREQUENCY, wxT("Hz"), 44100.0 });
 
    RegisterDataType(GRID_VALUE_CHOICE,
-                    new wxGridCellStringRenderer,
-                    new ChoiceEditor);
+                    safenew wxGridCellStringRenderer,
+                    safenew ChoiceEditor);
 }
 
 Grid::~Grid()
@@ -762,30 +769,30 @@ wxAccStatus GridAx::GetName(int childId, wxString *name)
       }
 
       // Hack to provide a more intelligible response
-      TimeEditor *d =
-         (TimeEditor *)mGrid->GetDefaultEditorForType(GRID_VALUE_TIME);
-      TimeEditor *c =
-         (TimeEditor *)mGrid->GetCellEditor(row, col);
+      NumericEditor *dt =
+         static_cast<NumericEditor *>(mGrid->GetDefaultEditorForType(GRID_VALUE_TIME));
+      NumericEditor *df =
+         static_cast<NumericEditor *>(mGrid->GetDefaultEditorForType(GRID_VALUE_FREQUENCY));
+      NumericEditor *c =
+         static_cast<NumericEditor *>(mGrid->GetCellEditor(row, col));
 
-      if (c && d && c == d) {
+      if (c && dt && df && ( c == dt || c == df)) {        
          double value;
          v.ToDouble(&value);
+         NumericConverter converter(c == dt ? NumericConverter::TIME : NumericConverter::FREQUENCY,
+                        c->GetFormat(),
+                        value,
+                        c->GetRate() );
 
-         NumericTextCtrl tt(NumericConverter::TIME, mGrid,
-                         wxID_ANY,
-                         c->GetFormat(),
-                         value,
-                         c->GetRate(),
-                         wxPoint(10000, 10000),  // create offscreen
-                         wxDefaultSize,
-                         true);
-         v = tt.GetString();
+         v = converter.GetString();
       }
 
       if (c)
          c->DecRef();
-      if (d)
-         d->DecRef();
+      if (dt)
+         dt->DecRef();
+      if (df)
+         df->DecRef();
 
       *name = n + wxT(" ") + v;
    }

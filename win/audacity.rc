@@ -26,7 +26,7 @@ BEGIN
             VALUE "FileDescription", "Audacity®, the Free, Cross-Platform Sound Editor"
             VALUE "FileVersion", AUDACITY_FILE_VERSION
             VALUE "InternalName", "Audacity"
-            VALUE "LegalCopyright", "Copyright © 2015. All rights reserved."
+            VALUE "LegalCopyright", "Copyright © 2016. All rights reserved."
             VALUE "LegalTrademarks", "Audacity® is a registered trademark of Dominic Mazzoni."
             VALUE "OriginalFilename", "Audacity.exe"
             VALUE "ProductName", "Audacity®"

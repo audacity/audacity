@@ -17,10 +17,10 @@
 
 #include <vector>
 #include <wx/defs.h>
-#include <wx/panel.h>
 #include <wx/sizer.h>
 
 #include "../Theme.h"
+#include "../widgets/wxPanelWrapper.h"
 
 class wxDC;
 class wxEraseEvent;
@@ -84,7 +84,7 @@ enum
 // How may pixels padding each side of a floating toolbar
 enum { ToolBarFloatMargin = 1 };
 
-class ToolBar /* not final */ : public wxPanel
+class ToolBar /* not final */ : public wxPanelWrapper
 {
 
  public:
@@ -224,8 +224,6 @@ class ToolBar /* not final */ : public wxPanel
 
    wxBoxSizer *mHSizer;
    wxSizerItem *mSpacer;
-
-   ToolDock *mDock;
 
    bool mVisible;
    bool mResizable;

@@ -28,7 +28,7 @@
 #include "ErrorDialog.h"
 #include "HelpSystem.h"
 
-BEGIN_EVENT_TABLE(BrowserDialog, wxDialog)
+BEGIN_EVENT_TABLE(BrowserDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_FORWARD,  BrowserDialog::OnForward)
    EVT_BUTTON(wxID_BACKWARD, BrowserDialog::OnBackward)
    EVT_BUTTON(wxID_CANCEL,   BrowserDialog::OnClose)
@@ -37,7 +37,7 @@ END_EVENT_TABLE()
 
 
 BrowserDialog::BrowserDialog(wxWindow *pParent, const wxString &title)
-   : wxDialog{ pParent, ID, title }
+   : wxDialogWrapper{ pParent, ID, title }
 {
 
 }
@@ -56,7 +56,11 @@ void BrowserDialog::OnBackward(wxCommandEvent & WXUNUSED(event))
 
 void BrowserDialog::OnClose(wxCommandEvent & WXUNUSED(event))
 {
-   EndModal(wxID_CANCEL);
+   if (IsModal() && !mDismissed)
+   {
+      mDismissed = true;
+      EndModal(wxID_CANCEL);
+   }
    auto parent = GetParent();
 
 #ifdef __WXMAC__
