@@ -63,7 +63,7 @@ public:
    void MoveLabel( int iEdge, double fNewTime);
 
    struct BadFormatException {};
-   static LabelStruct Import(wxTextFile &file, int index);
+   static LabelStruct Import(wxTextFile &file, int &index);
 
    void Export(wxTextFile &file) const;
 

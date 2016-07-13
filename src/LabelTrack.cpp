@@ -1217,21 +1217,23 @@ void LabelStruct::MoveLabel( int iEdge, double fNewTime)
    updated = true;
 }
 
-LabelStruct LabelStruct::Import(wxTextFile &file, int index)
+LabelStruct LabelStruct::Import(wxTextFile &file, int &index)
 {
-   wxString currentLine = file.GetLine(index);
-
-   // Assume tab is an impossible character within the exported text
-   // of the label, so can be only a delimiter.  But other white space may
-   // be part of the label text.
-   wxStringTokenizer toker { currentLine, wxT("\t") };
-
-   //get the timepoint of the left edge of the label.
-   auto token = toker.GetNextToken();
-
    SelectedRegion sr;
+   wxString title;
+   static const wxString continuation{ wxT("\\") };
+
+   wxString firstLine = file.GetLine(index++);
 
    {
+      // Assume tab is an impossible character within the exported text
+      // of the label, so can be only a delimiter.  But other white space may
+      // be part of the label text.
+      wxStringTokenizer toker { firstLine, wxT("\t") };
+
+      //get the timepoint of the left edge of the label.
+      auto token = toker.GetNextToken();
+
       double t0;
       if (!Internat::CompatibleToDouble(token, &t0))
          throw BadFormatException{};
@@ -1246,13 +1248,31 @@ LabelStruct LabelStruct::Import(wxTextFile &file, int index)
          token = toker.GetNextToken();
 
       sr.setTimes( t0, t1 );
+      
+      title = token;
    }
 
-   wxString title = token;
+   // Newer selection fields are written on additional lines beginning with
+   // '\' which is an impossible numerical character that older versions of
+   // audacity will ignore.  Test for the presence of such a line and then
+   // parse it if we can.
 
-   // Newer selection fields are written after the title, for historical
-   // reasons.
-   if (toker.HasMoreTokens()) {
+   // There may also be additional continuation lines from future formats that
+   // we ignore.
+
+   // Advance index over all continuation lines first, before we might throw
+   // any exceptions.
+   int index2 = index;
+   while (index < file.GetLineCount() &&
+          file.GetLine(index).StartsWith(continuation))
+      ++index;
+
+   if (index2 < index) {
+      wxStringTokenizer toker { file.GetLine(index2++), wxT("\t") };
+      auto token = toker.GetNextToken();
+      if (token != continuation)
+         throw BadFormatException{};
+
       token = toker.GetNextToken();
       double f0;
       if (!Internat::CompatibleToDouble(token, &f0))
@@ -1271,13 +1291,27 @@ LabelStruct LabelStruct::Import(wxTextFile &file, int index)
 
 void LabelStruct::Export(wxTextFile &file) const
 {
-   file.AddLine(wxString::Format(wxT("%f\t%f\t%s\t%f\t%f"),
+   file.AddLine(wxString::Format(wxT("%f\t%f\t%s"),
       getT0(),
       getT1(), 
-      title.c_str(),
-      selectedRegion.f0(),
-      selectedRegion.f1()
+      title.c_str()
    ));
+
+   // Do we need more lines?
+   auto f0 = selectedRegion.f0();
+   auto f1 = selectedRegion.f1();
+   if (f0 == SelectedRegion::UndefinedFrequency &&
+       f1 == SelectedRegion::UndefinedFrequency)
+      return;
+
+   // Write a \ character at the start of a second line,
+   // so that earlier versions of Audacity ignore it.
+   file.AddLine(wxString::Format(wxT("\\\t%f\t%f"),
+      f0,
+      f1
+   ));
+
+   // Additional lines in future formats should also start with '\'.
 }
 
 auto LabelStruct::RegionRelation(
@@ -2119,8 +2153,9 @@ void LabelTrack::Import(wxTextFile & in)
    //Currently, we expect a tag file to have two values and a label
    //on each line. If the second token is not a number, we treat
    //it as a single-value label.
-   for (int index = 0; index < lines; index++) {
+   for (int index = 0; index < lines;) {
       try {
+         // Let LabelStruct::Import advance index
          LabelStruct l { LabelStruct::Import(in, index) };
          mLabels.push_back(l);
       }
