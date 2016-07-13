@@ -2782,7 +2782,7 @@ void AdornedRulerPanel::OnToggleScrubBar(/*wxCommandEvent&*/)
    wxSize size { GetSize().GetWidth(), GetRulerHeight(mShowScrubbing) };
    SetSize(size);
    SetMinSize(size);
-   PostSizeEventToParent();
+   GetParent()->PostSizeEventToParent();
 }
 
 void AdornedRulerPanel::OnContextMenu(wxContextMenuEvent & WXUNUSED(event))
@@ -2811,8 +2811,8 @@ void AdornedRulerPanel::UpdateButtonStates()
       const auto label = state
       // Label descibes the present state, not what the click does
       // (which is, to toggle the state)
-      ? _("Pinned play/record Head")
-      : _("Unpinned play/record Head");
+      ? _("Pinned Record/Play head")
+      : _("Unpinned Record/Play head");
       common(*pinButton, wxT("PinnedHead"), label);
    }
 }

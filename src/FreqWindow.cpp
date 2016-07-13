@@ -1255,11 +1255,7 @@ bool SpectrumAnalyst::Calculate(Algorithm alg, int windowFunc,
          case EnhancedAutocorrelation:
 
             // Take FFT
-#ifdef EXPERIMENTAL_USE_REALFFTF
             RealFFT(mWindowSize, in, out, out2);
-#else
-            FFT(mWindowSize, false, in, NULL, out, out2);
-#endif
             // Compute power
             for (int i = 0; i < mWindowSize; i++)
                in[i] = (out[i] * out[i]) + (out2[i] * out2[i]);
@@ -1277,11 +1273,7 @@ bool SpectrumAnalyst::Calculate(Algorithm alg, int windowFunc,
                   in[i] = pow(in[i], 1.0f / 3.0f);
             }
             // Take FFT
-#ifdef EXPERIMENTAL_USE_REALFFTF
             RealFFT(mWindowSize, in, out, out2);
-#else
-            FFT(mWindowSize, false, in, NULL, out, out2);
-#endif
 
             // Take real part of result
             for (int i = 0; i < half; i++)
@@ -1289,12 +1281,7 @@ bool SpectrumAnalyst::Calculate(Algorithm alg, int windowFunc,
             break;
 
          case Cepstrum:
-#ifdef EXPERIMENTAL_USE_REALFFTF
             RealFFT(mWindowSize, in, out, out2);
-#else
-            FFT(mWindowSize, false, in, NULL, out, out2);
-#endif
-
             // Compute log power
             // Set a sane lower limit assuming maximum time amplitude of 1.0
             {
@@ -1309,11 +1296,7 @@ bool SpectrumAnalyst::Calculate(Algorithm alg, int windowFunc,
                      in[i] = log(power);
                }
                // Take IFFT
-#ifdef EXPERIMENTAL_USE_REALFFTF
                InverseRealFFT(mWindowSize, in, NULL, out);
-#else
-               FFT(mWindowSize, true, in, NULL, out, out2);
-#endif
 
                // Take real part of result
                for (int i = 0; i < half; i++)

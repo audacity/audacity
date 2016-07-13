@@ -62,6 +62,11 @@ public:
    bool AdjustEdge( int iEdge, double fNewTime);
    void MoveLabel( int iEdge, double fNewTime);
 
+   struct BadFormatException {};
+   static LabelStruct Import(wxTextFile &file, int &index);
+
+   void Export(wxTextFile &file) const;
+
    /// Relationships between selection region and labels
    enum TimeRelations
    {
@@ -91,8 +96,6 @@ public:
    mutable int xText; /// Pixel position of left hand side of text box
    mutable int y;     /// Pixel position of label.
 
-   mutable bool highlighted;              /// if the text is highlighted
-   mutable bool changeInitialMouseXPos;   /// flag to change initial mouse X pos
    bool updated;                  /// flag to tell if the label times were updated
 };
 
@@ -175,9 +178,6 @@ class AUDACITY_DLL_API LabelTrack final : public Track
    bool PasteSelectedText(double sel0, double sel1);
    static bool IsTextClipSupported();
 
-   // methods to set flags
-   void SetWrongDragging(bool rightFlag) { mRightDragging = rightFlag; }
-
    void HandleClick(const wxMouseEvent & evt, const wxRect & r, const ZoomInfo &zoomInfo,
       SelectedRegion *newSel);
    bool HandleGlyphDragRelease(const wxMouseEvent & evt, wxRect & r, const ZoomInfo &zoomInfo,
@@ -258,8 +258,6 @@ class AUDACITY_DLL_API LabelTrack final : public Track
    static int mFontHeight;
    int mCurrentCursorPos;                      /// current cursor position
    int mInitialCursorPos;                      /// initial cursor position
-   int mDragXPos;                              /// end X pos of dragging
-                                                  /// in text box
 
    bool mRightDragging;                        /// flag to tell if it's a valid dragging
    bool mDrawCursor;                           /// flag to tell if drawing the
@@ -274,6 +272,7 @@ class AUDACITY_DLL_API LabelTrack final : public Track
    void ComputeTextPosition(const wxRect & r, int index) const;
 
 public:
+   int FindCurrentCursorPosition(int xPos);
    void SetCurrentCursorPosition(int xPos);
 
 private:

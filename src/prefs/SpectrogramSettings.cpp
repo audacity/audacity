@@ -348,7 +348,6 @@ SpectrogramSettings::~SpectrogramSettings()
 
 void SpectrogramSettings::DestroyWindows()
 {
-#ifdef EXPERIMENTAL_USE_REALFFTF
    if (hFFT != NULL) {
       EndFFT(hFFT);
       hFFT = NULL;
@@ -365,7 +364,6 @@ void SpectrogramSettings::DestroyWindows()
       delete[] tWindow;
       tWindow = NULL;
    }
-#endif
 }
 
 
@@ -428,7 +426,6 @@ namespace
 
 void SpectrogramSettings::CacheWindows() const
 {
-#ifdef EXPERIMENTAL_USE_REALFFTF
    if (hFFT == NULL || window == NULL) {
 
       double scale;
@@ -444,7 +441,6 @@ void SpectrogramSettings::CacheWindows() const
          RecreateWindow(dWindow, DWINDOW, fftLen, padding, windowType, windowSize, scale);
       }
    }
-#endif // EXPERIMENTAL_USE_REALFFTF
 }
 
 void SpectrogramSettings::ConvertToEnumeratedWindowSizes()

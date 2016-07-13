@@ -138,6 +138,7 @@ bool EffectChangePitch::SetAutomationParameters(EffectAutomationParameters & par
    ReadAndVerifyDouble(Percentage);
 
    m_dPercentChange = Percentage;
+   Calc_SemitonesChange_fromPercentChange();
 
    return true;
 }

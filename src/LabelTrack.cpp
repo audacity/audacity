@@ -47,6 +47,7 @@ for drawing different aspects of the label and its text box.
 #include <wx/pen.h>
 #include <wx/string.h>
 #include <wx/textfile.h>
+#include <wx/tokenzr.h>
 #include <wx/utils.h>
 
 #include "AudioIO.h"
@@ -268,7 +269,6 @@ void LabelTrack::WarpLabels(const TimeWarper &warper) {
 
 void LabelTrack::ResetFlags()
 {
-   mDragXPos = -1;
    mInitialCursorPos = 1;
    mCurrentCursorPos = 1;
    mRightDragging = false;
@@ -521,8 +521,6 @@ LabelStruct::LabelStruct(const SelectedRegion &region,
 : selectedRegion(region)
 , title(aTitle)
 {
-   changeInitialMouseXPos = true;
-   highlighted = false;
    updated = false;
    width = 0;
    x = 0;
@@ -540,8 +538,6 @@ LabelStruct::LabelStruct(const SelectedRegion &region,
    // Overwrite the times
    selectedRegion.setTimes(t0, t1);
 
-   changeInitialMouseXPos = true;
-   highlighted = false;
    updated = false;
    width = 0;
    x = 0;
@@ -693,9 +689,6 @@ void LabelStruct::DrawTextBox(wxDC & dc, const wxRect & r) const
 void LabelStruct::DrawHighlight
    ( wxDC & dc, int xPos1, int xPos2, int charHeight) const
 {
-   highlighted = true;
-   changeInitialMouseXPos = false;
-
    wxPen curPen = dc.GetPen();
    curPen.SetColour(wxString(wxT("BLUE")));
    wxBrush curBrush = dc.GetBrush();
@@ -825,7 +818,7 @@ void LabelTrack::Draw(wxDC & dc, const wxRect & r,
    }}
 
    // Draw highlights
-   if ((mDragXPos != -1) && (mSelIndex >= 0 ))
+   if ((mInitialCursorPos != mCurrentCursorPos) && (mSelIndex >= 0 ))
    {
       int xpos1, xpos2;
       CalcHighlightXs(&xpos1, &xpos2);
@@ -865,11 +858,11 @@ void LabelTrack::Draw(wxDC & dc, const wxRect & r,
    }
 }
 
-/// Set the cursor position according to x position of mouse
 /// uses GetTextExtent to find the character position
 /// corresponding to the x pixel position.
-void LabelTrack::SetCurrentCursorPosition(int xPos)
+int LabelTrack::FindCurrentCursorPosition(int xPos)
 {
+   int result = -1;
    wxMemoryDC dc;
    if(msFont.Ok())
       dc.SetFont(msFont);
@@ -897,7 +890,7 @@ void LabelTrack::SetCurrentCursorPosition(int xPos)
       if (xPos <= bound)
       {
          // Found
-         mCurrentCursorPos = charIndex - 1;
+         result = charIndex - 1;
          finished = true;
       }
       else
@@ -907,10 +900,16 @@ void LabelTrack::SetCurrentCursorPosition(int xPos)
       }
    }
    if (!finished)
-   {
       // Cursor should be in the last position
-      mCurrentCursorPos = length;
-   }
+      result = length;
+
+   return result;
+}
+
+/// Set the cursor position according to x position of mouse
+void LabelTrack::SetCurrentCursorPosition(int xPos)
+{
+   mCurrentCursorPos = FindCurrentCursorPosition(xPos);
 }
 
 void LabelTrack::calculateFontHeight(wxDC & dc) const
@@ -934,8 +933,6 @@ void LabelTrack::calculateFontHeight(wxDC & dc) const
 bool LabelTrack::IsTextSelected()
 {
    if (mSelIndex == -1)
-      return false;
-   if (!mLabels[mSelIndex].highlighted)
       return false;
    if (mCurrentCursorPos == mInitialCursorPos)
       return false;
@@ -992,13 +989,14 @@ bool LabelTrack::CopySelectedText()
       return false;
 
    const auto &labelStruct = mLabels[mSelIndex];
-   if (!labelStruct.highlighted)
-      return false;
 
    int init = mInitialCursorPos;
    int cur = mCurrentCursorPos;
    if (init > cur)
       std::swap(init, cur);
+
+   if (init == cur)
+      return false;
 
    // data for copying
    wxString data = labelStruct.title.Mid(init, cur-init);
@@ -1042,12 +1040,9 @@ bool LabelTrack::PasteSelectedText(double sel0, double sel1)
 
    auto &labelStruct = mLabels[mSelIndex];
    auto &title = labelStruct.title;
-   int cur = mCurrentCursorPos, init = cur;
-   if (labelStruct.highlighted) {
-      init = mInitialCursorPos;
-      if (init > cur)
-         std::swap(init, cur);
-   }
+   int cur = mCurrentCursorPos, init = mInitialCursorPos;
+   if (init > cur)
+      std::swap(init, cur);
    left = title.Left(init);
    if (cur < (int)title.Length())
       right = title.Mid(cur);
@@ -1220,6 +1215,103 @@ void LabelStruct::MoveLabel( int iEdge, double fNewTime)
       selectedRegion.setTimes(fNewTime-fTimeSpan, fNewTime);
    }
    updated = true;
+}
+
+LabelStruct LabelStruct::Import(wxTextFile &file, int &index)
+{
+   SelectedRegion sr;
+   wxString title;
+   static const wxString continuation{ wxT("\\") };
+
+   wxString firstLine = file.GetLine(index++);
+
+   {
+      // Assume tab is an impossible character within the exported text
+      // of the label, so can be only a delimiter.  But other white space may
+      // be part of the label text.
+      wxStringTokenizer toker { firstLine, wxT("\t") };
+
+      //get the timepoint of the left edge of the label.
+      auto token = toker.GetNextToken();
+
+      double t0;
+      if (!Internat::CompatibleToDouble(token, &t0))
+         throw BadFormatException{};
+
+      token = toker.GetNextToken();
+
+      double t1;
+      if (!Internat::CompatibleToDouble(token, &t1))
+         //s1 is not a number.
+         t1 = t0;  //This is a one-sided label; t1 == t0.
+      else
+         token = toker.GetNextToken();
+
+      sr.setTimes( t0, t1 );
+      
+      title = token;
+   }
+
+   // Newer selection fields are written on additional lines beginning with
+   // '\' which is an impossible numerical character that older versions of
+   // audacity will ignore.  Test for the presence of such a line and then
+   // parse it if we can.
+
+   // There may also be additional continuation lines from future formats that
+   // we ignore.
+
+   // Advance index over all continuation lines first, before we might throw
+   // any exceptions.
+   int index2 = index;
+   while (index < file.GetLineCount() &&
+          file.GetLine(index).StartsWith(continuation))
+      ++index;
+
+   if (index2 < index) {
+      wxStringTokenizer toker { file.GetLine(index2++), wxT("\t") };
+      auto token = toker.GetNextToken();
+      if (token != continuation)
+         throw BadFormatException{};
+
+      token = toker.GetNextToken();
+      double f0;
+      if (!Internat::CompatibleToDouble(token, &f0))
+         throw BadFormatException{};
+
+      token = toker.GetNextToken();
+      double f1;
+      if (!Internat::CompatibleToDouble(token, &f1))
+         throw BadFormatException{};
+
+      sr.setFrequencies(f0, f1);
+   }
+
+   return LabelStruct{ sr, title };
+}
+
+void LabelStruct::Export(wxTextFile &file) const
+{
+   file.AddLine(wxString::Format(wxT("%f\t%f\t%s"),
+      getT0(),
+      getT1(), 
+      title.c_str()
+   ));
+
+   // Do we need more lines?
+   auto f0 = selectedRegion.f0();
+   auto f1 = selectedRegion.f1();
+   if (f0 == SelectedRegion::UndefinedFrequency &&
+       f1 == SelectedRegion::UndefinedFrequency)
+      return;
+
+   // Write a \ character at the start of a second line,
+   // so that earlier versions of Audacity ignore it.
+   file.AddLine(wxString::Format(wxT("\\\t%f\t%f"),
+      f0,
+      f1
+   ));
+
+   // Additional lines in future formats should also start with '\'.
 }
 
 auto LabelStruct::RegionRelation(
@@ -1429,20 +1521,9 @@ void LabelTrack::HandleTextDragRelease(const wxMouseEvent & evt)
 
    if(evt.Dragging())
    {
-      // if dragging happens in text box
-      // end dragging x position in pixels
-      // set flag to update current cursor position
-      mDragXPos = evt.m_x;
-
-      // for preventing dragging glygh from changing current cursor position
-      // set end dragging position to current cursor position
-      SetCurrentCursorPosition(mDragXPos);
-
-      // if it's an invalid dragging, disable displaying
-      if (mRightDragging) {
-         mDragXPos = -1;
-         mRightDragging = false;
-      }
+      if (!mRightDragging)
+         // Update drag end
+         SetCurrentCursorPosition(evt.m_x);
 
       return;
    }
@@ -1509,20 +1590,41 @@ void LabelTrack::HandleClick(const wxMouseEvent & evt,
          return;
       }
 
-      // disable displaying if left button is down
-      if (evt.LeftDown())
-         mDragXPos = -1;
-
       mSelIndex = OverATextBox(evt.m_x, evt.m_y);
       if (mSelIndex != -1) {
          auto &labelStruct = mLabels[mSelIndex];
          *newSel = labelStruct.selectedRegion;
-         SetCurrentCursorPosition(evt.m_x);
 
-         // for preventing from resetting by shift+mouse left button
-         if (labelStruct.changeInitialMouseXPos)
-            mInitialCursorPos = mCurrentCursorPos;
-         mDrawCursor = true;
+         if (evt.LeftDown()) {
+            // Find the NEW drag end
+            auto position = FindCurrentCursorPosition(evt.m_x);
+
+            // Anchor shift-drag at the farther end of the previous highlight
+            // that is farther from the click, on Mac, for consistency with
+            // its text editors, but on the others, re-use the previous
+            // anchor.
+            if (evt.ShiftDown()) {
+#ifdef __WXMAC__
+               // Set the drag anchor at the end of the previous selection
+               // that is farther from the NEW drag end
+               if (abs(position - mCurrentCursorPos) >
+                   abs(position - mInitialCursorPos))
+                  mInitialCursorPos = mCurrentCursorPos;
+#else
+               // mInitialCursorPos remains as before
+#endif
+            }
+            else
+               mInitialCursorPos = position;
+
+            mCurrentCursorPos = position;
+            
+            mDrawCursor = true;
+            mRightDragging = false;
+         }
+         else
+            // Actually this might be right or middle down
+            mRightDragging = true;
 
          // reset the highlight indicator
          wxRect highlightedRect;
@@ -1536,27 +1638,7 @@ void LabelTrack::HandleClick(const wxMouseEvent & evt,
                xpos1, labelStruct.y - mFontHeight / 2,
                (int)(xpos2 - xpos1 + 0.5), mFontHeight
             };
-
-            // reset when left button is down
-            if (evt.LeftDown())
-               labelStruct.highlighted = false;
-            // reset when right button is down outside text box
-            if (evt.RightDown())
-            {
-               if (!highlightedRect.Contains(evt.m_x, evt.m_y))
-               {
-                  mCurrentCursorPos = mInitialCursorPos = 0;
-                  labelStruct.highlighted = false;
-               }
-            }
-            // set changeInitialMouseXPos flag
-            labelStruct.changeInitialMouseXPos = true;
          }
-
-         // disable displaying if right button is down outside text box
-         if (evt.RightDown()
-             && !highlightedRect.Contains(evt.m_x, evt.m_y))
-            mDragXPos = -1;
 
          // Middle click on GTK: paste from primary selection
 #if defined(__WXGTK__) && (HAVE_GTK)
@@ -1570,16 +1652,6 @@ void LabelTrack::HandleClick(const wxMouseEvent & evt,
             *newSel = SelectedRegion(t, t);
          }
 #endif
-
-         // handle shift+mouse left button
-         if (evt.ShiftDown()) {
-            // if the mouse is clicked in text box, set flags
-            mDragXPos = evt.m_x;
-
-            // for preventing dragging glygh from changing current cursor position
-            // set end dragging position to current cursor position
-            SetCurrentCursorPosition(evt.m_x);
-         }
       }
 
 #if defined(__WXGTK__) && (HAVE_GTK)
@@ -1668,9 +1740,8 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
             if (len > 0)
             {
                // IF there are some highlighted letters, THEN DELETE them
-               if (labelStruct.highlighted) {
+               if (mInitialCursorPos != mCurrentCursorPos)
                   RemoveSelectedText();
-               }
                else
                {
                   // DELETE one letter
@@ -1699,9 +1770,8 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
             if (len > 0)
             {
                // if there are some highlighted letters, DELETE them
-               if (labelStruct.highlighted) {
+               if (mInitialCursorPos != mCurrentCursorPos)
                   RemoveSelectedText();
-               }
                else
                {
                   // DELETE one letter
@@ -1725,11 +1795,9 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
          // Move cursor to beginning of label
          mCurrentCursorPos = 0;
          if (mods == wxMOD_SHIFT)
-            mDragXPos = 0;
-         else {
-            mDragXPos = -1;
+            ;
+         else
             mInitialCursorPos = mCurrentCursorPos;
-         }
          break;
 
       case WXK_END:
@@ -1737,11 +1805,9 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
          // Move cursor to end of label
          mCurrentCursorPos = (int)title.length();
          if (mods == wxMOD_SHIFT)
-            mDragXPos = 0;
-         else {
-            mDragXPos = -1;
+            ;
+         else
             mInitialCursorPos = mCurrentCursorPos;
-         }
          break;
 
       case WXK_LEFT:
@@ -1750,11 +1816,10 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
          if (mCurrentCursorPos > 0) {
             mCurrentCursorPos--;
             if (mods == wxMOD_SHIFT)
-               mDragXPos = 0;
-            else {
-               mDragXPos = -1;
-               mInitialCursorPos = mCurrentCursorPos;
-            }
+               ;
+            else
+               mInitialCursorPos = mCurrentCursorPos =
+                  std::min(mInitialCursorPos, mCurrentCursorPos);
          }
          break;
 
@@ -1764,11 +1829,10 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
          if (mCurrentCursorPos < (int)title.length()) {
             mCurrentCursorPos++;
             if (mods == wxMOD_SHIFT)
-               mDragXPos = 0;
-            else {
-               mDragXPos = -1;
-               mInitialCursorPos = mCurrentCursorPos;
-            }
+               ;
+            else
+               mInitialCursorPos = mCurrentCursorPos =
+                  std::max(mInitialCursorPos, mCurrentCursorPos);
          }
          break;
 
@@ -1920,9 +1984,8 @@ bool LabelTrack::OnChar(SelectedRegion &WXUNUSED(newSel), wxKeyEvent & event)
    auto &title = labelStruct.title;
 
    // Test if cursor is in the end of string or not
-   if (labelStruct.highlighted) {
+   if (mInitialCursorPos != mCurrentCursorPos)
       RemoveSelectedText();
-   }
 
    if (mCurrentCursorPos < (int)title.length()) {
       // Get substring on the righthand side of cursor
@@ -1984,9 +2047,6 @@ void LabelTrack::ShowContextMenu()
 
       parent->PopupMenu(&menu, x, ls->y + (mIconHeight / 2) - 1);
    }
-
-   // it's an invalid dragging event
-   SetWrongDragging(true);
 }
 
 void LabelTrack::OnContextMenu(wxCommandEvent & evt)
@@ -2062,8 +2122,6 @@ void LabelTrack::RemoveSelectedText()
 
    title = left + right;
    mInitialCursorPos = mCurrentCursorPos = left.Length();
-   labelStruct.highlighted = false;
-   mDragXPos = -1;
 }
 
 void LabelTrack::Unselect()
@@ -2080,25 +2138,14 @@ bool LabelTrack::IsSelected() const
 void LabelTrack::Export(wxTextFile & f) const
 {
    // PRL: to do: export other selection fields
-   for (auto &labelStruct: mLabels) {
-      f.AddLine(wxString::Format(wxT("%f\t%f\t%s"),
-                                 (double)labelStruct.getT0(),
-                                 (double)labelStruct.getT1(),
-                                 labelStruct.title.c_str()));
-   }
+   for (auto &labelStruct: mLabels)
+      labelStruct.Export(f);
 }
 
 /// Import labels, handling files with or without end-times.
 void LabelTrack::Import(wxTextFile & in)
 {
-   wxString currentLine;
-   int i, i2,len;
-   int index, lines;
-   wxString s,s1;
-   wxString title;
-   double t0,t1;
-
-   lines = in.GetLineCount();
+   int lines = in.GetLineCount();
 
    mLabels.clear();
    mLabels.reserve(lines);
@@ -2106,69 +2153,13 @@ void LabelTrack::Import(wxTextFile & in)
    //Currently, we expect a tag file to have two values and a label
    //on each line. If the second token is not a number, we treat
    //it as a single-value label.
-   for (index = 0; index < lines; index++) {
-      currentLine = in.GetLine(index);
-
-      len = currentLine.Length();
-      if (len == 0)
-         return;
-
-      //get the timepoint of the left edge of the label.
-      i = 0;
-      while (i < len && currentLine.GetChar(i) != wxT(' ')
-         && currentLine.GetChar(i) != wxT('\t'))
-      {
-         i++;
+   for (int index = 0; index < lines;) {
+      try {
+         // Let LabelStruct::Import advance index
+         LabelStruct l { LabelStruct::Import(in, index) };
+         mLabels.push_back(l);
       }
-      s = currentLine.Left(i);
-
-      if (!Internat::CompatibleToDouble(s, &t0))
-         return;
-
-      //Increment one letter.
-      i++;
-
-      //Now, go until we find the start of the get the next token
-      while (i < len
-         && (currentLine.GetChar(i) == wxT(' ')
-         || currentLine.GetChar(i) == wxT('\t')))
-      {
-         i++;
-      }
-      //Keep track of the start of the second token
-      i2=i;
-
-      //Now, go to the end of the second token.
-      while (i < len && currentLine.GetChar(i) != wxT(' ')
-         && currentLine.GetChar(i) != wxT('\t'))
-      {
-         i++;
-      }
-
-      //We are at the end of the second token.
-      s1 = currentLine.Mid(i2,i-i2+1).Strip(wxString::stripType(0x3));
-      if (!Internat::CompatibleToDouble(s1, &t1))
-      {
-         //s1 is not a number.
-         t1 = t0;  //This is a one-sided label; t1 == t0.
-
-         //Because s1 is not a number, the label should be
-         //The rest of the line, starting at i2;
-         title = currentLine.Right(len - i2).Strip(wxString::stripType(0x3));  //0x3 indicates both
-      }
-      else
-      {
-         //s1 is a number, and it is stored correctly in t1.
-         //The title should be the remainder of the line,
-         //After we eat
-
-         //Get rid of spaces at either end
-         title = currentLine.Right(len - i).Strip(wxString::stripType(0x3)); //0x3 indicates both.
-
-      }
-      // PRL: to do: import other selection fields
-      LabelStruct l { SelectedRegion(t0, t1), title };
-      mLabels.push_back(l);
+      catch(const LabelStruct::BadFormatException&l) {}
    }
    SortLabels();
 }
