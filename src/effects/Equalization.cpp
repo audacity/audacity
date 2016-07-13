@@ -547,7 +547,15 @@ bool EffectEqualization::Process()
    if (IsBatchProcessing() && mCurveName.IsSameAs("unnamed"))
    {
       // The user tried to run a chain using the unnamed curve
-      wxMessageBox( _("The chain which you tried to run had an Equalization command using an unnamed curve. Using Equalization in chain processing requires the chain file to specify a named EQ Curve.\n\nTo use a custom-drawn equalization curve in a chain, please save your curve to a new name by pressing 'Save/Manage Curves...' and then renaming the 'unnamed' curve. It will then be available under that name in the 'Select Curve:' list when editing your chain's Equalization parameters."),
+      wxMessageBox( _("The chain which you tried to run had an Equalization \
+                      command using an unnamed curve. Using Equalization in \
+                      chain processing requires the chain file to specify a \
+                      named EQ Curve.\n\nTo use a custom-drawn equalization \
+                      curve in a chain, please save your curve to a new name \
+                      by pressing 'Save/Manage Curves...' and then renaming \
+                      the 'unnamed' curve. It will then be available under \
+                      that name in the 'Select Curve:' list when editing your \
+                      chain's Equalization parameters."),
                    _("Chain aborted: invalid EQ curve name: 'unnamed'"),
                    wxOK | wxICON_ERROR);
       return false;
