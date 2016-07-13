@@ -1674,6 +1674,12 @@ bool LabelTrack::CaptureKey(wxKeyEvent & event)
       return false;
    }
 
+   // Always capture the navigation keys, if we have any labels
+   auto code = event.GetKeyCode();
+   if ((code == WXK_TAB || code == WXK_NUMPAD_TAB) &&
+       !mLabels.empty())
+      return true;
+
    if (mSelIndex >= 0) {
       if (IsGoodLabelEditKey(event)) {
          return true;
@@ -1897,7 +1903,7 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
                mSelIndex = len - 1;
                if (newSel.t0() > mLabels[0].getT0()) {
                   while (mSelIndex >= 0 &&
-                         mLabels[mSelIndex].getT0() >= newSel.t0()) {
+                         mLabels[mSelIndex].getT0() > newSel.t0()) {
                      mSelIndex--;
                   }
                }
@@ -1905,7 +1911,7 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
                mSelIndex = 0;
                if (newSel.t0() < mLabels[len - 1].getT0()) {
                   while (mSelIndex < len &&
-                         mLabels[mSelIndex].getT0() <= newSel.t0()) {
+                         mLabels[mSelIndex].getT0() < newSel.t0()) {
                      mSelIndex++;
                   }
                }
