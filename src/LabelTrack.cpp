@@ -269,7 +269,6 @@ void LabelTrack::WarpLabels(const TimeWarper &warper) {
 
 void LabelTrack::ResetFlags()
 {
-   mDragXPos = -1;
    mInitialCursorPos = 1;
    mCurrentCursorPos = 1;
    mRightDragging = false;
@@ -522,8 +521,6 @@ LabelStruct::LabelStruct(const SelectedRegion &region,
 : selectedRegion(region)
 , title(aTitle)
 {
-   changeInitialMouseXPos = true;
-   highlighted = false;
    updated = false;
    width = 0;
    x = 0;
@@ -541,8 +538,6 @@ LabelStruct::LabelStruct(const SelectedRegion &region,
    // Overwrite the times
    selectedRegion.setTimes(t0, t1);
 
-   changeInitialMouseXPos = true;
-   highlighted = false;
    updated = false;
    width = 0;
    x = 0;
@@ -694,9 +689,6 @@ void LabelStruct::DrawTextBox(wxDC & dc, const wxRect & r) const
 void LabelStruct::DrawHighlight
    ( wxDC & dc, int xPos1, int xPos2, int charHeight) const
 {
-   highlighted = true;
-   changeInitialMouseXPos = false;
-
    wxPen curPen = dc.GetPen();
    curPen.SetColour(wxString(wxT("BLUE")));
    wxBrush curBrush = dc.GetBrush();
@@ -826,7 +818,7 @@ void LabelTrack::Draw(wxDC & dc, const wxRect & r,
    }}
 
    // Draw highlights
-   if ((mDragXPos != -1) && (mSelIndex >= 0 ))
+   if ((mInitialCursorPos != mCurrentCursorPos) && (mSelIndex >= 0 ))
    {
       int xpos1, xpos2;
       CalcHighlightXs(&xpos1, &xpos2);
@@ -866,11 +858,11 @@ void LabelTrack::Draw(wxDC & dc, const wxRect & r,
    }
 }
 
-/// Set the cursor position according to x position of mouse
 /// uses GetTextExtent to find the character position
 /// corresponding to the x pixel position.
-void LabelTrack::SetCurrentCursorPosition(int xPos)
+int LabelTrack::FindCurrentCursorPosition(int xPos)
 {
+   int result = -1;
    wxMemoryDC dc;
    if(msFont.Ok())
       dc.SetFont(msFont);
@@ -898,7 +890,7 @@ void LabelTrack::SetCurrentCursorPosition(int xPos)
       if (xPos <= bound)
       {
          // Found
-         mCurrentCursorPos = charIndex - 1;
+         result = charIndex - 1;
          finished = true;
       }
       else
@@ -908,10 +900,16 @@ void LabelTrack::SetCurrentCursorPosition(int xPos)
       }
    }
    if (!finished)
-   {
       // Cursor should be in the last position
-      mCurrentCursorPos = length;
-   }
+      result = length;
+
+   return result;
+}
+
+/// Set the cursor position according to x position of mouse
+void LabelTrack::SetCurrentCursorPosition(int xPos)
+{
+   mCurrentCursorPos = FindCurrentCursorPosition(xPos);
 }
 
 void LabelTrack::calculateFontHeight(wxDC & dc) const
@@ -935,8 +933,6 @@ void LabelTrack::calculateFontHeight(wxDC & dc) const
 bool LabelTrack::IsTextSelected()
 {
    if (mSelIndex == -1)
-      return false;
-   if (!mLabels[mSelIndex].highlighted)
       return false;
    if (mCurrentCursorPos == mInitialCursorPos)
       return false;
@@ -993,13 +989,14 @@ bool LabelTrack::CopySelectedText()
       return false;
 
    const auto &labelStruct = mLabels[mSelIndex];
-   if (!labelStruct.highlighted)
-      return false;
 
    int init = mInitialCursorPos;
    int cur = mCurrentCursorPos;
    if (init > cur)
       std::swap(init, cur);
+
+   if (init == cur)
+      return false;
 
    // data for copying
    wxString data = labelStruct.title.Mid(init, cur-init);
@@ -1043,12 +1040,9 @@ bool LabelTrack::PasteSelectedText(double sel0, double sel1)
 
    auto &labelStruct = mLabels[mSelIndex];
    auto &title = labelStruct.title;
-   int cur = mCurrentCursorPos, init = cur;
-   if (labelStruct.highlighted) {
-      init = mInitialCursorPos;
-      if (init > cur)
-         std::swap(init, cur);
-   }
+   int cur = mCurrentCursorPos, init = mInitialCursorPos;
+   if (init > cur)
+      std::swap(init, cur);
    left = title.Left(init);
    if (cur < (int)title.Length())
       right = title.Mid(cur);
@@ -1493,20 +1487,9 @@ void LabelTrack::HandleTextDragRelease(const wxMouseEvent & evt)
 
    if(evt.Dragging())
    {
-      // if dragging happens in text box
-      // end dragging x position in pixels
-      // set flag to update current cursor position
-      mDragXPos = evt.m_x;
-
-      // for preventing dragging glygh from changing current cursor position
-      // set end dragging position to current cursor position
-      SetCurrentCursorPosition(mDragXPos);
-
-      // if it's an invalid dragging, disable displaying
-      if (mRightDragging) {
-         mDragXPos = -1;
-         mRightDragging = false;
-      }
+      if (!mRightDragging)
+         // Update drag end
+         SetCurrentCursorPosition(evt.m_x);
 
       return;
    }
@@ -1573,20 +1556,41 @@ void LabelTrack::HandleClick(const wxMouseEvent & evt,
          return;
       }
 
-      // disable displaying if left button is down
-      if (evt.LeftDown())
-         mDragXPos = -1;
-
       mSelIndex = OverATextBox(evt.m_x, evt.m_y);
       if (mSelIndex != -1) {
          auto &labelStruct = mLabels[mSelIndex];
          *newSel = labelStruct.selectedRegion;
-         SetCurrentCursorPosition(evt.m_x);
 
-         // for preventing from resetting by shift+mouse left button
-         if (labelStruct.changeInitialMouseXPos)
-            mInitialCursorPos = mCurrentCursorPos;
-         mDrawCursor = true;
+         if (evt.LeftDown()) {
+            // Find the NEW drag end
+            auto position = FindCurrentCursorPosition(evt.m_x);
+
+            // Anchor shift-drag at the farther end of the previous highlight
+            // that is farther from the click, on Mac, for consistency with
+            // its text editors, but on the others, re-use the previous
+            // anchor.
+            if (evt.ShiftDown()) {
+#ifdef __WXMAC__
+               // Set the drag anchor at the end of the previous selection
+               // that is farther from the NEW drag end
+               if (abs(position - mCurrentCursorPos) >
+                   abs(position - mInitialCursorPos))
+                  mInitialCursorPos = mCurrentCursorPos;
+#else
+               // mInitialCursorPos remains as before
+#endif
+            }
+            else
+               mInitialCursorPos = position;
+
+            mCurrentCursorPos = position;
+            
+            mDrawCursor = true;
+            mRightDragging = false;
+         }
+         else
+            // Actually this might be right or middle down
+            mRightDragging = true;
 
          // reset the highlight indicator
          wxRect highlightedRect;
@@ -1600,27 +1604,7 @@ void LabelTrack::HandleClick(const wxMouseEvent & evt,
                xpos1, labelStruct.y - mFontHeight / 2,
                (int)(xpos2 - xpos1 + 0.5), mFontHeight
             };
-
-            // reset when left button is down
-            if (evt.LeftDown())
-               labelStruct.highlighted = false;
-            // reset when right button is down outside text box
-            if (evt.RightDown())
-            {
-               if (!highlightedRect.Contains(evt.m_x, evt.m_y))
-               {
-                  mCurrentCursorPos = mInitialCursorPos = 0;
-                  labelStruct.highlighted = false;
-               }
-            }
-            // set changeInitialMouseXPos flag
-            labelStruct.changeInitialMouseXPos = true;
          }
-
-         // disable displaying if right button is down outside text box
-         if (evt.RightDown()
-             && !highlightedRect.Contains(evt.m_x, evt.m_y))
-            mDragXPos = -1;
 
          // Middle click on GTK: paste from primary selection
 #if defined(__WXGTK__) && (HAVE_GTK)
@@ -1634,16 +1618,6 @@ void LabelTrack::HandleClick(const wxMouseEvent & evt,
             *newSel = SelectedRegion(t, t);
          }
 #endif
-
-         // handle shift+mouse left button
-         if (evt.ShiftDown()) {
-            // if the mouse is clicked in text box, set flags
-            mDragXPos = evt.m_x;
-
-            // for preventing dragging glygh from changing current cursor position
-            // set end dragging position to current cursor position
-            SetCurrentCursorPosition(evt.m_x);
-         }
       }
 
 #if defined(__WXGTK__) && (HAVE_GTK)
@@ -1732,9 +1706,8 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
             if (len > 0)
             {
                // IF there are some highlighted letters, THEN DELETE them
-               if (labelStruct.highlighted) {
+               if (mInitialCursorPos != mCurrentCursorPos)
                   RemoveSelectedText();
-               }
                else
                {
                   // DELETE one letter
@@ -1763,9 +1736,8 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
             if (len > 0)
             {
                // if there are some highlighted letters, DELETE them
-               if (labelStruct.highlighted) {
+               if (mInitialCursorPos != mCurrentCursorPos)
                   RemoveSelectedText();
-               }
                else
                {
                   // DELETE one letter
@@ -1789,11 +1761,9 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
          // Move cursor to beginning of label
          mCurrentCursorPos = 0;
          if (mods == wxMOD_SHIFT)
-            mDragXPos = 0;
-         else {
-            mDragXPos = -1;
+            ;
+         else
             mInitialCursorPos = mCurrentCursorPos;
-         }
          break;
 
       case WXK_END:
@@ -1801,11 +1771,9 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
          // Move cursor to end of label
          mCurrentCursorPos = (int)title.length();
          if (mods == wxMOD_SHIFT)
-            mDragXPos = 0;
-         else {
-            mDragXPos = -1;
+            ;
+         else
             mInitialCursorPos = mCurrentCursorPos;
-         }
          break;
 
       case WXK_LEFT:
@@ -1814,11 +1782,10 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
          if (mCurrentCursorPos > 0) {
             mCurrentCursorPos--;
             if (mods == wxMOD_SHIFT)
-               mDragXPos = 0;
-            else {
-               mDragXPos = -1;
-               mInitialCursorPos = mCurrentCursorPos;
-            }
+               ;
+            else
+               mInitialCursorPos = mCurrentCursorPos =
+                  std::min(mInitialCursorPos, mCurrentCursorPos);
          }
          break;
 
@@ -1828,11 +1795,10 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
          if (mCurrentCursorPos < (int)title.length()) {
             mCurrentCursorPos++;
             if (mods == wxMOD_SHIFT)
-               mDragXPos = 0;
-            else {
-               mDragXPos = -1;
-               mInitialCursorPos = mCurrentCursorPos;
-            }
+               ;
+            else
+               mInitialCursorPos = mCurrentCursorPos =
+                  std::max(mInitialCursorPos, mCurrentCursorPos);
          }
          break;
 
@@ -1984,9 +1950,8 @@ bool LabelTrack::OnChar(SelectedRegion &WXUNUSED(newSel), wxKeyEvent & event)
    auto &title = labelStruct.title;
 
    // Test if cursor is in the end of string or not
-   if (labelStruct.highlighted) {
+   if (mInitialCursorPos != mCurrentCursorPos)
       RemoveSelectedText();
-   }
 
    if (mCurrentCursorPos < (int)title.length()) {
       // Get substring on the righthand side of cursor
@@ -2048,9 +2013,6 @@ void LabelTrack::ShowContextMenu()
 
       parent->PopupMenu(&menu, x, ls->y + (mIconHeight / 2) - 1);
    }
-
-   // it's an invalid dragging event
-   SetWrongDragging(true);
 }
 
 void LabelTrack::OnContextMenu(wxCommandEvent & evt)
@@ -2126,8 +2088,6 @@ void LabelTrack::RemoveSelectedText()
 
    title = left + right;
    mInitialCursorPos = mCurrentCursorPos = left.Length();
-   labelStruct.highlighted = false;
-   mDragXPos = -1;
 }
 
 void LabelTrack::Unselect()

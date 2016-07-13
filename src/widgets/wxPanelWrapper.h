@@ -9,7 +9,7 @@
 #ifndef __AUDACITY_WXPANEL_WRAPPER__
 #define __AUDACITY_WXPANEL_WRAPPER__
 
-#include <MemoryX.h>
+#include "../MemoryX.h"
 #include <wx/panel.h>
 #include <wx/dialog.h>
 
