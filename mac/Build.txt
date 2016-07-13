@@ -37,6 +37,8 @@ http://forum.audacityteam.org/viewtopic.php?p=303835#p303835 .
    cd wxWidgets-3.0.2
    patch -p0 -i <path to Audacity source>/mac/wxMac_additions/wxMac-3.0.2-fixes.patch .
    patch -p0 -i <path to Audacity source>/mac/wxMac_additions/eventloops.patch .
+   patch -p0 -i <path to Audacity source>/mac/wxMac_additions/pinch-spread.patch .
+   patch -p0 -i <path to Audacity source>/mac/wxMac_additions/focusrings.patch .
 
 10) And finally build/install wxWidgets:
 
