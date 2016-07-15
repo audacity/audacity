@@ -2095,11 +2095,11 @@ void AdornedRulerPanel::ReCreateButtons()
       mButtons[iButton++] = button;
       return button;
    };
-   auto button = buttonMaker(OnTogglePinnedStateID, bmpPinnedPlayRecordHead, false);
+   auto button = buttonMaker(OnTogglePinnedStateID, bmpPinnedPlayHead, false);
    ToolBar::MakeAlternateImages(
       *button, 1,
       bmpRecoloredUpSmall, bmpRecoloredDownSmall, bmpRecoloredHiliteSmall,
-      bmpUnpinnedPlayRecordHead, bmpUnpinnedPlayRecordHead, bmpUnpinnedPlayRecordHead,
+      bmpUnpinnedPlayHead, bmpUnpinnedPlayHead, bmpUnpinnedPlayHead,
       size);
 
    UpdateButtonStates();
