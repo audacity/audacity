@@ -2123,7 +2123,7 @@ namespace {
       else
          return _("Click or drag to begin scrubbing");
 #else
-      return _("Click to scrub, drag to seek");
+      return _("Click & move to scrub. Click & drag to seek");
 #endif
    }
 
