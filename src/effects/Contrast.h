@@ -9,7 +9,7 @@
 #ifndef __AUDACITY_CONTRAST_DIALOG__
 #define __AUDACITY_CONTRAST_DIALOG__
 
-#include <wx/dialog.h>
+#include "../widgets/wxPanelWrapper.h"
 
 class wxButton;
 class wxSizer;
@@ -26,7 +26,7 @@ class WaveTrack;
 
 // Declare window functions
 
-class ContrastDialog final : public wxDialog
+class ContrastDialog final : public wxDialogWrapper
 {
 public:
    // constructors and destructors

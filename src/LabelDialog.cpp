@@ -74,7 +74,7 @@ enum {
    ID_EXPORT
 };
 
-BEGIN_EVENT_TABLE(LabelDialog, wxDialog)
+BEGIN_EVENT_TABLE(LabelDialog, wxDialogWrapper)
    EVT_GRID_SELECT_CELL(LabelDialog::OnSelectCell)
    EVT_GRID_CELL_CHANGED(LabelDialog::OnCellChange)
    EVT_BUTTON(ID_INSERTA, LabelDialog::OnInsert)
@@ -97,7 +97,7 @@ LabelDialog::LabelDialog(wxWindow *parent,
                          ViewInfo &viewinfo,
                          double rate,
                          const wxString & format, const wxString &freqFormat)
-: wxDialog(parent,
+: wxDialogWrapper(parent,
            wxID_ANY,
            _("Edit Labels"),
            wxDefaultPosition,
@@ -313,7 +313,7 @@ bool LabelDialog::TransferDataToWindow()
 
 bool LabelDialog::Show(bool show)
 {
-   bool ret = wxDialog::Show(show);
+   bool ret = wxDialogWrapper::Show(show);
 
    // Set initial row
    // (This will not work until the grid is actually displayed)
@@ -334,14 +334,20 @@ bool LabelDialog::TransferDataFromWindow()
 
    // Clear label tracks of labels
    for (t = iter.First(); t; t = iter.Next()) {
-      if (t->GetKind() == Track::Label &&
-          (!mSelectedTrack || mSelectedTrack == t)) {
-         LabelTrack *lt = (LabelTrack *)t;
-         tndx++;
-
-         for (i = lt->GetNumLabels() - 1; i >= 0 ; i--) {
-            lt->DeleteLabel(i);
+      if (t->GetKind() == Track::Label) {
+         ++tndx;
+         LabelTrack *lt = static_cast<LabelTrack*>(t);
+         if (!mSelectedTrack) {
+            for (i = lt->GetNumLabels() - 1; i >= 0 ; i--) {
+               lt->DeleteLabel(i);
+            }
          }
+         else if (mSelectedTrack == lt && mIndex > -1) {
+            lt->DeleteLabel(mIndex);
+         }
+         else
+            // Do nothing to the nonselected tracks
+            ;
       }
    }
 

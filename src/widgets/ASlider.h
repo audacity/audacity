@@ -18,9 +18,9 @@
 #include "../MemoryX.h"
 #include <wx/defs.h>
 #include <wx/window.h>
-#include <wx/dialog.h>
 #include <wx/panel.h>
 #include <wx/timer.h>
+#include "widgets/wxPanelWrapper.h"
 
 #if wxUSE_ACCESSIBILITY
 #include <wx/access.h>
@@ -330,7 +330,7 @@ public:
 // This is a modal dialog that contains an ASlider
 // and a text-entry box which can be used to set the
 // value of a slider.
-class SliderDialog final : public wxDialog
+class SliderDialog final : public wxDialogWrapper
 {
  public:
    SliderDialog(wxWindow * parent, wxWindowID id,

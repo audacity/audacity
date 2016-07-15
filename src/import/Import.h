@@ -15,9 +15,10 @@
 #include <vector>
 #include <wx/arrstr.h>
 #include <wx/string.h>
-#include <wx/dialog.h>
 #include <wx/listbox.h>
 #include <wx/tokenzr.h>
+
+#include "../widgets/wxPanelWrapper.h"
 
 class Tags;
 class TrackFactory;
@@ -157,7 +158,7 @@ private:
 // ImportStreamDialog
 //----------------------------------------------------------------------------
 
-class ImportStreamDialog final : public wxDialog
+class ImportStreamDialog final : public wxDialogWrapper
 {
 public:
    // constructors and destructors

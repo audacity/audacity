@@ -248,7 +248,7 @@ private:
 //----------------------------------------------------------------------------
 // ExportMixerDialog
 //----------------------------------------------------------------------------
-class ExportMixerDialog final : public wxDialog
+class ExportMixerDialog final : public wxDialogWrapper
 {
 public:
    // constructors and destructors

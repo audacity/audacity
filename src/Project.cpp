@@ -884,7 +884,8 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    // or else the device toolbar doesn't make initial widths of the choice
    // controls correct.
    mTopPanel = safenew wxPanelWrapper {
-      this, wxID_ANY, wxDefaultPosition, { this->GetSize().GetWidth(), -1 }
+      this, wxID_ANY, wxDefaultPosition,
+      wxSize{ this->GetSize().GetWidth(), -1 }
    };
    mTopPanel->SetAutoLayout(true);
 
@@ -1537,8 +1538,7 @@ void AudacityProject::FinishAutoScroll()
 
    // Call our Scroll method which updates our ViewInfo variables
    // to reflect the positions of the scrollbars
-   wxScrollEvent dummy;
-   OnScroll(dummy);
+   DoScroll();
 
    mAutoScrolling = false;
 }
@@ -1603,7 +1603,7 @@ void AudacityProject::OnScrollLeftButton(wxScrollEvent & event)
 
    if (pos != mHsbar->GetThumbPosition()) {
       mHsbar->SetThumbPosition((int)pos);
-      OnScroll(event);
+      DoScroll();
    }
 }
 
@@ -1625,7 +1625,7 @@ void AudacityProject::OnScrollRightButton(wxScrollEvent & event)
 
    if (pos != mHsbar->GetThumbPosition()) {
       mHsbar->SetThumbPosition((int)pos);
-      OnScroll(event);
+      DoScroll();
    }
 }
 
@@ -1693,8 +1693,7 @@ void AudacityProject::TP_ScrollWindow(double scrollto)
 
    // Call our Scroll method which updates our ViewInfo variables
    // to reflect the positions of the scrollbars
-   wxScrollEvent dummy;
-   OnScroll(dummy);
+   DoScroll();
 }
 
 //
@@ -1721,8 +1720,7 @@ bool AudacityProject::TP_ScrollUpDown(int delta)
    {
       mVsbar->SetThumbPosition(pos);
 
-      wxScrollEvent dummy;
-      OnScroll(dummy);
+      DoScroll();
       return true;
    }
    else
@@ -2090,6 +2088,14 @@ void AudacityProject::OnODTaskComplete(wxCommandEvent & WXUNUSED(event))
  }
 
 void AudacityProject::OnScroll(wxScrollEvent & WXUNUSED(event))
+{
+   const wxInt64 offset = PixelWidthBeforeTime(0.0);
+   mViewInfo.sbarH =
+      (wxInt64)(mHsbar->GetThumbPosition() / mViewInfo.sbarScale) - offset;
+   DoScroll();
+}
+
+void AudacityProject::DoScroll()
 {
    const double lowerBound = ScrollingLowerBoundTime();
 
@@ -2718,7 +2724,7 @@ bool AudacityProject::WarnOfLegacyFile( )
 }
 
 
-// FIXME? This should return a result that is checked.
+// FIXME:? TRAP_ERR This should return a result that is checked.
 //    See comment in AudacityApp::MRUOpen().
 void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
 {
@@ -2802,7 +2808,7 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
       }
    }
 
-   //FIXME: //v Surely we could be smarter about this, like checking much earlier that this is a .aup file.
+   // FIXME: //v Surely we could be smarter about this, like checking much earlier that this is a .aup file.
    if (temp.Mid(0, 6) != wxT("<?xml ")) {
       // If it's not XML, try opening it as any other form of audio
       Import(fileName);
@@ -4536,9 +4542,19 @@ void AudacityProject::OnTimer(wxTimerEvent& WXUNUSED(event))
          wxString msg;
          double recTime;
          int recMins;
-
+         // JKC: Bug 50: Use preferences to get actual sample format.
+         // However there is a slight performance impact due to Bug 1436
+         // So have left the old code in that gets the size (in RAM) but 
+         // #ifdeffed out.
+#if 1
+         sampleFormat oCaptureFormat = (sampleFormat)
+               gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleFormat"), floatSample);
+#else
+         sampleFormat oCaptureFormat = gAudioIO->GetCaptureFormat();
+#endif
+         double bytesOnDiskPerSample = SAMPLE_SIZE_DISK(oCaptureFormat);
          recTime = freeSpace.GetHi() * 4294967296.0 + freeSpace.GetLo();
-         recTime /= SAMPLE_SIZE_DISK(gAudioIO->GetCaptureFormat());
+         recTime /= bytesOnDiskPerSample;
          // note size on disk (=3 for 24-bit) not in memory (=4 for 24-bit)
          recTime /= gAudioIO->GetNumCaptureChannels();
          recTime /= GetRate();
@@ -5432,8 +5448,9 @@ int AudacityProject::GetEstimatedRecordingMinsLeftOnDisk() {
 
    // Calculate the remaining time
    double dRecTime = 0.0;
+   double bytesOnDiskPerSample = SAMPLE_SIZE_DISK(oCaptureFormat);
    dRecTime = lFreeSpace.GetHi() * 4294967296.0 + lFreeSpace.GetLo();
-   dRecTime /= SAMPLE_SIZE_DISK(oCaptureFormat);   
+   dRecTime /= bytesOnDiskPerSample;   
    dRecTime /= lCaptureChannels;
    dRecTime /= GetRate();
 

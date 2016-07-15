@@ -33,7 +33,7 @@ for each problem encountered, since there can be many orphans.
 #include <wx/artprov.h>
 #include <wx/radiobox.h>
 
-class MultiDialog final : public wxDialog
+class MultiDialog final : public wxDialogWrapper
 {
 public:
    MultiDialog(wxWindow * pParent, 
@@ -53,7 +53,7 @@ private:
 
 #define ID_SHOW_LOG_BUTTON 3333
 
-BEGIN_EVENT_TABLE(MultiDialog, wxDialog)
+BEGIN_EVENT_TABLE(MultiDialog, wxDialogWrapper)
    EVT_BUTTON( wxID_OK, MultiDialog::OnOK )
    EVT_BUTTON(ID_SHOW_LOG_BUTTON, MultiDialog::OnShowLog)
 END_EVENT_TABLE()
@@ -62,7 +62,7 @@ MultiDialog::MultiDialog(wxWindow * pParent,
                          wxString message,
                          wxString title,
                          const wxChar **buttons, wxString boxMsg, bool log)
-   : wxDialog(pParent, wxID_ANY, title,
+   : wxDialogWrapper(pParent, wxID_ANY, title,
                wxDefaultPosition, wxDefaultSize,
                wxCAPTION) // not wxDEFAULT_DIALOG_STYLE because we don't want wxCLOSE_BOX and wxSYSTEM_MENU
 {

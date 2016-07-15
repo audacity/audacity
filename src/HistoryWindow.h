@@ -12,18 +12,19 @@
 #define __AUDACITY_HISTORY_WINDOW__
 
 #include <wx/button.h>
-#include <wx/dialog.h>
 #include <wx/event.h>
 #include <wx/frame.h>
 #include <wx/listctrl.h>
 #include <wx/spinctrl.h>
 #include <wx/textctrl.h>
 
+#include "widgets/wxPanelWrapper.h"
+
 class AudacityProject;
 class ShuttleGui;
 class UndoManager;
 
-class HistoryWindow final : public wxDialog {
+class HistoryWindow final : public wxDialogWrapper {
 
  public:
    HistoryWindow(AudacityProject * parent, UndoManager *manager);

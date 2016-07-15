@@ -736,14 +736,14 @@ bool Importer::Import(const wxString &fName,
 // ImportStreamDialog
 //-------------------------------------------------------------------------
 
-BEGIN_EVENT_TABLE( ImportStreamDialog,wxDialog )
+BEGIN_EVENT_TABLE( ImportStreamDialog, wxDialogWrapper )
    EVT_BUTTON( wxID_OK, ImportStreamDialog::OnOk )
    EVT_BUTTON( wxID_CANCEL, ImportStreamDialog::OnCancel )
 END_EVENT_TABLE()
 
 ImportStreamDialog::ImportStreamDialog( ImportFileHandle *_mFile, wxWindow *parent, wxWindowID id, const wxString &title,
                                        const wxPoint &position, const wxSize& size, long style ):
-wxDialog( parent, id, title, position, size, style | wxRESIZE_BORDER )
+wxDialogWrapper( parent, id, title, position, size, style | wxRESIZE_BORDER )
 {
    SetName(GetTitle());
 

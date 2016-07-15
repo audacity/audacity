@@ -462,10 +462,8 @@ void DeviceToolBar::RepositionCombos()
    desiredChannels.x = mInputChannels->GetBestSize().x;
    desiredChannels.y = mInputChannels->GetSize().y;
 
-   // wxGtk has larger comboboxes than the other platforms.  For DeviceToolBar this will cause
-   // the height to be double because of the discrete grid layout.  So we shrink it to prevent this.
 #ifdef __WXGTK__
-   desiredHost.SetHeight(desiredHost.GetHeight() -4);
+   desiredHost.SetHeight(mHost->GetBestSize().y);
    desiredInput.SetHeight(desiredHost.GetHeight());
    desiredOutput.SetHeight(desiredHost.GetHeight());
    desiredChannels.SetHeight(desiredHost.GetHeight());
@@ -796,7 +794,7 @@ void DeviceToolBar::ShowComboDialog(wxChoice *combo, const wxString &title)
 #if USE_PORTMIXER
    wxArrayString inputSources = combo->GetStrings();
 
-   wxDialog dlg(NULL, wxID_ANY, title);
+   wxDialogWrapper dlg(nullptr, wxID_ANY, title);
    dlg.SetName(dlg.GetTitle());
    ShuttleGui S(&dlg, eIsCreating);
    wxChoice *c;

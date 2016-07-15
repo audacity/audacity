@@ -2096,11 +2096,11 @@ void AdornedRulerPanel::ReCreateButtons()
       mButtons[iButton++] = button;
       return button;
    };
-   auto button = buttonMaker(OnTogglePinnedStateID, bmpPinnedPlayRecordHead, false);
+   auto button = buttonMaker(OnTogglePinnedStateID, bmpPinnedPlayHead, false);
    ToolBar::MakeAlternateImages(
       *button, 1,
       bmpRecoloredUpSmall, bmpRecoloredDownSmall, bmpRecoloredHiliteSmall,
-      bmpUnpinnedPlayRecordHead, bmpUnpinnedPlayRecordHead, bmpUnpinnedPlayRecordHead,
+      bmpUnpinnedPlayHead, bmpUnpinnedPlayHead, bmpUnpinnedPlayHead,
       size);
 
    UpdateButtonStates();
@@ -2124,7 +2124,7 @@ namespace {
       else
          return _("Click or drag to begin scrubbing");
 #else
-      return _("Click to scrub, drag to seek");
+      return _("Click & move to scrub. Click & drag to seek");
 #endif
    }
 
@@ -2783,7 +2783,7 @@ void AdornedRulerPanel::OnToggleScrubBar(/*wxCommandEvent&*/)
    wxSize size { GetSize().GetWidth(), GetRulerHeight(mShowScrubbing) };
    SetSize(size);
    SetMinSize(size);
-   PostSizeEventToParent();
+   GetParent()->PostSizeEventToParent();
 }
 
 void AdornedRulerPanel::OnContextMenu(wxContextMenuEvent & WXUNUSED(event))
@@ -2812,8 +2812,8 @@ void AdornedRulerPanel::UpdateButtonStates()
       const auto label = state
       // Label descibes the present state, not what the click does
       // (which is, to toggle the state)
-      ? _("Pinned play/record Head")
-      : _("Unpinned play/record Head");
+      ? _("Pinned Record/Play head")
+      : _("Unpinned Record/Play head");
       common(*pinButton, wxT("PinnedHead"), label);
    }
 }
@@ -3294,4 +3294,17 @@ void AdornedRulerPanel::GetPlayRegion(double* playRegionStart,
 void AdornedRulerPanel::GetMaxSize(wxCoord *width, wxCoord *height)
 {
    mRuler.GetMaxSize(width, height);
+}
+
+bool AdornedRulerPanel::s_AcceptsFocus{ false };
+
+auto AdornedRulerPanel::TemporarilyAllowFocus() -> TempAllowFocus {
+   s_AcceptsFocus = true;
+   return std::move(TempAllowFocus{ &s_AcceptsFocus });
+}
+
+void AdornedRulerPanel::SetFocusFromKbd()
+{
+   auto temp = TemporarilyAllowFocus();
+   SetFocus();
 }

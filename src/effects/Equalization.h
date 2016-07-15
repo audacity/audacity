@@ -330,7 +330,7 @@ private:
 
 // EditCurvesDialog.  Note that the 'modified' curve used to be called 'custom' but is now called 'unnamed'
 // Some things that deal with 'unnamed' curves still use, for example, 'mCustomBackup' as variable names.
-class EditCurvesDialog final : public wxDialog
+class EditCurvesDialog final : public wxDialogWrapper
 {
 public:
    EditCurvesDialog(wxWindow * parent, EffectEqualization * effect, int position);

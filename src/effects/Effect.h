@@ -25,7 +25,6 @@
 
 class wxCheckBox;
 class wxChoice;
-class wxDialog;
 class wxListBox;
 class wxWindow;
 
@@ -544,7 +543,7 @@ private:
 #define ID_EFFECT_PREVIEW ePreviewID
 
 // Base dialog for regular effect
-class AUDACITY_DLL_API EffectDialog /* not final */ : public wxDialog
+class AUDACITY_DLL_API EffectDialog /* not final */ : public wxDialogWrapper
 {
 public:
    // constructors and destructors
@@ -573,7 +572,7 @@ private:
 };
 
 //
-class EffectUIHost final : public wxDialog,
+class EffectUIHost final : public wxDialogWrapper,
                      public EffectUIHostInterface
 {
 public:
@@ -664,7 +663,7 @@ private:
    DECLARE_EVENT_TABLE();
 };
 
-class EffectPresetsDialog final : public wxDialog
+class EffectPresetsDialog final : public wxDialogWrapper
 {
 public:
    EffectPresetsDialog(wxWindow *parent, Effect *effect);

@@ -9,16 +9,7 @@
 #include "../Audacity.h"
 #include "wxPanelWrapper.h"
 
-IMPLEMENT_CLASS(wxPanelWrapper, wxPanel)
-
-wxPanelWrapper::wxPanelWrapper(wxWindow * parent, wxWindowID id,
-                           const wxPoint & pos,
-                           const wxSize & size,
-                           long style)
-: wxPanel(parent, id, pos, size, style)
-{}
-
-void wxPanelWrapper::DoCharHook(wxKeyEvent &event)
+void wxTabTraversalWrapperCharHook(wxKeyEvent &event)
 {
 #ifdef __WXMAC__
    // Compensate for the regressions in TAB key navigation
@@ -35,12 +26,3 @@ void wxPanelWrapper::DoCharHook(wxKeyEvent &event)
 
    event.Skip();
 }
-
-void wxPanelWrapper::OnCharHook(wxKeyEvent &event)
-{
-   DoCharHook(event);
-}
-
-BEGIN_EVENT_TABLE(wxPanelWrapper, wxPanel)
-   EVT_CHAR_HOOK(wxPanelWrapper::OnCharHook)
-END_EVENT_TABLE()

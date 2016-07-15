@@ -163,7 +163,7 @@ void LV2EffectMeter::OnSize(wxSizeEvent & WXUNUSED(evt))
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-class LV2EffectSettingsDialog final : public wxDialog
+class LV2EffectSettingsDialog final : public wxDialogWrapper
 {
 public:
    LV2EffectSettingsDialog(wxWindow *parent, LV2Effect *effect);
@@ -181,12 +181,12 @@ private:
    DECLARE_EVENT_TABLE();
 };
 
-BEGIN_EVENT_TABLE(LV2EffectSettingsDialog, wxDialog)
+BEGIN_EVENT_TABLE(LV2EffectSettingsDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, LV2EffectSettingsDialog::OnOk)
 END_EVENT_TABLE()
 
 LV2EffectSettingsDialog::LV2EffectSettingsDialog(wxWindow *parent, LV2Effect *effect)
-:  wxDialog(parent, wxID_ANY, wxString(_("LV2 Effect Settings")))
+:  wxDialogWrapper(parent, wxID_ANY, wxString(_("LV2 Effect Settings")))
 {
    mEffect = effect;
 

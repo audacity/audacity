@@ -52,6 +52,7 @@ effects from this one class.
 #include "../../Internat.h"
 #include "../../ShuttleGui.h"
 #include "../../widgets/valnum.h"
+#include "../../widgets/wxPanelWrapper.h"
 
 // ============================================================================
 // List of effects that ship with Audacity.  These will be autoregistered.
@@ -327,7 +328,7 @@ wxArrayString LadspaEffectsModule::GetSearchPaths()
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-class LadspaEffectOptionsDialog final : public wxDialog
+class LadspaEffectOptionsDialog final : public wxDialogWrapper
 {
 public:
    LadspaEffectOptionsDialog(wxWindow * parent, EffectHostInterface *host);
@@ -344,12 +345,12 @@ private:
    DECLARE_EVENT_TABLE()
 };
 
-BEGIN_EVENT_TABLE(LadspaEffectOptionsDialog, wxDialog)
+BEGIN_EVENT_TABLE(LadspaEffectOptionsDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, LadspaEffectOptionsDialog::OnOk)
 END_EVENT_TABLE()
 
 LadspaEffectOptionsDialog::LadspaEffectOptionsDialog(wxWindow * parent, EffectHostInterface *host)
-:  wxDialog(parent, wxID_ANY, wxString(_("LADSPA Effect Options")))
+:  wxDialogWrapper(parent, wxID_ANY, wxString(_("LADSPA Effect Options")))
 {
    mHost = host;
 

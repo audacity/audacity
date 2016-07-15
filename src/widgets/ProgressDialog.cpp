@@ -980,7 +980,7 @@ static const unsigned char beep[] =
 /// Methods for ProgressDialog
 ////////////////////////////////////////////////////////////
 
-BEGIN_EVENT_TABLE(ProgressDialog, wxDialog)
+BEGIN_EVENT_TABLE(ProgressDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_CANCEL, ProgressDialog::OnCancel)
    EVT_BUTTON(wxID_OK, ProgressDialog::OnStop)
    EVT_CLOSE(ProgressDialog::OnCloseWindow)
@@ -990,7 +990,7 @@ END_EVENT_TABLE()
 // Constructor
 //
 ProgressDialog::ProgressDialog()
-:  wxDialog()
+:  wxDialogWrapper()
 {
    Init();
 }
@@ -999,7 +999,7 @@ ProgressDialog::ProgressDialog(const wxString & title,
                                const wxString & message /* = wxEmptyString*/,
                                int flags /* = pdlgDefaultFlags */,
                                const wxString & sRemainingLabelText /* = wxEmptyString */)
-:  wxDialog()
+:  wxDialogWrapper()
 {
    Init();
 
@@ -1082,7 +1082,7 @@ bool ProgressDialog::Create(const wxString & title,
    // Set this boolean to indicate if we confirm the Cancel/Stop actions
    m_bConfirmAction = (flags & pdlgConfirmStopCancel);
 
-   bool success = wxDialog::Create(parent,
+   bool success = wxDialogWrapper::Create(parent,
                                    wxID_ANY,
                                    title,
                                    wxDefaultPosition,
@@ -1247,7 +1247,7 @@ bool ProgressDialog::Create(const wxString & title,
    SetTransparent(0);
    mIsTransparent = true;
 
-   wxDialog::Show(true);
+   wxDialogWrapper::Show(true);
 
    // Even though we won't necessarily show the dialog due to the 500ms
    // delay, we MUST disable other windows/menus anyway since we run the risk
@@ -1335,7 +1335,7 @@ int ProgressDialog::Update(int value, const wxString & message)
       mLastUpdate = now;
    }
 
-   wxDialog::Update();
+   wxDialogWrapper::Update();
 
    // Copied from wx 3.0.2 generic progress dialog
    //
@@ -1476,7 +1476,7 @@ void ProgressDialog::SetMessage(const wxString & message)
          // to the existing dimensions.
          ds.x = wxMax(wxMax(ds.x, mLastW), wxMax(ds.y, mLastH));
          SetClientSize(ds);
-         wxDialog::Update();
+         wxDialogWrapper::Update();
       }
    }
 }

@@ -1296,11 +1296,7 @@ bool EffectEqualization::CalcFilter()
    //transfer to time domain to do the padding and windowing
    float *outr = new float[mWindowSize];
    float *outi = new float[mWindowSize];
-#ifdef EXPERIMENTAL_USE_REALFFTF
    InverseRealFFT(mWindowSize, mFilterFuncR, NULL, outr); // To time domain
-#else
-   FFT(mWindowSize,true,mFilterFuncR,NULL,outr,outi);   //To time domain
-#endif
 
    for(i=0;i<=(mM-1)/2;i++)
    {  //Windowing - could give a choice, fixed for now - MJS
@@ -2944,11 +2940,7 @@ void EqualizationPanel::Recalc()
    mOuti = new float[mEffect->mWindowSize];
 
    mEffect->CalcFilter();   //to calculate the actual response
-#ifdef EXPERIMENTAL_USE_REALFFTF
    InverseRealFFT(mEffect->mWindowSize, mEffect->mFilterFuncR, mEffect->mFilterFuncI, mOutr);
-#else
-   FFT(mWindowSize,true,mFilterFuncR,mFilterFuncI,mOutr,mOuti);   //work out FIR response - note mOuti will be all zeros
-#endif // EXPERIMENTAL_USE_REALFFTF
 }
 
 void EqualizationPanel::OnSize(wxSizeEvent &  WXUNUSED(event))
@@ -3173,7 +3165,7 @@ void EqualizationPanel::OnCaptureLost(wxMouseCaptureLostEvent & WXUNUSED(event))
 // Some things that deal with 'unnamed' curves still use, for example, 'mCustomBackup' as variable names.
 /// Constructor
 
-BEGIN_EVENT_TABLE(EditCurvesDialog, wxDialog)
+BEGIN_EVENT_TABLE(EditCurvesDialog, wxDialogWrapper)
    EVT_BUTTON(UpButtonID, EditCurvesDialog::OnUp)
    EVT_BUTTON(DownButtonID, EditCurvesDialog::OnDown)
    EVT_BUTTON(RenameButtonID, EditCurvesDialog::OnRename)
@@ -3190,7 +3182,7 @@ BEGIN_EVENT_TABLE(EditCurvesDialog, wxDialog)
 END_EVENT_TABLE()
 
 EditCurvesDialog::EditCurvesDialog(wxWindow * parent, EffectEqualization * effect, int position):
-wxDialog(parent, wxID_ANY, _("Manage Curves List"),
+wxDialogWrapper(parent, wxID_ANY, _("Manage Curves List"),
          wxDefaultPosition, wxDefaultSize,
          wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {

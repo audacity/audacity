@@ -353,7 +353,7 @@ void AudacityProject::CreateMenusAndCommands()
          AudioIONotBusyFlag | WaveTracksExistFlag,
          AudioIONotBusyFlag | WaveTracksExistFlag);
 #if defined(USE_MIDI)
-      c->AddItem(wxT("ExportMIDI"), _("Export MIDI..."), FN(OnExportMIDI),
+      c->AddItem(wxT("ExportMIDI"), _("Export MI&DI..."), FN(OnExportMIDI),
          AudioIONotBusyFlag | NoteTracksSelectedFlag,
          AudioIONotBusyFlag | NoteTracksSelectedFlag);
 #endif
@@ -724,7 +724,7 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddSeparator();
 
       /* i18n-hint: (verb)*/
-      c->AddItem(wxT("ResetToolbars"), _("&Reset Toolbars"), FN(OnResetToolBars), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
+      c->AddItem(wxT("ResetToolbars"), _("Reset Toolb&ars"), FN(OnResetToolBars), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
 
       c->EndSubMenu();
 
@@ -4355,7 +4355,7 @@ bool AudacityProject::HandlePasteText()
 
             // Make sure caret is in view
             int x;
-            if (pLabelTrack->CalcCursorX(this, &x)) {
+            if (pLabelTrack->CalcCursorX(&x)) {
                mTrackPanel->ScrollIntoView(x);
             }
 
@@ -6771,7 +6771,7 @@ void AudacityProject::OnAudioDeviceInfo()
 {
    wxString info = gAudioIO->GetDeviceInfo();
 
-   wxDialog dlg(this, wxID_ANY, wxString(_("Audio Device Info")));
+   wxDialogWrapper dlg(this, wxID_ANY, wxString(_("Audio Device Info")));
    dlg.SetName(dlg.GetTitle());
    ShuttleGui S(&dlg, eIsCreating);
 
@@ -6906,7 +6906,7 @@ void AudacityProject::OnResample()
 
    while (true)
    {
-      wxDialog dlg(this, wxID_ANY, wxString(_("Resample")));
+      wxDialogWrapper dlg(this, wxID_ANY, wxString(_("Resample")));
       dlg.SetName(dlg.GetTitle());
       ShuttleGui S(&dlg, eIsCreating);
       wxString rate;

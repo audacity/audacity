@@ -99,6 +99,8 @@ int PCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
             // libsndfile can't (under Windows).
             sf.reset(SFCall<SNDFILE*>(sf_open_fd, f.fd(), SFM_READ, &info, FALSE));
          }
+         // FIXME: TRAP_ERR failure of wxFile open incompletely handled in PCMAliasBlockFile::ReadData.
+
       }
 
       if (!sf) {

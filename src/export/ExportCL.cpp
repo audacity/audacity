@@ -498,7 +498,7 @@ int ExportCL::Export(AudacityProject *project,
    // Display output on error or if the user wants to see it
    if (process.GetStatus() != 0 || show) {
       // TODO use ShowInfoDialog() instead.
-      wxDialog dlg(NULL,
+      wxDialogWrapper dlg(nullptr,
                    wxID_ANY,
                    wxString(_("Command Output")),
                    wxDefaultPosition,

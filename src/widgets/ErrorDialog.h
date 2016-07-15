@@ -15,10 +15,11 @@
 #include "../Audacity.h"
 #include <wx/defs.h>
 #include <wx/window.h>
+#include "wxPanelWrapper.h"
 
 class AudacityProject;
 
-class ErrorDialog /* not final */ : public wxDialog
+class ErrorDialog /* not final */ : public wxDialogWrapper
 {
 public:
    // constructors and destructors

@@ -656,8 +656,8 @@ void TrackPanel::BuildMenus(void)
    /* build the pop-down menu used on time warping tracks */
    mTimeTrackMenu = new wxMenu();
    BuildCommonDropMenuItems(mTimeTrackMenu);   // does name, up/down etc
-   mTimeTrackMenu->Append(OnTimeTrackLinID, _("&Linear"));
-   mTimeTrackMenu->Append(OnTimeTrackLogID, _("L&ogarithmic"));
+   mTimeTrackMenu->AppendRadioItem(OnTimeTrackLinID, wxT("&Linear scale"));
+   mTimeTrackMenu->AppendRadioItem(OnTimeTrackLogID, _("L&ogarithmic scale"));
    mTimeTrackMenu->AppendSeparator();
    mTimeTrackMenu->Append(OnSetTimeTrackRangeID, _("&Range..."));
    mTimeTrackMenu->AppendCheckItem(OnTimeTrackLogIntID, _("Logarithmic &Interpolation"));
@@ -5567,12 +5567,28 @@ void TrackPanel::HandleResize(wxMouseEvent & event)
 /// Handle mouse wheel rotation (for zoom in/out, vertical and horizontal scrolling)
 void TrackPanel::HandleWheelRotation(wxMouseEvent & event)
 {
+   double steps {};
+#if defined(__WXMAC__) && defined(EVT_MAGNIFY)
+   // PRL:
+   // Pinch and spread implemented in wxWidgets 3.1.0, or cherry-picked from
+   // the future in custom build of 3.0.2
+   if (event.Magnify()) {
+      event.SetControlDown(true);
+      steps = 2 * event.GetMagnification();
+   }
+   else
+#endif
+   {
+      steps = event.m_wheelRotation /
+         (event.m_wheelDelta > 0 ? (double)event.m_wheelDelta : 120.0);
+   }
+
    if(event.GetWheelAxis() == wxMOUSE_WHEEL_HORIZONTAL) {
       // Two-fingered horizontal swipe on mac is treated like shift-mousewheel
       event.SetShiftDown(true);
       // This makes the wave move in the same direction as the fingers, and the scrollbar
       // thumb moves oppositely
-      event.m_wheelRotation *= -1;
+      steps *= -1;
    }
 
    if(!event.HasAnyModifiers()) {
@@ -5593,16 +5609,13 @@ void TrackPanel::HandleWheelRotation(wxMouseEvent & event)
       wxRect rect;
       Track *const pTrack = FindTrack(event.m_x, event.m_y, true, false, &rect);
       if (pTrack && event.m_x >= GetVRulerOffset()) {
-         HandleWheelRotationInVRuler(event, pTrack, rect);
+         HandleWheelRotationInVRuler(event, steps, pTrack, rect);
          // Always stop propagation even if the ruler didn't change.  The ruler
          // is a narrow enough target.
          event.Skip(false);
          return;
       }
    }
-
-   double steps = event.m_wheelRotation /
-      (event.m_wheelDelta > 0 ? (double)event.m_wheelDelta : 120.0);
 
    if (event.ShiftDown()
        // Don't pan during smooth scrolling.  That would conflict with keeping
@@ -5688,11 +5701,8 @@ void TrackPanel::HandleWheelRotation(wxMouseEvent & event)
 }
 
 void TrackPanel::HandleWheelRotationInVRuler
-   (wxMouseEvent &event, Track *pTrack, const wxRect &rect)
+   (wxMouseEvent &event, double steps, Track *pTrack, const wxRect &rect)
 {
-   double steps = event.m_wheelRotation /
-      (event.m_wheelDelta > 0 ? (double)event.m_wheelDelta : 120.0);
-
    if (pTrack->GetKind() == Track::Wave) {
       WaveTrack *const wt = static_cast<WaveTrack*>(pTrack);
       WaveTrack *const partner = static_cast<WaveTrack*>(wt->GetLink());
@@ -5710,7 +5720,7 @@ void TrackPanel::HandleWheelRotationInVRuler
 
          WaveformSettings &settings = wt->GetIndependentWaveformSettings();
          float olddBRange = settings.dBRange;
-         if (event.m_wheelRotation < 0)
+         if (steps < 0)
             // Zoom out
             settings.NextLowerDBRange();
          else
@@ -5719,7 +5729,7 @@ void TrackPanel::HandleWheelRotationInVRuler
 
          if (partner) {
             WaveformSettings &settings = partner->GetIndependentWaveformSettings();
-            if (event.m_wheelRotation < 0)
+            if (steps < 0)
                // Zoom out
                settings.NextLowerDBRange();
             else
@@ -5743,7 +5753,7 @@ void TrackPanel::HandleWheelRotationInVRuler
       else if (event.CmdDown() && !event.ShiftDown()) {
          HandleWaveTrackVZoom(
             mTracks, rect, event.m_y, event.m_y,
-            wt, false, (event.m_wheelRotation < 0),
+            wt, false, (steps < 0),
             true);
       }
       else if (!(event.CmdDown() || event.ShiftDown())) {
@@ -5877,7 +5887,7 @@ void TrackPanel::OnKeyDown(wxKeyEvent & event)
 
    // Make sure caret is in view
    int x;
-   if (lt->CalcCursorX(this, &x)) {
+   if (lt->CalcCursorX(&x)) {
       ScrollIntoView(x);
    }
 
@@ -5969,6 +5979,15 @@ void TrackPanel::OnCaptureLost(wxMouseCaptureLostEvent & WXUNUSED(event))
 /// various interested parties.
 void TrackPanel::OnMouseEvent(wxMouseEvent & event)
 {
+#if defined(__WXMAC__) && defined(EVT_MAGNIFY)
+   // PRL:
+   // Pinch and spread implemented in wxWidgets 3.1.0, or cherry-picked from
+   // the future in custom build of 3.0.2
+   if (event.Magnify()) {
+      HandleWheelRotation(event);
+   }
+#endif
+
    if (event.m_wheelRotation != 0)
       HandleWheelRotation(event);
 
@@ -6294,17 +6313,8 @@ bool TrackPanel::HandleLabelTrackClick(LabelTrack * lTrack, wxRect &rect, wxMous
 
       if(mCapturedTrack == NULL)
          SetCapturedTrack(lTrack, IsSelectingLabelText);
-      // handle shift+mouse left button
-      if (event.ShiftDown() && event.ButtonDown()) {
-         // if the mouse is clicked in text box, set flags
-         if (lTrack->OverTextBox(lTrack->GetLabel(lTrack->getSelectedIndex()), event.m_x, event.m_y)) {
-            lTrack->SetInBox(true);
-            lTrack->SetDragXPos(event.m_x);
-            lTrack->SetResetCursorPos(true);
-            RefreshTrack(lTrack);
-            return true;
-         }
-      }
+
+      RefreshTrack(lTrack);
       return true;
    }
 
@@ -6541,8 +6551,8 @@ int TrackPanel::DetermineToolToUse( ToolsToolBar * pTtb, const wxMouseEvent & ev
       currentTool = selectTool;
    } else if( trackKind != Track::Wave) {
       currentTool = selectTool;
-   // So we are in a wave track.
-   //FIXME: Not necessarily. Haven't checked Track::Note (#if defined(USE_MIDI)).
+   // So we are in a wave track?  Not necessarily. 
+   // FIXME: Possibly not in wave track. Haven't checked Track::Note (#if defined(USE_MIDI)).
    // From here on the order in which we hit test determines
    // which tool takes priority in the rare cases where it
    // could be more than one.
@@ -7550,8 +7560,6 @@ void TrackPanel::OnTrackMenu(Track *t)
 
       TimeTrack *tt = (TimeTrack*) t;
 
-      theMenu->Enable(OnTimeTrackLinID, tt->GetDisplayLog());
-      theMenu->Enable(OnTimeTrackLogID, !tt->GetDisplayLog());
       theMenu->Check(OnTimeTrackLogIntID, tt->GetInterpolateLog());
    }
 
@@ -8271,7 +8279,7 @@ void TrackPanel::OnRateOther(wxCommandEvent &event)
    /// \todo Make a real dialog box out of this!!
    while (true)
    {
-      wxDialog dlg(this, wxID_ANY, wxString(_("Set Rate")));
+      wxDialogWrapper dlg(this, wxID_ANY, wxString(_("Set Rate")));
       dlg.SetName(dlg.GetTitle());
       ShuttleGui S(&dlg, eIsCreating);
       wxString rate;
@@ -8568,7 +8576,7 @@ void TrackPanel::OnSetFont(wxCommandEvent & WXUNUSED(event))
                                 LabelTrack::DefaultFontSize);
 
    /* i18n-hint: (noun) This is the font for the label track.*/
-   wxDialog dlg(this, wxID_ANY, wxString(_("Label Track Font")));
+   wxDialogWrapper dlg(this, wxID_ANY, wxString(_("Label Track Font")));
    dlg.SetName(dlg.GetTitle());
    ShuttleGui S(&dlg, eIsCreating);
    wxListBox *lb;

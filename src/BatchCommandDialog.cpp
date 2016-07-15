@@ -47,7 +47,7 @@ selected command.
 #define EditParamsButtonID    7002
 #define UsePresetButtonID     7003
 
-BEGIN_EVENT_TABLE(BatchCommandDialog, wxDialog)
+BEGIN_EVENT_TABLE(BatchCommandDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK,                     BatchCommandDialog::OnOk)
    EVT_BUTTON(wxID_CANCEL,                 BatchCommandDialog::OnCancel)
    EVT_BUTTON(EditParamsButtonID,          BatchCommandDialog::OnEditParams)
@@ -57,7 +57,7 @@ BEGIN_EVENT_TABLE(BatchCommandDialog, wxDialog)
 END_EVENT_TABLE();
 
 BatchCommandDialog::BatchCommandDialog(wxWindow * parent, wxWindowID id):
-   wxDialog(parent, id, _("Select Command"),
+   wxDialogWrapper(parent, id, _("Select Command"),
             wxDefaultPosition, wxDefaultSize,
             wxCAPTION | wxRESIZE_BORDER)
 {

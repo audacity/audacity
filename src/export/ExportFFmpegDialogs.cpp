@@ -492,7 +492,7 @@ FFmpegPresets::FFmpegPresets()
 FFmpegPresets::~FFmpegPresets()
 {
    XMLFileWriter writer;
-   // FIXME: Catch XMLFileWriterException
+   // FIXME: TRAP_ERR Catch XMLFileWriterException
    wxFileName xmlFileName(FileNames::DataDir(), wxT("ffmpeg_presets.xml"));
    writer.Open(xmlFileName.GetFullPath(),wxT("wb"));
    WriteXMLHeader(writer);
@@ -516,7 +516,7 @@ void FFmpegPresets::ImportPresets(wxString &filename)
 void FFmpegPresets::ExportPresets(wxString &filename)
 {
    XMLFileWriter writer;
-   // FIXME: Catch XMLFileWriterException
+   // FIXME: TRAP_ERR Catch XMLFileWriterException
    writer.Open(filename,wxT("wb"));
    WriteXMLHeader(writer);
    WriteXML(writer);
@@ -874,7 +874,7 @@ void FFmpegPresets::WriteXML(XMLWriter &xmlFile)
 // ExportFFmpegOptions Class
 //----------------------------------------------------------------------------
 
-BEGIN_EVENT_TABLE(ExportFFmpegOptions, wxDialog)
+BEGIN_EVENT_TABLE(ExportFFmpegOptions, wxDialogWrapper)
    EVT_BUTTON(wxID_OK,ExportFFmpegOptions::OnOK)
    EVT_LISTBOX(FEFormatID,ExportFFmpegOptions::OnFormatList)
    EVT_LISTBOX(FECodecID,ExportFFmpegOptions::OnCodecList)
@@ -1303,7 +1303,7 @@ ExportFFmpegOptions::~ExportFFmpegOptions()
 }
 
 ExportFFmpegOptions::ExportFFmpegOptions(wxWindow *parent)
-:  wxDialog(parent, wxID_ANY,
+:  wxDialogWrapper(parent, wxID_ANY,
             wxString(_("Configure custom FFmpeg options")))
 {
    SetName(GetTitle());

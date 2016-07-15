@@ -13,13 +13,13 @@
 
 #include <vector>
 #include <wx/defs.h>
-#include <wx/dialog.h>
 #include <wx/event.h>
 #include <wx/grid.h>
 #include <wx/string.h>
 
 #include "Internat.h"
 #include "widgets/Grid.h"
+#include "widgets/wxPanelWrapper.h"
 
 class TrackFactory;
 class TrackList;
@@ -30,7 +30,7 @@ class ViewInfo;
 
 typedef std::vector<RowData> RowDataArray;
 
-class LabelDialog final : public wxDialog
+class LabelDialog final : public wxDialogWrapper
 {
  public:
 

@@ -51,7 +51,6 @@ class AudioThread;
 class Meter;
 class SelectedRegion;
 class TimeTrack;
-class wxDialog;
 
 class AudacityProject;
 class WaveTrackArray;

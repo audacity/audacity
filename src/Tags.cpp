@@ -615,6 +615,59 @@ public:
 
       wxGridCellChoiceEditor::SetSize(rect);
    }
+
+   // Fix for Bug 1389
+   // July 2016: ANSWER-ME: Does this need reporting upstream to wxWidgets?
+   virtual void StartingKey(wxKeyEvent& event)
+   {
+       // Lifted from wxGridCellTextEditor and adapted to combo.
+
+       // [Below is comment from wxWidgets code]
+       // Since this is now happening in the EVT_CHAR event EmulateKeyPress is no
+       // longer an appropriate way to get the character into the text control.
+       // Do it ourselves instead.  We know that if we get this far that we have
+       // a valid character, so not a whole lot of testing needs to be done.
+
+       //The only difference to wxGridCellTextEditor.
+       //wxTextCtrl* tc = (wxTextCtrl *)m_control;
+       wxComboBox * tc = Combo();
+       int ch;
+
+       bool isPrintable;
+
+   #if wxUSE_UNICODE
+       ch = event.GetUnicodeKey();
+       if ( ch != WXK_NONE )
+           isPrintable = true;
+       else
+   #endif // wxUSE_UNICODE
+       {
+           ch = event.GetKeyCode();
+           isPrintable = ch >= WXK_SPACE && ch < WXK_START;
+       }
+
+       switch (ch)
+       {
+           case WXK_DELETE:
+               // Delete the initial character when starting to edit with DELETE.
+               tc->Remove(0, 1);
+               break;
+
+           case WXK_BACK:
+               // Delete the last character when starting to edit with BACKSPACE.
+               {
+                   const long pos = tc->GetLastPosition();
+                   tc->Remove(pos - 1, pos);
+               }
+               break;
+
+           default:
+               if ( isPrintable )
+                   tc->WriteText(static_cast<wxChar>(ch));
+               break;
+       }
+   }
+
 };
 
 //
@@ -669,7 +722,7 @@ enum {
    RemoveID
 };
 
-BEGIN_EVENT_TABLE(TagsEditor, wxDialog)
+BEGIN_EVENT_TABLE(TagsEditor, wxDialogWrapper)
    EVT_GRID_CELL_CHANGED(TagsEditor::OnChange)
    EVT_BUTTON(EditID, TagsEditor::OnEdit)
    EVT_BUTTON(ResetID, TagsEditor::OnReset)
@@ -689,7 +742,7 @@ TagsEditor::TagsEditor(wxWindow * parent,
                        Tags * tags,
                        bool editTitle,
                        bool editTrack)
-:  wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize,
+:  wxDialogWrapper(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER),
    mTags(tags),
    mEditTitle(editTitle),
@@ -1003,7 +1056,7 @@ void TagsEditor::OnEdit(wxCommandEvent & WXUNUSED(event))
       mGrid->HideCellEditControl();
    }
 
-   wxDialog dlg(this, wxID_ANY, _("Edit Genres"),
+   wxDialogWrapper dlg(this, wxID_ANY, _("Edit Genres"),
                 wxDefaultPosition, wxDefaultSize,
                 wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER);
    dlg.SetName(dlg.GetTitle());

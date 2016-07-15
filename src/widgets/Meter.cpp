@@ -737,7 +737,7 @@ void Meter::OnMouse(wxMouseEvent &evt)
          mi->Enable(!mActive || mMonitoring);
       }
 
-      menu.Append(OnPreferencesID, _("Preferences..."));
+      menu.Append(OnPreferencesID, _("Options..."));
 
       if (evt.RightDown()) {
          ShowMenu(evt.GetPosition());
@@ -1919,7 +1919,7 @@ void Meter::ShowMenu(const wxPoint & pos)
       mi->Enable(!mActive || mMonitoring);
    }
 
-   menu.Append(OnPreferencesID, _("Preferences..."));
+   menu.Append(OnPreferencesID, _("Options..."));
 
    mAccSilent = true;      // temporarily make screen readers say (close to) nothing on focus events
 
@@ -1964,12 +1964,12 @@ void Meter::OnPreferences(wxCommandEvent & WXUNUSED(event))
    wxRadioButton *vertical;
    int meterRefreshRate = mMeterRefreshRate;
 
-   wxString title(mIsInput ? _("Recording Meter Preferences") : _("Playback Meter Preferences"));
+   wxString title(mIsInput ? _("Recording Meter Options") : _("Playback Meter Options"));
 
    // Dialog is a child of the project, rather than of the toolbar.
    // This determines where it pops up.
 
-   wxDialog dlg(GetActiveProject(), wxID_ANY, title);
+   wxDialogWrapper dlg(GetActiveProject(), wxID_ANY, title);
    dlg.SetName(dlg.GetTitle());
    ShuttleGui S(&dlg, eIsCreating);
    S.StartVerticalLay();

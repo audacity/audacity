@@ -252,7 +252,6 @@
     <ClCompile Include="..\..\..\src\effects\FindClipping.cpp" />
     <ClCompile Include="..\..\..\src\effects\Generator.cpp" />
     <ClCompile Include="..\..\..\src\effects\Invert.cpp" />
-    <ClCompile Include="..\..\..\src\effects\Leveller.cpp" />
     <ClCompile Include="..\..\..\src\effects\LoadEffects.cpp" />
     <ClCompile Include="..\..\..\src\effects\Noise.cpp" />
     <ClCompile Include="..\..\..\src\effects\NoiseRemoval.cpp" />
@@ -551,7 +550,6 @@
     <ClInclude Include="..\..\..\src\effects\FindClipping.h" />
     <ClInclude Include="..\..\..\src\effects\Generator.h" />
     <ClInclude Include="..\..\..\src\effects\Invert.h" />
-    <ClInclude Include="..\..\..\src\effects\Leveller.h" />
     <ClInclude Include="..\..\..\src\effects\LoadEffects.h" />
     <ClInclude Include="..\..\..\src\effects\Noise.h" />
     <ClInclude Include="..\..\..\src\effects\NoiseRemoval.h" />

@@ -25,7 +25,7 @@
 #include "ShuttleGui.h"
 #include "TimeDialog.h"
 
-BEGIN_EVENT_TABLE(TimeDialog, wxDialog)
+BEGIN_EVENT_TABLE(TimeDialog, wxDialogWrapper)
    EVT_COMMAND(wxID_ANY, EVT_TIMETEXTCTRL_UPDATED, TimeDialog::OnUpdate)
 END_EVENT_TABLE()
 
@@ -35,7 +35,7 @@ TimeDialog::TimeDialog(wxWindow *parent,
                        double rate,
                        double time,
                        const wxString &prompt)
-:  wxDialog(parent, wxID_ANY, title),
+:  wxDialogWrapper(parent, wxID_ANY, title),
    mPrompt(prompt),
    mFormat(format),
    mRate(rate),

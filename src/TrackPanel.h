@@ -389,7 +389,7 @@ protected:
    // MM: Handle mouse wheel rotation
    virtual void HandleWheelRotation(wxMouseEvent & event);
    virtual void HandleWheelRotationInVRuler
-      (wxMouseEvent &event, Track *pTrack, const wxRect &rect);
+      (wxMouseEvent &event, double steps, Track *pTrack, const wxRect &rect);
 
    // Handle resizing.
    virtual void HandleResizeClick(wxMouseEvent & event);

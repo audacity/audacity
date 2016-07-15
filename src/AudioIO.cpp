@@ -1089,6 +1089,8 @@ AudioIO::~AudioIO()
       mPortMixer = NULL;
    }
 #endif
+
+   // FIXME: ? TRAP_ERR.  Pa_Terminate probably OK if err without reporting.
    Pa_Terminate();
 
 #ifdef EXPERIMENTAL_MIDI_OUT
@@ -1358,6 +1360,7 @@ void AudioIO::HandleDeviceChange()
       }
    }
 
+   // FIXME: TRAP_ERR errors in HandleDeviceChange not reported.
    // if it's still not working, give up
    if( error )
       return;
@@ -1448,10 +1451,19 @@ bool AudioIO::StartPortAudioStream(double sampleRate,
    // rate is suggested, but we may get something else if it isn't supported
    mRate = GetBestRate(numCaptureChannels > 0, numPlaybackChannels > 0, sampleRate);
 
+   // July 2016 (Carsten and Uwe)
+   // BUG 193: Tell PortAudio sound card will handle 24 bit (under DirectSound) using 
+   // userData.
+   int captureFormat_saved = captureFormat;
    // Special case: Our 24-bit sample format is different from PortAudio's
    // 3-byte packed format. So just make PortAudio return float samples,
    // since we need float values anyway to apply the gain.
-   // ANSWER-ME: So we *never* actually handle 24-bit?! This causes mCapture to be set to floatSample below.
+   // ANSWER-ME: So we *never* actually handle 24-bit?! This causes mCapture to 
+   // be set to floatSample below.
+   // JKC: YES that's right.  Internally Audacity uses float, and float has space for
+   // 24 bits as well as exponent.  Actual 24 bit would require packing and
+   // unpacking unaligned bytes and would be inefficient.
+   // ANSWER ME: is floatSample 64 bit on 64 bit machines?
    if (captureFormat == int24Sample)
       captureFormat = floatSample;
 
@@ -1538,12 +1550,19 @@ bool AudioIO::StartPortAudioStream(double sampleRate,
    float oldRecordVolume = Px_GetInputVolume(mPortMixer);
 #endif
 #endif
+
+   // July 2016 (Carsten and Uwe)
+   // BUG 193: Possibly tell portAudio to use 24 bit with DirectSound. 
+   int  userData = 24;
+   int* lpUserData = (captureFormat_saved == int24Sample) ? &userData : NULL;
+
    mLastPaError = Pa_OpenStream( &mPortStreamV19,
                                  useCapture ? &captureParameters : NULL,
                                  usePlayback ? &playbackParameters : NULL,
                                  mRate, paFramesPerBufferUnspecified,
                                  paNoFlag,
-                                 audacityAudioCallback, NULL );
+                                 audacityAudioCallback, lpUserData );
+
 
 #if USE_PORTMIXER
 #ifdef __WXMSW__
@@ -1587,6 +1606,8 @@ void AudioIO::StartMonitoring(double sampleRate)
    if (mSoftwarePlaythrough)
       playbackChannels = 2;
 
+   // FIXME: TRAP_ERR StartPortAudioStream (a PaError may be present)
+   // but StartPortAudioStream function only returns true or false.
    success = StartPortAudioStream(sampleRate, (unsigned int)playbackChannels,
                                   (unsigned int)captureChannels,
                                   captureFormat);
@@ -1598,7 +1619,10 @@ void AudioIO::StartMonitoring(double sampleRate)
    e.SetInt(true);
    wxTheApp->ProcessEvent(e);
 
+   // FIXME: TRAP_ERR PaErrorCode 'noted' but not reported in StartMonitoring.
    // Now start the PortAudio stream!
+   // TODO: ? Factor out and reuse error reporting code from end of 
+   // AudioIO::StartStream?
    mLastPaError = Pa_StartStream( mPortStreamV19 );
 
    // Update UI display only now, after all possibilities for error are past.
@@ -2596,6 +2620,7 @@ bool AudioIO::IsBusy()
 bool AudioIO::IsStreamActive()
 {
    bool isActive = false;
+   // JKC: Not reporting any Pa error, but that looks OK.
    if( mPortStreamV19 )
       isActive = (Pa_IsStreamActive( mPortStreamV19 ) > 0);
 
@@ -2711,6 +2736,7 @@ wxArrayLong AudioIO::GetSupportedPlaybackRates(int devIndex, double rate)
    pars.suggestedLatency = devInfo->defaultHighOutputLatency;
    pars.hostApiSpecificStreamInfo = NULL;
 
+   // JKC: PortAudio Errors handled OK here.  No need to report them
    for (i = 0; i < NumRatesToTry; i++)
    {
       // LLL: Remove when a proper method of determining actual supported
@@ -3119,6 +3145,9 @@ int AudioIO::getPlayDevIndex(const wxString &devNameArg)
    }
 
    // The host wasn't found, so use the default output device.
+   // FIXME: TRAP_ERR PaErrorCode not handled well (this code is similar to input code
+   // and the input side has more comments.)
+
    PaDeviceIndex deviceNum = Pa_GetDefaultOutputDevice();
 
    // Sometimes PortAudio returns -1 if it cannot find a suitable default
@@ -3173,10 +3202,12 @@ int AudioIO::getRecordDevIndex(const wxString &devNameArg)
    }
 
    // The host wasn't found, so use the default input device.
+   // FIXME: TRAP_ERR PaErrorCode not handled well in getRecordDevIndex()
    PaDeviceIndex deviceNum = Pa_GetDefaultInputDevice();
 
    // Sometimes PortAudio returns -1 if it cannot find a suitable default
    // device, so we just use the first one available
+   // PortAudio has an error reporting function.  We should log/report the error?
    //
    // LL:  At this point, preferences and active no longer match
    //
@@ -3204,9 +3235,9 @@ wxString AudioIO::GetDeviceInfo()
    }
 
 
+   // FIXME: TRAP_ERR PaErrorCode not handled.  3 instances in GetDeviceInfo().
    int recDeviceNum = Pa_GetDefaultInputDevice();
    int playDeviceNum = Pa_GetDefaultOutputDevice();
-
    int cnt = Pa_GetDeviceCount();
 
    wxLogDebug(wxT("Portaudio reports %d audio devices"),cnt);
@@ -3354,7 +3385,7 @@ wxString AudioIO::GetDeviceInfo()
       }
 
       if (error) {
-         s << wxT("Recieved ") << error << wxT(" while opening devices") << e;
+         s << wxT("Received ") << error << wxT(" while opening devices") << e;
          return o.GetString();
       }
 
@@ -3369,6 +3400,7 @@ wxString AudioIO::GetDeviceInfo()
       s << wxT("==============================") << e;
       s << wxT("Available mixers:") << e;
 
+      // FIXME: ? PortMixer errors on query not reported in GetDeviceInfo
       cnt = Px_GetNumMixers(stream);
       for (int i = 0; i < cnt; i++) {
          wxString name = wxSafeConvertMB2WX(Px_GetMixerName(stream, i));

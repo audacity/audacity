@@ -119,6 +119,7 @@ ToolFrame::ToolFrame
 
    // Transfer the bar to the ferry
    bar->Reparent(this);
+   SetMinSize(bar->GetDockedSize());
 
    {
       // We use a sizer to maintain proper spacing
@@ -766,8 +767,6 @@ void ToolManager::ReadConfig()
       {
          // Create the bar (with the top dock being temporary parent)
          bar->Create( mTopDock );
-         
-
 
          // Construct a NEW floater
          ToolFrame *f = safenew ToolFrame( mParent, this, bar, wxPoint( x, y ) );
@@ -782,6 +781,10 @@ void ToolManager::ReadConfig()
             if( (x!=-1) && (y!=-1) )
                bar->SetPositioned();
          }
+
+         // Required on Linux Xfce
+         wxSize msz(width[ndx],height[ndx]-1);
+         bar->GetParent()->SetMinSize(msz);
 
          // Inform toolbar of change
          bar->SetDocked( NULL, false );
@@ -1162,7 +1165,6 @@ void ToolManager::OnMouse( wxMouseEvent & event )
             }
             else
             {
-               const auto &box = mLeft->GetBox();
                p.x = dr.GetLeft() + r.GetLeft();
                p.y = dr.GetTop() + r.GetTop() +
                   ( ( r.GetHeight() - mLeft->GetBox().GetHeight() ) / 2 );

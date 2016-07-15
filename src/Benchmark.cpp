@@ -42,7 +42,7 @@ of the BlockFile system.
 
 #include "FileDialog.h"
 
-class BenchmarkDialog final : public wxDialog
+class BenchmarkDialog final : public wxDialogWrapper
 {
 public:
    // constructors and destructors
@@ -117,7 +117,7 @@ enum {
    RandSeedID
 };
 
-BEGIN_EVENT_TABLE(BenchmarkDialog,wxDialog)
+BEGIN_EVENT_TABLE(BenchmarkDialog, wxDialogWrapper)
    EVT_BUTTON( RunID,   BenchmarkDialog::OnRun )
    EVT_BUTTON( BSaveID,  BenchmarkDialog::OnSave )
    EVT_BUTTON( ClearID, BenchmarkDialog::OnClear )
@@ -125,7 +125,7 @@ BEGIN_EVENT_TABLE(BenchmarkDialog,wxDialog)
 END_EVENT_TABLE()
 
 BenchmarkDialog::BenchmarkDialog(wxWindow *parent):
-      wxDialog( parent, 0, wxT("Benchmark"),
+      wxDialogWrapper( parent, 0, wxT("Benchmark"),
                 wxDefaultPosition, wxDefaultSize,
                 wxDEFAULT_DIALOG_STYLE |
                 wxRESIZE_BORDER)
