@@ -359,7 +359,7 @@ void AudacityProject::CreateMenusAndCommands()
 #endif
 #ifdef USE_LIBVORBIS
       c->AddSeparator();
-      c->AddItem(wxT("SaveCompressed"), _("Save Compressed Copy of Project..."), FN(OnSaveCompressed));
+      c->AddItem(wxT("SaveCompressed"), _("&Save Compressed Copy of Project..."), FN(OnSaveCompressed));
 #endif
       c->EndSubMenu();
       c->AddSeparator();
@@ -724,7 +724,7 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddSeparator();
 
       /* i18n-hint: (verb)*/
-      c->AddItem(wxT("ResetToolbars"), _("Reset Toolb&ars"), FN(OnResetToolBars), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
+      c->AddItem(wxT("ResetToolbars"), _("&Reset Toolb&ars"), FN(OnResetToolBars), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
 
       c->EndSubMenu();
 
@@ -808,7 +808,7 @@ void AudacityProject::CreateMenusAndCommands()
 
 
       c->BeginSubMenu(_("Transport Options"));
-      c->AddCheck(wxT("PinnedHead"), _("Pinned Play/Record Head (on/off)"),
+      c->AddCheck(wxT("PinnedHead"), _("Pinned Play/Record &Head (on/off)"),
                   FN(OnTogglePinnedHead), 0,
                   // Switching of scrolling on and off is permitted even during transport
                   AlwaysEnabledFlag, AlwaysEnabledFlag);
