@@ -160,6 +160,8 @@ void WaveTrack::Merge(const Track &orig)
       mDisplay = wt.mDisplay;
       mGain    = wt.mGain;
       mPan     = wt.mPan;
+      mDisplayMin = wt.mDisplayMin;
+      mDisplayMax = wt.mDisplayMax;
       SetSpectrogramSettings(wt.mpSpectrumSettings
          ? new SpectrogramSettings(*wt.mpSpectrumSettings) : 0);
       SetWaveformSettings
