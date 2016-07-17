@@ -462,8 +462,10 @@ void DeviceToolBar::RepositionCombos()
    desiredChannels.x = mInputChannels->GetBestSize().x;
    desiredChannels.y = mInputChannels->GetSize().y;
 
+   // wxGtk (Gnome) has larger comboboxes than the other platforms.  For DeviceToolBar this prevents
+   // the toolbar docking on a single height row. So we shrink it to prevent this.
 #ifdef __WXGTK__
-   desiredHost.SetHeight(mHost->GetBestSize().y);
+   desiredHost.SetHeight(mHost->GetBestSize().y -4);
    desiredInput.SetHeight(desiredHost.GetHeight());
    desiredOutput.SetHeight(desiredHost.GetHeight());
    desiredChannels.SetHeight(desiredHost.GetHeight());
