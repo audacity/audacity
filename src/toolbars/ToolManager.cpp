@@ -1358,7 +1358,8 @@ void ToolManager::OnGrabber( GrabberEvent & event )
    }
 
    // We want all mouse events from this point on
-   mParent->CaptureMouse();
+   if( !mParent->HasCapture() )
+      mParent->CaptureMouse();
 
    // Start monitoring shift key changes
    mLastState = wxGetKeyState( WXK_SHIFT );

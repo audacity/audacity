@@ -862,7 +862,8 @@ void EffectAutoDuckPanel::OnLeftDown(wxMouseEvent & evt)
       for (int i = 0; i < AUTO_DUCK_PANEL_NUM_CONTROL_POINTS; i++)
          mMoveStartControlPoints[i] = mControlPoints[i];
 
-      CaptureMouse();
+      if( !HasCapture() )
+         CaptureMouse();
    }
 }
 

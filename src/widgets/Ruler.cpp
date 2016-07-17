@@ -2526,7 +2526,8 @@ void AdornedRulerPanel::HandleQPClick(wxMouseEvent &evt, wxCoord mousePosX)
    // Check if we are dragging BEFORE CaptureMouse.
    if (mMouseEventState != mesNone)
       SetCursor(mCursorSizeWE);
-   CaptureMouse();
+   if ( !HasCapture() )
+      CaptureMouse();
 }
 
 void AdornedRulerPanel::HandleQPDrag(wxMouseEvent &event, wxCoord mousePosX)

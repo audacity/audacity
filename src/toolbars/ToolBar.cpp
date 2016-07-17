@@ -168,7 +168,8 @@ void ToolBarResizer::OnLeftDown( wxMouseEvent & event )
    mOrigSize = mBar->GetSize();
 
    // We want all of the mouse events
-   CaptureMouse();
+   if( !HasCapture() )
+      CaptureMouse();
 }
 
 void ToolBarResizer::OnLeftUp( wxMouseEvent & event )
