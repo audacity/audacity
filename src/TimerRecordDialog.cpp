@@ -918,7 +918,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
 
             wxArrayString arrayOptions;
             arrayOptions.Add(_("Do nothing"));
-            arrayOptions.Add(_("Exit audacity"));
+            arrayOptions.Add(_("Exit Audacity"));
             arrayOptions.Add(_("Restart system"));
             arrayOptions.Add(_("Shutdown system"));
 
