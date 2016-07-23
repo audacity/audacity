@@ -2119,11 +2119,11 @@ namespace {
        */
 #if 0
       if(scrubber.Seeks())
-         return _("Click or drag to begin seeking");
+         return _("Click or drag to begin Seek");
       else
-         return _("Click or drag to begin scrubbing");
+         return _("Click or drag to begin Scrub");
 #else
-      return _("Click & move to scrub. Click & drag to seek");
+      return _("Click & move to Scrub. Click & drag to Seek.");
 #endif
    }
 
@@ -2135,11 +2135,11 @@ namespace {
        */
 #if 0
       if(scrubber.Seeks())
-         return _("Move to seek");
+         return _("Move to Seek");
       else
-         return _("Move to scrub");
+         return _("Move to Scrub");
 #else
-      return _("Move to scrub, drag to seek");
+      return _("Move to Scrub, drag to Seek");
 #endif
    }
 
