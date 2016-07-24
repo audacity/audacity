@@ -3385,6 +3385,16 @@ void EffectUIHost::OnEnable(wxCommandEvent & WXUNUSED(evt))
 
    if (mEnabled)
    {
+      if (!mClient->ValidateUI()) {
+         // If we're previewing we should still be able to stop playback
+         // so don't disable transport buttons.
+         //   mEffect->EnableApply(false);   // currently this would also disable transport buttons.
+         // The preferred behaviour is currently undecided, so for now
+         // just disallow enabling until settings are valid.
+         mEnabled = false;
+         mEnableCb->SetValue(mEnabled);
+         return;
+      }
       mEffect->RealtimeResume();
    }
    else
