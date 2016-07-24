@@ -258,7 +258,6 @@ EffectEqualization::EffectEqualization()
    mWindowSize = windowSize;
 
    mDirty = false;
-   mDisallowCustom = false;
 
    // Load the EQ curves
    LoadCurves();
@@ -372,7 +371,7 @@ bool EffectEqualization::SetAutomationParameters(EffectAutomationParameters & pa
       InterpMeth -= kNumInterpolations;
    }
 
-   mEnvelope = (mLin ? mLinEnvelope : mLogEnvelope);
+   setCurve(CurveName);
 
    return true;
 }
@@ -393,7 +392,7 @@ bool EffectEqualization::ValidateUI()
 {
    // If editing a batch chain, we don't want to be using the unnamed curve so
    // we offer to save it.
-   while (mDisallowCustom && mCurveName.IsSameAs(wxT("unnamed")))
+   while (IsBatchProcessing() && mCurveName.IsSameAs(wxT("unnamed")))
    {
       wxMessageBox(_("To use this EQ curve in a batch chain, please choose a new name for it.\nChoose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."),
          _("EQ Curve needs a different name"),
@@ -545,6 +544,23 @@ bool EffectEqualization::Init()
 
 bool EffectEqualization::Process()
 {
+   if (IsBatchProcessing() && mCurveName.IsSameAs("unnamed"))
+   {
+      // The user tried to run a chain using the unnamed curve
+      wxMessageBox( _("The chain which you tried to run had an Equalization \
+                      command using an unnamed curve. Using Equalization in \
+                      chain processing requires the chain file to specify a \
+                      named EQ Curve.\n\nTo use a custom-drawn equalization \
+                      curve in a chain, please save your curve to a new name \
+                      by pressing 'Save/Manage Curves...' and then renaming \
+                      the 'unnamed' curve. It will then be available under \
+                      that name in the 'Select Curve:' list when editing your \
+                      chain's Equalization parameters."),
+                   _("Chain aborted: invalid EQ curve name: 'unnamed'"),
+                   wxOK | wxICON_ERROR);
+      return false;
+   }
+   
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
    if(mEffectEqualization48x)
       if(mBench) {
