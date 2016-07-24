@@ -676,7 +676,7 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
          // msmeyer: Show error message if stream could not be opened
          wxMessageBox(
             _("Error while opening sound device. "
-            "Please check the playback device settings and the project sample rate."),
+            "Try changing the audio host, playback device and the project sample rate."),
             _("Error"), wxOK | wxICON_EXCLAMATION, this);
       }
    }
