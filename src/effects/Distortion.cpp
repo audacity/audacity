@@ -84,7 +84,7 @@ Param( Param2,          double,  XO("Parameter 2"),    50.0,    0.0,   100.0,   
 Param( Repeats,         int,     XO("Repeats"),        1,       0,       5,                  1    );
 
 // How many samples are processed before recomputing the lookup table again
-#define skipsamples 100
+#define skipsamples 1000
 
 const double MIN_Threshold_Linear DB_TO_LINEAR(MIN_Threshold_dB);
 
