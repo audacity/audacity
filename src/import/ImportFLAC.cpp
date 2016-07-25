@@ -304,6 +304,8 @@ std::unique_ptr<ImportFileHandle> FLACImportPlugin::Open(const wxString &filenam
       return nullptr; // File not found
    }
 
+   // FIXME: TRAP_ERR wxFILE ops in FLAC Import could fail.
+   // Seek() return value is not examined, for example.
 #ifdef USE_LIBID3TAG
    // Skip any ID3 tags that might be present
    id3_byte_t query[ID3_TAG_QUERYSIZE];

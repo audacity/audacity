@@ -61,8 +61,11 @@ public:
 #endif
 
    /** \brief Check a proposed file name string for illegal characters and
-    * remove them */
-   static wxString SanitiseFilename(const wxString &name, const wxString &sub);
+    * remove them
+    * return true iff name is "visibly" changed (not necessarily equivalent to
+    * character-wise changed)
+    */
+   static bool SanitiseFilename(wxString &name, const wxString &sub);
 
    /** \brief Remove accelerator charactors from strings
     *
@@ -73,11 +76,15 @@ public:
     * when they aren't, saving translators effort. */
    static wxString StripAccelerators(const wxString& str);
 
+   static wxString Parenthesize(const wxString &str);
+
+   static const wxArrayString &GetExcludedCharacters()
+   { return exclude; }
+
 private:
    static wxChar mDecimalSeparator;
 
    // stuff for file name sanitisation
-   static wxString forbid;
    static wxArrayString exclude;
 
    static wxCharBuffer mFilename;

@@ -20,9 +20,7 @@
 #include "xml/XMLTagHandler.h"
 
 #include "Experimental.h"
-#ifdef EXPERIMENTAL_USE_REALFFTF
 #include "RealFFTf.h"
-#endif
 
 #include <wx/gdicmn.h>
 #include <wx/longlong.h>

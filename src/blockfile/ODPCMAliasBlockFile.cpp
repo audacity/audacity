@@ -407,6 +407,7 @@ void ODPCMAliasBlockFile::WriteSummary()
 
    mFileNameMutex.Unlock();
 
+   // JKC ANSWER-ME: Whay is IsOpened() commented out?
    if( !summaryFile){//.IsOpened() ){
 
       // Never silence the Log w.r.t write errors; they always count
@@ -482,95 +483,8 @@ void *ODPCMAliasBlockFile::CalcSummary(samplePtr buffer, sampleCount len,
       CopySamples(buffer, format,
                (samplePtr)fbuffer, floatSample, len);
    }
-   sampleCount sumLen;
-   sampleCount i, j, jcount;
 
-   float min, max;
-   float sumsq;
-
-   // Recalc 256 summaries
-   sumLen = (len + 255) / 256;
-
-
-   for (i = 0; i < sumLen; i++) {
-      min = fbuffer[i * 256];
-      max = fbuffer[i * 256];
-      sumsq = ((float)min) * ((float)min);
-      jcount = 256;
-      if (i * 256 + jcount > len)
-         jcount = len - i * 256;
-      for (j = 1; j < jcount; j++) {
-         float f1 = fbuffer[i * 256 + j];
-         sumsq += ((float)f1) * ((float)f1);
-         if (f1 < min)
-            min = f1;
-         else if (f1 > max)
-            max = f1;
-      }
-
-      float rms = (float)sqrt(sumsq / jcount);
-
-      summary256[i * 3] = min;
-      summary256[i * 3 + 1] = max;
-      summary256[i * 3 + 2] = rms;
-   }
-
-   for (i = sumLen; i < mSummaryInfo.frames256; i++) {
-      // filling in the remaining bits with non-harming/contributing values
-      summary256[i * 3] = FLT_MAX;  // min
-      summary256[i * 3 + 1] = -FLT_MAX;   // max
-      summary256[i * 3 + 2] = 0.0f; // rms
-   }
-
-   // Recalc 64K summaries
-   sumLen = (len + 65535) / 65536;
-
-   for (i = 0; i < sumLen; i++) {
-      min = summary256[3 * i * 256];
-      max = summary256[3 * i * 256 + 1];
-      sumsq = (float)summary256[3 * i * 256 + 2];
-      sumsq *= sumsq;
-
-      for (j = 1; j < 256; j++) {
-         if (summary256[3 * (i * 256 + j)] < min)
-            min = summary256[3 * (i * 256 + j)];
-         if (summary256[3 * (i * 256 + j) + 1] > max)
-            max = summary256[3 * (i * 256 + j) + 1];
-         float r1 = summary256[3 * (i * 256 + j) + 2];
-         sumsq += r1*r1;
-      }
-
-      float rms = (float)sqrt(sumsq / 256);
-
-      summary64K[i * 3] = min;
-      summary64K[i * 3 + 1] = max;
-      summary64K[i * 3 + 2] = rms;
-   }
-   for (i = sumLen; i < mSummaryInfo.frames64K; i++) {
-      summary64K[i * 3] = 0.0f;
-      summary64K[i * 3 + 1] = 0.0f;
-      summary64K[i * 3 + 2] = 0.0f;
-   }
-
-   // Recalc block-level summary
-   min = summary64K[0];
-   max = summary64K[1];
-   sumsq = (float)summary64K[2];
-   sumsq *= sumsq;
-
-   for (i = 1; i < sumLen; i++) {
-      if (summary64K[3*i] < min)
-         min = summary64K[3*i];
-      if (summary64K[3*i+1] > max)
-         max = summary64K[3*i+1];
-      float r1 = (float)summary64K[3*i+2];
-      sumsq += (r1*r1);
-   }
-
-   mMin = min;
-   mMax = max;
-   mRMS = sqrt(sumsq / sumLen);
-
+   BlockFile::CalcSummaryFromBuffer(fbuffer, len, summary256, summary64K);
 
    //if we've used the float sample..
    if(format!=floatSample)
@@ -618,6 +532,8 @@ int ODPCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
       // libsndfile can't (under Windows).
       sf.reset(SFCall<SNDFILE*>(sf_open_fd, f.fd(), SFM_READ, &info, FALSE));
    }
+   // FIXME: TRAP_ERR failure of wxFile open incompletely handled in ODPCMAliasBlockFile::ReadData.
+
 
    if (!sf) {
 

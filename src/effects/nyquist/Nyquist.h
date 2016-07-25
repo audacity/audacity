@@ -242,7 +242,7 @@ private:
    friend class NyquistEffectsModule;
 };
 
-class NyquistOutputDialog final : public wxDialog
+class NyquistOutputDialog final : public wxDialogWrapper
 {
 public:
    NyquistOutputDialog(wxWindow * parent, wxWindowID id,

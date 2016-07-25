@@ -770,7 +770,7 @@ void TrackList::Swap(TrackList &that)
 
 TrackList::~TrackList()
 {
-   Clear();
+   Clear(false);
 }
 
 void TrackList::RecalcPositions(TrackNodePointer node)
@@ -956,10 +956,11 @@ TrackNodePointer TrackList::Remove(Track *t)
    return result;
 }
 
-void TrackList::Clear()
+void TrackList::Clear(bool sendEvent)
 {
    ListOfTracks::clear();
-   UpdatedEvent(end());
+   if (sendEvent)
+      UpdatedEvent(end());
 }
 
 void TrackList::Select(Track * t, bool selected /* = true */ )

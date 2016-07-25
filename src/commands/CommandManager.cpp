@@ -149,23 +149,33 @@ public:
                   wxKeyEvent wxevent([event type] == NSKeyDown ? wxEVT_KEY_DOWN : wxEVT_KEY_UP);
                   impl->SetupKeyEvent(wxevent, event);
 
+                  NSEvent *result;
                   if ([event type] == NSKeyDown)
                   {
                      wxKeyEvent eventHook(wxEVT_CHAR_HOOK, wxevent);
-                     return FilterEvent(eventHook) == Event_Processed ? nil : event;
+                     result = FilterEvent(eventHook) == Event_Processed ? nil : event;
                   }
                   else
                   {
-                     return FilterEvent(wxevent) == Event_Processed ? nil : event;
+                     result = FilterEvent(wxevent) == Event_Processed ? nil : event;
                   }
+
+                  mEvent = nullptr;
+                  return result;
                }
             }
 
             return event;
          }
       ];
-#else
+
+      // Bug1252: must also install this filter with wxWidgets, else
+      // we don't intercept command keys when focus is in a combo box.
       wxEvtHandler::AddFilter(this);
+#else
+
+      wxEvtHandler::AddFilter(this);
+
 #endif
    }
 
@@ -178,7 +188,7 @@ public:
 #endif
    }
 
-   int FilterEvent(wxEvent& event)
+   int FilterEvent(wxEvent& event) override
    {
       // Quickly bail if this isn't something we want.
       wxEventType type = event.GetEventType();
@@ -317,6 +327,15 @@ private:
                                      
 #elif defined(__WXMAC__)
 
+      if (!mEvent) {
+         // TODO:  we got here without getting the NSEvent pointer,
+         // as in the combo box case of bug 1252.  We can't compute it!
+         // This makes a difference only when there is a capture handler.
+         // It's never the case yet that there is one.
+         wxASSERT(false);
+         return chars;
+      }
+
       NSString *c = [mEvent charactersIgnoringModifiers];
       if ([c length] == 1)
       {
@@ -382,7 +401,7 @@ private:
 
 #if defined(__WXMAC__)   
    id mHandler;
-   NSEvent *mEvent;
+   NSEvent *mEvent {};
    UInt32 mDeadKeyState;
 #endif
 

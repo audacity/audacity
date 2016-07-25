@@ -68,6 +68,8 @@
 #include "../widgets/Meter.h"
 
 #include "../tracks/ui/Scrubbing.h"
+#include "../prefs/PlaybackPrefs.h"
+#include "../toolbars/ToolManager.h"
 
 IMPLEMENT_CLASS(ControlToolBar, ToolBar);
 
@@ -129,14 +131,21 @@ AButton *ControlToolBar::MakeButton(teBmps eEnabledUp, teBmps eEnabledDown, teBm
                                     bool processdownevents,
                                     const wxChar *label)
 {
-   AButton *r = ToolBar::MakeButton(
+   AButton *r = ToolBar::MakeButton(this,
       bmpRecoloredUpLarge, bmpRecoloredDownLarge, bmpRecoloredHiliteLarge,
       eEnabledUp, eEnabledDown, eDisabled,
       wxWindowID(id),
       wxDefaultPosition, processdownevents,
       theTheme.ImageSize( bmpRecoloredUpLarge ));
    r->SetLabel(label);
-   r->SetFocusRect( r->GetRect().Deflate( 12, 12 ) );
+   enum { deflation =
+#ifdef __WXMAC__
+      3
+#else
+      12
+#endif
+   };
+   r->SetFocusRect( r->GetClientRect().Deflate( deflation, deflation ) );
 
    return r;
 }
@@ -167,6 +176,8 @@ void ControlToolBar::Populate()
       bmpCutPreview, bmpCutPreview, bmpCutPreviewDisabled);
    MakeAlternateImages(*mPlay, 3,
                        bmpScrub, bmpScrub, bmpScrubDisabled);
+   MakeAlternateImages(*mPlay, 4,
+                       bmpSeek, bmpSeek, bmpSeekDisabled);
    mPlay->FollowModifierKeys();
 
    mStop = MakeButton( bmpStop, bmpStop, bmpStopDisabled ,
@@ -185,7 +196,7 @@ void ControlToolBar::Populate()
    mRecord->FollowModifierKeys();
 
 #if wxUSE_TOOLTIPS
-   RegenerateToolsTooltips();
+   RegenerateTooltips();
    wxToolTip::Enable(true);
    wxToolTip::SetDelay(1000);
 #endif
@@ -194,47 +205,41 @@ void ControlToolBar::Populate()
    ArrangeButtons();
 }
 
-void ControlToolBar::RegenerateToolsTooltips()
+void ControlToolBar::RegenerateTooltips()
 {
 #if wxUSE_TOOLTIPS
+   std::vector<wxString> commands;
    for (long iWinID = ID_PLAY_BUTTON; iWinID < BUTTON_COUNT; iWinID++)
    {
-      wxWindow* pCtrl = this->FindWindow(iWinID);
-      wxString strToolTip = pCtrl->GetLabel();
-      AudacityProject* pProj = GetActiveProject();
-      CommandManager* pCmdMgr = (pProj) ? pProj->GetCommandManager() : NULL;
-      if (pCmdMgr)
+      commands.clear();
+      auto pCtrl = static_cast<AButton*>(this->FindWindow(iWinID));
+      commands.push_back(pCtrl->GetLabel());
+      switch (iWinID)
       {
-         wxString strKey(wxT(" ("));
-         switch (iWinID)
-         {
-            case ID_PLAY_BUTTON:
-               strKey += pCmdMgr->GetKeyFromName(wxT("Play"));
-               strKey += _(") / Loop Play (");
-               strKey += pCmdMgr->GetKeyFromName(wxT("PlayLooped"));
-               break;
-            case ID_RECORD_BUTTON:
-               strKey += pCmdMgr->GetKeyFromName(wxT("Record"));
-               strKey += _(") / Append Record (");
-               strKey += pCmdMgr->GetKeyFromName(wxT("RecordAppend"));
-               break;
-            case ID_PAUSE_BUTTON:
-               strKey += pCmdMgr->GetKeyFromName(wxT("Pause"));
-               break;
-            case ID_STOP_BUTTON:
-               strKey += pCmdMgr->GetKeyFromName(wxT("Stop"));
-               break;
-            case ID_FF_BUTTON:
-               strKey += pCmdMgr->GetKeyFromName(wxT("SkipEnd"));
-               break;
-            case ID_REW_BUTTON:
-               strKey += pCmdMgr->GetKeyFromName(wxT("SkipStart"));
-               break;
-         }
-         strKey += wxT(")");
-         strToolTip += strKey;
+         case ID_PLAY_BUTTON:
+            commands.push_back(wxT("Play"));
+            commands.push_back(_("Loop Play"));
+            commands.push_back(wxT("PlayLooped"));
+            break;
+         case ID_RECORD_BUTTON:
+            commands.push_back(wxT("Record"));
+            commands.push_back(_("Append Record"));
+            commands.push_back(wxT("RecordAppend"));
+            break;
+         case ID_PAUSE_BUTTON:
+            commands.push_back(wxT("Pause"));
+            break;
+         case ID_STOP_BUTTON:
+            commands.push_back(wxT("Stop"));
+            break;
+         case ID_FF_BUTTON:
+            commands.push_back(wxT("SkipEnd"));
+            break;
+         case ID_REW_BUTTON:
+            commands.push_back(wxT("SkipStart"));
+            break;
       }
-      pCtrl->SetToolTip(strToolTip);
+      ToolBar::SetButtonToolTip(*pCtrl, commands);
    }
 #endif
 }
@@ -259,14 +264,14 @@ void ControlToolBar::UpdatePrefs()
 
    if( updated )
    {
-      ReCreateButtons(); // side effect: calls RegenerateToolsTooltips()
+      ReCreateButtons(); // side effect: calls RegenerateTooltips()
       Updated();
    }
    else
       // The other reason to regenerate tooltips is if keyboard shortcuts for
       // transport buttons changed, but that's too much work to check for, so just
       // always do it. (Much cheaper than calling ReCreateButtons() in all cases.
-      RegenerateToolsTooltips();
+      RegenerateTooltips();
 
 
    // Set label to pull in language change
@@ -380,7 +385,7 @@ void ControlToolBar::ReCreateButtons()
 
    EnableDisableButtons();
 
-   RegenerateToolsTooltips();
+   RegenerateTooltips();
 }
 
 void ControlToolBar::Repaint( wxDC *dc )
@@ -634,16 +639,17 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
 #ifdef EXPERIMENTAL_MIDI_OUT
                NoteTrackArray(),
 #endif
-               p->GetRate(), tcp0, tcp1, myOptions);
-         } else
-         {
+               tcp0, tcp1, myOptions);
+         }
+         else {
             // Cannot create cut preview tracks, clean up and exit
             SetPlay(false);
             SetStop(false);
             SetRecord(false);
             return -1;
          }
-      } else {
+      }
+      else {
          // Lifted the following into AudacityProject::GetDefaultPlayOptions()
          /*
          if (!timetrack) {
@@ -655,7 +661,7 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
 #ifdef EXPERIMENTAL_MIDI_OUT
                                        t->GetNoteTrackArray(false),
 #endif
-                                       p->GetRate(), t0, t1, options);
+                                       t0, t1, options);
       }
       if (token != 0) {
          success = true;
@@ -670,7 +676,7 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
          // msmeyer: Show error message if stream could not be opened
          wxMessageBox(
             _("Error while opening sound device. "
-            "Please check the playback device settings and the project sample rate."),
+            "Try changing the audio host, playback device and the project sample rate."),
             _("Error"), wxOK | wxICON_EXCLAMATION, this);
       }
    }
@@ -681,6 +687,8 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
       SetRecord(false);
       return -1;
    }
+
+   StartScrollingIfPreferred();
 
    // Let other UI update appearance
    if (p)
@@ -745,25 +753,17 @@ void ControlToolBar::OnKeyEvent(wxKeyEvent & event)
 
 void ControlToolBar::OnPlay(wxCommandEvent & WXUNUSED(evt))
 {
-   auto doubleClicked = mPlay->IsDoubleClicked();
-   mPlay->ClearDoubleClicked();
-
    auto p = GetActiveProject();
 
-   if (doubleClicked)
-      p->GetPlaybackScroller().Activate
-         (AudacityProject::PlaybackScroller::Mode::Centered);
-   else {
-      if (!CanStopAudioStream())
-         return;
+   if (!CanStopAudioStream())
+      return;
 
-      StopPlaying();
+   StopPlaying();
 
-      if (p) p->TP_DisplaySelection();
+   if (p) p->TP_DisplaySelection();
 
-      PlayDefault();
-      UpdateStatusBar(p);
-   }
+   PlayDefault();
+   UpdateStatusBar(p);
 }
 
 void ControlToolBar::OnStop(wxCommandEvent & WXUNUSED(evt))
@@ -792,11 +792,11 @@ void ControlToolBar::PlayDefault()
 
 void ControlToolBar::StopPlaying(bool stopStream /* = true*/)
 {
+   StopScrolling();
+
    AudacityProject *project = GetActiveProject();
 
    if(project) {
-      project->GetPlaybackScroller().Activate
-         (AudacityProject::PlaybackScroller::Mode::Off);
       // Let scrubbing code do some appearance change
       project->GetScrubber().StopScrubbing();
    }
@@ -839,6 +839,9 @@ void ControlToolBar::StopPlaying(bool stopStream /* = true*/)
          meter->Clear();
       }
    }
+
+   const auto toolbar = project->GetToolManager()->GetToolBar(ScrubbingBarID);
+   toolbar->EnableDisableButtons();
 }
 
 void ControlToolBar::Pause()
@@ -853,29 +856,6 @@ void ControlToolBar::Pause()
 
 void ControlToolBar::OnRecord(wxCommandEvent &evt)
 {
-   auto doubleClicked = mRecord->IsDoubleClicked();
-   mRecord->ClearDoubleClicked();
-
-   if (doubleClicked) {
-      // Display a fixed recording head while scrolling the waves continuously.
-      // If you overdub, you may want to anticipate some context in existing tracks,
-      // so center the head.  If not, put it rightmost to display as much wave as we can.
-      const auto project = GetActiveProject();
-      bool duplex;
-      gPrefs->Read(wxT("/AudioIO/Duplex"), &duplex, true);
-
-      if (duplex) {
-         // See if there is really anything being overdubbed
-         if (gAudioIO->GetNumPlaybackChannels() == 0)
-            // No.
-            duplex = false;
-      }
-
-      using Mode = AudacityProject::PlaybackScroller::Mode;
-      project->GetPlaybackScroller().Activate(duplex ? Mode::Centered : Mode::Right);
-      return;
-   }
-
    if (gAudioIO->IsBusy()) {
       if (!CanStopAudioStream() || 0 == gAudioIO->GetNumCaptureChannels())
          mRecord->PopUp();
@@ -1085,13 +1065,15 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
 #ifdef EXPERIMENTAL_MIDI_OUT
                                         midiTracks,
 #endif
-                                        p->GetRate(), t0, t1, options);
+                                        t0, t1, options);
 
       bool success = (token != 0);
 
       if (success) {
          p->SetAudioIOToken(token);
          mBusyProject = p;
+
+         StartScrollingIfPreferred();
       }
       else {
          if (shifted) {
@@ -1277,4 +1259,65 @@ wxString ControlToolBar::StateForStatusBar()
 void ControlToolBar::UpdateStatusBar(AudacityProject *pProject)
 {
    pProject->GetStatusBar()->SetStatusText(StateForStatusBar(), stateStatusBarField);
+}
+
+void ControlToolBar::StartScrollingIfPreferred()
+{
+   if (PlaybackPrefs::GetPinnedHeadPreference())
+      StartScrolling();
+#ifdef __WXMAC__
+   else if (::GetActiveProject()->GetScrubber().HasStartedScrubbing()) {
+      // PRL:  cause many "unnecessary" refreshes.  For reasons I don't understand,
+      // doing this causes wheel rotation events (mapped from the double finger vertical
+      // swipe) to be delivered more uniformly to the application, so that speed control
+      // works better.
+      ::GetActiveProject()->GetPlaybackScroller().Activate
+         (AudacityProject::PlaybackScroller::Mode::Refresh);
+   }
+#endif
+   else
+      StopScrolling();
+}
+
+void ControlToolBar::StartScrolling()
+{
+   using Mode = AudacityProject::PlaybackScroller::Mode;
+   const auto project = GetActiveProject();
+   if (project) {
+      auto mode = Mode::Centered;
+
+#if 0
+      // Enable these lines to pin the playhead right instead of center,
+      // when recording but not overdubbing.
+      if (gAudioIO->GetNumCaptureChannels() > 0) {
+         // recording
+
+         // Display a fixed recording head while scrolling the waves continuously.
+         // If you overdub, you may want to anticipate some context in existing tracks,
+         // so center the head.  If not, put it rightmost to display as much wave as we can.
+         bool duplex;
+         gPrefs->Read(wxT("/AudioIO/Duplex"), &duplex, true);
+
+         if (duplex) {
+            // See if there is really anything being overdubbed
+            if (gAudioIO->GetNumPlaybackChannels() == 0)
+               // No.
+               duplex = false;
+         }
+
+         if (!duplex)
+            mode = Mode::Right;
+      }
+#endif
+
+      project->GetPlaybackScroller().Activate(mode);
+   }
+}
+
+void ControlToolBar::StopScrolling()
+{
+   const auto project = GetActiveProject();
+   if(project)
+      project->GetPlaybackScroller().Activate
+         (AudacityProject::PlaybackScroller::Mode::Off);
 }

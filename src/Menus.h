@@ -80,7 +80,7 @@ void OnSeekRightLong();
 
 bool MakeReadyToPlay(bool loop = false, bool cutpreview = false); // Helper function that sets button states etc.
 void OnPlayStop();
-void DoPlayStopSelect(bool click, bool shift);
+bool DoPlayStopSelect(bool click, bool shift);
 void OnPlayStopSelect();
 void OnPlayOneSecond();
 void OnPlayToSelection();
@@ -179,12 +179,16 @@ double GetTime(const Track *t);
 void OnSortTime();
 void OnSortName();
 
-void OnToggleScrollLeftOfZero();
-
 void OnSnapToOff();
 void OnSnapToNearest();
 void OnSnapToPrior();
 void OnFullScreen();
+
+static void DoMacMinimize(AudacityProject *project);
+void OnMacMinimize();
+void OnMacMinimizeAll();
+void OnMacZoom();
+void OnMacBringAllToFront();
 
         // File Menu
 
@@ -305,6 +309,7 @@ void OnShowSelectionToolBar();
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
 void OnShowSpectralSelectionToolBar();
 #endif
+void OnShowScrubbingToolBar();
 void OnShowToolsToolBar();
 void OnShowTranscriptionToolBar();
 void OnResetToolBars();
@@ -313,6 +318,7 @@ void OnResetToolBars();
 
 void OnSoundActivated();
 void OnToggleSoundActivated();
+void OnTogglePinnedHead();
 void OnTogglePlayRecording();
 void OnToggleSWPlaythrough();
 #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
@@ -365,6 +371,7 @@ void OnRemoveTracks();
 void OnSyncLock();
 void OnAddLabel();
 void OnAddLabelPlaying();
+void DoEditLabels(LabelTrack *lt = nullptr, int index = -1);
 void OnEditLabels();
 
         // Effect Menu
@@ -413,6 +420,7 @@ void OnSeparator();
 
       // Keyboard navigation
 
+void NextOrPrevFrame(bool next);
 void PrevFrame();
 void NextFrame();
 

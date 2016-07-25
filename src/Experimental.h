@@ -107,10 +107,6 @@
 // Paul Licameli (PRL) 29 Nov 2014
 // #define EXPERIMENTAL_IMPROVED_SEEKING
 
-// Philip Van Baren 01 July 2009
-// Replace RealFFT() and PowerSpectrum function to use (faster) RealFFTf function
-#define EXPERIMENTAL_USE_REALFFTF
-
 // RBD, 1 Sep 2008
 // Enables MIDI Output of NoteTrack (MIDI) data during playback
 // USE_MIDI must be defined in order for EXPERIMENTAL_MIDI_OUT to work
@@ -199,10 +195,5 @@
 // Zero-padding factor for spectrograms can smooth the display of spectrograms by
 // interpolating in frequency domain.
 #define EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
-
-// Paul Licameli (PRL) 10 May 2016
-// Time ruler accepts focus, buttons can be reached with TAB
-#define EXPERIMENTAL_TIME_RULER_NAVIGATION
-
 
 #endif

@@ -36,7 +36,6 @@ and on Mac OS X for the filesystem.
 // Otherwise, you get link errors.
 
 wxChar Internat::mDecimalSeparator = wxT('.'); // default
-wxString Internat::forbid;
 wxArrayString Internat::exclude;
 wxCharBuffer Internat::mFilename;
 
@@ -50,9 +49,29 @@ void Internat::Init()
 //   wxLogDebug(wxT("Decimal separator set to '%c'"), mDecimalSeparator);
 
    // Setup list of characters that aren't allowed in file names
-   forbid = wxFileName::GetForbiddenChars();
-   for(unsigned int i=0; i < forbid.Length(); i++)
-      exclude.Add( forbid.Mid(i, 1) );
+   // Hey!  The default wxPATH_NATIVE does not do as it should.
+#if defined(__WXMAC__)
+   wxPathFormat format = wxPATH_MAC;
+#elif defined(__WXGTK__)
+   wxPathFormat format = wxPATH_UNIX;
+#elif defined(__WXMSW__)
+   wxPathFormat format = wxPATH_WIN;
+#endif
+
+   // This is supposed to return characters not permitted in paths to files
+   // or to directories
+   auto forbid = wxFileName::GetForbiddenChars(format);
+
+   for(auto cc: forbid)
+      exclude.Add(wxString{ cc });
+
+   // The path separators may not be forbidden, so add them
+   auto separators = wxFileName::GetPathSeparators(format);
+
+   for(auto cc: separators) {
+      if (forbid.Find(cc) == wxNOT_FOUND)
+         exclude.Add(wxString{ cc });
+   }
 }
 
 wxChar Internat::GetDecimalSeparator()
@@ -204,17 +223,27 @@ char *Internat::VerifyFilename(const wxString &s, bool input)
 }
 #endif
 
-wxString Internat::SanitiseFilename(const wxString &name, const wxString &sub)
+bool Internat::SanitiseFilename(wxString &name, const wxString &sub)
 {
-   wxString temp = name;
-   for(unsigned i=0; i<exclude.Count(); i++)
+   bool result = false;
+   for(const auto &item : exclude)
    {
-      if(temp.Contains(exclude.Item(i)))
+      if(name.Contains(item))
       {
-         temp.Replace(exclude.Item(i),sub);
+         name.Replace(item, sub);
+         result = true;
       }
    }
-   return temp;
+
+#ifdef __WXMAC__
+   // Special Mac stuff
+   // '/' is permitted in file names as seen in dialogs, even though it is
+   // the path separator.  The "real" filename as seen in the terminal has ':'.
+   // Do NOT return true if this is the only subsitution.
+   name.Replace(wxT("/"), wxT(":"));
+#endif
+
+   return result;
 }
 
 wxString Internat::StripAccelerators(const wxString &s)
@@ -228,4 +257,13 @@ wxString Internat::StripAccelerators(const wxString &s)
          result += s[i];
    }
    return result;
+}
+
+wxString Internat::Parenthesize(const wxString &str)
+{
+   /* i18n-hint: An opening parenthesis, in some languages a right parenthesis */
+   auto open = _("(");
+   /* i18n-hint: A closing parenthesis, in some languages a left parenthesis */
+   auto close = _(")");
+   return open + str + close;
 }

@@ -261,7 +261,8 @@ bool ExportFFmpeg::Init(const char *shortname, AudacityProject *project, const T
 {
    // This will undo the acquisition of resources along any early exit path:
    auto deleter = [](ExportFFmpeg *This) {
-      This->FreeResources();
+      if (This)
+         This->FreeResources();
    };
    std::unique_ptr<ExportFFmpeg, decltype(deleter)> cleanup{ this, deleter };
 
@@ -936,7 +937,7 @@ void ExportFFmpeg::SetMetadata(const Tags *tags, const char *name, const wxChar 
 
 int ExportFFmpeg::AskResample(int bitrate, int rate, int lowrate, int highrate, const int *sampRates)
 {
-   wxDialog d(NULL, wxID_ANY, wxString(_("Invalid sample rate")));
+   wxDialogWrapper d(nullptr, wxID_ANY, wxString(_("Invalid sample rate")));
    d.SetName(d.GetTitle());
    wxChoice *choice;
    ShuttleGui S(&d, eIsCreating);

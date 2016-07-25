@@ -13,7 +13,7 @@ BackedPanel::BackedPanel(wxWindow * parent, wxWindowID id,
             const wxPoint & pos,
             const wxSize & size,
             long style)
-: wxPanel(parent, id, pos, size, style)
+: wxPanelWrapper(parent, id, pos, size, style)
 , mBacking{ safenew wxBitmap(1, 1) }
 {
    // Preinit the backing DC and bitmap so routines that require it will
@@ -77,7 +77,7 @@ void BackedPanel::OnSize(wxSizeEvent & /* event */)
    Refresh();
 }
 
-BEGIN_EVENT_TABLE(BackedPanel, wxPanel)
+BEGIN_EVENT_TABLE(BackedPanel, wxPanelWrapper)
    EVT_SIZE(BackedPanel::OnSize)
 END_EVENT_TABLE()
 

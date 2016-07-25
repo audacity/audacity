@@ -358,20 +358,18 @@ bool SimpleBlockFile::ReadSummary(void *data)
          Maybe<wxLogNull> silence{};
          if (mSilentLog)
             silence.create();
-
+         // FIXME: TRAP_ERR no report to user of absent summary files?
+         // filled with zero instead.
          if (!file.IsOpened()){
-
             memset(data, 0, (size_t)mSummaryInfo.totalSummaryBytes);
-
             mSilentLog = TRUE;
-
             return true;
-
          }
       }
       mSilentLog=FALSE;
 
       // The offset is just past the au header
+      // FIXME: Seek in summary file could fail.
       if( !file.Seek(sizeof(auHeader)) )
          return false;
 
@@ -424,6 +422,9 @@ int SimpleBlockFile::ReadData(samplePtr data, sampleFormat format,
             // libsndfile can't (under Windows).
             sf.reset(SFCall<SNDFILE*>(sf_open_fd, f.fd(), SFM_READ, &info, FALSE));
          }
+         // FIXME: TRAP_ERR failure of wxFile open incompletely handled in SimpleBlockFile::ReadData.
+         // FIXME: Too much cut and paste code between the different block file types.
+
 
          if (!sf) {
 

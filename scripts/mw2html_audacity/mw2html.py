@@ -343,11 +343,13 @@ def html_remove_image_history(doc):
 def html_remove_translation_links(doc):
     """
     Remove translation links (the international flags).
-    We identify them by the pattern for a 2 letter language code, /[\s\S][\s\S][/"]
+    We identify them by the pattern for a 2 or 3 letter language code, /[a-z]{2,3}[/"]
     in the URL.
+    The second version deals with links like /pt_PT and /zh_CN
+    We are case sensitive, so as not to treat FAQ as a language code.
     """
-    doc = re.sub(r'<a href="[^"]+/[\s\S][\s\S][/"][\s\S]+?</a>', r'<!--Removed Translation Flag-->', doc)
-    doc = re.sub(r'<a href="[^"]+/[\s\S][\s\S]_[\s\S][\s\S][/"][\s\S]+?</a>', r'<!--Removed Translation Flag2-->', doc)
+    doc = re.sub(r'<a href="[^"]+/[a-z]{2,3}[/"][\s\S]+?</a>', r'<!--Removed Translation Flag-->', doc)
+    doc = re.sub(r'<a href="[^"]+/[a-z]{2}_[A-Z]{2}[/"][\s\S]+?</a>', r'<!--Removed Translation Flag2-->', doc)
     return doc
 
 def monobook_hack_skin_html(doc):
@@ -797,7 +799,8 @@ def should_follow(url):
     nurl = normalize_url(url)
     droot = get_domain(config.rooturl)
     dn = get_domain(nurl)
-    if droot != dn and not (dn.endswith(droot) or droot.endswith(dn)):
+    #if droot != dn and not (dn.endswith(droot) or droot.endswith(dn)):
+    if droot != dn:
         if config.debug:
             print url, 'not in the same domain'
         return False

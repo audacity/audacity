@@ -23,13 +23,13 @@
 #include "ChangeSpeed.h"
 #include "ClickRemoval.h"
 #include "Compressor.h"
+#include "Distortion.h"
 #include "DtmfGen.h"
 #include "Echo.h"
 #include "Paulstretch.h"
 #include "Equalization.h"
 #include "Fade.h"
 #include "Invert.h"
-#include "Leveller.h"
 #include "Noise.h"
 #ifdef EXPERIMENTAL_NOISE_REDUCTION
 #include "NoiseReduction.h"
@@ -116,6 +116,7 @@
    EFFECT( CHANGESPEED,       EffectChangeSpeed, () )      \
    EFFECT( CLICKREMOVAL,      EffectClickRemoval, () )     \
    EFFECT( COMPRESSOR,        EffectCompressor, () )       \
+   EFFECT( DISTORTION,        EffectDistortion, () )       \
    EFFECT( ECHO,              EffectEcho, () )             \
    EFFECT( EQUALIZATION,      EffectEqualization, () )     \
    EFFECT( FADEIN,            EffectFade, (true) )         \
@@ -134,7 +135,6 @@
    NOISEREDUCTION_EFFECT                                 \
    SOUNDTOUCH_EFFECTS                                    \
    EFFECT( AUTODUCK,          EffectAutoDuck, () )         \
-   EFFECT( LEVELLER,          EffectLeveller, () )         \
    EFFECT( PAULSTRETCH,       EffectPaulstretch, () )      \
    SBSMS_EFFECTS
 

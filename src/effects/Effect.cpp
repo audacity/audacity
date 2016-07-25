@@ -2534,7 +2534,7 @@ void Effect::Preview(bool dryOnly)
    double previewLen;
    gPrefs->Read(wxT("/AudioIO/EffectsPreviewLen"), &previewLen, 6.0);
 
-   double rate = mProjectRate;
+   const double rate = mProjectRate;
 
    if (isNyquist && isGenerator) {
       previewDuration = CalcPreviewInputLength(previewLen);
@@ -2637,12 +2637,13 @@ void Effect::Preview(bool dryOnly)
       NoteTrackArray empty;
 #endif
       // Start audio playing
+      AudioIOStartStreamOptions options { rate };
       int token =
          gAudioIO->StartStream(playbackTracks, recordingTracks,
 #ifdef EXPERIMENTAL_MIDI_OUT
                                empty,
 #endif
-                               rate, mT0, t1);
+                               mT0, t1, options);
 
       if (token) {
          int previewing = eProgressSuccess;
@@ -2666,7 +2667,7 @@ void Effect::Preview(bool dryOnly)
          }
       }
       else {
-         wxMessageBox(_("Error while opening sound device. Please check the playback device settings and the project sample rate."),
+         wxMessageBox(_("Error while opening sound device. Try changing the audio host, playback device and the project sample rate."),
                      _("Error"), wxOK | wxICON_EXCLAMATION, FocusDialog);
       }
    }
@@ -2694,7 +2695,7 @@ void Effect::Preview(bool dryOnly)
    }
 }
 
-BEGIN_EVENT_TABLE(EffectDialog, wxDialog)
+BEGIN_EVENT_TABLE(EffectDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, EffectDialog::OnOk)
 END_EVENT_TABLE()
 
@@ -2703,7 +2704,7 @@ EffectDialog::EffectDialog(wxWindow * parent,
                            int type,
                            int flags,
                            int additionalButtons)
-: wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, flags)
+: wxDialogWrapper(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, flags)
 {
    mType = type;
    mAdditionalButtons = additionalButtons;
@@ -2792,11 +2793,11 @@ void EffectDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-class EffectPanel final : public wxPanel
+class EffectPanel final : public wxPanelWrapper
 {
 public:
    EffectPanel(wxWindow *parent)
-   :  wxPanel(parent)
+   :  wxPanelWrapper(parent)
    {
       // This fools NVDA into not saying "Panel" when the dialog gets focus
       SetName(wxT("\a"));
@@ -2844,7 +2845,7 @@ private:
 
 #include "../../images/Effect.h"
 
-BEGIN_EVENT_TABLE(EffectUIHost, wxDialog)
+BEGIN_EVENT_TABLE(EffectUIHost, wxDialogWrapper)
    EVT_INIT_DIALOG(EffectUIHost::OnInitDialog)
    EVT_ERASE_BACKGROUND(EffectUIHost::OnErase)
    EVT_PAINT(EffectUIHost::OnPaint)
@@ -2870,7 +2871,7 @@ END_EVENT_TABLE()
 EffectUIHost::EffectUIHost(wxWindow *parent,
                            Effect *effect,
                            EffectUIClientInterface *client)
-:  wxDialog(parent, wxID_ANY, effect->GetName(),
+:  wxDialogWrapper(parent, wxID_ANY, effect->GetName(),
             wxDefaultPosition, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMINIMIZE_BOX | wxMAXIMIZE_BOX)
 {
@@ -2951,7 +2952,7 @@ int EffectUIHost::ShowModal()
 
    Layout();
 
-   return wxDialog::ShowModal();
+   return wxDialogWrapper::ShowModal();
 }
 
 // ============================================================================
@@ -2983,8 +2984,8 @@ bool EffectUIHost::Initialize()
          vs->Add(hs.release(), 1, wxEXPAND);
       }
 
-      wxPanel *buttonPanel = safenew wxPanel(this, wxID_ANY);
-      wxPanel *const bar = safenew wxPanel(buttonPanel, wxID_ANY);
+      wxPanel *buttonPanel = safenew wxPanelWrapper(this, wxID_ANY);
+      wxPanel *const bar = safenew wxPanelWrapper(buttonPanel, wxID_ANY);
 
       // This fools NVDA into not saying "Panel" when the dialog gets focus
       bar->SetName(wxT("\a"));
@@ -3158,7 +3159,7 @@ bool EffectUIHost::Initialize()
 void EffectUIHost::OnInitDialog(wxInitDialogEvent & evt)
 {
    // Do default handling
-   wxDialog::OnInitDialog(evt);
+   wxDialogWrapper::OnInitDialog(evt);
 
 #if wxCHECK_VERSION(3, 0, 0)
 //#warning "check to see if this still needed in wx3"
@@ -3384,6 +3385,16 @@ void EffectUIHost::OnEnable(wxCommandEvent & WXUNUSED(evt))
 
    if (mEnabled)
    {
+      if (!mClient->ValidateUI()) {
+         // If we're previewing we should still be able to stop playback
+         // so don't disable transport buttons.
+         //   mEffect->EnableApply(false);   // currently this would also disable transport buttons.
+         // The preferred behaviour is currently undecided, so for now
+         // just disallow enabling until settings are valid.
+         mEnabled = false;
+         mEnableCb->SetValue(mEnabled);
+         return;
+      }
       mEffect->RealtimeResume();
    }
    else
@@ -3574,7 +3585,7 @@ void EffectUIHost::OnSaveAs(wxCommandEvent & WXUNUSED(evt))
 {
    wxTextCtrl *text;
    wxString name;
-   wxDialog dlg(this, wxID_ANY, wxString(_("Save Preset")));
+   wxDialogWrapper dlg(this, wxID_ANY, wxString(_("Save Preset")));
 
    ShuttleGui S(&dlg, eIsCreating);
 
@@ -3851,7 +3862,7 @@ enum
    ID_Type = 10000
 };
 
-BEGIN_EVENT_TABLE(EffectPresetsDialog, wxDialog)
+BEGIN_EVENT_TABLE(EffectPresetsDialog, wxDialogWrapper)
    EVT_CHOICE(ID_Type, EffectPresetsDialog::OnType)
    EVT_LISTBOX_DCLICK(wxID_ANY, EffectPresetsDialog::OnOk)
    EVT_BUTTON(wxID_OK, EffectPresetsDialog::OnOk)
@@ -3859,7 +3870,7 @@ BEGIN_EVENT_TABLE(EffectPresetsDialog, wxDialog)
 END_EVENT_TABLE()
 
 EffectPresetsDialog::EffectPresetsDialog(wxWindow *parent, Effect *effect)
-:  wxDialog(parent, wxID_ANY, wxString(_("Select Preset")))
+:  wxDialogWrapper(parent, wxID_ANY, wxString(_("Select Preset")))
 {
    ShuttleGui S(this, eIsCreating);
    S.StartVerticalLay();

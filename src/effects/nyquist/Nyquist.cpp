@@ -2228,7 +2228,7 @@ void NyquistEffect::OnText(wxCommandEvent & evt)
 ///////////////////////////////////////////////////////////////////////////////
 
 
-BEGIN_EVENT_TABLE(NyquistOutputDialog, wxDialog)
+BEGIN_EVENT_TABLE(NyquistOutputDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, NyquistOutputDialog::OnOk)
 END_EVENT_TABLE()
 
@@ -2236,7 +2236,7 @@ NyquistOutputDialog::NyquistOutputDialog(wxWindow * parent, wxWindowID id,
                                        const wxString & title,
                                        const wxString & prompt,
                                        const wxString &message)
-:  wxDialog(parent, id, title)
+:  wxDialogWrapper(parent, id, title)
 {
    SetName(GetTitle());
 

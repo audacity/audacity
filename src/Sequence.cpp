@@ -1026,6 +1026,7 @@ XMLTagHandler *Sequence::HandleXMLChild(const wxChar *tag)
    }
 }
 
+// Throws exceptions rather than reporting errors.
 void Sequence::WriteXML(XMLWriter &xmlFile)
 {
    unsigned int b;
@@ -1542,6 +1543,7 @@ bool Sequence::Append(samplePtr buffer, sampleFormat format,
             blockFileLog != NULL),
          lastBlock.start
       );
+      // FIXME: TRAP_ERR This could throw an exception that should(?) be converted to return false.
       if (blockFileLog)
          static_cast<SimpleBlockFile*>(newLastBlock.f)->SaveXML(*blockFileLog);
 
@@ -1567,6 +1569,7 @@ bool Sequence::Append(samplePtr buffer, sampleFormat format,
                                                 blockFileLog != NULL);
       }
 
+      // FIXME: TRAP_ERR This could throw an exception that should(?) be converted to return false.
       if (blockFileLog)
          static_cast<SimpleBlockFile*>(pFile)->SaveXML(*blockFileLog);
 

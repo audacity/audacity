@@ -123,7 +123,7 @@ private:
     DECLARE_EVENT_TABLE();
 };
 
-class FreqWindow final : public wxDialog
+class FreqWindow final : public wxDialogWrapper
 {
 public:
    FreqWindow(wxWindow *parent, wxWindowID id,

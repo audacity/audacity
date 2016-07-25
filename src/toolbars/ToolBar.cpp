@@ -41,6 +41,7 @@ in which buttons can be placed.
 #endif  /*  */
 
 #include "ToolBar.h"
+#include "ToolDock.h"
 #include "../Experimental.h"
 
 #include "../AllThemeResources.h"
@@ -48,6 +49,7 @@ in which buttons can be placed.
 #include "../ImageManipulation.h"
 #include "../Project.h"
 #include "../Theme.h"
+#include "../commands/Keyboard.h"
 #include "../widgets/AButton.h"
 #include "../widgets/Grabber.h"
 
@@ -67,8 +69,9 @@ public:
    virtual ~ToolBarResizer();
 
    // We don't need or want to accept focus.
-   // PRL: except for ESC key now.
-   // bool AcceptsFocus() const;
+   // Note that AcceptsFocusFromKeyboard() is overriden rather than
+   // AcceptsFocus(), so that resize can be cancelled by ESC
+   bool AcceptsFocusFromKeyboard() const override {return false;}
 
 private:
    void OnErase(wxEraseEvent & event);
@@ -86,6 +89,7 @@ private:
    ToolBar *mBar;
    wxPoint mResizeStart;
    wxSize mOrigSize;
+   wxWindow *mOrigFocus{};
 
    DECLARE_EVENT_TABLE();
 };
@@ -98,6 +102,8 @@ BEGIN_EVENT_TABLE( ToolBarResizer, wxWindow )
    EVT_PAINT( ToolBarResizer::OnPaint )
    EVT_LEFT_DOWN( ToolBarResizer::OnLeftDown )
    EVT_LEFT_UP( ToolBarResizer::OnLeftUp )
+   EVT_ENTER_WINDOW( ToolBarResizer::OnEnter )
+   EVT_LEAVE_WINDOW( ToolBarResizer::OnLeave )
    EVT_MOTION( ToolBarResizer::OnMotion )
    EVT_MOUSE_CAPTURE_LOST( ToolBarResizer::OnCaptureLost )
    EVT_KEY_DOWN( ToolBarResizer::OnKeyDown )
@@ -115,13 +121,6 @@ ToolBarResizer::~ToolBarResizer()
    if(HasCapture())
       ReleaseMouse();
 }
-
-/*
-bool ToolBarResizer::AcceptsFocus() const
-{
-   return false;
-}
- */
 
 //
 // Handle background erasure
@@ -169,7 +168,8 @@ void ToolBarResizer::OnLeftDown( wxMouseEvent & event )
    mOrigSize = mBar->GetSize();
 
    // We want all of the mouse events
-   CaptureMouse();
+   if( !HasCapture() )
+      CaptureMouse();
 }
 
 void ToolBarResizer::OnLeftUp( wxMouseEvent & event )
@@ -180,7 +180,27 @@ void ToolBarResizer::OnLeftUp( wxMouseEvent & event )
    if( HasCapture() )
    {
       ReleaseMouse();
+      if (mOrigFocus)
+         mOrigFocus->SetFocus();
+      mOrigFocus = nullptr;
    }
+}
+
+void ToolBarResizer::OnEnter( wxMouseEvent & event )
+{
+   // Bug 1201:  On Mac, unsetting and re-setting the tooltip may be needed
+   // to make it pop up when we want it.
+   const auto text = GetToolTipText();
+   UnsetToolTip();
+   SetToolTip(text);
+   if (!mOrigFocus)
+      mOrigFocus = FindFocus();
+}
+
+void ToolBarResizer::OnLeave( wxMouseEvent & event )
+{
+   if (!GetCapture())
+      mOrigFocus = nullptr;
 }
 
 void ToolBarResizer::OnMotion( wxMouseEvent & event )
@@ -244,6 +264,9 @@ void ToolBarResizer::OnCaptureLost( wxMouseCaptureLostEvent & WXUNUSED(event) )
    if( HasCapture() )
    {
       ReleaseMouse();
+      if (mOrigFocus)
+         mOrigFocus->SetFocus();
+      mOrigFocus = nullptr;
    }
 }
 
@@ -253,6 +276,9 @@ void ToolBarResizer::OnKeyDown(wxKeyEvent &event)
    if (HasCapture() && WXK_ESCAPE == event.GetKeyCode()) {
       ResizeBar( mOrigSize );
       ReleaseMouse();
+      if (mOrigFocus)
+         mOrigFocus->SetFocus();
+      mOrigFocus = nullptr;
    }
 }
 
@@ -263,7 +289,7 @@ void ToolBarResizer::OnKeyDown(wxKeyEvent &event)
 //
 // Define class to RTTI
 //
-IMPLEMENT_CLASS( ToolBar, wxPanel );
+IMPLEMENT_CLASS( ToolBar, wxPanelWrapper );
 
 //
 // Custom event
@@ -273,7 +299,7 @@ DEFINE_EVENT_TYPE(EVT_TOOLBAR_UPDATED)
 //
 // Event table
 //
-BEGIN_EVENT_TABLE( ToolBar, wxPanel )
+BEGIN_EVENT_TABLE( ToolBar, wxPanelWrapper )
    EVT_PAINT( ToolBar::OnPaint )
    EVT_ERASE_BACKGROUND( ToolBar::OnErase )
    EVT_MOUSE_EVENTS( ToolBar::OnMouseEvents )
@@ -286,7 +312,7 @@ ToolBar::ToolBar( int type,
                   const wxString &label,
                   const wxString &section,
                   bool resizable )
-: wxPanel()
+: wxPanelWrapper()
 {
    // Save parameters
    mType = type;
@@ -298,7 +324,6 @@ ToolBar::ToolBar( int type,
    mParent = NULL;
    mHSizer = NULL;
    mSpacer = NULL;
-   mDock = NULL;
    mVisible = false;
    mPositioned = false;
 
@@ -359,7 +384,7 @@ void ToolBar::SetLabel(const wxString & label)
 //
 // Returns whether the toolbar is resizable or not
 //
-bool ToolBar::IsResizable()
+bool ToolBar::IsResizable() const
 {
    return mResizable;
 }
@@ -367,15 +392,15 @@ bool ToolBar::IsResizable()
 //
 // Returns the dock state of the toolbar
 //
-bool ToolBar::IsDocked()
+bool ToolBar::IsDocked() const
 {
-   return mDock != NULL;
+   return const_cast<ToolBar*>(this)->GetDock() != nullptr;
 }
 
 //
 // Returns the visibility of the toolbar
 //
-bool ToolBar::IsVisible()
+bool ToolBar::IsVisible() const
 {
    return mVisible;
 }
@@ -421,13 +446,13 @@ void ToolBar::Create( wxWindow *parent )
    mParent = parent;
 
    // Create the window and label it
-   wxPanel::Create( mParent,
+   wxPanelWrapper::Create( mParent,
                     mType,
                     wxDefaultPosition,
                     wxDefaultSize,
                     wxNO_BORDER | wxTAB_TRAVERSAL,
                     GetTitle() );
-   wxPanel::SetLabel( GetLabel() );
+   wxPanelWrapper::SetLabel( GetLabel() );
 
    // Go do the rest of the creation
    ReCreateButtons();
@@ -527,7 +552,7 @@ void ToolBar::UpdatePrefs()
 //
 ToolDock *ToolBar::GetDock()
 {
-   return mDock;
+   return dynamic_cast<ToolDock*>(GetParent());
 }
 
 //
@@ -536,7 +561,7 @@ ToolDock *ToolBar::GetDock()
 void ToolBar::SetDocked( ToolDock *dock, bool pushed )
 {
    // Remember it
-   mDock = dock;
+//   mDock = dock;
 
    // Change the tooltip of the grabber
 #if wxUSE_TOOLTIPS
@@ -548,7 +573,7 @@ void ToolBar::SetDocked( ToolDock *dock, bool pushed )
 
    if (mResizer)
    {
-      mResizer->Show(mDock != NULL);
+      mResizer->Show(dock != NULL);
       Layout();
       Fit();
    }
@@ -700,6 +725,7 @@ void ToolBar::MakeButtonBackgroundsSmall()
 }
 
 /// Makes a button and its four different state bitmaps
+/// @param parent            Parent window for the button.
 /// @param eUp               Background for when button is Up.
 /// @param eDown             Background for when button is Down.
 /// @param eHilite           Background for when button is Hilit.
@@ -710,7 +736,8 @@ void ToolBar::MakeButtonBackgroundsSmall()
 /// @param placement         Placement position
 /// @param processdownevents true iff button handles down events.
 /// @param size              Size of the background.
-AButton * ToolBar::MakeButton(teBmps eUp,
+AButton * ToolBar::MakeButton(wxWindow *parent,
+                              teBmps eUp,
                               teBmps eDown,
                               teBmps eHilite,
                               teBmps eStandardUp,
@@ -731,7 +758,7 @@ AButton * ToolBar::MakeButton(teBmps eUp,
    wxImagePtr disable2   (OverlayImage(eUp,     eDisabled, xoff, yoff));
 
    AButton * button =
-      new AButton(this, id, placement, size, *up2, *hilite2, *down2,
+      new AButton(parent, id, placement, size, *up2, *hilite2, *down2,
             *disable2, processdownevents);
 
    return button;
@@ -757,6 +784,33 @@ void ToolBar::MakeAlternateImages(AButton &button, int idx,
    wxImagePtr disable   (OverlayImage(eUp,     eDisabled, xoff, yoff));
 
    button.SetAlternateImages(idx, *up, *hilite, *down, *disable);
+}
+
+void ToolBar::SetButtonToolTip
+(AButton &button, const std::vector<wxString> &commands, const wxString &separator)
+{
+   const auto project = GetActiveProject();
+   const auto commandManager = project ? project->GetCommandManager() : nullptr;
+   wxString result;
+   auto iter = commands.begin(), end = commands.end();
+   while (iter != end) {
+      result += *iter++;
+      if (iter != end) {
+         if (!iter->empty()) {
+            if (commandManager) {
+               auto keyStr = commandManager->GetKeyFromName(*iter);
+               if (keyStr.empty())
+                  keyStr = _("no key");
+               result += wxT(" ");
+               result += Internat::Parenthesize(KeyStringDisplay(keyStr, true));
+            }
+         }
+         ++iter;
+      }
+      if (iter != end)
+         result += separator;
+   }
+   button.SetToolTip(result);
 }
 
 //

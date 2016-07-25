@@ -192,7 +192,7 @@ enum {
    OnPreferencesID
 };
 
-BEGIN_EVENT_TABLE(Meter, wxPanel)
+BEGIN_EVENT_TABLE(Meter, wxPanelWrapper)
    EVT_TIMER(OnMeterUpdateID, Meter::OnMeterUpdate)
    EVT_MOUSE_EVENTS(Meter::OnMouse)
    EVT_CONTEXT_MENU(Meter::OnContext)
@@ -207,7 +207,7 @@ BEGIN_EVENT_TABLE(Meter, wxPanel)
    EVT_MENU(OnPreferencesID, Meter::OnPreferences)
 END_EVENT_TABLE()
 
-IMPLEMENT_CLASS(Meter, wxPanel)
+IMPLEMENT_CLASS(Meter, wxPanelWrapper)
 
 Meter::Meter(AudacityProject *project,
              wxWindow* parent, wxWindowID id,
@@ -216,7 +216,7 @@ Meter::Meter(AudacityProject *project,
              const wxSize& size /*= wxDefaultSize*/,
              Style style /*= HorizontalStereo*/,
              float fDecayRate /*= 60.0f*/)
-: wxPanel(parent, id, pos, size, wxTAB_TRAVERSAL | wxNO_BORDER | wxWANTS_CHARS),
+: wxPanelWrapper(parent, id, pos, size, wxTAB_TRAVERSAL | wxNO_BORDER | wxWANTS_CHARS),
    mProject(project),
    mQueue(1024),
    mWidth(size.x),
@@ -659,13 +659,11 @@ void Meter::OnPaint(wxPaintEvent & WXUNUSED(event))
       }
    }
 
-#if defined(__WXMSW__) || defined(__WXGTK__)
    if (mIsFocused)
    {
       wxRect r = mIconRect;
       AColor::DrawFocus(destDC, r.Inflate(1, 1));
    }
-#endif
 
    delete paintDC;
 }
@@ -724,7 +722,7 @@ void Meter::OnMouse(wxMouseEvent &evt)
          mi->Enable(!mActive || mMonitoring);
       }
 
-      menu.Append(OnPreferencesID, _("Preferences..."));
+      menu.Append(OnPreferencesID, _("Options..."));
 
       if (evt.RightDown()) {
          ShowMenu(evt.GetPosition());
@@ -1906,7 +1904,7 @@ void Meter::ShowMenu(const wxPoint & pos)
       mi->Enable(!mActive || mMonitoring);
    }
 
-   menu.Append(OnPreferencesID, _("Preferences..."));
+   menu.Append(OnPreferencesID, _("Options..."));
 
    mAccSilent = true;      // temporarily make screen readers say (close to) nothing on focus events
 
@@ -1951,12 +1949,12 @@ void Meter::OnPreferences(wxCommandEvent & WXUNUSED(event))
    wxRadioButton *vertical;
    int meterRefreshRate = mMeterRefreshRate;
 
-   wxString title(mIsInput ? _("Recording Meter Preferences") : _("Playback Meter Preferences"));
+   wxString title(mIsInput ? _("Recording Meter Options") : _("Playback Meter Options"));
 
    // Dialog is a child of the project, rather than of the toolbar.
    // This determines where it pops up.
 
-   wxDialog dlg(GetActiveProject(), wxID_ANY, title);
+   wxDialogWrapper dlg(GetActiveProject(), wxID_ANY, title);
    dlg.SetName(dlg.GetTitle());
    ShuttleGui S(&dlg, eIsCreating);
    S.StartVerticalLay();
@@ -2084,6 +2082,23 @@ wxString Meter::Key(const wxString & key) const
 
    return wxT("/Meter/Output/") + key;
 }
+
+bool Meter::s_AcceptsFocus{ false };
+
+auto Meter::TemporarilyAllowFocus() -> TempAllowFocus {
+   s_AcceptsFocus = true;
+   return std::move(TempAllowFocus{ &s_AcceptsFocus });
+}
+
+// This compensates for a but in wxWidgets 3.0.2 for mac:
+// Couldn't set focus from keyboard when AcceptsFocus returns false;
+// this bypasses that limitation
+void Meter::SetFocusFromKbd()
+{
+   auto temp = TemporarilyAllowFocus();
+   SetFocus();
+}
+
 
 #if wxUSE_ACCESSIBILITY
 

@@ -732,7 +732,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
          szrG = S.GetSizer();
 
          // Panel used to host the sliders since they will be positioned manually.
-         mGraphicPanel = safenew wxPanel(parent, wxID_ANY, wxDefaultPosition, wxSize(-1, 150));
+         mGraphicPanel = safenew wxPanelWrapper(parent, wxID_ANY, wxDefaultPosition, wxSize(-1, 150));
          S.Prop(1).AddWindow(mGraphicPanel, wxEXPAND);
 
          for (int i = 0; (i < NUMBER_OF_BANDS) && (kThirdOct[i] <= mHiFreq); ++i)
@@ -1296,11 +1296,7 @@ bool EffectEqualization::CalcFilter()
    //transfer to time domain to do the padding and windowing
    float *outr = new float[mWindowSize];
    float *outi = new float[mWindowSize];
-#ifdef EXPERIMENTAL_USE_REALFFTF
    InverseRealFFT(mWindowSize, mFilterFuncR, NULL, outr); // To time domain
-#else
-   FFT(mWindowSize,true,mFilterFuncR,NULL,outr,outi);   //To time domain
-#endif
 
    for(i=0;i<=(mM-1)/2;i++)
    {  //Windowing - could give a choice, fixed for now - MJS
@@ -2887,7 +2883,7 @@ void EffectEqualization::OnBench( wxCommandEvent & event)
 // EqualizationPanel
 //----------------------------------------------------------------------------
 
-BEGIN_EVENT_TABLE(EqualizationPanel, wxPanel)
+BEGIN_EVENT_TABLE(EqualizationPanel, wxPanelWrapper)
    EVT_PAINT(EqualizationPanel::OnPaint)
    EVT_MOUSE_EVENTS(EqualizationPanel::OnMouseEvent)
    EVT_MOUSE_CAPTURE_LOST(EqualizationPanel::OnCaptureLost)
@@ -2895,7 +2891,7 @@ BEGIN_EVENT_TABLE(EqualizationPanel, wxPanel)
 END_EVENT_TABLE()
 
 EqualizationPanel::EqualizationPanel(EffectEqualization *effect, wxWindow *parent)
-:  wxPanel(parent)
+:  wxPanelWrapper(parent)
 {
    mParent = parent;
    mEffect = effect;
@@ -2944,11 +2940,7 @@ void EqualizationPanel::Recalc()
    mOuti = new float[mEffect->mWindowSize];
 
    mEffect->CalcFilter();   //to calculate the actual response
-#ifdef EXPERIMENTAL_USE_REALFFTF
    InverseRealFFT(mEffect->mWindowSize, mEffect->mFilterFuncR, mEffect->mFilterFuncI, mOutr);
-#else
-   FFT(mWindowSize,true,mFilterFuncR,mFilterFuncI,mOutr,mOuti);   //work out FIR response - note mOuti will be all zeros
-#endif // EXPERIMENTAL_USE_REALFFTF
 }
 
 void EqualizationPanel::OnSize(wxSizeEvent &  WXUNUSED(event))
@@ -3173,7 +3165,7 @@ void EqualizationPanel::OnCaptureLost(wxMouseCaptureLostEvent & WXUNUSED(event))
 // Some things that deal with 'unnamed' curves still use, for example, 'mCustomBackup' as variable names.
 /// Constructor
 
-BEGIN_EVENT_TABLE(EditCurvesDialog, wxDialog)
+BEGIN_EVENT_TABLE(EditCurvesDialog, wxDialogWrapper)
    EVT_BUTTON(UpButtonID, EditCurvesDialog::OnUp)
    EVT_BUTTON(DownButtonID, EditCurvesDialog::OnDown)
    EVT_BUTTON(RenameButtonID, EditCurvesDialog::OnRename)
@@ -3183,10 +3175,14 @@ BEGIN_EVENT_TABLE(EditCurvesDialog, wxDialog)
    EVT_BUTTON(LibraryButtonID, EditCurvesDialog::OnLibrary)
    EVT_BUTTON(DefaultsButtonID, EditCurvesDialog::OnDefaults)
    EVT_BUTTON(wxID_OK, EditCurvesDialog::OnOK)
+   EVT_LIST_ITEM_SELECTED(CurvesListID,
+                          EditCurvesDialog::OnListSelectionChange)
+   EVT_LIST_ITEM_DESELECTED(CurvesListID,
+                          EditCurvesDialog::OnListSelectionChange)
 END_EVENT_TABLE()
 
 EditCurvesDialog::EditCurvesDialog(wxWindow * parent, EffectEqualization * effect, int position):
-wxDialog(parent, wxID_ANY, _("Manage Curves List"),
+wxDialogWrapper(parent, wxID_ANY, _("Manage Curves List"),
          wxDefaultPosition, wxDefaultSize,
          wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {
@@ -3642,6 +3638,19 @@ void EditCurvesDialog::OnOK(wxCommandEvent & WXUNUSED(event))
       item = mList->GetItemCount()-1;   // nothing selected, default to 'unnamed'
    mEffect->setCurve(item);
    EndModal(true);
+}
+
+void EditCurvesDialog::OnListSelectionChange( wxListEvent & )
+{
+   const bool enable = mList->GetSelectedItemCount() > 0;
+   static const int ids[] = {
+      UpButtonID,
+      DownButtonID,
+      RenameButtonID,
+      DeleteButtonID,
+   };
+   for (auto id : ids)
+      FindWindowById(id, this)->Enable(enable);
 }
 
 #if wxUSE_ACCESSIBILITY

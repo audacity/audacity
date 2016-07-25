@@ -147,7 +147,7 @@ AButton *TranscriptionToolBar::AddButton(
 {
    AButton *&r = mButtons[id];
 
-   r = ToolBar::MakeButton(
+   r = ToolBar::MakeButton(this,
       bmpRecoloredUpSmall, bmpRecoloredDownSmall, bmpRecoloredHiliteSmall,
       eFore, eFore, eDisabled,
       wxWindowID(id),
@@ -298,7 +298,25 @@ void TranscriptionToolBar::UpdatePrefs()
 
 void TranscriptionToolBar::RegenerateTooltips()
 {
-   mButtons[TTB_PlaySpeed]->SetToolTip(_("Play-at-speed"));
+   // We could also mention the shift- and ctrl-modified versions in the
+   // tool tip... but it would get long
+
+   static const struct Entry {
+      int tool;
+      wxString commandName;
+      wxString untranslatedLabel;
+   } table[] = {
+      { TTB_PlaySpeed,   wxT("PlayAtSpeed"),    XO("Play-at-speed")  },
+   };
+
+   std::vector<wxString> commands;
+   for (const auto &entry : table) {
+      commands.clear();
+      commands.push_back(wxGetTranslation(entry.untranslatedLabel));
+      commands.push_back(entry.commandName);
+      ToolBar::SetButtonToolTip(*mButtons[entry.tool], commands);
+   }
+
 
 #ifdef EXPERIMENTAL_VOICE_DETECTION
    mButtons[TTB_StartOn]->SetToolTip(TRANSLATABLE("Left-to-On"));
@@ -476,23 +494,11 @@ void TranscriptionToolBar::OnPlaySpeed(wxCommandEvent & WXUNUSED(event))
 {
    auto button = mButtons[TTB_PlaySpeed];
 
-   auto doubleClicked = button->IsDoubleClicked();
-   button->ClearDoubleClicked();
-
-   if (doubleClicked) {
-      GetActiveProject()->GetPlaybackScroller().Activate
-         (AudacityProject::PlaybackScroller::Mode::Centered);
-
-      // Pop up the button
-      SetButton(false, button);
-   }
-   else {
-      // Let control have precedence over shift
-      const bool cutPreview = mButtons[TTB_PlaySpeed]->WasControlDown();
-      const bool looped = !cutPreview &&
-         button->WasShiftDown();
-      PlayAtSpeed(looped, cutPreview);
-   }
+   // Let control have precedence over shift
+   const bool cutPreview = mButtons[TTB_PlaySpeed]->WasControlDown();
+   const bool looped = !cutPreview &&
+      button->WasShiftDown();
+   PlayAtSpeed(looped, cutPreview);
 }
 
 void TranscriptionToolBar::OnSpeedSlider(wxCommandEvent& WXUNUSED(event))

@@ -37,11 +37,11 @@ void OverlayPanel::ClearOverlays()
    mOverlays.clear();
 }
 
-void OverlayPanel::DrawOverlays(bool repaint, wxDC *pDC)
+void OverlayPanel::DrawOverlays(bool repaint_all, wxDC *pDC)
 {
    size_t n_pairs = mOverlays.size();
 
-   std::vector< std::pair<wxRect, bool> > pairs;
+   std::vector< std::pair<wxRect, bool /*out of date?*/> > pairs;
    pairs.reserve(n_pairs);
 
    // Find out the rectangles and outdatedness for each overlay
@@ -53,12 +53,15 @@ void OverlayPanel::DrawOverlays(bool repaint, wxDC *pDC)
    // If not, then whatever is outdated, and whatever will be damaged by
    // undrawing.
    // By redrawing only what needs it, we avoid flashing things like
-   // the cursor that are drawn with invert.
-   if (!repaint) {
+   // the cursor that are drawn with invert, and also avoid
+   // unnecessary work.
+   bool some_overlays_need_repainting = repaint_all;
+   if (!repaint_all) {
       bool done;
       do {
          done = true;
          for (size_t ii = 0; ii < n_pairs; ++ii) {
+	   some_overlays_need_repainting |= pairs[ii].second;
             for (size_t jj = ii + 1; jj < n_pairs; ++jj) {
                if (pairs[ii].second != pairs[jj].second &&
                    pairs[ii].first.Intersects(pairs[jj].first)) {
@@ -70,6 +73,14 @@ void OverlayPanel::DrawOverlays(bool repaint, wxDC *pDC)
       } while (!done);
    }
 
+   if (!some_overlays_need_repainting) {
+     // This function (OverlayPanel::DrawOverlays()) is called at
+     // fairly high frequency through a timer in TrackPanel. In case
+     // there is nothing to do, we exit early because creating the
+     // wxClientDC below is expensive, at least on Linux.
+     return;
+   }
+
    Maybe<wxClientDC> myDC;
    auto &dc = pDC ? *pDC : (myDC.create(this), *myDC);
 
@@ -77,7 +88,7 @@ void OverlayPanel::DrawOverlays(bool repaint, wxDC *pDC)
    bool done = true;
    auto it2 = pairs.begin();
    for (auto pOverlay : mOverlays) {
-      if (repaint || it2->second) {
+      if (repaint_all || it2->second) {
          done = false;
          pOverlay->Erase(dc, GetBackingDC());
       }
@@ -88,7 +99,7 @@ void OverlayPanel::DrawOverlays(bool repaint, wxDC *pDC)
    if (!done) {
       it2 = pairs.begin();
       for (auto pOverlay : mOverlays) {
-         if (repaint || it2->second) {
+         if (repaint_all || it2->second) {
             // Guarantee a clean state of the dc each pass:
             ADCChanger changer{ &dc };
 

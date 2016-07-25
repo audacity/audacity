@@ -148,11 +148,9 @@ void DirectoriesPrefs::OnChooseTempDir(wxCommandEvent & e)
       // already)
       wxString newDirName;
 #if defined(__WXMAC__)
-      newDirName = wxT("audacity_temp");
+      newDirName = wxT("SessionData");
 #elif defined(__WXMSW__) 
       // Clearing Bug 1271 residual issue.  Let's NOT have temp in the name.
-      // [Arguably we should do this for all platforms, not just Windows
-      // which has cleaners that clean up temp data.  For another day].
       newDirName = wxT("SessionData");
 #else
       newDirName = wxT(".audacity_temp");

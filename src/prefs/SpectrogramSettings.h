@@ -137,7 +137,6 @@ public:
 
    // Following fields are derived from preferences.
 
-#ifdef EXPERIMENTAL_USE_REALFFTF
    // Variables used for computing the spectrum
    mutable FFTParam      *hFFT{};
    mutable float         *window{};
@@ -145,7 +144,5 @@ public:
    // Two other windows for computing reassigned spectrogram
    mutable float         *tWindow{}; // Window times time parameter
    mutable float         *dWindow{}; // Derivative of window
-
-#endif
 };
 #endif

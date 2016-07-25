@@ -160,6 +160,8 @@ void WaveTrack::Merge(const Track &orig)
       mDisplay = wt.mDisplay;
       mGain    = wt.mGain;
       mPan     = wt.mPan;
+      mDisplayMin = wt.mDisplayMin;
+      mDisplayMax = wt.mDisplayMax;
       SetSpectrogramSettings(wt.mpSpectrumSettings
          ? new SpectrogramSettings(*wt.mpSpectrumSettings) : 0);
       SetWaveformSettings
@@ -1976,6 +1978,8 @@ bool WaveTrack::GetMinMax(float *min, float *max,
 
 bool WaveTrack::GetRMS(float *rms, double t0, double t1)
 {
+   *rms = float(0.0);
+
    if (t0 > t1)
       return false;
 
@@ -1990,7 +1994,10 @@ bool WaveTrack::GetRMS(float *rms, double t0, double t1)
    {
       WaveClip* clip = it->GetData();
 
-      if (t1 >= clip->GetStartTime() && t0 <= clip->GetEndTime())
+      // If t1 == clip->GetStartTime() or t0 == clip->GetEndTime(), then the clip
+      // is not inside the selection, so we don't want it.
+      // if (t1 >= clip->GetStartTime() && t0 <= clip->GetEndTime())
+      if (t1 > clip->GetStartTime() && t0 < clip->GetEndTime())
       {
          float cliprms;
          sampleCount clipStart, clipEnd;
@@ -2793,7 +2800,7 @@ constSamplePtr WaveTrackCache::Get(sampleFormat format,
       for (int ii = 0; ii < mNValidBuffers && remaining > 0; ++ii) {
          const sampleCount starti = start - mBuffers[ii].start;
          const sampleCount leni = std::min(remaining, mBuffers[ii].len - starti);
-         if (leni == len) {
+         if (initLen == 0 && leni == len) {
             // All is contiguous already.  We can completely avoid copying
             return samplePtr(mBuffers[ii].data + starti);
          }
@@ -2813,6 +2820,10 @@ constSamplePtr WaveTrackCache::Get(sampleFormat format,
       if (remaining > 0) {
          // Very big request!
          // Fall back to direct fetch
+         if (buffer == 0) {
+            mOverlapBuffer.Resize(len, format);
+            buffer = mOverlapBuffer.ptr();
+         }
          if (!mPTrack->Get(buffer, format, start, remaining))
             return 0;
       }

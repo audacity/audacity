@@ -65,6 +65,7 @@ and use it for toolbar and window layouts too.
 #include "Project.h"
 #include "toolbars/ToolBar.h"
 #include "toolbars/ToolManager.h"
+#include "widgets/Ruler.h"
 #include "ImageManipulation.h"
 #include "Theme.h"
 #include "Experimental.h"
@@ -230,6 +231,7 @@ void Theme::ApplyUpdatedImages()
       if( pToolBar )
          pToolBar->ReCreateButtons();
    }
+   p->GetRulerPanel()->ReCreateButtons();
 }
 
 void Theme::RegisterImages()
@@ -958,27 +960,41 @@ void ThemeBase::SaveComponents()
       if( (mBitmapFlags[i] & resFlagInternal)==0)
       {
          FileName = FileNames::ThemeComponent( mBitmapNames[i] );
-         if( !wxFileExists( FileName ))
+         if( wxFileExists( FileName ))
          {
-            if( !mImages[i].SaveFile( FileName, wxBITMAP_TYPE_PNG ))
-            {
-               wxMessageBox(
-                  wxString::Format(
-                  _("Audacity could not save file:\n  %s"),
-                     FileName.c_str() ));
-               return;
-            }
-            n++;
+            ++n;
+            break;
          }
       }
    }
-   if( n==0 )
+
+   if (n > 0)
    {
-      wxMessageBox(
-         wxString::Format(
-         _("All required files in:\n  %s\nwere already present."),
-            FileNames::ThemeComponentsDir().c_str() ));
-      return;
+      auto result =
+         wxMessageBox(
+            wxString::Format(
+               _("Some required files in:\n  %s\nwere already present.  Overwrite?"),
+               FileNames::ThemeComponentsDir().c_str()),
+               wxMessageBoxCaptionStr,
+               wxYES_NO | wxNO_DEFAULT);
+      if(result == wxNO)
+         return;
+   }
+
+   for(i=0;i<(int)mImages.GetCount();i++)
+   {
+      if( (mBitmapFlags[i] & resFlagInternal)==0)
+      {
+         FileName = FileNames::ThemeComponent( mBitmapNames[i] );
+         if( !mImages[i].SaveFile( FileName, wxBITMAP_TYPE_PNG ))
+         {
+            wxMessageBox(
+               wxString::Format(
+               _("Audacity could not save file:\n  %s"),
+                  FileName.c_str() ));
+            return;
+         }
+      }
    }
    wxMessageBox(
       wxString::Format(

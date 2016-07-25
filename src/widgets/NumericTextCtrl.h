@@ -160,7 +160,7 @@ class NumericTextCtrl final : public wxControl, public NumericConverter
    void SetReadOnly(bool readOnly = true);
    void EnableMenu(bool enable = true);
 
-   // The text control permits typing '-' to make the value invalid only if this
+   // The text control permits typing DELETE to make the value invalid only if this
    // function has previously been called.
    // Maybe you want something other than the default of -1 to indicate the invalid value
    // this control returns to the program, so you can specify.

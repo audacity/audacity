@@ -21,12 +21,13 @@
 #include "../Audacity.h"
 
 #include <wx/defs.h>
-#include <wx/dialog.h>
 #include <wx/evtloop.h>
 #include <wx/gauge.h>
 #include <wx/stattext.h>
 #include <wx/utils.h>
 #include <wx/msgdlg.h>
+
+#include "wxPanelWrapper.h"
 
 enum
 {
@@ -51,7 +52,7 @@ enum ProgressDialogFlags
 /// ProgressDialog Class
 ////////////////////////////////////////////////////////////
 
-class AUDACITY_DLL_API ProgressDialog /* not final */ : public wxDialog
+class AUDACITY_DLL_API ProgressDialog /* not final */ : public wxDialogWrapper
 {
 public:
    ProgressDialog();

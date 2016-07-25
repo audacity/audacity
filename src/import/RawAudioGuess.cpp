@@ -1066,8 +1066,10 @@ int RawAudioGuess(const wxString &in_fname,
    *out_channels = 1;
 
    wxFFile in_wxFFile(in_fname, wxT("rb"));
+
+   // JKC FALSE changed to -1.
    if (!in_wxFFile.IsOpened())
-      return false;
+      return -1;
    inf = in_wxFFile.fp();
 
    if (!inf) {
@@ -1079,6 +1081,7 @@ int RawAudioGuess(const wxString &in_fname,
       return -1;
    }
 
+   // FIXME: TRAP_ERR fseek return in RawAudioGuess unchecked.
    fseek(inf, 0, SEEK_END);
    fileLen = ftell(inf);
 
@@ -1100,6 +1103,7 @@ int RawAudioGuess(const wxString &in_fname,
       /* Make it a multiple of 16 (stereo double-precision) */
       startPoint = (startPoint/16)*16;
 
+      // FIXME: TRAP_ERR fseek return in MultiFormatReader unchecked.
       fseek(inf, headerSkipSize + startPoint, SEEK_SET);
       read_data = fread(rawData[test], 1, dataSize, inf);
       if (read_data != dataSize && ferror(inf)) {

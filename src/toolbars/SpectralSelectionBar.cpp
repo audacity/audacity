@@ -110,7 +110,14 @@ void SpectralSelectionBar::Populate()
    gPrefs->Read(preferencePath, &mbCenterAndWidth, true);
 
    // This will be inherited by all children:
-   SetFont(wxFont(9, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
+   SetFont(wxFont(
+#ifdef __WXMAC__
+                  12
+#else
+                  9
+#endif
+                  ,
+                  wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
 
    /* we don't actually need a control yet, but we want to use its methods
    * to do some look-ups, so we'll have to create one. We can't make the
@@ -208,6 +215,8 @@ void SpectralSelectionBar::UpdatePrefs()
 
    // Set label to pull in language change
    SetLabel(_("Spectral Selection"));
+
+   RegenerateTooltips();
 
    // Give base class a chance
    ToolBar::UpdatePrefs();

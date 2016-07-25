@@ -36,13 +36,14 @@
 #include "ErrorDialog.h"
 #include "HelpSystem.h"
 
-const wxString HelpSystem::HelpHostname = wxT("manual.audacityteam.org");
 #if IS_ALPHA
+const wxString HelpSystem::HelpHostname = wxT("alphamanual.audacityteam.org");
 const wxString HelpSystem::HelpServerHomeDir = wxT("/man/");
 const wxString HelpSystem::HelpServerManDir = wxT("/man/");
 #else
-const wxString HelpSystem::HelpServerHomeDir = wxT("/o/");
-const wxString HelpSystem::HelpServerManDir = wxT("/o/man/");
+const wxString HelpSystem::HelpHostname = wxT("manual.audacityteam.org");
+const wxString HelpSystem::HelpServerHomeDir = wxT("/");
+const wxString HelpSystem::HelpServerManDir = wxT("/man/");
 #endif
 const wxString HelpSystem::LocalHelpManDir = wxT("/man/");
 const wxString HelpSystem::ReleaseSuffix = wxT(".html");
@@ -56,7 +57,7 @@ void HelpSystem::ShowInfoDialog( wxWindow *parent,
                      const wxString &message,
                      const int xSize, const int ySize)
 {
-   wxDialog dlog(parent, wxID_ANY,
+   wxDialogWrapper dlog(parent, wxID_ANY,
                 dlogTitle,
                 wxDefaultPosition, wxDefaultSize,
                 wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX /*| wxDEFAULT_FRAME_STYLE */);
@@ -99,13 +100,8 @@ void HelpSystem::ShowHtmlText(wxWindow *pParent,
 {
    LinkingHtmlWindow *html;
 
-   BrowserFrame * pWnd;
-   if( bModal )
-      pWnd = new HtmlTextHelpDialog();
-   else
-      pWnd = new BrowserFrame();
-
-   pWnd->Create(pParent, wxID_ANY, Title, wxDefaultPosition, wxDefaultSize,
+   auto pFrame = safenew wxFrame {
+      pParent, wxID_ANY, Title, wxDefaultPosition, wxDefaultSize,
 #if defined(__WXMAC__)
       // On OSX, the html frame can go behind the help dialog and if the help
       // html frame is modal, you can't get back to it.  Pressing escape gets
@@ -114,9 +110,15 @@ void HelpSystem::ShowHtmlText(wxWindow *pParent,
       // but acceptable in this case.
       wxSTAY_ON_TOP |
 #endif
-      wxDEFAULT_FRAME_STYLE);
+      wxDEFAULT_FRAME_STYLE
+   };
 
-   pWnd->SetName(pWnd->GetTitle());
+   BrowserDialog * pWnd;
+   if( bModal )
+      pWnd = safenew HtmlTextHelpDialog{ pFrame, Title };
+   else
+      pWnd = safenew BrowserDialog{ pFrame, Title };
+
    ShuttleGui S( pWnd, eIsCreating );
 
    S.SetStyle( wxNO_BORDER | wxTAB_TRAVERSAL );
@@ -140,7 +142,7 @@ void HelpSystem::ShowHtmlText(wxWindow *pParent,
                                    bIsFile ? wxSize(500, 400) : wxSize(480, 240),
                                    wxHW_SCROLLBAR_AUTO | wxSUNKEN_BORDER);
 
-      html->SetRelatedFrame( pWnd, wxT("Help: %s") );
+      html->SetRelatedFrame( pFrame, wxT("Help: %s") );
       if( bIsFile )
          html->LoadFile( HtmlText );
       else
@@ -161,18 +163,26 @@ void HelpSystem::ShowHtmlText(wxWindow *pParent,
    wxIcon ic{};
       ic.CopyFromBitmap(theTheme.Bitmap(bmpAudacityLogo48x48));
    #endif
-   pWnd->SetIcon( ic );
+   pFrame->SetIcon( ic );
    // -- END of ICON stuff -----
 
 
    pWnd->mpHtml = html;
    pWnd->SetBackgroundColour( wxSystemSettings::GetColour(wxSYS_COLOUR_BTNFACE));
-   pWnd->CreateStatusBar();
-   pWnd->Centre();
-   pWnd->Layout();
-   pWnd->Fit();
-   pWnd->SetSizeHints(pWnd->GetSize());
-   pWnd->Show( true );
+
+   pFrame->CreateStatusBar();
+   pFrame->Centre();
+   pFrame->Layout();
+   pFrame->Fit();
+   pFrame->SetSizeHints(pWnd->GetSize());
+
+   pFrame->SetName(Title);
+   if (bModal)
+      pWnd->ShowModal();
+   else {
+      pWnd->Show(true);
+      pFrame->Show(true);
+   }
 
    html->SetRelatedStatusBar( 0 );
    html->SetFocus();

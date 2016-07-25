@@ -113,7 +113,14 @@ void SelectionBar::Populate()
    mLeftTime = mRightTime = mAudioTime = nullptr;
 
    // This will be inherited by all children:
-   SetFont(wxFont(9, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
+   SetFont(wxFont(
+#ifdef __WXMAC__
+                  12
+#else
+                  9
+#endif
+                  ,
+                  wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
 
    wxFlexGridSizer *mainSizer;
 
@@ -240,9 +247,6 @@ void SelectionBar::Populate()
                   0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
    mSnapTo->SetName(_("Snap To"));
    mSnapTo->SetSelection(mListener ? mListener->AS_GetSnapTo() : SNAP_OFF);
-   #if wxUSE_TOOLTIPS
-      mSnapTo->SetToolTip(wxString::Format(_("Snap Clicks/Selections to %s"), formatName.c_str()));
-   #endif
 
    mSnapTo->Connect(wxEVT_SET_FOCUS,
                     wxFocusEventHandler(SelectionBar::OnFocus),
@@ -280,6 +284,8 @@ void SelectionBar::Populate()
 
    mainSizer->Layout();
 
+   RegenerateTooltips();
+
    Layout();
 
    SetMinSize( GetSizer()->GetMinSize() );
@@ -296,6 +302,8 @@ void SelectionBar::UpdatePrefs()
    // Set label to pull in language change
    SetLabel(_("Selection"));
 
+   RegenerateTooltips();
+
    // Give base class a chance
    ToolBar::UpdatePrefs();
 }
@@ -307,6 +315,14 @@ void SelectionBar::SetListener(SelectionBarListener *l)
    SetSnapTo(mListener->AS_GetSnapTo());
    SetSelectionFormat(mListener->AS_GetSelectionFormat());
 };
+
+void SelectionBar::RegenerateTooltips()
+{
+#if wxUSE_TOOLTIPS
+   wxString formatName = mListener ? mListener->AS_GetSelectionFormat() : wxString(wxEmptyString);
+   mSnapTo->SetToolTip(wxString::Format(_("Snap Clicks/Selections to %s"), formatName.c_str()));
+#endif
+}
 
 void SelectionBar::OnSize(wxSizeEvent &evt)
 {
@@ -375,9 +391,7 @@ void SelectionBar::OnUpdate(wxCommandEvent &evt)
    format = mLeftTime->GetBuiltinName(index);
    mListener->AS_SetSelectionFormat(format);
 
-#if wxUSE_TOOLTIPS
-   mSnapTo->SetToolTip(wxString::Format(_("Snap Clicks/Selections to %s"), format.c_str()));
-#endif
+   RegenerateTooltips();
 
    // ToolBar::ReCreateButtons() will get rid of our sizers and controls
    // so reset pointers first.

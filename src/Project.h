@@ -75,9 +75,9 @@ class EditToolBar;
 class MeterToolBar;
 class MixerToolBar;
 class Scrubber;
+class ScrubbingToolBar;
 class SelectionBar;
 class SpectralSelectionBar;
-class Toolbar;
 class ToolManager;
 class ToolsToolBar;
 class TranscriptionToolBar;
@@ -258,7 +258,8 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    bool GetDirty() { return mDirty; }
    void SetProjectTitle();
 
-   TrackPanel * GetTrackPanel(){return mTrackPanel;}
+   wxPanel *GetTopPanel() { return mTopPanel; }
+   TrackPanel * GetTrackPanel() {return mTrackPanel;}
 
    bool GetIsEmpty();
 
@@ -311,12 +312,15 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    void OnMenu(wxCommandEvent & event);
    void OnUpdateUI(wxUpdateUIEvent & event);
 
+   void MacShowUndockedToolbars(bool show);
    void OnActivate(wxActivateEvent & event);
+
    void OnMouseEvent(wxMouseEvent & event);
    void OnIconize(wxIconizeEvent &event);
    void OnSize(wxSizeEvent & event);
    void OnShow(wxShowEvent & event);
    void OnMove(wxMoveEvent & event);
+   void DoScroll();
    void OnScroll(wxScrollEvent & event);
    void OnCloseWindow(wxCloseEvent & event);
    void OnTimer(wxTimerEvent & event);
@@ -406,6 +410,7 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
 
    void SafeDisplayStatusMessage(const wxChar *msg);
 
+   bool MayScrollBeyondZero() const;
    double ScrollingLowerBoundTime() const;
    // How many pixels are covered by the period from lowermost scrollable time, to the given time:
    // PRL: Bug1197: we seem to need to compute all in double, to avoid differing results on Mac
@@ -442,6 +447,7 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    DeviceToolBar *GetDeviceToolBar();
    EditToolBar *GetEditToolBar();
    MixerToolBar *GetMixerToolBar();
+   ScrubbingToolBar *GetScrubbingToolBar();
    SelectionBar *GetSelectionBar();
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    SpectralSelectionBar *GetSpectralSelectionBar();
@@ -592,6 +598,7 @@ public:
    wxStatusBar *mStatusBar;
 
    AdornedRulerPanel *mRuler{};
+   wxPanel *mTopPanel{};
    TrackPanel *mTrackPanel{};
    TrackFactory *mTrackFactory{};
    wxPanel * mMainPanel;
@@ -730,6 +737,7 @@ public:
 
       enum class Mode {
          Off,
+         Refresh,
          Centered,
          Right,
       };

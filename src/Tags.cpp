@@ -460,17 +460,35 @@ void Tags::SetTag(const wxString & name, const wxString & value)
    // Look it up
    TagMap::iterator iter = mXref.find(key);
 
-   // Didn't find the tag
-   if (iter == mXref.end()) {
-
-      // Add a NEW tag
-      mXref[key] = name;
-      mMap[name] = value;
-      return;
+   if (value.IsEmpty()) {
+      // Erase the tag
+      if (iter == mXref.end())
+         // nothing to do
+         ;
+      else {
+         mMap.erase(iter->second);
+         mXref.erase(iter);
+      }
    }
+   else {
+      if (iter == mXref.end()) {
+         // Didn't find the tag
 
-   // Update the value
-   mMap[iter->second] = value;
+         // Add a NEW tag
+         mXref[key] = name;
+         mMap[name] = value;
+      }
+      else if (!iter->second.IsSameAs(name)) {
+         // Watch out for case differences!
+         mMap[name] = value;
+         mMap.erase(iter->second);
+         iter->second = name;
+      }
+      else {
+         // Update the value
+         mMap[iter->second] = value;
+      }
+   }
 }
 
 void Tags::SetTag(const wxString & name, const int & value)
@@ -597,6 +615,59 @@ public:
 
       wxGridCellChoiceEditor::SetSize(rect);
    }
+
+   // Fix for Bug 1389
+   // July 2016: ANSWER-ME: Does this need reporting upstream to wxWidgets?
+   virtual void StartingKey(wxKeyEvent& event)
+   {
+       // Lifted from wxGridCellTextEditor and adapted to combo.
+
+       // [Below is comment from wxWidgets code]
+       // Since this is now happening in the EVT_CHAR event EmulateKeyPress is no
+       // longer an appropriate way to get the character into the text control.
+       // Do it ourselves instead.  We know that if we get this far that we have
+       // a valid character, so not a whole lot of testing needs to be done.
+
+       //The only difference to wxGridCellTextEditor.
+       //wxTextCtrl* tc = (wxTextCtrl *)m_control;
+       wxComboBox * tc = Combo();
+       int ch;
+
+       bool isPrintable;
+
+   #if wxUSE_UNICODE
+       ch = event.GetUnicodeKey();
+       if ( ch != WXK_NONE )
+           isPrintable = true;
+       else
+   #endif // wxUSE_UNICODE
+       {
+           ch = event.GetKeyCode();
+           isPrintable = ch >= WXK_SPACE && ch < WXK_START;
+       }
+
+       switch (ch)
+       {
+           case WXK_DELETE:
+               // Delete the initial character when starting to edit with DELETE.
+               tc->Remove(0, 1);
+               break;
+
+           case WXK_BACK:
+               // Delete the last character when starting to edit with BACKSPACE.
+               {
+                   const long pos = tc->GetLastPosition();
+                   tc->Remove(pos - 1, pos);
+               }
+               break;
+
+           default:
+               if ( isPrintable )
+                   tc->WriteText(static_cast<wxChar>(ch));
+               break;
+       }
+   }
+
 };
 
 //
@@ -651,7 +722,7 @@ enum {
    RemoveID
 };
 
-BEGIN_EVENT_TABLE(TagsEditor, wxDialog)
+BEGIN_EVENT_TABLE(TagsEditor, wxDialogWrapper)
    EVT_GRID_CELL_CHANGED(TagsEditor::OnChange)
    EVT_BUTTON(EditID, TagsEditor::OnEdit)
    EVT_BUTTON(ResetID, TagsEditor::OnReset)
@@ -663,6 +734,7 @@ BEGIN_EVENT_TABLE(TagsEditor, wxDialog)
    EVT_BUTTON(RemoveID, TagsEditor::OnRemove)
    EVT_BUTTON(wxID_CANCEL, TagsEditor::OnCancel)
    EVT_BUTTON(wxID_OK, TagsEditor::OnOk)
+   EVT_KEY_DOWN(TagsEditor::OnKeyDown)
 END_EVENT_TABLE()
 
 TagsEditor::TagsEditor(wxWindow * parent,
@@ -670,7 +742,7 @@ TagsEditor::TagsEditor(wxWindow * parent,
                        Tags * tags,
                        bool editTitle,
                        bool editTrack)
-:  wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize,
+:  wxDialogWrapper(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER),
    mTags(tags),
    mEditTitle(editTitle),
@@ -984,7 +1056,7 @@ void TagsEditor::OnEdit(wxCommandEvent & WXUNUSED(event))
       mGrid->HideCellEditControl();
    }
 
-   wxDialog dlg(this, wxID_ANY, _("Edit Genres"),
+   wxDialogWrapper dlg(this, wxID_ANY, _("Edit Genres"),
                 wxDefaultPosition, wxDefaultSize,
                 wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER);
    dlg.SetName(dlg.GetTitle());
@@ -1261,7 +1333,6 @@ void TagsEditor::OnOk(wxCommandEvent & WXUNUSED(event))
    if (mGrid->IsCellEditControlShown()) {
       mGrid->SaveEditControlValue();
       mGrid->HideCellEditControl();
-      return;
    }
 
    if (!Validate() || !TransferDataFromWindow()) {
@@ -1282,6 +1353,11 @@ void TagsEditor::OnOk(wxCommandEvent & WXUNUSED(event))
 
 void TagsEditor::OnCancel(wxCommandEvent & WXUNUSED(event))
 {
+   DoCancel(false);
+}
+
+void TagsEditor::DoCancel(bool escKey)
+{
    if (mGrid->IsCellEditControlShown()) {
       auto editor = mGrid->GetCellEditor(mGrid->GetGridCursorRow(),
          mGrid->GetGridCursorCol());
@@ -1289,10 +1365,21 @@ void TagsEditor::OnCancel(wxCommandEvent & WXUNUSED(event))
       // To avoid memory leak, don't forget DecRef()!
       editor->DecRef();
       mGrid->HideCellEditControl();
-      return;
    }
 
+   auto focus = wxWindow::FindFocus();
+   if (escKey && focus == mGrid)
+      return;
+
    EndModal(wxID_CANCEL);
+}
+
+void TagsEditor::OnKeyDown(wxKeyEvent &event)
+{
+   if (event.GetKeyCode() == WXK_ESCAPE)
+      DoCancel(true);
+   else
+      event.Skip();
 }
 
 void TagsEditor::SetEditors()

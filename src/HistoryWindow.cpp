@@ -45,7 +45,7 @@ enum {
    ID_DISCARD
 };
 
-BEGIN_EVENT_TABLE(HistoryWindow, wxDialog)
+BEGIN_EVENT_TABLE(HistoryWindow, wxDialogWrapper)
    EVT_SIZE(HistoryWindow::OnSize)
    EVT_CLOSE(HistoryWindow::OnCloseWindow)
    EVT_LIST_ITEM_SELECTED(wxID_ANY, HistoryWindow::OnItemSelected)
@@ -53,7 +53,7 @@ BEGIN_EVENT_TABLE(HistoryWindow, wxDialog)
 END_EVENT_TABLE()
 
 HistoryWindow::HistoryWindow(AudacityProject *parent, UndoManager *manager):
-   wxDialog((wxWindow*)parent, wxID_ANY, wxString(_("Undo History")),
+   wxDialogWrapper((wxWindow*)parent, wxID_ANY, wxString(_("Undo History")),
       wxDefaultPosition, wxDefaultSize,
       wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER )
 {

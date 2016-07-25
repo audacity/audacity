@@ -2420,7 +2420,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
           0, 0, numPixels,
           clip->GetNumSamples(),
           tOffset, rate,
-          0 //FIXME -- make reassignment work with fisheye
+          0 // FIXME: PRL -- make reassignment work with fisheye
        );
    }
 

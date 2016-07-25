@@ -235,7 +235,7 @@ static void RemoveDependencies(AudacityProject *project,
 // DependencyDialog
 //
 
-class DependencyDialog final : public wxDialog
+class DependencyDialog final : public wxDialogWrapper
 {
 public:
    DependencyDialog(wxWindow *parent,
@@ -281,7 +281,7 @@ enum {
    FutureActionChoiceID
 };
 
-BEGIN_EVENT_TABLE(DependencyDialog, wxDialog)
+BEGIN_EVENT_TABLE(DependencyDialog, wxDialogWrapper)
    EVT_LIST_ITEM_SELECTED(FileListID, DependencyDialog::OnList)
    EVT_LIST_ITEM_DESELECTED(FileListID, DependencyDialog::OnList)
    EVT_BUTTON(CopySelectedFilesButtonID, DependencyDialog::OnCopySelectedFiles)
@@ -296,7 +296,7 @@ DependencyDialog::DependencyDialog(wxWindow *parent,
                                    AudacityProject *project,
                                    AliasedFileArray &aliasedFiles,
                                    bool isSaving)
-: wxDialog(parent, id, _("Project Depends on Other Audio Files"),
+: wxDialogWrapper(parent, id, _("Project Depends on Other Audio Files"),
             wxDefaultPosition, wxDefaultSize,
             (isSaving ?
                   (wxDEFAULT_DIALOG_STYLE & ~wxCLOSE_BOX) : // no close box when saving
@@ -466,7 +466,7 @@ void DependencyDialog::OnSize(wxSizeEvent &evt)
    // Also subtract 8 from file path column width for borders.
    mFileListCtrl->SetColumnWidth(0, fileListCtrlWidth - 120 - 8);
    mFileListCtrl->SetColumnWidth(1, 120);
-   wxDialog::OnSize(evt);
+   wxDialogWrapper::OnSize(evt);
 }
 
 void DependencyDialog::OnNo(wxCommandEvent & WXUNUSED(event))

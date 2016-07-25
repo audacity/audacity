@@ -217,17 +217,29 @@ void AboutDialog::CreateCreditsList()
 
 // ----------------------------------------------------------------------------
 
-BEGIN_EVENT_TABLE(AboutDialog, wxDialog)
+BEGIN_EVENT_TABLE(AboutDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, AboutDialog::OnOK)
 END_EVENT_TABLE()
 
-IMPLEMENT_CLASS(AboutDialog, wxDialog)
+IMPLEMENT_CLASS(AboutDialog, wxDialogWrapper)
+
+namespace {
+   AboutDialog *sActiveInstance{};
+}
+
+AboutDialog *AboutDialog::ActiveIntance()
+{
+   return sActiveInstance;
+}
 
 AboutDialog::AboutDialog(wxWindow * parent)
-   :  wxDialog(parent, -1, _("About Audacity"),
+   :  wxDialogWrapper(parent, -1, _("About Audacity"),
                wxDefaultPosition, wxDefaultSize,
                wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {
+   wxASSERT(!sActiveInstance);
+   sActiveInstance = this;
+
    SetName(GetTitle());
    this->SetBackgroundColour(theTheme.Colour( clrAboutBoxBackground ));
    icon = NULL;
@@ -964,12 +976,16 @@ void AboutDialog::AddBuildinfoRow( wxString* htmlstring, const wxChar * libname,
    *htmlstring += wxT("</td></tr>");
 }
 
-
 AboutDialog::~AboutDialog()
 {
+   sActiveInstance = {};
 }
 
 void AboutDialog::OnOK(wxCommandEvent & WXUNUSED(event))
 {
+#ifdef __WXMAC__
+   Destroy();
+#else
    EndModal(wxID_OK);
+#endif
 }

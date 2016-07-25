@@ -80,7 +80,7 @@ void WaveformPrefs::PopulateOrExchange(ShuttleGui & S)
       mDefaultsCheckbox = 0;
       if (mWt) {
          /* i18n-hint: use is a verb */
-         mDefaultsCheckbox = S.Id(ID_DEFAULTS).TieCheckBox(_("Use Preferences"), mDefaulted);
+         mDefaultsCheckbox = S.Id(ID_DEFAULTS).TieCheckBox(_("&Use Preferences"), mDefaulted);
       }
 
       S.StartStatic(_("Display"));

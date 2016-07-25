@@ -82,7 +82,7 @@ static int iBitrates[] = {
    192, 224, 256, 320, 384
 };
 
-class ExportMP2Options final : public wxPanel
+class ExportMP2Options final : public wxPanelWrapper
 {
 public:
    ExportMP2Options(wxWindow *parent, int format);
@@ -100,7 +100,7 @@ private:
 ///
 ///
 ExportMP2Options::ExportMP2Options(wxWindow *parent, int WXUNUSED(format))
-:  wxPanel(parent, wxID_ANY)
+:  wxPanelWrapper(parent, wxID_ANY)
 {
    for (unsigned int i=0; i < (sizeof(iBitrates)/sizeof(int)); i++)
    {

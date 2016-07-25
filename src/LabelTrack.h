@@ -41,21 +41,18 @@ class ZoomInfo;
 
 class LabelStruct
 {
-   // disallow copy
-private:
-   LabelStruct(const LabelStruct&);
-   LabelStruct& operator= (const LabelStruct&);
 public:
    // Copies region
    LabelStruct(const SelectedRegion& region, const wxString &aTitle);
    // Copies region but then overwrites other times
    LabelStruct(const SelectedRegion& region, double t0, double t1,
                const wxString &aTitle);
-   void DrawLines( wxDC & dc, const wxRect & r);
-   void DrawGlyphs( wxDC & dc, const wxRect & r, int GlyphLeft, int GlyphRight);
-   void DrawText( wxDC & dc, const wxRect & r);
-   void DrawTextBox( wxDC & dc, const wxRect & r);
-   void DrawHighlight( wxDC & dc, int xPos1, int xPos2, int charHeight);
+   void DrawLines( wxDC & dc, const wxRect & r) const;
+   void DrawGlyphs
+      ( wxDC & dc, const wxRect & r, int GlyphLeft, int GlyphRight) const;
+   void DrawText( wxDC & dc, const wxRect & r) const;
+   void DrawTextBox( wxDC & dc, const wxRect & r) const;
+   void DrawHighlight( wxDC & dc, int xPos1, int xPos2, int charHeight) const;
    void getXPos( wxDC & dc, int * xPos1, int cursorPos) const;
    const SelectedRegion &getSelectedRegion() const { return selectedRegion; }
    double getDuration() const { return selectedRegion.duration(); }
@@ -64,6 +61,11 @@ public:
    // Returns true iff the label got inverted:
    bool AdjustEdge( int iEdge, double fNewTime);
    void MoveLabel( int iEdge, double fNewTime);
+
+   struct BadFormatException {};
+   static LabelStruct Import(wxTextFile &file, int &index);
+
+   void Export(wxTextFile &file) const;
 
    /// Relationships between selection region and labels
    enum TimeRelations
@@ -81,27 +83,23 @@ public:
    /// and end of parent to be within a region that borders them (this makes
    /// it possible to DELETE capture all labels with a Select All).
    TimeRelations RegionRelation(double reg_t0, double reg_t1,
-                                const LabelTrack *parent = NULL);
+                                const LabelTrack *parent = NULL) const;
 
 public:
    SelectedRegion selectedRegion;
    wxString title; /// Text of the label.
-   int width; /// width of the text in pixels.
+   mutable int width; /// width of the text in pixels.
 
 // Working storage for on-screen layout.
-   int x;     /// Pixel position of left hand glyph
-   int x1;    /// Pixel position of right hand glyph
-   int xText; /// Pixel position of left hand side of text box
-   int y;     /// Pixel position of label.
+   mutable int x;     /// Pixel position of left hand glyph
+   mutable int x1;    /// Pixel position of right hand glyph
+   mutable int xText; /// Pixel position of left hand side of text box
+   mutable int y;     /// Pixel position of label.
 
-   bool highlighted;              /// if the text is highlighted
-   bool changeInitialMouseXPos;   /// flag to change initial mouse X pos
    bool updated;                  /// flag to tell if the label times were updated
 };
 
-//You can't stick AUDACITY_DLL_API in front of the WX_DEFINE_ARRAY() macro, you
-//have to use the below macro instead to avoid a warning
-WX_DEFINE_USER_EXPORTED_ARRAY(LabelStruct *, LabelArray, class AUDACITY_DLL_API);
+using LabelArray = std::vector<LabelStruct>;
 
 const int NUM_GLYPH_CONFIGS = 3;
 const int NUM_GLYPH_HIGHLIGHTS = 4;
@@ -124,6 +122,9 @@ class AUDACITY_DLL_API LabelTrack final : public Track
    virtual ~ LabelTrack();
    void SetOffset(double dOffset) override;
 
+   static const int DefaultFontSize = 12;
+
+   static wxFont GetFont(const wxString &faceName, int size = DefaultFontSize);
    static void ResetFont();
 
    void Draw(wxDC & dc, const wxRect & r,
@@ -177,13 +178,6 @@ class AUDACITY_DLL_API LabelTrack final : public Track
    bool PasteSelectedText(double sel0, double sel1);
    static bool IsTextClipSupported();
 
-   // methods to set flags
-   void SetDragXPos(const int d) { mDragXPos = d; }
-   void SetInBox(bool inTextBox) { mInBox = inTextBox; }
-   void SetResetCursorPos(bool resetFlag) { mResetCursorPos = resetFlag; }
-   void SetWrongDragging(bool rightFlag) { mRightDragging = rightFlag; }
-   void SetDrawCursor(bool drawCursorFlag) { mDrawCursor = drawCursorFlag; }
-
    void HandleClick(const wxMouseEvent & evt, const wxRect & r, const ZoomInfo &zoomInfo,
       SelectedRegion *newSel);
    bool HandleGlyphDragRelease(const wxMouseEvent & evt, wxRect & r, const ZoomInfo &zoomInfo,
@@ -195,7 +189,7 @@ class AUDACITY_DLL_API LabelTrack final : public Track
    bool OnChar(SelectedRegion &sel, wxKeyEvent & event);
 
    void Import(wxTextFile & f);
-   void Export(wxTextFile & f);
+   void Export(wxTextFile & f) const;
 
    void Unselect();
 
@@ -213,9 +207,11 @@ class AUDACITY_DLL_API LabelTrack final : public Track
    //This deletes the label at given index.
    void DeleteLabel(int index);
 
-   //get current cursor position
-   bool CalcCursorX(wxWindow * parent, int * x);
-   int getCurrentCursorPosition() const { return mCurrentCursorPos; }
+   //get current cursor position,
+   // relative to the left edge of the track panel
+   bool CalcCursorX(int * x) const;
+
+   void CalcHighlightXs(int *x1, int *x2) const;
 
    void MayAdjustLabel( int iLabel, int iEdge, bool bAllowSwapping, double fNewTime);
    void MayMoveLabel( int iLabel, int iEdge, double fNewTime);
@@ -234,7 +230,7 @@ class AUDACITY_DLL_API LabelTrack final : public Track
    void WarpLabels(const TimeWarper &warper);
 
    // Returns tab-separated text of all labels completely within given region
-   wxString GetTextOfLabels(double t0, double t1);
+   wxString GetTextOfLabels(double t0, double t1) const;
 
  public:
    void SortLabels();
@@ -259,28 +255,27 @@ class AUDACITY_DLL_API LabelTrack final : public Track
    static bool mbGlyphsReady;
    static wxBitmap mBoundaryGlyphs[NUM_GLYPH_CONFIGS * NUM_GLYPH_HIGHLIGHTS];
 
-   mutable int xUsed[MAX_NUM_ROWS];
-
    static int mFontHeight;
-   mutable int mXPos1;                         /// left X pos of highlighted area
-   mutable int mXPos2;                         /// right X pos of highlighted area
-   mutable int mCurrentCursorPos;              /// current cursor position
-   mutable int mInitialCursorPos;              /// initial cursor position
-   mutable double mMouseXPos;                  /// mouse X pos
-   int mDragXPos;                      /// end X pos of dragging
-   bool mInBox;                        /// flag to tell if the mouse is in text box
-   mutable bool mResetCursorPos;               /// flag to reset cursor position(used in the dragging the glygh)
-   bool mRightDragging;                /// flag to tell if it's a valid dragging
-   mutable bool mDrawCursor;                   /// flag to tell if drawing the cursor or not
-   int mRestoreFocus;              /// Restore focus to this track when done editing
+   int mCurrentCursorPos;                      /// current cursor position
+   int mInitialCursorPos;                      /// initial cursor position
+
+   bool mRightDragging;                        /// flag to tell if it's a valid dragging
+   bool mDrawCursor;                           /// flag to tell if drawing the
+                                                  /// cursor or not
+   int mRestoreFocus;                          /// Restore focus to this track
+                                                  /// when done editing
 
    // Set in copied label tracks
    double mClipLen;
 
    void ComputeLayout(const wxRect & r, const ZoomInfo &zoomInfo) const;
    void ComputeTextPosition(const wxRect & r, int index) const;
-   void SetCurrentCursorPosition(wxDC & dc, int xPos) const;
 
+public:
+   int FindCurrentCursorPosition(int xPos);
+   void SetCurrentCursorPosition(int xPos);
+
+private:
    void calculateFontHeight(wxDC & dc) const;
    void RemoveSelectedText();
 

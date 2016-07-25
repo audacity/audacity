@@ -26,12 +26,12 @@
 #include "Prefs.h"
 #include "prefs/GUISettings.h"
 
-BEGIN_EVENT_TABLE(SoundActivatedRecord, wxDialog)
+BEGIN_EVENT_TABLE(SoundActivatedRecord, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, SoundActivatedRecord::OnOK)
 END_EVENT_TABLE()
 
 SoundActivatedRecord::SoundActivatedRecord(wxWindow* parent)
-: wxDialog(parent, -1, _("Sound Activated Record"), wxDefaultPosition,
+: wxDialogWrapper(parent, -1, _("Sound Activated Record"), wxDefaultPosition,
            wxDefaultSize, wxCAPTION )
 //           wxDefaultSize, wxCAPTION | wxTHICK_FRAME)
 {

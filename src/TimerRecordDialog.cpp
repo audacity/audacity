@@ -116,7 +116,7 @@ wxAccStatus DatePickerCtrlAx::GetState(int WXUNUSED(childId), long *state)
 #endif // wxUSE_ACCESSIBILITY
 
 
-BEGIN_EVENT_TABLE(TimerRecordDialog, wxDialog)
+BEGIN_EVENT_TABLE(TimerRecordDialog, wxDialogWrapper)
    EVT_DATE_CHANGED(ID_DATEPICKER_START, TimerRecordDialog::OnDatePicker_Start)
    EVT_TEXT(ID_TIMETEXT_START, TimerRecordDialog::OnTimeText_Start)
 
@@ -139,7 +139,7 @@ BEGIN_EVENT_TABLE(TimerRecordDialog, wxDialog)
 END_EVENT_TABLE()
 
 TimerRecordDialog::TimerRecordDialog(wxWindow* parent, bool bAlreadySaved)
-: wxDialog(parent, -1, _("Audacity Timer Record"), wxDefaultPosition,
+: wxDialogWrapper(parent, -1, _("Audacity Timer Record"), wxDefaultPosition,
            wxDefaultSize, wxCAPTION)
 {
    SetName(GetTitle());
@@ -348,7 +348,7 @@ void TimerRecordDialog::OnAutoExportCheckBox_Change(wxCommandEvent& WXUNUSED(eve
 
 void TimerRecordDialog::OnHelpButtonClick(wxCommandEvent& WXUNUSED(event))
 {
-   HelpSystem::ShowHelpDialog(this, wxT("Timer_Record"));
+   HelpSystem::ShowHelpDialog(this, wxT("Timer_Record"), true);
 }
 
 wxString TimerRecordDialog::GetHoursMinsString(int iMinutes) {
@@ -441,7 +441,7 @@ void TimerRecordDialog::OnOK(wxCommandEvent& WXUNUSED(event))
 
       // Create the message string
       wxString sMessage = "";
-      sMessage.Printf("You may not have enough free disk space to complete this timer recording, based on your current settings.\n\nDo you wish to continue?\n\nPlanned recording duration:   %s\nRecording time remaining on disc:   %s",
+      sMessage.Printf("You may not have enough free disk space to complete this Timer Recording, based on your current settings.\n\nDo you wish to continue?\n\nPlanned recording duration:   %s\nRecording time remaining on disk:   %s",
          sPlannedTime,
          sRemainingTime);
 
@@ -554,9 +554,9 @@ int TimerRecordDialog::RunWaitDialog()
       strMsg.Printf(_("Recording start:\t\t\t%s\n") +
          _("Duration:\t\t\t%s\n") +
          _("Recording end:\t\t\t%s\n\n") +
-         _("Automatic Save Enabled:\t\t%s\n") +
-         _("Automatic Export Enabled:\t\t%s\n") +
-         _("Post Timer Recording Action:\t%s"),
+         _("Automatic Save enabled:\t\t%s\n") +
+         _("Automatic Export enabled:\t\t%s\n") +
+         _("Action after Timer Recording:\t%s"),
          GetDisplayDate(m_DateTime_Start).c_str(),
          m_TimeSpan_Duration.Format(),
          GetDisplayDate(m_DateTime_End).c_str(),
@@ -918,7 +918,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
 
             wxArrayString arrayOptions;
             arrayOptions.Add(_("Do nothing"));
-            arrayOptions.Add(_("Exit audacity"));
+            arrayOptions.Add(_("Exit Audacity"));
             arrayOptions.Add(_("Restart system"));
             arrayOptions.Add(_("Shutdown system"));
 
@@ -930,7 +930,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
 #endif
             m_sTimerAfterCompleteOption = arrayOptions.Item(iPostTimerRecordAction);
 
-            m_pTimerAfterCompleteChoiceCtrl = S.AddChoice(_("After Recording Completes:"),
+            m_pTimerAfterCompleteChoiceCtrl = S.AddChoice(_("After Recording completes:"),
                                                           m_sTimerAfterCompleteOption,
                                                           &m_sTimerAfterCompleteOptionsArray);
          }
@@ -1024,9 +1024,9 @@ int TimerRecordDialog::WaitForStart()
    strMsg.Printf(_("Waiting to start recording at:\t%s\n") +
       _("Recording duration:\t\t%s\n") +
       _("Scheduled to stop at:\t\t%s\n\n") +
-      _("Automatic Save Enabled:\t\t%s\n") +
-      _("Automatic Export Enabled:\t\t%s\n") +
-      _("Post Timer Recording Action:\t%s"),
+      _("Automatic Save enabled:\t\t%s\n") +
+      _("Automatic Export enabled:\t\t%s\n") +
+      _("Action after Timer Recording:\t%s"),
       GetDisplayDate(m_DateTime_Start).c_str(),
       m_TimeSpan_Duration.Format(),
       GetDisplayDate(m_DateTime_End).c_str(),
@@ -1061,10 +1061,10 @@ int TimerRecordDialog::PreActionDelay(int iActionIndex, TimerRecordCompletedActi
 
    // Build a clearer message...
    wxString sMessage;
-   sMessage.Printf(_("Timer Recording Completed.\n\n") +
+   sMessage.Printf(_("Timer Recording completed.\n\n") +
       _("Recording Saved:\t\t\t%s\n") +
       _("Recording Exported:\t\t%s\n") +
-      _("Post Timer Recording Action:\t%s"),
+      _("Action after Timer Recording:\t%s"),
       ((eCompletedActions & TR_ACTION_SAVED) ? _("Yes") : _("No")),
       ((eCompletedActions & TR_ACTION_EXPORTED) ? _("Yes") : _("No")),
       sAction);

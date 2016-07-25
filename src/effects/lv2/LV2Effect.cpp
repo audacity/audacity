@@ -31,6 +31,7 @@
 #include "../../Internat.h"
 #include "../../ShuttleGui.h"
 #include "../../widgets/valnum.h"
+#include "../../widgets/wxPanelWrapper.h"
 
 #include "lilv/lilv.h"
 #include "suil/suil.h"
@@ -162,7 +163,7 @@ void LV2EffectMeter::OnSize(wxSizeEvent & WXUNUSED(evt))
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-class LV2EffectSettingsDialog final : public wxDialog
+class LV2EffectSettingsDialog final : public wxDialogWrapper
 {
 public:
    LV2EffectSettingsDialog(wxWindow *parent, LV2Effect *effect);
@@ -180,12 +181,12 @@ private:
    DECLARE_EVENT_TABLE();
 };
 
-BEGIN_EVENT_TABLE(LV2EffectSettingsDialog, wxDialog)
+BEGIN_EVENT_TABLE(LV2EffectSettingsDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, LV2EffectSettingsDialog::OnOk)
 END_EVENT_TABLE()
 
 LV2EffectSettingsDialog::LV2EffectSettingsDialog(wxWindow *parent, LV2Effect *effect)
-:  wxDialog(parent, wxID_ANY, wxString(_("LV2 Effect Settings")))
+:  wxDialogWrapper(parent, wxID_ANY, wxString(_("LV2 Effect Settings")))
 {
    mEffect = effect;
 
@@ -1449,7 +1450,7 @@ bool LV2Effect::BuildFancy()
    }
 
    // Use a panel to host the plugins GUI
-   mContainer = safenew wxPanel(mParent, wxID_ANY);
+   mContainer = safenew wxPanelWrapper(mParent, wxID_ANY);
    if (!mContainer)
    {
       lilv_uis_free(uis);
