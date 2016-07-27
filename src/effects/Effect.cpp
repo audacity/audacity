@@ -2667,7 +2667,7 @@ void Effect::Preview(bool dryOnly)
          }
       }
       else {
-         wxMessageBox(_("Error while opening sound device. Try changing the audio host, playback device and the project sample rate."),
+         wxMessageBox(_("Error opening sound device. Try changing the audio host, playback device and the project sample rate."),
                      _("Error"), wxOK | wxICON_EXCLAMATION, FocusDialog);
       }
    }
