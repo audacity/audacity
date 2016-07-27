@@ -1814,8 +1814,19 @@ void NumericTextCtrl::Updated(bool keyup /* = false */)
 
 void NumericTextCtrl::ValueToControls()
 {
+   const wxString previousValueString = mValueString;
    NumericConverter::ValueToControls(mValue);
-   Refresh(false);
+   if (mValueString != previousValueString) {
+      // Doing this only when needed is an optimization.
+      // NumerixTextCtrls are used in the selection bar at the bottom
+      // of Audacity, and are updated at high frequency through
+      // SetValue() when Audacity is playing. This consumes a
+      // significant amount of CPU. Typically, when a track is
+      // playing, only one of the NumericTextCtrl actually changes
+      // (the audio position). We save CPU by updating the control
+      // only when needed.
+      Refresh(false);
+   }
 }
 
 
