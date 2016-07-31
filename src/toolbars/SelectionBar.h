@@ -42,6 +42,8 @@ class SelectionBar final : public ToolBar {
    void UpdatePrefs() override;
 
    void SetTimes(double start, double end, double audio);
+   // Sets the audio time. Keeps the start and end times unchanged.
+   void SetAudioTime(double audio);
    double GetLeftTime();
    double GetRightTime();
    void SetField(const wxChar *msg, int fieldNum);
