@@ -18,6 +18,11 @@
 #include <wx/dcbuffer.h>
 #include <wx/dialog.h>
 #include <wx/dynarray.h>
+
+#ifdef __WXMAC__
+#include <wx/evtloop.h>
+#endif
+
 #include <wx/math.h>
 #include <wx/msgdlg.h>
 #include <wx/sizer.h>
@@ -1133,6 +1138,10 @@ bool LV2Effect::HideUI()
 
 bool LV2Effect::CloseUI()
 {
+#ifdef __WXMAC__
+   wxEventLoop::SetBusyWaiting(false);
+#endif
+
    mParent->RemoveEventHandler(this);
 
    if (mSliders)
@@ -1560,6 +1569,10 @@ bool LV2Effect::BuildFancy()
       suil_instance_extension_data(mSuilInstance, LV2_UI__idleInterface);
 
    TransferDataToWindow();
+
+#ifdef __WXMAC__
+   wxEventLoop::SetBusyWaiting(true);
+#endif
 
    return true;
 }

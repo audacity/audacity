@@ -1787,6 +1787,10 @@ bool VSTEffect::HideUI()
 
 bool VSTEffect::CloseUI()
 {
+#ifdef __WXMAC__
+   wxEventLoop::SetBusyWaiting(false);
+#endif
+
    mParent->RemoveEventHandler(this);
 
    PowerOff();
@@ -2834,6 +2838,10 @@ void VSTEffect::BuildFancy()
    NeedEditIdle(true);
 
    mDialog->Connect(wxEVT_SIZE, wxSizeEventHandler(VSTEffect::OnSize));
+
+#ifdef __WXMAC__
+   wxEventLoop::SetBusyWaiting(true);
+#endif
 
    return;
 }

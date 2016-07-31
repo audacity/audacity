@@ -22,6 +22,11 @@
 #include <wx/button.h>
 #include <wx/control.h>
 #include <wx/dir.h>
+
+#ifdef __WXMAC__
+#include <wx/evtloop.h>
+#endif
+
 #include <wx/filename.h>
 #include <wx/frame.h>
 #include <wx/listctrl.h>
@@ -1792,6 +1797,10 @@ bool AudioUnitEffect::PopulateUI(wxWindow *parent)
       }
 
       mParent->SetMinSize(wxDefaultSize);
+
+#ifdef __WXMAC__
+      wxEventLoop::SetBusyWaiting(true);
+#endif
    }
 
    mParent->PushEventHandler(this);
@@ -1838,6 +1847,10 @@ bool AudioUnitEffect::HideUI()
 
 bool AudioUnitEffect::CloseUI()
 {
+#ifdef __WXMAC__
+   wxEventLoop::SetBusyWaiting(false);
+#endif
+
    mParent->RemoveEventHandler(this);
 
    mUIHost = NULL;
