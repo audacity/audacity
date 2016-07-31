@@ -455,6 +455,11 @@ void SelectionBar::SetTimes(double start, double end, double audio)
    ValuesToControls();
 }
 
+void SelectionBar::SetAudioTime(double audio) {
+  mAudio = audio;
+  ValuesToControls();
+}
+
 double SelectionBar::GetLeftTime()
 {
    return mLeftTime->GetValue();
