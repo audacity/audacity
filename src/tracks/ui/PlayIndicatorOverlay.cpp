@@ -168,9 +168,6 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
          playPos,
          mProject->GetScreenEndTime());
 
-      // This displays the audio time, too...
-      mProject->TP_DisplaySelection();
-
       // BG: Scroll screen if option is set
       // msmeyer: But only if not playing looped or in one-second mode
       // PRL: and not scrolling with play/record head fixed right

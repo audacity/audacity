@@ -4815,7 +4815,6 @@ void AudacityProject::TP_DisplaySelection()
          // Cause ruler redraw anyway, because we may be zooming or scrolling
          mRuler->Refresh();
    }
-
    if (gAudioIO->IsBusy())
       audioTime = gAudioIO->GetStreamTime();
    else {
