@@ -195,7 +195,6 @@ is time to refresh some aspect of the screen.
 #include "prefs/WaveformPrefs.h"
 
 #include "toolbars/ControlToolBar.h"
-#include "toolbars/SelectionBar.h"
 #include "toolbars/ToolsToolBar.h"
 
 // To do:  eliminate this!
@@ -979,8 +978,6 @@ void TrackPanel::OnTimer(wxTimerEvent& )
       p->GetEventHandler()->ProcessEvent(e);
    }
 
-   p->GetSelectionBar()->SetAudioTime(gAudioIO->GetStreamTime());
-   
    DrawOverlays(false);
    mRuler->DrawOverlays(false);
 
