@@ -1799,7 +1799,9 @@ bool AudioUnitEffect::PopulateUI(wxWindow *parent)
       mParent->SetMinSize(wxDefaultSize);
 
 #ifdef __WXMAC__
+#ifdef __WX_EVTLOOP_BUSY_WAITING__
       wxEventLoop::SetBusyWaiting(true);
+#endif
 #endif
    }
 
@@ -1848,7 +1850,9 @@ bool AudioUnitEffect::HideUI()
 bool AudioUnitEffect::CloseUI()
 {
 #ifdef __WXMAC__
+#ifdef __WX_EVTLOOP_BUSY_WAITING__
    wxEventLoop::SetBusyWaiting(false);
+#endif
 #endif
 
    mParent->RemoveEventHandler(this);

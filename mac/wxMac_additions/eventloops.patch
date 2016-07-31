@@ -1,4 +1,4 @@
-From aed0a3ed0df16f04dc39c8366d9c399fcc172009 Mon Sep 17 00:00:00 2001
+From 8c9c17ca704f6c2b1469c861497ac7676dd67347 Mon Sep 17 00:00:00 2001
 From: Paul Licameli <paul.licameli@audacityteam.org>
 Date: Sun, 31 Jul 2016 11:55:29 -0400
 Subject: [PATCH 1/3] Mac modal loops won't hang when other code uses old
@@ -13,20 +13,21 @@ See the Audacity bug report that motivated this change:
 
 http://bugzilla.audacityteam.org/show_bug.cgi?id=1338
 ---
- include/wx/evtloop.h        |  9 +++++++++
+ include/wx/evtloop.h        | 10 ++++++++++
  src/common/evtloopcmn.cpp   | 14 ++++++++++++++
  src/osx/core/evtloop_cf.cpp |  3 ++-
- 3 files changed, 25 insertions(+), 1 deletion(-)
+ 3 files changed, 26 insertions(+), 1 deletion(-)
 
 diff --git a/include/wx/evtloop.h b/include/wx/evtloop.h
-index 1133473..db87431 100644
+index 1133473..4b23610 100644
 --- a/include/wx/evtloop.h
 +++ b/include/wx/evtloop.h
-@@ -177,6 +177,15 @@ public:
+@@ -177,6 +177,16 @@ public:
      // set currently active (running) event loop
      static void SetActive(wxEventLoopBase* loop);
  
 +#ifdef __WXMAC__
++#define __WX_EVTLOOP_BUSY_WAITING__
 +    static bool GetBusyWaiting();
 +
 +    // If the argument is true, cause modal dialogs to busy-wait for events,

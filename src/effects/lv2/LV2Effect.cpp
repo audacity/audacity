@@ -1139,7 +1139,9 @@ bool LV2Effect::HideUI()
 bool LV2Effect::CloseUI()
 {
 #ifdef __WXMAC__
+#ifdef __WX_EVTLOOP_BUSY_WAITING__
    wxEventLoop::SetBusyWaiting(false);
+#endif
 #endif
 
    mParent->RemoveEventHandler(this);
@@ -1571,7 +1573,9 @@ bool LV2Effect::BuildFancy()
    TransferDataToWindow();
 
 #ifdef __WXMAC__
+#ifdef __WX_EVTLOOP_BUSY_WAITING__
    wxEventLoop::SetBusyWaiting(true);
+#endif
 #endif
 
    return true;
