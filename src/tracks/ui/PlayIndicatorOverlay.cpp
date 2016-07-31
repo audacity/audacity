@@ -14,6 +14,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../AColor.h"
 #include "../../AudioIO.h"
 #include "../../Project.h"
+#include "../../toolbars/SelectionBar.h"
 #include "../../TrackPanel.h"
 #include "../../TrackPanelCell.h"
 #include "../../TrackPanelCellIterator.h"
@@ -167,6 +168,8 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
          between_incexc(viewInfo.h,
          playPos,
          mProject->GetScreenEndTime());
+
+      mProject->GetSelectionBar()->SetAudioTime(gAudioIO->GetStreamTime());
 
       // BG: Scroll screen if option is set
       // msmeyer: But only if not playing looped or in one-second mode
