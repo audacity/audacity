@@ -638,7 +638,8 @@ void EffectCompressor::UpdateUI()
      /* i18n-hint: Unless your language has a different convention for ratios,
       * like 8:1, leave as is.*/
      mRatioText->SetLabel(wxString::Format(_("%.0f:1"), mRatio));
-   } else {
+   }
+   else {
      mRatioLabel->SetName(wxString::Format(_("Ratio %.1f to 1"), mRatio));
     /* i18n-hint: Unless your language has a different convention for ratios,
       * like 8:1, leave as is.*/
