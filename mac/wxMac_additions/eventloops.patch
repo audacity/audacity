@@ -20,8 +20,8 @@ http://bugzilla.audacityteam.org/show_bug.cgi?id=1338
 
 diff --git a/include/wx/evtloop.h b/include/wx/evtloop.h
 index 1133473..4b23610 100644
---- a/include/wx/evtloop.h
-+++ b/include/wx/evtloop.h
+--- include/wx/evtloop.h
++++ include/wx/evtloop.h
 @@ -177,6 +177,16 @@ public:
      // set currently active (running) event loop
      static void SetActive(wxEventLoopBase* loop);
@@ -41,8 +41,8 @@ index 1133473..4b23610 100644
      // real implementation of Run()
 diff --git a/src/common/evtloopcmn.cpp b/src/common/evtloopcmn.cpp
 index f7b5138..325fd54 100644
---- a/src/common/evtloopcmn.cpp
-+++ b/src/common/evtloopcmn.cpp
+--- src/common/evtloopcmn.cpp
++++ src/common/evtloopcmn.cpp
 @@ -56,6 +56,20 @@ void wxEventLoopBase::SetActive(wxEventLoopBase* loop)
          wxTheApp->OnEventLoopEnter(loop);
  }
@@ -66,8 +66,8 @@ index f7b5138..325fd54 100644
      // event loops are not recursive, you need to create another loop!
 diff --git a/src/osx/core/evtloop_cf.cpp b/src/osx/core/evtloop_cf.cpp
 index 7e70dec..510af80 100644
---- a/src/osx/core/evtloop_cf.cpp
-+++ b/src/osx/core/evtloop_cf.cpp
+--- src/osx/core/evtloop_cf.cpp
++++ src/osx/core/evtloop_cf.cpp
 @@ -243,7 +243,8 @@ int wxCFEventLoop::DoProcessEvents()
      }
      else
