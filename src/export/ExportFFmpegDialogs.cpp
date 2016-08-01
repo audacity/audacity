@@ -65,7 +65,7 @@
 
 #if defined(USE_FFMPEG)
 
-extern FFmpegLibs *FFmpegLibsInst;
+extern FFmpegLibs *FFmpegLibsInst();
 
 /// This construction defines a enumeration of UI element IDs, and a static
 /// array of their string representations (this way they're always synchronized).
@@ -455,10 +455,10 @@ void ExportFFmpegCustomOptions::OnOpen(wxCommandEvent & WXUNUSED(evt))
 {
    // Show "Locate FFmpeg" dialog
    PickFFmpegLibs();
-   if (!FFmpegLibsInst->ValidLibsLoaded())
+   if (!FFmpegLibsInst()->ValidLibsLoaded())
    {
-      FFmpegLibsInst->FindLibs(NULL);
-      FFmpegLibsInst->FreeLibs();
+      FFmpegLibsInst()->FindLibs(NULL);
+      FFmpegLibsInst()->FreeLibs();
       if (!LoadFFmpeg(true))
       {
          return;
@@ -1309,12 +1309,12 @@ ExportFFmpegOptions::ExportFFmpegOptions(wxWindow *parent)
    SetName(GetTitle());
    ShuttleGui S(this, eIsCreatingFromPrefs);
    PickFFmpegLibs();
-   //FFmpegLibsInst->LoadLibs(NULL,true); //Loaded at startup or from Prefs now
+   //FFmpegLibsInst()->LoadLibs(NULL,true); //Loaded at startup or from Prefs now
 
    mPresets = new FFmpegPresets();
    mPresetNames = mPresets->GetPresetList();
 
-   if (FFmpegLibsInst->ValidLibsLoaded())
+   if (FFmpegLibsInst()->ValidLibsLoaded())
    {
       FetchFormatList();
       FetchCodecList();

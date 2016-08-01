@@ -162,7 +162,7 @@ static const wxChar *exts[] =
 #include "../ondemand/ODDecodeFFmpegTask.h"
 #endif
 
-extern FFmpegLibs *FFmpegLibsInst;
+extern FFmpegLibs *FFmpegLibsInst();
 
 class FFmpegImportFileHandle;
 
@@ -309,7 +309,7 @@ std::unique_ptr<ImportFileHandle> FFmpegImportPlugin::Open(const wxString &filen
       //insdead of usual wxMessageBox()
       bool newsession = false;
       gPrefs->Read(wxT("/NewImportingSession"), &newsession);
-      if (!FFmpegLibsInst->ValidLibsLoaded())
+      if (!FFmpegLibsInst()->ValidLibsLoaded())
       {
          int dontShowDlg;
          gPrefs->Read(wxT("/FFmpeg/NotFoundDontShow"),&dontShowDlg,0);
@@ -321,7 +321,7 @@ std::unique_ptr<ImportFileHandle> FFmpegImportPlugin::Open(const wxString &filen
          }
       }
    }
-   if (!FFmpegLibsInst->ValidLibsLoaded())
+   if (!FFmpegLibsInst()->ValidLibsLoaded())
    {
       return nullptr;
    }
@@ -352,9 +352,10 @@ FFmpegImportFileHandle::FFmpegImportFileHandle(const wxString & name)
 
 bool FFmpegImportFileHandle::Init()
 {
-   //FFmpegLibsInst->LoadLibs(NULL,false); //Loaded at startup or from Prefs now
+   //FFmpegLibsInst()->LoadLibs(NULL,false); //Loaded at startup or from Prefs now
 
-   if (!FFmpegLibsInst->ValidLibsLoaded()) return false;
+   if (!FFmpegLibsInst()->ValidLibsLoaded())
+      return false;
 
    av_log_set_callback(av_log_wx_callback);
 

@@ -30,7 +30,7 @@
 #include "../import/ImportFFmpeg.h"
 
 
-extern FFmpegLibs *FFmpegLibsInst;
+extern FFmpegLibs *FFmpegLibsInst();
 #include "ODDecodeFFmpegTask.h"
 
 
