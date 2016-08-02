@@ -250,6 +250,7 @@ void EffectCompressor::PopulateOrExchange(ShuttleGui & S)
                                                  MAX_Ratio * SCL_Ratio,
                                                  MIN_Ratio * SCL_Ratio);
          mRatioSlider->SetName(_("Ratio"));
+         mRatioSlider->SetPageSize(5);
          mRatioText = S.AddVariableText(wxT("XXXX:1"), true,
                                              wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
