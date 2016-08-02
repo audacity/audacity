@@ -799,10 +799,10 @@ void ToolBar::SetButtonToolTip
          if (!iter->empty()) {
             if (commandManager) {
                auto keyStr = commandManager->GetKeyFromName(*iter);
-               if (keyStr.empty())
-                  keyStr = _("no key");
-               result += wxT(" ");
-               result += Internat::Parenthesize(KeyStringDisplay(keyStr, true));
+               if (!keyStr.empty()) {
+                  result += wxT(" ");
+                  result += Internat::Parenthesize(KeyStringDisplay(keyStr, true));
+               }
             }
          }
          ++iter;
