@@ -121,10 +121,8 @@ private:
 
    TrackPanel * pParent;
    wxFont mFont;
-   LWSlider *mGainCaptured;
-   LWSlider *mPanCaptured;
-   LWSlider *mGain;
-   LWSlider *mPan;
+   std::unique_ptr<LWSlider>
+      mGainCaptured, mPanCaptured, mGain, mPan;
 
    friend class TrackPanel;
 };
@@ -546,7 +544,7 @@ protected:
 
    AdornedRulerPanel *mRuler;
 
-   TrackArtist *mTrackArtist;
+   std::unique_ptr<TrackArtist> mTrackArtist;
 
    class AUDACITY_DLL_API AudacityTimer final : public wxTimer {
    public:
@@ -656,7 +654,7 @@ protected:
    // line up with existing tracks or labels.  mSnapLeft and mSnapRight
    // are the horizontal index of pixels to display user feedback
    // guidelines so the user knows when such snapping is taking place.
-   SnapManager *mSnapManager;
+   std::unique_ptr<SnapManager> mSnapManager;
    wxInt64 mSnapLeft;
    wxInt64 mSnapRight;
    bool mSnapPreferRightEdge;
@@ -769,18 +767,16 @@ protected:
       mStretchCursor, mStretchLeftCursor, mStretchRightCursor;
 #endif
 
-   wxMenu *mWaveTrackMenu {};
+   std::unique_ptr<wxMenu> mWaveTrackMenu;
    size_t mChannelItemsInsertionPoint {};
 
-   wxMenu *mNoteTrackMenu {};
-   wxMenu *mTimeTrackMenu {};
-   wxMenu *mLabelTrackMenu {};
-   wxMenu *mRateMenu {};
-   wxMenu *mFormatMenu {};
-   wxMenu *mLabelTrackInfoMenu {};
+   std::unique_ptr<wxMenu>
+      mNoteTrackMenu, mTimeTrackMenu, mLabelTrackMenu,
+      mRulerWaveformMenu, mRulerSpectrumMenu;
 
-   wxMenu *mRulerWaveformMenu {};
-   wxMenu *mRulerSpectrumMenu {};
+   // These sub-menus are owned by parent menus,
+   // so not unique_ptrs
+   wxMenu *mRateMenu{}, *mFormatMenu{};
 
    Track *mPopupMenuTarget {};
 
