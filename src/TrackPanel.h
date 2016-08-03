@@ -786,7 +786,11 @@ protected:
 
    friend class TrackPanelAx;
 
-   TrackPanelAx *mAx;
+#if wxUSE_ACCESSIBILITY
+   TrackPanelAx *mAx{};
+#else
+   std::unique_ptr<TrackPanelAx> mAx;
+#endif
 
 public:
    TrackPanelAx &GetAx() { return *mAx; }

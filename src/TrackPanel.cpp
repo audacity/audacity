@@ -441,10 +441,16 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    SetName(_("Track Panel"));
    SetBackgroundStyle(wxBG_STYLE_PAINT);
 
-   mAx = new TrackPanelAx( this );
+   {
+      auto pAx = std::make_unique <TrackPanelAx>( this );
 #if wxUSE_ACCESSIBILITY
-   SetAccessible( mAx );
+      // wxWidgets owns the accessible object
+      SetAccessible(mAx = pAx.release());
+#else
+      // wxWidgets doesn not own the object, but we need to retain it
+      mAx = std::move(pAx);
 #endif
+   }
 
    mMouseCapture = IsUncaptured;
    mSlideUpDownOnly = false;
@@ -577,10 +583,6 @@ TrackPanel::~TrackPanel()
    delete mSnapManager;
 
    DeleteMenus();
-
-#if !wxUSE_ACCESSIBILITY
-   delete mAx;
-#endif
 }
 
 void TrackPanel::BuildMenusIfNeeded(void)
