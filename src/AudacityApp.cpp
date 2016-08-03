@@ -316,9 +316,6 @@ void QuitAudacity(bool bForce)
    //temporarilly commented out till it is added to all projects
    //delete Profiler::Instance();
 
-   //DELETE the static lock for audacity projects
-   AudacityProject::DeleteAllProjectsDeleteLock();
-
    //remove our logger
    std::unique_ptr<wxLog>{ wxLog::SetActiveTarget(NULL) }; // DELETE
 

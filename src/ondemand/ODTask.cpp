@@ -128,7 +128,7 @@ void ODTask::DoSome(float amountWork)
       ODManager::Instance()->AddTask(this);
 
       //we did a bit of progress - we should allow a resave.
-      AudacityProject::AllProjectsDeleteLock();
+      ODLocker locker{ &AudacityProject::AllProjectDeleteMutex() };
       for(unsigned i=0; i<gAudacityProjects.GetCount(); i++)
       {
          if(IsTaskAssociatedWithProject(gAudacityProjects[i]))
@@ -138,7 +138,6 @@ void ODTask::DoSome(float amountWork)
             break;
          }
       }
-      AudacityProject::AllProjectsDeleteUnlock();
 
 
 //      printf("%s %i is %f done\n", GetTaskName(),GetTaskNumber(),PercentComplete());
@@ -152,8 +151,8 @@ void ODTask::DoSome(float amountWork)
       //END_TASK_PROFILING("On Demand open an 80 mb wav stereo file");
 
       wxCommandEvent event( EVT_ODTASK_COMPLETE );
-      AudacityProject::AllProjectsDeleteLock();
 
+      ODLocker locker{ &AudacityProject::AllProjectDeleteMutex() };
       for(unsigned i=0; i<gAudacityProjects.GetCount(); i++)
       {
          if(IsTaskAssociatedWithProject(gAudacityProjects[i]))
@@ -165,7 +164,6 @@ void ODTask::DoSome(float amountWork)
             break;
          }
       }
-      AudacityProject::AllProjectsDeleteUnlock();
 
 //      printf("%s %i complete\n", GetTaskName(),GetTaskNumber());
    }
