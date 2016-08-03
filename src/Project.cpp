@@ -842,8 +842,6 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    // MM: We don't need to Ref() here because it start with refcount=1
    mDirManager = new DirManager();
 
-   // Create track list
-   mTracks = new TrackList();
    mLastSavedTracks = NULL;
 
    // Register for tracklist updates
@@ -965,7 +963,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
                                              TrackPanelID,
                                              wxDefaultPosition,
                                              wxDefaultSize,
-                                             mTracks,
+                                             GetTracks(),
                                              &mViewInfo,
                                              this,
                                              mRuler);
@@ -1093,7 +1091,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
 #endif
    mIconized = false;
 
-   mTrackFactory = new TrackFactory(mDirManager, &mViewInfo);
+   mTrackFactory.reset(safenew TrackFactory{ mDirManager, &mViewInfo });
 
    int widths[] = {0, GetControlToolBar()->WidthForStatusBar(mStatusBar), -1, 150};
    mStatusBar->SetStatusWidths(4, widths);
@@ -1103,7 +1101,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    GetControlToolBar()->UpdateStatusBar(this);
    mLastStatusUpdateTime = ::wxGetUTCTime();
 
-   mTimer = new wxTimer(this, AudacityProjectTimerID);
+   mTimer = std::make_unique<wxTimer>(this, AudacityProjectTimerID);
    mTimer->Start(200);
 
 #if wxUSE_DRAG_AND_DROP
@@ -1217,9 +1215,9 @@ wxDialog *AudacityProject::GetMissingAliasFileDialog()
 void AudacityProject::RedrawProject(const bool bForceWaveTracks /*= false*/)
 {
    FixScrollbars();
-   if (bForceWaveTracks && mTracks)
+   if (bForceWaveTracks && GetTracks())
    {
-      TrackListIterator iter(mTracks);
+      TrackListIterator iter(GetTracks());
       Track* pTrack = iter.First();
       while (pTrack)
       {
@@ -1277,7 +1275,7 @@ DirManager *AudacityProject::GetDirManager()
 
 TrackFactory *AudacityProject::GetTrackFactory()
 {
-   return mTrackFactory;
+   return mTrackFactory.get();
 }
 
 AdornedRulerPanel *AudacityProject::GetRulerPanel()
@@ -1420,7 +1418,7 @@ double AudacityProject::SSBL_GetRate() const
    // Return maximum of project rate and all track rates.
    double rate = mRate;
 
-   TrackListOfKindIterator iterWaveTrack(Track::Wave, mTracks);
+   TrackListOfKindIterator iterWaveTrack(Track::Wave, mTracks.get());
    WaveTrack *pWaveTrack = static_cast<WaveTrack*>(iterWaveTrack.First());
    while (pWaveTrack)
    {
@@ -1726,7 +1724,7 @@ bool AudacityProject::TP_ScrollUpDown(int delta)
 
 void AudacityProject::FixScrollbars()
 {
-   if(!mTracks)
+   if (!GetTracks())
       return;
 
    bool refresh = false;
@@ -1877,8 +1875,8 @@ void AudacityProject::FixScrollbars()
 
 Track *AudacityProject::GetFirstVisible()
 {
-   if (!mViewInfo.track && mTracks) {
-      TrackListIterator iter(mTracks);
+   if (!mViewInfo.track && GetTracks()) {
+      TrackListIterator iter(GetTracks());
       for (Track *t = iter.First(); t; t = iter.Next()) {
          int y = t->GetY();
          int h = t->GetHeight();
@@ -1894,7 +1892,7 @@ Track *AudacityProject::GetFirstVisible()
 
 void AudacityProject::UpdateFirstVisible()
 {
-   if (!mViewInfo.track || !mTracks) {
+   if (!mViewInfo.track || !GetTracks()) {
       return;
    }
 
@@ -2349,8 +2347,7 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
    ModuleManager::Get().Dispatch(ProjectClosing);
 
    // Stop the timer since there's no need to update anything anymore
-   delete mTimer;
-   mTimer = NULL;
+   mTimer.reset();
 
    // The project is now either saved or the user doesn't want to save it,
    // so there's no need to keep auto save info around anymore
@@ -2390,7 +2387,7 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
    // in memory.  After it's locked, DELETE the data structure so that
    // there's no memory leak.
    if (mLastSavedTracks) {
-      TrackListIterator iter(mLastSavedTracks);
+      TrackListIterator iter(mLastSavedTracks.get());
       Track *t = iter.First();
       while (t) {
          if (t->GetKind() == Track::Wave)
@@ -2398,9 +2395,8 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
          t = iter.Next();
       }
 
-      mLastSavedTracks->Clear();
-      delete mLastSavedTracks;
-      mLastSavedTracks = NULL;
+      mLastSavedTracks->Clear(); // sends an event
+      mLastSavedTracks.reset();
    }
 
    // Get rid of the history window
@@ -2429,13 +2425,11 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
 
    DestroyChildren();
 
-   delete mTrackFactory;
-   mTrackFactory = NULL;
+   mTrackFactory.reset();
 
    mTags.reset();
 
-   delete mImportXMLTagHandler;
-   mImportXMLTagHandler = NULL;
+   mImportXMLTagHandler.reset();
 
    // Unregister for tracklist updates
    mTracks->Disconnect(EVT_TRACKLIST_UPDATED,
@@ -2445,8 +2439,7 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
 
    // Delete all the tracks to free up memory and DirManager references.
    mTracks->Clear();
-   delete mTracks;
-   mTracks = NULL;
+   mTracks.reset();
 
    // This must be done before the following Deref() since it holds
    // references to the DirManager.
@@ -2850,7 +2843,7 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
       bool err = false;
       Track *t;
       TrackListIterator iter(GetTracks());
-      mLastSavedTracks = new TrackList();
+      mLastSavedTracks = std::make_unique<TrackList>();
 
       t = iter.First();
       while (t) {
@@ -2998,11 +2991,7 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
    }
 
    // Clean up now unused recording recovery handler if any
-   if (mRecordingRecoveryHandler)
-   {
-      delete mRecordingRecoveryHandler;
-      mRecordingRecoveryHandler = NULL;
-   }
+   mRecordingRecoveryHandler.reset();
 
    if (!bParseSuccess)
       return; // No need to do further processing if parse failed.
@@ -3015,7 +3004,7 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
    if(ODManager::HasLoadedODFlag())
    {
       Track *tr;
-      TrackListIterator triter(mTracks);
+      TrackListIterator triter(GetTracks());
       tr = triter.First();
 
       std::vector<ODTask*> newTasks;
@@ -3318,14 +3307,14 @@ XMLTagHandler *AudacityProject::HandleXMLChild(const wxChar *tag)
 
    if (!wxStrcmp(tag, wxT("recordingrecovery"))) {
       if (!mRecordingRecoveryHandler)
-         mRecordingRecoveryHandler = new RecordingRecoveryHandler(this);
-      return mRecordingRecoveryHandler;
+         mRecordingRecoveryHandler = std::make_unique<RecordingRecoveryHandler>(this);
+      return mRecordingRecoveryHandler.get();
    }
 
    if (!wxStrcmp(tag, wxT("import"))) {
-      if (mImportXMLTagHandler == NULL)
-         mImportXMLTagHandler = new ImportXMLTagHandler(this);
-      return mImportXMLTagHandler;
+      if (!mImportXMLTagHandler)
+         mImportXMLTagHandler = std::make_unique<ImportXMLTagHandler>(this);
+      return mImportXMLTagHandler.get();
    }
 
    return NULL;
@@ -3392,7 +3381,7 @@ void AudacityProject::WriteXML(XMLWriter &xmlFile)
 
    Track *t;
    WaveTrack* pWaveTrack;
-   TrackListIterator iter(mTracks);
+   TrackListIterator iter(GetTracks());
    t = iter.First();
    unsigned int ndx = 0;
    while (t) {
@@ -3491,7 +3480,7 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
       wxASSERT(fromSaveAs);
    else
    {
-      TrackListIterator iter(mTracks);
+      TrackListIterator iter(GetTracks());
       bool bHasTracks = (iter.First() != NULL);
       if (!bHasTracks)
       {
@@ -3582,7 +3571,7 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
          std::vector<movable_ptr<WaveTrack::Locker>> lockers;
          if (mLastSavedTracks && !overwrite) {
             lockers.reserve(mLastSavedTracks->size());
-            TrackListIterator iter(mLastSavedTracks);
+            TrackListIterator iter(mLastSavedTracks.get());
             Track *t = iter.First();
             while (t) {
                if (t->GetKind() == Track::Wave)
@@ -3666,14 +3655,11 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
          mDirManager->RemoveOrphanBlockfiles();
       }
 
-      if (mLastSavedTracks) {
+      if (mLastSavedTracks)
          mLastSavedTracks->Clear();
-         delete mLastSavedTracks;
-      }
+      mLastSavedTracks = std::make_unique<TrackList>();
 
-      mLastSavedTracks = new TrackList();
-
-      TrackListIterator iter(mTracks);
+      TrackListIterator iter(GetTracks());
       Track *t = iter.First();
       while (t) {
          mLastSavedTracks->Add(t->Duplicate());
@@ -3710,7 +3696,7 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
       // Copy the tracks because we're going to do some state changes before exporting.
       Track* pTrack;
       WaveTrack* pWaveTrack;
-      TrackListOfKindIterator iter(Track::Wave, mTracks);
+      TrackListOfKindIterator iter(Track::Wave, GetTracks());
       unsigned int numWaveTracks = 0;
 
       TrackList pSavedTrackList;
@@ -3913,7 +3899,7 @@ bool AudacityProject::Import(const wxString &fileName, WaveTrackArray* pTrackArr
    TempTags tempTags(mTags);
 
    bool success = Importer::Get().Import(fileName,
-                                            mTrackFactory,
+                                            GetTrackFactory(),
                                             newTracks,
                                             mTags.get(),
                                             errorMessage);
@@ -4099,18 +4085,17 @@ For an audio file that will open in other apps, use 'Export'.\n"),
 
 void AudacityProject::InitialState()
 {
-   if (mImportXMLTagHandler != NULL) {
+   if (mImportXMLTagHandler) {
       // We processed an <import> tag, so save it as a normal project, with no <import> tags.
       this->Save();
 
       // Shouldn't need it any more.
-      delete mImportXMLTagHandler;
-      mImportXMLTagHandler = NULL;
+      mImportXMLTagHandler.reset();
    }
 
    GetUndoManager()->ClearStates();
 
-   GetUndoManager()->PushState(mTracks, mViewInfo.selectedRegion, mTags,
+   GetUndoManager()->PushState(GetTracks(), mViewInfo.selectedRegion, mTags,
                           _("Created new project"), wxT(""));
 
    GetUndoManager()->StateSaved();
@@ -4134,7 +4119,7 @@ void AudacityProject::PushState(const wxString &desc,
                                 const wxString &shortDesc,
                                 UndoPush flags )
 {
-   GetUndoManager()->PushState(mTracks, mViewInfo.selectedRegion, mTags,
+   GetUndoManager()->PushState(GetTracks(), mViewInfo.selectedRegion, mTags,
                           desc, shortDesc, flags);
 
    mDirty = true;
@@ -4170,7 +4155,7 @@ void AudacityProject::RollbackState()
 
 void AudacityProject::ModifyState(bool bWantsAutoSave)
 {
-   GetUndoManager()->ModifyState(mTracks, mViewInfo.selectedRegion, mTags);
+   GetUndoManager()->ModifyState(GetTracks(), mViewInfo.selectedRegion, mTags);
    if (bWantsAutoSave)
       AutoSave();
 }
@@ -4252,7 +4237,7 @@ void AudacityProject::UpdateLyrics()
    if (!mLyricsWindow)
       return;
 
-   TrackListOfKindIterator iter(Track::Label, mTracks);
+   TrackListOfKindIterator iter(Track::Label, GetTracks());
    LabelTrack* pLabelTrack = (LabelTrack*)(iter.First()); // Lyrics come from only the first label track.
    if (!pLabelTrack)
       return;
@@ -4320,7 +4305,7 @@ void AudacityProject::ClearClipboard()
 
 void AudacityProject::Clear()
 {
-   TrackListIterator iter(mTracks);
+   TrackListIterator iter(GetTracks());
 
    Track *n = iter.First();
 
@@ -4345,7 +4330,7 @@ void AudacityProject::Clear()
 
 void AudacityProject::SelectNone()
 {
-   TrackListIterator iter(mTracks);
+   TrackListIterator iter(GetTracks());
    Track *t = iter.First();
    while (t) {
       t->SetSelected(false);
@@ -4614,7 +4599,7 @@ void AudacityProject::OnTimer(wxTimerEvent& WXUNUSED(event))
 //regions memory need to be deleted by the caller
 void AudacityProject::GetRegionsByLabel( Regions &regions )
 {
-   TrackListIterator iter( mTracks );
+   TrackListIterator iter(GetTracks());
    Track *n;
 
    //determine labelled regions
@@ -4668,7 +4653,7 @@ void AudacityProject::EditByLabel( EditFunction action,
    if( regions.size() == 0 )
       return;
 
-   TrackListIterator iter( mTracks );
+   TrackListIterator iter(GetTracks());
    Track *n;
    bool allTracks = true;
 
@@ -4714,7 +4699,7 @@ void AudacityProject::EditClipboardByLabel( EditDestFunction action )
    if( regions.size() == 0 )
       return;
 
-   TrackListIterator iter( mTracks );
+   TrackListIterator iter(GetTracks());
    Track *n;
    bool allTracks = true;
 
@@ -5195,7 +5180,7 @@ void AudacityProject::HandleTrackMute(Track *t, const bool exclusive)
    // "exclusive" mute means mute the chosen track and unmute all others.
    if (exclusive)
    {
-      TrackListIterator iter(mTracks);
+      TrackListIterator iter(GetTracks());
       Track *i = iter.First();
       while (i) {
          if (i == t) {
@@ -5219,7 +5204,7 @@ void AudacityProject::HandleTrackMute(Track *t, const bool exclusive)
       if(t->GetLinked())   // set mute the same on both, if a pair
       {
          bool muted = t->GetMute();
-         TrackListIterator iter(mTracks);
+         TrackListIterator iter(GetTracks());
          Track *i = iter.First();
          while (i != t) {  // search for this track
             i = iter.Next();
@@ -5230,7 +5215,7 @@ void AudacityProject::HandleTrackMute(Track *t, const bool exclusive)
 
       if (IsSoloSimple() || IsSoloNone())
       {
-         TrackListIterator iter(mTracks);
+         TrackListIterator iter(GetTracks());
          Track *i = iter.First();
          int nPlaying=0;
 
@@ -5273,7 +5258,7 @@ void AudacityProject::HandleTrackSolo(Track *t, const bool alternate)
       if(t->GetLinked())
       {
          bool soloed = t->GetSolo();
-         TrackListIterator iter(mTracks);
+         TrackListIterator iter(GetTracks());
          Track *i = iter.First();
          while (i != t) {  // search for this track
             i = iter.Next();
@@ -5286,7 +5271,7 @@ void AudacityProject::HandleTrackSolo(Track *t, const bool alternate)
    {
       // Normal click solo this track only, mute everything else.
       // OR unmute and unsolo everything.
-      TrackListIterator iter(mTracks);
+      TrackListIterator iter(GetTracks());
       Track *i = iter.First();
       bool bWasSolo = t->GetSolo();
       while (i) {
@@ -5417,7 +5402,7 @@ bool AudacityProject::SaveFromTimerRecording(wxFileName fnFile) {
 bool AudacityProject::ProjectHasTracks() {
    // These two lines test for an 'empty' project.
    // of course it could still have a history at this stage.
-   TrackListIterator iter2(mTracks);
+   TrackListIterator iter2(GetTracks());
    bool bHasTracks = (iter2.First() != NULL);
    return bHasTracks;
 }

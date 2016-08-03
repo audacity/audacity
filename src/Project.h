@@ -166,7 +166,7 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
 
    AudioIOStartStreamOptions GetDefaultPlayOptions();
 
-   TrackList *GetTracks() { return mTracks; }
+   TrackList *GetTracks() { return mTracks.get(); }
    UndoManager *GetUndoManager() { return mUndoManager.get(); }
 
    sampleFormat GetDefaultFormat() { return mDefaultFormat; }
@@ -562,14 +562,14 @@ public:
    std::shared_ptr<Tags> mTags;
 
    // List of tracks and display info
-   TrackList *mTracks;
+   std::unique_ptr<TrackList> mTracks{ std::make_unique<TrackList>() };
 
    int mSnapTo;
    wxString mSelectionFormat;
    wxString mFrequencySelectionFormatName;
    wxString mBandwidthSelectionFormatName;
 
-   TrackList *mLastSavedTracks;
+   std::unique_ptr<TrackList> mLastSavedTracks;
 
    // Clipboard (static because it is shared by all projects)
    static std::unique_ptr<TrackList> msClipboard;
@@ -592,7 +592,7 @@ public:
 
    // Window elements
 
-   wxTimer *mTimer;
+   std::unique_ptr<wxTimer> mTimer;
    long mLastStatusUpdateTime;
 
    wxStatusBar *mStatusBar;
@@ -600,7 +600,7 @@ public:
    AdornedRulerPanel *mRuler{};
    wxPanel *mTopPanel{};
    TrackPanel *mTrackPanel{};
-   TrackFactory *mTrackFactory{};
+   std::unique_ptr<TrackFactory> mTrackFactory{};
    wxPanel * mMainPanel;
    wxScrollBar *mHsbar;
    wxScrollBar *mVsbar;
@@ -664,7 +664,7 @@ public:
    // See AudacityProject::OnActivate() for an explanation of this.
    wxWindow *mLastFocusedWindow{};
 
-   ImportXMLTagHandler* mImportXMLTagHandler{};
+   std::unique_ptr<ImportXMLTagHandler> mImportXMLTagHandler;
 
    // Last auto-save file name and path (empty if none)
    wxString mAutoSaveFileName;
@@ -679,7 +679,7 @@ public:
    wxString mRecoveryAutoSaveDataDir;
 
    // The handler that handles recovery of <recordingrecovery> tags
-   RecordingRecoveryHandler* mRecordingRecoveryHandler{};
+   std::unique_ptr<RecordingRecoveryHandler> mRecordingRecoveryHandler;
 
    // Dependencies have been imported and a warning should be shown on save
    bool mImportedDependencies{ false };
