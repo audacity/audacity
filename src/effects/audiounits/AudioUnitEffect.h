@@ -14,6 +14,8 @@
 
 #if USE_AUDIO_UNITS
 
+#include "../../MemoryX.h"
+#include <vector>
 #include <wx/dialog.h>
 
 #include <AudioToolbox/AudioUnitUtilities.h>
@@ -31,7 +33,7 @@
 
 class AudioUnitEffect;
 
-WX_DEFINE_ARRAY_PTR(AudioUnitEffect *, AudioUnitEffectArray);
+using AudioUnitEffectArray = std::vector<movable_ptr<AudioUnitEffect>>;
 
 class AudioUnitEffectExportDialog;
 class AudioUnitEffectImportDialog;

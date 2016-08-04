@@ -124,7 +124,7 @@ void LV2EffectMeter::OnErase(wxEraseEvent & WXUNUSED(evt))
 
 void LV2EffectMeter::OnPaint(wxPaintEvent & WXUNUSED(evt))
 {
-   wxDC *dc = wxAutoBufferedPaintDCFactory(this);
+   std::unique_ptr<wxDC> dc{ wxAutoBufferedPaintDCFactory(this) };
 
    // Cache some metrics
    wxRect r = GetClientRect();
@@ -153,8 +153,6 @@ void LV2EffectMeter::OnPaint(wxPaintEvent & WXUNUSED(evt))
    dc->DrawRectangle(x, y, (w * (val / fabs(mCtrl.mMax - mCtrl.mMin))), h);
 
    mLastValue = mCtrl.mVal;
-
-   delete dc;
 }
 
 void LV2EffectMeter::OnSize(wxSizeEvent & WXUNUSED(evt))
@@ -1461,8 +1459,10 @@ bool LV2Effect::BuildFancy()
    }
 
    // Use a panel to host the plugins GUI
-   mContainer = safenew wxPanelWrapper(mParent, wxID_ANY);
-   if (!mContainer)
+   // container is owned by mParent, but we may destroy it if there are
+   // any errors before completing the build of UI.
+   auto container = std::make_unique<wxPanelWrapper>(mParent, wxID_ANY);
+   if (!container)
    {
       lilv_uis_free(uis);
       return false;
@@ -1476,30 +1476,29 @@ bool LV2Effect::BuildFancy()
          auto hs = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
          if (hs)
          {
-            si = hs->Add(mContainer, 1, wxCENTER | wxEXPAND);
+            si = hs->Add(container.get(), 1, wxCENTER | wxEXPAND);
             vs->Add(hs.release(), 0, wxCENTER);
          }
       }
 
       if (!si)
       {
-         delete mContainer;
          lilv_uis_free(uis);
          return false;
       }
 
 #if defined(__WXGTK__)
       // Make sure the parent has a window
-      if (!gtk_widget_get_window(GTK_WIDGET(mContainer->m_wxwindow)))
+      if (!gtk_widget_get_window(GTK_WIDGET(container->m_wxwindow)))
       {
-         gtk_widget_realize(GTK_WIDGET(mContainer->m_wxwindow));
+         gtk_widget_realize(GTK_WIDGET(container->m_wxwindow));
       }
 
-      mParentFeature->data = GTK_WIDGET(mContainer->GetHandle());
+      mParentFeature->data = GTK_WIDGET(container->GetHandle());
 #elif defined(__WXMSW__)
-      mParentFeature->data = mContainer->GetHandle();
+      mParentFeature->data = container->GetHandle();
 #elif defined(__WXMAC__)
-      mParentFeature->data = mContainer->GetHandle();
+      mParentFeature->data = container->GetHandle();
 #endif
 
       mInstanceAccessFeature->data = lilv_instance_get_handle(mMaster);
@@ -1509,7 +1508,6 @@ bool LV2Effect::BuildFancy()
       mSuilHost = suil_host_new(LV2Effect::suil_write_func, NULL, NULL, NULL);
       if (!mSuilHost)
       {
-         delete mContainer;
          lilv_uis_free(uis);
          return false;
       }
@@ -1532,7 +1530,6 @@ bool LV2Effect::BuildFancy()
          suil_host_free(mSuilHost);
          mSuilHost = NULL;
 
-         delete mContainer;
          return false;
       }
 
@@ -1545,7 +1542,7 @@ bool LV2Effect::BuildFancy()
       gtk_widget_set_size_request(widget, 1, 1);
       gtk_widget_set_size_request(widget, sz.width, sz.height);
 
-      wxPizza *pizza = WX_PIZZA(mContainer->m_wxwindow);
+      wxPizza *pizza = WX_PIZZA(container->m_wxwindow);
       pizza->put(widget,
          0, //gtk_pizza_get_xoffset(pizza),
          0, //gtk_pizza_get_yoffset(pizza),
@@ -1565,6 +1562,8 @@ bool LV2Effect::BuildFancy()
 #endif
 
       mParent->SetSizerAndFit(vs.release());
+      // mParent will guarantee release of the container now.
+      container.release();
    }
 
    mIdleFeature = (const LV2UI_Idle_Interface *)

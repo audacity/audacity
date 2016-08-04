@@ -35,7 +35,7 @@ class LabelTrack;
 class VampEffect final : public Effect
 {
 public:
-   VampEffect(Vamp::Plugin *plugin,
+   VampEffect(std::unique_ptr<Vamp::Plugin> &&plugin,
               const wxString & path,
               int output,
               bool hasParameters);
@@ -85,7 +85,7 @@ private:
    void OnTextCtrl(wxCommandEvent & evt);
 
 private:
-   Vamp::Plugin *mPlugin;
+   std::unique_ptr<Vamp::Plugin> mPlugin;
    wxString mPath;
    int mOutput;
    bool mHasParameters;

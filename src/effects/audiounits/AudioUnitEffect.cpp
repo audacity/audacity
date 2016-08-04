@@ -1346,36 +1346,28 @@ bool AudioUnitEffect::RealtimeInitialize()
 
 bool AudioUnitEffect::RealtimeAddProcessor(int numChannels, float sampleRate)
 {
-   AudioUnitEffect *slave = new AudioUnitEffect(mPath, mName, mComponent, this);
+   auto slave = make_movable<AudioUnitEffect>(mPath, mName, mComponent, this);
    if (!slave->SetHost(NULL))
-   {
-      delete slave;
       return false;
-   }
 
    slave->SetBlockSize(mBlockSize);
    slave->SetChannelCount(numChannels);
    slave->SetSampleRate(sampleRate);
 
    if (!CopyParameters(mUnit, slave->mUnit))
-   {
-      delete slave;
       return false;
-   }
 
-   mSlaves.Add(slave);
+   auto pSlave = slave.get();
+   mSlaves.push_back(std::move(slave));
 
-   return slave->ProcessInitialize(0);
+   return pSlave->ProcessInitialize(0);
 }
 
 bool AudioUnitEffect::RealtimeFinalize()
 {
-   for (size_t i = 0, cnt = mSlaves.GetCount(); i < cnt; i++)
-   {
+   for (size_t i = 0, cnt = mSlaves.size(); i < cnt; i++)
       mSlaves[i]->ProcessFinalize();
-      delete mSlaves[i];
-   }
-   mSlaves.Clear();
+   mSlaves.clear();
 
    for (int i = 0; i < mAudioIns; i++)
    {
@@ -2184,10 +2176,8 @@ void AudioUnitEffect::EventListener(const AudioUnitEvent *inEvent,
    else
    {
       // We're the master, so propogate 
-      for (size_t i = 0, cnt = mSlaves.GetCount(); i < cnt; i++)
-      {
+      for (size_t i = 0, cnt = mSlaves.size(); i < cnt; i++)
          mSlaves[i]->EventListener(inEvent, inParameterValue);
-      }
    }
 }
                            
