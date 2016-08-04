@@ -219,13 +219,12 @@ private:
 
    EQCurveArray mCurves;
 
-   Envelope *mLogEnvelope;
-   Envelope *mLinEnvelope;
+   std::unique_ptr<Envelope> mLogEnvelope, mLinEnvelope;
    Envelope *mEnvelope;
 
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
    bool mBench;
-   EffectEqualization48x *mEffectEqualization48x;
+   std::unique_ptr<EffectEqualization48x> mEffectEqualization48x;
    friend class EffectEqualization48x;
 #endif
 
@@ -312,7 +311,7 @@ private:
 
    bool mRecalcRequired;
 
-   wxBitmap *mBitmap;
+   std::unique_ptr<wxBitmap> mBitmap;
    wxRect mEnvRect;
    int mWidth;
    int mHeight;

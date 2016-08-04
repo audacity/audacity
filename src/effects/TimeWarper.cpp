@@ -15,8 +15,10 @@ Geometric TimeWarper classes
 
 *//*******************************************************************/
 
-#include <wx/string.h>
+#include "../Audacity.h"
 #include "TimeWarper.h"
+
+#include <wx/string.h>
 #include <math.h>
 
 double IdentityTimeWarper::Warp(double originalTime) const

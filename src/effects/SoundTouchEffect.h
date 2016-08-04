@@ -50,7 +50,7 @@ public:
 #endif
 
 protected:
-   SoundTouch *mSoundTouch;
+   std::unique_ptr<SoundTouch> mSoundTouch;
    double mCurT0;
    double mCurT1;
 

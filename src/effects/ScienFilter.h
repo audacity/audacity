@@ -163,7 +163,7 @@ private:
    double mDbMin;
    double mDbMax;
 
-   wxBitmap *mBitmap;
+   std::unique_ptr<wxBitmap> mBitmap;
    wxRect mEnvRect;
    int mWidth;
    int mHeight;

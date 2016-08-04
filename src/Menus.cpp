@@ -6246,7 +6246,10 @@ void AudacityProject::OnScoreAlign()
    // that it can be delted by CloseScoreAlignDialog() either here or
    // if the program is quit by the user while the dialog is up.
    ScoreAlignParams params;
-   ScoreAlignDialog *dlog = new ScoreAlignDialog(NULL, params);
+
+   // safe because the class maintains a global resource pointer
+   safenew ScoreAlignDialog(params);
+
    CloseScoreAlignDialog();
 
    if (params.mStatus != wxID_OK) return;

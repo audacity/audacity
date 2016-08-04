@@ -455,8 +455,8 @@ bool EffectChangeSpeed::TransferDataFromWindow()
 // the region are shifted along according to how the region size changed.
 bool EffectChangeSpeed::ProcessLabelTrack(Track *t)
 {
-   SetTimeWarper(new RegionTimeWarper(mT0, mT1,
-                     new LinearTimeWarper(mT0, mT0,
+   SetTimeWarper(std::make_unique<RegionTimeWarper>(mT0, mT1,
+                     std::make_unique<LinearTimeWarper>(mT0, mT0,
                          mT1, mT0 + (mT1-mT0)*mFactor)));
    LabelTrack *lt = (LabelTrack*)t;
    if (lt == NULL) return false;
@@ -551,7 +551,7 @@ bool EffectChangeSpeed::ProcessOne(WaveTrack * track,
    double newLength = outputTrack->GetEndTime();
    if (bResult)
    {
-      SetTimeWarper(new LinearTimeWarper(mCurT0, mCurT0, mCurT1, mCurT0 + newLength));
+      SetTimeWarper(std::make_unique<LinearTimeWarper>(mCurT0, mCurT0, mCurT1, mCurT0 + newLength));
       bResult = track->ClearAndPaste(mCurT0, mCurT1, outputTrack.get(), true, false, GetTimeWarper());
    }
 

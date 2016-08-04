@@ -423,9 +423,8 @@ void EffectRack::OnRemove(wxCommandEvent & evt)
 
    for (int i = 0; i < NUMCOLS; i++)
    {
-      wxWindow *w = mMainSizer->GetItem(index)->GetWindow();
+      std::unique_ptr<wxWindow> w {mMainSizer->GetItem(index)->GetWindow()};
       mMainSizer->Detach(index);
-      delete w;
    }
 
    mMainSizer->Layout();

@@ -141,11 +141,6 @@ Effect::~Effect()
       delete mOutputTracks;
    }
 
-   if (mWarper != NULL)
-   {
-      delete mWarper;
-   }
-
    if (mUIDialog)
    {
       mUIDialog->Close();
@@ -2055,22 +2050,16 @@ void Effect::GetSamples(WaveTrack *track, sampleCount *start, sampleCount *len)
    }
 }
 
-void Effect::SetTimeWarper(TimeWarper *warper)
+void Effect::SetTimeWarper(std::unique_ptr<TimeWarper> &&warper)
 {
-   if (mWarper != NULL)
-   {
-      delete mWarper;
-      mWarper = NULL;
-   }
-
-   wxASSERT(warper != NULL);
-   mWarper = warper;
+   wxASSERT(warper);
+   mWarper = std::move(warper);
 }
 
 TimeWarper *Effect::GetTimeWarper()
 {
-   wxASSERT(mWarper != NULL);
-   return mWarper;
+   wxASSERT(mWarper);
+   return mWarper.get();
 }
 
 //
