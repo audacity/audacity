@@ -326,7 +326,8 @@ writing audio.
 using std::max;
 using std::min;
 
-AudioIO *gAudioIO;
+std::unique_ptr<AudioIO> ugAudioIO;
+AudioIO *gAudioIO{};
 
 DEFINE_EVENT_TYPE(EVT_AUDIOIO_PLAYBACK);
 DEFINE_EVENT_TYPE(EVT_AUDIOIO_CAPTURE);
@@ -913,7 +914,8 @@ class MidiThread final : public AudioThread {
 
 void InitAudioIO()
 {
-   gAudioIO = new AudioIO();
+   ugAudioIO.reset(safenew AudioIO());
+   gAudioIO = ugAudioIO.get();
    gAudioIO->mThread->Run();
 #ifdef EXPERIMENTAL_MIDI_OUT
    gAudioIO->mMidiThread->Run();
@@ -939,11 +941,6 @@ void InitAudioIO()
    }
 
    gPrefs->Flush();
-}
-
-void DeinitAudioIO()
-{
-   delete gAudioIO;
 }
 
 wxString DeviceName(const PaDeviceInfo* info)
@@ -1046,12 +1043,12 @@ AudioIO::AudioIO()
 
       // Same logic for PortMidi as described above for PortAudio
    }
-   mMidiThread = new MidiThread();
+   mMidiThread = std::make_unique<MidiThread>();
    mMidiThread->Create();
 #endif
 
    // Start thread
-   mThread = new AudioThread();
+   mThread = std::make_unique<AudioThread>();
    mThread->Create();
 
 #if defined(USE_PORTMIXER)
@@ -1092,8 +1089,12 @@ AudioIO::~AudioIO()
 
 #ifdef EXPERIMENTAL_MIDI_OUT
    Pm_Terminate();
+
+   /* Delete is a "graceful" way to stop the thread.
+   (Kill is the not-graceful way.) */
+
    mMidiThread->Delete();
-   delete mMidiThread;
+   mMidiThread.reset();
 #endif
 
    /* Delete is a "graceful" way to stop the thread.
@@ -1103,13 +1104,9 @@ AudioIO::~AudioIO()
    // wxTheApp->Yield();
 
    mThread->Delete();
+   mThread.reset();
 
-   delete mThread;
-
-#ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-   delete mScrubQueue;
-#endif
-
+   gAudioIO = nullptr;
 }
 
 void AudioIO::SetMixer(int inputSource)
@@ -1974,19 +1971,18 @@ int AudioIO::StartStream(const WaveTrackArray &playbackTracks,
    }
 
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-   delete mScrubQueue;
    if (scrubbing)
    {
       const auto &scrubOptions = *options.pScrubbingOptions;
       mScrubQueue =
-         new ScrubQueue(mT0, mT1, scrubOptions.startClockTimeMillis,
+         std::make_unique<ScrubQueue>(mT0, mT1, scrubOptions.startClockTimeMillis,
             sampleRate, 2 * scrubOptions.minStutter,
             scrubOptions);
       mScrubDuration = 0;
       mSilentScrub = false;
    }
    else
-      mScrubQueue = NULL;
+      mScrubQueue.reset();
 #endif
 
    // We signal the audio thread to call FillBuffers, to prime the RingBuffers
@@ -2117,11 +2113,7 @@ void AudioIO::StartStreamCleanup(bool bOnlyBuffers)
    }
 
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-   if (mScrubQueue)
-   {
-      delete mScrubQueue;
-      mScrubQueue = 0;
-   }
+   mScrubQueue.reset();
 #endif
 
 
@@ -2146,7 +2138,7 @@ void AudioIO::PrepareMidiIterator(bool send, double offset)
    int nTracks = mMidiPlaybackTracks.size();
    // instead of initializing with an Alg_seq, we use begin_seq()
    // below to add ALL Alg_seq's.
-   mIterator = new Alg_iterator(NULL, false);
+   mIterator = std::make_unique<Alg_iterator>(nullptr, false);
    // Iterator not yet intialized, must add each track...
    for (i = 0; i < nTracks; i++) {
       NoteTrack *t = mMidiPlaybackTracks[i];
@@ -2405,8 +2397,7 @@ void AudioIO::StopStream()
          seq->set_in_use(false);
       }
 
-      delete mIterator;
-      mIterator = NULL; // just in case someone tries to reference it
+      mIterator.reset(); // just in case someone tries to reference it
       mMidiPlaySpeed = 1.0;
    }
 #endif
@@ -2546,11 +2537,7 @@ void AudioIO::StopStream()
    mNumPlaybackChannels = 0;
 
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-   if (mScrubQueue)
-   {
-      delete mScrubQueue;
-      mScrubQueue = 0;
-   }
+   mScrubQueue.reset();
 #endif
 
    if (mListener) {
@@ -3858,8 +3845,7 @@ void AudioIO::GetNextEvent()
       mNextEventTime = mT1 + mMidiLoopOffset - ALG_EPS;
       mNextIsNoteOn = true; // do not look at duration
       mIterator->end();
-      delete mIterator;
-      mIterator = NULL; // debugging aid
+      mIterator.reset(); // debugging aid
    }
 }
 

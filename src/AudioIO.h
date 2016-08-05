@@ -17,6 +17,7 @@
 #include "Audacity.h"
 #include "Experimental.h"
 
+#include "MemoryX.h"
 #include <vector>
 
 #ifdef USE_MIDI
@@ -61,7 +62,6 @@ using WaveTrackArray = std::vector < WaveTrack* >;
 extern AUDACITY_DLL_API AudioIO *gAudioIO;
 
 void InitAudioIO();
-void DeinitAudioIO();
 wxString DeviceName(const PaDeviceInfo* info);
 wxString HostName(const PaDeviceInfo* info);
 bool ValidateDeviceNames();
@@ -515,7 +515,7 @@ private:
        // begins.
 
    Alg_seq_ptr      mSeq;
-   Alg_iterator_ptr mIterator;
+   std::unique_ptr<Alg_iterator> mIterator;
    Alg_event_ptr    mNextEvent; // the next event to play (or null)
    double           mNextEventTime; // the time of the next event
                        // (note that this could be a note's time+duration)
@@ -548,9 +548,9 @@ private:
    unsigned short mAILALastChangeType;  //0 - no change, 1 - increase change, 2 - decrease change
 #endif
 
-   AudioThread        *mThread;
+   std::unique_ptr<AudioThread> mThread;
 #ifdef EXPERIMENTAL_MIDI_OUT
-   AudioThread         *mMidiThread;
+   std::unique_ptr<AudioThread> mMidiThread;
 #endif
    Resample          **mResample;
    RingBuffer        **mCaptureBuffers;
@@ -638,7 +638,6 @@ private:
 #endif
 
    friend void InitAudioIO();
-   friend void DeinitAudioIO();
 
    TimeTrack *mTimeTrack;
 
@@ -685,7 +684,7 @@ private:
 
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
    struct ScrubQueue;
-   ScrubQueue *mScrubQueue;
+   std::unique_ptr<ScrubQueue> mScrubQueue;
 
    bool mSilentScrub;
    long mScrubDuration;
