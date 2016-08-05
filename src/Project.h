@@ -92,7 +92,6 @@ class MixerBoardFrame;
 struct AudioIOStartStreamOptions;
 struct UndoState;
 
-class WaveTrackArray;
 class Regions;
 
 class LWSlider;

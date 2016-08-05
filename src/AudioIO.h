@@ -17,6 +17,8 @@
 #include "Audacity.h"
 #include "Experimental.h"
 
+#include <vector>
+
 #ifdef USE_MIDI
 
 #ifdef EXPERIMENTAL_MIDI_OUT
@@ -24,7 +26,6 @@
 #include "porttime.h"
 #include "allegro.h"
 
-#include <vector>
 class NoteTrack;
 using NoteTrackArray = std::vector < NoteTrack* >;
 
@@ -53,7 +54,9 @@ class SelectedRegion;
 class TimeTrack;
 
 class AudacityProject;
-class WaveTrackArray;
+
+class WaveTrack;
+using WaveTrackArray = std::vector < WaveTrack* >;
 
 extern AUDACITY_DLL_API AudioIO *gAudioIO;
 
@@ -551,9 +554,9 @@ private:
 #endif
    Resample          **mResample;
    RingBuffer        **mCaptureBuffers;
-   WaveTrackArray     *mCaptureTracks;
+   WaveTrackArray      mCaptureTracks;
    RingBuffer        **mPlaybackBuffers;
-   WaveTrackArray     *mPlaybackTracks;
+   WaveTrackArray      mPlaybackTracks;
 
    Mixer             **mPlaybackMixers;
    volatile int        mStreamToken;

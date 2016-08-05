@@ -41,8 +41,8 @@ class AudacityProject;
 class ZoomInfo;
 
 WX_DEFINE_USER_EXPORTED_ARRAY(Track*, TrackArray, class AUDACITY_DLL_API);
-class WaveTrackArray : public std::vector < WaveTrack* > {
-};
+using WaveTrackArray = std::vector < WaveTrack* > ;
+
 class WaveTrackConstArray : public std::vector < const WaveTrack* > {
 public:
    WaveTrackConstArray() {}
