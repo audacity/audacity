@@ -430,8 +430,8 @@ int ODFFmpegDecoder::Decode(SampleBuffer & data, sampleFormat & format, sampleCo
    {
       for (int i = 0; i < mChannels.size(); i++)
       {
-         sc->m_pkt.create();
          sc = scs[i].get();
+         sc->m_pkt.create();
          if (DecodeFrame(sc, true) == 0)
          {
             sc->m_pkt.reset();
