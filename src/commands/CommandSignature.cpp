@@ -20,17 +20,11 @@
 
 CommandSignature::~CommandSignature()
 {
-   // Delete the validators
-   ValidatorMap::iterator iter;
-   for (iter = mValidators.begin(); iter != mValidators.end(); ++iter)
-   {
-      delete iter->second;
-   }
 }
 
 void CommandSignature::AddParameter(const wxString &name,
       const wxVariant &dft,
-      Validator *valid)
+      movable_ptr<Validator> &&valid)
 {
    wxASSERT_MSG(valid->Validate(dft),
          wxT("Invalid command signature: the default value of '")
@@ -42,7 +36,7 @@ void CommandSignature::AddParameter(const wxString &name,
          + valid->GetDescription()
          + wxT("."));
    mDefaults.insert(std::pair<wxString, wxVariant>(name, dft));
-   mValidators.insert(std::pair<wxString, Validator*>(name, valid));
+   mValidators.insert(ValidatorMap::value_type(name, std::move(valid)));
 }
 
 ParamValueMap CommandSignature::GetDefaults() const

@@ -29,8 +29,8 @@ wxString CompareAudioCommandType::BuildName()
 
 void CompareAudioCommandType::BuildSignature(CommandSignature &signature)
 {
-   DoubleValidator *thresholdValidator = new DoubleValidator();
-   signature.AddParameter(wxT("Threshold"), 0.0, thresholdValidator);
+   auto thresholdValidator = make_movable<DoubleValidator>();
+   signature.AddParameter(wxT("Threshold"), 0.0, std::move(thresholdValidator));
 }
 
 CommandHolder CompareAudioCommandType::Create(std::unique_ptr<CommandOutputTarget> &&target)

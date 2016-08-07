@@ -23,8 +23,8 @@ wxString MessageCommandType::BuildName()
 
 void MessageCommandType::BuildSignature(CommandSignature &signature)
 {
-   Validator *stringValidator = new DefaultValidator();
-   signature.AddParameter(wxT("MessageString"), wxT(""), stringValidator);
+   auto stringValidator = make_movable<DefaultValidator>();
+   signature.AddParameter(wxT("MessageString"), wxT(""), std::move(stringValidator));
 }
 
 CommandHolder MessageCommandType::Create(std::unique_ptr<CommandOutputTarget> &&target)

@@ -27,8 +27,8 @@ wxString ImportCommandType::BuildName()
 
 void ImportCommandType::BuildSignature(CommandSignature &signature)
 {
-   Validator *filenameValidator(new DefaultValidator());
-   signature.AddParameter(wxT("Filename"), wxT(""), filenameValidator);
+   auto filenameValidator = make_movable<DefaultValidator>();
+   signature.AddParameter(wxT("Filename"), wxT(""), std::move(filenameValidator));
 }
 
 CommandHolder ImportCommandType::Create(std::unique_ptr<CommandOutputTarget> &&target)
@@ -54,16 +54,16 @@ wxString ExportCommandType::BuildName()
 
 void ExportCommandType::BuildSignature(CommandSignature &signature)
 {
-   OptionValidator *modeValidator(new OptionValidator());
+   auto modeValidator = make_movable<OptionValidator>();
    modeValidator->AddOption(wxT("All"));
    modeValidator->AddOption(wxT("Selection"));
-   signature.AddParameter(wxT("Mode"), wxT("All"), modeValidator);
+   signature.AddParameter(wxT("Mode"), wxT("All"), std::move(modeValidator));
 
-   Validator *filenameValidator(new DefaultValidator());
-   signature.AddParameter(wxT("Filename"), wxT("exported.wav"), filenameValidator);
+   auto filenameValidator = make_movable<DefaultValidator>();
+   signature.AddParameter(wxT("Filename"), wxT("exported.wav"), std::move(filenameValidator));
 
-   IntValidator *channelsValidator(new IntValidator());
-   signature.AddParameter(wxT("Channels"), 1, channelsValidator);
+   auto channelsValidator = make_movable<IntValidator>();
+   signature.AddParameter(wxT("Channels"), 1, std::move(channelsValidator));
 }
 
 CommandHolder ExportCommandType::Create(std::unique_ptr<CommandOutputTarget> &&target)
