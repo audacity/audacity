@@ -18,6 +18,7 @@
 
 #include "../MemoryX.h"
 #include <wx/bmpbuttn.h>
+#include <wx/defs.h>
 #include <wx/dynarray.h>
 #include <wx/intl.h>
 #include <wx/string.h>
@@ -571,6 +572,7 @@ private:
    int mAdditionalButtons;
 
    DECLARE_EVENT_TABLE()
+   wxDECLARE_NO_COPY_CLASS(EffectDialog);
 };
 
 //
