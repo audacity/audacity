@@ -17,6 +17,7 @@
 #define __COMMANDTYPE__
 
 #include "CommandMisc.h"
+#include "CommandSignature.h"
 #include "../MemoryX.h"
 
 class Command;
@@ -28,13 +29,13 @@ class wxString;
 class CommandType /* not final */
 {
 private:
-   wxString *mName;
-   CommandSignature *mSignature;
+   wxString mName;
+   Maybe<CommandSignature> mSignature;
 
 public:
    CommandType();
    virtual ~CommandType();
-   wxString GetName();
+   const wxString &GetName();
    CommandSignature &GetSignature();
    wxString Describe();
 

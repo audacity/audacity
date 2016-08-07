@@ -23,6 +23,7 @@
 class CommandType;
 
 // Map from parameter name to the value of the parameter
+// to do: use hash
 typedef std::map<wxString, wxVariant> ParamValueMap;
 
 // Map from parameter name to a suitable Validator
@@ -30,6 +31,7 @@ typedef std::map<wxString, wxVariant> ParamValueMap;
 typedef std::map<wxString, movable_ptr<Validator>> ValidatorMap;
 
 // Map from command name to type
-typedef std::map<wxString, CommandType*> CommandMap;
+// to do: use hash
+typedef std::map<wxString, movable_ptr<CommandType>> CommandMap;
 
 #endif /* End of include guard: __COMMANDMISC__ */

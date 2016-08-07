@@ -16,20 +16,21 @@
 
 *//*******************************************************************/
 
-#include <wx/event.h>
+#include "../Audacity.h"
 #include "CommandHandler.h"
+#include <wx/event.h>
 #include "../Project.h"
 #include "Command.h"
 #include "AppCommandEvent.h"
 #include "ScriptCommandRelay.h"
 
 CommandHandler::CommandHandler(AudacityApp &app)
- : mCurrentContext(new CommandExecutionContext(&app, GetActiveProject()))
+ : mCurrentContext(std::make_unique<CommandExecutionContext>
+                   (&app, GetActiveProject()))
 { }
 
 CommandHandler::~CommandHandler()
 {
-   delete mCurrentContext;
 }
 
 void CommandHandler::SetProject(AudacityProject *)
