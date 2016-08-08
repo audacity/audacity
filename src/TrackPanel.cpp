@@ -146,7 +146,7 @@ is time to refresh some aspect of the screen.
   Stereo channel grouping.
 
   The precise names of the classes are subject to revision.
-  Have deliberately not created NEW files for the new classes
+  Have deliberately not created NEW files for the NEW classes
   such as AdornedRulerPanel and TrackInfo - yet.
 
 *//*****************************************************************/
@@ -1091,7 +1091,7 @@ void TrackPanel::OnPaint(wxPaintEvent & /* event */)
 
       // Drawing now goes directly to the client area.
       // DrawOverlays() may need to draw outside the clipped region.
-      // (Used to make a new, separate wxClientDC, but that risks flashing
+      // (Used to make a NEW, separate wxClientDC, but that risks flashing
       // problems on Mac.)
       dc.DestroyClippingRegion();
       DrawOverlays(true, &dc);

@@ -11,7 +11,7 @@ Paul Licameli
 #ifndef __AUDACITY_TRACK_PANEL_CELL__
 #define __AUDACITY_TRACK_PANEL_CELL__
 
-// Future:  TrackPanelCell will be generalized to a new abstract base class of Track
+// Future:  TrackPanelCell will be generalized to a NEW abstract base class of Track
 // and of other things.
 class Track;
 using TrackPanelCell = Track;

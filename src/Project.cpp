@@ -5344,7 +5344,7 @@ bool AudacityProject::IsProjectSaved() {
 }
 
 bool AudacityProject::SaveFromTimerRecording(wxFileName fnFile) {
-   // MY: Will save the project to a new location a-la Save As
+   // MY: Will save the project to a NEW location a-la Save As
    // and then tidy up after itself.
 
    wxString sNewFileName = fnFile.GetFullPath();

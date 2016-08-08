@@ -551,7 +551,7 @@ public:
 
    // Tags (artist name, song properties, MP3 ID3 info, etc.)
    // The structure may be shared with undo history entries
-   // To keep undo working correctly, always replace this with a new duplicate
+   // To keep undo working correctly, always replace this with a NEW duplicate
    // BEFORE doing any editing of it!
    std::shared_ptr<Tags> mTags;
 

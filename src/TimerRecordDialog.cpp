@@ -85,7 +85,7 @@ static double wxDateTime_to_AudacityTime(wxDateTime& dateTime)
 // By default the msaa state of wxDatePickerCtrl is always normal (0x0), and this causes nvda not
 // to read the control when the user tabs to it. This class
 // modifies the state to be focusable + focused (when it's the focus).
-// Note that even with this class NVDA still doesn't read the new selected part of the control when left/right
+// Note that even with this class NVDA still doesn't read the NEW selected part of the control when left/right
 // arrow keys are used.
 
 #if wxUSE_ACCESSIBILITY

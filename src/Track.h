@@ -212,10 +212,10 @@ class AUDACITY_DLL_API Track /* not final */ : public XMLTagHandler
    // separate from the Track.
    DirManager* GetDirManager() const { return mDirManager; }
 
-   // Create a new track and modify this track (or return null for failure)
+   // Create a NEW track and modify this track (or return null for failure)
    virtual Holder Cut(double WXUNUSED(t0), double WXUNUSED(t1)) { return{}; }
 
-   // Create a new track and don't modify this track (or return null for failure)
+   // Create a NEW track and don't modify this track (or return null for failure)
    virtual Holder Copy(double WXUNUSED(t0), double WXUNUSED(t1)) const { return{}; }
 
    // Return true for success

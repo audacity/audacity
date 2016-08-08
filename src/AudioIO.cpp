@@ -522,7 +522,7 @@ struct AudioIO::ScrubQueue
          mDebt += deficit;
          auto toDiscard = mDebt - mMaxDebt;
          while (toDiscard > 0 && mMiddleIdx != mLeadingIdx) {
-            // Cancel some debt (discard some new work)
+            // Cancel some debt (discard some NEW work)
             auto &entry = mEntries[mMiddleIdx];
             auto &dur = entry.mDuration;
             if (toDiscard >= dur) {

@@ -143,7 +143,7 @@ enum kInterpolations
 // Increment whenever EQCurves.xml is updated
 #define EQCURVES_VERSION   1
 #define EQCURVES_REVISION  0
-#define UPDATE_ALL 0 // 0 = merge new presets only, 1 = Update all factory presets.
+#define UPDATE_ALL 0 // 0 = merge NEW presets only, 1 = Update all factory presets.
 
 static const wxString kInterpStrings[kNumInterpolations] =
 {
@@ -1370,7 +1370,7 @@ void EffectEqualization::LoadCurves(const wxString &fileName, bool append)
 
       bool needUpdate = (eqCurvesCurrentVersion != eqCurvesInstalledVersion);
 
-      // UpdateDefaultCurves allows us to import new factory presets only,
+      // UpdateDefaultCurves allows us to import NEW factory presets only,
       // or update all factory preset curves.
       if (needUpdate)
          UpdateDefaultCurves( UPDATE_ALL != 0 );
@@ -1506,7 +1506,7 @@ void EffectEqualization::UpdateDefaultCurves(bool updateAll /* false */)
       }
    }
    else {
-      // Import new factory defaults but retain all user modified curves.
+      // Import NEW factory defaults but retain all user modified curves.
       for (int defCurveCount = 0; defCurveCount < numDefaultCurves; defCurveCount++) {
          bool isUserCurve = false;
          // Add if the curve is in the user's set (preserve user's copy)
