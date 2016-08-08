@@ -547,7 +547,7 @@ bool NoteTrack::Shift(double t) // t is always seconds
       int m = ROUND(t * tempo / beats_per_measure);
       // need at least 1 measure, so if we rounded down to zero, fix it
       if (m == 0) m = 1;
-      // compute NEW tempo so that m measures at new tempo take t seconds
+      // compute NEW tempo so that m measures at NEW tempo take t seconds
       tempo = beats_per_measure * m / t; // in beats per second
       mSeq->insert_silence(0.0, beats_per_measure * m);
       mSeq->set_tempo(tempo * 60.0 /* bpm */, 0.0, beats_per_measure * m);
@@ -704,7 +704,7 @@ Alg_seq *NoteTrack::MakeExportableSeq(std::unique_ptr<Alg_seq> &cleanup)
             // beat
             double bar = tsp->beat + beats_per_measure * (int(measures) + 1);
             double bar_offset = bar - beat;
-            // insert NEW time signature at bar_offset in new sequence
+            // insert NEW time signature at bar_offset in NEW sequence
             // It will have the same time signature, but the position will
             // force a barline to match the barlines in mSeq
             seq->set_time_sig(bar_offset, tsp->num, tsp->den);

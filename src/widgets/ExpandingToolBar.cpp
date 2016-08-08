@@ -152,7 +152,7 @@ ExpandingToolBar::ExpandingToolBar(wxWindow* parent,
    wxColour magicColor = wxColour(0, 255, 255);
    ImageArray fourStates = ImageRoll::SplitV(hbar, magicColor);
 
-   mToggleButton = new AButton(this, kToggleButtonID,
+   mToggleButton = safenew AButton(this, kToggleButtonID,
                                wxDefaultPosition, wxDefaultSize,
                                ImageRoll(ImageRoll::HorizontalRoll,
                                          fourStates[0], magicColor),

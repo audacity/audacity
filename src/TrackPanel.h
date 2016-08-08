@@ -556,8 +556,8 @@ protected:
        // (no GDK event behind it) and that it therefore isn't processed
        // within the YieldFor(..) of the clipboard operations (workaround
        // for Debian bug #765341).
-       wxTimerEvent *event = new wxTimerEvent(*this);
-       parent->GetEventHandler()->QueueEvent(event);
+       // QueueEvent() will take ownership of the event
+       parent->GetEventHandler()->QueueEvent(safenew wxTimerEvent(*this));
      }
      TrackPanel *parent;
    } mTimer;
