@@ -514,7 +514,6 @@ void LWSlider::Init(wxWindow * parent,
 
    AdjustSize(size);
 
-   mpRuler = NULL; // Do this and Move() before Draw().
    Move(pos);
 }
 
@@ -811,7 +810,7 @@ void LWSlider::Draw(wxDC & paintDC)
    //{
    //   if (!mpRuler)
    //   {
-   //      mpRuler = new Ruler();
+   //      mpRuler = std::make_unique<Ruler>();
    //      mpRuler->mbTicksOnly = false;
    //      mpRuler->mbTicksAtExtremes = true;
 

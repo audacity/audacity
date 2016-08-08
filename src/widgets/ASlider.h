@@ -231,8 +231,6 @@ class LWSlider
    std::unique_ptr<TipPanel> mTipPanel;
    wxString mTipTemplate;
 
-   std::unique_ptr<Ruler> mpRuler;
-
    bool mIsDragging;
 
    std::unique_ptr<wxBitmap> mBitmap, mThumbBitmap;

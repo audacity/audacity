@@ -549,7 +549,7 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    mFreqSelMode = FREQ_SEL_INVALID;
-   mFrequencySnapper.reset(new SpectrumAnalyst());
+   mFrequencySnapper = std::make_unique<SpectrumAnalyst>();
 
    mLastF0 = mLastF1 = SelectedRegion::UndefinedFrequency;
 #endif
