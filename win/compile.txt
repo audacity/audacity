@@ -300,16 +300,6 @@ So for instance, a Debug version of Audacity should have:
         
 in the "audacity\win\Debug" directory.
 
-If this procedure doesn't work, check the "Common Compilation 
-Errors" section on 
-http://audacityteam.org/wiki/index.php?title=Developing_On_Windows .
-
-If you still need help after that, please ask on the "Compiling 
-Audacity" board at http://forum.audacityteam.org/. However, the first 
-suggestion there is likely to be "try it again with a clean 
-installation of the wxWidgets source and the latest Audacity source
-from GitHub". So if that's not what you attempted, please try that first. 
-
 
 ------------------------------------------------------------------------
 HELP! I get linker errors!
@@ -360,6 +350,11 @@ depending on the library which actually causes the conflict.
 Note that if you have configured all libraries correctly,
 none of the above should actually be necessary.
 
+If you still receive errors, it often helps to try it again with 
+a clean installation of the wxWidgets sources and the latest Audacity
+source from GitHub. Also check "Common compilation errors" on:   
+http://wiki.audacityteam.org/wiki/Developing_On_Windows#common
+for more assistance.
 
 ========================================================================
 
