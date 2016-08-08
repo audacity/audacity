@@ -1030,10 +1030,6 @@ EffectScienFilterPanel::EffectScienFilterPanel(EffectScienFilter *effect, wxWind
 
 EffectScienFilterPanel::~EffectScienFilterPanel()
 {
-   if (mBitmap)
-   {
-      delete mBitmap;
-   }
 }
 
 void EffectScienFilterPanel::SetFreqRange(double lo, double hi)
@@ -1073,14 +1069,9 @@ void EffectScienFilterPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
 
    if (!mBitmap || mWidth != width || mHeight != height)
    {
-      if (mBitmap)
-      {
-         delete mBitmap;
-      }
-
       mWidth = width;
       mHeight = height;
-      mBitmap = new wxBitmap(mWidth, mHeight);
+      mBitmap = std::make_unique<wxBitmap>(mWidth, mHeight);
    }
 
    wxBrush bkgndBrush(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE));

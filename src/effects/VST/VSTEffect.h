@@ -49,6 +49,11 @@ typedef AEffect *(*vstPluginMain)(audioMasterCallback audioMaster);
 class VSTEffectTimer;
 class VSTEffectDialog;
 class VSTEffect;
+class wxDynamicLibrary;
+
+#if defined(__WXMAC__)
+struct __CFBundle;
+#endif
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -244,6 +249,16 @@ private:
    void callSetChunk(bool isPgm, int len, void *buf, VstPatchChunkInfo *info);
 
  private:
+    // Define a manager class for a handle to a module
+#if defined(__WXMSW__)
+   using ModuleHandle = std::unique_ptr<wxDynamicLibrary>;
+#else
+   struct ModuleDeleter {
+      void operator() (void*) const;
+   };
+   using ModuleHandle = std::unique_ptr < char, ModuleDeleter > ;
+#endif
+
    EffectHostInterface *mHost;
    PluginID mID;
    wxString mPath;
@@ -265,11 +280,32 @@ private:
 
    bool mReady;
 
+   ModuleHandle mModule;
+
 #if defined(__WXMAC__)
-   void *mBundleRef;       // Cheating a little ... type is really CFBundle
-   int mResource;          // Cheating a little ... type is really CFBundle
+   // These members must be ordered after mModule
+
+   struct BundleDeleter {
+      void operator() (void*) const;
+   };
+   using BundleHandle = std::unique_ptr<
+      __CFBundle, BundleDeleter
+   >;
+
+   BundleHandle mBundleRef;
+
+   struct ResourceDeleter {
+      const BundleHandle *mpHandle;
+      ResourceDeleter(const BundleHandle *pHandle = nullptr)
+         : mpHandle(pHandle) {}
+      void operator() (void*) const;
+   };
+   using ResourceHandle = std::unique_ptr<
+      char, ResourceDeleter
+   >;
+   ResourceHandle mResource;
 #endif
-   void *mModule;
+
    AEffect *mAEffect;
 
    VstTimeInfo mTimeInfo;
@@ -286,7 +322,7 @@ private:
 
    wxCRIT_SECT_DECLARE_MEMBER(mDispatcherLock);
 
-   VSTEffectTimer *mTimer;
+   std::unique_ptr<VSTEffectTimer> mTimer;
    int mTimerGuard;
 
    // Realtime processing

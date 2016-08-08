@@ -28,7 +28,7 @@ effect that uses SoundTouch to do its processing (ChangeTempo
 bool EffectSoundTouch::ProcessLabelTrack(Track *track)
 {
 //   SetTimeWarper(new RegionTimeWarper(mCurT0, mCurT1,
- //           new LinearTimeWarper(mCurT0, mCurT0,
+ //           std::make_unique<LinearTimeWarper>(mCurT0, mCurT0,
    //            mCurT1, mCurT0 + (mCurT1-mCurT0)*mFactor)));
    LabelTrack *lt = (LabelTrack*)track;
    if (lt == NULL) return false;
@@ -162,8 +162,7 @@ bool EffectSoundTouch::Process()
    if (bGoodResult)
       ReplaceProcessedTracks(bGoodResult);
 
-   delete mSoundTouch;
-   mSoundTouch = NULL;
+   mSoundTouch.reset();
 
 //   mT0 = mCurT0;
 //   mT1 = mCurT0 + m_maxNewLength; // Update selection.

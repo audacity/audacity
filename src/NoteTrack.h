@@ -72,13 +72,13 @@ class AUDACITY_DLL_API NoteTrack final : public Track {
    int DrawLabelControls(wxDC & dc, wxRect & r);
    bool LabelClick(wxRect & r, int x, int y, bool right);
 
-   void SetSequence(Alg_seq *seq);
+   void SetSequence(std::unique_ptr<Alg_seq> &&seq);
    Alg_seq* GetSequence();
    void PrintSequence();
 
    int GetVisibleChannels();
 
-   Alg_seq_ptr MakeExportableSeq();
+   Alg_seq *MakeExportableSeq(std::unique_ptr<Alg_seq> &cleanup);
    bool ExportMIDI(const wxString &f);
    bool ExportAllegro(const wxString &f);
 
@@ -186,7 +186,7 @@ class AUDACITY_DLL_API NoteTrack final : public Track {
    void ClearVisibleChan(int c) { mVisibleChannels &= ~CHANNEL_BIT(c); }
    void ToggleVisibleChan(int c) { mVisibleChannels ^= CHANNEL_BIT(c); }
  private:
-   Alg_seq *mSeq; // NULL means no sequence
+   std::unique_ptr<Alg_seq> mSeq; // NULL means no sequence
    // when Duplicate() is called, assume that it is to put a copy
    // of the track into the undo stack or to redo/copy from the
    // stack to the project object. We want copies to the stack

@@ -44,7 +44,7 @@ public:
    CommandType *LookUp(const wxString &cmdName) const;
 
    /// Register a type of command with the directory.
-   void AddCommand(CommandType *type);
+   void AddCommand(movable_ptr<CommandType> &&type);
 
    /// Get a pointer to the singleton instance
    static CommandDirectory *Get();

@@ -1175,9 +1175,9 @@ NumericTextCtrl::NumericTextCtrl(NumericConverter::Type type,
                            bool autoPos):
    wxControl(parent, id, pos, size, wxSUNKEN_BORDER | wxWANTS_CHARS),
    NumericConverter(type, formatName, timeValue, sampleRate),
-   mBackgroundBitmap(NULL),
-   mDigitFont(NULL),
-   mLabelFont(NULL),
+   mBackgroundBitmap{},
+   mDigitFont{},
+   mLabelFont{},
    mLastField(1),
    mAutoPos(autoPos)
    , mType(type)
@@ -1211,12 +1211,6 @@ NumericTextCtrl::NumericTextCtrl(NumericConverter::Type type,
 
 NumericTextCtrl::~NumericTextCtrl()
 {
-   if (mBackgroundBitmap)
-      delete mBackgroundBitmap;
-   if (mDigitFont)
-      delete mDigitFont;
-   if (mLabelFont)
-      delete mLabelFont;
 }
 
 // Set the focus to the first (left-most) non-zero digit
@@ -1306,12 +1300,9 @@ bool NumericTextCtrl::Layout()
    int x, pos;
 
    wxMemoryDC memDC;
-   if (mBackgroundBitmap) {
-      delete mBackgroundBitmap;
-      mBackgroundBitmap = NULL;
-   }
+
    // Placeholder bitmap so the memDC has something to reference
-   mBackgroundBitmap = new wxBitmap(1, 1);
+   mBackgroundBitmap = std::make_unique<wxBitmap>(1, 1);
    memDC.SelectObject(*mBackgroundBitmap);
 
    mDigits.Clear();
@@ -1335,9 +1326,7 @@ bool NumericTextCtrl::Layout()
    }
    fontSize--;
 
-   if (mDigitFont)
-      delete mDigitFont;
-   mDigitFont = new wxFont(fontSize, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+   mDigitFont = std::make_unique<wxFont>(fontSize, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
    memDC.SetFont(*mDigitFont);
    memDC.GetTextExtent(exampleText, &strW, &strH);
    mDigitW = strW;
@@ -1345,9 +1334,7 @@ bool NumericTextCtrl::Layout()
 
    // The label font should be a little smaller
    fontSize--;
-   if (mLabelFont)
-      delete mLabelFont;
-   mLabelFont = new wxFont(fontSize, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+   mLabelFont = std::make_unique<wxFont>(fontSize, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
 
    // Figure out the x-position of each field and label in the box
    x = mBorderLeft;
@@ -1382,8 +1369,7 @@ bool NumericTextCtrl::Layout()
 
    wxBrush Brush;
 
-   delete mBackgroundBitmap; // Delete placeholder
-   mBackgroundBitmap = new wxBitmap(mWidth + mButtonWidth, mHeight);
+   mBackgroundBitmap = std::make_unique<wxBitmap>(mWidth + mButtonWidth, mHeight);
    memDC.SelectObject(*mBackgroundBitmap);
 
    memDC.SetBrush(*wxLIGHT_GREY_BRUSH);

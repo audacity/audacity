@@ -289,7 +289,7 @@ void ControlToolBar::ArrangeButtons()
    if( mSizer )
    {
       Detach( mSizer );
-      delete mSizer;
+      std::unique_ptr < wxSizer > {mSizer}; // DELETE it
    }
 
    Add((mSizer = safenew wxBoxSizer(wxHORIZONTAL)), 1, wxEXPAND);
@@ -359,7 +359,7 @@ void ControlToolBar::ReCreateButtons()
       recordShift = mRecord->WasShiftDown();
       Detach( mSizer );
 
-      delete mSizer;
+      std::unique_ptr < wxSizer > {mSizer}; // DELETE it
       mSizer = NULL;
    }
 
@@ -1185,7 +1185,7 @@ void ControlToolBar::SetupCutPreviewTracks(double WXUNUSED(playStart), double cu
             new2->Clear(cutStart, cutEnd);
          }
 
-         mCutPreviewTracks = new TrackList();
+         mCutPreviewTracks = std::make_unique<TrackList>();
          mCutPreviewTracks->Add(std::move(new1));
          if (track2)
             mCutPreviewTracks->Add(std::move(new2));
@@ -1196,11 +1196,8 @@ void ControlToolBar::SetupCutPreviewTracks(double WXUNUSED(playStart), double cu
 void ControlToolBar::ClearCutPreviewTracks()
 {
    if (mCutPreviewTracks)
-   {
-      mCutPreviewTracks->Clear(); /* DELETE track contents too */
-      delete mCutPreviewTracks;
-      mCutPreviewTracks = NULL;
-   }
+      mCutPreviewTracks->Clear();
+   mCutPreviewTracks.reset();
 }
 
 // works out the width of the field in the status bar needed for the state (eg play, record pause)

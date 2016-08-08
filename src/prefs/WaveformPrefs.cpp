@@ -147,9 +147,9 @@ bool WaveformPrefs::Apply()
 
    if (mWt) {
       if (mDefaulted) {
-         mWt->SetWaveformSettings(NULL);
+         mWt->SetWaveformSettings({});
          if (partner)
-            partner->SetWaveformSettings(NULL);
+            partner->SetWaveformSettings({});
       }
       else {
          WaveformSettings *pSettings =

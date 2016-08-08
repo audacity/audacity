@@ -132,7 +132,7 @@ wxArrayString VampEffectsModule::FindPlugins(PluginManagerInterface & WXUNUSED(p
 
    for (PluginLoader::PluginKeyList::iterator i = keys.begin(); i != keys.end(); ++i)
    {
-      Plugin *vp = PluginLoader::getInstance()->loadPlugin(*i, 48000); // rate doesn't matter here
+      std::unique_ptr<Plugin> vp{ PluginLoader::getInstance()->loadPlugin(*i, 48000) }; // rate doesn't matter here
       if (!vp)
       {
          continue;
@@ -194,8 +194,6 @@ wxArrayString VampEffectsModule::FindPlugins(PluginManagerInterface & WXUNUSED(p
 
          ++output;
       }
-
-      delete vp;
    }
 
    return names;
@@ -206,10 +204,10 @@ bool VampEffectsModule::RegisterPlugin(PluginManagerInterface & pm, const wxStri
    int output;
    bool hasParameters;
 
-   Plugin *vp = FindPlugin(path, output, hasParameters);
+   auto vp = FindPlugin(path, output, hasParameters);
    if (vp)
    {
-      VampEffect effect(vp, path, output, hasParameters);
+      VampEffect effect(std::move(vp), path, output, hasParameters);
       pm.RegisterPlugin(this, &effect);
 
       return true;
@@ -223,14 +221,8 @@ bool VampEffectsModule::IsPluginValid(const wxString & path)
    int output;
    bool hasParameters;
 
-   Plugin *vp = FindPlugin(path, output, hasParameters);
-   if (vp)
-   {
-      delete vp;
-      return true;
-   }
-
-   return false;
+   auto vp = FindPlugin(path, output, hasParameters);
+   return bool(vp);
 }
 
 IdentInterface *VampEffectsModule::CreateInstance(const wxString & path)
@@ -239,11 +231,11 @@ IdentInterface *VampEffectsModule::CreateInstance(const wxString & path)
    int output;
    bool hasParameters;
 
-   Plugin *vp = FindPlugin(path, output, hasParameters);
+   auto vp = FindPlugin(path, output, hasParameters);
    if (vp)
    {
       // Safety of this depends on complementary calls to DeleteInstance on the module manager side.
-      return safenew VampEffect(vp, path, output, hasParameters);
+      return safenew VampEffect(std::move(vp), path, output, hasParameters);
    }
 
    return NULL;
@@ -258,13 +250,13 @@ void VampEffectsModule::DeleteInstance(IdentInterface *instance)
 
 // VampEffectsModule implementation
 
-Plugin *VampEffectsModule::FindPlugin(const wxString & path,
+std::unique_ptr<Vamp::Plugin> VampEffectsModule::FindPlugin(const wxString & path,
                                       int & output,
                                       bool & hasParameters)
 {
    PluginLoader::PluginKey key = path.BeforeLast(wxT('/')).ToUTF8().data();
 
-   Plugin *vp = PluginLoader::getInstance()->loadPlugin(key, 48000); // rate doesn't matter here
+   std::unique_ptr<Plugin> vp{ PluginLoader::getInstance()->loadPlugin(key, 48000) }; // rate doesn't matter here
    if (!vp)
    {
       return nullptr;
@@ -331,9 +323,7 @@ Plugin *VampEffectsModule::FindPlugin(const wxString & path,
       ++output;
    }
 
-   delete vp;
-
-   return NULL;
+   return {};
 }
 
 #endif

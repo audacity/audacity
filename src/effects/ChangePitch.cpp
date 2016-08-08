@@ -154,14 +154,14 @@ bool EffectChangePitch::LoadFactoryDefaults()
 
 bool EffectChangePitch::Init()
 {
-   mSoundTouch = NULL;
+   mSoundTouch.reset();
    return true;
 }
 
 bool EffectChangePitch::Process()
 {
-   mSoundTouch = new SoundTouch();
-   SetTimeWarper(new IdentityTimeWarper());
+   mSoundTouch = std::make_unique<SoundTouch>();
+   SetTimeWarper(std::make_unique<IdentityTimeWarper>());
    mSoundTouch->setPitchSemiTones((float)(m_dSemitonesChange));
 #ifdef USE_MIDI
    // Note: m_dSemitonesChange is private to ChangePitch because it only

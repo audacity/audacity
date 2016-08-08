@@ -2026,7 +2026,7 @@ ShuttleGui::ShuttleGui(wxWindow * pParent, teShuttleMode ShuttleMode) :
       return;
    }
 
-   mpShuttle = new ShuttlePrefs;
+   mpShuttle = std::make_unique<ShuttlePrefs>();
    // In this case the client is the GUI, so if creating we do want to
    // store in the client.
    mpShuttle->mbStoreInClient = (mShuttleMode == eIsCreating );
@@ -2034,8 +2034,6 @@ ShuttleGui::ShuttleGui(wxWindow * pParent, teShuttleMode ShuttleMode) :
 
 ShuttleGui::~ShuttleGui()
 {
-   if( mpShuttle )
-      delete mpShuttle;
 }
 
 // Now we have Audacity specific shuttle functions.

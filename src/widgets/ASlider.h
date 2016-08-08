@@ -228,15 +228,14 @@ class LWSlider
 
    wxWindowID mID;
 
-   TipPanel *mTipPanel;
+   std::unique_ptr<TipPanel> mTipPanel;
    wxString mTipTemplate;
 
-   Ruler* mpRuler;
+   std::unique_ptr<Ruler> mpRuler;
 
    bool mIsDragging;
 
-   wxBitmap *mBitmap;
-   wxBitmap *mThumbBitmap;
+   std::unique_ptr<wxBitmap> mBitmap, mThumbBitmap;
 
    // AD: True if this object owns *mThumbBitmap (sometimes mThumbBitmap points
    // to an object we shouldn't DELETE) -- once we get theming totally right
@@ -311,7 +310,7 @@ public:
    static TempAllowFocus TemporarilyAllowFocus();
 
  private:
-   LWSlider *mLWSlider;
+   std::unique_ptr<LWSlider> mLWSlider;
    bool mSliderIsFocused;
    wxTimer mTimer;
 

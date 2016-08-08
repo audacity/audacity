@@ -93,8 +93,8 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
    CommandManager();
    virtual ~CommandManager();
 
-   CommandManager(const CommandManager&) = delete;
-   CommandManager &operator= (const CommandManager&) = delete;
+   CommandManager(const CommandManager&) PROHIBITED;
+   CommandManager &operator= (const CommandManager&) PROHIBITED;
 
    void PurgeData();
 

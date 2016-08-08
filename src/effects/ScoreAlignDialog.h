@@ -61,7 +61,7 @@ public:
    wxButton *mDefaultButton;
 
    // constructors and destructors
-   ScoreAlignDialog(wxWindow * parent, ScoreAlignParams &params);
+   ScoreAlignDialog(ScoreAlignParams &params);
    ~ScoreAlignDialog();
 
    bool TransferDataFromWindow();

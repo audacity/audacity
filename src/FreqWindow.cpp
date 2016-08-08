@@ -190,8 +190,7 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
 :  wxDialogWrapper(parent, id, title, pos, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX),
    mData(NULL),
-   mBitmap(NULL),
-   mAnalyst(new SpectrumAnalyst())
+   mAnalyst(std::make_unique<SpectrumAnalyst>())
 {
    SetName(GetTitle());
 
@@ -239,8 +238,8 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
    axisChoices.Add(_("Log frequency"));
 
    mFreqFont = wxFont(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-   mArrowCursor = new wxCursor(wxCURSOR_ARROW);
-   mCrossCursor = new wxCursor(wxCURSOR_CROSS);
+   mArrowCursor = std::make_unique<wxCursor>(wxCURSOR_ARROW);
+   mCrossCursor = std::make_unique<wxCursor>(wxCURSOR_CROSS);
 
    gPrefs->Read(wxT("/FreqWindow/DrawGrid"), &mDrawGrid, true);
 
@@ -515,12 +514,8 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
 
 FreqWindow::~FreqWindow()
 {
-   if (mBitmap)
-      delete mBitmap;
    if (mData)
       delete[] mData;
-   delete mArrowCursor;
-   delete mCrossCursor;
 }
 
 bool FreqWindow::Show(bool show)
@@ -622,15 +617,11 @@ void FreqWindow::DrawBackground(wxMemoryDC & dc)
 {
    Layout();
 
-   if (mBitmap)
-   {
-      delete mBitmap;
-      mBitmap = NULL;
-   }
+   mBitmap.reset();
 
    mPlotRect = mFreqPlot->GetClientRect();
 
-   mBitmap = new wxBitmap(mPlotRect.width, mPlotRect.height);
+   mBitmap = std::make_unique<wxBitmap>(mPlotRect.width, mPlotRect.height);
 
    dc.SelectObject(*mBitmap);
 

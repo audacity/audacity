@@ -139,18 +139,18 @@ bool EffectChangeTempo::Init()
    m_FromLength = mT1 - mT0;
    m_ToLength = (m_FromLength * 100.0) / (100.0 + m_PercentChange);
 
-   mSoundTouch = NULL;
+   mSoundTouch.reset();
 
    return true;
 }
 
 bool EffectChangeTempo::Process()
 {
-   mSoundTouch = new SoundTouch();
+   mSoundTouch = std::make_unique<SoundTouch>();
    mSoundTouch->setTempoChange(m_PercentChange);
    double mT1Dashed = mT0 + (mT1 - mT0)/(m_PercentChange/100.0 + 1.0);
-   SetTimeWarper(new RegionTimeWarper(mT0, mT1,
-            new LinearTimeWarper(mT0, mT0, mT1, mT1Dashed )));
+   SetTimeWarper(std::make_unique<RegionTimeWarper>(mT0, mT1,
+            std::make_unique<LinearTimeWarper>(mT0, mT0, mT1, mT1Dashed )));
    bool success = EffectSoundTouch::Process();
    if( success )
       mT1 = mT0 + (mT1 - mT0)/(m_PercentChange/100 + 1.);

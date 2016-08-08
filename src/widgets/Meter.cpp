@@ -237,8 +237,8 @@ Meter::Meter(AudacityProject *project,
    mActive(false),
    mNumBars(0),
    mLayoutValid(false),
-   mBitmap(NULL),
-   mIcon(NULL),
+   mBitmap{},
+   mIcon{},
    mAccSilent(false)
 {
    // Suppress warnings about the header file
@@ -316,11 +316,11 @@ Meter::Meter(AudacityProject *project,
    {
       if(mIsInput)
       {
-         mIcon = new wxBitmap(MicMenuNarrow_xpm);
+         mIcon = std::make_unique<wxBitmap>(MicMenuNarrow_xpm);
       }
       else
       {
-         mIcon = new wxBitmap(SpeakerMenuNarrow_xpm);
+         mIcon = std::make_unique<wxBitmap>(SpeakerMenuNarrow_xpm);
       }
    }
 
@@ -369,10 +369,6 @@ Meter::~Meter()
    //       is active.
    if (gAudioIO->IsMonitoring())
       gAudioIO->StopStream();
-   if (mIcon)
-      delete mIcon;
-   if (mBitmap)
-      delete mBitmap;
 }
 
 void Meter::UpdatePrefs()
@@ -427,21 +423,16 @@ void Meter::OnErase(wxEraseEvent & WXUNUSED(event))
 void Meter::OnPaint(wxPaintEvent & WXUNUSED(event))
 {
 #if defined(__WXMAC__)
-   wxPaintDC *paintDC = new wxPaintDC(this);
+   auto paintDC = std::make_unique<wxPaintDC>(this);
 #else
-   wxDC *paintDC = wxAutoBufferedPaintDCFactory(this);
+   std::unique_ptr<wxDC> paintDC{ wxAutoBufferedPaintDCFactory(this) };
 #endif
    wxDC & destDC = *paintDC;
 
    if (mLayoutValid == false)
    {
-      if (mBitmap)
-      {
-         delete mBitmap;
-      }
-   
       // Create a NEW one using current size and select into the DC
-      mBitmap = new wxBitmap();
+      mBitmap = std::make_unique<wxBitmap>();
       mBitmap->Create(mWidth, mHeight, destDC);
       wxMemoryDC dc;
       dc.SelectObject(*mBitmap);
@@ -664,8 +655,6 @@ void Meter::OnPaint(wxPaintEvent & WXUNUSED(event))
       wxRect r = mIconRect;
       AColor::DrawFocus(destDC, r.Inflate(1, 1));
    }
-
-   delete paintDC;
 }
 
 void Meter::OnSize(wxSizeEvent & WXUNUSED(event))

@@ -44,7 +44,7 @@ TimeTrack::TimeTrack(DirManager *projDirManager, const ZoomInfo *zoomInfo):
    mRangeUpper = 1.1;
    mDisplayLog = false;
 
-   mEnvelope = new Envelope();
+   mEnvelope = std::make_unique<Envelope>();
    mEnvelope->SetTrackLen(1000000000.0);
    mEnvelope->SetInterpolateDB(true);
    mEnvelope->Flatten(1.0);
@@ -55,7 +55,7 @@ TimeTrack::TimeTrack(DirManager *projDirManager, const ZoomInfo *zoomInfo):
    SetDefaultName(_("Time Track"));
    SetName(GetDefaultName());
 
-   mRuler = new Ruler;
+   mRuler = std::make_unique<Ruler>();
    mRuler->SetUseZoomInfo(0, mZoomInfo);
    mRuler->SetLabelEdges(false);
    mRuler->SetFormat(Ruler::TimeFormat);
@@ -71,17 +71,17 @@ TimeTrack::TimeTrack(const TimeTrack &orig):
    Init(orig);	// this copies the TimeTrack metadata (name, range, etc)
 
    ///@TODO: Give Envelope:: a copy-constructor instead of this?
-   mEnvelope = new Envelope();
+   mEnvelope = std::make_unique<Envelope>();
    mEnvelope->SetTrackLen(1000000000.0);
    SetInterpolateLog(orig.GetInterpolateLog()); // this calls Envelope::SetInterpolateDB
    mEnvelope->Flatten(1.0);
    mEnvelope->Mirror(false);
    mEnvelope->SetOffset(0);
    mEnvelope->SetRange(orig.mEnvelope->GetMinValue(), orig.mEnvelope->GetMaxValue());
-   mEnvelope->Paste(0.0, orig.mEnvelope);
+   mEnvelope->Paste(0.0, orig.mEnvelope.get());
 
    ///@TODO: Give Ruler:: a copy-constructor instead of this?
-   mRuler = new Ruler;
+   mRuler = std::make_unique<Ruler>();
    mRuler->SetUseZoomInfo(0, mZoomInfo);
    mRuler->SetLabelEdges(false);
    mRuler->SetFormat(Ruler::TimeFormat);
@@ -103,10 +103,6 @@ void TimeTrack::Init(const TimeTrack &orig)
 
 TimeTrack::~TimeTrack()
 {
-   delete mEnvelope;
-   mEnvelope = NULL;
-
-   delete mRuler;
 }
 
 Track::Holder TimeTrack::Duplicate() const
@@ -205,7 +201,7 @@ void TimeTrack::HandleXMLEndTag(const wxChar * WXUNUSED(tag))
 XMLTagHandler *TimeTrack::HandleXMLChild(const wxChar *tag)
 {
    if (!wxStrcmp(tag, wxT("envelope")))
-      return mEnvelope;
+      return mEnvelope.get();
 
   return NULL;
 }

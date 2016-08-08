@@ -78,7 +78,7 @@ bool Generator::Process()
             else {
                // Transfer the data from the temporary track to the actual one
                tmp->Flush();
-               SetTimeWarper(new StepTimeWarper(mT0+GetDuration(), GetDuration()-(mT1-mT0)));
+               SetTimeWarper(std::make_unique<StepTimeWarper>(mT0+GetDuration(), GetDuration()-(mT1-mT0)));
                bGoodResult = track->ClearAndPaste(p->GetSel0(), p->GetSel1(), &*tmp, true,
                      false, GetTimeWarper());
             }

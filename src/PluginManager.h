@@ -273,9 +273,9 @@ private:
    ~PluginManager();
 
    void Load();
-   void LoadGroup(PluginType type);
+   void LoadGroup(wxFileConfig *pRegistry, PluginType type);
    void Save();
-   void SaveGroup(PluginType type);
+   void SaveGroup(wxFileConfig *pRegistry, PluginType type);
 
    PluginDescriptor & CreatePlugin(const PluginID & id, IdentInterface *ident, PluginType type);
 
@@ -316,8 +316,7 @@ private:
 
    bool IsDirty();
    void SetDirty(bool dirty = true);
-   wxFileConfig *mRegistry;
-   wxFileConfig *mSettings;
+   std::unique_ptr<wxFileConfig> mSettings;
 
    bool mDirty;
    int mCurrentIndex;

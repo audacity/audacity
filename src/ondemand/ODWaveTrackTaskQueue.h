@@ -22,6 +22,7 @@ tasks associated with a WaveTrack.
 #ifndef __AUDACITY_ODWAVETRACKTASKQUEUE__
 #define __AUDACITY_ODWAVETRACKTASKQUEUE__
 
+#include "../MemoryX.h"
 #include <vector>
 #include "ODTaskThread.h"
 #include <wx/wx.h>
@@ -71,7 +72,7 @@ class ODWaveTrackTaskQueue final
    int GetNumWaveTracks();
 
    ///Add a task to the queue.
-   void AddTask(ODTask* task);
+   void AddTask(movable_ptr<ODTask> &&mtask);
 
    //returns true if either tracks or tasks are empty
    bool IsEmpty();
@@ -105,7 +106,7 @@ class ODWaveTrackTaskQueue final
   ODLock mTracksMutex;
 
   ///the list of tasks associated with the tracks.  This class owns these tasks.
-  std::vector<ODTask*> mTasks;
+  std::vector<movable_ptr<ODTask>> mTasks;
   ODLock    mTasksMutex;
 
 };

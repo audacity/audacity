@@ -261,13 +261,13 @@ class Meter final : public wxPanelWrapper
 
    bool      mLayoutValid;
 
-   wxBitmap *mBitmap;
+   std::unique_ptr<wxBitmap> mBitmap;
    wxRect    mIconRect;
    wxPoint   mLeftTextPos;
    wxPoint   mRightTextPos;
    wxSize    mLeftSize;
    wxSize    mRightSize;
-   wxBitmap *mIcon;
+   std::unique_ptr<wxBitmap> mIcon;
    wxPen     mPen;
    wxPen     mDisabledPen;
    wxPen     mPeakPeakPen;

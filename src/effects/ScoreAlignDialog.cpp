@@ -53,16 +53,16 @@ It \TODO: description
 #include "scorealign-glue.h"
 #include "ScoreAlignDialog.h"
 
-static ScoreAlignDialog *gScoreAlignDialog = NULL;
+static std::unique_ptr<ScoreAlignDialog> gScoreAlignDialog{};
 
 //IMPLEMENT_CLASS(ScoreAlignDialog, wxDialogWrapper)
 
-ScoreAlignDialog::ScoreAlignDialog(wxWindow *parent, ScoreAlignParams &params)
-   : wxDialogWrapper(parent, -1, _("Align MIDI to Audio"),
+ScoreAlignDialog::ScoreAlignDialog(ScoreAlignParams &params)
+   : wxDialogWrapper(NULL, -1, _("Align MIDI to Audio"),
               wxDefaultPosition, wxDefaultSize,
               wxDEFAULT_DIALOG_STYLE)
 {
-   gScoreAlignDialog = this; // Allows anyone to close dialog by calling
+   gScoreAlignDialog.reset(this); // Allows anyone to close dialog by calling
                              // CloseScoreAlignDialog()
    gPrefs->Read(wxT("/Tracks/Synchronize/FramePeriod"), &p.mFramePeriod,
                 float(SA_DFT_FRAME_PERIOD));
@@ -277,10 +277,7 @@ bool ScoreAlignDialog::TransferDataFromWindow()
 
 void CloseScoreAlignDialog()
 {
-   if (gScoreAlignDialog) {
-      delete gScoreAlignDialog;
-      gScoreAlignDialog = NULL;
-   }
+   gScoreAlignDialog.reset();
 }
 
 

@@ -330,7 +330,7 @@ protected:
    // Calculates the start time and selection length in samples
    void GetSamples(WaveTrack *track, sampleCount *start, sampleCount *len);
 
-   void SetTimeWarper(TimeWarper *warper);
+   void SetTimeWarper(std::unique_ptr<TimeWarper> &&warper);
    TimeWarper *GetTimeWarper();
 
    // Previewing linear effect can be optimised by pre-mixing. However this
@@ -446,7 +446,7 @@ protected:
    double         mF0;
    double         mF1;
 #endif
-   TimeWarper     *mWarper;
+   std::unique_ptr<TimeWarper> mWarper;
    wxArrayString  mPresetNames;
    wxArrayString  mPresetValues;
    int            mPass;

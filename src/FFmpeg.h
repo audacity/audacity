@@ -376,9 +376,7 @@ private:
    wxString mAVUtilVersion;
 
    ///! wx interfaces for dynamic libraries
-   wxDynamicLibrary *avformat;
-   wxDynamicLibrary *avcodec;
-   wxDynamicLibrary *avutil;
+   std::unique_ptr<wxDynamicLibrary> avformat, avcodec, avutil;
 
    ///! true if libraries are loaded, false otherwise
    bool mLibsLoaded;

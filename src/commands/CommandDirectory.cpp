@@ -39,36 +39,30 @@ CommandDirectory::CommandDirectory()
 {
    // Create the command map.
    // Adding an entry here is the easiest way to register a Command class.
-   AddCommand(new ScreenshotCommandType());
-   AddCommand(new BatchEvalCommandType());
-   AddCommand(new ExecMenuCommandType());
-   AddCommand(new GetAllMenuCommandsType());
-   AddCommand(new MessageCommandType());
-   AddCommand(new GetTrackInfoCommandType());
-   AddCommand(new GetProjectInfoCommandType());
+   AddCommand(make_movable<ScreenshotCommandType>());
+   AddCommand(make_movable<BatchEvalCommandType>());
+   AddCommand(make_movable<ExecMenuCommandType>());
+   AddCommand(make_movable<GetAllMenuCommandsType>());
+   AddCommand(make_movable<MessageCommandType>());
+   AddCommand(make_movable<GetTrackInfoCommandType>());
+   AddCommand(make_movable<GetProjectInfoCommandType>());
 
-   AddCommand(new HelpCommandType());
-   AddCommand(new SelectCommandType());
-   AddCommand(new CompareAudioCommandType());
-   AddCommand(new SetTrackInfoCommandType());
-   AddCommand(new SetProjectInfoCommandType());
+   AddCommand(make_movable<HelpCommandType>());
+   AddCommand(make_movable<SelectCommandType>());
+   AddCommand(make_movable<CompareAudioCommandType>());
+   AddCommand(make_movable<SetTrackInfoCommandType>());
+   AddCommand(make_movable<SetProjectInfoCommandType>());
 
-   AddCommand(new SetPreferenceCommandType());
-   AddCommand(new GetPreferenceCommandType());
-   AddCommand(new ImportCommandType());
-   AddCommand(new ExportCommandType());
-   AddCommand(new OpenProjectCommandType());
-   AddCommand(new SaveProjectCommandType());
+   AddCommand(make_movable<SetPreferenceCommandType>());
+   AddCommand(make_movable<GetPreferenceCommandType>());
+   AddCommand(make_movable<ImportCommandType>());
+   AddCommand(make_movable<ExportCommandType>());
+   AddCommand(make_movable<OpenProjectCommandType>());
+   AddCommand(make_movable<SaveProjectCommandType>());
 }
 
 CommandDirectory::~CommandDirectory()
 {
-   // Delete the factories
-   CommandMap::iterator iter;
-   for (iter = mCmdMap.begin(); iter != mCmdMap.end(); ++iter)
-   {
-      delete iter->second;
-   }
 }
 
 CommandType *CommandDirectory::LookUp(const wxString &cmdName) const
@@ -78,10 +72,10 @@ CommandType *CommandDirectory::LookUp(const wxString &cmdName) const
    {
       return NULL;
    }
-   return iter->second;
+   return iter->second.get();
 }
 
-void CommandDirectory::AddCommand(CommandType *type)
+void CommandDirectory::AddCommand(movable_ptr<CommandType> &&type)
 {
    wxASSERT(type != NULL);
    wxString cmdName = type->GetName();
@@ -89,7 +83,7 @@ void CommandDirectory::AddCommand(CommandType *type)
          , wxT("A command named ") + cmdName
          + wxT(" already exists."));
 
-   mCmdMap[cmdName] = type;
+   mCmdMap[cmdName] = std::move(type);
 }
 
 CommandDirectory *CommandDirectory::Get()

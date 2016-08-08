@@ -11,6 +11,7 @@
 #ifndef __AUDACITY_DEVICE_TOOLBAR__
 #define __AUDACITY_DEVICE_TOOLBAR__
 
+#include "../MemoryX.h"
 #include <vector>
 #include "ToolBar.h"
 
@@ -67,8 +68,7 @@ class DeviceToolBar final : public ToolBar {
 
    void ShowComboDialog(wxChoice *combo, const wxString &title);
 
-   wxBitmap *mPlayBitmap;
-   wxBitmap *mRecordBitmap;
+   std::unique_ptr<wxBitmap> mPlayBitmap, mRecordBitmap;
 
    wxChoice *mInput;
    wxChoice *mOutput;

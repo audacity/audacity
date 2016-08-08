@@ -11,6 +11,7 @@
 #ifndef __AUDACITY_SPLASH_DLG__
 #define __AUDACITY_SPLASH_DLG__
 
+#include "MemoryX.h"
 #include <wx/dialog.h>
 #include "widgets/wxPanelWrapper.h"
 
@@ -38,7 +39,7 @@ private:
    void OnDontShow( wxCommandEvent & Evt );
 
    HtmlWindow * mpHtml;
-   wxBitmap* m_pLogo; //vvv
+   std::unique_ptr<wxBitmap> m_pLogo; //vvv
    static SplashDialog * pSelf;
 };
 

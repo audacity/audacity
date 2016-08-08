@@ -14,6 +14,7 @@
 #ifndef __AUDACITY_CONTROL_TOOLBAR__
 #define __AUDACITY_CONTROL_TOOLBAR__
 
+#include "../MemoryX.h"
 #include "ToolBar.h"
 #include "../Theme.h"
 
@@ -160,7 +161,7 @@ class ControlToolBar final : public ToolBar {
 
    wxBoxSizer *mSizer;
 
-   TrackList* mCutPreviewTracks;
+   std::unique_ptr<TrackList> mCutPreviewTracks;
 
    // strings for status bar
    wxString mStatePlay;

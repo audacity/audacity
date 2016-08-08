@@ -181,8 +181,8 @@ private:
 
    wxFont mFreqFont;
 
-   wxCursor *mArrowCursor;
-   wxCursor *mCrossCursor;
+   std::unique_ptr<wxCursor> mArrowCursor;
+   std::unique_ptr<wxCursor> mCrossCursor;
 
    wxButton *mCloseButton;
    wxButton *mExportButton;
@@ -208,7 +208,7 @@ private:
    float mYMax;
    float mYStep;
 
-   wxBitmap *mBitmap;
+   std::unique_ptr<wxBitmap> mBitmap;
 
    int mMouseX;
    int mMouseY;

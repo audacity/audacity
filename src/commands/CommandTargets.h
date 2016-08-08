@@ -47,7 +47,7 @@ public:
 };
 
 /// Sends command progress information to a ProgressDialog
-class GUIProgressTarget : public CommandProgressTarget
+class GUIProgressTarget final : public CommandProgressTarget
 {
 private:
    ProgressDialog &mProgress;
@@ -74,18 +74,17 @@ public:
 class ProgressToMessageTarget final : public CommandProgressTarget
 {
 private:
-   CommandMessageTarget &mTarget;
+   std::unique_ptr<CommandMessageTarget> mTarget;
 public:
-   ProgressToMessageTarget(CommandMessageTarget *target)
-      : mTarget(*target)
+   ProgressToMessageTarget(std::unique_ptr<CommandMessageTarget> &&target)
+      : mTarget(std::move(target))
    { }
    virtual ~ProgressToMessageTarget()
    {
-      // delete &mTarget;
    }
    void Update(double completed) override
    {
-      mTarget.Update(wxString::Format(wxT("%.2f%%"), completed*100));
+      mTarget->Update(wxString::Format(wxT("%.2f%%"), completed*100));
    }
 };
 
@@ -94,7 +93,7 @@ class NullMessageTarget final : public CommandMessageTarget
 {
 public:
    virtual ~NullMessageTarget() {}
-   void Update(const wxString &message) override {}
+   void Update(const wxString &) override {}
 };
 
 /// Displays messages from a command in a wxMessageBox
@@ -146,18 +145,17 @@ public:
 class CombinedMessageTarget final : public CommandMessageTarget
 {
 private:
-   CommandMessageTarget *m1, *m2;
+   std::unique_ptr<CommandMessageTarget> m1, m2;
 public:
-   CombinedMessageTarget(CommandMessageTarget *t1, CommandMessageTarget *t2)
-      : m1(t1), m2(t2)
+   CombinedMessageTarget(std::unique_ptr<CommandMessageTarget> &&t1,
+                         std::unique_ptr<CommandMessageTarget> &&t2)
+      : m1(std::move(t1)), m2(std::move(t2))
    {
-      wxASSERT(t1 != NULL);
-      wxASSERT(t2 != NULL);
+      wxASSERT(m1);
+      wxASSERT(m2);
    }
    ~CombinedMessageTarget()
    {
-      delete m1;
-      delete m2;
    }
    void Update(const wxString &message) override
    {
@@ -167,7 +165,8 @@ public:
 };
 
 
-// By default, we ignore progress updates but display all other messages directly
+// By default, we ignore progress updates but display all other messages
+// directly
 class TargetFactory
 {
 public:

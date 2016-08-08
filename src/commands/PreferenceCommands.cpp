@@ -26,8 +26,8 @@ wxString GetPreferenceCommandType::BuildName()
 
 void GetPreferenceCommandType::BuildSignature(CommandSignature &signature)
 {
-   Validator *prefNameValidator(new DefaultValidator());
-   signature.AddParameter(wxT("PrefName"), wxT(""), prefNameValidator);
+   auto prefNameValidator = make_movable<DefaultValidator>();
+   signature.AddParameter(wxT("PrefName"), wxT(""), std::move(prefNameValidator));
 }
 
 CommandHolder GetPreferenceCommandType::Create(std::unique_ptr<CommandOutputTarget> &&target)
@@ -59,10 +59,10 @@ wxString SetPreferenceCommandType::BuildName()
 
 void SetPreferenceCommandType::BuildSignature(CommandSignature &signature)
 {
-   Validator *prefNameValidator(new DefaultValidator());
-   signature.AddParameter(wxT("PrefName"), wxT(""), prefNameValidator);
-   Validator *prefValueValidator(new DefaultValidator());
-   signature.AddParameter(wxT("PrefValue"), wxT(""), prefValueValidator);
+   auto prefNameValidator = make_movable<DefaultValidator>();
+   signature.AddParameter(wxT("PrefName"), wxT(""), std::move(prefNameValidator));
+   auto prefValueValidator = make_movable<DefaultValidator>();
+   signature.AddParameter(wxT("PrefValue"), wxT(""), std::move(prefValueValidator));
 }
 
 CommandHolder SetPreferenceCommandType::Create(std::unique_ptr<CommandOutputTarget> &&target)

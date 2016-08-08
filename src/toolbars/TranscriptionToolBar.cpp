@@ -93,15 +93,12 @@ TranscriptionToolBar::TranscriptionToolBar()
 {
    mPlaySpeed = 1.0 * 100.0;
 #ifdef EXPERIMENTAL_VOICE_DETECTION
-   mVk = new VoiceKey();
+   mVk = std::make_unique<VoiceKey>();
 #endif
 }
 
 TranscriptionToolBar::~TranscriptionToolBar()
 {
-#ifdef EXPERIMENTAL_VOICE_DETECTION
-   delete mVk;
-#endif
 }
 
 void TranscriptionToolBar::Create(wxWindow * parent)

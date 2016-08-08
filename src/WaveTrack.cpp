@@ -78,8 +78,6 @@ WaveTrack::Holder TrackFactory::NewWaveTrack(sampleFormat format, double rate)
 
 WaveTrack::WaveTrack(DirManager *projDirManager, sampleFormat format, double rate) :
    Track(projDirManager)
-   , mpSpectrumSettings(0)
-   , mpWaveformSettings(0)
 {
    if (format == (sampleFormat)0)
    {
@@ -163,9 +161,9 @@ void WaveTrack::Merge(const Track &orig)
       mDisplayMin = wt.mDisplayMin;
       mDisplayMax = wt.mDisplayMax;
       SetSpectrogramSettings(wt.mpSpectrumSettings
-         ? new SpectrogramSettings(*wt.mpSpectrumSettings) : 0);
+         ? std::make_unique<SpectrogramSettings>(*wt.mpSpectrumSettings) : nullptr);
       SetWaveformSettings
-         (wt.mpWaveformSettings ? new WaveformSettings(*wt.mpWaveformSettings) : 0);
+         (wt.mpWaveformSettings ? std::make_unique<WaveformSettings>(*wt.mpWaveformSettings) : nullptr);
    }
    Track::Merge(orig);
 }
@@ -180,9 +178,6 @@ WaveTrack::~WaveTrack()
    for (WaveClipList::compatibility_iterator it=GetClipIterator(); it; it=it->GetNext())
       delete it->GetData();
    mClips.Clear();
-
-   delete mpSpectrumSettings;
-   delete mpWaveformSettings;
 }
 
 double WaveTrack::GetOffset() const
@@ -763,15 +758,14 @@ SpectrogramSettings &WaveTrack::GetIndependentSpectrogramSettings()
 {
    if (!mpSpectrumSettings)
       mpSpectrumSettings =
-      new SpectrogramSettings(SpectrogramSettings::defaults());
+      std::make_unique<SpectrogramSettings>(SpectrogramSettings::defaults());
    return *mpSpectrumSettings;
 }
 
-void WaveTrack::SetSpectrogramSettings(SpectrogramSettings *pSettings)
+void WaveTrack::SetSpectrogramSettings(std::unique_ptr<SpectrogramSettings> &&pSettings)
 {
    if (mpSpectrumSettings != pSettings) {
-      delete mpSpectrumSettings;
-      mpSpectrumSettings = pSettings;
+      mpSpectrumSettings = std::move(pSettings);
    }
 }
 
@@ -794,15 +788,14 @@ WaveformSettings &WaveTrack::GetWaveformSettings()
 WaveformSettings &WaveTrack::GetIndependentWaveformSettings()
 {
    if (!mpWaveformSettings)
-      mpWaveformSettings = new WaveformSettings(WaveformSettings::defaults());
+      mpWaveformSettings = std::make_unique<WaveformSettings>(WaveformSettings::defaults());
    return *mpWaveformSettings;
 }
 
-void WaveTrack::SetWaveformSettings(WaveformSettings *pSettings)
+void WaveTrack::SetWaveformSettings(std::unique_ptr<WaveformSettings> &&pSettings)
 {
    if (mpWaveformSettings != pSettings) {
-      delete mpWaveformSettings;
-      mpWaveformSettings = pSettings;
+      mpWaveformSettings = std::move(pSettings);
    }
 }
 
@@ -2643,10 +2636,10 @@ void WaveTrack::FillSortedClipArray(WaveClipArray& clips) const
 }
 
 ///Deletes all clips' wavecaches.  Careful, This may not be threadsafe.
-void WaveTrack::DeleteWaveCaches()
+void WaveTrack::ClearWaveCaches()
 {
    for (WaveClipList::compatibility_iterator it=GetClipIterator(); it; it=it->GetNext())
-      it->GetData()->DeleteWaveCache();
+      it->GetData()->ClearWaveCache();
 }
 
 ///Adds an invalid region to the wavecache so it redraws that portion only.

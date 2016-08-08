@@ -13,6 +13,7 @@
 #ifndef __AUDACITY_TOOLMANAGER__
 #define __AUDACITY_TOOLMANAGER__
 
+#include "../MemoryX.h"
 #include <wx/defs.h>
 #include <wx/frame.h>
 #include <wx/timer.h>
@@ -97,8 +98,7 @@ class ToolManager final : public wxEvtHandler
    wxRect mBarPos;
 
    wxFrame *mIndicator;
-   wxRegion *mLeft;
-   wxRegion *mDown;
+   std::unique_ptr<wxRegion> mLeft, mDown;
    wxRegion *mCurrent;
 
    wxTimer mTimer;

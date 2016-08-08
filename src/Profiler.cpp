@@ -20,6 +20,7 @@ but it will probably work fine if you use it on a high level.
 
 *//*******************************************************************/
 
+#include "Audacity.h"
 #include "Profiler.h"
 #include <stdio.h>
 #include <string.h>
@@ -54,10 +55,6 @@ Profiler::~Profiler()
       fprintf(log,"\n****************************************\n\n\n");
 
       fclose(log);
-
-      //DELETE everything.
-      for(int i=0;i<(int)mTasks.size();i++)
-         delete mTasks[i];
    }
 }
 
@@ -83,14 +80,10 @@ void Profiler::End(char* fileName, int lineNum, char* taskDescription)
 ///Gets the singleton instance
 Profiler* Profiler::Instance()
 {
-   static Profiler* pro=NULL;
+   static Profiler pro;
    //this isn't 100% threadsafe but I think Okay for this purpose.
 
-   if(!pro)
-      pro = new Profiler();
-
-   return pro;
-
+   return &pro;
 }
 
 ///find a taskProfile for the given task, otherwise create
@@ -99,12 +92,12 @@ TaskProfile* Profiler::GetOrCreateTaskProfile(char* fileName, int lineNum)
    for(int i=0;i<(int)mTasks.size();i++)
    {
       if(strcmp(fileName,mTasks[i]->mFileName)==0 && lineNum == mTasks[i]->mLine)
-         return mTasks[i];
+         return mTasks[i].get();
    }
 
-   TaskProfile* tp = new TaskProfile();
-   mTasks.push_back(tp);
-   return tp;
+   auto tp = make_movable<TaskProfile>();
+   mTasks.push_back(std::move(tp));
+   return mTasks.back().get();
 }
 
 TaskProfile* Profiler::GetTaskProfileByDescription(char* description)
@@ -112,7 +105,7 @@ TaskProfile* Profiler::GetTaskProfileByDescription(char* description)
    for(int i=0;i<(int)mTasks.size();i++)
    {
       if(strcmp(description,mTasks[i]->mDescription)==0)
-         return mTasks[i];
+         return mTasks[i].get();
    }
 
    return NULL;

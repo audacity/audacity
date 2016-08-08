@@ -262,9 +262,9 @@ private:
    int mBitRateFromChoice;
    int mSampleRateFromChoice;
 
-   FFmpegPresets *mPresets;
+   std::unique_ptr<FFmpegPresets> mPresets;
 
-   wxArrayString *mPresetNames;
+   wxArrayString mPresetNames;
 
    /// Finds the format currently selected and returns it's name and description
    void FindSelectedFormat(wxString **name, wxString **longname);
@@ -324,7 +324,7 @@ public:
    FFmpegPresets();
    ~FFmpegPresets();
 
-   wxArrayString *GetPresetList();
+   void GetPresetList(wxArrayString &list);
    void LoadPreset(ExportFFmpegOptions *parent, wxString &name);
    void SavePreset(ExportFFmpegOptions *parent, wxString &name);
    void DeletePreset(wxString &name);

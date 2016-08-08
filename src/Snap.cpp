@@ -8,6 +8,7 @@
 
 **********************************************************************/
 
+#include "Audacity.h"
 #include "Snap.h"
 
 #include <algorithm>

@@ -168,7 +168,7 @@ public:
 
 private:
    sampleFormat          mFormat;
-   MyFLACFile           *mFile;
+   std::unique_ptr<MyFLACFile> mFile;
    wxFFile               mHandle;
    unsigned long         mSampleRate;
    unsigned long         mNumChannels;
@@ -178,7 +178,7 @@ private:
    bool                  mStreamInfoDone;
    int                   mUpdateResult;
    TrackHolders          mChannels;
-   ODDecodeFlacTask     *mDecoderTask;
+   movable_ptr<ODDecodeFlacTask> mDecoderTask;
 };
 
 
@@ -343,19 +343,17 @@ FLACImportFileHandle::FLACImportFileHandle(const wxString & name)
 {
    mFormat = (sampleFormat)
       gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleFormat"), floatSample);
-   mFile = new MyFLACFile(this);
+   mFile = std::make_unique<MyFLACFile>(this);
 }
 
 bool FLACImportFileHandle::Init()
 {
 #ifdef EXPERIMENTAL_OD_FLAC
-   mDecoderTask=new ODDecodeFlacTask;
+   mDecoderTask = make_movable<ODDecodeFlacTask>();
 
    ODFlacDecoder* odDecoder = (ODFlacDecoder*)mDecoderTask->CreateFileDecoder(mFilename);
    if(!odDecoder || !odDecoder->ReadHeader())
    {
-      //DELETE the task only if it failed to read - otherwise the OD man takes care of it.
-      delete mDecoderTask;
       return false;
    }
    //copy the meta data over to the class
@@ -511,13 +509,13 @@ int FLACImportFileHandle::Import(TrackFactory *trackFactory,
          if(moreThanStereo)
          {
             //if we have 3 more channels, they get imported on seperate tracks, so we add individual tasks for each.
-            ODManager::Instance()->AddNewTask(mDecoderTask);
-            mDecoderTask = new ODDecodeFlacTask; //TODO: see if we need to use clone to keep the metadata.
+            ODManager::Instance()->AddNewTask(std::move(mDecoderTask));
+            mDecoderTask = make_movable<ODDecodeFlacTask>(); //TODO: see if we need to use clone to keep the metadata.
          }
       }
       //if we have mono or a linked track (stereo), we add ONE task for the one linked wave track
       if(!moreThanStereo)
-         ODManager::Instance()->AddNewTask(mDecoderTask);
+         ODManager::Instance()->AddNewTask(std::move(mDecoderTask));
    }
 //END OD
 
@@ -554,7 +552,6 @@ FLACImportFileHandle::~FLACImportFileHandle()
    //don't DELETE mFile if we are using OD.
 #ifndef EXPERIMENTAL_OD_FLAC
    mFile->finish();
-   delete mFile;
 #endif
 }
 

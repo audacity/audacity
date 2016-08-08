@@ -105,7 +105,7 @@ wxColour Ruler::mTickColour{ 153, 153, 153 };
 //
 
 Ruler::Ruler()
-   : mpNumberScale(0)
+   : mpNumberScale{}
 {
    mMin = mHiddenMin = 0.0;
    mMax = mHiddenMax = 100.0;
@@ -136,9 +136,9 @@ Ruler::Ruler()
    fontSize = 8;
 #endif
 
-   mMinorMinorFont = new wxFont(fontSize - 1, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-   mMinorFont = new wxFont(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-   mMajorFont = new wxFont(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
+   mMinorMinorFont = std::make_unique<wxFont>(fontSize - 1, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+   mMinorFont = std::make_unique<wxFont>(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+   mMajorFont = std::make_unique<wxFont>(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
 
    mUserFonts = false;
 
@@ -170,9 +170,6 @@ Ruler::~Ruler()
    Invalidate();  // frees up our arrays
    if( mUserBits )
       delete [] mUserBits;//JKC
-   delete mMinorFont;
-   delete mMajorFont;
-   delete mMinorMinorFont;
 
    if (mMajorLabels)
       delete[] mMajorLabels;
@@ -180,8 +177,6 @@ Ruler::~Ruler()
       delete[] mMinorLabels;
    if (mMinorMinorLabels)
       delete[] mMinorMinorLabels;
-
-   delete mpNumberScale;
 }
 
 void Ruler::SetTwoTone(bool twoTone)
@@ -322,14 +317,13 @@ void Ruler::SetNumberScale(const NumberScale *pScale)
 {
    if (!pScale) {
       if (mpNumberScale) {
-         delete mpNumberScale;
+         mpNumberScale.reset();
          Invalidate();
       }
    }
    else {
       if (!mpNumberScale || *mpNumberScale != *pScale) {
-         delete mpNumberScale;
-         mpNumberScale = new NumberScale(*pScale);
+         mpNumberScale = std::make_unique<NumberScale>(*pScale);
          Invalidate();
       }
    }
@@ -1028,17 +1022,11 @@ void Ruler::Update(const TimeTrack* timetrack)// Envelope *speedEnv, long minSpe
       mDC->GetTextExtent(exampleText, &strW, &strH, &strD, &strL);
       mLead = strL;
 
-      if (mMajorFont)
-         delete mMajorFont;
-      mMajorFont = new wxFont(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
+      mMajorFont = std::make_unique<wxFont>(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
 
-      if (mMinorFont)
-         delete mMinorFont;
-      mMinorFont = new wxFont(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+      mMinorFont = std::make_unique<wxFont>(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
 
-      if (mMinorMinorFont)
-         delete mMinorMinorFont;
-      mMinorMinorFont = new wxFont(fontSize - 1, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+      mMinorMinorFont = std::make_unique<wxFont>(fontSize - 1, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
    }
 
    // If ruler is being resized, we could end up with it being too small.
@@ -2013,11 +2001,6 @@ AdornedRulerPanel::~AdornedRulerPanel()
    if(HasCapture())
       ReleaseMouse();
 
-   // Done with the snap manager
-   if (mSnapManager) {
-      delete mSnapManager;
-   }
-
    wxTheApp->Disconnect(EVT_AUDIOIO_CAPTURE,
                         wxCommandEventHandler(AdornedRulerPanel::OnCapture),
                         NULL,
@@ -2424,10 +2407,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
       SetCursor(mCursorDefault);
       mIsWE = false;
 
-      if (mSnapManager) {
-         delete mSnapManager;
-         mSnapManager = NULL;
-      }
+      mSnapManager.reset();
 
       if(evt.Leaving())
          return;
@@ -2929,7 +2909,7 @@ void AdornedRulerPanel::DragSelection()
 void AdornedRulerPanel::HandleSnapping()
 {
    if (!mSnapManager) {
-      mSnapManager = new SnapManager(mTracks, mViewInfo);
+      mSnapManager = std::make_unique<SnapManager>(mTracks, mViewInfo);
    }
 
    bool snappedPoint, snappedTime;

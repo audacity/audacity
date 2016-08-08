@@ -98,13 +98,13 @@ class TranscriptionToolBar final : public ToolBar {
    void OnAutomateSelection(wxCommandEvent & event);
    void OnSensitivitySlider(wxCommandEvent & event);
 
-   void Populate() override;
-   void Repaint(wxDC * WXUNUSED(dc)) override {}
-   void EnableDisableButtons() override;
-   void UpdatePrefs() override;
+   //void Populate() override;
+   //void Repaint(wxDC * WXUNUSED(dc)) override {}
+   //void EnableDisableButtons() override;
+   //void UpdatePrefs() override;
 
-   void OnFocus(wxFocusEvent &event);
-   void OnCaptureKey(wxCommandEvent &event);
+   //void OnFocus(wxFocusEvent &event);
+   //void OnCaptureKey(wxCommandEvent &event);
 
    double GetSensitivity();
    void SetKeyType(wxCommandEvent & event);
@@ -144,7 +144,7 @@ class TranscriptionToolBar final : public ToolBar {
 
 #ifdef EXPERIMENTAL_VOICE_DETECTION
    double mSensitivity;
-   VoiceKey *mVk;
+   std::unique_ptr<VoiceKey> mVk;
    wxChoice *mKeyTypeChoice;
 #endif
 

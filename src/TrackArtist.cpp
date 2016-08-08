@@ -274,12 +274,11 @@ TrackArtist::TrackArtist()
    UpdatePrefs();
 
    SetColours();
-   vruler = new Ruler;
+   vruler = std::make_unique<Ruler>();
 }
 
 TrackArtist::~TrackArtist()
 {
-   delete vruler;
 }
 
 void TrackArtist::SetColours()
@@ -2232,8 +2231,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
    }
    else {
       // Update the spectrum pixel cache
-      delete clip->mSpecPxCache;
-      clip->mSpecPxCache = new SpecPxCache(hiddenMid.width * hiddenMid.height);
+      clip->mSpecPxCache = std::make_unique<SpecPxCache>(hiddenMid.width * hiddenMid.height);
       clip->mSpecPxCache->valid = true;
       clip->mSpecPxCache->scaleType = scaleType;
       clip->mSpecPxCache->gain = gain;
@@ -2727,7 +2725,7 @@ void TrackArtist::DrawNoteBackground(const NoteTrack *track, wxDC &dc,
    }
 
    // draw bar lines
-   Alg_seq_ptr seq = track->mSeq;
+   Alg_seq_ptr seq = track->mSeq.get();
    // We assume that sliding a NoteTrack around slides the barlines
    // along with the notes. This means that when we write out a track
    // as Allegro or MIDI without the offset, we'll need to insert an
@@ -2779,16 +2777,16 @@ void TrackArtist::DrawNoteTrack(const NoteTrack *track,
    const double h = X_TO_TIME(rect.x);
    const double h1 = X_TO_TIME(rect.x + rect.width);
 
-   Alg_seq_ptr seq = track->mSeq;
+   Alg_seq_ptr seq = track->mSeq.get();
    if (!seq) {
       assert(track->mSerializationBuffer);
       // JKC: Previously this indirected via seq->, a NULL pointer.
       // This was actually OK, since unserialize is a static function.
       // Alg_seq:: is clearer.
-      Alg_track_ptr alg_track = Alg_seq::unserialize(track->mSerializationBuffer,
-            track->mSerializationLength);
+      std::unique_ptr<Alg_track> alg_track{ Alg_seq::unserialize(track->mSerializationBuffer,
+            track->mSerializationLength) };
       assert(alg_track->get_type() == 's');
-      const_cast<NoteTrack*>(track)->mSeq = seq = (Alg_seq_ptr) alg_track;
+      const_cast<NoteTrack*>(track)->mSeq.reset(seq = static_cast<Alg_seq*>(alg_track.release()));
       free(track->mSerializationBuffer);
       track->mSerializationBuffer = NULL;
    }

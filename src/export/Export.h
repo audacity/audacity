@@ -188,7 +188,7 @@ private:
    FileDialog *mDialog;
    wxString mFileDialogTitle;
    AudacityProject *mProject;
-   MixerSpec *mMixerSpec;
+   std::unique_ptr<MixerSpec> mMixerSpec;
 
    ExportPluginArray mPlugins;
 
@@ -227,7 +227,7 @@ public:
    void OnPaint(wxPaintEvent & event);
 
 private:
-   wxBitmap *mBitmap;
+   std::unique_ptr<wxBitmap> mBitmap;
    wxRect mEnvRect;
    int mWidth;
    int mHeight;
@@ -259,11 +259,11 @@ public:
          long style = wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER );
    virtual ~ExportMixerDialog();
 
-   MixerSpec* GetMixerSpec() { return mMixerSpec; }
+   MixerSpec* GetMixerSpec() { return mMixerSpec.get(); }
 
 private:
    wxStaticText *mChannelsText;
-   MixerSpec *mMixerSpec;
+   std::unique_ptr<MixerSpec> mMixerSpec;
    wxArrayString mTrackNames;
 
 private:

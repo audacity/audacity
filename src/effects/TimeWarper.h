@@ -56,6 +56,8 @@ of the warped region.
 #ifndef __TIMEWARPER__
 #define __TIMEWARPER__
 
+#include "../MemoryX.h"
+
 class TimeWarper /* not final */
 {
 public:
@@ -72,13 +74,12 @@ public:
 class ShiftTimeWarper final : public TimeWarper
 {
 private:
-   TimeWarper *mWarper;
+   std::unique_ptr<TimeWarper> mWarper;
    double mShift;
 public:
-   ShiftTimeWarper(TimeWarper *warper, double shiftAmount)
-      : mWarper(warper), mShift(shiftAmount) { }
-   virtual ~ShiftTimeWarper()
-   { delete mWarper; }
+   ShiftTimeWarper(std::unique_ptr<TimeWarper> &&warper, double shiftAmount)
+      : mWarper(std::move(warper)), mShift(shiftAmount) { }
+   virtual ~ShiftTimeWarper() {}
    double Warp(double originalTime) const override;
 };
 
@@ -191,17 +192,16 @@ public:
 class RegionTimeWarper final : public TimeWarper
 {
 private:
-   TimeWarper *mWarper;
+   std::unique_ptr<TimeWarper> mWarper;
    double mTStart;
    double mTEnd;
    double mOffset;
 public:
-   RegionTimeWarper(double tStart, double tEnd, TimeWarper *warper)
-      : mWarper(warper), mTStart(tStart), mTEnd(tEnd),
+   RegionTimeWarper(double tStart, double tEnd, std::unique_ptr<TimeWarper> &&warper)
+      : mWarper(std::move(warper)), mTStart(tStart), mTEnd(tEnd),
          mOffset(mWarper->Warp(mTEnd)-mTEnd)
    { }
-   virtual ~RegionTimeWarper()
-   { delete mWarper; }
+   virtual ~RegionTimeWarper() {}
    double Warp(double originalTime) const override
    {
       if (originalTime < mTStart)

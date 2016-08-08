@@ -16,6 +16,7 @@
 #ifndef __COMMANDHANDLER__
 #define __COMMANDHANDLER__
 
+#include "../MemoryX.h"
 #include "../AudacityApp.h"
 class AudacityProject;
 class AppCommandEvent;
@@ -24,7 +25,7 @@ class CommandExecutionContext;
 class CommandHandler
 {
    private:
-      CommandExecutionContext *mCurrentContext;
+      std::unique_ptr<CommandExecutionContext> mCurrentContext;
 
    public:
       CommandHandler(AudacityApp &app);

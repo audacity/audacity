@@ -125,7 +125,7 @@ private:
 private:
    wxWindow *mParent;
    EffectAutoDuck *mEffect;
-   wxBitmap *mBackgroundBitmap;
+   std::unique_ptr<wxBitmap> mBackgroundBitmap;
    EControlPoint mCurrentControlPoint;
    wxPoint mControlPoints[AUTO_DUCK_PANEL_NUM_CONTROL_POINTS];
    wxPoint mMoveStartControlPoints[AUTO_DUCK_PANEL_NUM_CONTROL_POINTS];

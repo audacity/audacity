@@ -37,7 +37,7 @@ public:
    ODDecodeFFmpegTask(const ScsPtr &scs, Streams &&channels, const std::shared_ptr<FFmpegContext> &context, int streamIndex);
    virtual ~ODDecodeFFmpegTask();
 
-   std::unique_ptr<ODTask> Clone() const override;
+   movable_ptr<ODTask> Clone() const override;
    ///Creates an ODFileDecoder that decodes a file of filetype the subclass handles.
    ODFileDecoder* CreateFileDecoder(const wxString & fileName) override;
 

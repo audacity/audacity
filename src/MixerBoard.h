@@ -156,13 +156,14 @@ WX_DEFINE_ARRAY(MixerTrackCluster*, MixerTrackClusterArray);
 class MusicalInstrument
 {
 public:
-   MusicalInstrument(wxBitmap* pBitmap, const wxString & strXPMfilename);
+   MusicalInstrument(std::unique_ptr<wxBitmap> &&pBitmap, const wxString & strXPMfilename);
    virtual ~MusicalInstrument();
 
-   wxBitmap*      mBitmap;
+   std::unique_ptr<wxBitmap> mBitmap;
    wxArrayString  mKeywords;
 };
-WX_DECLARE_OBJARRAY(MusicalInstrument, MusicalInstrumentArray);
+
+using MusicalInstrumentArray = std::vector<movable_ptr<MusicalInstrument>>;
 
 
 
@@ -274,15 +275,9 @@ private:
 
 public:
    // mute & solo button images: Create once and store on MixerBoard for use in all MixerTrackClusters.
-   wxImage* mImageMuteUp;
-   wxImage* mImageMuteOver;
-   wxImage* mImageMuteDown;
-   wxImage* mImageMuteDownWhileSolo; // the one actually alternate image
-   wxImage* mImageMuteDisabled;
-   wxImage* mImageSoloUp;
-   wxImage* mImageSoloOver;
-   wxImage* mImageSoloDown;
-   wxImage* mImageSoloDisabled;
+   std::unique_ptr<wxImage> mImageMuteUp, mImageMuteOver, mImageMuteDown,
+      mImageMuteDownWhileSolo, // the one actually alternate image
+      mImageMuteDisabled, mImageSoloUp, mImageSoloOver, mImageSoloDown, mImageSoloDisabled;
 
    int mMuteSoloWidth;
 

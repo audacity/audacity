@@ -58,7 +58,7 @@ public:
 
 private:
    wxString mName;
-   wxDynamicLibrary *mLib;
+   std::unique_ptr<wxDynamicLibrary> mLib;
    fnModuleDispatch mDispatch;
 };
 
@@ -123,7 +123,7 @@ private:
    ModuleMap mDynModules;
    LibraryMap mLibs;
 
-   wxArrayPtrVoid mModules;
+   std::vector<movable_ptr<Module>> mModules;
 };
 
 #endif /* __AUDACITY_MODULEMANAGER_H__ */

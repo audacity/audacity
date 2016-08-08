@@ -373,7 +373,7 @@ DeviceChangeHandler::DeviceChangeHandler()
 :  wxEvtHandler()
 {
    mTimer.SetOwner(this);
-   mListener = new DeviceChangeListener();
+   mListener = std::make_unique<DeviceChangeListener>();
    mListener->SetHandler(this);
    mListener->Enable(true);
 }
@@ -381,10 +381,7 @@ DeviceChangeHandler::DeviceChangeHandler()
 DeviceChangeHandler::~DeviceChangeHandler()
 {
    if (mListener)
-   {
       mListener->Enable(false);
-      delete mListener;
-   }
 }
 
 void DeviceChangeHandler::Enable(bool enable)

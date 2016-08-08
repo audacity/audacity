@@ -427,7 +427,7 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
      mTracks(tracks),
      mViewInfo(viewInfo),
      mRuler(ruler),
-     mTrackArtist(NULL),
+     mTrackArtist(nullptr),
      mRefreshBacking(false),
      mConverter(NumericConverter::TIME),
      mAutoScrolling(false),
@@ -441,10 +441,16 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    SetName(_("Track Panel"));
    SetBackgroundStyle(wxBG_STYLE_PAINT);
 
-   mAx = new TrackPanelAx( this );
+   {
+      auto pAx = std::make_unique <TrackPanelAx>( this );
 #if wxUSE_ACCESSIBILITY
-   SetAccessible( mAx );
+      // wxWidgets owns the accessible object
+      SetAccessible(mAx = pAx.release());
+#else
+      // wxWidgets doesn not own the object, but we need to retain it
+      mAx = std::move(pAx);
 #endif
+   }
 
    mMouseCapture = IsUncaptured;
    mSlideUpDownOnly = false;
@@ -501,9 +507,10 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    mLabelTrackMenu = NULL;
    mTimeTrackMenu = NULL;
 
-   mRulerWaveformMenu = mRulerSpectrumMenu = NULL;
+   BuildMenus();
 
-   mTrackArtist = new TrackArtist();
+   mTrackArtist = std::make_unique<TrackArtist>();
+
    mTrackArtist->SetInset(1, kTopMargin, kRightMargin, kBottomMargin);
 
    mCapturedTrack = NULL;
@@ -571,16 +578,7 @@ TrackPanel::~TrackPanel()
    if (HasCapture())
       ReleaseMouse();
 
-   delete mTrackArtist;
-
-
-   delete mSnapManager;
-
    DeleteMenus();
-
-#if !wxUSE_ACCESSIBILITY
-   delete mAx;
-#endif
 }
 
 void TrackPanel::BuildMenusIfNeeded(void)
@@ -596,29 +594,29 @@ void TrackPanel::BuildMenus(void)
 
    // Use AppendCheckItem so we can have ticks beside the items.
    // We would use AppendRadioItem but it only currently works on windows and GTK.
-   mRateMenu = new wxMenu();
-   mRateMenu->AppendRadioItem(OnRate8ID, wxT("8000 Hz"));
-   mRateMenu->AppendRadioItem(OnRate11ID, wxT("11025 Hz"));
-   mRateMenu->AppendRadioItem(OnRate16ID, wxT("16000 Hz"));
-   mRateMenu->AppendRadioItem(OnRate22ID, wxT("22050 Hz"));
-   mRateMenu->AppendRadioItem(OnRate44ID, wxT("44100 Hz"));
-   mRateMenu->AppendRadioItem(OnRate48ID, wxT("48000 Hz"));
-   mRateMenu->AppendRadioItem(OnRate88ID, wxT("88200 Hz"));
-   mRateMenu->AppendRadioItem(OnRate96ID, wxT("96000 Hz"));
-   mRateMenu->AppendRadioItem(OnRate176ID, wxT("176400 Hz"));
-   mRateMenu->AppendRadioItem(OnRate192ID, wxT("192000 Hz"));
-   mRateMenu->AppendRadioItem(OnRate352ID, wxT("352800 Hz"));
-   mRateMenu->AppendRadioItem(OnRate384ID, wxT("384000 Hz"));
-   mRateMenu->AppendRadioItem(OnRateOtherID, _("&Other..."));
+   auto rateMenu = std::make_unique<wxMenu>();
+   rateMenu->AppendRadioItem(OnRate8ID, wxT("8000 Hz"));
+   rateMenu->AppendRadioItem(OnRate11ID, wxT("11025 Hz"));
+   rateMenu->AppendRadioItem(OnRate16ID, wxT("16000 Hz"));
+   rateMenu->AppendRadioItem(OnRate22ID, wxT("22050 Hz"));
+   rateMenu->AppendRadioItem(OnRate44ID, wxT("44100 Hz"));
+   rateMenu->AppendRadioItem(OnRate48ID, wxT("48000 Hz"));
+   rateMenu->AppendRadioItem(OnRate88ID, wxT("88200 Hz"));
+   rateMenu->AppendRadioItem(OnRate96ID, wxT("96000 Hz"));
+   rateMenu->AppendRadioItem(OnRate176ID, wxT("176400 Hz"));
+   rateMenu->AppendRadioItem(OnRate192ID, wxT("192000 Hz"));
+   rateMenu->AppendRadioItem(OnRate352ID, wxT("352800 Hz"));
+   rateMenu->AppendRadioItem(OnRate384ID, wxT("384000 Hz"));
+   rateMenu->AppendRadioItem(OnRateOtherID, _("&Other..."));
 
-   mFormatMenu = new wxMenu();
-   mFormatMenu->AppendRadioItem(On16BitID, GetSampleFormatStr(int16Sample));
-   mFormatMenu->AppendRadioItem(On24BitID, GetSampleFormatStr(int24Sample));
-   mFormatMenu->AppendRadioItem(OnFloatID, GetSampleFormatStr(floatSample));
+   auto formatMenu = std::make_unique<wxMenu>();
+   formatMenu->AppendRadioItem(On16BitID, GetSampleFormatStr(int16Sample));
+   formatMenu->AppendRadioItem(On24BitID, GetSampleFormatStr(int24Sample));
+   formatMenu->AppendRadioItem(OnFloatID, GetSampleFormatStr(floatSample));
 
    /* build the pop-down menu used on wave (sampled audio) tracks */
-   mWaveTrackMenu = new wxMenu();
-   BuildCommonDropMenuItems(mWaveTrackMenu);   // does name, up/down etc
+   mWaveTrackMenu = std::make_unique<wxMenu>();
+   BuildCommonDropMenuItems(mWaveTrackMenu.get());   // does name, up/down etc
    mWaveTrackMenu->AppendRadioItem(OnWaveformID, _("Wa&veform"));
    mWaveTrackMenu->AppendRadioItem(OnWaveformDBID, _("&Waveform (dB)"));
    mWaveTrackMenu->AppendRadioItem(OnSpectrumID, _("&Spectrogram"));
@@ -636,41 +634,42 @@ void TrackPanel::BuildMenus(void)
    mWaveTrackMenu->Append(OnSplitStereoMonoID, _("Split Stereo to Mo&no"));
    mWaveTrackMenu->AppendSeparator();
 
-   mWaveTrackMenu->Append(0, _("&Format"), mFormatMenu);
+   mWaveTrackMenu->Append(0, _("&Format"), (mFormatMenu = formatMenu.release()));
 
    mWaveTrackMenu->AppendSeparator();
 
-   mWaveTrackMenu->Append(0, _("Rat&e"), mRateMenu);
+   mWaveTrackMenu->Append(0, _("Rat&e"), (mRateMenu = rateMenu.release()));
 
    /* build the pop-down menu used on note (MIDI) tracks */
-   mNoteTrackMenu = new wxMenu();
-   BuildCommonDropMenuItems(mNoteTrackMenu);   // does name, up/down etc
+   mNoteTrackMenu = std::make_unique<wxMenu>();
+   BuildCommonDropMenuItems(mNoteTrackMenu.get());   // does name, up/down etc
    mNoteTrackMenu->Append(OnUpOctaveID, _("Up &Octave"));
    mNoteTrackMenu->Append(OnDownOctaveID, _("Down Octa&ve"));
 
    /* build the pop-down menu used on label tracks */
-   mLabelTrackMenu = new wxMenu();
-   BuildCommonDropMenuItems(mLabelTrackMenu);   // does name, up/down etc
+   mLabelTrackMenu = std::make_unique<wxMenu>();
+   BuildCommonDropMenuItems(mLabelTrackMenu.get());   // does name, up/down etc
    mLabelTrackMenu->Append(OnSetFontID, _("&Font..."));
 
    /* build the pop-down menu used on time warping tracks */
-   mTimeTrackMenu = new wxMenu();
-   BuildCommonDropMenuItems(mTimeTrackMenu);   // does name, up/down etc
+   mTimeTrackMenu = std::make_unique<wxMenu>();
+   BuildCommonDropMenuItems(mTimeTrackMenu.get());   // does name, up/down etc
    mTimeTrackMenu->AppendRadioItem(OnTimeTrackLinID, wxT("&Linear scale"));
    mTimeTrackMenu->AppendRadioItem(OnTimeTrackLogID, _("L&ogarithmic scale"));
+
    mTimeTrackMenu->AppendSeparator();
    mTimeTrackMenu->Append(OnSetTimeTrackRangeID, _("&Range..."));
    mTimeTrackMenu->AppendCheckItem(OnTimeTrackLogIntID, _("Logarithmic &Interpolation"));
 
 /*
-   mRulerWaveformMenu = new wxMenu();
+   mRulerWaveformMenu = std::make_unique<wxMenu>();
    BuildVRulerMenuItems
-      (mRulerWaveformMenu, OnFirstWaveformScaleID,
+      (mRulerWaveformMenu.get(), OnFirstWaveformScaleID,
        WaveformSettings::GetScaleNames());
 
-   mRulerSpectrumMenu = new wxMenu();
+   mRulerSpectrumMenu = std::make_unique<wxMenu>();
    BuildVRulerMenuItems
-      (mRulerSpectrumMenu, OnFirstSpectrumScaleID,
+      (mRulerSpectrumMenu.get(), OnFirstSpectrumScaleID,
        SpectrogramSettings::GetScaleNames());
 */
 }
@@ -713,30 +712,15 @@ void TrackPanel::DeleteMenus(void)
 {
    // Note that the submenus (mRateMenu, ...)
    // are deleted by their parent
+
    mRateMenu = mFormatMenu = nullptr;
 
-   if (mWaveTrackMenu) {
-      delete mWaveTrackMenu;
-      mWaveTrackMenu = NULL;
-   }
-
-   if (mNoteTrackMenu) {
-      delete mNoteTrackMenu;
-      mNoteTrackMenu = NULL;
-   }
-
-   if (mLabelTrackMenu) {
-      delete mLabelTrackMenu;
-      mLabelTrackMenu = NULL;
-   }
-
-   if (mTimeTrackMenu) {
-      delete mTimeTrackMenu;
-      mTimeTrackMenu = NULL;
-   }
-
-   delete mRulerWaveformMenu;
-   delete mRulerSpectrumMenu;
+   mWaveTrackMenu.reset();
+   mNoteTrackMenu.reset();
+   mLabelTrackMenu.reset();
+   mTimeTrackMenu.reset();
+   mRulerWaveformMenu.reset();
+   mRulerSpectrumMenu.reset();
 }
 
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
@@ -1790,10 +1774,7 @@ void TrackPanel::HandleSelect(wxMouseEvent & event)
       if (t)
          SelectionHandleClick(event, t, rect);
    } else if (event.LeftUp() || event.RightUp()) {
-      if (mSnapManager) {
-         delete mSnapManager;
-         mSnapManager = NULL;
-      }
+      mSnapManager.reset();
       // Do not draw yellow lines
       if (mSnapLeft != -1 || mSnapRight != -1) {
          mSnapLeft = mSnapRight = -1;
@@ -1930,10 +1911,7 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
    }
 
    // We create a NEW snap manager in case any snap-points have changed
-   if (mSnapManager)
-      delete mSnapManager;
-
-   mSnapManager = new SnapManager(mTracks, mViewInfo);
+   mSnapManager = std::make_unique<SnapManager>(mTracks, mViewInfo);
 
    mSnapLeft = -1;
    mSnapRight = -1;
@@ -3198,10 +3176,7 @@ void TrackPanel::HandleSlide(wxMouseEvent & event)
 
       SetCapturedTrack( NULL );
 
-      if (mSnapManager) {
-         delete mSnapManager;
-         mSnapManager = NULL;
-      }
+      mSnapManager.reset();
 
       // Do not draw yellow lines
       if (mSnapLeft != -1 || mSnapRight != -1) {
@@ -3412,9 +3387,7 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
    mSelStartValid = true;
    mSelStart = mViewInfo->PositionToTime(event.m_x, rect.x);
 
-   if (mSnapManager)
-      delete mSnapManager;
-   mSnapManager = new SnapManager(mTracks,
+   mSnapManager = std::make_unique<SnapManager>(mTracks,
                                   mViewInfo,
                                   &mCapturedClipArray,
                                   &mTrackExclusions,
@@ -7554,7 +7527,7 @@ void TrackPanel::OnTrackMenu(Track *t)
 
    wxMenu *theMenu = NULL;
    if (t->GetKind() == Track::Time) {
-      theMenu = mTimeTrackMenu;
+      theMenu = mTimeTrackMenu.get();
 
       TimeTrack *tt = (TimeTrack*) t;
 
@@ -7562,7 +7535,7 @@ void TrackPanel::OnTrackMenu(Track *t)
    }
 
    if (t->GetKind() == Track::Wave) {
-      theMenu = mWaveTrackMenu;
+      theMenu = mWaveTrackMenu.get();
       const bool isMono = !t->GetLinked();
       const bool canMakeStereo =
          (next && isMono && !next->GetLinked() &&
@@ -7617,11 +7590,11 @@ void TrackPanel::OnTrackMenu(Track *t)
 
 #if defined(USE_MIDI)
    if (t->GetKind() == Track::Note)
-      theMenu = mNoteTrackMenu;
+      theMenu = mNoteTrackMenu.get();
 #endif
 
    if (t->GetKind() == Track::Label){
-       theMenu = mLabelTrackMenu;
+       theMenu = mLabelTrackMenu.get();
    }
 
    if (theMenu) {
@@ -7662,13 +7635,13 @@ void TrackPanel::OnVRulerMenu(Track *t, wxMouseEvent *pEvent)
    const int display = wt->GetDisplay();
    wxMenu *theMenu;
    if (display == WaveTrack::Waveform) {
-      theMenu = mRulerWaveformMenu;
+      theMenu = mRulerWaveformMenu.get();
       const int id =
          OnFirstWaveformScaleID + int(wt->GetWaveformSettings().scaleType);
       theMenu->Check(id, true);
    }
    else {
-      theMenu = mRulerSpectrumMenu;
+      theMenu = mRulerSpectrumMenu.get();
       const int id =
          OnFirstSpectrumScaleID + int(wt->GetSpectrogramSettings().scaleType);
       theMenu->Check(id, true);
@@ -8823,12 +8796,12 @@ TrackInfo::TrackInfo(TrackPanel * pParentIn)
    GetGainRect(rect, sliderRect);
 
    /* i18n-hint: Title of the Gain slider, used to adjust the volume */
-   mGain = new LWSlider(pParent, _("Gain"),
+   mGain = std::make_unique<LWSlider>(pParent, _("Gain"),
                         wxPoint(sliderRect.x, sliderRect.y),
                         wxSize(sliderRect.width, sliderRect.height),
                         DB_SLIDER);
    mGain->SetDefaultValue(1.0);
-   mGainCaptured = new LWSlider(pParent, _("Gain"),
+   mGainCaptured = std::make_unique<LWSlider>(pParent, _("Gain"),
                                 wxPoint(sliderRect.x, sliderRect.y),
                                 wxSize(sliderRect.width, sliderRect.height),
                                 DB_SLIDER);
@@ -8837,12 +8810,12 @@ TrackInfo::TrackInfo(TrackPanel * pParentIn)
    GetPanRect(rect, sliderRect);
 
    /* i18n-hint: Title of the Pan slider, used to move the sound left or right */
-   mPan = new LWSlider(pParent, _("Pan"),
+   mPan = std::make_unique<LWSlider>(pParent, _("Pan"),
                        wxPoint(sliderRect.x, sliderRect.y),
                        wxSize(sliderRect.width, sliderRect.height),
                        PAN_SLIDER);
    mPan->SetDefaultValue(0.0);
-   mPanCaptured = new LWSlider(pParent, _("Pan"),
+   mPanCaptured = std::make_unique<LWSlider>(pParent, _("Pan"),
                                wxPoint(sliderRect.x, sliderRect.y),
                                wxSize(sliderRect.width, sliderRect.height),
                                PAN_SLIDER);
@@ -8853,10 +8826,6 @@ TrackInfo::TrackInfo(TrackPanel * pParentIn)
 
 TrackInfo::~TrackInfo()
 {
-   delete mGainCaptured;
-   delete mGain;
-   delete mPanCaptured;
-   delete mPan;
 }
 
 int TrackInfo::GetTrackInfoWidth() const
@@ -9209,7 +9178,7 @@ LWSlider * TrackInfo::GainSlider(WaveTrack *t, bool captured) const
    mGainCaptured->Move(pos);
    mGainCaptured->Set(gain);
 
-   return captured ? mGainCaptured : mGain;
+   return (captured ? mGainCaptured : mGain).get();
 }
 
 LWSlider * TrackInfo::PanSlider(WaveTrack *t, bool captured) const
@@ -9226,7 +9195,7 @@ LWSlider * TrackInfo::PanSlider(WaveTrack *t, bool captured) const
    mPanCaptured->Move(pos);
    mPanCaptured->Set(pan);
 
-   return captured ? mPanCaptured : mPan;
+   return (captured ? mPanCaptured : mPan).get();
 }
 
 void TrackInfo::UpdatePrefs()
