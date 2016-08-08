@@ -5370,7 +5370,7 @@ void AudacityProject::OnShowClipping()
 void AudacityProject::OnHistory()
 {
    if (!mHistoryWindow)
-      mHistoryWindow = new HistoryWindow(this, GetUndoManager());
+      mHistoryWindow = safenew HistoryWindow(this, GetUndoManager());
    mHistoryWindow->Show();
    mHistoryWindow->Raise();
    mHistoryWindow->UpdateDisplay();
@@ -5405,7 +5405,7 @@ void AudacityProject::OnPlotSpectrum()
       where.x = 150;
       where.y = 150;
 
-      mFreqWindow = new FreqWindow(this, -1, _("Frequency Analysis"), where);
+      mFreqWindow = safenew FreqWindow(this, -1, _("Frequency Analysis"), where);
    }
 
    mFreqWindow->Show(true);
@@ -5422,7 +5422,7 @@ void AudacityProject::OnContrast()
       where.x = 150;
       where.y = 150;
 
-      mContrastDialog = new ContrastDialog(this, -1, _("Contrast Analysis (WCAG 2 compliance)"), where);
+      mContrastDialog = safenew ContrastDialog(this, -1, _("Contrast Analysis (WCAG 2 compliance)"), where);
    }
 
    mContrastDialog->CentreOnParent();

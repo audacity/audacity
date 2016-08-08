@@ -2740,7 +2740,8 @@ void LabelTrack::CreateCustomGlyphs()
          // Create the icon from the tweaked spec.
          mBoundaryGlyphs[index] = wxBitmap(XmpBmp);
          // Create the mask
-         mBoundaryGlyphs[index].SetMask(new wxMask(mBoundaryGlyphs[index], wxColour(192, 192, 192)));
+         // SetMask takes ownership
+         mBoundaryGlyphs[index].SetMask(safenew wxMask(mBoundaryGlyphs[index], wxColour(192, 192, 192)));
       }
    }
 

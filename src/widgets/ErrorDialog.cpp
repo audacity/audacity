@@ -184,11 +184,13 @@ void ShowModelessErrorDialog(wxWindow *parent,
                              const wxString &helpURL,
                              const bool Close)
 {
-   ErrorDialog *dlog = new ErrorDialog(parent, dlogTitle, message, helpURL, Close, false);
+   ErrorDialog *dlog = safenew ErrorDialog(parent, dlogTitle, message, helpURL, Close, false);
    dlog->CentreOnParent();
    dlog->Show();
    // ANSWER-ME: Vigilant Sentry flags this method as not deleting dlog, so a mem leak.
    // ANSWER-ME: This is unused. Delete it or are there plans for it?
+   // PRL: answer is that the parent window guarantees destruction of the dialog
+   // but in practice Destroy() in OnOK does that
 }
 
 void ShowAliasMissingDialog(AudacityProject *parent,
@@ -197,7 +199,7 @@ void ShowAliasMissingDialog(AudacityProject *parent,
                             const wxString &helpURL,
                             const bool Close)
 {
-   ErrorDialog *dlog = new AliasedFileMissingDialog(parent, dlogTitle, message, helpURL, Close, false);
+   ErrorDialog *dlog = safenew AliasedFileMissingDialog(parent, dlogTitle, message, helpURL, Close, false);
    // Don't center because in many cases (effect, export, etc) there will be a progress bar in the center that blocks this.
    // instead put it just above or on the top of the project.
    wxPoint point;
@@ -214,4 +216,6 @@ void ShowAliasMissingDialog(AudacityProject *parent,
    // stop playback AND read dialog's instructions.
    dlog->Show();
    // ANSWER-ME: Vigilant Sentry flags this method as not deleting dlog, so a mem leak.
+   // PRL: answer is that the parent window guarantees destruction of the dialog
+   // but in practice Destroy() in OnOK does that
 }

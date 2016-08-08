@@ -1085,6 +1085,7 @@ void ToolManager::OnMouse( wxMouseEvent & event )
 
          // Done with the floater
          mDragWindow->Destroy();
+         mDragWindow = nullptr;
          mDragBar->Refresh(false);
       }
       else
@@ -1335,7 +1336,7 @@ void ToolManager::OnGrabber( GrabberEvent & event )
       mDragBar->SetPositioned();
 
       // Construct a NEW floater
-      mDragWindow = new ToolFrame( mParent, this, mDragBar, mp );
+      mDragWindow = safenew ToolFrame( mParent, this, mDragBar, mp );
 
       // Make sure the ferry is visible
       mDragWindow->Show();
@@ -1377,6 +1378,7 @@ void ToolManager::HandleEscapeKey()
          // Done with the floater
          mDragWindow->ClearBar();
          mDragWindow->Destroy();
+         mDragWindow = nullptr;
          mDragBar->Refresh(false);
       }
       else {

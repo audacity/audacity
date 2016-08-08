@@ -705,7 +705,8 @@ void LWSlider::Draw(wxDC & paintDC)
 
 #if !defined(__WXMAC__)
    // Now create and set the mask
-   mThumbBitmap->SetMask(new wxMask(*mThumbBitmap, transparentColour));
+   // SetMask takes ownership
+   mThumbBitmap->SetMask(safenew wxMask(*mThumbBitmap, transparentColour));
 #endif
 
    //
@@ -884,7 +885,8 @@ void LWSlider::Draw(wxDC & paintDC)
    dc.SelectObject(wxNullBitmap);
 
 #if !defined(__WXMAC__)
-   mBitmap->SetMask(new wxMask(*mBitmap, transparentColour));
+   // SetMask takes ownership
+   mBitmap->SetMask(safenew wxMask(*mBitmap, transparentColour));
 #endif
 }
 

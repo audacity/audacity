@@ -758,7 +758,7 @@ AButton * ToolBar::MakeButton(wxWindow *parent,
    wxImagePtr disable2   (OverlayImage(eUp,     eDisabled, xoff, yoff));
 
    AButton * button =
-      new AButton(parent, id, placement, size, *up2, *hilite2, *down2,
+      safenew AButton(parent, id, placement, size, *up2, *hilite2, *down2,
             *disable2, processdownevents);
 
    return button;

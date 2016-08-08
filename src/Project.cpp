@@ -2033,8 +2033,8 @@ void AudacityProject::OnShow(wxShowEvent & event)
    // this is a pure wxWidgets event (no GDK event behind it) and that it
    // therefore isn't processed within the YieldFor(..) of the clipboard
    // operations (workaround for Debian bug #765341).
-   wxSizeEvent *sizeEvent = new wxSizeEvent(GetSize());
-   GetEventHandler()->QueueEvent(sizeEvent);
+   // QueueEvent() will take ownership of the event
+   GetEventHandler()->QueueEvent(safenew wxSizeEvent(GetSize()));
 
    // Further processing by default handlers
    event.Skip();
