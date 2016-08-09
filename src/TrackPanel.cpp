@@ -5578,7 +5578,7 @@ void TrackPanel::HandleWheelRotation(wxMouseEvent & event)
       return;
 
    // Special case of pointer in the vertical ruler
-   {
+   if (event.ShiftDown() || event.CmdDown()) {
       wxRect rect;
       Track *const pTrack = FindTrack(event.m_x, event.m_y, true, false, &rect);
       if (pTrack && event.m_x >= GetVRulerOffset()) {
@@ -5682,36 +5682,30 @@ void TrackPanel::HandleWheelRotationInVRuler
       const bool isDB =
          wt->GetDisplay() == WaveTrack::Waveform &&
          wt->GetWaveformSettings().scaleType == WaveformSettings::stLogarithmic;
-      if (isDB && event.ShiftDown()) {
-         // Special cases for Waveform dB only
 
-         // Vary the bottom of the dB scale, but only if the midline is visible
+      // Special cases for Waveform dB only.
+      // Set the bottom of the dB scale but only if it's visible
+      if (isDB && event.ShiftDown() && event.CmdDown()) {
          float min, max;
          wt->GetDisplayBounds(&min, &max);
-         if (!(min < 0.0 && max > 0.0))
-            return;
-
-         WaveformSettings &settings = wt->GetIndependentWaveformSettings();
-         float olddBRange = settings.dBRange;
-         if (steps < 0)
-            // Zoom out
-            settings.NextLowerDBRange();
-         else
-            settings.NextHigherDBRange();
-         float newdBRange = settings.dBRange;
-
-         if (partner) {
-            WaveformSettings &settings = partner->GetIndependentWaveformSettings();
+         if (min < 0.0 && max > 0.0) {
+            WaveformSettings &settings = wt->GetIndependentWaveformSettings();
+            float olddBRange = settings.dBRange;
             if (steps < 0)
                // Zoom out
                settings.NextLowerDBRange();
             else
                settings.NextHigherDBRange();
-         }
+            float newdBRange = settings.dBRange;
 
-         if (!event.CmdDown()) {
-            // extra-special case that varies the db limit without changing
-            // magnification
+            if (partner) {
+               WaveformSettings &settings = partner->GetIndependentWaveformSettings();
+               if (steps < 0)
+                  // Zoom out
+                  settings.NextLowerDBRange();
+               else
+                  settings.NextHigherDBRange();
+            }
             const float extreme = (LINEAR_TO_DB(2) + newdBRange) / newdBRange;
             max = std::min(extreme, max * olddBRange / newdBRange);
             min = std::max(-extreme, min * olddBRange / newdBRange);
@@ -5729,7 +5723,7 @@ void TrackPanel::HandleWheelRotationInVRuler
             wt, false, (steps < 0),
             true);
       }
-      else if (!(event.CmdDown() || event.ShiftDown())) {
+      else if (!event.CmdDown() && event.ShiftDown()) {
          // Scroll some fixed number of pixels, independent of zoom level or track height:
          static const float movement = 10.0f;
          const int height = wt->GetHeight() - (kTopMargin + kBottomMargin);
