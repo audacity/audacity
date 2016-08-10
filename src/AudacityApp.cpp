@@ -1203,7 +1203,8 @@ bool AudacityApp::OnInit()
 
    ::wxInitAllImageHandlers();
 
-   wxFileSystem::AddHandler(new wxZipFSHandler);
+   // AddHandler takes ownership
+   wxFileSystem::AddHandler(safenew wxZipFSHandler);
 
    //
    // Paths: set search path and temp dir path

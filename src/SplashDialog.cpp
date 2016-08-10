@@ -142,7 +142,8 @@ void SplashDialog::Show2( wxWindow * pParent )
 {
    if( pSelf == NULL )
    {
-      pSelf = new SplashDialog( pParent );
+      // pParent owns it
+      pSelf = safenew SplashDialog( pParent );
    }
    pSelf->mpHtml->SetPage(HelpText( wxT("welcome") ));
    pSelf->Show( true );

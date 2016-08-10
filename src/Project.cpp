@@ -340,7 +340,8 @@ public:
    {
       mProject = proj;
 
-      SetDataObject(new FileObject());
+      // SetDataObject takes ownership
+      SetDataObject(safenew FileObject());
    }
 
    ~DropTarget()
@@ -1110,9 +1111,11 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
 
 #if wxUSE_DRAG_AND_DROP
    // We can import now, so become a drag target
-//   SetDropTarget(new AudacityDropTarget(this));
-//   mTrackPanel->SetDropTarget(new AudacityDropTarget(this));
-   mTrackPanel->SetDropTarget(new DropTarget(this));
+//   SetDropTarget(safenew AudacityDropTarget(this));
+//   mTrackPanel->SetDropTarget(safenew AudacityDropTarget(this));
+
+   // SetDropTarget takes ownership
+   mTrackPanel->SetDropTarget(safenew DropTarget(this));
 #endif
 
    wxTheApp->Connect(EVT_AUDIOIO_CAPTURE,

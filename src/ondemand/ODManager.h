@@ -222,7 +222,7 @@ class ODManagerHelperThread {
    class ODManagerHelperThread final : public wxThread
    {
       public:
-      ///Constructs a ODTaskThread
+      ///Constructs an ODManagerHelperThread
       ///@param task the task to be launched as an
       ODManagerHelperThread(): wxThread(){}
 
