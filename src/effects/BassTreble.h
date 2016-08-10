@@ -41,7 +41,7 @@ public:
 
 WX_DECLARE_OBJARRAY(EffectBassTrebleState, EffectBassTrebleStateArray);
 
-class EffectBassTreble : public Effect
+class EffectBassTreble final : public Effect
 {
 public:
    EffectBassTreble();
