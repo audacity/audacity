@@ -546,6 +546,7 @@ void Scrubber::StopScrubbing()
    }
 
    mProject->GetRulerPanel()->HideQuickPlayIndicator();
+   CheckMenuItems();
 }
 
 bool Scrubber::ShowsBar() const
@@ -613,6 +614,8 @@ bool Scrubber::Seeks() const
 
 bool Scrubber::Scrubs() const
 {
+   if( Seeks() )
+      return false;
    return (HasStartedScrubbing() || IsScrubbing()) && !ChoseSeeking();
 }
 
@@ -897,11 +900,13 @@ void Scrubber::OnScrubOrSeek(bool seek)
 void Scrubber::OnScrub(wxCommandEvent&)
 {
    OnScrubOrSeek(false);
+   CheckMenuItems();
 }
 
 void Scrubber::OnSeek(wxCommandEvent&)
 {
    OnScrubOrSeek(true);
+   CheckMenuItems();
 }
 
 void Scrubber::OnToggleScrubBar(wxCommandEvent&)
