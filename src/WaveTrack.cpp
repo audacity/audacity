@@ -116,10 +116,13 @@ WaveTrack::WaveTrack(DirManager *projDirManager, sampleFormat format, double rat
 WaveTrack::WaveTrack(const WaveTrack &orig):
    Track(orig)
    , mpSpectrumSettings(orig.mpSpectrumSettings
-        ? new SpectrogramSettings(*orig.mpSpectrumSettings) : 0
-     )
+      ? std::make_unique<SpectrogramSettings>(*orig.mpSpectrumSettings)
+      : nullptr
+   )
    , mpWaveformSettings(orig.mpWaveformSettings 
-        ? new WaveformSettings(*orig.mpWaveformSettings) : 0)
+      ? std::make_unique<WaveformSettings>(*orig.mpWaveformSettings)
+      : nullptr
+   )
 {
    mLastScaleType = -1;
    mLastdBRange = -1;

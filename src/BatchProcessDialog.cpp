@@ -302,14 +302,15 @@ void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
    {
       S.StartStatic(_("Applying..."), 1);
       {
-         wxImageList *imageList = new wxImageList(9, 16);
+         auto imageList = std::make_unique<wxImageList>(9, 16);
          imageList->Add(wxIcon(empty9x16_xpm));
          imageList->Add(wxIcon(arrow_xpm));
 
          S.SetStyle(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_VRULES |
                     wxLC_SINGLE_SEL);
          mList = S.Id(CommandsListID).AddListControlReportMode();
-         mList->AssignImageList(imageList, wxIMAGE_LIST_SMALL);
+         // AssignImageList takes ownership
+         mList->AssignImageList(imageList.release(), wxIMAGE_LIST_SMALL);
          mList->InsertColumn(0, _("File"), wxLIST_FORMAT_LEFT);
       }
       S.EndStatic();
