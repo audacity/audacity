@@ -1434,17 +1434,18 @@ bool AudacityApp::OnInit()
       // On the Mac, users don't expect a program to quit when you close the last window.
       // Create a menubar that will show when all project windows are closed.
 
-      wxMenu *fileMenu = new wxMenu();
-      wxMenu *recentMenu = new wxMenu();
+      auto fileMenu = std::make_unique<wxMenu>();
+      auto urecentMenu = std::make_unique<wxMenu>();
+      auto recentMenu = urecentMenu.get();
       fileMenu->Append(wxID_NEW, wxString(_("&New")) + wxT("\tCtrl+N"));
       fileMenu->Append(wxID_OPEN, wxString(_("&Open...")) + wxT("\tCtrl+O"));
-      fileMenu->AppendSubMenu(recentMenu, _("Open &Recent..."));
+      fileMenu->AppendSubMenu(urecentMenu.release(), _("Open &Recent..."));
       fileMenu->Append(wxID_ABOUT, _("&About Audacity..."));
       fileMenu->Append(wxID_PREFERENCES, wxString(_("&Preferences...")) + wxT("\tCtrl+,"));
 
       {
          auto menuBar = std::make_unique<wxMenuBar>();
-         menuBar->Append(fileMenu, _("&File"));
+         menuBar->Append(fileMenu.release(), _("&File"));
 
          // PRL:  Are we sure wxWindows will not leak this menuBar?
          // The online documentation is not explicit.
