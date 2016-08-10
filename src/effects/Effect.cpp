@@ -2929,7 +2929,7 @@ int EffectUIHost::ShowModal()
    sz->Replace(mCloseBtn, apply);
    sz->Replace(mApplyBtn, mCloseBtn);
    sz->Layout();
-   delete mApplyBtn;
+   mApplyBtn->Destroy();
    mApplyBtn = apply;
    mApplyBtn->SetDefault();
    mApplyBtn->SetLabel(wxGetStockLabel(wxID_OK, 0));
