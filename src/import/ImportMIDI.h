@@ -22,6 +22,7 @@ into a NoteTrack.
 
 #if defined(USE_MIDI)
 
+class wxString;
 class NoteTrack;
 
 bool ImportMIDI(const wxString &fName, NoteTrack * dest);

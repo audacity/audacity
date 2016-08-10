@@ -54,8 +54,7 @@
 #ifndef __AUDACITY_IMPORT_LOF__
 #define __AUDACITY_IMPORT_LOF__
 
-class ImportPluginList;
-class UnusableImportPluginList;
+#include "ImportForwards.h"
 
 void GetLOFImportPlugin(ImportPluginList *importPluginList,
                         UnusableImportPluginList *unusableImportPluginList);

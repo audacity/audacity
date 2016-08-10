@@ -28,6 +28,9 @@
 
 *//*******************************************************************/
 
+#include "../Audacity.h"
+#include "ImportOGG.h"
+
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
 
@@ -36,12 +39,10 @@
 #endif
 
 #include <wx/intl.h>
-#include "../Audacity.h"
 #include "../Prefs.h"
 #include "../Internat.h"
 #include "../Tags.h"
 
-#include "ImportOGG.h"
 
 #define DESC _("Ogg Vorbis files")
 

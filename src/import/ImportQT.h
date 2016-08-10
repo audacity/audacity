@@ -11,8 +11,7 @@
 #ifndef __AUDACITY_IMPORT_QT__
 #define __AUDACITY_IMPORT_QT__
 
-class ImportPluginList;
-class UnusableImportPluginList;
+#include "ImportForwards.h"
 
 void GetQTImportPlugin(ImportPluginList *importPluginList,
                        UnusableImportPluginList *unusableImportPluginList);

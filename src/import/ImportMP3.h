@@ -11,8 +11,7 @@
 #ifndef __AUDACITY_IMPORT_MP3__
 #define __AUDACITY_IMPORT_MP3__
 
-class ImportPluginList;
-class UnusableImportPluginList;
+#include "ImportForwards.h"
 
 void GetMP3ImportPlugin(ImportPluginList *importPluginList,
                         UnusableImportPluginList *unusableImportPluginList);

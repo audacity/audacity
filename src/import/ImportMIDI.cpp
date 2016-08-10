@@ -8,12 +8,13 @@
 
 **********************************************************************/
 
+#include "../Audacity.h"
+#include "ImportMIDI.h"
+
 #include <wx/defs.h>
 #include <wx/msgdlg.h>
 #include <wx/ffile.h>
 #include <wx/intl.h>
-
-#include "../Audacity.h"
 
 #if defined(USE_MIDI)
 
@@ -23,7 +24,6 @@
 
 #include "../Internat.h"
 #include "../NoteTrack.h"
-#include "ImportMIDI.h"
 
 bool ImportMIDI(const wxString &fName, NoteTrack * dest)
 {

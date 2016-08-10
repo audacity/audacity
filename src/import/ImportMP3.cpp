@@ -26,6 +26,9 @@
 
 *//*******************************************************************/
 
+#include "../Audacity.h"
+#include "ImportMP3.h"
+
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
 
@@ -35,11 +38,9 @@
 
 #include <wx/defs.h>
 #include <wx/intl.h>
-#include "../Audacity.h"
 
 #include "../Prefs.h"
 #include "Import.h"
-#include "ImportMP3.h"
 #include "ImportPlugin.h"
 #include "../Internat.h"
 #include "../Tags.h"

@@ -22,6 +22,9 @@
 
 *//*******************************************************************/
 
+#include "../Audacity.h"
+#include "ImportFLAC.h"
+
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
 
@@ -33,7 +36,6 @@
 #include <wx/defs.h>
 #include <wx/intl.h>    // needed for _("translated stings") even if we
                         // don't have libflac available
-#include "../Audacity.h"
 
 #include "Import.h"
 #include "ImportPlugin.h"
@@ -66,7 +68,6 @@ void GetFLACImportPlugin(ImportPluginList *importPluginList,
 #else /* USE_LIBFLAC */
 
 #include "../Internat.h"
-#include "ImportFLAC.h"
 
 #include <wx/string.h>
 #include <wx/utils.h>

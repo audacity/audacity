@@ -20,10 +20,10 @@
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "ImportPCM.h"
 #include "../AudacityApp.h"
 #include "../Internat.h"
 #include "../Tags.h"
-#include "ImportPCM.h"
 
 #include <wx/wx.h>
 #include <wx/string.h>

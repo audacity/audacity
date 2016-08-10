@@ -17,6 +17,8 @@ the low-pass-like spectral behaviour of natural audio signals
 for classification of the sample format and the used endianness.
 
 *//*******************************************************************/
+#include "FormatClassifier.h"
+
 #include <stdint.h>
 #include <cmath>
 #include <cfloat>
@@ -28,8 +30,6 @@ for classification of the sample format and the used endianness.
 #include "MultiFormatReader.h"
 #include "SpecPowerMeter.h"
 #include "sndfile.h"
-
-#include "FormatClassifier.h"
 
 FormatClassifier::FormatClassifier(const char* filename) :
    mReader(filename),

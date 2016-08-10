@@ -13,6 +13,7 @@
 **********************************************************************/
 
 #include "../Audacity.h"
+#include "ImportQT.h"
 #include "ImportPlugin.h"
 
 #define DESC _("QuickTime files")
@@ -66,7 +67,6 @@ void GetQTImportPlugin(ImportPluginList *importPluginList,
 #include "../Internat.h"
 #include "../Tags.h"
 #include "../WaveTrack.h"
-#include "ImportQT.h"
 
 #define kQTAudioPropertyID_MaxAudioSampleSize   'mssz'
 

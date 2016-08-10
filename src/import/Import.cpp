@@ -37,6 +37,7 @@ and ImportLOF.cpp.
 
 #include "../Audacity.h"
 #include "Import.h"
+
 #include "ImportPlugin.h"
 
 #include <wx/textctrl.h>
