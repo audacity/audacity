@@ -2429,7 +2429,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
    else if (!HasCapture() && inScrubZone) {
       if (evt.LeftDown()) {
          scrubber.MarkScrubStart(evt.m_x,
-            PlaybackPrefs::GetPinnedHeadPreference(), false);
+            TracksPrefs::GetPinnedHeadPreference(), false);
          UpdateStatusBarAndTooltips(StatusChoice::EnteringScrubZone);
       }
       ShowQuickPlayIndicator();
@@ -2785,7 +2785,7 @@ void AdornedRulerPanel::UpdateButtonStates()
    };
 
    {
-      bool state = PlaybackPrefs::GetPinnedHeadPreference();
+      bool state = TracksPrefs::GetPinnedHeadPreference();
       auto pinButton = static_cast<AButton*>(FindWindow(OnTogglePinnedStateID));
       pinButton->PopUp();
       pinButton->SetAlternateIdx(state ? 0 : 1);

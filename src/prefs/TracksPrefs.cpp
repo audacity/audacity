@@ -30,6 +30,20 @@
 
 #include "../Experimental.h"
 
+
+namespace {
+   const wxChar *PinnedHeadPreferenceKey()
+   {
+      return wxT("/AudioIO/PinnedHead");
+   }
+
+   bool PinnedHeadPreferenceDefault()
+   {
+      return false;
+   }
+}
+
+
 TracksPrefs::TracksPrefs(wxWindow * parent)
 :  PrefsPanel(parent, _("Tracks"))
 {
@@ -89,9 +103,13 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
 
    S.StartStatic(_("Display"));
    {
-      S.TieCheckBox(_("&Update display while playing"),
+      S.TieCheckBox(_("&Update display while when Recording/Playback head unpinned"),
                     wxT("/GUI/AutoScroll"),
                     true);
+
+      S.TieCheckBox(_("Pinned Recording/Playback head"),
+                    PinnedHeadPreferenceKey(),
+                    PinnedHeadPreferenceDefault());
       S.TieCheckBox(_("Automatically &fit tracks vertically zoomed"),
                     wxT("/GUI/TracksFitVerticallyZoomed"),
                     false);
@@ -159,6 +177,19 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 }
+
+bool TracksPrefs::GetPinnedHeadPreference()
+{
+   return gPrefs->ReadBool(PinnedHeadPreferenceKey(), PinnedHeadPreferenceDefault());
+}
+
+void TracksPrefs::SetPinnedHeadPreference(bool value, bool flush)
+{
+   gPrefs->Write(PinnedHeadPreferenceKey(), value);
+   if(flush)
+      gPrefs->Flush();
+}
+
 
 bool TracksPrefs::Apply()
 {

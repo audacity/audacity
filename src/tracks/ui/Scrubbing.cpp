@@ -19,7 +19,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../TrackPanelCell.h"
 #include "../../TrackPanelCellIterator.h"
 #include "../../commands/CommandFunctors.h"
-#include "../../prefs/PlaybackPrefs.h"
+#include "../../prefs/TracksPrefs.h"
 #include "../../toolbars/ControlToolBar.h"
 #include "../../toolbars/ScrubbingToolBar.h"
 #include "../../toolbars/ToolManager.h"
@@ -852,7 +852,7 @@ Scrubber &ScrubbingOverlay::GetScrubber()
 void Scrubber::DoScrub(bool seek)
 {
    const bool wasScrubbing = HasStartedScrubbing() || IsScrubbing();
-   const bool scroll = PlaybackPrefs::GetPinnedHeadPreference();
+   const bool scroll = TracksPrefs::GetPinnedHeadPreference();
    if (!wasScrubbing) {
       auto tp = mProject->GetTrackPanel();
       wxCoord xx = tp->ScreenToClient(::wxGetMouseState().GetPosition()).x;
