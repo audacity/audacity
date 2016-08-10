@@ -282,9 +282,11 @@ void Scrubber::MarkScrubStart(
 
    mSeeking = seek;
 
-   ctb->SetPlay(true, mSeeking
-      ? ControlToolBar::PlayAppearance::Seek
-      : ControlToolBar::PlayAppearance::Scrub);
+   ctb->SetPlay(true, ControlToolBar::PlayAppearance::Straight );
+   // Commented out for Bug 1421
+   //   mSeeking
+   //   ? ControlToolBar::PlayAppearance::Seek
+   //   : ControlToolBar::PlayAppearance::Scrub);
 
    mScrubStartPosition = xx;
    ctb->UpdateStatusBar(mProject);
@@ -375,9 +377,12 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
 #endif
                lrint(std::max(0.0, MinStutter) * options.rate);
 
-            ControlToolBar::PlayAppearance appearance = mSeeking
-               ? ControlToolBar::PlayAppearance::Seek
-               : ControlToolBar::PlayAppearance::Scrub;
+            ControlToolBar::PlayAppearance appearance = 
+            // commented out to fix Bug 1241
+            // mSeeking
+            //   ? ControlToolBar::PlayAppearance::Seek
+            //   : ControlToolBar::PlayAppearance::Scrub;
+                 ControlToolBar::PlayAppearance::Straight;
             const bool cutPreview = false;
             const bool backwards = time1 < time0;
 #ifdef EXPERIMENTAL_SCRUBBING_SCROLL_WHEEL
