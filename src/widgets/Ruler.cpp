@@ -2122,6 +2122,9 @@ namespace {
       else
          return _("Move to Scrub");
 #else
+      wxMouseState State = wxGetMouseState();
+      if( State.LeftIsDown() )
+         return _("Release and move to Scrub. Drag to Seek.");
       return _("Move to Scrub, drag to Seek");
 #endif
    }
