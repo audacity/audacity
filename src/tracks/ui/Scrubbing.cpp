@@ -948,6 +948,20 @@ const wxString &Scrubber::GetUntranslatedStateString() const
       return empty;
 }
 
+const wxString & Scrubber::StatusMessageForWave() const
+{
+   static wxString result;
+   result = "";
+
+   if(  Seeks() )
+      result = _("Move mouse pointer to Seek");
+   else if( Scrubs() )
+      result = _("Move mouse pointer to Scrub");
+   return result;
+}
+
+
+
 std::vector<wxString> Scrubber::GetAllUntranslatedStatusStrings()
 {
    using namespace std;
