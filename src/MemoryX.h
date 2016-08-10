@@ -185,6 +185,12 @@ namespace std {
          }
       }
 
+      void swap(unique_ptr& that)
+      {
+         std::swap(p, that.p);
+         std::swap(get_deleter(), that.get_deleter());
+      }
+
    private:
       T *p{};
    };
@@ -259,6 +265,12 @@ namespace std {
          {
             get_deleter()(old__p);
          }
+      }
+
+      void swap(unique_ptr& that)
+      {
+         std::swap(p, that.p);
+         std::swap(get_deleter(), that.get_deleter());
       }
 
    private:
