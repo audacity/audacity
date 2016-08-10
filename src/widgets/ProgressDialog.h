@@ -7,6 +7,9 @@
   Copyright
      Leland Lucius
      Vaughan Johnson
+   
+  Modifications
+     Mark Young
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -40,13 +43,14 @@ enum
 
 enum ProgressDialogFlags
 {
-   pdlgEmptyFlags = 0x00000000,
-   pdlgHideStopButton = 0x00000001,
-   pdlgHideCancelButton = 0x00000002,
-   pdlgHideElapsedTime = 0x00000004,
-   pdlgConfirmStopCancel = 0x00000008,
+   pdlgEmptyFlags          = 0,
+   pdlgHideStopButton      = (1 << 0), /* 1 */
+   pdlgHideCancelButton    = (1 << 1), /* 2 */
+   pdlgHideElapsedTime     = (1 << 2), /* 4 */
+   pdlgConfirmStopCancel   = (1 << 3), /* 8 */
+   pdlgTwoColumnDialog     = (1 << 4), /* 16 */
 
-   pdlgDefaultFlags = pdlgEmptyFlags
+   pdlgDefaultFlags        = pdlgEmptyFlags
 };
 
 ////////////////////////////////////////////////////////////
@@ -60,6 +64,7 @@ public:
    ProgressDialog(const wxString & title,
                   const wxString & message = wxEmptyString,
                   int flags = pdlgDefaultFlags,
+                  const wxString & sCol2Message = wxEmptyString,
                   const wxString & sRemainingLabelText = wxEmptyString);
    virtual ~ProgressDialog();
 
@@ -67,6 +72,7 @@ public:
    virtual bool Create(const wxString & title,
                        const wxString & message = wxEmptyString,
                        int flags = pdlgDefaultFlags,
+                       const wxString & sCol2Message = wxEmptyString,
                        const wxString & sRemainingLabelText = wxEmptyString);
 
    int Update(int value, const wxString & message = wxEmptyString);
@@ -97,6 +103,7 @@ protected:
    // MY: Booleans to hold the flag values
    bool m_bShowElapsedTime = true;
    bool m_bConfirmAction = false;
+   bool m_bTwoColumns = false;
 
 private:
    void Init();
@@ -110,15 +117,19 @@ private:
                       const wxString & sTitle,
                       int iButtonID = -1);
 
+   wxStaticText* NewMessageStaticTextControl(const wxString & sText);
+
 private:
    // This guarantees we have an active event loop...possible during OnInit()
    wxEventLoopGuarantor mLoop;
 
    std::unique_ptr<wxWindowDisabler> mDisable;
 
-   wxStaticText *mMessage;
    int mLastW;
    int mLastH;
+
+   wxStaticText *mMessageOne;
+   wxStaticText *mMessageTwo;
 
    DECLARE_EVENT_TABLE();
 };
@@ -130,6 +141,7 @@ public:
                        const wxString & title,
                        const wxString & message = wxEmptyString,
                        int flags = pdlgDefaultFlags,
+                       const wxString & sCol2Message = wxEmptyString,
                        const wxString & sRemainingLabelText = wxEmptyString);
    int Update(const wxString & message = wxEmptyString);
 
