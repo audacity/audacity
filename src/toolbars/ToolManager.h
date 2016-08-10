@@ -112,7 +112,7 @@ class ToolManager final : public wxEvtHandler
    ToolDock *mTopDock;
    ToolDock *mBotDock;
 
-   ToolBar *mBars[ ToolBarCount ];
+   ToolBar::Holder mBars[ ToolBarCount ];
 
    wxPoint mPrevPosition {};
    ToolDock *mPrevDock {};

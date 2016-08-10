@@ -410,20 +410,20 @@ ToolManager::ToolManager( AudacityProject *parent, wxWindow *topDockParent )
    mBotDock = safenew ToolDock( this, mParent, BotDockID );
 
    // Create all of the toolbars
-   mBars[ ToolsBarID ]         = new ToolsToolBar();
-   mBars[ TransportBarID ]     = new ControlToolBar();
-   mBars[ RecordMeterBarID ]   = new MeterToolBar( parent, RecordMeterBarID );
-   mBars[ PlayMeterBarID ]     = new MeterToolBar( parent, PlayMeterBarID );
-   mBars[ MeterBarID ]         = new MeterToolBar( parent, MeterBarID );
-   mBars[ EditBarID ]          = new EditToolBar();
-   mBars[ MixerBarID ]         = new MixerToolBar();
-   mBars[ TranscriptionBarID ] = new TranscriptionToolBar();
-   mBars[ SelectionBarID ]     = new SelectionBar();
-   mBars[ DeviceBarID ]        = new DeviceToolBar();
+   mBars[ ToolsBarID ]         =  ToolBar::Holder{ safenew ToolsToolBar() };
+   mBars[ TransportBarID ]     =  ToolBar::Holder{ safenew ControlToolBar() };
+   mBars[ RecordMeterBarID ]   =  ToolBar::Holder{ safenew MeterToolBar( parent, RecordMeterBarID ) };
+   mBars[ PlayMeterBarID ]     =  ToolBar::Holder{ safenew MeterToolBar( parent, PlayMeterBarID ) };
+   mBars[ MeterBarID ]         =  ToolBar::Holder{ safenew MeterToolBar( parent, MeterBarID ) };
+   mBars[ EditBarID ]          =  ToolBar::Holder{ safenew EditToolBar() };
+   mBars[ MixerBarID ]         =  ToolBar::Holder{ safenew MixerToolBar() };
+   mBars[ TranscriptionBarID ] =  ToolBar::Holder{ safenew TranscriptionToolBar() };
+   mBars[ SelectionBarID ]     =  ToolBar::Holder{ safenew SelectionBar() };
+   mBars[ DeviceBarID ]        =  ToolBar::Holder{ safenew DeviceToolBar() };
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   mBars[SpectralSelectionBarID] = new SpectralSelectionBar();
+   mBars[SpectralSelectionBarID] =  ToolBar::Holder{ safenew SpectralSelectionBar() };
 #endif
-   mBars[ ScrubbingBarID ]     = new ScrubbingToolBar();
+   mBars[ ScrubbingBarID ]     =  ToolBar::Holder{ safenew ScrubbingToolBar() };
 
    // We own the timer
    mTimer.SetOwner( this );
@@ -509,11 +509,11 @@ void ToolManager::Reset()
    for ( const auto &entry : DefaultConfigTable )
    {
       int ndx = entry.barID;
-      ToolBar *bar = mBars[ ndx ];
+      ToolBar *bar = mBars[ ndx ].get();
 
       ToolBarConfiguration::Position position {
-         (entry.rightOf == NoBarID) ? nullptr : mBars[ entry.rightOf ],
-         (entry.below == NoBarID) ? nullptr : mBars[ entry.below ]
+         (entry.rightOf == NoBarID) ? nullptr : mBars[ entry.rightOf ].get(),
+         (entry.below == NoBarID) ? nullptr : mBars[ entry.below ].get()
       };
 
       wxWindow *floater;
@@ -610,7 +610,7 @@ void ToolManager::Reset()
 
 void ToolManager::RegenerateTooltips()
 {
-   for (auto bar : mBars) {
+   for (const auto &bar : mBars) {
       if (bar)
          bar->RegenerateTooltips();
    }
@@ -643,7 +643,7 @@ void ToolManager::ReadConfig()
    // Load and apply settings for each bar
    for( ndx = 0; ndx < ToolBarCount; ndx++ )
    {
-      ToolBar *bar = mBars[ ndx ];
+      ToolBar *bar = mBars[ ndx ].get();
       //wxPoint Center = mParent->GetPosition() + (mParent->GetSize() * 0.33);
       //wxPoint Center( 
       //   wxSystemSettings::GetMetric( wxSYS_SCREEN_X ) /2 ,
@@ -806,7 +806,7 @@ void ToolManager::ReadConfig()
       bool deviceWasPositioned = false;
       for( int ord = 0; ord < (int) unordered[ dock ].GetCount(); ord++ )
       {
-         ToolBar *t = mBars[ unordered[ dock ][ ord ] ];
+         ToolBar *t = mBars[ unordered[ dock ][ ord ] ].get();
 
          if (deviceWasPositioned &&
              t->GetType() == DeviceBarID)
@@ -835,7 +835,7 @@ void ToolManager::ReadConfig()
 
             // Reposition the device toolbar, if it was docked above,
             // right of scrubbing
-            const auto deviceToolBar = mBars[ DeviceBarID ];
+            const auto deviceToolBar = mBars[ DeviceBarID ].get();
             if (deviceToolBar->GetDock() == mTopDock) {
                deviceToolBar->GetDock()->Undock(deviceToolBar);
                position = { t, nullptr };
@@ -887,7 +887,7 @@ void ToolManager::WriteConfig()
    // Save state of each bar
    for( ndx = 0; ndx < ToolBarCount; ndx++ )
    {
-      ToolBar *bar = mBars[ ndx ];
+      ToolBar *bar = mBars[ ndx ].get();
 
       // Change to the bar subkey
       gPrefs->SetPath( bar->GetSection() );
@@ -918,13 +918,6 @@ void ToolManager::WriteConfig()
       gPrefs->SetPath( wxT("..") );
    }
 
-   // Kill the bars
-   for( ndx = 0; ndx < ToolBarCount; ndx++ )
-   {
-      ToolBar *bar = mBars[ ndx ];
-      bar->Destroy();
-   }
-
    // Restore original config path
    gPrefs->SetPath( oldpath );
    gPrefs->Flush();
@@ -935,7 +928,7 @@ void ToolManager::WriteConfig()
 //
 ToolBar *ToolManager::GetToolBar( int type ) const
 {
-   return mBars[ type ];
+   return mBars[ type ].get();
 }
 
 //
@@ -978,7 +971,7 @@ bool ToolManager::IsDocked( int type )
 //
 bool ToolManager::IsVisible( int type )
 {
-   ToolBar *t = mBars[ type ];
+   ToolBar *t = mBars[ type ].get();
 
    return t->IsVisible();
 
@@ -1008,7 +1001,7 @@ void ToolManager::ShowHide( int type )
 //
 void ToolManager::Expose( int type, bool show )
 {
-   ToolBar *t = mBars[ type ];
+   ToolBar *t = mBars[ type ].get();
 
    // Handle docked and floaters differently
    if( t->IsDocked() )
@@ -1038,7 +1031,7 @@ void ToolManager::UpdatePrefs()
 {
    for( int ndx = 0; ndx < ToolBarCount; ndx++ )
    {
-      ToolBar *bar = mBars[ ndx ];
+      ToolBar *bar = mBars[ ndx ].get();
       if( bar )
       {
          bar->UpdatePrefs();
@@ -1300,7 +1293,7 @@ void ToolManager::OnGrabber( GrabberEvent & event )
       return HandleEscapeKey();
 
    // Remember which bar we're dragging
-   mDragBar = mBars[ event.GetId() ];
+   mDragBar = mBars[ event.GetId() ].get();
 
    // Remember state, in case of ESCape key later
    if (mDragBar->IsDocked()) {
