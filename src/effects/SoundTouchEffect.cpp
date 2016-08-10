@@ -27,7 +27,7 @@ effect that uses SoundTouch to do its processing (ChangeTempo
 
 bool EffectSoundTouch::ProcessLabelTrack(Track *track)
 {
-//   SetTimeWarper(new RegionTimeWarper(mCurT0, mCurT1,
+//   SetTimeWarper(std::make_unique<RegionTimeWarper>(mCurT0, mCurT1,
  //           std::make_unique<LinearTimeWarper>(mCurT0, mCurT0,
    //            mCurT1, mCurT0 + (mCurT1-mCurT0)*mFactor)));
    LabelTrack *lt = (LabelTrack*)track;

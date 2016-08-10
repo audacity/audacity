@@ -2797,13 +2797,13 @@ void VSTEffect::BuildFancy()
    // Turn the power on...some effects need this when the editor is open
    PowerOn();
 
-   mControl = new VSTControl;
-   if (!mControl)
+   auto control = std::make_unique<VSTControl>();
+   if (!control)
    {
       return;
    }
 
-   if (!mControl->Create(mParent, this))
+   if (!control->Create(mParent, this))
    {
       return;
    }
@@ -2811,7 +2811,7 @@ void VSTEffect::BuildFancy()
    {
       auto mainSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
 
-      mainSizer->Add(mControl, 0, wxALIGN_CENTER);
+      mainSizer->Add((mControl = control.release()), 0, wxALIGN_CENTER);
 
       mParent->SetMinSize(wxDefaultSize);
       mParent->SetSizer(mainSizer.release());

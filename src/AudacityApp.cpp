@@ -1203,7 +1203,8 @@ bool AudacityApp::OnInit()
 
    ::wxInitAllImageHandlers();
 
-   wxFileSystem::AddHandler(new wxZipFSHandler);
+   // AddHandler takes ownership
+   wxFileSystem::AddHandler(safenew wxZipFSHandler);
 
    //
    // Paths: set search path and temp dir path
@@ -1433,17 +1434,18 @@ bool AudacityApp::OnInit()
       // On the Mac, users don't expect a program to quit when you close the last window.
       // Create a menubar that will show when all project windows are closed.
 
-      wxMenu *fileMenu = new wxMenu();
-      wxMenu *recentMenu = new wxMenu();
+      auto fileMenu = std::make_unique<wxMenu>();
+      auto urecentMenu = std::make_unique<wxMenu>();
+      auto recentMenu = urecentMenu.get();
       fileMenu->Append(wxID_NEW, wxString(_("&New")) + wxT("\tCtrl+N"));
       fileMenu->Append(wxID_OPEN, wxString(_("&Open...")) + wxT("\tCtrl+O"));
-      fileMenu->AppendSubMenu(recentMenu, _("Open &Recent..."));
+      fileMenu->AppendSubMenu(urecentMenu.release(), _("Open &Recent..."));
       fileMenu->Append(wxID_ABOUT, _("&About Audacity..."));
       fileMenu->Append(wxID_PREFERENCES, wxString(_("&Preferences...")) + wxT("\tCtrl+,"));
 
       {
          auto menuBar = std::make_unique<wxMenuBar>();
-         menuBar->Append(fileMenu, _("&File"));
+         menuBar->Append(fileMenu.release(), _("&File"));
 
          // PRL:  Are we sure wxWindows will not leak this menuBar?
          // The online documentation is not explicit.
@@ -1766,33 +1768,34 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
       wxUNIXaddress addr;
       addr.Filename(sockFile);
 
-      // Setup the socket
-      wxSocketClient *sock = new wxSocketClient();
-      sock->SetFlags(wxSOCKET_WAITALL);
-
-      // We try up to 50 times since there's a small window
-      // where the server may not have been fully initialized.
-      for (int i = 0; i < 50; i++)
       {
-         // Connect to the existing Audacity
-         sock->Connect(addr, true);
-         if (sock->IsConnected())
+         // Setup the socket
+         // A wxSocketClient must not be deleted by us, but rather, let the
+         // framework do appropriate delayed deletion after Destroy()
+         Destroy_ptr<wxSocketClient> sock { safenew wxSocketClient() };
+         sock->SetFlags(wxSOCKET_WAITALL);
+
+         // We try up to 50 times since there's a small window
+         // where the server may not have been fully initialized.
+         for (int i = 0; i < 50; i++)
          {
-            for (size_t i = 0, cnt = parser->GetParamCount(); i < cnt; i++)
+            // Connect to the existing Audacity
+            sock->Connect(addr, true);
+            if (sock->IsConnected())
             {
-               // Send the filename
-               wxString param = parser->GetParam(i);
-               sock->WriteMsg((const wxChar *) param.c_str(), (param.Len() + 1) * sizeof(wxChar));
+               for (size_t i = 0, cnt = parser->GetParamCount(); i < cnt; i++)
+               {
+                  // Send the filename
+                  wxString param = parser->GetParam(i);
+                  sock->WriteMsg((const wxChar *) param.c_str(), (param.Len() + 1) * sizeof(wxChar));
+               }
+
+               return false;
             }
 
-            sock->Destroy();
-            return false;
+            wxMilliSleep(100);
          }
-
-         wxMilliSleep(100);
       }
-
-      sock->Destroy();
 #endif
       // There is another copy of Audacity running.  Force quit.
 

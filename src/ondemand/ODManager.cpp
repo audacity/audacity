@@ -218,7 +218,9 @@ void ODManager::Init()
    mMaxThreads = 5;
 
    //   wxLogDebug(wxT("Initializing ODManager...Creating manager thread"));
-   ODManagerHelperThread* startThread = new ODManagerHelperThread;
+   // This is a detached thread, so it deletes itself when it finishes
+   // ... except on Mac where we we don't use wxThread for reasons unexplained
+   ODManagerHelperThread* startThread = safenew ODManagerHelperThread;
 
 //   startThread->SetPriority(0);//default of 50.
    startThread->Create();
@@ -239,7 +241,6 @@ void ODManager::DecrementCurrentThreads()
 ///Main loop for managing threads and tasks.
 void ODManager::Start()
 {
-   ODTaskThread* thread;
    bool tasksInArray;
    bool paused;
    int  numQueues=0;
@@ -278,7 +279,9 @@ void ODManager::Start()
 
          mTasksMutex.Lock();
          //detach a NEW thread.
-         thread = new ODTaskThread(mTasks[0]);//task);
+         // This is a detached thread, so it deletes itself when it finishes
+         // ... except on Mac where we we don't use wxThread for reasons unexplained
+         auto thread = safenew ODTaskThread(mTasks[0]);//task);
          //thread->SetPriority(10);//default is 50.
          thread->Create();
          thread->Run();

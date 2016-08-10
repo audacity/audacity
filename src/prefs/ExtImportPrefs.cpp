@@ -62,12 +62,6 @@ ExtImportPrefs::ExtImportPrefs(wxWindow * parent)
     PluginList(NULL), mCreateTable (false), mDragFocus (NULL),
     mFakeKeyEvent (false), mStopRecursiveSelection (false), last_selected (-1)
 {
-   dragtext1 = new wxTextDataObject(wxT(""));
-   dragtext2 = new wxTextDataObject(wxT(""));
-   dragtarget1 = new ExtImportPrefsDropTarget(dragtext1);
-   dragtarget2 = new ExtImportPrefsDropTarget(dragtext2);
-   dragtarget1->SetPrefs (this);
-   dragtarget2->SetPrefs (this);
    Populate();
 }
 
@@ -121,7 +115,14 @@ void ExtImportPrefs::PopulateOrExchange(ShuttleGui & S)
             RuleTable->SetSelectionMode (wxGrid::wxGridSelectRows);
             RuleTable->AutoSizeColumns ();
 
-            RuleTable->SetDropTarget (dragtarget1);
+            ExtImportPrefsDropTarget *dragtarget1 {};
+            RuleTable->SetDropTarget (
+               dragtarget1 = safenew ExtImportPrefsDropTarget(
+                  dragtext1 = safenew wxTextDataObject(wxT(""))
+               )
+            );
+            dragtarget1->SetPrefs (this);
+
             RuleTable->EnableDragCell (true);
             fillRuleTable = true;
          }
@@ -134,7 +135,15 @@ void ExtImportPrefs::PopulateOrExchange(ShuttleGui & S)
             PluginList->SetSingleStyle (wxLC_REPORT, true);
             PluginList->SetSingleStyle (wxLC_SINGLE_SEL, true);
             PluginList->InsertColumn (0, _("Importer order"));
-            PluginList->SetDropTarget (dragtarget2);
+
+            ExtImportPrefsDropTarget *dragtarget2 {};
+            PluginList->SetDropTarget (
+               dragtarget2 = safenew ExtImportPrefsDropTarget(
+                  dragtext2 = safenew wxTextDataObject(wxT(""))
+               )
+            );
+            dragtarget2->SetPrefs (this);
+
             PluginList->SetColumnWidth (0, wxLIST_AUTOSIZE_USEHEADER);
 
             ExtImportItems *items = Importer::Get().GetImportItems();
@@ -646,9 +655,9 @@ void ExtImportPrefs::OnRuleTableCellClick (wxGridEvent& event)
    event.Skip();
 }
 
-ExtImportPrefsDropTarget::ExtImportPrefsDropTarget (wxDataObject *dataObject)
+ExtImportPrefsDropTarget::ExtImportPrefsDropTarget(wxDataObject *dataObject)
+   : wxDropTarget(dataObject)
 {
-   SetDataObject (dataObject);
    mPrefs = NULL;
 }
 
@@ -777,11 +786,6 @@ wxDragResult ExtImportPrefsDropTarget::OnDragOver(wxCoord x, wxCoord y,
 
 void ExtImportPrefsDropTarget::OnLeave()
 {
-}
-
-void ExtImportPrefsDropTarget::SetDataObject(wxDataObject* data)
-{
-   this->m_dataObject = data;
 }
 
 PrefsPanel *ExtImportPrefsFactory::Create(wxWindow *parent)

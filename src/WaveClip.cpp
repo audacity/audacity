@@ -163,8 +163,10 @@ public:
 //            //this array is sorted by start/end points and has no overlaps.   If we've passed all possible intersections, insert.  The array will remain sorted.
 //            if(region.end < invalStart)
 //            {
-//               InvalidRegion* newRegion = new InvalidRegion(invalStart,invalEnd);
-//               mRegions.insert(mRegions.begin()+i,newRegion);
+//               mRegions.insert(
+//                  mRegions.begin() + i,
+//                  InvalidRegion{ invalStart, invalEnd }
+//               );
 //               break;
 //            }
          }

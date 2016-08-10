@@ -89,6 +89,8 @@ class ToolBar /* not final */ : public wxPanelWrapper
 
  public:
 
+   using Holder = Destroy_ptr<ToolBar>;
+
    ToolBar(int type, const wxString & label, const wxString & section, bool resizable = false);
    virtual ~ToolBar();
 

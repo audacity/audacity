@@ -412,7 +412,7 @@ private:
 };
 
 EffectNoiseReduction::EffectNoiseReduction()
-: mSettings(new EffectNoiseReduction::Settings)
+: mSettings(std::make_unique<EffectNoiseReduction::Settings>())
 {
    Init();
 }
@@ -609,8 +609,8 @@ bool EffectNoiseReduction::Process()
    // settings if reducing noise.
    if (mSettings->mDoProfile) {
       int spectrumSize = 1 + mSettings->WindowSize() / 2;
-      mStatistics.reset
-         (new Statistics(spectrumSize, track->GetRate(), mSettings->mWindowTypes));
+      mStatistics = std::make_unique<Statistics>
+         (spectrumSize, track->GetRate(), mSettings->mWindowTypes);
    }
    else if (mStatistics->mWindowSize != mSettings->WindowSize()) {
       // possible only with advanced settings

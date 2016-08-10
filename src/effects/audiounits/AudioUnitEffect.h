@@ -200,7 +200,6 @@ private:
    EffectUIHostInterface *mUIHost;
    wxWindow *mParent;
    wxDialog *mDialog;
-   AUControl *mControl;
    wxString mUIType;
    bool mIsGraphical;
 

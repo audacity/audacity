@@ -1778,13 +1778,13 @@ bool AudioUnitEffect::PopulateUI(wxWindow *parent)
    }
    else
    {
-      mControl = new AUControl;
-      if (!mControl)
+      auto pControl = std::make_unique<AUControl>();
+      if (!pControl)
       {
          return false;
       }
 
-      if (!mControl->Create(container, mComponent, mUnit, mUIType == wxT("Full")))
+      if (!pControl->Create(container, mComponent, mUnit, mUIType == wxT("Full")))
       {
          return false;
       }
@@ -1792,7 +1792,7 @@ bool AudioUnitEffect::PopulateUI(wxWindow *parent)
       {
          auto innerSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
 
-         innerSizer->Add(mControl, 1, wxEXPAND);
+         innerSizer->Add(pControl.release(), 1, wxEXPAND);
          container->SetSizer(innerSizer.release());
       }
 

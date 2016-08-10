@@ -116,10 +116,13 @@ WaveTrack::WaveTrack(DirManager *projDirManager, sampleFormat format, double rat
 WaveTrack::WaveTrack(const WaveTrack &orig):
    Track(orig)
    , mpSpectrumSettings(orig.mpSpectrumSettings
-        ? new SpectrogramSettings(*orig.mpSpectrumSettings) : 0
-     )
+      ? std::make_unique<SpectrogramSettings>(*orig.mpSpectrumSettings)
+      : nullptr
+   )
    , mpWaveformSettings(orig.mpWaveformSettings 
-        ? new WaveformSettings(*orig.mpWaveformSettings) : 0)
+      ? std::make_unique<WaveformSettings>(*orig.mpWaveformSettings)
+      : nullptr
+   )
 {
    mLastScaleType = -1;
    mLastdBRange = -1;
@@ -202,7 +205,7 @@ void WaveTrack::SetOffset(double o)
 WaveTrack::WaveTrackDisplay WaveTrack::FindDefaultViewMode()
 {
    // PRL:  Bugs 1043, 1044
-   // 2.1.1 writes a NEW key for this preference, which got new values,
+   // 2.1.1 writes a NEW key for this preference, which got NEW values,
    // to avoid confusing version 2.1.0 if it reads the preference file afterwards.
    // Prefer the NEW preference key if it is present
 

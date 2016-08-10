@@ -97,7 +97,8 @@ class ToolManager final : public wxEvtHandler
    wxPoint mLastPos;
    wxRect mBarPos;
 
-   wxFrame *mIndicator;
+   using FramePtr = Destroy_ptr<wxFrame>;
+   FramePtr mIndicator;
    std::unique_ptr<wxRegion> mLeft, mDown;
    wxRegion *mCurrent;
 
@@ -111,7 +112,7 @@ class ToolManager final : public wxEvtHandler
    ToolDock *mTopDock;
    ToolDock *mBotDock;
 
-   ToolBar *mBars[ ToolBarCount ];
+   ToolBar::Holder mBars[ ToolBarCount ];
 
    wxPoint mPrevPosition {};
    ToolDock *mPrevDock {};

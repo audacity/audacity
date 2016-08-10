@@ -568,7 +568,7 @@ public:
    {
       // Lose any old value
       reset();
-      // Create new value
+      // Create NEW value
       pp = safenew(address()) X(std::forward<Args>(args)...);
    }
 
@@ -687,6 +687,22 @@ make_movable_with_deleter(const Deleter &d, Args&&... args)
 {
    return movable_ptr_with_deleter<T, Deleter>(safenew T(std::forward<Args>(args)...), d);
 }
+
+/*
+ * A deleter class to supply the second template parameter of unique_ptr for
+ * classes like wxWindow that should be sent a message called Destroy rather
+ * than be deleted directly
+ */
+template <typename T>
+struct Destroyer {
+   void operator () (T *p) const { if (p) p->Destroy(); }
+};
+
+/*
+ * a convenience for using Destroyer
+ */
+template <typename T>
+using Destroy_ptr = std::unique_ptr<T, Destroyer<T>>;
 
 /*
  * "finally" as in The C++ Programming Language, 4th ed., p. 358
