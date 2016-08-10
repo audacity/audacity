@@ -100,7 +100,7 @@ class ExtImportPrefs final : public PrefsPanel
    void DoOnRuleTableKeyDown (int keycode);
    bool DoOnPluginKeyDown (int code);
    void DoOnRuleTableSelect (int toprow);
-   void AddItemToTable (int index, ExtImportItem *item);
+   void AddItemToTable (int index, const ExtImportItem *item);
    void Populate();
    void PopulateOrExchange(ShuttleGui & S);
    DECLARE_EVENT_TABLE()

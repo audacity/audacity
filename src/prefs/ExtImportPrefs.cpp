@@ -534,7 +534,7 @@ Audacity to trim spaces for you?"
    RuleTable->AutoSizeColumns ();
 }
 
-void ExtImportPrefs::AddItemToTable (int index, ExtImportItem *item)
+void ExtImportPrefs::AddItemToTable (int index, const ExtImportItem *item)
 {
    wxString extensions, mime_types;
    if (item->extensions.Count() > 0)
