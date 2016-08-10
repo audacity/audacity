@@ -363,7 +363,7 @@ ToolManager::ToolManager( AudacityProject *parent, wxWindow *topDockParent )
    mLeft = std::make_unique<wxRegion>( 3, &pt[0] );
 
    // Create the indicator frame
-   mIndicator = new wxFrame( NULL,
+   mIndicator = FramePtr{ safenew wxFrame( NULL,
                              wxID_ANY,
                              wxEmptyString,
                              wxDefaultPosition,
@@ -372,7 +372,8 @@ ToolManager::ToolManager( AudacityProject *parent, wxWindow *topDockParent )
                              wxFRAME_SHAPED |
                              wxNO_BORDER |
                              wxFRAME_NO_TASKBAR |
-                             wxSTAY_ON_TOP );
+                             wxSTAY_ON_TOP )
+   };
 
    // Hook the creation event...only needed on GTK, but doesn't hurt for all
    mIndicator->Connect( wxEVT_CREATE,
@@ -462,9 +463,6 @@ ToolManager::~ToolManager()
                            wxPaintEventHandler( ToolManager::OnIndicatorPaint ),
                            NULL,
                            this );
-
-   // Must destroy the window since it doesn't have a parent
-   mIndicator->Destroy();
 }
 
 // This table describes the default configuration of the toolbars as

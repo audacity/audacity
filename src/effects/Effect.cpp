@@ -779,14 +779,14 @@ void Effect::Preview()
 
 wxDialog *Effect::CreateUI(wxWindow *parent, EffectUIClientInterface *client)
 {
-   EffectUIHost *dlg = new EffectUIHost(parent, this, client);
+   Destroy_ptr<EffectUIHost> dlg
+      { safenew EffectUIHost{ parent, this, client} };
 
    if (dlg->Initialize())
    {
-      return dlg;
+      // release() is safe because parent will own it
+      return dlg.release();
    }
-
-   delete dlg;
 
    return NULL;
 }

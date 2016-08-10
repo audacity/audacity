@@ -111,14 +111,15 @@ class ScreenFrame final : public wxFrame
    DECLARE_EVENT_TABLE()
 };
 
-static ScreenFrame *mFrame = NULL;
+using ScreenFramePtr = Destroy_ptr<ScreenFrame>;
+ScreenFramePtr mFrame;
 
 ////////////////////////////////////////////////////////////////////////////////
 
 void OpenScreenshotTools()
 {
    if (!mFrame) {
-      mFrame = new ScreenFrame(NULL, -1);
+      mFrame = ScreenFramePtr{ safenew ScreenFrame(NULL, -1) };
    }
    mFrame->Show();
    mFrame->Raise();
@@ -126,10 +127,7 @@ void OpenScreenshotTools()
 
 void CloseScreenshotTools()
 {
-   if (mFrame) {
-      mFrame->Destroy();
-      mFrame = NULL;
-   }
+   mFrame.reset();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -485,7 +483,8 @@ bool ScreenFrame::ProcessEvent(wxEvent & e)
 
 void ScreenFrame::OnCloseWindow(wxCloseEvent &  WXUNUSED(event))
 {
-   mFrame = NULL;
+   if (this == mFrame.get())
+      mFrame.release();
    Destroy();
 }
 

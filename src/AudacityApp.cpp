@@ -1766,33 +1766,34 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
       wxUNIXaddress addr;
       addr.Filename(sockFile);
 
-      // Setup the socket
-      wxSocketClient *sock = new wxSocketClient();
-      sock->SetFlags(wxSOCKET_WAITALL);
-
-      // We try up to 50 times since there's a small window
-      // where the server may not have been fully initialized.
-      for (int i = 0; i < 50; i++)
       {
-         // Connect to the existing Audacity
-         sock->Connect(addr, true);
-         if (sock->IsConnected())
+         // Setup the socket
+         // A wxSocketClient must not be deleted by us, but rather, let the
+         // framework do appropriate delayed deletion after Destroy()
+         Destroy_ptr<wxSocketClient> sock { safenew wxSocketClient() };
+         sock->SetFlags(wxSOCKET_WAITALL);
+
+         // We try up to 50 times since there's a small window
+         // where the server may not have been fully initialized.
+         for (int i = 0; i < 50; i++)
          {
-            for (size_t i = 0, cnt = parser->GetParamCount(); i < cnt; i++)
+            // Connect to the existing Audacity
+            sock->Connect(addr, true);
+            if (sock->IsConnected())
             {
-               // Send the filename
-               wxString param = parser->GetParam(i);
-               sock->WriteMsg((const wxChar *) param.c_str(), (param.Len() + 1) * sizeof(wxChar));
+               for (size_t i = 0, cnt = parser->GetParamCount(); i < cnt; i++)
+               {
+                  // Send the filename
+                  wxString param = parser->GetParam(i);
+                  sock->WriteMsg((const wxChar *) param.c_str(), (param.Len() + 1) * sizeof(wxChar));
+               }
+
+               return false;
             }
 
-            sock->Destroy();
-            return false;
+            wxMilliSleep(100);
          }
-
-         wxMilliSleep(100);
       }
-
-      sock->Destroy();
 #endif
       // There is another copy of Audacity running.  Force quit.
 
