@@ -568,7 +568,7 @@ public:
    {
       // Lose any old value
       reset();
-      // Create new value
+      // Create NEW value
       pp = safenew(address()) X(std::forward<Args>(args)...);
    }
 

@@ -202,7 +202,7 @@ void WaveTrack::SetOffset(double o)
 WaveTrack::WaveTrackDisplay WaveTrack::FindDefaultViewMode()
 {
    // PRL:  Bugs 1043, 1044
-   // 2.1.1 writes a NEW key for this preference, which got new values,
+   // 2.1.1 writes a NEW key for this preference, which got NEW values,
    // to avoid confusing version 2.1.0 if it reads the preference file afterwards.
    // Prefer the NEW preference key if it is present
 
