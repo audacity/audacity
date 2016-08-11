@@ -55,13 +55,13 @@ static const wxChar *exts[] =
 /* BPF There is no real reason to compile without LIBVORBIS, but if you do, you will needs this header */
 #include "ImportPlugin.h"
 
-void GetOGGImportPlugin(ImportPluginList *importPluginList,
-                        UnusableImportPluginList *unusableImportPluginList)
+void GetOGGImportPlugin(ImportPluginList &importPluginList,
+                        UnusableImportPluginList &unusableImportPluginList)
 {
    UnusableImportPlugin* oggIsUnsupported =
       new UnusableImportPlugin(DESC, wxArrayString(WXSIZEOF(exts), exts));
 
-   unusableImportPluginList->Append(oggIsUnsupported);
+   unusableImportPluginList.push_back( oggIsUnsupported );
 }
 
 #else /* USE_LIBVORBIS */
@@ -160,10 +160,10 @@ private:
    sampleFormat   mFormat;
 };
 
-void GetOGGImportPlugin(ImportPluginList *importPluginList,
-                        UnusableImportPluginList * WXUNUSED(unusableImportPluginList))
+void GetOGGImportPlugin(ImportPluginList &importPluginList,
+                        UnusableImportPluginList & WXUNUSED(unusableImportPluginList))
 {
-   importPluginList->Append(new OggImportPlugin);
+   importPluginList.push_back( new OggImportPlugin );
 }
 
 wxString OggImportPlugin::GetPluginFormatDescription()

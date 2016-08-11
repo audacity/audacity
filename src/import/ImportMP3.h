@@ -13,7 +13,7 @@
 
 #include "ImportForwards.h"
 
-void GetMP3ImportPlugin(ImportPluginList *importPluginList,
-                        UnusableImportPluginList *unusableImportPluginList);
+void GetMP3ImportPlugin(ImportPluginList &importPluginList,
+                        UnusableImportPluginList &unusableImportPluginList);
 
 #endif

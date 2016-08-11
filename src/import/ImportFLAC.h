@@ -13,8 +13,8 @@
 
 #include "ImportForwards.h"
 
-void GetFLACImportPlugin(ImportPluginList *importPluginList,
-                         UnusableImportPluginList *unusableImportPluginList);
+void GetFLACImportPlugin(ImportPluginList &importPluginList,
+                         UnusableImportPluginList &unusableImportPluginList);
 
 
 #endif

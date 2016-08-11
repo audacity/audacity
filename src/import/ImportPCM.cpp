@@ -113,10 +113,10 @@ private:
    sampleFormat          mFormat;
 };
 
-void GetPCMImportPlugin(ImportPluginList * importPluginList,
-                        UnusableImportPluginList * WXUNUSED(unusableImportPluginList))
+void GetPCMImportPlugin(ImportPluginList & importPluginList,
+                        UnusableImportPluginList & WXUNUSED(unusableImportPluginList))
 {
-   importPluginList->Append(new PCMImportPlugin);
+   importPluginList.push_back( new PCMImportPlugin );
 }
 
 wxString PCMImportPlugin::GetPluginFormatDescription()

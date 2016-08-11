@@ -101,20 +101,20 @@ bool Importer::Initialize()
    // build the list of import plugin and/or unusableImporters.
    // order is significant.  If none match, they will all be tried
    // in the order defined here.
-   GetPCMImportPlugin(mImportPluginList, mUnusableImportPluginList);
-   GetOGGImportPlugin(mImportPluginList, mUnusableImportPluginList);
-   GetFLACImportPlugin(mImportPluginList, mUnusableImportPluginList);
-   GetMP3ImportPlugin(mImportPluginList, mUnusableImportPluginList);
-   GetLOFImportPlugin(mImportPluginList, mUnusableImportPluginList);
+   GetPCMImportPlugin(*mImportPluginList, *mUnusableImportPluginList);
+   GetOGGImportPlugin(*mImportPluginList, *mUnusableImportPluginList);
+   GetFLACImportPlugin(*mImportPluginList, *mUnusableImportPluginList);
+   GetMP3ImportPlugin(*mImportPluginList, *mUnusableImportPluginList);
+   GetLOFImportPlugin(*mImportPluginList, *mUnusableImportPluginList);
 
    #if defined(USE_FFMPEG)
-   GetFFmpegImportPlugin(mImportPluginList, mUnusableImportPluginList);
+   GetFFmpegImportPlugin(*mImportPluginList, *mUnusableImportPluginList);
    #endif
    #ifdef USE_QUICKTIME
-   GetQTImportPlugin(mImportPluginList, mUnusableImportPluginList);
+   GetQTImportPlugin(*mImportPluginList, *mUnusableImportPluginList);
    #endif
    #if defined(USE_GSTREAMER)
-   GetGStreamerImportPlugin(mImportPluginList, mUnusableImportPluginList);
+   GetGStreamerImportPlugin(*mImportPluginList, *mUnusableImportPluginList);
    #endif
 
    ReadImportItems();

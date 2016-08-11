@@ -13,8 +13,8 @@
 
 #include "ImportForwards.h"
 
-void GetPCMImportPlugin(ImportPluginList *importPluginList,
-                        UnusableImportPluginList *unusableImportPluginList);
+void GetPCMImportPlugin(ImportPluginList &importPluginList,
+                        UnusableImportPluginList &unusableImportPluginList);
 
 
 #endif

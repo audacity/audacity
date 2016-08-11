@@ -283,10 +283,10 @@ private:
 };
 
 
-void GetFFmpegImportPlugin(ImportPluginList *importPluginList,
-                           UnusableImportPluginList *WXUNUSED(unusableImportPluginList))
+void GetFFmpegImportPlugin(ImportPluginList &importPluginList,
+                           UnusableImportPluginList &WXUNUSED(unusableImportPluginList))
 {
-   importPluginList->Append(new FFmpegImportPlugin);
+   importPluginList.push_back( new FFmpegImportPlugin );
 }
 
 

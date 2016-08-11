@@ -13,7 +13,7 @@
 
 #include "ImportForwards.h"
 
-void GetOGGImportPlugin(ImportPluginList *importPluginList,
-                        UnusableImportPluginList *unusableImportPluginList);
+void GetOGGImportPlugin(ImportPluginList &importPluginList,
+                        UnusableImportPluginList &unusableImportPluginList);
 
 #endif

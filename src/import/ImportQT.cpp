@@ -27,13 +27,13 @@ static const wxChar *exts[] =
 
 #ifndef USE_QUICKTIME
 
-void GetQTImportPlugin(ImportPluginList *importPluginList,
-                       UnusableImportPluginList *unusableImportPluginList)
+void GetQTImportPlugin(ImportPluginList &importPluginList,
+                       UnusableImportPluginList &unusableImportPluginList)
 {
    UnusableImportPlugin* qtIsUnsupported =
       new UnusableImportPlugin(DESC, wxArrayString(WXSIZEOF(exts), exts));
 
-   unusableImportPluginList->Append(qtIsUnsupported);
+   unusableImportPluginList.push_back( qtIsUnsupported );
 }
 
 #else /* USE_QUICKTIME */
@@ -162,10 +162,10 @@ class QTImportFileHandle final : public ImportFileHandle
    Movie mMovie;
 };
 
-void GetQTImportPlugin(ImportPluginList *importPluginList,
-                       UnusableImportPluginList *unusableImportPluginList)
+void GetQTImportPlugin(ImportPluginList &importPluginList,
+                       UnusableImportPluginList &unusableImportPluginList)
 {
-   importPluginList->Append(new QTImportPlugin);
+   importPluginList.push_back( new QTImportPlugin );
 }
 
 wxString QTImportPlugin::GetPluginFormatDescription()

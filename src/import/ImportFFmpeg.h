@@ -13,7 +13,7 @@ LRN
 
 #include "ImportForwards.h"
 
-void GetFFmpegImportPlugin(ImportPluginList *importPluginList,
-                           UnusableImportPluginList *unusableImportPluginList);
+void GetFFmpegImportPlugin(ImportPluginList &importPluginList,
+                           UnusableImportPluginList &unusableImportPluginList);
 
 #endif

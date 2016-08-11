@@ -13,7 +13,7 @@
 
 #include "ImportForwards.h"
 
-void GetQTImportPlugin(ImportPluginList *importPluginList,
-                       UnusableImportPluginList *unusableImportPluginList);
+void GetQTImportPlugin(ImportPluginList &importPluginList,
+                       UnusableImportPluginList &unusableImportPluginList);
 
 #endif

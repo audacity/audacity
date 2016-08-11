@@ -56,7 +56,7 @@
 
 #include "ImportForwards.h"
 
-void GetLOFImportPlugin(ImportPluginList *importPluginList,
-                        UnusableImportPluginList *unusableImportPluginList);
+void GetLOFImportPlugin(ImportPluginList &importPluginList,
+                        UnusableImportPluginList &unusableImportPluginList);
 
 #endif

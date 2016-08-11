@@ -56,13 +56,13 @@ static const wxChar *exts[] =
 
 #ifndef USE_LIBMAD
 
-void GetMP3ImportPlugin(ImportPluginList *importPluginList,
-                        UnusableImportPluginList *unusableImportPluginList)
+void GetMP3ImportPlugin(ImportPluginList &importPluginList,
+                        UnusableImportPluginList &unusableImportPluginList)
 {
    UnusableImportPlugin* mp3IsUnsupported =
       new UnusableImportPlugin(DESC, wxArrayString(WXSIZEOF(exts), exts));
 
-   unusableImportPluginList->Append(mp3IsUnsupported);
+   unusableImportPluginList.push_back( mp3IsUnsupported );
 }
 
 #else /* USE_LIBMAD */
@@ -153,10 +153,10 @@ private:
    mad_decoder mDecoder;
 };
 
-void GetMP3ImportPlugin(ImportPluginList *importPluginList,
-                        UnusableImportPluginList * WXUNUSED(unusableImportPluginList))
+void GetMP3ImportPlugin(ImportPluginList &importPluginList,
+                        UnusableImportPluginList & WXUNUSED(unusableImportPluginList))
 {
-   importPluginList->Append(new MP3ImportPlugin);
+   importPluginList.push_back( new MP3ImportPlugin );
 }
 
 /* The MAD callbacks */
