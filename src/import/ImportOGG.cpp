@@ -58,10 +58,10 @@ static const wxChar *exts[] =
 void GetOGGImportPlugin(ImportPluginList &importPluginList,
                         UnusableImportPluginList &unusableImportPluginList)
 {
-   UnusableImportPlugin* oggIsUnsupported =
-      new UnusableImportPlugin(DESC, wxArrayString(WXSIZEOF(exts), exts));
-
-   unusableImportPluginList.push_back( oggIsUnsupported );
+   unusableImportPluginList.push_back(
+      make_movable<UnusableImportPlugin>
+         (DESC, wxArrayString(WXSIZEOF(exts), exts))
+   );
 }
 
 #else /* USE_LIBVORBIS */
@@ -163,7 +163,7 @@ private:
 void GetOGGImportPlugin(ImportPluginList &importPluginList,
                         UnusableImportPluginList & WXUNUSED(unusableImportPluginList))
 {
-   importPluginList.push_back( new OggImportPlugin );
+   importPluginList.push_back( make_movable<OggImportPlugin>() );
 }
 
 wxString OggImportPlugin::GetPluginFormatDescription()

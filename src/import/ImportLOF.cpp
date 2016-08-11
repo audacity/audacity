@@ -178,7 +178,7 @@ LOFImportFileHandle::LOFImportFileHandle
 void GetLOFImportPlugin(ImportPluginList &importPluginList,
                         UnusableImportPluginList & WXUNUSED(unusableImportPluginList))
 {
-   importPluginList.push_back( new LOFImportPlugin );
+   importPluginList.push_back( make_movable<LOFImportPlugin>() );
 }
 
 wxString LOFImportPlugin::GetPluginFormatDescription()

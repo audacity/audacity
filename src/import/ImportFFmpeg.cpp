@@ -286,7 +286,7 @@ private:
 void GetFFmpegImportPlugin(ImportPluginList &importPluginList,
                            UnusableImportPluginList &WXUNUSED(unusableImportPluginList))
 {
-   importPluginList.push_back( new FFmpegImportPlugin );
+   importPluginList.push_back( make_movable<FFmpegImportPlugin>() );
 }
 
 

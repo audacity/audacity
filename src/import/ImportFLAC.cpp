@@ -59,10 +59,10 @@ static const wxChar *exts[] =
 void GetFLACImportPlugin(ImportPluginList &importPluginList,
                         UnusableImportPluginList &unusableImportPluginList)
 {
-   UnusableImportPlugin* flacIsUnsupported =
-      new UnusableImportPlugin(DESC, wxArrayString(WXSIZEOF(exts), exts));
-
-   unusableImportPluginList.push_back( flacIsUnsupported );
+   unusableImportPluginList.push_back(
+      make_movable<UnusableImportPlugin>
+         (DESC, wxArrayString(WXSIZEOF(exts), exts));
+   );
 }
 
 #else /* USE_LIBFLAC */
@@ -285,7 +285,7 @@ FLAC__StreamDecoderWriteStatus MyFLACFile::write_callback(const FLAC__Frame *fra
 void GetFLACImportPlugin(ImportPluginList &importPluginList,
                          UnusableImportPluginList &WXUNUSED(unusableImportPluginList))
 {
-   importPluginList.push_back( new FLACImportPlugin );
+   importPluginList.push_back( make_movable<FLACImportPlugin>() );
 }
 
 

@@ -300,7 +300,7 @@ GetGStreamerImportPlugin(ImportPluginList &importPluginList,
       return;
 
    // Add to list of importers
-   importPluginList.push_back( plug.release() );
+   importPluginList.push_back( std::move(plug) );
 }
 
 // ============================================================================

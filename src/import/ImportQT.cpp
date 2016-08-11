@@ -30,10 +30,10 @@ static const wxChar *exts[] =
 void GetQTImportPlugin(ImportPluginList &importPluginList,
                        UnusableImportPluginList &unusableImportPluginList)
 {
-   UnusableImportPlugin* qtIsUnsupported =
-      new UnusableImportPlugin(DESC, wxArrayString(WXSIZEOF(exts), exts));
-
-   unusableImportPluginList.push_back( qtIsUnsupported );
+   unusableImportPluginList.push_back(
+      make_movable<UnusableImportPlugin>
+         (DESC, wxArrayString(WXSIZEOF(exts), exts))
+   );
 }
 
 #else /* USE_QUICKTIME */
@@ -165,7 +165,7 @@ class QTImportFileHandle final : public ImportFileHandle
 void GetQTImportPlugin(ImportPluginList &importPluginList,
                        UnusableImportPluginList &unusableImportPluginList)
 {
-   importPluginList.push_back( new QTImportPlugin );
+   importPluginList.push_back( make_movable<QTImportPlugin>() );
 }
 
 wxString QTImportPlugin::GetPluginFormatDescription()

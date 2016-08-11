@@ -12,6 +12,7 @@
 #define _IMPORT_
 
 #include "ImportRaw.h" // defines TrackHolders
+#include "ImportForwards.h"
 #include <vector>
 #include <wx/arrstr.h>
 #include <wx/string.h>
@@ -84,9 +85,6 @@ class ExtImportItem
    */
   wxArrayString mime_types;
 };
-
-class ImportPluginList;
-class UnusableImportPluginList;
 
 class Importer {
 public:

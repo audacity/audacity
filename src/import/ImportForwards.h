@@ -9,13 +9,15 @@
 #ifndef __AUDACITY_IMPORT_FORWARDS__
 #define __AUDACITY_IMPORT_FORWARDS__
 
-#include <wx/list.h>
+#include <vector>
 #include "../MemoryX.h"
 
 class ImportPlugin;
 class UnusableImportPlugin;
 
-WX_DECLARE_LIST(ImportPlugin, ImportPluginList);
-WX_DECLARE_LIST(UnusableImportPlugin, UnusableImportPluginList);
+using ImportPluginList =
+   std::vector< movable_ptr<ImportPlugin> >;
+using UnusableImportPluginList =
+   std::vector< movable_ptr<UnusableImportPlugin> >;
 
 #endif

@@ -116,7 +116,7 @@ private:
 void GetPCMImportPlugin(ImportPluginList & importPluginList,
                         UnusableImportPluginList & WXUNUSED(unusableImportPluginList))
 {
-   importPluginList.push_back( new PCMImportPlugin );
+   importPluginList.push_back( make_movable<PCMImportPlugin>() );
 }
 
 wxString PCMImportPlugin::GetPluginFormatDescription()
