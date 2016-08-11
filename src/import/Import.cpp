@@ -63,8 +63,6 @@ and ImportLOF.cpp.
 #include "ImportGStreamer.h"
 #include "../Prefs.h"
 
-WX_DEFINE_OBJARRAY(ExtImportItems);
-
 // ============================================================================
 //
 // Return reference to singleton
@@ -158,7 +156,6 @@ void Importer::ReadImportItems()
    wxStringTokenizer toker;
    wxString item_name;
    wxString item_value;
-   ExtImportItem *new_item;
 
    if (this->mExtImportItems != NULL)
       delete this->mExtImportItems;
@@ -181,7 +178,7 @@ void Importer::ReadImportItems()
       if (toker.CountTokens() != 2)
         break;
 
-      new_item = new ExtImportItem();
+      auto new_item = make_movable<ExtImportItem>();
 
       /* First token is the filtering condition, second - the filter list */
       condition = toker.GetNextToken();
@@ -260,7 +257,7 @@ void Importer::ReadImportItems()
                new_item->divider++;
          }
       }
-      this->mExtImportItems->Add (new_item);
+      this->mExtImportItems->push_back( std::move(new_item) );
    }
 }
 
@@ -268,9 +265,9 @@ void Importer::WriteImportItems()
 {
    size_t i;
    wxString val, name;
-   for (i = 0; i < this->mExtImportItems->Count(); i++)
+   for (i = 0; i < this->mExtImportItems->size(); i++)
    {
-      ExtImportItem *item = &(mExtImportItems->Item(i));
+      ExtImportItem *item = (*mExtImportItems)[i].get();
       val.Clear();
 
       for (size_t j = 0; j < item->extensions.Count(); j++)
@@ -310,7 +307,7 @@ void Importer::WriteImportItems()
    /* If we used to have more items than we have now, DELETE the excess items.
    We just keep deleting items and incrementing until we find there aren't any
    more to DELETE.*/
-   i = this->mExtImportItems->Count();
+   i = this->mExtImportItems->size();
    do {
      name.Printf (wxT("/ExtImportItems/Item%d"), (int)i);
      // No item to DELETE?  Then it's time to finish.
@@ -325,11 +322,9 @@ void Importer::WriteImportItems()
    } while( true );
 }
 
-ExtImportItem *Importer::CreateDefaultImportItem()
+movable_ptr<ExtImportItem> Importer::CreateDefaultImportItem()
 {
-   ExtImportItem *new_item;
-
-   new_item = new ExtImportItem();
+   auto new_item = make_movable<ExtImportItem>();
    new_item->extensions.Add(wxT("*"));
    new_item->mime_types.Add(wxT("*"));
 
@@ -392,9 +387,9 @@ bool Importer::Import(const wxString &fName,
    wxLogMessage(wxT("File name is %s"),(const char *) fName.c_str());
    wxLogMessage(wxT("Mime type is %s"),(const char *) mime_type.Lower().c_str());
 
-   for (size_t i = 0; i < mExtImportItems->Count(); i++)
+   for (const auto &uItem : *mExtImportItems)
    {
-      ExtImportItem *item = &(*mExtImportItems)[i];
+      ExtImportItem *item = uItem.get();
       bool matches_ext = false, matches_mime = false;
       wxLogDebug(wxT("Testing extensions"));
       for (size_t j = 0; j < item->extensions.Count(); j++)
