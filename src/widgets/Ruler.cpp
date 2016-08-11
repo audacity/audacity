@@ -85,6 +85,7 @@ array of Ruler::Label.
 #include "../tracks/ui/Scrubbing.h"
 #include "../prefs/PlaybackPrefs.h"
 #include "../prefs/TracksPrefs.h"
+#include "../widgets/Grabber.h"
 
 //#define SCRUB_ABOVE
 
@@ -1656,14 +1657,14 @@ enum : int {
 
    TopMargin = 1,
    BottomMargin = 2, // for bottom bevel and bottom line
-   LeftMargin = 1,
+   LeftMargin = 1, 
 
    RightMargin = 1,
 };
 
 enum {
    ScrubHeight = 14,
-   ProperRulerHeight = 28
+   ProperRulerHeight = 29
 };
 
 inline int IndicatorHeightForWidth(int width)
@@ -2056,10 +2057,20 @@ void AdornedRulerPanel::ReCreateButtons()
       button = nullptr;
    }
 
+   size_t iButton = 0;
    // Make the short row of time ruler pushbottons.
    // Don't bother with sizers.  Their sizes and positions are fixed.
-   wxPoint position{ 1 + LeftMargin, 0 };
-   size_t iButton = 0;
+   // Add a grabber converted to a spacer.
+   // This makes it visually clearer that the button is a button.
+
+   wxPoint position( 1, 0 );
+   Grabber * pGrabber = safenew Grabber(this, this->GetId());
+   pGrabber->SetAsSpacer( true );
+   //pGrabber->SetSize( 10, 27 ); // default is 10,27
+   pGrabber->SetPosition( position );
+
+   position.x = 12;
+
    auto size = theTheme.ImageSize( bmpRecoloredUpSmall );
    size.y = std::min(size.y, GetRulerHeight(false));
 
@@ -2078,7 +2089,7 @@ void AdornedRulerPanel::ReCreateButtons()
       mButtons[iButton++] = button;
       return button;
    };
-   auto button = buttonMaker(OnTogglePinnedStateID, bmpPinnedPlayHead, false);
+   auto button = buttonMaker(OnTogglePinnedStateID, bmpPinnedPlayHead, true);
    ToolBar::MakeAlternateImages(
       *button, 1,
       bmpRecoloredUpSmall, bmpRecoloredDownSmall, bmpRecoloredHiliteSmall,
@@ -2809,7 +2820,10 @@ void AdornedRulerPanel::UpdateButtonStates()
    {
       bool state = TracksPrefs::GetPinnedHeadPreference();
       auto pinButton = static_cast<AButton*>(FindWindow(OnTogglePinnedStateID));
-      pinButton->PopUp();
+      if( !state )
+         pinButton->PopUp();
+      else
+         pinButton->PushDown();
       pinButton->SetAlternateIdx(state ? 0 : 1);
       const auto label = state
       // Label descibes the present state, not what the click does
