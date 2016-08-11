@@ -11,11 +11,10 @@
 #ifndef __AUDACITY_IMPORT_PCM__
 #define __AUDACITY_IMPORT_PCM__
 
-class ImportPluginList;
-class UnusableImportPluginList;
+#include "ImportForwards.h"
 
-void GetPCMImportPlugin(ImportPluginList *importPluginList,
-                        UnusableImportPluginList *unusableImportPluginList);
+void GetPCMImportPlugin(ImportPluginList &importPluginList,
+                        UnusableImportPluginList &unusableImportPluginList);
 
 
 #endif

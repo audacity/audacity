@@ -20,10 +20,10 @@
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "ImportPCM.h"
 #include "../AudacityApp.h"
 #include "../Internat.h"
 #include "../Tags.h"
-#include "ImportPCM.h"
 
 #include <wx/wx.h>
 #include <wx/string.h>
@@ -113,10 +113,10 @@ private:
    sampleFormat          mFormat;
 };
 
-void GetPCMImportPlugin(ImportPluginList * importPluginList,
-                        UnusableImportPluginList * WXUNUSED(unusableImportPluginList))
+void GetPCMImportPlugin(ImportPluginList & importPluginList,
+                        UnusableImportPluginList & WXUNUSED(unusableImportPluginList))
 {
-   importPluginList->Append(new PCMImportPlugin);
+   importPluginList.push_back( make_movable<PCMImportPlugin>() );
 }
 
 wxString PCMImportPlugin::GetPluginFormatDescription()

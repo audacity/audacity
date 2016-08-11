@@ -59,7 +59,6 @@ but little else.
 #include <wx/arrstr.h>
 #include <wx/filename.h>
 #include <wx/string.h>
-#include <wx/list.h>
 #include "../MemoryX.h"
 
 #include "../widgets/ProgressDialog.h"
@@ -196,8 +195,5 @@ private:
    wxString mFormatName;
    wxArrayString mExtensions;
 };
-
-WX_DECLARE_LIST(ImportPlugin, ImportPluginList);
-WX_DECLARE_LIST(UnusableImportPlugin, UnusableImportPluginList);
 
 #endif

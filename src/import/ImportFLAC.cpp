@@ -22,6 +22,9 @@
 
 *//*******************************************************************/
 
+#include "../Audacity.h"
+#include "ImportFLAC.h"
+
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
 
@@ -33,7 +36,6 @@
 #include <wx/defs.h>
 #include <wx/intl.h>    // needed for _("translated stings") even if we
                         // don't have libflac available
-#include "../Audacity.h"
 
 #include "Import.h"
 #include "ImportPlugin.h"
@@ -54,19 +56,18 @@ static const wxChar *exts[] =
 
 #ifndef USE_LIBFLAC
 
-void GetFLACImportPlugin(ImportPluginList *importPluginList,
-                        UnusableImportPluginList *unusableImportPluginList)
+void GetFLACImportPlugin(ImportPluginList &importPluginList,
+                        UnusableImportPluginList &unusableImportPluginList)
 {
-   UnusableImportPlugin* flacIsUnsupported =
-      new UnusableImportPlugin(DESC, wxArrayString(WXSIZEOF(exts), exts));
-
-   unusableImportPluginList->Append(flacIsUnsupported);
+   unusableImportPluginList.push_back(
+      make_movable<UnusableImportPlugin>
+         (DESC, wxArrayString(WXSIZEOF(exts), exts));
+   );
 }
 
 #else /* USE_LIBFLAC */
 
 #include "../Internat.h"
-#include "ImportFLAC.h"
 
 #include <wx/string.h>
 #include <wx/utils.h>
@@ -281,10 +282,10 @@ FLAC__StreamDecoderWriteStatus MyFLACFile::write_callback(const FLAC__Frame *fra
 }
 
 
-void GetFLACImportPlugin(ImportPluginList *importPluginList,
-                         UnusableImportPluginList *WXUNUSED(unusableImportPluginList))
+void GetFLACImportPlugin(ImportPluginList &importPluginList,
+                         UnusableImportPluginList &WXUNUSED(unusableImportPluginList))
 {
-   importPluginList->Append(new FLACImportPlugin);
+   importPluginList.push_back( make_movable<FLACImportPlugin>() );
 }
 
 

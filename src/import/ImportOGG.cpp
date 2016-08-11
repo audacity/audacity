@@ -28,6 +28,9 @@
 
 *//*******************************************************************/
 
+#include "../Audacity.h"
+#include "ImportOGG.h"
+
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
 
@@ -36,12 +39,10 @@
 #endif
 
 #include <wx/intl.h>
-#include "../Audacity.h"
 #include "../Prefs.h"
 #include "../Internat.h"
 #include "../Tags.h"
 
-#include "ImportOGG.h"
 
 #define DESC _("Ogg Vorbis files")
 
@@ -54,13 +55,13 @@ static const wxChar *exts[] =
 /* BPF There is no real reason to compile without LIBVORBIS, but if you do, you will needs this header */
 #include "ImportPlugin.h"
 
-void GetOGGImportPlugin(ImportPluginList *importPluginList,
-                        UnusableImportPluginList *unusableImportPluginList)
+void GetOGGImportPlugin(ImportPluginList &importPluginList,
+                        UnusableImportPluginList &unusableImportPluginList)
 {
-   UnusableImportPlugin* oggIsUnsupported =
-      new UnusableImportPlugin(DESC, wxArrayString(WXSIZEOF(exts), exts));
-
-   unusableImportPluginList->Append(oggIsUnsupported);
+   unusableImportPluginList.push_back(
+      make_movable<UnusableImportPlugin>
+         (DESC, wxArrayString(WXSIZEOF(exts), exts))
+   );
 }
 
 #else /* USE_LIBVORBIS */
@@ -159,10 +160,10 @@ private:
    sampleFormat   mFormat;
 };
 
-void GetOGGImportPlugin(ImportPluginList *importPluginList,
-                        UnusableImportPluginList * WXUNUSED(unusableImportPluginList))
+void GetOGGImportPlugin(ImportPluginList &importPluginList,
+                        UnusableImportPluginList & WXUNUSED(unusableImportPluginList))
 {
-   importPluginList->Append(new OggImportPlugin);
+   importPluginList.push_back( make_movable<OggImportPlugin>() );
 }
 
 wxString OggImportPlugin::GetPluginFormatDescription()

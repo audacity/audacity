@@ -11,12 +11,9 @@ LRN
 #ifndef __AUDACITY_IMPORT_FFMPEG__
 #define __AUDACITY_IMPORT_FFMPEG__
 
-#include "ImportPlugin.h"
+#include "ImportForwards.h"
 
-class ImportPluginList;
-class UnusableImportPluginList;
-
-void GetFFmpegImportPlugin(ImportPluginList *importPluginList,
-                           UnusableImportPluginList *unusableImportPluginList);
+void GetFFmpegImportPlugin(ImportPluginList &importPluginList,
+                           UnusableImportPluginList &unusableImportPluginList);
 
 #endif

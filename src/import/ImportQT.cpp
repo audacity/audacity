@@ -13,6 +13,7 @@
 **********************************************************************/
 
 #include "../Audacity.h"
+#include "ImportQT.h"
 #include "ImportPlugin.h"
 
 #define DESC _("QuickTime files")
@@ -26,13 +27,13 @@ static const wxChar *exts[] =
 
 #ifndef USE_QUICKTIME
 
-void GetQTImportPlugin(ImportPluginList *importPluginList,
-                       UnusableImportPluginList *unusableImportPluginList)
+void GetQTImportPlugin(ImportPluginList &importPluginList,
+                       UnusableImportPluginList &unusableImportPluginList)
 {
-   UnusableImportPlugin* qtIsUnsupported =
-      new UnusableImportPlugin(DESC, wxArrayString(WXSIZEOF(exts), exts));
-
-   unusableImportPluginList->Append(qtIsUnsupported);
+   unusableImportPluginList.push_back(
+      make_movable<UnusableImportPlugin>
+         (DESC, wxArrayString(WXSIZEOF(exts), exts))
+   );
 }
 
 #else /* USE_QUICKTIME */
@@ -66,7 +67,6 @@ void GetQTImportPlugin(ImportPluginList *importPluginList,
 #include "../Internat.h"
 #include "../Tags.h"
 #include "../WaveTrack.h"
-#include "ImportQT.h"
 
 #define kQTAudioPropertyID_MaxAudioSampleSize   'mssz'
 
@@ -162,10 +162,10 @@ class QTImportFileHandle final : public ImportFileHandle
    Movie mMovie;
 };
 
-void GetQTImportPlugin(ImportPluginList *importPluginList,
-                       UnusableImportPluginList *unusableImportPluginList)
+void GetQTImportPlugin(ImportPluginList &importPluginList,
+                       UnusableImportPluginList &unusableImportPluginList)
 {
-   importPluginList->Append(new QTImportPlugin);
+   importPluginList.push_back( make_movable<QTImportPlugin>() );
 }
 
 wxString QTImportPlugin::GetPluginFormatDescription()

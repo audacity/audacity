@@ -175,10 +175,10 @@ LOFImportFileHandle::LOFImportFileHandle
    scrollOffset = 0;
 }
 
-void GetLOFImportPlugin(ImportPluginList *importPluginList,
-                        UnusableImportPluginList * WXUNUSED(unusableImportPluginList))
+void GetLOFImportPlugin(ImportPluginList &importPluginList,
+                        UnusableImportPluginList & WXUNUSED(unusableImportPluginList))
 {
-   importPluginList->Append(new LOFImportPlugin);
+   importPluginList.push_back( make_movable<LOFImportPlugin>() );
 }
 
 wxString LOFImportPlugin::GetPluginFormatDescription()

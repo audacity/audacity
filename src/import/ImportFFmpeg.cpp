@@ -20,10 +20,12 @@ Licensed under the GNU General Public License v2 or later
 
 *//*******************************************************************/
 
+#include "../Audacity.h"    // needed before FFmpeg.h
+#include "ImportFFmpeg.h"
+
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
 
-#include "../Audacity.h"    // needed before FFmpeg.h
 #include "../FFmpeg.h"      // which brings in avcodec.h, avformat.h
 #include "../ondemand/ODManager.h"
 #ifndef WX_PRECOMP
@@ -151,7 +153,6 @@ static const wxChar *exts[] =
 
 // all the includes live here by default
 #include "Import.h"
-#include "ImportFFmpeg.h"
 #include "../Tags.h"
 #include "../Internat.h"
 #include "../WaveTrack.h"
@@ -282,10 +283,10 @@ private:
 };
 
 
-void GetFFmpegImportPlugin(ImportPluginList *importPluginList,
-                           UnusableImportPluginList *WXUNUSED(unusableImportPluginList))
+void GetFFmpegImportPlugin(ImportPluginList &importPluginList,
+                           UnusableImportPluginList &WXUNUSED(unusableImportPluginList))
 {
-   importPluginList->Append(new FFmpegImportPlugin);
+   importPluginList.push_back( make_movable<FFmpegImportPlugin>() );
 }
 
 

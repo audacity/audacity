@@ -418,6 +418,7 @@ audacity_SOURCES = \
 	import/Import.h \
 	import/ImportFLAC.cpp \
 	import/ImportFLAC.h \
+	import/ImportForwards.h \
 	import/ImportLOF.cpp \
 	import/ImportLOF.h \
 	import/ImportMP3.cpp \

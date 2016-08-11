@@ -261,8 +261,8 @@ public:
 // ----------------------------------------------------------------------------
 // Instantiate GStreamerImportPlugin and add to the list of known importers
 void
-GetGStreamerImportPlugin(ImportPluginList *importPluginList,
-                         UnusableImportPluginList * WXUNUSED(unusableImportPluginList))
+GetGStreamerImportPlugin(ImportPluginList &importPluginList,
+                         UnusableImportPluginList & WXUNUSED(unusableImportPluginList))
 {
    wxLogMessage(wxT("Audacity is built against GStreamer version %d.%d.%d-%d"),
                 GST_VERSION_MAJOR,
@@ -300,7 +300,7 @@ GetGStreamerImportPlugin(ImportPluginList *importPluginList,
       return;
 
    // Add to list of importers
-   importPluginList->push_back(std::move(plug));
+   importPluginList.push_back( std::move(plug) );
 }
 
 // ============================================================================

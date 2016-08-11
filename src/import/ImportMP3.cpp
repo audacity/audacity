@@ -26,6 +26,9 @@
 
 *//*******************************************************************/
 
+#include "../Audacity.h"
+#include "ImportMP3.h"
+
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
 
@@ -35,11 +38,9 @@
 
 #include <wx/defs.h>
 #include <wx/intl.h>
-#include "../Audacity.h"
 
 #include "../Prefs.h"
 #include "Import.h"
-#include "ImportMP3.h"
 #include "ImportPlugin.h"
 #include "../Internat.h"
 #include "../Tags.h"
@@ -55,13 +56,13 @@ static const wxChar *exts[] =
 
 #ifndef USE_LIBMAD
 
-void GetMP3ImportPlugin(ImportPluginList *importPluginList,
-                        UnusableImportPluginList *unusableImportPluginList)
+void GetMP3ImportPlugin(ImportPluginList &importPluginList,
+                        UnusableImportPluginList &unusableImportPluginList)
 {
-   UnusableImportPlugin* mp3IsUnsupported =
-      new UnusableImportPlugin(DESC, wxArrayString(WXSIZEOF(exts), exts));
-
-   unusableImportPluginList->Append(mp3IsUnsupported);
+   unusableImportPluginList.push_back(
+      make_movable<UnusableImportPlugin>
+         (DESC, wxArrayString(WXSIZEOF(exts), exts))
+  );
 }
 
 #else /* USE_LIBMAD */
@@ -152,10 +153,10 @@ private:
    mad_decoder mDecoder;
 };
 
-void GetMP3ImportPlugin(ImportPluginList *importPluginList,
-                        UnusableImportPluginList * WXUNUSED(unusableImportPluginList))
+void GetMP3ImportPlugin(ImportPluginList &importPluginList,
+                        UnusableImportPluginList & WXUNUSED(unusableImportPluginList))
 {
-   importPluginList->Append(new MP3ImportPlugin);
+   importPluginList.push_back( make_movable<MP3ImportPlugin>() );
 }
 
 /* The MAD callbacks */

@@ -16,12 +16,13 @@ measurements in subbands or in the entire signal band.
 
 *//*******************************************************************/
 
+#include "SpecPowerMeter.h"
+
 #include <cmath>
 #include <cstdlib>
 #include <wx/defs.h>
 
 #include "../FFT.h"
-#include "SpecPowerMeter.h"
 
 SpecPowerMeter::SpecPowerMeter(int sigLen)
 {
