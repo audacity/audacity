@@ -2357,9 +2357,15 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
 
    auto &scrubber = mProject->GetScrubber();
    if (scrubber.HasStartedScrubbing()) {
-      if (evt.RightDown())
+      if (evt.RightDown() )
          // Fall through to context menu handling
          ;
+      else if ( evt.LeftUp() && inScrubZone)
+         // Fall through to seeking changes to scrubbing
+         ;
+//      else if ( evt.LeftDown() && inScrubZone)
+//         // Fall through to ready to seek
+//         ;
       else {
          bool switchToQP = (zone == StatusChoice::EnteringQP && mQuickPlayEnabled);
          if (switchToQP && evt.LeftDown()) {
@@ -2429,13 +2435,26 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
           &position);
       return;
    }
-   else if (!HasCapture() && inScrubZone) {
+   else if( !HasCapture() && evt.LeftUp() && inScrubZone ) {
+      //wxLogDebug("up");
+      // mouse going up => we shift to scrubbing.
+      scrubber.MarkScrubStart(evt.m_x,
+         TracksPrefs::GetPinnedHeadPreference(), false);
+      UpdateStatusBarAndTooltips(StatusChoice::EnteringScrubZone);
+      // repaint_all so that the indicator changes shape.
+      bool repaint_all = true;
+      ShowQuickPlayIndicator(repaint_all);
+      return;
+   }
+   else if ( !HasCapture() && inScrubZone) {
+      // mouse going down => we are (probably) seeking
       if (evt.LeftDown()) {
+         //wxLogDebug("down");
          scrubber.MarkScrubStart(evt.m_x,
             TracksPrefs::GetPinnedHeadPreference(), false);
          UpdateStatusBarAndTooltips(StatusChoice::EnteringScrubZone);
-      }
-      ShowQuickPlayIndicator();
+         ShowQuickPlayIndicator();
+      } 
       return;
    }
    else if ( mQuickPlayEnabled) {
@@ -3191,18 +3210,18 @@ QuickPlayIndicatorOverlay *AdornedRulerPanel::GetOverlay()
    return mOverlay.get();
 }
 
-void AdornedRulerPanel::ShowQuickPlayIndicator()
+void AdornedRulerPanel::ShowQuickPlayIndicator( bool repaint_all)
 {
-   ShowOrHideQuickPlayIndicator(true);
+   ShowOrHideQuickPlayIndicator(true, repaint_all);
 }
 
-void AdornedRulerPanel::HideQuickPlayIndicator()
+void AdornedRulerPanel::HideQuickPlayIndicator(bool repaint_all)
 {
-   ShowOrHideQuickPlayIndicator(false);
+   ShowOrHideQuickPlayIndicator(false, repaint_all);
 }
 
 // Draws the vertical line and green triangle indicating the Quick Play cursor position.
-void AdornedRulerPanel::ShowOrHideQuickPlayIndicator(bool show)
+void AdornedRulerPanel::ShowOrHideQuickPlayIndicator(bool show, bool repaint_all)
 {
    double latestEnd = std::max(mTracks->GetEndTime(), mProject->GetSel1());
    if (!show || (mQuickPlayPos >= latestEnd)) {
@@ -3216,8 +3235,8 @@ void AdornedRulerPanel::ShowOrHideQuickPlayIndicator(bool show)
       GetOverlay()->Update(x, mIsSnapped, previewScrub);
    }
 
-   mProject->GetTrackPanel()->DrawOverlays(false);
-   DrawOverlays(false);
+   mProject->GetTrackPanel()->DrawOverlays(repaint_all);
+   DrawOverlays(repaint_all);
 }
 
 void AdornedRulerPanel::SetPlayRegion(double playRegionStart,
