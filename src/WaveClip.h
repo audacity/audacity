@@ -318,7 +318,7 @@ public:
    bool InsertSilence(double t, double len);
 
    /// Get access to cut lines list
-   WaveClipList* GetCutLines() { return &mCutLines; }
+   WaveClipList &GetCutLines() { return mCutLines; }
 
    /** Find cut line at (approximately) this position. Returns true and fills
     * in cutLineStart and cutLineEnd (if specified) if a cut line at this

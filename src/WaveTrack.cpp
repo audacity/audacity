@@ -851,9 +851,9 @@ bool WaveTrack::ClearAndPaste(double t0, // Start of time to clear
       }
 
       // Search for cut lines
-      const auto &cutlines = clip->GetCutLines();
+      auto &cutlines = clip->GetCutLines();
       // May erase from cutlines, so don't use range-for
-      for (auto it = cutlines->begin(); it != cutlines->end(); ) {
+      for (auto it = cutlines.begin(); it != cutlines.end(); ) {
          WaveClip *cut = *it;
          double cs = LongSamplesToTime(TimeToLongSamples(clip->GetOffset() +
                                                          cut->GetOffset()));
@@ -862,7 +862,7 @@ bool WaveTrack::ClearAndPaste(double t0, // Start of time to clear
          if (cs >= t0 && cs <= t1) {
             // Remove cut point from this clips cutlines array, otherwise
             // it will not be deleted when HandleClear() is called.
-            it = cutlines->erase(it);
+            it = cutlines.erase(it);
 
             // Remember the absolute offset and add to our cuts array.
             cut->SetOffset(cs);
@@ -954,7 +954,7 @@ bool WaveTrack::ClearAndPaste(double t0, // Start of time to clear
                   // this clips cutlines.
                   if (cs >= st && cs <= et) {
                      cut->SetOffset(warper->Warp(cs) - st);
-                     clip->GetCutLines()->push_back(cut);
+                     clip->GetCutLines().push_back(cut);
                      cuts.RemoveAt(i);
                      i--;
                   }
@@ -2427,7 +2427,7 @@ void WaveTrack::UpdateLocationsCache() const
    {
       WaveClip* clip = clips.Item(i);
 
-      num += clip->GetCutLines()->size();
+      num += clip->GetCutLines().size();
 
       if (i > 0 && fabs(clips.Item(i - 1)->GetEndTime() -
                   clip->GetStartTime()) < WAVETRACK_MERGE_POINT_TOLERANCE)
@@ -2447,8 +2447,7 @@ void WaveTrack::UpdateLocationsCache() const
    {
       WaveClip* clip = clips.Item(i);
 
-      WaveClipList* cutlines = clip->GetCutLines();
-      for (const auto &cc: *cutlines)
+      for (const auto &cc : clip->GetCutLines())
       {
          // Add cut line expander point
          mDisplayLocationsCache.push_back(WaveTrackLocation{
