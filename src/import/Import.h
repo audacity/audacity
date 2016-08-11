@@ -129,7 +129,7 @@ public:
     * Returns a pointer to internal items array.
     * External objects are allowed to change the array contents.
     */
-   ExtImportItems &GetImportItems() { return *mExtImportItems; };
+   ExtImportItems &GetImportItems() { return mExtImportItems; };
 
    /**
     * Allocates NEW ExtImportItem, fills it with default data
@@ -147,9 +147,9 @@ public:
 private:
    static Importer mInstance;
 
-   ExtImportItems *mExtImportItems;
-   ImportPluginList *mImportPluginList;
-   UnusableImportPluginList *mUnusableImportPluginList;
+   ExtImportItems mExtImportItems;
+   ImportPluginList mImportPluginList;
+   UnusableImportPluginList mUnusableImportPluginList;
 };
 
 //----------------------------------------------------------------------------

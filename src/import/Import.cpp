@@ -77,41 +77,35 @@ Importer & Importer::Get()
 
 Importer::Importer()
 {
-   mExtImportItems = NULL;
 }
 
 Importer::~Importer()
 {
-   if (mExtImportItems != NULL)
-   {
-      delete mExtImportItems;
-      mExtImportItems = NULL;
-   }
 }
 
 bool Importer::Initialize()
 {
-   mImportPluginList = new ImportPluginList;
-   mUnusableImportPluginList = new UnusableImportPluginList;
-   mExtImportItems = NULL;
+   ImportPluginList{}.swap(mImportPluginList);
+   UnusableImportPluginList{}.swap(mUnusableImportPluginList);
+   ExtImportItems{}.swap(mExtImportItems);
 
    // build the list of import plugin and/or unusableImporters.
    // order is significant.  If none match, they will all be tried
    // in the order defined here.
-   GetPCMImportPlugin(*mImportPluginList, *mUnusableImportPluginList);
-   GetOGGImportPlugin(*mImportPluginList, *mUnusableImportPluginList);
-   GetFLACImportPlugin(*mImportPluginList, *mUnusableImportPluginList);
-   GetMP3ImportPlugin(*mImportPluginList, *mUnusableImportPluginList);
-   GetLOFImportPlugin(*mImportPluginList, *mUnusableImportPluginList);
+   GetPCMImportPlugin(mImportPluginList, mUnusableImportPluginList);
+   GetOGGImportPlugin(mImportPluginList, mUnusableImportPluginList);
+   GetFLACImportPlugin(mImportPluginList, mUnusableImportPluginList);
+   GetMP3ImportPlugin(mImportPluginList, mUnusableImportPluginList);
+   GetLOFImportPlugin(mImportPluginList, mUnusableImportPluginList);
 
    #if defined(USE_FFMPEG)
-   GetFFmpegImportPlugin(*mImportPluginList, *mUnusableImportPluginList);
+   GetFFmpegImportPlugin(mImportPluginList, mUnusableImportPluginList);
    #endif
    #ifdef USE_QUICKTIME
-   GetQTImportPlugin(*mImportPluginList, *mUnusableImportPluginList);
+   GetQTImportPlugin(mImportPluginList, mUnusableImportPluginList);
    #endif
    #if defined(USE_GSTREAMER)
-   GetGStreamerImportPlugin(*mImportPluginList, *mUnusableImportPluginList);
+   GetGStreamerImportPlugin(mImportPluginList, mUnusableImportPluginList);
    #endif
 
    ReadImportItems();
@@ -122,15 +116,15 @@ bool Importer::Initialize()
 bool Importer::Terminate()
 {
    WriteImportItems();
-   delete mImportPluginList;
-   delete mUnusableImportPluginList;
+   ImportPluginList{}.swap( mImportPluginList );
+   UnusableImportPluginList{}.swap( mUnusableImportPluginList );
 
    return true;
 }
 
 void Importer::GetSupportedImportFormats(FormatList *formatList)
 {
-   for(const auto &importPlugin : *mImportPluginList)
+   for(const auto &importPlugin : mImportPluginList)
    {
 #ifdef __AUDACITY_OLD_STD__
       formatList->push_back(Format{importPlugin->GetPluginFormatDescription(),
@@ -157,10 +151,7 @@ void Importer::ReadImportItems()
    wxString item_name;
    wxString item_value;
 
-   if (this->mExtImportItems != NULL)
-      delete this->mExtImportItems;
-
-   this->mExtImportItems = new ExtImportItems();
+   ExtImportItems{}.swap(mExtImportItems);
    /* Rule string format is:
     * extension1:extension2:extension3\mime_type1:mime_type2:mime_type3|filter1:filter2:filter3\unusedfilter1:unusedfilter2
     * backslashes are escaped and unescaped internally
@@ -220,7 +211,7 @@ void Importer::ReadImportItems()
       for (size_t i = 0; i < new_item->filters.Count(); i++)
       {
          bool found = false;
-         for (const auto &importPlugin : *mImportPluginList)
+         for (const auto &importPlugin : mImportPluginList)
          {
             if (importPlugin->GetPluginStringID().Cmp(new_item->filters[i]) == 0)
             {
@@ -234,7 +225,7 @@ void Importer::ReadImportItems()
            new_item->filter_objects.Add (NULL);
       }
       /* Find all filter objects that are not present in the filter list */
-      for (const auto &importPlugin : *mImportPluginList)
+      for (const auto &importPlugin : mImportPluginList)
       {
          bool found = false;
          for (size_t i = 0; i < new_item->filter_objects.Count(); i++)
@@ -257,7 +248,7 @@ void Importer::ReadImportItems()
                new_item->divider++;
          }
       }
-      this->mExtImportItems->push_back( std::move(new_item) );
+      this->mExtImportItems.push_back( std::move(new_item) );
    }
 }
 
@@ -265,9 +256,9 @@ void Importer::WriteImportItems()
 {
    size_t i;
    wxString val, name;
-   for (i = 0; i < this->mExtImportItems->size(); i++)
+   for (i = 0; i < this->mExtImportItems.size(); i++)
    {
-      ExtImportItem *item = (*mExtImportItems)[i].get();
+      ExtImportItem *item = mExtImportItems[i].get();
       val.Clear();
 
       for (size_t j = 0; j < item->extensions.Count(); j++)
@@ -307,7 +298,7 @@ void Importer::WriteImportItems()
    /* If we used to have more items than we have now, DELETE the excess items.
    We just keep deleting items and incrementing until we find there aren't any
    more to DELETE.*/
-   i = this->mExtImportItems->size();
+   i = this->mExtImportItems.size();
    do {
      name.Printf (wxT("/ExtImportItems/Item%d"), (int)i);
      // No item to DELETE?  Then it's time to finish.
@@ -328,7 +319,7 @@ movable_ptr<ExtImportItem> Importer::CreateDefaultImportItem()
    new_item->extensions.Add(wxT("*"));
    new_item->mime_types.Add(wxT("*"));
 
-   for (const auto &importPlugin : *mImportPluginList)
+   for (const auto &importPlugin : mImportPluginList)
    {
       new_item->filters.Add (importPlugin->GetPluginStringID());
       new_item->filter_objects.Add (importPlugin.get());
@@ -373,7 +364,7 @@ bool Importer::Import(const wxString &fName,
 
    if (usersSelectionOverrides)
    {
-      for (const auto &plugin : *mImportPluginList)
+      for (const auto &plugin : mImportPluginList)
       {
          if (plugin->GetPluginFormatDescription().CompareTo(type) == 0)
          {
@@ -387,7 +378,7 @@ bool Importer::Import(const wxString &fName,
    wxLogMessage(wxT("File name is %s"),(const char *) fName.c_str());
    wxLogMessage(wxT("Mime type is %s"),(const char *) mime_type.Lower().c_str());
 
-   for (const auto &uItem : *mExtImportItems)
+   for (const auto &uItem : mExtImportItems)
    {
       ExtImportItem *item = uItem.get();
       bool matches_ext = false, matches_mime = false;
@@ -449,10 +440,10 @@ bool Importer::Import(const wxString &fName,
    // is not changed by user selection overrides or any other mechanism, but we include an assert
    // in case subsequent code revisions to the constructor should break this assumption that
    // libsndfile is first.
-   ImportPlugin *libsndfilePlugin = mImportPluginList->begin()->get();
+   ImportPlugin *libsndfilePlugin = mImportPluginList.begin()->get();
    wxASSERT(libsndfilePlugin->GetPluginStringID().IsSameAs(wxT("libsndfile")));
 
-   for (const auto &plugin : *mImportPluginList)
+   for (const auto &plugin : mImportPluginList)
    {
       // Make sure its not already in the list
       if (importPlugins.end() ==
@@ -488,7 +479,7 @@ bool Importer::Import(const wxString &fName,
    // Otherwise, if FFmpeg (libav) has not been installed, libmad will still be there near the
    // end of the preference list importPlugins, where it will claim success importing FFmpeg file
    // formats unsuitable for it, and produce distorted results.
-   for (const auto &plugin : *mImportPluginList)
+   for (const auto &plugin : mImportPluginList)
    {
       if (!(plugin->GetPluginStringID().IsSameAs(wxT("libmad"))))
       {
@@ -564,7 +555,7 @@ bool Importer::Import(const wxString &fName,
    // None of our plugins can handle this file.  It might be that
    // Audacity supports this format, but support was not compiled in.
    // If so, notify the user of this fact
-   for (const auto &unusableImportPlugin : *mUnusableImportPluginList)
+   for (const auto &unusableImportPlugin : mUnusableImportPluginList)
    {
       if( unusableImportPlugin->SupportsExtension(extension) )
       {
