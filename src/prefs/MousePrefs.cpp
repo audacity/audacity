@@ -154,9 +154,10 @@ void MousePrefs::CreateList()
    // AddItem(_("ESC"),              _("Select"),    _("Toggle center snapping in spectrogram"), _("same as select tool"));
 #endif
 
-   AddItem(_("Shift-Wheel-Rotate"),_("Any"),          _("Scroll waveform"));
-   AddItem(CTRL + _("-Wheel-Rotate"), _("Any"),       _("Zoom waveform in or out"));
-   AddItem(CTRL + _("-Shift-Wheel-Rotate"),_("Any"),   _("Waveform (dB) range"));
+   AddItem(_("Wheel-Rotate"),                _("Any"),   _("Scroll tracks up or down"));
+   AddItem(_("Shift-Wheel-Rotate"),          _("Any"),   _("Scroll waveform"));
+   AddItem(CTRL + _("-Wheel-Rotate"),        _("Any"),   _("Zoom waveform in or out"));
+   AddItem(CTRL + _("-Shift-Wheel-Rotate"),  _("Any"),   _("Waveform (dB) range"));
 
    mList->SetColumnWidth(BlankColumn, 0);
    mList->SetColumnWidth(ToolColumn, wxLIST_AUTOSIZE);

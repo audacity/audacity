@@ -68,7 +68,7 @@
 #include "../widgets/Meter.h"
 
 #include "../tracks/ui/Scrubbing.h"
-#include "../prefs/PlaybackPrefs.h"
+#include "../prefs/TracksPrefs.h"
 #include "../toolbars/ToolManager.h"
 
 IMPLEMENT_CLASS(ControlToolBar, ToolBar);
@@ -1260,7 +1260,7 @@ void ControlToolBar::UpdateStatusBar(AudacityProject *pProject)
 
 void ControlToolBar::StartScrollingIfPreferred()
 {
-   if (PlaybackPrefs::GetPinnedHeadPreference())
+   if (TracksPrefs::GetPinnedHeadPreference())
       StartScrolling();
 #ifdef __WXMAC__
    else if (::GetActiveProject()->GetScrubber().HasStartedScrubbing()) {

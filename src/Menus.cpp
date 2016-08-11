@@ -1882,7 +1882,7 @@ void AudacityProject::ModifyToolbarMenus()
    mCommandManager.Check(wxT("AutomatedInputLevelAdjustmentOnOff"), active);
 #endif
 
-   active = PlaybackPrefs::GetPinnedHeadPreference();
+   active = TracksPrefs::GetPinnedHeadPreference();
    mCommandManager.Check(wxT("PinnedHead"), active);
 
    gPrefs->Read(wxT("/AudioIO/Duplex"),&active, true);
@@ -2411,8 +2411,8 @@ void AudacityProject::OnToggleSoundActivated()
 
 void AudacityProject::OnTogglePinnedHead()
 {
-   bool value = !PlaybackPrefs::GetPinnedHeadPreference();
-   PlaybackPrefs::SetPinnedHeadPreference(value, true);
+   bool value = !TracksPrefs::GetPinnedHeadPreference();
+   TracksPrefs::SetPinnedHeadPreference(value, true);
    ModifyAllProjectToolbarMenus();
 
    // Change what happens in case transport is in progress right now
