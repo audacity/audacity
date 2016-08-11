@@ -144,14 +144,13 @@ bool EffectReverse::ProcessOneWave(int count, WaveTrack * track, sampleCount sta
    // holds the NEW end position of the current clip
    sampleCount currentEnd = (sampleCount)end;
 
-   WaveClipList revClips; // holds the reversed clips
-   WaveClipList otherClips; // holds the clips that appear after the reverse selection region
-   WaveClipArray clipArray;
-   track->FillSortedClipArray(clipArray);
+   WaveClipHolders revClips; // holds the reversed clips
+   WaveClipHolders otherClips; // holds the clips that appear after the reverse selection region
+   auto clipArray = track->SortedClipArray();
    size_t i;
-   for (i=0; i < clipArray.Count(); i++) {
+   for (i=0; i < clipArray.size(); i++) {
 
-      WaveClip *clip = clipArray.Item(i);
+      WaveClip *clip = clipArray[i];
       sampleCount clipStart = clip->GetStartSample();
       sampleCount clipEnd = clip->GetEndSample();
 
@@ -163,7 +162,7 @@ bool EffectReverse::ProcessOneWave(int count, WaveTrack * track, sampleCount sta
          if(checkedFirstClip == false && clipStart > start) {
             checkedFirstClip = true;
             if(i > 0) {
-               if (clipArray.Item(i-1)->GetEndSample() <= start) {
+               if (clipArray[i-1]->GetEndSample() <= start) {
                   currentEnd -= (clipStart - start);
                }
             }
@@ -184,9 +183,9 @@ bool EffectReverse::ProcessOneWave(int count, WaveTrack * track, sampleCount sta
 
             sampleCount clipOffsetStart = (sampleCount)(currentEnd - (clipEnd-clipStart)); // calculate the offset required
             double offsetStartTime = track->LongSamplesToTime(clipOffsetStart);
-            if(i+1 < clipArray.Count()) // update currentEnd if there is a clip to process next
+            if(i+1 < clipArray.size()) // update currentEnd if there is a clip to process next
             {
-               sampleCount nextClipStart = clipArray.Item(i+1)->GetStartSample();
+               sampleCount nextClipStart = clipArray[i+1]->GetStartSample();
                currentEnd = (sampleCount)(currentEnd - (clipEnd - clipStart) - (nextClipStart - clipEnd));
             }
 

@@ -334,7 +334,9 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
    double LongSamplesToTime(sampleCount pos) const;
 
    // Get access to the clips in the tracks.
-   const WaveClipList &GetClips() const { return mClips; }
+   WaveClipHolders &GetClips() { return mClips; }
+   const WaveClipConstHolders &GetClips() const
+      { return reinterpret_cast< const WaveClipConstHolders& >( mClips ); }
 
    // Create NEW clip and add it to this track. Returns a pointer
    // to the newly created clip.
@@ -355,19 +357,21 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
    WaveClip* RightmostOrNewClip();
 
    // Get the linear index of a given clip (-1 if the clip is not found)
-   int GetClipIndex(WaveClip* clip) const;
+   int GetClipIndex(const WaveClip* clip) const;
 
    // Get the nth clip in this WaveTrack (will return NULL if not found).
    // Use this only in special cases (like getting the linked clip), because
    // it is much slower than GetClipIterator().
-   WaveClip* GetClipByIndex(int index);
+   WaveClip *GetClipByIndex(int index);
+   const WaveClip* GetClipByIndex(int index) const;
 
    // Get number of clips in this WaveTrack
    int GetNumClips() const;
 
    // Add all wave clips to the given array 'clips' and sort the array by
    // clip start time. The array is emptied prior to adding the clips.
-   void FillSortedClipArray(WaveClipArray& clips) const;
+   WaveClipPointers SortedClipArray();
+   WaveClipConstPointers SortedClipArray() const;
 
    // Before calling 'Offset' on a clip, use this function to see if the
    // offsetting is allowed with respect to the other clips in this track.
@@ -481,7 +485,7 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
    // Protected variables
    //
 
-   WaveClipList mClips;
+   WaveClipHolders mClips;
 
    sampleFormat  mFormat;
    int           mRate;

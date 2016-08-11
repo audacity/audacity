@@ -1206,7 +1206,7 @@ void WaveClip::TimeToSamplesClip(double t0, sampleCount *s0) const
       *s0 = (sampleCount)floor(((t0 - mOffset) * mRate) + 0.5);
 }
 
-void WaveClip::ClearDisplayRect()
+void WaveClip::ClearDisplayRect() const
 {
    mDisplayRect.x = mDisplayRect.y = -1;
    mDisplayRect.width = mDisplayRect.height = -1;

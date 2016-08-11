@@ -812,8 +812,7 @@ bool WaveTrack::ClearAndPaste(double t0, // Start of time to clear
 {
    double dur = wxMin(t1 - t0, src->GetEndTime());
    wxArrayDouble splits;
-   WaveClipArray cuts;
-   WaveClip *clip;
+   WaveClipHolders cuts;
 
    // If duration is 0, then it's just a plain paste
    if (dur == 0.0) {
@@ -866,7 +865,7 @@ bool WaveTrack::ClearAndPaste(double t0, // Start of time to clear
 
             // Remember the absolute offset and add to our cuts array.
             cut->SetOffset(cs);
-            cuts.Add(cut);
+            cuts.push_back(cut);
          }
          else
             ++it;
@@ -878,53 +877,54 @@ bool WaveTrack::ClearAndPaste(double t0, // Start of time to clear
 
       // And paste in the NEW data
       if (Paste(t0, src)) {
-         unsigned int i;
-
          // First, merge the NEW clip(s) in with the existing clips
          if (merge && splits.GetCount() > 0)
          {
-            WaveClipArray clips;
-
             // Now t1 represents the absolute end of the pasted data.
             t1 = t0 + src->GetEndTime();
 
             // Get a sorted array of the clips
-            FillSortedClipArray(clips);
+            auto clips = SortedClipArray();
 
             // Scan the sorted clips for the first clip whose start time
             // exceeds the pasted regions end time.
-            for (i = 0; i < clips.GetCount(); i++) {
-               clip = clips[i];
-
-               // Merge this clip and the previous clip if the end time
-               // falls within it and this isn't the first clip in the track.
-               if (fabs(t1 - clip->GetStartTime()) < WAVETRACK_MERGE_POINT_TOLERANCE) {
-                  if (i > 0) {
-                     bool bResult = MergeClips(GetClipIndex(clips[i - 1]), GetClipIndex(clip));
-                     wxASSERT(bResult); // TO DO: Actually handle this.
-                     wxUnusedVar(bResult);
+            {
+               WaveClip *prev = nullptr;
+               for (const auto clip : clips) {
+                  // Merge this clip and the previous clip if the end time
+                  // falls within it and this isn't the first clip in the track.
+                  if (fabs(t1 - clip->GetStartTime()) < WAVETRACK_MERGE_POINT_TOLERANCE) {
+                     if (prev) {
+                        bool bResult = MergeClips(GetClipIndex(prev), GetClipIndex(clip));
+                        wxASSERT(bResult); // TO DO: Actually handle this.
+                        wxUnusedVar(bResult);
+                     }
+                     break;
                   }
-                  break;
+                  prev = clip;
                }
             }
 
             // Refill the array since clips have changed.
-            FillSortedClipArray(clips);
+            clips = SortedClipArray();
 
-            // Scan the sorted clips to look for the start of the pasted
-            // region.
-            for (i = 0; i < clips.GetCount(); i++) {
-               clip = clips[i];
-
-               // Merge this clip and the next clip if the start time
-               // falls within it and this isn't the last clip in the track.
-               if (fabs(t0 - clip->GetEndTime()) < WAVETRACK_MERGE_POINT_TOLERANCE) {
-                  if (i < clips.GetCount() - 1) {
-                     bool bResult = MergeClips(GetClipIndex(clip), GetClipIndex(clips[i + 1]));
+            {
+               // Scan the sorted clips to look for the start of the pasted
+               // region.
+               WaveClip *prev = nullptr;
+               for (const auto clip : clips) {
+                  if (prev) {
+                     bool bResult = MergeClips(GetClipIndex(prev), GetClipIndex(clip));
                      wxASSERT(bResult); // TO DO: Actually handle this.
                      wxUnusedVar(bResult);
+                     break;
                   }
-                  break;
+                  if (fabs(t0 - clip->GetEndTime()) < WAVETRACK_MERGE_POINT_TOLERANCE)
+                     // Merge this clip and the next clip if the start time
+                     // falls within it and this isn't the last clip in the track.
+                     prev = clip;
+                  else
+                     prev = nullptr;
                }
             }
          }
@@ -933,8 +933,8 @@ bool WaveTrack::ClearAndPaste(double t0, // Start of time to clear
          if (preserve) {
 
             // Restore the split lines, transforming the position appropriately
-            for (i = 0; i < splits.GetCount(); i++) {
-               SplitAt(warper->Warp(splits[i]));
+            for (const auto split: splits) {
+               SplitAt(warper->Warp(split));
             }
 
             // Restore the saved cut lines, also transforming if time altered
@@ -946,8 +946,8 @@ bool WaveTrack::ClearAndPaste(double t0, // Start of time to clear
                et = clip->GetEndTime();
 
                // Scan the cuts for any that live within this clip
-               for (i = 0; i < cuts.GetCount(); i++) {
-                  WaveClip *cut = cuts[i];
+               for (auto it = cuts.begin(); it != cuts.end();) {
+                  WaveClip *cut = *it;
                   double cs = cut->GetOffset();
 
                   // Offset the cut from the start of the clip and add it to
@@ -955,9 +955,10 @@ bool WaveTrack::ClearAndPaste(double t0, // Start of time to clear
                   if (cs >= st && cs <= et) {
                      cut->SetOffset(warper->Warp(cs) - st);
                      clip->GetCutLines().push_back(cut);
-                     cuts.RemoveAt(i);
-                     i--;
+                     it = cuts.erase(it);
                   }
+                  else
+                     ++it;
                }
             }
          }
@@ -965,8 +966,8 @@ bool WaveTrack::ClearAndPaste(double t0, // Start of time to clear
    }
 
    // Delete cutlines that fell outside of resulting clips
-   for (int ii = cuts.GetCount(); ii--;)
-      delete cuts[ii];
+   for (const auto cut: cuts)
+      delete cut;
 
    return true;
 }
@@ -980,8 +981,8 @@ bool WaveTrack::SplitDelete(double t0, double t1)
 
 namespace
 {
-   WaveClipList::const_iterator
-      FindClip(const WaveClipList &list, const WaveClip *clip, int *distance = nullptr)
+   WaveClipHolders::const_iterator
+      FindClip(const WaveClipHolders &list, const WaveClip *clip, int *distance = nullptr)
    {
       if (distance)
          *distance = 0;
@@ -996,8 +997,8 @@ namespace
       return it;
    }
 
-   WaveClipList::iterator
-      FindClip(WaveClipList &list, const WaveClip *clip, int *distance = nullptr)
+   WaveClipHolders::iterator
+      FindClip(WaveClipHolders &list, const WaveClip *clip, int *distance = nullptr)
    {
       if (distance)
          *distance = 0;
@@ -1037,8 +1038,8 @@ bool WaveTrack::HandleClear(double t0, double t1,
    bool editClipCanMove = true;
    gPrefs->Read(wxT("/GUI/EditClipCanMove"), &editClipCanMove);
 
-   WaveClipList clipsToDelete;
-   WaveClipList clipsToAdd;
+   WaveClipPointers clipsToDelete;
+   WaveClipHolders clipsToAdd;
 
    // We only add cut lines when deleting in the middle of a single clip
    // The cut line code is not really prepared to handle other situations
@@ -1218,7 +1219,7 @@ bool WaveTrack::Paste(double t0, const Track *src)
    if (src->GetKind() != Track::Wave)
       return false;
 
-   WaveTrack* other = (WaveTrack*)src;
+   const WaveTrack* other = static_cast<const WaveTrack*>(src);
 
    //
    // Pasting is a bit complicated, because with the existence of multiclip mode,
@@ -1513,7 +1514,7 @@ bool WaveTrack::Join(double t0, double t1)
 {
    // Merge all WaveClips overlapping selection into one
 
-   WaveClipList clipsToDelete;
+   WaveClipPointers clipsToDelete;
    WaveClip *newClip;
 
    for (const auto &clip: mClips)
@@ -2263,7 +2264,7 @@ WaveClip* WaveTrack::RightmostOrNewClip()
    }
 }
 
-int WaveTrack::GetClipIndex(WaveClip* clip) const
+int WaveTrack::GetClipIndex(const WaveClip* clip) const
 {
    int result;
    FindClip(mClips, clip, &result);
@@ -2278,6 +2279,11 @@ WaveClip* WaveTrack::GetClipByIndex(int index)
       return NULL;
 }
 
+const WaveClip* WaveTrack::GetClipByIndex(int index) const
+{
+   return const_cast<WaveTrack&>(*this).GetClipByIndex(index);
+}
+
 int WaveTrack::GetNumClips() const
 {
    return mClips.size();
@@ -2286,7 +2292,7 @@ int WaveTrack::GetNumClips() const
 // unused
 //void WaveTrack::MoveClipToTrack(int clipIndex, WaveTrack* dest)
 //{
-//   WaveClipList::compatibility_iterator node = mClips.Item(clipIndex);
+//   WaveClipHolders::compatibility_iterator node = mClips.Item(clipIndex);
 //   WaveClip* clip = node->GetData();
 //   mClips.DeleteNode(node);
 //   dest->mClips.Append(clip);
@@ -2414,24 +2420,24 @@ bool WaveTrack::SplitAt(double t)
 
 void WaveTrack::UpdateLocationsCache() const
 {
-   unsigned int i;
-   WaveClipArray clips;
-
-   FillSortedClipArray(clips);
+   auto clips = SortedClipArray();
 
    mDisplayLocationsCache.clear();
 
    // Count number of display locations
    int num = 0;
-   for (i = 0; i < clips.GetCount(); i++)
    {
-      WaveClip* clip = clips.Item(i);
+      const WaveClip *prev = nullptr;
+      for (const auto clip : clips)
+      {
+         num += clip->NumCutLines();
 
-      num += clip->GetCutLines().size();
+         if (prev && fabs(prev->GetEndTime() -
+                          clip->GetStartTime()) < WAVETRACK_MERGE_POINT_TOLERANCE)
+            ++num;
 
-      if (i > 0 && fabs(clips.Item(i - 1)->GetEndTime() -
-                  clip->GetStartTime()) < WAVETRACK_MERGE_POINT_TOLERANCE)
-         ++num;
+         prev = clip;
+      }
    }
 
    if (num == 0)
@@ -2443,10 +2449,9 @@ void WaveTrack::UpdateLocationsCache() const
    // Add all display locations to cache
    int curpos = 0;
 
-   for (i = 0; i < clips.GetCount(); i++)
+   const WaveClip *previousClip = nullptr;
+   for (const auto clip: clips)
    {
-      WaveClip* clip = clips.Item(i);
-
       for (const auto &cc : clip->GetCutLines())
       {
          // Add cut line expander point
@@ -2457,16 +2462,14 @@ void WaveTrack::UpdateLocationsCache() const
          curpos++;
       }
 
-      if (i > 0)
+      if (previousClip)
       {
-         WaveClip* previousClip = clips.Item(i - 1);
-
          if (fabs(previousClip->GetEndTime() - clip->GetStartTime())
                                           < WAVETRACK_MERGE_POINT_TOLERANCE)
          {
             // Add merge point
             mDisplayLocationsCache.push_back(WaveTrackLocation{
-               clips.Item(i - 1)->GetEndTime(),
+               previousClip->GetEndTime(),
                WaveTrackLocation::locationMergePoint,
                GetClipIndex(previousClip),
                GetClipIndex(clip)
@@ -2474,6 +2477,8 @@ void WaveTrack::UpdateLocationsCache() const
             curpos++;
          }
       }
+
+      previousClip = clip;
    }
 
    wxASSERT(curpos == num);
@@ -2580,22 +2585,27 @@ bool WaveTrack::Resample(int rate, ProgressDialog *progress)
    return true;
 }
 
-static int SortClipArrayCmpFunc(WaveClip** clip1, WaveClip** clip2)
-{
-   if((*clip1)->GetStartTime() < (*clip2)->GetStartTime())
-      return -1;
-   else
-      return 1;
+namespace {
+   template < typename Cont1, typename Cont2 >
+   Cont1 FillSortedClipArray(const Cont2& mClips)
+   {
+      Cont1 clips;
+      std::copy(mClips.begin(), mClips.end(), std::back_inserter(clips));
+      std::sort(clips.begin(), clips.end(),
+         [](const WaveClip *a, const WaveClip *b)
+      { return a->GetStartTime() < b->GetStartTime(); });
+      return clips;
+   }
 }
 
-void WaveTrack::FillSortedClipArray(WaveClipArray& clips) const
+WaveClipPointers WaveTrack::SortedClipArray()
 {
-   clips.Empty();
+   return FillSortedClipArray<WaveClipPointers>(mClips);
+}
 
-   for (const auto &clip: GetClips())
-      clips.Add(clip);
-
-   clips.Sort(SortClipArrayCmpFunc);
+WaveClipConstPointers WaveTrack::SortedClipArray() const
+{
+   return FillSortedClipArray<WaveClipConstPointers>(mClips);
 }
 
 ///Deletes all clips' wavecaches.  Careful, This may not be threadsafe.

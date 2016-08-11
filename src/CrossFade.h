@@ -46,7 +46,7 @@ class CrossFader
                    sampleCount start, sampleCount len);
 
  protected:
-  WaveClipList mClips;
+  WaveClipHolders mClips;
 
  private:
 
