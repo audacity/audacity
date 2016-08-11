@@ -136,11 +136,11 @@ public:
 
    void Pause(bool paused);
    bool IsPaused() const;
+   void CheckMenuItems();
 
 private:
    void DoScrub(bool seek);
    void OnActivateOrDeactivateApp(wxActivateEvent & event);
-   void CheckMenuItems();
 
    // I need this because I can't push the scrubber as an event handler
    // in two places at once.

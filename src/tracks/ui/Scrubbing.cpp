@@ -281,6 +281,7 @@ void Scrubber::MarkScrubStart(
    mProject->SetAudioIOToken(0);
 
    mSeeking = seek;
+   CheckMenuItems();
 
    ctb->SetPlay(true, ControlToolBar::PlayAppearance::Straight );
    // Commented out for Bug 1421
@@ -291,7 +292,6 @@ void Scrubber::MarkScrubStart(
    mScrubStartPosition = xx;
    ctb->UpdateStatusBar(mProject);
    mOptions.startClockTimeMillis = ::wxGetLocalTimeMillis();
-
    mCancelled = false;
 }
 
@@ -891,6 +891,7 @@ void Scrubber::OnScrubOrSeek(bool seek)
    }
 
    mSeeking = seek;
+   CheckMenuItems();
 
    auto ruler = mProject->GetRulerPanel();
    if (ruler)
