@@ -48,6 +48,9 @@
 // feature to link audio tracks to a label track
 #define EXPERIMENTAL_SYNC_LOCK
 
+// enables dark theme and customisations.
+#define EXPERIMENTAL_DARK_AUDACITY
+
 // experimental theming
 // Work in progress, June-2008.
 // This mostly sets up a weird color scheme currently.
