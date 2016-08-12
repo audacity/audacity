@@ -29,25 +29,25 @@ wxString SelectCommandType::BuildName()
 
 void SelectCommandType::BuildSignature(CommandSignature &signature)
 {
-   OptionValidator *modeValidator = new OptionValidator();
+   auto modeValidator = make_movable<OptionValidator>();
    modeValidator->AddOption(wxT("None"));
    modeValidator->AddOption(wxT("All"));
    modeValidator->AddOption(wxT("Range"));
    modeValidator->AddOption(wxT("Name"));
-   signature.AddParameter(wxT("Mode"), wxT("All"), modeValidator);
+   signature.AddParameter(wxT("Mode"), wxT("All"), std::move(modeValidator));
 
-   DoubleValidator *startTimeValidator = new DoubleValidator();
-   signature.AddParameter(wxT("StartTime"), 0.0, startTimeValidator);
-   DoubleValidator *endTimeValidator = new DoubleValidator();
-   signature.AddParameter(wxT("EndTime"), 0.0, endTimeValidator);
-   IntValidator *firstTrackValidator = new IntValidator();
+   auto startTimeValidator = make_movable<DoubleValidator>();
+   signature.AddParameter(wxT("StartTime"), 0.0, std::move(startTimeValidator));
+   auto endTimeValidator = make_movable<DoubleValidator>();
+   signature.AddParameter(wxT("EndTime"), 0.0, std::move(endTimeValidator));
 
-   signature.AddParameter(wxT("FirstTrack"), 0, firstTrackValidator);
-   IntValidator *lastTrackValidator = new IntValidator();
-   signature.AddParameter(wxT("LastTrack"), 0, lastTrackValidator);
+   auto firstTrackValidator = make_movable<IntValidator>();
+   signature.AddParameter(wxT("FirstTrack"), 0, std::move(firstTrackValidator));
+   auto lastTrackValidator = make_movable<IntValidator>();
+   signature.AddParameter(wxT("LastTrack"), 0, std::move(lastTrackValidator));
 
-   Validator *trackNameValidator = new DefaultValidator();
-   signature.AddParameter(wxT("TrackName"), 0, trackNameValidator);
+   auto trackNameValidator = make_movable<DefaultValidator>();
+   signature.AddParameter(wxT("TrackName"), 0, std::move(trackNameValidator));
 }
 
 CommandHolder SelectCommandType::Create(std::unique_ptr<CommandOutputTarget> &&target)

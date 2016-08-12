@@ -660,9 +660,6 @@ bool EffectTruncSilence::Analyze(RegionList& silenceList,
                }
 
                // Record the silent region
-               Region *r = new Region;
-               r->start = wt->LongSamplesToTime(*index + i - *silentFrame);
-               r->end = wt->LongSamplesToTime(*index + i);
                trackSilences.push_back(Region(
                   wt->LongSamplesToTime(*index + i - *silentFrame),
                   wt->LongSamplesToTime(*index + i)

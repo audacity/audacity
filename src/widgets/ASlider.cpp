@@ -514,29 +514,11 @@ void LWSlider::Init(wxWindow * parent,
 
    AdjustSize(size);
 
-   mpRuler = NULL; // Do this and Move() before Draw().
    Move(pos);
 }
 
 LWSlider::~LWSlider()
 {
-   if (mBitmap)
-   {
-      delete mBitmap;
-      mBitmap = NULL;
-   }
-
-   if (mThumbBitmap)
-   {
-      delete mThumbBitmap;
-      mThumbBitmap = NULL;
-   }
-
-   delete mpRuler;
-   if (mTipPanel)
-   {
-      delete mTipPanel;
-   }
 }
 
 wxWindowID LWSlider::GetId()
@@ -658,29 +640,17 @@ void LWSlider::OnSize( wxSizeEvent & event )
 
 void LWSlider::Draw(wxDC & paintDC)
 {
-   if (mBitmap)
-   {
-      delete mBitmap;
-      mBitmap = NULL;
-   }
-
-   if (mThumbBitmap)
-   {
-      delete mThumbBitmap;
-      mThumbBitmap = NULL;
-   }
-
    // The color we'll use to create the mask
    wxColour transparentColour(255, 254, 255);
 
    // Set up the memory DC
    wxMemoryDC dc;
 
-   mThumbBitmap = new wxBitmap( theTheme.Bitmap( bmpSliderThumb ));
+   mThumbBitmap = std::make_unique<wxBitmap>(wxBitmap( theTheme.Bitmap( bmpSliderThumb )));
 
 #if 0
    // Create the bitmap
-   mThumbBitmap = new wxBitmap();
+   mThumbBitmap = std::make_unique<wxBitmap>();
    mThumbBitmap->Create(mThumbWidth, mThumbHeight, paintDC);
    dc.SelectObject(*mThumbBitmap);
 
@@ -690,55 +660,55 @@ void LWSlider::Draw(wxDC & paintDC)
    dc.Clear();
 #endif
 
-   // Create the graphics contexxt
-   wxGraphicsContext *gc = wxGraphicsContext::Create(dc);
-
-   // For vertical, we use the same downward pointing thumb, but rotate and flip it
-   if (mOrientation == wxVERTICAL)
    {
-      gc->Translate(0, 3);
-      gc->Scale(1, -1);
-      gc->Rotate((-90 * M_PI) / 180);
+      // Create the graphics contexxt
+      std::unique_ptr<wxGraphicsContext> gc{ wxGraphicsContext::Create(dc) };
+
+      // For vertical, we use the same downward pointing thumb, but rotate and flip it
+      if (mOrientation == wxVERTICAL)
+      {
+         gc->Translate(0, 3);
+         gc->Scale(1, -1);
+         gc->Rotate((-90 * M_PI) / 180);
+      }
+      else
+      {
+         gc->Translate(1.5, 0);
+      }
+
+      // Draw the thumb outline
+      gc->SetBrush(wxBrush(mEnabled ? wxColour(192, 192, 216) : wxColour(238, 238, 238)));
+      gc->SetPen(wxPen(mEnabled ? wxColour(0, 0, 0) : wxColour(119, 119, 119)));
+      gc->DrawLines(WXSIZEOF(outer), outer);
+
+      // The interior is based on whether the slider is enabled or not
+      if (mEnabled)
+      {
+         // Draw the left and top interior components
+         gc->SetPen(wxPen(wxColour(255, 255, 255)));
+         gc->StrokeLines(WXSIZEOF(enabledLeftBegin), enabledLeftBegin, enabledLeftEnd);
+
+         // Draw the right and bottom interior components
+         gc->SetPen(wxPen(wxColour(141, 141, 178)));
+         gc->StrokeLines(WXSIZEOF(enabledRightBegin), enabledRightBegin, enabledRightEnd);
+      }
+      else
+      {
+         // Draw the interior stripes
+         gc->SetPen(wxPen(wxColour(200, 200, 200)));
+         gc->StrokeLines(WXSIZEOF(disabledStripesBegin), disabledStripesBegin, disabledStripesEnd);
+
+         // Draw the right and bottom interior components
+         gc->SetPen(wxPen(wxColour(153, 153, 153)));
+         gc->StrokeLines(WXSIZEOF(disabledRightBegin), disabledRightBegin, disabledRightEnd);
+      }
    }
-   else
-   {
-      gc->Translate(1.5, 0);
-   }
-
-   // Draw the thumb outline
-   gc->SetBrush(wxBrush(mEnabled ? wxColour(192, 192, 216) : wxColour(238, 238, 238)));
-   gc->SetPen(wxPen(mEnabled ? wxColour(0, 0, 0) : wxColour(119, 119, 119)));
-   gc->DrawLines(WXSIZEOF(outer), outer);
-
-   // The interior is based on whether the slider is enabled or not
-   if (mEnabled)
-   {
-      // Draw the left and top interior components
-      gc->SetPen(wxPen(wxColour(255, 255, 255)));
-      gc->StrokeLines(WXSIZEOF(enabledLeftBegin), enabledLeftBegin, enabledLeftEnd);
-
-      // Draw the right and bottom interior components
-      gc->SetPen(wxPen(wxColour(141, 141, 178)));
-      gc->StrokeLines(WXSIZEOF(enabledRightBegin), enabledRightBegin, enabledRightEnd);
-   }
-   else
-   {
-      // Draw the interior stripes
-      gc->SetPen(wxPen(wxColour(200, 200, 200)));
-      gc->StrokeLines(WXSIZEOF(disabledStripesBegin), disabledStripesBegin, disabledStripesEnd);
-
-      // Draw the right and bottom interior components
-      gc->SetPen(wxPen(wxColour(153, 153, 153)));
-      gc->StrokeLines(WXSIZEOF(disabledRightBegin), disabledRightBegin, disabledRightEnd);
-   }
-
-   // Done with the graphics context and memory DC
-   delete gc;
    dc.SelectObject(wxNullBitmap);
 
 #if !defined(__WXMAC__)
    // Now create and set the mask
-   mThumbBitmap->SetMask(new wxMask(*mThumbBitmap, transparentColour));
+   // SetMask takes ownership
+   mThumbBitmap->SetMask(safenew wxMask(*mThumbBitmap, transparentColour));
 #endif
 
 #endif
@@ -746,7 +716,7 @@ void LWSlider::Draw(wxDC & paintDC)
    // Now the background bitmap
    //
 
-   mBitmap = new wxBitmap();
+   mBitmap = std::make_unique<wxBitmap>();
    mBitmap->Create(mWidth, mHeight, paintDC);
    dc.SelectObject(*mBitmap);
 
@@ -848,7 +818,7 @@ void LWSlider::Draw(wxDC & paintDC)
    //{
    //   if (!mpRuler)
    //   {
-   //      mpRuler = new Ruler();
+   //      mpRuler = std::make_unique<Ruler>();
    //      mpRuler->mbTicksOnly = false;
    //      mpRuler->mbTicksAtExtremes = true;
 
@@ -925,7 +895,8 @@ void LWSlider::Draw(wxDC & paintDC)
    dc.SelectObject(wxNullBitmap);
 
 #if !defined(__WXMAC__)
-   mBitmap->SetMask(new wxMask(*mBitmap, transparentColour));
+   // SetMask takes ownership
+   mBitmap->SetMask(safenew wxMask(*mBitmap, transparentColour));
 #endif
 }
 
@@ -945,8 +916,7 @@ void LWSlider::ShowTip(bool show)
             return;
          }
 
-         delete mTipPanel;
-         mTipPanel = NULL;
+         mTipPanel.reset();
       }
 
       CreatePopWin();
@@ -959,21 +929,14 @@ void LWSlider::ShowTip(bool show)
       if (mTipPanel)
       {
          mTipPanel->Hide();
-         delete mTipPanel;
-         mTipPanel = NULL;
+         mTipPanel.reset();
       }
    }
 }
 
 void LWSlider::CreatePopWin()
 {
-   if (mTipPanel)
-   {
-      delete mTipPanel;
-      mTipPanel = NULL;
-   }
-
-   mTipPanel = new TipPanel(mParent, GetMaxTip());
+   mTipPanel = std::make_unique<TipPanel>(mParent, GetMaxTip());
 }
 
 void LWSlider::SetPopWinPosition()
@@ -1566,11 +1529,7 @@ void LWSlider::SetEnabled(bool enabled)
 {
    mEnabled = enabled;
 
-   if (mThumbBitmap)
-   {
-      delete mThumbBitmap;
-      mThumbBitmap = NULL;
-   }
+   mThumbBitmap.reset();
 
    Refresh();
 }
@@ -1604,7 +1563,7 @@ ASlider::ASlider( wxWindow * parent,
                   int orientation /*= wxHORIZONTAL*/)
 : wxPanel( parent, id, pos, size, wxWANTS_CHARS )
 {
-   mLWSlider = new LWSlider( this,
+   mLWSlider = std::make_unique<LWSlider>( this,
                              name,
                              wxPoint(0,0),
                              size,
@@ -1632,7 +1591,6 @@ ASlider::~ASlider()
 {
    if(HasCapture())
       ReleaseMouse();
-   delete mLWSlider;
 }
 
 void ASlider::OnSlider(wxCommandEvent &event)

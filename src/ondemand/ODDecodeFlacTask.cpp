@@ -33,9 +33,9 @@ ODDecodeFlacTask::~ODDecodeFlacTask()
 }
 
 
-std::unique_ptr<ODTask> ODDecodeFlacTask::Clone() const
+movable_ptr<ODTask> ODDecodeFlacTask::Clone() const
 {
-   auto clone = std::make_unique<ODDecodeFlacTask>();
+   auto clone = make_movable<ODDecodeFlacTask>();
    clone->mDemandSample = GetDemandSample();
 
    //the decoders and blockfiles should not be copied.  They are created as the task runs.
@@ -220,9 +220,7 @@ bool ODFlacDecoder::ReadHeader()
                          //we want to use the native flac type for quick conversion.
       /* (sampleFormat)
       gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleFormat"), floatSample);*/
-   if(mFile)
-      delete mFile;
-   mFile = new ODFLACFile(this);
+   mFile = std::make_unique<ODFLACFile>(this);
 
 
    if (!mHandle.Open(mFName, wxT("rb"))) {
@@ -261,15 +259,12 @@ bool ODFlacDecoder::ReadHeader()
 
 ODFLACFile* ODFlacDecoder::GetFlacFile()
 {
-   return mFile;
+   return mFile.get();
 }
 
 ODFlacDecoder::~ODFlacDecoder(){
    if(mFile)
-   {
       mFile->finish();
-      delete mFile;
-   }
 }
 
 ///Creates an ODFileDecoder that decodes a file of filetype the subclass handles.
@@ -303,12 +298,11 @@ ODFileDecoder* ODDecodeFlacTask::CreateFileDecoder(const wxString & fileName)
    }
 
    // Open the file for import
-   ODFlacDecoder *decoder = new ODFlacDecoder(fileName);
+   auto decoder = std::make_movable<ODFlacDecoder>(fileName);
 */
 /*
    bool success = decoder->Init();
    if (!success) {
-      delete decoder;
       return NULL;
    }
 */

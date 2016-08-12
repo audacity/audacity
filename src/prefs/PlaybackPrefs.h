@@ -27,11 +27,7 @@ class PlaybackPrefs final : public PrefsPanel
    virtual ~PlaybackPrefs();
    bool Apply() override;
 
-   static bool GetPinnedHeadPreference();
-   static void SetPinnedHeadPreference(bool value, bool flush = false);
-
  private:
-   static int iPreferencePinned;
    void Populate();
    void PopulateOrExchange(ShuttleGui & S);
 };

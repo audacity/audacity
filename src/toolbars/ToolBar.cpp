@@ -168,7 +168,8 @@ void ToolBarResizer::OnLeftDown( wxMouseEvent & event )
    mOrigSize = mBar->GetSize();
 
    // We want all of the mouse events
-   CaptureMouse();
+   if( !HasCapture() )
+      CaptureMouse();
 }
 
 void ToolBarResizer::OnLeftUp( wxMouseEvent & event )
@@ -752,8 +753,9 @@ AButton * ToolBar::MakeButton(wxWindow *parent,
                               bool processdownevents,
                               wxSize size)
 {
-   int xoff = (size.GetWidth() - theTheme.Image(eStandardUp).GetWidth())/2;
-   int yoff = (size.GetHeight() - theTheme.Image(eStandardUp).GetHeight())/2;
+   // wxMax to cater for case of image being bigger than the button.
+   int xoff = wxMax( 0, (size.GetWidth() - theTheme.Image(eStandardUp).GetWidth())/2);
+   int yoff = wxMax( 0, (size.GetHeight() - theTheme.Image(eStandardUp).GetHeight())/2);
 
    typedef std::unique_ptr<wxImage> wxImagePtr;
    wxImagePtr up2        (OverlayImage(eUp,     eStandardUp, xoff, yoff));
@@ -762,7 +764,7 @@ AButton * ToolBar::MakeButton(wxWindow *parent,
    wxImagePtr disable2   (OverlayImage(eUp,     eDisabled, xoff, yoff));
 
    AButton * button =
-      new AButton(parent, id, placement, size, *up2, *hilite2, *down2,
+      safenew AButton(parent, id, placement, size, *up2, *hilite2, *down2,
             *disable2, processdownevents);
 
    return button;
@@ -778,8 +780,9 @@ void ToolBar::MakeAlternateImages(AButton &button, int idx,
                                   teBmps eDisabled,
                                   wxSize size)
 {
-   int xoff = (size.GetWidth() - theTheme.Image(eStandardUp).GetWidth())/2;
-   int yoff = (size.GetHeight() - theTheme.Image(eStandardUp).GetHeight())/2;
+   // wxMax to cater for case of image being bigger than the button.
+   int xoff = wxMax( 0, (size.GetWidth() - theTheme.Image(eStandardUp).GetWidth())/2);
+   int yoff = wxMax( 0, (size.GetHeight() - theTheme.Image(eStandardUp).GetHeight())/2);
 
    typedef std::unique_ptr<wxImage> wxImagePtr;
    wxImagePtr up        (OverlayImage(eUp,     eStandardUp, xoff, yoff));

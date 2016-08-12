@@ -293,9 +293,6 @@ Exporter::Exporter()
 
 Exporter::~Exporter()
 {
-   if (mMixerSpec) {
-      delete mMixerSpec;
-   }
 }
 
 void Exporter::SetFileDialogTitle( const wxString & DialogTitle )
@@ -367,10 +364,7 @@ bool Exporter::Process(AudacityProject *project, bool selectedOnly, double t0, d
    bool success = ExportTracks();
 
    // Get rid of mixerspec
-   if (mMixerSpec) {
-      delete mMixerSpec;
-      mMixerSpec = NULL;
-   }
+   mMixerSpec.reset();
 
    return success;
 }
@@ -738,10 +732,7 @@ void Exporter::DisplayOptions(int index)
 bool Exporter::CheckMix()
 {
    // Clean up ... should never happen
-   if (mMixerSpec) {
-      delete mMixerSpec;
-      mMixerSpec = NULL;
-   }
+   mMixerSpec.reset();
 
    // Detemine if exported file will be stereo or mono or multichannel,
    // and if mixing will occur.
@@ -806,7 +797,7 @@ bool Exporter::CheckMix()
          return false;
       }
 
-      mMixerSpec = new MixerSpec(*(md.GetMixerSpec()));
+      mMixerSpec = std::make_unique<MixerSpec>(*(md.GetMixerSpec()));
       mChannels = mMixerSpec->GetNumChannels();
    }
 
@@ -828,7 +819,7 @@ bool Exporter::ExportTracks()
                                        mSelectedOnly,
                                        mT0,
                                        mT1,
-                                       mMixerSpec,
+                                       mMixerSpec.get(),
                                        NULL,
                                        mSubFormat);
 
@@ -939,10 +930,7 @@ bool Exporter::ProcessFromTimerRecording(AudacityProject *project,
    bool success = ExportTracks();
 
    // Get rid of mixerspec
-   if (mMixerSpec) {
-      delete mMixerSpec;
-      mMixerSpec = NULL;
-   }
+   mMixerSpec.reset();
 
    return success;
 }
@@ -1011,10 +999,6 @@ ExportMixerPanel::~ExportMixerPanel()
 {
    delete[] mTrackRects;
    delete[] mChannelRects;
-
-   if (mBitmap) {
-      delete mBitmap;
-   }
 }
 
 //set the font on memDC such that text can fit in specified width and height
@@ -1048,12 +1032,9 @@ void ExportMixerPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
 
    if( !mBitmap || mWidth != width || mHeight != height )
    {
-      if( mBitmap )
-         delete mBitmap;
-
       mWidth = width;
       mHeight = height;
-      mBitmap = new wxBitmap( mWidth, mHeight );
+      mBitmap = std::make_unique<wxBitmap>( mWidth, mHeight );
    }
 
    wxColour bkgnd = GetBackgroundColour();
@@ -1281,14 +1262,14 @@ ExportMixerDialog::ExportMixerDialog( const TrackList *tracks, bool selectedOnly
    if (maxNumChannels > 32)
       maxNumChannels = 32;
 
-   mMixerSpec = new MixerSpec(numTracks, maxNumChannels);
+   mMixerSpec = std::make_unique<MixerSpec>(numTracks, maxNumChannels);
    
    wxBoxSizer *vertSizer;
    {
       auto uVertSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
       vertSizer = uVertSizer.get();
 
-      wxWindow *mixerPanel = safenew ExportMixerPanel(mMixerSpec, mTrackNames, this,
+      wxWindow *mixerPanel = safenew ExportMixerPanel(mMixerSpec.get(), mTrackNames, this,
          ID_MIXERPANEL, wxDefaultPosition, wxSize(400, -1));
       mixerPanel->SetName(_("Mixer Panel"));
       vertSizer->Add(mixerPanel, 1, wxEXPAND | wxALIGN_CENTRE | wxALL, 5);
@@ -1326,11 +1307,6 @@ ExportMixerDialog::ExportMixerDialog( const TrackList *tracks, bool selectedOnly
 
 ExportMixerDialog::~ExportMixerDialog()
 {
-   if( mMixerSpec )
-   {
-      delete mMixerSpec;
-      mMixerSpec = NULL;
-   }
 }
 
 void ExportMixerDialog::OnSize(wxSizeEvent &event)

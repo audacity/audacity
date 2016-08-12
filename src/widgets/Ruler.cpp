@@ -85,6 +85,7 @@ array of Ruler::Label.
 #include "../tracks/ui/Scrubbing.h"
 #include "../prefs/PlaybackPrefs.h"
 #include "../prefs/TracksPrefs.h"
+#include "../widgets/Grabber.h"
 
 //#define SCRUB_ABOVE
 
@@ -105,7 +106,7 @@ wxColour Ruler::mTickColour{ 153, 153, 153 };
 //
 
 Ruler::Ruler()
-   : mpNumberScale(0)
+   : mpNumberScale{}
 {
    mMin = mHiddenMin = 0.0;
    mMax = mHiddenMax = 100.0;
@@ -136,9 +137,9 @@ Ruler::Ruler()
    fontSize = 8;
 #endif
 
-   mMinorMinorFont = new wxFont(fontSize - 1, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-   mMinorFont = new wxFont(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-   mMajorFont = new wxFont(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
+   mMinorMinorFont = std::make_unique<wxFont>(fontSize - 1, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+   mMinorFont = std::make_unique<wxFont>(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+   mMajorFont = std::make_unique<wxFont>(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
 
    mUserFonts = false;
 
@@ -170,9 +171,6 @@ Ruler::~Ruler()
    Invalidate();  // frees up our arrays
    if( mUserBits )
       delete [] mUserBits;//JKC
-   delete mMinorFont;
-   delete mMajorFont;
-   delete mMinorMinorFont;
 
    if (mMajorLabels)
       delete[] mMajorLabels;
@@ -180,8 +178,6 @@ Ruler::~Ruler()
       delete[] mMinorLabels;
    if (mMinorMinorLabels)
       delete[] mMinorMinorLabels;
-
-   delete mpNumberScale;
 }
 
 void Ruler::SetTwoTone(bool twoTone)
@@ -322,14 +318,13 @@ void Ruler::SetNumberScale(const NumberScale *pScale)
 {
    if (!pScale) {
       if (mpNumberScale) {
-         delete mpNumberScale;
+         mpNumberScale.reset();
          Invalidate();
       }
    }
    else {
       if (!mpNumberScale || *mpNumberScale != *pScale) {
-         delete mpNumberScale;
-         mpNumberScale = new NumberScale(*pScale);
+         mpNumberScale = std::make_unique<NumberScale>(*pScale);
          Invalidate();
       }
    }
@@ -1028,17 +1023,11 @@ void Ruler::Update(const TimeTrack* timetrack)// Envelope *speedEnv, long minSpe
       mDC->GetTextExtent(exampleText, &strW, &strH, &strD, &strL);
       mLead = strL;
 
-      if (mMajorFont)
-         delete mMajorFont;
-      mMajorFont = new wxFont(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
+      mMajorFont = std::make_unique<wxFont>(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
 
-      if (mMinorFont)
-         delete mMinorFont;
-      mMinorFont = new wxFont(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+      mMinorFont = std::make_unique<wxFont>(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
 
-      if (mMinorMinorFont)
-         delete mMinorMinorFont;
-      mMinorMinorFont = new wxFont(fontSize - 1, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+      mMinorMinorFont = std::make_unique<wxFont>(fontSize - 1, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
    }
 
    // If ruler is being resized, we could end up with it being too small.
@@ -1669,14 +1658,14 @@ enum : int {
 
    TopMargin = 1,
    BottomMargin = 2, // for bottom bevel and bottom line
-   LeftMargin = 1,
+   LeftMargin = 1, 
 
    RightMargin = 1,
 };
 
 enum {
    ScrubHeight = 14,
-   ProperRulerHeight = 28
+   ProperRulerHeight = 29
 };
 
 inline int IndicatorHeightForWidth(int width)
@@ -2014,11 +2003,6 @@ AdornedRulerPanel::~AdornedRulerPanel()
    if(HasCapture())
       ReleaseMouse();
 
-   // Done with the snap manager
-   if (mSnapManager) {
-      delete mSnapManager;
-   }
-
    wxTheApp->Disconnect(EVT_AUDIOIO_CAPTURE,
                         wxCommandEventHandler(AdornedRulerPanel::OnCapture),
                         NULL,
@@ -2074,10 +2058,20 @@ void AdornedRulerPanel::ReCreateButtons()
       button = nullptr;
    }
 
+   size_t iButton = 0;
    // Make the short row of time ruler pushbottons.
    // Don't bother with sizers.  Their sizes and positions are fixed.
-   wxPoint position{ 1 + LeftMargin, 0 };
-   size_t iButton = 0;
+   // Add a grabber converted to a spacer.
+   // This makes it visually clearer that the button is a button.
+
+   wxPoint position( 1, 0 );
+   Grabber * pGrabber = safenew Grabber(this, this->GetId());
+   pGrabber->SetAsSpacer( true );
+   //pGrabber->SetSize( 10, 27 ); // default is 10,27
+   pGrabber->SetPosition( position );
+
+   position.x = 12;
+
    auto size = theTheme.ImageSize( bmpRecoloredUpSmall );
    size.y = std::min(size.y, GetRulerHeight(false));
 
@@ -2096,7 +2090,7 @@ void AdornedRulerPanel::ReCreateButtons()
       mButtons[iButton++] = button;
       return button;
    };
-   auto button = buttonMaker(OnTogglePinnedStateID, bmpPinnedPlayHead, false);
+   auto button = buttonMaker(OnTogglePinnedStateID, bmpPinnedPlayHead, true);
    ToolBar::MakeAlternateImages(
       *button, 1,
       bmpRecoloredUpSmall, bmpRecoloredDownSmall, bmpRecoloredHiliteSmall,
@@ -2120,11 +2114,11 @@ namespace {
        */
 #if 0
       if(scrubber.Seeks())
-         return _("Click or drag to begin seeking");
+         return _("Click or drag to begin Seek");
       else
-         return _("Click or drag to begin scrubbing");
+         return _("Click or drag to begin Scrub");
 #else
-      return _("Click & move to scrub. Click & drag to seek");
+      return _("Click & move to Scrub. Click & drag to Seek.");
 #endif
    }
 
@@ -2136,11 +2130,14 @@ namespace {
        */
 #if 0
       if(scrubber.Seeks())
-         return _("Move to seek");
+         return _("Move to Seek");
       else
-         return _("Move to scrub");
+         return _("Move to Scrub");
 #else
-      return _("Move to scrub, drag to seek");
+      wxMouseState State = wxGetMouseState();
+      if( State.LeftIsDown() )
+         return _("Release and move to Scrub. Drag to Seek.");
+      return _("Move to Scrub, drag to Seek");
 #endif
    }
 
@@ -2241,7 +2238,7 @@ void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
 
    // Stroke extras direct to the client area,
    // maybe outside of the damaged area
-   // As with TrackPanel, do not make a new wxClientDC or else Mac flashes badly!
+   // As with TrackPanel, do not make a NEW wxClientDC or else Mac flashes badly!
    dc.DestroyClippingRegion();
    DrawOverlays(true, &dc);
 }
@@ -2372,9 +2369,15 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
 
    auto &scrubber = mProject->GetScrubber();
    if (scrubber.HasStartedScrubbing()) {
-      if (evt.RightDown())
+      if (evt.RightDown() )
          // Fall through to context menu handling
          ;
+      else if ( evt.LeftUp() && inScrubZone)
+         // Fall through to seeking changes to scrubbing
+         ;
+//      else if ( evt.LeftDown() && inScrubZone)
+//         // Fall through to ready to seek
+//         ;
       else {
          bool switchToQP = (zone == StatusChoice::EnteringQP && mQuickPlayEnabled);
          if (switchToQP && evt.LeftDown()) {
@@ -2425,10 +2428,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
       SetCursor(mCursorDefault);
       mIsWE = false;
 
-      if (mSnapManager) {
-         delete mSnapManager;
-         mSnapManager = NULL;
-      }
+      mSnapManager.reset();
 
       if(evt.Leaving())
          return;
@@ -2447,13 +2447,26 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
           &position);
       return;
    }
-   else if (!HasCapture() && inScrubZone) {
+   else if( !HasCapture() && evt.LeftUp() && inScrubZone ) {
+      //wxLogDebug("up");
+      // mouse going up => we shift to scrubbing.
+      scrubber.MarkScrubStart(evt.m_x,
+         TracksPrefs::GetPinnedHeadPreference(), false);
+      UpdateStatusBarAndTooltips(StatusChoice::EnteringScrubZone);
+      // repaint_all so that the indicator changes shape.
+      bool repaint_all = true;
+      ShowQuickPlayIndicator(repaint_all);
+      return;
+   }
+   else if ( !HasCapture() && inScrubZone) {
+      // mouse going down => we are (probably) seeking
       if (evt.LeftDown()) {
+         //wxLogDebug("down");
          scrubber.MarkScrubStart(evt.m_x,
-            PlaybackPrefs::GetPinnedHeadPreference(), false);
+            TracksPrefs::GetPinnedHeadPreference(), false);
          UpdateStatusBarAndTooltips(StatusChoice::EnteringScrubZone);
-      }
-      ShowQuickPlayIndicator();
+         ShowQuickPlayIndicator();
+      } 
       return;
    }
    else if ( mQuickPlayEnabled) {
@@ -2527,7 +2540,8 @@ void AdornedRulerPanel::HandleQPClick(wxMouseEvent &evt, wxCoord mousePosX)
    // Check if we are dragging BEFORE CaptureMouse.
    if (mMouseEventState != mesNone)
       SetCursor(mCursorSizeWE);
-   CaptureMouse();
+   if ( !HasCapture() )
+      CaptureMouse();
 }
 
 void AdornedRulerPanel::HandleQPDrag(wxMouseEvent &event, wxCoord mousePosX)
@@ -2805,9 +2819,12 @@ void AdornedRulerPanel::UpdateButtonStates()
    };
 
    {
-      bool state = PlaybackPrefs::GetPinnedHeadPreference();
+      bool state = TracksPrefs::GetPinnedHeadPreference();
       auto pinButton = static_cast<AButton*>(FindWindow(OnTogglePinnedStateID));
-      pinButton->PopUp();
+      if( !state )
+         pinButton->PopUp();
+      else
+         pinButton->PushDown();
       pinButton->SetAlternateIdx(state ? 0 : 1);
       const auto label = state
       // Label descibes the present state, not what the click does
@@ -2929,7 +2946,7 @@ void AdornedRulerPanel::DragSelection()
 void AdornedRulerPanel::HandleSnapping()
 {
    if (!mSnapManager) {
-      mSnapManager = new SnapManager(mTracks, mViewInfo);
+      mSnapManager = std::make_unique<SnapManager>(mTracks, mViewInfo);
    }
 
    bool snappedPoint, snappedTime;
@@ -3187,7 +3204,7 @@ void AdornedRulerPanel::DoDrawIndicator
       dc->DrawPolygon( 3, tri );
    }
    else {
-      bool pinned = PlaybackPrefs::GetPinnedHeadPreference();
+      bool pinned = TracksPrefs::GetPinnedHeadPreference();
       wxBitmap & bmp = theTheme.Bitmap( pinned ? 
          (playing ? bmpPlayPointerPinned : bmpRecordPointerPinned) :
          (playing ? bmpPlayPointer : bmpRecordPointer) 
@@ -3218,18 +3235,18 @@ QuickPlayIndicatorOverlay *AdornedRulerPanel::GetOverlay()
    return mOverlay.get();
 }
 
-void AdornedRulerPanel::ShowQuickPlayIndicator()
+void AdornedRulerPanel::ShowQuickPlayIndicator( bool repaint_all)
 {
-   ShowOrHideQuickPlayIndicator(true);
+   ShowOrHideQuickPlayIndicator(true, repaint_all);
 }
 
-void AdornedRulerPanel::HideQuickPlayIndicator()
+void AdornedRulerPanel::HideQuickPlayIndicator(bool repaint_all)
 {
-   ShowOrHideQuickPlayIndicator(false);
+   ShowOrHideQuickPlayIndicator(false, repaint_all);
 }
 
 // Draws the vertical line and green triangle indicating the Quick Play cursor position.
-void AdornedRulerPanel::ShowOrHideQuickPlayIndicator(bool show)
+void AdornedRulerPanel::ShowOrHideQuickPlayIndicator(bool show, bool repaint_all)
 {
    double latestEnd = std::max(mTracks->GetEndTime(), mProject->GetSel1());
    if (!show || (mQuickPlayPos >= latestEnd)) {
@@ -3243,8 +3260,8 @@ void AdornedRulerPanel::ShowOrHideQuickPlayIndicator(bool show)
       GetOverlay()->Update(x, mIsSnapped, previewScrub);
    }
 
-   mProject->GetTrackPanel()->DrawOverlays(false);
-   DrawOverlays(false);
+   mProject->GetTrackPanel()->DrawOverlays(repaint_all);
+   DrawOverlays(repaint_all);
 }
 
 void AdornedRulerPanel::SetPlayRegion(double playRegionStart,

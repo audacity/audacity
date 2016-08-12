@@ -629,8 +629,6 @@ EffectAutoDuckPanel::EffectAutoDuckPanel(wxWindow *parent, EffectAutoDuck *effec
 
 EffectAutoDuckPanel::~EffectAutoDuckPanel()
 {
-   if (mBackgroundBitmap)
-      delete mBackgroundBitmap;
    if(HasCapture())
       ReleaseMouse();
 }
@@ -652,9 +650,7 @@ void EffectAutoDuckPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
    if (!mBackgroundBitmap || mBackgroundBitmap->GetWidth() != clientWidth ||
        mBackgroundBitmap->GetHeight() != clientHeight)
    {
-      if (mBackgroundBitmap)
-         delete mBackgroundBitmap;
-      mBackgroundBitmap = new wxBitmap(clientWidth, clientHeight);
+      mBackgroundBitmap = std::make_unique<wxBitmap>(clientWidth, clientHeight);
    }
 
    wxMemoryDC dc;
@@ -862,7 +858,8 @@ void EffectAutoDuckPanel::OnLeftDown(wxMouseEvent & evt)
       for (int i = 0; i < AUTO_DUCK_PANEL_NUM_CONTROL_POINTS; i++)
          mMoveStartControlPoints[i] = mControlPoints[i];
 
-      CaptureMouse();
+      if( !HasCapture() )
+         CaptureMouse();
    }
 }
 

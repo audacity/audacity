@@ -32,7 +32,7 @@ function bld
    mkdir -p "${1}"
    pushd "${1}"
    shift
-   ../configure --disable-accessibility \
+   ../configure --enable-accessibility \
                 --disable-compat26 \
                 --disable-compat28 \
                 --with-expat=builtin \

@@ -154,7 +154,7 @@ void LabelTrack::SetOffset(double dOffset)
 
 bool LabelTrack::Clear(double b, double e)
 {
-   // May delete labels, so use subscripts to iterate
+   // May DELETE labels, so use subscripts to iterate
    for (size_t i = 0; i < mLabels.size(); ++i) {
       auto &labelStruct = mLabels[i];
       LabelStruct::TimeRelations relation =
@@ -182,7 +182,7 @@ bool LabelTrack::Clear(double b, double e)
 //used when we want to use clear only on the labels
 bool LabelTrack::SplitDelete(double b, double e)
 {
-   // May delete labels, so use subscripts to iterate
+   // May DELETE labels, so use subscripts to iterate
    for (size_t i = 0, len = mLabels.size(); i < len; ++i) {
       auto &labelStruct = mLabels[i];
       LabelStruct::TimeRelations relation =
@@ -2292,23 +2292,18 @@ bool LabelTrack::Load(wxTextFile * in, DirManager * dirManager)
    if (!(in->GetNextLine().ToULong(&len)))
       return false;
 
-   for (auto pLabel : mLabels)
-      delete pLabel;
-
    mLabels.clear();
    mLabels.reserve(len);
 
    for (int i = 0; i < len; i++) {
-      LabelStruct *l = new LabelStruct();
       double t0;
       if (!Internat::CompatibleToDouble(in->GetNextLine(), &t0))
          return false;
-      l->selectedRegion.setT0(t0, false);
       // Legacy file format does not include label end-times.
-      l->selectedRegion.collapseToT0();
       // PRL: nothing NEW to do, legacy file support
-      l->title = in->GetNextLine();
-      mLabels.Add(l);
+      mLabels.push_back(LabelStruct {
+         SelectedRegion{ t0, t0 }, in->GetNextLine()
+      });
    }
 
    if (in->GetNextLine() != wxT("MLabelsEnd"))
@@ -2740,7 +2735,8 @@ void LabelTrack::CreateCustomGlyphs()
          // Create the icon from the tweaked spec.
          mBoundaryGlyphs[index] = wxBitmap(XmpBmp);
          // Create the mask
-         mBoundaryGlyphs[index].SetMask(new wxMask(mBoundaryGlyphs[index], wxColour(192, 192, 192)));
+         // SetMask takes ownership
+         mBoundaryGlyphs[index].SetMask(safenew wxMask(mBoundaryGlyphs[index], wxColour(192, 192, 192)));
       }
    }
 

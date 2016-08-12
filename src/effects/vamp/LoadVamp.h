@@ -54,7 +54,7 @@ public:
 private:
    // VampEffectModule implementation
 
-   Vamp::Plugin *FindPlugin(const wxString & wpath,
+   std::unique_ptr<Vamp::Plugin> FindPlugin(const wxString & wpath,
                             int & output,
                             bool & hasParameters);
 

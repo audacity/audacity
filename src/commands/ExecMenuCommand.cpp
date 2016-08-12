@@ -24,8 +24,8 @@ wxString ExecMenuCommandType::BuildName()
 
 void ExecMenuCommandType::BuildSignature(CommandSignature &signature)
 {
-   Validator *menuCommandValidator(new DefaultValidator());
-   signature.AddParameter(wxT("CommandName"), wxT(""), menuCommandValidator);
+   auto menuCommandValidator = make_movable<DefaultValidator>();
+   signature.AddParameter(wxT("CommandName"), wxT(""), std::move(menuCommandValidator));
 }
 
 CommandHolder ExecMenuCommandType::Create(std::unique_ptr<CommandOutputTarget> &&target)

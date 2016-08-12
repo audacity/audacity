@@ -139,7 +139,7 @@ void ToolBarConfiguration::Insert(ToolBar *bar, Position position)
 
       // Adopt the child only if the insertion point specifies that
       if (adopt && position.adopt) {
-         // Make new node with one child
+         // Make NEW node with one child
          Tree tree;
          tree.pBar = bar;
          tree.children.push_back(Tree{});
@@ -580,7 +580,7 @@ void ToolDock::VisitLayout(LayoutVisitor &visitor,
    }
 
    if (visitor.ShouldVisitSpaces()) {
-      // Visit the fringe where new leaves of the tree could go
+      // Visit the fringe where NEW leaves of the tree could go
 
       // Find the items with leftover spaces
       const auto end = std::remove_if(layout, layout + ToolBarCount,
@@ -622,7 +622,7 @@ void ToolDock::VisitLayout(LayoutVisitor &visitor,
    }
 
    // Report the final bounding box of all the bars, and a position where
-   // you can insert a new bar at bottom left.
+   // you can insert a NEW bar at bottom left.
    ToolBarConfiguration::Position finalPosition { nullptr, lastRoot };
    visitor.FinalRect(
       wxRect { toolbarGap, toolbarGap, main.width, main.y }, finalPosition

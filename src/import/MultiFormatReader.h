@@ -11,6 +11,9 @@
 #ifndef __AUDACITY_MULTIFORMATREADER_H__
 #define __AUDACITY_MULTIFORMATREADER_H__
 
+#include <stdio.h>
+#include <stdint.h>
+
 class MachineEndianness
 {
 public:
@@ -20,17 +23,7 @@ public:
       Big
    } EndiannessT;
 
-   MachineEndianness()
-   {
-      if (wxBYTE_ORDER == wxLITTLE_ENDIAN)
-      {
-         mFlag = MachineEndianness::Little;
-      }
-      else
-      {
-         mFlag = MachineEndianness::Big;
-      }
-   }
+   MachineEndianness();
    ~MachineEndianness()
    {}
 

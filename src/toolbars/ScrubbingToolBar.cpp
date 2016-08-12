@@ -250,4 +250,6 @@ void ScrubbingToolBar::EnableDisableButtons()
       barButton->PushDown();
    else
       barButton->PopUp();
+   RegenerateTooltips();
+   scrubber.CheckMenuItems();
 }

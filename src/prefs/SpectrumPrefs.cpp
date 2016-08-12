@@ -164,7 +164,7 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
    mDefaultsCheckbox = 0;
    if (mWt) {
       /* i18n-hint: use is a verb */
-      mDefaultsCheckbox = S.Id(ID_DEFAULTS).TieCheckBox(_("Use Preferences"), mDefaulted);
+      mDefaultsCheckbox = S.Id(ID_DEFAULTS).TieCheckBox(_("&Use Preferences"), mDefaulted);
    }
 
    S.StartStatic(_("Scale"));
@@ -382,11 +382,11 @@ bool SpectrumPrefs::Apply()
 
    if (mWt) {
       if (mDefaulted) {
-         mWt->SetSpectrogramSettings(NULL);
+         mWt->SetSpectrogramSettings({});
          // ... and so that the vertical scale also defaults:
          mWt->SetSpectrumBounds(-1, -1);
          if (partner) {
-            partner->SetSpectrogramSettings(NULL);
+            partner->SetSpectrogramSettings({});
             partner->SetSpectrumBounds(-1, -1);
          }
       }

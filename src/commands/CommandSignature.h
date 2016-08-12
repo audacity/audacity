@@ -41,7 +41,7 @@ public:
    //    valid: a suitable validator (caller doesn't need to DELETE it)
    void AddParameter(const wxString &name,
                      const wxVariant &dft,
-                     Validator *valid);
+                     movable_ptr<Validator> &&valid);
 
    // Methods for accessing the signature
    ParamValueMap GetDefaults() const;

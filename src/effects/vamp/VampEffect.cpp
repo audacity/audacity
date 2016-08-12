@@ -69,11 +69,11 @@ BEGIN_EVENT_TABLE(VampEffect, wxEvtHandler)
     EVT_CHOICE(wxID_ANY, VampEffect::OnChoice)
 END_EVENT_TABLE()
 
-VampEffect::VampEffect(Vamp::Plugin *plugin,
+VampEffect::VampEffect(std::unique_ptr<Vamp::Plugin> &&plugin,
                        const wxString & path,
                        int output,
                        bool hasParameters)
-:  mPlugin(plugin),
+:  mPlugin(std::move(plugin)),
    mPath(path),
    mOutput(output),
    mHasParameters(hasParameters),
@@ -92,11 +92,6 @@ VampEffect::VampEffect(Vamp::Plugin *plugin,
 
 VampEffect::~VampEffect()
 {
-   if (mPlugin)
-   {
-      delete mPlugin;
-   }
-
    if (mValues)
    {
       delete [] mValues;
@@ -381,14 +376,7 @@ bool VampEffect::Init()
    // The plugin must be reloaded to allow changing parameters
 
    Vamp::HostExt::PluginLoader *loader = Vamp::HostExt::PluginLoader::getInstance();
-
-   if (mPlugin)
-   {
-      delete mPlugin;
-      mPlugin = NULL;
-   }
-
-   mPlugin = loader->loadPlugin(mKey, mRate, Vamp::HostExt::PluginLoader::ADAPT_ALL);
+   mPlugin.reset(loader->loadPlugin(mKey, mRate, Vamp::HostExt::PluginLoader::ADAPT_ALL));
    if (!mPlugin)
    {
       wxMessageBox(_("Sorry, failed to load Vamp Plug-in."));
@@ -584,8 +572,7 @@ bool VampEffect::Process()
 
 void VampEffect::End()
 {
-   delete mPlugin;
-   mPlugin = 0;
+   mPlugin.reset();
 }
 
 void VampEffect::PopulateOrExchange(ShuttleGui & S)

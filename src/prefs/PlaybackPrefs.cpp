@@ -27,20 +27,6 @@
 #include "../ShuttleGui.h"
 #include "../Prefs.h"
 
-int PlaybackPrefs::iPreferencePinned = -1;
-
-namespace {
-   const wxChar *PinnedHeadPreferenceKey()
-   {
-      return wxT("/AudioIO/PinnedHead");
-   }
-
-   bool PinnedHeadPreferenceDefault()
-   {
-      return false;
-   }
-}
-
 PlaybackPrefs::PlaybackPrefs(wxWindow * parent)
 :  PrefsPanel(parent, _("Playback"))
 {
@@ -127,11 +113,6 @@ void PlaybackPrefs::PopulateOrExchange(ShuttleGui & S)
       S.EndThreeColumn();
    }
    S.EndStatic();
-
-   // This affects recording too, though it is in playback preferences.
-   S.TieCheckBox(_("Pinned playback/recording head"),
-                 PinnedHeadPreferenceKey(),
-                 PinnedHeadPreferenceDefault());
 }
 
 bool PlaybackPrefs::Apply()
@@ -140,25 +121,6 @@ bool PlaybackPrefs::Apply()
    PopulateOrExchange(S);
 
    return true;
-}
-
-bool PlaybackPrefs::GetPinnedHeadPreference()
-{
-   // JKC: Cache this setting as it is read many times during drawing, and otherwise causes screen flicker.
-   // Correct solution would be to re-write wxFileConfig to be efficient.
-   if( iPreferencePinned >= 0 )
-      return iPreferencePinned == 1;
-   bool bResult = gPrefs->ReadBool(PinnedHeadPreferenceKey(), PinnedHeadPreferenceDefault());
-   iPreferencePinned = bResult ? 1: 0;
-   return bResult;
-}
-
-void PlaybackPrefs::SetPinnedHeadPreference(bool value, bool flush)
-{
-   iPreferencePinned = value ? 1:0;
-   gPrefs->Write(PinnedHeadPreferenceKey(), value);
-   if(flush)
-      gPrefs->Flush();
 }
 
 PrefsPanel *PlaybackPrefsFactory::Create(wxWindow *parent)

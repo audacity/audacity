@@ -2026,7 +2026,7 @@ ShuttleGui::ShuttleGui(wxWindow * pParent, teShuttleMode ShuttleMode) :
       return;
    }
 
-   mpShuttle = new ShuttlePrefs;
+   mpShuttle = std::make_unique<ShuttlePrefs>();
    // In this case the client is the GUI, so if creating we do want to
    // store in the client.
    mpShuttle->mbStoreInClient = (mShuttleMode == eIsCreating );
@@ -2034,8 +2034,6 @@ ShuttleGui::ShuttleGui(wxWindow * pParent, teShuttleMode ShuttleMode) :
 
 ShuttleGui::~ShuttleGui()
 {
-   if( mpShuttle )
-      delete mpShuttle;
 }
 
 // Now we have Audacity specific shuttle functions.
@@ -2054,7 +2052,7 @@ GuiWaveTrack * ShuttleGui::AddGuiWaveTrack( const wxString & WXUNUSED(Name))
 //      return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), GuiWaveTrack);
    GuiWaveTrack * pGuiWaveTrack;
    miProp=1;
-   mpWind = pGuiWaveTrack = new GuiWaveTrack(mpParent, miId, Name);
+   mpWind = pGuiWaveTrack = safenew GuiWaveTrack(mpParent, miId, Name);
    mpWind->SetMinSize(wxSize(100,50));
    UpdateSizers();
    return pGuiWaveTrack;
@@ -2098,7 +2096,7 @@ AttachableScrollBar * ShuttleGui::AddAttachableScrollBar( long style )
 //      return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), AttachableScrollBar);
    AttachableScrollBar * pAttachableScrollBar;
    miProp=0;
-   mpWind = pAttachableScrollBar = new AttachableScrollBar(
+   mpWind = pAttachableScrollBar = safenew AttachableScrollBar(
       mpParent,
       miId,
       wxDefaultPosition,

@@ -67,8 +67,6 @@ DeviceToolBar::DeviceToolBar()
 
 DeviceToolBar::~DeviceToolBar()
 {
-   delete mPlayBitmap;
-   delete mRecordBitmap;
 }
 
 void DeviceToolBar::Create(wxWindow *parent)
@@ -102,7 +100,7 @@ void DeviceToolBar::Populate()
 
    // Input device
    if( mRecordBitmap == NULL )
-      mRecordBitmap = new wxBitmap(theTheme.Bitmap(bmpMic));
+      mRecordBitmap = std::make_unique<wxBitmap>(theTheme.Bitmap(bmpMic));
 
    Add(safenew wxStaticBitmap(this,
                           wxID_ANY,
@@ -122,7 +120,7 @@ void DeviceToolBar::Populate()
 
    // Output device
    if( mPlayBitmap == NULL )
-      mPlayBitmap = new wxBitmap(theTheme.Bitmap(bmpSpeaker));
+      mPlayBitmap = std::make_unique<wxBitmap>(theTheme.Bitmap(bmpSpeaker));
    Add(safenew wxStaticBitmap(this,
                           wxID_ANY,
                           *mPlayBitmap), 0, wxALIGN_CENTER);
@@ -462,8 +460,10 @@ void DeviceToolBar::RepositionCombos()
    desiredChannels.x = mInputChannels->GetBestSize().x;
    desiredChannels.y = mInputChannels->GetSize().y;
 
+   // wxGtk (Gnome) has larger comboboxes than the other platforms.  For DeviceToolBar this prevents
+   // the toolbar docking on a single height row. So we shrink it to prevent this.
 #ifdef __WXGTK__
-   desiredHost.SetHeight(mHost->GetBestSize().y);
+   desiredHost.SetHeight(mHost->GetBestSize().y -4);
    desiredInput.SetHeight(desiredHost.GetHeight());
    desiredOutput.SetHeight(desiredHost.GetHeight());
    desiredChannels.SetHeight(desiredHost.GetHeight());

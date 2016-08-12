@@ -65,7 +65,7 @@
 
 #if defined(USE_FFMPEG)
 
-extern FFmpegLibs *FFmpegLibsInst;
+extern FFmpegLibs *FFmpegLibsInst();
 
 /// This construction defines a enumeration of UI element IDs, and a static
 /// array of their string representations (this way they're always synchronized).
@@ -455,10 +455,10 @@ void ExportFFmpegCustomOptions::OnOpen(wxCommandEvent & WXUNUSED(evt))
 {
    // Show "Locate FFmpeg" dialog
    PickFFmpegLibs();
-   if (!FFmpegLibsInst->ValidLibsLoaded())
+   if (!FFmpegLibsInst()->ValidLibsLoaded())
    {
-      FFmpegLibsInst->FindLibs(NULL);
-      FFmpegLibsInst->FreeLibs();
+      FFmpegLibsInst()->FindLibs(NULL);
+      FFmpegLibsInst()->FreeLibs();
       if (!LoadFFmpeg(true))
       {
          return;
@@ -522,18 +522,16 @@ void FFmpegPresets::ExportPresets(wxString &filename)
    WriteXML(writer);
 }
 
-wxArrayString *FFmpegPresets::GetPresetList()
+void FFmpegPresets::GetPresetList(wxArrayString &list)
 {
-   wxArrayString *list = new wxArrayString();
+   list.Clear();
    FFmpegPresetMap::iterator iter;
    for (iter = mPresets.begin(); iter != mPresets.end(); ++iter)
    {
-      list->Add(iter->second.mPresetName);
+      list.Add(iter->second.mPresetName);
    }
 
-   list->Sort();
-
-   return list;
+   list.Sort();
 }
 
 void FFmpegPresets::DeletePreset(wxString &name)
@@ -1297,8 +1295,6 @@ const wxChar *ExportFFmpegOptions::PredictionOrderMethodNames[] = { _("Estimate"
 
 ExportFFmpegOptions::~ExportFFmpegOptions()
 {
-   delete mPresets;
-   delete mPresetNames;
    DropFFmpegLibs();
 }
 
@@ -1309,12 +1305,12 @@ ExportFFmpegOptions::ExportFFmpegOptions(wxWindow *parent)
    SetName(GetTitle());
    ShuttleGui S(this, eIsCreatingFromPrefs);
    PickFFmpegLibs();
-   //FFmpegLibsInst->LoadLibs(NULL,true); //Loaded at startup or from Prefs now
+   //FFmpegLibsInst()->LoadLibs(NULL,true); //Loaded at startup or from Prefs now
 
-   mPresets = new FFmpegPresets();
-   mPresetNames = mPresets->GetPresetList();
+   mPresets = std::make_unique<FFmpegPresets>();
+   mPresets->GetPresetList(mPresetNames);
 
-   if (FFmpegLibsInst->ValidLibsLoaded())
+   if (FFmpegLibsInst()->ValidLibsLoaded())
    {
       FetchFormatList();
       FetchCodecList();
@@ -1397,7 +1393,7 @@ void ExportFFmpegOptions::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(7, wxEXPAND);
       {
          S.SetStretchyCol(1);
-         mPresetCombo = S.Id(FEPresetID).AddCombo(_("Preset:"), gPrefs->Read(wxT("/FileFormats/FFmpegPreset"),wxEmptyString), mPresetNames);
+         mPresetCombo = S.Id(FEPresetID).AddCombo(_("Preset:"), gPrefs->Read(wxT("/FileFormats/FFmpegPreset"),wxEmptyString), &mPresetNames);
          mLoadPreset = S.Id(FELoadPresetID).AddButton(_("Load Preset"));
          mSavePreset = S.Id(FESavePresetID).AddButton(_("Save Preset"));
          mDeletePreset = S.Id(FEDeletePresetID).AddButton(_("Delete Preset"));
@@ -1754,7 +1750,7 @@ void ExportFFmpegOptions::OnDeletePreset(wxCommandEvent& WXUNUSED(event))
    long index = preset->FindString(presetname);
    preset->SetValue(wxEmptyString);
    preset->Delete(index);
-   mPresetNames->Remove(presetname);
+   mPresetNames.Remove(presetname);
 }
 
 ///
@@ -1769,13 +1765,13 @@ void ExportFFmpegOptions::OnSavePreset(wxCommandEvent& WXUNUSED(event))
       return;
    }
    mPresets->SavePreset(this,name);
-   int index = mPresetNames->Index(name.c_str(),false);
+   int index = mPresetNames.Index(name.c_str(),false);
    if (index == -1)
    {
-      mPresetNames->Add(name);
+      mPresetNames.Add(name);
       mPresetCombo->Clear();
-      mPresetCombo->Append(*mPresetNames);
-      mPresetCombo->Select(mPresetNames->Index(name,false));
+      mPresetCombo->Append(mPresetNames);
+      mPresetCombo->Select(mPresetNames.Index(name,false));
    }
 }
 
@@ -1816,10 +1812,9 @@ void ExportFFmpegOptions::OnImportPresets(wxCommandEvent& WXUNUSED(event))
    if (dlg.ShowModal() == wxID_CANCEL) return;
    path = dlg.GetPath();
    mPresets->ImportPresets(path);
-   delete mPresetNames;
-   mPresetNames = mPresets->GetPresetList();
+   mPresets->GetPresetList(mPresetNames);
    mPresetCombo->Clear();
-   mPresetCombo->Append(*mPresetNames);
+   mPresetCombo->Append(mPresetNames);
 }
 
 ///

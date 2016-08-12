@@ -19,7 +19,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../TrackPanelCell.h"
 #include "../../TrackPanelCellIterator.h"
 #include "../../commands/CommandFunctors.h"
-#include "../../prefs/PlaybackPrefs.h"
+#include "../../prefs/TracksPrefs.h"
 #include "../../toolbars/ControlToolBar.h"
 #include "../../toolbars/ScrubbingToolBar.h"
 #include "../../toolbars/ToolManager.h"
@@ -233,12 +233,12 @@ namespace {
          "Seeking" is normal speed playback but with skips, ...
        */
       { wxT("Scrub"),       XO("&Scrub"),           XO("Scrubbing"),
-         CanStopAudioStreamFlag,
+         CaptureNotBusyFlag,
          &Scrubber::OnScrub,       false,      &Scrubber::Scrubs,
       },
 
       { wxT("Seek"),        XO("See&k"),            XO("Seeking"),
-         CanStopAudioStreamFlag,
+         CaptureNotBusyFlag,
          &Scrubber::OnSeek,        true,       &Scrubber::Seeks,
       },
 
@@ -281,15 +281,17 @@ void Scrubber::MarkScrubStart(
    mProject->SetAudioIOToken(0);
 
    mSeeking = seek;
+   CheckMenuItems();
 
-   ctb->SetPlay(true, mSeeking
-      ? ControlToolBar::PlayAppearance::Seek
-      : ControlToolBar::PlayAppearance::Scrub);
+   ctb->SetPlay(true, ControlToolBar::PlayAppearance::Straight );
+   // Commented out for Bug 1421
+   //   mSeeking
+   //   ? ControlToolBar::PlayAppearance::Seek
+   //   : ControlToolBar::PlayAppearance::Scrub);
 
    mScrubStartPosition = xx;
    ctb->UpdateStatusBar(mProject);
    mOptions.startClockTimeMillis = ::wxGetLocalTimeMillis();
-
    mCancelled = false;
 }
 
@@ -375,9 +377,12 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
 #endif
                lrint(std::max(0.0, MinStutter) * options.rate);
 
-            ControlToolBar::PlayAppearance appearance = mSeeking
-               ? ControlToolBar::PlayAppearance::Seek
-               : ControlToolBar::PlayAppearance::Scrub;
+            ControlToolBar::PlayAppearance appearance = 
+            // commented out to fix Bug 1241
+            // mSeeking
+            //   ? ControlToolBar::PlayAppearance::Seek
+            //   : ControlToolBar::PlayAppearance::Scrub;
+                 ControlToolBar::PlayAppearance::Straight;
             const bool cutPreview = false;
             const bool backwards = time1 < time0;
 #ifdef EXPERIMENTAL_SCRUBBING_SCROLL_WHEEL
@@ -546,6 +551,7 @@ void Scrubber::StopScrubbing()
    }
 
    mProject->GetRulerPanel()->HideQuickPlayIndicator();
+   CheckMenuItems();
 }
 
 bool Scrubber::ShowsBar() const
@@ -613,6 +619,8 @@ bool Scrubber::Seeks() const
 
 bool Scrubber::Scrubs() const
 {
+   if( Seeks() )
+      return false;
    return (HasStartedScrubbing() || IsScrubbing()) && !ChoseSeeking();
 }
 
@@ -852,7 +860,7 @@ Scrubber &ScrubbingOverlay::GetScrubber()
 void Scrubber::DoScrub(bool seek)
 {
    const bool wasScrubbing = HasStartedScrubbing() || IsScrubbing();
-   const bool scroll = PlaybackPrefs::GetPinnedHeadPreference();
+   const bool scroll = TracksPrefs::GetPinnedHeadPreference();
    if (!wasScrubbing) {
       auto tp = mProject->GetTrackPanel();
       wxCoord xx = tp->ScreenToClient(::wxGetMouseState().GetPosition()).x;
@@ -883,6 +891,7 @@ void Scrubber::OnScrubOrSeek(bool seek)
    }
 
    mSeeking = seek;
+   CheckMenuItems();
 
    auto ruler = mProject->GetRulerPanel();
    if (ruler)
@@ -897,11 +906,13 @@ void Scrubber::OnScrubOrSeek(bool seek)
 void Scrubber::OnScrub(wxCommandEvent&)
 {
    OnScrubOrSeek(false);
+   CheckMenuItems();
 }
 
 void Scrubber::OnSeek(wxCommandEvent&)
 {
    OnScrubOrSeek(true);
+   CheckMenuItems();
 }
 
 void Scrubber::OnToggleScrubBar(wxCommandEvent&)
@@ -937,6 +948,20 @@ const wxString &Scrubber::GetUntranslatedStateString() const
    else
       return empty;
 }
+
+const wxString & Scrubber::StatusMessageForWave() const
+{
+   static wxString result;
+   result = "";
+
+   if(  Seeks() )
+      result = _("Move mouse pointer to Seek");
+   else if( Scrubs() )
+      result = _("Move mouse pointer to Scrub");
+   return result;
+}
+
+
 
 std::vector<wxString> Scrubber::GetAllUntranslatedStatusStrings()
 {

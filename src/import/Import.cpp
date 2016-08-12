@@ -37,6 +37,8 @@ and ImportLOF.cpp.
 
 #include "../Audacity.h"
 #include "Import.h"
+
+#include <algorithm>
 #include "ImportPlugin.h"
 
 #include <wx/textctrl.h>
@@ -61,10 +63,6 @@ and ImportLOF.cpp.
 #include "ImportGStreamer.h"
 #include "../Prefs.h"
 
-WX_DEFINE_LIST(ImportPluginList);
-WX_DEFINE_LIST(UnusableImportPluginList);
-WX_DEFINE_OBJARRAY(ExtImportItems);
-
 // ============================================================================
 //
 // Return reference to singleton
@@ -79,23 +77,17 @@ Importer & Importer::Get()
 
 Importer::Importer()
 {
-   mExtImportItems = NULL;
 }
 
 Importer::~Importer()
 {
-   if (mExtImportItems != NULL)
-   {
-      delete mExtImportItems;
-      mExtImportItems = NULL;
-   }
 }
 
 bool Importer::Initialize()
 {
-   mImportPluginList = new ImportPluginList;
-   mUnusableImportPluginList = new UnusableImportPluginList;
-   mExtImportItems = NULL;
+   ImportPluginList{}.swap(mImportPluginList);
+   UnusableImportPluginList{}.swap(mUnusableImportPluginList);
+   ExtImportItems{}.swap(mExtImportItems);
 
    // build the list of import plugin and/or unusableImporters.
    // order is significant.  If none match, they will all be tried
@@ -124,20 +116,16 @@ bool Importer::Initialize()
 bool Importer::Terminate()
 {
    WriteImportItems();
-   mImportPluginList->DeleteContents(true);
-   delete mImportPluginList;
-   mUnusableImportPluginList->DeleteContents(true);//JKC
-   delete mUnusableImportPluginList;
+   ImportPluginList{}.swap( mImportPluginList );
+   UnusableImportPluginList{}.swap( mUnusableImportPluginList );
 
    return true;
 }
 
 void Importer::GetSupportedImportFormats(FormatList *formatList)
 {
-   ImportPluginList::compatibility_iterator importPluginNode = mImportPluginList->GetFirst();
-   while(importPluginNode)
+   for(const auto &importPlugin : mImportPluginList)
    {
-      ImportPlugin *importPlugin = importPluginNode->GetData();
 #ifdef __AUDACITY_OLD_STD__
       formatList->push_back(Format{importPlugin->GetPluginFormatDescription(),
                                importPlugin->GetSupportedExtensions()});
@@ -145,7 +133,6 @@ void Importer::GetSupportedImportFormats(FormatList *formatList)
       formatList->emplace_back(importPlugin->GetPluginFormatDescription(),
                                importPlugin->GetSupportedExtensions());
 #endif
-      importPluginNode = importPluginNode->GetNext();
    }
 }
 
@@ -163,13 +150,8 @@ void Importer::ReadImportItems()
    wxStringTokenizer toker;
    wxString item_name;
    wxString item_value;
-   ExtImportItem *new_item;
-   ImportPluginList::compatibility_iterator importPluginNode;
 
-   if (this->mExtImportItems != NULL)
-      delete this->mExtImportItems;
-
-   this->mExtImportItems = new ExtImportItems();
+   ExtImportItems{}.swap(mExtImportItems);
    /* Rule string format is:
     * extension1:extension2:extension3\mime_type1:mime_type2:mime_type3|filter1:filter2:filter3\unusedfilter1:unusedfilter2
     * backslashes are escaped and unescaped internally
@@ -187,7 +169,7 @@ void Importer::ReadImportItems()
       if (toker.CountTokens() != 2)
         break;
 
-      new_item = new ExtImportItem();
+      auto new_item = make_movable<ExtImportItem>();
 
       /* First token is the filtering condition, second - the filter list */
       condition = toker.GetNextToken();
@@ -228,29 +210,27 @@ void Importer::ReadImportItems()
       /* Find corresponding filter object for each filter ID */
       for (size_t i = 0; i < new_item->filters.Count(); i++)
       {
-         for (importPluginNode = mImportPluginList->GetFirst();
-            importPluginNode; importPluginNode = importPluginNode->GetNext())
+         bool found = false;
+         for (const auto &importPlugin : mImportPluginList)
          {
-            ImportPlugin *importPlugin = importPluginNode->GetData();
             if (importPlugin->GetPluginStringID().Cmp(new_item->filters[i]) == 0)
             {
-               new_item->filter_objects.Add (importPlugin);
+               new_item->filter_objects.Add (importPlugin.get());
+               found = true;
                break;
             }
          }
          /* IDs that do not have corresponding filters, will be shown as-is */
-         if (!importPluginNode)
+         if (!found)
            new_item->filter_objects.Add (NULL);
       }
       /* Find all filter objects that are not present in the filter list */
-      for (importPluginNode = mImportPluginList->GetFirst();
-         importPluginNode; importPluginNode = importPluginNode->GetNext())
+      for (const auto &importPlugin : mImportPluginList)
       {
          bool found = false;
-         ImportPlugin *importPlugin = importPluginNode->GetData();
          for (size_t i = 0; i < new_item->filter_objects.Count(); i++)
          {
-            if (importPlugin == new_item->filter_objects[i])
+            if (importPlugin.get() == new_item->filter_objects[i])
             {
                found = true;
                break;
@@ -263,12 +243,12 @@ void Importer::ReadImportItems()
             if (new_item->divider < 0)
                index = new_item->filters.Count();
             new_item->filters.Insert(importPlugin->GetPluginStringID(),index);
-            new_item->filter_objects.Insert (importPlugin, index);
+            new_item->filter_objects.Insert (importPlugin.get(), index);
             if (new_item->divider >= 0)
                new_item->divider++;
          }
       }
-      this->mExtImportItems->Add (new_item);
+      this->mExtImportItems.push_back( std::move(new_item) );
    }
 }
 
@@ -276,9 +256,9 @@ void Importer::WriteImportItems()
 {
    size_t i;
    wxString val, name;
-   for (i = 0; i < this->mExtImportItems->Count(); i++)
+   for (i = 0; i < this->mExtImportItems.size(); i++)
    {
-      ExtImportItem *item = &(mExtImportItems->Item(i));
+      ExtImportItem *item = mExtImportItems[i].get();
       val.Clear();
 
       for (size_t j = 0; j < item->extensions.Count(); j++)
@@ -318,7 +298,7 @@ void Importer::WriteImportItems()
    /* If we used to have more items than we have now, DELETE the excess items.
    We just keep deleting items and incrementing until we find there aren't any
    more to DELETE.*/
-   i = this->mExtImportItems->Count();
+   i = this->mExtImportItems.size();
    do {
      name.Printf (wxT("/ExtImportItems/Item%d"), (int)i);
      // No item to DELETE?  Then it's time to finish.
@@ -333,21 +313,16 @@ void Importer::WriteImportItems()
    } while( true );
 }
 
-ExtImportItem *Importer::CreateDefaultImportItem()
+movable_ptr<ExtImportItem> Importer::CreateDefaultImportItem()
 {
-   ExtImportItem *new_item;
-   ImportPluginList::compatibility_iterator importPluginNode;
-
-   new_item = new ExtImportItem();
+   auto new_item = make_movable<ExtImportItem>();
    new_item->extensions.Add(wxT("*"));
    new_item->mime_types.Add(wxT("*"));
 
-   for (importPluginNode = mImportPluginList->GetFirst();
-      importPluginNode; importPluginNode = importPluginNode->GetNext())
+   for (const auto &importPlugin : mImportPluginList)
    {
-      ImportPlugin *importPlugin = importPluginNode->GetData();
       new_item->filters.Add (importPlugin->GetPluginStringID());
-      new_item->filter_objects.Add (importPlugin);
+      new_item->filter_objects.Add (importPlugin.get());
    }
    new_item->divider = -1;
    return new_item;
@@ -365,12 +340,13 @@ bool Importer::Import(const wxString &fName,
 
    wxString extension = fName.AfterLast(wxT('.'));
 
+   using ImportPluginPtrs = std::vector< ImportPlugin* >;
+
    // This list is used to call plugins in correct order
-   ImportPluginList importPlugins;
-   ImportPluginList::compatibility_iterator importPluginNode;
+   ImportPluginPtrs importPlugins;
 
    // This list is used to remember plugins that should have been compatible with the file.
-   ImportPluginList compatiblePlugins;
+   ImportPluginPtrs compatiblePlugins;
 
    // If user explicitly selected a filter,
    // then we should try importing via corresponding plugin first
@@ -388,26 +364,23 @@ bool Importer::Import(const wxString &fName,
 
    if (usersSelectionOverrides)
    {
-      importPluginNode = mImportPluginList->GetFirst();
-      while (importPluginNode)
+      for (const auto &plugin : mImportPluginList)
       {
-         ImportPlugin *plugin = importPluginNode->GetData();
          if (plugin->GetPluginFormatDescription().CompareTo(type) == 0)
          {
             // This plugin corresponds to user-selected filter, try it first.
             wxLogDebug(wxT("Inserting %s"),plugin->GetPluginStringID().c_str());
-            importPlugins.Insert(plugin);
+            importPlugins.insert(importPlugins.begin(), plugin.get());
          }
-         importPluginNode = importPluginNode->GetNext();
       }
    }
 
    wxLogMessage(wxT("File name is %s"),(const char *) fName.c_str());
    wxLogMessage(wxT("Mime type is %s"),(const char *) mime_type.Lower().c_str());
 
-   for (size_t i = 0; i < mExtImportItems->Count(); i++)
+   for (const auto &uItem : mExtImportItems)
    {
-      ExtImportItem *item = &(*mExtImportItems)[i];
+      ExtImportItem *item = uItem.get();
       bool matches_ext = false, matches_mime = false;
       wxLogDebug(wxT("Testing extensions"));
       for (size_t j = 0; j < item->extensions.Count(); j++)
@@ -454,13 +427,12 @@ bool Importer::Import(const wxString &fName,
             if (!(item->filter_objects[j]))
                continue;
             wxLogDebug(wxT("Inserting %s"),item->filter_objects[j]->GetPluginStringID().c_str());
-            importPlugins.Append(item->filter_objects[j]);
+            importPlugins.push_back(item->filter_objects[j]);
          }
       }
    }
 
    // Add all plugins that support the extension
-   importPluginNode = mImportPluginList->GetFirst();
 
    // Here we rely on the fact that the first plugin in mImportPluginList is libsndfile.
    // We want to save this for later insertion ahead of libmad, if libmad supports the extension.
@@ -468,14 +440,14 @@ bool Importer::Import(const wxString &fName,
    // is not changed by user selection overrides or any other mechanism, but we include an assert
    // in case subsequent code revisions to the constructor should break this assumption that
    // libsndfile is first.
-   ImportPlugin *libsndfilePlugin = importPluginNode->GetData();
+   ImportPlugin *libsndfilePlugin = mImportPluginList.begin()->get();
    wxASSERT(libsndfilePlugin->GetPluginStringID().IsSameAs(wxT("libsndfile")));
 
-   while (importPluginNode)
+   for (const auto &plugin : mImportPluginList)
    {
-      ImportPlugin *plugin = importPluginNode->GetData();
       // Make sure its not already in the list
-      if (importPlugins.Find(plugin) == NULL)
+      if (importPlugins.end() ==
+          std::find(importPlugins.begin(), importPlugins.end(), plugin.get()))
       {
          if (plugin->SupportsExtension(extension))
          {
@@ -490,45 +462,40 @@ bool Importer::Import(const wxString &fName,
             if (plugin->GetPluginStringID().IsSameAs(wxT("libmad")))
             {
                // Make sure libsndfile is not already in the list
-               if (importPlugins.Find(libsndfilePlugin) == NULL)
+               if (importPlugins.end() ==
+                   std::find(importPlugins.begin(), importPlugins.end(), libsndfilePlugin))
                {
                   wxLogDebug(wxT("Appending %s"),libsndfilePlugin->GetPluginStringID().c_str());
-                  importPlugins.Append(libsndfilePlugin);
+                  importPlugins.push_back(libsndfilePlugin);
                }
             }
             wxLogDebug(wxT("Appending %s"),plugin->GetPluginStringID().c_str());
-            importPlugins.Append(plugin);
+            importPlugins.push_back(plugin.get());
          }
       }
-
-      importPluginNode = importPluginNode->GetNext();
    }
 
    // Add remaining plugins, except for libmad, which should not be used as a fallback for anything.
    // Otherwise, if FFmpeg (libav) has not been installed, libmad will still be there near the
    // end of the preference list importPlugins, where it will claim success importing FFmpeg file
    // formats unsuitable for it, and produce distorted results.
-   importPluginNode = mImportPluginList->GetFirst();
-   while (importPluginNode)
+   for (const auto &plugin : mImportPluginList)
    {
-      ImportPlugin *plugin = importPluginNode->GetData();
       if (!(plugin->GetPluginStringID().IsSameAs(wxT("libmad"))))
       {
          // Make sure its not already in the list
-         if (importPlugins.Find(plugin) == NULL)
+         if (importPlugins.end() ==
+             std::find(importPlugins.begin(), importPlugins.end(), plugin.get()))
          {
             wxLogDebug(wxT("Appending %s"),plugin->GetPluginStringID().c_str());
-            importPlugins.Append(plugin);
+            importPlugins.push_back(plugin.get());
          }
       }
-
-      importPluginNode = importPluginNode->GetNext();
    }
 
-   importPluginNode = importPlugins.GetFirst();
-   while(importPluginNode)
+   // Try the import plugins, in the permuted sequences just determined
+   for (const auto plugin : importPlugins)
    {
-      ImportPlugin *plugin = importPluginNode->GetData();
       // Try to open the file with this plugin (probe it)
       wxLogMessage(wxT("Opening with %s"),plugin->GetPluginStringID().c_str());
       auto inFile = plugin->Open(fName);
@@ -582,18 +549,14 @@ bool Importer::Import(const wxString &fName,
          // that may recognize the extension, so we allow the loop to
          // continue.
       }
-      importPluginNode = importPluginNode->GetNext();
    }
    wxLogError(wxT("Importer::Import: Opening failed."));
 
    // None of our plugins can handle this file.  It might be that
    // Audacity supports this format, but support was not compiled in.
    // If so, notify the user of this fact
-   UnusableImportPluginList::compatibility_iterator unusableImporterNode
-      = mUnusableImportPluginList->GetFirst();
-   while(unusableImporterNode)
+   for (const auto &unusableImportPlugin : mUnusableImportPluginList)
    {
-      UnusableImportPlugin *unusableImportPlugin = unusableImporterNode->GetData();
       if( unusableImportPlugin->SupportsExtension(extension) )
       {
          errorMessage.Printf(_("This version of Audacity was not compiled with %s support."),
@@ -602,7 +565,6 @@ bool Importer::Import(const wxString &fName,
          pProj->mbBusyImporting = false;
          return false;
       }
-      unusableImporterNode = unusableImporterNode->GetNext();
    }
 
    /* warnings for unsupported data types */
@@ -616,7 +578,7 @@ bool Importer::Import(const wxString &fName,
    }
 #endif
 
-   if (compatiblePlugins.GetCount() <= 0)
+   if (compatiblePlugins.empty())
    {
       // if someone has sent us a .cda file, send them away
       if (extension.IsSameAs(wxT("cda"), false)) {
@@ -714,15 +676,12 @@ bool Importer::Import(const wxString &fName,
       // We DO have a plugin for this file, but import failed.
       wxString pluglist = wxEmptyString;
 
-      importPluginNode = compatiblePlugins.GetFirst();
-      while(importPluginNode)
+      for (const auto &plugin : compatiblePlugins)
       {
-         ImportPlugin *plugin = importPluginNode->GetData();
          if (pluglist == wxEmptyString)
            pluglist = plugin->GetPluginFormatDescription();
          else
            pluglist = pluglist + wxT(", ") + plugin->GetPluginFormatDescription();
-         importPluginNode = importPluginNode->GetNext();
       }
 
       errorMessage.Printf(_("Audacity recognized the type of the file '%s'.\nImporters supposedly supporting such files are:\n%s,\nbut none of them understood this file format."),fName.c_str(), pluglist.c_str());

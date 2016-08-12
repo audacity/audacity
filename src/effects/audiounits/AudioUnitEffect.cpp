@@ -22,6 +22,11 @@
 #include <wx/button.h>
 #include <wx/control.h>
 #include <wx/dir.h>
+
+#ifdef __WXMAC__
+#include <wx/evtloop.h>
+#endif
+
 #include <wx/filename.h>
 #include <wx/frame.h>
 #include <wx/listctrl.h>
@@ -36,6 +41,22 @@
 #include "../../widgets/wxPanelWrapper.h"
 
 #include "AudioUnitEffect.h"
+
+struct CFReleaser
+   { void operator () (const void *p) const { if (p) CFRelease(p); } };
+template <typename T>
+   using CFunique_ptr = std::unique_ptr<T, CFReleaser>;
+
+struct AudioUnitParameterInfoEx : AudioUnitParameterInfo
+{
+   ~AudioUnitParameterInfoEx ()
+   {
+      if ((flags & kAudioUnitParameterFlag_HasCFNameString)
+          &&
+          (flags & kAudioUnitParameterFlag_CFNameRelease))
+         CFRelease( cfNameString );
+   }
+};
 
 // ============================================================================
 // Module registration entry point
@@ -223,6 +244,8 @@ void AudioUnitEffectsModule::LoadAudioUnitsOfType(OSType inAUType,
       {
          CFStringRef cfName;
          result = AudioComponentCopyName(component, &cfName);
+         CFunique_ptr<const __CFString> uName{ cfName };
+
          if (result == noErr)
          {
             wxString name = wxCFStringRef::AsString(cfName);
@@ -232,8 +255,6 @@ void AudioUnitEffectsModule::LoadAudioUnitsOfType(OSType inAUType,
                         FromOSType(found.componentType).c_str(),
                         FromOSType(found.componentSubType).c_str(),
                         name.c_str()));
-   
-            CFRelease(cfName);
          }
       }
 
@@ -561,27 +582,26 @@ void AudioUnitEffectExportDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
                            &size);
 
       // And convert it to XML
-      CFDataRef xml = CFPropertyListCreateXMLData(kCFAllocatorDefault,
-                                                  content);
+      CFunique_ptr<const __CFData> xml {
+         CFPropertyListCreateXMLData(kCFAllocatorDefault, content)
+      };
       if (xml)
       {
          // Create the CFURL for the path
-         CFURLRef url = CFURLCreateWithFileSystemPath(kCFAllocatorDefault,
-                                                      wxCFStringRef(path),
-                                                      kCFURLPOSIXPathStyle,
-                                                      false);
+         CFunique_ptr<const __CFURL> url {
+            CFURLCreateWithFileSystemPath(kCFAllocatorDefault,
+                                          wxCFStringRef(path),
+                                          kCFURLPOSIXPathStyle,
+                                          false)
+         };
          if (url)
          {
             SInt32 error;
-            Boolean res = CFURLWriteDataAndPropertiesToResource(url,
-                                                                xml,
+            Boolean res = CFURLWriteDataAndPropertiesToResource(url.get(),
+                                                                xml.get(),
                                                                 NULL,
                                                                 &error);
-            CFRelease(url);
          }
-   
-         // Get rid of the XML data
-         CFRelease(xml);
       }
 
       // And continue to the next selected preset
@@ -725,10 +745,13 @@ void AudioUnitEffectImportDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
                   mList->GetItemText(sel).c_str());
 
       // Create the CFURL for the path
-      CFURLRef url = CFURLCreateWithFileSystemPath(kCFAllocatorDefault,
-                                                   wxCFStringRef(path),
-                                                   kCFURLPOSIXPathStyle,
-                                                   false);
+      CFunique_ptr<const __CFURL> url {
+         CFURLCreateWithFileSystemPath(kCFAllocatorDefault,
+                                       wxCFStringRef(path),
+                                       kCFURLPOSIXPathStyle,
+                                       false)
+      };
+
       if (!url)
       {
          continue;
@@ -737,24 +760,24 @@ void AudioUnitEffectImportDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
       CFDataRef xml;
       SInt32 error;
       Boolean res = CFURLCreateDataAndPropertiesFromResource(kCFAllocatorDefault,
-                                                             url,
+                                                             url.get(),
                                                              &xml,
                                                              NULL,
                                                              NULL,
                                                              &error);
-      CFRelease(url);
+      CFunique_ptr<const __CFData> uxml { xml };
 
       if (!res)
       {
          continue;
       }
 
-      CFPropertyListRef content;
-      content = CFPropertyListCreateFromXMLData(kCFAllocatorDefault,
-                                                xml,
-                                                kCFPropertyListImmutable,
-                                                NULL);
-      CFRelease(xml);
+      CFunique_ptr<char> content {
+         (char*)CFPropertyListCreateFromXMLData(kCFAllocatorDefault,
+                                         xml,
+                                         kCFPropertyListImmutable,
+                                         NULL)
+      };
 
       if (!content)
       {
@@ -767,7 +790,6 @@ void AudioUnitEffectImportDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
                                              0,
                                              &content,
                                              sizeof(content));
-      CFRelease(content);
 
       mEffect->SaveUserPreset(mEffect->mHost->GetUserPresetsGroup(mList->GetItemText(sel)));
    }
@@ -956,7 +978,7 @@ bool AudioUnitEffect::SupportsAutomation()
 
    for (int i = 0; i < cnt; i++)
    {
-      AudioUnitParameterInfo info;
+      AudioUnitParameterInfoEx info;
       dataSize = sizeof(info);
       result = AudioUnitGetProperty(mUnit,
                                     kAudioUnitProperty_ParameterInfo,
@@ -1341,36 +1363,28 @@ bool AudioUnitEffect::RealtimeInitialize()
 
 bool AudioUnitEffect::RealtimeAddProcessor(int numChannels, float sampleRate)
 {
-   AudioUnitEffect *slave = new AudioUnitEffect(mPath, mName, mComponent, this);
+   auto slave = make_movable<AudioUnitEffect>(mPath, mName, mComponent, this);
    if (!slave->SetHost(NULL))
-   {
-      delete slave;
       return false;
-   }
 
    slave->SetBlockSize(mBlockSize);
    slave->SetChannelCount(numChannels);
    slave->SetSampleRate(sampleRate);
 
    if (!CopyParameters(mUnit, slave->mUnit))
-   {
-      delete slave;
       return false;
-   }
 
-   mSlaves.Add(slave);
+   auto pSlave = slave.get();
+   mSlaves.push_back(std::move(slave));
 
-   return slave->ProcessInitialize(0);
+   return pSlave->ProcessInitialize(0);
 }
 
 bool AudioUnitEffect::RealtimeFinalize()
 {
-   for (size_t i = 0, cnt = mSlaves.GetCount(); i < cnt; i++)
-   {
+   for (size_t i = 0, cnt = mSlaves.size(); i < cnt; i++)
       mSlaves[i]->ProcessFinalize();
-      delete mSlaves[i];
-   }
-   mSlaves.Clear();
+   mSlaves.clear();
 
    for (int i = 0; i < mAudioIns; i++)
    {
@@ -1504,7 +1518,7 @@ bool AudioUnitEffect::GetAutomationParameters(EffectAutomationParameters & parms
 
    for (int i = 0; i < cnt; i++)
    {
-      AudioUnitParameterInfo info;
+      AudioUnitParameterInfoEx info;
       dataSize = sizeof(info);
       result = AudioUnitGetProperty(mUnit,
                                     kAudioUnitProperty_ParameterInfo,
@@ -1522,10 +1536,6 @@ bool AudioUnitEffect::GetAutomationParameters(EffectAutomationParameters & parms
       if (info.flags & kAudioUnitParameterFlag_HasCFNameString)
       {
          name = wxCFStringRef::AsString(info.cfNameString);
-         if (info.flags & kAudioUnitParameterFlag_CFNameRelease)
-         {
-            CFRelease(info.cfNameString);
-         }
       }
 
       if (name.IsEmpty())
@@ -1586,7 +1596,7 @@ bool AudioUnitEffect::SetAutomationParameters(EffectAutomationParameters & parms
 
    for (int i = 0; i < cnt; i++)
    {
-      AudioUnitParameterInfo info;
+      AudioUnitParameterInfoEx info;
       dataSize = sizeof(info);
       result = AudioUnitGetProperty(mUnit,
                                     kAudioUnitProperty_ParameterInfo,
@@ -1604,10 +1614,6 @@ bool AudioUnitEffect::SetAutomationParameters(EffectAutomationParameters & parms
       if (info.flags & kAudioUnitParameterFlag_HasCFNameString)
       {
          name = wxCFStringRef::AsString(info.cfNameString);
-         if (info.flags & kAudioUnitParameterFlag_CFNameRelease)
-         {
-            CFRelease(info.cfNameString);
-         }
       }
 
       if (name.IsEmpty())
@@ -1671,7 +1677,8 @@ bool AudioUnitEffect::LoadFactoryPreset(int id)
                                  kAudioUnitScope_Global,
                                  0,
                                  &array,
-                                 &dataSize);  
+                                 &dataSize);
+   CFunique_ptr < const __CFArray > uarray { array };
    if (result != noErr)
    {
       return false;
@@ -1700,8 +1707,6 @@ bool AudioUnitEffect::LoadFactoryPreset(int id)
       AUParameterListenerNotify(NULL, NULL, &aup);
    }
 
-   CFRelease(array);
-
    return result == noErr;
 }
 
@@ -1723,7 +1728,8 @@ wxArrayString AudioUnitEffect::GetFactoryPresets()
                                  kAudioUnitScope_Global,
                                  0,
                                  &array,
-                                 &dataSize);  
+                                 &dataSize);
+   CFunique_ptr< const __CFArray > uarray { array };
    if (result == noErr)
    {
       for (CFIndex i = 0, cnt = CFArrayGetCount(array); i < cnt; i++)
@@ -1731,7 +1737,6 @@ wxArrayString AudioUnitEffect::GetFactoryPresets()
          AUPreset *preset = (AUPreset *) CFArrayGetValueAtIndex(array, i);
          presets.Add(wxCFStringRef::AsString(preset->presetName));
       }
-      CFRelease(array);
    }
                         
    return presets;
@@ -1773,13 +1778,13 @@ bool AudioUnitEffect::PopulateUI(wxWindow *parent)
    }
    else
    {
-      mControl = new AUControl;
-      if (!mControl)
+      auto pControl = std::make_unique<AUControl>();
+      if (!pControl)
       {
          return false;
       }
 
-      if (!mControl->Create(container, mComponent, mUnit, mUIType == wxT("Full")))
+      if (!pControl->Create(container, mComponent, mUnit, mUIType == wxT("Full")))
       {
          return false;
       }
@@ -1787,11 +1792,17 @@ bool AudioUnitEffect::PopulateUI(wxWindow *parent)
       {
          auto innerSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
 
-         innerSizer->Add(mControl, 1, wxEXPAND);
+         innerSizer->Add(pControl.release(), 1, wxEXPAND);
          container->SetSizer(innerSizer.release());
       }
 
       mParent->SetMinSize(wxDefaultSize);
+
+#ifdef __WXMAC__
+#ifdef __WX_EVTLOOP_BUSY_WAITING__
+      wxEventLoop::SetBusyWaiting(true);
+#endif
+#endif
    }
 
    mParent->PushEventHandler(this);
@@ -1838,6 +1849,12 @@ bool AudioUnitEffect::HideUI()
 
 bool AudioUnitEffect::CloseUI()
 {
+#ifdef __WXMAC__
+#ifdef __WX_EVTLOOP_BUSY_WAITING__
+   wxEventLoop::SetBusyWaiting(false);
+#endif
+#endif
+
    mParent->RemoveEventHandler(this);
 
    mUIHost = NULL;
@@ -2167,10 +2184,8 @@ void AudioUnitEffect::EventListener(const AudioUnitEvent *inEvent,
    else
    {
       // We're the master, so propogate 
-      for (size_t i = 0, cnt = mSlaves.GetCount(); i < cnt; i++)
-      {
+      for (size_t i = 0, cnt = mSlaves.size(); i < cnt; i++)
          mSlaves[i]->EventListener(inEvent, inParameterValue);
-      }
    }
 }
                            

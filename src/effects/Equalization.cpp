@@ -143,7 +143,7 @@ enum kInterpolations
 // Increment whenever EQCurves.xml is updated
 #define EQCURVES_VERSION   1
 #define EQCURVES_REVISION  0
-#define UPDATE_ALL 0 // 0 = merge new presets only, 1 = Update all factory presets.
+#define UPDATE_ALL 0 // 0 = merge NEW presets only, 1 = Update all factory presets.
 
 static const wxString kInterpStrings[kNumInterpolations] =
 {
@@ -224,10 +224,6 @@ EffectEqualization::EffectEqualization()
 
    SetLinearEffectFlag(true);
 
-#ifdef EXPERIMENTAL_EQ_SSE_THREADED
-   mEffectEqualization48x=NULL;
-#endif
-
    mM = DEF_FilterLength;
    mLin = DEF_InterpLin;
    mInterp = DEF_InterpMeth;
@@ -243,17 +239,17 @@ EffectEqualization::EffectEqualization()
       mInterpolations.Add(wxGetTranslation(kInterpStrings[i]));
    }
 
-   mLogEnvelope = new Envelope();
+   mLogEnvelope = std::make_unique<Envelope>();
    mLogEnvelope->SetInterpolateDB(false);
    mLogEnvelope->Mirror(false);
    mLogEnvelope->SetRange(MIN_dBMin, MAX_dBMax); // MB: this is the highest possible range
 
-   mLinEnvelope = new Envelope();
+   mLinEnvelope = std::make_unique<Envelope>();
    mLinEnvelope->SetInterpolateDB(false);
    mLinEnvelope->Mirror(false);
    mLinEnvelope->SetRange(MIN_dBMin, MAX_dBMax); // MB: this is the highest possible range
 
-   mEnvelope = (mLin ? mLinEnvelope : mLogEnvelope);
+   mEnvelope = (mLin ? mLinEnvelope : mLogEnvelope).get();
 
    mWindowSize = windowSize;
 
@@ -278,12 +274,9 @@ EffectEqualization::EffectEqualization()
    bool useSSE;
    GetPrivateConfig(GetCurrentSettingsGroup(), wxT("/SSE/GUI"), useSSE, false);
    if(useSSE && !mEffectEqualization48x)
-      mEffectEqualization48x=new EffectEqualization48x;
-   else
-      if(!useSSE && mEffectEqualization48x) {
-         delete mEffectEqualization48x;
-         mEffectEqualization48x=NULL;
-      }
+      mEffectEqualization48x = std::make_unique<EffectEqualization48x>();
+   else if(!useSSE)
+      mEffectEqualization48x.reset();
    mBench=false;
 #endif
 }
@@ -291,13 +284,6 @@ EffectEqualization::EffectEqualization()
 
 EffectEqualization::~EffectEqualization()
 {
-   if(mLogEnvelope)
-      delete mLogEnvelope;
-   mLogEnvelope = NULL;
-   if(mLinEnvelope)
-      delete mLinEnvelope;
-   mLinEnvelope = NULL;
-
    if(hFFT)
       EndFFT(hFFT);
    hFFT = NULL;
@@ -310,10 +296,6 @@ EffectEqualization::~EffectEqualization()
       delete[] mFilterFuncI;
    mFilterFuncR = NULL;
    mFilterFuncI = NULL;
-#ifdef EXPERIMENTAL_EQ_SSE_THREADED
-   if(mEffectEqualization48x)
-      delete mEffectEqualization48x;
-#endif
 }
 
 // IdentInterface implementation
@@ -372,7 +354,7 @@ bool EffectEqualization::SetAutomationParameters(EffectAutomationParameters & pa
       InterpMeth -= kNumInterpolations;
    }
 
-   mEnvelope = (mLin ? mLinEnvelope : mLogEnvelope);
+   mEnvelope = (mLin ? mLinEnvelope : mLogEnvelope).get();
 
    return true;
 }
@@ -534,7 +516,7 @@ bool EffectEqualization::Init()
          break;
    }
 
-   mEnvelope = (mLin ? mLinEnvelope : mLogEnvelope);
+   mEnvelope = (mLin ? mLinEnvelope : mLogEnvelope).get();
 
    setCurve(mCurveName);
 
@@ -1388,7 +1370,7 @@ void EffectEqualization::LoadCurves(const wxString &fileName, bool append)
 
       bool needUpdate = (eqCurvesCurrentVersion != eqCurvesInstalledVersion);
 
-      // UpdateDefaultCurves allows us to import new factory presets only,
+      // UpdateDefaultCurves allows us to import NEW factory presets only,
       // or update all factory preset curves.
       if (needUpdate)
          UpdateDefaultCurves( UPDATE_ALL != 0 );
@@ -1524,7 +1506,7 @@ void EffectEqualization::UpdateDefaultCurves(bool updateAll /* false */)
       }
    }
    else {
-      // Import new factory defaults but retain all user modified curves.
+      // Import NEW factory defaults but retain all user modified curves.
       for (int defCurveCount = 0; defCurveCount < numDefaultCurves; defCurveCount++) {
          bool isUserCurve = false;
          // Add if the curve is in the user's set (preserve user's copy)
@@ -1669,10 +1651,10 @@ void EffectEqualization::setCurve(int currentCurve)
    int numPoints = (int) mCurves[currentCurve].points.GetCount();
 
    if (mLin) {  // linear freq mode
-      env = mLinEnvelope;
+      env = mLinEnvelope.get();
    }
    else { // log freq mode
-      env = mLogEnvelope;
+      env = mLogEnvelope.get();
    }
    env->Flatten(0.);
    env->SetTrackLen(1.0);
@@ -1856,11 +1838,11 @@ void EffectEqualization::EnvelopeUpdated()
 {
    if (IsLinear())
    {
-      EnvelopeUpdated(mLinEnvelope, true);
+      EnvelopeUpdated(mLinEnvelope.get(), true);
    }
    else
    {
-      EnvelopeUpdated(mLogEnvelope, false);
+      EnvelopeUpdated(mLogEnvelope.get(), false);
    }
 }
 
@@ -2205,7 +2187,7 @@ void EffectEqualization::UpdateDraw()
    if(mLin) // do not use IsLinear() here
    {
       EnvLogToLin();
-      mEnvelope = mLinEnvelope;
+      mEnvelope = mLinEnvelope.get();
       mFreqRuler->ruler.SetLog(false);
       mFreqRuler->ruler.SetRange(0, mHiFreq);
    }
@@ -2237,7 +2219,7 @@ void EffectEqualization::UpdateGraphic()
       }
 
       EnvLinToLog();
-      mEnvelope = mLogEnvelope;
+      mEnvelope = mLogEnvelope.get();
       mFreqRuler->ruler.SetLog(true);
       mFreqRuler->ruler.SetRange(mLoFreq, mHiFreq);
    }
@@ -2287,7 +2269,7 @@ void EffectEqualization::UpdateGraphic()
       mUIParent->Fit();
    }
 #endif
-   GraphicEQ(mLogEnvelope);
+   GraphicEQ(mLogEnvelope.get());
    mDrawMode = false;
 }
 
@@ -2360,7 +2342,7 @@ void EffectEqualization::EnvLinToLog(void)
    delete [] value;
 
    if(changed)
-      EnvelopeUpdated(mLogEnvelope, false);
+      EnvelopeUpdated(mLogEnvelope.get(), false);
 }
 
 void EffectEqualization::ErrMin(void)
@@ -2379,7 +2361,7 @@ void EffectEqualization::ErrMin(void)
    testEnvelope.SetRange(-120.0, 60.0);
    testEnvelope.Flatten(0.);
    testEnvelope.SetTrackLen(1.0);
-   testEnvelope.CopyFrom(mLogEnvelope, 0.0, 1.0);
+   testEnvelope.CopyFrom(mLogEnvelope.get(), 0.0, 1.0);
 
    for(i=0; i < NUM_PTS; i++)
       vals[i] = testEnvelope.GetValue(mWhens[i]);
@@ -2675,7 +2657,7 @@ void EffectEqualization::OnSlider(wxCommandEvent & event)
          break;
       }
    }
-   GraphicEQ(mLogEnvelope);
+   GraphicEQ(mLogEnvelope.get());
    EnvelopeUpdated();
 }
 
@@ -2683,7 +2665,7 @@ void EffectEqualization::OnInterp(wxCommandEvent & WXUNUSED(event))
 {
    if (mGraphic->GetValue())
    {
-      GraphicEQ(mLogEnvelope);
+      GraphicEQ(mLogEnvelope.get());
       EnvelopeUpdated();
    }
    mInterp = mInterpChoice->GetSelection();
@@ -2768,7 +2750,7 @@ void EffectEqualization::OnInvert(wxCommandEvent & WXUNUSED(event)) // Inverts a
             tip.Printf( wxT("%gkHz\n%.1fdB"), kThirdOct[i]/1000., mEQVals[i] );
          mSliders[i]->SetToolTip(tip);
       }
-      GraphicEQ(mLogEnvelope);
+      GraphicEQ(mLogEnvelope.get());
    }
    else  // Draw mode.  Invert the points.
    {
@@ -2835,7 +2817,7 @@ void EffectEqualization::OnLinFreq(wxCommandEvent & WXUNUSED(event))
       mFreqRuler->ruler.SetLog(false);
       mFreqRuler->ruler.SetRange(0, mHiFreq);
       EnvLogToLin();
-      mEnvelope = mLinEnvelope;
+      mEnvelope = mLinEnvelope.get();
       mLin = true;
    }
    else  //going from lin to log freq scale
@@ -2843,7 +2825,7 @@ void EffectEqualization::OnLinFreq(wxCommandEvent & WXUNUSED(event))
       mFreqRuler->ruler.SetLog(true);
       mFreqRuler->ruler.SetRange(mLoFreq, mHiFreq);
       EnvLinToLog();
-      mEnvelope = mLogEnvelope;
+      mEnvelope = mLogEnvelope.get();
       mLin = false;
    }
    mFreqRuler->Refresh(false);
@@ -2912,8 +2894,6 @@ EqualizationPanel::EqualizationPanel(EffectEqualization *effect, wxWindow *paren
 
 EqualizationPanel::~EqualizationPanel()
 {
-   if (mBitmap)
-      delete mBitmap;
    if (mOuti)
       delete [] mOuti;
    if (mOutr)
@@ -2960,12 +2940,9 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
 
    if (!mBitmap || mWidth!=width || mHeight!=height)
    {
-      if (mBitmap)
-         delete mBitmap;
-
       mWidth = width;
       mHeight = height;
-      mBitmap = new wxBitmap(mWidth, mHeight);
+      mBitmap = std::make_unique<wxBitmap>(mWidth, mHeight);
    }
 
    wxBrush bkgndBrush(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE));

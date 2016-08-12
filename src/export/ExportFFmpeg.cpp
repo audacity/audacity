@@ -53,13 +53,13 @@ function.
 
 #if defined(USE_FFMPEG)
 
-extern FFmpegLibs *FFmpegLibsInst;
+extern FFmpegLibs *FFmpegLibsInst();
 
 static bool CheckFFmpegPresence(bool quiet = false)
 {
    bool result = true;
    PickFFmpegLibs();
-   if (!FFmpegLibsInst->ValidLibsLoaded())
+   if (!FFmpegLibsInst()->ValidLibsLoaded())
    {
       if (!quiet)
       {
@@ -185,14 +185,14 @@ ExportFFmpeg::ExportFFmpeg()
    mSupportsUTF8 = true;
 
    PickFFmpegLibs(); // DropFFmpegLibs() call is in ExportFFmpeg destructor
-   int avfver = FFmpegLibsInst->ValidLibsLoaded() ? avformat_version() : 0;
+   int avfver = FFmpegLibsInst()->ValidLibsLoaded() ? avformat_version() : 0;
    int newfmt;
    // Adds export types from the export type list
    for (newfmt = 0; newfmt < FMT_LAST; newfmt++)
    {
       wxString shortname(ExportFFmpegOptions::fmts[newfmt].shortname);
       //Don't hide export types when there's no av-libs, and don't hide FMT_OTHER
-      if (newfmt < FMT_OTHER && FFmpegLibsInst->ValidLibsLoaded())
+      if (newfmt < FMT_OTHER && FFmpegLibsInst()->ValidLibsLoaded())
       {
          // Format/Codec support is compiled in?
          AVOutputFormat *avoformat = av_guess_format(shortname.mb_str(), NULL, NULL);
@@ -249,8 +249,8 @@ bool ExportFFmpeg::CheckFileName(wxFileName & WXUNUSED(filename), int WXUNUSED(f
    // Show "Locate FFmpeg" dialog
    if (!CheckFFmpegPresence(true))
    {
-      FFmpegLibsInst->FindLibs(NULL);
-      FFmpegLibsInst->FreeLibs();
+      FFmpegLibsInst()->FindLibs(NULL);
+      FFmpegLibsInst()->FreeLibs();
       return LoadFFmpeg(true);
    }
 
@@ -267,9 +267,9 @@ bool ExportFFmpeg::Init(const char *shortname, AudacityProject *project, const T
    std::unique_ptr<ExportFFmpeg, decltype(deleter)> cleanup{ this, deleter };
 
    int err;
-   //FFmpegLibsInst->LoadLibs(NULL,true); //Loaded at startup or from Prefs now
+   //FFmpegLibsInst()->LoadLibs(NULL,true); //Loaded at startup or from Prefs now
 
-   if (!FFmpegLibsInst->ValidLibsLoaded())
+   if (!FFmpegLibsInst()->ValidLibsLoaded())
       return false;
 
    av_log_set_callback(av_log_wx_callback);

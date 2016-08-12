@@ -30,7 +30,7 @@
 #include "../import/ImportFFmpeg.h"
 
 
-extern FFmpegLibs *FFmpegLibsInst;
+extern FFmpegLibs *FFmpegLibsInst();
 #include "ODDecodeFFmpegTask.h"
 
 
@@ -41,15 +41,18 @@ extern FFmpegLibs *FFmpegLibsInst;
 #define kMaxSamplesInCache 4410000
 
 //struct for caching the decoded samples to be used over multiple blockfiles
-typedef struct _FFmpegDecodeCache
+struct FFMpegDecodeCache
 {
-   uint8_t* samplePtr;//interleaved samples
+   FFMpegDecodeCache() {}
+   ~FFMpegDecodeCache() { free(samplePtr); }
+
+   uint8_t* samplePtr{};//interleaved samples
    sampleCount start;
    sampleCount len;
    int         numChannels;
    AVSampleFormat samplefmt; // input (from libav) sample format
 
-} FFMpegDecodeCache;
+};
 
 
 //------ ODFFmpegDecoder declaration and defs - here because we strip dependencies from .h files
@@ -82,7 +85,7 @@ public:
    bool SeekingAllowed() ;
 
 private:
-   void InsertCache(FFMpegDecodeCache* cache);
+   void InsertCache(movable_ptr<FFMpegDecodeCache> &&cache);
 
    //puts the actual audio samples into the blockfile's data array
    int FillDataFromCache(samplePtr & data, sampleFormat outFormat, sampleCount & start, sampleCount& len, unsigned int channel);
@@ -100,7 +103,7 @@ private:
    ScsPtr mScs;           //!< Pointer to array of pointers to stream contexts.
    ODDecodeFFmpegTask::Streams mChannels;
    std::shared_ptr<FFmpegContext> mContext; //!< Format description, also contains metadata and some useful info
-   std::vector<FFMpegDecodeCache*> mDecodeCache;
+   std::vector<movable_ptr<FFMpegDecodeCache>> mDecodeCache;
    int                  mNumSamplesInCache;
    sampleCount                  mCurrentPos;     //the index of the next sample to be decoded
    sampleCount                  mCurrentLen;     //length of the last packet decoded
@@ -140,9 +143,9 @@ ODDecodeFFmpegTask::~ODDecodeFFmpegTask()
 }
 
 
-std::unique_ptr<ODTask> ODDecodeFFmpegTask::Clone() const
+movable_ptr<ODTask> ODDecodeFFmpegTask::Clone() const
 {
-   auto clone = std::make_unique<ODDecodeFFmpegTask>(mScs, Streams{ mChannels }, mContext, mStreamIndex);
+   auto clone = make_movable<ODDecodeFFmpegTask>(mScs, Streams{ mChannels }, mContext, mStreamIndex);
    clone->mDemandSample=GetDemandSample();
 
    //the decoders and blockfiles should not be copied.  They are created as the task runs.
@@ -275,11 +278,7 @@ ODFFmpegDecoder::~ODFFmpegDecoder()
 
    //DELETE our caches.
    while(mDecodeCache.size())
-   {
-      free(mDecodeCache[0]->samplePtr);
-      delete mDecodeCache[0];
       mDecodeCache.erase(mDecodeCache.begin());
-   }
 
    DropFFmpegLibs();
 }
@@ -389,7 +388,7 @@ int ODFFmpegDecoder::Decode(SampleBuffer & data, sampleFormat & format, sampleCo
          if(actualDecodeStart>start && firstpass) {
             // find the number of samples for the leading silence
             int amt = actualDecodeStart - start;
-            FFMpegDecodeCache* cache = new FFMpegDecodeCache;
+            auto cache = make_movable<FFMpegDecodeCache>();
 
             //printf("skipping/zeroing %i samples. - now:%llu (%f), last:%llu, lastlen:%llu, start %llu, len %llu\n",amt,actualDecodeStart, actualDecodeStartdouble, mCurrentPos, mCurrentLen, start, len);
 
@@ -409,7 +408,7 @@ int ODFFmpegDecoder::Decode(SampleBuffer & data, sampleFormat & format, sampleCo
 
             memset(cache->samplePtr, 0, amt * cache->numChannels * SAMPLE_SIZE(format));
 
-            InsertCache(cache);
+            InsertCache(std::move(cache));
          }
          firstpass=false;
          mCurrentPos = actualDecodeStart;
@@ -430,8 +429,8 @@ int ODFFmpegDecoder::Decode(SampleBuffer & data, sampleFormat & format, sampleCo
    {
       for (int i = 0; i < mChannels.size(); i++)
       {
-         sc->m_pkt.create();
          sc = scs[i].get();
+         sc->m_pkt.create();
          if (DecodeFrame(sc, true) == 0)
          {
             sc->m_pkt.reset();
@@ -596,7 +595,7 @@ int ODFFmpegDecoder::DecodeFrame(streamContext *sc, bool flushing)
       //TODO- consider growing/unioning a few cache buffers like WaveCache does.
       //however we can't use wavecache as it isn't going to handle our stereo interleaved part, and isn't for samples
       //However if other ODDecode tasks need this, we should do a NEW class for caching.
-      FFMpegDecodeCache* cache = new FFMpegDecodeCache;
+      auto cache = make_movable<FFMpegDecodeCache>();
       //len is number of samples per channel
       cache->numChannels = sc->m_stream->codec->channels;
 
@@ -604,14 +603,14 @@ int ODFFmpegDecoder::DecodeFrame(streamContext *sc, bool flushing)
       cache->start = mCurrentPos;
       cache->samplePtr = (uint8_t*) malloc(sc->m_decodedAudioSamplesValidSiz);
       cache->samplefmt = sc->m_samplefmt;
-      memcpy(cache->samplePtr, sc->m_decodedAudioSamples, sc->m_decodedAudioSamplesValidSiz);
+      memcpy(cache->samplePtr, sc->m_decodedAudioSamples.get(), sc->m_decodedAudioSamplesValidSiz);
 
-      InsertCache(cache);
+      InsertCache(std::move(cache));
    }
    return ret;
 }
 
-void ODFFmpegDecoder::InsertCache(FFMpegDecodeCache* cache) {
+void ODFFmpegDecoder::InsertCache(movable_ptr<FFMpegDecodeCache> &&cache) {
    int searchStart = 0;
    int searchEnd = mDecodeCache.size(); //size() is also a valid insert index.
    int guess = 0;
@@ -634,7 +633,7 @@ void ODFFmpegDecoder::InsertCache(FFMpegDecodeCache* cache) {
    }
    mCurrentLen = cache->len;
    mCurrentPos=cache->start+cache->len;
-   mDecodeCache.insert(mDecodeCache.begin()+guess, cache);
+   mDecodeCache.insert(mDecodeCache.begin()+guess, std::move(cache));
    //      mDecodeCache.push_back(cache);
 
    mNumSamplesInCache+=cache->len;
@@ -646,8 +645,6 @@ void ODFFmpegDecoder::InsertCache(FFMpegDecodeCache* cache) {
       //drop which ever index is further from our newly added one.
       dropindex = (guess > (int)mDecodeCache.size()/2) ? 0 : (mDecodeCache.size()-1);
       mNumSamplesInCache-=mDecodeCache[dropindex]->len;
-      free(mDecodeCache[dropindex]->samplePtr);
-      delete mDecodeCache[dropindex];
       mDecodeCache.erase(mDecodeCache.begin()+dropindex);
    }
 }

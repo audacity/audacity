@@ -129,10 +129,6 @@ NoteTrack::~NoteTrack()
    if (mSerializationBuffer) {
       delete [] mSerializationBuffer;
    }
-
-   if (mSeq) {
-      delete mSeq;
-   }
 }
 
 Track::Holder NoteTrack::Duplicate() const
@@ -154,10 +150,10 @@ Track::Holder NoteTrack::Duplicate() const
    } else if (mSerializationBuffer) {
       SonifyBeginUnserialize();
       assert(!mSeq);
-      Alg_track_ptr alg_track = Alg_seq::unserialize(mSerializationBuffer,
-                                                      mSerializationLength);
+      std::unique_ptr<Alg_track> alg_track{ Alg_seq::unserialize(mSerializationBuffer,
+                                                      mSerializationLength) };
       assert(alg_track->get_type() == 's');
-      duplicate->mSeq = (Alg_seq_ptr) alg_track;
+      duplicate->mSeq.reset(static_cast<Alg_seq*>(alg_track.release()));
       SonifyEndUnserialize();
    } else assert(false); // bug if neither mSeq nor mSerializationBuffer
    // copy some other fields here
@@ -206,8 +202,7 @@ void NoteTrack::WarpAndTransposeNotes(double t0, double t1,
       nt->mSerializationLength = mSerializationLength;
       mSerializationBuffer = NULL;
       mSerializationLength = 0;
-      mSeq = nt->mSeq;
-      nt->mSeq = NULL;
+      mSeq = std::move(nt->mSeq);
    }
    mSeq->convert_to_seconds(); // make sure time units are right
    t1 -= offset; // adjust time range to compensate for track offset
@@ -216,7 +211,7 @@ void NoteTrack::WarpAndTransposeNotes(double t0, double t1,
       t1 = mSeq->get_dur();
       if (t0 >= t1) return;
    }
-   Alg_iterator iter(mSeq, false);
+   Alg_iterator iter(mSeq.get(), false);
    iter.begin();
    Alg_event_ptr event;
    while (0 != (event = iter.next()) && event->time < t1) {
@@ -368,17 +363,14 @@ bool NoteTrack::LabelClick(wxRect & r, int mx, int my, bool right)
    return true;
 }
 
-void NoteTrack::SetSequence(Alg_seq_ptr seq)
+void NoteTrack::SetSequence(std::unique_ptr<Alg_seq> &&seq)
 {
-   if (mSeq)
-      delete mSeq;
-
-   mSeq = seq;
+   mSeq = std::move(seq);
 }
 
 Alg_seq* NoteTrack::GetSequence()
 {
-   return mSeq;
+   return mSeq.get();
 }
 
 void NoteTrack::PrintSequence()
@@ -454,7 +446,7 @@ Track::Holder NoteTrack::Cut(double t0, double t1)
    newTrack->Init(*this);
 
    mSeq->convert_to_seconds();
-   newTrack->mSeq = mSeq->cut(t0 - GetOffset(), len, false);
+   newTrack->mSeq.reset(mSeq->cut(t0 - GetOffset(), len, false));
    newTrack->SetOffset(GetOffset());
 
    // What should be done with the rest of newTrack's members?
@@ -475,7 +467,7 @@ Track::Holder NoteTrack::Copy(double t0, double t1) const
    newTrack->Init(*this);
 
    mSeq->convert_to_seconds();
-   newTrack->mSeq = mSeq->copy(t0 - GetOffset(), len, false);
+   newTrack->mSeq.reset(mSeq->copy(t0 - GetOffset(), len, false));
    newTrack->SetOffset(GetOffset());
 
    // What should be done with the rest of newTrack's members?
@@ -530,14 +522,14 @@ bool NoteTrack::Paste(double t, const Track *src)
       return false;
 
    if(!mSeq)
-      mSeq = new Alg_seq();
+      mSeq = std::make_unique<Alg_seq>();
 
    if (other->GetOffset() > 0) {
       mSeq->convert_to_seconds();
       mSeq->insert_silence(t - GetOffset(), other->GetOffset());
       t += other->GetOffset();
    }
-   mSeq->paste(t - GetOffset(), other->mSeq);
+   mSeq->paste(t - GetOffset(), other->mSeq.get());
 
    return true;
 }
@@ -555,7 +547,7 @@ bool NoteTrack::Shift(double t) // t is always seconds
       int m = ROUND(t * tempo / beats_per_measure);
       // need at least 1 measure, so if we rounded down to zero, fix it
       if (m == 0) m = 1;
-      // compute NEW tempo so that m measures at new tempo take t seconds
+      // compute NEW tempo so that m measures at NEW tempo take t seconds
       tempo = beats_per_measure * m / t; // in beats per second
       mSeq->insert_silence(0.0, beats_per_measure * m);
       mSeq->set_tempo(tempo * 60.0 /* bpm */, 0.0, beats_per_measure * m);
@@ -596,24 +588,34 @@ bool NoteTrack::StretchRegion(double t0, double t1, double dur)
    return result;
 }
 
-Alg_seq_ptr NoteTrack::MakeExportableSeq()
+namespace
 {
+   void swap(std::unique_ptr<Alg_seq> &a, std::unique_ptr<Alg_seq> &b)
+   {
+      std::unique_ptr<Alg_seq> tmp = std::move(a);
+      a = std::move(b);
+      b = std::move(tmp);
+   }
+}
+
+Alg_seq *NoteTrack::MakeExportableSeq(std::unique_ptr<Alg_seq> &cleanup)
+{
+   cleanup.reset();
    double offset = GetOffset();
    if (offset == 0)
-      return mSeq;
+      return mSeq.get();
    // make a copy, deleting events that are shifted before time 0
    double start = -offset;
    if (start < 0) start = 0;
    // notes that begin before "start" are not included even if they
    // extend past "start" (because "all" parameter is set to false)
-   Alg_seq_ptr seq = mSeq->copy(start, mSeq->get_dur() - start, false);
+   cleanup.reset( mSeq->copy(start, mSeq->get_dur() - start, false) );
+   auto seq = cleanup.get();
    if (offset > 0) {
-      // swap seq and mSeq so that Shift operates on the NEW copy
-      Alg_seq_ptr old_seq = mSeq;
-      mSeq = seq;
+      // swap cleanup and mSeq so that Shift operates on the NEW copy
+      swap(mSeq, cleanup);
       Shift(offset);
-      seq = mSeq;  // undo the swap
-      mSeq = old_seq;
+      swap(mSeq, cleanup);  // undo the swap
 #ifdef OLD_CODE
       // now shift events by offset. This must be done with an integer
       // number of measures, so first, find the beats-per-measure
@@ -702,7 +704,7 @@ Alg_seq_ptr NoteTrack::MakeExportableSeq()
             // beat
             double bar = tsp->beat + beats_per_measure * (int(measures) + 1);
             double bar_offset = bar - beat;
-            // insert NEW time signature at bar_offset in new sequence
+            // insert NEW time signature at bar_offset in NEW sequence
             // It will have the same time signature, but the position will
             // force a barline to match the barlines in mSeq
             seq->set_time_sig(bar_offset, tsp->num, tsp->den);
@@ -717,9 +719,9 @@ Alg_seq_ptr NoteTrack::MakeExportableSeq()
 
 bool NoteTrack::ExportMIDI(const wxString &f)
 {
-   Alg_seq_ptr seq = MakeExportableSeq();
+   std::unique_ptr<Alg_seq> cleanup;
+   auto seq = MakeExportableSeq(cleanup);
    bool rslt = seq->smf_write(f.mb_str());
-   if (seq != mSeq) delete seq;
    return rslt;
 }
 
@@ -782,7 +784,7 @@ bool NoteTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          else if (!wxStrcmp(attr, wxT("data"))) {
              std::string s(strValue.mb_str(wxConvUTF8));
              std::istringstream data(s);
-             mSeq = new Alg_seq(data, false);
+             mSeq = std::make_unique<Alg_seq>(data, false);
          }
       } // while
       return true;

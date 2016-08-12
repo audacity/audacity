@@ -22,8 +22,8 @@ and sample size to help you importing data of an unknown format.
 
 
 #include "../Audacity.h"
-
 #include "ImportRaw.h"
+
 #include "Import.h"
 
 #include "../DirManager.h"

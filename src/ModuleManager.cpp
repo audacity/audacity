@@ -91,13 +91,12 @@ static tpRegScriptServerFunc scriptFn;
 Module::Module(const wxString & name)
 {
    mName = name;
-   mLib = new wxDynamicLibrary();
+   mLib = std::make_unique<wxDynamicLibrary>();
    mDispatch = NULL;
 }
 
 Module::~Module()
 {
-   delete mLib;
 }
 
 bool Module::Load()
@@ -183,15 +182,18 @@ void * Module::GetSymbol(const wxString &name)
 std::unique_ptr<ModuleManager> ModuleManager::mInstance{};
 
 // Provide builtin modules a means to identify themselves
-static wxArrayPtrVoid *pBuiltinModuleList = NULL;
+using BuiltinModuleList = std::vector<ModuleMain>;
+namespace {
+   BuiltinModuleList &builtinModuleList()
+   {
+      static BuiltinModuleList theList;
+      return theList;
+   }
+}
+
 void RegisterBuiltinModule(ModuleMain moduleMain)
 {
-   if (pBuiltinModuleList == NULL)
-   {
-      pBuiltinModuleList = new wxArrayPtrVoid;
-   }
-
-   pBuiltinModuleList->Add((void *)moduleMain);
+   builtinModuleList().push_back(moduleMain);
 
    return;
 }
@@ -206,19 +208,8 @@ ModuleManager::ModuleManager()
 
 ModuleManager::~ModuleManager()
 {
-   size_t cnt = mModules.GetCount();
-
-   for (size_t ndx = 0; ndx < cnt; ndx++) {
-      delete (Module *) mModules[ndx];
-   }
-   mModules.Clear();
-
    mDynModules.clear();
-
-   if (pBuiltinModuleList != NULL)
-   {
-      delete pBuiltinModuleList;
-   }
+   builtinModuleList().clear();
 }
 
 // static 
@@ -299,10 +290,11 @@ void ModuleManager::Initialize(CommandHandler &cmdHandler)
       ModulePrefs::SetModuleStatus( files[i], kModuleFailed );
 #endif
 
-      Module *module = new Module(files[i]);
-      if (module->Load())   // it will get rejected if there  are version problems
+      auto umodule = make_movable<Module>(files[i]);
+      if (umodule->Load())   // it will get rejected if there  are version problems
       {
-         Get().mModules.Add(module);
+         auto module = umodule.get();
+         Get().mModules.push_back(std::move(umodule));
          // We've loaded and initialised OK.
          // So look for special case functions:
          wxLogNull logNo; // Don't show wxWidgets errors if we can't do these. (Was: Fix bug 544.)
@@ -319,10 +311,6 @@ void ModuleManager::Initialize(CommandHandler &cmdHandler)
          ModulePrefs::SetModuleStatus( files[i], iModuleStatus);
 #endif
       }
-      else {
-         // No need to save status, as we already set kModuleFailed.
-         delete module;
-      }
    }
    ::wxSetWorkingDirectory(saveOldCWD);
 
@@ -338,11 +326,7 @@ void ModuleManager::Initialize(CommandHandler &cmdHandler)
 // static
 int ModuleManager::Dispatch(ModuleDispatchTypes type)
 {
-   size_t cnt = Get().mModules.GetCount();
-
-   for (size_t ndx = 0; ndx < cnt; ndx++) {
-      Module *module = (Module *)Get().mModules[ndx];
-
+   for (const auto &module: mModules) {
       module->Dispatch(type);
    }
    return 0;
@@ -413,10 +397,10 @@ void ModuleManager::InitializeBuiltins()
 {
    PluginManager & pm = PluginManager::Get();
 
-   for (size_t i = 0, cnt = pBuiltinModuleList->GetCount(); i < cnt; i++)
+   for (auto moduleMain : builtinModuleList())
    {
       ModuleInterfaceHandle module {
-         ((ModuleMain)(*pBuiltinModuleList)[i])(this, NULL), ModuleInterfaceDeleter{}
+         moduleMain(this, NULL), ModuleInterfaceDeleter{}
       };
 
       if (module->Initialize())
@@ -484,7 +468,7 @@ void ModuleInterfaceDeleter::operator() (ModuleInterface *pInterface) const
       if (iter != libs.end())
          libs.erase(iter); // This causes unloading in ~wxDynamicLibrary
 
-      delete pInterface;
+      std::unique_ptr < ModuleInterface > { pInterface }; // DELETE it
    }
 }
 

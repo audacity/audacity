@@ -271,7 +271,7 @@ class AudacityApp final : public wxApp {
                                    int flags = wxDIR_FILES);
    static bool IsTempDirectoryNameOK( const wxString & Name );
 
-   FileHistory *GetRecentFiles() {return mRecentFiles;}
+   FileHistory *GetRecentFiles() {return mRecentFiles.get();}
    void AddFileToHistory(const wxString & name);
    bool GetWindowRectAlreadySaved()const {return mWindowRectAlreadySaved;}
    void SetWindowRectAlreadySaved(bool alreadySaved) {mWindowRectAlreadySaved = alreadySaved;}
@@ -283,12 +283,12 @@ class AudacityApp final : public wxApp {
 #endif
 
  private:
-   CommandHandler *mCmdHandler;
-   FileHistory *mRecentFiles;
+   std::unique_ptr<CommandHandler> mCmdHandler;
+   std::unique_ptr<FileHistory> mRecentFiles;
 
-   wxLocale *mLocale;
+   std::unique_ptr<wxLocale> mLocale;
 
-   wxSingleInstanceChecker *mChecker;
+   std::unique_ptr<wxSingleInstanceChecker> mChecker;
 
    wxTimer mTimer;
 
@@ -298,7 +298,6 @@ class AudacityApp final : public wxApp {
    ODLock               m_LastMissingBlockFileLock;
 
    void InitCommandHandler();
-   void DeInitCommandHandler();
 
    bool InitTempDir();
    bool CreateSingleInstanceChecker(const wxString &dir);
@@ -308,9 +307,9 @@ class AudacityApp final : public wxApp {
    bool mWindowRectAlreadySaved;
 
 #if defined(__WXMSW__)
-   IPCServ *mIPCServ;
+   std::unique_ptr<IPCServ> mIPCServ;
 #else
-   wxSocketServer *mIPCServ;
+   std::unique_ptr<wxSocketServer> mIPCServ;
 #endif
 
  public:

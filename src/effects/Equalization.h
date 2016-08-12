@@ -143,7 +143,7 @@ private:
 
    void LoadCurves(const wxString &fileName = wxEmptyString, bool append = false);
    void SaveCurves(const wxString &fileName = wxEmptyString);
-   // Merge new curves only or update all factory presets.
+   // Merge NEW curves only or update all factory presets.
    void UpdateDefaultCurves( bool updateAll = false);
    void Select(int sel);
    void setCurve(int currentCurve);
@@ -219,13 +219,12 @@ private:
 
    EQCurveArray mCurves;
 
-   Envelope *mLogEnvelope;
-   Envelope *mLinEnvelope;
+   std::unique_ptr<Envelope> mLogEnvelope, mLinEnvelope;
    Envelope *mEnvelope;
 
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
    bool mBench;
-   EffectEqualization48x *mEffectEqualization48x;
+   std::unique_ptr<EffectEqualization48x> mEffectEqualization48x;
    friend class EffectEqualization48x;
 #endif
 
@@ -312,7 +311,7 @@ private:
 
    bool mRecalcRequired;
 
-   wxBitmap *mBitmap;
+   std::unique_ptr<wxBitmap> mBitmap;
    wxRect mEnvRect;
    int mWidth;
    int mHeight;

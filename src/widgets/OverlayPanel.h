@@ -22,7 +22,7 @@ public:
                 // default as for wxPanel:
                 long style = wxTAB_TRAVERSAL | wxNO_BORDER);
 
-   // Register and unregister overlay objects.
+   // Registers and unregisters overlay objects.
    // The sequence in which they were registered is the sequence in
    // which they are painted.
    // OverlayPanel is not responsible for their memory management.
@@ -31,9 +31,14 @@ public:
    bool RemoveOverlay(Overlay *pOverlay);
    void ClearOverlays();
 
-   // Erase and redraw things like the cursor, cheaply and directly to the
-   // client area, without full refresh.
-   void DrawOverlays(bool repaint, wxDC *pDC = nullptr);
+   // Erases and redraws to the client area the overlays that have
+   // been previously added with AddOverlay(). If "repaint_all" is
+   // true, all overlays will be erased and re-drawn. Otherwise, only
+   // the ones that are out-of-date, as well as the intersecting ones,
+   // will be erased and re-drawn.
+   // pDC can be null, in which case, DrawOverlays() will create a
+   // wxClientDC internally when necessary.
+   void DrawOverlays(bool repaint_all, wxDC *pDC = nullptr);
    
 private:
    std::vector<Overlay*> mOverlays;

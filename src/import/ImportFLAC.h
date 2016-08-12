@@ -11,11 +11,10 @@
 #ifndef __AUDACITY_IMPORT_FLAC__
 #define __AUDACITY_IMPORT_FLAC__
 
-class ImportPluginList;
-class UnusableImportPluginList;
+#include "ImportForwards.h"
 
-void GetFLACImportPlugin(ImportPluginList *importPluginList,
-                         UnusableImportPluginList *unusableImportPluginList);
+void GetFLACImportPlugin(ImportPluginList &importPluginList,
+                         UnusableImportPluginList &unusableImportPluginList);
 
 
 #endif

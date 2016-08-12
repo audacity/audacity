@@ -11,6 +11,7 @@
 #ifndef __AUDACITY_EXPANDING_TOOL_BAR__
 #define __AUDACITY_EXPANDING_TOOL_BAR__
 
+#include "../MemoryX.h"
 #include <wx/defs.h>
 #include <wx/dialog.h>
 #include <wx/dynarray.h>
@@ -108,7 +109,7 @@ class ExpandingToolBar final : public wxPanelWrapper
    ToolBarFrame *mFrameParent;
    ToolBarDialog *mDialogParent;
    ToolBarArea *mAreaParent;
-   ToolBarArrangement *mSavedArrangement;
+   std::unique_ptr<ToolBarArrangement> mSavedArrangement;
    ImageRollPanel *mTargetPanel;
    wxDragImage *mDragImage;
    wxWindow *mTopLevelParent;
@@ -217,8 +218,8 @@ class ToolBarArea final : public wxPanelWrapper
    void AddChild(ExpandingToolBar *child);
    void RemoveChild(ExpandingToolBar *child);
 
-   ToolBarArrangement *SaveArrangement();
-   void RestoreArrangement(ToolBarArrangement *arrangement);
+   std::unique_ptr<ToolBarArrangement> SaveArrangement();
+   void RestoreArrangement(std::unique_ptr<ToolBarArrangement>&& arrangement);
 
    wxArrayRect GetDropTargets();
    void MoveChild(ExpandingToolBar *child, wxRect dropTarget);

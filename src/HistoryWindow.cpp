@@ -64,7 +64,7 @@ HistoryWindow::HistoryWindow(AudacityProject *parent, UndoManager *manager):
    mSelected = 0;
    mAudioIOBusy = false;
 
-   wxImageList *imageList = new wxImageList(9, 16);
+   auto imageList = std::make_unique<wxImageList>(9, 16);
    imageList->Add(wxIcon(empty9x16_xpm));
    imageList->Add(wxIcon(arrow_xpm));
 
@@ -85,7 +85,8 @@ HistoryWindow::HistoryWindow(AudacityProject *parent, UndoManager *manager):
          mList->InsertColumn(1, _("Size"), wxLIST_FORMAT_LEFT, 85);
 
          //Assign rather than set the image list, so that it is deleted later.
-         mList->AssignImageList(imageList, wxIMAGE_LIST_SMALL);
+         // AssignImageList takes ownership
+         mList->AssignImageList(imageList.release(), wxIMAGE_LIST_SMALL);
 
          S.StartMultiColumn(3, wxCENTRE);
          {

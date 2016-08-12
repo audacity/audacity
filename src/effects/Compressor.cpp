@@ -57,7 +57,7 @@ enum
 //     Name          Type     Key                  Def      Min      Max      Scale
 Param( Threshold,    double,  XO("Threshold"),     -12.0,   -60.0,   -1.0,    1   );
 Param( NoiseFloor,   double,  XO("NoiseFloor"),    -40.0,   -80.0,   -20.0,   5   );
-Param( Ratio,        double,  XO("Ratio"),         2.0,     1.5,     10.0,    2   );
+Param( Ratio,        double,  XO("Ratio"),         2.0,     1.1,     10.0,    10  );
 Param( AttackTime,   double,  XO("AttackTime"),    0.2,     0.1,     5.0,     100 );
 Param( ReleaseTime,  double,  XO("ReleaseTime"),   1.0,     1.0,     30.0,    10  );
 Param( Normalize,    bool,    XO("Normalize"),     true,    false,   true,    1   );
@@ -250,6 +250,7 @@ void EffectCompressor::PopulateOrExchange(ShuttleGui & S)
                                                  MAX_Ratio * SCL_Ratio,
                                                  MIN_Ratio * SCL_Ratio);
          mRatioSlider->SetName(_("Ratio"));
+         mRatioSlider->SetPageSize(5);
          mRatioText = S.AddVariableText(wxT("XXXX:1"), true,
                                              wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
@@ -633,7 +634,7 @@ void EffectCompressor::UpdateUI()
    mNoiseFloorText->SetLabel(wxString::Format(_("%3d dB"), (int) mNoiseFloorDB));
    mNoiseFloorText->SetName(mNoiseFloorText->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
 
-   if (mRatioSlider->GetValue() % 2 == 0) {
+   if (mRatioSlider->GetValue() % 10 == 0) {
       mRatioLabel->SetName(wxString::Format(_("Ratio %.0f to 1"), mRatio));
       /* i18n-hint: Unless your language has a different convention for ratios,
        * like 8:1, leave as is.*/

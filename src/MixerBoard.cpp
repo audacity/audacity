@@ -833,9 +833,9 @@ void MixerTrackCluster::OnButton_Solo(wxCommandEvent& WXUNUSED(event))
 
 // class MusicalInstrument
 
-MusicalInstrument::MusicalInstrument(wxBitmap* pBitmap, const wxString & strXPMfilename)
+MusicalInstrument::MusicalInstrument(std::unique_ptr<wxBitmap> &&pBitmap, const wxString & strXPMfilename)
 {
-   mBitmap = pBitmap;
+   mBitmap = std::move(pBitmap);
 
    int nUnderscoreIndex;
    wxString strFilename = strXPMfilename;
@@ -853,11 +853,8 @@ MusicalInstrument::MusicalInstrument(wxBitmap* pBitmap, const wxString & strXPMf
 
 MusicalInstrument::~MusicalInstrument()
 {
-   delete mBitmap;
    mKeywords.Clear();
 }
-
-WX_DEFINE_OBJARRAY(MusicalInstrumentArray);
 
 
 // class MixerBoardScrolledWindow
@@ -976,19 +973,8 @@ MixerBoard::MixerBoard(AudacityProject* pProject,
 
 MixerBoard::~MixerBoard()
 {
-   // public data members
-   delete mImageMuteUp;
-   delete mImageMuteOver;
-   delete mImageMuteDown;
-   delete mImageMuteDownWhileSolo;
-   delete mImageMuteDisabled;
-   delete mImageSoloUp;
-   delete mImageSoloOver;
-   delete mImageSoloDown;
-   delete mImageSoloDisabled;
-
    // private data members
-   mMusicalInstruments.Clear();
+   mMusicalInstruments.clear();
 
    mProject->Disconnect(EVT_TRACK_PANEL_TIMER,
       wxCommandEventHandler(MixerBoard::OnTimer),
@@ -1191,7 +1177,7 @@ wxBitmap* MixerBoard::GetMusicalInstrumentBitmap(const wxString & name)
 wxBitmap* MixerBoard::GetMusicalInstrumentBitmap(const WaveTrack* pLeftTrack)
 #endif
 {
-   if (mMusicalInstruments.IsEmpty())
+   if (mMusicalInstruments.empty())
       return NULL;
 
    // random choice:    return mMusicalInstruments[(int)pLeftTrack % mMusicalInstruments.GetCount()].mBitmap;
@@ -1208,21 +1194,21 @@ wxBitmap* MixerBoard::GetMusicalInstrumentBitmap(const WaveTrack* pLeftTrack)
    unsigned int nNumKeywords;
    unsigned int nPointsPerMatch;
    unsigned int nScore;
-   for (nInstrIndex = 0; nInstrIndex < mMusicalInstruments.GetCount(); nInstrIndex++)
+   for (nInstrIndex = 0; nInstrIndex < mMusicalInstruments.size(); nInstrIndex++)
    {
       nScore = 0;
 
-      nNumKeywords = mMusicalInstruments[nInstrIndex].mKeywords.GetCount();
+      nNumKeywords = mMusicalInstruments[nInstrIndex]->mKeywords.GetCount();
       if (nNumKeywords > 0)
       {
          nPointsPerMatch = 10 / nNumKeywords;
          for (nKeywordIndex = 0; nKeywordIndex < nNumKeywords; nKeywordIndex++)
-            if (strTrackName.Contains(mMusicalInstruments[nInstrIndex].mKeywords[nKeywordIndex]))
+            if (strTrackName.Contains(mMusicalInstruments[nInstrIndex]->mKeywords[nKeywordIndex]))
             {
                nScore +=
                   nPointsPerMatch +
                   // Longer keywords get more points.
-                  (2 * mMusicalInstruments[nInstrIndex].mKeywords[nKeywordIndex].Length());
+                  (2 * mMusicalInstruments[nInstrIndex]->mKeywords[nKeywordIndex].Length());
             }
       }
 
@@ -1234,7 +1220,7 @@ wxBitmap* MixerBoard::GetMusicalInstrumentBitmap(const WaveTrack* pLeftTrack)
          nBestItemIndex = nInstrIndex;
       }
    }
-   return mMusicalInstruments[nBestItemIndex].mBitmap;
+   return mMusicalInstruments[nBestItemIndex]->mBitmap.get();
 }
 
 bool MixerBoard::HasSolo()
@@ -1434,22 +1420,22 @@ void MixerBoard::CreateMuteSoloImages()
 
    AColor::Bevel(dc, true, bev);
 
-   mImageMuteUp = new wxImage(bitmap.ConvertToImage());
-   mImageMuteOver = new wxImage(bitmap.ConvertToImage()); // Same as up, for now.
+   mImageMuteUp = std::make_unique<wxImage>(bitmap.ConvertToImage());
+   mImageMuteOver = std::make_unique<wxImage>(bitmap.ConvertToImage()); // Same as up, for now.
 
    AColor::Mute(&dc, true, true, false);
    dc.DrawRectangle(bev);
    dc.DrawText(str, x, y);
    AColor::Bevel(dc, false, bev);
-   mImageMuteDown = new wxImage(bitmap.ConvertToImage());
+   mImageMuteDown = std::make_unique<wxImage>(bitmap.ConvertToImage());
 
    AColor::Mute(&dc, true, true, true);
    dc.DrawRectangle(bev);
    dc.DrawText(str, x, y);
    AColor::Bevel(dc, false, bev);
-   mImageMuteDownWhileSolo = new wxImage(bitmap.ConvertToImage());
+   mImageMuteDownWhileSolo = std::make_unique<wxImage>(bitmap.ConvertToImage());
 
-   mImageMuteDisabled = new wxImage(mMuteSoloWidth, MUTE_SOLO_HEIGHT); // Leave empty because unused.
+   mImageMuteDisabled = std::make_unique<wxImage>(mMuteSoloWidth, MUTE_SOLO_HEIGHT); // Leave empty because unused.
 
 
    // solo button images
@@ -1464,16 +1450,16 @@ void MixerBoard::CreateMuteSoloImages()
 
    AColor::Bevel(dc, true, bev);
 
-   mImageSoloUp = new wxImage(bitmap.ConvertToImage());
-   mImageSoloOver = new wxImage(bitmap.ConvertToImage()); // Same as up, for now.
+   mImageSoloUp = std::make_unique<wxImage>(bitmap.ConvertToImage());
+   mImageSoloOver = std::make_unique<wxImage>(bitmap.ConvertToImage()); // Same as up, for now.
 
    AColor::Solo(&dc, true, true);
    dc.DrawRectangle(bev);
    dc.DrawText(str, x, y);
    AColor::Bevel(dc, false, bev);
-   mImageSoloDown = new wxImage(bitmap.ConvertToImage());
+   mImageSoloDown = std::make_unique<wxImage>(bitmap.ConvertToImage());
 
-   mImageSoloDisabled = new wxImage(mMuteSoloWidth, MUTE_SOLO_HEIGHT); // Leave empty because unused.
+   mImageSoloDisabled = std::make_unique<wxImage>(mMuteSoloWidth, MUTE_SOLO_HEIGHT); // Leave empty because unused.
 }
 
 #ifdef EXPERIMENTAL_MIDI_OUT
@@ -1502,150 +1488,44 @@ int MixerBoard::FindMixerTrackCluster(const WaveTrack* pLeftTrack,
 
 void MixerBoard::LoadMusicalInstruments()
 {
+   const struct Data { const char **bitmap; wxString name; } table[] = {
+      {acoustic_guitar_gtr_xpm, wxT("acoustic_guitar_gtr")},
+      {acoustic_piano_pno_xpm, wxT("acoustic_piano_pno")},
+      {back_vocal_bg_vox_xpm, wxT("back_vocal_bg_vox")},
+      {clap_xpm, wxT("clap")},
+      {drums_dr_xpm, wxT("drums_dr")},
+      {electric_bass_guitar_bs_gtr_xpm, wxT("electric_bass_guitar_bs_gtr")},
+      {electric_guitar_gtr_xpm, wxT("electric_guitar_gtr")},
+      {electric_piano_pno_key_xpm, wxT("electric_piano_pno_key")},
+      {kick_xpm, wxT("kick")},
+      {loop_xpm, wxT("loop")},
+      {organ_org_xpm, wxT("organ_org")},
+      {perc_xpm, wxT("perc")},
+      {sax_xpm, wxT("sax")},
+      {snare_xpm, wxT("snare")},
+      {string_violin_cello_xpm, wxT("string_violin_cello")},
+      {synth_xpm, wxT("synth")},
+      {tambo_xpm, wxT("tambo")},
+      {trumpet_horn_xpm, wxT("trumpet_horn")},
+      {turntable_xpm, wxT("turntable")},
+      {vibraphone_vibes_xpm, wxT("vibraphone_vibes")},
+      {vocal_vox_xpm, wxT("vocal_vox")},
+
+      // This one must be last, so it wins when best score is 0.
+      {_default_instrument_xpm, wxEmptyString},
+   };
+
    wxRect bev(1, 1, MUSICAL_INSTRUMENT_HEIGHT_AND_WIDTH - 2, MUSICAL_INSTRUMENT_HEIGHT_AND_WIDTH - 2);
-   wxBitmap* bitmap;
    wxMemoryDC dc;
-   MusicalInstrument* pMusicalInstrument;
 
-
-   bitmap = new wxBitmap((const char**)acoustic_guitar_gtr_xpm);
-   dc.SelectObject(*bitmap);
-   AColor::Bevel(dc, false, bev);
-   pMusicalInstrument = new MusicalInstrument(bitmap, wxT("acoustic_guitar_gtr"));
-   mMusicalInstruments.Add(pMusicalInstrument);
-
-   bitmap = new wxBitmap((const char**)acoustic_piano_pno_xpm);
-   dc.SelectObject(*bitmap);
-   AColor::Bevel(dc, false, bev);
-   pMusicalInstrument = new MusicalInstrument(bitmap, wxT("acoustic_piano_pno"));
-   mMusicalInstruments.Add(pMusicalInstrument);
-
-   bitmap = new wxBitmap((const char**)back_vocal_bg_vox_xpm);
-   dc.SelectObject(*bitmap);
-   AColor::Bevel(dc, false, bev);
-   pMusicalInstrument = new MusicalInstrument(bitmap, wxT("back_vocal_bg_vox"));
-   mMusicalInstruments.Add(pMusicalInstrument);
-
-   bitmap = new wxBitmap((const char**)clap_xpm);
-   dc.SelectObject(*bitmap);
-   AColor::Bevel(dc, false, bev);
-   pMusicalInstrument = new MusicalInstrument(bitmap, wxT("clap"));
-   mMusicalInstruments.Add(pMusicalInstrument);
-
-
-   bitmap = new wxBitmap((const char**)drums_dr_xpm);
-   dc.SelectObject(*bitmap);
-   AColor::Bevel(dc, false, bev);
-   pMusicalInstrument = new MusicalInstrument(bitmap, wxT("drums_dr"));
-   mMusicalInstruments.Add(pMusicalInstrument);
-
-   bitmap = new wxBitmap((const char**)electric_bass_guitar_bs_gtr_xpm);
-   dc.SelectObject(*bitmap);
-   AColor::Bevel(dc, false, bev);
-   pMusicalInstrument = new MusicalInstrument(bitmap, wxT("electric_bass_guitar_bs_gtr"));
-   mMusicalInstruments.Add(pMusicalInstrument);
-
-   bitmap = new wxBitmap((const char**)electric_guitar_gtr_xpm);
-   dc.SelectObject(*bitmap);
-   AColor::Bevel(dc, false, bev);
-   pMusicalInstrument = new MusicalInstrument(bitmap, wxT("electric_guitar_gtr"));
-   mMusicalInstruments.Add(pMusicalInstrument);
-
-   bitmap = new wxBitmap((const char**)electric_piano_pno_key_xpm);
-   dc.SelectObject(*bitmap);
-   AColor::Bevel(dc, false, bev);
-   pMusicalInstrument = new MusicalInstrument(bitmap, wxT("electric_piano_pno_key"));
-   mMusicalInstruments.Add(pMusicalInstrument);
-
-
-   bitmap = new wxBitmap((const char**)kick_xpm);
-   dc.SelectObject(*bitmap);
-   AColor::Bevel(dc, false, bev);
-   pMusicalInstrument = new MusicalInstrument(bitmap, wxT("kick"));
-   mMusicalInstruments.Add(pMusicalInstrument);
-
-   bitmap = new wxBitmap((const char**)loop_xpm);
-   dc.SelectObject(*bitmap);
-   AColor::Bevel(dc, false, bev);
-   pMusicalInstrument = new MusicalInstrument(bitmap, wxT("loop"));
-   mMusicalInstruments.Add(pMusicalInstrument);
-
-   bitmap = new wxBitmap((const char**)organ_org_xpm);
-   dc.SelectObject(*bitmap);
-   AColor::Bevel(dc, false, bev);
-   pMusicalInstrument = new MusicalInstrument(bitmap, wxT("organ_org"));
-   mMusicalInstruments.Add(pMusicalInstrument);
-
-   bitmap = new wxBitmap((const char**)perc_xpm);
-   dc.SelectObject(*bitmap);
-   AColor::Bevel(dc, false, bev);
-   pMusicalInstrument = new MusicalInstrument(bitmap, wxT("perc"));
-   mMusicalInstruments.Add(pMusicalInstrument);
-
-
-   bitmap = new wxBitmap((const char**)sax_xpm);
-   dc.SelectObject(*bitmap);
-   AColor::Bevel(dc, false, bev);
-   pMusicalInstrument = new MusicalInstrument(bitmap, wxT("sax"));
-   mMusicalInstruments.Add(pMusicalInstrument);
-
-   bitmap = new wxBitmap((const char**)snare_xpm);
-   dc.SelectObject(*bitmap);
-   AColor::Bevel(dc, false, bev);
-   pMusicalInstrument = new MusicalInstrument(bitmap, wxT("snare"));
-   mMusicalInstruments.Add(pMusicalInstrument);
-
-   bitmap = new wxBitmap((const char**)string_violin_cello_xpm);
-   dc.SelectObject(*bitmap);
-   AColor::Bevel(dc, false, bev);
-   pMusicalInstrument = new MusicalInstrument(bitmap, wxT("string_violin_cello"));
-   mMusicalInstruments.Add(pMusicalInstrument);
-
-   bitmap = new wxBitmap((const char**)synth_xpm);
-   dc.SelectObject(*bitmap);
-   AColor::Bevel(dc, false, bev);
-   pMusicalInstrument = new MusicalInstrument(bitmap, wxT("synth"));
-   mMusicalInstruments.Add(pMusicalInstrument);
-
-
-   bitmap = new wxBitmap((const char**)tambo_xpm);
-   dc.SelectObject(*bitmap);
-   AColor::Bevel(dc, false, bev);
-   pMusicalInstrument = new MusicalInstrument(bitmap, wxT("tambo"));
-   mMusicalInstruments.Add(pMusicalInstrument);
-
-   bitmap = new wxBitmap((const char**)trumpet_horn_xpm);
-   dc.SelectObject(*bitmap);
-   AColor::Bevel(dc, false, bev);
-   pMusicalInstrument = new MusicalInstrument(bitmap, wxT("trumpet_horn"));
-   mMusicalInstruments.Add(pMusicalInstrument);
-
-   bitmap = new wxBitmap((const char**)turntable_xpm);
-   dc.SelectObject(*bitmap);
-   AColor::Bevel(dc, false, bev);
-   pMusicalInstrument = new MusicalInstrument(bitmap, wxT("turntable"));
-   mMusicalInstruments.Add(pMusicalInstrument);
-
-   bitmap = new wxBitmap((const char**)vibraphone_vibes_xpm);
-   dc.SelectObject(*bitmap);
-   AColor::Bevel(dc, false, bev);
-   pMusicalInstrument = new MusicalInstrument(bitmap, wxT("vibraphone_vibes"));
-   mMusicalInstruments.Add(pMusicalInstrument);
-
-
-   bitmap = new wxBitmap((const char**)vocal_vox_xpm);
-   dc.SelectObject(*bitmap);
-   AColor::Bevel(dc, false, bev);
-   pMusicalInstrument = new MusicalInstrument(bitmap, wxT("vocal_vox"));
-   mMusicalInstruments.Add(pMusicalInstrument);
-
-
-   // This one must be last, so it wins when best score is 0.
-   bitmap = new wxBitmap((const char**)_default_instrument_xpm);
-   dc.SelectObject(*bitmap);
-   AColor::Bevel(dc, false, bev);
-   pMusicalInstrument = new MusicalInstrument(bitmap, wxEmptyString);
-   mMusicalInstruments.Add(pMusicalInstrument);
+   for (const auto &data : table) {
+      auto bmp = std::make_unique<wxBitmap>(data.bitmap);
+      dc.SelectObject(*bmp);
+      AColor::Bevel(dc, false, bev);
+      mMusicalInstruments.push_back(make_movable<MusicalInstrument>(
+         std::move(bmp), data.name
+      ));
+   };
 }
 
 // event handlers

@@ -20,10 +20,12 @@ Licensed under the GNU General Public License v2 or later
 
 *//*******************************************************************/
 
+#include "../Audacity.h"    // needed before FFmpeg.h
+#include "ImportFFmpeg.h"
+
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
 
-#include "../Audacity.h"    // needed before FFmpeg.h
 #include "../FFmpeg.h"      // which brings in avcodec.h, avformat.h
 #include "../ondemand/ODManager.h"
 #ifndef WX_PRECOMP
@@ -151,7 +153,6 @@ static const wxChar *exts[] =
 
 // all the includes live here by default
 #include "Import.h"
-#include "ImportFFmpeg.h"
 #include "../Tags.h"
 #include "../Internat.h"
 #include "../WaveTrack.h"
@@ -162,7 +163,7 @@ static const wxChar *exts[] =
 #include "../ondemand/ODDecodeFFmpegTask.h"
 #endif
 
-extern FFmpegLibs *FFmpegLibsInst;
+extern FFmpegLibs *FFmpegLibsInst();
 
 class FFmpegImportFileHandle;
 
@@ -282,10 +283,10 @@ private:
 };
 
 
-void GetFFmpegImportPlugin(ImportPluginList *importPluginList,
-                           UnusableImportPluginList *WXUNUSED(unusableImportPluginList))
+void GetFFmpegImportPlugin(ImportPluginList &importPluginList,
+                           UnusableImportPluginList &WXUNUSED(unusableImportPluginList))
 {
-   importPluginList->Append(new FFmpegImportPlugin);
+   importPluginList.push_back( make_movable<FFmpegImportPlugin>() );
 }
 
 
@@ -309,7 +310,7 @@ std::unique_ptr<ImportFileHandle> FFmpegImportPlugin::Open(const wxString &filen
       //insdead of usual wxMessageBox()
       bool newsession = false;
       gPrefs->Read(wxT("/NewImportingSession"), &newsession);
-      if (!FFmpegLibsInst->ValidLibsLoaded())
+      if (!FFmpegLibsInst()->ValidLibsLoaded())
       {
          int dontShowDlg;
          gPrefs->Read(wxT("/FFmpeg/NotFoundDontShow"),&dontShowDlg,0);
@@ -321,7 +322,7 @@ std::unique_ptr<ImportFileHandle> FFmpegImportPlugin::Open(const wxString &filen
          }
       }
    }
-   if (!FFmpegLibsInst->ValidLibsLoaded())
+   if (!FFmpegLibsInst()->ValidLibsLoaded())
    {
       return nullptr;
    }
@@ -352,9 +353,10 @@ FFmpegImportFileHandle::FFmpegImportFileHandle(const wxString & name)
 
 bool FFmpegImportFileHandle::Init()
 {
-   //FFmpegLibsInst->LoadLibs(NULL,false); //Loaded at startup or from Prefs now
+   //FFmpegLibsInst()->LoadLibs(NULL,false); //Loaded at startup or from Prefs now
 
-   if (!FFmpegLibsInst->ValidLibsLoaded()) return false;
+   if (!FFmpegLibsInst()->ValidLibsLoaded())
+      return false;
 
    av_log_set_callback(av_log_wx_callback);
 
@@ -577,13 +579,13 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
    //at this point we know the file is good and that we have to load the number of channels in mScs[s]->m_stream->codec->channels;
    //so for OD loading we create the tracks and releasee the modal lock after starting the ODTask.
    if (mUsingOD) {
-      std::vector<ODDecodeFFmpegTask*> tasks;
+      std::vector<movable_ptr<ODDecodeFFmpegTask>> tasks;
       //append blockfiles to each stream and add an individual ODDecodeTask for each one.
       s = -1;
       for (const auto &stream : mChannels) {
          ++s;
-         ODDecodeFFmpegTask* odTask =
-            new ODDecodeFFmpegTask(mScs, ODDecodeFFmpegTask::FromList(mChannels), mContext, s);
+         auto odTask =
+            make_movable<ODDecodeFFmpegTask>(mScs, ODDecodeFFmpegTask::FromList(mChannels), mContext, s);
          odTask->CreateFileDecoder(mFilename);
 
          //each stream has different duration.  We need to know it if seeking is to be allowed.
@@ -618,17 +620,12 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
                   break;
             }
          }
-         tasks.push_back(odTask);
+         tasks.push_back(std::move(odTask));
       }
       //Now we add the tasks and let them run, or DELETE them if the user cancelled
-      for(int i=0; i < (int)tasks.size(); i++) {
-         if(res==eProgressSuccess)
-            ODManager::Instance()->AddNewTask(tasks[i]);
-         else
-            {
-               delete tasks[i];
-            }
-      }
+      if (res == eProgressSuccess)
+         for (int i = 0; i < (int)tasks.size(); i++)
+            ODManager::Instance()->AddNewTask(std::move(tasks[i]));
    } else {
 #endif
 

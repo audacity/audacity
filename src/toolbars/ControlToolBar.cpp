@@ -68,7 +68,7 @@
 #include "../widgets/Meter.h"
 
 #include "../tracks/ui/Scrubbing.h"
-#include "../prefs/PlaybackPrefs.h"
+#include "../prefs/TracksPrefs.h"
 #include "../toolbars/ToolManager.h"
 
 IMPLEMENT_CLASS(ControlToolBar, ToolBar);
@@ -289,7 +289,7 @@ void ControlToolBar::ArrangeButtons()
    if( mSizer )
    {
       Detach( mSizer );
-      delete mSizer;
+      std::unique_ptr < wxSizer > {mSizer}; // DELETE it
    }
 
    Add((mSizer = safenew wxBoxSizer(wxHORIZONTAL)), 1, wxEXPAND);
@@ -359,7 +359,7 @@ void ControlToolBar::ReCreateButtons()
       recordShift = mRecord->WasShiftDown();
       Detach( mSizer );
 
-      delete mSizer;
+      std::unique_ptr < wxSizer > {mSizer}; // DELETE it
       mSizer = NULL;
    }
 
@@ -675,8 +675,8 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
       else {
          // msmeyer: Show error message if stream could not be opened
          wxMessageBox(
-            _("Error while opening sound device. "
-            "Please check the playback device settings and the project sample rate."),
+            _("Error opening sound device. "
+            "Try changing the audio host, playback device and the project sample rate."),
             _("Error"), wxOK | wxICON_EXCLAMATION, this);
       }
    }
@@ -1089,7 +1089,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
          }
 
          // msmeyer: Show error message if stream could not be opened
-         wxMessageBox(_("Error while opening sound device. Please check the recording device settings and the project sample rate."),
+         wxMessageBox(_("Error opening sound device. Try changing the audio host, recording device and the project sample rate."),
                       _("Error"), wxOK | wxICON_EXCLAMATION, this);
 
          SetPlay(false);
@@ -1185,7 +1185,7 @@ void ControlToolBar::SetupCutPreviewTracks(double WXUNUSED(playStart), double cu
             new2->Clear(cutStart, cutEnd);
          }
 
-         mCutPreviewTracks = new TrackList();
+         mCutPreviewTracks = std::make_unique<TrackList>();
          mCutPreviewTracks->Add(std::move(new1));
          if (track2)
             mCutPreviewTracks->Add(std::move(new2));
@@ -1196,11 +1196,8 @@ void ControlToolBar::SetupCutPreviewTracks(double WXUNUSED(playStart), double cu
 void ControlToolBar::ClearCutPreviewTracks()
 {
    if (mCutPreviewTracks)
-   {
-      mCutPreviewTracks->Clear(); /* DELETE track contents too */
-      delete mCutPreviewTracks;
-      mCutPreviewTracks = NULL;
-   }
+      mCutPreviewTracks->Clear();
+   mCutPreviewTracks.reset();
 }
 
 // works out the width of the field in the status bar needed for the state (eg play, record pause)
@@ -1263,7 +1260,7 @@ void ControlToolBar::UpdateStatusBar(AudacityProject *pProject)
 
 void ControlToolBar::StartScrollingIfPreferred()
 {
-   if (PlaybackPrefs::GetPinnedHeadPreference())
+   if (TracksPrefs::GetPinnedHeadPreference())
       StartScrolling();
 #ifdef __WXMAC__
    else if (::GetActiveProject()->GetScrubber().HasStartedScrubbing()) {

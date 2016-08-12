@@ -26,6 +26,9 @@
 
 *//*******************************************************************/
 
+#include "../Audacity.h"
+#include "ImportMP3.h"
+
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
 
@@ -35,11 +38,9 @@
 
 #include <wx/defs.h>
 #include <wx/intl.h>
-#include "../Audacity.h"
 
 #include "../Prefs.h"
 #include "Import.h"
-#include "ImportMP3.h"
 #include "ImportPlugin.h"
 #include "../Internat.h"
 #include "../Tags.h"
@@ -55,13 +56,13 @@ static const wxChar *exts[] =
 
 #ifndef USE_LIBMAD
 
-void GetMP3ImportPlugin(ImportPluginList *importPluginList,
-                        UnusableImportPluginList *unusableImportPluginList)
+void GetMP3ImportPlugin(ImportPluginList &importPluginList,
+                        UnusableImportPluginList &unusableImportPluginList)
 {
-   UnusableImportPlugin* mp3IsUnsupported =
-      new UnusableImportPlugin(DESC, wxArrayString(WXSIZEOF(exts), exts));
-
-   unusableImportPluginList->Append(mp3IsUnsupported);
+   unusableImportPluginList.push_back(
+      make_movable<UnusableImportPlugin>
+         (DESC, wxArrayString(WXSIZEOF(exts), exts))
+  );
 }
 
 #else /* USE_LIBMAD */
@@ -120,9 +121,9 @@ public:
 class MP3ImportFileHandle final : public ImportFileHandle
 {
 public:
-   MP3ImportFileHandle(wxFile *file, wxString filename):
+   MP3ImportFileHandle(std::unique_ptr<wxFile> &&file, wxString filename):
       ImportFileHandle(filename),
-      mFile(file)
+      mFile(std::move(file))
    {
    }
 
@@ -146,16 +147,16 @@ public:
 private:
    void ImportID3(Tags *tags);
 
-   wxFile *mFile;
+   std::unique_ptr<wxFile> mFile;
    void *mUserData;
    struct private_data mPrivateData;
    mad_decoder mDecoder;
 };
 
-void GetMP3ImportPlugin(ImportPluginList *importPluginList,
-                        UnusableImportPluginList * WXUNUSED(unusableImportPluginList))
+void GetMP3ImportPlugin(ImportPluginList &importPluginList,
+                        UnusableImportPluginList & WXUNUSED(unusableImportPluginList))
 {
-   importPluginList->Append(new MP3ImportPlugin);
+   importPluginList.push_back( make_movable<MP3ImportPlugin>() );
 }
 
 /* The MAD callbacks */
@@ -182,17 +183,15 @@ wxString MP3ImportPlugin::GetPluginFormatDescription()
 
 std::unique_ptr<ImportFileHandle> MP3ImportPlugin::Open(const wxString &Filename)
 {
-   wxFile *file = new wxFile(Filename);
+   auto file = std::make_unique<wxFile>(Filename);
 
-   if (!file->IsOpened()) {
-      delete file;
+   if (!file->IsOpened())
       return nullptr;
-   }
 
    /* There's no way to tell if this is a valid mp3 file before actually
     * decoding, so we return a valid FileHandle. */
 
-   return std::make_unique<MP3ImportFileHandle>(file, Filename);
+   return std::make_unique<MP3ImportFileHandle>(std::move(file), Filename);
 }
 
 wxString MP3ImportFileHandle::GetFileDescription()
@@ -215,7 +214,7 @@ int MP3ImportFileHandle::Import(TrackFactory *trackFactory, TrackHolders &outTra
 
    /* Prepare decoder data, initialize decoder */
 
-   mPrivateData.file        = mFile;
+   mPrivateData.file        = mFile.get();
    mPrivateData.inputBuffer = new unsigned char [INPUT_BUFFER_SIZE];
    mPrivateData.progress    = mProgress.get();
    mPrivateData.updateResult= eProgressSuccess;
@@ -260,12 +259,6 @@ int MP3ImportFileHandle::Import(TrackFactory *trackFactory, TrackHolders &outTra
 
 MP3ImportFileHandle::~MP3ImportFileHandle()
 {
-   if(mFile) {
-      if (mFile->IsOpened()) {
-         mFile->Close();
-      }
-      delete mFile;
-   }
 }
 
 void MP3ImportFileHandle::ImportID3(Tags *tags)

@@ -131,7 +131,7 @@ ExpandingToolBar::ExpandingToolBar(wxWindow* parent,
    mFrameParent(NULL),
    mDialogParent(NULL),
    mAreaParent(NULL),
-   mSavedArrangement(NULL),
+   mSavedArrangement{},
    mDragImage(NULL),
    mTopLevelParent(NULL)
 {
@@ -152,7 +152,7 @@ ExpandingToolBar::ExpandingToolBar(wxWindow* parent,
    //wxColour magicColor = wxColour(0, 255, 255);
    //ImageArray fourStates = ImageRoll::SplitV(hbar, magicColor);
 /*
-   mToggleButton = new AButton(this, kToggleButtonID,
+   mToggleButton = safenew AButton(this, kToggleButtonID,
                                wxDefaultPosition, wxDefaultSize,
                                ImageRoll(ImageRoll::HorizontalRoll,
                                          fourStates[0], magicColor),
@@ -632,13 +632,10 @@ void ExpandingToolBar::FinishMoving()
    msNoAutoExpandStack--;
 
    if (mDropTarget == kDummyRect) {
-      mAreaParent->RestoreArrangement(mSavedArrangement);
-      mSavedArrangement = NULL;
+      mAreaParent->RestoreArrangement(std::move(mSavedArrangement));
    }
    else {
-      delete mSavedArrangement;
-      mSavedArrangement = NULL;
-
+      mSavedArrangement.reset();
       mAreaParent->MoveChild(this, mDropTarget);
    }
 
@@ -1183,9 +1180,9 @@ void ToolBarArea::RemoveChild(ExpandingToolBar *child)
    }
 }
 
-ToolBarArrangement *ToolBarArea::SaveArrangement()
+std::unique_ptr<ToolBarArrangement> ToolBarArea::SaveArrangement()
 {
-   ToolBarArrangement *arrangement = new ToolBarArrangement();
+   auto arrangement = std::make_unique<ToolBarArrangement>();
    int i;
 
    arrangement->childArray = mChildArray;
@@ -1197,7 +1194,7 @@ ToolBarArrangement *ToolBarArea::SaveArrangement()
    return arrangement;
 }
 
-void ToolBarArea::RestoreArrangement(ToolBarArrangement *arrangement)
+void ToolBarArea::RestoreArrangement(std::unique_ptr<ToolBarArrangement>&& arrangement)
 {
    int i;
 
@@ -1211,7 +1208,7 @@ void ToolBarArea::RestoreArrangement(ToolBarArrangement *arrangement)
 
    Fit(false, true);
 
-   delete arrangement;
+   arrangement.reset();
 }
 
 wxArrayRect ToolBarArea::GetDropTargets()

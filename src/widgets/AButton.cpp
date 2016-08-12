@@ -292,7 +292,7 @@ void AButton::SetAlternateIdx(unsigned idx)
 void AButton::FollowModifierKeys()
 {
    if(!mListener)
-      mListener.reset(new Listener(this));
+      mListener = std::make_unique<Listener>(this);
 }
 
 void AButton::SetFocusRect(wxRect & r)

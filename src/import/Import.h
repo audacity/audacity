@@ -12,6 +12,7 @@
 #define _IMPORT_
 
 #include "ImportRaw.h" // defines TrackHolders
+#include "ImportForwards.h"
 #include <vector>
 #include <wx/arrstr.h>
 #include <wx/string.h>
@@ -44,7 +45,7 @@ class ExtImportItem;
 
 using FormatList = std::vector<Format> ;
 WX_DEFINE_ARRAY_PTR(ImportPlugin *, ImportPluginPtrArray);
-WX_DECLARE_OBJARRAY(ExtImportItem, ExtImportItems);
+using ExtImportItems = std::vector< movable_ptr<ExtImportItem> >;
 
 class ExtImportItem
 {
@@ -84,9 +85,6 @@ class ExtImportItem
    */
   wxArrayString mime_types;
 };
-
-class ImportPluginList;
-class UnusableImportPluginList;
 
 class Importer {
 public:
@@ -131,13 +129,13 @@ public:
     * Returns a pointer to internal items array.
     * External objects are allowed to change the array contents.
     */
-   ExtImportItems *GetImportItems() { return mExtImportItems; };
+   ExtImportItems &GetImportItems() { return mExtImportItems; };
 
    /**
     * Allocates NEW ExtImportItem, fills it with default data
     * and returns a pointer to it.
     */
-    ExtImportItem *CreateDefaultImportItem();
+    movable_ptr<ExtImportItem> CreateDefaultImportItem();
 
    // if false, the import failed and errorMessage will be set.
    bool Import(const wxString &fName,
@@ -149,9 +147,9 @@ public:
 private:
    static Importer mInstance;
 
-   ExtImportItems *mExtImportItems;
-   ImportPluginList *mImportPluginList;
-   UnusableImportPluginList *mUnusableImportPluginList;
+   ExtImportItems mExtImportItems;
+   ImportPluginList mImportPluginList;
+   UnusableImportPluginList mUnusableImportPluginList;
 };
 
 //----------------------------------------------------------------------------

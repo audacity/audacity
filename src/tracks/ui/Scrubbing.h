@@ -129,17 +129,18 @@ public:
    // A string to put in the leftmost part of the status bar
    // when scrub or seek is in progress, or else empty.
    const wxString &GetUntranslatedStateString() const;
+   const wxString &StatusMessageForWave() const;
 
    // All possible status strings.
    static std::vector<wxString> GetAllUntranslatedStatusStrings();
 
    void Pause(bool paused);
    bool IsPaused() const;
+   void CheckMenuItems();
 
 private:
    void DoScrub(bool seek);
    void OnActivateOrDeactivateApp(wxActivateEvent & event);
-   void CheckMenuItems();
 
    // I need this because I can't push the scrubber as an event handler
    // in two places at once.

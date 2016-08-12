@@ -285,7 +285,6 @@ private:
    EffectUIHostInterface *mUIHost;
 
    bool mUseGUI;
-   wxWindow *mContainer;
 
    char **mURIMap;
    int mNumURIMap;

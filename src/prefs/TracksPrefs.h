@@ -29,6 +29,8 @@ class TracksPrefs final : public PrefsPanel
    ~TracksPrefs();
    bool Apply() override;
 
+   static bool GetPinnedHeadPreference();
+   static void SetPinnedHeadPreference(bool value, bool flush = false);
    static const wxChar *ScrollingPreferenceKey();
    static inline bool ScrollingPreferenceDefault() { return false; }
 
@@ -36,6 +38,7 @@ class TracksPrefs final : public PrefsPanel
    void Populate();
    void PopulateOrExchange(ShuttleGui & S);
 
+   static int iPreferencePinned;
    wxArrayString mSoloCodes;
    wxArrayString mSoloChoices;
    wxArrayInt    mViewCodes;

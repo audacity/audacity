@@ -163,8 +163,10 @@ public:
 //            //this array is sorted by start/end points and has no overlaps.   If we've passed all possible intersections, insert.  The array will remain sorted.
 //            if(region.end < invalStart)
 //            {
-//               InvalidRegion* newRegion = new InvalidRegion(invalStart,invalEnd);
-//               mRegions.insert(mRegions.begin()+i,newRegion);
+//               mRegions.insert(
+//                  mRegions.begin() + i,
+//                  InvalidRegion{ invalStart, invalEnd }
+//               );
 //               break;
 //            }
          }
@@ -293,10 +295,10 @@ WaveClip::WaveClip(DirManager *projDirManager, sampleFormat format, int rate)
    mOffset = 0;
    mRate = rate;
    mSequence = std::make_unique<Sequence>(projDirManager, format);
-   mEnvelope = new Envelope();
-   mWaveCache = new WaveCache();
-   mSpecCache = new SpecCache();
-   mSpecPxCache = new SpecPxCache(1);
+   mEnvelope = std::make_unique<Envelope>();
+   mWaveCache = std::make_unique<WaveCache>();
+   mSpecCache = std::make_unique<SpecCache>();
+   mSpecPxCache = std::make_unique<SpecPxCache>(1);
    mAppendBufferLen = 0;
    mDirty = 0;
    mIsPlaceholder = false;
@@ -311,13 +313,13 @@ WaveClip::WaveClip(const WaveClip& orig, DirManager *projDirManager)
    mOffset = orig.mOffset;
    mRate = orig.mRate;
    mSequence = std::make_unique<Sequence>(*orig.mSequence, projDirManager);
-   mEnvelope = new Envelope();
-   mEnvelope->Paste(0.0, orig.mEnvelope);
+   mEnvelope = std::make_unique<Envelope>();
+   mEnvelope->Paste(0.0, orig.mEnvelope.get());
    mEnvelope->SetOffset(orig.GetOffset());
    mEnvelope->SetTrackLen(((double)orig.mSequence->GetNumSamples()) / orig.mRate);
-   mWaveCache = new WaveCache();
-   mSpecCache = new SpecCache();
-   mSpecPxCache = new SpecPxCache(1);
+   mWaveCache = std::make_unique<WaveCache>();
+   mSpecCache = std::make_unique<SpecCache>();
+   mSpecPxCache = std::make_unique<SpecPxCache>(1);
 
    for (WaveClipList::compatibility_iterator it=orig.mCutLines.GetFirst(); it; it=it->GetNext())
       mCutLines.Append(new WaveClip(*it->GetData(), projDirManager));
@@ -329,13 +331,6 @@ WaveClip::WaveClip(const WaveClip& orig, DirManager *projDirManager)
 
 WaveClip::~WaveClip()
 {
-   delete mEnvelope;
-   mEnvelope = NULL;
-
-   delete mWaveCache;
-   delete mSpecCache;
-   delete mSpecPxCache;
-
    mCutLines.DeleteContents(true);
    mCutLines.Clear();
 }
@@ -416,12 +411,10 @@ bool WaveClip::AfterClip(double t) const
 }
 
 ///Delete the wave cache - force redraw.  Thread-safe
-void WaveClip::DeleteWaveCache()
+void WaveClip::ClearWaveCache()
 {
    ODLocker locker(&mWaveCacheMutex);
-   if(mWaveCache!=NULL)
-      delete mWaveCache;
-   mWaveCache = new WaveCache();
+   mWaveCache = std::make_unique<WaveCache>();
 }
 
 ///Adds an invalid region to the wavecache so it redraws that portion only.
@@ -556,8 +549,7 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
          return true;
       }
 
-      std::unique_ptr<WaveCache> oldCache(mWaveCache);
-      mWaveCache = 0;
+      std::unique_ptr<WaveCache> oldCache(std::move(mWaveCache));
 
       int oldX0 = 0;
       double correction = 0.0;
@@ -577,7 +569,7 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
       if (!(copyEnd > copyBegin))
          oldCache.reset(0);
 
-      mWaveCache = new WaveCache(numPixels, pixelsPerSecond, mRate, t0, mDirty);
+      mWaveCache = std::make_unique<WaveCache>(numPixels, pixelsPerSecond, mRate, t0, mDirty);
       min = &mWaveCache->min[0];
       max = &mWaveCache->max[0];
       rms = &mWaveCache->rms[0];
@@ -1098,8 +1090,7 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
       // a complete hit, because of the complications of time reassignment
       match = false;
 
-   std::unique_ptr<SpecCache> oldCache(mSpecCache);
-   mSpecCache = 0;
+   std::unique_ptr<SpecCache> oldCache(std::move(mSpecCache));
 
    const double tstep = 1.0 / pixelsPerSecond;
    const double samplesPerPixel = mRate * tstep;
@@ -1124,7 +1115,7 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
    if (!(copyEnd > copyBegin))
       oldCache.reset(0);
 
-   mSpecCache = new SpecCache(
+   mSpecCache = std::make_unique<SpecCache>(
       numPixels, settings.algorithm, pixelsPerSecond, t0,
       windowType, windowSize, zeroPaddingFactor, frequencyGain);
 
@@ -1368,7 +1359,7 @@ XMLTagHandler *WaveClip::HandleXMLChild(const wxChar *tag)
    if (!wxStrcmp(tag, wxT("sequence")))
       return mSequence.get();
    else if (!wxStrcmp(tag, wxT("envelope")))
-      return mEnvelope;
+      return mEnvelope.get();
    else if (!wxStrcmp(tag, wxT("waveclip")))
    {
       // Nested wave clips are cut lines
@@ -1402,16 +1393,14 @@ bool WaveClip::CreateFromCopy(double t0, double t1, const WaveClip* other)
    other->TimeToSamplesClip(t1, &s1);
 
    std::unique_ptr<Sequence> oldSequence = std::move(mSequence);
-   mSequence = NULL;
    if (!other->mSequence->Copy(s0, s1, mSequence))
    {
       mSequence = std::move(oldSequence);
       return false;
    }
 
-   delete mEnvelope;
-   mEnvelope = new Envelope();
-   mEnvelope->CopyFrom(other->mEnvelope, (double)s0/mRate, (double)s1/mRate);
+   mEnvelope = std::make_unique<Envelope>();
+   mEnvelope->CopyFrom(other->mEnvelope.get(), (double)s0/mRate, (double)s1/mRate);
 
    MarkChanged();
 
@@ -1450,7 +1439,7 @@ bool WaveClip::Paste(double t0, const WaveClip* other)
    if (mSequence->Paste(s0, pastedClip->mSequence.get()))
    {
       MarkChanged();
-      mEnvelope->Paste((double)s0/mRate + mOffset, pastedClip->mEnvelope);
+      mEnvelope->Paste((double)s0/mRate + mOffset, pastedClip->mEnvelope.get());
       mEnvelope->RemoveUnneededPoints();
       OffsetCutLines(t0, pastedClip->GetEndTime() - pastedClip->GetStartTime());
 
@@ -1788,16 +1777,9 @@ bool WaveClip::Resample(int rate, ProgressDialog *progress)
       mRate = rate;
 
       // Invalidate wave display cache
-      if (mWaveCache)
-      {
-         delete mWaveCache;
-         mWaveCache = NULL;
-      }
-      mWaveCache = new WaveCache();
+      mWaveCache = std::make_unique<WaveCache>();
       // Invalidate the spectrum display cache
-      if (mSpecCache)
-         delete mSpecCache;
-      mSpecCache = new SpecCache();
+      mSpecCache = std::make_unique<SpecCache>();
    }
 
    return !error;

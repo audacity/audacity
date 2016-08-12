@@ -432,6 +432,7 @@
     <ClInclude Include="..\..\..\src\effects\Phaser.h" />
     <ClInclude Include="..\..\..\src\effects\VST\VSTControlMSW.h" />
     <ClInclude Include="..\..\..\src\import\FormatClassifier.h" />
+    <ClInclude Include="..\..\..\src\import\ImportForwards.h" />
     <ClInclude Include="..\..\..\src\import\ImportGStreamer.h" />
     <ClInclude Include="..\..\..\src\import\MultiFormatReader.h" />
     <ClInclude Include="..\..\..\src\import\SpecPowerMeter.h" />

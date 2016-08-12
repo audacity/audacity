@@ -141,11 +141,6 @@ Effect::~Effect()
       delete mOutputTracks;
    }
 
-   if (mWarper != NULL)
-   {
-      delete mWarper;
-   }
-
    if (mUIDialog)
    {
       mUIDialog->Close();
@@ -784,14 +779,14 @@ void Effect::Preview()
 
 wxDialog *Effect::CreateUI(wxWindow *parent, EffectUIClientInterface *client)
 {
-   EffectUIHost *dlg = new EffectUIHost(parent, this, client);
+   Destroy_ptr<EffectUIHost> dlg
+      { safenew EffectUIHost{ parent, this, client} };
 
    if (dlg->Initialize())
    {
-      return dlg;
+      // release() is safe because parent will own it
+      return dlg.release();
    }
-
-   delete dlg;
 
    return NULL;
 }
@@ -2055,22 +2050,16 @@ void Effect::GetSamples(WaveTrack *track, sampleCount *start, sampleCount *len)
    }
 }
 
-void Effect::SetTimeWarper(TimeWarper *warper)
+void Effect::SetTimeWarper(std::unique_ptr<TimeWarper> &&warper)
 {
-   if (mWarper != NULL)
-   {
-      delete mWarper;
-      mWarper = NULL;
-   }
-
-   wxASSERT(warper != NULL);
-   mWarper = warper;
+   wxASSERT(warper);
+   mWarper = std::move(warper);
 }
 
 TimeWarper *Effect::GetTimeWarper()
 {
-   wxASSERT(mWarper != NULL);
-   return mWarper;
+   wxASSERT(mWarper);
+   return mWarper.get();
 }
 
 //
@@ -2667,7 +2656,7 @@ void Effect::Preview(bool dryOnly)
          }
       }
       else {
-         wxMessageBox(_("Error while opening sound device. Please check the playback device settings and the project sample rate."),
+         wxMessageBox(_("Error opening sound device. Try changing the audio host, playback device and the project sample rate."),
                      _("Error"), wxOK | wxICON_EXCLAMATION, FocusDialog);
       }
    }
@@ -2940,7 +2929,7 @@ int EffectUIHost::ShowModal()
    sz->Replace(mCloseBtn, apply);
    sz->Replace(mApplyBtn, mCloseBtn);
    sz->Layout();
-   delete mApplyBtn;
+   mApplyBtn->Destroy();
    mApplyBtn = apply;
    mApplyBtn->SetDefault();
    mApplyBtn->SetLabel(wxGetStockLabel(wxID_OK, 0));
@@ -3301,7 +3290,6 @@ void EffectUIHost::OnDebug(wxCommandEvent & evt)
 void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
 {
    wxMenu menu;
-   wxMenu *sub;
 
    LoadUserPresets();
 
@@ -3311,12 +3299,12 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
    }
    else
    {
-      sub = new wxMenu();
+      auto sub = std::make_unique<wxMenu>();
       for (size_t i = 0, cnt = mUserPresets.GetCount(); i < cnt; i++)
       {
          sub->Append(kUserPresetsID + i, mUserPresets[i]);
       }
-      menu.Append(0, _("User Presets"), sub);
+      menu.Append(0, _("User Presets"), sub.release());
    }
 
    menu.Append(kSaveAsID, _("Save Preset..."));
@@ -3327,35 +3315,37 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
    }
    else
    {
-      sub = new wxMenu();
+      auto sub = std::make_unique<wxMenu>();
       for (size_t i = 0, cnt = mUserPresets.GetCount(); i < cnt; i++)
       {
          sub->Append(kDeletePresetID + i, mUserPresets[i]);
       }
-      menu.Append(0, _("Delete Preset"), sub);
+      menu.Append(0, _("Delete Preset"), sub.release());
    }
 
    menu.AppendSeparator();
 
    wxArrayString factory = mEffect->GetFactoryPresets();
 
-   sub = new wxMenu();
-   sub->Append(kDefaultsID, _("Defaults"));
-   if (factory.GetCount() > 0)
    {
-      sub->AppendSeparator();
-      for (size_t i = 0, cnt = factory.GetCount(); i < cnt; i++)
+      auto sub = std::make_unique<wxMenu>();
+      sub->Append(kDefaultsID, _("Defaults"));
+      if (factory.GetCount() > 0)
       {
-         wxString label = factory[i];
-         if (label.IsEmpty())
+         sub->AppendSeparator();
+         for (size_t i = 0, cnt = factory.GetCount(); i < cnt; i++)
          {
-            label = _("None");
-         }
+            wxString label = factory[i];
+            if (label.IsEmpty())
+            {
+               label = _("None");
+            }
 
-         sub->Append(kFactoryPresetsID + i, label);
+            sub->Append(kFactoryPresetsID + i, label);
+         }
       }
+      menu.Append(0, _("Factory Presets"), sub.release());
    }
-   menu.Append(0, _("Factory Presets"), sub);
 
    menu.AppendSeparator();
    menu.Append(kImportID, _("Import..."))->Enable(mClient->CanExportPresets());
@@ -3364,15 +3354,17 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
    menu.Append(kOptionsID, _("Options..."))->Enable(mClient->HasOptions());
    menu.AppendSeparator();
 
-   sub = new wxMenu();
+   {
+      auto sub = std::make_unique<wxMenu>();
 
-   sub->Append(kDummyID, wxString::Format(_("Type: %s"), mEffect->GetFamily().c_str()));
-   sub->Append(kDummyID, wxString::Format(_("Name: %s"), mEffect->GetName().c_str()));
-   sub->Append(kDummyID, wxString::Format(_("Version: %s"), mEffect->GetVersion().c_str()));
-   sub->Append(kDummyID, wxString::Format(_("Vendor: %s"), mEffect->GetVendor().c_str()));
-   sub->Append(kDummyID, wxString::Format(_("Description: %s"), mEffect->GetDescription().c_str()));
+      sub->Append(kDummyID, wxString::Format(_("Type: %s"), mEffect->GetFamily().c_str()));
+      sub->Append(kDummyID, wxString::Format(_("Name: %s"), mEffect->GetName().c_str()));
+      sub->Append(kDummyID, wxString::Format(_("Version: %s"), mEffect->GetVersion().c_str()));
+      sub->Append(kDummyID, wxString::Format(_("Vendor: %s"), mEffect->GetVendor().c_str()));
+      sub->Append(kDummyID, wxString::Format(_("Description: %s"), mEffect->GetDescription().c_str()));
 
-   menu.Append(0, _("About"), sub);
+      menu.Append(0, _("About"), sub.release());
+   }
 
    wxWindow *btn = FindWindow(kMenuID);
    wxRect r = btn->GetRect();
@@ -3385,6 +3377,16 @@ void EffectUIHost::OnEnable(wxCommandEvent & WXUNUSED(evt))
 
    if (mEnabled)
    {
+      if (!mClient->ValidateUI()) {
+         // If we're previewing we should still be able to stop playback
+         // so don't disable transport buttons.
+         //   mEffect->EnableApply(false);   // currently this would also disable transport buttons.
+         // The preferred behaviour is currently undecided, so for now
+         // just disallow enabling until settings are valid.
+         mEnabled = false;
+         mEnableCb->SetValue(mEnabled);
+         return;
+      }
       mEffect->RealtimeResume();
    }
    else

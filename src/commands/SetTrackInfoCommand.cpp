@@ -27,14 +27,14 @@ wxString SetTrackInfoCommandType::BuildName()
 
 void SetTrackInfoCommandType::BuildSignature(CommandSignature &signature)
 {
-   IntValidator *trackIndexValidator = new IntValidator();
-   signature.AddParameter(wxT("TrackIndex"), 0, trackIndexValidator);
+   auto trackIndexValidator = make_movable<IntValidator>();
+   signature.AddParameter(wxT("TrackIndex"), 0, std::move(trackIndexValidator));
 
-   OptionValidator *infoTypeValidator = new OptionValidator();
+   auto infoTypeValidator = make_movable<OptionValidator>();
    infoTypeValidator->AddOption(wxT("Name"));
-   signature.AddParameter(wxT("Type"), wxT("Name"), infoTypeValidator);
-   Validator *nameValidator = new DefaultValidator();
-   signature.AddParameter(wxT("Name"), wxT("Unnamed"), nameValidator);
+   signature.AddParameter(wxT("Type"), wxT("Name"), std::move(infoTypeValidator));
+   auto nameValidator = make_movable<DefaultValidator>();
+   signature.AddParameter(wxT("Name"), wxT("Unnamed"), std::move(nameValidator));
 }
 
 CommandHolder SetTrackInfoCommandType::Create(std::unique_ptr<CommandOutputTarget> &&target)

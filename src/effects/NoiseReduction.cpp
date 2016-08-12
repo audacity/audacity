@@ -338,7 +338,7 @@ private:
       FloatVector mRealFFTs;
       FloatVector mImagFFTs;
    };
-   std::vector<Record*> mQueue;
+   std::vector<movable_ptr<Record>> mQueue;
 };
 
 /****************************************************************//**
@@ -412,7 +412,7 @@ private:
 };
 
 EffectNoiseReduction::EffectNoiseReduction()
-: mSettings(new EffectNoiseReduction::Settings)
+: mSettings(std::make_unique<EffectNoiseReduction::Settings>())
 {
    Init();
 }
@@ -609,8 +609,8 @@ bool EffectNoiseReduction::Process()
    // settings if reducing noise.
    if (mSettings->mDoProfile) {
       int spectrumSize = 1 + mSettings->WindowSize() / 2;
-      mStatistics.reset
-         (new Statistics(spectrumSize, track->GetRate(), mSettings->mWindowTypes));
+      mStatistics = std::make_unique<Statistics>
+         (spectrumSize, track->GetRate(), mSettings->mWindowTypes);
    }
    else if (mStatistics->mWindowSize != mSettings->WindowSize()) {
       // possible only with advanced settings
@@ -641,8 +641,6 @@ bool EffectNoiseReduction::Process()
 EffectNoiseReduction::Worker::~Worker()
 {
    EndFFT(hFFT);
-   for(int ii = 0, nn = mQueue.size(); ii < nn; ++ii)
-      delete mQueue[ii];
 }
 
 bool EffectNoiseReduction::Worker::Process
@@ -797,7 +795,7 @@ EffectNoiseReduction::Worker::Worker
 
    mQueue.resize(mHistoryLen);
    for (int ii = 0; ii < mHistoryLen; ++ii)
-      mQueue[ii] = new Record(mSpectrumSize);
+      mQueue[ii] = make_movable<Record>(mSpectrumSize);
 
    // Create windows
 
@@ -986,9 +984,7 @@ void EffectNoiseReduction::Worker::FillFirstHistoryWindow()
 
 void EffectNoiseReduction::Worker::RotateHistoryWindows()
 {
-   Record *save = mQueue[mHistoryLen - 1];
-   mQueue.pop_back();
-   mQueue.insert(mQueue.begin(), save);
+   std::rotate(mQueue.begin(), mQueue.end() - 1, mQueue.end());
 }
 
 void EffectNoiseReduction::Worker::FinishTrackStatistics(Statistics &statistics)

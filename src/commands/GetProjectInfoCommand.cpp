@@ -28,7 +28,7 @@ wxString GetProjectInfoCommandType::BuildName()
 
 void GetProjectInfoCommandType::BuildSignature(CommandSignature &signature)
 {
-   OptionValidator *infoTypeValidator = new OptionValidator();
+   auto infoTypeValidator = make_movable<OptionValidator>();
    infoTypeValidator->AddOption(wxT("Name"));
    infoTypeValidator->AddOption(wxT("NumberOfTracks"));
    infoTypeValidator->AddOption(wxT("SelectedTracks"));
@@ -36,7 +36,7 @@ void GetProjectInfoCommandType::BuildSignature(CommandSignature &signature)
    infoTypeValidator->AddOption(wxT("SoloTracks"));
    infoTypeValidator->AddOption(wxT("FocusedTrackID")); // returns the Track ID number of the track in focus
 
-   signature.AddParameter(wxT("Type"), wxT("Name"), infoTypeValidator);
+   signature.AddParameter(wxT("Type"), wxT("Name"), std::move(infoTypeValidator));
 }
 
 CommandHolder GetProjectInfoCommandType::Create(std::unique_ptr<CommandOutputTarget> &&target)

@@ -92,7 +92,6 @@ class MixerBoardFrame;
 struct AudioIOStartStreamOptions;
 struct UndoState;
 
-class WaveTrackArray;
 class Regions;
 
 class LWSlider;
@@ -166,7 +165,7 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
 
    AudioIOStartStreamOptions GetDefaultPlayOptions();
 
-   TrackList *GetTracks() { return mTracks; }
+   TrackList *GetTracks() { return mTracks.get(); }
    UndoManager *GetUndoManager() { return mUndoManager.get(); }
 
    sampleFormat GetDefaultFormat() { return mDefaultFormat; }
@@ -339,7 +338,6 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    // Other commands
    static TrackList *GetClipboardTracks();
    static void DeleteClipboard();
-   static void DeleteAllProjectsDeleteLock();
 
    // checkActive is a temporary hack that should be removed as soon as we
    // get multiple effect preview working
@@ -514,10 +512,6 @@ public:
    bool TryToMakeActionAllowed
       ( CommandFlag & flags, CommandFlag flagsRqd, CommandFlag mask );
 
-   ///Prevents DELETE from external thread - for e.g. use of GetActiveProject
-   static void AllProjectsDeleteLock();
-   static void AllProjectsDeleteUnlock();
-
    void PushState(const wxString &desc, const wxString &shortDesc); // use UndoPush::AUTOSAVE
    void PushState(const wxString &desc, const wxString &shortDesc, UndoPush flags);
    void RollbackState();
@@ -557,19 +551,19 @@ public:
 
    // Tags (artist name, song properties, MP3 ID3 info, etc.)
    // The structure may be shared with undo history entries
-   // To keep undo working correctly, always replace this with a new duplicate
+   // To keep undo working correctly, always replace this with a NEW duplicate
    // BEFORE doing any editing of it!
    std::shared_ptr<Tags> mTags;
 
    // List of tracks and display info
-   TrackList *mTracks;
+   std::unique_ptr<TrackList> mTracks{ std::make_unique<TrackList>() };
 
    int mSnapTo;
    wxString mSelectionFormat;
    wxString mFrequencySelectionFormatName;
    wxString mBandwidthSelectionFormatName;
 
-   TrackList *mLastSavedTracks;
+   std::unique_ptr<TrackList> mLastSavedTracks;
 
    // Clipboard (static because it is shared by all projects)
    static std::unique_ptr<TrackList> msClipboard;
@@ -577,9 +571,12 @@ public:
    static double msClipT0;
    static double msClipT1;
 
+public:
+   ///Prevents DELETE from external thread - for e.g. use of GetActiveProject
    //shared by all projects
-   static ODLock *msAllProjectDeleteMutex;
+   static ODLock &AllProjectDeleteMutex();
 
+private:
    // History/Undo manager
    std::unique_ptr<UndoManager> mUndoManager;
    bool mDirty{ false };
@@ -592,7 +589,7 @@ public:
 
    // Window elements
 
-   wxTimer *mTimer;
+   std::unique_ptr<wxTimer> mTimer;
    long mLastStatusUpdateTime;
 
    wxStatusBar *mStatusBar;
@@ -600,7 +597,7 @@ public:
    AdornedRulerPanel *mRuler{};
    wxPanel *mTopPanel{};
    TrackPanel *mTrackPanel{};
-   TrackFactory *mTrackFactory{};
+   std::unique_ptr<TrackFactory> mTrackFactory{};
    wxPanel * mMainPanel;
    wxScrollBar *mHsbar;
    wxScrollBar *mVsbar;
@@ -664,7 +661,7 @@ public:
    // See AudacityProject::OnActivate() for an explanation of this.
    wxWindow *mLastFocusedWindow{};
 
-   ImportXMLTagHandler* mImportXMLTagHandler{};
+   std::unique_ptr<ImportXMLTagHandler> mImportXMLTagHandler;
 
    // Last auto-save file name and path (empty if none)
    wxString mAutoSaveFileName;
@@ -679,7 +676,7 @@ public:
    wxString mRecoveryAutoSaveDataDir;
 
    // The handler that handles recovery of <recordingrecovery> tags
-   RecordingRecoveryHandler* mRecordingRecoveryHandler{};
+   std::unique_ptr<RecordingRecoveryHandler> mRecordingRecoveryHandler;
 
    // Dependencies have been imported and a warning should be shown on save
    bool mImportedDependencies{ false };

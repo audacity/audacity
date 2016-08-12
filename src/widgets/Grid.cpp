@@ -411,11 +411,11 @@ Grid::Grid(wxWindow *parent,
 Grid::~Grid()
 {
 #if wxUSE_ACCESSIBILITY
-   int cnt = mChildren.GetCount();
-
-   while (cnt) {
-      GridAx *ax = (GridAx *) mChildren[--cnt];
-      delete ax;
+   int cnt = mChildren.size();
+   while (cnt--) {
+      // PRL: I found this loop destroying right-to-left.
+      // Is the sequence of destruction important?
+      mChildren.pop_back();
    }
 #endif
 }

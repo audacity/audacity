@@ -59,6 +59,7 @@ Grabber::Grabber(wxWindow * parent, wxWindowID id)
 {
    mOver = false;
    mPressed = false;
+   mAsSpacer = false;
 
    /* i18n-hint: A 'Grabber' is a region you can click and drag on
    It's used to drag a track around (when in multi-tool mode) rather
@@ -99,6 +100,10 @@ void Grabber::SendEvent(wxEventType type, const wxPoint & pos, bool escaping)
 void Grabber::DrawGrabber( wxDC & dc )
 {
    wxRect r = GetRect();
+   // PaintDC positions are relative to the grabber, not the parent window.
+   // So use 0,0 as origin for draw, so that the grabber draws right if 
+   // positioned in its parent at some non zero position.
+   r.SetPosition( wxPoint(0,0) );
    int y, left, right, top, bottom;
 
 #ifndef EXPERIMENTAL_THEMING
@@ -121,6 +126,9 @@ void Grabber::DrawGrabber( wxDC & dc )
 
 #endif
 
+   // No bumps in a spacer grabber.
+   if( mAsSpacer )
+      return;
    // Calculate the bump rectangle
    r.Deflate(3, 3);
    if ((r.GetHeight() % 4) < 2) {
@@ -163,6 +171,8 @@ void Grabber::DrawGrabber( wxDC & dc )
 //
 void Grabber::PushButton(bool state )
 {
+   if( mAsSpacer )
+      return;
    wxRect r = GetRect();
    mOver = r.Contains(ScreenToClient(wxGetMousePosition()));
 
@@ -195,6 +205,9 @@ void Grabber::OnEnter(wxMouseEvent & WXUNUSED(event))
    const auto text = GetToolTipText();
    UnsetToolTip();
    SetToolTip(text);
+
+   if( mAsSpacer )
+      return;
 
    // Redraw highlighted
    mOver = true;

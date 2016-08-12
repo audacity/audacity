@@ -251,8 +251,8 @@ public:
    bool SetSamples(samplePtr buffer, sampleFormat format,
                    sampleCount start, sampleCount len);
 
-   Envelope* GetEnvelope() { return mEnvelope; }
-   const Envelope* GetEnvelope() const { return mEnvelope; }
+   Envelope* GetEnvelope() { return mEnvelope.get(); }
+   const Envelope* GetEnvelope() const { return mEnvelope.get(); }
    BlockArray* GetSequenceBlockArray();
 
    // Get low-level access to the sequence. Whenever possible, don't use this,
@@ -348,7 +348,7 @@ public:
    // not balanced by unlocking calls.
 
    ///Delete the wave cache - force redraw.  Thread-safe
-   void DeleteWaveCache();
+   void ClearWaveCache();
 
    ///Adds an invalid region to the wavecache so it redraws that portion only.
    void AddInvalidRegion(long startSample, long endSample);
@@ -363,7 +363,7 @@ public:
    void WriteXML(XMLWriter &xmlFile) /* not override */;
 
    // Cache of values to colour pixels of Spectrogram - used by TrackArtist
-   mutable SpecPxCache    *mSpecPxCache;
+   mutable std::unique_ptr<SpecPxCache> mSpecPxCache;
 
    // AWD, Oct 2009: for pasting whitespace at the end of selection
    bool GetIsPlaceholder() const { return mIsPlaceholder; }
@@ -377,11 +377,11 @@ protected:
    int mDirty;
    bool mIsCutLine;
    std::unique_ptr<Sequence> mSequence;
-   Envelope *mEnvelope;
+   std::unique_ptr<Envelope> mEnvelope;
 
-   mutable WaveCache    *mWaveCache;
+   mutable std::unique_ptr<WaveCache> mWaveCache;
    mutable ODLock       mWaveCacheMutex;
-   mutable SpecCache    *mSpecCache;
+   mutable std::unique_ptr<SpecCache> mSpecCache;
    SampleBuffer  mAppendBuffer;
    sampleCount   mAppendBufferLen;
 

@@ -62,7 +62,7 @@ class ODManager final
    void DecrementCurrentThreads();
 
    ///Adds a wavetrack, creates a queue member.
-   void AddNewTask(ODTask* task, bool lockMutex=true);
+   void AddNewTask(movable_ptr<ODTask> &&mtask, bool lockMutex=true);
 
    ///Wakes the queue loop up by signalling its condition variable.
    void SignalTaskQueueLoop();
@@ -125,7 +125,8 @@ class ODManager final
    //private constructor - Singleton.
    ODManager();
    //private constructor - DELETE with static method Quit()
-   virtual ~ODManager();
+   friend std::default_delete < ODManager > ;
+   ~ODManager();
    ///Launches a thread for the manager and starts accepting Tasks.
    void Init();
 
@@ -136,10 +137,10 @@ class ODManager final
    void UpdateQueues();
 
    //instance
-   static ODManager* pMan;
+   static std::unique_ptr<ODManager> pMan;
 
    //List of tracks and their active and inactive tasks.
-   std::vector<ODWaveTrackTaskQueue*> mQueues;
+   std::vector<movable_ptr<ODWaveTrackTaskQueue>> mQueues;
    ODLock mQueuesMutex;
 
    //List of current Task to do.
@@ -169,7 +170,7 @@ class ODManager final
 
    //for the queue not empty comdition
    ODLock         mQueueNotEmptyCondLock;
-   ODCondition*   mQueueNotEmptyCond;
+   std::unique_ptr<ODCondition> mQueueNotEmptyCond;
 
 #ifdef __WXMAC__
 
@@ -221,7 +222,7 @@ class ODManagerHelperThread {
    class ODManagerHelperThread final : public wxThread
    {
       public:
-      ///Constructs a ODTaskThread
+      ///Constructs an ODManagerHelperThread
       ///@param task the task to be launched as an
       ODManagerHelperThread(): wxThread(){}
 

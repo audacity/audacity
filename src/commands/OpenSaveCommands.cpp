@@ -26,10 +26,10 @@ wxString OpenProjectCommandType::BuildName()
 
 void OpenProjectCommandType::BuildSignature(CommandSignature &signature)
 {
-   BoolValidator *addToHistoryValidator(new BoolValidator());
-   signature.AddParameter(wxT("AddToHistory"), true, addToHistoryValidator);
-   Validator *filenameValidator(new DefaultValidator());
-   signature.AddParameter(wxT("Filename"), wxT(""), filenameValidator);
+   auto addToHistoryValidator = make_movable<BoolValidator>();
+   signature.AddParameter(wxT("AddToHistory"), true, std::move(addToHistoryValidator));
+   auto filenameValidator = make_movable<DefaultValidator>();
+   signature.AddParameter(wxT("Filename"), wxT(""), std::move(filenameValidator));
 }
 
 CommandHolder OpenProjectCommandType::Create(std::unique_ptr<CommandOutputTarget> &&target)
@@ -70,14 +70,14 @@ wxString SaveProjectCommandType::BuildName()
 
 void SaveProjectCommandType::BuildSignature(CommandSignature &signature)
 {
-   BoolValidator *saveCompressedValidator(new BoolValidator());
-   BoolValidator *addToHistoryValidator(new BoolValidator());
+   auto saveCompressedValidator = make_movable<BoolValidator>();
+   auto addToHistoryValidator = make_movable<BoolValidator>();
 
-   signature.AddParameter(wxT("Compress"), false, saveCompressedValidator);
-   signature.AddParameter(wxT("AddToHistory"), true, addToHistoryValidator);
+   signature.AddParameter(wxT("Compress"), false, std::move(saveCompressedValidator));
+   signature.AddParameter(wxT("AddToHistory"), true, std::move(addToHistoryValidator));
 
-   Validator *filenameValidator(new DefaultValidator());
-   signature.AddParameter(wxT("Filename"), wxT(""), filenameValidator);
+   auto filenameValidator = make_movable<DefaultValidator>();
+   signature.AddParameter(wxT("Filename"), wxT(""), std::move(filenameValidator));
 }
 
 CommandHolder SaveProjectCommandType::Create(std::unique_ptr<CommandOutputTarget> &&target)

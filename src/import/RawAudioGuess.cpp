@@ -13,6 +13,8 @@
 
 **********************************************************************/
 
+#include "RawAudioGuess.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -22,7 +24,6 @@
 #include <wx/ffile.h>
 
 #include "../Internat.h"
-#include "RawAudioGuess.h"
 
 #define RAW_GUESS_DEBUG 0
 

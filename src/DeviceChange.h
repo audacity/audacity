@@ -16,6 +16,8 @@
 
 #if defined(EXPERIMENTAL_DEVICE_CHANGE_HANDLER)
 
+#include "MemoryX.h"
+
 #if defined(__WXMSW__) || defined(__WXMAC__) || defined(HAVE_LIBUDEV_H)
 #define HAVE_DEVICE_CHANGE
 #endif
@@ -48,7 +50,7 @@ private:
    void OnChange(wxCommandEvent & evt);
    void OnTimer(wxTimerEvent & evt);
 
-   DeviceChangeInterface *mListener;
+   std::unique_ptr<DeviceChangeInterface> mListener;
    wxTimer mTimer;
 
    DECLARE_EVENT_TABLE()

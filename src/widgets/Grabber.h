@@ -111,6 +111,7 @@ class Grabber final : public wxWindow
    bool AcceptsFocusFromKeyboard() const override {return false;}
 
    void PushButton(bool state);
+   void SetAsSpacer( bool bIsSpacer ) { mAsSpacer = bIsSpacer;};
 
  protected:
 
@@ -127,6 +128,7 @@ class Grabber final : public wxWindow
 
    bool mOver;
    bool mPressed;
+   bool mAsSpacer;
 
  public:
 

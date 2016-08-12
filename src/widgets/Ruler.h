@@ -12,7 +12,6 @@
 #define __AUDACITY_RULER__
 
 #include "OverlayPanel.h"
-
 #include "../MemoryX.h"
 #include <wx/bitmap.h>
 #include <wx/dc.h>
@@ -105,7 +104,7 @@ class AUDACITY_DLL_API Ruler {
    void SetFonts(const wxFont &minorFont, const wxFont &majorFont, const wxFont &minorMinorFont);
    struct Fonts { wxFont *major, *minor, *minorMinor; };
    Fonts GetFonts() const
-   { return { mMajorFont, mMinorFont, mMinorMinorFont }; }
+   { return { mMajorFont.get(), mMinorFont.get(), mMinorMinorFont.get() }; }
 
    // Copies *pScale if it is not NULL
    void SetNumberScale(const NumberScale *pScale);
@@ -181,8 +180,7 @@ private:
    int          mLengthOld;
    wxDC        *mDC;
 
-   wxFont      *mMinorFont, *mMajorFont;
-   wxFont      *mMinorMinorFont;
+   std::unique_ptr<wxFont> mMinorFont, mMajorFont, mMinorMinorFont;
    bool         mUserFonts;
 
    double       mMin, mMax;
@@ -240,7 +238,7 @@ private:
    const ZoomInfo *mUseZoomInfo;
    int          mLeftOffset;
 
-   NumberScale *mpNumberScale;
+   std::unique_ptr<NumberScale> mpNumberScale;
 };
 
 class AUDACITY_DLL_API RulerPanel final : public wxPanelWrapper {
@@ -327,8 +325,8 @@ public:
 
    void RegenerateTooltips(StatusChoice choice);
 
-   void ShowQuickPlayIndicator();
-   void HideQuickPlayIndicator();
+   void ShowQuickPlayIndicator( bool repaint_all=false);
+   void HideQuickPlayIndicator( bool repaint_all=false);
    void UpdateQuickPlayPos(wxCoord &mousPosX);
 
    bool ShowingScrubBar() const { return mShowScrubbing; }
@@ -368,7 +366,7 @@ public:
 
 private:
    QuickPlayIndicatorOverlay *GetOverlay();
-   void ShowOrHideQuickPlayIndicator(bool show);
+   void ShowOrHideQuickPlayIndicator(bool show, bool repaint_all=false);
    void DoDrawPlayRegion(wxDC * dc);
 
    enum class MenuChoice { QuickPlay, Scrub };
@@ -401,7 +399,7 @@ private:
    double mIndTime;
    double mQuickPlayPos;
 
-   SnapManager *mSnapManager;
+   std::unique_ptr<SnapManager> mSnapManager;
    bool mIsSnapped;
 
    bool   mPlayRegionLock;
