@@ -28,6 +28,7 @@ public:
    void setParameters(double rateStart, double rateEnd, double pitchStart, double pitchEnd,
                       SlideType rateSlideType, SlideType pitchSlideType,
                       bool bLinkRatePitch, bool bRateReferenceInput, bool bPitchReferenceInput);
+   void setParameters(double tempoRatio, double pitchRatio);  // Constant ratio (tempoRatio, pitchRatio)
    static double getInvertedStretchedTime(double rateStart, double rateEnd, SlideType slideType, double outputTime);
    static double getRate(double rateStart, double rateEnd, SlideType slideType, double t);
 private:
