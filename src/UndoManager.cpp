@@ -94,7 +94,7 @@ void UndoManager::CalculateSpaceUsage()
       while (wt)
       {
          // Scan all clips within current track
-         for(const auto &clip: wt->GetClips())
+         for(const auto &clip : wt->GetAllClips())
          {
             // Scan all blockfiles within current clip
             BlockArray *blocks = clip->GetSequenceBlockArray();

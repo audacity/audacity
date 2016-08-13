@@ -63,7 +63,7 @@ static void GetAllSeqBlocks(AudacityProject *project,
    while (t) {
       if (t->GetKind() == Track::Wave) {
          WaveTrack *waveTrack = static_cast<WaveTrack*>(t);
-         for(const auto &clip : waveTrack->GetClips()) {
+         for(const auto &clip : waveTrack->GetAllClips()) {
             Sequence *sequence = clip->GetSequence();
             BlockArray &blocks = sequence->GetBlockArray();
             int i;
