@@ -124,6 +124,7 @@ bool EffectStereoToMono::Process()
       count++;
    }
 
+   mOutTrack.reset();
    this->ReplaceProcessedTracks(bGoodResult);
    return bGoodResult;
 }
