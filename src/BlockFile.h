@@ -48,6 +48,13 @@ class BlockFile;
 // to do: use shared_ptr instead
 using BlockFilePtr = BlockFile *;
 
+// to do: make this a synonym for make_shared
+template< typename Result, typename... Args >
+inline Result *make_blockfile (Args && ... args)
+{
+   return new Result( std::forward< Args > ( args )... );
+}
+
 class PROFILE_DLL_API BlockFile /* not final, abstract */ {
  public:
 

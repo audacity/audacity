@@ -532,7 +532,8 @@ BlockFilePtr SimpleBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
       }
    }
 
-   return new SimpleBlockFile(std::move(fileName), len, min, max, rms);
+   return make_blockfile<SimpleBlockFile>
+      (std::move(fileName), len, min, max, rms);
 }
 
 /// Create a copy of this BlockFile, but using a different disk file.
@@ -540,8 +541,8 @@ BlockFilePtr SimpleBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
 /// @param newFileName The name of the NEW file to use.
 BlockFilePtr SimpleBlockFile::Copy(wxFileNameWrapper &&newFileName)
 {
-   BlockFile *newBlockFile = new SimpleBlockFile(std::move(newFileName), mLen,
-                                                 mMin, mMax, mRMS);
+   auto newBlockFile = make_blockfile<SimpleBlockFile>
+      (std::move(newFileName), mLen, mMin, mMax, mRMS);
 
    return newBlockFile;
 }

@@ -172,10 +172,10 @@ BlockFilePtr ODDecodeBlockFile::Copy(wxFileNameWrapper &&newFileName)
    else
    {
       //Summary File might exist in this case, but it probably (99.999% of the time) won't.
-      newBlockFile  = new ODDecodeBlockFile(std::move(newFileName),
-                                                   wxFileNameWrapper{mAudioFileName}, mAliasStart,
-                                                   mLen, mAliasChannel, mType,
-                                                   mMin, mMax, mRMS,IsSummaryAvailable());
+      newBlockFile = make_blockfile<ODDecodeBlockFile>
+         (std::move(newFileName), wxFileNameWrapper{mAudioFileName},
+          mAliasStart, mLen, mAliasChannel, mType,
+          mMin, mMax, mRMS, IsSummaryAvailable());
       //The client code will need to schedule this blockfile for OD decoding if it is going to a NEW track.
       //It can do this by checking for IsDataAvailable()==false.
    }
@@ -274,10 +274,9 @@ BlockFilePtr ODDecodeBlockFile::BuildFromXML(DirManager &dm, const wxChar **attr
       }
    }
 
-   return new ODDecodeBlockFile(std::move(summaryFileName), std::move(audioFileName),
-                                aliasStart, aliasLen, aliasChannel,decodeType,
-                                0,0,0, false);
-
+   return make_blockfile<ODDecodeBlockFile>
+      (std::move(summaryFileName), std::move(audioFileName),
+       aliasStart, aliasLen, aliasChannel, decodeType, 0, 0, 0, false);
 }
 
 

@@ -71,13 +71,13 @@ BlockFilePtr SilentBlockFile::BuildFromXML(DirManager & WXUNUSED(dm), const wxCh
          len = nValue;
    }
 
-   return new SilentBlockFile(len);
+   return make_blockfile<SilentBlockFile>(len);
 }
 
 /// Create a copy of this BlockFile
 BlockFilePtr SilentBlockFile::Copy(wxFileNameWrapper &&)
 {
-   BlockFile *newBlockFile = new SilentBlockFile(mLen);
+   auto newBlockFile = make_blockfile<SilentBlockFile>(mLen);
 
    return newBlockFile;
 }

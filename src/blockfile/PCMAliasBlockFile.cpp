@@ -152,10 +152,9 @@ int PCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
 /// @param newFileName The filename to copy the summary data to.
 BlockFilePtr PCMAliasBlockFile::Copy(wxFileNameWrapper &&newFileName)
 {
-   BlockFile *newBlockFile = new PCMAliasBlockFile(std::move(newFileName),
-                                                   wxFileNameWrapper{mAliasedFileName}, mAliasStart,
-                                                   mLen, mAliasChannel,
-                                                   mMin, mMax, mRMS);
+   auto newBlockFile = make_blockfile<PCMAliasBlockFile>
+      (std::move(newFileName), wxFileNameWrapper{mAliasedFileName},
+       mAliasStart, mLen, mAliasChannel, mMin, mMax, mRMS);
 
    return newBlockFile;
 }
@@ -249,9 +248,9 @@ BlockFilePtr PCMAliasBlockFile::BuildFromXML(DirManager &dm, const wxChar **attr
       }
    }
 
-   return new PCMAliasBlockFile(std::move(summaryFileName), std::move(aliasFileName),
-                                aliasStart, aliasLen, aliasChannel,
-                                min, max, rms);
+   return make_blockfile<PCMAliasBlockFile>
+      (std::move(summaryFileName), std::move(aliasFileName),
+       aliasStart, aliasLen, aliasChannel, min, max, rms);
 }
 
 void PCMAliasBlockFile::Recover(void)

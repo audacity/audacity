@@ -228,19 +228,18 @@ BlockFilePtr ODPCMAliasBlockFile::Copy(wxFileNameWrapper &&newFileName)
    //PCMAliasBlockFile is to lock on exit, and this will cause orphaned blockfiles..
    if(IsSummaryAvailable() && mHasBeenSaved)
    {
-      newBlockFile  = new PCMAliasBlockFile(std::move(newFileName),
-                                                   wxFileNameWrapper{mAliasedFileName}, mAliasStart,
-                                                   mLen, mAliasChannel,
-                                                   mMin, mMax, mRMS);
+      newBlockFile  = make_blockfile<PCMAliasBlockFile>
+         (std::move(newFileName), wxFileNameWrapper{mAliasedFileName},
+          mAliasStart, mLen, mAliasChannel, mMin, mMax, mRMS);
 
    }
    else
    {
       //Summary File might exist in this case, but it might not.
-      newBlockFile  = new ODPCMAliasBlockFile(std::move(newFileName),
-                                                   wxFileNameWrapper{mAliasedFileName}, mAliasStart,
-                                                   mLen, mAliasChannel,
-                                                   mMin, mMax, mRMS,IsSummaryAvailable());
+      newBlockFile  = make_blockfile<ODPCMAliasBlockFile>
+         (std::move(newFileName), wxFileNameWrapper{mAliasedFileName},
+          mAliasStart, mLen, mAliasChannel, mMin, mMax, mRMS,
+          IsSummaryAvailable());
       //The client code will need to schedule this blockfile for OD summarizing if it is going to a NEW track.
    }
 
@@ -339,9 +338,9 @@ BlockFilePtr ODPCMAliasBlockFile::BuildFromXML(DirManager &dm, const wxChar **at
       }
    }
 
-   return new ODPCMAliasBlockFile(std::move(summaryFileName), std::move(aliasFileName),
-                                    aliasStart, aliasLen, aliasChannel,
-                                    0,0,0, false);
+   return make_blockfile<ODPCMAliasBlockFile>
+      (std::move(summaryFileName), std::move(aliasFileName),
+       aliasStart, aliasLen, aliasChannel, 0, 0, 0, false);
 }
 
 

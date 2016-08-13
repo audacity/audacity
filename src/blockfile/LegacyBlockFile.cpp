@@ -328,7 +328,8 @@ BlockFilePtr LegacyBlockFile::BuildFromXML(const wxString &projDir, const wxChar
       }
    }
 
-   return new LegacyBlockFile(std::move(fileName), format, summaryLen, len, noRMS);
+   return make_blockfile<LegacyBlockFile>
+      (std::move(fileName), format, summaryLen, len, noRMS);
 }
 
 /// Create a copy of this BlockFile, but using a different disk file.
@@ -336,11 +337,10 @@ BlockFilePtr LegacyBlockFile::BuildFromXML(const wxString &projDir, const wxChar
 /// @param newFileName The name of the NEW file to use.
 BlockFilePtr LegacyBlockFile::Copy(wxFileNameWrapper &&newFileName)
 {
-   return new LegacyBlockFile(std::move(newFileName),
-                                                 mFormat,
-                                                 mSummaryInfo.totalSummaryBytes,
-                                                 mLen,
-                                                 mSummaryInfo.fields < 3);
+   return make_blockfile<LegacyBlockFile>
+       (std::move(newFileName),
+        mFormat, mSummaryInfo.totalSummaryBytes,
+        mLen, mSummaryInfo.fields < 3);
 }
 
 wxLongLong LegacyBlockFile::GetSpaceUsage() const

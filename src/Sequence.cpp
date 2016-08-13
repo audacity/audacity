@@ -678,7 +678,7 @@ bool Sequence::InsertSilence(sampleCount s0, sampleCount len)
 
    BlockFilePtr silentFile {};
    if (len >= idealSamples)
-      silentFile = new SilentBlockFile(idealSamples);
+      silentFile = make_blockfile<SilentBlockFile>(idealSamples);
    while (len >= idealSamples) {
       sTrack.mBlock.push_back(SeqBlock(silentFile, pos));
       mDirManager->Ref(silentFile);
@@ -689,7 +689,8 @@ bool Sequence::InsertSilence(sampleCount s0, sampleCount len)
    if (silentFile)
       mDirManager->Deref(silentFile);
    if (len) {
-      sTrack.mBlock.push_back(SeqBlock(new SilentBlockFile(len), pos));
+      sTrack.mBlock.push_back(SeqBlock(
+         make_blockfile<SilentBlockFile>(len), pos));
       pos += len;
    }
 
@@ -971,7 +972,7 @@ void Sequence::HandleXMLEndTag(const wxChar *tag)
                Internat::ToString(((wxLongLong)mMaxSamples).ToDouble(), 0).c_str());
             len = mMaxSamples;
          }
-         block.f = new SilentBlockFile(len);
+         block.f = make_blockfile<SilentBlockFile>(len);
          wxLogWarning(
             wxT("Gap detected in project file. Replacing missing block file with silence."));
          mErrorOpening = true;
@@ -1233,7 +1234,7 @@ bool Sequence::Set(samplePtr buffer, sampleFormat format,
              blen == fileLength) {
 
             mDirManager->Deref(block.f);
-            block.f = new SilentBlockFile(blen);
+            block.f = make_blockfile<SilentBlockFile>(blen);
          }
          else {
             // Odd partial blocks of silence at start or end.

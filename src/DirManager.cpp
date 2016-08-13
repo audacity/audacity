@@ -871,11 +871,10 @@ BlockFilePtr DirManager::NewSimpleBlockFile(
    wxFileNameWrapper filePath{ MakeBlockFileName() };
    const wxString fileName{ filePath.GetName() };
 
-   BlockFile *newBlockFile =
-       new SimpleBlockFile(std::move(filePath), sampleData, sampleLen, format,
-                           allowDeferredWrite);
+   auto newBlockFile = make_blockfile<SimpleBlockFile>
+      (std::move(filePath), sampleData, sampleLen, format, allowDeferredWrite);
 
-   mBlockFileHash[fileName]=newBlockFile;
+   mBlockFileHash[fileName] = newBlockFile;
 
    return newBlockFile;
 }
@@ -887,10 +886,9 @@ BlockFilePtr DirManager::NewAliasBlockFile(
    wxFileNameWrapper filePath{ MakeBlockFileName() };
    const wxString fileName = filePath.GetName();
 
-   BlockFile *newBlockFile =
-       new PCMAliasBlockFile(std::move(filePath),
-                             wxFileNameWrapper{aliasedFile},
-                             aliasStart, aliasLen, aliasChannel);
+   auto newBlockFile = make_blockfile<PCMAliasBlockFile>
+      (std::move(filePath), wxFileNameWrapper{aliasedFile},
+       aliasStart, aliasLen, aliasChannel);
 
    mBlockFileHash[fileName]=newBlockFile;
    aliasList.Add(aliasedFile);
@@ -905,9 +903,9 @@ BlockFilePtr DirManager::NewODAliasBlockFile(
    wxFileNameWrapper filePath{ MakeBlockFileName() };
    const wxString fileName{ filePath.GetName() };
 
-   BlockFile *newBlockFile =
-       new ODPCMAliasBlockFile(std::move(filePath),
-                             wxFileNameWrapper{aliasedFile}, aliasStart, aliasLen, aliasChannel);
+   auto newBlockFile = make_blockfile<ODPCMAliasBlockFile>
+      (std::move(filePath), wxFileNameWrapper{aliasedFile},
+       aliasStart, aliasLen, aliasChannel);
 
    mBlockFileHash[fileName]=newBlockFile;
    aliasList.Add(aliasedFile);
@@ -922,9 +920,9 @@ BlockFilePtr DirManager::NewODDecodeBlockFile(
    wxFileNameWrapper filePath{ MakeBlockFileName() };
    const wxString fileName{ filePath.GetName() };
 
-   BlockFile *newBlockFile =
-       new ODDecodeBlockFile(std::move(filePath),
-                             wxFileNameWrapper{aliasedFile}, aliasStart, aliasLen, aliasChannel, decodeType);
+   auto newBlockFile = make_blockfile<ODDecodeBlockFile>
+      (std::move(filePath), wxFileNameWrapper{ aliasedFile },
+       aliasStart, aliasLen, aliasChannel, decodeType);
 
    mBlockFileHash[fileName]=newBlockFile;
    aliasList.Add(aliasedFile); //OD TODO: check to see if we need to remove this when done decoding.

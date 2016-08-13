@@ -53,12 +53,10 @@ LegacyAliasBlockFile::~LegacyAliasBlockFile()
 /// @param newFileName The filename to copy the summary data to.
 BlockFilePtr LegacyAliasBlockFile::Copy(wxFileNameWrapper &&newFileName)
 {
-   BlockFile *newBlockFile =
-      new LegacyAliasBlockFile(std::move(newFileName),
-                               wxFileNameWrapper{mAliasedFileName}, mAliasStart,
-                               mLen, mAliasChannel,
-                               mSummaryInfo.totalSummaryBytes,
-                               mSummaryInfo.fields < 3);
+   auto newBlockFile = make_blockfile<LegacyAliasBlockFile>
+      (std::move(newFileName), wxFileNameWrapper{ mAliasedFileName },
+       mAliasStart, mLen, mAliasChannel,
+       mSummaryInfo.totalSummaryBytes, mSummaryInfo.fields < 3);
 
    return newBlockFile;
 }
@@ -133,9 +131,9 @@ BlockFilePtr LegacyAliasBlockFile::BuildFromXML(const wxString &projDir, const w
       }
    }
 
-   return new LegacyAliasBlockFile(std::move(summaryFileName), std::move(aliasFileName),
-                                   aliasStart, aliasLen, aliasChannel,
-                                   summaryLen, noRMS);
+   return make_blockfile<LegacyAliasBlockFile>
+      (std::move(summaryFileName), std::move(aliasFileName),
+       aliasStart, aliasLen, aliasChannel, summaryLen, noRMS);
 }
 
 // regenerates the summary info, doesn't deal with missing alias files
