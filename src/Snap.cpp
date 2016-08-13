@@ -33,6 +33,12 @@ TrackClip::TrackClip(Track *t, WaveClip *c)
    clip = c;
 }
 
+#ifndef __AUDACITY_OLD_STD__
+TrackClip::TrackClip(TrackClip&& tc)
+   : track{tc.track}, origTrack{tc.origTrack}, dstTrack{tc.dstTrack},
+   clip{tc.clip}, holder{std::move(tc.holder)} {}
+#endif
+
 TrackClip::~TrackClip()
 {
 
