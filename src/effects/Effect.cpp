@@ -94,7 +94,6 @@ Effect::Effect()
    mWarper = NULL;
 
    mTracks = NULL;
-   mOutputTracks = NULL;
    mOutputTracksType = Track::None;
    mT0 = 0.0;
    mT1 = 0.0;
@@ -136,11 +135,6 @@ Effect::Effect()
 
 Effect::~Effect()
 {
-   if (mOutputTracks)
-   {
-      delete mOutputTracks;
-   }
-
    if (mUIDialog)
    {
       mUIDialog->Close();
@@ -1168,11 +1162,7 @@ bool Effect::DoEffect(wxWindow *parent,
 {
    wxASSERT(selectedRegion->duration() >= 0.0);
 
-   if (mOutputTracks)
-   {
-      delete mOutputTracks;
-      mOutputTracks = NULL;
-   }
+   mOutputTracks.reset();
 
    mFactory = factory;
    mProjectRate = projectRate;
@@ -1244,11 +1234,7 @@ bool Effect::DoEffect(wxWindow *parent,
 
    End();
 
-   if (mOutputTracks)
-   {
-      delete mOutputTracks;
-      mOutputTracks = NULL;
-   }
+   mOutputTracks.reset();
 
    if (returnVal)
    {
@@ -1327,7 +1313,7 @@ bool Effect::ProcessPass()
    mBufferSize = 0;
    mBlockSize = 0;
 
-   TrackListIterator iter(mOutputTracks);
+   TrackListIterator iter(mOutputTracks.get());
    int count = 0;
    bool clear = false;
    Track* t = iter.First();
@@ -2079,7 +2065,7 @@ void Effect::CopyInputTracks(int trackType)
    mIMap.Clear();
    mOMap.Clear();
 
-   mOutputTracks = new TrackList();
+   mOutputTracks = std::make_unique<TrackList>();
    mOutputTracksType = trackType;
 
    //iterate over tracks of type trackType (All types if Track::All)
@@ -2201,7 +2187,7 @@ auto Effect::ModifyAnalysisTrack
 // Else clear and DELETE mOutputTracks copies.
 void Effect::ReplaceProcessedTracks(const bool bGoodResult)
 {
-   wxASSERT(mOutputTracks != NULL); // Make sure we at least did the CopyInputTracks().
+   wxASSERT(mOutputTracks); // Make sure we at least did the CopyInputTracks().
 
    if (!bGoodResult) {
       // Processing failed or was cancelled so throw away the processed tracks.
@@ -2277,8 +2263,7 @@ void Effect::ReplaceProcessedTracks(const bool bGoodResult)
    wxASSERT(mOutputTracks->empty());
 
    // The output list is no longer needed
-   delete mOutputTracks;
-   mOutputTracks = NULL;
+   mOutputTracks.reset();
    mOutputTracksType = Track::None;
 }
 
@@ -2665,8 +2650,7 @@ void Effect::Preview(bool dryOnly)
       FocusDialog->SetFocus();
    }
 
-   delete mOutputTracks;
-   mOutputTracks = NULL;
+   mOutputTracks.reset();
 
    mTracks->Clear();
    delete mTracks;

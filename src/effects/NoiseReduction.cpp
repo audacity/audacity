@@ -600,7 +600,7 @@ bool EffectNoiseReduction::Process()
 
    this->CopyInputTracks(); // Set up mOutputTracks.
 
-   SelectedTrackListOfKindIterator iter(Track::Wave, mOutputTracks);
+   SelectedTrackListOfKindIterator iter(Track::Wave, mOutputTracks.get());
    WaveTrack *track = (WaveTrack *) iter.First();
    if (!track)
       return false;

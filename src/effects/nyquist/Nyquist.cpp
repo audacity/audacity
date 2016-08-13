@@ -456,7 +456,7 @@ bool NyquistEffect::Process()
    // correct sync-lock group behavior when the timeline is affected; then we just want
    // to operate on the selected wave tracks
    CopyInputTracks(Track::All);
-   SelectedTrackListOfKindIterator iter(Track::Wave, mOutputTracks);
+   SelectedTrackListOfKindIterator iter(Track::Wave, mOutputTracks.get());
    mCurTrack[0] = (WaveTrack *) iter.First();
    mOutputTime = 0;
    mCount = 0;
@@ -472,7 +472,7 @@ bool NyquistEffect::Process()
    mTrackIndex = 0;
 
    mNumSelectedChannels = 0;
-   SelectedTrackListOfKindIterator sel(Track::Wave, mOutputTracks);
+   SelectedTrackListOfKindIterator sel(Track::Wave, mOutputTracks.get());
    for (WaveTrack *t = (WaveTrack *) sel.First(); t; t = (WaveTrack *) sel.Next()) {
       mNumSelectedChannels++;
       if (mT1 >= mT0) {
@@ -620,7 +620,7 @@ bool NyquistEffect::Process()
          }
 
          // Check whether we're in the same group as the last selected track
-         SyncLockedTracksIterator gIter(mOutputTracks);
+         SyncLockedTracksIterator gIter(mOutputTracks.get());
          Track *gt = gIter.StartWith(mCurTrack[0]);
          mFirstInGroup = !gtLast || (gtLast != gt);
          gtLast = gt;
@@ -1110,7 +1110,7 @@ bool NyquistEffect::ProcessOne()
       unsigned int l;
       LabelTrack *ltrack = NULL;
 
-      TrackListIterator iter(mOutputTracks);
+      TrackListIterator iter(mOutputTracks.get());
       for (Track *t = iter.First(); t; t = iter.Next()) {
          if (t->GetKind() == Track::Label) {
             ltrack = (LabelTrack *)t;
@@ -1225,7 +1225,7 @@ bool NyquistEffect::ProcessOne()
          
       // If we were first in the group adjust non-selected group tracks
       if (mFirstInGroup) {
-         SyncLockedTracksIterator git(mOutputTracks);
+         SyncLockedTracksIterator git(mOutputTracks.get());
          Track *t;
          for (t = git.StartWith(mCurTrack[i]); t; t = git.Next())
          {

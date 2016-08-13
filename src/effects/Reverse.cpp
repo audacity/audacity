@@ -68,7 +68,7 @@ bool EffectReverse::Process()
    this->CopyInputTracks(Track::All); // Set up mOutputTracks.
    bool bGoodResult = true;
 
-   TrackListIterator iter(mOutputTracks);
+   TrackListIterator iter(mOutputTracks.get());
    Track *t = iter.First();
    int count = 0;
    while (t) {
