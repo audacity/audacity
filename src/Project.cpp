@@ -1230,14 +1230,9 @@ void AudacityProject::RedrawProject(const bool bForceWaveTracks /*= false*/)
       {
          if (pTrack->GetKind() == Track::Wave)
          {
-            WaveTrack* pWaveTrack = (WaveTrack*)pTrack;
-            WaveClipList::compatibility_iterator node = pWaveTrack->GetClipIterator();
-            while (node)
-            {
-               WaveClip *clip = node->GetData();
+            WaveTrack* pWaveTrack = static_cast<WaveTrack*>(pTrack);
+            for (const auto &clip: pWaveTrack->GetClips())
                clip->MarkChanged();
-               node = node->GetNext();
-            }
          }
          pTrack = iter.Next();
       }
@@ -2954,10 +2949,8 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
                if (t->GetKind() == Track::Wave)
                {
                   // Only wave tracks have a notion of "changed".
-                  for (WaveClipList::compatibility_iterator clipIter = ((WaveTrack*)t)->GetClipIterator();
-                        clipIter;
-                        clipIter=clipIter->GetNext())
-                     clipIter->GetData()->MarkChanged();
+                  for (const auto &clip: static_cast<WaveTrack*>(t)->GetClips())
+                     clip->MarkChanged();
                }
                t = iter.Next();
             }

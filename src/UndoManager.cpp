@@ -94,11 +94,10 @@ void UndoManager::CalculateSpaceUsage()
       while (wt)
       {
          // Scan all clips within current track
-         WaveClipList::compatibility_iterator it = wt->GetClipIterator();
-         while (it)
+         for(const auto &clip: wt->GetClips())
          {
             // Scan all blockfiles within current clip
-            BlockArray *blocks = it->GetData()->GetSequenceBlockArray();
+            BlockArray *blocks = clip->GetSequenceBlockArray();
             for (const auto &block : *blocks)
             {
                BlockFile *file = block.f;
@@ -113,8 +112,6 @@ void UndoManager::CalculateSpaceUsage()
                // Add file to current set
                cur->insert(file);
             }
-            
-            it = it->GetNext();
          }
 
          wt = (WaveTrack *) iter.Next();

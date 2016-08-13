@@ -24,7 +24,6 @@
 
 #include <wx/gdicmn.h>
 #include <wx/longlong.h>
-#include <wx/list.h>
 #include <wx/msgdlg.h>
 
 #include <vector>
@@ -150,8 +149,13 @@ public:
 
 class WaveClip;
 
-WX_DECLARE_USER_EXPORTED_LIST(WaveClip, WaveClipList, AUDACITY_DLL_API);
-WX_DEFINE_USER_EXPORTED_ARRAY_PTR(WaveClip*, WaveClipArray, class AUDACITY_DLL_API);
+// Array of pointers that assume ownership
+using WaveClipHolders = std::vector < movable_ptr< WaveClip > >;
+using WaveClipConstHolders = std::vector < movable_ptr< const WaveClip > >;
+
+// Temporary arrays of mere pointers
+using WaveClipPointers = std::vector < WaveClip* >;
+using WaveClipConstPointers = std::vector < const WaveClip* >;
 
 // A bundle of arrays needed for drawing waveforms.  The object may or may not
 // own the storage for those arrays.  If it does, it destroys them.
@@ -204,6 +208,7 @@ class AUDACITY_DLL_API WaveClip final : public XMLTagHandler
 {
 private:
    // It is an error to copy a WaveClip without specifying the DirManager.
+
    WaveClip(const WaveClip&) PROHIBITED;
    WaveClip& operator= (const WaveClip&) PROHIBITED;
 
@@ -281,7 +286,7 @@ public:
 
    // Set/clear/get rectangle that this WaveClip fills on screen. This is
    // called by TrackArtist while actually drawing the tracks and clips.
-   void ClearDisplayRect();
+   void ClearDisplayRect() const;
    void SetDisplayRect(const wxRect& r) const;
    void GetDisplayRect(wxRect* r);
 
@@ -318,7 +323,10 @@ public:
    bool InsertSilence(double t, double len);
 
    /// Get access to cut lines list
-   WaveClipList* GetCutLines() { return &mCutLines; }
+   WaveClipHolders &GetCutLines() { return mCutLines; }
+   const WaveClipConstHolders &GetCutLines() const
+      { return reinterpret_cast< const WaveClipConstHolders& >( mCutLines ); }
+   size_t NumCutLines() const { return mCutLines.size(); }
 
    /** Find cut line at (approximately) this position. Returns true and fills
     * in cutLineStart and cutLineEnd (if specified) if a cut line at this
@@ -387,7 +395,7 @@ protected:
 
    // Cut Lines are nothing more than ordinary wave clips, with the
    // offset relative to the start of the clip.
-   WaveClipList mCutLines;
+   WaveClipHolders mCutLines;
 
    // AWD, Oct. 2009: for whitespace-at-end-of-selection pasting
    bool mIsPlaceholder;

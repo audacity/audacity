@@ -932,15 +932,14 @@ bool NyquistEffect::ProcessOne()
       float maxPeak = 0.0;
       wxString clips;
       for (int i = 0; i < mCurNumChannels; i++) {
-         WaveClipArray ca;
-         mCurTrack[i]->FillSortedClipArray(ca);
+         auto ca = mCurTrack[i]->SortedClipArray();
          // A list of clips for mono, or an array of lists for multi-channel.
          if (mCurNumChannels > 1) clips += wxT("(list ");
          // Each clip is a list (start-time, end-time)
-         for (size_t j = 0; j < ca.GetCount(); j++) {
+         for (const auto clip: ca) {
             clips += wxString::Format(wxT("(list (float %s) (float %s))"),
-                                      Internat::ToString(ca[j]->GetStartTime()).c_str(),
-                                      Internat::ToString(ca[j]->GetEndTime()).c_str());
+                                      Internat::ToString(clip->GetStartTime()).c_str(),
+                                      Internat::ToString(clip->GetEndTime()).c_str());
          }
          if (mCurNumChannels > 1) clips += wxT(" )");
 

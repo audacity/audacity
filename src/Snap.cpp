@@ -21,11 +21,21 @@
 
 #include <wx/arrimpl.cpp>
 
-WX_DEFINE_USER_EXPORTED_OBJARRAY(TrackClipArray);
-
 inline bool operator < (SnapPoint s1, SnapPoint s2)
 {
    return s1.t < s2.t;
+}
+
+TrackClip::TrackClip(Track *t, WaveClip *c)
+{
+   track = origTrack = t;
+   dstTrack = NULL;
+   clip = c;
+}
+
+TrackClip::~TrackClip()
+{
+
 }
 
 SnapManager::SnapManager(TrackList *tracks,
@@ -118,18 +128,16 @@ void SnapManager::Reinit()
       }
       else if (track->GetKind() == Track::Wave)
       {
-         WaveTrack *waveTrack = (WaveTrack *)track;
-         WaveClipList::compatibility_iterator it;
-         for (it = waveTrack->GetClipIterator(); it; it = it->GetNext())
+         WaveTrack *waveTrack = static_cast<WaveTrack *>(track);
+         for (const auto &clip: waveTrack->GetClips())
          {
-            WaveClip *clip = it->GetData();
             if (mClipExclusions)
             {
                bool skip = false;
-               for (size_t j = 0, cnt = mClipExclusions->GetCount(); j < cnt; ++j)
+               for (size_t j = 0, cnt = mClipExclusions->size(); j < cnt; ++j)
                {
-                  if (mClipExclusions->Item(j).track == waveTrack &&
-                      mClipExclusions->Item(j).clip == clip)
+                  if ((*mClipExclusions)[j].track == waveTrack &&
+                      (*mClipExclusions)[j].clip == clip.get())
                   {
                      skip = true;
                      break;

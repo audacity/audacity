@@ -62,16 +62,13 @@ static void GetAllSeqBlocks(AudacityProject *project,
    Track *t = iter.First();
    while (t) {
       if (t->GetKind() == Track::Wave) {
-         WaveTrack *waveTrack = (WaveTrack *)t;
-         WaveClipList::compatibility_iterator node = waveTrack->GetClipIterator();
-         while(node) {
-            WaveClip *clip = node->GetData();
+         WaveTrack *waveTrack = static_cast<WaveTrack*>(t);
+         for(const auto &clip : waveTrack->GetClips()) {
             Sequence *sequence = clip->GetSequence();
             BlockArray &blocks = sequence->GetBlockArray();
             int i;
             for (i = 0; i < (int)blocks.size(); i++)
                outBlocks->push_back(&blocks[i]);
-            node = node->GetNext();
          }
       }
       t = iter.Next();
