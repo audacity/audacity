@@ -34,7 +34,8 @@ public:
    TrackClip(Track *t, WaveClip *c);
 
 #ifndef __AUDACITY_OLD_STD__
-   TrackClip(TrackClip&&) = default;
+   // TrackClip(TrackClip&&) = default; is not supported by vs2013/5 so explicit version needed
+   TrackClip(TrackClip&&);
 #endif
 
    ~TrackClip();
