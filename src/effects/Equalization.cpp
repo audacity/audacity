@@ -220,7 +220,7 @@ EffectEqualization::EffectEqualization()
    mCurve = NULL;
    mPanel = NULL;
 
-   hFFT = InitializeFFT(windowSize);
+   hFFT = GetFFT(windowSize);
 
    SetLinearEffectFlag(true);
 
@@ -282,9 +282,6 @@ EffectEqualization::EffectEqualization()
 
 EffectEqualization::~EffectEqualization()
 {
-   if(hFFT)
-      EndFFT(hFFT);
-   hFFT = NULL;
 }
 
 // IdentInterface implementation
@@ -1319,7 +1316,7 @@ void EffectEqualization::Filter(size_t len, float *buffer)
 {
    float re,im;
    // Apply FFT
-   RealFFTf(buffer, hFFT);
+   RealFFTf(buffer, hFFT.get());
    //FFT(len, false, inr, NULL, outr, outi);
 
    // Apply filter
@@ -1336,8 +1333,8 @@ void EffectEqualization::Filter(size_t len, float *buffer)
    mFFTBuffer[1] = buffer[1] * mFilterFuncR[len/2];
 
    // Inverse FFT and normalization
-   InverseRealFFTf(mFFTBuffer.get(), hFFT);
-   ReorderToTime(hFFT, mFFTBuffer.get(), buffer);
+   InverseRealFFTf(mFFTBuffer.get(), hFFT.get());
+   ReorderToTime(hFFT.get(), mFFTBuffer.get(), buffer);
 }
 
 //

@@ -273,7 +273,8 @@ protected:
 };
 
 static void ComputeSpectrumUsingRealFFTf
-   (float * __restrict buffer, HFFT hFFT, const float * __restrict window, size_t len, float * __restrict out)
+   (float * __restrict buffer, const FFTParam *hFFT,
+    const float * __restrict window, size_t len, float * __restrict out)
 {
    size_t i;
    if(len > hFFT->Points * 2)
@@ -924,7 +925,7 @@ bool SpecCache::CalculateOneSpectrum
       }
       else if (reassignment) {
          static const double epsilon = 1e-16;
-         const HFFT hFFT = settings.hFFT;
+         const auto hFFT = settings.hFFT.get();
 
          float *const scratch2 = scratch + fftLen;
          std::copy(scratch, scratch2, scratch2);
@@ -1024,7 +1025,7 @@ bool SpecCache::CalculateOneSpectrum
 
          // This function mutates useBuffer
          ComputeSpectrumUsingRealFFTf
-            (useBuffer, settings.hFFT, settings.window.get(), fftLen, results);
+            (useBuffer, settings.hFFT.get(), settings.window.get(), fftLen, results);
          if (!gainFactors.empty()) {
             // Apply a frequency-dependant gain factor
             for (size_t ii = 0; ii < nBins; ++ii)
@@ -1160,7 +1161,7 @@ void SpecCache::Populate
 #endif
          for (auto xx = lowerBoundX; xx < upperBoundX; ++xx) {
             float *const results = &freq[nBins * xx];
-            const HFFT hFFT = settings.hFFT;
+            const auto hFFT = settings.hFFT.get();
             for (size_t ii = 0; ii < nBins; ++ii) {
                float &power = results[ii];
                if (power <= 0)

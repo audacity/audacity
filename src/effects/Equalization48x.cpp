@@ -688,7 +688,7 @@ void EffectEqualization48x::Filter1x(size_t len,
    int i;
    float real, imag;
    // Apply FFT
-   RealFFTf1x(buffer, mEffectEqualization->hFFT);
+   RealFFTf1x(buffer, mEffectEqualization->hFFT.get());
 
    // Apply filter
    // DC component is purely real
@@ -721,8 +721,8 @@ void EffectEqualization48x::Filter1x(size_t len,
    scratchBuffer[1] = buffer[1] * filterFuncR;
 
    // Inverse FFT and normalization
-   InverseRealFFTf1x(scratchBuffer, mEffectEqualization->hFFT);
-   ReorderToTime1x(mEffectEqualization->hFFT, scratchBuffer, buffer);
+   InverseRealFFTf1x(scratchBuffer, mEffectEqualization->hFFT.get());
+   ReorderToTime1x(mEffectEqualization->hFFT.get(), scratchBuffer, buffer);
 }
 
 bool EffectEqualization48x::ProcessBuffer4x(BufferInfo *bufferInfo)
@@ -981,7 +981,7 @@ void EffectEqualization48x::Filter4x(size_t len,
    int i;
    __m128 real128, imag128;
    // Apply FFT
-   RealFFTf4x(buffer, mEffectEqualization->hFFT);
+   RealFFTf4x(buffer, mEffectEqualization->hFFT.get());
 
    // Apply filter
    // DC component is purely real
@@ -1015,8 +1015,8 @@ void EffectEqualization48x::Filter4x(size_t len,
    localFFTBuffer[1] = _mm_mul_ps(localBuffer[1], filterFuncR);
 
    // Inverse FFT and normalization
-   InverseRealFFTf4x(scratchBuffer, mEffectEqualization->hFFT);
-   ReorderToTime4x(mEffectEqualization->hFFT, scratchBuffer, buffer);
+   InverseRealFFTf4x(scratchBuffer, mEffectEqualization->hFFT.get());
+   ReorderToTime4x(mEffectEqualization->hFFT.get(), scratchBuffer, buffer);
 }
 
 #ifdef __AVX_ENABLED
