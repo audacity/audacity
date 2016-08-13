@@ -413,7 +413,6 @@ private:
 CommandManager::CommandManager():
    mCurrentID(17000),
    mCurrentMenuName(COMMAND),
-   mCurrentMenu(NULL),
    mDefaultFlags(AlwaysEnabledFlag),
    mDefaultMask(AlwaysEnabledFlag)
 {
@@ -442,7 +441,6 @@ void CommandManager::PurgeData()
    mCommandKeyHash.clear();
    mCommandIDHash.clear();
 
-   mCurrentMenu = NULL;
    mCurrentMenuName = COMMAND;
    mCurrentID = 0;
 }
@@ -504,9 +502,7 @@ wxMenuBar * CommandManager::CurrentMenuBar() const
 ///
 void CommandManager::BeginMenu(const wxString & tName)
 {
-   wxMenu *tmpMenu = new wxMenu();
-
-   mCurrentMenu = tmpMenu;
+   mCurrentMenu = std::make_unique<wxMenu>();
    mCurrentMenuName = tName;
 }
 
@@ -519,8 +515,7 @@ void CommandManager::EndMenu()
    // Add the menu to the menubar after all menu items have been
    // added to the menu to allow OSX to rearrange special menu
    // items like Preferences, About, and Quit.
-   CurrentMenuBar()->Append(mCurrentMenu, mCurrentMenuName);
-   mCurrentMenu = NULL;
+   CurrentMenuBar()->Append(mCurrentMenu.release(), mCurrentMenuName);
    mCurrentMenuName = COMMAND;
 }
 
@@ -530,14 +525,10 @@ void CommandManager::EndMenu()
 /// the function's argument.
 wxMenu* CommandManager::BeginSubMenu(const wxString & tName)
 {
-   const auto result = new wxMenu{};
-#ifdef __AUDACITY_OLD_STD__
-   mSubMenuList.push_back(SubMenuListEntry{ tName, result });
-#else
-   mSubMenuList.emplace_back(tName, result);
-#endif
+   mSubMenuList.push_back
+      (make_movable< SubMenuListEntry > ( tName, std::make_unique<wxMenu>() ));
    mbSeparatorAllowed = false;
-   return result;
+   return mSubMenuList.back()->menu.get();
 }
 
 
@@ -548,13 +539,14 @@ wxMenu* CommandManager::BeginSubMenu(const wxString & tName)
 void CommandManager::EndSubMenu()
 {
    //Save the submenu's information
-   SubMenuListEntry tmpSubMenu = mSubMenuList.back();
+   SubMenuListEntry tmpSubMenu { std::move( *mSubMenuList.back() ) };
 
    //Pop off the NEW submenu so CurrentMenu returns the parent of the submenu
    mSubMenuList.pop_back();
 
    //Add the submenu to the current menu
-   CurrentMenu()->Append(0, tmpSubMenu.name, tmpSubMenu.menu, tmpSubMenu.name);
+   CurrentMenu()->Append
+      (0, tmpSubMenu.name, tmpSubMenu.menu.release(), tmpSubMenu.name);
    mbSeparatorAllowed = true;
 }
 
@@ -567,7 +559,7 @@ wxMenu * CommandManager::CurrentSubMenu() const
    if(mSubMenuList.empty())
       return NULL;
 
-   return mSubMenuList.back().menu;
+   return mSubMenuList.back()->menu.get();
 }
 
 ///
@@ -583,7 +575,7 @@ wxMenu * CommandManager::CurrentMenu() const
 
    if(!tmpCurrentSubMenu)
    {
-      return mCurrentMenu;
+      return mCurrentMenu.get();
    }
 
    return tmpCurrentSubMenu;
@@ -834,7 +826,7 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & name,
 
       wxString labelPrefix;
       if (!mSubMenuList.empty()) {
-         labelPrefix = mSubMenuList.back().name;
+         labelPrefix = mSubMenuList.back()->name;
       }
 
       // wxMac 2.5 and higher will do special things with the

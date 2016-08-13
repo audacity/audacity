@@ -439,7 +439,7 @@ protected:
    double         mSampleRate;
    TrackFactory   *mFactory;
    TrackList      *mTracks;      // the complete list of all tracks
-   TrackList      *mOutputTracks; // used only if CopyInputTracks() is called.
+   std::unique_ptr<TrackList> mOutputTracks; // used only if CopyInputTracks() is called.
    double         mT0;
    double         mT1;
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING

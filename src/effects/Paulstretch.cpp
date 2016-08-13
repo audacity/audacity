@@ -150,7 +150,7 @@ double EffectPaulstretch::CalcPreviewInputLength(double previewLength)
 bool EffectPaulstretch::Process()
 {
    CopyInputTracks();
-   SelectedTrackListOfKindIterator iter(Track::Wave, mOutputTracks);
+   SelectedTrackListOfKindIterator iter(Track::Wave, mOutputTracks.get());
    WaveTrack *track = (WaveTrack *) iter.First();
    m_t1=mT1;
    int count=0;

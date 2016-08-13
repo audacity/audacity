@@ -1416,7 +1416,8 @@ bool WaveClip::Paste(double t0, const WaveClip* other)
 
    if (clipNeedsResampling || clipNeedsNewFormat)
    {
-      newClip.reset(new WaveClip(*other, mSequence->GetDirManager()));
+      newClip =
+         std::make_unique<WaveClip>(*other, mSequence->GetDirManager());
       if (clipNeedsResampling)
          // The other clip's rate is different from ours, so resample
          if (!newClip->Resample(mRate))
@@ -1502,7 +1503,7 @@ bool WaveClip::Clear(double t0, double t1)
       if (clip_t1 > GetEndTime())
          clip_t1 = GetEndTime();
 
-      // May delete as we iterate, so don't use range-for
+      // May DELETE as we iterate, so don't use range-for
       for (auto it = mCutLines.begin(); it != mCutLines.end();)
       {
          WaveClip* clip = it->get();
@@ -1554,7 +1555,7 @@ bool WaveClip::ClearAndAddCutLine(double t0, double t1)
    newClip->SetOffset(clip_t0-mOffset);
 
    // Sort out cutlines that belong to the NEW cutline
-   // May delete as we iterate, so don't use range-for
+   // May DELETE as we iterate, so don't use range-for
    for (auto it = mCutLines.begin(); it != mCutLines.end();)
    {
       WaveClip* clip = it->get();

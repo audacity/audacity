@@ -104,7 +104,7 @@ bool EffectRepeat::Process()
    bool bGoodResult = true;
    double maxDestLen = 0.0; // used to change selection to generated bit
 
-   TrackListIterator iter(mOutputTracks);
+   TrackListIterator iter(mOutputTracks.get());
 
    for (Track *t = iter.First(); t && bGoodResult; t = iter.Next())
    {
