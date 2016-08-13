@@ -751,6 +751,23 @@ make_movable_with_deleter(const Deleter &d, Args&&... args)
 }
 
 /*
+ * A deleter for pointers obtained with malloc
+ */
+struct freer { void operator() (void *p) const { free(p); } };
+
+/*
+ * A useful alias for holding the result of malloc
+ */
+template< typename T >
+using MallocPtr = std::unique_ptr< T, freer >;
+
+/*
+ * A useful alias for holding the result of strup and similar
+ */
+template <typename Character = char>
+using MallocString = std::unique_ptr< Character[], freer >;
+
+/*
  * A deleter class to supply the second template parameter of unique_ptr for
  * classes like wxWindow that should be sent a message called Destroy rather
  * than be deleted directly
