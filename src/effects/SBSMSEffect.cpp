@@ -33,38 +33,29 @@ public:
    ResampleBuf()
    {
       processed = 0;
-      buf = NULL;
-      leftBuffer = NULL;
-      rightBuffer = NULL;
-
-      SBSMSBuf = NULL;
       outputLeftTrack = NULL;
       outputRightTrack = NULL;
    }
 
    ~ResampleBuf()
    {
-      if(buf)                 free(buf);
-      if(leftBuffer)          free(leftBuffer);
-      if(rightBuffer)         free(rightBuffer);
-      if(SBSMSBuf)            free(SBSMSBuf);
    }
 
    bool bPitch;
-   audio *buf;
+   ArrayOf<audio> buf;
    double ratio;
    sampleCount processed;
    size_t blockSize;
    long SBSMSBlockSize;
    sampleCount offset;
    sampleCount end;
-   float *leftBuffer;
-   float *rightBuffer;
+   ArrayOf<float> leftBuffer;
+   ArrayOf<float> rightBuffer;
    WaveTrack *leftTrack;
    WaveTrack *rightTrack;
    std::unique_ptr<SBSMS> sbsms;
    std::unique_ptr<SBSMSInterface> iface;
-   audio *SBSMSBuf;
+   ArrayOf<audio> SBSMSBuf;
 
    // Not required by callbacks, but makes for easier cleanup
    std::unique_ptr<Resampler> resampler;
@@ -104,8 +95,8 @@ long resampleCB(void *cb_data, SBSMSFrame *data)
    );
 
    // Get the samples from the tracks and put them in the buffers.
-   r->leftTrack->Get((samplePtr)(r->leftBuffer), floatSample, r->offset, blockSize);
-   r->rightTrack->Get((samplePtr)(r->rightBuffer), floatSample, r->offset, blockSize);
+   r->leftTrack->Get((samplePtr)(r->leftBuffer.get()), floatSample, r->offset, blockSize);
+   r->rightTrack->Get((samplePtr)(r->rightBuffer.get()), floatSample, r->offset, blockSize);
 
    // convert to sbsms audio format
    for(decltype(blockSize) i=0; i<blockSize; i++) {
@@ -113,7 +104,7 @@ long resampleCB(void *cb_data, SBSMSFrame *data)
       r->buf[i][1] = r->rightBuffer[i];
    }
 
-   data->buf = r->buf;
+   data->buf = r->buf.get();
    data->size = blockSize;
    if(r->bPitch) {
      float t0 = r->processed.as_float() / r->iface->getSamplesToInput();
@@ -132,8 +123,8 @@ long resampleCB(void *cb_data, SBSMSFrame *data)
 long postResampleCB(void *cb_data, SBSMSFrame *data)
 {
    ResampleBuf *r = (ResampleBuf*) cb_data;
-   auto count = r->sbsms->read(r->iface.get(), r->SBSMSBuf, r->SBSMSBlockSize);
-   data->buf = r->SBSMSBuf;
+   auto count = r->sbsms->read(r->iface.get(), r->SBSMSBuf.get(), r->SBSMSBlockSize);
+   data->buf = r->SBSMSBuf.get();
    data->size = count;
    data->ratio0 = 1.0 / r->ratio;
    data->ratio1 = 1.0 / r->ratio;
@@ -285,11 +276,11 @@ bool EffectSBSMS::Process()
             ResampleBuf rb;
             auto maxBlockSize = leftTrack->GetMaxBlockSize();
             rb.blockSize = maxBlockSize;
-            rb.buf = (audio*)calloc(rb.blockSize,sizeof(audio));
+            rb.buf.reinit(rb.blockSize, true);
             rb.leftTrack = leftTrack;
             rb.rightTrack = rightTrack?rightTrack:leftTrack;
-            rb.leftBuffer = (float*)calloc(maxBlockSize,sizeof(float));
-            rb.rightBuffer = (float*)calloc(maxBlockSize,sizeof(float));
+            rb.leftBuffer.reinit(maxBlockSize, true);
+            rb.rightBuffer.reinit(maxBlockSize, true);
 
             // Samples in selection
             auto samplesIn = end - start;
@@ -325,7 +316,7 @@ bool EffectSBSMS::Process()
               rb.resampler = std::make_unique<Resampler>(resampleCB, &rb, srProcess==srTrack?SlideIdentity:SlideConstant);
               rb.sbsms = std::make_unique<SBSMS>(rightTrack ? 2 : 1, rb.quality.get(), true);
               rb.SBSMSBlockSize = rb.sbsms->getInputFrameSize();
-              rb.SBSMSBuf = (audio*)calloc(rb.SBSMSBlockSize,sizeof(audio));
+              rb.SBSMSBuf.reinit(static_cast<size_t>(rb.SBSMSBlockSize), true);
 
               // Note: width of getMaxPresamples() is only long.  Widen it
               decltype(start) processPresamples = rb.quality->getMaxPresamples();

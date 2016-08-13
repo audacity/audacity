@@ -277,7 +277,8 @@ void AUControl::CreateCocoa()
       return;
    }
 
-   AudioUnitCocoaViewInfo *viewInfo = (AudioUnitCocoaViewInfo *) malloc(dataSize);
+   ArrayOf<char> buffer{ dataSize };
+   auto viewInfo = (AudioUnitCocoaViewInfo *) buffer.get();
    if (viewInfo == NULL)
    {
       return;
@@ -330,8 +331,6 @@ void AUControl::CreateCocoa()
          CFRelease(viewInfo->mCocoaAUViewClass[i]);
       }
    }
-
-   free(viewInfo);
 
    if (!mView)
    {
@@ -474,7 +473,8 @@ void AUControl::CreateCarbon()
       return;
    }
 
-   AudioComponentDescription *compList = (AudioComponentDescription *) malloc(dataSize);
+   ArrayOf<char> buffer{ dataSize };
+   auto compList = (AudioComponentDescription *) buffer.get();
    if (compList == NULL)
    {
       return;
@@ -488,20 +488,13 @@ void AUControl::CreateCarbon()
                                  compList,
                                  &dataSize);
    if (result != noErr)
-   {
-      free(compList);
-
       return;
-   }
 
    // Get the component
    AudioComponent comp = AudioComponentFindNext(NULL, &compList[0]);
 
    // Try to create an instance
    result = AudioComponentInstanceNew(comp, &mInstance);
-
-   // Done with the list
-   free(compList);
 
    if (result != noErr)
    {

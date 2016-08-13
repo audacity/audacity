@@ -2187,7 +2187,8 @@ void AudioUnitEffect::GetChannelCounts()
       return;
    }
 
-   AUChannelInfo *info = (AUChannelInfo *) malloc(dataSize);
+   ArrayOf<char> buffer{ dataSize };
+   auto info = (AUChannelInfo *) buffer.get();
 
    // Retrieve the channel info
    result = AudioUnitGetProperty(mUnit,
@@ -2202,7 +2203,6 @@ void AudioUnitEffect::GetChannelCounts()
       mAudioIns = 2;
       mAudioOuts = 2;
 
-      free(info);
       return;
    }
 

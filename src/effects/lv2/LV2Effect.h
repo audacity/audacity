@@ -15,7 +15,6 @@
 
 #include "../../MemoryX.h"
 #include <vector>
-
 #include <wx/checkbox.h>
 #include <wx/dialog.h>
 #include <wx/dynarray.h>
@@ -289,8 +288,7 @@ private:
 
    bool mUseGUI;
 
-   char **mURIMap;
-   int mNumURIMap;
+   std::vector< movable_ptr_with_deleter<char, freer> > mURIMap;
 
    LV2_URI_Map_Feature mUriMapFeature;
    LV2_URID_Map mURIDMapFeature;
@@ -302,11 +300,9 @@ private:
    size_t mSampleRateOption;
 
    LV2_Options_Interface *mOptionsInterface;
-   LV2_Options_Option *mOptions;
-   int mNumOptions;
+   std::vector<LV2_Options_Option> mOptions;
 
    std::vector<movable_ptr<LV2_Feature>> mFeatures;
-   std::vector<LV2_Feature*> mFeaturePtrs;
 
    LV2_Feature *mInstanceAccessFeature;
    LV2_Feature *mParentFeature;
