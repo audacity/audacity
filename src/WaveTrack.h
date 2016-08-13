@@ -69,7 +69,7 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
    // Private since only factories are allowed to construct WaveTracks
    //
 
-   WaveTrack(DirManager * projDirManager,
+   WaveTrack(const std::shared_ptr<DirManager> &projDirManager,
              sampleFormat format = (sampleFormat)0,
              double rate = 0);
    WaveTrack(const WaveTrack &orig);

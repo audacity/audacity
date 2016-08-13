@@ -76,7 +76,7 @@ WaveTrack::Holder TrackFactory::NewWaveTrack(sampleFormat format, double rate)
    { safenew WaveTrack(mDirManager, format, rate) };
 }
 
-WaveTrack::WaveTrack(DirManager *projDirManager, sampleFormat format, double rate) :
+WaveTrack::WaveTrack(const std::shared_ptr<DirManager> &projDirManager, sampleFormat format, double rate) :
    Track(projDirManager)
 {
    if (format == (sampleFormat)0)

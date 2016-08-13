@@ -343,8 +343,8 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
    HoldPrint(true);
 
    ZoomInfo zoomInfo(0.0, ZoomInfo::GetDefaultZoom());
-   DirManager *d = new DirManager();
-   const auto t = TrackFactory{ d, &zoomInfo }.NewWaveTrack(int16Sample);
+   auto dd = std::make_shared<DirManager>();
+   const auto t = TrackFactory{ dd, &zoomInfo }.NewWaveTrack(int16Sample);
 
    t->SetRate(1);
 
@@ -533,7 +533,7 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
    delete[]small2;
    delete[]block;
 
-   d->Deref();
+   dd.reset();
 
    Sequence::SetMaxDiskBlockSize(oldBlockSize);
    Printf(wxT("Benchmark completed successfully.\n"));

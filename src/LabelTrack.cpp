@@ -96,7 +96,7 @@ LabelTrack::Holder TrackFactory::NewLabelTrack()
    return std::make_unique<LabelTrack>(mDirManager);
 }
 
-LabelTrack::LabelTrack(DirManager * projDirManager):
+LabelTrack::LabelTrack(const std::shared_ptr<DirManager> &projDirManager):
    Track(projDirManager),
    mbHitCenter(false),
    mOldEdge(-1),

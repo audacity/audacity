@@ -319,8 +319,6 @@ DirManager::DirManager()
 {
    wxLogDebug(wxT("DirManager: Created new instance."));
 
-   mRef = 1; // MM: Initial refcount is 1 by convention
-
    // Seed the random number generator.
    // this need not be strictly uniform or random, but it should give
    // unclustered numbers
@@ -365,8 +363,6 @@ DirManager::DirManager()
 
 DirManager::~DirManager()
 {
-   wxASSERT(mRef == 0); // MM: Otherwise, we shouldn't DELETE it
-
    numDirManagers--;
    if (numDirManagers == 0) {
       CleanTempDir();
@@ -1381,23 +1377,6 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
    return true;
 }
 
-void DirManager::Ref()
-{
-   wxASSERT(mRef > 0); // MM: If mRef is smaller, it should have been deleted already
-   ++mRef;
-}
-
-void DirManager::Deref()
-{
-   wxASSERT(mRef > 0); // MM: If mRef is smaller, it should have been deleted already
-
-   --mRef;
-
-   // MM: Automatically DELETE if refcount reaches zero
-   if (mRef == 0)
-      delete this;
-}
-
 // Check the BlockFiles against the disk state.
 // Missing Blockfile data can be regenerated if possible or replaced with silence.
 // Orphan blockfiles can be deleted.
@@ -1829,7 +1808,7 @@ void DirManager::FindOrphanBlockFiles(
                TrackListIterator clipIter(clipTracks);
                Track *track = clipIter.First();
                if (track)
-                  clipboardDM = track->GetDirManager();
+                  clipboardDM = track->GetDirManager().get();
             }
          }
 

@@ -332,7 +332,7 @@ bool RecordingRecoveryHandler::HandleXMLTag(const wxChar *tag,
       Sequence* seq = clip->GetSequence();
 
       // Load the blockfile from the XML
-      DirManager* dirManager = mProject->GetDirManager();
+      const auto &dirManager = mProject->GetDirManager();
       dirManager->SetLoadingFormat(seq->GetSampleFormat());
 
       BlockArray array;

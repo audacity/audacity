@@ -51,26 +51,23 @@
 int Sequence::sMaxDiskBlockSize = 1048576;
 
 // Sequence methods
-Sequence::Sequence(DirManager * projDirManager, sampleFormat format)
+Sequence::Sequence(const std::shared_ptr<DirManager> &projDirManager, sampleFormat format)
    : mDirManager(projDirManager)
    , mSampleFormat(format)
    , mMinSamples(sMaxDiskBlockSize / SAMPLE_SIZE(mSampleFormat) / 2)
    , mMaxSamples(mMinSamples * 2)
 {
-   mDirManager->Ref();
 }
 
 // essentially a copy constructor - but you must pass in the
 // current project's DirManager, because we might be copying
 // from one project to another
-Sequence::Sequence(const Sequence &orig, DirManager *projDirManager)
+Sequence::Sequence(const Sequence &orig, const std::shared_ptr<DirManager> &projDirManager)
    : mDirManager(projDirManager)
    , mSampleFormat(orig.mSampleFormat)
    , mMinSamples(orig.mMinSamples)
    , mMaxSamples(orig.mMaxSamples)
 {
-   mDirManager->Ref();
-
    bool bResult = Paste(0, &orig);
    wxASSERT(bResult); // TO DO: Actually handle this.
    (void)bResult;
@@ -79,7 +76,6 @@ Sequence::Sequence(const Sequence &orig, DirManager *projDirManager)
 Sequence::~Sequence()
 {
    DerefAllFiles();
-   mDirManager->Deref();
 }
 
 void Sequence::DerefAllFiles()
@@ -1022,7 +1018,7 @@ XMLTagHandler *Sequence::HandleXMLChild(const wxChar *tag)
       return this;
    else {
       mDirManager->SetLoadingFormat(mSampleFormat);
-      return mDirManager;
+      return mDirManager.get();
    }
 }
 

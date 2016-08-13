@@ -83,7 +83,7 @@ static void GetAllSeqBlocks(AudacityProject *project,
 static void ReplaceBlockFiles(AudacityProject *project,
                               ReplacedBlockFileHash &hash)
 {
-   DirManager *dirManager = project->GetDirManager();
+   const auto &dirManager = project->GetDirManager();
    BlockPtrArray blocks;
    GetAllSeqBlocks(project, &blocks);
 
@@ -159,7 +159,7 @@ void FindDependencies(AudacityProject *project,
 static void RemoveDependencies(AudacityProject *project,
                                AliasedFileArray &aliasedFiles)
 {
-   DirManager *dirManager = project->GetDirManager();
+   const auto &dirManager = project->GetDirManager();
 
    ProgressDialog progress
       (_("Removing Dependencies"),

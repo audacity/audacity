@@ -116,7 +116,7 @@ class AUDACITY_DLL_API LabelTrack final : public Track
    bool IsTextSelected();
 
    void CreateCustomGlyphs();
-   LabelTrack(DirManager * projDirManager);
+   LabelTrack(const std::shared_ptr<DirManager> &projDirManager);
    LabelTrack(const LabelTrack &orig);
 
    virtual ~ LabelTrack();
