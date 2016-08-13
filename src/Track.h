@@ -143,7 +143,7 @@ class AUDACITY_DLL_API Track /* not final */ : public XMLTagHandler
    bool                mMute;
    bool                mSolo;
 
-   mutable DirManager *mDirManager;
+   mutable std::shared_ptr<DirManager> mDirManager;
 
  public:
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
@@ -169,7 +169,7 @@ class AUDACITY_DLL_API Track /* not final */ : public XMLTagHandler
       All
    };
 
-   Track(DirManager * projDirManager);
+   Track(const std::shared_ptr<DirManager> &projDirManager);
    Track(const Track &orig);
 
    virtual ~ Track();
@@ -210,7 +210,7 @@ class AUDACITY_DLL_API Track /* not final */ : public XMLTagHandler
    // mostly to support "Duplicate" of const objects,
    // but in general, mucking with the dir manager is
    // separate from the Track.
-   DirManager* GetDirManager() const { return mDirManager; }
+   const std::shared_ptr<DirManager> &GetDirManager() const { return mDirManager; }
 
    // Create a NEW track and modify this track (or return null for failure)
    virtual Holder Cut(double WXUNUSED(t0), double WXUNUSED(t1)) { return{}; }
@@ -529,13 +529,13 @@ private:
 class AUDACITY_DLL_API TrackFactory
 {
  private:
-   TrackFactory(DirManager *dirManager, const ZoomInfo *zoomInfo):
+   TrackFactory(const std::shared_ptr<DirManager> &dirManager, const ZoomInfo *zoomInfo):
       mDirManager(dirManager)
       , mZoomInfo(zoomInfo)
    {
    }
 
-   DirManager *const mDirManager;
+   const std::shared_ptr<DirManager> mDirManager;
    const ZoomInfo *const mZoomInfo;
    friend class AudacityProject;
    friend class BenchmarkDialog;

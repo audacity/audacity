@@ -11,6 +11,7 @@
 #ifndef _DIRMANAGER_
 #define _DIRMANAGER_
 
+#include <MemoryX.h>
 #include <wx/list.h>
 #include <wx/string.h>
 #include <wx/filename.h>
@@ -38,17 +39,12 @@ wxMemorySize GetFreeMemory();
 class PROFILE_DLL_API DirManager final : public XMLTagHandler {
  public:
 
-   // MM: Construct DirManager with refcount=1
+   // MM: Construct DirManager
    DirManager();
 
-   // MM: Only called by Deref() when refcount reaches zero.
    virtual ~DirManager();
 
    static void SetTempDir(const wxString &_temp) { globaltemp = _temp; }
-
-   // MM: Ref count mechanism for the DirManager itself
-   void Ref();
-   void Deref();
 
    // Returns true on success.
    // If SetProject is told NOT to create the directory
@@ -173,8 +169,6 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
    wxFileNameWrapper MakeBlockFilePath(const wxString &value);
 
    bool MoveOrCopyToNewProjectDirectory(BlockFile *f, bool copy);
-
-   int mRef; // MM: Current refcount
 
    BlockHash mBlockFileHash; // repository for blockfiles
    DirHash   dirTopPool;    // available toplevel dirs

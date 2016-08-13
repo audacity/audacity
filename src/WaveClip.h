@@ -214,12 +214,12 @@ private:
 
 public:
    // typical constructor
-   WaveClip(DirManager *projDirManager, sampleFormat format, int rate);
+   WaveClip(const std::shared_ptr<DirManager> &projDirManager, sampleFormat format, int rate);
 
    // essentially a copy constructor - but you must pass in the
    // current project's DirManager, because we might be copying
    // from one project to another
-   WaveClip(const WaveClip& orig, DirManager *projDirManager);
+   WaveClip(const WaveClip& orig, const std::shared_ptr<DirManager> &projDirManager);
 
    virtual ~WaveClip();
 

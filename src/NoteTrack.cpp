@@ -103,7 +103,7 @@ NoteTrack::Holder TrackFactory::NewNoteTrack()
    return std::make_unique<NoteTrack>(mDirManager);
 }
 
-NoteTrack::NoteTrack(DirManager * projDirManager):
+NoteTrack::NoteTrack(const std::shared_ptr<DirManager> &projDirManager):
 Track(projDirManager)
 {
    SetDefaultName(_("Note Track"));
@@ -113,7 +113,6 @@ Track(projDirManager)
    mSerializationBuffer = NULL;
    mSerializationLength = 0;
 
-   mDirManager = projDirManager;
 #ifdef EXPERIMENTAL_MIDI_OUT
    mGain = 0;
 #endif

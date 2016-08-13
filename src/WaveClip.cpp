@@ -288,7 +288,7 @@ static void ComputeSpectrumUsingRealFFTf
    }
 }
 
-WaveClip::WaveClip(DirManager *projDirManager, sampleFormat format, int rate)
+WaveClip::WaveClip(const std::shared_ptr<DirManager> &projDirManager, sampleFormat format, int rate)
 {
    mOffset = 0;
    mRate = rate;
@@ -302,7 +302,7 @@ WaveClip::WaveClip(DirManager *projDirManager, sampleFormat format, int rate)
    mIsPlaceholder = false;
 }
 
-WaveClip::WaveClip(const WaveClip& orig, DirManager *projDirManager)
+WaveClip::WaveClip(const WaveClip& orig, const std::shared_ptr<DirManager> &projDirManager)
 {
    // essentially a copy constructor - but you must pass in the
    // current project's DirManager, because we might be copying

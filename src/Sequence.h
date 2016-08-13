@@ -70,12 +70,12 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    // Constructor / Destructor / Duplicator
    //
 
-   Sequence(DirManager * projDirManager, sampleFormat format);
+   Sequence(const std::shared_ptr<DirManager> &projDirManager, sampleFormat format);
 
    // The copy constructor and duplicate operators take a
    // DirManager as a parameter, because you might be copying
    // from one project to another...
-   Sequence(const Sequence &orig, DirManager *projDirManager);
+   Sequence(const Sequence &orig, const std::shared_ptr<DirManager> &projDirManager);
 
    ~Sequence();
 
@@ -128,7 +128,7 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    bool SetSilence(sampleCount s0, sampleCount len);
    bool InsertSilence(sampleCount s0, sampleCount len);
 
-   DirManager* GetDirManager() { return mDirManager; }
+   const std::shared_ptr<DirManager> &GetDirManager() { return mDirManager; }
 
    //
    // XMLTagHandler callback methods for loading and saving
@@ -218,7 +218,7 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    // Private variables
    //
 
-   DirManager   *mDirManager;
+   std::shared_ptr<DirManager> mDirManager;
 
    BlockArray    mBlock;
    sampleFormat  mSampleFormat;

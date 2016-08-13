@@ -193,7 +193,7 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    bool Clipboard() { return (msClipT1 - msClipT0) > 0.0; }
 
    wxString GetName();
-   DirManager *GetDirManager();
+   const std::shared_ptr<DirManager> &GetDirManager();
    TrackFactory *GetTrackFactory();
    AdornedRulerPanel *GetRulerPanel();
    const Tags *GetTags();
@@ -541,7 +541,7 @@ public:
 
    // The project's name and file info
    wxString mFileName;
-   DirManager *mDirManager; // MM: DirManager now created dynamically
+   std::shared_ptr<DirManager> mDirManager; // MM: DirManager now created dynamically
 
    double mRate;
    sampleFormat mDefaultFormat;

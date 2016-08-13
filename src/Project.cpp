@@ -845,7 +845,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
 
    // MM: DirManager is created dynamically, freed on demand via ref-counting
    // MM: We don't need to Ref() here because it start with refcount=1
-   mDirManager = new DirManager();
+   mDirManager = std::make_shared<DirManager>();
 
    mLastSavedTracks = NULL;
 
@@ -1270,7 +1270,7 @@ void AudacityProject::OnCapture(wxCommandEvent& evt)
 }
 
 
-DirManager *AudacityProject::GetDirManager()
+const std::shared_ptr<DirManager> &AudacityProject::GetDirManager()
 {
    return mDirManager;
 }
@@ -2442,7 +2442,7 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
    //
    // LL: All objects with references to the DirManager should
    //     have been deleted before this.
-   mDirManager->Deref();
+   mDirManager.reset();
 
    {
       ODLocker locker{ &AudacityProject::AllProjectDeleteMutex() };

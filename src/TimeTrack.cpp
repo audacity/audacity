@@ -34,7 +34,7 @@ std::unique_ptr<TimeTrack> TrackFactory::NewTimeTrack()
    return std::make_unique<TimeTrack>(mDirManager, mZoomInfo);
 }
 
-TimeTrack::TimeTrack(DirManager *projDirManager, const ZoomInfo *zoomInfo):
+TimeTrack::TimeTrack(const std::shared_ptr<DirManager> &projDirManager, const ZoomInfo *zoomInfo):
    Track(projDirManager)
    , mZoomInfo(zoomInfo)
 {
