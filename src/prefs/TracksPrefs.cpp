@@ -103,7 +103,7 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
 
    S.StartStatic(_("Display"));
    {
-      S.TieCheckBox(_("&Update display while when Recording/Playback head unpinned"),
+      S.TieCheckBox(_("&Update display when Recording/Playback head unpinned"),
                     wxT("/GUI/AutoScroll"),
                     true);
 

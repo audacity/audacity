@@ -325,8 +325,8 @@ public:
 
    void RegenerateTooltips(StatusChoice choice);
 
-   void ShowQuickPlayIndicator();
-   void HideQuickPlayIndicator();
+   void ShowQuickPlayIndicator( bool repaint_all=false);
+   void HideQuickPlayIndicator( bool repaint_all=false);
    void UpdateQuickPlayPos(wxCoord &mousPosX);
 
    bool ShowingScrubBar() const { return mShowScrubbing; }
@@ -366,7 +366,7 @@ public:
 
 private:
    QuickPlayIndicatorOverlay *GetOverlay();
-   void ShowOrHideQuickPlayIndicator(bool show);
+   void ShowOrHideQuickPlayIndicator(bool show, bool repaint_all=false);
    void DoDrawPlayRegion(wxDC * dc);
 
    enum class MenuChoice { QuickPlay, Scrub };

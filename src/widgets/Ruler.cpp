@@ -85,6 +85,7 @@ array of Ruler::Label.
 #include "../tracks/ui/Scrubbing.h"
 #include "../prefs/PlaybackPrefs.h"
 #include "../prefs/TracksPrefs.h"
+#include "../widgets/Grabber.h"
 
 //#define SCRUB_ABOVE
 
@@ -1656,14 +1657,14 @@ enum : int {
 
    TopMargin = 1,
    BottomMargin = 2, // for bottom bevel and bottom line
-   LeftMargin = 1,
+   LeftMargin = 1, 
 
    RightMargin = 1,
 };
 
 enum {
    ScrubHeight = 14,
-   ProperRulerHeight = 28
+   ProperRulerHeight = 29
 };
 
 inline int IndicatorHeightForWidth(int width)
@@ -2056,10 +2057,20 @@ void AdornedRulerPanel::ReCreateButtons()
       button = nullptr;
    }
 
+   size_t iButton = 0;
    // Make the short row of time ruler pushbottons.
    // Don't bother with sizers.  Their sizes and positions are fixed.
-   wxPoint position{ 1 + LeftMargin, 0 };
-   size_t iButton = 0;
+   // Add a grabber converted to a spacer.
+   // This makes it visually clearer that the button is a button.
+
+   wxPoint position( 1, 0 );
+   Grabber * pGrabber = safenew Grabber(this, this->GetId());
+   pGrabber->SetAsSpacer( true );
+   //pGrabber->SetSize( 10, 27 ); // default is 10,27
+   pGrabber->SetPosition( position );
+
+   position.x = 12;
+
    auto size = theTheme.ImageSize( bmpRecoloredUpSmall );
    size.y = std::min(size.y, GetRulerHeight(false));
 
@@ -2078,7 +2089,7 @@ void AdornedRulerPanel::ReCreateButtons()
       mButtons[iButton++] = button;
       return button;
    };
-   auto button = buttonMaker(OnTogglePinnedStateID, bmpPinnedPlayHead, false);
+   auto button = buttonMaker(OnTogglePinnedStateID, bmpPinnedPlayHead, true);
    ToolBar::MakeAlternateImages(
       *button, 1,
       bmpRecoloredUpSmall, bmpRecoloredDownSmall, bmpRecoloredHiliteSmall,
@@ -2357,9 +2368,15 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
 
    auto &scrubber = mProject->GetScrubber();
    if (scrubber.HasStartedScrubbing()) {
-      if (evt.RightDown())
+      if (evt.RightDown() )
          // Fall through to context menu handling
          ;
+      else if ( evt.LeftUp() && inScrubZone)
+         // Fall through to seeking changes to scrubbing
+         ;
+//      else if ( evt.LeftDown() && inScrubZone)
+//         // Fall through to ready to seek
+//         ;
       else {
          bool switchToQP = (zone == StatusChoice::EnteringQP && mQuickPlayEnabled);
          if (switchToQP && evt.LeftDown()) {
@@ -2429,13 +2446,26 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
           &position);
       return;
    }
-   else if (!HasCapture() && inScrubZone) {
+   else if( !HasCapture() && evt.LeftUp() && inScrubZone ) {
+      //wxLogDebug("up");
+      // mouse going up => we shift to scrubbing.
+      scrubber.MarkScrubStart(evt.m_x,
+         TracksPrefs::GetPinnedHeadPreference(), false);
+      UpdateStatusBarAndTooltips(StatusChoice::EnteringScrubZone);
+      // repaint_all so that the indicator changes shape.
+      bool repaint_all = true;
+      ShowQuickPlayIndicator(repaint_all);
+      return;
+   }
+   else if ( !HasCapture() && inScrubZone) {
+      // mouse going down => we are (probably) seeking
       if (evt.LeftDown()) {
+         //wxLogDebug("down");
          scrubber.MarkScrubStart(evt.m_x,
             TracksPrefs::GetPinnedHeadPreference(), false);
          UpdateStatusBarAndTooltips(StatusChoice::EnteringScrubZone);
-      }
-      ShowQuickPlayIndicator();
+         ShowQuickPlayIndicator();
+      } 
       return;
    }
    else if ( mQuickPlayEnabled) {
@@ -2790,7 +2820,10 @@ void AdornedRulerPanel::UpdateButtonStates()
    {
       bool state = TracksPrefs::GetPinnedHeadPreference();
       auto pinButton = static_cast<AButton*>(FindWindow(OnTogglePinnedStateID));
-      pinButton->PopUp();
+      if( !state )
+         pinButton->PopUp();
+      else
+         pinButton->PushDown();
       pinButton->SetAlternateIdx(state ? 0 : 1);
       const auto label = state
       // Label descibes the present state, not what the click does
@@ -3170,6 +3203,21 @@ void AdornedRulerPanel::DoDrawIndicator
       dc->DrawPolygon( 3, tri );
    }
    else {
+      // synonyms... (makes compatibility with DarkAudacity easier).
+      #define bmpPlayPointerPinned bmpPinnedPlayHead
+      #define bmpPlayPointer bmpUnpinnedPlayHead
+      #define bmpRecordPointerPinned bmpPinnedRecordHead
+      #define bmpRecordPointer bmpUnpinnedRecordHead
+
+      bool pinned = TracksPrefs::GetPinnedHeadPreference();
+      wxBitmap & bmp = theTheme.Bitmap( pinned ? 
+         (playing ? bmpPlayPointerPinned : bmpRecordPointerPinned) :
+         (playing ? bmpPlayPointer : bmpRecordPointer) 
+      );
+      const int IndicatorHalfWidth = bmp.GetWidth() / 2;
+      dc->DrawBitmap( bmp, xx - IndicatorHalfWidth -1, mInner.y );
+#if 0
+
       // Down pointing triangle
       auto height = IndicatorHeightForWidth(width);
       const int IndicatorHalfWidth = width / 2;
@@ -3180,6 +3228,7 @@ void AdornedRulerPanel::DoDrawIndicator
       tri[ 2 ].x = xx;
       tri[ 2 ].y = mInner.y + height;
       dc->DrawPolygon( 3, tri );
+#endif
    }
 }
 
@@ -3191,18 +3240,18 @@ QuickPlayIndicatorOverlay *AdornedRulerPanel::GetOverlay()
    return mOverlay.get();
 }
 
-void AdornedRulerPanel::ShowQuickPlayIndicator()
+void AdornedRulerPanel::ShowQuickPlayIndicator( bool repaint_all)
 {
-   ShowOrHideQuickPlayIndicator(true);
+   ShowOrHideQuickPlayIndicator(true, repaint_all);
 }
 
-void AdornedRulerPanel::HideQuickPlayIndicator()
+void AdornedRulerPanel::HideQuickPlayIndicator(bool repaint_all)
 {
-   ShowOrHideQuickPlayIndicator(false);
+   ShowOrHideQuickPlayIndicator(false, repaint_all);
 }
 
 // Draws the vertical line and green triangle indicating the Quick Play cursor position.
-void AdornedRulerPanel::ShowOrHideQuickPlayIndicator(bool show)
+void AdornedRulerPanel::ShowOrHideQuickPlayIndicator(bool show, bool repaint_all)
 {
    double latestEnd = std::max(mTracks->GetEndTime(), mProject->GetSel1());
    if (!show || (mQuickPlayPos >= latestEnd)) {
@@ -3216,8 +3265,8 @@ void AdornedRulerPanel::ShowOrHideQuickPlayIndicator(bool show)
       GetOverlay()->Update(x, mIsSnapped, previewScrub);
    }
 
-   mProject->GetTrackPanel()->DrawOverlays(false);
-   DrawOverlays(false);
+   mProject->GetTrackPanel()->DrawOverlays(repaint_all);
+   DrawOverlays(repaint_all);
 }
 
 void AdornedRulerPanel::SetPlayRegion(double playRegionStart,
