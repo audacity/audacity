@@ -300,7 +300,7 @@ void DeviceManager::Rescan()
    // Hosts may have disappeared or appeared so a complete repopulate is needed.
    if (m_inited) {
       DeviceToolBar *dt;
-      for (size_t i = 0; i < gAudacityProjects.GetCount(); i++) {
+      for (size_t i = 0; i < gAudacityProjects.size(); i++) {
          dt = gAudacityProjects[i]->GetDeviceToolBar();
          dt->RefillCombos();
       }

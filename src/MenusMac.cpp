@@ -46,7 +46,7 @@ void AudacityProject::OnMacMinimize()
 void AudacityProject::OnMacMinimizeAll()
 {
    for (const auto project : gAudacityProjects) {
-      DoMacMinimize(project);
+      DoMacMinimize(project.get());
    }
 }
 

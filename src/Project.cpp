@@ -527,10 +527,14 @@ AudacityProject *CreateNewAudacityProject()
    GetNextWindowPlacement(&wndRect, &bMaximized, &bIconized);
 
    //Create and show a NEW project
-   AudacityProject *p = new AudacityProject(NULL, -1,
-                                            wxDefaultPosition,
-                                            wxSize(wndRect.width, wndRect.height));
-   gAudacityProjects.Add(p);
+   gAudacityProjects.push_back(
+      make_movable_with_deleter<AudacityProject, Destroyer< AudacityProject > >
+         ({},
+          nullptr, -1,
+          wxDefaultPosition,
+          wxSize(wndRect.width, wndRect.height))
+   );
+   const auto p = gAudacityProjects.back().get();
 
    // wxGTK3 seems to need to require creating the window using default position
    // and then manually positioning it.
@@ -563,21 +567,21 @@ AudacityProject *CreateNewAudacityProject()
 
 void RedrawAllProjects()
 {
-   size_t len = gAudacityProjects.GetCount();
+   size_t len = gAudacityProjects.size();
    for (size_t i = 0; i < len; i++)
       gAudacityProjects[i]->RedrawProject();
 }
 
 void RefreshCursorForAllProjects()
 {
-   size_t len = gAudacityProjects.GetCount();
+   size_t len = gAudacityProjects.size();
    for (size_t i = 0; i < len; i++)
       gAudacityProjects[i]->RefreshCursor();
 }
 
 AUDACITY_DLL_API void CloseAllProjects()
 {
-   size_t len = gAudacityProjects.GetCount();
+   size_t len = gAudacityProjects.size();
    for (size_t i = 0; i < len; i++)
       gAudacityProjects[i]->Close();
 
@@ -712,7 +716,7 @@ void GetNextWindowPlacement(wxRect *nextRect, bool *pMaximized, bool *pIconized)
       windowRect = defaultRect;
    }
 
-   if (gAudacityProjects.IsEmpty()) {
+   if (gAudacityProjects.empty()) {
       if (*pMaximized || *pIconized) {
          *nextRect = normalRect;
       }
@@ -726,11 +730,11 @@ void GetNextWindowPlacement(wxRect *nextRect, bool *pMaximized, bool *pIconized)
    else {
       bool validWindowSize = false;
       AudacityProject * validProject = NULL;
-      size_t numProjects = gAudacityProjects.Count();
+      size_t numProjects = gAudacityProjects.size();
       for (int i = numProjects; i > 0 ; i--) {
          if (!gAudacityProjects[i-1]->IsIconized()) {
              validWindowSize = true;
-             validProject = gAudacityProjects[i-1];
+             validProject = gAudacityProjects[i-1].get();
              break;
          }
       }
@@ -1967,7 +1971,7 @@ void AudacityProject::OnIconize(wxIconizeEvent &event)
 
    unsigned int i;
 
-   for(i=0;i<gAudacityProjects.Count();i++){
+   for(i=0;i<gAudacityProjects.size();i++){
       if(gAudacityProjects[i]){
          if( !gAudacityProjects[i]->mIconized )
             VisibleProjectCount++;
@@ -2365,7 +2369,7 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
 
    // DanH: If we're definitely about to quit, DELETE the clipboard.
    //       Doing this after Deref'ing the DirManager causes problems.
-   if ((gAudacityProjects.GetCount() == 1) && (quitOnClose || gIsQuitting))
+   if ((gAudacityProjects.size() == 1) && (quitOnClose || gIsQuitting))
       DeleteClipboard();
 
    // JKC: For Win98 and Linux do not detach the menu bar.
@@ -2445,15 +2449,21 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
    //     have been deleted before this.
    mDirManager.reset();
 
+   AProjectHolder pSelf;
    {
       ODLocker locker{ &AudacityProject::AllProjectDeleteMutex() };
-      gAudacityProjects.Remove(this);
+      auto end = gAudacityProjects.end();
+      auto it = std::find_if(gAudacityProjects.begin(), end,
+         [this] (const AProjectHolder &p) { return p.get() == this; });
+      wxASSERT( it != end );
+      pSelf = std::move( *it );
+      gAudacityProjects.erase(it);
    }
 
    if (gActiveProject == this) {
       // Find a NEW active project
-      if (gAudacityProjects.Count() > 0) {
-         SetActiveProject(gAudacityProjects[0]);
+      if (gAudacityProjects.size() > 0) {
+         SetActiveProject(gAudacityProjects[0].get());
       }
       else {
          SetActiveProject(NULL);
@@ -2466,7 +2476,7 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
       gAudioIO->SetListener(gActiveProject);
    }
 
-   if (gAudacityProjects.IsEmpty() && !gIsQuitting) {
+   if (gAudacityProjects.empty() && !gIsQuitting) {
 
 #if !defined(__WXMAC__)
       if (quitOnClose) {
@@ -2484,7 +2494,8 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
       NULL,
       &mViewInfo);
 
-   Destroy();
+   // Destroys this
+   pSelf.reset();
    mRuler = nullptr;
 
    mIsBeingDeleted = true;
@@ -2611,7 +2622,7 @@ wxArrayString AudacityProject::ShowOpenDialog(const wxString &extraformat, const
 bool AudacityProject::IsAlreadyOpen(const wxString & projPathName)
 {
    const wxFileName newProjPathName(projPathName);
-   size_t numProjects = gAudacityProjects.Count();
+   size_t numProjects = gAudacityProjects.size();
    for (size_t i = 0; i < numProjects; i++)
    {
       if (newProjPathName.SameAs(gAudacityProjects[i]->mFileName))
@@ -5332,7 +5343,7 @@ bool AudacityProject::ExportFromTimerRecording(wxFileName fnFile, int iFormat, i
 }
 
 int AudacityProject::GetOpenProjectCount() {
-   return gAudacityProjects.Count();
+   return gAudacityProjects.size();
 }
 
 bool AudacityProject::IsProjectSaved() {

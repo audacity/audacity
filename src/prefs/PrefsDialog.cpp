@@ -437,7 +437,7 @@ void PrefsDialog::OnOK(wxCommandEvent & WXUNUSED(event))
    // LL:  wxMac can't handle recreating the menus when this dialog is still active,
    //      so AudacityProject::UpdatePrefs() or any of the routines it calls must
    //      not cause AudacityProject::RebuildMenuBar() to be executed.
-   for (size_t i = 0; i < gAudacityProjects.GetCount(); i++) {
+   for (size_t i = 0; i < gAudacityProjects.size(); i++) {
       gAudacityProjects[i]->UpdatePrefs();
    }
 

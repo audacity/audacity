@@ -1828,7 +1828,7 @@ void AudacityProject::ModifyAllProjectToolbarMenus()
 {
    AProjectArray::iterator i;
    for (i = gAudacityProjects.begin(); i != gAudacityProjects.end(); ++i) {
-      ((AudacityProject *)*i)->ModifyToolbarMenus();
+      (*i)->ModifyToolbarMenus();
    }
 }
 
@@ -2260,9 +2260,9 @@ void AudacityProject::OnPlayStop()
 
       //find out which project we need;
       AudacityProject* otherProject = NULL;
-      for(unsigned i=0; i<gAudacityProjects.GetCount(); i++) {
+      for(unsigned i=0; i<gAudacityProjects.size(); i++) {
          if(gAudioIO->IsStreamActive(gAudacityProjects[i]->GetAudioIOToken())) {
-            otherProject=gAudacityProjects[i];
+            otherProject=gAudacityProjects[i].get();
             break;
          }
       }
@@ -3554,8 +3554,8 @@ void AudacityProject::OnManagePluginsMenu(EffectType type)
 {
    if (PluginManager::Get().ShowManager(this, type))
    {
-      for (size_t i = 0; i < gAudacityProjects.GetCount(); i++) {
-         AudacityProject *p = gAudacityProjects[i];
+      for (size_t i = 0; i < gAudacityProjects.size(); i++) {
+         AudacityProject *p = gAudacityProjects[i].get();
 
          p->RebuildMenuBar();
 #if defined(__WXGTK__)
@@ -3835,8 +3835,8 @@ void AudacityProject::OnPreferences()
    // LL:  Moved from PrefsDialog since wxWidgets on OSX can't deal with
    //      rebuilding the menus while the PrefsDialog is still in the modal
    //      state.
-   for (size_t i = 0; i < gAudacityProjects.GetCount(); i++) {
-      AudacityProject *p = gAudacityProjects[i];
+   for (size_t i = 0; i < gAudacityProjects.size(); i++) {
+      AudacityProject *p = gAudacityProjects[i].get();
 
       p->RebuildMenuBar();
       p->RebuildOtherMenus();
