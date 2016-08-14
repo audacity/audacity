@@ -132,7 +132,6 @@ ExpandingToolBar::ExpandingToolBar(wxWindow* parent,
    mDialogParent(NULL),
    mAreaParent(NULL),
    mSavedArrangement{},
-   mDragImage(NULL),
    mTopLevelParent(NULL)
 {
    mMainPanel = safenew wxPanelWrapper(this, -1,
@@ -280,11 +279,15 @@ class ExpandingToolBarEvtHandler final : public wxEvtHandler
 {
  public:
    ExpandingToolBarEvtHandler(ExpandingToolBar *toolbar,
+                              wxWindow *window,
                               wxEvtHandler *inheritedEvtHandler)
    {
       mToolBar = toolbar;
+      mWindow = window;
       mInheritedEvtHandler = inheritedEvtHandler;
-   }
+
+      window->PushEventHandler(this);
+}
 
    bool ProcessEvent(wxEvent& evt) override
    {
@@ -296,8 +299,14 @@ class ExpandingToolBarEvtHandler final : public wxEvtHandler
       return mInheritedEvtHandler->ProcessEvent(evt);
    }
 
+   ~ExpandingToolBarEvtHandler()
+   {
+      mWindow->RemoveEventHandler(this);
+   }
+
 protected:
    ExpandingToolBar *mToolBar;
+   wxWindow *mWindow;
    wxEvtHandler *mInheritedEvtHandler;
 
    DECLARE_NO_COPY_CLASS(ExpandingToolBarEvtHandler);
@@ -306,9 +315,8 @@ protected:
 void ExpandingToolBar::RecursivelyPushEventHandlers(wxWindow *win)
 {
    if (!mWindowHash[win]) {
-      ExpandingToolBarEvtHandler *evtHandler =
-         new ExpandingToolBarEvtHandler(this, win->GetEventHandler());
-      win->PushEventHandler(evtHandler);
+      mHandlers.push_back(make_movable<ExpandingToolBarEvtHandler>
+         (this, win, win->GetEventHandler()));
       mWindowHash[win] = 1;
    }
 
@@ -556,7 +564,7 @@ void ExpandingToolBar::StartMoving()
 
    mAreaParent->SetCapturedChild(this);
 
-   mDragImage = new wxDragImage(toolbarBitmap);
+   mDragImage = std::make_unique<wxDragImage>(toolbarBitmap);
    mDragImage->BeginDrag(hotSpot, mAreaParent, mTopLevelParent);
    mDragImage->Show();
    mDragImage->Move(ScreenToClient(wxGetMousePosition()));

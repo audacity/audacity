@@ -12,6 +12,7 @@
 #define __AUDACITY_EXPANDING_TOOL_BAR__
 
 #include "../MemoryX.h"
+#include <vector>
 #include <wx/defs.h>
 #include <wx/dialog.h>
 #include <wx/dynarray.h>
@@ -38,6 +39,8 @@ class ToolBarArrangement;
 WX_DECLARE_VOIDPTR_HASH_MAP(int, WindowHash);
 WX_DEFINE_ARRAY(ExpandingToolBar *, ExpandingToolBarArray);
 WX_DECLARE_OBJARRAY(wxRect, wxArrayRect);
+
+class ExpandingToolBarEvtHandler;
 
 //
 // A smart ToolBar class that has a "MainPanel" which is always
@@ -111,7 +114,7 @@ class ExpandingToolBar final : public wxPanelWrapper
    ToolBarArea *mAreaParent;
    std::unique_ptr<ToolBarArrangement> mSavedArrangement;
    ImageRollPanel *mTargetPanel;
-   wxDragImage *mDragImage;
+   std::unique_ptr<wxDragImage> mDragImage;
    wxWindow *mTopLevelParent;
    wxArrayRect mDropTargets;
    wxRect mDropTarget;
@@ -121,6 +124,7 @@ class ExpandingToolBar final : public wxPanelWrapper
    DECLARE_EVENT_TABLE();
 
    friend class ExpandingToolBarEvtHandler;
+   std::vector< movable_ptr< ExpandingToolBarEvtHandler > > mHandlers;
 };
 
 class ToolBarGrabber final : public wxPanelWrapper
