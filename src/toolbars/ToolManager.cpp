@@ -563,6 +563,7 @@ void ToolManager::Reset()
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
          || ndx == SpectralSelectionBarID
 #endif
+         || ndx == ScrubbingBarID
          )
       {
          expose = false;
@@ -656,12 +657,14 @@ void ToolManager::ReadConfig()
       // Change to the bar subkey
       gPrefs->SetPath( bar->GetSection() );
 
-      bool bShownByDefault = true;
+      bool bShownByDefault = false;
       int defaultDock = TopDockID;
       
       if( ndx == SelectionBarID )
          defaultDock = BotDockID;
       if( ndx == MeterBarID )
+         bShownByDefault = false;
+      if( ndx == ScrubbingBarID )
          bShownByDefault = false;
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
