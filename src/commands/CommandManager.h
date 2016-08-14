@@ -44,7 +44,11 @@ struct SubMenuListEntry
       : name(name_), menu( std::move(menu_) )
    {}
 
-   // SubMenuListEntry( SubMenuListEntry&& ) = default;
+   SubMenuListEntry(SubMenuListEntry &&that)
+      : name(std::move(that.name))
+      , menu(std::move(that.menu))
+   {
+   }
 
    wxString name;
    std::unique_ptr<wxMenu> menu;

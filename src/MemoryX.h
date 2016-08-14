@@ -733,7 +733,7 @@ Final_action<F> finally (F f)
 template <typename Iterator>
 struct IteratorRange : public std::pair<Iterator, Iterator> {
    IteratorRange (Iterator &&a, Iterator &&b)
-      : std::pair<Iterator, Iterator> { std::move(a), std::move(b) } {}
+      : std::pair<Iterator, Iterator> ( std::move(a), std::move(b) ) {}
 
    Iterator begin() const { return this->first; }
    Iterator end() const { return this->second; }
