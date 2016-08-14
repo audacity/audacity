@@ -11,7 +11,7 @@
 #ifndef _DIRMANAGER_
 #define _DIRMANAGER_
 
-#include <MemoryX.h>
+#include "MemoryX.h"
 #include <wx/list.h>
 #include <wx/string.h>
 #include <wx/filename.h>

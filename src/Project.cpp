@@ -169,7 +169,8 @@ scroll information.  It also has some status flags.
 
 #include "../images/AudacityLogoAlpha.xpm"
 
-std::unique_ptr<TrackList> AudacityProject::msClipboard{ safenew TrackList() };
+std::unique_ptr<TrackList> AudacityProject::msClipboard
+   { std::make_unique<TrackList>() };
 double AudacityProject::msClipT0 = 0.0;
 double AudacityProject::msClipT1 = 0.0;
 AudacityProject *AudacityProject::msClipProject = NULL;
@@ -829,7 +830,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
      mSelectionFormat(gPrefs->Read(wxT("/SelectionFormat"), wxT(""))),
      mFrequencySelectionFormatName(gPrefs->Read(wxT("/FrequencySelectionFormatName"), wxT(""))),
      mBandwidthSelectionFormatName(gPrefs->Read(wxT("/BandwidthSelectionFormatName"), wxT(""))),
-     mUndoManager(safenew UndoManager),
+     mUndoManager(std::make_unique<UndoManager>()),
      mViewInfo(0.0, 1.0, ZoomInfo::GetDefaultZoom())
 {
    // Note that the first field of the status bar is a dummy, and it's width is set

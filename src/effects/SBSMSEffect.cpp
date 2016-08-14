@@ -156,6 +156,12 @@ void EffectSBSMS :: setParameters(double rateStart, double rateEnd, double pitch
    this->bPitchReferenceInput = bPitchReferenceInput;
 }
 
+void EffectSBSMS::setParameters(double tempoRatio, double pitchRatio)
+{
+   setParameters(tempoRatio, tempoRatio, pitchRatio, pitchRatio,
+                 SlideConstant, SlideConstant, false, false, false);
+}
+
 std::unique_ptr<TimeWarper> createTimeWarper(double t0, double t1, double duration,
                              double rateStart, double rateEnd, SlideType rateSlideType)
 {

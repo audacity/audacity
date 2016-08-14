@@ -333,10 +333,83 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
     */
    double LongSamplesToTime(sampleCount pos) const;
 
-   // Get access to the clips in the tracks.
+   // Get access to the (visible) clips in the tracks, in unspecified order
+   // (not necessarioy sequenced in time).
    WaveClipHolders &GetClips() { return mClips; }
    const WaveClipConstHolders &GetClips() const
       { return reinterpret_cast< const WaveClipConstHolders& >( mClips ); }
+
+   // Get access to all clips (in some unspecified sequence),
+   // including those hidden in cutlines.
+   class AllClipsIterator
+      : public std::iterator< std::forward_iterator_tag, WaveClip* >
+   {
+   public:
+      // Constructs an "end" iterator
+      AllClipsIterator () {}
+
+      // Construct a "begin" iterator
+      explicit AllClipsIterator( WaveTrack &track )
+      {
+         push( track.mClips );
+      }
+
+      WaveClip *operator * () const
+      {
+         if (mStack.empty())
+            return nullptr;
+         else
+            return mStack.back().first->get();
+      }
+
+      AllClipsIterator &operator ++ ()
+      {
+         // The unspecified sequence is a post-order, but there is no
+         // promise whether sister nodes are ordered in time.
+         if ( !mStack.empty() ) {
+            auto &pair =  mStack.back();
+            if ( ++pair.first == pair.second ) {
+               mStack.pop_back();
+            }
+            else
+               push( (*pair.first)->GetCutLines() );
+         }
+
+         return *this;
+      }
+
+      // Define == well enough to serve for loop termination test
+      friend bool operator ==
+         (const AllClipsIterator &a, const AllClipsIterator &b)
+      { return a.mStack.empty() == b.mStack.empty(); }
+
+      friend bool operator !=
+         (const AllClipsIterator &a, const AllClipsIterator &b)
+      { return !( a == b ); }
+
+   private:
+
+      void push( WaveClipHolders &clips )
+      {
+         auto pClips = &clips;
+         while (!pClips->empty()) {
+            auto first = pClips->begin();
+            mStack.push_back( Pair( first, pClips->end() ) );
+            pClips = &(*first)->GetCutLines();
+         }
+      }
+
+      using Iterator = WaveClipHolders::iterator;
+      using Pair = std::pair< Iterator, Iterator >;
+      using Stack = std::vector< Pair >;
+
+      Stack mStack;
+   };
+
+   IteratorRange< AllClipsIterator > GetAllClips()
+   {
+      return { AllClipsIterator{ *this }, AllClipsIterator{ } };
+   }
 
    // Create NEW clip and add it to this track. Returns a pointer
    // to the newly created clip.

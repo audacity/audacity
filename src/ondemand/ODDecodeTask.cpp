@@ -140,7 +140,7 @@ void ODDecodeTask::Update()
          Sequence *seq;
 
          //gather all the blockfiles that we should process in the wavetrack.
-         for (const auto &clip : mWaveTracks[j]->GetClips()) {
+         for (const auto &clip : mWaveTracks[j]->GetAllClips()) {
             seq = clip->GetSequence();
             //TODO:this lock is way to big since the whole file is one sequence.  find a way to break it down.
             seq->LockDeleteUpdateMutex();

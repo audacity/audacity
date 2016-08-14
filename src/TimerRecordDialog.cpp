@@ -778,6 +778,7 @@ TimerRecordPathCtrl * TimerRecordDialog::NewPathControl(wxWindow *wParent, const
                                                         const wxString &sCaption, const wxString &sValue)
 {
    TimerRecordPathCtrl * pTextCtrl;
+   wxASSERT(wParent); // to justify safenew
    pTextCtrl = safenew TimerRecordPathCtrl(wParent, iID, sValue);
    pTextCtrl->SetName(sCaption);
    return pTextCtrl;

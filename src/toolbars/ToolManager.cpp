@@ -363,6 +363,7 @@ ToolManager::ToolManager( AudacityProject *parent, wxWindow *topDockParent )
    mLeft = std::make_unique<wxRegion>( 3, &pt[0] );
 
    // Create the indicator frame
+   // parent is null but FramePtr ensures destruction
    mIndicator = FramePtr{ safenew wxFrame( NULL,
                              wxID_ANY,
                              wxEmptyString,
@@ -410,6 +411,8 @@ ToolManager::ToolManager( AudacityProject *parent, wxWindow *topDockParent )
    mBotDock = safenew ToolDock( this, mParent, BotDockID );
 
    // Create all of the toolbars
+   // All have the project as parent window
+   wxASSERT(parent);
    mBars[ ToolsBarID ]         =  ToolBar::Holder{ safenew ToolsToolBar() };
    mBars[ TransportBarID ]     =  ToolBar::Holder{ safenew ControlToolBar() };
    mBars[ RecordMeterBarID ]   =  ToolBar::Holder{ safenew MeterToolBar( parent, RecordMeterBarID ) };
@@ -583,6 +586,7 @@ void ToolManager::Reset()
          // Maybe construct a NEW floater
          // this happens if we have just been bounced out of a dock.
          if( floater == NULL ) {
+            wxASSERT(mParent);
             floater = safenew ToolFrame( mParent, this, bar, wxPoint(-1,-1) );
             bar->Reparent( floater );
          }
@@ -761,6 +765,7 @@ void ToolManager::ReadConfig()
          bar->Create( mTopDock );
 
          // Construct a NEW floater
+         wxASSERT(mParent);
          ToolFrame *f = safenew ToolFrame( mParent, this, bar, wxPoint( x, y ) );
 
          // Set the width and height
@@ -1327,6 +1332,7 @@ void ToolManager::OnGrabber( GrabberEvent & event )
       mDragBar->SetPositioned();
 
       // Construct a NEW floater
+      wxASSERT(mParent);
       mDragWindow = safenew ToolFrame( mParent, this, mDragBar, mp );
 
       // Make sure the ferry is visible

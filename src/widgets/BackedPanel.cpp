@@ -14,7 +14,7 @@ BackedPanel::BackedPanel(wxWindow * parent, wxWindowID id,
             const wxSize & size,
             long style)
 : wxPanelWrapper(parent, id, pos, size, style)
-, mBacking{ safenew wxBitmap(1, 1) }
+, mBacking{ std::make_unique<wxBitmap>(1, 1) }
 {
    // Preinit the backing DC and bitmap so routines that require it will
    // not cause a crash if they run before the panel is fully initialized.
@@ -52,7 +52,7 @@ void BackedPanel::ResizeBacking()
       mBackingDC.SelectObject(wxNullBitmap);
 
    wxSize sz = GetClientSize();
-   mBacking.reset(safenew wxBitmap);
+   mBacking = std::make_unique<wxBitmap>();
    mBacking->Create(sz.x, sz.y); //, *dc);
    mBackingDC.SelectObject(*mBacking);
 }

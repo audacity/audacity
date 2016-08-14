@@ -2125,7 +2125,7 @@ Effect::AddedAnalysisTrack::~AddedAnalysisTrack()
 auto Effect::AddAnalysisTrack(const wxString &name) -> std::shared_ptr<AddedAnalysisTrack>
 {
    return std::shared_ptr<AddedAnalysisTrack>
-   { safenew AddedAnalysisTrack{ this, name } };
+      { safenew AddedAnalysisTrack{ this, name } };
 }
 
 Effect::ModifiedAnalysisTrack::ModifiedAnalysisTrack

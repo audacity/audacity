@@ -113,6 +113,7 @@ void MeterToolBar::ReCreateButtons()
 
 void MeterToolBar::Populate()
 {
+   wxASSERT(mProject); // to justify safenew
    Add((mSizer = safenew wxGridBagSizer()), 1, wxEXPAND);
 
    if( mWhichMeters & kWithRecordMeter ){

@@ -104,13 +104,7 @@ class AUDACITY_DLL_API Tags final : public XMLTagHandler {
    bool HasTag(const wxString & name) const;
    wxString GetTag(const wxString & name) const;
 
-   using IterPair = std::pair<TagMap::const_iterator, TagMap::const_iterator>;
-   struct Iterators : public IterPair {
-      Iterators(IterPair p) : IterPair(p) {}
-      // Define begin() and end() for convenience in range-for
-      auto begin() -> decltype(first) const { return first; }
-      auto end() -> decltype(second) const { return second; }
-   };
+   using Iterators = IteratorRange<TagMap::const_iterator>;
    Iterators GetRange() const;
 
    void SetTag(const wxString & name, const wxString & value);
