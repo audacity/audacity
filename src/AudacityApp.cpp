@@ -275,7 +275,7 @@ void QuitAudacity(bool bForce)
    // BG: Are there any projects open?
    //-   if (!gAudacityProjects.IsEmpty())
 /*start+*/
-   if (gAudacityProjects.IsEmpty())
+   if (gAudacityProjects.empty())
    {
 #ifdef __WXMAC__
       AudacityProject::DeleteClipboard();
@@ -285,8 +285,10 @@ void QuitAudacity(bool bForce)
 /*end+*/
    {
       SaveWindowSize();
-      while (gAudacityProjects.Count())
+      while (gAudacityProjects.size())
       {
+         // Closing the project has global side-effect
+         // of deletion from gAudacityProjects
          if (bForce)
          {
             gAudacityProjects[0]->Close(true);
@@ -339,12 +341,12 @@ void SaveWindowSize()
    bool validWindowForSaveWindowSize = FALSE;
    AudacityProject * validProject = NULL;
    bool foundIconizedProject = FALSE;
-   size_t numProjects = gAudacityProjects.Count();
+   size_t numProjects = gAudacityProjects.size();
    for (size_t i = 0; i < numProjects; i++)
    {
       if (!gAudacityProjects[i]->IsIconized()) {
          validWindowForSaveWindowSize = TRUE;
-         validProject = gAudacityProjects[i];
+         validProject = gAudacityProjects[i].get();
          i = numProjects;
       }
       else
@@ -370,7 +372,7 @@ void SaveWindowSize()
    else
    {
       if (foundIconizedProject) {
-         validProject = gAudacityProjects[0];
+         validProject = gAudacityProjects[0].get();
          bool wndMaximized = validProject->IsMaximized();
          wxRect normalRect = validProject->GetNormalizedWindowState();
          // store only the normal rectangle because the itemized rectangle
@@ -502,7 +504,7 @@ static gboolean save_yourself_cb(GnomeClient *client,
       return TRUE;
    }
 
-   if (gAudacityProjects.IsEmpty()) {
+   if (gAudacityProjects.empty()) {
       return TRUE;
    }
 
@@ -723,7 +725,7 @@ void AudacityApp::MacNewFile()
    // This method should only be used on the Mac platform
    // when no project windows are open.
 
-   if (gAudacityProjects.GetCount() == 0) {
+   if (gAudacityProjects.size() == 0) {
       CreateNewAudacityProject();
    }
 }
@@ -886,19 +888,19 @@ void AudacityApp::OnTimer(wxTimerEvent& WXUNUSED(event))
    if (ShouldShowMissingAliasedFileWarning()) {
       // find which project owns the blockfile
       // note: there may be more than 1, but just go with the first one.
-      size_t numProjects = gAudacityProjects.Count();
+      size_t numProjects = gAudacityProjects.size();
       wxString missingFileName;
       AudacityProject *offendingProject = NULL;
 
       m_LastMissingBlockFileLock.Lock();
       if (numProjects == 1) {
          // if there is only one project open, no need to search
-         offendingProject = gAudacityProjects[0];
+         offendingProject = gAudacityProjects[0].get();
       } else if (numProjects > 1) {
          for (size_t i = 0; i < numProjects; i++) {
             // search each project for the blockfile
             if (gAudacityProjects[i]->GetDirManager()->ContainsBlockFile(m_LastMissingBlockFile)) {
-               offendingProject = gAudacityProjects[i];
+               offendingProject = gAudacityProjects[i].get();
                break;
             }
          }
@@ -1973,8 +1975,10 @@ void AudacityApp::OnEndSession(wxCloseEvent & event)
 
    // Try to close each open window.  If the user hits Cancel
    // in a Save Changes dialog, don't continue.
-   if (!gAudacityProjects.IsEmpty()) {
-      while (gAudacityProjects.Count()) {
+   if (!gAudacityProjects.empty()) {
+      while (gAudacityProjects.size()) {
+         // Closing the project has side-effect of
+         // deletion from gAudacityProjects
          if (force) {
             gAudacityProjects[0]->Close(true);
          }
@@ -2077,7 +2081,7 @@ void AudacityApp::OnMenuNew(wxCommandEvent & event)
    // this happens, and enable the same code to be present on
    // all platforms.
 
-   if(gAudacityProjects.GetCount() == 0)
+   if(gAudacityProjects.size() == 0)
       CreateNewAudacityProject();
    else
       event.Skip();
@@ -2093,7 +2097,7 @@ void AudacityApp::OnMenuOpen(wxCommandEvent & event)
    // all platforms.
 
 
-   if(gAudacityProjects.GetCount() == 0)
+   if(gAudacityProjects.size() == 0)
       AudacityProject::OpenFiles(NULL);
    else
       event.Skip();
@@ -2109,7 +2113,7 @@ void AudacityApp::OnMenuPreferences(wxCommandEvent & event)
    // this happens, and enable the same code to be present on
    // all platforms.
 
-   if(gAudacityProjects.GetCount() == 0) {
+   if(gAudacityProjects.size() == 0) {
       GlobalPrefsDialog dialog(NULL /* parent */ );
       dialog.ShowModal();
    }
@@ -2127,12 +2131,12 @@ void AudacityApp::OnMenuExit(wxCommandEvent & event)
    // all platforms.
 
    // LL:  Removed "if" to allow closing based on final project count.
-   // if(gAudacityProjects.GetCount() == 0)
+   // if(gAudacityProjects.size() == 0)
       QuitAudacity();
 
    // LL:  Veto quit if projects are still open.  This can happen
    //      if the user selected Cancel in a Save dialog.
-   event.Skip(gAudacityProjects.GetCount() == 0);
+   event.Skip(gAudacityProjects.size() == 0);
 
 }
 

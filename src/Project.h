@@ -110,7 +110,9 @@ void GetDefaultWindowRect(wxRect *defRect);
 void GetNextWindowPlacement(wxRect *nextRect, bool *pMaximized, bool *pIconized);
 bool IsWindowAccessible(wxRect *requestedRect);
 
-WX_DEFINE_ARRAY(AudacityProject *, AProjectArray);
+using AProjectHolder =
+   movable_ptr_with_deleter< AudacityProject, Destroyer< AudacityProject > >;
+using AProjectArray = std::vector< AProjectHolder >;
 
 extern AProjectArray gAudacityProjects;
 

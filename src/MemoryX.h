@@ -670,15 +670,42 @@ public:
    movable_ptr_with_deleter() {};
    movable_ptr_with_deleter(T* p, const Deleter &d)
       : movable_ptr_with_deleter_base<T, Deleter>( p, d ) {}
-   movable_ptr_with_deleter(const movable_ptr_with_deleter &that) = default;
+
+#ifdef __AUDACITY_OLD_STD__
+
+   // copy
+   movable_ptr_with_deleter(const movable_ptr_with_deleter &that)
+      : movable_ptr_with_deleter_base < T, Deleter > ( that )
+   {
+   }
+
+   movable_ptr_with_deleter &operator= (const movable_ptr_with_deleter& that)
+   {
+      if (this != &that) {
+         ((movable_ptr_with_deleter_base<T, Deleter>&)(*this)) =
+            that;
+      }
+      return *this;
+   }
+
+#else
+
+   // move
+   movable_ptr_with_deleter(movable_ptr_with_deleter &&that)
+      : movable_ptr_with_deleter_base < T, Deleter > ( std::move(that) )
+   {
+   }
+
    movable_ptr_with_deleter &operator= (movable_ptr_with_deleter&& that)
    {
       if (this != &that) {
          ((movable_ptr_with_deleter_base<T, Deleter>&)(*this)) =
-            std::move(that);
+         std::move(that);
       }
       return *this;
    }
+
+#endif
 };
 
 template<typename T, typename Deleter, typename... Args>
