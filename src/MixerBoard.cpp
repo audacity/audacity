@@ -934,6 +934,7 @@ MixerBoard::MixerBoard(AudacityProject* pProject,
    this->LoadMusicalInstruments(); // Set up mMusicalInstruments.
    mProject = pProject;
 
+   wxASSERT(pProject); // to justify safenew
    mScrolledWindow =
       safenew MixerBoardScrolledWindow(
          pProject, // AudacityProject* project,

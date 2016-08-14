@@ -184,6 +184,7 @@ void ShowModelessErrorDialog(wxWindow *parent,
                              const wxString &helpURL,
                              const bool Close)
 {
+   wxASSERT(parent);
    ErrorDialog *dlog = safenew ErrorDialog(parent, dlogTitle, message, helpURL, Close, false);
    dlog->CentreOnParent();
    dlog->Show();
@@ -199,6 +200,7 @@ void ShowAliasMissingDialog(AudacityProject *parent,
                             const wxString &helpURL,
                             const bool Close)
 {
+   wxASSERT(parent); // to justify safenew
    ErrorDialog *dlog = safenew AliasedFileMissingDialog(parent, dlogTitle, message, helpURL, Close, false);
    // Don't center because in many cases (effect, export, etc) there will be a progress bar in the center that blocks this.
    // instead put it just above or on the top of the project.
