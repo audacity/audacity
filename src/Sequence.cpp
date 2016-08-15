@@ -176,7 +176,7 @@ bool Sequence::ConvertToSampleFormat(sampleFormat format, bool* pbChanged)
       for (size_t i = 0, nn = mBlock.size(); i < nn && bSuccess; i++)
       {
          SeqBlock &oldSeqBlock = mBlock[i];
-         BlockFile* oldBlockFile = oldSeqBlock.f;
+         const auto &oldBlockFile = oldSeqBlock.f;
 
          sampleCount len = oldBlockFile->GetLength();
 
@@ -277,7 +277,7 @@ bool Sequence::GetMinMax(sampleCount start, sampleCount len,
    {
       float block0Min, block0Max, block0RMS;
       const SeqBlock &theBlock = mBlock[block0];
-      BlockFile *const theFile = theBlock.f;
+      const auto &theFile = theBlock.f;
       theFile->GetMinMax(&block0Min, &block0Max, &block0RMS);
 
       if (block0Min < min || block0Max > max) {
@@ -302,7 +302,7 @@ bool Sequence::GetMinMax(sampleCount start, sampleCount len,
    {
       float block1Min, block1Max, block1RMS;
       const SeqBlock &theBlock = mBlock[block1];
-      BlockFile *const theFile = theBlock.f;
+      const auto &theFile = theBlock.f;
       theFile->GetMinMax(&block1Min, &block1Max, &block1RMS);
 
       if (block1Min < min || block1Max > max) {
@@ -351,7 +351,7 @@ bool Sequence::GetRMS(sampleCount start, sampleCount len,
    for (unsigned b = block0 + 1; b < block1; b++) {
       float blockMin, blockMax, blockRMS;
       const SeqBlock &theBlock = mBlock[b];
-      BlockFile *const theFile = theBlock.f;
+      const auto &theFile = theBlock.f;
       theFile->GetMinMax(&blockMin, &blockMax, &blockRMS);
 
       const sampleCount fileLen = theFile->GetLength();
@@ -364,7 +364,7 @@ bool Sequence::GetRMS(sampleCount start, sampleCount len,
    // If not, we need read some samples and summaries from disk.
    {
       const SeqBlock &theBlock = mBlock[block0];
-      BlockFile *const theFile = theBlock.f;
+      const auto &theFile = theBlock.f;
       s0 = start - theBlock.start;
       l0 = len;
       maxl0 = theBlock.start + theFile->GetLength() - start;
@@ -381,7 +381,7 @@ bool Sequence::GetRMS(sampleCount start, sampleCount len,
 
    if (block1 > block0) {
       const SeqBlock &theBlock = mBlock[block1];
-      BlockFile *const theFile = theBlock.f;
+      const auto &theFile = theBlock.f;
 
       s0 = 0;
       l0 = (start + len) - theBlock.start;
@@ -429,7 +429,7 @@ bool Sequence::Copy(sampleCount s0, sampleCount s1, std::unique_ptr<Sequence> &d
 
    const SeqBlock &block0 = mBlock[b0];
    if (s0 != block0.start) {
-      BlockFile *const file = block0.f;
+      const auto &file = block0.f;
       blocklen = std::min(s1, block0.start + file->GetLength()) - s0;
       wxASSERT(file->IsAlias() || (blocklen <= mMaxSamples)); // Vaughan, 2012-02-29
       Get(b0, buffer.ptr(), mSampleFormat, s0, blocklen);
@@ -446,7 +446,7 @@ bool Sequence::Copy(sampleCount s0, sampleCount s1, std::unique_ptr<Sequence> &d
    // Do the last block
    if (b1 > b0) {
       const SeqBlock &block = mBlock[b1];
-      BlockFile *const file = block.f;
+      const auto &file = block.f;
       blocklen = (s1 - block.start);
       wxASSERT(file->IsAlias() || (blocklen <= mMaxSamples)); // Vaughan, 2012-02-29
       if (blocklen < file->GetLength()) {
@@ -547,7 +547,7 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
            mSampleFormat, block,
            splitPoint, length - splitPoint);
 
-      BlockFile *const file =
+      auto file =
          mDirManager->NewSimpleBlockFile(buffer.ptr(), largerBlockLen, mSampleFormat);
 
       mDirManager->Deref(block.f);
@@ -617,7 +617,7 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
 
       for (i = 2; i < srcNumBlocks - 2; i++) {
          const SeqBlock &block = srcBlock[i];
-         BlockFile *const file = mDirManager->CopyBlockFile(block.f);
+         auto file = mDirManager->CopyBlockFile(block.f);
          if (!file) {
             wxASSERT(false); // TODO: Handle this better, alert the user of failure.
             return false;
@@ -676,7 +676,7 @@ bool Sequence::InsertSilence(sampleCount s0, sampleCount len)
 
    sTrack.mBlock.reserve((len + idealSamples - 1) / idealSamples);
 
-   BlockFile *silentFile = 0;
+   BlockFilePtr silentFile {};
    if (len >= idealSamples)
       silentFile = new SilentBlockFile(idealSamples);
    while (len >= idealSamples) {
@@ -771,9 +771,9 @@ unsigned int Sequence::GetODFlags()
 {
    unsigned int ret = 0;
    for (unsigned int i = 0; i < mBlock.size(); i++) {
-      BlockFile *const file = mBlock[i].f;
+      const auto &file = mBlock[i].f;
       if(!file->IsDataAvailable())
-         ret |= (static_cast<ODDecodeBlockFile*>(file))->GetDecodeType();
+         ret |= (static_cast< ODDecodeBlockFile * >( &*file ))->GetDecodeType();
       else if(!file->IsSummaryAvailable())
          ret |= ODTask::eODPCMSummary;
    }
@@ -1114,7 +1114,7 @@ int Sequence::FindBlock(sampleCount pos) const
 bool Sequence::Read(samplePtr buffer, sampleFormat format,
                     const SeqBlock &b, sampleCount start, sampleCount len) const
 {
-   BlockFile *f = b.f;
+   const auto &f = b.f;
 
    wxASSERT(start >= 0);
    wxASSERT(start + len <= f->GetLength());
@@ -1541,7 +1541,8 @@ bool Sequence::Append(samplePtr buffer, sampleFormat format,
       );
       // FIXME: TRAP_ERR This could throw an exception that should(?) be converted to return false.
       if (blockFileLog)
-         static_cast<SimpleBlockFile*>(newLastBlock.f)->SaveXML(*blockFileLog);
+         static_cast< SimpleBlockFile * >( &*newLastBlock.f )
+            ->SaveXML( *blockFileLog );
 
       mDirManager->Deref(lastBlock.f);
       lastBlock = newLastBlock;
@@ -1554,7 +1555,7 @@ bool Sequence::Append(samplePtr buffer, sampleFormat format,
    while (len) {
       const sampleCount idealSamples = GetIdealBlockSize();
       const sampleCount l = std::min(idealSamples, len);
-      BlockFile *pFile;
+      BlockFilePtr pFile;
       if (format == mSampleFormat) {
          pFile = mDirManager->NewSimpleBlockFile(buffer, l, mSampleFormat,
                                                 blockFileLog != NULL);
@@ -1567,7 +1568,7 @@ bool Sequence::Append(samplePtr buffer, sampleFormat format,
 
       // FIXME: TRAP_ERR This could throw an exception that should(?) be converted to return false.
       if (blockFileLog)
-         static_cast<SimpleBlockFile*>(pFile)->SaveXML(*blockFileLog);
+         static_cast< SimpleBlockFile * >( &*pFile )->SaveXML( *blockFileLog );
 
       mBlock.push_back(SeqBlock(pFile, mNumSamples));
 
@@ -1685,7 +1686,7 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
          if (!scratch.ptr())
             scratch.Allocate(scratchSize, mSampleFormat);
          Read(scratch.ptr(), mSampleFormat, preBlock, 0, preBufferLen);
-         BlockFile *const pFile =
+         auto pFile =
             mDirManager->NewSimpleBlockFile(scratch.ptr(), preBufferLen, mSampleFormat);
 
          newBlock.push_back(SeqBlock(pFile, preBlock.start));
@@ -1736,7 +1737,7 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
             scratch.Allocate(postBufferLen, mSampleFormat);
          sampleCount pos = (start + len) - postBlock.start;
          Read(scratch.ptr(), mSampleFormat, postBlock, pos, postBufferLen);
-         BlockFile *const file =
+         auto file =
             mDirManager->NewSimpleBlockFile(scratch.ptr(), postBufferLen, mSampleFormat);
 
          newBlock.push_back(SeqBlock(file, start));
@@ -1855,7 +1856,7 @@ int Sequence::GetMaxDiskBlockSize()
    return sMaxDiskBlockSize;
 }
 
-void Sequence::AppendBlockFile(BlockFile* blockFile)
+void Sequence::AppendBlockFile(const BlockFilePtr &blockFile)
 {
    // We assume blockFile has the correct ref count already
 

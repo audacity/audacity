@@ -51,7 +51,7 @@ LegacyAliasBlockFile::~LegacyAliasBlockFile()
 /// the summary data to a NEW file.
 ///
 /// @param newFileName The filename to copy the summary data to.
-BlockFile *LegacyAliasBlockFile::Copy(wxFileNameWrapper &&newFileName)
+BlockFilePtr LegacyAliasBlockFile::Copy(wxFileNameWrapper &&newFileName)
 {
    BlockFile *newBlockFile =
       new LegacyAliasBlockFile(std::move(newFileName),
@@ -83,7 +83,7 @@ void LegacyAliasBlockFile::SaveXML(XMLWriter &xmlFile)
 // BuildFromXML methods should always return a BlockFile, not NULL,
 // even if the result is flawed (e.g., refers to nonexistent file),
 // as testing will be done in DirManager::ProjectFSCK().
-BlockFile *LegacyAliasBlockFile::BuildFromXML(const wxString &projDir, const wxChar **attrs)
+BlockFilePtr LegacyAliasBlockFile::BuildFromXML(const wxString &projDir, const wxChar **attrs)
 {
    wxFileNameWrapper summaryFileName;
    wxFileNameWrapper aliasFileName;

@@ -66,7 +66,6 @@ void ODComputeSummaryTask::DoSomeInternal()
       return;
    }
 
-   ODPCMAliasBlockFile* bf;
    sampleCount blockStartSample = 0;
    sampleCount blockEndSample = 0;
    bool success =false;
@@ -74,7 +73,7 @@ void ODComputeSummaryTask::DoSomeInternal()
    mBlockFilesMutex.Lock();
    for(size_t i=0; i < mWaveTracks.size() && mBlockFiles.size();i++)
    {
-      bf = mBlockFiles[0];
+      const auto &bf = mBlockFiles[0];
 
       //first check to see if the ref count is at least 2.  It should have one
       //from when we added it to this instance's mBlockFiles array, and one from
@@ -202,7 +201,7 @@ void ODComputeSummaryTask::Update()
             {
                //if there is data but no summary, this blockfile needs summarizing.
                SeqBlock &block = (*blocks)[i];
-               BlockFile *const file = block.f;
+               const auto &file = block.f;
                if(file->IsDataAvailable() && !file->IsSummaryAvailable())
                {
                   file->Ref();

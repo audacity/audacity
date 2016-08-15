@@ -32,7 +32,11 @@ class SequenceTest;
 #define FSCKstatus_SAVE_AUP  0x4 // used in combination with FSCKstatus_CHANGED
 
 WX_DECLARE_HASH_MAP(int, int, wxIntegerHash, wxIntegerEqual, DirHash);
-WX_DECLARE_HASH_MAP(wxString, BlockFile*, wxStringHash, wxStringEqual, BlockHash);
+
+class BlockFile;
+using BlockFilePtr = BlockFile *;
+
+WX_DECLARE_HASH_MAP(wxString, BlockFilePtr, wxStringHash, wxStringEqual, BlockHash);
 
 wxMemorySize GetFreeMemory();
 
@@ -56,18 +60,22 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
 
    wxLongLong GetFreeDiskSpace();
 
-   BlockFile *NewSimpleBlockFile(samplePtr sampleData,
+   BlockFilePtr
+      NewSimpleBlockFile(samplePtr sampleData,
                                  sampleCount sampleLen,
                                  sampleFormat format,
                                  bool allowDeferredWrite = false);
 
-   BlockFile *NewAliasBlockFile( const wxString &aliasedFile, sampleCount aliasStart,
+   BlockFilePtr
+      NewAliasBlockFile( const wxString &aliasedFile, sampleCount aliasStart,
                                  sampleCount aliasLen, int aliasChannel);
 
-   BlockFile *NewODAliasBlockFile( const wxString &aliasedFile, sampleCount aliasStart,
+   BlockFilePtr
+      NewODAliasBlockFile( const wxString &aliasedFile, sampleCount aliasStart,
                                  sampleCount aliasLen, int aliasChannel);
 
-   BlockFile *NewODDecodeBlockFile( const wxString &aliasedFile, sampleCount aliasStart,
+   BlockFilePtr
+      NewODDecodeBlockFile( const wxString &aliasedFile, sampleCount aliasStart,
                                  sampleCount aliasLen, int aliasChannel, int decodeType);
 
    /// Returns true if the blockfile pointed to by b is contained by the DirManager
@@ -78,7 +86,7 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
    // Adds one to the reference count of the block file,
    // UNLESS it is "locked", then it makes a NEW copy of
    // the BlockFile.
-   BlockFile *CopyBlockFile(BlockFile *b);
+   BlockFilePtr CopyBlockFile(const BlockFilePtr &b);
 
    BlockFile *LoadBlockFile(const wxChar **attrs, sampleFormat format);
    void SaveBlockFile(BlockFile *f, int depth, FILE *fp);

@@ -338,7 +338,7 @@ bool RecordingRecoveryHandler::HandleXMLTag(const wxChar *tag,
       BlockArray array;
       array.resize(1);
       dirManager->SetLoadingTarget(&array, 0);
-      BlockFile *& blockFile = array[0].f;
+      auto &blockFile = array[0].f;
 
       if (!dirManager->HandleXMLTag(tag, attrs) || !blockFile)
       {

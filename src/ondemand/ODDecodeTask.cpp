@@ -42,7 +42,6 @@ void ODDecodeTask::DoSomeInternal()
       return;
    }
 
-   ODDecodeBlockFile* bf;
    ODFileDecoder* decoder;
    sampleCount blockStartSample = 0;
    sampleCount blockEndSample = 0;
@@ -50,7 +49,7 @@ void ODDecodeTask::DoSomeInternal()
 
    for(size_t i=0; i < mWaveTracks.size() && mBlockFiles.size();i++)
    {
-      bf = mBlockFiles[0];
+      const auto &bf = mBlockFiles[0];
 
       int ret = 1;
 
@@ -64,7 +63,7 @@ void ODDecodeTask::DoSomeInternal()
          //which the dirmanager::EnsureSafeFilename also does.
          bf->LockRead();
          //Get the decoder.  If the file was moved, we need to create another one and init it.
-         decoder=GetOrCreateMatchingFileDecoder(bf);
+         decoder = GetOrCreateMatchingFileDecoder( &*bf );
          if(!decoder->IsInitialized())
             decoder->Init();
          bf->SetODFileDecoder(decoder);

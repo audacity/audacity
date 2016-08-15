@@ -75,13 +75,13 @@ class ODPCMAliasBlockFile final : public PCMAliasBlockFile
    bool Read64K(float *buffer, sampleCount start, sampleCount len) override;
 
    ///Makes NEW ODPCMAliasBlockFile or PCMAliasBlockFile depending on summary availability
-   BlockFile *Copy(wxFileNameWrapper &&fileName) override;
+   BlockFilePtr Copy(wxFileNameWrapper &&fileName) override;
 
    ///Saves as xml ODPCMAliasBlockFile or PCMAliasBlockFile depending on summary availability
    void SaveXML(XMLWriter &xmlFile) override;
 
    ///Reconstructs from XML a ODPCMAliasBlockFile and reschedules it for OD loading
-   static BlockFile *BuildFromXML(DirManager &dm, const wxChar **attrs);
+   static BlockFilePtr BuildFromXML(DirManager &dm, const wxChar **attrs);
 
    ///Writes the summary file if summary data is available
    void Recover(void) override;

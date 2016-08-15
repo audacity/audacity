@@ -45,9 +45,10 @@
 WX_DECLARE_HASH_MAP(wxString, AliasedFile *,
                     wxStringHash, wxStringEqual, AliasedFileHash);
 
-WX_DECLARE_HASH_MAP(BlockFile *, BlockFile *,
+// These two hash types are used only inside short scopes
+// so it is safe to key them by plain pointers.
+WX_DECLARE_HASH_MAP(BlockFile *, BlockFilePtr,
                     wxPointerHash, wxPointerEqual, ReplacedBlockFileHash);
-
 WX_DECLARE_HASH_MAP(BlockFile *, bool,
                     wxPointerHash, wxPointerEqual, BoolBlockFileHash);
 
@@ -89,14 +90,15 @@ static void ReplaceBlockFiles(AudacityProject *project,
 
    int i;
    for (i = 0; i < (int)blocks.size(); i++) {
-      if (hash.count(blocks[i]->f) > 0) {
-         BlockFile *src = blocks[i]->f;
-         BlockFile *dst = hash[src];
+      auto &f = blocks[i]->f;
+      const auto src = &*f;
+      if (hash.count( src ) > 0) {
+         const auto &dst = hash[src];
 
          dirManager->Deref(src);
          dirManager->Ref(dst);
 
-         blocks[i]->f = dst;
+         f = dst;
       }
    }
 }
@@ -113,12 +115,12 @@ void FindDependencies(AudacityProject *project,
    BoolBlockFileHash blockFileHash;
 
    for (const auto &blockFile : blocks) {
-      BlockFile *f = blockFile->f;
-      if (f->IsAlias() && (blockFileHash.count(f) == 0))
+      const auto &f = blockFile->f;
+      if (f->IsAlias() && (blockFileHash.count( &*f ) == 0))
       {
          // f is an alias block we have not yet counted.
-         blockFileHash[f] = true; // Don't count the same blockfile twice.
-         AliasBlockFile *aliasBlockFile = static_cast<AliasBlockFile*>(f);
+         blockFileHash[ &*f ] = true; // Don't count the same blockfile twice.
+         auto aliasBlockFile = static_cast<AliasBlockFile*>( &*f );
          const wxFileName &fileName = aliasBlockFile->GetAliasedFileName();
 
          // In DirManager::ProjectFSCK(), if the user has chosen to
@@ -183,11 +185,11 @@ static void RemoveDependencies(AudacityProject *project,
    ReplacedBlockFileHash blockFileHash;
    wxLongLong completedBytes = 0;
    for (const auto blockFile : blocks) {
-      BlockFile *f = blockFile->f;
-      if (f->IsAlias() && (blockFileHash.count(f) == 0))
+      const auto &f = blockFile->f;
+      if (f->IsAlias() && (blockFileHash.count( &*f ) == 0))
       {
          // f is an alias block we have not yet processed.
-         AliasBlockFile *aliasBlockFile = static_cast<AliasBlockFile*>(f);
+         auto aliasBlockFile = static_cast<AliasBlockFile*>( &*f );
          const wxFileName &fileName = aliasBlockFile->GetAliasedFileName();
          const wxString &fileNameStr = fileName.GetFullPath();
 
@@ -197,7 +199,7 @@ static void RemoveDependencies(AudacityProject *project,
 
          // Convert it from an aliased file to an actual file in the project.
          unsigned int len = aliasBlockFile->GetLength();
-         BlockFile *newBlockFile;
+         BlockFilePtr newBlockFile;
          {
             SampleBuffer buffer(len, format);
             f->ReadData(buffer.ptr(), format, 0, len);
@@ -206,7 +208,7 @@ static void RemoveDependencies(AudacityProject *project,
          }
 
          // Update our hash so we know what block files we've done
-         blockFileHash[f] = newBlockFile;
+         blockFileHash[ &*f ] = newBlockFile;
 
          // Update the progress bar
          completedBytes += SAMPLE_SIZE(format) * len;

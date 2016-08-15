@@ -294,7 +294,7 @@ void LegacyBlockFile::SaveXML(XMLWriter &xmlFile)
 // even if the result is flawed (e.g., refers to nonexistent file),
 // as testing will be done in DirManager::ProjectFSCK().
 /// static
-BlockFile *LegacyBlockFile::BuildFromXML(const wxString &projDir, const wxChar **attrs,
+BlockFilePtr LegacyBlockFile::BuildFromXML(const wxString &projDir, const wxChar **attrs,
                                          sampleCount len, sampleFormat format)
 {
    wxFileNameWrapper fileName;
@@ -334,7 +334,7 @@ BlockFile *LegacyBlockFile::BuildFromXML(const wxString &projDir, const wxChar *
 /// Create a copy of this BlockFile, but using a different disk file.
 ///
 /// @param newFileName The name of the NEW file to use.
-BlockFile *LegacyBlockFile::Copy(wxFileNameWrapper &&newFileName)
+BlockFilePtr LegacyBlockFile::Copy(wxFileNameWrapper &&newFileName)
 {
    return new LegacyBlockFile(std::move(newFileName),
                                                  mFormat,

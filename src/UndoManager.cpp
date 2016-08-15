@@ -100,17 +100,17 @@ void UndoManager::CalculateSpaceUsage()
             BlockArray *blocks = clip->GetSequenceBlockArray();
             for (const auto &block : *blocks)
             {
-               BlockFile *file = block.f;
+               const auto &file = block.f;
 
                // Accumulate space used by the file if the file didn't exist
                // in the previous level
-               if (prev->count(file) == 0 && cur->count(file) == 0)
+               if (prev->count( &*file ) == 0 && cur->count( &*file ) == 0)
                {
                   space[i] += file->GetSpaceUsage().GetValue();
                }
                
                // Add file to current set
-               cur->insert(file);
+               cur->insert( &*file );
             }
          }
 

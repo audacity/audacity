@@ -150,7 +150,7 @@ int PCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
 /// the summary data to a NEW file.
 ///
 /// @param newFileName The filename to copy the summary data to.
-BlockFile *PCMAliasBlockFile::Copy(wxFileNameWrapper &&newFileName)
+BlockFilePtr PCMAliasBlockFile::Copy(wxFileNameWrapper &&newFileName)
 {
    BlockFile *newBlockFile = new PCMAliasBlockFile(std::move(newFileName),
                                                    wxFileNameWrapper{mAliasedFileName}, mAliasStart,
@@ -179,7 +179,7 @@ void PCMAliasBlockFile::SaveXML(XMLWriter &xmlFile)
 // BuildFromXML methods should always return a BlockFile, not NULL,
 // even if the result is flawed (e.g., refers to nonexistent file),
 // as testing will be done in DirManager::ProjectFSCK().
-BlockFile *PCMAliasBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
+BlockFilePtr PCMAliasBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
 {
    wxFileNameWrapper summaryFileName;
    wxFileNameWrapper aliasFileName;

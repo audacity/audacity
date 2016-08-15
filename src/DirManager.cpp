@@ -447,12 +447,12 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
       int count = 0;
       while ((iter != mBlockFileHash.end()) && success)
       {
-         BlockFile *b = iter->second;
+         BlockFilePtr b = iter->second;
 
          if (b->IsLocked())
-            success = CopyToNewProjectDirectory(b);
+            success = CopyToNewProjectDirectory( &*b );
          else{
-            success = MoveToNewProjectDirectory(b);
+            success = MoveToNewProjectDirectory( &*b );
          }
 
          progress.Update(count, total);
@@ -473,8 +473,8 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
          BlockHash::iterator iter = mBlockFileHash.begin();
          while (iter != mBlockFileHash.end())
          {
-            BlockFile *b = iter->second;
-            MoveToNewProjectDirectory(b);
+            BlockFilePtr b = iter->second;
+            MoveToNewProjectDirectory(&*b);
 
             if (count >= 0)
                progress.Update(count, total);
@@ -863,7 +863,7 @@ wxFileNameWrapper DirManager::MakeBlockFileName()
    return std::move(ret);
 }
 
-BlockFile *DirManager::NewSimpleBlockFile(
+BlockFilePtr DirManager::NewSimpleBlockFile(
                                  samplePtr sampleData, sampleCount sampleLen,
                                  sampleFormat format,
                                  bool allowDeferredWrite)
@@ -880,7 +880,7 @@ BlockFile *DirManager::NewSimpleBlockFile(
    return newBlockFile;
 }
 
-BlockFile *DirManager::NewAliasBlockFile(
+BlockFilePtr DirManager::NewAliasBlockFile(
                                  const wxString &aliasedFile, sampleCount aliasStart,
                                  sampleCount aliasLen, int aliasChannel)
 {
@@ -898,7 +898,7 @@ BlockFile *DirManager::NewAliasBlockFile(
    return newBlockFile;
 }
 
-BlockFile *DirManager::NewODAliasBlockFile(
+BlockFilePtr DirManager::NewODAliasBlockFile(
                                  const wxString &aliasedFile, sampleCount aliasStart,
                                  sampleCount aliasLen, int aliasChannel)
 {
@@ -915,7 +915,7 @@ BlockFile *DirManager::NewODAliasBlockFile(
    return newBlockFile;
 }
 
-BlockFile *DirManager::NewODDecodeBlockFile(
+BlockFilePtr DirManager::NewODDecodeBlockFile(
                                  const wxString &aliasedFile, sampleCount aliasStart,
                                  sampleCount aliasLen, int aliasChannel, int decodeType)
 {
@@ -939,7 +939,10 @@ bool DirManager::ContainsBlockFile(const BlockFile *b) const
       return false;
    auto result = b->GetFileName();
    BlockHash::const_iterator it = mBlockFileHash.find(result.name.GetName());
-   return it != mBlockFileHash.end() && it->second == b;
+   if (it == mBlockFileHash.end())
+      return false;
+   BlockFilePtr ptr = it->second;
+   return ptr && (b == &*ptr);
 }
 
 bool DirManager::ContainsBlockFile(const wxString &filepath) const
@@ -952,7 +955,7 @@ bool DirManager::ContainsBlockFile(const wxString &filepath) const
 // Adds one to the reference count of the block file,
 // UNLESS it is "locked", then it makes a NEW copy of
 // the BlockFile.
-BlockFile *DirManager::CopyBlockFile(BlockFile *b)
+BlockFilePtr DirManager::CopyBlockFile(const BlockFilePtr &b)
 {
    auto result = b->GetFileName();
    const auto &fn = result.name;
@@ -970,7 +973,7 @@ BlockFile *DirManager::CopyBlockFile(BlockFile *b)
    }
 
    // Copy the blockfile
-   BlockFile *b2;
+   BlockFilePtr b2;
    if (!fn.IsOk())
       // Block files with uninitialized filename (i.e. SilentBlockFile)
       // just need an in-memory copy.
@@ -991,7 +994,7 @@ BlockFile *DirManager::CopyBlockFile(BlockFile *b)
       {
          if( !wxCopyFile(fn.GetFullPath(),
                   newFile.GetFullPath()) )
-            return NULL;
+            return {};
       }
 
       // Done with fn
@@ -1000,7 +1003,7 @@ BlockFile *DirManager::CopyBlockFile(BlockFile *b)
       b2 = b->Copy(std::move(newFile));
 
       if (b2 == NULL)
-         return NULL;
+         return {};
 
       mBlockFileHash[newName]=b2;
       aliasList.Add(newPath);
@@ -1014,9 +1017,9 @@ bool DirManager::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    if( mLoadingTarget == NULL )
       return false;
 
-   BlockFile* pBlockFile = NULL;
+   BlockFilePtr pBlockFile {};
 
-   BlockFile *&target = mLoadingTarget->at(mLoadingTargetIdx).f;
+   BlockFilePtr &target = mLoadingTarget->at(mLoadingTargetIdx).f;
    
    if (!wxStricmp(tag, wxT("silentblockfile"))) {
       // Silent blocks don't actually have a file associated, so
@@ -1092,20 +1095,19 @@ bool DirManager::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    //
 
    wxString name = target->GetFileName().name.GetName();
-   BlockFile *retrieved = mBlockFileHash[name];
+   auto &wRetrieved = mBlockFileHash[name];
+   BlockFilePtr retrieved = wRetrieved;
    if (retrieved) {
       // Lock it in order to DELETE it safely, i.e. without having
       // it DELETE the file, too...
       target->Lock();
-      delete target;
 
-      Ref(retrieved); // Add one to its reference count
       target = retrieved;
       return true;
    }
 
    // This is a NEW object
-   mBlockFileHash[name] = target;
+   wRetrieved = target;
    // MakeBlockFileName wasn't used so we must add the directory
    // balancing information
    BalanceInfoAdd(name);
@@ -1284,13 +1286,13 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
    BlockHash::iterator iter = mBlockFileHash.begin();
    while (iter != mBlockFileHash.end())
    {
-      BlockFile *b = iter->second;
+      BlockFilePtr b = iter->second;
       // don't worry, we don't rely on this cast unless IsAlias is true
-      AliasBlockFile *ab = (AliasBlockFile*)b;
+      auto ab = static_cast< AliasBlockFile * > ( &*b );
 
       // don't worry, we don't rely on this cast unless ISDataAvailable is false
       // which means that it still needs to access the file.
-      ODDecodeBlockFile *db = (ODDecodeBlockFile*)b;
+      auto db = static_cast< ODDecodeBlockFile * > ( &*b );
 
       if (b->IsAlias() && ab->GetAliasedFileName() == fName) {
          needToRename = true;
@@ -1323,9 +1325,9 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
          BlockHash::iterator iter = mBlockFileHash.begin();
          while (iter != mBlockFileHash.end())
          {
-            BlockFile *b = iter->second;
-            AliasBlockFile *ab = (AliasBlockFile*)b;
-            ODDecodeBlockFile *db = (ODDecodeBlockFile*)b;
+            BlockFilePtr b = iter->second;
+            auto ab = static_cast< AliasBlockFile * > ( &*b );
+            auto db = static_cast< ODDecodeBlockFile * > ( &*b );
 
             if (b->IsAlias() && (ab->GetAliasedFileName() == fName))
                ab->UnlockRead();
@@ -1347,9 +1349,9 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
          BlockHash::iterator iter = mBlockFileHash.begin();
          while (iter != mBlockFileHash.end())
          {
-            BlockFile *b = iter->second;
-            AliasBlockFile *ab = (AliasBlockFile*)b;
-            ODDecodeBlockFile *db = (ODDecodeBlockFile*)b;
+            BlockFilePtr b = iter->second;
+            auto ab = static_cast< AliasBlockFile * > ( &*b );
+            auto db = static_cast< ODDecodeBlockFile * > ( &*b );
 
             if (b->IsAlias() && ab->GetAliasedFileName() == fName)
             {
@@ -1477,11 +1479,12 @@ _("Project check of \"%s\" folder \
          BlockHash::iterator iter = missingAliasedFileAUFHash.begin();
          while (iter != missingAliasedFileAUFHash.end())
          {
-            // This type caste is safe. We checked that it's an alias block file earlier.
-            AliasBlockFile *b = (AliasBlockFile*)iter->second;
+            // This type cast is safe. We checked that it's an alias block file earlier.
+            BlockFilePtr b = iter->second;
+            auto ab = static_cast< AliasBlockFile * > ( &*b );
             if (action == 1)
                // Silence error logging for this block in this session.
-               b->SilenceAliasLog();
+               ab->SilenceAliasLog();
             else if (action == 2)
             {
                // silence the blockfiles by yanking the filename
@@ -1490,8 +1493,8 @@ _("Project check of \"%s\" folder \
                // There, if the mAliasedFileName is bad, it zeroes the data.
                wxFileNameWrapper dummy;
                dummy.Clear();
-               b->ChangeAliasedFileName(std::move(dummy));
-               b->Recover();
+               ab->ChangeAliasedFileName(std::move(dummy));
+               ab->Recover();
                nResult = FSCKstatus_CHANGED | FSCKstatus_SAVE_AUP;
             }
             ++iter;
@@ -1539,7 +1542,7 @@ _("Project check of \"%s\" folder \
          BlockHash::iterator iter = missingAUFHash.begin();
          while (iter != missingAUFHash.end())
          {
-            BlockFile *b = iter->second;
+            BlockFilePtr b = iter->second;
             if(action==0){
                //regenerate from data
                b->Recover();
@@ -1598,7 +1601,7 @@ _("Project check of \"%s\" folder \
          BlockHash::iterator iter = missingAUHash.begin();
          while (iter != missingAUHash.end())
          {
-            BlockFile *b = iter->second;
+            BlockFilePtr b = iter->second;
             if (action == 2)
             {
                //regenerate with zeroes
@@ -1705,10 +1708,11 @@ void DirManager::FindMissingAliasedFiles(
    while (iter != mBlockFileHash.end())
    {
       wxString key = iter->first;   // file name and extension
-      BlockFile *b = iter->second;
+      BlockFilePtr b = iter->second;
       if (b->IsAlias())
       {
-         const wxFileName &aliasedFileName = ((AliasBlockFile*)b)->GetAliasedFileName();
+         const wxFileName &aliasedFileName =
+            static_cast< AliasBlockFile* > ( &*b )->GetAliasedFileName();
          wxString aliasedFileFullPath = aliasedFileName.GetFullPath();
          // wxEmptyString can happen if user already chose to "replace... with silence".
          if ((aliasedFileFullPath != wxEmptyString) &&
@@ -1719,7 +1723,7 @@ void DirManager::FindMissingAliasedFiles(
                   missingAliasedFilePathHash.end()) // Add it only once.
                // Not actually using the block here, just the path,
                // so set the block to NULL to create the entry.
-               missingAliasedFilePathHash[aliasedFileFullPath] = NULL;
+               missingAliasedFilePathHash[aliasedFileFullPath] = {};
          }
       }
       ++iter;
@@ -1740,7 +1744,7 @@ void DirManager::FindMissingAUFs(
    while (iter != mBlockFileHash.end())
    {
       const wxString &key = iter->first;
-      BlockFile *b = iter->second;
+      BlockFilePtr b = iter->second;
       if (b->IsAlias() && b->IsSummaryAvailable())
       {
          /* don't look in hash; that might find files the user moved
@@ -1766,7 +1770,7 @@ void DirManager::FindMissingAUs(
    while (iter != mBlockFileHash.end())
    {
       const wxString &key = iter->first;
-      BlockFile *b = iter->second;
+      BlockFilePtr b = iter->second;
       if (!b->IsAlias())
       {
          wxFileNameWrapper fileName{ MakeBlockFilePath(key) };
@@ -1866,7 +1870,7 @@ void DirManager::FillBlockfilesCache()
    iter = mBlockFileHash.begin();
    while (iter != mBlockFileHash.end())
    {
-      BlockFile *b = iter->second;
+      BlockFilePtr b = iter->second;
       if (b->GetNeedFillCache())
          numNeed++;
       ++iter;
@@ -1882,7 +1886,7 @@ void DirManager::FillBlockfilesCache()
    int current = 0;
    while (iter != mBlockFileHash.end())
    {
-      BlockFile *b = iter->second;
+      BlockFilePtr b = iter->second;
       if (b->GetNeedFillCache() && (GetFreeMemory() > lowMem)) {
          b->FillCache();
       }
@@ -1903,7 +1907,7 @@ void DirManager::WriteCacheToDisk()
    iter = mBlockFileHash.begin();
    while (iter != mBlockFileHash.end())
    {
-      BlockFile *b = iter->second;
+      BlockFilePtr b = iter->second;
       if (b->GetNeedWriteCacheToDisk())
          numNeed++;
       ++iter;
@@ -1919,7 +1923,7 @@ void DirManager::WriteCacheToDisk()
    int current = 0;
    while (iter != mBlockFileHash.end())
    {
-      BlockFile *b = iter->second;
+      BlockFilePtr b = iter->second;
       if (b->GetNeedWriteCacheToDisk())
       {
          b->WriteCacheToDisk();

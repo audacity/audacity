@@ -43,6 +43,11 @@ class SummaryInfo {
 
 
 
+class BlockFile;
+
+// to do: use shared_ptr instead
+using BlockFilePtr = BlockFile *;
+
 class PROFILE_DLL_API BlockFile /* not final, abstract */ {
  public:
 
@@ -127,7 +132,7 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
    virtual bool IsSummaryBeingComputed(){return false;}
 
    /// Create a NEW BlockFile identical to this, using the given filename
-   virtual BlockFile * Copy(wxFileNameWrapper &&newFileName) = 0;
+   virtual BlockFilePtr Copy(wxFileNameWrapper &&newFileName) = 0;
 
    virtual wxLongLong GetSpaceUsage() const = 0;
 
