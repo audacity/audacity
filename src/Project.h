@@ -110,8 +110,8 @@ void GetDefaultWindowRect(wxRect *defRect);
 void GetNextWindowPlacement(wxRect *nextRect, bool *pMaximized, bool *pIconized);
 bool IsWindowAccessible(wxRect *requestedRect);
 
-using AProjectHolder =
-   movable_ptr_with_deleter< AudacityProject, Destroyer< AudacityProject > >;
+// Use shared_ptr to projects, because elsewhere we need weak_ptr
+using AProjectHolder = std::shared_ptr< AudacityProject >;
 using AProjectArray = std::vector< AProjectHolder >;
 
 extern AProjectArray gAudacityProjects;
