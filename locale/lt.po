@@ -8,13 +8,14 @@ msgstr ""
 "Project-Id-Version: Vertimas 1,0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2015-09-07 12:40+0100\n"
-"PO-Revision-Date: 2006-01-16 17:59+0100\n"
-"Last-Translator: Šarūnas <Sharunas55387@hotmail.com>\n"
+"PO-Revision-Date: 2016-07-09 01:14+0300\n"
+"Last-Translator: Zygimantus <zygimantus@gmail.com>\n"
 "Language-Team: Sharunas <Sharunas55387@hotmail.com>\n"
 "Language: lt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.7.1\n"
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp:75
 #, c-format
@@ -23,7 +24,7 @@ msgstr ""
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp:78 src/LangChoice.cpp:135
 msgid "Confirm"
-msgstr ""
+msgstr "Patvirtinti"
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp:91
 msgid "Please choose an existing file."
@@ -48,7 +49,7 @@ msgstr "Klaida"
 
 #: lib-src/FileDialog/mac/FileDialogPrivate.mm:483
 msgid "File type:"
-msgstr ""
+msgstr "Failo tipas:"
 
 #: lib-src/FileDialog/win/FileDialogPrivate.cpp:860
 #, c-format
@@ -165,7 +166,7 @@ msgstr "Stop"
 #: lib-src/mod-nyq-bench/NyqBench.cpp:796
 #: lib-src/mod-nyq-bench/NyqBench.cpp:799
 msgid "&About"
-msgstr ""
+msgstr "Apie"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:922
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1607
@@ -180,15 +181,13 @@ msgstr ""
 msgid "Output"
 msgstr "Sujungti Išvestį"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp:1058
-#: src/effects/nyquist/Nyquist.cpp:2065
+#: lib-src/mod-nyq-bench/NyqBench.cpp:1058 src/effects/nyquist/Nyquist.cpp:2065
 #, fuzzy
 msgid "Load Nyquist script"
 msgstr "Nyquist Komanda..."
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1061
-#: lib-src/mod-nyq-bench/NyqBench.cpp:1107
-#: src/effects/nyquist/Nyquist.cpp:2090
+#: lib-src/mod-nyq-bench/NyqBench.cpp:1107 src/effects/nyquist/Nyquist.cpp:2090
 msgid "Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|All files|*"
 msgstr ""
 
@@ -206,8 +205,7 @@ msgstr ""
 msgid "Warning"
 msgstr "Perspėjimas"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp:1104
-#: src/effects/nyquist/Nyquist.cpp:2087
+#: lib-src/mod-nyq-bench/NyqBench.cpp:1104 src/effects/nyquist/Nyquist.cpp:2087
 #, fuzzy
 msgid "Save Nyquist script"
 msgstr "Nyquist Komanda..."
@@ -253,7 +251,7 @@ msgstr ""
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1645
 msgid "Untitled"
-msgstr ""
+msgstr "Be pavadinimo"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1651
 #, fuzzy
@@ -331,7 +329,7 @@ msgstr "Įterpta iš iškirptinės"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1723
 msgid "Clear"
-msgstr ""
+msgstr "Išvalyti"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1723
 #, fuzzy
@@ -363,7 +361,7 @@ msgstr "Formato Pakeitimas"
 #: src/toolbars/EditToolBar.cpp:148 src/toolbars/EditToolBar.cpp:209
 #: src/widgets/KeyView.cpp:655
 msgid "Redo"
-msgstr ""
+msgstr "Atkurti"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1727
 msgid "Redo previous change"
@@ -371,11 +369,11 @@ msgstr ""
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1729
 msgid "Find"
-msgstr ""
+msgstr "Rasti"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1729
 msgid "Find text"
-msgstr ""
+msgstr "Rasti tekstą"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1731
 msgid "Match"
@@ -424,7 +422,7 @@ msgstr ""
 #: src/Menus.cpp:5786 src/Menus.cpp:5791 src/effects/Contrast.cpp:220
 #: src/effects/ToneGen.cpp:319
 msgid "Start"
-msgstr ""
+msgstr "Pradėti"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1737
 #, fuzzy
@@ -449,7 +447,7 @@ msgstr ""
 
 #: lib-src/mod-track-panel/TrackPanel2.cpp:68
 msgid "Diagnostics"
-msgstr ""
+msgstr "Diagnostika"
 
 #. i18n-hint: "OK... Audacious" appears on a button at the
 #. * foot of the 'About Audacity' dialog box, after some text to read.
@@ -590,7 +588,7 @@ msgstr ""
 
 #: src/AboutDialog.cpp:397 src/AboutDialog.cpp:400
 msgid "MP2 export"
-msgstr ""
+msgstr "MP2 eksportas"
 
 #: src/AboutDialog.cpp:405 src/AboutDialog.cpp:408
 msgid "Import via QuickTime"
@@ -871,8 +869,8 @@ msgstr "Audacity Pirmasis paleidimas"
 msgid "&Save..."
 msgstr ""
 
-#: src/AudacityLogger.cpp:203 src/Tags.cpp:792
-#: src/prefs/KeyConfigPrefs.cpp:273 src/prefs/KeyConfigPrefs.cpp:792
+#: src/AudacityLogger.cpp:203 src/Tags.cpp:792 src/prefs/KeyConfigPrefs.cpp:273
+#: src/prefs/KeyConfigPrefs.cpp:792
 msgid "Cl&ear"
 msgstr ""
 
@@ -3769,7 +3767,7 @@ msgstr "Perkelta prie apibraukimo pradžios"
 #: src/effects/ToneGen.cpp:325 src/toolbars/SelectionBar.cpp:154
 #: src/toolbars/SelectionBar.cpp:157 src/toolbars/SelectionBar.cpp:264
 msgid "End"
-msgstr ""
+msgstr "Pabaiga"
 
 #: src/Menus.cpp:5800
 #, fuzzy
@@ -3788,11 +3786,11 @@ msgstr "Perkelti į Pabaiga"
 
 #: src/Menus.cpp:5811
 msgid "together"
-msgstr ""
+msgstr "kartu"
 
 #: src/Menus.cpp:5812
 msgid "Together"
-msgstr ""
+msgstr "Kartu"
 
 #: src/Menus.cpp:5887
 #, fuzzy, c-format
@@ -3867,7 +3865,7 @@ msgstr "Sukurtas naujas laiko takelis"
 
 #: src/Menus.cpp:6383
 msgid "Edited labels"
-msgstr ""
+msgstr "Pakeistos etiketės"
 
 #: src/Menus.cpp:6438
 msgid "Removed audio track(s)"
@@ -4158,7 +4156,7 @@ msgstr ""
 
 #: src/Prefs.cpp:174
 msgid "Failed!"
-msgstr ""
+msgstr "Nepavyko!"
 
 #: src/Prefs.cpp:191
 msgid ""
@@ -6076,7 +6074,7 @@ msgstr ""
 
 #: src/effects/ClickRemoval.cpp:52
 msgid "Width"
-msgstr ""
+msgstr "Plotis"
 
 #: src/effects/ClickRemoval.cpp:85
 msgid "Click Removal is designed to remove clicks on audio tracks"
@@ -6354,7 +6352,7 @@ msgstr ""
 
 #: src/effects/Contrast.cpp:421 src/effects/Contrast.cpp:434
 msgid "zero"
-msgstr ""
+msgstr "nulis"
 
 #: src/effects/Contrast.cpp:425
 msgid "No background measured"
@@ -6436,11 +6434,11 @@ msgstr ""
 
 #: src/effects/Contrast.cpp:515
 msgid "Background"
-msgstr ""
+msgstr "Fonas"
 
 #: src/effects/Contrast.cpp:534
 msgid "Results"
-msgstr ""
+msgstr "Rezultatai"
 
 #: src/effects/Contrast.cpp:537
 msgid "Difference is indeterminate."
@@ -6504,7 +6502,7 @@ msgstr "Stiprumas (0-1)"
 #: src/effects/TruncSilence.cpp:508 src/effects/VST/VSTEffect.cpp:2881
 #: src/effects/ladspa/LadspaEffect.cpp:1196
 msgid "Duration:"
-msgstr ""
+msgstr "Trukmė:"
 
 #: src/effects/DtmfGen.cpp:329
 msgid "Tone/silence ratio:"
@@ -6521,7 +6519,7 @@ msgstr ""
 #: src/effects/DtmfGen.cpp:345 src/effects/DtmfGen.cpp:348
 #: src/effects/DtmfGen.cpp:564 src/effects/DtmfGen.cpp:567
 msgid "ms"
-msgstr ""
+msgstr "ms"
 
 #: src/effects/DtmfGen.cpp:347
 msgid "Silence duration:"
@@ -6533,7 +6531,7 @@ msgstr ""
 
 #: src/effects/Echo.cpp:35 src/effects/Reverb.cpp:48
 msgid "Delay"
-msgstr ""
+msgstr "Užlaikymas"
 
 #: src/effects/Echo.cpp:36
 msgid "Decay"
@@ -6586,7 +6584,7 @@ msgstr ""
 
 #: src/effects/Effect.cpp:2577
 msgid "Previewing"
-msgstr ""
+msgstr "Peržiūra"
 
 #: src/effects/Effect.cpp:2593 src/toolbars/ControlToolBar.cpp:650
 #, fuzzy
@@ -6965,7 +6963,7 @@ msgstr ""
 
 #: src/effects/Equalization.cpp:736 src/widgets/NumericTextCtrl.cpp:480
 msgid "kHz"
-msgstr ""
+msgstr "kHz"
 
 #: src/effects/Equalization.cpp:758
 msgid "&EQ Type:"
@@ -7144,7 +7142,7 @@ msgstr ""
 
 #: src/effects/Equalization.cpp:3031 src/widgets/ErrorDialog.cpp:120
 msgid "Help"
-msgstr ""
+msgstr "Pagalba"
 
 #: src/effects/Equalization.cpp:3032
 msgid ""
@@ -7162,7 +7160,7 @@ msgstr ""
 
 #: src/effects/Equalization.cpp:3161 src/effects/Equalization.cpp:3164
 msgid "Rename '"
-msgstr ""
+msgstr "Pervardinti '"
 
 #: src/effects/Equalization.cpp:3161
 msgid "' to..."
@@ -7170,7 +7168,7 @@ msgstr ""
 
 #: src/effects/Equalization.cpp:3162
 msgid "Rename..."
-msgstr ""
+msgstr "Pervardinti..."
 
 #: src/effects/Equalization.cpp:3185
 msgid "Name is the same as the original one"
@@ -7178,7 +7176,7 @@ msgstr ""
 
 #: src/effects/Equalization.cpp:3185
 msgid "Same name"
-msgstr ""
+msgstr "Tas pats pavadinimas"
 
 #: src/effects/Equalization.cpp:3188
 msgid "Overwrite existing curve '"
@@ -7190,7 +7188,7 @@ msgstr ""
 
 #: src/effects/Equalization.cpp:3189
 msgid "Curve exists"
-msgstr ""
+msgstr "Kreivė egzistuoja"
 
 #: src/effects/Equalization.cpp:3260
 msgid "You cannot delete the 'unnamed' curve."
@@ -7219,7 +7217,7 @@ msgstr ""
 
 #: src/effects/Equalization.cpp:3293
 msgid "items?"
-msgstr ""
+msgstr "Ištrinti"
 
 #: src/effects/Equalization.cpp:3309
 msgid "You cannot delete the 'unnamed' curve, it is special."
@@ -7330,20 +7328,20 @@ msgstr ""
 
 #: src/effects/Leveller.cpp:42
 msgid "Moderate"
-msgstr ""
+msgstr "Moderuoti"
 
 #. i18n-hint: Of strength of an effect.  Strongly.
 #: src/effects/Leveller.cpp:44
 msgid "Heavy"
-msgstr ""
+msgstr "Sunkus"
 
 #: src/effects/Leveller.cpp:45
 msgid "Heavier"
-msgstr ""
+msgstr "Sunkesnis"
 
 #: src/effects/Leveller.cpp:46
 msgid "Heaviest"
-msgstr ""
+msgstr "Sunkiausias"
 
 #: src/effects/Leveller.cpp:53
 msgid "Passes"
@@ -7386,19 +7384,19 @@ msgstr ""
 
 #: src/effects/Noise.cpp:40
 msgid "White"
-msgstr ""
+msgstr "Baltas"
 
 #: src/effects/Noise.cpp:41
 msgid "Pink"
-msgstr ""
+msgstr "Rožinis"
 
 #: src/effects/Noise.cpp:42
 msgid "Brownian"
-msgstr ""
+msgstr "Brauno"
 
 #: src/effects/Noise.cpp:48
 msgid "Type"
-msgstr ""
+msgstr "Tipas"
 
 #: src/effects/Noise.cpp:78
 msgid "Generates one of three different types of noise"
@@ -7406,11 +7404,11 @@ msgstr ""
 
 #: src/effects/Noise.cpp:221
 msgid "Noise type:"
-msgstr ""
+msgstr "Triukšmo tipas:"
 
 #: src/effects/Noise.h:24
 msgid "Noise"
-msgstr ""
+msgstr "Triukšmas"
 
 #  i18n-hint: Refers to byte-order.  Don't translate this if you don't
 #  know the correct technical word.
@@ -7426,7 +7424,7 @@ msgstr ""
 
 #: src/effects/NoiseReduction.cpp:101
 msgid "Old"
-msgstr ""
+msgstr "Senas"
 
 #: src/effects/NoiseReduction.cpp:132
 msgid "none, Hann (2.0.6 behavior)"
@@ -7512,7 +7510,7 @@ msgstr ""
 
 #: src/effects/NoiseReduction.cpp:1460 src/effects/NoiseRemoval.cpp:782
 msgid "Sensitivity"
-msgstr ""
+msgstr "Jautrumas"
 
 #: src/effects/NoiseReduction.cpp:1464
 #, fuzzy
@@ -7607,35 +7605,35 @@ msgstr ""
 
 #: src/effects/NoiseReduction.cpp:1749 src/effects/NoiseReduction.cpp:1770
 msgid "8"
-msgstr ""
+msgstr "8"
 
 #: src/effects/NoiseReduction.cpp:1750 src/effects/NoiseReduction.cpp:1771
 msgid "16"
-msgstr ""
+msgstr "16"
 
 #: src/effects/NoiseReduction.cpp:1751 src/effects/NoiseReduction.cpp:1772
 msgid "32"
-msgstr ""
+msgstr "32"
 
 #: src/effects/NoiseReduction.cpp:1752 src/effects/NoiseReduction.cpp:1773
 msgid "64"
-msgstr ""
+msgstr "64"
 
 #: src/effects/NoiseReduction.cpp:1753
 msgid "128"
-msgstr ""
+msgstr "128"
 
 #: src/effects/NoiseReduction.cpp:1754
 msgid "256"
-msgstr ""
+msgstr "256"
 
 #: src/effects/NoiseReduction.cpp:1755
 msgid "512"
-msgstr ""
+msgstr "512"
 
 #: src/effects/NoiseReduction.cpp:1756
 msgid "1024"
-msgstr ""
+msgstr "1024"
 
 #: src/effects/NoiseReduction.cpp:1757
 #, fuzzy
@@ -7644,15 +7642,15 @@ msgstr "256 - įprastas"
 
 #: src/effects/NoiseReduction.cpp:1758
 msgid "4096"
-msgstr ""
+msgstr "4096"
 
 #: src/effects/NoiseReduction.cpp:1759
 msgid "8192"
-msgstr ""
+msgstr "8192"
 
 #: src/effects/NoiseReduction.cpp:1760
 msgid "16384"
-msgstr ""
+msgstr "16384"
 
 #: src/effects/NoiseReduction.cpp:1761
 msgid "Window si&ze"
@@ -7660,7 +7658,7 @@ msgstr ""
 
 #: src/effects/NoiseReduction.cpp:1768 src/export/ExportFLAC.cpp:87
 msgid "2"
-msgstr ""
+msgstr "2"
 
 #: src/effects/NoiseReduction.cpp:1769
 #, fuzzy
@@ -8032,15 +8030,15 @@ msgstr ""
 
 #: src/effects/Reverb.cpp:67
 msgid "Vocal I"
-msgstr ""
+msgstr "Vokalas I"
 
 #: src/effects/Reverb.cpp:68
 msgid "Vocal II"
-msgstr ""
+msgstr "Vokalas II"
 
 #: src/effects/Reverb.cpp:69
 msgid "Bathroom"
-msgstr ""
+msgstr "Vonia"
 
 #: src/effects/Reverb.cpp:70
 msgid "Small Room Bright"
@@ -8064,7 +8062,7 @@ msgstr ""
 
 #: src/effects/Reverb.cpp:75
 msgid "Cathedral"
-msgstr ""
+msgstr "Katedra"
 
 #: src/effects/Reverb.cpp:140
 msgid "Adds ambience or a \"hall effect\""
@@ -8142,11 +8140,11 @@ msgstr ""
 
 #: src/effects/ScienFilter.cpp:108
 msgid "Lowpass"
-msgstr ""
+msgstr "Žemo dažnio"
 
 #: src/effects/ScienFilter.cpp:109
 msgid "Highpass"
-msgstr ""
+msgstr "Aukšto dažnio"
 
 #: src/effects/ScienFilter.cpp:115
 msgid "FilterType"
@@ -8158,7 +8156,7 @@ msgstr ""
 
 #: src/effects/ScienFilter.cpp:117
 msgid "Order"
-msgstr ""
+msgstr "Eilė"
 
 #: src/effects/ScienFilter.cpp:118
 msgid "Cutoff"
@@ -8239,7 +8237,7 @@ msgstr ""
 
 #: src/effects/ScoreAlignDialog.cpp:109 src/effects/ScoreAlignDialog.cpp:114
 msgid "Window Size"
-msgstr ""
+msgstr "Lango dydis"
 
 #: src/effects/ScoreAlignDialog.cpp:121
 msgid "Force Final Alignment"
@@ -8487,7 +8485,7 @@ msgstr ""
 
 #: src/effects/ToneGen.h:26
 msgid "Tone"
-msgstr ""
+msgstr "Tonas"
 
 #: src/effects/TruncSilence.cpp:40
 msgid "Truncate Detected Silence"
@@ -8503,7 +8501,7 @@ msgstr ""
 
 #: src/effects/TruncSilence.cpp:55
 msgid "Minimum"
-msgstr ""
+msgstr "Minimumas"
 
 #: src/effects/TruncSilence.cpp:56
 msgid "Truncate"
@@ -8571,7 +8569,7 @@ msgstr "Efektų nustatymai"
 
 #: src/effects/VST/VSTEffect.cpp:756
 msgid "Buffer Size"
-msgstr ""
+msgstr "Buferio dydis"
 
 #: src/effects/VST/VSTEffect.cpp:762
 msgid "The buffer size controls the number of samples sent to the effect "
@@ -9094,7 +9092,7 @@ msgstr ""
 
 #: src/effects/vamp/VampEffect.cpp:622 src/effects/vamp/VampEffect.cpp:626
 msgid "Program"
-msgstr ""
+msgstr "Programa"
 
 #: src/export/Export.cpp:235
 msgid "No format specific options"
@@ -9225,7 +9223,7 @@ msgstr "Negaliu eksportuoti audio į %s"
 
 #: src/export/ExportCL.cpp:445 src/export/ExportMultiple.cpp:384
 msgid "Export"
-msgstr ""
+msgstr "Eksportuoti"
 
 #: src/export/ExportCL.cpp:447
 msgid "Exporting the selected audio using command-line encoder"
