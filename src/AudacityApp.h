@@ -41,6 +41,7 @@ class Importer;
 class CommandHandler;
 class AppCommandEvent;
 class AudacityLogger;
+class AudacityProject;
 
 void SaveWindowSize();
 
@@ -179,6 +180,7 @@ inline CommandFlag & operator |= (CommandFlag &lhs, CommandFlag rhs)
 using CommandMask = CommandFlag;
 
 class BlockFile;
+class AliasBlockFile;
 
 class AudacityApp final : public wxApp {
  public:
@@ -226,7 +228,7 @@ class AudacityApp final : public wxApp {
      * ShouldShowMissingAliasedFileWarning can be called to determine
      * if the user should be notified
      */
-   void MarkAliasedFilesMissingWarning(const BlockFile *b);
+   void MarkAliasedFilesMissingWarning(const AliasBlockFile *b);
 
    /** \brief Changes the behavior of missing aliased blockfiles warnings
      */
@@ -293,7 +295,8 @@ class AudacityApp final : public wxApp {
    wxTimer mTimer;
 
    bool                 m_aliasMissingWarningShouldShow;
-   const BlockFile     *m_LastMissingBlockFile;
+   std::weak_ptr< AudacityProject > m_LastMissingBlockFileProject;
+   wxString             m_LastMissingBlockFilePath;
 
    ODLock               m_LastMissingBlockFileLock;
 

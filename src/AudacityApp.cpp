@@ -889,24 +889,15 @@ void AudacityApp::OnTimer(wxTimerEvent& WXUNUSED(event))
       // find which project owns the blockfile
       // note: there may be more than 1, but just go with the first one.
       size_t numProjects = gAudacityProjects.size();
+      AudacityProject *offendingProject {};
       wxString missingFileName;
-      AudacityProject *offendingProject = NULL;
 
-      m_LastMissingBlockFileLock.Lock();
-      if (numProjects == 1) {
-         // if there is only one project open, no need to search
-         offendingProject = gAudacityProjects[0].get();
-      } else if (numProjects > 1) {
-         for (size_t i = 0; i < numProjects; i++) {
-            // search each project for the blockfile
-            if (gAudacityProjects[i]->GetDirManager()->ContainsBlockFile(m_LastMissingBlockFile)) {
-               offendingProject = gAudacityProjects[i].get();
-               break;
-            }
-         }
+      {
+         ODLocker locker { &m_LastMissingBlockFileLock };
+         offendingProject =
+            AProjectHolder{ m_LastMissingBlockFileProject }.get();
+         missingFileName = m_LastMissingBlockFilePath;
       }
-      missingFileName = ((AliasBlockFile*)m_LastMissingBlockFile)->GetAliasedFileName().GetFullPath();
-      m_LastMissingBlockFileLock.Unlock();
 
       // if there are no projects open, don't show the warning (user has closed it)
       if (offendingProject) {
@@ -937,19 +928,26 @@ locations of the missing files."), missingFileName.c_str());
    }
 }
 
-void AudacityApp::MarkAliasedFilesMissingWarning(const BlockFile *b)
+void AudacityApp::MarkAliasedFilesMissingWarning(const AliasBlockFile *b)
 {
-   // the reference counting provides thread safety.
+   ODLocker locker { &m_LastMissingBlockFileLock };
+   if (b) {
+   size_t numProjects = gAudacityProjects.size();
+      for (size_t ii = 0; ii < numProjects; ++ii) {
+         // search each project for the blockfile
+         if (gAudacityProjects[ii]->GetDirManager()->ContainsBlockFile(b)) {
+            m_LastMissingBlockFileProject = gAudacityProjects[ii];
+            break;
+         }
+      }
+   }
+   else
+      m_LastMissingBlockFileProject = {};
+
    if (b)
-      b->Ref();
-
-   m_LastMissingBlockFileLock.Lock();
-   if (m_LastMissingBlockFile)
-      m_LastMissingBlockFile->Deref();
-
-   m_LastMissingBlockFile = b;
-
-   m_LastMissingBlockFileLock.Unlock();
+      m_LastMissingBlockFilePath = b->GetAliasedFileName().GetFullPath();
+   else
+      m_LastMissingBlockFilePath = wxString{};
 }
 
 void AudacityApp::SetMissingAliasedFileWarningShouldShow(bool b)
@@ -961,15 +959,15 @@ void AudacityApp::SetMissingAliasedFileWarningShouldShow(bool b)
    m_aliasMissingWarningShouldShow = b;
    // reset the warnings as they were probably marked by a previous run
    if (m_aliasMissingWarningShouldShow) {
-      MarkAliasedFilesMissingWarning(NULL);
+      MarkAliasedFilesMissingWarning( nullptr );
    }
 }
 
 bool AudacityApp::ShouldShowMissingAliasedFileWarning()
 {
-   bool ret = m_LastMissingBlockFile && m_aliasMissingWarningShouldShow;
-
-   return ret;
+   ODLocker locker { &m_LastMissingBlockFileLock };
+   auto ptr = m_LastMissingBlockFileProject.lock();
+   return ptr && m_aliasMissingWarningShouldShow;
 }
 
 AudacityLogger *AudacityApp::GetLogger()
@@ -1185,7 +1183,6 @@ bool AudacityApp::OnInit()
    mLocale = NULL;
 
    m_aliasMissingWarningShouldShow = true;
-   m_LastMissingBlockFile = NULL;
 
 #if defined(__WXMAC__)
    // Disable window animation

@@ -526,14 +526,16 @@ AudacityProject *CreateNewAudacityProject()
    bool bIconized;
    GetNextWindowPlacement(&wndRect, &bMaximized, &bIconized);
 
-   //Create and show a NEW project
-   gAudacityProjects.push_back(
-      make_movable_with_deleter<AudacityProject, Destroyer< AudacityProject > >
-         ({},
-          nullptr, -1,
-          wxDefaultPosition,
-          wxSize(wndRect.width, wndRect.height))
-   );
+   // Create and show a NEW project
+   // Use a non-default deleter in the smart pointer!
+   gAudacityProjects.push_back( AProjectHolder {
+      safenew AudacityProject(
+         nullptr, -1,
+         wxDefaultPosition,
+         wxSize(wndRect.width, wndRect.height)
+      ),
+      Destroyer< AudacityProject > {}
+   } );
    const auto p = gAudacityProjects.back().get();
 
    // wxGTK3 seems to need to require creating the window using default position
