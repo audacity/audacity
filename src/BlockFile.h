@@ -233,7 +233,7 @@ class AliasBlockFile /* not final */ : public BlockFile
    //
    // These methods are for advanced use only!
    //
-   const wxFileName &GetAliasedFileName() { return mAliasedFileName; }
+   const wxFileName &GetAliasedFileName() const { return mAliasedFileName; }
    void ChangeAliasedFileName(wxFileNameWrapper &&newAliasedFile);
    bool IsAlias() const override { return true; }
 
