@@ -64,6 +64,8 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
    BlockFile(wxFileNameWrapper &&fileName, sampleCount samples);
    virtual ~BlockFile();
 
+   static unsigned long gBlockFileDestructionCount;
+
    // Reading
 
    /// Retrieves audio data from this BlockFile

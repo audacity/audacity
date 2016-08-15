@@ -319,6 +319,8 @@ DirManager::DirManager()
 {
    wxLogDebug(wxT("DirManager: Created new instance."));
 
+   mLastBlockFileDestructionCount = BlockFile::gBlockFileDestructionCount;
+
    // Seed the random number generator.
    // this need not be strictly uniform or random, but it should give
    // unclustered numbers
@@ -347,8 +349,11 @@ DirManager::DirManager()
 
    // toplevel pool hash is fully populated to begin
    {
-      int i;
-      for(i=0; i< 256; i++) dirTopPool[i]=0;
+      // We can bypass the accessor function while initializing
+      auto &balanceInfo = mBalanceInfo;
+      auto &dirTopPool = balanceInfo.dirTopPool;
+      for(int i = 0; i < 256; ++i)
+         dirTopPool[i] = 0;
    }
 
    // Make sure there is plenty of space for temp files
@@ -650,6 +655,12 @@ int DirManager::BalanceMidAdd(int topnum, int midkey)
 {
    // enter the midlevel directory if it doesn't exist
 
+   auto &balanceInfo = GetBalanceInfo();
+   auto &dirMidPool = balanceInfo.dirMidPool;
+   auto &dirMidFull = balanceInfo.dirMidFull;
+   auto &dirTopPool = balanceInfo.dirTopPool;
+   auto &dirTopFull = balanceInfo.dirTopFull;
+
    if(dirMidPool.find(midkey) == dirMidPool.end() &&
          dirMidFull.find(midkey) == dirMidFull.end()){
       dirMidPool[midkey]=0;
@@ -668,6 +679,10 @@ int DirManager::BalanceMidAdd(int topnum, int midkey)
 
 void DirManager::BalanceFileAdd(int midkey)
 {
+   auto &balanceInfo = GetBalanceInfo();
+   auto &dirMidPool = balanceInfo.dirMidPool;
+   auto &dirMidFull = balanceInfo.dirMidFull;
+
    // increment the midlevel directory usage information
    if(dirMidPool.find(midkey) != dirMidPool.end()){
       dirMidPool[midkey]++;
@@ -700,11 +715,46 @@ void DirManager::BalanceInfoAdd(const wxString &file)
    }
 }
 
+auto DirManager::GetBalanceInfo() -> BalanceInfo &
+{
+   // Before returning the map,
+   // see whether any block files have disappeared,
+   // and if so update
+
+   auto count = BlockFile::gBlockFileDestructionCount;
+   if ( mLastBlockFileDestructionCount != count ) {
+      auto it = mBlockFileHash.begin(), end = mBlockFileHash.end();
+      while (it != end)
+      {
+         BlockFilePtr ptr { it->second };
+         if (!ptr) {
+            auto name = it->first;
+            mBlockFileHash.erase( it++ );
+            BalanceInfoDel( name );
+         }
+         else
+            ++it;
+      }
+   }
+
+   mLastBlockFileDestructionCount = count;
+
+   return mBalanceInfo;
+}
+
 // Note that this will try to clean up directories out from under even
 // locked blockfiles; this is actually harmless as the rmdir will fail
 // on non-empty directories.
 void DirManager::BalanceInfoDel(const wxString &file)
 {
+   // do not use GetBalanceInfo(),
+   // rather this function will be called from there.
+   auto &balanceInfo = mBalanceInfo;
+   auto &dirMidPool = balanceInfo.dirMidPool;
+   auto &dirMidFull = balanceInfo.dirMidFull;
+   auto &dirTopPool = balanceInfo.dirTopPool;
+   auto &dirTopFull = balanceInfo.dirTopFull;
+
    const wxChar *s=file.c_str();
    if(s[0]==wxT('e')){
       // this is one of the modern two-deep managed files
@@ -766,6 +816,11 @@ void DirManager::BalanceInfoDel(const wxString &file)
 // perform maintainence
 wxFileNameWrapper DirManager::MakeBlockFileName()
 {
+   auto &balanceInfo = GetBalanceInfo();
+   auto &dirMidPool = balanceInfo.dirMidPool;
+   auto &dirTopPool = balanceInfo.dirTopPool;
+   auto &dirTopFull = balanceInfo.dirTopFull;
+
    wxFileNameWrapper ret;
    wxString baseFileName;
 

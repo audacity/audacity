@@ -109,10 +109,15 @@ BlockFile::BlockFile(wxFileNameWrapper &&fileName, sampleCount samples):
    mSilentLog=FALSE;
 }
 
+// static
+unsigned long BlockFile::gBlockFileDestructionCount { 0 };
+
 BlockFile::~BlockFile()
 {
    if (!IsLocked() && mFileName.HasName())
       wxRemoveFile(mFileName.GetFullPath());
+
+   ++gBlockFileDestructionCount;
 }
 
 /// Returns the file name of the disk file associated with this

@@ -179,10 +179,19 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
    bool MoveOrCopyToNewProjectDirectory(BlockFile *f, bool copy);
 
    BlockHash mBlockFileHash; // repository for blockfiles
-   DirHash   dirTopPool;    // available toplevel dirs
-   DirHash   dirTopFull;    // full toplevel dirs
-   DirHash   dirMidPool;    // available two-level dirs
-   DirHash   dirMidFull;    // full two-level dirs
+
+   // Hashes for management of the sub-directory tree of _data
+   struct BalanceInfo
+   {
+      DirHash   dirTopPool;    // available toplevel dirs
+      DirHash   dirTopFull;    // full toplevel dirs
+      DirHash   dirMidPool;    // available two-level dirs
+      DirHash   dirMidFull;    // full two-level dirs
+   } mBalanceInfo;
+
+   // Accessor for the balance info, may need to do a delayed update for
+   // deletion in case other threads delete block files
+   BalanceInfo &GetBalanceInfo();
 
    void BalanceInfoDel(const wxString&);
    void BalanceInfoAdd(const wxString&);
@@ -203,6 +212,8 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
    sampleCount mLoadingBlockLen;
 
    sampleCount mMaxSamples; // max samples per block
+
+   unsigned long mLastBlockFileDestructionCount { 0 };
 
    static wxString globaltemp;
    wxString mytemp;
