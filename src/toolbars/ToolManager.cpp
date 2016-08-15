@@ -494,7 +494,7 @@ static struct DefaultConfigEntry {
 
    // start another top dock row
    { ScrubbingBarID,         NoBarID,                TransportBarID         },
-   { DeviceBarID,            ScrubbingBarID,         NoBarID                },
+   { DeviceBarID,            ScrubbingBarID,         TransportBarID         },
 
    // Hidden by default in top dock
    { MeterBarID,             NoBarID,                NoBarID                },
@@ -657,7 +657,7 @@ void ToolManager::ReadConfig()
       // Change to the bar subkey
       gPrefs->SetPath( bar->GetSection() );
 
-      bool bShownByDefault = false;
+      bool bShownByDefault = true;
       int defaultDock = TopDockID;
       
       if( ndx == SelectionBarID )

@@ -103,13 +103,12 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
 
    S.StartStatic(_("Display"));
    {
+      S.TieCheckBox(_("&Pinned Recording/Playback head"),
+                    PinnedHeadPreferenceKey(),
+                    PinnedHeadPreferenceDefault());
       S.TieCheckBox(_("&Update display when Recording/Playback head unpinned"),
                     wxT("/GUI/AutoScroll"),
                     true);
-
-      S.TieCheckBox(_("Pinned Recording/Playback head"),
-                    PinnedHeadPreferenceKey(),
-                    PinnedHeadPreferenceDefault());
       S.TieCheckBox(_("Automatically &fit tracks vertically zoomed"),
                     wxT("/GUI/TracksFitVerticallyZoomed"),
                     false);
