@@ -435,6 +435,8 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
       saved version of the old project must not be moved,
       otherwise the old project would not be safe.) */
 
+   int trueTotal = 0;
+
    {
       /*i18n-hint: This title appears on a dialog that indicates the progress in doing something.*/
       ProgressDialog progress(_("Progress"),
@@ -449,6 +451,9 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
       {
          BlockFilePtr b = iter->second;
 
+         if (!b)
+            continue;
+
          if (b->IsLocked())
             success = CopyToNewProjectDirectory( &*b );
          else{
@@ -460,6 +465,9 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
          ++iter;
          count++;
       }
+
+      // in case there are any nulls
+      trueTotal = count;
 
       if (!success) {
          // If the move failed, we try to move/copy as many files
@@ -474,6 +482,10 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
          while (iter != mBlockFileHash.end())
          {
             BlockFilePtr b = iter->second;
+
+            if (!b)
+               continue;
+
             MoveToNewProjectDirectory(&*b);
 
             if (count >= 0)
@@ -496,7 +508,7 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
    // loading a project; in this latter case, the movement code does
    // nothing because SetProject is called before there are any
    // blockfiles.  Cleanup code trigger is the same
-   if (mBlockFileHash.size()>0){
+   if (trueTotal > 0) {
       // Clean up after ourselves; look for empty directories in the old
       // and NEW project directories.  The easiest way to do this is to
       // recurse depth-first and rmdir every directory seen in old and
@@ -841,7 +853,7 @@ wxFileNameWrapper DirManager::MakeBlockFileName()
 
       baseFileName.Printf(wxT("e%02x%02x%03x"),topnum,midnum,filenum);
 
-      if (mBlockFileHash.find(baseFileName) == mBlockFileHash.end()){
+      if (!ContainsBlockFile(baseFileName)) {
          // not in the hash, good.
          if (!this->AssignFile(ret, baseFileName, true))
          {
@@ -947,7 +959,8 @@ bool DirManager::ContainsBlockFile(const wxString &filepath) const
 {
    // check what the hash returns in case the blockfile is from a different project
    BlockHash::const_iterator it = mBlockFileHash.find(filepath);
-   return it != mBlockFileHash.end();
+   return it != mBlockFileHash.end() &&
+      BlockFilePtr{ it->second };
 }
 
 // Adds one to the reference count of the block file,
@@ -1285,6 +1298,10 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
    while (iter != mBlockFileHash.end())
    {
       BlockFilePtr b = iter->second;
+
+      if (!b)
+         continue;
+
       // don't worry, we don't rely on this cast unless IsAlias is true
       auto ab = static_cast< AliasBlockFile * > ( &*b );
 
@@ -1324,6 +1341,10 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
          while (iter != mBlockFileHash.end())
          {
             BlockFilePtr b = iter->second;
+
+            if (!b)
+               continue;
+
             auto ab = static_cast< AliasBlockFile * > ( &*b );
             auto db = static_cast< ODDecodeBlockFile * > ( &*b );
 
@@ -1348,6 +1369,10 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
          while (iter != mBlockFileHash.end())
          {
             BlockFilePtr b = iter->second;
+
+            if (!b)
+               continue;
+
             auto ab = static_cast< AliasBlockFile * > ( &*b );
             auto db = static_cast< ODDecodeBlockFile * > ( &*b );
 
@@ -1479,6 +1504,11 @@ _("Project check of \"%s\" folder \
          {
             // This type cast is safe. We checked that it's an alias block file earlier.
             BlockFilePtr b = iter->second;
+
+            wxASSERT(b);
+            if (!b)
+               continue;
+
             auto ab = static_cast< AliasBlockFile * > ( &*b );
             if (action == 1)
                // Silence error logging for this block in this session.
@@ -1541,6 +1571,11 @@ _("Project check of \"%s\" folder \
          while (iter != missingAUFHash.end())
          {
             BlockFilePtr b = iter->second;
+
+            wxASSERT(b);
+            if (!b)
+               continue;
+
             if(action==0){
                //regenerate from data
                b->Recover();
@@ -1600,6 +1635,11 @@ _("Project check of \"%s\" folder \
          while (iter != missingAUHash.end())
          {
             BlockFilePtr b = iter->second;
+
+            wxASSERT(b);
+            if (!b)
+               continue;
+
             if (action == 2)
             {
                //regenerate with zeroes
@@ -1707,6 +1747,10 @@ void DirManager::FindMissingAliasedFiles(
    {
       wxString key = iter->first;   // file name and extension
       BlockFilePtr b = iter->second;
+
+      if (!b)
+         continue;
+
       if (b->IsAlias())
       {
          const wxFileName &aliasedFileName =
@@ -1743,6 +1787,10 @@ void DirManager::FindMissingAUFs(
    {
       const wxString &key = iter->first;
       BlockFilePtr b = iter->second;
+
+      if (!b)
+         continue;
+
       if (b->IsAlias() && b->IsSummaryAvailable())
       {
          /* don't look in hash; that might find files the user moved
@@ -1769,6 +1817,10 @@ void DirManager::FindMissingAUs(
    {
       const wxString &key = iter->first;
       BlockFilePtr b = iter->second;
+
+      if (!b)
+         continue;
+
       if (!b->IsAlias())
       {
          wxFileNameWrapper fileName{ MakeBlockFilePath(key) };
@@ -1869,6 +1921,10 @@ void DirManager::FillBlockfilesCache()
    while (iter != mBlockFileHash.end())
    {
       BlockFilePtr b = iter->second;
+
+      if (!b)
+         continue;
+
       if (b->GetNeedFillCache())
          numNeed++;
       ++iter;
@@ -1885,6 +1941,10 @@ void DirManager::FillBlockfilesCache()
    while (iter != mBlockFileHash.end())
    {
       BlockFilePtr b = iter->second;
+
+      if (!b)
+         continue;
+
       if (b->GetNeedFillCache() && (GetFreeMemory() > lowMem)) {
          b->FillCache();
       }
@@ -1906,6 +1966,10 @@ void DirManager::WriteCacheToDisk()
    while (iter != mBlockFileHash.end())
    {
       BlockFilePtr b = iter->second;
+
+      if (!b)
+         continue;
+
       if (b->GetNeedWriteCacheToDisk())
          numNeed++;
       ++iter;
@@ -1922,6 +1986,10 @@ void DirManager::WriteCacheToDisk()
    while (iter != mBlockFileHash.end())
    {
       BlockFilePtr b = iter->second;
+
+      if (!b)
+         continue;
+
       if (b->GetNeedWriteCacheToDisk())
       {
          b->WriteCacheToDisk();
