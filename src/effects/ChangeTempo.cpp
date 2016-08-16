@@ -173,6 +173,7 @@ bool EffectChangeTempo::Process()
       double tempoRatio = 1.0 + m_PercentChange / 100.0;
       SelectedRegion region(mT0, mT1);
       EffectSBSMS proxy;
+      proxy.mProxyEffectName = XO("High Quality Tempo Change");
       proxy.setParameters(tempoRatio, 1.0);
       success = proxy.DoEffect(mUIParent, mProjectRate, mTracks, mFactory, &region, false);
    }
@@ -229,13 +230,13 @@ void EffectChangeTempo::PopulateOrExchange(ShuttleGui & S)
             FloatingPointValidator<double> vldFromBPM(3, &m_FromBPM, NUM_VAL_THREE_TRAILING_ZEROES | NUM_VAL_ZERO_AS_BLANK);
             m_pTextCtrl_FromBPM = S.Id(ID_FromBPM)
                .AddTextBox(_("from"), wxT(""), 12);
-            m_pTextCtrl_FromBPM->SetName(_("From beats per minute"));
+            m_pTextCtrl_FromBPM->SetName(_("Beats per minute, from"));
             m_pTextCtrl_FromBPM->SetValidator(vldFromBPM);
 
             FloatingPointValidator<double> vldToBPM(3, &m_ToBPM, NUM_VAL_THREE_TRAILING_ZEROES | NUM_VAL_ZERO_AS_BLANK);
             m_pTextCtrl_ToBPM = S.Id(ID_ToBPM)
                .AddTextBox(_("to"), wxT(""), 12);
-            m_pTextCtrl_ToBPM->SetName(_("To beats per minute"));
+            m_pTextCtrl_ToBPM->SetName(_("Beats per minute, to"));
             m_pTextCtrl_ToBPM->SetValidator(vldToBPM);
          }
          S.EndHorizontalLay();
@@ -251,7 +252,6 @@ void EffectChangeTempo::PopulateOrExchange(ShuttleGui & S)
             FloatingPointValidator<double> vldFromLength(precission, &m_FromLength, NUM_VAL_TWO_TRAILING_ZEROES);
             m_pTextCtrl_FromLength = S.Id(ID_FromLength)
                .AddTextBox(_("from"), wxT(""), 12);
-            m_pTextCtrl_FromLength->SetName(_("From length in seconds"));
             m_pTextCtrl_FromLength->SetValidator(vldFromLength);
             m_pTextCtrl_FromLength->Enable(false); // Disable because the value comes from the user selection.
 
@@ -266,7 +266,6 @@ void EffectChangeTempo::PopulateOrExchange(ShuttleGui & S)
             vldToLength.SetRange(minLength, maxLength);
             m_pTextCtrl_ToLength = S.Id(ID_ToLength)
                .AddTextBox(_("to"), wxT(""), 12);
-            m_pTextCtrl_ToLength->SetName(_("To length in seconds"));
             m_pTextCtrl_ToLength->SetValidator(vldToLength);
          }
          S.EndHorizontalLay();
@@ -307,6 +306,10 @@ bool EffectChangeTempo::TransferDataToWindow()
    Update_Text_ToLength();
 
    m_bLoopDetect = false;
+
+   // Set the accessibility name here because we need m_pTextCtrl_FromLength to have had its value set
+   m_pTextCtrl_ToLength->SetName(_("Length in seconds from") + wxT(" ") +  m_pTextCtrl_FromLength->GetValue()
+               +wxT(", ") + _("to"));
 
    return true;
 }

@@ -66,9 +66,16 @@ public:
 
    virtual ~NumericConverter();
 
+   // ValueToControls() formats a raw value (either provided as
+   // argument, or mValue, depending on the version of the function
+   // called). The result is stored to mValueString.
    virtual void ValueToControls();
    virtual void ValueToControls(double rawValue, bool nearest = true);
+
+   // Converts the stored formatted string (mValueString) back to a
+   // raw value (mValue).
    virtual void ControlsToValue();
+
    virtual void ParseFormatString(const wxString & format);
 
    void PrintDebugInfo();
@@ -115,6 +122,7 @@ protected:
    wxString       mPrefix;
    wxString       mValueTemplate;
    wxString       mValueMask;
+   // Formatted mValue, by ValueToControls().
    wxString       mValueString;
 
    double         mScalingFactor;
@@ -181,6 +189,9 @@ private:
    void OnFocus(wxFocusEvent &event);
    void OnContext(wxContextMenuEvent &event);
 
+   // Formats mValue into mValueString, using the method of the base class.
+   // Triggers a refresh of the wx window only when the value actually
+   // changed since last time a refresh was triggered.
    void ValueToControls() override;
    void ControlsToValue() override;
 
