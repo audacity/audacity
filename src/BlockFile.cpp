@@ -101,7 +101,6 @@ ArrayOf<char> BlockFile::fullSummary;
 /// @param samples  The number of samples this BlockFile contains.
 BlockFile::BlockFile(wxFileNameWrapper &&fileName, sampleCount samples):
    mLockCount(0),
-   mRefCount(1),
    mFileName(std::move(fileName)),
    mLen(samples),
    mSummaryInfo(samples)
@@ -109,10 +108,15 @@ BlockFile::BlockFile(wxFileNameWrapper &&fileName, sampleCount samples):
    mSilentLog=FALSE;
 }
 
+// static
+unsigned long BlockFile::gBlockFileDestructionCount { 0 };
+
 BlockFile::~BlockFile()
 {
    if (!IsLocked() && mFileName.HasName())
       wxRemoveFile(mFileName.GetFullPath());
+
+   ++gBlockFileDestructionCount;
 }
 
 /// Returns the file name of the disk file associated with this
@@ -158,28 +162,6 @@ void BlockFile::Unlock()
 bool BlockFile::IsLocked()
 {
    return mLockCount > 0;
-}
-
-/// Increases the reference count of this block by one.  Only
-/// DirManager should call this method.
-void BlockFile::Ref() const
-{
-   mRefCount++;
-   BLOCKFILE_DEBUG_OUTPUT("Ref", mRefCount);
-}
-
-/// Decreases the reference count of this block by one.  If this
-/// causes the count to become zero, deletes the associated disk
-/// file and deletes this object
-bool BlockFile::Deref() const
-{
-   mRefCount--;
-   BLOCKFILE_DEBUG_OUTPUT("Deref", mRefCount);
-   if (mRefCount <= 0) {
-      delete this;
-      return true;
-   } else
-      return false;
 }
 
 /// Get a buffer containing a summary block describing this sample

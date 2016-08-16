@@ -492,7 +492,7 @@ void SimpleBlockFile::SaveXML(XMLWriter &xmlFile)
 // even if the result is flawed (e.g., refers to nonexistent file),
 // as testing will be done in DirManager::ProjectFSCK().
 /// static
-BlockFile *SimpleBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
+BlockFilePtr SimpleBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
 {
    wxFileNameWrapper fileName;
    float min = 0.0f, max = 0.0f, rms = 0.0f;
@@ -532,16 +532,17 @@ BlockFile *SimpleBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
       }
    }
 
-   return new SimpleBlockFile(std::move(fileName), len, min, max, rms);
+   return make_blockfile<SimpleBlockFile>
+      (std::move(fileName), len, min, max, rms);
 }
 
 /// Create a copy of this BlockFile, but using a different disk file.
 ///
 /// @param newFileName The name of the NEW file to use.
-BlockFile *SimpleBlockFile::Copy(wxFileNameWrapper &&newFileName)
+BlockFilePtr SimpleBlockFile::Copy(wxFileNameWrapper &&newFileName)
 {
-   BlockFile *newBlockFile = new SimpleBlockFile(std::move(newFileName), mLen,
-                                                 mMin, mMax, mRMS);
+   auto newBlockFile = make_blockfile<SimpleBlockFile>
+      (std::move(newFileName), mLen, mMin, mMax, mRMS);
 
    return newBlockFile;
 }

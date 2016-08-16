@@ -85,10 +85,11 @@ protected:
    void Update() override;
 
    ///Orders the input as either On-Demand or default layered order.
-   void OrderBlockFiles(std::vector<ODDecodeBlockFile*> &unorderedBlocks);
+   void OrderBlockFiles
+      (std::vector< std::shared_ptr< ODDecodeBlockFile > > &unorderedBlocks);
 
 
-   std::vector<ODDecodeBlockFile*> mBlockFiles;
+   std::vector<std::shared_ptr<ODDecodeBlockFile>> mBlockFiles;
    std::vector<movable_ptr<ODFileDecoder>> mDecoders;
 
    int mMaxBlockFiles;

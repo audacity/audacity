@@ -32,7 +32,12 @@ class SequenceTest;
 #define FSCKstatus_SAVE_AUP  0x4 // used in combination with FSCKstatus_CHANGED
 
 WX_DECLARE_HASH_MAP(int, int, wxIntegerHash, wxIntegerEqual, DirHash);
-WX_DECLARE_HASH_MAP(wxString, BlockFile*, wxStringHash, wxStringEqual, BlockHash);
+
+class BlockFile;
+using BlockFilePtr = std::shared_ptr<BlockFile>;
+
+WX_DECLARE_HASH_MAP(wxString, std::weak_ptr<BlockFile>, wxStringHash,
+                    wxStringEqual, BlockHash);
 
 wxMemorySize GetFreeMemory();
 
@@ -56,18 +61,22 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
 
    wxLongLong GetFreeDiskSpace();
 
-   BlockFile *NewSimpleBlockFile(samplePtr sampleData,
+   BlockFilePtr
+      NewSimpleBlockFile(samplePtr sampleData,
                                  sampleCount sampleLen,
                                  sampleFormat format,
                                  bool allowDeferredWrite = false);
 
-   BlockFile *NewAliasBlockFile( const wxString &aliasedFile, sampleCount aliasStart,
+   BlockFilePtr
+      NewAliasBlockFile( const wxString &aliasedFile, sampleCount aliasStart,
                                  sampleCount aliasLen, int aliasChannel);
 
-   BlockFile *NewODAliasBlockFile( const wxString &aliasedFile, sampleCount aliasStart,
+   BlockFilePtr
+      NewODAliasBlockFile( const wxString &aliasedFile, sampleCount aliasStart,
                                  sampleCount aliasLen, int aliasChannel);
 
-   BlockFile *NewODDecodeBlockFile( const wxString &aliasedFile, sampleCount aliasStart,
+   BlockFilePtr
+      NewODDecodeBlockFile( const wxString &aliasedFile, sampleCount aliasStart,
                                  sampleCount aliasLen, int aliasChannel, int decodeType);
 
    /// Returns true if the blockfile pointed to by b is contained by the DirManager
@@ -78,7 +87,7 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
    // Adds one to the reference count of the block file,
    // UNLESS it is "locked", then it makes a NEW copy of
    // the BlockFile.
-   BlockFile *CopyBlockFile(BlockFile *b);
+   BlockFilePtr CopyBlockFile(const BlockFilePtr &b);
 
    BlockFile *LoadBlockFile(const wxChar **attrs, sampleFormat format);
    void SaveBlockFile(BlockFile *f, int depth, FILE *fp);
@@ -92,12 +101,6 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
    bool CopyToNewProjectDirectory(BlockFile *f);
 
    bool EnsureSafeFilename(const wxFileName &fName);
-
-   void Ref(BlockFile * f);
-   void Deref(BlockFile * f);
-
-   // For debugging only
-   int GetRefCount(BlockFile * f);
 
    void SetLoadingTarget(BlockArray *pArray, unsigned idx)
    {
@@ -171,10 +174,19 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
    bool MoveOrCopyToNewProjectDirectory(BlockFile *f, bool copy);
 
    BlockHash mBlockFileHash; // repository for blockfiles
-   DirHash   dirTopPool;    // available toplevel dirs
-   DirHash   dirTopFull;    // full toplevel dirs
-   DirHash   dirMidPool;    // available two-level dirs
-   DirHash   dirMidFull;    // full two-level dirs
+
+   // Hashes for management of the sub-directory tree of _data
+   struct BalanceInfo
+   {
+      DirHash   dirTopPool;    // available toplevel dirs
+      DirHash   dirTopFull;    // full toplevel dirs
+      DirHash   dirMidPool;    // available two-level dirs
+      DirHash   dirMidFull;    // full two-level dirs
+   } mBalanceInfo;
+
+   // Accessor for the balance info, may need to do a delayed update for
+   // deletion in case other threads delete block files
+   BalanceInfo &GetBalanceInfo();
 
    void BalanceInfoDel(const wxString&);
    void BalanceInfoAdd(const wxString&);
@@ -195,6 +207,8 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
    sampleCount mLoadingBlockLen;
 
    sampleCount mMaxSamples; // max samples per block
+
+   unsigned long mLastBlockFileDestructionCount { 0 };
 
    static wxString globaltemp;
    wxString mytemp;
