@@ -319,18 +319,22 @@ ProgressResult QTImportFileHandle::Import(TrackFactory *trackFactory,
             format = floatSample;
             break;
       }
-   
-      AudioBufferList *abl = (AudioBufferList *)
-         calloc(1, offsetof(AudioBufferList, mBuffers) + (sizeof(AudioBuffer) * numchan));
+
+      std::unique_ptr<AudioBufferList, freer> abl
+      { static_cast<AudioBufferList *>
+         (calloc(1, offsetof(AudioBufferList, mBuffers) +
+                    (sizeof(AudioBuffer) * numchan))) };
       abl->mNumberBuffers = numchan;
    
       TrackHolders channels{ numchan };
-   
+
+      ArraysOf<unsigned char> holders{ numchan, sizeof(float) * bufsize };
       int c;
       for (c = 0; c < numchan; c++) {
          abl->mBuffers[c].mNumberChannels = 1;
          abl->mBuffers[c].mDataByteSize = sizeof(float) * bufsize;
-         abl->mBuffers[c].mData = malloc(abl->mBuffers[c].mDataByteSize);
+
+         abl->mBuffers[c].mData = holders[c].get();
    
          channels[c] = trackFactory->NewWaveTrack(format);
          channels[c]->SetRate(desc.mSampleRate);
@@ -352,7 +356,7 @@ ProgressResult QTImportFileHandle::Import(TrackFactory *trackFactory,
    
          err = MovieAudioExtractionFillBuffer(maer,
                                               &numFrames,
-                                              abl,
+                                              abl.get(),
                                               &flags);
          if (err != noErr) {
             wxMessageBox(_("Unable to get fill buffer"));
@@ -383,12 +387,7 @@ ProgressResult QTImportFileHandle::Import(TrackFactory *trackFactory,
    
          outTracks.swap(channels);
       }
-   
-      for (c = 0; c < numchan; c++) {
-         free(abl->mBuffers[c].mData);
-      }
-      free(abl);
-   
+
       //
       // Extract any metadata
       //
@@ -463,7 +462,6 @@ void QTImportFileHandle::AddMetadata(Tags *tags)
          continue;
       }
 
-      QTPropertyValuePtr outValPtr = nil;
       QTPropertyValueType outPropType;
       ::ByteCount outPropValueSize;
       ::ByteCount outPropValueSizeUsed = 0;
@@ -495,7 +493,7 @@ void QTImportFileHandle::AddMetadata(Tags *tags)
       }
 
       // Alloc memory for it
-      outValPtr = malloc(outPropValueSize);
+      ArrayOf<char> outVals{ outPropValueSize };
 
       // Retrieve the data
       err =  QTMetaDataGetItemProperty(metaDataRef,
@@ -503,24 +501,22 @@ void QTImportFileHandle::AddMetadata(Tags *tags)
                                        kPropertyClass_MetaDataItem,
                                        kQTMetaDataItemPropertyID_Value,
                                        outPropValueSize,
-                                       outValPtr,
+                                       outVals.get(),
                                        &outPropValueSizeUsed);
-      if (err != noErr) {
-         free(outValPtr);
+      if (err != noErr)
          continue;
-      }
 
       wxString v = wxT("");
 
       switch (dataType)
       {
          case kQTMetaDataTypeUTF8:
-            v = wxString((char *)outValPtr, wxConvUTF8);
+            v = wxString(outVals.get(), wxConvUTF8);
          break;
          case kQTMetaDataTypeUTF16BE:
          {
             wxMBConvUTF16BE conv;
-            v = wxString((char *)outValPtr, conv);
+            v = wxString(outVals.get(), conv);
          }
          break;
       }
@@ -528,8 +524,6 @@ void QTImportFileHandle::AddMetadata(Tags *tags)
       if (!v.IsEmpty()) {
          tags->SetTag(names[i].name, v);
       }
-
-      free(outValPtr);
    }
 
    // we are done so release our metadata object
