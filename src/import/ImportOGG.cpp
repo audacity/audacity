@@ -211,7 +211,6 @@ std::unique_ptr<ImportFileHandle> OggImportPlugin::Open(const wxString &filename
       }
 
       // what to do with message?
-      file->Close();
       return nullptr;
    }
 
@@ -230,7 +229,7 @@ auto OggImportFileHandle::GetFileUncompressedBytes() -> ByteCount
 }
 
 ProgressResult OggImportFileHandle::Import(TrackFactory *trackFactory, TrackHolders &outTracks,
-                                Tags *tags)
+   Tags *tags)
 {
    outTracks.clear();
 

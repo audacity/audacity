@@ -157,7 +157,8 @@ struct GStreamContext
 };
 
 // For RAII on gst objects
-template<typename T> using GstObjHandle = std::unique_ptr < T, Deleter<void, gst_object_unref > > ;
+template<typename T> using GstObjHandle =
+   std::unique_ptr < T, Deleter<void, gst_object_unref > > ;
 
 ///! Does actual import, returned by GStreamerImportPlugin::Open
 class GStreamerImportFileHandle final : public ImportFileHandle
@@ -225,8 +226,8 @@ private:
    TrackFactory           *mTrackFactory; //!< Factory to create tracks when samples arrive
 
    GstString               mUri;          //!< URI of file
-   GstObjHandle<GstElement> mPipeline;     //!< GStreamer pipeline
-   GstObjHandle<GstBus>     mBus;          //!< Message bus
+   GstObjHandle<GstElement> mPipeline;    //!< GStreamer pipeline
+   GstObjHandle<GstBus>    mBus;          //!< Message bus
    GstElement             *mDec;          //!< uridecodebin element
    bool                    mAsyncDone;    //!< true = 1st async-done message received
 
@@ -273,17 +274,21 @@ GetGStreamerImportPlugin(ImportPluginList &importPluginList,
 
    // Initialize gstreamer
    GErrorHandle error;
-   int argc = 0;
-   char **argv = NULL;
-   GError *ee;
-   if (!gst_init_check(&argc, &argv, &ee))
+   bool initError;
+   {
+      int argc = 0;
+      char **argv = NULL;
+      GError *ee;
+      initError = !gst_init_check(&argc, &argv, &ee);
+      error.reset(ee);
+   }
+   if ( initError )
    {
       wxLogMessage(wxT("Failed to initialize GStreamer. Error %d: %s"),
                    error.get()->code,
                    wxString::FromUTF8(error.get()->message).c_str());
       return;
    }
-   error.reset(ee);
 
    guint major, minor, micro, nano;
    gst_version(&major, &minor, &micro, &nano);

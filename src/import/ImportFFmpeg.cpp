@@ -847,6 +847,8 @@ void FFmpegImportFileHandle::GetMetadata(Tags *tags, const wxChar *tag, const ch
 
 FFmpegImportFileHandle::~FFmpegImportFileHandle()
 {
+   av_log_set_callback(av_log_default_callback);
+
    // Do this before unloading the libraries
    mContext.reset();
 

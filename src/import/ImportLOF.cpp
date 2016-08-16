@@ -142,24 +142,23 @@ public:
 private:
    // Takes a line of text in lof file and interprets it and opens files
    void lofOpenFiles(wxString* ln);
-   void doDuration();
-   void doScrollOffset();
+   void doDurationAndScrollOffset();
 
    std::unique_ptr<wxTextFile> mTextFile;
    wxFileName mLOFFileName;  /**< The name of the LOF file, which is used to
                                 interpret relative paths in it */
-   AudacityProject *mProject;
+   AudacityProject *mProject{ GetActiveProject() };
 
    // In order to know whether or not to create a NEW window
-   bool              windowCalledOnce;
+   bool              windowCalledOnce{ false };
 
    // In order to zoom in, it must be done after files are opened
-   bool              callDurationFactor;
-   double            durationFactor;
+   bool              callDurationFactor{ false };
+   double            durationFactor{ 1 };
 
    // In order to offset scrollbar, it must be done after files are opened
-   bool              callScrollOffset;
-   double            scrollOffset;
+   bool              callScrollOffset{ false };
+   double            scrollOffset{ 0 };
 };
 
 LOFImportFileHandle::LOFImportFileHandle
@@ -168,12 +167,6 @@ LOFImportFileHandle::LOFImportFileHandle
    mTextFile(std::move(file))
    , mLOFFileName{name}
 {
-   mProject = GetActiveProject();
-   windowCalledOnce = false;
-   callDurationFactor = false;
-   durationFactor = 1;
-   callScrollOffset = false;
-   scrollOffset = 0;
 }
 
 void GetLOFImportPlugin(ImportPluginList &importPluginList,
@@ -190,27 +183,26 @@ wxString LOFImportPlugin::GetPluginFormatDescription()
 std::unique_ptr<ImportFileHandle> LOFImportPlugin::Open(const wxString &filename)
 {
    // Check if it is a binary file
-   wxFile binaryFile;
-   if (!binaryFile.Open(filename))
-      return nullptr; // File not found
-
-   char buf[BINARY_FILE_CHECK_BUFFER_SIZE];
-   int count = binaryFile.Read(buf, BINARY_FILE_CHECK_BUFFER_SIZE);
-
-   for (int i = 0; i < count; i++)
    {
-      // Check if this char is below the space character, but not a
-      // line feed or carriage return
-      if (buf[i] < 32 && buf[i] != 10 && buf[i] != 13)
+      wxFile binaryFile;
+      if (!binaryFile.Open(filename))
+         return nullptr; // File not found
+
+      char buf[BINARY_FILE_CHECK_BUFFER_SIZE];
+      int count = binaryFile.Read(buf, BINARY_FILE_CHECK_BUFFER_SIZE);
+
+      for (int i = 0; i < count; i++)
       {
-         // Assume it is a binary file
-         binaryFile.Close();
-         return nullptr;
+         // Check if this char is below the space character, but not a
+         // line feed or carriage return
+         if (buf[i] < 32 && buf[i] != 10 && buf[i] != 13)
+         {
+            // Assume it is a binary file
+            binaryFile.Close();
+            return nullptr;
+         }
       }
    }
-
-   // Close it again so it can be opened as a text file
-   binaryFile.Close();
 
    // Now open the file again as text file
    auto file = std::make_unique<wxTextFile>(filename);
@@ -235,6 +227,18 @@ auto LOFImportFileHandle::GetFileUncompressedBytes() -> ByteCount
 ProgressResult LOFImportFileHandle::Import(TrackFactory * WXUNUSED(trackFactory), TrackHolders &outTracks,
                                 Tags * WXUNUSED(tags))
 {
+   // Unlike other ImportFileHandle subclasses, this one never gives any tracks
+   // back to the caller.
+   // Instead, it recursively calls AudacityProject::Import for each file listed
+   // in the .lof file.
+   // Each importation creates a new undo state.
+   // If there is an error or exception during one of them, only that one's
+   // side effects are rolled back, and the rest of the import list is skipped.
+   // The file may have "window" directives that cause new AudacityProjects
+   // to be created, and the undo states are pushed onto the latest project.
+   // If a project is created but the first file import into it fails, destroy
+   // the project.
+
    outTracks.clear();
 
    wxASSERT(mTextFile->IsOpened());
@@ -256,15 +260,13 @@ ProgressResult LOFImportFileHandle::Import(TrackFactory * WXUNUSED(trackFactory)
    // for last line
    lofOpenFiles(&line);
 
+   if(!mTextFile->Close())
+      return ProgressResult::Failed;
+
    // set any duration/offset factors for last window, as all files were called
-   doDuration();
-   doScrollOffset();
+   doDurationAndScrollOffset();
 
-   // exited ok
-   if(mTextFile->Close())
-      return ProgressResult::Success;
-
-   return ProgressResult::Failed;
+   return ProgressResult::Success;
 }
 
 static int CountNumTracks(AudacityProject *proj)
@@ -302,8 +304,7 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
    if (tokenholder.IsSameAs(wxT("window"), false))
    {
       // set any duration/offset factors for last window, as all files were called
-      doDuration();
-      doScrollOffset();
+      doDurationAndScrollOffset();
 
       if (windowCalledOnce)
       {
@@ -379,6 +380,8 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
             targetfile = fName.GetFullPath();
          }
       }
+
+      // Do recursive call to import
 
 #ifdef USE_MIDI
       // If file is a midi
@@ -459,6 +462,9 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
                      t->SetOffset(offset);
                   }
                }
+
+               // Amend the undo transaction made by import
+               mProject->TP_ModifyState(false);
             } // end of converting "offset" argument
             else
             {
@@ -481,23 +487,25 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
    }
 }
 
-void LOFImportFileHandle::doDuration()
+void LOFImportFileHandle::doDurationAndScrollOffset()
 {
+   bool doSomething = callDurationFactor || callScrollOffset;
    if (callDurationFactor)
    {
       double longestDuration = mProject->GetTracks()->GetEndTime();
       mProject->ZoomBy(longestDuration / durationFactor);
       callDurationFactor = false;
    }
-}
 
-void LOFImportFileHandle::doScrollOffset()
-{
    if (callScrollOffset && (scrollOffset != 0))
    {
       mProject->TP_ScrollWindow(scrollOffset);
       callScrollOffset = false;
    }
+
+   if (doSomething)
+      // Amend last undo state
+      mProject->TP_ModifyState(false);
 }
 
 LOFImportFileHandle::~LOFImportFileHandle()

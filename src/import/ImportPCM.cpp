@@ -478,6 +478,11 @@ ProgressResult PCMImportFileHandle::Import(TrackFactory *trackFactory,
          else
             block = SFCall<sf_count_t>(sf_readf_float, mFile.get(), (float *)srcbuffer.ptr(), block);
 
+         if(block < 0 || block > maxBlock) {
+            wxASSERT(false);
+            block = maxBlock;
+         }
+
          if (block) {
             auto iter = channels.begin();
             for(int c=0; c<mInfo.channels; ++iter, ++c) {
@@ -670,6 +675,7 @@ ProgressResult PCMImportFileHandle::Import(TrackFactory *trackFactory,
                else if (frame->nfields == 3) {
                   ustr = id3_field_getstring(&frame->fields[1]);
                   if (ustr) {
+                     // Is this duplication really needed?
                      MallocString<> str{ (char *)id3_ucs4_utf8duplicate(ustr) };
                      n = UTF8CTOWX(str.get());
                   }
@@ -681,6 +687,7 @@ ProgressResult PCMImportFileHandle::Import(TrackFactory *trackFactory,
                }
 
                if (ustr) {
+                  // Is this duplication really needed?
                   MallocString<> str{ (char *)id3_ucs4_utf8duplicate(ustr) };
                   v = UTF8CTOWX(str.get());
                }
@@ -700,8 +707,6 @@ ProgressResult PCMImportFileHandle::Import(TrackFactory *trackFactory,
 
             break;
          }
-
-         f.Close();
       }
    }
 #endif
