@@ -2025,6 +2025,8 @@ int AudacityApp::OnExit()
 
    DeinitFFT();
 
+   DeinitAudioIO();
+
    // Terminate the PluginManager (must be done before deleting the locale)
    PluginManager::Get().Terminate();
 
