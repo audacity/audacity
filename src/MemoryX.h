@@ -380,7 +380,7 @@ you don't use something like std::move(p) or q.release().  Both expressions requ
 that you identify the type only once, which is brief and less error prone.
 
 (Whereas this omission of [] might invite a runtime error:
-std::unique_ptr<Myclass> q { new Myclass[count] }; )
+std::unique_ptr<Myclass> q { safenew Myclass[count] }; )
 
 Some C++11 tricks needed here are (1) variadic argument lists and
 (2) making the compile-time dispatch work correctly.  You can't have
@@ -511,7 +511,7 @@ public:
  * with *, ->, get(), reset(), or in if()
  */
 
-// Placement-new is used below, and that does not cooperate with the DEBUG_NEW for Visual Studio
+// Placement-NEW is used below, and that does not cooperate with the DEBUG_NEW for Visual Studio
 #ifdef _DEBUG
 #ifdef _MSC_VER
 #undef new
