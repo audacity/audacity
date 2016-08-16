@@ -185,7 +185,7 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
    } mBalanceInfo;
 
    // Accessor for the balance info, may need to do a delayed update for
-   // deletion in case other threads delete block files
+   // deletion in case other threads DELETE block files
    BalanceInfo &GetBalanceInfo();
 
    void BalanceInfoDel(const wxString&);

@@ -2533,129 +2533,127 @@ void Effect::Preview(bool dryOnly)
    if (!mPreviewFullSelection)
       mT1 = t1;
 
-   // Save the original track list
-   TrackList *saveTracks = mTracks;
-
-   // Build NEW tracklist from rendering tracks
-   mTracks = new TrackList();
-
-   // Linear Effect preview optimised by pre-mixing to one track.
-   // Generators need to generate per track.
-   if (mIsLinearEffect && !isGenerator) {
-      WaveTrack::Holder mixLeft, mixRight;
-      MixAndRender(saveTracks, mFactory, rate, floatSample, mT0, t1, mixLeft, mixRight);
-      if (!mixLeft) {
-         delete mTracks;
-         mTracks = saveTracks;
-         return;
-      }
-
-      mixLeft->Offset(-mixLeft->GetStartTime());
-      mixLeft->InsertSilence(0.0, mT0);
-      mixLeft->SetSelected(true);
-      mixLeft->SetDisplay(WaveTrack::NoDisplay);
-      mTracks->Add(std::move(mixLeft));
-      if (mixRight) {
-         mixRight->Offset(-mixRight->GetStartTime());
-         mixRight->InsertSilence(0.0, mT0);
-         mixRight->SetSelected(true);
-         mTracks->Add(std::move(mixRight));
-      }
-   }
-   else {
-      TrackListOfKindIterator iter(Track::Wave, saveTracks);
-      WaveTrack *src = (WaveTrack *) iter.First();
-      while (src)
-      {
-         if (src->GetSelected() || mPreviewWithNotSelected) {
-            auto dest = src->Copy(mT0, t1);
-            dest->InsertSilence(0.0, mT0);
-            dest->SetSelected(src->GetSelected());
-            static_cast<WaveTrack*>(dest.get())->SetDisplay(WaveTrack::NoDisplay);
-            mTracks->Add(std::move(dest));
-         }
-         src = (WaveTrack *) iter.Next();
-      }
-   }
-
-   // Update track/group counts
-   CountWaveTracks();
-
-   // Apply effect
-   if (!dryOnly) {
-      ProgressDialog progress(GetName(),
-         _("Preparing preview"),
-         pdlgHideCancelButton); // Have only "Stop" button.
-      SetProgress sp(mProgress, &progress);
-      mIsPreview = true;
-      success = Process();
-      mIsPreview = false;
-   }
-
-   if (success)
    {
-      WaveTrackArray playbackTracks;
-      WaveTrackArray recordingTracks;
+      // Save the original track list
+      TrackList *saveTracks = mTracks;
+      auto cleanup = finally( [&] { mTracks = saveTracks; } );
 
-      SelectedTrackListOfKindIterator iter(Track::Wave, mTracks);
-      WaveTrack *src = (WaveTrack *) iter.First();
-      while (src) {
-         playbackTracks.push_back(src);
-         src = (WaveTrack *) iter.Next();
+      // Build NEW tracklist from rendering tracks
+      auto uTracks = std::make_unique<TrackList>();
+      mTracks = uTracks.get();
+
+      // Linear Effect preview optimised by pre-mixing to one track.
+      // Generators need to generate per track.
+      if (mIsLinearEffect && !isGenerator) {
+         WaveTrack::Holder mixLeft, mixRight;
+         MixAndRender(saveTracks, mFactory, rate, floatSample, mT0, t1, mixLeft, mixRight);
+         if (!mixLeft)
+            return;
+
+         mixLeft->Offset(-mixLeft->GetStartTime());
+         mixLeft->InsertSilence(0.0, mT0);
+         mixLeft->SetSelected(true);
+         mixLeft->SetDisplay(WaveTrack::NoDisplay);
+         mTracks->Add(std::move(mixLeft));
+         if (mixRight) {
+            mixRight->Offset(-mixRight->GetStartTime());
+            mixRight->InsertSilence(0.0, mT0);
+            mixRight->SetSelected(true);
+            mTracks->Add(std::move(mixRight));
+         }
       }
-      // Some effects (Paulstretch) may need to generate more
-      // than previewLen, so take the min.
-      t1 = std::min(mT0 + previewLen, mT1);
+      else {
+         TrackListOfKindIterator iter(Track::Wave, saveTracks);
+         WaveTrack *src = (WaveTrack *) iter.First();
+         while (src)
+         {
+            if (src->GetSelected() || mPreviewWithNotSelected) {
+               auto dest = src->Copy(mT0, t1);
+               dest->InsertSilence(0.0, mT0);
+               dest->SetSelected(src->GetSelected());
+               static_cast<WaveTrack*>(dest.get())->SetDisplay(WaveTrack::NoDisplay);
+               mTracks->Add(std::move(dest));
+            }
+            src = (WaveTrack *) iter.Next();
+         }
+      }
+
+
+      // Update track/group counts
+      CountWaveTracks();
+
+      // Apply effect
+      if (!dryOnly) {
+         ProgressDialog progress(GetName(),
+                                 _("Preparing preview"),
+                                 pdlgHideCancelButton); // Have only "Stop" button.
+         SetProgress sp(mProgress, &progress);
+         mIsPreview = true;
+         success = Process();
+         mIsPreview = false;
+      }
+
+      if (success)
+      {
+         WaveTrackArray playbackTracks;
+         WaveTrackArray recordingTracks;
+
+         SelectedTrackListOfKindIterator iter(Track::Wave, mTracks);
+         WaveTrack *src = (WaveTrack *) iter.First();
+         while (src) {
+            playbackTracks.push_back(src);
+            src = (WaveTrack *) iter.Next();
+         }
+         // Some effects (Paulstretch) may need to generate more
+         // than previewLen, so take the min.
+         t1 = std::min(mT0 + previewLen, mT1);
 
 #ifdef EXPERIMENTAL_MIDI_OUT
-      NoteTrackArray empty;
+         NoteTrackArray empty;
 #endif
-      // Start audio playing
-      AudioIOStartStreamOptions options { rate };
-      int token =
+         // Start audio playing
+         AudioIOStartStreamOptions options { rate };
+         int token =
          gAudioIO->StartStream(playbackTracks, recordingTracks,
 #ifdef EXPERIMENTAL_MIDI_OUT
                                empty,
 #endif
                                mT0, t1, options);
 
-      if (token) {
-         int previewing = eProgressSuccess;
-         // The progress dialog must be deleted before stopping the stream
-         // to allow events to flow to the app during StopStream processing.
-         // The progress dialog blocks these events.
-         {
-            ProgressDialog progress
+         if (token) {
+            int previewing = eProgressSuccess;
+            // The progress dialog must be deleted before stopping the stream
+            // to allow events to flow to the app during StopStream processing.
+            // The progress dialog blocks these events.
+            {
+               ProgressDialog progress
                (GetName(), _("Previewing"), pdlgHideCancelButton);
 
-            while (gAudioIO->IsStreamActive(token) && previewing == eProgressSuccess) {
+               while (gAudioIO->IsStreamActive(token) && previewing == eProgressSuccess) {
+                  ::wxMilliSleep(100);
+                  previewing = progress.Update(gAudioIO->GetStreamTime() - mT0, t1 - mT0);
+               }
+            }
+
+            gAudioIO->StopStream();
+
+            while (gAudioIO->IsBusy()) {
                ::wxMilliSleep(100);
-               previewing = progress.Update(gAudioIO->GetStreamTime() - mT0, t1 - mT0);
             }
          }
-
-         gAudioIO->StopStream();
-
-         while (gAudioIO->IsBusy()) {
-            ::wxMilliSleep(100);
+         else {
+            wxMessageBox(_("Error opening sound device. Try changing the audio host, playback device and the project sample rate."),
+                         _("Error"), wxOK | wxICON_EXCLAMATION, FocusDialog);
          }
       }
-      else {
-         wxMessageBox(_("Error opening sound device. Try changing the audio host, playback device and the project sample rate."),
-                     _("Error"), wxOK | wxICON_EXCLAMATION, FocusDialog);
+      
+      if (FocusDialog) {
+         FocusDialog->SetFocus();
       }
+      
+      mOutputTracks.reset();
    }
 
-   if (FocusDialog) {
-      FocusDialog->SetFocus();
-   }
-
-   mOutputTracks.reset();
-
-   mTracks->Clear();
-   delete mTracks;
-
-   mTracks = saveTracks;
    mT0 = oldT0;
    mT1 = oldT1;
 
