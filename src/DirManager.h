@@ -34,9 +34,10 @@ class SequenceTest;
 WX_DECLARE_HASH_MAP(int, int, wxIntegerHash, wxIntegerEqual, DirHash);
 
 class BlockFile;
-using BlockFilePtr = BlockFile *;
+using BlockFilePtr = std::shared_ptr<BlockFile>;
 
-WX_DECLARE_HASH_MAP(wxString, BlockFilePtr, wxStringHash, wxStringEqual, BlockHash);
+WX_DECLARE_HASH_MAP(wxString, std::weak_ptr<BlockFile>, wxStringHash,
+                    wxStringEqual, BlockHash);
 
 wxMemorySize GetFreeMemory();
 
@@ -100,12 +101,6 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
    bool CopyToNewProjectDirectory(BlockFile *f);
 
    bool EnsureSafeFilename(const wxFileName &fName);
-
-   void Ref(BlockFile * f);
-   void Deref(BlockFile * f);
-
-   // For debugging only
-   int GetRefCount(BlockFile * f);
 
    void SetLoadingTarget(BlockArray *pArray, unsigned idx)
    {

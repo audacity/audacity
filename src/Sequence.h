@@ -30,7 +30,7 @@ typedef wxLongLong_t sampleCount; /** < A native 64-bit integer type, because
 #endif
 
 class BlockFile;
-using BlockFilePtr = BlockFile *;
+using BlockFilePtr = std::shared_ptr<BlockFile>;
 
 class DirManager;
 
@@ -237,8 +237,6 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    //
    // Private methods
    //
-
-   void DerefAllFiles();
 
    int FindBlock(sampleCount pos) const;
 

@@ -143,13 +143,6 @@ protected:
       sampleFormat format, ArrayOf<char> &cleanup) override;
 
   private:
-   //Thread-safe versions
-   void Ref() const override;
-   bool Deref() const override;
-   //needed for Ref/Deref access.
-   friend class DirManager;
-   friend class ODComputeSummaryTask;
-   friend class ODDecodeTask;
 
    ODLock mWriteSummaryMutex;
 
@@ -161,11 +154,6 @@ protected:
 
    //lock the read data - libsndfile can't handle two reads at once?
    mutable ODLock mReadDataMutex;
-
-
-   //lock the Ref counting
-   mutable ODLock mDerefMutex;
-   mutable ODLock mRefMutex;
 
    mutable ODLock    mSummaryAvailableMutex;
    bool mSummaryAvailable;

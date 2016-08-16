@@ -94,10 +94,6 @@ static void ReplaceBlockFiles(AudacityProject *project,
       const auto src = &*f;
       if (hash.count( src ) > 0) {
          const auto &dst = hash[src];
-
-         dirManager->Deref(src);
-         dirManager->Ref(dst);
-
          f = dst;
       }
    }
@@ -223,11 +219,6 @@ static void RemoveDependencies(AudacityProject *project,
    // However, that didn't actually change any references to these
    // blockfiles in the Sequences, so we do that next...
    ReplaceBlockFiles(project, blockFileHash);
-
-   // Subtract one from reference count of NEW block files; they're
-   // now all referenced the proper number of times by the Sequences
-   for (const auto &pair : blockFileHash)
-      dirManager->Deref(pair.second);
 }
 
 //

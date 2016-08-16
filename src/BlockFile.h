@@ -44,15 +44,12 @@ class SummaryInfo {
 
 
 class BlockFile;
+using BlockFilePtr = std::shared_ptr<BlockFile>;
 
-// to do: use shared_ptr instead
-using BlockFilePtr = BlockFile *;
-
-// to do: make this a synonym for make_shared
 template< typename Result, typename... Args >
-inline Result *make_blockfile (Args && ... args)
+inline std::shared_ptr< Result > make_blockfile (Args && ... args)
 {
-   return new Result( std::forward< Args > ( args )... );
+   return std::make_shared< Result > ( std::forward< Args > ( args )... );
 }
 
 class PROFILE_DLL_API BlockFile /* not final, abstract */ {
@@ -168,17 +165,6 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
 
  private:
 
-   friend class DirManager;
-   friend class AudacityApp;
-   //needed for Ref/Deref access.
-   friend class ODComputeSummaryTask;
-   friend class ODDecodeTask;
-   friend class ODPCMAliasBlockFile;
-
-   virtual void Ref() const;
-   virtual bool Deref() const;
-   virtual int RefCount(){return mRefCount;}
-
  protected:
    /// Calculate summary data for the given sample data
    /// Overrides have differing details of memory management
@@ -199,7 +185,6 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
 
  private:
    int mLockCount;
-   mutable int mRefCount;
 
    static ArrayOf<char> fullSummary;
 

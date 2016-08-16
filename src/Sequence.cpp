@@ -75,19 +75,6 @@ Sequence::Sequence(const Sequence &orig, const std::shared_ptr<DirManager> &proj
 
 Sequence::~Sequence()
 {
-   DerefAllFiles();
-}
-
-void Sequence::DerefAllFiles()
-{
-   for (size_t i = 0, nn = mBlock.size(); i < nn; i++)
-   {
-      BlockFile *& pOldFile = mBlock[i].f;
-      if (pOldFile) {
-         mDirManager->Deref(pOldFile);
-         pOldFile = NULL;
-      }
-   }
 }
 
 sampleCount Sequence::GetMaxBlockSize() const
@@ -209,8 +196,6 @@ bool Sequence::ConvertToSampleFormat(sampleFormat format, bool* pbChanged)
    {
       // Invalidate all the old, non-aliased block files.
       // Aliased files will be converted at save, per comment above.
-
-      DerefAllFiles();
 
       // Replace with NEW blocks.
       mBlock.swap(newBlockArray);
@@ -550,7 +535,6 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
       auto file =
          mDirManager->NewSimpleBlockFile(buffer.ptr(), largerBlockLen, mSampleFormat);
 
-      mDirManager->Deref(block.f);
       block.f = file;
 
       for (unsigned int i = b + 1; i < numBlocks; i++)
@@ -635,8 +619,6 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
       Blockify(newBlock, s + lastStart, sampleBuffer.ptr(), rightLen);
    }
 
-   mDirManager->Deref(splitBlock.f);
-
    // Copy remaining blocks to NEW block array and
    // swap the NEW block array in for the old
    for (i = b + 1; i < numBlocks; i++)
@@ -681,13 +663,10 @@ bool Sequence::InsertSilence(sampleCount s0, sampleCount len)
       silentFile = make_blockfile<SilentBlockFile>(idealSamples);
    while (len >= idealSamples) {
       sTrack.mBlock.push_back(SeqBlock(silentFile, pos));
-      mDirManager->Ref(silentFile);
 
       pos += idealSamples;
       len -= idealSamples;
    }
-   if (silentFile)
-      mDirManager->Deref(silentFile);
    if (len) {
       sTrack.mBlock.push_back(SeqBlock(
          make_blockfile<SilentBlockFile>(len), pos));
@@ -1151,10 +1130,7 @@ bool Sequence::CopyWrite(SampleBuffer &scratch,
    Read(scratch.ptr(), mSampleFormat, b, 0, length);
    memcpy(scratch.ptr() + start*sampleSize, buffer, len*sampleSize);
 
-   BlockFile *const oldBlockFile = b.f;
    b.f = mDirManager->NewSimpleBlockFile(scratch.ptr(), length, mSampleFormat);
-
-   mDirManager->Deref(oldBlockFile);
 
    return true;
 }
@@ -1233,7 +1209,6 @@ bool Sequence::Set(samplePtr buffer, sampleFormat format,
          if (start == block.start &&
              blen == fileLength) {
 
-            mDirManager->Deref(block.f);
             block.f = make_blockfile<SilentBlockFile>(blen);
          }
          else {
@@ -1545,7 +1520,6 @@ bool Sequence::Append(samplePtr buffer, sampleFormat format,
          static_cast< SimpleBlockFile * >( &*newLastBlock.f )
             ->SaveXML( *blockFileLog );
 
-      mDirManager->Deref(lastBlock.f);
       lastBlock = newLastBlock;
 
       len -= addLen;
@@ -1651,12 +1625,10 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
       Read(scratch.ptr() + (pos * sampleSize), mSampleFormat,
            b, pos + len, newLen - pos);
 
-      BlockFile *const oldFile = b.f;
       b = SeqBlock(
          mDirManager->NewSimpleBlockFile(scratch.ptr(), newLen, mSampleFormat),
          b.start
       );
-      mDirManager->Deref(oldFile);
 
       for (unsigned int j = b0 + 1; j < numBlocks; j++)
          mBlock[j].start -= len;
@@ -1705,22 +1677,11 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
 
          newBlock.erase(newBlock.end() - 1);
          Blockify(newBlock, prepreBlock.start, scratch.ptr(), sum);
-
-         mDirManager->Deref(prepreBlock.f);
       }
    }
    else {
       // The sample where we begin deletion happens to fall
       // right on the beginning of a block.
-   }
-
-   if (b0 != b1) {
-      mDirManager->Deref(preBlock.f);
-   }
-
-   // Next, DELETE blocks strictly between b0 and b1
-   for (i = b0 + 1; i < b1; i++) {
-      mDirManager->Deref(mBlock[i].f);
    }
 
    // Now, symmetrically, grab the samples in block b1 after the
@@ -1757,15 +1718,12 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
 
          Blockify(newBlock, start, scratch.ptr(), sum);
          b1++;
-
-         mDirManager->Deref(postpostBlock.f);
       }
    }
    else {
       // The sample where we begin deletion happens to fall
       // right on the end of a block.
    }
-   mDirManager->Deref(postBlock.f);
 
    // Copy the remaining blocks over from the old array
    for (i = b1 + 1; i < numBlocks; i++)
@@ -1822,11 +1780,11 @@ void Sequence::DebugPrintf(wxString *dest) const
    for (i = 0; i < mBlock.size(); i++) {
       const SeqBlock &seqBlock = mBlock[i];
       *dest += wxString::Format
-         (wxT("   Block %3u: start %8lld, len %8lld, refs %d, "),
+         (wxT("   Block %3u: start %8lld, len %8lld, refs %ld, "),
           i,
           (long long) seqBlock.start,
           seqBlock.f ? (long long) seqBlock.f->GetLength() : 0,
-          seqBlock.f ? mDirManager->GetRefCount(seqBlock.f) : 0);
+          seqBlock.f ? seqBlock.f.use_count() : 0);
 
       if (seqBlock.f)
          *dest += seqBlock.f->GetFileName().name.GetFullName();
