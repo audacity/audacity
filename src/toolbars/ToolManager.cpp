@@ -1276,7 +1276,8 @@ void ToolManager::OnIndicatorPaint( wxPaintEvent & event )
 {
    wxWindow *w = (wxWindow *)event.GetEventObject();
    wxPaintDC dc( w );
-   dc.SetBackground( *wxBLUE_BRUSH );
+   wxBrush brush( theTheme.Colour( clrTrackPanelText ) );
+   dc.SetBackground( brush );
    dc.Clear();
 }
 
