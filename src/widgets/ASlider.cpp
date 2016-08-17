@@ -1563,6 +1563,9 @@ ASlider::ASlider( wxWindow * parent,
                   int orientation /*= wxHORIZONTAL*/)
 : wxPanel( parent, id, pos, size, wxWANTS_CHARS )
 {
+   //wxColour Col(parent->GetBackgroundColour());
+   //SetBackgroundColour( Col );
+   SetBackgroundColour( theTheme.Colour( clrMedium ) );
    mLWSlider = std::make_unique<LWSlider>( this,
                              name,
                              wxPoint(0,0),
@@ -1622,11 +1625,6 @@ void ASlider::OnErase(wxEraseEvent & WXUNUSED(event))
 void ASlider::OnPaint(wxPaintEvent & WXUNUSED(event))
 {
    wxPaintDC dc(this);
-
-#ifdef EXPERIMENTAL_THEMING
-   wxColour Col(GetParent()->GetBackgroundColour());
-   this->SetBackgroundColour( Col );
-#endif
 
    mLWSlider->OnPaint(dc);
 
