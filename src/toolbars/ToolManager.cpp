@@ -1274,6 +1274,7 @@ void ToolManager::OnTimer( wxTimerEvent & event )
 //
 void ToolManager::OnIndicatorPaint( wxPaintEvent & event )
 {
+   // TODO: Better to use a bitmap than a triangular region.
    wxWindow *w = (wxWindow *)event.GetEventObject();
    wxPaintDC dc( w );
    wxBrush brush( theTheme.Colour( clrTrackPanelText ) );
