@@ -165,7 +165,8 @@ void PCMAliasBlockFile::SaveXML(XMLWriter &xmlFile)
 
    xmlFile.WriteAttr(wxT("summaryfile"), mFileName.GetFullName());
    xmlFile.WriteAttr(wxT("aliasfile"), mAliasedFileName.GetFullPath());
-   xmlFile.WriteAttr(wxT("aliasstart"), mAliasStart);
+   xmlFile.WriteAttr(wxT("aliasstart"),
+                     static_cast<long long>( mAliasStart ));
    xmlFile.WriteAttr(wxT("aliaslen"), mLen);
    xmlFile.WriteAttr(wxT("aliaschannel"), mAliasChannel);
    xmlFile.WriteAttr(wxT("min"), mMin);
@@ -186,6 +187,7 @@ BlockFilePtr PCMAliasBlockFile::BuildFromXML(DirManager &dm, const wxChar **attr
    float min = 0.0f, max = 0.0f, rms = 0.0f;
    double dblValue;
    long nValue;
+   long long nnValue;
 
    while(*attrs)
    {
@@ -217,11 +219,15 @@ BlockFilePtr PCMAliasBlockFile::BuildFromXML(DirManager &dm, const wxChar **attr
             // but we want to keep the reference to the missing file because it's a good path string.
             aliasFileName.Assign(strValue);
       }
+      else if ( !wxStricmp(attr, wxT("aliasstart")) )
+      {
+         if (XMLValueChecker::IsGoodInt64(strValue) &&
+             strValue.ToLongLong(&nnValue) && (nnValue >= 0))
+            aliasStart = nnValue;
+      }
       else if (XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
       {  // integer parameters
-         if (!wxStricmp(attr, wxT("aliasstart")) && (nValue >= 0))
-            aliasStart = nValue;
-         else if (!wxStricmp(attr, wxT("aliaslen")) && (nValue >= 0))
+         if (!wxStricmp(attr, wxT("aliaslen")) && (nValue >= 0))
             aliasLen = nValue;
          else if (!wxStricmp(attr, wxT("aliaschannel")) && XMLValueChecker::IsValidChannel(aliasChannel))
             aliasChannel = nValue;
