@@ -64,7 +64,7 @@ bool EffectSoundTouch::Process()
    this->CopyInputTracks(Track::All);
    bool bGoodResult = true;
 
-   TrackListIterator iter(mOutputTracks);
+   TrackListIterator iter(mOutputTracks.get());
    Track* t;
    mCurTrackNum = 0;
    m_maxNewLength = 0.0;

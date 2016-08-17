@@ -156,6 +156,12 @@ void EffectSBSMS :: setParameters(double rateStart, double rateEnd, double pitch
    this->bPitchReferenceInput = bPitchReferenceInput;
 }
 
+void EffectSBSMS::setParameters(double tempoRatio, double pitchRatio)
+{
+   setParameters(tempoRatio, tempoRatio, pitchRatio, pitchRatio,
+                 SlideConstant, SlideConstant, false, false, false);
+}
+
 std::unique_ptr<TimeWarper> createTimeWarper(double t0, double t1, double duration,
                              double rateStart, double rateEnd, SlideType rateSlideType)
 {
@@ -209,7 +215,7 @@ bool EffectSBSMS::Process()
    //Iterate over each track
    //Track::All is needed because this effect needs to introduce silence in the group tracks to keep sync
    this->CopyInputTracks(Track::All); // Set up mOutputTracks.
-   TrackListIterator iter(mOutputTracks);
+   TrackListIterator iter(mOutputTracks.get());
    Track* t;
    mCurTrackNum = 0;
 

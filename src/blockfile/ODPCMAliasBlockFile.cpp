@@ -74,33 +74,6 @@ ODPCMAliasBlockFile::~ODPCMAliasBlockFile()
 {
 }
 
-/// Increases the reference count of this block by one.  Only
-/// DirManager should call this method.
-/// This method has been overidden to be threadsafe.  It is important especially
-/// if two blockfiles deref at the same time resulting in a double deletion of the file
-void ODPCMAliasBlockFile::Ref() const
-{
-   mRefMutex.Lock();
-   BlockFile::Ref();
-   mRefMutex.Unlock();
-}
-
-/// Decreases the reference count of this block by one.  If this
-/// causes the count to become zero, deletes the associated disk
-/// file and deletes this object
-bool ODPCMAliasBlockFile::Deref() const
-{
-   bool ret;
-   mDerefMutex.Lock();
-   ret = BlockFile::Deref();
-   if(!ret)
-   {
-      //Deref returns true when deleted, in which case we should not be touching instance variables, or ever calling this function again.
-      mDerefMutex.Unlock();
-   }
-   return ret;
-}
-
 
 
 //Check to see if we have the file for these calls.
@@ -216,9 +189,9 @@ bool ODPCMAliasBlockFile::Read64K(float *buffer, sampleCount start, sampleCount 
 /// Construct a NEW PCMAliasBlockFile based on this one.
 /// otherwise construct an ODPCMAliasBlockFile that still needs to be computed.
 /// @param newFileName The filename to copy the summary data to.
-BlockFile *ODPCMAliasBlockFile::Copy(wxFileNameWrapper &&newFileName)
+BlockFilePtr ODPCMAliasBlockFile::Copy(wxFileNameWrapper &&newFileName)
 {
-   BlockFile *newBlockFile;
+   BlockFilePtr newBlockFile;
 
    //mAliasedFile can change so we lock readdatamutex, which is responsible for it.
    LockRead();
@@ -228,19 +201,18 @@ BlockFile *ODPCMAliasBlockFile::Copy(wxFileNameWrapper &&newFileName)
    //PCMAliasBlockFile is to lock on exit, and this will cause orphaned blockfiles..
    if(IsSummaryAvailable() && mHasBeenSaved)
    {
-      newBlockFile  = new PCMAliasBlockFile(std::move(newFileName),
-                                                   wxFileNameWrapper{mAliasedFileName}, mAliasStart,
-                                                   mLen, mAliasChannel,
-                                                   mMin, mMax, mRMS);
+      newBlockFile  = make_blockfile<PCMAliasBlockFile>
+         (std::move(newFileName), wxFileNameWrapper{mAliasedFileName},
+          mAliasStart, mLen, mAliasChannel, mMin, mMax, mRMS);
 
    }
    else
    {
       //Summary File might exist in this case, but it might not.
-      newBlockFile  = new ODPCMAliasBlockFile(std::move(newFileName),
-                                                   wxFileNameWrapper{mAliasedFileName}, mAliasStart,
-                                                   mLen, mAliasChannel,
-                                                   mMin, mMax, mRMS,IsSummaryAvailable());
+      newBlockFile  = make_blockfile<ODPCMAliasBlockFile>
+         (std::move(newFileName), wxFileNameWrapper{mAliasedFileName},
+          mAliasStart, mLen, mAliasChannel, mMin, mMax, mRMS,
+          IsSummaryAvailable());
       //The client code will need to schedule this blockfile for OD summarizing if it is going to a NEW track.
    }
 
@@ -290,7 +262,7 @@ void ODPCMAliasBlockFile::SaveXML(XMLWriter &xmlFile)
 // BuildFromXML methods should always return a BlockFile, not NULL,
 // even if the result is flawed (e.g., refers to nonexistent file),
 // as testing will be done in DirManager::ProjectFSCK().
-BlockFile *ODPCMAliasBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
+BlockFilePtr ODPCMAliasBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
 {
    wxFileNameWrapper summaryFileName;
    wxFileNameWrapper aliasFileName;
@@ -339,9 +311,9 @@ BlockFile *ODPCMAliasBlockFile::BuildFromXML(DirManager &dm, const wxChar **attr
       }
    }
 
-   return new ODPCMAliasBlockFile(std::move(summaryFileName), std::move(aliasFileName),
-                                    aliasStart, aliasLen, aliasChannel,
-                                    0,0,0, false);
+   return make_blockfile<ODPCMAliasBlockFile>
+      (std::move(summaryFileName), std::move(aliasFileName),
+       aliasStart, aliasLen, aliasChannel, 0, 0, 0, false);
 }
 
 

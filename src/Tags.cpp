@@ -443,7 +443,7 @@ wxString Tags::GetTag(const wxString & name) const
 
 Tags::Iterators Tags::GetRange() const
 {
-   return std::make_pair(mMap.begin(), mMap.end());
+   return { mMap.begin(), mMap.end() };
 }
 
 void Tags::SetTag(const wxString & name, const wxString & value)

@@ -762,7 +762,7 @@ void DeviceToolBar::OnChoice(wxCommandEvent &event)
    }
 
    // Update all projects' DeviceToolBar.
-   for (size_t i = 0; i < gAudacityProjects.GetCount(); i++) {
+   for (size_t i = 0; i < gAudacityProjects.size(); i++) {
       gAudacityProjects[i]->GetDeviceToolBar()->UpdatePrefs();
    }
 }

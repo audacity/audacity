@@ -1819,7 +1819,7 @@ void TrackPanel::HandleSelect(wxMouseEvent & event)
                selectedClip->GetOffset(), selectedClip->GetEndTime());
          }
          //Also, capture this track for dragging until we up-click.
-         mCapturedClipArray.Add(TrackClip(w, selectedClip));
+         mCapturedClipArray.push_back(TrackClip(w, selectedClip));
 
          mMouseCapture = IsSliding;
 
@@ -3304,7 +3304,7 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
       // The captured clip is the focus, but we need to create a list
       // of all clips that have to move, also...
 
-      mCapturedClipArray.Clear();
+      mCapturedClipArray.clear();
 
       // First, if click was in selection, capture selected clips; otherwise
       // just the clicked-on clip
@@ -3319,7 +3319,7 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
          }
       }
       else {
-         mCapturedClipArray.Add(TrackClip(vt, mCapturedClip));
+         mCapturedClipArray.push_back(TrackClip(vt, mCapturedClip));
 
          // Check for stereo partner
          Track *partner = mTracks->GetLink(vt);
@@ -3328,7 +3328,7 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
                FindClipAtTime(static_cast<WaveTrack*>(partner),
                   mViewInfo->PositionToTime(event.m_x, GetLeftOffset()));
             if (clip)
-               mCapturedClipArray.Add(TrackClip(partner, clip));
+               mCapturedClipArray.push_back(TrackClip(partner, clip));
          }
       }
 
@@ -3375,7 +3375,7 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
 
    } else {
       mCapturedClip = NULL;
-      mCapturedClipArray.Clear();
+      mCapturedClipArray.clear();
    }
 
    mSlideUpDownOnly = event.CmdDown() && !multiToolModeActive;
@@ -3422,27 +3422,22 @@ void TrackPanel::AddClipsToCaptured(Track *t, double t0, double t1)
 {
    if (t->GetKind() == Track::Wave)
    {
-      WaveClipList::compatibility_iterator it =
-         ((WaveTrack *)t)->GetClipIterator();
-      while (it)
+      for(const auto &clip: static_cast<WaveTrack*>(t)->GetClips())
       {
-         WaveClip *clip = it->GetData();
-
          if ( ! clip->AfterClip(t0) && ! clip->BeforeClip(t1) )
          {
             // Avoid getting clips that were already captured
             bool newClip = true;
             for (unsigned int i = 0; i < mCapturedClipArray.size(); ++i) {
-               if (mCapturedClipArray[i].clip == clip) {
+               if (mCapturedClipArray[i].clip == clip.get()) {
                   newClip = false;
                   break;
                }
             }
 
             if (newClip)
-               mCapturedClipArray.Add(TrackClip(t, clip));
+               mCapturedClipArray.push_back(TrackClip(t, clip.get()));
          }
-         it = it->GetNext();
       }
    }
    else
@@ -3467,7 +3462,7 @@ void TrackPanel::AddClipsToCaptured(Track *t, double t0, double t1)
                return;
          }
 #endif
-         mCapturedClipArray.Add(TrackClip(t, NULL));
+         mCapturedClipArray.push_back(TrackClip(t, NULL));
       }
    }
 }
@@ -3639,7 +3634,8 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
          TrackClip &trackClip = mCapturedClipArray[ii];
          WaveClip *const pSrcClip = trackClip.clip;
          if (pSrcClip)
-            static_cast<WaveTrack*>(trackClip.track)->MoveClipToTrack(pSrcClip, NULL);
+            trackClip.holder =
+            static_cast<WaveTrack*>(trackClip.track)->RemoveAndReturnClip(pSrcClip);
       }
 
       // Now check that the move is possible
@@ -3657,7 +3653,7 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
             TrackClip &trackClip = mCapturedClipArray[ii];
             WaveClip *const pSrcClip = trackClip.clip;
             if (pSrcClip) {
-               static_cast<WaveTrack*>(trackClip.track)->AddClip(pSrcClip);
+               static_cast<WaveTrack*>(trackClip.track)->AddClip(std::move(trackClip.holder));
             }
          }
          return;
@@ -3669,7 +3665,7 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
             WaveClip *const pSrcClip = trackClip.clip;
             if (pSrcClip) {
                Track *const dstTrack = trackClip.dstTrack;
-               static_cast<WaveTrack*>(dstTrack)->AddClip(pSrcClip);
+               static_cast<WaveTrack*>(dstTrack)->AddClip(std::move(trackClip.holder));
                trackClip.track = dstTrack;
             }
          }

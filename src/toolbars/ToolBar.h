@@ -181,6 +181,7 @@ class ToolBar /* not final */ : public wxPanelWrapper
             int border = 0,
             wxObject *userData = NULL);
 
+   // Takes ownership of sizer
    void Add(wxSizer *sizer,
              int proportion = 0,
              int flag = 0,

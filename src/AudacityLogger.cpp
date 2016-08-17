@@ -51,7 +51,6 @@ AudacityLogger::AudacityLogger()
 :  wxEvtHandler(),
    wxLog()
 {
-   mFrame = NULL;
    mText = NULL;
    mUpdated = false;
 }
@@ -97,48 +96,44 @@ void AudacityLogger::DoLogText(const wxString & str)
 void AudacityLogger::Destroy()
 {
    if (mFrame) {
-      wxFrame *frame = mFrame;
-      mFrame = NULL;
-      mText = NULL;
-
-      frame->Disconnect(LoggerID_Save,
+      mFrame->Disconnect(LoggerID_Save,
                         wxEVT_COMMAND_BUTTON_CLICKED,
                         wxCommandEventHandler(AudacityLogger::OnSave),
                         NULL,
                         this);
-      frame->Disconnect(LoggerID_Clear,
+      mFrame->Disconnect(LoggerID_Clear,
                         wxEVT_COMMAND_BUTTON_CLICKED,
                         wxCommandEventHandler(AudacityLogger::OnClear),
                         NULL,
                         this);
-      frame->Disconnect(LoggerID_Close,
+      mFrame->Disconnect(LoggerID_Close,
                         wxEVT_COMMAND_BUTTON_CLICKED,
                         wxCommandEventHandler(AudacityLogger::OnClose),
                         NULL,
                         this);
 
-      frame->Disconnect(LoggerID_Save,
+      mFrame->Disconnect(LoggerID_Save,
                         wxEVT_COMMAND_MENU_SELECTED,
                         wxCommandEventHandler(AudacityLogger::OnSave),
                         NULL,
                         this);
-      frame->Disconnect(LoggerID_Clear,
+      mFrame->Disconnect(LoggerID_Clear,
                         wxEVT_COMMAND_MENU_SELECTED,
                         wxCommandEventHandler(AudacityLogger::OnClear),
                         NULL,
                         this);
-      frame->Disconnect(LoggerID_Close,
+      mFrame->Disconnect(LoggerID_Close,
                         wxEVT_COMMAND_MENU_SELECTED,
                         wxCommandEventHandler(AudacityLogger::OnClose),
                         NULL,
                         this);
 
-      frame->Disconnect(wxEVT_CLOSE_WINDOW,
+      mFrame->Disconnect(wxEVT_CLOSE_WINDOW,
                         wxCloseEventHandler(AudacityLogger::OnCloseWindow),
                         NULL,
                         this);
 
-      frame->Destroy();
+      mFrame.reset();
    }
 }
 
@@ -165,7 +160,8 @@ void AudacityLogger::Show(bool show)
    }
 
    // This is the first use, so create the frame
-   wxFrame *frame = new wxFrame(NULL, wxID_ANY, _("Audacity Log"));
+   Destroy_ptr<wxFrame> frame
+      { safenew wxFrame(NULL, wxID_ANY, _("Audacity Log")) };
    frame->SetName(frame->GetTitle());
    frame->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE));
 
@@ -185,7 +181,7 @@ void AudacityLogger::Show(bool show)
    }
 
    // Log text
-   ShuttleGui S(frame, eIsCreating);
+   ShuttleGui S(frame.get(), eIsCreating);
 
    S.SetStyle(wxNO_BORDER | wxTAB_TRAVERSAL);
    S.Prop(true).StartPanel();
@@ -254,7 +250,7 @@ void AudacityLogger::Show(bool show)
                   NULL,
                   this);
 
-   mFrame = frame;
+   mFrame = std::move( frame );
 
    mFrame->Show();
 
@@ -302,7 +298,7 @@ void AudacityLogger::OnSave(wxCommandEvent & WXUNUSED(e))
                         wxT("txt"),
                         wxT("*.txt"),
                         wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
-                        mFrame);
+                        mFrame.get());
 
    if (fName == wxEmptyString) {
       return;
@@ -312,7 +308,7 @@ void AudacityLogger::OnSave(wxCommandEvent & WXUNUSED(e))
       wxMessageBox(_("Couldn't save log to file: ") + fName,
                    _("Warning"),
                    wxICON_EXCLAMATION,
-                   mFrame);
+                   mFrame.get());
       return;
    }
 }

@@ -73,18 +73,12 @@ bool CrossFader::CrossFadeMix(samplePtr buffer, sampleFormat format, sampleCount
    //we should use one of the size len, because this has already
    //been determined to be good in Mixer
 
-   //Get a pointer to the sequence in each clip.
-   WaveClip * tmpclip = NULL;
-
-   WaveClipList::compatibility_iterator  it;
-
-
    //Go through each clip, adding it to the total in the appropriate way.
 
    //this could be 'optimized' by getting all of the sequences and then
    //iterating through each of them.
 
-   int numclips = mClips.GetCount();
+   int numclips = mClips.size();
 
    //create vectors to store the important info for each clip.
    std::vector<sampleCount> clipStart(numclips);
@@ -94,10 +88,8 @@ bool CrossFader::CrossFadeMix(samplePtr buffer, sampleFormat format, sampleCount
 
    unsigned int i = 0;
    //Now, go through the clips and load up the vectors.
-   for(it = mClips.GetFirst(); it; it = it->GetNext())
+   for(const auto &tmpclip: mClips)
    {
-
-      tmpclip = it->GetData();
       tmpSequence[i] = tmpclip->GetSequence();
 
 
@@ -271,13 +263,7 @@ bool CrossFader::CrossFadeMix(samplePtr buffer, sampleFormat format, sampleCount
 }
 
 
-void CrossFader::AddClip( WaveClip * clip)
-{
-   mClips.Append(clip);
-}
-
 void CrossFader::ClearClips()
 {
-   if(mClips.GetCount())
-      mClips.Clear();
+   mClips.clear();
 }

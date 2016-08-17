@@ -45,9 +45,10 @@
 WX_DECLARE_HASH_MAP(wxString, AliasedFile *,
                     wxStringHash, wxStringEqual, AliasedFileHash);
 
-WX_DECLARE_HASH_MAP(BlockFile *, BlockFile *,
+// These two hash types are used only inside short scopes
+// so it is safe to key them by plain pointers.
+WX_DECLARE_HASH_MAP(BlockFile *, BlockFilePtr,
                     wxPointerHash, wxPointerEqual, ReplacedBlockFileHash);
-
 WX_DECLARE_HASH_MAP(BlockFile *, bool,
                     wxPointerHash, wxPointerEqual, BoolBlockFileHash);
 
@@ -62,16 +63,13 @@ static void GetAllSeqBlocks(AudacityProject *project,
    Track *t = iter.First();
    while (t) {
       if (t->GetKind() == Track::Wave) {
-         WaveTrack *waveTrack = (WaveTrack *)t;
-         WaveClipList::compatibility_iterator node = waveTrack->GetClipIterator();
-         while(node) {
-            WaveClip *clip = node->GetData();
+         WaveTrack *waveTrack = static_cast<WaveTrack*>(t);
+         for(const auto &clip : waveTrack->GetAllClips()) {
             Sequence *sequence = clip->GetSequence();
             BlockArray &blocks = sequence->GetBlockArray();
             int i;
             for (i = 0; i < (int)blocks.size(); i++)
                outBlocks->push_back(&blocks[i]);
-            node = node->GetNext();
          }
       }
       t = iter.Next();
@@ -86,20 +84,17 @@ static void GetAllSeqBlocks(AudacityProject *project,
 static void ReplaceBlockFiles(AudacityProject *project,
                               ReplacedBlockFileHash &hash)
 {
-   DirManager *dirManager = project->GetDirManager();
+   const auto &dirManager = project->GetDirManager();
    BlockPtrArray blocks;
    GetAllSeqBlocks(project, &blocks);
 
    int i;
    for (i = 0; i < (int)blocks.size(); i++) {
-      if (hash.count(blocks[i]->f) > 0) {
-         BlockFile *src = blocks[i]->f;
-         BlockFile *dst = hash[src];
-
-         dirManager->Deref(src);
-         dirManager->Ref(dst);
-
-         blocks[i]->f = dst;
+      auto &f = blocks[i]->f;
+      const auto src = &*f;
+      if (hash.count( src ) > 0) {
+         const auto &dst = hash[src];
+         f = dst;
       }
    }
 }
@@ -116,12 +111,12 @@ void FindDependencies(AudacityProject *project,
    BoolBlockFileHash blockFileHash;
 
    for (const auto &blockFile : blocks) {
-      BlockFile *f = blockFile->f;
-      if (f->IsAlias() && (blockFileHash.count(f) == 0))
+      const auto &f = blockFile->f;
+      if (f->IsAlias() && (blockFileHash.count( &*f ) == 0))
       {
          // f is an alias block we have not yet counted.
-         blockFileHash[f] = true; // Don't count the same blockfile twice.
-         AliasBlockFile *aliasBlockFile = static_cast<AliasBlockFile*>(f);
+         blockFileHash[ &*f ] = true; // Don't count the same blockfile twice.
+         auto aliasBlockFile = static_cast<AliasBlockFile*>( &*f );
          const wxFileName &fileName = aliasBlockFile->GetAliasedFileName();
 
          // In DirManager::ProjectFSCK(), if the user has chosen to
@@ -162,7 +157,7 @@ void FindDependencies(AudacityProject *project,
 static void RemoveDependencies(AudacityProject *project,
                                AliasedFileArray &aliasedFiles)
 {
-   DirManager *dirManager = project->GetDirManager();
+   const auto &dirManager = project->GetDirManager();
 
    ProgressDialog progress
       (_("Removing Dependencies"),
@@ -186,11 +181,11 @@ static void RemoveDependencies(AudacityProject *project,
    ReplacedBlockFileHash blockFileHash;
    wxLongLong completedBytes = 0;
    for (const auto blockFile : blocks) {
-      BlockFile *f = blockFile->f;
-      if (f->IsAlias() && (blockFileHash.count(f) == 0))
+      const auto &f = blockFile->f;
+      if (f->IsAlias() && (blockFileHash.count( &*f ) == 0))
       {
          // f is an alias block we have not yet processed.
-         AliasBlockFile *aliasBlockFile = static_cast<AliasBlockFile*>(f);
+         auto aliasBlockFile = static_cast<AliasBlockFile*>( &*f );
          const wxFileName &fileName = aliasBlockFile->GetAliasedFileName();
          const wxString &fileNameStr = fileName.GetFullPath();
 
@@ -200,7 +195,7 @@ static void RemoveDependencies(AudacityProject *project,
 
          // Convert it from an aliased file to an actual file in the project.
          unsigned int len = aliasBlockFile->GetLength();
-         BlockFile *newBlockFile;
+         BlockFilePtr newBlockFile;
          {
             SampleBuffer buffer(len, format);
             f->ReadData(buffer.ptr(), format, 0, len);
@@ -209,7 +204,7 @@ static void RemoveDependencies(AudacityProject *project,
          }
 
          // Update our hash so we know what block files we've done
-         blockFileHash[f] = newBlockFile;
+         blockFileHash[ &*f ] = newBlockFile;
 
          // Update the progress bar
          completedBytes += SAMPLE_SIZE(format) * len;
@@ -224,11 +219,6 @@ static void RemoveDependencies(AudacityProject *project,
    // However, that didn't actually change any references to these
    // blockfiles in the Sequences, so we do that next...
    ReplaceBlockFiles(project, blockFileHash);
-
-   // Subtract one from reference count of NEW block files; they're
-   // now all referenced the proper number of times by the Sequences
-   for (const auto &pair : blockFileHash)
-      dirManager->Deref(pair.second);
 }
 
 //

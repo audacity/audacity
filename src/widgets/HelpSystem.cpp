@@ -100,6 +100,7 @@ void HelpSystem::ShowHtmlText(wxWindow *pParent,
 {
    LinkingHtmlWindow *html;
 
+   wxASSERT(pParent); // to justify safenew
    auto pFrame = safenew wxFrame {
       pParent, wxID_ANY, Title, wxDefaultPosition, wxDefaultSize,
 #if defined(__WXMAC__)
@@ -195,6 +196,7 @@ void HelpSystem::ShowHelpDialog(wxWindow *parent,
                     const wxString &remoteURL,
                     bool bModal)
 {
+   wxASSERT(parent); // to justify safenew
    AudacityProject * pProj = GetActiveProject();
    wxString HelpMode = wxT("Local");
 
@@ -341,6 +343,7 @@ void HelpSystem::ShowHelpDialog(wxWindow *parent,
    wxLogMessage(wxT("webHelpPage %s, localHelpPage %s"),
               webHelpPage.c_str(), localHelpPage.c_str());
 
+   wxASSERT(parent); // to justify safenew
    HelpSystem::ShowHelpDialog(
       parent, 
       localHelpPage,

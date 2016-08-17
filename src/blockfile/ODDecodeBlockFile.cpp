@@ -158,9 +158,9 @@ bool ODDecodeBlockFile::Read64K(float *buffer, sampleCount start, sampleCount le
 /// Construct a NEW PCMAliasBlockFile based on this one.
 /// otherwise construct an ODPCMAliasBlockFile that still needs to be computed.
 /// @param newFileName The filename to copy the summary data to.
-BlockFile *ODDecodeBlockFile::Copy(wxFileNameWrapper &&newFileName)
+BlockFilePtr ODDecodeBlockFile::Copy(wxFileNameWrapper &&newFileName)
 {
-   BlockFile *newBlockFile;
+   BlockFilePtr newBlockFile;
 
    //mAliasedFile can change so we lock readdatamutex, which is responsible for it.
    LockRead();
@@ -172,10 +172,10 @@ BlockFile *ODDecodeBlockFile::Copy(wxFileNameWrapper &&newFileName)
    else
    {
       //Summary File might exist in this case, but it probably (99.999% of the time) won't.
-      newBlockFile  = new ODDecodeBlockFile(std::move(newFileName),
-                                                   wxFileNameWrapper{mAudioFileName}, mAliasStart,
-                                                   mLen, mAliasChannel, mType,
-                                                   mMin, mMax, mRMS,IsSummaryAvailable());
+      newBlockFile = make_blockfile<ODDecodeBlockFile>
+         (std::move(newFileName), wxFileNameWrapper{mAudioFileName},
+          mAliasStart, mLen, mAliasChannel, mType,
+          mMin, mMax, mRMS, IsSummaryAvailable());
       //The client code will need to schedule this blockfile for OD decoding if it is going to a NEW track.
       //It can do this by checking for IsDataAvailable()==false.
    }
@@ -222,7 +222,7 @@ void ODDecodeBlockFile::SaveXML(XMLWriter &xmlFile)
 // BuildFromXML methods should always return a BlockFile, not NULL,
 // even if the result is flawed (e.g., refers to nonexistent file),
 // as testing will be done in DirManager::ProjectFSCK().
-BlockFile *ODDecodeBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
+BlockFilePtr ODDecodeBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
 {
    wxFileNameWrapper summaryFileName;
    wxFileNameWrapper audioFileName;
@@ -274,10 +274,9 @@ BlockFile *ODDecodeBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
       }
    }
 
-   return new ODDecodeBlockFile(std::move(summaryFileName), std::move(audioFileName),
-                                aliasStart, aliasLen, aliasChannel,decodeType,
-                                0,0,0, false);
-
+   return make_blockfile<ODDecodeBlockFile>
+      (std::move(summaryFileName), std::move(audioFileName),
+       aliasStart, aliasLen, aliasChannel, decodeType, 0, 0, 0, false);
 }
 
 

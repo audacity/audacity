@@ -234,7 +234,7 @@ void ShuttleGuiBase::AddUnits(const wxString &Prompt)
    mpWind = safenew wxStaticText(GetParent(), -1, Prompt, wxDefaultPosition, wxDefaultSize,
       Style( wxALIGN_LEFT ));
    mpWind->SetName(Prompt); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
-   UpdateSizersCore( false, wxALL | wxALIGN_LEFT );
+   UpdateSizersCore( false, wxALL | wxALIGN_CENTRE_VERTICAL );
 }
 
 /// Centred text string.

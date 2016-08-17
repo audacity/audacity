@@ -353,7 +353,10 @@ bool EffectEqualization48x::TrackCompare()
    }
 
    for(int i=0;i<2;i++) {
-      SelectedTrackListOfKindIterator iter(Track::Wave, i ? mEffectEqualization->mOutputTracks : &SecondOutputTracks);
+      SelectedTrackListOfKindIterator iter
+         (Track::Wave, i
+          ? mEffectEqualization->mOutputTracks.get()
+          : &SecondOutputTracks);
       i?sMathPath=sMathPath:sMathPath=0;
       WaveTrack *track = (WaveTrack *) iter.First();
       int count = 0;
@@ -375,7 +378,8 @@ bool EffectEqualization48x::TrackCompare()
          count++;
       }
    }
-   SelectedTrackListOfKindIterator iter(Track::Wave, mEffectEqualization->mOutputTracks);
+   SelectedTrackListOfKindIterator
+      iter(Track::Wave, mEffectEqualization->mOutputTracks.get());
    SelectedTrackListOfKindIterator iter2(Track::Wave, &SecondOutputTracks);
    WaveTrack *track =  (WaveTrack *) iter.First();
    WaveTrack *track2 = (WaveTrack *) iter2.First();
@@ -440,7 +444,8 @@ bool EffectEqualization48x::Benchmark(EffectEqualization* effectEqualization)
    if(sMathPath)  // !!! Filter MUST BE QUAD WORD ALIGNED !!!!
       mEffectEqualization->mM=(mEffectEqualization->mM&(~15))+1;
    AllocateBuffersWorkers(MATH_FUNCTION_THREADED);
-   SelectedTrackListOfKindIterator iter(Track::Wave, mEffectEqualization->mOutputTracks);
+   SelectedTrackListOfKindIterator
+      iter(Track::Wave, mEffectEqualization->mOutputTracks.get());
    long times[] = { 0,0,0,0,0 };
    wxStopWatch timer;
    mBenching=true;
@@ -520,13 +525,11 @@ bool EffectEqualization48x::ProcessTail(WaveTrack * t, WaveTrack * output, sampl
    //Find the bits of clips that need replacing
    std::vector<std::pair<double, double> > clipStartEndTimes;
    std::vector<std::pair<double, double> > clipRealStartEndTimes; //the above may be truncated due to a clip being partially selected
-   for (WaveClipList::compatibility_iterator it=t->GetClipIterator(); it; it=it->GetNext())
+   for (const auto &clip: t->GetClips())
    {
-      WaveClip *clip;
       double clipStartT;
       double clipEndT;
 
-      clip = it->GetData();
       clipStartT = clip->GetStartTime();
       clipEndT = clip->GetEndTime();
       if( clipEndT <= startT )

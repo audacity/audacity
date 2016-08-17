@@ -43,12 +43,10 @@ and TimeTrack.
 //   #define DEBUG_TLI
 #endif
 
-Track::Track(DirManager * projDirManager)
+Track::Track(const std::shared_ptr<DirManager> &projDirManager)
 :  vrulerSize(36,0),
    mDirManager(projDirManager)
 {
-   mDirManager->Ref();
-
    mList      = NULL;
    mSelected  = false;
    mLinked    = false;
@@ -74,8 +72,6 @@ Track::Track(DirManager * projDirManager)
 
 Track::Track(const Track &orig)
 {
-   mDirManager = NULL;
-
    mList = NULL;
    mY = 0;
    mIndex = 0;
@@ -92,15 +88,7 @@ void Track::Init(const Track &orig)
    mDefaultName = orig.mDefaultName;
    mName = orig.mName;
 
-   if (mDirManager != orig.mDirManager) {
-      if (mDirManager) {
-         mDirManager->Deref(); // MM: unreference old DirManager
-      }
-
-      // MM: Assign and ref NEW DirManager
-      mDirManager = orig.mDirManager;
-      mDirManager->Ref();
-   }
+   mDirManager = orig.mDirManager;
 
    mSelected = orig.mSelected;
    mLinked = orig.mLinked;
@@ -130,7 +118,6 @@ void Track::Merge(const Track &orig)
 
 Track::~Track()
 {
-   mDirManager->Deref();
 }
 
 

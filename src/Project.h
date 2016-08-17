@@ -110,7 +110,9 @@ void GetDefaultWindowRect(wxRect *defRect);
 void GetNextWindowPlacement(wxRect *nextRect, bool *pMaximized, bool *pIconized);
 bool IsWindowAccessible(wxRect *requestedRect);
 
-WX_DEFINE_ARRAY(AudacityProject *, AProjectArray);
+// Use shared_ptr to projects, because elsewhere we need weak_ptr
+using AProjectHolder = std::shared_ptr< AudacityProject >;
+using AProjectArray = std::vector< AProjectHolder >;
 
 extern AProjectArray gAudacityProjects;
 
@@ -193,7 +195,7 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    bool Clipboard() { return (msClipT1 - msClipT0) > 0.0; }
 
    wxString GetName();
-   DirManager *GetDirManager();
+   const std::shared_ptr<DirManager> &GetDirManager();
    TrackFactory *GetTrackFactory();
    AdornedRulerPanel *GetRulerPanel();
    const Tags *GetTags();
@@ -541,7 +543,7 @@ public:
 
    // The project's name and file info
    wxString mFileName;
-   DirManager *mDirManager; // MM: DirManager now created dynamically
+   std::shared_ptr<DirManager> mDirManager; // MM: DirManager now created dynamically
 
    double mRate;
    sampleFormat mDefaultFormat;

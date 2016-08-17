@@ -18,8 +18,12 @@ the pitch without changing the tempo.
 #include "../Audacity.h" // for USE_SOUNDTOUCH
 
 #if USE_SOUNDTOUCH
-
 #include "ChangePitch.h"
+
+#if USE_SBSMS
+#include "sbsms.h"
+#include <wx/valgen.h>
+#endif
 
 #include <float.h>
 #include <math.h>
@@ -51,6 +55,7 @@ enum {
 //
 //     Name          Type     Key               Def   Min      Max      Scale
 Param( Percentage,   double,  XO("Percentage"), 0.0,  -99.0,   3000.0,  1  );
+Param( UseSBSMS,     bool,    XO("SBSMS"),     false, false,   true,    1  );
 
 // We warp the slider to go up to 400%, but user can enter up to 3000%
 static const double kSliderMax = 100.0;          // warped above zero to actually go up to 400%
@@ -79,6 +84,12 @@ EffectChangePitch::EffectChangePitch()
    m_dSemitonesChange = 0.0;
    m_dStartFrequency = 0.0; // 0.0 => uninitialized
    m_bLoopDetect = false;
+
+#if USE_SBSMS
+   mUseSBSMS = DEF_UseSBSMS;
+#else
+   mUseSBSMS = false;
+#endif
 
    // NULL out these control members because there are some cases where the
    // event table handlers get called during this method, and those handlers that
@@ -127,6 +138,7 @@ EffectType EffectChangePitch::GetType()
 bool EffectChangePitch::GetAutomationParameters(EffectAutomationParameters & parms)
 {
    parms.Write(KEY_Percentage, m_dPercentChange);
+   parms.Write(KEY_UseSBSMS, mUseSBSMS);
 
    return true;
 }
@@ -139,6 +151,13 @@ bool EffectChangePitch::SetAutomationParameters(EffectAutomationParameters & par
 
    m_dPercentChange = Percentage;
    Calc_SemitonesChange_fromPercentChange();
+
+#if USE_SBSMS
+   ReadAndVerifyBool(UseSBSMS);
+   mUseSBSMS = UseSBSMS;
+#else
+   mUseSBSMS = false;
+#endif
 
    return true;
 }
@@ -160,20 +179,38 @@ bool EffectChangePitch::Init()
 
 bool EffectChangePitch::Process()
 {
-   mSoundTouch = std::make_unique<SoundTouch>();
-   SetTimeWarper(std::make_unique<IdentityTimeWarper>());
-   mSoundTouch->setPitchSemiTones((float)(m_dSemitonesChange));
-#ifdef USE_MIDI
-   // Note: m_dSemitonesChange is private to ChangePitch because it only
-   // needs to pass it along to mSoundTouch (above). I added mSemitones
-   // to SoundTouchEffect (the super class) to convey this value
-   // to process Note tracks. This approach minimizes changes to existing
-   // code, but it would be cleaner to change all m_dSemitonesChange to
-   // mSemitones, make mSemitones exist with or without USE_MIDI, and
-   // eliminate the next line:
-   mSemitones = m_dSemitonesChange;
+#if USE_SBSMS
+   if (mUseSBSMS)
+   {
+      double pitchRatio = 1.0 + m_dPercentChange / 100.0;
+      SelectedRegion region(mT0, mT1);
+      EffectSBSMS proxy;
+      proxy.mProxyEffectName = XO("High Quality Pitch Change");
+      proxy.setParameters(1.0, pitchRatio);
+
+      return proxy.DoEffect(mUIParent, mProjectRate, mTracks, mFactory, &region, false);
+   }
+   else
 #endif
-   return EffectSoundTouch::Process();
+   {
+      mSoundTouch = std::make_unique<SoundTouch>();
+      SetTimeWarper(std::make_unique<IdentityTimeWarper>());
+      mSoundTouch->setPitchSemiTones((float)(m_dSemitonesChange));
+#ifdef USE_MIDI
+      // Pitch shifting note tracks is currently only supported by SoundTouchEffect
+      // and non-real-time-preview effects require an audio track selection.
+      //
+      // Note: m_dSemitonesChange is private to ChangePitch because it only
+      // needs to pass it along to mSoundTouch (above). I added mSemitones
+      // to SoundTouchEffect (the super class) to convey this value
+      // to process Note tracks. This approach minimizes changes to existing
+      // code, but it would be cleaner to change all m_dSemitonesChange to
+      // mSemitones, make mSemitones exist with or without USE_MIDI, and
+      // eliminate the next line:
+      mSemitones = m_dSemitonesChange;
+#endif
+      return EffectSoundTouch::Process();
+   }
 }
 
 bool EffectChangePitch::CheckWhetherSkipEffect()
@@ -287,6 +324,17 @@ void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
          S.EndHorizontalLay();
       }
       S.EndStatic();
+
+#if USE_SBSMS
+      S.StartMultiColumn(2);
+      {
+         mUseSBSMSCheckBox = S.AddCheckBox(_("Use high quality stretching (slow)"),
+                                             mUseSBSMS? wxT("true") : wxT("false"));
+         mUseSBSMSCheckBox->SetValidator(wxGenericValidator(&mUseSBSMS));
+      }
+      S.EndMultiColumn();
+#endif
+
    }
    S.EndVerticalLay();
 
@@ -460,7 +508,6 @@ void EffectChangePitch::Calc_PercentChange()
 
 
 // handlers
-
 void EffectChangePitch::OnChoice_FromPitch(wxCommandEvent & WXUNUSED(evt))
 {
    if (m_bLoopDetect)

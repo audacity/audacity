@@ -54,13 +54,13 @@ class LegacyBlockFile final : public BlockFile {
                         sampleCount start, sampleCount len) const override;
 
    /// Create a NEW block file identical to this one
-   BlockFile *Copy(wxFileNameWrapper &&newFileName) override;
+   BlockFilePtr Copy(wxFileNameWrapper &&newFileName) override;
    /// Write an XML representation of this file
    void SaveXML(XMLWriter &xmlFile) override;
    wxLongLong GetSpaceUsage() const override;
    void Recover() override;
 
-   static BlockFile *BuildFromXML(const wxString &dir, const wxChar **attrs,
+   static BlockFilePtr BuildFromXML(const wxString &dir, const wxChar **attrs,
                                   sampleCount len,
                                   sampleFormat format);
 

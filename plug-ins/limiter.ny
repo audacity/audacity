@@ -86,20 +86,21 @@
 (defun soft-clip-table ()
 "Lookup table for soft clipping wave-shaper"
   (abs-env
-    (Control-srate-abs *sound-srate*
-      (let* ((knee (- 1 (/ 1.0 pi)))
-             (kcurve (mult knee (osc (hz-to-step (/ (* 4 knee))) knee)))
-             (ikcurve (mult knee (osc (hz-to-step (/ (* 4 knee))) knee *sine-table* -90)))
-             (lin (pwlv -0.5 knee -0.5
-                             (+ knee (/ 2.0 pi)) 0.5 
-                             2.0 0.5
-                             2.0 (+ 0.5 knee)
-                             2.1 (+ 0.5 knee))))
-        (mult (/ 2.0 pi)
-          (sim
-            (at-abs 0 (cue ikcurve))
-            (at-abs 0 (cue lin))
-            (at-abs (+ knee (/ 2.0 pi)) (cue kcurve))))))))
+    (sound-srate-abs 44100
+      (Control-srate-abs 44100
+        (let* ((knee (- 1 (/ 1.0 pi)))
+               (kcurve (mult knee (osc (hz-to-step (/ (* 4 knee))) knee)))
+               (ikcurve (mult knee (osc (hz-to-step (/ (* 4 knee))) knee *sine-table* -90)))
+               (lin (pwlv -0.5 knee -0.5
+                               (+ knee (/ 2.0 pi)) 0.5 
+                               2.0 0.5
+                               2.0 (+ 0.5 knee)
+                               2.1 (+ 0.5 knee))))
+          (mult (/ 2.0 pi)
+            (sim
+              (at-abs 0 (cue ikcurve))
+              (at-abs 0 (cue lin))
+              (at-abs (+ knee (/ 2.0 pi)) (cue kcurve)))))))))
 
 (defun soft-clip (sig)
   (let* ((knee (- 1 (/ 1.0 pi)))

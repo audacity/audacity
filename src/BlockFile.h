@@ -43,6 +43,15 @@ class SummaryInfo {
 
 
 
+class BlockFile;
+using BlockFilePtr = std::shared_ptr<BlockFile>;
+
+template< typename Result, typename... Args >
+inline std::shared_ptr< Result > make_blockfile (Args && ... args)
+{
+   return std::make_shared< Result > ( std::forward< Args > ( args )... );
+}
+
 class PROFILE_DLL_API BlockFile /* not final, abstract */ {
  public:
 
@@ -51,6 +60,8 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
    /// Construct a BlockFile.
    BlockFile(wxFileNameWrapper &&fileName, sampleCount samples);
    virtual ~BlockFile();
+
+   static unsigned long gBlockFileDestructionCount;
 
    // Reading
 
@@ -127,7 +138,7 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
    virtual bool IsSummaryBeingComputed(){return false;}
 
    /// Create a NEW BlockFile identical to this, using the given filename
-   virtual BlockFile * Copy(wxFileNameWrapper &&newFileName) = 0;
+   virtual BlockFilePtr Copy(wxFileNameWrapper &&newFileName) = 0;
 
    virtual wxLongLong GetSpaceUsage() const = 0;
 
@@ -154,17 +165,6 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
 
  private:
 
-   friend class DirManager;
-   friend class AudacityApp;
-   //needed for Ref/Deref access.
-   friend class ODComputeSummaryTask;
-   friend class ODDecodeTask;
-   friend class ODPCMAliasBlockFile;
-
-   virtual void Ref() const;
-   virtual bool Deref() const;
-   virtual int RefCount(){return mRefCount;}
-
  protected:
    /// Calculate summary data for the given sample data
    /// Overrides have differing details of memory management
@@ -185,7 +185,6 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
 
  private:
    int mLockCount;
-   mutable int mRefCount;
 
    static ArrayOf<char> fullSummary;
 
@@ -233,7 +232,7 @@ class AliasBlockFile /* not final */ : public BlockFile
    //
    // These methods are for advanced use only!
    //
-   const wxFileName &GetAliasedFileName() { return mAliasedFileName; }
+   const wxFileName &GetAliasedFileName() const { return mAliasedFileName; }
    void ChangeAliasedFileName(wxFileNameWrapper &&newAliasedFile);
    bool IsAlias() const override { return true; }
 

@@ -162,7 +162,7 @@ bool EffectClickRemoval::Process()
    bool bGoodResult = true;
    mbDidSomething = false;
 
-   SelectedTrackListOfKindIterator iter(Track::Wave, mOutputTracks);
+   SelectedTrackListOfKindIterator iter(Track::Wave, mOutputTracks.get());
    WaveTrack *track = (WaveTrack *) iter.First();
    int count = 0;
    while (track) {

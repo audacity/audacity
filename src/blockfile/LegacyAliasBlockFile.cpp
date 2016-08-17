@@ -51,14 +51,12 @@ LegacyAliasBlockFile::~LegacyAliasBlockFile()
 /// the summary data to a NEW file.
 ///
 /// @param newFileName The filename to copy the summary data to.
-BlockFile *LegacyAliasBlockFile::Copy(wxFileNameWrapper &&newFileName)
+BlockFilePtr LegacyAliasBlockFile::Copy(wxFileNameWrapper &&newFileName)
 {
-   BlockFile *newBlockFile =
-      new LegacyAliasBlockFile(std::move(newFileName),
-                               wxFileNameWrapper{mAliasedFileName}, mAliasStart,
-                               mLen, mAliasChannel,
-                               mSummaryInfo.totalSummaryBytes,
-                               mSummaryInfo.fields < 3);
+   auto newBlockFile = make_blockfile<LegacyAliasBlockFile>
+      (std::move(newFileName), wxFileNameWrapper{ mAliasedFileName },
+       mAliasStart, mLen, mAliasChannel,
+       mSummaryInfo.totalSummaryBytes, mSummaryInfo.fields < 3);
 
    return newBlockFile;
 }
@@ -83,7 +81,7 @@ void LegacyAliasBlockFile::SaveXML(XMLWriter &xmlFile)
 // BuildFromXML methods should always return a BlockFile, not NULL,
 // even if the result is flawed (e.g., refers to nonexistent file),
 // as testing will be done in DirManager::ProjectFSCK().
-BlockFile *LegacyAliasBlockFile::BuildFromXML(const wxString &projDir, const wxChar **attrs)
+BlockFilePtr LegacyAliasBlockFile::BuildFromXML(const wxString &projDir, const wxChar **attrs)
 {
    wxFileNameWrapper summaryFileName;
    wxFileNameWrapper aliasFileName;
@@ -133,9 +131,9 @@ BlockFile *LegacyAliasBlockFile::BuildFromXML(const wxString &projDir, const wxC
       }
    }
 
-   return new LegacyAliasBlockFile(std::move(summaryFileName), std::move(aliasFileName),
-                                   aliasStart, aliasLen, aliasChannel,
-                                   summaryLen, noRMS);
+   return make_blockfile<LegacyAliasBlockFile>
+      (std::move(summaryFileName), std::move(aliasFileName),
+       aliasStart, aliasLen, aliasChannel, summaryLen, noRMS);
 }
 
 // regenerates the summary info, doesn't deal with missing alias files

@@ -40,12 +40,18 @@ struct MenuBarListEntry
 
 struct SubMenuListEntry
 {
-   SubMenuListEntry(const wxString &name_, wxMenu *menu_)
-      : name(name_), menu(menu_)
+   SubMenuListEntry(const wxString &name_, std::unique_ptr<wxMenu> &&menu_)
+      : name(name_), menu( std::move(menu_) )
    {}
 
+   SubMenuListEntry(SubMenuListEntry &&that)
+      : name(std::move(that.name))
+      , menu(std::move(that.menu))
+   {
+   }
+
    wxString name;
-   wxMenu *menu;
+   std::unique_ptr<wxMenu> menu;
 };
 
 struct CommandListEntry
@@ -71,7 +77,9 @@ struct CommandListEntry
 };
 
 using MenuBarList = std::vector < MenuBarListEntry >;
-using SubMenuList = std::vector < SubMenuListEntry >;
+
+// to do: remove the extra indirection when Mac compiler moves to newer version
+using SubMenuList = std::vector < movable_ptr<SubMenuListEntry> >;
 
 // This is an array of pointers, not structures, because the hash maps also point to them,
 // so we don't want the structures to relocate with vector operations.
@@ -109,9 +117,6 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
 
    wxMenu* BeginSubMenu(const wxString & tName);
    void EndSubMenu();
-   void SetToMenu( wxMenu * menu ){
-      mCurrentMenu = menu;
-   };
 
    void InsertItem(const wxString & name,
                    const wxString & label,
@@ -311,7 +316,7 @@ private:
    bool mbSeparatorAllowed; // false at the start of a menu and immediately after a separator.
 
    wxString mCurrentMenuName;
-   wxMenu * mCurrentMenu;
+   std::unique_ptr<wxMenu> mCurrentMenu;
 
    CommandFlag mDefaultFlags;
    CommandMask mDefaultMask;

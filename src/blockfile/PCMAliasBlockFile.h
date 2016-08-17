@@ -41,10 +41,10 @@ class PCMAliasBlockFile /* not final */ : public AliasBlockFile
                         sampleCount start, sampleCount len) const override;
 
    void SaveXML(XMLWriter &xmlFile) override;
-   BlockFile *Copy(wxFileNameWrapper &&fileName) override;
+   BlockFilePtr Copy(wxFileNameWrapper &&fileName) override;
    void Recover() override;
 
-   static BlockFile *BuildFromXML(DirManager &dm, const wxChar **attrs);
+   static BlockFilePtr BuildFromXML(DirManager &dm, const wxChar **attrs);
 };
 
 #endif

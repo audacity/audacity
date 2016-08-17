@@ -19,6 +19,11 @@
 
 #if USE_SOUNDTOUCH
 
+#if USE_SBSMS
+#include "sbsms.h"
+#include <wx/valgen.h>
+#endif
+
 #include <math.h>
 
 #include <wx/intl.h>
@@ -44,6 +49,7 @@ enum
 //
 //     Name          Type     Key               Def   Min      Max      Scale
 Param( Percentage,   double,  XO("Percentage"), 0.0,  -99.0,   3000.0,  1  );
+Param( UseSBSMS,     bool,    XO("SBSMS"),     false, false,   true,    1  );
 
 // We warp the slider to go up to 400%, but user can enter higher values.
 static const double kSliderMax = 100.0;         // warped above zero to actually go up to 400%
@@ -70,6 +76,12 @@ EffectChangeTempo::EffectChangeTempo()
    m_ToLength = 0.0;
 
    m_bLoopDetect = false;
+
+#if USE_SBSMS
+   mUseSBSMS = DEF_UseSBSMS;
+#else
+   mUseSBSMS = false;
+#endif
 
    SetLinearEffectFlag(true);
 }
@@ -107,6 +119,7 @@ bool EffectChangeTempo::SupportsAutomation()
 bool EffectChangeTempo::GetAutomationParameters(EffectAutomationParameters & parms)
 {
    parms.Write(KEY_Percentage, m_PercentChange);
+   parms.Write(KEY_UseSBSMS, mUseSBSMS);
 
    return true;
 }
@@ -114,8 +127,14 @@ bool EffectChangeTempo::GetAutomationParameters(EffectAutomationParameters & par
 bool EffectChangeTempo::SetAutomationParameters(EffectAutomationParameters & parms)
 {
    ReadAndVerifyDouble(Percentage);
-
    m_PercentChange = Percentage;
+
+#if USE_SBSMS
+   ReadAndVerifyBool(UseSBSMS);
+   mUseSBSMS = UseSBSMS;
+#else
+   mUseSBSMS = false;
+#endif
 
    return true;
 }
@@ -146,14 +165,32 @@ bool EffectChangeTempo::Init()
 
 bool EffectChangeTempo::Process()
 {
-   mSoundTouch = std::make_unique<SoundTouch>();
-   mSoundTouch->setTempoChange(m_PercentChange);
-   double mT1Dashed = mT0 + (mT1 - mT0)/(m_PercentChange/100.0 + 1.0);
-   SetTimeWarper(std::make_unique<RegionTimeWarper>(mT0, mT1,
-            std::make_unique<LinearTimeWarper>(mT0, mT0, mT1, mT1Dashed )));
-   bool success = EffectSoundTouch::Process();
-   if( success )
+   bool success = false;
+
+#if USE_SBSMS
+   if (mUseSBSMS)
+   {
+      double tempoRatio = 1.0 + m_PercentChange / 100.0;
+      SelectedRegion region(mT0, mT1);
+      EffectSBSMS proxy;
+      proxy.mProxyEffectName = XO("High Quality Tempo Change");
+      proxy.setParameters(tempoRatio, 1.0);
+      success = proxy.DoEffect(mUIParent, mProjectRate, mTracks, mFactory, &region, false);
+   }
+   else
+#endif
+   {
+      mSoundTouch = std::make_unique<SoundTouch>();
+      mSoundTouch->setTempoChange(m_PercentChange);
+      double mT1Dashed = mT0 + (mT1 - mT0)/(m_PercentChange/100.0 + 1.0);
+      SetTimeWarper(std::make_unique<RegionTimeWarper>(mT0, mT1,
+               std::make_unique<LinearTimeWarper>(mT0, mT0, mT1, mT1Dashed )));
+      success = EffectSoundTouch::Process();
+   }
+
+   if(success)
       mT1 = mT0 + (mT1 - mT0)/(m_PercentChange/100 + 1.);
+
    return success;
 }
 
@@ -186,50 +223,65 @@ void EffectChangeTempo::PopulateOrExchange(ShuttleGui & S)
       }
       S.EndHorizontalLay();
 
-      //
-      S.StartMultiColumn(5, wxCENTER);
+      S.StartStatic(_("Beats per minute"));
       {
-         //
-         S.AddUnits(_("Beats per minute:"));
+         S.StartHorizontalLay(wxALIGN_CENTER);
+         {
+            FloatingPointValidator<double> vldFromBPM(3, &m_FromBPM, NUM_VAL_THREE_TRAILING_ZEROES | NUM_VAL_ZERO_AS_BLANK);
+            m_pTextCtrl_FromBPM = S.Id(ID_FromBPM)
+               .AddTextBox(_("from"), wxT(""), 12);
+            m_pTextCtrl_FromBPM->SetName(_("Beats per minute, from"));
+            m_pTextCtrl_FromBPM->SetValidator(vldFromBPM);
 
-         FloatingPointValidator<double> vldFromBPM(3, &m_FromBPM, NUM_VAL_THREE_TRAILING_ZEROES | NUM_VAL_ZERO_AS_BLANK);
-         m_pTextCtrl_FromBPM = S.Id(ID_FromBPM)
-            .AddTextBox(_("from"), wxT(""), 12);
-         m_pTextCtrl_FromBPM->SetName(_("From beats per minute"));
-         m_pTextCtrl_FromBPM->SetValidator(vldFromBPM);
+            FloatingPointValidator<double> vldToBPM(3, &m_ToBPM, NUM_VAL_THREE_TRAILING_ZEROES | NUM_VAL_ZERO_AS_BLANK);
+            m_pTextCtrl_ToBPM = S.Id(ID_ToBPM)
+               .AddTextBox(_("to"), wxT(""), 12);
+            m_pTextCtrl_ToBPM->SetName(_("Beats per minute, to"));
+            m_pTextCtrl_ToBPM->SetValidator(vldToBPM);
+         }
+         S.EndHorizontalLay();
+      }
+      S.EndStatic();
 
-         FloatingPointValidator<double> vldToBPM(3, &m_ToBPM, NUM_VAL_THREE_TRAILING_ZEROES | NUM_VAL_ZERO_AS_BLANK);
-         m_pTextCtrl_ToBPM = S.Id(ID_ToBPM)
-            .AddTextBox(_("to"), wxT(""), 12);
-         m_pTextCtrl_ToBPM->SetName(_("To beats per minute"));
-         m_pTextCtrl_ToBPM->SetValidator(vldToBPM);
+      //
+      S.StartStatic(_("Length (seconds)"));
+      {
+         S.StartHorizontalLay(wxALIGN_CENTER);
+         {
+            int precission = 2;
+            FloatingPointValidator<double> vldFromLength(precission, &m_FromLength, NUM_VAL_TWO_TRAILING_ZEROES);
+            m_pTextCtrl_FromLength = S.Id(ID_FromLength)
+               .AddTextBox(_("from"), wxT(""), 12);
+            m_pTextCtrl_FromLength->SetValidator(vldFromLength);
+            m_pTextCtrl_FromLength->Enable(false); // Disable because the value comes from the user selection.
 
-         //
-         S.AddUnits(_("Length (seconds):"));
+            FloatingPointValidator<double> vldToLength(2, &m_ToLength, NUM_VAL_TWO_TRAILING_ZEROES);
 
-         int precission = 2;
-         FloatingPointValidator<double> vldFromLength(precission, &m_FromLength, NUM_VAL_TWO_TRAILING_ZEROES);
-         m_pTextCtrl_FromLength = S.Id(ID_FromLength)
-            .AddTextBox(_("from"), wxT(""), 12);
-         m_pTextCtrl_FromLength->SetName(_("From length in seconds"));
-         m_pTextCtrl_FromLength->SetValidator(vldFromLength);
-         m_pTextCtrl_FromLength->Enable(false); // Disable because the value comes from the user selection.
+            // min and max need same precision as what we're validating (bug 963)
+            double minLength = (m_FromLength * 100.0) / (100.0 + MAX_Percentage);
+            double maxLength = (m_FromLength * 100.0) / (100.0 + MIN_Percentage);
+            minLength = Internat::CompatibleToDouble(Internat::ToString(minLength, precission));
+            maxLength = Internat::CompatibleToDouble(Internat::ToString(maxLength, precission));
 
-         FloatingPointValidator<double> vldToLength(2, &m_ToLength, NUM_VAL_TWO_TRAILING_ZEROES);
+            vldToLength.SetRange(minLength, maxLength);
+            m_pTextCtrl_ToLength = S.Id(ID_ToLength)
+               .AddTextBox(_("to"), wxT(""), 12);
+            m_pTextCtrl_ToLength->SetValidator(vldToLength);
+         }
+         S.EndHorizontalLay();
+      }
+      S.EndStatic();
 
-         // min and max need same precision as what we're validating (bug 963)
-         double minLength = (m_FromLength * 100.0) / (100.0 + MAX_Percentage);
-         double maxLength = (m_FromLength * 100.0) / (100.0 + MIN_Percentage);
-         minLength = Internat::CompatibleToDouble(Internat::ToString(minLength, precission));
-         maxLength = Internat::CompatibleToDouble(Internat::ToString(maxLength, precission));
-
-         vldToLength.SetRange(minLength, maxLength);
-         m_pTextCtrl_ToLength = S.Id(ID_ToLength)
-            .AddTextBox(_("to"), wxT(""), 12);
-         m_pTextCtrl_ToLength->SetName(_("To length in seconds"));
-         m_pTextCtrl_ToLength->SetValidator(vldToLength);
+#if USE_SBSMS
+      S.StartMultiColumn(2);
+      {
+         mUseSBSMSCheckBox = S.AddCheckBox(_("Use high quality stretching (slow)"),
+                                             mUseSBSMS? wxT("true") : wxT("false"));
+         mUseSBSMSCheckBox->SetValidator(wxGenericValidator(&mUseSBSMS));
       }
       S.EndMultiColumn();
+#endif
+
    }
    S.EndVerticalLay();
 
@@ -254,6 +306,10 @@ bool EffectChangeTempo::TransferDataToWindow()
    Update_Text_ToLength();
 
    m_bLoopDetect = false;
+
+   // Set the accessibility name here because we need m_pTextCtrl_FromLength to have had its value set
+   m_pTextCtrl_ToLength->SetName(_("Length in seconds from") + wxT(" ") +  m_pTextCtrl_FromLength->GetValue()
+               +wxT(", ") + _("to"));
 
    return true;
 }

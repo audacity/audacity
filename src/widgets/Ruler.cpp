@@ -2460,13 +2460,18 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
    }
    else if ( !HasCapture() && inScrubZone) {
       // mouse going down => we are (probably) seeking
+      bool repaint_all = false;
       if (evt.LeftDown()) {
          //wxLogDebug("down");
          scrubber.MarkScrubStart(evt.m_x,
             TracksPrefs::GetPinnedHeadPreference(), false);
          UpdateStatusBarAndTooltips(StatusChoice::EnteringScrubZone);
-         ShowQuickPlayIndicator();
       } 
+      else if( changeInZone ) {
+         repaint_all = true;
+      }
+
+      ShowQuickPlayIndicator(repaint_all);
       return;
    }
    else if ( mQuickPlayEnabled) {

@@ -943,6 +943,11 @@ void InitAudioIO()
    gPrefs->Flush();
 }
 
+void DeinitAudioIO()
+{
+   ugAudioIO.reset();
+}
+
 wxString DeviceName(const PaDeviceInfo* info)
 {
    wxString infoName = wxSafeConvertMB2WX(info->name);

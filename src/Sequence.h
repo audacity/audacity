@@ -30,20 +30,22 @@ typedef wxLongLong_t sampleCount; /** < A native 64-bit integer type, because
 #endif
 
 class BlockFile;
+using BlockFilePtr = std::shared_ptr<BlockFile>;
+
 class DirManager;
 
 // This is an internal data structure!  For advanced use only.
 class SeqBlock {
  public:
-   BlockFile * f;
+   BlockFilePtr f;
    ///the sample in the global wavetrack that this block starts at.
    sampleCount start;
 
    SeqBlock()
-      : f(NULL), start(0)
+      : f{}, start(0)
    {}
 
-   SeqBlock(BlockFile *f_, sampleCount start_)
+   SeqBlock(const BlockFilePtr &f_, sampleCount start_)
       : f(f_), start(start_)
    {}
 
@@ -70,12 +72,12 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    // Constructor / Destructor / Duplicator
    //
 
-   Sequence(DirManager * projDirManager, sampleFormat format);
+   Sequence(const std::shared_ptr<DirManager> &projDirManager, sampleFormat format);
 
    // The copy constructor and duplicate operators take a
    // DirManager as a parameter, because you might be copying
    // from one project to another...
-   Sequence(const Sequence &orig, DirManager *projDirManager);
+   Sequence(const Sequence &orig, const std::shared_ptr<DirManager> &projDirManager);
 
    ~Sequence();
 
@@ -123,12 +125,12 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    // be registered within the dir manager hash. This is the case
    // when the blockfile is created using DirManager::NewSimpleBlockFile or
    // loaded from an XML file via DirManager::HandleXMLTag
-   void AppendBlockFile(BlockFile* blockFile);
+   void AppendBlockFile(const BlockFilePtr &blockFile);
 
    bool SetSilence(sampleCount s0, sampleCount len);
    bool InsertSilence(sampleCount s0, sampleCount len);
 
-   DirManager* GetDirManager() { return mDirManager; }
+   const std::shared_ptr<DirManager> &GetDirManager() { return mDirManager; }
 
    //
    // XMLTagHandler callback methods for loading and saving
@@ -218,7 +220,7 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    // Private variables
    //
 
-   DirManager   *mDirManager;
+   std::shared_ptr<DirManager> mDirManager;
 
    BlockArray    mBlock;
    sampleFormat  mSampleFormat;
@@ -235,8 +237,6 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    //
    // Private methods
    //
-
-   void DerefAllFiles();
 
    int FindBlock(sampleCount pos) const;
 

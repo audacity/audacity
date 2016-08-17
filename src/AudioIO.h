@@ -62,6 +62,7 @@ using WaveTrackArray = std::vector < WaveTrack* >;
 extern AUDACITY_DLL_API AudioIO *gAudioIO;
 
 void InitAudioIO();
+void DeinitAudioIO();
 wxString DeviceName(const PaDeviceInfo* info);
 wxString HostName(const PaDeviceInfo* info);
 bool ValidateDeviceNames();

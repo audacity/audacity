@@ -32,10 +32,10 @@ class LegacyAliasBlockFile final : public PCMAliasBlockFile
    virtual ~LegacyAliasBlockFile();
 
    void SaveXML(XMLWriter &xmlFile) override;
-   BlockFile *Copy(wxFileNameWrapper &&fileName) override;
+   BlockFilePtr Copy(wxFileNameWrapper &&fileName) override;
    void Recover() override;
 
-   static BlockFile *BuildFromXML(const wxString &projDir, const wxChar **attrs);
+   static BlockFilePtr BuildFromXML(const wxString &projDir, const wxChar **attrs);
 };
 
 #endif

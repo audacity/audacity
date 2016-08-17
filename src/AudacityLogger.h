@@ -16,6 +16,7 @@
 
 #include "Audacity.h"
 
+#include "MemoryX.h"
 #include <wx/event.h>
 #include <wx/log.h>
 #include <wx/frame.h>
@@ -46,7 +47,7 @@ class AudacityLogger final : public wxEvtHandler, public wxLog {
    void OnClear(wxCommandEvent & e);
    void OnSave(wxCommandEvent & e);
 
-   wxFrame *mFrame;
+   Destroy_ptr<wxFrame> mFrame;
    wxTextCtrl *mText;
    wxString mBuffer;
    bool mUpdated;

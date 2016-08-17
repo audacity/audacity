@@ -125,6 +125,7 @@ class Envelope final : public XMLTagHandler {
 
    // Handling Cut/Copy/Paste events
    void CollapseRegion(double t0, double t1);
+   // Takes absolute times, NOT offset-relative:
    void CopyFrom(const Envelope * e, double t0, double t1);
    void Paste(double t0, const Envelope *e);
    void InsertSpace(double t0, double tlen);

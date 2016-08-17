@@ -54,7 +54,7 @@ class AUDACITY_DLL_API NoteTrack final : public Track {
  public:
    friend class TrackArtist;
 
-   NoteTrack(DirManager * projDirManager);
+   NoteTrack(const std::shared_ptr<DirManager> &projDirManager);
    virtual ~NoteTrack();
 
    using Holder = std::unique_ptr<NoteTrack>;
@@ -200,8 +200,6 @@ class AUDACITY_DLL_API NoteTrack final : public Track {
    // even number of times, otherwise mSeq will be NULL).
    mutable char *mSerializationBuffer; // NULL means no buffer
    long mSerializationLength;
-
-   DirManager *mDirManager;
 
 #ifdef EXPERIMENTAL_MIDI_OUT
    float mGain; // velocity offset

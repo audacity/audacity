@@ -450,9 +450,9 @@ void TrackArtist::DrawTrack(const Track * t,
    switch (t->GetKind()) {
    case Track::Wave:
    {
-      WaveTrack* wt = (WaveTrack*)t;
-      for (WaveClipList::compatibility_iterator it=wt->GetClipIterator(); it; it=it->GetNext()) {
-         it->GetData()->ClearDisplayRect();
+      const WaveTrack* wt = static_cast<const WaveTrack*>(t);
+      for (const auto &clip : wt->GetClips()) {
+         clip->ClearDisplayRect();
       }
 
       bool muted = (hasSolo || t->GetMute()) && !t->GetSolo();
@@ -1471,9 +1471,8 @@ void TrackArtist::DrawWaveform(const WaveTrack *track,
    DrawBackgroundWithSelection(&dc, rect, track, blankSelectedBrush, blankBrush,
          selectedRegion, zoomInfo);
 
-   for (WaveClipList::compatibility_iterator it =
-      const_cast<WaveTrack*>(track)->GetClipIterator(); it; it = it->GetNext())
-      DrawClipWaveform(track, it->GetData(), dc, rect, selectedRegion, zoomInfo,
+   for (const auto &clip: track->GetClips())
+      DrawClipWaveform(track, clip.get(), dc, rect, selectedRegion, zoomInfo,
                        drawEnvelope, bigPoints,
                        dB, muted);
 
@@ -2011,9 +2010,8 @@ void TrackArtist::DrawSpectrum(const WaveTrack *track,
          selectedRegion, zoomInfo);
 
    WaveTrackCache cache(track);
-   for (WaveClipList::compatibility_iterator it =
-      const_cast<WaveTrack*>(track)->GetClipIterator(); it; it = it->GetNext()) {
-      DrawClipSpectrum(cache, it->GetData(), dc, rect, selectedRegion, zoomInfo);
+   for (const auto &clip: track->GetClips()) {
+      DrawClipSpectrum(cache, clip.get(), dc, rect, selectedRegion, zoomInfo);
    }
 }
 

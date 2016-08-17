@@ -305,7 +305,7 @@ bool EffectTruncSilence::ProcessIndependently()
 
    {
       unsigned iGroup = 0;
-      SelectedTrackListOfKindIterator iter(Track::Wave, mOutputTracks);
+      SelectedTrackListOfKindIterator iter(Track::Wave, mOutputTracks.get());
       for (Track *track = iter.First(); track;
          ++iGroup, track = iter.Next(true) // skip linked tracks
       ) {
@@ -314,12 +314,12 @@ bool EffectTruncSilence::ProcessIndependently()
 
          RegionList silences;
 
-         if (!FindSilences(silences, mOutputTracks, track, last))
+         if (!FindSilences(silences, mOutputTracks.get(), track, last))
             return false;
          // Treat tracks in the sync lock group only
          Track *groupFirst, *groupLast;
          if (syncLock) {
-            SyncLockedTracksIterator syncIter(mOutputTracks);
+            SyncLockedTracksIterator syncIter(mOutputTracks.get());
             groupFirst = syncIter.StartWith(track);
             groupLast = syncIter.Last();
          }
@@ -350,7 +350,7 @@ bool EffectTruncSilence::ProcessAll()
 
    SelectedTrackListOfKindIterator iter(Track::Wave, mTracks);
    if (FindSilences(silences, mTracks, iter.First(), iter.Last())) {
-      TrackListIterator iterOut(mOutputTracks);
+      TrackListIterator iterOut(mOutputTracks.get());
       double totalCutLen = 0.0;
       Track *const first = iterOut.First();
       if (DoRemoval(silences, 0, 1, first, iterOut.Last(), totalCutLen)) {
@@ -469,7 +469,7 @@ bool EffectTruncSilence::DoRemoval
       double cutLen = inLength - outLength;
       totalCutLen += cutLen;
 
-      TrackListIterator iterOut(mOutputTracks);
+      TrackListIterator iterOut(mOutputTracks.get());
       bool lastSeen = false;
       for (Track *t = iterOut.StartWith(firstTrack); t && !lastSeen; t = iterOut.Next())
       {

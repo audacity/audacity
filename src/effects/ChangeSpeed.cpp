@@ -218,7 +218,7 @@ bool EffectChangeSpeed::Process()
    CopyInputTracks(Track::All); // Set up mOutputTracks.
    bool bGoodResult = true;
 
-   TrackListIterator iter(mOutputTracks);
+   TrackListIterator iter(mOutputTracks.get());
    Track* t;
    mCurTrackNum = 0;
    mMaxNewLength = 0.0;

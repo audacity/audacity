@@ -456,7 +456,7 @@ bool NyquistEffect::Process()
    // correct sync-lock group behavior when the timeline is affected; then we just want
    // to operate on the selected wave tracks
    CopyInputTracks(Track::All);
-   SelectedTrackListOfKindIterator iter(Track::Wave, mOutputTracks);
+   SelectedTrackListOfKindIterator iter(Track::Wave, mOutputTracks.get());
    mCurTrack[0] = (WaveTrack *) iter.First();
    mOutputTime = 0;
    mCount = 0;
@@ -472,7 +472,7 @@ bool NyquistEffect::Process()
    mTrackIndex = 0;
 
    mNumSelectedChannels = 0;
-   SelectedTrackListOfKindIterator sel(Track::Wave, mOutputTracks);
+   SelectedTrackListOfKindIterator sel(Track::Wave, mOutputTracks.get());
    for (WaveTrack *t = (WaveTrack *) sel.First(); t; t = (WaveTrack *) sel.Next()) {
       mNumSelectedChannels++;
       if (mT1 >= mT0) {
@@ -620,7 +620,7 @@ bool NyquistEffect::Process()
          }
 
          // Check whether we're in the same group as the last selected track
-         SyncLockedTracksIterator gIter(mOutputTracks);
+         SyncLockedTracksIterator gIter(mOutputTracks.get());
          Track *gt = gIter.StartWith(mCurTrack[0]);
          mFirstInGroup = !gtLast || (gtLast != gt);
          gtLast = gt;
@@ -932,15 +932,14 @@ bool NyquistEffect::ProcessOne()
       float maxPeak = 0.0;
       wxString clips;
       for (int i = 0; i < mCurNumChannels; i++) {
-         WaveClipArray ca;
-         mCurTrack[i]->FillSortedClipArray(ca);
+         auto ca = mCurTrack[i]->SortedClipArray();
          // A list of clips for mono, or an array of lists for multi-channel.
          if (mCurNumChannels > 1) clips += wxT("(list ");
          // Each clip is a list (start-time, end-time)
-         for (size_t j = 0; j < ca.GetCount(); j++) {
+         for (const auto clip: ca) {
             clips += wxString::Format(wxT("(list (float %s) (float %s))"),
-                                      Internat::ToString(ca[j]->GetStartTime()).c_str(),
-                                      Internat::ToString(ca[j]->GetEndTime()).c_str());
+                                      Internat::ToString(clip->GetStartTime()).c_str(),
+                                      Internat::ToString(clip->GetEndTime()).c_str());
          }
          if (mCurNumChannels > 1) clips += wxT(" )");
 
@@ -1111,7 +1110,7 @@ bool NyquistEffect::ProcessOne()
       unsigned int l;
       LabelTrack *ltrack = NULL;
 
-      TrackListIterator iter(mOutputTracks);
+      TrackListIterator iter(mOutputTracks.get());
       for (Track *t = iter.First(); t; t = iter.Next()) {
          if (t->GetKind() == Track::Label) {
             ltrack = (LabelTrack *)t;
@@ -1226,7 +1225,7 @@ bool NyquistEffect::ProcessOne()
          
       // If we were first in the group adjust non-selected group tracks
       if (mFirstInGroup) {
-         SyncLockedTracksIterator git(mOutputTracks);
+         SyncLockedTracksIterator git(mOutputTracks.get());
          Track *t;
          for (t = git.StartWith(mCurTrack[i]); t; t = git.Next())
          {

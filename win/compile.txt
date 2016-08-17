@@ -1,5 +1,5 @@
 Building Audacity(R) for Microsoft Windows(R)
-Copyright (c) 1999-2015 Audacity Team
+Copyright (c) 1999-2016 Audacity Team
 
 Authors:
   Asger Ottar Alstrup
@@ -48,10 +48,18 @@ wxWidgets from http://www.wxwidgets.org/.
 
 
 ------------------------------------------------------------------------
-MSVC++ STEP 2:  Build wxWidgets
+MSVC++ STEP 2:  Download source code for Audacity
 ------------------------------------------------------------------------
 
-2.1. Open "C:\wxWidgets-3.0.2\build\msw\wx_dll.dsw" with 
+Checkout the latest Audacity code from our GitHub repository 
+at https://github.com/audacity/audacity/ (see GitHub for help).
+
+
+------------------------------------------------------------------------
+MSVC++ STEP 3:  Build wxWidgets
+------------------------------------------------------------------------
+
+3.1. Open "C:\wxWidgets-3.0.2\build\msw\wx_dll.dsw" with 
    Microsoft Visual Studio. 
    Make sure to use wx_dll.dsw, not wx.dsw, because wx.dsw
    does not have the correct dependencies for the DLL builds.
@@ -61,7 +69,7 @@ MSVC++ STEP 2:  Build wxWidgets
    "C\wxWidgets-3.0.2\build\msw\wx_dll.sln" instead of wx_dll.dsw.
 
 
-2.2. We have patched wxWidgets with four patches.  You should apply all 
+3.2. We have patched wxWidgets with four patches.  You should apply all 
    four.  You can do this in one step by copying the folder
      "audacity\win\wxWidgets_additions\wxWidgets-3.0.2\"
    over your: 
@@ -91,7 +99,7 @@ MSVC++ STEP 2:  Build wxWidgets
    features.
 
    
-2.3. Build wxWidgets for all configurations of Audacity that you want.
+3.3. Build wxWidgets for all configurations of Audacity that you want.
 
    * Use the "DLL Release" configuration to use in a 
      "Release" version of Audacity.
@@ -131,13 +139,6 @@ MSVC++ STEP 2:  Build wxWidgets
    If you build the whole solution, ignore the linker errors for 
    wxbase30*_odbc*.* dbgrid.
 
-
-------------------------------------------------------------------------
-MSVC++ STEP 3:  Download source code for Audacity
-------------------------------------------------------------------------
-
-Checkout the latest Audacity code from our GitHub repository 
-at https://github.com/audacity/audacity/ (see GitHub for help).
 
 ------------------------------------------------------------------------
 MSVC++ STEP 4:  Set wxWidgets location for Audacity
