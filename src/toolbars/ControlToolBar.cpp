@@ -909,7 +909,11 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
       TrackList tracksCopy{};
       bool tracksCopied = false;
       bool shifted = mRecord->WasShiftDown();
+#ifdef EXPERIMENTAL_DARK_AUDACITY
+      if (!shifted) {
+#else
       if (shifted) {
+#endif
          bool sel = false;
          double allt0 = t0;
 
