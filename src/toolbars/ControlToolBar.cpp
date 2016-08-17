@@ -875,8 +875,12 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
    if (p) {
       TrackList *trackList = p->GetTracks();
       TrackListIterator it(trackList);
+      bool shifted = mRecord->WasShiftDown();
+#ifdef EXPERIMENTAL_DARK_AUDACITY
+      shifted = !shifted;
+#endif
       if(it.First() == NULL)
-         mRecord->SetShift(false);
+         shifted = false;
       double t0 = p->GetSel0();
       double t1 = p->GetSel1();
       if (t1 == t0)
@@ -908,12 +912,8 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
       int recordingChannels = 0;
       TrackList tracksCopy{};
       bool tracksCopied = false;
-      bool shifted = mRecord->WasShiftDown();
-#ifdef EXPERIMENTAL_DARK_AUDACITY
-      if (!shifted) {
-#else
       if (shifted) {
-#endif
+         recordingChannels = gPrefs->Read(wxT("/AudioIO/RecordChannels"), 2);
          bool sel = false;
          double allt0 = t0;
 
@@ -969,6 +969,10 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
                   wxUnusedVar(bResult);
                }
                newRecordingTracks.push_back(wt);
+               // Don't record more channels than configured recording pref.
+               if( newRecordingTracks.size() >= recordingChannels ){
+                  break;
+               }
             }
          }
 
@@ -977,6 +981,8 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
       else {
          bool recordingNameCustom, useTrackNumber, useDateStamp, useTimeStamp;
          wxString defaultTrackName, defaultRecordingTrackName;
+         
+         // Count the tracks.  
          int numTracks = 0;
 
          for (Track *tt = it.First(); tt; tt = it.Next()) {
@@ -984,7 +990,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
                numTracks++;
          }
          numTracks++;
-         
+
          recordingChannels = gPrefs->Read(wxT("/AudioIO/RecordChannels"), 2);
 
          gPrefs->Read(wxT("/GUI/TrackNames/RecordingNameCustom"), &recordingNameCustom, false);
