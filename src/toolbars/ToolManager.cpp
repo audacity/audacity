@@ -492,11 +492,11 @@ static struct DefaultConfigEntry {
    { PlayMeterBarID,         RecordMeterBarID,       NoBarID                },
    { MixerBarID,             PlayMeterBarID,         NoBarID                },
    { EditBarID,              MixerBarID,             NoBarID                },
-   { TranscriptionBarID,     EditBarID,              NoBarID                },
+   { TranscriptionBarID,     NoBarID,                NoBarID                },
 
    // start another top dock row
    { ScrubbingBarID,         NoBarID,                TransportBarID         },
-   { DeviceBarID,            ScrubbingBarID,         TransportBarID         },
+   { DeviceBarID,            NoBarID,                TransportBarID         },
 
    // Hidden by default in top dock
    { MeterBarID,             NoBarID,                NoBarID                },
@@ -566,6 +566,9 @@ void ToolManager::Reset()
          || ndx == SpectralSelectionBarID
 #endif
          || ndx == ScrubbingBarID
+         || ndx == DeviceBarID
+         || ndx == TranscriptionBarID
+         || ndx == SelectionBarID
          )
       {
          expose = false;
