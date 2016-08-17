@@ -455,20 +455,17 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
       while ((iter != mBlockFileHash.end()) && success)
       {
          BlockFilePtr b = iter->second.lock();
+         if (b) {
+            if (b->IsLocked())
+               success = CopyToNewProjectDirectory( &*b );
+            else{
+               success = MoveToNewProjectDirectory( &*b );
+            }
 
-         if (!b)
-            continue;
-
-         if (b->IsLocked())
-            success = CopyToNewProjectDirectory( &*b );
-         else{
-            success = MoveToNewProjectDirectory( &*b );
+            progress.Update(count, total);
+            count++;
          }
-
-         progress.Update(count, total);
-
          ++iter;
-         count++;
       }
 
       // in case there are any nulls
@@ -487,17 +484,14 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
          while (iter != mBlockFileHash.end())
          {
             BlockFilePtr b = iter->second.lock();
+            if (b) {
+               MoveToNewProjectDirectory(&*b);
 
-            if (!b)
-               continue;
-
-            MoveToNewProjectDirectory(&*b);
-
-            if (count >= 0)
-               progress.Update(count, total);
-
+               if (count >= 0)
+                  progress.Update(count, total);
+               count--;
+            }
             ++iter;
-            count--;
          }
 
          this->projFull = oldFull;
@@ -1319,31 +1313,28 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
    while (iter != mBlockFileHash.end())
    {
       BlockFilePtr b = iter->second.lock();
+      if (b) {
+         // don't worry, we don't rely on this cast unless IsAlias is true
+         auto ab = static_cast< AliasBlockFile * > ( &*b );
 
-      if (!b)
-         continue;
+         // don't worry, we don't rely on this cast unless ISDataAvailable is false
+         // which means that it still needs to access the file.
+         auto db = static_cast< ODDecodeBlockFile * > ( &*b );
 
-      // don't worry, we don't rely on this cast unless IsAlias is true
-      auto ab = static_cast< AliasBlockFile * > ( &*b );
+         if (b->IsAlias() && ab->GetAliasedFileName() == fName) {
+            needToRename = true;
 
-      // don't worry, we don't rely on this cast unless ISDataAvailable is false
-      // which means that it still needs to access the file.
-      auto db = static_cast< ODDecodeBlockFile * > ( &*b );
+            //ODBlocks access the aliased file on another thread, so we need to pause them before this continues.
+            ab->LockRead();
+         }
+         //now for encoded OD blocks  (e.g. flac)
+         else if (!b->IsDataAvailable() && db->GetEncodedAudioFilename() == fName) {
+            needToRename = true;
 
-      if (b->IsAlias() && ab->GetAliasedFileName() == fName) {
-         needToRename = true;
-
-         //ODBlocks access the aliased file on another thread, so we need to pause them before this continues.
-         ab->LockRead();
+            //ODBlocks access the aliased file on another thread, so we need to pause them before this continues.
+            db->LockRead();
+         }
       }
-      //now for encoded OD blocks  (e.g. flac)
-      else if (!b->IsDataAvailable() && db->GetEncodedAudioFilename() == fName) {
-         needToRename = true;
-
-         //ODBlocks access the aliased file on another thread, so we need to pause them before this continues.
-         db->LockRead();
-      }
-
       ++iter;
    }
 
@@ -1362,18 +1353,15 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
          while (iter != mBlockFileHash.end())
          {
             BlockFilePtr b = iter->second.lock();
+            if (b) {
+               auto ab = static_cast< AliasBlockFile * > ( &*b );
+               auto db = static_cast< ODDecodeBlockFile * > ( &*b );
 
-            if (!b)
-               continue;
-
-            auto ab = static_cast< AliasBlockFile * > ( &*b );
-            auto db = static_cast< ODDecodeBlockFile * > ( &*b );
-
-            if (b->IsAlias() && (ab->GetAliasedFileName() == fName))
-               ab->UnlockRead();
-            if (!b->IsDataAvailable() && (db->GetEncodedAudioFilename() == fName))
-               db->UnlockRead();
-
+               if (b->IsAlias() && (ab->GetAliasedFileName() == fName))
+                  ab->UnlockRead();
+               if (!b->IsDataAvailable() && (db->GetEncodedAudioFilename() == fName))
+                  db->UnlockRead();
+            }
             ++iter;
          }
 
@@ -1390,24 +1378,22 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
          while (iter != mBlockFileHash.end())
          {
             BlockFilePtr b = iter->second.lock();
+            if (b) {
+               auto ab = static_cast< AliasBlockFile * > ( &*b );
+               auto db = static_cast< ODDecodeBlockFile * > ( &*b );
 
-            if (!b)
-               continue;
+               if (b->IsAlias() && ab->GetAliasedFileName() == fName)
+               {
+                  ab->ChangeAliasedFileName(wxFileNameWrapper{ renamedFileName });
+                  ab->UnlockRead();
+                  wxPrintf(_("Changed block %s to new alias name\n"),
+                           b->GetFileName().name.GetFullName().c_str());
 
-            auto ab = static_cast< AliasBlockFile * > ( &*b );
-            auto db = static_cast< ODDecodeBlockFile * > ( &*b );
-
-            if (b->IsAlias() && ab->GetAliasedFileName() == fName)
-            {
-               ab->ChangeAliasedFileName(wxFileNameWrapper{ renamedFileName });
-               ab->UnlockRead();
-               wxPrintf(_("Changed block %s to new alias name\n"),
-                        b->GetFileName().name.GetFullName().c_str());
-
-            }
-            else if (!b->IsDataAvailable() && db->GetEncodedAudioFilename() == fName) {
-               db->ChangeAudioFile(wxFileNameWrapper{ renamedFileName });
-               db->UnlockRead();
+               }
+               else if (!b->IsDataAvailable() && db->GetEncodedAudioFilename() == fName) {
+                  db->ChangeAudioFile(wxFileNameWrapper{ renamedFileName });
+                  db->UnlockRead();
+               }
             }
             ++iter;
          }
@@ -1525,26 +1511,24 @@ _("Project check of \"%s\" folder \
          {
             // This type cast is safe. We checked that it's an alias block file earlier.
             BlockFilePtr b = iter->second.lock();
-
             wxASSERT(b);
-            if (!b)
-               continue;
-
-            auto ab = static_cast< AliasBlockFile * > ( &*b );
-            if (action == 1)
-               // Silence error logging for this block in this session.
-               ab->SilenceAliasLog();
-            else if (action == 2)
-            {
-               // silence the blockfiles by yanking the filename
-               // This is done, eventually, in PCMAliasBlockFile::ReadData()
-               // and ODPCMAliasBlockFile::ReadData, in the stack of b->Recover().
-               // There, if the mAliasedFileName is bad, it zeroes the data.
-               wxFileNameWrapper dummy;
-               dummy.Clear();
-               ab->ChangeAliasedFileName(std::move(dummy));
-               ab->Recover();
-               nResult = FSCKstatus_CHANGED | FSCKstatus_SAVE_AUP;
+            if (b) {
+               auto ab = static_cast< AliasBlockFile * > ( &*b );
+               if (action == 1)
+                  // Silence error logging for this block in this session.
+                  ab->SilenceAliasLog();
+               else if (action == 2)
+               {
+                  // silence the blockfiles by yanking the filename
+                  // This is done, eventually, in PCMAliasBlockFile::ReadData()
+                  // and ODPCMAliasBlockFile::ReadData, in the stack of b->Recover().
+                  // There, if the mAliasedFileName is bad, it zeroes the data.
+                  wxFileNameWrapper dummy;
+                  dummy.Clear();
+                  ab->ChangeAliasedFileName(std::move(dummy));
+                  ab->Recover();
+                  nResult = FSCKstatus_CHANGED | FSCKstatus_SAVE_AUP;
+               }
             }
             ++iter;
          }
@@ -1592,18 +1576,16 @@ _("Project check of \"%s\" folder \
          while (iter != missingAUFHash.end())
          {
             BlockFilePtr b = iter->second.lock();
-
             wxASSERT(b);
-            if (!b)
-               continue;
-
-            if(action==0){
-               //regenerate from data
-               b->Recover();
-               nResult |= FSCKstatus_CHANGED;
-            }else if (action==1){
-               // Silence error logging for this block in this session.
-               b->SilenceLog();
+            if (b) {
+               if(action==0){
+                  //regenerate from data
+                  b->Recover();
+                  nResult |= FSCKstatus_CHANGED;
+               }else if (action==1){
+                  // Silence error logging for this block in this session.
+                  b->SilenceLog();
+               }
             }
             ++iter;
          }
@@ -1656,19 +1638,17 @@ _("Project check of \"%s\" folder \
          while (iter != missingAUHash.end())
          {
             BlockFilePtr b = iter->second.lock();
-
             wxASSERT(b);
-            if (!b)
-               continue;
-
-            if (action == 2)
-            {
-               //regenerate with zeroes
-               b->Recover();
-               nResult = FSCKstatus_CHANGED;
+            if (b) {
+               if (action == 2)
+               {
+                  //regenerate with zeroes
+                  b->Recover();
+                  nResult = FSCKstatus_CHANGED;
+               }
+               else if (action == 1)
+                  b->SilenceLog();
             }
-            else if (action == 1)
-               b->SilenceLog();
             ++iter;
          }
          if ((action == 2) && bAutoRecoverMode)
@@ -1768,25 +1748,23 @@ void DirManager::FindMissingAliasedFiles(
    {
       wxString key = iter->first;   // file name and extension
       BlockFilePtr b = iter->second.lock();
-
-      if (!b)
-         continue;
-
-      if (b->IsAlias())
-      {
-         const wxFileName &aliasedFileName =
-            static_cast< AliasBlockFile* > ( &*b )->GetAliasedFileName();
-         wxString aliasedFileFullPath = aliasedFileName.GetFullPath();
-         // wxEmptyString can happen if user already chose to "replace... with silence".
-         if ((aliasedFileFullPath != wxEmptyString) &&
-               !aliasedFileName.FileExists())
+      if (b) {
+         if (b->IsAlias())
          {
-            missingAliasedFileAUFHash[key] = b;
-            if (missingAliasedFilePathHash.find(aliasedFileFullPath) ==
-                  missingAliasedFilePathHash.end()) // Add it only once.
-               // Not actually using the block here, just the path,
-               // so set the block to NULL to create the entry.
-               missingAliasedFilePathHash[aliasedFileFullPath] = {};
+            const wxFileName &aliasedFileName =
+            static_cast< AliasBlockFile* > ( &*b )->GetAliasedFileName();
+            wxString aliasedFileFullPath = aliasedFileName.GetFullPath();
+            // wxEmptyString can happen if user already chose to "replace... with silence".
+            if ((aliasedFileFullPath != wxEmptyString) &&
+                !aliasedFileName.FileExists())
+            {
+               missingAliasedFileAUFHash[key] = b;
+               if (missingAliasedFilePathHash.find(aliasedFileFullPath) ==
+                   missingAliasedFilePathHash.end()) // Add it only once.
+                  // Not actually using the block here, just the path,
+                  // so set the block to NULL to create the entry.
+                  missingAliasedFilePathHash[aliasedFileFullPath] = {};
+            }
          }
       }
       ++iter;
@@ -1808,22 +1786,20 @@ void DirManager::FindMissingAUFs(
    {
       const wxString &key = iter->first;
       BlockFilePtr b = iter->second.lock();
-
-      if (!b)
-         continue;
-
-      if (b->IsAlias() && b->IsSummaryAvailable())
-      {
-         /* don't look in hash; that might find files the user moved
-            that the Blockfile abstraction can't find itself */
-         wxFileNameWrapper fileName{ MakeBlockFilePath(key) };
-         fileName.SetName(key);
-         fileName.SetExt(wxT("auf"));
-         if (!fileName.FileExists())
+      if (b) {
+         if (b->IsAlias() && b->IsSummaryAvailable())
          {
-            missingAUFHash[key] = b;
-            wxLogWarning(_("Missing alias (.auf) block file: '%s'"),
-                           fileName.GetFullPath().c_str());
+            /* don't look in hash; that might find files the user moved
+             that the Blockfile abstraction can't find itself */
+            wxFileNameWrapper fileName{ MakeBlockFilePath(key) };
+            fileName.SetName(key);
+            fileName.SetExt(wxT("auf"));
+            if (!fileName.FileExists())
+            {
+               missingAUFHash[key] = b;
+               wxLogWarning(_("Missing alias (.auf) block file: '%s'"),
+                            fileName.GetFullPath().c_str());
+            }
          }
       }
       ++iter;
@@ -1838,20 +1814,18 @@ void DirManager::FindMissingAUs(
    {
       const wxString &key = iter->first;
       BlockFilePtr b = iter->second.lock();
-
-      if (!b)
-         continue;
-
-      if (!b->IsAlias())
-      {
-         wxFileNameWrapper fileName{ MakeBlockFilePath(key) };
-         fileName.SetName(key);
-         fileName.SetExt(wxT("au"));
-         if (!fileName.FileExists())
+      if (b) {
+         if (!b->IsAlias())
          {
-            missingAUHash[key] = b;
-            wxLogWarning(_("Missing data block file: '%s'"),
-                           fileName.GetFullPath().c_str());
+            wxFileNameWrapper fileName{ MakeBlockFilePath(key) };
+            fileName.SetName(key);
+            fileName.SetExt(wxT("au"));
+            if (!fileName.FileExists())
+            {
+               missingAUHash[key] = b;
+               wxLogWarning(_("Missing data block file: '%s'"),
+                            fileName.GetFullPath().c_str());
+            }
          }
       }
       ++iter;
@@ -1942,12 +1916,10 @@ void DirManager::FillBlockfilesCache()
    while (iter != mBlockFileHash.end())
    {
       BlockFilePtr b = iter->second.lock();
-
-      if (!b)
-         continue;
-
-      if (b->GetNeedFillCache())
-         numNeed++;
+      if (b) {
+         if (b->GetNeedFillCache())
+            numNeed++;
+      }
       ++iter;
    }
 
@@ -1962,18 +1934,16 @@ void DirManager::FillBlockfilesCache()
    while (iter != mBlockFileHash.end())
    {
       BlockFilePtr b = iter->second.lock();
+      if (b) {
+         if (b->GetNeedFillCache() && (GetFreeMemory() > lowMem)) {
+            b->FillCache();
+         }
 
-      if (!b)
-         continue;
-
-      if (b->GetNeedFillCache() && (GetFreeMemory() > lowMem)) {
-         b->FillCache();
+         if (!progress.Update(current, numNeed))
+            break; // user cancelled progress dialog, stop caching
+         current++;
       }
-
-      if (!progress.Update(current, numNeed))
-         break; // user cancelled progress dialog, stop caching
       ++iter;
-      current++;
    }
 #endif // DEPRECATED_AUDIO_CACHE
 }
@@ -1987,12 +1957,10 @@ void DirManager::WriteCacheToDisk()
    while (iter != mBlockFileHash.end())
    {
       BlockFilePtr b = iter->second.lock();
-
-      if (!b)
-         continue;
-
-      if (b->GetNeedWriteCacheToDisk())
-         numNeed++;
+      if (b) {
+         if (b->GetNeedWriteCacheToDisk())
+            numNeed++;
+      }
       ++iter;
    }
 
@@ -2007,17 +1975,15 @@ void DirManager::WriteCacheToDisk()
    while (iter != mBlockFileHash.end())
    {
       BlockFilePtr b = iter->second.lock();
-
-      if (!b)
-         continue;
-
-      if (b->GetNeedWriteCacheToDisk())
-      {
-         b->WriteCacheToDisk();
-         progress.Update(current, numNeed);
+      if (b) {
+         if (b->GetNeedWriteCacheToDisk())
+         {
+            b->WriteCacheToDisk();
+            progress.Update(current, numNeed);
+         }
+         current++;
       }
       ++iter;
-      current++;
    }
 }
 
