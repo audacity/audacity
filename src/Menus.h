@@ -67,7 +67,7 @@ public:
 void OnStop();
 void OnPause();
 void OnRecord();
-void OnRecordAppend();
+void OnRecordBelow();
 void OnStopSelect();
 void OnSkipStart();
 void OnSkipEnd();

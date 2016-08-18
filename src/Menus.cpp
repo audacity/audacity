@@ -755,7 +755,7 @@ void AudacityProject::CreateMenusAndCommands()
       /* i18n-hint: (verb)*/
       c->AddItem(wxT("Record"), _("&Record"), FN(OnRecord), wxT("R"));
       c->AddItem(wxT("TimerRecord"), _("&Timer Record..."), FN(OnTimerRecord), wxT("Shift+T"));
-      c->AddItem(wxT("RecordAppend"), _("Appen&d Record"), FN(OnRecordAppend), wxT("Shift+R"));
+      c->AddItem(wxT("RecordBelow"), _("Record Below"), FN(OnRecordBelow), wxT("Shift+R"));
       // I decided to duplicate this between play and record, rather than put it at the top level.
       c->AddItem(wxT("Pause"), _("&Pause"), FN(OnPause), wxT("P"));
       c->EndSubMenu();
@@ -2352,7 +2352,7 @@ void AudacityProject::OnRecord()
    GetControlToolBar()->OnRecord(evt);
 }
 
-void AudacityProject::OnRecordAppend()
+void AudacityProject::OnRecordBelow()
 {
    wxCommandEvent evt;
    evt.SetInt(1); // 0 is default, use 1 to set shift on, 2 to clear it

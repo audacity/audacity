@@ -223,8 +223,8 @@ void ControlToolBar::RegenerateTooltips()
             break;
          case ID_RECORD_BUTTON:
             commands.push_back(wxT("Record"));
-            commands.push_back(_("Append Record"));
-            commands.push_back(wxT("RecordAppend"));
+            commands.push_back(_("Record Below"));
+            commands.push_back(wxT("RecordBelow"));
             break;
          case ID_PAUSE_BUTTON:
             commands.push_back(wxT("Pause"));
