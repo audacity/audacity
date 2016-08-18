@@ -71,7 +71,7 @@ UndoManager::~UndoManager()
 
 void UndoManager::CalculateSpaceUsage()
 {
-   TIMER_START( "CalculateSpaceUsage", space_calc );
+   //TIMER_START( "CalculateSpaceUsage", space_calc );
    TrackListOfKindIterator iter(Track::Wave);
 
    space.clear();
@@ -118,7 +118,7 @@ void UndoManager::CalculateSpaceUsage()
       }
    }
 
-   TIMER_STOP( space_calc );
+   //TIMER_STOP( space_calc );
 }
 
 wxLongLong_t UndoManager::GetLongDescription(unsigned int n, wxString *desc,

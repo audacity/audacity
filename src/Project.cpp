@@ -3342,7 +3342,7 @@ void AudacityProject::WriteXMLHeader(XMLWriter &xmlFile)
 
 void AudacityProject::WriteXML(XMLWriter &xmlFile)
 {
-   TIMER_START( "AudacityProject::WriteXML", xml_writer_timer );
+   //TIMER_START( "AudacityProject::WriteXML", xml_writer_timer );
    // Warning: This block of code is duplicated in Save, for now...
    wxString project = mFileName;
    if (project.Len() > 4 && project.Mid(project.Len() - 4) == wxT(".aup"))
@@ -3439,7 +3439,7 @@ void AudacityProject::WriteXML(XMLWriter &xmlFile)
       // recording log data to the end of the file later
       xmlFile.EndTag(wxT("project"));
    }
-   TIMER_STOP( xml_writer_timer );
+   //TIMER_STOP( xml_writer_timer );
 
 }
 
