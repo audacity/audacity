@@ -970,7 +970,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
                }
                newRecordingTracks.push_back(wt);
                // Don't record more channels than configured recording pref.
-               if( newRecordingTracks.size() >= recordingChannels ){
+               if( (int)newRecordingTracks.size() >= recordingChannels ){
                   break;
                }
             }
