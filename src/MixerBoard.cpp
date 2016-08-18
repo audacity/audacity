@@ -21,6 +21,7 @@
 #include <wx/settings.h> // for wxSystemSettings::GetColour and wxSystemSettings::GetMetric
 
 #include "AColor.h"
+#include "AllThemeResources.h"
 #include "AudioIO.h"
 #ifdef EXPERIMENTAL_MIDI_OUT
    #include "NoteTrack.h"
@@ -179,8 +180,8 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
 
    SetName(mLeftTrack->GetName());
 
-   this->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE));
-
+   //this->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE));
+   this->SetBackgroundColour( theTheme.Colour( clrMedium ) );
    // Not sure why, but sizers weren't getting offset vertically,
    // probably because not using wxDefaultPosition,
    // so positions are calculated explicitly below, and sizers code was removed.
@@ -199,6 +200,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
       #endif
    //v Useful when different tracks are different colors, but not now.
    //    mStaticText_TrackName->SetBackgroundColour(this->GetTrackColor());
+   mStaticText_TrackName->SetForegroundColour(theTheme.Colour(clrTrackPanelText));
 
 
    // gain slider at left
@@ -944,11 +946,12 @@ MixerBoard::MixerBoard(AudacityProject* pProject,
          wxHSCROLL); // long style = wxHSCROLL | wxVSCROLL, const wxString& name = "scrolledWindow")
 
    // Set background color to same as TrackPanel background.
-   #ifdef EXPERIMENTAL_THEMING
-      mScrolledWindow->SetBackgroundColour(this->GetParent()->GetBackgroundColour());
-   #else
-      mScrolledWindow->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_3DSHADOW));
-   #endif
+//   #ifdef EXPERIMENTAL_THEMING
+//      mScrolledWindow->SetBackgroundColour(this->GetParent()->GetBackgroundColour());
+//   #else
+//      mScrolledWindow->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_3DSHADOW));
+//   #endif
+   mScrolledWindow->SetBackgroundColour( theTheme.Colour( clrMedium ) );
 
    mScrolledWindow->SetScrollRate(10, 0); // no vertical scroll
    mScrolledWindow->SetVirtualSize(size);
@@ -1393,6 +1396,7 @@ void MixerBoard::CreateMuteSoloImages()
 {
    // Much of this is taken from TrackLabel::DrawMuteSolo.
    wxMemoryDC dc;
+   dc.SetTextForeground(theTheme.Colour(clrTrackPanelText));
    wxString str = _("Mute");
    int textWidth, textHeight;
 
