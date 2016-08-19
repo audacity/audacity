@@ -381,7 +381,7 @@ wxString LV2Effect::GetVendor()
 
    if (vendor.IsEmpty())
    {
-      vendor = XO("N/A");
+      vendor = XO("n/a");
    }
 
    return vendor;
@@ -394,7 +394,7 @@ wxString LV2Effect::GetVersion()
 
 wxString LV2Effect::GetDescription()
 {
-   return XO("N/A");
+   return XO("n/a");
 }
 
 // ============================================================================

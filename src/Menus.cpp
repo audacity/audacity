@@ -1520,7 +1520,7 @@ void AudacityProject::AddEffectMenuItemGroup(CommandManager *c,
          {
             end = groupCnt;
          }
-         c->BeginSubMenu(wxString::Format(_("Plug-ins %d to %d"),
+         c->BeginSubMenu(wxString::Format(_("Plug-in %d to %d"),
                                           groupNdx + 1,
                                           end));
       }

@@ -216,10 +216,10 @@ audio CDs</a>.") + wxT("</p>")
    if(Key ==  wxT("remotehelp") )
    {
 // *URL* will be replaced by whatever URL we are looking for.
-      return WrapText(_("You do not appear to have the 'help' folder installed. \
-Please <a href=\"*URL*\">view the content online</a> or \
+      return WrapText(_("The manual does not appear to be installed. \
+Please <a href=\"*URL*\">view the manual online</a> or \
 <a href=\"http://manual.audacityteam.org/man/unzipping_the_manual.html\"> \
-download the current Manual</a>.<br><br>\
+download the Manual</a>.<br><br>\
 To always view the Manual online, change \"Location of Manual\" in \
 Interface Preferences to \"From Internet\".")
          );
