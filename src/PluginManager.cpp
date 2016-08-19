@@ -1510,11 +1510,6 @@ bool PluginManager::GetSharedConfig(const PluginID & ID, const wxString & group,
    return GetConfig(SharedKey(ID, group, key), value, defval);
 }
 
-bool PluginManager::GetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, sampleCount & value, sampleCount defval)
-{
-   return GetConfig(SharedKey(ID, group, key), value, defval);
-}
-
 bool PluginManager::SetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, const wxString & value)
 {
    return SetConfig(SharedKey(ID, group, key), value);
@@ -1536,11 +1531,6 @@ bool PluginManager::SetSharedConfig(const PluginID & ID, const wxString & group,
 }
 
 bool PluginManager::SetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, const double & value)
-{
-   return SetConfig(SharedKey(ID, group, key), value);
-}
-
-bool PluginManager::SetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, const sampleCount & value)
 {
    return SetConfig(SharedKey(ID, group, key), value);
 }
@@ -1602,11 +1592,6 @@ bool PluginManager::GetPrivateConfig(const PluginID & ID, const wxString & group
    return GetConfig(PrivateKey(ID, group, key), value, defval);
 }
 
-bool PluginManager::GetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, sampleCount & value, sampleCount defval)
-{
-   return GetConfig(PrivateKey(ID, group, key), value, defval);
-}
-
 bool PluginManager::SetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, const wxString & value)
 {
    return SetConfig(PrivateKey(ID, group, key), value);
@@ -1628,11 +1613,6 @@ bool PluginManager::SetPrivateConfig(const PluginID & ID, const wxString & group
 }
 
 bool PluginManager::SetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, const double & value)
-{
-   return SetConfig(PrivateKey(ID, group, key), value);
-}
-
-bool PluginManager::SetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, const sampleCount & value)
 {
    return SetConfig(PrivateKey(ID, group, key), value);
 }
@@ -2643,24 +2623,6 @@ bool PluginManager::GetConfig(const wxString & key, double & value, double defva
    return result;
 }
 
-bool PluginManager::GetConfig(const wxString & key, sampleCount & value, sampleCount defval)
-{
-   bool result = false;
-
-   if (!key.IsEmpty())
-   {
-      wxString wxval = wxEmptyString;
-      wxString wxdef;
-      wchar_t *endptr;
-      wxdef.Printf(wxT("%Ld"), defval);
-
-      result = GetSettings()->Read(key, &wxval, wxdef);
-      value = wxStrtoll(wxval.c_str(), &endptr, 10);
-   }
-   
-   return result;
-}
-
 bool PluginManager::SetConfig(const wxString & key, const wxString & value)
 {
    bool result = false;
@@ -2733,22 +2695,6 @@ bool PluginManager::SetConfig(const wxString & key, const double & value)
    if (!key.IsEmpty())
    {
       result = GetSettings()->Write(key, value);
-      if (result)
-      {
-         result = GetSettings()->Flush();
-      }
-   }
-
-   return result;
-}
-
-bool PluginManager::SetConfig(const wxString & key, const sampleCount & value)
-{
-   bool result = false;
-
-   if (!key.IsEmpty())
-   {
-      result = GetSettings()->Write(key, wxString::Format(wxT("%d"), (int) value));
       if (result)
       {
          result = GetSettings()->Flush();

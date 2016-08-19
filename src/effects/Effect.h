@@ -182,14 +182,12 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    bool GetSharedConfig(const wxString & group, const wxString & key, bool & value, bool defval = false) override;
    bool GetSharedConfig(const wxString & group, const wxString & key, float & value, float defval = 0.0) override;
    bool GetSharedConfig(const wxString & group, const wxString & key, double & value, double defval = 0.0) override;
-   bool GetSharedConfig(const wxString & group, const wxString & key, sampleCount & value, sampleCount defval = 0) override;
 
    bool SetSharedConfig(const wxString & group, const wxString & key, const wxString & value) override;
    bool SetSharedConfig(const wxString & group, const wxString & key, const int & value) override;
    bool SetSharedConfig(const wxString & group, const wxString & key, const bool & value) override;
    bool SetSharedConfig(const wxString & group, const wxString & key, const float & value) override;
    bool SetSharedConfig(const wxString & group, const wxString & key, const double & value) override;
-   bool SetSharedConfig(const wxString & group, const wxString & key, const sampleCount & value) override;
 
    bool RemoveSharedConfigSubgroup(const wxString & group) override;
    bool RemoveSharedConfig(const wxString & group, const wxString & key) override;
@@ -202,14 +200,12 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    bool GetPrivateConfig(const wxString & group, const wxString & key, bool & value, bool defval = false) override;
    bool GetPrivateConfig(const wxString & group, const wxString & key, float & value, float defval = 0.0) override;
    bool GetPrivateConfig(const wxString & group, const wxString & key, double & value, double defval = 0.0) override;
-   bool GetPrivateConfig(const wxString & group, const wxString & key, sampleCount & value, sampleCount defval = 0) override;
 
    bool SetPrivateConfig(const wxString & group, const wxString & key, const wxString & value) override;
    bool SetPrivateConfig(const wxString & group, const wxString & key, const int & value) override;
    bool SetPrivateConfig(const wxString & group, const wxString & key, const bool & value) override;
    bool SetPrivateConfig(const wxString & group, const wxString & key, const float & value) override;
    bool SetPrivateConfig(const wxString & group, const wxString & key, const double & value) override;
-   bool SetPrivateConfig(const wxString & group, const wxString & key, const sampleCount & value) override;
 
    bool RemovePrivateConfigSubgroup(const wxString & group) override;
    bool RemovePrivateConfig(const wxString & group, const wxString & key) override;

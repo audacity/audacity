@@ -847,11 +847,6 @@ bool Effect::GetSharedConfig(const wxString & group, const wxString & key, doubl
    return PluginManager::Get().GetSharedConfig(GetID(), group, key, value, defval);
 }
 
-bool Effect::GetSharedConfig(const wxString & group, const wxString & key, sampleCount & value, sampleCount defval)
-{
-   return PluginManager::Get().GetSharedConfig(GetID(), group, key, value, defval);
-}
-
 bool Effect::SetSharedConfig(const wxString & group, const wxString & key, const wxString & value)
 {
    return PluginManager::Get().SetSharedConfig(GetID(), group, key, value);
@@ -873,11 +868,6 @@ bool Effect::SetSharedConfig(const wxString & group, const wxString & key, const
 }
 
 bool Effect::SetSharedConfig(const wxString & group, const wxString & key, const double & value)
-{
-   return PluginManager::Get().SetSharedConfig(GetID(), group, key, value);
-}
-
-bool Effect::SetSharedConfig(const wxString & group, const wxString & key, const sampleCount & value)
 {
    return PluginManager::Get().SetSharedConfig(GetID(), group, key, value);
 }
@@ -927,11 +917,6 @@ bool Effect::GetPrivateConfig(const wxString & group, const wxString & key, doub
    return PluginManager::Get().GetPrivateConfig(GetID(), group, key, value, defval);
 }
 
-bool Effect::GetPrivateConfig(const wxString & group, const wxString & key, sampleCount & value, sampleCount defval)
-{
-   return PluginManager::Get().GetPrivateConfig(GetID(), group, key, value, defval);
-}
-
 bool Effect::SetPrivateConfig(const wxString & group, const wxString & key, const wxString & value)
 {
    return PluginManager::Get().SetPrivateConfig(GetID(), group, key, value);
@@ -953,11 +938,6 @@ bool Effect::SetPrivateConfig(const wxString & group, const wxString & key, cons
 }
 
 bool Effect::SetPrivateConfig(const wxString & group, const wxString & key, const double & value)
-{
-   return PluginManager::Get().SetPrivateConfig(GetID(), group, key, value);
-}
-
-bool Effect::SetPrivateConfig(const wxString & group, const wxString & key, const sampleCount & value)
 {
    return PluginManager::Get().SetPrivateConfig(GetID(), group, key, value);
 }

@@ -195,14 +195,12 @@ public:
    bool GetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, bool & value, bool defval = false) override;
    bool GetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, float & value, float defval = 0.0) override;
    bool GetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, double & value, double defval = 0.0) override;
-   bool GetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, sampleCount & value, sampleCount defval = 0) override;
 
    bool SetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, const wxString & value) override;
    bool SetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, const int & value) override;
    bool SetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, const bool & value) override;
    bool SetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, const float & value) override;
    bool SetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, const double & value) override;
-   bool SetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, const sampleCount & value) override;
 
    bool RemoveSharedConfigSubgroup(const PluginID & ID, const wxString & group) override;
    bool RemoveSharedConfig(const PluginID & ID, const wxString & group, const wxString & key) override;
@@ -215,14 +213,12 @@ public:
    bool GetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, bool & value, bool defval = false) override;
    bool GetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, float & value, float defval = 0.0) override;
    bool GetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, double & value, double defval = 0.0) override;
-   bool GetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, sampleCount & value, sampleCount defval = 0) override;
 
    bool SetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, const wxString & value) override;
    bool SetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, const int & value) override;
    bool SetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, const bool & value) override;
    bool SetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, const float & value) override;
    bool SetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, const double & value) override;
-   bool SetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, const sampleCount & value) override;
 
    bool RemovePrivateConfigSubgroup(const PluginID & ID, const wxString & group) override;
    bool RemovePrivateConfig(const PluginID & ID, const wxString & group, const wxString & key) override;
@@ -289,14 +285,12 @@ private:
    bool GetConfig(const wxString & key, bool & value, bool defval = false);
    bool GetConfig(const wxString & key, float & value, float defval = 0.0);
    bool GetConfig(const wxString & key, double & value, double defval = 0.0);
-   bool GetConfig(const wxString & key, sampleCount & value, sampleCount defval = 0);
 
    bool SetConfig(const wxString & key, const wxString & value);
    bool SetConfig(const wxString & key, const int & value);
    bool SetConfig(const wxString & key, const bool & value);
    bool SetConfig(const wxString & key, const float & value);
    bool SetConfig(const wxString & key, const double & value);
-   bool SetConfig(const wxString & key, const sampleCount & value);
 
    wxString SettingsPath(const PluginID & ID, bool shared);
    wxString SharedGroup(const PluginID & ID, const wxString & group);

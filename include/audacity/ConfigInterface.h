@@ -42,8 +42,6 @@
 #ifndef __AUDACITY_CONFIGINTERFACE_H__
 #define __AUDACITY_CONFIGINTERFACE_H__
 
-#include "audacity/Types.h"
-
 class AUDACITY_DLL_API ConfigClientInterface /* not final */
 {
 public:
@@ -57,14 +55,12 @@ public:
    virtual bool GetSharedConfig(const wxString & group, const wxString & key, bool & value, bool defval) = 0;
    virtual bool GetSharedConfig(const wxString & group, const wxString & key, float & value, float defval) = 0;
    virtual bool GetSharedConfig(const wxString & group, const wxString & key, double & value, double defval) = 0;
-   virtual bool GetSharedConfig(const wxString & group, const wxString & key, sampleCount & value, sampleCount defval) = 0;
 
    virtual bool SetSharedConfig(const wxString & group, const wxString & key, const wxString & value) = 0;
    virtual bool SetSharedConfig(const wxString & group, const wxString & key, const int & value) = 0;
    virtual bool SetSharedConfig(const wxString & group, const wxString & key, const bool & value) = 0;
    virtual bool SetSharedConfig(const wxString & group, const wxString & key, const float & value) = 0;
    virtual bool SetSharedConfig(const wxString & group, const wxString & key, const double & value) = 0;
-   virtual bool SetSharedConfig(const wxString & group, const wxString & key, const sampleCount & value) = 0;
 
    virtual bool RemoveSharedConfigSubgroup(const wxString & group) = 0;
    virtual bool RemoveSharedConfig(const wxString & group, const wxString & key) = 0;
@@ -77,14 +73,12 @@ public:
    virtual bool GetPrivateConfig(const wxString & group, const wxString & key, bool & value, bool defval) = 0;
    virtual bool GetPrivateConfig(const wxString & group, const wxString & key, float & value, float defval) = 0;
    virtual bool GetPrivateConfig(const wxString & group, const wxString & key, double & value, double defval) = 0;
-   virtual bool GetPrivateConfig(const wxString & group, const wxString & key, sampleCount & value, sampleCount defval) = 0;
 
    virtual bool SetPrivateConfig(const wxString & group, const wxString & key, const wxString & value) = 0;
    virtual bool SetPrivateConfig(const wxString & group, const wxString & key, const int & value) = 0;
    virtual bool SetPrivateConfig(const wxString & group, const wxString & key, const bool & value) = 0;
    virtual bool SetPrivateConfig(const wxString & group, const wxString & key, const float & value) = 0;
    virtual bool SetPrivateConfig(const wxString & group, const wxString & key, const double & value) = 0;
-   virtual bool SetPrivateConfig(const wxString & group, const wxString & key, const sampleCount & value) = 0;
 
    virtual bool RemovePrivateConfigSubgroup(const wxString & group) = 0;
    virtual bool RemovePrivateConfig(const wxString & group, const wxString & key) = 0;

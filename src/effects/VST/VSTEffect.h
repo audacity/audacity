@@ -268,7 +268,7 @@ private:
    int mMidiOuts;
    bool mAutomatable;
    float mSampleRate;
-   sampleCount mUserBlockSize;
+   int mUserBlockSize;
    wxString mName;
    wxString mVendor;
    wxString mDescription;
@@ -313,7 +313,7 @@ private:
    bool mUseLatency;
    int mBufferDelay;
 
-   sampleCount mBlockSize;
+   int mBlockSize;
 
    int mProcessLevel;
    bool mHasPower;
