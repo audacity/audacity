@@ -212,7 +212,7 @@ void EditToolBar::RegenerateTooltips()
       { ETBRedoID,     wxT("Redo"),        XO("Redo")  },
 
 #ifdef EXPERIMENTAL_SYNC_LOCK
-//      { ETBSyncLockID, wxT("SyncLock"),    XO("Sync-Lock Tracks")  },
+//      { ETBSyncLockID, wxT("SyncLock"),    XO("Time-Lock Tracks")  },
 #endif
 
       { ETBZoomInID,   wxT("ZoomIn"),      XO("Zoom In")  },
