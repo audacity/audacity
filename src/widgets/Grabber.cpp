@@ -32,6 +32,7 @@ around to NEW positions.
 #include "../Experimental.h"
 
 #include "../AColor.h"
+#include "../AllThemeResources.h"
 
 ////////////////////////////////////////////////////////////
 /// Methods for Grabber
@@ -60,6 +61,7 @@ Grabber::Grabber(wxWindow * parent, wxWindowID id)
    mOver = false;
    mPressed = false;
    mAsSpacer = false;
+   SetBackgroundColour( theTheme.Colour( clrMedium ) );
 
    /* i18n-hint: A 'Grabber' is a region you can click and drag on
    It's used to drag a track around (when in multi-tool mode) rather
