@@ -1069,7 +1069,7 @@ void AudacityApp::GenerateCrashReport(wxDebugReport::Context ctx)
    rpt.AddAll(ctx);
 
    wxFileName fn(FileNames::DataDir(), wxT("audacity.cfg"));
-   rpt.AddFile(fn.GetFullPath(), wxT("Audacity Configuration"));
+   rpt.AddFile(fn.GetFullPath(), wxT("DarkAudacity Configuration"));
    rpt.AddFile(FileNames::PluginRegistry(), wxT("Plugin Registry"));
    rpt.AddFile(FileNames::PluginSettings(), wxT("Plugin Settings"));
 
@@ -1081,7 +1081,7 @@ void AudacityApp::GenerateCrashReport(wxDebugReport::Context ctx)
    AudacityLogger *logger = GetLogger();
    if (logger)
    {
-      rpt.AddText(wxT("log.txt"), logger->GetLog(), wxT("Audacity Log"));
+      rpt.AddText(wxT("log.txt"), logger->GetLog(), wxT("DarkAudacity Log"));
    }
 
    bool ok = wxDebugReportPreviewStd().Show(rpt);
@@ -1094,7 +1094,7 @@ void AudacityApp::GenerateCrashReport(wxDebugReport::Context ctx)
    {
       wxTextEntryDialog dlg(NULL,
                               _("Report generated to:"),
-                              _("Audacity Support Data"),
+                              _("DarkAudacity Support Data"),
                               rpt.GetCompressedFileName(),
                               wxOK | wxCENTER);
       dlg.SetName(dlg.GetTitle());
@@ -1224,7 +1224,7 @@ bool AudacityApp::OnInit()
    /* On Unix systems, the default temp dir is in /var/tmp. */
    defaultTempDir.Printf(wxT("/var/tmp/audacity-%s"), wxGetUserId().c_str());
 
-   wxString pathVar = wxGetenv(wxT("AUDACITY_PATH"));
+   wxString pathVar = wxGetenv(wxT("DARKAUDACITY_PATH"));
    if (pathVar != wxT(""))
       AddMultiPathsToPathList(pathVar, audacityPathList);
    AddUniquePathToPathList(::wxGetCwd(), audacityPathList);
@@ -1702,16 +1702,16 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
    wxString sockFile(dir + wxT("/.audacity.sock"));
 #endif
 
-   wxString runningTwoCopiesStr = _("Running two copies of Audacity simultaneously may cause\ndata loss or cause your system to crash.\n\n");
+   wxString runningTwoCopiesStr = _("Running two copies of DarkAudacity simultaneously may cause\ndata loss or cause your system to crash.\n\n");
 
    if (!checker->Create(name, dir)) {
       // Error initializing the wxSingleInstanceChecker.  We don't know
       // whether there is another instance running or not.
 
       wxString prompt =
-         _("Audacity was not able to lock the temporary files directory.\nThis folder may be in use by another copy of Audacity.\n") +
+         _("DarkAudacity was not able to lock the temporary files directory.\nThis folder may be in use by another copy of Audacity.\n") +
          runningTwoCopiesStr +
-         _("Do you still want to start Audacity?");
+         _("Do you still want to start DarkAudacity?");
       int action = wxMessageBox(prompt,
                                 _("Error Locking Temporary Folder"),
                                 wxYES_NO | wxICON_EXCLAMATION,
@@ -1803,10 +1803,10 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
       // There is another copy of Audacity running.  Force quit.
 
       wxString prompt =
-         _("The system has detected that another copy of Audacity is running.\n") +
+         _("The system has detected that another copy of DarkAudacity is running.\n") +
          runningTwoCopiesStr +
-         _("Use the New or Open commands in the currently running Audacity\nprocess to open multiple projects simultaneously.\n");
-      wxMessageBox(prompt, _("Audacity is already running"),
+         _("Use the New or Open commands in the currently running DarkAudacity\nprocess to open multiple projects simultaneously.\n");
+      wxMessageBox(prompt, _("DarkAudacity is already running"),
             wxOK | wxICON_ERROR);
       return false;
    }

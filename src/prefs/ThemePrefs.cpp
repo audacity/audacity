@@ -88,12 +88,12 @@ void ThemePrefs::PopulateOrExchange(ShuttleGui & S)
    S.StartStatic(_("Info"));
    {
       S.AddFixedText(
-         _("Themability is an experimental feature.\n\nTo try it out, click \"Save Theme Cache\" then find and modify the images and colors in\nImageCacheVxx.png using an image editor such as the Gimp.\n\nClick \"Load Theme Cache\" to load the changed images and colors back into Audacity.\n\n(Only the Transport Toolbar and the colors on the wavetrack are currently affected, even\nthough the image file shows other icons too.)")
+         _("Themability is an experimental feature.\n\nTo try it out, click \"Save Theme Cache\" then find and modify the images and colors in\nImageCacheVxx.png using an image editor such as the Gimp.\n\nClick \"Load Theme Cache\" to load the changed images and colors back into DarkAudacity.\n\n(Only the Transport Toolbar and the colors on the wavetrack are currently affected, even\nthough the image file shows other icons too.)")
          );
 
 #ifdef __WXDEBUG__
       S.AddFixedText(
-         _("You have compiled Audacity with an extra button, 'Output Sourcery'.  This will save a\nC version of the image cache that can be compiled in as a default.")
+         _("You have compiled DarkAudacity with an extra button, 'Output Sourcery'.  This will save a\nC version of the image cache that can be compiled in as a default.")
          );
 #endif
 

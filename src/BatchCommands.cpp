@@ -565,7 +565,7 @@ bool BatchCommands::ApplySpecialCommand(int WXUNUSED(iCommand), const wxString &
       }
       return mExporter.Process(project, numChannels, wxT("OGG"), filename, false, 0.0, endTime);
 #else
-      wxMessageBox(_("Ogg Vorbis support is not included in this build of Audacity"));
+      wxMessageBox(_("Ogg Vorbis support is not included in this build of DarkAudacity"));
       return false;
 #endif
    } else if (command == wxT("ExportFLAC")) {
@@ -577,7 +577,7 @@ bool BatchCommands::ApplySpecialCommand(int WXUNUSED(iCommand), const wxString &
       }
       return mExporter.Process(project, numChannels, wxT("FLAC"), filename, false, 0.0, endTime);
 #else
-      wxMessageBox(_("FLAC support is not included in this build of Audacity"));
+      wxMessageBox(_("FLAC support is not included in this build of DarkAudacity"));
       return false;
 #endif
    }

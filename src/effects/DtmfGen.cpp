@@ -36,7 +36,7 @@ enum
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
 //     Name       Type        Key               Def               Min      Max      Scale
-Param( Sequence,  wxString,   XO("Sequence"),   wxT("audacity"),  wxT(""), wxT(""), wxT(""));
+Param( Sequence,  wxString,   XO("Sequence"),   wxT("darkaudacity"),  wxT(""), wxT(""), wxT(""));
 Param( DutyCycle, double,     XO("Duty Cycle"), 55.0,             0.0,     100.0,   10.0   );
 Param( Amplitude, double,     XO("Amplitude"),  0.8,              0.001,   1.0,     1      );
 
@@ -269,7 +269,7 @@ bool EffectDtmf::Startup()
    // Load the old "current" settings
    if (gPrefs->Exists(base))
    {
-      gPrefs->Read(base + wxT("String"), &dtmfSequence, wxT("audacity"));
+      gPrefs->Read(base + wxT("String"), &dtmfSequence, wxT("darkaudacity"));
       gPrefs->Read(base + wxT("DutyCycle"), &dtmfDutyCycle, 550L);
       gPrefs->Read(base + wxT("Amplitude"), &dtmfAmplitude, 0.8f);
 

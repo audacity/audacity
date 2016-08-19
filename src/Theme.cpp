@@ -653,7 +653,7 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
       {
          wxMessageBox(
             wxString::Format(
-            _("Audacity could not write file:\n  %s."),
+            _("DarkAudacity could not write file:\n  %s."),
                FileName.c_str() ));
          return;
       }
@@ -671,7 +671,7 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
       {
          wxMessageBox(
             wxString::Format(
-            _("Audacity could not open file:\n  %s\nfor writing."),
+            _("DarkAudacity could not open file:\n  %s\nfor writing."),
             FileName.c_str() ));
          return;
       }
@@ -679,7 +679,7 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
       {
          wxMessageBox(
             wxString::Format(
-            _("Audacity could not write images to file:\n  %s."),
+            _("DarkAudacity could not write images to file:\n  %s."),
             FileName.c_str() ));
          return;
       }
@@ -814,7 +814,7 @@ bool ThemeBase::ReadImageCache( bool bBinaryRead, bool bOkIfNotFound)
             return false; // did not load the images, so return false.
          wxMessageBox(
             wxString::Format(
-            _("Audacity could not find file:\n  %s.\nTheme not loaded."),
+            _("DarkAudacity could not find file:\n  %s.\nTheme not loaded."),
                FileName.c_str() ));
          return false;
       }
@@ -823,7 +823,7 @@ bool ThemeBase::ReadImageCache( bool bBinaryRead, bool bOkIfNotFound)
          /* i18n-hint: Do not translate png.  It is the name of a file format.*/
          wxMessageBox(
             wxString::Format(
-            _("Audacity could not load file:\n  %s.\nBad png format perhaps?"),
+            _("DarkAudacity could not load file:\n  %s.\nBad png format perhaps?"),
                FileName.c_str() ));
          return false;
       }
@@ -839,7 +839,7 @@ bool ThemeBase::ReadImageCache( bool bBinaryRead, bool bOkIfNotFound)
          // was not a valid png image.
          // Most likely someone edited it by mistake,
          // Or some experiment is being tried with NEW formats for it.
-         wxMessageBox(_("Audacity could not read its default theme.\nPlease report the problem."));
+         wxMessageBox(_("DarkAudacity could not read its default theme.\nPlease report the problem."));
          return false;
       }
    }
@@ -912,7 +912,7 @@ void ThemeBase::LoadComponents( bool bOkIfNotFound )
                /* i18n-hint: Do not translate png.  It is the name of a file format.*/
                wxMessageBox(
                   wxString::Format(
-                  _("Audacity could not load file:\n  %s.\nBad png format perhaps?"),
+                  _("DarkAudacity could not load file:\n  %s.\nBad png format perhaps?"),
                      FileName.c_str() ));
                return;
             }
@@ -1003,7 +1003,7 @@ void ThemeBase::SaveComponents()
          {
             wxMessageBox(
                wxString::Format(
-               _("Audacity could not save file:\n  %s"),
+               _("DarkAudacity could not save file:\n  %s"),
                   FileName.c_str() ));
             return;
          }
