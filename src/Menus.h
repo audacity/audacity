@@ -203,7 +203,11 @@ void OnSaveAs();
 
 void OnCheckDependencies();
 
-void OnExport();
+void OnExport(const wxString & Format);
+void OnExportAudio();
+void OnExportMp3();
+void OnExportWav();
+void OnExportOgg();
 void OnExportSelection();
 void OnExportMultiple();
 void OnExportLabels();

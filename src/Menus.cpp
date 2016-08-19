@@ -325,18 +325,22 @@ void AudacityProject::CreateMenusAndCommands()
          AudioIONotBusyFlag | UnsavedChangesFlag);
       c->AddItem(wxT("SaveAs"), _("Save Project &As..."), FN(OnSaveAs));
       c->BeginSubMenu( _("Save Other") );
-#if 1
+#ifdef EXPERIMENTAL_DARK_AUDACITY
       // Enable Export audio commands only when there are audio tracks.
-      c->AddItem(wxT("ExportMp3"), _("Export as MP&3"), FN(OnExport), wxT(""),
+      c->AddItem(wxT("ExportMp3"), _("Export as MP&3"), FN(OnExportMp3), wxT(""),
          AudioIONotBusyFlag | WaveTracksExistFlag,
          AudioIONotBusyFlag | WaveTracksExistFlag);
 
-      c->AddItem(wxT("ExportWav"), _("Export as &WAV"), FN(OnExport), wxT(""),
+      c->AddItem(wxT("ExportWav"), _("Export as &WAV"), FN(OnExportWav), wxT(""),
+         AudioIONotBusyFlag | WaveTracksExistFlag,
+         AudioIONotBusyFlag | WaveTracksExistFlag);
+
+      c->AddItem(wxT("ExportOgg"), _("Export as &OGG"), FN(OnExportOgg), wxT(""),
          AudioIONotBusyFlag | WaveTracksExistFlag,
          AudioIONotBusyFlag | WaveTracksExistFlag);
 #endif
 
-      c->AddItem(wxT("Export"), _("&Export Audio..."), FN(OnExport), wxT("Ctrl+Shift+E"),
+      c->AddItem(wxT("Export"), _("&Export Audio..."), FN(OnExportAudio), wxT("Ctrl+Shift+E"),
          AudioIONotBusyFlag | WaveTracksExistFlag,
          AudioIONotBusyFlag | WaveTracksExistFlag);
 
@@ -3830,13 +3834,19 @@ void AudacityProject::OnExportMIDI(){
 #endif // USE_MIDI
 
 
-void AudacityProject::OnExport()
+void AudacityProject::OnExport(const wxString & Format )
 {
    Exporter e;
+   e.SetDefaultFormat( Format );
 
    wxGetApp().SetMissingAliasedFileWarningShouldShow(true);
    e.Process(this, false, 0.0, mTracks->GetEndTime());
 }
+
+void AudacityProject::OnExportAudio(){   OnExport("");}
+void AudacityProject::OnExportMp3(){   OnExport("MP3");}
+void AudacityProject::OnExportWav(){   OnExport("WAV");}
+void AudacityProject::OnExportOgg(){   OnExport("OGG");}
 
 void AudacityProject::OnExportSelection()
 {
@@ -3873,6 +3883,7 @@ void AudacityProject::OnPreferences()
 
       p->RebuildMenuBar();
       p->RebuildOtherMenus();
+// TODO: The comment below suggests this workaround is obsolete.
 #if defined(__WXGTK__)
       // Workaround for:
       //
