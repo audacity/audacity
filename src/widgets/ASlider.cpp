@@ -566,7 +566,7 @@ void LWSlider::AdjustSize(const wxSize & sz)
    mHeight = sz.GetHeight();
 
    if( mBitmap ){
-      mBitmap.release();
+      mBitmap.reset();
    }
    mThumbWidth = 11;
    mThumbHeight = 20;

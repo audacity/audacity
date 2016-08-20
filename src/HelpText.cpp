@@ -201,11 +201,11 @@ static wxString HelpTextBuiltIn( const wxString & Key )
          wxString(wxT("<p>"))+
          _("Audacity can import unprotected files in many other formats (such as M4A and WMA, \
 compressed WAV files from portable recorders and audio from video files) if you download and install \
-the optional <a href=\"http://manual.audacityteam.org/o/man/faq_opening_and_saving_files.html#foreign\"> \
+the optional <a href=\"http://manual.audacityteam.org/man/faq_opening_and_saving_files.html#foreign\"> \
 FFmpeg library</a> to your computer.") + wxT("</p><p>") +
          _("You can also read our help on importing \
-<a href=\"http://manual.audacityteam.org/o/man/faq_opening_and_saving_files.html#midi\">MIDI files</a> \
-and tracks from <a href=\"http://manual.audacityteam.org/o/man/faq_opening_and_saving_files.html#fromcd\"> \
+<a href=\"http://manual.audacityteam.org/man/faq_opening_and_saving_files.html#midi\">MIDI files</a> \
+and tracks from <a href=\"http://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd\"> \
 audio CDs</a>.") + wxT("</p>")
       );
    }
@@ -216,10 +216,10 @@ audio CDs</a>.") + wxT("</p>")
    if(Key ==  wxT("remotehelp") )
    {
 // *URL* will be replaced by whatever URL we are looking for.
-      return WrapText(_("You do not appear to have the 'help' folder installed. \
-Please <a href=\"*URL*\">view the content online</a> or \
-<a href=\"http://manual.audacityteam.org/o/man/unzipping_the_manual.html\"> \
-download the current Manual</a>.<br><br>\
+      return WrapText(_("The Manual does not appear to be installed. \
+Please <a href=\"*URL*\">view the Manual online</a> or \
+<a href=\"http://manual.audacityteam.org/man/unzipping_the_manual.html\"> \
+download the Manual</a>.<br><br>\
 To always view the Manual online, change \"Location of Manual\" in \
 Interface Preferences to \"From Internet\".")
          );

@@ -126,8 +126,8 @@ NyquistEffect::NyquistEffect(const wxString &fName)
    mDebug = false;
    mIsSal = false;
    mOK = false;
-   mAuthor = wxT("N/A");
-   mCopyright = wxT("N/A");
+   mAuthor = XO("n/a");
+   mCopyright = XO("n/a");
 
    // set clip/split handling when applying over clip boundary.
    mRestoreSplits = true;  // Default: Restore split lines. 
@@ -201,7 +201,7 @@ wxString NyquistEffect::GetVendor()
 
 wxString NyquistEffect::GetVersion()
 {
-   return wxT("N/A");
+   return XO("n/a");
 }
 
 wxString NyquistEffect::GetDescription()

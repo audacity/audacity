@@ -638,7 +638,7 @@ wxString LadspaEffect::GetVendor()
 
 wxString LadspaEffect::GetVersion()
 {
-   return _("N/A");
+   return _("n/a");
 }
 
 wxString LadspaEffect::GetDescription()
