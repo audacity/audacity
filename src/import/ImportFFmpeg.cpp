@@ -592,7 +592,7 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
          sampleCount sampleDuration = 0;
          auto sc = scs[s].get();
          if (sc->m_stream->duration > 0)
-            sampleDuration = ((sampleCount)sc->m_stream->duration * sc->m_stream->time_base.num), sc->m_stream->codec->sample_rate / sc->m_stream->time_base.den;
+            sampleDuration = ((sampleCount)sc->m_stream->duration * sc->m_stream->time_base.num) * sc->m_stream->codec->sample_rate / sc->m_stream->time_base.den;
          else
             sampleDuration = ((sampleCount)mFormatContext->duration *sc->m_stream->codec->sample_rate) / AV_TIME_BASE;
 
