@@ -886,7 +886,7 @@ int LadspaEffect::GetMidiOutCount()
    return 0;
 }
 
-void LadspaEffect::SetSampleRate(sampleCount rate)
+void LadspaEffect::SetSampleRate(double rate)
 {
    mSampleRate = rate;
 }

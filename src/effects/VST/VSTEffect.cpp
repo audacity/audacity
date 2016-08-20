@@ -1332,7 +1332,7 @@ sampleCount VSTEffect::SetBlockSize(sampleCount maxBlockSize)
    return mBlockSize;
 }
 
-void VSTEffect::SetSampleRate(sampleCount rate)
+void VSTEffect::SetSampleRate(double rate)
 {
    mSampleRate = (float) rate;
 }

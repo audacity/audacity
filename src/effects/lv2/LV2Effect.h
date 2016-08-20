@@ -128,7 +128,7 @@ public:
    int GetMidiInCount() override;
    int GetMidiOutCount() override;
 
-   void SetSampleRate(sampleCount rate) override;
+   void SetSampleRate(double rate) override;
    sampleCount SetBlockSize(sampleCount maxBlockSize) override;
 
    sampleCount GetLatency() override;

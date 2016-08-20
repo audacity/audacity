@@ -325,7 +325,7 @@ int Effect::GetMidiOutCount()
    return 0;
 }
 
-void Effect::SetSampleRate(sampleCount rate)
+void Effect::SetSampleRate(double rate)
 {
    if (mClient)
    {

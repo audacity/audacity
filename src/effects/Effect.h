@@ -106,7 +106,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    sampleCount GetLatency() override;
    sampleCount GetTailSize() override;
 
-   void SetSampleRate(sampleCount rate) override;
+   void SetSampleRate(double rate) override;
    sampleCount SetBlockSize(sampleCount maxBlockSize) override;
 
    bool IsReady() override;

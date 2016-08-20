@@ -1187,7 +1187,7 @@ int AudioUnitEffect::GetMidiOutCount()
    return 0;
 }
 
-void AudioUnitEffect::SetSampleRate(sampleCount rate)
+void AudioUnitEffect::SetSampleRate(double rate)
 {
    mSampleRate = rate;
 }
