@@ -1576,9 +1576,9 @@ bool Effect::ProcessTrack(int count,
    sampleCount genLength = 0;
    bool isGenerator = GetType() == EffectTypeGenerate;
    bool isProcessor = GetType() == EffectTypeProcess;
+   double genDur = 0;
    if (isGenerator)
    {
-      double genDur;
       if (mIsPreview) {
          gPrefs->Read(wxT("/AudioIO/EffectsPreviewLen"), &genDur, 6.0);
          genDur = wxMin(mDuration, CalcPreviewInputLength(genDur));
@@ -1850,17 +1850,33 @@ bool Effect::ProcessTrack(int count,
    if (isGenerator)
    {
       AudacityProject *p = GetActiveProject();
-      StepTimeWarper warper(mT0 + genLength, genLength - (mT1 - mT0));
+
+      // PRL:  this code was here and could not have been the right
+      // intent, mixing time and sampleCount values:
+      // StepTimeWarper warper(mT0 + genLength, genLength - (mT1 - mT0));
+
+      // This looks like what it should have been:
+      // StepTimeWarper warper(mT0 + genDur, genDur - (mT1 - mT0));
+      // But rather than fix it, I will just disable the use of it for now.
+      // The purpose was to remap split lines inside the selected region when
+      // a generator replaces it with sound of different duration.  But
+      // the "correct" version might have the effect of mapping some splits too
+      // far left, to before the seletion.
+      // In practice the wrong version probably did nothing most of the time,
+      // because the cutoff time for the step time warper was 44100 times too
+      // far from mT0.
 
       // Transfer the data from the temporary tracks to the actual ones
       genLeft->Flush();
       // mT1 gives us the NEW selection. We want to replace up to GetSel1().
-      left->ClearAndPaste(mT0, p->GetSel1(), genLeft.get(), true, true, &warper);
+      left->ClearAndPaste(mT0, p->GetSel1(), genLeft.get(), true, true,
+                          nullptr /* &warper */);
 
       if (genRight)
       {
          genRight->Flush();
-         right->ClearAndPaste(mT0, mT1, genRight.get(), true, true, &warper);
+         right->ClearAndPaste(mT0, mT1, genRight.get(), true, true,
+                              nullptr /* &warper */);
       }
    }
 
