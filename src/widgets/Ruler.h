@@ -331,6 +331,8 @@ public:
 
    bool ShowingScrubBar() const { return mShowScrubbing; }
    void OnToggleScrubBar(/*wxCommandEvent&*/);
+   void SetPanelSize();
+
 
 private:
    void OnCapture(wxCommandEvent & evt);

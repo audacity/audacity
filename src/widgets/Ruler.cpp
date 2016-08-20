@@ -2008,7 +2008,7 @@ AdornedRulerPanel::~AdornedRulerPanel()
                         this);
 }
 
-#if 0
+#if 1
 namespace {
    static const wxChar *scrubEnabledPrefName = wxT("/QuickPlay/ScrubbingEnabled");
 
@@ -2042,9 +2042,10 @@ void AdornedRulerPanel::UpdatePrefs()
 #endif
 #endif
 
-   // mShowScrubbing = ReadScrubEnabledPref();
+   mShowScrubbing = ReadScrubEnabledPref();
    // Affected by the last
    UpdateRects();
+   SetPanelSize();
 
    RegenerateTooltips(mPrevZone);
 }
@@ -2213,6 +2214,7 @@ void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
       // Do this first time setting of button status texts
       // when we are sure the CommandManager is initialized.
       ReCreateButtons();
+      // Sends a resize event, which will cause a second paint.
       UpdatePrefs();
    }
 
@@ -2796,8 +2798,13 @@ void AdornedRulerPanel::UpdateStatusBarAndTooltips(StatusChoice choice)
 void AdornedRulerPanel::OnToggleScrubBar(/*wxCommandEvent&*/)
 {
    mShowScrubbing = !mShowScrubbing;
-   //WriteScrubEnabledPref(mShowScrubbing);
+   WriteScrubEnabledPref(mShowScrubbing);
    gPrefs->Flush();
+   SetPanelSize();
+}
+
+void AdornedRulerPanel::SetPanelSize()
+{
    wxSize size { GetSize().GetWidth(), GetRulerHeight(mShowScrubbing) };
    SetSize(size);
    SetMinSize(size);
