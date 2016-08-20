@@ -74,7 +74,7 @@ void TrackPanelAx::SetFocus( Track *track )
 
    if( track == NULL )
    {
-      TrackListIterator iter( mTrackPanel->mTracks );
+      TrackListIterator iter( mTrackPanel->GetTracks() );
       track = iter.First();
    }
 
@@ -122,7 +122,7 @@ bool TrackPanelAx::IsFocused( Track *track )
 
 int TrackPanelAx::TrackNum( Track *target )
 {
-   TrackListIterator iter( mTrackPanel->mTracks );
+   TrackListIterator iter( mTrackPanel->GetTracks() );
    Track *t = iter.First();
    int ndx = 0;
 
@@ -142,7 +142,7 @@ int TrackPanelAx::TrackNum( Track *target )
 
 Track *TrackPanelAx::FindTrack( int num )
 {
-   TrackListIterator iter( mTrackPanel->mTracks );
+   TrackListIterator iter( mTrackPanel->GetTracks() );
    Track *t = iter.First();
    int ndx = 0;
 
@@ -195,7 +195,7 @@ wxAccStatus TrackPanelAx::GetChild( int childId, wxAccessible** child )
 // Gets the number of children.
 wxAccStatus TrackPanelAx::GetChildCount( int* childCount )
 {
-   TrackListIterator iter( mTrackPanel->mTracks );
+   TrackListIterator iter( mTrackPanel->GetTracks() );
    Track *t = iter.First();
    int cnt = 0;
 

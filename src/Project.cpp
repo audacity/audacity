@@ -975,7 +975,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
                                              TrackPanelID,
                                              wxDefaultPosition,
                                              wxDefaultSize,
-                                             GetTracks(),
+                                             mTracks,
                                              &mViewInfo,
                                              this,
                                              mRuler);
