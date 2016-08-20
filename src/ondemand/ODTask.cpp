@@ -31,6 +31,7 @@ DEFINE_EVENT_TYPE(EVT_ODTASK_COMPLETE)
 
 /// Constructs an ODTask
 ODTask::ODTask()
+: mDemandSample(0)
 {
 
    static int sTaskNumber=0;
@@ -41,8 +42,6 @@ ODTask::ODTask()
    mIsRunning = false;
 
    mTaskNumber=sTaskNumber++;
-
-   mDemandSample=0;
 }
 
 //outside code must ensure this task is not scheduled again.
