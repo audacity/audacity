@@ -93,10 +93,10 @@ enum CommandFlag : unsigned long long
    IsRealtimeNotActiveFlag= 0x10000000,  //lll
    CaptureNotBusyFlag     = 0x20000000,
    CanStopAudioStreamFlag = 0x40000000,
-   RulerHasFocus
-                          = 0x80000000ULL, // prl
-   NotMinimizedFlag
-                        = 0x100000000ULL, // prl
+   RulerHasFocus          = 0x80000000ULL, // prl
+   NotMinimizedFlag      = 0x100000000ULL, // prl
+   PausedFlag            = 0x200000000ULL, // jkc
+   NotPausedFlag         = 0x400000000ULL, // jkc
 
    NoFlagsSpecifed        = ~0ULL
 };

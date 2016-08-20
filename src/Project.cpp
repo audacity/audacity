@@ -1176,6 +1176,7 @@ void AudacityProject::UpdatePrefsVariables()
    gPrefs->Read(wxT("/GUI/EmptyCanBeDirty"), &mEmptyCanBeDirty, true );
    gPrefs->Read(wxT("/GUI/Help"), &mHelpPref, wxT("InBrowser") );
    gPrefs->Read(wxT("/GUI/SelectAllOnNone"), &mSelectAllOnNone, true);
+   mStopIfWasPaused = true;  // not configurable for now, but could be later.
    gPrefs->Read(wxT("/GUI/ShowSplashScreen"), &mShowSplashScreen, true);
    gPrefs->Read(wxT("/GUI/Solo"), &mSoloPref, wxT("Simple"));
    // Update the old default to the NEW default.
@@ -2138,16 +2139,31 @@ bool AudacityProject::TryToMakeActionAllowed
    if( bAllowed )
       return true;
 
-   // Action is not allowed
+   // Why is action not allowed?
+   // 1's wherever a required flag is missing.
+   auto MissingFlags = (~flags & flagsRqd) & mask;
+
+   if( mStopIfWasPaused && (MissingFlags & AudioIONotBusyFlag ) ){
+      StopIfPaused();
+      // Hope this will now reflect stopped audio.
+      flags = GetUpdateFlags();
+      bAllowed = ((flags & mask) == (flagsRqd & mask));
+      if( bAllowed )
+         return true;
+   }
+
+   // Why is action still not allowed?
+   // 0's wherever a required flag is missing (or is don't care)
+   MissingFlags = (flags & ~flagsRqd) & mask;
    // IF not set up to select all audio in that case, THEN return with failure.
    if( !mSelectAllOnNone )
       return false;
 
-   auto MissingFlags = (flags & ~flagsRqd) & mask;
-
    // IF selecting all audio won't do any good, THEN return with failure.
    if( !(flags & WaveTracksExistFlag) )
       return false;
+   // returns if mask wants a zero in some flag and that's not present.
+   // logic seems a bit peculiar and worth revisiting.
    if( (MissingFlags & ~( TimeSelectedFlag | WaveTracksSelectedFlag)) )
       return false;
 

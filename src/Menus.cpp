@@ -1692,6 +1692,11 @@ CommandFlag AudacityProject::GetUpdateFlags()
    else
       flags |= AudioIOBusyFlag;
 
+   if( gAudioIO->IsPaused() )
+      flags |= PausedFlag;
+   else
+      flags |= NotPausedFlag;
+
    if (!mViewInfo.selectedRegion.isPoint())
       flags |= TimeSelectedFlag;
 
@@ -1824,6 +1829,13 @@ void AudacityProject::SelectAllIfNone()
       OnSelectAll();
 }
 
+void AudacityProject::StopIfPaused()
+{
+   auto flags = GetUpdateFlags();
+   if( flags & PausedFlag )
+      OnStop();
+}
+
 void AudacityProject::ModifyAllProjectToolbarMenus()
 {
    AProjectArray::iterator i;
@@ -1912,6 +1924,9 @@ void AudacityProject::UpdateMenus(bool checkActive)
 
    // We can enable some extra items if we have select-all-on-none.
    //EXPLAIN-ME: Why is this here rather than in GetUpdateFlags()?
+   //ANSWER: Because flags2 is used in the menu enable/disable.
+   //The effect still needs flags to determine whether it will need
+   //to actually do the 'select all' to make the command valid.
    if (mSelectAllOnNone)
    {
       if ((flags & TracksExistFlag))
@@ -1923,6 +1938,13 @@ void AudacityProject::UpdateMenus(bool checkActive)
                    |  WaveTracksSelectedFlag
                    |  CutCopyAvailableFlag;
          }
+      }
+   }
+
+   if( mStopIfWasPaused )
+   {
+      if( flags & PausedFlag ){
+         flags2 |= AudioIONotBusyFlag;
       }
    }
 

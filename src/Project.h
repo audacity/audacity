@@ -350,6 +350,7 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    void RefreshCursor();
    void SelectNone();
    void SelectAllIfNone();
+   void StopIfPaused();
    void Zoom(double level);
    void ZoomBy(double multiplier);
    void Rewind(bool shift);
@@ -655,6 +656,7 @@ private:
    bool mEmptyCanBeDirty;
 
    bool mSelectAllOnNone;
+   bool mStopIfWasPaused;
 
    bool mIsSyncLocked;
 
