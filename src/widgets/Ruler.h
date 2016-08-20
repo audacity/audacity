@@ -330,7 +330,8 @@ public:
    void UpdateQuickPlayPos(wxCoord &mousPosX);
 
    bool ShowingScrubBar() const { return mShowScrubbing; }
-   void OnToggleScrubBar(/*wxCommandEvent&*/);
+   void OnToggleScrubBar(/*wxCommandEvent& */);
+   void OnToggleScrubBarFromMenu(wxCommandEvent& );
    void SetPanelSize();
 
 

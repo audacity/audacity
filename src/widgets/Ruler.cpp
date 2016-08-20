@@ -1911,6 +1911,7 @@ enum {
    OnTimelineToolTipID,
    OnAutoScrollID,
    OnLockPlayRegionID,
+   OnScrubBarID,
 
    OnTogglePinnedStateID,
 };
@@ -1927,6 +1928,7 @@ BEGIN_EVENT_TABLE(AdornedRulerPanel, OverlayPanel)
    EVT_MENU(OnTimelineToolTipID, AdornedRulerPanel::OnTimelineToolTips)
    EVT_MENU(OnAutoScrollID, AdornedRulerPanel::OnAutoScroll)
    EVT_MENU(OnLockPlayRegionID, AdornedRulerPanel::OnLockPlayRegion)
+   EVT_MENU(OnScrubBarID, AdornedRulerPanel::OnToggleScrubBarFromMenu)
 
    // Pop up menus on Windows
    EVT_CONTEXT_MENU(AdornedRulerPanel::OnContextMenu)
@@ -2015,7 +2017,7 @@ namespace {
    bool ReadScrubEnabledPref()
    {
       bool result {};
-      gPrefs->Read(scrubEnabledPrefName, &result, false);
+      gPrefs->Read(scrubEnabledPrefName, &result, true);
       return result;
    }
 
@@ -2795,6 +2797,15 @@ void AdornedRulerPanel::UpdateStatusBarAndTooltips(StatusChoice choice)
    RegenerateTooltips(choice);
 }
 
+// This version toggles ruler state indirectly via the scrubber
+// to ensure that all the places where the state is shown update.
+// For example buttons and menus must update.
+void AdornedRulerPanel::OnToggleScrubBarFromMenu(wxCommandEvent& Evt)
+{
+   auto &scrubber = mProject->GetScrubber();
+   scrubber.OnToggleScrubBar( Evt );
+}
+
 void AdornedRulerPanel::OnToggleScrubBar(/*wxCommandEvent&*/)
 {
    mShowScrubbing = !mShowScrubbing;
@@ -2910,6 +2921,12 @@ void AdornedRulerPanel::ShowMenu(const wxPoint & pos)
    else
       prlitem = rulerMenu.Append(OnLockPlayRegionID, _("Unlock Play Region"));
    prlitem->Enable(mProject->IsPlayRegionLocked() || (mPlayRegionStart != mPlayRegionEnd));
+
+   wxMenuItem *baritem;
+   if (mShowScrubbing)
+      baritem = rulerMenu.Append(OnScrubBarID, _("Disable Scrub Bar"));
+   else
+      baritem = rulerMenu.Append(OnScrubBarID, _("Enable Scrub Bar"));
 
    PopupMenu(&rulerMenu, pos);
 }
