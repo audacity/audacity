@@ -2278,6 +2278,9 @@ void AdornedRulerPanel::UpdateRects()
 #else
       auto qpHeight = mScrubZone.height - scrubHeight;
       bottom = &mScrubZone, topHeight = qpHeight;
+      // Increase scrub zone height so that hit testing finds it and
+      // not QP region, when on bottom 'edge'.
+      mScrubZone.height+=BottomMargin;
 #endif
 
       top->height = topHeight;
