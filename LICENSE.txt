@@ -1,4 +1,4 @@
-Note: Audacity is distributed under the terms of the GNU GPL.
+Note: DarkAudacity is distributed under the terms of the GNU GPL.
 This includes everything in the source code distribution
 except code in the lib-src directory.  Code in the lib-src
 directory may be released under a different license

@@ -1,17 +1,20 @@
 
-Audacity(R): A Free, Cross-Platform Digital Audio Editor
-  WWW: http://audacityteam.org/
+DarkAudacity: A Free, Cross-Platform Digital Audio Editor
+  WWW: http://www.darkaudacity.com/
 
-We welcome feedback on Audacity, suggestions for new or improved features, 
+DarkAudacity is a branch of Audacity(R).  Audacity is maintained by the 
+audacity team.
+
+I welcome feedback on DarkAudacity, suggestions for new or improved features, 
 bug reports and patches at:
-  feedback@audacityteam.org .
+  james@audacityteam.org .
 
-Personal support with Audacity is not provided by e-mail, but on our Forum:
-  http://forum.audacityteam.org/ .
-
-Audacity is copyright (c) 1999-2015 by Audacity Team. This copyright notice
+Audacity is copyright (c) 1999-2016 by Audacity Team. This copyright notice
 applies to all documents in the Audacity source code archive, except as
 otherwise noted (mostly in the lib-src subdirectories).
+
+The additions and changes to Audacity for DarkAudacity are (c) 2016 by
+James Crook.
 
 The documentation for Audacity is licensed under the Creative Commons
 Attribution 3.0 license:
@@ -20,12 +23,12 @@ http://creativecommons.org/licenses/by/3.0/legalcode .
 
 "Audacity" is a registered trademark of Dominic Mazzoni.
 
-Version 2.1.2 
+Version 2.1.2x 
 
 Contents of this README:
 
 1.  Licensing
-2.  Changes since version 2.1.1 
+2.  Changes since version 2.1.2 
 3.  Known Issues at Release
 4.  Source Code, Libraries and Additional Copyright Information
 5.  Compilation Instructions
