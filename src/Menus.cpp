@@ -2397,10 +2397,12 @@ bool AudacityProject::DoPlayStopSelect(bool click, bool shift)
          }
          selection.setTimes(t0, t1);
       }
-      else if (click)
+      else if (click){
+         // avoid a point at negative time.
+         time = wxMax( time, 0 );
          // Set a point selection, as if by a click at the play head
          selection.setTimes(time, time);
-      else
+      } else
          // How stop and set cursor always worked
          // -- change t0, collapsing to point only if t1 was greater
          selection.setT0(time, false);
