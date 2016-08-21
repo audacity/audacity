@@ -334,11 +334,15 @@ bool EffectSBSMS::Process()
                                       (long)((float)(processPresamples)*(srTrack/srProcess)));
               rb.offset = start - trackPresamples;
               rb.end = trackEnd;
-              rb.iface = std::make_unique<SBSMSEffectInterface>(rb.resampler.get(),
-                                                      &rateSlide,&pitchSlide,
-                                                      bPitchReferenceInput,
-                                                      samplesToProcess,processPresamples,
-                                                      rb.quality.get());
+              rb.iface = std::make_unique<SBSMSEffectInterface>
+                  (rb.resampler.get(), &rateSlide, &pitchSlide,
+                   bPitchReferenceInput,
+                   // UNSAFE_SAMPLE_COUNT_TRUNCATION
+                   // The argument type is only long!
+                   static_cast<long> ( static_cast<size_t> (
+                        samplesToProcess ) ),
+                   processPresamples,
+                   rb.quality.get());
             }
             
             Resampler resampler(outResampleCB,&rb,outSlideType);

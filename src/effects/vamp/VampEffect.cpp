@@ -522,7 +522,12 @@ bool VampEffect::Process()
             }
          }
 
-         Vamp::RealTime timestamp = Vamp::RealTime::frame2RealTime(ls, (int)(mRate + 0.5));
+         // UNSAFE_SAMPLE_COUNT_TRUNCATION
+         // Truncation in case of very long tracks!
+         Vamp::RealTime timestamp = Vamp::RealTime::frame2RealTime(
+            (long) static_cast<long long>( ls ),
+            (int)(mRate + 0.5)
+         );
 
          Vamp::Plugin::FeatureSet features = mPlugin->process(data, timestamp);
          AddFeatures(ltrack, features);

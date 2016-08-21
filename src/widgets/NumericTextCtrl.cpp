@@ -848,7 +848,9 @@ void NumericConverter::ValueToControls(double rawValue, bool nearest /* = true *
       }
       else {
          if (t_int >= 0) {
-            value = (t_int / mFields[i].base);
+            // UNSAFE_SAMPLE_COUNT_TRUNCATION
+            // truncation danger!
+            value = (static_cast<long long>( t_int ) / mFields[i].base);
             if (mFields[i].range > 0)
                value = value % mFields[i].range;
          }
