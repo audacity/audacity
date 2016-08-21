@@ -8925,8 +8925,15 @@ void TrackInfo::DrawBordersWithin(wxDC* dc, const wxRect & rect, bool bHasMuteSo
                   minimizeRect.x + minimizeRect.width, minimizeRect.y - 1);
 }
 
+//#define USE_BEVELS
+
+#ifdef USE_BEVELS
+void TrackInfo::DrawBackground(wxDC * dc, const wxRect & rect, bool bSelected,
+   bool bHasMuteSolo, const int labelw, const int vrul) const
+#else
 void TrackInfo::DrawBackground(wxDC * dc, const wxRect & rect, bool bSelected,
    bool WXUNUSED(bHasMuteSolo), const int labelw, const int WXUNUSED(vrul)) const
+#endif
 {
    // fill in label
    wxRect fill = rect;
@@ -8934,20 +8941,28 @@ void TrackInfo::DrawBackground(wxDC * dc, const wxRect & rect, bool bSelected,
    AColor::MediumTrackInfo(dc, bSelected);
    dc->DrawRectangle(fill);
 
-   // Vaughan, 2010-09-16: No more bevels around controls area. Now only around buttons.
-   //if( bHasMuteSolo )
-   //{
-   //   fill=wxRect( rect.x+1, rect.y+17, vrul-6, 32);
-   //   AColor::BevelTrackInfo( *dc, true, fill );
-   //
-   //   fill=wxRect( rect.x+1, rect.y+67, fill.width, rect.height-87);
-   //   AColor::BevelTrackInfo( *dc, true, fill );
-   //}
-   //else
-   //{
-   //   fill=wxRect( rect.x+1, rect.y+17, vrul-6, rect.height-37);
-   //   AColor::BevelTrackInfo( *dc, true, fill );
-   //}
+
+#ifdef USE_BEVELS
+   if( bHasMuteSolo )
+   {
+      int ylast = rect.height-20;
+      int ybutton = wxMin(32,ylast-17);
+      int ybuttonEnd = 67;
+
+      fill=wxRect( rect.x+1, rect.y+17, vrul-6, ybutton);
+      AColor::BevelTrackInfo( *dc, true, fill );
+   
+      if( ybuttonEnd < ylast ){
+         fill=wxRect( rect.x+1, rect.y+ybuttonEnd, fill.width, ylast - ybuttonEnd);
+         AColor::BevelTrackInfo( *dc, true, fill );
+      }
+   }
+   else
+   {
+      fill=wxRect( rect.x+1, rect.y+17, vrul-6, rect.height-37);
+      AColor::BevelTrackInfo( *dc, true, fill );
+   }
+#endif
 }
 
 void TrackInfo::GetTrackControlsRect(const wxRect & rect, wxRect & dest) const
