@@ -448,7 +448,7 @@ struct AudioIO::ScrubQueue
          auto actualDuration = origDuration;
          const sampleCount s1 = options.enqueueBySpeed
             ? s0 + lrint(origDuration * end) // end is a speed
-            : lrint(end * mRate);            // end is a time
+            : sampleCount(lrint(end * mRate));            // end is a time
          auto success =
             current->Init(previous, s0, s1, actualDuration, options);
          if (success)

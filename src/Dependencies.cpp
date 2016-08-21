@@ -143,7 +143,7 @@ void FindDependencies(AudacityProject *project,
             outAliasedFiles.back() =
                AliasedFile {
                   wxFileNameWrapper { fileName },
-                  blockBytes, fileName.FileExists()
+                  wxLongLong(blockBytes), fileName.FileExists()
                };
             aliasedFileHash[fileNameStr] = &outAliasedFiles.back();
          }

@@ -517,10 +517,10 @@ int ODFFmpegDecoder::FillDataFromCache(samplePtr & data, sampleFormat outFormat,
          // UNSAFE_SAMPLE_COUNT_TRUNCATION
          // -- but used only experimentally as of this writing
          // Is there a proof size_t will not overflow?
-         const auto hitStartInCache   = FFMAX(0,start-mDecodeCache[i]->start);
+         const auto hitStartInCache   = FFMAX(sampleCount{0},start-mDecodeCache[i]->start);
          //we also need to find out which end was hit - if it is the tail only we need to update from a later index.
          const auto hitStartInRequest = start < mDecodeCache[i]->start
-            ? len - samplesHit : 0;
+            ? len - samplesHit : sampleCount{ 0 };
          for(decltype(samplesHit) j = 0; j < samplesHit; j++)
          {
             const auto outIndex = hitStartInRequest + j;

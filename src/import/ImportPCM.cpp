@@ -447,7 +447,7 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
       wxASSERT(mInfo.channels >= 0);
       while (NULL == srcbuffer.Allocate(maxBlock * mInfo.channels, mFormat).ptr())
       {
-         maxBlock >>= 1;
+         maxBlock /= 2;
          if (maxBlock < 1)
             return eProgressFailed;
       }

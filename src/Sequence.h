@@ -23,12 +23,6 @@
 
 #include "audacity/Types.h"
 
-#if 0
-// Moved to "audacity/types.h"
-typedef wxLongLong_t sampleCount; /** < A native 64-bit integer type, because
-                                    32-bit integers may not be enough */
-#endif
-
 class BlockFile;
 using BlockFilePtr = std::shared_ptr<BlockFile>;
 

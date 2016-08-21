@@ -55,11 +55,252 @@
 // ----------------------------------------------------------------------------
 // A native 64-bit integer...used when referring to any number of samples
 // ----------------------------------------------------------------------------
-#if (defined(__VISUALC__) && defined(__WIN32__))
-typedef __int64 sampleCount;
-#else
-typedef long long sampleCount;
-#endif
+
+class sampleCount
+{
+public:
+   using type = long long;
+   static_assert(sizeof(type) == 8, "Wrong width of sampleCount");
+
+   sampleCount () : value { 0 } {}
+   sampleCount ( type v ) : value { v } {}
+   sampleCount ( const sampleCount& ) = default;
+   sampleCount &operator= ( const sampleCount& ) = default;
+
+   operator type () const { return value; }
+
+   sampleCount &operator += (sampleCount b) { value += b.value; return *this; }
+   sampleCount &operator -= (sampleCount b) { value -= b.value; return *this; }
+   sampleCount &operator *= (sampleCount b) { value *= b.value; return *this; }
+   sampleCount &operator /= (sampleCount b) { value /= b.value; return *this; }
+   sampleCount &operator %= (sampleCount b) { value %= b.value; return *this; }
+
+   sampleCount &operator ++ () { ++value; return *this; }
+   sampleCount operator ++ (int)
+      { sampleCount result{ *this }; ++value; return result; }
+
+   sampleCount &operator -- () { --value; return *this; }
+   sampleCount operator -- (int)
+      { sampleCount result{ *this }; --value; return result; }
+
+private:
+   type value;
+};
+
+namespace std
+{
+   inline sampleCount min (sampleCount a, sampleCount b)
+   {
+      return a < b ? a : b;
+   }
+
+   inline sampleCount max (sampleCount a, sampleCount b)
+   {
+      return a > b ? a : b;
+   }
+}
+
+inline
+sampleCount operator + (sampleCount a, sampleCount b)
+{ return (long long)a + (long long)b; }
+
+inline
+sampleCount operator + (sampleCount a, size_t b)
+{ return (long long)a + b; }
+
+inline
+sampleCount operator + (size_t a, sampleCount b)
+{ return a + (long long)b; }
+
+inline
+sampleCount operator + (sampleCount a, int b)
+{ return (long long)a + b; }
+
+inline
+sampleCount operator + (int a, sampleCount b)
+{ return a + (long long)b; }
+
+inline
+sampleCount operator + (sampleCount a, long b)
+{ return (long long)a + b; }
+
+inline
+sampleCount operator + (long a, sampleCount b)
+{ return a + (long long)b; }
+
+inline
+sampleCount operator + (sampleCount a, long long b)
+{ return (long long)a + b; }
+
+inline
+sampleCount operator + (long long a, sampleCount b)
+{ return a + (long long)b; }
+
+inline
+sampleCount operator + (sampleCount a, unsigned b)
+{ return (long long)a + b; }
+
+inline
+sampleCount operator + (unsigned a, sampleCount b)
+{ return a + (long long)b; }
+
+
+
+
+inline
+sampleCount operator - (sampleCount a, sampleCount b)
+{ return (long long)a - (long long)b; }
+
+inline
+sampleCount operator - (sampleCount a, size_t b)
+{ return (long long)a - b; }
+
+inline
+sampleCount operator - (size_t a, sampleCount b)
+{ return a - (long long)b; }
+
+inline
+sampleCount operator - (sampleCount a, int b)
+{ return(long long) a - b; }
+
+inline
+sampleCount operator - (int a, sampleCount b)
+{ return a - (long long)b; }
+
+inline
+sampleCount operator - (sampleCount a, long b)
+{ return (long long)a - b; }
+
+inline
+sampleCount operator - (long a, sampleCount b)
+{ return a - (long long)b; }
+
+inline
+sampleCount operator - (sampleCount a, long long b)
+{ return (long long)a - b; }
+
+inline
+sampleCount operator - (long long a, sampleCount b)
+{ return a - (long long)b; }
+
+inline
+sampleCount operator - (sampleCount a, unsigned b)
+{ return (long long)a - b; }
+
+inline
+sampleCount operator - (unsigned a, sampleCount b)
+{ return a - (long long)b; }
+
+
+
+inline
+sampleCount operator * (sampleCount a, sampleCount b)
+{ return (long long)a * (long long)b; }
+
+inline
+sampleCount operator * (sampleCount a, int b)
+{ return (long long)a * b; }
+
+inline
+sampleCount operator * (int a, sampleCount b)
+{ return a * (long long)b; }
+
+inline
+sampleCount operator * (sampleCount a, unsigned b)
+{ return (long long)a * b; }
+
+inline
+sampleCount operator * (unsigned a, sampleCount b)
+{ return a * (long long)b; }
+
+inline
+sampleCount operator * (sampleCount a, long b)
+{ return (long long)a * b; }
+
+inline
+sampleCount operator * (long a, sampleCount b)
+{ return a * (long long)b; }
+
+inline
+sampleCount operator * (sampleCount a, unsigned long b)
+{ return (long long)a * b; }
+
+inline
+sampleCount operator * (unsigned long a, sampleCount b)
+{ return a * (long long)b; }
+
+inline
+sampleCount operator * (sampleCount a, long long b)
+{ return (long long)a * b; }
+
+inline
+sampleCount operator * (long long a, sampleCount b)
+{ return a * (long long)b; }
+
+
+
+inline
+sampleCount operator / (sampleCount a, sampleCount b)
+{ return (long long)a / (long long)b; }
+
+inline
+sampleCount operator / (sampleCount a, int b)
+{ return (long long)a / b; }
+
+inline
+sampleCount operator / (sampleCount a, size_t b)
+{ return (long long)a / b; }
+
+inline
+double operator / (sampleCount a, double b)
+{ return (long long)a / b; }
+
+inline
+float operator / (float a, sampleCount b)
+{ return a / (long long)b; }
+
+inline
+double operator / (double a, sampleCount b)
+{ return a / (long long)b; }
+
+
+
+inline
+double operator + (sampleCount a, double b)
+{ return (long long)a + b; }
+
+inline
+double operator + (double a, sampleCount b)
+{ return a + (long long)b; }
+
+inline
+double operator - (sampleCount a, double b)
+{ return (long long)a - b; }
+
+inline
+double operator - (double a, sampleCount b)
+{ return a - (long long)b; }
+
+inline
+double operator * (sampleCount a, double b)
+{ return (long long)a * b; }
+
+inline
+double operator * (double a, sampleCount b)
+{ return a * (long long)b; }
+
+
+inline
+float operator - (float a, sampleCount b)
+{ return a - (long long)b; }
+
+inline
+float operator * (float a, sampleCount b)
+{ return a * (long long)b; }
+
+inline
+float operator * (sampleCount a, float b)
+{ return (long long)a * b; }
 
 // ----------------------------------------------------------------------------
 // Function returning the minimum of a sampleCount and a size_t,

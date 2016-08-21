@@ -1094,7 +1094,8 @@ bool Sequence::Read(samplePtr buffer, sampleFormat format,
 
    if (result != len)
    {
-      wxLogWarning(wxT("Expected to read %ld samples, got %d samples."), len, result);
+      wxLogWarning(wxT("Expected to read %ld samples, got %d samples."),
+                   (long long)len, result);
       if (result < 0)
          result = 0;
       ClearSamples(buffer, format, result, len-result);
