@@ -1197,7 +1197,7 @@ bool AudacityApp::OnInit()
 
    wxTheApp->SetAppName(appName);
    // Explicitly set since OSX will use it for the "Quit" menu item
-   wxTheApp->SetAppDisplayName(wxT("Dark Audacity"));
+   wxTheApp->SetAppDisplayName(wxT("DarkAudacity"));
    wxTheApp->SetVendorName(wxT("Audacity"));
 
    // Unused strings that we want to be translated, even though
@@ -1443,7 +1443,7 @@ bool AudacityApp::OnInit()
       fileMenu->Append(wxID_NEW, wxString(_("&New")) + wxT("\tCtrl+N"));
       fileMenu->Append(wxID_OPEN, wxString(_("&Open...")) + wxT("\tCtrl+O"));
       fileMenu->AppendSubMenu(urecentMenu.release(), _("Open &Recent..."));
-      fileMenu->Append(wxID_ABOUT, _("&About Audacity..."));
+      fileMenu->Append(wxID_ABOUT, _("&About DarkAudacity..."));
       fileMenu->Append(wxID_PREFERENCES, wxString(_("&Preferences...")) + wxT("\tCtrl+,"));
 
       {

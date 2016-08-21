@@ -233,7 +233,7 @@ AboutDialog *AboutDialog::ActiveIntance()
 }
 
 AboutDialog::AboutDialog(wxWindow * parent)
-   :  wxDialogWrapper(parent, -1, _("About Dark Audacity"),
+   :  wxDialogWrapper(parent, -1, _("About DarkAudacity"),
                wxDefaultPosition, wxDefaultSize,
                wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {
@@ -300,14 +300,14 @@ visit our <a href=\"http://forum.audacityteam.org/\">forum</a>.");
          localeStr +
          wxT("\"></head>") +
       wxT("<body bgcolor=\"#ffffff\"><center>") +
-      wxT("<h3>Dark Audacity ") + wxString(AUDACITY_VERSION_STRING) + wxT("</center></h3>") +
-      _("Customised version of Audacity, the free, open source, cross-platform software " ) +
+      wxT("<h3>DarkAudacity ") + wxString(AUDACITY_VERSION_STRING) + wxT("</center></h3>") +
+      _("Customised version of the Audacity free, open source, cross-platform software " ) +
       _("for recording and editing sounds.") +
       //wxT("<p><br>") + par1Str +
       //wxT("<p>") + par2Str +
       wxT("<h3>") + _("Credits") + wxT("</h3>") + wxT("<p>") +
 
-      wxT("<p><b>") + wxString::Format(_("Dark Audacity Customisation")) + wxT("</b><br>") +
+      wxT("<p><b>") + wxString::Format(_("DarkAudacity Customisation")) + wxT("</b><br>") +
       wxT("James Crook, art, coding &amp; design<br>") +
 
       wxT("<p><b>") + wxString::Format(_("Audacity Team Members")) + wxT("</b><br>") +
@@ -332,7 +332,7 @@ visit our <a href=\"http://forum.audacityteam.org/\">forum</a>.");
       GetCreditsByRole(roleThanks) +
 
       wxT("<p><br>Audacity website: <a href=\"http://www.audacityteam.org/\">http://www.audacityteam.org/</a>") +
-      wxT("<br>Dark Audacity website: <a href=\"http://www.darkaudacity.com/\">http://www.darkaudacity.com/</a>") +
+      wxT("<br>DarkAudacity website: <a href=\"http://www.darkaudacity.com/\">http://www.darkaudacity.com/</a>") +
       wxT("<p><br>") + _("<b>Audacity&reg;</b> software is copyright")+
       wxT("&copy; 1999-2016 Audacity Team.<br>") +
       _("The name <b>Audacity&reg;</b> is a registered trademark of Dominic Mazzoni.") +
@@ -343,7 +343,7 @@ visit our <a href=\"http://forum.audacityteam.org/\">forum</a>.");
 
 
    // New way to add to About box....
-   S.StartNotebookPage( wxT("Audacity") );
+   S.StartNotebookPage( wxT("DarkAudacity") );
    S.StartVerticalLay(1);
 
    {

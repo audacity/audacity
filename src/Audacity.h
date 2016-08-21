@@ -27,7 +27,7 @@
 // We only do alpha builds and release versions.
 // Most of the time we're in development, so IS_ALPHA should be defined
 // to 1.
-#define IS_ALPHA 1
+#define IS_ALPHA 0
 
 // Increment as appropriate every time we release a NEW version.
 #define AUDACITY_VERSION   2
@@ -38,7 +38,8 @@
 #if IS_ALPHA
    #define AUDACITY_SUFFIX wxT("-alpha-") __TDATE__
 #else
-   #define AUDACITY_SUFFIX    wxT("") // for a stable release
+   //#define AUDACITY_SUFFIX    wxT("") // for a stable release
+   #define AUDACITY_SUFFIX wxT("x  ") __TDATE__
 #endif
 
 #define AUDACITY_MAKESTR( x ) #x
@@ -54,7 +55,7 @@
 #define AUDACITY_FILE_VERSION AUDACITY_QUOTE( AUDACITY_VERSION ) "," \
                               AUDACITY_QUOTE( AUDACITY_RELEASE ) "," \
                               AUDACITY_QUOTE( AUDACITY_REVISION ) "," \
-                              AUDACITY_QUOTE( AUDACITY_MODLEVEL )
+                              AUDACITY_QUOTE( AUDACITY_MODLEVEL ) " x"
 
 // Increment this every time the prefs need to be reset
 // the first part (before the r) indicates the version the reset took place

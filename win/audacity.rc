@@ -29,7 +29,7 @@ BEGIN
             VALUE "LegalCopyright", "Copyright © 2016. All rights reserved."
             VALUE "LegalTrademarks", "Audacity® is a registered trademark of Dominic Mazzoni."
             VALUE "OriginalFilename", "DarkAudacity.exe"
-            VALUE "ProductName", "DarkAudacity®"
+            VALUE "ProductName", "DarkAudacity"
             VALUE "ProductVersion", AUDACITY_FILE_VERSION
         END
     END

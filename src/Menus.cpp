@@ -1125,7 +1125,7 @@ void AudacityProject::CreateMenusAndCommands()
 #endif
 
       c->AddItem(wxT("Updates"), _("&Check for Updates..."), FN(OnCheckForUpdates));
-      c->AddItem(wxT("About"), _("&About Audacity..."), FN(OnAbout));
+      c->AddItem(wxT("About"), _("&About DarkAudacity..."), FN(OnAbout));
 
       c->EndMenu();
 
