@@ -1295,11 +1295,13 @@ bool EffectNoiseReduction::Worker::ProcessOne
    FloatVector buffer(bufferSize);
 
    bool bLoopSuccess = true;
-   sampleCount blockSize;
    sampleCount samplePos = start;
    while (bLoopSuccess && samplePos < start + len) {
       //Get a blockSize of samples (smaller than the size of the buffer)
-      blockSize = std::min(start + len - samplePos, track->GetBestBlockSize(samplePos));
+      const auto blockSize = limitSampleBufferSize(
+         track->GetBestBlockSize(samplePos),
+         start + len - samplePos
+      );
 
       //Get the samples from the track and put them in the buffer
       track->Get((samplePtr)&buffer[0], floatSample, samplePos, blockSize);

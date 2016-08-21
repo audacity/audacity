@@ -487,12 +487,11 @@ int FLACImportFileHandle::Import(TrackFactory *trackFactory,
    //add the task to the ODManager
    if(useOD)
    {
-      sampleCount fileTotalFrames = mNumSamples;
+      sampleCount fileTotalFrames = (sampleCount)mNumSamples;
       sampleCount maxBlockSize = mChannels.begin()->get()->GetMaxBlockSize();
       for (sampleCount i = 0; i < fileTotalFrames; i += maxBlockSize) {
-         sampleCount blockLen = maxBlockSize;
-         if (i + blockLen > fileTotalFrames)
-            blockLen = fileTotalFrames - i;
+         const auto blockLen =
+            limitSampleBufferSize( maxBlockSize, fileTotalFrames - i );
 
          auto iter = mChannels.begin();
          for (int c = 0; c < mNumChannels; ++c, ++iter)

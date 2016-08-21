@@ -1546,7 +1546,7 @@ bool Effect::ProcessTrack(int count,
    sampleCount curBlockSize = 0;
    sampleCount curDelay = 0;
 
-   sampleCount inputBufferCnt = 0;
+   size_t inputBufferCnt = 0;
    sampleCount outputBufferCnt = 0;
    bool cleared = false;
 
@@ -1589,11 +1589,8 @@ bool Effect::ProcessTrack(int count,
          if (inputBufferCnt == 0)
          {
             // Calculate the number of samples to get
-            inputBufferCnt = mBufferSize;
-            if (inputBufferCnt > inputRemaining)
-            {
-               inputBufferCnt = inputRemaining;
-            }
+            inputBufferCnt =
+               limitSampleBufferSize( mBufferSize, inputRemaining );
 
             // Fill the input buffers
             left->Get((samplePtr) mInBuffer[0], floatSample, inLeftPos, inputBufferCnt);

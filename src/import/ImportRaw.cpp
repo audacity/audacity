@@ -105,7 +105,7 @@ void ImportRaw(wxWindow *parent, const wxString &fileName,
    double percent = 100.0;
    TrackHolders channels;
    int updateResult = eProgressSuccess;
-   long block;
+
    {
       SF_INFO sndInfo;
       int result;
@@ -224,6 +224,10 @@ void ImportRaw(wxWindow *parent, const wxString &fileName,
       SampleBuffer buffer(maxBlockSize, format);
 
       sampleCount framescompleted = 0;
+      if (totalFrames < 0) {
+         wxASSERT(false);
+         totalFrames = 0;
+      }
 
       wxString msg;
 
@@ -232,27 +236,38 @@ void ImportRaw(wxWindow *parent, const wxString &fileName,
       /* i18n-hint: 'Raw' means 'unprocessed' here and should usually be tanslated.*/
       ProgressDialog progress(_("Import Raw"), msg);
 
+      size_t block;
       do {
-         block = maxBlockSize;
+         block =
+            limitSampleBufferSize( maxBlockSize, totalFrames - framescompleted );
 
-         if (block + framescompleted > totalFrames)
-            block = totalFrames - framescompleted;
-
+         sf_count_t result;
          if (format == int16Sample)
-            block = SFCall<sf_count_t>(sf_readf_short, sndFile.get(), (short *)srcbuffer.ptr(), block);
+            result = SFCall<sf_count_t>(sf_readf_short, sndFile.get(), (short *)srcbuffer.ptr(), block);
          else
-            block = SFCall<sf_count_t>(sf_readf_float, sndFile.get(), (float *)srcbuffer.ptr(), block);
+            result = SFCall<sf_count_t>(sf_readf_float, sndFile.get(), (float *)srcbuffer.ptr(), block);
+
+         if (result >= 0) {
+            block = result;
+         }
+         else {
+            // This is not supposed to happen, sndfile.h says result is always
+            // a count, not an invalid value for error
+            wxASSERT(false);
+            updateResult = eProgressFailed;
+            break;
+         }
 
          if (block) {
             auto iter = channels.begin();
             for(int c=0; c<numChannels; ++iter, ++c) {
                if (format==int16Sample) {
-                  for(int j=0; j<block; j++)
+                  for(decltype(block) j=0; j<block; j++)
                      ((short *)buffer.ptr())[j] =
                      ((short *)srcbuffer.ptr())[numChannels*j+c];
                }
                else {
-                  for(int j=0; j<block; j++)
+                  for(decltype(block) j=0; j<block; j++)
                      ((float *)buffer.ptr())[j] =
                      ((float *)srcbuffer.ptr())[numChannels*j+c];
                }
@@ -270,11 +285,7 @@ void ImportRaw(wxWindow *parent, const wxString &fileName,
       } while (block > 0 && framescompleted < totalFrames);
    }
 
-   int res = updateResult;
-   if (block < 0)
-     res = eProgressFailed;
-
-   if (res == eProgressFailed || res == eProgressCancelled) {
+   if (updateResult == eProgressFailed || updateResult == eProgressCancelled) {
       // It's a shame we can't return proper error code
       return;
    }

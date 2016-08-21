@@ -388,10 +388,8 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
       int updateCounter = 0;
 
       for (sampleCount i = 0; i < fileTotalFrames; i += maxBlockSize) {
-
-         sampleCount blockLen = maxBlockSize;
-         if (i + blockLen > fileTotalFrames)
-            blockLen = fileTotalFrames - i;
+         const auto blockLen =
+            limitSampleBufferSize( maxBlockSize, fileTotalFrames - i );
 
          auto iter = channels.begin();
          for (int c = 0; c < mInfo.channels; ++iter, ++c)

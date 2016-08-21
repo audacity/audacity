@@ -448,9 +448,10 @@ sampleCount Mixer::MixVariableRates(int *channelFlags, WaveTrackCache &cache,
          memmove(queue, &queue[*queueStart], (*queueLen) * sampleSize);
          *queueStart = 0;
 
-         int getLen =
-            std::min((backwards ? *pos - endPos : endPos - *pos),
-                      sampleCount(mQueueMaxLen - *queueLen));
+         const auto getLen = limitSampleBufferSize(
+            mQueueMaxLen - *queueLen,
+            backwards ? *pos - endPos : endPos - *pos
+         );
 
          // Nothing to do if past end of play interval
          if (getLen > 0) {
@@ -475,7 +476,7 @@ sampleCount Mixer::MixVariableRates(int *channelFlags, WaveTrackCache &cache,
                *pos += getLen;
             }
 
-            for (int i = 0; i < getLen; i++) {
+            for (decltype(+getLen) i = 0; i < getLen; i++) {
                queue[(*queueLen) + i] *= mEnvValues[i];
             }
 

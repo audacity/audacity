@@ -167,7 +167,7 @@ bool EffectFindClipping::ProcessOne(LabelTrack * lt,
    sampleCount startrun = 0;
    sampleCount stoprun = 0;
    sampleCount samps = 0;
-   sampleCount block = 0;
+   size_t block = 0;
    double startTime = -1.0;
 
    while (s < len) {
@@ -177,7 +177,7 @@ bool EffectFindClipping::ProcessOne(LabelTrack * lt,
             break;
          }
 
-         block = s + blockSize > len ? len - s : blockSize;
+         block = limitSampleBufferSize( blockSize, len - s );
 
          wt->Get((samplePtr)buffer, floatSample, start + s, block);
          ptr = buffer;

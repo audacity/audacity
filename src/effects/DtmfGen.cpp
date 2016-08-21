@@ -194,7 +194,7 @@ sampleCount EffectDtmf::ProcessBlock(float **WXUNUSED(inbuf), float **outbuf, sa
          numRemaining += (diff-- > 0 ? 1 : 0);         
       }
 
-      sampleCount len = wxMin(numRemaining, size);
+      const auto len = limitSampleBufferSize( size, numRemaining );
 
       if (isTone)
       {

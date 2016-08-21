@@ -1740,9 +1740,9 @@ int NyquistEffect::GetCallback(float *buffer, int ch,
          mCurBufferLen[ch] = mCurTrack[ch]->GetIdealBlockSize();
       }
 
-      if (mCurBufferStart[ch] + mCurBufferLen[ch] > mCurStart[ch] + mCurLen) {
-         mCurBufferLen[ch] = mCurStart[ch] + mCurLen - mCurBufferStart[ch];
-      }
+      mCurBufferLen[ch] =
+         limitSampleBufferSize( mCurBufferLen[ch],
+                                mCurStart[ch] + mCurLen - mCurBufferStart[ch] );
 
       mCurBuffer[ch].Allocate(mCurBufferLen[ch], floatSample);
       if (!mCurTrack[ch]->Get(mCurBuffer[ch].ptr(), floatSample,

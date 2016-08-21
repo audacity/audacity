@@ -606,9 +606,8 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
             sampleCount maxBlockSize = t->GetMaxBlockSize();
             //use the maximum blockfile size to divide the sections (about 11secs per blockfile at 44.1khz)
             for (sampleCount i = 0; i < sampleDuration; i += maxBlockSize) {
-               sampleCount blockLen = maxBlockSize;
-               if (i + blockLen > sampleDuration)
-                  blockLen = sampleDuration - i;
+               const auto blockLen =
+                  limitSampleBufferSize( maxBlockSize, sampleDuration - i );
 
                t->AppendCoded(mFilename, i, blockLen, c, ODTask::eODFFMPEG);
 

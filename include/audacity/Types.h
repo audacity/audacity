@@ -61,6 +61,18 @@ typedef long long sampleCount;
 #endif
 
 // ----------------------------------------------------------------------------
+// Function returning the minimum of a sampleCount and a size_t,
+// hiding the casts
+// ----------------------------------------------------------------------------
+
+inline size_t limitSampleBufferSize( size_t bufferSize, sampleCount limit )
+{
+   return static_cast<size_t> (
+      std::min( sampleCount( bufferSize ), std::max( sampleCount(0), limit ) )
+   );
+}
+
+// ----------------------------------------------------------------------------
 // Supported sample formats
 // ----------------------------------------------------------------------------
 typedef enum

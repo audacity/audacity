@@ -576,15 +576,14 @@ bool EffectNoiseRemoval::ProcessOne(int count, WaveTrack * track,
    float *buffer = new float[bufferSize];
 
    bool bLoopSuccess = true;
-   sampleCount blockSize;
    sampleCount samplePos = start;
    while (samplePos < start + len) {
       //Get a blockSize of samples (smaller than the size of the buffer)
-      blockSize = track->GetBestBlockSize(samplePos);
-
       //Adjust the block size if it is the final block in the track
-      if (samplePos + blockSize > start + len)
-         blockSize = start + len - samplePos;
+      const auto blockSize = limitSampleBufferSize(
+         track->GetBestBlockSize(samplePos),
+         start + len - samplePos
+      );
 
       //Get the samples from the track and put them in the buffer
       track->Get((samplePtr)buffer, floatSample, samplePos, blockSize);

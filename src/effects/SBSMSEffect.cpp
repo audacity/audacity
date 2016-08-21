@@ -98,18 +98,17 @@ long resampleCB(void *cb_data, SBSMSFrame *data)
 {
    ResampleBuf *r = (ResampleBuf*) cb_data;
 
-   long blockSize = r->leftTrack->GetBestBlockSize(r->offset);
-
-   //Adjust the block size if it is the final block in the track
-   if (r->offset + blockSize > r->end)
-      blockSize = r->end - r->offset;
+   const auto blockSize = limitSampleBufferSize(
+      r->leftTrack->GetBestBlockSize(r->offset),
+      r->end - r->offset
+   );
 
    // Get the samples from the tracks and put them in the buffers.
    r->leftTrack->Get((samplePtr)(r->leftBuffer), floatSample, r->offset, blockSize);
    r->rightTrack->Get((samplePtr)(r->rightBuffer), floatSample, r->offset, blockSize);
 
    // convert to sbsms audio format
-   for(int i=0; i<blockSize; i++) {
+   for(decltype(+blockSize) i=0; i<blockSize; i++) {
       r->buf[i][0] = r->leftBuffer[i];
       r->buf[i][1] = r->rightBuffer[i];
    }
@@ -376,12 +375,9 @@ bool EffectSBSMS::Process()
 
             // process
             while(pos<samplesOut && outputCount) {
-               long frames;
-               if(pos+SBSMSOutBlockSize>samplesOut) {
-                  frames = samplesOut - pos;
-               } else {
-                  frames = SBSMSOutBlockSize;
-               }
+               const auto frames =
+                  limitSampleBufferSize( SBSMSOutBlockSize, samplesOut - pos );
+
                outputCount = resampler.read(outBuf,frames);
                for(int i = 0; i < outputCount; i++) {
                   outBufLeft[i] = outBuf[i][0];

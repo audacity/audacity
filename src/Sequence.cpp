@@ -239,7 +239,7 @@ bool Sequence::GetMinMax(sampleCount start, sampleCount len,
    unsigned int block0 = FindBlock(start);
    unsigned int block1 = FindBlock(start + len - 1);
 
-   sampleCount s0, l0, maxl0;
+   sampleCount s0;
 
    // First calculate the min/max of the blocks in the middle of this region;
    // this is very fast because we have the min/max of every entire block
@@ -267,11 +267,9 @@ bool Sequence::GetMinMax(sampleCount start, sampleCount len,
 
       if (block0Min < min || block0Max > max) {
          s0 = start - theBlock.start;
-         l0 = len;
-         maxl0 = theBlock.start + theFile->GetLength() - start;
+         const auto maxl0 = theBlock.start + theFile->GetLength() - start;
          wxASSERT(maxl0 <= mMaxSamples); // Vaughan, 2011-10-19
-         if (l0 > maxl0)
-            l0 = maxl0;
+         const auto l0 = limitSampleBufferSize ( maxl0, len );
 
          float partialMin, partialMax, partialRMS;
          theFile->GetMinMax(s0, l0,
@@ -293,7 +291,7 @@ bool Sequence::GetMinMax(sampleCount start, sampleCount len,
       if (block1Min < min || block1Max > max) {
 
          s0 = 0;
-         l0 = (start + len) - theBlock.start;
+         const auto l0 = (start + len) - theBlock.start;
          wxASSERT(l0 <= mMaxSamples); // Vaughan, 2011-10-19
 
          float partialMin, partialMax, partialRMS;
@@ -328,7 +326,7 @@ bool Sequence::GetRMS(sampleCount start, sampleCount len,
    unsigned int block0 = FindBlock(start);
    unsigned int block1 = FindBlock(start + len - 1);
 
-   sampleCount s0, l0, maxl0;
+   sampleCount s0;
 
    // First calculate the rms of the blocks in the middle of this region;
    // this is very fast because we have the rms of every entire block
@@ -351,11 +349,9 @@ bool Sequence::GetRMS(sampleCount start, sampleCount len,
       const SeqBlock &theBlock = mBlock[block0];
       const auto &theFile = theBlock.f;
       s0 = start - theBlock.start;
-      l0 = len;
-      maxl0 = theBlock.start + theFile->GetLength() - start;
+      const auto maxl0 = theBlock.start + theFile->GetLength() - start;
       wxASSERT(maxl0 <= mMaxSamples); // Vaughan, 2011-10-19
-      if (l0 > maxl0)
-         l0 = maxl0;
+      const auto l0 = limitSampleBufferSize( maxl0, len );
 
       float partialMin, partialMax, partialRMS;
       theFile->GetMinMax(s0, l0, &partialMin, &partialMax, &partialRMS);
@@ -369,7 +365,7 @@ bool Sequence::GetRMS(sampleCount start, sampleCount len,
       const auto &theFile = theBlock.f;
 
       s0 = 0;
-      l0 = (start + len) - theBlock.start;
+      const auto l0 = (start + len) - theBlock.start;
       wxASSERT(l0 <= mMaxSamples); // PRL: I think Vaughan missed this
 
       float partialMin, partialMax, partialRMS;
@@ -1181,7 +1177,8 @@ bool Sequence::Set(samplePtr buffer, sampleFormat format,
 
    SampleBuffer temp;
    if (buffer && format != mSampleFormat) {
-      temp.Allocate(std::min(len, mMaxSamples), mSampleFormat);
+      const auto size = limitSampleBufferSize( mMaxSamples, len );
+      temp.Allocate(size, mSampleFormat);
    }
 
    int b = FindBlock(start);
@@ -1190,8 +1187,7 @@ bool Sequence::Set(samplePtr buffer, sampleFormat format,
       SeqBlock &block = mBlock[b];
       const sampleCount bstart = start - block.start;
       const sampleCount fileLength = block.f->GetLength();
-      const int blen =
-         std::min(len, fileLength - bstart);
+      const auto blen = limitSampleBufferSize( fileLength - bstart, len );
 
       if (buffer) {
          if (format == mSampleFormat)
