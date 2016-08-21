@@ -133,12 +133,12 @@ long resampleCB(void *cb_data, SBSMSFrame *data)
 long postResampleCB(void *cb_data, SBSMSFrame *data)
 {
    ResampleBuf *r = (ResampleBuf*) cb_data;
-   long sampleCount = r->sbsms->read(r->iface.get(), r->SBSMSBuf, r->SBSMSBlockSize);
+   auto count = r->sbsms->read(r->iface.get(), r->SBSMSBuf, r->SBSMSBlockSize);
    data->buf = r->SBSMSBuf;
-   data->size = sampleCount;
+   data->size = count;
    data->ratio0 = 1.0 / r->ratio;
    data->ratio1 = 1.0 / r->ratio;
-   return sampleCount;
+   return count;
 }
 
 void EffectSBSMS :: setParameters(double rateStart, double rateEnd, double pitchStart, double pitchEnd,
