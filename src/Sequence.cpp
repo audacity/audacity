@@ -1051,16 +1051,15 @@ int Sequence::FindBlock(sampleCount pos) const
 
    int numBlocks = mBlock.size();
 
-   sampleCount lo = 0, loSamples = 0;
-   sampleCount hi = numBlocks, hiSamples = mNumSamples;
-   sampleCount guess;
+   size_t lo = 0, hi = numBlocks, guess;
+   sampleCount loSamples = 0, hiSamples = mNumSamples;
 
    while (true) {
       //this is not a binary search, but a
       //dictionary search where we guess something smarter than the binary division
       //of the unsearched area, since samples are usually proportional to block file number.
       const double frac = double(pos - loSamples) / (hiSamples - loSamples);
-      guess = std::min(hi - 1, lo + sampleCount(frac * (hi - lo)));
+      guess = std::min(hi - 1, lo + size_t(frac * (hi - lo)));
       const SeqBlock &block = mBlock[guess];
 
       wxASSERT(block.f->GetLength() > 0);

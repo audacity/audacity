@@ -123,7 +123,7 @@ public:
    virtual int GetMidiInCount() = 0;
    virtual int GetMidiOutCount() = 0;
 
-   virtual void SetSampleRate(sampleCount rate) = 0;
+   virtual void SetSampleRate(double rate) = 0;
    virtual sampleCount SetBlockSize(sampleCount maxBlockSize) = 0;
 
    virtual sampleCount GetLatency() = 0;

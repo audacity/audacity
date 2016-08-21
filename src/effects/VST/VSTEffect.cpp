@@ -1085,14 +1085,12 @@ VSTEffect::VSTEffect(const wxString & path, VSTEffect *master)
    mMidiIns = 0;
    mMidiOuts = 0;
    mSampleRate = 44100;
-   mBlockSize = 0;
+   mBlockSize = mUserBlockSize = 8192;
    mBufferDelay = 0;
    mProcessLevel = 1;         // in GUI thread
    mHasPower = false;
    mWantsIdle = false;
    mWantsEditIdle = false;
-   mUserBlockSize = 8192;
-   mBlockSize = mUserBlockSize;
    mUseLatency = true;
    mReady = false;
 
@@ -1330,19 +1328,11 @@ int VSTEffect::GetMidiOutCount()
 
 sampleCount VSTEffect::SetBlockSize(sampleCount maxBlockSize)
 {
-   if (mUserBlockSize > maxBlockSize)
-   {
-      mBlockSize = maxBlockSize;
-   }
-   else
-   {
-      mBlockSize = mUserBlockSize;
-   }
-
+   mBlockSize = std::min((int)maxBlockSize, mUserBlockSize);
    return mBlockSize;
 }
 
-void VSTEffect::SetSampleRate(sampleCount rate)
+void VSTEffect::SetSampleRate(double rate)
 {
    mSampleRate = (float) rate;
 }
