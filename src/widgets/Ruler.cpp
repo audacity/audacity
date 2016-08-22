@@ -2346,12 +2346,15 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
       mProject->GetScrubber().CanScrub() &&
       mShowScrubbing &&
       mScrubZone.Contains(position);
+   const bool inQPZone = 
+      (!inScrubZone) && mInner.Contains(position);
+
    const StatusChoice zone =
       evt.Leaving()
       ? StatusChoice::Leaving
       : inScrubZone
         ? StatusChoice::EnteringScrubZone
-        : mInner.Contains(position)
+        : inQPZone
           ? StatusChoice::EnteringQP
           : StatusChoice::NoChange;
    const bool changeInZone = (zone != mPrevZone);
@@ -2498,9 +2501,11 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
       }
 
       if (evt.LeftDown()) {
-         HandleQPClick(evt, mousePosX);
-         HandleQPDrag(evt, mousePosX);
-         ShowQuickPlayIndicator();
+         if( inQPZone ){
+            HandleQPClick(evt, mousePosX);
+            HandleQPDrag(evt, mousePosX);
+            ShowQuickPlayIndicator();
+         }
       }
       else if (evt.LeftIsDown() && HasCapture()) {
          HandleQPDrag(evt, mousePosX);
@@ -2510,7 +2515,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
          HandleQPRelease(evt);
          ShowQuickPlayIndicator();
       }
-      else // if (!inScrubZone)
+      else // if (!inScrubZone) 
          ShowQuickPlayIndicator();
    }
 }
