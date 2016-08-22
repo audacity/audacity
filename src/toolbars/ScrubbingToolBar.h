@@ -30,7 +30,7 @@ class AButton;
 enum {
    STBScrubID,
    STBSeekID,
-   STBBarID,
+   STBRulerID,
 
    STBNumButtons,
    STBFirstButton = STBScrubID

@@ -329,9 +329,9 @@ public:
    void HideQuickPlayIndicator( bool repaint_all=false);
    void UpdateQuickPlayPos(wxCoord &mousPosX);
 
-   bool ShowingScrubBar() const { return mShowScrubbing; }
-   void OnToggleScrubBar(/*wxCommandEvent& */);
-   void OnToggleScrubBarFromMenu(wxCommandEvent& );
+   bool ShowingScrubRuler() const { return mShowScrubbing; }
+   void OnToggleScrubRuler(/*wxCommandEvent& */);
+   void OnToggleScrubRulerFromMenu(wxCommandEvent& );
    void SetPanelSize();
 
 

@@ -242,9 +242,9 @@ namespace {
          &Scrubber::OnSeek,        true,       &Scrubber::Seeks,
       },
 
-      { wxT("ToggleScrubBar"),            XO("Scrub Bar"),   XO(""),
+      { wxT("ToggleScrubRuler"),            XO("Scrub Ruler"),   XO(""),
          AlwaysEnabledFlag,
-         &Scrubber::OnToggleScrubBar, true,    &Scrubber::ShowsBar,
+         &Scrubber::OnToggleScrubRuler, true,    &Scrubber::ShowsBar,
       },
    };
 
@@ -556,7 +556,7 @@ void Scrubber::StopScrubbing()
 
 bool Scrubber::ShowsBar() const
 {
-   return mProject->GetRulerPanel()->ShowingScrubBar();
+   return mProject->GetRulerPanel()->ShowingScrubRuler();
 }
 
 bool Scrubber::IsScrubbing() const
@@ -915,9 +915,9 @@ void Scrubber::OnSeek(wxCommandEvent&)
    CheckMenuItems();
 }
 
-void Scrubber::OnToggleScrubBar(wxCommandEvent&)
+void Scrubber::OnToggleScrubRuler(wxCommandEvent&)
 {
-   mProject->GetRulerPanel()->OnToggleScrubBar();
+   mProject->GetRulerPanel()->OnToggleScrubRuler();
    const auto toolbar = mProject->GetToolManager()->GetToolBar(ScrubbingBarID);
    toolbar->EnableDisableButtons();
    CheckMenuItems();
@@ -928,7 +928,7 @@ enum { CMD_ID = 8000 };
 BEGIN_EVENT_TABLE(Scrubber, wxEvtHandler)
    EVT_MENU(CMD_ID,     Scrubber::OnScrub)
    EVT_MENU(CMD_ID + 1, Scrubber::OnSeek)
-   EVT_MENU(CMD_ID + 2, Scrubber::OnToggleScrubBar)
+   EVT_MENU(CMD_ID + 2, Scrubber::OnToggleScrubRuler)
 END_EVENT_TABLE()
 
 BEGIN_EVENT_TABLE(Scrubber::Forwarder, wxEvtHandler)

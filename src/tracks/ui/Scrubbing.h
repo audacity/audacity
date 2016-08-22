@@ -124,7 +124,7 @@ public:
    void OnScrubOrSeek(bool seek);
    void OnScrub(wxCommandEvent&);
    void OnSeek(wxCommandEvent&);
-   void OnToggleScrubBar(wxCommandEvent&);
+   void OnToggleScrubRuler(wxCommandEvent&);
 
    // A string to put in the leftmost part of the status bar
    // when scrub or seek is in progress, or else empty.
