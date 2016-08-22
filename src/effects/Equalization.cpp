@@ -1084,7 +1084,7 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
    int wcopy = 0;
    int offset = (mM - 1)/2;
 
-   while(len)
+   while (len != 0)
    {
       sampleCount block = idealBlockLen;
       if (block > len)

@@ -496,7 +496,7 @@ bool VampEffect::Process()
       sampleCount ls = lstart;
       sampleCount rs = rstart;
 
-      while (len)
+      while (len != 0)
       {
          int request = block;
          if (request > len) request = len;
