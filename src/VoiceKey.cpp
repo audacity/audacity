@@ -181,6 +181,7 @@ sampleCount VoiceKey::OnForward (WaveTrack & t, sampleCount start, sampleCount l
 
 
          //Now, go through the sound again, sample by sample.
+         wxASSERT(WindowSizeInt < SignalWindowSizeInt);
          size_t i;
          for(i = 0; i < SignalWindowSizeInt - WindowSizeInt; i++) {
 
