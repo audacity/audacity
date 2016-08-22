@@ -314,7 +314,8 @@ sampleCount VoiceKey::OnBackward (WaveTrack & t, sampleCount end, sampleCount le
          //Initialize these trend markers atrend and ztrend.  They keep track of the
          //up/down trends at the start and end of the evaluation window.
          int atrend = sgn(buffer[remaining - 2]-buffer[remaining - 1]);
-         int ztrend = sgn(buffer[remaining - WindowSizeInt-2]-buffer[remaining - WindowSizeInt-2]);
+         int ztrend = sgn(buffer[remaining - WindowSizeInt - 2] -
+                          buffer[remaining - WindowSizeInt - 2]);
 
          double erg=0;
          double sc = 0;
