@@ -233,12 +233,12 @@ namespace {
          "Seeking" is normal speed playback but with skips, ...
        */
       { wxT("Scrub"),       XO("&Scrub"),           XO("Scrubbing"),
-         CaptureNotBusyFlag,
+         CaptureNotBusyFlag | HasWaveDataFlag,
          &Scrubber::OnScrub,       false,      &Scrubber::Scrubs,
       },
 
       { wxT("Seek"),        XO("See&k"),            XO("Seeking"),
-         CaptureNotBusyFlag,
+         CaptureNotBusyFlag | HasWaveDataFlag,
          &Scrubber::OnSeek,        true,       &Scrubber::Seeks,
       },
 
@@ -859,6 +859,8 @@ Scrubber &ScrubbingOverlay::GetScrubber()
 
 void Scrubber::DoScrub(bool seek)
 {
+   if( !CanScrub() )
+      return;
    const bool wasScrubbing = HasStartedScrubbing() || IsScrubbing();
    const bool scroll = TracksPrefs::GetPinnedHeadPreference();
    if (!wasScrubbing) {

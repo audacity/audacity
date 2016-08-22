@@ -1736,6 +1736,8 @@ CommandFlag AudacityProject::GetUpdateFlags()
                flags |= WaveTracksSelectedFlag;
             }
          }
+         if( t->GetEndTime() > t->GetStartTime() )
+            flags |= HasWaveDataFlag; 
       }
 #if defined(USE_MIDI)
       else if (t->GetKind() == Track::Note) {
