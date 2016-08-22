@@ -1545,7 +1545,7 @@ sampleCount VSTEffect::RealtimeProcess(int group, float **inbuf, float **outbuf,
          mMasterIn[c][s] += inbuf[c][s];
       }
    }
-   mNumSamples = wxMax(numSamples, mNumSamples);
+   mNumSamples = std::max(numSamples, mNumSamples);
 
    return mSlaves[group]->ProcessBlock(inbuf, outbuf, numSamples);
 }

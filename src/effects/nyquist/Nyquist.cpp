@@ -641,7 +641,7 @@ _("Selection too long for Nyquist code.\nMaximum allowed selection is %ld sample
             return false;
          }
 
-         if (mCurLen > mMaxLen) mCurLen = mMaxLen;
+         mCurLen = std::min(mCurLen, mMaxLen);
 
          mProgressIn = 0.0;
          mProgressOut = 0.0;

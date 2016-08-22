@@ -1628,11 +1628,10 @@ sampleCount WaveTrack::GetBestBlockSize(sampleCount s) const
 
 sampleCount WaveTrack::GetMaxBlockSize() const
 {
-   int maxblocksize = 0;
+   decltype(GetMaxBlockSize()) maxblocksize = 0;
    for (const auto &clip : mClips)
    {
-      if (clip->GetSequence()->GetMaxBlockSize() > maxblocksize)
-         maxblocksize = clip->GetSequence()->GetMaxBlockSize();
+      maxblocksize = std::max(maxblocksize, clip->GetSequence()->GetMaxBlockSize());
    }
 
    if (maxblocksize == 0)
