@@ -49,8 +49,8 @@ ODPCMAliasBlockFile::ODPCMAliasBlockFile(
       wxFileNameWrapper &&aliasedFileName,
       sampleCount aliasStart,
       sampleCount aliasLen, int aliasChannel)
-: PCMAliasBlockFile(std::move(fileName), std::move(aliasedFileName),
-                    aliasStart, aliasLen, aliasChannel,false)
+: PCMAliasBlockFile { std::move(fileName), std::move(aliasedFileName),
+                      aliasStart, aliasLen, aliasChannel, false }
 {
    mSummaryAvailable = mSummaryBeingComputed = mHasBeenSaved = false;
 }

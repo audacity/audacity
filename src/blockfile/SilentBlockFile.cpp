@@ -13,7 +13,7 @@
 #include "../FileFormats.h"
 
 SilentBlockFile::SilentBlockFile(sampleCount sampleLen):
-BlockFile(wxFileNameWrapper{}, sampleLen)
+BlockFile{ wxFileNameWrapper{}, sampleLen }
 {
    mMin = 0.;
    mMax = 0.;
