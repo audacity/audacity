@@ -46,6 +46,9 @@ hold information about one contributor to Audacity.
 
 #include "../images/AudacityLogoWithName.xpm"
 
+extern wxString FormatHtmlText( const wxString & Text );
+
+
 void AboutDialog::CreateCreditsList()
 {
    // The Audacity Team: developers and support
@@ -172,23 +175,23 @@ void AboutDialog::CreateCreditsList()
 
    // Libraries
 
-   AddCredit(wxT("<a href=\"http://www.jclark.com/xml/expat.html\">expat</a>"), roleLibrary);
-   AddCredit(wxT("<a href=\"http://xiph.org/flac/\">FLAC</a>"), roleLibrary);
-   AddCredit(wxT("iAVC</a>"), roleLibrary);
-   AddCredit(wxT("<a href=\"http://lame.sourceforge.net/\">LAME</a>"), roleLibrary);
-   AddCredit(wxT("<a href=\"http://www.underbit.com/products/mad/\">libmad</a>"), roleLibrary);
-   AddCredit(wxT("<a href=\"http://www.mega-nerd.com/libsndfile/\">libsndfile</a>"), roleLibrary);
-   AddCredit(wxT("<a href=\"http://sourceforge.net/p/soxr/wiki/Home/\">libsoxr</a>"), roleLibrary);
-   AddCredit(wxT("<a href=\"http://lv2plug.in/\">lv2</a> (") + _("incorporating") + wxT(" lilv, msinttypes, serd, sord and sratom)"), roleLibrary);
-   AddCredit(wxT("<a href=\"https://www.cs.cmu.edu/~music/nyquist/\">Nyquist</a>"), roleLibrary);
-   AddCredit(wxT("<a href=\"http://vorbis.com/\">Ogg Vorbis</a>"), roleLibrary);
-   AddCredit(wxT("<a href=\"http://www.portaudio.com/\">PortAudio</a>"), roleLibrary);
-   AddCredit(wxT("<a href=\"http://sourceforge.net/apps/trac/portmedia/wiki/portsmf/\">portsmf</a>"), roleLibrary);
-   AddCredit(wxT("<a href=\"http://sbsms.sourceforge.net/\">sbsms</a>"), roleLibrary);
-   AddCredit(wxT("<a href=\"http://www.surina.net/soundtouch/\">SoundTouch</a>"), roleLibrary);
-   AddCredit(wxT("<a href=\"http://www.twolame.org/\">TwoLAME</a>"), roleLibrary);
-   AddCredit(wxT("<a href=\"http://www.vamp-plugins.org/\">Vamp</a>"), roleLibrary);
-   AddCredit(wxT("<a href=\"http://wxwidgets.org/\">wxWidgets</a>"), roleLibrary);
+   AddCredit(wxT("[[http://www.jclark.com/xml/expat.html|expat]]"), roleLibrary);
+   AddCredit(wxT("[[http://xiph.org/flac/|FLAC]]"), roleLibrary);
+   AddCredit(wxT("iAVC"), roleLibrary);
+   AddCredit(wxT("[[http://lame.sourceforge.net/|LAME]]"), roleLibrary);
+   AddCredit(wxT("[[http://www.underbit.com/products/mad/|libmad]]"), roleLibrary);
+   AddCredit(wxT("[[http://www.mega-nerd.com/libsndfile/|libsndfile]]"), roleLibrary);
+   AddCredit(wxT("[[http://sourceforge.net/p/soxr/wiki/Home/|libsoxr]]"), roleLibrary);
+   AddCredit(wxT("[[http://lv2plug.in/|lv2]] (") + _("incorporating") + wxT(" lilv, msinttypes, serd, sord and sratom)"), roleLibrary);
+   AddCredit(wxT("[[https://www.cs.cmu.edu/~music/nyquist/|Nyquist]]"), roleLibrary);
+   AddCredit(wxT("[[http://vorbis.com/|Ogg Vorbis]]"), roleLibrary);
+   AddCredit(wxT("[[http://www.portaudio.com/|PortAudio]]"), roleLibrary);
+   AddCredit(wxT("[[http://sourceforge.net/apps/trac/portmedia/wiki/portsmf/|portsmf]]"), roleLibrary);
+   AddCredit(wxT("[[http://sbsms.sourceforge.net/|sbsms]]"), roleLibrary);
+   AddCredit(wxT("[[http://www.surina.net/soundtouch/|SoundTouch]]"), roleLibrary);
+   AddCredit(wxT("[[http://www.twolame.org/|TwoLAME]]"), roleLibrary);
+   AddCredit(wxT("[[http://www.vamp-plugins.org/|Vamp]]"), roleLibrary);
+   AddCredit(wxT("[[http://wxwidgets.org/|wxWidgets]]"), roleLibrary);
 
    // Thanks
 
@@ -241,7 +244,8 @@ AboutDialog::AboutDialog(wxWindow * parent)
    sActiveInstance = this;
 
    SetName(GetTitle());
-   this->SetBackgroundColour(theTheme.Colour( clrAboutBoxBackground ));
+   //this->SetBackgroundColour(theTheme.Colour( clrAboutBoxBackground ));
+   this->SetBackgroundColour(theTheme.Colour( clrMedium ));
    icon = NULL;
    ShuttleGui S( this, eIsCreating );
    S.StartNotebook();
@@ -266,19 +270,19 @@ void AboutDialog::PopulateAudacityPage( ShuttleGui & S )
    CreateCreditsList();
 
    wxString par1Str = _(
-"Audacity, which this is a customised version of, is a free program written by a worldwide team of <a href=\"http://audacityteam.org/about/credits\">volunteers</a>. \
-Audacity is <a href=\"http://audacityteam.org/download\">available</a> for Windows, Mac, and GNU/Linux (and other Unix-like systems).");
+"Audacity, which this is a customised version of, is a free program written by a worldwide team of [[http://audacityteam.org/about/credits|volunteers]]. \
+Audacity is [[http://audacityteam.org/download|available]] for Windows, Mac, and GNU/Linux (and other Unix-like systems).");
 
    // This trick here means that the English language version won't mention using
    // English, whereas all translated versions will.
    wxString par2StrUntranslated = wxT(
-"If you find a bug or have a suggestion for us, please write, in English, to our <a href=\"mailto:feedback@audacityteam.org\">feedback address</a>. \
-For help, view the tips and tricks on our <a href=\"http://wiki.audacityteam.org/\">wiki</a> or \
-visit our <a href=\"http://forum.audacityteam.org/\">forum</a>.");
+"If you find a bug or have a suggestion for us, please write, in English, to our [[mailto:feedback@audacityteam.org|feedback address]]. \
+For help, view the tips and tricks on our [[http://wiki.audacityteam.org/|wiki]] or \
+visit our [[http://forum.audacityteam.org/|forum]].");
    wxString par2Str = _(
-"If you find a bug or have a suggestion for us, please write, in English, to our <a href=\"mailto:feedback@audacityteam.org\">feedback address</a>. \
-For help, view the tips and tricks on our <a href=\"http://wiki.audacityteam.org/\">wiki</a> or \
-visit our <a href=\"http://forum.audacityteam.org/\">forum</a>.");
+"If you find a bug or have a suggestion for us, please write, in English, to our [[mailto:feedback@audacityteam.org|feedback address]]. \
+For help, view the tips and tricks on our [[http://wiki.audacityteam.org/|wiki]] or \
+visit our [[http://forum.audacityteam.org/|forum]].");
 
    if( par2Str == par2StrUntranslated )
       par2Str.Replace( wxT(", in English,"), wxT("") );
@@ -293,13 +297,9 @@ visit our <a href=\"http://forum.audacityteam.org/\">forum</a>.");
    {
       translatorCredits = _("translator_credits") + wxT("<br>");
    }
-   wxString localeStr = wxLocale::GetSystemEncodingName();
 
-   wxString creditStr =
-      wxT("<html><head><META http-equiv=\"Content-Type\" content=\"text/html; charset=") +
-         localeStr +
-         wxT("\"></head>") +
-      wxT("<body bgcolor=\"#ffffff\"><center>") +
+   wxString creditStr = FormatHtmlText(
+      wxString( wxT("<center>") ) +
       wxT("<h3>DarkAudacity ") + wxString(AUDACITY_VERSION_STRING) + wxT("</center></h3>") +
       _("Customised version of the Audacity free, open source, cross-platform software " ) +
       _("for recording and editing sounds.") +
@@ -331,22 +331,17 @@ visit our <a href=\"http://forum.audacityteam.org/\">forum</a>.");
       wxT("<p><b>") +  _("Special thanks:") + wxT("</b><br>") +
       GetCreditsByRole(roleThanks) +
 
-      wxT("<p><br>Audacity website: <a href=\"http://www.audacityteam.org/\">http://www.audacityteam.org/</a>") +
-      wxT("<br>DarkAudacity website: <a href=\"http://www.darkaudacity.com/\">http://www.darkaudacity.com/</a>") +
+      wxT("<p><br>Audacity website: [[http://www.audacityteam.org/|http://www.audacityteam.org/]]") +
+      wxT("<br>DarkAudacity website: [[http://www.darkaudacity.com/|http://www.darkaudacity.com/]]") +
       wxT("<p><br>") + _("<b>Audacity&reg;</b> software is copyright")+
       wxT("&copy; 1999-2016 Audacity Team.<br>") +
       _("The name <b>Audacity&reg;</b> is a registered trademark of Dominic Mazzoni.") +
-      wxT("</center></font></body></html>");
+      wxT("</center>")
+   );
 
-
-   this->SetBackgroundColour(theTheme.Colour( clrAboutBoxBackground ));
-
-
-   // New way to add to About box....
    auto pPage = S.StartNotebookPage( wxT("DarkAudacity") );
    pPage->SetBackgroundColour(wxColour(0xAB, 0xAB,0xAB ));
    S.StartVerticalLay(1);
-
    {
       //v For now, change to AudacityLogoWithName via old-fashioned way, not Theme.
       wxBitmap logo(AudacityLogoWithName_xpm); //v
@@ -588,7 +583,7 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
 
 // Uncomment the next two lines to test hyperlinks work from here.
 //   AddBuildinfoRow(&informationStr, wxT("Link Test:"), 
-//      wxT("<a href=\"https:web.audacityteam.org\">Click bait</a>") );
+//      wxT("[[https:web.audacityteam.org|Click bait]]") );
 
    AddBuildinfoRow(&informationStr, _("Commit Id:"),
 #include "RevisionIdent.h"
@@ -613,6 +608,8 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
    // end of table
    informationStr += wxT("</table>\n");
 
+   informationStr = FormatHtmlText( informationStr );
+
    html->SetPage(informationStr);   // push the page into the html renderer
    S.Prop(2).AddWindow( html, wxEXPAND ); // make it fill the page
    // I think the 2 here goes with the StartVerticalLay() call above?
@@ -636,7 +633,7 @@ void AboutDialog::PopulateLicensePage( ShuttleGui & S )
 // better proportionally spaced.
 //
 // The GPL is not to be translated....
-   wxString PageText=
+   wxString PageText= FormatHtmlText(
 wxT("		    <center>GNU GENERAL PUBLIC LICENSE\n</center>")
 wxT("		       <center>Version 2, June 1991\n</center>")
 wxT("<p><p>")
@@ -918,7 +915,7 @@ wxT("OUT OF THE USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED\n
 wxT("TO LOSS OF DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY\n")
 wxT("YOU OR THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER\n")
 wxT("PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE\n")
-wxT("POSSIBILITY OF SUCH DAMAGES.\n");
+wxT("POSSIBILITY OF SUCH DAMAGES.\n"));
 
    html->SetPage( PageText );
 

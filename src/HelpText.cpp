@@ -109,6 +109,10 @@ static wxString LinkExpand( const wxString & Text )
       {
          Replacement = TypedLink( Key, LinkText );
       }
+      else if( Key.StartsWith( wxT("*URL*") ))
+      {
+         Replacement = TypedLink( Key, LinkText );
+      }
       else
       {
          Replacement = Link( Key, LinkText );
@@ -226,7 +230,7 @@ audio CDs]].") + wxT("</p>")
    {
 // *URL* will be replaced by whatever URL we are looking for.
       return WrapText(_("The Manual does not appear to be installed. \
-Please <a href=\"*URL*\">view the Manual online</a> or \
+Please [[*URL*|view the Manual online]] or \
 [[http://manual.audacityteam.org/man/unzipping_the_manual.html| \
 download the Manual]].<br><br>\
 To always view the Manual online, change \"Location of Manual\" in \
@@ -253,4 +257,17 @@ wxString HelpText( const wxString & Key )
 
    // Perhaps useful for debugging - we'll return key that we didn't find.
    return WrapText( Key );
+}
+
+
+wxString FormatHtmlText( const wxString & Text ){
+
+   wxString localeStr = wxLocale::GetSystemEncodingName();
+
+   return 
+      wxT("<html><head><META http-equiv=\"Content-Type\" content=\"text/html; charset=") +
+      localeStr +
+      wxT("\"></head>") +
+      WrapText( LinkExpand( Text ))+
+      wxT("</html>");
 }
