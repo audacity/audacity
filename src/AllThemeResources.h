@@ -249,7 +249,7 @@ from there.  Audacity will look for a file called "Pause.png".
 */
    SET_THEME_FLAGS(  resFlagNewLine  );
 
-#define LOGOWITHNAME_WIDTH 506
+#define LOGOWITHNAME_WIDTH 768
 #define LOGOWITHNAME_HEIGHT 200
 
    DEFINE_IMAGE( bmpAudacityLogo, wxImage( 215, 190 ), wxT("AudacityLogo"));

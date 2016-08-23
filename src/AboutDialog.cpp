@@ -343,7 +343,8 @@ visit our <a href=\"http://forum.audacityteam.org/\">forum</a>.");
 
 
    // New way to add to About box....
-   S.StartNotebookPage( wxT("DarkAudacity") );
+   auto pPage = S.StartNotebookPage( wxT("DarkAudacity") );
+   pPage->SetBackgroundColour(wxColour(0xAB, 0xAB,0xAB ));
    S.StartVerticalLay(1);
 
    {

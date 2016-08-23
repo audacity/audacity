@@ -25,8 +25,10 @@ static wxString WrapText( const wxString & Text )
 {
    return wxString(wxT(""))+
       wxT("<html><head></head>") +
-      wxT("<body bgcolor=\"#ffffff\">") +
+      wxT("<body bgcolor=\"#404040\">") +
+      wxT("<font color=\"#fedfb2\">")+
       wxT("<p>") + Text +
+      wxT("</font>")+
       wxT("</body></html>");
 }
 
@@ -90,6 +92,7 @@ static wxString LinkExpand( const wxString & Text )
       Key = Key.Mid( 0, j );
       LinkText = LinkText.Mid( 0, k );
 
+      LinkText="<font color=\"#ffffff\">"+LinkText+"</font>";
       wxString Replacement;
       if( Key.StartsWith( wxT("wiki:") ))
       {
@@ -107,6 +110,7 @@ static wxString LinkExpand( const wxString & Text )
       {
          Replacement = Link( Key, LinkText );
       }
+
 
       Temp = Temp.Mid( 0, i ) + Replacement + Temp.Mid( i + j + k + 5 );// 5 for the [[|]]
    }
@@ -158,7 +162,7 @@ wxString TitleText( const wxString & Key )
    if(Key ==wxT("save") )
    {
       /* i18n-hint: Title for a topic.*/
-      return _("Saving a DarkAudacity Project");
+      return _("Saving an Audacity Project");
    }
    if(Key ==wxT("wma-proprietary") )
    {
@@ -186,22 +190,20 @@ static wxString HelpTextBuiltIn( const wxString & Key )
       /* i18n-hint: Preserve [[file:quick_help.html as it's the name of a file.*/
       return WrapText(
          wxString(wxT("")) + 
-         wxT("<center><h3>DarkAudacity ") + AUDACITY_VERSION_STRING + wxT("</h3></center>") +
-         _("<br><br>DarkAudacity is based on Audacity:") + wxT("<ul><li>") +
-         _(" email to <a href=\"mailto:james@audacityteam.org\">'james@audacityteam.org'</a> - for help using DarkAudacity.") + wxT("</li><li>") +
-         _(" see <a href=\"http://www.darkaudacity.com\">www.darkaudacity.com</a> - for differences between DarkAudacity and Audacity.") + wxT("</li></ul>") +
-
-         _("<br><br>Audacity has these support methods:") + wxT("<ul><li>") +
-         _(" <a href=\"http://manual.audacityteam.org/quick_help.html\">'Quick Help'</a> - for getting started with Audacity.") + wxT("</li><li>") +
-         _(" <a href=\"http://manual.audacityteam.org/\">Manual</a> - for comprehensive Audacity documentation") + wxT("</li><li>") +
-         _(" <a href=\"http://forum.audacityteam.org/\">Forum</a> - for large knowledge base on using Audacity.") + wxT("</li></ul>") 
-         );
+         wxT("<center><h3>Audacity ") + AUDACITY_VERSION_STRING + wxT("</h3><h3>") +
+         _("How to get help") + wxT("</h3></center>") + 
+         _("These are our support methods:") + wxT("<p><ul><li>") +
+         _(" [[file:quick_help.html|Quick Help]] - if not installed locally, [[http://manual.audacityteam.org/quick_help.html|view online]]") + wxT("</li><li>") +
+         _(" [[file:index.html|Manual]] - if not installed locally, [[http://manual.audacityteam.org|view online]]") + wxT("</li><li>") +
+         _(" [[http://forum.audacityteam.org/|Forum]] - ask your question directly, online.") + wxT("</li></ul></p><p>") + wxT("<b>") + 
+         _("More:</b> Visit our [[http://wiki.audacityteam.org/index.php|Wiki]] for tips, tricks, extra tutorials and effects plug-ins.") + wxT("</p>")
+      );
    }
    if(Key==wxT("wma-proprietary"))
    {
       return WrapText(
          wxString(wxT("<p>"))+
-         _("DarkAudacity can import unprotected files in many other formats (such as M4A and WMA, \
+         _("Audacity can import unprotected files in many other formats (such as M4A and WMA, \
 compressed WAV files from portable recorders and audio from video files) if you download and install \
 the optional <a href=\"http://manual.audacityteam.org/man/faq_opening_and_saving_files.html#foreign\"> \
 FFmpeg library</a> to your computer.") + wxT("</p><p>") +
