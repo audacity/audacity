@@ -100,7 +100,7 @@ bool EffectTwoPassSimpleMono::ProcessOne(WaveTrack * track,
                                          sampleCount start, sampleCount end)
 {
    bool ret;
-   sampleCount s, samples1, samples2, tmpcount;
+   sampleCount s;
    float *tmpfloat;
 
    //Get the length of the buffer (as double). len is
@@ -113,12 +113,8 @@ bool EffectTwoPassSimpleMono::ProcessOne(WaveTrack * track,
    //be shorter than the length of the track being processed.
    float *buffer1 = new float[maxblock];
    float *buffer2 = new float[maxblock];
-   samples1 = track->GetBestBlockSize(start);
-   if(start + samples1 > end)
-      samples1 = end - start;
-
-   if(samples1 > maxblock)
-      samples1 = maxblock;
+   auto samples1 =  limitSampleBufferSize(
+      std::min( maxblock, track->GetBestBlockSize(start) ), end - start );
 
    //Get the samples from the track and put them in the buffer
    track->Get((samplePtr) buffer1, floatSample, start, samples1);
@@ -141,14 +137,10 @@ bool EffectTwoPassSimpleMono::ProcessOne(WaveTrack * track,
    s = start + samples1;
    while (s < end) {
       //Get a block of samples (smaller than the size of the buffer)
-      samples2 = track->GetBestBlockSize(s);
-
-      if(samples2 > maxblock)
-         samples2 = maxblock;
-
       //Adjust the block size if it is the final block in the track
-      if (s + samples2 > end)
-         samples2 = end - s;
+      auto samples2 = limitSampleBufferSize(
+         std::min( track->GetBestBlockSize(s), maxblock ), end - s
+      );
 
       //Get the samples from the track and put them in the buffer
       track->Get((samplePtr) buffer2, floatSample, s, samples2);
@@ -189,9 +181,7 @@ bool EffectTwoPassSimpleMono::ProcessOne(WaveTrack * track,
       buffer1 = buffer2;
       buffer2 = tmpfloat;
 
-      tmpcount = samples1;
-      samples1 = samples2;
-      samples2 = tmpcount;
+      std::swap(samples1, samples2);
    }
 
    // Send the last buffer with a NULL pointer for the current buffer

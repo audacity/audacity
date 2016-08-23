@@ -38,8 +38,9 @@ char bheaderTag[bheaderTagLen + 1] = "AudacityBlockFile112";
    /// Create a disk file and write summary and sample data to it
 ODDecodeBlockFile::ODDecodeBlockFile(wxFileNameWrapper &&baseFileName, wxFileNameWrapper &&audioFileName, sampleCount aliasStart,
                      sampleCount aliasLen, int aliasChannel,unsigned int decodeType):
-   SimpleBlockFile(std::move(baseFileName),
-      NULL,aliasLen,floatSample,true,true), //floatSample has no effect.  last two bools - bypass writing of blockfile and cache
+   SimpleBlockFile{ std::move(baseFileName),
+                    NULL, aliasLen, floatSample, true, true },
+   //floatSample has no effect.  last two bools - bypass writing of blockfile and cache
 
    mType(decodeType),
    mAliasStart(aliasStart),
@@ -55,7 +56,7 @@ ODDecodeBlockFile::ODDecodeBlockFile(wxFileNameWrapper &&baseFileName, wxFileNam
 ODDecodeBlockFile::ODDecodeBlockFile(wxFileNameWrapper &&existingFile, wxFileNameWrapper &&audioFileName, sampleCount aliasStart,
                      sampleCount aliasLen, int aliasChannel, unsigned int decodeType,
                    float min, float max, float rms, bool dataAvailable):
-   SimpleBlockFile(std::move(existingFile),aliasLen,min,max,rms),
+   SimpleBlockFile{ std::move(existingFile), aliasLen, min, max, rms },
 
    mType(decodeType),
    mAliasStart(aliasStart),
@@ -207,7 +208,8 @@ void ODDecodeBlockFile::SaveXML(XMLWriter &xmlFile)
       mFileNameMutex.Unlock();
       LockRead();
       xmlFile.WriteAttr(wxT("audiofile"), mAudioFileName.GetFullPath());
-      xmlFile.WriteAttr(wxT("aliasstart"), mAliasStart);
+      xmlFile.WriteAttr(wxT("aliasstart"),
+                        static_cast<long long>( mAliasStart ));
       xmlFile.WriteAttr(wxT("aliaslen"), mLen);
       xmlFile.WriteAttr(wxT("aliaschannel"), mAliasChannel);
       xmlFile.WriteAttr(wxT("decodetype"), (size_t)mType);
@@ -229,6 +231,7 @@ BlockFilePtr ODDecodeBlockFile::BuildFromXML(DirManager &dm, const wxChar **attr
    sampleCount aliasStart=0, aliasLen=0;
    int aliasChannel=0;
    long nValue;
+   long long nnValue;
    unsigned int   decodeType=0;
 
    while(*attrs)
@@ -261,11 +264,15 @@ BlockFilePtr ODDecodeBlockFile::BuildFromXML(DirManager &dm, const wxChar **attr
             // but we want to keep the reference to the file because it's a good path string.
             audioFileName.Assign(strValue);
       }
+      else if ( !wxStricmp(attr, wxT("aliasstart")) )
+      {
+         if (XMLValueChecker::IsGoodInt64(strValue) &&
+             strValue.ToLongLong(&nnValue) && (nnValue >= 0))
+            aliasStart = nnValue;
+      }
       else if (XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
       {  // integer parameters
-         if (!wxStricmp(attr, wxT("aliasstart")) && (nValue >= 0))
-            aliasStart = nValue;
-         else if (!wxStricmp(attr, wxT("aliaslen")) && (nValue >= 0))
+         if (!wxStricmp(attr, wxT("aliaslen")) && (nValue >= 0))
             aliasLen = nValue;
          else if (!wxStricmp(attr, wxT("aliaschannel")) && XMLValueChecker::IsValidChannel(aliasChannel))
             aliasChannel = nValue;

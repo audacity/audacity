@@ -1459,13 +1459,11 @@ bool WaveTrack::Disjoin(double t0, double t1)
       sampleCount len = ( end - start );
       for( sampleCount done = 0; done < len; done += maxAtOnce )
       {
-         sampleCount numSamples = maxAtOnce;
-         if( done + maxAtOnce > len )
-            numSamples = len - done;
+         const auto numSamples = limitSampleBufferSize( maxAtOnce, len - done );
 
          clip->GetSamples( ( samplePtr )buffer, floatSample, start + done,
                numSamples );
-         for( sampleCount i = 0; i < numSamples; i++ )
+         for( auto i = 0; i < numSamples; i++ )
          {
             sampleCount curSamplePos = start + done + i;
 
@@ -1628,11 +1626,10 @@ sampleCount WaveTrack::GetBestBlockSize(sampleCount s) const
 
 sampleCount WaveTrack::GetMaxBlockSize() const
 {
-   int maxblocksize = 0;
+   decltype(GetMaxBlockSize()) maxblocksize = 0;
    for (const auto &clip : mClips)
    {
-      if (clip->GetSequence()->GetMaxBlockSize() > maxblocksize)
-         maxblocksize = clip->GetSequence()->GetMaxBlockSize();
+      maxblocksize = std::max(maxblocksize, clip->GetSequence()->GetMaxBlockSize());
    }
 
    if (maxblocksize == 0)
@@ -2096,13 +2093,9 @@ bool WaveTrack::Set(samplePtr buffer, sampleFormat format,
    return result;
 }
 
-void WaveTrack::GetEnvelopeValues(double *buffer, int bufferLen,
-                         double t0, double tstep) const
+void WaveTrack::GetEnvelopeValues(double *buffer, size_t bufferLen,
+                                  double t0) const
 {
-   // Possibly nothing to do.
-   if( bufferLen <= 0 )
-      return;
-
    // The output buffer corresponds to an unbroken span of time which the callers expect
    // to be fully valid.  As clips are processed below, the output buffer is updated with
    // envelope values from any portion of a clip, start, end, middle, or none at all.
@@ -2119,29 +2112,31 @@ void WaveTrack::GetEnvelopeValues(double *buffer, int bufferLen,
    }
 
    double startTime = t0;
-   double endTime = t0+tstep*bufferLen;
+   auto tstep = 1.0 / mRate;
+   double endTime = t0 + tstep * bufferLen;
    for (const auto &clip: mClips)
    {
       // IF clip intersects startTime..endTime THEN...
-      double dClipStartTime = clip->GetStartTime();
-      double dClipEndTime = clip->GetEndTime();
+      auto dClipStartTime = clip->GetStartTime();
+      auto dClipEndTime = clip->GetEndTime();
       if ((dClipStartTime < endTime) && (dClipEndTime > startTime))
       {
-         double* rbuf = buffer;
-         int rlen = bufferLen;
-         double rt0 = t0;
+         auto rbuf = buffer;
+         auto rlen = bufferLen;
+         auto rt0 = t0;
 
          if (rt0 < dClipStartTime)
          {
             sampleCount nDiff = (sampleCount)floor((dClipStartTime - rt0) * mRate + 0.5);
             rbuf += nDiff;
+            wxASSERT(nDiff <= rlen);
             rlen -= nDiff;
             rt0 = dClipStartTime;
          }
 
          if (rt0 + rlen*tstep > dClipEndTime)
          {
-            int nClipLen = clip->GetEndSample() - clip->GetStartSample();
+            auto nClipLen = clip->GetEndSample() - clip->GetStartSample();
 
             if (nClipLen <= 0) // Testing for bug 641, this problem is consistently '== 0', but doesn't hurt to check <.
                return;
@@ -2151,8 +2146,8 @@ void WaveTrack::GetEnvelopeValues(double *buffer, int bufferLen,
             // This conditional prevents the previous write past the buffer end, in clip->GetEnvelope() call.
             // Never increase rlen here.
             // PRL bug 827:  rewrote it again
-            rlen = std::min(rlen, nClipLen);
-            rlen = std::min(rlen, int(floor(0.5 + (dClipEndTime - rt0) / tstep)));
+            rlen = limitSampleBufferSize( rlen, nClipLen );
+            rlen = std::min(rlen, size_t(floor(0.5 + (dClipEndTime - rt0) / tstep)));
          }
          clip->GetEnvelope()->GetValues(rbuf, rlen, rt0, tstep);
       }
@@ -2718,8 +2713,12 @@ constSamplePtr WaveTrackCache::Get(sampleFormat format,
       sampleCount remaining = len;
 
       // Possibly get an initial portion that is uncached
-      const sampleCount initLen =
-         mNValidBuffers < 1 ? len : std::min(len, mBuffers[0].start - start);
+
+      // This may be negative
+      const auto initLen =
+         mNValidBuffers < 1 ? sampleCount( len )
+            : std::min(sampleCount( len ), mBuffers[0].start - start);
+
       if (initLen > 0) {
          // This might be fetching zeroes between clips
          mOverlapBuffer.Resize(len, format);

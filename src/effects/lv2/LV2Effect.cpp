@@ -722,7 +722,7 @@ int LV2Effect::GetMidiOutCount()
    return 0;
 }
 
-void LV2Effect::SetSampleRate(sampleCount rate)
+void LV2Effect::SetSampleRate(double rate)
 {
    mSampleRate = (double) rate;
 

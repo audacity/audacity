@@ -417,7 +417,7 @@ std::unique_ptr<wxCursor> MakeCursor( int WXUNUSED(CursorId), const char * pXpm[
 TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
                        const wxPoint & pos,
                        const wxSize & size,
-                       TrackList * tracks,
+                       const std::shared_ptr<TrackList> &tracks,
                        ViewInfo * viewInfo,
                        TrackPanelListener * listener,
                        AdornedRulerPanel * ruler)
@@ -803,7 +803,7 @@ void TrackPanel::SetCapturedTrack( Track * t, enum MouseCaptureEnum MouseCapture
 
 void TrackPanel::SelectNone()
 {
-   TrackListIterator iter(mTracks);
+   TrackListIterator iter(GetTracks());
    Track *t = iter.First();
    while (t) {
       SelectTrack(t, false, false);
@@ -814,7 +814,7 @@ void TrackPanel::SelectNone()
 /// Select all tracks marked by the label track lt
 void TrackPanel::SelectTracksByLabel( LabelTrack *lt )
 {
-   TrackListIterator iter(mTracks);
+   TrackListIterator iter(GetTracks());
    Track *t = iter.First();
 
    //do nothing if at least one other track is selected
@@ -839,7 +839,7 @@ void TrackPanel::SelectTracksByLabel( LabelTrack *lt )
 void TrackPanel::SelectTrackLength(Track *t)
 {
    AudacityProject *p = GetActiveProject();
-   SyncLockedTracksIterator it(mTracks);
+   SyncLockedTracksIterator it(GetTracks());
    Track *t1 = it.StartWith(t);
    double minOffset = t->GetOffset();
    double maxEnd = t->GetEndTime();
@@ -1182,7 +1182,7 @@ bool TrackPanel::HandleEscapeKey(bool down)
    {
    case IsSelecting:
    {
-      TrackListIterator iter(mTracks);
+      TrackListIterator iter(GetTracks());
       std::vector<bool>::const_iterator
          it = mInitialTrackSelection.begin(),
          end = mInitialTrackSelection.end();
@@ -1875,7 +1875,7 @@ void TrackPanel::SelectRangeOfTracks(Track *sTrack, Track *eTrack)
       if (eTrack->GetIndex() < sTrack->GetIndex())
          std::swap(sTrack, eTrack);
 
-      TrackListIterator iter(mTracks);
+      TrackListIterator iter(GetTracks());
       sTrack = iter.StartWith(sTrack);
       do {
          SelectTrack(sTrack, true, false);
@@ -1905,7 +1905,7 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
    // Save initial state of track selections
    mInitialTrackSelection.clear();
    {
-      TrackListIterator iter(mTracks);
+      TrackListIterator iter(GetTracks());
       for (Track *t = iter.First(); t; t = iter.Next()) {
          const bool isSelected = t->GetSelected();
          mInitialTrackSelection.push_back(isSelected);
@@ -1913,7 +1913,7 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
    }
 
    // We create a NEW snap manager in case any snap-points have changed
-   mSnapManager = std::make_unique<SnapManager>(mTracks, mViewInfo);
+   mSnapManager = std::make_unique<SnapManager>(GetTracks(), mViewInfo);
 
    mSnapLeft = -1;
    mSnapRight = -1;
@@ -2336,7 +2336,7 @@ void TrackPanel::SnapCenterOnce(const WaveTrack *pTrack, bool up)
 
 void TrackPanel::StartSnappingFreqSelection (const WaveTrack *pTrack)
 {
-   static const sampleCount minLength = 8;
+   static const size_t minLength = 8;
 
    const double rate = pTrack->GetRate();
 
@@ -2346,11 +2346,11 @@ void TrackPanel::StartSnappingFreqSelection (const WaveTrack *pTrack)
       pTrack->TimeToLongSamples(mViewInfo->selectedRegion.t0());
    const sampleCount end =
       pTrack->TimeToLongSamples(mViewInfo->selectedRegion.t1());
-   const sampleCount length =
-      std::min(sampleCount(frequencySnappingData.max_size()),
-         std::min(sampleCount(10485760), // as in FreqWindow.cpp
-                  end - start));
-   const sampleCount effectiveLength = std::max(minLength, length);
+   const auto length =
+      std::min(frequencySnappingData.max_size(),
+         limitSampleBufferSize( 10485760, // as in FreqWindow.cpp
+                               end - start ));
+   const auto effectiveLength = std::max(minLength, length);
    frequencySnappingData.resize(effectiveLength, 0.0f);
    pTrack->Get(
       reinterpret_cast<samplePtr>(&frequencySnappingData[0]),
@@ -2612,7 +2612,7 @@ void TrackPanel::Stretch(int mouseXCoordinate, int trackLeftEdge,
       // there are saved pointers to tracks that are not supposed to change.
       // Undo will change tracks, so convert pTrack, mCapturedTrack to index
       // values, then look them up after the Undo
-      TrackListIterator iter(mTracks);
+      TrackListIterator iter(GetTracks());
       int pTrackIndex = pTrack->GetIndex();
       int capturedTrackIndex =
          (mCapturedTrack ? mCapturedTrack->GetIndex() : 0);
@@ -2626,7 +2626,7 @@ void TrackPanel::Stretch(int mouseXCoordinate, int trackLeftEdge,
 
       mStretched = false;
       int index = 0;
-      for (Track *t = iter.First(mTracks); t; t = iter.Next()) {
+      for (Track *t = iter.First(GetTracks()); t; t = iter.Next()) {
          if (index == pTrackIndex) pTrack = t;
          if (mCapturedTrack && index == capturedTrackIndex) mCapturedTrack = t;
          index++;
@@ -3309,7 +3309,7 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
       // First, if click was in selection, capture selected clips; otherwise
       // just the clicked-on clip
       if (mCapturedClipIsSelection) {
-         TrackListIterator iter(mTracks);
+         TrackListIterator iter(GetTracks());
          for (Track *t = iter.First(); t; t = iter.Next()) {
             if (t->GetSelected()) {
                AddClipsToCaptured(t, true);
@@ -3345,7 +3345,7 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
             // we can treat individual labels as clips)
             if (mCapturedClipArray[i].clip) {
                // Iterate over sync-lock group tracks.
-               SyncLockedTracksIterator git(mTracks);
+               SyncLockedTracksIterator git(GetTracks());
                for (Track *t = git.StartWith(mCapturedClipArray[i].track);
                      t; t = git.Next() )
                {
@@ -3361,7 +3361,7 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
             Track *nt = mCapturedClipArray[i].track;
             if (nt->GetKind() == Track::Note) {
                // Iterate over sync-lock group tracks.
-               SyncLockedTracksIterator git(mTracks);
+               SyncLockedTracksIterator git(GetTracks());
                for (Track *t = git.StartWith(nt); t; t = git.Next())
                {
                   AddClipsToCaptured(t, nt->GetStartTime(), nt->GetEndTime());
@@ -3389,7 +3389,7 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
    mSelStartValid = true;
    mSelStart = mViewInfo->PositionToTime(event.m_x, rect.x);
 
-   mSnapManager = std::make_unique<SnapManager>(mTracks,
+   mSnapManager = std::make_unique<SnapManager>(GetTracks(),
                                   mViewInfo,
                                   &mCapturedClipArray,
                                   &mTrackExclusions,
@@ -4014,7 +4014,7 @@ void TrackPanel::HandleVZoomButtonUp( wxMouseEvent & event )
 
 void TrackPanel::HandleWaveTrackVZoom(WaveTrack *track, bool shiftDown, bool rightUp)
 {
-   HandleWaveTrackVZoom(mTracks, mCapturedRect, mZoomStart, mZoomEnd,
+   HandleWaveTrackVZoom(GetTracks(), mCapturedRect, mZoomStart, mZoomEnd,
       track, shiftDown, rightUp, false);
    mZoomEnd = mZoomStart = 0;
    UpdateVRuler(track);
@@ -5717,7 +5717,7 @@ void TrackPanel::HandleWheelRotationInVRuler
       }
       else if (event.CmdDown() && !event.ShiftDown()) {
          HandleWaveTrackVZoom(
-            mTracks, rect, event.m_y, event.m_y,
+            GetTracks(), rect, event.m_y, event.m_y,
             wt, false, (steps < 0),
             true);
       }
@@ -6239,7 +6239,7 @@ bool TrackPanel::HandleLabelTrackClick(LabelTrack * lTrack, wxRect &rect, wxMous
    {
       /// \todo This method is one of a large number of methods in
       /// TrackPanel which suitably modified belong in other classes.
-      TrackListIterator iter(mTracks);
+      TrackListIterator iter(GetTracks());
       Track *n = iter.First();
 
       while (n) {
@@ -6791,7 +6791,7 @@ void TrackPanel::DrawTracks(wxDC * dc)
    bool sliderFlag     = bMultiToolDown;
 
    // The track artist actually draws the stuff inside each track
-   mTrackArtist->DrawTracks(mTracks, GetProject()->GetFirstVisible(),
+   mTrackArtist->DrawTracks(GetTracks(), GetProject()->GetFirstVisible(),
                             *dc, region, tracksRect, clip,
                             mViewInfo->selectedRegion, *mViewInfo,
                             envelopeFlag, bigPointsFlag, sliderFlag);
@@ -7163,7 +7163,7 @@ void TrackPanel::HighlightFocusedTrack(wxDC * dc, const wxRect & rect)
 
 void TrackPanel::UpdateVRulers()
 {
-   TrackListOfKindIterator iter(Track::Wave, mTracks);
+   TrackListOfKindIterator iter(Track::Wave, GetTracks());
    for (Track *t = iter.First(); t; t = iter.Next()) {
       UpdateTrackVRuler(t);
    }
@@ -7206,7 +7206,7 @@ void TrackPanel::UpdateTrackVRuler(Track *t)
 
 void TrackPanel::UpdateVRulerSize()
 {
-   TrackListIterator iter(mTracks);
+   TrackListIterator iter(GetTracks());
    Track *t = iter.First();
    if (t) {
       wxSize s = t->vrulerSize;
@@ -7231,7 +7231,7 @@ void TrackPanel::UpdateVRulerSize()
 /// TrackPanel::OnNextTrack.
 void TrackPanel::OnPrevTrack( bool shift )
 {
-   TrackListIterator iter( mTracks );
+   TrackListIterator iter( GetTracks() );
    Track* t = GetFocusedTrack();
    if( t == NULL )   // if there isn't one, focus on last
    {
@@ -7255,7 +7255,7 @@ void TrackPanel::OnPrevTrack( bool shift )
          wxBell();
          if( mCircularTrackNavigation )
          {
-            TrackListIterator iter( mTracks );
+            TrackListIterator iter( GetTracks() );
             p = iter.Last();
          }
          else
@@ -7308,7 +7308,7 @@ void TrackPanel::OnPrevTrack( bool shift )
          wxBell();
          if( mCircularTrackNavigation )
          {
-            TrackListIterator iter( mTracks );
+            TrackListIterator iter( GetTracks() );
             for( Track *d = iter.First(); d; d = iter.Next( true ) )
             {
                p = d;
@@ -7341,7 +7341,7 @@ void TrackPanel::OnNextTrack( bool shift )
 {
    Track *t;
    Track *n;
-   TrackListIterator iter( mTracks );
+   TrackListIterator iter( GetTracks() );
    bool tSelected,nSelected;
 
    t = GetFocusedTrack();   // Get currently focused track
@@ -7362,7 +7362,7 @@ void TrackPanel::OnNextTrack( bool shift )
          wxBell();
          if( mCircularTrackNavigation )
          {
-            TrackListIterator iter( mTracks );
+            TrackListIterator iter( GetTracks() );
             n = iter.First();
          }
          else
@@ -7414,7 +7414,7 @@ void TrackPanel::OnNextTrack( bool shift )
          wxBell();
          if( mCircularTrackNavigation )
          {
-            TrackListIterator iter( mTracks );
+            TrackListIterator iter( GetTracks() );
             n = iter.First();
             SetFocusedTrack( n );   // Wrap to the first track
             EnsureVisible( n );
@@ -7443,7 +7443,7 @@ void TrackPanel::OnFirstTrack()
    if (!t)
       return;
 
-   TrackListIterator iter(mTracks);
+   TrackListIterator iter(GetTracks());
    Track *f = iter.First();
    if (t != f)
    {
@@ -7459,7 +7459,7 @@ void TrackPanel::OnLastTrack()
    if (!t)
       return;
 
-   TrackListIterator iter(mTracks);
+   TrackListIterator iter(GetTracks());
    Track *l = iter.Last();
    if (t != l)
    {
@@ -7666,7 +7666,7 @@ void TrackPanel::OnVRulerMenu(Track *t, wxMouseEvent *pEvent)
 Track * TrackPanel::GetFirstSelectedTrack()
 {
 
-   TrackListIterator iter(mTracks);
+   TrackListIterator iter(GetTracks());
 
    Track * t;
    for ( t = iter.First();t!=NULL;t=iter.Next())
@@ -7689,7 +7689,7 @@ Track * TrackPanel::GetFirstSelectedTrack()
 
 void TrackPanel::EnsureVisible(Track * t)
 {
-   TrackListIterator iter(mTracks);
+   TrackListIterator iter(GetTracks());
    Track *it = NULL;
    Track *nt = NULL;
 
@@ -8921,8 +8921,15 @@ void TrackInfo::DrawBordersWithin(wxDC* dc, const wxRect & rect, bool bHasMuteSo
                   minimizeRect.x + minimizeRect.width, minimizeRect.y - 1);
 }
 
+//#define USE_BEVELS
+
+#ifdef USE_BEVELS
+void TrackInfo::DrawBackground(wxDC * dc, const wxRect & rect, bool bSelected,
+   bool bHasMuteSolo, const int labelw, const int vrul) const
+#else
 void TrackInfo::DrawBackground(wxDC * dc, const wxRect & rect, bool bSelected,
    bool WXUNUSED(bHasMuteSolo), const int labelw, const int WXUNUSED(vrul)) const
+#endif
 {
    // fill in label
    wxRect fill = rect;
@@ -8930,20 +8937,28 @@ void TrackInfo::DrawBackground(wxDC * dc, const wxRect & rect, bool bSelected,
    AColor::MediumTrackInfo(dc, bSelected);
    dc->DrawRectangle(fill);
 
-   // Vaughan, 2010-09-16: No more bevels around controls area. Now only around buttons.
-   //if( bHasMuteSolo )
-   //{
-   //   fill=wxRect( rect.x+1, rect.y+17, vrul-6, 32);
-   //   AColor::BevelTrackInfo( *dc, true, fill );
-   //
-   //   fill=wxRect( rect.x+1, rect.y+67, fill.width, rect.height-87);
-   //   AColor::BevelTrackInfo( *dc, true, fill );
-   //}
-   //else
-   //{
-   //   fill=wxRect( rect.x+1, rect.y+17, vrul-6, rect.height-37);
-   //   AColor::BevelTrackInfo( *dc, true, fill );
-   //}
+
+#ifdef USE_BEVELS
+   if( bHasMuteSolo )
+   {
+      int ylast = rect.height-20;
+      int ybutton = wxMin(32,ylast-17);
+      int ybuttonEnd = 67;
+
+      fill=wxRect( rect.x+1, rect.y+17, vrul-6, ybutton);
+      AColor::BevelTrackInfo( *dc, true, fill );
+   
+      if( ybuttonEnd < ylast ){
+         fill=wxRect( rect.x+1, rect.y+ybuttonEnd, fill.width, ylast - ybuttonEnd);
+         AColor::BevelTrackInfo( *dc, true, fill );
+      }
+   }
+   else
+   {
+      fill=wxRect( rect.x+1, rect.y+17, vrul-6, rect.height-37);
+      AColor::BevelTrackInfo( *dc, true, fill );
+   }
+#endif
 }
 
 void TrackInfo::GetTrackControlsRect(const wxRect & rect, wxRect & dest) const
@@ -9261,7 +9276,7 @@ static TrackPanel * TrackPanelFactory(wxWindow * parent,
    wxWindowID id,
    const wxPoint & pos,
    const wxSize & size,
-   TrackList * tracks,
+   const std::shared_ptr<TrackList> &tracks,
    ViewInfo * viewInfo,
    TrackPanelListener * listener,
    AdornedRulerPanel * ruler)
@@ -9286,7 +9301,7 @@ TrackPanel *(*TrackPanel::FactoryFunction)(
               wxWindowID id,
               const wxPoint & pos,
               const wxSize & size,
-              TrackList * tracks,
+              const std::shared_ptr<TrackList> &tracks,
               ViewInfo * viewInfo,
               TrackPanelListener * listener,
               AdornedRulerPanel * ruler) = TrackPanelFactory;

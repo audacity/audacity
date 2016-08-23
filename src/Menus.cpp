@@ -723,7 +723,7 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddCheck(wxT("ShowTranscriptionTB"), _("Tra&nscription Toolbar"), FN(OnShowTranscriptionToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
       /* i18n-hint: Clicking this menu item shows the toolbar with the big buttons on it (play record etc)*/
       c->AddCheck(wxT("ShowTransportTB"), _("&Transport Toolbar"), FN(OnShowTransportToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
-      /* i18n-hint: Clicking this menu item shows the toolbar that enables Scrub or Seek playback and Scrub Bar*/
+      /* i18n-hint: Clicking this menu item shows the toolbar that enables Scrub or Seek playback and Scrub Ruler*/
       c->AddCheck(wxT("ShowScrubbingTB"), _("Scru&b Toolbar"), FN(OnShowScrubbingToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
 
       c->AddSeparator();
@@ -1773,6 +1773,8 @@ CommandFlag AudacityProject::GetUpdateFlags()
                flags |= WaveTracksSelectedFlag;
             }
          }
+         if( t->GetEndTime() > t->GetStartTime() )
+            flags |= HasWaveDataFlag; 
       }
 #if defined(USE_MIDI)
       else if (t->GetKind() == Track::Note) {
@@ -2434,10 +2436,12 @@ bool AudacityProject::DoPlayStopSelect(bool click, bool shift)
          }
          selection.setTimes(t0, t1);
       }
-      else if (click)
+      else if (click){
+         // avoid a point at negative time.
+         time = wxMax( time, 0 );
          // Set a point selection, as if by a click at the play head
          selection.setTimes(time, time);
-      else
+      } else
          // How stop and set cursor always worked
          // -- change t0, collapsing to point only if t1 was greater
          selection.setT0(time, false);

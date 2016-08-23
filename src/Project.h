@@ -559,7 +559,7 @@ public:
    std::shared_ptr<Tags> mTags;
 
    // List of tracks and display info
-   std::unique_ptr<TrackList> mTracks{ std::make_unique<TrackList>() };
+   std::shared_ptr<TrackList> mTracks{ std::make_shared<TrackList>() };
 
    int mSnapTo;
    wxString mSelectionFormat;

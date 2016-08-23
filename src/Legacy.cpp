@@ -206,7 +206,10 @@ static bool ConvertLegacyTrack(wxTextFile *f, XMLFileWriter &xmlFile)
             xmlFile.WriteAttr(wxT("name"), localName);
             xmlFile.WriteAttr(wxT("alias"), 1);
             xmlFile.WriteAttr(wxT("aliaspath"), aliasPath);
+
+            // This was written but not read again?
             xmlFile.WriteAttr(wxT("aliasstart"), aliasStart);
+
             xmlFile.WriteAttr(wxT("aliaslen"), aliasLen);
             xmlFile.WriteAttr(wxT("aliaschannel"), aliasChannel);
             xmlFile.WriteAttr(wxT("summarylen"), localLen);

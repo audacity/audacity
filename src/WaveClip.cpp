@@ -1717,9 +1717,7 @@ bool WaveClip::Resample(int rate, ProgressDialog *progress)
     */
    while (pos < numSamples || outGenerated > 0)
    {
-      int inLen = numSamples - pos;
-      if (inLen > bufsize)
-         inLen = bufsize;
+      const auto inLen = limitSampleBufferSize( bufsize, numSamples - pos );
 
       bool isLast = ((pos + inLen) == numSamples);
 

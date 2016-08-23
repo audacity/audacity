@@ -194,7 +194,7 @@ sampleCount EffectDtmf::ProcessBlock(float **WXUNUSED(inbuf), float **outbuf, sa
          numRemaining += (diff-- > 0 ? 1 : 0);         
       }
 
-      sampleCount len = wxMin(numRemaining, size);
+      const auto len = limitSampleBufferSize( size, numRemaining );
 
       if (isTone)
       {
@@ -532,24 +532,24 @@ bool EffectDtmf::MakeDtmfTone(float *buffer, sampleCount len, float fs, wxChar t
    }
 
    // generate a fade-in of duration 1/250th of second
-   if (last==0) {
-      A=(fs/kFadeInOut);
-      for(sampleCount i=0; i<A; i++) {
-         buffer[i]*=i/A;
+   if (last == 0) {
+      A = (fs / kFadeInOut);
+      for(sampleCount i = 0; i < A; i++) {
+         buffer[i] *= i/A;
       }
    }
 
    // generate a fade-out of duration 1/250th of second
-   if (last==total-len) {
+   if (last == total - len) {
       // we are at the last buffer of 'len' size, so, offset is to
       // backup 'A' samples, from 'len'
-      A=(fs/kFadeInOut);
-      sampleCount offset=len-(sampleCount)(fs/kFadeInOut);
+      A = (fs / kFadeInOut);
+      sampleCount offset = len - (sampleCount)(fs / kFadeInOut);
       // protect against negative offset, which can occur if too a
       // small selection is made
-      if (offset>=0) {
-         for(sampleCount i=0; i<A; i++) {
-            buffer[i+offset]*=(1-(i/A));
+      if (offset >= 0) {
+         for(sampleCount i = 0; i < A; i++) {
+            buffer[i + offset] *= (1 - (i / A));
          }
       }
    }

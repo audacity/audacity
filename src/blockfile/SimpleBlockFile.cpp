@@ -141,7 +141,7 @@ SimpleBlockFile::SimpleBlockFile(wxFileNameWrapper &&baseFileName,
 /// @param existingFile The disk file this SimpleBlockFile should use.
 SimpleBlockFile::SimpleBlockFile(wxFileNameWrapper &&existingFile, sampleCount len,
                                  float min, float max, float rms):
-   BlockFile(std::move(existingFile), len)
+   BlockFile{ std::move(existingFile), len }
 {
    // Set an invalid format to force GetSpaceUsage() to read it from the file.
    mFormat = (sampleFormat) 0;

@@ -42,7 +42,6 @@
 #ifndef __AUDACITY_PLUGININTERFACE_H__
 #define __AUDACITY_PLUGININTERFACE_H__
 
-#include "audacity/Types.h"
 #include "audacity/ConfigInterface.h"
 #include "audacity/EffectInterface.h"
 #include "audacity/IdentInterface.h"
@@ -73,14 +72,12 @@ public:
    virtual bool GetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, bool & value, bool defval = false) = 0;
    virtual bool GetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, float & value, float defval = 0.0) = 0;
    virtual bool GetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, double & value, double defval = 0.0) = 0;
-   virtual bool GetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, sampleCount & value, sampleCount defval = 0) = 0;
 
    virtual bool SetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, const wxString & value) = 0;
    virtual bool SetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, const int & value) = 0;
    virtual bool SetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, const bool & value) = 0;
    virtual bool SetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, const float & value) = 0;
    virtual bool SetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, const double & value) = 0;
-   virtual bool SetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, const sampleCount & value) = 0;
 
    virtual bool RemoveSharedConfigSubgroup(const PluginID & ID, const wxString & group) = 0;
    virtual bool RemoveSharedConfig(const PluginID & ID, const wxString & group, const wxString & key) = 0;
@@ -92,14 +89,12 @@ public:
    virtual bool GetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, bool & value, bool defval = false) = 0;
    virtual bool GetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, float & value, float defval = 0.0) = 0;
    virtual bool GetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, double & value, double defval = 0.0) = 0;
-   virtual bool GetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, sampleCount & value, sampleCount defval = 0) = 0;
 
    virtual bool SetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, const wxString & value) = 0;
    virtual bool SetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, const int & value) = 0;
    virtual bool SetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, const bool & value) = 0;
    virtual bool SetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, const float & value) = 0;
    virtual bool SetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, const double & value) = 0;
-   virtual bool SetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, const sampleCount & value) = 0;
 
    virtual bool RemovePrivateConfigSubgroup(const PluginID & ID, const wxString & group) = 0;
    virtual bool RemovePrivateConfig(const PluginID & ID, const wxString & group, const wxString & key) = 0;

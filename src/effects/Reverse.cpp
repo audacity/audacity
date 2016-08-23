@@ -229,14 +229,13 @@ bool EffectReverse::ProcessOneClip(int count, WaveTrack *track,
    sampleCount originalLen = (sampleCount)originalEnd-originalStart;
 
    while (len > 1) {
-      sampleCount block = track->GetBestBlockSize(first);
-      if (block > len / 2)
-         block = len / 2;
+      const auto block =
+         limitSampleBufferSize( track->GetBestBlockSize(first), len / 2 );
       second = first + (len - block);
 
       track->Get((samplePtr)buffer1, floatSample, first, block);
       track->Get((samplePtr)buffer2, floatSample, second, block);
-      for (int i = 0; i < block; i++) {
+      for (auto i = 0; i < block; i++) {
          tmp = buffer1[i];
          buffer1[i] = buffer2[block-i-1];
          buffer2[block-i-1] = tmp;

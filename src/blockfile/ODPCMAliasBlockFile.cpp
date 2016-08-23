@@ -49,8 +49,8 @@ ODPCMAliasBlockFile::ODPCMAliasBlockFile(
       wxFileNameWrapper &&aliasedFileName,
       sampleCount aliasStart,
       sampleCount aliasLen, int aliasChannel)
-: PCMAliasBlockFile(std::move(fileName), std::move(aliasedFileName),
-                    aliasStart, aliasLen, aliasChannel,false)
+: PCMAliasBlockFile { std::move(fileName), std::move(aliasedFileName),
+                      aliasStart, aliasLen, aliasChannel, false }
 {
    mSummaryAvailable = mSummaryBeingComputed = mHasBeenSaved = false;
 }
@@ -247,7 +247,8 @@ void ODPCMAliasBlockFile::SaveXML(XMLWriter &xmlFile)
       LockRead();
 
       xmlFile.WriteAttr(wxT("aliasfile"), mAliasedFileName.GetFullPath());
-      xmlFile.WriteAttr(wxT("aliasstart"), mAliasStart);
+      xmlFile.WriteAttr(wxT("aliasstart"),
+                        static_cast<long long>( mAliasStart));
       xmlFile.WriteAttr(wxT("aliaslen"), mLen);
       xmlFile.WriteAttr(wxT("aliaschannel"), mAliasChannel);
 
@@ -269,6 +270,7 @@ BlockFilePtr ODPCMAliasBlockFile::BuildFromXML(DirManager &dm, const wxChar **at
    sampleCount aliasStart=0, aliasLen=0;
    int aliasChannel=0;
    long nValue;
+   long long nnValue;
 
    while(*attrs)
    {
@@ -300,11 +302,15 @@ BlockFilePtr ODPCMAliasBlockFile::BuildFromXML(DirManager &dm, const wxChar **at
             // but we want to keep the reference to the missing file because it's a good path string.
             aliasFileName.Assign(strValue);
       }
+      else if ( !wxStricmp(attr, wxT("aliasstart")) )
+      {
+         if (XMLValueChecker::IsGoodInt64(strValue) &&
+             strValue.ToLongLong(&nnValue) && (nnValue >= 0))
+            aliasStart = nnValue;
+      }
       else if (XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
       {  // integer parameters
-         if (!wxStricmp(attr, wxT("aliasstart")) && (nValue >= 0))
-            aliasStart = nValue;
-         else if (!wxStricmp(attr, wxT("aliaslen")) && (nValue >= 0))
+         if (!wxStricmp(attr, wxT("aliaslen")) && (nValue >= 0))
             aliasLen = nValue;
          else if (!wxStricmp(attr, wxT("aliaschannel")) && XMLValueChecker::IsValidChannel(aliasChannel))
             aliasChannel = nValue;

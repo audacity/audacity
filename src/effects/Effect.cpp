@@ -325,7 +325,7 @@ int Effect::GetMidiOutCount()
    return 0;
 }
 
-void Effect::SetSampleRate(sampleCount rate)
+void Effect::SetSampleRate(double rate)
 {
    if (mClient)
    {
@@ -847,11 +847,6 @@ bool Effect::GetSharedConfig(const wxString & group, const wxString & key, doubl
    return PluginManager::Get().GetSharedConfig(GetID(), group, key, value, defval);
 }
 
-bool Effect::GetSharedConfig(const wxString & group, const wxString & key, sampleCount & value, sampleCount defval)
-{
-   return PluginManager::Get().GetSharedConfig(GetID(), group, key, value, defval);
-}
-
 bool Effect::SetSharedConfig(const wxString & group, const wxString & key, const wxString & value)
 {
    return PluginManager::Get().SetSharedConfig(GetID(), group, key, value);
@@ -873,11 +868,6 @@ bool Effect::SetSharedConfig(const wxString & group, const wxString & key, const
 }
 
 bool Effect::SetSharedConfig(const wxString & group, const wxString & key, const double & value)
-{
-   return PluginManager::Get().SetSharedConfig(GetID(), group, key, value);
-}
-
-bool Effect::SetSharedConfig(const wxString & group, const wxString & key, const sampleCount & value)
 {
    return PluginManager::Get().SetSharedConfig(GetID(), group, key, value);
 }
@@ -927,11 +917,6 @@ bool Effect::GetPrivateConfig(const wxString & group, const wxString & key, doub
    return PluginManager::Get().GetPrivateConfig(GetID(), group, key, value, defval);
 }
 
-bool Effect::GetPrivateConfig(const wxString & group, const wxString & key, sampleCount & value, sampleCount defval)
-{
-   return PluginManager::Get().GetPrivateConfig(GetID(), group, key, value, defval);
-}
-
 bool Effect::SetPrivateConfig(const wxString & group, const wxString & key, const wxString & value)
 {
    return PluginManager::Get().SetPrivateConfig(GetID(), group, key, value);
@@ -953,11 +938,6 @@ bool Effect::SetPrivateConfig(const wxString & group, const wxString & key, cons
 }
 
 bool Effect::SetPrivateConfig(const wxString & group, const wxString & key, const double & value)
-{
-   return PluginManager::Get().SetPrivateConfig(GetID(), group, key, value);
-}
-
-bool Effect::SetPrivateConfig(const wxString & group, const wxString & key, const sampleCount & value)
 {
    return PluginManager::Get().SetPrivateConfig(GetID(), group, key, value);
 }
@@ -1566,7 +1546,7 @@ bool Effect::ProcessTrack(int count,
    sampleCount curBlockSize = 0;
    sampleCount curDelay = 0;
 
-   sampleCount inputBufferCnt = 0;
+   size_t inputBufferCnt = 0;
    sampleCount outputBufferCnt = 0;
    bool cleared = false;
 
@@ -1576,9 +1556,9 @@ bool Effect::ProcessTrack(int count,
    sampleCount genLength = 0;
    bool isGenerator = GetType() == EffectTypeGenerate;
    bool isProcessor = GetType() == EffectTypeProcess;
+   double genDur = 0;
    if (isGenerator)
    {
-      double genDur;
       if (mIsPreview) {
          gPrefs->Read(wxT("/AudioIO/EffectsPreviewLen"), &genDur, 6.0);
          genDur = wxMin(mDuration, CalcPreviewInputLength(genDur));
@@ -1600,20 +1580,17 @@ bool Effect::ProcessTrack(int count,
    }
 
    // Call the effect until we run out of input or delayed samples
-   while (inputRemaining || delayRemaining)
+   while (inputRemaining != 0 || delayRemaining != 0)
    {
       // Still working on the input samples
-      if (inputRemaining)
+      if (inputRemaining != 0)
       {
          // Need to refill the input buffers
          if (inputBufferCnt == 0)
          {
             // Calculate the number of samples to get
-            inputBufferCnt = mBufferSize;
-            if (inputBufferCnt > inputRemaining)
-            {
-               inputBufferCnt = inputRemaining;
-            }
+            inputBufferCnt =
+               limitSampleBufferSize( mBufferSize, inputRemaining );
 
             // Fill the input buffers
             left->Get((samplePtr) mInBuffer[0], floatSample, inLeftPos, inputBufferCnt);
@@ -1649,7 +1626,7 @@ bool Effect::ProcessTrack(int count,
             }
 
             // Might be able to use up some of the delayed samples
-            if (delayRemaining)
+            if (delayRemaining != 0)
             {
                // Don't use more than needed
                if (delayRemaining < cnt)
@@ -1662,7 +1639,7 @@ bool Effect::ProcessTrack(int count,
          }
       }
       // We've exhausted the input samples and are now working on the delay
-      else if (delayRemaining)
+      else if (delayRemaining != 0)
       {
          // Calculate the number of samples to process
          curBlockSize = mBlockSize;
@@ -1704,7 +1681,7 @@ bool Effect::ProcessTrack(int count,
       wxUnusedVar(processed);
 
       // Bump to next input buffer position
-      if (inputRemaining)
+      if (inputRemaining != 0)
       {
          for (int i = 0; i < mNumChannels; i++)
          {
@@ -1850,17 +1827,33 @@ bool Effect::ProcessTrack(int count,
    if (isGenerator)
    {
       AudacityProject *p = GetActiveProject();
-      StepTimeWarper warper(mT0 + genLength, genLength - (mT1 - mT0));
+
+      // PRL:  this code was here and could not have been the right
+      // intent, mixing time and sampleCount values:
+      // StepTimeWarper warper(mT0 + genLength, genLength - (mT1 - mT0));
+
+      // This looks like what it should have been:
+      // StepTimeWarper warper(mT0 + genDur, genDur - (mT1 - mT0));
+      // But rather than fix it, I will just disable the use of it for now.
+      // The purpose was to remap split lines inside the selected region when
+      // a generator replaces it with sound of different duration.  But
+      // the "correct" version might have the effect of mapping some splits too
+      // far left, to before the seletion.
+      // In practice the wrong version probably did nothing most of the time,
+      // because the cutoff time for the step time warper was 44100 times too
+      // far from mT0.
 
       // Transfer the data from the temporary tracks to the actual ones
       genLeft->Flush();
       // mT1 gives us the NEW selection. We want to replace up to GetSel1().
-      left->ClearAndPaste(mT0, p->GetSel1(), genLeft.get(), true, true, &warper);
+      left->ClearAndPaste(mT0, p->GetSel1(), genLeft.get(), true, true,
+                          nullptr /* &warper */);
 
       if (genRight)
       {
          genRight->Flush();
-         right->ClearAndPaste(mT0, mT1, genRight.get(), true, true, &warper);
+         right->ClearAndPaste(mT0, mT1, genRight.get(), true, true,
+                              nullptr /* &warper */);
       }
    }
 

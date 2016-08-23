@@ -86,7 +86,7 @@ enum
 };
 
 // Protect Nyquist from selections greater than 2^31 samples (bug 439)
-#define NYQ_MAX_LEN ((sampleCount) 2147483647)
+#define NYQ_MAX_LEN (std::numeric_limits<long>::max())
 
 #define UNINITIALIZED_CONTROL ((double)99999999.99)
 
@@ -630,14 +630,18 @@ bool NyquistEffect::Process()
          mCurLen = (sampleCount)(end - mCurStart[0]);
 
          if (mCurLen > NYQ_MAX_LEN) {
-            wxMessageBox(_("Selection too long for Nyquist code.\nMaximum allowed selection is 2147483647 samples\n(about 13.5 hours at 44100 Hz sample rate)."),
-                         _("Nyquist Error"), wxOK | wxCENTRE);
+            float hours = (float)NYQ_MAX_LEN / (44100 * 60 * 60);
+            const auto message = wxString::Format(
+_("Selection too long for Nyquist code.\nMaximum allowed selection is %ld samples\n(about %.1f hours at 44100 Hz sample rate)."),
+               (long)NYQ_MAX_LEN, hours
+            );
+            wxMessageBox(message, _("Nyquist Error"), wxOK | wxCENTRE);
             if (!mProjectChanged)
                em.SetSkipStateFlag(true);
             return false;
          }
 
-         if (mCurLen > mMaxLen) mCurLen = mMaxLen;
+         mCurLen = std::min(mCurLen, mMaxLen);
 
          mProgressIn = 0.0;
          mProgressOut = 0.0;
@@ -959,11 +963,21 @@ bool NyquistEffect::ProcessOne()
       nyx_set_audio_params(mCurTrack[0]->GetRate(), 0);
    }
    else {
-      nyx_set_audio_params(mCurTrack[0]->GetRate(), mCurLen);
+      // UNSAFE_SAMPLE_COUNT_TRUNCATION
+      // Danger!  Truncation of long long to long!
+      // Don't say we didn't warn you!
+
+      // Note mCurLen was elsewhere limited to mMaxLen, which is normally
+      // the greatest long value, and yet even mMaxLen may be experimentally
+      // increased with a nyquist comment directive.
+      // See the parsing of "maxlen"
+
+      auto curLen = (long)(static_cast<long long>(mCurLen));
+      nyx_set_audio_params(mCurTrack[0]->GetRate(), curLen);
 
       nyx_set_input_audio(StaticGetCallback, (void *)this,
                           mCurNumChannels,
-                          mCurLen, mCurTrack[0]->GetRate());
+                          curLen, mCurTrack[0]->GetRate());
    }
 
    // Restore the Nyquist sixteenth note symbol for Generate plugins.
@@ -1726,9 +1740,9 @@ int NyquistEffect::GetCallback(float *buffer, int ch,
          mCurBufferLen[ch] = mCurTrack[ch]->GetIdealBlockSize();
       }
 
-      if (mCurBufferStart[ch] + mCurBufferLen[ch] > mCurStart[ch] + mCurLen) {
-         mCurBufferLen[ch] = mCurStart[ch] + mCurLen - mCurBufferStart[ch];
-      }
+      mCurBufferLen[ch] =
+         limitSampleBufferSize( mCurBufferLen[ch],
+                                mCurStart[ch] + mCurLen - mCurBufferStart[ch] );
 
       mCurBuffer[ch].Allocate(mCurBufferLen[ch], floatSample);
       if (!mCurTrack[ch]->Get(mCurBuffer[ch].ptr(), floatSample,

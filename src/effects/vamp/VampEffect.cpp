@@ -496,10 +496,9 @@ bool VampEffect::Process()
       sampleCount ls = lstart;
       sampleCount rs = rstart;
 
-      while (len)
+      while (len != 0)
       {
-         int request = block;
-         if (request > len) request = len;
+         const auto request = limitSampleBufferSize( block, len );
 
          if (left)
          {
@@ -511,18 +510,23 @@ bool VampEffect::Process()
             right->Get((samplePtr)data[1], floatSample, rs, request);
          }
 
-         if (request < (int)block)
+         if (request < block)
          {
             for (int c = 0; c < channels; ++c)
             {
-               for (int i = request; i < (int)block; ++i)
+               for (decltype(block) i = request; i < block; ++i)
                {
                   data[c][i] = 0.f;
                }
             }
          }
 
-         Vamp::RealTime timestamp = Vamp::RealTime::frame2RealTime(ls, (int)(mRate + 0.5));
+         // UNSAFE_SAMPLE_COUNT_TRUNCATION
+         // Truncation in case of very long tracks!
+         Vamp::RealTime timestamp = Vamp::RealTime::frame2RealTime(
+            (long) static_cast<long long>( ls ),
+            (int)(mRate + 0.5)
+         );
 
          Vamp::Plugin::FeatureSet features = mPlugin->process(data, timestamp);
          AddFeatures(ltrack, features);

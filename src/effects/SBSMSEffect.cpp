@@ -98,18 +98,17 @@ long resampleCB(void *cb_data, SBSMSFrame *data)
 {
    ResampleBuf *r = (ResampleBuf*) cb_data;
 
-   long blockSize = r->leftTrack->GetBestBlockSize(r->offset);
-
-   //Adjust the block size if it is the final block in the track
-   if (r->offset + blockSize > r->end)
-      blockSize = r->end - r->offset;
+   const auto blockSize = limitSampleBufferSize(
+      r->leftTrack->GetBestBlockSize(r->offset),
+      r->end - r->offset
+   );
 
    // Get the samples from the tracks and put them in the buffers.
    r->leftTrack->Get((samplePtr)(r->leftBuffer), floatSample, r->offset, blockSize);
    r->rightTrack->Get((samplePtr)(r->rightBuffer), floatSample, r->offset, blockSize);
 
    // convert to sbsms audio format
-   for(int i=0; i<blockSize; i++) {
+   for(auto i=0; i<blockSize; i++) {
       r->buf[i][0] = r->leftBuffer[i];
       r->buf[i][1] = r->rightBuffer[i];
    }
@@ -133,12 +132,12 @@ long resampleCB(void *cb_data, SBSMSFrame *data)
 long postResampleCB(void *cb_data, SBSMSFrame *data)
 {
    ResampleBuf *r = (ResampleBuf*) cb_data;
-   long sampleCount = r->sbsms->read(r->iface.get(), r->SBSMSBuf, r->SBSMSBlockSize);
+   auto count = r->sbsms->read(r->iface.get(), r->SBSMSBuf, r->SBSMSBlockSize);
    data->buf = r->SBSMSBuf;
-   data->size = sampleCount;
+   data->size = count;
    data->ratio0 = 1.0 / r->ratio;
    data->ratio1 = 1.0 / r->ratio;
-   return sampleCount;
+   return count;
 }
 
 void EffectSBSMS :: setParameters(double rateStart, double rateEnd, double pitchStart, double pitchEnd,
@@ -334,11 +333,15 @@ bool EffectSBSMS::Process()
                                       (long)((float)(processPresamples)*(srTrack/srProcess)));
               rb.offset = start - trackPresamples;
               rb.end = trackEnd;
-              rb.iface = std::make_unique<SBSMSEffectInterface>(rb.resampler.get(),
-                                                      &rateSlide,&pitchSlide,
-                                                      bPitchReferenceInput,
-                                                      samplesToProcess,processPresamples,
-                                                      rb.quality.get());
+              rb.iface = std::make_unique<SBSMSEffectInterface>
+                  (rb.resampler.get(), &rateSlide, &pitchSlide,
+                   bPitchReferenceInput,
+                   // UNSAFE_SAMPLE_COUNT_TRUNCATION
+                   // The argument type is only long!
+                   static_cast<long> ( static_cast<size_t> (
+                        samplesToProcess ) ),
+                   processPresamples,
+                   rb.quality.get());
             }
             
             Resampler resampler(outResampleCB,&rb,outSlideType);
@@ -372,12 +375,9 @@ bool EffectSBSMS::Process()
 
             // process
             while(pos<samplesOut && outputCount) {
-               long frames;
-               if(pos+SBSMSOutBlockSize>samplesOut) {
-                  frames = samplesOut - pos;
-               } else {
-                  frames = SBSMSOutBlockSize;
-               }
+               const auto frames =
+                  limitSampleBufferSize( SBSMSOutBlockSize, samplesOut - pos );
+
                outputCount = resampler.read(outBuf,frames);
                for(int i = 0; i < outputCount; i++) {
                   outBufLeft[i] = outBuf[i][0];

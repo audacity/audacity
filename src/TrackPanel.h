@@ -138,7 +138,7 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
               wxWindowID id,
               const wxPoint & pos,
               const wxSize & size,
-              TrackList * tracks,
+              const std::shared_ptr<TrackList> &tracks,
               ViewInfo * viewInfo,
               TrackPanelListener * listener,
               AdornedRulerPanel * ruler );
@@ -487,7 +487,7 @@ protected:
 // JKC Nov-2011: These four functions only used from within a dll such as mod-track-panel
 // They work around some messy problems with constructors.
 public:
-   TrackList * GetTracks(){ return mTracks;}
+   TrackList * GetTracks(){ return mTracks.get(); }
    ViewInfo * GetViewInfo(){ return mViewInfo;}
    TrackPanelListener * GetListener(){ return mListener;}
    AdornedRulerPanel * GetRuler(){ return mRuler;}
@@ -497,7 +497,7 @@ public:
               wxWindowID id,
               const wxPoint & pos,
               const wxSize & size,
-              TrackList * tracks,
+              const std::shared_ptr<TrackList> &tracks,
               ViewInfo * viewInfo,
               TrackPanelListener * listener,
               AdornedRulerPanel * ruler);
@@ -539,7 +539,7 @@ protected:
 protected:
    TrackPanelListener *mListener;
 
-   TrackList *mTracks;
+   std::shared_ptr<TrackList> mTracks;
    ViewInfo *mViewInfo;
 
    AdornedRulerPanel *mRuler;

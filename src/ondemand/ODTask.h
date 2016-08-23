@@ -159,7 +159,7 @@ class ODTask /* not final */
    std::vector<WaveTrack*> mWaveTracks;
    ODLock     mWaveTrackMutex;
 
-   volatile sampleCount mDemandSample;
+   sampleCount mDemandSample;
    mutable ODLock      mDemandSampleMutex;
 
    volatile bool mIsRunning;

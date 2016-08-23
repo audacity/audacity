@@ -592,7 +592,7 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
          sampleCount sampleDuration = 0;
          auto sc = scs[s].get();
          if (sc->m_stream->duration > 0)
-            sampleDuration = ((sampleCount)sc->m_stream->duration * sc->m_stream->time_base.num), sc->m_stream->codec->sample_rate / sc->m_stream->time_base.den;
+            sampleDuration = ((sampleCount)sc->m_stream->duration * sc->m_stream->time_base.num) * sc->m_stream->codec->sample_rate / sc->m_stream->time_base.den;
          else
             sampleDuration = ((sampleCount)mFormatContext->duration *sc->m_stream->codec->sample_rate) / AV_TIME_BASE;
 
@@ -606,9 +606,8 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
             sampleCount maxBlockSize = t->GetMaxBlockSize();
             //use the maximum blockfile size to divide the sections (about 11secs per blockfile at 44.1khz)
             for (sampleCount i = 0; i < sampleDuration; i += maxBlockSize) {
-               sampleCount blockLen = maxBlockSize;
-               if (i + blockLen > sampleDuration)
-                  blockLen = sampleDuration - i;
+               const auto blockLen =
+                  limitSampleBufferSize( maxBlockSize, sampleDuration - i );
 
                t->AppendCoded(mFilename, i, blockLen, c, ODTask::eODFFMPEG);
 
