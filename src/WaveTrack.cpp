@@ -1459,13 +1459,11 @@ bool WaveTrack::Disjoin(double t0, double t1)
       sampleCount len = ( end - start );
       for( sampleCount done = 0; done < len; done += maxAtOnce )
       {
-         sampleCount numSamples = maxAtOnce;
-         if( done + maxAtOnce > len )
-            numSamples = len - done;
+         const auto numSamples = limitSampleBufferSize( maxAtOnce, len - done );
 
          clip->GetSamples( ( samplePtr )buffer, floatSample, start + done,
                numSamples );
-         for( sampleCount i = 0; i < numSamples; i++ )
+         for( decltype(+numSamples) i = 0; i < numSamples; i++ )
          {
             sampleCount curSamplePos = start + done + i;
 
@@ -2148,7 +2146,7 @@ void WaveTrack::GetEnvelopeValues(double *buffer, size_t bufferLen,
             // This conditional prevents the previous write past the buffer end, in clip->GetEnvelope() call.
             // Never increase rlen here.
             // PRL bug 827:  rewrote it again
-            rlen = static_cast<size_t>( std::min(sampleCount( rlen ), nClipLen) );
+            rlen = limitSampleBufferSize( rlen, nClipLen );
             rlen = std::min(rlen, size_t(floor(0.5 + (dClipEndTime - rt0) / tstep)));
          }
          clip->GetEnvelope()->GetValues(rbuf, rlen, rt0, tstep);

@@ -498,8 +498,7 @@ bool VampEffect::Process()
 
       while (len != 0)
       {
-         int request = block;
-         if (request > len) request = len;
+         const auto request = limitSampleBufferSize( block, len );
 
          if (left)
          {
@@ -511,11 +510,11 @@ bool VampEffect::Process()
             right->Get((samplePtr)data[1], floatSample, rs, request);
          }
 
-         if (request < (int)block)
+         if (request < block)
          {
             for (int c = 0; c < channels; ++c)
             {
-               for (int i = request; i < (int)block; ++i)
+               for (decltype(block) i = request; i < block; ++i)
                {
                   data[c][i] = 0.f;
                }

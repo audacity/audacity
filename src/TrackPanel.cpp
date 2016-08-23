@@ -2336,7 +2336,7 @@ void TrackPanel::SnapCenterOnce(const WaveTrack *pTrack, bool up)
 
 void TrackPanel::StartSnappingFreqSelection (const WaveTrack *pTrack)
 {
-   static const sampleCount minLength = 8;
+   static const size_t minLength = 8;
 
    const double rate = pTrack->GetRate();
 
@@ -2346,11 +2346,11 @@ void TrackPanel::StartSnappingFreqSelection (const WaveTrack *pTrack)
       pTrack->TimeToLongSamples(mViewInfo->selectedRegion.t0());
    const sampleCount end =
       pTrack->TimeToLongSamples(mViewInfo->selectedRegion.t1());
-   const sampleCount length =
-      std::min(sampleCount(frequencySnappingData.max_size()),
-         std::min(sampleCount(10485760), // as in FreqWindow.cpp
-                  end - start));
-   const sampleCount effectiveLength = std::max(minLength, length);
+   const auto length =
+      std::min(frequencySnappingData.max_size(),
+         limitSampleBufferSize( 10485760, // as in FreqWindow.cpp
+                               end - start ));
+   const auto effectiveLength = std::max(minLength, length);
    frequencySnappingData.resize(effectiveLength, 0.0f);
    pTrack->Get(
       reinterpret_cast<samplePtr>(&frequencySnappingData[0]),

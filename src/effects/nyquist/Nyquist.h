@@ -222,7 +222,7 @@ private:
 
    SampleBuffer      mCurBuffer[2];
    sampleCount       mCurBufferStart[2];
-   sampleCount       mCurBufferLen[2];
+   size_t            mCurBufferLen[2];
 
    std::unique_ptr<WaveTrack> mOutputTrack[2];
 

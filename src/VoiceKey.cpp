@@ -110,7 +110,6 @@ sampleCount VoiceKey::OnForward (WaveTrack & t, sampleCount start, sampleCount l
       auto samplesleft = len - WindowSizeInt;   //Indexes the number of samples remaining in the selection
       lastsubthresholdsample = start;          //start this off at the selection start
       int blockruns=0;                         //keeps track of the number of consecutive above-threshold blocks
-      int blocksize;                           //The final block may be smaller than WindowSizeInt, so use this
 
 
       //This loop goes through the selection a block at a time.  If a long enough run
@@ -122,12 +121,7 @@ sampleCount VoiceKey::OnForward (WaveTrack & t, sampleCount start, sampleCount l
           i += (WindowSizeInt - 1) , samplesleft -= (WindowSizeInt - 1)) {
 
          //Set blocksize so that it is the right size
-         if((unsigned int)samplesleft < WindowSizeInt){
-            blocksize = samplesleft;
-         }
-         else {
-            blocksize = WindowSizeInt;
-         }
+         const auto blocksize = limitSampleBufferSize( WindowSizeInt, samplesleft);
 
          //Test whether we are above threshold (the number of stats)
          if(AboveThreshold(t,i,blocksize))
@@ -263,7 +257,6 @@ sampleCount VoiceKey::OnBackward (WaveTrack & t, sampleCount end, sampleCount le
       auto samplesleft = len - WindowSizeInt;                 //Indexes the number of samples remaining in the selection
       lastsubthresholdsample = end;            //start this off at the end
       int blockruns=0;                         //keeps track of the number of consecutive above-threshold blocks
-      int blocksize;                           //The final block may be smaller than WindowSizeInt, so use this
 
 
       //This loop goes through the selection a block at a time in reverse order.  If a long enough run
@@ -274,12 +267,8 @@ sampleCount VoiceKey::OnBackward (WaveTrack & t, sampleCount end, sampleCount le
           i -= (WindowSizeInt - 1) , samplesleft -= (WindowSizeInt - 1)) {
 
          //Set blocksize so that it is the right size
-         if(samplesleft < (int)WindowSizeInt){
-            blocksize = samplesleft;
-         }
-         else {
-            blocksize = WindowSizeInt;
-         }
+
+         const auto blocksize = limitSampleBufferSize( WindowSizeInt, samplesleft);
 
 
          //Test whether we are above threshold
@@ -406,7 +395,6 @@ sampleCount VoiceKey::OffForward (WaveTrack & t, sampleCount start, sampleCount 
       auto samplesleft = len - WindowSizeInt;   //Indexes the number of samples remaining in the selection
       lastsubthresholdsample = start;          //start this off at the selection start
       int blockruns=0;                         //keeps track of the number of consecutive above-threshold blocks
-      int blocksize;                           //The final block may be smaller than WindowSizeInt, so use this
 
       //This loop goes through the selection a block at a time.  If a long enough run
       //of above-threshold blocks occur, we return to the last sub-threshold block and
@@ -416,12 +404,7 @@ sampleCount VoiceKey::OffForward (WaveTrack & t, sampleCount start, sampleCount 
           i += (WindowSizeInt - 1) , samplesleft -= (WindowSizeInt - 1)) {
 
          //Set blocksize so that it is the right size
-         if(samplesleft < (int)WindowSizeInt){
-            blocksize = samplesleft;
-         }
-         else {
-            blocksize = WindowSizeInt;
-         }
+         const auto blocksize = limitSampleBufferSize( WindowSizeInt, samplesleft);
 
          if(!AboveThreshold(t,i,blocksize))
             {
@@ -547,7 +530,6 @@ sampleCount VoiceKey::OffBackward (WaveTrack & t, sampleCount end, sampleCount l
       auto samplesleft = len - WindowSizeInt;                 //Indexes the number of samples remaining in the selection
       lastsubthresholdsample = end;            //start this off at the end
       int blockruns=0;                         //keeps track of the number of consecutive above-threshold blocks
-      int blocksize;                           //The final block may be smaller than WindowSizeInt, so use this
 
       //This loop goes through the selection a block at a time in reverse order.  If a long enough run
       //of above-threshold blocks occur, we return to the last sub-threshold block and
@@ -557,12 +539,7 @@ sampleCount VoiceKey::OffBackward (WaveTrack & t, sampleCount end, sampleCount l
           i -= (WindowSizeInt - 1), samplesleft -= (WindowSizeInt -1 )) {
 
          //Set blocksize so that it is the right size
-         if(samplesleft < (int)WindowSizeInt){
-            blocksize = samplesleft;
-         }
-         else {
-            blocksize = WindowSizeInt;
-         }
+         const auto blocksize = limitSampleBufferSize( WindowSizeInt, samplesleft);
 
          if(!AboveThreshold(t,i,blocksize))
             {
@@ -797,7 +774,6 @@ void VoiceKey::CalibrateNoise(WaveTrack & t, sampleCount start, sampleCount len)
 
    //	int n = len - WindowSizeInt;        //This is how many samples we have
    auto samplesleft = len - WindowSizeInt;
-   int blocksize;
    int samples=0;
 
    for(auto i = start; samplesleft >= 10;
@@ -807,14 +783,7 @@ void VoiceKey::CalibrateNoise(WaveTrack & t, sampleCount start, sampleCount len)
          //samples left) take a chunk that eats the rest of the samples.
 
          samples++;          //Increment the number of samples we have
-         if(samplesleft < (int)WindowSizeInt)
-            {
-               blocksize = samplesleft;
-            }
-         else
-            {
-               blocksize = WindowSizeInt;
-            }
+         const auto blocksize = limitSampleBufferSize( WindowSizeInt, samplesleft);
 
          erg = TestEnergy(t, i, blocksize);
          sumerg +=(double)erg;
@@ -872,22 +841,19 @@ double VoiceKey::TestEnergy (WaveTrack & t, sampleCount start, sampleCount len)
    double sum = 1;
    sampleCount s = start;                                //Keep track of start
    sampleCount originalLen = len;                        //Keep track of the length of block to process (its not the length of t)
-   sampleCount blockSize = t.GetMaxBlockSize();         //Determine size of sampling buffer
-
-
-   if( blockSize > len)
-      blockSize = len;
+   const auto blockSize = limitSampleBufferSize(
+      t.GetMaxBlockSize(), len);               //Determine size of sampling buffer
    float *buffer = new float[blockSize];       //Get a sampling buffer
 
    while(len > 0)
       {
-         sampleCount block = t.GetBestBlockSize(s);          //Figure out how much to grab
-         if(block > len)	block = len;                 //Don't grab too much!
+         //Figure out how much to grab
+         const auto block = limitSampleBufferSize ( t.GetBestBlockSize(s), len );
 
          t.Get((samplePtr)buffer,floatSample, s,block);                      //grab the block;
 
          //Now, go through the block and calculate energy
-         for(int i = 0; i< block; i++)
+         for(decltype(+block) i = 0; i< block; i++)
             {
                sum += buffer[i]*buffer[i];
             }
@@ -916,19 +882,16 @@ double VoiceKey::TestSignChanges(WaveTrack & t, sampleCount start, sampleCount l
 
    sampleCount s = start;                                //Keep track of start
    sampleCount originalLen = len;                        //Keep track of the length of block to process (its not the length of t)
-   sampleCount blockSize = t.GetMaxBlockSize();         //Determine size of sampling buffer
+   const auto blockSize = limitSampleBufferSize(
+      t.GetMaxBlockSize(), len);               //Determine size of sampling buffer
    unsigned long signchanges = 1;
    int currentsign=0;
 
-
-   if( blockSize > len)
-      blockSize = len;
    float *buffer = new float[blockSize];       //Get a sampling buffer
 
    while(len > 0) {
-
-      sampleCount block = t.GetBestBlockSize(s);  //Figure out how much to grab
-      if(block > len)	block = len;                 //Don't grab too much!
+      //Figure out how much to grab
+      const auto block = limitSampleBufferSize ( t.GetBestBlockSize(s), len );
 
       t.Get((samplePtr)buffer,floatSample, s,block);                      //grab the block;
 
@@ -940,7 +903,7 @@ double VoiceKey::TestSignChanges(WaveTrack & t, sampleCount start, sampleCount l
 
       //Now, go through the block and calculate zero crossings
 
-      for(int i = 0; i< block; i++)
+      for(decltype(+block) i = 0; i< block; i++)
          {
             if( sgn(buffer[i]) != currentsign)
                {
@@ -975,19 +938,17 @@ double VoiceKey::TestDirectionChanges(WaveTrack & t, sampleCount start, sampleCo
 
    sampleCount s = start;                                //Keep track of start
    sampleCount originalLen = len;                        //Keep track of the length of block to process (its not the length of t)
-   sampleCount blockSize = t.GetMaxBlockSize();         //Determine size of sampling buffer
+   const auto blockSize = limitSampleBufferSize(
+      t.GetMaxBlockSize(), len);               //Determine size of sampling buffer
    unsigned long directionchanges = 1;
    float lastval=float(0);
    int lastdirection=1;
 
-   if( blockSize > len)
-      blockSize = len;
    float *buffer = new float[blockSize];       //Get a sampling buffer
 
    while(len > 0) {
-
-      sampleCount block = t.GetBestBlockSize(s);  //Figure out how much to grab
-      if(block > len)	block = len;                 //Don't grab too much!
+      //Figure out how much to grab
+      const auto block = limitSampleBufferSize ( t.GetBestBlockSize(s), len );
 
       t.Get((samplePtr)buffer,floatSample, s,block);                      //grab the block;
 
@@ -999,7 +960,7 @@ double VoiceKey::TestDirectionChanges(WaveTrack & t, sampleCount start, sampleCo
       //Now, go through the block and calculate zero crossings
 
 
-      for(int i = 0; i< block; i++){
+      for(decltype(+block) i = 0; i< block; i++){
 
          if( sgn(buffer[i]-lastval) != lastdirection) {
             directionchanges++;
