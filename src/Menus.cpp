@@ -1091,7 +1091,7 @@ void AudacityProject::CreateMenusAndCommands()
       c->SetDefaultFlags(AlwaysEnabledFlag, AlwaysEnabledFlag);
 
       c->AddItem(wxT("QuickHelp"), _("&Quick Help"), FN(OnQuickHelp));
-      c->AddItem(wxT("Audacity Manual"), _("&Manual"), FN(OnManual));
+      c->AddItem(wxT("Manual"), _("Audacity &Manual"), FN(OnManual));
 
       c->AddSeparator();
 
