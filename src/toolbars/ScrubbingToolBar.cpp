@@ -110,9 +110,9 @@ void ScrubbingToolBar::Populate()
              _("Scrub"), true);
    AddButton(bmpSeek, bmpSeek, bmpSeekDisabled, STBSeekID,
              _("Seek"), true);
-   AddButton(bmpToggleScrubBar, bmpToggleScrubBar, bmpToggleScrubBar,
-             STBBarID,
-             _("Scrub bar"), true);
+   AddButton(bmpToggleScrubRuler, bmpToggleScrubRuler, bmpToggleScrubRuler,
+             STBRulerID,
+             _("Scrub Ruler"), true);
 
 
    RegenerateTooltips();
@@ -173,11 +173,11 @@ void ScrubbingToolBar::RegenerateTooltips()
       fn(*seekButton, label, wxT("Seek"));
 
       label = (
-               project->GetRulerPanel()->ShowingScrubBar()
-               ? _("Hide Scrub Bar")
-               : _("Show Scrub Bar")
+               project->GetRulerPanel()->ShowingScrubRuler()
+               ? _("Hide Scrub Ruler")
+               : _("Show Scrub Ruler")
                );
-      fn(*mButtons[STBBarID], label, wxT("ToggleScrubBar"));
+      fn(*mButtons[STBRulerID], label, wxT("ToggleScrubRuler"));
    }
 #endif
 }
@@ -197,8 +197,8 @@ void ScrubbingToolBar::OnButton(wxCommandEvent &event)
       case STBSeekID:
          scrubber.OnSeek(event);
          break;
-      case STBBarID:
-         scrubber.OnToggleScrubBar(event);
+      case STBRulerID:
+         scrubber.OnToggleScrubRuler(event);
          break;
       default:
          wxASSERT(false);
@@ -244,9 +244,9 @@ void ScrubbingToolBar::EnableDisableButtons()
          seekButton->Disable();
    }
 
-   const auto barButton = mButtons[STBBarID];
+   const auto barButton = mButtons[STBRulerID];
    barButton->Enable();
-   if (p->GetRulerPanel()->ShowingScrubBar())
+   if (p->GetRulerPanel()->ShowingScrubRuler())
       barButton->PushDown();
    else
       barButton->PopUp();

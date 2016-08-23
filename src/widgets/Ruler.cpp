@@ -1911,7 +1911,7 @@ enum {
    OnTimelineToolTipID,
    OnAutoScrollID,
    OnLockPlayRegionID,
-   OnScrubBarID,
+   OnScrubRulerID,
 
    OnTogglePinnedStateID,
 };
@@ -1928,7 +1928,7 @@ BEGIN_EVENT_TABLE(AdornedRulerPanel, OverlayPanel)
    EVT_MENU(OnTimelineToolTipID, AdornedRulerPanel::OnTimelineToolTips)
    EVT_MENU(OnAutoScrollID, AdornedRulerPanel::OnAutoScroll)
    EVT_MENU(OnLockPlayRegionID, AdornedRulerPanel::OnLockPlayRegion)
-   EVT_MENU(OnScrubBarID, AdornedRulerPanel::OnToggleScrubBarFromMenu)
+   EVT_MENU(OnScrubRulerID, AdornedRulerPanel::OnToggleScrubRulerFromMenu)
 
    // Pop up menus on Windows
    EVT_CONTEXT_MENU(AdornedRulerPanel::OnContextMenu)
@@ -2346,12 +2346,15 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
       mProject->GetScrubber().CanScrub() &&
       mShowScrubbing &&
       mScrubZone.Contains(position);
+   const bool inQPZone = 
+      (!inScrubZone) && mInner.Contains(position);
+
    const StatusChoice zone =
       evt.Leaving()
       ? StatusChoice::Leaving
       : inScrubZone
         ? StatusChoice::EnteringScrubZone
-        : mInner.Contains(position)
+        : inQPZone
           ? StatusChoice::EnteringQP
           : StatusChoice::NoChange;
    const bool changeInZone = (zone != mPrevZone);
@@ -2498,9 +2501,11 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
       }
 
       if (evt.LeftDown()) {
-         HandleQPClick(evt, mousePosX);
-         HandleQPDrag(evt, mousePosX);
-         ShowQuickPlayIndicator();
+         if( inQPZone ){
+            HandleQPClick(evt, mousePosX);
+            HandleQPDrag(evt, mousePosX);
+            ShowQuickPlayIndicator();
+         }
       }
       else if (evt.LeftIsDown() && HasCapture()) {
          HandleQPDrag(evt, mousePosX);
@@ -2510,7 +2515,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
          HandleQPRelease(evt);
          ShowQuickPlayIndicator();
       }
-      else // if (!inScrubZone)
+      else // if (!inScrubZone) 
          ShowQuickPlayIndicator();
    }
 }
@@ -2803,13 +2808,13 @@ void AdornedRulerPanel::UpdateStatusBarAndTooltips(StatusChoice choice)
 // This version toggles ruler state indirectly via the scrubber
 // to ensure that all the places where the state is shown update.
 // For example buttons and menus must update.
-void AdornedRulerPanel::OnToggleScrubBarFromMenu(wxCommandEvent& Evt)
+void AdornedRulerPanel::OnToggleScrubRulerFromMenu(wxCommandEvent& Evt)
 {
    auto &scrubber = mProject->GetScrubber();
-   scrubber.OnToggleScrubBar( Evt );
+   scrubber.OnToggleScrubRuler( Evt );
 }
 
-void AdornedRulerPanel::OnToggleScrubBar(/*wxCommandEvent&*/)
+void AdornedRulerPanel::OnToggleScrubRuler(/*wxCommandEvent&*/)
 {
    mShowScrubbing = !mShowScrubbing;
    WriteScrubEnabledPref(mShowScrubbing);
@@ -2925,11 +2930,11 @@ void AdornedRulerPanel::ShowMenu(const wxPoint & pos)
       prlitem = rulerMenu.Append(OnLockPlayRegionID, _("Unlock Play Region"));
    prlitem->Enable(mProject->IsPlayRegionLocked() || (mPlayRegionStart != mPlayRegionEnd));
 
-   wxMenuItem *baritem;
+   wxMenuItem *ruleritem;
    if (mShowScrubbing)
-      baritem = rulerMenu.Append(OnScrubBarID, _("Disable Scrub Bar"));
+      ruleritem = rulerMenu.Append(OnScrubRulerID, _("Disable Scrub Ruler"));
    else
-      baritem = rulerMenu.Append(OnScrubBarID, _("Enable Scrub Bar"));
+      ruleritem = rulerMenu.Append(OnScrubRulerID, _("Enable Scrub Ruler"));
 
    PopupMenu(&rulerMenu, pos);
 }

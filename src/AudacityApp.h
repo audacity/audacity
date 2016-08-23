@@ -97,6 +97,7 @@ enum CommandFlag : unsigned long long
    NotMinimizedFlag      = 0x100000000ULL, // prl
    PausedFlag            = 0x200000000ULL, // jkc
    NotPausedFlag         = 0x400000000ULL, // jkc
+   HasWaveDataFlag       = 0x800000000ULL, // jkc
 
    NoFlagsSpecifed        = ~0ULL
 };

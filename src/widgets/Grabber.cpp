@@ -94,6 +94,17 @@ void Grabber::SendEvent(wxEventType type, const wxPoint & pos, bool escaping)
    parent->GetEventHandler()->AddPendingEvent(e);
 }
 
+void Grabber::SetAsSpacer( bool bIsSpacer ) { 
+   if( mAsSpacer != bIsSpacer ){
+      // HACK: Use a wider rectangle to also cover one pixel of space just to the right.
+      wxSize siz = GetSize();
+      siz.IncBy( bIsSpacer ? 1:-1, 0 );
+      SetSize( siz );
+   }
+   mAsSpacer = bIsSpacer;
+};
+
+
 //
 // Draw the grabber
 //
@@ -107,8 +118,14 @@ void Grabber::DrawGrabber( wxDC & dc )
    int y, left, right, top, bottom;
 
 #ifndef EXPERIMENTAL_THEMING
+
    AColor::Medium(&dc, mOver );
    dc.DrawRectangle(r);
+
+   // HACK: We used a wider rectangle to also cover one pixel of space just to the right.
+   if( mAsSpacer )
+      r.width -= 1;
+
 #else
    // Paint the background
    if( mOver )
@@ -125,6 +142,7 @@ void Grabber::DrawGrabber( wxDC & dc )
       dc.DrawRectangle(r);
    }
 #endif
+
 
 #ifndef __WXMAC__
 
