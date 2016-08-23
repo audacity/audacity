@@ -64,11 +64,10 @@ static wxString FileLink( const wxString &Key, const wxString& Text )
       wxT("</a>");
 }
 
-static wxString HttpLink( const wxString &Key, const wxString& Text )
+static wxString TypedLink( const wxString &Key, const wxString& Text )
 {
    return wxString(wxT("")) +
       wxT("<a href='") +
-      wxT("http:") +
       Key +
       wxT("'>") +
       Text +
@@ -104,7 +103,11 @@ static wxString LinkExpand( const wxString & Text )
       }
       else if( Key.StartsWith( wxT("http:") ))
       {
-         Replacement = HttpLink( Key.Mid( 5 ), LinkText );
+         Replacement = TypedLink( Key, LinkText );
+      }
+      else if( Key.StartsWith( wxT("mailto:") ))
+      {
+         Replacement = TypedLink( Key, LinkText );
       }
       else
       {
@@ -162,7 +165,7 @@ wxString TitleText( const wxString & Key )
    if(Key ==wxT("save") )
    {
       /* i18n-hint: Title for a topic.*/
-      return _("Saving an Audacity Project");
+      return _("Saving a DarkAudacity Project");
    }
    if(Key ==wxT("wma-proprietary") )
    {
@@ -186,31 +189,33 @@ static wxString HelpTextBuiltIn( const wxString & Key )
    if(Key==wxT("welcome"))
    {
       /// TO-DO: Make the links to help here use the widgets/HelpSystem mechanism
-	  /// so that they are consistent
+      /// so that they are consistent
       /* i18n-hint: Preserve [[file:quick_help.html as it's the name of a file.*/
       return WrapText(
          wxString(wxT("")) + 
-         wxT("<center><h3>Audacity ") + AUDACITY_VERSION_STRING + wxT("</h3><h3>") +
-         _("How to get help") + wxT("</h3></center>") + 
-         _("These are our support methods:") + wxT("<p><ul><li>") +
-         _(" [[file:quick_help.html|Quick Help]] - if not installed locally, [[http://manual.audacityteam.org/quick_help.html|view online]]") + wxT("</li><li>") +
-         _(" [[file:index.html|Manual]] - if not installed locally, [[http://manual.audacityteam.org|view online]]") + wxT("</li><li>") +
-         _(" [[http://forum.audacityteam.org/|Forum]] - ask your question directly, online.") + wxT("</li></ul></p><p>") + wxT("<b>") + 
-         _("More:</b> Visit our [[http://wiki.audacityteam.org/index.php|Wiki]] for tips, tricks, extra tutorials and effects plug-ins.") + wxT("</p>")
+         wxT("<center><h3>DarkAudacity ") + AUDACITY_VERSION_STRING + wxT("</h3></center>") +
+         _("<br><br>DarkAudacity is based on Audacity:") + wxT("<ul><li>") +
+         _(" email to [[mailto:james@audacityteam.org|'james@audacityteam.org']] - for help using DarkAudacity.") + wxT("</li><li>") +
+         _(" see [[http://www.darkaudacity.com|www.darkaudacity.com]] - for differences between DarkAudacity and Audacity.") + wxT("</li></ul>") +
+
+         _("<br><br>Audacity has these support methods:") + wxT("<ul><li>") +
+         _(" [[http://manual.audacityteam.org/quick_help.html|'Quick Help']] - for getting started with Audacity.") + wxT("</li><li>") +
+         _(" [[http://manual.audacityteam.org/|Manual]] - for comprehensive Audacity documentation") + wxT("</li><li>") +
+         _(" [[http://forum.audacityteam.org/|Forum]] - for large knowledge base on using Audacity.") + wxT("</li></ul>") 
       );
    }
    if(Key==wxT("wma-proprietary"))
    {
       return WrapText(
          wxString(wxT("<p>"))+
-         _("Audacity can import unprotected files in many other formats (such as M4A and WMA, \
+         _("DarkAudacity can import unprotected files in many other formats (such as M4A and WMA, \
 compressed WAV files from portable recorders and audio from video files) if you download and install \
-the optional <a href=\"http://manual.audacityteam.org/man/faq_opening_and_saving_files.html#foreign\"> \
-FFmpeg library</a> to your computer.") + wxT("</p><p>") +
+the optional [[http://manual.audacityteam.org/man/faq_opening_and_saving_files.html#foreign|\
+FFmpeg library]] to your computer.") + wxT("</p><p>") +
          _("You can also read our help on importing \
-<a href=\"http://manual.audacityteam.org/man/faq_opening_and_saving_files.html#midi\">MIDI files</a> \
-and tracks from <a href=\"http://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd\"> \
-audio CDs</a>.") + wxT("</p>")
+[[http://manual.audacityteam.org/man/faq_opening_and_saving_files.html#midi|MIDI files]] \
+and tracks from [[http://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| \
+audio CDs]].") + wxT("</p>")
       );
    }
 
@@ -222,8 +227,8 @@ audio CDs</a>.") + wxT("</p>")
 // *URL* will be replaced by whatever URL we are looking for.
       return WrapText(_("The Manual does not appear to be installed. \
 Please <a href=\"*URL*\">view the Manual online</a> or \
-<a href=\"http://manual.audacityteam.org/man/unzipping_the_manual.html\"> \
-download the Manual</a>.<br><br>\
+[[http://manual.audacityteam.org/man/unzipping_the_manual.html| \
+download the Manual]].<br><br>\
 To always view the Manual online, change \"Location of Manual\" in \
 Interface Preferences to \"From Internet\".")
          );
