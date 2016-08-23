@@ -96,10 +96,10 @@
 // Use on-demand importing for FLAC. Has issues with opening projects that
 // have not been fully imported in builds without FLAC support, so disabled for
 // 2.0 release
-#define EXPERIMENTAL_OD_FLAC
+//#define EXPERIMENTAL_OD_FLAC
 // similarly for FFmpeg:
 // Won't build on Fedora 17 or Windows VC++, per http://bugzilla.audacityteam.org/show_bug.cgi?id=539.
-#define EXPERIMENTAL_OD_FFMPEG 1
+//#define EXPERIMENTAL_OD_FFMPEG 1
 
 // Paul Licameli (PRL) 5 Oct 2014
 #define EXPERIMENTAL_SPECTRAL_EDITING
