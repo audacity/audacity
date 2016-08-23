@@ -95,7 +95,7 @@ Source: "..\LICENSE.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#AppExe}"; DestDir: "{app}"; Flags: ignoreversion
 
 ; Manual, which should be got from the manual wiki using ..\scripts\mw2html_audacity\wiki2htm.bat
-Source: "..\help\manual\*"; DestDir: "{app}\help\manual\"; Flags: ignoreversion recursesubdirs
+;Source: "..\help\manual\*"; DestDir: "{app}\help\manual\"; Flags: ignoreversion recursesubdirs
 
 Source: "..\presets\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
 
@@ -123,7 +123,7 @@ Source: "..\win\release\wxmsw30u_qa_vc_custom.dll"; DestDir: "{app}"; Flags: ign
 Source: "..\win\release\msvcp120.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\win\release\msvcr120.dll"; DestDir: "{app}"; Flags: ignoreversion
 
-Source: "..\win\release\languages\*"; DestDir: "{app}\Languages\"; Flags: ignoreversion recursesubdirs
+;Source: "..\win\release\languages\*"; DestDir: "{app}\Languages\"; Flags: ignoreversion recursesubdirs
 ; We don't currently ship any modules, so the next line is commented out
 ; Source: "..\win\release\modules\*"; DestDir: "{app}\Modules\"; Flags: ignoreversion recursesubdirs skipifsourcedoesntexist
 Source: "..\win\release\nyquist\*"; DestDir: "{app}\Nyquist\"; Flags: ignoreversion recursesubdirs

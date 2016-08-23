@@ -23,12 +23,19 @@ http://creativecommons.org/licenses/by/3.0/legalcode .
 
 "Audacity" is a registered trademark of Dominic Mazzoni.
 
-Version 2.1.2x 
+DarkAudacity Version 2.1.3x 
+
+The x,y, and z suffixes indicate experimental releases.  DarkAudacity releases 
+are cutting edge releases.  Whilst I am careful about the changes I make, if 
+you want assurances about the degree of testing done, use an official Audacity 
+release that has been through the official Audacity QA process.
+
+
 
 Contents of this README:
 
 1.  Licensing
-2.  Changes since version 2.1.2 
+2.  Changes since Audacity version 2.1.2 
 3.  Known Issues at Release
 4.  Source Code, Libraries and Additional Copyright Information
 5.  Compilation Instructions
@@ -60,64 +67,74 @@ to http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or write to
 
 -------------------------------------------------------------------------------
 
-2. Changes since version 2.1.1: 
+2. DarkAudacity 2.1.3x; changes since Audacity version 2.1.2: 
 
-Changes and Improvements:
-   
  * Interface:  
-   * Spectrogram settings are now available per track.
-   * Clearer (sharper) display of pitch (EAC).
-   * New 'Spectral Reassignment' option in spectrogram.  Good for vocal work.
+   * New icon set derived from Google's material design icons.
+   * Dark themed colours, dark background and orange waves.
+   * New Logo(s) (yes, I agree it needs more TLC.)
+   * Reorganisation of menus (less cruft in top level menus)
+   * New Menu Items for Export MP3, WAV or OGG.
+   * Clutter on left of track panel removed, sliders and meters simplified.
+   * Sync-Lock demoted; still available from menus if you want it.
+   * Record now records at end of the track, rather than under to make a mix.  
+     To get the old behaviour, use SHIFT before pressing record.
+   * Many actions that were previously disabled when paused are now enabled.
+     Pause 'pops up' if you click on them.
+   * Pinned (centred) or Unpinned Play-Head (by Paul Licameli)
+   * Optional Scrub-Ruler and Scrub-Toolbar (by Paul Licameli)
+   * Recording Preferences for naming of recorded tracks (Audacity Team).
+   * Option to mix MP3 export to Mono (Audacity Team).
+   * Timer Record dialog extended (Mark Young). 
    
  * Other Changes:   
-   * Upgraded the wxWidgets library from wx 2.8.12 to wx 3.0.2.  This is 
-     the main change in this release.
+   * Ongoing code review/upgrade work.  Mainly to identify risky code and
+     improve consistency in the code, which in turn reduces errors.  This has 
+     removed some memory leaks, and identified places where Audacity continues 
+     on from some action without checking for errors first.
+   * Installer ships without manual; Translations not installed; accessibility 
+     support not enabled.  Only Windows.  [These save me a lot of time in 
+     preparing a release - e.g 3 platforms = 3x the work.].
+   * Officially supports Win10 (Audacity 2.1.2 did not).
+   * Upgraded PortAudio to r1966.
+
    
 Bug fixes:
 
- * Crashes
-   * Crash using 'space' in Selection toolbar context menu fixed.
-   * Crash setting equalization effect parameters in chains fixed.
-   * Crash when pressing both mouse buttons over toolbar buttons fixed.
-   * (Rare) crash or freeze in sound activated recording fixed.
-   * (Rare) crash on using plot spectrum for first time fixed.
+ * 82 bugs we knew about in 2.1.2 addressed, 66 closed, 16 had some residual 
+   problems after the fixes.  These issues included a dramatic slowdown when 
+   using Lyrics Window with lots of lyrics (fully fixed), and labels 
+   being written at the wrong position in some circumstances (fully fixed). I'm
+   not listing all these issues, but this gives an idea of the kind of issue.
+ * At least as much work has gone into other issues which we did not know about 
+   when we released 2.1.2.  These were for example caused by work on new 
+   features, and usually were in those features, or came to light as a result 
+   of code review (mostly code review by Paul).
 
- * Interface
-   * Equalization effect settings are now saved.
-   * Oversized Export Options window (FFmpeg) now OK on smaller screens
-   * FLAC import/export fast again.
-   * Can now set undefined frequency in Spectral Selection bar.
-   * Imported presets on custom FFmpeg export fixed.
-   * Text input boxes working with VAMP
-   * Keyboard playback commands now work again.
-   * Import Raw Data now works when in Polish language.
-   
- * Mac OS X
-   * Mouse preference bindings now show 'command', not 'ctrl'
    
 -------------------------------------------------------------------------------
 
-3. Known Issues in 2.1.2:
+3. Known Issues in 2.1.3x:
 
-For known issues at release of 2.1.2 please see:
+Please see the facebook page for DarkAudacity for discussion of issues.
+
+Many issues that affected Audacity 2.1.2 will affect DarkAudacity 2.1.3x too, 
+since DarkAudacity is derived from Audacity code.  Many Audacity 2.1.2 issues 
+are listed here:
+
   http://wiki.audacityteam.org/wiki/Release_Notes_2.1.2#known
 
-Please also check:
-  http://wiki.audacityteam.org/index.php?title=Known_Issues
-
-for details of any issues that have been identified after release of
-this version.
 
 
 -------------------------------------------------------------------------------
 
 4.  Source Code, Libraries and Additional Copyright Information
 
-Source code to this program is always available; for more information visit
-our web site at:
+Source code to this program is always available; for more information visit:
 
-  http://audacityteam.org/download/source
-
+  http://audacityteam.org/download/source - for Audacity
+  https://github.com/JamesCrook/audacity - for DarkAudacity branch.
+  
 Audacity is built upon other free libraries; some of these libraries may have
 come with Audacity in the lib-src directory.  Others you are expected to install
 first if you want Audacity to have certain capabilities.  Most of these libraries
@@ -259,13 +276,15 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 5. Compilation instructions
 
-First you must download wxWidgets. Audacity 2.1.2 requires wxWidgets 3.0.x, 
-preferably 3.0.2, which can be obtained from:
+First you must download wxWidgets. DarkAudacity 2.1.3x requires wxWidgets 3.0.2.
 
    http://www.wxWidgets.org/ .
 
-The libsndfile library is also required and is included in Audacity obtained 
+The libsndfile library is also required and is included in DarkAudacity obtained 
 from GitHub. 
+
+The instructions that follow are for Audacity for Linux/Mac, and might work
+for DarkAudacity too.
  
 CMake ( http://www.cmake.org/ ) is required to build the local copy of 
 the libsoxr resampling library used by Audacity, unless you install 
@@ -308,7 +327,42 @@ or ask at:
 
 --------------------------------------------------------------------------------
 
-6.  Previous Changes going back to version 1.1.0
+6.  Previous Changes to Audacity going back to version 1.1.0
+
+
+Changes in version 2.1.2: 
+   
+ * Interface:  
+   * Spectrogram settings are now available per track.
+   * Clearer (sharper) display of pitch (EAC).
+   * New 'Spectral Reassignment' option in spectrogram.  Good for vocal work.
+   
+ * Other Changes:   
+   * Upgraded the wxWidgets library from wx 2.8.12 to wx 3.0.2.  This is 
+     the main change in this release.
+   
+Bug fixes:
+
+ * Crashes
+   * Crash using 'space' in Selection toolbar context menu fixed.
+   * Crash setting equalization effect parameters in chains fixed.
+   * Crash when pressing both mouse buttons over toolbar buttons fixed.
+   * (Rare) crash or freeze in sound activated recording fixed.
+   * (Rare) crash on using plot spectrum for first time fixed.
+
+ * Interface
+   * Equalization effect settings are now saved.
+   * Oversized Export Options window (FFmpeg) now OK on smaller screens
+   * FLAC import/export fast again.
+   * Can now set undefined frequency in Spectral Selection bar.
+   * Imported presets on custom FFmpeg export fixed.
+   * Text input boxes working with VAMP
+   * Keyboard playback commands now work again.
+   * Import Raw Data now works when in Polish language.
+   
+ * Mac OS X
+   * Mouse preference bindings now show 'command', not 'ctrl'
+
 
 Changes in version 2.1.1: 
 
