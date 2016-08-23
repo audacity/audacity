@@ -108,7 +108,7 @@ long resampleCB(void *cb_data, SBSMSFrame *data)
    r->rightTrack->Get((samplePtr)(r->rightBuffer), floatSample, r->offset, blockSize);
 
    // convert to sbsms audio format
-   for(decltype(+blockSize) i=0; i<blockSize; i++) {
+   for(auto i=0; i<blockSize; i++) {
       r->buf[i][0] = r->leftBuffer[i];
       r->buf[i][1] = r->rightBuffer[i];
    }

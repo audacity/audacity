@@ -853,7 +853,7 @@ double VoiceKey::TestEnergy (WaveTrack & t, sampleCount start, sampleCount len)
          t.Get((samplePtr)buffer,floatSample, s,block);                      //grab the block;
 
          //Now, go through the block and calculate energy
-         for(decltype(+block) i = 0; i< block; i++)
+         for(auto i = 0; i< block; i++)
             {
                sum += buffer[i]*buffer[i];
             }
@@ -903,7 +903,7 @@ double VoiceKey::TestSignChanges(WaveTrack & t, sampleCount start, sampleCount l
 
       //Now, go through the block and calculate zero crossings
 
-      for(decltype(+block) i = 0; i< block; i++)
+      for(auto i = 0; i< block; i++)
          {
             if( sgn(buffer[i]) != currentsign)
                {
@@ -960,7 +960,7 @@ double VoiceKey::TestDirectionChanges(WaveTrack & t, sampleCount start, sampleCo
       //Now, go through the block and calculate zero crossings
 
 
-      for(decltype(+block) i = 0; i< block; i++){
+      for(auto i = 0; i< block; i++){
 
          if( sgn(buffer[i]-lastval) != lastdirection) {
             directionchanges++;

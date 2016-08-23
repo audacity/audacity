@@ -116,7 +116,7 @@ bool CompareAudioCommand::Apply(CommandExecutionContext context)
       mTrack0->Get((samplePtr)buff0, floatSample, position, block);
       mTrack1->Get((samplePtr)buff1, floatSample, position, block);
 
-      for (decltype(+block) buffPos = 0; buffPos < block; ++buffPos)
+      for (auto buffPos = 0; buffPos < block; ++buffPos)
       {
          if (CompareSample(buff0[buffPos], buff1[buffPos]) > errorThreshold)
          {

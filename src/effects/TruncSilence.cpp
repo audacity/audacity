@@ -630,7 +630,7 @@ bool EffectTruncSilence::Analyze(RegionList& silenceList,
       wt->Get((samplePtr)(buffer), floatSample, *index, count);
 
       // Look for silenceList in current block
-      for (decltype(+count) i = 0; i < count; ++i) {
+      for (auto i = 0; i < count; ++i) {
          if (inputLength && ((outLength >= previewLen) || (outLength > wt->TimeToLongSamples(*minInputLength)))) {
             *inputLength = wt->LongSamplesToTime(*index + i) - wt->LongSamplesToTime(start);
             break;

@@ -1463,7 +1463,7 @@ bool WaveTrack::Disjoin(double t0, double t1)
 
          clip->GetSamples( ( samplePtr )buffer, floatSample, start + done,
                numSamples );
-         for( decltype(+numSamples) i = 0; i < numSamples; i++ )
+         for( auto i = 0; i < numSamples; i++ )
          {
             sampleCount curSamplePos = start + done + i;
 

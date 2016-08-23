@@ -476,7 +476,7 @@ sampleCount Mixer::MixVariableRates(int *channelFlags, WaveTrackCache &cache,
                *pos += getLen;
             }
 
-            for (decltype(+getLen) i = 0; i < getLen; i++) {
+            for (auto i = 0; i < getLen; i++) {
                queue[(*queueLen) + i] *= mEnvValues[i];
             }
 

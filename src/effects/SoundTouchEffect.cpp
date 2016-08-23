@@ -291,7 +291,7 @@ bool EffectSoundTouch::ProcessStereo(WaveTrack* leftTrack, WaveTrack* rightTrack
       rightTrack->Get((samplePtr)(rightBuffer), floatSample, sourceSampleCount, blockSize);
 
       // Interleave into soundTouchBuffer.
-      for (decltype(+blockSize) index = 0; index < blockSize; index++) {
+      for (auto index = 0; index < blockSize; index++) {
          soundTouchBuffer[index*2]       = leftBuffer[index];
          soundTouchBuffer[(index*2)+1]   = rightBuffer[index];
       }
