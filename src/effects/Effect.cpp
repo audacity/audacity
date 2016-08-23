@@ -1580,10 +1580,10 @@ bool Effect::ProcessTrack(int count,
    }
 
    // Call the effect until we run out of input or delayed samples
-   while (inputRemaining || delayRemaining)
+   while (inputRemaining != 0 || delayRemaining != 0)
    {
       // Still working on the input samples
-      if (inputRemaining)
+      if (inputRemaining != 0)
       {
          // Need to refill the input buffers
          if (inputBufferCnt == 0)
@@ -1629,7 +1629,7 @@ bool Effect::ProcessTrack(int count,
             }
 
             // Might be able to use up some of the delayed samples
-            if (delayRemaining)
+            if (delayRemaining != 0)
             {
                // Don't use more than needed
                if (delayRemaining < cnt)
@@ -1642,7 +1642,7 @@ bool Effect::ProcessTrack(int count,
          }
       }
       // We've exhausted the input samples and are now working on the delay
-      else if (delayRemaining)
+      else if (delayRemaining != 0)
       {
          // Calculate the number of samples to process
          curBlockSize = mBlockSize;
@@ -1684,7 +1684,7 @@ bool Effect::ProcessTrack(int count,
       wxUnusedVar(processed);
 
       // Bump to next input buffer position
-      if (inputRemaining)
+      if (inputRemaining != 0)
       {
          for (int i = 0; i < mNumChannels; i++)
          {

@@ -27,8 +27,8 @@ LegacyAliasBlockFile::LegacyAliasBlockFile(wxFileNameWrapper &&fileName,
                                            int aliasChannel,
                                            sampleCount summaryLen,
                                            bool noRMS)
-: PCMAliasBlockFile(std::move(fileName), std::move(aliasedFileName), aliasStart, aliasLen,
-                    aliasChannel, 0.0, 0.0, 0.0)
+: PCMAliasBlockFile{ std::move(fileName), std::move(aliasedFileName), aliasStart, aliasLen,
+                     aliasChannel, 0.0, 0.0, 0.0 }
 {
    sampleFormat format;
 

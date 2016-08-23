@@ -667,7 +667,7 @@ bool Sequence::InsertSilence(sampleCount s0, sampleCount len)
       pos += idealSamples;
       len -= idealSamples;
    }
-   if (len) {
+   if (len != 0) {
       sTrack.mBlock.push_back(SeqBlock(
          make_blockfile<SilentBlockFile>(len), pos));
       pos += len;
@@ -1186,7 +1186,7 @@ bool Sequence::Set(samplePtr buffer, sampleFormat format,
 
    int b = FindBlock(start);
 
-   while (len) {
+   while (len != 0) {
       SeqBlock &block = mBlock[b];
       const sampleCount bstart = start - block.start;
       const sampleCount fileLength = block.f->GetLength();

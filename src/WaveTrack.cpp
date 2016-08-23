@@ -1628,11 +1628,10 @@ sampleCount WaveTrack::GetBestBlockSize(sampleCount s) const
 
 sampleCount WaveTrack::GetMaxBlockSize() const
 {
-   int maxblocksize = 0;
+   decltype(GetMaxBlockSize()) maxblocksize = 0;
    for (const auto &clip : mClips)
    {
-      if (clip->GetSequence()->GetMaxBlockSize() > maxblocksize)
-         maxblocksize = clip->GetSequence()->GetMaxBlockSize();
+      maxblocksize = std::max(maxblocksize, clip->GetSequence()->GetMaxBlockSize());
    }
 
    if (maxblocksize == 0)
@@ -2716,8 +2715,12 @@ constSamplePtr WaveTrackCache::Get(sampleFormat format,
       sampleCount remaining = len;
 
       // Possibly get an initial portion that is uncached
-      const sampleCount initLen =
-         mNValidBuffers < 1 ? len : std::min(len, mBuffers[0].start - start);
+
+      // This may be negative
+      const auto initLen =
+         mNValidBuffers < 1 ? sampleCount( len )
+            : std::min(sampleCount( len ), mBuffers[0].start - start);
+
       if (initLen > 0) {
          // This might be fetching zeroes between clips
          mOverlapBuffer.Resize(len, format);

@@ -542,7 +542,7 @@ AliasBlockFile::AliasBlockFile(wxFileNameWrapper &&existingSummaryFileName,
                                sampleCount aliasLen,
                                int aliasChannel,
                                float min, float max, float rms):
-   BlockFile(std::move(existingSummaryFileName), aliasLen),
+   BlockFile{ std::move(existingSummaryFileName), aliasLen },
    mAliasedFileName(std::move(aliasedFileName)),
    mAliasStart(aliasStart),
    mAliasChannel(aliasChannel)

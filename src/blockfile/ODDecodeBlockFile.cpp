@@ -38,8 +38,9 @@ char bheaderTag[bheaderTagLen + 1] = "AudacityBlockFile112";
    /// Create a disk file and write summary and sample data to it
 ODDecodeBlockFile::ODDecodeBlockFile(wxFileNameWrapper &&baseFileName, wxFileNameWrapper &&audioFileName, sampleCount aliasStart,
                      sampleCount aliasLen, int aliasChannel,unsigned int decodeType):
-   SimpleBlockFile(std::move(baseFileName),
-      NULL,aliasLen,floatSample,true,true), //floatSample has no effect.  last two bools - bypass writing of blockfile and cache
+   SimpleBlockFile{ std::move(baseFileName),
+                    NULL, aliasLen, floatSample, true, true },
+   //floatSample has no effect.  last two bools - bypass writing of blockfile and cache
 
    mType(decodeType),
    mAliasStart(aliasStart),
@@ -55,7 +56,7 @@ ODDecodeBlockFile::ODDecodeBlockFile(wxFileNameWrapper &&baseFileName, wxFileNam
 ODDecodeBlockFile::ODDecodeBlockFile(wxFileNameWrapper &&existingFile, wxFileNameWrapper &&audioFileName, sampleCount aliasStart,
                      sampleCount aliasLen, int aliasChannel, unsigned int decodeType,
                    float min, float max, float rms, bool dataAvailable):
-   SimpleBlockFile(std::move(existingFile),aliasLen,min,max,rms),
+   SimpleBlockFile{ std::move(existingFile), aliasLen, min, max, rms },
 
    mType(decodeType),
    mAliasStart(aliasStart),

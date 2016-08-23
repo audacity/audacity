@@ -156,7 +156,7 @@ private:
 
    LADSPA_Handle mMaster;
 
-   sampleCount mSampleRate;
+   double mSampleRate;
    sampleCount mBlockSize;
    sampleCount mUserBlockSize;
 

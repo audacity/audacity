@@ -32,8 +32,8 @@ PCMAliasBlockFile::PCMAliasBlockFile(
       wxFileNameWrapper &&aliasedFileName,
       sampleCount aliasStart,
       sampleCount aliasLen, int aliasChannel)
-: AliasBlockFile(std::move(fileName), std::move(aliasedFileName),
-                 aliasStart, aliasLen, aliasChannel)
+: AliasBlockFile{ std::move(fileName), std::move(aliasedFileName),
+                  aliasStart, aliasLen, aliasChannel }
 {
    AliasBlockFile::WriteSummary();
 }
@@ -43,8 +43,8 @@ PCMAliasBlockFile::PCMAliasBlockFile(
       wxFileNameWrapper&& aliasedFileName,
       sampleCount aliasStart,
       sampleCount aliasLen, int aliasChannel,bool writeSummary)
-: AliasBlockFile(std::move(fileName), std::move(aliasedFileName),
-                 aliasStart, aliasLen, aliasChannel)
+: AliasBlockFile{ std::move(fileName), std::move(aliasedFileName),
+                  aliasStart, aliasLen, aliasChannel }
 {
    if(writeSummary)
       AliasBlockFile::WriteSummary();
@@ -56,9 +56,9 @@ PCMAliasBlockFile::PCMAliasBlockFile(
       sampleCount aliasStart,
       sampleCount aliasLen, int aliasChannel,
       float min, float max, float rms)
-: AliasBlockFile(std::move(existingSummaryFileName), std::move(aliasedFileName),
-                 aliasStart, aliasLen,
-                 aliasChannel, min, max, rms)
+: AliasBlockFile{ std::move(existingSummaryFileName), std::move(aliasedFileName),
+                  aliasStart, aliasLen,
+                  aliasChannel, min, max, rms }
 {
 }
 

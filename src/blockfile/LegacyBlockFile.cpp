@@ -131,7 +131,7 @@ LegacyBlockFile::LegacyBlockFile(wxFileNameWrapper &&existingFile,
                                  sampleCount summaryLen,
                                  sampleCount len,
                                  bool noRMS):
-   BlockFile(std::move(existingFile), len),
+   BlockFile{ std::move(existingFile), len },
    mFormat(format)
 {
 
