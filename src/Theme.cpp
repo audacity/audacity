@@ -515,7 +515,7 @@ int SourceOutputStream::OpenFile(const wxString & Filename)
    bOk = File.Open( Filename, wxFile::write );
    if( bOk )
    {
-      File.Write( wxT("//   ThemeAsCeeCode.h\r\n") );
+      File.Write( wxT("//   DarkThemeAsCeeCode.h\r\n") );
       File.Write( wxT("//\r\n") );
       File.Write( wxT("//   This file was Auto-Generated.\r\n") );
       File.Write( wxT("//   It is included by Theme.cpp.\r\n") );

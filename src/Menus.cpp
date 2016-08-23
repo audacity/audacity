@@ -1091,7 +1091,7 @@ void AudacityProject::CreateMenusAndCommands()
       c->SetDefaultFlags(AlwaysEnabledFlag, AlwaysEnabledFlag);
 
       c->AddItem(wxT("QuickHelp"), _("&Quick Help"), FN(OnQuickHelp));
-      c->AddItem(wxT("Manual"), _("&Manual"), FN(OnManual));
+      c->AddItem(wxT("Audacity Manual"), _("&Manual"), FN(OnManual));
 
       c->AddSeparator();
 
@@ -1124,7 +1124,7 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddSeparator();
 #endif
 
-      c->AddItem(wxT("Updates"), _("&Check for Updates..."), FN(OnCheckForUpdates));
+      //c->AddItem(wxT("Updates"), _("&Check for Updates..."), FN(OnCheckForUpdates));
       c->AddItem(wxT("About"), _("&About DarkAudacity..."), FN(OnAbout));
 
       c->EndMenu();

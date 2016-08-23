@@ -230,9 +230,7 @@ audio CDs]].") + wxT("</p>")
    {
 // *URL* will be replaced by whatever URL we are looking for.
       return WrapText(_("The Manual does not appear to be installed. \
-Please [[*URL*|view the Manual online]] or \
-[[http://manual.audacityteam.org/man/unzipping_the_manual.html| \
-download the Manual]].<br><br>\
+Please [[*URL*|view the Manual online]].<br><br>\
 To always view the Manual online, change \"Location of Manual\" in \
 Interface Preferences to \"From Internet\".")
          );
