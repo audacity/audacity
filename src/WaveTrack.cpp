@@ -2106,7 +2106,7 @@ void WaveTrack::GetEnvelopeValues(double *buffer, size_t bufferLen,
    // be set twice.  Unfortunately, there is no easy way around this since the clips are not
    // stored in increasing time order.  If they were, we could just track the time as the
    // buffer is filled.
-   for (int i = 0; i < bufferLen; i++)
+   for (decltype(bufferLen) i = 0; i < bufferLen; i++)
    {
       buffer[i] = 1.0;
    }

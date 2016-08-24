@@ -608,7 +608,7 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
 
       /* handle values in the append buffer */
 
-      int numSamples = mSequence->GetNumSamples();
+      auto numSamples = mSequence->GetNumSamples();
       int a;
 
       // Not all of the required columns might be in the sequence.

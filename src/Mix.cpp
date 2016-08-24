@@ -150,7 +150,7 @@ void MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
 
 
 
-   int maxBlockLen = mixLeft->GetIdealBlockSize();
+   auto maxBlockLen = mixLeft->GetIdealBlockSize();
 
    // If the caller didn't specify a time range, use the whole range in which
    // any input track had clips in it.
@@ -338,9 +338,7 @@ Mixer::Mixer(const WaveTrackConstArray &inputTracks,
       mQueueLen[i] = 0;
    }
 
-   int envLen = mInterleavedBufferSize;
-   if (mQueueMaxLen > envLen)
-      envLen = mQueueMaxLen;
+   const auto envLen = std::max(mQueueMaxLen, mInterleavedBufferSize);
    mEnvValues = new double[envLen];
 }
 
@@ -557,7 +555,7 @@ sampleCount Mixer::MixSameRate(int *channelFlags, WaveTrackCache &cache,
                                sampleCount *pos)
 {
    const WaveTrack *const track = cache.GetTrack();
-   int slen = mMaxOut;
+   auto slen = mMaxOut;
    int c;
    const double t = *pos / track->GetRate();
    const double trackEndTime = track->GetEndTime();

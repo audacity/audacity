@@ -98,15 +98,15 @@ bool CompareAudioCommand::Apply(CommandExecutionContext context)
    double errorThreshold = GetDouble(wxT("Threshold"));
 
    // Initialize buffers for track data to be analyzed
-   int buffSize = min(mTrack0->GetMaxBlockSize(), mTrack1->GetMaxBlockSize());
+   auto buffSize = std::min(mTrack0->GetMaxBlockSize(), mTrack1->GetMaxBlockSize());
    float *buff0 = new float[buffSize];
    float *buff1 = new float[buffSize];
 
    // Compare tracks block by block
-   long s0 = mTrack0->TimeToLongSamples(mT0);
-   long s1 = mTrack0->TimeToLongSamples(mT1);
-   long position = s0;
-   long length = s1 - s0;
+   auto s0 = mTrack0->TimeToLongSamples(mT0);
+   auto s1 = mTrack0->TimeToLongSamples(mT1);
+   auto position = s0;
+   auto length = s1 - s0;
    while (position < s1)
    {
       // Get a block of data into the buffers

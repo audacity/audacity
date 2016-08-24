@@ -355,7 +355,7 @@ sampleCount EffectWahwah::InstanceProcess(EffectWahwahState & data, float **inBl
    data.phase = mPhase * M_PI / 180.0;
    data.outgain = DB_TO_LINEAR(mOutGain);
 
-   for (int i = 0; i < blockLen; i++)
+   for (decltype(blockLen) i = 0; i < blockLen; i++)
    {
       in = (double) ibuf[i];
 

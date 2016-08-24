@@ -164,7 +164,7 @@ bool EffectFindClipping::ProcessOne(LabelTrack * lt,
    float *ptr = buffer;
 
    decltype(len) s = 0, startrun = 0, stoprun = 0, samps = 0;
-   size_t block = 0;
+   decltype(blockSize) block = 0;
    double startTime = -1.0;
 
    while (s < len) {

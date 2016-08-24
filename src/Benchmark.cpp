@@ -335,7 +335,7 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
    gPrefs->Flush();
 
    // Rememebr the old blocksize, so that we can restore it later.
-   int oldBlockSize = Sequence::GetMaxDiskBlockSize();
+   auto oldBlockSize = Sequence::GetMaxDiskBlockSize();
    Sequence::SetMaxDiskBlockSize(blockSize * 1024);
 
    wxBusyCursor busy;

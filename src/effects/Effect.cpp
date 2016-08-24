@@ -1617,7 +1617,7 @@ bool Effect::ProcessTrack(int count,
             auto cnt = mBlockSize - curBlockSize;
             for (int i = 0; i < mNumChannels; i++)
             {
-               for (int j = 0 ; j < cnt; j++)
+               for (decltype(cnt) j = 0 ; j < cnt; j++)
                {
                   mInBufPos[i][j + curBlockSize] = 0.0;
                }

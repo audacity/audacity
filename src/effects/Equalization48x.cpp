@@ -420,7 +420,7 @@ bool EffectEqualization48x::DeltaTrack(WaveTrack * t, WaveTrack * t2, sampleCoun
       auto curretLength = (trackBlockSize > len) ? len : trackBlockSize;
       t->Get((samplePtr)buffer1, floatSample, currentSample, curretLength);
       t2->Get((samplePtr)buffer2, floatSample, currentSample, curretLength);
-      for(int i=0;i<curretLength;i++)
+      for(decltype(curretLength) i=0;i<curretLength;i++)
          buffer1[i]-=buffer2[i];
       output->Append((samplePtr)buffer1, floatSample, curretLength);
       currentSample+=curretLength;

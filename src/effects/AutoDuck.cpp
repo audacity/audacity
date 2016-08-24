@@ -517,12 +517,12 @@ bool EffectAutoDuck::ApplyDuckFade(int trackNumber, WaveTrack* t,
    float *buf = new float[kBufSize];
    auto pos = start;
 
-   int fadeDownSamples = t->TimeToLongSamples(
+   auto fadeDownSamples = t->TimeToLongSamples(
       mOuterFadeDownLen + mInnerFadeDownLen);
    if (fadeDownSamples < 1)
       fadeDownSamples = 1;
 
-   int fadeUpSamples = t->TimeToLongSamples(
+   auto fadeUpSamples = t->TimeToLongSamples(
       mOuterFadeUpLen + mInnerFadeUpLen);
    if (fadeUpSamples < 1)
       fadeUpSamples = 1;

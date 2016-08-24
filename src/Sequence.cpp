@@ -1556,11 +1556,10 @@ void Sequence::Blockify(BlockArray &list, sampleCount start, samplePtr buffer, s
 {
    if (len <= 0)
       return;
-
-   const int num = (len + (mMaxSamples - 1)) / mMaxSamples;
+   auto num = (len + (mMaxSamples - 1)) / mMaxSamples;
    list.reserve(list.size() + num);
 
-   for (int i = 0; i < num; i++) {
+   for (decltype(num) i = 0; i < num; i++) {
       SeqBlock b;
 
       const auto offset = i * len / num;

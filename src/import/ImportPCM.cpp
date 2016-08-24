@@ -448,7 +448,7 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
 
       SampleBuffer buffer(maxBlock, mFormat);
 
-      unsigned long framescompleted = 0;
+      decltype(fileTotalFrames) framescompleted = 0;
 
       long block;
       do {

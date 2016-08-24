@@ -524,7 +524,7 @@ sampleCount EffectDistortion::InstanceProcess(EffectDistortionState& data, float
    data.param1 = mParams.mParam1;
    data.repeats = mParams.mRepeats;
 
-   for (sampleCount i = 0; i < blockLen; i++) {
+   for (decltype(blockLen) i = 0; i < blockLen; i++) {
       if (update && ((data.skipcount++) % skipsamples == 0)) {
          MakeTable();
       }
