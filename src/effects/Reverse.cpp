@@ -78,9 +78,9 @@ bool EffectReverse::Process()
          WaveTrack *track = (WaveTrack*)t;
 
          if (mT1 > mT0) {
-            sampleCount start = track->TimeToLongSamples(mT0);
-            sampleCount end = track->TimeToLongSamples(mT1);
-            sampleCount len = (sampleCount)(end - start);
+            auto start = track->TimeToLongSamples(mT0);
+            auto end = track->TimeToLongSamples(mT1);
+            auto len = end - start;
 
             if (!ProcessOneWave(count, track, start, len))
             {
@@ -107,7 +107,7 @@ bool EffectReverse::ProcessOneWave(int count, WaveTrack * track, sampleCount sta
 {
    bool rValue = true; // return value
 
-   sampleCount end = (sampleCount) start + len; // start, end, len refer to the selected reverse region
+   auto end = start + len; // start, end, len refer to the selected reverse region
 
    // STEP 1:
    // If a reverse selection begins and/or ends at the inside of a clip
@@ -116,8 +116,8 @@ bool EffectReverse::ProcessOneWave(int count, WaveTrack * track, sampleCount sta
    // Beware, the array grows as we loop over it.  Use integer subscripts, not iterators.
    for (int ii = 0; ii < clips.size(); ++ii) {
       const auto &clip = clips[ii].get();
-      sampleCount clipStart = clip->GetStartSample();
-      sampleCount clipEnd = clip->GetEndSample();
+      auto clipStart = clip->GetStartSample();
+      auto clipEnd = clip->GetEndSample();
       if (clipStart < start && clipEnd > start && clipEnd <= end) { // the reverse selection begins at the inside of a clip
          double splitTime = track->LongSamplesToTime(start);
          track->SplitAt(splitTime);
@@ -142,7 +142,7 @@ bool EffectReverse::ProcessOneWave(int count, WaveTrack * track, sampleCount sta
 
    // used in calculating the offset of clips to rearrange
    // holds the NEW end position of the current clip
-   sampleCount currentEnd = (sampleCount)end;
+   auto currentEnd = end;
 
    WaveClipHolders revClips; // holds the reversed clips
    WaveClipHolders otherClips; // holds the clips that appear after the reverse selection region
@@ -151,8 +151,8 @@ bool EffectReverse::ProcessOneWave(int count, WaveTrack * track, sampleCount sta
    for (i=0; i < clipArray.size(); i++) {
 
       WaveClip *clip = clipArray[i];
-      sampleCount clipStart = clip->GetStartSample();
-      sampleCount clipEnd = clip->GetEndSample();
+      auto clipStart = clip->GetStartSample();
+      auto clipEnd = clip->GetEndSample();
 
       if (clipStart >= start && clipEnd <= end) { // if the clip is inside the selected region
 
@@ -171,9 +171,9 @@ bool EffectReverse::ProcessOneWave(int count, WaveTrack * track, sampleCount sta
             }
          }
 
-         sampleCount revStart = (clipStart >= start)? clipStart: start;
-         sampleCount revEnd = (clipEnd >= end)? end: clipEnd;
-         sampleCount revLen = (sampleCount)revEnd-revStart;
+         auto revStart = (clipStart >= start)? clipStart: start;
+         auto revEnd = (clipEnd >= end)? end: clipEnd;
+         auto revLen = revEnd - revStart;
          if (revEnd >= revStart) {
             if(!ProcessOneClip(count, track, revStart, revLen, start, end)) // reverse the clip
             {
@@ -181,12 +181,12 @@ bool EffectReverse::ProcessOneWave(int count, WaveTrack * track, sampleCount sta
                break;
             }
 
-            sampleCount clipOffsetStart = (sampleCount)(currentEnd - (clipEnd-clipStart)); // calculate the offset required
+            auto clipOffsetStart = currentEnd - (clipEnd - clipStart); // calculate the offset required
             double offsetStartTime = track->LongSamplesToTime(clipOffsetStart);
             if(i+1 < clipArray.size()) // update currentEnd if there is a clip to process next
             {
-               sampleCount nextClipStart = clipArray[i+1]->GetStartSample();
-               currentEnd = (sampleCount)(currentEnd - (clipEnd - clipStart) - (nextClipStart - clipEnd));
+               auto nextClipStart = clipArray[i+1]->GetStartSample();
+               currentEnd = currentEnd - (clipEnd - clipStart) - (nextClipStart - clipEnd);
             }
 
             revClips.push_back(track->RemoveAndReturnClip(clip)); // detach the clip from track
@@ -218,20 +218,19 @@ bool EffectReverse::ProcessOneClip(int count, WaveTrack *track,
 {
    bool rc = true;
    // keep track of two blocks whose data we will swap
-   sampleCount first = start;
-   sampleCount second;
+   auto first = start;
 
-   sampleCount blockSize = track->GetMaxBlockSize();
+   auto blockSize = track->GetMaxBlockSize();
    float tmp;
    float *buffer1 = new float[blockSize];
    float *buffer2 = new float[blockSize];
 
-   sampleCount originalLen = (sampleCount)originalEnd-originalStart;
+   auto originalLen = originalEnd - originalStart;
 
    while (len > 1) {
       auto block =
          limitSampleBufferSize( track->GetBestBlockSize(first), len / 2 );
-      second = first + (len - block);
+      auto second = first + (len - block);
 
       track->Get((samplePtr)buffer1, floatSample, first, block);
       track->Get((samplePtr)buffer2, floatSample, second, block);

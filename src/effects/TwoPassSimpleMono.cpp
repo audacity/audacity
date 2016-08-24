@@ -64,8 +64,8 @@ bool EffectTwoPassSimpleMono::ProcessPass()
       if (mCurT1 > mCurT0) {
 
          //Transform the marker timepoints to samples
-         sampleCount start = track->TimeToLongSamples(mCurT0);
-         sampleCount end = track->TimeToLongSamples(mCurT1);
+         auto start = track->TimeToLongSamples(mCurT0);
+         auto end = track->TimeToLongSamples(mCurT1);
 
          //Get the track rate and samples
          mCurRate = track->GetRate();
@@ -100,14 +100,13 @@ bool EffectTwoPassSimpleMono::ProcessOne(WaveTrack * track,
                                          sampleCount start, sampleCount end)
 {
    bool ret;
-   sampleCount s;
    float *tmpfloat;
 
    //Get the length of the buffer (as double). len is
    //used simple to calculate a progress meter, so it is easier
    //to make it a double now than it is to do it later
    double len = (double)(end - start);
-   sampleCount maxblock = track->GetMaxBlockSize();
+   auto maxblock = track->GetMaxBlockSize();
 
    //Initiate a processing buffer.  This buffer will (most likely)
    //be shorter than the length of the track being processed.
@@ -134,7 +133,7 @@ bool EffectTwoPassSimpleMono::ProcessOne(WaveTrack * track,
 
    //Go through the track one buffer at a time. s counts which
    //sample the current buffer starts at.
-   s = start + samples1;
+   auto s = start + samples1;
    while (s < end) {
       //Get a block of samples (smaller than the size of the buffer)
       //Adjust the block size if it is the final block in the track

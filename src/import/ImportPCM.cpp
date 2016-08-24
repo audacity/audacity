@@ -367,8 +367,8 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
       channels.begin()->get()->SetLinked(true);
    }
 
-   sampleCount fileTotalFrames = (sampleCount)mInfo.frames;
-   sampleCount maxBlockSize = channels.begin()->get()->GetMaxBlockSize();
+   auto fileTotalFrames = (sampleCount)mInfo.frames;
+   auto maxBlockSize = channels.begin()->get()->GetMaxBlockSize();
    int updateResult = false;
 
    // If the format is not seekable, we must use 'copy' mode,
@@ -387,7 +387,8 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
       bool useOD =fileTotalFrames>kMinimumODFileSampleSize;
       int updateCounter = 0;
 
-      for (sampleCount i = 0; i < fileTotalFrames; i += maxBlockSize) {
+      for (decltype(fileTotalFrames) i = 0; i < fileTotalFrames; i += maxBlockSize) {
+
          const auto blockLen =
             limitSampleBufferSize( maxBlockSize, fileTotalFrames - i );
 
@@ -429,9 +430,10 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
       // samples in the tracks.
 
       // PRL:  guard against excessive memory buffer allocation in case of many channels
-      sampleCount maxBlock = std::min(maxBlockSize,
-         sampleCount(std::numeric_limits<int>::max() /
-                 (mInfo.channels * SAMPLE_SIZE(mFormat)))
+      using type = decltype(maxBlockSize);
+      auto maxBlock = std::min(maxBlockSize,
+         std::numeric_limits<type>::max() /
+            (mInfo.channels * SAMPLE_SIZE(mFormat))
       );
       if (maxBlock < 1)
          return eProgressFailed;
@@ -446,7 +448,7 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
 
       SampleBuffer buffer(maxBlock, mFormat);
 
-      unsigned long framescompleted = 0;
+      decltype(fileTotalFrames) framescompleted = 0;
 
       long block;
       do {

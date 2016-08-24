@@ -172,9 +172,9 @@ bool EffectClickRemoval::Process()
       double t1 = mT1 > trackEnd? trackEnd: mT1;
 
       if (t1 > t0) {
-         sampleCount start = track->TimeToLongSamples(t0);
-         sampleCount end = track->TimeToLongSamples(t1);
-         sampleCount len = (sampleCount)(end - start);
+         auto start = track->TimeToLongSamples(t0);
+         auto end = track->TimeToLongSamples(t1);
+         auto len = end - start;
 
          if (!ProcessOne(count, track, start, len))
          {
@@ -207,17 +207,17 @@ bool EffectClickRemoval::ProcessOne(int count, WaveTrack * track, sampleCount st
       return false;
    }
 
-   sampleCount idealBlockLen = track->GetMaxBlockSize() * 4;
+   auto idealBlockLen = track->GetMaxBlockSize() * 4;
    if (idealBlockLen % windowSize != 0)
       idealBlockLen += (windowSize - (idealBlockLen % windowSize));
 
    bool bResult = true;
-   sampleCount s = 0;
+   decltype(len) s = 0;
    float *buffer = new float[idealBlockLen];
    float *datawindow = new float[windowSize];
    while ((s < len)  &&  ((len - s) > windowSize/2))
    {
-      sampleCount block = idealBlockLen;
+      auto block = idealBlockLen;
       if (s + block > len)
          block = len - s;
 

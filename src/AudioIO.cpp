@@ -1841,9 +1841,9 @@ int AudioIO::StartStream(const WaveTrackArray &playbackTracks,
          if( mNumPlaybackChannels > 0 ) {
             // Allocate output buffers.  For every output track we allocate
             // a ring buffer of five seconds
-            sampleCount playbackBufferSize =
+            auto playbackBufferSize =
                (sampleCount)lrint(mRate * mPlaybackRingBufferSecs);
-            sampleCount playbackMixBufferSize =
+            auto playbackMixBufferSize =
                (sampleCount)mPlaybackSamplesToCopy;
 
             mPlaybackBuffers = new RingBuffer* [mPlaybackTracks.size()];
@@ -1881,7 +1881,7 @@ int AudioIO::StartStream(const WaveTrackArray &playbackTracks,
          {
             // Allocate input buffers.  For every input track we allocate
             // a ring buffer of five seconds
-            sampleCount captureBufferSize =
+            auto captureBufferSize =
                (sampleCount)(mRate * mCaptureRingBufferSecs + 0.5);
 
             // In the extraordinarily rare case that we can't even afford 100 samples, just give up.
@@ -1920,9 +1920,9 @@ int AudioIO::StartStream(const WaveTrackArray &playbackTracks,
          bDone = false;
 
          // In the extraordinarily rare case that we can't even afford 100 samples, just give up.
-         sampleCount playbackBufferSize =
+         auto playbackBufferSize =
             (sampleCount)lrint(mRate * mPlaybackRingBufferSecs);
-         sampleCount playbackMixBufferSize =
+         auto playbackMixBufferSize =
             (sampleCount)mPlaybackSamplesToCopy;
          if(playbackBufferSize < 100 || playbackMixBufferSize < 100)
          {

@@ -364,7 +364,7 @@ double WaveClip::GetStartTime() const
 
 double WaveClip::GetEndTime() const
 {
-   sampleCount numSamples = mSequence->GetNumSamples();
+   auto numSamples = mSequence->GetNumSamples();
 
    double maxLen = mOffset + double(numSamples+mAppendBufferLen)/mRate;
    // JS: calculated value is not the length;
@@ -375,7 +375,7 @@ double WaveClip::GetEndTime() const
 
 sampleCount WaveClip::GetStartSample() const
 {
-   return (sampleCount)floor(mOffset * mRate + 0.5);
+   return floor(mOffset * mRate + 0.5);
 }
 
 sampleCount WaveClip::GetEndSample() const
@@ -390,19 +390,19 @@ sampleCount WaveClip::GetNumSamples() const
 
 bool WaveClip::WithinClip(double t) const
 {
-   sampleCount ts = (sampleCount)floor(t * mRate + 0.5);
+   auto ts = (sampleCount)floor(t * mRate + 0.5);
    return ts > GetStartSample() && ts < GetEndSample() + mAppendBufferLen;
 }
 
 bool WaveClip::BeforeClip(double t) const
 {
-   sampleCount ts = (sampleCount)floor(t * mRate + 0.5);
+   auto ts = (sampleCount)floor(t * mRate + 0.5);
    return ts <= GetStartSample();
 }
 
 bool WaveClip::AfterClip(double t) const
 {
-   sampleCount ts = (sampleCount)floor(t * mRate + 0.5);
+   auto ts = (sampleCount)floor(t * mRate + 0.5);
    return ts >= GetEndSample() + mAppendBufferLen;
 }
 
@@ -472,11 +472,9 @@ fillWhere(std::vector<sampleCount> &where, int len, double bias, double correcti
 {
    // Be careful to make the first value non-negative
    const double w0 = 0.5 + correction + bias + t0 * rate;
-   where[0] = sampleCount(std::max(0.0, floor(w0)));
-   for (sampleCount x = 1; x < len + 1; x++)
-      where[x] = sampleCount(
-         floor(w0 + double(x) * samplesPerPixel)
-      );
+   where[0] = std::max(0.0, floor(w0));
+   for (decltype(len) x = 1; x < len + 1; x++)
+      where[x] = floor(w0 + double(x) * samplesPerPixel);
 }
 
 }
@@ -608,7 +606,7 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
 
       /* handle values in the append buffer */
 
-      int numSamples = mSequence->GetNumSamples();
+      auto numSamples = mSequence->GetNumSamples();
       int a;
 
       // Not all of the required columns might be in the sequence.
@@ -626,10 +624,8 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
          sampleFormat seqFormat = mSequence->GetSampleFormat();
          bool didUpdate = false;
          for(i=a; i<p1; i++) {
-            sampleCount left;
-            left = where[i] - numSamples;
-            sampleCount right;
-            right = where[i + 1] - numSamples;
+            auto left = where[i] - numSamples;
+            auto right = where[i + 1] - numSamples;
 
             //wxCriticalSectionLocker locker(mAppendCriticalSection);
 
@@ -641,7 +637,6 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
             if (right > left) {
                float *b;
                sampleCount len = right-left;
-               sampleCount j;
 
                if (seqFormat == floatSample)
                   b = &((float *)mAppendBuffer.ptr())[left];
@@ -658,7 +653,7 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
                   theMax = theMin = val;
                   sumsq = val * val;
                }
-               for(j=1; j<len; j++) {
+               for(decltype(len) j = 1; j < len; j++) {
                   const float val = b[j];
                   theMax = std::max(theMax, val);
                   theMin = std::min(theMin, val);
@@ -730,11 +725,11 @@ void ComputeSpectrogramGainFactors
       // This is the reciprocal of the bin number of 1000 Hz:
       const double factor = ((double)rate / (double)fftLen) / 1000.0;
 
-      const int half = fftLen / 2;
+      int half = fftLen / 2;
       gainFactors.reserve(half);
       // Don't take logarithm of zero!  Let bin 0 replicate the gain factor for bin 1.
       gainFactors.push_back(frequencyGain*log10(factor));
-      for (sampleCount x = 1; x < half; x++) {
+      for (decltype(half) x = 1; x < half; x++) {
          gainFactors.push_back(frequencyGain*log10(factor * x));
       }
    }
@@ -806,12 +801,13 @@ bool SpecCache::CalculateOneSpectrum
       float *adj = scratch + padding;
 
       {
-         sampleCount myLen = windowSize;
+         auto myLen = windowSize;
          // Take a window of the track centered at this sample.
          start -= windowSize >> 1;
          if (start < 0) {
             // Near the start of the clip, pad left with zeroes as needed.
-            for (sampleCount ii = start; ii < 0; ++ii)
+            // Start is at least -windowSize / 2
+            for (auto ii = start; ii < 0; ++ii)
                *adj++ = 0;
             myLen += start;
             start = 0;
@@ -821,7 +817,7 @@ bool SpecCache::CalculateOneSpectrum
          if (start + myLen > numSamples) {
             // Near the end of the clip, pad right with zeroes as needed.
             int newlen = numSamples - start;
-            for (sampleCount ii = newlen; ii < (sampleCount)myLen; ++ii)
+            for (decltype(myLen) ii = newlen; ii < myLen; ++ii)
                adj[ii] = 0;
             myLen = newlen;
             copy = true;
@@ -983,7 +979,7 @@ void SpecCache::Populate
    for (int jj = 0; jj < 2; ++jj) {
       const int lowerBoundX = jj == 0 ? 0 : copyEnd;
       const int upperBoundX = jj == 0 ? copyBegin : numPixels;
-      for (sampleCount xx = lowerBoundX; xx < upperBoundX; ++xx)
+      for (auto xx = lowerBoundX; xx < upperBoundX; ++xx)
          CalculateOneSpectrum(
             settings, waveTrackCache, xx, numSamples,
             offset, rate, pixelsPerSecond,
@@ -994,7 +990,7 @@ void SpecCache::Populate
          // Need to look beyond the edges of the range to accumulate more
          // time reassignments.
          // I'm not sure what's a good stopping criterion?
-         sampleCount xx = lowerBoundX;
+         auto xx = lowerBoundX;
          const double pixelsPerSample = pixelsPerSecond / rate;
          const int limit = std::min(int(0.5 + fftLen * pixelsPerSample), 100);
          for (int ii = 0; ii < limit; ++ii)
@@ -1024,7 +1020,7 @@ void SpecCache::Populate
 
          // Now Convert to dB terms.  Do this only after accumulating
          // power values, which may cross columns with the time correction.
-         for (sampleCount xx = lowerBoundX; xx < upperBoundX; ++xx) {
+         for (auto xx = lowerBoundX; xx < upperBoundX; ++xx) {
             float *const results = &freq[half * xx];
             const HFFT hFFT = settings.hFFT;
             for (int ii = 0; ii < hFFT->Points; ++ii) {
@@ -1200,7 +1196,7 @@ void WaveClip::TimeToSamplesClip(double t0, sampleCount *s0) const
    else if (t0 > mOffset + double(mSequence->GetNumSamples())/mRate)
       *s0 = mSequence->GetNumSamples();
    else
-      *s0 = (sampleCount)floor(((t0 - mOffset) * mRate) + 0.5);
+      *s0 = floor(((t0 - mOffset) * mRate) + 0.5);
 }
 
 void WaveClip::ClearDisplayRect() const
@@ -1225,8 +1221,8 @@ bool WaveClip::Append(samplePtr buffer, sampleFormat format,
 {
    //wxLogDebug(wxT("Append: len=%lli"), (long long) len);
 
-   sampleCount maxBlockSize = mSequence->GetMaxBlockSize();
-   sampleCount blockSize = mSequence->GetIdealAppendLen();
+   auto maxBlockSize = mSequence->GetMaxBlockSize();
+   auto blockSize = mSequence->GetIdealAppendLen();
    sampleFormat seqFormat = mSequence->GetSampleFormat();
 
    if (!mAppendBuffer.ptr())
@@ -1461,7 +1457,7 @@ bool WaveClip::InsertSilence(double t, double len)
 {
    sampleCount s0;
    TimeToSamplesClip(t, &s0);
-   sampleCount slen = (sampleCount)floor(len * mRate + 0.5);
+   auto slen = (sampleCount)floor(len * mRate + 0.5);
 
    if (!GetSequence()->InsertSilence(s0, slen))
    {
@@ -1705,7 +1701,7 @@ bool WaveClip::Resample(int rate, ProgressDialog *progress)
    sampleCount pos = 0;
    bool error = false;
    int outGenerated = 0;
-   sampleCount numSamples = mSequence->GetNumSamples();
+   auto numSamples = mSequence->GetNumSamples();
 
    auto newSequence =
       std::make_unique<Sequence>(mSequence->GetDirManager(), mSequence->GetSampleFormat());

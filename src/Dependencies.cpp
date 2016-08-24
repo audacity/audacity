@@ -194,7 +194,7 @@ static void RemoveDependencies(AudacityProject *project,
             continue;
 
          // Convert it from an aliased file to an actual file in the project.
-         unsigned int len = aliasBlockFile->GetLength();
+         auto len = aliasBlockFile->GetLength();
          BlockFilePtr newBlockFile;
          {
             SampleBuffer buffer(len, format);

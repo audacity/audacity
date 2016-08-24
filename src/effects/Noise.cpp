@@ -104,7 +104,7 @@ sampleCount EffectNoise::ProcessBlock(float **WXUNUSED(inbuf), float **outbuf, s
    {
    default:
    case kWhite: // white
-       for (sampleCount i = 0; i < size; i++)
+       for (decltype(size) i = 0; i < size; i++)
        {
           buffer[i] = mAmp * ((rand() / div) - 1.0f);
        }
@@ -115,7 +115,7 @@ sampleCount EffectNoise::ProcessBlock(float **WXUNUSED(inbuf), float **outbuf, s
 
       // 0.129f is an experimental normalization factor.
       amplitude = mAmp * 0.129f;
-      for (sampleCount i = 0; i < size; i++)
+      for (decltype(size) i = 0; i < size; i++)
       {
          white = (rand() / div) - 1.0f;
          buf0 = 0.99886f * buf0 + 0.0555179f * white;
@@ -142,7 +142,7 @@ sampleCount EffectNoise::ProcessBlock(float **WXUNUSED(inbuf), float **outbuf, s
          ? 9.0 / sqrt(mSampleRate)
          : 0.01f;
  
-      for (sampleCount i = 0; i < size; i++)
+      for (decltype(size) i = 0; i < size; i++)
       {
          white = (rand() / div) - 1.0f;
          z = leakage * y + white * scaling;

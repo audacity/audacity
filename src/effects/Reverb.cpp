@@ -217,11 +217,11 @@ sampleCount EffectReverb::ProcessBlock(float **inBlock, float **outBlock, sample
    
    float const dryMult = mParams.mWetOnly ? 0 : dB_to_linear(mParams.mDryGain);
 
-   sampleCount remaining = blockLen;
+   auto remaining = blockLen;
 
    while (remaining)
    {
-      sampleCount len = wxMin(remaining, BLOCK);
+      auto len = std::min(remaining, decltype(remaining)(BLOCK));
       for (int c = 0; c < mNumChans; c++)
       {
          // Write the input samples to the reverb fifo.  Returned value is the address of the
@@ -232,7 +232,7 @@ sampleCount EffectReverb::ProcessBlock(float **inBlock, float **outBlock, sample
 
       if (mNumChans == 2)
       {
-         for (sampleCount i = 0; i < len; i++)
+         for (decltype(len) i = 0; i < len; i++)
          {
             for (int w = 0; w < 2; w++)
             {
@@ -245,7 +245,7 @@ sampleCount EffectReverb::ProcessBlock(float **inBlock, float **outBlock, sample
       }
       else
       {
-         for (sampleCount i = 0; i < len; i++)
+         for (decltype(len) i = 0; i < len; i++)
          {
             ochans[0][i] = dryMult * 
                            mP[0].dry[i] +

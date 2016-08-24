@@ -69,7 +69,7 @@ sampleCount EffectInvert::ProcessBlock(float **inBlock, float **outBlock, sample
    float *ibuf = inBlock[0];
    float *obuf = outBlock[0];
 
-   for (sampleCount i = 0; i < blockLen; i++)
+   for (decltype(blockLen) i = 0; i < blockLen; i++)
    {
       obuf[i] = -ibuf[i];
    }

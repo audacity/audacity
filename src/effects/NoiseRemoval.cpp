@@ -222,9 +222,9 @@ bool EffectNoiseRemoval::Process()
       double t1 = mT1 > trackEnd? trackEnd: mT1;
 
       if (t1 > t0) {
-         sampleCount start = track->TimeToLongSamples(t0);
-         sampleCount end = track->TimeToLongSamples(t1);
-         sampleCount len = (sampleCount)(end - start);
+         auto start = track->TimeToLongSamples(t0);
+         auto end = track->TimeToLongSamples(t1);
+         auto len = end - start;
 
          if (!ProcessOne(count, track, start, len)) {
             Cleanup();
@@ -572,11 +572,11 @@ bool EffectNoiseRemoval::ProcessOne(int count, WaveTrack * track,
       mOutputTrack = mFactory->NewWaveTrack(track->GetSampleFormat(),
                                             track->GetRate());
 
-   sampleCount bufferSize = track->GetMaxBlockSize();
+   auto bufferSize = track->GetMaxBlockSize();
    float *buffer = new float[bufferSize];
 
    bool bLoopSuccess = true;
-   sampleCount samplePos = start;
+   auto samplePos = start;
    while (samplePos < start + len) {
       //Get a blockSize of samples (smaller than the size of the buffer)
       //Adjust the block size if it is the final block in the track

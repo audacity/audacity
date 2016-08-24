@@ -102,14 +102,14 @@ bool EffectRepair::Process()
          repair_t0 = (repair_t0 < t0? t0: repair_t0);
          repair_t1 = (repair_t1 > t1? t1: repair_t1);
 
-         sampleCount s0 = track->TimeToLongSamples(t0);
-         sampleCount repair0 = track->TimeToLongSamples(repair_t0);
-         sampleCount repair1 = track->TimeToLongSamples(repair_t1);
-         sampleCount s1 = track->TimeToLongSamples(t1);
+         auto s0 = track->TimeToLongSamples(t0);
+         auto repair0 = track->TimeToLongSamples(repair_t0);
+         auto repair1 = track->TimeToLongSamples(repair_t1);
+         auto s1 = track->TimeToLongSamples(t1);
 
-         sampleCount repairStart = (sampleCount)(repair0 - s0);
-         sampleCount repairLen = (sampleCount)(repair1 - repair0);
-         sampleCount len = (sampleCount)(s1 - s0);
+         auto repairStart = repair0 - s0;
+         auto repairLen = repair1 - repair0;
+         auto len = s1 - s0;
 
          if (repairLen > 128) {
             ::wxMessageBox(_("The Repair effect is intended to be used on very short sections of damaged audio (up to 128 samples).\n\nZoom in and select a tiny fraction of a second to repair."));

@@ -252,8 +252,8 @@ bool EffectChangeSpeed::Process()
          // Process only if the right marker is to the right of the left marker
          if (mCurT1 > mCurT0) {
             //Transform the marker timepoints to samples
-            sampleCount start = pOutWaveTrack->TimeToLongSamples(mCurT0);
-            sampleCount end = pOutWaveTrack->TimeToLongSamples(mCurT1);
+            auto start = pOutWaveTrack->TimeToLongSamples(mCurT0);
+            auto end = pOutWaveTrack->TimeToLongSamples(mCurT1);
 
             //ProcessOne() (implemented below) processes a single track
             if (!ProcessOne(pOutWaveTrack, start, end))
@@ -485,11 +485,11 @@ bool EffectChangeSpeed::ProcessOne(WaveTrack * track,
 
    // Initiate processing buffers, most likely shorter than
    // the length of the selection being processed.
-   sampleCount inBufferSize = track->GetMaxBlockSize();
+   auto inBufferSize = track->GetMaxBlockSize();
 
    float * inBuffer = new float[inBufferSize];
 
-   sampleCount outBufferSize =
+   auto outBufferSize =
       (sampleCount)((mFactor * inBufferSize) + 10);
    float * outBuffer = new float[outBufferSize];
 
@@ -499,11 +499,10 @@ bool EffectChangeSpeed::ProcessOne(WaveTrack * track,
    //Go through the track one buffer at a time. samplePos counts which
    //sample the current buffer starts at.
    bool bResult = true;
-   sampleCount blockSize;
-   sampleCount samplePos = start;
+   auto samplePos = start;
    while (samplePos < end) {
       //Get a blockSize of samples (smaller than the size of the buffer)
-      blockSize = track->GetBestBlockSize(samplePos);
+      auto blockSize = track->GetBestBlockSize(samplePos);
 
       //Adjust the block size if it is the final block in the track
       if (samplePos + blockSize > end)

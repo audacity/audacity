@@ -69,8 +69,8 @@ bool ContrastDialog::GetDB(float &dB)
       if(mT1 > t->GetEndTime())
          mT1 = t->GetEndTime();
 
-      sampleCount SelT0 = t->TimeToLongSamples(mT0);
-      sampleCount SelT1 = t->TimeToLongSamples(mT1);
+      auto SelT0 = t->TimeToLongSamples(mT0);
+      auto SelT1 = t->TimeToLongSamples(mT1);
 
       if(SelT0 > SelT1)
       {

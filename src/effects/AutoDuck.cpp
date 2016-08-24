@@ -254,16 +254,14 @@ void EffectAutoDuck::End()
 
 bool EffectAutoDuck::Process()
 {
-   sampleCount i;
-
    if (GetNumWaveTracks() == 0 || !mControlTrack)
       return false;
 
    bool cancel = false;
 
-   sampleCount start =
+   auto start =
       mControlTrack->TimeToLongSamples(mT0 + mOuterFadeDownLen);
-   sampleCount end =
+   auto end =
       mControlTrack->TimeToLongSamples(mT1 - mOuterFadeUpLen);
 
    if (end <= start)
@@ -277,7 +275,7 @@ bool EffectAutoDuck::Process()
    if (maxPause < mOuterFadeDownLen + mOuterFadeUpLen)
       maxPause = mOuterFadeDownLen + mOuterFadeUpLen;
 
-   sampleCount minSamplesPause =
+   auto minSamplesPause =
       mControlTrack->TimeToLongSamples(maxPause);
 
    double threshold = DB_TO_LINEAR(mThresholdDb);
@@ -288,7 +286,7 @@ bool EffectAutoDuck::Process()
    int rmsPos = 0;
    float rmsSum = 0;
    float *rmsWindow = new float[kRMSWindowSize];
-   for (i = 0; i < kRMSWindowSize; i++)
+   for (size_t i = 0; i < kRMSWindowSize; i++)
       rmsWindow[i] = 0;
 
    float *buf = new float[kBufSize];
@@ -302,15 +300,15 @@ bool EffectAutoDuck::Process()
    // to make the progress bar appear more natural, we first look for all
    // duck regions and apply them all at once afterwards
    AutoDuckRegionArray regions;
-   sampleCount pos = start;
+   auto pos = start;
 
    while (pos < end)
    {
       const auto len = limitSampleBufferSize( kBufSize, end - pos );
 
-      mControlTrack->Get((samplePtr)buf, floatSample, pos, (sampleCount)len);
+      mControlTrack->Get((samplePtr)buf, floatSample, pos, len);
 
-      for (i = pos; i < pos + len; i++)
+      for (auto i = pos; i < pos + len; i++)
       {
          rmsSum -= rmsWindow[rmsPos];
          rmsWindow[rmsPos] = buf[i - pos] * buf[i - pos];
@@ -393,7 +391,7 @@ bool EffectAutoDuck::Process()
 
          WaveTrack* t = (WaveTrack*)iterTrack;
 
-         for (i = 0; i < (int)regions.GetCount(); i++)
+         for (size_t i = 0; i < regions.GetCount(); i++)
          {
             const AutoDuckRegion& region = regions[i];
             if (ApplyDuckFade(trackNumber, t, region.t0, region.t1))
@@ -513,18 +511,18 @@ bool EffectAutoDuck::ApplyDuckFade(int trackNumber, WaveTrack* t,
 {
    bool cancel = false;
 
-   sampleCount start = t->TimeToLongSamples(t0);
-   sampleCount end = t->TimeToLongSamples(t1);
+   auto start = t->TimeToLongSamples(t0);
+   auto end = t->TimeToLongSamples(t1);
 
    float *buf = new float[kBufSize];
-   sampleCount pos = start;
+   auto pos = start;
 
-   int fadeDownSamples = t->TimeToLongSamples(
+   auto fadeDownSamples = t->TimeToLongSamples(
       mOuterFadeDownLen + mInnerFadeDownLen);
    if (fadeDownSamples < 1)
       fadeDownSamples = 1;
 
-   int fadeUpSamples = t->TimeToLongSamples(
+   auto fadeUpSamples = t->TimeToLongSamples(
       mOuterFadeUpLen + mInnerFadeUpLen);
    if (fadeUpSamples < 1)
       fadeUpSamples = 1;
@@ -538,7 +536,7 @@ bool EffectAutoDuck::ApplyDuckFade(int trackNumber, WaveTrack* t,
 
       t->Get((samplePtr)buf, floatSample, pos, len);
 
-      for (sampleCount i = pos; i < pos + len; i++)
+      for (auto i = pos; i < pos + len; i++)
       {
          float gainDown = fadeDownStep * (i - start);
          float gainUp = fadeUpStep * (end - i);;

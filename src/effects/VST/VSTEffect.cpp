@@ -1342,7 +1342,7 @@ sampleCount VSTEffect::GetLatency()
    if (mUseLatency)
    {
       // ??? Threading issue ???
-      sampleCount delay = mBufferDelay;
+      auto delay = mBufferDelay;
       mBufferDelay = 0;
       return delay;
    }
@@ -1540,7 +1540,7 @@ sampleCount VSTEffect::RealtimeProcess(int group, float **inbuf, float **outbuf,
 
    for (int c = 0; c < mAudioIns; c++)
    {
-      for (sampleCount s = 0; s < numSamples; s++)
+      for (decltype(numSamples) s = 0; s < numSamples; s++)
       {
          mMasterIn[c][s] += inbuf[c][s];
       }

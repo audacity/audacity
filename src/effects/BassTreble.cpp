@@ -361,7 +361,7 @@ sampleCount EffectBassTreble::InstanceProcess(EffectBassTrebleState & data,
                   data.a0Treble, data.a1Treble, data.a2Treble,
                   data.b0Treble, data.b1Treble, data.b2Treble);
 
-   for (sampleCount i = 0; i < blockLen; i++) {
+   for (decltype(blockLen) i = 0; i < blockLen; i++) {
       obuf[i] = DoFilter(data, ibuf[i]) * data.gain;
    }
 

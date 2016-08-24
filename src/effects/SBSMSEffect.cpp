@@ -251,10 +251,8 @@ bool EffectSBSMS::Process()
 
          // Process only if the right marker is to the right of the left marker
          if (mCurT1 > mCurT0) {
-            sampleCount start;
-            sampleCount end;
-            start = leftTrack->TimeToLongSamples(mCurT0);
-            end = leftTrack->TimeToLongSamples(mCurT1);
+            auto start = leftTrack->TimeToLongSamples(mCurT0);
+            auto end = leftTrack->TimeToLongSamples(mCurT1);
 
             WaveTrack* rightTrack = NULL;
             if (leftTrack->GetLinked()) {
@@ -275,16 +273,18 @@ bool EffectSBSMS::Process()
 
                mCurTrackNum++; // Increment for rightTrack, too.
             }
-            sampleCount trackStart = leftTrack->TimeToLongSamples(leftTrack->GetStartTime());
-            sampleCount trackEnd = leftTrack->TimeToLongSamples(leftTrack->GetEndTime());
+            const auto trackStart =
+               leftTrack->TimeToLongSamples(leftTrack->GetStartTime());
+            const auto trackEnd =
+               leftTrack->TimeToLongSamples(leftTrack->GetEndTime());
 
             // SBSMS has a fixed sample rate - we just convert to its sample rate and then convert back
             float srTrack = leftTrack->GetRate();
-            float srProcess = bLinkRatePitch?srTrack:44100.0;
+            float srProcess = bLinkRatePitch ? srTrack : 44100.0;
 
             // the resampler needs a callback to supply its samples
             ResampleBuf rb;
-            sampleCount maxBlockSize = leftTrack->GetMaxBlockSize();
+            auto maxBlockSize = leftTrack->GetMaxBlockSize();
             rb.blockSize = maxBlockSize;
             rb.buf = (audio*)calloc(rb.blockSize,sizeof(audio));
             rb.leftTrack = leftTrack;
@@ -293,16 +293,13 @@ bool EffectSBSMS::Process()
             rb.rightBuffer = (float*)calloc(maxBlockSize,sizeof(float));
 
             // Samples in selection
-            sampleCount samplesIn = end-start;
+            auto samplesIn = end - start;
 
             // Samples for SBSMS to process after resampling
-            sampleCount samplesToProcess = (sampleCount) ((float)samplesIn*(srProcess/srTrack));
+            auto samplesToProcess = (sampleCount) ((float)samplesIn*(srProcess/srTrack));
 
             SlideType outSlideType;
             SBSMSResampleCB outResampleCB;
-
-            sampleCount processPresamples = 0;
-            sampleCount trackPresamples = 0;
 
             if(bLinkRatePitch) {
               rb.bPitch = true;
@@ -327,10 +324,18 @@ bool EffectSBSMS::Process()
               rb.SBSMSBlockSize = rb.sbsms->getInputFrameSize();
               rb.SBSMSBuf = (audio*)calloc(rb.SBSMSBlockSize,sizeof(audio));
 
-              processPresamples = wxMin(rb.quality->getMaxPresamples(),
-                                        (long)((float)(start-trackStart)*(srProcess/srTrack)));
-              trackPresamples = wxMin(start-trackStart,
-                                      (long)((float)(processPresamples)*(srTrack/srProcess)));
+              // Note: width of getMaxPresamples() is only long.  Widen it
+              decltype(start) processPresamples = rb.quality->getMaxPresamples();
+              processPresamples =
+                 std::min(processPresamples,
+                          decltype(processPresamples)
+                             ((float)(start-trackStart)*(srProcess/srTrack)));
+
+              auto trackPresamples = start - trackStart;
+              trackPresamples =
+                  std::min(trackPresamples,
+                           decltype(trackPresamples)
+                              ((float)(processPresamples)*(srTrack/srProcess)));
               rb.offset = start - trackPresamples;
               rb.end = trackEnd;
               rb.iface = std::make_unique<SBSMSEffectInterface>
@@ -340,7 +345,9 @@ bool EffectSBSMS::Process()
                    // The argument type is only long!
                    static_cast<long> ( static_cast<size_t> (
                         samplesToProcess ) ),
-                   processPresamples,
+                   // This argument type is also only long!
+                   static_cast<long> ( static_cast<size_t> (
+                        processPresamples ) ),
                    rb.quality.get());
             }
             
@@ -354,7 +361,7 @@ bool EffectSBSMS::Process()
             sampleCount samplesToOutput = rb.iface->getSamplesToOutput();
 
             // Samples in output after resampling back
-            sampleCount samplesOut = (sampleCount) ((float)samplesToOutput * (srTrack/srProcess));
+            auto samplesOut = (sampleCount) ((float)samplesToOutput * (srTrack/srProcess));
 
             // Duration in track time
             double duration =  (mCurT1-mCurT0) * mTotalStretch;

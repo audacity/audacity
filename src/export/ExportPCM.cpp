@@ -490,8 +490,8 @@ int ExportPCM::Export(AudacityProject *project,
                                                   formatStr.c_str()));
 
          while (updateResult == eProgressSuccess) {
-            sampleCount samplesWritten;
-            sampleCount numSamples = mixer->Process(maxBlockLen);
+            sf_count_t samplesWritten;
+            auto numSamples = mixer->Process(maxBlockLen);
 
             if (numSamples == 0)
                break;

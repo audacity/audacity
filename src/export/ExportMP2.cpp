@@ -274,7 +274,7 @@ int ExportMP2::Export(AudacityProject *project,
          wxString::Format(_("Exporting entire file at %ld kbps"), bitrate));
 
       while (updateResult == eProgressSuccess) {
-         sampleCount pcmNumSamples = mixer->Process(pcmBufferSize);
+         auto pcmNumSamples = mixer->Process(pcmBufferSize);
 
          if (pcmNumSamples == 0)
             break;

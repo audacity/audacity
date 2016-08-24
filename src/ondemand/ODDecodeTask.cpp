@@ -159,12 +159,12 @@ void ODDecodeTask::Update()
                        std::static_pointer_cast<ODDecodeBlockFile>(file))->GetDecodeType() == this->GetODType())
                {
                   oddbFile->SetStart(block.start);
-                  oddbFile->SetClipOffset((sampleCount)(clip->GetStartTime()*clip->GetRate()));
+                  oddbFile->SetClipOffset(clip->GetStartTime()*clip->GetRate());
 
                   //these will always be linear within a sequence-lets take advantage of this by keeping a cursor.
                   while(insertCursor<(int)tempBlocks.size()&&
-                     (sampleCount)(tempBlocks[insertCursor]->GetStart()+tempBlocks[insertCursor]->GetClipOffset()) <
-                        (sampleCount)((oddbFile->GetStart()+oddbFile->GetClipOffset())))
+                     tempBlocks[insertCursor]->GetStart() + tempBlocks[insertCursor]->GetClipOffset() <
+                        oddbFile->GetStart() + oddbFile->GetClipOffset())
                      insertCursor++;
 
                   tempBlocks.insert(tempBlocks.begin()+insertCursor++, oddbFile);
@@ -193,7 +193,7 @@ void ODDecodeTask::OrderBlockFiles
    //(which the user sets by clicking.)   note that this code is pretty hacky - it assumes that the array is sorted in time.
 
    //find the startpoint
-   sampleCount processStartSample = GetDemandSample();
+   auto processStartSample = GetDemandSample();
    for(int i= ((int)unorderedBlocks.size())-1;i>= 0;i--)
    {
       //check to see if the refcount is at least two before we add it to the list.

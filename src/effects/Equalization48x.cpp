@@ -303,9 +303,9 @@ bool EffectEqualization48x::Process(EffectEqualization* effectEqualization)
       double t1 = mEffectEqualization->mT1 > trackEnd? trackEnd: mEffectEqualization->mT1;
 
       if (t1 > t0) {
-         sampleCount start = track->TimeToLongSamples(t0);
-         sampleCount end = track->TimeToLongSamples(t1);
-         sampleCount len = (sampleCount)(end - start);
+         auto start = track->TimeToLongSamples(t0);
+         auto end = track->TimeToLongSamples(t1);
+         auto len = end - start;
          bBreakLoop=RunFunctionSelect(sMathPath, count, track, start, len);
          if( bBreakLoop )
             break;
@@ -367,9 +367,9 @@ bool EffectEqualization48x::TrackCompare()
          double t1 = mEffectEqualization->mT1 > trackEnd? trackEnd: mEffectEqualization->mT1;
 
          if (t1 > t0) {
-            sampleCount start = track->TimeToLongSamples(t0);
-            sampleCount end = track->TimeToLongSamples(t1);
-            sampleCount len = (sampleCount)(end - start);
+            auto start = track->TimeToLongSamples(t0);
+            auto end = track->TimeToLongSamples(t1);
+            auto len = end - start;
             bBreakLoop=RunFunctionSelect(sMathPath, count, track, start, len);
             if( bBreakLoop )
                break;
@@ -390,9 +390,9 @@ bool EffectEqualization48x::TrackCompare()
       double t1 = mEffectEqualization->mT1 > trackEnd? trackEnd: mEffectEqualization->mT1;
 
       if (t1 > t0) {
-         sampleCount start = track->TimeToLongSamples(t0);
-         sampleCount end = track->TimeToLongSamples(t1);
-         sampleCount len = (sampleCount)(end - start);
+         auto start = track->TimeToLongSamples(t0);
+         auto end = track->TimeToLongSamples(t1);
+         auto len = end - start;
          DeltaTrack(track, track2, start, len);
       }
       track = (WaveTrack *) iter.Next();
@@ -406,21 +406,21 @@ bool EffectEqualization48x::TrackCompare()
 bool EffectEqualization48x::DeltaTrack(WaveTrack * t, WaveTrack * t2, sampleCount start, sampleCount len)
 {
 
-   sampleCount trackBlockSize = t->GetMaxBlockSize();
+   auto trackBlockSize = t->GetMaxBlockSize();
 
    float *buffer1 = new float[trackBlockSize];
    float *buffer2 = new float[trackBlockSize];
 
    AudacityProject *p = GetActiveProject();
    auto output=p->GetTrackFactory()->NewWaveTrack(floatSample, t->GetRate());
-   sampleCount originalLen = len;
-   sampleCount currentSample = start;
+   auto originalLen = len;
+   auto currentSample = start;
 
    while(len) {
-      sampleCount curretLength=(trackBlockSize>len)?len:trackBlockSize;
+      auto curretLength = (trackBlockSize > len) ? len : trackBlockSize;
       t->Get((samplePtr)buffer1, floatSample, currentSample, curretLength);
       t2->Get((samplePtr)buffer2, floatSample, currentSample, curretLength);
-      for(int i=0;i<curretLength;i++)
+      for(decltype(curretLength) i=0;i<curretLength;i++)
          buffer1[i]-=buffer2[i];
       output->Append((samplePtr)buffer1, floatSample, curretLength);
       currentSample+=curretLength;
@@ -479,9 +479,9 @@ bool EffectEqualization48x::Benchmark(EffectEqualization* effectEqualization)
             double t1 = mEffectEqualization->mT1 > trackEnd? trackEnd: mEffectEqualization->mT1;
 
             if (t1 > t0) {
-               sampleCount start = track->TimeToLongSamples(t0);
-               sampleCount end = track->TimeToLongSamples(t1);
-               sampleCount len = (sampleCount)(end - start);
+               auto start = track->TimeToLongSamples(t0);
+               auto end = track->TimeToLongSamples(t1);
+               auto len = end - start;
                bBreakLoop=RunFunctionSelect( localMathPath, count, track, start, len);
                if( bBreakLoop )
                   break;
@@ -510,7 +510,7 @@ bool EffectEqualization48x::Benchmark(EffectEqualization* effectEqualization)
 
 bool EffectEqualization48x::ProcessTail(WaveTrack * t, WaveTrack * output, sampleCount start, sampleCount len)
 {
-   //	  double offsetT0 = t->LongSamplesToTime((sampleCount)offset);
+   //	  double offsetT0 = t->LongSamplesToTime(offset);
    double lenT = t->LongSamplesToTime(len);
    // 'start' is the sample offset in 't', the passed in track
    // 'startT' is the equivalent time value
@@ -632,7 +632,7 @@ bool EffectEqualization48x::ProcessOne1x(int count, WaveTrack * t,
 {
    //sampleCount blockCount=len/mBlockSize;
 
-   sampleCount trackBlockSize = t->GetMaxBlockSize();
+   auto trackBlockSize = t->GetMaxBlockSize();
 
    AudacityProject *p = GetActiveProject();
    auto output = p->GetTrackFactory()->NewWaveTrack(floatSample, t->GetRate());
@@ -647,7 +647,7 @@ bool EffectEqualization48x::ProcessOne1x(int count, WaveTrack * t,
       singleProcessLength=len;
    else 
       singleProcessLength=(mFilterSize>>1)*bigRuns + len%(bigRuns*(subBufferSize-mBlockSize));
-   sampleCount currentSample=start;
+   auto currentSample=start;
    bool bBreakLoop = false;
    for(int bigRun=0;bigRun<bigRuns;bigRun++)
    {
@@ -817,7 +817,7 @@ bool EffectEqualization48x::ProcessOne4x(int count, WaveTrack * t,
    if(len<subBufferSize) // it's not worth 4x processing do a regular process
       return ProcessOne1x(count, t, start, len);
 
-   sampleCount trackBlockSize = t->GetMaxBlockSize();
+   auto trackBlockSize = t->GetMaxBlockSize();
 
    AudacityProject *p = GetActiveProject();
    auto output = p->GetTrackFactory()->NewWaveTrack(floatSample, t->GetRate());
@@ -827,7 +827,7 @@ bool EffectEqualization48x::ProcessOne4x(int count, WaveTrack * t,
    int trackBlocksPerBig=subBufferSize/trackBlockSize;
    int trackLeftovers=subBufferSize-trackBlocksPerBig*trackBlockSize;
    int singleProcessLength=(mFilterSize>>1)*bigRuns + len%(bigRuns*(subBufferSize-mBlockSize));
-   sampleCount currentSample=start;
+   auto currentSample=start;
 
    bool bBreakLoop = false;
    for(int bigRun=0;bigRun<bigRuns;bigRun++)
@@ -906,13 +906,13 @@ bool EffectEqualization48x::ProcessOne1x4xThreaded(int count, WaveTrack * t,
    AudacityProject *p = GetActiveProject();
    auto output = p->GetTrackFactory()->NewWaveTrack(floatSample, t->GetRate());
 
-   sampleCount trackBlockSize = t->GetMaxBlockSize();
+   auto trackBlockSize = t->GetMaxBlockSize();
    mEffectEqualization->TrackProgress(count, 0.0);
    int bigRuns=len/(subBufferSize-mBlockSize);
    int trackBlocksPerBig=subBufferSize/trackBlockSize;
    int trackLeftovers=subBufferSize-trackBlocksPerBig*trackBlockSize;
    int singleProcessLength=(mFilterSize>>1)*bigRuns + len%(bigRuns*(subBufferSize-mBlockSize));
-   sampleCount currentSample=start;
+   auto currentSample=start;
 
    int bigBlocksRead=mWorkerDataCount, bigBlocksWritten=0;
 
@@ -1146,7 +1146,7 @@ bool EffectEqualization48x::ProcessOne8x(int count, WaveTrack * t,
    if(blockCount<32) // it's not worth 8x processing do a regular process
       return ProcessOne4x(count, t, start, len);
 
-   sampleCount trackBlockSize = t->GetMaxBlockSize();
+   auto trackBlockSize = t->GetMaxBlockSize();
 
    AudacityProject *p = GetActiveProject();
    auto output = p->GetTrackFactory()->NewWaveTrack(floatSample, t->GetRate());
@@ -1156,7 +1156,7 @@ bool EffectEqualization48x::ProcessOne8x(int count, WaveTrack * t,
    int trackBlocksPerBig=mSubBufferSize/trackBlockSize;
    int trackLeftovers=mSubBufferSize-trackBlocksPerBig*trackBlockSize;
    int singleProcessLength=(mFilterSize>>1)*bigRuns + len%(bigRuns*(mSubBufferSize-mBlockSize));
-   sampleCount currentSample=start;
+   auto currentSample=start;
 
    bool bBreakLoop = false;
    for(int bigRun=0;bigRun<bigRuns;bigRun++)
@@ -1203,13 +1203,13 @@ bool EffectEqualization48x::ProcessOne8xThreaded(int count, WaveTrack * t,
    AudacityProject *p = GetActiveProject();
    auto output = p->GetTrackFactory()->NewWaveTrack(floatSample, t->GetRate());
 
-   sampleCount trackBlockSize = t->GetMaxBlockSize();
+   auto trackBlockSize = t->GetMaxBlockSize();
    mEffectEqualization->TrackProgress(count, 0.0);
    int bigRuns=len/(mSubBufferSize-mBlockSize);
    int trackBlocksPerBig=mSubBufferSize/trackBlockSize;
    int trackLeftovers=mSubBufferSize-trackBlocksPerBig*trackBlockSize;
    int singleProcessLength=(mFilterSize>>1)*bigRuns + len%(bigRuns*(mSubBufferSize-mBlockSize));
-   sampleCount currentSample=start;
+   auto currentSample=start;
 
    int bigBlocksRead=mWorkerDataCount, bigBlocksWritten=0;
 

@@ -105,7 +105,6 @@ bool EffectSoundTouch::Process()
 
          // Process only if the right marker is to the right of the left marker
          if (mCurT1 > mCurT0) {
-            sampleCount start, end;
 
             if (leftTrack->GetLinked()) {
                double t;
@@ -120,8 +119,8 @@ bool EffectSoundTouch::Process()
                mCurT1 = wxMax(mCurT1, t);
 
                //Transform the marker timepoints to samples
-               start = leftTrack->TimeToLongSamples(mCurT0);
-               end = leftTrack->TimeToLongSamples(mCurT1);
+               auto start = leftTrack->TimeToLongSamples(mCurT0);
+               auto end = leftTrack->TimeToLongSamples(mCurT1);
 
                //Inform soundtouch there's 2 channels
                mSoundTouch->setChannels(2);
@@ -135,8 +134,8 @@ bool EffectSoundTouch::Process()
                mCurTrackNum++; // Increment for rightTrack, too.
             } else {
                //Transform the marker timepoints to samples
-               start = leftTrack->TimeToLongSamples(mCurT0);
-               end = leftTrack->TimeToLongSamples(mCurT1);
+               auto start = leftTrack->TimeToLongSamples(mCurT0);
+               auto end = leftTrack->TimeToLongSamples(mCurT1);
 
                //Inform soundtouch there's a single channel
                mSoundTouch->setChannels(1);
@@ -175,8 +174,6 @@ bool EffectSoundTouch::Process()
 bool EffectSoundTouch::ProcessOne(WaveTrack *track,
                                   sampleCount start, sampleCount end)
 {
-   sampleCount s;
-
    mSoundTouch->setSampleRate((unsigned int)(track->GetRate()+0.5));
 
    auto outputTrack = mFactory->NewWaveTrack(track->GetSampleFormat(), track->GetRate());
@@ -192,7 +189,7 @@ bool EffectSoundTouch::ProcessOne(WaveTrack *track,
 
    //Go through the track one buffer at a time. s counts which
    //sample the current buffer starts at.
-   s = start;
+   auto s = start;
    while (s < end) {
       //Get a block of samples (smaller than the size of the buffer)
       const auto block =
@@ -269,7 +266,7 @@ bool EffectSoundTouch::ProcessStereo(WaveTrack* leftTrack, WaveTrack* rightTrack
    // Make soundTouchBuffer twice as big as MaxBlockSize for each channel,
    // because Soundtouch wants them interleaved, i.e., each
    // Soundtouch sample is left-right pair.
-   sampleCount maxBlockSize = leftTrack->GetMaxBlockSize();
+   auto maxBlockSize = leftTrack->GetMaxBlockSize();
    float* leftBuffer = new float[maxBlockSize];
    float* rightBuffer = new float[maxBlockSize];
    float* soundTouchBuffer = new float[maxBlockSize * 2];
@@ -277,7 +274,7 @@ bool EffectSoundTouch::ProcessStereo(WaveTrack* leftTrack, WaveTrack* rightTrack
    // Go through the track one stereo buffer at a time.
    // sourceSampleCount counts the sample at which the current buffer starts,
    // per channel.
-   sampleCount sourceSampleCount = start;
+   auto sourceSampleCount = start;
    while (sourceSampleCount < end) {
       //Get a block of samples (smaller than the size of the buffer)
       //Adjust the block size if it is the final block in the track
