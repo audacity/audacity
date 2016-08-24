@@ -375,7 +375,7 @@ double WaveClip::GetEndTime() const
 
 sampleCount WaveClip::GetStartSample() const
 {
-   return (sampleCount)floor(mOffset * mRate + 0.5);
+   return floor(mOffset * mRate + 0.5);
 }
 
 sampleCount WaveClip::GetEndSample() const
@@ -472,11 +472,9 @@ fillWhere(std::vector<sampleCount> &where, int len, double bias, double correcti
 {
    // Be careful to make the first value non-negative
    const double w0 = 0.5 + correction + bias + t0 * rate;
-   where[0] = sampleCount(std::max(0.0, floor(w0)));
+   where[0] = std::max(0.0, floor(w0));
    for (decltype(len) x = 1; x < len + 1; x++)
-      where[x] = sampleCount(
-         floor(w0 + double(x) * samplesPerPixel)
-      );
+      where[x] = floor(w0 + double(x) * samplesPerPixel);
 }
 
 }
@@ -1198,7 +1196,7 @@ void WaveClip::TimeToSamplesClip(double t0, sampleCount *s0) const
    else if (t0 > mOffset + double(mSequence->GetNumSamples())/mRate)
       *s0 = mSequence->GetNumSamples();
    else
-      *s0 = (sampleCount)floor(((t0 - mOffset) * mRate) + 0.5);
+      *s0 = floor(((t0 - mOffset) * mRate) + 0.5);
 }
 
 void WaveClip::ClearDisplayRect() const

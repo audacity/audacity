@@ -159,12 +159,12 @@ void ODDecodeTask::Update()
                        std::static_pointer_cast<ODDecodeBlockFile>(file))->GetDecodeType() == this->GetODType())
                {
                   oddbFile->SetStart(block.start);
-                  oddbFile->SetClipOffset((sampleCount)(clip->GetStartTime()*clip->GetRate()));
+                  oddbFile->SetClipOffset(clip->GetStartTime()*clip->GetRate());
 
                   //these will always be linear within a sequence-lets take advantage of this by keeping a cursor.
                   while(insertCursor<(int)tempBlocks.size()&&
-                     (sampleCount)(tempBlocks[insertCursor]->GetStart()+tempBlocks[insertCursor]->GetClipOffset()) <
-                        (sampleCount)((oddbFile->GetStart()+oddbFile->GetClipOffset())))
+                     tempBlocks[insertCursor]->GetStart() + tempBlocks[insertCursor]->GetClipOffset() <
+                        oddbFile->GetStart() + oddbFile->GetClipOffset())
                      insertCursor++;
 
                   tempBlocks.insert(tempBlocks.begin()+insertCursor++, oddbFile);

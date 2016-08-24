@@ -306,7 +306,7 @@ bool EffectAutoDuck::Process()
    {
       const auto len = limitSampleBufferSize( kBufSize, end - pos );
 
-      mControlTrack->Get((samplePtr)buf, floatSample, pos, (sampleCount)len);
+      mControlTrack->Get((samplePtr)buf, floatSample, pos, len);
 
       for (auto i = pos; i < pos + len; i++)
       {

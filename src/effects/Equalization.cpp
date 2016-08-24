@@ -1147,7 +1147,7 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
 
       // now move the appropriate bit of the output back to the track
       // (this could be enhanced in the future to use the tails)
-      double offsetT0 = t->LongSamplesToTime((sampleCount)offset);
+      double offsetT0 = t->LongSamplesToTime(offset);
       double lenT = t->LongSamplesToTime(originalLen);
       // 'start' is the sample offset in 't', the passed in track
       // 'startT' is the equivalent time value

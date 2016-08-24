@@ -203,12 +203,12 @@ void ODComputeSummaryTask::Update()
                   const auto odpcmaFile =
                      std::static_pointer_cast<ODPCMAliasBlockFile>(file);
                   odpcmaFile->SetStart(block.start);
-                  odpcmaFile->SetClipOffset((sampleCount)(clip->GetStartTime()*clip->GetRate()));
+                  odpcmaFile->SetClipOffset(clip->GetStartTime()*clip->GetRate());
 
                   //these will always be linear within a sequence-lets take advantage of this by keeping a cursor.
                   while(insertCursor<(int)tempBlocks.size()&&
-                     (sampleCount)(tempBlocks[insertCursor]->GetStart()+tempBlocks[insertCursor]->GetClipOffset()) <
-                        (sampleCount)(odpcmaFile->GetStart()+odpcmaFile->GetClipOffset()))
+                     tempBlocks[insertCursor]->GetStart() + tempBlocks[insertCursor]->GetClipOffset() <
+                        odpcmaFile->GetStart() + odpcmaFile->GetClipOffset())
                      insertCursor++;
 
                   tempBlocks.insert(tempBlocks.begin() + insertCursor++, odpcmaFile);

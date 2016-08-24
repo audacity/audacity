@@ -1213,7 +1213,7 @@ sampleCount AudioUnitEffect::GetLatency()
                            &latency,
                            &dataSize);  
 
-      return (sampleCount) (latency * mSampleRate);
+      return latency * mSampleRate;
    }
 
    return 0;
@@ -1231,7 +1231,7 @@ sampleCount AudioUnitEffect::GetTailSize()
                         &tailTime,
                         &dataSize);  
 
-   return (sampleCount) (tailTime * mSampleRate);
+   return tailTime * mSampleRate;
 }
 
 bool AudioUnitEffect::IsReady()

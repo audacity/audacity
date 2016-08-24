@@ -2019,7 +2019,7 @@ void Effect::GetSamples(WaveTrack *track, sampleCount *start, sampleCount *len)
    if (t1 > t0) {
       *start = track->TimeToLongSamples(t0);
       auto end = track->TimeToLongSamples(t1);
-      *len = (sampleCount)(end - *start);
+      *len = end - *start;
    }
    else {
       *start = 0;

@@ -122,8 +122,8 @@ bool EffectDtmf::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames 
    numSamplesSequence = nT1 - nT0;  // needs to be exact number of samples selected
 
    //make under-estimates if anything, and then redistribute the few remaining samples
-   numSamplesTone = (sampleCount)floor(dtmfTone * mSampleRate);
-   numSamplesSilence = (sampleCount)floor(dtmfSilence * mSampleRate);
+   numSamplesTone = floor(dtmfTone * mSampleRate);
+   numSamplesSilence = floor(dtmfSilence * mSampleRate);
 
    // recalculate the sum, and spread the difference - due to approximations.
    // Since diff should be in the order of "some" samples, a division (resulting in zero)

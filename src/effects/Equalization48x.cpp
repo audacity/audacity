@@ -510,7 +510,7 @@ bool EffectEqualization48x::Benchmark(EffectEqualization* effectEqualization)
 
 bool EffectEqualization48x::ProcessTail(WaveTrack * t, WaveTrack * output, sampleCount start, sampleCount len)
 {
-   //	  double offsetT0 = t->LongSamplesToTime((sampleCount)offset);
+   //	  double offsetT0 = t->LongSamplesToTime(offset);
    double lenT = t->LongSamplesToTime(len);
    // 'start' is the sample offset in 't', the passed in track
    // 'startT' is the equivalent time value

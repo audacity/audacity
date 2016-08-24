@@ -1851,7 +1851,7 @@ bool WaveTrack::Unlock() const
 
 AUDACITY_DLL_API sampleCount WaveTrack::TimeToLongSamples(double t0) const
 {
-   return (sampleCount)floor(t0 * mRate + 0.5);
+   return floor(t0 * mRate + 0.5);
 }
 
 double WaveTrack::LongSamplesToTime(sampleCount pos) const
