@@ -792,8 +792,6 @@ sampleCount Sequence::GetBestBlockSize(sampleCount start) const
 
 bool Sequence::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 {
-   sampleCount nValue;
-
    /* handle waveblock tag and its attributes */
    if (!wxStrcmp(tag, wxT("waveblock"))) {
       SeqBlock wb;
@@ -803,6 +801,8 @@ bool Sequence::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       while(*attrs) {
          const wxChar *attr = *attrs++;
          const wxChar *value = *attrs++;
+
+         long long nValue = 0;
 
          if (!value)
             break;
@@ -856,6 +856,8 @@ bool Sequence::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 
          if (!value)
             break;
+
+         long long nValue = 0;
 
          const wxString strValue = value;	// promote string, we need this for all
 
